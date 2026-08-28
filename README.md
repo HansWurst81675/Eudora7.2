@@ -111,7 +111,7 @@ Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 ist möglich, im Feld noch nicht nachgemessen |
 | QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll noch zu protokollieren |
 | Aktueller `rootcerts.p7b` für das Release | offen — Eudoras Speicher ist von 2005, QCSSL prüft nur gegen diese Datei |
-| Zeichensatz-Darstellung | **eingebaut** — `XLATE_CHARS` in `utils.cpp` von 27 auf 123 erhöht, alle 123 Einträge der UTF-8-Tabelle belegt (Commit `d03007f`); sichtbar wird das erst mit einer neu gebauten `Eudora.exe` |
+| Zeichensatz-Darstellung | **eingebaut, aber fehlerhaft** — `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`). Unit-Tests haben zwei echte Fehler nachgewiesen: sieben der 27 urspruenglichen Zuordnungen zeigen auf falsche Codepunkte (darunter alle typografischen Anfuehrungszeichen), und der neue C3-Block erzeugt eine Doppelersetzung. Siehe `PORTIERUNG.md` |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
 | Build-Artefakte im Repo | `.gitignore` greift jetzt; die mitversionierten Altbestände müssen noch aus dem Index |
 

@@ -283,6 +283,61 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
   erweitert (deutsche Umlaute + Latin-1 U+00A0..U+00FF), Patch aus
   https://github.com/HansWurst81675/Eudora_patches
 
+## Zwei Fehler in der Zeichentabelle (durch Unit-Tests belegt)
+
+`Eudora71/Tests` prueft die Uebersetzungstabelle aus `utils.cpp` gegen CP1252,
+ISO-8859-15 und RFC 3629. Die Erwartungswerte stammen aus den Spezifikationen,
+nicht aus dem getesteten Code. Stand: 23 Tests, 19 bestanden, 4 fehlgeschlagen.
+
+### 1. Sieben Zuordnungen zeigen auf falsche Codepunkte (Altbestand)
+
+| Eintrag | Quellfolge | ist | sollte |
+|---|---|---|---|
+| 21 | `E2 80 B2` = U+2032 | Ziel 0x92 = U+2019 | `E2 80 99` |
+| 22 | `E2 80 B3` = U+2033 | Ziel 0x94 = U+201D | `E2 80 9D` |
+| 23 | `E2 80 B5` = U+2035 | Ziel 0x91 = U+2018 | `E2 80 98` |
+| 24 | `E2 80 B6` = U+2036 | Ziel 0x93 = U+201C | `E2 80 9C` |
+| 7 | `C5 BF` = U+017F | Ziel 0x83 = U+0192 | `C6 92` |
+| 8 | `CB 82` = U+02C2 | Ziel 0x8B = U+2039 | `E2 80 B9` |
+| 9 | `CB 83` = U+02C3 | Ziel 0x9B = U+203A | `E2 80 BA` |
+
+Vier davon sind die **typografischen Anfuehrungszeichen**. In der Tabelle stehen
+die Prime-Zeichen (U+2032/2033/2035/2036) statt der Anfuehrungszeichen
+(U+2018/2019/201C/201D) - ein Uebertragungsfehler, `B2/B3/B5/B6` statt
+`98/99/9C/9D`.
+
+**Folge:** Anfuehrungszeichen und Apostrophe aus UTF-8-Post werden gar nicht
+uebersetzt und erscheinen als `a-Tilde-Euro-TM`. Das ist der haeufigste
+nicht-ASCII-Fall in echter Post - haeufiger als Umlaute.
+
+Diese sieben Eintraege sind **Originalcode von QUALCOMM**. Der Umlaut-Patch aus
+`d03007f` hat sie nicht verursacht, aber auch nicht mitrepariert.
+
+### 2. Doppelersetzung durch den neuen C3-Block (Regression aus d03007f)
+
+`ISOTranslate` laeuft die Tabelle der Reihe nach durch und ruft
+`CString::Replace`. Der Eintrag `C3 83 -> 0xC3` erzeugt ein **neues**
+Fuehrungsbyte 0xC3, das mit dem Folgebyte eine Folge bildet, die ein spaeterer
+Eintrag (`C3 A9 -> 0xE9`) noch einmal ersetzt. Aus zwei Zeichen wird eines:
+
+    Eingabe C3 83 C2 A9  ->  erwartet C3 A9, erhalten E9
+
+**50 von 13456 geprueften Zeichenpaaren** brechen so, alle mit U+00C3 als erstem
+Zeichen. Vor `d03007f` war das unmoeglich: die alten 27 Eintraege erzeugten nur
+Bytes 0x80..0x9F, nie ein Fuehrungsbyte. Erst der neue C3-Block erzeugt
+0xC0..0xFF. Praktisch selten (U+00C3 steht meist vor ASCII, etwa "Sao"), die
+Invariante ist aber verletzt.
+
+### Was bestanden hat
+
+Alle Makrowerte, keine Luecke in den 123 Eintraegen, alle Quellfolgen gueltiges
+UTF-8, keine Doppeleintraege, und - wichtig fuer `d03007f` - **Latin-1
+U+00A0..U+00FF ist vollstaendig und wertgleich**. Der Umlaut-Zusatz ist als
+Datensatz korrekt; nur die Reihenfolgewirkung stimmt nicht.
+
+Nichts davon ist repariert. Beide Fehler aendern die Darstellung von Post und
+gehoeren entschieden, nicht nebenbei behoben.
+
 ## Fallstricke für die Weiterarbeit
 
 - **`core.autocrlf`**: repo-lokal auf `false` gesetzt. Die Quellen haben gemischte
