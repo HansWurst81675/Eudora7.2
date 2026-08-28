@@ -120,7 +120,9 @@ Vorgaben verwenden lassen — genau das, was der Kommentar ursprünglich meinte.
 
 ## Nächster Schritt
 
-1. `QCSSL.dll` aus `Releases/1.0/` gegen einen echten Mailserver testen (siehe oben).
+1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt, Abruf und Versand
+   laufen. Offen: über "Last SSL Info" protokollieren, welches Protokoll und welche
+   Cipher-Suite ausgehandelt werden — davon hängt der Cipher-Punkt oben ab.
 2. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
 
 ## Angewandte Korrekturen (Kategorien)

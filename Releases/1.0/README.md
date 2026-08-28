@@ -77,8 +77,13 @@ wiederhergestellt.
 
 ## Stand der Erprobung
 
-Die DLL ist gebaut und die Abhängigkeiten sind geprüft. **Ein Test gegen einen echten
-Mailserver steht noch aus.** Deshalb Schritt 3 ernst nehmen und die alte Datei aufheben.
+Die DLL ist gegen einen echten Mailserver getestet: **Abruf und Versand funktionieren.**
+
+Im Betrieb ist kein Unterschied zu sehen — das ist beabsichtigt. Ausgetauscht wird nur
+die Kryptoschicht; Oberfläche und Verhalten von Eudora bleiben unverändert. Der Gewinn
+liegt in Protokoll und Wartbarkeit, nicht in sichtbaren Funktionen.
+
+Trotzdem Schritt 3 ernst nehmen und die alte Datei aufheben.
 
 ## Herkunft
 

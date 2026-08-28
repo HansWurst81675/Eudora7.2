@@ -17,8 +17,8 @@ Fertig gebaut werden: `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`,
 
 `QCSSL.dll` ist inzwischen gegen **OpenSSL 3.5.8 LTS** gebaut und beherrscht TLS 1.3.
 Als einbaufertiges Paket liegt sie in [Releases/1.0/](Releases/1.0/README.md) — sie
-ersetzt in einer bestehenden Eudora-7.1-Installation genau eine Datei. Ein Test gegen
-einen echten Mailserver steht noch aus.
+ersetzt in einer bestehenden Eudora-7.1-Installation genau eine Datei. **Gegen einen
+echten Mailserver getestet:** Abruf und Versand funktionieren.
 
 ```
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86 -m
@@ -71,7 +71,7 @@ der zu ersetzenden Oberfläche: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/IN
 |---|---|
 | OT501-Ersatzschicht | Bestandsaufnahme fertig, Implementierung offen |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS, TLS 1.3 aktiv |
-| QCSSL gegen echten Mailserver prüfen | offen — bisher nur Bau und Abhängigkeiten geprüft |
+| QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen; ausgehandeltes Protokoll noch zu protokollieren |
 | Zeichensatz-Darstellung | Ursache gefunden, Fix in `utils.cpp` vorbereitet |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
 | Build-Artefakte im Repo | `.gitignore` greift jetzt; die mitversionierten Altbestände müssen noch aus dem Index |
