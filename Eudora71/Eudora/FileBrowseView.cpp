@@ -3449,8 +3449,8 @@ LPITEMIDLIST CFileBrowseView::GetFullyQualPidlFromPath
 						MB_PRECOMPOSED,
 						lpszFullPathName,
 						-1,
-						(USHORT *)szOleChar,
-						sizeof(szOleChar));
+						szOleChar,
+						_countof(szOleChar));   // cchWideChar zaehlt Zeichen, nicht Bytes
 
 	//
 	// Use Desktop folder since we want a path relative to the root.

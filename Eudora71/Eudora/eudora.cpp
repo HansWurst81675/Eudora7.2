@@ -1173,7 +1173,7 @@ BOOL CEudoraApp::InitInstance()
 	if (CMI)
 	{
 		SetIniShort( IDS_INI_CHECK_FOR_MAIL,
-					 _MAX(CMI, GetIniShort(IDS_MIN_MAIL_CHECK_INTERVAL)) );
+					 __max(CMI, GetIniShort(IDS_MIN_MAIL_CHECK_INTERVAL)) );
 	}
    	
    	// Make sure only one encoding type is selected

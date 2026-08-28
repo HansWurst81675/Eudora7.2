@@ -1270,7 +1270,7 @@ void CheckTimeChange(void)
 	dt = *(localtime( &theTime )); /* Convert to local time. */	
 	
 	//theTime = gStatData->startTime;
-	dtStart = *(localtime( &gStatData->startTime )); /* Convert to local time. */	
+	time_t tStart = gStatData->startTime; dtStart = *(localtime( &tStart )); /* Convert to local time. */	
 
 	int timeFlags = kStart;
 
@@ -1575,7 +1575,7 @@ DWORD LoadStats(void)
 	}
 	
 	if (gStatData)
-		gCurrentTime = *localtime(&gStatData->currentTime);	// set the local time as the current time
+		{ time_t tCur = gStatData->currentTime; gCurrentTime = *localtime(&tCur); }	// set the local time as the current time
 	
 	return US_SUCCESS;
 	//return 0;
@@ -1813,7 +1813,7 @@ ULONG CalcElapsedUnits(StatTimePeriod period)
 	time(&theTime);
 	dtNow = *(localtime( &theTime )); 
 
-	dtStart = *(localtime( &gStatData->startTime));
+	time_t tStart = gStatData->startTime; dtStart = *(localtime( &tStart));
 	
 	dtNow.tm_min = dtNow.tm_sec = 0;
 	dtStart.tm_min = dtStart.tm_sec = 0;
