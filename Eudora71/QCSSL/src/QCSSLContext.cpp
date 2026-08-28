@@ -540,7 +540,7 @@ int SetCipherSuites(SSL_CTX *pSSLCtx)
 //
 SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 {
-	SSL_METHOD		*sslmethod = NULL;
+	const SSL_METHOD		*sslmethod = NULL;
 
 	if (!pSSLReference)
 	{
@@ -593,8 +593,6 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 	}
 	return pCtx;
 }
-	return SSL_CTX_new(sslmethod);
-}
 
 //
 //	FillInConnectionInfo()
@@ -636,7 +634,7 @@ void FillInConnectionInfo(ConnectionInfo *pConnectionInfo, QCSSLReference *pSSLR
 
 					X509		*pX509 = NULL;
 					pX509 = d2i_X509(NULL,
-									 (unsigned char **)(&pcCertBlob),
+									 (const unsigned char **)(&pcCertBlob),
 									 pCertData->m_CertBlobLength);
 
 					if (pX509)
@@ -693,7 +691,7 @@ void FillInConnectionInfo(ConnectionInfo *pConnectionInfo, QCSSLReference *pSSLR
 	pConnectionInfo->m_ServerName = pSSLReference->m_ProtocolInfo.m_ServerName ;
 	pConnectionInfo->m_Port = pSSLReference->m_ProtocolInfo.m_Port ;
 
-	SSL_CIPHER		*pSSLCipher = SSL_get_current_cipher(pSSL);
+	const SSL_CIPHER		*pSSLCipher = SSL_get_current_cipher(pSSL);
 	if (pSSLCipher)
 	{
 		pConnectionInfo->m_CipherName = SSL_get_cipher(pSSL);

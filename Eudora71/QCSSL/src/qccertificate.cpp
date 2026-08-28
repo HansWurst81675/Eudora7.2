@@ -205,7 +205,7 @@ int QCCertificateUtils::CertIsInStore(X509 *pX509, CertificateStore *pStore)
 				pbCertEncodedStart = pbCertEncoded;
 				memcpy(pbCertEncoded, pContext->pbCertEncoded, pContext->cbCertEncoded);
 
-				X509	*pX509Tmp = d2i_X509(NULL, (unsigned char **)(&pbCertEncoded), pContext->cbCertEncoded);
+				X509	*pX509Tmp = d2i_X509(NULL, (const unsigned char **)(&pbCertEncoded), pContext->cbCertEncoded);
 				if (pX509Tmp)
 				{
 					if (X509_cmp(pX509, pX509Tmp) == 0)
