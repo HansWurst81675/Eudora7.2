@@ -41,12 +41,14 @@ Die DLL ist **statisch gelinkt**: keine `libeay32.dll`, keine `ssleay32.dll` dan
 
 QCSSL prüft Serverzertifikate **nicht** gegen den Windows-Zertifikatspeicher, sondern
 gegen eine Datei `rootcerts.p7b` im Eudora-Verzeichnis ([QCSSLContext.cpp:53](../../Eudora71/QCSSL/src/QCSSLContext.cpp:53)).
-Die von Eudora 7.1 mitgelieferte Fassung stammt von **2005** und kennt kaum eine
-Zertifizierungsstelle, die heute Mailserver-Zertifikate ausstellt.
+Die von Eudora 7.1 mitgelieferte Fassung enthält **30 Zertifikate**, das neueste
+ausgestellt am **04.03.2004**. Stand August 2026 sind davon **17 abgelaufen**
+(nachgemessen an `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b`).
 
-Diese DLL ändert daran nichts — sie liest dieselbe Datei. Wer noch den Original-
-Speicher von 2005 hat, bekommt daher trotz funktionierendem TLS einen Zertifikats-
-fehler ("unknown root"). Wer **HermesSSL** installiert hat, ist versorgt: dessen
+Diese DLL ändert daran nichts — sie liest dieselbe Datei. Mit dem Original-Speicher
+ist deshalb trotz funktionierendem TLS ein Zertifikatsfehler ("unknown root") zu
+erwarten. Ungeprüft: ob es in der Praxis tatsächlich dazu kommt — das hängt davon ab,
+welche der 13 noch gültigen Wurzeln der jeweilige Mailserver nutzt. Wer **HermesSSL** installiert hat, ist versorgt: dessen
 Paket bringt eine aktuelle `rootcerts.p7b` mit, und die bleibt beim Austausch der
 `QCSSL.dll` liegen.
 

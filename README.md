@@ -15,7 +15,9 @@ Fertig gebaut werden: `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`,
 
 `Eudora.exe` selbst linkt noch **nicht** — siehe [Blocker](#blocker-ot501).
 
-`QCSSL.dll` ist inzwischen gegen **OpenSSL 3.5.8 LTS** gebaut und beherrscht TLS 1.3.
+`QCSSL.dll` ist inzwischen gegen **OpenSSL 3.5.8 LTS** gebaut. Der Code setzt TLS 1.2
+als Untergrenze und keine Obergrenze, TLS 1.3 ist damit möglich; welches Protokoll
+tatsächlich ausgehandelt wird, ist noch nicht nachgemessen.
 Als einbaufertiges Paket liegt sie in [Releases/1.0/](Releases/1.0/README.md) — sie
 ersetzt in einer bestehenden Eudora-7.1-Installation genau eine Datei. **Gegen einen
 echten Mailserver getestet:** Abruf und Versand funktionieren.
@@ -70,7 +72,7 @@ der zu ersetzenden Oberfläche: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/IN
 | Thema | Stand |
 |---|---|
 | OT501-Ersatzschicht | Bestandsaufnahme fertig, Implementierung offen |
-| OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS, TLS 1.3 aktiv |
+| OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 ist möglich, im Feld noch nicht nachgemessen |
 | QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll noch zu protokollieren |
 | Aktueller `rootcerts.p7b` für das Release | offen — Eudoras Speicher ist von 2005, QCSSL prüft nur gegen diese Datei |
 | Zeichensatz-Darstellung | Ursache gefunden, Fix in `utils.cpp` vorbereitet |

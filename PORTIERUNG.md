@@ -126,9 +126,14 @@ QCSSL prüft Serverzertifikate gegen `rootcerts.p7b` im Eudora- oder Programm-
 verzeichnis (`QCSSLContext.cpp:53`, geladen in `SetupCertificates()`), **nicht** gegen
 den Windows-Zertifikatspeicher. Die Fassung aus Eudora 7.1 ist von 2005.
 
+Nachgemessen am mitgelieferten `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b`:
+**30 Zertifikate, das neueste vom 04.03.2004, davon 17 im August 2026 abgelaufen.**
+(`certutil -dump` auf die Datei; ausgewertet wurden die Felder "Nicht vor"/"Nicht nach".)
+
 Die Portierung auf OpenSSL 3.x ändert daran nichts. Auf einer unberührten 7.1-
-Installation dürfte die Zertifikatsprüfung deshalb fehlschlagen (`IDS_CERTERR_UNKNOWNROOT`),
-obwohl der TLS-Handshake selbst funktioniert.
+Installation ist deshalb ein Zertifikatsfehler (`IDS_CERTERR_UNKNOWNROOT`) zu erwarten,
+obwohl der TLS-Handshake selbst funktioniert. Ob es real dazu kommt, ist **ungeprüft**
+und hängt davon ab, welche der 13 noch gültigen Wurzeln der Mailserver verwendet.
 
 Der erfolgreiche Test lief auf einer Installation mit **HermesSSL 7.8 gamma**, die
 einen aktuellen Speicher mitbringt — das erklärt, warum die Zertifikatsprüfung dort
@@ -140,8 +145,10 @@ Zu tun: einen aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen.
 ## Nächster Schritt
 
 1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt, Abruf und Versand
-   laufen. Einschränkungen: der Build stammt von **vor** `643305d`, und die Installation
-   hatte HermesSSL samt aktuellem Wurzelzertifikatsspeicher. Offen: mit der aktuellen
+   laufen. Einschränkungen: die Installation hatte HermesSSL samt aktuellem
+   Wurzelzertifikatsspeicher. **Ungeklärt**, welcher Build getestet wurde — `643305d`
+   hat die DLL um 20:02 neu gebaut; ob davor oder danach kopiert wurde, ist nicht
+   festgestellt. Per SHA256 gegen `Releases/1.0/QCSSL.dll.sha256` nachprüfbar. Offen: mit der aktuellen
    DLL wiederholen und über "Last SSL Info" protokollieren, welches Protokoll und
    welche Cipher-Suite ausgehandelt werden.
 2. Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen — sonst ist das Paket
