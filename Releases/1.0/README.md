@@ -26,14 +26,33 @@ Diese DLL ist gegen **OpenSSL 3.5.8 LTS** gebaut:
 | SSLv2 / SSLv3 | angeboten | abgeschaltet (beide gebrochen) |
 | Mindestprotokoll | — | TLS 1.2 |
 
-Gegenüber dem verbreiteten **HermSSL**-Paket: das nutzt OpenSSL 1.0.2p, seit 2019
-End-of-Life und ohne TLS 1.3. Außerdem sind hier keine fremden Binärdateien im Spiel —
+Gegenüber dem verbreiteten **HermesSSL**-Paket (Version 7.8 gamma): das nutzt
+OpenSSL 1.0.2p, seit 2019 End-of-Life und ohne TLS 1.3. Wer HermesSSL bereits
+einsetzt, hat funktionierendes TLS 1.2 und wird im Alltag **keinen Unterschied**
+bemerken — der Gewinn ist die gepflegte Krypto-Basis, nicht eine sichtbare Funktion.
+Hermes bringt dafür einen aktuellen Wurzelzertifikatsspeicher mit, den dieses
+Release noch nicht ersetzt (siehe oben). Außerdem sind hier keine fremden Binärdateien im Spiel —
 die DLL ist aus den offiziellen, prüfsummenverifizierten OpenSSL-Quellen gebaut, der
 komplette Bauweg liegt im Repository.
 
 Die DLL ist **statisch gelinkt**: keine `libeay32.dll`, keine `ssleay32.dll` daneben nötig.
 
-## Voraussetzung
+## Voraussetzung: aktueller Wurzelzertifikatsspeicher
+
+QCSSL prüft Serverzertifikate **nicht** gegen den Windows-Zertifikatspeicher, sondern
+gegen eine Datei `rootcerts.p7b` im Eudora-Verzeichnis ([QCSSLContext.cpp:53](../../Eudora71/QCSSL/src/QCSSLContext.cpp:53)).
+Die von Eudora 7.1 mitgelieferte Fassung stammt von **2005** und kennt kaum eine
+Zertifizierungsstelle, die heute Mailserver-Zertifikate ausstellt.
+
+Diese DLL ändert daran nichts — sie liest dieselbe Datei. Wer noch den Original-
+Speicher von 2005 hat, bekommt daher trotz funktionierendem TLS einen Zertifikats-
+fehler ("unknown root"). Wer **HermesSSL** installiert hat, ist versorgt: dessen
+Paket bringt eine aktuelle `rootcerts.p7b` mit, und die bleibt beim Austausch der
+`QCSSL.dll` liegen.
+
+Ein eigener, aktueller Speicher liegt diesem Release noch nicht bei.
+
+## Voraussetzung: Laufzeitbibliothek
 
 Die **Visual C++ Redistributable für Visual Studio 2015–2022 (x86)** muss installiert
 sein. Die DLL braucht daraus `mfc140.dll` und die C-Laufzeit.

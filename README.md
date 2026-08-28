@@ -71,7 +71,8 @@ der zu ersetzenden Oberfläche: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/IN
 |---|---|
 | OT501-Ersatzschicht | Bestandsaufnahme fertig, Implementierung offen |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS, TLS 1.3 aktiv |
-| QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen; ausgehandeltes Protokoll noch zu protokollieren |
+| QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll noch zu protokollieren |
+| Aktueller `rootcerts.p7b` für das Release | offen — Eudoras Speicher ist von 2005, QCSSL prüft nur gegen diese Datei |
 | Zeichensatz-Darstellung | Ursache gefunden, Fix in `utils.cpp` vorbereitet |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
 | Build-Artefakte im Repo | `.gitignore` greift jetzt; die mitversionierten Altbestände müssen noch aus dem Index |

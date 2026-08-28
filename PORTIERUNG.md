@@ -120,13 +120,33 @@ TLS 1.3 war davon nie betroffen: dort gilt eine eigene, über
 `Releases/1.0/QCSSL.dll` wurde daraufhin neu gebaut, die SHA256 in
 `QCSSL.dll.sha256` ist aktualisiert.
 
+### Offener Punkt: Wurzelzertifikatsspeicher
+
+QCSSL prüft Serverzertifikate gegen `rootcerts.p7b` im Eudora- oder Programm-
+verzeichnis (`QCSSLContext.cpp:53`, geladen in `SetupCertificates()`), **nicht** gegen
+den Windows-Zertifikatspeicher. Die Fassung aus Eudora 7.1 ist von 2005.
+
+Die Portierung auf OpenSSL 3.x ändert daran nichts. Auf einer unberührten 7.1-
+Installation dürfte die Zertifikatsprüfung deshalb fehlschlagen (`IDS_CERTERR_UNKNOWNROOT`),
+obwohl der TLS-Handshake selbst funktioniert.
+
+Der erfolgreiche Test lief auf einer Installation mit **HermesSSL 7.8 gamma**, die
+einen aktuellen Speicher mitbringt — das erklärt, warum die Zertifikatsprüfung dort
+durchlief. Es erklärt zugleich, warum im Alltag kein Unterschied spürbar war: Hermes
+liefert OpenSSL 1.0.2p und damit bereits TLS 1.2.
+
+Zu tun: einen aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen.
+
 ## Nächster Schritt
 
 1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt, Abruf und Versand
-   laufen — allerdings mit dem Build **vor** `643305d`. Offen: mit der aktuellen DLL
-   wiederholen und über "Last SSL Info" protokollieren, welches Protokoll und welche
-   Cipher-Suite ausgehandelt werden.
-2. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
+   laufen. Einschränkungen: der Build stammt von **vor** `643305d`, und die Installation
+   hatte HermesSSL samt aktuellem Wurzelzertifikatsspeicher. Offen: mit der aktuellen
+   DLL wiederholen und über "Last SSL Info" protokollieren, welches Protokoll und
+   welche Cipher-Suite ausgehandelt werden.
+2. Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen — sonst ist das Paket
+   nur auf Installationen mit HermesSSL vollständig.
+3. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
 
 ## Angewandte Korrekturen (Kategorien)
 
