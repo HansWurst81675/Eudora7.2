@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "NSImport.h"
 #include <stdio.h>
+#include <io.h>   // _finddata_t
 
 
 class NSImportClass

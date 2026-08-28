@@ -206,7 +206,8 @@ char* TimeDateStringFormatMT(char* buf, long Seconds, int TimeZoneMinutes, const
 
 	if (Seconds < 0)
 		Seconds = 1;
-	struct tm *TheTime = ::localtime(&Seconds);
+	time_t tmSeconds = Seconds;
+	struct tm *TheTime = ::localtime(&tmSeconds);
 
 	// Find out types are in the format string
 	BOOL bHasTime = FALSE;
@@ -631,7 +632,8 @@ char* TrimWhitespaceMT(char* pszBuffer)
 	//
 	char *pszBegin = pszBufPtr++;
 
-	for (char* pszEnd = pszBufPtr; *pszBufPtr; pszBufPtr++)
+	char* pszEnd = pszBufPtr;
+	for (; *pszBufPtr; pszBufPtr++)
 		if (!::isspace((int)(unsigned char)*pszBufPtr))
 			pszEnd = pszBufPtr;
 
@@ -1074,7 +1076,7 @@ HRESULT CreateShortcutMT(LPCTSTR Target, LPCTSTR Link, LPCTSTR Arguments /*= NUL
 			Temp.MakeLower();
 			if (Temp.Find(".lnk") == -1)
 				FullLink += ".lnk";
-			WORD wsz[MAX_PATH];
+			WCHAR wsz[MAX_PATH];
 			MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, FullLink, -1, wsz, MAX_PATH);
 
 			hr = piPF->Save(wsz, TRUE);
@@ -2003,7 +2005,7 @@ char* StripAddressMT(char* line)
 	*t = 0;
 
 	const char* BegAngle = strchr(line, '<');
-	char* EndAngle = BegAngle? strchr(BegAngle + 1, '>') : NULL;
+	char* EndAngle = BegAngle? const_cast<char*>(strchr(BegAngle + 1, '>')) : NULL;
 	if (BegAngle && EndAngle && BegAngle < EndAngle)
 	{
 		*EndAngle = 0;

@@ -148,6 +148,7 @@ MakeDox.pl Eudora.sln DevDox
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GSSupport\secchk.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
@@ -156,6 +157,7 @@ MakeDox.pl Eudora.sln DevDox
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
     </ClCompile>
     <ClCompile Include="..\GSSupport\seccinit.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
@@ -164,6 +166,7 @@ MakeDox.pl Eudora.sln DevDox
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsC</CompileAs>
     </ClCompile>
     <ClCompile Include="..\GSSupport\seccook.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>

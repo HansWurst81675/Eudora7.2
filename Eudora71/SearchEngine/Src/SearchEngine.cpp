@@ -1173,7 +1173,7 @@ const int FINDBUFSIZE = 1024*64;
 class SumLessThan 
 {
 public:
-	bool operator ()(CSummary *Sum1, CSummary *Sum2)
+	bool operator ()(CSummary *Sum1, CSummary *Sum2) const
 	{
 		return (Sum1->m_Offset < Sum2->m_Offset)?true:false;
 	}
