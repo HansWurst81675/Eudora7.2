@@ -103,10 +103,10 @@ static int ws_new(BIO *pBIO)
 		return 0;
 	}
 
-	pBIO->init = 0;
-	pBIO->num = 0;
-	pBIO->ptr = NULL;
-	pBIO->flags = 0;
+	BIO_set_init(pBIO, 0);
+	BIO_set_data(pBIO, NULL);
+	BIO_set_shutdown(pBIO, 0);
+	BIO_clear_flags(pBIO, ~0);
 
 	return 1;
 }
@@ -118,16 +118,16 @@ static int ws_free(BIO *pBIO)
 		return 0;
 	}
 
-	if (pBIO->shutdown)
+	if (BIO_get_shutdown(pBIO))
 	{
 		// Should we close?
-		if (pBIO->init)
+		if (BIO_get_init(pBIO))
 		{	// Did we init??
 			//	Close the socket
 			//	SHUTDOWN2(a->num);
 		}
-		pBIO->init = 0;		// no longer opened
-		pBIO->flags = 0;
+		BIO_set_init(pBIO, 0);		// no longer opened
+		BIO_clear_flags(pBIO, ~0);
 	}
 
 	return 1;
@@ -145,7 +145,7 @@ static int ws_read(BIO *pBIO, char *szIn, int iInLen)
 
 	if (szIn)
 	{
-		QCSSLReference		*pSSLReference = (QCSSLReference*)pBIO->num;
+		QCSSLReference		*pSSLReference = (QCSSLReference*)BIO_get_data(pBIO);
 		if (!pSSLReference)
 		{
 			return 0;
@@ -193,7 +193,7 @@ static int ws_write(BIO *pBIO, const char *szOut, int iOutLen)
 		return 0;
 	}
 
-	QCSSLReference		*pSSLReference = (QCSSLReference*)pBIO->num;
+	QCSSLReference		*pSSLReference = (QCSSLReference*)BIO_get_data(pBIO);
 	if (!pSSLReference)
 	{
 		return 0;
@@ -246,18 +246,18 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 		case BIO_C_SET_FD:
 			// Set the endpoint for the BIO
 			ws_free(pBIO);				//	Close whatever's already there
-			pBIO->num = *((int*)ptr);	//	Set the new endpoint
-			pBIO->shutdown = (int)lNum;	//	Set the close mode
-			pBIO->init = 1;				//	We've been initialized
+			BIO_set_data(pBIO, (void*)(INT_PTR)(*((int*)ptr)));	//	Set the new endpoint
+			BIO_set_shutdown(pBIO, (int)lNum);	//	Set the close mode
+			BIO_set_init(pBIO, 1);				//	We've been initialized
 			break;
 
 		case BIO_C_GET_FD:
 			// Return the endpoint for the BIO
-			if (pBIO->init)
+			if (BIO_get_init(pBIO))
 			{
 				if (ptr)
 				{
-					*((int*)ptr) = lRet = pBIO->num;
+					*((int*)ptr) = lRet = (int)(INT_PTR)BIO_get_data(pBIO);
 				}
 			}
 			else
@@ -268,12 +268,12 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 
 		case BIO_CTRL_GET_CLOSE:
 			// Get the close flag
-			lRet = pBIO->shutdown;
+			lRet = BIO_get_shutdown(pBIO);
 			break;
 
 		case BIO_CTRL_SET_CLOSE:
 			// Set the close flag
-			pBIO->shutdown = (int)lNum;
+			BIO_set_shutdown(pBIO, (int)lNum);
 			break;
 
 		case BIO_CTRL_PENDING:
@@ -300,24 +300,37 @@ static int ws_puts(BIO *pBIO, const char *szStr)
 	return ws_write(pBIO, szStr, strlen(szStr));
 }
 
-#define BIO_TYPE_WORKERSOCKET		(25|0x0400|0x0100)
+#define BIO_TYPE_WORKERSOCKET		(25|BIO_TYPE_SOURCE_SINK|BIO_TYPE_DESCRIPTOR)
+
+//
+//	Seit OpenSSL 1.1.0 ist BIO_METHOD undurchsichtig: die Struktur laesst sich
+//	nicht mehr statisch ausfuellen, sie wird zur Laufzeit mit BIO_meth_new()
+//	angelegt und ueber Setter befuellt. Einmal erzeugt, bleibt sie fuer die
+//	Lebensdauer des Prozesses bestehen (wie vorher die statische Struktur).
+//
+static BIO_METHOD *s_pMethodsWS = NULL;
 
 BIO_METHOD *BIO_s_workersocket()
 {
-	static BIO_METHOD methods_ws =
+	if (s_pMethodsWS == NULL)
 	{
-		BIO_TYPE_WORKERSOCKET,
-		"workersocket_in_Eudora",
-		ws_write,
-		ws_read,
-		ws_puts,
-		NULL, /* sock_gets, */
-		ws_ctrl,
-		ws_new,
-		ws_free,
-		NULL,
-	};
-	return &methods_ws;
+		s_pMethodsWS = BIO_meth_new(BIO_TYPE_WORKERSOCKET, "workersocket_in_Eudora");
+		if (s_pMethodsWS == NULL)
+		{
+			ASSERT(0);
+			return NULL;
+		}
+
+		BIO_meth_set_write(s_pMethodsWS,   ws_write);
+		BIO_meth_set_read(s_pMethodsWS,    ws_read);
+		BIO_meth_set_puts(s_pMethodsWS,    ws_puts);
+		//	kein gets - wie zuvor (war NULL)
+		BIO_meth_set_ctrl(s_pMethodsWS,    ws_ctrl);
+		BIO_meth_set_create(s_pMethodsWS,  ws_new);
+		BIO_meth_set_destroy(s_pMethodsWS, ws_free);
+	}
+
+	return s_pMethodsWS;
 }
 
 BIO *BIO_new_ws(int iWorkerSocket, int iCloseFlag)
