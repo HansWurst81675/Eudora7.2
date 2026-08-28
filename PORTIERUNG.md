@@ -118,7 +118,7 @@ Umgestellt wurde:
 | `SSLv3_method()`, `TLSv1_method()` | veraltet | `TLS_client_method()` + `SSL_CTX_set_min_proto_version()` |
 | `ERR_remove_state(0)` | seit 1.1.0 entfernt | ersatzlos gestrichen (Thread-Cleanup ist automatisch) |
 | `ctx->cert_store` | Struktur opak | `SSL_CTX_get_cert_store()` |
-| `qccertificate.cpp` `ctx->ex_data` | Struktur opak | `X509_STORE_CTX_get_ex_data()` |
+| `qccertificate.cpp` `ctx->ex_data` | Struktur opak | `X509_STORE_get_ex_data(X509_STORE_CTX_get0_store(...))` |
 
 SSLv2 und SSLv3 sind damit abgeschaltet. Als Mindestprotokoll setzt
 `QCSSLContext.cpp` bei sieben der acht Werte von `m_ProtocolVersion` — 0, 1, 2, 4,
@@ -166,8 +166,9 @@ gegen den Zustand davor hat die Umstellung **entlastet**. Belegt korrekt sind:
 
 - `SSL_CTX_set_verify(SSL_VERIFY_PEER, CertificateCallback)` ist unveraendert. Die
   Zertifikatspruefung greift. Selbstsignierte Zertifikate (Fehler 18/19) und
-  unbekannte Aussteller (20) werden abgewiesen, weil der `switch` im Callback fuer
-  sie keinen `case` hat und `iOK = 0` stehen bleibt.
+  unbekannte Aussteller (20) werden abgewiesen. Sie haben zwar `case`-Zweige
+  (`qccertificate.cpp:101-102` und `:82`), aber keiner davon setzt `iOK` auf 1 -
+  es bleibt bei 0, der Handshake bricht ab.
 - Die BIO-Schicht: alle sechs Felder der alten `BIO_METHOD`-Struktur sind in der
   richtigen Zuordnung gesetzt, `BIO_set_data`/`BIO_get_data` konsistent umgestellt.
 - Die Umstellung von direktem Strukturzugriff auf `X509_STORE_get_ex_data` und
