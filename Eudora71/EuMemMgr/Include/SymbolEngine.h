@@ -99,11 +99,11 @@ typedef BOOL (CALLBACK *PENUM_LOCAL_VARS_CALLBACK)
                                       int      iIndentLevel  ,
                                       PVOID    pContext       ) ;
                                       
-// The UNICODE wrapper on UnDecorateSymbolName.
-DWORD UnDecorateSymbolNameW ( PCWSTR DecoratedName       ,
-                              PWSTR  UnDecoratedName     ,
-                              DWORD  UndecoratedLength   ,
-                              DWORD  Flags                ) ;
+// --- Claude fix: removed redundant forward declaration of UnDecorateSymbolNameW.
+// This function is already declared (with the correct IMAGEAPI calling convention)
+// in the Windows SDK's <imagehlp.h>, which this header pulls in transitively.
+// The old declaration here lacked that convention specifier and conflicted with
+// the SDK's own prototype under modern Windows 10/11 SDKs (error C2373). ---
                                       
 
 // The symbol engine class

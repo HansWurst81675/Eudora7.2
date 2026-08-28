@@ -1,0 +1,22 @@
+﻿  
+  Microsoft (R) Program Maintenance Utility, Version 14.38.33145.0
+  Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
+  
+  --- Building OTA50D.LIB ---------
+   ** 32-bit, static OT, AFXDLL MFC, release build, VC++ 5.0 **
+   ** If you wish to RebuildAll OT501, you may do so by    **
+   ** deleting the contents of Eudora\OT501\Src\OTA50D.    **
+cl : Befehlszeile warning D9035: Die Option "Gm" ist veraltet und wird in einer der nächsten Versionen entfernt.
+cl : Befehlszeile warning D9035: Die Option "Gi" ist veraltet und wird in einer der nächsten Versionen entfernt.
+cl : Befehlszeile warning D9035: Die Option "GX" ist veraltet und wird in einer der nächsten Versionen entfernt.
+cl : Befehlszeile warning D9036: "EHsc" anstelle von "GX" verwenden
+cl : Befehlszeile warning D9035: Die Option "GZ" ist veraltet und wird in einer der nächsten Versionen entfernt.
+cl : Befehlszeile warning D9036: "RTC1" anstelle von "GZ" verwenden
+cl : Befehlszeile warning D9035: Die Option "Gi-" ist veraltet und wird in einer der nächsten Versionen entfernt.
+  Stdafx.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\atlmfc\include\afxv_w32.h(36): fatal error C1189: #error:  MFC does not support WINVER less than 0x0501.  Please change the definition of WINVER in your project properties or precompiled header.
+NMAKE : fatal error U1077: "cl.exe /nologo /MDd /RTC1 /GS /W4 /Gm /Gi /GR /GX /Zi /Od /I "..\src" /I "..\..\src" /I "..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR".\OTA50D/" /Fp".\OTA50D/OTA50D.pch" /Yc /Fo".\OTA50D/" /Fd".\OTA50D/OTA50D.pdb" /GZ /c .\Stdafx.cpp": R�ckgabe-Code "0x2"
+  Stop.
+NMAKE : fatal error U1073: "OTA50D\OTA50D.lib" konnte nicht erstellt werden
+  Stop.
+C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Microsoft\VC\v170\Microsoft.MakeFile.Targets(45,5): error MSB3073: Der Befehl "NMAKE /f build50.mak ota50d" wurde mit dem Code -1 beendet.

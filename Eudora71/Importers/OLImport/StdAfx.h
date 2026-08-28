@@ -13,6 +13,18 @@
 
 #define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
 
+// --- Claude fix: force minimum WINVER/_WIN32_WINNT for MFC v143 (VS2022) compatibility ---
+#ifdef WINVER
+#undef WINVER
+#endif
+#define WINVER 0x0501
+
+#ifdef _WIN32_WINNT
+#undef _WIN32_WINNT
+#endif
+#define _WIN32_WINNT 0x0501
+// --- end Claude fix ---
+
 #include <afxwin.h>         // MFC core and standard components
 #include <afxext.h>         // MFC extensions
 

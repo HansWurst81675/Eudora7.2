@@ -1,0 +1,6 @@
+ .vs/ 
+*.db 
+Bin/ 
+Lib/ 
+**/Debug/ 
+**/Release/

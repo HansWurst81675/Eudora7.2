@@ -10,7 +10,10 @@
 //
 // Header file that's the nexus for PCH stuff.
 //  
-#define WINVER 0x0410
+// --- Claude fix: MFC v143 (VS2022) requires WINVER/_WIN32_WINNT >= 0x0501 ---
+#define WINVER 0x0501
+#define _WIN32_WINNT 0x0501
+// --- end Claude fix ---
 
 // Turn on leak checking with malloc (must be defined before stdlib.h is included)
 #define _CRTDBG_MAP_ALLOC
