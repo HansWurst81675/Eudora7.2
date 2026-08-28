@@ -507,30 +507,29 @@ bool SetupCertificates(SSL_CTX *pSSLCtx, QCSSLReference *pSSLReference)
 //
 //	SetCipherSuites()
 //
-//	Set the list of cipher suites to offer to the server.
+//	Frueher wurde hier eine fest verdrahtete Liste von Cipher Suites gesetzt.
+//	Der urspruengliche Kommentar sagte dazu, der Aufruf sei gleichbedeutend mit
+//	den Vorgaben von OpenSSL - das galt 2006 und gilt heute nicht mehr:
 //
-//	Note: With OpenSSL this call is optional because not specifying any cipher suites will result in
-//	the default cipher suite list to be offered.  The below code has the same effect as not calling
-//	this function at all.  If at some point we want to change the list of cipher suites then we would
-//	need to change the below list and be sure to call this function.
+//	  * RC4, DES, 3DES, IDEA, RC2 und die EXPORT-Suiten sind in OpenSSL 3.x
+//	    gar nicht mehr enthalten.
+//	  * Uebrig blieben aus der alten Liste nur AES-CBC-Suiten mit SHA-1. Damit
+//	    faellt jedes AEAD-Verfahren (AES-GCM, ChaCha20-Poly1305) weg - und genau
+//	    darauf bestehen heutige Server bei TLS 1.2.
+//
+//	Die alte Liste wuerde den Handshake also nicht absichern, sondern verhindern.
+//	Deshalb wird sie nicht mehr gesetzt: OpenSSL waehlt selbst, und dessen
+//	Vorgaben sind aktueller, als eine gepflegte Liste es je waere. Genau das
+//	meinte der alte Kommentar.
+//
+//	TLS 1.3 war davon ohnehin nie betroffen - dort gilt eine eigene Liste, die
+//	ueber SSL_CTX_set_ciphersuites() verwaltet wird.
 //
 int SetCipherSuites(SSL_CTX *pSSLCtx)
 {
-	if (pSSLCtx != NULL)
-	{
-		const char		*szCiphers = "DHE-RSA-AES256-SHA:DHE-DSS-AES256-SHA:AES256-SHA:"
-									 "EDH-RSA-DES-CBC3-SHA:EDH-DSS-DES-CBC3-SHA:DES-CBC3-SHA:DES-CBC3-MD5:"
-									 "DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA:AES128-SHA:"
-									 "IDEA-CBC-SHA:IDEA-CBC-MD5:RC2-CBC-MD5:DHE-DSS-RC4-SHA:"
-									 "RC4-SHA:RC4-MD5:RC4-MD5:RC4-64-MD5:"
-									 "EXP1024-DHE-DSS-DES-CBC-SHA:EXP1024-DES-CBC-SHA:EXP1024-RC2-CBC-MD5:"
-									 "EDH-RSA-DES-CBC-SHA:EDH-DSS-DES-CBC-SHA:DES-CBC-SHA:DES-CBC-MD5:"
-									 "EXP1024-DHE-DSS-RC4-SHA:EXP1024-RC4-SHA:EXP1024-RC4-MD5:"
-									 "EXP-EDH-RSA-DES-CBC-SHA:EXP-EDH-DSS-DES-CBC-SHA:"
-									 "EXP-DES-CBC-SHA:EXP-RC2-CBC-MD5:EXP-RC2-CBC-MD5:EXP-RC4-MD5:EXP-RC4-MD5";
-		return SSL_CTX_set_cipher_list(pSSLCtx, szCiphers);
-	}
-	return 0;
+	//	Absichtlich ohne SSL_CTX_set_cipher_list(): die Vorgaben von OpenSSL
+	//	gelten. Wer hier wieder einschraenken will, muss AEAD-Suiten enthalten.
+	return (pSSLCtx != NULL) ? 1 : 0;
 }
 
 //
