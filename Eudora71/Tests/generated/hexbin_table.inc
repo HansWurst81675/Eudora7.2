@@ -1,0 +1,45 @@
+// Automatisch erzeugt von Extract.ps1 - NICHT von Hand aendern.
+// Quelle: C:\Users\Gregor\Documents\github\Eudora7.2\Eudora71\Tests\..\Eudora\hexbin.cpp, Zeilen 47 bis 88
+#line 47 "C:/Users/Gregor/Documents/github/Eudora7.2/Eudora71/Tests/../Eudora/hexbin.cpp"
+const BYTE RUNCHAR = 0x90;
+const BYTE DONE = 0x7F;
+const BYTE SKIP = 0x7E;
+const BYTE FAIL = 0x7D;
+
+static const BYTE HexBinTable[256] =
+{
+/* 0*/	FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+/*					 \n				   \r		*/
+		FAIL, FAIL, SKIP, FAIL, FAIL, SKIP, FAIL, FAIL,
+/* 2*/	FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+/* 4*/	FAIL, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06,
+		0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, FAIL, FAIL,
+/* 6*/	0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, FAIL,
+/*					 :					*/
+		0x14, 0x15, DONE, FAIL, FAIL, FAIL, FAIL, FAIL,
+/* 8*/	0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D,
+		0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, FAIL,
+/*10*/	0x25, 0x26, 0x27, 0x28, 0x29, 0x2A, 0x2B, FAIL,
+		0x2C, 0x2D, 0x2E, 0x2F, FAIL, FAIL, FAIL, FAIL,
+/*12*/	0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, FAIL,
+		0x37, 0x38, 0x39, 0x3A, 0x3B, 0x3C, FAIL, FAIL,
+/*14*/	0x3D, 0x3E, 0x3F, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+/*16*/	FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+		FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL, FAIL,
+};
