@@ -6,13 +6,17 @@ Stand: 2026-08-28 · Branch `vs2022-portierung-fixes`
 
 **16 von 18 Projekten der Solution bauen.** Es fehlen `OT501` (Stingray Objective
 Toolkit; die Quellen sind nicht freigegeben) und `Eudora` selbst — `Eudora.vcxproj`
-kompiliert noch nicht. Beides blockiert `Eudora.exe`.
+uebersetzt seit `3f6877a` vollstaendig, linkt aber nicht.
 
 `Eudora.exe` **kompiliert vollstaendig** — alle 269 urspruenglichen Compilerfehler sind
-behoben. Es scheitert jetzt allein am Linker: `LNK1104: OTA50D.LIB kann nicht geoeffnet werden`.
-Vier davon sind Quelldateien, deren Header vorliegen, deren Implementierung aber in
-der Freigabe fehlt (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`).
+behoben (Verlauf 269 - 74 - 25 - 16 - 4 - 0). Es scheitert jetzt allein am Linker:
+`LNK1104: OTA50D.LIB kann nicht geoeffnet werden`. Damit ist alles erledigt, was
+Portierungsarbeit war; uebrig bleibt allein die fehlende Fremdbibliothek OT501.
 Gemessen mit `-p:BuildProjectReferences=false`, also ohne OT501.
+
+Die vier Quelldateien, deren Header vorlagen, deren Implementierung aber in der
+Freigabe fehlte (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`),
+sind seit `3f6877a` als Dummys vorhanden.
 
 QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert. Belegt ist: der Code setzt eine
 Protokoll-Untergrenze und **keine Obergrenze** (`SSL_CTX_set_max_proto_version()`
@@ -154,6 +158,46 @@ TLS 1.3 war davon nie betroffen: dort gilt eine eigene, über
 
 `Releases/1.0/QCSSL.dll` wurde daraufhin neu gebaut, die SHA256 in
 `QCSSL.dll.sha256` ist aktualisiert.
+
+### Geprueft: die Portierung selbst ist korrekt
+
+Eine Pruefung der vier QCSSL-Commits (`1b6e888`, `ac4f00d`, `9ce1274`, `9e7a880`)
+gegen den Zustand davor hat die Umstellung **entlastet**. Belegt korrekt sind:
+
+- `SSL_CTX_set_verify(SSL_VERIFY_PEER, CertificateCallback)` ist unveraendert. Die
+  Zertifikatspruefung greift. Selbstsignierte Zertifikate (Fehler 18/19) und
+  unbekannte Aussteller (20) werden abgewiesen, weil der `switch` im Callback fuer
+  sie keinen `case` hat und `iOK = 0` stehen bleibt.
+- Die BIO-Schicht: alle sechs Felder der alten `BIO_METHOD`-Struktur sind in der
+  richtigen Zuordnung gesetzt, `BIO_set_data`/`BIO_get_data` konsistent umgestellt.
+- Die Umstellung von direktem Strukturzugriff auf `X509_STORE_get_ex_data` und
+  `X509_STORE_CTX_get_current_cert`/`get_error` trifft dasselbe Objekt und
+  dieselben Indizes.
+- Die Reihenfolge beim Abraeumen (`SSL_get_SSL_CTX` vor `SSL_free` vor
+  `SSL_CTX_free`) stimmt; das ersatzlos gestrichene `ERR_remove_state(0)` wird
+  tatsaechlich nicht gebraucht.
+
+### Offene Schwaechen der Zertifikatspruefung - alle Altbestand
+
+Diese Punkte stammen aus dem Originalcode, nicht aus der Portierung. Sie sind
+trotzdem echte Schwaechen:
+
+1. **`qccertificate.cpp:110-112` akzeptiert zwei Fehlerarten.**
+   `X509_V_ERR_CERT_UNTRUSTED` (27) und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE`
+   (21) setzen `iOK = 1`, der Handshake laeuft also weiter. Fehler 21 duerfte unter
+   3.x unerreichbar sein, weil vorher Fehler 20 gemeldet wird; Fehler 27 aus
+   `check_trust()` ist erreichbar. Empfehlung: beide `case` streichen.
+2. **`qccertificate.cpp:157` schreibt in einen fremden Slot.**
+   `X509_STORE_CTX_set_ex_data(ctx, 0, ...)` belegt Index 0 des STORE_CTX - genau
+   den Slot, in den libssl den `SSL*` legt. Der Wert wird nirgends zurueckgelesen:
+   ein toter Schreibzugriff, der fremde Daten ueberschreibt.
+3. **Der Namensabgleich ist rein beratend.** Bei Nichtuebereinstimmung wird nur ein
+   Hinweistext angehaengt; der Rueckgabewert haengt allein am Handshake-Ergebnis.
+   Geprueft wird ausserdem nur der CN, keine SAN-Eintraege - moderne Zertifikate
+   fuehren oft gar keinen CN mehr. `X509_check_host` gab es in 0.9.7 noch nicht,
+   die Luecke ist also Altbestand.
+4. **Kein SNI.** `SSL_set_tlsext_host_name` wird nicht gesetzt, vorher wie nachher.
+   Bei Mailservern hinter gemeinsamer IP liefert der Server das Standardzertifikat.
 
 ### Offener Punkt: Wurzelzertifikatsspeicher
 

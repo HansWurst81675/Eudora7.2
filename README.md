@@ -9,8 +9,8 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 ## Stand
 
 **16 von 18 Projekten der Solution bauen** mit VS 2022 (Toolset v143, `Debug|x86`).
-Nicht dabei sind `OT501` (die Quellen sind nicht freigegeben) und `Eudora` selbst:
-`Eudora.vcxproj` kompiliert noch nicht.
+Nicht dabei sind `OT501` (die Quellen sind nicht freigegeben) und
+`Eudora` selbst: `Eudora.vcxproj` **kompiliert seit `3f6877a` vollstaendig**, linkt aber nicht, weil ihm `OTA50D.LIB` aus OT501 fehlt.
 
 Fertig gebaut werden: `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`,
 `EuLang.dll`, `plstclnt.dll`, dazu elf `.lib` in `Eudora71/Lib/Debug` und OpenSSL.
@@ -18,7 +18,11 @@ Von den elf `.lib` sind sieben Importbibliotheken zu den DLLs (kenntlich an der
 begleitenden `.exp`); echte statische Bibliotheken sind nur vier: `AccountWizard`,
 `DirectoryServicesUI`, `EuImap`, `SearchEngine`.
 
-`Eudora.exe` selbst kompiliert und linkt noch **nicht** — siehe [Blocker](#blocker-ot501).
+`Eudora.exe` **uebersetzt vollstaendig** — alle 269 urspruenglichen Compilerfehler sind
+behoben (Verlauf 269 — 74 — 25 — 16 — 4 — 0). Der Build endet jetzt an genau einer
+Stelle: `LNK1104: OTA50D.LIB kann nicht geoeffnet werden`. Damit ist alles erledigt,
+was Portierungsarbeit war; uebrig bleibt allein die fehlende Fremdbibliothek —
+siehe [Blocker](#blocker-ot501).
 
 `QCSSL.dll` ist inzwischen gegen **OpenSSL 3.5.8 LTS** gebaut. Der Code setzt eine
 Untergrenze (meist TLS 1.2, siehe unten) und **keine Obergrenze**; TLS 1.3 ist damit
