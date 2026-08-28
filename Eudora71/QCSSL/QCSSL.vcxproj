@@ -80,6 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <BaseAddress>%40..\Addresses.txt,$(ProjectName)</BaseAddress>
       <ImportLibrary>..\Lib\Debug\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
@@ -123,6 +124,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <BaseAddress>%40..\Addresses.txt,$(ProjectName)</BaseAddress>
