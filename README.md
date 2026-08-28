@@ -106,11 +106,14 @@ Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
 
 | Thema | Stand |
 |---|---|
-| OT501-Ersatzschicht | Analyse fertig, Stufenplan steht, Implementierung offen |
+| OT501-Ersatzschicht | **Stufe 0 und 1 fertig** (`Eudora71/OTShim/`, 2272 Zeilen, syntaktisch geprueft, noch nicht eingehaengt). Offen: Stufe 2 (Andockleisten mit prozentualen Zeilenbreiten und Splittern) — danach sollte `Eudora.exe` linken |
+| OTShim einhaengen | offen — `OTShim.h` in `stdafx.h` (dort kommt bisher `secall.h` herein), `OTShim.cpp` ins Projekt mit `/Y-` (kein vorkompilierter Header) |
+| Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig; es scheitert jetzt allein am Linker, dem `OTA50D.LIB` fehlt |
-| OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 ist möglich, im Feld noch nicht nachgemessen |
-| QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll noch zu protokollieren |
-| Aktueller `rootcerts.p7b` für das Release | offen — Eudoras Speicher ist von 2005, QCSSL prüft nur gegen diese Datei |
+| OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 **gemessen bestaetigt** (`TLS_AES_256_GCM_SHA384`), 30 Cipher Suites ohne RC4/3DES/EXPORT |
+| QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll per Komponententest nachgemessen |
+| **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` angenommen, ohne Hinweis. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |
+| Aktueller `rootcerts.p7b` für das Release | offen — der ausgelieferte Speicher (`Bin/Release`) enthaelt 19 Zertifikate von 1996-1998, acht davon abgelaufen, keine heute uebliche CA. QCSSL prueft nur gegen diese Datei, nicht gegen den Windows-Speicher |
 | Zeichensatz-Darstellung | **eingebaut, aber fehlerhaft** — `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`). Unit-Tests haben zwei echte Fehler nachgewiesen: sieben der 27 urspruenglichen Zuordnungen zeigen auf falsche Codepunkte (darunter alle typografischen Anfuehrungszeichen), und der neue C3-Block erzeugt eine Doppelersetzung. Siehe `PORTIERUNG.md` |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
 | Build-Artefakte im Repo | `.gitignore` greift jetzt; die mitversionierten Altbestände müssen noch aus dem Index |
