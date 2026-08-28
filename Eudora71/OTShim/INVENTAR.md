@@ -1,35 +1,53 @@
 # OT501-Ersatzschicht — Bestandsaufnahme
 
-Maschinell erzeugt aus `Eudora/*.cpp` und `Eudora/*.h`.
-Definiert exakt die Oberflaeche, die die Ersatzschicht bereitstellen muss.
+**Hinweis: diese Datei ist maschinell erzeugt und enthaelt Fehler.** Sie ist eine
+Rohaufnahme, keine verbindliche Schnittstellenbeschreibung — Abschnitt 2 enthaelt
+falsche Positive (Treffer aus Kommentaren, ein SSPI-Makro, ein Tippfehler), und
+Abschnitt 1 war unvollstaendig, weil der Generator nur `class X : public SECY` mit
+`SEC` als *erster* Basisklasse erfasst hat. Die geprueften Korrekturen und die
+Bewertung stehen in **[PLAN.md](PLAN.md)**, Abschnitt "Fehler im Inventar"; im
+Zweifel gilt PLAN.md.
+
+Erzeugt aus `Eudora/*.cpp` und `Eudora/*.h`.
 
 ## 1. Klassen, von denen Eudora ableitet
 
-| Eudora-Klasse | Stingray-Basis |
-|---|---|
-| CColorToolbarButton|SECTwoPartBtn |
-| CMoodMailStatic|SECStdBtn |
-| CSearchBar|SECCustomToolBar |
-| CStatusBarEx|SECStatusBar |
-| CTBarComboBtn|SECComboBtn |
-| CTBarMenuButton|SECStdBtn |
-| CWazooBar|SECControlBar |
-| EmoticonToolbarButton|SECTwoPartBtn |
-| QCChildToolBar|SECCustomToolBar |
-| QCControlBarWorksheet|SECControlBarWorksheet |
-| QCCustomToolBar|SECCustomToolBar |
-| QCCustomizeToolBar|SECCustomizeToolBar |
-| QCDockBar|SECDockBar |
-| QCImage|SECDib |
-| QCJpeg|SECJpeg |
-| QCMiniDockFrameWnd|SECMiniDockFrameWnd |
-| QCPng|SECDib |
-| QCTipOfDayDlg|SECTipOfDay |
-| QCToolBarCmdPage|SECToolBarCmdPage |
-| QCToolBarManagerWithBM|SECToolBarManager |
-| QCWorkbook|SECWorkbook |
-| QCWorksheet|SECWorksheet |
-| TBarSendButton|SECStdBtn |
+30 Ableitungen von 22 verschiedenen Stingray-Basisklassen. Die sieben unten mit
+(+) markierten Zeilen sind von Hand nachgetragen; der Generator hatte sie
+uebersehen.
+
+| Eudora-Klasse | Stingray-Basis | Fundstelle |
+|---|---|---|
+| CColorToolbarButton|SECTwoPartBtn | ColorToolbarButton.h:31 |
+| CDontFloatDockContext (+)|SECDockContext | QCChildToolBar.cpp:43 |
+| CMoodMailStatic|SECStdBtn | MoodMailStatic.h:13 |
+| CSearchBar|SECCustomToolBar | SearchBar.h:112 |
+| CStatusBarEx|SECStatusBar | statbar.h:13 |
+| CTBarBitmapComboBtn (+)|SECWndBtn (nach CBitmapCombo) | TBarBmpCombo.h:14 |
+| CTBarComboBtn|SECComboBtn | TBarCombo.h:8 |
+| CTBarEditBtn (+)|SECWndBtn (nach CEdit) | TBarEdit.h:12 |
+| CTBarMenuButton|SECStdBtn | TBarMenuButton.h:14 |
+| CTBarStaticBtn (+)|SECWndBtn (nach CStatic) | TBarStatic.h:12 |
+| CWazooBar|SECControlBar | WazooBar.h:60 |
+| EmoticonToolbarButton|SECTwoPartBtn | EmoticonToolbarButton.h:33 |
+| QC3DTabControl (+)|SEC3DTabControl | QC3DTabWnd.h:14 |
+| QC3DTabWnd (+)|SEC3DTabWnd | QC3DTabWnd.h:74 |
+| QCChildToolBar|SECCustomToolBar | QCChildToolBar.h:15 |
+| QCControlBarWorksheet|SECControlBarWorksheet | workbook.h:86 |
+| QCCustomToolBar|SECCustomToolBar | QCCustomToolBar.h:15 |
+| QCCustomizeToolBar|SECCustomizeToolBar | QCCustomizeToolBar.h:14 |
+| QCDockBar|SECDockBar | DockBar.h:16 |
+| QCImage|SECDib | QCGraphics.h:51 |
+| QCJpeg|SECJpeg | QCGraphics.h:36 |
+| QCMiniDockFrameWnd|SECMiniDockFrameWnd | workbook.h:136 |
+| QCPng|SECDib | QCGraphics.h:42 |
+| QCTipOfDayDlg|SECTipOfDay | TipOfDayDlg.h:4 |
+| QCToolBarCmdPage|SECToolBarCmdPage | QCToolbarCmdPage.h:13 |
+| QCToolBarManagerWithBM|SECToolBarManager | QCToolBarManager.h:12 |
+| QCWorkbook|SECWorkbook | workbook.h:174 |
+| QCWorkbookClient (+)|SECWorkbookClient | mainfrm.cpp:333 |
+| QCWorksheet|SECWorksheet | workbook.h:39 |
+| TBarSendButton|SECStdBtn | TBarSendButton.h:11 |
 
 ## 2. Aufgerufene Methoden
 

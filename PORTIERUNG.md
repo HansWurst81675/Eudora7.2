@@ -4,16 +4,21 @@ Stand: 2026-08-28 · Branch `vs2022-portierung-fixes`
 
 ## Kurzfassung
 
-**17 von 18 Projekten der Solution bauen.** Das fehlende ist `OT501`
-(Stingray Objective Toolkit); es blockiert `Eudora.exe`.
+**16 von 18 Projekten der Solution bauen.** Es fehlen `OT501` (Stingray Objective
+Toolkit; die Quellen sind nicht freigegeben) und `Eudora` selbst — `Eudora.vcxproj`
+kompiliert noch nicht. Beides blockiert `Eudora.exe`.
 
-`Eudora.exe` hat daneben noch **eigene** Fehler: derzeit 25 (von ursprünglich 269).
+`Eudora.exe` hat neben OT501 noch **eigene** Fehler: 4 (von ursprünglich 269),
+gemessen an Commit `ba3d2ee`. Eudoras eigener Code ist damit fehlerfrei.
 Vier davon sind Quelldateien, deren Header vorliegen, deren Implementierung aber in
 der Freigabe fehlt (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`).
 Gemessen mit `-p:BuildProjectReferences=false`, also ohne OT501.
 
-QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert und handelt **TLS 1.3** aus. Die
-fertige `QCSSL.dll` liegt als einbaufertiges Paket in `Releases/1.0/`.
+QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert. Belegt ist: der Code setzt eine
+Protokoll-Untergrenze und **keine Obergrenze** (`SSL_CTX_set_max_proto_version()`
+kommt in QCSSL nicht vor), TLS 1.3 ist damit nicht ausgeschlossen. Welches Protokoll
+tatsächlich ausgehandelt wird, ist **nicht nachgemessen**. Die fertige `QCSSL.dll`
+liegt als einbaufertiges Paket in `Releases/1.0/`.
 
 ## Umgebung
 
@@ -42,19 +47,29 @@ Ein voller Durchlauf dauert ca. 1–4 Minuten (OpenSSL beim ersten Mal deutlich 
 — das, wogegen QCSSL heute gebaut wird.
 
 `Eudora71/OpenSSL/out32`: `libeay32.lib`, `ssleay32.lib` (OpenSSL 0.9.7l, statisch)
-— Altbestand, wird nicht mehr in QCSSL gelinkt.
+— Altbestand. Das `OpenSSL`-Projekt steht noch mit `Build.0` in der Solution und
+erzeugt die beiden Libs weiterhin, aber **kein** Projekt linkt sie noch; das
+Ergebnisverzeichnis ist in `.gitignore` (`Eudora71/OpenSSL/out32/`). Übrig ist
+außerdem ein toter Include-Pfad `..\OpenSSL\inc32` in `QCSocket.vcxproj:60`.
+Projekt und Pfad können entfallen.
 
 ## Blocker: OT501 (Stingray Objective Toolkit)
 
-Die Freigabe des Computer History Museum enthält von OT501 nur die **130 Header**
-unter `Eudora71/OT501/Include`. Von den 186 Quelldateien, die `otlib50.mak` erwartet,
-liegen nur zlib, JPEG, `treectrl` und `shortcut` bei — der proprietäre Stingray-Code
-wurde entfernt. Dasselbe gilt für die zweite Kopie unter `Sandbox/OT501`.
+Die Freigabe des Computer History Museum enthält von OT501 nur **127 Header**
+(`.h`/`.H`) unter `Eudora71/OT501/Include`; das Verzeichnis zählt 130 Einträge, dazu
+gehören aber `SECRES.RC`, `SECRES.APS` und der Unterordner `RES`. Von den
+186 Quelldateien, die `otlib50.mak` erwartet, liegen **67** bei: zlib (14), JPEG (46),
+`treectrl` (1), `shortcut` (4) sowie `secaux.cpp` und `STDAFX.CPP` direkt unter
+`OT501/Src`. Die übrigen 119 — der proprietäre Stingray-Code — wurden entfernt.
+Dasselbe gilt für die zweite Kopie unter `Sandbox/OT501`.
 
-Eudora leitet von **23 dieser Klassen** ab und ruft 77 Methoden auf; dazu kommen rund
-50 weitere referenzierte Bezeichner (ausgezählt in
-[Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md)). Früher stand hier "rund 63
-Klassen" — diese Zahl ist durch die Bestandsaufnahme überholt. Beispiele: (`SECWorkbook`, `SECControlBar`,
+Eudora leitet an **30 Stellen** von **22 verschiedenen** dieser Klassen ab und ruft
+77 Methoden auf; insgesamt referenzieren die Eudora-Quellen 52 verschiedene
+`SEC`-Bezeichner (Klassen, Makros, Konstanten; ausgezählt in
+[Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md), dessen Abschnitt 1
+unvollständig war). Früher stand hier "rund 63 Klassen" — diese Zahl ist durch die
+Bestandsaufnahme überholt und wird auch weiter unten nicht mehr benutzt.
+Beispiele: (`SECWorkbook`, `SECControlBar`,
 `SECCustomToolBar`, `SECMDIFrameWnd`, `SECTab` …). Ohne `ota50d.lib` linkt
 `Eudora.exe` nicht.
 
@@ -64,8 +79,10 @@ mit v143 neu gebaut werden.
 
 Mögliche Wege:
 
-1. Die ~63 benutzten Klassen gegen die vorhandenen Header (14k Zeilen Deklarationen)
-   auf reines MFC nachbauen. Die Schnittstelle ist durch die Header vollständig
+1. Die benutzten Klassen (22 Basisklassen, 30 Ableitungen) gegen die vorhandenen
+   Header auf reines MFC nachbauen. Umfang der Vorlage: 32124 Zeilen in allen
+   127 Headern, davon 19379 Zeilen in den 89 Headern, die überhaupt eine
+   `class SEC…` deklarieren. Die Schnittstelle ist durch die Header vollständig
    definiert — also ein großes, aber wohldefiniertes Projekt.
 2. Objective Toolkit 5.0.1 Quellen beschaffen (Rogue Wave / Perforce).
 3. `Eudora.exe` zurückstellen und nur die DLLs pflegen.
@@ -80,7 +97,8 @@ aufgerufen. Die Registerkartenleiste ist verzichtbar, `SECStatusBar` erledigt ei
 
 QCSSL hing an **OpenSSL 0.9.7l von 2006** — maximal TLS 1.0. Damit kam Eudora an
 keinem aktuellen Mailserver mehr vorbei. Die Umstellung auf **OpenSSL 3.5.8 LTS** ist
-abgeschlossen, `QCSSL.dll` handelt jetzt TLS 1.3 aus.
+abgeschlossen; `QCSSL.dll` setzt keine Protokoll-Obergrenze mehr, TLS 1.3 ist damit
+nicht ausgeschlossen. Nachgemessen, welches Protokoll ausgehandelt wird, ist es nicht.
 
 Günstig war die Ausgangslage: der gesamte OpenSSL-Kontakt steckt in **einer Datei**,
 `Eudora71/QCSSL/src/QCSSLContext.cpp`, und QCSSL linkt OpenSSL **statisch** — die
@@ -98,7 +116,10 @@ Umgestellt wurde:
 | `ctx->cert_store` | Struktur opak | `SSL_CTX_get_cert_store()` |
 | `qccertificate.cpp` `ctx->ex_data` | Struktur opak | `X509_STORE_CTX_get_ex_data()` |
 
-SSLv2 und SSLv3 sind damit abgeschaltet, Mindestprotokoll ist TLS 1.2.
+SSLv2 und SSLv3 sind damit abgeschaltet. Als Mindestprotokoll setzt
+`QCSSLContext.cpp` bei sieben der acht Werte von `m_ProtocolVersion` — 0, 1, 2, 4,
+5, 6, 7 — `TLS1_2_VERSION`. Der achte, `m_ProtocolVersion == 3` (früher "TLSv1"),
+setzt `TLS1_VERSION`, also TLS 1.0. Eine Obergrenze wird nirgends gesetzt.
 
 ### Bau von OpenSSL 3.5.8
 
@@ -188,8 +209,9 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
 4. **`const char*`-Rückgaben** — `strchr`/`strrchr`/`strstr` haben in C++ eine
    const-Überladung, die bei `const char*`-Eingabe auch `const char*` liefert. Kein
    Compilerflag hilft, das ist Überladungsauflösung. Durchgehend mit `const_cast<char *>`
-   um den Aufruf versehen: erst rund 20 Stellen, dann 47 weitere in 32 Dateien —
-   das allein brachte `Eudora.vcxproj` von 74 auf 25 Fehler.
+   um den Aufruf versehen: erst rund 20 Stellen, dann 49 weitere in 22 Quelldateien
+   (Commit `2fb1566`) — das allein brachte `Eudora.vcxproj` von 74 auf 25 Fehler.
+   Heute stehen 4 (Commit `ba3d2ee`), und alle vier sind fehlende Quelldateien.
 5. **STL-Modernisierung** — `std::auto_ptr` → `std::unique_ptr<char[]>`;
    Komparator-`operator()` const (std::set); Iteratoren sind keine Zeiger mehr
    (`= NULL` / `!= NULL` ersetzt, u.a. durch `m_bIteratorValid` in `searchutil`)
@@ -223,6 +245,29 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
   komplett um und der Diff wird unlesbar.
 - **`sed` unter Git Bash**: nur mit `-b` (binary) benutzen. Ohne `-b` verschluckt es
   die CR aus CRLF-Zeilen und erzeugt dieselbe Diff-Flut.
+- **Zwei Werkzeuge gegen genau diese Schäden** (seit Commit `a7aeb33`, beide in
+  `tools/`):
+  - `tools/pruefe-bytes.pl` — vergleicht für jede zum Commit vorgemerkte Datei den
+    **Index**-Blob gegen den **HEAD**-Blob (nicht die Arbeitskopie, die liegt bei
+    manchen Dateien abweichend vor) und bricht den Commit ab, wenn sich die CR-Anzahl
+    geändert hat oder Unicode-Ersatzzeichen `U+FFFD` hinzugekommen sind — die Eudora-
+    Quellen sind **Latin-1**, nicht UTF-8. Geprüft werden die Endungen `cpp h c hpp
+    inl rc idl mak txt md vcxproj filters`. Bewusst überspringen:
+    `git commit --no-verify`.
+  - `tools/aendere-zeile.pl` — ändert eine einzelne Zeile byte-erhaltend:
+    `perl tools/aendere-zeile.pl <datei> <zeilennummer> <alt> <neu>`. Liest und
+    schreibt mit `:raw`, ersetzt per `index`/`substr` statt per regulärem Ausdruck
+    und bricht selbst ab, wenn sich die CR-Anzahl ändern würde.
+
+  `pruefe-bytes.pl` läuft als **pre-commit-Hook**. Der Hook liegt in `.git/hooks/pre-commit`
+  und wird von Git **nicht** mitversioniert — nach einem frischen Klon ist er einmal
+  einzurichten:
+
+  ```sh
+  printf '#!/bin/sh\nexec perl "$(git rev-parse --show-toplevel)/tools/pruefe-bytes.pl"\n' > .git/hooks/pre-commit
+  chmod +x .git/hooks/pre-commit
+  ```
+
 - **Skripte, die Quelldateien umschreiben**: hinterher prüfen, ob sich die Zahl der CR
   geändert hat (CR-Anzahl per `tr` gegen `git show HEAD:<datei>`). Am 28.08.2026 hat
   ein Perl-Skript vier reine LF-Dateien (`statbar.cpp`, `header.cpp`,
@@ -232,13 +277,19 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
 - **Build-Artefakte im Repo**: `.pdb`, `.idb`, `.tlog`, `.sbr` und `Build/`-Ordner sind
   aus dem ersten Import mit eingecheckt und tauchen bei jedem Build als Änderung auf.
   Die `.gitignore` ist inzwischen repariert (jede Zeile hatte ein Leerzeichen am Ende,
-  weshalb kein einziges Muster griff) und hält 601 unversionierte Dateien fern. Die
+  weshalb kein einziges Muster griff) und hält rund 2000 unversionierte Dateien fern
+  (2003 gemessen mit `git ls-files -o -i --exclude-standard | wc -l`; die Zahl
+  schwankt mit dem Build-Zustand des Arbeitsverzeichnisses). Die
   bereits **getrackten** Altbestände bleiben sichtbar — sie müssten per
   `git rm --cached` aus dem Index.
 - **Drei Blocker unabhängig von OT501**, gefunden bei der Familienanalyse:
   `statbar.h:71` deklariert `afx_msg void OnTimer(UINT)`, `ON_WM_TIMER()` verlangt in
-  MFC 14 aber `UINT_PTR`; `QCPng::LoadImage` (`QCGraphics.cpp:353,379`) benutzt
-  `png_ptr->jmpbuf` und direkten Strukturzugriff (libpng-1.2-API, seit 1.4 gekapselt);
+  MFC 14 aber `UINT_PTR`; der PNG-Code in `QCGraphics.cpp` greift an vier Stellen
+  direkt in die libpng-Strukturen (libpng-1.2-API, seit 1.4 gekapselt): `306`
+  (`png_ptr->error_ptr` im Warn-Callback `libpng_warning`), `313` und `316`
+  (`png_ptr->error_ptr` bzw. `longjmp(png_ptr->jmpbuf, 1)` im Fehler-Callback
+  `libpng_error`) und `354` (`setjmp(png_ptr->jmpbuf)`) — nur die letzte liegt
+  wirklich in `QCPng::LoadImage`;
   `QCChildToolBar.cpp:62` bindet `ON_MESSAGE_VOID` an einen Handler mit Signatur
   `LRESULT(WPARAM,LPARAM)`.
 - `AccountWizard` meldete gelegentlich `C1041` (PDB-Zugriff) beim Parallelbau — ein

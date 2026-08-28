@@ -16,8 +16,16 @@ Kategorien, und nur eine davon kostet Arbeit:
 | **C** | Deklariert, aber von Eudora nie aufgerufen — Qualcomm hat sie durch eigene Varianten ersetzt, oder die Treffer im Inventar stammen aus Kommentaren | Leerer Rumpf oder Deklaration |
 
 Die Kategorie-A-Fälle sind der Grund, warum die Schicht kleiner ausfällt als befürchtet.
-In der Workbook-Familie sind von 16 gelisteten Methoden nur **6** überhaupt in
-Stingray-Headern deklariert.
+In der Workbook-Familie sind von 16 gelisteten Methoden nur **7** überhaupt in dem
+Stingray-Header derjenigen Klasse deklariert, unter der das Inventar sie führt:
+`SECMDIFrameWnd::LoadBarState` (`swinmdi.h:102`), `SECWorkbook::CreateClient`
+(`SECWB.H:157`), `AddSheet` (`179`), `RemoveSheet` (`180`), `GetTabPts` (`182`),
+`OnLButtonDown` (`209`) und `SECWorksheet::OnDestroy` (`SECWB.H:75`). Die übrigen
+neun sind Kategorie A — sie stehen entweder in einer Basisklasse (`OnActivate`,
+`RecalcLayout`), in einer *anderen* SEC-Klasse (`OnSize`, `OnClose` nur in
+`SECControlBarWorksheet`; `SECMDIFrameWnd::OnLButtonDown` nur in `SECWorkbook`;
+`SECMDIChildWnd::OnMDIActivate` nur in `SECWorksheet`, `SECWB.H:74`) oder gar nicht
+in den Headern (`OnNotify`, `OnSetCursor`, `WindowProc`).
 
 ## Der Weg zum ersten startenden `Eudora.exe`
 
@@ -28,7 +36,7 @@ Laufzeit umschaltbare Anwendereinstellung:
 ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))      mainfrm.cpp:1025
 ```
 
-Jede Auswertung der Tabs steht hinter `m_bWorkbookMode` (`workbook.cpp:1075,1100,1741`;
+Jede Auswertung der Tabs steht hinter `m_bWorkbookMode` (`workbook.cpp:1065,1101,1741`;
 `mainfrm.cpp:8438,8484,8549,8654`). Bei `FALSE` läuft nichts davon an — ein von Qualcomm
 vorgesehener, über die Einstellungen erreichbarer Zustand (`settings.cpp:1055-1060`).
 
@@ -49,7 +57,7 @@ also real subclassen, darf aber Ränder von (0,0,0,0) melden.
 
 | Klasse | Vorgehen | Beleg |
 |---|---|---|
-| `SECStatusBar` (11 Methoden) | **`typedef CStatusBar SECStatusBar;`** — `sbarstat.h` ist eine 1:1-Kopie von `CStatusBar` (afxext.h:269) mit `SECControlBar` statt `CControlBar` als Basis. Alle 11 Aufrufe sind Kategorie A. Stingray macht für Nicht-WIN32 selbst `#define SECStatusBar CStatusBar` (`sbarstat.h:139`). Die Statusleiste wird nie über den SEC-Bar-Manager angefasst | `sbarstat.h:44,139` |
+| `SECStatusBar` (11 Methoden) | **`typedef CStatusBar SECStatusBar;`** — `sbarstat.h` ist eine 1:1-Kopie von `CStatusBar` (afxext.h:269) mit `SECControlBar` statt `CControlBar` als Basis. Alle 11 Aufrufe sind Kategorie A. Stingray macht für Nicht-WIN32 selbst `#define SECStatusBar CStatusBar` (`sbarstat.h:140`). Die Statusleiste wird nie über den SEC-Bar-Manager angefasst | `sbarstat.h:43,140` |
 | `SECTipOfDay` | Stub: Konstruktor merkt die Werte, `DoModal()` liefert `IDOK`. Einzige Einstiegspunkte sind ein Menüpunkt und ein `PostMessage` beim Start; nichts hängt daran. Der INI-Rückschreibpfad (`eudora.cpp:256-257`) braucht nur plausible Werte | `SECTOD.H:41` |
 | `SECLoadSysColorBitmap` | `CBitmap::LoadMappedBitmap` | `SECBTNS.H:340` |
 
@@ -69,7 +77,7 @@ Ziel: ein `Eudora.exe`, das startet.
 Zwischenklasse, bricht das still.
 
 `GetTabPts` muss auch im Stub ein `new CPoint[n]` mit **mindestens 6** Punkten liefern —
-der Aufrufer prüft `ASSERT(count > 5)` und macht `delete[]` (`workbook.cpp:986`, `757`).
+der Aufrufer prüft `ASSERT(count > 5)` und macht `delete[]` (`workbook.cpp:987`, `757`).
 
 ### Stufe 2 — Andockfamilie
 
@@ -131,6 +139,15 @@ Umsetzung zu korrigieren:
 - **`SEC_TEXT` gehört nicht dazu** — das ist ein SSPI-Makro aus `Sspi.h`, kein Stingray.
 - **`SECCustonToolBar` existiert nicht** — Tippfehler in einem Kommentar
   (`QCCustomizeToolBar.cpp:241`).
+- **Fehlende Ableitungen in Abschnitt 1:** der Generator hat nur `class X : public SECY`
+  mit `SEC` als *erster* Basis erfasst. Es fehlten sieben Einträge — inzwischen in
+  `INVENTAR.md` nachgetragen: `QCWorkbookClient : SECWorkbookClient`
+  (`mainfrm.cpp:333`), `QC3DTabControl : SEC3DTabControl` (`QC3DTabWnd.h:14`),
+  `QC3DTabWnd : SEC3DTabWnd` (`QC3DTabWnd.h:74`), `CDontFloatDockContext : SECDockContext`
+  (`QCChildToolBar.cpp:43`) sowie die drei Mehrfachvererbungen auf `SECWndBtn`:
+  `CTBarBitmapComboBtn` (`TBarBmpCombo.h:14`), `CTBarEditBtn` (`TBarEdit.h:12`),
+  `CTBarStaticBtn` (`TBarStatic.h:12`). Damit sind es **30** Ableitungen von
+  **22** verschiedenen Stingray-Basisklassen, nicht 23.
 - **Fehlende Einträge:** `SECControlBar::GetBarInfo`/`SetBarInfo` (`WazooBarMgr.cpp:433,435`),
   `SECDockBar::GetControlBarRow`/`GetFirstControlBar`/`RemoveControlBar`,
   `SECControlBar::GetInsideRect`/`CalcInsideRect`/`IsMDIChild`, dazu die gesamte
@@ -142,8 +159,12 @@ Drei Dinge kosten Arbeit, haben aber mit OT501 nichts zu tun:
 
 1. **`statbar.h:71`** deklariert `afx_msg void OnTimer(UINT)`; `ON_WM_TIMER()` verlangt in
    MFC 14 `UINT_PTR` — Compilerfehler unabhängig von der Shim-Wahl.
-2. **`QCPng::LoadImage`** (`QCGraphics.cpp:353,379`) benutzt `png_ptr->jmpbuf` und
-   direkten Strukturzugriff — libpng-1.2-API, seit 1.4 gekapselt.
+2. **Direkter Zugriff auf die libpng-Strukturen** in `QCGraphics.cpp` — libpng-1.2-API,
+   seit 1.4 gekapselt. Vier Stellen, davon liegt nur eine in `QCPng::LoadImage`:
+   - `306` — `png_ptr->error_ptr` im Warn-Callback `libpng_warning`
+   - `313` — `png_ptr->error_ptr` im Fehler-Callback `libpng_error`
+   - `316` — `longjmp(png_ptr->jmpbuf, 1)`, ebenfalls in `libpng_error`
+   - `354` — `setjmp(png_ptr->jmpbuf)` in `QCPng::LoadImage(LPCTSTR)`
 3. **`QCChildToolBar.cpp:62`** bindet `ON_MESSAGE_VOID(WM_IDLEUPDATECMDUI, OnIdleUpdateCmdUI)`
    an einen Handler mit Signatur `LRESULT(WPARAM,LPARAM)` (`QCChildToolBar.h:24`) —
    Typmismatch, vermutlich aus einem früheren Portierungsschritt.
@@ -154,11 +175,22 @@ Die ersten drei sind Toolbar-Steuerelemente und gehören fachlich zu Stufe 3.
 
 ## Verfügbares Material
 
-`secaux.cpp` ist die **einzige** OT501-Quelldatei, die die Freigabe enthält — und sie
+Unter `OT501/Src/` liegen **67** Quelldateien (alle `.cpp`, keine `.c`) — von den
+186, die `otlib50.mak` erwartet. Aufgeteilt:
+
+| Ort | Anzahl | Was |
+|---|---|---|
+| `image/JPEG` | 46 | libjpeg (Fremdcode) |
+| `utility/zlib` | 14 | zlib (Fremdcode) |
+| `ui/shortcut` | 4 | Shortcut-Dialoge |
+| `controls/treectrl` | 1 | `TreeNode.cpp` |
+| `OT501/Src` selbst | 2 | `secaux.cpp` und `STDAFX.CPP` |
+
+`secaux.cpp` ist die einzige davon, die echte Stingray-Substanz enthält — sie
 liefert `secData` (`SEC_AUX_DATA`) mit den Systemfarben, die der Zeichencode an mehreren
 Stellen direkt liest (`TBarSendButton.cpp:74`, `MoodMailStatic.cpp:63`,
-`QCCustomizeToolBar.cpp:17`). Alles Übrige unter `OT501/Src/` ist Fremdcode
-(libjpeg, zlib, TreeNode, Shortcut).
+`QCCustomizeToolBar.cpp:17`). `STDAFX.CPP` ist der übliche Vorkompilierungs-Rumpf,
+alles Übrige Fremdcode.
 
 Jede Aussage über die *Innereien* der SEC-Implementierungen bleibt damit Rekonstruktion
 aus den Erwartungen der Aufrufer.

@@ -20,18 +20,19 @@ Diese DLL ist gegen **OpenSSL 3.5.8 LTS** gebaut:
 
 | | vorher | jetzt |
 |---|---|---|
-| Höchstes Protokoll | TLS 1.0 | **TLS 1.3** |
+| Höchstes Protokoll | TLS 1.0 (Grenze der Bibliothek) | **keine Obergrenze gesetzt** — TLS 1.3 damit nicht ausgeschlossen, aber nicht nachgemessen |
 | OpenSSL-Version | 0.9.7l (2006) | 3.5.8 LTS |
 | Sicherheitsupdates | seit ~2007 keine | bis 2030 |
 | SSLv2 / SSLv3 | angeboten | abgeschaltet (beide gebrochen) |
-| Mindestprotokoll | — | TLS 1.2 |
+| Mindestprotokoll | — | TLS 1.2 bei sieben der acht Werte von `m_ProtocolVersion`; beim Wert 3 (früher "TLSv1") TLS 1.0 |
 
 Gegenüber dem verbreiteten **HermesSSL**-Paket (Version 7.8 gamma): das nutzt
 OpenSSL 1.0.2p, seit 2019 End-of-Life und ohne TLS 1.3. Wer HermesSSL bereits
 einsetzt, hat funktionierendes TLS 1.2 und wird im Alltag **keinen Unterschied**
 bemerken — der Gewinn ist die gepflegte Krypto-Basis, nicht eine sichtbare Funktion.
 Hermes bringt dafür einen aktuellen Wurzelzertifikatsspeicher mit, den dieses
-Release noch nicht ersetzt (siehe oben). Außerdem sind hier keine fremden Binärdateien im Spiel —
+Release noch nicht ersetzt (siehe den nächsten Abschnitt, "Voraussetzung: aktueller
+Wurzelzertifikatsspeicher"). Außerdem sind hier keine fremden Binärdateien im Spiel —
 die DLL ist aus den offiziellen, prüfsummenverifizierten OpenSSL-Quellen gebaut, der
 komplette Bauweg liegt im Repository.
 
@@ -100,6 +101,18 @@ wiederhergestellt.
 
 Die DLL ist gegen einen echten Mailserver getestet: **Abruf und Versand funktionieren.**
 
+Zwei Einschränkungen dazu:
+
+- Die Testinstallation hatte **HermesSSL 7.8 gamma** und damit einen aktuellen
+  Wurzelzertifikatsspeicher. Dass die Zertifikatsprüfung durchlief, sagt nichts über
+  eine unberührte 7.1-Installation aus (siehe den Abschnitt zum Wurzelzertifikats-
+  speicher oben).
+- **Ungeklärt ist, welcher Build getestet wurde.** Commit `643305d` hat die DLL um
+  20:02 neu gebaut; ob davor oder danach kopiert wurde, ist nicht festgestellt. Per
+  SHA256 gegen `QCSSL.dll.sha256` nachprüfbar. Der Test ist mit der aktuellen DLL zu
+  wiederholen, und dabei über "Last SSL Info" zu protokollieren, welches Protokoll
+  und welche Cipher-Suite ausgehandelt werden.
+
 Im Betrieb ist kein Unterschied zu sehen — das ist beabsichtigt. Ausgetauscht wird nur
 die Kryptoschicht; Oberfläche und Verhalten von Eudora bleiben unverändert. Der Gewinn
 liegt in Protokoll und Wartbarkeit, nicht in sichtbaren Funktionen.
@@ -110,6 +123,9 @@ Trotzdem Schritt 3 ernst nehmen und die alte Datei aufheben.
 
 - OpenSSL 3.5.8, Quellen von `github.com/openssl/openssl`,
   SHA256 `a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2`
-- Übersetzt mit Visual Studio 2022, Toolset v143, `Debug|x86`-Solution, Konfiguration Release
+- Übersetzt mit Visual Studio 2022, Toolset v143, Konfiguration **`Release|x86`**.
+  (Die übrige Solution wird sonst in `Debug|x86` gebaut; für QCSSL wurde zusätzlich
+  der Release-Zweig gebaut, und daraus stammt diese DLL. Sie ist byte-identisch mit
+  `Eudora71/Bin/Release/QCSSL.dll`.)
 - Konfiguration: `VC-WIN32 no-shared no-asm no-tests no-docs no-apps /MD`
 - Eudora-Quellen: Freigabe des Computer History Museum, Branch `vs2022-portierung-fixes`
