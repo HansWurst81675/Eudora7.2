@@ -1448,7 +1448,7 @@ bool NSImportClass::BuildFolderList(struct Pathnames **files)
 	}
 	return true;
 }
-bool NSImportClass::AddNode(struct Pathnames **currentfile, 	struct _finddata_t *file)
+bool NSImportClass::AddNode(struct Pathnames **currentfile, 	_finddata_t *file)
 {
 	*currentfile = DEBUG_NEW struct Pathnames;
 	if (*currentfile == NULL)

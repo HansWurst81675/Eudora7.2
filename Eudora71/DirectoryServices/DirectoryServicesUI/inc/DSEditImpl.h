@@ -20,7 +20,7 @@
 #include "utils.h"
 #include "font.h"
 
-#include <xstddef>
+#include <functional>   // war <xstddef> (in VS2022 entfernt)
 #pragma warning (disable: 4663 4244)
 #include "AutoCompleteSearcher.h"
 #pragma warning (default: 4663 4244)

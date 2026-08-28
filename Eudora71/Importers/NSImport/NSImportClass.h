@@ -78,7 +78,7 @@ private:
 	bool				BuildFileList(struct Pathnames **files, struct Pathnames *folders);
 	bool				BuildFolderList(struct Pathnames **files);
 	bool				existsInTree(char * name, struct Pathnames *folders);
-	bool				AddNode(struct Pathnames **currentfile, 	struct _finddata_t *file);
+	bool				AddNode(struct Pathnames **currentfile, 	_finddata_t *file);
 	bool				InitMsgStoreTree(CMessageStore *pEntry);
 
 	// These happy Members are used primarily by Folder Operations

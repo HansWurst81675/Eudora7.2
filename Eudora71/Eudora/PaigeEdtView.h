@@ -38,7 +38,7 @@ class CPaigeEdtView;
 #include "MoodWatch.h" //text analyser header
 #include "paige.h"
 
-#include <xstddef>
+#include <functional>   // war <xstddef> (in VS2022 entfernt)
 #pragma warning (disable: 4663 4244 4018 4146)
 #include <stack>
 #include <queue>
