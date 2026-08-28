@@ -102,27 +102,30 @@ Zwei Stolperfallen, die Zeit gekostet haben:
 Konfiguration: `perl Configure VC-WIN32 no-shared no-asm no-tests no-docs no-apps /MD`
 Quellen-SHA256: `a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2`
 
-### Offener Punkt: veraltete Cipher-Liste
+### Erledigt: veraltete Cipher-Liste entfernt
 
-`SetCipherSuites()` in `QCSSLContext.cpp:517` setzt weiterhin die fest verdrahtete
-Liste von 2006 — RC4, DES, IDEA, RC2 und EXPORT-Suiten. Der Kommentar darüber sagt,
-der Aufruf sei gleichbedeutend mit den OpenSSL-Vorgaben; das galt 2006 und gilt heute
-**nicht mehr**. In OpenSSL 3.x sind die meisten dieser Suiten gar nicht mehr gebaut,
-übrig bleiben nur AES-CBC-Suiten mit SHA-1.
+`SetCipherSuites()` in `QCSSLContext.cpp` setzte noch die fest verdrahtete Liste von
+2006 — RC4, DES, 3DES, IDEA, RC2 und EXPORT-Suiten. In OpenSSL 3.x sind die meisten
+davon gar nicht mehr gebaut; übrig blieben nur AES-CBC-Suiten mit SHA-1. Damit fiel
+jedes AEAD-Verfahren weg — und genau darauf bestehen heutige Server bei TLS 1.2.
+Die alte Liste hätte den Handshake also nicht abgesichert, sondern verhindert.
 
-Folge, noch zu bestätigen: **TLS 1.3 funktioniert** (dort gilt eine eigene, per
-`SSL_CTX_set_ciphersuites()` verwaltete Liste, die unberührt bleibt), aber ein
-Server, der nur **TLS 1.2** kann und AEAD-Suiten verlangt, dürfte den Handshake
-ablehnen. Der Test gegen einen echten Mailserver muss das zeigen.
+Der ursprüngliche Kommentar im Code sagte, der Aufruf sei gleichbedeutend mit den
+OpenSSL-Vorgaben. Das galt 2006. Seit Commit `643305d` wird die Liste nicht mehr
+gesetzt — damit stimmt der Satz wieder.
 
-Naheliegende Lösung: `SetCipherSuites()` nicht mehr aufrufen und OpenSSL seine
-Vorgaben verwenden lassen — genau das, was der Kommentar ursprünglich meinte.
+TLS 1.3 war davon nie betroffen: dort gilt eine eigene, über
+`SSL_CTX_set_ciphersuites()` verwaltete Liste.
+
+`Releases/1.0/QCSSL.dll` wurde daraufhin neu gebaut, die SHA256 in
+`QCSSL.dll.sha256` ist aktualisiert.
 
 ## Nächster Schritt
 
 1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt, Abruf und Versand
-   laufen. Offen: über "Last SSL Info" protokollieren, welches Protokoll und welche
-   Cipher-Suite ausgehandelt werden — davon hängt der Cipher-Punkt oben ab.
+   laufen — allerdings mit dem Build **vor** `643305d`. Offen: mit der aktuellen DLL
+   wiederholen und über "Last SSL Info" protokollieren, welches Protokoll und welche
+   Cipher-Suite ausgehandelt werden.
 2. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
 
 ## Angewandte Korrekturen (Kategorien)
