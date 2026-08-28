@@ -4,8 +4,13 @@ Stand: 2026-08-28 · Branch `vs2022-portierung-fixes`
 
 ## Kurzfassung
 
-**17 von 18 Projekten der Solution bauen.** Einziger verbleibender Fehler ist `OT501`
-(Stingray Objective Toolkit), und der blockiert nur noch `Eudora.exe` selbst.
+**17 von 18 Projekten der Solution bauen.** Das fehlende ist `OT501`
+(Stingray Objective Toolkit); es blockiert `Eudora.exe`.
+
+`Eudora.exe` hat daneben noch **eigene** Fehler: derzeit 25 (von ursprünglich 269).
+Vier davon sind Quelldateien, deren Header vorliegen, deren Implementierung aber in
+der Freigabe fehlt (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`).
+Gemessen mit `-p:BuildProjectReferences=false`, also ohne OT501.
 
 QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert und handelt **TLS 1.3** aus. Die
 fertige `QCSSL.dll` liegt als einbaufertiges Paket in `Releases/1.0/`.
@@ -46,7 +51,10 @@ unter `Eudora71/OT501/Include`. Von den 186 Quelldateien, die `otlib50.mak` erwa
 liegen nur zlib, JPEG, `treectrl` und `shortcut` bei — der proprietäre Stingray-Code
 wurde entfernt. Dasselbe gilt für die zweite Kopie unter `Sandbox/OT501`.
 
-Eudora benutzt rund **63 dieser Klassen** (`SECWorkbook`, `SECControlBar`,
+Eudora leitet von **23 dieser Klassen** ab und ruft 77 Methoden auf; dazu kommen rund
+50 weitere referenzierte Bezeichner (ausgezählt in
+[Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md)). Früher stand hier "rund 63
+Klassen" — diese Zahl ist durch die Bestandsaufnahme überholt. Beispiele: (`SECWorkbook`, `SECControlBar`,
 `SECCustomToolBar`, `SECMDIFrameWnd`, `SECTab` …). Ohne `ota50d.lib` linkt
 `Eudora.exe` nicht.
 
@@ -60,7 +68,13 @@ Mögliche Wege:
    auf reines MFC nachbauen. Die Schnittstelle ist durch die Header vollständig
    definiert — also ein großes, aber wohldefiniertes Projekt.
 2. Objective Toolkit 5.0.1 Quellen beschaffen (Rogue Wave / Perforce).
-3. `Eudora.exe` zurückstellen und nur die DLLs pflegen (aktuell gewählter Weg).
+3. `Eudora.exe` zurückstellen und nur die DLLs pflegen.
+
+**Gewählt ist Weg 1.** Die Analyse der vier Klassenfamilien ist abgeschlossen und hat
+den Umfang deutlich verkleinert: die 77 Methoden sind nicht 77 Aufgaben. Viele sind
+geerbte MFC-Methoden, die Eudora nur qualifiziert aufruft, andere werden nie
+aufgerufen. Die Registerkartenleiste ist verzichtbar, `SECStatusBar` erledigt ein
+`typedef`. Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
 
 ## Erledigt: OpenSSL 3.5.8 LTS hinter QCSSL
 
@@ -194,6 +208,10 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
   https://github.com/microsoft/MAPIStubLibrary (MIT, Lizenz liegt bei).
   Nötig, weil `mapix.h`/`mapiutil.h` seit dem Windows-8-SDK nicht mehr im Windows SDK
   sind. Eingebunden in `Eudora`, `AccountWizard`, `OLImport`.
+- `Eudora71/OpenSSL3` — Header und statische Bibliotheken von OpenSSL 3.5.8 LTS
+  (`libcrypto.lib`, `libssl.lib`), damit sich QCSSL ohne einen 25-minütigen
+  OpenSSL-Lauf übersetzen lässt. Bauweg und Prüfsumme in
+  [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
 - `Eudora71/Eudora/utils.cpp` — UTF-8-Übersetzungstabelle von 27 auf 123 Einträge
   erweitert (deutsche Umlaute + Latin-1 U+00A0..U+00FF), Patch aus
   https://github.com/HansWurst81675/Eudora_patches
@@ -205,9 +223,24 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
   komplett um und der Diff wird unlesbar.
 - **`sed` unter Git Bash**: nur mit `-b` (binary) benutzen. Ohne `-b` verschluckt es
   die CR aus CRLF-Zeilen und erzeugt dieselbe Diff-Flut.
+- **Skripte, die Quelldateien umschreiben**: hinterher prüfen, ob sich die Zahl der CR
+  geändert hat (CR-Anzahl per `tr` gegen `git show HEAD:<datei>`). Am 28.08.2026 hat
+  ein Perl-Skript vier reine LF-Dateien (`statbar.cpp`, `header.cpp`,
+  `BossProtector.cpp`, `TridentPreviewView.cpp`) auf CRLF umgestellt und damit 2194
+  Scheinänderungen allein in `statbar.cpp` erzeugt. Die Ursache wurde nicht gefunden,
+  die Rückwandlung ist gegen `HEAD` verifiziert.
 - **Build-Artefakte im Repo**: `.pdb`, `.idb`, `.tlog`, `.sbr` und `Build/`-Ordner sind
   aus dem ersten Import mit eingecheckt und tauchen bei jedem Build als Änderung auf.
-  Sollte man aufräumen und in `.gitignore` aufnehmen.
+  Die `.gitignore` ist inzwischen repariert (jede Zeile hatte ein Leerzeichen am Ende,
+  weshalb kein einziges Muster griff) und hält 601 unversionierte Dateien fern. Die
+  bereits **getrackten** Altbestände bleiben sichtbar — sie müssten per
+  `git rm --cached` aus dem Index.
+- **Drei Blocker unabhängig von OT501**, gefunden bei der Familienanalyse:
+  `statbar.h:71` deklariert `afx_msg void OnTimer(UINT)`, `ON_WM_TIMER()` verlangt in
+  MFC 14 aber `UINT_PTR`; `QCPng::LoadImage` (`QCGraphics.cpp:353,379`) benutzt
+  `png_ptr->jmpbuf` und direkten Strukturzugriff (libpng-1.2-API, seit 1.4 gekapselt);
+  `QCChildToolBar.cpp:62` bindet `ON_MESSAGE_VOID` an einen Handler mit Signatur
+  `LRESULT(WPARAM,LPARAM)`.
 - `AccountWizard` meldete gelegentlich `C1041` (PDB-Zugriff) beim Parallelbau — ein
   Race, verschwindet beim erneuten Bauen. Falls es stört: `/FS` bzw. serieller Bau.
 
