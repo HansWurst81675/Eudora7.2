@@ -282,7 +282,7 @@ BOOL CFileBrowseView::GetTargetFolder(CPoint pt, LPTSTR FolderBuffer)
 		// or the source is directly inside the folder (no-op)
 		if (*FolderBuffer)
 		{
-			const FolderLen = _tcslen(FolderBuffer);
+			const size_t FolderLen = _tcslen(FolderBuffer);
 			int SourceLen;
 			for (LPCTSTR pSource = m_DropFiles; *pSource; pSource += SourceLen + 1)
 			{

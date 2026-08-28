@@ -3207,7 +3207,7 @@ CTranslatorManager::CTranslatorManager(short numArgs, ...)
 //================================================================
 // CTranslatorManager: this manages the dll's and all the translators
 // =======================================================================
-CTranslatorManager::LoadModule(const char *path, HINSTANCE libHandle, ModeTypeEnum theMode )
+BOOL CTranslatorManager::LoadModule(const char *path, HINSTANCE libHandle, ModeTypeEnum theMode )
 {
 	CTransAPI *ptrapi = NULL;
 	void FAR*globals = NULL;
