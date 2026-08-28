@@ -7,11 +7,15 @@ Stand: 2026-08-28 · Branch `vs2022-portierung-fixes`
 **17 von 18 Projekten der Solution bauen.** Einziger verbleibender Fehler ist `OT501`
 (Stingray Objective Toolkit), und der blockiert nur noch `Eudora.exe` selbst.
 
+QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert und handelt **TLS 1.3** aus. Die
+fertige `QCSSL.dll` liegt als einbaufertiges Paket in `Releases/1.0/`.
+
 ## Umgebung
 
 - Visual Studio 2022 Professional, Toolset v143 (MSVC 14.38.33130)
 - Windows SDK 10.0.22621.0
-- Konfiguration: `Debug|x86` (Release ist noch ungetestet)
+- Konfiguration: `Debug|x86`; für QCSSL zusätzlich `Release|x86` gebaut,
+  die übrigen Projekte sind im Release-Zweig ungetestet
 - Die IDE wird nicht gebraucht — gebaut wird mit MSBuild von der Kommandozeile:
 
 ```
@@ -29,7 +33,11 @@ Ein voller Durchlauf dauert ca. 1–4 Minuten (OpenSSL beim ersten Mal deutlich 
 `EuLang.lib`, `Imap.lib`, `OEImport.lib`, `OLImport.lib`, `QCSSL.lib`, `QCSocket.lib`,
 `QCUtils.lib`, `SearchEngine.lib`
 
+`Eudora71/OpenSSL3/lib`: `libcrypto.lib`, `libssl.lib` (OpenSSL 3.5.8 LTS, statisch)
+— das, wogegen QCSSL heute gebaut wird.
+
 `Eudora71/OpenSSL/out32`: `libeay32.lib`, `ssleay32.lib` (OpenSSL 0.9.7l, statisch)
+— Altbestand, wird nicht mehr in QCSSL gelinkt.
 
 ## Blocker: OT501 (Stingray Objective Toolkit)
 
@@ -54,54 +62,66 @@ Mögliche Wege:
 2. Objective Toolkit 5.0.1 Quellen beschaffen (Rogue Wave / Perforce).
 3. `Eudora.exe` zurückstellen und nur die DLLs pflegen (aktuell gewählter Weg).
 
-## Nächster Schritt: OpenSSL 3.5 LTS hinter QCSSL
+## Erledigt: OpenSSL 3.5.8 LTS hinter QCSSL
 
-Aktuell hängt an QCSSL **OpenSSL 0.9.7l von 2006** — maximal TLS 1.0. Damit kommt
-Eudora an keinem aktuellen Mailserver mehr vorbei.
+QCSSL hing an **OpenSSL 0.9.7l von 2006** — maximal TLS 1.0. Damit kam Eudora an
+keinem aktuellen Mailserver mehr vorbei. Die Umstellung auf **OpenSSL 3.5.8 LTS** ist
+abgeschlossen, `QCSSL.dll` handelt jetzt TLS 1.3 aus.
 
-Günstige Ausgangslage:
+Günstig war die Ausgangslage: der gesamte OpenSSL-Kontakt steckt in **einer Datei**,
+`Eudora71/QCSSL/src/QCSSLContext.cpp`, und QCSSL linkt OpenSSL **statisch** — die
+gebaute DLL braucht keine `libeay32.dll`/`ssleay32.dll` daneben und ist damit ein
+echtes Drop-in für eine bestehende Eudora-Installation.
 
-- Der gesamte OpenSSL-Kontakt steckt in **einer Datei**: `Eudora71/QCSSL/src/QCSSLContext.cpp`.
-- QCSSL linkt OpenSSL **statisch** — die gebaute `QCSSL.dll` hat keine Abhängigkeit
-  auf `libeay32.dll`/`ssleay32.dll` und ist damit ein echtes Drop-in für eine
-  bestehende Eudora-Installation (dann aber als *Release*-Build).
-- Nur drei Stellen greifen direkt auf OpenSSL-Interna zu:
-  `QCSSLContext.cpp:780` (`ctx->cert_store`), `qccertificate.cpp:43` und `:55` (`ctx->ex_data`).
-
-Zu ändern für 3.x:
+Umgestellt wurde:
 
 | Stelle | Problem | Lösung |
 |---|---|---|
-| `QCSSLContext.cpp:305–307` | eigene `BIO_METHOD`-Struktur (`BIO_s_workersocket`) | `BIO_METHOD` ist seit 1.1.0 opak → `BIO_meth_new()` + `BIO_meth_set_*()` |
-| `QCSSLContext.cpp:556` | `SSLv2_method()` | seit 1.1.0 entfernt → Zweig streichen |
-| `QCSSLContext.cpp:547/550` | `SSLv3_method()`, `TLSv1_method()` | vorhanden, aber meist wegkompiliert → auf `TLS_client_method()` + `SSL_CTX_set_min_proto_version()` umstellen |
-| `QCSSLContext.cpp:873` | `ERR_remove_state(0)` | seit 1.1.0 entfernt → ersatzlos streichen (Thread-Cleanup ist jetzt automatisch) |
-| `QCSSLContext.cpp:780` | `ctx->cert_store` | `SSL_CTX_get_cert_store()` |
-| `qccertificate.cpp:43/55` | `ctx->ex_data` | `X509_STORE_CTX_get_ex_data()` |
+| eigene `BIO_METHOD`-Struktur (`BIO_s_workersocket`) | `BIO_METHOD` ist seit 1.1.0 opak | `BIO_meth_new()` + `BIO_meth_set_*()` |
+| `SSLv2_method()` | seit 1.1.0 entfernt | Zweig gestrichen |
+| `SSLv3_method()`, `TLSv1_method()` | veraltet | `TLS_client_method()` + `SSL_CTX_set_min_proto_version()` |
+| `ERR_remove_state(0)` | seit 1.1.0 entfernt | ersatzlos gestrichen (Thread-Cleanup ist automatisch) |
+| `ctx->cert_store` | Struktur opak | `SSL_CTX_get_cert_store()` |
+| `qccertificate.cpp` `ctx->ex_data` | Struktur opak | `X509_STORE_CTX_get_ex_data()` |
 
-Geschätzt 60–100 geänderte Zeilen.
+SSLv2 und SSLv3 sind damit abgeschaltet, Mindestprotokoll ist TLS 1.2.
 
-### Offener Punkt beim OpenSSL-Bau
+### Bau von OpenSSL 3.5.8
 
-Quellen sind geprüft vorhanden (SHA256 gegen die Veröffentlichung abgeglichen):
-`openssl-3.5.8.tar.gz` → `a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2`
+Header und statische Libs liegen fertig im Repo unter `Eudora71/OpenSSL3`, damit sich
+QCSSL ohne einen 25-minütigen OpenSSL-Lauf übersetzen lässt. Der komplette Bauweg
+steht in [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
 
-`perl Configure VC-WIN32 no-shared no-asm no-tests no-docs` mit dem MSYS-Perl aus
-Git für Windows läuft **nicht durch** (>10 min ohne `configdata.pm`). OpenSSL verlangt
-für die VC-Targets ein Windows-natives Perl.
+Zwei Stolperfallen, die Zeit gekostet haben:
 
-Vor dem Weitermachen zu installieren:
+- OpenSSL verlangt für die VC-Targets ein **Windows-natives Perl** (Strawberry Perl).
+  Das MSYS-Perl aus Git für Windows läuft nicht durch.
+- Das CRT-Flag muss **`/MD`** sein, gegen OpenSSLs Vorgabe — sonst kollidiert die
+  Laufzeit mit der von MFC.
 
-- **Strawberry Perl** (https://strawberryperl.com) — zwingend
-- **NASM** — nur wenn ohne `no-asm` gebaut werden soll (schnellere Krypto)
+Konfiguration: `perl Configure VC-WIN32 no-shared no-asm no-tests no-docs no-apps /MD`
+Quellen-SHA256: `a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2`
 
-Alternative, falls das zu umständlich ist: ein fertiges Win32-x86-Paket mit Headern
-und statischen Libs (slproweb "Win32 OpenSSL", FireDaemon). DLLs allein reichen
-**nicht** — zum Kompilieren von QCSSL braucht es Header und Libs derselben Version.
+### Offener Punkt: veraltete Cipher-Liste
 
-Danach: `Eudora71/QCSSL/QCSSL.vcxproj` von `..\OpenSSL\inc32` / `..\OpenSSL\out32`
-auf das neue Verzeichnis umstellen und `libeay32.lib;ssleay32.lib` durch
-`libssl.lib;libcrypto.lib` ersetzen.
+`SetCipherSuites()` in `QCSSLContext.cpp:517` setzt weiterhin die fest verdrahtete
+Liste von 2006 — RC4, DES, IDEA, RC2 und EXPORT-Suiten. Der Kommentar darüber sagt,
+der Aufruf sei gleichbedeutend mit den OpenSSL-Vorgaben; das galt 2006 und gilt heute
+**nicht mehr**. In OpenSSL 3.x sind die meisten dieser Suiten gar nicht mehr gebaut,
+übrig bleiben nur AES-CBC-Suiten mit SHA-1.
+
+Folge, noch zu bestätigen: **TLS 1.3 funktioniert** (dort gilt eine eigene, per
+`SSL_CTX_set_ciphersuites()` verwaltete Liste, die unberührt bleibt), aber ein
+Server, der nur **TLS 1.2** kann und AEAD-Suiten verlangt, dürfte den Handshake
+ablehnen. Der Test gegen einen echten Mailserver muss das zeigen.
+
+Naheliegende Lösung: `SetCipherSuites()` nicht mehr aufrufen und OpenSSL seine
+Vorgaben verwenden lassen — genau das, was der Kommentar ursprünglich meinte.
+
+## Nächster Schritt
+
+1. `QCSSL.dll` aus `Releases/1.0/` gegen einen echten Mailserver testen (siehe oben).
+2. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
 
 ## Angewandte Korrekturen (Kategorien)
 

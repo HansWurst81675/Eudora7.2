@@ -15,6 +15,11 @@ Fertig gebaut werden: `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`,
 
 `Eudora.exe` selbst linkt noch **nicht** — siehe [Blocker](#blocker-ot501).
 
+`QCSSL.dll` ist inzwischen gegen **OpenSSL 3.5.8 LTS** gebaut und beherrscht TLS 1.3.
+Als einbaufertiges Paket liegt sie in [Releases/1.0/](Releases/1.0/README.md) — sie
+ersetzt in einer bestehenden Eudora-7.1-Installation genau eine Datei. Ein Test gegen
+einen echten Mailserver steht noch aus.
+
 ```
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86 -m
 ```
@@ -40,6 +45,11 @@ deaktiviert, SafeSEH für QCSSL aus, `/WX` aus dem OpenSSL-Makefile.
 
 Ausführlich mit Begründungen: **[PORTIERUNG.md](PORTIERUNG.md)**
 
+Getrennt davon steht die Portierung von QCSSL auf die **OpenSSL-3.x-API**: 0.9.7l von
+2006 kannte noch offene Strukturen, 3.x kapselt sie hinter Zugriffsfunktionen. Betroffen
+waren vor allem die BIO-Schicht und `QCSSLContext.cpp`. SSLv2 und SSLv3 sind dabei
+abgeschaltet, Mindestprotokoll ist TLS 1.2.
+
 ## Blocker: OT501
 
 `Eudora.exe` linkt gegen **Stingray Objective Toolkit 5.0.1**, eine kommerzielle
@@ -60,10 +70,11 @@ der zu ersetzenden Oberfläche: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/IN
 | Thema | Stand |
 |---|---|
 | OT501-Ersatzschicht | Bestandsaufnahme fertig, Implementierung offen |
-| OpenSSL 3.5 statt 0.9.7l (2006) | geplant — bringt TLS 1.3, betrifft nur `QCSSLContext.cpp` |
+| OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS, TLS 1.3 aktiv |
+| QCSSL gegen echten Mailserver prüfen | offen — bisher nur Bau und Abhängigkeiten geprüft |
 | Zeichensatz-Darstellung | Ursache gefunden, Fix in `utils.cpp` vorbereitet |
-| Release-Konfiguration | ungetestet |
-| Build-Artefakte im Repo | aus dem Erstimport mitversioniert, sollten raus |
+| Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
+| Build-Artefakte im Repo | `.gitignore` greift jetzt; die mitversionierten Altbestände müssen noch aus dem Index |
 
 ## Ergänzungen gegenüber der CHM-Freigabe
 
@@ -71,6 +82,11 @@ der zu ersetzenden Oberfläche: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/IN
   [microsoft/MAPIStubLibrary](https://github.com/microsoft/MAPIStubLibrary) (MIT).
   Nötig, weil `mapix.h` und `mapiutil.h` seit dem Windows-8-SDK nicht mehr
   im Windows SDK enthalten sind.
+- `Eudora71/OpenSSL3` — Header und statische Bibliotheken von **OpenSSL 3.5.8 LTS**
+  (`libcrypto.lib`, `libssl.lib`), damit sich `QCSSL` ohne einen 25-minütigen
+  OpenSSL-Lauf übersetzen lässt. Bauweg und Prüfsumme stehen in
+  [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md). Das alte `Eudora71/OpenSSL`
+  (0.9.7l) bleibt vorerst liegen, weil andere Projekte noch dagegen bauen.
 - `Eudora71/Eudora/utils.cpp` — UTF-8-Übersetzungstabelle von 27 auf 123 Einträge
   erweitert (deutsche Umlaute und Latin-1), nach
   [HansWurst81675/Eudora_patches](https://github.com/HansWurst81675/Eudora_patches)

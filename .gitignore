@@ -1,6 +1,22 @@
- .vs/ 
-*.db 
-Bin/ 
-Lib/ 
-**/Debug/ 
+# Visual-Studio-Arbeitsdaten
+.vs/
+*.db
+
+# Build-Ausgaben
+Bin/
+Lib/
+**/Debug/
 **/Release/
+
+# OpenSSL 0.9.x: Testprogramme aus dem alten Build
+# (die gepflegten Libs liegen in Eudora71/OpenSSL3/)
+Eudora71/OpenSSL/out32/
+
+# Compiler-Zwischendateien (Objekte, Browse-Info, PCH, Debug-Datenbanken)
+# Hinweis: *.lib fehlt hier absichtlich - die OpenSSL3-Libs sind eingecheckt.
+*.obj
+*.sbr
+*.pch
+*.idb
+*.ilk
+*.exp
