@@ -548,37 +548,51 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 		return NULL;
 	}
 
+	//
+	//	Seit OpenSSL 1.1.0 gibt es nur noch TLS_client_method(); die
+	//	versionsgebundenen Varianten SSLv2_method/SSLv3_method/TLSv1_method sind
+	//	entfernt bzw. wegkompiliert. Die Version wird jetzt nachtraeglich ueber
+	//	SSL_CTX_set_min_proto_version() eingegrenzt.
+	//
+	//	SSLv2 und SSLv3 sind seit Jahren gebrochen und werden nicht mehr
+	//	angeboten - die betreffenden Faelle landen auf TLS 1.2 als Untergrenze.
+	//
+	int		iMinVersion = TLS1_2_VERSION;
+
 	switch (pSSLReference->m_ProtocolInfo.m_ProtocolVersion)
 	{
 	case 0:
-		sslmethod = SSLv23_method();
-		break;
 	case 1:
-		sslmethod = SSLv23_method();
-		break;
-	case 2:
-		sslmethod = SSLv3_method();
-		break;
-	case 3:
-		sslmethod = TLSv1_method();
-		break;
 	case 4:
-		sslmethod = SSLv23_method();
-		break;
-	case 5:
-		sslmethod = SSLv2_method();
-		break;
 	case 6:
-		sslmethod = SSLv23_method();
-		break;
 	case 7:
-		sslmethod = SSLv23_method();
+		//	"automatisch" - alles ab TLS 1.2
+		iMinVersion = TLS1_2_VERSION;
+		break;
+	case 2:	//	frueher SSLv3
+	case 5:	//	frueher SSLv2
+		//	Nicht mehr unterstuetzt. Statt die Verbindung abzulehnen, wird auf
+		//	die niedrigste noch vertretbare Version gegangen.
+		iMinVersion = TLS1_2_VERSION;
+		break;
+	case 3:	//	frueher TLSv1
+		iMinVersion = TLS1_VERSION;
 		break;
 	default:
 		ConnectionInfo *pConnectionInfo = (ConnectionInfo*) pSSLReference->m_pConnectionManagerInfo;
 		pConnectionInfo->m_Outcome.AddComments(CResString(IDS_ERR_VERSIONINVALID));
 		break;
 	}
+
+	sslmethod = TLS_client_method();
+
+	SSL_CTX	*pCtx = SSL_CTX_new(sslmethod);
+	if (pCtx)
+	{
+		SSL_CTX_set_min_proto_version(pCtx, iMinVersion);
+	}
+	return pCtx;
+}
 	return SSL_CTX_new(sslmethod);
 }
 
@@ -790,11 +804,11 @@ bool BeginQCSSLSession(QCSSLReference *pSSLReference)
 	// The certificate verification callback needs two pieces of data: the QCSSLReference object and
 	// the user store.  Set these objects as extra data for the cert store so they can be retrieved
 	// inside the callback.
-	X509_STORE			*pX509Store = pSSL->ctx->cert_store;
+	X509_STORE			*pX509Store = SSL_CTX_get_cert_store(SSL_get_SSL_CTX(pSSL));
 	if (pX509Store)
 	{
-		CRYPTO_set_ex_data(&(pX509Store->ex_data), 0, pSSLReference);
-		CRYPTO_set_ex_data(&(pX509Store->ex_data), 1, &g_certstoreUserStore);
+		X509_STORE_set_ex_data(pX509Store, 0, pSSLReference);
+		X509_STORE_set_ex_data(pX509Store, 1, &g_certstoreUserStore);
 	}
 
 	// Now that everything is created, set the parameters passed to us.
@@ -883,7 +897,8 @@ bool EndQCSSLSession(void *pSSL)
 		// same as this one.  The note suggests that they have fixed the leak so either I am missing
 		// something or they are.  For now I am giving up on try to fix this last leak.  In the meantime,
 		// for each SSL session Eudora will leak 482 bytes which isn't the end of the world. -dwiggins
-		ERR_remove_state(0);
+		//	ERR_remove_state() ist seit OpenSSL 1.1.0 entfernt - das Aufraeumen
+		//	der Fehlerzustaende pro Thread erledigt die Bibliothek jetzt selbst.
 
 		SSL_CTX		*pSSLCtx = (SSL_CTX*)SSL_get_SSL_CTX((SSL*)pSSL);
 
