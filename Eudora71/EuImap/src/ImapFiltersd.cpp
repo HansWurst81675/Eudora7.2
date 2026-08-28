@@ -1599,7 +1599,7 @@ int CImapFilterActions::PerformAction(CTocDoc *pTocDoc,
 		if (iNumSavedXferActions > 0)
 		{
 			// Put back the actions into the filter.
-			for (i = 0; i < iNumSavedXferActions; i++)
+			for (int i = 0; i < iNumSavedXferActions; i++)
 			{
 				int			 iActionIndex = iXferActions[i];
 
@@ -1709,7 +1709,7 @@ int CImapFilterActions::PerformAction(CTocDoc *pTocDoc,
 	if (iNumSavedXferActions > 0)
 	{
 		// Put back the actions into the filter.
-		for (i = 0; i < iNumSavedXferActions; i++)
+		for (int i = 0; i < iNumSavedXferActions; i++)
 		{
 			int		 iActionIndex = iXferActions[i];
 

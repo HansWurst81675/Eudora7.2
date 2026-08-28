@@ -97,6 +97,7 @@ private:
 	// The iterator.
 	//
 	SearchCriteriaList::iterator m_Iterator;
+	BOOL					 m_bIteratorValid;	// frueher: m_Iterator == NULL
 };
 
 

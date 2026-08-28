@@ -1461,7 +1461,7 @@ CAttacher::~CAttacher()
 }
 
 // =======================================================================
-CAttacher::GetIcon(HICON &icn)
+BOOL CAttacher::GetIcon(HICON &icn)
 {
 	if (m_MenuItem.icon && *m_MenuItem.icon)
 	{
@@ -1565,7 +1565,7 @@ CSpecial::CSpecial(CTransAPI *ptlAPI, long id) : CAttacher(ptlAPI, id, FALSE)
 }
 
 // =======================================================================
-CSpecial::GetIcon(HICON &icn)
+BOOL CSpecial::GetIcon(HICON &icn)
 {
 	if (m_MenuItem.icon && *m_MenuItem.icon)
 	{
