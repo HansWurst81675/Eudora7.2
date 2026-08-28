@@ -64,14 +64,34 @@ Eudora baut darauf sein komplettes Fenstergerüst auf — `CMainFrame` erbt übe
 `QCWorkbook` von `SECWorkbook`. Insgesamt 23 Klassen, 77 aufgerufene Methoden,
 43 betroffene Quelldateien.
 
-**Gewählter Weg:** eine eigene Ersatzschicht auf modernes MFC. Bestandsaufnahme
-der zu ersetzenden Oberfläche: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md)
+**Gewählter Weg:** eine eigene Ersatzschicht auf modernes MFC.
+
+Die Analyse der vier Klassenfamilien ist abgeschlossen und hat den Umfang deutlich
+verkleinert. Die 77 Methoden sind nicht 77 Aufgaben: viele sind gar keine
+Stingray-Methoden, sondern geerbte MFC-Methoden, die Eudora nur qualifiziert aufruft
+(in der Workbook-Familie sind von 16 gelisteten nur 6 überhaupt in Stingray-Headern
+deklariert); andere werden nie aufgerufen, weil Qualcomm sie durch eigene Varianten
+ersetzt hat.
+
+Zwei Funde verkürzen den Weg besonders:
+
+- **Die Registerkartenleiste ist verzichtbar.** Sie ist eine zur Laufzeit umschaltbare
+  Anwendereinstellung (`mainfrm.cpp:1025`), jede Auswertung steht hinter
+  `m_bWorkbookMode`. Ein schlichter `CMDIFrameWnd` reicht für ein startendes
+  `Eudora.exe` — damit entfällt der komplette GDI-Zeichencode, der teuerste Posten.
+- **`SECStatusBar` ist eine 1:1-Kopie von MFCs `CStatusBar`** mit anderer Basisklasse.
+  Ein `typedef` erledigt alle 11 Methoden.
+
+Bestandsaufnahme: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md) —
+Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
+**[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**
 
 ## Offene Themen
 
 | Thema | Stand |
 |---|---|
-| OT501-Ersatzschicht | Bestandsaufnahme fertig, Implementierung offen |
+| OT501-Ersatzschicht | Analyse fertig, Stufenplan steht, Implementierung offen |
+| `Eudora.vcxproj` eigene Fehler | 269 — 74 — **25**; davon 4 fehlende Quelldateien |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 ist möglich, im Feld noch nicht nachgemessen |
 | QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll noch zu protokollieren |
 | Aktueller `rootcerts.p7b` für das Release | offen — Eudoras Speicher ist von 2005, QCSSL prüft nur gegen diese Datei |

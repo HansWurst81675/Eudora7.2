@@ -154,6 +154,10 @@ Zu tun: einen aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen.
 2. Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen — sonst ist das Paket
    nur auf Installationen mit HermesSSL vollständig.
 3. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
+   Die Familienanalyse ist fertig, der Stufenplan steht in
+   [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md). Reihenfolge: Stufe 0 (typedef
+   für `SECStatusBar`, Stub für `SECTipOfDay`), Stufe 1 (MDI ohne Registerkarten —
+   Ziel: ein startendes `Eudora.exe`), dann Andockfamilie, Werkzeugleisten, Bilder.
 
 ## Angewandte Korrekturen (Kategorien)
 
