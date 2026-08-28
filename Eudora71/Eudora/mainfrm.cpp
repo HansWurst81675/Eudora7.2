@@ -8659,7 +8659,7 @@ void CMainFrameOleDropTarget::OnDragLeave(CWnd* pWnd)
 }
 
 
-UINT CMainFrame::OnNcHitTest(CPoint point) 
+LRESULT CMainFrame::OnNcHitTest(CPoint point) 
 {
 	ASSERT(m_pControlBarManager != NULL);
 	ASSERT_KINDOF(SECToolBarManager, m_pControlBarManager);

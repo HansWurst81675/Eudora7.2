@@ -80,7 +80,7 @@ BOOL MIMEMap::Find(MIMEState* ms)
 	AttributeElement* AE = hd->GetAttribute(CRString(IDS_MIME_NAME));
 	if (!AE)
 		AE = hd->GetAttribute(CRString(IDS_MIME_CONTENT_DISP_FILENAME));
-	if (AE && (dot = strrchr(AE->m_Value, '.')))
+	if (AE && (dot = const_cast<LPTSTR>(strrchr(AE->m_Value, '.'))))
 	{
 		strncpy(m_Suffix, dot + 1, sizeof(m_Suffix) - 1);
 		m_Suffix[sizeof(m_Suffix) - 1] = 0;
