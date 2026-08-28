@@ -2115,7 +2115,7 @@ BOOL CHeaderView::DoFindFirst(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 		//
 		// Do the search...
 		//
-		char* p_match = strstr(p_msgtext, search_str);
+		char* p_match = const_cast<char *>(strstr(p_msgtext, search_str));
 		if (p_match)
 		{
 			//
@@ -2206,7 +2206,7 @@ BOOL CHeaderView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWholeW
 		//
 		// Do the search...
 		//
-		char* p_match = strstr(p_msgtext, search_str);
+		char* p_match = const_cast<char *>(strstr(p_msgtext, search_str));
 		if (p_match)
 		{
 			//
@@ -2274,7 +2274,7 @@ BOOL CHeaderView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWholeW
 		//
 		// Do the search...
 		//
-		char* p_match = strstr(p_msgtext, search_str);
+		char* p_match = const_cast<char *>(strstr(p_msgtext, search_str));
 		if (p_match)
 		{
 			//

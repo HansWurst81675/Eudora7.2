@@ -4845,7 +4845,7 @@ void CMainFrame::GetAttachmentLine(LPCTSTR cmdLine, CString& csAttachLine)
 	// build up attachments line (disregard folders)
 	while (!DONE)
 	{
-		if (c = strchr(cmdLine, ' '))
+		if (c = const_cast<char *>(strchr(cmdLine, ' ')))
 			*c++ = 0;
 		else
 			DONE = TRUE;
@@ -4855,7 +4855,7 @@ void CMainFrame::GetAttachmentLine(LPCTSTR cmdLine, CString& csAttachLine)
 		{
 			*path = 0;
 			char *c = NULL;
-			c = strrchr(cmdLine, '\\');
+			c = const_cast<char *>(strrchr(cmdLine, '\\'));
 			
 			// Make sure we got a full path name
 			if (c)

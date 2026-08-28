@@ -486,7 +486,7 @@ int URIMap::BuildURIMap( const char * pMessage, bool bFreePrevious )
 	// first look for X-EmbeddedContent headers
 	const char* pTmp = pMessage;
 	const char* pBody = FindBody(pTmp);
-	while ( pIt = strstr( pTmp, ECHeader ) )
+	while ( pIt = const_cast<char *>(strstr( pTmp, ECHeader )) )
 	{
 		// Skip by X-EmbeddedContent headers found in the body
 		if (pIt >= pBody)
@@ -567,7 +567,7 @@ int URIMap::BuildURIMap( const char * pMessage, bool bFreePrevious )
 
 	// now look for "Embedded content" trailers
 	pTmp = pMessage;
-	while ( pIt = strstr( pTmp, ECTrailer ) )
+	while ( pIt = const_cast<char *>(strstr( pTmp, ECTrailer )) )
 	{
 		// verify and parse the parameters
 		// expects "Embedded content \path %x,%x,%x,%x\"

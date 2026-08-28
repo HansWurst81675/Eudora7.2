@@ -161,7 +161,7 @@ void CListCtrlEx::DrawItemLabel(CDC *pDC,
 
 			if ((cFirstChar >= '0') && (cFirstChar <= '9'))
 			{
-				char *pColon = strchr(LPCSTR(LabelStr), ':');
+				char *pColon = const_cast<char *>(strchr(LPCSTR(LabelStr), ':'));
 
 				COLORREF cCompleted = m_GraphCompletedColor, cRemain = m_GraphRemainColor;
 

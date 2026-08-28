@@ -168,7 +168,10 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
 3. **Alte for-Scope-Regeln** — Schleifenzähler, die nach der Schleife weiterbenutzt
    wurden (`oemh`, `pszEnd`, `lNumRead`, `nSearch`, `i`), vorgezogen bzw. lokalisiert
 4. **`const char*`-Rückgaben** — `strchr`/`strrchr`/`strstr` haben in C++ eine
-   const-Überladung; rund 20 Stellen mit `const_cast` versehen
+   const-Überladung, die bei `const char*`-Eingabe auch `const char*` liefert. Kein
+   Compilerflag hilft, das ist Überladungsauflösung. Durchgehend mit `const_cast<char *>`
+   um den Aufruf versehen: erst rund 20 Stellen, dann 47 weitere in 32 Dateien —
+   das allein brachte `Eudora.vcxproj` von 74 auf 25 Fehler.
 5. **STL-Modernisierung** — `std::auto_ptr` → `std::unique_ptr<char[]>`;
    Komparator-`operator()` const (std::set); Iteratoren sind keine Zeiger mehr
    (`= NULL` / `!= NULL` ersetzt, u.a. durch `m_bIteratorValid` in `searchutil`)

@@ -1053,7 +1053,7 @@ BOOL CTLAddress::CreateAddressList(const char *to,
 	if (rawHeaders && *rawHeaders)
 	{
 		// Just grab off the header of the message
-		char *endOfHeader = strstr(rawHeaders, "\r\n\r\n");
+		char *endOfHeader = const_cast<char *>(strstr(rawHeaders, "\r\n\r\n"));
 		int len = 0;
 		if (endOfHeader)
 			len = endOfHeader - rawHeaders;
@@ -3692,7 +3692,7 @@ CTranslatorManager::GetSortedTranslators(const char* sel, const long context /*=
             sel += 1;
 
         ModuleID = atoi(sel);
-        dot = strchr(sel,'.');
+        dot = const_cast<char *>(strchr(sel,'.'));
 
         if (dot)
         {
@@ -3703,8 +3703,8 @@ CTranslatorManager::GetSortedTranslators(const char* sel, const long context /*=
             break;
 
 
-        comma = strchr(sel,',');
-        space = strchr(sel,' ');
+        comma = const_cast<char *>(strchr(sel,','));
+        space = const_cast<char *>(strchr(sel,' '));
         CTranslator *tltr = GetTranslator(ModuleID, TransID);
 
         if ( tltr && tltr->ModeNeeded()<=forMode ) {
@@ -3779,7 +3779,7 @@ int CTranslatorManager::ValidateTransIDs
     
     while ( sel ) {
         ModuleID = atoi( sel );
-        dot = strchr( sel,'.' );
+        dot = const_cast<char *>(strchr( sel,'.' ));
 
         if ( dot ) {
             sel = dot + 1;
@@ -3788,8 +3788,8 @@ int CTranslatorManager::ValidateTransIDs
         else
             break;
 
-        comma = strchr( sel, ',' );
-        space = strchr( sel, ' ' );
+        comma = const_cast<char *>(strchr( sel, ',' ));
+        space = const_cast<char *>(strchr( sel, ' ' ));
         CTranslator *tltr = GetTranslator( ModuleID, TransID );
 
         if ( tltr && (tltr->GetFlags() & context) ) {
@@ -4188,7 +4188,7 @@ long CTranslatorManager::XLateDisplay(QCProtocol* pXLateProtocol, CSummary * pSu
 
 	// Parse out filename the translator  ( drv:\path\filename.ems <xxx.xxx> )
 	char *tltrID = NULL;
-	char *space = strstr(inFileCmd,".ems ");
+	char *space = const_cast<char *>(strstr(inFileCmd,".ems "));
 	if (space && (space += 4))
 	{
 		*space = 0;
@@ -4316,7 +4316,7 @@ long CTranslatorManager::XLateDisplay(QCProtocol* pXLateProtocol, CSummary * pSu
 				if (*pScan == '"')
 				{
 					pScan++;
-					pEndPath = strchr(pScan, '"');
+					pEndPath = const_cast<char *>(strchr(pScan, '"'));
 
 					if (pEndPath)
 					{
@@ -4344,7 +4344,7 @@ long CTranslatorManager::XLateDisplay(QCProtocol* pXLateProtocol, CSummary * pSu
 					
 					do
 					{
-						pEndPath = strchr(pScan, '\n');
+						pEndPath = const_cast<char *>(strchr(pScan, '\n'));
 
 						if (pEndPath)
 						{
