@@ -8,8 +8,8 @@ Stand: 2026-08-28 · Branch `vs2022-portierung-fixes`
 Toolkit; die Quellen sind nicht freigegeben) und `Eudora` selbst — `Eudora.vcxproj`
 kompiliert noch nicht. Beides blockiert `Eudora.exe`.
 
-`Eudora.exe` hat neben OT501 noch **eigene** Fehler: 4 (von ursprünglich 269),
-gemessen an Commit `ba3d2ee`. Eudoras eigener Code ist damit fehlerfrei.
+`Eudora.exe` **kompiliert vollstaendig** — alle 269 urspruenglichen Compilerfehler sind
+behoben. Es scheitert jetzt allein am Linker: `LNK1104: OTA50D.LIB kann nicht geoeffnet werden`.
 Vier davon sind Quelldateien, deren Header vorliegen, deren Implementierung aber in
 der Freigabe fehlt (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`).
 Gemessen mit `-p:BuildProjectReferences=false`, also ohne OT501.
@@ -211,7 +211,7 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
    Compilerflag hilft, das ist Überladungsauflösung. Durchgehend mit `const_cast<char *>`
    um den Aufruf versehen: erst rund 20 Stellen, dann 49 weitere in 22 Quelldateien
    (Commit `2fb1566`) — das allein brachte `Eudora.vcxproj` von 74 auf 25 Fehler.
-   Heute stehen 4 (Commit `ba3d2ee`), und alle vier sind fehlende Quelldateien.
+   Heute steht der Compilerfehlerstand bei 0 - Eudora.exe uebersetzt vollstaendig.
 5. **STL-Modernisierung** — `std::auto_ptr` → `std::unique_ptr<char[]>`;
    Komparator-`operator()` const (std::set); Iteratoren sind keine Zeiger mehr
    (`= NULL` / `!= NULL` ersetzt, u.a. durch `m_bIteratorValid` in `searchutil`)

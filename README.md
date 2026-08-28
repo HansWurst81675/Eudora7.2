@@ -103,7 +103,7 @@ Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
 | Thema | Stand |
 |---|---|
 | OT501-Ersatzschicht | Analyse fertig, Stufenplan steht, Implementierung offen |
-| `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — **4** (gemessen an Commit `ba3d2ee`). Eudoras eigener Code ist fehlerfrei; die vier verbliebenen sind Quelldateien, die in der Freigabe fehlen |
+| `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig; es scheitert jetzt allein am Linker, dem `OTA50D.LIB` fehlt |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 ist möglich, im Feld noch nicht nachgemessen |
 | QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll noch zu protokollieren |
 | Aktueller `rootcerts.p7b` für das Release | offen — Eudoras Speicher ist von 2005, QCSSL prüft nur gegen diese Datei |
