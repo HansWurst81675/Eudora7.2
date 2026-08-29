@@ -283,60 +283,98 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
   erweitert (deutsche Umlaute + Latin-1 U+00A0..U+00FF), Patch aus
   https://github.com/HansWurst81675/Eudora_patches
 
-## Zwei Fehler in der Zeichentabelle (durch Unit-Tests belegt)
+## Zwei Fehler in der Zeichentabelle - gefunden und behoben
 
 `Eudora71/Tests` prueft die Uebersetzungstabelle aus `utils.cpp` gegen CP1252,
 ISO-8859-15 und RFC 3629. Die Erwartungswerte stammen aus den Spezifikationen,
-nicht aus dem getesteten Code. Stand: 23 Tests, 19 bestanden, 4 fehlgeschlagen.
+nicht aus dem getesteten Code. Die Tests haben zwei echte Fehler nachgewiesen
+(`4c2f614`, damals 19 von 23 gruen); beide sind jetzt behoben, **23 von 23 Tests
+sind gruen**.
 
-### 1. Sieben Zuordnungen zeigen auf falsche Codepunkte (Altbestand)
+### 1. Sieben Zuordnungen zeigten auf falsche Codepunkte (Altbestand)
 
-| Eintrag | Quellfolge | ist | sollte |
-|---|---|---|---|
-| 21 | `E2 80 B2` = U+2032 | Ziel 0x92 = U+2019 | `E2 80 99` |
-| 22 | `E2 80 B3` = U+2033 | Ziel 0x94 = U+201D | `E2 80 9D` |
-| 23 | `E2 80 B5` = U+2035 | Ziel 0x91 = U+2018 | `E2 80 98` |
-| 24 | `E2 80 B6` = U+2036 | Ziel 0x93 = U+201C | `E2 80 9C` |
-| 7 | `C5 BF` = U+017F | Ziel 0x83 = U+0192 | `C6 92` |
-| 8 | `CB 82` = U+02C2 | Ziel 0x8B = U+2039 | `E2 80 B9` |
-| 9 | `CB 83` = U+02C3 | Ziel 0x9B = U+203A | `E2 80 BA` |
+| Quellfolge war | = | Ziel | Ziel ist in CP1252 | Quellfolge ist jetzt |
+|---|---|---|---|---|
+| `C5 BF` | U+017F LATIN SMALL LETTER LONG S | 0x83 | U+0192 f mit Haken | `C6 92` |
+| `CB 82` | U+02C2 MODIFIER LETTER LEFT ARROWHEAD | 0x8B | U+2039 einfaches Anfuehrungszeichen links | `E2 80 B9` |
+| `CB 83` | U+02C3 MODIFIER LETTER RIGHT ARROWHEAD | 0x9B | U+203A einfaches Anfuehrungszeichen rechts | `E2 80 BA` |
+| `E2 80 B2` | U+2032 PRIME | 0x92 | U+2019 Apostroph / Anfuehrung rechts | `E2 80 99` |
+| `E2 80 B3` | U+2033 DOUBLE PRIME | 0x94 | U+201D doppelte Anfuehrung rechts | `E2 80 9D` |
+| `E2 80 B5` | U+2035 REVERSED PRIME | 0x91 | U+2018 Anfuehrung links | `E2 80 98` |
+| `E2 80 B6` | U+2036 REVERSED DOUBLE PRIME | 0x93 | U+201C doppelte Anfuehrung links | `E2 80 9C` |
 
-Vier davon sind die **typografischen Anfuehrungszeichen**. In der Tabelle stehen
+Vier davon sind die **typografischen Anfuehrungszeichen**. In der Tabelle standen
 die Prime-Zeichen (U+2032/2033/2035/2036) statt der Anfuehrungszeichen
 (U+2018/2019/201C/201D) - ein Uebertragungsfehler, `B2/B3/B5/B6` statt
-`98/99/9C/9D`.
+`98/99/9C/9D`. Die drei uebrigen sind vom selben Muster: ein optisch aehnliches,
+aber anderes Zeichen.
 
-**Folge:** Anfuehrungszeichen und Apostrophe aus UTF-8-Post werden gar nicht
-uebersetzt und erscheinen als `a-Tilde-Euro-TM`. Das ist der haeufigste
-nicht-ASCII-Fall in echter Post - haeufiger als Umlaute.
+**Folge vor der Reparatur:** Anfuehrungszeichen und Apostrophe aus UTF-8-Post
+wurden gar nicht uebersetzt und erschienen als `a-Tilde-Euro-TM`. Das ist der
+haeufigste nicht-ASCII-Fall in echter Post - haeufiger als Umlaute.
 
-Diese sieben Eintraege sind **Originalcode von QUALCOMM**. Der Umlaut-Patch aus
+Diese sieben Eintraege waren **Originalcode von QUALCOMM**. Der Umlaut-Patch aus
 `d03007f` hat sie nicht verursacht, aber auch nicht mitrepariert.
+
+Die Zielbytes blieben unveraendert; geaendert wurden nur die Quellfolgen. Damit
+sind alle 35 CP1252-Zeichenliterale der Datei byteweise dieselben wie vorher -
+nachgemessen, die Datei ist Latin-1 mit gemischten Zeilenenden.
 
 ### 2. Doppelersetzung durch den neuen C3-Block (Regression aus d03007f)
 
-`ISOTranslate` laeuft die Tabelle der Reihe nach durch und ruft
-`CString::Replace`. Der Eintrag `C3 83 -> 0xC3` erzeugt ein **neues**
-Fuehrungsbyte 0xC3, das mit dem Folgebyte eine Folge bildet, die ein spaeterer
-Eintrag (`C3 A9 -> 0xE9`) noch einmal ersetzt. Aus zwei Zeichen wird eines:
+`ISOTranslate` lief die Tabelle der Reihe nach durch und rief fuer jede der 123
+Zeilen `CString::Replace` auf den **ganzen** Text. Das ist nicht sicher: eine
+Ersetzung erzeugt ein 1252-Byte, und dieses Byte kann sich mit seinem Nachbarn zu
+einer Folge verbinden, die eine **spaetere** Zeile ein zweites Mal ersetzt. Aus
+zwei Zeichen wurde eines:
 
     Eingabe C3 83 C2 A9  ->  erwartet C3 A9, erhalten E9
 
-**50 von 13456 geprueften Zeichenpaaren** brechen so, alle mit U+00C3 als erstem
-Zeichen. Vor `d03007f` war das unmoeglich: die alten 27 Eintraege erzeugten nur
-Bytes 0x80..0x9F, nie ein Fuehrungsbyte. Erst der neue C3-Block erzeugt
-0xC0..0xFF. Praktisch selten (U+00C3 steht meist vor ASCII, etwa "Sao"), die
-Invariante ist aber verletzt.
+Im Beispiel steht U+00C3 vor U+00A9. Erst lief Zeile `C2 A9 -> A9`, dann Zeile
+`C3 83 -> C3`; die dabei entstandene Folge `C3 A9` wurde von der viel spaeteren
+Zeile `C3 A9 -> E9` aufgefressen. **50 von 13456 geprueften Zeichenpaaren**
+brachen so, alle mit U+00C3 als erstem Zeichen.
 
-### Was bestanden hat
+Vor `d03007f` war das unmoeglich: die alten 27 Eintraege erzeugten nur Bytes
+0x80..0x9F, nie ein Fuehrungsbyte. Erst der neue C3-Block erzeugt 0xC0..0xFF.
+
+**Behoben** durch einen einzigen Durchgang von links nach rechts ueber den Puffer
+(`utils.cpp`, `ISOTranslate`): an jeder Stelle wird die laengste passende
+Quellfolge gesucht, ihr Zielbyte geschrieben und um die Laenge der Quellfolge
+weitergerueckt. Jedes geschriebene Byte liegt hinter der Leseposition und wird nie
+wieder angesehen - damit haengt die Uebersetzung eines Zeichens nicht mehr davon
+ab, welches Zeichen daneben steht. Genau das ist die Bedeutung einer
+Zeichensatzwandlung, und genau das prueft der Test
+"Zeichen werden unabhaengig von ihren Nachbarn uebersetzt".
+
+Nebenbei entfaellt die Umkopiererei ueber ein `CString` samt `strncpy`; die
+Ausgabe ist nie laenger als die Eingabe, es wird direkt im Puffer gearbeitet.
+Der Durchgang laeuft ausserdem ueber die volle Laenge `lSize` statt bis zum
+ersten Nullbyte - eingebettete Nullbytes schneiden den Text nicht mehr ab.
+
+### Was schon vorher bestanden hat
 
 Alle Makrowerte, keine Luecke in den 123 Eintraegen, alle Quellfolgen gueltiges
 UTF-8, keine Doppeleintraege, und - wichtig fuer `d03007f` - **Latin-1
-U+00A0..U+00FF ist vollstaendig und wertgleich**. Der Umlaut-Zusatz ist als
-Datensatz korrekt; nur die Reihenfolgewirkung stimmt nicht.
+U+00A0..U+00FF ist vollstaendig und wertgleich**. Der Umlaut-Zusatz war als
+Datensatz von Anfang an korrekt.
 
-Nichts davon ist repariert. Beide Fehler aendern die Darstellung von Post und
-gehoeren entschieden, nicht nebenbei behoben.
+### Was die Tabelle weiterhin nicht kann (offen, Entscheidung steht aus)
+
+`MAX_CHARS_TO_TRANS` ist 3. Zeichen ausserhalb der BMP - Emoji, U+1F600 und
+aufwaerts - sind in UTF-8 vier Byte lang und koennen deshalb prinzipiell nicht
+abgebildet werden; sie bleiben als rohe UTF-8-Bytes stehen und erscheinen als
+Zeichensalat. Dasselbe gilt fuer alle drei- und zweibyteigen Zeichen ohne
+CP1252-Entsprechung, etwa kyrillisch oder griechisch.
+
+**Vorschlag zur Entscheidung:** Das Tabellenverfahren liesse sich vollstaendig
+durch den Windows-Codepage-Wandler ersetzen -
+`MultiByteToWideChar(CP_UTF8, ...)` gefolgt von `WideCharToMultiByte(1252, ...,
+"?", ...)`. Das deckt den gesamten Unicode-Bereich ab, ersetzt Nichtabbildbares
+durch ein Fragezeichen statt durch Zeichensalat, macht die 123 Tabellenzeilen
+ueberfluessig und ist deutlich schneller. Es ist aber ein Verhaltenswechsel:
+heute bleibt ein nicht abbildbares Zeichen unveraendert stehen, danach wuerde es
+zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
 
 ## Fallstricke für die Weiterarbeit
 

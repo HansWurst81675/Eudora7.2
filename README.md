@@ -114,7 +114,7 @@ Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
 | QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen (Installation mit HermesSSL); Protokoll per Komponententest nachgemessen |
 | **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` angenommen, ohne Hinweis. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |
 | Aktueller `rootcerts.p7b` für das Release | offen — der ausgelieferte Speicher (`Bin/Release`) enthaelt 19 Zertifikate von 1996-1998, acht davon abgelaufen, keine heute uebliche CA. QCSSL prueft nur gegen diese Datei, nicht gegen den Windows-Speicher |
-| Zeichensatz-Darstellung | **eingebaut, aber fehlerhaft** — `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`). Unit-Tests haben zwei echte Fehler nachgewiesen: sieben der 27 urspruenglichen Zuordnungen zeigen auf falsche Codepunkte (darunter alle typografischen Anfuehrungszeichen), und der neue C3-Block erzeugt eine Doppelersetzung. Siehe `PORTIERUNG.md` |
+| Zeichensatz-Darstellung | **fertig** — `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`). Die beiden von den Unit-Tests nachgewiesenen Fehler sind behoben: sieben falsche Zuordnungen berichtigt, `ISOTranslate` laeuft jetzt in einem Durchgang statt in 123 Ersetzungslaeufen. 23 von 23 Tests gruen. Siehe `PORTIERUNG.md` |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
 | Build-Artefakte im Repo | `.gitignore` greift jetzt; die mitversionierten Altbestände müssen noch aus dem Index |
 

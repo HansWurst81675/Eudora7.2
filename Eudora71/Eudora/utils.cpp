@@ -99,9 +99,9 @@ unsigned char pcXlateTable[MAX_CHARACTER_SETS][XLATE_CHARS][MAX_CHARS_TO_TRANS +
 	 {0xC5,		 0xB8,		 0x00,		 0x00,		(UCHAR)'Ÿ'},
 	 {0xC5,		 0xBD,		 0x00,		 0x00,		(UCHAR)'Ž'},
 	 {0xC5,		 0xBE,		 0x00,		 0x00,		(UCHAR)'ž'},
-	 {0xC5,		 0xBF,		 0x00,		 0x00,		(UCHAR)'ƒ'},
-	 {0xCB,		 0x82,		 0x00,		 0x00,		(UCHAR)'‹'},
-	 {0xCB,		 0x83,		 0x00,		 0x00,		(UCHAR)'›'},
+	 {0xC6,		 0x92,		 0x00,		 0x00,		(UCHAR)'ƒ'},
+	 {0xE2,		 0x80,		 0xB9,		 0x00,		(UCHAR)'‹'},
+	 {0xE2,		 0x80,		 0xBA,		 0x00,		(UCHAR)'›'},
 	 {0xCB,		 0x86,		 0x00,		 0x00,		(UCHAR)'ˆ'},
 	 {0xCB,		 0x9C,		 0x00,		 0x00,		(UCHAR)'˜'},
 	 {0xE2,		 0x80,		 0x93,		 0x00,		(UCHAR)'–'},
@@ -113,10 +113,10 @@ unsigned char pcXlateTable[MAX_CHARACTER_SETS][XLATE_CHARS][MAX_CHARS_TO_TRANS +
 	 {0xE2,		 0x80,		 0xA2,		 0x00,		(UCHAR)'•'},
 	 {0xE2,		 0x80,		 0xA6,		 0x00,		(UCHAR)'…'},
 	 {0xE2,		 0x80,		 0xB0,		 0x00,		(UCHAR)'‰'},
-	 {0xE2,		 0x80,		 0xB2,		 0x00,		(UCHAR)'’'},
-	 {0xE2,		 0x80,		 0xB3,		 0x00,		(UCHAR)'”'},
-	 {0xE2,		 0x80,		 0xB5,		 0x00,		(UCHAR)'‘'},
-	 {0xE2,		 0x80,		 0xB6,		 0x00,		(UCHAR)'“'},
+	 {0xE2,		 0x80,		 0x99,		 0x00,		(UCHAR)'’'},
+	 {0xE2,		 0x80,		 0x9D,		 0x00,		(UCHAR)'”'},
+	 {0xE2,		 0x80,		 0x98,		 0x00,		(UCHAR)'‘'},
+	 {0xE2,		 0x80,		 0x9C,		 0x00,		(UCHAR)'“'},
 	 {0xE2,		 0x82,		 0xAC,		 0x00,		(UCHAR)'€'},
 	{0xE2,		 0x84,		 0xA2,		 0x00,		(UCHAR)'™'},
 	{0xC2,		 0xA0,		 0x00,		 0x00,		(UCHAR)0xA0},
@@ -1196,41 +1196,89 @@ LONG ISOTranslate(LPTSTR szBuf, LONG lSize, UINT iCharsetIdx)
 	// end of its buffer for us to NULL terminate it.
 	szBuf[lSize] = 0;
 
-	// Copy the buffer into a CString for easier string substitution.
-	CString			 csTranslated(szBuf);
+	// Translate in a single left to right pass over the buffer.
+	//
+	// Fix: this used to run CString::Replace() once per table row over the whole
+	// text.  That is not safe: a replacement produces a 1252 byte, and that byte
+	// can join up with its neighbour to form a sequence that a LATER row replaces
+	// a second time.  Example: "C3 83 C2 A9" is U+00C3 followed by U+00A9 and must
+	// become the two bytes "C3 A9".  Row "C2 A9"->A9 ran first, then row
+	// "C3 83"->C3, and the "C3 A9" thus created was eaten by row "C3 A9"->E9.
+	// Two characters turned into one.  A single pass cannot do that, because
+	// every byte it writes is behind the read position and is never looked at
+	// again, so each input character is translated independently of its
+	// neighbours - which is exactly what the character set conversion means.
+	//
+	// The output is never longer than the input (each matched sequence becomes
+	// exactly one byte), so writing back into the same buffer is safe.
+	unsigned char*	pBytes = (unsigned char*)szBuf;
+	LONG			lRead  = 0;
+	LONG			lWrite = 0;
 
-	unsigned char	 szTransTo[2] = {'\0', '\0'};
-
-	// Iterate through the translation table replacing occurrences
-	// of target strings with their replacements.
-	for (int i = 0; i < XLATE_CHARS; ++i)
+	while (lRead < lSize)
 	{
-		if (pcXlateTable[iCharsetIdx][i][0] == '\0')
+		int		iMatchRow = -1;
+		int		iMatchLen = 0;
+		int		i;
+
+		for (i = 0; i < XLATE_CHARS; ++i)
 		{
-			// We have reached an empty entry: no more strings to translate.
-			break;
+			const unsigned char*	pFrom = pcXlateTable[iCharsetIdx][i];
+			int						iLen;
+
+			if (pFrom[0] == '\0')
+			{
+				// We have reached an empty entry: no more strings to translate.
+				break;
+			}
+
+			// Cheap reject first: the vast majority of bytes are plain ASCII
+			// and match no row at all.
+			if (pFrom[0] != pBytes[lRead])
+			{
+				continue;
+			}
+
+			for (iLen = 0; iLen < MAX_CHARS_TO_TRANS && pFrom[iLen] != '\0'; ++iLen)
+			{
+				;
+			}
+
+			// Longest match wins.  No source sequence is a prefix of another one
+			// today, but relying on that would be a trap for the next editor.
+			if (iLen <= iMatchLen || lRead + iLen > lSize)
+			{
+				continue;
+			}
+
+			if (memcmp(pBytes + lRead, pFrom, (size_t)iLen) == 0)
+			{
+				iMatchRow = i;
+				iMatchLen = iLen;
+			}
 		}
 
-		// Place the last item in the table's row in the string
-		// to replace the above string.
-		szTransTo[0] = pcXlateTable[iCharsetIdx][i][MAX_CHARS_TO_TRANS + 1];
-
-		// Note that this might decrease the size of the text but will never
-		// increase the size because the replacement string is always
-		// exactly one character long.
-		csTranslated.Replace((char*)pcXlateTable[iCharsetIdx][i], (char*)szTransTo);
+		if (iMatchRow >= 0)
+		{
+			// Place the last item in the table's row in the string
+			// to replace the matched sequence.
+			pBytes[lWrite++] = pcXlateTable[iCharsetIdx][iMatchRow][MAX_CHARS_TO_TRANS + 1];
+			lRead += iMatchLen;
+		}
+		else
+		{
+			// Nothing in the table matches here: keep the byte as it is.
+			pBytes[lWrite++] = pBytes[lRead++];
+		}
 	}
 
-	// Recalculate the text length in case we got shorter.
-	lSize = csTranslated.GetLength();
+	// The text got shorter by one byte for every sequence that was translated.
+	lSize = lWrite;
 
-	// Copy the translated text back into the buffer.
-	strncpy(szBuf, csTranslated, lSize);
-	
 	// Make sure the text is NULL terminated.
 	szBuf[lSize] = 0;
 
-	return strlen(szBuf);
+	return lSize;
 }
 
 
