@@ -153,8 +153,8 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
 		}
 	}
 
-	// Store the error in the cert store's extra data.
-	X509_STORE_CTX_set_ex_data(pX509StoreCtx, 0, (void*)lErrors);
+	// Hier stand ein Schreibzugriff auf ex_data-Index 0 des X509_STORE_CTX.
+	// Index 0 gehoert libssl (SSL-Zeiger); der Wert wurde nie gelesen. Entfernt.
 
 	// Create a new CertData object using the data from the current cert.  This object is used
 	// by the Certificate Information Manager.
