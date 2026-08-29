@@ -195,11 +195,33 @@ Zwei Einschränkungen dazu:
   Wurzelzertifikatsspeicher. Dass die Zertifikatsprüfung durchlief, sagt nichts über
   eine unberührte 7.1-Installation aus (siehe den Abschnitt zum Wurzelzertifikats-
   speicher oben).
-- **Ungeklärt ist, welcher Build getestet wurde.** Commit `643305d` hat die DLL um
-  20:02 neu gebaut; ob davor oder danach kopiert wurde, ist nicht festgestellt. Per
-  SHA256 gegen `QCSSL.dll.sha256` nachprüfbar. Der Test ist mit der aktuellen DLL zu
-  wiederholen, und dabei über "Last SSL Info" zu protokollieren, welches Protokoll
-  und welche Cipher-Suite ausgehandelt werden.
+- **Welcher Build getestet wurde, ist für den damaligen Lauf ungeklärt geblieben.**
+  Commit `643305d` hat die DLL um 20:02 neu gebaut; ob davor oder danach kopiert
+  wurde, wurde nicht festgestellt.
+
+  **Für künftige Läufe ist die Frage beantwortbar.** Seit `94e32c6` trägt die DLL
+  eine ablesbare Kennung in der Versionsressource (`Eudora71/QCSSL/src/qcssl.rc:14`
+  und `:15`):
+
+  | Feld | Inhalt |
+  |---|---|
+  | `FileDescription` | `Secure Socket Library - QCSSL 1.0.0 (Eudora 7.2)` |
+  | `Comments` | `QCSSL 1.0.0, gebaut gegen OpenSSL 3.5.8 LTS. Projekt Eudora 7.2, github.com/HansWurst81675/Eudora7.2` |
+
+  Ablesbar ohne Werkzeuge über Rechtsklick auf die Datei, Eigenschaften,
+  Registerkarte "Details" — oder auf der Kommandozeile:
+
+  ```powershell
+  (Get-Item QCSSL.dll).VersionInfo | Format-List FileDescription, Comments, FileVersion
+  ```
+
+  Eine ausgelieferte 7.1-DLL von Qualcomm nennt dort weder "Eudora 7.2" noch
+  OpenSSL 3.5.8; eine Verwechslung mit HermesSSL ist damit ausgeschlossen.
+  Zusätzlich bleibt der Abgleich per SHA256 gegen `QCSSL.dll.sha256`.
+
+  Nachgeholt wurde der Lauf inzwischen: am 29.08.2026 gegen `pop.gmx.net:995`
+  ergab "SSL Connection Information Manager" `TLSv1.3`,
+  `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`.
 
 Im Betrieb ist kein Unterschied zu sehen — das ist beabsichtigt. Ausgetauscht wird nur
 die Kryptoschicht; Oberfläche und Verhalten von Eudora bleiben unverändert. Der Gewinn

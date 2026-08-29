@@ -4,7 +4,21 @@ Stand: 2026-08-29 · Branch `vs2022-portierung-fixes` · Messwerte an Commit `fd
 
 ## Kurzfassung
 
-**15 der 18 Projekte der Solution werden fertig.** Drei nicht: `OT501` (Stingray
+> **Zwischenstand 29.08.2026, gemessen an `e7e6f3c`.** Der Bau ist zurzeit an
+> zwei zusätzlichen Stellen gebrochen, weil die OT501-Ersatzschicht halb
+> eingehängt ist. Erstens brechen `AccountWizard`, `DirectoryServicesUI`,
+> `EuImap` und `SearchEngine` mit `C1083: OTShimAll.h` ab — `..\OTShim` steht
+> nur in `Eudora.vcxproj:66` auf dem Include-Pfad, seit `7dcac81` in
+> `stdafx.h:52` `secall.h` durch `OTShimAll.h` ersetzt hat. Ein voller
+> Solution-Bau meldet damit 7 Fehler statt 3, und es werden **11 von 18**
+> Projekten fertig. Zweitens übersetzt `Eudora` selbst nicht mehr:
+> `secbtns.h(340,83): error C2572` — der Wächter `__SECBTNS_H__` in
+> `OTShimAll.h` ist noch auskommentiert. Der Linker wird also gar nicht
+> erreicht. Der folgende Abschnitt beschreibt den Zustand **davor**
+> (Commit `fd9a235`). Einzelheiten und der Weg heraus stehen in `README.md`
+> und `WEITERMACHEN.md`.
+
+**Ohne diese beiden Fehler werden 15 der 18 Projekte fertig.** Drei nicht: `OT501` (Stingray
 Objective Toolkit; die Quellen sind nicht freigegeben) sowie `Eudora` und
 `EudoraRes`. Die beiden letzten haben je einen Projektverweis auf `OT501`
 (`Eudora.vcxproj:1013`, `EudoraRes.vcxproj:351`) und werden im Solution-Bau deshalb
@@ -126,11 +140,33 @@ Mögliche Wege:
 2. Objective Toolkit 5.0.1 Quellen beschaffen (Rogue Wave / Perforce).
 3. `Eudora.exe` zurückstellen und nur die DLLs pflegen.
 
-**Gewählt ist Weg 1.** Die Analyse der vier Klassenfamilien ist abgeschlossen und hat
-den Umfang deutlich verkleinert: die 77 Methoden sind nicht 77 Aufgaben. Viele sind
-geerbte MFC-Methoden, die Eudora nur qualifiziert aufruft, andere werden nie
-aufgerufen. Die Registerkartenleiste ist verzichtbar, `SECStatusBar` erledigt ein
-`typedef`. Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
+**Gewählt ist Weg 1, und er ist weitgehend umgesetzt.** Die Analyse der vier
+Klassenfamilien hat den Umfang deutlich verkleinert: die 77 Methoden sind nicht 77
+Aufgaben. Viele sind geerbte MFC-Methoden, die Eudora nur qualifiziert aufruft,
+andere werden nie aufgerufen; `SECStatusBar` erledigt ein `typedef`.
+
+Stand der Ersatzschicht an `e7e6f3c`, gezählt mit `wc -l` und geprüft gegen
+`OTShimAll.h` sowie die `ClCompile`-Einträge in `Eudora.vcxproj:217`:
+
+| Stufe | Dateien | Zeilen | eingehängt? |
+|---|---|---|---|
+| 0–2, 2b — Workbook, MDI, Statusleiste, Andockfamilie | `OTShim.h/.cpp` | 5494 | ja |
+| 3 — Werkzeugleisten und Knöpfe | `OTShim_Werkzeugleiste.h/.cpp` | 6083 | **nein** |
+| 4 — Bilder über GDI+ | `OTShim_Bild.h/.cpp` | 2358 | ja |
+| Registerkarten | `OTShim_Reiter.h/.cpp` | 2925 | **nein** |
+| `SECDateTimeCtrl` | `OTShim_Palette.h/.cpp` | 890 | **nein** |
+| Sammelkopfdatei | `OTShimAll.h` | 45 | — |
+
+Zusammen **17795 Zeilen** in 11 Dateien. `secaux.cpp` aus `OT501/Src` ist direkt in
+`Eudora.vcxproj` aufgenommen — `secData` und `SEC_AUX_DATA` brauchten keinen
+Nachbau.
+
+**Eine Planannahme hat sich als falsch erwiesen:** die Registerkarten sind *nicht*
+durchweg verzichtbar. Das gilt nur für den MDI-Streifen hinter `m_bWorkbookMode`,
+nicht für `SEC3DTabWnd`/`SEC3DTabControl`, das Steuerelement in jeder Wazoo-Leiste.
+Belegt in PLAN.md, Abschnitt „Berichtigungen" (`7d94c3d`).
+
+Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
 
 ## Erledigt: OpenSSL 3.5.8 LTS hinter QCSSL
 

@@ -29,6 +29,11 @@ in den Headern (`OnNotify`, `OnSetCursor`, `WindowProc`).
 
 ## Der Weg zum ersten startenden `Eudora.exe`
 
+> **Teilweise widerlegt.** Der folgende Absatz gilt nur für den MDI-Registerkarten-
+> streifen, nicht für das Registerkarten-Steuerelement in den Wazoo-Leisten. Siehe
+> [Berichtigung 1](#1-die-registerkarten-sind-nicht-verzichtbar) am Ende der Datei —
+> im Zweifel gilt die Berichtigung.
+
 **Die Registerkartenleiste ist verzichtbar.** Sie ist keine Struktur, sondern eine zur
 Laufzeit umschaltbare Anwendereinstellung:
 
