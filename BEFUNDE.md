@@ -397,6 +397,14 @@ nicht geschehen.
 
 ## N6 - OTShim ist in keinem Projekt
 
+> **Ueberholt seit `7dcac81`** (nachgetragen von LEKTOR, gemessen an `e7e6f3c`).
+> `Eudora/stdafx.h:52` zieht jetzt `OTShimAll.h` statt `secall.h`, und
+> `Eudora.vcxproj:217` uebersetzt `OTShim.cpp`, `OTShim_Bild.cpp` und
+> `..\OT501\Src\secaux.cpp` mit. Der Befund gilt aber unveraendert fuer die
+> **drei nicht eingehaengten** Teile: `OTShim_Werkzeugleiste.*` (6083 Zeilen),
+> `OTShim_Reiter.*` (2925) und `OTShim_Palette.*` (890) stehen weder in
+> `OTShimAll.h` noch in einer `.vcxproj` - siehe Befund NP2-1.
+
 **Sicherheit: nachgewiesen. Kein Fehler, sondern eine Standortbestimmung.**
 
 `Eudora71/OTShim/` wird ausserhalb des eigenen Verzeichnisses nur von
@@ -810,3 +818,147 @@ Weiterhin ausgenommen: die **Hostnamenpruefung** in QCSSL.
 
 Nicht erneut nachgesehen; sie beziehen sich auf `ba617a8`. Ausnahme: **H1 ist
 behoben** (siehe oben). `M3` war schon im Nachtrag als ueberholt vermerkt.
+
+---
+
+## Ergebnis der Stufe-3-Pruefung (`91716bb`) - NACHTRAG zur obigen Tabelle
+
+Die Tabelle "Noch offen" oben war der Stand beim ersten Sicherungs-Commit.
+Danach konnte Stufe 3 doch noch weitgehend geprueft werden. **Erledigt** sind
+damit: `SECStdBtn::DrawFace`, `SECBtnDrawData` samt
+`PreDrawButton`/`PostDrawButton`/`SysColorChange`/`CreateDitherBrush`,
+`CSafetyPalette`, `CPaletteDC`, `SECToolBarManager::LoadState`/`SaveState`,
+`SECToolBarCmdUI` mit `SECCustomToolBar::OnUpdateCmdUI` sowie saemtliche
+Indexzugriffe auf `m_btns` samt `m_nDown`/`m_nRaised`.
+
+**Weiterhin offen von Stufe 3:** die Anordnungsrechnung von
+`SECCustomToolBar` (Zeilenumbruch, `CalcDynamicLayout`, `CalcFixedLayout`,
+`Layout`), `SECTwoPartBtn::DrawButton`, `SECWndBtn`/`SECComboBtn`
+(Fenstererzeugung, Weiterreichen der Mausereignisse), `SECCustomizeToolBar`
+und die Anpassen-Dialogseiten. Unveraendert offen: Stufe 2/2b, Stufe 4,
+`lehren-spiegeln.pl`, der Zertifikats-Patch.
+
+### Geprueft und in Ordnung
+
+- **`SECStdBtn::DrawFace` (cpp Z. 688-762).** Der Vertrag stimmt: Ziel ist
+  `data.m_drawDC`; `x`, `y`, `nWidth`, `nHeight` kommen als ganzer Knopf herein
+  und gehen als innere Flaeche zurueck; `bForce` unterdrueckt Gedrueckt- und
+  Angehoben-Darstellung; `nImgWidth == -1` heisst volle Bildbreite. Alle vier
+  Rahmenzweige (gedrueckt, cool+angehoben, cool, klassisch) decken sich Zeile
+  fuer Zeile mit `TBarSendButton.cpp:71-160`, und
+  `ColorToolbarButton.cpp:53-73` bestaetigt den Rueckgabevertrag: es rechnet
+  nach dem Basisaufruf mit den veraenderten `x`/`y` weiter.
+
+- **Wichtig fuer spaetere Leser: das fehlende `+ 1` ist richtig so.**
+  `TBarSendButton.cpp:83` rechnet
+  `yImg = (nHeight - GetImgHeight())/2 + y + 1`, der Shim rechnet ohne `+ 1`.
+  Die zweite, auskommentierte Kopie in `MoodMailStatic.cpp:73` rechnet
+  **ebenfalls ohne `+ 1`**. Das `+ 1` ist also die Zugabe des Sende-Knopfes und
+  nicht Teil der Basis; der Shim folgt der Basis. Wer das spaeter
+  "berichtigt", verschiebt jedes Knopfbild um einen Bildpunkt nach unten.
+  Die Commit-Nachricht von `91716bb` nennt nur `TBarSendButton` als Vorlage -
+  deshalb hier ausdruecklich festgehalten.
+  Zwei weitere Abweichungen von `TBarSendButton` sind ebenfalls richtig: das
+  dortige `SetBkColor(COLOR_WINDOW)` gehoert zum anschliessend gezeichneten
+  Text und ist fuer ein `SRCCOPY` ohne Belang; die zusaetzliche Schranke
+  `if (nImgWidth > 0)` ist folgenlos, weil ein `BitBlt` der Breite 0 ohnehin
+  nichts tut.
+
+- **`SECToolBarManager::LoadState` (cpp Z. 4074-4106).** Gegen
+  `QCToolBarManager::QCLoadState` (`QCToolBarManager.cpp:1118-1170`)
+  abgeglichen: gleiche Reihenfolge, dieselben drei Profilwerte, dieselbe
+  Leistenschleife mit `SetManager` und Zaehler, dasselbe
+  `SetDefaultDockState()` bei null Leisten. Entscheidend sind die
+  Schluesselnamen, denn Eudora **liest** mit `QCLoadState` und **schreibt**
+  ueber `SECToolBarManager::SaveState` - beide Seiten muessen dieselben
+  Zeichenketten benutzen, sonst gingen Kurzhinweise, Cool-Look und grosse
+  Knoepfe bei jedem Start still verloren. Nachgemessen (cpp Z. 4064-4067):
+  `"%s-ToolBarManager"`, `"ToolTips"`, `"CoolLook"`, `"LargeButtons"` -
+  **wortgleich** mit `QCToolBarManager.cpp:1125-1128`. Die Iteration ist sogar
+  sauberer als das Original: sie wandelt erst nach `CControlBar*` und prueft
+  dann `IsKindOf`, statt vor der Pruefung nach `SECCustomToolBar*` zu wandeln.
+
+- **`SECToolBarCmdUI` / `OnUpdateCmdUI` (cpp Z. 2676-2745).** Deckt sich mit
+  `CToolCmdUI` aus `winctrl3.cpp`, einschliesslich des dortigen
+  `nNewStyle &= ~TBBS_PRESSED` beim Sperren und des Ueberspringens von
+  `TBBS_SEPARATOR`. `SetText` ist wie im Vorbild leer.
+
+- **`SECBtnDrawData`, Lebensdauer der GDI-Objekte.** Durchgerechnet:
+  `PreDrawButton` stellt auf **jedem** Fehlerweg die zuvor gewaehlten Objekte
+  wieder her, bevor es `FALSE` liefert, und setzt `m_bReady` erst ganz am
+  Ende - nach der letzten Fehlerstelle. Ein verschachtelter Aufruf wird oben
+  mit `if (m_bReady) PostDrawButton();` abgefangen. Der Destruktor ruft
+  `PostDrawButton()` im **Rumpf**, also bevor die Member abgebaut werden; die
+  `CBitmap`-Felder sind damit abgewaehlt, ehe sie zerstoert werden - was hier
+  noetig ist, weil sie in umgekehrter Deklarationsreihenfolge vor den
+  `CPaletteDC`-Feldern an die Reihe kaemen. Kein Leck gefunden.
+
+- **Indexgrenzen.** `AddButton`, `RemoveButton`, `GetItemID`, `GetItemRect`,
+  `InvalidateButton`, `GetButtonStyle` und `SetButtonStyle` pruefen alle
+  `nIndex < 0 || nIndex >= GetBtnCount()`. `RemoveButton` zieht `m_nDown`,
+  `m_nRaised` und das durchgereichte `*pIndex` richtig nach; `AddButton`
+  schiebt `m_nDown` mit. Alle Verwendungen von `m_nDown`/`m_nRaised` sind
+  beidseitig geschrankt - auch `OnLButtonUp` (Z. 2886) und `RaiseButton`
+  (Z. 2948-2968, wo der Index aus `ItemFromPoint` kommt und damit gueltig oder
+  -1 ist). Nichts gefunden, was ueber das Feld hinausgreift.
+
+### NP2-2 - `SysColorChange()` tut nicht, was daneben steht
+
+**Sicherheit: nachgewiesen. Auswirkung: keine - aber der Kommentar fuehrt in
+die Irre.**
+
+`Eudora71/OTShim/OTShim_Werkzeugleiste.cpp` Z. 320-331. Der Kommentar sagt,
+ein zwischengespeicherter Zeichenpuffer bleibe bei einem Farbwechsel nicht
+gueltig. Die Funktion loescht dann aber nur `m_ditherBrush`; `m_bmpDraw`,
+`m_bmpMono`, `m_cxBuf` und `m_cyBuf` bleiben stehen, und der naechste
+`PreDrawButton` nimmt denselben Puffer wieder.
+
+Folgenlos, weil `DrawFace` den Puffer bei jedem Knopf zuerst mit
+`FillSolidRect` ueberschreibt - ein alter Bildpunkt wird also nie sichtbar.
+Der Kommentar behauptet aber eine Vorkehrung, die es nicht gibt.
+
+**Zu tun:** Entweder die zwei Loeschzeilen ergaenzen oder den Kommentar auf das
+kuerzen, was zutrifft.
+
+### NP2-3 - `BitBltTransparent` meldet Erfolg, ohne gezeichnet zu haben
+
+**Sicherheit: nachgewiesen; geringe Auswirkung**
+
+`Eudora71/OTShim/OTShim_Werkzeugleiste.cpp` Z. 233-272. Der eigentliche
+Kopiervorgang steht in einem `if`:
+
+```
+if (dcTmp.CreateCompatibleDC(this) &&
+    bmTmp.CreateCompatibleBitmap(this, nWidth, nHeight))
+{
+    ... die vier BitBlt ...
+}
+
+dcMask.SelectObject(pOldMask);
+return TRUE;
+```
+
+Schlaegt eine der beiden Erzeugungen fehl, wird nichts gezeichnet - die
+Funktion liefert trotzdem `TRUE`. Der Aufrufer haelt die Flaeche fuer
+gezeichnet und laesst stehen, was vorher dort stand. Die frueheren
+Fehlerausgaenge derselben Funktion liefern korrekt `FALSE`; nur dieser eine
+nicht.
+
+**Zu tun:** Den Rueckgabewert an das Ergebnis des Blocks binden.
+
+---
+
+## Gesamtzahl nach der Nachpruefung
+
+- Teil 1 (`ba617a8`): 1 hoch (**H1 inzwischen behoben**), 5 mittel (davon M3
+  ueberholt, M4 und M5 Originalfehler), 8 niedrig.
+- Teil 2 (`ba617a8..8dd6b2a`, unvollstaendig): 3 Befunde - NP2-1 (Stufe 3
+  haengt in keinem Projekt), NP2-2 und NP2-3 (beide klein, in Stufe 3).
+
+Der Werkzeugleisten-Block aus `91716bb` ist an den geprueften Stellen
+**sauber**. Die vier Punkte, auf die der Auftrag ausdruecklich hingewiesen hat -
+`DrawFace`, `SECBtnDrawData` mit den drei `CPaletteDC`, die Indexgrenzen von
+`SECCustomToolBar` und `LoadState` gegen `QCLoadState` - halten der Pruefung
+stand. Der ernsteste Befund an Stufe 3 ist nicht der Code selbst, sondern dass
+er nirgends eingebunden ist (NP2-1) und deshalb noch durch keinen Uebersetzer
+gelaufen ist.
