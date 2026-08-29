@@ -57,7 +57,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\SearchEngine\PublicInc;..\QCUtils\public\inc;..\Eudora;..\EuMemMgr\Include;.\public\inc;..\OT501\Include;..\Imapdll\public\inc;..\;..\expat\Source\lib;..\PlaylistClient\plstclnt_dll;..\QCSocket\inc;..\tae;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OTShim;..\SearchEngine\PublicInc;..\QCUtils\public\inc;..\Eudora;..\EuMemMgr\Include;.\public\inc;..\OT501\Include;..\Imapdll\public\inc;..\;..\expat\Source\lib;..\PlaylistClient\plstclnt_dll;..\QCSocket\inc;..\tae;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;COMMERCIAL=1;OEMRESOURCE;WIN32_COMPILE;WIN32;_WINDOWS;IMAP4;THREADED;WINVER=0x0410;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -82,7 +82,7 @@
     <ClCompile>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\SearchEngine\PublicInc;..\QCUtils\public\inc;..\Eudora;..\EuMemMgr\Include;.\public\inc;..\OT501\Include;..\Imapdll\public\inc;..\;..\expat\Source\lib;..\PlaylistClient\plstclnt_dll;..\QCSocket\inc;..\tae;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OTShim;..\SearchEngine\PublicInc;..\QCUtils\public\inc;..\Eudora;..\EuMemMgr\Include;.\public\inc;..\OT501\Include;..\Imapdll\public\inc;..\;..\expat\Source\lib;..\PlaylistClient\plstclnt_dll;..\QCSocket\inc;..\tae;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;COMMERCIAL=1;OEMRESOURCE;WIN32_COMPILE;WIN32;_WINDOWS;IMAP4;THREADED;WINVER=0x0410;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
