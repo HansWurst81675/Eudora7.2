@@ -176,8 +176,8 @@
 //
 // WAS AUS SICHT DIESER FAMILIE NOCH FEHLT
 //
-//   - Uebersetzt und gebunden wurde noch nicht gegen Eudora; das geht erst,
-//     wenn Stufe 3 (OTShim_Werkzeugleiste) steht, weil CWazooBar von
+//   - GEMESSEN 29.08.2026 mit cl 14.38.33130 (/W3 /MD /D_AFXDLL): OTShim_Reiter.cpp uebersetzt warnungsfrei; ein Bindetest, der alle vier Klassen erzeugt und jede oeffentliche Methode anfasst, bindet ohne offene Verweise; Waechtertest bestanden (die vier Originalheader sind danach wirkungslos, tabctrl.h und tabwnd.h uebersetzen gegen die Ersatzklassen).
+//   - Gegen Eudora selbst ist noch nicht uebersetzt worden; das geht erst, wenn Stufe 3 (OTShim_Werkzeugleiste) steht, weil CWazooBar von
 //     SECControlBar erbt und QC3DTabWnd.cpp SECDockBar mitzieht.
 //   - Die Kurzhinweise haengen an der MFC-eigenen Verwaltung
 //     (EnableToolTips + OnToolHitTest). Ob MFC sie fuer ein freistehendes
@@ -579,7 +579,7 @@ public:
 		{ return SetFontTab(pFont,SEC3DTAB_INACTIVE,bRedraw); }
 	CFont* GetFontActiveTab() 				{ return &m_fonts[SEC3DTAB_ACTIVE]; }
 	CFont* GetFontInactiveTab() 			{ return &m_fonts[SEC3DTAB_INACTIVE]; }
-
+	virtual void ScrollToTab(int nTab);	// ABWEICHUNG: in tabctrl3.h nicht aufgefuehrt. Die Basisfassung kann nichts tun - sie kennt keine Reiterrechtecke -, also blieben WazooBar.cpp:409 und :1365 sonst wirkungslos.
 	virtual void SetTabIcon(int nIndex, HICON hIcon);
 	virtual void SetTabIcon(int nIndex, UINT nIDIcon);
 	virtual void SetTabIcon(int nIndex, LPCTSTR lpszResourceName);
