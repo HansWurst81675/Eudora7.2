@@ -57,7 +57,7 @@ also real subclassen, darf aber Ränder von (0,0,0,0) melden.
 
 | Klasse | Vorgehen | Beleg |
 |---|---|---|
-| `SECStatusBar` (11 Methoden) | **`typedef CStatusBar SECStatusBar;`** — `sbarstat.h` ist eine 1:1-Kopie von `CStatusBar` (afxext.h:269) mit `SECControlBar` statt `CControlBar` als Basis. Alle 11 Aufrufe sind Kategorie A. Stingray macht für Nicht-WIN32 selbst `#define SECStatusBar CStatusBar` (`sbarstat.h:140`). Die Statusleiste wird nie über den SEC-Bar-Manager angefasst | `sbarstat.h:43,140` |
+| `SECStatusBar` (11 Methoden) | **`typedef CStatusBar SECStatusBar;`** — `sbarstat.h` ist eine 1:1-Kopie von `CStatusBar` (`afxext.h:268` in MSVC 14.38.33130) mit `SECControlBar` statt `CControlBar` als Basis. Alle 11 Aufrufe sind Kategorie A. Stingray macht für Nicht-WIN32 selbst `#define SECStatusBar CStatusBar` (`sbarstat.h:140`). Die Statusleiste wird nie über den SEC-Bar-Manager angefasst | `sbarstat.h:43,140` |
 | `SECTipOfDay` | Stub: Konstruktor merkt die Werte, `DoModal()` liefert `IDOK`. Einzige Einstiegspunkte sind ein Menüpunkt und ein `PostMessage` beim Start; nichts hängt daran. Der INI-Rückschreibpfad (`eudora.cpp:256-257`) braucht nur plausible Werte | `SECTOD.H:41` |
 | `SECLoadSysColorBitmap` | `CBitmap::LoadMappedBitmap` | `SECBTNS.H:340` |
 
@@ -118,7 +118,10 @@ erhalten bleiben (`TBarCombo.cpp:19,30`).
 
 GDI+ über `CImage` (`atlimage.h`) deckt BMP/JPEG/GIF/PNG/TIFF ab; Eudora nutzt es
 bereits selbst (`QCGraphics.cpp:582-604`). Damit entfällt das komplette eingebettete
-libjpeg (`SECJPEG.H:207-830`).
+libjpeg. Es steht mitten im Rumpf von `class SECJpeg`, die bei `SECJPEG.H:207`
+beginnt: die libjpeg-Deklarationen laufen dort von Zeile 228 (`forward_DCT`) bis 823
+(`jinit_memory_mgr`), erst ab `:827` folgt wieder Stingray-Eigenes. Die Datei hat
+885 Zeilen.
 
 **Aber `CImage` ersetzt nur den Dekoder, nicht die Schnittstelle.** Fünf Stellen greifen
 roh auf `m_lpSrcBits`/`m_lpBMI` zu und reichen sie an `::StretchDIBits` weiter
@@ -135,10 +138,18 @@ Umsetzung zu korrigieren:
 
 - **Falsche Positive:** `SECDockBar::CalcFixedLayout` stammt ausschließlich aus
   Kommentaren (`SearchBar.cpp` 7×). Ebenso `SECToolBarManager::EnableLargeBtns`,
-  `LoadState`, `SECMDIFrameWnd::LoadBarState`, `SECControl`.
-- **`SEC_TEXT` gehört nicht dazu** — das ist ein SSPI-Makro aus `Sspi.h`, kein Stingray.
+  `LoadState`, `SECMDIFrameWnd::LoadBarState`, `SECControl` — letzteres kommt in den
+  Eudora-Quellen genau einmal vor, in einem Kommentar (`mainfrm.cpp:2464`).
+- **`SEC_TEXT` gehört nicht dazu** — das ist ein SSPI-Makro aus `Sspi.h`
+  (dort dreimal definiert, `:80`, `:98`, `:126`), kein Stingray.
 - **`SECCustonToolBar` existiert nicht** — Tippfehler in einem Kommentar
   (`QCCustomizeToolBar.cpp:241`).
+- **Abschnitt 3 ist auch nach oben unvollständig.** Er listet 52 Bezeichner, aber
+  `SEC_AUX_DATA` fehlt darin, obwohl es an fünf Stellen in echtem Code steht
+  (`EmoticonToolbarButton.cpp:91`, `MoodMailStatic.cpp:63` und `:140`,
+  `QCCustomizeToolBar.cpp:17`, `TBarSendButton.cpp:74`, jeweils
+  `extern SEC_AUX_DATA secData;`). Die 52 ist deshalb weder eine Ober- noch eine
+  Untergrenze und sollte nicht als Kennzahl zitiert werden.
 - **Fehlende Ableitungen in Abschnitt 1:** der Generator hat nur `class X : public SECY`
   mit `SEC` als *erster* Basis erfasst. Es fehlten sieben Einträge — inzwischen in
   `INVENTAR.md` nachgetragen: `QCWorkbookClient : SECWorkbookClient`

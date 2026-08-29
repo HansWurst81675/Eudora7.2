@@ -1,12 +1,24 @@
 # OT501-Ersatzschicht — Bestandsaufnahme
 
 **Hinweis: diese Datei ist maschinell erzeugt und enthaelt Fehler.** Sie ist eine
-Rohaufnahme, keine verbindliche Schnittstellenbeschreibung — Abschnitt 2 enthaelt
-falsche Positive (Treffer aus Kommentaren, ein SSPI-Makro, ein Tippfehler), und
-Abschnitt 1 war unvollstaendig, weil der Generator nur `class X : public SECY` mit
-`SEC` als *erster* Basisklasse erfasst hat. Die geprueften Korrekturen und die
-Bewertung stehen in **[PLAN.md](PLAN.md)**, Abschnitt "Fehler im Inventar"; im
-Zweifel gilt PLAN.md.
+Rohaufnahme, keine verbindliche Schnittstellenbeschreibung. Die geprueften
+Korrekturen und die Bewertung stehen in **[PLAN.md](PLAN.md)**, Abschnitt "Fehler im
+Inventar"; im Zweifel gilt PLAN.md.
+
+Was an welcher Stelle nicht stimmt:
+
+- **Abschnitt 1** war unvollstaendig, weil der Generator nur `class X : public SECY`
+  mit `SEC` als *erster* Basisklasse erfasst hat. Sieben Zeilen sind von Hand
+  nachgetragen; seither sind die 30 Zeilen nachgezaehlt und stimmen.
+- **Abschnitt 2** enthaelt falsche Positive: mehrere Eintraege stammen allein aus
+  Kommentaren (`SECDockBar::CalcFixedLayout`, `SECToolBarManager::EnableLargeBtns`,
+  `SECToolBarManager::LoadState`, `SECMDIFrameWnd::LoadBarState`). Die Liste hat
+  77 Zeilen; 77 Aufgaben sind es nicht.
+- **Abschnitt 3** ist in beide Richtungen falsch. Er enthaelt Fehltreffer
+  (`SEC_TEXT` ist ein SSPI-Makro aus `Sspi.h`, `SECCustonToolBar` ein Tippfehler in
+  einem Kommentar) und ihm fehlt umgekehrt `SEC_AUX_DATA`, das an fuenf Stellen in
+  echtem Code steht. **Die Zahl 52 taugt daher nicht als Kennzahl** und sollte
+  nirgends zitiert werden.
 
 Erzeugt aus `Eudora/*.cpp` und `Eudora/*.h`.
 

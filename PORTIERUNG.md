@@ -1,33 +1,45 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
-Stand: 2026-08-28 · Branch `vs2022-portierung-fixes`
+Stand: 2026-08-29 · Branch `vs2022-portierung-fixes` · Messwerte an Commit `fd9a235`
 
 ## Kurzfassung
 
-**16 von 18 Projekten der Solution bauen.** Es fehlen `OT501` (Stingray Objective
-Toolkit; die Quellen sind nicht freigegeben) und `Eudora` selbst — `Eudora.vcxproj`
-uebersetzt seit `3f6877a` vollstaendig, linkt aber nicht.
+**15 der 18 Projekte der Solution werden fertig.** Drei nicht: `OT501` (Stingray
+Objective Toolkit; die Quellen sind nicht freigegeben) sowie `Eudora` und
+`EudoraRes`. Die beiden letzten haben je einen Projektverweis auf `OT501`
+(`Eudora.vcxproj:1013`, `EudoraRes.vcxproj:351`) und werden im Solution-Bau deshalb
+gar nicht erst versucht — sie erscheinen nicht in der Fehlerliste, fertig werden sie
+trotzdem nicht. Ein voller Solution-Bau meldet 3 Fehler, alle aus `OT501`: zweimal
+`NMAKE U1073` (`Blackbox.cpp`, `OTA50D.lib`) und einmal `MSB3073`. Früher stand hier
+"16 von 18" — `EudoraRes` war dabei übersehen.
 
-`Eudora.exe` **kompiliert vollstaendig** — alle 269 urspruenglichen Compilerfehler sind
-behoben (Verlauf 269 - 74 - 25 - 16 - 4 - 0). Es scheitert jetzt allein am Linker:
-`LNK1104: OTA50D.LIB kann nicht geoeffnet werden`. Damit ist alles erledigt, was
-Portierungsarbeit war; uebrig bleibt allein die fehlende Fremdbibliothek OT501.
-Gemessen mit `-p:BuildProjectReferences=false`, also ohne OT501.
+Einzeln gemessen mit `-p:BuildProjectReferences=false` uebersetzen `Eudora` und
+`EudoraRes` **vollstaendig** und scheitern beide an genau einer Stelle:
+`LNK1104: OTA50D.LIB kann nicht geoeffnet werden`, je 1 Fehler. Fuer `Eudora` sind
+damit alle 269 urspruenglichen Compilerfehler behoben (Verlauf 269 - 74 - 25 - 16 -
+4 - 0, null seit `3f6877a`). Damit ist alles erledigt, was Portierungsarbeit war;
+uebrig bleibt allein die fehlende Fremdbibliothek OT501.
 
 Die vier Quelldateien, deren Header vorlagen, deren Implementierung aber in der
 Freigabe fehlte (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`),
 sind seit `3f6877a` als Dummys vorhanden.
 
-QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert. Belegt ist: der Code setzt eine
+QCSSL ist auf **OpenSSL 3.5.8 LTS** portiert. Der Code setzt eine
 Protokoll-Untergrenze und **keine Obergrenze** (`SSL_CTX_set_max_proto_version()`
-kommt in QCSSL nicht vor), TLS 1.3 ist damit nicht ausgeschlossen. Welches Protokoll
-tatsächlich ausgehandelt wird, ist **nicht nachgemessen**. Die fertige `QCSSL.dll`
-liegt als einbaufertiges Paket in `Releases/1.0/`.
+kommt in QCSSL nicht vor). **TLS 1.3 ist nachgemessen**, und zwar zweimal: im
+Komponententest gegen einen lokalen Server
+(`Eudora71/Tests/QCSSL/work/ergebnis_qcssl_lokal.txt`) und am 29.08.2026 im Betrieb
+gegen `pop.gmx.net:995`, abgelesen in Eudoras Dialog "SSL Connection Information
+Manager" — `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Die
+fertige `QCSSL.dll` liegt als einbaufertiges Paket in `Releases/1.0/`.
 
 ## Umgebung
 
-- Visual Studio 2022 Professional, Toolset v143 (MSVC 14.38.33130)
-- Windows SDK 10.0.22621.0
+- Visual Studio 2022 Professional, Toolset v143. Die installierte Fassung ist
+  MSVC **14.38.33130** (einziger Ordner unter
+  `VC\Tools\MSVC\`); die `.vcxproj` legen nur `<PlatformToolset>v143` fest.
+- Windows SDK **10.0.22621.0**. Auch das steht in keiner `.vcxproj` — es ist die
+  Fassung, die MSBuild hier aufloest, abgelesen an den Include-Pfaden im Build-Log.
 - Konfiguration: `Debug|x86`; für QCSSL zusätzlich `Release|x86` gebaut,
   die übrigen Projekte sind im Release-Zweig ungetestet
 - Die IDE wird nicht gebraucht — gebaut wird mit MSBuild von der Kommandozeile:
@@ -36,16 +48,27 @@ liegt als einbaufertiges Paket in `Releases/1.0/`.
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86 -m -v:m -clp:ErrorsOnly;Summary
 ```
 
-Ein voller Durchlauf dauert ca. 1–4 Minuten (OpenSSL beim ersten Mal deutlich länger).
+Ein voller Durchlauf dauerte hier zwischen einer und vier Minuten (OpenSSL beim
+ersten Mal deutlich länger) — Erfahrungswert von dieser Maschine, nicht gemessen.
 
 ## Was gebaut wird
 
 `Eudora71/Bin/Debug`: `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`,
-`EuLang.dll`, `plstclnt.dll`
+`EuLang.dll`, `plstclnt.dll` sowie `NSImport.eif`, `OEImport.eif`, `OLImport.eif` —
+die drei Importer sind ebenfalls DLLs, nur mit der Plugin-Endung `.eif`
+(`<OutputFile>$(OutDir)$(ProjectName).eif</OutputFile>`).
+
+`Eudora71/EudoraOldIcons/Debug`: `EudoraOldIcons.epi` — dasselbe, Endung `.epi`.
+Dieses Projekt schreibt als einziges nicht nach `Bin/Debug`.
 
 `Eudora71/Lib/Debug`: `AccountWizard.lib`, `DirectoryServicesUI.lib`, `EuImap.lib`,
 `EuLang.lib`, `Imap.lib`, `OEImport.lib`, `OLImport.lib`, `QCSSL.lib`, `QCSocket.lib`,
-`QCUtils.lib`, `SearchEngine.lib`
+`QCUtils.lib`, `SearchEngine.lib` — elf Stueck. Sieben davon sind Importbibliotheken
+zu den DLLs (kenntlich an der `.exp` daneben), echte statische Bibliotheken sind nur
+`AccountWizard`, `DirectoryServicesUI`, `EuImap`, `SearchEngine`. Im selben
+Verzeichnis liegen zusaetzlich sechs vorgefertigte Fremdbibliotheken, die kein
+Projekt der Solution erzeugt (`EuMemMgr.lib`, `Paige32d.lib`, `SSCEWD32.LIB`,
+`Uuid.Lib`, `libpng.lib`, `zlib.lib`); insgesamt sind es dort also 17 `.lib`.
 
 `Eudora71/OpenSSL3/lib`: `libcrypto.lib`, `libssl.lib` (OpenSSL 3.5.8 LTS, statisch)
 — das, wogegen QCSSL heute gebaut wird.
@@ -68,14 +91,26 @@ gehören aber `SECRES.RC`, `SECRES.APS` und der Unterordner `RES`. Von den
 Dasselbe gilt für die zweite Kopie unter `Sandbox/OT501`.
 
 Eudora leitet an **30 Stellen** von **22 verschiedenen** dieser Klassen ab und ruft
-77 Methoden auf; insgesamt referenzieren die Eudora-Quellen 52 verschiedene
-`SEC`-Bezeichner (Klassen, Makros, Konstanten; ausgezählt in
-[Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md), dessen Abschnitt 1
-unvollständig war). Früher stand hier "rund 63 Klassen" — diese Zahl ist durch die
-Bestandsaufnahme überholt und wird auch weiter unten nicht mehr benutzt.
-Beispiele: (`SECWorkbook`, `SECControlBar`,
-`SECCustomToolBar`, `SECMDIFrameWnd`, `SECTab` …). Ohne `ota50d.lib` linkt
-`Eudora.exe` nicht.
+**77 Methoden** auf. Beide Zahlen sind die Zeilenzahlen der Abschnitte 1 und 2 von
+[Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md) und nachgezählt.
+
+Abschnitt 3 des Inventars listet 52 weitere `SEC`-Bezeichner. **Diese 52 ist keine
+belastbare Zahl** und sollte nicht zitiert werden: sie enthält mindestens zwei
+Fehltreffer (`SEC_TEXT` ist ein SSPI-Makro aus `Sspi.h`, `SECCustonToolBar` ein
+Tippfehler in einem Kommentar — beides in `PLAN.md` belegt) und ihr fehlen
+umgekehrt Bezeichner, die in den Quellen tatsächlich vorkommen, etwa `SEC_AUX_DATA`
+und `SEC_WNDBTN_RESIZE_WIDTH`. Früher stand hier "rund 63 Klassen" — auch das ist
+überholt.
+
+Gemessen an den Quellen selbst: **42** `.cpp` und **30** `.h` unter
+`Eudora71/Eudora` nennen mindestens einen Stingray-Bezeichner. Gezählt über
+`\bSEC[A-Za-z_]…`, abzüglich der Treffer, die kein Stingray sind — die SSPI-Namen
+in `AuthRPA.cpp` (`SEC_E_*`, `SEC_I_*`, `SECPKG_*`, `SECBUFFER_*`, `SECURITY_*`),
+`SECRET_SEED` in `timestmp.cpp` und `SECTION` in `persona.cpp`. Im README stand
+dafür lange 39; diese Zahl ließ sich nicht reproduzieren.
+
+Beispiele für die Klassen: `SECWorkbook`, `SECControlBar`, `SECCustomToolBar`,
+`SECMDIFrameWnd`, `SECTab`. Ohne `ota50d.lib` linkt `Eudora.exe` nicht.
 
 Eine fertige VC6-`ota50d.lib` hilft **nicht** — sie wäre ABI-inkompatibel zu VS2022
 (andere CRT, andere MFC-Version). Die Bibliothek müsste in jedem Fall aus Quellen
@@ -101,8 +136,17 @@ aufgerufen. Die Registerkartenleiste ist verzichtbar, `SECStatusBar` erledigt ei
 
 QCSSL hing an **OpenSSL 0.9.7l von 2006** — maximal TLS 1.0. Damit kam Eudora an
 keinem aktuellen Mailserver mehr vorbei. Die Umstellung auf **OpenSSL 3.5.8 LTS** ist
-abgeschlossen; `QCSSL.dll` setzt keine Protokoll-Obergrenze mehr, TLS 1.3 ist damit
-nicht ausgeschlossen. Nachgemessen, welches Protokoll ausgehandelt wird, ist es nicht.
+abgeschlossen; `QCSSL.dll` setzt keine Protokoll-Obergrenze mehr. Nachgemessen wird
+**TLS 1.3 tatsächlich ausgehandelt**:
+
+| Messung | Ergebnis |
+|---|---|
+| Komponententest, lokaler Server (`Eudora71/Tests/QCSSL`, Fall 1a) | `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, `SSLSUCCEEDED` |
+| Betrieb, 29.08.2026, `pop.gmx.net:995` (IP 212.227.17.185), Eudora-Dialog "SSL Connection Information Manager" | `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded` |
+
+Die zweite Messung stammt gesichert aus **dieser** DLL und nicht aus HermesSSL:
+HermesSSL 7.8 gamma setzt auf OpenSSL 1.0.2p auf, und 1.0.2 beherrscht TLS 1.3
+nicht.
 
 Günstig war die Ausgangslage: der gesamte OpenSSL-Kontakt steckt in **einer Datei**,
 `Eudora71/QCSSL/src/QCSSLContext.cpp`, und QCSSL linkt OpenSSL **statisch** — die
@@ -121,9 +165,11 @@ Umgestellt wurde:
 | `qccertificate.cpp` `ctx->ex_data` | Struktur opak | `X509_STORE_get_ex_data(X509_STORE_CTX_get0_store(...))` |
 
 SSLv2 und SSLv3 sind damit abgeschaltet. Als Mindestprotokoll setzt
-`QCSSLContext.cpp` bei sieben der acht Werte von `m_ProtocolVersion` — 0, 1, 2, 4,
-5, 6, 7 — `TLS1_2_VERSION`. Der achte, `m_ProtocolVersion == 3` (früher "TLSv1"),
-setzt `TLS1_VERSION`, also TLS 1.0. Eine Obergrenze wird nirgends gesetzt.
+`QCSSLContext.cpp:561-583` bei sieben der acht Werte von `m_ProtocolVersion` — 0, 1,
+2, 4, 5, 6, 7 — `TLS1_2_VERSION`. Der achte, `m_ProtocolVersion == 3` (früher
+"TLSv1"), setzt `TLS1_VERSION`, also TLS 1.0. Ein ungültiger Wert landet im
+`default`-Zweig, meldet `IDS_ERR_VERSIONINVALID` und bleibt beim Startwert
+`TLS1_2_VERSION` (`:559`). Eine Obergrenze wird nirgends gesetzt.
 
 ### Bau von OpenSSL 3.5.8
 
@@ -148,6 +194,12 @@ Quellen-SHA256: `a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b
 davon gar nicht mehr gebaut; übrig blieben nur AES-CBC-Suiten mit SHA-1. Damit fiel
 jedes AEAD-Verfahren weg — und genau darauf bestehen heutige Server bei TLS 1.2.
 Die alte Liste hätte den Handshake also nicht abgesichert, sondern verhindert.
+
+Das ist inzwischen keine Erwartung mehr, sondern gemessen: gegen `pop.gmx.net` wurde
+`TLS_AES_256_GCM_SHA384` ausgehandelt — ein AEAD-Verfahren, das in der Liste von 2006
+nicht vorkam. Die Entfernung war notwendig, nicht vorsorglich. Ohne feste Liste bietet
+QCSSL **30 Cipher Suites** an, keine davon mit RC4, 3DES oder EXPORT
+(`Eudora71/Tests/QCSSL/work/ergebnis_openssl_lokal.txt`, Prüfpunkt 3).
 
 Der ursprüngliche Kommentar im Code sagte, der Aufruf sei gleichbedeutend mit den
 OpenSSL-Vorgaben. Das galt 2006. Seit Commit `643305d` wird die Liste nicht mehr
@@ -196,7 +248,27 @@ trotzdem echte Schwaechen:
    Hinweistext angehaengt; der Rueckgabewert haengt allein am Handshake-Ergebnis.
    Geprueft wird ausserdem nur der CN, keine SAN-Eintraege - moderne Zertifikate
    fuehren oft gar keinen CN mehr. `X509_check_host` gab es in 0.9.7 noch nicht,
-   die Luecke ist also Altbestand.
+   die Luecke ist also Altbestand. Weder `X509_check_host` noch
+   `SSL_set_tlsext_host_name` kommen in QCSSL vor (gegrept ueber
+   `Eudora71/QCSSL/src`).
+
+   **Zweimal gemessen, im Test und im Betrieb.** Der Komponententest (Fall 1c,
+   Server auf Port 14433 mit `CN=falsch.example.com`) liefert `SSLSUCCEEDED`,
+   `ErrorCode 0`, `m_bCertRejected = false` und dazu die beiden Texte
+   "Certificate bad: Destination Host name does not match host name in
+   certificate" und "But ignoring this error because Certificate is trusted".
+   Genau dieselben zwei Texte zeigt Eudora am 29.08.2026 im Betrieb gegen
+   `pop.gmx.net` — bei `Status: Succeeded`.
+
+   Die praktische Folge ist damit belegt: weil nur der CN und keine SAN geprueft
+   wird, schlaegt der Namensabgleich bei heutigen Zertifikaten regelmaessig fehl;
+   GMX ist kein Sonderfall. Eudora erkennt die Abweichung, meldet sie und faehrt
+   trotzdem fort, weil es sich allein auf "Aussteller ist vertraut" stuetzt. Die
+   Namenspruefung ist damit faktisch wirkungslos - uebrig bleibt allein die
+   Pruefung des Ausstellers.
+
+   **Nicht behoben, und zwar bewusst:** die Behebung ist zurueckgestellt. Dieser
+   Abschnitt dokumentiert nur.
 4. **Kein SNI.** `SSL_set_tlsext_host_name` wird nicht gesetzt, vorher wie nachher.
    Bei Mailservern hinter gemeinsamer IP liefert der Server das Standardzertifikat.
 
@@ -206,38 +278,52 @@ QCSSL prüft Serverzertifikate gegen `rootcerts.p7b` im Eudora- oder Programm-
 verzeichnis (`QCSSLContext.cpp:53`, geladen in `SetupCertificates()`), **nicht** gegen
 den Windows-Zertifikatspeicher. Die Fassung aus Eudora 7.1 ist von 2005.
 
-Nachgemessen am mitgelieferten `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b`:
-**30 Zertifikate, das neueste vom 04.03.2004, davon 17 im August 2026 abgelaufen.**
-(`certutil -dump` auf die Datei; ausgewertet wurden die Felder "Nicht vor"/"Nicht nach".)
+Im Repo liegen **zwei verschiedene** Altbestände dieser Datei — sie haben
+verschiedene SHA256 und verschiedenen Inhalt. Beide am 29.08.2026 nachgemessen
+(`X509Certificate2Collection.Import`, ausgewertet `NotBefore`/`NotAfter`):
+
+| Datei | Zertifikate | ältestes `NotBefore` | jüngstes `NotBefore` | heute abgelaufen | noch gültig |
+|---|---|---|---|---|---|
+| `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` | 30 | 09.11.1994 | 04.03.2004 | 17 | 13 |
+| `Eudora71/Bin/Release/rootcerts.p7b` (identisch mit `Bin/Debug`) | 19 | 09.11.1994 | 22.09.2000 | 8 | 11 |
+
+Der Installer verteilt die erste, der Build-Baum trägt die zweite. Im README stand
+für die zweite Datei früher "19 Zertifikate von 1996-1998" — die Anzahl stimmt, der
+Zeitraum nicht.
 
 Die Portierung auf OpenSSL 3.x ändert daran nichts. Auf einer unberührten 7.1-
 Installation ist deshalb ein Zertifikatsfehler (`IDS_CERTERR_UNKNOWNROOT`) zu erwarten,
 obwohl der TLS-Handshake selbst funktioniert. Ob es real dazu kommt, ist **ungeprüft**
-und hängt davon ab, welche der 13 noch gültigen Wurzeln der Mailserver verwendet.
+und hängt davon ab, welche der noch gültigen Wurzeln der Mailserver verwendet.
 
 Der erfolgreiche Test lief auf einer Installation mit **HermesSSL 7.8 gamma**, die
 einen aktuellen Speicher mitbringt — das erklärt, warum die Zertifikatsprüfung dort
-durchlief. Es erklärt zugleich, warum im Alltag kein Unterschied spürbar war: Hermes
-liefert OpenSSL 1.0.2p und damit bereits TLS 1.2.
+durchlief; der Lauf gegen GMX meldete "Certificate is trusted". Für die
+TLS-Version ist Hermes dagegen ausgeschlossen: es liefert OpenSSL 1.0.2p, das kein
+TLS 1.3 kann, gemessen wurde aber TLS 1.3.
 
-Zu tun: einen aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen.
+Erledigt seit `75b60e1`: `Releases/1.0/rootcerts.p7b` mit 121 Zertifikaten liegt dem
+Release bei, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Einzelheiten in
+`Releases/1.0/README.md`.
 
 ## Nächster Schritt
 
-1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt, Abruf und Versand
-   laufen. Einschränkungen: die Installation hatte HermesSSL samt aktuellem
-   Wurzelzertifikatsspeicher. **Ungeklärt**, welcher Build getestet wurde — `643305d`
-   hat die DLL um 20:02 neu gebaut; ob davor oder danach kopiert wurde, ist nicht
-   festgestellt. Per SHA256 gegen `Releases/1.0/QCSSL.dll.sha256` nachprüfbar. Offen: mit der aktuellen
-   DLL wiederholen und über "Last SSL Info" protokollieren, welches Protokoll und
-   welche Cipher-Suite ausgehandelt werden.
-2. Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen — sonst ist das Paket
-   nur auf Installationen mit HermesSSL vollständig.
-3. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe`.
-   Die Familienanalyse ist fertig, der Stufenplan steht in
+1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt. Abruf und Versand
+   laufen; am 29.08.2026 gegen `pop.gmx.net:995` protokolliert: `TLSv1.3`,
+   `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Einschränkung: die
+   Installation hatte HermesSSL samt aktuellem Wurzelzertifikatsspeicher, die
+   Kette wurde deshalb als vertrauenswürdig eingestuft. Dass die gemessene
+   TLS-Verbindung von dieser DLL stammt, ist gesichert — HermesSSL 7.8 gamma
+   beruht auf OpenSSL 1.0.2p und kann kein TLS 1.3.
+2. ~~Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen~~ — erledigt mit
+   `75b60e1`.
+3. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe` **und**
+   für `EudoraRes.dll`. Die Familienanalyse ist fertig, der Stufenplan steht in
    [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md). Reihenfolge: Stufe 0 (typedef
    für `SECStatusBar`, Stub für `SECTipOfDay`), Stufe 1 (MDI ohne Registerkarten —
    Ziel: ein startendes `Eudora.exe`), dann Andockfamilie, Werkzeugleisten, Bilder.
+4. Hostnamenprüfung — bewusst zurückgestellt, siehe oben. Der Befund ist
+   dokumentiert, nicht behoben.
 
 ## Angewandte Korrekturen (Kategorien)
 
@@ -415,11 +501,11 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
 - **Build-Artefakte im Repo**: `.pdb`, `.idb`, `.tlog`, `.sbr` und `Build/`-Ordner sind
   aus dem ersten Import mit eingecheckt und tauchen bei jedem Build als Änderung auf.
   Die `.gitignore` ist inzwischen repariert (jede Zeile hatte ein Leerzeichen am Ende,
-  weshalb kein einziges Muster griff) und hält rund 2000 unversionierte Dateien fern
-  (2003 gemessen mit `git ls-files -o -i --exclude-standard | wc -l`; die Zahl
-  schwankt mit dem Build-Zustand des Arbeitsverzeichnisses). Die
-  bereits **getrackten** Altbestände bleiben sichtbar — sie müssten per
-  `git rm --cached` aus dem Index.
+  weshalb kein einziges Muster griff) und hält einige tausend unversionierte Dateien
+  fern. Die Zahl schwankt mit dem Build-Zustand des Arbeitsverzeichnisses und ist
+  deshalb kein fester Wert: `git ls-files -o -i --exclude-standard | wc -l` ergab am
+  28.08.2026 2003, am 29.08.2026 2183. Die bereits **getrackten** Altbestände bleiben
+  sichtbar — sie müssten per `git rm --cached` aus dem Index.
 - **Drei Blocker unabhängig von OT501**, gefunden bei der Familienanalyse:
   `statbar.h:71` deklariert `afx_msg void OnTimer(UINT)`, `ON_WM_TIMER()` verlangt in
   MFC 14 aber `UINT_PTR`; der PNG-Code in `QCGraphics.cpp` greift an vier Stellen
