@@ -8,25 +8,40 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-> **Achtung — der Solution-Bau ist zurzeit zusaetzlich gebrochen (gemessen an
-> `8dd6b2a`, 29.08.2026).** `7dcac81` hat in `Eudora71/Eudora/stdafx.h:52`
-> `secall.h` durch `OTShimAll.h` ersetzt. Auf dem Include-Pfad steht
-> `Eudora71/OTShim` aber **nur in `Eudora.vcxproj`**. Die vier anderen Projekte,
-> die `Eudora/stdafx.h` mitbenutzen, finden die Datei deshalb nicht und brechen
-> jeweils mit `C1083: OTShimAll.h` ab: `AccountWizard`,
-> `DirectoryServicesUI`, `EuImap`, `SearchEngine`. Ein voller Solution-Bau meldet
-> damit **7 Fehler**: 3 aus `OT501` (`NMAKE U1073` zweimal, `MSB3073` einmal) und
-> viermal `C1083`. Bis das behoben ist, gelten die Zahlen im folgenden Abschnitt
-> nicht — es werden derzeit **11 der 18** Projekte fertig, nicht 15. Behebbar
-> vermutlich durch Aufnahme von `..\OTShim` in die
-> `AdditionalIncludeDirectories` der vier Projekte; **nicht nachgeprueft**, weil
-> an `OTShim/` parallel gearbeitet wird.
+> **Achtung — der Bau ist zurzeit an zwei Stellen gebrochen.** Gemessen an
+> Commit `e7e6f3c` am 29.08.2026, `Debug|x86`, Toolset v143 (MSVC 14.38.33130).
+> Beides sind Folgen davon, dass die OT501-Ersatzschicht halb eingehaengt ist.
+>
+> **1. Vier Projekte finden `OTShimAll.h` nicht.** `7dcac81` hat in
+> `Eudora71/Eudora/stdafx.h:52` `secall.h` durch `OTShimAll.h` ersetzt. Auf dem
+> Include-Pfad steht `Eudora71/OTShim` aber **nur in `Eudora.vcxproj`**
+> (Zeile 66). Die vier anderen Projekte, die `Eudora/stdafx.h` mitbenutzen,
+> brechen deshalb mit `C1083: OTShimAll.h` ab: `AccountWizard`,
+> `DirectoryServicesUI`, `EuImap`, `SearchEngine`. Ein voller Solution-Bau
+> meldet damit **7 Fehler**: 3 aus `OT501` (zweimal `NMAKE U1073`, einmal
+> `MSB3073`) und viermal `C1083`. Es werden derzeit **11 der 18** Projekte
+> fertig. Behebbar vermutlich durch Aufnahme von `..\OTShim` in die
+> `AdditionalIncludeDirectories` der vier Projekte — **nicht nachgeprueft**,
+> weil an `OTShim/` parallel gearbeitet wird.
+>
+> **2. `Eudora` selbst uebersetzt nicht mehr.** Einzeln gebaut
+> (`-p:BuildProjectReferences=false`) endet es mit **1 Fehler**:
+> `secbtns.h(340,83): error C2572: "SECLoadSysColorBitmap": Neudefinition des
+> Standardarguments`. Ursache ist der auskommentierte Waechter `__SECBTNS_H__`
+> in `OTShimAll.h`: die Ersatzschicht deklariert die Funktion, und `secall.h`
+> zieht das Stingray-Original daneben. Der Waechter wartet dort ausdruecklich
+> darauf, dass Stufe 3 eingehaengt wird.
+>
+> **Der Linker wird derzeit also gar nicht erreicht.** Die Symbolzahlen in
+> `WEITERMACHEN.md` (1088 / 651 / rund 299) stammen aus einem frueheren Zustand
+> und sind an `e7e6f3c` **nicht reproduzierbar**.
 
-Die Zahlen im Rest dieses Abschnitts sind an Commit `fd9a235` gemessen,
-Konfiguration `Debug|x86`, Toolset v143 (MSVC 14.38.33130). Am Baum wird gerade
+Die Zahlen im Rest dieses Abschnitts sind an Commit `fd9a235` gemessen — also an
+dem Zustand, bevor die Ersatzschicht eingehaengt wurde. Am Baum wird gerade
 weitergearbeitet; wer den Stand pruefen will, misst neu.
 
-**Ohne den oben genannten Fehler werden 15 der 18 Projekte fertig.** Drei nicht:
+**Ohne die beiden oben genannten Fehler werden 15 der 18 Projekte fertig.** Drei
+nicht:
 
 - `OT501` — die Stingray-Quellen sind nicht freigegeben, das Projekt bricht mit
   `NMAKE U1073` ab.
@@ -157,7 +172,7 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 
 | Thema | Stand |
 |---|---|
-| OT501-Ersatzschicht | **Stufe 0 und 1 fertig** (`Eudora71/OTShim/`, bei `fd9a235` 2272 Zeilen: 987 in `OTShim.h`, 1285 in `OTShim.cpp`; syntaktisch geprueft, noch nicht eingehaengt). Offen: Stufe 2 (Andockleisten mit prozentualen Zeilenbreiten und Splittern) — danach sollte `Eudora.exe` linken |
+| OT501-Ersatzschicht | **Stufe 0-4 geschrieben, halb eingehaengt.** `Eudora71/OTShim/` umfasst an `e7e6f3c` **17795 Zeilen** in 11 Dateien (gezaehlt mit `wc -l`). Eingehaengt sind ueber `OTShimAll.h` nur Stufe 0-2 (`OTShim.h/.cpp`) und Stufe 4 (`OTShim_Bild.h/.cpp`). **Nicht** eingehaengt: Stufe 3 (`OTShim_Werkzeugleiste.*`, 6083 Zeilen), Registerkarten (`OTShim_Reiter.*`, 2925) und `SECDateTimeCtrl` (`OTShim_Palette.*`, 890) — sie stehen weder in `OTShimAll.h` noch in `Eudora.vcxproj`. Genau daher kommt der `C2572`-Fehler oben |
 | OTShim einhaengen | offen — `OTShim.h` in `stdafx.h` (dort kommt bisher `secall.h` herein), `OTShim.cpp` ins Projekt mit `/Y-` (kein vorkompilierter Header) |
 | Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig; es scheitert jetzt allein am Linker, dem `OTA50D.LIB` fehlt. `EudoraRes.vcxproj` steht genauso da |
@@ -167,7 +182,7 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | Aktueller `rootcerts.p7b` für das Release | **erledigt** seit `75b60e1` — `Releases/1.0/rootcerts.p7b` mit 121 Zertifikaten, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Die Altbestaende im Baum sind **zwei verschiedene Dateien** (verschiedene SHA256): `Eudora71/Bin/Release/rootcerts.p7b` mit 19 Zertifikaten (aeltestes gueltig ab 09.11.1994, juengstes ab 22.09.2000), 8 davon heute abgelaufen; `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` mit 30, juengstes ab 04.03.2004, 17 abgelaufen. QCSSL prueft nur gegen diese Datei, nicht gegen den Windows-Speicher |
 | Zeichensatz-Darstellung | **fertig** — `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`). Die beiden von den Unit-Tests nachgewiesenen Fehler sind behoben: sieben falsche Zuordnungen berichtigt, `ISOTranslate` laeuft jetzt in einem Durchgang statt in 123 Ersetzungslaeufen. 23 von 23 Tests gruen. Siehe `PORTIERUNG.md` |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
-| Build-Artefakte im Repo | **erledigt** seit `e4a0fae` — `.gitignore` greift, 108 Dateien sind aus dem Index. Getrackt sind noch 20 `.pdb`, die zu vorgefertigten Fremd-DLLs unter `Bin/Debug` und `Bin/Release` gehoeren und nicht aus diesem Bau stammen |
+| Build-Artefakte im Repo | **erledigt** seit `e4a0fae` — `.gitignore` greift, **107** Dateien sind aus dem Index (der Commit zeigt 108 geaenderte Dateien, davon 107 geloescht und die `.gitignore` selbst). Getrackt sind noch 20 `.pdb`, die zu vorgefertigten Fremd-DLLs unter `Bin/Debug` und `Bin/Release` gehoeren und nicht aus diesem Bau stammen |
 
 ## Ergänzungen gegenüber der CHM-Freigabe
 
