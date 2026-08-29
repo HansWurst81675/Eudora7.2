@@ -121,7 +121,8 @@ END
 #define CREATEPROCESS_MANIFEST_RESOURCE_ID  1
 #endif
 
-CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Eudora.manifest" 
+// Manifest bettet jetzt der Linker ein (sonst doppelte Ressource, CVT1100):
+//CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "Eudora.manifest" 
 
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
