@@ -1,7 +1,8 @@
 # Befundbericht Korrektheitspruefung
 
 **Geprueft am:** 2026-08-29
-**Stand:** `b4b7de5` auf Branch `vs2022-portierung-fixes`
+**Stand Teil 1:** `b4b7de5` bzw. Nachtrag `ba617a8` auf Branch `vs2022-portierung-fixes`
+**Stand Teil 2 (Nachpruefung, unvollstaendig):** `8dd6b2a` - siehe letzter Abschnitt
 (Durchsicht begann bei `fd9a235`; die waehrenddessen entstandenen Commits
 `e4a0fae`, `75b60e1`, `b4b7de5` sind eingearbeitet.)
 **Vergleichsbasis:** `git diff main...HEAD`
@@ -677,3 +678,135 @@ OpenSSL-3-Strukturen auf Zugriffsfunktionen stimmt an allen geprueften
 Stellen; der Zeigerschmuggel durch die BIO-Schicht ist konsistent. Die
 einzige echte Regression liegt nicht in der API-Umstellung, sondern in der
 umgebauten Ablaufsteuerung von `SetSSLVersion()`.
+
+---
+
+# Nachpruefung 2 (Bereich `ba617a8..8dd6b2a`) - ABGEBROCHEN, UNVOLLSTAENDIG
+
+**Bezugscommit des neuen Teils:** `8dd6b2a` auf `vs2022-portierung-fixes`
+**Vergleichsbasis:** `git diff ba617a8..HEAD`
+**Abgebrochen am:** 2026-08-29, wegen Herunterfahren des Rechners.
+
+Alles oberhalb dieser Linie bezieht sich unveraendert auf den alten Stand
+`ba617a8` und ist abgeschlossen. Alles ab hier ist **Zwischenstand**.
+
+## Zu pruefender Bereich
+
+```
+8dd6b2a Lehren werden jetzt automatisch ins Repo gespiegelt
+adcede6 Arbeitsweise/: die Lehren aus dem Projekt liegen jetzt im Repo
+7d94c3d PLAN.md berichtigt: Registerkarten sind nicht verzichtbar
+91716bb OT501-Ersatzschicht Stufe 3: Werkzeugleisten und Knoepfe
+94e32c6 QCSSL bekommt eine ablesbare Kennung
+dd65c33 OTShim Stufe 2b: der Rest der Andockfamilie
+7dcac81 OT501-Ersatzschicht in Eudora eingehaengt
+1a0c343 Zertifikatspruefung: Verschaerfung als Patch bereitgelegt
+a7478b0 OTShim Stufe 2: Andockfamilie
+bc94cf0 MAPI: kein Schreibzugriff mehr in den fremden WM_COPYDATA-Puffer
+f42466b Eudora: SafeSEH und doppeltes Manifest
+```
+
+Rund 11.200 eingefuegte Zeilen, davon 6.083 allein in
+`OTShim_Werkzeugleiste.{h,cpp}`.
+
+## Erledigt: geprueft und in Ordnung
+
+- **`QCSSLContext.cpp`, Behebung von H1** (`7d94c3d`-Reihe): `break;` wurde
+  durch `return NULL;` ersetzt. Das stellt das alte Verhalten **wirklich
+  wieder her** und verschiebt es nicht: `SetSSLVersion()` liefert wie frueher
+  `NULL`, und `BeginQCSSLSession()` faengt das in Z. 750 mit
+  `if (!pSSLCtx) { ASSERT(0); g_Mutex.Unlock(); return false; }` ab. Zu
+  diesem Zeitpunkt ist noch kein `SSL_CTX` angelegt, es leckt also nichts.
+  **H1 ist damit erledigt.**
+- **`mapicmc.cpp` (`bc94cf0`)**: `current_line = CString(pszData, (int)(pszNewline - pszData));`
+  ersetzt das Setzen und Zuruecksetzen des NUL-Bytes. Bei `WM_COPYDATA` liegt
+  der Puffer im fremden Prozess; der Schreibzugriff faellt jetzt weg. Der
+  ausgeschnittene Text ist byteweise derselbe. Richtig.
+- **`EudoraExe.rc` / Manifest (`f42466b`)**: Das `RT_MANIFEST` aus der `.rc`
+  auszukommentieren ist unbedenklich - `Eudora.vcxproj:966` fuehrt
+  `<Manifest Include="Eudora.manifest" />`, und MSBuild reicht `@(Manifest)`
+  an den Linker weiter. Die Abhaengigkeit auf
+  `Microsoft.Windows.Common-Controls 6.0.0.0` (und damit die Fensterthemen,
+  auf die `XPThemedAppearance` baut) bleibt im erzeugten Manifest erhalten.
+  Nachgesehen, nicht vermutet.
+- **`qcssl.rc` (`94e32c6`)**: nur Versionstexte, ohne Wirkung auf den Ablauf.
+
+## Neuer Befund
+
+### NP2-1 - Stufe 3 haengt nirgends: 6.083 Zeilen ohne Uebersetzung
+
+**Sicherheit: nachgewiesen**
+
+**Dateien:** `Eudora71/OTShim/OTShim_Werkzeugleiste.h`,
+`Eudora71/OTShim/OTShim_Werkzeugleiste.cpp` (Commit `91716bb`),
+`Eudora71/OTShim/OTShimAll.h`, `Eudora71/Eudora/Eudora.vcxproj`
+
+Gemessen, nicht geschaetzt:
+
+```
+grep -c OTShim_Werkzeugleiste Eudora71/Eudora/Eudora.vcxproj  -> 0
+grep -c OTShim_Werkzeugleiste Eudora71/OTShim/OTShimAll.h     -> 0
+```
+
+`7dcac81` hat drei Dateien ins Projekt genommen (`OTShim.cpp`,
+`OTShim_Bild.cpp`, `OT501/Src/secaux.cpp`) und `OTShimAll.h` angelegt. Beides
+ist **vor** `91716bb` passiert und danach nicht nachgezogen worden. Folge:
+
+1. `OTShim_Werkzeugleiste.cpp` wird von keinem Projekt uebersetzt. Die 4.671
+   Zeilen sind bisher durch **keinen Uebersetzer gelaufen**.
+2. `OTShim_Werkzeugleiste.h` wird von `OTShimAll.h` nicht eingebunden. Die
+   Klassen `SECStdBtn`, `SECWndBtn`, `SECTwoPartBtn`, `SECComboBtn`,
+   `SECCustomToolBar`, `SECToolBarManager` kommen fuer Eudora weiterhin aus
+   den Stingray-Originalen unter `OT501/Include` - fuer die es keine
+   Implementierung gibt.
+3. `OTShimAll.h` Z. 38-40 haelt den Waechter dafuer ausdruecklich noch
+   zurueck:
+   ```
+   // #ifndef __SECBTNS_H__  -- erst setzen, wenn Stufe 3 (Knoepfe) geliefert ist
+   ```
+   Stufe 3 **ist** geliefert; die Zeile ist seitdem veraltet. Umgekehrt wuerde
+   das Setzen des Waechters ohne Einbinden von `OTShim_Werkzeugleiste.h` die
+   Knopfklassen ersatzlos verschwinden lassen.
+
+Das ist derselbe Befundtyp wie N6 aus der ersten Runde, nur eine Stufe
+weiter: Der Code ist da, er ist nur an nichts angeschlossen. Solange das so
+ist, sagt "uebersetzt" ueber Stufe 3 gar nichts aus - auch der
+Uebersetzungsfehler waere noch nicht gefunden.
+
+**Zu tun (fuer die naechste Sitzung, nicht fuer den Pruefer):**
+`OTShim_Werkzeugleiste.cpp` in `Eudora.vcxproj` aufnehmen (wie die anderen
+drei mit `<PrecompiledHeader>NotUsing</PrecompiledHeader>`),
+`OTShim_Werkzeugleiste.h` in `OTShimAll.h` einbinden und dabei die Waechter
+`__TBTNSTD_H__`, `__TBTNWND_H__`, `__TBTN2PRT_H__`, `__TBTNCMBO_H__`,
+`__TBARCUST_H__`, `__TBARMGR_H__`, `__TBARPAGE_H__`, `__TBARTRCK_H__` und
+`__SECBTNS_H__` gemeinsam setzen. `OTShim_Werkzeugleiste.h:1402-1405` setzt
+vier davon bereits selbst - das ist beim Zusammenfuehren zu beachten, damit
+kein Waechter doppelt oder gar nicht gesetzt wird.
+
+## Noch offen - hier ansetzen
+
+Die inhaltliche Pruefung des neuen Codes hat **nicht mehr stattgefunden**.
+Angesehen wurde bisher nur die Gliederung (Klassenliste des Headers,
+Funktionsliste des `.cpp`). Offen sind:
+
+| Prioritaet | Gegenstand | Stand |
+|---|---|---|
+| 1 | `OTShim_Werkzeugleiste.cpp` `SECStdBtn::DrawFace` (Z. 688-762) gegen `TBarSendButton.cpp:71-160` und die auskommentierte zweite Kopie in `MoodMailStatic.cpp:63-120` | **nicht begonnen** |
+| 1 | `SECBtnDrawData` (Z. 156ff Header, Z. 286-438 cpp): drei `CPaletteDC` als Wertfelder - Lebensdauer, Freigabe der GDI-Objekte, Verhalten bei fehlgeschlagenem `CreateCompatibleDC` | **nicht begonnen** |
+| 1 | `SECCustomToolBar`: Anordnung, Umbruch, Mausbehandlung, `OnUpdateCmdUI` mit eigener `CCmdUI`-Ableitung; Indexgrenzen und Nullzeiger | **nicht begonnen** |
+| 1 | `SECToolBarManager::LoadState` gegen `QCLoadState` | **nicht begonnen** |
+| 1 | `CSafetyPalette`/`CPaletteDC` (cpp Z. 121-284) - in der Freigabe nie implementiert | **nicht begonnen** |
+| 2 | `OTShim.{h,cpp}` Stufe 2/2b (`a7478b0`, `dd65c33`): `SECControlBar`, `SECDockBar`, `SECMiniDockFrameWnd`, `SECFrameWnd`, `SECDockState`, `SECControlBarInfo(Ex)`, `SECControlBarManager`, `SECDockContext`; besonders die zweite Dockbar `m_wndSECDockBar` neben dem geerbten `m_wndDockBar` | **nicht begonnen** |
+| 3 | `OTShim_Bild.*` (`e81adb0`): Wiederherstellen der Bitmapauswahl in **allen** Rueckgabepfaden von `CreateFromBitmap`, auch im Fehlerfall | **nicht begonnen** |
+| 4 | `tools/lehren-spiegeln.pl` (`8dd6b2a`/`adcede6`), im pre-commit-Hook | **nicht begonnen** |
+| 4 | `tools/patches/zertifikatspruefung-verschaerfen.patch` (`1a0c343`) - liegt nur bereit, ist nicht angewandt | **nicht begonnen** |
+
+Nicht zu pruefen (waren beim Abbruch noch im Fluss, andere Agenten):
+`OTShim_Reiter.{h,cpp}`, `OTShim_Palette.{h,cpp}`.
+
+Weiterhin ausgenommen: die **Hostnamenpruefung** in QCSSL.
+
+## Stand der alten Befunde
+
+Nicht erneut nachgesehen; sie beziehen sich auf `ba617a8`. Ausnahme: **H1 ist
+behoben** (siehe oben). `M3` war schon im Nachtrag als ueberholt vermerkt.
