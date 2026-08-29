@@ -1,4 +1,4 @@
-// OTShim.h - Ersatzschicht fuer Stingray Objective Toolkit 5.0.1, Stufe 0
+// OTShim.h - Ersatzschicht fuer Stingray Objective Toolkit 5.0.1, Stufen 0 bis 2
 //
 // Von OT501 liegen nur die Header unter Eudora71/OT501/Include vor; die
 // Implementierung fehlt in der Freigabe (einzige Ausnahme: secaux.cpp).
@@ -331,6 +331,632 @@ inline BOOL SECLoadSysColorBitmap(CBitmap& bmp, LPCTSTR lpszName,
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 //
+// STUFE 2 - ANDOCKFAMILIE (OTShim/PLAN.md, "Stufe 2 - Andockfamilie")
+//
+// Ersetzt die beiden Originalheader
+//
+//     OT501/Include/sbarcore.h  SECGripperInfo, SECControlBar
+//     OT501/Include/sbardock.h  SECDockBar (mit Splitter/ClientEdge),
+//                               SECMiniDockFrameWnd
+//
+// Der Abschnitt steht VOR Stufe 1, weil SECControlBarWorksheet ein Wertfeld
+// vom Typ SECDockBar traegt (SECWB.H:227) und dafuer die vollstaendige
+// Definition braucht.
+//
+// GRUNDENTSCHEIDUNG: die Andockmechanik kommt von MFC, nicht von Stingray.
+// CControlBar/CDockBar/CMiniDockFrameWnd koennen andocken, schweben und
+// Zeilen umbrechen. Was MFC nicht hat, sind die beiden Stingray-Zugaben:
+//
+//   (1) prozentuale Zeilenbreiten (m_fPctWidth) mit Splittern zwischen den
+//       Leisten einer Zeile,
+//   (2) eine Leiste als eigenes MDI-Kindfenster schweben lassen
+//       (ID_SEC_MDIFLOAT).
+//
+// Beides bleibt in dieser Stufe unbesetzt; die Felder und Methoden sind
+// vorhanden und feldgenau, tun aber nichts. Warum das vertretbar ist, steht
+// jeweils an der Methode. Die Folgen fuer den Anwender:
+//   - Leisten liegen in Zeilen nebeneinander, aber ohne Ziehgriffe dazwischen;
+//     ihre Breite ergibt sich aus CalcFixedLayout, nicht aus einem Prozentsatz.
+//   - Wazoo-Leisten bleiben angedockt, statt beim Start zu MDI-Fenstern zu
+//     werden (WazooBarMgr.cpp:243, 381).
+//
+// DIE DREI SEC-KOMMANDOS werden dagegen wirklich bedient, denn Eudora schickt
+// sie schon beim Start an die Leisten:
+//     ID_SEC_HIDE          SECRES.H:190 - WazooBarMgr.cpp:415, 442, 623
+//     ID_SEC_ALLOWDOCKING  SECRES.H:189 - WazooWnd.cpp:492 (Kontextmenue)
+//     ID_SEC_MDIFLOAT      SECRES.H:191 - WazooBarMgr.cpp:243, 381
+//
+// EINBINDUNG
+//   Diese Datei darf NICHT gemeinsam mit sbarcore.h und sbardock.h uebersetzt
+//   werden. Am Ende des Abschnitts werden deren Waechter __SBARCORE_H__ und
+//   __SBARDOCK_H__ gesetzt, damit ein spaeteres #include "secall.h" die
+//   ersetzten Dateien ueberspringt (SECALL.H:291-297).
+//
+//   Nicht ersetzt und weiterhin aus OT501/Include:
+//     sdocksta.h  SECControlBarInfo, SECControlBarInfoEx, SECDockState
+//     sbarmgr.h   SECControlBarManager
+//     sdockcnt.h  SECDockContext
+//   Von diesen dreien fehlt die Umsetzung nach wie vor. SECControlBarInfo
+//   wird hier nur ueber Zeiger benutzt und in OTShim.cpp eingebunden; die
+//   Deklaration reicht also, solange Eudora keinen dieser Typen anlegt.
+
+#if defined(__SBARCORE_H__) || defined(__SBARDOCK_H__)
+#error OTShim.h ersetzt sbarcore.h und sbardock.h - diese duerfen vorher nicht eingebunden sein.
+#endif
+
+#ifndef __AFXPRIV_H__
+#include <afxpriv.h>		// CDockBar, CMiniDockFrameWnd, AFX_SIZEPARENTPARAMS
+#endif						// (wie sbardock.h:22)
+
+// Vorwaertsdeklarationen wie sbarcore.h:41-42 und sbardock.h:38-39
+class SECControlBarInfo;		// sdocksta.h:86
+class SECControlBarManager;		// sbarmgr.h:41
+class SECControlBar;
+class SECDockContext;			// sdockcnt.h:46
+
+
+// Konstanten wortgleich aus sbarcore.h:45-74. Eudora benutzt davon
+// CBRS_EX_STDCONTEXTMENU, CBRS_EX_UNIDIRECTIONAL, CBRS_EX_COOLBORDERS,
+// CBRS_EX_GRIPPER, CBRS_EX_STRETCH_ON_SIZE und CBRS_EX_ALLOW_MDI_FLOAT
+// (SearchBar.cpp:568-572, WazooBar.cpp, QCCustomToolBar.cpp).
+
+#define CX_BORDER   1
+#define CY_BORDER   1
+
+// SEC-eigene Nachricht (sbarcore.h:49)
+#define WM_EXTENDCONTEXTMENU	(WM_USER+800)
+
+// Erweiterte Stile (sbarcore.h:52-74)
+#define CBRS_EX_STDCONTEXTMENU		0x0001L
+#define CBRS_EX_STRETCH_ON_SIZE		0x0002L
+#define CBRS_EX_UNIDIRECTIONAL		0x0004L
+#define CBRS_EX_DRAWBORDERS			0x0008L
+#define CBRS_EX_BORDERSPACE			0x0010L
+#define CBRS_EX_ALLOW_MDI_FLOAT		0x0020L
+#define CBRS_EX_SIZE_TO_FIT			0x0040L
+#define CBRS_EX_DISALLOW_FLOAT		0x0080L
+#define CBRS_EX_COOLBORDERS			0x0100L
+#define CBRS_EX_GRIPPER				0x0200L
+#define CBRS_EX_GRIPPER_CLOSE		0x0400L
+#define CBRS_EX_GRIPPER_EXPAND		0x0800L
+#define CBRS_EX_TRANSPARENT			0x1000L
+#define CBRS_EX_COOL				CBRS_EX_COOLBORDERS | CBRS_EX_GRIPPER | \
+									CBRS_EX_GRIPPER_CLOSE | CBRS_EX_GRIPPER_EXPAND
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 11. SECGripperInfo  (Original: sbarcore.h:79)
+//
+// Reiner Massesatz fuer den selbstgemalten Ziehgriff. Der Shim zeichnet
+// keinen Griff (siehe SECControlBar::DrawGripper), das Objekt bleibt aber
+// Datenmember von SECControlBar - Eudora leitet Klassen davon ab und deren
+// Objektgroesse muss zur Vorlage passen, falls spaeter jemand den Griff
+// nachruestet.
+
+class SECGripperInfo : public CObject
+{
+public:
+	SECGripperInfo();
+	~SECGripperInfo();
+
+	// sbarcore.h:85-86. Im Original die Stelle, an der ein eigener Griff
+	// seine Masse meldet. Hier die Summe der Felder, damit ein spaeterer
+	// Nachbau nichts umrechnen muss.
+	virtual int GetWidth();
+	virtual int GetHeight();
+
+public:
+	// waagerechte Aufteilung (sbarcore.h:90-94)
+	int m_cxPad1;
+	int m_cxWidth1;
+	int m_cxPad2;
+	int m_cxWidth2;
+	int m_cxPad3;
+
+	// senkrechte Aufteilung (sbarcore.h:97-101)
+	int m_cyPad1;
+	int m_cyWidth1;
+	int m_cyPad2;
+	int m_cyWidth2;
+	int m_cyPad3;
+
+	// Abstand zwischen Rand und Innenbereich auf den griff-freien Seiten
+	int m_nGripperOffSidePadding;
+
+	// Kurzhinweise (sbarcore.h:108-110)
+	CString m_strCloseTipText;
+	CString m_strExpandTipText;
+	CString m_strContractTipText;
+};
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 12. SECControlBar  (Original: sbarcore.h:118)
+//
+// Basis aller andockbaren Leisten von Eudora:
+//     CControlBar -> SECControlBar -> CWazooBar        (WazooBar.h:60)
+//                                  -> SECCustomToolBar -> ... (Stufe 3)
+//
+// EUDORA GREIFT DIREKT AUF DIESE FELDER ZU, sie muessen oeffentlich bleiben:
+//     m_szDockHorz/-Vert/m_szFloat  SearchBar.cpp:596-602, 1297-1361;
+//                                   WazooBar.cpp:560-565; WazooBarMgr.cpp:434
+//     m_fPctWidth                   DockBar.cpp:67,68,264,272,284-293
+//     m_dwExStyle                   SearchBar.cpp:591 (m_dwExOldStyle)
+//     m_bOptimizedRedrawEnabled     mainfrm.cpp:1019 (statisch)
+//
+// KATEGORIE A (PLAN.md) - qualifizierte Aufrufe, die bei MFC landen und
+// deshalb hier NICHT deklariert werden duerfen, sonst waere die geerbte
+// Fassung verdeckt:
+//     SECControlBar::OnCreate             AdWazooBar.cpp:358, WazooBar.cpp:1160
+//     SECControlBar::OnTimer              WazooBar.cpp:1337
+//     SECControlBar::OnWindowPosChanging   WazooBar.cpp:1400
+//     SECControlBar::PreTranslateMessage   WazooBar.cpp:964
+//     SECControlBar::OnBarStyleChange      SearchBar.cpp:1214
+
+class SECControlBar : public CControlBar
+{
+	DECLARE_DYNCREATE(SECControlBar)
+
+// Konstruktion
+public:
+	SECControlBar();
+
+	// sbarcore.h:126-130. CControlBar hat kein Create - diese beiden sind
+	// echte Stingray-Funktionalitaet und muessen selbst gebaut werden.
+	// Aufrufstellen: WazooBar.cpp:98 (beide Ueberladungen, :112),
+	// SearchBar.cpp:578.
+	virtual BOOL Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID,
+		DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd = NULL,
+		CCreateContext* pContext = NULL);
+	virtual BOOL Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwStyle,
+		DWORD dwExStyle, UINT nID, CCreateContext* pContext = NULL);
+
+// Attribute (sbarcore.h:135-157, Reihenfolge und Sichtbarkeit unveraendert)
+public:
+
+	static BOOL m_bOptimizedRedrawEnabled;	// mainfrm.cpp:1019
+
+	CSize m_szDockHorz;			// Masse waagerecht angedockt
+	CPoint m_ptDockHorz;
+	CSize m_szDockVert;			// Masse senkrecht angedockt
+	CSize m_szFloat;			// Masse schwebend
+	DWORD m_dwMRUDockingState;	// gemerkter Andockzustand fuer "Allow Docking"
+	float m_fPctWidth;			// Anteil an der Zeilenbreite - Stufe 2 offen
+	float m_fDockedPctWidth;	// derselbe Anteil vor dem Schweben
+	DWORD m_dwExStyle;			// erweiterte Stilbits (CBRS_EX_*)
+
+protected:
+
+	CRect m_rcBorderSpace;				// Freiraum zum Ziehen
+	SECControlBarManager* m_pManager;	// Leistenverwalter
+	SECGripperInfo m_GripperInfo;
+	CRect m_rcGripperCloseButton;
+	BOOL  m_bClickingGripperClose;
+	CRect m_rcGripperExpandButton;
+	BOOL  m_bClickingGripperExpand;
+	BOOL  m_bGripperExpandEnabled;
+	BOOL  m_bGripperExpandExpanding;
+	BOOL  m_bGripperExpandHorz;
+
+// Abfragen
+public:
+	// WazooBar.cpp:1246, 1270 (OnSize, OnEraseBkgnd)
+	virtual void GetInsideRect(CRect& rectInside) const;
+	// mainfrm.cpp:4016; PersonalityView.cpp:363; StationeryWazooWnd.cpp:361,420;
+	// WazooBar.cpp:652,690,864,1501,1515; WazooBarMgr.cpp:779,810;
+	// WazooWnd.cpp:173,534
+	BOOL IsMDIChild() const;
+
+protected:
+
+	// sbarcore.h:166-171. Im Original merkt sich die Leiste die Lage ihrer
+	// Kinder, um beim Ziehen nicht alles neu berechnen zu muessen. Der Shim
+	// legt das Feld nie an (siehe InitLayoutInfo).
+	struct LayoutInfo {
+		HWND m_hWnd;
+		CRect m_rect;
+	};
+
+	CPtrArray* m_pArrLayoutInfo;
+
+// Operationen
+public:
+	// Verdeckt CControlBar::EnableDocking (afxext.h:162). WazooBarMgr.cpp:233
+	void EnableDocking(DWORD dwDockStyle);
+	DWORD GetExBarStyle() const
+		{ return m_dwExStyle; };			// mainfrm.cpp:5924
+	virtual void SetExBarStyle(DWORD dwExStyle, BOOL bAutoUpdate = FALSE);
+	virtual void ModifyBarStyleEx(DWORD dwRemove, DWORD dwAdd, BOOL bAutoUpdate = FALSE);
+
+// Ueberschreibungen
+	// Im Original "virtual int" (sbarcore.h:182); MFC 14 deklariert
+	// CWnd::OnToolHitTest als "virtual INT_PTR" (afxwin.h:2429). Unter Win32
+	// ist INT_PTR gleich int, beide bezeichnen dieselbe virtuelle Funktion.
+	// Hier wird MFC gefolgt - wie schon bei SECWorkbook::OnToolHitTest.
+	// SearchBar.cpp:1269 ruft die Fassung qualifiziert auf.
+	virtual INT_PTR OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
+
+// Umsetzung
+public:
+	virtual ~SECControlBar();
+
+	// AdWazooBar.cpp:239 ruft diese Fassung auf und begrenzt danach.
+	virtual CSize CalcFixedLayout(BOOL bStretch, BOOL bHorz);
+	virtual CSize CalcDynamicLayout(int nLength, DWORD dwMode);
+	virtual void DoPaint(CDC* pDC);
+	virtual void DrawBorders(CDC* pDC, CRect& rect);
+	// Verdeckt CControlBar::EraseNonClient (afxext.h:237)
+	void EraseNonClient();
+	// WazooBarMgr.cpp:433, 435. Verdecken die MFC-Fassungen mit
+	// CControlBarInfo* (afxext.h:239-240); SECControlBarInfo erbt davon
+	// (sdocksta.h:86), der Aufruf geht also nicht verloren.
+	void GetBarInfo(SECControlBarInfo* pInfo);
+	void SetBarInfo(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd);
+	// In CControlBar rein virtuell (afxext.h:166). SearchBar.cpp:1246 ruft
+	// diese Fassung ausdruecklich auf, um die Toolbar-Fassung zu umgehen.
+	virtual void OnUpdateCmdUI(CFrameWnd* pTarget, BOOL bDisableIfNoHndler);
+	// Drei Argumente wie im Original (sbarcore.h:200); verdeckt damit die
+	// zweistellige virtuelle CControlBar::CalcInsideRect (afxext.h:170).
+	// QCCustomToolBar.cpp:162 ruft die dreistellige Fassung auf.
+	void CalcInsideRect(CRect& rect, BOOL bHorz, BOOL bVert = FALSE) const;
+	inline SECControlBarManager* GetManager() const;
+	inline void SetManager(SECControlBarManager*);
+
+// Ueberschreibbares (sbarcore.h:206-210)
+public:
+	// Meldungen, keine Befehle: das Rahmenwerk teilt der Leiste mit, dass sie
+	// gerade angedockt bzw. losgeloest wurde. CWazooBar ueberschreibt zwei
+	// davon und ruft die Basis auf (WazooBar.cpp:1574, 1607);
+	// QC3DTabWnd.cpp:284 loest OnBarFloat von aussen aus.
+	virtual void OnBarDock();
+	virtual void OnBarFloat();
+	virtual void OnBarMDIFloat();
+	// SearchBar.cpp:1165, 1192 und QCCustomToolBar.cpp:334 rufen diese
+	// Fassungen auf.
+	virtual void GetBarInfoEx(SECControlBarInfo* pInfo);
+	virtual void SetBarInfoEx(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd);
+
+protected:
+	void InitLayoutInfo();
+	void DeleteLayoutInfo();
+	// Aus SECControlBar::OnContextMenu heraus. CWazooBar (WazooBar.cpp:1075)
+	// und CAdWazooBar (AdWazooBar.cpp:297) ueberschreiben das.
+	virtual void OnExtendContextMenu(CMenu* pMenu);
+
+	//
+	// Ziehgriff. Der Shim malt keinen (siehe DrawGripper); die Methoden
+	// bleiben virtuell, damit ein spaeterer Nachbau nur hier ansetzen muss.
+	// ACHTUNG: DrawGripper verdeckt CControlBar::DrawGripper(CDC*, const
+	// CRect&) (afxext.h:173) - andere Parameterliste, also eine zweite
+	// virtuelle Funktion. MFC-interne Aufrufe landen weiterhin bei CControlBar.
+	//
+	virtual void AdjustInsideRectForGripper(CRect& rect, BOOL bHorz);
+	virtual void DrawGripper(CDC* pDC, CRect& rect);
+
+	virtual void DrawGripperCloseButton(CDC* pDC, CRect& rect, BOOL bHorz);
+	virtual void DrawGripperCloseButtonDepressed(CDC* pDC);
+	virtual void DrawGripperCloseButtonRaised(CDC* pDC);
+
+	virtual void DrawGripperExpandButton(CDC* pDC, CRect& rect, BOOL bHorz);
+	virtual void DrawGripperExpandButtonDepressed(CDC* pDC);
+	virtual void DrawGripperExpandButtonRaised(CDC* pDC);
+	virtual void SetGripperExpandButtonState(BOOL bHorz);
+
+// Kommandobehandler (sbarcore.h:238-240)
+protected:
+
+	afx_msg void OnHide();				// ID_SEC_HIDE
+	afx_msg void OnToggleAllowDocking();	// ID_SEC_ALLOWDOCKING
+	afx_msg void OnFloatAsMDIChild();	// ID_SEC_MDIFLOAT
+
+// Nachrichtenbehandlung (sbarcore.h:246-252)
+protected:
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);	// WazooBar.cpp:1238
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint pt);
+	afx_msg void OnLButtonUp(UINT nFlags, CPoint pt);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint pt);
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnDestroy();							// WazooBar.cpp:1226
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+
+	DECLARE_MESSAGE_MAP()
+};
+
+/////////////////////////////////////////////////////////////////////////////
+// Inline-Funktionen wortgleich aus sbarcore.h:260-268
+
+inline SECControlBarManager* SECControlBar::GetManager() const
+{
+	return m_pManager;
+}
+
+inline void SECControlBar::SetManager(SECControlBarManager* pManager)
+{
+	m_pManager = pManager;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 13. SECDockBar  (Original: sbardock.h:48)
+//
+// Die Andockleiste am Rand des Rahmens. Eudora leitet QCDockBar davon ab
+// (DockBar.h:16) und legt vier davon selbst an (mainfrm.cpp:2156-2173).
+//
+// EUDORA GREIFT DIREKT ZU:
+//     m_fAdjustedMinPctWidth  DockBar.cpp:72        (geschuetzt, ueber QCDockBar)
+//     m_arrBars               DockBar.cpp:117,127,161,166,237,242,276,281
+//                             (das ist CDockBar::m_arrBars, afxpriv.h:627)
+//     GetControlBarRow        DockBar.cpp:59, 92    (VERIFY - muss TRUE liefern)
+//     GetFirstControlBar      workbook.cpp:373, 459, 563, 619
+//     Splitter::m_nPos/m_type/m_orientation/m_nMin/m_nMax
+//                             DockBar.cpp:171-213
+//
+// STUFE 2 OFFEN: die Splitter selbst. AddSplitter wird nie aufgerufen, also
+// bleibt m_arrSplitters leer, HitTest liefert NULL und CalcTrackingLimits
+// (samt der Eudora-Ueberschreibung DockBar.cpp:149) wird nie erreicht.
+// Dasselbe gilt fuer NormalizeRow und die prozentualen Zeilenbreiten.
+// Die Leisten liegen dadurch so, wie CDockBar sie anordnet.
+
+class SECDockBar : public CDockBar
+{
+// Konstruktion
+public:
+	DECLARE_DYNAMIC(SECDockBar)
+	// bFloating: haengt an einem SECMiniDockFrameWnd
+	// bMDIChild: haengt an einem SECControlBarWorksheet (SECWB.H:227)
+	SECDockBar(BOOL bFloating = FALSE, BOOL bMDIChild = FALSE);
+
+// Attribute
+public:
+
+	static BOOL m_bBorderClientEdge;
+
+	// Feldgenau uebernommen (sbardock.h:62-99). DockBar.cpp:171-213 liest
+	// m_nPos, m_type, m_orientation und schreibt m_nMin/m_nMax.
+	class Splitter : public CObject	{
+
+		public:
+			enum Orientation { Horizontal, Vertical };
+			enum Type { RowSplitter, BarSplitter };
+
+		// Konstruktion
+		public:
+			Splitter(Type type, Orientation orientation, const RECT & rect);
+
+		// Attribute
+		public:
+			static const int cx;
+			static const int cy;
+			enum Orientation m_orientation;
+			enum Type m_type;
+			CRect m_rect;
+			int m_nPos;
+			BOOL m_bInUse;
+			int m_nMin, m_nMax;
+
+		protected:
+			CRect m_rectLast;
+			CSize m_sizeLast;
+			BOOL m_bErase;			// DrawTrackerRect loescht nur
+			BOOL m_bFinalErase;		// letztes Loeschen
+
+		// Umsetzung
+		protected:
+			void DrawTrackerRect(LPCRECT lpRect,
+				CWnd* pWndClipTo, CDC* pDC, CWnd* pWnd);
+
+		// Operationen
+		public:
+			virtual void Draw(CDC *pDC);
+			int Track(CWnd* pWnd, CPoint point, CWnd* pWndClipTo);
+	};
+
+	// Feldgenau uebernommen (sbardock.h:101-121)
+	class ClientEdge : public CObject	{
+
+		public:
+			enum Orientation { Horizontal, Vertical };
+
+		// Konstruktion
+		public:
+			ClientEdge(Orientation orientation, const RECT & rect);
+
+		// Attribute
+		public:
+			static const int cx;
+			static const int cy;
+			enum Orientation m_orientation;
+			CRect m_rect;
+			BOOL m_bInUse;
+
+		// Operationen
+		public:
+			virtual void Draw(CDC *pDC);
+	};
+
+	CPtrArray		m_arrInvalidBars;	// Leisten, die neu zu zeichnen sind
+	CObArray		m_arrEdges;
+	CObArray		m_arrSplitters;
+	BOOL			m_bMDIChild;		// SECControlBar::IsMDIChild liest das
+
+protected:
+// Attribute
+	AFX_SIZEPARENTPARAMS *m_pLayout;
+	CControlBar* m_pBarDocked;
+	BOOL m_bProcessingDelayedInvalidates;
+	BOOL m_bOptimizeNextRedraw;
+	float m_fAdjustedMinPctWidth;		// DockBar.cpp:72
+
+public:
+	// DockBar.cpp:75, 86 rufen diese Fassungen auf.
+	virtual BOOL IsControlBarAtMaxWidthInRow(SECControlBar* pBar);
+	virtual BOOL IsOnlyControlBarInRow(SECControlBar* pBar);
+
+public:
+// Operationen
+	// Verdeckt CDockBar::DockControlBar (afxpriv.h:606)
+	void DockControlBar(CControlBar* pBar, LPCRECT lpRect = NULL);
+	// DockBar.cpp:59, 92 - steht in einem VERIFY
+	virtual BOOL GetControlBarRow(CPtrList& rowList, SECControlBar* pBar);
+	virtual void SetControlBarWidthsInRow(SECControlBar* pBar, USHORT uOperationType);
+
+// Umsetzung
+public:
+	virtual ~SECDockBar();
+#ifdef _DEBUG
+	virtual void AssertValid() const;
+	virtual void Dump(CDumpContext& dc) const;
+#endif
+
+	// Zeichnen
+	virtual void DoPaint(CDC* pDC);
+	void InvalidateBar(CControlBar* pBar);
+	void InvalidateBar(int nPos);
+	void InvalidateToRow(int nPosRow);
+	virtual void OnBarHideShow(CControlBar* pBar);
+	virtual void ProcessDelayedInvalidates();
+
+	// Splitter und Innenkanten
+	Splitter * HitTest(CPoint pt);
+	void StartTracking(Splitter* pSplit, CPoint pt);
+	Splitter * GetSplitter(int i)
+		{ return ((Splitter *)(m_arrSplitters[i])); };
+	virtual void AddSplitter(Splitter::Type type, Splitter::Orientation orientation,
+			int x1, int y1, int x2, int y2, int nPos);
+	virtual void CalcTrackingLimits(Splitter* pSplitter);
+	void DeleteAllSplitters();
+	void BeginRecycleSplitters();
+	void EndRecycleSplitters();
+	virtual void AddClientEdge(ClientEdge::Orientation orientation,
+			int x1, int y1, int x2, int y2);
+	void DeleteAllEdges();
+	void BeginRecycleEdges();
+	void EndRecycleEdges();
+	virtual void InvalidateCustomToolBarsInRow(SECControlBar* pBar);
+
+	// Abfragen
+	BOOL IsNewBar(CControlBar* pBarToTest) const;
+	CControlBar* NextBarThisRow(int nPos);
+	CControlBar* NextVisibleBarThisRow(int nPos);
+	CControlBar* PrevBarThisRow(int nPos);
+	CControlBar* PrevVisibleBarThisRow(int nPos);
+	// workbook.cpp:373, 459, 563, 619
+	SECControlBar * GetFirstControlBar ();
+	BOOL BarIsNewToThisRow(CControlBar* pBarToTest, int nCurrentRow) const;
+	int GetRowHeight(int nPos) const;
+	// Verdecken CDockBar::Get/SetBarInfo (afxpriv.h:622-623)
+	void GetBarInfo(SECControlBarInfo* pInfo);
+	void SetBarInfo(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd);
+
+	// Zugabe des Shims, nicht im Original: erste angedockte Leiste beliebigen
+	// Typs. CDockBar::GetDockedControlBar ist geschuetzt; SECMiniDockFrameWnd
+	// braucht den Wert aber, um die MFC-Fassungen von OnNcLButtonDown und
+	// OnNcLButtonDblClk nachzubilden, die auf m_wndDockBar zugreifen.
+	CControlBar* GetFirstDockedBar() const;
+
+	// Anordnung
+protected:
+	// DockBar.cpp:225 ruft diese Fassung auf.
+	virtual void NormalizeRow(int nPos, CControlBar* pBarDocked,
+		int& nBarsBidirectional, int& nBarsUnidirectional);
+	int PredictInsertPosition(CControlBar* pBarIns, CRect rect, CPoint ptMid);
+
+	// Hilfsmittel
+	virtual int Insert(CControlBar* pBarIns, int nInsCol, int nInsRow);
+	// Verdeckt CDockBar::Insert (afxpriv.h:635)
+	int Insert(CControlBar* pBar, CRect rect, CPoint ptMid);
+
+public:
+	virtual CSize CalcFixedLayout(BOOL bStretch, BOOL bHorz);
+	virtual CRect CalcDockingLayout(CControlBar* pBarToDock, CRect& rectBar,
+		CPoint pt, int& nPosDockingRow, CRect& prevFocusRect, CPoint& prevPt);
+	void SetRowHeight(int nPos, int nRowHeight);
+	void AdjustRowHeight(int nPos, int nWidth);
+	virtual void DockControlBar(CControlBar* pBar, int nCol, int nRow);
+	// Verdeckt CDockBar::ReDockControlBar (afxpriv.h:607)
+	void ReDockControlBar(CControlBar* pBar, LPCRECT lpRect = NULL);
+	// Verdeckt CDockBar::RemoveControlBar (afxpriv.h:608). Das Original
+	// unterscheidet nach _MFC_VER; MFC 14 liegt weit ueber 0x0420, es bleibt
+	// also die dreistellige Fassung.
+	BOOL RemoveControlBar(CControlBar*, int nPosExclude = -1, BOOL bAddPlaceHolder = FALSE);
+	virtual void OnSplitterMoved(Splitter* pSplitter, int nDelta);
+
+	// Nachrichtenbehandlung (sbardock.h:225-230)
+protected:
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnDestroy();
+	afx_msg LRESULT OnSizeParent(WPARAM wParam, LPARAM lParam);
+	DECLARE_MESSAGE_MAP()
+
+	friend class SECMiniDockFrameWnd;
+	friend class SECDockContext;
+};
+
+
+/////////////////////////////////////////////////////////////////////////////
+// 14. SECMiniDockFrameWnd  (Original: sbardock.h:239)
+//
+// Der kleine Rahmen um eine frei schwebende Leiste. Eudora leitet
+// QCMiniDockFrameWnd davon ab (workbook.h:136) und setzt sie ueber
+// CFrameWnd::m_pFloatingFrameClass ein.
+//
+// ZWEI ANDOCKLEISTEN, EINE BENUTZT: die Klasse erbt m_wndDockBar (CDockBar,
+// afxpriv.h:664) und legt m_wndSECDockBar daneben. Nachgebaut wird die
+// Aufteilung des Originals: Create erzeugt NUR m_wndSECDockBar, und zwar
+// unter der Kennung AFX_IDW_DOCKBAR_FLOAT. Das genuegt fuer MFC, denn
+// CFrameWnd::FloatControlBar sucht die Leiste ueber
+//     pDockFrame->GetDlgItem(AFX_IDW_DOCKBAR_FLOAT)     winfrm2.cpp:202
+// und nicht ueber den Datenmember. m_wndDockBar bleibt dauerhaft ohne
+// Fenster.
+//
+// DASS DAS DIE ABSICHT DES ORIGINALS IST, LAESST SICH AN SBARDOCK.H ABLESEN:
+// genau die vier CMiniDockFrameWnd-Methoden, die m_wndDockBar anfassen
+// (RecalcLayout, OnClose, OnNcLButtonDown, OnNcLButtonDblClk - bardock.cpp:
+// 858, 871, 876, 920), sind dort ueberschrieben; OnMouseActivate, das
+// m_wndDockBar nicht anfasst, ist es nicht.
+//
+// QCMiniDockFrameWnd ersetzt beide RecalcLayout-Fassungen vollstaendig
+// (workbook.cpp:539, 574) und liest dabei selbst m_wndSECDockBar.
+
+class SECMiniDockFrameWnd : public CMiniDockFrameWnd
+{
+	DECLARE_DYNCREATE(SECMiniDockFrameWnd)
+
+public:
+// Konstruktion
+	SECMiniDockFrameWnd();
+	virtual BOOL Create(CWnd* pParent, DWORD dwBarStyle);
+
+// Umsetzung
+public:
+	SECDockBar m_wndSECDockBar;		// workbook.cpp:563, 619
+
+// Operationen
+	// Die zweistellige Fassung ist eine Zugabe des Originals, die
+	// einstellige ueberschreibt CFrameWnd::RecalcLayout (afxwin.h:4180).
+	virtual void RecalcLayout(CPoint point, BOOL bNotify = TRUE);
+	virtual void RecalcLayout(BOOL bNotify = TRUE);
+
+	afx_msg void OnClose();
+	afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);
+	afx_msg void OnNcLButtonDblClk(UINT nHitTest, CPoint point);
+	afx_msg void OnParentNotify(UINT message, LPARAM lParam);
+	DECLARE_MESSAGE_MAP()
+};
+
+
+// Waechter der ersetzten Originalheader setzen (siehe Einbindungshinweis oben)
+#define __SBARCORE_H__
+#define __SBARDOCK_H__
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//
 // STUFE 1 - MDI-FENSTERGERUEST (OTShim/PLAN.md, "Stufe 1 - MDI ohne
 // Registerkarten")
 //
@@ -369,10 +995,10 @@ inline BOOL SECLoadSysColorBitmap(CBitmap& bmp, LPCTSTR lpszName,
 // EINBINDUNG
 //   Wie die Originale braucht dieser Abschnitt afxpriv.h (wegen CDockBar),
 //   swinfrm.h (SECFrameWnd, SECDockState, SECControlBarManager) und
-//   sbardock.h (SECDockBar - Datenmember von SECControlBarWorksheet).
-//   swinfrm.h und sbardock.h gehoeren zur Andockfamilie und damit zu Stufe 2;
-//   bis dahin liefern die Originalheader unter OT501/Include die
-//   Deklarationen. Der Suchpfad muss OT501/Include enthalten.
+//   SECDockBar (Datenmember von SECControlBarWorksheet) aus dem Abschnitt
+//   Stufe 2 darueber. sbardock.h ist damit ersetzt und sein Waechter gesetzt;
+//   das #include unten laeuft ins Leere. swinfrm.h liefert weiterhin das
+//   Original. Der Suchpfad muss OT501/Include enthalten.
 //
 //   Am Ende dieses Abschnitts werden die Includewaechter __SWINMDI_H__ und
 //   __SECWB_H__ der Originale gesetzt, damit ein spaeteres
@@ -392,7 +1018,7 @@ inline BOOL SECLoadSysColorBitmap(CBitmap& bmp, LPCTSTR lpszName,
 #endif						// SECDockState, SECControlBarManager (swinfrm.h:44-45)
 
 #ifndef __SBARDOCK_H__
-#include "sbardock.h"		// SECDockBar (sbardock.h:48), SECMiniDockFrameWnd
+#include "sbardock.h"		// seit Stufe 2 ersetzt - der Waechter ist gesetzt
 #endif
 
 

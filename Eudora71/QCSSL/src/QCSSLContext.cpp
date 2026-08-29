@@ -580,7 +580,7 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 	default:
 		ConnectionInfo *pConnectionInfo = (ConnectionInfo*) pSSLReference->m_pConnectionManagerInfo;
 		pConnectionInfo->m_Outcome.AddComments(CResString(IDS_ERR_VERSIONINVALID));
-		break;
+		return NULL;	//	ungueltige Version: keinen Kontext anlegen. Vorher blieb sslmethod NULL und SSL_CTX_new(NULL) scheiterte - sonst wird trotz Fehlermeldung verbunden.
 	}
 
 	sslmethod = TLS_client_method();

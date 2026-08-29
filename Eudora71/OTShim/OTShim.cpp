@@ -1,4 +1,4 @@
-// OTShim.cpp - Ersatzschicht fuer Stingray Objective Toolkit 5.0.1, Stufe 0
+// OTShim.cpp - Ersatzschicht fuer Stingray Objective Toolkit 5.0.1, Stufen 0 bis 2
 //
 // Zu OTShim.h. Enthaelt nur das, was nicht in den Header passt:
 // IMPLEMENT_DYNAMIC und die Message-Map von SECTipOfDay sowie die wenigen
@@ -162,8 +162,8 @@ void OTShimNichtUmgesetzt(BOOL& rbBereitsGemeldet, LPCTSTR lpszWas)
 	strMeldung.Format(
 		_T("Diese Funktion steht in dieser Fassung nicht zur Verfuegung:\n\n")
 		_T("    %s\n\n")
-		_T("Der Ersatz fuer das Stingray Objective Toolkit ist bis Stufe 1 ")
-		_T("(MDI-Fenstergeruest ohne Registerkarten) umgesetzt. Alles Weitere ")
+		_T("Der Ersatz fuer das Stingray Objective Toolkit ist bis Stufe 2 ")
+		_T("(MDI-Fenstergeruest und Andockfamilie) umgesetzt. Alles Weitere ")
 		_T("folgt in spaeteren Stufen.\n\n")
 		_T("Diese Meldung erscheint nur einmal je Sitzung."),
 		lpszWas);
@@ -255,16 +255,38 @@ void SECMDIFrameWnd::EnableDocking(DWORD dwDockStyle)
 }
 
 
-// STUFE 2. Die Zusatzangaben nCol, nRow, fPctWidth und nHeight sind echte
-// Stingray-Funktionalitaet (prozentuale Zeilenbreiten in SECDockBar), die MFC
-// nicht kennt. Hier bleibt davon das Andocken an der gewuenschten Seite
-// uebrig - das Ergebnis ist eine brauchbare, aber nicht spaltengenaue
-// Anordnung. Eine Meldung gibt es dafuer bewusst nicht: die Aufrufe kommen
-// beim Start (mainfrm.cpp:965, WazooBarMgr.cpp:242,366,375,425) und die
-// Leisten erscheinen ja, nur eben an einfacher berechneter Stelle.
+// Von den vier Zusatzangaben des Originals sind zwei nachgebildet:
+//   nCol/nRow   Spalte und Zeile in der Andockleiste - STUFE 2 OFFEN.
+//               SECDockBar ordnet nach den MFC-Regeln ein, also anhand des
+//               Fensterrechtecks der Leiste.
+//   fPctWidth   Anteil an der Zeilenbreite. Wird abgelegt, weil Eudora ihn
+//               liest und fortschreibt (DockBar.cpp:264-293); ausgewertet
+//               wird er nicht, dazu fehlen die Splitter.
+//   nHeight     Ausdehnung quer zur Andockleiste. Die geht wirklich ein: sie
+//               landet in m_szDockHorz.cy bzw. m_szDockVert.cx, und genau
+//               daraus rechnet SECControlBar::CalcFixedLayout. Ohne das
+//               waeren die Wazoo-Leisten beim ersten Start unbrauchbar
+//               (WazooBarMgr.cpp:242 uebergibt 180, der Kommentar bei :425
+//               nennt den Wert ausdruecklich "the WIDTH when docked
+//               vertically").
+// Ohne Meldung: die Aufrufe kommen beim Start (mainfrm.cpp:965,
+// WazooBarMgr.cpp:242, 366, 375, 425), und die Leisten erscheinen ja.
 void SECMDIFrameWnd::DockControlBarEx(CControlBar* pBar, UINT nDockBarID,
-	int /*nCol*/, int /*nRow*/, float /*fPctWidth*/, int /*nHeight*/)
+	int /*nCol*/, int /*nRow*/, float fPctWidth, int nHeight)
 {
+	SECControlBar* pSECBar = DYNAMIC_DOWNCAST(SECControlBar, pBar);
+	if (pSECBar != NULL)
+	{
+		pSECBar->m_fPctWidth = fPctWidth;
+		pSECBar->m_fDockedPctWidth = fPctWidth;
+
+		if (nHeight > 0)
+		{
+			pSECBar->m_szDockHorz.cy = nHeight;
+			pSECBar->m_szDockVert.cx = nHeight;
+		}
+	}
+
 	CMDIFrameWnd::DockControlBar(pBar, nDockBarID, NULL);
 }
 
@@ -295,19 +317,27 @@ void SECMDIFrameWnd::ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay)
 }
 
 
-// STUFE 2. Eine Leiste als eigenstaendiges MDI-Kindfenster schweben lassen
-// setzt SECControlBarWorksheet mit einer eingebauten SECDockBar voraus.
-// Erreichbar ist das ueber das Kontextmenue der Leisten (ID_SEC_MDIFLOAT,
-// SECRES.H:191), also ueber die Oberflaeche - deshalb die Meldung.
-// Ersatzverhalten: normal schweben lassen, damit die Leiste nicht verschwindet.
-void SECMDIFrameWnd::FloatControlBarInMDIChild(CControlBar* pBar, CPoint point, DWORD dwStyle)
+// STUFE 2 OFFEN: eine Leiste als eigenes MDI-Kindfenster schweben lassen
+// (Kommando ID_SEC_MDIFLOAT, SECRES.H:191).
+//
+// WARUM NICHT UMGESETZT: dazu muesste die Leiste aus der Andockleiste des
+// Hauptfensters in die SECDockBar eines SECControlBarWorksheet umziehen,
+// waehrend ihr m_pDockSite weiterhin auf das Hauptfenster zeigt. MFC hat
+// dafuer kein Gegenstueck und setzt an mehreren Stellen das Gegenteil voraus
+// (winfrm2.cpp:206 "ASSERT(pBar->m_pDockSite == this)").
+//
+// BEWUSST OHNE MELDUNG UND OHNE ERSATZHANDLUNG: der Weg wird beim Start
+// durchlaufen - WazooBarMgr.cpp:243 fuer jede neu erzeugte Wazoo-Leiste und
+// :381 fuer die zweite Gruppe. Ein Meldungsfenster beim Start waere
+// unbrauchbar. "Statt dessen frei schweben lassen" waere es ebenso: Eudora
+// startete dann mit mehreren losen Fenstern. Die Leiste bleibt deshalb
+// einfach dort, wo DockControlBarEx sie unmittelbar davor hingesetzt hat -
+// angedockt am Rand des Hauptfensters.
+void SECMDIFrameWnd::FloatControlBarInMDIChild(CControlBar* pBar, CPoint /*point*/,
+	DWORD /*dwStyle*/)
 {
-	static BOOL bGemeldet = FALSE;
-	OTShimNichtUmgesetzt(bGemeldet,
-		_T("Eine Werkzeug- oder Wazoo-Leiste als eigenes Fenster innerhalb des ")
-		_T("Hauptfensters ablegen. Die Leiste schwebt statt dessen frei."));
-
-	CMDIFrameWnd::FloatControlBar(pBar, point, dwStyle);
+	TRACE1("OTShim: FloatControlBarInMDIChild - Stufe 2 offen, Leiste %p bleibt angedockt\n",
+		pBar);
 }
 
 // Im Original: an der zuletzt gemerkten Stelle wieder schweben lassen. Der
@@ -318,18 +348,14 @@ void SECMDIFrameWnd::ReFloatControlBar(CControlBar* pBar, CPoint point, DWORD dw
 	CMDIFrameWnd::FloatControlBar(pBar, point, dwStyle);
 }
 
-// STUFE 2. Legt im Original ein Fenster der Klasse m_pFloatingMDIChildClass
-// an (also QCControlBarWorksheet, workbook.cpp:668) und haengt pBar in dessen
-// SECDockBar. Ohne die Andockfamilie geht das nicht.
-// UNGEPRUEFT: ob das Original bei Misserfolg NULL liefert oder assertiert,
-// ist nicht belegbar; Eudora ruft die Methode nirgends direkt auf.
+// STUFE 2 OFFEN, aus demselben Grund wie FloatControlBarInMDIChild - dort
+// steht die ausfuehrliche Begruendung. Von Eudora nicht direkt aufgerufen;
+// der einzige Weg hierher fuehrt ueber FloatControlBarInMDIChild, das nichts
+// mehr tut.
+// UNGEPRUEFT: ob das Original bei Misserfolg NULL liefert oder assertiert.
 CMDIChildWnd* SECMDIFrameWnd::CreateFloatingMDIChild(DWORD /*dwStyle*/, CControlBar* /*pBar*/)
 {
-	static BOOL bGemeldet = FALSE;
-	OTShimNichtUmgesetzt(bGemeldet,
-		_T("Eine Leiste in ein eigenes Fenster innerhalb des Hauptfensters ")
-		_T("verwandeln (Stingray CreateFloatingMDIChild)."));
-
+	TRACE0("OTShim: SECMDIFrameWnd::CreateFloatingMDIChild - Stufe 2 offen\n");
 	return NULL;
 }
 
@@ -1213,8 +1239,14 @@ BEGIN_MESSAGE_MAP(SECControlBarWorksheet, SECWorksheet)
 END_MESSAGE_MAP()
 
 
-SECControlBarWorksheet::SECControlBarWorksheet()
+// m_wndDockBar mit bMDIChild == TRUE anlegen (sbardock.h:53-55): daran
+// erkennt SECControlBar::IsMDIChild eine Leiste, die als MDI-Kindfenster
+// schwebt. m_bAutoDelete aus - das Feld gehoert dem Worksheet, nicht dem
+// Rahmenwerk; genauso haelt es CMiniDockFrameWnd (bardock.cpp:800).
+SECControlBarWorksheet::SECControlBarWorksheet() :
+	m_wndDockBar(FALSE, TRUE)
 {
+	m_wndDockBar.m_bAutoDelete = FALSE;
 }
 
 SECControlBarWorksheet::~SECControlBarWorksheet()
@@ -1237,19 +1269,34 @@ BOOL SECControlBarWorksheet::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 
-// STUFE 2. Hier legt das Original die eingebaute Andockleiste m_wndDockBar an
-// und haengt die schwebende Leiste hinein. Ohne SECDockBar-Umsetzung geht das
-// nicht; erreichbar ist der Weg ueber das Kontextmenue der Leisten
-// (ID_SEC_MDIFLOAT, SECRES.H:191), deshalb die Meldung.
+// Hier legt das Original die eingebaute Andockleiste m_wndDockBar an und
+// haengt die schwebende Leiste hinein. Seit Stufe 2 gibt es SECDockBar, die
+// Leiste wird also wirklich erzeugt - QCControlBarWorksheet liest gleich
+// danach m_wndDockBar.m_dwStyle (workbook.cpp:371, 457).
 //
-// Die Anmeldung beim Workbook geschieht trotzdem, damit m_worksheets auch
-// diesen Erzeugungsweg erfasst.
+// ERREICHT WIRD DIESE FASSUNG DERZEIT NICHT: der einzige Erzeugungsweg fuer
+// ein SECControlBarWorksheet ist CreateFloatingMDIChild, und das liefert in
+// dieser Stufe NULL. Der Rumpf steht trotzdem vollstaendig hier, damit beim
+// Nachruesten des MDI-Schwebens nur dort noch etwas fehlt.
+//
+// Die Anmeldung beim Workbook geschieht wie bei jedem Worksheet, damit
+// m_worksheets auch diesen Erzeugungsweg erfasst.
 BOOL SECControlBarWorksheet::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
 {
-	static BOOL bGemeldet = FALSE;
-	OTShimNichtUmgesetzt(bGemeldet,
-		_T("Eine Leiste als eigenes Fenster im Hauptfenster ablegen. Das ")
-		_T("Fenster entsteht ohne die eingebaute Andockleiste und bleibt leer."));
+	if (m_wndDockBar.GetSafeHwnd() == NULL)
+	{
+		// UNGEPRUEFT: die Kennung, die das Original vergibt. Gewaehlt ist
+		// AFX_IDW_DOCKBAR_TOP, weil die Leiste den ganzen Innenbereich des
+		// MDI-Kindfensters fuellen soll und CBRS_ALIGN_TOP die waagerechte
+		// Ausrichtung ergibt. AFX_IDW_DOCKBAR_FLOAT scheidet aus - danach
+		// sucht CFrameWnd::FloatControlBar (winfrm2.cpp:202), und dieses
+		// Fenster ist kein Schweberahmen.
+		if (!m_wndDockBar.Create(this, WS_CHILD | WS_VISIBLE | CBRS_ALIGN_TOP,
+				AFX_IDW_DOCKBAR_TOP))
+		{
+			return FALSE;
+		}
+	}
 
 	RegisterWithWorkbook();
 
@@ -1282,4 +1329,1890 @@ void SECControlBarWorksheet::OnWindowPosChanged(WINDOWPOS FAR* lpwndpos)
 void SECControlBarWorksheet::OnShowWindow(BOOL bShow, UINT nStatus)
 {
 	SECWorksheet::OnShowWindow(bShow, nStatus);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//
+// STUFE 2 - ANDOCKFAMILIE
+//
+// Zur Begruendung jeder einzelnen Entscheidung siehe den Abschnitt "Stufe 2"
+// in OTShim.h. Hier steht nur, was nicht in den Header passt.
+//
+// UEBERSETZUNG: dieser Abschnitt braucht zusaetzlich zwei Originalheader aus
+// OT501/Include, die NICHT ersetzt sind - secres.h (die drei Kommandokennungen)
+// und sdocksta.h (SECControlBarInfo, nur ueber Zeiger benutzt).
+
+#ifndef ID_SEC_HIDE
+#include "secres.h"			// ID_SEC_ALLOWDOCKING/-HIDE/-MDIFLOAT
+#endif						// (SECRES.H:189-191)
+
+#ifndef __SDOCKSTA_H__
+#include "sdocksta.h"		// SECControlBarInfo (sdocksta.h:86)
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECGripperInfo
+//
+// Reiner Massesatz. Der Shim malt keinen Ziehgriff (siehe
+// SECControlBar::DrawGripper), deshalb liest niemand diese Werte.
+//
+// UNGEPRUEFT: die Masse des Originals. Angesetzt sind die von MFC fuer seinen
+// eigenen Griff benutzten (afximpl.h: AFX_CX_BORDER_GRIPPER 1, AFX_CX_GRIPPER
+// 3), damit GetWidth/GetHeight etwas Plausibles liefern.
+
+SECGripperInfo::SECGripperInfo()
+{
+	m_cxPad1   = 1;
+	m_cxWidth1 = 1;
+	m_cxPad2   = 1;
+	m_cxWidth2 = 1;
+	m_cxPad3   = 1;
+
+	m_cyPad1   = 1;
+	m_cyWidth1 = 1;
+	m_cyPad2   = 1;
+	m_cyWidth2 = 1;
+	m_cyPad3   = 1;
+
+	m_nGripperOffSidePadding = 1;
+}
+
+SECGripperInfo::~SECGripperInfo()
+{
+}
+
+int SECGripperInfo::GetWidth()
+{
+	return m_cxPad1 + m_cxWidth1 + m_cxPad2 + m_cxWidth2 + m_cxPad3;
+}
+
+int SECGripperInfo::GetHeight()
+{
+	return m_cyPad1 + m_cyWidth1 + m_cyPad2 + m_cyWidth2 + m_cyPad3;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar
+
+IMPLEMENT_DYNCREATE(SECControlBar, CControlBar)
+
+// mainfrm.cpp:1019 schaltet das Merkmal beim Start ab. Im Original steuerte es,
+// ob SECDockBar Neuzeichnen-Anforderungen sammelt, statt sie sofort
+// auszufuehren. Der Shim sammelt ohnehin nicht (SECDockBar::InvalidateBar),
+// das Feld ist also nur noch Ablage. Vorgabe TRUE wie der Name nahelegt.
+BOOL SECControlBar::m_bOptimizedRedrawEnabled = TRUE;
+
+// Die drei SEC-Kommandos kommen per SendMessage(WM_COMMAND, ...) an die Leiste
+// (WazooBarMgr.cpp:243, 381, 415, 442, 623; WazooWnd.cpp:471, 492, 513) und
+// brauchen deshalb echte Eintraege. Die uebrigen Eintraege reichen an CControlBar
+// durch; sie stehen hier, weil Eudora die Behandler qualifiziert aufruft
+// (WazooBar.cpp:1226, 1238; SearchBar.cpp:1575).
+BEGIN_MESSAGE_MAP(SECControlBar, CControlBar)
+	ON_COMMAND(ID_SEC_HIDE, &SECControlBar::OnHide)
+	ON_COMMAND(ID_SEC_ALLOWDOCKING, &SECControlBar::OnToggleAllowDocking)
+	ON_COMMAND(ID_SEC_MDIFLOAT, &SECControlBar::OnFloatAsMDIChild)
+	ON_WM_SIZE()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_LBUTTONUP()
+	ON_WM_LBUTTONDBLCLK()
+	ON_WM_CONTEXTMENU()
+	ON_WM_DESTROY()
+	ON_WM_ERASEBKGND()
+END_MESSAGE_MAP()
+
+
+// UNGEPRUEFT: die Vorgabemasse des Originals. (0,0) waere naheliegend, machte
+// aber jede Leiste unsichtbar, die ihre Masse nicht selbst setzt - denn
+// CalcFixedLayout liest genau diese Felder. CWazooBar hebt sie erst in
+// LoadWazooConfigFromIni auf mindestens 20 an (WazooBar.cpp:560-565), also
+// nach dem ersten Andocken. Deshalb hier ein brauchbarer Anfangswert; die
+// wirklichen Masse setzt SECMDIFrameWnd::DockControlBarEx aus dem Argument
+// nHeight (WazooBarMgr.cpp:242 uebergibt 180).
+SECControlBar::SECControlBar()
+{
+	m_szDockHorz = CSize(200, 100);
+	m_ptDockHorz = CPoint(0, 0);
+	m_szDockVert = CSize(200, 100);
+	m_szFloat    = CSize(200, 100);
+
+	m_dwMRUDockingState = CBRS_ALIGN_ANY;
+	m_fPctWidth       = (float)1.0;
+	m_fDockedPctWidth = (float)1.0;
+	m_dwExStyle       = 0;
+
+	m_rcBorderSpace.SetRectEmpty();
+	m_pManager = NULL;
+
+	m_rcGripperCloseButton.SetRectEmpty();
+	m_bClickingGripperClose = FALSE;
+	m_rcGripperExpandButton.SetRectEmpty();
+	m_bClickingGripperExpand = FALSE;
+	m_bGripperExpandEnabled = FALSE;
+	m_bGripperExpandExpanding = FALSE;
+	m_bGripperExpandHorz = TRUE;
+
+	m_pArrLayoutInfo = NULL;
+}
+
+
+SECControlBar::~SECControlBar()
+{
+	DeleteLayoutInfo();
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Erzeugung
+//
+// ECHTE STINGRAY-FUNKTIONALITAET: CControlBar hat kein Create (afxext.h:132
+// erklaert die Klasse ausdruecklich als abstrakt), jede MFC-Leiste bringt ihr
+// eigenes mit. Diese Fassung ist an CDialogBar::Create (bardlg.cpp) und
+// CToolBar::CreateEx (bartool.cpp) angelehnt.
+//
+// WICHTIG ZUR STILAUFTEILUNG: dwStyle enthaelt Leistenstile (CBRS_*) und
+// Fensterstile (WS_*) im selben Wort - das ist der Punkt, ueber den sich
+// WazooBar.cpp:82-93 beschwert. m_dwStyle bekommt nur den CBRS-Anteil, das
+// Fenster nur den Rest. Beide Aufrufstellen filtern schon selbst mit
+// "& CBRS_ALL" und tragen die WS-Bits danach mit ModifyStyle nach
+// (WazooBar.cpp:104-106, SearchBar.cpp:584-586).
+
+BOOL SECControlBar::Create(LPCTSTR lpszClassName, LPCTSTR lpszWindowName, UINT nID,
+	DWORD dwStyle, DWORD dwExStyle, const RECT& rect, CWnd* pParentWnd,
+	CCreateContext* pContext)
+{
+	ASSERT_VALID(pParentWnd);
+	if (pParentWnd == NULL)
+		return FALSE;
+
+	m_dwStyle   = dwStyle & CBRS_ALL;
+	m_dwExStyle = dwExStyle;
+
+	// Ohne eigene Fensterklasse eine mit Doppelklickmeldung und
+	// Systemfarbe-Hintergrund anlegen - dieselbe Wahl trifft CDialogBar.
+	if (lpszClassName == NULL)
+	{
+		lpszClassName = ::AfxRegisterWndClass(CS_DBLCLKS,
+			::LoadCursor(NULL, IDC_ARROW), (HBRUSH)(COLOR_BTNFACE + 1), NULL);
+	}
+
+	// WS_VISIBLE bewusst NICHT setzen: beide Aufrufstellen entscheiden
+	// hinterher selbst darueber, und der Leistenverwalter blendet einen Teil
+	// der Leisten direkt nach dem Anlegen wieder aus (WazooBarMgr.cpp:415).
+	DWORD dwWndStyle = (dwStyle & ~CBRS_ALL)
+		| WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS;
+
+	// CWnd::Create ruft PreCreateWindow und damit CControlBar::PreCreateWindow
+	// (barcore.cpp:86) auf; die Randstile werden dort aus m_dwStyle abgeleitet,
+	// weshalb m_dwStyle oben schon stehen muss. CControlBar::OnCreate
+	// (barcore.cpp:554) meldet die Leiste danach beim Rahmen an - das setzt
+	// m_pDockSite und ist die Voraussetzung fuers spaetere Andocken.
+	return CWnd::Create(lpszClassName, lpszWindowName, dwWndStyle, rect,
+		pParentWnd, nID, pContext);
+}
+
+
+// sbarcore.h:129. Bequemere Fassung; WazooBar.cpp:112 macht dasselbe.
+BOOL SECControlBar::Create(CWnd* pParentWnd, LPCTSTR lpszWindowName, DWORD dwStyle,
+	DWORD dwExStyle, UINT nID, CCreateContext* pContext)
+{
+	// Ueber die virtuelle Fassung, damit eine abgeleitete Klasse ihre eigene
+	// zu sehen bekommt (CWazooBar tut genau das, WazooBar.cpp:94).
+	return Create(NULL, lpszWindowName, nID, dwStyle, dwExStyle,
+		CRect(0, 0, 0, 0), pParentWnd, pContext);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Abfragen
+
+// WazooBar.cpp:1246, 1270. Der Innenbereich ist der Client-Bereich abzueglich
+// der Raender.
+void SECControlBar::GetInsideRect(CRect& rectInside) const
+{
+	GetClientRect(&rectInside);
+	CalcInsideRect(rectInside,
+		(m_dwStyle & CBRS_ORIENT_HORZ) ? TRUE : FALSE,
+		(m_dwStyle & CBRS_ORIENT_VERT) ? TRUE : FALSE);
+}
+
+
+// Genau dafuer traegt SECDockBar sein m_bMDIChild (sbardock.h:55, 126): eine
+// Leiste schwebt als MDI-Kindfenster, wenn ihre Andockleiste zu einem
+// SECControlBarWorksheet gehoert.
+//
+// FOLGE IN DIESER STUFE: da FloatControlBarInMDIChild nichts tut, gibt es
+// keine solche Andockleiste, und die Antwort ist immer FALSE. Genau das ist
+// das gewuenschte Verhalten - Eudora fragt an vielen Stellen ab und macht bei
+// FALSE das Uebliche (WazooBar.cpp:652, 690, 864; WazooWnd.cpp:534).
+BOOL SECControlBar::IsMDIChild() const
+{
+	SECDockBar* pDockBar = DYNAMIC_DOWNCAST(SECDockBar, m_pDockBar);
+	return (pDockBar != NULL) && pDockBar->m_bMDIChild;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Operationen
+
+// Verdeckt CControlBar::EnableDocking (afxext.h:162). Der einzige Zusatz ist
+// das Merken des Zustands fuer "Allow Docking" (WazooWnd.cpp:492).
+void SECControlBar::EnableDocking(DWORD dwDockStyle)
+{
+	m_dwMRUDockingState = dwDockStyle;
+	CControlBar::EnableDocking(dwDockStyle);
+}
+
+
+void SECControlBar::SetExBarStyle(DWORD dwExStyle, BOOL bAutoUpdate)
+{
+	DWORD dwOld = m_dwExStyle;
+	m_dwExStyle = dwExStyle;
+
+	if (!bAutoUpdate || dwOld == m_dwExStyle || GetSafeHwnd() == NULL)
+		return;
+
+	// Die erweiterten Stile aendern Raender und Zeichnung, also neu anordnen.
+	Invalidate();
+	if (m_pDockSite != NULL)
+		m_pDockSite->RecalcLayout();
+}
+
+
+void SECControlBar::ModifyBarStyleEx(DWORD dwRemove, DWORD dwAdd, BOOL bAutoUpdate)
+{
+	SetExBarStyle((m_dwExStyle & ~dwRemove) | dwAdd, bAutoUpdate);
+}
+
+
+// SearchBar.cpp:1269 ruft diese Fassung auf, um die Toolbar-Fassung von
+// SECCustomToolBar zu umgehen. Kategorie A: die Kurzhinweise verwaltet CWnd.
+INT_PTR SECControlBar::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
+{
+	return CControlBar::OnToolHitTest(point, pTI);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Anordnung
+
+// ECHTE STINGRAY-FUNKTIONALITAET. CControlBar::CalcFixedLayout liefert nur
+// 0 oder 32767 (barcore.cpp:210-216) und weiss nichts von den drei
+// gespeicherten Massen. Genau diese Fassung erwartet CAdWazooBar
+// (AdWazooBar.cpp:239): sie holt sich das Ergebnis und begrenzt es nach unten.
+CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
+{
+	CSize size;
+
+	if (IsFloating())
+		size = m_szFloat;
+	else if (bHorz)
+		size = m_szDockHorz;
+	else
+		size = m_szDockVert;
+
+	// Nicht gesetzt: an MFC abgeben, damit wenigstens die Streckregel stimmt.
+	if (size.cx <= 0 && size.cy <= 0)
+		return CControlBar::CalcFixedLayout(bStretch, bHorz);
+
+	// Streckung in Zeilenrichtung wie bei jeder MFC-Leiste.
+	if (bStretch)
+	{
+		if (bHorz)
+			size.cx = 32767;
+		else
+			size.cy = 32767;
+	}
+
+	return size;
+}
+
+
+// Fuer Leisten mit CBRS_SIZE_DYNAMIC. CSearchBar bringt eine eigene Fassung
+// mit (SearchBar.cpp:1340), CWazooBar nicht.
+CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
+{
+	if (dwMode & LM_HORZDOCK)
+		return CalcFixedLayout(TRUE, TRUE);
+	if (dwMode & LM_VERTDOCK)
+		return CalcFixedLayout(TRUE, FALSE);
+
+	// Schwebend zieht der Anwender an den Raendern; nLength ist die neue
+	// Ausdehnung in Ziehrichtung.
+	if (nLength > 0 && IsFloating())
+	{
+		CSize size = m_szFloat;
+		if (dwMode & LM_LENGTHY)
+			size.cy = max(nLength, 20);
+		else
+			size.cx = max(nLength, 20);
+
+		if (dwMode & LM_COMMIT)
+			m_szFloat = size;
+
+		return size;
+	}
+
+	return CalcFixedLayout((dwMode & LM_STRETCH) != 0, (dwMode & LM_HORZ) != 0);
+}
+
+
+// Drei Argumente wie im Original (sbarcore.h:200). Damit ist die zweistellige
+// virtuelle CControlBar::CalcInsideRect verdeckt; MFC-interne Aufrufe gehen
+// weiter an die Basisfassung, was richtig ist.
+//
+// UNGEPRUEFT: was bVert im Original bewirkt. Die einzige Aufrufstelle
+// (QCCustomToolBar.cpp:162) uebergibt die beiden Ausrichtungsbits einzeln,
+// also genau die Angabe, die CControlBar::CalcInsideRect schon aus m_dwStyle
+// zieht (barcore.cpp:1151-1184). Der zweite Wert bleibt deshalb unbenutzt.
+void SECControlBar::CalcInsideRect(CRect& rect, BOOL bHorz, BOOL /*bVert*/) const
+{
+	CControlBar::CalcInsideRect(rect, bHorz);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Zeichnen
+//
+// Kategorie A bis auf den Ziehgriff: CControlBar zeichnet Raender und
+// Hintergrund selbst.
+
+void SECControlBar::DoPaint(CDC* pDC)
+{
+	CControlBar::DoPaint(pDC);
+}
+
+void SECControlBar::DrawBorders(CDC* pDC, CRect& rect)
+{
+	CControlBar::DrawBorders(pDC, rect);
+}
+
+void SECControlBar::EraseNonClient()
+{
+	CControlBar::EraseNonClient();
+}
+
+
+// ZIEHGRIFF - BEWUSST NICHT NACHGEBAUT.
+//
+// Der Griff ist der schmale Streifen am linken bzw. oberen Rand einer
+// angedockten Leiste, mit dem man sie loszieht, dazu wahlweise ein Schliess-
+// und ein Aufklappknopf (CBRS_EX_GRIPPER, -_CLOSE, -_EXPAND). Eudora schaltet
+// ihn nur ein, wenn die Einstellung "Cool Bars" gesetzt ist
+// (SearchBar.cpp:571-572).
+//
+// GRUND: es geht ohne. Losziehen geht auch am Leistenhintergrund
+// (CControlBar::OnLButtonDown, barcore.cpp), Schliessen ueber das
+// Kontextmenue ("Hide"), Aufklappen ist eine reine Bequemlichkeit. Ein
+// nachgemalter Griff dagegen muesste in CalcInsideRect, DoPaint,
+// OnLButtonDown/-Up, OnMouseMove und OnToolHitTest zusammenpassen - viel
+// Zeichencode fuer nichts, was nicht anders erreichbar waere.
+//
+// FOLGE: die Leisten sehen ohne Griff aus wie MFC-Leisten. AdjustInsideRect-
+// ForGripper haelt keinen Platz frei, also entsteht auch keine Luecke.
+
+void SECControlBar::AdjustInsideRectForGripper(CRect& /*rect*/, BOOL /*bHorz*/)
+{
+}
+
+void SECControlBar::DrawGripper(CDC* /*pDC*/, CRect& /*rect*/)
+{
+}
+
+void SECControlBar::DrawGripperCloseButton(CDC* /*pDC*/, CRect& /*rect*/, BOOL /*bHorz*/)
+{
+}
+
+void SECControlBar::DrawGripperCloseButtonDepressed(CDC* /*pDC*/)
+{
+}
+
+void SECControlBar::DrawGripperCloseButtonRaised(CDC* /*pDC*/)
+{
+}
+
+void SECControlBar::DrawGripperExpandButton(CDC* /*pDC*/, CRect& /*rect*/, BOOL /*bHorz*/)
+{
+}
+
+void SECControlBar::DrawGripperExpandButtonDepressed(CDC* /*pDC*/)
+{
+}
+
+void SECControlBar::DrawGripperExpandButtonRaised(CDC* /*pDC*/)
+{
+}
+
+void SECControlBar::SetGripperExpandButtonState(BOOL bHorz)
+{
+	// Die beiden Felder bleiben gepflegt, damit ein spaeterer Nachbau des
+	// Griffs sie vorfindet.
+	m_bGripperExpandHorz = bHorz;
+	m_bGripperExpandExpanding = !m_bGripperExpandExpanding;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Zustand sichern und zuruecklesen
+//
+// WazooBarMgr.cpp:432-436 benutzt das Paar, um allein die Andockhoehe zu
+// aendern:
+//     SECControlBarInfo info;
+//     pWazooBar->GetBarInfo(&info);
+//     info.m_szDockHorz.cy = 80;
+//     pWazooBar->SetBarInfo(&info, pMainFrame);
+// Der Weg muss also verlustfrei hin und zurueck fuehren.
+
+void SECControlBar::GetBarInfo(SECControlBarInfo* pInfo)
+{
+	ASSERT(pInfo != NULL);
+	if (pInfo == NULL)
+		return;
+
+	// Der MFC-Anteil (Kennung, Sichtbarkeit, Lage, Andockkontext)
+	CControlBar::GetBarInfo(pInfo);
+
+	// Der Stingray-Anteil (sdocksta.h:94-108)
+	pInfo->m_szDockHorz        = m_szDockHorz;
+	pInfo->m_ptDockHorz        = m_ptDockHorz;
+	pInfo->m_szDockVert        = m_szDockVert;
+	pInfo->m_szFloat           = m_szFloat;
+	pInfo->m_dwMRUDockingState = m_dwMRUDockingState;
+	pInfo->m_dwDockStyle       = m_dwDockStyle;
+	pInfo->m_fPctWidth         = m_fPctWidth;
+	pInfo->m_dwStyle           = m_dwStyle;
+	pInfo->m_dwExStyle         = m_dwExStyle;
+	pInfo->m_bMDIChild         = IsMDIChild();
+	pInfo->m_bPreviouslyFloating = IsFloating();
+
+	// Zuletzt bekommt die abgeleitete Klasse ihre Gelegenheit
+	// (SearchBar.cpp:1162, QCCustomToolBar.cpp:334).
+	GetBarInfoEx(pInfo);
+}
+
+
+void SECControlBar::SetBarInfo(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd)
+{
+	ASSERT(pInfo != NULL);
+	if (pInfo == NULL)
+		return;
+
+	m_szDockHorz        = pInfo->m_szDockHorz;
+	m_ptDockHorz        = pInfo->m_ptDockHorz;
+	m_szDockVert        = pInfo->m_szDockVert;
+	m_szFloat           = pInfo->m_szFloat;
+	m_dwMRUDockingState = pInfo->m_dwMRUDockingState;
+	m_fPctWidth         = pInfo->m_fPctWidth;
+	m_dwExStyle         = pInfo->m_dwExStyle;
+
+	// m_dwStyle und m_dwDockStyle bewusst NICHT zurueckgeschrieben: beide
+	// haengen am tatsaechlichen Fensterzustand, den CControlBar::SetBarInfo
+	// gleich anfasst. Sie aus einer moeglicherweise alten Aufzeichnung zu
+	// ueberschreiben, brachte die Leiste und ihre Andockleiste auseinander.
+
+	CControlBar::SetBarInfo(pInfo, pFrameWnd);
+
+	SetBarInfoEx(pInfo, pFrameWnd);
+
+	// Kein RecalcLayout: die einzige Aufrufstelle ordnet unmittelbar danach
+	// ohnehin neu an (WazooBarMgr.cpp ruft SetDefaultDockState im Block, und
+	// mainfrm.cpp:5661 zieht nach). Ein Neuanordnen mitten in der
+	// Startreihenfolge waere nur eine Fehlerquelle.
+}
+
+
+// Die beiden sind im Original leer und ausschliesslich zum Ueberschreiben da.
+// SearchBar.cpp:1165 und :1192 rufen sie ausdruecklich auf, um die Fassung von
+// SECCustomToolBar zu ueberspringen; QCCustomToolBar.cpp:334 erweitert sie.
+void SECControlBar::GetBarInfoEx(SECControlBarInfo* /*pInfo*/)
+{
+}
+
+void SECControlBar::SetBarInfoEx(SECControlBarInfo* /*pInfo*/, CFrameWnd* /*pFrameWnd*/)
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Meldungen an die Leiste
+//
+// Keine Befehle, sondern Mitteilungen des Rahmenwerks ueber einen bereits
+// vollzogenen Wechsel. Im Original leer; CWazooBar haengt sich an zwei davon
+// (WazooBar.cpp:1544, 1577) und ruft anschliessend diese Fassungen auf,
+// QC3DTabWnd.cpp:284 loest OnBarFloat von aussen aus.
+//
+// STUFE 2 OFFEN: der Shim loest sie nicht selbst aus - dazu muesste er das
+// Andocken und Losloesen selbst in der Hand haben, was hier MFC tut.
+// Aufgerufen werden sie also nur ueber die genannte Stelle in QC3DTabWnd.
+
+void SECControlBar::OnBarDock()
+{
+}
+
+void SECControlBar::OnBarFloat()
+{
+}
+
+void SECControlBar::OnBarMDIFloat()
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Kontextmenue
+//
+// Der Einstieg ist WM_CONTEXTMENU auf der Leiste selbst. Eudora baut fuer die
+// Wazoo-Fenster ein eigenes Menue (WazooWnd.cpp:88-183) und haengt dieselben
+// drei Kennungen an; diese Fassung greift also nur, wenn der Anwender neben
+// die Wazoo-Flaeche trifft.
+
+void SECControlBar::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
+{
+	// Ohne den Stil gehoert das Menue nicht der Leiste (sbarcore.h:52).
+	if ((m_dwExStyle & CBRS_EX_STDCONTEXTMENU) == 0)
+	{
+		Default();
+		return;
+	}
+
+	CMenu menu;
+	if (!menu.CreatePopupMenu())
+		return;
+
+	// Die Beschriftungen stehen in SECRES.RC:412-414 ("Allow Docking",
+	// "Hide", "Float In Main Window"). Eudora bindet die Datei mit ein
+	// (EudoraRes.rc:11712), die Zeichenketten sind also zur Laufzeit da.
+	CString strItem;
+
+	if (strItem.LoadString(ID_SEC_ALLOWDOCKING))
+	{
+		UINT nFlags = MF_STRING;
+		if (m_dwDockStyle & CBRS_ALIGN_ANY)
+			nFlags |= MF_CHECKED;
+		menu.AppendMenu(nFlags, ID_SEC_ALLOWDOCKING, strItem);
+	}
+
+	if (strItem.LoadString(ID_SEC_HIDE))
+		menu.AppendMenu(MF_STRING, ID_SEC_HIDE, strItem);
+
+	// "Float In Main Window" nur, wenn die Leiste das ueberhaupt darf. Ohne
+	// die Umsetzung von FloatControlBarInMDIChild taete der Punkt nichts;
+	// weggelassen ist ehrlicher als ein Menuepunkt ohne Wirkung.
+	if ((m_dwExStyle & CBRS_EX_ALLOW_MDI_FLOAT) &&
+		strItem.LoadString(ID_SEC_MDIFLOAT))
+	{
+		menu.AppendMenu(MF_SEPARATOR);
+		UINT nFlags = MF_STRING;
+		if (IsMDIChild())
+			nFlags |= MF_CHECKED;
+		menu.AppendMenu(nFlags, ID_SEC_MDIFLOAT, strItem);
+	}
+
+	// CWazooBar (WazooBar.cpp:1075) und CAdWazooBar (AdWazooBar.cpp:297)
+	// nehmen hier Punkte weg bzw. hinzu.
+	OnExtendContextMenu(&menu);
+
+	if (menu.GetMenuItemCount() > 0)
+		menu.TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+}
+
+
+// Im Original leer, nur zum Ueberschreiben.
+void SECControlBar::OnExtendContextMenu(CMenu* /*pMenu*/)
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - die drei SEC-Kommandos
+
+// ID_SEC_HIDE. Reichlich benutzt und deshalb wirklich umgesetzt:
+// WazooBarMgr.cpp:415, 442, 623 blenden Leisten beim Start aus,
+// WazooWnd.cpp:513 auf Wunsch des Anwenders.
+void SECControlBar::OnHide()
+{
+	CFrameWnd* pFrame = GetDockingFrame();
+	if (pFrame == NULL)
+		return;
+
+	pFrame->ShowControlBar(this, FALSE, FALSE);
+}
+
+
+// ID_SEC_ALLOWDOCKING. Erreichbar ueber das Kontextmenue (WazooWnd.cpp:492);
+// den Hakenzustand liest Eudora selbst aus m_dwDockStyle (WazooWnd.cpp:163).
+void SECControlBar::OnToggleAllowDocking()
+{
+	if (m_dwDockStyle & CBRS_ALIGN_ANY)
+	{
+		// Andocken abschalten. Der bisherige Zustand wird gemerkt - genau
+		// dafuer ist m_dwMRUDockingState da (sbarcore.h:141).
+		m_dwMRUDockingState = m_dwDockStyle;
+		m_dwDockStyle &= ~CBRS_ALIGN_ANY;
+
+		// Eine gerade angedockte Leiste muss dabei losgeloest werden, sonst
+		// bliebe sie an einem Platz stehen, den sie laut Einstellung nicht
+		// mehr haben darf.
+		if (!IsFloating() && m_pDockSite != NULL)
+		{
+			CRect rect;
+			GetWindowRect(&rect);
+			m_pDockSite->FloatControlBar(this, rect.TopLeft(), CBRS_ALIGN_TOP);
+		}
+	}
+	else
+	{
+		m_dwDockStyle = m_dwMRUDockingState;
+	}
+}
+
+
+// ID_SEC_MDIFLOAT. CWazooBar faengt das Kommando vorher ab und ruft diese
+// Fassung von Hand auf (WazooBar.cpp:1418), um danach den Fenstertitel
+// nachzuziehen.
+//
+// STUFE 2 OFFEN - die Begruendung steht bei
+// SECMDIFrameWnd::FloatControlBarInMDIChild.
+void SECControlBar::OnFloatAsMDIChild()
+{
+	SECMDIFrameWnd* pFrame = DYNAMIC_DOWNCAST(SECMDIFrameWnd, GetDockingFrame());
+	if (pFrame == NULL)
+		return;
+
+	CRect rect;
+	GetWindowRect(&rect);
+
+	pFrame->FloatControlBarInMDIChild(this, rect.TopLeft(),
+		m_dwStyle & CBRS_ALIGN_ANY);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Zwischenspeicher der Kinderlage
+//
+// Im Original merkt sich die Leiste vor einem Ziehvorgang Fenster und Lage
+// aller Kinder, um beim Loslassen nicht alles neu berechnen zu muessen. Ohne
+// die prozentualen Zeilenbreiten gibt es diesen Vorgang nicht; das Feld wird
+// nie angelegt. DeleteLayoutInfo bleibt trotzdem vollstaendig, damit ein
+// spaeterer Nachbau nur InitLayoutInfo fuellen muss.
+
+void SECControlBar::InitLayoutInfo()
+{
+	DeleteLayoutInfo();
+}
+
+
+void SECControlBar::DeleteLayoutInfo()
+{
+	if (m_pArrLayoutInfo == NULL)
+		return;
+
+	for (int i = 0; i < m_pArrLayoutInfo->GetSize(); i++)
+		delete (LayoutInfo*) m_pArrLayoutInfo->GetAt(i);
+
+	m_pArrLayoutInfo->RemoveAll();
+	delete m_pArrLayoutInfo;
+	m_pArrLayoutInfo = NULL;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBar - Nachrichten
+//
+// Alle Kategorie A. Sie stehen nur deshalb hier, weil Eudora sie qualifiziert
+// aufruft und ein Weglassen einen Linkerfehler gaebe.
+
+// WazooBar.cpp:1238, SearchBar.cpp:1575
+void SECControlBar::OnSize(UINT nType, int cx, int cy)
+{
+	CControlBar::OnSize(nType, cx, cy);
+}
+
+// CControlBar::OnLButtonDown startet das Ziehen ueber m_pDockContext
+// (barcore.cpp) - genau das soll passieren.
+void SECControlBar::OnLButtonDown(UINT nFlags, CPoint pt)
+{
+	CControlBar::OnLButtonDown(nFlags, pt);
+}
+
+void SECControlBar::OnLButtonUp(UINT nFlags, CPoint pt)
+{
+	CControlBar::OnLButtonUp(nFlags, pt);
+}
+
+// Doppelklick schaltet zwischen angedockt und schwebend um (CControlBar).
+void SECControlBar::OnLButtonDblClk(UINT nFlags, CPoint pt)
+{
+	CControlBar::OnLButtonDblClk(nFlags, pt);
+}
+
+// WazooBar.cpp:1226
+void SECControlBar::OnDestroy()
+{
+	DeleteLayoutInfo();
+	CControlBar::OnDestroy();
+}
+
+BOOL SECControlBar::OnEraseBkgnd(CDC* pDC)
+{
+	return CControlBar::OnEraseBkgnd(pDC);
+}
+
+
+// In CControlBar rein virtuell (afxext.h:166), muss also besetzt werden.
+//
+// BEWUSST LEER: eine SECControlBar enthaelt Fenster, keine Knopfleiste. Fuer
+// Fenster erledigt MFC die Aktualisierung ueber deren eigene Nachrichtenwege.
+// Dass das die Absicht ist, sagt CSearchBar selbst - sie ueberschreibt die
+// Fassung von SECCustomToolBar und ruft diese hier auf, mit der Begruendung,
+// sie wolle "mostly just the functionality of being an SECControlBar"
+// (SearchBar.cpp:1230-1246). CWazooBar bringt eine eigene mit (WazooBar.h:76).
+void SECControlBar::OnUpdateCmdUI(CFrameWnd* /*pTarget*/, BOOL /*bDisableIfNoHndler*/)
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar
+
+IMPLEMENT_DYNAMIC(SECDockBar, CDockBar)
+
+// UNGEPRUEFT: der Wert des Originals. FALSE bedeutet: keine zusaetzliche
+// vertiefte Kante zum MDI-Bereich hin. Eudora fragt das Feld nirgends ab.
+BOOL SECDockBar::m_bBorderClientEdge = FALSE;
+
+// UNGEPRUEFT: die Masse des Originals. 4 Pixel entsprechen der ueblichen
+// Breite eines Ziehbalkens (halbe Fensterrahmenbreite). Weil in dieser Stufe
+// nie ein Splitter angelegt wird, hat der Wert keine Wirkung.
+const int SECDockBar::Splitter::cx = 4;
+const int SECDockBar::Splitter::cy = 4;
+
+const int SECDockBar::ClientEdge::cx = 2;
+const int SECDockBar::ClientEdge::cy = 2;
+
+BEGIN_MESSAGE_MAP(SECDockBar, CDockBar)
+	ON_WM_CREATE()
+	ON_WM_SETCURSOR()
+	ON_WM_MOUSEMOVE()
+	ON_WM_LBUTTONDOWN()
+	ON_WM_DESTROY()
+	ON_MESSAGE(WM_SIZEPARENT, &SECDockBar::OnSizeParent)
+END_MESSAGE_MAP()
+
+
+SECDockBar::SECDockBar(BOOL bFloating, BOOL bMDIChild) :
+	CDockBar(bFloating)
+{
+	m_bMDIChild = bMDIChild;
+
+	m_pLayout = NULL;
+	m_pBarDocked = NULL;
+	m_bProcessingDelayedInvalidates = FALSE;
+	m_bOptimizeNextRedraw = FALSE;
+
+	// UNGEPRUEFT: der Anfangswert des Originals. Er ist die untere Schranke
+	// fuer den Anteil einer Leiste an ihrer Zeile; DockBar.cpp:72 vergleicht
+	// dagegen. Ohne prozentuale Breiten wird er nie fortgeschrieben.
+	m_fAdjustedMinPctWidth = (float)0.0;
+}
+
+
+SECDockBar::~SECDockBar()
+{
+	DeleteAllSplitters();
+	DeleteAllEdges();
+	m_arrInvalidBars.RemoveAll();
+}
+
+
+#ifdef _DEBUG
+void SECDockBar::AssertValid() const
+	{ CDockBar::AssertValid(); }
+void SECDockBar::Dump(CDumpContext& dc) const
+	{ CDockBar::Dump(dc); }
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Zeilen
+//
+// AUFBAU VON m_arrBars (CDockBar, afxpriv.h:627): ein Feld aus Zeigern auf
+// CControlBar, in dem NULL das Ende einer Zeile markiert. Eintraege mit einem
+// Wert <= 0xffff sind Platzhalter fuer noch nicht erzeugte Leisten;
+// GetDockedControlBar liefert dafuer NULL (bardock.cpp). Eudora wertet den
+// Aufbau selbst genauso aus (DockBar.cpp:117-138, 237-258).
+
+// DockBar.cpp:59 und :92 rufen das in einem VERIFY auf - die Fassung MUSS
+// also TRUE liefern, wenn pBar zu dieser Andockleiste gehoert.
+BOOL SECDockBar::GetControlBarRow(CPtrList& rowList, SECControlBar* pBar)
+{
+	rowList.RemoveAll();
+
+	if (pBar == NULL)
+		return FALSE;
+
+	int nSize = (int) m_arrBars.GetSize();
+	int nFound = -1;
+	int i;
+
+	for (i = 0; i < nSize; i++)
+	{
+		if (m_arrBars[i] == (void*) pBar)
+		{
+			nFound = i;
+			break;
+		}
+	}
+
+	if (nFound < 0)
+		return FALSE;
+
+	// Zeilenanfang suchen: rueckwaerts bis vor die naechste NULL-Marke.
+	int nStart = nFound;
+	while (nStart > 0 && m_arrBars[nStart - 1] != NULL)
+		nStart--;
+
+	// Vorwaerts bis zur naechsten NULL-Marke einsammeln.
+	for (i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
+	{
+		CControlBar* pRowBar = GetDockedControlBar(i);
+		if (pRowBar != NULL)
+			rowList.AddTail(pRowBar);
+	}
+
+	return TRUE;
+}
+
+
+// DockBar.cpp:86 ruft diese Fassung auf, wenn Eudora nicht im Werbemodus
+// laeuft. "Allein in der Zeile" heisst: keine andere sichtbare Leiste.
+BOOL SECDockBar::IsOnlyControlBarInRow(SECControlBar* pBar)
+{
+	CPtrList rowList;
+	if (!GetControlBarRow(rowList, pBar))
+		return FALSE;
+
+	POSITION pos = rowList.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CControlBar* pOther = (CControlBar*) rowList.GetNext(pos);
+		if (pOther != (CControlBar*) pBar && pOther->IsVisible())
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+
+// DockBar.cpp:75. Im Original: hat die Leiste den groesstmoeglichen Anteil an
+// ihrer Zeile?
+//
+// STUFE 2 OFFEN. Ohne prozentuale Zeilenbreiten gibt es kein Maximum, das
+// unter 100 Prozent laege. Die einzige Lage, in der eine Leiste hier
+// zweifelsfrei "am Anschlag" ist, ist die, in der sie ihre Zeile allein hat -
+// also genau IsOnlyControlBarInRow.
+BOOL SECDockBar::IsControlBarAtMaxWidthInRow(SECControlBar* pBar)
+{
+	return IsOnlyControlBarInRow(pBar);
+}
+
+
+// STUFE 2 OFFEN: die prozentualen Zeilenbreiten. Die einzige Aufrufstelle
+// waere SECDockBar selbst.
+void SECDockBar::SetControlBarWidthsInRow(SECControlBar* /*pBar*/, USHORT /*uOperationType*/)
+{
+}
+
+
+// DockBar.cpp:225 ruft diese Fassung auf und rechnet danach die Breite der
+// Werbeleiste heraus.
+//
+// STUFE 2 OFFEN: im Original verteilt NormalizeRow die Zeilenbreite anhand von
+// m_fPctWidth auf die Leisten einer Zeile. Bei MFC macht das CDockBar in
+// OnSizeParent ueber CalcFixedLayout, und zwar ohne diesen Zwischenschritt.
+// Die Zaehler werden trotzdem richtig gefuellt, weil QCDockBar sie nicht
+// weiterbenutzt, ein spaeterer Nachbau aber schon.
+void SECDockBar::NormalizeRow(int nPos, CControlBar* /*pBarDocked*/,
+	int& nBarsBidirectional, int& nBarsUnidirectional)
+{
+	nBarsBidirectional = 0;
+	nBarsUnidirectional = 0;
+
+	int nSize = (int) m_arrBars.GetSize();
+	if (nPos < 0 || nPos >= nSize)
+		return;
+
+	int nStart = nPos;
+	while (nStart > 0 && m_arrBars[nStart - 1] != NULL)
+		nStart--;
+
+	for (int i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
+	{
+		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, GetDockedControlBar(i));
+		if (pBar == NULL)
+			continue;
+
+		// CBRS_EX_UNIDIRECTIONAL: die Leiste laesst sich nur in einer
+		// Richtung groesser ziehen (sbarcore.h:54).
+		if (pBar->GetExBarStyle() & CBRS_EX_UNIDIRECTIONAL)
+			nBarsUnidirectional++;
+		else
+			nBarsBidirectional++;
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Abfragen
+
+// workbook.cpp:373, 459, 563, 619. Der Rueckgabewert wird dort auf CWazooBar
+// heruntergecastet und darf NULL sein.
+SECControlBar* SECDockBar::GetFirstControlBar()
+{
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, GetDockedControlBar(i));
+		if (pBar != NULL)
+			return pBar;
+	}
+
+	return NULL;
+}
+
+
+// Zugabe des Shims (siehe OTShim.h). SECMDIFrameWnd braucht die erste Leiste
+// unabhaengig von ihrem Typ, um die MFC-Fassungen von OnNcLButtonDown und
+// OnNcLButtonDblClk nachzubilden (bardock.cpp:886-889).
+CControlBar* SECDockBar::GetFirstDockedBar() const
+{
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		CControlBar* pBar = GetDockedControlBar(i);
+		if (pBar != NULL)
+			return pBar;
+	}
+
+	return NULL;
+}
+
+
+BOOL SECDockBar::IsNewBar(CControlBar* pBarToTest) const
+{
+	if (pBarToTest == NULL)
+		return FALSE;
+
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		if (m_arrBars[i] == (void*) pBarToTest)
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+
+// UNGEPRUEFT: die genaue Bedeutung im Original. Gelesen als "steht
+// pBarToTest noch nicht in der Zeile, die bei nCurrentRow beginnt". Von
+// Eudora nicht aufgerufen.
+BOOL SECDockBar::BarIsNewToThisRow(CControlBar* pBarToTest, int nCurrentRow) const
+{
+	if (pBarToTest == NULL)
+		return FALSE;
+
+	int nSize = (int) m_arrBars.GetSize();
+	if (nCurrentRow < 0 || nCurrentRow >= nSize)
+		return TRUE;
+
+	int nStart = nCurrentRow;
+	while (nStart > 0 && m_arrBars[nStart - 1] != NULL)
+		nStart--;
+
+	for (int i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
+	{
+		if (m_arrBars[i] == (void*) pBarToTest)
+			return FALSE;
+	}
+
+	return TRUE;
+}
+
+
+// Hoehe der Zeile, in der nPos liegt: das Maximum der Leistenhoehen.
+int SECDockBar::GetRowHeight(int nPos) const
+{
+	int nSize = (int) m_arrBars.GetSize();
+	if (nPos < 0 || nPos >= nSize)
+		return 0;
+
+	int nStart = nPos;
+	while (nStart > 0 && m_arrBars[nStart - 1] != NULL)
+		nStart--;
+
+	BOOL bHorz = (m_dwStyle & CBRS_ORIENT_HORZ) ? TRUE : FALSE;
+	int nHeight = 0;
+
+	for (int i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
+	{
+		CControlBar* pBar = GetDockedControlBar(i);
+		if (pBar == NULL || !pBar->IsVisible())
+			continue;
+
+		CRect rect;
+		pBar->GetWindowRect(&rect);
+		int n = bHorz ? rect.Height() : rect.Width();
+		if (n > nHeight)
+			nHeight = n;
+	}
+
+	return nHeight;
+}
+
+
+// Die vier laufen innerhalb einer Zeile weiter bzw. zurueck. Von Eudora nicht
+// aufgerufen; im Original Hilfsmittel der Splitterberechnung.
+CControlBar* SECDockBar::NextBarThisRow(int nPos)
+{
+	int nSize = (int) m_arrBars.GetSize();
+	for (int i = nPos + 1; i < nSize && m_arrBars[i] != NULL; i++)
+	{
+		CControlBar* pBar = GetDockedControlBar(i);
+		if (pBar != NULL)
+			return pBar;
+	}
+	return NULL;
+}
+
+CControlBar* SECDockBar::NextVisibleBarThisRow(int nPos)
+{
+	int nSize = (int) m_arrBars.GetSize();
+	for (int i = nPos + 1; i < nSize && m_arrBars[i] != NULL; i++)
+	{
+		CControlBar* pBar = GetDockedControlBar(i);
+		if (pBar != NULL && pBar->IsVisible())
+			return pBar;
+	}
+	return NULL;
+}
+
+CControlBar* SECDockBar::PrevBarThisRow(int nPos)
+{
+	for (int i = nPos - 1; i >= 0 && m_arrBars[i] != NULL; i--)
+	{
+		CControlBar* pBar = GetDockedControlBar(i);
+		if (pBar != NULL)
+			return pBar;
+	}
+	return NULL;
+}
+
+CControlBar* SECDockBar::PrevVisibleBarThisRow(int nPos)
+{
+	for (int i = nPos - 1; i >= 0 && m_arrBars[i] != NULL; i--)
+	{
+		CControlBar* pBar = GetDockedControlBar(i);
+		if (pBar != NULL && pBar->IsVisible())
+			return pBar;
+	}
+	return NULL;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Zustand sichern und zuruecklesen
+//
+// Verdecken CDockBar::Get/SetBarInfo (afxpriv.h:622-623). Eine Andockleiste
+// hat keine SEC-eigenen Angaben; die Zusatzfelder von SECControlBarInfo
+// gehoeren der einzelnen Leiste. Deshalb reines Durchreichen - der Aufruf
+// darf nur nicht bei CControlBarInfo* haengenbleiben.
+
+void SECDockBar::GetBarInfo(SECControlBarInfo* pInfo)
+{
+	CDockBar::GetBarInfo(pInfo);
+}
+
+void SECDockBar::SetBarInfo(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd)
+{
+	CDockBar::SetBarInfo(pInfo, pFrameWnd);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Andocken
+//
+// Alles Kategorie A: CDockBar kann andocken, umdocken und entfernen. Was der
+// Shim nicht kann, ist die spaltengenaue Einordnung.
+
+void SECDockBar::DockControlBar(CControlBar* pBar, LPCRECT lpRect)
+{
+	CDockBar::DockControlBar(pBar, lpRect);
+}
+
+
+// STUFE 2 OFFEN: nCol und nRow. Der Weg dorthin ist
+// SECMDIFrameWnd::DockControlBarEx; dort steht die ausfuehrliche Begruendung.
+// CDockBar ordnet die Leiste anhand ihres Fensterrechtecks ein.
+void SECDockBar::DockControlBar(CControlBar* pBar, int /*nCol*/, int /*nRow*/)
+{
+	CDockBar::DockControlBar(pBar, NULL);
+}
+
+
+void SECDockBar::ReDockControlBar(CControlBar* pBar, LPCRECT lpRect)
+{
+	CDockBar::ReDockControlBar(pBar, lpRect);
+}
+
+
+// Das Original unterscheidet nach _MFC_VER (sbardock.h:215-219); MFC 14 liegt
+// weit ueber 0x0420, es gilt also die dreistellige Fassung. MFC nimmt den
+// dritten Wert als int entgegen (afxpriv.h:608).
+BOOL SECDockBar::RemoveControlBar(CControlBar* pBar, int nPosExclude, BOOL bAddPlaceHolder)
+{
+	return CDockBar::RemoveControlBar(pBar, nPosExclude, bAddPlaceHolder ? 1 : 0);
+}
+
+
+// STUFE 2 OFFEN: Spalte und Zeile. Siehe DockControlBar oben.
+int SECDockBar::Insert(CControlBar* pBarIns, int /*nInsCol*/, int /*nInsRow*/)
+{
+	CRect rect(0, 0, 0, 0);
+	if (pBarIns != NULL && pBarIns->GetSafeHwnd() != NULL)
+		pBarIns->GetWindowRect(&rect);
+
+	return CDockBar::Insert(pBarIns, rect, rect.CenterPoint());
+}
+
+
+int SECDockBar::Insert(CControlBar* pBar, CRect rect, CPoint ptMid)
+{
+	return CDockBar::Insert(pBar, rect, ptMid);
+}
+
+
+// STUFE 2 OFFEN. Im Original sagt die Fassung vorher, an welche Stelle eine
+// gezogene Leiste fallen wuerde, um den Ziehrahmen dort einzublenden. Ohne
+// eigene Ziehlogik gibt es niemanden, der danach fragt. -1 heisst "unbekannt".
+int SECDockBar::PredictInsertPosition(CControlBar* /*pBarIns*/, CRect /*rect*/, CPoint /*ptMid*/)
+{
+	return -1;
+}
+
+
+CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
+{
+	return CDockBar::CalcFixedLayout(bStretch, bHorz);
+}
+
+
+// STUFE 2 OFFEN, wie PredictInsertPosition: das ist der Rahmen, den das
+// Original waehrend des Ziehens zeichnet. MFC macht das in CDockContext.
+CRect SECDockBar::CalcDockingLayout(CControlBar* /*pBarToDock*/, CRect& rectBar,
+	CPoint /*pt*/, int& nPosDockingRow, CRect& /*prevFocusRect*/, CPoint& /*prevPt*/)
+{
+	nPosDockingRow = -1;
+	return rectBar;
+}
+
+
+// STUFE 2 OFFEN: die Zeilenhoehe ergibt sich hier aus CalcFixedLayout der
+// einzelnen Leisten, nicht aus einem gespeicherten Wert. Von Eudora nicht
+// aufgerufen.
+void SECDockBar::SetRowHeight(int /*nPos*/, int /*nRowHeight*/)
+{
+}
+
+void SECDockBar::AdjustRowHeight(int /*nPos*/, int /*nWidth*/)
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Neuzeichnen
+//
+// Im Original sammelt die Andockleiste Neuzeichnen-Wuensche in
+// m_arrInvalidBars und arbeitet sie erst am Ende eines Ziehvorgangs ab
+// (m_bOptimizedRedrawEnabled, mainfrm.cpp:1019 schaltet das ab). Ohne eigene
+// Ziehlogik gibt es nichts zu sammeln: hier wird sofort fuer ungueltig
+// erklaert. Das Feld bleibt und wird leer gehalten.
+
+void SECDockBar::InvalidateBar(CControlBar* pBar)
+{
+	if (pBar == NULL || pBar->GetSafeHwnd() == NULL)
+		return;
+
+	pBar->Invalidate();
+}
+
+
+void SECDockBar::InvalidateBar(int nPos)
+{
+	if (nPos < 0 || nPos >= m_arrBars.GetSize())
+		return;
+
+	InvalidateBar(GetDockedControlBar(nPos));
+}
+
+
+// Alle Leisten der Zeile, in der nPosRow liegt.
+void SECDockBar::InvalidateToRow(int nPosRow)
+{
+	int nSize = (int) m_arrBars.GetSize();
+	if (nPosRow < 0 || nPosRow >= nSize)
+		return;
+
+	int nStart = nPosRow;
+	while (nStart > 0 && m_arrBars[nStart - 1] != NULL)
+		nStart--;
+
+	for (int i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
+		InvalidateBar(i);
+}
+
+
+// Aufgerufen, wenn eine Leiste ein- oder ausgeblendet wurde. Die uebrigen
+// Leisten der Zeile muessen dann neu gezeichnet werden, weil sie den frei
+// gewordenen Platz uebernehmen.
+void SECDockBar::OnBarHideShow(CControlBar* pBar)
+{
+	if (pBar == NULL)
+		return;
+
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		if (m_arrBars[i] == (void*) pBar)
+		{
+			InvalidateToRow(i);
+			return;
+		}
+	}
+}
+
+
+void SECDockBar::ProcessDelayedInvalidates()
+{
+	if (m_bProcessingDelayedInvalidates)
+		return;
+
+	m_bProcessingDelayedInvalidates = TRUE;
+
+	for (int i = 0; i < m_arrInvalidBars.GetSize(); i++)
+		InvalidateBar((CControlBar*) m_arrInvalidBars[i]);
+
+	m_arrInvalidBars.RemoveAll();
+	m_bProcessingDelayedInvalidates = FALSE;
+}
+
+
+// STUFE 2 OFFEN. Im Original zeichnet die Fassung die Werkzeugleisten einer
+// Zeile neu, wenn sich deren Breite geaendert hat. Hier ist es dasselbe wie
+// InvalidateToRow.
+void SECDockBar::InvalidateCustomToolBarsInRow(SECControlBar* pBar)
+{
+	OnBarHideShow(pBar);
+}
+
+
+void SECDockBar::DoPaint(CDC* pDC)
+{
+	CDockBar::DoPaint(pDC);
+
+	// Beide Felder bleiben in dieser Stufe leer - AddSplitter und
+	// AddClientEdge werden nie aufgerufen. Die Schleifen stehen trotzdem hier,
+	// damit ein spaeterer Nachbau nur die beiden Erzeuger fuellen muss.
+	int i;
+	for (i = 0; i < m_arrEdges.GetSize(); i++)
+	{
+		ClientEdge* pEdge = (ClientEdge*) m_arrEdges[i];
+		if (pEdge != NULL && pEdge->m_bInUse)
+			pEdge->Draw(pDC);
+	}
+
+	for (i = 0; i < m_arrSplitters.GetSize(); i++)
+	{
+		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
+		if (pSplitter != NULL && pSplitter->m_bInUse)
+			pSplitter->Draw(pDC);
+	}
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Splitter und Innenkanten
+//
+// Die Verwaltung ist vollstaendig umgesetzt, weil sie billig ist und die
+// Klasse sonst in sich unstimmig waere. Was fehlt, ist der Erzeuger: nichts im
+// Shim ruft AddSplitter oder AddClientEdge auf, weil die prozentualen
+// Zeilenbreiten fehlen, aus denen sich die Lage der Trennstriche ergaebe.
+// m_arrSplitters und m_arrEdges bleiben daher leer, HitTest liefert NULL, und
+// QCDockBar::CalcTrackingLimits (DockBar.cpp:149) wird nie erreicht.
+
+void SECDockBar::AddSplitter(Splitter::Type type, Splitter::Orientation orientation,
+	int x1, int y1, int x2, int y2, int nPos)
+{
+	CRect rect(x1, y1, x2, y2);
+
+	// Wiederverwenden statt neu anlegen - dafuer sind BeginRecycleSplitters
+	// und m_bInUse da.
+	for (int i = 0; i < m_arrSplitters.GetSize(); i++)
+	{
+		Splitter* pOld = (Splitter*) m_arrSplitters[i];
+		if (pOld == NULL || pOld->m_bInUse)
+			continue;
+
+		pOld->m_type        = type;
+		pOld->m_orientation = orientation;
+		pOld->m_rect        = rect;
+		pOld->m_nPos        = nPos;
+		pOld->m_bInUse      = TRUE;
+		return;
+	}
+
+	Splitter* pNew = new Splitter(type, orientation, rect);
+	pNew->m_nPos   = nPos;
+	pNew->m_bInUse = TRUE;
+	m_arrSplitters.Add(pNew);
+}
+
+
+void SECDockBar::DeleteAllSplitters()
+{
+	for (int i = 0; i < m_arrSplitters.GetSize(); i++)
+		delete (Splitter*) m_arrSplitters[i];
+
+	m_arrSplitters.RemoveAll();
+}
+
+
+void SECDockBar::BeginRecycleSplitters()
+{
+	for (int i = 0; i < m_arrSplitters.GetSize(); i++)
+	{
+		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
+		if (pSplitter != NULL)
+			pSplitter->m_bInUse = FALSE;
+	}
+}
+
+
+void SECDockBar::EndRecycleSplitters()
+{
+	// Rueckwaerts, damit das Entfernen die noch offenen Plaetze nicht
+	// verschiebt.
+	for (int i = (int) m_arrSplitters.GetSize() - 1; i >= 0; i--)
+	{
+		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
+		if (pSplitter != NULL && pSplitter->m_bInUse)
+			continue;
+
+		delete pSplitter;
+		m_arrSplitters.RemoveAt(i);
+	}
+}
+
+
+void SECDockBar::AddClientEdge(ClientEdge::Orientation orientation,
+	int x1, int y1, int x2, int y2)
+{
+	CRect rect(x1, y1, x2, y2);
+
+	for (int i = 0; i < m_arrEdges.GetSize(); i++)
+	{
+		ClientEdge* pOld = (ClientEdge*) m_arrEdges[i];
+		if (pOld == NULL || pOld->m_bInUse)
+			continue;
+
+		pOld->m_orientation = orientation;
+		pOld->m_rect        = rect;
+		pOld->m_bInUse      = TRUE;
+		return;
+	}
+
+	ClientEdge* pNew = new ClientEdge(orientation, rect);
+	pNew->m_bInUse = TRUE;
+	m_arrEdges.Add(pNew);
+}
+
+
+void SECDockBar::DeleteAllEdges()
+{
+	for (int i = 0; i < m_arrEdges.GetSize(); i++)
+		delete (ClientEdge*) m_arrEdges[i];
+
+	m_arrEdges.RemoveAll();
+}
+
+
+void SECDockBar::BeginRecycleEdges()
+{
+	for (int i = 0; i < m_arrEdges.GetSize(); i++)
+	{
+		ClientEdge* pEdge = (ClientEdge*) m_arrEdges[i];
+		if (pEdge != NULL)
+			pEdge->m_bInUse = FALSE;
+	}
+}
+
+
+void SECDockBar::EndRecycleEdges()
+{
+	for (int i = (int) m_arrEdges.GetSize() - 1; i >= 0; i--)
+	{
+		ClientEdge* pEdge = (ClientEdge*) m_arrEdges[i];
+		if (pEdge != NULL && pEdge->m_bInUse)
+			continue;
+
+		delete pEdge;
+		m_arrEdges.RemoveAt(i);
+	}
+}
+
+
+SECDockBar::Splitter* SECDockBar::HitTest(CPoint pt)
+{
+	for (int i = 0; i < m_arrSplitters.GetSize(); i++)
+	{
+		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
+		if (pSplitter != NULL && pSplitter->m_bInUse &&
+			pSplitter->m_rect.PtInRect(pt))
+		{
+			return pSplitter;
+		}
+	}
+
+	return NULL;
+}
+
+
+// DockBar.cpp:149 (QCDockBar) verfeinert die Grenzen anschliessend, damit die
+// Werbeleiste nicht unter ihre Mindestgroesse gezogen wird. Diese Fassung
+// liefert die aeussere Schranke: den Client-Bereich der Andockleiste.
+void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
+{
+	if (pSplitter == NULL)
+		return;
+
+	CRect rect;
+	GetClientRect(&rect);
+
+	if (pSplitter->m_orientation == Splitter::Vertical)
+	{
+		pSplitter->m_nMin = rect.left;
+		pSplitter->m_nMax = rect.right;
+	}
+	else
+	{
+		pSplitter->m_nMin = rect.top;
+		pSplitter->m_nMax = rect.bottom;
+	}
+}
+
+
+void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
+{
+	if (pSplit == NULL)
+		return;
+
+	// Die virtuelle Fassung, damit QCDockBar seine Grenzen setzen kann.
+	CalcTrackingLimits(pSplit);
+
+	int nDelta = pSplit->Track(this, pt, this);
+	if (nDelta != 0)
+		OnSplitterMoved(pSplit, nDelta);
+}
+
+
+// STUFE 2 OFFEN: hier verteilte das Original die Zeilenbreite neu
+// (m_fPctWidth der beiden angrenzenden Leisten). Ohne Splitter wird die
+// Fassung nie erreicht.
+void SECDockBar::OnSplitterMoved(Splitter* /*pSplitter*/, int /*nDelta*/)
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar::Splitter
+
+SECDockBar::Splitter::Splitter(Type type, Orientation orientation, const RECT & rect)
+{
+	m_type        = type;
+	m_orientation = orientation;
+	m_rect        = rect;
+	m_nPos        = -1;
+	m_bInUse      = FALSE;
+	m_nMin        = 0;
+	m_nMax        = 0;
+
+	m_rectLast.SetRectEmpty();
+	m_sizeLast   = CSize(0, 0);
+	m_bErase     = FALSE;
+	m_bFinalErase = FALSE;
+}
+
+
+void SECDockBar::Splitter::Draw(CDC *pDC)
+{
+	if (pDC == NULL)
+		return;
+
+	// Ein Trennstrich sieht aus wie ein Stueck Leistenhintergrund. Erst wenn
+	// er wirklich benutzt wird, lohnt sich mehr.
+	pDC->FillSolidRect(m_rect, ::GetSysColor(COLOR_BTNFACE));
+}
+
+
+// Der invertierte Ziehrahmen. Zweimal auf dieselbe Stelle gezeichnet hebt er
+// sich wieder auf - deshalb der Halbtonpinsel mit PATINVERT, genau wie
+// CDockContext::DrawFocusRect es macht.
+void SECDockBar::Splitter::DrawTrackerRect(LPCRECT lpRect,
+	CWnd* pWndClipTo, CDC* pDC, CWnd* /*pWnd*/)
+{
+	if (lpRect == NULL || pDC == NULL)
+		return;
+
+	CRect rect(lpRect);
+	if (pWndClipTo != NULL)
+		pWndClipTo->ScreenToClient(&rect);
+
+	CBrush* pBrush = CDC::GetHalftoneBrush();
+	if (pBrush == NULL)
+		return;
+
+	HBRUSH hOldBrush = (HBRUSH) ::SelectObject(pDC->GetSafeHdc(), pBrush->GetSafeHandle());
+	pDC->PatBlt(rect.left, rect.top, rect.Width(), rect.Height(), PATINVERT);
+	if (hOldBrush != NULL)
+		::SelectObject(pDC->GetSafeHdc(), hOldBrush);
+}
+
+
+// STUFE 2 OFFEN. Im Original laeuft hier die Mausschleife, bis der Anwender
+// loslaesst, und der Rueckgabewert ist die zurueckgelegte Strecke.
+// Aufgerufen wird die Fassung nur aus StartTracking, und dorthin fuehrt nur
+// ein Treffer auf einen Splitter - den es in dieser Stufe nicht gibt.
+// 0 heisst "nicht verschoben", der Aufrufer laesst dann alles, wie es ist.
+int SECDockBar::Splitter::Track(CWnd* /*pWnd*/, CPoint /*point*/, CWnd* /*pWndClipTo*/)
+{
+	return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar::ClientEdge
+
+SECDockBar::ClientEdge::ClientEdge(Orientation orientation, const RECT & rect)
+{
+	m_orientation = orientation;
+	m_rect        = rect;
+	m_bInUse      = FALSE;
+}
+
+
+void SECDockBar::ClientEdge::Draw(CDC *pDC)
+{
+	if (pDC == NULL)
+		return;
+
+	// Vertiefte Kante wie am Rand eines Client-Bereichs.
+	pDC->Draw3dRect(m_rect,
+		::GetSysColor(COLOR_BTNSHADOW), ::GetSysColor(COLOR_BTNHIGHLIGHT));
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockBar - Nachrichten
+
+int SECDockBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	return CDockBar::OnCreate(lpCreateStruct);
+}
+
+
+// Ueber einem Splitter der Doppelpfeil, sonst der uebliche Zeiger. Weil es
+// keine Splitter gibt, faellt die Fassung immer durch.
+BOOL SECDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	if (m_arrSplitters.GetSize() > 0)
+	{
+		CPoint pt;
+		if (::GetCursorPos(&pt))
+		{
+			ScreenToClient(&pt);
+			Splitter* pSplitter = HitTest(pt);
+			if (pSplitter != NULL)
+			{
+				LPCTSTR lpszCursor = (pSplitter->m_orientation == Splitter::Vertical)
+					? IDC_SIZEWE : IDC_SIZENS;
+				::SetCursor(::LoadCursor(NULL, lpszCursor));
+				return TRUE;
+			}
+		}
+	}
+
+	return CDockBar::OnSetCursor(pWnd, nHitTest, message);
+}
+
+
+void SECDockBar::OnMouseMove(UINT nFlags, CPoint point)
+{
+	CDockBar::OnMouseMove(nFlags, point);
+}
+
+
+void SECDockBar::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	Splitter* pSplitter = HitTest(point);
+	if (pSplitter != NULL)
+	{
+		StartTracking(pSplitter, point);
+		return;
+	}
+
+	CDockBar::OnLButtonDown(nFlags, point);
+}
+
+
+void SECDockBar::OnDestroy()
+{
+	DeleteAllSplitters();
+	DeleteAllEdges();
+	m_arrInvalidBars.RemoveAll();
+
+	CDockBar::OnDestroy();
+}
+
+
+// WM_SIZEPARENT ist der Anordnungsdurchlauf des Rahmens (afxpriv.h). Hier
+// wuerde das Original die prozentualen Breiten anwenden und danach die
+// Splitter neu setzen. Kategorie A - CDockBar ordnet die Leisten selbst an.
+LRESULT SECDockBar::OnSizeParent(WPARAM wParam, LPARAM lParam)
+{
+	return CDockBar::OnSizeParent(wParam, lParam);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+// SECMiniDockFrameWnd
+
+IMPLEMENT_DYNCREATE(SECMiniDockFrameWnd, CMiniDockFrameWnd)
+
+BEGIN_MESSAGE_MAP(SECMiniDockFrameWnd, CMiniDockFrameWnd)
+	ON_WM_CLOSE()
+	ON_WM_NCLBUTTONDOWN()
+	ON_WM_NCLBUTTONDBLCLK()
+	ON_WM_PARENTNOTIFY()
+END_MESSAGE_MAP()
+
+
+// m_wndSECDockBar schwebt (erstes Argument TRUE) und ist kein MDI-Kind.
+// m_bAutoDelete aus: das Feld gehoert dem Rahmen, nicht dem Rahmenwerk -
+// genauso haelt es CMiniDockFrameWnd mit m_wndDockBar (bardock.cpp:798-801).
+SECMiniDockFrameWnd::SECMiniDockFrameWnd() :
+	m_wndSECDockBar(TRUE, FALSE)
+{
+	m_wndSECDockBar.m_bAutoDelete = FALSE;
+}
+
+
+// Wortgetreue Nachbildung von CMiniDockFrameWnd::Create (bardock.cpp:803-856)
+// mit einem einzigen Unterschied: erzeugt wird m_wndSECDockBar statt
+// m_wndDockBar. Die Kennung bleibt AFX_IDW_DOCKBAR_FLOAT, denn danach sucht
+// CFrameWnd::FloatControlBar (winfrm2.cpp:202).
+BOOL SECMiniDockFrameWnd::Create(CWnd* pParent, DWORD dwBarStyle)
+{
+	// Verhindert Flackern waehrend der Erzeugung; RecalcLayout laeuft erst,
+	// wenn etwas angedockt ist.
+	m_bInRecalcLayout = TRUE;
+
+	DWORD dwStyle = WS_POPUP | WS_CAPTION | WS_SYSMENU | MFS_MOVEFRAME |
+		MFS_4THICKFRAME | MFS_SYNCACTIVE | MFS_BLOCKSYSMENU |
+		FWS_SNAPTOBARS;
+
+	if (dwBarStyle & CBRS_SIZE_DYNAMIC)
+		dwStyle &= ~MFS_MOVEFRAME;
+
+	if (!CMiniFrameWnd::CreateEx(0, NULL, _T(""), dwStyle,
+			CFrameWnd::rectDefault, pParent))
+	{
+		m_bInRecalcLayout = FALSE;
+		return FALSE;
+	}
+
+	dwStyle = (dwBarStyle & (CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT)) ?
+		CBRS_ALIGN_LEFT : CBRS_ALIGN_TOP;
+	dwStyle |= dwBarStyle & CBRS_FLOAT_MULTI;
+
+	// Systemmenue zurechtstutzen und "Close" in "Hide" umbenennen.
+	CMenu* pSysMenu = GetSystemMenu(FALSE);
+	if (pSysMenu != NULL)
+	{
+		pSysMenu->DeleteMenu(SC_SIZE, MF_BYCOMMAND);
+		pSysMenu->DeleteMenu(SC_MINIMIZE, MF_BYCOMMAND);
+		pSysMenu->DeleteMenu(SC_MAXIMIZE, MF_BYCOMMAND);
+		pSysMenu->DeleteMenu(SC_RESTORE, MF_BYCOMMAND);
+
+		CString strHide;
+		if (strHide.LoadString(AFX_IDS_HIDE))
+		{
+			pSysMenu->DeleteMenu(SC_CLOSE, MF_BYCOMMAND);
+			pSysMenu->AppendMenu(MF_STRING | MF_ENABLED, SC_CLOSE, strHide);
+		}
+	}
+
+	// Zuerst mit dem Hauptrahmen als Elternfenster anlegen - so will es MFC,
+	// weil CControlBar::OnCreate sich beim Rahmen anmeldet.
+	if (!m_wndSECDockBar.Create(pParent, WS_CHILD | WS_VISIBLE | dwStyle,
+			AFX_IDW_DOCKBAR_FLOAT))
+	{
+		m_bInRecalcLayout = FALSE;
+		return FALSE;
+	}
+
+	m_wndSECDockBar.SetParent(this);
+	m_bInRecalcLayout = FALSE;
+
+	return TRUE;
+}
+
+
+// Wie CMiniDockFrameWnd::RecalcLayout (bardock.cpp:858-869), nur auf
+// m_wndSECDockBar. QCMiniDockFrameWnd ersetzt die Fassung vollstaendig
+// (workbook.cpp:539) und laesst den Titelabgleich weg, weil CWazooBar den
+// Titel selbst setzt.
+void SECMiniDockFrameWnd::RecalcLayout(BOOL bNotify)
+{
+	if (m_bInRecalcLayout)
+		return;
+
+	CMiniFrameWnd::RecalcLayout(bNotify);
+
+	TCHAR szTitle[_MAX_PATH];
+	szTitle[0] = _T('\0');
+	if (m_wndSECDockBar.GetSafeHwnd() != NULL)
+		m_wndSECDockBar.GetWindowText(szTitle, _countof(szTitle));
+
+	::AfxSetWindowText(m_hWnd, szTitle);
+}
+
+
+// Zugabe des Originals (sbardock.h:253): anordnen UND an eine bestimmte
+// Stelle setzen, in einem Zug. Im Original ruft SECDockContext das waehrend
+// des Ziehens auf. Der Rumpf ist der von QCMiniDockFrameWnd
+// (workbook.cpp:574-620) ohne dessen Titelbehandlung - Eudora hat ihn dort
+// abgeschrieben, es ist also der Rumpf des Originals.
+void SECMiniDockFrameWnd::RecalcLayout(CPoint point, BOOL bNotify)
+{
+	if (m_bInRecalcLayout)
+		return;
+
+	m_bInRecalcLayout = TRUE;
+
+	// Angesammelte Anordnungswuensche mitnehmen.
+	if (m_nIdleFlags & idleNotify)
+		bNotify = TRUE;
+	m_nIdleFlags &= ~(idleLayout | idleNotify);
+	UNREFERENCED_PARAMETER(bNotify);
+
+	if (GetStyle() & FWS_SNAPTOBARS)
+	{
+		CRect rect(0, 0, 32767, 32767);
+		RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposQuery,
+			&rect, &rect, FALSE);
+		RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposExtra,
+			&m_rectBorder, &rect, TRUE);
+		CalcWindowRect(&rect);
+		SetWindowPos(NULL, point.x, point.y, rect.Width(), rect.Height(),
+			SWP_NOACTIVATE | SWP_NOZORDER);
+	}
+	else
+	{
+		RepositionBars(0, 0xffff, AFX_IDW_PANE_FIRST, reposExtra, &m_rectBorder);
+	}
+
+	m_bInRecalcLayout = FALSE;
+}
+
+
+// bardock.cpp:871-874. Schliessen heisst hier ausblenden, nicht zerstoeren.
+void SECMiniDockFrameWnd::OnClose()
+{
+	m_wndSECDockBar.ShowAll(FALSE);
+}
+
+
+// bardock.cpp:876-918. Ziehen an der Titelzeile bzw. am Rahmen wird an den
+// Andockkontext der ersten Leiste weitergereicht.
+//
+// ABWEICHUNG VOM ORIGINAL-MFC: dort steht ENSURE_VALID(pBar) und
+// ENSURE(pBar->m_pDockContext != NULL) - eine leere schwebende Andockleiste
+// gilt als unmoeglich. Hier wird geprueft statt zugesichert, denn der Shim
+// kann nicht ausschliessen, dass ein Aufruf ohne Leiste ankommt; in dem Fall
+// bleibt es beim gewoehnlichen Fensterverhalten.
+void SECMiniDockFrameWnd::OnNcLButtonDown(UINT nHitTest, CPoint point)
+{
+	if (nHitTest == HTCAPTION)
+	{
+		ActivateTopParent();
+
+		if ((m_wndSECDockBar.m_dwStyle & CBRS_FLOAT_MULTI) == 0)
+		{
+			CControlBar* pBar = m_wndSECDockBar.GetFirstDockedBar();
+			if (pBar != NULL && pBar->m_pDockContext != NULL)
+			{
+				pBar->m_pDockContext->StartDrag(point);
+				return;
+			}
+		}
+	}
+	else if (nHitTest >= HTSIZEFIRST && nHitTest <= HTSIZELAST)
+	{
+		ActivateTopParent();
+
+		CControlBar* pBar = m_wndSECDockBar.GetFirstDockedBar();
+		if (pBar != NULL && pBar->m_pDockContext != NULL)
+		{
+			// Leisten mit CBRS_SIZE_DYNAMIC duerfen kein CBRS_FLOAT_MULTI
+			// haben (bardock.cpp:913).
+			ASSERT((m_wndSECDockBar.m_dwStyle & CBRS_FLOAT_MULTI) == 0);
+			pBar->m_pDockContext->StartResize(nHitTest, point);
+			return;
+		}
+	}
+
+	CMiniFrameWnd::OnNcLButtonDown(nHitTest, point);
+}
+
+
+// bardock.cpp:920-943. Doppelklick auf die Titelzeile dockt wieder an.
+void SECMiniDockFrameWnd::OnNcLButtonDblClk(UINT nHitTest, CPoint point)
+{
+	if (nHitTest == HTCAPTION)
+	{
+		ActivateTopParent();
+
+		if ((m_wndSECDockBar.m_dwStyle & CBRS_FLOAT_MULTI) == 0)
+		{
+			CControlBar* pBar = m_wndSECDockBar.GetFirstDockedBar();
+			if (pBar != NULL && pBar->m_pDockContext != NULL)
+			{
+				pBar->m_pDockContext->ToggleDocking();
+				return;
+			}
+		}
+	}
+
+	CMiniFrameWnd::OnNcLButtonDblClk(nHitTest, point);
+}
+
+
+// sbardock.h:260. In CMiniDockFrameWnd nicht ueberschrieben; das Original
+// braucht die Nachricht, um das Verschwinden der letzten Leiste zu bemerken.
+// Hier reicht das Durchreichen - CDockBar blendet den Rahmen selbst aus,
+// sobald er leer ist (bardock.cpp).
+void SECMiniDockFrameWnd::OnParentNotify(UINT message, LPARAM lParam)
+{
+	CMiniDockFrameWnd::OnParentNotify(message, lParam);
 }
