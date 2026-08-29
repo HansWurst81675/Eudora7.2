@@ -1,0 +1,657 @@
+# Befundbericht Korrektheitspruefung
+
+**Geprueft am:** 2026-08-29
+**Stand:** `b4b7de5` auf Branch `vs2022-portierung-fixes`
+(Durchsicht begann bei `fd9a235`; die waehrenddessen entstandenen Commits
+`e4a0fae`, `75b60e1`, `b4b7de5` sind eingearbeitet.)
+**Vergleichsbasis:** `git diff main...HEAD`
+**Pruefer:** Agent PRUEFER (nur lesend; ausser dieser Datei wurde nichts geaendert)
+
+## Was geprueft wurde
+
+Korrektheitsfehler: Stellen, an denen sich das Verhalten gegenueber Eudora 7.1
+ungewollt geaendert hat oder an denen der neue Code falsch ist. Schwerpunkt in
+dieser Reihenfolge:
+
+1. QCSSL (OpenSSL 0.9.7 -> 3.x): `QCSSLContext.cpp`, `qccertificate.cpp`,
+   `certstore.cpp`, `SSLConnectionManager.cpp`
+2. Die OT501-Ersatzschicht unter `Eudora71/OTShim/`
+3. Die rund 90 Einzelkorrekturen an Eudoras eigenem Code (alle Hunks von
+   `git diff main...HEAD --ignore-cr-at-eol` ueber `*.cpp`/`*.h` ausserhalb von
+   `OpenSSL3/`, `MAPI/include/` und `Tests/` wurden gelesen)
+
+## Was ausdruecklich nicht geprueft wurde
+
+- **Die Hostnamenpruefung in QCSSL** (nur CN, keine SAN, rein beratend) -
+  bekannt, belegt und vom Auftraggeber bewusst zurueckgestellt.
+- Stil, Formatierung, Namensgebung.
+- Die Dokumentation (`README.md`, `PORTIERUNG.md`) - dafuer ist LEKTOR
+  zustaendig.
+- `Eudora71/OpenSSL3/**` - fremder Quelltext, unveraendert uebernommen.
+- `Eudora71/MAPI/include/*.h` - rund 25.000 Zeilen unveraenderte
+  Microsoft-SDK-Header.
+- `Eudora71/Tests/**` - das Pruefgeruest selbst (nicht der Prueflingscode).
+- Die `.vcxproj`-Dateien (QCSSL, QCSocket, QCUtils; zusammen rund 1.200
+  geaenderte Zeilen). Einzig `<Platform>Win32</Platform>` wurde nachgesehen,
+  weil Befund N1 davon abhaengt.
+- `Releases/1.0/QCSSL.dll` - Binaerdatei.
+- Zeilenenden und Kodierung der beruehrten Dateien.
+- Die Rumpfteile von `TBarBmpCombo.cpp`, `TBarStatic.cpp`, `TBarEdit.cpp`
+  jenseits von Konstruktoren und Nachrichtentabellen.
+- Es wurde nichts gebaut und nichts ausgefuehrt; alle Befunde stammen aus dem
+  Quelltext.
+
+---
+
+# Befunde
+
+## H1 - QCSSL: ungueltige Protokollversion bricht die Verbindung nicht mehr ab
+
+**Sicherheit: nachgewiesen**
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp`, `SetSSLVersion()`,
+`default:`-Zweig ab Z. 578, Wirkung ab Z. 585.
+
+Vorher stand im `default:`-Zweig nur die Fehlermeldung; `sslmethod` blieb
+`NULL`, und die Funktion endete mit `return SSL_CTX_new(sslmethod);`.
+`SSL_CTX_new(NULL)` liefert `NULL`. `BeginQCSSLSession()` fing das ab:
+
+```
+SSL_CTX *pSSLCtx = SetSSLVersion(pSSLReference);
+if (!pSSLCtx) { ASSERT(0); g_Mutex.Unlock(); return false; }
+```
+
+Jetzt steht der Aufruf ausserhalb des `switch`:
+
+```
+	default:
+		... AddComments(CResString(IDS_ERR_VERSIONINVALID));
+		break;
+	}
+
+	sslmethod = TLS_client_method();
+
+	SSL_CTX	*pCtx = SSL_CTX_new(sslmethod);
+```
+
+**Folge:** Bei einem ungueltigen `m_ProtocolVersion` wird der Kommentar
+"Version ungueltig" zwar noch in die ConnectionInfo geschrieben, die Verbindung
+kommt aber trotzdem zustande - mit `iMinVersion = TLS1_2_VERSION`, weil die
+Variable ihren Anfangswert behaelt. Aus "abbrechen" ist "stillschweigend
+weitermachen" geworden. Der Fehlerfall oeffnet also, statt zu schliessen.
+
+**Zu tun:** Im `default:`-Zweig `return NULL;` statt `break;` - oder eine
+Merkervariable setzen und vor `SSL_CTX_new()` abfragen.
+
+---
+
+## H2 - Zeichentabelle: bereits behoben, Korrektur nachgeprueft
+
+**Sicherheit: nachgewiesen (Befund und Behebung)**
+
+**Datei:** `Eudora71/Eudora/utils.cpp`
+
+Beide in `4c2f614` gemeldeten Fehler - sieben falsche Zuordnungen und die
+Doppelersetzung durch das zeilenweise `CString::Replace()` - sind mit `b4b7de5`
+behoben worden. Die Pruefung dieser Sitzung war unabhaengig zum selben Ergebnis
+gekommen: Die Eingabe `C3 83 C2 A9` (U+00C3 gefolgt von U+00A9) haette
+`C3 A9` ergeben muessen, wurde aber zu dem einen Byte `E9`, weil die Zeile
+`C3 83 -> 0xC3` ein neues Fuehrungsbyte erzeugt, das die spaetere Zeile
+`C3 A9 -> 0xE9` noch einmal frisst. Aus zwei Zeichen wurde eines.
+
+Die Korrektur wurde nachgeprueft und ist richtig:
+
+- Alle 27 CP1252-Zeilen wurden byteweise gegen CP1252.TXT geprueft. Alle 27
+  stimmen jetzt (0x80..0x9F ohne 81, 8D, 8F, 90, 9D).
+- Der Ersatz von `CString::Replace()` durch einen einzigen Links-nach-rechts-Lauf
+  ist korrekt: `lWrite <= lRead` gilt in beiden Zweigen, das Schreiben in
+  denselben Puffer ist damit gefahrlos; der Laengenlauf ueber `pFrom[iLen]`
+  liefert 2 bzw. 3, wie es das Zeilenformat verlangt; `lRead + iLen > lSize`
+  verhindert das Lesen ueber das Pufferende; "laengste Uebereinstimmung
+  gewinnt" ist implementiert.
+
+Kein Handlungsbedarf. Hier nur festgehalten, damit spaetere Pruefungen wissen,
+dass die Stelle geprueft ist.
+
+---
+
+## M1 - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
+
+**Sicherheit: nachgewiesen (Code); Auswirkung: Verdacht**
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp`, `SetSSLVersion()`, Fall 3
+(Z. 573-575) sowie `SSL_CTX_set_min_proto_version()` Z. 590.
+
+`TLSv1_method()` war eine **versionsgenaue** Methode: Unter- *und* Obergrenze
+TLS 1.0. Die Ersetzung setzt nur `SSL_CTX_set_min_proto_version(ctx,
+TLS1_VERSION)` und laesst die Obergrenze offen.
+
+Zwei Abweichungen auf einmal:
+
+1. Fall 3 handelte frueher genau TLS 1.0 aus; jetzt kann bis TLS 1.3
+   ausgehandelt werden. Das ist vermutlich gewuenscht, steht aber weder im
+   Kommentar noch in `PORTIERUNG.md`.
+2. Fall 3 setzt die Untergrenze auf TLS 1.0, waehrend alle anderen Faelle
+   TLS 1.2 verlangen. Wer in den Einstellungen "TLSv1" gewaehlt hat, bekommt
+   damit eine **schwaechere** Untergrenze als jeder andere. Praktisch faengt
+   das die Voreinstellung Security Level 1 von OpenSSL 3 wieder ab, die TLS < 1.2
+   ohnehin ablehnt - verlassen sollte man sich darauf nicht.
+
+**Zu tun:** Entscheiden, ob Fall 3 heute noch etwas anderes bedeuten soll als
+Fall 0/1/4/6/7. Wenn nicht: ebenfalls auf `TLS1_2_VERSION` legen. Wenn doch:
+`SSL_CTX_set_max_proto_version()` mitsetzen und den Kommentar ergaenzen.
+
+---
+
+## M2 - QCSSL: `BIO_s_workersocket()` ist fuer sich genommen nicht threadsicher
+
+**Sicherheit: nachgewiesen (Code); in der Praxis derzeit entschaerft**
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 310-334.
+
+```
+static BIO_METHOD *s_pMethodsWS = NULL;
+
+BIO_METHOD *BIO_s_workersocket()
+{
+	if (s_pMethodsWS == NULL)
+	{
+		s_pMethodsWS = BIO_meth_new(...);      // <-- zuerst zuweisen
+		...
+		BIO_meth_set_write(s_pMethodsWS, ws_write);   // <-- dann fuellen
+		...
+	}
+	return s_pMethodsWS;
+}
+```
+
+Vorher war das eine funktionslokale `static BIO_METHOD` mit konstantem
+Initialisierer - statisch initialisiert, also von Haus aus threadsicher.
+Jetzt gibt es zwei Rennen:
+
+- Zwei Threads sehen beide `NULL`, beide rufen `BIO_meth_new()` auf; einer der
+  beiden Bloecke bleibt fuer immer liegen (kleines Leck).
+- Schlimmer: `s_pMethodsWS` wird **vor** den Settern zugewiesen. Ein zweiter
+  Thread kann in genau diesem Fenster einen `BIO_METHOD` mit lauter
+  Null-Zeigern bekommen. `BIO_new()` ruft dann `create == NULL` auf bzw. die
+  spaeteren `read`/`write` laufen ins Leere.
+
+**Warum es heute trotzdem haelt:** Der einzige Aufrufer ist `BIO_new_ws()`
+(Z. 338), und der einzige Aufrufer davon ist `BeginQCSSLSession()` (Z. 789),
+das seit Z. 745 unter `g_Mutex` laeuft. Solange das so bleibt, kann das Rennen
+nicht auftreten.
+
+**Zu tun:** In eine lokale Variable bauen und erst am Ende zuweisen - das
+kostet nichts und macht die Funktion unabhaengig von `g_Mutex`.
+
+---
+
+## M3 - OTShim: `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht
+
+**Sicherheit: nachgewiesen**
+
+**Datei:** `Eudora71/OTShim/OTShim.cpp`, `SECWorkbook::SetWorkbookMode()`
+(Z. 1067-1081), zusammen mit `OnViewWorkbook()` (Z. 1156-1159) und
+`OnUpdateViewWorkbook()` (Z. 1161-1165).
+
+Der Setzer meldet den nicht umgesetzten Fall und ruft
+`m_pWBClient->SetMargins(0,0,0,0)` - er weist `m_bWorkbookMode` aber nie zu.
+Der Wert bleibt fuer die gesamte Laufzeit auf dem `FALSE` aus dem Konstruktor.
+
+**Folge:** `OnViewWorkbook()` ruft immer `SetWorkbookMode(TRUE)`, nie
+`SetWorkbookMode(FALSE)`; `OnUpdateViewWorkbook()` zeigt den Haken nie an. Der
+Menuepunkt reagiert also aus Sicht des Anwenders gar nicht - und da die
+Hinweismeldung ueber eine `static`-Merkervariable nur einmal je Sitzung kommt,
+passiert ab dem zweiten Klick sichtbar nichts.
+
+Das kann Absicht sein ("der Modus gibt es nicht, also bleibt er aus"), steht so
+aber nirgends. Falls Absicht: als Kommentar hinschreiben. Falls nicht:
+`m_bWorkbookMode = bEnabled;` ergaenzen.
+
+---
+
+## M4 - `QCWorkerSocket`: Empfangsrichtung liest die Sendeeinstellung
+
+**Sicherheit: nachgewiesen. Nicht aus der Portierung - Originalfehler.**
+
+**Datei:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:2084`
+
+```
+else   // Empfang, Standardport
+{
+	m_pSSLReference->m_ProtocolInfo.m_ProtocolVersion = pSettings->m_nSSLSendVersion;
+}
+```
+
+Jede andere Zeile in diesem `else`-Block liest `m_nSSLReceive...`; nur diese
+eine liest `m_nSSLSendVersion`. `m_nSSLReceiveVersion` existiert und wird in
+`SSLSettings.cpp:75` aus `IDS_INI_SSL_RECEIVE_VERSION` geladen - es wird nur
+nirgends benutzt.
+
+**Folge:** Die Protokollversion fuer POP/IMAP kommt aus der SMTP-Einstellung.
+Bisher war das folgenlos, weil alle Faelle auf `SSLv23_method()` hinausliefen.
+**Seit der Portierung steuert dieser Wert die TLS-Untergrenze** (siehe M1), die
+Verwechslung wird also erstmals wirksam.
+
+Die Datei ist von der Portierung nur an einer Stelle beruehrt worden
+(`<xstddef>` -> `<functional>`); der Fehler ist Originalcode von QUALCOMM.
+
+**Zu tun:** `m_nSSLReceiveVersion` einsetzen - aber getrennt vom Portierungs-
+umbau, weil es eine echte Verhaltensaenderung ist.
+
+---
+
+## M5 - `CSumList::GetTail()` liefert den Kopf
+
+**Sicherheit: nachgewiesen. Nicht aus der Portierung - Originalfehler,
+in die neue const-Ueberladung uebernommen.**
+
+**Datei:** `Eudora71/Eudora/summary.h` Z. 504 und Z. 507
+
+```
+CSummary*&      GetTail()       { return reinterpret_cast<CSummary *&>( m_ObList.GetHead() ); }
+const CSummary* GetTail() const { return reinterpret_cast<const CSummary *>( m_ObList.GetHead() ); }
+```
+
+Beide `GetTail()` rufen `m_ObList.GetHead()` auf. In `main` steht dasselbe; die
+Portierung hat den Fehler beim Umbau der const-Ueberladung mitgenommen, statt
+ihn zu bemerken.
+
+**Folge:** Jeder Aufrufer von `GetTail()` bekommt das erste statt des letzten
+Elements. Wie oft das zutraegt, haengt an den Aufrufstellen - die wurden im
+Rahmen dieser Pruefung nicht durchgezaehlt.
+
+**Zu tun:** `GetTailPosition()`/`m_ObList.GetTail()` verwenden. Vorher pruefen,
+ob sich Code auf das falsche Verhalten stuetzt.
+
+---
+
+## N1 - QCSSL: der Zeigerschmuggel durch `BIO_set_fd` haelt nur unter Win32
+
+**Sicherheit: nachgewiesen. Heute kein Fehler.**
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 249 (setzen), Z. 148 und
+Z. 196 (lesen), Z. 259 (zurueckgeben), Z. 789 (Aufrufer).
+
+Eudora reicht einen `QCSSLReference*` als `int` durch `BIO_set_fd()`:
+
+```
+BIO *pBIO = BIO_new_ws((int)pSSLReference, BIO_NOCLOSE);
+```
+
+`BIO_set_fd` ist `BIO_int_ctrl(b, BIO_C_SET_FD, c, fd)`, und `BIO_int_ctrl`
+reicht die Adresse eines lokalen `int` weiter. Der Umbau legt den Wert nun im
+Datenslot ab:
+
+```
+BIO_set_data(pBIO, (void*)(INT_PTR)(*((int*)ptr)));
+```
+
+Setzen und Lesen sind **konsistent**: `ws_read` und `ws_write` holen den Zeiger
+mit `BIO_get_data()`, `BIO_C_GET_FD` gibt ihn ueber denselben Weg zurueck. Ein
+Zeiger wird dabei **nicht** beschaedigt, weil `QCSSL.vcxproj` ausschliesslich
+`<Platform>Win32</Platform>` kennt - `int` und Zeiger sind beide 32 Bit.
+
+Sobald QCSSL einmal fuer x64 gebaut wird, schneidet `*((int*)ptr)` die oberen
+32 Bit des Zeigers ab, und zwar lautlos. Der Weg ueber `BIO_int_ctrl` kann das
+nicht heilen; dafuer muesste `BIO_new_ws` den Zeiger direkt per `BIO_set_data`
+ablegen und `BIO_C_SET_FD` gar nicht mehr benutzen.
+
+**Zu tun:** Nichts, solange Win32 gilt. Als Sperre fuer eine spaetere
+x64-Portierung vormerken.
+
+---
+
+## N2 - `plist_mgr.cpp`: `static` bei `get_entry_info` verlorengegangen
+
+**Sicherheit: nachgewiesen**
+
+**Datei:** `Eudora71/PlaylistClient/plstclnt_dll/plist_mgr.cpp:176`
+
+```
+- static get_entry_info( PrivCachePtr pcp, Entry* pe, ENTRY_INFO** pei );
++ int get_entry_info( PrivCachePtr pcp, Entry* pe, ENTRY_INFO** pei );
+```
+
+Die Definition in Z. 1571 lautet in beiden Fassungen `int get_entry_info(...)`
+ohne Speicherklasse. In C++ uebernimmt eine Definition ohne Speicherklasse die
+Bindung der vorangegangenen Deklaration - vorher also **interne** Bindung,
+jetzt **externe**.
+
+**Folge:** Der Name wird zu einem globalen Symbol der DLL. Heute kollidiert
+nichts (es baut), aber eine spaetere Uebersetzungseinheit mit gleichem Namen
+gaebe LNK2005 oder - schlimmer - eine stille Fehlbindung. Zur Behebung des
+Uebersetzungsfehlers (fehlender Rueckgabetyp) war das Entfernen von `static`
+nicht noetig.
+
+**Zu tun:** `static int get_entry_info(...)` schreiben.
+
+---
+
+## N3 - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
+
+**Sicherheit: nachgewiesen; geringe Auswirkung**
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp`
+
+- Z. 590: `SSL_CTX_set_min_proto_version()` liefert 0 bei Fehlschlag. Der Wert
+  wird verworfen. Scheitert der Aufruf, gilt die Voreinstellung von OpenSSL -
+  die Untergrenze aus den Einstellungen greift dann nicht.
+- Z. 534: `SetCipherSuites()` gibt jetzt `1` zurueck, ohne etwas gesetzt zu
+  haben. Der Rueckgabewert wurde allerdings auch vorher schon von
+  `BeginQCSSLSession()` verworfen, insofern keine Aenderung im Ablauf.
+
+**Zu tun:** Beim ersten Punkt den Rueckgabewert pruefen und im Fehlerfall wie
+in H1 abbrechen.
+
+---
+
+## N4 - `ExceptionHandler.cpp`: `#undef` auf einen SDK-Waechter
+
+**Sicherheit: nachgewiesen; heute wirkungslos, aber zerbrechlich**
+
+**Datei:** `Eudora71/Eudora/ExceptionHandler.cpp` Z. 18-32
+
+```
+#undef _MINIDUMP_H
+#include "MiniDump.h"
+```
+
+`EuMemMgr/Include/MiniDump.h:27` benutzt denselben Waechternamen wie
+`minidumpapiset.h` aus dem Windows SDK. Der `#undef` macht den fremden Header
+wieder einbindbar - danach setzt `MiniDump.h` `_MINIDUMP_H` erneut.
+
+**Folge:** In dieser Uebersetzungseinheit ist `minidumpapiset.h` ab hier
+gesperrt. Das faellt heute nicht auf, weil `stdafx.h` es vorher schon
+hereingezogen hat. Kehrt sich die Einbindungsreihenfolge irgendwann um, fehlen
+die SDK-Typen ohne verstaendliche Fehlermeldung.
+
+**Zu tun:** Nichts Dringendes. Falls jemand daran vorbeikommt: den Waechter von
+`EuMemMgr/Include/MiniDump.h` umbenennen (z. B. `_EUMEMMGR_MINIDUMP_H`) und den
+`#undef` entfernen.
+
+---
+
+## N5 - `atlimage.h`: Laufzeitpruefung durch `TRUE` ersetzt
+
+**Sicherheit: nachgewiesen; Ergebnis sachlich richtig**
+
+**Datei:** `Eudora71/Eudora/atlimage.h:1541`
+
+```
+- return( _AtlBaseModule.m_bNT5orWin98 );
++ return( TRUE );
+```
+
+`CImage::IsTransparencySupported()` liefert jetzt ohne Pruefung `TRUE`. Auf dem
+Zielsystem (Windows 10) ist das korrekt. Bemerkenswert ist nur, dass dafuer
+eine **mitgelieferte Kopie eines Microsoft-ATL-Headers** geaendert wurde -
+solche Aenderungen gehen bei einem Wechsel auf den SDK-eigenen Header
+verloren.
+
+**Zu tun:** In `PORTIERUNG.md` als bewusste Abweichung fuehren, falls noch
+nicht geschehen.
+
+---
+
+## N6 - OTShim ist in keinem Projekt
+
+**Sicherheit: nachgewiesen. Kein Fehler, sondern eine Standortbestimmung.**
+
+`Eudora71/OTShim/` wird ausserhalb des eigenen Verzeichnisses nur von
+`README.md` und `PORTIERUNG.md` erwaehnt. Keine `.vcxproj`, keine `.sln`, kein
+Skript bindet `OTShim.cpp` ein; `Eudora/stdafx.h:52` zieht weiterhin
+`secall.h` aus `OT501/Include`.
+
+Zusaetzlich: `OTShim.h` deklariert `SECControlBar` und `SECGripperInfo`
+vollstaendig, aber `OTShim.cpp` implementiert davon **keine einzige Methode**.
+Und `TBarEdit.cpp`, `TBarBmpCombo.cpp`, `TBarStatic.cpp` rufen
+`SECWndBtn::AdjustSize()`, `SECWndBtn::LButtonDown()` usw. auf, fuer die es in
+`OT501` nur Header gibt.
+
+"Nie gelaufen, nur uebersetzt" ist damit genau richtig - genauer: es
+uebersetzt, es bindet nicht, und im Build steckt es noch gar nicht.
+
+---
+
+## N7 - OTShim: zwei kleinere Stellen
+
+**Sicherheit: Verdacht; beide heute wirkungslos**
+
+**Datei:** `Eudora71/OTShim/OTShim.cpp`
+
+- **`SECWorkbook::GetTabRgn()` (Z. 1003-1012)** greift fest auf `pts[0]` und
+  `pts[4]` zu, waehrend `count` aus der virtuellen `GetTabPts()` stammt. Die
+  Basisfassung liefert 6 Punkte, das passt. Eine abgeleitete Fassung mit
+  weniger als 5 Punkten liest ueber das Feldende hinaus.
+- **`SECWorkbookClient::CalcWindowRect()` (Z. 713-727)** zieht die Raender vom
+  Ergebnis von `CWnd::CalcWindowRect()` ab. `CalcWindowRect` rechnet ein
+  **Client**- in ein **Fenster**rechteck um (es vergroessert); die Raender
+  danach abzuziehen verkleinert das Fensterrechteck, statt die Client-Flaeche
+  zu verkleinern. Fuer den Zweck "Platz fuer die Registerleiste freihalten"
+  sieht das nach der falschen Richtung aus. Wirkungslos, solange die Raender
+  ueberall 0 sind - und `SetWorkbookMode()` setzt sie ausdruecklich auf 0.
+
+---
+
+## N8 - `const_cast` mit anschliessendem Schreibzugriff
+
+**Sicherheit: nachgewiesen (das Muster); Bewertung: originalgetreu**
+
+Zehn der rund 50 `const_cast`-Korrekturen liegen an Stellen, an denen der
+zurueckgewonnene Zeiger anschliessend **beschrieben** wird - und zwar in einen
+Puffer, der ueber einen `const char*`/`LPCTSTR`-Parameter hereinkam:
+
+| Datei | Zeile | Schreibzugriff |
+|---|---|---|
+| `Eudora/Trnslate.cpp` | 4191 | `*space = 0; *(space-1) = 0;` auf `const char *inFileCmd` |
+| `Eudora/mainfrm.cpp` | 4848 | `*c++ = 0;` auf `LPCTSTR cmdLine` |
+| `Eudora/TridentPreviewView.cpp` | 350 | `*EndOfHeader = 0;` |
+| `Eudora/mapicmc.cpp` | 171 | `*pszNewline = '\0';` |
+| `Eudora/sendmail.cpp` | 1537 | `*pEnd = '\0';` |
+| `Eudora/statbar.cpp` | 233 | Puffer wird umgeschrieben |
+| `Eudora/tocdoc.cpp` | 2169 | vorlaeufige NUL-Terminierung |
+| `Eudora/Convhtml.cpp` | 489, 570 | Kopfzeilen werden zerschnitten |
+| `Eudora/PaigeEdtView.cpp` | 2521 | `*s = 0;` |
+| `Eudora/html2text.cpp` | 981 | `szCurrent + 1` ohne NULL-Pruefung |
+
+**Das ist kein Rueckschritt.** Vor VS2005 hatte `strchr`/`strstr`/`strrchr` in
+`<string.h>` nur die C-Signatur `char* f(const char*, ...)`; der Schreibzugriff
+fand also schon vorher statt. Der `const_cast` macht das nur sichtbar.
+
+Trotzdem festgehalten, weil das die Stellen sind, an denen ein spaeterer
+Umbau - etwa ein Aufrufer, der eine Zeichenkettenkonstante oder einen
+`CString`-Puffer ohne `GetBuffer()` uebergibt - einen Absturz erzeugt, den
+niemand mehr mit der Portierung in Verbindung bringt.
+
+**Zu tun:** Nichts jetzt. Bei kuenftigen Aenderungen an diesen Funktionen die
+Parameter auf `char*` ziehen und die Aufrufer nachziehen.
+
+---
+
+# Geprueft und in Ordnung
+
+Diese Bereiche wurden Zeile fuer Zeile durchgesehen und sind unauffaellig.
+Spaetere Pruefungen muessen hier nicht noch einmal anfangen.
+
+## QCSSL
+
+- **BIO-Schicht, Zustandsfelder.** `ws_new`/`ws_free` bilden `init`, `flags`
+  und `shutdown` richtig ueber die Zugriffsfunktionen ab.
+  `BIO_clear_flags(pBIO, ~0)` entspricht `pBIO->flags = 0`. Das im Original
+  fehlende `BIO_set_shutdown(pBIO, 0)` in `ws_new` ist sogar **noetig**:
+  `BIO_new()` setzt in OpenSSL 3 `shutdown = 1` vor, bevor es `create` ruft.
+  Der Endzustand nach `BIO_new_ws(..., BIO_NOCLOSE)` ist in beiden Fassungen
+  derselbe.
+- **Datenslot-Rundlauf** setzen/lesen/zurueckgeben - konsistent (Einzelheiten
+  unter N1).
+- **`qccertificate.cpp`.** `X509_STORE_CTX_get0_store(ctx)` liefert dasselbe
+  Objekt wie frueher `pX509StoreCtx->ctx`; `X509_STORE_CTX_get_current_cert()`
+  und `X509_STORE_CTX_get_error()` sind wortgleiche Ersetzungen. Die
+  Zusatzdaten werden in `BeginQCSSLSession()` auf dem `X509_STORE` des
+  `SSL_CTX` abgelegt und im Rueckruf von demselben Objekt gelesen. Die
+  Indizes 0 und 1 ohne `X509_STORE_get_ex_new_index()` funktionieren unter
+  OpenSSL 3 (`CRYPTO_set_ex_data` legt den Stapel bei Bedarf an), und die
+  Klasse `X509_STORE` wird von libssl selbst nicht mit Zusatzdaten belegt.
+- **`certstore.cpp`.** Einzige Aenderung ist die `const`-Anpassung an
+  `d2i_X509()`. Die Funktion schreibt weiterhin durch den Zeiger-auf-Zeiger,
+  der Zeiger selbst ist nicht `const` - richtig.
+- **Cipher-Liste entfernt.** Die Begruendung stimmt: die Liste von 2006
+  enthaelt kein einziges AEAD-Verfahren; unter OpenSSL 3 haette sie den
+  Handshake mit heutigen Servern verhindert statt abgesichert.
+- **`ERR_remove_state()` gestrichen** - in OpenSSL 1.1+ ersatzlos entfallen,
+  die Bibliothek raeumt selbst auf.
+- **`SSLConnectionManager.cpp`.** Der `const_cast` bei `strchr(uniquename,'\n')`
+  wird nur gelesen (`++strProtocol`, `strcmp`).
+
+## OpenSSL-3-Umstellung, uebrige Stellen
+
+- `d2i_X509`, `SSL_get_current_cipher`, `SSL_METHOD` als `const` - reine
+  Signaturanpassungen ohne Verhaltensfolge.
+
+## `summary.h`, const-Ueberladungen
+
+Der Wechsel von `const CSummary*&` auf `const CSummary*` ist **eine Behebung,
+kein Rueckschritt**. `CObList::GetHead() const` liefert `CObject*` **als Wert**;
+das alte `reinterpret_cast<const CSummary*&>(...)` band also eine Referenz an
+ein temporaeres Objekt. Die Ueberladungen kaemen ausserdem nur ueber einen
+Uebersetzungsfehler zum Vorschein, wenn ein Aufrufer das Ergebnis wirklich als
+Referenz binden wollte - das tut keiner. (Der eigentliche Fehler an dieser
+Stelle ist M5.)
+
+## Schleifenzaehler, die vorgezogen wurden
+
+Alle fuenf geprueft, alle mit **unveraendertem Anfangswert** und ohne
+Ueberschreiben eines aeusseren Zaehlers:
+
+- `QCUtils/src/jjfile.cpp:819` `ReadLine_` - `lNumRead` wird nach der Schleife
+  in mehreren `return`-Zweigen gebraucht.
+- `QCUtils/src/services.cpp:635` `TrimWhitespaceMT` - `pszEnd` wird nach der
+  Schleife gebraucht.
+- `PlaylistClient/.../plist_html.cpp:207` `ParseURLs` - `nSearch` wird nach der
+  Schleife abgefragt.
+- `Importers/OEImport/OEImportClass.cpp:2222` `ReadTilDone` - `oemh` wird nach
+  der Schleife gebraucht.
+- `EuImap/src/ImapFiltersd.cpp:1602` und `:1712` - hier wurde umgekehrt ein
+  `int i` **hinzugefuegt**. Beide Schleifen liegen **ausserhalb** der
+  vorangehenden `for (int i = 0; i < NUM_FILT_ACTS; i++)`-Schleife (Nachpruefung
+  ueber die Einrueckungsebenen), der aeussere Zaehler ist zu diesem Zeitpunkt
+  tot. Kein Verhaltensunterschied.
+
+## Rueckgabetypen, die von "implizit int" auf einen Typ gesetzt wurden
+
+Alle geprueft, jeweils gegen die Aufrufstellen:
+
+- `Eudora/DynamicMenu.h:52` + `.cpp:81` `OnInitMenuPopup` -> `void`. Alle drei
+  Aufrufstellen (`mainfrm.cpp:7012`, `guiutils.cpp:3055`, `:3158`) verwerfen
+  das Ergebnis.
+- `Eudora/DynamicPersonalityMenu.cpp`, `DynamicPluginMenu.cpp`,
+  `DynamicRecipientMenu.cpp`, `DynamicStationeryMenu.cpp` `BuildMenu` -> `BOOL`.
+  Die Basis deklariert bereits `virtual BOOL BuildMenu(...) = 0`; alle Ruempfe
+  enthalten `return TRUE;`. `CDynamicMenu::OnInitMenuPopup` wertet den Wert aus
+  und bekommt jetzt denselben wie vorher.
+- `Eudora/trnslate.h` `GetIcon`, `IsInYerFace`, `LoadModule` -> `BOOL`;
+  `Eudora/spell.h` `Check`, `ReallyCheck` -> `int`; `Eudora/UsgStatsView.h`
+  `UpdateFT` -> `void` (leerer Rumpf, kein Aufrufer wertet aus);
+  `EuLang/src/lang_info.cpp` `friend` -> `int`; `QCUtils/inc/services.h`
+  `operator=` -> `CSortedStringListMT&`; `Imapdll/src/misc.cpp` `register bitno`
+  -> `int`; `PlaylistClient` `typedef (*adproc)` -> `int (*adproc)` in allen
+  drei Dateien einheitlich.
+- `Eudora/ComboBoxEnhanced.cpp:51-53`, `Eudora/eudora.cpp:4625` und `:4745`,
+  `Eudora/FileBrowseView.cpp:285`, `Eudora/ExtLaunchMgr.cpp:37`,
+  `Importers/OEImport/OEImportClass.cpp:1297` - Konstanten und `static`-Merker
+  bekommen einen Typ. `FolderLen` wird von `int` zu `size_t`; die drei
+  Verwendungen (`_tcsnicmp`, Feldindex, Zeigeraddition) kennen kein
+  Vorzeichenproblem.
+- `Eudora/AboutDlg.h`, `Eudora/mainfrm.h` `OnNcHitTest` `UINT` -> `LRESULT` -
+  von `ON_WM_NCHITTEST` im heutigen MFC so verlangt.
+
+## `FileBrowseView::GetFullyQualPidlFromPath`
+
+Die Korrektur ist richtig. Alt wurde `sizeof(szOleChar)` (520) als
+`cchWideChar` fuer einen Puffer von 260 `WCHAR` uebergeben - `MultiByteToWideChar`
+haette bis zu 520 Zeichen geschrieben. Neu steht dort `_countof(szOleChar)`,
+und der zusaetzliche `if (iWideChars == 0) return NULL;` fuellt genau die
+Luecke, die der frueher verworfene Rueckgabewert offenliess. Die Funktion haelt
+zu diesem Zeitpunkt keine Ressource, die freigegeben werden muesste.
+
+## Zeit- und Typkorrekturen
+
+- `Eudora/MsgRecord.cpp:425` `long` -> `time_t` mit `(unsigned long)`-Rueckwandlung
+  beim Ablegen in `m_ulDate` - dieselbe Reichweite wie bisher.
+- `Eudora/StatMng.cpp:1273`, `:1578`, `:1816` - `localtime()` bekommt eine
+  `time_t`-Kopie des 32-bittigen Feldes aus der Statistikdatei. Das Dateiformat
+  bleibt unangetastet.
+- `QCUtils/src/services.cpp:209` dasselbe Muster.
+- `QCUtils/src/services.cpp:1079` `WORD wsz[MAX_PATH]` -> `WCHAR` - beide 16 Bit
+  ohne Vorzeichen, gleiche Groesse.
+- `Imapdll/src/osdep.cpp:200` `tzname`/`daylight` -> `_tzname`/`_daylight` -
+  in der Microsoft-CRT dieselben Objekte, `_daylight` heisst wie zuvor "eine
+  Sommerzeitregel ist eingestellt", nicht "Sommerzeit gilt gerade".
+
+## `EuImap/src/searchutil.{h,cpp}`
+
+Der Ersatz von `m_Iterator == NULL` durch das eigene Kennzeichen
+`m_bIteratorValid` ist richtig: Ein `std::list::iterator` liess sich frueher
+nur wegen einer nicht normgerechten Ueberladung mit `NULL` vergleichen. Beide
+Auswertungen (`GetNextCriterion`, `HasNext`) fragen das Kennzeichen **vor** dem
+Vergleich mit `end()` ab, ein einzelner Iterator wird also nie angefasst.
+Konstruktor und `Initialize()` setzen es vollstaendig.
+
+## `Imapdll/src/krbv4.cpp`
+
+Die Umbenennung `ntohl`/`ntohs`/`htonl`/`htons` -> `krbv4_*` aendert nichts an
+der Rechnung (dieselben Byte-Vertauschungen, `htonl` ruft weiterhin `ntohl`).
+Alle Aufrufstellen wurden mitgezogen. Ausserhalb der Datei gibt es keine
+Verwendung; ein Zusammenstoss mit `ws2_32` bestand ohnehin nicht, weil die
+Winsock-Fassungen `__stdcall` sind und damit anders heissen.
+
+## `Eudora/spell.cpp` (neu, Ersatzimplementierung)
+
+Der Konstruktor initialisiert **alle** in `spell.h` deklarierten Felder,
+einschliesslich `m_bJustQueue`, das von aussen gelesen wird
+(`headervw.cpp:2961`, `compmsgd.cpp:806`). Die Begruendung fuer `0` als
+Rueckgabewert von `Check()` (statt `NO_MISSPELLINGS` oder `IDCANCEL`) ist an
+den Aufrufstellen belegt und stimmt.
+
+## `Eudora/ConConMessage.cpp`, `Eudora/mime.cpp`
+
+Die `memchr`-Ergebnisse werden nach dem `const_cast` sofort wieder an einen
+`const char*` zugewiesen bzw. nur gelesen. Kein Schreibzugriff.
+
+## `<xstddef>` -> `<functional>`
+
+Elf Dateien; in allen ist der Header nur ein Vorspann fuer ein direkt darauf
+folgendes `<map>`/`<list>`/`<algorithm>`/`<stack>`. Ohne Wirkung auf den Ablauf.
+
+## OTShim, uebriger Teil
+
+Konstruktoren von `SECMDIFrameWnd`, `SECMDIChildWnd`, `SECWorksheet`,
+`SECWorkbookClient`, `SECWorkbook`, `SECTipOfDay`, `SECControlBarWorksheet`
+setzen jeweils alle eigenen Skalarfelder. Alle Eintraege der
+Nachrichtentabellen (`SECWorksheet`, `SECWorkbook`, `SECControlBarWorksheet`)
+haben eine passende Behandlungsroutine mit passender Signatur; keiner zeigt
+ins Leere. Die ueberschriebenen Methoden rufen die Basis auf, wo es das
+Original verlangt - `SECWorkbook::OnDestroy()` raeumt vor
+`SECMDIFrameWnd::OnDestroy()` auf, `SECWorksheet::LoadFrame()` prueft das
+Ergebnis der Basis, bevor es weitermacht. Die doppelte Freigabe von
+`m_pWBClient` (Destruktor **und** `OnDestroy`) ist ueber die NULL-Pruefung
+abgefangen.
+
+---
+
+# Zusammenfassung
+
+- 1 Befund hoher Schwere (H1) - eine echte Regression aus der Portierung.
+- 5 Befunde mittlerer Schwere; davon zwei (M4, M5) **Originalfehler**, die die
+  Portierung nicht verursacht, aber auch nicht bemerkt hat.
+- 8 Befunde niedriger Schwere, ueberwiegend vorsorglicher Natur.
+- H2 (Zeichentabelle) war bei Pruefungsbeginn offen und ist waehrend der
+  Pruefung mit `b4b7de5` behoben worden; die Behebung wurde nachgeprueft und
+  ist richtig.
+
+Der QCSSL-Umbau ist insgesamt sauber. Die Abbildung der undurchsichtigen
+OpenSSL-3-Strukturen auf Zugriffsfunktionen stimmt an allen geprueften
+Stellen; der Zeigerschmuggel durch die BIO-Schicht ist konsistent. Die
+einzige echte Regression liegt nicht in der API-Umstellung, sondern in der
+umgebauten Ablaufsteuerung von `SetSSLVersion()`.
