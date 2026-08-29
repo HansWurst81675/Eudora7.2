@@ -16,7 +16,7 @@ Zeilenangaben beziehen sich auf den Stand **vor** der jeweiligen Behebung.
 |-----|-------------|-------|--------|
 | 1 | Toter Schreibzugriff in einen fremden Datenslot | `Eudora71/QCSSL/src/qccertificate.cpp:157` | behoben |
 | 2 | Suche ignoriert die Groß-/Kleinschreibung nicht | `Eudora71/Eudora/headervw.cpp:2107, 2191, 2266` | behoben |
-| 3 | Schreibzugriff auf einen fremden Prozesspuffer | `Eudora71/Eudora/mapicmc.cpp:174, 176` | offen, in Arbeit |
+| 3 | Schreibzugriff auf einen fremden Prozesspuffer | `Eudora71/Eudora/mapicmc.cpp:174, 176` | behoben |
 | 4 | Nicht vertrauenswürdige Zertifikate werden angenommen | `Eudora71/QCSSL/src/qccertificate.cpp:110-112` | **vorbereitet, nicht angewandt** |
 
 ---
@@ -165,7 +165,7 @@ Zugriffsverletzung möglich, sobald der sendende Prozess den Puffer in
 schreibgeschütztem Speicher ablegt. Der Fehler bestand schon unter VC6 und ist
 nicht durch die Portierung entstanden.
 
-**Geplante Behebung**
+**Behebung**
 
 Die Zeile wird ohne jeden Schreibzugriff aus dem fremden Puffer herauskopiert:
 
@@ -180,7 +180,16 @@ if (pszNewline)
 
 Ergebnisgleich (`CString(ptr, len)` kopiert genau die Zeichen bis vor das
 Zeilenende), und der `const_cast` entfällt ersatzlos. Kopiert wird jeweils nur die
-aktuelle Zeile, nicht der ganze Puffer.
+aktuelle Zeile, nicht der ganze Puffer. In C++ liefert `strchr()` auf einem
+`const char*` selbst einen `const char*`, die Deklaration passt also ohne Umweg.
+
+Zwei erklärende Kommentarzeilen halten die Zeilenzahl konstant (8 vor wie nach der
+Änderung), sodass `tools/pruefe-bytes.pl` ohne `--no-verify` durchläuft;
+CR=18, LF=1033 unverändert.
+
+Der zweite Aufrufer, `SaveMAPIMessage()` (Zeile 784), reicht einen eigenen Puffer
+durch und war von dem Fehler nicht betroffen — profitiert aber ebenfalls davon, dass
+die Funktion ihre Eingabe jetzt tatsächlich nur liest.
 
 ---
 

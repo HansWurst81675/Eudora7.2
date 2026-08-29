@@ -168,12 +168,12 @@ static BOOL ProcessMAPIData(
 		//
 		CString current_line;
 		{
-			char* pszNewline = const_cast<char *>(strchr(pszData, '\n'));
+			// pszData zeigt bei WM_COPYDATA in den Speicher eines fremden
+			// Prozesses und ist schreibgeschuetzt zu behandeln: nur lesen.
+			const char* pszNewline = strchr(pszData, '\n');
 			if (pszNewline)
 			{
-				*pszNewline = '\0';		// temporary NULL termination
-				current_line = pszData;
-				*pszNewline = '\n';		// undo temporary NULL termination
+				current_line = CString(pszData, (int)(pszNewline - pszData));
 				pszData = pszNewline + 1;
 			}
 			else
