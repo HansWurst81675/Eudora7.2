@@ -15,7 +15,7 @@ Zeilenangaben beziehen sich auf den Stand **vor** der jeweiligen Behebung.
 | Nr. | Kurzfassung | Datei | Status |
 |-----|-------------|-------|--------|
 | 1 | Toter Schreibzugriff in einen fremden Datenslot | `Eudora71/QCSSL/src/qccertificate.cpp:157` | behoben |
-| 2 | Suche ignoriert die Groß-/Kleinschreibung nicht | `Eudora71/Eudora/headervw.cpp:2107, 2191, 2266` | offen, in Arbeit |
+| 2 | Suche ignoriert die Groß-/Kleinschreibung nicht | `Eudora71/Eudora/headervw.cpp:2107, 2191, 2266` | behoben |
 | 3 | Schreibzugriff auf einen fremden Prozesspuffer | `Eudora71/Eudora/mapicmc.cpp:174, 176` | offen, in Arbeit |
 | 4 | Nicht vertrauenswürdige Zertifikate werden angenommen | `Eudora71/QCSSL/src/qccertificate.cpp:110-112` | **vorbereitet, nicht angewandt** |
 
@@ -70,8 +70,8 @@ weil die Variable durch die Zuweisungen als referenziert gilt.
 ## Befund 2 — Suche ignoriert die Groß-/Kleinschreibung nicht
 
 **Datei:** `Eudora71/Eudora/headervw.cpp`
-**Funktionen:** `CHeaderView::DoFind()` (Zeile 2107) und `CHeaderView::DoFindNext()`
-(Zeilen 2191 und 2266) — dasselbe Muster an drei Stellen.
+**Funktionen:** `CHeaderView::DoFindFirst()` (Zeile 2107) und
+`CHeaderView::DoFindNext()` (Zeilen 2191 und 2266) — dasselbe Muster an drei Stellen.
 
 **Ursache**
 
@@ -104,13 +104,28 @@ Zwei Fehler zugleich:
    verschiedene Speicherblöcke hinweg. Der daraus berechnete Index ist
    bedeutungslos und steuert danach `SetSel()`.
 
-**Geplante Behebung**
+**Behebung**
 
 An allen drei Stellen wird der Zeiger erst **nach** dem `MakeLower()`-Block geholt.
 Bei der Stelle in `DoFindNext()` ab Zeile 2188, wo `p_msgtext` zwischendurch für
 `strlen()` und den Versatz `dummy_sel_y` gebraucht wird, wurde stattdessen der
 `MakeLower()`-Block nach vorne gezogen — wirkungsgleich, da `MakeLower()` die Länge
 nicht ändert.
+
+Die Änderung ist eine reine Umstellung ganzer Zeilen: keine Zeile kommt hinzu, keine
+fällt weg, keine wird inhaltlich verändert. Damit bleiben Zeilenenden und Kodierung
+zwangsläufig unangetastet (CR=18, LF=3762 vor und nach der Änderung — die Datei hat
+gemischte Zeilenenden, CRLF nur im Kopf, Zeilen 3-20).
+
+**Nicht gebaut**
+
+Ein Bau des Eudora-Projekts wurde bewusst unterlassen: ein paralleler Agent hatte zu
+diesem Zeitpunkt `Eudora71/Eudora/Eudora.vcxproj` und `EudoraExe.rc` mit eigenen
+Änderungen im Index. Ein Bau hätte dessen Stand geprüft, nicht diesen, und in
+gemeinsam genutzte Ausgabeverzeichnisse geschrieben. Geprüft wurde stattdessen am
+Quelltext: die verschobenen Blöcke sind in sich geschlossen, `p_msgtext` wird an
+keiner Stelle vor seiner Deklaration benutzt, und die Klammerbilanz ist durch die
+reine Permutation unverändert.
 
 ---
 
