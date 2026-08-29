@@ -1,0 +1,12 @@
+# Dieses Repo enthaelt Quellen von 1996-2006 mit absichtlich gemischten
+# Zeilenenden - pro Datei verschieden, teils innerhalb einer Datei. Manche
+# Dateien sind rein LF, manche rein CRLF, die meisten gemischt.
+#
+# "-text" schaltet jede Zeilenenden-Umwandlung durch git ab: beim Auschecken
+# wie beim Einchecken bleiben die Bytes, wie sie sind. Damit ist git als
+# Fehlerquelle ausgeschlossen, unabhaengig davon, wie core.autocrlf auf dem
+# jeweiligen Rechner steht - und ohne dass jemand daran denken muss.
+#
+# Wer eine Datei aendert, muss sie weiterhin byte-erhaltend anfassen
+# (tools/aendere-zeile.pl); der pre-commit-Hook prueft das.
+* -text
