@@ -640,6 +640,28 @@ abgefangen.
 
 ---
 
+# Nachtrag: Stand nach `ba617a8`
+
+Waehrend die Pruefung lief, haben andere Agenten weitergearbeitet. Gegen
+`ba617a8` nachgesehen:
+
+- **M3 ist ueberholt.** `OTShim.cpp:1104` haelt inzwischen ausdruecklich fest
+  "Bewusst keine Zuweisung an `m_bWorkbookMode`", `OTShim.h:970` nennt es eine
+  Grundentscheidung. Damit ist genau die Luecke geschlossen, die der Befund
+  bemaengelt hat: es war Absicht, sie stand nur nirgends. Kein Handlungsbedarf
+  mehr.
+- **N6 gilt weiter.** Auch nach `e81adb0` ("Stufe 4: Bildklassen ueber GDI+")
+  taucht `OTShim` in keiner `.vcxproj` auf.
+- **H1, M1, M2, M4, M5 und N1 bis N5, N7, N8 gelten unveraendert.**
+  `SetSSLVersion()` steht in `ba617a8` Zeile fuer Zeile so da wie beschrieben.
+- Nicht als Befund aufgenommen, weil waehrend der Pruefung behoben:
+  `X509_STORE_CTX_set_ex_data(pX509StoreCtx, 0, ...)` in
+  `qccertificate.cpp` schrieb in einen Slot, den libssl fuer sich beansprucht
+  (`SSL_get_ex_data_X509_STORE_CTX_idx()` liefert dort ueblicherweise 0). Das
+  war Originalcode und ist mit `455294c` entfernt worden.
+
+---
+
 # Zusammenfassung
 
 - 1 Befund hoher Schwere (H1) - eine echte Regression aus der Portierung.
