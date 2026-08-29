@@ -501,12 +501,12 @@ class CSumList
 	// Peek at head or tail
 	CSummary*&				GetHead()
 								{ return reinterpret_cast<CSummary *&>( m_ObList.GetHead() ); }
-	const CSummary*&		GetHead() const
-								{ return reinterpret_cast<const CSummary *&>( m_ObList.GetHead() ); }
+	const CSummary*		GetHead() const
+								{ return reinterpret_cast<const CSummary *>( m_ObList.GetHead() ); }
 	CSummary*&				GetTail()
 								{ return reinterpret_cast<CSummary *&>( m_ObList.GetHead() ); }
-	const CSummary*&		GetTail() const
-								{ return reinterpret_cast<const CSummary *&>( m_ObList.GetHead() ); }
+	const CSummary*		GetTail() const
+								{ return reinterpret_cast<const CSummary *>( m_ObList.GetHead() ); }
 
   // === Operations ===
 	// get head or tail (and remove it) - don't call on empty list!
@@ -527,18 +527,18 @@ class CSumList
 								{ return m_ObList.GetTailPosition(); }
 	CSummary *&				GetNext(POSITION& rPosition)
 								{ return reinterpret_cast<CSummary *&>( m_ObList.GetNext(rPosition) ); }
-	const CSummary *&		GetNext(POSITION& rPosition) const
-								{ return reinterpret_cast<const CSummary *&>( m_ObList.GetNext(rPosition) ); }
+	const CSummary *		GetNext(POSITION& rPosition) const
+								{ return reinterpret_cast<const CSummary *>( m_ObList.GetNext(rPosition) ); }
 	CSummary *&				GetPrev(POSITION& rPosition)
 								{ return reinterpret_cast<CSummary *&>( m_ObList.GetPrev(rPosition) ); }
-	const CSummary *&		GetPrev(POSITION& rPosition) const
-								{ return reinterpret_cast<const CSummary *&>( m_ObList.GetPrev(rPosition) ); }
+	const CSummary *		GetPrev(POSITION& rPosition) const
+								{ return reinterpret_cast<const CSummary *>( m_ObList.GetPrev(rPosition) ); }
 
 	// getting/modifying an element at a given position
 	CSummary *&				GetAt(POSITION position)
 								{ return reinterpret_cast<CSummary *&>( m_ObList.GetAt(position) ); }
-	const CSummary *&		GetAt(POSITION position) const
-								{ return reinterpret_cast<const CSummary *&>( m_ObList.GetAt(position) ); }
+	const CSummary *		GetAt(POSITION position) const
+								{ return reinterpret_cast<const CSummary *>( m_ObList.GetAt(position) ); }
 	void					SetAt(POSITION position, CSummary * in_pSummary);
 	void					RemoveAt(POSITION position);
 

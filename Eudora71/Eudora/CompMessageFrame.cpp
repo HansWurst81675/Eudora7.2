@@ -1438,7 +1438,7 @@ void CCompMessageFrame::SelectTranslators(const char *hdr)
 		if (hdr[0] == '<')
 			hdr += 1;
 		ModuleID = atoi(hdr);
-		dot = strchr(hdr,'.');
+		dot = const_cast<char *>(strchr(hdr,'.'));
 		if (dot)
 		{
 			hdr = dot+1;
@@ -1447,8 +1447,8 @@ void CCompMessageFrame::SelectTranslators(const char *hdr)
 		else
 			return;
 
-		comma = strchr(hdr,',');
-		space = strchr(hdr,' ');
+		comma = const_cast<char *>(strchr(hdr,','));
+		space = const_cast<char *>(strchr(hdr,' '));
 		
 		pCommand = NULL;
 

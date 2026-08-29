@@ -103,10 +103,10 @@ static int ws_new(BIO *pBIO)
 		return 0;
 	}
 
-	pBIO->init = 0;
-	pBIO->num = 0;
-	pBIO->ptr = NULL;
-	pBIO->flags = 0;
+	BIO_set_init(pBIO, 0);
+	BIO_set_data(pBIO, NULL);
+	BIO_set_shutdown(pBIO, 0);
+	BIO_clear_flags(pBIO, ~0);
 
 	return 1;
 }
@@ -118,16 +118,16 @@ static int ws_free(BIO *pBIO)
 		return 0;
 	}
 
-	if (pBIO->shutdown)
+	if (BIO_get_shutdown(pBIO))
 	{
 		// Should we close?
-		if (pBIO->init)
+		if (BIO_get_init(pBIO))
 		{	// Did we init??
 			//	Close the socket
 			//	SHUTDOWN2(a->num);
 		}
-		pBIO->init = 0;		// no longer opened
-		pBIO->flags = 0;
+		BIO_set_init(pBIO, 0);		// no longer opened
+		BIO_clear_flags(pBIO, ~0);
 	}
 
 	return 1;
@@ -145,7 +145,7 @@ static int ws_read(BIO *pBIO, char *szIn, int iInLen)
 
 	if (szIn)
 	{
-		QCSSLReference		*pSSLReference = (QCSSLReference*)pBIO->num;
+		QCSSLReference		*pSSLReference = (QCSSLReference*)BIO_get_data(pBIO);
 		if (!pSSLReference)
 		{
 			return 0;
@@ -193,7 +193,7 @@ static int ws_write(BIO *pBIO, const char *szOut, int iOutLen)
 		return 0;
 	}
 
-	QCSSLReference		*pSSLReference = (QCSSLReference*)pBIO->num;
+	QCSSLReference		*pSSLReference = (QCSSLReference*)BIO_get_data(pBIO);
 	if (!pSSLReference)
 	{
 		return 0;
@@ -246,18 +246,18 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 		case BIO_C_SET_FD:
 			// Set the endpoint for the BIO
 			ws_free(pBIO);				//	Close whatever's already there
-			pBIO->num = *((int*)ptr);	//	Set the new endpoint
-			pBIO->shutdown = (int)lNum;	//	Set the close mode
-			pBIO->init = 1;				//	We've been initialized
+			BIO_set_data(pBIO, (void*)(INT_PTR)(*((int*)ptr)));	//	Set the new endpoint
+			BIO_set_shutdown(pBIO, (int)lNum);	//	Set the close mode
+			BIO_set_init(pBIO, 1);				//	We've been initialized
 			break;
 
 		case BIO_C_GET_FD:
 			// Return the endpoint for the BIO
-			if (pBIO->init)
+			if (BIO_get_init(pBIO))
 			{
 				if (ptr)
 				{
-					*((int*)ptr) = lRet = pBIO->num;
+					*((int*)ptr) = lRet = (int)(INT_PTR)BIO_get_data(pBIO);
 				}
 			}
 			else
@@ -268,12 +268,12 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 
 		case BIO_CTRL_GET_CLOSE:
 			// Get the close flag
-			lRet = pBIO->shutdown;
+			lRet = BIO_get_shutdown(pBIO);
 			break;
 
 		case BIO_CTRL_SET_CLOSE:
 			// Set the close flag
-			pBIO->shutdown = (int)lNum;
+			BIO_set_shutdown(pBIO, (int)lNum);
 			break;
 
 		case BIO_CTRL_PENDING:
@@ -300,24 +300,37 @@ static int ws_puts(BIO *pBIO, const char *szStr)
 	return ws_write(pBIO, szStr, strlen(szStr));
 }
 
-#define BIO_TYPE_WORKERSOCKET		(25|0x0400|0x0100)
+#define BIO_TYPE_WORKERSOCKET		(25|BIO_TYPE_SOURCE_SINK|BIO_TYPE_DESCRIPTOR)
+
+//
+//	Seit OpenSSL 1.1.0 ist BIO_METHOD undurchsichtig: die Struktur laesst sich
+//	nicht mehr statisch ausfuellen, sie wird zur Laufzeit mit BIO_meth_new()
+//	angelegt und ueber Setter befuellt. Einmal erzeugt, bleibt sie fuer die
+//	Lebensdauer des Prozesses bestehen (wie vorher die statische Struktur).
+//
+static BIO_METHOD *s_pMethodsWS = NULL;
 
 BIO_METHOD *BIO_s_workersocket()
 {
-	static BIO_METHOD methods_ws =
+	if (s_pMethodsWS == NULL)
 	{
-		BIO_TYPE_WORKERSOCKET,
-		"workersocket_in_Eudora",
-		ws_write,
-		ws_read,
-		ws_puts,
-		NULL, /* sock_gets, */
-		ws_ctrl,
-		ws_new,
-		ws_free,
-		NULL,
-	};
-	return &methods_ws;
+		s_pMethodsWS = BIO_meth_new(BIO_TYPE_WORKERSOCKET, "workersocket_in_Eudora");
+		if (s_pMethodsWS == NULL)
+		{
+			ASSERT(0);
+			return NULL;
+		}
+
+		BIO_meth_set_write(s_pMethodsWS,   ws_write);
+		BIO_meth_set_read(s_pMethodsWS,    ws_read);
+		BIO_meth_set_puts(s_pMethodsWS,    ws_puts);
+		//	kein gets - wie zuvor (war NULL)
+		BIO_meth_set_ctrl(s_pMethodsWS,    ws_ctrl);
+		BIO_meth_set_create(s_pMethodsWS,  ws_new);
+		BIO_meth_set_destroy(s_pMethodsWS, ws_free);
+	}
+
+	return s_pMethodsWS;
 }
 
 BIO *BIO_new_ws(int iWorkerSocket, int iCloseFlag)
@@ -494,30 +507,29 @@ bool SetupCertificates(SSL_CTX *pSSLCtx, QCSSLReference *pSSLReference)
 //
 //	SetCipherSuites()
 //
-//	Set the list of cipher suites to offer to the server.
+//	Frueher wurde hier eine fest verdrahtete Liste von Cipher Suites gesetzt.
+//	Der urspruengliche Kommentar sagte dazu, der Aufruf sei gleichbedeutend mit
+//	den Vorgaben von OpenSSL - das galt 2006 und gilt heute nicht mehr:
 //
-//	Note: With OpenSSL this call is optional because not specifying any cipher suites will result in
-//	the default cipher suite list to be offered.  The below code has the same effect as not calling
-//	this function at all.  If at some point we want to change the list of cipher suites then we would
-//	need to change the below list and be sure to call this function.
+//	  * RC4, DES, 3DES, IDEA, RC2 und die EXPORT-Suiten sind in OpenSSL 3.x
+//	    gar nicht mehr enthalten.
+//	  * Uebrig blieben aus der alten Liste nur AES-CBC-Suiten mit SHA-1. Damit
+//	    faellt jedes AEAD-Verfahren (AES-GCM, ChaCha20-Poly1305) weg - und genau
+//	    darauf bestehen heutige Server bei TLS 1.2.
+//
+//	Die alte Liste wuerde den Handshake also nicht absichern, sondern verhindern.
+//	Deshalb wird sie nicht mehr gesetzt: OpenSSL waehlt selbst, und dessen
+//	Vorgaben sind aktueller, als eine gepflegte Liste es je waere. Genau das
+//	meinte der alte Kommentar.
+//
+//	TLS 1.3 war davon ohnehin nie betroffen - dort gilt eine eigene Liste, die
+//	ueber SSL_CTX_set_ciphersuites() verwaltet wird.
 //
 int SetCipherSuites(SSL_CTX *pSSLCtx)
 {
-	if (pSSLCtx != NULL)
-	{
-		const char		*szCiphers = "DHE-RSA-AES256-SHA:DHE-DSS-AES256-SHA:AES256-SHA:"
-									 "EDH-RSA-DES-CBC3-SHA:EDH-DSS-DES-CBC3-SHA:DES-CBC3-SHA:DES-CBC3-MD5:"
-									 "DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA:AES128-SHA:"
-									 "IDEA-CBC-SHA:IDEA-CBC-MD5:RC2-CBC-MD5:DHE-DSS-RC4-SHA:"
-									 "RC4-SHA:RC4-MD5:RC4-MD5:RC4-64-MD5:"
-									 "EXP1024-DHE-DSS-DES-CBC-SHA:EXP1024-DES-CBC-SHA:EXP1024-RC2-CBC-MD5:"
-									 "EDH-RSA-DES-CBC-SHA:EDH-DSS-DES-CBC-SHA:DES-CBC-SHA:DES-CBC-MD5:"
-									 "EXP1024-DHE-DSS-RC4-SHA:EXP1024-RC4-SHA:EXP1024-RC4-MD5:"
-									 "EXP-EDH-RSA-DES-CBC-SHA:EXP-EDH-DSS-DES-CBC-SHA:"
-									 "EXP-DES-CBC-SHA:EXP-RC2-CBC-MD5:EXP-RC2-CBC-MD5:EXP-RC4-MD5:EXP-RC4-MD5";
-		return SSL_CTX_set_cipher_list(pSSLCtx, szCiphers);
-	}
-	return 0;
+	//	Absichtlich ohne SSL_CTX_set_cipher_list(): die Vorgaben von OpenSSL
+	//	gelten. Wer hier wieder einschraenken will, muss AEAD-Suiten enthalten.
+	return (pSSLCtx != NULL) ? 1 : 0;
 }
 
 //
@@ -527,7 +539,7 @@ int SetCipherSuites(SSL_CTX *pSSLCtx)
 //
 SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 {
-	SSL_METHOD		*sslmethod = NULL;
+	const SSL_METHOD		*sslmethod = NULL;
 
 	if (!pSSLReference)
 	{
@@ -535,38 +547,50 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 		return NULL;
 	}
 
+	//
+	//	Seit OpenSSL 1.1.0 gibt es nur noch TLS_client_method(); die
+	//	versionsgebundenen Varianten SSLv2_method/SSLv3_method/TLSv1_method sind
+	//	entfernt bzw. wegkompiliert. Die Version wird jetzt nachtraeglich ueber
+	//	SSL_CTX_set_min_proto_version() eingegrenzt.
+	//
+	//	SSLv2 und SSLv3 sind seit Jahren gebrochen und werden nicht mehr
+	//	angeboten - die betreffenden Faelle landen auf TLS 1.2 als Untergrenze.
+	//
+	int		iMinVersion = TLS1_2_VERSION;
+
 	switch (pSSLReference->m_ProtocolInfo.m_ProtocolVersion)
 	{
 	case 0:
-		sslmethod = SSLv23_method();
-		break;
 	case 1:
-		sslmethod = SSLv23_method();
-		break;
-	case 2:
-		sslmethod = SSLv3_method();
-		break;
-	case 3:
-		sslmethod = TLSv1_method();
-		break;
 	case 4:
-		sslmethod = SSLv23_method();
-		break;
-	case 5:
-		sslmethod = SSLv2_method();
-		break;
 	case 6:
-		sslmethod = SSLv23_method();
-		break;
 	case 7:
-		sslmethod = SSLv23_method();
+		//	"automatisch" - alles ab TLS 1.2
+		iMinVersion = TLS1_2_VERSION;
+		break;
+	case 2:	//	frueher SSLv3
+	case 5:	//	frueher SSLv2
+		//	Nicht mehr unterstuetzt. Statt die Verbindung abzulehnen, wird auf
+		//	die niedrigste noch vertretbare Version gegangen.
+		iMinVersion = TLS1_2_VERSION;
+		break;
+	case 3:	//	frueher TLSv1
+		iMinVersion = TLS1_VERSION;
 		break;
 	default:
 		ConnectionInfo *pConnectionInfo = (ConnectionInfo*) pSSLReference->m_pConnectionManagerInfo;
 		pConnectionInfo->m_Outcome.AddComments(CResString(IDS_ERR_VERSIONINVALID));
-		break;
+		return NULL;	//	ungueltige Version: keinen Kontext anlegen. Vorher blieb sslmethod NULL und SSL_CTX_new(NULL) scheiterte - sonst wird trotz Fehlermeldung verbunden.
 	}
-	return SSL_CTX_new(sslmethod);
+
+	sslmethod = TLS_client_method();
+
+	SSL_CTX	*pCtx = SSL_CTX_new(sslmethod);
+	if (pCtx)
+	{
+		SSL_CTX_set_min_proto_version(pCtx, iMinVersion);
+	}
+	return pCtx;
 }
 
 //
@@ -609,7 +633,7 @@ void FillInConnectionInfo(ConnectionInfo *pConnectionInfo, QCSSLReference *pSSLR
 
 					X509		*pX509 = NULL;
 					pX509 = d2i_X509(NULL,
-									 (unsigned char **)(&pcCertBlob),
+									 (const unsigned char **)(&pcCertBlob),
 									 pCertData->m_CertBlobLength);
 
 					if (pX509)
@@ -666,7 +690,7 @@ void FillInConnectionInfo(ConnectionInfo *pConnectionInfo, QCSSLReference *pSSLR
 	pConnectionInfo->m_ServerName = pSSLReference->m_ProtocolInfo.m_ServerName ;
 	pConnectionInfo->m_Port = pSSLReference->m_ProtocolInfo.m_Port ;
 
-	SSL_CIPHER		*pSSLCipher = SSL_get_current_cipher(pSSL);
+	const SSL_CIPHER		*pSSLCipher = SSL_get_current_cipher(pSSL);
 	if (pSSLCipher)
 	{
 		pConnectionInfo->m_CipherName = SSL_get_cipher(pSSL);
@@ -777,11 +801,11 @@ bool BeginQCSSLSession(QCSSLReference *pSSLReference)
 	// The certificate verification callback needs two pieces of data: the QCSSLReference object and
 	// the user store.  Set these objects as extra data for the cert store so they can be retrieved
 	// inside the callback.
-	X509_STORE			*pX509Store = pSSL->ctx->cert_store;
+	X509_STORE			*pX509Store = SSL_CTX_get_cert_store(SSL_get_SSL_CTX(pSSL));
 	if (pX509Store)
 	{
-		CRYPTO_set_ex_data(&(pX509Store->ex_data), 0, pSSLReference);
-		CRYPTO_set_ex_data(&(pX509Store->ex_data), 1, &g_certstoreUserStore);
+		X509_STORE_set_ex_data(pX509Store, 0, pSSLReference);
+		X509_STORE_set_ex_data(pX509Store, 1, &g_certstoreUserStore);
 	}
 
 	// Now that everything is created, set the parameters passed to us.
@@ -870,7 +894,8 @@ bool EndQCSSLSession(void *pSSL)
 		// same as this one.  The note suggests that they have fixed the leak so either I am missing
 		// something or they are.  For now I am giving up on try to fix this last leak.  In the meantime,
 		// for each SSL session Eudora will leak 482 bytes which isn't the end of the world. -dwiggins
-		ERR_remove_state(0);
+		//	ERR_remove_state() ist seit OpenSSL 1.1.0 entfernt - das Aufraeumen
+		//	der Fehlerzustaende pro Thread erledigt die Bibliothek jetzt selbst.
 
 		SSL_CTX		*pSSLCtx = (SSL_CTX*)SSL_get_SSL_CTX((SSL*)pSSL);
 

@@ -2166,7 +2166,7 @@ BOOL CTocDoc::GetMessageById(
 
 			while (*pszBody)
 			{
-				char* pszNewline = strchr(pszBody, '\n');
+				char* pszNewline = const_cast<char *>(strchr(pszBody, '\n'));
 				if (pszNewline)
 				{
 					// temporary NULL termination
@@ -2821,7 +2821,7 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 							if( tNext )
 							{
 								// See if it is a mbx file, we may have generated a toc ourselves
-								char * lpszExt = strrchr(szAttachmentPathname, '.');
+								char * lpszExt = const_cast<char *>(strrchr(szAttachmentPathname, '.'));
 
 								if(lpszExt)
 								{

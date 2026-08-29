@@ -2104,18 +2104,18 @@ BOOL CHeaderView::DoFindFirst(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 		msg_text = phdrField->GetText();
 		
 
-		const char* p_msgtext = msg_text;
-
 		if (! bMatchCase)
 		{
 			msg_text.MakeLower();
 			search_str.MakeLower();
 		}
+
+		const char* p_msgtext = msg_text;
 		
 		//
 		// Do the search...
 		//
-		char* p_match = strstr(p_msgtext, search_str);
+		char* p_match = const_cast<char *>(strstr(p_msgtext, search_str));
 		if (p_match)
 		{
 			//
@@ -2188,6 +2188,12 @@ BOOL CHeaderView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWholeW
 		msg_text = phdrField->GetText();
 		phdrField->GetSel(dummy_sel_x, dummy_sel_y);
 
+		if (! bMatchCase)
+		{
+			msg_text.MakeLower();
+			search_str.MakeLower();
+		}
+
 		const char* p_msgtext = msg_text;
 
 		ASSERT((unsigned)dummy_sel_y <= strlen(p_msgtext));
@@ -2196,17 +2202,11 @@ BOOL CHeaderView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWholeW
 			dummy_sel_y = 0;
 
 		p_msgtext += dummy_sel_y;
-
-		if (! bMatchCase)
-		{
-			msg_text.MakeLower();
-			search_str.MakeLower();
-		}
 		
 		//
 		// Do the search...
 		//
-		char* p_match = strstr(p_msgtext, search_str);
+		char* p_match = const_cast<char *>(strstr(p_msgtext, search_str));
 		if (p_match)
 		{
 			//
@@ -2263,18 +2263,18 @@ BOOL CHeaderView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWholeW
 
 		msg_text = phdrField->GetText();
 
-		const char* p_msgtext = msg_text;
-
 		if (! bMatchCase)
 		{
 			msg_text.MakeLower();
 			search_str.MakeLower();
 		}
+
+		const char* p_msgtext = msg_text;
 		
 		//
 		// Do the search...
 		//
-		char* p_match = strstr(p_msgtext, search_str);
+		char* p_match = const_cast<char *>(strstr(p_msgtext, search_str));
 		if (p_match)
 		{
 			//

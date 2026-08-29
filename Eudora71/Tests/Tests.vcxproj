@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    Eigenstaendiges Testprojekt. Es gehoert bewusst NICHT zur Eudora-Solution und
+    fasst weder Eudora.vcxproj noch sonst eine bestehende Datei an. Gebaut wird mit
+
+      MSBuild.exe Eudora71\Tests\Tests.vcxproj /p:Configuration=Debug /p:Platform=Win32
+  -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7E5D1A20-9C41-4F86-B0D3-2A6E7C914B01}</ProjectGuid>
+    <RootNamespace>EudoraTests</RootNamespace>
+    <Keyword>MFCProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <!-- Wie Eudora selbst: MFC als DLL, MBCS. CString ist damit dasselbe CStringA
+         wie im Produktivcode. -->
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <OutDir>$(MSBuildProjectDirectory)\Build\$(Configuration)\</OutDir>
+    <IntDir>$(MSBuildProjectDirectory)\Build\$(Configuration)\obj\</IntDir>
+    <TargetName>EudoraTests</TargetName>
+    <EudoraSrcDir>$(MSBuildProjectDirectory)\..\Eudora</EudoraSrcDir>
+    <GeneratedDir>$(MSBuildProjectDirectory)\generated</GeneratedDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(MSBuildProjectDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!-- Die Quelldateien von Eudora sind in CP1252 abgelegt (Zeichenliterale wie
+           (UCHAR)'<80>' in der Uebersetzungstabelle). Beide Zeichensaetze werden
+           deshalb ausdruecklich festgelegt, damit der Build nicht von der
+           Systemcodepage abhaengt. -->
+      <AdditionalOptions>/source-charset:.1252 /execution-charset:.1252 %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <!-- Vor dem Uebersetzen den zu pruefenden Code frisch aus dem Produktivcode
+       schneiden. Die Originaldateien werden dabei nur gelesen. -->
+  <Target Name="ExtractCodeUnderTest" BeforeTargets="ClCompile">
+    <Exec Command="powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(MSBuildProjectDirectory)\Extract.ps1&quot; -SrcDir &quot;$(EudoraSrcDir)&quot; -OutDir &quot;$(GeneratedDir)&quot;" />
+  </Target>
+  <ItemGroup>
+    <ClCompile Include="TinyTest.cpp" />
+    <ClCompile Include="Spec.cpp" />
+    <ClCompile Include="UnderTest.cpp" />
+    <ClCompile Include="TestXlateTable.cpp" />
+    <ClCompile Include="TestIsoTranslate.cpp" />
+    <ClCompile Include="TestHexBinTable.cpp" />
+    <ClCompile Include="TestMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TinyTest.h" />
+    <ClInclude Include="Spec.h" />
+    <ClInclude Include="UnderTest.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Extract.ps1" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

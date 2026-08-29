@@ -15,7 +15,22 @@
 #include "fileutil.h"
 #include "QCUtils.h"
 #include "..\Version.h"
-
+// CreateCurrentProcessCrashDump() and SnapCurrentProcessMiniDump() live in
+// EuMemMgr.dll (BugslayerUtil) and are declared in EuMemMgr/Include/MiniDump.h,
+// which is already on the include path. That header is normally reached through
+// BugslayerUtil.h, which would also force _CRTDBG_MAP_ALLOC and the assert /
+// memory-dumper headers on us, so include it directly and supply the one macro
+// it expects.
+#ifndef BUGSUTIL_DLLINTERFACE
+#define BUGSUTIL_DLLINTERFACE __declspec ( dllimport )
+#endif
+// Das Windows SDK belegt denselben Waechternamen: minidumpapiset.h:8 definiert
+// ebenfalls _MINIDUMP_H. Ohne das folgende #undef wird MiniDump.h komplett
+// uebersprungen und die beiden Deklarationen fehlen. Der Typ MINIDUMP_TYPE aus
+// MiniDump.h ist davon nicht betroffen - er steht dort hinter #ifndef
+// MINIDUMP_SIGNATURE und bleibt korrekt der SDK-Definition ueberlassen.
+#undef _MINIDUMP_H
+#include "MiniDump.h"
 
 #include "DebugNewHelpers.h"
 

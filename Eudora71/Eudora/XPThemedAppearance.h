@@ -30,7 +30,8 @@ DAMAGE. */
 
 
 #include <uxtheme.h>
-#include <tmschema.h>
+#include <vssym32.h>   // war <tmschema.h> (alte Platform-SDK)
+#include <vsstyle.h>
 
 
 class CXPThemedAppearance

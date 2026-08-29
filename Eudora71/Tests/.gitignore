@@ -1,0 +1,5 @@
+# Bauergebnisse und der bei jedem Build frisch geschnittene Produktivcode.
+# Nur dieses Verzeichnis, nicht die Unterprojekte (z.B. QCSSL).
+/Build/
+/generated/
+/*.vcxproj.user

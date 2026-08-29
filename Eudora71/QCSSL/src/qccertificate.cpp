@@ -40,7 +40,7 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
 	}
 
 	// Get the QCSSLReference and ConnectionInfo objects from the cert store's extra data.
-	QCSSLReference *pSSLReference = (QCSSLReference*)CRYPTO_get_ex_data(&(pX509StoreCtx->ctx->ex_data), 0);
+	QCSSLReference *pSSLReference = (QCSSLReference*)X509_STORE_get_ex_data(X509_STORE_CTX_get0_store(pX509StoreCtx), 0);
 	ConnectionInfo* pInfo = NULL;
 	if (pSSLReference)
 	{
@@ -52,10 +52,10 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
 	}
 
 	// Get the user store object from the cert store's extra data.
-	CertificateStore	*pUserStore = (CertificateStore*)CRYPTO_get_ex_data(&(pX509StoreCtx->ctx->ex_data), 1);
+	CertificateStore	*pUserStore = (CertificateStore*)X509_STORE_get_ex_data(X509_STORE_CTX_get0_store(pX509StoreCtx), 1);
 
 	// Bail now if there is no cert.
-	if (!pX509StoreCtx->current_cert)
+	if (!X509_STORE_CTX_get_current_cert(pX509StoreCtx))
 	{
 		pInfo->m_Outcome.AddErrors(IDS_CERTERR_NOCERT);
 		return 0;
@@ -64,7 +64,7 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
 	// If cert is not OK see if the user has added it to their trusted list.
 	if (iOK == 0)
 	{
-		bInStore = (CertIsInStore(pX509StoreCtx->current_cert, pUserStore) == 1);
+		bInStore = (CertIsInStore(X509_STORE_CTX_get_current_cert(pX509StoreCtx), pUserStore) == 1);
 		if (bInStore)
 		{
 			iOK = 1;
@@ -76,8 +76,8 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
 	// certs the user said was OK) process it through our normal means.
 	if (iOK == 0)
 	{
-		lErrors = pX509StoreCtx->error;
-		switch(pX509StoreCtx->error)
+		lErrors = X509_STORE_CTX_get_error(pX509StoreCtx);
+		switch(X509_STORE_CTX_get_error(pX509StoreCtx))
 		{
 			case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
 				if (pInfo->m_Outcome.m_ErrorCode == 0)
@@ -153,15 +153,15 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
 		}
 	}
 
-	// Store the error in the cert store's extra data.
-	X509_STORE_CTX_set_ex_data(pX509StoreCtx, 0, (void*)lErrors);
+	// Hier stand ein Schreibzugriff auf ex_data-Index 0 des X509_STORE_CTX.
+	// Index 0 gehoert libssl (SSL-Zeiger); der Wert wurde nie gelesen. Entfernt.
 
 	// Create a new CertData object using the data from the current cert.  This object is used
 	// by the Certificate Information Manager.
 	CertData		*pNewCertData = DEBUG_NEW CertData();
 	pInfo->m_CertDataList.AddTail(pNewCertData);
 	pNewCertData->m_bTrusted = (iOK == 1);
-	ExtractCertInfo(pX509StoreCtx->current_cert, pNewCertData);
+	ExtractCertInfo(X509_STORE_CTX_get_current_cert(pX509StoreCtx), pNewCertData);
 
 	// If we haven't yet matched the certificate name, test it now.  If the server returns a chain of
 	// certificates we only need to name match against one.
@@ -205,7 +205,7 @@ int QCCertificateUtils::CertIsInStore(X509 *pX509, CertificateStore *pStore)
 				pbCertEncodedStart = pbCertEncoded;
 				memcpy(pbCertEncoded, pContext->pbCertEncoded, pContext->cbCertEncoded);
 
-				X509	*pX509Tmp = d2i_X509(NULL, (unsigned char **)(&pbCertEncoded), pContext->cbCertEncoded);
+				X509	*pX509Tmp = d2i_X509(NULL, (const unsigned char **)(&pbCertEncoded), pContext->cbCertEncoded);
 				if (pX509Tmp)
 				{
 					if (X509_cmp(pX509, pX509Tmp) == 0)

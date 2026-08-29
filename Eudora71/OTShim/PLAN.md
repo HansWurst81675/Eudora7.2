@@ -1,0 +1,286 @@
+# OT501-Ersatzschicht — Umsetzungsplan
+
+Grundlage: die vier Familienanalysen vom 28.08.2026 gegen die Bestandsaufnahme
+in [INVENTAR.md](INVENTAR.md). Jede Aussage hier ist an Header- und Aufrufstellen
+belegt; wo etwas unbelegt blieb, steht es ausdrücklich dabei.
+
+## Kernergebnis
+
+Die 77 Methoden aus dem Inventar sind **nicht** 77 Aufgaben. Sie zerfallen in drei
+Kategorien, und nur eine davon kostet Arbeit:
+
+| Kategorie | Bedeutung | Konsequenz |
+|---|---|---|
+| **A** | Gar keine Stingray-Methode, sondern eine geerbte MFC-Methode, die Eudora nur qualifiziert aufruft (`SECFoo::Bar()` ist auch für rein geerbte Member erlaubt) | Kein Code. Muss nur über die Vererbungskette erreichbar sein |
+| **B** | Echte Stingray-Funktionalität | Nachbauen |
+| **C** | Deklariert, aber von Eudora nie aufgerufen — Qualcomm hat sie durch eigene Varianten ersetzt, oder die Treffer im Inventar stammen aus Kommentaren | Leerer Rumpf oder Deklaration |
+
+Die Kategorie-A-Fälle sind der Grund, warum die Schicht kleiner ausfällt als befürchtet.
+In der Workbook-Familie sind von 16 gelisteten Methoden nur **7** überhaupt in dem
+Stingray-Header derjenigen Klasse deklariert, unter der das Inventar sie führt:
+`SECMDIFrameWnd::LoadBarState` (`swinmdi.h:102`), `SECWorkbook::CreateClient`
+(`SECWB.H:157`), `AddSheet` (`179`), `RemoveSheet` (`180`), `GetTabPts` (`182`),
+`OnLButtonDown` (`209`) und `SECWorksheet::OnDestroy` (`SECWB.H:75`). Die übrigen
+neun sind Kategorie A — sie stehen entweder in einer Basisklasse (`OnActivate`,
+`RecalcLayout`), in einer *anderen* SEC-Klasse (`OnSize`, `OnClose` nur in
+`SECControlBarWorksheet`; `SECMDIFrameWnd::OnLButtonDown` nur in `SECWorkbook`;
+`SECMDIChildWnd::OnMDIActivate` nur in `SECWorksheet`, `SECWB.H:74`) oder gar nicht
+in den Headern (`OnNotify`, `OnSetCursor`, `WindowProc`).
+
+## Der Weg zum ersten startenden `Eudora.exe`
+
+> **Teilweise widerlegt.** Der folgende Absatz gilt nur für den MDI-Registerkarten-
+> streifen, nicht für das Registerkarten-Steuerelement in den Wazoo-Leisten. Siehe
+> [Berichtigung 1](#1-die-registerkarten-sind-nicht-verzichtbar) am Ende der Datei —
+> im Zweifel gilt die Berichtigung.
+
+**Die Registerkartenleiste ist verzichtbar.** Sie ist keine Struktur, sondern eine zur
+Laufzeit umschaltbare Anwendereinstellung:
+
+```
+ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))      mainfrm.cpp:1025
+```
+
+Jede Auswertung der Tabs steht hinter `m_bWorkbookMode` (`workbook.cpp:1065,1101,1741`;
+`mainfrm.cpp:8438,8484,8549,8654`). Bei `FALSE` läuft nichts davon an — ein von Qualcomm
+vorgesehener, über die Einstellungen erreichbarer Zustand (`settings.cpp:1055-1060`).
+
+`SECWorkbook` ist auch kein Tab-Control-Container, sondern ein `CMDIFrameWnd`
+(`SECWB.H:118` → `swinmdi.h:53`), der seine Tabs mit GDI-Polygonen selbst in einen
+Randstreifen malt, den `SECWorkbookClient` per `SetMargins` freihält.
+
+**Damit entfällt für Stufe 1 der gesamte Zeichencode — der teuerste Posten.**
+
+Nicht verzichtbar ist der MDI-Unterbau: alle Dokumentfenster sind Worksheets
+(`mdichild.h:14`), und `m_pWBClient` wird unabhängig vom Tab-Modus vorausgesetzt
+(`mainfrm.cpp:1287-1294`, `3280-3283`). `SECWorkbookClient` muss das MDICLIENT-Fenster
+also real subclassen, darf aber Ränder von (0,0,0,0) melden.
+
+## Stufenplan
+
+### Stufe 0 — die geschenkten Klassen
+
+| Klasse | Vorgehen | Beleg |
+|---|---|---|
+| `SECStatusBar` (11 Methoden) | **`typedef CStatusBar SECStatusBar;`** — `sbarstat.h` ist eine 1:1-Kopie von `CStatusBar` (`afxext.h:268` in MSVC 14.38.33130) mit `SECControlBar` statt `CControlBar` als Basis. Alle 11 Aufrufe sind Kategorie A. Stingray macht für Nicht-WIN32 selbst `#define SECStatusBar CStatusBar` (`sbarstat.h:140`). Die Statusleiste wird nie über den SEC-Bar-Manager angefasst | `sbarstat.h:43,140` |
+| `SECTipOfDay` | Stub: Konstruktor merkt die Werte, `DoModal()` liefert `IDOK`. Einzige Einstiegspunkte sind ein Menüpunkt und ein `PostMessage` beim Start; nichts hängt daran. Der INI-Rückschreibpfad (`eudora.cpp:256-257`) braucht nur plausible Werte | `SECTOD.H:41` |
+| `SECLoadSysColorBitmap` | `CBitmap::LoadMappedBitmap` | `SECBTNS.H:340` |
+
+### Stufe 1 — MDI ohne Registerkarten
+
+Ziel: ein `Eudora.exe`, das startet.
+
+- `SECMDIFrameWnd` : `CMDIFrameWnd`, `SECWorkbook` : `SECMDIFrameWnd`
+- `SECMDIChildWnd` : `CMDIChildWnd`, `SECWorksheet` : `SECMDIChildWnd`
+- `SECWorkbookClient` : `CWnd` mit echtem Subclassing des MDICLIENT, `SetMargins` → 0
+- `m_bWorkbookMode` hart auf `FALSE`
+- `AddSheet`/`RemoveSheet` als reine Listenpflege über `CObArray m_worksheets`
+- alle Zeichen-Overridables (`OnDrawTab`, `OnDrawBorder`, `OnDrawTabIconAndLabel`) als No-Op
+
+**Die Klassenkette darf nicht eingespart werden.** Eudora springt an fünf Stellen bewusst
+über eine Vererbungsebene hinweg (`workbook.cpp:133,295,361,521,1165`); fehlt eine
+Zwischenklasse, bricht das still.
+
+`GetTabPts` muss auch im Stub ein `new CPoint[n]` mit **mindestens 6** Punkten liefern —
+der Aufrufer prüft `ASSERT(count > 5)` und macht `delete[]` (`workbook.cpp:987`, `757`).
+
+### Stufe 2 — Andockfamilie
+
+Der aufwendigste Teil, weil hier echte Stingray-Funktionalität steckt, die MFC nicht hat:
+prozentuale Zeilenbreiten (`m_fPctWidth`) und Splitter.
+
+- `SECControlBar` : `CControlBar` — `Create` selbst bauen (`CControlBar` hat keins),
+  `CalcFixedLayout`, `GetBarInfoEx`/`SetBarInfoEx`, `OnBarFloat`, `OnBarMDIFloat`,
+  `OnFloatAsMDIChild`, `OnUpdateCmdUI` (in MFC rein virtuell)
+- `SECDockBar` : `CDockBar` — `NormalizeRow`, `CalcTrackingLimits`,
+  `IsControlBarAtMaxWidthInRow`, `IsOnlyControlBarInRow`, Klasse `Splitter` feldgenau
+- `SECMiniDockFrameWnd` : `CMiniDockFrameWnd` mit **zweiter** Dockbar `m_wndSECDockBar`
+  neben dem geerbten `m_wndDockBar` — beide müssen konsistent bleiben
+
+Die Kommandos `ID_SEC_HIDE`/`ID_SEC_ALLOWDOCKING`/`ID_SEC_MDIFLOAT` (`SECRES.H:189-191`)
+kommen per `SendMessage` an die Bar und brauchen echte Handler in der Message-Map.
+
+### Stufe 3 — Werkzeugleisten und Knöpfe
+
+**Für die schwierigste Methode existiert eine Vorlage im Repo.** `SECStdBtn::DrawFace`
+ist das Kernstück des Owner-Draws — und `TBarSendButton.cpp:71-160` repliziert die
+Original-Logik samt `secData`-Farben und `SEC_TBBS_RAISED` bereits vollständig, weil
+Eudora sie überschreibt. Das Zeichenverhalten ist also ablesbar, nicht zu erraten.
+
+`SECStdBtn` ist **weder `CObject` noch `CWnd`** — reine Zeichenobjekte in einem
+`CPtrArray` der Leiste. Ein Umbau auf `CMFCToolBarButton` scheidet aus: er bräche die
+`m_ulData`-Zugriffe an rund 20 Stellen.
+
+Kategorie C in dieser Familie: `SECToolBarManager::EnableLargeBtns` und `LoadState`
+werden nie aufgerufen — alle Inventartreffer sind Kommentare; Qualcomm hat sie durch
+`QCEnableLargeBtns` und `QCLoadState` ersetzt. Aber `LargeBtnsEnabled()` und
+`SetDefaultDockState()` **werden** gebraucht.
+
+`SECComboBtn` erbt von `CComboBox` **und** `SECWndBtn` — die Mehrfachvererbung muss
+erhalten bleiben (`TBarCombo.cpp:19,30`).
+
+### Stufe 4 — Bilder
+
+GDI+ über `CImage` (`atlimage.h`) deckt BMP/JPEG/GIF/PNG/TIFF ab; Eudora nutzt es
+bereits selbst (`QCGraphics.cpp:582-604`). Damit entfällt das komplette eingebettete
+libjpeg. Es steht mitten im Rumpf von `class SECJpeg`, die bei `SECJPEG.H:207`
+beginnt: die libjpeg-Deklarationen laufen dort von Zeile 228 (`forward_DCT`) bis 823
+(`jinit_memory_mgr`), erst ab `:827` folgt wieder Stingray-Eigenes. Die Datei hat
+885 Zeilen.
+
+**Aber `CImage` ersetzt nur den Dekoder, nicht die Schnittstelle.** Fünf Stellen greifen
+roh auf `m_lpSrcBits`/`m_lpBMI` zu und reichen sie an `::StretchDIBits` weiter
+(`mainfrm.cpp:5683`, `6158`, `6185`; `LinkHistoryManager.cpp:1238`;
+`QCToolBarManager.cpp:428` u.a.). Die Datenmember bleiben, gefüllt über `::GetDIBits`.
+
+`CreateFromBitmap` wird auf demselben Objekt mehrfach aufgerufen
+(`QCToolBarManager.cpp:421,434,447`) — alte Puffer freigeben, sonst Leck.
+
+## Fehler im Inventar
+
+`INVENTAR.md` ist maschinell erzeugt und an mehreren Stellen irreführend. Vor der
+Umsetzung zu korrigieren:
+
+- **Falsche Positive:** `SECDockBar::CalcFixedLayout` stammt ausschließlich aus
+  Kommentaren (`SearchBar.cpp` 7×). Ebenso `SECToolBarManager::EnableLargeBtns`,
+  `LoadState`, `SECMDIFrameWnd::LoadBarState`, `SECControl` — letzteres kommt in den
+  Eudora-Quellen genau einmal vor, in einem Kommentar (`mainfrm.cpp:2464`).
+- **`SEC_TEXT` gehört nicht dazu** — das ist ein SSPI-Makro aus `Sspi.h`
+  (dort dreimal definiert, `:80`, `:98`, `:126`), kein Stingray.
+- **`SECCustonToolBar` existiert nicht** — Tippfehler in einem Kommentar
+  (`QCCustomizeToolBar.cpp:241`).
+- **Abschnitt 3 ist auch nach oben unvollständig.** Er listet 52 Bezeichner, aber
+  `SEC_AUX_DATA` fehlt darin, obwohl es an fünf Stellen in echtem Code steht
+  (`EmoticonToolbarButton.cpp:91`, `MoodMailStatic.cpp:63` und `:140`,
+  `QCCustomizeToolBar.cpp:17`, `TBarSendButton.cpp:74`, jeweils
+  `extern SEC_AUX_DATA secData;`). Die 52 ist deshalb weder eine Ober- noch eine
+  Untergrenze und sollte nicht als Kennzahl zitiert werden.
+- **Fehlende Ableitungen in Abschnitt 1:** der Generator hat nur `class X : public SECY`
+  mit `SEC` als *erster* Basis erfasst. Es fehlten sieben Einträge — inzwischen in
+  `INVENTAR.md` nachgetragen: `QCWorkbookClient : SECWorkbookClient`
+  (`mainfrm.cpp:333`), `QC3DTabControl : SEC3DTabControl` (`QC3DTabWnd.h:14`),
+  `QC3DTabWnd : SEC3DTabWnd` (`QC3DTabWnd.h:74`), `CDontFloatDockContext : SECDockContext`
+  (`QCChildToolBar.cpp:43`) sowie die drei Mehrfachvererbungen auf `SECWndBtn`:
+  `CTBarBitmapComboBtn` (`TBarBmpCombo.h:14`), `CTBarEditBtn` (`TBarEdit.h:12`),
+  `CTBarStaticBtn` (`TBarStatic.h:12`). Damit sind es **30** Ableitungen von
+  **22** verschiedenen Stingray-Basisklassen, nicht 23.
+- **Fehlende Einträge:** `SECControlBar::GetBarInfo`/`SetBarInfo` (`WazooBarMgr.cpp:433,435`),
+  `SECDockBar::GetControlBarRow`/`GetFirstControlBar`/`RemoveControlBar`,
+  `SECControlBar::GetInsideRect`/`CalcInsideRect`/`IsMDIChild`, dazu die gesamte
+  Zusatzoberfläche von `SECCustomToolBar` (rund 20 Member) und `SECStdBtn`.
+
+## Was unabhängig vom Shim blockiert
+
+Drei Dinge kosten Arbeit, haben aber mit OT501 nichts zu tun:
+
+1. **`statbar.h:71`** deklariert `afx_msg void OnTimer(UINT)`; `ON_WM_TIMER()` verlangt in
+   MFC 14 `UINT_PTR` — Compilerfehler unabhängig von der Shim-Wahl.
+2. **Direkter Zugriff auf die libpng-Strukturen** in `QCGraphics.cpp` — libpng-1.2-API,
+   seit 1.4 gekapselt. Vier Stellen, davon liegt nur eine in `QCPng::LoadImage`:
+   - `306` — `png_ptr->error_ptr` im Warn-Callback `libpng_warning`
+   - `313` — `png_ptr->error_ptr` im Fehler-Callback `libpng_error`
+   - `316` — `longjmp(png_ptr->jmpbuf, 1)`, ebenfalls in `libpng_error`
+   - `354` — `setjmp(png_ptr->jmpbuf)` in `QCPng::LoadImage(LPCTSTR)`
+3. **`QCChildToolBar.cpp:62`** bindet `ON_MESSAGE_VOID(WM_IDLEUPDATECMDUI, OnIdleUpdateCmdUI)`
+   an einen Handler mit Signatur `LRESULT(WPARAM,LPARAM)` (`QCChildToolBar.h:24`) —
+   Typmismatch, vermutlich aus einem früheren Portierungsschritt.
+
+Dazu die vier Quelldateien, deren Header vorliegen, deren Implementierung aber in der
+CHM-Freigabe fehlt: `TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`.
+Die ersten drei sind Toolbar-Steuerelemente und gehören fachlich zu Stufe 3.
+
+## Verfügbares Material
+
+Unter `OT501/Src/` liegen **67** Quelldateien (alle `.cpp`, keine `.c`) — von den
+186, die `otlib50.mak` erwartet. Aufgeteilt:
+
+| Ort | Anzahl | Was |
+|---|---|---|
+| `image/JPEG` | 46 | libjpeg (Fremdcode) |
+| `utility/zlib` | 14 | zlib (Fremdcode) |
+| `ui/shortcut` | 4 | Shortcut-Dialoge |
+| `controls/treectrl` | 1 | `TreeNode.cpp` |
+| `OT501/Src` selbst | 2 | `secaux.cpp` und `STDAFX.CPP` |
+
+`secaux.cpp` ist die einzige davon, die echte Stingray-Substanz enthält — sie
+liefert `secData` (`SEC_AUX_DATA`) mit den Systemfarben, die der Zeichencode an mehreren
+Stellen direkt liest (`TBarSendButton.cpp:74`, `MoodMailStatic.cpp:63`,
+`QCCustomizeToolBar.cpp:17`). `STDAFX.CPP` ist der übliche Vorkompilierungs-Rumpf,
+alles Übrige Fremdcode.
+
+Jede Aussage über die *Innereien* der SEC-Implementierungen bleibt damit Rekonstruktion
+aus den Erwartungen der Aufrufer.
+
+---
+
+# Berichtigungen nach der Umsetzung von Stufe 2 (29.08.2026)
+
+Beim Umsetzen und Nachmessen haben sich drei Aussagen dieses Plans als falsch
+erwiesen. Sie stehen oben unveraendert, damit nachvollziehbar bleibt, was
+angenommen wurde — hier steht der gemessene Befund.
+
+## 1. Die Registerkarten sind NICHT verzichtbar
+
+Oben steht, die Registerkartenleiste sei eine Anwendereinstellung hinter
+`m_bWorkbookMode` und koenne entfallen. **Das gilt nur fuer den MDI-Streifen.**
+
+`SEC3DTabWnd` und `SEC3DTabControl` sind etwas anderes: das Registerkarten-
+Steuerelement **innerhalb jeder Wazoo-Leiste**.
+
+- `CWazooBar::m_wndTab` ist ein `QC3DTabWnd` — `Eudora/WazooBar.h:137`
+- `QC3DTabWnd : SEC3DTabWnd`, `QC3DTabControl : SEC3DTabControl` —
+  `Eudora/QC3DTabWnd.h:14` und `:74`
+- `m_bWorkbookMode` schaltet davon nichts ab
+
+Eudora ruft echte Funktionalitaet auf: `GetTabCount` 19x, `GetActiveTab` 7x,
+`GetTabInfo` 6x, dazu `AddTab`, `InsertTab`, `RemoveTab`, `FindTab`,
+`ActivateTab`, `SetTabIcon`, `ScrollToTab`, `TabExists`, `TabHit`,
+`SetTabLocation`, `ShowTabs`.
+
+Mit leeren Ruempfen linkt und startet Eudora — aber **jede Wazoo-Leiste bleibt
+leer**: Mailboxes, Nicknames, Filters, Directory Services, Link History, Task
+Status. Das Programm waere unbenutzbar.
+
+Umfang: rund 80 Symbole, eigene Stufe zwischen 2 und 3. Fuer die Zeichenarbeit
+gibt es **keine** Vorlage im Repo (anders als bei `SECStdBtn::DrawFace`).
+
+## 2. Drei Klassenfamilien fehlen im Plan ganz
+
+- **`CSafetyPalette` / `CPaletteDC`** aus `safetypal.h`, 14 Symbole. `CPaletteDC`
+  ist der Geraetekontext, durch den Eudora jede Bitmap zeichnet — Aufrufstellen in
+  `QCToolBarManager.cpp` (9x), `QCGraphics.cpp` (5x), `tocview.cpp`, `AdView.cpp`,
+  `LinkHistoryManager.cpp`, `mainfrm.cpp` (4x). Aufwand gering.
+- **`SECDateTimeCtrl`** aus `dtctrl.h`, 6 Symbole. `SearchView.h:388` haelt ein
+  Feld davon. MFCs `CDateTimeCtrl` deckt es ab.
+- **`SECFrameWnd`, `SECDockState`, `SECControlBarInfo(Ex)`, `SECControlBarManager`,
+  `SECDockContext`** — gehoeren zur Andockfamilie, in Stufe 2b nachgezogen. Ihre
+  Originalheader uebersetzen unter MFC 14 fehlerfrei; es fehlte nur die Umsetzung.
+
+## 3. `secData` liegt bereits im Repo
+
+`SEC_AUX_DATA` und die drei anderen freien Funktionen brauchen keinen Nachbau:
+`OT501/Src/secaux.cpp` ist Teil der Freigabe und muss nur in die Projektdatei
+aufgenommen werden.
+
+## Stand der Symbolliste
+
+Gemessen mit einer leeren Platzhalter-`OTA50D.LIB`: 1088 ungeloeste Externe,
+651 verschiedene. Nach dem Einhaengen von Stufe 0-2 und 4 bleiben rund 299:
+
+| Familie | Symbole | Stand |
+|---|---|---|
+| Werkzeugleisten und Knoepfe | 158 | Stufe 3 |
+| Registerkarten | 80 | eigene Stufe |
+| Bilder | 27 | Stufe 4 fertig, Rest beim Einhaengen |
+| Palette | 14 | eigene Kleinstufe |
+| `SECDateTimeCtrl` | 6 | eigene Kleinstufe |
+| freie Funktionen | 4 | `secaux.cpp` ins Projekt |
+| nicht Stingray (`ATL::CImage`, `CVoiceText`, `TraceStart`) | 5 | eigenstaendig |
+
+## Stolperstein beim Einhaengen
+
+`OTShim.h` setzt `__SWINMDI_H__`, `__SECWB_H__`, `__SBARCORE_H__`, `__SBARDOCK_H__`
+selbst. Nicht gesetzt sind `__SECTOD_H__` und `__SBARSTAT_H__` — die stehen in
+`OTShimAll.h`. Der Wächter `__SECBTNS_H__` laesst sich **nicht** setzen, ohne
+`SECStdBtn` und die uebrigen Knopfklassen mit wegzunehmen; das loest erst der
+Ersatz fuer `secbtns.h` aus Stufe 3 auf.

@@ -3,7 +3,7 @@
 #ifndef _QComObject_h_
 #define _QComObject_h_
 
-#include <typeinfo.h>
+#include <typeinfo>   // war <typeinfo.h>
 
 /////////////////////////////////////////////////////////////////////////////
 // QComObject

@@ -2516,9 +2516,9 @@ BOOL CPaigeEdtView::OnSetCursor( CWnd* pWnd, UINT nHitTest, UINT message )
 							// Ad hack for now: skip redirect part and show just final destination URL.
 							// This should go away when we implement clickbase.
 							char* s;
-							if (s = strstr(DisplayURL, "url="))
+							if (s = const_cast<char *>(strstr(DisplayURL, "url=")))
 								DisplayURL = s + 4;
-							if (s = strstr(DisplayURL, "&distributorid"))
+							if (s = const_cast<char *>(strstr(DisplayURL, "&distributorid")))
 								*s = 0;
 						}
 						else if (bShouldCheckLink)

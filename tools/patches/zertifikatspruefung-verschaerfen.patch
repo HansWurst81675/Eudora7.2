@@ -1,0 +1,24 @@
+diff --git a/Eudora71/QCSSL/src/qccertificate.cpp b/Eudora71/QCSSL/src/qccertificate.cpp
+index d8dbad9..1354b5c 100644
+--- a/Eudora71/QCSSL/src/qccertificate.cpp
++++ b/Eudora71/QCSSL/src/qccertificate.cpp
+@@ -80,6 +80,8 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
+ 		switch(X509_STORE_CTX_get_error(pX509StoreCtx))
+ 		{
+ 			case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY:
++			case X509_V_ERR_CERT_UNTRUSTED:
++			case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE:
+ 				if (pInfo->m_Outcome.m_ErrorCode == 0)
+ 				{
+ 					pInfo->m_Outcome.m_ErrorCode = IDS_CERTERR_CHAINNOTTRUSTED;
+@@ -107,10 +109,6 @@ int QCCertificateUtils::CertificateCallback(int iOK, X509_STORE_CTX *pX509StoreC
+ 				pInfo->m_Outcome.AddErrors(IDS_CERTERR_UNKNOWNROOT);
+ 				if (bInStore) pInfo->m_Outcome.AddErrors(IDS_CERTWARN_IGNOREBCOSTRUSTED);
+ 				break;
+-			case X509_V_ERR_CERT_UNTRUSTED:
+-			case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE:
+-				iOK = 1;
+-				break;
+ 			case X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT:
+ 			case X509_V_ERR_UNABLE_TO_GET_CRL:
+ 			case X509_V_ERR_UNABLE_TO_DECRYPT_CERT_SIGNATURE:

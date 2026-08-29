@@ -9,7 +9,7 @@
 #include "pgTraps.h"
 #include "PgGlobals.h"
 
-#include <xstddef>
+#include <functional>   // war <xstddef> (in VS2022 entfernt)
 #pragma warning (disable: 4663 4244 4018 4146)
 #include <stack>
 #pragma warning (default: 4663 4244 4018 4146)

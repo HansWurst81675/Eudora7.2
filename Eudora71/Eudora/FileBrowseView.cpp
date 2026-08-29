@@ -282,7 +282,7 @@ BOOL CFileBrowseView::GetTargetFolder(CPoint pt, LPTSTR FolderBuffer)
 		// or the source is directly inside the folder (no-op)
 		if (*FolderBuffer)
 		{
-			const FolderLen = _tcslen(FolderBuffer);
+			const size_t FolderLen = _tcslen(FolderBuffer);
 			int SourceLen;
 			for (LPCTSTR pSource = m_DropFiles; *pSource; pSource += SourceLen + 1)
 			{
@@ -3445,12 +3445,20 @@ LPITEMIDLIST CFileBrowseView::GetFullyQualPidlFromPath
 
 	LPITEMIDLIST pFullyQualifiedIdList = NULL;
 	OLECHAR szOleChar[MAX_PATH];
-	MultiByteToWideChar(CP_ACP,
+	const int iWideChars = MultiByteToWideChar(CP_ACP,
 						MB_PRECOMPOSED,
 						lpszFullPathName,
 						-1,
-						(USHORT *)szOleChar,
-						sizeof(szOleChar));
+						szOleChar,
+						_countof(szOleChar));   // cchWideChar zaehlt Zeichen, nicht Bytes
+
+	//
+	//	Rueckgabewert pruefen: bei einem Pfad, der nicht in MAX_PATH Zeichen passt,
+	//	schreibt MultiByteToWideChar NICHTS und liefert 0. szOleChar bliebe dann
+	//	uninitialisierter Stapelspeicher und ginge so an ParseDisplayName.
+	//
+	if (iWideChars == 0)
+		return NULL;
 
 	//
 	// Use Desktop folder since we want a path relative to the root.

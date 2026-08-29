@@ -57,7 +57,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\OpenSSL\inc32;.\SSLPlus\include;.\SSLPlus\tools\securitybuilder\win32\include;.\Public\inc;.\inc;..\Eudora;..\QCUtils\public\inc;..\EuMemMgr\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OpenSSL3/include;.\SSLPlus\include;.\SSLPlus\tools\securitybuilder\win32\include;.\Public\inc;.\inc;..\Eudora;..\QCUtils\public\inc;..\EuMemMgr\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;WINVER=0x0410;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -72,14 +72,15 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>crypt32.lib;libeay32.lib;ssleay32.lib;QCUtils.lib;EuMemMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>crypt32.lib;libssl.lib;libcrypto.lib;ws2_32.lib;advapi32.lib;user32.lib;gdi32.lib;bcrypt.lib;QCUtils.lib;EuMemMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\OpenSSL\out32;..\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\OpenSSL3/lib;..\Lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBC;MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\src\qcssl.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <BaseAddress>%40..\Addresses.txt,$(ProjectName)</BaseAddress>
       <ImportLibrary>..\Lib\Debug\$(ProjectName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
@@ -102,7 +103,7 @@
     <ClCompile>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\OpenSSL\inc32;.\SSLPlus\include;.\SSLPlus\tools\securitybuilder\win32\include;.\Public\inc;.\inc;..\Eudora;..\QCUtils\public\inc;..\EuMemMgr\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\OpenSSL3/include;.\SSLPlus\include;.\SSLPlus\tools\securitybuilder\win32\include;.\Public\inc;.\inc;..\Eudora;..\QCUtils\public\inc;..\EuMemMgr\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;WINVER=0x0410;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -115,14 +116,15 @@
     </ClCompile>
     <Link>
       <AdditionalOptions>/IGNORE:4089 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>crypt32.lib;libeay32.lib;ssleay32.lib;QCUtils.lib;EuMemMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>crypt32.lib;libssl.lib;libcrypto.lib;ws2_32.lib;advapi32.lib;user32.lib;gdi32.lib;bcrypt.lib;QCUtils.lib;EuMemMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>..\OpenSSL\out32;..\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\OpenSSL3/lib;..\Lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>.\src\qcssl.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <BaseAddress>%40..\Addresses.txt,$(ProjectName)</BaseAddress>
@@ -144,18 +146,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\GSSupport\secchk.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\GSSupport\seccinit.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\GSSupport\seccook.c">
+      <ExcludedFromBuild>true</ExcludedFromBuild>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -197,10 +202,6 @@
     <ClInclude Include="src\StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenSSL\OpenSSL.vcxproj">
-      <Project>{40ad5b45-6a83-4ea5-aa08-172d6c65bbfa}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\QCSocket\QCSocket.vcxproj">
       <Project>{eb832ea8-35cf-45fd-b644-e423affc4feb}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

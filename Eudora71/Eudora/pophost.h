@@ -36,7 +36,7 @@ class CPOPSession;
 enum { kLMOSBuffSize	= 4000};
 
 
-#include <xstddef>
+#include <functional>   // war <xstddef> (in VS2022 entfernt)
 #pragma warning (disable: 4663 4244)
 #include <algorithm>
 #include <map>

@@ -1,0 +1,15 @@
+- [Prüfen statt vermuten](pruefen-statt-vermuten.md) — vorhandene Quellen öffnen, bevor ich eine Ursache vermute; Vermutungen kennzeichnen
+- [Commit auf Extra-Branch und pushen](commit-auf-extra-branch-und-pushen.md) — Zwischenstände laufend sichern, nur Quelldateien stagen
+- [Doku bei jedem Commit mitziehen](doku-bei-jedem-commit-mitziehen.md) — README.md und PORTIERUNG.md gehören in denselben Commit wie der Code
+- [Hängende Kommandos abbrechen](haengende-kommandos-abbrechen.md) — früh abbrechen statt Zeitlimits auslaufen lassen; cmd/c aus Git Bash hängt
+- [Zeilenenden nach jedem Schreibzugriff messen](zeilenenden-nach-jedem-schreibzugriff-messen.md) — CR-Anzahl gegen HEAD prüfen, bevor gestaget wird; der Fehler ist lautlos
+- [Quelldateien nur byte-erhaltend ändern](quelldateien-nur-byte-erhaltend-aendern.md) — Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden; Edit-Werkzeug zerstört beides
+- [Dummy statt Weglassen](dummy-statt-weglassen.md) — nicht benutzte Funktionen als leeren Rumpf implementieren, nicht ausbauen
+- [Agenten benennen](agenten-benennen.md) — kurze deutsche Namen und eine Statustabelle, statt technischer IDs
+- [Tests vor jedem Commit laufen lassen](tests-vor-jedem-commit-laufen-lassen.md) — Ergebnis in die Commit-Nachricht, roter Test ist kein Grund zu warten
+- [Zurückgestellte Befunde](zurueckgestellte-befunde.md) — belegte Mängel, die Gregor bewusst später angehen will; nicht von selbst aufgreifen
+- [Wissen gehört in Dateien](wissen-gehoert-in-dateien.md) — Befunde ins Repo schreiben; Chat überlebt kein Abschalten
+- [Nie stillstehen](nie-stillstehen.md) — Langes in den Hintergrund, währenddessen weiterarbeiten, ungefragt melden; Leerlauf ist der teuerste Fehler
+- [Anweisungen abarbeiten](anweisungen-abarbeiten.md) — geliefertes Material sofort auswerten, Wiederholung ist ein Alarmzeichen, Absprachen in eine Datei
+- [Lauffähiges Ergebnis liefern](lauffaehiges-ergebnis-liefern.md) — Ziel ist eine einsetzbare Version; Übergabe mit Prüfanleitung und ehrlichem Vergleich
+- [Fehlerklassen abstellen](fehlerklassen-abstellen.md) — beim zweiten Auftreten Werkzeug und Schranke bauen, statt einzeln nachzubessern

@@ -24,6 +24,7 @@ DAMAGE. */
 //
 
 #include "stdafx.h"
+#include <memory>
 
 #ifdef IMAP4 // Only for IMAP.
 
@@ -3884,7 +3885,7 @@ bool CActionQueue::ReadQueue()
 
 	//	Allocated a buffer big enough for the entire file contents
 	long					nLength = lseek(hFile, 0, SEEK_END);
-	std::auto_ptr<char>		szFileBuf(DEBUG_NEW_NOTHROW char[nLength+1]);
+	std::unique_ptr<char[]>	szFileBuf(DEBUG_NEW_NOTHROW char[nLength+1]);
 
 	if (szFileBuf.get())
 	{

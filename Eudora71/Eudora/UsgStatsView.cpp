@@ -990,7 +990,7 @@ LRESULT CUsageStatisticsView::OnDisplayChange(WPARAM wParam, LPARAM lParam)
 	if (lPrevWidth != glFirstColPercentWidth)
 		ReloadData((short)gsPeriodSelected,(BOOL)gbMoreStatistics);		
 	
-	return CPaigeEdtView::OnDisplayChange(wParam, lParam);
+	CPaigeEdtView::OnDisplayChange((UINT)wParam, LOWORD(lParam), HIWORD(lParam)); return 0;
 }
 
 void CUsageStatisticsView::OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

@@ -33,10 +33,10 @@ BOOL (CALLBACK* SendTicketForService)(LPSTR service, LPSTR version, int fd) = NU
 
 // Internal functions
 //
-unsigned long	ntohl (unsigned long ulNet);
-unsigned short	ntohs (unsigned short usNet);
-unsigned long	htonl (unsigned long ulHost);
-unsigned short	htons (unsigned short usHost);
+unsigned long	krbv4_ntohl (unsigned long ulNet);
+unsigned short	krbv4_ntohs (unsigned short usNet);
+unsigned long	krbv4_htonl (unsigned long ulHost);
+unsigned short	krbv4_htons (unsigned short usHost);
 
 
 /////////////////////////////////////////////////////////////////////////
@@ -393,7 +393,7 @@ BOOL CKrb4::Stage0Challenge (unsigned long *ulRndNum)
 
     // NOTE: ulRndNum is now in local byte order:
 	//
-	*ulRndNum = ntohl(*ulRndNum);
+	*ulRndNum = krbv4_ntohl(*ulRndNum);
 
 	// Can now free it:
 	//
@@ -626,7 +626,7 @@ BOOL CKrb4::Stage2Challenge (unsigned long ulRndNum)
 
     testnum = (in[0]*256*256*256)+(in[1]*256*256)+(in[2]*256)+in[3];
 
-//    testnum = ntohl(testnum);
+//    testnum = krbv4_ntohl(testnum);
 
     if (testnum != ulRndNum + 1)
       return FALSE;
@@ -637,7 +637,7 @@ BOOL CKrb4::Stage2Challenge (unsigned long ulRndNum)
      * 6-8 max buffer size
      */
 
-    unsigned long nchal = htonl(ulRndNum);
+    unsigned long nchal = krbv4_htonl(ulRndNum);
 
 	{
 		CString str; str.Format ("random number in network byte order is %lu", nchal);
@@ -717,7 +717,7 @@ BOOL CKrb4::Stage2Challenge (unsigned long ulRndNum)
 
 
 
-unsigned long ntohl (unsigned long ulNet)
+unsigned long krbv4_ntohl (unsigned long ulNet)
 {
 	// 
 	unsigned long b0 = (ulNet & 0xFF000000) >> 24;
@@ -731,7 +731,7 @@ unsigned long ntohl (unsigned long ulNet)
 
 
 
-unsigned short ntohs (unsigned short usNet)
+unsigned short krbv4_ntohs (unsigned short usNet)
 {
 	// 
 	unsigned short b0 = (unsigned short) ( (usNet & 0xFF00) >> 8 );
@@ -741,15 +741,15 @@ unsigned short ntohs (unsigned short usNet)
 }
 
 
-unsigned long htonl (unsigned long ulHost)
+unsigned long krbv4_htonl (unsigned long ulHost)
 {
-	return ntohl (ulHost);
+	return krbv4_ntohl (ulHost);
 }
 
 
-unsigned short htons (unsigned short usHost)
+unsigned short krbv4_htons (unsigned short usHost)
 {
-	return ntohs (usHost);
+	return krbv4_ntohs (usHost);
 }
 
 

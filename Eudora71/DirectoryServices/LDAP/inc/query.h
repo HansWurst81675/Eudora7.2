@@ -31,7 +31,7 @@
 
 // BOG: this really sucks. I can't believe that stl is really that messed-up
 // on Microsoft. apparently all the string impls suck. whatever.
-#include <xstddef>
+#include <functional>   // war <xstddef> (in VS2022 entfernt)
 #pragma warning(disable : 4663 4244 4100 4511 4512 4018)
 #include <string>
 #pragma warning(default : 4663 4244 4100 4511 4512 4018)

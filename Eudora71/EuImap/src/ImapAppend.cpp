@@ -1404,7 +1404,7 @@ void CImapAppend::NewMessageID (CString& szBuffer)
 
 	*pPtr++ = '<';
 
-	LPSTR pVer = strchr(Version, ' ');
+	LPSTR pVer = const_cast<LPSTR>(strchr(Version, ' '));
 	if (pVer)
 		pVer++;
 	pVer = strchr (pVer, ' ');
@@ -1505,7 +1505,7 @@ long APPENDEncodingType ( const char* fname, MIMEMap& mm )
 	BYTE ch, LastCh;
 	char* p;
 
-	p = strrchr(fname, '.');
+	p = const_cast<char *>(strrchr(fname, '.'));
 	if (p)
 		mm.Find(p + 1);
 	if (!strncmp(mm.m_Type, CRString(IDS_ATTACH_TEXT_TYPE), 4))

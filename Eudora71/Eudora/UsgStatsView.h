@@ -62,7 +62,7 @@ public:
 	//}}AFX_VIRTUAL
 
 	void ReplaceSpaceFillers();
-	static UpdateFT() { };
+	static void UpdateFT() { };
 
 
 #ifdef _DEBUG
