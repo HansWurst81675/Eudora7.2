@@ -245,3 +245,31 @@ Zurückdrehen:
 ```
 git apply -R tools/patches/zertifikatspruefung-verschaerfen.patch
 ```
+
+**Was der Patch inhaltlich macht**
+
+Er erfindet keinen neuen Code, sondern streicht den Sonderzweig und hängt die beiden
+Fehlercodes an den bereits vorhandenen, korrekt ausgeführten Zweig für
+`X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`. Damit bleibt `iOK` bei 0, die
+Verbindung wird abgelehnt, und der Anwender sieht `IDS_CERTERR_CHAINNOTTRUSTED`
+statt wie bisher gar nichts.
+
+Der Ausweg bleibt: Der `switch` wird nur erreicht, wenn das Zertifikat **nicht**
+schon im vom Anwender bestätigten Speicher liegt. Wer ein einzelnes Zertifikat
+trotzdem akzeptieren will, kann es weiterhin dort freigeben. Der Patch nimmt die
+pauschale Annahme weg, nicht die bewusste Einzelfreigabe.
+
+**Geprüft**
+
+`git apply --check` läuft durch; mit angewandtem Patch baut QCSSL in `Release|x86`
+fehlerfrei ohne neue Warnungen. Die Arbeitskopie wurde danach zurückgesetzt und
+`QCSSL.dll` aus dem unveränderten Quelltext neu gebaut, damit die abgelegte
+Binärdatei zum eingecheckten Code passt und nicht zum Patch.
+
+**Beim Anwenden zu beachten**
+
+Der Patch entfernt vier Zeilen und fügt zwei hinzu; CR und LF sinken gemeinsam von
+372 auf 370. `tools/pruefe-bytes.pl` wird den Commit deshalb abweisen — ein
+Fehlalarm, denn der Hook kann eine beabsichtigte Zeilenlöschung nicht von einem
+Werkzeugschaden unterscheiden. Die begleitende `.md` neben dem Patch beschreibt, wie
+man das nachmisst, bevor man `--no-verify` benutzt.
