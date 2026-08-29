@@ -160,7 +160,8 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 - `Eudora71/MAPI/include` — Extended-MAPI-Header aus
   [microsoft/MAPIStubLibrary](https://github.com/microsoft/MAPIStubLibrary) (MIT).
   Nötig, weil `mapix.h` und `mapiutil.h` seit dem Windows-8-SDK nicht mehr
-  im Windows SDK enthalten sind.
+  im Windows SDK enthalten sind — im hier benutzten SDK 10.0.22621.0 liegen unter
+  `um\` nur noch `MAPI.h` und `MapiUnicodeHelp.h`.
 - `Eudora71/OpenSSL3` — Header und statische Bibliotheken von **OpenSSL 3.5.8 LTS**
   (`libcrypto.lib`, `libssl.lib`), damit sich `QCSSL` ohne einen 25-minütigen
   OpenSSL-Lauf übersetzen lässt. Bauweg und Prüfsumme stehen in
@@ -171,7 +172,11 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
   mitgebaut wird. Beides kann weg.
 - `Eudora71/Eudora/utils.cpp` — UTF-8-Übersetzungstabelle von 27 auf 123 Einträge
   erweitert (deutsche Umlaute und Latin-1), nach
-  [HansWurst81675/Eudora_patches](https://github.com/HansWurst81675/Eudora_patches)
+  [HansWurst81675/Eudora_patches](https://github.com/HansWurst81675/Eudora_patches).
+  Sie ist inzwischen mehr als der Patch: sieben Zuordnungen aus dem
+  Qualcomm-Altbestand waren falsch und sind mit `b4b7de5` berichtigt, ebenso die
+  Doppelersetzung, die der neue C3-Block ausgelöst hat. Belegt durch die Unit-Tests
+  in `Eudora71/Tests`.
 
 ## Verwandte Projekte
 
