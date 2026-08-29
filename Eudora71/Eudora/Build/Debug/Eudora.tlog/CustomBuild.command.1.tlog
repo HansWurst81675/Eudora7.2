@@ -1,2 +1,0 @@
-^C:\USERS\GREGOR\GITHUB\EUDORA7.2\EUDORA71\EUDORA\EUDORAEXE.IDL
-midl /Oicf /h "EudoraExe.h" /iid "EudoraExe_i.c" /tlb "EudoraExe.tlb"                                                                            "EudoraExe.idl"

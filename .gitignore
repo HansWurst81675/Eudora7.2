@@ -20,3 +20,24 @@ Eudora71/OpenSSL/out32/
 *.idb
 *.ilk
 *.exp
+
+# Zwischenverzeichnisse der Projekte (frueher mitversioniert, jetzt entfernt)
+**/Build/
+**/ResBuild/
+
+# Linker- und Compilerausgaben: Symboldateien, Typbibliotheken, Protokolle
+# Hinweis: die mitgelieferten Original-Symboldateien unter Eudora71/Bin/
+# bleiben versioniert - .gitignore wirkt nicht auf bereits verfolgte Dateien.
+*.pdb
+*.bsc
+*.res
+*.tlb
+*.tlog/
+
+# Visual-Studio-Benutzerdaten
+*.ncb
+*.aps
+*.suo
+*.user
+*.VC.db
+*.VC.opendb
