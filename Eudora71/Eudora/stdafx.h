@@ -49,7 +49,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Stingray Objective Toolkit includes
 
-#include "secall.h"			// Stingray Objective Toolkit
+#include "OTShimAll.h"		// OT501-Ersatzschicht, zieht secall.h nach
 
 #include "qcassert.h"		// ASSERT/VERIFY logging
 
