@@ -8,11 +8,25 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-Die Zahlen in diesem Abschnitt sind an Commit `fd9a235` gemessen, Konfiguration
-`Debug|x86`, Toolset v143 (MSVC 14.38.33130). Am Baum wird gerade weitergearbeitet;
-wer den Stand pruefen will, misst neu.
+> **Achtung — der Solution-Bau ist zurzeit zusaetzlich gebrochen (gemessen an
+> `8dd6b2a`, 29.08.2026).** `7dcac81` hat in `Eudora71/Eudora/stdafx.h:52`
+> `secall.h` durch `OTShimAll.h` ersetzt. Auf dem Include-Pfad steht
+> `Eudora71/OTShim` aber **nur in `Eudora.vcxproj`**. Die vier anderen Projekte,
+> die `Eudora/stdafx.h` mitbenutzen, finden die Datei deshalb nicht und brechen
+> jeweils mit `C1083: OTShimAll.h` ab: `AccountWizard`,
+> `DirectoryServicesUI`, `EuImap`, `SearchEngine`. Ein voller Solution-Bau meldet
+> damit **7 Fehler**: 3 aus `OT501` (`NMAKE U1073` zweimal, `MSB3073` einmal) und
+> viermal `C1083`. Bis das behoben ist, gelten die Zahlen im folgenden Abschnitt
+> nicht — es werden derzeit **11 der 18** Projekte fertig, nicht 15. Behebbar
+> vermutlich durch Aufnahme von `..\OTShim` in die
+> `AdditionalIncludeDirectories` der vier Projekte; **nicht nachgeprueft**, weil
+> an `OTShim/` parallel gearbeitet wird.
 
-**15 der 18 Projekte der Solution werden fertig.** Drei nicht:
+Die Zahlen im Rest dieses Abschnitts sind an Commit `fd9a235` gemessen,
+Konfiguration `Debug|x86`, Toolset v143 (MSVC 14.38.33130). Am Baum wird gerade
+weitergearbeitet; wer den Stand pruefen will, misst neu.
+
+**Ohne den oben genannten Fehler werden 15 der 18 Projekte fertig.** Drei nicht:
 
 - `OT501` — die Stingray-Quellen sind nicht freigegeben, das Projekt bricht mit
   `NMAKE U1073` ab.
