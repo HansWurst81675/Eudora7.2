@@ -205,3 +205,77 @@ alles Übrige Fremdcode.
 
 Jede Aussage über die *Innereien* der SEC-Implementierungen bleibt damit Rekonstruktion
 aus den Erwartungen der Aufrufer.
+
+---
+
+# Berichtigungen nach der Umsetzung von Stufe 2 (29.08.2026)
+
+Beim Umsetzen und Nachmessen haben sich drei Aussagen dieses Plans als falsch
+erwiesen. Sie stehen oben unveraendert, damit nachvollziehbar bleibt, was
+angenommen wurde — hier steht der gemessene Befund.
+
+## 1. Die Registerkarten sind NICHT verzichtbar
+
+Oben steht, die Registerkartenleiste sei eine Anwendereinstellung hinter
+`m_bWorkbookMode` und koenne entfallen. **Das gilt nur fuer den MDI-Streifen.**
+
+`SEC3DTabWnd` und `SEC3DTabControl` sind etwas anderes: das Registerkarten-
+Steuerelement **innerhalb jeder Wazoo-Leiste**.
+
+- `CWazooBar::m_wndTab` ist ein `QC3DTabWnd` — `Eudora/WazooBar.h:137`
+- `QC3DTabWnd : SEC3DTabWnd`, `QC3DTabControl : SEC3DTabControl` —
+  `Eudora/QC3DTabWnd.h:14` und `:74`
+- `m_bWorkbookMode` schaltet davon nichts ab
+
+Eudora ruft echte Funktionalitaet auf: `GetTabCount` 19x, `GetActiveTab` 7x,
+`GetTabInfo` 6x, dazu `AddTab`, `InsertTab`, `RemoveTab`, `FindTab`,
+`ActivateTab`, `SetTabIcon`, `ScrollToTab`, `TabExists`, `TabHit`,
+`SetTabLocation`, `ShowTabs`.
+
+Mit leeren Ruempfen linkt und startet Eudora — aber **jede Wazoo-Leiste bleibt
+leer**: Mailboxes, Nicknames, Filters, Directory Services, Link History, Task
+Status. Das Programm waere unbenutzbar.
+
+Umfang: rund 80 Symbole, eigene Stufe zwischen 2 und 3. Fuer die Zeichenarbeit
+gibt es **keine** Vorlage im Repo (anders als bei `SECStdBtn::DrawFace`).
+
+## 2. Drei Klassenfamilien fehlen im Plan ganz
+
+- **`CSafetyPalette` / `CPaletteDC`** aus `safetypal.h`, 14 Symbole. `CPaletteDC`
+  ist der Geraetekontext, durch den Eudora jede Bitmap zeichnet — Aufrufstellen in
+  `QCToolBarManager.cpp` (9x), `QCGraphics.cpp` (5x), `tocview.cpp`, `AdView.cpp`,
+  `LinkHistoryManager.cpp`, `mainfrm.cpp` (4x). Aufwand gering.
+- **`SECDateTimeCtrl`** aus `dtctrl.h`, 6 Symbole. `SearchView.h:388` haelt ein
+  Feld davon. MFCs `CDateTimeCtrl` deckt es ab.
+- **`SECFrameWnd`, `SECDockState`, `SECControlBarInfo(Ex)`, `SECControlBarManager`,
+  `SECDockContext`** — gehoeren zur Andockfamilie, in Stufe 2b nachgezogen. Ihre
+  Originalheader uebersetzen unter MFC 14 fehlerfrei; es fehlte nur die Umsetzung.
+
+## 3. `secData` liegt bereits im Repo
+
+`SEC_AUX_DATA` und die drei anderen freien Funktionen brauchen keinen Nachbau:
+`OT501/Src/secaux.cpp` ist Teil der Freigabe und muss nur in die Projektdatei
+aufgenommen werden.
+
+## Stand der Symbolliste
+
+Gemessen mit einer leeren Platzhalter-`OTA50D.LIB`: 1088 ungeloeste Externe,
+651 verschiedene. Nach dem Einhaengen von Stufe 0-2 und 4 bleiben rund 299:
+
+| Familie | Symbole | Stand |
+|---|---|---|
+| Werkzeugleisten und Knoepfe | 158 | Stufe 3 |
+| Registerkarten | 80 | eigene Stufe |
+| Bilder | 27 | Stufe 4 fertig, Rest beim Einhaengen |
+| Palette | 14 | eigene Kleinstufe |
+| `SECDateTimeCtrl` | 6 | eigene Kleinstufe |
+| freie Funktionen | 4 | `secaux.cpp` ins Projekt |
+| nicht Stingray (`ATL::CImage`, `CVoiceText`, `TraceStart`) | 5 | eigenstaendig |
+
+## Stolperstein beim Einhaengen
+
+`OTShim.h` setzt `__SWINMDI_H__`, `__SECWB_H__`, `__SBARCORE_H__`, `__SBARDOCK_H__`
+selbst. Nicht gesetzt sind `__SECTOD_H__` und `__SBARSTAT_H__` — die stehen in
+`OTShimAll.h`. Der Wächter `__SECBTNS_H__` laesst sich **nicht** setzen, ohne
+`SECStdBtn` und die uebrigen Knopfklassen mit wegzunehmen; das loest erst der
+Ersatz fuer `secbtns.h` aus Stufe 3 auf.

@@ -214,7 +214,7 @@ MakeDox.pl Eudora.sln DevDox
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="3dformv.cpp" />
-    <ClCompile Include="AboutDlg.cpp" /><ClCompile Include="..\OTShim\OTShim.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Bild.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="AboutDlg.cpp" /><ClCompile Include="..\OTShim\OTShim.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Bild.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OT501\Src\secaux.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="AboutEMS.cpp" />
     <ClCompile Include="acapdlg.cpp" />
     <ClCompile Include="address.cpp" />
