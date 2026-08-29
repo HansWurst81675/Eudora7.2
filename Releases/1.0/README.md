@@ -1,6 +1,6 @@
 # Eudora 7.2 — Release 1.0: QCSSL mit TLS 1.3
 
-Diese Version tauscht **eine einzige Datei** in einer bestehenden Eudora-7.1-Installation
+Diese Version tauscht **zwei Dateien** in einer bestehenden Eudora-7.1-Installation
 aus und bringt sie damit auf aktuelle Verschlüsselung.
 
 ## Was drin ist
@@ -9,6 +9,9 @@ aus und bringt sie damit auf aktuelle Verschlüsselung.
 |---|---|---|
 | `QCSSL.dll` | 2,8 MB | Eudoras SSL/TLS-Schicht, neu gebaut gegen OpenSSL 3.5.8 LTS |
 | `QCSSL.dll.sha256` | | Prüfsumme zum Abgleich |
+| `rootcerts.p7b` | 126 KB | Wurzelzertifikatsspeicher, 121 aktuelle Zertifizierungsstellen |
+| `rootcerts.p7b.sha256` | | Prüfsumme zum Abgleich |
+| `rootcerts-erzeugen.ps1` | | Skript, das `rootcerts.p7b` erzeugt — der Bauweg zum Nachvollziehen |
 
 ## Was es bringt
 
@@ -30,30 +33,103 @@ Gegenüber dem verbreiteten **HermesSSL**-Paket (Version 7.8 gamma): das nutzt
 OpenSSL 1.0.2p, seit 2019 End-of-Life und ohne TLS 1.3. Wer HermesSSL bereits
 einsetzt, hat funktionierendes TLS 1.2 und wird im Alltag **keinen Unterschied**
 bemerken — der Gewinn ist die gepflegte Krypto-Basis, nicht eine sichtbare Funktion.
-Hermes bringt dafür einen aktuellen Wurzelzertifikatsspeicher mit, den dieses
-Release noch nicht ersetzt (siehe den nächsten Abschnitt, "Voraussetzung: aktueller
-Wurzelzertifikatsspeicher"). Außerdem sind hier keine fremden Binärdateien im Spiel —
+Einen aktuellen Wurzelzertifikatsspeicher bringen beide mit; der hier beiliegende
+ist aus einer offengelegten Quelle nachgebaut (siehe den nächsten Abschnitt,
+"Wurzelzertifikatsspeicher"). Außerdem sind hier keine fremden Binärdateien im Spiel —
 die DLL ist aus den offiziellen, prüfsummenverifizierten OpenSSL-Quellen gebaut, der
 komplette Bauweg liegt im Repository.
 
 Die DLL ist **statisch gelinkt**: keine `libeay32.dll`, keine `ssleay32.dll` daneben nötig.
 
-## Voraussetzung: aktueller Wurzelzertifikatsspeicher
+## Wurzelzertifikatsspeicher
 
 QCSSL prüft Serverzertifikate **nicht** gegen den Windows-Zertifikatspeicher, sondern
 gegen eine Datei `rootcerts.p7b` im Eudora-Verzeichnis ([QCSSLContext.cpp:53](../../Eudora71/QCSSL/src/QCSSLContext.cpp:53)).
-Die von Eudora 7.1 mitgelieferte Fassung enthält **30 Zertifikate**, das neueste
-ausgestellt am **04.03.2004**. Stand August 2026 sind davon **17 abgelaufen**
-(nachgemessen an `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b`).
+Sie wird über die Windows-CryptoAPI geöffnet und Zertifikat für Zertifikat in OpenSSLs
+`X509_STORE` übertragen ([certstore.cpp:82](../../Eudora71/QCSSL/src/certstore.cpp:82) und
+[certstore.cpp:273](../../Eudora71/QCSSL/src/certstore.cpp:273)). Geladen wird sie in
+[QCSSLContext.cpp:486](../../Eudora71/QCSSL/src/QCSSLContext.cpp:486). Eine feste
+Obergrenze für die Zahl der Zertifikate gibt es dabei nicht.
 
-Diese DLL ändert daran nichts — sie liest dieselbe Datei. Mit dem Original-Speicher
-ist deshalb trotz funktionierendem TLS ein Zertifikatsfehler ("unknown root") zu
-erwarten. Ungeprüft: ob es in der Praxis tatsächlich dazu kommt — das hängt davon ab,
-welche der 13 noch gültigen Wurzeln der jeweilige Mailserver nutzt. Wer **HermesSSL** installiert hat, ist versorgt: dessen
-Paket bringt eine aktuelle `rootcerts.p7b` mit, und die bleibt beim Austausch der
-`QCSSL.dll` liegen.
+### Warum der Original-Speicher nicht mehr reicht
 
-Ein eigener, aktueller Speicher liegt diesem Release noch nicht bei.
+Nachgemessen am 29.08.2026 mit OpenSSL 3.5.7:
+
+| Datei | Zertifikate | davon abgelaufen |
+|---|---|---|
+| `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` (was der Installer verteilt) | 30 | 17 |
+| `Eudora71/Bin/Release/rootcerts.p7b` (was im Build-Verzeichnis liegt) | 19 | 8 |
+| **`rootcerts.p7b` aus diesem Release** | **121** | **0** |
+
+Das neueste Zertifikat im Original-Speicher ist von **2004**. Die 13 noch gültigen sind
+alte VeriSign- und GeoTrust-Wurzeln, die längst keine Serverzertifikate mehr ausstellen.
+Keine der heute üblichen Stellen ist dabei — weder Let's Encrypt (ISRG Root X1) noch
+Google Trust Services noch DigiCert G2.
+
+Das ist gemessen, nicht vermutet. Vier Mailserver, jeweils mit dem Original-Speicher und
+mit dem neuen als einzigem Vertrauensanker geprüft (`openssl s_client -CAfile ...`):
+
+| Server | Original-Speicher | neuer Speicher |
+|---|---|---|
+| `imap.gmail.com:993` | `unable to get local issuer certificate` | **OK** |
+| `outlook.office365.com:993` | `unable to get local issuer certificate` | **OK** |
+| `imap.mail.yahoo.com:993` | `self-signed certificate in certificate chain` | **OK** |
+| `imap.web.de:993` | `unable to get local issuer certificate` | **OK** |
+
+Auf einer unberührten 7.1-Installation ist mit dem Original-Speicher also ein
+Zertifikatsfehler zu erwarten, auch wenn die TLS-Verbindung selbst zustande kommt.
+
+Einschränkung dieser Messung: geprüft hat OpenSSL 3.5.7 auf der Kommandozeile, nicht
+Eudora. Das ist nah dran — QCSSL kippt genau diese Zertifikate in einen OpenSSL-
+`X509_STORE` und lässt OpenSSL prüfen —, aber es ist nicht dasselbe.
+
+### Woher der neue Speicher stammt
+
+Quelle ist die **Mozilla-CA-Liste** in der Aufbereitung des curl-Projekts
+(`cacert.pem`), so wie **Git für Windows 2.55.0.windows.5** sie mitliefert:
+
+- Datei: `C:\Program Files\Git\mingw64\etc\ssl\certs\ca-bundle.crt`
+- SHA256: `f345ac0d7dbd1a584dd80ff96eb2919e8dac68e962db2e7111401b434e888493`
+- Inhalt: 121 Zertifikate, davon 0 abgelaufen
+- Dieselbe Liste gibt es direkt bei <https://curl.se/ca/cacert.pem>
+
+Daraus erzeugt `rootcerts-erzeugen.ps1` die Datei. Das Skript liest die PEM-Blöcke,
+verwirft abgelaufene und noch nicht gültige (hier: keine), sortiert nach Fingerabdruck
+— damit das Ergebnis reproduzierbar ist — und schreibt sie über
+`X509Certificate2Collection.Export(Pkcs7)` heraus. Dieser Aufruf landet intern bei
+`CertSaveStore(..., CERT_STORE_SAVE_AS_PKCS7, ...)`, also **derselben Systemfunktion**,
+mit der Eudora den Speicher selbst zurückschreibt ([certstore.cpp:125](../../Eudora71/QCSSL/src/certstore.cpp:125)).
+Das Format wird damit nicht nachgebaut, sondern von der Originalfunktion geschrieben.
+
+Nachbauen lässt sich das so:
+
+```
+powershell -ExecutionPolicy Bypass -File rootcerts-erzeugen.ps1
+```
+
+### Was geprüft ist
+
+- **Format:** `openssl asn1parse` weist für alte wie neue Datei denselben Typ aus,
+  DER-kodiertes `pkcs7-signedData`. (Die neue Datei nutzt die lange Längenform —
+  `hl=5` statt `hl=4` —, weil sie größer als 64 KB ist. Das ist reguläres DER.)
+- **Lesbarkeit mit OpenSSL:** `openssl pkcs7 -inform DER -print_certs` listet
+  121 Zertifikate auf.
+- **Lesbarkeit auf Eudoras Weg:** derselbe Aufruf, den `CertificateStore::LoadFromFile`
+  macht — `CertOpenStore(CERT_STORE_PROV_FILENAME_A, X509_ASN_ENCODING, …)` —, öffnet
+  die Datei und zählt darin 121 Zertifikate.
+- **Wirkung:** die vier Mailserver oben, Tabelle darüber.
+- **Reproduzierbarkeit:** ein zweiter Lauf des Skripts über dieselbe Quelle liefert eine
+  byte-identische Datei, SHA256 `b7b0739a8339c41944a9a4f9d72664cba207e414e0c867b869d4be48c44a62e7`.
+
+### Was ungeprüft bleibt
+
+**Ob Eudora selbst die Datei annimmt, ist nicht getestet.** Dafür braucht es eine
+laufende Installation; das steht noch aus. Die Prüfungen oben zeigen, dass die Datei
+über genau die Schnittstelle lesbar ist, die Eudora benutzt, und dass die enthaltenen
+Wurzeln für aktuelle Mailserver ausreichen — mehr nicht.
+
+Wer **HermesSSL** installiert hat, hat bereits einen aktuellen Speicher; ihn zu
+ersetzen ist dann nicht nötig.
 
 ## Voraussetzung: Laufzeitbibliothek
 
@@ -80,15 +156,27 @@ Auf einem 32-Bit-Windows stattdessen `%SystemRoot%\System32\mfc140.dll`.
 3. Die vorhandene `QCSSL.dll` **umbenennen**, nicht löschen:
    `QCSSL.dll` → `QCSSL.dll.original`
 
-4. Die `QCSSL.dll` aus diesem Verzeichnis dorthin kopieren.
+4. Die vorhandene `rootcerts.p7b` ebenfalls **umbenennen**, nicht löschen:
+   `rootcerts.p7b` → `rootcerts.p7b.original`
 
-5. Eudora starten und Mail abrufen.
+   Wer HermesSSL einsetzt, kann diesen Schritt und den nächsten überspringen — dort
+   liegt bereits ein aktueller Speicher.
+
+   `usercerts.p7b` daneben bleibt unangetastet. Dort stehen die Zertifikate, denen der
+   Benutzer selbst zugestimmt hat; die gehen sonst verloren.
+
+5. `QCSSL.dll` und `rootcerts.p7b` aus diesem Verzeichnis dorthin kopieren.
+
+6. Eudora starten und Mail abrufen.
 
 ## Zurück zum alten Stand
 
-Falls etwas nicht funktioniert: Eudora beenden, die neue `QCSSL.dll` löschen,
-`QCSSL.dll.original` zurück in `QCSSL.dll` umbenennen. Damit ist der Ausgangszustand
-wiederhergestellt.
+Falls etwas nicht funktioniert: Eudora beenden, die neue `QCSSL.dll` und die neue
+`rootcerts.p7b` löschen, dann `QCSSL.dll.original` zurück in `QCSSL.dll` und
+`rootcerts.p7b.original` zurück in `rootcerts.p7b` umbenennen. Damit ist der
+Ausgangszustand wiederhergestellt.
+
+Beide Dateien lassen sich auch einzeln zurücknehmen — sie hängen nicht voneinander ab.
 
 ## Was diese Version NICHT behebt
 
@@ -117,7 +205,10 @@ Im Betrieb ist kein Unterschied zu sehen — das ist beabsichtigt. Ausgetauscht 
 die Kryptoschicht; Oberfläche und Verhalten von Eudora bleiben unverändert. Der Gewinn
 liegt in Protokoll und Wartbarkeit, nicht in sichtbaren Funktionen.
 
-Trotzdem Schritt 3 ernst nehmen und die alte Datei aufheben.
+Der beiliegende **`rootcerts.p7b` ist in Eudora selbst nicht erprobt** — siehe
+"Was ungeprüft bleibt" im Abschnitt zum Wurzelzertifikatsspeicher.
+
+Trotzdem die Schritte 3 und 4 ernst nehmen und die alten Dateien aufheben.
 
 ## Herkunft
 
@@ -129,3 +220,7 @@ Trotzdem Schritt 3 ernst nehmen und die alte Datei aufheben.
   `Eudora71/Bin/Release/QCSSL.dll`.)
 - Konfiguration: `VC-WIN32 no-shared no-asm no-tests no-docs no-apps /MD`
 - Eudora-Quellen: Freigabe des Computer History Museum, Branch `vs2022-portierung-fixes`
+- `rootcerts.p7b`: Mozilla-CA-Liste in der curl-Aufbereitung (`cacert.pem`), bezogen aus
+  Git für Windows 2.55.0.windows.5, Quelldatei-SHA256
+  `f345ac0d7dbd1a584dd80ff96eb2919e8dac68e962db2e7111401b434e888493`,
+  umgesetzt mit `rootcerts-erzeugen.ps1` am 29.08.2026
