@@ -3216,3 +3216,666 @@ void SECMiniDockFrameWnd::OnParentNotify(UINT message, LPARAM lParam)
 {
 	CMiniDockFrameWnd::OnParentNotify(message, lParam);
 }
+
+
+/////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////
+//
+// STUFE 2b - DER REST DER ANDOCKFAMILIE
+//
+// PLAN.md nennt unter "Stufe 2 - Andockfamilie" nur SECControlBar, SECDockBar
+// und SECMiniDockFrameWnd. Beim Messen der offenen Linkersymbole zeigte sich,
+// dass fuenf weitere Klassen derselben Familie fehlen; ohne sie linkt
+// Eudora.exe nicht:
+//
+//     swinfrm.h    SECFrameWnd            QCCustomizeToolBar.cpp:267-268
+//     sdocksta.h   SECDockState           mainfrm.cpp:832, 934
+//                  SECControlBarInfo      WazooBarMgr.cpp:432
+//                  SECControlBarInfoEx    Oberflaeche von SECControlBarInfo
+//     sbarmgr.h    SECControlBarManager   QCToolbarCmdPage.cpp:86,
+//                                         QCToolBarManager.cpp:1378
+//     sdockcnt.h   SECDockContext         QCChildToolBar.cpp:43
+//
+// ANDERES VORGEHEN ALS OBEN: diese fuenf Klassen bekommen KEINEN Ersatzheader.
+// Ihre Originalheader uebersetzen unter MFC 14 fehlerfrei (nachgemessen: eine
+// Probe, die secall.h einbindet, laeuft durch) - es fehlt allein die
+// Umsetzung, die in der CHM-Freigabe nicht enthalten ist. Deshalb stehen hier
+// nur die Rumpfdefinitionen zu den vorhandenen Deklarationen. Das hat zwei
+// Vorteile: keine zweite Stelle, an der eine Deklaration gepflegt werden muss,
+// und keine Absprache mit der Werkzeugleistenschicht noetig, deren
+// SECToolBarManager von SECControlBarManager erbt.
+//
+// JEDE VIRTUELLE METHODE MUSS DEFINIERT SEIN, auch die von Eudora nie
+// gerufenen: der Uebersetzer legt die Methodentabelle in der Uebersetzungs-
+// einheit ab, die die erste nicht-inline virtuelle Methode definiert, und
+// diese Tabelle verweist auf alle uebrigen.
+
+#ifndef __SBARMGR_H__
+#include "sbarmgr.h"		// SECControlBarManager (sbarmgr.h:41)
+#endif
+
+#ifndef __SDOCKCNT_H__
+#include "sdockcnt.h"		// SECDockContext (sdockcnt.h:46)
+#endif
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECFrameWnd  (Original: swinfrm.h:47)
+//
+// Das Gegenstueck zu SECMDIFrameWnd fuer Rahmen ohne MDI. Eudoras Hauptfenster
+// ist ein SECMDIFrameWnd, die Klasse wird also nie erzeugt - gebraucht wird
+// sie an genau einer Stelle, und zwar als Fallunterscheidung:
+//
+//     QCCustomizeToolBar.cpp:265  if (pFrameWnd->IsKindOf(RUNTIME_CLASS(SECMDIFrameWnd)))
+//                          :267  else if (pFrameWnd->IsKindOf(RUNTIME_CLASS(SECFrameWnd)))
+//                          :268      ((SECFrameWnd*)pFrameWnd)->FloatControlBar(pToolBar, pt);
+//
+// Der zweite Zweig wird nie genommen. Trotzdem muessen RUNTIME_CLASS und
+// FloatControlBar vorhanden sein, sonst linkt QCCustomizeToolBar.obj nicht.
+//
+// Die Rumpfe entsprechen Methode fuer Methode denen von SECMDIFrameWnd weiter
+// oben; dort steht auch die jeweilige Begruendung. Hier ist nur die Basis
+// CFrameWnd statt CMDIFrameWnd.
+
+IMPLEMENT_DYNCREATE(SECFrameWnd, CFrameWnd)
+
+// Wortgleich zu SECMDIFrameWnd::dwSECDockBarMap und zu CFrameWnd::dwDockBarMap
+// (winfrm2.cpp:18-24). Muss uebereinstimmen, sonst entstuenden doppelte
+// Andockleisten.
+const DWORD SECFrameWnd::dwSECDockBarMap[4][2] =
+{
+	{ AFX_IDW_DOCKBAR_TOP,      CBRS_TOP    },
+	{ AFX_IDW_DOCKBAR_BOTTOM,   CBRS_BOTTOM },
+	{ AFX_IDW_DOCKBAR_LEFT,     CBRS_LEFT   },
+	{ AFX_IDW_DOCKBAR_RIGHT,    CBRS_RIGHT  },
+};
+
+// Leer aus demselben Grund wie bei SECMDIFrameWnd: das Original haengt hier
+// seine Farbverlauf-Titelzeile ein, die der Shim nicht nachbaut. Jede
+// Nachricht faellt an CFrameWnd durch.
+BEGIN_MESSAGE_MAP(SECFrameWnd, CFrameWnd)
+END_MESSAGE_MAP()
+
+
+SECFrameWnd::SECFrameWnd()
+{
+	m_prevLayout.SetRectEmpty();
+
+	m_uiTextAlign = acLeft;
+	m_bNullGetText = FALSE;
+	m_bHandleCaption = FALSE;	// keine selbstgemalte Titelzeile
+	m_bActive = FALSE;
+
+	m_pControlBarManager = NULL;
+
+	m_bIsWin95orAbove = FALSE;
+	GetWindowsVersion();
+}
+
+SECFrameWnd::~SECFrameWnd()
+{
+	// m_pControlBarManager gehoert dem Anwender der Klasse.
+}
+
+#ifdef _DEBUG
+void SECFrameWnd::AssertValid() const
+	{ CFrameWnd::AssertValid(); }
+void SECFrameWnd::Dump(CDumpContext& dc) const
+	{ CFrameWnd::Dump(dc); }
+#endif
+
+void SECFrameWnd::GetWindowsVersion()
+{
+	m_bIsWin95orAbove = TRUE;
+}
+
+void SECFrameWnd::EnableDocking(DWORD dwDockStyle)
+{
+	CFrameWnd::EnableDocking(dwDockStyle);
+}
+
+void SECFrameWnd::FloatControlBar(CControlBar* pBar, CPoint point, DWORD dwStyle)
+{
+	CFrameWnd::FloatControlBar(pBar, point, dwStyle);
+}
+
+// Wie SECMDIFrameWnd::DockControlBarEx - dort steht die Begruendung zu
+// nCol/nRow/fPctWidth/nHeight.
+void SECFrameWnd::DockControlBarEx(CControlBar* pBar, UINT nDockBarID,
+	int /*nCol*/, int /*nRow*/, float fPctWidth, int nHeight)
+{
+	SECControlBar* pSECBar = DYNAMIC_DOWNCAST(SECControlBar, pBar);
+	if (pSECBar != NULL)
+	{
+		pSECBar->m_fPctWidth = fPctWidth;
+		pSECBar->m_fDockedPctWidth = fPctWidth;
+
+		if (nHeight > 0)
+		{
+			pSECBar->m_szDockHorz.cy = nHeight;
+			pSECBar->m_szDockVert.cx = nHeight;
+		}
+	}
+
+	CFrameWnd::DockControlBar(pBar, nDockBarID, NULL);
+}
+
+void SECFrameWnd::DockControlBar(CControlBar* pBar, UINT nDockBarID, LPCRECT lpRect)
+{
+	CFrameWnd::DockControlBar(pBar, nDockBarID, lpRect);
+}
+
+void SECFrameWnd::DockControlBar(CControlBar* pBar, CDockBar* pDockBar, LPCRECT lpRect)
+{
+	CFrameWnd::DockControlBar(pBar, pDockBar, lpRect);
+}
+
+void SECFrameWnd::ReDockControlBar(CControlBar* pBar, CDockBar* pDockBar, LPCRECT lpRect)
+{
+	CFrameWnd::ReDockControlBar(pBar, pDockBar, lpRect);
+}
+
+void SECFrameWnd::ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay)
+{
+	CFrameWnd::ShowControlBar(pBar, bShow, bDelay);
+}
+
+void SECFrameWnd::LoadBarState(LPCTSTR lpszProfileName)
+{
+	CFrameWnd::LoadBarState(lpszProfileName);
+}
+
+void SECFrameWnd::SaveBarState(LPCTSTR lpszProfileName) const
+{
+	CFrameWnd::SaveBarState(lpszProfileName);
+}
+
+// SECDockState erbt von CDockState (sdocksta.h:39), der Zustand laesst sich
+// also weiterreichen. Was dabei verlorengeht, sind die SEC-Zusatzangaben je
+// Leiste - siehe die Anmerkung bei SECControlBarInfo weiter unten.
+void SECFrameWnd::SetDockState(SECDockState& state)
+{
+	CFrameWnd::SetDockState(state);
+}
+
+void SECFrameWnd::GetDockState(SECDockState& state) const
+{
+	CFrameWnd::GetDockState(state);
+}
+
+SECControlBarManager* SECFrameWnd::GetControlBarManager() const
+{
+	return m_pControlBarManager;
+}
+
+void SECFrameWnd::SetControlBarManager(SECControlBarManager* pManager)
+{
+	m_pControlBarManager = pManager;
+}
+
+BOOL SECFrameWnd::EnableCustomCaption(BOOL bEnable, BOOL /*bRedraw*/)
+{
+	BOOL bWar = m_bHandleCaption;
+	m_bHandleCaption = bEnable;
+	return bWar;
+}
+
+void SECFrameWnd::ForceCaptionRedraw(BOOL /*bImmediate*/)
+{
+}
+
+void SECFrameWnd::SetCaptionTextAlign(AlignCaption ac, BOOL /*bRedraw*/)
+{
+	m_uiTextAlign = (UINT)ac;
+}
+
+void SECFrameWnd::OnSetPreviewMode(BOOL bPreview, CPrintPreviewState* pState)
+{
+	CFrameWnd::OnSetPreviewMode(bPreview, pState);
+}
+
+void SECFrameWnd::OnSysColorChange()
+{
+	CFrameWnd::OnSysColorChange();
+}
+
+void SECFrameWnd::RecalcLayout(BOOL bNotify)
+{
+	CFrameWnd::RecalcLayout(bNotify);
+}
+
+// ACHTUNG, kein Ueberschreiben: CFrameWnd deklariert OnUpdateFrameMenu mit
+// einem Argument (afxwin.h:4283), die dreistellige Fassung gibt es erst in
+// CMDIChildWnd (afxwin.h:4488). Diese hier ist also eine eigene virtuelle
+// Funktion, die das Original zusaetzlich eingefuehrt hat.
+void SECFrameWnd::OnUpdateFrameMenu(BOOL /*bActive*/, CWnd* /*pActivateWnd*/,
+	HMENU hMenuAlt)
+{
+	CFrameWnd::OnUpdateFrameMenu(hMenuAlt);
+}
+
+void SECFrameWnd::OnNcPaint()
+{
+	CFrameWnd::OnNcPaint();
+}
+
+// Einziger Rumpf mit Inhalt: m_bActive wird von GetActiveState() nach aussen
+// gereicht (swinfrm.h:56), muss also stimmen.
+void SECFrameWnd::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
+{
+	m_bActive = (nState != WA_INACTIVE);
+	CFrameWnd::OnActivate(nState, pWndOther, bMinimized);
+}
+
+void SECFrameWnd::OnNcLButtonDown(UINT nHitTest, CPoint point)
+{
+	CFrameWnd::OnNcLButtonDown(nHitTest, point);
+}
+
+void SECFrameWnd::OnNcMButtonDown(UINT nHitTest, CPoint point)
+{
+	CFrameWnd::OnNcMButtonDown(nHitTest, point);
+}
+
+void SECFrameWnd::OnNcRButtonDown(UINT nHitTest, CPoint point)
+{
+	CFrameWnd::OnNcRButtonDown(nHitTest, point);
+}
+
+BOOL SECFrameWnd::OnNcActivate(BOOL bActive)
+{
+	return CFrameWnd::OnNcActivate(bActive);
+}
+
+// Farbverlauf-Titelzeile, steht in keiner Nachrichtentabelle.
+LRESULT SECFrameWnd::OnGetText(WPARAM /*wParam*/, LPARAM /*lParam*/)
+{
+	return 0;
+}
+
+LRESULT SECFrameWnd::OnSetText(WPARAM /*wParam*/, LPARAM /*lParam*/)
+{
+	return 0;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBarInfoEx  (Original: sdocksta.h:68)
+//
+// Ablage fuer Zusatzangaben, die eine abgeleitete Leiste ueber die von
+// SECControlBarInfo hinaus sichern will. Eudora leitet SECCustomToolBarInfoEx
+// davon ab (Werkzeugleistenschicht) und legt sie in
+// SECControlBarInfo::m_pBarInfoEx ab (QCToolBarManager.cpp:1357).
+//
+// STUFE 2 OFFEN: das Sichern selbst. Siehe die Anmerkung bei
+// SECControlBarInfo::SaveState.
+
+IMPLEMENT_DYNCREATE(SECControlBarInfoEx, CObject)
+
+SECControlBarInfoEx::SECControlBarInfoEx()
+{
+}
+
+void SECControlBarInfoEx::Serialize(CArchive& /*ar*/, SECDockState* /*pDockState*/)
+{
+}
+
+BOOL SECControlBarInfoEx::LoadState(LPCTSTR /*lpszSection*/, SECDockState* /*pDockState*/)
+{
+	return FALSE;
+}
+
+BOOL SECControlBarInfoEx::SaveState(LPCTSTR /*lpszSection*/)
+{
+	return FALSE;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBarInfo  (Original: sdocksta.h:86)
+//
+// Der aufgezeichnete Zustand einer einzelnen Leiste. Erbt von
+// CControlBarInfo (afxpriv.h:557) und legt die SEC-Zusatzfelder daneben.
+// WazooBarMgr.cpp:432 legt ein Objekt auf dem Stapel an und benutzt es als
+// Zwischenspeicher fuer SECControlBar::Get/SetBarInfo - das ist der einzige
+// Weg, auf dem Eudora die Klasse anfasst, und er funktioniert vollstaendig.
+//
+// STUFE 2 OFFEN: das Sichern in die INI. Der Grund liegt in MFC, nicht hier -
+// CDockState::SaveState ruft pInfo->SaveState(...) ueber einen
+// CControlBarInfo* und NICHT virtuell auf (dockstat.cpp), und CDockState::
+// LoadState legt CControlBarInfo-Objekte an, keine SECControlBarInfo. Die
+// SEC-Zusatzfelder kaemen also gar nicht erst in die Hand dieser Klasse.
+// FOLGE: ueber SetDockState wird der MFC-Anteil des Leistenzustands
+// wiederhergestellt (Sichtbarkeit, Andockleiste, Lage), nicht aber
+// m_szDockHorz/-Vert, m_fPctWidth und die erweiterten Stile.
+
+SECControlBarInfo::SECControlBarInfo()
+{
+	m_szDockHorz = CSize(0, 0);
+	m_ptDockHorz = CPoint(0, 0);
+	m_szDockVert = CSize(0, 0);
+	m_szFloat    = CSize(0, 0);
+
+	m_dwMRUDockingState = 0;
+	m_dwDockStyle       = 0;
+	m_fPctWidth         = (float)1.0;
+	m_dwStyle           = 0;
+	m_dwExStyle         = 0;
+
+	m_bPreviouslyFloating = FALSE;
+	m_bMDIChild           = FALSE;
+
+	m_pBarInfoEx          = NULL;
+	m_dwBarTypeID         = 0;
+	m_pControlBarManager  = NULL;
+}
+
+
+SECControlBarInfo::SECControlBarInfo(SECControlBarManager* pControlBarManager)
+{
+	m_szDockHorz = CSize(0, 0);
+	m_ptDockHorz = CPoint(0, 0);
+	m_szDockVert = CSize(0, 0);
+	m_szFloat    = CSize(0, 0);
+
+	m_dwMRUDockingState = 0;
+	m_dwDockStyle       = 0;
+	m_fPctWidth         = (float)1.0;
+	m_dwStyle           = 0;
+	m_dwExStyle         = 0;
+
+	m_bPreviouslyFloating = FALSE;
+	m_bMDIChild           = FALSE;
+
+	m_pBarInfoEx          = NULL;
+	m_dwBarTypeID         = 0;
+	m_pControlBarManager  = pControlBarManager;
+}
+
+
+SECControlBarInfo::~SECControlBarInfo()
+{
+	// m_pBarInfoEx gehoert diesem Objekt: QCToolBarManager legt es an und
+	// haengt es ein (QCToolBarManager.cpp:1357 liest es, die Zusatzschicht
+	// erzeugt es ueber CreateControlBarInfoEx).
+	delete m_pBarInfoEx;
+	m_pBarInfoEx = NULL;
+}
+
+
+void SECControlBarInfo::Serialize(CArchive& ar, SECDockState* pDockState)
+{
+	// Der MFC-Anteil. CControlBarInfo::Serialize nimmt einen CDockState*
+	// entgegen (afxpriv.h:581); SECDockState erbt davon.
+	CControlBarInfo::Serialize(ar, pDockState);
+
+	// Der SEC-Anteil wird bewusst NICHT mitgeschrieben: das Format muesste
+	// dann zum Original passen, und das ist ohne dessen Umsetzung nicht
+	// feststellbar. Eine eigene Erweiterung wuerde eine Datei erzeugen, die
+	// ein spaeterer echter Nachbau nicht mehr lesen kann.
+}
+
+
+BOOL SECControlBarInfo::LoadState(LPCTSTR lpszProfileName, int nIndex,
+	SECDockState* pDockState)
+{
+	return CControlBarInfo::LoadState(lpszProfileName, nIndex, pDockState);
+}
+
+
+BOOL SECControlBarInfo::SaveState(LPCTSTR lpszProfileName, int nIndex)
+{
+	return CControlBarInfo::SaveState(lpszProfileName, nIndex);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockState  (Original: sdocksta.h:39)
+//
+// Die Sammlung aller Leistenzustaende. Eudora benutzt sie an zwei Stellen:
+//     mainfrm.cpp:832  SECDockState state(m_pControlBarManager);
+//     mainfrm.cpp:833  state.LoadState(...)
+//     mainfrm.cpp:934  SetDockState(state)
+//
+// Erbt von CDockState (afxadv.h:164), das Laden und Setzen laeuft also
+// wirklich. Was fehlt, sind die SEC-Zusatzangaben je Leiste - siehe
+// SECControlBarInfo.
+
+IMPLEMENT_SERIAL(SECDockState, CDockState, 1)
+
+SECDockState::SECDockState()
+{
+	m_pControlBarManager = NULL;
+}
+
+SECDockState::SECDockState(SECControlBarManager* pControlBarManager)
+{
+	m_pControlBarManager = pControlBarManager;
+}
+
+SECDockState::~SECDockState()
+{
+	// CDockState::~CDockState raeumt m_arrBarInfo ab.
+}
+
+void SECDockState::Serialize(CArchive& ar)
+{
+	CDockState::Serialize(ar);
+}
+
+void SECDockState::SaveState(LPCTSTR lpszProfileName)
+{
+	CDockState::SaveState(lpszProfileName);
+}
+
+void SECDockState::LoadState(LPCTSTR lpszProfileName)
+{
+	CDockState::LoadState(lpszProfileName);
+}
+
+// Verdeckt CDockState::Clear (afxadv.h:177), das dasselbe tut.
+void SECDockState::Clear()
+{
+	CDockState::Clear();
+}
+
+// UNGEPRUEFT: was das Original hier genau aufraeumt. Der Name und die Lage
+// legen nahe: Eintraege zu Leisten wegwerfen, die es nicht mehr gibt. Von
+// Eudora nicht aufgerufen - mainfrm.cpp benutzt nur den Konstruktor,
+// LoadState und SetDockState. CDockState kommt mit unbekannten Kennungen
+// selbst zurecht (es sucht die Leiste ueber GetDlgItem und laesst den Eintrag
+// aus, wenn nichts gefunden wird), deshalb ist hier nichts zu tun.
+void SECDockState::CleanUpControlBarState()
+{
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECControlBarManager  (Original: sbarmgr.h:41)
+//
+// Der Leistenverwalter. Eudora leitet QCToolBarManager davon ab (ueber
+// SECToolBarManager, Werkzeugleistenschicht) und hat den Sicherungsteil
+// laengst selbst uebernommen: QCLoadState und QCSaveState ersetzen LoadState
+// und SaveState (PLAN.md, Stufe 3).
+//
+// Wirklich gebraucht sind nur zwei Dinge:
+//     GetFrameWnd            QCToolbarCmdPage.cpp:86
+//     DynCreateControlBar    QCToolBarManager.cpp:1378 - als Standardzweig
+//                            eines switch, der alle Eudora-eigenen Typen
+//                            schon vorher abgefangen hat. NULL ist dort die
+//                            richtige Antwort: "diesen Leistentyp kenne ich
+//                            nicht".
+
+IMPLEMENT_DYNAMIC(SECControlBarManager, CCmdTarget)
+
+BEGIN_MESSAGE_MAP(SECControlBarManager, CCmdTarget)
+END_MESSAGE_MAP()
+
+
+SECControlBarManager::SECControlBarManager()
+{
+	m_pFrameWnd = NULL;
+}
+
+SECControlBarManager::SECControlBarManager(CFrameWnd* pFrameWnd)
+{
+	m_pFrameWnd = pFrameWnd;
+}
+
+SECControlBarManager::~SECControlBarManager()
+{
+	// Der Rahmen gehoert dem Verwalter nicht.
+}
+
+CFrameWnd* SECControlBarManager::GetFrameWnd() const
+{
+	return m_pFrameWnd;
+}
+
+
+// STUFE 2 OFFEN. Eudora ruft die beiden nie auf (PLAN.md: alle Treffer im
+// Inventar stammen aus Kommentaren); QCToolBarManager hat mit QCLoadState und
+// QCSaveState eigene Fassungen. Sie bleiben als Rumpf stehen, weil sie
+// virtuell sind und deshalb in der Methodentabelle auftauchen.
+void SECControlBarManager::LoadState(LPCTSTR /*lpszProfileName*/)
+{
+	TRACE0("OTShim: SECControlBarManager::LoadState - Stufe 2 offen\n");
+}
+
+void SECControlBarManager::SaveState(LPCTSTR /*lpszProfileName*/) const
+{
+	TRACE0("OTShim: SECControlBarManager::SaveState - Stufe 2 offen\n");
+}
+
+
+// Im Original die Stelle, an der ein Verwalter sagt, unter welcher Kennung er
+// einen Leistentyp aufzeichnet. QCToolBarManager ueberschreibt das mit seinen
+// eigenen CBT_-Werten; 0 heisst "kein besonderer Typ".
+DWORD SECControlBarManager::GetBarTypeID(CControlBar* /*pBar*/) const
+{
+	return 0;
+}
+
+// NULL heisst: dieser Leistentyp braucht keine Zusatzangaben.
+SECControlBarInfoEx* SECControlBarManager::CreateControlBarInfoEx(
+	SECControlBarInfo* /*pBarInfo*/) const
+{
+	return NULL;
+}
+
+// Standardzweig von QCToolBarManager::DynCreateControlBar
+// (QCToolBarManager.cpp:1378): alle Eudora-eigenen Typen sind vorher
+// abgefangen, hier bleibt nur "unbekannt".
+CControlBar* SECControlBarManager::DynCreateControlBar(SECControlBarInfo* /*pBarInfo*/)
+{
+	return NULL;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// SECDockContext  (Original: sdockcnt.h:46)
+//
+// Der Ziehvorgang einer Leiste. MFC hat mit CDockContext (afxpriv.h:489) das
+// vollstaendige Gegenstueck; das Original erweitert es um das Umschalten in
+// ein MDI-Kindfenster.
+//
+// EUDORA BENUTZT DIE KLASSE AN GENAU EINER STELLE: QCChildToolBar.cpp:43
+// leitet CDontFloatDockContext davon ab und macht StartDrag leer, damit sich
+// die Werkzeugleiste eines Kindfensters nicht abziehen laesst. Gebraucht
+// werden davon der Konstruktor, der Destruktor und die drei virtuellen
+// Methoden aus der Methodentabelle.
+//
+// ACHTUNG: die Klasse legt niemand an. CControlBar erzeugt seinen Kontext
+// selbst als CDockContext (winfrm2.cpp), und QCChildToolBar ersetzt ihn durch
+// sein CDontFloatDockContext. Der Shim hat also keinen Anlass, hier mehr zu
+// tun als durchzureichen.
+
+SECDockContext::SECDockContext(CControlBar* pBar) :
+	CDockContext(pBar)
+{
+	m_rectFocus.SetRectEmpty();
+	m_ptStartDrag = CPoint(0, 0);
+	m_ptPrev      = CPoint(0, 0);
+	m_nPosDockingRow = -1;
+	m_bPreviouslyFloating = FALSE;
+}
+
+
+SECDockContext::~SECDockContext()
+{
+}
+
+
+// Doppelklick auf die Titelzeile: zwischen angedockt und schwebend umschalten.
+void SECDockContext::ToggleDocking()
+{
+	CDockContext::ToggleDocking();
+}
+
+
+// STUFE 2 OFFEN: zwischen schwebend und "eigenes MDI-Kindfenster" umschalten.
+// Die Begruendung steht bei SECMDIFrameWnd::FloatControlBarInMDIChild. Der
+// Weg dorthin ist derselbe, deshalb auch hier keine Meldung.
+void SECDockContext::ToggleMDIFloat()
+{
+	TRACE0("OTShim: SECDockContext::ToggleMDIFloat - Stufe 2 offen\n");
+}
+
+
+void SECDockContext::StartDrag(CPoint pt)
+{
+	m_ptStartDrag = pt;
+	m_ptPrev      = pt;
+	CDockContext::StartDrag(pt);
+}
+
+void SECDockContext::Move(CPoint pt)
+{
+	m_ptPrev = pt;
+	CDockContext::Move(pt);
+}
+
+void SECDockContext::EndDrag()
+{
+	CDockContext::EndDrag();
+}
+
+void SECDockContext::StartResize(int nHitTest, CPoint pt)
+{
+	m_ptStartDrag = pt;
+	m_ptPrev      = pt;
+	CDockContext::StartResize(nHitTest, pt);
+}
+
+void SECDockContext::Stretch(CPoint pt)
+{
+	m_ptPrev = pt;
+	CDockContext::Stretch(pt);
+}
+
+void SECDockContext::EndResize()
+{
+	CDockContext::EndResize();
+}
+
+void SECDockContext::CancelLoop()
+{
+	CDockContext::CancelLoop();
+}
+
+BOOL SECDockContext::Track()
+{
+	return CDockContext::Track();
+}
+
+// Der gestrichelte Rahmen waehrend des Ziehens. m_rectFocus des Originals
+// bleibt ungepflegt - CDockContext fuehrt mit m_rectLast sein eigenes.
+void SECDockContext::DrawFocusRect(BOOL bRemoveRect)
+{
+	CDockContext::DrawFocusRect(bRemoveRect);
+}
+
+DWORD SECDockContext::CanDock()
+{
+	return CDockContext::CanDock();
+}
