@@ -588,7 +588,7 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 	SSL_CTX	*pCtx = SSL_CTX_new(sslmethod);
 	if (pCtx)
 	{
-		SSL_CTX_set_min_proto_version(pCtx, iMinVersion);
+		if (!SSL_CTX_set_min_proto_version(pCtx, iMinVersion)) { ASSERT(0); SSL_CTX_free(pCtx); pCtx = NULL; }	//	N3: Fehlschlag nicht verschlucken - sonst gilt still die Voreinstellung von OpenSSL statt der eingestellten Untergrenze. BeginQCSSLSession() bricht bei NULL ab, wie im Fall der ungueltigen Version.
 	}
 	return pCtx;
 }
@@ -767,7 +767,7 @@ bool BeginQCSSLSession(QCSSLReference *pSSLReference)
 	}
 
 	// Set up the cipher suites.
-	SetCipherSuites(pSSLCtx);
+	if (!SetCipherSuites(pSSLCtx)) { ASSERT(0); SSL_CTX_free(pSSLCtx); g_Mutex.Unlock(); return false; }	//	N3: Rueckgabewert wird ausgewertet statt verworfen. Fehlschlagen kann der Aufruf nur bei pSSLCtx == NULL, und das ist oben bereits abgefangen.
 
 	// Set up the certificates.
 	SetupCertificates(pSSLCtx, pSSLReference);

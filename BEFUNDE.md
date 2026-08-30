@@ -138,8 +138,10 @@ Zwei Abweichungen auf einmal:
    das die Voreinstellung Security Level 1 von OpenSSL 3 wieder ab, die TLS < 1.2
    ohnehin ablehnt - verlassen sollte man sich darauf nicht.
 
-**ERLEDIGT** (Branch `eudora-exe-linkt`, Commit "QCSSL: TLS-Untergrenze fuer Fall 3
-auf TLS 1.2 gelegt").
+**ERLEDIGT** - Code in `78a9c10`. Die Aenderung war zum Commit vorgemerkt, als ein
+parallel arbeitender Agent committete; sein `git commit` hat sie mitgenommen. Die
+Commit-Nachricht von `78a9c10` beschreibt sie deshalb nicht. Inhalt und Wirkung
+sind davon unberuehrt.
 
 Entschieden wurde die erste Fassung: Fall 3 bekommt denselben Boden wie alle
 anderen Faelle. Gruende, nachgemessen statt vermutet:
@@ -347,7 +349,7 @@ nicht noetig.
 
 ---
 
-## N3 - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
+## N3 [ERLEDIGT] - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
 
 **Sicherheit: nachgewiesen; geringe Auswirkung**
 
@@ -360,8 +362,18 @@ nicht noetig.
   haben. Der Rueckgabewert wurde allerdings auch vorher schon von
   `BeginQCSSLSession()` verworfen, insofern keine Aenderung im Ablauf.
 
-**Zu tun:** Beim ersten Punkt den Rueckgabewert pruefen und im Fehlerfall wie
-in H1 abbrechen.
+**ERLEDIGT** (Commit siehe unten). Beide Rueckgabewerte werden jetzt ausgewertet:
+
+- `SSL_CTX_set_min_proto_version()` (jetzt Z. 591): schlaegt der Aufruf fehl, wird
+  der Kontext freigegeben und `NULL` zurueckgegeben. `BeginQCSSLSession()` bricht
+  bei `NULL` ab - derselbe Weg, den H1 fuer die ungueltige Version wiederhergestellt
+  hat. Damit kann die eingestellte Untergrenze nicht mehr stillschweigend durch die
+  Voreinstellung von OpenSSL ersetzt werden.
+- `SetCipherSuites()` (Aufruf in `BeginQCSSLSession()`, jetzt Z. 770): Rueckgabewert
+  wird geprueft und fuehrt im Fehlerfall zum Abbruch samt `SSL_CTX_free()` und
+  `g_Mutex.Unlock()`, wie in den benachbarten Fehlerzweigen. Ausloesen kann das nur
+  `pSSLCtx == NULL`, und das ist zwei Zeilen darueber schon abgefangen - die
+  Auswertung ist also eine Schranke gegen kuenftige Aenderungen, kein neuer Pfad.
 
 ---
 
