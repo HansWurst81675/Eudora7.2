@@ -11,8 +11,8 @@
 
 VALUE "InternalName",     "QCSSL\0"
 VALUE "OriginalFilename", "QCSSL.DLL\0"
-VALUE "FileDescription",  "Secure Socket Library - QCSSL 1.0.0 (Eudora 7.2)\0"
-VALUE "Comments",         "QCSSL 1.0.0, gebaut gegen OpenSSL 3.5.8 LTS. Projekt Eudora 7.2, github.com/HansWurst81675/Eudora7.2\0"
+VALUE "FileDescription",  "Secure Socket Library - QCSSL 1.0.1 (Eudora 7.2)\0"
+VALUE "Comments",         "QCSSL 1.0.1, gebaut gegen OpenSSL 3.5.8 LTS. Mindestprotokoll TLS 1.2 fuer alle Einstellungen. Projekt Eudora 7.2, github.com/HansWurst81675/Eudora7.2\0"
 
 #include "..\..\VersionEnd.inc"
 
