@@ -1,0 +1,148 @@
+Eudora 7.2 — Paket 1.0.2
+========================
+
+Eudora 7.1 aus dem Quellcode der Computer-History-Museum-Freigabe, neu
+uebersetzt mit Visual Studio 2022.
+
+
+WAS SICH GEGENUEBER 1.0.1 GEAENDERT HAT
+---------------------------------------
+
+Paket 1.0.1 startete nicht. Drei Gruende, alle behoben:
+
+1. Es enthielt die DEBUG-Fassungen von sieben vorgebauten DLLs aus dem Jahr
+   2006. Die brauchen die Debug-Laufzeit von Visual Studio 2003
+   (MSVCR71D.dll), und die ist nicht verteilbar - es gibt sie nur auf einem
+   Rechner mit installiertem VS2003. Jetzt liegen die Release-Fassungen bei.
+
+2. Eudora bricht ohne vorhandene Eudora.ini beim Start ab (VERIFY in
+   eudora.cpp:3542). Eine passende Datei liegt jetzt im Unterverzeichnis
+   "Mailverzeichnis".
+
+3. Der eigentliche Grund fuer den Stillstand nach dem Startbildschirm war die
+   WERBEFLAECHE. CAdWazooWnd::OnCreate legt sie mit einer Groesse von 0 x 0
+   Bildpunkten an; die Textmaschine Paige bekommt damit eine Umbruchbreite von
+   null und dreht sich in einer Endlosrekursion fest, bis der Stapel voll ist.
+   Gemessen: 1689 Stapelrahmen, davon 1613 im Zyklus.
+
+   Die Werbeleiste wurde bedingungslos angelegt, ohne jede Abfrage der
+   Betriebsart. Sie haengt jetzt an QCSharewareManager::IsBoxBuild(), und der
+   Uebersetzungsschalter BUILD_BOX_OR_SITE_R_VERSION ist gesetzt. Das ist die
+   Fassung, die QUALCOMM an Firmenkunden ausgeliefert hat:
+
+       keine Werbung, keine Registrierung, kein Einfuehrungsdialog.
+
+
+STARTEN
+-------
+
+    Eudora.exe "<Pfad zum Mailverzeichnis>"
+
+Das mitgelieferte Verzeichnis "Mailverzeichnis" enthaelt eine vorbereitete
+Eudora.ini und ist sonst leer. Zum Ausprobieren genau dieses angeben.
+
+NICHT ueber eine bestehende Eudora-Installation kopieren und nicht auf ein
+Mailverzeichnis loslassen, an dem etwas haengt.
+
+
+WAS BEIM ERSTEN START PASSIERT
+------------------------------
+
+Es erscheinen drei bis vier Dialoge mit der Ueberschrift "SUPERASSERT
+Assertion Failure". Auf "Ignore Once" klicken. Das sind Debug-Zusicherungen,
+keine Fehler - eine davon meldet nur, dass der Suchindex noch nicht existiert
+und neu angelegt wird (SearchManagerInfo.cpp:496).
+
+Sie erscheinen, weil dies ein DEBUG-Bau ist. Ein Release-Bau haette sie nicht,
+scheitert aber noch an einer fehlenden Imap.lib im Release-Zweig.
+
+Danach steht das Hauptfenster: Menueleiste, Werkzeugleiste, Postfachbereich,
+Statuszeile.
+
+
+VORAUSSETZUNGEN
+---------------
+
+Debug-Laufzeiten von Visual Studio 2022 (mfc140d.dll, ucrtbased.dll,
+vcruntime140d.dll, msvcp140d.dll). Die liegen auf einem Rechner MIT
+installiertem Visual Studio in C:\Windows\SysWOW64. Ohne Visual Studio startet
+dieses Paket nicht.
+
+Die Laufzeiten von Visual C++ 2003 (msvcr71.dll, msvcr71d.dll, msvcp71d.dll)
+liegen bei, weil die vorgebauten Fremd-DLLs von 2006 sie brauchen und
+Microsoft dafuer nie ein eigenstaendiges Redistributable veroeffentlicht hat.
+
+HERKUNFT DIESER DREI DATEIEN: sie stammen von dll-files.com, nicht von
+Microsoft. Sie sind nicht von Microsoft signiert und ihre Echtheit ist nicht
+geprueft. Wer das nicht moechte, loescht sie - dann startet das Paket nicht.
+Eine saubere Alternative waere machbar: Windows liefert selbst eine msvcrt.dll
+derselben Generation mit, die 19 der 20 von Paige benoetigten Funktionen
+exportiert; eine eigene Weiterleitungs-DLL kaeme ohne Fremdbinaerdatei aus.
+
+
+WAS NICHT GEHT
+--------------
+
+MFC71.DLL und MSVCP71.dll fehlen. Betroffen sind vier DLLs, die Eudora erst
+bei Benutzung laedt:
+
+    EudoraBk.dll   braucht MFC71             ->  Adressbuch
+    ISock.dll      braucht MFC71             ->  ein Socket-Pfad
+    Ldap.dll       braucht MFC71, MSVCP71    ->  LDAP-Verzeichnissuche
+    Ph.dll         braucht MSVCP71           ->  Ph-Verzeichnisdienst
+
+Mailabruf und -versand sind davon NICHT betroffen. Ohne diese beiden Dateien
+faellt vor allem das Adressbuch aus.
+
+Die Oberflaechenbibliothek Stingray Objective Toolkit war nicht Teil der
+Freigabe und ist durch eine eigene Ersatzschicht auf modernes MFC ersetzt
+(rund 18.000 Zeilen). Sie bildet die benutzten Klassen nach, aber nicht jede
+Funktion darin. Was fehlt, meldet sich beim Aufruf einmal je Sitzung mit einem
+Hinweis. Bekannt:
+
+    - Werkzeugleisten lassen sich nicht anpassen
+    - Leisten koennen nicht als eigenes Fenster losgeloest werden
+    - die Fensterleiste am unteren Rand ("Auto-Wazoo", "MDI Task Bar") fehlt;
+      die Fenster bleiben ueber das Menue "Window" erreichbar
+    - Registerkarten sehen schlichter aus als im Original
+    - die Rechtschreibpruefung ist stillgelegt (spell.cpp fehlt in der Freigabe)
+
+
+TLS UND ZEICHENSAETZE
+---------------------
+
+QCSSL.dll traegt die Kennung QCSSL 1.0.1 - unveraendert gegenueber Paket
+1.0.1, die Quellen haben sich nicht geaendert. Statt OpenSSL 0.9.7l von 2006
+(hoechstens TLS 1.0) jetzt OpenSSL 3.5.8 LTS, Mindestprotokoll TLS 1.2 fuer
+alle Einstellungen, TLS 1.3 gemessen bestaetigt. Aktueller
+Wurzelzertifikatsspeicher (rootcerts.p7b, 121 Zertifikate) - der
+mitgelieferte war von 2004 und scheitert an Gmail, Office 365, Yahoo, web.de.
+
+UNGEPRUEFT: der Abruf gegen einen echten Mailserver wurde mit dieser Fassung
+noch nicht durchgefuehrt. Der letzte erfolgreiche Abruf (pop.gmx.net, TLS 1.3,
+TLS_AES_256_GCM_SHA384) fand mit einer aelteren QCSSL statt. Einzelheiten in
+Releases/1.0/AUSLIEFERUNGEN.md.
+
+Zeichensatzdarstellung: UTF-8 laeuft ueber den Windows-Codepage-Wandler statt
+ueber eine Tabelle mit 123 Eintraegen. Umlaute, Anfuehrungszeichen,
+Gedankenstriche und das Eurozeichen werden korrekt dargestellt. Emoji und
+nichtlateinische Schriften werden verstanden und durch ein Fragezeichen
+ersetzt, statt als Zeichensalat zu erscheinen.
+
+
+WENN ES ABSTUERZT
+-----------------
+
+Nuetzlich waere: an welcher Stelle, der genaue Wortlaut einer Meldung, ein
+Bildschirmfoto. Mit tools/stapel-untersuchen.ps1 aus dem Quellbaum laesst sich
+der Aufrufstapel eines Absturzes auch ohne installierten Debugger ermitteln -
+dafuer muss Eudora.pdb neben Eudora.exe liegen (separates Anhangspaket der
+Veroeffentlichung).
+
+
+HERKUNFT
+--------
+
+Quellcode:  github.com/HansWurst81675/Eudora7.2
+Grundlage:  Quelltextfreigabe des Computer History Museum, 2018
+Uebersetzt: Visual Studio 2022, Toolset v143, Debug|Win32
