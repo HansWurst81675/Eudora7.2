@@ -2464,7 +2464,13 @@ Splitter gibt. Der Rumpf fasst den Splitter ohnehin nicht an, setzt aber weiter
 unten `g_Nicknames` voraus - aussteigen ist sicherer als weiterlaufen. Ohne
 Ansichten kann nichts geaendert worden sein, es gibt also auch nichts zu sichern.
 
-## S-5 — Menues lassen sich nicht oeffnen (OFFEN, in Arbeit)
+## S-5 — Menues lassen sich nicht oeffnen
+
+> **URSACHE INZWISCHEN GEFUNDEN — siehe Abschnitt M-1 weiter unten.**
+> Der Rahmen liefert immer HTERROR, weil SECToolBarManager
+> m_bMainFrameEnabled auf TRUE setzt. Was hier folgt, ist der Stand der
+> Untersuchung VOR diesem Fund und bleibt stehen, weil die
+> Ausschluesse weiter gelten.
 
 Gregor meldet, dass sich in Eudora keine Menues aufklappen lassen.
 
@@ -2502,6 +2508,12 @@ Leisten in einer Reihe. Muss reproduziert werden, bevor etwas geaendert wird.
 **Gemessen:** 4616 von 5563 verfolgten Quell- und Textdateien unterschieden sich
 von HEAD **ausschliesslich in den Zeilenenden**. Im Arbeitsverzeichnis standen
 sie als CRLF, im Commit als LF.
+
+> **Zu den Zahlen.** Der Kopf von `tools/zeilenenden-angleichen.pl` nennt
+> 4426 von 5336 — das war ein frueherer Durchlauf, der weniger Dateiendungen
+> beruecksichtigte (ohne `.def`, `.mak`, `.txt`, `.md`). Beide Zahlen sind
+> richtig gemessen, nur mit verschiedenem Suchmuster. Nach dem Angleichen
+> meldet das Werkzeug 5586 byteidentische Dateien.
 
 **Ursache.** Das Repo wurde seinerzeit mit `core.autocrlf=true` ausgecheckt. Git
 wandelte beim Auschecken LF nach CRLF und vermerkte die Datei trotzdem als
