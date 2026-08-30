@@ -1,261 +1,243 @@
 # Hier weitermachen
 
-Übergabe vom 30.08.2026. Arbeitsbranch `eudora-exe-linkt`; der frühere Branch
-`vs2022-portierung-fixes` ist mit `22a6d77` nach `main` gemergt und wird nicht mehr
-weitergeführt.
+Übergabe vom **30.08.2026, abends**. Arbeitsbranch `eudora-exe-linkt`.
 
-Diese Datei ist der Einstieg für die nächste Sitzung. Sie sagt, wo genau die Arbeit
-steht, was als Nächstes dran ist und welche Fallen im Arbeitsverzeichnis liegen.
+Diese Datei ist der Einstieg für die nächste Sitzung. Alle Zahlen sind an
+`371c1e3` gemessen. An diesem Baum arbeiten mehrere Agenten in eigenen
+Worktrees; wer eine Zahl weiterverwendet, misst nach und nennt seinen eigenen
+Bezugscommit.
 
-**Alle Zahlen hier sind an `a807b93` gemessen.** An diesem Baum arbeiten mehrere
-Agenten gleichzeitig; der Stand bewegt sich. Wer eine Zahl weiterverwendet, misst
-nach und nennt seinen eigenen Bezugscommit.
+---
 
-## Zuerst: Umgebung herrichten
+## Das Wichtigste zuerst
 
-Nach einem frischen Klon fehlen die Schutzmechanismen — git versioniert Hooks nicht:
+**Eudora startet und zeigt sein Hauptfenster.** Zum ersten Mal seit Beginn der
+Portierung. Veröffentlicht als `v1.0.2`.
 
-```bash
-sh tools/hooks-einrichten.sh
+**Aber es ist noch nicht „lauffähig".** Gregor hat am 30.08. festgelegt, was das
+heißt — siehe [ZIEL.md](ZIEL.md). Drei Kriterien:
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+| 2 | die Darstellung ist korrekt | **nicht erfüllt** |
+| 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** |
+
+Der Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung
+kann. Das ist zu korrigieren.
+
+---
+
+## Was am 30.08. passiert ist
+
+### Behoben
+
+**S-1 — Paket 1.0.1 startete nicht.** Drei Ursachen: die sieben vorgebauten
+Fremd-DLLs von 2006 lagen als *Debug*-Fassungen bei (nicht verteilbare
+VS2003-Debug-Laufzeit); es fehlte eine `Eudora.ini` (Abbruch in
+`eudora.cpp:3542`); und die Werbefläche stürzte ab.
+
+**S-2 — der Absturz war die Werbefläche.** `CAdWazooWnd::OnCreate`
+([AdWazooWnd.cpp:108](Eudora71/Eudora/AdWazooWnd.cpp:108)) legt die Werbeansicht
+mit `CRect(0,0,0,0)` an; die Textmaschine Paige bekommt eine Umbruchbreite von
+null und dreht sich in einer Endlosrekursion fest. Gemessen: 1689 Stapelrahmen,
+davon 1613 im Zyklus. Die Werbeleiste wurde in
+[WazooBarMgr.cpp:155](Eudora71/Eudora/WazooBarMgr.cpp:155) **bedingungslos**
+angelegt; sie hängt jetzt an `QCSharewareManager::IsBoxBuild()`, dazu der
+Übersetzungsschalter `BUILD_BOX_OR_SITE_R_VERSION`. Damit entfallen Werbung,
+Registrierung und Einführungsdialog.
+
+**S-4 — Zusicherung im Adressbuch-Wazoo.** Eine Registerkarte kann *aktiv* sein,
+ohne je *angezeigt* worden zu sein. QUALCOMM beschreibt genau das in
+`WazooBar.cpp:346` und fängt es beim Aktivieren ab, an den beiden
+Deaktivierungsstellen aber nicht. In der Schwesterklasse `CFiltersWazooWnd` ist
+dieselbe Zusicherung bereits auskommentiert (`FiltersWazooWnd.cpp:109`).
+
+**S-7 — die Wurzel aller CRLF-Probleme.** 4616 von 5563 verfolgten Dateien lagen
+im Arbeitsverzeichnis als CRLF vor, während im Commit LF steht — Folge eines
+Auscheckens mit `core.autocrlf=true`. Git sah nicht hinein, solange niemand die
+Datei anfasste; danach sprang die *ganze* Datei als geändert heraus. Das ist
+einmalig bereinigt.
+
+> **Nach jedem frischen Klon einmal ausführen:**
+> ```bash
+> perl tools/zeilenenden-angleichen.pl --aendern && git ls-files -z | xargs -0 -n 400 git add --
+> ```
+
+Dazu die Berichtigung: die frühere Vermutung „mit `autocrlf=true` geklont" war
+**richtig** und wurde damals zu Unrecht als widerlegt abgehakt — `git config`
+sagte zum Prüfzeitpunkt schon `false`, die Einstellung war inzwischen geändert
+worden, die Folgen des Auscheckens blieben.
+
+### Offen
+
+**S-5 — Menüs lassen sich nicht öffnen.** Gregor: „nichts, kleine reaktion" —
+der Menütitel leuchtet auf, klappt aber nicht auf. **Wichtig: sie haben
+zwischendurch funktioniert.** Es ist also zustandsabhängig, kein
+grundsätzlicher Defekt. Verdacht: der frische Zustand ohne gespeicherten
+Leistenzustand in der `Eudora.ini`
+([mainfrm.cpp:819](Eudora71/Eudora/mainfrm.cpp:819),
+`SECDockState::LoadState`).
+
+Ausgeschlossen (gemessen): kein `SetMenu` in der Anwendung; der Werbecode im
+Leerlauf läuft nicht (`GetSharewareMode()` ist `SWM_MODE_PRO`);
+`CWazooBar::OnTimer` läuft nur beim Ziehen-und-Ablegen; das Menü selbst ist
+vollständig (14 Einträge, alle Untermenüs gefüllt); das Fenster hängt nicht.
+
+**S-6 — die Darstellung ist fehlerhaft.** Gregors wichtigster Punkt. Leere
+Werkzeugleisten-Knöpfe, sich überlagernde Bereiche, ein Registerkartenstreifen
+mitten im Fenster, die fehlende Fensterleiste unten. Ausgeschlossen: dass es am
+Entfernen der Werbeleiste liegt — `QCDockBar` prüft an beiden betroffenen
+Stellen selbst auf `SWM_MODE_ADWARE`.
+
+---
+
+## Neue Werkzeuge
+
+| Werkzeug | wozu |
+|---|---|
+| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Siehe S-7. Nach jedem Klon einmal. |
+| `tools/stapel-untersuchen.ps1` | Kleiner Debugger: startet ein Programm als Debuggee, fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen.** Braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
+| `tools/kennung-erzeugen.pl` | Erzeugt `BuildKennung.h` vor jedem Bau. Läuft als PreBuildEvent. |
+| `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte hier ausschließlich Fehlalarme. |
+
+`tools/pruefe-bytes.pl` wurde berichtigt: es verglich die bloße CR-Anzahl und
+schlug damit schon beim *Hinzufügen* von Zeilen an. Jetzt zwei Regeln — Inhalt
+gleich bei verschiedenen Bytes, und: hat eine inhaltlich unveränderte Zeile ihr
+Zeilenende gewechselt?
+
+---
+
+## Bau-Kennung in der Titelleiste
+
+Der Fenstertitel trägt jetzt Paketversion, Commit und Herkunftsverzeichnis:
+
+```
+Eudora - [In]   [1.0.3+371c1e3 - Eudora72-1.0.3]
 ```
 
+Ein **Sternchen** hinter dem Commit heißt: beim Bau lagen ungesicherte
+Änderungen vor, der Bau ist nicht reproduzierbar. Die Version steht in der
+Datei `VERSION`.
+
+Anlass: Gregor konnte eine Beobachtung („die Menüs funktionierten
+zwischendurch") keinem Bau zuordnen — die EXE trug keine Kennung. Derselbe
+Fehler war zwei Tage zuvor schon bei der `QCSSL.dll` passiert.
+
+---
+
+## Wie man Eudora startet
+
 ```bash
-git config core.autocrlf false
+Eudora.exe "<Pfad zu einem Mailverzeichnis>"
 ```
 
-Beides ist nicht optional. Ohne den Hook treten zwei Fehlerklassen lautlos wieder
-auf, die uns mehrfach Zeit gekostet haben.
+Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
+`eudora.cpp:3542` ab. Vorlage:
+`InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`.
 
-**Ausserdem fehlen nach einem frischen Klon zwei Bibliotheken, ohne die `QCSSL`
-nicht linkt.** `Eudora71/OpenSSL3/lib/libcrypto.lib` und `libssl.lib` sind von
-`.gitignore:7` (`Lib/`) erfasst und liegen deshalb **nicht** im Repo — gemessen:
-`git ls-files Eudora71/OpenSSL3/lib` liefert null Treffer. In einem frischen Klon
-endet `QCSSL` mit `LNK1104: libssl.lib`. Sie müssen nach
-`Eudora71/OpenSSL3/BAUEN.md` neu erzeugt oder von Hand hineinkopiert werden.
+Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
+Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine
+Fehler; sie erscheinen nur, weil bisher nur der Debug-Bau läuft (der
+Release-Zweig scheitert an einer fehlenden `Imap.lib`).
 
-## Wo wir stehen
+**Wichtig:** Gregor testet auf derselben Windows-Sitzung. Kein Programm mit
+Fenstern ohne Absprache starten — auch nicht durch Agenten. Beim Aufräumen von
+Prozessen **immer nach Pfad filtern**, sonst schießt man seine laufende Sitzung
+mit ab.
 
-Das Ziel dieser Etappe war ein **linkendes `Eudora.exe`**. Der Blocker war die
-fehlende Fremdbibliothek `OTA50D.LIB` (Stingray Objective Toolkit) — sie ist durch
-eine eigene Ersatzschicht unter `Eudora71/OTShim/` ersetzt.
+---
 
-> **Das Ziel dieser Etappe ist erreicht.** Seit `a807b93` bindet `Eudora.exe`
-> vollständig — **0 Übersetzungsfehler, 0 ungelöste Externe** —, und die leere
-> Attrappe `OTA50D.LIB` wird dafür **nicht mehr gebraucht**. Selbst nachgemessen
-> an `a807b93` in einem frisch ausgecheckten Baum, aus dem die Attrappe entfernt
-> war: `Eudora.exe`, 10 203 136 Byte.
+## Konto einrichten ohne Menü
 
-Die Ersatzschicht ist vollständig eingehängt (`e50a89c`), `Eudora` übersetzt seit
-`78a9c10` fehlerfrei, und mit `a807b93` ist auch das Binden durch.
+Solange S-5 offen ist, geht es nur über die `Eudora.ini` im Mailverzeichnis,
+Abschnitt `[Settings]`:
 
-Stand an `a807b93` (`wc -l`; Einhängung geprüft gegen `OTShimAll.h` und die
-`ClCompile`-Einträge in `Eudora.vcxproj:217`):
+```ini
+POPAccount=benutzername@pop.anbieter.de
+LoginName=benutzername
+RealName=Name
+ReturnAddress=adresse@anbieter.de
+SMTPServer=smtp.anbieter.de
+SmtpAuthAllowed=1
+SSLReceiveUse=2
+SSLPOPAlternatePort=995
+SSLSendUse=2
+SSLSMTPAlternatePort=465
+```
 
-| Stufe | Inhalt | Dateien | Zeilen | eingehängt? |
-|---|---|---|---|---|
-| 0–2, 2b | Workbook, MDI, Statusleiste, Andockfamilie | `OTShim.h/.cpp` | 5494 | ja |
-| 3 | Werkzeugleisten und Knöpfe | `OTShim_Werkzeugleiste.h/.cpp` | 6083 | ja |
-| 4 | Bilder über GDI+ | `OTShim_Bild.h/.cpp` | 2358 | ja |
-| Registerkarten | `SEC3DTabControl` und Verwandte | `OTShim_Reiter.h/.cpp` | 2925 | ja |
-| `SECDateTimeCtrl`, Palette | Datumsfeld der Suche, `CSafetyPalette` | `OTShim_Palette.h/.cpp` | 890 | ja |
-| — | Sammelkopfdatei | `OTShimAll.h` | 78 | — |
+`SSLReceiveUse`/`SSLSendUse` sind der Index der Auswahlliste aus
+[settings.cpp:1978](Eudora71/Eudora/settings.cpp:1978): 0 nie, 1 falls verfügbar
+(STARTTLS), 2 erforderlich mit eigenem Port, 3 erforderlich (STARTTLS).
 
-Zusammen **17828 Zeilen** in 11 Dateien. Dazu ist `OT501/Src/secaux.cpp` direkt in
-`Eudora.vcxproj` aufgenommen — `secData` brauchte keinen Nachbau.
+Das Passwort landet als `SavePasswordText` **Base64-kodiert, nicht
+verschlüsselt** in derselben Datei ([password.cpp:544](Eudora71/Eudora/password.cpp:544)).
 
-### Gemessener Bauzustand an `a807b93`
+---
 
-| Messung | Ergebnis |
-|---|---|
-| `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler**; `Eudora.exe` 10 203 136 Byte — **ohne** Attrappe |
-| Solution-Bau `Debug\|x86` | **3 Fehler, alle aus `OT501`** (zweimal `NMAKE U1073`, einmal `MSB3073`) |
-| fertige Projekte | **16 von 18** |
-| Testlauf `Eudora71/Tests/RunTests.cmd` | **33 Tests, 33 bestanden, 0 fehlgeschlagen** (an `04e93c3`) |
+## Was die Agenten am 30.08. abends bearbeitet haben
 
-`Eudora` wird im Solution-Bau jetzt mitgebaut und **fertig**. Nicht fertig werden
-nur noch zwei: `OT501` (Quellen nicht freigegeben, bricht ab) und **`EudoraRes`**,
-das über seinen Projektverweis (`EudoraRes.vcxproj:351`) an `OT501` hängt und gar
-nicht erst versucht wird — es taucht im Bauprotokoll überhaupt nicht auf. Deshalb
-fehlt `EudoraRes.dll` in `Bin/Debug`; sie wird zur Laufzeit nachgeladen, siehe
-[STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+Alle fünf haben in eigenen Worktrees gearbeitet und beim Abschalten gesichert.
+Ihre Branches heißen `worktree-agent-*`; ihre Ergebnisse stehen in eigenen
+Dateien und in eigenen Abschnitten am Ende von `BEFUNDE.md`.
 
-Die vier Projekte `AccountWizard`, `DirectoryServicesUI`, `EuImap` und
-`SearchEngine`, die zwischenzeitlich gebrochen waren, bauen wieder — ihre `.lib`
-liegen nach dem Lauf in `Lib/Debug`.
+| Agent | Auftrag | Ablage |
+|---|---|---|
+| BRÜCKE | eigene `msvcr71.dll` als Weiterleitung auf die von Windows mitgelieferte `msvcrt.dll`, damit die drei Fremd-DLLs von dll-files.com aus dem Paket verschwinden | `Eudora71/VC71Bruecke/BEFUND.md`, Abschnitt `## B-1` |
+| MENUE | Befund S-5, warum sich Menüs nicht öffnen lassen | `Eudora71/OTShim/BEFUND-MENUE.md`, Abschnitt `## M-1` |
+| ANSICHT | Befund S-6, das Erscheinungsbild | `Eudora71/OTShim/BEFUND-ANSICHT.md`, Abschnitt `## A-1` |
+| POSTBOTE | Kriterium 3 vorbereiten: Abrufpfad gegenlesen, Prüfanleitung schreiben | `ABRUF-PRUEFEN.md`, Abschnitt `## P-1` |
+| LEKTOR | Aktualität aller MD-Dateien | `LEKTORAT.md`, Abschnitt `## L-1` |
+| PRÜFER | Richtigkeit der heutigen Werkzeuge, Codeänderungen und Zahlen | `PRUEFBERICHT.md`, Abschnitt `## PR-1` |
 
-### Der Weg von 1088 auf 0
+**Zuerst diese Dateien lesen** — dort steht, wie weit jeder gekommen ist und was
+der nächste Schritt wäre.
 
-| Bezug | ungelöste Externe |
-|---|---|
-| früher, nicht reproduzierbar | 1088 (651 verschiedene) |
-| früher, nicht reproduzierbar | rund 299 |
-| `78a9c10` | 8 |
-| `4ba2dd3` | 3 |
-| `e61f243` | 1 |
-| **`a807b93` (selbst nachgemessen)** | **0** |
+---
 
-Die beiden obersten Zahlen stammen aus einem Zustand vor dem vollständigen
-Einhängen. Sie sind an heutigen Commits **nicht reproduzierbar** und nur als
-Größenordnung zu lesen.
+## Nächste Schritte, nach Wichtigkeit
 
-Das letzte Symbol war `__imp___iob` aus der vorgebauten `libpng.lib` (libpng 1.2.7,
-aus der Zeit vor der UCRT) — **kein Stingray**. Gelöst ist es in
-`OTShim_Libpng.cpp`, das `_imp___iob` mit `(char*)stderr - 2*32` definiert, weil
-libpng ausschliesslich `_iob[2]` anfasst und die damalige CRT 32 Byte je Element
-hatte. **Sauber wäre erst ein Neubau von libpng** aus `Eudora71/PNG/libpng` mit
-v143; der Behelf ist im Kopf der Datei begründet.
+1. **Das Erscheinungsbild (S-6).** Gregors ausdrücklicher Vorrang. Vergleich ist
+   sein Bildschirmfoto der Originalfassung; die Merkmale stehen in
+   [ZIEL.md](ZIEL.md).
+2. **Die Menüs (S-5).** Sperrbefund — ohne Menüs ist Eudora nicht einzurichten.
+   Der Hinweis „hat zwischendurch funktioniert" ist die heißeste Spur.
+3. **Mail abrufen (Kriterium 3).** Nie getestet. Zugleich der erste echte Test
+   der neuen TLS-Schicht: die ausgelieferte QCSSL 1.0.1 ist nie gegen einen
+   echten Server gelaufen, nur eine ältere Fassung war es.
+4. **Paket 1.0.3** — erst danach, und mit einem Namen, der nicht mehr behauptet,
+   als die Fassung kann.
+5. **Release-Bau.** Scheitert an einer fehlenden `Imap.lib` im Release-Zweig.
+   Ein Release-Bau hätte keine SUPERASSERT-Dialoge.
 
-## Der nächste Schritt, konkret
+---
 
-Das Binden ist durch — die nächste Frage ist, ob das Programm **startet**.
+## Zurückgestellt — nicht von selbst aufgreifen
 
-1. **`EudoraRes.dll` beschaffen.** Sie fehlt in `Bin/Debug`, wird zur Laufzeit
-   nachgeladen, und ihr Projekt hängt über `EudoraRes.vcxproj:351` an `OT501`.
-   Derselbe Handgriff wie bei `Eudora` (`LinkLibraryDependencies` auf `false`,
-   `_SECNOMSG`) ist der naheliegende Weg — **nicht geprüft**.
-2. **Ersten Start durchspielen.** Welche Laufzeitdateien danebenliegen müssen,
-   steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md). `dumpbin /dependents` nennt
-   27 Abhängigkeiten; alle bis auf `EudoraRes.dll` liegen in `Bin/Debug`.
-3. **`libpng` sauber nachziehen.** Der Behelf in `OTShim_Libpng.cpp` hält, solange
-   libpng nur `_iob[2]` anfasst und die Elementgrösse 32 Byte bleibt. Ein Neubau
-   aus `Eudora71/PNG/libpng` mit v143 macht die Annahme überflüssig.
-4. **`Release|x86` prüfen.** Bisher ist nur `QCSSL` im Release-Zweig gebaut; die
-   übrigen Projekte sind dort ungetestet.
+`tools/patches/zertifikatspruefung-verschaerfen.patch` (Hostnamensprüfung und
+Umgang mit `X509_V_ERR_CERT_UNTRUSTED` in QCSSL) ist vorbereitet, aber **nicht
+angewendet**. Gregor hat entschieden, das später anzugehen. Nicht ohne sein
+Wort anwenden.
 
-## Eine Falle, die schon einmal in die Irre geführt hat
-
-> **Den Wächter `__SECBTNS_H__` in `OTShimAll.h` NICHT einkommentieren.**
-
-Frühere Fassungen dieser Datei nannten das als Lösungsschritt. **Das ist
-nachgemessen falsch.** `secbtns.h` liefert ausser `SECLoadSysColorBitmap` auch
-`SECBitmapButton`, und das ersetzt Stufe 3 nicht — wer den Wächter setzt, nimmt die
-Klasse mit weg.
-
-Selbst nachgemessen an `22a6d77`, `Eudora.vcxproj` einzeln:
-
-| Wächter | Fehler |
-|---|---|
-| auskommentiert (wie im Repo) | **1** (`secbtns.h(340,83): C2572`) |
-| eingekommentiert | **102** (`C3646`, `C4430`, `C2065`, `C2653`, `C3861`) |
-
-Gelöst ist der `C2572` stattdessen in `OTShim.h:307`: die dortige inline-Fassung
-von `SECLoadSysColorBitmap` führt **kein Standardargument** mehr, `secbtns.h:340`
-trägt es nach (`78a9c10`). Die Begründung steht auch in `OTShimAll.h` an der
-auskommentierten Stelle — sie soll dort auskommentiert bleiben.
+---
 
 ## Fallen im Arbeitsverzeichnis
 
-**1. Die Attrappe `OTA50D.LIB` wird nicht mehr gebraucht — und darf nicht wieder
-auftauchen.**
-Während der Arbeit an der Ersatzschicht lag unter `Eudora71/Lib/Debug/OTA50D.LIB`
-eine leere Platzhalter-Bibliothek, damit der Linker über `LNK1104` hinweggeht und
-verrät, welche Symbole wirklich fehlen. Seit `a807b93` ist sie **überflüssig**: zwei
-Änderungen in `Eudora.vcxproj` lösen die Bindung an sie — `_SECNOMSG` in den
-Präprozessordefinitionen (`SECVER.H:210-211` hängt das
-`pragma comment(lib, ...)` daran) und `LinkLibraryDependencies` auf `false` beim
-Projektverweis auf `OT501` (Zeile 1015).
-
-Nachgemessen an `a807b93` in einem Baum **ohne** die Attrappe: `Eudora.exe` bindet
-mit 0 Fehlern. Wer sie wieder anlegt, linkt gegen eine leere Bibliothek, ohne dass
-es auffällt — also nicht tun.
-
-**2. Die Quellen haben von Haus aus gemischte Zeilenenden — pro Datei verschieden.**
-
-Das ist der **Originalzustand der Eudora-Quellen**, keine Umschreibung durch git:
-manche Dateien rein LF (`stdafx.h`), manche rein CRLF (`OTShim.h`), die meisten
-gemischt (`mainfrm.cpp`: 18 CR auf über 8000 Zeilen).
-
-Seit `1f42745` liegt eine `.gitattributes` mit `* -text` im Repo. Damit ist **git
-als Fehlerquelle ausgeschlossen**: beim Auschecken wie beim Einchecken bleiben die
-Bytes, wie sie sind, unabhängig davon, wie `core.autocrlf` auf dem jeweiligen
-Rechner steht. Ein vorsorgliches `git checkout HEAD -- <datei>` ist damit
-gegenstandslos — und wer es doch tut, verwirft womöglich die Arbeit eines parallel
-laufenden Agenten.
-
-Was bleibt, ist die Vorsicht beim **Schreiben** (Punkt 3).
-
-**Zum Nachmessen der CR-Anzahl** taugt `grep -c $'\r'` in Git Bash **nicht** — das
-Muster kommt dort leer an und zählt schlicht alle Zeilen. Zuverlässig ist:
-
-```bash
-tr -cd '\r' < <datei> | wc -c
-```
-
-Damit gemessen: die Markdown-Dateien im Wurzelverzeichnis sowie `PLAN.md`,
-`INVENTAR.md`, `BAUEN.md` und `Arbeitsweise/README.md` haben **0 CR** — dort ist
-normales Editieren unbedenklich.
-
-**3. Änderungen an Eudora-Quellen nur byte-erhaltend.**
-Die Quellen sind Latin-1 mit gemischten Zeilenenden. Das Edit-Werkzeug und `sed` mit
-handgebauten `\r\n` zerstören beides. Stattdessen:
-
-```bash
-perl tools/aendere-zeile.pl <datei> <zeilennummer> <alt> <neu>
-```
-
-Der pre-commit-Hook fängt Verstöße ab — aber erst nach der Arbeit.
-
-**4. Fünf MIDL-Ausgaben verrauschen dauerhaft `git status`.**
-`EudoraExe_i.c`, `EudoraExe_p.c`, `GoogleDesktopSearchAPI_i.c`, `_p.c`, `dlldata.c`
-werden bei jedem Bau neu geschrieben, liegen aber zwischen den Quellen. Nicht
-committen, nicht wundern.
-
-**5. Der git-Index ist zwischen allen Agenten geteilt.**
-Ein `git add` stagt auch die halbfertigen Dateien der anderen, und deren Commit
-nimmt sie dann mit. Deshalb **immer mit ausdrücklicher Pfadangabe committen**, ohne
-vorheriges `git add`:
-
-```bash
-git commit -m "..." -- <pfad1> <pfad2>
-```
-
-Bei `cannot lock ref 'HEAD'`: kurz warten und erneut versuchen.
-
-**6. Beim parallelen Bauen `IntDir` überschreiben, `OutDir` nicht.**
-Zwei gleichzeitig laufende `cl.exe` schreiben sonst in dieselbe
-`Build\Debug\vc143.pdb` und der Bau bricht mit 148× `C1041` ab. `OutDir` dagegen
-**nicht** überschreiben — die Projektverweise lösen ihre Importbibliotheken über
-`$(OutDir)` auf, und der Link endet dann mit `LNK1104: AccountWizard.lib`. Beides
-von LINKER gemessen, siehe `Eudora71/OTShim/PLAN.md`.
-
-**7. Ein frisch ausgecheckter Baum baut anders als ein gewachsener.**
-Im leeren Baum liefen `NSImport`, `OEImport` und `OLImport` in
-`LNK1104: QCUtils.lib` — die Solution deklariert die Abhängigkeit nicht, bei `-m`
-ist es ein Wettlauf. Ein zweiter Lauf im selben Verzeichnis behebt es. Wer Zahlen
-vergleicht, muss denselben Zustand vergleichen.
-
-## Was noch offen ist
-
-| Thema | Wo es steht |
-|---|---|
-| Die 8 ungelösten Symbole, Weg zum Linken | `Eudora71/OTShim/PLAN.md`, Abschnitt „Der Weg zum Linken" |
-| Laufzeitumgebung für den ersten Start, fehlende `EudoraRes.dll` | `STARTUMGEBUNG.md` |
-| Prüfbefunde | `BEFUNDE.md` |
-| Altbefunde | `BEFUNDE-ALTBESTAND.md` |
-| Verschärfung der Zertifikatsprüfung — liegt bereit, **nicht angewandt** | `tools/patches/zertifikatspruefung-verschaerfen.patch` |
-| Hostnamenprüfung greift nicht — bewusst zurückgestellt | `Arbeitsweise/zurueckgestellte-befunde.md` |
-| `OpenSSL3/lib` liegt nicht im Repo (siehe oben) | `Eudora71/OpenSSL3/BAUEN.md` |
-| Zeichensatz: Emoji und nichtlateinische Schriften | `PORTIERUNG.md` |
-
-## Wie gearbeitet wird
-
-Die Regeln stehen in [Arbeitsweise/](Arbeitsweise/README.md) — entstanden aus
-konkreten Fehlgriffen, jede mit belegtem Anlass. Die vier wichtigsten:
-
-- **Nie stillstehen.** Lange Läufe in den Hintergrund und währenddessen weiterarbeiten.
-  Der teuerste Einzelfehler des Projekts war 1 Stunde 46 Minuten Leerlauf.
-- **Prüfen statt vermuten.** Zahlen nur nennen, wenn gemessen. Bei einer früheren
-  Prüfung waren acht Zahlen in der Doku falsch, weil sie geschätzt und als Tatsache
-  geschrieben wurden.
-- **Gemeinsame Dateien gegen die ganze Solution messen.** Eine Änderung an
-  `stdafx.h` hat vier Projekte gebrochen, weil nur das eigene Projekt gebaut wurde.
-  Siehe `Arbeitsweise/gemeinsame-dateien-gegen-alles-messen.md`.
-- **Wissen gehört in Dateien.** Was nur im Gespräch steht, ist beim nächsten
-  Abschalten weg.
-
-Prüfung und Dokumentation gehören **ans Ende einer Arbeitswelle**, nicht parallel
-dazu — sonst prüfen sie ein bewegliches Ziel. Wie weit sie zurückliegen:
-
-```bash
-perl tools/pruefstand-melden.pl
-```
+- **Quelldateien sind Latin-1 mit gemischten Zeilenenden.** Nur byte-erhaltend
+  ändern: `tools/aendere-zeile.pl`, `tools/ersetze-bereich.pl`. Niemals `sed`
+  ohne `-b`, nicht das Edit-Werkzeug auf bestehende Quellen.
+- **`grep -c $'\r'` misst Zeilenenden NICHT zuverlässig** — es zählt in Git Bash
+  schlicht alle Zeilen. Immer mit Perl und `:raw` messen.
+- **Einzelprojekt-Bauten brauchen `/p:BuildProjectReferences=false`**, sonst
+  scheitern sie am Projekt `OT501`.
+- **`$(SolutionDir)` zeigt beim Einzelprojekt-Bau auf das Projektverzeichnis**,
+  nicht auf die Solution. `$(ProjectDir)..\..` benutzen.
+- **`perl` ist im MSBuild-Pfad nicht vorhanden.** Es liegt unter
+  `C:\Program Files\Git\usr\bin\perl.exe`.
+- **`&` muss in `.vcxproj` als `&amp;` geschrieben werden** — sonst lädt MSBuild
+  die Projektdatei nicht mehr.
+- **Es kann systemweit nur einen OutputDebugString-Mithörer geben**
+  (`DBWIN_BUFFER`). Zwei gleichzeitig, und beide bekommen nichts.
+- **Include-Wächter sind alles-oder-nichts.** Wer nur einen Teil eines
+  Stingray-Headers ersetzt, darf den Wächter nicht setzen. Steht ausführlich in
+  `Eudora71/OTShim/PLAN.md`.
