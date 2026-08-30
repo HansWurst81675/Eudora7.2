@@ -7,7 +7,7 @@ weitergeführt.
 Diese Datei ist der Einstieg für die nächste Sitzung. Sie sagt, wo genau die Arbeit
 steht, was als Nächstes dran ist und welche Fallen im Arbeitsverzeichnis liegen.
 
-**Alle Zahlen hier sind an `e875979` gemessen.** An diesem Baum arbeiten mehrere
+**Alle Zahlen hier sind an `a807b93` gemessen.** An diesem Baum arbeiten mehrere
 Agenten gleichzeitig; der Stand bewegt sich. Wer eine Zahl weiterverwendet, misst
 nach und nennt seinen eigenen Bezugscommit.
 
@@ -35,14 +35,20 @@ endet `QCSSL` mit `LNK1104: libssl.lib`. Sie müssen nach
 
 ## Wo wir stehen
 
-Das Ziel dieser Etappe ist ein **linkendes `Eudora.exe`**. Der Blocker ist die
-fehlende Fremdbibliothek `OTA50D.LIB` (Stingray Objective Toolkit) — sie wird durch
+Das Ziel dieser Etappe war ein **linkendes `Eudora.exe`**. Der Blocker war die
+fehlende Fremdbibliothek `OTA50D.LIB` (Stingray Objective Toolkit) — sie ist durch
 eine eigene Ersatzschicht unter `Eudora71/OTShim/` ersetzt.
 
-**Die Ersatzschicht ist vollständig eingehängt** (`e50a89c`), und **`Eudora`
-übersetzt seit `78a9c10` fehlerfrei.** Erreicht wird jetzt der Linker.
+> **Das Ziel dieser Etappe ist erreicht.** Seit `a807b93` bindet `Eudora.exe`
+> vollständig — **0 Übersetzungsfehler, 0 ungelöste Externe** —, und die leere
+> Attrappe `OTA50D.LIB` wird dafür **nicht mehr gebraucht**. Selbst nachgemessen
+> an `a807b93` in einem frisch ausgecheckten Baum, aus dem die Attrappe entfernt
+> war: `Eudora.exe`, 10 203 136 Byte.
 
-Stand an `e875979` (`wc -l`; Einhängung geprüft gegen `OTShimAll.h` und die
+Die Ersatzschicht ist vollständig eingehängt (`e50a89c`), `Eudora` übersetzt seit
+`78a9c10` fehlerfrei, und mit `a807b93` ist auch das Binden durch.
+
+Stand an `a807b93` (`wc -l`; Einhängung geprüft gegen `OTShimAll.h` und die
 `ClCompile`-Einträge in `Eudora.vcxproj:217`):
 
 | Stufe | Inhalt | Dateien | Zeilen | eingehängt? |
@@ -57,57 +63,64 @@ Stand an `e875979` (`wc -l`; Einhängung geprüft gegen `OTShimAll.h` und die
 Zusammen **17828 Zeilen** in 11 Dateien. Dazu ist `OT501/Src/secaux.cpp` direkt in
 `Eudora.vcxproj` aufgenommen — `secData` brauchte keinen Nachbau.
 
-### Gemessener Bauzustand an `e875979`
+### Gemessener Bauzustand an `a807b93`
 
 | Messung | Ergebnis |
 |---|---|
+| `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler**; `Eudora.exe` 10 203 136 Byte — **ohne** Attrappe |
 | Solution-Bau `Debug\|x86` | **3 Fehler, alle aus `OT501`** (zweimal `NMAKE U1073`, einmal `MSB3073`) |
-| fertige Projekte | **15 von 18** |
-| `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | übersetzt **vollständig**; `LNK1120: 8 nicht aufgelöste Externe` |
+| fertige Projekte | **16 von 18** |
+| Testlauf `Eudora71/Tests/RunTests.cmd` | **33 Tests, 33 bestanden, 0 fehlgeschlagen** (an `04e93c3`) |
+
+`Eudora` wird im Solution-Bau jetzt mitgebaut und **fertig**. Nicht fertig werden
+nur noch zwei: `OT501` (Quellen nicht freigegeben, bricht ab) und **`EudoraRes`**,
+das über seinen Projektverweis (`EudoraRes.vcxproj:351`) an `OT501` hängt und gar
+nicht erst versucht wird — es taucht im Bauprotokoll überhaupt nicht auf. Deshalb
+fehlt `EudoraRes.dll` in `Bin/Debug`; sie wird zur Laufzeit nachgeladen, siehe
+[STARTUMGEBUNG.md](STARTUMGEBUNG.md).
 
 Die vier Projekte `AccountWizard`, `DirectoryServicesUI`, `EuImap` und
 `SearchEngine`, die zwischenzeitlich gebrochen waren, bauen wieder — ihre `.lib`
-liegen nach dem Lauf in `Lib/Debug`. Nicht fertig werden `OT501` (Quellen nicht
-freigegeben) sowie `Eudora` und `EudoraRes`, die über einen Projektverweis an
-`OT501` hängen und im Solution-Bau gar nicht erst versucht werden.
+liegen nach dem Lauf in `Lib/Debug`.
 
-### Die 8 verbliebenen Symbole
+### Der Weg von 1088 auf 0
 
-Gemessen am Link von `Eudora.exe` gegen die leere Attrappe `OTA50D.LIB`:
-
-| Symbol | Herkunft |
+| Bezug | ungelöste Externe |
 |---|---|
-| `SECBitmapButton::SECBitmapButton()` | Stingray, `secbtns.h:189` |
-| `SECBitmapButton::~SECBitmapButton()` | Stingray, `secbtns.h:233` |
-| `ATL::CImage::s_initGDIPlus` | nicht Stingray (ATL) |
-| `ATL::CImage::s_cache` | nicht Stingray (ATL) |
-| `CVoiceText::Init(...)` | nicht Stingray (SpeechSDK) |
-| `CVoiceText::Speak(...)` | nicht Stingray (SpeechSDK) |
-| `TraceStart(...)` | nicht Stingray |
-| `__imp___iob` | nicht Stingray — aus der vorgefertigten `libpng.lib` |
+| früher, nicht reproduzierbar | 1088 (651 verschiedene) |
+| früher, nicht reproduzierbar | rund 299 |
+| `78a9c10` | 8 |
+| `4ba2dd3` | 3 |
+| `e61f243` | 1 |
+| **`a807b93` (selbst nachgemessen)** | **0** |
 
-Nur zwei davon sind überhaupt Stingray. Die Zahl bewegt sich noch: LINKER mass 8
-an `78a9c10`, SUMME 14 an einem anderen Stand; die 8 oben sind an `e875979`
-nachgemessen.
+Die beiden obersten Zahlen stammen aus einem Zustand vor dem vollständigen
+Einhängen. Sie sind an heutigen Commits **nicht reproduzierbar** und nur als
+Größenordnung zu lesen.
 
-Die früheren Symbolzahlen **1088 (651 verschiedene)** und **rund 299** stammen aus
-einem Zustand vor dem vollständigen Einhängen. Sie sind an heutigen Commits **nicht
-reproduzierbar** und nur als Größenordnung zu lesen.
+Das letzte Symbol war `__imp___iob` aus der vorgebauten `libpng.lib` (libpng 1.2.7,
+aus der Zeit vor der UCRT) — **kein Stingray**. Gelöst ist es in
+`OTShim_Libpng.cpp`, das `_imp___iob` mit `(char*)stderr - 2*32` definiert, weil
+libpng ausschliesslich `_iob[2]` anfasst und die damalige CRT 32 Byte je Element
+hatte. **Sauber wäre erst ein Neubau von libpng** aus `Eudora71/PNG/libpng` mit
+v143; der Behelf ist im Kopf der Datei begründet.
 
 ## Der nächste Schritt, konkret
 
-Die acht Symbole oben abräumen. Zwei Gruppen:
+Das Binden ist durch — die nächste Frage ist, ob das Programm **startet**.
 
-1. **`SECBitmapButton`** — die einzige echte Stingray-Lücke. `secbtns.h` deklariert
-   die Klasse, Stufe 3 ersetzt sie nicht. Gebraucht wird sie in `mainfrm`,
-   `nickpage`, `nicksht` und `PaymentAndRegistrationDlg`.
-2. **Der Rest ist kein Stingray** und hat mit der Ersatzschicht nichts zu tun:
-   `ATL::CImage` braucht die statischen Member aus `atlimage.h`, `CVoiceText` das
-   SpeechSDK, `__imp___iob` stammt aus der vorgefertigten VC6-`libpng.lib`.
-
-Danach ist `Eudora.exe` gebunden. Was beim **ersten Start** danebenliegen muss —
-insbesondere die fehlende `EudoraRes.dll` —, steht in
-[STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+1. **`EudoraRes.dll` beschaffen.** Sie fehlt in `Bin/Debug`, wird zur Laufzeit
+   nachgeladen, und ihr Projekt hängt über `EudoraRes.vcxproj:351` an `OT501`.
+   Derselbe Handgriff wie bei `Eudora` (`LinkLibraryDependencies` auf `false`,
+   `_SECNOMSG`) ist der naheliegende Weg — **nicht geprüft**.
+2. **Ersten Start durchspielen.** Welche Laufzeitdateien danebenliegen müssen,
+   steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md). `dumpbin /dependents` nennt
+   27 Abhängigkeiten; alle bis auf `EudoraRes.dll` liegen in `Bin/Debug`.
+3. **`libpng` sauber nachziehen.** Der Behelf in `OTShim_Libpng.cpp` hält, solange
+   libpng nur `_iob[2]` anfasst und die Elementgrösse 32 Byte bleibt. Ein Neubau
+   aus `Eudora71/PNG/libpng` mit v143 macht die Annahme überflüssig.
+4. **`Release|x86` prüfen.** Bisher ist nur `QCSSL` im Release-Zweig gebaut; die
+   übrigen Projekte sind dort ungetestet.
 
 ## Eine Falle, die schon einmal in die Irre geführt hat
 
@@ -132,17 +145,19 @@ auskommentierten Stelle — sie soll dort auskommentiert bleiben.
 
 ## Fallen im Arbeitsverzeichnis
 
-**1. `Eudora71/Lib/Debug/OTA50D.LIB` ist eine leere Attrappe.**
-Sie sorgt dafür, dass der Linker über `LNK1104` hinweggeht und verrät, welche
-Symbole tatsächlich fehlen. Sie ist absichtlich **nicht eingecheckt** und nach einem
-frischen Klon nicht vorhanden. Neu erzeugen:
+**1. Die Attrappe `OTA50D.LIB` wird nicht mehr gebraucht — und darf nicht wieder
+auftauchen.**
+Während der Arbeit an der Ersatzschicht lag unter `Eudora71/Lib/Debug/OTA50D.LIB`
+eine leere Platzhalter-Bibliothek, damit der Linker über `LNK1104` hinweggeht und
+verrät, welche Symbole wirklich fehlen. Seit `a807b93` ist sie **überflüssig**: zwei
+Änderungen in `Eudora.vcxproj` lösen die Bindung an sie — `_SECNOMSG` in den
+Präprozessordefinitionen (`SECVER.H:210-211` hängt das
+`pragma comment(lib, ...)` daran) und `LinkLibraryDependencies` auf `false` beim
+Projektverweis auf `OT501` (Zeile 1015).
 
-```bash
-echo "// leer" > leer.cpp && cl /nologo /c leer.cpp && lib /nologo /OUT:Eudora71\Lib\Debug\OTA50D.LIB leer.obj
-```
-
-Sobald die Ersatzschicht vollständig ist, muss sie **weg** — sonst linkt Eudora
-gegen eine leere Bibliothek und niemand merkt es.
+Nachgemessen an `a807b93` in einem Baum **ohne** die Attrappe: `Eudora.exe` bindet
+mit 0 Fehlern. Wer sie wieder anlegt, linkt gegen eine leere Bibliothek, ohne dass
+es auffällt — also nicht tun.
 
 **2. Die Quellen haben von Haus aus gemischte Zeilenenden — pro Datei verschieden.**
 
