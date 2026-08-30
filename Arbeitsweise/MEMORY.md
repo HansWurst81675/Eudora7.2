@@ -15,3 +15,4 @@
 - [Fehlerklassen abstellen](fehlerklassen-abstellen.md) — beim zweiten Auftreten Werkzeug und Schranke bauen, statt einzeln nachzubessern
 - [Gemeinsame Dateien gegen alles messen](gemeinsame-dateien-gegen-alles-messen.md) — nach Änderung an stdafx.h oder Projektdateien die ganze Solution bauen
 - [Agenten trennen mit Worktrees](agenten-trennen-worktrees.md) — geteilter Index beschädigt fremde Commits; sonst mit Pfadangabe committen
+- [Teilweise ersetzte Header](teilweise-ersetzte-header.md) — Include-Wächter sind alles-oder-nichts; bei Teilersatz nicht setzen
