@@ -11,15 +11,17 @@ Bezugscommit.
 
 ## Das Wichtigste zuerst
 
-**Eudora startet und zeigt sein Hauptfenster.** Zum ersten Mal seit Beginn der
-Portierung. Veröffentlicht als `v1.0.2`.
+**Eudora startet und laeuft bis in die Fenstererzeugung, ohne abzustuerzen.**
+Zum ersten Mal seit Beginn der Portierung. Das Fenster ist aber NICHT
+bedienbar - Menues tot (S-5), Bereiche ueberlagert, Knoepfe leer (S-6). Ein
+Meilenstein, kein erfuelltes Kriterium; siehe ZIEL.md. Veröffentlicht als `v1.0.2`.
 
 **Aber es ist noch nicht „lauffähig".** Gregor hat am 30.08. festgelegt, was das
 heißt — siehe [ZIEL.md](ZIEL.md). Drei Kriterien:
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+| 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
 | 2 | die Darstellung ist korrekt | **nicht erfüllt** |
 | 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** |
 

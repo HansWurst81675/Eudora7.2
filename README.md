@@ -19,7 +19,7 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 >
 > | # | Kriterium | Stand |
 > |---|---|---|
-> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+> | 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
 > | 2 | die Darstellung ist korrekt | **nicht erfüllt** (Befund S-6) |
 > | 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** |
 >
