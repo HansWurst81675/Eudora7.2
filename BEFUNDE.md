@@ -1293,3 +1293,371 @@ Copy-on-Write. **Die Portierung hat hier also nichts verschlechtert.** Der
 richtige Zeitpunkt fuer eine Bereinigung ist weiterhin der naechste inhaltliche
 Umbau dieser Funktionen, so wie der Befund es vorschlaegt: Parameter auf `char*`
 ziehen und die Aufrufer mit `GetBuffer()`/`ReleaseBuffer()` nachziehen.
+
+---
+
+# Nachpruefung 3 durch PRUEFER (30.08.2026, Branch `eudora-exe-linkt`)
+
+**Bezugscommit:** `22a6d77` (Merge von `vs2022-portierung-fixes` nach `main`);
+gelesen wurde der Dateistand dieses Commits. Waehrend der Pruefung haben andere
+Agenten weitergearbeitet - `Eudora.vcxproj` war dabei mehrfach im Fluss und ist
+deshalb ausdruecklich NICHT Gegenstand dieses Abschnitts.
+
+**Auftrag:** genau die Bereiche, die die Nachpruefung 2 offen gelassen hat -
+Stufe 2/2b der Ersatzschicht (`OTShim.{h,cpp}`), die Registerkartenfamilie
+(`OTShim_Reiter.{h,cpp}`), Stufe 4 (`OTShim_Bild.{h,cpp}`), `SECDateTimeCtrl`
+(`OTShim_Palette.{h,cpp}`) und die Werkzeuge unter `tools/`.
+
+**Nicht Gegenstand:** Hostnamenpruefung und `X509_V_ERR_CERT_UNTRUSTED`
+(bewusst zurueckgestellt), Stil/Formatierung/Namensgebung, die Dokumentation.
+
+**Stand dieses Abschnitts: Zwischenstand.** Was schon durch ist und was noch
+offen ist, steht unten unter "Stand der Nachpruefung 3".
+
+---
+
+## NP2-1 ist ueberholt
+
+`OTShim_Werkzeugleiste.cpp`, `OTShim_Reiter.cpp` und `OTShim_Palette.cpp`
+stehen seit `e50a89c` in `Eudora.vcxproj:217`, jeweils mit
+`<PrecompiledHeader>NotUsing</PrecompiledHeader>`, und `OTShimAll.h` bindet die
+zugehoerigen Header ein. Der Befund "Stufe 3 haengt nirgends" ist damit
+erledigt.
+
+---
+
+## NP3-1 - `ZeigeInhaltsfenster` laeuft, bevor Eudora das Fenster umgehaengt hat
+
+**Sicherheit: im Code nachgewiesen; Auswirkung Verdacht (nur sichtbar, nicht
+funktional)**
+
+**Dateien:** `Eudora71/OTShim/OTShim_Reiter.cpp:1500-1503`
+(`SECTabWndBase::InsertTab`) gegen `Eudora71/Eudora/WazooBar.cpp:124-185`
+(`CWazooBar::AddWazooWindow`).
+
+`AddWazooWindow` legt das Wazoo-Fenster als sichtbares Kind des HAUPTFENSTERS
+an (`WazooBar.cpp:1003` - `Create(..., WS_CHILD|WS_VISIBLE, ..., ::AfxGetMainWnd(), ...)`)
+und haengt es erst NACH `AddTab`/`InsertTab` um:
+
+    pNewTab = m_wndTab.AddTab(pWazooWnd, pWazooWnd->GetTabLabel());
+    ...
+    m_wndTab.SetTabIcon(nTabIndex, pWazooWnd->GetTabIconHandle());
+    pWazooWnd->ModifyStyle(0, WS_CHILD);
+    pWazooWnd->SetParent(&m_wndTab);          // erst hier
+
+Der Shim ruft beim ERSTEN Reiter mitten darin `ZeigeInhaltsfenster(nNeu)` auf.
+Das setzt `m_pActiveWnd`, ruft `RecalcLayout()` - das das Fenster per
+`DeferWindowPos` auf `rcInnen` setzt, also auf Koordinaten des noch gar nicht
+zustaendigen Elternfensters - und macht es anschliessend mit `SW_SHOW` sichtbar.
+
+**Folge:** das Wazoo-Fenster steht fuer die Dauer weniger Anweisungen an einer
+falschen Stelle im Hauptfenster. Danach zieht der naechste `RecalcLayout`
+(ueber `CWazooBar::OnSize` oder `SetActiveWazooWindow`) es zurecht. Beim zweiten
+und jedem weiteren Reiter tritt der Fall nicht auf, weil dann der `else`-Zweig
+mit `ShowWindow(SW_HIDE)` greift. Es bleibt also hoechstens ein Aufblitzen beim
+Start; ein Datenfehler entsteht nicht.
+
+**Zu tun:** in `SECTabWndBase::InsertTab` den ersten Reiter nur vormerken
+(`m_pActiveWnd` setzen) und das Zeigen dem ersten `ActivateTab` bzw.
+`RecalcLayout` ueberlassen - oder `ZeigeInhaltsfenster` nur ausfuehren, wenn
+`pWnd->GetParent() == this` gilt.
+
+---
+
+## NP3-2 - `SEC3DTabControl::OnToolHitTest` ist als `int` deklariert
+
+**Sicherheit: nachgewiesen. Heute kein Fehler.**
+
+**Datei:** `Eudora71/OTShim/OTShim_Reiter.h:570` und
+`Eudora71/OTShim/OTShim_Reiter.cpp:1032`.
+
+    virtual int OnToolHitTest(CPoint point, TOOLINFO* pTI) const;
+
+`CWnd::OnToolHitTest` ist in MFC 14 als `virtual INT_PTR` deklariert
+(`afxwin.h:2429`). Unter Win32 ist `INT_PTR` gleich `int`, beide Deklarationen
+bezeichnen also dieselbe virtuelle Funktion - deshalb uebersetzt es. `OTShim.h`
+begruendet an zwei anderen Stellen (`SECControlBar::OnToolHitTest` Z. 572-577,
+`SECWorkbook::OnToolHitTest` Z. 1454-1460) ausdruecklich, warum dort `INT_PTR`
+steht; hier ist es nicht nachgezogen worden.
+
+**Folge:** keine, solange Win32 gilt. Bei einem x64-Bau waere es C2555
+(Ueberschreibung mit abweichendem Rueckgabetyp) - immerhin ein lauter Fehler,
+kein stiller. Derselbe Sperrgrund wie Befund N1.
+
+**Zu tun:** auf `INT_PTR` ziehen, wie an den beiden anderen Stellen.
+
+---
+
+## NP3-3 - Der Kommentar zu `CreateFromBitmap` zaehlt die Aufrufstellen falsch
+
+**Sicherheit: nachgewiesen. Der Code ist richtig, nur die Begruendung stimmt
+nicht.**
+
+**Datei:** `Eudora71/OTShim/OTShim_Bild.h:326-328`
+
+> "Die Quellbitmap ist an drei von fuenf Stellen im uebergebenen DC ausgewaehlt:
+> QCToolBarManager.cpp:420/421, 433/434, 446/447 und QCGraphics.cpp:167/226"
+
+Nachgezaehlt sind es **neun** Aufrufstellen (Zeile 322 derselben Datei zaehlt
+sie selbst korrekt auf), und ausgewaehlt ist die Quellbitmap an **sechs** davon:
+
+| Aufrufstelle | Quellbitmap im DC ausgewaehlt? | Beleg |
+|---|---|---|
+| `QCGraphics.cpp:226` | ja | `:167` `cdc.SelectObject(&Bitmap)` |
+| `QCGraphics.cpp:258` | nein | `cdc.CreateCDC()` ohne Auswahl |
+| `QCGraphics.cpp:615` | nein | frischer `CreateCompatibleDC(NULL)` |
+| `LinkHistoryManager.cpp:1249` | nein | `:1242` `cdc.SelectObject(pSavePrevBitmap)` loest vorher |
+| `QCToolBarManager.cpp:421` | ja | `:420` `theSrcDC.SelectObject(&m_bmp)` |
+| `QCToolBarManager.cpp:434` | ja | `:433` `theSrcDC.SelectObject(theBitmapA)` |
+| `QCToolBarManager.cpp:447` | ja | `:446` `theSrcDC.SelectObject(theBitmapB)` |
+| `QCToolBarManager.cpp:569` | ja | `:559` `pBmpOldSrc = theSrcDC.SelectObject(&m_bmp)` |
+| `QCToolBarManager.cpp:582` | ja | `:581` `theSrcDC.SelectObject(theNewButtonBitmap)` |
+
+Die Umsetzung ist davon unberuehrt - sie prueft den Zustand zur Laufzeit mit
+`::GetCurrentObject(hdc, OBJ_BITMAP)` und behandelt beide Faelle. Nur die
+Zahlenangabe im Kommentar ist falsch und laesst die beiden Stellen 569/582
+aussehen, als seien sie geprueft und unkritisch.
+
+**Zu tun:** die Zahl im Kommentar berichtigen (sechs von neun).
+
+---
+
+## Geprueft und in Ordnung (Nachpruefung 3)
+
+### Stufe 2 - die zweite Andockleiste von `SECMiniDockFrameWnd`
+
+Das war der Hauptpunkt des Auftrags: `SECMiniDockFrameWnd` haelt neben der von
+`CMiniDockFrameWnd` geerbten `m_wndDockBar` (`CDockBar`, `afxpriv.h:664`) eine
+eigene `m_wndSECDockBar` (`SECDockBar`). **Beide bleiben konsistent, auch beim
+Zerstoeren.** Nachgemessen, nicht vermutet:
+
+- **Alle** Stellen, an denen MFC `m_wndDockBar` anfasst, sind ueberschrieben.
+  Gemessen mit `grep -n m_wndDockBar` ueber `atlmfc/src/mfc/*.cpp` (MSVC
+  14.38.33130): `bardock.cpp:798` (Baumeister), `:800` (`m_bAutoDelete`),
+  `:844/852` (`Create`), `:866` (`RecalcLayout`), `:873` (`OnClose`),
+  `:884-913` (`OnNcLButtonDown`), `:928-933` (`OnNcLButtonDblClk`). Genau diese
+  sechs Methoden ersetzt der Shim, und alle drei Nachrichtenbehandler stehen in
+  `BEGIN_MESSAGE_MAP(SECMiniDockFrameWnd, ...)` (`OTShim.cpp:3002-3007`), fangen
+  die Nachricht also vor der Basisklasse ab. `OnMouseActivate` ist die einzige
+  nicht ueberschriebene Methode von `CMiniDockFrameWnd` - und sie fasst
+  `m_wndDockBar` nicht an. Die Behauptung im Kopf von `OTShim.h:916-920` stimmt
+  also wortgenau.
+- **Der Zugriff von aussen laeuft ueber die Kennung, nicht ueber den
+  Datenmember.** `CFrameWnd::FloatControlBar` (`winfrm2.cpp:202`) und
+  `CFrameWnd::SetDockState` (`dockstat.cpp:476`) holen die schwebende
+  Andockleiste mit `pDockFrame->GetDlgItem(AFX_IDW_DOCKBAR_FLOAT)`. Der Shim
+  legt `m_wndSECDockBar` unter genau dieser Kennung an (`OTShim.cpp:3067-3068`),
+  MFC findet also die richtige.
+- **`m_wndDockBar` bekommt nie ein Fenster.** Damit ist sie in keiner
+  Leistenliste (`CControlBar::OnCreate`, `barcore.cpp:554-566`, meldet die
+  Leiste erst beim Anlegen beim Rahmen an), taucht in keinem `GetDlgItem` auf
+  und hat beim Abraeumen nichts zu tun: `CWnd::~CWnd` findet `m_hWnd == NULL`,
+  und `m_bAutoDelete` ist von `CMiniDockFrameWnd::CMiniDockFrameWnd` auf
+  `FALSE` gesetzt. Fuer `m_wndSECDockBar` setzt der Shim dasselbe
+  (`OTShim.cpp:3016`) - richtig, denn der Zerstoerungsweg
+  `CDockBar::RemoveControlBar` nach `pFrameWnd->DestroyWindow()`
+  (`bardock.cpp:342-347`) fuehrt ueber `CFrameWnd::PostNcDestroy` auf
+  `delete this`, und das Wertfeld darf sich nicht zusaetzlich selbst freigeben.
+- **Eudora zieht mit.** `QCMiniDockFrameWnd` (`workbook.cpp:539, 574`) ersetzt
+  beide `RecalcLayout`-Fassungen vollstaendig und liest darin ausschliesslich
+  `m_wndSECDockBar`; `Create`, `OnClose`, `OnNcLButtonDown` und
+  `OnNcLButtonDblClk` ueberschreibt es nicht, es laufen also die Fassungen des
+  Shims. Gegenprobe: `grep -rn "m_wndDockBar|m_wndSECDockBar"` ueber `Eudora71`
+  ausserhalb von `OTShim/` liefert nur `workbook.cpp` - die
+  `m_wndDockBar`-Treffer dort (`:371, :373, :457, :459`) gehoeren zu
+  `QCControlBarWorksheet`, also zum gleichnamigen Wertfeld von
+  `SECControlBarWorksheet`, das eine andere Klasse ist.
+- **Kleiner Unterschied ohne Folge:** MFC laeuft in `OnNcLButtonDown` und
+  `OnNcLButtonDblClk` ab `nPos = 1` durch `m_arrBars`, der Shim beginnt in
+  `GetFirstDockedBar` bei 0. `CDockBar::CDockBar` legt an Index 0 immer ein
+  `NULL` an (`bardock.cpp:35`), und keine Einfuegeoperation ueberschreibt es
+  (`DockControlBar` haengt an, `Insert` und `SetBarInfo` beginnen bei 1).
+  `GetDockedControlBar(0)` liefert also stets `NULL`; die Schleifen sind
+  gleichwertig.
+- **Zusatz gegenueber MFC, absichtlich:** wo MFC `ENSURE_VALID(pBar)` und
+  `ENSURE(pBar->m_pDockContext != NULL)` schreibt, prueft der Shim und faellt
+  auf `CMiniFrameWnd::OnNcLButtonDown` zurueck. Das ist strikt vertraeglicher
+  als das Original.
+
+### Stufe 2 - uebriger Teil der Andockfamilie
+
+- **`SECControlBar::GetBarInfo`/`SetBarInfo`** sind fuer die einzige
+  Aufrufstelle (`WazooBarMgr.cpp:432-436`, Andockhoehe der Task-Leiste auf 80
+  setzen) verlustfrei: `GetBarInfo` legt alle elf SEC-Felder ab und ruft danach
+  `GetBarInfoEx`, `SetBarInfo` liest sieben davon zurueck. Dass `m_dwStyle` und
+  `m_dwDockStyle` bewusst NICHT zurueckgeschrieben werden, ist richtig -
+  `CControlBar::SetBarInfo` (`dockstat.cpp:584-616`) fasst genau diesen Zustand
+  gleich danach selbst an.
+- **`SECDockBar`, Zeilenlogik.** `GetControlBarRow`, `IsOnlyControlBarInRow`,
+  `BarIsNewToThisRow`, `GetRowHeight`, `InvalidateToRow` und `NormalizeRow`
+  suchen den Zeilenanfang alle nach demselben Muster (rueckwaerts bis vor die
+  naechste NULL-Marke) und brechen vorwaerts an der naechsten NULL ab. Alle
+  sechs sind gegen `nPos < 0 || nPos >= GetSize()` geschrankt, und die
+  Rueckwaertssuche kann wegen des NULL an Index 0 nicht unter 1 fallen. Die
+  Platzhalter (Werte bis 0xffff) werden ueber `GetDockedControlBar`
+  ausgefiltert. Kein Zugriff ueber das Feldende gefunden.
+- **`SECDockBar`, Splitter und Innenkanten.** `AddSplitter`/`AddClientEdge`
+  verwenden freie Eintraege wieder, `EndRecycleSplitters`/`EndRecycleEdges`
+  raeumen rueckwaerts auf (richtig, weil `RemoveAt` nachfolgende Plaetze
+  verschiebt), `DeleteAllSplitters`/`DeleteAllEdges` geben frei und leeren.
+  Destruktor und `OnDestroy` rufen beide `DeleteAllSplitters`/`DeleteAllEdges`;
+  weil beide danach `RemoveAll()` machen, ist die zweite Runde leer - keine
+  Doppelfreigabe.
+- **`SECControlBar::OnContextMenu`** laedt seine Beschriftungen mit
+  `strItem.LoadString(ID_SEC_ALLOWDOCKING)` usw. Nachgesehen: `SECRES.H:189-191`
+  vergibt die Kennungen 53288 bis 53290, `SECRES.RC:412-414` traegt genau diese
+  drei in eine STRINGTABLE ein, und `EudoraRes.rc:11712` bindet `secres.rc` in
+  einem `#ifndef APSTUDIO_INVOKED`-Block ein, der beim Bau durchlaufen wird. Die
+  Zeichenketten sind zur Laufzeit also da.
+- **`SECControlBar::DeleteLayoutInfo`** ist gegen Mehrfachaufruf sicher
+  (`m_pArrLayoutInfo` wird auf NULL gesetzt); Destruktor und `OnDestroy` rufen
+  es beide.
+- **Stufe 2b** (`SECFrameWnd`, `SECDockState`, `SECControlBarInfo(Ex)`,
+  `SECControlBarManager`, `SECDockContext`) besteht fast nur aus
+  Durchreichungen an die MFC-Gegenstuecke. Zwei Stellen mit Inhalt geprueft:
+  `SECControlBarInfo::~SECControlBarInfo` gibt `m_pBarInfoEx` frei (der
+  Erzeuger ist `CreateControlBarInfoEx`, der Besitz liegt also wirklich hier),
+  und `SECFrameWnd::OnActivate` pflegt `m_bActive`, das `GetActiveState()` nach
+  aussen reicht. `SECFrameWnd::dwSECDockBarMap` ist feldgleich mit
+  `SECMDIFrameWnd::dwSECDockBarMap` und mit `CFrameWnd::dwDockBarMap`
+  (`winfrm2.cpp:18-24`) - genau das verlangt `CMainFrame::EnableDocking`
+  (`mainfrm.cpp:2156-2173`), sonst entstuenden acht statt vier Andockleisten.
+
+### Registerkarten - die Punkte aus dem Kommentarkopf
+
+- **Der Ringlauf `ActivateTab` - `TCM_TABSEL` - `OnTabSelect` - `ActivateTab`
+  ist wirklich aufgeloest**, und zwar doppelt abgesichert:
+  1. `SECTabWndBase::OnTabSelect` (`OTShim_Reiter.cpp:1793-1810`) ruft
+     `ZeigeInhaltsfenster` und NICHT `ActivateTab`; es meldet nichts an das
+     Steuerelement zurueck.
+  2. Selbst wenn es das taete, setzt `SECTabControlBase::ActivateTab` den
+     aktiven Reiter mit `SetActiveTabQuiet` **vor** `OnActivateTab`, und der
+     Wiedereintritt liefe in die Abbruchbedingung
+     `if (m_bActiveTab && m_nActiveTab == nTab) return;`.
+  Die Gegenprobe auf Eudoras Seite stimmt ebenfalls: `CWazooBar::OnTabSelect`
+  (`WazooBar.cpp:1490-1530`) setzt nur Fenstertitel und Symbol und ruft
+  `ActivateTab` nicht.
+- **Es wird wirklich kein fremdes Fenster zerstoert.** `SECTabWndBase::RemoveTab`
+  zerstoert nur, was in `m_arrEigeneFenster` steht, also nur ueber `CreateView`
+  selbst erzeugte Fenster; `~SECTab` und `~SEC3DTab` fassen `m_pClient` und
+  `m_hIcon` nicht an. Das passt zu `CWazooBar::RemoveWazooWindow`
+  (`WazooBar.cpp:196-210`), das direkt nach `RemoveTab` mit
+  `ASSERT(::IsWindow(pWazooWnd->GetSafeHwnd()))` prueft, dass das Fenster noch
+  lebt. `SECTabWndBase::OnDestroy` fasst die Inhaltsfenster ebenfalls nicht an -
+  richtig, denn `CWazooBar::OnDestroy` (`WazooBar.cpp:1197-1225`) hat sie zu
+  diesem Zeitpunkt schon zerstoert und geloescht (WM_DESTROY erreicht das
+  Elternfenster vor den Kindern).
+- **Das Loeschen der Reiter ueber den `CObject`-Zeiger ist zulaessig.**
+  `~SECTab` ist wie im Original geschuetzt, aber `CObject::~CObject` ist
+  oeffentlich und virtuell; die Zugriffspruefung greift an `CObject`, die
+  Ausfuehrung landet bei `~SECTab`. Kein Speicherleck, kein Zugriffsfehler.
+- **Kein doppeltes Loeschen der Reiterliste.** `SECTabControlBase::OnDestroy`
+  loescht die Reiter und ruft `RemoveAll()`; der Destruktor laeuft danach ueber
+  ein leeres Feld. `SECTabWndBase::OnDestroy` loescht `m_pTabCtrl` und setzt es
+  auf NULL, der Destruktor findet nichts mehr vor.
+- **Der Kurzhinweis-Puffer ist richtig verwaltet.** `OnToolHitTest` legt den
+  Text mit `_tcsdup` an; MFC gibt ihn in `CWnd::_FilterToolTipMessage`
+  (`tooltip.cpp:501-502`) mit `free(tiHit.lpszText)` wieder frei, und zwar
+  genau unter der Bedingung `tiHit.hinst == 0` - die erfuellt ist, weil MFC die
+  Struktur vorher mit `memset` nullt (`tooltip.cpp:433`). Passendes
+  Allokator-Paar, kein Leck.
+- **`EnableToolTips` vor dem Anlegen des Fensters ist unbedenklich.**
+  `SECTabControlBase::Create` ruft `Initialize` vor `CWnd::Create`, und
+  `SEC3DTabControl::Initialize` ruft `EnableToolTips(TRUE)`.
+  `CWnd::_EnableToolTips` (`tooltip.cpp:303-345`) setzt im Einschaltfall nur
+  `m_nFlags |= WF_TOOLTIPS` und einen Modulzeiger - kein `m_hWnd` noetig.
+- **Alle Reiterzugriffe sind geschrankt.** `GetTabPtr` prueft ueber
+  `TabExists(nTab)`, und jede Stelle, die einen Reiter anfasst, geht ueber
+  `GetTabPtr` und prueft auf NULL. `SetActiveTabQuiet` setzt `m_nActiveTab` auf
+  -1, sobald der Index aus dem Bereich faellt; `InsertTab` und `DeleteTab`
+  ziehen den Index richtig nach (nachgerechnet fuer Einfuegen vor und hinter dem
+  aktiven Reiter und fuer Loeschen des letzten Reiters).
+
+### Stufe 4 - `SECImage::CreateFromBitmap`
+
+**Die Frage des Auftrags war, ob die Bitmapauswahl auf allen Rueckgabepfaden
+wiederhergestellt wird. Ja.** `OTShim_Bild.cpp:1120-1209` hat nach dem Loesen
+der Auswahl (Z. 1164-1171) **keinen einzigen weiteren `return`**: die beiden
+Fehlerfaelle (`OTShimDibAnlegen` scheitert, `::GetDIBits` liefert 0) setzen
+`bErfolg = FALSE` und fallen durch den gemeinsamen Ausgang Z. 1198-1208, der
+erst `::SelectObject(hdc, hQuelle)` zuruecksetzt, dann die Platzhalter-Bitmap
+loescht und zuletzt einen selbst angelegten DC freigibt. Die drei frueheren
+`return FALSE` (Z. 1130, 1138, 1152) liegen alle **vor** der ersten
+Zustandsaenderung. Auch der Fall "`::CreateBitmap` fuer den Platzhalter
+scheitert" ist abgefangen: dann wird `bWarAusgewaehlt` auf FALSE gesetzt, der
+Ausgang laesst den DC also in Ruhe.
+Der zweite Zweck der Methode ist ebenfalls erfuellt: `OTShimDibAnlegen` ruft als
+erstes `OTShimDibFreigeben()`, der Mehrfachaufruf auf demselben Objekt
+(`QCToolBarManager.cpp:421/434/447` und `:569/582`) leckt also nicht.
+
+### `SECDateTimeCtrl`
+
+**Die Frage des Auftrags war, ob das Nachtragen der Formatzeichenkette
+zuverlaessig greift. Ja.** Der einzige Weg in Eudora ist
+`SearchView.cpp:1565-1566`: `SetFormat("MMMM d, yyyy")` vor
+`AttachDateTimeCtrl`. `SetFormat(LPCTSTR)` legt die Zeichenkette in
+`m_strCustomFormat` ab und ruft `ApplyFormat()`, das ohne Fenster sofort
+zurueckkehrt. `AttachDateTimeCtrl` ruft `CreateEx` (das seinerseits schon
+`ApplyFormat()` ruft) und danach noch einmal `ApplyFormat()` - der zweite Aufruf
+ist ueberfluessig, aber harmlos. Es gibt keinen Weg, auf dem ein Fenster
+entsteht, ohne dass danach `ApplyFormat` liefe: `Create`, `CreateEx` und
+`AttachDateTimeCtrl` tun es alle drei.
+Zwei Nebenpunkte mitgeprueft:
+- Das fehlende `WS_VISIBLE` im Vorgabewert `dwWinStyles = WS_CHILD|WS_TABSTOP`
+  ist **kein Fehler**: der Vorgabewert ist wortgleich mit dem Original
+  (`DTCtrl.h:85-87`), und `CSearchView` schaltet die Sichtbarkeit selbst
+  (`SearchView.cpp:1076` und `:2230`).
+- Das Wegraeumen des Platzhalters (`pPlaceholder->DestroyWindow()`) ist richtig:
+  der Platzhalter ist die oertliche `CEdit TempEdit` aus
+  `SearchView.cpp:1557-1561`, `GetDlgItem` liefert genau dieses Objekt aus der
+  staendigen Fensterzuordnung, und `DestroyWindow` setzt dessen `m_hWnd` auf
+  NULL - der spaetere Zerstoerer von `TempEdit` findet nichts mehr vor.
+
+---
+
+## Nebenbefund im Eudora-Originalcode
+
+`Eudora71/Eudora/SearchView.cpp:1567` schreibt
+
+    m_DateTimeCtrl->SetFont(pFont);
+
+statt `m_DateTimeCtrl[nIdx].SetFont(pFont)`. Damit bekommt bei jedem Durchlauf
+immer nur das Feld mit Index 0 die Schrift gesetzt; die uebrigen
+Steuerelemente behalten die Systemvorgabe. Die beiden Nachbarzeilen (`:1565`,
+`:1566`) indizieren korrekt. **Kein Portierungsfehler** - die Zeile steht in
+`main` genauso. Nur der Vollstaendigkeit halber festgehalten; die Auswirkung ist
+eine abweichende Schrift, sonst nichts.
+
+---
+
+## Stand der Nachpruefung 3
+
+**Durch (Zeile fuer Zeile gelesen):**
+
+- `OTShim/OTShim.h` vollstaendig (1614 Zeilen).
+- `OTShim/OTShim.cpp` Z. 175-540 (`SECMDIFrameWnd`), Z. 1229-1334
+  (`SECControlBarWorksheet`), Z. 1336-3881 (Stufe 2 und 2b vollstaendig).
+- `OTShim/OTShim_Reiter.h` vollstaendig (753 Zeilen).
+- `OTShim/OTShim_Reiter.cpp` vollstaendig (2172 Zeilen).
+- `OTShim/OTShim_Bild.cpp` `CreateFromBitmap` und `OTShimDibAnlegen`.
+- `OTShim/OTShim_Palette.cpp` `SECDateTimeCtrl`, Erzeugungs- und Formatteil
+  (Z. 30-260).
+- Gegengelesen in Eudora: `WazooBar.cpp` (Reiterpflege, `OnDestroy`,
+  `OnTabSelect`), `WazooBarMgr.cpp` (Andockaufbau), `DockBar.cpp`,
+  `workbook.cpp` (`QCControlBarWorksheet`, `QCMiniDockFrameWnd`),
+  `QC3DTabWnd.cpp` (`ActivateTab`, `OnLButtonDown`), `QCToolBarManager.cpp`
+  und `QCGraphics.cpp` (Aufrufstellen von `CreateFromBitmap`),
+  `SearchView.cpp` (`SECDateTimeCtrl`).
+- Gegengelesen in MFC 14.38.33130: `bardock.cpp`, `dockstat.cpp`,
+  `winfrm2.cpp`, `barcore.cpp`, `tooltip.cpp`.
+
+**Noch offen:**
+
+| Gegenstand | Grund |
+|---|---|
+| `OTShim/OTShim.cpp` Z. 1-175 und Z. 540-1229 (Stufe 0 und Stufe 1) | in der ersten Runde bereits unter "OTShim, uebriger Teil" geprueft; hier nur ueberflogen |
+| `OTShim/OTShim_Bild.{h,cpp}` ausserhalb von `CreateFromBitmap` (rund 2000 Zeilen: Laden, Speichern, Farbtafel, GDI+-Anbindung) | noch nicht begonnen |
+| `OTShim/OTShim_Palette.{h,cpp}` ausserhalb von `SECDateTimeCtrl` | noch nicht begonnen |
+| `tools/lehren-spiegeln.pl`, `tools/pruefstand-melden.pl` | noch nicht begonnen |
+| `OTShim_Werkzeugleiste`: Anordnungsrechnung, `SECTwoPartBtn::DrawButton`, `SECWndBtn`/`SECComboBtn`, `SECCustomizeToolBar` | unveraendert offen aus Nachpruefung 2 |
+| `Eudora.vcxproj` | war waehrend der ganzen Pruefung im Fluss (andere Agenten); eine Aussage waere schon beim Aufschreiben veraltet |
