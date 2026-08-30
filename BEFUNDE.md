@@ -1034,7 +1034,7 @@ griechische Schrift) - ein anderer Arbeitsbereich, QCSSL hat daran keinen Anteil
 
 Bearbeitet wurden die verstreuten Befunde ausserhalb von QCSSL und der
 Ersatzschicht: M5, N2, N4, N5, N8. Die bestehenden Befundabschnitte oben sind
-unveraendert geblieben; dieser Abschnitt verweist nur auf sie.
+unveraendert geblieben; dieser Abschnitt verweist nur auf sie. Hinweis zur Herkunft: die vier Quelldateien und dieser Abschnitt sind versehentlich in den Commit 63f81dc eines parallel laufenden Agenten geraten, dessen Nachricht von ISOTranslate spricht. Die Begruendung zu jeder Aenderung steht deshalb nur hier, nicht in einer Commit-Nachricht.
 
 **Bau:** `Eudora.vcxproj` Debug/x86 uebersetzt vollstaendig durch - kein einziger
 Uebersetzungsfehler mehr, auch kein `C2572` aus `secbtns.h`. Es bleiben 14
