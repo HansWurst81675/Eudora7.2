@@ -1128,6 +1128,32 @@ der zurueckgestellte Hostnamen-Befund -, 2a/2b Fehlschlag, 2c TLSv1.2, 2d TLSv1.
 Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
 Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 33 bestanden, 0 fehlgeschlagen.
 
+## Ausgeliefertes Paket nachgezogen
+
+`Releases/1.0/QCSSL.dll` ist neu gebaut, `QCSSL.dll.sha256` erneuert
+(`5c7fcd5004036e9247252b8ec822687758a84774dad2d024e6fe172116339664`), und im
+`Releases/1.0/README.md` steht unter "Neubau vom 30.08.2026", was fuer diesen
+Build gemessen ist und was nicht. Damit stimmt auch die Aussage im Abschnitt
+"Herkunft" wieder, die DLL sei byte-identisch mit `Eudora71/Bin/Release/QCSSL.dll`.
+
+## Was in `PORTIERUNG.md` durch diese Arbeit ueberholt ist
+
+Nicht selbst geaendert - dort arbeitet LEKTOR. Nur als Hinweis:
+
+- Z. 204-210: "Als Mindestprotokoll setzt `QCSSLContext.cpp:561-583` bei sieben der
+  acht Werte ... `TLS1_2_VERSION`. Der achte, `m_ProtocolVersion == 3` ..., setzt
+  `TLS1_VERSION`, also TLS 1.0." Das gilt seit M1 nicht mehr: alle acht Werte setzen
+  `TLS1_2_VERSION`.
+- Derselbe Absatz: "Ein ungueltiger Wert landet im `default`-Zweig, meldet
+  `IDS_ERR_VERSIONINVALID` und bleibt beim Startwert `TLS1_2_VERSION`." Das war schon
+  durch H1 ueberholt - der Zweig gibt jetzt `NULL` zurueck, die Verbindung kommt
+  nicht zustande.
+- Die Zeile "Eine Obergrenze wird nirgends gesetzt" stimmt weiterhin und soll auch
+  so bleiben.
+- Tabelle Z. 196: der Eintrag zu `BIO_s_workersocket` koennte ergaenzen, dass die
+  Struktur seit M2 erst nach dem Fuellen unteilbar veroeffentlicht wird.
+- Nicht erwaehnt, aber jetzt anders: `BIO_set_fd()` wird nicht mehr benutzt (N1).
+
 ---
 
 # Erledigt durch SUMME (30.08.2026, Branch `eudora-exe-linkt`)
