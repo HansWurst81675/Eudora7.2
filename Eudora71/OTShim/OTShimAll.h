@@ -40,9 +40,10 @@
 //
 //   sbarstat.h -> SECStatusBar (in OTShim.h ein typedef auf CStatusBar)
 //   sectod.h   -> SECTipOfDay  (in OTShim.h nachgebaut)
-//   secbtns.h  -> SECLoadSysColorBitmap; das Original deklariert das
-//                 Standardargument ein zweites Mal (C2572). Stufe 3 ersetzt die
-//                 Knopfklassen, also darf das Original weichen.
+// secbtns.h bleibt bewusst im Original (siehe unten). Der Zusammenstoss bei
+// SECLoadSysColorBitmap ist stattdessen in OTShim.h:307 geloest: die dortige
+// inline-Fassung fuehrt KEIN Standardargument mehr, secbtns.h:340 traegt es
+// nach. Damit entfaellt C2572 ohne den Waechter.
 //
 #ifndef __SBARSTAT_H__
 #define __SBARSTAT_H__
@@ -53,6 +54,24 @@
 // #ifndef __SECBTNS_H__  -- NICHT setzen: secbtns.h liefert SECBitmapButton, das Stufe 3 nicht ersetzt (sonst 102 Fehler)
 // #define __SECBTNS_H__
 // #endif
+
+//
+// MIN und MAX.
+//
+// Bis zum Einhaengen von Stufe 4 zog secall.h ueber secjpeg.h die libjpeg-
+// Kopfdatei Jpegint.h nach, und die definiert MIN/MAX (Jpegint.h:326,329).
+// Sechs Stellen in Eudora benutzen die Makros, ohne sie selbst zu definieren:
+// sendmail.cpp:1676,1733,1734,1736, mime.cpp:1779, summary.cpp:2828.
+// OTShim_Bild.h setzt __SECJPEG_H__, damit entfaellt Jpegint.h - gemessen:
+// fuenf Fehler C3861 in sendmail.cpp und summary.cpp. Die beiden Makros stehen
+// hier wortgleich wieder her, was vorher zufaellig vorhanden war.
+//
+#ifndef MAX
+#define MAX(a,b)	((a) > (b) ? (a) : (b))
+#endif
+#ifndef MIN
+#define MIN(a,b)	((a) < (b) ? (a) : (b))
+#endif
 
 #include "secall.h"        // der Rest im Original
 

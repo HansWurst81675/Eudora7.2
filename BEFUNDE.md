@@ -116,7 +116,7 @@ dass die Stelle geprueft ist.
 
 ---
 
-## M1 - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
+## M1 [ERLEDIGT] - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
 
 **Sicherheit: nachgewiesen (Code); Auswirkung: Verdacht**
 
@@ -138,9 +138,27 @@ Zwei Abweichungen auf einmal:
    das die Voreinstellung Security Level 1 von OpenSSL 3 wieder ab, die TLS < 1.2
    ohnehin ablehnt - verlassen sollte man sich darauf nicht.
 
-**Zu tun:** Entscheiden, ob Fall 3 heute noch etwas anderes bedeuten soll als
-Fall 0/1/4/6/7. Wenn nicht: ebenfalls auf `TLS1_2_VERSION` legen. Wenn doch:
-`SSL_CTX_set_max_proto_version()` mitsetzen und den Kommentar ergaenzen.
+**ERLEDIGT** (Branch `eudora-exe-linkt`, Commit "QCSSL: TLS-Untergrenze fuer Fall 3
+auf TLS 1.2 gelegt").
+
+Entschieden wurde die erste Fassung: Fall 3 bekommt denselben Boden wie alle
+anderen Faelle. Gruende, nachgemessen statt vermutet:
+
+- Fall 3 ist nicht der Sonderfall, sondern der **Normalfall**: `EudoraRes.rc:8143`
+  und `:8147` geben `SSLReceiveVersion` und `SSLSendVersion` beide mit **3** vor.
+  Die schwaechste Untergrenze galt also fuer jede Voreinstellung, die TLS-1.2-
+  Untergrenze der anderen Faelle fuer fast niemanden.
+- Die Obergrenze offenzulassen ist richtig und bleibt so; TLS 1.3 zu verbieten,
+  weil ein Anwender 2006 "TLSv1" angeklickt hat, waere unsinnig. Nur die
+  Untergrenze war zu tief.
+- Wirkung gemessen, nicht angenommen: `Eudora71/Tests/QCSSL/work/ergebnis_qcssl_lokal.txt`,
+  Fall 2e (`ProtocolVersion=3` gegen einen Server, der nur TLS 1.0 spricht) schlug
+  schon vor der Aenderung fehl - Security Level 1 von OpenSSL 3 laesst TLS 1.0/1.1
+  gar nicht erst zu. Die Aenderung schreibt also nur fest, was ohnehin geschieht,
+  und bricht keine Verbindung, die heute zustande kommt.
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 557 (Kommentar), Z. 577/578
+(`iMinVersion = TLS1_2_VERSION` statt `TLS1_VERSION`, mit Begruendung im Code).
 
 ---
 

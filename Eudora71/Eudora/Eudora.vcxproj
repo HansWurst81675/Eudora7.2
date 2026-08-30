@@ -64,7 +64,7 @@
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\OTShim;../MAPI/include;..\SearchEngine\PublicInc;..\SpeechSDK\Include;..\AccountWizard\PublicInc;..\PaigeDLL\PGHEADER;..\Qt3.x\CIncludes;..\QCUtils\public\inc;..\QCSocket\inc;..\OT501\Include;..\EuImap\public\inc;..\imapdll\public\inc;..\DirectoryServices\DirectoryServicesUI\public\inc;..\PlaylistClient\plstclnt_dll;..\EuLang\public\inc;..\EuMemMgr\Include;..\tae;..\expat\Source\lib;..\QCSSL\public\inc;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;COMMERCIAL;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0410;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;COMMERCIAL;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -106,8 +106,8 @@
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>../MAPI/include;..\SearchEngine\PublicInc;..\SpeechSDK\Include;..\AccountWizard\PublicInc;..\PaigeDLL\PGHEADER;..\Qt3.x\CIncludes;..\QCUtils\public\inc;..\QCSocket\inc;..\OT501\Include;..\EuImap\public\inc;..\imapdll\public\inc;..\DirectoryServices\DirectoryServicesUI\public\inc;..\PlaylistClient\plstclnt_dll;..\EuLang\public\inc;..\EuMemMgr\Include;..\tae;..\expat\Source\lib;..\QCSSL\public\inc;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;COMMERCIAL=1;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0410;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\OTShim;../MAPI/include;..\SearchEngine\PublicInc;..\SpeechSDK\Include;..\AccountWizard\PublicInc;..\PaigeDLL\PGHEADER;..\Qt3.x\CIncludes;..\QCUtils\public\inc;..\QCSocket\inc;..\OT501\Include;..\EuImap\public\inc;..\imapdll\public\inc;..\DirectoryServices\DirectoryServicesUI\public\inc;..\PlaylistClient\plstclnt_dll;..\EuLang\public\inc;..\EuMemMgr\Include;..\tae;..\expat\Source\lib;..\QCSSL\public\inc;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;COMMERCIAL=1;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>

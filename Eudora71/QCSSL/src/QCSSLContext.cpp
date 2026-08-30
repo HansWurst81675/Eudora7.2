@@ -554,7 +554,7 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 	//	SSL_CTX_set_min_proto_version() eingegrenzt.
 	//
 	//	SSLv2 und SSLv3 sind seit Jahren gebrochen und werden nicht mehr
-	//	angeboten - die betreffenden Faelle landen auf TLS 1.2 als Untergrenze.
+	//	angeboten. Alle Faelle - auch Fall 3 - landen auf TLS 1.2 als Untergrenze.
 	//
 	int		iMinVersion = TLS1_2_VERSION;
 
@@ -574,8 +574,8 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 		//	die niedrigste noch vertretbare Version gegangen.
 		iMinVersion = TLS1_2_VERSION;
 		break;
-	case 3:	//	frueher TLSv1
-		iMinVersion = TLS1_VERSION;
+	case 3:	//	frueher TLSv1, damals versionsgenau (nur TLS 1.0)
+		iMinVersion = TLS1_2_VERSION;	//	M1: derselbe Boden wie alle anderen Faelle. Vorher "TLS 1.0, nach oben offen" - die einzige Einstellung unterhalb von TLS 1.2, und ausgerechnet die Voreinstellung (SSLReceiveVersion/SSLSendVersion = 3). Gemessen in Tests/QCSSL, Fall 2e: OpenSSL 3 lehnt TLS 1.0/1.1 auf Sicherheitsstufe 1 ohnehin ab - die Absicht steht jetzt auch im Code.
 		break;
 	default:
 		ConnectionInfo *pConnectionInfo = (ConnectionInfo*) pSSLReference->m_pConnectionManagerInfo;
