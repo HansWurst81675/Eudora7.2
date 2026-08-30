@@ -185,6 +185,7 @@ HMENU g_EudoraProHMENU;
 #endif
 
 #include "DebugNewHelpers.h"
+#include "BuildKennung.h"
 
 //	Definitions from newer version of "WinUser.h" and "BaseTsd.h" in Microsoft platform SDK
 #ifndef COLOR_MENUBAR
@@ -9656,4 +9657,68 @@ void CMainFrame::OnAlwaysShowTrayIcon()
 void CMainFrame::OnUpdateAlwaysShowTrayIcon(CCmdUI* pCmdUI)
 {
 	pCmdUI->SetCheck(GetIniShort(IDS_INI_ALWAYS_SHOW_TRAY_ICON));
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// OnUpdateFrameTitle [protected, virtual]
+//
+// Haengt die Bau-Kennung an den Fenstertitel.
+//
+// WARUM: Am 30.08.2026 meldete Gregor, die Menues haetten "kurzfristig
+// funktioniert" - konnte aber nicht sagen, in welchem Bau, weil die Eudora.exe
+// keine Kennung trug. Damit war die Beobachtung wertlos. Ausserdem liefen
+// zeitweise mehrere Instanzen aus verschiedenen Verzeichnissen gleichzeitig
+// (eine von ihm, eine von einem Agenten), und ihre Fenster waren nicht
+// auseinanderzuhalten.
+//
+// Der Titel traegt jetzt beides:
+//
+//     Eudora - [In]   [1.0.3+31810e2 - Eudora72-1.0.3]
+//                      |       |       |
+//                      |       |       Verzeichnis, aus dem die EXE stammt
+//                      |       Commit; ein Sternchen dahinter heisst, dass
+//                      |       beim Bau uncommittete Aenderungen vorlagen
+//                      Paketversion aus der Datei VERSION
+//
+// Die Kennung erzeugt tools/kennung-erzeugen.pl vor jedem Bau nach
+// BuildKennung.h (PreBuildEvent in Eudora.vcxproj).
+/////////////////////////////////////////////////////////////////////////////
+void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
+{
+	QCWorkbook::OnUpdateFrameTitle(bAddToTitle);
+
+	if (GetSafeHwnd() == NULL)
+		return;
+
+	// Das Verzeichnis, aus dem diese Instanz gestartet wurde - nur der letzte
+	// Namensteil, sonst wird der Titel unlesbar lang.
+	static CString strHerkunft;
+	if (strHerkunft.IsEmpty())
+	{
+		TCHAR szPfad[_MAX_PATH + 1];
+		szPfad[0] = _T('\0');
+		::GetModuleFileName(AfxGetInstanceHandle(), szPfad, _MAX_PATH);
+
+		CString strPfad(szPfad);
+		int nLetzter = strPfad.ReverseFind(_T('\\'));
+		if (nLetzter > 0)
+		{
+			strPfad = strPfad.Left(nLetzter);			// Dateiname weg
+			int nVorletzter = strPfad.ReverseFind(_T('\\'));
+			strHerkunft = (nVorletzter >= 0) ? strPfad.Mid(nVorletzter + 1) : strPfad;
+		}
+		if (strHerkunft.IsEmpty())
+			strHerkunft = _T("?");
+	}
+
+	CString strZusatz;
+	strZusatz.Format(_T("   [%s - %s]"), _T(EUDORA_BAU_KENNUNG), (LPCTSTR) strHerkunft);
+
+	CString strTitel;
+	GetWindowText(strTitel);
+
+	// Nicht doppelt anhaengen: OnUpdateFrameTitle laeuft bei jedem
+	// Fensterwechsel erneut.
+	if (strTitel.Find(strZusatz) < 0)
+		SetWindowText(strTitel + strZusatz);
 }

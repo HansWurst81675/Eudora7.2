@@ -60,6 +60,16 @@
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>setlocal
+set KENNUNG="$(ProjectDir)..\..\tools\kennung-erzeugen.pl"
+set WURZEL="$(ProjectDir)..\.."
+perl %KENNUNG% %WURZEL% &amp;&amp; exit /b 0
+"C:\Program Files\Git\usr\bin\perl.exe" %KENNUNG% %WURZEL% &amp;&amp; exit /b 0
+echo WARNUNG: perl nicht gefunden - BuildKennung.h bleibt unveraendert
+exit /b 0</Command>
+      <Message>Bau-Kennung erzeugen (BuildKennung.h)</Message>
+    </PreBuildEvent>
     <ClCompile>
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <Optimization>Disabled</Optimization>
@@ -102,6 +112,16 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>setlocal
+set KENNUNG="$(ProjectDir)..\..\tools\kennung-erzeugen.pl"
+set WURZEL="$(ProjectDir)..\.."
+perl %KENNUNG% %WURZEL% &amp;&amp; exit /b 0
+"C:\Program Files\Git\usr\bin\perl.exe" %KENNUNG% %WURZEL% &amp;&amp; exit /b 0
+echo WARNUNG: perl nicht gefunden - BuildKennung.h bleibt unveraendert
+exit /b 0</Command>
+      <Message>Bau-Kennung erzeugen (BuildKennung.h)</Message>
+    </PreBuildEvent>
     <ClCompile>
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <Optimization>MinSpace</Optimization>
