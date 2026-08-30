@@ -84,12 +84,20 @@ if ($nur_pruefen) {
     exit 1;
 }
 
-# Die Kopien mit in den Commit nehmen - sonst waere der Abgleich beim naechsten
-# Mal wieder faellig und das Wissen bliebe ungesichert.
-system('git', 'add', '--', "$ziel") == 0
-    or warn "git add auf $ziel fehlgeschlagen\n";
+# NICHT stagen. Ein "git add" an dieser Stelle hinterlaesst bei Commits mit
+# Pfadangabe (git commit -- <pfad>) eine Loeschung im Index: die Kopien kommen
+# zwar in den Commit, im Index steht danach "geloescht", und der naechste
+# gewoehnliche Commit fuehrt das aus - die gespiegelten Lehren waeren wieder weg.
+# Nachgewiesen in einem Testrepo (Befund NP3-4).
+#
+# Stattdessen wird der Commit abgebrochen. Ein Schritt mehr, dafuer kann nichts
+# lautlos verlorengehen - und genau darum geht es bei diesem Werkzeug.
 
-print "Arbeitsweise/ abgeglichen (" . scalar(@geaendert) . " Datei(en)):\n";
+print "Arbeitsweise/ wurde aktualisiert (" . scalar(@geaendert) . " Datei(en)):\n";
 print "  $_\n" for @geaendert;
+print "\nDie Kopien liegen jetzt im Arbeitsverzeichnis, sind aber nicht gestaget.\n";
+print "Bitte mit committen, dann erneut versuchen:\n";
+print "  git add Arbeitsweise\n";
+print "Der Commit wurde abgebrochen.\n";
 
-exit 0;
+exit 1;
