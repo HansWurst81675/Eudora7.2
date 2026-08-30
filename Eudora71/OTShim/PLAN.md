@@ -284,3 +284,71 @@ selbst. Nicht gesetzt sind `__SECTOD_H__` und `__SBARSTAT_H__` — die stehen in
 `OTShimAll.h`. Der Wächter `__SECBTNS_H__` laesst sich **nicht** setzen, ohne
 `SECStdBtn` und die uebrigen Knopfklassen mit wegzunehmen; das loest erst der
 Ersatz fuer `secbtns.h` aus Stufe 3 auf.
+
+---
+
+# Der Weg zum Linken (Agent LINKER, 30.08.2026)
+
+Laufendes Protokoll. Jede Zahl hier ist gemessen, mit Bezugscommit.
+
+## Gemessene Symbolzahlen
+
+| Zustand | Bezug | ungeloeste Externe |
+|---|---|---|
+| ohne Ersatzschicht | frueher, nicht reproduzierbar | 1088 (651 verschiedene) |
+| nach Stufe 0-2 und 4 | frueher, nicht reproduzierbar | rund 299 |
+| **alle fuenf Teile eingehaengt, Uebersetzung fehlerfrei** | **78a9c10** | **8** |
+
+Gemessen mit
+
+    MSBuild Eudora71\Eudora\Eudora.vcxproj -p:Configuration=Debug -p:Platform=x86
+            -p:BuildProjectReferences=false -p:IntDir=.\Build\DebugLINKER\ -v:m -nologo
+
+und der leeren Attrappe `Eudora71/Lib/Debug/OTA50D.LIB`.
+
+**Wichtig fuer jede weitere Messung:** `IntDir` muss ueberschrieben werden, solange
+mehrere Agenten gleichzeitig bauen — sonst schreiben zwei `cl.exe` in dieselbe
+`Build\Debug\vc143.pdb` und der Bau bricht mit 148x `C1041` ab (gemessen).
+`OutDir` dagegen **nicht** ueberschreiben: die Projektverweise loesen ihre
+Importbibliotheken ueber `$(OutDir)` auf, und der Link endet dann mit
+`LNK1104: AccountWizard.lib` (gemessen).
+
+## Was auf dem Weg dorthin zu beheben war
+
+Drei Uebersetzungsfehler, alle in `78a9c10`:
+
+1. **`C2572` in `secbtns.h:340`** — Neudefinition des Standardarguments von
+   `SECLoadSysColorBitmap`. Der Waechter `__SECBTNS_H__` ist **nicht** die
+   Loesung (102 Fehler statt einem, weil `secbtns.h` ausserdem
+   `SECBitmapButton` liefert). Stattdessen fuehrt die inline-Fassung in
+   `OTShim.h:307` kein Standardargument mehr; `secbtns.h:340` traegt es nach.
+2. **`WINVER=0x0410`** aus `Eudora.vcxproj:67` brach MFC 14.38
+   (`afxv_w32.h:36`, `C1189`) fuer alle Dateien ohne `stdafx.h` — also fuer vier
+   der fuenf Shim-Dateien. Statt den Umgehungsblock aus `OTShim_Palette.cpp`
+   viermal zu kopieren, steht die Projektdefinition jetzt auf `0x0501`, genau
+   dem Wert, den `stdafx.h:20-29` ohnehin fuer jede andere Datei erzwingt.
+3. **Fuenf `C3861` zu `MIN`/`MAX`** in `sendmail.cpp` und `summary.cpp`. Ursache
+   gemessen: `secall.h` zog ueber `secjpeg.h` die libjpeg-Kopfdatei `Jpegint.h`
+   nach, und die definiert `MIN`/`MAX` (`Jpegint.h:326,329`). `OTShim_Bild.h`
+   setzt `__SECJPEG_H__`, damit war die zufaellige Quelle weg. Die Makros stehen
+   jetzt wortgleich in `OTShimAll.h`. Betroffene Stellen: `sendmail.cpp:1676`,
+   `:1733`, `:1734`, `:1736`, `mime.cpp:1779`, `summary.cpp:2828`.
+
+An den Shim-Dateien anderer Agenten war **nichts inhaltlich zu korrigieren** —
+nur die eine Deklaration in `OTShim.h:307` und Kommentare in `OTShimAll.h`.
+
+## Die 8 verbliebenen Symbole (Stand 78a9c10)
+
+| Symbol | Herkunft | Betroffene Objektdateien |
+|---|---|---|
+| `SECBitmapButton::SECBitmapButton()` | Stingray, `secbtns.h:189` | nickpage, PaymentAndRegistrationDlg |
+| `SECBitmapButton::~SECBitmapButton()` | Stingray, `secbtns.h:233` | mainfrm, nickpage, nicksht, PaymentAndRegistrationDlg |
+| `ATL::CImage::s_initGDIPlus` | **nicht Stingray** | QCGraphics |
+| `ATL::CImage::s_cache` | **nicht Stingray** | QCGraphics |
+| `CVoiceText::Init(...)` | **nicht Stingray** (SpeechSDK) | TextToSpeech |
+| `CVoiceText::Speak(...)` | **nicht Stingray** (SpeechSDK) | TextToSpeech |
+| `__imp___iob` | **nicht Stingray** (libpng.lib, alte CRT) | libpng.lib(pngerror,pngrutil) |
+| `TraceStart()` | `OT501/Include/TraceFile.h:9` | EudoraExe |
+
+Von den 158+80+27+14+6 Symbolen der Stingray-Familien ist damit **eines** offen:
+`SECBitmapButton`. Alles andere traegt die Ersatzschicht.
