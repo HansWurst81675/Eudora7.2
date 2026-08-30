@@ -41,7 +41,7 @@
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(MSBuildProjectDirectory);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MSBuildProjectDirectory);$(MSBuildProjectDirectory)\..\OTShim;$(MSBuildProjectDirectory)\..\OT501\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <!-- Die Quelldateien von Eudora sind in CP1252 abgelegt (Zeichenliterale wie
            (UCHAR)'<80>' in der Uebersetzungstabelle). Beide Zeichensaetze werden
            deshalb ausdruecklich festgelegt, damit der Build nicht von der
@@ -67,12 +67,18 @@
     <ClCompile Include="TestXlateTable.cpp" />
     <ClCompile Include="TestIsoTranslate.cpp" />
     <ClCompile Include="TestHexBinTable.cpp" />
+    <ClCompile Include="..\OTShim\OTShim_Bild.cpp" />
+    <ClCompile Include="..\OTShim\OTShim_Palette.cpp" />
+    <ClCompile Include="..\OTShim\OTShim_Reiter.cpp" />
+    <ClCompile Include="OTShimProbe.cpp" />
+    <ClCompile Include="TestOTShimBild.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TinyTest.h" />
     <ClInclude Include="Spec.h" />
     <ClInclude Include="UnderTest.h" />
+    <ClInclude Include="OTShimProbe.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Extract.ps1" />
