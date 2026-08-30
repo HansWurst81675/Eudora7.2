@@ -301,6 +301,12 @@ public:
 	void SetTransferMenuBeingUsed(BOOL bSet) { m_bTransferMenuBeingUsed = bSet; }
 
 protected:
+	// Ueberschrieben, um die Bau-Kennung an den Fenstertitel zu haengen:
+	// Paketversion, Commit und Herkunftsverzeichnis. Damit ist ein
+	// Bildschirmfoto eindeutig einem Bau und einer Instanz zuzuordnen.
+	// Siehe BuildKennung.h und tools/kennung-erzeugen.pl.
+	virtual void OnUpdateFrameTitle(BOOL bAddToTitle);
+
 	// Can't save some of these as CMenus because they are temporaries, and
 	// it's a really bad idea to hold on to a pointer to a temporary object
 	HMENU GetTopMenuByPosition(int nPos);

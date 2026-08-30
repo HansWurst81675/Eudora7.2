@@ -304,7 +304,7 @@ public:
 // wie es MFCs internes AfxLoadSysColorBitmap tut, ist nicht feststellbar.
 
 inline BOOL SECLoadSysColorBitmap(CBitmap& bmp, LPCTSTR lpszName,
-                                  bool /*bToolbar*/ = false)
+                                  bool /*bToolbar*/)   // kein Standardargument: das liefert secbtns.h:340 (sonst C2572)
 {
 	// Beide Aufrufstellen benutzen MAKEINTRESOURCE, also eine als Zeiger
 	// verpackte Zahl. CBitmap::LoadMappedBitmap nimmt nur eine UINT-ID

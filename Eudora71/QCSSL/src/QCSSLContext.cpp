@@ -246,7 +246,7 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 		case BIO_C_SET_FD:
 			// Set the endpoint for the BIO
 			ws_free(pBIO);				//	Close whatever's already there
-			BIO_set_data(pBIO, (void*)(INT_PTR)(*((int*)ptr)));	//	Set the new endpoint
+			BIO_set_data(pBIO, ptr);	//	N1: der QCSSLReference-Zeiger wandert unveraendert in den zeigergrossen Datenslot. Vorher ging er durch ein int (BIO_set_fd/BIO_int_ctrl) - unter Win32 harmlos, unter x64 eine lautlose Trunkierung. ptr ist hier bewusst der Zeiger selbst, nicht die Adresse eines int: BIO_s_workersocket ist unsere eigene BIO-Methode, an die OpenSSL-Belegung von BIO_C_SET_FD sind wir nicht gebunden.
 			BIO_set_shutdown(pBIO, (int)lNum);	//	Set the close mode
 			BIO_set_init(pBIO, 1);				//	We've been initialized
 			break;
@@ -257,7 +257,7 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 			{
 				if (ptr)
 				{
-					*((int*)ptr) = lRet = (int)(INT_PTR)BIO_get_data(pBIO);
+					*((void**)ptr) = BIO_get_data(pBIO);	//	N1: zeigergross zurueckgeben, passend zu BIO_C_SET_FD. lRet bleibt 1 (Erfolg); die Adresse als long zurueckzugeben ginge unter x64 nicht.
 				}
 			}
 			else
@@ -306,39 +306,39 @@ static int ws_puts(BIO *pBIO, const char *szStr)
 //	Seit OpenSSL 1.1.0 ist BIO_METHOD undurchsichtig: die Struktur laesst sich
 //	nicht mehr statisch ausfuellen, sie wird zur Laufzeit mit BIO_meth_new()
 //	angelegt und ueber Setter befuellt. Einmal erzeugt, bleibt sie fuer die
-//	Lebensdauer des Prozesses bestehen (wie vorher die statische Struktur).
+//	Lebensdauer des Prozesses bestehen (wie vorher die statische Struktur). Sichtbar wird sie erst, wenn sie vollstaendig gefuellt ist - siehe unten.
 //
-static BIO_METHOD *s_pMethodsWS = NULL;
+static BIO_METHOD * volatile s_pMethodsWS = NULL;
 
 BIO_METHOD *BIO_s_workersocket()
 {
 	if (s_pMethodsWS == NULL)
 	{
-		s_pMethodsWS = BIO_meth_new(BIO_TYPE_WORKERSOCKET, "workersocket_in_Eudora");
-		if (s_pMethodsWS == NULL)
-		{
-			ASSERT(0);
-			return NULL;
-		}
+		BIO_METHOD	*pNeu = BIO_meth_new(BIO_TYPE_WORKERSOCKET, "workersocket_in_Eudora");
+		if (pNeu == NULL)	{ ASSERT(0); return NULL; }
 
-		BIO_meth_set_write(s_pMethodsWS,   ws_write);
-		BIO_meth_set_read(s_pMethodsWS,    ws_read);
-		BIO_meth_set_puts(s_pMethodsWS,    ws_puts);
+		BIO_meth_set_write(pNeu,   ws_write);
+		BIO_meth_set_read(pNeu,    ws_read);
+		BIO_meth_set_puts(pNeu,    ws_puts);
 		//	kein gets - wie zuvor (war NULL)
-		BIO_meth_set_ctrl(s_pMethodsWS,    ws_ctrl);
-		BIO_meth_set_create(s_pMethodsWS,  ws_new);
-		BIO_meth_set_destroy(s_pMethodsWS, ws_free);
-	}
+		BIO_meth_set_ctrl(pNeu,    ws_ctrl);
+		BIO_meth_set_create(pNeu,  ws_new);
+		BIO_meth_set_destroy(pNeu, ws_free);
 
+		//	M2: erst die fertig gefuellte Struktur veroeffentlichen, und zwar unteilbar. Wer
+		//	das Rennen verliert, gibt seine eigene wieder frei. So sieht kein zweiter Thread je eine halb gefuellte BIO_METHOD, und es bleibt auch nichts liegen - unabhaengig davon, ob der Aufrufer unter g_Mutex laeuft.
+		if (InterlockedCompareExchangePointer((void* volatile*)&s_pMethodsWS, pNeu, NULL) != NULL)
+			BIO_meth_free(pNeu);	//	Rennen verloren: die fremde Fassung gilt, die eigene wird freigegeben
+	}
 	return s_pMethodsWS;
 }
 
-BIO *BIO_new_ws(int iWorkerSocket, int iCloseFlag)
+BIO *BIO_new_ws(QCSSLReference *pWorkerSocket, int iCloseFlag)
 {
 	BIO		*pBIO = BIO_new(BIO_s_workersocket());
 	if (pBIO)
 	{
-		BIO_set_fd(pBIO, iWorkerSocket, iCloseFlag);
+		BIO_ctrl(pBIO, BIO_C_SET_FD, iCloseFlag, pWorkerSocket);	//	N1: statt BIO_set_fd(), das den Zeiger durch ein int schleusen wuerde
 	}
 	return pBIO;
 }
@@ -554,7 +554,7 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 	//	SSL_CTX_set_min_proto_version() eingegrenzt.
 	//
 	//	SSLv2 und SSLv3 sind seit Jahren gebrochen und werden nicht mehr
-	//	angeboten - die betreffenden Faelle landen auf TLS 1.2 als Untergrenze.
+	//	angeboten. Alle Faelle - auch Fall 3 - landen auf TLS 1.2 als Untergrenze.
 	//
 	int		iMinVersion = TLS1_2_VERSION;
 
@@ -574,8 +574,8 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 		//	die niedrigste noch vertretbare Version gegangen.
 		iMinVersion = TLS1_2_VERSION;
 		break;
-	case 3:	//	frueher TLSv1
-		iMinVersion = TLS1_VERSION;
+	case 3:	//	frueher TLSv1, damals versionsgenau (nur TLS 1.0)
+		iMinVersion = TLS1_2_VERSION;	//	M1: derselbe Boden wie alle anderen Faelle. Vorher "TLS 1.0, nach oben offen" - die einzige Einstellung unterhalb von TLS 1.2, und ausgerechnet die Voreinstellung (SSLReceiveVersion/SSLSendVersion = 3). Gemessen in Tests/QCSSL, Fall 2e: OpenSSL 3 lehnt TLS 1.0/1.1 auf Sicherheitsstufe 1 ohnehin ab - die Absicht steht jetzt auch im Code.
 		break;
 	default:
 		ConnectionInfo *pConnectionInfo = (ConnectionInfo*) pSSLReference->m_pConnectionManagerInfo;
@@ -588,7 +588,7 @@ SSL_CTX *SetSSLVersion(QCSSLReference *pSSLReference)
 	SSL_CTX	*pCtx = SSL_CTX_new(sslmethod);
 	if (pCtx)
 	{
-		SSL_CTX_set_min_proto_version(pCtx, iMinVersion);
+		if (!SSL_CTX_set_min_proto_version(pCtx, iMinVersion)) { ASSERT(0); SSL_CTX_free(pCtx); pCtx = NULL; }	//	N3: Fehlschlag nicht verschlucken - sonst gilt still die Voreinstellung von OpenSSL statt der eingestellten Untergrenze. BeginQCSSLSession() bricht bei NULL ab, wie im Fall der ungueltigen Version.
 	}
 	return pCtx;
 }
@@ -767,7 +767,7 @@ bool BeginQCSSLSession(QCSSLReference *pSSLReference)
 	}
 
 	// Set up the cipher suites.
-	SetCipherSuites(pSSLCtx);
+	if (!SetCipherSuites(pSSLCtx)) { ASSERT(0); SSL_CTX_free(pSSLCtx); g_Mutex.Unlock(); return false; }	//	N3: Rueckgabewert wird ausgewertet statt verworfen. Fehlschlagen kann der Aufruf nur bei pSSLCtx == NULL, und das ist oben bereits abgefangen.
 
 	// Set up the certificates.
 	SetupCertificates(pSSLCtx, pSSLReference);
@@ -786,7 +786,7 @@ bool BeginQCSSLSession(QCSSLReference *pSSLReference)
 	}
 
 	// Create the BIO for reading and writing.
-	BIO		*pBIO = BIO_new_ws((int)pSSLReference, BIO_NOCLOSE);
+	BIO		*pBIO = BIO_new_ws(pSSLReference, BIO_NOCLOSE);
 	if (!pBIO)
 	{
 		SSL_free(pSSL);

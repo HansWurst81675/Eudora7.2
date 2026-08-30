@@ -1146,7 +1146,10 @@ void ReadPlatform(CString& sPlatform, CString& sVer, CString* sMachineType /*= N
 //
 //	ISOTranslate
 //
-//	Translates the specified buffer using the specified table.
+//	Translates the specified buffer from the specified charset to CP1252.
+//
+//	UTF-8 goes through the Windows code page converter; everything else still
+//	uses pcXlateTable.  See the long comment inside the function for why.
 //
 //	Parameters:
 //		szBuf[in/out] - Buffer to translate.
@@ -1185,6 +1188,12 @@ LONG ISOTranslate(LPTSTR szBuf, LONG lSize, UINT iCharsetIdx)
 		return lSize;
 	}
 
+	// Nothing sensible to do with a negative length.
+	if (lSize < 0)
+	{
+		return 0;
+	}
+
 	// Make sure the input text is NULL terminated.
 	//
 	// Bug note - this NULL termination business is a bit nasty. TextReader::ReadIt
@@ -1195,6 +1204,83 @@ LONG ISOTranslate(LPTSTR szBuf, LONG lSize, UINT iCharsetIdx)
 	// Instead TextReader::ReadIt is now making sure that it leaves space at the
 	// end of its buffer for us to NULL terminate it.
 	szBuf[lSize] = 0;
+
+	// UTF-8 is handed to the Windows code page converter instead of the table.
+	//
+	// Why: pcXlateTable maps a UTF-8 byte sequence to ONE CP1252 byte and
+	// MAX_CHARS_TO_TRANS is 3.  Characters outside the BMP - every emoji - are
+	// four bytes long in UTF-8 and therefore cannot be described by the table at
+	// all; they used to survive as raw UTF-8 bytes and showed up as byte salad.
+	// The same went for every two or three byte character without a CP1252
+	// counterpart: Cyrillic, Greek, Polish, Turkish.  MultiByteToWideChar()
+	// understands the whole of Unicode, and WideCharToMultiByte() turns whatever
+	// CP1252 cannot hold into a single question mark instead - readable, and one
+	// byte per character rather than two to four bytes of noise.
+	//
+	// WideCharToMultiByte is called with dwFlags 0, so the code page's best fit
+	// table is used: characters that have a close CP1252 relative are mapped to
+	// it rather than to a question mark, e.g. U+0142 SMALL LETTER L WITH STROKE
+	// becomes 'l'.  Polish, Czech and Turkish mail stays readable that way.
+	//
+	// MB_ERR_INVALID_CHARS makes the decoding step FAIL on malformed UTF-8
+	// instead of silently turning every stray byte into U+FFFD (and from there
+	// into a question mark).  That matters: mail that says utf-8 but actually
+	// carries CP1252 bytes is common, and a line can also be cut in the middle
+	// of a character when it is longer than the read buffer.  In both cases the
+	// code below falls through to the table, which is exactly what happened
+	// before - so this change can only make the result better, never worse.
+	//
+	// ISO-8859-15 deliberately keeps the table.  It is a single byte charset, its
+	// eight table entries are complete and proven by the tests, and it has neither
+	// the three byte limit nor the coverage problem.  Running it through code page
+	// 28605 would additionally turn the bytes 0x80..0x9F - C1 controls in
+	// ISO-8859-15, printable characters in CP1252 - into question marks, and mail
+	// that is labelled iso-8859-15 while carrying CP1252 bytes is just as common
+	// as the UTF-8 case above.  That would be a step backwards.
+	if (iCharsetIdx == (IDS_MIME_UTF_8 - IDS_MIME_ISO_LATIN9) && lSize > 0)
+	{
+		// One block for both scratch buffers: lSize wide characters followed by
+		// lSize output bytes.  Converting into scratch memory and copying back
+		// only on success keeps szBuf untouched if anything goes wrong.
+		char*	pScratch = (char*)malloc((size_t)lSize * (sizeof(WCHAR) + 1));
+
+		if (pScratch)
+		{
+			WCHAR*	pwWide = (WCHAR*)pScratch;
+			char*	pOut   = pScratch + (size_t)lSize * sizeof(WCHAR);
+			int		iWide;
+			int		iOut = 0;
+
+			// lSize UTF-8 bytes can never decode to more than lSize wide
+			// characters (the shortest character is one byte), so the wide
+			// buffer always fits.
+			iWide = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
+										szBuf, (int)lSize, pwWide, (int)lSize);
+
+			if (iWide > 0)
+			{
+				// A single byte code page never produces more than one byte per
+				// wide character, so the output buffer always fits as well.
+				iOut = WideCharToMultiByte(1252, 0, pwWide, iWide,
+										   pOut, (int)lSize, "?", NULL);
+			}
+
+			if (iOut > 0 && iOut <= lSize)
+			{
+				memcpy(szBuf, pOut, (size_t)iOut);
+				free(pScratch);
+
+				lSize = iOut;
+				szBuf[lSize] = 0;
+				return lSize;
+			}
+
+			free(pScratch);
+
+			// Not valid UTF-8 (or out of luck): fall through to the table, which
+			// leaves anything it does not recognise exactly as it was.
+		}
+	}
 
 	// Translate in a single left to right pass over the buffer.
 	//

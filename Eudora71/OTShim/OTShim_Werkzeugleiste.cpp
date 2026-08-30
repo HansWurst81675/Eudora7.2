@@ -3477,7 +3477,8 @@ SECToolBarManager::SECToolBarManager()
 	: SECControlBarManager()
 {
 	m_pNoDropWnd        = NULL;
-	m_bMainFrameEnabled = TRUE;
+	// FALSE = Normalbetrieb, siehe IsMainFrameEnabled und BEFUND-MENUE.md.
+	m_bMainFrameEnabled = FALSE;
 	m_bConfig           = FALSE;
 	m_bToolTips         = TRUE;
 	m_bFlyBy            = TRUE;
@@ -3503,7 +3504,8 @@ SECToolBarManager::SECToolBarManager(CFrameWnd* pFrameWnd)
 	: SECControlBarManager(pFrameWnd)
 {
 	m_pNoDropWnd        = NULL;
-	m_bMainFrameEnabled = TRUE;
+	// FALSE = Normalbetrieb, siehe IsMainFrameEnabled und BEFUND-MENUE.md.
+	m_bMainFrameEnabled = FALSE;
 	m_bConfig           = FALSE;
 	m_bToolTips         = TRUE;
 	m_bFlyBy            = TRUE;
@@ -3743,10 +3745,21 @@ BOOL SECToolBarManager::InConfigMode() const
 	return m_bConfig;
 }
 
-// mainfrm.cpp:2987, 8667, 8678, 8726, 8742. Eudora fragt damit ab, ob es
-// gerade in den Anpassen-Dialog geraten ist; dort sperrt der Verwalter das
-// Hauptfenster, laesst es aber weiterhin auf Mausereignisse antworten, damit
-// Knoepfe daraus gezogen werden koennen.
+// mainfrm.cpp:2987, 8667, 8678, 8726, 8742.
+//
+// ACHTUNG: der Name luegt. Die Kopfdatei des Originals behauptet "TRUE, wenn
+// das Hauptfenster gerade freigegeben ist" (tbarmgr.h:79-80). Eudora liest
+// den Wert aber genau andersherum - TRUE heisst dort "der Anpassen-Dialog
+// steht offen":
+//   mainfrm.cpp:2990  TRUE -> WM_SYSCOMMAND/SC_CLOSE wird geschluckt,
+//                     Kommentar: "with a customize dialog still active"
+//   mainfrm.cpp:8742  TRUE -> Kommentar: "We have a customize dialog up"
+//   mainfrm.cpp:8670  TRUE -> CMainFrame::OnNcHitTest liefert HTERROR
+//
+// Der letzte Punkt ist der Beweis. Liefert der Rahmen staendig HTERROR, ist
+// seine gesamte Nichtklientenflaeche tot: Menueleiste, Titelzeile,
+// Rahmenkanten. Eudora 7.1 lief - also kann TRUE nicht der Normalzustand
+// sein. Deshalb ist der Ausgangswert FALSE (BEFUND-MENUE.md, Befund M-1).
 BOOL SECToolBarManager::IsMainFrameEnabled()
 {
 	return m_bMainFrameEnabled;
@@ -3771,9 +3784,13 @@ void SECToolBarManager::EnableMainFrame()
 	m_bMainFrameEnabled = TRUE;
 }
 
+// Von Eudora nicht aufgerufen; im Original tat das der Anpassen-Dialog der
+// Bibliothek. Der frueher hier stehende Waechter !m_bMainFrameEnabled haette
+// den Rumpf nie laufen lassen: beim Betreten des Anpassen-Dialogs ist der
+// Schalter FALSE. Es genuegt, doppeltes Sperren zu verhindern.
 void SECToolBarManager::DisableMainFrame()
 {
-	if (!m_bMainFrameEnabled || m_pFrameWnd == NULL)
+	if (m_pFrameWnd == NULL || m_enabledList.GetSize() > 0)
 		return;
 
 	m_enabledList.RemoveAll();
@@ -3791,6 +3808,25 @@ void SECToolBarManager::DisableMainFrame()
 		pChild = pChild->GetWindow(GW_HWNDNEXT);
 	}
 
+	m_bMainFrameEnabled = FALSE;
+}
+
+// NICHT im Original. Gegenstueck zu EnableMainFrame fuer den Weg AUS dem
+// Anpassen-Dialog heraus: die dort gesperrten Fenster kommen frei und der
+// Schalter faellt auf den Normalzustand zurueck. DisableMainFrame taugt
+// dafuer nicht - das sperrt die Kindfenster erst recht. Ohne diesen Rueckweg
+// bliebe m_bMainFrameEnabled nach dem ersten Besuch des Anpassen-Dialogs auf
+// TRUE stehen und die Menueleiste waere wieder tot (BEFUND-MENUE.md, M-1).
+void SECToolBarManager::RestoreMainFrame()
+{
+	for (INT_PTR i = 0; i < m_enabledList.GetSize(); i++)
+	{
+		HWND hWnd = (HWND)(UINT_PTR)m_enabledList[i];
+		if (::IsWindow(hWnd))
+			::EnableWindow(hWnd, TRUE);
+	}
+
+	m_enabledList.RemoveAll();
 	m_bMainFrameEnabled = FALSE;
 }
 
@@ -4301,6 +4337,12 @@ void SECToolBarCmdPage::Initialize()
 
 SECToolBarCmdPage::~SECToolBarCmdPage()
 {
+	// Die Seiten leben genau so lange wie der Anpassen-Dialog
+	// (QCToolBarManager.cpp:1042-1104, Objekte auf dem Stapel). Hier endet
+	// also der Anpassen-Zustand - siehe BEFUND-MENUE.md, Befund M-1.
+	if (m_pManager != NULL)
+		m_pManager->RestoreMainFrame();
+
 	for (INT_PTR i = 0; i < m_btnGroups.GetSize(); i++)
 		delete (SECBtnGroup*)m_btnGroups[i];
 

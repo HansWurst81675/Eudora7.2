@@ -41,3 +41,10 @@ Eudora71/OpenSSL/out32/
 *.user
 *.VC.db
 *.VC.opendb
+
+# Ausnahme: die vorgebauten OpenSSL-3.5-Bibliotheken gehoeren ins Repo.
+# Ohne sie scheitert ein frischer Klon bei QCSSL mit LNK1104 und braucht einen
+# 25-minuetigen OpenSSL-Lauf. Das Muster "Lib/" oben greift auf jeder Ebene und
+# hatte sie stillschweigend mit erfasst.
+!Eudora71/OpenSSL3/lib/
+!Eudora71/OpenSSL3/lib/*.lib

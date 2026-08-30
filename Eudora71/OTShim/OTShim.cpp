@@ -162,9 +162,9 @@ void OTShimNichtUmgesetzt(BOOL& rbBereitsGemeldet, LPCTSTR lpszWas)
 	strMeldung.Format(
 		_T("Diese Funktion steht in dieser Fassung nicht zur Verfuegung:\n\n")
 		_T("    %s\n\n")
-		_T("Der Ersatz fuer das Stingray Objective Toolkit ist bis Stufe 2 ")
-		_T("(MDI-Fenstergeruest und Andockfamilie) umgesetzt. Alles Weitere ")
-		_T("folgt in spaeteren Stufen.\n\n")
+		_T("Die Ersatzschicht fuer das Stingray Objective Toolkit bildet die ")
+		_T("benutzten Klassen nach, aber nicht jede Funktion darin. Was hier ")
+		_T("fehlt, ist Beiwerk - Eudora bleibt bedienbar.\n\n")   
 		_T("Diese Meldung erscheint nur einmal je Sitzung."),
 		lpszWas);
 

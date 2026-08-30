@@ -37,6 +37,9 @@ für unbeaufsichtigtes Arbeiten freigegeben war.
 | [anweisungen-abarbeiten](anweisungen-abarbeiten.md) | Material sofort auswerten; eine wiederholte Frage ist ein Alarmzeichen |
 | [lauffaehiges-ergebnis-liefern](lauffaehiges-ergebnis-liefern.md) | Ziel ist eine einsetzbare Fassung, nicht ein Teilschritt |
 | [pruefen-statt-vermuten](pruefen-statt-vermuten.md) | Zahlen nur nennen, wenn gemessen — auch Selbstvorwürfe |
+| [gemeinsame-dateien-gegen-alles-messen](gemeinsame-dateien-gegen-alles-messen.md) | Was mehrere Projekte einbinden, gegen die ganze Solution bauen |
+| [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter sind alles-oder-nichts — bei Teilersatz nicht setzen |
+| [agenten-trennen-worktrees](agenten-trennen-worktrees.md) | Parallele Agenten teilen Arbeitsverzeichnis und Index — trennen oder mit Pfadangabe committen |
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Beim zweiten Auftreten ein Werkzeug bauen, nicht einzeln nachbessern |
 | [wissen-gehoert-in-dateien](wissen-gehoert-in-dateien.md) | Befunde und Absprachen in Dateien, nicht in den Chat |
 | [commit-auf-extra-branch-und-pushen](commit-auf-extra-branch-und-pushen.md) | Zwischenstände laufend sichern |

@@ -1,10 +1,21 @@
 # OpenSSL 3.5 fuer QCSSL bauen
 
-Dieses Verzeichnis enthaelt die fertigen Header und statischen Bibliotheken,
-gegen die `QCSSL` gebaut wird (`QCSSL.vcxproj` verweist auf `OpenSSL3/include`
-und `OpenSSL3/lib`).
+Dieses Verzeichnis enthaelt die Header und — auf einem gewachsenen Arbeitsbaum —
+die statischen Bibliotheken, gegen die `QCSSL` gebaut wird (`QCSSL.vcxproj`
+verweist auf `OpenSSL3/include` und `OpenSSL3/lib`).
 
-Was hier liegt — Stand 28.08.2026:
+> **Achtung: die beiden `.lib` sind NICHT versioniert.** `.gitignore:7` (`Lib/`)
+> erfasst auch dieses Verzeichnis; gemessen liefert
+> `git ls-files Eudora71/OpenSSL3/lib` **null Treffer**. Versioniert sind allein
+> die Header unter `include/`.
+>
+> **Nach einem frischen Klon fehlen sie deshalb**, und `QCSSL` endet mit
+> `LNK1104: libssl.lib kann nicht geoeffnet werden` (nachgemessen in einem
+> frisch ausgecheckten Arbeitsbaum). Wer neu klont, muss sie nach der Anleitung
+> unten erzeugen oder aus einem vorhandenen Baum hineinkopieren.
+
+Was auf einem eingerichteten Baum unter `lib/` liegen muss — Stand 30.08.2026,
+Groesse und Pruefsumme nachgemessen:
 
 | Datei | Groesse | SHA256 |
 |---|---|---|
@@ -13,6 +24,7 @@ Was hier liegt — Stand 28.08.2026:
 
 Die Version steht in `include/openssl/opensslv.h:90`
 (`# define OPENSSL_VERSION_STR "3.5.8"`) — dort nachsehen, nicht raten.
+Nachgeprueft am 30.08.2026: Zeile, Groessen und beide Pruefsummen stimmen.
 
 Wer die Bibliotheken neu erzeugen will:
 

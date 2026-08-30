@@ -1,38 +1,53 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
-Stand: 2026-08-29 · Branch `vs2022-portierung-fixes` · Messwerte an Commit `fd9a235`
+Stand: 2026-08-30 · Branch `eudora-exe-linkt` (der frühere `vs2022-portierung-fixes`
+ist mit `22a6d77` nach `main` gemergt) · Messwerte an Commit `a807b93`
+
+An diesem Baum arbeiten mehrere Agenten gleichzeitig. Jede Zahl hier nennt ihren
+Bezugscommit; wer sie weiterverwendet, misst nach.
 
 ## Kurzfassung
 
-> **Zwischenstand 29.08.2026, gemessen an `e7e6f3c`.** Der Bau ist zurzeit an
-> zwei zusätzlichen Stellen gebrochen, weil die OT501-Ersatzschicht halb
-> eingehängt ist. Erstens brechen `AccountWizard`, `DirectoryServicesUI`,
-> `EuImap` und `SearchEngine` mit `C1083: OTShimAll.h` ab — `..\OTShim` steht
-> nur in `Eudora.vcxproj:66` auf dem Include-Pfad, seit `7dcac81` in
-> `stdafx.h:52` `secall.h` durch `OTShimAll.h` ersetzt hat. Ein voller
-> Solution-Bau meldet damit 7 Fehler statt 3, und es werden **11 von 18**
-> Projekten fertig. Zweitens übersetzt `Eudora` selbst nicht mehr:
-> `secbtns.h(340,83): error C2572` — der Wächter `__SECBTNS_H__` in
-> `OTShimAll.h` ist noch auskommentiert. Der Linker wird also gar nicht
-> erreicht. Der folgende Abschnitt beschreibt den Zustand **davor**
-> (Commit `fd9a235`). Einzelheiten und der Weg heraus stehen in `README.md`
-> und `WEITERMACHEN.md`.
+> **`Eudora.exe` bindet.** Gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
+> Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe
+> `OTA50D.LIB`:
+>
+> | Messung | Ergebnis |
+> |---|---|
+> | `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |
+> | Solution-Bau | **3 Fehler**, alle aus `OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`) |
+> | fertige Projekte | **16 von 18** |
+> | `Eudora71/Tests/RunTests.cmd` | 33 Tests, 33 bestanden |
+>
+> Die OT501-Ersatzschicht ist damit vollständig: Verlauf der ungelösten Externen
+> 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**. Die leere Attrappe
+> `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
+> `LinkLibraryDependencies` auf `false`, `Eudora.vcxproj:1015`).
+>
+> **Eudora startet und zeigt sein Hauptfenster** (30.08.2026, Paket 1.0.2). Der
+> Absturz beim Start war die Werbefläche — Befund S-2 in `BEFUNDE.md`. Das heißt
+> aber noch nicht „lauffähig": von den drei Kriterien in `ZIEL.md` ist bisher nur
+> das erste erfüllt. `EudoraRes.dll` fehlt weiterhin und wird zur Laufzeit
+> nachgeladen — siehe `STARTUMGEBUNG.md`.
 
-**Ohne diese beiden Fehler werden 15 der 18 Projekte fertig.** Drei nicht: `OT501` (Stingray
-Objective Toolkit; die Quellen sind nicht freigegeben) sowie `Eudora` und
-`EudoraRes`. Die beiden letzten haben je einen Projektverweis auf `OT501`
-(`Eudora.vcxproj:1013`, `EudoraRes.vcxproj:351`) und werden im Solution-Bau deshalb
-gar nicht erst versucht — sie erscheinen nicht in der Fehlerliste, fertig werden sie
-trotzdem nicht. Ein voller Solution-Bau meldet 3 Fehler, alle aus `OT501`: zweimal
-`NMAKE U1073` (`Blackbox.cpp`, `OTA50D.lib`) und einmal `MSB3073`. Früher stand hier
-"16 von 18" — `EudoraRes` war dabei übersehen.
+**16 der 18 Projekte werden fertig.** Zwei nicht:
 
-Einzeln gemessen mit `-p:BuildProjectReferences=false` uebersetzen `Eudora` und
-`EudoraRes` **vollstaendig** und scheitern beide an genau einer Stelle:
-`LNK1104: OTA50D.LIB kann nicht geoeffnet werden`, je 1 Fehler. Fuer `Eudora` sind
-damit alle 269 urspruenglichen Compilerfehler behoben (Verlauf 269 - 74 - 25 - 16 -
-4 - 0, null seit `3f6877a`). Damit ist alles erledigt, was Portierungsarbeit war;
-uebrig bleibt allein die fehlende Fremdbibliothek OT501.
+- `OT501` (Stingray Objective Toolkit) — die Quellen sind nicht freigegeben, das
+  Projekt bricht mit `NMAKE U1073` ab. Gebraucht wird es nicht mehr.
+- `EudoraRes` — hat einen Projektverweis auf `OT501` (`EudoraRes.vcxproj:351`) und
+  wird im Solution-Bau gar nicht erst versucht; es erscheint nicht in der
+  Fehlerliste, fertig wird es trotzdem nicht. Einzeln gebaut übersetzt es
+  vollständig. Für `Eudora` war dieselbe Bindung an `Eudora.vcxproj:1013` bis
+  `a807b93` genauso wirksam; dort ist sie jetzt gelöst.
+
+Ein voller Solution-Bau meldet 3 Fehler, alle aus `OT501`: zweimal `NMAKE U1073`
+(`Blackbox.cpp`, `OTA50D.lib`) und einmal `MSB3073`.
+
+Für `Eudora` sind alle 269 ursprünglichen Compilerfehler behoben (Verlauf
+269 - 74 - 25 - 16 - 4 - 0, null seit `3f6877a`), seit `78a9c10` übersetzt die
+Ersatzschicht fehlerfrei mit, und seit `a807b93` bindet die `.exe` ohne ein
+ungelöstes Symbol. Der Verlauf mit Bezugscommits steht in
+[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md), Abschnitt "Der Weg zum Linken".
 
 Die vier Quelldateien, deren Header vorlagen, deren Implementierung aber in der
 Freigabe fehlte (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`),
@@ -145,21 +160,32 @@ Klassenfamilien hat den Umfang deutlich verkleinert: die 77 Methoden sind nicht 
 Aufgaben. Viele sind geerbte MFC-Methoden, die Eudora nur qualifiziert aufruft,
 andere werden nie aufgerufen; `SECStatusBar` erledigt ein `typedef`.
 
-Stand der Ersatzschicht an `e7e6f3c`, gezählt mit `wc -l` und geprüft gegen
-`OTShimAll.h` sowie die `ClCompile`-Einträge in `Eudora.vcxproj:217`:
+**Alle fünf Teile sind eingehängt** (`e50a89c`). Stand an `a807b93`, gezählt mit
+`wc -l` und geprüft gegen `OTShimAll.h` sowie die `ClCompile`-Einträge in
+`Eudora.vcxproj:217`:
 
 | Stufe | Dateien | Zeilen | eingehängt? |
 |---|---|---|---|
 | 0–2, 2b — Workbook, MDI, Statusleiste, Andockfamilie | `OTShim.h/.cpp` | 5494 | ja |
-| 3 — Werkzeugleisten und Knöpfe | `OTShim_Werkzeugleiste.h/.cpp` | 6083 | **nein** |
+| 3 — Werkzeugleisten und Knöpfe | `OTShim_Werkzeugleiste.h/.cpp` | 6083 | ja |
 | 4 — Bilder über GDI+ | `OTShim_Bild.h/.cpp` | 2358 | ja |
-| Registerkarten | `OTShim_Reiter.h/.cpp` | 2925 | **nein** |
-| `SECDateTimeCtrl` | `OTShim_Palette.h/.cpp` | 890 | **nein** |
-| Sammelkopfdatei | `OTShimAll.h` | 45 | — |
+| Registerkarten | `OTShim_Reiter.h/.cpp` | 2925 | ja |
+| `SECDateTimeCtrl`, Palette | `OTShim_Palette.h/.cpp` | 890 | ja |
+| Sammelkopfdatei | `OTShimAll.h` | 78 | — |
 
-Zusammen **17795 Zeilen** in 11 Dateien. `secaux.cpp` aus `OT501/Src` ist direkt in
+Zusammen **17828 Zeilen** in 11 Dateien. `secaux.cpp` aus `OT501/Src` ist direkt in
 `Eudora.vcxproj` aufgenommen — `secData` und `SEC_AUX_DATA` brauchten keinen
 Nachbau.
+
+Seit `78a9c10` übersetzt `Eudora` damit fehlerfrei, und seit `a807b93` bindet die
+`.exe` ohne ein einziges ungelöstes Symbol.
+
+> **Der Wächter `__SECBTNS_H__` in `OTShimAll.h` bleibt auskommentiert.** Ihn zu
+> setzen ist der naheliegende, aber falsche Weg: `secbtns.h` liefert ausser
+> `SECLoadSysColorBitmap` auch `SECBitmapButton`. Gemessen an `22a6d77`, `Eudora`
+> einzeln: auskommentiert **1** Fehler, eingekommentiert **102**. Der `C2572` ist
+> stattdessen dadurch gelöst, dass die inline-Fassung in `OTShim.h:307` kein
+> Standardargument mehr führt.
 
 **Eine Planannahme hat sich als falsch erwiesen:** die Registerkarten sind *nicht*
 durchweg verzichtbar. Das gilt nur für den MDI-Streifen hinter `m_bWorkbookMode`,
@@ -193,19 +219,33 @@ Umgestellt wurde:
 
 | Stelle | Problem | Lösung |
 |---|---|---|
-| eigene `BIO_METHOD`-Struktur (`BIO_s_workersocket`) | `BIO_METHOD` ist seit 1.1.0 opak | `BIO_meth_new()` + `BIO_meth_set_*()` |
+| eigene `BIO_METHOD`-Struktur (`BIO_s_workersocket`) | `BIO_METHOD` ist seit 1.1.0 opak | `BIO_meth_new()` + `BIO_meth_set_*()`. Seit Befund **M2** wird die fertig gefüllte Struktur unteilbar veröffentlicht (`InterlockedCompareExchangePointer`, `:330`) — vorher konnte ein zweiter Thread eine halb gefüllte Methode sehen |
+| `BIO_set_fd()` für den `QCSSLReference`-Zeiger | schleust einen Zeiger durch ein `int` — unter Win32 harmlos, unter x64 eine lautlose Trunkierung | seit Befund **N1** nicht mehr benutzt: der Zeiger geht zeigergross durch `BIO_set_data()` (`:249`) bzw. `BIO_ctrl()` (`:341`) |
 | `SSLv2_method()` | seit 1.1.0 entfernt | Zweig gestrichen |
 | `SSLv3_method()`, `TLSv1_method()` | veraltet | `TLS_client_method()` + `SSL_CTX_set_min_proto_version()` |
 | `ERR_remove_state(0)` | seit 1.1.0 entfernt | ersatzlos gestrichen (Thread-Cleanup ist automatisch) |
 | `ctx->cert_store` | Struktur opak | `SSL_CTX_get_cert_store()` |
 | `qccertificate.cpp` `ctx->ex_data` | Struktur opak | `X509_STORE_get_ex_data(X509_STORE_CTX_get0_store(...))` |
 
-SSLv2 und SSLv3 sind damit abgeschaltet. Als Mindestprotokoll setzt
-`QCSSLContext.cpp:561-583` bei sieben der acht Werte von `m_ProtocolVersion` — 0, 1,
-2, 4, 5, 6, 7 — `TLS1_2_VERSION`. Der achte, `m_ProtocolVersion == 3` (früher
-"TLSv1"), setzt `TLS1_VERSION`, also TLS 1.0. Ein ungültiger Wert landet im
-`default`-Zweig, meldet `IDS_ERR_VERSIONINVALID` und bleibt beim Startwert
-`TLS1_2_VERSION` (`:559`). Eine Obergrenze wird nirgends gesetzt.
+SSLv2 und SSLv3 sind damit abgeschaltet. Als Mindestprotokoll setzen inzwischen
+**alle acht** Werte von `m_ProtocolVersion` — 0 bis 7 — `TLS1_2_VERSION`
+(`QCSSLContext.cpp:569`, `:575`, `:578`).
+
+Bis Befund **M1** war das anders: `m_ProtocolVersion == 3` (früher "TLSv1") setzte
+`TLS1_VERSION`, also TLS 1.0 nach oben offen. Das war nicht bloss ein Ausreisser
+unter acht Einstellungen, sondern **die Voreinstellung** — `EudoraRes.rc:8143` und
+`:8147` geben `SSLReceiveVersion` und `SSLSendVersion` beide mit `3` vor. Die
+schwächste Untergrenze galt damit für jede unveränderte Installation. Gemessen in
+`Eudora71/Tests/QCSSL`, Fall 2e: OpenSSL 3 lehnt TLS 1.0/1.1 auf Sicherheitsstufe 1
+ohnehin ab — die Absicht steht jetzt auch im Code.
+
+Ein ungültiger Wert landet im `default`-Zweig, meldet `IDS_ERR_VERSIONINVALID` und
+liefert seit Befund **H1** `NULL` zurück (`:584`): es wird gar kein Kontext angelegt,
+die Verbindung kommt nicht zustande. Vorher wurde trotz Fehlermeldung verbunden.
+
+**Eine Obergrenze wird weiterhin an keiner Stelle gesetzt** —
+`SSL_CTX_set_max_proto_version()` kommt in QCSSL nicht vor. Das ist Absicht: so
+handelt die Bibliothek stets das höchste beiderseits unterstützte Protokoll aus.
 
 ### Bau von OpenSSL 3.5.8
 
@@ -353,17 +393,70 @@ Release bei, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Einzelheiten in
    beruht auf OpenSSL 1.0.2p und kann kein TLS 1.3.
 2. ~~Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen~~ — erledigt mit
    `75b60e1`.
-3. OT501-Ersatzschicht implementieren — der einzige Blocker für `Eudora.exe` **und**
-   für `EudoraRes.dll`. Die Familienanalyse ist fertig, der Stufenplan steht in
-   [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md). Reihenfolge: Stufe 0 (typedef
-   für `SECStatusBar`, Stub für `SECTipOfDay`), Stufe 1 (MDI ohne Registerkarten —
-   Ziel: ein startendes `Eudora.exe`), dann Andockfamilie, Werkzeugleisten, Bilder.
-4. Hostnamenprüfung — bewusst zurückgestellt, siehe oben. Der Befund ist
+3. ~~OT501-Ersatzschicht implementieren~~ — **erledigt.** Alle fünf Teile sind
+   geschrieben und eingehängt (`e50a89c`), `Eudora` übersetzt seit `78a9c10`
+   fehlerfrei und bindet seit `a807b93` mit **0 ungelösten Externen**, ohne die
+   Attrappe `OTA50D.LIB`. Der Weg mit allen Zwischenmessungen steht in
+   [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md).
+4. **`EudoraRes.dll` beschaffen** — das Projekt hängt über
+   `EudoraRes.vcxproj:351` an `OT501` und wird im Solution-Bau nicht versucht.
+   Für `Eudora` ist dieselbe Bindung mit `a807b93` gelöst
+   (`LinkLibraryDependencies` auf `false`, `_SECNOMSG`); ob derselbe Handgriff
+   hier trägt, ist **nicht geprüft**.
+5. **`libpng` sauber nachziehen** — `__imp___iob` ist in `OTShim_Libpng.cpp` nur
+   behelfsweise gelöst, gestützt auf die gemessene Annahme, dass libpng 1.2.7
+   ausschliesslich `_iob[2]` anfasst und die damalige CRT 32 Byte je Element
+   hatte. Ein Neubau aus `Eudora71/PNG/libpng` mit v143 macht die Annahme
+   überflüssig.
+6. **Ersten Start herrichten** — welche Laufzeitdateien danebenliegen müssen und
+   was noch fehlt (unter anderem `EudoraRes.dll`), steht in
+   [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+7. Hostnamenprüfung — bewusst zurückgestellt, siehe oben. Der Befund ist
    dokumentiert, nicht behoben.
+
+## Rückschritte und ihre Ursachen
+
+Nicht jeder Schritt ging vorwärts. Der folgende Fall ist festgehalten, weil die
+Lehre daraus allgemein gilt.
+
+### `stdafx.h` gewechselt, vier Projekte gebrochen
+
+**Was passiert ist.** `7dcac81` hat in `Eudora71/Eudora/stdafx.h:52` `secall.h`
+durch `OTShimAll.h` ersetzt, um die OT501-Ersatzschicht einzuhängen. Der
+Include-Pfad `..\OTShim` wurde dabei nur in `Eudora.vcxproj:66` eingetragen.
+
+**Die Folge.** `Eudora/stdafx.h` wird von vier weiteren Projekten mitbenutzt:
+`AccountWizard`, `DirectoryServicesUI`, `EuImap` und `SearchEngine`. Alle vier
+brachen mit `C1083: OTShimAll.h` ab. Nachgemessen an `e7e6f3c` mit einem vollen
+Solution-Bau: **7 Fehler statt 3**, und es wurden **11 der 18** Projekte fertig
+statt 15.
+
+**Wie es auffiel.** Nicht beim Ändern, sondern erst, als bei einer
+Doku-Überprüfung der Bauzustand nachgemessen statt übernommen wurde. Zwischen
+Einbau und Entdeckung lagen mehrere Commits.
+
+**Behoben mit `1c616c9`:** `..\OTShim` bzw. `..\..\OTShim` in die
+`AdditionalIncludeDirectories` aller vier Projekte, je Debug und Release.
+
+**Ein Nachspiel, das die Lehre bestätigt.** Der Fix beseitigte den `C1083`, aber
+nicht den Fehlerstand: nachgemessen an `22a6d77` meldete der Solution-Bau
+weiterhin **7 Fehler** und **11 von 18** Projekten. Die vier Projekte fanden die
+Kopfdatei jetzt — und liefen damit in denselben `C2572` aus `secbtns.h:340`, an
+dem auch `Eudora` hing. Erst `78a9c10` hat beides zugleich aufgelöst; seither sind
+es wieder 3 Fehler; an `a807b93` sind es 16 von 18, weil dort auch `Eudora`
+fertig wird.
+
+**Die Lehre.** Eine Änderung an einer *gemeinsam benutzten* Datei — `stdafx.h`
+steht hier stellvertretend — muss gegen die **ganze Solution** gemessen werden,
+nicht nur gegen das Projekt, an dem man gerade arbeitet. Ein Einzelprojekt-Bau
+hätte den Schaden nie gezeigt, und der zweite Durchgang zeigt, dass auch die
+Wirkung eines Fixes gegen die ganze Solution zu prüfen ist. Ausformuliert in
+`Arbeitsweise/gemeinsame-dateien-gegen-alles-messen.md`.
 
 ## Angewandte Korrekturen (Kategorien)
 
-Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokumentiert.
+Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
+`vs2022-portierung-fixes`, seither auf `eudora-exe-linkt`.
 
 1. **Deklarationen ohne Rückgabetyp** (default-int, in C++ nicht mehr erlaubt) —
    `LNG_GetLanguageInfo`, `CDynamicMenu::OnInitMenuPopup`, `CSortedStringListMT::operator=`,
@@ -401,6 +494,20 @@ Alle Änderungen sind einzeln in den Commits von `vs2022-portierung-fixes` dokum
   (`libcrypto.lib`, `libssl.lib`), damit sich QCSSL ohne einen 25-minütigen
   OpenSSL-Lauf übersetzen lässt. Bauweg und Prüfsumme in
   [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
+  **Achtung:** die beiden `.lib` liegen **nicht** im Repo — `.gitignore:7` (`Lib/`)
+  erfasst auch dieses Verzeichnis (gemessen: `git ls-files Eudora71/OpenSSL3/lib`
+  liefert null Treffer). Nur die Header sind versioniert. In einem frischen Klon
+  endet `QCSSL` deshalb mit `LNK1104: libssl.lib`.
+- `Eudora71/Eudora/atlimage.h` — **geänderte Kopie eines Microsoft-Headers.**
+  `CImage::IsTransparencySupported()` lautete im Original
+  `return( _AtlBaseModule.m_bNT5orWin98 );`. Das `CAtlBaseModule` der ATL von v143
+  (`atlcore.h:280`) kennt dieses Win9x/NT4-Erbstück nicht mehr, und im ganzen Baum
+  gibt es keine Ersatzdefinition — der Originalrumpf hätte nicht übersetzt. Die
+  Funktion liefert jetzt für `WINVER >= 0x0500` fest `TRUE`; auf dem Zielsystem
+  Windows 10 ist das ohnehin die richtige Antwort. Die Abweichung ist in der Datei
+  selbst bei Zeile 1537/1541 vermerkt (`ba3d2ee`, Befund N5). Beim Wechsel auf den
+  SDK-eigenen `atlimage.h` fällt sie weg. Wer hier ein SDK aktualisiert, sollte
+  wissen, dass eine veränderte Microsoft-Kopie im Baum liegt.
 - `Eudora71/Eudora/utils.cpp` — UTF-8-Übersetzungstabelle von 27 auf 123 Einträge
   erweitert (deutsche Umlaute + Latin-1 U+00A0..U+00FF), Patch aus
   https://github.com/HansWurst81675/Eudora_patches
@@ -500,20 +607,33 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
 
 ## Fallstricke für die Weiterarbeit
 
-- **`core.autocrlf`**: repo-lokal auf `false` gesetzt. Die Quellen haben gemischte
-  Zeilenenden; mit `autocrlf=true` schreibt Git beim Stagen jede angefasste Datei
-  komplett um und der Diff wird unlesbar.
+- **`core.autocrlf`**: repo-lokal auf `false` gesetzt, dazu seit `1f42745` eine
+  `.gitattributes` mit `* -text`. Die Quellen haben gemischte Zeilenenden; mit
+  `autocrlf=true` schreibt Git beim Stagen jede angefasste Datei komplett um und der
+  Diff wird unlesbar.
+
+  **Der Altschaden war damit nicht behoben.** Dieser Baum war seinerzeit mit
+  `autocrlf=true` ausgecheckt worden; 4616 von 5563 verfolgten Dateien lagen im
+  Arbeitsverzeichnis als CRLF, während im Commit LF stand — und galten für git
+  trotzdem als sauber, weil git bei passendem Zeitstempel und passender Größe gar
+  nicht erst hineinsieht. Das ist die Wurzel aller CRLF-Vorfälle dieses Projekts
+  (**Befund S-7**). Behoben mit `tools/zeilenenden-angleichen.pl`; nach jedem
+  frischen Klon einmal auszuführen, siehe `README.md`.
 - **`sed` unter Git Bash**: nur mit `-b` (binary) benutzen. Ohne `-b` verschluckt es
   die CR aus CRLF-Zeilen und erzeugt dieselbe Diff-Flut.
 - **Zwei Werkzeuge gegen genau diese Schäden** (seit Commit `a7aeb33`, beide in
   `tools/`):
   - `tools/pruefe-bytes.pl` — vergleicht für jede zum Commit vorgemerkte Datei den
     **Index**-Blob gegen den **HEAD**-Blob (nicht die Arbeitskopie, die liegt bei
-    manchen Dateien abweichend vor) und bricht den Commit ab, wenn sich die CR-Anzahl
-    geändert hat oder Unicode-Ersatzzeichen `U+FFFD` hinzugekommen sind — die Eudora-
-    Quellen sind **Latin-1**, nicht UTF-8. Geprüft werden die Endungen `cpp h c hpp
-    inl rc idl mak txt md vcxproj filters`. Bewusst überspringen:
-    `git commit --no-verify`.
+    manchen Dateien abweichend vor) und bricht den Commit ab bei:
+    (a) inhaltlich gleicher Datei mit verschiedenen Bytes, (b) einer inhaltlich
+    unveränderten Zeile, die ihr Zeilenende gewechselt hat, oder (c) neu
+    hinzugekommenen Unicode-Ersatzzeichen `U+FFFD` — die Eudora-Quellen sind
+    **Latin-1**, nicht UTF-8.
+    Die **bloße CR-Anzahl** wird seit `371c1e3` **nicht** mehr verglichen: das schlug
+    schon beim reinen Hinzufügen von Zeilen an und erzeugte Fehlalarme. Geprüft
+    werden die Endungen `cpp h c hpp inl rc idl mak txt md vcxproj filters`. Bewusst
+    überspringen: `git commit --no-verify`.
   - `tools/aendere-zeile.pl` — ändert eine einzelne Zeile byte-erhaltend:
     `perl tools/aendere-zeile.pl <datei> <zeilennummer> <alt> <neu>`. Liest und
     schreibt mit `:raw`, ersetzt per `index`/`substr` statt per regulärem Ausdruck
@@ -563,3 +683,183 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   Eudora-Installation ist HermSSL dagegen der etablierte Weg.
 - **OpenSSL 1.0.2u statt 3.5**: wäre fast Drop-in für QCSSL, ist aber seit 2019
   End-of-Life und kann kein TLS 1.3.
+
+## Zeichensatz-Darstellung: UTF-8 läuft jetzt über den Windows-Codepage-Wandler
+
+Nachtrag zum Abschnitt *„Zwei Fehler in der Zeichentabelle“* weiter oben. Der dort
+unter *„Was die Tabelle weiterhin nicht kann“* formulierte Vorschlag ist umgesetzt
+(Commit `63f81dc`, `Eudora71/Eudora/utils.cpp`). Die Tests stehen bei **33 von 33
+grün**, vorher 23 von 23; zehn Fälle sind neu.
+
+### Was vorher war
+
+`ISOTranslate()` übersetzte ausschließlich über die Tabelle `pcXlateTable`. Die
+bildet eine **UTF-8-Bytefolge auf genau ein CP1252-Byte** ab, und
+`MAX_CHARS_TO_TRANS` ist **3**. Daraus folgten zwei harte Grenzen:
+
+- **Emoji waren prinzipiell unmöglich.** Zeichen außerhalb der BMP (U+1F600
+  aufwärts) sind in UTF-8 **vier** Byte lang. Es gab keine Tabellenzeile, die so
+  etwas hätte beschreiben können — unabhängig davon, wie viele Zeilen man
+  ergänzt.
+- **Alles ohne CP1252-Entsprechung blieb als rohe Bytes stehen.** Kyrillisch,
+  Griechisch, Hebräisch, Chinesisch, Polnisch, Tschechisch, Türkisch: die zwei
+  oder drei UTF-8-Bytes wurden durchgereicht und anschließend Byte für Byte als
+  CP1252 angezeigt. Genau das ist der Zeichensalat, den der Auftraggeber täglich
+  sieht.
+
+### Was jetzt ist
+
+Der **UTF-8-Fall** (Zeichensatz-Index 4) geht durch den Windows-Wandler:
+
+    MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ...)
+    WideCharToMultiByte(1252, 0, ..., "?", NULL)
+
+Damit versteht Eudora den **gesamten Unicode-Bereich**. Was CP1252 nicht halten
+kann, wird zu **einem Fragezeichen** statt zu zwei bis vier Salatzeichen.
+Zusätzlich — das war nicht geplant, ist aber der größte praktische Gewinn —
+arbeitet `WideCharToMultiByte` mit `dwFlags = 0` und benutzt deshalb die
+**Ersatztabelle der Codepage**: Zeichen mit einem nahen CP1252-Verwandten werden
+auf diesen abgebildet statt auf ein Fragezeichen.
+
+Die Funktion arbeitet weiterhin **an Ort und Stelle** im Puffer des Aufrufers,
+schreibt nie mehr Bytes, als hereinkamen, terminiert mit einer Null und gibt die
+neue Länge zurück. Der Vertrag zu den Aufrufern ist unverändert.
+
+### Die Testfälle, die den Unterschied belegen
+
+Alle Erwartungswerte sind **gemessen**, nicht geraten — drei meiner Annahmen
+waren falsch und wurden vom ersten Testlauf korrigiert (siehe die Anmerkung zum
+Emoji). Die Fälle stehen in `Eudora71/Tests/TestIsoTranslate.cpp`.
+
+| Eingabe | vorher | jetzt |
+|---|---|---|
+| U+1F600 Emoji (`F0 9F 98 80`, vier Byte) | vier Bytes bleiben stehen | `? ?` — **zwei** Fragezeichen |
+| U+0416 Ж, U+05D0 א (kyrillisch, hebräisch) | zwei Bytes bleiben stehen | `?` |
+| U+4E2D 中, U+3042 あ, U+D55C 한 | drei Bytes bleiben stehen | `?` |
+| U+0142 ł (polnisch) | zwei Bytes bleiben stehen | `l` |
+| U+0104 Ą, U+0105 ą (polnisch) | dto. | `A`, `a` |
+| U+010D č, U+0159 ř (tschechisch) | dto. | `c`, `r` |
+| U+015F ş, U+011F ğ (türkisch) | dto. | `s`, `g` |
+| U+03B1 α, U+03A9 Ω (griechisch) | dto. | `a`, `O` |
+| **jeder** Codepunkt U+00A0..U+FFFD | zwei bis drei Bytes, sobald keine Tabellenzeile passte | **genau ein Byte** |
+
+Der letzte Fall ist der eigentliche Beleg: kein Zeichen der BMP bleibt mehr als
+rohe UTF-8-Bytefolge stehen. Dazu kommt ein realistischer Volltext-Fall — ein
+deutscher Newsletter mit typografischen Anführungszeichen (U+201E/U+201C),
+Gedankenstrich (U+2013), Eurozeichen, Umlauten und einem Emoji — der byteweise
+gegen die erwartete CP1252-Zeile geprüft wird.
+
+**Zum Emoji:** es werden **zwei** Fragezeichen, nicht eines. Ein Zeichen
+außerhalb der BMP ist in UTF-16 ein Ersatzzeichenpaar, und `WideCharToMultiByte`
+setzt für jede der beiden Hälften ein Ersatzzeichen. Zwei Fragezeichen statt vier
+Salatzeichen — der Gewinn bleibt, die Zahl ist nur nicht die, die man erwartet.
+
+### Zwei bewusste Entscheidungen
+
+**1. `MB_ERR_INVALID_CHARS` mit Rückfall auf die Tabelle.**
+Ohne dieses Flag ersetzt Windows jedes ungültige Byte durch U+FFFD und damit am
+Ende durch ein Fragezeichen. Das wäre in zwei häufigen Fällen ein Rückschritt:
+
+- Post, die `utf-8` behauptet und in Wahrheit CP1252-Bytes trägt (alte Programme,
+  Spam). Solche Bytes werden **richtig** angezeigt, wenn man sie in Ruhe lässt.
+- Eine Zeile, die länger ist als der Lesepuffer von `TextReader` und deshalb
+  mitten in einem Zeichen geschnitten wird.
+
+Mit dem Flag bricht die Wandlung in beiden Fällen ab, und der Text fällt auf den
+alten Tabellendurchgang zurück, der alles Unbekannte unverändert durchreicht.
+**Deshalb kann die Umstellung nie schlechter sein als der Ist-Zustand** — beide
+Fälle sind als Test festgehalten. Die 123 Tabellenzeilen bleiben aus genau
+diesem Grund erhalten, obwohl sie im Normalfall nicht mehr laufen.
+
+**2. ISO-8859-15 bleibt bei der Tabelle** und läuft *nicht* über Codepage 28605.
+Begründung: der Zeichensatz ist einbyteig, seine acht Tabelleneinträge sind
+vollständig und durch Tests belegt, und er hat weder die Drei-Byte-Grenze noch
+das Abdeckungsproblem — es gibt also nichts zu gewinnen. Zu verlieren gäbe es
+dagegen etwas: in ISO-8859-15 sind die Bytes `0x80..0x9F` C1-Steuerzeichen, in
+CP1252 sind es druckbare Zeichen (Anführungszeichen, Gedankenstriche,
+Eurozeichen). Eine saubere Wandlung über 28605 würde sie zu Fragezeichen machen,
+und Post, die `iso-8859-15` behauptet und CP1252-Bytes trägt, ist genauso häufig
+wie im UTF-8-Fall. Auch das ist als Test festgehalten.
+
+### Was weiterhin NICHT geht
+
+**Die Anzeige selbst bleibt einbyte-basiert.** Eudora speichert und zeigt Text als
+CP1252; daran ändert diese Umstellung nichts. Ein Fragezeichen statt Zeichensalat
+ist ein Fortschritt in der Lesbarkeit — mehr nicht:
+
+- **Kyrillisch, Griechisch, Hebräisch, Chinesisch, Japanisch, Koreanisch werden
+  nicht dargestellt.** Sie werden durch `?` bzw. durch einen lateinischen
+  Verwandten ersetzt. Der ursprüngliche Text ist danach verloren.
+- **Emoji werden nicht dargestellt.** Sie werden zu `??`.
+- Auch die Ersatztabelle ist eine Annäherung: aus `ł` wird `l`, aus `Ω` wird `O`.
+  Lesbar, aber nicht richtig.
+
+Echte Darstellung dieser Schriften bräuchte einen **Unicode-Umbau der Anzeige**
+(Speicherung, Editor, Listenspalten, Filter, Adressbuch). Das ist ein eigenes,
+großes Vorhaben und in dieser Portierung nicht enthalten.
+
+### Nebenbefund 1: der IMAP-Pfad übersetzt gar nichts
+
+Beim Prüfen der Aufrufstellen gefunden, **nicht** von dieser Umstellung
+verursacht und **nicht** behoben (`ImapDownload.cpp` gehört nicht zu dieser
+Änderung):
+
+`ISOTranslate()` erwartet die Indizes aus `FindMIMECharset()` (`mime.cpp:382`):
+`0` windows-\*, `1` us-ascii, `2` iso-8859-1, `3` iso-8859-15, `4` utf-8.
+`Eudora71/EuImap/src/ImapDownload.cpp:4644` bildet den Index aber selbst und
+anders:
+
+    iCharsetIdx = FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9,
+                                    params->value, -1);
+
+Das liefert `0` us-ascii, `1` iso-8859-1, `2` iso-8859-15 — um eins verschoben,
+und **`utf-8` liegt gar nicht im durchsuchten Bereich** (er endet bei
+`IDS_MIME_ISO_LATIN9`). Folge:
+
+- `utf-8` → `-1`, die Wächterbedingung `if (iCharsetIdx > 1)` greift nicht,
+  `ISOTranslate` wird nie gerufen.
+- `iso-8859-15` → `2`, `ISOTranslate` wird gerufen, liest die `2` aber als
+  „Latin-1, keine Übersetzung nötig“ und gibt den Text unverändert zurück.
+
+**Über IMAP wird also kein einziger Zeichensatz übersetzt** — weder vorher noch
+nachher. Die Umstellung wirkt damit ausschließlich auf dem POP-Pfad
+(`lex822.cpp:544` für Kopfzeilen nach RFC 2047, `TextReader.cpp:251` für den
+Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
+`ImapDownload.cpp` auf `FindMIMECharset()` umstellen; das ist eine eigene
+Änderung mit eigenen Tests.
+
+### Nebenbefund 2: zwei Aufrufer werten die neue Länge nicht aus
+
+Ebenfalls Altbestand, ebenfalls nicht von dieser Umstellung verursacht.
+`ISOTranslate()` verkürzt den Puffer und gibt die neue Länge zurück. Zwei
+Aufrufer werfen den Rückgabewert weg und rechnen mit der **alten** Länge weiter:
+
+- `Eudora71/Eudora/TextReader.cpp:251` — `size` bleibt unverändert
+- `Eudora71/EuImap/src/ImapDownload.cpp:4662` — `inLen` bleibt unverändert
+
+Hinter dem übersetzten Text steht dann die Null, die `ISOTranslate` schreibt, und
+dahinter der unveränderte Rest des alten Inhalts; beides wird mitgeschrieben.
+`lex822.cpp:544` ist nicht betroffen, weil es danach mit `strlen` weiterrechnet
+und die Null die Länge korrekt begrenzt.
+
+Der Befund ist **älter als die Portierung** — schon die ursprüngliche Fassung von
+QUALCOMM (Commit `567a5d8`) kürzte den Puffer und gab die neue Länge zurück. Weil
+die Umstellung mehr Zeichen zusammenfasst als vorher (drei Bytes Kyrillisch
+werden zu einem Fragezeichen), wird der Rest **sichtbarer** als bisher. Das ist
+ein Grund, diesen Befund bald anzugehen — er liegt aber in `TextReader.cpp` und
+`ImapDownload.cpp`, nicht in `utils.cpp`.
+
+### Neues Werkzeug: `tools/ersetze-bereich.pl`
+
+`tools/aendere-zeile.pl` kann nur *innerhalb* einer Zeile ersetzen und keine
+Zeilen einfügen oder löschen — für eine neu geschriebene Funktion reicht das
+nicht. `tools/ersetze-bereich.pl` ersetzt einen zusammenhängenden Zeilenbereich:
+
+    perl tools/ersetze-bereich.pl <datei> <vonZeile> <bisZeile> <neuerBlock>
+
+Gelesen und geschrieben wird ausschließlich mit `:raw`. Nach dem Schreiben wird
+nachgemessen, dass alles **vor** und **nach** dem ersetzten Bereich byteweise
+unverändert geblieben ist; bei Abweichung bricht das Werkzeug ab. Zusätzlich
+werden die CR-Zahlen vorher/nachher ausgegeben, damit ein versehentlicher Wechsel
+von LF auf CRLF sofort auffällt. Für `utils.cpp` gemessen: 118 CR vorher, 118 CR
+nachher, `tools/pruefe-bytes.pl` sauber.
