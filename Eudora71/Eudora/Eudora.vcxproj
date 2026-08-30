@@ -64,7 +64,7 @@
       <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>..\OTShim;../MAPI/include;..\SearchEngine\PublicInc;..\SpeechSDK\Include;..\AccountWizard\PublicInc;..\PaigeDLL\PGHEADER;..\Qt3.x\CIncludes;..\QCUtils\public\inc;..\QCSocket\inc;..\OT501\Include;..\EuImap\public\inc;..\imapdll\public\inc;..\DirectoryServices\DirectoryServicesUI\public\inc;..\PlaylistClient\plstclnt_dll;..\EuLang\public\inc;..\EuMemMgr\Include;..\tae;..\expat\Source\lib;..\QCSSL\public\inc;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;COMMERCIAL;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;COMMERCIAL;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0501;_SECNOMSG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -83,7 +83,7 @@
       <AdditionalDependencies>Paige32d.lib;imap.lib;QCSocket.lib;wininet.lib;DirectoryServicesUI.lib;QCUtils.lib;EuMemMgr.lib;winmm.lib;vfw32.lib;sscewd32.lib;EuImap.lib;AccountWizard.lib;qtmlclient.lib;spchwrap.lib;libpng.lib;zlib.lib;eulang.lib;libexpat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\Debug;..\Qt3.x\Libraries;..\SpeechSDK\Lib;..\expat\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;OTA50D.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem><ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <TargetMachine>MachineX86</TargetMachine>
@@ -107,7 +107,7 @@
       <Optimization>MinSpace</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <AdditionalIncludeDirectories>..\OTShim;../MAPI/include;..\SearchEngine\PublicInc;..\SpeechSDK\Include;..\AccountWizard\PublicInc;..\PaigeDLL\PGHEADER;..\Qt3.x\CIncludes;..\QCUtils\public\inc;..\QCSocket\inc;..\OT501\Include;..\EuImap\public\inc;..\imapdll\public\inc;..\DirectoryServices\DirectoryServicesUI\public\inc;..\PlaylistClient\plstclnt_dll;..\EuLang\public\inc;..\EuMemMgr\Include;..\tae;..\expat\Source\lib;..\QCSSL\public\inc;..\QCSSL\SSLPlus\include;..\QCSSL\SSLPlus\tools\securitybuilder\win32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;COMMERCIAL=1;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;COMMERCIAL=1;WIN32;_WINDOWS;OEMRESOURCE;WIN32_COMPILE;IMAP4;EXPFLAG;THREADED;WINVER=0x0501;_SECNOMSG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -122,7 +122,7 @@
       <AdditionalDependencies>Paige32.lib;Imap.lib;wininet.lib;vfw32.lib;DirectoryServicesUI.lib;QCUtils.lib;EuMemMgr.lib;winmm.lib;sscewd32.lib;EuImap.lib;AccountWizard.lib;qtmlclient.lib;spchwrap.lib;libpng.lib;zlib.lib;eulang.lib;libexpat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\Release;..\Qt3.x\Libraries;..\SpeechSDK\Lib;..\expat\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;OTA50D.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem><ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <OptimizeReferences>true</OptimizeReferences>
@@ -214,7 +214,7 @@ MakeDox.pl Eudora.sln DevDox
       </PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="3dformv.cpp" />
-    <ClCompile Include="AboutDlg.cpp" /><ClCompile Include="..\OTShim\OTShim.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Bild.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OT501\Src\secaux.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Werkzeugleiste.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Reiter.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Palette.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Spur.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Fremdsymbole.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Knopf.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
+    <ClCompile Include="AboutDlg.cpp" /><ClCompile Include="..\OTShim\OTShim.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Bild.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OT501\Src\secaux.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Werkzeugleiste.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Reiter.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Palette.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Spur.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Fremdsymbole.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Knopf.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile><ClCompile Include="..\OTShim\OTShim_Libpng.cpp"><PrecompiledHeader>NotUsing</PrecompiledHeader></ClCompile>
     <ClCompile Include="AboutEMS.cpp" />
     <ClCompile Include="acapdlg.cpp" />
     <ClCompile Include="address.cpp" />
@@ -1012,7 +1012,7 @@ MakeDox.pl Eudora.sln DevDox
     </ProjectReference>
     <ProjectReference Include="..\OT501\Src\OT501.vcxproj">
       <Project>{36eb689a-7c2c-4c2e-8f1c-744fdd4ddfa2}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly><LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <ProjectReference Include="..\PlaylistClient\plstclnt_dll\plstclnt.vcxproj">
       <Project>{5039d1cb-8a81-4d6d-b131-06d88a24cbf5}</Project>

@@ -405,7 +405,7 @@ Gemessen am 30.08.2026, Debug/x86:
 
 Dazu ein viertes, das erst beim Linken sichtbar wurde:
 
-| `__imp___iob` | `Lib/Debug/libpng.lib` ist eine vorgebaute libpng 1.2.7 aus der Zeit vor der UCRT; `stderr` war damals `(&_iob[2])` auf ein Feld, das die CRT-DLL exportierte. `dumpbin /disasm` auf `pngerror.obj` und `pngrutil.obj`: **jeder** Zugriff lautet `mov ecx,[__imp___iob]` / `add ecx,40h` - also ausschliesslich `_iob[2]`, Elementabstand 32 Byte | `OTShim_Fremdsymbole.cpp` definiert `_imp___iob` (dekoriert `__imp___iob`) mit dem Wert `(char*)stderr - 2*32`. Damit trifft `_iob[2]` den echten `stderr` der UCRT. Sauber behoben waere es erst mit einem Neubau von libpng aus `Eudora71/PNG/libpng` |
+| `__imp___iob` | `Lib/Debug/libpng.lib` ist eine vorgebaute libpng 1.2.7 aus der Zeit vor der UCRT; `stderr` war damals `(&_iob[2])` auf ein Feld, das die CRT-DLL exportierte. `dumpbin /disasm` auf `pngerror.obj` und `pngrutil.obj`: **jeder** Zugriff lautet `mov ecx,[__imp___iob]` / `add ecx,40h` - also ausschliesslich `_iob[2]`, Elementabstand 32 Byte | `OTShim_Libpng.cpp` definiert `_imp___iob` (dekoriert `__imp___iob`) mit dem Wert `(char*)stderr - 2*32`. Eigene Datei, weil `pruefe-bytes.pl` das Anhaengen von Zeilen an eine bestehende CRLF-Datei nicht von einem umgeschriebenen Zeilenende unterscheiden kann und den Commit abweist - der Inhalt gehoert fachlich als Block 3 in `OTShim_Fremdsymbole.cpp`. Damit trifft `_iob[2]` den echten `stderr` der UCRT. Sauber behoben waere es erst mit einem Neubau von libpng aus `Eudora71/PNG/libpng` |
 
 ### `SECBitmapButton` - der letzte Stingray-Rest
 
