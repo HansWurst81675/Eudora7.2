@@ -962,3 +962,111 @@ Der Werkzeugleisten-Block aus `91716bb` ist an den geprueften Stellen
 stand. Der ernsteste Befund an Stufe 3 ist nicht der Code selbst, sondern dass
 er nirgends eingebunden ist (NP2-1) und deshalb noch durch keinen Uebersetzer
 gelaufen ist.
+
+---
+
+## B-1 — Ersatz für die Laufzeitbibliothek von Visual C++ 7.1 (`VC71Bruecke`)
+
+Agent BRUECKE, 30.08.2026. Ausführliche Fassung mit allen Messungen:
+[`Eudora71/VC71Bruecke/BEFUND.md`](Eudora71/VC71Bruecke/BEFUND.md). Hier nur
+das, was für andere Agenten und für Paket 1.0.3 zählt.
+
+### Was jetzt da ist
+
+`Eudora71/VC71Bruecke` erzeugt eine eigene `msvcr71.dll`, die ihre Exporte an
+`C:\Windows\SysWOW64\msvcrt.dll` weiterleitet. Damit können die drei
+unsignierten Fremd-DLLs von dll-files.com (`msvcr71.dll`, `msvcr71d.dll`,
+`msvcp71d.dll`) aus dem Paket **entfallen**.
+
+Gemessen am fertigen PE:
+
+- x86, Abhängigkeiten: **nur `KERNEL32.dll`** (`dumpbin -dependents`) — keine
+  moderne CRT, das Problem ist also gelöst und nicht verschoben
+- 1430 Exporte, davon **1429 echte Forwarder** und eine eigene Funktion
+  (`__security_error_handler`, die einzige der 118 gebrauchten, die
+  `msvcrt.dll` nicht hat)
+- laufzeitgeprüft mit einem Konsolenprogramm: **alle 1429 lösen auf**,
+  `malloc`/`strlen`/`free` funktionieren über die Brücke
+
+Bauen (das Projekt hängt noch **nicht** in `Eudora.sln`, siehe unten):
+
+    MSBuild VC71Bruecke.vcxproj /p:Configuration=Release /p:Platform=Win32 /p:BuildProjectReferences=false /m /v:minimal
+
+### Drei Befunde, die über den Auftrag hinausgehen
+
+**B-1.1 — Der Kreis der betroffenen Module ist größer als sieben.** In
+`Eudora71/Bin/Release/Plugins` liegen drei weitere vorgebaute Fremdmodule ohne
+Quellen: `SMIME.dll`, `SpamHeaders.dll`, `SpamWatch.dll`. Alle drei brauchen
+`MFC71.DLL`, `MSVCR71.dll` **und** `MSVCP71.dll`.
+
+**B-1.2 — Die Brücke rettet drei von zehn Modulen, und das ist die Obergrenze.**
+Vollständig gelöst sind `Paige32.dll` (Textbearbeitung), `DirServ.dll` und
+`EuMemMgr.dll` — sie brauchen nur `MSVCR71`. Die anderen sieben scheitern
+nicht an `MSVCR71`, sondern an `MFC71.DLL` (`EudoraBk`, `ISock`, `Ldap`,
+die drei Plugins) und `MSVCP71.dll` (`Ph`, `Ldap`, die drei Plugins).
+**Diese beiden DLLs liegen dem Paket nach Auftragsbeschreibung gar nicht bei.**
+Wenn das stimmt, sind Adressbuch, LDAP-Verzeichnisdienst, `Ph` und alle drei
+Plugins **heute schon nicht ladbar** — unabhängig von der `msvcr71`-Frage.
+**Das gehört am echten Paket nachgesehen**; es liegt nicht im Repository.
+
+**B-1.3 — `MFC71.DLL` ist nicht „schwierig“, sondern aussichtslos.** Die
+Messung „0 benannte Importe aus MFC71“ bedeutet nicht, dass nichts gebraucht
+wird, sondern das Gegenteil: es sind **157 Importe nach Ordinal** (Debug: 173),
+also 157 Bindungen ohne Namen. Ein Ersatz müsste Microsofts Ordinalvergabe von
+2003 exakt treffen; diese Zuordnung ist nicht veröffentlicht und aus den
+vorliegenden Dateien nicht rekonstruierbar. Für `MSVCP71.dll` gilt: technisch
+nachbaubar (17 Namen für die sieben DLLs, 173 mit den Plugins), aber
+**nutzlos**, weil sechs der sieben betroffenen Module zusätzlich an `MFC71`
+hängen. Übrig bliebe nur `Ph.dll`. **Nicht bauen.**
+
+### `Paige32d.dll`: Umbenennen ist erlaubt (belegt)
+
+Die Release-`Paige32.dll` darf unter dem Namen `Paige32d.dll` in `Bin/Debug`
+liegen. Vier unabhängige Belege:
+
+1. Exportlisten beider DLLs: **938 Namen, Differenz leer**
+2. `Paige32.lib` und `Paige32d.lib`: **938 Symbole, Differenz leer**
+3. `PAIGE.H` hat **kein einziges** `#ifdef _DEBUG`. Paige schaltet über ein
+   eigenes Makro `PG_DEBUG`, das in `CPUDEFS.H:35`/`:47` auskommentiert ist und
+   in keiner `.vcxproj` und keinem Quelltext gesetzt wird. Die Felder unter dem
+   Kommentar `PAIGE.H:2169` („used only for PG_DEBUG“) stehen **unbedingt** in
+   der Struktur.
+4. Unabhängig von den Kopfdateien: `pgAllocateNewRef` bekäme unter `PG_DEBUG`
+   zwei Parameter mehr (`PGMEMMGR.H:269-274`). Der Export heißt in **beiden**
+   DLLs `_pgAllocateNewRef@20`, nicht `@28`. Beide wurden also mit derselben
+   Konfiguration gebaut.
+
+Ein Startversuch ist für dieses Urteil nicht nötig.
+
+### `msvcr71d.dll` und `msvcp71d.dll` können aus dem Paket weg
+
+Gemessen: **kein einziges** Modul unter `Eudora71/Bin/Release` importiert aus
+`MSVCR71D.dll`, `MSVCP71D.dll` oder `MFC71D.DLL`. Ein Auslieferungspaket wird
+aus der Release-Ausgabe gebaut. Nebenbei: `msvcp71d.dll` war ohnehin die
+falsche Begründung — `Paige32d.dll` importiert **kein** `MSVCP71D`, sondern nur
+`KERNEL32`, `USER32`, `GDI32` und `MSVCR71D`.
+
+### Fallstrick für alle, die an der `.def` arbeiten
+
+Die klassische Zeile `malloc = msvcrt.malloc` **bindet mit dem Linker aus
+VS 2022 nicht**: `LNK2001: Nicht aufgelöstes externes Symbol "malloc"`.
+Ursache eingekreist (fünf Testbindungen, siehe `BEFUND.md` 2.3): link.exe löst
+den Namen auf der rechten Seite trotzdem als gewöhnliches externes Symbol auf.
+Weder `/EXPORT` auf der Befehlszeile noch `PRIVATE`, `@ordinal` oder
+`/ALTERNATENAME` helfen. Der Bauablauf erzeugt deshalb vor dem Binden mit
+`lib.exe` eine Stub-Importbibliothek; im fertigen PE steht davon nichts.
+
+### Vier im Auftrag genannte Dateien gibt es nicht
+
+`ZIEL.md`, `Releases/PAKETE.md`, `tools/zeilenenden-angleichen.pl` und
+`tools/ersetze-bereich.pl` sind im Repository nicht vorhanden. Ebenso gibt es
+in dieser `BEFUNDE.md` keine Abschnitte `S-1` bis `S-7`. Wer künftige Aufträge
+schreibt, sollte das wissen.
+
+### Offen
+
+- `VC71Bruecke` hängt **noch nicht** in `Eudora71/Eudora.sln` — bewusst nicht
+  eingetragen, um keinen Konflikt in einer geteilten Datei zu hinterlassen.
+  Die zwei nötigen Einfügungen stehen wörtlich in `BEFUND.md`, Abschnitt 6.
+- Startversuch mit der Brücke steht aus (Auflage: keine Fenster, kein
+  Eudora-Start).

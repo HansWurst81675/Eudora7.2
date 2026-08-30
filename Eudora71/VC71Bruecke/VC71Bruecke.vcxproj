@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    VC71Bruecke - erzeugt msvcr71.dll als reine Weiterleitung an
+    C:\Windows\SysWOW64\msvcrt.dll. Siehe BEFUND.md.
+
+    Beide Konfigurationen erzeugen dieselbe DLL. Das ist Absicht: es gibt
+    hier nichts zu debuggen (eine Funktion, sonst nur Weiterleitungen), und
+    die Debug-Ausgabe von Eudora braucht dieselbe msvcr71.dll wie die
+    Release-Ausgabe. Nur der Ausgabeordner unterscheidet sich.
+  -->
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}</ProjectGuid>
+    <RootNamespace>VC71Bruecke</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>..\Bin\Debug\</OutDir>
+    <IntDir>.\Build\Debug\</IntDir>
+    <TargetName>msvcr71</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>..\Bin\Release\</OutDir>
+    <IntDir>.\Build\Release\</IntDir>
+    <TargetName>msvcr71</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!--
+        Ohne C-Laufzeitbibliothek. Jede der folgenden Einstellungen dient
+        genau diesem Zweck; wer eine davon zuruecknimmt, holt sich eine
+        Abhaengigkeit auf vcruntime140.dll ins Haus und macht die Bruecke
+        sinnlos (nachzumessen mit dumpbin -dependents).
+      -->
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <Optimization>MinSpace</Optimization>
+      <ExceptionHandling>false</ExceptionHandling>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ControlFlowGuard>false</ControlFlowGuard>
+      <SDLCheck>false</SDLCheck>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <CompileAs>CompileAsC</CompileAs>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <PreBuildEvent>
+      <!--
+        Erzeugt die Stub-Importbibliothek. Sie ist nur waehrend des Bindens
+        noetig: link.exe nimmt eine Zeile "malloc = msvcrt.malloc" in der
+        .def sonst nicht an, sondern verlangt den Namen "malloc" als
+        gewoehnliches externes Symbol (LNK2001) - gemessen, siehe
+        BEFUND.md, Abschnitt "Die Stolperstelle beim Binden". Im fertigen
+        PE steht davon nichts; nachzumessen mit dumpbin -dependents.
+      -->
+      <Command>lib.exe /NOLOGO /DEF:"$(ProjectDir)msvcrt-stub.def" /MACHINE:X86 /OUT:"$(IntDir)msvcrt-stub.lib"</Command>
+      <Message>Stub-Importbibliothek fuer msvcrt.dll erzeugen</Message>
+    </PreBuildEvent>
+    <Link>
+      <ModuleDefinitionFile>msvcr71.def</ModuleDefinitionFile>
+      <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
+      <AdditionalDependencies>kernel32.lib;user32.lib;$(IntDir)msvcrt-stub.lib</AdditionalDependencies>
+      <EntryPointSymbol>VC71BrueckeEinsprung</EntryPointSymbol>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!--
+        Importbibliothek in den Zwischenordner, nicht nach Bin. Gegen diese
+        DLL wird nichts gebunden - sie wird nur vom Lader gefunden. Eine
+        msvcr71.lib neben den ausgelieferten Dateien koennte spaeter
+        versehentlich in ein anderes Projekt geraten.
+      -->
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <ImportLibrary>$(IntDir)msvcr71.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="vc71bruecke.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="msvcr71.def" />
+    <None Include="BEFUND.md" />
+    <None Include="Werkzeug\erzeuge-def.pl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
