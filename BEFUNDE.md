@@ -2709,3 +2709,76 @@ kommt mit `MSGF_MENU`), sowie `SECDockState::LoadState` bei leerer INI.
 **Nebenbefund:** frische Arbeitsbaeume standen auf `origin/main` (`22a6d77`);
 dort bricht der Bau am laengst behobenen `C2572` ab. Der lebende Stand ist
 `eudora-exe-linkt`.
+
+## A-1 — Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026, UNFERTIG)
+
+Agent ANSICHT, Branch `worktree-agent-a84c76a2ea910c75d`, ausgehend von
+`31810e2`. **Kein Code geändert** — die Sitzung wurde vor der Umsetzung
+abgebrochen. Vollständige Analyse mit allen Fundstellen in
+[`Eudora71/OTShim/BEFUND-ANSICHT.md`](Eudora71/OTShim/BEFUND-ANSICHT.md).
+
+### Die sich überlagernden Bereiche: Ursache belegt
+
+Es ist kein Fehler, sondern eine **offene Baustelle**. Die Ersatzschicht sagt es
+an ihrer eigenen Deklaration (`OTShim.h:695-699`): die prozentualen
+Zeilenbreiten (`m_fPctWidth`) und die Splitter sind nicht umgesetzt, „die
+Leisten liegen dadurch so, wie `CDockBar` sie anordnet".
+
+Nachgemessen in `Eudora71/OTShim/OTShim.cpp`:
+
+| Stelle | Zustand |
+|---|---|
+| `SECDockBar::CalcFixedLayout` Z. 2505 | reicht 1:1 an MFC durch |
+| `SECDockBar::OnSizeParent` Z. 2990 | reicht 1:1 an MFC durch |
+| `SECDockBar::NormalizeRow` Z. 2239 | zählt nur, **verteilt keine Breite** |
+| `SECDockBar::SetControlBarWidthsInRow` Z. 2226 | leerer Rumpf |
+| `SECMDIFrameWnd::DockControlBarEx` Z. 274 | legt `fPctWidth` ab, **wertet es nicht aus**; verwirft zusätzlich `nCol` und `nRow` |
+
+Dazu `SECControlBar::CalcFixedLayout` (`OTShim.cpp:1606`): bei `bStretch`
+liefert sie **32767** in Zeilenrichtung. Jede Wazoo-Leiste fordert also die
+volle Zeilenbreite an, und MFCs `CDockBar` kennt keine anteilige Aufteilung
+einer Zeile. Daraus folgen unmittelbar drei der vier gemeldeten
+Auffälligkeiten: Adressbuch über Nachrichtenliste, der leere senkrechte
+Streifen, und „Task Status/Task Errors" mitten im Fenster.
+
+Bestätigt wird der frühere Ausschluss: an der abgeschalteten Werbeleiste liegt
+es nicht (`DockBar.cpp:51-75`, `82-99` prüfen selbst auf `SWM_MODE_ADWARE`).
+
+### Die leeren Werkzeugleisten-Knöpfe: fünf Ursachen ausgeschlossen
+
+Gemessen (Einzelheiten in `BEFUND-ANSICHT.md`):
+
+- Vorgabe ist **große Knöpfe** (`EudoraRes.rc:7648`), also `IDR_MAINFRAME32/A/B`.
+- Alle sechs Werkzeugleisten-Bitmaps sind 24 bpp; Bildzahlen 64/61/51 stimmen
+  exakt mit `Breite/Höhe` überein; **keine `SEPARATOR`-Zeile** in den
+  Ressourcen.
+- **Alle 15 Standardknöpfe** (`mainfrm.cpp:684-711`) liegen mit Index 0–62 im
+  **ersten** Bitmap. Das Zusammensetzen der drei Ressourcen
+  (`QCToolBarManager.cpp:283-540`) ist damit als Ursache **ausgeschlossen** —
+  es könnte nur alle 15 gleichzeitig treffen, nicht einzelne.
+- `IDToBmpIndex` liefert bei unbekannter Kennung 0 → **falsches** Symbol, nie
+  ein leeres Feld. Ausgeschlossen.
+- `secData` ist echt gefüllt (`OT501/Src/secaux.cpp:23`, im Projekt unter
+  `Eudora.vcxproj:217`). Ausgeschlossen.
+- `QCCustomToolBar` überschreibt das Zeichnen nicht — gemalt wird ausschließlich
+  in der Ersatzschicht.
+
+**Übrig bleibt der Zeichenweg je Knopf.** Stärkster Verdacht (UNGEPRÜFT):
+`SECStdBtn::DrawDisabled` (`OTShim_Werkzeugleiste.cpp:786-801`) lässt vor dem
+Einfarbig→Farb-`BitBlt` das Paar `SetTextColor(0)` / `SetBkColor(0xFFFFFF)`
+weg, das die klassische Vorlage dort zwingend setzt. Weil `CDC::FillSolidRect`
+in `DrawFace` (Z. 704) die Hintergrundfarbe auf `clrBtnFace` stehen lässt,
+übersetzt GDI die Maskeneins nicht nach Weiß, sondern nach `clrBtnFace` — und
+die Verknüpfungszahl `PSDPxax` setzt Weiß/Schwarz voraus. Das passt als
+einziger Kandidat auf das Muster „mehrere leer, andere da": auf einer frisch
+gestarteten Eudora sind gerade acht der fünfzehn Knöpfe gesperrt, und auf
+Gregors **Vergleichsbild** ist ein Nachrichtenfenster offen, dort wären
+dieselben Knöpfe freigegeben.
+
+### Bauzustand
+
+`Eudora.vcxproj` Debug/Win32 endet an `31810e2` **unverändert** mit
+`LNK1104: imap.lib`. Alle Quelldateien übersetzen fehlerfrei. Nebenbefund: der
+MSBuild-Aufruf aus der Arbeitsanweisung läuft in der **Git-Bash nicht** (sie
+macht aus `/p:Configuration=Debug` einen Pfad) — er gehört in PowerShell, und
+Visual Studio liegt auf diesem Rechner unter **Professional**, nicht Community.
