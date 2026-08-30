@@ -1,46 +1,49 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
 Stand: 2026-08-30 · Branch `eudora-exe-linkt` (der frühere `vs2022-portierung-fixes`
-ist mit `22a6d77` nach `main` gemergt) · Messwerte an Commit `2d68555`
+ist mit `22a6d77` nach `main` gemergt) · Messwerte an Commit `a807b93`
 
 An diesem Baum arbeiten mehrere Agenten gleichzeitig. Jede Zahl hier nennt ihren
 Bezugscommit; wer sie weiterverwendet, misst nach.
 
 ## Kurzfassung
 
-> **Gemessen an `2d68555`, 30.08.2026, `Debug|x86`, Toolset v143.**
-> Ein voller Solution-Bau meldet **3 Fehler, alle aus `OT501`** (zweimal
-> `NMAKE U1073`, einmal `MSB3073`); **15 der 18 Projekte werden fertig.**
-> `Eudora.vcxproj` einzeln gebaut (`-p:BuildProjectReferences=false`)
-> **übersetzt vollständig** und endet im Linker mit
-> `LNK1120: 1 nicht aufgelöstes Externes`.
+> **`Eudora.exe` bindet.** Gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
+> Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe
+> `OTA50D.LIB`:
 >
-> Dieses eine Symbol ist `__imp___iob`, angefordert von der **vorgefertigten
-> `libpng.lib`** (`pngerror.obj`, `pngrutil.obj`) — eine VC6-Binärdatei aus dem
-> Altbestand, die gegen eine CRT von damals gebaut wurde. Mit Stingray hat es
-> nichts zu tun: **von der OT501-Ersatzschicht her ist `Eudora.exe` gebunden.**
+> | Messung | Ergebnis |
+> |---|---|
+> | `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |
+> | Solution-Bau | **3 Fehler**, alle aus `OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`) |
+> | fertige Projekte | **16 von 18** |
+> | `Eudora71/Tests/RunTests.cmd` | 33 Tests, 33 bestanden |
 >
-> Gemessen wurde gegen die leere Attrappe `Eudora71/Lib/Debug/OTA50D.LIB`;
-> sie muss weg, bevor daraus ein echtes Ergebnis wird.
+> Die OT501-Ersatzschicht ist damit vollständig: Verlauf der ungelösten Externen
+> 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**. Die leere Attrappe
+> `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
+> `LinkLibraryDependencies` auf `false`, `Eudora.vcxproj:1015`).
+>
+> **Ungeprüft ist, ob das Programm startet.** `EudoraRes.dll` fehlt und wird zur
+> Laufzeit nachgeladen — siehe `STARTUMGEBUNG.md`.
 
-**Sobald `libpng` gelöst ist, werden 15 der 18 Projekte fertig.** Drei nicht: `OT501` (Stingray
-Objective Toolkit; die Quellen sind nicht freigegeben) sowie `Eudora` und
-`EudoraRes`. Die beiden letzten haben je einen Projektverweis auf `OT501`
-(`Eudora.vcxproj:1013`, `EudoraRes.vcxproj:351`) und werden im Solution-Bau deshalb
-gar nicht erst versucht — sie erscheinen nicht in der Fehlerliste, fertig werden sie
-trotzdem nicht. Ein voller Solution-Bau meldet 3 Fehler, alle aus `OT501`: zweimal
-`NMAKE U1073` (`Blackbox.cpp`, `OTA50D.lib`) und einmal `MSB3073`. Früher stand hier
-"16 von 18" — `EudoraRes` war dabei übersehen.
+**16 der 18 Projekte werden fertig.** Zwei nicht:
 
-Einzeln gemessen mit `-p:BuildProjectReferences=false` uebersetzen `Eudora` und
-`EudoraRes` **vollstaendig**. Fuer `Eudora` sind damit alle 269 urspruenglichen
-Compilerfehler behoben (Verlauf 269 - 74 - 25 - 16 - 4 - 0, null seit `3f6877a`),
-und seit `78a9c10` uebersetzt auch die Ersatzschicht selbst fehlerfrei mit.
+- `OT501` (Stingray Objective Toolkit) — die Quellen sind nicht freigegeben, das
+  Projekt bricht mit `NMAKE U1073` ab. Gebraucht wird es nicht mehr.
+- `EudoraRes` — hat einen Projektverweis auf `OT501` (`EudoraRes.vcxproj:351`) und
+  wird im Solution-Bau gar nicht erst versucht; es erscheint nicht in der
+  Fehlerliste, fertig wird es trotzdem nicht. Einzeln gebaut übersetzt es
+  vollständig. Für `Eudora` war dieselbe Bindung an `Eudora.vcxproj:1013` bis
+  `a807b93` genauso wirksam; dort ist sie jetzt gelöst.
 
-Ohne die Attrappe endet der Link mit `LNK1104: OTA50D.LIB kann nicht geoeffnet
-werden`; mit ihr laeuft er durch bis zu den ungeloesten Symbolen. Deren Zahl ist
-in dieser Sitzung von 1088 (651 verschiedene) auf **1** gefallen — der Verlauf
-mit Bezugscommits steht in
+Ein voller Solution-Bau meldet 3 Fehler, alle aus `OT501`: zweimal `NMAKE U1073`
+(`Blackbox.cpp`, `OTA50D.lib`) und einmal `MSB3073`.
+
+Für `Eudora` sind alle 269 ursprünglichen Compilerfehler behoben (Verlauf
+269 - 74 - 25 - 16 - 4 - 0, null seit `3f6877a`), seit `78a9c10` übersetzt die
+Ersatzschicht fehlerfrei mit, und seit `a807b93` bindet die `.exe` ohne ein
+ungelöstes Symbol. Der Verlauf mit Bezugscommits steht in
 [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md), Abschnitt "Der Weg zum Linken".
 
 Die vier Quelldateien, deren Header vorlagen, deren Implementierung aber in der
@@ -154,7 +157,7 @@ Klassenfamilien hat den Umfang deutlich verkleinert: die 77 Methoden sind nicht 
 Aufgaben. Viele sind geerbte MFC-Methoden, die Eudora nur qualifiziert aufruft,
 andere werden nie aufgerufen; `SECStatusBar` erledigt ein `typedef`.
 
-**Alle fünf Teile sind eingehängt** (`e50a89c`). Stand an `2d68555`, gezählt mit
+**Alle fünf Teile sind eingehängt** (`e50a89c`). Stand an `a807b93`, gezählt mit
 `wc -l` und geprüft gegen `OTShimAll.h` sowie die `ClCompile`-Einträge in
 `Eudora.vcxproj:217`:
 
@@ -171,8 +174,8 @@ Zusammen **17828 Zeilen** in 11 Dateien. `secaux.cpp` aus `OT501/Src` ist direkt
 `Eudora.vcxproj` aufgenommen — `secData` und `SEC_AUX_DATA` brauchten keinen
 Nachbau.
 
-Seit `78a9c10` übersetzt `Eudora` damit fehlerfrei; von den Stingray-Symbolen ist
-keines mehr offen (gemessen an `2d68555`).
+Seit `78a9c10` übersetzt `Eudora` damit fehlerfrei, und seit `a807b93` bindet die
+`.exe` ohne ein einziges ungelöstes Symbol.
 
 > **Der Wächter `__SECBTNS_H__` in `OTShimAll.h` bleibt auskommentiert.** Ihn zu
 > setzen ist der naheliegende, aber falsche Weg: `secbtns.h` liefert ausser
@@ -387,21 +390,25 @@ Release bei, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Einzelheiten in
    beruht auf OpenSSL 1.0.2p und kann kein TLS 1.3.
 2. ~~Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen~~ — erledigt mit
    `75b60e1`.
-3. ~~OT501-Ersatzschicht implementieren~~ — im Kern erledigt. Alle fünf Teile sind
+3. ~~OT501-Ersatzschicht implementieren~~ — **erledigt.** Alle fünf Teile sind
    geschrieben und eingehängt (`e50a89c`), `Eudora` übersetzt seit `78a9c10`
-   fehlerfrei, und von den Stingray-Symbolen ist an `2d68555` keines mehr offen.
-   Der Weg mit allen Zwischenmessungen steht in
+   fehlerfrei und bindet seit `a807b93` mit **0 ungelösten Externen**, ohne die
+   Attrappe `OTA50D.LIB`. Der Weg mit allen Zwischenmessungen steht in
    [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md).
-4. **`__imp___iob` aus der vorgefertigten `libpng.lib` auflösen** — das letzte
-   ungelöste Symbol beim Binden von `Eudora.exe` (gemessen an `2d68555`). Es ist
-   kein Stingray-Problem, sondern eine VC6-Binärdatei aus dem Altbestand, die
-   gegen eine CRT von damals gebaut wurde. Danach die Attrappe
-   `Eudora71/Lib/Debug/OTA50D.LIB` entfernen und neu messen — solange sie liegt,
-   linkt Eudora gegen eine leere Bibliothek.
-5. **Ersten Start herrichten** — welche Laufzeitdateien danebenliegen müssen und
+4. **`EudoraRes.dll` beschaffen** — das Projekt hängt über
+   `EudoraRes.vcxproj:351` an `OT501` und wird im Solution-Bau nicht versucht.
+   Für `Eudora` ist dieselbe Bindung mit `a807b93` gelöst
+   (`LinkLibraryDependencies` auf `false`, `_SECNOMSG`); ob derselbe Handgriff
+   hier trägt, ist **nicht geprüft**.
+5. **`libpng` sauber nachziehen** — `__imp___iob` ist in `OTShim_Libpng.cpp` nur
+   behelfsweise gelöst, gestützt auf die gemessene Annahme, dass libpng 1.2.7
+   ausschliesslich `_iob[2]` anfasst und die damalige CRT 32 Byte je Element
+   hatte. Ein Neubau aus `Eudora71/PNG/libpng` mit v143 macht die Annahme
+   überflüssig.
+6. **Ersten Start herrichten** — welche Laufzeitdateien danebenliegen müssen und
    was noch fehlt (unter anderem `EudoraRes.dll`), steht in
    [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
-6. Hostnamenprüfung — bewusst zurückgestellt, siehe oben. Der Befund ist
+7. Hostnamenprüfung — bewusst zurückgestellt, siehe oben. Der Befund ist
    dokumentiert, nicht behoben.
 
 ## Rückschritte und ihre Ursachen
@@ -433,7 +440,8 @@ nicht den Fehlerstand: nachgemessen an `22a6d77` meldete der Solution-Bau
 weiterhin **7 Fehler** und **11 von 18** Projekten. Die vier Projekte fanden die
 Kopfdatei jetzt — und liefen damit in denselben `C2572` aus `secbtns.h:340`, an
 dem auch `Eudora` hing. Erst `78a9c10` hat beides zugleich aufgelöst; seither sind
-es wieder 3 Fehler und 15 von 18 (gemessen an `2d68555`).
+es wieder 3 Fehler; an `a807b93` sind es 16 von 18, weil dort auch `Eudora`
+fertig wird.
 
 **Die Lehre.** Eine Änderung an einer *gemeinsam benutzten* Datei — `stdafx.h`
 steht hier stellvertretend — muss gegen die **ganze Solution** gemessen werden,
