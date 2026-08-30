@@ -2782,3 +2782,339 @@ dieselben Knöpfe freigegeben.
 MSBuild-Aufruf aus der Arbeitsanweisung läuft in der **Git-Bash nicht** (sie
 macht aus `/p:Configuration=Debug` einen Pfad) — er gehört in PowerShell, und
 Visual Studio liegt auf diesem Rechner unter **Professional**, nicht Community.
+
+## P-1 - Der POP-Abrufpfad, vor dem ersten echten Abruf gegengelesen
+
+**Geprueft am:** 2026-08-30, Agent POSTBOTE, Branch `worktree-agent-a09934fad08c602f1`
+**Anlass:** Kriterium 3 aus `ZIEL.md` ist nie geprueft worden. Gregor will als
+naechstes ein freenet-Konto einrichten und Mail abrufen.
+**Verfahren:** nur Quellcode und Komponententests. Kein Eudora gestartet, keine
+Verbindung zu einem Mailserver, keine Zugangsdaten benutzt.
+**Ablieferung nebenan:** `ABRUF-PRUEFEN.md` im Wurzelverzeichnis.
+
+### P-1.0 Die Kette, um die es geht
+
+```
+ID_FILE_CHECKMAIL (EudoraRes.rc)
+  -> CMainFrame::OnFileCheckMail        mainfrm.cpp:3428
+  -> CEudoraApp::OnCheckMail            eudora.cpp:791
+  -> ::GetMail(bitflags)                GetMail.cpp:82
+       QCPOPSettings::GrabSettings      QCMailSettings.cpp:138  (POPAccount, POPPort)
+       QCSSLSettings::GrabSettings      SSLSettings.cpp:71      (SSLReceiveUse, SSLPOPAlternatePort)
+  -> CPOPSession (Worker-Thread)        POPSession.cpp:286 / DoWork:478
+  -> CPOPSession::GetMail               POPSession.cpp:520
+       SetupNetConnection_ 3190 -> CreateNetConnectionMT -> QCWorkerSocket
+       OpenPOPConnection_  1690 (Port 110 / 995 / kpop 1110)
+       [implizites TLS]     602 -> SetSSLMode -> qcssl.dll: BeginQCSSLSession
+       POPAuthenticate_    2047: Banner, CAPA 752, STLS 3479, USER/PASS 2175/2176, STAT 2267
+       DoGetPOPMailToSpool  916 -> POPGetMessageToSpool 1027: LIST 1045, RETR 1085, DELE 1174
+                                -> FetchMessageToSpool 1207 (ReadPOPLine 2364 -> Spool-Datei)
+  -> CPOP::GetMailFromSpool             pop.cpp:123
+       FetchMessageTextFromSpool 461 -> WriteMessageToMBX_ 656
+            HeaderDesc::Read  header.cpp:77 (+ Fix2047/Translate2047 lex822.cpp:554/514)
+            MIMEState::Init   mime.cpp:109 -> Reader::ReadIt -> Base64Decoder/QPDecoder
+       CTocDoc::UpdateSum/WriteSum      pop.cpp:596/639
+```
+
+### P-1.1 BEHOBEN: `TextReader::ReadIt` warf die neue Laenge von `ISOTranslate` weg
+
+**Sicherheit: nachgewiesen (Komponententest).**
+**Datei:** `Eudora71/Eudora/TextReader.cpp:251`.
+
+`ISOTranslate` (utils.cpp:1162) uebersetzt an Ort und Stelle. Jede uebersetzte
+Mehrbytefolge macht den Text **kuerzer** - die Funktion liefert deshalb die neue
+Laenge zurueck. Die Aufrufstelle warf sie weg:
+
+    ISOTranslate(buf, size, iCharsetIdx);        // vorher
+    size = ISOTranslate(buf, size, iCharsetIdx); // jetzt
+
+`size` behielt also die Laenge **vor** der Uebersetzung. Alles, was danach mit
+`size` rechnet, lag daneben:
+
+- `buf[size-2] != '\r'` (Z. 260) - die CRLF-Erkennung greift ins Leere. Jede
+  Zeile mit einem Umlaut galt als "nicht mit CRLF beendet" und lief in den
+  Sammelpuffer statt direkt in die Mailbox.
+- `PutWithEscapedFileMarkers(buf, size, ...)` (Z. 312) - schreibt hinter den
+  uebersetzten Text die Nullterminierung **und** je uebersetztem Zeichen ein
+  Restbyte der alten Fassung in `In.mbx`.
+
+**Warum es bis heute nicht auffiel - und ab jetzt jede deutsche Mail trifft.**
+Im Originalcode von 2006 (`567a5d8:Eudora71/Eudora/utils.cpp`) hatte die
+UTF-8-Zeile der Uebersetzungstabelle **27 Eintraege**, ausschliesslich
+CP1252-Sonderzeichen (Anfuehrungsstriche, Gedankenstriche, Eurozeichen).
+Deutsche Umlaute waren nicht dabei: `C3 A4` blieb `C3 A4`, der Text wurde nicht
+kuerzer, und der Fehler blieb stumm. Heute hat die Tabelle **123 Eintraege**
+(`utils.cpp:46`), darunter der komplette Latin-1-Bereich U+00A0..U+00FF. Damit
+wird ab sofort **jede Zeile mit einem Umlaut** kuerzer - und der seit 2006
+schlafende Fehler waere bei Gregors erstem Abruf sofort sichtbar geworden.
+
+Der Fehler ist **kein Portierungsschaden**: die Zeile steht wortgleich in
+`567a5d8`. Erst die Erweiterung der Tabelle hat ihn geweckt.
+
+**Abgesichert durch:** `Eudora71/Tests/TestPopEmpfang.cpp`, Test
+"POP: TextReader::ReadIt uebernimmt die neue Laenge von ISOTranslate" - ein
+Waechter auf den Quelltext, damit die Zuweisung nicht wieder verschwindet.
+
+### P-1.2 GEPRUEFT UND IN ORDNUNG: der POP-Pfad ist vom IMAP-Zeichensatzfehler nicht betroffen
+
+**Sicherheit: nachgewiesen (Komponententest).**
+
+Bekannt war: `EuImap/src/ImapDownload.cpp:4644` ruft `FindRStringIndexI` direkt
+auf und gibt das Ergebnis **ohne die Verschiebung um eins** an `ISOTranslate`.
+
+Der POP-Pfad geht einen anderen Weg. `TextReader.cpp:85` und `lex822.cpp:516`
+benutzen `FindMIMECharset` (`mime.cpp:382`), und das zaehlt den Wert hoch:
+
+    iCharSet = FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_UTF_8, charSet, -1);
+    if (iCharSet >= 0) ++iCharSet;      // "Bump index to avoid conflict with windows"
+
+Gemessen (Test "POP: der Index wird um eins verschoben"):
+
+| Zeichensatz | roher Index (IMAP) | `FindMIMECharset` (POP) | Wirkung des rohen Index |
+|---|---|---|---|
+| `iso-8859-15` | 2 | 3 | 2 ist "<= 2" - gar keine Uebersetzung |
+| `utf-8` | 3 | 4 | 3 waehlt nach `-3` die Zeile 0, also die **ISO-8859-15-Tabelle**; aus `C3 BC` wird `C3 8C`, der Text ist danach kaputt |
+
+Zusaetzlich sucht IMAP nur bis `IDS_MIME_ISO_LATIN9` - `utf-8` findet es gar
+nicht und bekommt `-1`. Der IMAP-Pfad uebersetzt damit ueberhaupt keine
+Zeichensaetze. **Gregor benutzt POP, ist also nicht betroffen.**
+
+### P-1.3 GEPRUEFT UND IN ORDNUNG: Betreff und Absendername laufen ueber denselben Pfad wie der Text
+
+Beide gehen durch `HeaderDesc::Read` (header.cpp:77) und von dort durch den
+Lexer (`lex822.cpp:777`), der `Fix2047` aufruft. `Fix2047` (lex822.cpp:554)
+zerlegt `=?Zeichensatz?Kodierung?Text?=` und gibt den Inhalt an `Translate2047`
+(lex822.cpp:514): erst `PseudoQP` bzw. `DecodeB64String`, dann **dasselbe**
+`ISOTranslate` mit **demselben** Index aus `FindMIMECharset`.
+
+Der Rueckgabewert wird hier zu Recht nicht gebraucht: `Fix2047` arbeitet
+anschliessend mit `strcpy`/`strlen`, und `ISOTranslate` setzt die
+Nullterminierung an die neue, kuerzere Stelle (utils.cpp:1277). P-1.1 betrifft
+den Kopfzeilenpfad also nicht.
+
+Gemessen an echten Kopfzeilen (`TestPopEmpfang.cpp`, neun Tests):
+
+| Eingabe auf der Leitung | Ergebnis |
+|---|---|
+| `=?UTF-8?B?R3LDvMOfZQ==?=` | `Gr` FC DF `e` |
+| `=?utf-8?Q?Gr=C3=BC=C3=9Fe?=` | `Gr` FC DF `e` |
+| `=?iso-8859-1?Q?Gr=FC=DFe?=` | `Gr` FC DF `e` (Index 2, keine Uebersetzung noetig) |
+| `=?utf-8?B?4oKsIDUw?=` | 80 ` 50` (Eurozeichen, 3 Bytes -> 1) |
+| `=?UTF-8?B?SsO8cmdlbiBTY2jDtm4=?= <juergen@example.org>` | `J` FC `rgen Sch` F6 `n <juergen@example.org>` |
+| `Re: =?utf-8?Q?Gr=C3=BC=C3=9Fe?= aus Bremen` | `Re: Gr` FC DF `e aus Bremen` |
+| `=?utf-8?Q?Gr=C3=BC=C3=9Fe?= =?utf-8?Q?_und_Dank?=` | `Gr` FC DF `e und Dank` (Zwischenraum faellt weg, RFC 2047 6.2) |
+| `=?koi8-r?B?VGVzdA==?=` | bleibt woertlich stehen (unbekannter Zeichensatz) |
+| `=?utf-8?X?VGVzdA==?=` | bleibt woertlich stehen (unbekanntes Verfahren) |
+
+### P-1.4 Die Portierung hat den Abrufpfad nicht angefasst
+
+**Sicherheit: nachgewiesen** (Vergleich gegen `567a5d8`, den Commit mit den
+Originalquellen).
+
+Der gesamte Unterschied im POP-Abrufpfad zwischen 2006 und heute sind **sechs
+Zeilen**, und keine davon aendert die Bedeutung:
+
+| Fundstelle | Aenderung | Bewertung |
+|---|---|---|
+| `POPSession.cpp:1711, 2232, 2429, 2473` | `strchr(...)` -> `const_cast<char*>(strchr(...))` | C++-const-Ueberladung; alle vier Zeiger werden nur gelesen |
+| `header.cpp:240` | dieselbe Aenderung | dito |
+| `QCWorkerSocket.cpp:47` | `#include <xstddef>` -> `<functional>` | verhaltensneutral |
+
+`SSLSettings.cpp`, `QCMailSettings.cpp` und `pop.cpp` sind **byteidentisch** zum
+Original.
+
+Ebenfalls geprueft und in Ordnung: `Eudora71/QCSSL/src/qcssl.def` ist in
+`QCSSL.vcxproj` (Z. 79 und 123) fuer Debug **und** Release als
+`ModuleDefinitionFile` eingehaengt. Die elf `QCSSL*`-Exporte bleiben damit
+undekoriert, und die `GetProcAddress`-Aufrufe in `Network::SetSSLMode`
+(`QCWorkerSocket.cpp:373-383`) finden ihre Symbole trotz `__stdcall`. Das war
+der naheliegendste Weg, wie die Portierung SSL-POP still haette brechen koennen
+- sie hat es nicht.
+
+**`char` mit Vorzeichen: kein Fund.** `POPSession.cpp:1837` und `:2279` casten
+schon im Original nach `unsigned char`, bevor sie `isspace`/`isdigit` rufen.
+Keine Tabellenindizierung mit rohem `char` im geprueften Bereich.
+
+**`time_t` 32 -> 64 Bit:** die einzige Kategorie, in der der Uebersetzerwechsel
+Typen wirklich geaendert hat. Betroffen: `QCWorkerSocket.cpp:1728/1739`
+(Netzwerk-Zeitgrenze), `POPSession.cpp:2264` und `:361/341`
+(`IDS_INI_POP_LAST_AUTH` ueber `SetIniLong`/`GetIniLong`), `pop.cpp:690-694`
+(Zeitstempel der `From ???@???`-Zeile). Alle Werte bleiben bis zum 19.01.2038
+verlustfrei, `_USE_32BIT_TIME_T` ist nirgends gesetzt. **Keine auf Platte
+geschriebene Struktur mit `time_t`** im POP-Pfad - das INI-Format bleibt
+kompatibel. Kein Handlungsbedarf.
+
+### P-1.5 OFFEN: Altlasten aus 2006, die den ersten Abruf treffen koennen
+
+Alle folgenden Stellen stehen **wortgleich in `567a5d8`**. Sie sind keine
+Portierungsschaeden, aber sie liegen auf dem Weg, den Gregors erster Abruf
+nimmt. Nichts davon wurde geaendert - hier steht nur, worauf zu achten ist.
+
+**P-1.5a  NULL-Zeiger nach gescheiterter SSL-Aushandlung.**
+`QCSocket/src/QCWorkerSocket.cpp:1961-1972`. `pConnectionInfo` wird in Z. 1961
+geprueft, in Z. 1969 (`pConnectionInfo->m_Outcome.m_bCertRejected`) aber
+ungeprueft dereferenziert; dieselbe Stelle nochmals in `:1989-1992`. Liefert
+`QCSSLGetConnectionInfo` nach einem gescheiterten Handshake NULL, stuerzt Eudora
+ab, statt eine Fehlermeldung zu zeigen. **Das ist der wahrscheinlichste
+Absturzpunkt beim ersten Abruf, wenn etwas mit dem Zertifikat nicht stimmt.**
+Wenn Eudora beim Abruf kommentarlos verschwindet: hier zuerst nachsehen.
+
+**P-1.5b  `sscanf` mit unbegrenztem `%s` auf Serverdaten.**
+`POPSession.cpp:1050-1052`: `char szDummy[40]` und
+`sscanf(szBuffer, "%s %d %ld", szDummy, ...)` auf der 3072 Byte grossen
+`LIST`-Antwort. Ein Server, dessen erstes Token laenger als 39 Zeichen ist,
+ueberschreibt den Stapel. Unter VS2022 greift `/GS` - daraus wird ein
+kontrollierter Absturz statt stiller Verfaelschung. Richtig waere `%39s`.
+
+**P-1.5c  Schleife laeuft ein Byte unter den Puffer.**
+`POPSession.cpp:1305-1306` in `FetchMessageToSpool`:
+`while (Len >= 0 && (szBuffer[Len-1] == '\r' || ...)) szBuffer[--Len] = 0;`
+Bei `Len == 0` wird `szBuffer[-1]` gelesen und geschrieben. Muss `Len > 0`
+heissen. **UNGEPRUEFT**, ob ein Pfad `Len == 0` ueberhaupt erreicht -
+`Network::GetLine` normalisiert nacktes LF zu CRLF. Die Zeile ist unabhaengig
+davon falsch.
+
+**P-1.5d  `strncpy` ohne Nullterminierung, Servername.**
+`POPSession.cpp:1739`: `char Server[128]; strncpy(Server, pszPOPServer, sizeof(Server));`
+- `sizeof` statt `sizeof-1`, kein `Server[127] = 0`. Ab 128 Zeichen Servername
+lesen `stricmp` (Z. 1742) und `Open()` ueber das Array hinaus. Gleiches Muster
+in `POPSession.cpp:3342` und `:3344`.
+
+**P-1.5e  Ungeprueftes `strcpy` aus den Einstellungen.**
+`POPSession.cpp:2154-2155` (`char szPOPUserName[128]` aus `GetPOPAccount()`),
+`:2190-2192` (`char szPassword[255]`, abgesichert nur durch ein `ASSERT`, das im
+Release wegfaellt), `:1785-1795` (`char szCommand[3072]`, `strcpy` plus zwei
+ungeprueften `strcat` mit Kommandoargumenten). Ein sehr langes Passwort oder
+POP-Konto in der INI ueberlaeuft den Stapel.
+
+**P-1.5f  SSL-Lesefehler wird verschluckt.**
+`QCWorkerSocket.cpp:1280-1302`: `res` wird gesetzt, aber nie ausgewertet.
+Schlaegt `QCSSLRead` fehl und laesst `nValid` unveraendert auf `m_nBufferSize`,
+meldet `Read()` einen vollen Puffer alter Daten als gueltige Serverantwort.
+**UNGEPRUEFT**, ob `QCSSLRead` `nValid` im Fehlerfall immer nullt.
+
+**P-1.5g  `memmove` braucht zwei Bytes mehr als vorhanden.**
+`POPSession.cpp:2407` in `ReadPOPLine`:
+`memmove(pszBuffer+1, pszBuffer, ++nBytesRead);` - kopiert `nBytesRead+1` Bytes
+ab Offset 1, braucht also `nBytesRead+2`. Bei einer maximal langen Zeile, die
+mit `From ` beginnt, ein 1-Byte-Ueberlauf. **UNGEPRUEFT** (haengt an der genauen
+Obergrenze in `GetLine`, die bei `len-1` liegt).
+
+**P-1.5h  Zeiger durch 32-Bit-Typen.**
+`QCWorkerSocket.cpp:1469` (`SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)this)`,
+Rueckweg `:1480`, Loeschen `:526`) und `:1841/1848/1899` (`long lArg` traegt
+einen `QCSSLReference*`). Auf **Win32/x86 exakt 32 Bit und damit heute
+harmlos.** Es ist aber der Punkt, an dem eine spaetere x64-Umstellung sofort und
+vollstaendig bricht - jede Winsock-Nachricht des POP-Sockets und der ganze
+SSL-Datenstrom laufen hier durch. Richtig waere `SetWindowLongPtr`/`GWLP_USERDATA`
+und `LPARAM` statt `long`.
+
+**P-1.5i  Warnungen sind dateiweit abgeschaltet.**
+`QCWorkerSocket.cpp:46`: `#pragma warning(disable: 4786 4663 4244 4018 4146 4100)`.
+**4244** (Datenverlust bei Konvertierung) und **4018** (signed/unsigned-Vergleich)
+sind genau die Warnungen, mit denen VS2022 die obigen Kategorien in dieser Datei
+melden wuerde. Die Portierung ist hier blind.
+
+**P-1.5j  `size_t`-Unterlauf bei leerem Ressourcentext.**
+`header.cpp:113-114`: `interesting[h][strlen(interesting[h]) - 1] = 0;` - ist
+eine der 14 Kopfzeilen-Ressourcen leer, ergibt `strlen(...)-1` den Wert
+`0xFFFFFFFF`. Alle 14 Plaetze werden in Z. 96-109 befuellt; nur der Leerstring
+ist offen.
+
+**Kleinigkeiten ohne praktische Wirkung:** `POPSession.cpp:1031`
+(`char szMessageNum[10]` fuer `%d`, braeuchte 12 - erst ab 1 Mrd. Nachrichten),
+`:2394` (`strcpy` auf ueberlappenden Puffern, formal UB), `:759-760`
+(`strnicmp(szBuffer,"MANGLE",5)` - Laenge um eins zu klein, trifft trotzdem),
+`QCWorkerSocket.cpp:1086` (`if (!m_szMachine)` auf einem Array - immer falsch,
+tote Pruefung), `:1137` (`wsprintf` mit Hostnamen in `char Buffer[256]`, nur im
+Fehlerpfad erreichbar).
+
+### P-1.6 Der zurueckgestellte Zertifikats-Patch beeintraechtigt den Abruf NICHT
+
+`tools/patches/zertifikatspruefung-verschaerfen.patch` ist **nicht angewandt**
+und wurde von mir auch nicht angefasst.
+
+Er wirkt in die **sichere** Richtung: heute behandelt
+`QCCertificateUtils::CertificateCallback` die Pruefergebnisse
+`X509_V_ERR_CERT_UNTRUSTED` und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` als
+Erfolg (`iOK = 1`), ohne dem Anwender etwas zu zeigen. Ohne den Patch ist Eudora
+also **nachsichtiger** und nimmt mehr Zertifikate an. Der erste Abruf wird daran
+nicht scheitern. Erst mit dem Patch wuerde Eudora Zertifikate ablehnen, die es
+heute klaglos annimmt.
+
+### P-1.7 Neue Komponententests
+
+`Eudora71/Tests/TestPopEmpfang.cpp` (11 Tests), dazu die Uebersetzungseinheit
+`Eudora71/Tests/UnderTest2047.{h,cpp}` und sechs neue Schnittregionen in
+`Eudora71/Tests/Extract.ps1`.
+
+Wie im Testprojekt ueblich steht in den Testdateien **kein abgeschriebener
+Produktivcode**: `Extract.ps1` schneidet bei jedem Bau frisch aus
+`Decode.h`, `Base64.h`, `Base64.cpp`, `mime.cpp` (`FindMIMECharset`, `HexToString`)
+und `lex822.cpp` (`PseudoQP`, `DecodeB64String`, `Translate2047`, `Fix2047`).
+Nachgebildet ist nur `FindRStringIndexI`, weil im Test keine Ressourcen-DLL
+vorliegt; die vier Zeichensatznamen stammen woertlich aus `EudoraRes.rc:9385-9388`.
+
+**Ergebnis am 30.08.2026:**
+
+    Ergebnis: 34 Tests, 34 bestanden, 0 fehlgeschlagen
+
+(vorher 23; die 11 neuen sind die aus P-1.2, P-1.3 und der Waechter aus P-1.1.)
+Aufruf: `Eudora71\Tests\RunTests.cmd`.
+
+### P-1.8 NICHT GEPRUEFT: Eudora.vcxproj baut aus dem eingecheckten Stand nicht
+
+In einem frischen Worktree auf `22a6d77` bricht
+`MSBuild Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32`
+schon bei `stdafx.cpp` ab:
+
+    OT501\Include\secbtns.h(340,83): error C2572: "SECLoadSysColorBitmap":
+      Neudefinition des Standardarguments: Parameter 1
+      Siehe Deklaration von "SECLoadSysColorBitmap" in OTShim\OTShim.h(306,13)
+
+Im gemeinsamen Arbeitsverzeichnis liegen dazu **nicht eingecheckte** Aenderungen
+an `OTShim.h`, `OTShim.cpp`, `OTShimAll.h`, `OTShim_Reiter.cpp` sowie vier neue
+Dateien (`OTShim_Knopf.cpp`, `OTShim_Fremdsymbole.cpp`, `OTShim_Libpng.cpp`,
+`OTShim_Spur.cpp`). Der Bau gelingt also nur mit der Arbeit anderer Agenten, die
+noch nicht committet ist. Das ist deren Baustelle, nicht meine.
+
+**Folge fuer P-1.1:** die Aenderung an `TextReader.cpp:251` ist deshalb **nicht
+durch den Uebersetzer gelaufen.** Das Risiko ist klein - `size` ist als `LONG`
+deklariert (`TextReader.cpp:77`), `ISOTranslate` liefert `LONG`
+(`utils.h:90`), es ist eine typgleiche Zuweisung. Aber gemessen ist es nicht.
+**Vor der naechsten Auslieferung `Eudora.vcxproj` bauen und das nachholen.**
+
+Das Testprojekt `Eudora71\Tests\Tests.vcxproj` baut und laeuft dagegen sauber -
+es haengt nicht an OTShim.
+
+---
+
+## Stand und naechster Schritt (POSTBOTE, 30.08.2026)
+
+**Fertig und im Branch:**
+
+- `ABRUF-PRUEFEN.md` - die Anleitung fuer Gregors ersten Abruf
+- P-1.1 behoben (`TextReader.cpp:251`), mit Waechtertest
+- 11 neue Komponententests, alle gruen (34 von 34)
+- der Abrufpfad ist ganz gegengelesen, Portierungsschaeden ausgeschlossen (P-1.4)
+
+**Was ich als naechstes getan haette, in dieser Reihenfolge:**
+
+1. **`Eudora.vcxproj` bauen**, sobald die OTShim-Arbeit committet ist, und damit
+   P-1.8 schliessen. Das ist der einzige offene Punkt an meiner eigenen
+   Aenderung.
+2. **P-1.5a absichern** - die NULL-Pruefung in `QCWorkerSocket.cpp:1969` und
+   `:1989`. Das ist ein Zweizeiler und verwandelt einen Absturz beim ersten
+   Abruf in eine Fehlermeldung. Von allen Punkten unter P-1.5 der mit dem
+   besten Verhaeltnis von Aufwand zu Nutzen.
+3. **P-1.5b** (`%39s` statt `%s`) und **P-1.5d** (`sizeof(Server)-1` plus
+   Nullterminierung) - beides Einzeiler auf dem Abrufweg.
+4. Einen Test bauen, der eine vollstaendige POP-Antwort aus einem Puffer
+   einspeist. Das braucht einen Ersatz fuer `LineReader` und `JJFile`; ich habe
+   stattdessen die beiden Stellen einzeln geprueft, an denen der Zeichensatz
+   umgesetzt wird. Der durchgehende Test waere die naechste Ausbaustufe.
+5. Den Zeichensatzfehler im IMAP-Pfad (`ImapDownload.cpp:4644`) beheben - er ist
+   in P-1.2 genau vermessen, betrifft Gregor aber nicht, weil er POP benutzt.
+
+**Nicht angefasst, wie verabredet:**
+`tools/patches/zertifikatspruefung-verschaerfen.patch` bleibt liegen (P-1.6).

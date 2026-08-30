@@ -248,7 +248,7 @@ BoundaryType TextReader::ReadIt(CObArray& MimeStates, char* buf, LONG bSize)
 			// As a first pass at handling other charsets we pass the text
 			// through a translator function.  A more elegant solution would
 			// be to create a decoder for other charsets.
-			ISOTranslate(buf, size, iCharsetIdx);
+			size = ISOTranslate(buf, size, iCharsetIdx);
 		}
 
 		if (size)
