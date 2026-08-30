@@ -2,9 +2,20 @@
 
 Vorarbeit vom 30.08.2026, Branch `eudora-exe-linkt`, gemessen an `a139f9b`.
 
-`Eudora.exe` linkt noch nicht und wurde nie gestartet. Diese Datei sammelt, was
-beim ersten Startversuch danebenliegen muss — damit die Suche danach nicht erst
-dann anfängt.
+> **Überholt in den Voraussagen, weiter gültig in der Sache.** Diese Datei entstand,
+> als `Eudora.exe` noch nicht linkte. Inzwischen linkt sie (`a807b93`) und **Eudora
+> startet** (30.08.2026, Paket 1.0.2). Was hier als „ungeprüft" steht, ist teils
+> beantwortet — die Antworten stehen in `BEFUNDE.md` unter S-1 bis S-3 und in
+> `Releases/PAKETE.md`. Die Liste der Laufzeitdateien selbst gilt unverändert.
+>
+> Wesentlich hinzugekommen und hier noch nicht eingearbeitet: die sieben vorgebauten
+> Fremd-DLLs von 2006 brauchen die **VC7.1-Laufzeit** (`MSVCR71.dll`, `MFC71.DLL`,
+> `MSVCP71.dll`), die in dieser Aufstellung fehlt. Zwingend beim Laden sind laut
+> Importtabelle nur `EuMemMgr.dll` und `Paige32d.dll`; `MFC71.DLL` und `MSVCP71.dll`
+> fehlen weiterhin, wodurch Adressbuch, LDAP und Ph ausfallen (S-3c).
+
+Diese Datei sammelt, was beim ersten Startversuch danebenliegen muss — damit die
+Suche danach nicht erst dann anfängt.
 
 ## Was zur Laufzeit gebraucht wird
 

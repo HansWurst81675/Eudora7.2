@@ -16,15 +16,17 @@ nach und nennt seinen eigenen Bezugscommit.
 Nach einem frischen Klon fehlen die Schutzmechanismen — git versioniert Hooks nicht:
 
 ```bash
-sh tools/hooks-einrichten.sh
-```
-
-```bash
 git config core.autocrlf false
+sh tools/hooks-einrichten.sh
+perl tools/zeilenenden-angleichen.pl --aendern
+git ls-files -z | xargs -0 -n 400 git add --
 ```
 
-Beides ist nicht optional. Ohne den Hook treten zwei Fehlerklassen lautlos wieder
-auf, die uns mehrfach Zeit gekostet haben.
+Alle vier sind nicht optional. Ohne den Hook treten zwei Fehlerklassen lautlos
+wieder auf, die uns mehrfach Zeit gekostet haben. Und ein Klon mit
+`core.autocrlf=true` hinterlässt Dateien, die git für sauber hält, obwohl sie im
+Arbeitsverzeichnis als CRLF und im Commit als LF stehen — gemessen 4616 von 5563.
+Das ist Befund **S-7**, die Wurzel aller CRLF-Probleme dieses Projekts.
 
 **Ausserdem fehlen nach einem frischen Klon zwei Bibliotheken, ohne die `QCSSL`
 nicht linkt.** `Eudora71/OpenSSL3/lib/libcrypto.lib` und `libssl.lib` sind von
@@ -107,20 +109,30 @@ v143; der Behelf ist im Kopf der Datei begründet.
 
 ## Der nächste Schritt, konkret
 
-Das Binden ist durch — die nächste Frage ist, ob das Programm **startet**.
+Binden **und** Starten sind durch: Eudora zeigt sein Hauptfenster (30.08.2026,
+Paket 1.0.2, Befund S-2). Maßstab für alles Weitere ist jetzt [ZIEL.md](ZIEL.md) —
+drei Kriterien, erfüllt ist bisher nur das erste.
 
-1. **`EudoraRes.dll` beschaffen.** Sie fehlt in `Bin/Debug`, wird zur Laufzeit
-   nachgeladen, und ihr Projekt hängt über `EudoraRes.vcxproj:351` an `OT501`.
-   Derselbe Handgriff wie bei `Eudora` (`LinkLibraryDependencies` auf `false`,
-   `_SECNOMSG`) ist der naheliegende Weg — **nicht geprüft**.
-2. **Ersten Start durchspielen.** Welche Laufzeitdateien danebenliegen müssen,
-   steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md). `dumpbin /dependents` nennt
-   27 Abhängigkeiten; alle bis auf `EudoraRes.dll` liegen in `Bin/Debug`.
-3. **`libpng` sauber nachziehen.** Der Behelf in `OTShim_Libpng.cpp` hält, solange
+1. **Kriterium 2 — Darstellung.** Menüs lassen sich nicht öffnen (Befund S-5,
+   Agent MENUE), und mehrere Wazoos überlagern sich (S-6, Agent ANSICHT).
+2. **Kriterium 3 — Mailabruf.** Noch nie mit dem selbst gebauten `Eudora.exe`
+   durchgeführt. Nachweis: Protokollversion aus *Tools → Last SSL Info* und eine
+   lesbar dargestellte empfangene Nachricht.
+3. **VC7.1-Laufzeiten sauber lösen** (Agent BRUECKE). `MFC71.DLL` und
+   `MSVCP71.dll` fehlen weiterhin (S-3c); die beiliegende `msvcr71.dll` stammt von
+   dll-files.com und ist unsigniert (S-1). Eine eigene Weiterleitungs-DLL auf die
+   von Windows mitgelieferte `msvcrt.dll` käme ohne Fremdbinärdatei aus — Paige
+   braucht daraus 20 Funktionen, 19 davon exportiert `msvcrt.dll`.
+4. **`EudoraRes.dll` beschaffen.** Sie fehlt in `Bin/Debug` und ihr Projekt hängt
+   über `EudoraRes.vcxproj:351` an `OT501`. Derselbe Handgriff wie bei `Eudora`
+   (`LinkLibraryDependencies` auf `false`, `_SECNOMSG`) ist der naheliegende Weg —
+   **nicht geprüft**.
+5. **`libpng` sauber nachziehen.** Der Behelf in `OTShim_Libpng.cpp` hält, solange
    libpng nur `_iob[2]` anfasst und die Elementgrösse 32 Byte bleibt. Ein Neubau
    aus `Eudora71/PNG/libpng` mit v143 macht die Annahme überflüssig.
-4. **`Release|x86` prüfen.** Bisher ist nur `QCSSL` im Release-Zweig gebaut; die
-   übrigen Projekte sind dort ungetestet.
+6. **`Release|x86` prüfen.** Bisher ist nur `QCSSL` im Release-Zweig gebaut; der
+   Release-Zweig scheitert an einer fehlenden `Imap.lib`. Solange nur der Debug-Bau
+   läuft, muss jeder Anwender drei bis vier SUPERASSERT-Dialoge wegklicken (S-3b).
 
 ## Eine Falle, die schon einmal in die Irre geführt hat
 
@@ -166,9 +178,17 @@ manche Dateien rein LF (`stdafx.h`), manche rein CRLF (`OTShim.h`), die meisten
 gemischt (`mainfrm.cpp`: 18 CR auf über 8000 Zeilen).
 
 Seit `1f42745` liegt eine `.gitattributes` mit `* -text` im Repo. Damit ist **git
-als Fehlerquelle ausgeschlossen**: beim Auschecken wie beim Einchecken bleiben die
-Bytes, wie sie sind, unabhängig davon, wie `core.autocrlf` auf dem jeweiligen
-Rechner steht. Ein vorsorgliches `git checkout HEAD -- <datei>` ist damit
+für die Zukunft als Fehlerquelle ausgeschlossen**: beim Auschecken wie beim
+Einchecken bleiben die Bytes, wie sie sind, unabhängig davon, wie `core.autocrlf`
+auf dem jeweiligen Rechner steht.
+
+**Der Schaden aus der Vergangenheit war damit aber nicht beseitigt** — dieser Baum
+war seinerzeit mit `core.autocrlf=true` ausgecheckt worden, und 4616 Dateien lagen
+weiter als CRLF im Arbeitsverzeichnis, während im Commit LF stand. Die frühere
+Vermutung „mit `autocrlf=true` geklont" war **richtig**; sie wurde damals zu
+Unrecht als widerlegt abgehakt, weil `git config` zum Zeitpunkt der Prüfung schon
+`false` sagte. Behoben durch `tools/zeilenenden-angleichen.pl` (Befund S-7, siehe
+oben unter „Umgebung herrichten"). Ein vorsorgliches `git checkout HEAD -- <datei>` ist damit
 gegenstandslos — und wer es doch tut, verwirft womöglich die Arbeit eines parallel
 laufenden Agenten.
 

@@ -7,9 +7,19 @@ Die Paketversion und die QCSSL-Version sind **verschiedene Zählungen**. Paket
 1.0.2 enthält QCSSL 1.0.1, weil sich die QCSSL-Quellen seit 1.0.1 nicht geändert
 haben.
 
+> **Zur Benennung.** Beide ZIP-Dateien tragen im Namen das Wort `lauffaehig`.
+> Nach [ZIEL.md](../ZIEL.md) ist das für keine der beiden zutreffend: 1.0.1 startet
+> gar nicht, 1.0.2 erfüllt nur Kriterium 1 von dreien. Die Namen bleiben stehen,
+> weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
+> nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
+> Stand.**
+
 ## 1.0.2 — 30.08.2026
 
-**Startet.** Erste Fassung, bei der das Hauptfenster erscheint.
+**Startet.** Erste Fassung, bei der das Hauptfenster erscheint. Erfüllt damit
+**Kriterium 1 von dreien** ([ZIEL.md](../ZIEL.md)) — nicht mehr. Die Darstellung
+ist fehlerhaft (S-6), Menüs lassen sich nicht öffnen (S-5), ein Mailabruf ist
+nicht geprüft.
 
 | | |
 |---|---|

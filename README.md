@@ -31,8 +31,16 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > `__imp___iob` aus der vorgebauten `libpng.lib` — kein Stingray, sondern eine
 > VC6-Binaerdatei aus der Zeit vor der UCRT.
 >
-> **Noch nicht geprueft ist, ob das Programm startet.** `EudoraRes.dll` fehlt und
-> wird zur Laufzeit nachgeladen — siehe [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+> **Eudora startet und zeigt sein Hauptfenster** — erstmals seit Beginn der
+> Portierung, gemessen am 30.08.2026 mit Paket 1.0.2. Der Absturz beim Start war
+> die Werbeflaeche (`CAdWazooWnd::OnCreate` legt sie mit `CRect(0,0,0,0)` an, Paige
+> verheddert sich in einer Endlosrekursion); sie haengt jetzt an
+> `QCSharewareManager::IsBoxBuild()` — Befund S-2 in [BEFUNDE.md](BEFUNDE.md).
+>
+> **Das heisst noch nicht „lauffaehig".** [ZIEL.md](ZIEL.md) legt drei Kriterien
+> fest; erfuellt ist bisher nur das erste. Die Darstellung ist fehlerhaft (S-6),
+> Menues lassen sich nicht oeffnen (S-5), und ein Mailabruf mit dieser Fassung ist
+> nicht geprueft. Ausgelieferte Pakete: [Releases/PAKETE.md](Releases/PAKETE.md).
 
 Nicht fertig werden zwei Projekte:
 
@@ -88,6 +96,55 @@ Versand funktionieren.
 
 Die Visual-Studio-IDE wird zum Bauen nicht gebraucht, nur die Installation
 (MSVC v143, MFC/ATL, Windows SDK).
+
+## Nach einem frischen Klon
+
+```bash
+git config core.autocrlf false
+sh tools/hooks-einrichten.sh
+perl tools/zeilenenden-angleichen.pl --aendern
+git ls-files -z | xargs -0 -n 400 git add --
+```
+
+Der dritte Schritt ist **nicht optional**. Ein Klon mit `core.autocrlf=true`
+hinterlaesst Dateien, die git fuer sauber haelt, obwohl sie im Arbeitsverzeichnis
+als CRLF stehen und im Commit als LF: gemessen **4616 von 5563** verfolgten
+Dateien. Git sieht in eine Datei nicht hinein, solange Zeitstempel und Groesse zum
+Index passen — der Schaden faellt erst auf, wenn irgendein Werkzeug die Datei
+anfasst, und dann als vollstaendig geaenderte Datei. Das ist die Wurzel aller
+CRLF-Probleme dieses Projekts, Befund S-7 in [BEFUNDE.md](BEFUNDE.md).
+
+Ausserdem fehlen nach einem frischen Klon `Eudora71/OpenSSL3/lib/libcrypto.lib`
+und `libssl.lib` (von `.gitignore` erfasst) — ohne sie endet `QCSSL` mit
+`LNK1104`. Siehe [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
+
+## Werkzeuge
+
+Unter `tools/`. Alle nehmen die Repo-Wurzel als Arbeitsverzeichnis.
+
+| Werkzeug | Zweck |
+|---|---|
+| `aendere-zeile.pl`, `ersetze-bereich.pl` | Quelldateien byte-erhaltend aendern (Latin-1, gemischte Zeilenenden) |
+| `pruefe-bytes.pl` | Schranke vor dem Commit. Meldet (a) Dateien, deren Inhalt gleich, deren Bytes aber verschieden sind, und (b) inhaltlich unveraenderte Zeilen, die ihr Zeilenende gewechselt haben. Zaehlt **nicht** mehr blosse CR — das schlug frueher schon beim Hinzufuegen von Zeilen an |
+| `zeilenenden-angleichen.pl` | stellt den HEAD-Stand woertlich wieder her, aber nur wo das nachweislich byteidentisch ist. Nach jedem frischen Klon einmal ausfuehren (siehe oben) |
+| `kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau |
+| `stapel-untersuchen.ps1` | kleiner Debugger: startet das Programm als Debuggee, faengt die toedliche Ausnahme, laeuft die EBP-Kette ab und symbolisiert mit `dbghelp.dll`. **Muss in der 32-Bit-PowerShell laufen** (`SysWOW64\WindowsPowerShell`). Damit wurde S-2 gefunden |
+| `rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Ueberladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte bei S-2 ausschliesslich Fehlalarme |
+| `hooks-einrichten.sh` | richtet die git-Hooks ein (git versioniert sie nicht) |
+| `pruefstand-melden.pl`, `ungesichertes-melden.pl`, `lehren-spiegeln.pl`, `release-pruefen.pl` | Stand der Pruefung, ungesicherte Arbeit, Spiegelung der `Arbeitsweise/`-Regeln, Pruefung eines Auslieferungspakets |
+
+## Bau-Kennung in der Titelleiste
+
+Der Fenstertitel nennt Paketversion, Commit und Herkunftsverzeichnis:
+
+```
+Eudora - [In]   [1.0.3+371c1e3 - Eudora72-1.0.3]
+```
+
+Ein Sternchen hinter dem Commit heisst: beim Bau lagen uncommittete Aenderungen
+vor. Die Paketversion steht in der Datei `VERSION` im Wurzelverzeichnis, die
+Kennung erzeugt `tools/kennung-erzeugen.pl` vor jedem Bau nach `BuildKennung.h`.
+Anlass war, dass sich eine Beobachtung keinem Bau mehr zuordnen liess.
 
 ## Was bisher gemacht wurde
 
@@ -187,7 +244,11 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | `__imp___iob` aus `libpng.lib` | **behelfsweise geloest** — `OTShim_Libpng.cpp` definiert das Symbol als `(char*)stderr - 2*32`, weil libpng 1.2.7 nur `_iob[2]` anfasst und die damalige CRT 32 Byte je Element hatte. Traegt, ist aber eine Annahme; sauber waere ein Neubau von libpng aus `Eudora71/PNG/libpng` mit v143 |
 | Attrappe `Lib/Debug/OTA50D.LIB` | **entfaellt** — seit `a807b93` nicht mehr noetig (`_SECNOMSG`, `LinkLibraryDependencies` false in `Eudora.vcxproj:1015`). Sie darf nicht wieder angelegt werden, sonst linkt Eudora gegen eine leere Bibliothek |
 | `EudoraRes.dll` | **offen** — das Projekt haengt ueber `EudoraRes.vcxproj:351` an `OT501` und wird gar nicht erst versucht. Fuer `Eudora` ist dieselbe Bindung geloest; hier steht der Handgriff noch aus |
-| Erster Start von `Eudora.exe` | **offen und ungeprueft** — ob das Programm laeuft, ist noch nicht gemessen. Welche Laufzeitdateien danebenliegen muessen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
+| Erster Start von `Eudora.exe` | **erledigt** — Eudora startet und zeigt sein Hauptfenster (Paket 1.0.2, 30.08.2026). Ursache des vorherigen Absturzes: Befund S-2. Welche Laufzeitdateien danebenliegen muessen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
+| Darstellung korrekt (Kriterium 2 aus [ZIEL.md](ZIEL.md)) | **offen** — Bereiche ueberlagern sich, Befund S-6 |
+| Menues lassen sich oeffnen | **offen** — Befund S-5 |
+| Mailabruf mit der neu gebauten Fassung (Kriterium 3) | **nicht geprueft** — der letzte erfolgreiche Abruf lief mit einer aelteren `QCSSL.dll` in einer bestehenden Eudora-Installation, nicht mit dem selbst gebauten `Eudora.exe` |
+| `MFC71.DLL`, `MSVCP71.dll` fehlen | **offen** — Adressbuch, LDAP und Ph fallen aus (Befund S-3c). Mailabruf und -versand sind nicht betroffen |
 | Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen. Die Testzahl waechst gerade, weil die Ersatzschicht Tests bekommt |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig, seit `78a9c10` samt Ersatzschicht, und bindet seit `a807b93`. `EudoraRes.vcxproj` uebersetzt ebenfalls vollstaendig, wird im Solution-Bau aber nicht versucht |
 | `OpenSSL3/lib` fehlt im Repo | **offen** — `libcrypto.lib` und `libssl.lib` sind von `.gitignore:7` (`Lib/`) erfasst und nicht versioniert (`git ls-files`: null Treffer). Ein frischer Klon endet bei `QCSSL` mit `LNK1104: libssl.lib`. Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
