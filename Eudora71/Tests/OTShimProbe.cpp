@@ -7,32 +7,42 @@
 #include "OTShimProbe.h"
 
 static int  s_iMeldungen = 0;
-static char s_szLetzte[512] = { 0 };
+static char s_szLetzte[1024] = { 0 };
+
 
 //
-// Ersatz fuer die Sammelmeldung aus OTShim.cpp:154.
+// Das Anwendungsobjekt des Testprogramms.
 //
-// Wortgleiche Zweitdefinition der Signatur, die OTShim_Bild.h:196 und
-// OTShim.h:1028 deklarieren. Der Rumpf unterscheidet sich bewusst: das
-// Original zeigt ein AfxMessageBox, diese Fassung schreibt nur mit.
+// Es dient einzig dazu, DoMessageBox zu ueberschreiben. AfxWinInit in
+// TestMain.cpp findet es ueber AfxGetApp() und traegt Instanz und
+// Befehlszeile ein; eine Nachrichtenschleife laeuft nie, InitInstance wird
+// nie gerufen. Das ist der uebliche Aufbau einer MFC-Konsolenanwendung.
 //
-// Das Merkverhalten des Originals ist uebernommen - jede Fundstelle bringt
-// ihr eigenes statisches Flag mit und meldet sich hoechstens einmal je Lauf.
-// Ohne dieses Flag koennte ein Test nicht mehrfach hintereinander pruefen,
-// dass sich ein Rumpf meldet; mit ihm ist das Verhalten dasselbe wie im
-// laufenden Eudora, und die Tests muessen sich danach richten.
+// AUFPASSEN: das Objekt muss vor main() entstehen, damit AfxGetApp() es
+// waehrend AfxWinInit schon sieht. Deshalb steht es hier als globales
+// Objekt und nicht in einer Funktion.
 //
-void OTShimNichtUmgesetzt(BOOL& rbBereitsGemeldet, LPCTSTR lpszWas)
+class CProbeApp : public CWinApp
 {
-	if (rbBereitsGemeldet)
-		return;
+public:
+	virtual int DoMessageBox(LPCTSTR lpszPrompt, UINT nType, UINT nIDPrompt);
+};
 
-	rbBereitsGemeldet = TRUE;
+int CProbeApp::DoMessageBox(LPCTSTR lpszPrompt, UINT /*nType*/, UINT /*nIDPrompt*/)
+{
 	++s_iMeldungen;
 
-	strncpy(s_szLetzte, (lpszWas != NULL) ? lpszWas : "(NULL)", sizeof(s_szLetzte) - 1);
+	strncpy(s_szLetzte, (lpszPrompt != NULL) ? lpszPrompt : "(NULL)", sizeof(s_szLetzte) - 1);
 	s_szLetzte[sizeof(s_szLetzte) - 1] = '\0';
+
+	// IDOK, als haette der Anwender bestaetigt. Die Sammelmeldung aus
+	// OTShim.cpp wertet den Rueckgabewert nicht aus; andere Meldungen
+	// koennten es tun, und Bestaetigen ist der harmlosere Weg.
+	return IDOK;
 }
+
+CProbeApp theProbeApp;
+
 
 int OTShimProbeMeldungen(void)
 {
@@ -48,4 +58,39 @@ void OTShimProbeZuruecksetzen(void)
 {
 	s_iMeldungen = 0;
 	s_szLetzte[0] = '\0';
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Fremdsymbol: SuperAssertionA
+//
+// GEMESSEN beim Einbinden von OT501/Src/secaux.cpp (das die Veraenderliche
+// secData liefert, ohne die OTShim_Werkzeugleiste.cpp nicht bindet):
+//
+//   secaux.obj : error LNK2019: nicht aufgeloestes externes Symbol
+//     "__imp__SuperAssertionA" in Funktion "SEC_AUX_DATA::SEC_AUX_DATA(void)"
+//
+// HERKUNFT: secaux.cpp bindet OT501/Src/stdafx.h ein, dieses qcassert.h
+// (QCUtils), dieses BugslayerUtil.h (EuMemMgr). Damit wird ASSERT auf die
+// Bugslayer-Fassung SUPERASSERT umgebogen, deren Rumpf in der DLL
+// BugslayerUtil liegt. Eudora selbst bindet diese DLL ein; fuer ein
+// Testprogramm waere das ein unverhaeltnismaessiger Rattenschwanz.
+//
+// LOESUNG: das Testprojekt setzt BUGSUTIL_DLLINTERFACE auf leer (BugslayerUtil.h
+// erlaubt das ausdruecklich, Zeile 132-141). Aus dem Import wird damit eine
+// gewoehnliche freie Funktion, die hier ihren Rumpf bekommt. FALSE heisst
+// laut SuperAssert.h:46 "Zusicherung uebergehen" - genau richtig fuer einen
+// unbeaufsichtigten Testlauf, der nicht anhalten darf.
+//
+// WICHTIG: das betrifft ausschliesslich dieses Testprojekt. Eudora.vcxproj
+// wird nicht angefasst, und ausser secaux.cpp bindet keine hier uebersetzte
+// Datei BugslayerUtil.h ein.
+//
+extern "C" BOOL SuperAssertionA(LPCSTR /*szType*/, LPCSTR /*szExpression*/,
+								LPCSTR /*szFunction*/, LPCSTR /*szFile*/,
+								int /*iLine*/, LPCSTR /*szEmail*/,
+								DWORD64 /*dwStack*/, DWORD64 /*dwStackFrame*/,
+								int* /*piFailCount*/, int* /*piIgnoreCount*/)
+{
+	return FALSE;
 }

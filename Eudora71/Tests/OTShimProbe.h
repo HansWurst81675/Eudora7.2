@@ -2,26 +2,31 @@
 // OTShimProbe.h - gemeinsame Hilfsmittel der Tests gegen die OT501-Ersatzschicht
 //
 // Die Ersatzschicht unter Eudora71/OTShim uebersetzt eigenstaendig: jede .cpp
-// bindet nur <afxwin.h> und ihre eigene Kopfdatei ein. Deshalb koennen
-// OTShim_Bild.cpp, OTShim_Palette.cpp und OTShim_Reiter.cpp unmittelbar in
+// bindet nur <afxwin.h> (und fuer die Stufen 2 und 3 die Originalheader aus
+// OT501/Include) ein. Deshalb koennen OTShim.cpp, OTShim_Werkzeugleiste.cpp,
+// OTShim_Reiter.cpp, OTShim_Palette.cpp und OTShim_Bild.cpp unmittelbar in
 // dieses Testprogramm gebunden werden - es wird nichts abgeschrieben und
 // nichts geschnitten, geprueft wird der Produktivcode selbst.
 //
-// EINE Ausnahme gibt es: OTShimNichtUmgesetzt. Die Sammelmeldung liegt in
-// OTShim.cpp (Stufe 1), und OTShim.cpp zieht ueber OTShim.h die halbe
-// Stingray-Welt nach. Vor allem aber oeffnet die Originalfassung ein
-// AfxMessageBox - genau das, was ein Testlauf niemals tun darf. Diese Datei
-// stellt deshalb eine Fassung bereit, die die Meldung nur zaehlt und
-// aufbewahrt. Das ist kein Ausweichen: die Tests koennen damit ausdruecklich
-// PRUEFEN, dass ein Rumpf sich meldet.
+// EIN PROBLEM BLEIBT: OTShimNichtUmgesetzt (OTShim.cpp:154) oeffnet ein
+// AfxMessageBox. Ein Testlauf darf kein Fenster oeffnen - ein modaler Dialog
+// aus einem unbeaufsichtigten Lauf haelt alles an.
+//
+// Geloest wird das NICHT durch eine eigene Fassung der Funktion, sondern
+// eine Ebene tiefer: das Testprogramm bringt ein CWinApp-Objekt mit, dessen
+// DoMessageBox die Meldung nur mitschreibt. AfxMessageBox geht ueber
+// AfxGetApp()->DoMessageBox (MFC, appui1.cpp:136-147), landet also dort. Der
+// Vorteil gegenueber einem Ersatz der Funktion: geprueft wird der echte
+// OTShimNichtUmgesetzt samt seinem Merkverhalten, und JEDE Meldung des
+// Programms wird abgefangen, nicht nur die aus dieser einen Funktion.
 //
 #ifndef EUDORA_TESTS_OTSHIMPROBE_H
 #define EUDORA_TESTS_OTSHIMPROBE_H
 
-// Zahl der bisher abgesetzten Meldungen seit dem letzten Zuruecksetzen.
+// Zahl der abgefangenen Meldungsfenster seit dem letzten Zuruecksetzen.
 int  OTShimProbeMeldungen(void);
 
-// Die zuletzt abgesetzte Meldung (leere Zeichenkette, wenn keine kam).
+// Der Text der zuletzt abgefangenen Meldung (leer, wenn keine kam).
 const char* OTShimProbeLetzteMeldung(void);
 
 // Zaehler und letzte Meldung zuruecksetzen.
