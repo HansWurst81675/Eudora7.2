@@ -563,3 +563,183 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   Eudora-Installation ist HermSSL dagegen der etablierte Weg.
 - **OpenSSL 1.0.2u statt 3.5**: wäre fast Drop-in für QCSSL, ist aber seit 2019
   End-of-Life und kann kein TLS 1.3.
+
+## Zeichensatz-Darstellung: UTF-8 läuft jetzt über den Windows-Codepage-Wandler
+
+Nachtrag zum Abschnitt *„Zwei Fehler in der Zeichentabelle“* weiter oben. Der dort
+unter *„Was die Tabelle weiterhin nicht kann“* formulierte Vorschlag ist umgesetzt
+(Commit `63f81dc`, `Eudora71/Eudora/utils.cpp`). Die Tests stehen bei **33 von 33
+grün**, vorher 23 von 23; zehn Fälle sind neu.
+
+### Was vorher war
+
+`ISOTranslate()` übersetzte ausschließlich über die Tabelle `pcXlateTable`. Die
+bildet eine **UTF-8-Bytefolge auf genau ein CP1252-Byte** ab, und
+`MAX_CHARS_TO_TRANS` ist **3**. Daraus folgten zwei harte Grenzen:
+
+- **Emoji waren prinzipiell unmöglich.** Zeichen außerhalb der BMP (U+1F600
+  aufwärts) sind in UTF-8 **vier** Byte lang. Es gab keine Tabellenzeile, die so
+  etwas hätte beschreiben können — unabhängig davon, wie viele Zeilen man
+  ergänzt.
+- **Alles ohne CP1252-Entsprechung blieb als rohe Bytes stehen.** Kyrillisch,
+  Griechisch, Hebräisch, Chinesisch, Polnisch, Tschechisch, Türkisch: die zwei
+  oder drei UTF-8-Bytes wurden durchgereicht und anschließend Byte für Byte als
+  CP1252 angezeigt. Genau das ist der Zeichensalat, den der Auftraggeber täglich
+  sieht.
+
+### Was jetzt ist
+
+Der **UTF-8-Fall** (Zeichensatz-Index 4) geht durch den Windows-Wandler:
+
+    MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ...)
+    WideCharToMultiByte(1252, 0, ..., "?", NULL)
+
+Damit versteht Eudora den **gesamten Unicode-Bereich**. Was CP1252 nicht halten
+kann, wird zu **einem Fragezeichen** statt zu zwei bis vier Salatzeichen.
+Zusätzlich — das war nicht geplant, ist aber der größte praktische Gewinn —
+arbeitet `WideCharToMultiByte` mit `dwFlags = 0` und benutzt deshalb die
+**Ersatztabelle der Codepage**: Zeichen mit einem nahen CP1252-Verwandten werden
+auf diesen abgebildet statt auf ein Fragezeichen.
+
+Die Funktion arbeitet weiterhin **an Ort und Stelle** im Puffer des Aufrufers,
+schreibt nie mehr Bytes, als hereinkamen, terminiert mit einer Null und gibt die
+neue Länge zurück. Der Vertrag zu den Aufrufern ist unverändert.
+
+### Die Testfälle, die den Unterschied belegen
+
+Alle Erwartungswerte sind **gemessen**, nicht geraten — drei meiner Annahmen
+waren falsch und wurden vom ersten Testlauf korrigiert (siehe die Anmerkung zum
+Emoji). Die Fälle stehen in `Eudora71/Tests/TestIsoTranslate.cpp`.
+
+| Eingabe | vorher | jetzt |
+|---|---|---|
+| U+1F600 Emoji (`F0 9F 98 80`, vier Byte) | vier Bytes bleiben stehen | `? ?` — **zwei** Fragezeichen |
+| U+0416 Ж, U+05D0 א (kyrillisch, hebräisch) | zwei Bytes bleiben stehen | `?` |
+| U+4E2D 中, U+3042 あ, U+D55C 한 | drei Bytes bleiben stehen | `?` |
+| U+0142 ł (polnisch) | zwei Bytes bleiben stehen | `l` |
+| U+0104 Ą, U+0105 ą (polnisch) | dto. | `A`, `a` |
+| U+010D č, U+0159 ř (tschechisch) | dto. | `c`, `r` |
+| U+015F ş, U+011F ğ (türkisch) | dto. | `s`, `g` |
+| U+03B1 α, U+03A9 Ω (griechisch) | dto. | `a`, `O` |
+| **jeder** Codepunkt U+00A0..U+FFFD | zwei bis drei Bytes, sobald keine Tabellenzeile passte | **genau ein Byte** |
+
+Der letzte Fall ist der eigentliche Beleg: kein Zeichen der BMP bleibt mehr als
+rohe UTF-8-Bytefolge stehen. Dazu kommt ein realistischer Volltext-Fall — ein
+deutscher Newsletter mit typografischen Anführungszeichen (U+201E/U+201C),
+Gedankenstrich (U+2013), Eurozeichen, Umlauten und einem Emoji — der byteweise
+gegen die erwartete CP1252-Zeile geprüft wird.
+
+**Zum Emoji:** es werden **zwei** Fragezeichen, nicht eines. Ein Zeichen
+außerhalb der BMP ist in UTF-16 ein Ersatzzeichenpaar, und `WideCharToMultiByte`
+setzt für jede der beiden Hälften ein Ersatzzeichen. Zwei Fragezeichen statt vier
+Salatzeichen — der Gewinn bleibt, die Zahl ist nur nicht die, die man erwartet.
+
+### Zwei bewusste Entscheidungen
+
+**1. `MB_ERR_INVALID_CHARS` mit Rückfall auf die Tabelle.**
+Ohne dieses Flag ersetzt Windows jedes ungültige Byte durch U+FFFD und damit am
+Ende durch ein Fragezeichen. Das wäre in zwei häufigen Fällen ein Rückschritt:
+
+- Post, die `utf-8` behauptet und in Wahrheit CP1252-Bytes trägt (alte Programme,
+  Spam). Solche Bytes werden **richtig** angezeigt, wenn man sie in Ruhe lässt.
+- Eine Zeile, die länger ist als der Lesepuffer von `TextReader` und deshalb
+  mitten in einem Zeichen geschnitten wird.
+
+Mit dem Flag bricht die Wandlung in beiden Fällen ab, und der Text fällt auf den
+alten Tabellendurchgang zurück, der alles Unbekannte unverändert durchreicht.
+**Deshalb kann die Umstellung nie schlechter sein als der Ist-Zustand** — beide
+Fälle sind als Test festgehalten. Die 123 Tabellenzeilen bleiben aus genau
+diesem Grund erhalten, obwohl sie im Normalfall nicht mehr laufen.
+
+**2. ISO-8859-15 bleibt bei der Tabelle** und läuft *nicht* über Codepage 28605.
+Begründung: der Zeichensatz ist einbyteig, seine acht Tabelleneinträge sind
+vollständig und durch Tests belegt, und er hat weder die Drei-Byte-Grenze noch
+das Abdeckungsproblem — es gibt also nichts zu gewinnen. Zu verlieren gäbe es
+dagegen etwas: in ISO-8859-15 sind die Bytes `0x80..0x9F` C1-Steuerzeichen, in
+CP1252 sind es druckbare Zeichen (Anführungszeichen, Gedankenstriche,
+Eurozeichen). Eine saubere Wandlung über 28605 würde sie zu Fragezeichen machen,
+und Post, die `iso-8859-15` behauptet und CP1252-Bytes trägt, ist genauso häufig
+wie im UTF-8-Fall. Auch das ist als Test festgehalten.
+
+### Was weiterhin NICHT geht
+
+**Die Anzeige selbst bleibt einbyte-basiert.** Eudora speichert und zeigt Text als
+CP1252; daran ändert diese Umstellung nichts. Ein Fragezeichen statt Zeichensalat
+ist ein Fortschritt in der Lesbarkeit — mehr nicht:
+
+- **Kyrillisch, Griechisch, Hebräisch, Chinesisch, Japanisch, Koreanisch werden
+  nicht dargestellt.** Sie werden durch `?` bzw. durch einen lateinischen
+  Verwandten ersetzt. Der ursprüngliche Text ist danach verloren.
+- **Emoji werden nicht dargestellt.** Sie werden zu `??`.
+- Auch die Ersatztabelle ist eine Annäherung: aus `ł` wird `l`, aus `Ω` wird `O`.
+  Lesbar, aber nicht richtig.
+
+Echte Darstellung dieser Schriften bräuchte einen **Unicode-Umbau der Anzeige**
+(Speicherung, Editor, Listenspalten, Filter, Adressbuch). Das ist ein eigenes,
+großes Vorhaben und in dieser Portierung nicht enthalten.
+
+### Nebenbefund 1: der IMAP-Pfad übersetzt gar nichts
+
+Beim Prüfen der Aufrufstellen gefunden, **nicht** von dieser Umstellung
+verursacht und **nicht** behoben (`ImapDownload.cpp` gehört nicht zu dieser
+Änderung):
+
+`ISOTranslate()` erwartet die Indizes aus `FindMIMECharset()` (`mime.cpp:382`):
+`0` windows-\*, `1` us-ascii, `2` iso-8859-1, `3` iso-8859-15, `4` utf-8.
+`Eudora71/EuImap/src/ImapDownload.cpp:4644` bildet den Index aber selbst und
+anders:
+
+    iCharsetIdx = FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9,
+                                    params->value, -1);
+
+Das liefert `0` us-ascii, `1` iso-8859-1, `2` iso-8859-15 — um eins verschoben,
+und **`utf-8` liegt gar nicht im durchsuchten Bereich** (er endet bei
+`IDS_MIME_ISO_LATIN9`). Folge:
+
+- `utf-8` → `-1`, die Wächterbedingung `if (iCharsetIdx > 1)` greift nicht,
+  `ISOTranslate` wird nie gerufen.
+- `iso-8859-15` → `2`, `ISOTranslate` wird gerufen, liest die `2` aber als
+  „Latin-1, keine Übersetzung nötig“ und gibt den Text unverändert zurück.
+
+**Über IMAP wird also kein einziger Zeichensatz übersetzt** — weder vorher noch
+nachher. Die Umstellung wirkt damit ausschließlich auf dem POP-Pfad
+(`lex822.cpp:544` für Kopfzeilen nach RFC 2047, `TextReader.cpp:251` für den
+Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
+`ImapDownload.cpp` auf `FindMIMECharset()` umstellen; das ist eine eigene
+Änderung mit eigenen Tests.
+
+### Nebenbefund 2: zwei Aufrufer werten die neue Länge nicht aus
+
+Ebenfalls Altbestand, ebenfalls nicht von dieser Umstellung verursacht.
+`ISOTranslate()` verkürzt den Puffer und gibt die neue Länge zurück. Zwei
+Aufrufer werfen den Rückgabewert weg und rechnen mit der **alten** Länge weiter:
+
+- `Eudora71/Eudora/TextReader.cpp:251` — `size` bleibt unverändert
+- `Eudora71/EuImap/src/ImapDownload.cpp:4662` — `inLen` bleibt unverändert
+
+Hinter dem übersetzten Text steht dann die Null, die `ISOTranslate` schreibt, und
+dahinter der unveränderte Rest des alten Inhalts; beides wird mitgeschrieben.
+`lex822.cpp:544` ist nicht betroffen, weil es danach mit `strlen` weiterrechnet
+und die Null die Länge korrekt begrenzt.
+
+Der Befund ist **älter als die Portierung** — schon die ursprüngliche Fassung von
+QUALCOMM (Commit `567a5d8`) kürzte den Puffer und gab die neue Länge zurück. Weil
+die Umstellung mehr Zeichen zusammenfasst als vorher (drei Bytes Kyrillisch
+werden zu einem Fragezeichen), wird der Rest **sichtbarer** als bisher. Das ist
+ein Grund, diesen Befund bald anzugehen — er liegt aber in `TextReader.cpp` und
+`ImapDownload.cpp`, nicht in `utils.cpp`.
+
+### Neues Werkzeug: `tools/ersetze-bereich.pl`
+
+`tools/aendere-zeile.pl` kann nur *innerhalb* einer Zeile ersetzen und keine
+Zeilen einfügen oder löschen — für eine neu geschriebene Funktion reicht das
+nicht. `tools/ersetze-bereich.pl` ersetzt einen zusammenhängenden Zeilenbereich:
+
+    perl tools/ersetze-bereich.pl <datei> <vonZeile> <bisZeile> <neuerBlock>
+
+Gelesen und geschrieben wird ausschließlich mit `:raw`. Nach dem Schreiben wird
+nachgemessen, dass alles **vor** und **nach** dem ersetzten Bereich byteweise
+unverändert geblieben ist; bei Abweichung bricht das Werkzeug ab. Zusätzlich
+werden die CR-Zahlen vorher/nachher ausgegeben, damit ein versehentlicher Wechsel
+von LF auf CRLF sofort auffällt. Für `utils.cpp` gemessen: 118 CR vorher, 118 CR
+nachher, `tools/pruefe-bytes.pl` sauber.
