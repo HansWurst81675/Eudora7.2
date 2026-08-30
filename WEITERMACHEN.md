@@ -76,26 +76,114 @@ worden, die Folgen des Auscheckens blieben.
 
 ### Offen
 
-**S-5 — Menüs lassen sich nicht öffnen.** Gregor: „nichts, kleine reaktion" —
-der Menütitel leuchtet auf, klappt aber nicht auf. **Wichtig: sie haben
-zwischendurch funktioniert.** Es ist also zustandsabhängig, kein
-grundsätzlicher Defekt. Verdacht: der frische Zustand ohne gespeicherten
-Leistenzustand in der `Eudora.ini`
-([mainfrm.cpp:819](Eudora71/Eudora/mainfrm.cpp:819),
-`SECDockState::LoadState`).
+**S-5 — Menüs lassen sich nicht öffnen. URSACHE GEFUNDEN (M-1), Behebung
+ungeprüft.**
 
-Ausgeschlossen (gemessen): kein `SetMenu` in der Anwendung; der Werbecode im
-Leerlauf läuft nicht (`GetSharewareMode()` ist `SWM_MODE_PRO`);
-`CWazooBar::OnTimer` läuft nur beim Ziehen-und-Ablegen; das Menü selbst ist
-vollständig (14 Einträge, alle Untermenüs gefüllt); das Fenster hängt nicht.
+`SECToolBarManager` setzte `m_bMainFrameEnabled` im Konstruktor auf `TRUE`
+([OTShim_Werkzeugleiste.cpp:3480](Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:3480)
+und `:3506`). `CMainFrame::OnNcHitTest`
+([mainfrm.cpp:8662](Eudora71/Eudora/mainfrm.cpp:8662)) liefert bei
+`IsMainFrameEnabled() == TRUE` **immer `HTERROR`** — damit ist die *gesamte*
+Nichtklientenfläche tot: Menüleiste, Titelzeile, Fensterknöpfe, Rahmenkanten.
+Ein Klick auf „File" erreicht nie `WM_NCLBUTTONDOWN`/`HTMENU`.
 
-**S-6 — die Darstellung ist fehlerhaft.** Gregors wichtigster Punkt. Leere
-Werkzeugleisten-Knöpfe, sich überlagernde Bereiche, ein Registerkartenstreifen
-mitten im Fenster, die fehlende Fensterleiste unten. Ausgeschlossen: dass es am
-Entfernen der Werbeleiste liegt — `QCDockBar` prüft an beiden betroffenen
-Stellen selbst auf `SWM_MODE_ADWARE`.
+Die Stingray-Kopfdatei (`tbarmgr.h:79-80`) beschreibt `TRUE` als „Hauptfenster
+freigegeben" und hat den Autor der Ersatzschicht in die Irre geführt. Eudora
+liest den Wert an allen fünf Abfragestellen andersherum: `TRUE` heißt dort
+„Anpassen-Dialog steht offen" (`mainfrm.cpp:2990` und `:8744`).
 
----
+> ### Vier Fragen an Gregor, die das ohne Debugger entscheiden
+>
+> Waren im kaputten Bau **auch** diese drei tot?
+>
+> 1. das Verschieben am **Titelbalken**
+> 2. das Ziehen an den **Rahmenkanten**
+> 3. die **Fensterknöpfe** (Minimieren/Maximieren/Schließen)
+> 4. und ging **`Alt+F`** trotzdem? *(die Tastatur läuft über `SC_KEYMENU`,
+>    nicht über den Hit-Test — sie müsste funktioniert haben)*
+>
+> Passt das Bild, ist M-1 bestätigt. Ging der Titelbalken normal, ist M-1 zwar
+> ein echter Fehler, aber **nicht** die Ursache von S-5.
+
+Offener Widerspruch: M-1 ist vom INI-Zustand unabhängig, Gregor sagt aber, die
+Menüs hätten *zwischendurch* funktioniert. Verdacht (UNGEPRÜFT): der
+funktionierende Bau lag vor `91716bb`, dem Commit, der `= TRUE` eingeführt hat.
+
+Ausgeschlossen, mit Belegen in
+[BEFUND-MENUE.md](Eudora71/OTShim/BEFUND-MENUE.md): `SECDockState::LoadState`
+bei leerer INI (regulärer Erstlauf-Weg), MDI-Menüverschmelzung, Fokusdiebe,
+Zeitgeber- und Leerlaufpfade, kein `SetMenu` in der Anwendung.
+
+**S-6 — die Darstellung ist fehlerhaft. Ursache von Punkt 2 belegt (A-1).**
+
+Die Ersatzschicht setzt die prozentualen Zeilenbreiten `m_fPctWidth` und die
+Splitter der Andockleiste **gar nicht um** und reicht `SECDockBar::OnSizeParent`
+und `CalcFixedLayout` unverändert an MFC durch. `SECControlBar::CalcFixedLayout`
+gibt dabei jeder Wazoo-Leiste **32767** als Wunschbreite. `DockControlBarEx`
+verwirft zusätzlich `nCol` und `nRow`. Das erklärt die überlagernden Bereiche
+und den Registerkartenstreifen mitten im Fenster.
+
+Bei den **leeren Werkzeugleisten-Knöpfen** sind fünf Ursachen ausgemessen und
+ausgeschlossen; alle 15 Standardknöpfe liegen im ersten Bitmap, die Bildzahlen
+64/61/51 stimmen. Übrig bleibt der Zeichenweg je Knopf. Stärkster Verdacht
+(UNGEPRÜFT): das fehlende `SetTextColor(0)`/`SetBkColor(0xFFFFFF)` in
+`SECStdBtn::DrawDisabled`
+([OTShim_Werkzeugleiste.cpp:786](Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:786)).
+Das passt als einziges auf „mehrere leer, andere da" — auf einer frisch
+gestarteten Eudora sind acht der fünfzehn Knöpfe gesperrt.
+
+Fünf konkrete Folgeschritte in
+[BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
+
+**Kriterium 3 — Mail abrufen. Wahrscheinlichster Absturzpunkt bekannt (P-1).**
+
+`QCWorkerSocket.cpp:1969` dereferenziert `pConnectionInfo` **ungeprüft**,
+nachdem Zeile 1961 es gerade geprüft hat. Scheitert die SSL-Aushandlung und
+`QCSSLGetConnectionInfo` liefert `NULL`, stürzt Eudora ab, statt eine Meldung zu
+zeigen. Ein Zweizeiler — das wäre der erste Handgriff.
+
+Der POP-Pfad selbst ist gegengelesen und von der Portierung unbeschädigt;
+Betreff, Absendername und Text laufen über denselben, korrekt indizierten
+Zeichensatzpfad. Der bekannte IMAP-Fehler trifft POP **nicht**. Anleitung zum
+Ausprobieren: [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Dort als UNGEPRÜFT
+markiert: ob `mx.freenet.de` überhaupt der POP3-Server ist.
+
+**PR-1 — drei Fehler in der Arbeit vom 30.08. selbst.**
+
+PRÜFER hat sie mit Gegenproben belegt:
+
+1. `tools/pruefe-bytes.pl` lässt **LF→CRLF lautlos durch** — Regel 2 sucht nur
+   die Gegenrichtung. Unter Windows ist CRLF die wahrscheinlichere
+   Schadensrichtung; der Wächter deckt also den unwahrscheinlicheren Fall ab.
+2. Dieselbe Schranke **schlägt bei Leerzeilen grundlos an**: eine CRLF-Leerzeile
+   gelöscht, eine LF-Leerzeile ergänzt — kein Byte umgewandelt, trotzdem
+   Abbruch. Derselbe Fehlalarm-Fehler wie zuvor, nur von der CR-Anzahl auf den
+   Zeileninhalt umgezogen.
+3. `BuildKennung.h` ist in git **verfolgt**. Fällt perl beim Bau aus, zeigt das
+   Fenster die Kennung eines *fremden* Baus statt gar keiner — genau der Fehler,
+   den die Kennung verhindern sollte.
+
+Weiter: `.def`/`.sln`/`.bat`/`.ps1` prüft die Schranke gar nicht;
+`_T(EUDORA_BAU_KENNUNG)` ([mainfrm.cpp:9715](Eudora71/Eudora/mainfrm.cpp:9715))
+übersetzt in einem Unicode-Bau nicht; die Zahlen in S-7 widersprechen sich
+(4616/5563 gegen 4426/5336 im Werkzeugkopf, nachgemessen 5568). PRÜFERs Urteil
+zu `tools/rekursion-suchen.pl`: **löschen** — es bildet jede Kante mit der
+umgebenden Klasse und kann klassenübergreifende Zyklen strukturell nicht finden,
+auch den aus S-2 nicht.
+
+Vollständig in [PRUEFBERICHT.md](PRUEFBERICHT.md).
+
+**B-1 — die VC7.1-Laufzeiten.** Die eigene `msvcr71.dll` steht: 1430 Exporte,
+davon 1429 echte Weiterleitungen auf die von Windows mitgelieferte
+`msvcrt.dll`, einzige Abhängigkeit `KERNEL32.dll`. Damit können die drei
+unsignierten Dateien von dll-files.com aus dem Paket. Ebenfalls belegt: die
+Release-`Paige32.dll` darf als `Paige32d.dll` dienen, also sind `msvcr71d.dll`
+und `msvcp71d.dll` totes Gewicht. **`MFC71.DLL` ist aussichtslos** — sie wird
+über **157 Ordinale** importiert.
+
+UNFERTIG: `VC71Bruecke` hängt noch nicht in `Eudora71/Eudora.sln`. Die zwei
+nötigen Einfügungen stehen wörtlich in
+[Eudora71/VC71Bruecke/BEFUND.md](Eudora71/VC71Bruecke/BEFUND.md), Abschnitt 6.
 
 ## Neue Werkzeuge
 
