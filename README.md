@@ -8,86 +8,132 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-> ## `Eudora.exe` bindet.
+> ## Eudora startet und zeigt sein Hauptfenster.
 >
-> **Gemessen an Commit `a807b93` am 30.08.2026**, `Debug|x86`, Toolset v143
-> (MSVC 14.38.33130), in einem frisch ausgecheckten Baum. An diesem Baum arbeiten
-> mehrere Agenten gleichzeitig; wer den Stand pruefen will, misst neu und nennt
-> seinen eigenen Bezugscommit.
+> **Gemessen an Commit `371c1e3` am 30.08.2026**, `Debug|Win32`, Toolset v143
+> (MSVC 14.38.33130). An diesem Baum arbeiten mehrere Agenten gleichzeitig; wer
+> den Stand prüfen will, misst neu und nennt seinen eigenen Bezugscommit.
 >
-> | Messung | Ergebnis |
-> |---|---|
-> | `Eudora.vcxproj` einzeln | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |
-> | Solution-Bau | **3 Fehler**, alle aus `OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`) |
-> | fertige Projekte | **16 von 18** |
-> | Unit- und Komponententests | **33 von 33 gruen** |
+> **Aber es ist noch nicht „lauffähig".** Was das heißt, steht in
+> [ZIEL.md](ZIEL.md) — von Gregor am 30.08.2026 festgelegt:
 >
-> Die **OT501-Ersatzschicht ist vollstaendig** (`e50a89c`): `Eudora` uebersetzt
-> seit `78a9c10` fehlerfrei und bindet seit `a807b93` ohne ein einziges ungeloestes
-> Symbol. Der Verlauf: 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**.
+> | # | Kriterium | Stand |
+> |---|---|---|
+> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+> | 2 | die Darstellung ist korrekt | **nicht erfüllt** (Befund S-6) |
+> | 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** |
 >
-> **Die leere Attrappe `OTA50D.LIB` wird dafuer nicht mehr gebraucht** und liegt
-> nicht mehr im Baum; obige Messung ist ohne sie entstanden. Das letzte Symbol war
-> `__imp___iob` aus der vorgebauten `libpng.lib` — kein Stingray, sondern eine
-> VC6-Binaerdatei aus der Zeit vor der UCRT.
->
-> **Noch nicht geprueft ist, ob das Programm startet.** `EudoraRes.dll` fehlt und
-> wird zur Laufzeit nachgeladen — siehe [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+> Erst wenn alle drei erfüllt sind, darf eine Fassung „lauffähig" heißen. Der
+> Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung kann.
 
-Nicht fertig werden zwei Projekte:
+Der Weg dorthin an einem Tag: `Eudora.exe` band zum ersten Mal, startete nicht,
+und die drei Gründe dafür sind belegt und behoben — siehe
+[BEFUNDE.md](BEFUNDE.md), Befunde S-1 bis S-7.
 
-- `OT501` — die Stingray-Quellen sind nicht freigegeben, das Projekt bricht mit
-  `NMAKE U1073` ab. Es wird nicht mehr gebraucht: die Ersatzschicht hat es abgeloest.
-- `EudoraRes` — hat einen Projektverweis auf `OT501` (`EudoraRes.vcxproj:351`) und
-  wird im Solution-Bau deshalb gar nicht erst versucht; es taucht im Bauprotokoll
-  ueberhaupt nicht auf. Fuer `Eudora` ist dieselbe Bindung mit `a807b93` geloest
-  (`LinkLibraryDependencies` auf `false`, `_SECNOMSG`); fuer `EudoraRes` steht der
-  Handgriff noch aus. Deshalb fehlt `EudoraRes.dll` in `Bin/Debug`.
+Der eigentliche Blocker war die **Werbefläche**: `CAdWazooWnd::OnCreate` legt sie
+mit `CRect(0,0,0,0)` an, die Textmaschine Paige bekommt eine Umbruchbreite von
+null und dreht sich in einer Endlosrekursion fest (1689 Stapelrahmen, davon 1613
+im Zyklus). Sie hängt jetzt an `QCSharewareManager::IsBoxBuild()`, dazu der
+Übersetzungsschalter `BUILD_BOX_OR_SITE_R_VERSION`. Damit entfallen **Werbung,
+Registrierung und Einführungsdialog** — das ist die Fassung, die QUALCOMM an
+Firmenkunden ausgeliefert hat.
 
-Ein voller Solution-Bau meldet daher **3 Fehler, alle aus `OT501`**
-(zweimal `NMAKE U1073`, einmal `MSB3073`).
+### Nach einem frischen Klon: einmal die Zeilenenden angleichen
 
-Fuer `Eudora` sind alle 269 urspruenglichen Compilerfehler behoben (Verlauf
-269 — 74 — 25 — 16 — 4 — 0, null seit `3f6877a`), seit `78a9c10` uebersetzt die
-Ersatzschicht fehlerfrei mit, und seit `a807b93` bindet die `.exe`. Der Verlauf der
-Symbolzahlen mit Bezugscommits steht in
-[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md), Abschnitt "Der Weg zum Linken".
+```bash
+perl tools/zeilenenden-angleichen.pl --aendern
+git ls-files -z | xargs -0 -n 400 git add --
+```
 
-Fertig gebaut werden von den 16:
+**Ohne diesen Schritt springt jede Datei, die man anfasst, als komplett geändert
+heraus.** Gemessen: 4616 von 5563 verfolgten Dateien lagen als CRLF vor, während
+im Commit LF steht — Folge eines Auscheckens mit `core.autocrlf=true`. Git sieht
+in eine Datei gar nicht hinein, solange Zeitstempel und Größe zum Index passen;
+der Schaden bleibt deshalb unsichtbar, bis ein Werkzeug die Datei berührt. Das
+ist die Wurzel aller CRLF-Probleme dieses Projekts, Befund S-7.
+
+### Bauen
+
+```bash
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:BuildProjectReferences=false /m
+```
+
+`/p:BuildProjectReferences=false` ist nötig — sonst scheitert der Bau am Projekt
+`OT501`, dessen Stingray-Quellen nicht freigegeben sind. Die Visual-Studio-IDE
+wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
+
+Ein voller Solution-Bau meldet weiterhin **3 Fehler, alle aus `OT501`**
+(zweimal `NMAKE U1073`, einmal `MSB3073`). Das Projekt wird nicht mehr gebraucht:
+die Ersatzschicht hat es abgelöst.
+
+### Starten
+
+```bash
+Eudora.exe "<Pfad zu einem Mailverzeichnis>"
+```
+
+Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
+`eudora.cpp:3542` ab. Vorlage:
+`InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`.
+
+Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
+Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine Fehler.
+Sie erscheinen nur, weil bisher nur der Debug-Bau läuft; der Release-Zweig
+scheitert an einer fehlenden `Imap.lib`.
+
+Der Fenstertitel trägt die **Bau-Kennung** — Paketversion, Commit und
+Herkunftsverzeichnis:
+
+```
+Eudora - [In]   [1.0.3+371c1e3 - Eudora72-1.0.3]
+```
+
+Ein Sternchen hinter dem Commit heißt: beim Bau lagen ungesicherte Änderungen
+vor, der Bau ist nicht reproduzierbar. Damit ist ein Bildschirmfoto eindeutig
+einem Bau und einer Instanz zuzuordnen.
+
+### Was fertig gebaut wird
 
 | Ergebnis | Ort |
 |---|---|
+| **`Eudora.exe`** | `Eudora71/Bin/Debug` |
+| `EudoraRes.dll` | `Eudora71/Bin/Debug` |
 | `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`, `EuLang.dll`, `plstclnt.dll` | `Eudora71/Bin/Debug` |
 | `NSImport.eif`, `OEImport.eif`, `OLImport.eif` (Importer-Plugins, DLLs mit eigener Endung) | `Eudora71/Bin/Debug` |
 | `EudoraOldIcons.epi` (Icon-Plugin, ebenfalls eine DLL) | `Eudora71/EudoraOldIcons/Debug` |
-| **`Eudora.exe`** (10 203 136 Byte, gemessen an `a807b93`) | `Eudora71/Bin/Debug` |
 | elf `.lib` | `Eudora71/Lib/Debug` |
 | `libeay32.lib`, `ssleay32.lib` (Projekt `OpenSSL`, Altbestand) | `Eudora71/OpenSSL/out32` |
 
 Von den elf `.lib` sind sieben Importbibliotheken zu den DLLs (kenntlich an der
 begleitenden `.exp`); echte statische Bibliotheken sind nur vier: `AccountWizard`,
-`DirectoryServicesUI`, `EuImap`, `SearchEngine`. Das Verzeichnis `Lib/Debug`
-enthaelt darueber hinaus sechs vorgefertigte Fremdbibliotheken, die kein Projekt
-der Solution erzeugt (`EuMemMgr`, `Paige32d`, `SSCEWD32`, `Uuid`, `libpng`,
-`zlib`) — insgesamt liegen dort also 17 `.lib`.
+`DirectoryServicesUI`, `EuImap`, `SearchEngine`. Daneben liegen dort sechs
+vorgefertigte Fremdbibliotheken, die kein Projekt der Solution erzeugt
+(`EuMemMgr`, `Paige32d`, `SSCEWD32`, `Uuid`, `libpng`, `zlib`).
 
-`QCSSL.dll` ist inzwischen gegen **OpenSSL 3.5.8 LTS** gebaut. **TLS 1.3 ist
-zweimal nachgemessen:** im Komponententest gegen einen lokalen Server
-(`Eudora71/Tests/QCSSL`, Protokoll in `work/ergebnis_qcssl_lokal.txt`) und am
-29.08.2026 im Betrieb gegen `pop.gmx.net:995`, abgelesen in Eudoras eigenem Dialog
-"SSL Connection Information Manager": `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit,
-Status `Succeeded`. Dass es dabei diese DLL war und nicht HermesSSL, ist gesichert —
-HermesSSL 7.8 gamma setzt auf OpenSSL 1.0.2p auf, das TLS 1.3 gar nicht beherrscht.
-Als einbaufertiges Paket liegt die DLL in [Releases/1.0/](Releases/1.0/README.md) —
-sie ersetzt in einer bestehenden Eudora-7.1-Installation genau eine Datei. Abruf und
-Versand funktionieren.
+### TLS
 
-```
-"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86 -m
-```
+`QCSSL.dll` ist gegen **OpenSSL 3.5.8 LTS** gebaut, Mindestprotokoll TLS 1.2 für
+alle Einstellungen. TLS 1.3 ist zweimal nachgemessen: im Komponententest gegen
+einen lokalen Server und am 29.08.2026 gegen `pop.gmx.net:995`
+(`TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit).
 
-Die Visual-Studio-IDE wird zum Bauen nicht gebraucht, nur die Installation
-(MSVC v143, MFC/ATL, Windows SDK).
+**Achtung:** dieser Abruf fand mit einer *älteren* QCSSL-Fassung statt. Die
+ausgelieferte QCSSL 1.0.1 ist gegen Komponententests geprüft, aber nie gegen
+einen echten Mailserver. Einzelheiten in
+[Releases/1.0/AUSLIEFERUNGEN.md](Releases/1.0/AUSLIEFERUNGEN.md).
+
+### Werkzeuge
+
+| Werkzeug | wozu |
+|---|---|
+| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. |
+| `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
+| `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
+| `tools/pruefe-bytes.pl` | pre-commit-Schranke gegen lautlosen Byteschaden |
+| `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
+| `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau |
+| `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
+| `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte bisher ausschließlich Fehlalarme. |
 
 ## Was bisher gemacht wurde
 
