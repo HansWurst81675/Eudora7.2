@@ -1102,6 +1102,11 @@ public:
 	void EnableMainFrame();
 	void DisableMainFrame();
 
+	// NICHT im Original (tbarmgr.h:162-163). Der Rueckweg aus dem
+	// Anpassen-Zustand, ohne dabei Fenster zu sperren. Siehe
+	// BEFUND-MENUE.md, Befund M-1.
+	void RestoreMainFrame();
+
 	void SetInToolBarCommand(BOOL bIn, CRect& rect);
 
 	void BarNotify(int nID, SECCustomToolBar::BarNotifyCode notify);
@@ -1142,6 +1147,11 @@ protected:
 	CPtrArray m_defaultBars;			// Vorgabeleisten
 	CPtrArray m_notifyWnds;				// Empfaenger der Leistenmeldungen
 	CWnd* m_pNoDropWnd;					// Fenster ohne Ablagemoeglichkeit
+	// TRUE heisst NICHT "Normalbetrieb", sondern: der Anpassen-Dialog
+	// steht offen und EnableMainFrame hat den Rahmen darin wieder
+	// freigegeben. Im Normalbetrieb FALSE - sonst liefert
+	// CMainFrame::OnNcHitTest (mainfrm.cpp:8670) staendig HTERROR und die
+	// Menueleiste ist tot. Siehe BEFUND-MENUE.md, Befund M-1.
 	BOOL m_bMainFrameEnabled;
 	BOOL m_bConfig;						// im Anpassen-Modus
 	BOOL m_bToolTips;

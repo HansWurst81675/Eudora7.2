@@ -2656,3 +2656,56 @@ schreibt, sollte das wissen.
   Die zwei nötigen Einfügungen stehen wörtlich in `BEFUND.md`, Abschnitt 6.
 - Startversuch mit der Brücke steht aus (Auflage: keine Fenster, kein
   Eudora-Start).
+
+## M-1 - Menues lassen sich nicht oeffnen: der Rahmen liefert immer HTERROR
+
+Bearbeiter MENUE, reine Quellcodeanalyse (kein Programmstart). Die
+ausfuehrliche Fassung mit allen Belegen steht in
+`Eudora71/OTShim/BEFUND-MENUE.md`.
+
+**Ursache.** `SECToolBarManager` setzte `m_bMainFrameEnabled` im Konstruktor
+auf `TRUE` (`Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:3480` und `:3506`).
+`CMainFrame::OnNcHitTest` (`Eudora71/Eudora/mainfrm.cpp:8662-8671`) liefert bei
+`IsMainFrameEnabled() == TRUE` **immer** `HTERROR`. Damit ist die gesamte
+Nichtklientenflaeche des Hauptfensters tot: Menueleiste, Titelzeile,
+Systemmenue, die Knoepfe Minimieren/Maximieren/Schliessen und die Rahmenkanten.
+Ein Klick auf "File" erreicht nie `WM_NCLBUTTONDOWN` mit `HTMENU` und damit nie
+den Menuemodus.
+
+**Warum der Ausgangswert falsch war.** Die Stingray-Kopfdatei
+(`Eudora71/OT501/Include/tbarmgr.h:79-80, 213`) beschreibt `TRUE` als
+"Hauptfenster ist freigegeben". Eudora liest den Wert an allen fuenf
+Abfragestellen andersherum - `TRUE` heisst dort "der Anpassen-Dialog steht
+offen". Zwei Stellen sagen es im Klartext: `mainfrm.cpp:2990` ("with a
+customize dialog still active") und `mainfrm.cpp:8744` ("We have a customize
+dialog up"). Der Schlussstein ist ein Widerspruchsbeweis: waere `TRUE` der
+Normalzustand, haette schon Eudora 7.1 eine tote Menueleiste gehabt.
+`HTERROR` kommt im ganzen Baum genau einmal vor (`mainfrm.cpp:8670`).
+
+**Behoben** in `Eudora71/OTShim/OTShim_Werkzeugleiste.{h,cpp}`: Ausgangswert
+`FALSE` in beiden Konstruktoren, Kommentare berichtigt, Waechter in
+`DisableMainFrame` gerichtet, und ein Rueckweg `RestoreMainFrame()` aus dem
+Anpassen-Zustand ergaenzt (sonst bliebe der Schalter nach dem ersten Besuch von
+"Tools -> Customize Toolbars" auf `TRUE` stehen und die Menueleiste waere
+wieder tot). Uebersetzt fehlerfrei; das Binden scheitert nur an nicht
+mitgebautem `imap.lib`.
+
+**Nicht gemessen:** die Wirkung im laufenden Programm. Vier Fragen an Gregor
+entscheiden das ohne Debugger - im kaputten Bau muessten auch das Verschieben
+am Titelbalken, das Ziehen an den Rahmenkanten und die Fensterknoepfe tot
+gewesen sein, waehrend **Alt+F** weiterhin funktioniert haben muesste (die
+Tastatur laeuft ueber `SC_KEYMENU`, nicht ueber den Hit-Test).
+
+**Widerspruch, offen:** Gregors Beobachtung, die Menues haetten zwischendurch
+funktioniert, passt nicht zu M-1 - der Schalter ist vom Umgebungszustand
+unabhaengig. Verdacht (UNGEPRUEFT): der funktionierende Bau lag vor `91716bb`,
+dem Commit, der `m_bMainFrameEnabled = TRUE` eingefuehrt hat.
+
+**Ausgeschlossen (mit Beleg, siehe BEFUND-MENUE.md):** MDI-Menueverschmelzung,
+Fokusdiebe und Erfassung in der Ersatzschicht, Zeitgeber- und Leerlaufpfade
+(der MFC-Leerlauf laeuft waehrend des Menuemodus gar nicht, `WM_ENTERIDLE`
+kommt mit `MSGF_MENU`), sowie `SECDockState::LoadState` bei leerer INI.
+
+**Nebenbefund:** frische Arbeitsbaeume standen auf `origin/main` (`22a6d77`);
+dort bricht der Bau am laengst behobenen `C2572` ab. Der lebende Stand ist
+`eudora-exe-linkt`.
