@@ -11,9 +11,32 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 
 | # | Kriterium | Stand am 30.08.2026 |
 |---|---|---|
-| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** (Paket 1.0.2) |
+| 1 | Eudora startet und zeigt sein Hauptfenster | **strittig** — siehe unten |
 | 2 | Die Darstellung ist korrekt | **nicht erfüllt** |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **nicht geprüft** |
+
+> ### Kriterium 1 ist nicht erfüllt
+>
+> Am 30.08.2026 abends, von Gregor:
+>
+> > *„halte ich für ein gerücht ... das hauptfenster ist ja kaputt!"*
+>
+> Er hat recht. Ich hatte Kriterium 1 als erfüllt geführt, weil ein Fenster
+> erscheint. Das Fenster ist aber **nicht bedienbar**: die Menüs lassen sich
+> nicht öffnen (S-5), Bereiche überlagern sich, Werkzeugleisten-Knöpfe sind
+> leer (S-6).
+>
+> **Ein Fenster, das erscheint, aber nicht benutzbar ist, erfüllt kein
+> Kriterium.** „Zeigt sein Hauptfenster" heißt: man kann damit arbeiten —
+> nicht: es sind Pixel auf dem Schirm.
+>
+> Damit ist derzeit **keines der drei Kriterien erfüllt**. Was Paket 1.0.2
+> belegt, ist bescheidener und trotzdem ein Fortschritt: der Bau ist
+> vollständig, die Abhängigkeiten lösen auf, und die Anwendung läuft bis in
+> die Fenstererzeugung, ohne abzustürzen. Das ist ein *Meilenstein*, kein
+> erfülltes Kriterium.
+>
+> Zu besprechen in der nächsten Sitzung.
 
 **Erst wenn alle drei erfüllt sind, darf eine Fassung „lauffähig" heißen.**
 Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung".
