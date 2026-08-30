@@ -173,7 +173,7 @@ int ForEntriesDo( void *dbRef, adproc proc, int startPlaylistID, int startServer
 // top secret intelligence
 
 static void schedule_next( db_reference* pRef, bool forceNew );
-int get_entry_info( PrivCachePtr pcp, Entry* pe, ENTRY_INFO** pei );
+static int get_entry_info( PrivCachePtr pcp, Entry* pe, ENTRY_INFO** pei );
 static char* prep_html_source( PrivCachePtr pcp, char* url );
 static int ad_end_bookkeeping( db_reference *pRef, int playlistID, int serverID, int entryID, Entry *pe );
 static int valid_entry_for_display( EntryRecPtr erp, enum EntryType desiredType, bool today, bool rerun, time_t rerunAge );

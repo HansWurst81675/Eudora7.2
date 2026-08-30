@@ -28,10 +28,10 @@
 // ebenfalls _MINIDUMP_H. Ohne das folgende #undef wird MiniDump.h komplett
 // uebersprungen und die beiden Deklarationen fehlen. Der Typ MINIDUMP_TYPE aus
 // MiniDump.h ist davon nicht betroffen - er steht dort hinter #ifndef
-// MINIDUMP_SIGNATURE und bleibt korrekt der SDK-Definition ueberlassen.
+// MINIDUMP_SIGNATURE und bleibt korrekt der SDK-Definition ueberlassen. Der SDK-Header wird darum zuerst ausdruecklich geholt (er hat #pragma once, ist also ein Nulleingriff, solange stdafx.h ihn schon gebracht hat) - so bleibt er auch dann verfuegbar, wenn sich die Einbindungsreihenfolge einmal umkehrt. Befund N4.
+#include <minidumpapiset.h>
 #undef _MINIDUMP_H
 #include "MiniDump.h"
-
 #include "DebugNewHelpers.h"
 
 // Constants

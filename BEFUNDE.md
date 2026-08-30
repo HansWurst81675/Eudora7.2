@@ -1027,3 +1027,209 @@ Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
 Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 30 bestanden, 3 fehlgeschlagen.
 Die drei roten Tests betreffen `ISOTranslate()` in `Eudora/utils.cpp` (Emoji,
 griechische Schrift) - ein anderer Arbeitsbereich, QCSSL hat daran keinen Anteil.
+
+---
+
+# Erledigt durch SUMME (30.08.2026, Branch `eudora-exe-linkt`)
+
+Bearbeitet wurden die verstreuten Befunde ausserhalb von QCSSL und der
+Ersatzschicht: M5, N2, N4, N5, N8. Die bestehenden Befundabschnitte oben sind
+unveraendert geblieben; dieser Abschnitt verweist nur auf sie.
+
+**Bau:** `Eudora.vcxproj` Debug/x86 uebersetzt vollstaendig durch - kein einziger
+Uebersetzungsfehler mehr, auch kein `C2572` aus `secbtns.h`. Es bleiben 14
+**Binde**fehler (`SECBitmapButton`, `TraceStart`, `ATL::CImage::s_initGDIPlus`
+und `s_cache`, `CVoiceText`, `libpng` mit `__imp___iob`) - die gehoeren LINKER.
+Keiner davon nennt eine der hier geaenderten Dateien.
+`plstclnt.vcxproj` Debug/x86 baut fehlerfrei bis zur fertigen `plstclnt.dll`.
+
+**Tests:** `Eudora71/Tests/RunTests.cmd` - 33 Tests, 30 bestanden, 3
+fehlgeschlagen. Alle drei liegen in `ISOTranslate` (`utils.cpp` /
+`TestIsoTranslate.cpp`), beide Dateien sind gerade von einem anderen Agenten in
+Arbeit und gehoeren nicht zu diesem Auftrag. Keiner der drei Tests beruehrt
+`summary.h`, `plist_mgr.cpp`, `ExceptionHandler.cpp` oder `atlimage.h`.
+
+---
+
+## M5 - erledigt, Aufrufstellen ausgezaehlt
+
+**Zaehlung zuerst.** `GetTail` kommt im gesamten Baum `Eudora71/` **38 mal in 10
+Dateien** vor. Davon sind:
+
+- 8 Deklarationen in vier Hilfsklassen: `tocdoc.h:512/514`, `nickdoc.h:204/206`,
+  `filtersd.h:233/235`, `summary.h:506/508`;
+- 6 Rumpfzeilen dieser Deklarationen, die `CObList::GetTail()` weiterreichen -
+  **ausser** den beiden in `summary.h`, die `GetHead()` riefen;
+- 2 Deklarationen und 3 Aufrufe der voellig unabhaengigen `CNode::GetTail` in
+  `DirectoryServices/Ph`;
+- **19 echte Aufrufstellen**, verteilt auf `PaigeEdtView.cpp` (12),
+  `QCCommandStack.cpp` (5), `QCMailboxDirector.cpp` (1), `html2text.cpp` (1).
+
+**Kein einziger dieser 19 Aufrufe geht auf ein `CSumList`.** Die Empfaenger
+wurden einzeln aufgeloest:
+
+| Aufrufstelle | Empfaenger | Typ |
+|---|---|---|
+| `PaigeEdtView.cpp` (12x) | `m_undoStack`, `m_redoStack`, `m_deleteUndoStack`, `m_deleteRedoStack`, `theStack`, `theRefStack` | `CUndoStack` = `CTypedPtrList<CPtrList, undo_ref*>` (`PaigeEdtView.h:97`) |
+| `QCCommandStack.cpp` (5x) | `m_theStack` | `CPtrList` (`QCCommandStack.h:65`) |
+| `QCMailboxDirector.cpp:2109` | `theList` (= `m_theMailboxList`) | `CPtrList` (`QCMailboxDirector.h:48`) |
+| `html2text.cpp:851` | `m_BlockList` | `CList<CHtmlBlockInfo, CHtmlBlockInfo&>` (`html2text.h:34`) |
+
+Die einzige abgeleitete Klasse, `CTempSumList` (`summary.h:601`), ruft
+`GetTail()` ebenfalls nirgends.
+
+**Folge:** `CSumList::GetTail()` hat **null Aufrufer**. Kein Code stuetzt sich
+also auf das falsche Verhalten - die Korrektur kann nichts brechen, und sie
+raeumt eine Falle weg, in die der naechste Aufrufer sonst blind hineingelaufen
+waere. Der Befund war damit **heute harmlos, aber scharf gestellt**.
+
+Zusaetzliches Indiz, dass es sich wirklich um einen Tippfehler und nicht um
+Absicht handelt: die drei Schwesterklassen `CTocDocList`, `CNicknameList` und
+`CFilterList` sind zeichengleich aufgebaut und rufen alle sechs richtig
+`CObList::GetTail()`. Nur `summary.h` weicht ab.
+
+**Geaendert:** `Eudora71/Eudora/summary.h` Z. 507 und 509, je
+`m_ObList.GetHead()` -> `m_ObList.GetTail()`. Beide Ueberladungen sind damit
+typkorrekt: die nicht-`const`-Fassung bindet an das `CObject*&`, das
+`CObList::GetTail()` liefert, die `const`-Fassung nimmt den `CObject*` als Wert.
+
+---
+
+## N2 - erledigt und nachgemessen
+
+**Geaendert:** `Eudora71/PlaylistClient/plstclnt_dll/plist_mgr.cpp:176`,
+`int get_entry_info(...)` -> `static int get_entry_info(...)`.
+
+Die Definition in Z. 1571 bleibt bewusst `int get_entry_info(...)` ohne
+Speicherklasse - genau wie im Original 7.1. Eine Definition ohne Speicherklasse
+uebernimmt die Bindung der vorangegangenen Deklaration; Deklaration und
+Definition stimmen also im Rueckgabetyp ueberein, und der urspruengliche
+default-int-Uebersetzungsfehler kehrt nicht zurueck.
+
+**Nachgemessen statt vermutet:** `dumpbin /SYMBOLS` auf dem frisch erzeugten
+`plist_mgr.obj` zeigt
+
+    ?get_entry_info@@YAHPAUPrivCacheStruct@@PAUEntry@@PAPAUENTRY_INFO@@@Z   Static
+
+- `Static`, nicht `External`. Die interne Bindung ist tatsaechlich wieder da.
+Der Uebersetzer gibt dabei kein `C4211` und keine sonstige Warnung aus.
+
+---
+
+## N4 - erledigt, anders als vorgeschlagen
+
+Der Vorschlag im Befund war, den Waechter in `EuMemMgr/Include/MiniDump.h`
+umzubenennen. Das ist hier nicht der Weg: die Datei gehoert einem fremden
+Teilprojekt (BugslayerUtil), und eine Umbenennung dort wuerde jede andere
+Uebersetzungseinheit mitreissen, die sie einbindet.
+
+Stattdessen ist die Zerbrechlichkeit **in der betroffenen Datei selbst**
+beseitigt. `Eudora71/Eudora/ExceptionHandler.cpp` Z. 32-34 lautet jetzt:
+
+    #include <minidumpapiset.h>
+    #undef _MINIDUMP_H
+    #include "MiniDump.h"
+
+Der SDK-Header wird also ausdruecklich zuerst geholt, bevor sein Waechter
+geloescht wird. Damit haengt die Sache nicht mehr daran, ob `stdafx.h` ihn
+zufaellig schon vorher gebracht hat.
+
+**Warum das kein Nebenwirkungsrisiko traegt:** `minidumpapiset.h` beginnt mit
+`#pragma once` (Z. 3-5, vor dem `#ifndef _MINIDUMP_H`). Solange `stdafx.h` ihn
+schon eingebunden hat - und das tut sie heute - ist die neue Zeile ein reiner
+Nulleingriff; der Uebersetzer oeffnet die Datei gar nicht erst. Kehrt sich die
+Reihenfolge irgendwann um, zieht die Zeile den Header herein und die SDK-Typen
+sind da. In beiden Faellen richtig.
+
+Der bestehende Erklaerkommentar in Z. 27-31 ist um diesen Punkt ergaenzt worden.
+Die Zeilenzahl der Datei ist unveraendert.
+
+`ExceptionHandler.cpp` uebersetzt danach fehler- und warnungsfrei.
+
+---
+
+## N5 - geprueft: die Aenderung war noetig, sie bleibt
+
+Der Befund vermutete, die Aenderung koennte noetig gewesen sein. **Sie war es.**
+Nachgesehen wurde beides:
+
+1. `CAtlBaseModule` in
+   `VC/Tools/MSVC/14.38.33130/atlmfc/include/atlcore.h:280` hat **kein** Element
+   `m_bNT5orWin98` mehr. Das Feld war ein Win9x/NT4-Erbstueck und ist mit dem
+   Ende der Win9x-Unterstuetzung aus der ATL geflogen.
+2. Im gesamten Baum `Eudora71/` kommt `m_bNT5orWin98` **nirgends** vor, es gibt
+   also auch keine projekteigene Ersatzdefinition.
+
+Der urspruengliche Rumpf `return( _AtlBaseModule.m_bNT5orWin98 );` haette unter
+v143 schlicht nicht uebersetzt. `return( TRUE )` ist auf dem Zielsystem
+Windows 10 zudem sachlich das richtige Ergebnis. **Nichts zurueckzunehmen.**
+
+Nebenbefund zur Herkunft: die Aenderung stammt nicht aus dem Zweig
+`vs2022-portierung-fixes`, sondern schon aus `ba3d2ee` und liegt damit bereits
+in `main` - `git diff main -- Eudora71/Eudora/atlimage.h` ist leer.
+
+**Geaendert:** nur Dokumentation, und zwar **in der Datei selbst**, weil sie am
+ehesten dort gefunden wird, wo jemand sie braucht - naemlich beim Vergleich mit
+dem SDK-eigenen Header. `Eudora71/Eudora/atlimage.h` Z. 1537 traegt jetzt eine
+`ABWEICHUNG`-Notiz mit dem Originalrumpf, dem Grund und dem Hinweis, dass sie
+bei einem Umstieg auf den SDK-Header wegfaellt; Z. 1541 verweist darauf.
+Zeilenzahl unveraendert.
+
+**Offen und ausdruecklich nicht von mir erledigt:** der Eintrag in
+`PORTIERUNG.md`. Die Datei liegt bei LEKTOR; sie erwaehnt `atlimage.h`,
+`IsTransparencySupported` und `m_bNT5orWin98` bisher an keiner Stelle.
+
+**Ausserdem beachtenswert fuer LINKER:** zwei der offenen Bindefehler,
+`ATL::CImage::s_initGDIPlus` und `ATL::CImage::s_cache`, stammen aus genau
+diesem `atlimage.h` (angezogen ueber `QCGraphics.obj`). Die mitgelieferte Kopie
+deklariert die beiden statischen Elemente, aber keine Uebersetzungseinheit
+definiert sie. Das ist ein eigenstaendiger Punkt, nicht Teil von N5.
+
+---
+
+## N8 - geprueft, nichts geaendert; die Tabelle stimmt nicht mehr ganz
+
+Auftragsgemaess wurde nur geprueft. Alle zehn Stellen wurden geoeffnet und bis
+zur Herkunft des beschriebenen Puffers zurueckverfolgt.
+
+**Ergebnis vorweg: keine einzige Stelle schreibt in einen tatsaechlich
+schreibgeschuetzten Puffer.** Nichts zu melden, nichts zu aendern. Die Bewertung
+"originalgetreu" im Befund bleibt richtig.
+
+Drei Korrekturen an der Tabelle - dort stehen Stellen als Schreibzugriff, die
+keiner sind:
+
+| Stelle | Tabelle sagt | Tatsaechlich |
+|---|---|---|
+| `statbar.cpp:233` | "Puffer wird umgeschrieben" | **Kein Schreibzugriff.** `Newline` wird nur getestet (Z. 234) und fuer die Differenz `Newline - lParam` benutzt (Z. 238). Kopiert wird mit `strncpy` in ein lokales `char Buffer[128]`; `lParam` selbst bleibt unberuehrt. |
+| `html2text.cpp:981` | "`szCurrent + 1` ohne NULL-Pruefung" | **Kein Schreibzugriff.** Der Mangel ist echt, aber ein anderer: Z. 984 rechnet `szStart = szCurrent + 1` **vor** der NULL-Pruefung in Z. 986. Das ist Zeigerarithmetik auf einem Nullzeiger - formal undefiniert, praktisch folgenlos, weil der Wert nach dem `break` nicht mehr gelesen wird. Gehoert nicht in die `const_cast`-Familie. |
+| `mapicmc.cpp:171` | Schreibzugriff auf `pszNewline` | **Ueberholt.** Die Stelle ist inzwischen auf eine rein lesende Fassung umgebaut, mit Kommentar: `pszData` zeigt bei `WM_COPYDATA` in fremden Prozessspeicher. Dort steht kein `const_cast` mehr. |
+
+Es bleiben **sieben** echte Schreibzugriffe. Fuer jeden wurde der Aufrufweg bis
+zum Ursprung des Puffers verfolgt:
+
+| Stelle | Puffer kommt von | Bewertung |
+|---|---|---|
+| `mainfrm.cpp:4849` (`GetAttachmentLine`) | zwei Wege: `CWinApp::m_lpCmdLine` (`eudora.cpp:1636`) - beschreibbar; und `OnCopyData` (`mainfrm.cpp:4904`), das den fremden `WM_COPYDATA`-Block **vorher in ein eigenes `DEBUG_NEW char[]` kopiert** | unbedenklich; der gefaehrliche Fall ist bereits abgefangen |
+| `Trnslate.cpp:4194` (`XLateDisplay`) | `PgHLinks.cpp:340` uebergibt ein lokales `char url[1024]` | unbedenklich |
+| dieselbe Stelle | `TridentView.cpp:2840` uebergibt eine `CString szHRef` | siehe unten |
+| `TridentPreviewView.cpp:352` | lokale `CString szFullMessage` (Z. 287) | siehe unten |
+| `tocdoc.cpp:2173/2174` | lokale `CString ConvertedBody` (Z. 2128) | siehe unten |
+| `Convhtml.cpp` (`BuildURIMap`, Schreibzugriffe in Z. 527/537/540/613) | `Trnslate.cpp:4470` uebergibt ein eigenes `DEBUG_NEW char[]`; `Trnslate.cpp:4296` und `TocFrame.cpp:1672` uebergeben eine `CString`; die Schreibzugriffe setzen den alten Wert unmittelbar wieder ein | siehe unten |
+| `PaigeEdtView.cpp:2522` | lokales `char url[INTERNET_MAX_URL_LENGTH]` (Z. 2506) | unbedenklich |
+
+**Die verbleibende Gemeinsamkeit ist enger als der Befund sie fasst:** vier der
+sieben Stellen schreiben durch `CString::operator LPCTSTR` in den internen
+Puffer einer `CString`, ohne vorher `GetBuffer()` zu rufen. Das ist kein
+Speicherschutzverstoss - der Puffer liegt im Heap und ist beschreibbar - aber es
+umgeht das Copy-on-Write von `CStringT`: teilt sich die `CString` ihre Daten
+gerade mit einer zweiten (Referenzzaehler groesser 1), aendern sich beide. Der
+Sonderfall des global geteilten Leerstring-Objekts kann nicht auftreten, weil
+`strchr`/`strstr` auf einer leeren Zeichenkette NULL liefern und gar nicht erst
+geschrieben wird.
+
+Das gilt fuer VC6 genauso - auch dessen `CString` war referenzgezaehlt mit
+Copy-on-Write. **Die Portierung hat hier also nichts verschlechtert.** Der
+richtige Zeitpunkt fuer eine Bereinigung ist weiterhin der naechste inhaltliche
+Umbau dieser Funktionen, so wie der Befund es vorschlaegt: Parameter auf `char*`
+ziehen und die Aufrufer mit `GetBuffer()`/`ReleaseBuffer()` nachziehen.

@@ -323,6 +323,316 @@ static void Test_RueckgabewertIstLaenge(void)
 	TT_EndTest();
 }
 
+// ---------------------------------------------------------------------------
+// Ab hier: Faelle, die das reine Tabellenverfahren nicht konnte.
+//
+// pcXlateTable bildet eine UTF-8-Bytefolge auf EIN CP1252-Byte ab, und
+// MAX_CHARS_TO_TRANS ist 3. Ein Emoji ist vier Byte lang und war damit
+// prinzipiell nicht abbildbar; alles ohne CP1252-Entsprechung - kyrillisch,
+// griechisch, chinesisch, polnisch - blieb als rohe UTF-8-Bytes stehen und
+// erschien als Zeichensalat. Die Tests hier belegen, dass das vorbei ist.
+//
+// Die Erwartungswerte fuer die Ersatztabelle der Codepage (U+0142 -> 'l' und so
+// weiter) sind gemessen, nicht geraten: sie stammen aus einem Lauf gegen den
+// Windows-Wandler und stehen hier, damit eine spaetere Aenderung auffaellt.
+// ---------------------------------------------------------------------------
+
+// Uebersetzt einen einzelnen Codepunkt und liefert die Ergebnislaenge;
+// das Ergebnis steht in pOut.
+static long TranslateCp(long lCp, unsigned char* pOut, long lOutCapacity)
+{
+	unsigned char szUtf8[8];
+	int iLen = SpecUtf8Encode(lCp, szUtf8);
+	if (iLen == 0) return -1;
+	return Run(szUtf8, iLen, IDX_UTF8, pOut, lOutCapacity);
+}
+
+static void Test_EmojiWirdZuFragezeichen(void)
+{
+	// U+1F600 GRINNING FACE, UTF-8 F0 9F 98 80. Vier Byte - von der Tabelle
+	// prinzipiell nicht erreichbar, weil MAX_CHARS_TO_TRANS 3 ist. Frueher
+	// blieben alle vier Bytes stehen und wurden als vier CP1252-Zeichen
+	// angezeigt: der Zeichensalat.
+	//
+	// Gemessen: der Wandler liefert ZWEI Fragezeichen, nicht eines. Ein Zeichen
+	// ausserhalb der BMP ist in UTF-16 ein Ersatzzeichenpaar, und
+	// WideCharToMultiByte setzt fuer jede der beiden Haelften ein Ersatzzeichen.
+	// Zwei Fragezeichen statt vier Salatzeichen - das ist der Gewinn.
+	static const unsigned char szExpected[] = { '?', '?' };
+	unsigned char szOut[32];
+	long lRet;
+
+	TT_BeginTest("ISOTranslate: ein Emoji (vier Byte) wird zu Fragezeichen statt zu Bytesalat");
+
+	lRet = TranslateCp(0x1F600, szOut, sizeof(szOut));
+
+	if (lRet != (long)sizeof(szExpected) || memcmp(szOut, szExpected, sizeof(szExpected)) != 0)
+		TT_Fail("U+1F600 (F0 9F 98 80) -> erwartet %s, erhalten %ld Bytes: %s",
+				Hex(szExpected, (long)sizeof(szExpected)), lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+
+	TT_EndTest();
+}
+
+static void Test_KyrillischUndHebraeisch(void)
+{
+	// Zwei Byte in UTF-8, ohne CP1252-Entsprechung und ohne nahen Verwandten.
+	// Frueher blieben beide Bytes stehen und wurden als zwei CP1252-Zeichen
+	// angezeigt.
+	static const long alCp[] = { 0x0416, 0x0439, 0x044F, 0x05D0, 0x05EA, -1 };
+	unsigned char szOut[32];
+	int i;
+
+	TT_BeginTest("ISOTranslate: kyrillisch und hebraeisch werden zu '?'");
+
+	for (i = 0; alCp[i] >= 0; ++i)
+	{
+		long lRet = TranslateCp(alCp[i], szOut, sizeof(szOut));
+		if (lRet != 1 || szOut[0] != '?')
+			TT_Fail("U+%04lX -> erwartet 1 Byte '?', erhalten %ld Bytes: %s",
+					alCp[i], lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+	}
+	TT_EndTest();
+}
+
+static void Test_ChinesischUndJapanisch(void)
+{
+	// Drei Byte in UTF-8, ohne CP1252-Entsprechung.
+	static const long alCp[] = { 0x4E2D, 0x6587, 0x3042, 0xD55C, -1 };
+	unsigned char szOut[32];
+	int i;
+
+	TT_BeginTest("ISOTranslate: chinesisch, japanisch und koreanisch werden zu '?'");
+
+	for (i = 0; alCp[i] >= 0; ++i)
+	{
+		long lRet = TranslateCp(alCp[i], szOut, sizeof(szOut));
+		if (lRet != 1 || szOut[0] != '?')
+			TT_Fail("U+%04lX -> erwartet 1 Byte '?', erhalten %ld Bytes: %s",
+					alCp[i], lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+	}
+	TT_EndTest();
+}
+
+static void Test_NahenVerwandtenStattFragezeichen(void)
+{
+	// Diese Zeichen haben kein CP1252-Byte, aber einen nahen Verwandten. Der
+	// Wandler wird mit dwFlags 0 aufgerufen und benutzt deshalb die
+	// Ersatztabelle der Codepage: polnische, tschechische, tuerkische und sogar
+	// griechische Post bleibt lesbar, statt zu Fragezeichen zu werden.
+	// Alle Erwartungswerte sind gemessen.
+	static const struct { long lCp; unsigned char byErwartet; const char* szName; } aFall[] =
+	{
+		{ 0x0141, (unsigned char)'L', "L mit Querstrich (polnisch)" },
+		{ 0x0142, (unsigned char)'l', "l mit Querstrich (polnisch)" },
+		{ 0x0104, (unsigned char)'A', "A mit Ogonek (polnisch)" },
+		{ 0x0105, (unsigned char)'a', "a mit Ogonek (polnisch)" },
+		{ 0x010D, (unsigned char)'c', "c mit Hatschek (tschechisch)" },
+		{ 0x0159, (unsigned char)'r', "r mit Hatschek (tschechisch)" },
+		{ 0x015F, (unsigned char)'s', "s mit Cedille (tuerkisch)" },
+		{ 0x011F, (unsigned char)'g', "g mit Breve (tuerkisch)" },
+		{ 0x03B1, (unsigned char)'a', "Alpha (griechisch)" },
+		{ 0x03A9, (unsigned char)'O', "Omega (griechisch)" },
+		{ 0,      0,                  0 }
+	};
+	unsigned char szOut[32];
+	int i;
+
+	TT_BeginTest("ISOTranslate: Zeichen ohne CP1252-Entsprechung bekommen den nahen Verwandten");
+
+	for (i = 0; aFall[i].szName; ++i)
+	{
+		long lRet = TranslateCp(aFall[i].lCp, szOut, sizeof(szOut));
+		if (lRet != 1 || szOut[0] != aFall[i].byErwartet)
+			TT_Fail("U+%04lX (%s) -> erwartet 1 Byte '%c', erhalten %ld Bytes: %s",
+					aFall[i].lCp, aFall[i].szName, aFall[i].byErwartet,
+					lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+	}
+	TT_EndTest();
+}
+
+static void Test_JedesZeichenWirdZuGenauEinemByte(void)
+{
+	// Der Kern des Gewinns: KEIN Zeichen bleibt mehr als rohe UTF-8-Bytefolge
+	// stehen. Jeder Codepunkt der BMP muss zu genau einem Byte werden - egal ob
+	// zum passenden CP1252-Byte, zu einem Verwandten oder zum Fragezeichen.
+	// Frueher blieben zwei bis drei Bytes stehen, sobald es keine Tabellenzeile
+	// gab: das war der Zeichensalat.
+	long lCp;
+	long lGeprueft = 0;
+	long lFalsch   = 0;
+	unsigned char szOut[32];
+
+	TT_BeginTest("ISOTranslate: jedes BMP-Zeichen wird zu genau einem Byte, nie zu Bytesalat");
+
+	for (lCp = 0x00A0; lCp <= 0xFFFD; ++lCp)
+	{
+		long lRet;
+
+		if (lCp >= 0xD800 && lCp <= 0xDFFF) continue;	// Ersatzzeichenbereich
+		if (lCp >= 0xFDD0 && lCp <= 0xFDEF) continue;	// Nichtzeichen
+		if ((lCp & 0xFFFE) == 0xFFFE)       continue;	// Nichtzeichen
+
+		++lGeprueft;
+		lRet = TranslateCp(lCp, szOut, sizeof(szOut));
+
+		if (lRet != 1)
+		{
+			if (lFalsch < 10)
+				TT_Fail("U+%04lX -> erwartet genau 1 Byte, erhalten %ld: %s",
+						lCp, lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+			++lFalsch;
+		}
+	}
+
+	if (lFalsch > 0)
+		TT_Note("%ld von %ld Codepunkten werden nicht zu genau einem Byte", lFalsch, lGeprueft);
+
+	TT_EndTest();
+}
+
+static void Test_NewsletterMitEmoji(void)
+{
+	// Der Fall, an dem der Fehler aufgefallen ist: ein deutscher Newsletter mit
+	// typografischen Anfuehrungszeichen, Gedankenstrich, Eurozeichen, Umlauten
+	// und einem Emoji. Vor der Umstellung liess das Emoji vier rohe Bytes im
+	// Text stehen; jetzt bleibt der Rest der Zeile unbeschadet.
+	static const long alText[] =
+	{
+		0x201E,'A','n','g','e','b','o','t',0x201C,' ',0x2013,' ',
+		'j','e','t','z','t',' ','f',0x00FC,'r',' ','9',',','9','9',' ',0x20AC,
+		' ', 0x1F600, ' ','G','r',0x00FC,0x00DF,'e',0x2019,
+		-1
+	};
+	static const unsigned char szExpected[] =
+	{
+		0x84,'A','n','g','e','b','o','t',0x93,' ',0x96,' ',
+		'j','e','t','z','t',' ','f',0xFC,'r',' ','9',',','9','9',' ',0x80,
+		' ', '?','?', ' ','G','r',0xFC,0xDF,'e',0x92
+	};
+	unsigned char szIn[128];
+	unsigned char szOut[128];
+	long lInLen = 0;
+	long lRet;
+	int i;
+
+	TT_BeginTest("ISOTranslate: deutscher Newsletter mit Anfuehrung, Gedankenstrich, Euro und Emoji");
+
+	for (i = 0; alText[i] >= 0; ++i)
+		lInLen += SpecUtf8Encode(alText[i], szIn + lInLen);
+
+	lRet = Run(szIn, lInLen, IDX_UTF8, szOut, sizeof(szOut));
+
+	if (lRet != (long)sizeof(szExpected) || memcmp(szOut, szExpected, sizeof(szExpected)) != 0)
+	{
+		TT_Fail("erwartet %ld Bytes: %s", (long)sizeof(szExpected), Hex(szExpected, (long)sizeof(szExpected)));
+		TT_Note("erhalten %ld Bytes: %s", lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+	}
+	TT_EndTest();
+}
+
+static void Test_KaputtesUtf8BleibtStehen(void)
+{
+	// Post, die utf-8 behauptet und in Wahrheit CP1252-Bytes traegt, ist haeufig.
+	// Solche Bytes duerfen NICHT zu Fragezeichen werden - sie werden ja richtig
+	// angezeigt, wenn man sie in Ruhe laesst. Der Wandler laeuft deshalb mit
+	// MB_ERR_INVALID_CHARS und faellt bei ungueltigem UTF-8 auf die Tabelle
+	// zurueck, die alles Unbekannte unveraendert durchreicht.
+	static const unsigned char szIn[] = { 'G','r',0xFC,0xDF,'e',' ','2','0',0x80 };
+	unsigned char szOut[64];
+	long lRet;
+
+	TT_BeginTest("ISOTranslate: ungueltiges UTF-8 wird nicht zu Fragezeichen zerredet");
+
+	lRet = Run(szIn, (long)sizeof(szIn), IDX_UTF8, szOut, sizeof(szOut));
+
+	if (lRet != (long)sizeof(szIn) || memcmp(szOut, szIn, sizeof(szIn)) != 0)
+		TT_Fail("erwartet unveraendert %s, erhalten %s",
+				Hex(szIn, (long)sizeof(szIn)), Hex(szOut, lRet > 0 ? lRet : 0));
+
+	TT_EndTest();
+}
+
+static void Test_AbgeschnittenesZeichenAmZeilenende(void)
+{
+	// TextReader liest zeilenweise in einen Puffer fester Groesse. Ist eine Zeile
+	// laenger als der Puffer, wird mitten in einem Zeichen geschnitten. Der
+	// Rueckfall auf die Tabelle muss dann wenigstens den vollstaendigen Teil
+	// uebersetzen - genau wie vor der Umstellung.
+	static const unsigned char szIn[]       = { 'a', 0xC3, 0xBC, 'b', 0xC3 };
+	static const unsigned char szExpected[] = { 'a', 0xFC, 'b', 0xC3 };
+	unsigned char szOut[64];
+	long lRet;
+
+	TT_BeginTest("ISOTranslate: bei abgeschnittenem Zeichen faellt die Tabelle ein");
+
+	lRet = Run(szIn, (long)sizeof(szIn), IDX_UTF8, szOut, sizeof(szOut));
+
+	if (lRet != (long)sizeof(szExpected) || memcmp(szOut, szExpected, sizeof(szExpected)) != 0)
+		TT_Fail("Eingabe %s -> erwartet %s, erhalten %s",
+				Hex(szIn, (long)sizeof(szIn)), Hex(szExpected, (long)sizeof(szExpected)),
+				Hex(szOut, lRet > 0 ? lRet : 0));
+
+	TT_EndTest();
+}
+
+static void Test_ErgebnisNieLaengerAlsEingabe(void)
+{
+	// ISOTranslate arbeitet an Ort und Stelle im Puffer des Aufrufers. Wuerde es
+	// mehr Bytes schreiben als hereinkamen, waere das ein Speicherueberlauf.
+	// Geprueft ueber die Laengen 1..8 mit einem Zeichen aus jedem Bereich.
+	static const long alCp[] = { 'a', 0x00FC, 0x20AC, 0x0416, 0x4E2D, 0x1F600, -1 };
+	unsigned char szIn[64];
+	unsigned char szOut[128];
+	int i, iWdh;
+
+	TT_BeginTest("ISOTranslate: das Ergebnis ist nie laenger als die Eingabe");
+
+	for (i = 0; alCp[i] >= 0; ++i)
+	{
+		for (iWdh = 1; iWdh <= 8; ++iWdh)
+		{
+			long lInLen = 0;
+			long lRet;
+			int k;
+
+			for (k = 0; k < iWdh; ++k)
+				lInLen += SpecUtf8Encode(alCp[i], szIn + lInLen);
+
+			lRet = Run(szIn, lInLen, IDX_UTF8, szOut, sizeof(szOut));
+
+			if (lRet < 0 || lRet > lInLen)
+				TT_Fail("U+%04lX %d mal: Eingabe %ld Bytes, Ergebnis %ld Bytes",
+						alCp[i], iWdh, lInLen, lRet);
+		}
+	}
+	TT_EndTest();
+}
+
+static void Test_Latin9BehaeltCp1252Bytes(void)
+{
+	// Bewusste Entscheidung: ISO-8859-15 bleibt bei der Tabelle und laeuft NICHT
+	// ueber Codepage 28605. Dort sind 0x80..0x9F C1-Steuerzeichen, in CP1252 sind
+	// es druckbare Zeichen. Post, die iso-8859-15 behauptet und CP1252-Bytes
+	// traegt, wuerde sonst zu Fragezeichen. Diese Bytes muessen stehen bleiben.
+	int b;
+	TT_BeginTest("ISOTranslate: ISO-8859-15 laesst die Bytes 0x80..0x9F unveraendert");
+
+	for (b = 0x80; b <= 0x9F; ++b)
+	{
+		unsigned char szIn[4];
+		unsigned char szOut[16];
+		long lRet;
+
+		szIn[0] = (unsigned char)b;
+		lRet = Run(szIn, 1, IDX_LATIN9, szOut, sizeof(szOut));
+
+		if (lRet != 1 || szOut[0] != (unsigned char)b)
+			TT_Fail("ISO-8859-15 0x%02X -> erwartet unveraendert, erhalten %s",
+					b, Hex(szOut, lRet > 0 ? lRet : 0));
+	}
+	TT_EndTest();
+}
+
 void RunIsoTranslateTests(void)
 {
 	TT_Suite("utils.cpp - Verhalten von ISOTranslate()");
@@ -336,4 +646,18 @@ void RunIsoTranslateTests(void)
 	Test_ZeichenSindVoneinanderUnabhaengig();
 	Test_Latin9Uebersetzung();
 	Test_RueckgabewertIstLaenge();
+
+	// Was das Tabellenverfahren nicht konnte
+	Test_EmojiWirdZuFragezeichen();
+	Test_KyrillischUndHebraeisch();
+	Test_ChinesischUndJapanisch();
+	Test_NahenVerwandtenStattFragezeichen();
+	Test_JedesZeichenWirdZuGenauEinemByte();
+	Test_NewsletterMitEmoji();
+
+	// Dass die Umstellung nichts kaputt macht
+	Test_KaputtesUtf8BleibtStehen();
+	Test_AbgeschnittenesZeichenAmZeilenende();
+	Test_ErgebnisNieLaengerAlsEingabe();
+	Test_Latin9BehaeltCp1252Bytes();
 }

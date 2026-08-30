@@ -1534,11 +1534,11 @@ inline BOOL CImage::TransparentBlt( HDC hDestDC, const RECT& rectDest,
 		crTransparent ) );
 }
 #endif  // WINVER >= 0x0500
-
+// ABWEICHUNG von der mitgelieferten ATL-Kopie (Befund N5): Der Rumpf lautete "return( _AtlBaseModule.m_bNT5orWin98 );". CAtlBaseModule der ATL von v143 kennt dieses Win9x/NT4-Erbstueck nicht mehr - die Zeile uebersetzt nicht. Auf dem Zielsystem Windows 10 ist die Antwort ohnehin immer TRUE. Beim Wechsel auf den SDK-eigenen atlimage.h faellt diese Anpassung weg und wird dann auch nicht mehr gebraucht.
 inline BOOL CImage::IsTransparencySupported() throw()
 {
 #if WINVER >= 0x0500
-	return( TRUE );
+	return( TRUE );		// s. Hinweis oben
 #else  // WINVER < 0x0500
 	return( FALSE );
 #endif  // WINVER >= 0x0500

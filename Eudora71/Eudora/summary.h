@@ -504,9 +504,9 @@ class CSumList
 	const CSummary*		GetHead() const
 								{ return reinterpret_cast<const CSummary *>( m_ObList.GetHead() ); }
 	CSummary*&				GetTail()
-								{ return reinterpret_cast<CSummary *&>( m_ObList.GetHead() ); }
+								{ return reinterpret_cast<CSummary *&>( m_ObList.GetTail() ); }
 	const CSummary*		GetTail() const
-								{ return reinterpret_cast<const CSummary *>( m_ObList.GetHead() ); }
+								{ return reinterpret_cast<const CSummary *>( m_ObList.GetTail() ); }
 
   // === Operations ===
 	// get head or tail (and remove it) - don't call on empty list!
