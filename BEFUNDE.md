@@ -2427,3 +2427,126 @@ die Eudora erst bei Benutzung laedt:
 
 Mailabruf und -versand sind davon **nicht** betroffen. Ohne die beiden Dateien
 faellt vor allem das Adressbuch aus.
+
+## S-4 — Zusicherung im Adressbuch-Wazoo schlaegt zu (behoben 30.08.2026)
+
+**Symptom.** Beim Wegklicken von der Adressbuch-Registerkarte:
+
+    Assertion   : ::IsWindow(m_wndSplitter.GetSafeHwnd())
+    Location    : CNicknamesWazooWnd::OnDeactivateWazoo, Zeile 115
+
+**Ursache.** Eine Registerkarte kann *aktiv* sein, ohne je *angezeigt* worden zu
+sein. `SECTabControlBase::InsertTab` (OTShim_Reiter.cpp:214) macht die erste
+eingefuegte Karte still aktiv - absichtlich, damit beim Aufbau der Leiste noch
+kein Wazoo angestossen wird. `CNicknamesWazooWnd::CreateViews` laeuft aber erst
+in `OnActivateWazoo`. Wer also von dieser Karte wegklickt, ohne sie je geoeffnet
+zu haben, loest `OnDeactivateWazoo` auf einem Fenster ohne Splitter aus.
+
+**Das ist kein Fehler der Ersatzschicht.** QUALCOMM beschreibt genau diesen
+Zustand in WazooBar.cpp:346-355:
+
+    In the SEC stuff, the ActivateTab() call doesn't do anything if the tab is
+    ALREADY active, so make sure the Wazoo gets an initialization notice
+    anyway. This covers cases like ... "active" wazoos which have never been
+    displayed before.
+
+Beim **Aktivieren** faengt Eudora den Fall also ab. An den beiden
+**Deaktivierungs**stellen (QC3DTabWnd.cpp:101 und WazooBar.cpp:1396) fehlt
+dieselbe Absicherung.
+
+**Beweis, dass die Regel nicht gilt:** in der Schwesterklasse
+`CFiltersWazooWnd::OnDeactivateWazoo` hat QUALCOMM dieselbe Zusicherung bereits
+**auskommentiert** (FiltersWazooWnd.cpp:109). In `CNicknamesWazooWnd` blieb sie
+stehen.
+
+**Behebung.** Statt der Zusicherung ein frueher Ausstieg, wenn es keinen
+Splitter gibt. Der Rumpf fasst den Splitter ohnehin nicht an, setzt aber weiter
+unten `g_Nicknames` voraus - aussteigen ist sicherer als weiterlaufen. Ohne
+Ansichten kann nichts geaendert worden sein, es gibt also auch nichts zu sichern.
+
+## S-5 — Menues lassen sich nicht oeffnen (OFFEN, in Arbeit)
+
+Gregor meldet, dass sich in Eudora keine Menues aufklappen lassen.
+
+**Bisher gemessen** (an einem eigenen Lauf, nicht an Gregors Pruefstand):
+
+- Das Hauptfenster hat ein Menue: `GetMenu` liefert ein gueltiges Handle mit
+  **14 Eintraegen**, davon 11 mit gefuellten Untermenues (File 22, Edit 25,
+  Mailbox 1, Message 24, Transfer 1, Special 13, Tools 21, Window 7, Help 12,
+  Debug 16). Eintrag 0 ist das MDI-Systemmenue des maximierten Kindfensters.
+- Drei Eintraege am Ende (11, 12, 13) haben **leere Beschriftung und kein
+  Untermenue**. UNGEPRUEFT, ob das die Ursache ist oder normale MDI-Platzhalter.
+- Das Fenster antwortet auf `WM_NULL` innerhalb von 3 s, haengt also nicht.
+
+**Naechster Schritt:** mit `SC_KEYMENU` ein Menue oeffnen und ueber
+`GetGUIThreadInfo` pruefen, ob `GUI_INMENUMODE` gesetzt wird und ein Popup der
+Klasse `#32768` entsteht. Damit laesst sich unterscheiden, ob das Menue gar
+nicht aufgeht oder sofort wieder zufaellt.
+
+## S-6 — Darstellung nach dem Oeffnen mehrerer Wazoos (OFFEN)
+
+Gregor meldet, die Darstellung sei "vorher besser" gewesen und jetzt defekt. Auf
+dem Bildschirmfoto ueberlagern sich der Adressbuch-Wazoo, die Registerkarten
+"Task Status"/"Task Errors" und die Nachrichtenliste.
+
+**Ausgeschlossen:** dass es am Entfernen der Werbeleiste liegt. `QCDockBar`
+prueft an beiden betroffenen Stellen selbst auf `SWM_MODE_ADWARE`
+(DockBar.cpp:51 und 84) und faellt sonst auf die Basisfassung zurueck - der
+Zustand ohne Werbeleiste ist dort vorgesehen.
+
+**UNGEPRUEFT:** Verdacht auf die Andockrechnung der Ersatzschicht bei mehreren
+Leisten in einer Reihe. Muss reproduziert werden, bevor etwas geaendert wird.
+
+## S-7 — Die Wurzel aller CRLF-Probleme, endlich gefunden (behoben 30.08.2026)
+
+**Gemessen:** 4616 von 5563 verfolgten Quell- und Textdateien unterschieden sich
+von HEAD **ausschliesslich in den Zeilenenden**. Im Arbeitsverzeichnis standen
+sie als CRLF, im Commit als LF.
+
+**Ursache.** Das Repo wurde seinerzeit mit `core.autocrlf=true` ausgecheckt. Git
+wandelte beim Auschecken LF nach CRLF und vermerkte die Datei trotzdem als
+sauber - im Index steht der LF-Blob-Hash, aber die **Groesse der CRLF-Fassung**.
+Spaeter wurde `autocrlf` auf `false` gesetzt und `.gitattributes` mit `* -text`
+angelegt; seitdem vergleicht git woertlich.
+
+**Warum es so lange unsichtbar blieb.** Git sieht in eine Datei gar nicht erst
+hinein, solange Zeitstempel und Groesse zum Index passen. Die Dateien galten
+also weiter als unveraendert - bis irgendein Werkzeug eine anfasste. Dann
+aenderte sich der Zeitstempel, git las neu ein und meldete die **ganze Datei**
+als geaendert.
+
+**Das erklaert die Vorgeschichte.** Genau dieses Muster hat in diesem Projekt
+wiederholt zugeschlagen und wurde jedes Mal einzeln von Hand nachgebessert. Die
+fruehere Vermutung, das Repo sei mit `autocrlf=true` geklont worden, war
+**richtig** - sie wurde damals als widerlegt abgehakt, weil `git config` zum
+Zeitpunkt der Pruefung schon `false` sagte. Die Einstellung war inzwischen
+geaendert worden; die Folgen des Auscheckens blieben.
+
+Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`:
+
+    Index-Eintrag:  Blob 8c4fb68a...   size: 5781      (Groesse der CRLF-Fassung)
+    Arbeitskopie:   Blob 8c4fb68a...   5716 Bytes      (LF, inhaltlich gleich)
+
+Gleicher Blob-Hash, verschiedene Groesse. `git diff` meldete nichts,
+`git status` meldete "geaendert".
+
+**Behebung.** `tools/zeilenenden-angleichen.pl` schreibt jede betroffene Datei
+mit dem HEAD-Stand woertlich neu - aber nur, wenn sie sich danach nachweislich
+byteidentisch dazu verhaelt. Dateien mit echten inhaltlichen Aenderungen bleiben
+unangetastet und werden aufgezaehlt. Anschliessend muss der Index einmal
+aufgefrischt werden, weil `git update-index --really-refresh` die veralteten
+Groessenangaben nicht korrigiert:
+
+    perl tools/zeilenenden-angleichen.pl --aendern
+    git ls-files -z | xargs -0 -n 400 git add --
+
+Danach meldete `git status` genau die zwei Dateien mit echten Aenderungen.
+
+**Was sich dadurch aendert.** Jede kuenftige Aenderung erzeugt einen Unterschied,
+der nur die tatsaechlich geaenderten Zeilen zeigt. Die pre-commit-Schranke
+`tools/pruefe-bytes.pl` bleibt sinnvoll - sie faengt jetzt echte Schaeden statt
+Nachwirkungen des Auscheckens. Ein Werkzeug, das die Datei komplett neu
+schreibt, faellt weiterhin auf.
+
+**Das Werkzeug gehoert nach jedem frischen Klon einmal ausgefuehrt.** Steht so
+in README.md.
