@@ -2033,3 +2033,131 @@ abgesichert.
 ausserhalb von `SECDateTimeCtrl`, die Anordnungsrechnung von
 `OTShim_Werkzeugleiste`, `tools/pruefe-bytes.pl` und `tools/aendere-zeile.pl`
 (nicht beauftragt), `Eudora.vcxproj`.
+
+---
+
+# Nachpruefung 3, dritter Teil (PRUEFER) - Bildschicht und Datumsfeld vollstaendig
+
+Fortsetzung. Damit sind `OTShim_Bild.{h,cpp}` und `OTShim_Palette.{h,cpp}` nicht
+mehr nur an den beiden beauftragten Stellen, sondern **ganz** durchgesehen.
+**Kein neuer Befund.** Was folgt, ist die Fundliste des Gegenteils - damit eine
+spaetere Pruefung hier nicht noch einmal anfangen muss.
+
+## Geprueft und in Ordnung - Stufe 4, Bildschicht
+
+- **GDI+ starten und beenden.** `OTShimGdiPlusBereit()`
+  (`OTShim_Bild.cpp:96-100`) benutzt ein funktionslokales `static`. Seit C++11
+  ist dessen Anlage vom Uebersetzer gegen gleichzeitige Zugriffe abgesichert
+  ("magic statics"), MSVC hat das seit 2015 - die Begruendung im Kommentar
+  stimmt. `GdiplusShutdown` laeuft im Aufraeumteil von `Eudora.exe`, nicht aus
+  einer DLL-Entladung; die Einschraenkung der Schnittstellenbeschreibung ist
+  eingehalten. Scheitert `GdiplusStartup`, liefert jede Lade- und Speichermethode
+  `FALSE` mit `ERROR_NOT_READY` statt in GDI+ hineinzulaufen.
+- **Der Umweg ueber `IStream`.** `OTShimStromAusDatei` gibt den `HGLOBAL` auf
+  **jedem** Fehlerweg wieder frei (kein `GlobalLock`, kurzer Lesevorgang,
+  `CreateStreamOnHGlobal` gescheitert) und uebergibt den Besitz erst mit
+  `fDeleteOnRelease == TRUE` an den Strom. Jedes `GlobalLock` hat sein
+  `GlobalUnlock`, auch im Ausnahmefall. Die 2-GB-Schranke verhindert, dass die
+  Umrechnung `ULONGLONG` nach `UINT` still abschneidet. In
+  `OTShimLadenUeberGdiPlus` steht das `Gdiplus::Bitmap` in einem eigenen Block,
+  wird also **vor** `pStrom->Release()` zerstoert - noetig, weil GDI+ bei
+  manchen Formaten erst beim Zugriff nachliest.
+- **Die Zeilenrechnung.** `CalcBytesPerLine(24, w) = ((w*24+31) & ~31)/8`
+  nachgerechnet: fuer w = 1,2,3,4 ergibt sich 4,8,12,12 - genau die
+  4-Byte-Ausrichtung, die ein DIB verlangt. `OTShimDibAnlegen` legt `m_lpBMI`
+  mit `sizeof(BITMAPINFO)` an (also mit dem einen `RGBQUAD`, in den
+  `::GetDIBits` auch ohne Farbtabelle schreibt) und gibt bei einer
+  fehlgeschlagenen zweiten Belegung beides wieder frei - `m_lpBMI` und
+  `m_lpSrcBits` sind danach beide NULL, wie `AssertValid` es verlangt.
+- **Die Zeilenumkehr beim Laden.** GDI+ liefert von oben nach unten, der DIB
+  hat positives `biHeight` und will von unten nach oben - die Rechnung
+  `m_lpSrcBits + (nHoehe - 1 - y) * m_dwPadWidth` ist richtig. Im Fall ohne
+  Alphakanal werden `nBreite * 3` Byte kopiert, nicht `daten.Stride`; damit kann
+  die Auffuellung der Quelle nicht ueber das Zeilenende des Ziels
+  hinausschreiben, auch wenn beide unterschiedlich aufgefuellt waeren. Im Fall
+  mit Alphakanal werden je Bildpunkt vier Byte gelesen und drei geschrieben,
+  ebenfalls innerhalb beider Zeilen.
+- **`OTShimUeberlagern`** ist Byte fuer Byte `alpha_composite` aus
+  `QCGraphics.cpp:293-300`. Die dort dokumentierte Abweichung (durchgaengig
+  gegen `m_crTransparent` statt teils gegen Schwarz) ist im Kommentar begruendet
+  und macht das Bild besser, nicht anders falsch.
+- **`OTShimSpeichernUeberGdiPlus`.** `EncoderParameters` traegt genau ein
+  `Parameter[1]`, `Count = 1` passt also zur Struktur; der Wert `ulQualitaet`
+  lebt bis nach dem `Save`. `pBild` wird auf jedem Weg geloescht, `pStrom` auf
+  jedem Weg freigegeben. `Bitmap::FromBITMAPINFO` legt keine Kopie an - der
+  Kommentar sagt es, und der Puffer steht bis zum Ende des Blocks.
+- **`SECDib::DoSaveImage`** schreibt den Dateikopf von Hand. Nachgerechnet:
+  `bfOffBits = 14 + 40 + Farbtabelle`, `bfSize = bfOffBits + m_dwPadWidth *
+  m_dwHeight`, und `biSizeImage` wird unmittelbar davor auf denselben Wert
+  gezogen. `DIB_HEADER_MARKER` ist in `OTShim_Bild.h:432` als
+  `((WORD)('M' << 8) | 'B')` definiert, also 0x4D42 - die Bytefolge "BM".
+  `BITMAPFILEHEADER` ist in `wingdi.h` auf 2 Byte gepackt, `sizeof` ist 14; der
+  Kopf wird also nicht mit Fuellbytes geschrieben.
+- **`SECDib::DoLoadImage`** liest den Dateikopf nur, um `m_lpbmfHdr` zu fuellen,
+  und spult in **jedem** Fall auf die Ausgangsstelle zurueck, bevor GDI+ die
+  Datei bekommt. Eine zu kurze Datei und ein fremdes Magiewort fuehren beide
+  dazu, dass `m_lpbmfHdr` NULL bleibt - nicht dazu, dass falsch gelesen wird.
+- **`CreatePalette`, `MakeBitmap`, `CopyImage`.** `CreatePalette` gibt den
+  `LOGPALETTE`-Puffer auf beiden Wegen frei und raeumt `m_pPalette` wieder ab,
+  wenn `CPalette::CreatePalette` scheitert. `MakeBitmap` gibt einen selbst
+  angelegten DC wieder frei, bevor es zurueckkehrt, und uebergibt das
+  `CBitmap` an den Aufrufer (`EmoticonMenu.cpp:113` und
+  `LinkHistoryManager.cpp:608` loeschen es - nachgesehen). `CopyImage` kopiert
+  zeilenweise mit der kleineren der beiden Zeilenlaengen und kann deshalb auch
+  dann nicht ueber den Puffer hinausschreiben, wenn eine Quelle mit anderer
+  Farbtiefe auftaucht.
+- **Die Dummys sind wirklich Dummys.** `FlipHorz`, `FlipVert`, `Rotate90`,
+  `ContrastImage`, `Crop`, `UnPadBits`, `InitCache` und `SECLoadDib` melden sich
+  ueber `OTShimNichtUmgesetzt` je einmal pro Sitzung und liefern `FALSE`; keiner
+  taeuscht Erfolg vor. `LoadCache`, `GetCache` und `PutCache` liefern 0 - fuer
+  einen nie angelegten Puffer die richtige Antwort.
+
+## Geprueft und in Ordnung - `SECDateTimeCtrl`, uebriger Teil
+
+- `SetMinMax` weist die Werte nur zu, wenn `min <= max`, und reicht sie an
+  `CDateTimeCtrl::SetRange` nur weiter, wenn es ein Fenster gibt; ohne Fenster
+  bleibt der Bereich gemerkt. `Validate` prueft beide Grenzen einzeln auf
+  Gueltigkeit, bevor es vergleicht.
+- Die Merker (`SetModified`, `IsModified`, `EnableFastEntry`, `SetNoEdit`,
+  `SetNull`) sind reine Ablage, wie im Kommentar behauptet; keiner davon hat
+  einen Aufrufer in Eudora.
+- `SizeToContent` ist ueber `#ifdef DTM_GETIDEALSIZE` abgesichert und prueft das
+  Ergebnis auf beide Ausdehnungen, bevor es die Fenstergroesse aendert.
+- `SECSetOleDateTime` gibt `dt.SetDateTime(...) == 0` zurueck. Das ist richtig:
+  `COleDateTime::SetDateTime` liefert den `DateTimeStatus`, und
+  `COleDateTime::valid` ist 0.
+- `SECTmFromOleDate` rechnet `tm_mon` ab 0 und `tm_year` ab 1900 - beides
+  richtig herum.
+- `OnDateTimeChange` haengt ueber `ON_NOTIFY_REFLECT(DTN_DATETIMECHANGE)` an der
+  zurueckgespiegelten Meldung des gemeinen Steuerelements und setzt `*pResult`,
+  bevor es zurueckkehrt.
+
+## Zwei Kleinigkeiten ohne Befundwert
+
+Beide sind originalgetreu bzw. unerreichbar; sie stehen hier nur, damit ein
+spaeterer Leser nicht denselben Weg noch einmal geht.
+
+- `SECImage::LoadImage(LPCTSTR)` merkt sich den uebergebenen Zeiger in
+  `m_lpszFileName` (Zeile 923). Der zeigt nach der Rueckkehr moeglicherweise ins
+  Leere. Das ist die Oberflaeche des Originals (`secimage.h:74` fuehrt `LPCTSTR`,
+  keinen `CString`), und Eudora liest das Feld nirgends.
+- `SECDateTimeCtrl::SetDateTime` weist `m_datetime` zu, bevor
+  `CDateTimeCtrl::SetTime` scheitern kann (Zeile 267-273). Nach einem
+  Fehlschlag stehen Feld und Fenster damit auseinander. Eudora ruft die Methode
+  nur mit gueltigen Werten (`SearchView.cpp:5261`).
+
+## Stand nach dem dritten Teil
+
+**Jetzt vollstaendig durch:** `OTShim.{h,cpp}` (Stufe 2 und 2b),
+`OTShim_Reiter.{h,cpp}`, `OTShim_Bild.{h,cpp}`, `OTShim_Palette.{h,cpp}`,
+`tools/lehren-spiegeln.pl`, `tools/pruefstand-melden.pl`.
+
+**Weiterhin offen:**
+
+| Gegenstand | Grund |
+|---|---|
+| `OTShim_Werkzeugleiste`: Anordnungsrechnung (`CalcDynamicLayout`, `CalcFixedLayout`, `Layout`, Zeilenumbruch), `SECTwoPartBtn::DrawButton`, `SECWndBtn`/`SECComboBtn`, `SECCustomizeToolBar` und die Anpassen-Dialogseiten | unveraendert offen seit Nachpruefung 2 |
+| `OTShim.cpp` Stufe 0 und Stufe 1 (Z. 1-175, 540-1229) | in Runde 1 unter "OTShim, uebriger Teil" geprueft; hier nur ueberflogen |
+| `tools/pruefe-bytes.pl`, `tools/aendere-zeile.pl` | nicht beauftragt |
+| `Eudora.vcxproj` und die offenen Bindefehler | waehrend der ganzen Pruefung im Fluss |
+| Hostnamenpruefung, `X509_V_ERR_CERT_UNTRUSTED` | bewusst zurueckgestellt |
