@@ -223,6 +223,26 @@ Zwei Einschränkungen dazu:
   ergab "SSL Connection Information Manager" `TLSv1.3`,
   `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`.
 
+### Neubau vom 30.08.2026
+
+Die beiliegende `QCSSL.dll` wurde am 30.08.2026 neu gebaut und enthält vier
+Korrekturen an der TLS-Schicht (Befunde M1, M2, N1 und N3 in `BEFUNDE.md`):
+TLS 1.2 als Untergrenze für **alle** Protokolleinstellungen statt nur für die
+meisten, eine für sich genommen threadsichere `BIO_s_workersocket()`, den Wegfall
+des Zeigerschmuggels durch `BIO_set_fd()` und die Auswertung zweier bisher
+verworfener Rückgabewerte. Die Prüfsumme in `QCSSL.dll.sha256` ist mitgezogen.
+
+Dazu zwei Einordnungen, damit nichts überschätzt wird:
+
+- Der Lauf gegen `pop.gmx.net:995` vom 29.08.2026 gilt dem **vorherigen** Build.
+  Mit dieser DLL ist er nicht wiederholt worden.
+- Wiederholt wurde dagegen der Komponententest `Eudora71/Tests/QCSSL/messen.ps1`
+  gegen genau diese DLL. Alle neun Fälle verhalten sich wie vor den Änderungen:
+  1a Erfolg mit TLSv1.3, 1b und 1d Fehlschlag, 1c unverändert (das ist der
+  zurückgestellte Befund zur Hostnamenprüfung), 2a und 2b Fehlschlag, 2c TLSv1.2,
+  2d TLSv1.3, 2e Fehlschlag. Die Korrekturen ändern das Verhalten also nicht - sie
+  nehmen Annahmen weg, auf die man sich bisher verlassen musste.
+
 Im Betrieb ist kein Unterschied zu sehen — das ist beabsichtigt. Ausgetauscht wird nur
 die Kryptoschicht; Oberfläche und Verhalten von Eudora bleiben unverändert. Der Gewinn
 liegt in Protokoll und Wartbarkeit, nicht in sichtbaren Funktionen.
