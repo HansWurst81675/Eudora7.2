@@ -13,3 +13,4 @@
 - [Anweisungen abarbeiten](anweisungen-abarbeiten.md) — geliefertes Material sofort auswerten, Wiederholung ist ein Alarmzeichen, Absprachen in eine Datei
 - [Lauffähiges Ergebnis liefern](lauffaehiges-ergebnis-liefern.md) — Ziel ist eine einsetzbare Version; Übergabe mit Prüfanleitung und ehrlichem Vergleich
 - [Fehlerklassen abstellen](fehlerklassen-abstellen.md) — beim zweiten Auftreten Werkzeug und Schranke bauen, statt einzeln nachzubessern
+- [Gemeinsame Dateien gegen alles messen](gemeinsame-dateien-gegen-alles-messen.md) — nach Änderung an stdafx.h oder Projektdateien die ganze Solution bauen
