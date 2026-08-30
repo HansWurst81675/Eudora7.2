@@ -14,6 +14,7 @@
 void RunXlateTableTests(const char* szEudoraDir);
 void RunIsoTranslateTests(void);
 void RunHexBinTableTests(void);
+void RunPopEmpfangTests(const char* szEudoraDir);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -73,6 +74,7 @@ int main(int argc, char* argv[])
 	RunXlateTableTests(szEudoraDir);
 	RunIsoTranslateTests();
 	RunHexBinTableTests();
+	RunPopEmpfangTests(szEudoraDir);
 
 	iFailed = TT_Summary();
 	return iFailed;

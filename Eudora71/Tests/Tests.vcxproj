@@ -64,15 +64,18 @@
     <ClCompile Include="TinyTest.cpp" />
     <ClCompile Include="Spec.cpp" />
     <ClCompile Include="UnderTest.cpp" />
+    <ClCompile Include="UnderTest2047.cpp" />
     <ClCompile Include="TestXlateTable.cpp" />
     <ClCompile Include="TestIsoTranslate.cpp" />
     <ClCompile Include="TestHexBinTable.cpp" />
+    <ClCompile Include="TestPopEmpfang.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TinyTest.h" />
     <ClInclude Include="Spec.h" />
     <ClInclude Include="UnderTest.h" />
+    <ClInclude Include="UnderTest2047.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Extract.ps1" />
