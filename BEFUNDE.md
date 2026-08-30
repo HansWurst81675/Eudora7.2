@@ -3118,3 +3118,86 @@ es haengt nicht an OTShim.
 
 **Nicht angefasst, wie verabredet:**
 `tools/patches/zertifikatspruefung-verschaerfen.patch` bleibt liegen (P-1.6).
+
+## PR-1 — Die Schranke `pruefe-bytes.pl` erkennt den halben Schaden nicht (geprueft 30.08.2026)
+
+Nachgepruefter Stand: 371c1e3. Vollstaendiger Bericht: `PRUEFBERICHT.md`.
+Drei Befunde an der Schranke, alle mit Gegenprobe in einem Wegwerf-Repo belegt.
+
+**1. Die Umwandlung LF → CRLF laeuft lautlos durch.** `tools/pruefe-bytes.pl:105-125`
+sucht nur die Richtung CRLF → LF (`$a->{$inhalt}[0] > 0` und `$b->{$inhalt}[0] == 0`).
+Schreibt ein Werkzeug eine gemischte Datei komplett mit CRLF neu und aendert
+dabei auch Inhalt, greift Regel 1 nicht mehr und Regel 2 sieht nichts:
+
+    Datei a.cpp in HEAD: zeile1 LF, zeile2 CRLF, zeile3 LF, zeile4 CRLF
+    Im Index: alles CRLF, zeile4 durch NEU ersetzt
+    -> perl tools/pruefe-bytes.pl  ==>  Rueckgabe 0, keine Meldung
+
+Dieselbe Aenderung in der Gegenrichtung wird korrekt gemeldet. Die Schranke ist
+also einseitig — und CRLF ist unter Windows die wahrscheinlichere Richtung.
+
+**2. Sie schlaegt bei Leerzeilen grundlos an.** Regel 2 vergleicht Zeilen ueber
+ihren Inhalt. Der haeufigste Inhalt in einer gemischten Datei ist die leere
+Zeile, und die kommt mit beiden Enden vor. Ein voellig normaler Commit:
+
+    c.cpp in HEAD: void f() LF, { LF, Leerzeile CRLF, \tint a; LF, } LF
+    Im Index: die CRLF-Leerzeile geloescht, \tint b; und eine LF-Leerzeile ergaenzt
+    -> COMMIT ABGEBROCHEN ... z. B. ""
+
+Kein einziges Byte wurde umgewandelt. Die Meldung nennt als Beispiel die leere
+Zeichenkette und sagt damit nicht, wo man nachsehen soll. Das ist derselbe
+Fehlalarm-Fehler, den 371c1e3 abstellen wollte — er ist nur von der CR-Anzahl
+auf den Zeileninhalt umgezogen.
+
+**3. Ganze Dateiarten werden gar nicht geprueft.** Die Endungslisten in
+`tools/pruefe-bytes.pl:52` und `tools/zeilenenden-angleichen.pl:90` sind
+verschieden: `.def` steht nur in einem, `.vcxproj`/`.filters` nur im anderen.
+`.sln`, `.rc2`, `.bat`, `.cmd`, `.ps1`, `.pl`, `.props` stehen in keinem —
+darunter die Bauwerkzeuge dieses Projekts. Eine `.def`-Datei komplett von CRLF
+auf LF umgeschrieben: Rueckgabe 0.
+
+**Behebung**, alle drei klein, aber bewusst NICHT ausgefuehrt: die Schranke
+laeuft vor jedem Commit, an ihr ohne Zeit fuer eine saubere Gegenprobe zu
+drehen ist schlechter, als sie so zu lassen.
+
+  1. Regel 2 symmetrisch: dieselbe Pruefung mit vertauschten Feldern 0 und 1.
+  2. Zeilen, deren Inhalt nach `s/\s+//g` leer ist, in Regel 2 uebergehen;
+     ebenso Zeilen, die in HEAD schon mit beiden Enden vorkommen.
+  3. Eine gemeinsame Endungsliste fuer beide Werkzeuge, ergaenzt um
+     `def sln rc2 bat cmd ps1 pl props`.
+
+**Weitere Befunde derselben Pruefung** (Einzelheiten in `PRUEFBERICHT.md`):
+
+  * PR-4: `BuildKennung.h` ist in git verfolgt. Faellt perl beim Bau aus,
+    bricht der Bau richtigerweise nicht ab — das Fenster zeigt dann aber die
+    Kennung eines FREMDEN Baus statt gar keiner. `Eudora.vcxproj:63-72`.
+  * PR-5: Der Zeitstempel in der Kennung ist nicht der Bauzeitpunkt, sondern
+    der Zeitpunkt der letzten Aenderung an Commit oder Sauberkeit
+    (`tools/kennung-erzeugen.pl:118-130`). Als Verhalten richtig, als
+    Beschreibung falsch.
+  * PR-6: `_T(EUDORA_BAU_KENNUNG)` in `mainfrm.cpp:9715` uebersetzt in einem
+    Unicode-Bau nicht — `__T(x)` ist `L##x`, und `##` unterbindet die
+    Makroerweiterung. Im MBCS-Bau, den dieses Projekt baut, faellt es nicht auf.
+  * PR-7: In S-7 widersprechen sich die Zahlen (4616/5563 hier gegen 4426/5336
+    im Kopf von `tools/zeilenenden-angleichen.pl`; nachgemessen sind es 5568
+    verfolgte Dateien), und das Beispiel ist falsch beschriftet: 5716 Bytes ist
+    die Groesse des LF-BLOBS, nicht die der Arbeitskopie. Der Kern der
+    Erklaerung — git sieht nicht in die Datei, solange Zeitstempel und Groesse
+    zum Index passen — stimmt.
+  * PR-8: `tools/rekursion-suchen.pl` bildet jede Kante mit dem Klassennamen
+    der umgebenden Methode (`:74`). Klassenuebergreifende Zyklen sind damit
+    strukturell unsichtbar — auch der aus S-2, fuer den es gebaut wurde.
+    Empfehlung: loeschen.
+
+**Ausdruecklich nachgemessen und in Ordnung:** die CONTEXT-Versaetze in
+`tools/stapel-untersuchen.ps1:141-143` (Ebp 180, Eip 184, Esp 196 sind fuer
+x86 richtig) und die EBP-Kette, die wegen `if ($neuEbp -le $ebp) { break }`
+streng steigen muss und deshalb nicht haengen kann; der PreBuildEvent, der den
+Bau in keinem Zweig abbricht; `OnUpdateFrameTitle`, das in keine Rekursion
+laeuft; und die Werbeleiste an `IsBoxBuild()` — der ganze Baum `Eudora71/`
+wurde nach Nutzern durchsucht, keiner greift ins Leere. `IsBoxBuild()` ist eine
+Uebersetzungszeit-Weiche ueber `BUILD_BOX_OR_SITE_R_VERSION`, und das Makro
+steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) — wer es
+entfernt, holt sich den Stapelueberlauf aus S-2 zurueck.
+
+**Nichts davon haelt Paket 1.0.3 auf.**
