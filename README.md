@@ -8,40 +8,30 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-> **Achtung — der Bau ist zurzeit an zwei Stellen gebrochen.** Gemessen an
-> Commit `e7e6f3c` am 29.08.2026, `Debug|x86`, Toolset v143 (MSVC 14.38.33130).
-> Beides sind Folgen davon, dass die OT501-Ersatzschicht halb eingehaengt ist.
+> **Gemessen an Commit `2d68555` am 30.08.2026**, `Debug|x86`, Toolset v143
+> (MSVC 14.38.33130). An diesem Baum arbeiten mehrere Agenten gleichzeitig; wer
+> den Stand pruefen will, misst neu und nennt seinen eigenen Bezugscommit.
 >
-> **1. Vier Projekte finden `OTShimAll.h` nicht.** `7dcac81` hat in
-> `Eudora71/Eudora/stdafx.h:52` `secall.h` durch `OTShimAll.h` ersetzt. Auf dem
-> Include-Pfad steht `Eudora71/OTShim` aber **nur in `Eudora.vcxproj`**
-> (Zeile 66). Die vier anderen Projekte, die `Eudora/stdafx.h` mitbenutzen,
-> brechen deshalb mit `C1083: OTShimAll.h` ab: `AccountWizard`,
-> `DirectoryServicesUI`, `EuImap`, `SearchEngine`. Ein voller Solution-Bau
-> meldet damit **7 Fehler**: 3 aus `OT501` (zweimal `NMAKE U1073`, einmal
-> `MSB3073`) und viermal `C1083`. Es werden derzeit **11 der 18** Projekte
-> fertig. Behebbar vermutlich durch Aufnahme von `..\OTShim` in die
-> `AdditionalIncludeDirectories` der vier Projekte — **nicht nachgeprueft**,
-> weil an `OTShim/` parallel gearbeitet wird.
+> | Messung | Ergebnis |
+> |---|---|
+> | Solution-Bau | **3 Fehler**, alle aus `OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`) |
+> | fertige Projekte | **15 von 18** |
+> | `Eudora.vcxproj` einzeln | uebersetzt **vollstaendig**; `LNK1120: 1 nicht aufgeloestes Externes` |
 >
-> **2. `Eudora` selbst uebersetzt nicht mehr.** Einzeln gebaut
-> (`-p:BuildProjectReferences=false`) endet es mit **1 Fehler**:
-> `secbtns.h(340,83): error C2572: "SECLoadSysColorBitmap": Neudefinition des
-> Standardarguments`. Ursache ist der auskommentierte Waechter `__SECBTNS_H__`
-> in `OTShimAll.h`: die Ersatzschicht deklariert die Funktion, und `secall.h`
-> zieht das Stingray-Original daneben. Der Waechter wartet dort ausdruecklich
-> darauf, dass Stufe 3 eingehaengt wird.
+> **Die OT501-Ersatzschicht ist vollstaendig eingehaengt** (`e50a89c`), und seit
+> `78a9c10` uebersetzt `Eudora` fehlerfrei. Von den Stingray-Symbolen ist keines
+> mehr offen. Das eine verbliebene Symbol ist `__imp___iob`, angefordert von der
+> **vorgefertigten `libpng.lib`** (`pngerror.obj`, `pngrutil.obj`) — eine
+> VC6-Binaerdatei aus dem Altbestand, die gegen eine CRT von damals gebaut wurde.
 >
-> **Der Linker wird derzeit also gar nicht erreicht.** Die Symbolzahlen in
-> `WEITERMACHEN.md` (1088 / 651 / rund 299) stammen aus einem frueheren Zustand
-> und sind an `e7e6f3c` **nicht reproduzierbar**.
+> Gemessen wurde gegen die leere Attrappe `Eudora71/Lib/Debug/OTA50D.LIB`; sie
+> muss weg, bevor daraus ein echtes Ergebnis wird.
+>
+> Die frueher genannten Symbolzahlen (1088 / 651 / rund 299) stammen aus einem
+> Zustand vor dem vollstaendigen Einhaengen und sind heute **nicht
+> reproduzierbar**.
 
-Die Zahlen im Rest dieses Abschnitts sind an Commit `fd9a235` gemessen — also an
-dem Zustand, bevor die Ersatzschicht eingehaengt wurde. Am Baum wird gerade
-weitergearbeitet; wer den Stand pruefen will, misst neu.
-
-**Ohne die beiden oben genannten Fehler werden 15 der 18 Projekte fertig.** Drei
-nicht:
+Nicht fertig werden drei Projekte:
 
 - `OT501` — die Stingray-Quellen sind nicht freigegeben, das Projekt bricht mit
   `NMAKE U1073` ab.
@@ -54,11 +44,14 @@ Ein voller Solution-Bau meldet daher nur **3 Fehler, alle aus `OT501`**
 (zweimal `NMAKE U1073`, einmal `MSB3073`). Das ist keine Auskunft ueber `Eudora`.
 
 Einzeln gemessen mit `-p:BuildProjectReferences=false` uebersetzen `Eudora` und
-`EudoraRes` **vollstaendig** und scheitern beide an genau einer Stelle:
-`LNK1104: OTA50D.LIB kann nicht geoeffnet werden` — je 1 Fehler. Fuer `Eudora` sind
-damit alle 269 urspruenglichen Compilerfehler behoben (Verlauf 269 — 74 — 25 — 16 —
-4 — 0, null seit `3f6877a`). Uebrig bleibt allein die fehlende Fremdbibliothek —
-siehe [Blocker](#blocker-ot501).
+`EudoraRes` **vollstaendig**. Fuer `Eudora` sind damit alle 269 urspruenglichen
+Compilerfehler behoben (Verlauf 269 — 74 — 25 — 16 — 4 — 0, null seit `3f6877a`),
+und seit `78a9c10` uebersetzt die Ersatzschicht fehlerfrei mit.
+
+Ohne die Attrappe endet der Link mit `LNK1104: OTA50D.LIB kann nicht geoeffnet
+werden`; mit ihr laeuft er durch bis zu den ungeloesten Symbolen — an `2d68555`
+noch genau eines, siehe oben. Der Verlauf mit Bezugscommits steht in
+[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md), Abschnitt "Der Weg zum Linken".
 
 Fertig gebaut werden von den 15:
 
@@ -116,11 +109,12 @@ Ausführlich mit Begründungen: **[PORTIERUNG.md](PORTIERUNG.md)**
 Getrennt davon steht die Portierung von QCSSL auf die **OpenSSL-3.x-API**: 0.9.7l von
 2006 kannte noch offene Strukturen, 3.x kapselt sie hinter Zugriffsfunktionen. Betroffen
 waren vor allem die BIO-Schicht und `QCSSLContext.cpp`. SSLv2 und SSLv3 sind dabei
-abgeschaltet. Als Mindestprotokoll setzt `QCSSLContext.cpp:561-583` bei sieben der acht
-Einstellungen von `m_ProtocolVersion` (0, 1, 2, 4, 5, 6, 7) `TLS1_2_VERSION`; bei
-`m_ProtocolVersion == 3` (früher "TLSv1") dagegen `TLS1_VERSION`, also TLS 1.0.
-Eine Obergrenze wird an keiner Stelle gesetzt — `SSL_CTX_set_max_proto_version()`
-kommt in QCSSL nicht vor.
+abgeschaltet. Als Mindestprotokoll setzen inzwischen **alle acht** Einstellungen von
+`m_ProtocolVersion` `TLS1_2_VERSION`. Bis Befund M1 setzte `m_ProtocolVersion == 3`
+(früher "TLSv1") noch `TLS1_VERSION`, also TLS 1.0 — und das war ausgerechnet die
+Voreinstellung (`EudoraRes.rc:8143`, `:8147`). Eine Obergrenze wird bewusst an keiner
+Stelle gesetzt — `SSL_CTX_set_max_proto_version()` kommt in QCSSL nicht vor, damit
+stets das höchste beiderseits unterstützte Protokoll ausgehandelt wird.
 
 ## Blocker: OT501
 
@@ -152,14 +146,25 @@ Stingray-Methoden, sondern geerbte MFC-Methoden, die Eudora nur qualifiziert auf
 deklariert); andere werden nie aufgerufen, weil Qualcomm sie durch eigene Varianten
 ersetzt hat.
 
-Zwei Funde verkürzen den Weg besonders:
+Zwei Funde haben den Weg besonders verkürzt:
 
-- **Die Registerkartenleiste ist verzichtbar.** Sie ist eine zur Laufzeit umschaltbare
-  Anwendereinstellung (`mainfrm.cpp:1025`), jede Auswertung steht hinter
-  `m_bWorkbookMode`. Ein schlichter `CMDIFrameWnd` reicht für ein startendes
-  `Eudora.exe` — damit entfällt der komplette GDI-Zeichencode, der teuerste Posten.
 - **`SECStatusBar` ist eine 1:1-Kopie von MFCs `CStatusBar`** mit anderer Basisklasse.
   Ein `typedef` erledigt alle 11 Methoden.
+- **`secData` lag bereits im Repo.** `OT501/Src/secaux.cpp` ist Teil der Freigabe und
+  musste nur in die Projektdatei aufgenommen werden.
+
+Ein dritter Fund hat sich dagegen **als falsch erwiesen** und ist hier festgehalten,
+damit ihn niemand aus einer älteren Fassung dieser Datei übernimmt:
+
+- ~~Die Registerkartenleiste ist verzichtbar.~~ Das gilt **nur** für den
+  MDI-Streifen hinter `m_bWorkbookMode` (`mainfrm.cpp:1025`). Das
+  Registerkarten-*Steuerelement* `SEC3DTabWnd`/`SEC3DTabControl` sitzt in **jeder
+  Wazoo-Leiste** (`WazooBar.h:137`, `QC3DTabWnd.h:14`, `:74`) und wird davon nicht
+  abgeschaltet. Mit leeren Rümpfen startet Eudora zwar, aber Mailboxes, Nicknames,
+  Filters, Directory Services, Link History und Task Status blieben leer — das
+  Programm wäre unbenutzbar. Die Registerkarten sind deshalb als eigener Teil
+  ausgeführt (`OTShim_Reiter.*`, 2925 Zeilen). Beleg: `PLAN.md`, Abschnitt
+  „Berichtigungen", Punkt 1.
 
 Bestandsaufnahme: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md) —
 Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
@@ -167,20 +172,24 @@ Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
 
 ## Offene Themen
 
-Stand der Tabelle: Commit `fd9a235`. An mehreren Zeilen wird gerade parallel
+Stand der Tabelle: Commit `2d68555`. An mehreren Zeilen wird gerade parallel
 gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 
 | Thema | Stand |
 |---|---|
-| OT501-Ersatzschicht | **Stufe 0-4 geschrieben, halb eingehaengt.** `Eudora71/OTShim/` umfasst an `e7e6f3c` **17795 Zeilen** in 11 Dateien (gezaehlt mit `wc -l`). Eingehaengt sind ueber `OTShimAll.h` nur Stufe 0-2 (`OTShim.h/.cpp`) und Stufe 4 (`OTShim_Bild.h/.cpp`). **Nicht** eingehaengt: Stufe 3 (`OTShim_Werkzeugleiste.*`, 6083 Zeilen), Registerkarten (`OTShim_Reiter.*`, 2925) und `SECDateTimeCtrl` (`OTShim_Palette.*`, 890) — sie stehen weder in `OTShimAll.h` noch in `Eudora.vcxproj`. Genau daher kommt der `C2572`-Fehler oben |
-| OTShim einhaengen | offen — `OTShim.h` in `stdafx.h` (dort kommt bisher `secall.h` herein), `OTShim.cpp` ins Projekt mit `/Y-` (kein vorkompilierter Header) |
-| Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen |
-| `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig; es scheitert jetzt allein am Linker, dem `OTA50D.LIB` fehlt. `EudoraRes.vcxproj` steht genauso da |
+| OT501-Ersatzschicht | **geschrieben und vollstaendig eingehaengt** (`e50a89c`). `Eudora71/OTShim/` umfasst an `2d68555` **17828 Zeilen** in 11 Dateien (`wc -l`). Ueber `OTShimAll.h` eingebunden und mit ihren `.cpp` in `Eudora.vcxproj:217` aufgenommen sind alle fuenf Teile: Stufe 0-2 (`OTShim.*`, 5494), Stufe 3 (`OTShim_Werkzeugleiste.*`, 6083), Stufe 4 (`OTShim_Bild.*`, 2358), Registerkarten (`OTShim_Reiter.*`, 2925) und `SECDateTimeCtrl`/Palette (`OTShim_Palette.*`, 890). Dazu `OT501/Src/secaux.cpp` direkt im Projekt |
+| Stingray-Symbole beim Binden | **keines mehr offen** (gemessen an `2d68555`). Verlauf 1088 (651 verschiedene) — rund 299 — 8 — 1; das letzte Symbol ist kein Stingray. Bezugscommits in `PLAN.md`, Abschnitt „Der Weg zum Linken" |
+| `__imp___iob` aus `libpng.lib` | **offen** — das einzige verbliebene ungeloeste Symbol beim Binden von `Eudora.exe`. Angefordert von der vorgefertigten VC6-`libpng.lib` (`pngerror.obj`, `pngrutil.obj`), nicht von Stingray |
+| Attrappe `Lib/Debug/OTA50D.LIB` | **muss weg**, sobald gebunden wird — sonst linkt Eudora gegen eine leere Bibliothek und niemand merkt es. Absichtlich nicht eingecheckt |
+| Erster Start von `Eudora.exe` | offen — welche Laufzeitdateien danebenliegen muessen und was noch fehlt (u. a. `EudoraRes.dll`), steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
+| Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen. Die Testzahl waechst gerade, weil die Ersatzschicht Tests bekommt |
+| `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig, seit `78a9c10` samt Ersatzschicht; es scheitert jetzt allein am Binden. `EudoraRes.vcxproj` steht genauso da |
+| `OpenSSL3/lib` fehlt im Repo | **offen** — `libcrypto.lib` und `libssl.lib` sind von `.gitignore:7` (`Lib/`) erfasst und nicht versioniert (`git ls-files`: null Treffer). Ein frischer Klon endet bei `QCSSL` mit `LNK1104: libssl.lib`. Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 zweimal **gemessen** (Komponententest lokal, dann im Betrieb), ausgehandelt `TLS_AES_256_GCM_SHA384`; 30 angebotene Cipher Suites, keine mit RC4, 3DES oder EXPORT |
 | QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen. Am 29.08.2026 gegen `pop.gmx.net:995`: `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Da HermesSSL (OpenSSL 1.0.2p) kein TLS 1.3 beherrscht, war es gesichert diese DLL |
 | **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und `ErrorCode 0` angenommen. Ein Hinweistext wird durchaus angehaengt ("Destination Host name does not match … But ignoring this error because Certificate is trusted"), er bleibt nur ohne Wirkung. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |
 | Aktueller `rootcerts.p7b` für das Release | **erledigt** seit `75b60e1` — `Releases/1.0/rootcerts.p7b` mit 121 Zertifikaten, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Die Altbestaende im Baum sind **zwei verschiedene Dateien** (verschiedene SHA256): `Eudora71/Bin/Release/rootcerts.p7b` mit 19 Zertifikaten (aeltestes gueltig ab 09.11.1994, juengstes ab 22.09.2000), 8 davon heute abgelaufen; `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` mit 30, juengstes ab 04.03.2004, 17 abgelaufen. QCSSL prueft nur gegen diese Datei, nicht gegen den Windows-Speicher |
-| Zeichensatz-Darstellung | **fertig** — `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`). Die beiden von den Unit-Tests nachgewiesenen Fehler sind behoben: sieben falsche Zuordnungen berichtigt, `ISOTranslate` laeuft jetzt in einem Durchgang statt in 123 Ersetzungslaeufen. 23 von 23 Tests gruen. Siehe `PORTIERUNG.md` |
+| Zeichensatz-Darstellung | **fertig** — der UTF-8-Fall laeuft seit `63f81dc` ueber den Windows-Codepage-Wandler statt ueber die handgepflegte Tabelle; die Tabelle bleibt als Rueckfallweg fuer Post, die `utf-8` behauptet und in Wahrheit CP1252-Bytes traegt. Davor: `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`), sieben falsche Zuordnungen berichtigt, Doppelersetzung beseitigt. **33 von 33 Tests gruen** (selbst nachgemessen an `04e93c3` mit `Eudora71/Tests/RunTests.cmd`). Grenzen und Nebenbefunde in `PORTIERUNG.md` |
 | Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
 | Build-Artefakte im Repo | **erledigt** seit `e4a0fae` — `.gitignore` greift, **107** Dateien sind aus dem Index (der Commit zeigt 108 geaenderte Dateien, davon 107 geloescht und die `.gitignore` selbst). Getrackt sind noch 20 `.pdb`, die zu vorgefertigten Fremd-DLLs unter `Bin/Debug` und `Bin/Release` gehoeren und nicht aus diesem Bau stammen |
 
