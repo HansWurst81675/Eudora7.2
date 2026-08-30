@@ -153,10 +153,21 @@ BOOL CWazooBarMgr::CreateInitialWazooBars(CMDIFrameWnd* pMainFrame)
 	}
 
 	// Create a special wazoo bar for holding the Ad window
-	CAdWazooBar* pAWB = DEBUG_NEW CAdWazooBar(this);
-	pAWB->Create(pMainFrame);
-	pAWB->EnableDocking(CBRS_ALIGN_ANY);
-	m_WazooBarList.AddTail(pAWB);
+	//
+	// In der Fassung fuer Firmenkunden (BUILD_BOX_OR_SITE_R_VERSION) gibt es
+	// keine Werbung. Dann die Leiste gar nicht erst anlegen: CAdWazooWnd::OnCreate
+	// (AdWazooWnd.cpp:108) erzeugt die CAdView mit CRect(0,0,0,0), und Paige
+	// verheddert sich beim Zeilenumbruch in eine Breite von null in einer
+	// Endlosrekursion. Gemessen am 30.08.2026 mit tools/stapel-untersuchen.ps1,
+	// Befund S-2: zwei Paige-Rahmen wechseln sich rund 800mal ab, bis der
+	// Stapel voll ist. Ausloeser ist AdWazooBar.cpp:96.
+	if (!QCSharewareManager::IsBoxBuild())
+	{
+		CAdWazooBar* pAWB = DEBUG_NEW CAdWazooBar(this);
+		pAWB->Create(pMainFrame);
+		pAWB->EnableDocking(CBRS_ALIGN_ANY);
+		m_WazooBarList.AddTail(pAWB);
+	}
 
 	return TRUE;
 }

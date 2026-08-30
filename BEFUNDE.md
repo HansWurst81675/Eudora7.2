@@ -2329,3 +2329,50 @@ Voraussetzung nur die VS2022-Debug-Laufzeiten und behauptet, die seien auf der
 Zielmaschine vorhanden. Das ist unvollstaendig: die VC7.1-Laufzeit fehlt und wird
 nicht erwaehnt. Das Paket ist damit **nicht startfaehig**; die Beschreibung muss
 richtiggestellt werden.
+
+## S-2 — Stapelueberlauf beim Start: die Werbeflaeche (behoben 30.08.2026)
+
+**Symptom.** Nach dem Startbildschirm passierte nichts mehr, dann Absturz mit
+`EXCEPTION_STACK_OVERFLOW` (mal auch `0xC0000005`). Die letzte Meldung vor dem
+Absturz war stets `viewcore.cpp(103): Creating a pane with no CDocument`.
+
+**Wie es gefunden wurde.** Auf der Maschine ist kein Debugger installiert, und
+Eudoras eigener Absturzbehandler gibt bei einem vollen Stapel bewusst nur eine
+Zeile aus (`BugslayerUtil/CrashHandler.cpp:286`). Dafuer entstand
+`tools/stapel-untersuchen.ps1`: ein kleiner Debugger, der das Programm als
+Debuggee startet, die toedliche Ausnahme abfaengt, die EBP-Kette ablaeuft und
+mit `dbghelp.dll` symbolisiert. Bei einer Endlosrekursion sind fast alle Rahmen
+gleich, deshalb weist er die haeufigsten als Zyklus aus und druckt nur den Rest.
+
+**Gemessene Aufrufkette** (1689 Rahmen, davon 1613 im Zyklus):
+
+    CAdWazooWnd::OnCreate              AdWazooWnd.cpp:108
+      CPaigeEdtView::Create            PaigeEdtView.cpp:4490
+        -> CreateWindowEx -> WM_CREATE
+          CPaigeEdtView::OnCreate      PaigeEdtView.cpp:1551
+            CAdView::NewPaigeObject    AdView.cpp:208
+              CPaigeEdtView::NewPaigeObject   PaigeEdtView.cpp:1646
+                -> Paige32d.dll, zwei Rahmen wechseln sich ~800mal ab
+
+**Ursache.** `CAdWazooWnd::OnCreate` legt die Werbeansicht mit `CRect(0,0,0,0)`
+an (AdWazooWnd.cpp:108). Paige bekommt damit eine Umbruchbreite von null und
+verheddert sich in einer Endlosrekursion. Paige ist eine Fremdbibliothek ohne
+Quellen (`Eudora71/PaigeDLL` enthaelt nur Makefiles und `PAIGE.H`) - dort ist
+nichts zu reparieren.
+
+**Behebung.** Die Werbeleiste wurde in `WazooBarMgr.cpp:155` **bedingungslos**
+angelegt, ohne jede Abfrage der Betriebsart. Jetzt haengt sie an
+`QCSharewareManager::IsBoxBuild()`. Zusammen mit dem Uebersetzungsschalter
+`BUILD_BOX_OR_SITE_R_VERSION` (Eudora.vcxproj, beide Konfigurationen) entfaellt
+damit die Werbung ganz - das ist die Fassung, die QUALCOMM an Firmenkunden
+ausgeliefert hat. `DEFAULT_SWM_MODE` wird dadurch 2 (`SWM_MODE_PRO`), und der
+Einfuehrungsdialog (eudora.cpp:1597) entfaellt ebenfalls.
+
+**Ergebnis.** Eudora startet und zeigt sein Hauptfenster: Menueleiste,
+Werkzeugleiste, Postfachbereich, Statuszeile. Erstmals seit Beginn der
+Portierung.
+
+**Nebenbefund.** `tools/rekursion-suchen.pl` (Zyklensuche im Aufrufgraphen der
+Ersatzschicht) meldete fuenf Zyklen - **alle Fehlalarm**: es sind Ueberladungen,
+die das Werkzeug nur am Namen und an der Argumentzahl unterscheidet, nicht an
+den Typen. Die Ersatzschicht war an diesem Absturz unbeteiligt.
