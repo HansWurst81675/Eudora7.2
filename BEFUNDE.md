@@ -1086,7 +1086,47 @@ Bauen: `QCSocket.vcxproj` Release/x86 erfolgreich, 0 Fehler (11 Warnungen, alle
 aus dem Altbestand). `QCSSL.vcxproj` unveraendert gruen.
 Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 33 bestanden, 0 fehlgeschlagen.
 
-Noch offen aus meinem Auftrag: N1 (Zeigerschmuggel durch `BIO_set_fd`).
+## N1 - erledigt, und zwar sauber statt mit `static_assert`
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 249, 260, 336, 341, 789.
+
+Der Auftrag liess die Wahl zwischen einer `static_assert` auf die Zeigergroesse und
+einer sauberen Loesung. Gewaehlt wurde die saubere, weil sie nicht teurer war:
+
+- `BIO_new_ws()` nimmt jetzt einen `QCSSLReference*` statt eines `int` und legt ihn
+  ueber `BIO_ctrl(pBIO, BIO_C_SET_FD, iCloseFlag, pWorkerSocket)` ab - der vierte
+  Parameter von `BIO_ctrl` ist `void*`, also zeigergross. `BIO_set_fd()` wird nicht
+  mehr benutzt; genau dieses Makro war der Engpass, weil es ueber `BIO_int_ctrl()
+  die Adresse eines lokalen `int` weiterreicht.
+- `ws_ctrl()`, `BIO_C_SET_FD` (Z. 249): `BIO_set_data(pBIO, ptr)` statt
+  `BIO_set_data(pBIO, (void*)(INT_PTR)(*((int*)ptr)))`. Kein Umweg mehr durch `int`.
+- `ws_ctrl()`, `BIO_C_GET_FD` (Z. 260): `*((void**)ptr) = BIO_get_data(pBIO)` statt
+  der Rueckgabe als `int`/`long`. Der Rueckgabewert `lRet` bleibt 1 (Erfolg), weil
+  eine Adresse als `long` unter x64 nicht zurueckgegeben werden koennte.
+- Aufrufer Z. 789: die Umwandlung `(int)pSSLReference` ist entfallen.
+
+Dass wir die OpenSSL-Belegung von `BIO_C_SET_FD` dabei umdeuten, ist zulaessig und
+im Code vermerkt: `BIO_s_workersocket` ist eine eigene BIO-Methode, `BIO_new_ws()`
+ihr einziger Erzeuger, und `BIO_get_fd()` ruft im ganzen Baum niemand auf. Weder
+`BIO_new_ws` noch `BIO_s_workersocket` stehen in einer Kopfdatei oder in
+`qcssl.def`; ausserhalb dieser Datei ist nichts betroffen.
+
+**Was fuer x64 trotzdem offen bleibt** (nicht Teil von N1, hier nur vermerkt, damit
+es nicht als erledigt gilt): `ws_read()` Z. 154 und `ws_write()` Z. 202 reichen den
+`QCSSLReference*` als `(long)` an `m_fnQCSSLReadCallback`/`m_fnQCSSLWriteCallback`
+weiter. Das ist die Signatur der Rueckruffunktionen in der oeffentlichen
+QCSSL-Schnittstelle, an der auch QCSocket haengt; sie zu aendern ist ein eigener
+Umbau. Unter Win32 ist es folgenlos, unter x64 waere es dieselbe Trunkierung.
+
+**Gegenprobe am Produktivpfad:** `Eudora71/Tests/QCSSL/messen.ps1` mit der neu
+gebauten `Eudora71/Bin/Release/QCSSL.dll`. Alle neun Faelle verhalten sich genau wie
+vor den Aenderungen (1a Erfolg TLSv1.3, 1b/1d Fehlschlag, 1c unveraendert - das ist
+der zurueckgestellte Hostnamen-Befund -, 2a/2b Fehlschlag, 2c TLSv1.2, 2d TLSv1.3,
+2e Fehlschlag). Die erfolgreichen Faelle uebertragen Nutzdaten, laufen also durch
+`ws_read`/`ws_write` und damit durch den umgebauten Datenslot.
+
+Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
+Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 33 bestanden, 0 fehlgeschlagen.
 
 ---
 

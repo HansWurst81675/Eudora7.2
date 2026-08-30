@@ -246,7 +246,7 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 		case BIO_C_SET_FD:
 			// Set the endpoint for the BIO
 			ws_free(pBIO);				//	Close whatever's already there
-			BIO_set_data(pBIO, (void*)(INT_PTR)(*((int*)ptr)));	//	Set the new endpoint
+			BIO_set_data(pBIO, ptr);	//	N1: der QCSSLReference-Zeiger wandert unveraendert in den zeigergrossen Datenslot. Vorher ging er durch ein int (BIO_set_fd/BIO_int_ctrl) - unter Win32 harmlos, unter x64 eine lautlose Trunkierung. ptr ist hier bewusst der Zeiger selbst, nicht die Adresse eines int: BIO_s_workersocket ist unsere eigene BIO-Methode, an die OpenSSL-Belegung von BIO_C_SET_FD sind wir nicht gebunden.
 			BIO_set_shutdown(pBIO, (int)lNum);	//	Set the close mode
 			BIO_set_init(pBIO, 1);				//	We've been initialized
 			break;
@@ -257,7 +257,7 @@ static long ws_ctrl(BIO *pBIO, int iCmd, long lNum, void *ptr)
 			{
 				if (ptr)
 				{
-					*((int*)ptr) = lRet = (int)(INT_PTR)BIO_get_data(pBIO);
+					*((void**)ptr) = BIO_get_data(pBIO);	//	N1: zeigergross zurueckgeben, passend zu BIO_C_SET_FD. lRet bleibt 1 (Erfolg); die Adresse als long zurueckzugeben ginge unter x64 nicht.
 				}
 			}
 			else
@@ -333,12 +333,12 @@ BIO_METHOD *BIO_s_workersocket()
 	return s_pMethodsWS;
 }
 
-BIO *BIO_new_ws(int iWorkerSocket, int iCloseFlag)
+BIO *BIO_new_ws(QCSSLReference *pWorkerSocket, int iCloseFlag)
 {
 	BIO		*pBIO = BIO_new(BIO_s_workersocket());
 	if (pBIO)
 	{
-		BIO_set_fd(pBIO, iWorkerSocket, iCloseFlag);
+		BIO_ctrl(pBIO, BIO_C_SET_FD, iCloseFlag, pWorkerSocket);	//	N1: statt BIO_set_fd(), das den Zeiger durch ein int schleusen wuerde
 	}
 	return pBIO;
 }
@@ -786,7 +786,7 @@ bool BeginQCSSLSession(QCSSLReference *pSSLReference)
 	}
 
 	// Create the BIO for reading and writing.
-	BIO		*pBIO = BIO_new_ws((int)pSSLReference, BIO_NOCLOSE);
+	BIO		*pBIO = BIO_new_ws(pSSLReference, BIO_NOCLOSE);
 	if (!pBIO)
 	{
 		SSL_free(pSSL);
