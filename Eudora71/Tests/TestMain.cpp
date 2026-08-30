@@ -16,6 +16,8 @@ void RunXlateTableTests(const char* szEudoraDir);
 void RunIsoTranslateTests(void);
 void RunHexBinTableTests(void);
 void RunOTShimBildTests(void);
+void RunOTShimReiterTests(void);
+void RunOTShimPaletteTests(void);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -90,6 +92,8 @@ int main(int argc, char* argv[])
 	RunIsoTranslateTests();
 	RunHexBinTableTests();
 	RunOTShimBildTests();
+	RunOTShimReiterTests();
+	RunOTShimPaletteTests();
 
 	iFailed = TT_Summary();
 	return iFailed;

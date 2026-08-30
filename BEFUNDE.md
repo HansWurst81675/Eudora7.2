@@ -2161,3 +2161,123 @@ spaeterer Leser nicht denselben Weg noch einmal geht.
 | `tools/pruefe-bytes.pl`, `tools/aendere-zeile.pl` | nicht beauftragt |
 | `Eudora.vcxproj` und die offenen Bindefehler | waehrend der ganzen Pruefung im Fluss |
 | Hostnamenpruefung, `X509_V_ERR_CERT_UNTRUSTED` | bewusst zurueckgestellt |
+
+## Gefunden durch PROBE
+
+Der Agent PROBE hat die Ersatzschicht erstmals ausgefuehrt (Testprogramm unter
+`Eudora71/Tests`, siehe `TestOTShimBild.cpp`, `TestOTShimReiter.cpp`,
+`TestOTShimPalette.cpp`). Was dabei aufgefallen ist:
+
+### P-1 - `OnActivateTab` und `ClearSelection` rufen `GetParent()`, bevor sie das eigene Fenster pruefen
+
+**GEMESSEN**, nicht vermutet. Der erste Lauf der Registerkarten-Tests schrieb
+zehn Zeilen auf stderr:
+
+```
+...\ATLMFC\Include\afxwin2.inl(213) : Assertion failed!
+```
+
+Zeile 213 ist `CWnd::GetParent`:
+
+```cpp
+_AFXWIN_INLINE CWnd* CWnd::GetParent() const
+    { ASSERT(::IsWindow(m_hWnd)); return CWnd::FromHandle(::GetParent(m_hWnd)); }
+```
+
+Die zehn Meldungen decken sich Stueck fuer Stueck mit den neun Aufrufen von
+`ActivateTab` und dem einen von `ClearSelection` in den Tests. Ein zweiter
+Lauf mit einem Berichtshaken der Laufzeitbibliothek (`_CrtSetReportHook2`)
+hat es auf zwei Stellen eingegrenzt:
+
+| Datei | Zeile | Methode |
+|---|---|---|
+| `Eudora71/OTShim/OTShim_Reiter.cpp` | 330 | `SECTabControlBase::OnActivateTab` |
+| `Eudora71/OTShim/OTShim_Reiter.cpp` | 358 | `SECTabControlBase::ClearSelection` |
+
+Beide holen sich das Elternfenster, **bevor** sie pruefen, ob es das eigene
+Fenster ueberhaupt gibt:
+
+```cpp
+CWnd* pParent = GetParent();
+if (pParent != NULL && ::IsWindow(pParent->GetSafeHwnd()))
+    pParent->SendMessage(...);
+```
+
+Die Absicht ist erkennbar - "ohne gueltiges Elternfenster nichts tun" -, die
+Pruefung steht nur einen Schritt zu spaet. Ueberall sonst in derselben Datei
+steht zuerst `if (GetSafeHwnd() != NULL)`, zum Beispiel drei Zeilen vor der
+zweiten Fundstelle.
+
+**Tragweite.** In Eudora selbst loest das nichts aus: das Steuerelement
+entsteht in `SECTabWndBase::CreateTabCtrl` unmittelbar mit einem Fenster, und
+`CWazooBar` ruft `ActivateTab` erst danach (`WazooBar.cpp:347, 408, 1364`).
+Der Befund ist also eine Haertungsluecke, kein belegter Absturz. Im Debugbau
+wuerde er allerdings ein modales Meldungsfenster aufmachen, sobald der Weg
+doch einmal ohne Fenster genommen wird - und schliessen laesst er sich mit
+zwei Zeilen.
+
+**Vorschlag.** In beiden Methoden vorne einsetzen:
+
+```cpp
+if (GetSafeHwnd() == NULL)
+    return;
+```
+
+**Nicht von PROBE repariert** - `OTShim_Reiter.cpp` gehoert einem anderen
+Agenten. Der Test
+`BEFUND: ActivateTab und ClearSelection fassen GetParent an, bevor sie das Fenster pruefen`
+in `Eudora71/Tests/TestOTShimReiter.cpp` bleibt so lange rot und wird von
+selbst gruen, sobald die zwei Zeilen stehen.
+
+**Verwandte Stellen, die NICHT betroffen sind** (dort steht `GetParent()`
+ebenfalls ungeschuetzt, die Methoden sind aber nur aus einer Nachricht heraus
+erreichbar, also stets mit Fenster): `OTShim_Reiter.cpp:1301`
+(`SEC3DTabControl::OnLButtonDblClk`), `:1805` (`SECTabWndBase::OnTabSelect`),
+`OTShim_Palette.cpp:509` (`SECDateTimeCtrl::OnChanged`).
+
+### P-2 - `SECTabWndBase::InsertTab` blendet ein Fenster aus, ohne es zu pruefen
+
+Kein gemessener Fehler, sondern der Grund, warum die **Fensterebene** der
+Registerkarten-Familie ungetestet bleibt. `SECTabWndBase::InsertTab`
+(`OTShim_Reiter.cpp:1503`) ruft im `else`-Zweig
+
+```cpp
+pWnd->ShowWindow(SW_HIDE);
+```
+
+ohne vorherige `::IsWindow`-Pruefung - anders als `ZeigeInhaltsfenster`
+zwanzig Zeilen weiter, das sie hat. In Eudora ist das kein Fehler: die
+`CWazooWnd` sind vor dem Einfuegen angelegt (`WazooBar.cpp:178-179` ruft
+unmittelbar danach `SetParent`, was ein Fenster voraussetzt). Es macht die
+Ebene aber ohne echte Fenster unpruefbar, und es ist dieselbe Unachtsamkeit
+wie P-1.
+
+Dieselbe Methode ist schon unter NP3-1 aufgefallen, dort aus einem anderen
+Grund (der erste Reiter wird gezeigt, bevor Eudora ihn umgehaengt hat).
+
+### P-3 - `SECDateTimeCtrl::FixedTime` laesst die Stunde aus (Fehler im Original, bewusst uebernommen)
+
+Kein Befund gegen die Ersatzschicht, sondern gegen das Stingray-Original -
+festgehalten, damit niemand ihn spaeter fuer einen Uebernahmefehler haelt.
+
+**GEMESSEN.** Ein Test in `Eudora71/Tests/TestOTShimPalette.cpp` erwartete,
+dass `FixedTime` die Summe aus `FixedHour`, `FixedMinute` und `FixedSecond`
+ist (0x0038), und schlug fehl. Nachgesehen in `OT501/Include/DTCtrl.h:114-118`:
+
+```
+FixedHour   = 0x0008,           // The hour is non-editable
+FixedMinute = 0x0010,           // The minute is non-editable
+FixedSecond = 0x0020,           // The second is non-editable
+FixedDate   = 0x0007,           // The date is non-editable
+FixedTime   = 0x0030            // The time is non-editable
+```
+
+`FixedDate` stimmt (0x0001|0x0002|0x0004), `FixedTime` nicht: 0x0030 ist
+`FixedMinute|FixedSecond`, die Stunde fehlt. `OTShim_Palette.h` hat den Wert
+woertlich uebernommen - **und das ist richtig so**: die Konstante gehoert zur
+Schnittstelle, ein stillschweigend berichtigter Wert wuerde abweichendes
+Verhalten erzeugen. Eudora wertet `SetNoEdit` ohnehin nirgends aus (in
+`OTShim_Palette.cpp` ausdruecklich vermerkt).
+
+Der Test schreibt den uebernommenen Wert fest, damit ein spaeteres
+Geradeziehen als Aenderung sichtbar wird und nicht unbemerkt einsickert.

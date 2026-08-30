@@ -72,6 +72,8 @@
     <ClCompile Include="..\OTShim\OTShim_Reiter.cpp" />
     <ClCompile Include="OTShimProbe.cpp" />
     <ClCompile Include="TestOTShimBild.cpp" />
+    <ClCompile Include="TestOTShimReiter.cpp" />
+    <ClCompile Include="TestOTShimPalette.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
