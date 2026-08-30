@@ -1028,6 +1028,33 @@ Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 30 bestanden, 3 fehlgeschlagen.
 Die drei roten Tests betreffen `ISOTranslate()` in `Eudora/utils.cpp` (Emoji,
 griechische Schrift) - ein anderer Arbeitsbereich, QCSSL hat daran keinen Anteil.
 
+## M2 - erledigt
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 309-334, `BIO_s_workersocket()`.
+
+Die `BIO_METHOD` wird jetzt in einer lokalen Variablen (`pNeu`) angelegt und
+vollstaendig gefuellt; erst danach wird sie mit einem einzigen
+`InterlockedCompareExchangePointer()` veroeffentlicht. Wer das Rennen verliert,
+gibt seine eigene Struktur mit `BIO_meth_free()` wieder frei. `s_pMethodsWS` ist
+zusaetzlich `volatile`, damit der Uebersetzer den Vergleich am Anfang und die
+Rueckgabe am Ende nicht zu einem einzigen gepufferten Lesezugriff zusammenzieht.
+
+Damit sind beide im Befund beschriebenen Rennen weg:
+
+- Kein Thread kann mehr eine halb gefuellte `BIO_METHOD` sehen - der Zeiger wird
+  erst gesetzt, wenn alle sechs Setter gelaufen sind.
+- Es bleibt auch nichts mehr liegen: der Verlierer raeumt seine eigene Struktur ab.
+  Das kleine Leck aus dem Befund ist damit ebenfalls erledigt.
+
+Die Funktion haengt jetzt nicht mehr an der ungeschriebenen Zusicherung, dass ihr
+einziger Aufrufer unter `g_Mutex` laeuft. `g_Mutex` bleibt unveraendert - es geht
+nur darum, dass die Funktion fuer sich genommen haelt.
+
+Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
+Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 33 bestanden, 0 fehlgeschlagen.
+
+Noch offen aus meinem Auftrag: M4 (`QCWorkerSocket.cpp:2084`) und N1 (Zeiger-
+schmuggel durch `BIO_set_fd`).
 ---
 
 # Erledigt durch SUMME (30.08.2026, Branch `eudora-exe-linkt`)

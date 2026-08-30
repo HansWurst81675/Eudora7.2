@@ -306,30 +306,30 @@ static int ws_puts(BIO *pBIO, const char *szStr)
 //	Seit OpenSSL 1.1.0 ist BIO_METHOD undurchsichtig: die Struktur laesst sich
 //	nicht mehr statisch ausfuellen, sie wird zur Laufzeit mit BIO_meth_new()
 //	angelegt und ueber Setter befuellt. Einmal erzeugt, bleibt sie fuer die
-//	Lebensdauer des Prozesses bestehen (wie vorher die statische Struktur).
+//	Lebensdauer des Prozesses bestehen (wie vorher die statische Struktur). Sichtbar wird sie erst, wenn sie vollstaendig gefuellt ist - siehe unten.
 //
-static BIO_METHOD *s_pMethodsWS = NULL;
+static BIO_METHOD * volatile s_pMethodsWS = NULL;
 
 BIO_METHOD *BIO_s_workersocket()
 {
 	if (s_pMethodsWS == NULL)
 	{
-		s_pMethodsWS = BIO_meth_new(BIO_TYPE_WORKERSOCKET, "workersocket_in_Eudora");
-		if (s_pMethodsWS == NULL)
-		{
-			ASSERT(0);
-			return NULL;
-		}
+		BIO_METHOD	*pNeu = BIO_meth_new(BIO_TYPE_WORKERSOCKET, "workersocket_in_Eudora");
+		if (pNeu == NULL)	{ ASSERT(0); return NULL; }
 
-		BIO_meth_set_write(s_pMethodsWS,   ws_write);
-		BIO_meth_set_read(s_pMethodsWS,    ws_read);
-		BIO_meth_set_puts(s_pMethodsWS,    ws_puts);
+		BIO_meth_set_write(pNeu,   ws_write);
+		BIO_meth_set_read(pNeu,    ws_read);
+		BIO_meth_set_puts(pNeu,    ws_puts);
 		//	kein gets - wie zuvor (war NULL)
-		BIO_meth_set_ctrl(s_pMethodsWS,    ws_ctrl);
-		BIO_meth_set_create(s_pMethodsWS,  ws_new);
-		BIO_meth_set_destroy(s_pMethodsWS, ws_free);
-	}
+		BIO_meth_set_ctrl(pNeu,    ws_ctrl);
+		BIO_meth_set_create(pNeu,  ws_new);
+		BIO_meth_set_destroy(pNeu, ws_free);
 
+		//	M2: erst die fertig gefuellte Struktur veroeffentlichen, und zwar unteilbar. Wer
+		//	das Rennen verliert, gibt seine eigene wieder frei. So sieht kein zweiter Thread je eine halb gefuellte BIO_METHOD, und es bleibt auch nichts liegen - unabhaengig davon, ob der Aufrufer unter g_Mutex laeuft.
+		if (InterlockedCompareExchangePointer((void* volatile*)&s_pMethodsWS, pNeu, NULL) != NULL)
+			BIO_meth_free(pNeu);	//	Rennen verloren: die fremde Fassung gilt, die eigene wird freigegeben
+	}
 	return s_pMethodsWS;
 }
 
