@@ -2081,7 +2081,7 @@ void QCWorkerSocket::SetSSLMode(bool bVal,  CString person, SSLSettings *pSettin
 			}
 			else
 			{
-				m_pSSLReference->m_ProtocolInfo.m_ProtocolVersion = pSettings->m_nSSLSendVersion;
+				m_pSSLReference->m_ProtocolInfo.m_ProtocolVersion = pSettings->m_nSSLReceiveVersion;	//	M4: hier stand m_nSSLSendVersion. Jede andere Zuweisung in diesem Zweig liest die Empfangseinstellung, der Zweig darueber m_nSSLAltPortReceiveVersion; m_nSSLReceiveVersion wird in SSLSettings.cpp:75 aus IDS_INI_SSL_RECEIVE_VERSION geladen und war bis hierher unbenutzt. Folgenlos war die Verwechslung nur, solange alle Faelle auf SSLv23_method hinausliefen.
 			}
 			m_pSSLReference->m_CertificateInfo.m_bIgnoreExpired
 									= pSettings->m_nSSLReceiveIgnoreExpiredCerts;

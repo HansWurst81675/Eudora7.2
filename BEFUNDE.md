@@ -1053,8 +1053,41 @@ nur darum, dass die Funktion fuer sich genommen haelt.
 Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
 Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 33 bestanden, 0 fehlgeschlagen.
 
-Noch offen aus meinem Auftrag: M4 (`QCWorkerSocket.cpp:2084`) und N1 (Zeiger-
-schmuggel durch `BIO_set_fd`).
+## M4 - erledigt
+
+**Datei:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:2084`, `SetSSLMode()`.
+`m_nSSLSendVersion` durch `m_nSSLReceiveVersion` ersetzt, mit Begruendung im Code.
+
+Der Befund raet, die Aufrufstellen erst zu pruefen, weil beide Richtungen dieselbe
+Einstellung absichtlich nutzen koennten. Geprueft, und sie tun es nicht:
+
+- Der `else`-Zweig ab Z. 2076 ist der Empfangszweig (POP/IMAP). **Alle** zehn
+  uebrigen Zuweisungen darin lesen `m_nSSLReceive...`; der Zweig unmittelbar
+  darueber (Alternativport, Z. 2080) liest `m_nSSLAltPortReceiveVersion`. Genau
+  eine Zeile faellt aus dem Muster - Z. 2084.
+- `m_nSSLReceiveVersion` ist voll versorgt: `SSLSettings.cpp:75` laedt es aus
+  `IDS_INI_SSL_RECEIVE_VERSION`, und `EudoraRes.rc:8143` gibt dafuer denselben
+  Vorgabewert **3** wie fuer `SSLSendVersion` (`:8147`). Ein Umschalten kann also
+  keine ungueltige Version erzeugen; wer nichts einstellt, merkt nichts.
+  `GetSSLReceiveVersion()` (SSLSettings.h:171) existiert ebenfalls und war der
+  einzige weitere Beruehrungspunkt - unbenutzt.
+- Kein zweiter Leser: `m_nSSLSendVersion` wird ausser hier nur in Z. 2062 im
+  SMTP-Zweig gelesen. Eine Absicht, die Empfangsrichtung an die Sendeeinstellung
+  zu koppeln, ist an keiner Stelle formuliert.
+
+**Einschraenkung, damit sie nicht ueberschaetzt wird:** seit M1 laufen alle acht
+gueltigen Faelle auf dieselbe Untergrenze TLS 1.2 hinaus. Die im Befund
+beschriebene Wirkung - die Empfangsrichtung erbt den TLS-Boden der Sendeseite -
+kann also derzeit ohnehin nicht mehr auftreten. Uebrig bleibt der Unterschied im
+`default:`-Zweig (ungueltiger Wert bricht ab) und, wichtiger, dass die Einstellung
+jetzt wieder die Verkabelung hat, die ihr Name verspricht.
+
+Bauen: `QCSocket.vcxproj` Release/x86 erfolgreich, 0 Fehler (11 Warnungen, alle
+aus dem Altbestand). `QCSSL.vcxproj` unveraendert gruen.
+Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 33 bestanden, 0 fehlgeschlagen.
+
+Noch offen aus meinem Auftrag: N1 (Zeigerschmuggel durch `BIO_set_fd`).
+
 ---
 
 # Erledigt durch SUMME (30.08.2026, Branch `eudora-exe-linkt`)
