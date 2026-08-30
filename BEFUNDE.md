@@ -2281,3 +2281,51 @@ Verhalten erzeugen. Eudora wertet `SetNoEdit` ohnehin nirgends aus (in
 
 Der Test schreibt den uebernommenen Wert fest, damit ein spaeteres
 Geradeziehen als Aenderung sichtbar wird und nicht unbemerkt einsickert.
+
+## S-1 — Das Auslieferungspaket 1.0.1 startet nicht (gemessen 30.08.2026)
+
+**Erster Startversuch ueberhaupt.** `Eudora.exe` startet, laeuft acht Sekunden mit
+vier Threads und 15,6 MB, oeffnet aber kein Fenster. Windows meldet:
+
+    Die Ausfuehrung des Codes kann nicht fortgesetzt werden,
+    da MSVCR71D.dll nicht gefunden wurde.
+
+**Ursache.** Nach `Bin\Debug` gehoeren sieben vorgebaute DLLs aus der CHM-Freigabe,
+die gegen die *Debug*-Laufzeit von Visual Studio 2003 gebunden sind (`MSVCR71D.dll`,
+`MFC71D.DLL`, `MSVCP71D.dll`). Diese Debug-Laufzeit ist nicht verteilbar und
+existiert nur auf einer Maschine mit installiertem VS2003. Betroffen: DirServ,
+EudoraBk, EuMemMgr, ISock, Ldap, Ph, Paige32d.
+
+Die Release-Varianten derselben DLLs liegen unter `Bin\Release` und brauchen nur die
+*Retail*-Laufzeit (`MSVCR71.dll`, `MFC71.DLL`, `MSVCP71.dll`). Auch die ist auf
+dieser Maschine nicht vorhanden — es ist keine Eudora-Installation da, aus der man
+sie nehmen koennte.
+
+**Beim Laden zwingend** sind laut Importtabelle von `Eudora.exe` nur zwei:
+`EuMemMgr.dll` und `Paige32d.dll`. Die uebrigen fuenf werden erst bei Benutzung
+geladen.
+
+**Loesungsweg.**
+
+| DLL | Quellen vorhanden | Weg |
+|---|---|---|
+| EuMemMgr | ja, 17.172 Zeilen unter `Eudora71/EuMemMgr` | selbst bauen mit v143 |
+| Paige32 | **nein** — `Eudora71/PaigeDLL` enthaelt nur Makefiles, `PAIGE.H` und die fertigen Binaerdateien | vorgebaute Release-Fassung benutzen |
+
+Fuer Paige bleibt die Bindung an `MSVCR71.dll`. Gemessen braucht `Paige32.dll`
+daraus **genau 20 Funktionen**:
+
+    _onexit  __dllonexit  __CppXcptFilter  _adjust_fdiv  malloc  _initterm
+    free  _except_handler3  __security_error_handler  time  labs  memmove
+    tmpnam  _setjmp3  memset  strlen  longjmp  remove  rename
+
+Das ist wenig genug fuer eine eigene Weiterleitungs-DLL auf die heutige UCRT —
+dasselbe Vorgehen wie bei OTShim. Heikel sind nur die VC7.1-eigenen: `_setjmp3`,
+`_except_handler3`, `__security_error_handler`, `_adjust_fdiv`, `__CppXcptFilter`,
+`_initterm`, `__dllonexit`, `_onexit`.
+
+**Folge fuer die Auslieferung.** Die Datei `LIESMICH.txt` im Release 1.0.1 nennt als
+Voraussetzung nur die VS2022-Debug-Laufzeiten und behauptet, die seien auf der
+Zielmaschine vorhanden. Das ist unvollstaendig: die VC7.1-Laufzeit fehlt und wird
+nicht erwaehnt. Das Paket ist damit **nicht startfaehig**; die Beschreibung muss
+richtiggestellt werden.
