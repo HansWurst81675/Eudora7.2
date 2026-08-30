@@ -1727,3 +1727,309 @@ eine abweichende Schrift, sonst nichts.
 | `tools/lehren-spiegeln.pl`, `tools/pruefstand-melden.pl` | noch nicht begonnen |
 | `OTShim_Werkzeugleiste`: Anordnungsrechnung, `SECTwoPartBtn::DrawButton`, `SECWndBtn`/`SECComboBtn`, `SECCustomizeToolBar` | unveraendert offen aus Nachpruefung 2 |
 | `Eudora.vcxproj` | war waehrend der ganzen Pruefung im Fluss (andere Agenten); eine Aussage waere schon beim Aufschreiben veraltet |
+
+---
+
+# Nachpruefung 3, zweiter Teil (PRUEFER) - die Werkzeuge und zwei Meldungen von TABELLE
+
+Fortsetzung des Abschnitts "Nachpruefung 3 durch PRUEFER". Gemessen am
+Arbeitsbaum vom 30.08.2026 (HEAD zu diesem Zeitpunkt: `703a3ca`). Alle Befunde
+dieses Teils sind **ausgefuehrt und nachgemessen**, nicht nur gelesen.
+
+---
+
+## NP3-4 - `lehren-spiegeln.pl` und der Pfadangaben-Commit: die gespiegelten Dateien werden beim naechsten Commit wieder geloescht
+
+**Sicherheit: nachgewiesen, in einem eigens angelegten Testrepo vorgefuehrt.
+Schwere: hoch - es ist genau der Wissensverlust, gegen den das Werkzeug gebaut
+wurde.**
+
+**Dateien:** `tools/lehren-spiegeln.pl:89` (`git add -- Arbeitsweise`),
+`.git/hooks/pre-commit`, in Verbindung mit der seit dem 30.08.2026 geltenden
+Regel "immer mit ausdruecklicher Pfadangabe committen"
+(`git commit -m "..." -- BEFUNDE.md`).
+
+`git commit -- <pfade>` baut den Commit in einem **voruebergehenden** Index auf
+(git setzt `GIT_INDEX_FILE` fuer die Dauer des Vorgangs um). Der pre-commit-Hook
+laeuft gegen diesen voruebergehenden Index. Das hat zwei Folgen, und nur die
+erste ist die erwartete:
+
+1. **Gut:** die von `lehren-spiegeln.pl` frisch kopierten Dateien landen
+   tatsaechlich im Commit. Das hatte ich zuerst anders vermutet; die Messung sagt
+   etwas anderes.
+2. **Schlecht:** der **richtige** Index wird dabei nie aktualisiert. Nach dem
+   Commit steht die eben mitgeschriebene Datei dort als **geloescht**. Der
+   naechste Commit, der den Index nicht per Pfadangabe umgeht, nimmt diese
+   Loeschung mit.
+
+Vorgefuehrt mit git 2.55.0.windows.5 in einem leeren Repo:
+
+    # pre-commit legt Arbeitsweise/lehre.md an und ruft "git add -- Arbeitsweise"
+    git commit -m "nur a" -- a.txt
+      -> Commit enthaelt: Arbeitsweise/lehre.md | 1 +   und   a.txt | 2 +-
+    git status --short
+      -> D  Arbeitsweise/lehre.md          <== im Index als geloescht vorgemerkt
+    # Hook entfernt, naechster ganz gewoehnlicher Commit:
+    git commit -m "naechster commit"
+      -> Commit enthaelt: Arbeitsweise/lehre.md | 1 -
+    git cat-file -e HEAD:Arbeitsweise/lehre.md  ->  die Datei ist weg
+
+**Folge:** sobald sich eine Lehre aendert, wird sie einmal gespiegelt und
+mitgeschrieben - und beim uebernaechsten Commit wieder aus dem Repo entfernt,
+ohne dass jemand etwas davon merkt. Der Arbeitsbaum behaelt die Datei, das Repo
+verliert sie. Das ist genau der lautlose Wissensverlust, den das Werkzeug
+verhindern soll, nur eine Ebene tiefer.
+
+Zusaetzlich verschaerft: der Hook fragt den Rueckgabewert von
+`lehren-spiegeln.pl` nicht ab (`.git/hooks/pre-commit` Zeile 3 steht ohne
+`set -e`, danach folgt `exec perl .../pruefe-bytes.pl`). Auch die drei `die`- und
+`warn`-Ausgaenge des Skripts halten den Commit deshalb nicht auf.
+
+**Zu tun:** entweder das Spiegeln aus dem pre-commit-Hook nehmen und daraus einen
+eigenen Commit-Schritt machen, oder im Hook nach dem `git add` den echten Index
+nachziehen (`git add` mit gesetztem `GIT_INDEX_FILE` auf den Standardindex - z. B.
+`GIT_INDEX_FILE="$(git rev-parse --git-dir)/index" git add -- Arbeitsweise`), oder
+das Werkzeug so umbauen, dass es die Kopien nur anlegt und laut meldet, statt
+selbst zu stagen.
+
+---
+
+## NP3-5 - `lehren-spiegeln.pl` ist genau im Fehlerfall stumm
+
+**Sicherheit: nachgewiesen (Quelltext und Ausfuehrung). Heute tritt der Fall
+nicht ein.**
+
+**Datei:** `tools/lehren-spiegeln.pl:32`, `:43-47`, `:66`, `:71`
+
+Die Pfadableitung stimmt inzwischen - nachgemessen:
+
+    git rev-parse --show-toplevel  ->  C:/Users/Gregor/Documents/github/Eudora7.2
+    nach s{:}{-} und s{[/.]}{-}    ->  C--Users-Gregor-Documents-github-Eudora7-2
+    tatsaechliches Verzeichnis     ->  C--Users-Gregor-Documents-github-Eudora7-2
+
+Der Punkt in "Eudora7.2" wird von `s{[/.]}{-}g` mit erfasst; genau daran ist die
+erste Fassung gescheitert. Heute passt es.
+
+**Was bleibt, ist die Stummheit:** faellt die Ableitung wieder auseinander -
+anderes Laufwerk, umbenanntes Repo, geaenderte Namensbildung von Claude Code,
+`USERPROFILE` nicht gesetzt -, dann greift
+
+    unless (-d $gedaechtnis) { exit 0; }
+
+und das Werkzeug beendet sich **wortlos mit 0**. Auch `--pruefen` sagt dann
+nichts. Ein Aufrufer kann "es gibt nichts zu tun" nicht von "ich habe gar nicht
+erst hingesehen" unterscheiden - und das ist derselbe Fehler wie beim ersten Mal,
+nur an einer anderen Stelle.
+
+Zwei kleinere Punkte derselben Art:
+
+- **Zeile 66/67:** `open(my $a, '<:raw', $q) or next;` - laesst sich die Quelle
+  nicht lesen, wird die Datei stillschweigend uebersprungen und gilt als
+  abgeglichen.
+- **Der Abgleich ist einseitig.** Es wird nur kopiert, nie geloescht. Wird eine
+  Lehre im Gedaechtnis umbenannt oder entfernt, bleibt die alte Kopie unter
+  `Arbeitsweise/` fuer immer stehen, und `--pruefen` meldet "alles gleich". Heute
+  gibt es genau einen solchen Fall - `Arbeitsweise/README.md` hat kein
+  Gegenstueck im Gedaechtnis -, der ist aber gewollt und von Hand geschrieben.
+  Ein spaeterer echter Fall waere davon nicht zu unterscheiden.
+
+**Zu tun:** im nicht gefundenen Fall auf `STDERR` melden (und im `--pruefen`-Modus
+mit ungleich 0 enden), den abgeleiteten Pfad mit ausgeben, und `--pruefen` auch
+ueber verwaiste Kopien in `Arbeitsweise/` berichten lassen.
+
+---
+
+## NP3-6 - `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis heraus Entwarnung
+
+**Sicherheit: nachgewiesen, ausgefuehrt.**
+
+**Datei:** `tools/pruefstand-melden.pl:41-44` und `:78-86`
+
+Die drei Dateinamen stehen ohne Pfad (`'BEFUNDE.md'` usw.) und werden gegen das
+**aktuelle Arbeitsverzeichnis** geprueft. Fehlt eine Datei, meldet das Werkzeug
+zwar "fehlt", setzt aber `$warnung` **nicht**. Aus einem Unterverzeichnis heraus
+kommt deshalb:
+
+    $ cd Eudora71 && perl ../tools/pruefstand-melden.pl
+    Stand HEAD: 703a3ca
+
+      BEFUNDE.md         fehlt
+      PORTIERUNG.md      fehlt
+      README.md          fehlt
+
+    Pruefung und Doku sind nah am Code.
+    rc=0
+
+Also der Rueckgabewert 0 und der Satz "nah am Code", obwohl gar nichts geprueft
+wurde. Aus der Wurzel heraus laeuft dasselbe Werkzeug korrekt und liefert
+`rc=1`. Im pre-commit-Hook steht es nicht (dort laufen nur
+`lehren-spiegeln.pl` und `pruefe-bytes.pl`), es wird also von Hand aufgerufen -
+und genau dann steht das Arbeitsverzeichnis nicht fest.
+
+**Zu tun:** die Pfade an `git rev-parse --show-toplevel` haengen, wie
+`lehren-spiegeln.pl` es tut, und "fehlt" als Warnung zaehlen.
+
+---
+
+## NP3-7 - `pruefstand-melden.pl` nennt einen beliebigen Commit als Pruefstand
+
+**Sicherheit: nachgewiesen, ausgefuehrt. Auswirkung: die Zahl ist irrefuehrend,
+nicht falsch gerundet.**
+
+**Datei:** `tools/pruefstand-melden.pl:24-26` und `:47-58`
+
+Die Schleife laeuft ueber **alle** Treffer von `\b([0-9a-f]{7,40})\b` in der
+ganzen Datei und behaelt den **letzten**, der ein gueltiger Commit ist. Der
+Kommentar nennt das "den zuletzt genannten Commit-Hash" - gemeint ist aber
+offensichtlich der Commit, bis zu dem geprueft wurde, und das ist etwas anderes.
+In `BEFUNDE.md` steht der Bezugscommit eines Abschnitts jeweils oben im Abschnitt;
+danach folgen beliebig viele weitere Hashes aus den einzelnen Befunden.
+
+Gemessen unmittelbar nach dem Eintragen der Nachpruefung 3:
+
+    BEFUNDE.md   geprueft bis e50a89c, seither 18 Commit(s)  <== faellig
+
+`e50a89c` ist der Commit, den mein Befund "NP2-1 ist ueberholt" als Beleg nennt.
+Der Bezugscommit des Abschnitts ist `22a6d77`, und der ist **neuer**:
+
+    git rev-list --count 22a6d77..HEAD  ->  17
+    git rev-list --count e50a89c..HEAD  ->  18
+
+Heute ist der Unterschied ein einziger Commit; sobald ein Befund einen alten
+Commit als Beleg anfuehrt - `BEFUNDE.md` nennt an mehreren Stellen `b4b7de5`,
+`ba617a8` oder `567a5d8` -, kann die Meldung um Dutzende Commits danebenliegen,
+in beide Richtungen.
+
+**Nebenbei gemessen: das Werkzeug ist langsam.** Es ruft fuer **jeden** hex-artigen
+Fund `git cat-file -t` in einer eigenen Prozessinstanz auf. Allein `BEFUNDE.md`
+enthaelt 60 solche Kandidaten; der gesamte Lauf ueber die drei Dateien braucht
+**29,5 Sekunden** (gemessen mit `time`). Das ist der Grund, warum niemand es
+gewohnheitsmaessig aufruft.
+
+**Zu tun:** eine ausdrueckliche Marke einfuehren, die das Werkzeug sucht, statt zu
+raten - z. B. eine Zeile `<!-- pruefstand: <hash> -->` oder das erste Vorkommen
+von "Bezugscommit:" -, und die Hashes in einem einzigen
+`git cat-file --batch-check`-Aufruf pruefen statt in 60 einzelnen.
+
+`$gesamt` (Zeile 33-34) wird berechnet und nie benutzt.
+
+---
+
+## Nachgeprueft: die beiden Meldungen des Agenten TABELLE
+
+Beide sind **bestaetigt**. Beide sind Altbestand von QUALCOMM, kein
+Portierungsschaden - aber der zweite ist durch die Umstellung auf den
+Codepage-Wandler haeufiger sichtbar geworden.
+
+### NP3-8 - Der IMAP-Empfang uebersetzt keinen einzigen Zeichensatz
+
+**Sicherheit: nachgewiesen. Originalfehler von QUALCOMM.**
+
+**Datei:** `Eudora71/EuImap/src/ImapDownload.cpp:4644` und `:4657-4662`
+
+Die beiden Zaehlweisen nebeneinander, jeweils an der Ressourcentabelle
+nachgemessen (`Eudora/resource.h:1807-1810`, `Eudora/EudoraRes.rc:9385-9388`):
+
+| Zeichensatz | Ressource | `FindMIMECharset` (`mime.cpp:382-390`) | `ImapDownload.cpp:4644` |
+|---|---|---|---|
+| `windows-*` | - | 0 (Sonderweg) | -1 (nicht gefunden) |
+| `us-ascii` | 3611 | 1 | 0 |
+| `iso-8859-1` | 3612 | 2 | 1 |
+| `iso-8859-15` | 3613 | 3 | 2 |
+| `utf-8` | 3614 | 4 | **-1** (ausserhalb des Suchbereichs) |
+
+`FindMIMECharset` durchsucht 3611 bis **3614** und zaehlt danach mit `++iCharSet`
+eins hinauf, damit die 0 fuer die Windows-Zeichensaetze frei bleibt.
+`ImapDownload.cpp:4644` durchsucht nur 3611 bis **3613** und laesst das `++` weg.
+
+`ISOTranslate` (`Eudora/utils.cpp:1165-1178`) erwartet die Zaehlweise von
+`FindMIMECharset`: "0 ist Windows, 1 ist US ASCII und 2 ist Latin1" - alles
+darunter kehrt sofort zurueck, und erst ab 3 wird `iCharsetIdx -= 3` in die
+Uebersetzungstabelle hinein gerechnet.
+
+Damit ergibt sich fuer den IMAP-Pfad:
+
+- `utf-8` liefert -1, die Abfrage `if (iCharsetIdx > 1)` faellt durch - **keine
+  Uebersetzung**.
+- `iso-8859-15` liefert 2, die Abfrage laesst es durch, `ISOTranslate` liest die
+  2 als "Latin-1, nichts zu tun" und kehrt in Zeile 1176 sofort zurueck -
+  **keine Uebersetzung**.
+- Jeder andere Zeichensatz liefert -1 - **keine Uebersetzung**.
+
+Es gibt also **keinen** Wert, bei dem der IMAP-Pfad tatsaechlich uebersetzt. Die
+Abfrage `> 1` ist dabei folgerichtig um eins verschoben (der POP-Pfad prueft
+`> 2`, `TextReader.cpp:245` und `lex822.cpp:541`); nur der **Wert**, der an
+`ISOTranslate` weitergereicht wird, ist es nicht.
+
+**Folge:** jede IMAP-Nachricht in UTF-8, ISO-8859-15 oder einem der
+Tabellenzeichensaetze kommt unuebersetzt im Postfach an. Fuer den POP-Pfad
+(`TextReader.cpp:251`, `lex822.cpp:544`) gilt das nicht - dort stimmt die
+Zaehlweise. Ein Schadensbild, das nur bei IMAP auftritt, ist also nicht dem
+Wandler anzulasten.
+
+**Zu tun:** in `ImapDownload.cpp:4644` denselben Aufruf verwenden wie
+`mime.cpp:382-390`, am besten durch Aufruf von `FindMIMECharset` selbst, und die
+Abfrage in Zeile 4657 auf `> 2` ziehen. Getrennt vom Portierungsumbau, weil es
+eine echte Verhaltensaenderung ist.
+
+### NP3-9 - Der Rueckgabewert von `ISOTranslate` wird an zwei Stellen verworfen
+
+**Sicherheit: nachgewiesen. Originalfehler von QUALCOMM, durch die Umstellung
+haeufiger sichtbar.**
+
+**Dateien:** `Eudora71/Eudora/TextReader.cpp:251`,
+`Eudora71/EuImap/src/ImapDownload.cpp:4662`
+
+`ISOTranslate` gibt die **neue** Laenge zurueck (`utils.cpp:1361-1367`: `lSize =
+lWrite; szBuf[lSize] = 0; return lSize;`) und ist nie laenger als die Eingabe.
+Beide Aufrufstellen verwerfen den Wert und rechnen mit der alten Laenge weiter:
+
+    // TextReader.cpp:251
+    ISOTranslate(buf, size, iCharsetIdx);
+    if (size) { ... buf[size-2] ... }        // size ist die ALTE Laenge
+
+    // ImapDownload.cpp:4662
+    ISOTranslate(pBuf, inLen, iCharsetIdx);
+    ... weiter mit inLen / outLen
+
+**Folge:** verkuerzt die Umsetzung den Text - und das tut sie bei jeder
+Mehrbyte-Folge, die zu einem Byte wird -, dann liegen zwischen dem neuen Ende und
+der alten Laenge die unveraenderten Reste des Ausgangstextes. Die werden
+mitgeschrieben. Kein Zugriff ueber das Pufferende hinaus, aber ein sichtbar
+falscher Textschwanz. Bei UTF-8 faellt das am staerksten auf: der neue Weg ueber
+`MultiByteToWideChar`/`WideCharToMultiByte` verkuerzt zwei- bis vierbyteweise,
+die alte Tabelle nur um ein bis zwei Byte je Zeichen.
+
+**Nicht betroffen** sind die beiden anderen Aufrufstellen: `lex822.cpp:544` und
+`ImapLex822.cpp:577` rufen mit `strlen(text)` und arbeiten danach wieder ueber
+die Nullterminierung - und die setzt `ISOTranslate` auf die neue Laenge.
+Nachgesehen, nicht vermutet.
+
+**Zu tun:** `size = ISOTranslate(buf, size, iCharsetIdx);` bzw.
+`inLen = ISOTranslate(pBuf, inLen, iCharsetIdx);`. Bei `ImapDownload.cpp` ist
+vorher NP3-8 zu klaeren, sonst laeuft der Zweig ohnehin nie an. Achtung bei
+`TextReader.cpp`: `outLen` bzw. die nachfolgende `CRLF`-Pruefung haengen an
+`size`, die Aenderung ist also nicht ganz oertlich - sie gehoert mit einem Test
+abgesichert.
+
+---
+
+## Stand nach dem zweiten Teil
+
+**Zusaetzlich durch:**
+
+- `tools/lehren-spiegeln.pl` (95 Zeilen), `tools/pruefstand-melden.pl` (86
+  Zeilen), `tools/hooks-einrichten.sh` und der eingerichtete
+  `.git/hooks/pre-commit`. Beide Skripte wurden **ausgefuehrt**, das Verhalten
+  von `git commit -- <pfad>` mit stagendem pre-commit-Hook in einem eigenen
+  Testrepo vorgefuehrt.
+- `Eudora/utils.cpp` `ISOTranslate` vollstaendig (Z. 1165-1367),
+  `Eudora/rs.cpp` `FindRStringIndexI` (Z. 796-830), `Eudora/mime.cpp`
+  `FindMIMECharset` (Z. 379-400), die vier Aufrufstellen von `ISOTranslate`
+  und die Ressourcentabelle der Zeichensatznamen.
+
+**Weiterhin offen** (unveraendert gegenueber dem ersten Teil):
+`OTShim_Bild.{h,cpp}` ausserhalb von `CreateFromBitmap`, `OTShim_Palette.{h,cpp}`
+ausserhalb von `SECDateTimeCtrl`, die Anordnungsrechnung von
+`OTShim_Werkzeugleiste`, `tools/pruefe-bytes.pl` und `tools/aendere-zeile.pl`
+(nicht beauftragt), `Eudora.vcxproj`.
