@@ -24,8 +24,11 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
 > `LinkLibraryDependencies` auf `false`, `Eudora.vcxproj:1015`).
 >
-> **Ungeprüft ist, ob das Programm startet.** `EudoraRes.dll` fehlt und wird zur
-> Laufzeit nachgeladen — siehe `STARTUMGEBUNG.md`.
+> **Eudora startet und zeigt sein Hauptfenster** (30.08.2026, Paket 1.0.2). Der
+> Absturz beim Start war die Werbefläche — Befund S-2 in `BEFUNDE.md`. Das heißt
+> aber noch nicht „lauffähig": von den drei Kriterien in `ZIEL.md` ist bisher nur
+> das erste erfüllt. `EudoraRes.dll` fehlt weiterhin und wird zur Laufzeit
+> nachgeladen — siehe `STARTUMGEBUNG.md`.
 
 **16 der 18 Projekte werden fertig.** Zwei nicht:
 
@@ -604,20 +607,33 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
 
 ## Fallstricke für die Weiterarbeit
 
-- **`core.autocrlf`**: repo-lokal auf `false` gesetzt. Die Quellen haben gemischte
-  Zeilenenden; mit `autocrlf=true` schreibt Git beim Stagen jede angefasste Datei
-  komplett um und der Diff wird unlesbar.
+- **`core.autocrlf`**: repo-lokal auf `false` gesetzt, dazu seit `1f42745` eine
+  `.gitattributes` mit `* -text`. Die Quellen haben gemischte Zeilenenden; mit
+  `autocrlf=true` schreibt Git beim Stagen jede angefasste Datei komplett um und der
+  Diff wird unlesbar.
+
+  **Der Altschaden war damit nicht behoben.** Dieser Baum war seinerzeit mit
+  `autocrlf=true` ausgecheckt worden; 4616 von 5563 verfolgten Dateien lagen im
+  Arbeitsverzeichnis als CRLF, während im Commit LF stand — und galten für git
+  trotzdem als sauber, weil git bei passendem Zeitstempel und passender Größe gar
+  nicht erst hineinsieht. Das ist die Wurzel aller CRLF-Vorfälle dieses Projekts
+  (**Befund S-7**). Behoben mit `tools/zeilenenden-angleichen.pl`; nach jedem
+  frischen Klon einmal auszuführen, siehe `README.md`.
 - **`sed` unter Git Bash**: nur mit `-b` (binary) benutzen. Ohne `-b` verschluckt es
   die CR aus CRLF-Zeilen und erzeugt dieselbe Diff-Flut.
 - **Zwei Werkzeuge gegen genau diese Schäden** (seit Commit `a7aeb33`, beide in
   `tools/`):
   - `tools/pruefe-bytes.pl` — vergleicht für jede zum Commit vorgemerkte Datei den
     **Index**-Blob gegen den **HEAD**-Blob (nicht die Arbeitskopie, die liegt bei
-    manchen Dateien abweichend vor) und bricht den Commit ab, wenn sich die CR-Anzahl
-    geändert hat oder Unicode-Ersatzzeichen `U+FFFD` hinzugekommen sind — die Eudora-
-    Quellen sind **Latin-1**, nicht UTF-8. Geprüft werden die Endungen `cpp h c hpp
-    inl rc idl mak txt md vcxproj filters`. Bewusst überspringen:
-    `git commit --no-verify`.
+    manchen Dateien abweichend vor) und bricht den Commit ab bei:
+    (a) inhaltlich gleicher Datei mit verschiedenen Bytes, (b) einer inhaltlich
+    unveränderten Zeile, die ihr Zeilenende gewechselt hat, oder (c) neu
+    hinzugekommenen Unicode-Ersatzzeichen `U+FFFD` — die Eudora-Quellen sind
+    **Latin-1**, nicht UTF-8.
+    Die **bloße CR-Anzahl** wird seit `371c1e3` **nicht** mehr verglichen: das schlug
+    schon beim reinen Hinzufügen von Zeilen an und erzeugte Fehlalarme. Geprüft
+    werden die Endungen `cpp h c hpp inl rc idl mak txt md vcxproj filters`. Bewusst
+    überspringen: `git commit --no-verify`.
   - `tools/aendere-zeile.pl` — ändert eine einzelne Zeile byte-erhaltend:
     `perl tools/aendere-zeile.pl <datei> <zeilennummer> <alt> <neu>`. Liest und
     schreibt mit `:raw`, ersetzt per `index`/`substr` statt per regulärem Ausdruck

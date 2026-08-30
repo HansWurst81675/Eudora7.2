@@ -60,6 +60,24 @@ Danach steht das Hauptfenster: Menueleiste, Werkzeugleiste, Postfachbereich,
 Statuszeile.
 
 
+WAS DIESES PAKET NOCH NICHT KANN
+--------------------------------
+
+Der Dateiname sagt "lauffaehig". Das trifft nicht zu. Massgeblich sind drei
+Kriterien (ZIEL.md im Quellbaum):
+
+    1. Eudora startet und zeigt sein Hauptfenster    ERFUELLT
+    2. Die Darstellung ist korrekt                   NICHT ERFUELLT
+    3. Mailkonto einrichten, verbinden, Mail abrufen  NICHT GEPRUEFT
+
+Zu 2: Menues lassen sich nicht aufklappen (Befund S-5). Nach dem Oeffnen
+mehrerer Wazoos ueberlagern sich Adressbuch, Registerkarten und
+Nachrichtenliste (S-6). An beidem wird gearbeitet.
+
+Kuenftige Pakete tragen nicht mehr das Wort "lauffaehig" im Namen, solange es
+nicht zutrifft. Dieses behaelt seinen Namen, weil es so veroeffentlicht ist.
+
+
 VORAUSSETZUNGEN
 ---------------
 

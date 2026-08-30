@@ -59,10 +59,15 @@ Auscheckens mit `core.autocrlf=true`. Git sah nicht hinein, solange niemand die
 Datei anfasste; danach sprang die *ganze* Datei als geändert heraus. Das ist
 einmalig bereinigt.
 
-> **Nach jedem frischen Klon einmal ausführen:**
+> **Nach jedem frischen Klon, alle vier Schritte:**
 > ```bash
-> perl tools/zeilenenden-angleichen.pl --aendern && git ls-files -z | xargs -0 -n 400 git add --
+> git config core.autocrlf false
+> sh tools/hooks-einrichten.sh
+> perl tools/zeilenenden-angleichen.pl --aendern
+> git ls-files -z | xargs -0 -n 400 git add --
 > ```
+> Keiner davon ist wahlfrei. Ohne den Hook treten zwei Fehlerklassen lautlos
+> wieder auf.
 
 Dazu die Berichtigung: die frühere Vermutung „mit `autocrlf=true` geklont" war
 **richtig** und wurde damals zu Unrecht als widerlegt abgehakt — `git config`
