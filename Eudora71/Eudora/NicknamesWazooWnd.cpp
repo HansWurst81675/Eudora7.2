@@ -112,7 +112,26 @@ BOOL CNicknamesWazooWnd::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHAND
 ////////////////////////////////////////////////////////////////////////
 void CNicknamesWazooWnd::OnDeactivateWazoo()
 {
-	ASSERT(::IsWindow(m_wndSplitter.GetSafeHwnd()));
+	// Eine Registerkarte kann aktiv sein, ohne je angezeigt worden zu sein:
+	// SECTabControlBase::InsertTab macht die erste Karte still aktiv, damit
+	// beim Aufbau der Leiste noch kein Wazoo angestossen wird. QUALCOMM
+	// beschreibt genau diesen Zustand in WazooBar.cpp:346 und faengt ihn beim
+	// AKTIVIEREN ab - an den beiden Deaktivierungsstellen (QC3DTabWnd.cpp:101,
+	// WazooBar.cpp:1396) fehlt dieselbe Absicherung.
+	//
+	// Die urspruengliche Zeile war
+	//     ASSERT(::IsWindow(m_wndSplitter.GetSafeHwnd()));
+	// und schlug zu, sobald man von dieser Karte wegklickte, ohne sie je
+	// geoeffnet zu haben. In der Schwesterklasse CFiltersWazooWnd hat QUALCOMM
+	// dieselbe Zusicherung bereits auskommentiert (FiltersWazooWnd.cpp:109) -
+	// die Regel gilt also nachweislich nicht.
+	//
+	// Ohne Ansichten gibt es nichts zu sichern: CreateViews wurde nie
+	// aufgerufen, also kann auch nichts geaendert worden sein. Hier
+	// auszusteigen ist sicherer als weiterzulaufen, denn unten wird g_Nicknames
+	// vorausgesetzt. Gemessen am 30.08.2026, Befund S-4.
+	if (!::IsWindow(m_wndSplitter.GetSafeHwnd()))
+		return;
 
 	//
 	// Give the parent implementation a chance to save the keyboard focus.
