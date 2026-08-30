@@ -116,7 +116,7 @@ dass die Stelle geprueft ist.
 
 ---
 
-## M1 [ERLEDIGT] - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
+## M1 - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
 
 **Sicherheit: nachgewiesen (Code); Auswirkung: Verdacht**
 
@@ -138,29 +138,9 @@ Zwei Abweichungen auf einmal:
    das die Voreinstellung Security Level 1 von OpenSSL 3 wieder ab, die TLS < 1.2
    ohnehin ablehnt - verlassen sollte man sich darauf nicht.
 
-**ERLEDIGT** - Code in `78a9c10`. Die Aenderung war zum Commit vorgemerkt, als ein
-parallel arbeitender Agent committete; sein `git commit` hat sie mitgenommen. Die
-Commit-Nachricht von `78a9c10` beschreibt sie deshalb nicht. Inhalt und Wirkung
-sind davon unberuehrt.
-
-Entschieden wurde die erste Fassung: Fall 3 bekommt denselben Boden wie alle
-anderen Faelle. Gruende, nachgemessen statt vermutet:
-
-- Fall 3 ist nicht der Sonderfall, sondern der **Normalfall**: `EudoraRes.rc:8143`
-  und `:8147` geben `SSLReceiveVersion` und `SSLSendVersion` beide mit **3** vor.
-  Die schwaechste Untergrenze galt also fuer jede Voreinstellung, die TLS-1.2-
-  Untergrenze der anderen Faelle fuer fast niemanden.
-- Die Obergrenze offenzulassen ist richtig und bleibt so; TLS 1.3 zu verbieten,
-  weil ein Anwender 2006 "TLSv1" angeklickt hat, waere unsinnig. Nur die
-  Untergrenze war zu tief.
-- Wirkung gemessen, nicht angenommen: `Eudora71/Tests/QCSSL/work/ergebnis_qcssl_lokal.txt`,
-  Fall 2e (`ProtocolVersion=3` gegen einen Server, der nur TLS 1.0 spricht) schlug
-  schon vor der Aenderung fehl - Security Level 1 von OpenSSL 3 laesst TLS 1.0/1.1
-  gar nicht erst zu. Die Aenderung schreibt also nur fest, was ohnehin geschieht,
-  und bricht keine Verbindung, die heute zustande kommt.
-
-**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 557 (Kommentar), Z. 577/578
-(`iMinVersion = TLS1_2_VERSION` statt `TLS1_VERSION`, mit Begruendung im Code).
+**Zu tun:** Entscheiden, ob Fall 3 heute noch etwas anderes bedeuten soll als
+Fall 0/1/4/6/7. Wenn nicht: ebenfalls auf `TLS1_2_VERSION` legen. Wenn doch:
+`SSL_CTX_set_max_proto_version()` mitsetzen und den Kommentar ergaenzen.
 
 ---
 
@@ -349,7 +329,7 @@ nicht noetig.
 
 ---
 
-## N3 [ERLEDIGT] - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
+## N3 - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
 
 **Sicherheit: nachgewiesen; geringe Auswirkung**
 
@@ -362,18 +342,8 @@ nicht noetig.
   haben. Der Rueckgabewert wurde allerdings auch vorher schon von
   `BeginQCSSLSession()` verworfen, insofern keine Aenderung im Ablauf.
 
-**ERLEDIGT** (Commit siehe unten). Beide Rueckgabewerte werden jetzt ausgewertet:
-
-- `SSL_CTX_set_min_proto_version()` (jetzt Z. 591): schlaegt der Aufruf fehl, wird
-  der Kontext freigegeben und `NULL` zurueckgegeben. `BeginQCSSLSession()` bricht
-  bei `NULL` ab - derselbe Weg, den H1 fuer die ungueltige Version wiederhergestellt
-  hat. Damit kann die eingestellte Untergrenze nicht mehr stillschweigend durch die
-  Voreinstellung von OpenSSL ersetzt werden.
-- `SetCipherSuites()` (Aufruf in `BeginQCSSLSession()`, jetzt Z. 770): Rueckgabewert
-  wird geprueft und fuehrt im Fehlerfall zum Abbruch samt `SSL_CTX_free()` und
-  `g_Mutex.Unlock()`, wie in den benachbarten Fehlerzweigen. Ausloesen kann das nur
-  `pSSLCtx == NULL`, und das ist zwei Zeilen darueber schon abgefangen - die
-  Auswertung ist also eine Schranke gegen kuenftige Aenderungen, kein neuer Pfad.
+**Zu tun:** Beim ersten Punkt den Rueckgabewert pruefen und im Fehlerfall wie
+in H1 abbrechen.
 
 ---
 
@@ -992,3 +962,68 @@ Der Werkzeugleisten-Block aus `91716bb` ist an den geprueften Stellen
 stand. Der ernsteste Befund an Stufe 3 ist nicht der Code selbst, sondern dass
 er nirgends eingebunden ist (NP2-1) und deshalb noch durch keinen Uebersetzer
 gelaufen ist.
+
+---
+
+# Erledigt durch WACHE (30.08.2026, Branch `eudora-exe-linkt`)
+
+Zustaendig fuer `Eudora71/QCSSL/src/*` und `Eudora71/QCSocket/src/*`. Die
+Befundabschnitte oben sind unveraendert geblieben; hier steht, was daraus
+geworden ist. Ausdruecklich nicht angefasst: die Hostnamenpruefung (nur CN, keine
+SAN, rein beratend) und die Zertifikatsannahme bei `X509_V_ERR_CERT_UNTRUSTED` -
+beide sind nach `Arbeitsweise/zurueckgestellte-befunde.md` bewusst zurueckgestellt,
+der fertige Patch `tools/patches/zertifikatspruefung-verschaerfen.patch` bleibt
+unangewandt.
+
+## M1 - erledigt, Code in `78a9c10`
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp`, `SetSSLVersion()`: Z. 557
+(Kommentar), Z. 577/578 - Fall 3 setzt jetzt `iMinVersion = TLS1_2_VERSION`
+statt `TLS1_VERSION`, mit Begruendung im Code.
+
+Von den beiden im Befund angebotenen Wegen wurde der erste gewaehlt: Fall 3
+bekommt denselben Boden wie alle anderen Faelle, die Obergrenze bleibt offen.
+Begruendung, nachgemessen statt vermutet:
+
+- Fall 3 ist nicht der Sonderfall, sondern der **Normalfall**. `EudoraRes.rc:8143`
+  und `:8147` geben `SSLReceiveVersion` und `SSLSendVersion` beide mit **3** vor.
+  Die schwaechste Untergrenze galt also fuer jede Voreinstellung; die TLS-1.2-
+  Untergrenze der uebrigen Faelle traf fast niemanden. Der Befund beschreibt Fall 3
+  als Ausreisser - er ist in Wahrheit der Regelfall, was ihn ernster macht, nicht
+  harmloser.
+- Die Obergrenze offenzulassen ist richtig und bleibt so. TLS 1.3 zu verbieten,
+  weil jemand vor zwanzig Jahren "TLSv1" angeklickt hat, waere unsinnig; zu tief
+  war nur die Untergrenze.
+- Wirkung gemessen: `Eudora71/Tests/QCSSL/work/ergebnis_qcssl_lokal.txt`, Fall 2e
+  (`ProtocolVersion=3` gegen einen Server, der nur TLS 1.0 spricht) schlug **schon
+  vor** der Aenderung fehl - Security Level 1 von OpenSSL 3 laesst TLS 1.0/1.1 gar
+  nicht erst zu. Die Aenderung schreibt damit nur fest, was ohnehin geschieht, und
+  bricht keine Verbindung, die heute zustande kommt.
+
+**Zur Commit-Zuordnung:** die Aenderung war zum Commit vorgemerkt, als ein parallel
+arbeitender Agent `git commit` ohne Pfadangabe ausfuehrte; sie ist deshalb in
+`78a9c10` gelandet, dessen Nachricht sie nicht beschreibt. Inhalt und Wirkung sind
+davon unberuehrt. Seither committe ich nur noch mit Pfadangabe.
+
+Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
+Tests: `Eudora71/Tests/RunTests.cmd` - 23 Tests, 23 bestanden, 0 fehlgeschlagen.
+
+## N3 - erledigt, Commit `9608b39`
+
+**Datei:** `Eudora71/QCSSL/src/QCSSLContext.cpp` Z. 591 und Z. 770.
+
+- `SSL_CTX_set_min_proto_version()`: schlaegt der Aufruf fehl, wird der Kontext
+  freigegeben und `NULL` zurueckgegeben. `BeginQCSSLSession()` bricht bei `NULL`
+  ab - denselben Weg nimmt seit H1 auch die ungueltige Version. Die eingestellte
+  Untergrenze kann damit nicht mehr stillschweigend durch die Voreinstellung von
+  OpenSSL ersetzt werden.
+- `SetCipherSuites()`: Rueckgabewert wird in `BeginQCSSLSession()` geprueft und
+  fuehrt im Fehlerfall zum Abbruch samt `SSL_CTX_free()` und `g_Mutex.Unlock()`,
+  wie in den benachbarten Fehlerzweigen. Ausloesen kann das nur `pSSLCtx == NULL`,
+  was zwei Zeilen darueber schon geprueft wird - die Auswertung ist eine Schranke
+  gegen kuenftige Aenderungen, kein neuer Pfad.
+
+Bauen: `QCSSL.vcxproj` Release/x86 erfolgreich, 0 Warnungen, 0 Fehler.
+Tests: `Eudora71/Tests/RunTests.cmd` - 33 Tests, 30 bestanden, 3 fehlgeschlagen.
+Die drei roten Tests betreffen `ISOTranslate()` in `Eudora/utils.cpp` (Emoji,
+griechische Schrift) - ein anderer Arbeitsbereich, QCSSL hat daran keinen Anteil.
