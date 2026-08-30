@@ -327,7 +327,7 @@ void SECTabControlBase::OnActivateTab(int nTab)
 	// haengt SECTabWndBase::OnTabSelect, das den Fensterwechsel vornimmt und
 	// die Nachricht an die Wazoo-Leiste weiterreicht - nur so erreicht sie
 	// CWazooBar::OnTabSelect (WazooBar.cpp:51).
-	CWnd* pParent = GetParent();
+	if (GetSafeHwnd() == NULL) return;  /* sonst assertiert GetParent(), Befund P-1 */  CWnd* pParent = GetParent();
 	if (pParent != NULL && ::IsWindow(pParent->GetSafeHwnd()))
 		pParent->SendMessage(TCM_TABSEL, (WPARAM) nTab, 0);
 }
@@ -355,7 +355,7 @@ void SECTabControlBase::ClearSelection()
 	if (GetSafeHwnd() != NULL)
 		Invalidate();
 
-	CWnd* pParent = GetParent();
+	if (GetSafeHwnd() == NULL) return;  /* sonst assertiert GetParent(), Befund P-1 */  CWnd* pParent = GetParent();
 	if (pParent != NULL && ::IsWindow(pParent->GetSafeHwnd()))
 		pParent->SendMessage(TCM_TABSELCLR, 0, 0);
 }
