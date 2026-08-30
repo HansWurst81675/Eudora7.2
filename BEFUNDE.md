@@ -2376,3 +2376,54 @@ Portierung.
 Ersatzschicht) meldete fuenf Zyklen - **alle Fehlalarm**: es sind Ueberladungen,
 die das Werkzeug nur am Namen und an der Argumentzahl unterscheidet, nicht an
 den Typen. Die Ersatzschicht war an diesem Absturz unbeteiligt.
+
+## S-3 — Erster Lauf durch einen Anwender: was auffiel (30.08.2026)
+
+Gregor hat die Fassung mit abgeschalteter Werbeflaeche selbst gestartet. Sie
+laeuft. Aufgefallen ist Folgendes.
+
+### S-3a  Veraltete Selbstauskunft der Ersatzschicht (behoben)
+
+Beim Aufruf der Auto-Wazoo-Fensterleiste (Einstellung "MDI Task Bar") meldet
+sich die Ersatzschicht mit dem Hinweis, dass die Funktion fehlt - das ist so
+gewollt (`OTShimNichtUmgesetzt`, OTShim.cpp:153). Der Text behauptete aber:
+
+    Der Ersatz fuer das Stingray Objective Toolkit ist bis Stufe 2
+    (MDI-Fenstergeruest und Andockfamilie) umgesetzt. Alles Weitere
+    folgt in spaeteren Stufen.
+
+Das stimmte seit Commit `e50a89c` nicht mehr - Stufe 3, die Registerkarten und
+die Palette sind eingehaengt. Der Satz haette den Eindruck erweckt, die Schicht
+sei halbfertig, obwohl sie vollstaendig eingehaengt ist und nur einzelne
+Funktionen darin leer sind. Neu formuliert in OTShim.cpp:165-167.
+
+**Lehre:** Ein Text, der einen *Fortschrittsstand* nennt, veraltet zwangslaeufig.
+Meldungen sollen sagen, was fehlt - nicht, wie weit man ist.
+
+### S-3b  Vier Debug-Zusicherungen beim ersten Start (offen)
+
+Aus frisch ausgepacktem Paket erscheinen drei bis vier SUPERASSERT-Dialoge, die
+weggeklickt werden muessen. Eine davon ist belegt:
+
+    !"Erasing X1 indices because DB schema was missing or doesn't match"
+    SearchManager::Info::InitX1, SearchManagerInfo.cpp:496
+
+Das ist beim ersten Start normal - der Suchindex existiert noch nicht. In einem
+Release-Bau erschiene keiner dieser Dialoge; sie sind eine reine Folge davon,
+dass nur der Debug-Bau lauffaehig ist (der Release-Zweig scheitert an fehlender
+`Imap.lib`). Solange das so bleibt, gehoert der Hinweis in die Paketbeschreibung.
+
+### S-3c  Zwei Laufzeitbibliotheken fehlen weiterhin (offen)
+
+`MFC71.DLL` und `MSVCP71.dll` sind nicht vorhanden. Betroffen sind vier DLLs,
+die Eudora erst bei Benutzung laedt:
+
+| DLL | braucht | Funktion, die ausfaellt |
+|---|---|---|
+| EudoraBk.dll | MFC71 | Adressbuch |
+| ISock.dll | MFC71 | ein Socket-Pfad |
+| Ldap.dll | MFC71, MSVCP71 | LDAP-Verzeichnissuche |
+| Ph.dll | MSVCP71 | Ph-Verzeichnisdienst |
+
+Mailabruf und -versand sind davon **nicht** betroffen. Ohne die beiden Dateien
+faellt vor allem das Adressbuch aus.
