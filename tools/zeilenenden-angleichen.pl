@@ -7,9 +7,21 @@
 #
 # WARUM ES DIESES WERKZEUG GIBT
 #
-# Am 30.08.2026 gemessen: 4426 von 5336 verfolgten Quelldateien unterscheiden
-# sich von HEAD AUSSCHLIESSLICH in den Zeilenenden. Im Arbeitsverzeichnis
-# stehen sie als CRLF, im Commit als LF.
+# Am 30.08.2026 gemessen: 4616 von 5563 verfolgten Quell- und Textdateien
+# unterschieden sich von HEAD AUSSCHLIESSLICH in den Zeilenenden. Im
+# Arbeitsverzeichnis standen sie als CRLF, im Commit als LF.
+#
+# Diese Zahl ist eine EINMALIGE Messung des damaligen Arbeitsbaums und laesst
+# sich nicht wiederholen - der Baum ist seither angeglichen. Nachpruefbar ist
+# nur die Grundgesamtheit, und die waechst mit jedem Commit, der Dateien
+# hinzufuegt: 5563 am 30.08., 5568 am 30.08. abends, 5589 am 31.08.2026
+# (gemessen mit derselben Endungsliste, die dieses Werkzeug benutzt). Wer
+# nachzaehlen will:
+#
+#   perl tools/zeilenenden-angleichen.pl        # letzte Zeile: Grundgesamtheit
+#
+# Eine frueher hier genannte Zahl 4426 von 5336 stammte aus einem Durchlauf mit
+# kuerzerer Endungsliste und wurde nicht nachgezogen; sie ist ersatzlos weg.
 #
 # Ursache: das Repo wurde seinerzeit mit core.autocrlf=true ausgecheckt. Git
 # hat beim Auschecken LF nach CRLF gewandelt und die Datei trotzdem als sauber
@@ -36,6 +48,14 @@ use strict;
 use warnings;
 use IPC::Open2;
 use IO::Handle;
+use FindBin;
+
+# Gemeinsame Endungsliste mit tools/pruefe-bytes.pl. Zwei getrennte Listen sind
+# am 30.08.2026 auseinandergelaufen und haben ganze Dateiarten ungeprueft
+# gelassen (Befund PR-3).
+my $D = do "$FindBin::Bin/dateiendungen.pl";
+die "tools/dateiendungen.pl laesst sich nicht laden: " . ($@ ? $@ : $!) . "\n"
+    unless ref($D) eq 'HASH' and $D->{muster};
 
 my $aendern = grep { $_ eq '--aendern' } @ARGV;
 
@@ -84,7 +104,7 @@ open(my $ls, '-|', 'git ls-files -z') or die "git ls-files: $!\n";
     while (my $p = <$ls>) {
         chomp $p;
         next unless length $p;
-        next unless $p =~ /\.(c|cpp|h|hpp|inl|rc|idl|def|mak|txt|md)$/i;
+        next unless $p =~ $D->{muster};
         next unless -f $p;
         push @dateien, $p;
     }
