@@ -4945,15 +4945,17 @@ Das passt genau zum Bild: **ein** Ersatzzeichen je Umlaut. Waere es umgekehrt �
 UTF-8-Bytes als CP1252 gelesen —, stuenden dort **zwei** Zeichen (`Ã¼`). Der
 Textpfad hat kein `<meta>` und keinen Rater und zeigt deshalb richtig an (E-1).
 
-### Behebung: zwei kleine Aenderungen, beide noetig
+### Behebung: zwei Aenderungen, beide eingesetzt
 
 1. **Den Zeichensatz ansagen**, als erste Bytes der temporaeren Datei, vor dem
-   Stylesheet, in `CTridentView::WriteTempFile` (`Eudora/TridentView.cpp`, direkt
-   vor dem `theFile.Write(szStyleSheet, ...)` bei `:1336`):
+   Stylesheet, in `CTridentView::WriteTempFile`
+   (`Eudora/TridentView.cpp:1334-1351`):
 
-       static const char szCharsetMeta[] =
+       static const char	szCharsetMeta[] =
            "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">\r\n";
-       theFile.Write(szCharsetMeta, sizeof(szCharsetMeta) - 1);
+       ...
+       theFile.Write( szCharsetMeta, sizeof(szCharsetMeta) - 1 );
+       theFile.Write( szStyleSheet, szStyleSheet.GetLength() );
 
    `windows-1252` ist in **allen** Faellen richtig: bei `iCharsetIdx <= 2`
    (Windows, US-ASCII, Latin-1) sind die Bytes unveraendert Latin-1/CP1252, bei
@@ -4963,37 +4965,45 @@ Textpfad hat kein `<meta>` und keinen Rater und zeigt deshalb richtig an (E-1).
    in der Ressource stuende die Ansage dann nur manchmal in der Datei.
 
 2. **Die fremde Zeichensatz-Ansage entfernen**, in `GetBodyAsHTML`
-   (`Eudora/msgutils.cpp:1629`), damit MSHTML nicht doch der spaeteren Angabe
-   der Mail folgt:
+   (`Eudora/msgutils.cpp:1625-1639`), damit MSHTML nicht doch der spaeteren
+   Angabe der Mail folgt:
 
-       bool bIsBadMeta = HasBadAttributeValue(TagContents, "http-equiv", "refresh") ||
-                         (StrStrIA(TagContents, "charset") != NULL);
+       CString		TagContentsLower = TagContents;
+       TagContentsLower.MakeLower();
+       bool		bIsBadMeta = HasBadAttributeValue(TagContents, "http-equiv", "refresh") ||
+                                ( TagContentsLower.Find("charset") >= 0 );
 
-   UNGEPRUEFT ist allein, ob Schritt 1 fuer sich genuegt: ob MSHTML die erste
-   oder die letzte `charset`-Angabe im Dokument gewinnen laesst, ist nicht
+   Ueber die Zeichenkette `charset` statt ueber `http-equiv`, weil der
+   HTML5-Kurzschreibweise `<meta charset="utf-8">` das `http-equiv` fehlt und
+   `HasBadAttributeValue` sie deshalb nicht sieht. `CString::MakeLower` statt
+   `StrStrIA`, damit `msgutils.cpp` keinen neuen Kopf (`<shlwapi.h>`) braucht.
+
+   UNGEPRUEFT ist allein, ob Schritt 1 fuer sich genuegt haette: ob MSHTML die
+   erste oder die letzte `charset`-Angabe im Dokument gewinnen laesst, ist nicht
    nachgemessen. Schritt 2 macht die Frage gegenstandslos, deshalb beide.
-
-### Nebenbefund (nicht behoben)
-
-Ein `<meta charset="utf-8">` im HTML5-Stil, ohne `http-equiv`, kommt in
-`GetBodyAsHTML` gar nicht erst in die Naehe der Pruefung; die Fassung von
-Schritt 2 oben faengt ihn ueber die Zeichenkette `charset` trotzdem mit ab.
 
 ### Stand und naechster Schritt
 
-Ursache belegt, Anzeigepfad vollstaendig verfolgt, Fundstellen oben mit
-Datei:Zeile. Der Code ist **nicht** geaendert — die Frist reichte nicht mehr,
-um die Aenderung zu uebersetzen und zu pruefen, und eine ungebaute Aenderung an
-`TridentView.cpp` waere schlechter als keine.
+Ursache belegt, Anzeigepfad vollstaendig verfolgt, Fundstellen mit Datei:Zeile
+oben. Beide Aenderungen sind eingesetzt (byte-erhaltend ueber
+`tools/ersetze-bereich.pl`, CR-Zahl vorher/nachher je 18, unveraendert).
 
-Naechster Schritt, in dieser Reihenfolge:
+**Nicht nachgewiesen ist die Wirkung.** Der Bau lief zum Zeitpunkt des Commits
+noch (frischer Worktree, die ganze Solution muss durch), und ein Lauf von
+Eudora war nach Auflage ausgeschlossen. Wer weitermacht:
 
-1. Beide Aenderungen oben einsetzen (byte-erhaltend, `tools/aendere-zeile.pl`).
-   Fuer `StrStrIA` braucht `msgutils.cpp` `<shlwapi.h>` — falls das stoert,
-   genuegt ein zweites `HasBadAttributeValue(TagContents, "http-equiv",
-   "content-type")` ohne neuen Kopf, das deckt den Regelfall ab.
-2. In der PowerShell uebersetzen.
-3. Gegenprobe ohne Eudora-Start: eine UTF-8-HTML-Mail zustellen, danach in
-   `%TEMP%\eud*.htm` (Zwischendatei bleibt bis zum Aufraeumen liegen,
-   `TridentView.cpp:1469-1484`) nachsehen, ob die erste Zeile die
-   `windows-1252`-Ansage traegt und im Rumpf kein `charset=utf-8` mehr steht.
+1. `MSBuild Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86` aus der
+   PowerShell — wenn er bricht, liegt es an einer dieser beiden Stellen, keine
+   andere Datei ist angefasst.
+2. Gegenprobe ohne Eudora-Start moeglich: nach dem Anzeigen einer
+   UTF-8-HTML-Mail liegt die Zwischendatei in `%TEMP%\eud*.htm`
+   (`TridentView.cpp:1469-1484`). Darin muss die erste Zeile die
+   `windows-1252`-Ansage tragen und im Rumpf darf kein `charset=` mehr stehen.
+3. Erst danach das Bildschirmfoto aus E-2 wiederholen.
+
+### Nebenbefund (nicht behoben)
+
+`GetBodyAsHTML` schreibt beim Pruefen der Meta-Tags mit `*(LPTSTR)TagEnd = 0`
+in einen Puffer, der ueber `LPCTSTR` hereinkam (`msgutils.cpp:1633`). Das ist
+Bestand des Originalcodes und hier nicht angeruehrt worden, faellt aber jedem
+auf, der die Stelle liest.

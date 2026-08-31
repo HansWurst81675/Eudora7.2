@@ -1331,9 +1331,23 @@ CTridentView::WriteTempFile(
 		(LPCSTR) GetIniString(IDS_INI_MESSAGE_FIXED_FONT),
 		(LPCSTR) GetIniString(IDS_INI_EXCERPT_BARS) );
 
+	//	Announce the character set of everything that follows.  This has to be
+	//	the FIRST thing in the file: MSHTML receives this document as a file
+	//	path (CSite::Load, SITE.CPP:397-465), so it has to work out the encoding
+	//	from the content alone.  What we write is Windows-1252 in every case:
+	//	untranslated Latin-1/CP1252 for the charset indices 0..2, and the output
+	//	of ISOTranslate (utils.cpp, TextReader.cpp:243-250) for everything above.
+	//	Without this line MSHTML believes the <meta charset=utf-8> that the
+	//	original mail carries and turns every CP1252 umlaut byte into U+FFFD.
+	//	Not put into IDS_INI_READMESSAGE_STYLE_SHEET because a read.css in the
+	//	Eudora directory replaces that resource entirely.
+	static const char	szCharsetMeta[] =
+		"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">\r\n";
+
 	//	Write out the style sheet
 	try
 	{			
+		theFile.Write( szCharsetMeta, sizeof(szCharsetMeta) - 1 );
 		theFile.Write( szStyleSheet, szStyleSheet.GetLength() );
 	}
 	catch( CException* pExp )
