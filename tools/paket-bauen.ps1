@@ -126,8 +126,14 @@ Write-Host '1. Laufzeitbruecke statt Fremddatei'
 Nimm (Join-Path $binRel 'msvcr71.dll') 'msvcr71.dll'
 
 Write-Host ''
-Write-Host '2. Paige: Release-Fassung unter dem Debug-Dateinamen'
+Write-Host '2. Paige'
+# Der Debug-Bau importiert den DATEINAMEN Paige32d.dll, der Release-Bau
+# Paige32.dll (Eudora.vcxproj:94 bzw. :144, Paige32d.lib gegen Paige32.lib).
+# Beide Fassungen sind ABI-gleich - vier Belege in
+# Eudora71\VC71Bruecke\BEFUND.md, Abschnitt 3. Deshalb dieselbe Datei,
+# einmal unter jedem Namen; welcher gebraucht wird, haengt an der Bauart.
 Nimm (Join-Path $binRel 'Paige32.dll') 'Paige32d.dll'
+if ($Bauart -eq 'Release') { Nimm (Join-Path $binRel 'Paige32.dll') 'Paige32.dll' }
 
 Write-Host ''
 Write-Host '3. Fremddateien von dll-files.com entfernen'

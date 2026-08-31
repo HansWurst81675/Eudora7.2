@@ -3933,3 +3933,155 @@ Er erfuellt Kriterium 0 genauso, nur mit drei Dateien mehr im ZIP:
 Der zweite Gewinn ist der, den der Auftrag nebenbei nennt: im Release-Bau
 verschwinden die SUPERASSERT-Dialoge aus S-3b und saemtliche `ASSERT`- und
 `VERIFY`-Pruefungen. Das Programm startet ohne Zwischenfrage durch.
+
+### F-1.4 — Warum der Release-Zweig nie gebunden hat: ein Buchstabe
+
+Der eigentliche Fund. `Eudora71/Eudora/Eudora.vcxproj:147`, Release-Zweig:
+
+    <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;OTA50D.LIB;...
+
+`OTA50D.LIB` ist der **Debug**-Name. Der Debug-Zweig (`:97`) schliesst
+dieselbe Datei aus und ist damit richtig; der Release-Zweig braucht
+`OTA50R.LIB` (`OT501/Src/OT501.vcxproj:50`) und schliesst sie nicht aus.
+Ergebnis seit jeher:
+
+    LINK : fatal error LNK1104: Datei "ota50r.lib" kann nicht geoeffnet werden.
+
+`OTA50R.LIB` laesst sich nicht bauen — `NMAKE /f build50.mak ota50r` bricht mit
+`U1073` ab, weil `OT501/Src/utility/crypt/Blackbox.cpp` in der Freigabe von
+2006 fehlt. Gebraucht wird sie auch nicht: die vier Funktionen daraus liefert
+`Eudora71/OTShim/OTShim_Spur.cpp` seit B-1, und die stehen ohnehin unter
+`_DEBUG`.
+
+**Woher die Anforderung kommt, war der Umweg.** Sie steht **nicht** in
+`AdditionalDependencies` und **nicht** auf der Linker-Befehlszeile — im
+Diagnoseprotokoll von MSBuild taucht `ota50r.lib` an keiner Stelle auf. Sie
+kommt als Standardbibliotheks-Direktive aus den Objektdateien von
+`AccountWizard` und `DirectoryServicesUI` (gemessen: Volltextsuche ueber alle
+`.obj` unter `Eudora71`, 29 Treffer, alle in diesen beiden Projekten). Deshalb
+hilft nur `IgnoreSpecificDefaultLibraries`, und deshalb hat das Suchen in
+`AdditionalDependencies` nichts ergeben.
+
+**Behoben:** `OTA50R.LIB` in `Eudora.vcxproj:147` ergaenzt. Eine Zeile.
+
+### F-1.5 — Der zweite Stolperstein: MakeDox.pl im Nachbereitungsschritt
+
+Danach band `Eudora.exe` durch — und der Bau endete trotzdem mit Fehler:
+
+    error MSB3073: Der Befehl "... MakeDox.pl Eudora.sln DevDox ..."
+    wurde mit dem Code 9009 beendet.
+
+`Eudora.vcxproj:161-166` liess im Release-Zweig nach dem Binden
+`MakeDox.pl Eudora.sln DevDox` laufen — die Doxygen-Entwicklerdoku von 2006.
+Das Werkzeug ist nicht auf dem Pfad, 9009 heisst „Befehl nicht gefunden". Der
+**Debug**-Zweig hat gar keinen Nachbereitungsschritt.
+
+Die zwei Doku-Zeilen entfernt. `call ..\BinTools\PostProcessRel Eudora` bleibt
+stehen; das ruft `UpdateExternalEMSAPIHeader.pl` und `BindExe ..\Bin\Release`
+auf und laeuft durch.
+
+**Nebenwirkung, die man wissen muss:** `BindExe` schreibt die Bindungsdaten in
+**jede** DLL in `Eudora71/Bin/Release` zurueck, auch in die zwoelf vorgebauten
+Fremd-DLLs von 2006, die im Repository liegen. Nach einem Release-Bau meldet
+`git status` sie deshalb als geaendert. Sie gehoeren **nicht** in einen Commit.
+
+### F-1.6 — Gemessen: was uebrig bleibt
+
+`Eudora71/Bin/Release/Eudora.exe`, 2.933.760 B. `dumpbin /dependents`:
+
+| Art | Eintraege |
+|---|---|
+| eigene Module | `Paige32.dll`, `Imap.dll`, `QCUtils.dll`, `EuMemMgr.dll`, `EuLang.dll`, `LIBEXPAT.dll`, `plstclnt.dll`, `QCSocket.dll` |
+| **Laufzeit von Visual C++** | **`mfc140.dll`, `MSVCP140.dll`, `VCRUNTIME140.dll`** — alle drei verteilbar |
+| UCRT | zwoelf `api-ms-win-crt-*` — Bestandteil von Windows 10, nichts beizulegen |
+| Windows | `KERNEL32`, `USER32`, `GDI32`, `COMDLG32`, `ADVAPI32`, `SHELL32`, `COMCTL32`, `ole32`, `OLEAUT32`, `urlmon`, `VERSION`, `WININET`, `MSVFW32`, `WINMM`, `gdiplus` |
+
+Kein `ucrtbased.dll`, kein `d`-Anhang. Genau die drei Dateien, an denen Gregor
+am Morgen gescheitert ist, sind weg — und ihre drei Nachfolger duerfen ins ZIP.
+
+### F-1.7 — `tools/paket-bauen.ps1` kann jetzt Release
+
+Neuer Schalter `-Bauart Debug|Release` (Vorgabe `Debug`, also keine Aenderung
+fuer bestehende Aufrufe). Bei `Release`:
+
+- `-AusBauverzeichnis` nimmt aus `Eudora71\Bin\Release` statt `Bin\Debug`
+- `Paige32.dll` kommt **unter beiden Namen** ins Paket. Der Debug-Bau
+  importiert `Paige32d.dll` (`Eudora.vcxproj:94`), der Release-Bau
+  `Paige32.dll` (`:144`) — das war der eine Fehler, den der Paketpruefer im
+  ersten Anlauf gemeldet hat.
+- die drei verteilbaren Laufzeit-DLLs kommen aus dem VC-Redistributable der
+  oertlichen Visual-Studio-Installation ins Paket, ueber `vswhere`
+- `laufzeit-holen.ps1` faellt weg — es wird nichts mehr nachgeholt
+
+### F-1.8 — Was der Paketpruefer sagt
+
+    powershell -File tools\paket-bauen.ps1 -Ziel <verz> -Bauart Release -AusBauverzeichnis
+    powershell -File tools\paket-pruefen.ps1 -Paket <verz>
+
+    32 Binaerdateien geprueft, alle x86.
+    ERGEBNIS: keine Fehler.
+    7 Warnung(en)
+
+**Null Fehler.** Damit ist Kriterium 0 gemessen erfuellt, so weit ein Pruefer
+ohne Start es belegen kann.
+
+Von den sieben Warnungen sind **vier falsch**: der Pruefer sucht in Abschnitt 3
+fest nach `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
+`ucrtbased.dll` und warnt, wenn sie fehlen — auch dann, wenn keine einzige
+Datei im Paket sie importiert. Fuer ein Release-Paket ist das Unsinn.
+Nachgemessen: keine der 32 Binaerdateien importiert eine der vier. Die drei
+uebrigen Warnungen (`EUMAPI.DLL`, `MFC71.DLL`, `MSVCP71.dll`) sind
+unveraendert die aus B-2.5 und betreffen den Start nicht.
+
+## Stand und naechster Schritt (FREIGABE, 31.08.2026)
+
+**Erledigt.**
+
+| | |
+|---|---|
+| Release-Bau | **baut**, `MSBuild ... /p:Configuration=Release /p:Platform=Win32 /p:BuildProjectReferences=false` endet mit Exit 0 |
+| statisch gebunden | **nein, und zwar nicht in der verbleibenden Zeit nachholbar** — F-1.1, sechs MFC-Erweiterungs-DLLs |
+| uebrige Laufzeit-DLLs | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` — alle drei verteilbar, alle drei jetzt im Paket |
+| Paketpruefer | **null Fehler** |
+| SUPERASSERT beim Start (S-3b) | im Release-Bau weg, ebenso alle `ASSERT`/`VERIFY` |
+
+**Das Bauverfahren, das funktioniert** — die Reihenfolge ist noetig, weil ein
+Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
+`OT501` scheitert:
+
+    1. MSBuild Eudora71\Eudora.sln /p:Configuration=Release /p:Platform=x86 /m
+       (endet mit Fehler: OT501 U1073/MSB3073 - erwartet; erzeugt aber die
+        zehn .lib-Dateien in Eudora71\Lib\Release)
+    2. MSBuild auf NSImport, OEImport, OLImport, dann Eudora.vcxproj,
+       je /p:Configuration=Release /p:Platform=Win32
+                 /p:BuildProjectReferences=false
+
+`/p:Platform=Win32` gilt fuer **Projektdateien**, `/p:Platform=x86` fuer die
+**Projektmappe** — sonst MSB4126 (Befund P-2).
+
+**Naechster Schritt, konkret.**
+
+1. **`tools/paket-pruefen.ps1`, Abschnitt 3** (die Liste der vier
+   VS2022-Debug-Laufzeiten): nur noch warnen, wenn eine Paketdatei die
+   betreffende DLL wirklich importiert. Der Pruefer loest die Importtabellen
+   ohnehin schon auf (B-2.5), die Angabe steht also bereits zur Verfuegung.
+   Solange das nicht geschieht, meldet ein fehlerfreies Release-Paket vier
+   Warnungen, die keine sind — und wer sie ernst nimmt, holt sich mit
+   `laufzeit-holen.ps1` genau die vier nicht verteilbaren DLLs zurueck.
+2. **`Eudora71/Eudora/Eudora.vcxproj:144`**: der Release-Zweig fuehrt
+   `QCSocket.lib` **nicht** in `AdditionalDependencies`, der Debug-Zweig
+   (`:94`) sehr wohl. Gebunden hat es trotzdem — offenbar ueber eine
+   Standardbibliotheks-Direktive. **UNGEPRUEFT**, ob das Zufall ist; nachsehen
+   und im Zweifel angleichen.
+3. **`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg („ZUERST:
+   DIE VIER LAUFZEITEN HOLEN"). Fuer ein Release-Paket ist dieser ganze
+   Abschnitt hinfaellig und irrefuehrend. Neu fassen, bevor ausgeliefert wird.
+4. **Nach jedem Release-Bau**: `git status` zeigt zwoelf geaenderte DLLs unter
+   `Eudora71/Bin/Release`. Das ist `BindExe` aus dem Nachbereitungsschritt
+   (F-1.5), kein Bauergebnis. Nicht stagen.
+
+**Nicht getan:** kein Eudora gestartet, kein Programm mit Fenstern, kein
+`OutputDebugString`-Mithoerer. Nichts veroeffentlicht — kein ZIP im
+Repository. Ob und wie das Release-Paket ausgeliefert wird, entscheidet Gregor.
+Der Bau der Kriterien 1 bis 3 ist von dieser Arbeit unberuehrt: das Fenster ist
+weiterhin nicht bedienbar (S-5, S-6, M-1).
