@@ -1954,7 +1954,8 @@ bool QCWorkerSocket::InitializeQCSSL()
 				ConnectionInfo *pConnectionInfo = NULL;
 				FPNQCSSLGetConnectionInfo fnConnInfo =NULL;
 				fnConnInfo = Network::GetQCSSLGetConnectionInfo();
-				pConnectionInfo= fnConnInfo(m_pSSLReference->m_Persona,m_pSSLReference->m_ProtocolInfo.m_ProtocolName);
+				if (fnConnInfo)
+					pConnectionInfo= fnConnInfo(m_pSSLReference->m_Persona,m_pSSLReference->m_ProtocolInfo.m_ProtocolName);
 				CString csError;
 				csError = CRString(IDS_ERR_SSL_NEGOTIATION);
 				int errorCode = -1;
@@ -1963,10 +1964,18 @@ bool QCWorkerSocket::InitializeQCSSL()
 					csError += pConnectionInfo->m_Outcome.m_Errors;
 					errorCode = pConnectionInfo->m_Outcome.m_ErrorCode;
 				}
+				else
+				{
+					// No ConnectionInfo: either QCSSLGetConnectionInfo could not be
+					// resolved in qcssl.dll, or the handshake failed before the SSL
+					// layer recorded an outcome.  Without this branch the pointer was
+					// dereferenced below and Eudora crashed instead of reporting.
+					csError += "no details available from the SSL layer. Check that QCSSL.dll and the OpenSSL DLLs sit next to Eudora.exe and are the documented version.";
+				}
 
 				// Pass the SSL negotiation data to the Task Info object.
 				pTaskInfo->SetSSLError(errorCode);
-				if (pConnectionInfo->m_Outcome.m_bCertRejected)
+				if (pConnectionInfo && pConnectionInfo->m_Outcome.m_bCertRejected)
 				{
 					pTaskInfo->SetSSLCertText(pConnectionInfo->m_Outcome.m_strCertText);
 					pTaskInfo->SetSSLCert(pConnectionInfo->m_Outcome.m_pCertData);
@@ -1986,14 +1995,18 @@ bool QCWorkerSocket::InitializeQCSSL()
 			ConnectionInfo				*pConnectionInfo = NULL;
 			FPNQCSSLGetConnectionInfo	 fnConnInfo = NULL;
 			fnConnInfo = Network::GetQCSSLGetConnectionInfo();
-			pConnectionInfo = fnConnInfo(m_pSSLReference->m_Persona,
-										 m_pSSLReference->m_ProtocolInfo.m_ProtocolName);
-			m_iSSLError = pConnectionInfo->m_Outcome.m_ErrorCode;
-			if (pConnectionInfo->m_Outcome.m_bCertRejected)
+			if (fnConnInfo)
+				pConnectionInfo = fnConnInfo(m_pSSLReference->m_Persona,
+											 m_pSSLReference->m_ProtocolInfo.m_ProtocolName);
+			if (pConnectionInfo)
 			{
-				m_strSSLCertText = pConnectionInfo->m_Outcome.m_strCertText;
-				m_pCertData = pConnectionInfo->m_Outcome.m_pCertData;
-				m_strSSLCertRejection = pConnectionInfo->m_Outcome.m_strCertRejection;
+				m_iSSLError = pConnectionInfo->m_Outcome.m_ErrorCode;
+				if (pConnectionInfo->m_Outcome.m_bCertRejected)
+				{
+					m_strSSLCertText = pConnectionInfo->m_Outcome.m_strCertText;
+					m_pCertData = pConnectionInfo->m_Outcome.m_pCertData;
+					m_strSSLCertRejection = pConnectionInfo->m_Outcome.m_strCertRejection;
+				}
 			}
 		}
 			
