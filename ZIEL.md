@@ -41,6 +41,50 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 **Erst wenn alle drei erfüllt sind, darf eine Fassung „lauffähig" heißen.**
 Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung".
 
+
+## Kriterium 0: das Paket muss ohne Nachinstallieren laufen
+
+Von Gregor am 31.08.2026 festgelegt, nachdem Paket 1.0.2 mit `0xc000007b`
+scheiterte, weil vier Debug-DLLs von Visual Studio fehlten:
+
+> *„ziel: möglichst einfach: zip runterladen, entpacken, starten - läuft. keine
+> fehlenden DLLs, keine fehlermeldungen, daß etwas nicht gefunden werden kann
+> oder nachinstalliert werden muß"*
+
+Und auf die Frage nach dem Weg dorthin:
+
+> *„sonst ja, statisch linken, ist mir auch egal."*
+
+### Was dem heute im Weg steht
+
+Der Debug-Bau braucht `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
+`ucrtbased.dll`. **Diese vier dürfen nicht mitgeliefert werden** — Microsoft
+nimmt die Debug-Fassungen der Laufzeit ausdrücklich vom Weiterverteilen aus,
+bei Visual Studio liegen sie deshalb in einem Ordner namens `debug_nonredist`.
+Ein Redistributable dafür gibt es nicht; sie kommen nur mit einer
+Visual-Studio-Installation.
+
+### Der Weg dorthin
+
+| Weg | Ergebnis |
+|---|---|
+| **Debug-Bau** | vier nicht verteilbare DLLs nötig, dazu SUPERASSERT-Dialoge beim Start. **Ungeeignet fürs Ausliefern.** |
+| **Release-Bau, dynamisch** | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` sind verteilbar und dürfen beiliegen. Keine Dialoge mehr. Aber: drei Dateien mehr im Paket. |
+| **Release-Bau, statisch (`/MT` + MFC statisch)** | **keine Laufzeit-DLL nötig.** Die `Eudora.exe` wird größer, das Paket kleiner und einfacher. Gregors bevorzugter Weg. |
+
+Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die übrigen) bleiben
+davon unberührt — sie sind eigene Module mit eigener Laufzeit und brauchen
+weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau**
+(`Eudora71/VC71Bruecke`), der auf die von Windows selbst mitgelieferte
+`msvcrt.dll` weiterleitet. Der darf mit ins Paket, er ist unser eigener Code.
+
+### Woran sich Kriterium 0 misst
+
+`tools/paket-pruefen.ps1` gegen das ausgepackte Paket, auf einem Rechner **ohne**
+Visual Studio: **null Fehler**. Kein `0xc000007b`, keine Meldung über eine
+fehlende DLL, kein Nachinstallieren.
+
+
 ## Woran sich Kriterium 2 misst
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert
