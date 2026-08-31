@@ -5331,3 +5331,54 @@ Das Konto **über die `Eudora.ini` von Hand** eintragen, wie in
 `ABRUF-PRUEFEN.md` beschrieben. Auf diesem Weg hat Gregor am 31.08. um 08:09
 erfolgreich Mail abgerufen (E-1, E-3) — der Assistent ist für Kriterium 3 nicht
 nötig.
+
+### E-9, Nachtrag: die Plugins sind es NICHT (31.08.2026, gemessen)
+
+Gegenprobe von Gregor: `Plugins` in `Plugins_aus` umbenannt — **der Absturz
+bleibt.** Und Eudora legt einen neuen, leeren `Plugins`-Ordner an.
+
+Damit ist die Plugin-Suche als Ursache **ausgeschlossen**, und meine
+Berichtigung im Commit `6e5da17` bestätigt: gesucht wird
+`ExecutableDir` + `*.eif` (`MAPIImport.cpp:954-955`), also die drei Importer im
+**Programmverzeichnis**. Der `Plugins`-Ordner enthält etwas anderes
+(`SMIME.dll`, `SpamHeaders.dll`, `SpamWatch.dll`) und wird von `InitPluginList`
+gar nicht angefasst. Dass Eudora ihn neu anlegt, ist normales Verhalten beim
+Start und hat mit dem Assistenten nichts zu tun.
+
+Die Härtung von `InitPluginList` (`6e5da17`) bleibt richtig — sie behebt zwei
+echte Strukturfehler —, aber sie behebt **diesen** Absturz nicht.
+
+### Wo es jetzt noch liegen kann
+
+In `CWizardClientPage` selbst. Zwei Stellen fallen beim Lesen auf:
+
+**a) `OnSetActive`, nach der Plugin-Suche:**
+
+```cpp
+if (m_pParent->m_pImporter->InitPlugins())
+    m_pParent->m_pImporter->InitProviders();
+
+CImportMail *pIM = m_pParent->m_pImporter;
+ASSERT(pIM);
+if (!pIM->m_newhead)
+```
+
+`InitProviders` wird **nur** gerufen, wenn `InitPlugins` `true` liefert. Findet
+die Suche keine `*.eif`, liefert sie `false` — und danach wird `m_newhead`
+gelesen, das erst `InitProviders` belegt. **UNGEPRÜFT**, ob der Konstruktor von
+`CImportMail` `m_newhead` auf NULL setzt. Tut er es nicht, wird hier ein
+unbestimmter Zeiger geprüft, und `pIM->m_newhead` weiter unten dereferenziert.
+
+Das passt zum Bild: im Paket liegen zwar drei `.eif`, aber ob sie gefunden
+werden, hängt an `ExecutableDir` — und das wird aus dem Modulpfad gebildet.
+
+**b) `OnInitDialog`** ruft `OnRadioNew()`, bevor `OnSetActive` gelaufen ist —
+also bevor `m_pImporter` überhaupt angelegt wurde. Was `OnRadioNew` anfasst,
+ist noch nicht nachgelesen.
+
+### Der nächste Schritt, der es entscheidet
+
+`tools/stapel-untersuchen.ps1` gegen das Release-Paket, `Eudora.pdb` daneben,
+dann *Weiter* per `BM_CLICK` an den Knopf senden — so wie es bei den
+SUPERASSERT-Dialogen schon gemacht wurde. Der Debugger fängt die
+Zugriffsverletzung und nennt Datei und Zeile. Ein Lauf von etwa einer Minute.
