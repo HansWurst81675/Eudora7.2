@@ -1,5 +1,26 @@
 # Hier weitermachen
 
+> ## Stand 31.08.2026, 09:00
+>
+> **Die Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)** — was zu tun ist,
+> in welcher Reihenfolge, mit Fundstelle je Punkt und den Auflagen für
+> Agenten. Diese Datei hier erklärt den Weg dorthin.
+>
+> **Eudora ruft Mail ab.** 159 Nachrichten von `mx.freenet.de`, TLS 1.3,
+> `TLS_AES_256_GCM_SHA384` (Befunde E-1 und E-3). Menüs, Anordnung und
+> Werkzeugleiste stimmen. Von den vier Kriterien in [ZIEL.md](ZIEL.md) sind
+> **zwei erfüllt**, eines fast, eines nicht nachgewiesen.
+>
+> **Der wichtigste offene Punkt** ist behoben, aber ungeprüft: auf einer
+> frischen Installation stürzte Eudora ab, sobald man *Weiter* im
+> Kontoassistenten klickte. Ursache war nicht der Assistent, sondern
+> `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` — eine VC6-Altlast,
+> die bei MFC 14 den referenzgezählten `CStringT` zerstört. Gefunden über
+> Gregors `eudora.log`, behoben mit `Truncate`. **Befund E-11.**
+>
+> Auf der VM fiel das nie auf, weil der Zweig nur bei einer
+> **jungfräulichen** Installation betreten wird.
+
 Übergabe vom **31.08.2026, vormittags**. Arbeitsstand ist der Branch
 `darstellung-und-menue`; auf `main` fehlt alles von diesen zwei Tagen.
 
