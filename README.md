@@ -8,34 +8,36 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-> ## Eudora startet. Bedienbar ist es noch nicht.
+> ## Eudora startet, ist bedienbar und ruft Mail ab.
 >
-> **Bauzustand gemessen an Commit `371c1e3` am 30.08.2026**, `Debug|Win32`,
-> Toolset v143 (MSVC 14.38.33130); der Gesamtbau der Solution ist am 31.08.2026
-> nachgemessen (Befund B-2). An diesem Baum arbeiten mehrere Agenten
-> gleichzeitig; wer den Stand prüft, misst neu und nennt seinen eigenen
-> Bezugscommit.
+> **Gemessen am 31.08.2026** an dem Paket `Eudora72-1.0.3-release.zip`
+> (Produktversion 7.2.0.3, `Release|Win32`, Toolset v143 / MSVC 14.38.33130).
+> Der Gesamtbau der Solution ist in derselben Sitzung nachgemessen (Befund B-2).
+> Wer den Stand prüft, misst neu und nennt seinen eigenen Bezugscommit — an
+> diesem Baum arbeiten mehrere Agenten gleichzeitig.
 >
-> **Es ist noch nicht „lauffähig".** Was das heißt, steht in
-> [ZIEL.md](ZIEL.md) — von Gregor festgelegt:
+> Was „lauffähig" heißt, hat Gregor in [ZIEL.md](ZIEL.md) festgelegt:
 >
 > | # | Kriterium | Stand am 31.08.2026 |
 > |---|---|---|
-> | 0 | das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare Laufzeit-DLLs (Befund S-8) |
-> | 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
-> | 2 | die Darstellung ist korrekt | **nicht erfüllt** — Ursachen behoben (A-1), am laufenden Programm nicht nachgesehen |
-> | 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** — Abrufpfad abgesichert (P-2), echter Abruf steht aus |
+> | 0 | das Paket läuft ohne Nachinstallieren | **nicht belegt** — das Release-Paket ist gebaut, aber auf keinem Rechner **ohne** Visual Studio nachgewiesen. `tools/paket-pruefen.ps1` taugt nicht als Nachweis, es prüft die Maschine statt das Paket (Befund PR-2) |
+> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** auf einer eingerichteten Installation — Gregor: *„menü funktioniert"* (Befund E-1). Auf einer **frischen** Installation stürzte der Kontoassistent beim Klick auf *Weiter* ab (Befund E-11); behoben in `eudora.cpp:3372`, am Programm noch nicht nachgesehen |
+> | 2 | die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen. Die falschen Zeichen in HTML-Mail (`◆`) sind an der Ursache behoben (Befund Z-2), am Programm noch nicht nachgesehen |
+> | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten von `mx.freenet.de`, Port 110, STARTTLS, TLSv1.3, `TLS_AES_256_GCM_SHA384` (Befunde E-1 und E-3) |
 >
-> **Derzeit ist kein Kriterium erfüllt.** Erst wenn alle erfüllt sind, darf eine
-> Fassung „lauffähig" heißen. Der Dateiname `Eudora72-1.0.2-lauffaehig.zip`
-> behauptet mehr, als die Fassung kann; er bleibt nur stehen, weil das Paket
-> unter diesem Namen samt Prüfsumme veröffentlicht ist.
+> **Zwei von vier Kriterien sind belegt, eines fast, eines offen.** Erst wenn
+> alle vier erfüllt sind, darf eine Fassung „lauffähig" heißen. Die Dateinamen
+> `Eudora72-1.0.1-lauffaehig.zip` und `Eudora72-1.0.2-lauffaehig.zip` behaupten
+> mehr, als die Fassungen können; sie bleiben nur stehen, weil die Pakete unter
+> diesen Namen samt Prüfsumme veröffentlicht sind.
 >
-> Am 31.08.2026 sind die Ursachen der beiden sichtbaren Mängel belegt **und im
-> Quelltext behoben**: die tote Nichtklientenfläche, an der die Menüs hingen
-> (Befund M-1), und die leeren Werkzeugleisten-Knöpfe samt Andockrechnung
-> (Befund A-1). Nachgesehen hat das noch niemand am laufenden Programm — es
-> war keine Sitzung mit Bildschirm erlaubt.
+> **Der nächste Schritt** steht in [AUFGABEN.md](AUFGABEN.md) ganz oben: das
+> Paket auf dem zweiten PC (Windows 11, ohne Visual Studio) auspacken und
+> starten. Dieser eine Lauf beantwortet die Kriterien 0, 1 und 2 zusammen.
+> Achtung auf die Prüfsumme — das ZIP unter
+> [Releases v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3)
+> ist am 31.08. um 09:00 **ausgetauscht** worden. Nur die Fassung mit SHA256
+> `d4719047…` enthält die Behebung von E-11; die erste (`632c4066…`) stürzte ab.
 
 Der Weg dorthin an zwei Tagen: `Eudora.exe` band zum ersten Mal, startete nicht,
 und die Gründe dafür sind belegt und behoben — siehe
@@ -326,7 +328,7 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | `__imp___iob` aus `libpng.lib` | **behelfsweise geloest** — `OTShim_Libpng.cpp` definiert das Symbol als `(char*)stderr - 2*32`, weil libpng 1.2.7 nur `_iob[2]` anfasst und die damalige CRT 32 Byte je Element hatte. Traegt, ist aber eine Annahme; sauber waere ein Neubau von libpng aus `Eudora71/PNG/libpng` mit v143 |
 | Attrappe `Lib/Debug/OTA50D.LIB` | **entfaellt** — seit `a807b93` nicht mehr noetig (`_SECNOMSG`, `LinkLibraryDependencies` false in `Eudora.vcxproj:1015`). Sie darf nicht wieder angelegt werden, sonst linkt Eudora gegen eine leere Bibliothek |
 | `EudoraRes.dll` | **offen** — das Projekt haengt ueber `EudoraRes.vcxproj:351` an `OT501` und wird gar nicht erst versucht. Fuer `Eudora` ist dieselbe Bindung geloest; hier steht der Handgriff noch aus |
-| Erster Start von `Eudora.exe` | **erledigt** seit Befund S-2 (30.08.2026) — Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen. Das Fenster ist damit noch nicht bedienbar, siehe [ZIEL.md](ZIEL.md). Welche Laufzeitdateien danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md); was passiert, wenn sie fehlen, in Befund S-8 (`0xc000007b`) |
+| Erster Start von `Eudora.exe` | **erledigt** seit Befund S-2 (30.08.2026) — Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen. Am 31.08.2026 ist das Fenster bedienbar und ruft Mail ab, siehe oben und [ZIEL.md](ZIEL.md). Welche Laufzeitdateien danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md); was passiert, wenn sie fehlen, in Befund S-8 (`0xc000007b`) |
 | Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen. Die Testzahl waechst gerade, weil die Ersatzschicht Tests bekommt |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig, seit `78a9c10` samt Ersatzschicht, und bindet seit `a807b93`. `EudoraRes.vcxproj` uebersetzt ebenfalls vollstaendig, wird im Solution-Bau aber nicht versucht |
 | `OpenSSL3/lib` fehlt im Repo | **offen** — `libcrypto.lib` und `libssl.lib` sind von `.gitignore:7` (`Lib/`) erfasst und nicht versioniert (`git ls-files`: null Treffer). Ein frischer Klon endet bei `QCSSL` mit `LNK1104: libssl.lib`. Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
