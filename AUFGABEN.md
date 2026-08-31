@@ -236,10 +236,36 @@ wenn es das Gedächtnisverzeichnis nicht findet, samt dem abgeleiteten Pfad.
 der Hook liegt unter `.git/hooks` und wird von git nicht mitversioniert. Ein
 alter Hook aus einem früheren Klon verschluckt den Abbruch weiterhin.
 
-### D3 · `suche-zeiger.pl` ist Rauschen (**X-1**)
+### D3 · ~~`suche-zeiger.pl` ist Rauschen~~ — **erledigt** (Befund X-3)
 
-345 Treffer, Stichprobe von 15: **15 Fehlalarme**. Drei strukturelle Ursachen
-erklären 79 %. Entweder die drei Filter einbauen oder das Werkzeug löschen.
+**347 → 18 Treffer**, neun Filter, alle achtzehn von Hand nachgelesen.
+Fehlalarmquote 6 von 18; im eigenen Code, ohne die OpenSSL-Beispiele, 4 von 16.
+Vorher 15 von 15. Aufruf und Empfehlung (Fremdcode ausschließen) in X-3.
+
+### D3a · NEU: die neun Zeigerstellen aus X-3 beheben — **braucht einen Bau**
+
+Prüfung vorhanden, Zugriff danach ungeschützt, kein erkennbarer Grund, warum der
+Zeiger dort belegt sein müsste. Nach Dringlichkeit:
+
+1. **`EuImap/src/ImapMailbox.cpp:1637` → `:1659`** (`pImapCommand`) — der Block
+   des Wächters ist `if (!pImapCommand) { ASSERT(0); … }` **ohne `return`**. Im
+   **Release** entfällt das `ASSERT` (F-1), dann läuft es weiter und greift auf
+   den Nullzeiger zu. Der ernsteste der neun.
+2. **`Eudora/POPSession.cpp:896` → `:905`** (`pDiskHost`) — auf dem Abrufpfad,
+   direkter Nachbar von P-1/P-2.
+3. `EuImap/src/ImapChecker.cpp:945` → `:953` (`m_pTaskInfo`)
+4. `EuImap/src/ImapMailbox.cpp:1022` → `:1051` (`pAccount`)
+5. `EuImap/src/imapgets.cpp:735` → `:743` (`m_pAccount`)
+6. `Eudora/TocFrame.cpp:3968` → `:3973` (`pTocDoc`)
+7. `Eudora/headervw.cpp:546` → `:551` (`pField`)
+8. `Eudora/PgEmbeddedObject.cpp:276` → `:303` (`pView`)
+9. `AccountWizard/Src/WizardImportPage.cpp:379` → `:420` (`pChild`)
+
+Die Behebung ist jeweils dieselbe Form wie in P-2: die Prüfung mitziehen
+(`if (p && …)`) oder früh aussteigen. **Jede Änderung braucht einen Bau** —
+deshalb steht sie hier und nicht bei den compilerfreien Punkten. Drei weitere
+Treffer sind unklar und brauchen ein menschliches Urteil (`ImapAccount.cpp:3152`,
+`CompMessageFrame.cpp:644`, `StatMng.cpp:2399`).
 
 ### D4 · `zeilenenden-angleichen.pl`: zwei Lücken (**X-1**)
 

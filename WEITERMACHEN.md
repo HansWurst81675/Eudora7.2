@@ -278,7 +278,7 @@ Neu am 31.08.2026:
 | `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten aus `SysWOW64` und prüft jede einzeln auf x86 nach. Befund S-8. |
 | `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. **Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch (PR-2.0 bis PR-2.3). |
 | `tools/paket-bauen.ps1` | stellt ein Paket aus dem Quellbaum zusammen. Veröffentlicht nichts. Braucht `-AusBauverzeichnis`, wenn ein frischer Bau übernommen werden soll. |
-| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden — aber **345 Treffer, Stichprobe 15 von 15 Fehlalarm** (X-1). Ohne die drei Filter aus D3 nicht benutzbar. |
+| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. Seit Befund **X-3** brauchbar: **18 Treffer statt 347**, neun Filter, alle Treffer nachgelesen. Die neun echten Kandidaten stehen in `AUFGABEN.md` unter D3a. |
 | `tools/pruefe-bytes-tests.pl` | Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
 | `tools/releasebuffer-pruefen.pl` | stuft die 142 `ReleaseBuffer`-Vorkommen ein — die Fehlerklasse hinter E-11. 25 sind zu ändern, Einzelheiten in Befund R-1. |
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |

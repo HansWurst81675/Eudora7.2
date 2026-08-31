@@ -1,6 +1,6 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: d45d6c0 -->
+<!-- pruefstand: 1890b46 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -113,8 +113,9 @@ zuerst **E-11**, **R-1** und **E-1**.
 | PR-1 | drei Löcher in der Commit-Schranke | **Bericht** → durch W-1 abgearbeitet |
 | PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
 | Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
-| X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** durch X-2, außer `suche-zeiger.pl` und `zeilenenden-angleichen.pl` |
+| X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** durch X-2 und X-3, außer `zeilenenden-angleichen.pl` |
 | X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
+| X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
@@ -5972,3 +5973,130 @@ Compiler — es ist nur nicht Teil dieses Auftrags gewesen.
   das nicht, sondern eine Frage, die nur ein Mensch beantworten kann.
 - `git commit --no-verify` umgeht alles. Auch das ist Absicht — eine Schranke
   ohne Notausgang wird umgebaut, nicht befolgt.
+
+
+## X-3 — `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, davon 9 echte Kandidaten (31.08.2026)
+
+Abarbeitung von **D3** aus `AUFGABEN.md` (Befund X-1: „345 Treffer, Stichprobe 15
+von 15 Fehlalarm — ohne Filter nicht benutzbar"). Ohne Visual Studio gearbeitet,
+**keine Zeile C++ geändert**. Werkzeug: `tools/suche-zeiger.pl`.
+
+### Die Messkette
+
+| Stand | Treffer |
+|---|---|
+| vorher (X-1: 345 an anderem Dateimuster) | **347** |
+| nach den drei Filtern, die X-1 vorschlägt | 88 |
+| nach drei weiteren, aus einer Stichprobe von 15 abgeleitet | 29 |
+| nach drei weiteren, aus dem Nachlesen **aller** 29 | 20 |
+| nach der Berichtigung zweier eigener Fehler | **18** |
+
+Gemessen an **3295 Dateien** (`.cpp .CPP .c .h` unter `Eudora71`, ohne
+`Build/ Debug/ Release/`). Nachzurechnen mit
+
+```sh
+find Eudora71 -name "*.cpp" -o -name "*.h" -o -name "*.c" -o -name "*.CPP" \
+  | grep -v "/Build/\|/Debug/\|/Release/" | sort > /tmp/dateien.txt
+perl tools/suche-zeiger.pl $(cat /tmp/dateien.txt)
+```
+
+### Warum nicht nach Bauchgefühl gefiltert wurde
+
+X-1 nennt drei Ursachen mit Zahlen. Die Verteilung der Abstände zwischen
+Prüfung und Zugriff belegt sie unmittelbar:
+
+| Abstand | Treffer |
+|---|---|
+| **1 Zeile** | **212** |
+| 3–5 | 8 |
+| 6–10 | 24 |
+| 11–20 | 29 |
+| 21–40 | 28 |
+| **> 40** | **46** |
+
+212 mit Abstand 1 — das ist der klammerlose `if`-Rumpf, X-1 nennt 211.
+46 mit Abstand über 40 — X-1 nennt 46.
+
+### Die neun Filter
+
+| # | Was durchlief | Wie behoben |
+|---|---|---|
+| 1 | **der klammerlose Rumpf** (212): bei `if (p)` ohne Klammern ist die nächste Anweisung der Rumpf, also der geschützte Bereich | der geschützte Bereich reicht bis zum Semikolon der folgenden Anweisung |
+| 2 | **der einzeilige Wächter** (16): `if (!p) return;` auf **einer** Zeile — danach ist `p` garantiert belegt | das `return` wird jetzt auch auf der `if`-Zeile selbst gesucht, nicht nur in den sechs Folgezeilen |
+| 3 | **die abgeschnittene Blockende-Suche** (Großteil der 46): sie lief nur 40 Zeilen weit; bei längeren Blöcken landete das „Blockende" **mitten im Block**, und der gemeldete Zugriff stand in Wahrheit noch **innerhalb** des geschützten Bereichs | keine Fenstergrenze mehr, nur eine Notbremse |
+| 4 | **der `else`-Zweig eines negierten Wächters**: in `if (!p) {…} else {…}` ist `p` im `else` belegt | die **ganze** `else`-Kette wird übersprungen — bei einem **positiven** Wächter dagegen nicht, dort ist `p` im `else` NULL und ein Zugriff wäre ein echter Fehler |
+| 5 | **Zuweisung an den Zeiger**: `if (!pCDC) { pCDC = &dc; }` | eine Zuweisung zwischen Prüfung und Zugriff macht die Prüfung gegenstandslos. Ein Schreibzugriff **durch** den Zeiger zählt nicht |
+| 6 | **erneute Prüfung, die der alte Ausdruck nicht sah**: `return (pWnd) ? pWnd->…` (ternär) und `if ( (n>0) && pTocDoc && … )` — der alte Ausdruck verlangte `[^)]*` und scheiterte an der ersten inneren Klammer | jede Prüfung des Namens in einer Bedingung zählt, auch nach `&&` und vor `?` |
+| 7 | **ein `else`, das zu einem ÄUSSEREN `if` gehört**: `app.cpp:274-277` erzeugte vier Fehlalarme in einem Rutsch | ein `else`, das **weniger tief** steht als der Wächter, beendet die Suche |
+| 8 | **auskommentierter Code**: `pngerror.c:255` meldete einen Zugriff, der in einem `/* */`-Kommentar steht; `nickview.cpp:316/329` steht in einem **69 Zeilen langen** auskommentierten Block | Block- **und** Zeilenkommentare werden vor der Analyse ausgeblendet |
+| 9 | **eine Steueranweisung als Rumpf**: `if (m_pcip) for (…) { … }` — der Block gehört zum `for` und ist geschützt | erkannt und wie ein Block behandelt |
+
+**Bewusst NICHT eingebaut** — ein zehnter Filter „ein `return` auf oder über der
+Ebene des Wächters beendet den Weg" war fertig und ist wieder herausgeflogen: er
+entfernte **einen** Fehlalarm (`OLImportClass.cpp:2948`) und tötete **einen
+echten Fund** (`ImapChecker.cpp:945`, dessen `return` innerhalb des umgebenden
+Blocks steht, den man danach verlässt). Ein Wächter, der den echten Fall
+verliert, ist schlechter als einer, der einmal zu oft ruft. Steht so im Kopf des
+Werkzeugs, damit es niemand „nachbessert".
+
+### Zwei Fehler, die ich selbst eingebaut habe
+
+Beide fielen **nur** beim Nachlesen aller Treffer auf, nicht bei der
+Stichprobe — das ist das Argument für das Nachlesen:
+
+1. **Die Klammersuche lief in die nächste Funktion.** Als die 40-Zeilen-Grenze
+   fiel (Filter 3), scannte sie bei einem klammerlosen `if` weiter, fand die
+   Klammern der **folgenden** Funktion und setzte das Blockende dorthin.
+   `ImapConnection.cpp:1916` meldete einen Zugriff **95 Zeilen später in einer
+   anderen Funktion**. Behoben: erst entscheiden, ob der Rumpf überhaupt eine
+   Klammer hat, dann scannen.
+2. **Die Zeilenkommentare wurden nicht mehr gestrichen.** Beim Umstieg auf den
+   kommentarfreien Puffer ging das `s{//.*$}{}` verloren, und eine geschweifte
+   Klammer **im Kommentar** zählte als Blockende: `ImapAccount.cpp:3123` schreibt
+   `(\noselect}` in einen `//`-Kommentar, worauf der Block dort zu schließen
+   schien und zwei Zugriffe **innerhalb** des Blocks gemeldet wurden.
+
+### Was übrig bleibt: 18 Treffer, alle nachgelesen
+
+**Neun echte Kandidaten** — Prüfung vorhanden, Zugriff danach ungeschützt, und
+kein erkennbarer Grund, warum der Zeiger dort belegt sein müsste:
+
+| Stelle | Zeiger | Bemerkung |
+|---|---|---|
+| `EuImap/src/ImapMailbox.cpp:1637` → `:1659` | `pImapCommand` | `if (!pImapCommand) { ASSERT(0); … }` **ohne `return`** — im Release entfällt das `ASSERT` (F-1), dann läuft es weiter und greift zu. Der ernsteste der neun |
+| `Eudora/POPSession.cpp:896` → `:905` | `pDiskHost` | auf dem **Abrufpfad** — Nachbar der Befunde P-1/P-2 |
+| `EuImap/src/ImapChecker.cpp:945` → `:953` | `m_pTaskInfo` | Prüfung im umgebenden Block, Zugriff danach |
+| `EuImap/src/ImapMailbox.cpp:1022` → `:1051` | `pAccount` | der eine Treffer, den X-1 als plausibel echt nannte |
+| `EuImap/src/imapgets.cpp:735` → `:743` | `m_pAccount` | Passwortpfad |
+| `Eudora/TocFrame.cpp:3968` → `:3973` | `pTocDoc` | `if (pTocDoc) …;` dann `if (pFBView) pTocDoc->…` — anderer Wächter |
+| `Eudora/headervw.cpp:546` → `:551` | `pField` | zwei Zeilen nach dem Block |
+| `Eudora/PgEmbeddedObject.cpp:276` → `:303` | `pView` | Block schließt nach drei Zeilen, Zugriff 27 später |
+| `AccountWizard/Src/WizardImportPage.cpp:379` → `:420` | `pChild` | Block schließt bei 411 |
+
+**Drei unklar** — das Melden ist vertretbar, die Entscheidung braucht einen
+Menschen: `ImapAccount.cpp:3152`, `CompMessageFrame.cpp:644`,
+`StatMng.cpp:2399` (jeweils ein anderer Zweig eines umgebenden `if`/`switch`).
+
+**Sechs Fehlalarm:** `TridentView.cpp:584` (abgesichert über eine **abhängige**
+Variable — nicht filterbar), `Trnslate.cpp:4410`, `OLImportClass.cpp:2948`,
+`plist_cinfo.cpp:263` (Zugriff in einem Makrorumpf), und zwei in
+`OpenSSL/demos/maurice/example2.c` — **Fremdcode**.
+
+Quote: **6 von 18 (33 %)**, im eigenen Code ohne die OpenSSL-Beispiele
+**4 von 16 (25 %)**. Vorher: 15 von 15.
+
+### Empfehlung für den Aufruf
+
+Fremdcode ausschließen, dann sind es 16 Treffer:
+
+```sh
+... | grep -v "/OpenSSL/\|/PNG/\|/OT501/\|/expat/\|/Qt3.x/"
+```
+
+### Was das Werkzeug nicht kann
+
+Es liest Text, nicht Semantik. Ein Zeiger, der über einen **anderen** Namen
+abgesichert ist (`TridentView.cpp:584`), eine Prüfung in einer aufgerufenen
+Funktion, `ASSERT`/`VERIFY` als Prüfung, ein Zugriff in einem Makrorumpf — alles
+unsichtbar. **Ein Treffer ist ein Hinweis zum Nachlesen, kein Befund.** Die
+neun oben sind nachgelesen; wer sie behebt, braucht einen Bau.
