@@ -3847,3 +3847,405 @@ Gemerkt hat es `tools/ersetze-bereich.pl`, das die CR-Zahl vorher und nachher
 ausgibt: 1064 → 1062, obwohl der Block angeblich CR-frei war. Ohne diese
 Ausgabe waere der Schaden in den Commit gelaufen und die Schranke haette ihn
 erst dort gemeldet.
+
+
+## PR-2 — Nachpruefung der Arbeit vom 31.08.2026 (PRUEFER, 31.08.2026)
+
+Grundlage: `darstellung-und-menue` bei 2cf569f. Kein Programm mit Oberflaeche
+gestartet, gebaut ausschliesslich in der PowerShell. FREIGABEs Release-Bau lag
+nicht vor.
+
+---
+
+### PR-2.0 — Der Paketpruefer leitet zum Lizenzverstoss an (hoch, OFFEN)
+
+Von FREIGABE gemeldet, hier bestaetigt und eingeordnet — der wichtigste
+Einzelpunkt an `tools/paket-pruefen.ps1`.
+
+**Fundstelle:** `tools/paket-pruefen.ps1:360` (feste Liste), `:363-364`,
+`:371`.
+
+Der Pruefer sucht fest nach den vier VS2022-**Debug**-Laufzeiten
+(`mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`, `ucrtbased.dll`) und
+meldet ihr Fehlen. In einem Release-Paket importiert **keine** Datei sie. Der
+Pruefer gibt dort also vier falsche Warnungen.
+
+**Warum das gefaehrlich ist:** wer die Warnung ernst nimmt, ruft
+`tools/laufzeit-holen.ps1` und holt sich genau die nicht verteilbaren
+Debug-DLLs ins Paket. Das Werkzeug leitet damit zu dem an, was es verhindern
+soll. `README.md:73-74` sagt ausdruecklich, diese vier duerfen nicht
+mitgeliefert werden — und `:363-364` bewertet ihr Vorhandensein trotzdem
+gruen (siehe auch PR-2.3, letzter Punkt: derselbe Widerspruch von der anderen
+Seite).
+
+**Richtig waere:** die noetigen Laufzeiten aus den IMPORTEN der Paketdateien
+ableiten statt aus einer festen Liste. Die Lesefunktion dafuer hat das Skript
+schon (`:138`, `:158`) und benutzt sie an anderer Stelle korrekt — bei einem
+Debug-Paket kaemen dann die `d`-Fassungen heraus, bei einem Release-Paket
+`mfc140.dll` / `MSVCP140.dll` / `VCRUNTIME140.dll`, und im Release-Fall gar
+keine Warnung, weil die drei schon beiliegen.
+
+**Nicht behoben.** Nicht aus Zeitnot allein: `paket-pruefen.ps1` ist das
+Werkzeug, an dem die Freigabe von 1.0.3 haengt, und eine Aenderung daran ohne
+Gegenprobe an einem echten Release-Paket waere schlechter als der jetzige
+Zustand. Der Umbau gehoert mit PR-2.2 und PR-2.3 zusammen: alle drei sagen,
+dass der Pruefer aus dem Paket ableiten muss statt aus fester Liste und
+Pruefmaschine.
+
+---
+
+### PR-2.1 — Der Absturz kommt VOR der Behebung (hoch, behoben)
+
+**Fundstelle:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:1944` (vor der
+Behebung).
+
+Commit e060a81 sichert `fnConnInfo` in `:1957` und `:1998` mit dieser
+Begruendung: `Network::SetSSLMode` (`QCWorkerSocket.cpp:362-386`) wertet
+**keines** seiner zehn `GetProcAddress`-Ergebnisse aus und setzt `m_bSSLMode`
+trotzdem; bei einer `QCSSL.dll` der falschen Fassung ist der Zeiger NULL.
+
+Die Begruendung ist richtig. Sie trifft aber dreizehn Zeilen hoeher genauso zu:
+
+    :1944   bool bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);
+
+`g_fnQCSSLBeginSession` wird in `:373` aus demselben ungeprueften Block
+gefuellt. Ist es NULL, stuerzt Eudora **hier** ab — die neue Pruefung in
+`:1957` wird nie erreicht. Der abgesicherte Abrufpfad war damit gegen genau
+den Fall wirkungslos, fuer den er gebaut wurde.
+
+**Gegenprobe, dass es dieselbe Fehlerklasse ist:** die Datei prueft die
+Geschwister laengst.
+
+    grep -n "if (g_fnQCSSL" Eudora71/QCSocket/src/QCWorkerSocket.cpp
+    453:   if (g_fnQCSSLClean)
+    564:   if (g_fnQCSSLEndSession)
+
+**Behoben** in e0f8bef: `bSuccess` faellt auf `false` zurueck, wenn der Zeiger
+NULL ist; damit laeuft der Fehlerzweig, der seit heute frueh eine
+verstaendliche Meldung zeigt. Byte-erhaltend mit `tools/ersetze-bereich.pl`,
+CR-Zahl 18 vorher wie nachher. Uebersetzt und gelinkt: MSBuild
+`QCSocket.vcxproj` Debug/Win32, Exit 0, `Bin\Debug\QCSocket.dll` entsteht, nur
+die vorbestehenden C4996-Warnungen.
+
+**Bewusst NICHT angefasst:** `g_fnQCSSLWrite` (`:1164`) und `g_fnQCSSLRead`
+(`:1285`) sind ebenfalls ungeprueft. Beide sind nur ueber
+`m_pSSLReference->m_pSSL` erreichbar, und das bleibt NULL, wenn
+`QCSSLBeginSession` nicht lief — nach der Behebung also auch bei fehlendem
+Zeiger. Ein `&& g_fnQCSSLWrite` in die Bedingung von `:1160` zu haengen waere
+schaedlich: dann fiele der Zweig auf den Klartextpfad zurueck und Eudora
+schickte Anmeldedaten unverschluesselt.
+
+**Was an der Behebung von heute frueh stimmt:** die vier gemeldeten Stellen
+sind wirklich zu (`:1958`, `:1978`, `:1999-2010`, `:2050-2056` in der heutigen
+Zaehlung), die neue Meldung verschluckt nichts — der `else`-Zweig in
+`:1967-1974` haengt nur Text an einen Fall an, der vorher gar keinen Text
+bekam. Eine Kleinigkeit bleibt: faellt `pConnectionInfo` im Zweig ohne
+TaskInfo weg, behaelt `m_iSSLError` seinen alten Wert, statt zurueckgesetzt zu
+werden. Folgenlos, solange die Meldung aus `csError` kommt.
+
+---
+
+### PR-2.2 — `paket-pruefen.ps1` winkt ein Paket ohne `EudoraRes.dll` durch (hoch)
+
+**Fundstelle:** `tools/paket-pruefen.ps1:138` und `:158`.
+
+Das Werkzeug liest die Importtabellen der PE-Dateien — Datenverzeichnis 1 und,
+richtig, auch Datenverzeichnis 13 (verzoegertes Laden, 32-Byte-Deskriptoren).
+Die im Auftrag vermutete Delay-Load-Luecke gibt es **nicht**; gegen
+`dumpbin /dependents` auf `EuMemMgr.dll` gemessen, gleiche Aufteilung.
+
+Was es nicht sieht, ist alles, was in keiner Importtabelle steht.
+
+**Gegenprobe:** aus einer ausgepackten Kopie des Pakets wurden
+`EudoraRes.dll`, `QCSSL.dll`, `SPELL32.DLL`, `EuGraph.ocx`, `EuShlExt.dll`,
+`x1lib.dll` und der ganze Ordner `Plugins\` geloescht. Ergebnis des Pruefers:
+
+    ERGEBNIS: keine Fehler.        EXIT=0
+
+Kein Wort zu `EudoraRes.dll` — der Datei, die laut `README.md:66` die gesamte
+Oberflaeche traegt. Sie wird per `LoadLibrary` geholt und steht deshalb in
+keiner Importtabelle. Im Baum `Eudora71\` liegen 62 `LoadLibrary`- und 28
+`CoCreateInstance`-Stellen, die alle im toten Winkel liegen.
+
+**Folge fuer 1.0.3:** `paket-pruefen.ps1` beantwortet die Frage "sind alle
+Importe aufloesbar", nicht die Frage "ist das Paket vollstaendig". Als
+Freigabekriterium fuer Kriterium 0 taugt es in dieser Fassung nicht. Was
+fehlt, ist eine Soll-Liste der Dateien, gegen die geprueft wird.
+
+---
+
+### PR-2.3 — Der Pruefer benotet die Maschine, nicht das Paket (hoch)
+
+**Fundstelle:** `tools/paket-pruefen.ps1:9` ("Warnungen allein aendern die
+Rueckgabe nicht"), `:266` (Rueckfall auf das Systemverzeichnis), `:433`.
+
+**Gegenprobe** gegen das ausgepackte `Eudora72-1.0.2-lauffaehig.zip`:
+
+    3. VS2022-DEBUG-LAUFZEITEN
+       mfc140d.dll  msvcp140d.dll  vcruntime140d.dll  ucrtbased.dll
+            nicht im Paket, aber in SysWOW64 vorhanden
+    ERGEBNIS: keine Fehler.        EXIT=0
+
+Genau der Fall, fuer den das Werkzeug laut seinem eigenen Kopfkommentar
+(`:13-19`) gebaut wurde — ein Paket, das auf einer fremden Maschine nicht
+startet — wird mit Rueckgabe 0 durchgewunken, weil auf DIESER Maschine die
+Laufzeit installiert ist.
+
+Dazu drei Verschaerfungen:
+
+* `:266` faellt auf `System32` zurueck. Das Skript laeuft in einer 64-Bit-
+  PowerShell; dort liegen 64-Bit-DLLs, die ein x86-Prozess nicht laden kann.
+  1230 DLLs sind nur dort vorhanden. Die Architektur der aufgeloesten
+  System-DLL wird nirgends geprueft. Beispiel: `Finde-DLL 'aadcloudap.dll'`
+  meldet "aufgeloest".
+* `QCSSL.dll` importiert `mfc140.dll` und `VCRUNTIME140.dll` (Release, ohne
+  `d`). Die Liste in `:360` kennt nur die vier Debug-Fassungen. Ohne
+  VC-Redistributable faellt TLS auf der Zielmaschine aus, der Pruefer schweigt.
+* `README.md:73-74` sagt, die vier Debug-Laufzeiten duerften **nicht**
+  mitgeliefert werden; `paket-pruefen.ps1:363-364` bewertet ihr Vorhandensein
+  gruen und ihr Fehlen (`:371`) als FEHLER. Werkzeug und Doku widersprechen
+  sich.
+
+Ausserdem ungeprueft: Exporte und Ordinale (`:149/:151` liest nur den Namen
+des Deskriptors, nie die Thunk-Tabellen — eine `msvcr71`-Bruecke mit fehlendem
+Export ergibt `0xc0000139` und bleibt unentdeckt), das eingebettete Manifest
+(`Microsoft.Windows.Common-Controls 6.0.0.0`, SxS-Fehler 14001), die
+COM-Registrierung von `EuGraph.ocx`/`EuShlExt.dll`/`capicom.dll`, und der Ort
+der `Eudora.ini` (`:386` sucht mit `-Recurse` irgendwo im Baum, nicht dort, wo
+`eudora.cpp:3542` sie sucht).
+
+---
+
+### PR-2.4 — Der groesste Eingriff des Tages hat keinen einzigen Test (hoch)
+
+**Fundstelle:** Commit 1a4a6d5 aendert `Eudora71/OTShim/OTShim.cpp` um 334
+Zeilen; `Eudora71/Tests/` ist in demselben Commit **nicht** angefasst.
+
+**Gegenprobe:**
+
+    grep -rn "DistributeRow|MoveControlBarToPosition|AssignRowExtents|m_nRowExtent|NormalizeRow" Eudora71/Tests/*.cpp
+    Eudora71/Tests/TestOTShimAndocken.cpp:689:  //   NormalizeRow, die Splitter und die Client-Kanten)
+
+Ein Kommentar. Sonst nichts. Fuenf neue Funktionen mit Zeilenaufteilung,
+Rundung, Mindestbreiten und Umbau von `m_arrBars` sind ohne Zusicherung.
+
+Schaerfer noch: der bestehende Test schreibt das **alte** Verhalten fest und
+bleibt deshalb gruen, egal was die neue Rechnung tut.
+
+    Eudora71/Tests/TestOTShimAndocken.cpp:214
+    GroesseVergleichen(leiste.CalcDynamicLayout(0, LM_HORZDOCK), 32767, 40, ...)
+
+Das trifft den Zweig `m_nRowExtent == 0`. Der neue Zweig
+(`OTShim.cpp:1640-1646`, `m_nRowExtent > 0`) wird von keinem der 105 Tests
+betreten. "105 von 105 gruen" ist wahr — selbst gebaut und gelaufen
+(`Eudora71/Tests/RunTests.cmd`, Exit 0) — sagt ueber die Aenderung des Tages
+aber nichts.
+
+Nach Tests ohne wirksame Zusicherung wurde gezielt gesucht: die Faelle, die
+auf den ersten Blick leer wirken, rufen Pruefhilfen (`PruefeKopfzeile`,
+`GroesseVergleichen`), die ihrerseits `TT_Fail` aufrufen. Ein immer gruener
+Test wurde **nicht** gefunden. `SECDockBar: PredictInsertPosition und
+CalcDockingLayout sind als offen gekennzeichnet` (`:526-533`) prueft wirklich
+etwas — dass der Rumpf noch ein Rumpf ist. Das ist Absicht und in Ordnung.
+
+---
+
+### PR-2.5 — `DrawChecked` hat denselben Farbfehler (mittel)
+
+**Fundstelle:** `Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:851-852`.
+
+Die Behebung in `DrawDisabled` (db28adb) ist richtig, und zwar nachgerechnet.
+Die Verknuepfungszahl `0x00B8074A` (PSDPxax) ist umgekehrt polnisch
+`P S D P x a x`, also
+
+    Ergebnis = P XOR (S AND (D XOR P))
+
+Ist `S` lauter Einsen, bleibt `D` stehen; ist `S` null, kommt der Pinsel `P`.
+Beim Kopieren von einfarbig nach farbig macht GDI aus der Maskeneins die
+Hintergrund- und aus der Maskennull die Textfarbe des Ziels. Die Rechnung geht
+also genau dann auf, wenn dort `0x00FFFFFF` und `0x00000000` stehen — genau
+das setzt `DrawDisabled` seit heute. **Richtig.** Auch die Ruecknahme ist
+sicher: der einzige vorzeitige `return` (`:799`, `nWidth <= 0`) liegt VOR dem
+`SetTextColor`, und die beiden `Set…`-Zeilen am Ende laufen unbedingt.
+
+Die Begruendung im Commit nennt `DrawChecked` als Vorbild ("setzt beide Farben
+laengst"). Als Vorbild dafuer, DASS man die Farben setzt, stimmt das. WELCHE
+Farben `DrawChecked` setzt, haelt derselben Rechnung aber nicht stand:
+
+    :851  COLORREF crOldText = data.m_drawDC.SetTextColor(secData.clrBtnHilite);
+    :852  COLORREF crOldBk   = data.m_drawDC.SetBkColor(secData.clrBtnFace);
+
+`clrBtnFace` ist ueblicherweise `0xF0F0F0`, `clrBtnHilite` `0xFFFFFF`. Damit
+ist `S` weder lauter Einsen noch null, sondern gemischt — das Schachbrett
+erscheint nur in einem Teil der Bitebenen. Nach der Begruendung, die
+`DrawDisabled` behoben hat, ist `DrawChecked` der naechste Fall derselben
+Klasse. Betroffen sind die angekreuzten Knoepfe und ueber
+`DrawIndeterminate` (`:864-868`) die Auszeichnungsknoepfe im Verfassenfenster.
+
+UNGEPRUEFT auf dem Bildschirm — die Auflage verbietet den Start.
+
+---
+
+### PR-2.6 — Die Suchleiste teilt sich jetzt Zeile 0 mit der Hauptleiste (mittel)
+
+**Fundstelle:** `Eudora71/Eudora/mainfrm.cpp:966`.
+
+    DockControlBarEx(m_pSearchBar, m_pToolBar->m_pDockBar->GetDlgCtrlID(),
+                     nCol+1, nRow, 1.0, nDefaultHeight);
+
+Seit 1a4a6d5 werden `nCol` und `nRow` ausgewertet. Die Suchleiste landet damit
+in derselben Zeile wie die Hauptwerkzeugleiste. `SECControlBar::m_fPctWidth`
+steht bei beiden auf dem Vorgabewert `1.0` (`OTShim.cpp:1453`); Eudora setzt
+ihn fuer die Hauptleiste nirgends. `SECDockBar::DistributeRow` normiert
+deshalb auf 0,5 zu 0,5 — die Hauptleiste bekommt die halbe Fensterbreite.
+
+Bei fuenfzehn Knoepfen zu je rund 24 Bildpunkten reicht das auf einem breiten
+Fenster; auf einem schmalen nicht. Das ist eine **neue** Moeglichkeit, die
+Hauptleiste abzuschneiden, und sie entsteht durch die Aenderung von heute.
+
+Zweite Stelle derselben Art: `AdWazooBar.cpp:176` und `:212` docken mit
+`nCol=5, nRow=0, fPctWidth=0.25` an, `WazooBarMgr.cpp:253` mit
+`nCol=0, nRow=0, fPctWidth=1.00` an dieselbe untere Leiste. Vorher hatte jede
+ihre eigene Zeile, jetzt teilen sie sich Zeile 0 im Verhaeltnis 0,8 zu 0,2.
+Das ist vermutlich genau das Gewollte — nachgewiesen ist es nicht.
+
+**Was an der Rechnung stimmt** (von Hand durchgerechnet, ohne Lauf):
+
+* Division durch null gibt es nicht: `fSum > 0.0` steht vor jeder Division
+  (`OTShim.cpp:2688`, `:2694`), `nBars > 0` vor `1.0/nBars` (`:2669`).
+* Negative Breiten gibt es nicht: `nExtent = nRest - nReserve` kann negativ
+  werden, wird aber von `if (nExtent < nMin)` und zuletzt von
+  `if (nExtent < 1) nExtent = 1` (`:2708`) aufgefangen.
+* Leere Zeile: `DistributeRow(nStart, nStart, …)` sammelt nichts und kehrt bei
+  `nBars <= 0` sofort um. Die fuehrende NULL-Marke erzeugt genau diesen Fall
+  im ersten Schleifendurchlauf.
+* Genau eine Leiste: sie ist die letzte, bekommt `nRest` = `nAvail`, also die
+  ganze Zeile — dasselbe Ergebnis wie vorher mit 32767.
+* `MoveControlBarToPosition` von Hand durchgespielt fuer den ersten und den
+  zweiten Andockvorgang: `[NULL,bar1,NULL]` bleibt `[NULL,bar1,NULL]`,
+  `[NULL,bar1,NULL,bar2,NULL]` wird zu `[NULL,bar1,bar2,NULL]`. Richtig.
+* Der Umbruch in MFC greift nicht mehr: `CDockBar::CalcFixedLayout`
+  (`atlmfc/src/mfc/bardock.cpp`) bricht bei
+  `rect.left >= sizeMax.cx - afxData.cxBorder2` um und zaehlt
+  `pt.x += sizeBar.cx - afxData.cxBorder2`. Da die Summe der zugeteilten
+  Laengen genau `nAvail` ist und je Leiste ein `cxBorder2` abgezogen wird,
+  bleibt die Zeile unter der Schranke.
+* Der Weg dorthin stimmt auch: MFC ruft nicht `CalcFixedLayout`, sondern
+  `pBar->CalcDynamicLayout(-1, LM_HORZDOCK|LM_HORZ)`. Waere dort
+  `CControlBar::CalcDynamicLayout` zustaendig, kaeme `bStretch = FALSE` heraus
+  und `m_nRowExtent` wuerde nie angewandt. `SECControlBar::CalcDynamicLayout`
+  (`OTShim.cpp:1654-1658`) gibt aber ausdruecklich `CalcFixedLayout(TRUE, …)`
+  zurueck. Die Kette traegt.
+
+---
+
+### PR-2.7 — `paket-bauen.ps1` ist kein Bau (mittel)
+
+**Fundstellen:** `tools/paket-bauen.ps1:59-60`, `:103-106`, `:115`, `:161`.
+
+* `:60` nimmt als Grundlage das **alte** ZIP. Frische Binaerdateien kommen nur
+  mit `-AusBauverzeichnis` und nur fuer sieben fest verdrahtete Namen
+  (`:103-106`). Fehlt eine davon, bleibt die alte stehen (`:115`, gelbe
+  Zeile) — und das ZIP wird trotzdem geschrieben.
+* Debug oder Release ist nirgends festgelegt: `Bin\Debug` ist hartkodiert
+  (`:86`), gleichzeitig werden `Bin\Release`-Dateien beigemischt (`:125`,
+  `:129`, `:139`).
+* In einem frischen Klon laeuft es gar nicht: `.gitignore:6` ignoriert `Bin/`,
+  `:59` erwartet aber `Eudora71\Bin\Release\msvcr71.dll`. Gemessen in diesem
+  Worktree: Abbruch mit EXIT=1 in `:74` — **nach** dem Auspacken in `:71`, so
+  dass 155 Dateien einer unveraenderten 1.0.2 im Zielverzeichnis stehen
+  bleiben und wie ein 1.0.3-Bauverzeichnis aussehen. Kein Aufraeumen im
+  Fehlerfall.
+* Reproduzierbar ist es nur auf derselben Maschine in derselben Stunde:
+  `:161` `CreateFromDirectory` schreibt Aenderungszeiten ins ZIP. Zwei Laeufe
+  ohne Aenderung ergaben denselben Hash; eine verstellte `LastWriteTime`
+  ergab einen anderen. Die aus dem Git-Checkout kopierten Dateien (`:146-147`,
+  `:153`) tragen die Auscheckzeit. Das `.sha256` in `:162` verspricht eine
+  Reproduzierbarkeit, die es nicht gibt.
+* Vollstaendigkeit wird vor dem Schreiben nicht geprueft (`:159-161`);
+  `paket-pruefen.ps1` wird erst danach als Textzeile empfohlen (`:172`) — und
+  wuerde nach PR-2.2 ohnehin nichts merken.
+* Keine Versionskopplung: weder die Datei `VERSION` noch
+  `tools/kennung-erzeugen.pl` kommen vor. Ein ZIP mit Namen 1.0.3 kann eine
+  1.0.2-`Eudora.exe` enthalten, ohne dass etwas warnt. Genau davor warnt
+  `Releases/PAKETE.md` bei der QCSSL.dll.
+* Das Grundlagen-ZIP wird ohne Hash-Abgleich ausgepackt (`:62`, `:71`),
+  obwohl daneben eine `.sha256` liegt.
+
+`tools/laufzeit-holen.ps1` laedt nichts aus dem Netz (geprueft: kein
+`Invoke-WebRequest`, `DownloadFile`, `System.Net`, `http` in allen drei
+Skripten). Auf einem Rechner ohne Visual Studio bricht es ab, aber nicht
+sauber: mit einer Quelle, die nur drei der vier Pflichtdateien hat, kopiert es
+zwei Dateien und meldet danach EXIT=1 — zurueck bleibt ein halb bestuecktes
+Verzeichnis. Ausserdem ist `:74` `C:\Windows\SysWOW64` hartkodiert, waehrend
+`paket-pruefen.ps1:196` es richtig ueber `$env:SystemRoot` macht, und
+`Architektur()` (`:44-55`) prueft weder `MZ` noch `PE\0\0` und hat kein
+`finally`.
+
+---
+
+### PR-2.8 — `EUDORA_BUILD_MONTH` bleibt auf Juni 2006 (niedrig, kein Handlungsbedarf)
+
+**Fundstelle:** `Eudora71/Version.h:19`.
+
+    #define EUDORA_BUILD_MONTH REG_EUD_CLIENT_7_1_MONTH
+
+`regcode/regcode_eudora.h:129` gibt dafuer `(89)` an, "June 2006". Ein
+`REG_EUD_CLIENT_7_2_MONTH` gibt es nicht; die Reihe endet bei 7_1.
+
+Benutzt wird der Wert an fuenf Stellen: `QCSharewareManager.cpp:944, 953, 963`
+(Ablauf eines Registrierungscodes), `:1182-1183` (`DemoDaysLeft`) und
+`QCSharewareManager.h:85` (`IsNewDemoBuild`).
+
+**Nicht mitzuaendern ist richtig.** Die Zahl bedeutet "in welchem Monat wurde
+dieses Produkt gebaut" und dient dazu, Registrierungscodes ablaufen zu lassen,
+die aelter als zwoelf Monate sind. Ein Hochsetzen auf einen Wert nahe heute
+(rund 320) wuerde `(regCodeMonth + 12) < EUDORA_BUILD_MONTH` fuer **jeden**
+existierenden Eudora-Code wahr machen und alle vorhandenen Registrierungen
+entwerten. `IsNewDemoBuild` wuerde ausserdem jede gespeicherte
+`DemoBuildMonth` als aelter einstufen und die Testfrist neu starten. Beides
+ist nicht gewollt.
+
+Die im Commit 2cf569f genannte Nebenwirkung ist eine andere und trifft zu:
+`QCSharewareManager::Load` vergleicht `EUDORA_BUILD_VERSION` (die Zeichenkette
+`"7.2.0.3"`) mit der `RetailVersion` in der INI, nicht `EUDORA_BUILD_MONTH`.
+
+---
+
+### PR-2.9 — Falsche Zeilenangabe in BEFUND-ANSICHT.md (niedrig)
+
+`Eudora71/OTShim/BEFUND-ANSICHT.md:279` nennt `Splitter::cx` (= 4,
+`OTShim.cpp:2091`). Die Zeile stimmt nicht mehr:
+
+    grep -n "Splitter::cx" Eudora71/OTShim/OTShim.cpp
+    2109:  const int SECDockBar::Splitter::cx = 4;
+    2675:  const int nMin = 4 * Splitter::cx;
+
+Der Wert 4 stimmt, die Fundstelle ist um 18 Zeilen verrutscht.
+
+---
+
+### Geprueft und in Ordnung
+
+* **`m_bMainFrameEnabled = FALSE`** (`OTShim_Werkzeugleiste.cpp:3514`, `:3541`).
+  Alle fuenf Abfragestellen in Eudora lesen TRUE als "der Anpassen-Dialog
+  steht offen": `mainfrm.cpp:2988` (Schliessen unterbinden), `:8668`
+  (`OnNcHitTest` liefert HTERROR), `:8679` und `:8727` (`WF_STAYACTIVE`
+  loeschen), `:8743` (`OnEnterIdle` nur bei `MSGF_DIALOGBOX`). FALSE ist
+  ueberall die richtige Ruhelage. Der Rueckweg existiert und wird gerufen:
+  `SECToolBarCmdPage::~SECToolBarCmdPage` (`:4377`) ruft `RestoreMainFrame`,
+  und `QCToolBarCmdPage` (`QCToolbarCmdPage.cpp:117`, das
+  `EnableMainFrame` ruft) leitet sich davon ab. Kein Haengenbleiben auf TRUE.
+* **`EudoraTests.exe`**: selbst gebaut und gelaufen ueber
+  `Eudora71/Tests/RunTests.cmd`. 105 Tests, 105 bestanden, 0 fehlgeschlagen,
+  Exit 0. Die Zahl stimmt.
+* **Delay Load**: die vermutete Luecke in `paket-pruefen.ps1` gibt es nicht,
+  siehe PR-2.2.
+
+### Offen geblieben
+
+Aus Zeitgruenden nicht mehr erreicht: die Stichprobe zu
+`tools/zeilenenden-angleichen.pl`, BEFUNDE.md S-1 bis S-6, `utils.cpp
+ISOTranslate`, sowie die eigenen Gegenproben gegen `tools/pruefe-bytes.pl` und
+die Fehlalarmquote von `tools/suche-zeiger.pl`. FREIGABEs Release-Bau lag
+nicht vor und ist ungeprueft.
