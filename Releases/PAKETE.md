@@ -24,6 +24,22 @@ Die Paketversion und die QCSSL-Version sind **verschiedene Zählungen**. Paket
 1.0.2 enthält QCSSL 1.0.1, weil sich die QCSSL-Quellen seit 1.0.1 nicht geändert
 haben.
 
+> ### Ein veröffentlichtes Paket wird nicht ersetzt (Befund V-1)
+>
+> Muss etwas hinterher, bekommt es die **nächste Nummer** — Paket 1.0.4 mit
+> Produktversion 7.2.0.4. Am 31.08.2026 ist das **verletzt** worden: unter
+> `v1.0.3` hängen zwei verschiedene ZIPs, sie unterscheiden sich in der Behebung
+> von E-11. Damit identifiziert die Angabe „Version 1.0.3" das Programm nicht
+> mehr, und ein Fehlerbericht von außen ist keinem Bau zuzuordnen.
+>
+> **Das ist derselbe Fehler, den diese Datei bei der `QCSSL.dll` schon
+> dokumentiert** (zwei Binärdateien unter „QCSSL 1.0.0", siehe
+> [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), erster Absatz). Die Lehre stand in
+> der Datei über die DLL, nicht in der über die Pakete — jetzt steht sie hier.
+>
+> Zurückziehen ja, überschreiben nein. Das gilt besonders, wenn die alte Fassung
+> fehlerhaft ist: gerade dann muss man sie später noch benennen können.
+
 > **Zur Benennung.** Beide ZIP-Dateien tragen im Namen das Wort `lauffaehig`.
 > Nach [ZIEL.md](../ZIEL.md) ist das für keine der beiden zutreffend: 1.0.1 startet
 > gar nicht, 1.0.2 erfüllte damals nur eines der Kriterien. Die Namen bleiben stehen,
@@ -102,10 +118,18 @@ Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also nicht auf; es fällt
 erst bei Benutzung auf (Adressbuch, LDAP, Ph, S/MIME, Spamfilter). Das galt
 für 1.0.2 genauso — es war nur nicht gemessen.
 
-**Stand nach ZIEL.md** (31.08.2026, abends): Kriterium 1 und 3 sind mit diesem
-Paket **belegt** — Gregor hat damit 159 Nachrichten abgerufen (E-1, E-3).
-Kriterium 2 fast, Kriterium 0 offen: das Release-ZIP ist auf einem Rechner
-**ohne** Visual Studio nicht gestartet worden (E-8).
+**Stand nach ZIEL.md** (31.08.2026, abends). Hier ist genau zu unterscheiden,
+welcher Bau gemeint ist — **keine der beiden veröffentlichten Fassungen ist von
+jemandem gestartet worden** (Befund V-1):
+
+| Bau | Stand |
+|---|---|
+| **Debug**-Bau `Eudora72-1.0.3` (nicht veröffentlicht, nicht veröffentlichbar) | darauf sind Kriterium 1 und 3 belegt — 159 Nachrichten, TLSv1.3 (E-1, E-3). Er lief nur, weil die vier **nicht verteilbaren** Laufzeit-DLLs von Hand daneben lagen (E-8) |
+| **Release**-ZIP, erste Fassung (`632c4066…`) | von Gregor probiert: **Absturz** beim Klick auf *Weiter* im Kontoassistenten (E-6, Ursache E-11) |
+| **Release**-ZIP, zweite Fassung (`d4719047…`) | **von niemandem geprüft** — sie trägt die Behebung von E-11, aber es hat sie noch keiner gestartet |
+
+Kriterium 0 ist damit unbelegt, und die Behebung von E-11 unerprobt — zumal in
+derselben Funktion zwei weitere Vorkommen derselben Art stehen (R-1).
 
 ## 1.0.2 — 30.08.2026
 

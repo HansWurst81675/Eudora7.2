@@ -32,6 +32,12 @@ gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
 
 **Am 31.08. um 09:00 nicht mehr geschafft — das ist der erste Schritt.**
 
+> **Und es ist weiterhin ungetan** (Stand 31.08. abends, Befund V-1): Gregor hat
+> die **erste** Fassung probiert, die abstürzte. Die **ausgetauschte** hat
+> niemand gestartet. „1.0.3 läuft" gilt für keines der beiden veröffentlichten
+> ZIPs — der erfolgreiche Lauf mit 159 Nachrichten war der **Debug**-Bau mit von
+> Hand hineinkopierten, nicht verteilbaren Laufzeiten (E-8).
+
 Auf GitHub hängt seit 09:00 ein **ausgetauschtes** ZIP:
 
 | | |

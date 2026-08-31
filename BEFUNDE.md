@@ -1,6 +1,6 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: 765c39b -->
+<!-- pruefstand: c0833b2 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -118,6 +118,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -6184,3 +6185,76 @@ Die Commit-Schranke bleibt bei **35 von 35 grün** — die erweiterte Endungslis
 bricht keinen ihrer Testfälle.
 
 **Damit ist Befund X-1 vollständig abgearbeitet.**
+
+
+## V-1 — Zwei verschiedene ZIPs unter derselben Versionsnummer (31.08.2026)
+
+Gregors Feststellung, wörtlich: *„Eigentlich illegal, weil die gleiche Vers.nr.
+Aber anderes zip"* — und dazu: **er hat die ausgetauschte Fassung nicht
+geprüft.**
+
+Beides trifft zu, und beides hat Folgen, die über die Formalie hinausgehen.
+
+### Es ist derselbe Fehler wie bei der QCSSL.dll
+
+`Releases/1.0/AUSLIEFERUNGEN.md` hält im ersten Absatz fest, warum es diese
+Datei überhaupt gibt: *„Die Versionskennung wurde erst spät eingebaut und dann
+einmal nicht mitgezogen. Dadurch tragen **zwei verschiedene Binärdateien
+dieselbe Kennung „QCSSL 1.0.0"**. Wer sagt ‚ich habe 1.0.0 getestet', meint also
+möglicherweise die eine oder die andere — und die unterscheiden sich in fünf
+behobenen Befunden."*
+
+Am 31.08.2026 um 09:00 ist genau das mit dem **Paket** passiert: unter
+`v1.0.3` hängen zwei verschiedene ZIPs, und der einzige Unterschied zwischen
+ihnen ist die Behebung eines Absturzes (E-11). Die Lehre war aufgeschrieben und
+hat nicht getragen — sie stand in der Datei über die *DLL*, nicht in der über
+die *Pakete*.
+
+### Was dadurch nicht mehr zusammengeht
+
+| Angabe | Problem |
+|---|---|
+| „Gregor hat 1.0.3 probiert und es stürzte ab" | stimmt — für die **erste** Fassung (`632c4066…`). Ohne Prüfsumme wäre das nicht mehr zuzuordnen |
+| die beiliegende `LIESMICH.txt` | beschreibt in der ersten Fassung einen Stand, den die zweite nicht mehr hat |
+| ein Fehlerbericht von außen | „Version 1.0.3" identifiziert das Programm **nicht** |
+| die **volle** SHA256 der ersten Fassung | steht **nirgends** im Repo, nur die ersten acht Zeichen. Zum Unterscheiden reicht das, zum Nachweisen nicht |
+
+### Und der Stand wird dadurch schwächer, nicht stärker
+
+**Keine der beiden veröffentlichten Fassungen ist von jemandem gestartet
+worden:**
+
+- Die **erste** hat Gregor probiert — sie stürzte beim Klick auf *Weiter* ab
+  (E-6, Ursache E-11).
+- Die **zweite** (mit der Behebung) hat **niemand** geprüft. Das ist der Stand
+  seit dem Austausch.
+- Der Lauf, der 159 Nachrichten abgerufen hat (E-1, E-3), war **keiner von
+  beiden**: er lief aus `C:\Users\Gregor\Eudora72-1.0.3`, dem **Debug**-Bau mit
+  von Hand hineinkopierten, nicht verteilbaren Laufzeit-DLLs (E-8).
+
+Für die Kriterien heißt das: 1 und 3 sind auf dem **Debug**-Bau belegt, nicht auf
+dem ausgelieferten Paket. Kriterium 0 ist unbelegt. Das steht so in `ZIEL.md`,
+wird aber leicht überlesen, wenn man „1.0.3 läuft" hört.
+
+### Die Regel, die daraus folgt
+
+**Ein veröffentlichtes Paket wird nicht ersetzt.** Muss etwas hinterher, bekommt
+es die nächste Nummer — nach der Verabredung in `Releases/PAKETE.md` also
+Paket **1.0.4** mit Produktversion **7.2.0.4**. Das kostet eine Zeile in
+`VERSION` und in `Eudora71/Version.h`; `tools/kennung-erzeugen.pl` warnt von
+selbst, wenn die beiden auseinanderlaufen.
+
+Das gilt auch dann — und besonders dann —, wenn die alte Fassung fehlerhaft ist:
+gerade dann muss man sie später noch benennen können. Zurückziehen ja,
+überschreiben nein.
+
+### Was jetzt zu tun ist
+
+1. **Die zweite Fassung auf dem Win11-Rechner starten.** Das ist ohnehin der
+   erste Punkt der Arbeitsliste; hier ist der zusätzliche Grund: es ist bisher
+   nur die *erste* geprüft, und die stürzte ab.
+2. **Die volle SHA256 der ersten Fassung** aus der GitHub-Veröffentlichung
+   nachtragen, solange sie noch abrufbar ist — sonst ist der einzige Beleg für
+   „das ist die Fassung, die abstürzte" acht Zeichen lang.
+3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
+   und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.

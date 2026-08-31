@@ -13,6 +13,25 @@
 > C++ geändert** worden und **nichts gebaut**. Geändert wurden Dokumentation und
 > Werkzeuge; beides ist hier nachprüfbar und wurde nachgeprüft.
 >
+> ### Vorab: die veröffentlichte Fassung hat noch niemand gestartet
+>
+> Gregor am 31.08. abends: *„Ich habe die neue Version nicht geprüft. Eigentlich
+> illegal, weil die gleiche Vers.nr. Aber anderes zip"*. Beides trifft zu
+> (Befund **V-1**):
+>
+> | Bau | Stand |
+> |---|---|
+> | Debug-Bau `Eudora72-1.0.3` | darauf sind Kriterium 1 und 3 belegt (E-1, E-3) — lief nur mit den vier **nicht verteilbaren** DLLs daneben (E-8) |
+> | Release-ZIP, **erste** Fassung `632c4066…` | probiert: **Absturz** bei *Weiter* (E-6/E-11) |
+> | Release-ZIP, **zweite** Fassung `d4719047…` | **von niemandem geprüft** |
+>
+> **„1.0.3 läuft" gilt also für keines der beiden veröffentlichten ZIPs.** Und
+> zwei verschiedene ZIPs unter derselben Nummer sind dieselbe Verwechslung, die
+> das Projekt bei der `QCSSL.dll` schon dokumentiert hat („QCSSL 1.0.0" zweimal).
+> Die Regel steht jetzt in `Releases/PAKETE.md`: **ein veröffentlichtes Paket
+> wird nicht ersetzt, das nächste heißt 1.0.4.** Wenn die Behebungen aus R-1
+> hineinkommen, ist das ohnehin ein neues Paket.
+>
 > ### Das Wichtigste für den nächsten Lauf auf dem Win11-Rechner
 >
 > **Die Behebung von E-11 ist wahrscheinlich unvollständig.**
