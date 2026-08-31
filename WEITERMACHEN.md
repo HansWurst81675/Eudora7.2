@@ -42,10 +42,53 @@
 > | `f8b4dee` | Diese Übergabe, dazu in `AUFGABEN.md` die Angabe, welcher Punkt einen Compiler braucht. |
 > | `26b52b8` | Nachtrag: ein fehlender Parameter im neuen Werkzeug (perl warnte, das Ergebnis war unberührt — Nachtrag in R-1). |
 >
-> **Nachprüfbar ist beides:** `perl tools/pruefe-bytes-tests.pl` muss 35 grün
-> melden, `perl tools/releasebuffer-pruefen.pl` 117 ok / 20 falsch /
-> 4 lockbuffer / 1 danach. Wie man die Gegenprobe gegen die **alte** Schranke
-> nachrechnet, steht in Befund X-2 als fertiger Befehlsblock.
+> ### Zweite Runde derselben Sitzung: die Werkzeuge abgearbeitet
+>
+> | Befund | Was | Messung |
+> |---|---|---|
+> | **NP3-6/NP3-7** | `pruefstand-melden.pl` gab aus dem falschen Verzeichnis Entwarnung und nannte einen beliebigen Commit als Prüfstand | jetzt Prüfstandsmarke `<!-- pruefstand: … -->` in den drei beobachteten Dateien; 182 git-Aufrufe → 3 |
+> | **X-3** (D3) | `suche-zeiger.pl` war Rauschen: 347 Treffer, 15 von 15 Fehlalarm | **347 → 18**, neun Filter, **alle 18 von Hand nachgelesen**: 9 echte Kandidaten, 3 unklar, 6 Fehlalarm |
+> | **X-4** (D4) | `zeilenenden-angleichen.pl` ließ 771 Textdateien aus und drehte absichtliche Arbeit still zurück | 6 Dateiarten aufgenommen (6395 → **6444**), drei Sicherungen: namentliche Ausgabe, **vorgemerkte Dateien unangetastet**, Gegenrichtung getrennt |
+> | **PR-5** | „Zeitpunkt des Baus" war falsch beschrieben | an drei Stellen berichtigt. Damit ist **PR-1 bis PR-8 vollständig** |
+> | **LIESMICH 1.0.3** | beschrieb den Debug-Weg und hätte den Empfänger die vier **nicht verteilbaren** DLLs holen lassen | neu gefasst, mit der Warnung über die zwei ZIPs unter derselben Nummer |
+>
+> **Damit ist Befund X-1 vollständig abgearbeitet** (X-2, X-3, X-4).
+>
+> ### Neue Arbeit, die daraus entstanden ist
+>
+> **Neun Zeigerstellen** aus X-3 — Prüfung vorhanden, Zugriff danach
+> ungeschützt. Liste in `AUFGABEN.md` unter **D3a**. Der ernsteste:
+> `ImapMailbox.cpp:1637`, wo der Wächter `if (!pImapCommand) { ASSERT(0); … }`
+> **kein `return`** hat — im Release entfällt das `ASSERT` (F-1), dann läuft es
+> weiter und greift zu. Zweiter: `POPSession.cpp:896`, auf dem Abrufpfad.
+> **Das Ändern braucht einen Bau.**
+>
+> ### Nachprüfbar, alles in einem Zug
+>
+> ```sh
+> perl tools/pruefe-bytes-tests.pl        # 35 von 35 gruen
+> perl tools/releasebuffer-pruefen.pl     # 117 ok / 20 falsch / 4 lockbuffer / 1 danach
+> perl tools/zeilenenden-angleichen.pl    # 0 Abweichungen in allen Richtungen
+> perl tools/pruefstand-melden.pl         # rc=0, drei Marken
+> ```
+>
+> `suche-zeiger.pl` braucht seine Dateiliste; der Aufruf steht in Befund X-3.
+> Wie man die Gegenprobe gegen die **alte** Schranke nachrechnet, steht in X-2
+> als fertiger Befehlsblock.
+>
+> ### Was compilerfrei noch offen ist
+>
+> **Nur noch einer, und der ist bewusst nicht angefasst:**
+> `tools/paket-pruefen.ps1` (PR-2.0 bis PR-2.3) — es prüft die Maschine statt
+> das Paket und erzeugt bei einem Release-Paket vier Falschwarnungen, die zum
+> Lizenzverstoß anleiten. Der Umbau ist beschrieben (die nötigen Laufzeiten aus
+> den **Importen** der Paketdateien ableiten). **Hier lag keine PowerShell vor**,
+> und ein Blindumbau genau des Werkzeugs, an dem die Freigabe hängt, wäre
+> schlechter als der jetzige Zustand. Wer eine Windows-Sitzung hat, macht es
+> dort — die 101 PE-Dateien im Klon reichen zum Messen.
+>
+> Alles andere, was ohne Compiler ginge, ist abgearbeitet. Der Rest der
+> Arbeitsliste braucht einen Bau oder einen Start.
 >
 > ### `BEFUNDE.md` hat jetzt ein Verzeichnis
 >

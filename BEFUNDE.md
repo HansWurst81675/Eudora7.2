@@ -1,6 +1,6 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: 1890b46 -->
+<!-- pruefstand: 765c39b -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
