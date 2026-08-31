@@ -281,7 +281,7 @@ Neu am 31.08.2026:
 | `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. Seit Befund **X-3** brauchbar: **18 Treffer statt 347**, neun Filter, alle Treffer nachgelesen. Die neun echten Kandidaten stehen in `AUFGABEN.md` unter D3a. |
 | `tools/pruefe-bytes-tests.pl` | Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
 | `tools/releasebuffer-pruefen.pl` | stuft die 142 `ReleaseBuffer`-Vorkommen ein — die Fehlerklasse hinter E-11. 25 sind zu ändern, Einzelheiten in Befund R-1. |
-| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |
+| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten — **von der Schranke und von `zeilenenden-angleichen.pl`**. Wer sie erweitert, erweitert beide (X-4). |
 
 `tools/rekursion-suchen.pl` ist am 31.08.2026 gelöscht worden — Befund W-1: es
 bildete jede Kante mit der umgebenden Klasse und konnte klassenübergreifende

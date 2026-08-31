@@ -20,9 +20,13 @@
 #   5568  30.08.2026 abends, alte Liste (PRUEFER)
 #   5589  31.08.2026, alte Liste (c cpp h hpp inl rc idl def mak txt md)
 #   6385  31.08.2026, neue gemeinsame Liste aus tools/dateiendungen.pl
+#   6444  31.08.2026 abends, um ih rgs mc user hh hpj erweitert (X-1, D4)
 #
-# Die 6385 enthalten 0 Dateien, die sich nur in den Zeilenenden unterscheiden -
-# die erweiterte Liste deckt also keinen neuen Schaden auf. Wer nachzaehlen will:
+# Auch die 6444 enthalten 0 Dateien, die sich nur in den Zeilenenden
+# unterscheiden - die erweiterte Liste deckt keinen neuen Schaden auf, sie
+# schliesst eine Luecke fuer die Zukunft. Von den 49 neu erfassten Dateien war
+# jede einzelne byteidentisch zu HEAD (nachgemessen, bevor die Liste erweitert
+# wurde). Wer nachzaehlen will:
 #
 #   perl tools/zeilenenden-angleichen.pl        # letzte Zeile: Grundgesamtheit
 #
@@ -50,6 +54,27 @@
 # byteidentisch zum HEAD-Stand ist. Dateien mit echten inhaltlichen Aenderungen
 # bleiben unangetastet und werden aufgezaehlt.
 #
+# DREI SICHERUNGEN MEHR (Befund X-1, D4 - eingebaut am 31.08.2026)
+#
+# X-1 hat dem Werkzeug vorgehalten, es drehe "absichtliche Arbeit richtungslos
+# zurueck": wer im Arbeitsbaum absichtlich LF nach CRLF korrigiert - etwa eine
+# .bat, die CRLF braucht -, verliert das durch --aendern kommentarlos. Das
+# stimmt, und byteweise ist dieser Fall von dem Schaden, gegen den das Werkzeug
+# gebaut wurde, NICHT zu unterscheiden. Beides sieht gleich aus: Arbeitskopie
+# CRLF, HEAD LF. Also drei Sicherungen statt eines Ratespiels:
+#
+# 1. JEDE Datei, die angefasst wird, wird NAMENTLICH genannt (bis zu 20, dann
+#    die Zahl). Vorher stand dort nur eine Zahl - man konnte hinterher nicht
+#    sagen, was das Werkzeug getan hat.
+# 2. VORGEMERKTE Dateien werden NICHT angefasst. Wer eine Aenderung an den
+#    Zeilenenden schon "git add" gegeben hat, hat sie absichtlich gemacht; sie
+#    zurueckzuschreiben wuerde vorgemerkte Arbeit still verwerfen. Solche
+#    Dateien werden getrennt aufgezaehlt.
+# 3. DIE GEGENRICHTUNG hat ihre eigene Zeile. Arbeitskopie LF, HEAD CRLF ist
+#    NICHT der Schaden dieses Projekts; solche Dateien bleiben unangetastet und
+#    werden gezaehlt (vorher landeten sie unter "inhaltlich verschieden" - eine
+#    falsche Beschriftung). Mit --auch-umgekehrt werden auch sie angeglichen.
+#
 use strict;
 use warnings;
 use IPC::Open2;
@@ -63,7 +88,18 @@ my $D = do "$FindBin::Bin/dateiendungen.pl";
 die "tools/dateiendungen.pl laesst sich nicht laden: " . ($@ ? $@ : $!) . "\n"
     unless ref($D) eq 'HASH' and $D->{muster};
 
-my $aendern = grep { $_ eq '--aendern' } @ARGV;
+my $aendern   = grep { $_ eq '--aendern' } @ARGV;
+my $umgekehrt = grep { $_ eq '--auch-umgekehrt' } @ARGV;
+
+# Vorgemerkte Dateien: was im Index anders steht als in HEAD, hat jemand
+# absichtlich vorgemerkt. Sicherung 2.
+my %vorgemerkt;
+{
+    open(my $d, '-|', 'git diff-index --cached --name-only -z HEAD') or last;
+    local $/ = "\0";
+    while (my $p = <$d>) { chomp $p; $vorgemerkt{$p} = 1 if length $p }
+    close $d;
+}
 
 sub roh {
     my ($p) = @_;
@@ -117,8 +153,8 @@ open(my $ls, '-|', 'git ls-files -z') or die "git ls-files: $!\n";
 }
 close $ls;
 
-my ($gleich, $angeglichen, $echt, $unlesbar) = (0, 0, 0, 0);
-my @echte;
+my ($gleich, $angeglichen, $echt, $unlesbar, $gegen, $geschont) = (0, 0, 0, 0, 0, 0);
+my (@echte, @angefasst, @gegenrichtung, @geschonte);
 
 for my $p (@dateien) {
     my $arbeit = roh($p);
@@ -128,12 +164,38 @@ for my $p (@dateien) {
 
     if ($arbeit eq $head) { $gleich++; next; }
 
-    (my $ohne = $arbeit) =~ s/\r\n/\n/g;
+    (my $ohne      = $arbeit) =~ s/\r\n/\n/g;
+    (my $ohne_head = $head)   =~ s/\r\n/\n/g;
+
+    # Der Schaden dieses Projekts: Arbeitskopie CRLF, HEAD LF.
     if ($ohne eq $head) {
+        if ($vorgemerkt{$p}) {          # Sicherung 2
+            $geschont++;
+            push @geschonte, $p if @geschonte < 20;
+            next;
+        }
         $angeglichen++;
+        push @angefasst, $p if @angefasst < 20;
         if ($aendern) {
             open(my $o, '>:raw', $p) or die "$p: $!\n";
             print $o $head;             # den HEAD-Stand woertlich schreiben
+            close $o;
+            my $nach = roh($p);
+            die "$p: Angleichen fehlgeschlagen\n" unless defined $nach and $nach eq $head;
+        }
+    }
+    # Sicherung 3: die Gegenrichtung. Arbeitskopie LF, HEAD CRLF.
+    elsif ($ohne_head eq $arbeit) {
+        if ($vorgemerkt{$p}) {
+            $geschont++;
+            push @geschonte, $p if @geschonte < 20;
+            next;
+        }
+        $gegen++;
+        push @gegenrichtung, $p if @gegenrichtung < 20;
+        if ($aendern and $umgekehrt) {
+            open(my $o, '>:raw', $p) or die "$p: $!\n";
+            print $o $head;
             close $o;
             my $nach = roh($p);
             die "$p: Angleichen fehlgeschlagen\n" unless defined $nach and $nach eq $head;
@@ -145,16 +207,34 @@ for my $p (@dateien) {
     }
 }
 
-printf "  byteidentisch zu HEAD:        %5d\n", $gleich;
-printf "  nur Zeilenenden verschieden:  %5d%s\n", $angeglichen,
+printf "  byteidentisch zu HEAD:            %5d\n", $gleich;
+printf "  Arbeitskopie CRLF, HEAD LF:       %5d%s\n", $angeglichen,
        ($aendern ? '  -> angeglichen' : '  (mit --aendern angleichen)');
-printf "  inhaltlich verschieden:       %5d\n", $echt;
-printf "  nicht in HEAD:                %5d\n", $unlesbar;
+printf "  Arbeitskopie LF, HEAD CRLF:       %5d%s\n", $gegen,
+       ($aendern && $umgekehrt ? '  -> angeglichen'
+                               : '  (Gegenrichtung, nur mit --auch-umgekehrt)');
+printf "  vorgemerkt, nicht angefasst:      %5d\n", $geschont;
+printf "  inhaltlich verschieden:           %5d\n", $echt;
+printf "  nicht in HEAD:                    %5d\n", $unlesbar;
 
-if (@echte) {
-    print "\n  Inhaltlich verschieden (bleiben unangetastet):\n";
-    print "    $_\n" for @echte;
-    print "    ...\n" if $echt > @echte;
+sub liste {
+    my ($titel, $liste, $gesamt) = @_;
+    return unless @$liste;
+    print "\n  $titel\n";
+    print "    $_\n" for @$liste;
+    print "    ... und " . ($gesamt - scalar @$liste) . " weitere\n" if $gesamt > @$liste;
 }
+
+# Sicherung 1: namentlich, nicht nur als Zahl.
+liste($aendern ? 'Angeglichen (Arbeitskopie CRLF -> HEAD LF):'
+               : 'Wuerde angeglichen (Arbeitskopie CRLF -> HEAD LF):',
+      \@angefasst, $angeglichen);
+liste('Gegenrichtung, Arbeitskopie LF und HEAD CRLF - absichtlich? Diese bleiben'
+      . "\n  unangetastet, es sei denn mit --auch-umgekehrt:",
+      \@gegenrichtung, $gegen);
+liste('Vorgemerkt (git add) und deshalb NICHT angefasst - hier hat jemand die'
+      . "\n  Zeilenenden absichtlich geaendert:",
+      \@geschonte, $geschont);
+liste('Inhaltlich verschieden (bleiben unangetastet):', \@echte, $echt);
 
 exit 0;

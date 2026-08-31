@@ -267,12 +267,16 @@ deshalb steht sie hier und nicht bei den compilerfreien Punkten. Drei weitere
 Treffer sind unklar und brauchen ein menschliches Urteil (`ImapAccount.cpp:3152`,
 `CompMessageFrame.cpp:644`, `StatMng.cpp:2399`).
 
-### D4 · `zeilenenden-angleichen.pl`: zwei Lücken (**X-1**)
+### D4 · ~~`zeilenenden-angleichen.pl`: zwei Lücken~~ — **erledigt** (Befund X-4)
 
-Es lässt **773 eindeutige Textdateien** aus (darunter `.ih` und `.rgs`, die
-mitkompiliert werden bzw. als Ressource ins Binary gehen). Und es dreht
-absichtliche Arbeit **richtungslos** zurück: wer LF→CRLF korrigiert, verliert
-das kommentarlos.
+Sechs Dateiarten aufgenommen (`.ih .rgs .mc .user .hh .hpj`, 49 Dateien,
+Grundgesamtheit 6395 → 6444; alle 49 waren byteidentisch zu HEAD). Und drei
+Sicherungen gegen das richtungslose Zurückschreiben: jede angefasste Datei wird
+**namentlich** genannt, **vorgemerkte** Dateien werden nicht angefasst, und die
+**Gegenrichtung** hat ihre eigene Zeile und bleibt unangetastet
+(`--auch-umgekehrt`, wenn doch). Vier Fälle in einem Wegwerf-Repo gegengeprobt.
+
+**Damit ist Befund X-1 vollständig abgearbeitet** (X-2, X-3, X-4).
 
 ---
 

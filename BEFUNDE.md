@@ -113,9 +113,10 @@ zuerst **E-11**, **R-1** und **E-1**.
 | PR-1 | drei Löcher in der Commit-Schranke | **Bericht** → durch W-1 abgearbeitet |
 | PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
 | Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
-| X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** durch X-2 und X-3, außer `zeilenenden-angleichen.pl` |
+| X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 |
 | X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
+| X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
@@ -6100,3 +6101,86 @@ abgesichert ist (`TridentView.cpp:584`), eine Prüfung in einer aufgerufenen
 Funktion, `ASSERT`/`VERIFY` als Prüfung, ein Zugriff in einem Makrorumpf — alles
 unsichtbar. **Ein Treffer ist ein Hinweis zum Nachlesen, kein Befund.** Die
 neun oben sind nachgelesen; wer sie behebt, braucht einen Bau.
+
+
+## X-4 — `zeilenenden-angleichen.pl`: 49 Dateien mehr, und es dreht keine Arbeit mehr zurück (31.08.2026)
+
+Abarbeitung von **D4** — der letzte offene Punkt aus Befund X-1. Ohne Visual
+Studio gearbeitet, **keine Zeile C++ geändert**.
+
+### Teil 1: die ausgelassenen Textdateien
+
+X-1 hat gemessen, dass das Werkzeug **773 eindeutige Textdateien** nicht erfasst.
+Nachgemessen am 31.08.2026 abends: von **9151** verfolgten Dateien erfasste das
+Muster **6395**; von den 2756 übrigen sind **771** Text (kein NUL-Byte, über 95 %
+druckbare Bytes).
+
+Aufgenommen sind die, die **Quellen dieses Projekts** sind — sechs Arten,
+49 Dateien:
+
+| Endung | Dateien | warum |
+|---|---|---|
+| `.ih` | 6 | C-Header des Regex-Teils, werden **mitkompiliert** |
+| `.rgs` | 12 | ATL-Registrar-Skripte, landen als **Ressource im Binary** |
+| `.mc` | 2 | gehen durch den **Message Compiler** |
+| `.user` | 18 | die `vcxproj.user`-Dateien, hier verfolgt |
+| `.hh` | 7 | Hilfe-Header |
+| `.hpj` | 4 | Hilfe-Projektdateien |
+
+Grundgesamtheit **6395 → 6444**. **Alle 49 waren byteidentisch zu HEAD** —
+nachgemessen, *bevor* die Liste erweitert wurde. Die Erweiterung deckt also
+keinen Schaden auf, sie schließt eine Lücke für die Zukunft. Und weil die Liste
+seit PR-3 **geteilt** ist, zieht die Commit-Schranke automatisch mit.
+
+**Bewusst draußen** geblieben, mit Begründung im Kopf von
+`tools/dateiendungen.pl`: 139 Dateien ohne Endung (eine Endungsliste kann sie
+nicht sicher von Binärdateien unterscheiden, eine Namensliste wäre Raten),
+100 `.pem` und 20 `.cer`, 96 `.r` (Mac-Rez von QuickTime), 48 `.ssl` / 28 `.com`
+/ 11 `.unix` (Makefiles des mitgelieferten OpenSSL), 37 Messwertdateien von
+OpenSSL, 42 Hilfe- und Handbuchbestände, 10 Testskripte von Visual Test. Alles
+Fremdbestand oder Beiwerk.
+
+### Teil 2: es dreht keine absichtliche Arbeit mehr zurück
+
+X-1s zweiter Vorhalt: *„Es dreht absichtliche Arbeit still zurück. Wer im
+Arbeitsbaum absichtlich LF→CRLF korrigiert — etwa eine `.bat`, die CRLF braucht
+—, verliert das durch `--aendern` kommentarlos."*
+
+**Der Vorhalt trifft zu, und byteweise sind die beiden Fälle nicht zu
+unterscheiden:** der Schaden, gegen den das Werkzeug gebaut wurde, sieht genauso
+aus wie die absichtliche Korrektur — Arbeitskopie CRLF, HEAD LF. Also keine
+Heuristik, sondern drei Sicherungen:
+
+| # | Sicherung | Warum |
+|---|---|---|
+| 1 | **jede angefasste Datei wird namentlich genannt** (bis zu 20, dann die Zahl) | vorher stand dort nur eine Zahl — man konnte hinterher nicht sagen, was das Werkzeug getan hat |
+| 2 | **vorgemerkte Dateien werden nicht angefasst** | wer eine Änderung an den Zeilenenden schon `git add` gegeben hat, hat sie absichtlich gemacht. Sie zurückzuschreiben würde vorgemerkte Arbeit still verwerfen. Eigene Zeile in der Ausgabe |
+| 3 | **die Gegenrichtung hat ihre eigene Zeile** (Arbeitskopie LF, HEAD CRLF) und bleibt unangetastet | das ist **nicht** der Schaden dieses Projekts. Vorher landete sie unter „inhaltlich verschieden" — eine falsche Beschriftung. Mit `--auch-umgekehrt` wird sie mitgezogen |
+
+### Gegenprobe in einem Wegwerf-Repo
+
+Vier Dateien, vier Fälle, einmal `--aendern`:
+
+| Datei | HEAD | Arbeitskopie | vorgemerkt | Ergebnis |
+|---|---|---|---|---|
+| `a.cpp` | LF | CRLF | nein | **angeglichen**, CR 2 → 0 |
+| `b.cpp` | LF | CRLF | **ja** | **unangetastet**, CR bleibt 2 |
+| `c.bat` | CRLF | LF | nein | **unangetastet** (Gegenrichtung), CR bleibt 0 |
+| `d.cpp` | LF | LF, Inhalt geändert | nein | **unangetastet** |
+
+Und mit `--aendern --auch-umgekehrt` wird `c.bat` sehr wohl angeglichen
+(CR 0 → 1). Jede der vier Dateien erscheint namentlich in der Ausgabe.
+
+### Stand am Baum
+
+    byteidentisch zu HEAD:            6442
+    Arbeitskopie CRLF, HEAD LF:          0
+    Arbeitskopie LF, HEAD CRLF:          0
+    vorgemerkt, nicht angefasst:         0
+    inhaltlich verschieden:              2   (die zwei Werkzeuge dieser Arbeit)
+    nicht in HEAD:                       0
+
+Die Commit-Schranke bleibt bei **35 von 35 grün** — die erweiterte Endungsliste
+bricht keinen ihrer Testfälle.
+
+**Damit ist Befund X-1 vollständig abgearbeitet.**

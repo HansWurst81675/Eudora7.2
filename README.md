@@ -213,7 +213,7 @@ einen echten Mailserver. Einzelheiten in
 
 | Werkzeug | wozu |
 |---|---|
-| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. |
+| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. Seit Befund **X-4**: erfasst 6444 statt 6395 Dateien, nennt jede angefasste **namentlich**, lässt **vorgemerkte** Dateien in Ruhe und behandelt die Gegenrichtung (Arbeitskopie LF, HEAD CRLF) getrennt — sie wird nur mit `--auch-umgekehrt` angeglichen. |
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
 | `tools/pruefe-bytes.pl` | pre-commit-Schranke gegen lautlosen Byteschaden |
