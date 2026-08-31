@@ -4988,25 +4988,57 @@ Ursache belegt, Anzeigepfad vollstaendig verfolgt, Fundstellen mit Datei:Zeile
 oben. Beide Aenderungen sind eingesetzt (byte-erhaltend ueber
 `tools/ersetze-bereich.pl`, CR-Zahl vorher/nachher je 18, unveraendert).
 
-**Nicht nachgewiesen ist die Wirkung.** Der Bau lief zum Zeitpunkt des Commits
-noch (frischer Worktree, die ganze Solution muss durch), und ein Lauf von
-Eudora war nach Auflage ausgeschlossen. Wer weitermacht:
+**Beide geaenderten Dateien uebersetzen fehlerfrei**, nachgemessen an den
+Objektdateien: `Eudora71/Eudora/Build/Debug/msgutils.obj` (08:34:55) und
+`TridentView.obj` (08:35:59), beide neuer als die Quellen (08:31:56). Der Bau
+des Eudora-Projekts kommt vollstaendig durch die Uebersetzung und bricht erst
+beim **Binden** ab, an einer fremden Ursache:
 
-1. `MSBuild Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86` aus der
-   PowerShell — wenn er bricht, liegt es an einer dieser beiden Stellen, keine
-   andere Datei ist angefasst.
+    LINK : fatal error LNK1104: Datei "...\Eudora71\Importers\Lib\Debug\NSImport.lib"
+    kann nicht geoeffnet werden.   [Eudora.vcxproj]
+
+`Eudora71/Importers/Lib/Debug/` gibt es in diesem Worktree gar nicht — die drei
+Importer-Projekte sind im Solution-Bau vorher an `QCUtils.lib` gescheitert
+(siehe naechster Unterabschnitt). Es fehlt also eine Vorstufe, nicht ein
+Ergebnis dieser Aenderung.
+
+**Nicht nachgewiesen ist die Wirkung.** Es gibt kein gebundenes `Eudora.exe`
+aus diesem Worktree, und ein Lauf von Eudora war nach Auflage ausgeschlossen.
+Wer weitermacht:
+
+1. Die Vorstufen bauen, bis `QCUtils.lib` und die drei Importer-Libs stehen,
+   dann `Eudora.vcxproj` erneut binden. An den zwei geaenderten Dateien ist
+   dafuer nichts zu tun.
 2. Gegenprobe ohne Eudora-Start moeglich: nach dem Anzeigen einer
    UTF-8-HTML-Mail liegt die Zwischendatei in `%TEMP%\eud*.htm`
    (`TridentView.cpp:1469-1484`). Darin muss die erste Zeile die
    `windows-1252`-Ansage tragen und im Rumpf darf kein `charset=` mehr stehen.
 3. Erst danach das Bildschirmfoto aus E-2 wiederholen.
-
 ### Nebenbefund (nicht behoben)
 
 `GetBodyAsHTML` schreibt beim Pruefen der Meta-Tags mit `*(LPTSTR)TagEnd = 0`
 in einen Puffer, der ueber `LPCTSTR` hereinkam (`msgutils.cpp:1633`). Das ist
 Bestand des Originalcodes und hier nicht angeruehrt worden, faellt aber jedem
 auf, der die Stelle liest.
+
+
+### Der Bau der ganzen Solution: 6 Fehler, keiner davon aus dieser Aenderung
+
+Gemessen im frischen Worktree, `MSBuild Eudora71\Eudora.sln -p:Configuration=Debug
+-p:Platform=x86 -m`, 2030 Warnungen, 6 Fehler:
+
+  * `OT501.vcxproj`, dreimal: `NMAKE : fatal error U1073: ".\utility\crypt\Blackbox.cpp"
+    konnte nicht erstellt werden`, dasselbe fuer `OTA50D\OTA50D.lib`, und daraus
+    folgend `error MSB3073` fuer `NMAKE /f build50.mak ota50d`.
+  * `NSImport.vcxproj`, `OLImport.vcxproj`, `OEImport.vcxproj`, je einmal:
+    `LINK : fatal error LNK1104: Datei "QCUtils.lib" kann nicht geoeffnet werden`.
+
+Beide Gruppen betreffen **fremde Teilprojekte** und keine der zwei geaenderten
+Dateien. Die LNK1104-Gruppe ist eine Reihenfolge- oder Abhaengigkeitsfrage des
+Parallelbaus (`-m`): die Importer binden, bevor `QCUtils.lib` fertig ist. Ob es
+sich um denselben bekannten Effekt handelt, den README unter "in einem frischen
+Klon oder Worktree zuerst die ganze Solution bauen" beschreibt, ist
+**UNGEPRUEFT** — ein zweiter Lauf desselben Befehls wuerde das entscheiden.
 
 ## E-5 — Das Release startet auf einem Win11-Rechner ohne Visual Studio nicht (31.08.2026, OFFEN)
 
