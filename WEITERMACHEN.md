@@ -1,6 +1,52 @@
 # Hier weitermachen
 
-> ## Stand 31.08.2026, 09:00
+> ## Stand 31.08.2026, abends — Übergabe an die nächste Sitzung
+>
+> **Arbeitsstand ist der Branch `claude/letzter-stand-b2ytpi`**, drei Commits
+> vor `origin/main`, alles gepusht. `main` ist unberührt. Wer weitermacht,
+> arbeitet auf diesem Branch weiter oder führt ihn zusammen.
+>
+> **Diese Sitzung lief ohne Visual Studio** — auf einem Linux-Rechner mit perl,
+> git und python, ohne MSBuild, MSVC und PowerShell. Deshalb ist **keine Zeile
+> C++ geändert** worden und **nichts gebaut**. Geändert wurden Dokumentation und
+> Werkzeuge; beides ist hier nachprüfbar und wurde nachgeprüft.
+>
+> ### Das Wichtigste für den nächsten Lauf auf dem Win11-Rechner
+>
+> **Die Behebung von E-11 ist wahrscheinlich unvollständig.**
+> `CEudoraApp::RegisterURLSchemes()` reicht von `eudora.cpp:3274` bis `:3417`,
+> und in dieser **einen** Funktion stehen **drei** Vorkommen von
+> `ReleaseBuffer` ohne `GetBuffer`:
+>
+> | Zeile | Stand |
+> |---|---|
+> | 3372 | behoben (E-11), jetzt `Truncate(i)` |
+> | **3403** | `RegClientsMail.ReleaseBuffer(LastSlash)` — **unverändert** |
+> | **3413** | `EudoraOption.ReleaseBuffer(SlashIndex)` — **unverändert** |
+>
+> `eudora.log` belegt nur, dass der Absturz **hinter `:3331`** liegt — nicht,
+> dass er an `:3372` lag. **Stürzt das ZIP weiterhin beim Klick auf *Weiter*
+> ab, sind das die nächsten Verdächtigen**, und es sind zwei Zeilen. Am besten
+> vor dem nächsten Paket beheben, dann kostet es keinen zweiten Lauf.
+> Vollständig in Befund **R-1**.
+>
+> ### Was diese Sitzung geliefert hat
+>
+> | Commit | Was |
+> |---|---|
+> | `3d19aca` | Doku zusammengezogen. `ZIEL.md` war im Commit davor in 40 Zeilen doppelt UTF-8-kodiert — berichtigt. Die Kriterientabelle stand an fünf Stellen in drei Fassungen; `ZIEL.md` ist jetzt die Quelle, die übrigen verweisen. Drei Dateien widersprachen sich in sich selbst. Vier Stellen behaupteten noch, der Release-Zweig scheitere an `Imap.lib`. Dritter Lektorats-Durchgang in `LEKTORAT.md`, **alle 45 Markdown-Dateien gelesen**. |
+> | `8f1c51e` | `tools/releasebuffer-pruefen.pl` — stuft die 142 `ReleaseBuffer`-Vorkommen ein: **117 richtig, 25 zu ändern**. Befund **R-1** mit allen Fundstellen, nach Häufigkeit des Wegs geordnet. |
+> | `1819e61` | Die **neun Löcher** der Commit-Schranke aus X-1 geschlossen, jedes mit eigenem Testfall (23 → 35 Fälle). Dazu der pre-commit-Hook, der den Abbruch des Spiegelns verschluckte. Befund **X-2**. |
+>
+> ### Auflage für den nächsten frischen Klon
+>
+> **`sh tools/hooks-einrichten.sh` einmal laufen lassen** — der Hook liegt unter
+> `.git/hooks` und wird von git nicht mitversioniert. Ein alter Hook aus einem
+> früheren Klon verschluckt den Abbruch des Spiegelns weiterhin (X-2).
+>
+> ---
+>
+> ## Stand 31.08.2026, 09:00 — der Vormittag
 >
 > **Die Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)** — was zu tun ist,
 > in welcher Reihenfolge, mit Fundstelle je Punkt und den Auflagen für
@@ -21,17 +67,22 @@
 > Auf der VM fiel das nie auf, weil der Zweig nur bei einer
 > **jungfräulichen** Installation betreten wird.
 
-Übergabe vom **31.08.2026, vormittags**. Arbeitsstand ist der Branch
-`darstellung-und-menue`; auf `main` fehlt alles von diesen zwei Tagen.
+Der Absatz oben war die Übergabe vom **31.08.2026, vormittags**; damals war der
+Arbeitsstand der Branch `darstellung-und-menue`. Er ist inzwischen über
+Pull Request #3 in `main` gelandet; der heutige Arbeitsstand steht im Kasten
+ganz oben.
 
-**Bekannte Lücke:** der Agent FREIGABE (Release-Bau) lief noch, als diese Datei
-geschrieben wurde. Sein Ergebnis steht hier nicht. Wer weitermacht, sieht
-zuerst seinen Branch und seinen Abschnitt in `BEFUNDE.md` an.
+**Die damals bekannte Lücke ist geschlossen:** der Agent FREIGABE (Release-Bau)
+lief noch, als diese Datei geschrieben wurde. Sein Ergebnis steht jetzt in
+`BEFUNDE.md` als Befund **F-1** — der Release-Zweig scheiterte an `OTA50D.LIB`
+statt `OTA50R.LIB` in `Eudora.vcxproj:147` und an `MakeDox.pl` im
+Nachbereitungsschritt; er bindet, und statisch binden ist ausgeschlossen (sechs
+MFC-Erweiterungs-DLLs).
 
-Diese Datei ist der Einstieg für die nächste Sitzung. Alle Zahlen sind an
-`371c1e3` gemessen. An diesem Baum arbeiten mehrere Agenten in eigenen
-Worktrees; wer eine Zahl weiterverwendet, misst nach und nennt seinen eigenen
-Bezugscommit.
+Diese Datei ist der Einstieg für die nächste Sitzung. Die Zahlen der Abschnitte
+vom 30. und 31.08. vormittags sind an `371c1e3` bzw. `a807b93` gemessen. An
+diesem Baum arbeiten mehrere Agenten in eigenen Worktrees; wer eine Zahl
+weiterverwendet, misst nach und nennt seinen eigenen Bezugscommit.
 
 ---
 
@@ -204,9 +255,9 @@ Neu am 31.08.2026:
 | Werkzeug | wozu |
 |---|---|
 | `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten aus `SysWOW64` und prüft jede einzeln auf x86 nach. Befund S-8. |
-| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. Das Maß für Kriterium 0. |
+| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. **Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch (PR-2.0 bis PR-2.3). |
 | `tools/paket-bauen.ps1` | stellt ein Paket aus dem Quellbaum zusammen. Veröffentlicht nichts. Braucht `-AusBauverzeichnis`, wenn ein frischer Bau übernommen werden soll. |
-| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. |
+| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden — aber **345 Treffer, Stichprobe 15 von 15 Fehlalarm** (X-1). Ohne die drei Filter aus D3 nicht benutzbar. |
 | `tools/pruefe-bytes-tests.pl` | Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
 | `tools/releasebuffer-pruefen.pl` | stuft die 142 `ReleaseBuffer`-Vorkommen ein — die Fehlerklasse hinter E-11. 25 sind zu ändern, Einzelheiten in Befund R-1. |
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |
@@ -325,6 +376,32 @@ der nächste Schritt wäre.
 
 ---
 
+## Was ohne Visual Studio geht — und was nicht
+
+Diese Frage kam am 31.08.2026 abends auf, als eine Sitzung ohne VM lief.
+Nachgemessen in einer Linux-Umgebung mit perl 5.38, git 2.43, python 3.11:
+
+**Geht vollständig, mit Nachweis:**
+
+| Arbeit | warum sie hier abschließbar ist |
+|---|---|
+| Die Werkzeuge unter `tools/` | perl und git reichen. `tools/pruefe-bytes-tests.pl` läuft (35 Fälle) und beweist jede Änderung an der Schranke — rot vorher, grün nachher. |
+| Quelltextanalyse über den ganzen Baum | `tools/releasebuffer-pruefen.pl` ist so entstanden. Fundstellen, Einstufungen, Funktionsgrenzen: alles Text. |
+| Der Paketprüfer (`paket-pruefen.ps1`, PR-2.0) | im Klon liegen **101 PE-Dateien**, darunter `Bin/Release`. Ein Import-Leser lässt sich also gegen echte x86-Binärdateien entwickeln und messen. Nur die `.ps1` selbst läuft ohne PowerShell nicht. |
+| Doku und Nachrechnen | grep-Arbeit. Befund Z-1 hat gezeigt, dass 11 von rund 40 geprüften Angaben falsch waren — das ist keine Fleißarbeit. |
+
+**Braucht zwingend Windows mit Visual Studio 2022:**
+
+jeder Bau, jeder Start, jedes Bildschirmfoto, die 105 Komponententests
+(MFC/MBCS über MSBuild), `stapel-untersuchen.ps1` (32-Bit-PowerShell) und
+`laufzeit-holen.ps1` — und damit der erste Punkt der Arbeitsliste.
+
+**Die Grenze, die dabei einzuhalten ist:** eine C++-Änderung, die hier
+entsteht, ist **ungeprüft**, weil sie nicht übersetzt. In genau dieser Lücke hat
+sich das Projekt am 31.08. dreimal geirrt (E-2, E-5, E-8). Deshalb: C++ nur mit
+ausdrücklichem UNGEPRÜFT-Vermerk in Commit und Befund — und die Werkzeug- und
+Doku-Arbeit zuerst, weil sie hier vollständig nachweisbar ist.
+
 ## Nächste Schritte, nach Wichtigkeit
 
 **Die vollständige Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)**; hier nur
@@ -340,8 +417,12 @@ die Reihenfolge.
    Laufzeiten aus den **Importen** der Paketdateien ableiten statt aus einer
    festen Liste, und „vorhanden" nur gelten lassen, wenn die Datei im Paket
    liegt. Solange das offen ist, ist Kriterium 0 nicht nachweisbar.
-3. **`ReleaseBuffer` ohne `GetBuffer` abstellen** — die Fehlerklasse hinter
-   E-11. `tools/releasebuffer-pruefen.pl` stuft die 142 Vorkommen ein.
+3. **`ReleaseBuffer` ohne `GetBuffer` beheben** — die Fehlerklasse hinter E-11
+   ist **ausgezählt** (Befund R-1): von 142 Vorkommen sind 117 richtig und **25
+   zu ändern**, `perl tools/releasebuffer-pruefen.pl` nennt sie einzeln. Zuerst
+   `eudora.cpp:3403` und `:3413` (dieselbe Funktion wie der E-11-Absturz), dann
+   `QCSharewareManager.cpp:1318` (jeder Start), dann die vier in `sendmail.cpp`
+   (jede gesendete Klartextmail). Das Ändern selbst braucht einen Bau.
 4. **Erscheinungsbild, zweite Runde.** Nach dem Bildschirmfoto: die Splitter
    (`SECDockBar::AddSplitter` wird nie gerufen) und
    `SECMDIFrameWnd::FloatControlBarInMDIChild`. Reihenfolge und Ansatz in

@@ -8,6 +8,12 @@ Diese Datei ist die Arbeitsliste — was zu tun ist, in welcher Reihenfolge, und
 für jeden Punkt die Fundstelle. Sie ist so geschrieben, dass ein Agent damit
 sofort anfangen kann, ohne die Vorgeschichte zu kennen.
 
+> **Braucht der Punkt Visual Studio?** Am 31.08.2026 abends lief eine Sitzung
+> ohne VM. Die Aufteilung steht in `WEITERMACHEN.md`, Abschnitt „Was ohne Visual
+> Studio geht". Kurz: **A2, C1, D1–D4 und jede Zählung gehen ohne Compiler**;
+> alles unter „Ganz zuerst", B1–B4, C2, C3 und E1–E3 brauchen einen Bau oder
+> einen Start.
+
 ---
 
 ## Wo wir stehen
@@ -42,8 +48,12 @@ Gregor am 31.08. probiert, und sie stürzte beim Klick auf *Weiter* ab.
 1. Auf dem Win11-Rechner auspacken, `Eudora.exe` starten, im Assistenten
    auf *Weiter* klicken. **Stürzt es noch ab?**
    - **Nein** → E-11 ist bestätigt. Dann A2: die Fehlerklasse abstellen.
-   - **Ja** → `tools/stapel-untersuchen.ps1` mit der `Eudora.pdb` daneben.
-     Die `Eudora.pdb` liegt **nicht** im Paket, sie muss aus
+   - **Ja** → **zuerst `eudora.cpp:3403` und `:3413` ansehen**, nicht den
+     Debugger. In derselben Funktion `RegisterURLSchemes()` (3274–3417) stehen
+     zwei weitere `ReleaseBuffer` ohne `GetBuffer`, unverändert — Befund R-1.
+     `eudora.log` belegt nur, dass der Absturz hinter `:3331` liegt. Erst wenn
+     das nichts bringt: `tools/stapel-untersuchen.ps1` mit der `Eudora.pdb`
+     daneben. Die liegt **nicht** im Paket, sie muss aus
      `Eudora71/Bin/Release` dazu.
 2. Dabei gleich mitprüfen, was ohnehin ansteht:
    - **Kriterium 0** — startet es dort ohne Nachinstallieren? (C2)
