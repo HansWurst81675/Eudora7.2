@@ -1,6 +1,6 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: c0833b2 -->
+<!-- pruefstand: 0634124 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -5417,6 +5417,14 @@ genau in dem Zustand, in dem Gregor jetzt Fehler findet (frischer Start,
 Assistent offen, noch kein Postfach), fehlt sie. Damit versagt sie an der
 Stelle, für die sie da ist.
 
+> **Nachtrag vom 31.08.2026 abends (Befund V-1): es ist inzwischen mehr als
+> das.** Unter `v1.0.3` sind **zwei verschiedene ZIPs** veröffentlicht, und beide
+> `Eudora.exe` melden dieselbe Produktversion **7.2.0.3** — im Über-Dialog, im
+> Explorer und im Absturzbericht. Die Bau-Kennung ist damit das **einzige**
+> Merkmal am laufenden Programm, das die beiden auseinanderhält, weil sie den
+> Commit enthält. Und sie fehlt ausgerechnet im Zustand des Absturzes. Die
+> Behebung ist ein einziger Aufruf.
+
 ## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
 
 Gregor: *„ich habe das verwendet: `C:\Users\Gregor\Eudora72-1.0.3`"*
@@ -6235,6 +6243,32 @@ worden:**
 Für die Kriterien heißt das: 1 und 3 sind auf dem **Debug**-Bau belegt, nicht auf
 dem ausgelieferten Paket. Kriterium 0 ist unbelegt. Das steht so in `ZIEL.md`,
 wird aber leicht überlesen, wenn man „1.0.3 läuft" hört.
+
+### Die Zahl steckt auch in der EXE — und zwar dieselbe
+
+Gregors Nachtrag: *„Sie heißt übrigens 7.2.0.3"*. Das ist der Punkt, der die
+Sache verschärft: nicht nur Dateiname und Paketnummer sind bei beiden ZIPs
+gleich, sondern die **Produktversion im Binary**. Beide `Eudora.exe` melden
+unter *Hilfe → Über Eudora*, im Explorer und im Absturzbericht **7.2.0.3**.
+
+Damit ist die Angabe, die ein Anwender melden würde, für beide Fassungen
+identisch. Unterscheiden können sie nur zwei Dinge:
+
+1. die **SHA256 des ZIP** — und die volle Prüfsumme der ersten Fassung steht
+   nirgends im Repo (siehe oben);
+2. die **Bau-Kennung in der Titelleiste**, die den Commit enthält — **und die
+   fehlt, solange kein Postfach offen ist** (Befund E-7). Im Zustand des
+   Absturzes, mit offenem Kontoassistenten, steht im Titel nur „Eudora".
+
+**Das eine Merkmal, das die beiden Bauten auseinanderhält, ist genau dort nicht
+sichtbar, wo der Fehler auftritt.** Damit ist E-7 nicht mehr Kosmetik, sondern
+die Voraussetzung dafür, einen Fehlerbericht überhaupt einem Bau zuzuordnen —
+und die Behebung ist ein einziger Aufruf (`OnUpdateFrameTitle(TRUE)` nach
+`FinishInitAndShowWindow`).
+
+Was genau zu ändern ist, wenn die Version gehoben wird — **fünf Zeilen in zwei
+Dateien**, und die vier Angaben in `Version.h` sind nicht voneinander abgeleitet
+—, steht in `Releases/PAKETE.md`, Abschnitt „Wie man die Version hebt".
 
 ### Die Regel, die daraus folgt
 

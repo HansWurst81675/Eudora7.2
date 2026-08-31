@@ -163,7 +163,14 @@ Gegenprobe ohne Eudora-Start: nach dem Anzeigen liegt die Zwischendatei als
 `charset=windows-1252`-Zeile als **erste** stehen und keine fremde
 `charset`-Angabe mehr vorkommen.
 
-### B2 · Die Bau-Kennung fehlt im Titel (**E-7**)
+### B2 · Die Bau-Kennung fehlt im Titel (**E-7**) — **hochgestuft**
+
+> Seit Befund **V-1** ist das kein Schönheitsfehler mehr: unter `v1.0.3` sind
+> zwei verschiedene ZIPs veröffentlicht, und **beide melden Produktversion
+> 7.2.0.3**. Die Bau-Kennung enthält den Commit und ist damit das einzige
+> Merkmal am laufenden Programm, das die zwei Bauten unterscheidet — und sie
+> fehlt genau im Zustand des Absturzes (frischer Start, Assistent offen). Ein
+> Aufruf.
 
 Solange kein Postfach offen ist, steht im Titel nur `Eudora`. `OnUpdateFrameTitle`
 läuft erst bei einer Auffrischung. **Behebung:** einmal `OnUpdateFrameTitle(TRUE)`

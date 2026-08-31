@@ -20,6 +20,49 @@ Die QCSSL-Zählung läuft bewusst eigenständig: sie folgt den Quellen der
 TLS-Schicht, nicht dem Paket. Paket 1.0.3 enthält QCSSL 1.0.1, weil sich
 dort seit 1.0.1 nichts geändert hat.
 
+### Wie man die Version hebt — vollständig, nachgemessen am 31.08.2026
+
+Für Paket **1.0.4** mit Produktversion **7.2.0.4** sind es **fünf Zeilen in zwei
+Dateien**:
+
+| Datei | Zeile | von | auf |
+|---|---|---|---|
+| `VERSION` | 1 | `1.0.3` | `1.0.4` |
+| `Eudora71/Version.h` | `EUDORA_VERSION4` | `3` | `4` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,3` | `7,2,0,4` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.3\0"` | `…7.2.0.4\0` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.3"` | `"7.2.0.4"` |
+
+**Die vier Angaben in `Version.h` sind NICHT voneinander abgeleitet** — jede
+steht für sich. Wer nur `EUDORA_VERSION4` ändert, hebt die Version an keiner
+sichtbaren Stelle; wer nur die Zeichenketten ändert, bekommt eine EXE, deren
+Dateiversion nicht zu ihrem Über-Dialog passt. Das ist die Falle.
+
+**`EUDORA_BUILD_MONTH` bleibt unangetastet.** Es steht auf Juni 2006
+(`REG_EUD_CLIENT_7_1_MONTH`) und ist keine Versionsangabe, sondern der Monat,
+gegen den Registrierungscodes ablaufen. Ein Hochsetzen entwertet **jeden**
+existierenden Eudora-Code und startet die Testfrist neu — Befund PR-2.8.
+
+**Wo die Zahl danach sichtbar wird** (gemessen, nicht vermutet):
+
+| Stelle | woraus |
+|---|---|
+| Dateiversion und Produktversion im Explorer, Reiter *Details* | `EUDORA_BUILD_NUMBER` über `Eudora71/VersionBeg.inc` (`FILEVERSION`, `PRODUCTVERSION`) |
+| Versionsressource `FileVersion` / `ProductVersion` | `EUDORA_BUILD_VERSION`, dieselbe `.inc` |
+| *Hilfe → Über Eudora* und der Startbildschirm | `EUDORA_BUILD_DESC` über `IDS_VERSION` in `EudoraExeVer.rc:13` und `EudoraResVer.rc:17` |
+| `guiutils.cpp:2362`, `msgdoc.cpp:1341` | `EUDORA_BUILD_VERSION` |
+| Absturzbericht | `ExceptionHandler.cpp:344` und `:497` |
+| `User-Agent` des PlaylistClient (`Eudora/7.2.0.3`) | drei Stellen unter `PlaylistClient/plstclnt_dll` |
+| Vergleich mit `RetailVersion` in der `Eudora.ini` | `QCSharewareManager.cpp:1323`, zurückgeschrieben in `:1326` |
+| als Zahl | `eudora.cpp:551`, `:1069`, `QComApplication.cpp:610` (`EUDORA_VERSION4`) |
+
+Die Bau-Kennung in der Titelleiste ist davon unabhängig: sie kommt aus
+`tools/kennung-erzeugen.pl` und enthält **Produktversion, Paketversion und
+Commit**. Sie ist damit die einzige Angabe, die zwei Bauten derselben Version
+unterscheidet — **und genau sie fehlt, solange kein Postfach offen ist**
+(Befund E-7). In dem Zustand, in dem der Absturz auftrat, sagt der Titel nur
+„Eudora".
+
 Die Paketversion und die QCSSL-Version sind **verschiedene Zählungen**. Paket
 1.0.2 enthält QCSSL 1.0.1, weil sich die QCSSL-Quellen seit 1.0.1 nicht geändert
 haben.
