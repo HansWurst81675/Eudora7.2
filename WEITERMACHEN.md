@@ -2,9 +2,11 @@
 
 > ## Stand 31.08.2026, abends — Übergabe an die nächste Sitzung
 >
-> **Arbeitsstand ist der Branch `claude/letzter-stand-b2ytpi`**, drei Commits
-> vor `origin/main`, alles gepusht. `main` ist unberührt. Wer weitermacht,
-> arbeitet auf diesem Branch weiter oder führt ihn zusammen.
+> **Arbeitsstand ist der Branch `claude/letzter-stand-b2ytpi`**, alles gepusht,
+> `main` unberührt. Wer weitermacht, arbeitet auf diesem Branch weiter oder
+> führt ihn zusammen. Die Commits stehen unten; nachzählen mit
+> `git log --oneline origin/main..HEAD` — hier steht bewusst **keine Zahl**, die
+> beim nächsten Commit veraltet.
 >
 > **Diese Sitzung lief ohne Visual Studio** — auf einem Linux-Rechner mit perl,
 > git und python, ohne MSBuild, MSVC und PowerShell. Deshalb ist **keine Zeile
@@ -37,6 +39,13 @@
 > | `3d19aca` | Doku zusammengezogen. `ZIEL.md` war im Commit davor in 40 Zeilen doppelt UTF-8-kodiert — berichtigt. Die Kriterientabelle stand an fünf Stellen in drei Fassungen; `ZIEL.md` ist jetzt die Quelle, die übrigen verweisen. Drei Dateien widersprachen sich in sich selbst. Vier Stellen behaupteten noch, der Release-Zweig scheitere an `Imap.lib`. Dritter Lektorats-Durchgang in `LEKTORAT.md`, **alle 45 Markdown-Dateien gelesen**. |
 > | `8f1c51e` | `tools/releasebuffer-pruefen.pl` — stuft die 142 `ReleaseBuffer`-Vorkommen ein: **117 richtig, 25 zu ändern**. Befund **R-1** mit allen Fundstellen, nach Häufigkeit des Wegs geordnet. |
 > | `1819e61` | Die **neun Löcher** der Commit-Schranke aus X-1 geschlossen, jedes mit eigenem Testfall (23 → 35 Fälle). Dazu der pre-commit-Hook, der den Abbruch des Spiegelns verschluckte. Befund **X-2**. |
+> | `f8b4dee` | Diese Übergabe, dazu in `AUFGABEN.md` die Angabe, welcher Punkt einen Compiler braucht. |
+> | `26b52b8` | Nachtrag: ein fehlender Parameter im neuen Werkzeug (perl warnte, das Ergebnis war unberührt — Nachtrag in R-1). |
+>
+> **Nachprüfbar ist beides:** `perl tools/pruefe-bytes-tests.pl` muss 35 grün
+> melden, `perl tools/releasebuffer-pruefen.pl` 117 ok / 20 falsch /
+> 4 lockbuffer / 1 danach. Wie man die Gegenprobe gegen die **alte** Schranke
+> nachrechnet, steht in Befund X-2 als fertiger Befehlsblock.
 >
 > ### Auflage für den nächsten frischen Klon
 >

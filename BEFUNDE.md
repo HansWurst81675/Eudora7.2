@@ -5510,9 +5510,10 @@ untersucht.
 
 ## R-1 — Die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 Vorkommen sind falsch (31.08.2026)
 
-Werkzeug: **`tools/releasebuffer-pruefen.pl`** (neu). Gemessen ohne Visual
-Studio, reine Quelltextanalyse — **es ist keine Zeile C++ geändert worden**, und
-nichts davon ist übersetzt.
+Werkzeug: **`tools/releasebuffer-pruefen.pl`** (neu). Branch
+`claude/letzter-stand-b2ytpi`, Commit `8f1c51e`, Berichtigung `26b52b8`.
+Gemessen ohne Visual Studio, ohne Agenten, reine Quelltextanalyse — **es ist
+keine Zeile C++ geändert worden**, und nichts davon ist übersetzt.
 
 E-11 hat einen Absturz auf frischen Installationen auf `ReleaseBuffer` ohne
 vorangehendes `GetBuffer` zurückgeführt (`eudora.cpp:3372`) und 142 Vorkommen im
@@ -5658,6 +5659,22 @@ läuft, steht `[Funktionsanfang unsicher]` in der Ausgabe (nach dem Ausbau der
 nicht ausgeblendet — ein `"ReleaseBuffer("` im Text wäre ein Fehlalarm; im Baum
 gibt es keinen.
 
+### Nachtrag: ein Fehler im Werkzeug selbst (Commit `26b52b8`)
+
+Beim Einbau der Einstufung `lockbuffer` hat `passt()` einen dritten Parameter
+bekommen, und **eine von vier Aufrufstellen** wurde nicht nachgezogen (`:151`,
+der Wächter in der Rückwärts-Suche). perl warnte bei jedem Lauf zweimal
+`Use of uninitialized value $ruf in regexp compilation`.
+
+**Wirkung auf das Ergebnis: keine.** Mit undefiniertem `$ruf` wurde der Ausdruck
+zu `\s*\(` und lieferte für die `ReleaseBuffer`-Zeile selbst 0 — genau das, was
+der Wächter erreichen sollte. Nachgemessen, vorher wie nachher: 117 ok,
+20 falsch, 4 lockbuffer, 1 danach, 0 verdächtig = 142.
+
+Aufgefallen ist es erst bei der Abschlussprüfung **nach** dem Commit, nicht
+vorher. Festgehalten, weil ein Werkzeug, dessen Warnungen man gewohnheitsmäßig
+übersieht, dasselbe Problem hat wie eine Schranke, die grundlos anschlägt.
+
 ### UNGEPRÜFT
 
 - **Ob `CSimpleStringT::SetAt` den Puffer exklusiv hält.** Davon hängt ab, wie
@@ -5673,20 +5690,34 @@ gibt es keinen.
 ## X-2 — Die neun Löcher der Schranke geschlossen, jedes mit eigenem Testfall (31.08.2026)
 
 Abarbeitung von **X-1** (neun Löcher in `tools/pruefe-bytes.pl`) und seines
-Zusatzfundes zum pre-commit-Hook. Gemessen ohne Visual Studio: perl 5.38,
-git 2.43. **Keine C++-Quelldatei angefasst.**
+Zusatzfundes zum pre-commit-Hook. Branch `claude/letzter-stand-b2ytpi`, Commit
+`1819e61`, Stand davor `8f1c51e`. Gemessen ohne Visual Studio: perl 5.38,
+git 2.43, ohne Agenten. **Keine C++-Quelldatei angefasst.**
 
 ### Die Sammlung ist der Beleg, nicht die Zusicherung
 
 `tools/pruefe-bytes-tests.pl` wächst von 23 auf **35 Fälle**. Die zwölf neuen
 sind nicht nachträglich passend geschriebene Tests: sie sind zuerst gegen die
-**alte** Schranke gelaufen (`git show HEAD:tools/pruefe-bytes.pl` in einem
-eigenen Verzeichnis, mit der neuen Sammlung daneben):
+**alte** Schranke gelaufen. So lässt sich das nachrechnen — die neue Sammlung
+gegen die alte Schranke, in einem eigenen Verzeichnis:
+
+```sh
+D=$(mktemp -d)
+git show 8f1c51e:tools/pruefe-bytes.pl > $D/pruefe-bytes.pl
+cp tools/pruefe-bytes-tests.pl tools/dateiendungen.pl $D/
+perl $D/pruefe-bytes-tests.pl
+```
 
 ```
 35 Faelle: 24 gruen, 11 rot
 ROT: L1a, L1b, L2a, L2b, L3, L4, L5, L6, L7, L8, L9
 ```
+
+> **Der Bezugscommit gehört in den Befehl, nicht `HEAD`.** Hier stand zuerst
+> `git show HEAD:...`, und das war ab dem nächsten Commit falsch: `HEAD` trägt
+> die **behobene** Schranke, die Anleitung liefert dann „35 grün" und die
+> Gegenprobe sieht erfunden aus. Beim Durchlesen der Übergabe aufgefallen und
+> berichtigt — dieselbe Fehlerklasse wie die veralteten Zeilenangaben aus Z-1.
 
 **11 von 12 waren rot.** Der zwölfte (`L1c`) ist die Gegenkontrolle — eine
 reine Umbenennung ohne Änderung am Inhalt muss durchlaufen, vorher wie nachher.
