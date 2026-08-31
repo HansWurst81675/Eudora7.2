@@ -401,6 +401,138 @@ static void Test_TextReaderUebernimmtDieNeueLaenge(const char* szEudoraDir)
 }
 
 // ---------------------------------------------------------------------------
+// 4. Randfaelle, die beim ersten echten Abruf auftreten koennen (P-2)
+// ---------------------------------------------------------------------------
+
+static void Test_NachrichtOhneBetreff(void)
+{
+	TT_BeginTest("POP: eine Nachricht ohne Betreff bringt den Kopfzeilenpfad nicht durcheinander");
+
+	// Werbepost und Systemmeldungen kommen regelmaessig ohne Subject an, oder mit
+	// einem leeren. Fix2047 muss beides unveraendert durchlassen und darf die
+	// Laenge nicht durcheinanderbringen - PruefeKopfzeile prueft len gegen strlen.
+	PruefeKopfzeile("leerer Betreff", "", "");
+	PruefeKopfzeile("Betreff nur aus Zwischenraum", " ", " ");
+
+	// Ein einzelnes "=" darf nicht als Anfang eines kodierten Wortes gelten.
+	PruefeKopfzeile("Betreff ist nur ein Gleichheitszeichen", "=", "=");
+
+	// Ein angefangenes, aber nie geschlossenes kodiertes Wort. Kommt bei
+	// abgeschnittenen Kopfzeilen vor und darf nicht ueber das Ende hinauslesen.
+	PruefeKopfzeile("kodiertes Wort ohne Abschluss",
+					"=?utf-8?Q?Gr=C3=BC",
+					"=?utf-8?Q?Gr=C3=BC");
+
+	TT_EndTest();
+}
+
+static void Test_SehrLangeKopfzeile(void)
+{
+	TT_BeginTest("POP: eine sehr lange Kopfzeile wird vollstaendig dekodiert");
+
+	// RFC 5322 empfiehlt 78 Zeichen und erlaubt 998. Verteilerlisten und
+	// Weiterleitungsketten sprengen das regelmaessig. Hier: 60 kodierte Woerter
+	// hintereinander, jedes "Gr" + U+00FC + U+00DF + "e" in UTF-8/Q.
+	// Roh sind das 60 * 27 = 1620 Zeichen, dekodiert 60 * 5 = 300.
+	char szEingabe[2048];
+	char szErwartet[512];
+	int  i;
+
+	szEingabe[0] = 0;
+	szErwartet[0] = 0;
+	for (i = 0; i < 60; ++i)
+	{
+		strcat(szEingabe, "=?utf-8?Q?Gr=C3=BC=C3=9Fe?=");
+		strcat(szErwartet, "Gr\xFC\xDF" "e");
+	}
+
+	// Gegenprobe auf die Rechnung oben - wenn sie nicht stimmt, prueft der Test
+	// nicht das, was er zu pruefen behauptet.
+	TT_CHECK(strlen(szEingabe) == 1620);
+	TT_CHECK(strlen(szErwartet) == 300);
+
+	// Nach RFC 2047, 6.2 faellt zwischen benachbarten kodierten Woertern der
+	// Zwischenraum weg; hier steht ohnehin keiner dazwischen.
+	PruefeKopfzeile("60 kodierte Woerter hintereinander", szEingabe, szErwartet);
+
+	TT_EndTest();
+}
+
+static void Test_VollstaendigePopAntwort(void)
+{
+	TT_BeginTest("POP: eine ganze RETR-Antwort mit UTF-8-Umlauten");
+
+	// Das ist der Rohtext, wie ihn ReadPOPLine (POPSession.cpp:2364) Zeile fuer
+	// Zeile aus der Leitung holt und in die Spool-Datei schreibt. Danach zerlegt
+	// CPOP::WriteMessageToMBX_ (pop.cpp:656) ihn wieder: die Kopfzeilen durch
+	// HeaderDesc::Read -> Fix2047, den Rumpf durch TextReader::ReadIt ->
+	// ISOTranslate. Genau diese Aufteilung wird hier nachgestellt.
+	//
+	// Netz, Sockets und Dateien kommen nicht vor - nur die beiden Umsetzer.
+	static const char* aszKopf[] = {
+		"Return-Path: <absender@example.org>",
+		"From: =?UTF-8?B?SsO8cmdlbiBTY2jDtm4=?= <juergen@example.org>",
+		"To: gregor@freenet.de",
+		"Subject: =?utf-8?Q?Sch=C3=B6ne_Gr=C3=BC=C3=9Fe?=",
+		"Content-Type: text/plain; charset=utf-8",
+		"Content-Transfer-Encoding: 8bit"
+	};
+	static const char* aszKopfSoll[] = {
+		"Return-Path: <absender@example.org>",
+		"From: J\xFCrgen Sch\xF6n <juergen@example.org>",
+		"To: gregor@freenet.de",
+		"Subject: Sch\xF6ne Gr\xFC\xDF" "e",
+		"Content-Type: text/plain; charset=utf-8",
+		"Content-Transfer-Encoding: 8bit"
+	};
+	static const char* aszRumpf[] = {
+		"Hallo Gregor,\r\n",
+		"\r\n",
+		"sch\xC3\xB6ne Gr\xC3\xBC\xC3\x9F" "e aus Bremen. Das kostet \xE2\x82\xAC 5,\xC2\xA0" "50.\r\n",
+		"Stra\xC3\x9F" "e, H\xC3\xA4user, B\xC3\xA4ume.\r\n"
+	};
+	static const char* aszRumpfSoll[] = {
+		"Hallo Gregor,\r\n",
+		"\r\n",
+		"sch\xF6ne Gr\xFC\xDF" "e aus Bremen. Das kostet \x80 5,\xA0" "50.\r\n",
+		"Stra\xDF" "e, H\xE4user, B\xE4ume.\r\n"
+	};
+	int i;
+
+	// Die Kopfzeilen. Der Zeichensatz steht im kodierten Wort selbst, nicht im
+	// Content-Type - deshalb geht jede Zeile durch Fix2047, auch die reinen
+	// ASCII-Zeilen, die sich dabei nicht veraendern duerfen.
+	for (i = 0; i < (int)(sizeof(aszKopf) / sizeof(aszKopf[0])); ++i)
+		PruefeKopfzeile("Kopfzeile", aszKopf[i], aszKopfSoll[i]);
+
+	// Der Rumpf. Content-Type sagt utf-8, FindMIMECharset macht daraus IDX_UTF_8,
+	// und TextReader::ReadIt gibt jede Zeile einzeln durch ISOTranslate.
+	TT_CHECK(UT_FindMIMECharset("utf-8") == IDX_UTF_8);
+
+	for (i = 0; i < (int)(sizeof(aszRumpf) / sizeof(aszRumpf[0])); ++i)
+	{
+		char szZeile[512];
+		long lSize;
+
+		memset(szZeile, 0, sizeof(szZeile));
+		lSize = (long)strlen(aszRumpf[i]);
+		memcpy(szZeile, aszRumpf[i], (size_t)lSize);
+
+		lSize = UT_ISOTranslate(szZeile, lSize, IDX_UTF_8);
+
+		PruefeBytes("Rumpfzeile", szZeile, (int)lSize,
+					aszRumpfSoll[i], (int)strlen(aszRumpfSoll[i]));
+
+		// Jede Zeile muss nach der Uebersetzung immer noch auf CRLF enden.
+		// Darauf beruht die Erkennung in TextReader.cpp:260, und genau das ging
+		// schief, solange die neue Laenge weggeworfen wurde (P-1.1).
+		TT_CHECK(lSize >= 2 && szZeile[lSize - 2] == 0x0D && szZeile[lSize - 1] == 0x0A);
+	}
+
+	TT_EndTest();
+}
+
+// ---------------------------------------------------------------------------
 
 void RunPopEmpfangTests(const char* szEudoraDir)
 {
@@ -417,4 +549,7 @@ void RunPopEmpfangTests(const char* szEudoraDir)
 	Test_KaputteKodierteWoerter();
 	Test_NachrichtentextUtf8();
 	Test_TextReaderUebernimmtDieNeueLaenge(szEudoraDir);
+	Test_NachrichtOhneBetreff();
+	Test_SehrLangeKopfzeile();
+	Test_VollstaendigePopAntwort();
 }
