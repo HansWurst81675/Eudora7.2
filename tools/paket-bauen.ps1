@@ -50,7 +50,8 @@ param(
   [Parameter(Mandatory=$true)][string]$Ziel,
   [string]$Zip,
   [string]$Grundlage,
-  [switch]$AusBauverzeichnis
+  [switch]$AusBauverzeichnis,
+  [ValidateSet('Debug','Release')][string]$Bauart = 'Debug'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -83,10 +84,10 @@ function Weg([string]$name) {
 }
 
 if ($AusBauverzeichnis) {
-  $binDbg = Join-Path $wurzel 'Eudora71\Bin\Debug'
-  if (-not (Test-Path -LiteralPath $binDbg)) { throw "kein Bauverzeichnis: $binDbg" }
+  $binBau = Join-Path $wurzel ('Eudora71\Bin\' + $Bauart)
+  if (-not (Test-Path -LiteralPath $binBau)) { throw "kein Bauverzeichnis: $binBau" }
   Write-Host ''
-  Write-Host "0. Frische Bauergebnisse aus $binDbg"
+  Write-Host "0. Frische Bauergebnisse aus $binBau"
   # NUR diese Liste, und zwar mit Absicht.
   #
   # In Bin\Debug liegen NICHT nur eigene Bauergebnisse, sondern auch die
@@ -106,7 +107,7 @@ if ($AusBauverzeichnis) {
   )
   $n = 0
   foreach ($d in $eigene) {
-    $q = Join-Path $binDbg $d
+    $q = Join-Path $binBau $d
     if (Test-Path -LiteralPath $q) {
       Copy-Item -LiteralPath $q -Destination (Join-Path $Ziel $d) -Force
       Write-Host ("  {0,-28} uebernommen" -f $d)
@@ -151,6 +152,33 @@ if (Test-Path -LiteralPath $liesmich) {
   Write-Host ''
   Write-Host '6. LIESMICH.txt der Fassung 1.0.3'
   Nimm $liesmich 'LIESMICH.txt'
+}
+
+if ($Bauart -eq 'Release') {
+  Write-Host ''
+  Write-Host '7. Verteilbare Laufzeit von Visual C++ 2022 (nur bei -Bauart Release)'
+  # Diese drei DUERFEN weiterverteilt werden - anders als die Debug-Fassungen
+  # mfc140d.dll / msvcp140d.dll / vcruntime140d.dll / ucrtbased.dll, die bei
+  # Visual Studio im Ordner "debug_nonredist" liegen. Genau daran ist Paket
+  # 1.0.2 mit 0xc000007b gescheitert (Befund F-1).
+  #
+  # ucrtbase.dll wird NICHT beigelegt: die liegt Windows 10 selbst bei.
+  $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+  if (-not (Test-Path -LiteralPath $vswhere)) { throw "vswhere.exe nicht gefunden: $vswhere" }
+  $vsPfad = & $vswhere -latest -property installationPath
+  if (-not $vsPfad) { throw 'keine Visual-Studio-Installation gefunden' }
+  $redist = Join-Path $vsPfad 'VC\Redist\MSVC'
+  $ver = Get-ChildItem -LiteralPath $redist -Directory |
+         Where-Object { $_.Name -match '^\d+\.' } |
+         Sort-Object { [version]$_.Name } -Descending | Select-Object -First 1
+  if (-not $ver) { throw "keine Redist-Fassung unter $redist" }
+  Write-Host ("  Redist-Fassung {0}" -f $ver.Name)
+  Nimm (Join-Path $ver.FullName 'x86\Microsoft.VC143.MFC\mfc140.dll')       'mfc140.dll'
+  Nimm (Join-Path $ver.FullName 'x86\Microsoft.VC143.CRT\msvcp140.dll')     'msvcp140.dll'
+  Nimm (Join-Path $ver.FullName 'x86\Microsoft.VC143.CRT\vcruntime140.dll') 'vcruntime140.dll'
+  Write-Host ''
+  Write-Host '   laufzeit-holen.ps1 wird nicht gebraucht - entfernt'
+  Weg 'laufzeit-holen.ps1'
 }
 
 Write-Host ''

@@ -144,7 +144,7 @@ exit /b 0</Command>
       <AdditionalDependencies>Paige32.lib;Imap.lib;wininet.lib;vfw32.lib;DirectoryServicesUI.lib;QCUtils.lib;EuMemMgr.lib;winmm.lib;sscewd32.lib;EuImap.lib;AccountWizard.lib;qtmlclient.lib;spchwrap.lib;libpng.lib;zlib.lib;eulang.lib;libexpat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\Release;..\Qt3.x\Libraries;..\SpeechSDK\Lib;..\expat\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;OTA50D.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;OTA50D.LIB;OTA50R.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem><ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <OptimizeReferences>true</OptimizeReferences>
@@ -160,8 +160,6 @@ exit /b 0</Command>
     </Midl>
     <PostBuildEvent>
       <Command>call ..\BinTools\PostProcessRel Eudora
-cd $(SolutionDir)
-MakeDox.pl Eudora.sln DevDox
 </Command>
     </PostBuildEvent>
     <ResourceCompile>
