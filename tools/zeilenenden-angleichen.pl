@@ -14,9 +14,15 @@
 # Diese Zahl ist eine EINMALIGE Messung des damaligen Arbeitsbaums und laesst
 # sich nicht wiederholen - der Baum ist seither angeglichen. Nachpruefbar ist
 # nur die Grundgesamtheit, und die waechst mit jedem Commit, der Dateien
-# hinzufuegt: 5563 am 30.08., 5568 am 30.08. abends, 5589 am 31.08.2026
-# (gemessen mit derselben Endungsliste, die dieses Werkzeug benutzt). Wer
-# nachzaehlen will:
+# hinzufuegt - und sie haengt an der Endungsliste:
+#
+#   5563  30.08.2026 vormittags, alte Liste
+#   5568  30.08.2026 abends, alte Liste (PRUEFER)
+#   5589  31.08.2026, alte Liste (c cpp h hpp inl rc idl def mak txt md)
+#   6385  31.08.2026, neue gemeinsame Liste aus tools/dateiendungen.pl
+#
+# Die 6385 enthalten 0 Dateien, die sich nur in den Zeilenenden unterscheiden -
+# die erweiterte Liste deckt also keinen neuen Schaden auf. Wer nachzaehlen will:
 #
 #   perl tools/zeilenenden-angleichen.pl        # letzte Zeile: Grundgesamtheit
 #

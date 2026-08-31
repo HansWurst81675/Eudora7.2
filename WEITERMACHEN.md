@@ -55,7 +55,7 @@ ohne je *angezeigt* worden zu sein. QUALCOMM beschreibt genau das in
 Deaktivierungsstellen aber nicht. In der Schwesterklasse `CFiltersWazooWnd` ist
 dieselbe Zusicherung bereits auskommentiert (`FiltersWazooWnd.cpp:109`).
 
-**S-7 — die Wurzel aller CRLF-Probleme.** 4616 von 5563 verfolgten Dateien lagen
+**S-7 — die Wurzel aller CRLF-Probleme.** Gemessen am 30.08.2026: 4616 von 5563 verfolgten Dateien lagen
 im Arbeitsverzeichnis als CRLF vor, während im Commit LF steht — Folge eines
 Auscheckens mit `core.autocrlf=true`. Git sah nicht hinein, solange niemand die
 Datei anfasste; danach sprang die *ganze* Datei als geändert heraus. Das ist
@@ -175,6 +175,12 @@ auch den aus S-2 nicht.
 
 Vollständig in [PRUEFBERICHT.md](PRUEFBERICHT.md).
 
+> **Stand 31.08.2026 (WERKZEUG, Befund W-1).** Behoben sind PR-1, PR-2, PR-3
+> (Schranke, neu mit `tools/pruefe-bytes-tests.pl` — 23 Fälle, alle grün),
+> PR-7 (Zahlen: es gilt 4616 von 5563 vom 30.08.2026; die Grundgesamtheit
+> wächst und ist am 31.08. bei 5589), PR-8 (`rekursion-suchen.pl` gelöscht)
+> sowie PR-4 und PR-6. Offen bleibt PR-5, die Beschreibung des Zeitstempels.
+
 **B-1 — die VC7.1-Laufzeiten.** Die eigene `msvcr71.dll` steht: 1430 Exporte,
 davon 1429 echte Weiterleitungen auf die von Windows mitgelieferte
 `msvcrt.dll`, einzige Abhängigkeit `KERNEL32.dll`. Damit können die drei
@@ -194,12 +200,17 @@ nötigen Einfügungen stehen wörtlich in
 | `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Siehe S-7. Nach jedem Klon einmal. |
 | `tools/stapel-untersuchen.ps1` | Kleiner Debugger: startet ein Programm als Debuggee, fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen.** Braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
 | `tools/kennung-erzeugen.pl` | Erzeugt `BuildKennung.h` vor jedem Bau. Läuft als PreBuildEvent. |
-| `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte hier ausschließlich Fehlalarme. |
+| `tools/pruefe-bytes-tests.pl` | Testsammlung für die Schranke, 23 Fälle. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |
+
+`tools/rekursion-suchen.pl` ist am 31.08.2026 gelöscht worden — Befund W-1.
 
 `tools/pruefe-bytes.pl` wurde berichtigt: es verglich die bloße CR-Anzahl und
-schlug damit schon beim *Hinzufügen* von Zeilen an. Jetzt zwei Regeln — Inhalt
-gleich bei verschiedenen Bytes, und: hat eine inhaltlich unveränderte Zeile ihr
-Zeilenende gewechselt?
+schlug damit schon beim *Hinzufügen* von Zeilen an. Der Nachfolger verglich
+Zeileninhalte und schlug bei Leerzeilen grundlos an. Seit dem 31.08.2026 wertet
+Regel 2 den eigentlichen Unterschied aus (`git diff --cached -U0`) und paart
+entfernte mit hinzugefügten Zeilen innerhalb eines Blocks — Umwandlungen fallen
+in beide Richtungen auf, Ergänzungen und Löschungen laufen durch.
 
 ---
 

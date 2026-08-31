@@ -2509,11 +2509,30 @@ Leisten in einer Reihe. Muss reproduziert werden, bevor etwas geaendert wird.
 von HEAD **ausschliesslich in den Zeilenenden**. Im Arbeitsverzeichnis standen
 sie als CRLF, im Commit als LF.
 
-> **Zu den Zahlen.** Der Kopf von `tools/zeilenenden-angleichen.pl` nennt
-> 4426 von 5336 — das war ein frueherer Durchlauf, der weniger Dateiendungen
-> beruecksichtigte (ohne `.def`, `.mak`, `.txt`, `.md`). Beide Zahlen sind
-> richtig gemessen, nur mit verschiedenem Suchmuster. Nach dem Angleichen
-> meldet das Werkzeug 5586 byteidentische Dateien.
+> **Zu den Zahlen** (nachgemessen 31.08.2026, Befund W-1). Es gilt **4616 von
+> 5563**, gemessen am 30.08.2026. Die frueher hier und im Kopf von
+> `tools/zeilenenden-angleichen.pl` genannten 4426 von 5336 stammten aus einem
+> Durchlauf mit kuerzerer Endungsliste und wurden nie nachgezogen; sie sind aus
+> dem Werkzeugkopf entfernt.
+>
+> Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und laesst
+> sich nicht wiederholen — der Baum ist seither angeglichen. Nachpruefbar ist
+> nur die Grundgesamtheit, und die waechst mit jedem Commit, der Dateien
+> hinzufuegt, und sie haengt an der Endungsliste:
+>
+> | Zahl | Zeitpunkt | Liste |
+> |---|---|---|
+> | 5563 | 30.08.2026 vormittags | alt |
+> | 5568 | 30.08.2026 abends (PRUEFER) | alt |
+> | 5589 | 31.08.2026 | alt (`c cpp h hpp inl rc idl def mak txt md`) |
+> | 6385 | 31.08.2026 | neu, `tools/dateiendungen.pl` |
+>
+> Alle vier sind zu ihrem Zeitpunkt und ihrer Liste richtig; es gibt hier keine
+> feste Zahl, sondern einen Befehl. Von den 6385 unterscheidet sich **keine
+> einzige** nur in den Zeilenenden — die erweiterte Liste deckt also keinen
+> neuen Schaden auf, sie schliesst nur eine Luecke fuer die Zukunft.
+>
+>     perl tools/zeilenenden-angleichen.pl        # misst, aendert nichts
 
 **Ursache.** Das Repo wurde seinerzeit mit `core.autocrlf=true` ausgecheckt. Git
 wandelte beim Auschecken LF nach CRLF und vermerkte die Datei trotzdem als
@@ -2536,11 +2555,26 @@ geaendert worden; die Folgen des Auscheckens blieben.
 
 Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`:
 
-    Index-Eintrag:  Blob 8c4fb68a...   size: 5781      (Groesse der CRLF-Fassung)
-    Arbeitskopie:   Blob 8c4fb68a...   5716 Bytes      (LF, inhaltlich gleich)
+    Blob (HEAD wie Index):  8c4fb68a...   5716 Bytes   (LF, 65 Zeilen)
+    Groesse im Index-Eintrag vermerkt:    5781         (die der CRLF-Arbeitskopie)
+    Arbeitskopie damals:                  5781 Bytes   (CRLF)
 
-Gleicher Blob-Hash, verschiedene Groesse. `git diff` meldete nichts,
-`git status` meldete "geaendert".
+5716 + 65 CR = 5781. Der Index trug also den Hash der **LF**-Fassung und
+daneben die Groesse der **CRLF**-Fassung — genau die Kombination, bei der git
+nicht mehr hineinsieht.
+
+> **Beschriftung berichtigt am 31.08.2026** (Befund W-1). Die frueheren zwei
+> Zeilen waren vertauscht: sie stellten 5716 als Groesse der Arbeitskopie dar
+> und 5781 als die des Blobs. Dann waeren Arbeitskopie und Blob byteidentisch
+> gewesen und es haette nichts anzugleichen gegeben. Nachgemessen im heutigen,
+> angeglichenen Baum: Arbeitskopie 5716 Bytes, 0 CR, 65 LF; Blob-Hash
+> unveraendert `8c4fb68a`.
+>
+> Der Satz "`git diff` meldete nichts, `git status` meldete geaendert" steht
+> nicht mehr da: beide lesen denselben Zwischenspeicher und denselben Index,
+> und der Vorgang liess sich nicht nachstellen. Der Kern der Erklaerung — git
+> sieht nicht in die Datei, solange Zeitstempel und Groesse zum Index passen —
+> bleibt richtig.
 
 **Behebung.** `tools/zeilenenden-angleichen.pl` schreibt jede betroffene Datei
 mit dem HEAD-Stand woertlich neu - aber nur, wenn sie sich danach nachweislich
