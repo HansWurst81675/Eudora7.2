@@ -1050,37 +1050,63 @@ void CImportMail::DeleteFolderNodeData(Mbox_FnamePair *pFolder)
 }
 bool CImportMail::InitPluginList()
 {
-	CFileFind	finder;
-	BOOL		bWorking = TRUE;
-	UINT		iMatchingFiles = 0;
+	//	Ein einziger Suchlauf, dann erst das Feld anlegen.
+	//
+	//	WARUM UMGEBAUT: die vorige Fassung suchte ZWEIMAL. Der erste Lauf
+	//	zaehlte die Treffer, danach wurde das Feld in dieser Groesse angelegt,
+	//	und ein ZWEITER Lauf schrieb hinein. Liefern die beiden Laeufe
+	//	verschiedene Anzahlen - eine Datei kommt dazu, verschwindet, oder eine
+	//	Freigabe im Netz antwortet unterschiedlich -, schreibt der zweite Lauf
+	//	ueber das Feldende hinaus. Ausserdem wurde der Rueckgabewert der
+	//	Speicheranforderung nicht geprueft.
+	//
+	//	Gesucht wird m_szEudoraImportSearch, also ExecutableDir + "*.eif"
+	//	(siehe oben, Zeile 954-955): die Importer-Plugins im
+	//	Programmverzeichnis.
+	//
+	//	Anlass: Absturz im Kontoassistenten beim Klick auf "Weiter"
+	//	(Befund E-9, 31.08.2026). CWizardClientPage::OnSetActive ruft als
+	//	erstes ueber InitPlugins hierher. Ob DIESE Stelle der Absturz ist, war
+	//	bei der Aenderung UNGEPRUEFT - die beiden Mangel sind aber unabhaengig
+	//	davon echt.
 
-	bWorking = finder.FindFile(m_szEudoraImportSearch);
+	CFileFind		finder;
+	CStringArray	pfade;
 
-	if(!bWorking)
+	BOOL bWorking = finder.FindFile(m_szEudoraImportSearch);
+	if (!bWorking)
 		return false;
 
-	while(bWorking)
+	while (bWorking)
 	{
+		//	FindNextFile liefert FALSE beim LETZTEN Treffer, die Angaben dazu
+		//	sind aber gueltig. Deshalb erst holen, dann die Schleife beenden.
 		bWorking = finder.FindNextFile();
-		iMatchingFiles++;
-	}
-	m_psDllStruct = DEBUG_NEW ImportDllStruct[iMatchingFiles];
 
-	m_iDllStructSize = iMatchingFiles;
-	iMatchingFiles = 0;
-	bWorking = finder.FindFile(m_szEudoraImportSearch);
-	
-	while(bWorking)
-	{
-		bWorking = finder.FindNextFile();
-		m_psDllStruct[iMatchingFiles].szDllPath = finder.GetFilePath();
-		InitDllStruct(iMatchingFiles);
-		iMatchingFiles++;
+		if (!finder.IsDots() && !finder.IsDirectory())
+			pfade.Add(finder.GetFilePath());
 	}
 
-	
+	const int nAnzahl = (int) pfade.GetSize();
+	if (nAnzahl <= 0)
+		return false;
+
+	m_psDllStruct = DEBUG_NEW_NOTHROW ImportDllStruct[nAnzahl];
+	if (m_psDllStruct == NULL)
+	{
+		m_iDllStructSize = 0;
+		return false;
+	}
+
+	m_iDllStructSize = nAnzahl;
+
+	for (int i = 0; i < nAnzahl; i++)
+	{
+		m_psDllStruct[i].szDllPath = pfade[i];
+		InitDllStruct(i);
+	}
+
 	return true;
-
 }
 bool CImportMail::InitDllStruct(UINT iStructNum)
 {
