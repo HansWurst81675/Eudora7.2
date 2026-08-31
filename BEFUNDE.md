@@ -1,5 +1,10 @@
 # BEFUNDE — Verzeichnis
 
+<!-- pruefstand: d45d6c0 -->
+<!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
+     wurde. Wer die Datei nachzieht, zieht die Marke mit.
+     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen und
 inzwischen rund **5900 Zeilen** lang (nachzählen: `grep -c '^## ' BEFUNDE.md`,
 dieses Verzeichnis zählt mit). Jeder Agent schreibt seinen Abschnitt ans
@@ -68,8 +73,8 @@ zuerst **E-11**, **R-1** und **E-1**.
 | NP3-3 | Kommentar zu `CreateFromBitmap` zählt die Aufrufstellen falsch | **offen** |
 | NP3-4 | `lehren-spiegeln.pl` löschte die gespiegelten Dateien wieder | **behoben** (stagt nicht mehr; Hook siehe X-2) |
 | NP3-5 | `lehren-spiegeln.pl` war genau im Fehlerfall stumm | **behoben** (X-2) |
-| NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **offen** |
-| NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **offen** |
+| NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **behoben** |
+| NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** (Prüfstandsmarke) |
 | NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **offen** |
 | NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **teilweise** (POP behoben, IMAP offen) |
 | PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
@@ -1984,6 +1989,14 @@ ueber verwaiste Kopien in `Arbeitsweise/` berichten lassen.
 
 ## NP3-6 - `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis heraus Entwarnung
 
+> **BEHOBEN am 31.08.2026 abends.** Die Pfade hängen jetzt an
+> `git rev-parse --show-toplevel`, und eine fehlende Datei ist eine **Warnung**
+> mit Rückgabe 1. Vorher nachgemessen und vorgeführt: aus `Eudora71/` heraus
+> dreimal „fehlt" und danach „Pruefung und Doku sind nah am Code", `rc=0`.
+> Nachher liefert das Werkzeug aus `Eudora71/Eudora/` **dasselbe** wie aus der
+> Wurzel. Gegenprobe mit fehlender Datei in einem Wegwerf-Repo: Warnung,
+> `rc=1`. Siehe auch NP3-7 — beide in einem Zug.
+
 **Sicherheit: nachgewiesen, ausgefuehrt.**
 
 **Datei:** `tools/pruefstand-melden.pl:41-44` und `:78-86`
@@ -2015,6 +2028,26 @@ und genau dann steht das Arbeitsverzeichnis nicht fest.
 ---
 
 ## NP3-7 - `pruefstand-melden.pl` nennt einen beliebigen Commit als Pruefstand
+
+> **BEHOBEN am 31.08.2026 abends, mit der hier vorgeschlagenen Marke.**
+> Jede beobachtete Datei trägt oben eine Zeile
+> `<!-- pruefstand: <commit> -->` und nennt damit den Commit, gegen den sie
+> zuletzt abgeglichen wurde. **Wo keine Marke steht, wird das gemeldet statt
+> geraten** (Rückgabe 1) — samt der Zeile, die einzusetzen ist.
+>
+> Wie irreführend das Raten war, zeigt die letzte Messung der alten Fassung:
+> *„PORTIERUNG.md abgeglichen bis `567a5d8`, seither 186 Commits"* — `567a5d8`
+> ist der Commit mit den Originalquellen von 2006, den ein Befund nur zitiert.
+> `README.md` bekam `b4b7de5` und 170 Commits.
+>
+> **Zur Laufzeit:** die 29,5 s sind auf dieser Linux-Maschine nicht
+> reproduzierbar (dort 0,73 s) — Prozessstarts kosten unter Windows ein
+> Vielfaches. Die maschinenunabhängige Zahl ist die Zahl der git-Aufrufe:
+> **182 vorher** (122 Hash-Kandidaten in `BEFUNDE.md`, 41 in `PORTIERUNG.md`,
+> 19 in `README.md`, je ein `git cat-file -t`), **3 nachher** — je Marke ein
+> `git rev-parse --verify`. Lokal 0,73 s → 0,03 s.
+>
+> `$gesamt` (berechnet und nie benutzt) ist ebenfalls weg.
 
 **Sicherheit: nachgewiesen, ausgefuehrt. Auswirkung: die Zahl ist irrefuehrend,
 nicht falsch gerundet.**

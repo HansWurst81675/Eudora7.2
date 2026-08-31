@@ -1,5 +1,10 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
+<!-- pruefstand: d45d6c0 -->
+<!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
+     wurde. Wer die Datei nachzieht, zieht die Marke mit.
+     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+
 Stand: 2026-08-31 · Branch `darstellung-und-menue` · Messwerte an Commit `a807b93`,
 wo nicht anders angegeben
 

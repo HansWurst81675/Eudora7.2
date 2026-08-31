@@ -1,5 +1,10 @@
 # Eudora 7.2
 
+<!-- pruefstand: d45d6c0 -->
+<!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
+     wurde. Wer die Datei nachzieht, zieht die Marke mit.
+     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+
 Portierung des Eudora-7.1-Quellcodes auf Visual Studio 2022 — mit dem Ziel, den
 Mailclient wieder selbst bauen und weiterentwickeln zu können.
 
@@ -225,7 +230,8 @@ einen echten Mailserver. Einzelheiten in
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
 | `tools/hooks-einrichten.sh` | richtet den pre-commit-Hook ein. Nach jedem Klon einmal — ohne ihn treten zwei Fehlerklassen lautlos wieder auf. |
 | `tools/lehren-spiegeln.pl` | spiegelt die Lehren aus dem Gedächtnis nach `Arbeitsweise/` |
-| `tools/pruefstand-melden.pl`, `tools/ungesichertes-melden.pl` | melden Prüfstand und ungesicherte Änderungen |
+| `tools/pruefstand-melden.pl` | meldet, wie weit `BEFUNDE.md`, `README.md` und `PORTIERUNG.md` hinter dem Code herhinken. Maßstab ist die Zeile `<!-- pruefstand: <commit> -->` in jeder der drei Dateien — **wer eine davon nachzieht, zieht die Marke mit**. Ohne Marke sagt das Werkzeug „nicht messbar" und gibt 1 zurück, statt zu raten (Befunde NP3-6, NP3-7). |
+| `tools/ungesichertes-melden.pl` | meldet ungesicherte Änderungen |
 
 `tools/rekursion-suchen.pl` wurde am 31.08.2026 **gelöscht**, siehe Befund W-1:
 es bildete jede Kante mit dem Klassennamen der umgebenden Methode und konnte
