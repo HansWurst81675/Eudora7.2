@@ -238,7 +238,8 @@ behoben. Die Schranke `tools/pruefe-bytes.pl` hat jetzt eine Testsammlung
 (`tools/pruefe-bytes-tests.pl`, inzwischen 35 Fälle, alle grün);
 `tools/rekursion-suchen.pl` ist gelöscht. Es gilt: **4616 von 5563** vom
 30.08.2026; die Grundgesamtheit wächst und lag am 31.08. bei 5589. Offen bleibt
-PR-5, die Beschreibung des Zeitstempels.
+PR-5, die Beschreibung des Zeitstempels — **seit 31.08. abends ebenfalls
+behoben**, damit ist PR-1 bis PR-8 vollständig abgearbeitet.
 
 **Produktversion 7.2.0.3** statt 7.1.0.9, sichtbar im Splash und unter
 *Hilfe → Über Eudora*. Es gibt **drei getrennte Zählungen** — Produkt
@@ -448,12 +449,18 @@ die Reihenfolge.
    (`SECDockBar::AddSplitter` wird nie gerufen) und
    `SECMDIFrameWnd::FloatControlBarInMDIChild`. Reihenfolge und Ansatz in
    `BEFUND-ANSICHT.md`.
-5. **Paket 1.0.3 veröffentlichen** — vorbereitet, aber bewusst NICHT
-   veröffentlicht. Vorgeschlagener Name `Eudora72-1.0.3-vorabfassung.zip`.
-   Einzelheiten und Bauweg in [Releases/PAKETE.md](Releases/PAKETE.md).
-6. **PR-5** — der Zeitstempel in der Bau-Kennung ist der Zeitpunkt der letzten
-   Commit- oder Sauberkeitsänderung, nicht der Bauzeitpunkt. Das Verhalten ist
-   richtig, nur die Beschreibung stimmt nicht. Ein Wort im Kommentar.
+5. ~~**Paket 1.0.3 veröffentlichen**~~ — **erledigt**, und zwar als
+   `Eudora72-1.0.3-release.zip`. Das ZIP ist am 31.08. um 09:00 **ausgetauscht**
+   worden; nur `d4719047…` trägt die E-11-Behebung. Einzelheiten in
+   [Releases/PAKETE.md](Releases/PAKETE.md). Die beiliegende
+   `Releases/1.0.3/LIESMICH.txt` ist am 31.08. abends neu gefasst — sie
+   beschrieb den Debug-Weg und hätte den Empfänger dazu gebracht, sich die vier
+   **nicht verteilbaren** Debug-Laufzeiten zu holen.
+6. ~~**PR-5**~~ — **erledigt** am 31.08.2026 abends: der Zeitstempel in der
+   Bau-Kennung ist der Zeitpunkt der letzten Commit- oder Sauberkeitsänderung,
+   nicht der Bauzeitpunkt. Das Verhalten war richtig, die Beschreibung falsch —
+   jetzt an drei Stellen richtig (Kopf des Werkzeugs, erzeugte
+   `BuildKennung.h`, und die Codestelle, an der der Unterschied entsteht).
 
 ---
 

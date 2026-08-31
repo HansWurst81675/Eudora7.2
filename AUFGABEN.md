@@ -308,6 +308,14 @@ von keinem der 105 Tests betreten.
 
 - **`Out.mbx`-Größe 1.788.158.654 für eine leere Datei** (E-11, Nebenbefund) —
   nicht initialisierter Wert im Protokoll, zwei Zeilen später steht korrekt 0.
+- ~~**PR-5**, der Zeitstempel in der Bau-Kennung~~ — **erledigt am 31.08.2026
+  abends.** Der Kopf von `tools/kennung-erzeugen.pl` sagte „dem Zeitpunkt des
+  Baus"; tatsächlich nennt der Zeitstempel den Zeitpunkt, zu dem sich **Commit
+  oder Sauberkeit** zuletzt geändert haben — die Datei wird nur neu geschrieben,
+  wenn sich etwas außer dem Zeitstempel ändert. Das Verhalten ist richtig
+  gewählt (sonst übersetzt jeder Bau alles neu), nur die Beschreibung war
+  falsch. Jetzt an drei Stellen richtig: Kopf, erzeugte `BuildKennung.h`, und an
+  der Stelle im Code, an der der Unterschied entsteht.
 - **`EUMAPI.DLL` ist eine 16-Bit-Datei** von 1995 (Signatur `NE`, belegt in
   Z-1). Niemand importiert sie. Kann vermutlich aus dem Paket.
 - **`MFC71.DLL` und `MSVCP71.dll`** sind nicht nachbaubar (157 Ordinale, B-1).
@@ -317,9 +325,11 @@ von keinem der 105 Tests betreten.
   `OT501` (`EudoraRes.vcxproj:351`).
 - **LEKTORAT:** am 31.08.2026 abends sind **alle 45 Markdown-Dateien** gelesen
   und die Widersprüche berichtigt worden (dritter Durchgang in `LEKTORAT.md`).
-  Ungeprüft bleiben die beiden `LIESMICH.txt` — insbesondere
-  `Releases/1.0.3/LIESMICH.txt`, die noch den Debug-Weg beschreibt und für ein
-  Release-Paket irreführend ist (F-1, nächster Schritt 3).
+  `Releases/1.0.3/LIESMICH.txt` ist ebenfalls neu gefasst — sie beschrieb den
+  Debug-Weg und hätte den Empfänger dazu gebracht, sich die vier **nicht
+  verteilbaren** Debug-Laufzeiten zu holen. Offen bleibt allein
+  `Releases/1.0.2/LIESMICH.txt`; sie beschreibt ein Paket, das nicht mehr
+  ausgeliefert wird.
 - ~~**Die alte CR-Anzahl-Regel** steht noch in vier `Arbeitsweise/`-Dateien, in
   `PORTIERUNG.md` und in einem Patch-Kommentar.~~ **Nachgemessen am 31.08.2026
   abends: die Behauptung war zu weit gefasst.** Von acht Fundstellen war

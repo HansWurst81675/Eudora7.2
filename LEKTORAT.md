@@ -310,9 +310,14 @@ weitergeschrieben, ohne sie zu zaehlen.
 
 ## Offen
 
-- **`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg („ZUERST: DIE
-  VIER LAUFZEITEN HOLEN"). Fuer das ausgelieferte Release-Paket ist der ganze
-  Abschnitt hinfaellig und irrefuehrend. Es ist eine `.txt`, nicht Teil des
-  Auftrags „alle md" — aber es liegt im ausgelieferten ZIP und ist damit die
-  Datei, die ein Empfaenger zuerst liest.
+- ~~**`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg~~ —
+  **erledigt am 31.08.2026 abends.** Sie verlangte vier Laufzeit-DLLs, die das
+  veroeffentlichte Release-Paket gar nicht braucht: wer ihr folgte, holte sich
+  mit `laufzeit-holen.ps1` genau die vier **nicht verteilbaren** Debug-DLLs.
+  Neu gefasst: Release-Bau, die drei verteilbaren Laufzeiten liegen bei, keine
+  SUPERASSERT-Dialoge, **vier** Kriterien mit dem Stand vom 31.08. (zwei
+  erfuellt, eines fast, Kriterium 0 nicht belegt), die Warnung ueber die **zwei
+  ZIPs unter derselben Nummer** samt Pruefsumme, und der Hinweis, dass
+  `paket-pruefen.ps1` vier Falschwarnungen erzeugt, denen man **nicht** folgen
+  darf (PR-2). Zeilenenden und Kodierung unveraendert (LF, UTF-8).
 - Die **Quelle im Gedaechtnis** fuer `Arbeitsweise/was-lauffaehig-heisst.md`.

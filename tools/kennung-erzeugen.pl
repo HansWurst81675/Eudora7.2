@@ -25,7 +25,14 @@
 #   - dem Commit, auf dem der Bau steht (kurz)
 #   - einem Pluszeichen, falls das Arbeitsverzeichnis Aenderungen enthaelt,
 #     die noch nicht committet sind - dann ist der Bau NICHT reproduzierbar
-#   - dem Zeitpunkt des Baus
+#   - einem Zeitstempel. ACHTUNG, DAS IST NICHT DER BAUZEITPUNKT (Befund PR-5,
+#     berichtigt am 31.08.2026): die Datei wird nur neu geschrieben, wenn sich
+#     etwas AUSSER dem Zeitstempel geaendert hat - sonst uebersetzt jeder Bau
+#     alles neu. Der Zeitstempel nennt also den Zeitpunkt, zu dem sich COMMIT
+#     ODER SAUBERKEIT zuletzt geaendert haben. Baut man zehnmal hintereinander
+#     ohne zu committen, zeigen alle zehn Bauten dieselbe Uhrzeit - die des
+#     ersten. Das VERHALTEN ist richtig gewaehlt, nur die fruehere Beschreibung
+#     "Zeitpunkt des Baus" war falsch.
 #
 # Beispiel:  1.0.3+31810e2* 2026-08-30 20:37
 #            Das Sternchen sagt: es lagen uncommittete Aenderungen vor.
@@ -125,6 +132,10 @@ my $neu = <<"ENDE";
 // Ein Sternchen hinter dem Commit heisst: beim Bau lagen Aenderungen vor, die
 // noch nicht committet waren. Ein solcher Bau ist nicht reproduzierbar.
 //
+// Der Zeitstempel ist NICHT der Bauzeitpunkt, sondern der Zeitpunkt, zu dem
+// sich Commit oder Sauberkeit zuletzt geaendert haben - diese Datei wird nur
+// neu geschrieben, wenn sich etwas ausser dem Zeitstempel aendert (Befund PR-5).
+//
 // EUDORA_BAU_KENNUNG ist bereits eine FERTIGE Zeichenkette im Zeichensatz des
 // Baus. Kein _T() darum herum: _T(x) ist __T(x), und __T(x) ist im Unicode-Bau
 // L##x. Der ##-Operator unterbindet die Erweiterung seines Operanden, aus
@@ -147,7 +158,9 @@ my $alt = '';
 if (open(my $a, '<:raw', $ziel)) { local $/; $alt = <$a>; close $a; $alt = '' unless defined $alt; }
 
 # Nur der Zeitstempel unterscheidet sich bei sonst gleichem Stand - dann nicht
-# neu schreiben, sonst uebersetzt jeder Bau alles neu.
+# neu schreiben, sonst uebersetzt jeder Bau alles neu. GENAU HIER entsteht der
+# Unterschied zwischen "Bauzeitpunkt" und dem, was der Zeitstempel wirklich
+# sagt; siehe den Kopf dieser Datei und Befund PR-5.
 (my $alt_ohne_zeit = $alt) =~ s/\d{4}-\d{2}-\d{2} \d{2}:\d{2}//;
 (my $neu_ohne_zeit = $neu) =~ s/\d{4}-\d{2}-\d{2} \d{2}:\d{2}//;
 
