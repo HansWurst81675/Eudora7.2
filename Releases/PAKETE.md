@@ -14,6 +14,74 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.3 — vorbereitet am 31.08.2026, NICHT veröffentlicht
+
+**Vorabfassung.** Der Name trägt bewusst nicht das Wort `lauffaehig`: nach
+[ZIEL.md](../ZIEL.md) ist derzeit **keines der drei Kriterien** erfüllt.
+Vorgeschlagener Dateiname `Eudora72-1.0.3-vorabfassung.zip`.
+
+Ob und wann das Paket veröffentlicht wird, entscheidet Gregor. Deshalb steht
+hier weder eine Prüfsumme noch eine Größe — beides entsteht erst beim
+Veröffentlichen.
+
+| | |
+|---|---|
+| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Zip "<verz>\..\Eudora72-1.0.3-vorabfassung.zip"` |
+| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` |
+| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) |
+| QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
+
+**Was sich gegenüber 1.0.2 ändert.**
+
+1. **Keine Fremdbinärdateien mehr.** `msvcr71.dll`, `msvcr71d.dll` und
+   `msvcp71d.dll` von dll-files.com fallen weg. An ihrer Stelle die selbst
+   gebaute `msvcr71.dll` aus `Eudora71/VC71Bruecke` — 1429 Weiterleitungen an
+   die von Windows mitgelieferte `msvcrt.dll`, eine einzige selbst
+   geschriebene Funktion (`__security_error_handler`). Gemessen am fertigen
+   PE: x86, einzige Abhängigkeit `KERNEL32.dll`. Befund B-1.
+2. **`Paige32d.dll` ist jetzt eine Kopie der Release-`Paige32.dll`.** In 1.0.2
+   lag dort die Debug-Fassung; nur ihretwegen brauchte das Paket
+   `msvcr71d.dll`. Dass die Umbenennung zulässig ist, ist mit vier
+   unabhängigen Messungen belegt (B-1, entscheidend `_pgAllocateNewRef@20` in
+   beiden Fassungen).
+3. **Die drei Plugins als Release-Fassungen, ohne PDB.** 1.0.2 lieferte die
+   Debug-Fassungen samt 12 MB Symboldateien. Ladbar sind beide nicht.
+4. **`laufzeit-holen.ps1` und `paket-pruefen.ps1` liegen im Paket**, mit
+   Hinweis ganz vorn in der LIESMICH.txt. Ohne die vier VS2022-Debug-Laufzeiten
+   scheitert der Start mit `0xc000007b` — genau das ist am 31.08.2026
+   passiert.
+
+**Was der Paketprüfer sagt.** Zusammengestellt und geprüft am 31.08.2026:
+
+| | 1.0.2 | 1.0.3 |
+|---|---|---|
+| Fehler | 3 | **0** |
+| Warnungen | 5 | 7 |
+| Binärdateien, alle x86 | 31 | 29 |
+
+Die drei Fehler in 1.0.2 waren `MFC71.DLL`, `MFC71D.DLL` und `MSVCP71.dll`.
+In 1.0.3 ist `MFC71D.DLL` verschwunden (Release-Plugins), die beiden anderen
+sind zu Warnungen geworden — nicht weil sich etwas verschlechtert hätte,
+sondern weil der Prüfer inzwischen die **Startkette** ausrechnet und weiß,
+dass sie außerhalb liegen.
+
+**Wann Eudora die fehlenden Module lädt — gemessen, nicht vermutet.** Die
+Startkette (alles, was der Lader vor der ersten eigenen Codezeile anfassen
+muss) besteht aus elf Modulen:
+
+    Eudora.exe  swEudora.exe  EuLang.dll  EuMemMgr.dll  Imap.dll
+    libexpat.dll  msvcr71.dll  Paige32d.dll  plstclnt.dll  QCSocket.dll
+    QCUtils.dll
+
+`EudoraBk`, `ISock`, `Ldap`, `Ph` und die drei Plugins sind **nicht** darin.
+Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also nicht auf; es fällt
+erst bei Benutzung auf (Adressbuch, LDAP, Ph, S/MIME, Spamfilter). Das galt
+für 1.0.2 genauso — es war nur nicht gemessen.
+
+**Stand nach ZIEL.md.** Kriterium 1 nicht erfüllt (Fenster erscheint, Menüs
+seit M-1 behoben, **Wirkung ungeprüft**), Kriterium 2 nicht erfüllt
+(Darstellung in Arbeit, A-1), Kriterium 3 nicht geprüft (kein Mailabruf).
+
 ## 1.0.2 — 30.08.2026
 
 **Startet.** Erste Fassung, bei der das Hauptfenster erscheint. Erfüllt damit

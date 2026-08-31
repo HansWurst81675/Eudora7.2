@@ -3213,3 +3213,154 @@ steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) — wer e
 entfernt, holt sich den Stapelueberlauf aus S-2 zurueck.
 
 **Nichts davon haelt Paket 1.0.3 auf.**
+
+## B-2 — Die Brücke hängt in der Solution, Paket 1.0.3 steht, und ein Prüfer davor
+
+Agent BRUECKE, 31.08.2026. Fortsetzung von [B-1](#b-1). Alle Zahlen hier sind
+**gemessen**; wo nicht, steht **UNGEPRÜFT** davor. Werkzeug war
+`tools/paket-pruefen.ps1` (in diesem Commit neu) und `MSBuild` aus VS 2022.
+
+### B-2.1 — `VC71Bruecke` ist eingehängt, aber die GUID in B-1 war falsch
+
+`Eudora71/Eudora.sln` enthält das Projekt jetzt. Byte-erhaltend eingefügt mit
+`tools/ersetze-bereich.pl`, zwei Stellen, sechs Zeilen; CR-Zahl 0 vorher wie
+nachher, Tabulatoren erhalten.
+
+**Berichtigung zu B-1.** Der dortige Abschnitt „Offen“ und
+`Eudora71/VC71Bruecke/BEFUND.md` Abschnitt 6 nennen als einzutragende GUID
+
+    {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}
+
+Das ist **nicht** die GUID des Projekts. In `VC71Bruecke.vcxproj:32` steht
+
+    <ProjectGuid>{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}</ProjectGuid>
+
+Eingetragen ist die echte. Wer die aus BEFUND.md abgeschrieben hätte, bekäme
+eine Solution, in der das Projekt zwar auftaucht, aber keiner Konfiguration
+zugeordnet ist — es würde stillschweigend nicht gebaut. Die falsche Angabe in
+`BEFUND.md` steht dort noch; sie ist mit diesem Abschnitt richtiggestellt.
+
+**Nachgemessen:** Gesamtbau der Solution, `Debug|x86`. `VC71Bruecke` baut mit,
+Ausgabe `Eudora71/Bin/Debug/msvcr71.dll`. Die drei bekannten Fehler aus `OT501`
+bleiben (`NMAKE U1073` zweimal, `MSB3073` einmal). Zusätzlich zwei
+`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` — das ist **kein neuer
+Fehler**, sondern ein Wettlauf im Parallelbau (`/m`): beide Projekte binden,
+bevor `QCUtils` fertig ist. Einzeln gebaut laufen sie durch, nachgemessen.
+Danach bindet auch `Eudora.vcxproj` wieder durch.
+
+### B-2.2 — Wann Eudora die MFC71-abhängigen Module lädt: erst bei Benutzung
+
+Die in B-1.2 offen gelassene Frage ist beantwortet, und zwar **gemessen am
+ausgelieferten Paket**, nicht am Quelltext.
+
+`tools/paket-pruefen.ps1` rechnet die **Startkette** aus: beginnend bei den
+EXE-Dateien im Wurzelverzeichnis den gewöhnlichen (nicht verzögerten) Importen
+folgen, solange das Ziel im Paket liegt. Das ist genau das, was der Lader
+anfassen muss, bevor die erste Zeile eigener Code läuft. Ergebnis für das
+Paket, **elf Module**:
+
+    Eudora.exe  swEudora.exe  EuLang.dll  EuMemMgr.dll  Imap.dll
+    libexpat.dll  msvcr71.dll  Paige32d.dll  plstclnt.dll  QCSocket.dll
+    QCUtils.dll
+
+`EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` und die drei Plugins sind
+**nicht darin**. Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also
+nicht auf. Es gehört in einen Abschnitt „was nicht geht“, nicht nach vorn in
+die LIESMICH.txt. Das bestätigt S-1 („beim Laden zwingend sind nur zwei“) und
+erweitert es um die transitive Kette.
+
+### B-2.3 — Das echte Paket 1.0.2 nachgesehen: drei Berichtigungen zu B-1
+
+B-1 musste den Paketinhalt aus der Auftragsbeschreibung übernehmen. Jetzt ist
+er gemessen (`Releases/Eudora72-1.0.2-lauffaehig.zip`, ausgepackt, jede Datei
+durch den PE-Leser).
+
+**1. `MFC71.DLL` und `MSVCP71.dll` liegen tatsächlich nicht bei.** Die
+Vermutung aus B-1.2 stimmt. Adressbuch, LDAP, Ph und die drei Plugins waren
+also schon in 1.0.2 nicht ladbar. 1.0.3 verschlechtert daran nichts.
+
+**2. Das Paket 1.0.2 ist gemischt, nicht durchgehend Release.** `PAKETE.md`
+und die LIESMICH.txt zu 1.0.2 sagen, die sieben vorgebauten DLLs lägen als
+Release-Fassungen bei. Für fünf stimmt das. Nicht für zwei:
+
+| Datei im Paket 1.0.2 | Größe | entspricht | importiert |
+|---|---|---|---|
+| `Paige32d.dll` | 757.760 B | `Bin/Debug/Paige32d.dll` | `MSVCR71D.dll` |
+| `Plugins/*.dll` | — | `Bin/Debug/Plugins/*` | `MFC71D.DLL`, `MSVCP71D.dll` |
+
+**Damit ist erklärt, warum die D-Dateien im Paket lagen** — B-1 hatte sie für
+totes Gewicht gehalten, weil es nur `Bin/Release` gemessen hatte. Im Paket
+wurden sie sehr wohl gebraucht: `msvcr71d.dll` von der Debug-`Paige32d.dll`,
+`msvcp71d.dll` von den Debug-Plugins. Der Satz aus B-1, sie seien „totes
+Gewicht“, war für das Repository richtig und für das Paket falsch.
+
+Der Weg, sie loszuwerden, bleibt derselbe und ist in B-1 belegt: die
+Release-`Paige32.dll` unter dem Namen `Paige32d.dll` kopieren. Danach braucht
+sie niemand mehr.
+
+**3. `EUMAPI.DLL` im Paket ist keine PE-Datei.** Der PE-Leser bekommt keinen
+gültigen Kopf. 82.944 B, unverändert aus der Freigabe von 2006 übernommen.
+**UNGEPRÜFT**, was es stattdessen ist — der Verdacht ist eine 16-Bit-NE-Datei
+aus der MAPI-Vergangenheit. Keine Paketdatei importiert sie; sie steht in
+keiner Importtabelle. Meldet sich als Warnung, nicht als Fehler.
+
+### B-2.4 — Paket 1.0.3 ist vorbereitet, nicht veröffentlicht
+
+Zusammengestellt mit `tools/paket-bauen.ps1` (neu), das den Vorgang
+reproduzierbar macht. Änderungen gegenüber 1.0.2 und ihre Begründung stehen im
+Kopf des Skripts und in `Releases/PAKETE.md`. Kurz:
+
+1. selbst gebaute `msvcr71.dll` statt der drei Fremddateien von dll-files.com
+2. `Paige32d.dll` als Kopie der Release-`Paige32.dll`
+3. `msvcr71d.dll` und `msvcp71d.dll` entfallen
+4. Release-Plugins statt Debug-Plugins, ohne 12 MB Symboldateien
+5. `laufzeit-holen.ps1` und `paket-pruefen.ps1` liegen im Paket
+
+Vorgeschlagener Dateiname `Eudora72-1.0.3-vorabfassung.zip`. **Nicht
+„lauffaehig“** — nach `ZIEL.md` ist derzeit keines der drei Kriterien erfüllt.
+
+Das ZIP selbst ist **nicht** im Repository. Es besteht zu 99 % aus
+Bauergebnissen, und ob veröffentlicht wird, entscheidet Gregor. Im Repository
+liegen `Releases/1.0.3/LIESMICH.txt`, der Eintrag in `Releases/PAKETE.md` und
+das Skript, das es jederzeit wieder herstellt.
+
+### B-2.5 — Was der Paketprüfer findet
+
+`tools/paket-pruefen.ps1` liest von jeder EXE/DLL/OCX den PE-Kopf selbst — kein
+`dumpbin` nötig, damit es auch auf einer Maschine ohne Visual Studio läuft. Es
+prüft Architektur, löst Import- **und** Verzögerungstabelle auf, sucht die vier
+VS2022-Debug-Laufzeiten und eine `Eudora.ini` als Vorlage. **Es startet
+nichts.**
+
+| | 1.0.2 | 1.0.3 |
+|---|---|---|
+| Fehler | 3 | **0** |
+| Warnungen | 5 | 7 |
+| Binärdateien, alle x86 | 31 | 29 |
+
+Die drei Fehler in 1.0.2 waren `MFC71.DLL`, `MFC71D.DLL`, `MSVCP71.dll`.
+`MFC71D.DLL` ist in 1.0.3 verschwunden (Release-Plugins); die beiden anderen
+sind Warnungen geworden, seit der Prüfer die Startkette kennt (B-2.2).
+
+**Der eigentliche Zweck ist aber ein anderer Fund.** Beide Pakete bekommen
+vier Warnungen der Form
+
+    mfc140d.dll  liegt nicht im Paket. Auf dieser Maschine steht sie in
+    SysWOW64, auf einer Maschine ohne Visual Studio 2022 nicht - dort
+    scheitert der Start.
+
+Genau daran ist Gregor am Morgen des 31.08.2026 gescheitert: `0xc000007b`. Der
+Prüfer hätte das vor der Auslieferung gesagt, und die Architekturprüfung hätte
+auch den zweiten Teil gefunden — die ersatzweise geholten Dateien waren
+64 Bit.
+
+### B-2.6 — Was ich NICHT getan habe
+
+- Kein Eudora gestartet, kein Programm mit Fenstern, kein
+  `OutputDebugString`-Mithörer. `paket-pruefen.ps1` und `paket-bauen.ps1`
+  lesen und kopieren Dateien, mehr nicht.
+- Nichts veröffentlicht. Kein ZIP im Repository, keine Prüfsumme in
+  `PAKETE.md` — beides entsteht erst, wenn Gregor es will.
+- `Eudora71/VC71Bruecke/BEFUND.md` nicht angefasst (falsche GUID in
+  Abschnitt 6, siehe B-2.1) — es ist der Bericht meines Vorlaufs; die
+  Richtigstellung steht hier.

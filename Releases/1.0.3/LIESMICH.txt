@@ -1,0 +1,232 @@
+Eudora 7.2 — Paket 1.0.3 (Vorabfassung)
+=======================================
+
+Eudora 7.1 aus dem Quellcode der Computer-History-Museum-Freigabe, neu
+uebersetzt mit Visual Studio 2022.
+
+VORABFASSUNG. Der Dateiname sagt nicht "lauffaehig", weil es nicht zutrifft.
+Was geht und was nicht, steht weiter unten unter STAND - vollstaendig und ohne
+Beschoenigung.
+
+
+ZUERST: DIE VIER LAUFZEITEN HOLEN
+---------------------------------
+
+OHNE DIESEN SCHRITT STARTET EUDORA NICHT. Es kommt dann
+
+    0xc000007b - Die Anwendung konnte nicht korrekt gestartet werden
+
+Vier Debug-DLLs von Visual Studio 2022 muessen ins Programmverzeichnis:
+
+    mfc140d.dll   msvcp140d.dll   vcruntime140d.dll   ucrtbased.dll
+
+Sie liegen diesem Paket NICHT bei - sie sind nicht verteilbar. Auf einem
+Rechner mit installiertem Visual Studio 2022 (mit C++-Werkzeugen und MFC)
+stehen sie bereits im System. Dieses Paket bringt ein Werkzeug mit, das sie
+holt und dabei jede Datei einzeln auf ihre Architektur nachprueft:
+
+    powershell -ExecutionPolicy Bypass -File laufzeit-holen.ps1 -Ziel "."
+
+NICHT von DLL-Sammelseiten herunterladen. Von dort kommen haeufig die
+64-Bit-Fassungen, und genau das ist der Grund fuer 0xc000007b: Eudora.exe ist
+ein 32-Bit-Programm.
+
+    C:\Windows\System32    -> 64-Bit-DLLs      FALSCH
+    C:\Windows\SysWOW64    -> 32-Bit-DLLs      richtig
+
+Der 32-Bit-Ordner heisst unter Windows ausgerechnet SysWOW64. Der Name legt
+das Gegenteil nahe; er ist trotzdem der richtige.
+
+Danach nachsehen, ob wirklich alles beisammen ist:
+
+    powershell -ExecutionPolicy Bypass -File paket-pruefen.ps1 -Paket "."
+
+Das Werkzeug liest von jeder EXE und DLL den PE-Kopf, prueft die Architektur
+und geht die Importtabellen durch. Es startet nichts. "ERGEBNIS: keine
+Fehler" heisst: der Start scheitert jedenfalls nicht an einer fehlenden oder
+falschen Datei.
+
+
+STARTEN
+-------
+
+    Eudora.exe "<Pfad zum Mailverzeichnis>"
+
+Das mitgelieferte Verzeichnis "Mailverzeichnis" enthaelt eine vorbereitete
+Eudora.ini und ist sonst leer. Zum Ausprobieren genau dieses angeben.
+
+NICHT ueber eine bestehende Eudora-Installation kopieren und nicht auf ein
+Mailverzeichnis loslassen, an dem etwas haengt.
+
+Beim ersten Start erscheinen drei bis vier Dialoge "SUPERASSERT Assertion
+Failure". Auf "Ignore Once" klicken. Das sind Debug-Zusicherungen, keine
+Fehler - eine davon meldet nur, dass der Suchindex noch nicht existiert und
+neu angelegt wird (SearchManagerInfo.cpp:496). Sie erscheinen, weil dies ein
+DEBUG-Bau ist. Ein Release-Bau haette sie nicht, scheitert aber noch an einer
+fehlenden Imap.lib im Release-Zweig.
+
+
+STAND - WAS GEHT UND WAS NICHT
+------------------------------
+
+Massgeblich sind drei Kriterien (ZIEL.md im Quellbaum):
+
+    1. Eudora startet und zeigt sein Hauptfenster    NICHT ERFUELLT
+    2. Die Darstellung ist korrekt                   NICHT ERFUELLT
+    3. Mailkonto einrichten, verbinden, Mail abrufen NICHT GEPRUEFT
+
+Zu 1: Ein Fenster erscheint. Es ist aber nicht bedienbar gewesen, und ein
+      Fenster, mit dem man nicht arbeiten kann, erfuellt kein Kriterium.
+
+      Menues (Befund S-5/M-1): Ursache gefunden und behoben. Der Rahmen
+      lieferte fuer jeden Treffertest HTERROR, weil SECToolBarManager
+      m_bMainFrameEnabled im Konstruktor auf TRUE setzte. WIRKUNG UNGEPRUEFT -
+      es hat seit der Aenderung niemand nachgesehen, ob sich die Menues nun
+      aufklappen lassen.
+
+Zu 2: Darstellung (Befund S-6/A-1): in Arbeit. Eine der beiden Ursachen ist
+      gefunden, die andere eingegrenzt. Bekannt sind leere graue Felder in der
+      Werkzeugleiste und sich ueberlagernde Bereiche nach dem Oeffnen mehrerer
+      Wazoos.
+
+Zu 3: Mailabruf: UNGEPRUEFT. Es hat mit dieser Fassung noch niemand ein Konto
+      eingerichtet oder einen Server angesprochen.
+
+Solange nicht alle drei erfuellt sind, heisst keine Fassung "lauffaehig".
+
+
+WAS SICH GEGENUEBER 1.0.2 GEAENDERT HAT
+---------------------------------------
+
+1. KEINE FREMDBINAERDATEIEN MEHR.
+
+   Paket 1.0.2 enthielt msvcr71.dll, msvcr71d.dll und msvcp71d.dll von
+   dll-files.com - nicht von Microsoft, nicht signiert, Echtheit ungeprueft.
+   Alle drei sind weg.
+
+   An ihrer Stelle liegt eine selbst gebaute msvcr71.dll bei
+   (Quellen: Eudora71/VC71Bruecke). Sie enthaelt keinen fremden Code: sie
+   leitet 1429 Exporte an C:\Windows\SysWOW64\msvcrt.dll weiter, die Windows
+   selbst mitbringt und die aus derselben Generation stammt. Genau eine
+   Funktion ist selbst geschrieben - __security_error_handler, die einzige der
+   118 gebrauchten, die msvcrt.dll nicht hat.
+
+   Gemessen an der fertigen Datei: x86, und als einzige Abhaengigkeit
+   KERNEL32.dll. Keine moderne C-Laufzeit, das Problem ist also geloest und
+   nicht bloss verschoben. Alle 1429 Weiterleitungen wurden mit einem
+   Konsolenprogramm nachgeprueft; keine einzige laeuft ins Leere.
+
+2. Paige32d.dll ist jetzt eine KOPIE der Release-Fassung Paige32.dll.
+
+   In 1.0.2 lag dort die Debug-Fassung. Die verlangt MSVCR71D.dll, und nur
+   deshalb lagen die D-Dateien ueberhaupt bei. Dass die Release-Fassung unter
+   dem Debug-Dateinamen benutzt werden darf, ist mit vier unabhaengigen
+   Messungen belegt (Eudora71/VC71Bruecke/BEFUND.md, Abschnitt 3); die
+   staerkste: pgAllocateNewRef heisst in BEIDEN Dateien _pgAllocateNewRef@20.
+   Unter der Debug-Schaltung PG_DEBUG muesste er @28 heissen. Beide wurden
+   also mit derselben Konfiguration gebaut.
+
+   Kopiert und umbenannt statt ersetzt, weil Eudora.exe den DATEINAMEN
+   Paige32d.dll importiert.
+
+3. Die drei Plugins liegen jetzt als Release-Fassungen bei, ohne ihre
+   Symboldateien. In 1.0.2 waren es die Debug-Fassungen samt 12 MB PDB.
+   Ladbar sind sie so wie so nicht (siehe WAS NICHT GEHT).
+
+4. Die beiden Werkzeuge laufzeit-holen.ps1 und paket-pruefen.ps1 liegen bei.
+   Der Grund steht ganz oben.
+
+
+WAS NICHT GEHT
+--------------
+
+MFC71.DLL und MSVCP71.dll fehlen und lassen sich nicht ersetzen.
+
+DER START IST DAVON NICHT BETROFFEN. Nachgemessen mit paket-pruefen.ps1: die
+Startkette - alles, was der Lader anfassen muss, bevor die erste Zeile eigener
+Code laeuft - besteht aus elf Modulen:
+
+    Eudora.exe   swEudora.exe   EuLang.dll    EuMemMgr.dll   Imap.dll
+    libexpat.dll msvcr71.dll    Paige32d.dll  plstclnt.dll   QCSocket.dll
+    QCUtils.dll
+
+Keines davon braucht MFC71 oder MSVCP71. Die betroffenen Module laedt Eudora
+erst, wenn man die zugehoerige Funktion benutzt:
+
+    EudoraBk.dll   braucht MFC71             ->  Adressbuch
+    ISock.dll      braucht MFC71             ->  ein Socket-Pfad
+    Ldap.dll       braucht MFC71, MSVCP71    ->  LDAP-Verzeichnissuche
+    Ph.dll         braucht MSVCP71           ->  Ph-Verzeichnisdienst
+    Plugins\*.dll  braucht MFC71, MSVCP71    ->  S/MIME, Spamfilter
+
+Mailabruf und -versand sind davon NICHT betroffen. Es faellt vor allem das
+Adressbuch aus.
+
+WARUM SICH DAS NICHT LOESEN LAESST, wie es bei msvcr71.dll gelungen ist:
+
+  MFC71.DLL wird ueber ORDINALNUMMERN importiert, 157 verschiedene, kein
+  einziger Import ueber einen Namen. Ein Ersatz muesste Microsofts
+  Ordinalvergabe von 2003 exakt treffen. Diese Zuordnung ist nirgends
+  veroeffentlicht, und aus den vorliegenden Dateien laesst sie sich nicht
+  rekonstruieren - die importierende Seite speichert nur die Nummer.
+  Aussichtslos, nicht "schwierig".
+
+  MSVCP71.dll waere nachbaubar, brachte aber nichts: von den betroffenen
+  Modulen haengen alle ausser Ph.dll zusaetzlich an MFC71. Uebrig bliebe der
+  Zugriff auf Ph-Verzeichnisserver - ein Protokoll aus den fruehen 1990ern.
+
+Auch das Paket 1.0.2 konnte diese Funktionen nicht. Das ist keine
+Verschlechterung, sondern derselbe Zustand, nur jetzt nachgemessen.
+
+Ausserdem: die Oberflaechenbibliothek Stingray Objective Toolkit war nicht Teil
+der Freigabe und ist durch eine eigene Ersatzschicht auf modernes MFC ersetzt
+(rund 18.000 Zeilen). Sie bildet die benutzten Klassen nach, aber nicht jede
+Funktion darin. Was fehlt, meldet sich beim Aufruf einmal je Sitzung mit einem
+Hinweis. Bekannt:
+
+    - Werkzeugleisten lassen sich nicht anpassen
+    - Leisten koennen nicht als eigenes Fenster losgeloest werden
+    - die Fensterleiste am unteren Rand ("Auto-Wazoo", "MDI Task Bar") fehlt;
+      die Fenster bleiben ueber das Menue "Window" erreichbar
+    - Registerkarten sehen schlichter aus als im Original
+    - die Rechtschreibpruefung ist stillgelegt (spell.cpp fehlt in der Freigabe)
+
+
+TLS UND ZEICHENSAETZE
+---------------------
+
+QCSSL.dll traegt die Kennung QCSSL 1.0.1 - unveraendert gegenueber Paket 1.0.1
+und 1.0.2, die Quellen haben sich nicht geaendert. Statt OpenSSL 0.9.7l von
+2006 (hoechstens TLS 1.0) jetzt OpenSSL 3.5.8 LTS, Mindestprotokoll TLS 1.2
+fuer alle Einstellungen, TLS 1.3 gemessen bestaetigt. Aktueller
+Wurzelzertifikatsspeicher (rootcerts.p7b, 121 Zertifikate) - der mitgelieferte
+war von 2004 und scheitert an Gmail, Office 365, Yahoo, web.de.
+
+UNGEPRUEFT: der Abruf gegen einen echten Mailserver wurde mit dieser Fassung
+noch nicht durchgefuehrt. Der letzte erfolgreiche Abruf (pop.gmx.net, TLS 1.3,
+TLS_AES_256_GCM_SHA384) fand mit einer aelteren QCSSL statt. Einzelheiten in
+Releases/1.0/AUSLIEFERUNGEN.md.
+
+Zeichensatzdarstellung: UTF-8 laeuft ueber den Windows-Codepage-Wandler statt
+ueber eine Tabelle mit 123 Eintraegen. Umlaute, Anfuehrungszeichen,
+Gedankenstriche und das Eurozeichen werden korrekt dargestellt. Emoji und
+nichtlateinische Schriften werden verstanden und durch ein Fragezeichen
+ersetzt, statt als Zeichensalat zu erscheinen.
+
+
+WENN ES ABSTUERZT
+-----------------
+
+Nuetzlich waere: an welcher Stelle, der genaue Wortlaut einer Meldung, ein
+Bildschirmfoto. Mit tools/stapel-untersuchen.ps1 aus dem Quellbaum laesst sich
+der Aufrufstapel eines Absturzes auch ohne installierten Debugger ermitteln -
+dafuer muss Eudora.pdb neben Eudora.exe liegen (separates Anhangspaket der
+Veroeffentlichung).
+
+
+HERKUNFT
+--------
+
+Quellcode:  github.com/HansWurst81675/Eudora7.2
+Grundlage:  Quelltextfreigabe des Computer History Museum, 2018
+Uebersetzt: Visual Studio 2022, Toolset v143, Debug|Win32
