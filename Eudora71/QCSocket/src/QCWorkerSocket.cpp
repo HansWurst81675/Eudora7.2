@@ -2047,8 +2047,13 @@ void QCWorkerSocket::SetSSLMode(bool bVal,  CString person, SSLSettings *pSettin
 	m_pSSLReference->m_ProtocolInfo.m_Port = m_Port;
 	m_pSSLReference->m_ProtocolInfo.m_IPAddress = m_ServerIP;
 	m_pSSLReference->m_ProtocolInfo.m_ServerName = m_ServerName;
-	m_pSSLReference->m_CertificateInfo.m_RootCertStoreDir= pSettings->m_InputCertsDir;
-	m_pSSLReference->m_CertificateInfo.m_UserCertStoreDir=pSettings->m_InputCertsDir;
+	if (pSettings)
+	{
+		// pSettings hat in QCWorkerSocket.h:62 den Vorgabewert NULL, und Zeile
+		// 2065 unten prueft ihn auch. Hier wurde er ungeprueft dereferenziert.
+		m_pSSLReference->m_CertificateInfo.m_RootCertStoreDir= pSettings->m_InputCertsDir;
+		m_pSSLReference->m_CertificateInfo.m_UserCertStoreDir=pSettings->m_InputCertsDir;
+	}
 
 	m_pSSLReference->m_SSLLogSession = 0;
 
