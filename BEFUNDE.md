@@ -5007,3 +5007,57 @@ Eudora war nach Auflage ausgeschlossen. Wer weitermacht:
 in einen Puffer, der ueber `LPCTSTR` hereinkam (`msgutils.cpp:1633`). Das ist
 Bestand des Originalcodes und hier nicht angeruehrt worden, faellt aber jedem
 auf, der die Stelle liest.
+
+## E-5 — Das Release startet auf einem Win11-Rechner ohne Visual Studio nicht (31.08.2026, OFFEN)
+
+Gregor hat `Eudora72-1.0.3-release.zip` aus der GitHub-Veröffentlichung auf einem
+zweiten Rechner (Windows 11, **kein** Visual Studio) ausgepackt: *„exe aus dem
+github release ordner startet auf einem win11 pc gar nicht."*
+
+### Was ausgeschlossen ist
+
+Streng nachgemessen, mit `dumpbin -dependents` über alle 37 Binärdateien des
+Pakets — und diesmal **ohne** `SysWOW64` als Fundort zu akzeptieren, weil dort
+auf einem Rechner ohne Visual Studio nichts liegt:
+
+| fehlt | gebraucht von | hält den Start auf? |
+|---|---|---|
+| `MFC42.DLL` | `EuGraph.ocx` | **nein** — erst bei Benutzung geladen |
+| `MFC71.DLL` | `EudoraBk`, `ISock`, `Ldap`, drei Plugins | **nein** — dito |
+| `MSVCP71.dll` | `Ldap`, `Ph`, drei Plugins | **nein** — dito |
+| `oledlg.dll` | `mfc140.dll` | **nein** — Bestandteil von Windows |
+
+Ebenfalls ausgeschlossen: eine Vermischung von Debug und Release. Jede Datei im
+Paket wurde einzeln geprüft, keine braucht eine Debug-Laufzeit. Die drei
+verteilbaren Laufzeiten liegen bei.
+
+### Mein Fehler bei der vorigen Prüfung
+
+Ich hatte gemeldet, alle Importe lösten auf — dabei habe ich „liegt in
+`SysWOW64`" als „vorhanden" gewertet. Auf dieser VM stimmt das, weil Visual
+Studio installiert ist; auf Gregors Zielrechner nicht. **Genau der Fehler, den
+PRÜFER am Paketprüfer schon nachgewiesen hatte** (PR-2: „prüft die Maschine,
+nicht das Paket") — und ich habe ihn in meiner eigenen Prüfung wiederholt.
+
+### Was jetzt zu prüfen ist, in dieser Reihenfolge
+
+1. **Mark of the Web.** Dateien aus einem heruntergeladenen ZIP tragen einen
+   Zonenvermerk; Windows kann das Laden von DLLs daraus verweigern — ohne
+   Meldung. Gegenprobe im ausgepackten Ordner:
+
+       Get-ChildItem -Recurse | Unblock-File
+
+2. **Wie „gar nicht" genau aussieht.** Kein Fenster? Eine Meldung? Erscheint der
+   Prozess kurz im Task-Manager? Davon hängt alles Weitere ab. Ohne diese Angabe
+   ist jede Vermutung wertlos.
+3. **Die Ereignisanzeige** auf dem Zielrechner, Protokoll *Anwendung*: ein
+   Ladefehler steht dort mit dem Namen der fehlenden Datei.
+4. **`tools/paket-pruefen.ps1` auf dem ZIELRECHNER laufen lassen** — dort, wo
+   kein Visual Studio ist, gibt es die richtige Antwort. Das ist auch der einzige
+   belastbare Nachweis für Kriterium 0 (siehe die Berichtigung in `ZIEL.md`).
+
+### Was daraus für Kriterium 0 folgt
+
+**Es bleibt unbelegt, und die Vermutung, es sei erfüllt, ist widerlegt.** Ein
+Release-Bau allein genügt nicht; das Paket muss auf einer Maschine ohne
+Entwicklungsumgebung nachweislich starten.
