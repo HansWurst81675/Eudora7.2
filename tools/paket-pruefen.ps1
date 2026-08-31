@@ -271,8 +271,45 @@ function Finde-DLL([string]$name) {
   return $null
 }
 
-$fehlend = @{}          # DLL-Name -> Liste der Module, die sie brauchen
-$fehlendVerz = @{}      # dasselbe, aber nur verzoegert geladen
+# Die STARTKETTE: alles, was der Lader anfassen MUSS, bevor die erste Zeile
+# eigener Code laeuft. Sie beginnt bei den EXE-Dateien im Wurzelverzeichnis und
+# folgt nur den gewoehnlichen (nicht verzoegerten) Importen auf Dateien, die im
+# Paket liegen. Was ausserhalb dieser Kette liegt, laedt Eudora erst bei
+# Benutzung ueber LoadLibrary/COM - ein dort fehlendes Stueck legt eine
+# Funktion lahm, aber nicht den Start.
+#
+# Das ist der Unterschied zwischen FEHLER und Warnung in diesem Werkzeug.
+
+$relVonName = @{}
+foreach ($rel in $peInfo.Keys) {
+  if ($rel -notmatch '\\') { $relVonName[$rel.ToLowerInvariant()] = $rel }
+}
+
+$startkette = @{}
+$rand = New-Object System.Collections.Queue
+foreach ($rel in $peInfo.Keys) {
+  if ($rel -notmatch '\\' -and $rel -match '\.exe$') {
+    $startkette[$rel] = $true
+    $rand.Enqueue($rel)
+  }
+}
+while ($rand.Count -gt 0) {
+  $rel = $rand.Dequeue()
+  foreach ($n in $peInfo[$rel].Noetig) {
+    if ($n.EndsWith(' (verzoegert)')) { continue }
+    $k = $n.ToLowerInvariant()
+    if ($relVonName.ContainsKey($k)) {
+      $ziel = $relVonName[$k]
+      if (-not $startkette.ContainsKey($ziel)) {
+        $startkette[$ziel] = $true
+        $rand.Enqueue($ziel)
+      }
+    }
+  }
+}
+
+$fehlend     = @{}      # fehlt in der Startkette          -> FEHLER
+$fehlendSpaet = @{}      # fehlt erst bei Benutzung         -> Warnung
 
 foreach ($rel in ($peInfo.Keys | Sort-Object)) {
   foreach ($n in $peInfo[$rel].Noetig) {
@@ -285,25 +322,33 @@ foreach ($rel in ($peInfo.Keys | Sort-Object)) {
       }
       continue
     }
-    $ziel = if ($verz) { $fehlendVerz } else { $fehlend }
+    $imStart = $startkette.ContainsKey($rel) -and (-not $verz)
+    $ziel = if ($imStart) { $fehlend } else { $fehlendSpaet }
     if (-not $ziel.ContainsKey($name)) { $ziel[$name] = @() }
     $ziel[$name] += $rel
   }
 }
 
-if ($fehlend.Count -eq 0 -and $fehlendVerz.Count -eq 0) {
+Write-Host ("   Startkette: {0} Modul(e), die der Lader vor dem ersten Befehl braucht." -f $startkette.Count)
+if ($Ausfuehrlich) {
+  ($startkette.Keys | Sort-Object) | ForEach-Object { Write-Host "     $_" -ForegroundColor DarkGray }
+}
+
+if ($fehlend.Count -eq 0 -and $fehlendSpaet.Count -eq 0) {
   Write-Host '   Alle Importe loesen auf.' -ForegroundColor Green
+} elseif ($fehlend.Count -eq 0) {
+  Write-Host '   In der Startkette loest alles auf.' -ForegroundColor Green
 }
 
 foreach ($n in ($fehlend.Keys | Sort-Object)) {
   $wer = ($fehlend[$n] | Sort-Object -Unique) -join ', '
-  Write-Host ("   FEHLT: {0,-24} gebraucht von {1}" -f $n, $wer) -ForegroundColor Red
-  Melde-Fehler ("$n fehlt - gebraucht von: $wer")
+  Write-Host ("   FEHLT BEIM START: {0,-20} gebraucht von {1}" -f $n, $wer) -ForegroundColor Red
+  Melde-Fehler ("$n fehlt und wird beim Start gebraucht - von: $wer")
 }
-foreach ($n in ($fehlendVerz.Keys | Sort-Object)) {
-  $wer = ($fehlendVerz[$n] | Sort-Object -Unique) -join ', '
-  Write-Host ("   fehlt (verzoegert): {0,-18} {1}" -f $n, $wer) -ForegroundColor Yellow
-  Melde-Warnung ("$n fehlt, wird aber erst bei Benutzung geladen - gebraucht von: $wer")
+foreach ($n in ($fehlendSpaet.Keys | Sort-Object)) {
+  $wer = ($fehlendSpaet[$n] | Sort-Object -Unique) -join ', '
+  Write-Host ("   fehlt, erst bei Benutzung: {0,-11} {1}" -f $n, $wer) -ForegroundColor Yellow
+  Melde-Warnung ("$n fehlt. Der Start ist davon nicht betroffen; ausfallen wird: $wer")
 }
 Write-Host ''
 
