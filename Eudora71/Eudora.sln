@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QCUtils", "QCUtils\QCUtils.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SearchEngine", "SearchEngine\SearchEngine.vcxproj", "{FBE55C67-E107-45C2-87BF-31E55D7FCAFC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VC71Bruecke", "VC71Bruecke\VC71Bruecke.vcxproj", "{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plstclnt", "PlaylistClient\plstclnt_dll\plstclnt.vcxproj", "{5039D1CB-8A81-4D6D-B131-06D88A24CBF5}"
 EndProject
 Global
@@ -116,6 +118,10 @@ Global
 		{5039D1CB-8A81-4D6D-B131-06D88A24CBF5}.Debug|x86.Build.0 = Debug|Win32
 		{5039D1CB-8A81-4D6D-B131-06D88A24CBF5}.Release|x86.ActiveCfg = Release|Win32
 		{5039D1CB-8A81-4D6D-B131-06D88A24CBF5}.Release|x86.Build.0 = Release|Win32
+		{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Debug|x86.ActiveCfg = Debug|Win32
+		{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Debug|x86.Build.0 = Debug|Win32
+		{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Release|x86.ActiveCfg = Release|Win32
+		{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
