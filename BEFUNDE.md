@@ -3847,3 +3847,89 @@ Gemerkt hat es `tools/ersetze-bereich.pl`, das die CR-Zahl vorher und nachher
 ausgibt: 1064 → 1062, obwohl der Block angeblich CR-frei war. Ohne diese
 Ausgabe waere der Schaden in den Commit gelaufen und die Schranke haette ihn
 erst dort gemeldet.
+
+
+## F-1 — Der Release-Bau und die Frage nach dem statischen Binden (FREIGABE, 31.08.2026)
+
+Auftrag war Kriterium 0 aus `ZIEL.md`: „zip runterladen, entpacken, starten -
+laeuft". Der Weg dorthin sollte moeglichst das statische Binden sein.
+
+**Kurzfassung: statisch geht nicht, und der Grund ist keine Einstellung,
+sondern die Bauart des Programms.** Was geht, ist der dynamische Release-Bau,
+und der erfuellt Kriterium 0 ebenfalls — mit drei DLLs, die Microsoft
+ausdruecklich zum Weiterverteilen freigibt.
+
+Alle Zahlen unten sind gemessen; wo nicht, steht **UNGEPRUEFT** davor.
+
+### F-1.1 — Statisches MFC ist ausgeschlossen: sechs MFC-Erweiterungs-DLLs
+
+Eudora ist nicht ein Programm, sondern ein Programm mit sechs
+**MFC-Erweiterungs-DLLs**. Der Nachweis steht im Quelltext — jede von ihnen
+ruft `AfxInitExtensionModule` auf:
+
+| Modul | Fundstelle |
+|---|---|
+| `EudoraIcons` | `Eudora71/Eudora/EudoraIcons.cpp:18` |
+| `EudoraRes` | `Eudora71/Eudora/EudoraRes.cpp:18` |
+| `EudoraOldIcons` | `Eudora71/EudoraOldIcons/EudoraOldIcons.cpp:38` |
+| `Imap` | `Eudora71/Imapdll/src/imap.cpp:25` |
+| `QCSocket` | `Eudora71/QCSocket/src/QCSocket.cpp:24` |
+| `QCUtils` | `Eudora71/QCUtils/src/QCUtils.cpp:23` |
+
+Dieselben Projekte setzen `_AFXEXT` in ihren Praeprozessordefinitionen
+(`Eudora/EudoraRes.vcxproj:64`, `EudoraOldIcons/EudoraOldIcons.vcxproj:64`,
+`Imapdll/imap.vcxproj:103`, `QCSocket/QCSocket.vcxproj:104`,
+`QCUtils/QCUtils.vcxproj:62`, jeweils der Release-Zweig).
+
+`AfxInitExtensionModule`, `CDynLinkLibrary` und `AFX_EXTENSION_MODULE` gibt es
+in MFC **nur**, wenn `_AFXDLL` gesetzt ist — also nur beim gemeinsam genutzten
+MFC. Eine Erweiterungs-DLL ist ihrem Wesen nach ein Modul, das sich in die
+MFC-Modulliste des Hauptprogramms einhaengt; dazu muss es dieselbe
+MFC-Instanz benutzen. Mit `<UseOfMfc>Static</UseOfMfc>` haette jede dieser
+sechs DLLs ihre eigene MFC-Kopie, ihren eigenen Heap und ihre eigene
+Ressourcenkette.
+
+**Statisches MFC waere also nicht eine Umstellung von zwei Einstellungen,
+sondern der Umbau von sechs DLLs zu statischen Bibliotheken** — mit allem, was
+daran haengt: `EudoraRes.dll` und `EudoraOldIcons.dll` sind reine
+Ressourcen-DLLs, die zur Laufzeit ueber `CDynLinkLibrary` gesucht werden;
+`Imap.dll`, `QCSocket.dll` und `QCUtils.dll` werden ausserdem von
+`EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` und den Importern benutzt.
+Das ist kein Handgriff, das ist ein eigenes Vorhaben.
+
+### F-1.2 — Auch nur `/MT` allein geht nicht
+
+Statische C-Laufzeit (`/MT`) bei weiterhin dynamischem MFC ist nicht
+vorgesehen: `mfc140.dll` ist selbst gegen `/MD` gebaut und gibt CRT-Objekte
+(`FILE*`, Speicherbloecke) ueber die Modulgrenze weiter. Ein Programm mit
+`_AFXDLL` und `/MT` bekaeme zwei getrennte CRT-Heaps.
+
+Zusaetzlich gemessen, `dumpbin /directives` gegen `Eudora71/Lib/Release`:
+
+| Bibliothek | CRT-Direktive |
+|---|---|
+| `zlib.lib` | `-defaultlib:MSVCRT` — gegen die **dynamische** Laufzeit gebaut |
+| `libpng.lib` | `-defaultlib:MSVCRT` — dito |
+| `Paige32.lib` | keine (Importbibliothek, neutral) |
+| `EuMemMgr.lib` | keine (Importbibliothek, neutral) |
+| `Uuid.Lib` | keine (neutral) |
+| `SSCEWD32.LIB` | keine (Importbibliothek, neutral) |
+
+`zlib.lib` und `libpng.lib` waeren bei `/MT` also die naechste Huerde
+(`LNK4098`, dann `LNK2005`) — sie liegen nur als Binaerdatei vor, ein Neubau
+mit `/MT` ist ohne ihren Quelltext nicht moeglich.
+
+### F-1.3 — Was stattdessen liefert: der dynamische Release-Bau
+
+Er erfuellt Kriterium 0 genauso, nur mit drei Dateien mehr im ZIP:
+
+| | Debug (Paket 1.0.2/1.0.3) | Release, dynamisch |
+|---|---|---|
+| noetige Laufzeit-DLLs | `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`, `ucrtbased.dll` | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` |
+| weiterverteilbar? | **nein** — `debug_nonredist`, kein Redistributable | **ja** — Teil des Visual-C++-Redistributable, duerfen beiliegen |
+| `ucrtbase.dll` | Debug-Fassung noetig | liegt Windows 10 bei, nichts zu tun |
+| SUPERASSERT beim Start (S-3b) | ja | **nein** — `NDEBUG`, keine Debug-Zusicherungen |
+
+Der zweite Gewinn ist der, den der Auftrag nebenbei nennt: im Release-Bau
+verschwinden die SUPERASSERT-Dialoge aus S-3b und saemtliche `ASSERT`- und
+`VERIFY`-Pruefungen. Das Programm startet ohne Zwischenfrage durch.
