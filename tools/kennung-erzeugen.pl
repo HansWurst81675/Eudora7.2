@@ -90,11 +90,21 @@ my $neu = <<"ENDE";
 //
 // Ein Sternchen hinter dem Commit heisst: beim Bau lagen Aenderungen vor, die
 // noch nicht committet waren. Ein solcher Bau ist nicht reproduzierbar.
+//
+// EUDORA_BAU_KENNUNG ist bereits eine FERTIGE Zeichenkette im Zeichensatz des
+// Baus. Kein _T() darum herum: _T(x) ist __T(x), und __T(x) ist im Unicode-Bau
+// L##x. Der ##-Operator unterbindet die Erweiterung seines Operanden, aus
+// _T(EUDORA_BAU_KENNUNG) wuerde also der Bezeichner LEUDORA_BAU_KENNUNG statt
+// der Zeichenkette. Im MBCS-Bau faellt das nicht auf, weil _T(x) dort schlicht
+// x ist - genau deshalb ist es eine Zeitbombe fuer den Tag, an dem jemand die
+// Zeichensatz-Einstellung umstellt. Befund PR-6/W-1.
 
 #ifndef __BUILDKENNUNG_H__
 #define __BUILDKENNUNG_H__
 
-#define EUDORA_BAU_KENNUNG "$kennung"
+#include <tchar.h>
+
+#define EUDORA_BAU_KENNUNG _T("$kennung")
 
 #endif // __BUILDKENNUNG_H__
 ENDE

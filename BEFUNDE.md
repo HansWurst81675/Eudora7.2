@@ -3247,3 +3247,250 @@ steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) — wer e
 entfernt, holt sich den Stapelueberlauf aus S-2 zurueck.
 
 **Nichts davon haelt Paket 1.0.3 auf.**
+
+## W-1 — Die Werkzeuge in Ordnung gebracht (WERKZEUG, 31.08.2026)
+
+Abgearbeitet werden die Befunde PR-1 bis PR-8 aus `PRUEFBERICHT.md`. Jede
+Aussage unten ist gemessen; die Gegenproben laufen als Testsammlung mit.
+
+| Befund | Gegenstand | Stand |
+|---|---|---|
+| PR-1 | Schranke laesst LF → CRLF durch | **behoben** |
+| PR-2 | Schranke schlaegt bei Leerzeilen grundlos an | **behoben** |
+| PR-3 | `.def`/`.sln`/`.bat`/`.ps1` gar nicht geprueft | **behoben** |
+| PR-4 | `BuildKennung.h` verfolgt → fremde Kennung | **behoben** |
+| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | offen (nur Beschreibung) |
+| PR-6 | `_T(EUDORA_BAU_KENNUNG)` bricht im Unicode-Bau | **behoben** |
+| PR-7 | Zahlen in S-7 widersprechen sich | **behoben** |
+| PR-8 | `rekursion-suchen.pl` findet den eigenen Anlass nicht | **geloescht** |
+
+### Das Wichtigste: `tools/pruefe-bytes-tests.pl`
+
+Die Schranke war am 30.08.2026 schon einmal "repariert" worden und danach
+falsch. Beides — der Fehlalarm und das Loch — waere bei einem einzigen
+Testlauf aufgefallen. Es gab nur keinen.
+
+Jetzt gibt es einen. 23 Faelle, jeder in einem eigenen Wegwerf-Repo unter dem
+Temp-Verzeichnis, mit `.gitattributes` `* -text` wie im echten Repo. Geprueft
+wird ausschliesslich der Rueckgabewert der Schranke: 0 durchgelassen,
+1 abgebrochen. Die Faelle sind byteweise beschrieben, es kommt kein Escape im
+Testtext vor.
+
+    perl tools/pruefe-bytes-tests.pl        # Tabelle, Rueckgabe 1 bei rot
+    perl tools/pruefe-bytes-tests.pl -v     # zusaetzlich die Meldung je Fall
+
+**Gegen den Stand vom 30.08.2026: 16 gruen, 7 rot.** Die Sammlung reproduziert
+damit PR-1, PR-2 und PR-3 aus eigener Kraft:
+
+| rot | Fall | was die alte Schranke tat |
+|---|---|---|
+| d | Leerzeile CRLF weg, Leerzeile LF dazu | brach den Commit ab, Beispiel `""` |
+| h1 | Umwandlung LF → CRLF plus Inhalt | liess durch, Rueckgabe 0 |
+| j1 | `.def` komplett CRLF → LF | liess durch |
+| j2 | `.sln` komplett CRLF → LF | liess durch |
+| j3 | `.bat` komplett CRLF → LF | liess durch |
+| j4 | `.ps1` komplett LF → CRLF | liess durch |
+| j5 | `.pl` komplett CRLF → LF | liess durch |
+
+**Gegen den heutigen Stand: 23 gruen, 0 rot.** Alle 23 Faelle im Einzelnen:
+
+| Fall | Beschreibung | erwartet |
+|---|---|---|
+| a | Zeilen hinzugefuegt (CRLF-Datei) | durchlassen |
+| b | Zeilen hinzugefuegt (LF-Datei) | durchlassen |
+| c1 | Zeilen geloescht (CRLF-Datei) | durchlassen |
+| c2 | Zeilen geloescht (gemischte Datei, 655 Zeilen) | durchlassen |
+| d | Leerzeile CRLF weg, Leerzeile LF dazu | durchlassen |
+| d2 | haeufige Zeilen (`{`, `}`, leer) verschoben | durchlassen |
+| e | Datei komplett CRLF → LF | anschlagen |
+| f | Datei komplett LF → CRLF | anschlagen |
+| g | gemischte Datei, 18 CRLF → LF unter 655 Zeilen | anschlagen |
+| h1 | Umwandlung LF → CRLF plus Inhaltsaenderung | anschlagen |
+| h2 | Umwandlung CRLF → LF plus Inhaltsaenderung | anschlagen |
+| h3 | Umwandlung plus hinzugefuegte Zeilen (ungleiche Anzahl) | anschlagen |
+| i | nur Inhalt geaendert, Zeilenenden gleich | durchlassen |
+| j1..j5 | `.def` `.sln` `.bat` `.ps1` `.pl` komplett umgeschrieben | anschlagen |
+| k | neue Datei, nicht in HEAD | durchlassen |
+| l | Sonderzeichen zerstoert (U+FFFD dazu) | anschlagen |
+| m | Datei unveraendert vorgemerkt | durchlassen |
+| n | letzte Zeile ohne Zeilenumbruch, Inhalt ergaenzt | durchlassen |
+| o | unbekannte Endung `.xyz` komplett umgeschrieben | durchlassen |
+
+Fall `o` ist die **dokumentierte Grenze**: was nicht in
+`tools/dateiendungen.pl` steht, wird nicht geprueft. Der Fall steht bewusst
+drin, damit die Grenze sichtbar bleibt statt vergessen zu werden.
+
+### PR-1 und PR-2: die Regel taugte nicht, nicht ihre Richtung
+
+Die Fassung vom 30.08. zaehlte je **Zeileninhalt**, wie oft er mit CRLF und wie
+oft mit LF vorkommt, und meldete jeden Inhalt, der seine CRLF-Vorkommen
+verloren hatte. Daraus folgen beide Befunde zwangslaeufig:
+
+  * Die Abfrage war einseitig formuliert (`[0] > 0` in HEAD, `[0] == 0` im
+    Index), also fiel LF → CRLF heraus. Das ist unter Windows die
+    **wahrscheinlichere** Schadensrichtung — Editoren, `Set-Content`,
+    `Out-File` schreiben CRLF.
+  * Der Zeileninhalt taugt nicht als Schluessel. `""`, `{`, `}` und ein
+    blosser Tabulator kommen in einer Datei hundertfach vor, mit beiden Enden.
+    Welches Vorkommen welches war, geht beim Zaehlen verloren. Eine geloeschte
+    CRLF-Leerzeile plus eine ergaenzte LF-Leerzeile war deshalb von einer
+    Umwandlung nicht zu unterscheiden.
+
+Die naheliegende Behebung — Leerzeilen ueberspringen, Zeilen mit beiden Enden
+ueberspringen — waere Symptombehandlung gewesen: sie haette den Fehlalarm bei
+`""` beseitigt und ihn bei `\tif (nRet)` oder jeder anderen mehrfach
+vorkommenden Zeile stehen gelassen.
+
+**Was der Waechter eigentlich unterscheiden soll**, ist eine UMWANDLUNG
+bestehender Zeilen von einer Ergaenzung oder Loeschung. Genau diese
+Unterscheidung trifft git selbst schon. Regel 2 wertet deshalb jetzt den
+eigentlichen Unterschied aus:
+
+    git diff --cached -U0 --no-color --no-ext-diff -- <datei>
+
+Eine umgewandelte Zeile erscheint darin als Paar aus einer entfernten und einer
+hinzugefuegten Zeile **im selben Block**, deren Inhalt gleich und deren
+Zeilenende verschieden ist. Eine reine Ergaenzung erzeugt einen Block ohne
+entfernte Zeilen, eine reine Loeschung einen ohne hinzugefuegte — dort entsteht
+gar kein Paar. Damit ist die Zuordnung **ortsgebunden statt inhaltsgebunden**,
+und der Leerzeilen-Fehlalarm kann strukturell nicht mehr auftreten: die
+geloeschte und die ergaenzte Leerzeile stehen an verschiedenen Stellen und
+landen in verschiedenen Bloecken (Fall `d`, gemessen).
+
+Innerhalb eines Blocks werden entfernte und hinzugefuegte Zeilen der Reihe nach
+gepaart. Bei gleicher Anzahl — dem Normalfall einer Umwandlung — passt das
+genau. Bei ungleicher Anzahl (Umwandlung UND ergaenzte Zeilen, Fall `h3`) fuehrt
+eine Vorausschau von 30 Zeilen die Paare nach.
+
+**Warum nicht die andere vorgeschlagene Loesung** (haeufige Zeilen aus dem
+Vergleich ausnehmen): sie verschiebt die Grenze nur. Jede Schwelle "ab wie oft
+ist eine Zeile haeufig" waere geraten, und ausgerechnet in den langen,
+gleichfoermigen Ressourcendateien dieses Projekts sind die meisten Zeilen
+haeufig — dort wuerde der Waechter dann blind. Der Diff kennt die Antwort
+ohnehin schon.
+
+Regel 1 (Inhalt gleich, Bytes verschieden) bleibt unveraendert daneben stehen.
+Sie arbeitet auf den rohen Blobs und ist damit unabhaengig davon, wie git den
+Unterschied darstellt — eine zweite, einfachere Sicherung fuer den haeufigsten
+Fall.
+
+### PR-3: eine Liste statt zwei
+
+`tools/pruefe-bytes.pl` und `tools/zeilenenden-angleichen.pl` hatten je eine
+eigene Endungsliste. Sie waren auseinandergelaufen. Beide laden jetzt
+`tools/dateiendungen.pl`. Neu darin unter anderem `def sln vcproj props targets
+dsp dsw bat cmd ps1 psm1 pl pm py sh rc2 pod ini cnf manifest config xml json
+yml yaml asm inc s` sowie die Namen `.gitattributes`, `.gitignore`,
+`.editorconfig`, `Makefile`.
+
+Laesst sich die Liste nicht laden, **bricht die Schranke ab**. Eine Schranke,
+die stillschweigend nichts mehr prueft, ist schlimmer als gar keine.
+
+Gemessen, was die groessere Liste am Bestand aendert:
+
+    perl tools/zeilenenden-angleichen.pl
+      byteidentisch zu HEAD:         6385
+      nur Zeilenenden verschieden:      0
+
+Die erweiterte Liste deckt also **keinen neuen Schaden** auf; sie schliesst
+eine Luecke fuer die Zukunft. Mit der alten Liste waren es 5589 Dateien.
+
+### PR-4: `BuildKennung.h` ist nicht mehr verfolgt
+
+`git rm --cached Eudora71/Eudora/BuildKennung.h`, Eintrag in `.gitignore`, und
+`Eudora71/Eudora/BuildKennung-vorlage.h` mit `_T("unbekannt")` eingecheckt. Der
+PreBuildEvent kopiert die Vorlage, wenn perl nicht laeuft:
+
+    perl %KENNUNG% %WURZEL% && exit /b 0
+    "C:\Program Files\Git\usr\bin\perl.exe" %KENNUNG% %WURZEL% && exit /b 0
+    echo WARNUNG: perl nicht gefunden - die Kennung sagt "unbekannt"
+    fc /b "...BuildKennung.h" "...BuildKennung-vorlage.h" >nul 2>&1 || copy /y ...
+    exit /b 0
+
+Das `fc /b` davor verhindert, dass ein Bau ohne perl die Datei jedes Mal neu
+anfasst und eine vollstaendige Neuuebersetzung nach sich zieht. Ein frischer
+Klon ohne perl uebersetzt, und das Fenster sagt dann ehrlich `unbekannt` statt
+der Kennung eines fremden Baus.
+
+### PR-6: kein `_T` um ein Makro
+
+`tools/kennung-erzeugen.pl` erzeugt die Zeichenkette jetzt gleich richtig:
+
+    #include <tchar.h>
+    #define EUDORA_BAU_KENNUNG _T("1.0.3+... 2026-08-31 07:11")
+
+und `mainfrm.cpp:9715` benutzt sie ohne `_T(...)` (byte-erhaltend geaendert mit
+`tools/aendere-zeile.pl`, CR-Zahl 18 unveraendert). Damit stimmt es im
+MBCS-Bau wie im Unicode-Bau: `__T(x)` ist dort `L##x`, und `##` haette die
+Erweiterung des Makros unterbunden — aus `_T(EUDORA_BAU_KENNUNG)` waere der
+Bezeichner `LEUDORA_BAU_KENNUNG` geworden.
+
+### PR-7: es gilt 4616 von 5563
+
+Nachgemessen und in `BEFUNDE.md` (S-7), `README.md`, `WEITERMACHEN.md` und im
+Kopf von `tools/zeilenenden-angleichen.pl` gleichgezogen. Die 4426 von 5336 im
+Werkzeugkopf stammten aus einem Durchlauf mit kuerzerer Endungsliste und sind
+ersatzlos weg.
+
+Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und laesst
+sich nicht wiederholen — der Baum ist angeglichen. Die Grundgesamtheit dagegen
+ist keine feste Zahl: sie waechst mit jedem Commit und haengt an der
+Endungsliste (5563 / 5568 / 5589 alte Liste, 6385 neue). Statt einer Zahl steht
+in S-7 jetzt eine Tabelle mit Datum und Liste, dazu der Befehl zum Nachzaehlen.
+
+Nebenbei berichtigt: das Beispiel in S-7 war vertauscht beschriftet. Heute
+nachgemessen — Blob `8c4fb68a` hat 5716 Bytes, 0 CR, 65 LF; der Index trug
+daneben 5781, die Groesse der CRLF-Arbeitskopie. 5716 + 65 CR = 5781.
+
+### PR-8: `rekursion-suchen.pl` geloescht
+
+Das Urteil des Pruefers nachgeprueft und bestaetigt. Gegenprobe: eine Datei mit
+einem klassenuebergreifenden Zyklus nach dem Muster von S-2 und zusaetzlich
+einem Selbstaufruf innerhalb einer Klasse.
+
+    void CAdView::Zeichne()  { m_pRahmen->Anpassen(); }
+    void CRahmen::Anpassen() { m_pAnsicht->Zeichne(); }
+    void CAdView::Messen()   { Messen(); }
+
+    perl tools/rekursion-suchen.pl <verzeichnis>
+    ZYKLUS (1 Glied): CAdView::Messen/0 -> CAdView::Messen/0
+    1 Zyklus/Zyklen.
+
+Es meldet nur den Selbstaufruf. Zwei Ursachen im Code, beide strukturell:
+`my $zsig = "$klasse\::$ziel/"` bildet jede Kante mit der **umgebenden** Klasse,
+und der Aufrufmuster-Ausdruck ueberspringt jeden Aufruf mit `.`, `->` oder `::`
+davor. Eine Kante zwischen zwei Klassen kann also gar nicht entstehen.
+
+**Warum ein Werkzeug, das nur Fehlalarme liefert, schlimmer ist als keines.**
+Ein fehlendes Werkzeug kostet die Zeit, die man ohne es braucht. Ein Werkzeug,
+das nur Fehlalarme liefert, kostet dieselbe Zeit **plus** die Zeit, jeden
+Fehlalarm von Hand zu widerlegen — und es kostet Vertrauen: nach dem dritten
+Fehlalarm liest niemand mehr seine Ausgabe, auch nicht die eine richtige
+Meldung darin. Dazu kommt der teuerste Posten: wer eine Zyklensuche laufen
+laesst und "0 Zyklen" liest, glaubt, geprueft zu haben. Hier war das falsch —
+den Zyklus aus S-2 hat `stapel-untersuchen.ps1` gefunden, nicht dieses
+Werkzeug. Eine Zusicherung, die nicht traegt, ist schaedlicher als gar keine.
+Dieselbe Ueberlegung gilt fuer die Schranke oben; deshalb die Testsammlung.
+
+### PR-5 bleibt offen
+
+Der Zeitstempel in der Kennung ist der Zeitpunkt, zu dem sich Commit oder
+Sauberkeit zuletzt geaendert haben, nicht der Bauzeitpunkt. Das **Verhalten**
+ist richtig gewaehlt (sonst uebersetzt jeder Bau alles neu); nur die
+Beschreibung stimmt nicht. Ein Wort im Kommentar — nicht angefasst, weil die
+Frist naeher war als der Nutzen.
+
+### Nebenbefund: `sed` verschweigt CR
+
+Beim Umbau des PreBuildEvent hat `sed -n '114,124p' | cat -A` die Zeilen ohne
+`^M` angezeigt, obwohl sie CRLF haben — das cygwin-`sed` in dieser Umgebung
+liest im Textmodus und wirft CR weg. Wer Zeilenenden ansehen will, darf `sed`
+dafuer **nicht** benutzen; verlaesslich ist nur ein direkter Rohvergleich:
+
+    perl -e 'open(F,"<:raw",$ARGV[0]);local $/;$d=<F>;
+             $cr=()=$d=~/\r/g;$lf=()=$d=~/\n/g;print "CR=$cr LF=$lf\n"' <datei>
+
+Gemerkt hat es `tools/ersetze-bereich.pl`, das die CR-Zahl vorher und nachher
+ausgibt: 1064 → 1062, obwohl der Block angeblich CR-frei war. Ohne diese
+Ausgabe waere der Schaden in den Commit gelaufen und die Schranke haette ihn
+erst dort gemeldet.
