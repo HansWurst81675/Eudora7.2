@@ -3369,7 +3369,7 @@ BOOL CEudoraApp::RegisterURLSchemes()
 			::ErrorDialog(IDS_REG_MAILTO_ERR);
 		int i = RegMailto.Find('\\');
 		if (i >= 0)
-			RegMailto.ReleaseBuffer(i);
+			RegMailto.Truncate(i);	// war ReleaseBuffer(i) ohne GetBuffer - Befund E-11
 		AddToRegistry(HKEY_CLASSES_ROOT, RegMailto, MailtoURLProtocol, "");	// HCR\mailto\URL Protocol
 	}
 
