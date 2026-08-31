@@ -12,7 +12,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 | # | Kriterium | Stand am 31.08.2026 |
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare DLLs (S-8) |
-| 1 | Eudora startet und zeigt sein Hauptfenster | **strittig** — siehe unten |
+| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** (31.08.2026, Befund E-1) |
 | 2 | Die Darstellung ist korrekt | **nicht erfüllt** — die belegten Ursachen sind behoben, aber von Gregor nicht nachgesehen |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **nicht geprüft** — der Abrufpfad ist abgesichert (P-2), ein echter Abruf steht aus |
 
@@ -20,7 +20,13 @@ Kriterium 0 kam am 31.08.2026 dazu; es steht vor den anderen dreien, weil ohne
 lauffähiges Paket niemand die anderen prüfen kann. Beschrieben ist es weiter
 unten in einem eigenen Abschnitt.
 
-> ### Kriterium 1 ist nicht erfüllt
+> ### Kriterium 1 — erledigt am 31.08.2026
+>
+> **Seit Befund E-1 erfüllt:** das Fenster erscheint und ist bedienbar, die
+> Menüs klappen auf, die Bereiche überlagern sich nicht mehr. Was folgt, ist
+> der Stand vom Vortag und bleibt stehen, weil die Begründung weiter gilt.
+>
+> ### Der Stand am 30.08.2026: Kriterium 1 ist nicht erfüllt
 >
 > Am 30.08.2026 abends, von Gregor:
 >
