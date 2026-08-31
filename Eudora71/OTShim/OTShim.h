@@ -525,6 +525,13 @@ public:
 	float m_fDockedPctWidth;	// derselbe Anteil vor dem Schweben
 	DWORD m_dwExStyle;			// erweiterte Stilbits (CBRS_EX_*)
 
+	// NICHT im Original. Die Laenge in Zeilenrichtung, die SECDockBar dieser
+	// Leiste fuer den laufenden Anordnungsdurchlauf zugeteilt hat; 0 heisst
+	// "keine Zuteilung". CalcFixedLayout liefert diesen Wert statt der
+	// MFC-Streckmarke 32767. Siehe SECDockBar::AssignRowExtents und
+	// BEFUND-ANSICHT.md, Punkt 2.
+	int m_nRowExtent;
+
 protected:
 
 	CRect m_rcBorderSpace;				// Freiraum zum Ziehen
@@ -868,6 +875,23 @@ protected:
 	int Insert(CControlBar* pBar, CRect rect, CPoint ptMid);
 
 public:
+	// NICHT im Original, aber die Voraussetzung fuer die Zeilenaufteilung:
+	// CDockBar::DockControlBar haengt eine Leiste ohne Rechteck IMMER als
+	// eigene Zeile ans Ende (bardock.cpp:165-172). Dadurch stand bisher jede
+	// Wazoo-Leiste in einer eigenen Zeile. Diese Fassung schiebt den Eintrag
+	// in m_arrBars an die von Eudora verlangte Stelle. Zeilen werden dabei so
+	// gezaehlt wie in QCDockBar::FindControlBarLocation (DockBar.cpp:110-140):
+	// die fuehrende NULL-Marke beendet die (leere) Zeile vor Zeile 0.
+	void MoveControlBarToPosition(CControlBar* pBar, int nCol, int nRow);
+
+	// NICHT im Original. Verteilt die verfuegbare Zeilenlaenge anhand von
+	// SECControlBar::m_fPctWidth auf die sichtbaren Leisten einer Zeile und
+	// legt das Ergebnis in deren m_nRowExtent ab. Laeuft unmittelbar vor
+	// CDockBar::CalcFixedLayout und wird danach zurueckgenommen.
+	void AssignRowExtents(BOOL bHorz);
+	void DistributeRow(int nStart, int nEnd, int nAvail);
+	void ClearRowExtents();
+
 	virtual CSize CalcFixedLayout(BOOL bStretch, BOOL bHorz);
 	virtual CRect CalcDockingLayout(CControlBar* pBarToDock, CRect& rectBar,
 		CPoint pt, int& nPosDockingRow, CRect& prevFocusRect, CPoint& prevPt);

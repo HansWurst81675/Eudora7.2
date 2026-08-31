@@ -369,45 +369,232 @@ gestartet werden. Der Pfad ist auf diesem Rechner
 
 ---
 
+## Zweite Sitzung, 31.08.2026 - die Umsetzung
+
+Branch `ansicht-darstellung`, ausgehend von `76efdb6` (`darstellung-und-menue`).
+Wieder ohne einen einzigen Programmstart (Auflage: keine Fenster auf Gregors
+Sitzung). Alles Folgende ist Quellcodeanalyse plus Kontrolluebersetzung.
+
+### Was geaendert wurde
+
+#### 1. `SECStdBtn::DrawDisabled` - Text- und Hintergrundfarbe (Commit `db28adb`)
+
+`Eudora71/OTShim/OTShim_Werkzeugleiste.cpp`, in `DrawDisabled`.
+
+Vor den beiden `BitBlt` stehen jetzt
+
+```
+COLORREF crOldText = data.m_drawDC.SetTextColor(0x00000000L);
+COLORREF crOldBk   = data.m_drawDC.SetBkColor(0x00FFFFFFL);
+```
+
+und am Ende die Wiederherstellung. Begruendung wie in Verdacht A oben: beim
+Kopieren von EINFARBIG nach FARBIG uebersetzt GDI die Maskeneins in die
+Hintergrund- und die Maskennull in die Textfarbe des ZIELkontextes; `PSDPxax`
+rechnet bitweise und setzt voraus, dass daraus `0xFFFFFF` bzw. `0x000000`
+werden. In `data.m_drawDC` stand statt dessen noch `secData.clrBtnFace`, weil
+`DrawFace` sie ueber `CDC::FillSolidRect` (= `SetBkColor` + `ExtTextOut` mit
+`ETO_OPAQUE`) gesetzt und stehengelassen hat.
+
+**Was gewirkt haben muesste:** die acht gesperrten Knoepfe der Hauptleiste
+werden wieder als eingepraegtes graues Bild gezeichnet statt als leeres Feld.
+**UNGEPRUEFT ohne Programmstart.** Die Rechnung geht bei
+`clrBtnFace = 0xF0F0F0` (Windows-10-Vorgabe) auch vorher schon auf; ob Gregors
+Sitzung diese Farbe benutzt, ist nicht gemessen. Die Aenderung stellt in jedem
+Fall die Vorlage her und macht das Ergebnis von der Systemfarbe unabhaengig.
+
+#### 2. `SECBtnDrawData::PreDrawButton` - `::SelectObject` wird geprueft
+
+Dieselbe Datei, in `PreDrawButton`, Abschnitt "1. Kontext mit der
+Leistenbitmap".
+
+**Verdacht C ist damit halb geklaert.** `GetDrawData()` liefert wirklich einen
+GETEILTEN Puffer: `SECCustomToolBar::GetDrawData` reicht an
+`SECToolBarManager::GetDrawData` durch, und das gibt das Feld `m_drawData`
+zurueck (`OTShim_Werkzeugleiste.h:1123`). Alle Leisten EINES Verwalters teilen
+sich also `m_bmpDC`, und ueber `SetToolBarInfo` teilen sie sich auch dieselbe
+`HBITMAP` (`m_bOwnBitmap` ist dann `FALSE`).
+
+**Ein dauerhafter Konflikt ist trotzdem ausgeschlossen:** `PostDrawButton`
+waehlt die Bitmap am Ende jedes `DoPaint` wieder ab, und `WM_PAINT` laeuft je
+Faden nacheinander. Ein Fehlschlag bliebe aber unbemerkt, weil der
+Rueckgabewert nicht ausgewertet wurde - `m_bmpDC` behielte dann seine
+1x1-Vorgabebitmap und JEDES `BitBlt` daraus maelte einen leeren Knopf. Der
+Rueckgabewert wird jetzt geprueft; im Fehlerfall wird gar nicht gemalt und eine
+`TRACE`-Zeile geschrieben.
+
+#### 3. `TBBS_HIDDEN` - Verdacht B ist ausgeraeumt
+
+Gemessen mit einer Volltextsuche ueber `Eudora71/`:
+
+| Fundstelle | Bedeutung |
+|---|---|
+| `OT501/Include/Sbartool.h:163` | die Definition |
+| `OTShim_Werkzeugleiste.cpp:875` | `DrawButton` steigt aus |
+| `OTShim_Werkzeugleiste.cpp:1371` | Trefferpruefung steigt aus |
+| `Eudora/TocFrame.cpp:3093,3095` | **die einzige setzende Stelle** |
+
+`CTocFrame::ShowHideSplitter` setzt es auf `m_PeanutToolBar` - der kleinen
+Leiste eines Postfachfensters -, und zwar nur fuer die Knoepfe ab Index 2 und
+nur, wenn der Dateibrowser aus ist. **Die Hauptleiste des Rahmenfensters ist
+davon nicht betroffen.** Verdacht B scheidet als Erklaerung fuer die leeren
+Knoepfe der Hauptleiste aus.
+
+#### 4. Die Andockrechnung - prozentuale Zeilenbreiten
+
+`Eudora71/OTShim/OTShim.cpp` und `OTShim.h`.
+
+**Die eigentliche Ursache ist gefunden und belegt, und sie ist eine andere als
+im ersten Befund vermutet.** Der Kern steht in MFCs
+`CDockBar::DockControlBar` (`bardock.cpp:165-172`):
+
+```
+else
+{
+    // always add on current row, then create new one
+    m_arrBars.Add(pBar);
+    m_arrBars.Add(NULL);
+    ...
+}
+```
+
+`SECMDIFrameWnd::DockControlBarEx` rief `CMDIFrameWnd::DockControlBar(pBar,
+nDockBarID, NULL)` - **ohne Rechteck**. Damit landet JEDE Leiste in einer
+EIGENEN ZEILE, ganz gleich, welches `nCol`/`nRow` Eudora verlangt hat. Die
+prozentualen Breiten konnten deshalb gar nicht zum Tragen kommen: in einer
+Zeile mit genau einer Leiste gibt es nichts zu verteilen.
+
+Der zweite Teil steht in `CDockBar::CalcFixedLayout` (`bardock.cpp:360-545`).
+Sie fragt jede Leiste ueber `CalcDynamicLayout` nach ihrer Wunschgroesse, und
+`SECControlBar::CalcFixedLayout` lieferte in Zeilenrichtung `32767`. Folge
+(`bardock.cpp:441-447`): sobald doch einmal zwei Leisten in einer Zeile
+stuenden, schoebe MFC eine `NULL`-Marke dazwischen und braeche sie in zwei
+Zeilen um. Die Aufteilung war also doppelt verriegelt.
+
+Umgesetzt sind jetzt:
+
+| neu | Datei | was es tut |
+|---|---|---|
+| `SECDockBar::MoveControlBarToPosition` | `OTShim.cpp` | schiebt den Eintrag in `m_arrBars` nach dem Andocken an die von Eudora verlangte Zeile und Spalte |
+| `SECDockBar::AssignRowExtents` | `OTShim.cpp` | ermittelt die verfuegbare Zeilenlaenge genau so wie `CDockBar::CalcFixedLayout` (`bardock.cpp:366-380`) und geht die Zeilen durch |
+| `SECDockBar::DistributeRow` | `OTShim.cpp` | verteilt die Laenge anhand von `m_fPctWidth` auf die sichtbaren Leisten einer Zeile, mit unterer Schranke und Restausgleich bei der letzten |
+| `SECDockBar::ClearRowExtents` | `OTShim.cpp` | nimmt die Zuteilung nach dem Durchlauf zurueck |
+| `SECDockBar::CalcFixedLayout` | `OTShim.cpp` | klammert `CDockBar::CalcFixedLayout` zwischen die beiden |
+| `SECControlBar::m_nRowExtent` | `OTShim.h` | die Zuteilung; 0 heisst "keine" |
+| `SECControlBar::CalcFixedLayout` | `OTShim.cpp` | liefert `m_nRowExtent` statt `32767`, wenn eine Zuteilung vorliegt |
+| `SECDockBar::NormalizeRow` | `OTShim.cpp` | normiert die Summe der Anteile einer Zeile auf 1.0 - genau das, worauf `QCDockBar::NormalizeRow` (`DockBar.cpp:225-296`) aufsetzt |
+| `SECMDIFrameWnd::DockControlBarEx` | `OTShim.cpp` | wertet `nCol` und `nRow` aus, statt sie zu verwerfen |
+
+Die Zeilenzaehlung folgt `QCDockBar::FindControlBarLocation`
+(`DockBar.cpp:110-140`): die fuehrende `NULL`-Marke aus dem `CDockBar`-
+Konstruktor (`bardock.cpp:36`) beendet eine leere Zeile VOR Zeile 0. Zeile
+`nRow` beginnt also hinter der `(nRow+1)`-ten `NULL`. `m_arrBars` endet nach
+dem Verschieben weiterhin mit einer `NULL`-Marke.
+
+**Was gewirkt haben muesste** (alles UNGEPRUEFT ohne Programmstart):
+
+- Die Wazoo-Leisten sitzen in der Zeile und Spalte, die Eudora verlangt:
+  Postfachbaum links (`WazooBarMgr.cpp:377`, Spalte 0, Zeile 0),
+  Aufgabenstatus unten (`:436`, Spalte 1, Zeile 0), Werbeleiste unten
+  (`AdWazooBar.cpp:176`, Spalte 5).
+- Die Suchleiste steht neben der Hauptwerkzeugleiste statt darunter
+  (`mainfrm.cpp:966` uebergibt `nCol+1, nRow`).
+- Kein Leistenfenster ist mehr 32767 Bildpunkte breit.
+- Zwei Leisten in derselben Zeile teilen sich die Breite nach `m_fPctWidth`,
+  statt uebereinander umgebrochen zu werden.
+
+**Was NICHT umgesetzt ist:** die Splitter zwischen den Bereichen.
+`AddSplitter` wird weiterhin nie gerufen, `m_arrSplitters` bleibt leer,
+`HitTest` liefert `NULL`. Es gibt also keine Ziehmarken, mit denen der Anwender
+die Aufteilung aendern koennte; die Anteile stehen so, wie Eudora sie vorgibt.
+Zwischen den Leisten wird auch kein Platz fuer einen Splitter freigelassen -
+`DistributeRow` verteilt die volle Zeilenlaenge.
+
+### Was OFFEN bleibt
+
+#### Punkt 4 des ersten Befundes: die MDI-Fensterleiste - unveraendert offen
+
+Nicht angefasst. Der Befund von oben gilt weiter.
+
+#### NEU UND WICHTIG: `FloatControlBarInMDIChild` tut nichts
+
+`OTShim.cpp` (`SECMDIFrameWnd::FloatControlBarInMDIChild`) ist ein leerer
+Rumpf mit `TRACE`. Das hat eine Folge, die im ersten Befund noch nicht stand
+und die **wahrscheinlich der Rest der Ueberlagerungen ist**:
+
+`CWazooBarMgr::SetDefaultWazooBarState` (`WazooBarMgr.cpp:365-445`) macht beim
+ERSTEN Start fuer Gruppe 1 - Adressbuch (`CNicknamesWazooWnd`),
+Verzeichnisdienste, Filter, Filterbericht, Linkverlauf - Folgendes:
+
+```
+pMainFrame->DockControlBarEx(pWazooBar, AFX_IDW_DOCKBAR_RIGHT, 0, 0, 1.00, 180);
+pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0);   // -> tut nichts
+pMainFrame->RecalcLayout(FALSE);
+...
+QCControlBarWorksheet* pMDIFrame = (QCControlBarWorksheet *) pWazooBar->GetParentFrame();
+ASSERT_KINDOF(QCControlBarWorksheet, pMDIFrame);
+pMDIFrame->MoveWindow(rectMDIClient.left, rectMDIClient.top,
+                      rectMDIClient.Width(), __max(rectMDIClient.Height(),355));
+```
+
+Weil `ID_SEC_MDIFLOAT` nichts bewirkt, bleibt die Leiste am RECHTEN Rand des
+Hauptfensters angedockt. `GetParentFrame()` liefert dann **das Hauptfenster**,
+nicht ein `QCControlBarWorksheet`. Im Debug-Bau schlaegt das `ASSERT_KINDOF`
+zu; **im Release-Bau wird `MoveWindow` auf das HAUPTFENSTER angewandt** - mit
+dem Rechteck des MDI-Klientbereichs. **UNGEPRUEFT**, aber das erklaerte
+zwanglos ein Hauptfenster, dessen Bereiche nicht dorthin passen, wo sie
+hingehoeren.
+
+Zu pruefen ist als naechstes: ob `SECMDIFrameWnd::FloatControlBarInMDIChild`
+so weit nachgebaut werden kann, dass `GetParentFrame()` wenigstens ein
+`SECControlBarWorksheet` liefert. Das Geruest ist da
+(`SECControlBarWorksheet`, `OTShim.h:1558`), `CreateFloatingMDIChild`
+(`OTShim.cpp`) liefert bisher `NULL`.
+
+#### Die Werbeleiste
+
+`AdWazooBar.cpp:176` und `:212` docken mit `nCol = 5`. Nach dem Umbau wird das
+auf das Zeilenende begrenzt. Das ist die Absicht - im Original steht die
+Werbeleiste am Ende ihrer Zeile.
+
+---
+
 ## Stand und naechster Schritt
 
-**Stand:** reine Analyse, kein Code geaendert, nichts gebaut ausser einer
-Kontrolluebersetzung des unveraenderten Standes.
+**Stand (31.08.2026, Branch `ansicht-darstellung`):**
 
-**Wo ich stand:** mitten in Punkt 1. Die Bitmap- und Indexseite war gerade
-vollstaendig ausgemessen und ausgeschlossen; ich war dabei, den Zeichenweg je
-Knopf durchzugehen, und bei `DrawDisabled` haengengeblieben (fehlendes
-`SetTextColor`/`SetBkColor`, siehe Verdacht A).
+| Punkt aus dem Auftrag | Zustand |
+|---|---|
+| 1 `DrawDisabled` Farben | **erledigt**, uebersetzt, eigener Commit |
+| 2 `GetDrawData` / `SelectObject` | **erledigt** - geteilter Puffer belegt, Rueckgabewert wird geprueft |
+| 3 `TBBS_HIDDEN` verfolgen | **erledigt** - nur `TocFrame.cpp:3093/3095`, betrifft die Hauptleiste nicht |
+| 4 Andockrechnung | **umgesetzt**, uebersetzt; Splitter weiterhin offen |
+| 5 `nCol`/`nRow` in `DockControlBarEx` | **erledigt** |
 
-**Was als naechstes zu tun ist, in dieser Reihenfolge:**
+**Nicht gemessen, weil kein Programmstart erlaubt war:** ob eine der
+Aenderungen auf dem Bildschirm das tut, was sie soll. Alle Wirkungsaussagen
+oben sind als UNGEPRUEFT gekennzeichnet.
 
-1. **`OTShim_Werkzeugleiste.cpp:786-801`** - in `SECStdBtn::DrawDisabled` vor
-   den beiden `BitBlt` `data.m_drawDC.SetTextColor(0x00000000L)` und
-   `data.m_drawDC.SetBkColor(0x00FFFFFFL)` setzen, danach die alten Werte
-   wiederherstellen. Billig, ohne Risiko, stellt die Vorlage her. Danach
-   uebersetzen.
-2. **`OTShim_Werkzeugleiste.cpp:2650`** - nachsehen, was `GetDrawData()`
-   zurueckgibt (statisch oder je Leiste). Bei statisch: pruefen, ob
-   `::SelectObject(m_bmpDC, hBmp)` in Z. 353 fehlschlagen kann, weil dieselbe
-   Bitmap schon anderswo ausgewaehlt ist, und den Rueckgabewert auswerten.
-3. **`TBBS_HIDDEN` verfolgen** - wer setzt es? `SECCustomToolBar::SetButtonStyle`
-   und `QCCustomToolBar.cpp` durchsuchen.
-4. **Punkt 2 angehen** - das ist die groesste Einzelbaustelle und der Grund
-   fuer drei der vier gemeldeten Auffaelligkeiten. Beginnen bei
-   `SECDockBar::OnSizeParent` (`OTShim.cpp:2990`) und
-   `SECDockBar::NormalizeRow` (`OTShim.cpp:2239`); als Vorlage dient
-   `QCDockBar::NormalizeRow` (`DockBar.cpp:225-297`), das genau auf die
-   Nachrechnung der Basisfassung aufsetzt und dadurch verraet, was diese
-   geleistet haben muss.
-5. **`SECMDIFrameWnd::DockControlBarEx` (`OTShim.cpp:274`)** - `nCol` und
-   `nRow` auswerten statt verwerfen. Ohne das sitzen die Wazoo-Leisten
-   moeglicherweise schon in der falschen Zeile, und jede Breitenrechnung
-   darueber ist vergeblich.
+**Was als naechstes dran waere, in dieser Reihenfolge:**
+
+1. **Einmal starten und ein Bildschirmfoto machen.** Ohne das ist jeder
+   weitere Schritt geraten. Zu vergleichen sind die vier Merkmale aus
+   `ZIEL.md`, "Woran sich Kriterium 2 misst".
+2. **`SECMDIFrameWnd::FloatControlBarInMDIChild`** (`OTShim.cpp`) - siehe den
+   Abschnitt "NEU UND WICHTIG" oben. Das ist jetzt der groesste bekannte
+   verbliebene Einzelposten am Erscheinungsbild. Der Weg fuehrt ueber
+   `CreateFloatingMDIChild` (`OTShim.cpp`, liefert bisher `NULL`) und
+   `SECControlBarWorksheet` (`OTShim.h:1558`).
+3. **Die Splitter** - `SECDockBar::AddSplitter` wird nie gerufen. Erst damit
+   kann der Anwender die Aufteilung selbst aendern und
+   `SECDockBar::SetControlBarWidthsInRow` (leerer Rumpf) bekommt einen
+   Aufrufer. Ansatz: in `AssignRowExtents` zwischen je zwei Leisten
+   `Splitter::cx` freilassen und dort einen `Splitter` anlegen.
+4. **Die MDI-Fensterleiste unten** (`m_bWorkbookMode`) - siehe Punkt 4 des
+   ersten Befundes. Erst nach 1 bis 3.
 
 **Woran Gregor auf einem Bildschirmfoto sehen wuerde, dass es geklappt hat:**
-kein einziges leeres graues Feld mehr in der Werkzeugleiste (auch nicht bei
-gesperrten Knoepfen - die muessen dann grau-erhaben, aber erkennbar sein);
-Postfachbaum links als eigener Streifen mit sichtbarer Ziehmarke daneben;
-Adressbuch und Nachrichtenliste nebeneinander statt uebereinander;
-"Task Status"/"Task Errors" unten am Rand angedockt statt als Streifen in der
-Mitte.
+kein leeres graues Feld mehr in der Werkzeugleiste (gesperrte Knoepfe grau,
+aber erkennbar); Postfachbaum links als eigener Streifen; Suchleiste neben der
+Werkzeugleiste statt darunter; keine Leiste mehr, die die ganze Fensterbreite
+belegt, obwohl sie sich die Zeile teilen sollte.

@@ -255,24 +255,28 @@ void SECMDIFrameWnd::EnableDocking(DWORD dwDockStyle)
 }
 
 
-// Von den vier Zusatzangaben des Originals sind zwei nachgebildet:
-//   nCol/nRow   Spalte und Zeile in der Andockleiste - STUFE 2 OFFEN.
-//               SECDockBar ordnet nach den MFC-Regeln ein, also anhand des
-//               Fensterrechtecks der Leiste.
-//   fPctWidth   Anteil an der Zeilenbreite. Wird abgelegt, weil Eudora ihn
-//               liest und fortschreibt (DockBar.cpp:264-293); ausgewertet
-//               wird er nicht, dazu fehlen die Splitter.
-//   nHeight     Ausdehnung quer zur Andockleiste. Die geht wirklich ein: sie
-//               landet in m_szDockHorz.cy bzw. m_szDockVert.cx, und genau
-//               daraus rechnet SECControlBar::CalcFixedLayout. Ohne das
-//               waeren die Wazoo-Leisten beim ersten Start unbrauchbar
+// Von den vier Zusatzangaben des Originals sind jetzt alle vier ausgewertet:
+//   nCol/nRow   Spalte und Zeile in der Andockleiste. MFC kennt das nicht:
+//               CDockBar::DockControlBar haengt eine Leiste ohne Rechteck
+//               IMMER als eigene Zeile ans Ende (bardock.cpp:165-172).
+//               Deshalb wird der Eintrag danach mit
+//               SECDockBar::MoveControlBarToPosition an die verlangte Stelle
+//               geschoben. Ohne das stand jede Wazoo-Leiste in einer eigenen
+//               Zeile, und die prozentualen Breiten kamen nie zum Tragen.
+//   fPctWidth   Anteil an der Zeilenbreite. Wird abgelegt und in
+//               SECDockBar::AssignRowExtents angewandt; SECDockBar::NormalizeRow
+//               normiert die Summe einer Zeile auf 1.0 (DockBar.cpp:264-293).
+//   nHeight     Ausdehnung quer zur Andockleiste. Sie landet in m_szDockHorz.cy
+//               bzw. m_szDockVert.cx, und genau daraus rechnet
+//               SECControlBar::CalcFixedLayout. Ohne das waeren die
+//               Wazoo-Leisten beim ersten Start unbrauchbar
 //               (WazooBarMgr.cpp:242 uebergibt 180, der Kommentar bei :425
 //               nennt den Wert ausdruecklich "the WIDTH when docked
 //               vertically").
-// Ohne Meldung: die Aufrufe kommen beim Start (mainfrm.cpp:965,
-// WazooBarMgr.cpp:242, 366, 375, 425), und die Leisten erscheinen ja.
+// Aufrufer: mainfrm.cpp:966, WazooBarMgr.cpp:253, 377, 386, 436,
+// AdWazooBar.cpp:176, 212.
 void SECMDIFrameWnd::DockControlBarEx(CControlBar* pBar, UINT nDockBarID,
-	int /*nCol*/, int /*nRow*/, float fPctWidth, int nHeight)
+	int nCol, int nRow, float fPctWidth, int nHeight)
 {
 	SECControlBar* pSECBar = DYNAMIC_DOWNCAST(SECControlBar, pBar);
 	if (pSECBar != NULL)
@@ -288,6 +292,14 @@ void SECMDIFrameWnd::DockControlBarEx(CControlBar* pBar, UINT nDockBarID,
 	}
 
 	CMDIFrameWnd::DockControlBar(pBar, nDockBarID, NULL);
+
+	// Erst NACH dem Andocken steht fest, in welcher SECDockBar die Leiste
+	// gelandet ist. Ist es keine SECDockBar, bleibt es beim MFC-Verhalten.
+	SECDockBar* pDockBar = (pBar != NULL)
+						   ? DYNAMIC_DOWNCAST(SECDockBar, pBar->m_pDockBar)
+						   : NULL;
+	if (pDockBar != NULL)
+		pDockBar->MoveControlBarToPosition(pBar, nCol, nRow);
 }
 
 
@@ -1443,6 +1455,7 @@ SECControlBar::SECControlBar()
 	m_fPctWidth       = (float)1.0;
 	m_fDockedPctWidth = (float)1.0;
 	m_dwExStyle       = 0;
+	m_nRowExtent      = 0;
 
 	m_rcBorderSpace.SetRectEmpty();
 	m_pManager = NULL;
@@ -1618,13 +1631,18 @@ CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 	if (size.cx <= 0 && size.cy <= 0)
 		return CControlBar::CalcFixedLayout(bStretch, bHorz);
 
-	// Streckung in Zeilenrichtung wie bei jeder MFC-Leiste.
+	// Streckung in Zeilenrichtung. Hat SECDockBar dieser Leiste fuer den
+	// laufenden Anordnungsdurchlauf eine Zeilenlaenge zugeteilt, gilt die
+	// statt der MFC-Streckmarke 32767. Ohne das belegte die erste Leiste
+	// einer Zeile die ganze Zeile und jede weitere wurde von
+	// CDockBar::CalcFixedLayout in eine neue Zeile umgebrochen
+	// (bardock.cpp:441-447) - siehe SECDockBar::AssignRowExtents.
 	if (bStretch)
 	{
 		if (bHorz)
-			size.cx = 32767;
+			size.cx = (m_nRowExtent > 0) ? m_nRowExtent : 32767;
 		else
-			size.cy = 32767;
+			size.cy = (m_nRowExtent > 0) ? m_nRowExtent : 32767;
 	}
 
 	return size;
@@ -2231,11 +2249,15 @@ void SECDockBar::SetControlBarWidthsInRow(SECControlBar* /*pBar*/, USHORT /*uOpe
 // DockBar.cpp:225 ruft diese Fassung auf und rechnet danach die Breite der
 // Werbeleiste heraus.
 //
-// STUFE 2 OFFEN: im Original verteilt NormalizeRow die Zeilenbreite anhand von
-// m_fPctWidth auf die Leisten einer Zeile. Bei MFC macht das CDockBar in
-// OnSizeParent ueber CalcFixedLayout, und zwar ohne diesen Zwischenschritt.
-// Die Zaehler werden trotzdem richtig gefuellt, weil QCDockBar sie nicht
-// weiterbenutzt, ein spaeterer Nachbau aber schon.
+// Im Original verteilt NormalizeRow die Zeilenbreite anhand von m_fPctWidth
+// auf die Leisten einer Zeile. Genau darauf setzt QCDockBar::NormalizeRow auf:
+// es ruft diese Fassung zuerst und rechnet DANACH die Breite der Werbeleiste
+// aus den bereits normierten Anteilen heraus (DockBar.cpp:225-296). Diese
+// Fassung normiert deshalb die Summe der Anteile einer Zeile auf 1.0;
+// angewandt werden sie in SECDockBar::AssignRowExtents.
+//
+// Nicht normiert wird, wenn die Summe schon nahe 1.0 liegt - sonst wanderten
+// die Werte bei jedem Durchlauf durch die Rundung.
 void SECDockBar::NormalizeRow(int nPos, CControlBar* /*pBarDocked*/,
 	int& nBarsBidirectional, int& nBarsUnidirectional)
 {
@@ -2250,7 +2272,11 @@ void SECDockBar::NormalizeRow(int nPos, CControlBar* /*pBarDocked*/,
 	while (nStart > 0 && m_arrBars[nStart - 1] != NULL)
 		nStart--;
 
-	for (int i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
+	CPtrArray arrRow;
+	float fSum = (float)0.0;
+	int i;
+
+	for (i = nStart; i < nSize && m_arrBars[i] != NULL; i++)
 	{
 		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, GetDockedControlBar(i));
 		if (pBar == NULL)
@@ -2262,6 +2288,33 @@ void SECDockBar::NormalizeRow(int nPos, CControlBar* /*pBarDocked*/,
 			nBarsUnidirectional++;
 		else
 			nBarsBidirectional++;
+
+		arrRow.Add(pBar);
+		if (pBar->m_fPctWidth > (float)0.0)
+			fSum += pBar->m_fPctWidth;
+	}
+
+	int nBars = (int) arrRow.GetSize();
+	if (nBars <= 0)
+		return;
+
+	if (fSum > (float)0.0 &&
+		(fSum < (float)0.999 || fSum > (float)1.001))
+	{
+		for (i = 0; i < nBars; i++)
+		{
+			SECControlBar* pBar = (SECControlBar*) arrRow[i];
+			if (pBar->m_fPctWidth > (float)0.0)
+				pBar->m_fPctWidth /= fSum;
+			else
+				pBar->m_fPctWidth = (float)0.0;
+		}
+	}
+	else if (fSum <= (float)0.0)
+	{
+		// Keine brauchbaren Anteile - gleichmaessig aufteilen.
+		for (i = 0; i < nBars; i++)
+			((SECControlBar*) arrRow[i])->m_fPctWidth = (float)1.0 / nBars;
 	}
 }
 
@@ -2502,9 +2555,242 @@ int SECDockBar::PredictInsertPosition(CControlBar* /*pBarIns*/, CRect /*rect*/, 
 }
 
 
+// NICHT im Original in dieser Form, aber die Stelle, an der das Original die
+// prozentualen Zeilenbreiten anwendet.
+//
+// WARUM HIER: CDockBar::OnSizeParent reicht die Arbeit an
+// CControlBar::OnSizeParent weiter, und die ruft CalcFixedLayout auf. Die
+// eigentliche Anordnung der Leisten steckt in CDockBar::CalcFixedLayout
+// (bardock.cpp:360-545); die fragt jede Leiste ueber CalcDynamicLayout nach
+// ihrer Wunschgroesse. SECControlBar::CalcFixedLayout lieferte dort in
+// Zeilenrichtung 32767. Folge: die erste Leiste einer Zeile belegte die ganze
+// Zeile, und fuer jede weitere schob bardock.cpp:441-447 eine NULL-Marke in
+// m_arrBars - jede Leiste bekam eine eigene Zeile. Genau das ergab die
+// uebereinanderliegenden Bereiche.
+//
+// AssignRowExtents setzt vorher je Leiste eine echte Laenge; danach wird die
+// Zuteilung wieder zurueckgenommen, damit ein CalcFixedLayout ausserhalb des
+// Anordnungsdurchlaufs (etwa aus CAdWazooBar, AdWazooBar.cpp:239) dieselbe
+// Antwort bekommt wie bisher.
 CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 {
-	return CDockBar::CalcFixedLayout(bStretch, bHorz);
+	AssignRowExtents(bHorz);
+	CSize size = CDockBar::CalcFixedLayout(bStretch, bHorz);
+	ClearRowExtents();
+	return size;
+}
+
+
+void SECDockBar::ClearRowExtents()
+{
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, GetDockedControlBar(i));
+		if (pBar != NULL)
+			pBar->m_nRowExtent = 0;
+	}
+}
+
+
+void SECDockBar::AssignRowExtents(BOOL bHorz)
+{
+	ClearRowExtents();
+
+	// Eine schwebende Andockleiste hat genau eine Leiste und keine Zeile, die
+	// sich aufteilen liesse.
+	if (m_bFloating)
+		return;
+
+	// Die verfuegbare Laenge wird genau so ermittelt wie in
+	// CDockBar::CalcFixedLayout (bardock.cpp:366-380), damit beide Rechnungen
+	// von derselben Zahl ausgehen.
+	CSize sizeMax;
+	if (!m_rectLayout.IsRectEmpty())
+	{
+		CRect rect = m_rectLayout;
+		CalcInsideRect(rect, bHorz);
+		sizeMax = rect.Size();
+	}
+	else
+	{
+		CFrameWnd* pFrame = GetDockingFrame();
+		if (pFrame == NULL || pFrame->GetSafeHwnd() == NULL)
+			return;
+
+		CRect rectFrame;
+		pFrame->GetClientRect(&rectFrame);
+		sizeMax = rectFrame.Size();
+	}
+
+	int nAvail = bHorz ? sizeMax.cx : sizeMax.cy;
+	if (nAvail <= 0)
+		return;
+
+	// AUFBAU VON m_arrBars: NULL beendet eine Zeile. Die fuehrende NULL aus
+	// dem Konstruktor (bardock.cpp:36) beendet eine leere Zeile vor Zeile 0.
+	int nSize = (int) m_arrBars.GetSize();
+	int nStart = 0;
+
+	while (nStart < nSize)
+	{
+		int nEnd = nStart;
+		while (nEnd < nSize && m_arrBars[nEnd] != NULL)
+			nEnd++;
+
+		DistributeRow(nStart, nEnd, nAvail);
+
+		nStart = nEnd + 1;
+	}
+}
+
+
+// Verteilt nAvail auf die sichtbaren SECControlBars zwischen nStart
+// (einschliesslich) und nEnd (ausschliesslich).
+void SECDockBar::DistributeRow(int nStart, int nEnd, int nAvail)
+{
+	CPtrArray arrRow;
+	float fSum = (float)0.0;
+	int i;
+
+	for (i = nStart; i < nEnd; i++)
+	{
+		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, GetDockedControlBar(i));
+		if (pBar == NULL || !pBar->IsVisible())
+			continue;
+
+		arrRow.Add(pBar);
+		if (pBar->m_fPctWidth > (float)0.0)
+			fSum += pBar->m_fPctWidth;
+	}
+
+	int nBars = (int) arrRow.GetSize();
+	if (nBars <= 0)
+		return;
+
+	// Untere Schranke je Leiste, damit keine ganz verschwindet. Der Wert ist
+	// die uebliche Breite eines Ziehbalkens mal vier - UNGEPRUEFT, das
+	// Original nennt keinen.
+	// Ist die Zeile dafuer zu kurz, wird die Schranke fallengelassen; das
+	// prueft nBoundsFit.
+	const int nMin = 4 * Splitter::cx;
+	const BOOL nBoundsFit = (nAvail >= nBars * nMin);
+
+	int nRest = nAvail;
+	for (i = 0; i < nBars; i++)
+	{
+		SECControlBar* pBar = (SECControlBar*) arrRow[i];
+		int nExtent;
+
+		if (i == nBars - 1)
+		{
+			// Der Rest, damit sich Rundungsfehler nicht aufsummieren.
+			nExtent = nRest;
+		}
+		else
+		{
+			float fPct = (fSum > (float)0.0 && pBar->m_fPctWidth > (float)0.0)
+						 ? (pBar->m_fPctWidth / fSum)
+						 : ((float)1.0 / nBars);
+			nExtent = (int)(nAvail * fPct + (float)0.5);
+
+			// Genug fuer die noch folgenden Leisten uebriglassen.
+			int nReserve = (nBars - 1 - i) * nMin;
+			if (nBoundsFit && nExtent > nRest - nReserve)
+				nExtent = nRest - nReserve;
+			if (nBoundsFit && nExtent < nMin)
+				nExtent = nMin;
+		}
+
+		if (nExtent < 1)
+			nExtent = 1;
+
+		pBar->m_nRowExtent = nExtent;
+		nRest -= nExtent;
+		if (nRest < 0)
+			nRest = 0;
+	}
+}
+
+
+// NICHT im Original. Schiebt den Eintrag von pBar in m_arrBars an die Stelle,
+// die SECMDIFrameWnd::DockControlBarEx verlangt. Begruendung siehe OTShim.h.
+void SECDockBar::MoveControlBarToPosition(CControlBar* pBar, int nCol, int nRow)
+{
+	if (pBar == NULL || nCol < 0 || nRow < 0)
+		return;
+
+	int nSize = (int) m_arrBars.GetSize();
+	int nOld = -1;
+	int i;
+
+	for (i = 0; i < nSize; i++)
+	{
+		if (m_arrBars[i] == (void*) pBar)
+		{
+			nOld = i;
+			break;
+		}
+	}
+
+	if (nOld < 0)
+		return;
+
+	// Eintrag herausnehmen. Wird die Zeile dadurch leer, faellt auch ihre
+	// Endemarke weg - sonst blieben leere Zeilen stehen.
+	BOOL bRowBecomesEmpty = (nOld == 0 || m_arrBars[nOld - 1] == NULL) &&
+							(nOld + 1 >= nSize || m_arrBars[nOld + 1] == NULL);
+
+	m_arrBars.RemoveAt(nOld);
+	if (bRowBecomesEmpty && nOld < m_arrBars.GetSize() &&
+		m_arrBars[nOld] == NULL)
+	{
+		m_arrBars.RemoveAt(nOld);
+	}
+
+	// Anfang der Zielzeile suchen: Zeile nRow beginnt hinter der
+	// (nRow+1)-ten NULL-Marke.
+	nSize = (int) m_arrBars.GetSize();
+	int nNullsToSkip = nRow + 1;
+	int nSeen = 0;
+	int nRowStart = -1;
+
+	for (i = 0; i < nSize; i++)
+	{
+		if (m_arrBars[i] == NULL)
+		{
+			nSeen++;
+			if (nSeen == nNullsToSkip)
+			{
+				nRowStart = i + 1;
+				break;
+			}
+		}
+	}
+
+	if (nRowStart < 0)
+	{
+		// So viele Zeilen gibt es nicht - dann bleibt es bei einer eigenen
+		// Zeile am Ende, also genau beim bisherigen Verhalten.
+		m_arrBars.Add(pBar);
+		m_arrBars.Add(NULL);
+		return;
+	}
+
+	int nRowEnd = nRowStart;
+	while (nRowEnd < nSize && m_arrBars[nRowEnd] != NULL)
+		nRowEnd++;
+
+	int nIns = nRowStart + nCol;
+	if (nIns > nRowEnd)
+		nIns = nRowEnd;
+
+	m_arrBars.InsertAt(nIns, (void*) pBar);
+
+	// m_arrBars muss mit einer NULL-Marke enden, sonst faellt in
+	// CDockBar::CalcFixedLayout das Zeilenende der letzten Zeile weg.
+	nSize = (int) m_arrBars.GetSize();
+	if (nSize == 0 || m_arrBars[nSize - 1] != NULL)
+		m_arrBars.Add(NULL);
 }
 
 
