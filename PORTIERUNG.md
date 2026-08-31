@@ -657,14 +657,20 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   - `tools/pruefe-bytes.pl` — vergleicht für jede zum Commit vorgemerkte Datei den
     **Index**-Blob gegen den **HEAD**-Blob (nicht die Arbeitskopie, die liegt bei
     manchen Dateien abweichend vor) und bricht den Commit ab bei:
-    (a) inhaltlich gleicher Datei mit verschiedenen Bytes, (b) einer inhaltlich
-    unveränderten Zeile, die ihr Zeilenende gewechselt hat, oder (c) neu
-    hinzugekommenen Unicode-Ersatzzeichen `U+FFFD` — die Eudora-Quellen sind
-    **Latin-1**, nicht UTF-8.
+    (a) inhaltlich gleicher Datei mit verschiedenen Bytes — CRLF, LF **und** ein
+    einzelnes CR gelten dabei als Zeilenende, (b) einer inhaltlich unveränderten
+    Zeile, die ihr Zeilenende gewechselt hat, (c) neu hinzugekommenen
+    Unicode-Ersatzzeichen `U+FFFD` — die Eudora-Quellen sind **Latin-1**, nicht
+    UTF-8 —, (d) einer Umkodierung Latin-1 ↔ UTF-8, (e) einer neu eingefügten
+    Byte-Order-Marke und (f) einem verlorenen Zeilenumbruch am Dateiende.
+    **Umbenannte Dateien** (`git mv`) werden mitgeprüft, ebenso **neue** Dateien
+    (auf Ersatzzeichen) und Dateien mit **NUL-Byte** (`git diff --text`). Die
+    Endungsliste steht in `tools/dateiendungen.pl`. Bewusst überspringen:
+    `git commit --no-verify`.
     Die **bloße CR-Anzahl** wird seit `371c1e3` **nicht** mehr verglichen: das schlug
-    schon beim reinen Hinzufügen von Zeilen an und erzeugte Fehlalarme. Geprüft
-    werden die Endungen `cpp h c hpp inl rc idl mak txt md vcxproj filters`. Bewusst
-    überspringen: `git commit --no-verify`.
+    schon beim reinen Hinzufügen von Zeilen an und erzeugte Fehlalarme. Was die
+    Schranke kann und was nicht, hält `tools/pruefe-bytes-tests.pl` in **35 Fällen**
+    fest — wer die Schranke anfasst, lässt sie laufen.
   - `tools/aendere-zeile.pl` — ändert eine einzelne Zeile byte-erhaltend:
     `perl tools/aendere-zeile.pl <datei> <zeilennummer> <alt> <neu>`. Liest und
     schreibt mit `:raw`, ersetzt per `index`/`substr` statt per regulärem Ausdruck

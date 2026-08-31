@@ -5668,3 +5668,100 @@ gibt es keinen.
   Absturz hinter `eudora.cpp:3331` liegt.
 - **Nichts davon ist übersetzt.** Es ist auch nichts geändert — dieser Abschnitt
   ist eine Meldung, keine Behebung.
+
+
+## X-2 — Die neun Löcher der Schranke geschlossen, jedes mit eigenem Testfall (31.08.2026)
+
+Abarbeitung von **X-1** (neun Löcher in `tools/pruefe-bytes.pl`) und seines
+Zusatzfundes zum pre-commit-Hook. Gemessen ohne Visual Studio: perl 5.38,
+git 2.43. **Keine C++-Quelldatei angefasst.**
+
+### Die Sammlung ist der Beleg, nicht die Zusicherung
+
+`tools/pruefe-bytes-tests.pl` wächst von 23 auf **35 Fälle**. Die zwölf neuen
+sind nicht nachträglich passend geschriebene Tests: sie sind zuerst gegen die
+**alte** Schranke gelaufen (`git show HEAD:tools/pruefe-bytes.pl` in einem
+eigenen Verzeichnis, mit der neuen Sammlung daneben):
+
+```
+35 Faelle: 24 gruen, 11 rot
+ROT: L1a, L1b, L2a, L2b, L3, L4, L5, L6, L7, L8, L9
+```
+
+**11 von 12 waren rot.** Der zwölfte (`L1c`) ist die Gegenkontrolle — eine
+reine Umbenennung ohne Änderung am Inhalt muss durchlaufen, vorher wie nachher.
+Gegen die neue Schranke: **35 grün, 0 rot.**
+
+### Was geändert wurde, Loch für Loch
+
+| Loch | Was durchlief | Behebung | Testfall |
+|---|---|---|---|
+| **L1** | `git mv alt.cpp neu.cpp` plus Neuschreiben — der Ablauf einer Portierung | `--diff-filter=ACM` → `ACMRT` und `--name-status` statt `--name-only`: bei `R` wird der Index-Blob des **neuen** gegen den HEAD-Blob des **alten** Pfads gehalten. Die Meldung nennt beide Namen | `L1a`, `L1b`, Gegenkontrolle `L1c` |
+| **L2** | eine **saubere** Umkodierung Latin-1 → UTF-8 (erzeugt kein Ersatzzeichen, also sah Regel 2 nichts) | neue Regel 3: `latin1_nach_utf8($vorher) eq $jetzt` — byteweise, ohne Modul, exakt. Beide Richtungen | `L2a`, `L2b` |
+| **L3** | ein neu eingefügtes UTF-8-BOM | neue Regel 4: BOM am Anfang des Index-Blobs, das im HEAD-Blob nicht stand | `L3` |
+| **L4** | Dateien mit NUL-Byte: `git diff` liefert nur „Binary files differ", Regel 2 sah gar nichts | `git diff --text` erzwingt den Textvergleich. **Kein** pauschaler Alarm für NUL-Dateien — der hätte jede berechtigte Änderung an ihnen getroffen | `L4` |
+| **L5** | die Vorausschau von 30 Zeilen war eine harte Grenze: 30 eingefügte Zeilen vor der Umwandlung wurden erkannt, **31 liefen durch** | gepaart wird über den ganzen Block. Die neue Obergrenze (`$MAX_PAARUNG = 20000`) ist nur eine Bremse gegen quadratische Laufzeit und liegt weit über dem größten Block im Baum (655 Zeilen) | `L5` (genau 31 Zeilen) |
+| **L6** | reine CR-Zeilenenden (alter Mac-Stil) → LF | Regel 1 normalisiert jetzt auch ein einzelnes CR, nicht nur CRLF | `L6` |
+| **L7** | die letzte Zeile verliert ihr CRLF — wurde bewusst durchgelassen, ist aber echter Byteverlust | nur die **Verlustrichtung** schlägt an. Einen Umbruch zu **ergänzen** bleibt erlaubt, sonst wäre der bestehende Fall `n` rot geworden | `L7`, Gegenkontrolle `n` |
+| **L8** | neue Dateien wurden vollständig übersprungen, auch mit Ersatzzeichen | bei `A` gibt es nichts zu vergleichen, aber die U+FFFD-Prüfung läuft jetzt | `L8`, Gegenkontrolle `k` |
+| **L9** | eine in HEAD **leere** Datei galt als „nicht vorhanden" und lief ungeprüft durch | `vorhanden()` fragt mit `git rev-parse --verify` nach dem Eintrag, getrennt von seinem Inhalt | `L9` |
+
+### Der Zusatzfund: der Hook log
+
+`tools/hooks-einrichten.sh` schrieb einen Hook, der den Rückgabewert von
+`lehren-spiegeln.pl` **nicht** auswertete. Das Werkzeug meldet „Der Commit wurde
+abgebrochen" und endet mit 1 — der Hook lief weiter und gab am Ende den Wert der
+Schranke zurück. **Die Meldung war unwahr.**
+
+Vorgeführt in einem Wegwerf-Repo, mit einem absichtlich scheiternden ersten
+Schritt:
+
+| Hook | Ausgabe | Rückgabe | Commit steht? |
+|---|---|---|---|
+| alt | `SPIEGELN MELDET ABBRUCH` | **0** | **ja** |
+| neu | `SPIEGELN MELDET ABBRUCH` | **1** | nein |
+
+Behoben mit `perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?`.
+
+**NP3-4 war bereits behoben** und ist hier nur der Vollständigkeit wegen
+erwähnt: `lehren-spiegeln.pl` stagt nicht mehr selbst (das hinterließ bei
+`git commit -- <pfad>` eine Löschung im echten Index), sondern bricht ab und
+lässt den Menschen `git add Arbeitsweise` tun. Genau dieser Abbruch war es, den
+der Hook verschluckte — die beiden Befunde greifen ineinander.
+
+### Dazu NP3-5: nicht mehr stumm
+
+`lehren-spiegeln.pl` endete wortlos mit 0, wenn das Gedächtnisverzeichnis nicht
+gefunden wurde. Ein Aufrufer konnte „es gibt nichts zu tun" nicht von „ich habe
+gar nicht erst hingesehen" unterscheiden. Es meldet den Fall jetzt auf `STDERR`
+**samt dem abgeleiteten Pfad** — denn wenn die Ableitung schiefgeht, sucht sonst
+niemand dort den Fehler — und endet im `--pruefen`-Modus mit 2.
+
+### Was von X-1 offen bleibt
+
+- **`tools/suche-zeiger.pl`**: 345 Treffer, Stichprobe 15 von 15 Fehlalarm.
+  Die drei strukturellen Filter (klammerloser `if`-Rumpf, einzeiliger Wächter
+  mit `return`, Abstand größer als das Fenster) sind **nicht** eingebaut.
+- **`tools/zeilenenden-angleichen.pl`**: die 773 ausgelassenen Textdateien
+  (`.ih`, `.rgs`, `.hh`, `.mc`, `.hpj`, 139 ohne Endung) und das richtungslose
+  Zurückschreiben sind **nicht** angefasst.
+
+Beides ist in `AUFGABEN.md` unter D3 und D4 beschrieben und braucht keinen
+Compiler — es ist nur nicht Teil dieses Auftrags gewesen.
+
+### Grenzen, die bleiben — und bewusst als Testfall festgehalten sind
+
+- **Endungen**: was nicht in `tools/dateiendungen.pl` steht, wird nicht geprüft.
+  Fall `o` (`.xyz`) hält diese Grenze fest, damit sie sichtbar bleibt.
+- **Zeichenketten** werden nicht ausgeblendet; ein `"ReleaseBuffer("` im Text
+  wäre für andere Werkzeuge ein Fehlalarm, für die Schranke ist es ohne Belang.
+- **Die Schranke prüft den Index, nicht die Arbeitskopie.** Das ist Absicht und
+  im Kopf der Datei begründet.
+- **Regel 3 kann eine Mojibake-Reparatur nicht von einer Umkodierung
+  unterscheiden.** Eine vollständig doppelt kodierte Datei zurückzurechnen
+  (`ZIEL.md` war am 31.08.2026 genau so beschädigt) sieht byteweise aus wie
+  „UTF-8 → Latin-1 umkodiert". Die Meldung sagt das ausdrücklich und lässt den
+  Menschen entscheiden; für den Fall gibt es `--no-verify`. Ein Fehlalarm ist
+  das nicht, sondern eine Frage, die nur ein Mensch beantworten kann.
+- `git commit --no-verify` umgeht alles. Auch das ist Absicht — eine Schranke
+  ohne Notausgang wird umgebaut, nicht befolgt.

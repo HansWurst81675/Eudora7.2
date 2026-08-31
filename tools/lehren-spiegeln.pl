@@ -42,8 +42,15 @@ my $gedaechtnis = "$heim/.claude/projects/$projektname/memory";
 
 unless (-d $gedaechtnis) {
     # Kein Gedaechtnis gefunden - das ist kein Fehler (anderer Rechner, anderer
-    # Nutzer). Still beenden, damit der Hook niemanden aufhaelt.
-    exit 0;
+    # Nutzer, anderes Betriebssystem). Der Hook wird deshalb nicht aufgehalten.
+    #
+    # ABER NICHT STUMM: bis zum 31.08.2026 endete das Werkzeug hier wortlos mit
+    # 0, und ein Aufrufer konnte "es gibt nichts zu tun" nicht von "ich habe gar
+    # nicht erst hingesehen" unterscheiden (Befund NP3-5). Der abgeleitete Pfad
+    # gehoert in die Meldung, sonst sucht niemand den Fehler in der Ableitung.
+    print STDERR "lehren-spiegeln: kein Gedaechtnis gefunden, nichts gespiegelt.\n";
+    print STDERR "  erwartet unter: $gedaechtnis\n";
+    exit($nur_pruefen ? 2 : 0);
 }
 
 my $ziel = "$wurzel/Arbeitsweise";

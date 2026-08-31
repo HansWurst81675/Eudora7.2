@@ -1,7 +1,15 @@
 #!/usr/bin/perl
-# Prueft jede zum Commit vorgemerkte Datei auf zwei lautlose Schaeden:
-#   1. umgewandelte Zeilenenden - CRLF -> LF UND LF -> CRLF
+# Prueft jede zum Commit vorgemerkte Datei auf lautlose Schaeden:
+#   1. umgewandelte Zeilenenden - CRLF -> LF, LF -> CRLF und CR -> LF
 #   2. zerstoerte Sonderzeichen (Unicode-Ersatzzeichen U+FFFD)
+#   3. Umkodierung Latin-1 <-> UTF-8 (die Quellen sind Latin-1)
+#   4. neu eingefuegte Byte-Order-Marke
+#   5. der Zeilenumbruch am Dateiende geht verloren
+#   6. Dateien mit NUL-Byte werden mit "git diff --text" doch verglichen,
+#      statt als binaer durchzulaufen
+#
+# Umbenannte Dateien (git mv) werden mitgeprueft - bis zum 31.08.2026 nicht,
+# das war das schwerste der neun Loecher aus Befund X-1 (L1).
 #
 # Verglichen wird der INDEX-Blob gegen den HEAD-Blob, nicht die Arbeitskopie.
 # Grund: manche Dateien liegen im Arbeitsverzeichnis mit CRLF, waehrend im
@@ -57,10 +65,34 @@ sub git_roh {
   return $aus;
 }
 
+# Gibt es den Eintrag ueberhaupt? Getrennt von seinem Inhalt zu fragen ist
+# noetig, weil eine in HEAD LEERE Datei sonst als "nicht vorhanden" gilt und
+# ungeprueft durchlaeuft (Befund X-1, L9).
+sub vorhanden {
+  my ($rev, $datei) = @_;
+  my $out = git_roh('rev-parse', '--verify', '--quiet', "$rev:$datei");
+  return (defined $out and $out =~ /[0-9a-f]/) ? 1 : 0;
+}
+
 sub blob {
   my ($rev, $datei) = @_;
+  return undef unless vorhanden($rev, $datei);
   my $out = git_roh('show', "$rev:$datei");
-  return (defined $out and length $out) ? $out : undef;
+  return defined $out ? $out : '';
+}
+
+# Latin-1 nach UTF-8, byteweise und ohne Modul. Wird nur zum VERGLEICHEN
+# gebraucht: stimmt das Ergebnis mit der anderen Fassung ueberein, wurde die
+# Datei umkodiert (Befund X-1, L2).
+sub latin1_nach_utf8 {
+  my ($t) = @_;
+  my $o = '';
+  for my $i (0 .. length($t) - 1) {
+    my $b = ord(substr($t, $i, 1));
+    if ($b < 0x80) { $o .= chr($b) }
+    else { $o .= chr(0xC0 | ($b >> 6)) . chr(0x80 | ($b & 0x3F)) }
+  }
+  return $o;
 }
 
 # Zaehlt getrennt, wie viele Zeilen mit CRLF und wie viele mit blossem LF enden.
@@ -111,11 +143,17 @@ sub zaehle_enden {
 # Innerhalb eines Blocks werden entfernte und hinzugefuegte Zeilen der Reihe
 # nach gepaart. Sind es gleich viele - der Normalfall bei einer Umwandlung -
 # passt das genau. Sind es verschieden viele (Umwandlung UND ergaenzte Zeilen),
-# wird mit begrenzter Vorausschau nachgefuehrt, damit die Paare nicht
-# verrutschen.
+# wird nachgefuehrt.
+#
+# DIE VORAUSSCHAU HAT KEINE FESTE GRENZE MEHR. Bis zum 31.08.2026 waren es
+# 30 Zeilen, und das war genau messbar aushebelbar: 30 eingefuegte Zeilen vor
+# der Umwandlung wurden erkannt, 31 liefen durch (Befund X-1, L5). Gepaart wird
+# jetzt ueber den ganzen Block. Die Obergrenze unten ist nur eine Bremse gegen
+# quadratische Laufzeit bei riesigen Bloecken; sie liegt so hoch, dass sie im
+# Baum nicht erreicht wird (groesster Block beim Angleichen: 655 Zeilen).
 # ---------------------------------------------------------------------------
 
-my $VORAUSSCHAU = 30;
+my $MAX_PAARUNG = 20000;
 
 sub zerlege_diffzeile {
   my ($z) = @_;                      # ohne das fuehrende - oder +
@@ -125,9 +163,12 @@ sub zerlege_diffzeile {
 }
 
 sub umwandlungen {
-  my ($datei) = @_;
+  my ($e) = @_;
+  my @pfade = $e->{st} eq 'R' ? ($e->{alt}, $e->{neu}) : ($e->{neu});
+  # --text erzwingt den Textvergleich. Ohne das liefert git bei einer Datei mit
+  # NUL-Byte nur "Binary files differ", und Regel 2 sieht gar nichts (X-1, L4).
   my $roh = git_roh('diff', '--cached', '-U0', '--no-color', '--no-ext-diff',
-                    '--', $datei);
+                    '--text', '--find-renames', '--', @pfade);
   return () unless defined $roh and length $roh;
 
   my @treffer;
@@ -141,17 +182,19 @@ sub umwandlungen {
         @paare = map { [ $weg[$_], $dazu[$_] ] } 0 .. $#weg;
       }
       else {
+        my $grenze = @weg * @dazu > $MAX_PAARUNG ? $MAX_PAARUNG : 0;
         my ($i, $j) = (0, 0);
         while ($i <= $#weg and $j <= $#dazu) {
           if ($weg[$i][0] eq $dazu[$j][0]) {
             push @paare, [ $weg[$i], $dazu[$j] ]; $i++; $j++; next;
           }
           my ($vor_dazu, $vor_weg) = (-1, -1);
-          for my $k (1 .. $VORAUSSCHAU) {
+          my $weit = $grenze ? $grenze : ($#dazu > $#weg ? $#dazu : $#weg) + 1;
+          for my $k (1 .. $weit) {
             last if $j + $k > $#dazu;
             if ($weg[$i][0] eq $dazu[$j + $k][0]) { $vor_dazu = $k; last }
           }
-          for my $k (1 .. $VORAUSSCHAU) {
+          for my $k (1 .. $weit) {
             last if $i + $k > $#weg;
             if ($dazu[$j][0] eq $weg[$i + $k][0]) { $vor_weg = $k; last }
           }
@@ -163,8 +206,12 @@ sub umwandlungen {
       for my $p (@paare) {
         my ($a, $b) = @$p;
         next unless $a->[0] eq $b->[0];        # anderer Inhalt: echte Aenderung
-        next if $a->[1] eq 'OHNE' or $b->[1] eq 'OHNE';   # letzte Zeile ohne Umbruch
         next if $a->[1] eq $b->[1];            # Zeilenende unveraendert
+        # Die letzte Zeile bekommt einen Umbruch, den sie vorher nicht hatte:
+        # harmlos, das ergaenzt Bytes und zerstoert keine.
+        next if $a->[1] eq 'OHNE';
+        # Umgekehrt ist es ein echter Byteverlust (Befund X-1, L7): bis zum
+        # 31.08.2026 lief genau das durch.
         push @treffer, [ $a->[0], $a->[1], $b->[1] ];
       }
     }
@@ -194,35 +241,103 @@ sub umwandlungen {
 # Anfuehrungszeichen und mit Escapes heraus (core.quotepath), und die Schranke
 # fragt anschliessend nach einer Datei, die es unter dem Namen nicht gibt -
 # also wieder stilles Durchlassen.
-my @vorgemerkt = grep { length }
-  split /\0/, (git_roh('diff', '--cached', '--name-only', '-z', '--diff-filter=ACM') || '');
-my @dateien = grep { $_ =~ $D->{muster} } @vorgemerkt;
+# --name-status statt --name-only, und R (Umbenennung) ist dabei. Bis zum
+# 31.08.2026 stand hier --diff-filter=ACM: ein "git mv alt.cpp neu.cpp" erscheint
+# als R088 und landete nie in der Pruefliste. Wer danach die Datei neu schrieb,
+# konnte jedes Zeilenende zerstoeren - Rueckgabe 0. Das ist der Ablauf einer
+# Portierung, also genau der Fall, fuer den die Schranke da ist (X-1, L1).
+my @teile = grep { length }
+  split /\0/, (git_roh('diff', '--cached', '--name-status', '-z',
+                       '--diff-filter=ACMRT') || '');
+my @eintraege;
+while (@teile) {
+  my $st = shift @teile;
+  if ($st =~ /^[RC]/) {
+    my $alt = shift @teile; my $neu = shift @teile;
+    last unless defined $neu;
+    push @eintraege, { st => substr($st, 0, 1), alt => $alt, neu => $neu };
+  }
+  else {
+    my $pfad = shift @teile;
+    last unless defined $pfad;
+    push @eintraege, { st => substr($st, 0, 1), alt => $pfad, neu => $pfad };
+  }
+}
+@eintraege = grep { $_->{neu} =~ $D->{muster} or $_->{alt} =~ $D->{muster} } @eintraege;
 my @fehler;
 
-for my $d (@dateien) {
-  my $jetzt  = blob('',     $d);   # ':datei' = Index
-  my $vorher = blob('HEAD', $d);
-  next unless defined $jetzt and defined $vorher;   # neue Datei: nichts zu vergleichen
+my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
+
+for my $e (@eintraege) {
+  my $d      = $e->{neu};
+  my $jetzt  = blob('',     $d);            # ':datei' = Index
+  my $vorher = $e->{st} eq 'A' ? undef : blob('HEAD', $e->{alt});
+  next unless defined $jetzt;
+
+  # Neue Datei: es gibt nichts zu vergleichen, aber sie ist nicht ungepruefte
+  # Ware. Bis zum 31.08.2026 wurde sie vollstaendig uebersprungen, und eine
+  # neue Datei mit Ersatzzeichen lief durch (X-1, L8).
+  unless (defined $vorher) {
+    my $bd = zaehle($jetzt, $BAD);
+    push @fehler, "$d: neue Datei mit $bd Ersatzzeichen (U+FFFD) - diese Quellen sind Latin-1"
+      if $bd;
+    next;
+  }
+
+  my $umbenannt = $e->{st} eq 'R' ? " (umbenannt aus $e->{alt})" : '';
 
   my ($crlf_a, $lf_a) = zaehle_enden($vorher);
   my ($crlf_b, $lf_b) = zaehle_enden($jetzt);
+  my $gemeldet = 0;
+
+  # Regel 3: Umkodierung. Exakter Vergleich, deshalb ohne Fehlalarm moeglich -
+  # eine SAUBERE Umkodierung erzeugt kein einziges Ersatzzeichen und war
+  # deshalb bis zum 31.08.2026 unsichtbar (X-1, L2).
+  if ($vorher ne $jetzt) {
+    if (latin1_nach_utf8($vorher) eq $jetzt) {
+      push @fehler, "$d$umbenannt: von Latin-1 nach UTF-8 umkodiert - diese Quellen sind Latin-1";
+      $gemeldet = 1;
+    }
+    elsif (latin1_nach_utf8($jetzt) eq $vorher) {
+      # ACHTUNG, ein bekannter Randfall: genau so sieht auch das REPARIEREN
+      # einer vollstaendig doppelt kodierten Datei aus (ZIEL.md war am
+      # 31.08.2026 so beschaedigt). Die Schranke kann beides nicht
+      # unterscheiden - sie meldet, der Mensch entscheidet. Wer eine
+      # Mojibake-Reparatur committen will, tut es mit --no-verify und schreibt
+      # in die Commit-Nachricht, was gemessen wurde.
+      push @fehler, "$d$umbenannt: von UTF-8 nach Latin-1 umkodiert - oder eine "
+        . "Mojibake-Reparatur, die genauso aussieht. Von Hand entscheiden.";
+      $gemeldet = 1;
+    }
+  }
+
+  # Regel 4: eine Byte-Order-Marke, die vorher nicht da war (X-1, L3).
+  if (index($jetzt, $BOM) == 0 and index($vorher, $BOM) != 0) {
+    push @fehler, "$d$umbenannt: Byte-Order-Marke (EF BB BF) am Dateianfang eingefuegt";
+    $gemeldet = 1;
+  }
 
   # Regel 1: Der Inhalt ist gleich, die Bytes nicht. Dann wurde AUSSCHLIESSLICH
   # an den Zeilenenden gedreht - der klassische lautlose Schaden. Diese Regel
   # arbeitet auf den rohen Blobs und ist damit unabhaengig davon, wie git den
   # Unterschied darstellt.
-  (my $ohne_a = $vorher) =~ s/\r\n/\n/g;
-  (my $ohne_b = $jetzt)  =~ s/\r\n/\n/g;
+  # Auch ein einzelnes CR gilt als Zeilenende. Vorher wurde nur CRLF
+  # normalisiert, und eine Datei im alten Mac-Stil (nur CR) liess sich lautlos
+  # auf LF umschreiben (X-1, L6).
+  my $ohne_a = $vorher; $ohne_a =~ s/\Q$CR\E\Q$LF\E/$LF/g; $ohne_a =~ s/\Q$CR\E/$LF/g;
+  my $ohne_b = $jetzt;  $ohne_b =~ s/\Q$CR\E\Q$LF\E/$LF/g; $ohne_b =~ s/\Q$CR\E/$LF/g;
 
   if ($ohne_a eq $ohne_b and $vorher ne $jetzt) {
     push @fehler, sprintf(
-      "%s: NUR die Zeilenenden geaendert, kein Inhalt - CRLF %d -> %d, LF %d -> %d",
-      $d, $crlf_a, $crlf_b, $lf_a, $lf_b);
+      "%s%s: NUR die Zeilenenden geaendert, kein Inhalt - CRLF %d -> %d, LF %d -> %d",
+      $d, $umbenannt, $crlf_a, $crlf_b, $lf_a, $lf_b);
+    $gemeldet = 1;
   }
   # Regel 2: Inhalt UND Zeilenenden geaendert. Siehe die Begruendung oben.
   else {
-    my @um = umwandlungen($d);
+    my @um = umwandlungen($e);
     if (@um) {
+      $gemeldet = 1;
       my %richtung;
       $richtung{ $_->[1] . ' -> ' . $_->[2] }++ for @um;
       my $bsp = $um[0][0];
@@ -230,13 +345,13 @@ for my $d (@dateien) {
       $bsp = substr($bsp, 0, 40) . '...' if length($bsp) > 40;
       $bsp = '(Leerzeile)' unless length $bsp;
       push @fehler, sprintf(
-        "%s: %d Zeile(n) haben bei unveraendertem Inhalt ihr Zeilenende gewechselt (%s), z. B. \"%s\"",
-        $d, scalar(@um), join(', ', map { "$_ x$richtung{$_}" } sort keys %richtung), $bsp);
+        "%s%s: %d Zeile(n) haben bei unveraendertem Inhalt ihr Zeilenende gewechselt (%s), z. B. \"%s\"",
+        $d, $umbenannt, scalar(@um), join(', ', map { "$_ x$richtung{$_}" } sort keys %richtung), $bsp);
     }
   }
 
   my $bd_a = zaehle($vorher, $BAD); my $bd_b = zaehle($jetzt, $BAD);
-  push @fehler, "$d: Sonderzeichen zerstoert - $bd_b Ersatzzeichen (U+FFFD), vorher $bd_a"
+  push @fehler, "$d$umbenannt: Sonderzeichen zerstoert - $bd_b Ersatzzeichen (U+FFFD), vorher $bd_a"
     if $bd_b > $bd_a;
 }
 

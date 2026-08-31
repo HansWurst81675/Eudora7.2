@@ -163,7 +163,7 @@ Debug-`Eudora.exe`), nicht durchgehend Release — die frühere Angabe war falsc
 
 **W-1 — die Werkzeuge in Ordnung gebracht.** PR-1 bis PR-4 und PR-6 bis PR-8
 behoben. Die Schranke `tools/pruefe-bytes.pl` hat jetzt eine Testsammlung
-(`tools/pruefe-bytes-tests.pl`, 23 Fälle, alle grün);
+(`tools/pruefe-bytes-tests.pl`, inzwischen 35 Fälle, alle grün);
 `tools/rekursion-suchen.pl` ist gelöscht. Es gilt: **4616 von 5563** vom
 30.08.2026; die Grundgesamtheit wächst und lag am 31.08. bei 5589. Offen bleibt
 PR-5, die Beschreibung des Zeitstempels.

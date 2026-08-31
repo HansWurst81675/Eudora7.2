@@ -211,7 +211,7 @@ einen echten Mailserver. Einzelheiten in
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
 | `tools/pruefe-bytes.pl` | pre-commit-Schranke gegen lautlosen Byteschaden |
-| `tools/pruefe-bytes-tests.pl` | Testsammlung für die pre-commit-Schranke: 23 Fälle in eigenen Wegwerf-Repos. **Wer `tools/pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/pruefe-bytes-tests.pl` | Testsammlung für die pre-commit-Schranke: **35 Fälle** in eigenen Wegwerf-Repos, darunter je einer für die neun Löcher aus Befund X-1. **Wer `tools/pruefe-bytes.pl` anfasst, lässt sie laufen.** |
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen. |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. Damit wurden die Stellen zu P-2 gefunden. |

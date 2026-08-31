@@ -218,6 +218,72 @@ my @faelle = (
     datei => 'o.xyz', erwartet => 0,
     vorher  => [ @cpp_crlf ],
     nachher => [ @cpp_lf ] },
+
+  # --- X-1: die neun Loecher, je ein Fall. Alle waren am 31.08.2026 vormittags
+  #     ROT und sind seit dem Umbau derselben Nacht GRUEN.
+  { schl => 'L1a', name => 'git mv PLUS Umwandlung CRLF -> LF (Umbenennung hebelte alles aus)',
+    datei => 'L1a.cpp', umbenennen => 'L1a-neu.cpp', erwartet => 1,
+    vorher  => [ @cpp_crlf ],
+    nachher => [ @cpp_lf ] },
+
+  { schl => 'L1b', name => 'git mv PLUS Umwandlung PLUS Inhaltsaenderung',
+    datei => 'L1b.cpp', umbenennen => 'L1b-neu.cpp', erwartet => 1,
+    vorher  => [ [ 'zeile1', 'L' ], [ 'zeile2', 'C' ], [ 'zeile3', 'L' ], [ 'zeile4', 'C' ] ],
+    nachher => [ [ 'zeile1', 'C' ], [ 'zeile2', 'C' ], [ 'zeile3', 'C' ], [ 'NEU',    'C' ] ] },
+
+  { schl => 'L1c', name => 'git mv OHNE Aenderung am Inhalt (reine Umbenennung)',
+    datei => 'L1c.cpp', umbenennen => 'L1c-neu.cpp', erwartet => 0,
+    vorher  => [ @cpp_crlf ],
+    nachher => [ @cpp_crlf ] },
+
+  { schl => 'L2a', name => 'Latin-1 nach UTF-8 umkodiert (sauber, ohne Ersatzzeichen)',
+    datei => 'L2a.cpp', erwartet => 1,
+    roh_vorher  => 'Umlaut ' . chr(0xE4) . chr(0xF6) . chr(0xFC) . $LF,
+    roh_nachher => 'Umlaut ' . chr(0xC3) . chr(0xA4) . chr(0xC3) . chr(0xB6)
+                             . chr(0xC3) . chr(0xBC) . $LF },
+
+  { schl => 'L2b', name => 'UTF-8 nach Latin-1 umkodiert (die Gegenrichtung)',
+    datei => 'L2b.cpp', erwartet => 1,
+    roh_vorher  => 'Umlaut ' . chr(0xC3) . chr(0xA4) . $LF,
+    roh_nachher => 'Umlaut ' . chr(0xE4) . $LF },
+
+  { schl => 'L3', name => 'Byte-Order-Marke eingefuegt',
+    datei => 'L3.cpp', erwartet => 1,
+    roh_vorher  => 'eins' . $LF . 'zwei' . $LF,
+    roh_nachher => chr(0xEF) . chr(0xBB) . chr(0xBF) . 'eins' . $LF . 'zwei' . $LF },
+
+  { schl => 'L4', name => 'Datei mit NUL-Byte: Umwandlung PLUS Inhaltsaenderung',
+    datei => 'L4.cpp', erwartet => 1,
+    roh_vorher  => 'eins' . chr(0) . 'x' . $CR . $LF . 'zwei' . $LF . 'drei' . $CR . $LF,
+    roh_nachher => 'eins' . chr(0) . 'x' . $LF        . 'zwei' . $LF . 'NEU'  . $LF },
+
+  { schl => 'L5', name => '31 eingefuegte Zeilen vor der Umwandlung (30 war die alte Grenze)',
+    datei => 'L5.cpp', erwartet => 1,
+    vorher  => [ alle_mit('L', 'x1', 'x2', 'x3', 'x4', 'x5'), [ 'ziel', 'C' ],
+                 alle_mit('L', 'y1', 'y2', 'y3', 'y4', 'y5') ],
+    nachher => [ alle_mit('L', 'x1', 'x2', 'x3', 'x4', 'x5'),
+                 alle_mit('L', map { "neu$_" } 1 .. 31), [ 'ziel', 'L' ],
+                 alle_mit('L', 'y1', 'y2', 'y3', 'y4', 'y5') ] },
+
+  { schl => 'L6', name => 'reine CR-Zeilenenden (Mac-Stil) nach LF',
+    datei => 'L6.cpp', erwartet => 1,
+    roh_vorher  => 'eins' . $CR . 'zwei' . $CR . 'drei' . $CR,
+    roh_nachher => 'eins' . $LF . 'zwei' . $LF . 'drei' . $LF },
+
+  { schl => 'L7', name => 'letzte Zeile VERLIERT ihren Zeilenumbruch',
+    datei => 'L7.cpp', erwartet => 1,
+    roh_vorher  => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' . $CR . $LF,
+    roh_nachher => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' },
+
+  { schl => 'L8', name => 'NEUE Datei mit Ersatzzeichen (U+FFFD)',
+    datei => 'L8.cpp', erwartet => 1,
+    vorher  => undef,
+    nachher => [ [ 'Gruesse', 'L' ], [ 'Umlaut ' . $bad, 'L' ] ] },
+
+  { schl => 'L9', name => 'in HEAD LEERE Datei, danach mit Ersatzzeichen gefuellt',
+    datei => 'L9.cpp', erwartet => 1,
+    roh_vorher  => '',
+    roh_nachher => 'Umlaut ' . $bad . $LF },
 );
 
 # ------------------------------------------------------------- Durchlauf
@@ -255,9 +321,14 @@ for my $f (@faelle) {
         git('add', '--', $f->{datei});
         git('commit', '-q', '--no-verify', '-m', 'HEAD-Stand');
     }
+    # Umbenennung: git mv, damit im Index wirklich ein R-Eintrag steht
+    my $ziel = $f->{umbenennen} || $f->{datei};
+    if ($f->{umbenennen}) {
+        git('mv', '--', $f->{datei}, $ziel);
+    }
     if (defined $nachher) {
-        schreib($f->{datei}, $nachher);
-        git('add', '--', $f->{datei});
+        schreib($ziel, $nachher);
+        git('add', '--', $ziel);
     }
     else {
         git('rm', '-q', '--cached', '--', $f->{datei});

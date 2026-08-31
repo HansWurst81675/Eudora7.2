@@ -207,22 +207,23 @@ Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt (**E-6**).
 
 ## D — Die Werkzeuge
 
-### D1 · Neun Löcher in `pruefe-bytes.pl` (**X-1**)
+### D1 · ~~Neun Löcher in `pruefe-bytes.pl`~~ — **erledigt** (Befund X-2)
 
-Die zwei schwersten sind genau die Schäden, gegen die die Schranke gebaut wurde:
+Alle neun sind geschlossen, **jedes mit eigenem Testfall**. Die Sammlung
+`tools/pruefe-bytes-tests.pl` wächst von 23 auf **35 Fälle**. Gegen die alte
+Schranke sind 11 der 12 neuen Fälle **rot** (der zwölfte ist die Gegenkontrolle),
+gegen die neue **35 grün**. Einzelheiten je Loch in X-2.
 
-- **L1** — eine **Umbenennung** hebelt sie vollständig aus (`:198`,
-  `--diff-filter=ACM`; ein `git mv` erscheint als `R088` und landet nie in der
-  Prüfliste). `git mv` + Neuschreiben ist der Ablauf einer Portierung.
-- **L2** — eine saubere Umkodierung **Latin-1 → UTF-8** bleibt unerkannt.
+### D2 · ~~Der pre-commit-Hook wertet seinen ersten Schritt nicht aus~~ — **erledigt**
 
-Dazu L3 bis L9, alle in X-1 mit Gegenprobe belegt.
+`perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?`. In einem Wegwerf-Repo
+vorgeführt: mit dem alten Hook lief der Commit trotz Abbruchmeldung durch, mit
+dem neuen nicht. Dazu NP3-5: `lehren-spiegeln.pl` meldet jetzt auf `STDERR`,
+wenn es das Gedächtnisverzeichnis nicht findet, samt dem abgeleiteten Pfad.
 
-### D2 · Der pre-commit-Hook wertet seinen ersten Schritt nicht aus (**X-1**)
-
-`tools/hooks-einrichten.sh:20` prüft `$?` von `lehren-spiegeln.pl` nicht. Meldet
-das Spiegeln *„Der Commit wurde abgebrochen"*, stimmt das nicht — der Hook gibt
-0 zurück. Dieselbe Fehlerklasse wie NP3-4.
+**Nach jedem frischen Klon einmal `sh tools/hooks-einrichten.sh` laufen lassen** —
+der Hook liegt unter `.git/hooks` und wird von git nicht mitversioniert. Ein
+alter Hook aus einem früheren Klon verschluckt den Abbruch weiterhin.
 
 ### D3 · `suche-zeiger.pl` ist Rauschen (**X-1**)
 
