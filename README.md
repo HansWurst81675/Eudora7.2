@@ -68,6 +68,54 @@ die Ersatzschicht hat es abgelöst.
 
 ### Starten
 
+#### Zuerst: die Debug-Laufzeiten dazulegen
+
+**Ohne diesen Schritt startet Eudora nicht.** Der Debug-Bau braucht vier
+DLLs, die nicht mit ausgeliefert werden dürfen:
+
+```
+mfc140d.dll   msvcp140d.dll   vcruntime140d.dll   ucrtbased.dll
+```
+
+Dafür gibt es ein Werkzeug — es kopiert sie und prüft jede einzeln auf ihre
+Architektur nach:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\laufzeit-holen.ps1 -Ziel "C:\Pfad\zu\Eudora"
+```
+
+Mit `-NurPruefen` sagt es nur, was fehlt, ohne etwas zu kopieren.
+
+> ### Achtung: `0xc000007b`
+>
+> ```
+> Die Anwendung konnte nicht korrekt gestartet werden (0xc000007b).
+> ```
+>
+> Dieser Code heißt `STATUS_INVALID_IMAGE_FORMAT` und bedeutet fast immer
+> **Bitness-Konflikt**: eine 64-Bit-DLL in einem 32-Bit-Prozess.
+> **`Eudora.exe` ist ein 32-Bit-Programm.**
+>
+> Zwei Fallen führen dahin:
+>
+> 1. **DLL-Sammelseiten** wie dll-files.com liefern häufig die 64-Bit-Fassung,
+>    ohne es deutlich zu machen. Von dort **keine** Laufzeit-DLLs holen.
+> 2. Der 32-Bit-Systemordner heißt unter Windows ausgerechnet **`SysWOW64`** —
+>    der Name legt das Gegenteil nahe:
+>
+>    | Ordner | enthält |
+>    |---|---|
+>    | `C:\Windows\System32` | **64**-Bit-DLLs |
+>    | `C:\Windows\SysWOW64` | **32**-Bit-DLLs ← diese hier |
+>
+> Die richtigen Dateien liegen auf jedem Rechner mit installiertem Visual
+> Studio 2022 (mit C++-Werkzeugen und MFC/ATL) bereits in `SysWOW64`, in der
+> zum Toolset passenden Fassung. Ohne Visual Studio läuft dieser Bau nicht —
+> dafür bräuchte es einen Release-Bau, und der scheitert noch an einer
+> fehlenden `Imap.lib`.
+
+#### Dann starten
+
 ```bash
 Eudora.exe "<Pfad zu einem Mailverzeichnis>"
 ```
@@ -78,8 +126,7 @@ Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
 
 Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
 Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine Fehler.
-Sie erscheinen nur, weil bisher nur der Debug-Bau läuft; der Release-Zweig
-scheitert an einer fehlenden `Imap.lib`.
+Sie erscheinen nur, weil bisher nur der Debug-Bau läuft.
 
 Der Fenstertitel trägt die **Bau-Kennung** — Paketversion, Commit und
 Herkunftsverzeichnis:
@@ -132,6 +179,7 @@ einen echten Mailserver. Einzelheiten in
 | `tools/pruefe-bytes.pl` | pre-commit-Schranke gegen lautlosen Byteschaden |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau |
+| `tools/laufzeit-holen.ps1` | holt die Debug-Laufzeiten von VS2022 aus `SysWOW64` und prüft jede auf x86 nach. Ohne sie startet Eudora mit `0xc000007b`. |
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
 | `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte bisher ausschließlich Fehlalarme. |
 
