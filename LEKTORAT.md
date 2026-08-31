@@ -321,3 +321,35 @@ weitergeschrieben, ohne sie zu zaehlen.
   `paket-pruefen.ps1` vier Falschwarnungen erzeugt, denen man **nicht** folgen
   darf (PR-2). Zeilenenden und Kodierung unveraendert (LF, UTF-8).
 - Die **Quelle im Gedaechtnis** fuer `Arbeitsweise/was-lauffaehig-heisst.md`.
+
+## Zwei Lehren aus dieser Sitzung, die in `Arbeitsweise/` gehoeren
+
+Sie stehen hier und nicht dort, weil `Arbeitsweise/` ein **Spiegel** des
+Gedaechtnisverzeichnisses ist (`tools/lehren-spiegeln.pl` kopiert von dort ins
+Repo, nicht umgekehrt) — ein Eintrag, den ich dort anlege, ist beim naechsten
+Spiegeln weg. Wer mit dem Gedaechtnis arbeitet, zieht sie dort nach; hier
+ueberleben sie.
+
+**1. Eine Anleitung, die einen Commit meint, nennt den Commit — nicht `HEAD`.**
+In Befund X-2 stand die Gegenprobe als `git show HEAD:tools/pruefe-bytes.pl`.
+Vom naechsten Commit an war das falsch: `HEAD` traegt die **behobene** Fassung,
+die Anleitung liefert dann „35 gruen" statt „11 rot", und die Gegenprobe sieht
+erfunden aus. Aufgefallen erst, als die Uebergabe gegengelesen wurde. Das ist
+dieselbe Fehlerklasse wie die veralteten Zeilenangaben aus Z-1 — nur trifft sie
+hier nicht eine Fundstelle, sondern einen **Beweis**.
+
+*Handgriff:* jede Anleitung in einem Befund einmal ausfuehren, bevor sie
+eingecheckt wird. Wo ein Commit gemeint ist, gehoert der Commit hin.
+
+**2. Ist die Menge klein genug, wird sie ganz gelesen — nicht gestichprobt.**
+Bei `suche-zeiger.pl` (X-3) hat die Stichprobe von 15 die Filter geliefert, aber
+**zwei eigene Fehler nicht gefunden**: die Klammersuche, die in die naechste
+Funktion lief, und die verlorene Streichung der `//`-Kommentare, wodurch eine
+Klammer **im Kommentar** als Blockende zaehlte. Beide fielen erst auf, als alle
+Treffer nachgelesen wurden. Dasselbe beim Einstufen: zwei Treffer, die ich als
+echte Kandidaten gefuehrt hatte, standen in einem 69 Zeilen langen
+auskommentierten Block.
+
+*Handgriff:* ab etwa 30 Treffern abwaerts alle lesen. Eine Stichprobe misst die
+Quote, sie findet nicht den Sonderfall — und der Sonderfall ist meistens ein
+Fehler im Werkzeug, nicht im geprueften Code.
