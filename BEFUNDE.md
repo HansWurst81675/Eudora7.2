@@ -4833,3 +4833,64 @@ Die ganze Kette trägt: OpenSSL 3.5.8 LTS → QCSSL 1.0.1 → `QCWorkerSocket` �
 POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
 Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
 (`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
+
+## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026, OFFEN)
+
+Beim **Schließen** von Eudora:
+
+    Microsoft Visual C++ Runtime Library
+    Debug Assertion Failed!
+    Program: C:\Users\Gregor\Eudora72-1.0.3\mfc140d.dll
+    File:    ...\ATLMFC\Include\afxcoll.inl
+    Line:    213
+
+### Was an dieser Zeile steht — nachgeschlagen, nicht geraten
+
+`afxcoll.inl:213` ist die Bereichsprüfung in **`CPtrArray::ElementAt`**:
+
+```cpp
+_AFXCOLL_INLINE void*& CPtrArray::ElementAt(INT_PTR nIndex)
+    { ASSERT(nIndex >= 0 && nIndex < m_nSize);      // <- Zeile 213
+```
+
+Also ein **Index außerhalb des Arrays**. In der Ersatzschicht kommt `ElementAt`
+nicht vor — aber MFCs eigene `CDockBar` benutzt es auf `m_arrBars`, und genau
+daran hat die heutige Andockrechnung gearbeitet.
+
+### Wahrscheinlichste Ursache (UNGEPRÜFT)
+
+`SECDockBar::MoveControlBarToPosition` (`OTShim.cpp:2718-2795`, heute neu) baut
+`m_arrBars` **von Hand** um: `RemoveAt` (bis zu zweimal), dann `InsertAt`, dann
+gegebenenfalls eine `NULL`-Endemarke anhängen.
+
+`m_arrBars` ist kein gewöhnliches Feld: MFC hält darin Zeiger auf Leisten,
+getrennt durch `NULL`-Marken, die die Zeilen abschließen — und `CDockBar` führt
+parallel dazu Zustand mit (`CControlBar::m_pDockBar`, die Positionsangaben, und
+`CFrameWnd::m_listControlBars`). Wer das Feld umbaut, muss diesen Zustand
+mitziehen.
+
+Der Verdacht: beim Beenden läuft MFCs eigener Abbauweg über `m_arrBars` und
+trifft auf eine Struktur, die zu dem nicht passt, was es sich gemerkt hat.
+
+**Nicht widerlegt, aber auch nicht belegt** — es fehlt der Aufrufstapel.
+
+### Wie man es morgen in Minuten findet
+
+`tools/stapel-untersuchen.ps1` fängt die Ausnahme und läuft die EBP-Kette ab.
+Damit wurde S-2 gefunden. Nötig: `Eudora.pdb` neben der `Eudora.exe` im Paket.
+Eine Debug-Zusicherung ist allerdings keine Ausnahme im Sinne des Debuggers —
+sie zeigt einen Dialog. Zwei Wege:
+
+1. Im Dialog **„Wiederholen"** drücken: das löst einen Haltepunkt aus, den der
+   Debugger als Ausnahme sieht.
+2. Oder `_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG)` setzen, dann geht
+   die Meldung in die Debugausgabe statt in einen Dialog.
+
+### Einordnung
+
+Es passiert **beim Beenden**, nachdem alles funktioniert hat — Abruf,
+Darstellung, Menüs. Kein Datenverlust ist zu erwarten: Eudora hat seine
+Postfächer zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
+Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
+Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
+der Grund, ihn nicht auf sich beruhen zu lassen.
