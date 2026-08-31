@@ -47,6 +47,18 @@
 > 4 lockbuffer / 1 danach. Wie man die Gegenprobe gegen die **alte** Schranke
 > nachrechnet, steht in Befund X-2 als fertiger Befehlsblock.
 >
+> ### `BEFUNDE.md` hat jetzt ein Verzeichnis
+>
+> Ganz oben in [BEFUNDE.md](BEFUNDE.md): alle **60 Kennungen** mit einem
+> Halbsatz und einer **Statusspalte** — behoben, offen, teilweise, überholt,
+> Beleg. Vorher musste man 5900 Zeilen durchsuchen und wusste hinterher nicht,
+> ob der gefundene Befund noch gilt. **Wer einen Befund fortschreibt, ändert
+> die Statusspalte dort mit** — sonst ist das Verzeichnis schlimmer als keines.
+>
+> Nebenbei aufgefallen: **E-10 gibt es nicht.** Die Kennung ist nie vergeben
+> worden, im ganzen Repo und im git-Verlauf gesucht. Wer sie sucht, sucht
+> umsonst; das steht jetzt im Verzeichnis.
+>
 > ### Auflage für den nächsten frischen Klon
 >
 > **`sh tools/hooks-einrichten.sh` einmal laufen lassen** — der Hook liegt unter

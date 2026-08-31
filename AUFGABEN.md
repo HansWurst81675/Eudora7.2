@@ -6,7 +6,8 @@ Belege: [BEFUNDE.md](BEFUNDE.md)
 
 Diese Datei ist die Arbeitsliste — was zu tun ist, in welcher Reihenfolge, und
 für jeden Punkt die Fundstelle. Sie ist so geschrieben, dass ein Agent damit
-sofort anfangen kann, ohne die Vorgeschichte zu kennen.
+sofort anfangen kann, ohne die Vorgeschichte zu kennen. Welcher Befund noch
+gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
 
 > **Braucht der Punkt Visual Studio?** Am 31.08.2026 abends lief eine Sitzung
 > ohne VM. Die Aufteilung steht in `WEITERMACHEN.md`, Abschnitt „Was ohne Visual

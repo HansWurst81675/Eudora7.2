@@ -1,3 +1,146 @@
+# BEFUNDE — Verzeichnis
+
+Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen und
+inzwischen rund **5900 Zeilen** lang (nachzählen: `grep -c '^## ' BEFUNDE.md`,
+dieses Verzeichnis zählt mit). Jeder Agent schreibt seinen Abschnitt ans
+**Ende**, die Reihenfolge ist also zeitlich, nicht sachlich. Ohne dieses
+Verzeichnis findet niemand, was er sucht — und schlimmer: er findet einen
+Befund und weiß nicht, ob er noch gilt.
+
+**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil vier Kennungen
+eine Ebene tiefer stehen (`### NP2-2`, `### NP2-3`, `### NP3-8`, `### NP3-9`:
+sie sind Nachträge innerhalb eines größeren Abschnitts). Zeilennummern stehen
+hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses Projekt hat
+genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
+
+> **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**
+> Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
+> dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
+
+**Stand der Statusspalte:** 31.08.2026 abends, Commit `48d28a2`. Die Einstufung
+ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
+
+| Status | Bedeutung |
+|---|---|
+| **behoben** | Ursache beseitigt, im Repo |
+| **offen** | nichts geändert |
+| **teilweise** | ein Teil behoben, der Rest steht im Befund |
+| **überholt** | durch einen späteren Befund widerlegt oder gegenstandslos |
+| **Beleg** | kein Mangel, sondern eine Messung |
+| **Bericht** | Prüfdurchgang, seine Einzelbefunde stehen darin |
+| **ungeprüft** | behoben, aber am laufenden Programm nicht nachgesehen |
+
+## Was zuerst zu lesen ist
+
+Wer neu dazukommt: **`WEITERMACHEN.md`** (Einstieg und Übergabe),
+**`AUFGABEN.md`** (Arbeitsliste), **`ZIEL.md`** (der Maßstab). Aus dieser Datei
+zuerst **E-11**, **R-1** und **E-1**.
+
+## Korrektheitsprüfung vom 29.08.2026 (Agent PRUEFER)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| H1 | ungültige Protokollversion brach die TLS-Verbindung nicht mehr ab | **behoben** |
+| H2 | Zeichentabelle: sieben falsche Zuordnungen, Doppelersetzung | **behoben** |
+| M1 | Untergrenze TLS 1.0 galt ausgerechnet für die Voreinstellung | **behoben** |
+| M2 | `BIO_s_workersocket()` war für sich genommen nicht threadsicher | **behoben** |
+| M3 | `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht | **überholt** (Absicht, im Code vermerkt) |
+| M4 | Empfangsrichtung las die **Sende**einstellung (Originalfehler) | **behoben** |
+| M5 | `CSumList::GetTail()` lieferte den Kopf (Originalfehler) | **behoben** |
+| N1 | Zeigerschmuggel durch `BIO_set_fd` hält nur unter Win32 | **behoben** (x64-Rest im Befund) |
+| N2 | `static` bei `get_entry_info` verlorengegangen | **behoben** |
+| N3 | zwei Rückgabewerte wurden nicht ausgewertet | **behoben** |
+| N4 | `#undef` auf einen SDK-Wächter in `ExceptionHandler.cpp` | **behoben** |
+| N5 | `atlimage.h`: Laufzeitprüfung durch `TRUE` ersetzt | **behoben** (Änderung war nötig, bleibt) |
+| N6 | OTShim war in keinem Projekt eingehängt | **überholt** |
+| N7 | zwei kleine Stellen in OTShim, beide heute wirkungslos | **offen** |
+| N8 | `const_cast` mit anschließendem Schreibzugriff, 7 echte Fälle | **geprüft**, kein Handlungsbedarf |
+
+## Nachprüfungen 2 und 3 (PRUEFER, 29./30.08.2026)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| NP2-1 | Stufe 3 der Ersatzschicht hing in keinem Projekt | **überholt** |
+| NP2-2 | `SysColorChange()` tut nicht, was daneben steht | **offen** (folgenlos, Kommentar irreführend) |
+| NP2-3 | `BitBltTransparent` meldet Erfolg, ohne gezeichnet zu haben | **offen** |
+| NP3-1 | `ZeigeInhaltsfenster` läuft, bevor Eudora das Fenster umhängt | **offen** (nur sichtbar, kein Datenfehler) |
+| NP3-2 | `OnToolHitTest` als `int` statt `INT_PTR` — x64-Sperre | **offen** |
+| NP3-3 | Kommentar zu `CreateFromBitmap` zählt die Aufrufstellen falsch | **offen** |
+| NP3-4 | `lehren-spiegeln.pl` löschte die gespiegelten Dateien wieder | **behoben** (stagt nicht mehr; Hook siehe X-2) |
+| NP3-5 | `lehren-spiegeln.pl` war genau im Fehlerfall stumm | **behoben** (X-2) |
+| NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **offen** |
+| NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **offen** |
+| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **offen** |
+| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **teilweise** (POP behoben, IMAP offen) |
+| PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
+
+## Start, Paket, Auslieferung (S)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| S-1 | Paket 1.0.1 startete nicht: `MSVCR71D.dll` fehlte | **behoben** |
+| S-2 | Stapelüberlauf beim Start — die Werbefläche mit `CRect(0,0,0,0)` | **behoben** |
+| S-3 | erster Lauf durch Gregor: drei Beobachtungen | **teilweise** (S-3c: `MFC71`/`MSVCP71` dauerhaft offen) |
+| S-4 | Zusicherung im Adressbuch-Wazoo | **behoben** |
+| S-5 | Menüs ließen sich nicht öffnen | **behoben** (Ursache M-1, belegt in E-1) |
+| S-6 | Bereiche überlagern sich | **teilweise** (A-1 umgesetzt, Splitter offen) |
+| S-7 | die Wurzel aller CRLF-Probleme: Auschecken mit `autocrlf=true` | **behoben** |
+| S-8 | Paket 1.0.2 startete mit `0xc000007b` | **behoben** (und durch F-1 gegenstandslos) |
+
+## Arbeit der Agenten vom 30./31.08.2026
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| B-1 | eigene `msvcr71.dll` als Weiterleitung (1429 Forwarder) | **behoben** |
+| B-2 | Brücke in der Solution, Paket 1.0.3, neuer Paketprüfer | **behoben** (GUID-Berichtigung darin) |
+| M-1 | der Rahmen lieferte immer `HTERROR` — `m_bMainFrameEnabled` | **behoben**, Wirkung belegt (E-1) |
+| A-1 | Erscheinungsbild: fünf Punkte umgesetzt | **teilweise**, Wirkung belegt (E-1/E-2) |
+| P-1 | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | **teilweise** (P-1.5b bis P-1.5j offen) |
+| P-2 | der Absturzpunkt vor dem ersten Abruf abgesichert | **behoben** |
+| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben** (PR-5 offen) |
+| F-1 | Release-Bau: `OTA50D.LIB` statt `OTA50R.LIB`, `MakeDox.pl` | **behoben**; statisch binden bleibt ausgeschlossen |
+| Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben, ungeprüft** |
+
+## Prüfberichte über die eigene Arbeit
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| PR-1 | drei Löcher in der Commit-Schranke | **Bericht** → durch W-1 abgearbeitet |
+| PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
+| Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
+| X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** durch X-2, außer `suche-zeiger.pl` und `zeilenenden-angleichen.pl` |
+| X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
+| R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+
+## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) |
+| E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 |
+| E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** |
+| E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **offen** |
+| E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 |
+| E-6 | Release läuft, Assistent stürzt bei *Weiter* ab | **überholt** durch E-8 (es war der Debug-Bau) |
+| E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **offen** (Behebung beschrieben, ein Aufruf) |
+| E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** |
+| E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig |
+| E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
+
+> **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
+> ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
+> Befund — wer sie sucht, sucht umsonst.
+
+## Was in dieser Datei sonst noch steht
+
+Neben den Befunden vier Sammelkapitel, die **kein** Mangel sind und deshalb oben
+nicht auftauchen: „Geprueft und in Ordnung" (zweimal, aus der ersten Prüfung und
+aus Nachprüfung 3), „Geprueft und in Ordnung — Stufe 4, Bildschicht" und
+„Nachgeprueft: die beiden Meldungen des Agenten TABELLE". Sie sagen, wo eine
+spätere Prüfung **nicht** noch einmal anfangen muss — dafür sind sie da.
+
+---
+
 # Befundbericht Korrektheitspruefung
 
 **Geprueft am:** 2026-08-29

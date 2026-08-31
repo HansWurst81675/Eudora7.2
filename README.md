@@ -43,7 +43,8 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 Der Weg dorthin an zwei Tagen: `Eudora.exe` band zum ersten Mal, startete nicht,
 und die Gründe dafür sind belegt und behoben — siehe
 [BEFUNDE.md](BEFUNDE.md), Befunde S-1 bis S-8 sowie B-1/B-2, M-1, A-1, P-1/P-2
-und W-1.
+und W-1. **Am Anfang von `BEFUNDE.md` steht ein Verzeichnis** aller Kennungen
+mit Statusspalte; ohne das findet man in 5900 Zeilen nichts wieder.
 
 Der eigentliche Blocker war die **Werbefläche**: `CAdWazooWnd::OnCreate` legt sie
 mit `CRect(0,0,0,0)` an, die Textmaschine Paige bekommt eine Umbruchbreite von
