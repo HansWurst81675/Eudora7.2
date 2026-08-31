@@ -92,6 +92,28 @@ weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau*
 
 ### Woran sich Kriterium 0 misst
 
+> ### Berichtigung vom 31.08.2026: Kriterium 0 ist NICHT belegt
+>
+> Ich hatte gemeldet, Kriterium 0 sei mit `tools/paket-pruefen.ps1`
+> „gemessen erfuellt". Das traegt nicht. PRUEFER hat mit einer Gegenprobe
+> gezeigt: **der Pruefer prueft die Maschine, nicht das Paket.**
+>
+> Aus einer ausgepackten Kopie wurden `EudoraRes.dll`, `QCSSL.dll`,
+> `SPELL32.DLL`, `EuGraph.ocx` und der ganze `Plugins`-Ordner geloescht —
+> das Ergebnis blieb **„keine Fehler, EXIT=0"**. Fehlende Laufzeiten gelten
+> ihm als vorhanden, sobald sie irgendwo in `SysWOW64` liegen.
+>
+> Dazu kommt: bei einem **Release**-Paket erzeugt seine feste
+> Debug-Laufzeitliste vier Falschwarnungen. Wer ihnen folgt, holt sich mit
+> `laufzeit-holen.ps1` genau die **nicht verteilbaren** DLLs ins Paket. Ein
+> Pruefwerkzeug, das zum Lizenzverstoss anleitet, ist schlimmer als keines.
+>
+> **Bis das behoben ist, darf `paket-pruefen.ps1` nicht als Freigabekriterium
+> gelten.** Der einzige belastbare Nachweis fuer Kriterium 0 bleibt: das ZIP
+> auf einem Rechner **ohne** Visual Studio auspacken und starten.
+
+
+
 `tools/paket-pruefen.ps1` gegen das ausgepackte Paket, auf einem Rechner **ohne**
 Visual Studio: **null Fehler**. Kein `0xc000007b`, keine Meldung über eine
 fehlende DLL, kein Nachinstallieren.
