@@ -26,7 +26,7 @@ Veröffentlichen.
 
 | | |
 |---|---|
-| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Zip "<verz>\..\Eudora72-1.0.3-vorabfassung.zip"` |
+| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -AusBauverzeichnis -Zip "<verz>\..\Eudora72-1.0.3-vorabfassung.zip"` |
 | Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` |
 | LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) |
 | QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
