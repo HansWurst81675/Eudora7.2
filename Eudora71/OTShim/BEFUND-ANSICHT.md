@@ -557,6 +557,30 @@ so weit nachgebaut werden kann, dass `GetParentFrame()` wenigstens ein
 auf das Zeilenende begrenzt. Das ist die Absicht - im Original steht die
 Werbeleiste am Ende ihrer Zeile.
 
+### Bauzustand dieser Sitzung
+
+| was | Ergebnis |
+|---|---|
+| `Eudora71\Eudora\Eudora.vcxproj` Debug/Win32 `/t:ClCompile` | Exit 0, keine neuen Warnungen |
+| `Eudora71\Tests\Tests.vcxproj` Debug/Win32 (voll, mit Linker) | Exit 0, `Eudora71\Tests\Build\Debug\EudoraTests.exe` erzeugt |
+
+Der Testbau ist zugleich die Linkerprobe fuer `OTShim.cpp` - dort wird
+`OTShim.cpp` mitgebunden, und das Programm entsteht vollstaendig. Der Linkerlauf
+von `Eudora.exe` selbst scheitert weiterhin an fehlender `imap.lib` (Befund
+S-3b), unabhaengig von dieser Sitzung.
+
+**OFFENE BITTE AN GREGOR:** `EudoraTests.exe` wurde **nicht ausgefuehrt**. Es ist
+ein Konsolenprogramm, und die Auflage dieser Sitzung lautete, kein Programm zu
+starten. `TestOTShimAndocken.cpp:162-224` und `:371` pruefen genau die Fassung
+`SECControlBar::CalcFixedLayout`, die hier geaendert wurde. Die Faelle sollten
+weiter durchgehen, weil `m_nRowExtent` im Konstruktor auf 0 steht und die
+Testleisten frisch angelegt werden - **gemessen ist das aber nicht.** Der Lauf
+waere:
+
+```
+Eudora71\Tests\Build\Debug\EudoraTests.exe
+```
+
 ---
 
 ## Stand und naechster Schritt
