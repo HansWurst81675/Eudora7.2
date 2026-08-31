@@ -8,11 +8,10 @@ Vorarbeit vom 30.08.2026, Branch `eudora-exe-linkt`, gemessen an `a139f9b`.
 > beantwortet — die Antworten stehen in `BEFUNDE.md` unter S-1 bis S-3 und in
 > `Releases/PAKETE.md`. Die Liste der Laufzeitdateien selbst gilt unverändert.
 >
-> Wesentlich hinzugekommen und hier noch nicht eingearbeitet: die sieben vorgebauten
-> Fremd-DLLs von 2006 brauchen die **VC7.1-Laufzeit** (`MSVCR71.dll`, `MFC71.DLL`,
-> `MSVCP71.dll`), die in dieser Aufstellung fehlt. Zwingend beim Laden sind laut
-> Importtabelle nur `EuMemMgr.dll` und `Paige32d.dll`; `MFC71.DLL` und `MSVCP71.dll`
-> fehlen weiterhin, wodurch Adressbuch, LDAP und Ph ausfallen (S-3c).
+> Wesentlich hinzugekommen: die sieben vorgebauten Fremd-DLLs von 2006 brauchen die
+> **VC7.1-Laufzeit**, und der Debug-Bau braucht die **VS2022-Debug-Laufzeiten**.
+> Beides ist in der Checkliste unten eingearbeitet. Am 31.08.2026 scheiterte ein
+> Startversuch an genau dieser Luecke mit `0xc000007b`.
 
 Diese Datei sammelt, was beim ersten Startversuch danebenliegen muss — damit die
 Suche danach nicht erst dann anfängt.
@@ -75,19 +74,67 @@ die Oberfläche. Beim Bau von `EudoraRes` gilt dasselbe wie bei `Eudora`: es hä
 
 ## Checkliste für den ersten Startversuch
 
-1. `Eudora.exe` linkt — dann zuerst `dumpbin /dependents` darauf laufen lassen und
-   die Ausgabe gegen `Bin/Debug` halten.
-2. `EudoraRes.dll` bauen (Projekt `EudoraRes`, ebenfalls mit
-   `-p:BuildProjectReferences=false`, solange OT501 nicht baut).
-3. `capicom.dll` aus dem Installer nach `Bin/Debug` kopieren, falls Eudora sie beim
-   Start verlangt.
-4. Erst dann starten — und mit einem **frischen, leeren Mailverzeichnis**, nicht mit
-   dem produktiven. Eudora legt beim ersten Start Dateien an und könnte eine
-   bestehende Installation beschädigen.
+**Stand 31.08.2026: diese Liste ist abgearbeitet, Eudora startet.** Sie steht
+hier als Anleitung für jeden, der ein Paket in ein frisches Verzeichnis packt.
 
-Punkt 4 ist kein Formalismus: der Auftraggeber liest mit Eudora täglich Mail. Ein
-Startversuch mit einer selbst gebauten, nie gelaufenen Fassung gehört in eine Kopie.
+1. **Die vier Debug-Laufzeiten von Visual Studio 2022 dazulegen.** Ohne sie
+   scheitert der Start mit `0xc000007b`:
 
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File tools\laufzeit-holen.ps1 -Ziel "<Verzeichnis>"
+   ```
+
+   Das Werkzeug holt `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
+   `ucrtbased.dll` aus `C:\Windows\SysWOW64` — dem **32-Bit**-Ordner, trotz des
+   Namens — und prüft jede einzeln auf ihre Architektur nach.
+
+   > `0xc000007b` heißt `STATUS_INVALID_IMAGE_FORMAT` und bedeutet fast immer
+   > Bitness-Konflikt. `Eudora.exe` ist x86. **Keine Laufzeit-DLLs von
+   > Sammelseiten holen** — die liefern häufig die 64-Bit-Fassung, ohne es
+   > deutlich zu machen. Am 31.08.2026 genau so passiert.
+
+2. **Die VC7.1-Laufzeit für die sieben vorgebauten Fremd-DLLs von 2006.**
+   Zwingend beim Laden sind laut Importtabelle nur `EuMemMgr.dll` und
+   `Paige32d.dll`, beide brauchen `MSVCR71.dll`. Dafür gibt es inzwischen einen
+   eigenen Nachbau unter `Eudora71/VC71Bruecke` — 1429 Weiterleitungen auf die
+   von Windows mitgelieferte `msvcrt.dll`, siehe Befund B-1.
+
+   `MFC71.DLL` und `MSVCP71.dll` fehlen weiterhin und sind nicht nachbaubar
+   (`MFC71` wird über 157 Ordinale importiert). Dadurch fallen **Adressbuch,
+   LDAP und Ph** aus. Mailabruf und -versand sind davon nicht betroffen.
+
+3. **Eine `Eudora.ini` ins Mailverzeichnis.** Ohne sie bricht Eudora in
+   `eudora.cpp:3542` ab (`VERIFY(GetShortPathName(INIPath,…))`). Vorlage:
+   `InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`.
+
+4. **Mit einem frischen, leeren Mailverzeichnis starten**, nicht mit dem
+   produktiven:
+
+   ```bash
+   Eudora.exe "<Pfad zum leeren Mailverzeichnis>"
+   ```
+
+   Das ist kein Formalismus: der Auftraggeber liest mit Eudora täglich Mail. Ein
+   Startversuch mit einer selbst gebauten Fassung gehört in eine Kopie.
+
+5. **Die drei bis vier SUPERASSERT-Dialoge wegklicken** (*Ignore Once*). Das
+   sind Debug-Zusicherungen, keine Fehler — eine meldet nur, dass der Suchindex
+   neu angelegt wird. Sie erscheinen nur, weil bisher ausschließlich der
+   Debug-Bau läuft.
+
+6. **Den Fenstertitel ablesen.** Er trägt die Bau-Kennung:
+
+   ```
+   Eudora - [In]   [1.0.3+371c1e3 - Eudora72-1.0.3]
+   ```
+
+   Paketversion, Commit, Herkunftsverzeichnis. Ein Sternchen hinter dem Commit
+   heißt: beim Bau lagen ungesicherte Änderungen vor. Bei einem
+   Bildschirmfoto immer den Titel mit aufnehmen — sonst lässt sich eine
+   Beobachtung keinem Bau zuordnen.
+
+Wenn ein Paket geprüft werden soll, bevor es jemand auspackt, gibt es dafür
+`tools/paket-pruefen.ps1`.
 ## Was hier bewusst nicht steht
 
 Ob Eudora **startet**, sagt diese Datei nicht. Sie sagt nur, welche Dateien

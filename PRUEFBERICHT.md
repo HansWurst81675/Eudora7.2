@@ -404,3 +404,44 @@ heute, S-7.
 Alle Gegenproben liegen als Wegwerf-Repos unter
 `%TEMP%\claude\...\scratchpad\gp`, `gp2`, `gp3` und sind aus den oben
 abgedruckten Befehlen in einer Minute neu erzeugt.
+
+---
+
+# PRUEFBERICHT, zweiter Durchgang — Stand 2cf569f
+
+Geprueft von PRUEFER am 31.08.2026, Branch `pruefung-pr2`, abgezweigt von
+`darstellung-und-menue` (2cf569f "Produktversion auf 7.2.0.3").
+
+Kein Programm mit Oberflaeche gestartet. Gebaut und gemessen wurde in der
+PowerShell. Der Release-Bau von FREIGABE lag zum Pruefzeitpunkt nicht vor —
+eine bekannte Luecke.
+
+## Zusammenfassung, zweiter Durchgang
+
+| Nr.    | Gegenstand | Schwere | Zustand |
+|--------|-----------|---------|---------|
+| PR-2.1 | `g_fnQCSSLBeginSession` ungeprueft — der Absturz kommt VOR der Behebung von heute | **hoch** | belegt, **behoben** |
+| PR-2.2 | `paket-pruefen.ps1` meldet EXIT=0 fuer ein Paket ohne `EudoraRes.dll` | **hoch** | belegt |
+| PR-2.3 | `paket-pruefen.ps1` benotet die Pruefmaschine, nicht das Paket | **hoch** | belegt |
+| PR-2.4 | Der groesste Eingriff des Tages hat keinen einzigen Test | **hoch** | belegt |
+| PR-2.5 | `DrawChecked` hat denselben Farbfehler, der in `DrawDisabled` behoben wurde | mittel | belegt |
+| PR-2.6 | Die Suchleiste teilt sich jetzt Zeile 0 mit der Hauptleiste, 50/50 | mittel | belegt, Wirkung UNGEPRUEFT |
+| PR-2.7 | `paket-bauen.ps1` ist kein Bau, sondern eine Umetikettierung | mittel | belegt |
+| PR-2.8 | `EUDORA_BUILD_MONTH` steht weiter auf Juni 2006 | niedrig | belegt, kein Handlungsbedarf |
+| PR-2.9 | `Splitter::cx` in `BEFUND-ANSICHT.md:279` mit falscher Zeilenangabe | niedrig | belegt |
+| —      | `DrawDisabled`: 0x00FFFFFF/0x00000000 sind richtig, Rueckgabe sicher | — | **stimmt** |
+| —      | `m_bMainFrameEnabled = FALSE`: alle fuenf Abfragestellen passen | — | **stimmt** |
+| —      | `DistributeRow`: keine Division durch null, keine negativen Breiten | — | **stimmt** |
+| —      | `MoveControlBarToPosition`: Zeilenzaehlung von Hand durchgerechnet | — | **stimmt** |
+| —      | `EudoraTests.exe`: 105 von 105 gruen, selbst gebaut und gelaufen | — | **stimmt** |
+| —      | Delay-Load: `paket-pruefen.ps1` liest Datenverzeichnis 13 sehr wohl | — | **stimmt** |
+
+**Haelt etwas Paket 1.0.3 auf?** PR-2.2 und PR-2.3 ja — nicht die Software,
+aber die Abnahme. `paket-pruefen.ps1` darf nicht als Freigabekriterium fuer
+Kriterium 0 gelten, solange es ein Paket ohne `EudoraRes.dll` mit "keine
+Fehler" durchwinkt. PR-2.1 war ein echter Absturz und ist behoben. PR-2.4 und
+PR-2.6 sind der Grund, warum die Andockrechnung vor der Auslieferung von einem
+Menschen auf dem Bildschirm angesehen werden muss.
+
+Die Einzelheiten mit Fundstellen und Gegenproben stehen in BEFUNDE.md,
+Abschnitt "PR-2".

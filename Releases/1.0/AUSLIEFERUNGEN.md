@@ -44,6 +44,16 @@ Mailserver**.
 
 ## Was das für die aktuelle Fassung bedeutet
 
+> ### Erledigt am 31.08.2026: der Servertest ist bestanden
+>
+> `ab55281a` (QCSSL 1.0.1) hat gegen `mx.freenet.de` auf **Port 110 mit
+> STARTTLS** gearbeitet: **TLSv1.3**, `TLS_AES_256_GCM_SHA384`, 256 Bit,
+> Status *Succeeded*, 08:09:43 Uhr. Danach 159 Nachrichten abgerufen.
+> Abgelesen in *Tools → Last SSL Info*. Einzelheiten in `BEFUNDE.md`, E-3.
+>
+> Die Sorge, die strengeren Vorgaben aus M1 könnten etwas verschlechtern,
+> hat sich **nicht** bestätigt.
+
 `ab55281a` (QCSSL 1.0.1) ist die einzige, die man einsetzen sollte. Sie enthält
 alles Genannte. Der Mailserver-Test steht für sie aus.
 

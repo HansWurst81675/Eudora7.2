@@ -349,9 +349,24 @@ BOOL SECBtnDrawData::PreDrawButton(CDC& dc, HBITMAP hBmp, int nMaxBtnWidth,
 		return FALSE;
 
 	// 1. Kontext mit der Leistenbitmap
+	//
+	// GetDrawData() liefert den Puffer des Verwalters
+	// (OTShim_Werkzeugleiste.h:1123, SECToolBarManager::m_drawData) - alle
+	// Leisten EINES Verwalters teilen sich also diesen m_bmpDC, und ueber
+	// SetToolBarInfo (Z. 1898) teilen sie sich auch dieselbe Bitmap.
+	// ::SelectObject schlaegt fehl, wenn dieselbe Bitmap bereits in einem
+	// ANDEREN Kontext ausgewaehlt ist. Der Rueckgabewert wurde bisher nicht
+	// ausgewertet; im Fehlerfall behielte m_bmpDC seine 1x1-Vorgabebitmap und
+	// jedes BitBlt daraus maelte einen leeren Knopf.
 	if (m_bmpDC.GetSafeHdc() == NULL && !m_bmpDC.CreateCompatibleDC(&dc))
 		return FALSE;
+
 	m_hOldBmp = ::SelectObject(m_bmpDC.GetSafeHdc(), hBmp);
+	if (m_hOldBmp == NULL)
+	{
+		TRACE1("OTShim: PreDrawButton - Bitmap %p laesst sich nicht auswaehlen\n", hBmp);
+		return FALSE;
+	}
 
 	// 2. Zwischenpuffer in Groesse eines Knopfes
 	if (m_drawDC.GetSafeHdc() == NULL && !m_drawDC.CreateCompatibleDC(&dc))
@@ -787,6 +802,21 @@ void SECStdBtn::DrawDisabled(SECBtnDrawData& data, int x, int y, int nWidth,
 
 	CreateMask(data, x, y, nWidth, nHeight);
 
+	// Beim Kopieren von EINFARBIG nach FARBIG uebersetzt GDI die 1 in die
+	// Hintergrund- und die 0 in die Textfarbe des ZIELKONTEXTES. Die
+	// Verknuepfungszahl unten rechnet bitweise und setzt deshalb voraus, dass
+	// aus der 1 lauter Einsen und aus der 0 lauter Nullen werden.
+	//
+	// Ohne die beiden folgenden Zeilen stuende in data.m_drawDC noch die
+	// Hintergrundfarbe, die SECStdBtn::DrawFace ueber CDC::FillSolidRect
+	// (= SetBkColor + ExtTextOut/ETO_OPAQUE) auf secData.clrBtnFace gesetzt
+	// hat. Die Maskeneins wuerde dann nach clrBtnFace statt nach 0xFFFFFF
+	// uebersetzt, die Rechnung ginge nicht auf und der gesperrte Knopf bliebe
+	// je nach Systemfarbe leer. DrawChecked setzt beide Farben laengst -
+	// hier fehlten sie.
+	COLORREF crOldText = data.m_drawDC.SetTextColor(0x00000000L);
+	COLORREF crOldBk   = data.m_drawDC.SetBkColor(0x00FFFFFFL);
+
 	CBrush brHilite(secData.clrBtnHilite);
 	CBrush brShadow(secData.clrBtnShadow);
 
@@ -799,6 +829,9 @@ void SECStdBtn::DrawDisabled(SECBtnDrawData& data, int x, int y, int nWidth,
 						 OTSHIM_ROP_MASKED_PATTERN);
 
 	data.m_drawDC.SelectObject(pOld);
+
+	data.m_drawDC.SetBkColor(crOldBk);
+	data.m_drawDC.SetTextColor(crOldText);
 }
 
 // Angekreuzter Knopf: der HINTERGRUND bekommt das Schachbrettmuster, das

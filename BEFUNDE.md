@@ -3213,3 +3213,2263 @@ steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) — wer e
 entfernt, holt sich den Stapelueberlauf aus S-2 zurueck.
 
 **Nichts davon haelt Paket 1.0.3 auf.**
+
+## P-2 - Kriterium 3 abgesichert: der Absturzpunkt vor dem ersten Abruf ist behoben
+
+**Geprueft am:** 2026-08-31, Agent POSTBOTE, Branch `abruf-absichern`
+(aus `darstellung-und-menue`, `76efdb6`).
+**Anlass:** Fortsetzung von P-1. Gregor will als naechstes selbst einen
+Mailserver verbinden. P-1.5a nannte den wahrscheinlichsten Absturzpunkt, P-1.8
+liess die Aenderung an `TextReader.cpp:251` unuebersetzt.
+**Verfahren:** nur Quellcode und Uebersetzer. Kein Eudora gestartet, keine
+Verbindung zu einem Mailserver, keine Zugangsdaten benutzt.
+**Ablieferung nebenan:** `ABRUF-PRUEFEN.md`, Abschnitte 1 (Servername),
+5a (SSL-Aushandlung) und 5b (Zertifikatsfehler) sind neu.
+
+### P-2.1 BEHOBEN: NULL-Zeiger nach gescheiterter SSL-Aushandlung (war P-1.5a)
+
+**Sicherheit: nachgewiesen (uebersetzt).**
+**Datei:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp`, Funktion
+`QCWorkerSocket::InitializeQCSSL` (ab `:1938`).
+
+Vier Zeilen, alle im Fehlerpfad einer gescheiterten SSL-Aushandlung:
+
+| vorher | Fundstelle | jetzt |
+|---|---|---|
+| `pConnectionInfo= fnConnInfo(...)` | `:1957` | Aufruf nur noch `if (fnConnInfo)` |
+| `if (pConnectionInfo->m_Outcome.m_bCertRejected)` | `:1969` | `if (pConnectionInfo && pConnectionInfo->...)` |
+| `pConnectionInfo = fnConnInfo(...)` | `:1989` | Aufruf nur noch `if (fnConnInfo)` |
+| `m_iSSLError = pConnectionInfo->...` und `if (pConnectionInfo->...)` | `:1991/:1992` | beide in ein `if (pConnectionInfo)` gefasst |
+
+Die Stelle `:1969` war die wichtigste: Zeile 1961 prueft `pConnectionInfo`,
+Zeile 1969 dereferenziert es acht Zeilen spaeter wieder ungeprueft. Der
+Zweig `:1986-1997` (kein `TaskInfo`, also IMAP oder Hauptfaden) pruefte
+ueberhaupt nicht.
+
+**Neu hinzugekommen: der Funktionszeiger.** `fnConnInfo` kann NULL sein, ohne
+dass etwas vorher schiefgelaufen sein muss. `Network::SetSSLMode`
+(`:362-386`) bricht nur ab, wenn `LoadLibrary("qcssl")` scheitert; die zehn
+`GetProcAddress`-Ergebnisse (`:373-383`) werden **gar nicht geprueft** und
+`m_bSSLMode` wird trotzdem gesetzt. Laedt also eine `QCSSL.dll` der falschen
+Fassung, in der `QCSSLGetConnectionInfo` fehlt, dann ist `fnConnInfo` NULL und
+der Aufruf in `:1957` stuerzt ab - **noch bevor** die alte Fundstelle `:1969`
+ueberhaupt erreicht wird. Genau dieser Fall ist bei Gregor moeglich, weil in
+`Releases/1.0/` mehrere `QCSSL.dll`-Fassungen liegen.
+
+**Die Meldung.** Ohne `ConnectionInfo` blieb `csError` bisher bei
+`"SSL Negotiation Failed: "` stehen und `errorCode` bei `-1`. `SetError`
+(`:680`) bildet daraus `CRString(8000 + (-1 - 10000))` = `CRString(-2001)` -
+eine Ressourcen-ID, die es nicht gibt; `LoadString` liefert dann den
+Leerstring. Gregor haette also `SSL Negotiation Failed: <nichts> Cause:
+<nichts> (-1)` gesehen. Jetzt haengt in diesem Fall ein Klartext-Zusatz daran,
+der auf die DLLs zeigt. Woertliche Zeichenkette statt neuer Ressourcen-ID -
+dasselbe Muster wie `QCWorkerSocket.cpp:700`
+(`"Connection closed by foreign host."`), damit `EudoraRes.rc` und
+`resource.h` unangetastet bleiben und keine Ressourcen-DLL neu gebaut werden
+muss.
+
+Am Ablauf aendert sich sonst nichts: `SetError(csError, errorCode)` und
+`m_bAbortConnection = TRUE` laufen wie bisher, der Abruf bricht geordnet ab.
+
+**Uebersetzt:**
+`MSBuild Eudora71\QCSocket\QCSocket.vcxproj /p:Configuration=Debug /p:Platform=Win32`
+- Exit 0, `Eudora71\Bin\Debug\QCSocket.dll` erzeugt. `QCWorkerSocket.cpp`
+fehlerfrei, nur die vorbestehenden `C4996`-Warnungen.
+
+### P-2.2 BEHOBEN: derselbe Fehlertyp, umgekehrt - `pSettings` in `SetSSLMode`
+
+**Sicherheit: nachgewiesen (uebersetzt). Heute nicht erreichbar.**
+**Datei:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:2050-2051`.
+
+`QCWorkerSocket::SetSSLMode` (`:2038`) dereferenzierte `pSettings` in den
+Zeilen 2050/2051 ungeprueft - und prueft denselben Zeiger fuenfzehn Zeilen
+weiter unten in `:2065` (`if(pSettings)`) sehr wohl. Der Autor hat NULL also
+fuer moeglich gehalten. Er ist es auch: die Deklaration in
+`QCWorkerSocket.h:62` und `:265` gibt `SSLSettings *pSettings = NULL` als
+**Vorgabewert** an.
+
+**Heute nicht erreichbar:** alle fuenf echten Aufrufer uebergeben die Adresse
+eines Elements, die nie NULL sein kann - `POPSession.cpp:604` und `:3489`,
+`SMTPSession.cpp:717` und `:837`, `password.cpp:392`, jeweils
+`&m_Settings->m_SSLSettings`. Der einzige Aufruf mit Vorgabewerten ist
+`Network::SetSSLMode(bVal)` in `:2041`, und das ist eine andere Funktion, die
+`pSettings` gar nicht anfasst. Gefunden hat es die Suche unten, nicht ein
+Absturz.
+
+Behoben, weil es derselbe Fehlertyp ist und die Zeile auf dem Abrufweg liegt.
+Die beiden Zuweisungen stehen jetzt in einem `if (pSettings)`.
+
+### P-2.3 Der Abrufpfad ist nach demselben Muster abgesucht
+
+**Verfahren:** `suche-zeiger.pl` (im Branch abgelegt) liest jede Datei mit
+`:raw`, findet jede Zeile der Form `if (p)`, `if (!p)`, `if (p == NULL)`,
+`if (p != NULL)`, verfolgt die Klammertiefe bis zum Ende des geschuetzten
+Blocks und meldet jede Dereferenzierung desselben Namens in den 40 Zeilen
+danach, sofern dazwischen nicht erneut geprueft wird.
+
+Abgesucht: `QCWorkerSocket.cpp`, `POPSession.cpp`, `pop.cpp`, `GetMail.cpp`,
+`header.cpp`, `TextReader.cpp`, `mime.cpp`, `lex822.cpp`, `QCMailSettings.cpp`,
+`SSLSettings.cpp`.
+
+Acht Treffer, einzeln nachgelesen:
+
+| Fundstelle | Bewertung |
+|---|---|
+| `QCWorkerSocket.cpp:2050` | **echter Fund** - P-2.2, behoben |
+| `QCWorkerSocket.cpp:453` | Fehlalarm: einzeiliges `if` ohne Block, der Aufruf ist der Rumpf |
+| `QCWorkerSocket.cpp:2042` | Fehlalarm: `if(!m_pSSLReference) m_pSSLReference = DEBUG_NEW ...`; `new` wirft bei MFC, liefert nicht NULL |
+| `POPSession.cpp:501`, `:896`, `:3228` | Fehlalarme: einzeiliges `if`, Zugriff im Rumpf |
+| `pop.cpp:312` | Fehlalarm: sauberes `if (!p) {...} else {...}` |
+| `pop.cpp:476` | Fehlalarm: Zugriff steht im geschuetzten Block |
+
+Das Muster "geprueft und ein paar Zeilen spaeter ungeprueft benutzt" kommt im
+Abrufpfad also **nur an diesen beiden Stellen** vor. Beide sind behoben.
+
+**Was die Suche NICHT findet, und wo deshalb noch etwas liegen koennte:**
+Zeiger, die nirgends geprueft werden. Die zehn ungeprueften
+`GetProcAddress`-Ergebnisse in `QCWorkerSocket.cpp:373-383` sind der wichtigste
+Fall dieser Art. Nur `QCSSLGetConnectionInfo` ist jetzt an seinen zwei
+Verwendungsstellen abgesichert; `g_fnQCSSLBeginSession` (`:1944`),
+`g_fnQCSSLWrite`, `g_fnQCSSLRead`, `g_fnQCSSLEndSession` sind es nicht.
+**UNGEPRUEFT**, ob eine der ausgelieferten `QCSSL.dll`-Fassungen wirklich einen
+dieser Exporte vermissen laesst - P-1.4 hat `qcssl.def` als in beiden
+Konfigurationen eingehaengt nachgewiesen, die Exporte sollten also da sein.
+Sauber waere, `Network::SetSSLMode` `m_bSSLMode` nur dann setzen zu lassen,
+wenn alle Zeiger aufgeloest wurden, und sonst eine Meldung zu zeigen. Das ist
+mehr als ein Zweizeiler und war in der Zeit nicht drin.
+
+### P-2.4 ERLEDIGT: `TextReader.cpp:251` ist jetzt uebersetzt (schliesst P-1.8)
+
+**Sicherheit: nachgewiesen (uebersetzt und gebunden).**
+
+P-1.8 musste die Aenderung aus P-1.1 unuebersetzt lassen, weil der damalige
+Arbeitsbaum an einem OTShim-Fehler haengenblieb. Auf `darstellung-und-menue`
+ist das behoben.
+
+    MSBuild Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32
+    -> Eudora71\Bin\Debug\Eudora.exe   (Exit 0, 10 224 128 Byte)
+
+`TextReader.cpp` uebersetzt fehlerfrei. Die Zuweisung
+`size = ISOTranslate(buf, size, iCharsetIdx);` erzeugt **keine** Warnung -
+insbesondere keine `C4244`; `size` ist `LONG` (`TextReader.cpp:77`) und
+`ISOTranslate` liefert `LONG` (`utils.h:90`). Die einzigen Warnungen in der
+Datei sind die vorbestehenden `C4996` zu `strncpy`, `sprintf`, `strcpy` und
+`strcat`. **P-1.8 ist damit geschlossen.**
+
+Zum Weg dorthin, fuer den naechsten, der es nachbaut:
+
+1. `Eudora.vcxproj` mit `/p:BuildProjectReferences=false` uebersetzt alles,
+   scheitert aber am Binden mit `LNK1104: imap.lib`.
+2. `Eudora71\Eudora.sln` laesst sich **nicht** mit
+   `/p:Platform=Win32` bauen: `MSB4126, Projektmappenkonfiguration
+   "Debug|Win32" ist ungueltig`.
+3. `Eudora.vcxproj` **mit** Projektverweisen baut `Imap.dll`, `QCSSL.dll`,
+   `QCSocket.dll` und die uebrigen Bibliotheken, scheitert dann aber an
+   `OT501.vcxproj` (`NMAKE U1073: OTA50D\OTA50D.lib`). Das ist eine fremde
+   Baustelle.
+4. Danach `Eudora.vcxproj` erneut **ohne** Projektverweise - jetzt liegen alle
+   `.lib` in `Eudora71\Lib\Debug`, und `Eudora.exe` entsteht.
+
+Der Umweg ueber Schritt 3 ist nur beim ersten Mal in einem frischen Worktree
+noetig.
+
+### P-2.5 Nicht angefasst
+
+- `tools/patches/zertifikatspruefung-verschaerfen.patch` bleibt unangewendet
+  (Gregors ausdrueckliche Entscheidung, siehe P-1.6).
+- Die uebrigen Altlasten aus P-1.5b bis P-1.5j. Sie stehen wortgleich in
+  `567a5d8` und sind unveraendert offen. Nach Aufwand-Nutzen als naechstes:
+  **P-1.5b** (`%39s` statt `%s`, `POPSession.cpp:1050`) und **P-1.5d**
+  (`sizeof(Server)-1` plus Nullterminierung, `POPSession.cpp:1739`, `:3342`,
+  `:3344`) - beides Einzeiler.
+
+### P-2.6 Wie zuversichtlich ich bin, dass der erste Abruf gelingt
+
+Ehrlich: **verhalten.** Was ich sagen kann und was nicht:
+
+- **Belegt:** der Absturz aus P-1.5a kann nicht mehr eintreten, und wo Eudora
+  vorher verschwand, kommt jetzt eine Meldung mit einem Hinweis auf die DLLs.
+- **Belegt:** Umlaute in Text und Betreff kommen richtig an (P-1.1 behoben und
+  jetzt auch uebersetzt, P-1.3 mit neun Tests vermessen).
+- **Belegt:** die Portierung hat den Abrufpfad nicht beschaedigt (P-1.4).
+- **UNGEPRUEFT und der wahrscheinlichste Stolperstein:** ob `mx.freenet.de`
+  ueberhaupt POP3 spricht. Ohne Netz nicht zu klaeren. `ABRUF-PRUEFEN.md`
+  Abschnitt 1 nennt jetzt das unterscheidende Merkmal - kommt der
+  Passwortdialog, stimmt der Server; kommt er nicht, ist es der Name oder der
+  Port.
+- **UNGEPRUEFT:** ob `rootcerts.p7b` die heutige CA von freenet enthaelt. Wenn
+  nicht, kommt der Vertrauensdialog. Das ist kein Scheitern - Abschnitt 5b
+  sagt, was der Text bedeutet und dass "OK" ihn dauerhaft wegraeumt.
+- **Nichts davon ist an einem laufenden Eudora geprueft.** Der erste echte
+  Abruf ist der erste echte Abruf.
+
+Meine Erwartung: **der Abruf scheitert eher an der Serveradresse als an
+Eudora.** Und wenn er scheitert, scheitert er jetzt mit einer Meldung statt
+mit einem Absturz - das ist der Unterschied, den diese Sitzung gemacht hat.
+
+### P-2.7 Nachtrag: drei Komponententests mehr (105 gruen)
+
+Ausgangsstand waren nicht mehr die 34 aus P-1.7, sondern **102** - andere
+Agenten haben in der Zwischenzeit ergaenzt. Dazu drei neue in
+`Eudora71/Tests/TestPopEmpfang.cpp`:
+
+| Test | Was er absichert |
+|---|---|
+| `Test_NachrichtOhneBetreff` | leerer Betreff, Betreff nur aus Zwischenraum, Betreff nur `=`, und ein angefangenes, nie geschlossenes kodiertes Wort - `Fix2047` darf dabei nicht ueber das Zeilenende hinauslesen |
+| `Test_SehrLangeKopfzeile` | 60 kodierte Woerter hintereinander, roh 1620 Zeichen, dekodiert 300. Beide Laengen sind im Test gegengeprueft, damit er nicht unbemerkt etwas anderes misst |
+| `Test_VollstaendigePopAntwort` | eine ganze RETR-Antwort: sechs Kopfzeilen (zwei kodiert, vier reines ASCII, die sich nicht aendern duerfen) und vier Rumpfzeilen mit Umlaut, scharfem s, Eurozeichen und geschuetztem Leerzeichen. Nachgestellt ist die Aufteilung aus `pop.cpp:656`. Jede Rumpfzeile wird zusaetzlich darauf geprueft, dass sie NACH der Uebersetzung noch auf CRLF endet - genau das ging schief, solange die neue Laenge weggeworfen wurde (P-1.1) |
+
+    Eudora71\Tests\RunTests.cmd
+    Ergebnis: 105 Tests, 105 bestanden, 0 fehlgeschlagen
+
+Damit ist von der Wunschliste des Auftrags abgedeckt: UTF-8-Umlaute in einer
+POP-Antwort, Betreff in Base64, Betreff in Quoted-Printable (die beiden
+letzten standen schon aus P-1.3), Nachricht ohne Betreff, sehr lange
+Kopfzeile.
+
+**Eine Falle fuer den naechsten, der hier Tests schreibt:** `"\xC3\x9Fe"` ist
+keine Bytefolge, sondern die Fluchtfolge `\x9FE` - C++ frisst das `e` als
+weitere Hexziffer. Der Uebersetzer meldet `C2022: "2558" zu gross fuer ein
+Zeichen`. Richtig ist `"\xC3\x9F" "e"`. Das gilt fuer jedes `a`-`f` direkt
+hinter einer `\x`-Folge, und der Fehler ist genau bei deutschen Umlauten
+(`\x9F` + `e` in "Strasse", "Gruesse") wahrscheinlich.
+
+## B-2 — Die Brücke hängt in der Solution, Paket 1.0.3 steht, und ein Prüfer davor
+
+Agent BRUECKE, 31.08.2026. Fortsetzung von [B-1](#b-1). Alle Zahlen hier sind
+**gemessen**; wo nicht, steht **UNGEPRÜFT** davor. Werkzeug war
+`tools/paket-pruefen.ps1` (in diesem Commit neu) und `MSBuild` aus VS 2022.
+
+### B-2.1 — `VC71Bruecke` ist eingehängt, aber die GUID in B-1 war falsch
+
+`Eudora71/Eudora.sln` enthält das Projekt jetzt. Byte-erhaltend eingefügt mit
+`tools/ersetze-bereich.pl`, zwei Stellen, sechs Zeilen; CR-Zahl 0 vorher wie
+nachher, Tabulatoren erhalten.
+
+**Berichtigung zu B-1.** Der dortige Abschnitt „Offen“ und
+`Eudora71/VC71Bruecke/BEFUND.md` Abschnitt 6 nennen als einzutragende GUID
+
+    {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}
+
+Das ist **nicht** die GUID des Projekts. In `VC71Bruecke.vcxproj:32` steht
+
+    <ProjectGuid>{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}</ProjectGuid>
+
+Eingetragen ist die echte. Wer die aus BEFUND.md abgeschrieben hätte, bekäme
+eine Solution, in der das Projekt zwar auftaucht, aber keiner Konfiguration
+zugeordnet ist — es würde stillschweigend nicht gebaut. Die falsche Angabe in
+`BEFUND.md` steht dort noch; sie ist mit diesem Abschnitt richtiggestellt.
+
+**Nachgemessen:** Gesamtbau der Solution, `Debug|x86`. `VC71Bruecke` baut mit,
+Ausgabe `Eudora71/Bin/Debug/msvcr71.dll`. Die drei bekannten Fehler aus `OT501`
+bleiben (`NMAKE U1073` zweimal, `MSB3073` einmal). Zusätzlich zwei
+`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` — das ist **kein neuer
+Fehler**, sondern ein Wettlauf im Parallelbau (`/m`): beide Projekte binden,
+bevor `QCUtils` fertig ist. Einzeln gebaut laufen sie durch, nachgemessen.
+Danach bindet auch `Eudora.vcxproj` wieder durch.
+
+### B-2.2 — Wann Eudora die MFC71-abhängigen Module lädt: erst bei Benutzung
+
+Die in B-1.2 offen gelassene Frage ist beantwortet, und zwar **gemessen am
+ausgelieferten Paket**, nicht am Quelltext.
+
+`tools/paket-pruefen.ps1` rechnet die **Startkette** aus: beginnend bei den
+EXE-Dateien im Wurzelverzeichnis den gewöhnlichen (nicht verzögerten) Importen
+folgen, solange das Ziel im Paket liegt. Das ist genau das, was der Lader
+anfassen muss, bevor die erste Zeile eigener Code läuft. Ergebnis für das
+Paket, **elf Module**:
+
+    Eudora.exe  swEudora.exe  EuLang.dll  EuMemMgr.dll  Imap.dll
+    libexpat.dll  msvcr71.dll  Paige32d.dll  plstclnt.dll  QCSocket.dll
+    QCUtils.dll
+
+`EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` und die drei Plugins sind
+**nicht darin**. Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also
+nicht auf. Es gehört in einen Abschnitt „was nicht geht“, nicht nach vorn in
+die LIESMICH.txt. Das bestätigt S-1 („beim Laden zwingend sind nur zwei“) und
+erweitert es um die transitive Kette.
+
+### B-2.3 — Das echte Paket 1.0.2 nachgesehen: drei Berichtigungen zu B-1
+
+B-1 musste den Paketinhalt aus der Auftragsbeschreibung übernehmen. Jetzt ist
+er gemessen (`Releases/Eudora72-1.0.2-lauffaehig.zip`, ausgepackt, jede Datei
+durch den PE-Leser).
+
+**1. `MFC71.DLL` und `MSVCP71.dll` liegen tatsächlich nicht bei.** Die
+Vermutung aus B-1.2 stimmt. Adressbuch, LDAP, Ph und die drei Plugins waren
+also schon in 1.0.2 nicht ladbar. 1.0.3 verschlechtert daran nichts.
+
+**2. Das Paket 1.0.2 ist gemischt, nicht durchgehend Release.** `PAKETE.md`
+und die LIESMICH.txt zu 1.0.2 sagen, die sieben vorgebauten DLLs lägen als
+Release-Fassungen bei. Für fünf stimmt das. Nicht für zwei:
+
+| Datei im Paket 1.0.2 | Größe | entspricht | importiert |
+|---|---|---|---|
+| `Paige32d.dll` | 757.760 B | `Bin/Debug/Paige32d.dll` | `MSVCR71D.dll` |
+| `Plugins/*.dll` | — | `Bin/Debug/Plugins/*` | `MFC71D.DLL`, `MSVCP71D.dll` |
+
+**Damit ist erklärt, warum die D-Dateien im Paket lagen** — B-1 hatte sie für
+totes Gewicht gehalten, weil es nur `Bin/Release` gemessen hatte. Im Paket
+wurden sie sehr wohl gebraucht: `msvcr71d.dll` von der Debug-`Paige32d.dll`,
+`msvcp71d.dll` von den Debug-Plugins. Der Satz aus B-1, sie seien „totes
+Gewicht“, war für das Repository richtig und für das Paket falsch.
+
+Der Weg, sie loszuwerden, bleibt derselbe und ist in B-1 belegt: die
+Release-`Paige32.dll` unter dem Namen `Paige32d.dll` kopieren. Danach braucht
+sie niemand mehr.
+
+**3. `EUMAPI.DLL` im Paket ist keine PE-Datei.** Der PE-Leser bekommt keinen
+gültigen Kopf. 82.944 B, unverändert aus der Freigabe von 2006 übernommen.
+**UNGEPRÜFT**, was es stattdessen ist — der Verdacht ist eine 16-Bit-NE-Datei
+aus der MAPI-Vergangenheit. Keine Paketdatei importiert sie; sie steht in
+keiner Importtabelle. Meldet sich als Warnung, nicht als Fehler.
+
+### B-2.4 — Paket 1.0.3 ist vorbereitet, nicht veröffentlicht
+
+Zusammengestellt mit `tools/paket-bauen.ps1` (neu), das den Vorgang
+reproduzierbar macht. Änderungen gegenüber 1.0.2 und ihre Begründung stehen im
+Kopf des Skripts und in `Releases/PAKETE.md`. Kurz:
+
+1. selbst gebaute `msvcr71.dll` statt der drei Fremddateien von dll-files.com
+2. `Paige32d.dll` als Kopie der Release-`Paige32.dll`
+3. `msvcr71d.dll` und `msvcp71d.dll` entfallen
+4. Release-Plugins statt Debug-Plugins, ohne 12 MB Symboldateien
+5. `laufzeit-holen.ps1` und `paket-pruefen.ps1` liegen im Paket
+
+Vorgeschlagener Dateiname `Eudora72-1.0.3-vorabfassung.zip`. **Nicht
+„lauffaehig“** — nach `ZIEL.md` ist derzeit keines der drei Kriterien erfüllt.
+
+Das ZIP selbst ist **nicht** im Repository. Es besteht zu 99 % aus
+Bauergebnissen, und ob veröffentlicht wird, entscheidet Gregor. Im Repository
+liegen `Releases/1.0.3/LIESMICH.txt`, der Eintrag in `Releases/PAKETE.md` und
+das Skript, das es jederzeit wieder herstellt.
+
+### B-2.5 — Was der Paketprüfer findet
+
+`tools/paket-pruefen.ps1` liest von jeder EXE/DLL/OCX den PE-Kopf selbst — kein
+`dumpbin` nötig, damit es auch auf einer Maschine ohne Visual Studio läuft. Es
+prüft Architektur, löst Import- **und** Verzögerungstabelle auf, sucht die vier
+VS2022-Debug-Laufzeiten und eine `Eudora.ini` als Vorlage. **Es startet
+nichts.**
+
+| | 1.0.2 | 1.0.3 |
+|---|---|---|
+| Fehler | 3 | **0** |
+| Warnungen | 5 | 7 |
+| Binärdateien, alle x86 | 31 | 29 |
+
+Die drei Fehler in 1.0.2 waren `MFC71.DLL`, `MFC71D.DLL`, `MSVCP71.dll`.
+`MFC71D.DLL` ist in 1.0.3 verschwunden (Release-Plugins); die beiden anderen
+sind Warnungen geworden, seit der Prüfer die Startkette kennt (B-2.2).
+
+**Der eigentliche Zweck ist aber ein anderer Fund.** Beide Pakete bekommen
+vier Warnungen der Form
+
+    mfc140d.dll  liegt nicht im Paket. Auf dieser Maschine steht sie in
+    SysWOW64, auf einer Maschine ohne Visual Studio 2022 nicht - dort
+    scheitert der Start.
+
+Genau daran ist Gregor am Morgen des 31.08.2026 gescheitert: `0xc000007b`. Der
+Prüfer hätte das vor der Auslieferung gesagt, und die Architekturprüfung hätte
+auch den zweiten Teil gefunden — die ersatzweise geholten Dateien waren
+64 Bit.
+
+### B-2.6 — Was ich NICHT getan habe
+
+- Kein Eudora gestartet, kein Programm mit Fenstern, kein
+  `OutputDebugString`-Mithörer. `paket-pruefen.ps1` und `paket-bauen.ps1`
+  lesen und kopieren Dateien, mehr nicht.
+- Nichts veröffentlicht. Kein ZIP im Repository, keine Prüfsumme in
+  `PAKETE.md` — beides entsteht erst, wenn Gregor es will.
+- `Eudora71/VC71Bruecke/BEFUND.md` nicht angefasst (falsche GUID in
+  Abschnitt 6, siehe B-2.1) — es ist der Bericht meines Vorlaufs; die
+  Richtigstellung steht hier.
+
+## W-1 — Die Werkzeuge in Ordnung gebracht (WERKZEUG, 31.08.2026)
+
+Abgearbeitet werden die Befunde PR-1 bis PR-8 aus `PRUEFBERICHT.md`. Jede
+Aussage unten ist gemessen; die Gegenproben laufen als Testsammlung mit.
+
+| Befund | Gegenstand | Stand |
+|---|---|---|
+| PR-1 | Schranke laesst LF → CRLF durch | **behoben** |
+| PR-2 | Schranke schlaegt bei Leerzeilen grundlos an | **behoben** |
+| PR-3 | `.def`/`.sln`/`.bat`/`.ps1` gar nicht geprueft | **behoben** |
+| PR-4 | `BuildKennung.h` verfolgt → fremde Kennung | **behoben** |
+| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | offen (nur Beschreibung) |
+| PR-6 | `_T(EUDORA_BAU_KENNUNG)` bricht im Unicode-Bau | **behoben** |
+| PR-7 | Zahlen in S-7 widersprechen sich | **behoben** |
+| PR-8 | `rekursion-suchen.pl` findet den eigenen Anlass nicht | **geloescht** |
+
+### Das Wichtigste: `tools/pruefe-bytes-tests.pl`
+
+Die Schranke war am 30.08.2026 schon einmal "repariert" worden und danach
+falsch. Beides — der Fehlalarm und das Loch — waere bei einem einzigen
+Testlauf aufgefallen. Es gab nur keinen.
+
+Jetzt gibt es einen. 23 Faelle, jeder in einem eigenen Wegwerf-Repo unter dem
+Temp-Verzeichnis, mit `.gitattributes` `* -text` wie im echten Repo. Geprueft
+wird ausschliesslich der Rueckgabewert der Schranke: 0 durchgelassen,
+1 abgebrochen. Die Faelle sind byteweise beschrieben, es kommt kein Escape im
+Testtext vor.
+
+    perl tools/pruefe-bytes-tests.pl        # Tabelle, Rueckgabe 1 bei rot
+    perl tools/pruefe-bytes-tests.pl -v     # zusaetzlich die Meldung je Fall
+
+**Gegen den Stand vom 30.08.2026: 16 gruen, 7 rot.** Die Sammlung reproduziert
+damit PR-1, PR-2 und PR-3 aus eigener Kraft:
+
+| rot | Fall | was die alte Schranke tat |
+|---|---|---|
+| d | Leerzeile CRLF weg, Leerzeile LF dazu | brach den Commit ab, Beispiel `""` |
+| h1 | Umwandlung LF → CRLF plus Inhalt | liess durch, Rueckgabe 0 |
+| j1 | `.def` komplett CRLF → LF | liess durch |
+| j2 | `.sln` komplett CRLF → LF | liess durch |
+| j3 | `.bat` komplett CRLF → LF | liess durch |
+| j4 | `.ps1` komplett LF → CRLF | liess durch |
+| j5 | `.pl` komplett CRLF → LF | liess durch |
+
+**Gegen den heutigen Stand: 23 gruen, 0 rot.** Alle 23 Faelle im Einzelnen:
+
+| Fall | Beschreibung | erwartet |
+|---|---|---|
+| a | Zeilen hinzugefuegt (CRLF-Datei) | durchlassen |
+| b | Zeilen hinzugefuegt (LF-Datei) | durchlassen |
+| c1 | Zeilen geloescht (CRLF-Datei) | durchlassen |
+| c2 | Zeilen geloescht (gemischte Datei, 655 Zeilen) | durchlassen |
+| d | Leerzeile CRLF weg, Leerzeile LF dazu | durchlassen |
+| d2 | haeufige Zeilen (`{`, `}`, leer) verschoben | durchlassen |
+| e | Datei komplett CRLF → LF | anschlagen |
+| f | Datei komplett LF → CRLF | anschlagen |
+| g | gemischte Datei, 18 CRLF → LF unter 655 Zeilen | anschlagen |
+| h1 | Umwandlung LF → CRLF plus Inhaltsaenderung | anschlagen |
+| h2 | Umwandlung CRLF → LF plus Inhaltsaenderung | anschlagen |
+| h3 | Umwandlung plus hinzugefuegte Zeilen (ungleiche Anzahl) | anschlagen |
+| i | nur Inhalt geaendert, Zeilenenden gleich | durchlassen |
+| j1..j5 | `.def` `.sln` `.bat` `.ps1` `.pl` komplett umgeschrieben | anschlagen |
+| k | neue Datei, nicht in HEAD | durchlassen |
+| l | Sonderzeichen zerstoert (U+FFFD dazu) | anschlagen |
+| m | Datei unveraendert vorgemerkt | durchlassen |
+| n | letzte Zeile ohne Zeilenumbruch, Inhalt ergaenzt | durchlassen |
+| o | unbekannte Endung `.xyz` komplett umgeschrieben | durchlassen |
+
+Fall `o` ist die **dokumentierte Grenze**: was nicht in
+`tools/dateiendungen.pl` steht, wird nicht geprueft. Der Fall steht bewusst
+drin, damit die Grenze sichtbar bleibt statt vergessen zu werden.
+
+### PR-1 und PR-2: die Regel taugte nicht, nicht ihre Richtung
+
+Die Fassung vom 30.08. zaehlte je **Zeileninhalt**, wie oft er mit CRLF und wie
+oft mit LF vorkommt, und meldete jeden Inhalt, der seine CRLF-Vorkommen
+verloren hatte. Daraus folgen beide Befunde zwangslaeufig:
+
+  * Die Abfrage war einseitig formuliert (`[0] > 0` in HEAD, `[0] == 0` im
+    Index), also fiel LF → CRLF heraus. Das ist unter Windows die
+    **wahrscheinlichere** Schadensrichtung — Editoren, `Set-Content`,
+    `Out-File` schreiben CRLF.
+  * Der Zeileninhalt taugt nicht als Schluessel. `""`, `{`, `}` und ein
+    blosser Tabulator kommen in einer Datei hundertfach vor, mit beiden Enden.
+    Welches Vorkommen welches war, geht beim Zaehlen verloren. Eine geloeschte
+    CRLF-Leerzeile plus eine ergaenzte LF-Leerzeile war deshalb von einer
+    Umwandlung nicht zu unterscheiden.
+
+Die naheliegende Behebung — Leerzeilen ueberspringen, Zeilen mit beiden Enden
+ueberspringen — waere Symptombehandlung gewesen: sie haette den Fehlalarm bei
+`""` beseitigt und ihn bei `\tif (nRet)` oder jeder anderen mehrfach
+vorkommenden Zeile stehen gelassen.
+
+**Was der Waechter eigentlich unterscheiden soll**, ist eine UMWANDLUNG
+bestehender Zeilen von einer Ergaenzung oder Loeschung. Genau diese
+Unterscheidung trifft git selbst schon. Regel 2 wertet deshalb jetzt den
+eigentlichen Unterschied aus:
+
+    git diff --cached -U0 --no-color --no-ext-diff -- <datei>
+
+Eine umgewandelte Zeile erscheint darin als Paar aus einer entfernten und einer
+hinzugefuegten Zeile **im selben Block**, deren Inhalt gleich und deren
+Zeilenende verschieden ist. Eine reine Ergaenzung erzeugt einen Block ohne
+entfernte Zeilen, eine reine Loeschung einen ohne hinzugefuegte — dort entsteht
+gar kein Paar. Damit ist die Zuordnung **ortsgebunden statt inhaltsgebunden**,
+und der Leerzeilen-Fehlalarm kann strukturell nicht mehr auftreten: die
+geloeschte und die ergaenzte Leerzeile stehen an verschiedenen Stellen und
+landen in verschiedenen Bloecken (Fall `d`, gemessen).
+
+Innerhalb eines Blocks werden entfernte und hinzugefuegte Zeilen der Reihe nach
+gepaart. Bei gleicher Anzahl — dem Normalfall einer Umwandlung — passt das
+genau. Bei ungleicher Anzahl (Umwandlung UND ergaenzte Zeilen, Fall `h3`) fuehrt
+eine Vorausschau von 30 Zeilen die Paare nach.
+
+**Warum nicht die andere vorgeschlagene Loesung** (haeufige Zeilen aus dem
+Vergleich ausnehmen): sie verschiebt die Grenze nur. Jede Schwelle "ab wie oft
+ist eine Zeile haeufig" waere geraten, und ausgerechnet in den langen,
+gleichfoermigen Ressourcendateien dieses Projekts sind die meisten Zeilen
+haeufig — dort wuerde der Waechter dann blind. Der Diff kennt die Antwort
+ohnehin schon.
+
+Regel 1 (Inhalt gleich, Bytes verschieden) bleibt unveraendert daneben stehen.
+Sie arbeitet auf den rohen Blobs und ist damit unabhaengig davon, wie git den
+Unterschied darstellt — eine zweite, einfachere Sicherung fuer den haeufigsten
+Fall.
+
+### PR-3: eine Liste statt zwei
+
+`tools/pruefe-bytes.pl` und `tools/zeilenenden-angleichen.pl` hatten je eine
+eigene Endungsliste. Sie waren auseinandergelaufen. Beide laden jetzt
+`tools/dateiendungen.pl`. Neu darin unter anderem `def sln vcproj props targets
+dsp dsw bat cmd ps1 psm1 pl pm py sh rc2 pod ini cnf manifest config xml json
+yml yaml asm inc s` sowie die Namen `.gitattributes`, `.gitignore`,
+`.editorconfig`, `Makefile`.
+
+Laesst sich die Liste nicht laden, **bricht die Schranke ab**. Eine Schranke,
+die stillschweigend nichts mehr prueft, ist schlimmer als gar keine.
+
+Gemessen, was die groessere Liste am Bestand aendert:
+
+    perl tools/zeilenenden-angleichen.pl
+      byteidentisch zu HEAD:         6385
+      nur Zeilenenden verschieden:      0
+
+Die erweiterte Liste deckt also **keinen neuen Schaden** auf; sie schliesst
+eine Luecke fuer die Zukunft. Mit der alten Liste waren es 5589 Dateien.
+
+### PR-4: `BuildKennung.h` ist nicht mehr verfolgt
+
+`git rm --cached Eudora71/Eudora/BuildKennung.h`, Eintrag in `.gitignore`, und
+`Eudora71/Eudora/BuildKennung-vorlage.h` mit `_T("unbekannt")` eingecheckt. Der
+PreBuildEvent kopiert die Vorlage, wenn perl nicht laeuft:
+
+    perl %KENNUNG% %WURZEL% && exit /b 0
+    "C:\Program Files\Git\usr\bin\perl.exe" %KENNUNG% %WURZEL% && exit /b 0
+    echo WARNUNG: perl nicht gefunden - die Kennung sagt "unbekannt"
+    fc /b "...BuildKennung.h" "...BuildKennung-vorlage.h" >nul 2>&1 || copy /y ...
+    exit /b 0
+
+Das `fc /b` davor verhindert, dass ein Bau ohne perl die Datei jedes Mal neu
+anfasst und eine vollstaendige Neuuebersetzung nach sich zieht. Ein frischer
+Klon ohne perl uebersetzt, und das Fenster sagt dann ehrlich `unbekannt` statt
+der Kennung eines fremden Baus.
+
+### PR-6: kein `_T` um ein Makro
+
+`tools/kennung-erzeugen.pl` erzeugt die Zeichenkette jetzt gleich richtig:
+
+    #include <tchar.h>
+    #define EUDORA_BAU_KENNUNG _T("1.0.3+... 2026-08-31 07:11")
+
+und `mainfrm.cpp:9715` benutzt sie ohne `_T(...)` (byte-erhaltend geaendert mit
+`tools/aendere-zeile.pl`, CR-Zahl 18 unveraendert). Damit stimmt es im
+MBCS-Bau wie im Unicode-Bau: `__T(x)` ist dort `L##x`, und `##` haette die
+Erweiterung des Makros unterbunden — aus `_T(EUDORA_BAU_KENNUNG)` waere der
+Bezeichner `LEUDORA_BAU_KENNUNG` geworden.
+
+**Uebersetzt** (31.08.2026, Debug|Win32, eigener Worktree):
+
+    MSBuild.exe Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug
+                /p:Platform=Win32 /p:BuildProjectReferences=false /m /v:minimal
+
+Alle Quelldateien uebersetzen fehlerfrei, `mainfrm.cpp` eingeschlossen — die
+neue `BuildKennung.h` mit `_T("...")` und `#include <tchar.h>` traegt also. Der
+Lauf endet in `LNK1104: imap.lib kann nicht geoeffnet werden`: der Worktree ist
+frisch und `/p:BuildProjectReferences=false` baut die abhaengigen Projekte
+nicht mit. Das hat mit diesen Aenderungen nichts zu tun. **Nicht gemessen**
+wurde damit ein vollstaendiger Binaerbau — nur die Uebersetzung.
+
+Der Rueckfallzweig des PreBuildEvent ist getrennt geprueft: Datei fehlt →
+Vorlage wird kopiert; Datei schon gleich der Vorlage → Zeitstempel bleibt
+unveraendert, es entsteht also keine Neuuebersetzung.
+
+### PR-7: es gilt 4616 von 5563
+
+Nachgemessen und in `BEFUNDE.md` (S-7), `README.md`, `WEITERMACHEN.md` und im
+Kopf von `tools/zeilenenden-angleichen.pl` gleichgezogen. Die 4426 von 5336 im
+Werkzeugkopf stammten aus einem Durchlauf mit kuerzerer Endungsliste und sind
+ersatzlos weg.
+
+Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und laesst
+sich nicht wiederholen — der Baum ist angeglichen. Die Grundgesamtheit dagegen
+ist keine feste Zahl: sie waechst mit jedem Commit und haengt an der
+Endungsliste (5563 / 5568 / 5589 alte Liste, 6385 neue). Statt einer Zahl steht
+in S-7 jetzt eine Tabelle mit Datum und Liste, dazu der Befehl zum Nachzaehlen.
+
+Nebenbei berichtigt: das Beispiel in S-7 war vertauscht beschriftet. Heute
+nachgemessen — Blob `8c4fb68a` hat 5716 Bytes, 0 CR, 65 LF; der Index trug
+daneben 5781, die Groesse der CRLF-Arbeitskopie. 5716 + 65 CR = 5781.
+
+### PR-8: `rekursion-suchen.pl` geloescht
+
+Das Urteil des Pruefers nachgeprueft und bestaetigt. Gegenprobe: eine Datei mit
+einem klassenuebergreifenden Zyklus nach dem Muster von S-2 und zusaetzlich
+einem Selbstaufruf innerhalb einer Klasse.
+
+    void CAdView::Zeichne()  { m_pRahmen->Anpassen(); }
+    void CRahmen::Anpassen() { m_pAnsicht->Zeichne(); }
+    void CAdView::Messen()   { Messen(); }
+
+    perl tools/rekursion-suchen.pl <verzeichnis>
+    ZYKLUS (1 Glied): CAdView::Messen/0 -> CAdView::Messen/0
+    1 Zyklus/Zyklen.
+
+Es meldet nur den Selbstaufruf. Zwei Ursachen im Code, beide strukturell:
+`my $zsig = "$klasse\::$ziel/"` bildet jede Kante mit der **umgebenden** Klasse,
+und der Aufrufmuster-Ausdruck ueberspringt jeden Aufruf mit `.`, `->` oder `::`
+davor. Eine Kante zwischen zwei Klassen kann also gar nicht entstehen.
+
+**Warum ein Werkzeug, das nur Fehlalarme liefert, schlimmer ist als keines.**
+Ein fehlendes Werkzeug kostet die Zeit, die man ohne es braucht. Ein Werkzeug,
+das nur Fehlalarme liefert, kostet dieselbe Zeit **plus** die Zeit, jeden
+Fehlalarm von Hand zu widerlegen — und es kostet Vertrauen: nach dem dritten
+Fehlalarm liest niemand mehr seine Ausgabe, auch nicht die eine richtige
+Meldung darin. Dazu kommt der teuerste Posten: wer eine Zyklensuche laufen
+laesst und "0 Zyklen" liest, glaubt, geprueft zu haben. Hier war das falsch —
+den Zyklus aus S-2 hat `stapel-untersuchen.ps1` gefunden, nicht dieses
+Werkzeug. Eine Zusicherung, die nicht traegt, ist schaedlicher als gar keine.
+Dieselbe Ueberlegung gilt fuer die Schranke oben; deshalb die Testsammlung.
+
+### PR-5 bleibt offen
+
+Der Zeitstempel in der Kennung ist der Zeitpunkt, zu dem sich Commit oder
+Sauberkeit zuletzt geaendert haben, nicht der Bauzeitpunkt. Das **Verhalten**
+ist richtig gewaehlt (sonst uebersetzt jeder Bau alles neu); nur die
+Beschreibung stimmt nicht. Ein Wort im Kommentar — nicht angefasst, weil die
+Frist naeher war als der Nutzen.
+
+### Nebenbefund: `sed` verschweigt CR
+
+Beim Umbau des PreBuildEvent hat `sed -n '114,124p' | cat -A` die Zeilen ohne
+`^M` angezeigt, obwohl sie CRLF haben — das cygwin-`sed` in dieser Umgebung
+liest im Textmodus und wirft CR weg. Wer Zeilenenden ansehen will, darf `sed`
+dafuer **nicht** benutzen; verlaesslich ist nur ein direkter Rohvergleich:
+
+    perl -e 'open(F,"<:raw",$ARGV[0]);local $/;$d=<F>;
+             $cr=()=$d=~/\r/g;$lf=()=$d=~/\n/g;print "CR=$cr LF=$lf\n"' <datei>
+
+Gemerkt hat es `tools/ersetze-bereich.pl`, das die CR-Zahl vorher und nachher
+ausgibt: 1064 → 1062, obwohl der Block angeblich CR-frei war. Ohne diese
+Ausgabe waere der Schaden in den Commit gelaufen und die Schranke haette ihn
+erst dort gemeldet.
+
+
+## F-1 — Der Release-Bau und die Frage nach dem statischen Binden (FREIGABE, 31.08.2026)
+
+Auftrag war Kriterium 0 aus `ZIEL.md`: „zip runterladen, entpacken, starten -
+laeuft". Der Weg dorthin sollte moeglichst das statische Binden sein.
+
+**Kurzfassung: statisch geht nicht, und der Grund ist keine Einstellung,
+sondern die Bauart des Programms.** Was geht, ist der dynamische Release-Bau,
+und der erfuellt Kriterium 0 ebenfalls — mit drei DLLs, die Microsoft
+ausdruecklich zum Weiterverteilen freigibt.
+
+Alle Zahlen unten sind gemessen; wo nicht, steht **UNGEPRUEFT** davor.
+
+### F-1.1 — Statisches MFC ist ausgeschlossen: sechs MFC-Erweiterungs-DLLs
+
+Eudora ist nicht ein Programm, sondern ein Programm mit sechs
+**MFC-Erweiterungs-DLLs**. Der Nachweis steht im Quelltext — jede von ihnen
+ruft `AfxInitExtensionModule` auf:
+
+| Modul | Fundstelle |
+|---|---|
+| `EudoraIcons` | `Eudora71/Eudora/EudoraIcons.cpp:18` |
+| `EudoraRes` | `Eudora71/Eudora/EudoraRes.cpp:18` |
+| `EudoraOldIcons` | `Eudora71/EudoraOldIcons/EudoraOldIcons.cpp:38` |
+| `Imap` | `Eudora71/Imapdll/src/imap.cpp:25` |
+| `QCSocket` | `Eudora71/QCSocket/src/QCSocket.cpp:24` |
+| `QCUtils` | `Eudora71/QCUtils/src/QCUtils.cpp:23` |
+
+Dieselben Projekte setzen `_AFXEXT` in ihren Praeprozessordefinitionen
+(`Eudora/EudoraRes.vcxproj:64`, `EudoraOldIcons/EudoraOldIcons.vcxproj:64`,
+`Imapdll/imap.vcxproj:103`, `QCSocket/QCSocket.vcxproj:104`,
+`QCUtils/QCUtils.vcxproj:62`, jeweils der Release-Zweig).
+
+`AfxInitExtensionModule`, `CDynLinkLibrary` und `AFX_EXTENSION_MODULE` gibt es
+in MFC **nur**, wenn `_AFXDLL` gesetzt ist — also nur beim gemeinsam genutzten
+MFC. Eine Erweiterungs-DLL ist ihrem Wesen nach ein Modul, das sich in die
+MFC-Modulliste des Hauptprogramms einhaengt; dazu muss es dieselbe
+MFC-Instanz benutzen. Mit `<UseOfMfc>Static</UseOfMfc>` haette jede dieser
+sechs DLLs ihre eigene MFC-Kopie, ihren eigenen Heap und ihre eigene
+Ressourcenkette.
+
+**Statisches MFC waere also nicht eine Umstellung von zwei Einstellungen,
+sondern der Umbau von sechs DLLs zu statischen Bibliotheken** — mit allem, was
+daran haengt: `EudoraRes.dll` und `EudoraOldIcons.dll` sind reine
+Ressourcen-DLLs, die zur Laufzeit ueber `CDynLinkLibrary` gesucht werden;
+`Imap.dll`, `QCSocket.dll` und `QCUtils.dll` werden ausserdem von
+`EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` und den Importern benutzt.
+Das ist kein Handgriff, das ist ein eigenes Vorhaben.
+
+### F-1.2 — Auch nur `/MT` allein geht nicht
+
+Statische C-Laufzeit (`/MT`) bei weiterhin dynamischem MFC ist nicht
+vorgesehen: `mfc140.dll` ist selbst gegen `/MD` gebaut und gibt CRT-Objekte
+(`FILE*`, Speicherbloecke) ueber die Modulgrenze weiter. Ein Programm mit
+`_AFXDLL` und `/MT` bekaeme zwei getrennte CRT-Heaps.
+
+Zusaetzlich gemessen, `dumpbin /directives` gegen `Eudora71/Lib/Release`:
+
+| Bibliothek | CRT-Direktive |
+|---|---|
+| `zlib.lib` | `-defaultlib:MSVCRT` — gegen die **dynamische** Laufzeit gebaut |
+| `libpng.lib` | `-defaultlib:MSVCRT` — dito |
+| `Paige32.lib` | keine (Importbibliothek, neutral) |
+| `EuMemMgr.lib` | keine (Importbibliothek, neutral) |
+| `Uuid.Lib` | keine (neutral) |
+| `SSCEWD32.LIB` | keine (Importbibliothek, neutral) |
+
+`zlib.lib` und `libpng.lib` waeren bei `/MT` also die naechste Huerde
+(`LNK4098`, dann `LNK2005`) — sie liegen nur als Binaerdatei vor, ein Neubau
+mit `/MT` ist ohne ihren Quelltext nicht moeglich.
+
+### F-1.3 — Was stattdessen liefert: der dynamische Release-Bau
+
+Er erfuellt Kriterium 0 genauso, nur mit drei Dateien mehr im ZIP:
+
+| | Debug (Paket 1.0.2/1.0.3) | Release, dynamisch |
+|---|---|---|
+| noetige Laufzeit-DLLs | `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`, `ucrtbased.dll` | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` |
+| weiterverteilbar? | **nein** — `debug_nonredist`, kein Redistributable | **ja** — Teil des Visual-C++-Redistributable, duerfen beiliegen |
+| `ucrtbase.dll` | Debug-Fassung noetig | liegt Windows 10 bei, nichts zu tun |
+| SUPERASSERT beim Start (S-3b) | ja | **nein** — `NDEBUG`, keine Debug-Zusicherungen |
+
+Der zweite Gewinn ist der, den der Auftrag nebenbei nennt: im Release-Bau
+verschwinden die SUPERASSERT-Dialoge aus S-3b und saemtliche `ASSERT`- und
+`VERIFY`-Pruefungen. Das Programm startet ohne Zwischenfrage durch.
+
+### F-1.4 — Warum der Release-Zweig nie gebunden hat: ein Buchstabe
+
+Der eigentliche Fund. `Eudora71/Eudora/Eudora.vcxproj:147`, Release-Zweig:
+
+    <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;OTA50D.LIB;...
+
+`OTA50D.LIB` ist der **Debug**-Name. Der Debug-Zweig (`:97`) schliesst
+dieselbe Datei aus und ist damit richtig; der Release-Zweig braucht
+`OTA50R.LIB` (`OT501/Src/OT501.vcxproj:50`) und schliesst sie nicht aus.
+Ergebnis seit jeher:
+
+    LINK : fatal error LNK1104: Datei "ota50r.lib" kann nicht geoeffnet werden.
+
+`OTA50R.LIB` laesst sich nicht bauen — `NMAKE /f build50.mak ota50r` bricht mit
+`U1073` ab, weil `OT501/Src/utility/crypt/Blackbox.cpp` in der Freigabe von
+2006 fehlt. Gebraucht wird sie auch nicht: die vier Funktionen daraus liefert
+`Eudora71/OTShim/OTShim_Spur.cpp` seit B-1, und die stehen ohnehin unter
+`_DEBUG`.
+
+**Woher die Anforderung kommt, war der Umweg.** Sie steht **nicht** in
+`AdditionalDependencies` und **nicht** auf der Linker-Befehlszeile — im
+Diagnoseprotokoll von MSBuild taucht `ota50r.lib` an keiner Stelle auf. Sie
+kommt als Standardbibliotheks-Direktive aus den Objektdateien von
+`AccountWizard` und `DirectoryServicesUI` (gemessen: Volltextsuche ueber alle
+`.obj` unter `Eudora71`, 29 Treffer, alle in diesen beiden Projekten). Deshalb
+hilft nur `IgnoreSpecificDefaultLibraries`, und deshalb hat das Suchen in
+`AdditionalDependencies` nichts ergeben.
+
+**Behoben:** `OTA50R.LIB` in `Eudora.vcxproj:147` ergaenzt. Eine Zeile.
+
+### F-1.5 — Der zweite Stolperstein: MakeDox.pl im Nachbereitungsschritt
+
+Danach band `Eudora.exe` durch — und der Bau endete trotzdem mit Fehler:
+
+    error MSB3073: Der Befehl "... MakeDox.pl Eudora.sln DevDox ..."
+    wurde mit dem Code 9009 beendet.
+
+`Eudora.vcxproj:161-166` liess im Release-Zweig nach dem Binden
+`MakeDox.pl Eudora.sln DevDox` laufen — die Doxygen-Entwicklerdoku von 2006.
+Das Werkzeug ist nicht auf dem Pfad, 9009 heisst „Befehl nicht gefunden". Der
+**Debug**-Zweig hat gar keinen Nachbereitungsschritt.
+
+Die zwei Doku-Zeilen entfernt. `call ..\BinTools\PostProcessRel Eudora` bleibt
+stehen; das ruft `UpdateExternalEMSAPIHeader.pl` und `BindExe ..\Bin\Release`
+auf und laeuft durch.
+
+**Nebenwirkung, die man wissen muss:** `BindExe` schreibt die Bindungsdaten in
+**jede** DLL in `Eudora71/Bin/Release` zurueck, auch in die zwoelf vorgebauten
+Fremd-DLLs von 2006, die im Repository liegen. Nach einem Release-Bau meldet
+`git status` sie deshalb als geaendert. Sie gehoeren **nicht** in einen Commit.
+
+### F-1.6 — Gemessen: was uebrig bleibt
+
+`Eudora71/Bin/Release/Eudora.exe`, 2.933.760 B. `dumpbin /dependents`:
+
+| Art | Eintraege |
+|---|---|
+| eigene Module | `Paige32.dll`, `Imap.dll`, `QCUtils.dll`, `EuMemMgr.dll`, `EuLang.dll`, `LIBEXPAT.dll`, `plstclnt.dll`, `QCSocket.dll` |
+| **Laufzeit von Visual C++** | **`mfc140.dll`, `MSVCP140.dll`, `VCRUNTIME140.dll`** — alle drei verteilbar |
+| UCRT | zwoelf `api-ms-win-crt-*` — Bestandteil von Windows 10, nichts beizulegen |
+| Windows | `KERNEL32`, `USER32`, `GDI32`, `COMDLG32`, `ADVAPI32`, `SHELL32`, `COMCTL32`, `ole32`, `OLEAUT32`, `urlmon`, `VERSION`, `WININET`, `MSVFW32`, `WINMM`, `gdiplus` |
+
+Kein `ucrtbased.dll`, kein `d`-Anhang. Genau die drei Dateien, an denen Gregor
+am Morgen gescheitert ist, sind weg — und ihre drei Nachfolger duerfen ins ZIP.
+
+### F-1.7 — `tools/paket-bauen.ps1` kann jetzt Release
+
+Neuer Schalter `-Bauart Debug|Release` (Vorgabe `Debug`, also keine Aenderung
+fuer bestehende Aufrufe). Bei `Release`:
+
+- `-AusBauverzeichnis` nimmt aus `Eudora71\Bin\Release` statt `Bin\Debug`
+- `Paige32.dll` kommt **unter beiden Namen** ins Paket. Der Debug-Bau
+  importiert `Paige32d.dll` (`Eudora.vcxproj:94`), der Release-Bau
+  `Paige32.dll` (`:144`) — das war der eine Fehler, den der Paketpruefer im
+  ersten Anlauf gemeldet hat.
+- die drei verteilbaren Laufzeit-DLLs kommen aus dem VC-Redistributable der
+  oertlichen Visual-Studio-Installation ins Paket, ueber `vswhere`
+- `laufzeit-holen.ps1` faellt weg — es wird nichts mehr nachgeholt
+
+### F-1.8 — Was der Paketpruefer sagt
+
+    powershell -File tools\paket-bauen.ps1 -Ziel <verz> -Bauart Release -AusBauverzeichnis
+    powershell -File tools\paket-pruefen.ps1 -Paket <verz>
+
+    32 Binaerdateien geprueft, alle x86.
+    ERGEBNIS: keine Fehler.
+    7 Warnung(en)
+
+**Null Fehler.** Damit ist Kriterium 0 gemessen erfuellt, so weit ein Pruefer
+ohne Start es belegen kann.
+
+Von den sieben Warnungen sind **vier falsch**: der Pruefer sucht in Abschnitt 3
+fest nach `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
+`ucrtbased.dll` und warnt, wenn sie fehlen — auch dann, wenn keine einzige
+Datei im Paket sie importiert. Fuer ein Release-Paket ist das Unsinn.
+Nachgemessen: keine der 32 Binaerdateien importiert eine der vier. Die drei
+uebrigen Warnungen (`EUMAPI.DLL`, `MFC71.DLL`, `MSVCP71.dll`) sind
+unveraendert die aus B-2.5 und betreffen den Start nicht.
+
+## Stand und naechster Schritt (FREIGABE, 31.08.2026)
+
+**Erledigt.**
+
+| | |
+|---|---|
+| Release-Bau | **baut**, `MSBuild ... /p:Configuration=Release /p:Platform=Win32 /p:BuildProjectReferences=false` endet mit Exit 0 |
+| statisch gebunden | **nein, und zwar nicht in der verbleibenden Zeit nachholbar** — F-1.1, sechs MFC-Erweiterungs-DLLs |
+| uebrige Laufzeit-DLLs | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` — alle drei verteilbar, alle drei jetzt im Paket |
+| Paketpruefer | **null Fehler** |
+| SUPERASSERT beim Start (S-3b) | im Release-Bau weg, ebenso alle `ASSERT`/`VERIFY` |
+
+**Das Bauverfahren, das funktioniert** — die Reihenfolge ist noetig, weil ein
+Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
+`OT501` scheitert:
+
+    1. MSBuild Eudora71\Eudora.sln /p:Configuration=Release /p:Platform=x86 /m
+       (endet mit Fehler: OT501 U1073/MSB3073 - erwartet; erzeugt aber die
+        zehn .lib-Dateien in Eudora71\Lib\Release)
+    2. MSBuild auf NSImport, OEImport, OLImport, dann Eudora.vcxproj,
+       je /p:Configuration=Release /p:Platform=Win32
+                 /p:BuildProjectReferences=false
+
+`/p:Platform=Win32` gilt fuer **Projektdateien**, `/p:Platform=x86` fuer die
+**Projektmappe** — sonst MSB4126 (Befund P-2).
+
+**Naechster Schritt, konkret.**
+
+1. **`tools/paket-pruefen.ps1`, Abschnitt 3** (die Liste der vier
+   VS2022-Debug-Laufzeiten): nur noch warnen, wenn eine Paketdatei die
+   betreffende DLL wirklich importiert. Der Pruefer loest die Importtabellen
+   ohnehin schon auf (B-2.5), die Angabe steht also bereits zur Verfuegung.
+   Solange das nicht geschieht, meldet ein fehlerfreies Release-Paket vier
+   Warnungen, die keine sind — und wer sie ernst nimmt, holt sich mit
+   `laufzeit-holen.ps1` genau die vier nicht verteilbaren DLLs zurueck.
+2. **`Eudora71/Eudora/Eudora.vcxproj:144`**: der Release-Zweig fuehrt
+   `QCSocket.lib` **nicht** in `AdditionalDependencies`, der Debug-Zweig
+   (`:94`) sehr wohl. Gebunden hat es trotzdem — offenbar ueber eine
+   Standardbibliotheks-Direktive. **UNGEPRUEFT**, ob das Zufall ist; nachsehen
+   und im Zweifel angleichen.
+3. **`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg („ZUERST:
+   DIE VIER LAUFZEITEN HOLEN"). Fuer ein Release-Paket ist dieser ganze
+   Abschnitt hinfaellig und irrefuehrend. Neu fassen, bevor ausgeliefert wird.
+4. **Nach jedem Release-Bau**: `git status` zeigt zwoelf geaenderte DLLs unter
+   `Eudora71/Bin/Release`. Das ist `BindExe` aus dem Nachbereitungsschritt
+   (F-1.5), kein Bauergebnis. Nicht stagen.
+
+**Nicht getan:** kein Eudora gestartet, kein Programm mit Fenstern, kein
+`OutputDebugString`-Mithoerer. Nichts veroeffentlicht — kein ZIP im
+Repository. Ob und wie das Release-Paket ausgeliefert wird, entscheidet Gregor.
+Der Bau der Kriterien 1 bis 3 ist von dieser Arbeit unberuehrt: das Fenster ist
+weiterhin nicht bedienbar (S-5, S-6, M-1).
+
+## PR-2 — Nachpruefung der Arbeit vom 31.08.2026 (PRUEFER, 31.08.2026)
+
+Grundlage: `darstellung-und-menue` bei 2cf569f. Kein Programm mit Oberflaeche
+gestartet, gebaut ausschliesslich in der PowerShell. FREIGABEs Release-Bau lag
+nicht vor.
+
+---
+
+### PR-2.0 — Der Paketpruefer leitet zum Lizenzverstoss an (hoch, OFFEN)
+
+Von FREIGABE gemeldet, hier bestaetigt und eingeordnet — der wichtigste
+Einzelpunkt an `tools/paket-pruefen.ps1`.
+
+**Fundstelle:** `tools/paket-pruefen.ps1:360` (feste Liste), `:363-364`,
+`:371`.
+
+Der Pruefer sucht fest nach den vier VS2022-**Debug**-Laufzeiten
+(`mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`, `ucrtbased.dll`) und
+meldet ihr Fehlen. In einem Release-Paket importiert **keine** Datei sie. Der
+Pruefer gibt dort also vier falsche Warnungen.
+
+**Warum das gefaehrlich ist:** wer die Warnung ernst nimmt, ruft
+`tools/laufzeit-holen.ps1` und holt sich genau die nicht verteilbaren
+Debug-DLLs ins Paket. Das Werkzeug leitet damit zu dem an, was es verhindern
+soll. `README.md:73-74` sagt ausdruecklich, diese vier duerfen nicht
+mitgeliefert werden — und `:363-364` bewertet ihr Vorhandensein trotzdem
+gruen (siehe auch PR-2.3, letzter Punkt: derselbe Widerspruch von der anderen
+Seite).
+
+**Richtig waere:** die noetigen Laufzeiten aus den IMPORTEN der Paketdateien
+ableiten statt aus einer festen Liste. Die Lesefunktion dafuer hat das Skript
+schon (`:138`, `:158`) und benutzt sie an anderer Stelle korrekt — bei einem
+Debug-Paket kaemen dann die `d`-Fassungen heraus, bei einem Release-Paket
+`mfc140.dll` / `MSVCP140.dll` / `VCRUNTIME140.dll`, und im Release-Fall gar
+keine Warnung, weil die drei schon beiliegen.
+
+**Nicht behoben.** Nicht aus Zeitnot allein: `paket-pruefen.ps1` ist das
+Werkzeug, an dem die Freigabe von 1.0.3 haengt, und eine Aenderung daran ohne
+Gegenprobe an einem echten Release-Paket waere schlechter als der jetzige
+Zustand. Der Umbau gehoert mit PR-2.2 und PR-2.3 zusammen: alle drei sagen,
+dass der Pruefer aus dem Paket ableiten muss statt aus fester Liste und
+Pruefmaschine.
+
+---
+
+### PR-2.1 — Der Absturz kommt VOR der Behebung (hoch, behoben)
+
+**Fundstelle:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:1944` (vor der
+Behebung).
+
+Commit e060a81 sichert `fnConnInfo` in `:1957` und `:1998` mit dieser
+Begruendung: `Network::SetSSLMode` (`QCWorkerSocket.cpp:362-386`) wertet
+**keines** seiner zehn `GetProcAddress`-Ergebnisse aus und setzt `m_bSSLMode`
+trotzdem; bei einer `QCSSL.dll` der falschen Fassung ist der Zeiger NULL.
+
+Die Begruendung ist richtig. Sie trifft aber dreizehn Zeilen hoeher genauso zu:
+
+    :1944   bool bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);
+
+`g_fnQCSSLBeginSession` wird in `:373` aus demselben ungeprueften Block
+gefuellt. Ist es NULL, stuerzt Eudora **hier** ab — die neue Pruefung in
+`:1957` wird nie erreicht. Der abgesicherte Abrufpfad war damit gegen genau
+den Fall wirkungslos, fuer den er gebaut wurde.
+
+**Gegenprobe, dass es dieselbe Fehlerklasse ist:** die Datei prueft die
+Geschwister laengst.
+
+    grep -n "if (g_fnQCSSL" Eudora71/QCSocket/src/QCWorkerSocket.cpp
+    453:   if (g_fnQCSSLClean)
+    564:   if (g_fnQCSSLEndSession)
+
+**Behoben** in e0f8bef: `bSuccess` faellt auf `false` zurueck, wenn der Zeiger
+NULL ist; damit laeuft der Fehlerzweig, der seit heute frueh eine
+verstaendliche Meldung zeigt. Byte-erhaltend mit `tools/ersetze-bereich.pl`,
+CR-Zahl 18 vorher wie nachher. Uebersetzt und gelinkt: MSBuild
+`QCSocket.vcxproj` Debug/Win32, Exit 0, `Bin\Debug\QCSocket.dll` entsteht, nur
+die vorbestehenden C4996-Warnungen.
+
+**Bewusst NICHT angefasst:** `g_fnQCSSLWrite` (`:1164`) und `g_fnQCSSLRead`
+(`:1285`) sind ebenfalls ungeprueft. Beide sind nur ueber
+`m_pSSLReference->m_pSSL` erreichbar, und das bleibt NULL, wenn
+`QCSSLBeginSession` nicht lief — nach der Behebung also auch bei fehlendem
+Zeiger. Ein `&& g_fnQCSSLWrite` in die Bedingung von `:1160` zu haengen waere
+schaedlich: dann fiele der Zweig auf den Klartextpfad zurueck und Eudora
+schickte Anmeldedaten unverschluesselt.
+
+**Was an der Behebung von heute frueh stimmt:** die vier gemeldeten Stellen
+sind wirklich zu (`:1958`, `:1978`, `:1999-2010`, `:2050-2056` in der heutigen
+Zaehlung), die neue Meldung verschluckt nichts — der `else`-Zweig in
+`:1967-1974` haengt nur Text an einen Fall an, der vorher gar keinen Text
+bekam. Eine Kleinigkeit bleibt: faellt `pConnectionInfo` im Zweig ohne
+TaskInfo weg, behaelt `m_iSSLError` seinen alten Wert, statt zurueckgesetzt zu
+werden. Folgenlos, solange die Meldung aus `csError` kommt.
+
+---
+
+### PR-2.2 — `paket-pruefen.ps1` winkt ein Paket ohne `EudoraRes.dll` durch (hoch)
+
+**Fundstelle:** `tools/paket-pruefen.ps1:138` und `:158`.
+
+Das Werkzeug liest die Importtabellen der PE-Dateien — Datenverzeichnis 1 und,
+richtig, auch Datenverzeichnis 13 (verzoegertes Laden, 32-Byte-Deskriptoren).
+Die im Auftrag vermutete Delay-Load-Luecke gibt es **nicht**; gegen
+`dumpbin /dependents` auf `EuMemMgr.dll` gemessen, gleiche Aufteilung.
+
+Was es nicht sieht, ist alles, was in keiner Importtabelle steht.
+
+**Gegenprobe:** aus einer ausgepackten Kopie des Pakets wurden
+`EudoraRes.dll`, `QCSSL.dll`, `SPELL32.DLL`, `EuGraph.ocx`, `EuShlExt.dll`,
+`x1lib.dll` und der ganze Ordner `Plugins\` geloescht. Ergebnis des Pruefers:
+
+    ERGEBNIS: keine Fehler.        EXIT=0
+
+Kein Wort zu `EudoraRes.dll` — der Datei, die laut `README.md:66` die gesamte
+Oberflaeche traegt. Sie wird per `LoadLibrary` geholt und steht deshalb in
+keiner Importtabelle. Im Baum `Eudora71\` liegen 62 `LoadLibrary`- und 28
+`CoCreateInstance`-Stellen, die alle im toten Winkel liegen.
+
+**Folge fuer 1.0.3:** `paket-pruefen.ps1` beantwortet die Frage "sind alle
+Importe aufloesbar", nicht die Frage "ist das Paket vollstaendig". Als
+Freigabekriterium fuer Kriterium 0 taugt es in dieser Fassung nicht. Was
+fehlt, ist eine Soll-Liste der Dateien, gegen die geprueft wird.
+
+---
+
+### PR-2.3 — Der Pruefer benotet die Maschine, nicht das Paket (hoch)
+
+**Fundstelle:** `tools/paket-pruefen.ps1:9` ("Warnungen allein aendern die
+Rueckgabe nicht"), `:266` (Rueckfall auf das Systemverzeichnis), `:433`.
+
+**Gegenprobe** gegen das ausgepackte `Eudora72-1.0.2-lauffaehig.zip`:
+
+    3. VS2022-DEBUG-LAUFZEITEN
+       mfc140d.dll  msvcp140d.dll  vcruntime140d.dll  ucrtbased.dll
+            nicht im Paket, aber in SysWOW64 vorhanden
+    ERGEBNIS: keine Fehler.        EXIT=0
+
+Genau der Fall, fuer den das Werkzeug laut seinem eigenen Kopfkommentar
+(`:13-19`) gebaut wurde — ein Paket, das auf einer fremden Maschine nicht
+startet — wird mit Rueckgabe 0 durchgewunken, weil auf DIESER Maschine die
+Laufzeit installiert ist.
+
+Dazu drei Verschaerfungen:
+
+* `:266` faellt auf `System32` zurueck. Das Skript laeuft in einer 64-Bit-
+  PowerShell; dort liegen 64-Bit-DLLs, die ein x86-Prozess nicht laden kann.
+  1230 DLLs sind nur dort vorhanden. Die Architektur der aufgeloesten
+  System-DLL wird nirgends geprueft. Beispiel: `Finde-DLL 'aadcloudap.dll'`
+  meldet "aufgeloest".
+* `QCSSL.dll` importiert `mfc140.dll` und `VCRUNTIME140.dll` (Release, ohne
+  `d`). Die Liste in `:360` kennt nur die vier Debug-Fassungen. Ohne
+  VC-Redistributable faellt TLS auf der Zielmaschine aus, der Pruefer schweigt.
+* `README.md:73-74` sagt, die vier Debug-Laufzeiten duerften **nicht**
+  mitgeliefert werden; `paket-pruefen.ps1:363-364` bewertet ihr Vorhandensein
+  gruen und ihr Fehlen (`:371`) als FEHLER. Werkzeug und Doku widersprechen
+  sich.
+
+Ausserdem ungeprueft: Exporte und Ordinale (`:149/:151` liest nur den Namen
+des Deskriptors, nie die Thunk-Tabellen — eine `msvcr71`-Bruecke mit fehlendem
+Export ergibt `0xc0000139` und bleibt unentdeckt), das eingebettete Manifest
+(`Microsoft.Windows.Common-Controls 6.0.0.0`, SxS-Fehler 14001), die
+COM-Registrierung von `EuGraph.ocx`/`EuShlExt.dll`/`capicom.dll`, und der Ort
+der `Eudora.ini` (`:386` sucht mit `-Recurse` irgendwo im Baum, nicht dort, wo
+`eudora.cpp:3542` sie sucht).
+
+---
+
+### PR-2.4 — Der groesste Eingriff des Tages hat keinen einzigen Test (hoch)
+
+**Fundstelle:** Commit 1a4a6d5 aendert `Eudora71/OTShim/OTShim.cpp` um 334
+Zeilen; `Eudora71/Tests/` ist in demselben Commit **nicht** angefasst.
+
+**Gegenprobe:**
+
+    grep -rn "DistributeRow|MoveControlBarToPosition|AssignRowExtents|m_nRowExtent|NormalizeRow" Eudora71/Tests/*.cpp
+    Eudora71/Tests/TestOTShimAndocken.cpp:689:  //   NormalizeRow, die Splitter und die Client-Kanten)
+
+Ein Kommentar. Sonst nichts. Fuenf neue Funktionen mit Zeilenaufteilung,
+Rundung, Mindestbreiten und Umbau von `m_arrBars` sind ohne Zusicherung.
+
+Schaerfer noch: der bestehende Test schreibt das **alte** Verhalten fest und
+bleibt deshalb gruen, egal was die neue Rechnung tut.
+
+    Eudora71/Tests/TestOTShimAndocken.cpp:214
+    GroesseVergleichen(leiste.CalcDynamicLayout(0, LM_HORZDOCK), 32767, 40, ...)
+
+Das trifft den Zweig `m_nRowExtent == 0`. Der neue Zweig
+(`OTShim.cpp:1640-1646`, `m_nRowExtent > 0`) wird von keinem der 105 Tests
+betreten. "105 von 105 gruen" ist wahr — selbst gebaut und gelaufen
+(`Eudora71/Tests/RunTests.cmd`, Exit 0) — sagt ueber die Aenderung des Tages
+aber nichts.
+
+Nach Tests ohne wirksame Zusicherung wurde gezielt gesucht: die Faelle, die
+auf den ersten Blick leer wirken, rufen Pruefhilfen (`PruefeKopfzeile`,
+`GroesseVergleichen`), die ihrerseits `TT_Fail` aufrufen. Ein immer gruener
+Test wurde **nicht** gefunden. `SECDockBar: PredictInsertPosition und
+CalcDockingLayout sind als offen gekennzeichnet` (`:526-533`) prueft wirklich
+etwas — dass der Rumpf noch ein Rumpf ist. Das ist Absicht und in Ordnung.
+
+---
+
+### PR-2.5 — `DrawChecked` hat denselben Farbfehler (mittel)
+
+**Fundstelle:** `Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:851-852`.
+
+Die Behebung in `DrawDisabled` (db28adb) ist richtig, und zwar nachgerechnet.
+Die Verknuepfungszahl `0x00B8074A` (PSDPxax) ist umgekehrt polnisch
+`P S D P x a x`, also
+
+    Ergebnis = P XOR (S AND (D XOR P))
+
+Ist `S` lauter Einsen, bleibt `D` stehen; ist `S` null, kommt der Pinsel `P`.
+Beim Kopieren von einfarbig nach farbig macht GDI aus der Maskeneins die
+Hintergrund- und aus der Maskennull die Textfarbe des Ziels. Die Rechnung geht
+also genau dann auf, wenn dort `0x00FFFFFF` und `0x00000000` stehen — genau
+das setzt `DrawDisabled` seit heute. **Richtig.** Auch die Ruecknahme ist
+sicher: der einzige vorzeitige `return` (`:799`, `nWidth <= 0`) liegt VOR dem
+`SetTextColor`, und die beiden `Set…`-Zeilen am Ende laufen unbedingt.
+
+Die Begruendung im Commit nennt `DrawChecked` als Vorbild ("setzt beide Farben
+laengst"). Als Vorbild dafuer, DASS man die Farben setzt, stimmt das. WELCHE
+Farben `DrawChecked` setzt, haelt derselben Rechnung aber nicht stand:
+
+    :851  COLORREF crOldText = data.m_drawDC.SetTextColor(secData.clrBtnHilite);
+    :852  COLORREF crOldBk   = data.m_drawDC.SetBkColor(secData.clrBtnFace);
+
+`clrBtnFace` ist ueblicherweise `0xF0F0F0`, `clrBtnHilite` `0xFFFFFF`. Damit
+ist `S` weder lauter Einsen noch null, sondern gemischt — das Schachbrett
+erscheint nur in einem Teil der Bitebenen. Nach der Begruendung, die
+`DrawDisabled` behoben hat, ist `DrawChecked` der naechste Fall derselben
+Klasse. Betroffen sind die angekreuzten Knoepfe und ueber
+`DrawIndeterminate` (`:864-868`) die Auszeichnungsknoepfe im Verfassenfenster.
+
+UNGEPRUEFT auf dem Bildschirm — die Auflage verbietet den Start.
+
+---
+
+### PR-2.6 — Die Suchleiste teilt sich jetzt Zeile 0 mit der Hauptleiste (mittel)
+
+**Fundstelle:** `Eudora71/Eudora/mainfrm.cpp:966`.
+
+    DockControlBarEx(m_pSearchBar, m_pToolBar->m_pDockBar->GetDlgCtrlID(),
+                     nCol+1, nRow, 1.0, nDefaultHeight);
+
+Seit 1a4a6d5 werden `nCol` und `nRow` ausgewertet. Die Suchleiste landet damit
+in derselben Zeile wie die Hauptwerkzeugleiste. `SECControlBar::m_fPctWidth`
+steht bei beiden auf dem Vorgabewert `1.0` (`OTShim.cpp:1453`); Eudora setzt
+ihn fuer die Hauptleiste nirgends. `SECDockBar::DistributeRow` normiert
+deshalb auf 0,5 zu 0,5 — die Hauptleiste bekommt die halbe Fensterbreite.
+
+Bei fuenfzehn Knoepfen zu je rund 24 Bildpunkten reicht das auf einem breiten
+Fenster; auf einem schmalen nicht. Das ist eine **neue** Moeglichkeit, die
+Hauptleiste abzuschneiden, und sie entsteht durch die Aenderung von heute.
+
+Zweite Stelle derselben Art: `AdWazooBar.cpp:176` und `:212` docken mit
+`nCol=5, nRow=0, fPctWidth=0.25` an, `WazooBarMgr.cpp:253` mit
+`nCol=0, nRow=0, fPctWidth=1.00` an dieselbe untere Leiste. Vorher hatte jede
+ihre eigene Zeile, jetzt teilen sie sich Zeile 0 im Verhaeltnis 0,8 zu 0,2.
+Das ist vermutlich genau das Gewollte — nachgewiesen ist es nicht.
+
+**Was an der Rechnung stimmt** (von Hand durchgerechnet, ohne Lauf):
+
+* Division durch null gibt es nicht: `fSum > 0.0` steht vor jeder Division
+  (`OTShim.cpp:2688`, `:2694`), `nBars > 0` vor `1.0/nBars` (`:2669`).
+* Negative Breiten gibt es nicht: `nExtent = nRest - nReserve` kann negativ
+  werden, wird aber von `if (nExtent < nMin)` und zuletzt von
+  `if (nExtent < 1) nExtent = 1` (`:2708`) aufgefangen.
+* Leere Zeile: `DistributeRow(nStart, nStart, …)` sammelt nichts und kehrt bei
+  `nBars <= 0` sofort um. Die fuehrende NULL-Marke erzeugt genau diesen Fall
+  im ersten Schleifendurchlauf.
+* Genau eine Leiste: sie ist die letzte, bekommt `nRest` = `nAvail`, also die
+  ganze Zeile — dasselbe Ergebnis wie vorher mit 32767.
+* `MoveControlBarToPosition` von Hand durchgespielt fuer den ersten und den
+  zweiten Andockvorgang: `[NULL,bar1,NULL]` bleibt `[NULL,bar1,NULL]`,
+  `[NULL,bar1,NULL,bar2,NULL]` wird zu `[NULL,bar1,bar2,NULL]`. Richtig.
+* Der Umbruch in MFC greift nicht mehr: `CDockBar::CalcFixedLayout`
+  (`atlmfc/src/mfc/bardock.cpp`) bricht bei
+  `rect.left >= sizeMax.cx - afxData.cxBorder2` um und zaehlt
+  `pt.x += sizeBar.cx - afxData.cxBorder2`. Da die Summe der zugeteilten
+  Laengen genau `nAvail` ist und je Leiste ein `cxBorder2` abgezogen wird,
+  bleibt die Zeile unter der Schranke.
+* Der Weg dorthin stimmt auch: MFC ruft nicht `CalcFixedLayout`, sondern
+  `pBar->CalcDynamicLayout(-1, LM_HORZDOCK|LM_HORZ)`. Waere dort
+  `CControlBar::CalcDynamicLayout` zustaendig, kaeme `bStretch = FALSE` heraus
+  und `m_nRowExtent` wuerde nie angewandt. `SECControlBar::CalcDynamicLayout`
+  (`OTShim.cpp:1654-1658`) gibt aber ausdruecklich `CalcFixedLayout(TRUE, …)`
+  zurueck. Die Kette traegt.
+
+---
+
+### PR-2.7 — `paket-bauen.ps1` ist kein Bau (mittel)
+
+**Fundstellen:** `tools/paket-bauen.ps1:59-60`, `:103-106`, `:115`, `:161`.
+
+* `:60` nimmt als Grundlage das **alte** ZIP. Frische Binaerdateien kommen nur
+  mit `-AusBauverzeichnis` und nur fuer sieben fest verdrahtete Namen
+  (`:103-106`). Fehlt eine davon, bleibt die alte stehen (`:115`, gelbe
+  Zeile) — und das ZIP wird trotzdem geschrieben.
+* Debug oder Release ist nirgends festgelegt: `Bin\Debug` ist hartkodiert
+  (`:86`), gleichzeitig werden `Bin\Release`-Dateien beigemischt (`:125`,
+  `:129`, `:139`).
+* In einem frischen Klon laeuft es gar nicht: `.gitignore:6` ignoriert `Bin/`,
+  `:59` erwartet aber `Eudora71\Bin\Release\msvcr71.dll`. Gemessen in diesem
+  Worktree: Abbruch mit EXIT=1 in `:74` — **nach** dem Auspacken in `:71`, so
+  dass 155 Dateien einer unveraenderten 1.0.2 im Zielverzeichnis stehen
+  bleiben und wie ein 1.0.3-Bauverzeichnis aussehen. Kein Aufraeumen im
+  Fehlerfall.
+* Reproduzierbar ist es nur auf derselben Maschine in derselben Stunde:
+  `:161` `CreateFromDirectory` schreibt Aenderungszeiten ins ZIP. Zwei Laeufe
+  ohne Aenderung ergaben denselben Hash; eine verstellte `LastWriteTime`
+  ergab einen anderen. Die aus dem Git-Checkout kopierten Dateien (`:146-147`,
+  `:153`) tragen die Auscheckzeit. Das `.sha256` in `:162` verspricht eine
+  Reproduzierbarkeit, die es nicht gibt.
+* Vollstaendigkeit wird vor dem Schreiben nicht geprueft (`:159-161`);
+  `paket-pruefen.ps1` wird erst danach als Textzeile empfohlen (`:172`) — und
+  wuerde nach PR-2.2 ohnehin nichts merken.
+* Keine Versionskopplung: weder die Datei `VERSION` noch
+  `tools/kennung-erzeugen.pl` kommen vor. Ein ZIP mit Namen 1.0.3 kann eine
+  1.0.2-`Eudora.exe` enthalten, ohne dass etwas warnt. Genau davor warnt
+  `Releases/PAKETE.md` bei der QCSSL.dll.
+* Das Grundlagen-ZIP wird ohne Hash-Abgleich ausgepackt (`:62`, `:71`),
+  obwohl daneben eine `.sha256` liegt.
+
+`tools/laufzeit-holen.ps1` laedt nichts aus dem Netz (geprueft: kein
+`Invoke-WebRequest`, `DownloadFile`, `System.Net`, `http` in allen drei
+Skripten). Auf einem Rechner ohne Visual Studio bricht es ab, aber nicht
+sauber: mit einer Quelle, die nur drei der vier Pflichtdateien hat, kopiert es
+zwei Dateien und meldet danach EXIT=1 — zurueck bleibt ein halb bestuecktes
+Verzeichnis. Ausserdem ist `:74` `C:\Windows\SysWOW64` hartkodiert, waehrend
+`paket-pruefen.ps1:196` es richtig ueber `$env:SystemRoot` macht, und
+`Architektur()` (`:44-55`) prueft weder `MZ` noch `PE\0\0` und hat kein
+`finally`.
+
+---
+
+### PR-2.8 — `EUDORA_BUILD_MONTH` bleibt auf Juni 2006 (niedrig, kein Handlungsbedarf)
+
+**Fundstelle:** `Eudora71/Version.h:19`.
+
+    #define EUDORA_BUILD_MONTH REG_EUD_CLIENT_7_1_MONTH
+
+`regcode/regcode_eudora.h:129` gibt dafuer `(89)` an, "June 2006". Ein
+`REG_EUD_CLIENT_7_2_MONTH` gibt es nicht; die Reihe endet bei 7_1.
+
+Benutzt wird der Wert an fuenf Stellen: `QCSharewareManager.cpp:944, 953, 963`
+(Ablauf eines Registrierungscodes), `:1182-1183` (`DemoDaysLeft`) und
+`QCSharewareManager.h:85` (`IsNewDemoBuild`).
+
+**Nicht mitzuaendern ist richtig.** Die Zahl bedeutet "in welchem Monat wurde
+dieses Produkt gebaut" und dient dazu, Registrierungscodes ablaufen zu lassen,
+die aelter als zwoelf Monate sind. Ein Hochsetzen auf einen Wert nahe heute
+(rund 320) wuerde `(regCodeMonth + 12) < EUDORA_BUILD_MONTH` fuer **jeden**
+existierenden Eudora-Code wahr machen und alle vorhandenen Registrierungen
+entwerten. `IsNewDemoBuild` wuerde ausserdem jede gespeicherte
+`DemoBuildMonth` als aelter einstufen und die Testfrist neu starten. Beides
+ist nicht gewollt.
+
+Die im Commit 2cf569f genannte Nebenwirkung ist eine andere und trifft zu:
+`QCSharewareManager::Load` vergleicht `EUDORA_BUILD_VERSION` (die Zeichenkette
+`"7.2.0.3"`) mit der `RetailVersion` in der INI, nicht `EUDORA_BUILD_MONTH`.
+
+---
+
+### PR-2.9 — Falsche Zeilenangabe in BEFUND-ANSICHT.md (niedrig)
+
+`Eudora71/OTShim/BEFUND-ANSICHT.md:279` nennt `Splitter::cx` (= 4,
+`OTShim.cpp:2091`). Die Zeile stimmt nicht mehr:
+
+    grep -n "Splitter::cx" Eudora71/OTShim/OTShim.cpp
+    2109:  const int SECDockBar::Splitter::cx = 4;
+    2675:  const int nMin = 4 * Splitter::cx;
+
+Der Wert 4 stimmt, die Fundstelle ist um 18 Zeilen verrutscht.
+
+---
+
+### Geprueft und in Ordnung
+
+* **`m_bMainFrameEnabled = FALSE`** (`OTShim_Werkzeugleiste.cpp:3514`, `:3541`).
+  Alle fuenf Abfragestellen in Eudora lesen TRUE als "der Anpassen-Dialog
+  steht offen": `mainfrm.cpp:2988` (Schliessen unterbinden), `:8668`
+  (`OnNcHitTest` liefert HTERROR), `:8679` und `:8727` (`WF_STAYACTIVE`
+  loeschen), `:8743` (`OnEnterIdle` nur bei `MSGF_DIALOGBOX`). FALSE ist
+  ueberall die richtige Ruhelage. Der Rueckweg existiert und wird gerufen:
+  `SECToolBarCmdPage::~SECToolBarCmdPage` (`:4377`) ruft `RestoreMainFrame`,
+  und `QCToolBarCmdPage` (`QCToolbarCmdPage.cpp:117`, das
+  `EnableMainFrame` ruft) leitet sich davon ab. Kein Haengenbleiben auf TRUE.
+* **`EudoraTests.exe`**: selbst gebaut und gelaufen ueber
+  `Eudora71/Tests/RunTests.cmd`. 105 Tests, 105 bestanden, 0 fehlgeschlagen,
+  Exit 0. Die Zahl stimmt.
+* **Delay Load**: die vermutete Luecke in `paket-pruefen.ps1` gibt es nicht,
+  siehe PR-2.2.
+
+### Offen geblieben
+
+Aus Zeitgruenden nicht mehr erreicht: die Stichprobe zu
+`tools/zeilenenden-angleichen.pl`, BEFUNDE.md S-1 bis S-6, `utils.cpp
+ISOTranslate`, sowie die eigenen Gegenproben gegen `tools/pruefe-bytes.pl` und
+die Fehlalarmquote von `tools/suche-zeiger.pl`. FREIGABEs Release-Bau lag
+nicht vor und ist ungeprueft.
+
+## S-8 — Paket 1.0.2 startet mit `0xc000007b` (31.08.2026)
+
+Nachgetragen von LEKTOR am 31.08.2026. Der Befund war bis dahin nur im Commit
+`76efdb6`, in `README.md` und in `Releases/1.0.2/LIESMICH.txt` festgehalten, in
+dieser Datei fehlte er. Anlass fuer `ZIEL.md`, Kriterium 0.
+
+**Was Gregor sah.** Paket 1.0.2 ausgepackt, `Eudora.exe` gestartet:
+
+    Die Anwendung konnte nicht korrekt gestartet werden (0xc000007b)
+
+Kein Fenster, kein Absturzdialog, kein Protokolleintrag.
+
+**Ursache.** `0xc000007b` ist `STATUS_INVALID_IMAGE_FORMAT`. Der Lader hat eine
+Abhaengigkeit gefunden, die er nicht in den Prozess bringen kann. Im
+Programmverzeichnis fehlten die vier Debug-Laufzeiten des VS-2022-Baus
+vollstaendig (nachgemessen):
+
+    mfc140d.dll   msvcp140d.dll   vcruntime140d.dll   ucrtbased.dll
+
+**Warum es so leicht schiefgeht.** `Eudora.exe` ist ein **32-Bit**-Programm
+(`Debug|Win32`, im PE-Kopf nachgemessen). Zwei Fallen fuehren beim Nachlegen der
+DLLs zur 64-Bit-Fassung und damit erneut zu `0xc000007b`:
+
+| Falle | Warum |
+|---|---|
+| DLL-Sammelseiten wie dll-files.com | liefern haeufig die 64-Bit-Fassung, ohne es deutlich zu machen |
+| der Ordnername `SysWOW64` | er enthaelt die **32**-Bit-DLLs; die 64-Bit-DLLs liegen in `System32`. Der Name legt genau das Gegenteil nahe |
+
+**Behebung.** `tools/laufzeit-holen.ps1` (neu in `76efdb6`). Es holt die vier
+Dateien aus `C:\Windows\SysWOW64` und prueft **jede einzeln** im PE-Kopf auf
+x86 nach; kopiert wird nur, was wirklich x86 ist. Mit `-NurPruefen` sagt es nur,
+was fehlt. Gegen Gregors Testverzeichnis gelaufen: alle vier vorhanden und x86.
+Die auf dieser Maschine vorhandene Fassung ist 14.38.33142.0 gegen Toolset
+14.38.33130.
+
+**Was damit NICHT geloest ist.** Die vier Debug-DLLs duerfen nicht
+weiterverteilt werden — Microsoft nimmt die Debug-Fassungen der Laufzeit
+ausdruecklich davon aus, bei Visual Studio liegen sie deshalb unter
+`debug_nonredist`. Ein Redistributable gibt es nicht. Solange nur der Debug-Bau
+laeuft, braucht jeder Empfaenger des Pakets ein installiertes Visual Studio
+2022. Das widerspricht Kriterium 0 („zip runterladen, entpacken, starten —
+laeuft"). Der Ausweg ist ein **Release-Bau**, vorzugsweise statisch gebunden;
+Einzelheiten und Abwaegung in `ZIEL.md`, Abschnitt „Kriterium 0". Bis dahin
+misst `tools/paket-pruefen.ps1` den Paketinhalt gegen die Startkette.
+
+**Bezug zu anderen Befunden.** S-1 (Paket 1.0.1 startete nicht) hatte eine
+andere Ursache — dort lagen die *falschen* Fremd-DLLs bei. S-8 ist der Fall,
+dass die eigene Laufzeit ganz fehlt.
+
+## Z-1 — Alle Zahlen und Fundstellen des 31.08. nachgerechnet (31.08.2026)
+
+Ein Prüfdurchgang hat jede Zahl und jede Zeilenangabe der heutigen Befunde
+gegen die Quelle gehalten. **Nichts wurde geändert** — das hier ist die Liste
+der Abweichungen, damit niemand auf einer falschen Angabe aufbaut.
+
+### Falsch
+
+| Stelle | Behauptung | tatsächlich |
+|---|---|---|
+| P-2.1, P-2.3 | „die **zehn** `GetProcAddress`-Ergebnisse (`:373-383`)" | es sind **elf** (373…383). Die Zahl steht zweimal falsch da. |
+| P-2.1 | „in `Releases/1.0/` liegen **mehrere** `QCSSL.dll`-Fassungen" | es liegt **genau eine** (2.920.960 B), SHA256-identisch mit der im Paket 1.0.2. **Damit trägt die Begründung des Absturzszenarios so nicht.** |
+| P-2.2 | „**alle fünf** echten Aufrufer übergeben die Adresse eines Elements" | es gibt einen **sechsten**: `Eudora71/Imapdll/src/Network.cpp:539` reicht in `CNetStream::SetSSLMode` einen Zeigerparameter weiter. Nicht auf dem POP-Weg, aber „alle fünf" ist falsch. |
+| P-2.2 (Quelltext) | Kommentar „Zeile **2065** unten prüft ihn auch" | die Prüfung steht nach der eigenen Änderung bei **2070**; in 2065 steht etwas anderes. Die Korrektur hat ihre eigene Zeilenangabe veraltet gemacht. |
+| M-1 | `HTERROR` in `mainfrm.cpp:8670`, Funktion `8662-8671`, Kommentar `:8744` | durchweg **um eins daneben**: 8671, 8663–8672, 8745. Dieselbe Verschiebung ist in die neuen Quelltextkommentare übernommen worden (`OTShim_Werkzeugleiste.cpp:3790`, `.h:1153`). |
+| M-1 | Konstruktoren `:3480` und `:3506` | das war der **Vorzustand**. Heute `:3514` und `:3541`. Im Text nicht als „vorher" gekennzeichnet. |
+| A-1 | „Ursache belegt", fünf Fundstellen, 32767, Verdacht `DrawDisabled` | war an `31810e2` richtig, ist **heute überholt** — `1a4a6d5` und `db28adb` haben genau das behoben. Sämtliche Zeilenangaben des Abschnitts stimmen im heutigen Baum nicht mehr. Nur `SetControlBarWidthsInRow` ist noch leerer Rumpf (`OTShim.cpp:2244`) und `OnSizeParent` reicht noch durch (`:3276`). |
+| B-2.2 | Startkette des **ausgelieferten** Pakets = **elf** Module | **zwölf** — dazu `msvcr71d.dll`, weil die gepackte `Paige32d.dll` der Debug-Bau ist. Die Elferliste ist die von Paket **1.0.3**, nicht die des ausgelieferten. |
+| B-2.5 | Paket 1.0.2: **3 Fehler, 5 Warnungen** | heute mit dem eingecheckten Prüfer: **0 Fehler, 8 Warnungen**. Die Spalte stammt aus einem älteren Stand des Werkzeugs. |
+| W-1 / PR-7 | „S-7 nachgezogen, Tabelle eingefügt, Beispiel berichtigt" | **S-7 ist unverändert.** Der Kasten behauptet weiter, der Werkzeugkopf nenne „4426 von 5336" — das ist dort ersatzlos entfernt worden. Die Tabelle steht nur im Werkzeugkopf. Die Beschriftung des Beispiels ist weiterhin vertauscht. |
+| W-1 / PR-3 | Grundgesamtheit **6385** | heute **6392**. Wächst mit jedem Commit — kein Widerspruch, aber schon am Tag des Schreibens flüchtig. |
+
+### Bestätigt
+
+`P-2.1` alle vier Fundstellen exakt der Vorzustand, die Rechnung
+`CRString(8000 + (-1-10000))` geht auf · `P-2.3` acht Treffer, alle sieben
+Fehlalarm-Bewertungen stichprobenweise richtig · `P-2.4` `TextReader.cpp:251`
+und `utils.h:90` · `P-2.7` **105 Tests, 105 bestanden** selbst ausgeführt ·
+`M-1` `tbarmgr.h:79-80`, **genau fünf** Abfragestellen (2988, 8668, 8679, 8727,
+8743), `91716bb` als Einführungscommit, `RestoreMainFrame` wird gerufen ·
+`A-1` 15 Standardknöpfe, `secData`, `DockBar.cpp` prüft selbst auf
+`SWM_MODE_ADWARE` · `B-2.1` die echte GUID steht in der Solution, die falsche
+weiter in `VC71Bruecke/BEFUND.md:462` · `B-2.3` `EUMAPI.DLL` ist keine PE-Datei
+— und der als UNGEPRÜFT markierte Verdacht **stimmt**: Signatur `NE`, also eine
+**16-Bit-Datei** · `W-1` 23 Testfälle grün, Blob `8c4fb68a` = 5716 B mit 65 LF,
+5716+65 = 5781.
+
+### Was daraus folgt
+
+**Zeilenangaben veralten, sobald jemand dieselbe Datei anfasst.** Sieben der elf
+Abweichungen sind genau das — nicht falsch gemessen, sondern durch spätere
+Commits verschoben. Wer eine Fundstelle benutzt, prüft sie nach.
+
+Nicht prüfbar in jenem Arbeitsbaum: die Größenangaben zu `Eudora.exe` und die
+MSBuild-Läufe aus P-2.4, B-2.1 und W-1.
+
+## X-1 — Die Werkzeuge angegriffen: neun Löcher in der Schranke (31.08.2026)
+
+Ein Angriffsdurchgang gegen die eigenen Werkzeuge, mit 15 selbst gebauten
+Fällen, von denen **keiner** in `tools/pruefe-bytes-tests.pl` steht.
+**Ergebnis: 9 Löcher, 0 Fehlalarme.** Die Bestandssammlung läuft weiter 23/23
+grün — diese Funde kommen obendrauf.
+
+### Schwer
+
+**L1 — Umbenennung hebelt die Schranke vollständig aus.** `pruefe-bytes.pl:198`
+benutzt `--diff-filter=ACM`. Ein `git mv alt.cpp neu.cpp` erscheint als `R088`
+und landet nie in der Prüfliste. Wer danach die Datei neu schreibt, kann jedes
+Zeilenende und jedes Sonderzeichen zerstören — Rückgabe 0. **`git mv` plus
+Neuschreiben ist genau der Ablauf einer Portierung.**
+
+**L2 — Latin-1 → UTF-8 umkodiert bleibt unerkannt.** Gezählt werden nur
+Ersatzzeichen (`EF BF BD`). Eine *saubere* Umkodierung (`0xE4` → `C3 A4`)
+erzeugt keines; der Inhalt ändert sich, also greift Regel 2, und dort verwirft
+Zeile 165 das Paar. Das ist genau der Schaden, gegen den die Regel
+„byte-erhaltend ändern" existiert.
+
+**L3 — Ein neu eingefügtes UTF-8-BOM** (`EF BB BF`) bleibt aus demselben Grund
+unerkannt.
+
+### Mittel
+
+**L4** — bei Dateien mit NUL-Byte ist Regel 2 blind: `git diff -U0` liefert nur
+„Binary files differ", kein `@@`. Derzeit latent — von 6392 erfassten Dateien
+enthält keine ein NUL-Byte.
+
+**L5** — die Vorausschau von 30 Zeilen (`:118`) ist eine harte Grenze, exakt
+gemessen: 30 eingefügte Zeilen vor der Umwandlung → erkannt, **31 → durch**.
+Ehrlich dazu: an echten Projektdateien wird es trotzdem erkannt, weil git
+wiederkehrende Zeilen in mehrere Blöcke zerlegt. Das Loch ist synthetisch
+belegt, an Projektmaterial nicht.
+
+**L6** — reine CR-Zeilenenden (Mac-Stil) → LF bleiben unerkannt; normalisiert
+wird nur `\r\n`.
+
+**L7** — verliert die letzte Zeile ihr CRLF, wird das bewusst durchgelassen
+(`:166`). Es ist trotzdem ein echter Byteverlust.
+
+### Leicht
+
+**L8** — neue Dateien werden gar nicht geprüft (`:205`); eine neue Datei mit
+Ersatzzeichen läuft durch. **L9** — eine in HEAD leere Datei gilt als „nicht
+vorhanden" und wird übersprungen.
+
+### Zusatzfund: der pre-commit-Hook wertet seinen ersten Schritt nicht aus
+
+`tools/hooks-einrichten.sh:20` ruft `lehren-spiegeln.pl` ohne `set -e` und ohne
+Prüfung von `$?`, danach `exec pruefe-bytes.pl`. Wenn das Spiegeln mit
+`exit 1` abbricht und „Der Commit wurde abgebrochen" meldet, **stimmt das
+nicht** — der Hook gibt 0 zurück. Die gespiegelten Lehren gehen weiterhin
+lautlos aus dem Commit heraus. Das ist derselbe Befund wie NP3-4, in anderer
+Gestalt.
+
+### `tools/suche-zeiger.pl` ist Rauschen
+
+Über 3237 Dateien: **345 Treffer**. Stichprobe von 15 zufällig gezogenen:
+**15 Fehlalarme, also 100 %.** Drei strukturelle Ursachen erklären 273 der 345
+(79 %): klammerloser `if`-Rumpf (211), einzeiliger Wächter mit `return` (16),
+Abstand größer als das Fenster von 40 Zeilen (46). In allen 23 handgeprüften
+Treffern **ein** plausibel echter: `EuImap/src/ImapMailbox.cpp:1022` prüft
+`pAccount`, `:1051` dereferenziert außerhalb des Blocks.
+
+Urteil: etwa ein brauchbarer Treffer auf 70 Ausgabezeilen. Ohne die drei
+Filter nicht benutzbar.
+
+### `tools/zeilenenden-angleichen.pl`: zwei Lücken
+
+**Es lässt Textdateien aus.** Von 9146 verfolgten Dateien erfasst das Muster
+6392; von den 2754 übrigen sind **773 eindeutig Text**. Projektrelevant fehlen
+`.ih` (6 C-Header, werden mitkompiliert), `.rgs` (12 ATL-Registrar-Skripte,
+landen als Ressource im Binary), `.hh` (7 Hilfe-Header), `.mc`, `.hpj`, dazu
+139 Dateien ohne Endung. `tools/dateiendungen.pl:30` führt `cc`, aber nicht
+`hh` und `ih`.
+
+**Es dreht absichtliche Arbeit still zurück.** Die Zeilen 129-141 schreiben den
+HEAD-Stand **richtungslos**. Wer im Arbeitsbaum absichtlich LF→CRLF korrigiert
+— etwa eine `.bat`, die CRLF braucht —, verliert das durch `--aendern`
+kommentarlos, und die Datei erscheint unter „angeglichen" statt unter
+„inhaltlich verschieden".
+
+**Entwarnung:** von den 6392 erfassten Dateien enthält **keine** ein NUL-Byte
+und **keine** ein UTF-16-BOM. Bilder, DLLs und Archive liegen alle außerhalb
+des Musters. Es fasst also keine Binärdatei fälschlich an.
+
+### Was daraus folgt
+
+Nichts davon ist heute akut — aber L1 und L2 sind die beiden Schäden, gegen die
+die Schranke überhaupt gebaut wurde, und gegen beide ist sie wirkungslos. Wer
+sie als Sicherheit betrachtet, irrt.
+
+## E-1 — Der erste erfolgreiche Mailabruf (31.08.2026, 08:15)
+
+**Gregor hat mit dieser Fassung Mail abgerufen.** Zum ersten Mal seit Beginn der
+Portierung. Belegt durch zwei Bildschirmfotos.
+
+Gebaut aus `93762c7`, Paket `C:\Users\Gregor\Eudora72-1.0.3`, Titelleiste:
+
+    Eudora [Eudora 7.2.0.3 / Paket 1.0.3+93762c7* 2026-08-31 08:04 - Eudora72-1.0.3] - [In]
+
+### Was funktioniert
+
+| | |
+|---|---|
+| **Mailabruf** | Fortschrittsbalken in der Statuszeile, danach **159 Nachrichten** im Eingangspostfach (`159/4319K/0K`) |
+| **Anzeige** | Absender, Datum, Größe, Betreff in der Liste; Vorschaubereich zeigt eine vollständige Nachricht mit Kopfzeilen und Text |
+| **Menüs** | das *File*-Menü klappt auf und ist vollständig — **Befund S-5 ist behoben**, die Behebung M-1 wirkt |
+| **Anordnung** | Postfachbaum links, Nachrichtenliste rechts oben, Vorschau darunter. **Keine sich überlagernden Bereiche mehr** — die neue Andockrechnung aus A-1 wirkt |
+| **Umlaute** | im Vorschaubereich korrekt („Guten Tag", „gültig", „vergangen") |
+
+### Was damit belegt ist
+
+**Kriterium 3 aus `ZIEL.md` ist erfüllt.** Ein Mailkonto lässt sich einrichten,
+verbinden, und Mail wird abgerufen und lesbar dargestellt. Das war nie zuvor
+geprüft.
+
+Zugleich ist damit der **erste echte Servertest der neuen TLS-Schicht**
+bestanden — bisher lag nur ein Test mit einer *älteren* QCSSL-Fassung vor
+(`AUSLIEFERUNGEN.md`).
+
+**Kriterium 1 ist erfüllt.** Das Fenster erscheint und ist bedienbar. Die
+Einstufung „strittig" vom 30.08. ist damit aufgehoben.
+
+### Was noch nicht stimmt
+
+**Die Werkzeugleiste hat weiterhin leere graue Felder** — auf dem ersten
+Bildschirmfoto der erste Knopf und drei weitere in der Mitte. Die Behebung an
+`SECStdBtn::DrawDisabled` (A-1) hat also **nur einen Teil** der Fälle
+erwischt. Damit ist **Kriterium 2 weiterhin nicht erfüllt**.
+
+Nächster Ansatz dafür steht in `BEFUND-ANSICHT.md`: der Zeichenweg je Knopf,
+Punkte 2 und 3 (`GetDrawData`, `TBBS_HIDDEN`), und `SetControlBarWidthsInRow`
+ist noch ein leerer Rumpf (`OTShim.cpp:2244`), `OnSizeParent` reicht noch durch
+(`:3276`).
+
+**Beim Start sind zwei bis drei SUPERASSERT-Dialoge wegzuklicken**, dazu einige
+Warnungen. Das ist der Debug-Bau; im Release-Bau entfallen sie.
+
+### Stand der vier Kriterien
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 0 | Paket läuft ohne Nachinstallieren | **nicht belegt** — der Paketprüfer trägt nicht, siehe PR-2 |
+| 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+| 2 | die Darstellung ist korrekt | **nicht erfüllt** — leere Werkzeugleisten-Knöpfe |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
+
+## E-2 — Werkzeugleiste vollständig, aber Umlaute in HTML-Mails zerstört (31.08.2026, 08:25)
+
+Zweites Bildschirmfoto aus demselben Lauf (`93762c7`, Paket 1.0.3).
+
+### Behoben: die leeren Werkzeugleisten-Knöpfe
+
+Auf diesem Bild ist die Werkzeugleiste **vollständig** — alle Symbole
+vorhanden, kein einziges graues Feld mehr. Die Behebung an
+`SECStdBtn::DrawDisabled` (A-1, Commit `db28adb`) **wirkt also doch**.
+
+Warum das erste Bildschirmfoto welche zeigte: dort war noch kein Postfach
+geöffnet und keine Nachricht ausgewählt, also waren die betroffenen Knöpfe
+gesperrt. Sobald Nachrichten da sind, werden sie freigegeben und normal
+gezeichnet. Der Fall „gesperrt und leer" ist damit behoben; der Fall „gesperrt
+und erkennbar grau" bleibt zu prüfen, wenn wieder einmal Knöpfe gesperrt sind.
+
+Auch der Aufgabenbereich unten („Task Status" / „Task Errors") sitzt jetzt als
+eigener Streifen am unteren Rand, nicht mehr senkrecht mitten im Fenster.
+
+### NEU UND OFFEN: Umlaute in HTML-Nachrichten werden zu `◆`
+
+    Video Lernkurs f◆r Excel 2019 - 2021 - G◆ltig bis 23.03.2022
+                     ^                      ^
+                     ü                      ü
+
+**Im reinen Text stimmten die Umlaute** — dieselbe Sitzung zeigte kurz zuvor
+„gültig" und „vergangen" richtig (Befund E-1). Der Fehler trifft also nur den
+**HTML-Anzeigepfad**, nicht `ISOTranslate` im Textpfad.
+
+Das Zeichen ist ein Ersatzzeichen, kein Zeichensalat: **die Quelle wird als
+etwas anderes gelesen, als sie ist.** Wahrscheinlich ist der Zeichensatz aus
+dem `Content-Type` oder aus einem `<meta charset>` nicht ausgewertet, und der
+Text kommt als UTF-8-Bytes in einen Wandler, der Windows-1252 erwartet — oder
+umgekehrt.
+
+**UNGEPRÜFT**, wo genau. Anzusehen wären:
+
+  - der HTML-Anzeigepfad (`TridentView.cpp`, `PgEmbeddedImage.cpp` und was
+    sonst die Vorschau mit HTML füllt)
+  - ob der Zeichensatz aus dem MIME-Kopf überhaupt bis dorthin gereicht wird
+  - `ISOTranslate` in `utils.cpp` wird hier offenbar **nicht** durchlaufen,
+    sonst wäre das Ergebnis dasselbe wie im Textpfad
+
+Gregors Einschätzung: *„das kann man beheben."*
+
+### Stand der vier Kriterien
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 0 | Paket ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** |
+| 2 | Darstellung korrekt | **fast** — Anordnung, Menüs und Werkzeugleiste stimmen; **Umlaute in HTML-Mails nicht** |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
+
+## E-3 — TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, gegen einen echten Server (31.08.2026, 08:09:43)
+
+Abgelesen in Eudoras eigenem Dialog *Tools → Last SSL Info*
+(„Eudora SSL Connection Information Manager"), Bildschirmfoto von Gregor.
+
+| | |
+|---|---|
+| Server | `mx.freenet.de`, `194.97.208.35` |
+| **Port** | **110** |
+| Zeitpunkt | Monday, August 31, 2026, 08:09:43 |
+| Negotiation Status | **Succeeded** |
+| SSL Version | **TLSv1.3** |
+| Encryption Algorithm | **TLS_AES_256_GCM_SHA384 (256 bits)** |
+
+### Warum das wichtig ist
+
+Damit ist die offene Frage aus `Releases/1.0/AUSLIEFERUNGEN.md` beantwortet.
+Dort stand: *„Der Mailserver-Test steht für sie aus."* Der bisherige
+erfolgreiche Abruf (29.08., `pop.gmx.net`) war mit `c875a750` gelaufen — der
+Fassung **ohne** den Regressionsfix H1 und **ohne** WACHEs fünf Befunde.
+
+**Jetzt ist die ausgelieferte QCSSL 1.0.1 (`ab55281a`) selbst gemessen:**
+TLS 1.3 mit einem AEAD-Verfahren, Aushandlung erfolgreich. Die strengeren
+Vorgaben aus M1 (Mindestprotokoll TLS 1.2 für alle Einstellungen) haben nichts
+verschlechtert — genau das war die Sorge, die in AUSLIEFERUNGEN.md formuliert
+war.
+
+### Port 110, nicht 995 — und das ist richtig so
+
+`ABRUF-PRUEFEN.md` empfiehlt `SSLReceiveUse=2` mit Port 995, also **implizites
+TLS**. Gregor hat stattdessen **Port 110 mit STARTTLS** benutzt, und es
+funktioniert: die Verbindung beginnt im Klartext auf dem gewöhnlichen
+POP3-Port und wird per `STLS` auf TLS 1.3 gehoben.
+
+Das ist kein Widerspruch, sondern der zweite gangbare Weg. `ABRUF-PRUEFEN.md`
+sollte beide nennen, statt nur einen — mit dem Hinweis, dass freenet auf 110
+mit STARTTLS nachweislich arbeitet.
+
+Nebenbei beantwortet: die in `ABRUF-PRUEFEN.md` als **UNGEPRÜFT** markierte
+Frage, ob `mx.freenet.de` überhaupt POP3 spricht. **Ja**, auf Port 110.
+
+### Was damit belegt ist
+
+Die ganze Kette trägt: OpenSSL 3.5.8 LTS → QCSSL 1.0.1 → `QCWorkerSocket` →
+POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
+Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
+(`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
+
+## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026, OFFEN)
+
+Beim **Schließen** von Eudora:
+
+    Microsoft Visual C++ Runtime Library
+    Debug Assertion Failed!
+    Program: C:\Users\Gregor\Eudora72-1.0.3\mfc140d.dll
+    File:    ...\ATLMFC\Include\afxcoll.inl
+    Line:    213
+
+### Was an dieser Zeile steht — nachgeschlagen, nicht geraten
+
+`afxcoll.inl:213` ist die Bereichsprüfung in **`CPtrArray::ElementAt`**:
+
+```cpp
+_AFXCOLL_INLINE void*& CPtrArray::ElementAt(INT_PTR nIndex)
+    { ASSERT(nIndex >= 0 && nIndex < m_nSize);      // <- Zeile 213
+```
+
+Also ein **Index außerhalb des Arrays**. In der Ersatzschicht kommt `ElementAt`
+nicht vor — aber MFCs eigene `CDockBar` benutzt es auf `m_arrBars`, und genau
+daran hat die heutige Andockrechnung gearbeitet.
+
+### Wahrscheinlichste Ursache (UNGEPRÜFT)
+
+`SECDockBar::MoveControlBarToPosition` (`OTShim.cpp:2718-2795`, heute neu) baut
+`m_arrBars` **von Hand** um: `RemoveAt` (bis zu zweimal), dann `InsertAt`, dann
+gegebenenfalls eine `NULL`-Endemarke anhängen.
+
+`m_arrBars` ist kein gewöhnliches Feld: MFC hält darin Zeiger auf Leisten,
+getrennt durch `NULL`-Marken, die die Zeilen abschließen — und `CDockBar` führt
+parallel dazu Zustand mit (`CControlBar::m_pDockBar`, die Positionsangaben, und
+`CFrameWnd::m_listControlBars`). Wer das Feld umbaut, muss diesen Zustand
+mitziehen.
+
+Der Verdacht: beim Beenden läuft MFCs eigener Abbauweg über `m_arrBars` und
+trifft auf eine Struktur, die zu dem nicht passt, was es sich gemerkt hat.
+
+**Nicht widerlegt, aber auch nicht belegt** — es fehlt der Aufrufstapel.
+
+### Wie man es morgen in Minuten findet
+
+`tools/stapel-untersuchen.ps1` fängt die Ausnahme und läuft die EBP-Kette ab.
+Damit wurde S-2 gefunden. Nötig: `Eudora.pdb` neben der `Eudora.exe` im Paket.
+Eine Debug-Zusicherung ist allerdings keine Ausnahme im Sinne des Debuggers —
+sie zeigt einen Dialog. Zwei Wege:
+
+1. Im Dialog **„Wiederholen"** drücken: das löst einen Haltepunkt aus, den der
+   Debugger als Ausnahme sieht.
+2. Oder `_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG)` setzen, dann geht
+   die Meldung in die Debugausgabe statt in einen Dialog.
+
+### Einordnung
+
+Es passiert **beim Beenden**, nachdem alles funktioniert hat — Abruf,
+Darstellung, Menüs. Kein Datenverlust ist zu erwarten: Eudora hat seine
+Postfächer zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
+Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
+Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
+der Grund, ihn nicht auf sich beruhen zu lassen.
+
+## Z-2 — Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
+
+Befund E-2: In HTML-Nachrichten steht statt eines Umlauts ein Ersatzzeichen
+(`f<>r` statt `fuer`), im reinen Text derselben Sitzung stimmen die Umlaute.
+
+### Der HTML-Anzeigepfad, Schritt fuer Schritt (alles nachgelesen, nicht vermutet)
+
+1. `CTridentView::LoadMessage()` (`Eudora/TridentView.cpp:1453-1550`) legt mit
+   `GetTempFileName` eine **temporaere Datei** an, ruft
+   `WriteTempFile(theFile, ...)` (`:1496`) und danach
+   `m_pSite->Load((LPTSTR)(LPCTSTR)m_szTmpFile)` (`:1546`).
+2. `CSite::Load` (`Eudora/SITE.CPP:397-465`) reicht diesen **Dateipfad** an
+   MSHTML weiter — ueber `CreateURLMoniker` + `IPersistMoniker::Load` (`:423-440`),
+   ersatzweise `IPersistFile::Load` (`:453-460`).
+3. `CTridentView::WriteTempFile` (`Eudora/TridentView.cpp:1281-1440`) schreibt in
+   diese Datei: erst das Stylesheet (aus `read.css` oder aus
+   `IDS_INI_READMESSAGE_STYLE_SHEET`, `EudoraRes.rc:8129-8130`, Anfang:
+   `<HTML><HEAD><STYLE>`), dann Kopfzeilen, dann den Nachrichtenrumpf aus
+   `GetMessageForDisplay`.
+
+**In keinem dieser drei Schritte wird ein Zeichensatz angegeben.** Kein BOM,
+kein `<meta ... charset=...>`, keine Codepage-Umwandlung. Die Volltextsuche des
+Auftrags stimmt und ist damit erklaert: die Suche nach `IPersistStreamInit`
+liefert im ganzen Baum **keinen** Treffer, weil MSHTML hier ueber eine Datei
+geladen wird. MSHTML muss den Zeichensatz also selbst raten — aus dem Inhalt.
+
+### Woher das Ersatzzeichen kommt
+
+Was auf der Platte steht, ist **Windows-1252**: `TextReader::ReadIt`
+(`Eudora/TextReader.cpp:243-250`) uebersetzt jede Zeile mit
+`size = ISOTranslate(buf, size, iCharsetIdx)`, sobald `iCharsetIdx > 2` ist —
+und `ISOTranslate` (`Eudora/utils.cpp:1240-1283`) wandelt UTF-8 ueber
+`MultiByteToWideChar(CP_UTF8, ...)` + `WideCharToMultiByte(1252, ...)` nach
+CP1252. Das gilt fuer HTML-Teile genauso wie fuer Text, `bHtml`
+(`TextReader.cpp:63`) steuert nur den `<x-html>`-Rahmen, nicht die Uebersetzung.
+
+Der `<meta http-equiv="Content-Type" ... charset=utf-8>` aus der Originalmail
+ueberlebt diese Umwandlung dagegen unveraendert: der Tag-Filter in
+`GetBodyAsHTML` (`Eudora/msgutils.cpp:1616-1645`) sieht sich `<meta>` **nur auf
+`http-equiv=refresh`** an (`:1629`) und laesst jedes andere `<meta>` samt
+`charset`-Angabe stehen.
+
+Damit steht in der temporaeren Datei: CP1252-Bytes, dazu die Ansage "utf-8".
+MSHTML glaubt der Ansage, findet ein einzelnes Byte `0xFC`, das in UTF-8 nicht
+vorkommt, und setzt **ein** U+FFFD dafuer.
+
+Das passt genau zum Bild: **ein** Ersatzzeichen je Umlaut. Waere es umgekehrt —
+UTF-8-Bytes als CP1252 gelesen —, stuenden dort **zwei** Zeichen (`Ã¼`). Der
+Textpfad hat kein `<meta>` und keinen Rater und zeigt deshalb richtig an (E-1).
+
+### Behebung: zwei Aenderungen, beide eingesetzt
+
+1. **Den Zeichensatz ansagen**, als erste Bytes der temporaeren Datei, vor dem
+   Stylesheet, in `CTridentView::WriteTempFile`
+   (`Eudora/TridentView.cpp:1334-1351`):
+
+       static const char	szCharsetMeta[] =
+           "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">\r\n";
+       ...
+       theFile.Write( szCharsetMeta, sizeof(szCharsetMeta) - 1 );
+       theFile.Write( szStyleSheet, szStyleSheet.GetLength() );
+
+   `windows-1252` ist in **allen** Faellen richtig: bei `iCharsetIdx <= 2`
+   (Windows, US-ASCII, Latin-1) sind die Bytes unveraendert Latin-1/CP1252, bei
+   `iCharsetIdx > 2` hat `ISOTranslate` nach CP1252 gewandelt. Vor dem
+   Stylesheet und nicht in `IDS_INI_READMESSAGE_STYLE_SHEET`, weil eine
+   vorhandene `read.css` die Ressource ersetzt (`TridentView.cpp:1300-1322`) —
+   in der Ressource stuende die Ansage dann nur manchmal in der Datei.
+
+2. **Die fremde Zeichensatz-Ansage entfernen**, in `GetBodyAsHTML`
+   (`Eudora/msgutils.cpp:1625-1639`), damit MSHTML nicht doch der spaeteren
+   Angabe der Mail folgt:
+
+       CString		TagContentsLower = TagContents;
+       TagContentsLower.MakeLower();
+       bool		bIsBadMeta = HasBadAttributeValue(TagContents, "http-equiv", "refresh") ||
+                                ( TagContentsLower.Find("charset") >= 0 );
+
+   Ueber die Zeichenkette `charset` statt ueber `http-equiv`, weil der
+   HTML5-Kurzschreibweise `<meta charset="utf-8">` das `http-equiv` fehlt und
+   `HasBadAttributeValue` sie deshalb nicht sieht. `CString::MakeLower` statt
+   `StrStrIA`, damit `msgutils.cpp` keinen neuen Kopf (`<shlwapi.h>`) braucht.
+
+   UNGEPRUEFT ist allein, ob Schritt 1 fuer sich genuegt haette: ob MSHTML die
+   erste oder die letzte `charset`-Angabe im Dokument gewinnen laesst, ist nicht
+   nachgemessen. Schritt 2 macht die Frage gegenstandslos, deshalb beide.
+
+### Stand und naechster Schritt
+
+Ursache belegt, Anzeigepfad vollstaendig verfolgt, Fundstellen mit Datei:Zeile
+oben. Beide Aenderungen sind eingesetzt (byte-erhaltend ueber
+`tools/ersetze-bereich.pl`, CR-Zahl vorher/nachher je 18, unveraendert).
+
+**Beide geaenderten Dateien uebersetzen fehlerfrei**, nachgemessen an den
+Objektdateien: `Eudora71/Eudora/Build/Debug/msgutils.obj` (08:34:55) und
+`TridentView.obj` (08:35:59), beide neuer als die Quellen (08:31:56). Der Bau
+des Eudora-Projekts kommt vollstaendig durch die Uebersetzung und bricht erst
+beim **Binden** ab, an einer fremden Ursache:
+
+    LINK : fatal error LNK1104: Datei "...\Eudora71\Importers\Lib\Debug\NSImport.lib"
+    kann nicht geoeffnet werden.   [Eudora.vcxproj]
+
+`Eudora71/Importers/Lib/Debug/` gibt es in diesem Worktree gar nicht — die drei
+Importer-Projekte sind im Solution-Bau vorher an `QCUtils.lib` gescheitert
+(siehe naechster Unterabschnitt). Es fehlt also eine Vorstufe, nicht ein
+Ergebnis dieser Aenderung.
+
+**Nicht nachgewiesen ist die Wirkung.** Es gibt kein gebundenes `Eudora.exe`
+aus diesem Worktree, und ein Lauf von Eudora war nach Auflage ausgeschlossen.
+Wer weitermacht:
+
+1. Die Vorstufen bauen, bis `QCUtils.lib` und die drei Importer-Libs stehen,
+   dann `Eudora.vcxproj` erneut binden. An den zwei geaenderten Dateien ist
+   dafuer nichts zu tun.
+2. Gegenprobe ohne Eudora-Start moeglich: nach dem Anzeigen einer
+   UTF-8-HTML-Mail liegt die Zwischendatei in `%TEMP%\eud*.htm`
+   (`TridentView.cpp:1469-1484`). Darin muss die erste Zeile die
+   `windows-1252`-Ansage tragen und im Rumpf darf kein `charset=` mehr stehen.
+3. Erst danach das Bildschirmfoto aus E-2 wiederholen.
+### Nebenbefund (nicht behoben)
+
+`GetBodyAsHTML` schreibt beim Pruefen der Meta-Tags mit `*(LPTSTR)TagEnd = 0`
+in einen Puffer, der ueber `LPCTSTR` hereinkam (`msgutils.cpp:1633`). Das ist
+Bestand des Originalcodes und hier nicht angeruehrt worden, faellt aber jedem
+auf, der die Stelle liest.
+
+
+### Der Bau der ganzen Solution: 6 Fehler, keiner davon aus dieser Aenderung
+
+Gemessen im frischen Worktree, `MSBuild Eudora71\Eudora.sln -p:Configuration=Debug
+-p:Platform=x86 -m`, 2030 Warnungen, 6 Fehler:
+
+  * `OT501.vcxproj`, dreimal: `NMAKE : fatal error U1073: ".\utility\crypt\Blackbox.cpp"
+    konnte nicht erstellt werden`, dasselbe fuer `OTA50D\OTA50D.lib`, und daraus
+    folgend `error MSB3073` fuer `NMAKE /f build50.mak ota50d`.
+  * `NSImport.vcxproj`, `OLImport.vcxproj`, `OEImport.vcxproj`, je einmal:
+    `LINK : fatal error LNK1104: Datei "QCUtils.lib" kann nicht geoeffnet werden`.
+
+Beide Gruppen betreffen **fremde Teilprojekte** und keine der zwei geaenderten
+Dateien. Die LNK1104-Gruppe ist eine Reihenfolge- oder Abhaengigkeitsfrage des
+Parallelbaus (`-m`): die Importer binden, bevor `QCUtils.lib` fertig ist. Ob es
+sich um denselben bekannten Effekt handelt, den README unter "in einem frischen
+Klon oder Worktree zuerst die ganze Solution bauen" beschreibt, ist
+**UNGEPRUEFT** — ein zweiter Lauf desselben Befehls wuerde das entscheiden.
+
+## E-5 — Das Release startet auf einem Win11-Rechner ohne Visual Studio nicht (31.08.2026, OFFEN)
+
+Gregor hat `Eudora72-1.0.3-release.zip` aus der GitHub-Veröffentlichung auf einem
+zweiten Rechner (Windows 11, **kein** Visual Studio) ausgepackt: *„exe aus dem
+github release ordner startet auf einem win11 pc gar nicht."*
+
+### Was ausgeschlossen ist
+
+Streng nachgemessen, mit `dumpbin -dependents` über alle 37 Binärdateien des
+Pakets — und diesmal **ohne** `SysWOW64` als Fundort zu akzeptieren, weil dort
+auf einem Rechner ohne Visual Studio nichts liegt:
+
+| fehlt | gebraucht von | hält den Start auf? |
+|---|---|---|
+| `MFC42.DLL` | `EuGraph.ocx` | **nein** — erst bei Benutzung geladen |
+| `MFC71.DLL` | `EudoraBk`, `ISock`, `Ldap`, drei Plugins | **nein** — dito |
+| `MSVCP71.dll` | `Ldap`, `Ph`, drei Plugins | **nein** — dito |
+| `oledlg.dll` | `mfc140.dll` | **nein** — Bestandteil von Windows |
+
+Ebenfalls ausgeschlossen: eine Vermischung von Debug und Release. Jede Datei im
+Paket wurde einzeln geprüft, keine braucht eine Debug-Laufzeit. Die drei
+verteilbaren Laufzeiten liegen bei.
+
+### Mein Fehler bei der vorigen Prüfung
+
+Ich hatte gemeldet, alle Importe lösten auf — dabei habe ich „liegt in
+`SysWOW64`" als „vorhanden" gewertet. Auf dieser VM stimmt das, weil Visual
+Studio installiert ist; auf Gregors Zielrechner nicht. **Genau der Fehler, den
+PRÜFER am Paketprüfer schon nachgewiesen hatte** (PR-2: „prüft die Maschine,
+nicht das Paket") — und ich habe ihn in meiner eigenen Prüfung wiederholt.
+
+### Was jetzt zu prüfen ist, in dieser Reihenfolge
+
+1. **Mark of the Web.** Dateien aus einem heruntergeladenen ZIP tragen einen
+   Zonenvermerk; Windows kann das Laden von DLLs daraus verweigern — ohne
+   Meldung. Gegenprobe im ausgepackten Ordner:
+
+       Get-ChildItem -Recurse | Unblock-File
+
+2. **Wie „gar nicht" genau aussieht.** Kein Fenster? Eine Meldung? Erscheint der
+   Prozess kurz im Task-Manager? Davon hängt alles Weitere ab. Ohne diese Angabe
+   ist jede Vermutung wertlos.
+3. **Die Ereignisanzeige** auf dem Zielrechner, Protokoll *Anwendung*: ein
+   Ladefehler steht dort mit dem Namen der fehlenden Datei.
+4. **`tools/paket-pruefen.ps1` auf dem ZIELRECHNER laufen lassen** — dort, wo
+   kein Visual Studio ist, gibt es die richtige Antwort. Das ist auch der einzige
+   belastbare Nachweis für Kriterium 0 (siehe die Berichtigung in `ZIEL.md`).
+
+### Was daraus für Kriterium 0 folgt
+
+**Es bleibt unbelegt, und die Vermutung, es sei erfüllt, ist widerlegt.** Ein
+Release-Bau allein genügt nicht; das Paket muss auf einer Maschine ohne
+Entwicklungsumgebung nachweislich starten.
+
+## E-6 — Das Release läuft auf Windows 11 ohne Visual Studio — der Kontoassistent stürzt bei *Weiter* ab (31.08.2026, TEILERFOLG)
+
+### Berichtigung zu E-5: es startet doch
+
+Gregor hat das **hier gepackte** ZIP auf dem zweiten Rechner (Windows 11, kein
+Visual Studio) ausgepackt und ein Mailverzeichnis hinzugefügt. **Eudora startet.**
+Bildschirmfoto zeigt: Hauptfenster im Windows-11-Erscheinungsbild, Menüleiste
+vollständig (*File* bis *Help* — ohne *Debug*, wie es im Release-Bau sein soll),
+Postfachbaum links mit *In/Out/Junk/Trash/Recent*, Statuszeile, und den
+**New Account Wizard**.
+
+Damit ist **Kriterium 0 im Kern erreicht**: das Paket läuft ohne
+Nachinstallieren auf einer Maschine ohne Entwicklungsumgebung. Einschränkung:
+das Mailverzeichnis musste von Hand dazugelegt werden — der Grund dafür ist
+noch nicht geklärt (im Paket liegt eines, siehe „Offene Frage" unten).
+
+Was in E-5 als „startet gar nicht" gemeldet war, betraf offenbar das aus der
+GitHub-Veröffentlichung heruntergeladene ZIP, nicht das hier gepackte. Der
+Unterschied ist noch nicht gemessen; **UNGEPRÜFT**, ob es am Zonenvermerk
+(*Mark of the Web*) lag.
+
+### NEU: Absturz im Kontoassistenten
+
+> *„wenn ich hier auf weiter klicke, stürzt es ab!"*
+
+Der Assistent zeigt die Begrüßungsseite („Welcome to Eudora!"); der Klick auf
+**Weiter >** beendet das Programm.
+
+**Das ist ein Release-Bau — und genau davor war gewarnt.** FREIGABE hatte
+festgehalten: *„im Release-Bau entfallen die SUPERASSERT-Dialoge und alle
+ASSERT/VERIFY"*. Ein Fehler, der im Debug-Bau nur eine Zusicherung ausgelöst
+hätte, wird hier zum Absturz. Im Debug-Bau ist der Assistent nie benutzt worden
+— Gregor hat sein Konto von Hand über die `Eudora.ini` eingetragen.
+
+**Wo zu suchen ist:** Projekt `Eudora71/AccountWizard`. Die Seitenklassen liegen
+in `Eudora71/AccountWizard/PrivateInc` (`WizardAcapPage.h`,
+`WizardClientPage.h`, `WizardConfirmpage.h`, `WizardFinishPage.h`,
+`WizardImapDirPage.h` und weitere). Der Übergang von der ersten Seite läuft über
+`OnWizardNext` der Begrüßungsseite.
+
+**Nächster Schritt:** den **Debug**-Bau nehmen und im Assistenten auf *Weiter*
+klicken. Dort meldet sich die Zusicherung mit Datei und Zeile, statt still
+abzustürzen — das ist der schnellste Weg zur Fundstelle. Falls es im Debug-Bau
+nicht auftritt, ist es ein reiner Release-Effekt (nicht initialisierte Variable
+oder ein Codepfad, der nur ohne `ASSERT` erreicht wird), und dann hilft
+`tools/stapel-untersuchen.ps1` gegen die Release-EXE mit der `Eudora.pdb`.
+
+### Offene Frage
+
+Warum musste das Mailverzeichnis von Hand dazugelegt werden? Das Paket enthält
+`Mailverzeichnis\Eudora.ini` — entweder wurde es beim Auspacken nicht
+mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
+übergeben wird. Zu klären.
+
+### Stand der vier Kriterien
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 0 | Paket ohne Nachinstallieren | **im Kern erreicht** — läuft auf Win11 ohne VS; Mailverzeichnis noch von Hand |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** |
+| 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, aber ungeprüft |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** (Debug-Bau) — im Release blockiert der Assistent |
+
+## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026, OFFEN)
+
+Gregor auf dem Win11-Rechner: *„und ich sehe hier keine versionsnummer in der
+titelzeile"*. Der Titel zeigt nur `Eudora`.
+
+### Es ist kein Bau-, sondern ein Anzeigeproblem — nachgemessen
+
+| Prüfung | Ergebnis |
+|---|---|
+| Kennung in der Release-EXE? | **ja**, bei Versatz 2.147.104: `Eudora 7.2.0.3 / Paket 1.0.3+b1f20e0` |
+| Vorlagentext `unbekannt` in der EXE? | **nein** — die echte Kennung wurde erzeugt, nicht die Vorlage |
+| Überschreibung im Baum? | **ja**, `mainfrm.cpp:9686` |
+
+### Die Ursache
+
+`CMainFrame::OnUpdateFrameTitle` läuft **nur, wenn MFC den Rahmentitel
+auffrischt** — also wenn sich ein MDI-Kindfenster ändert. Beim Start ohne
+geöffnetes Postfach, und während der modale Kontoassistent läuft, ist das nie
+der Fall. Der Titel steht dann noch so, wie er beim Erzeugen des Fensters
+gesetzt wurde, und die Ergänzung war nie dran.
+
+Auf dieser VM fiel es nicht auf, weil dort immer ein Postfach geöffnet war —
+der Titel lautete `Eudora [... ] - [In]`. Genau der Zustandsunterschied, der
+heute schon bei den Werkzeugleisten-Knöpfen zu einer falschen Meldung geführt
+hat (E-2).
+
+### Behebung
+
+Die Kennung muss **beim Setzen des Titels** dazukommen, nicht erst bei seiner
+Auffrischung. Zwei Wege:
+
+1. In `CMainFrame::OnCreate` bzw. direkt nach
+   `FinishInitAndShowWindow` (`eudora.cpp:1510`) einmal `OnUpdateFrameTitle(TRUE)`
+   aufrufen. Billig, nutzt den vorhandenen Code.
+2. Oder `m_strTitle` des Rahmens gleich mit der Kennung belegen — dann trägt
+   MFC sie bei jeder Auffrischung von selbst mit, und die Überschreibung könnte
+   ganz entfallen. Sauberer, aber `m_strTitle` wird an mehreren Stellen
+   benutzt; **UNGEPRÜFT**, ob das Nebenwirkungen hat.
+
+Weg 1 ist der kleinere Eingriff und wäre der erste Versuch.
+
+### Warum das mehr als Kosmetik ist
+
+Die Kennung ist dafür gebaut, ein Bildschirmfoto einem Bau zuzuordnen — und
+genau in dem Zustand, in dem Gregor jetzt Fehler findet (frischer Start,
+Assistent offen, noch kein Postfach), fehlt sie. Damit versagt sie an der
+Stelle, für die sie da ist.
+
+## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
+
+Gregor: *„ich habe das verwendet: `C:\Users\Gregor\Eudora72-1.0.3`"*
+
+Nachgemessen mit `dumpbin -dependents`:
+
+| Verzeichnis | Bauart | Größe | Laufzeiten im Ordner |
+|---|---|---|---|
+| `Eudora72-1.0.3` | **DEBUG** | 10.208.256 B | `mfc140d`, `msvcp140d`, `vcruntime140d`, `ucrtbased`, `concrt140d`, `mfc140deu` |
+| `Eudora72-1.0.3-release` | RELEASE | 2.933.248 B | `mfc140`, `msvcp140`, `vcruntime140` |
+
+### Zwei Folgerungen, beide unangenehm
+
+**1. Der Absturz im Kontoassistenten (E-6) ist KEIN Release-Effekt.** Er
+passiert im Debug-Bau. Meine Erklärung in E-6 — „im Release entfallen alle
+ASSERT, deshalb Absturz statt Zusicherung" — **trägt nicht**. Es ist entweder
+ein Fehler unterhalb dessen, was `ASSERT` abfängt (Zugriff über einen ungültigen
+Zeiger), oder es kam eine Zusicherung, die als Absturz wahrgenommen wurde.
+
+Was das für die Suche bedeutet: der Debug-Bau bringt hier **keinen** zusätzlichen
+Hinweis, weil er schon der Debug-Bau war. Der Weg führt über
+`tools/stapel-untersuchen.ps1` gegen genau dieses Verzeichnis, mit der
+`Eudora.pdb` daneben.
+
+**2. Kriterium 0 ist NICHT erreicht.** Das Verzeichnis läuft auf dem
+Win11-Rechner nur, weil die sechs **nicht verteilbaren** Debug-Laufzeiten
+physisch darin liegen — ich hatte sie dort mit `laufzeit-holen.ps1` hinkopiert.
+Genau das darf nicht ausgeliefert werden (Microsoft nimmt die Debug-Fassungen
+ausdrücklich vom Weiterverteilen aus, siehe `ZIEL.md`, Kriterium 0).
+
+Meine Meldung in E-6, Kriterium 0 sei „im Kern erreicht", ist damit **falsch**
+und hiermit zurückgezogen.
+
+### Was noch offen ist
+
+Das **Release**-Paket (`Eudora72-1.0.3-release`, 2,9 MB) ist auf dem
+Win11-Rechner **nicht ausprobiert** worden. Ob es dort startet, ist weiter
+ungeprüft — und damit auch, was E-5 ursprünglich meldete.
+
+Ebenfalls unverändert offen: warum das Mailverzeichnis von Hand dazugelegt
+werden musste, obwohl beide Pakete eines enthalten.
+
+### Die Lehre, zum dritten Mal an einem Tag
+
+Ich habe eine Aussage über einen Zustand gemacht, ohne den Zustand zu prüfen —
+und zwar genau die Frage, um die es ging: **welches Paket lief da eigentlich?**
+Dieselbe Fehlerklasse wie bei den Werkzeugleisten-Knöpfen (E-2) und bei
+„SysWOW64 gilt als vorhanden" (E-5). Siehe `Arbeitsweise/erst-pruefen-dann-anweisen.md`.
+
+## E-9 — Absturz im Kontoassistenten bei *Weiter*: die Kette bis zur Importsuche (31.08.2026, OFFEN)
+
+Gregor, in **beiden** Bauarten reproduziert (Debug- und Release-Paket 1.0.3):
+*„beim klicken auf weiter stürzt es ab!"*
+
+Damit ist es **kein Release-Effekt** — die Erklärung aus E-6 ist endgültig
+widerlegt.
+
+### Die Kette, nachgelesen
+
+1. Die Begrüßungsseite `CWizardWelcomePage`
+   (`AccountWizard/Src/WizardWelcomePage.cpp`) hat **kein** `OnWizardNext`. Der
+   Klick auf *Weiter* führt also unmittelbar zur nächsten Seite.
+2. Nächste Seite ist `CWizardClientPage`, angehängt in
+   `WizardPropSheet.cpp:342-343` direkt nach der Begrüßungsseite.
+3. Deren `OnSetActive` (`WizardClientPage.cpp`) tut als erstes dies:
+
+   ```cpp
+   if (!m_pParent->m_pImporter)
+       m_pParent->m_pImporter = DEBUG_NEW CImportMail;
+
+   if (m_pParent->m_pImporter->InitPlugins())
+       m_pParent->m_pImporter->InitProviders();
+
+   CImportMail *pIM = m_pParent->m_pImporter;
+   ASSERT(pIM);
+   if (!pIM->m_newhead)
+   ```
+
+4. `CImportMail::InitPlugins` (`Eudora/MAPIImport.cpp`) reicht direkt an
+   `InitPluginList` weiter. Dort:
+
+   ```cpp
+   m_psDllStruct = DEBUG_NEW ImportDllStruct[iMatchingFiles];
+   m_iDllStructSize = iMatchingFiles;
+   ...
+   m_psDllStruct[iMatchingFiles].szDllPath = finder.GetFilePath();
+   InitDllStruct(iMatchingFiles);
+   ```
+
+### Zwei Auffälligkeiten in `InitPluginList`
+
+**a) Die Anzahl wird zweimal ermittelt, das Feld nur einmal bemessen.** Erst
+zählt eine Suche die Treffer, dann wird das Feld in dieser Größe angelegt, dann
+läuft eine **zweite** Suche und schreibt hinein. Liefern die beiden Suchen
+verschiedene Anzahlen, wird über das Feldende hinaus geschrieben.
+
+**b) Der Rückgabewert von `DEBUG_NEW` wird nicht geprüft**, und `InitDllStruct`
+wird für jeden Treffer gerufen — auch für einen, dessen DLL sich **nicht laden
+lässt**. Und genau das ist belegt: die Ablaufverfolgung vom 30.08. zeigt
+
+    LoadLibrary failed (...\Plugins\SMIME.dll): err = 126
+    LoadLibrary failed (...\Plugins\SpamHeaders.dll): err = 126
+    LoadLibrary failed (...\Plugins\SpamWatch.dll): err = 126
+
+Fehler 126 ist „Modul nicht gefunden" — diese drei Plugins brauchen `MFC71.DLL`
+und `MSVCP71.dll`, die dem Paket fehlen und nicht nachbaubar sind (B-2). Ob
+`m_szEudoraImportSearch` diese drei überhaupt trifft, ist **UNGEPRÜFT** — das
+ist die erste Frage, die morgen zu klären ist.
+
+### Wie man es entscheidet, ohne zu raten
+
+1. **`tools/stapel-untersuchen.ps1`** gegen das Paket, `Eudora.pdb` daneben.
+   Dann *Weiter* klicken. Der Debugger fängt die Zugriffsverletzung und nennt
+   die Zeile. Das ist der direkte Weg und dauert Minuten.
+2. **Gegenprobe ohne Debugger:** den Ordner `Plugins` im Paket umbenennen und
+   den Assistenten erneut versuchen. Stürzt es dann **nicht** ab, ist die
+   Plugin-Suche die Ursache — und der Verdacht auf `InitDllStruct` bestätigt.
+   Das kann Gregor selbst in zehn Sekunden machen.
+3. Erst danach `m_szEudoraImportSearch` und `InitDllStruct` genau lesen.
+
+### Umgehung, die nachweislich funktioniert
+
+Das Konto **über die `Eudora.ini` von Hand** eintragen, wie in
+`ABRUF-PRUEFEN.md` beschrieben. Auf diesem Weg hat Gregor am 31.08. um 08:09
+erfolgreich Mail abgerufen (E-1, E-3) — der Assistent ist für Kriterium 3 nicht
+nötig.
+
+### E-9, Nachtrag: die Plugins sind es NICHT (31.08.2026, gemessen)
+
+Gegenprobe von Gregor: `Plugins` in `Plugins_aus` umbenannt — **der Absturz
+bleibt.** Und Eudora legt einen neuen, leeren `Plugins`-Ordner an.
+
+Damit ist die Plugin-Suche als Ursache **ausgeschlossen**, und meine
+Berichtigung im Commit `6e5da17` bestätigt: gesucht wird
+`ExecutableDir` + `*.eif` (`MAPIImport.cpp:954-955`), also die drei Importer im
+**Programmverzeichnis**. Der `Plugins`-Ordner enthält etwas anderes
+(`SMIME.dll`, `SpamHeaders.dll`, `SpamWatch.dll`) und wird von `InitPluginList`
+gar nicht angefasst. Dass Eudora ihn neu anlegt, ist normales Verhalten beim
+Start und hat mit dem Assistenten nichts zu tun.
+
+Die Härtung von `InitPluginList` (`6e5da17`) bleibt richtig — sie behebt zwei
+echte Strukturfehler —, aber sie behebt **diesen** Absturz nicht.
+
+### Wo es jetzt noch liegen kann
+
+In `CWizardClientPage` selbst. Zwei Stellen fallen beim Lesen auf:
+
+**a) `OnSetActive`, nach der Plugin-Suche:**
+
+```cpp
+if (m_pParent->m_pImporter->InitPlugins())
+    m_pParent->m_pImporter->InitProviders();
+
+CImportMail *pIM = m_pParent->m_pImporter;
+ASSERT(pIM);
+if (!pIM->m_newhead)
+```
+
+`InitProviders` wird **nur** gerufen, wenn `InitPlugins` `true` liefert. Findet
+die Suche keine `*.eif`, liefert sie `false` — und danach wird `m_newhead`
+gelesen, das erst `InitProviders` belegt. **UNGEPRÜFT**, ob der Konstruktor von
+`CImportMail` `m_newhead` auf NULL setzt. Tut er es nicht, wird hier ein
+unbestimmter Zeiger geprüft, und `pIM->m_newhead` weiter unten dereferenziert.
+
+Das passt zum Bild: im Paket liegen zwar drei `.eif`, aber ob sie gefunden
+werden, hängt an `ExecutableDir` — und das wird aus dem Modulpfad gebildet.
+
+**b) `OnInitDialog`** ruft `OnRadioNew()`, bevor `OnSetActive` gelaufen ist —
+also bevor `m_pImporter` überhaupt angelegt wurde. Was `OnRadioNew` anfasst,
+ist noch nicht nachgelesen.
+
+### Der nächste Schritt, der es entscheidet
+
+`tools/stapel-untersuchen.ps1` gegen das Release-Paket, `Eudora.pdb` daneben,
+dann *Weiter* per `BM_CLICK` an den Knopf senden — so wie es bei den
+SUPERASSERT-Dialogen schon gemacht wurde. Der Debugger fängt die
+Zugriffsverletzung und nennt Datei und Zeile. Ein Lauf von etwa einer Minute.
+
+## E-11 — Der Absturz liegt nicht im Assistenten: `ReleaseBuffer` ohne `GetBuffer` (31.08.2026, URSACHE GEFUNDEN)
+
+### Der Beleg: `eudora.log`
+
+Gregor hat die Protokolldatei geschickt. **Beide Sitzungen enden an derselben
+Stelle**, danach steht nichts mehr:
+
+    MAIN     8: 0.01 Dialog: "Eudora is not currently the default mail program.\n"
+    MAIN     8: 0.01 Dialog: "Would you like it to be the default mail program?"
+
+Damit ist der Kontoassistent **entlastet**. Der Absturz passiert in der
+Registrierung als Standard-Mailprogramm — der Klick auf *Weiter* schließt nur
+den Assistenten, und danach läuft dieser Weg.
+
+Die Meldung ist `IDS_WARN_DEFAULT_MAILTO` (`EudoraRes.rc:7909`), benutzt genau
+einmal: `eudora.cpp:3331`, in `CEudoraApp::RegisterURLSchemes` (ab `:3274`,
+gerufen aus `InitInstance` bei `:1591`).
+
+### Die Fundstelle, drei Zeilen nach dem Dialog
+
+`eudora.cpp:3369-3371`:
+
+```cpp
+if (!AddToRegistry(HKEY_CLASSES_ROOT, RegMailto, NULL, cmd))
+    ::ErrorDialog(IDS_REG_MAILTO_ERR);
+int i = RegMailto.Find('\');
+if (i >= 0)
+    RegMailto.ReleaseBuffer(i);          // <- hier
+```
+
+`RegMailto` ist ein **`CRString`** (`eudora.cpp:3287`), also ein aus einer
+Ressource geladener String.
+
+**`CString::ReleaseBuffer` ohne vorangehendes `GetBuffer` ist unzulässig.** Unter
+VC6 war das gutmütig: `CString` hielt einen eigenen Puffer, und
+`ReleaseBuffer(n)` setzte einfach die Länge. Bei **MFC 14** ist `CString` ein
+`CStringT` mit **Referenzzählung**: `ReleaseBuffer` setzt voraus, dass der Puffer
+exklusiv gesperrt ist, und schreibt in die gemeinsame Verwaltungsstruktur. Bei
+einem geteilten Puffer zerstört das fremde Daten.
+
+Das ist derselbe Klassiker wie die anderen VC6-Altlasten dieser Portierung
+(`std::auto_ptr`, Iteratoren als Zeiger, Standardargumente) — nur schlägt er
+erst zur Laufzeit zu.
+
+### Der Umfang: 142 Vorkommen im Baum
+
+`grep -rn "ReleaseBuffer(" --include=*.cpp Eudora71/` findet **142 Stellen**.
+Nicht alle sind falsch — richtig ist das Muster
+`p = s.GetBuffer(n); ... s.ReleaseBuffer();`. Falsch sind die Stellen **ohne**
+vorangehendes `GetBuffer` auf derselben Variablen.
+
+Auffällig auf den ersten Blick, weil sie eine **Länge** übergeben und damit
+kürzen wollen — also die gefährliche Form:
+
+- `eudora.cpp:3371` `RegMailto.ReleaseBuffer(i)` — **dieser Absturz**
+- `ConConProfile.cpp:198` `m_szElementData.ReleaseBuffer(nNewDataLength)`
+- `QCSharewareManager.cpp` (in `Load`) `RetailVersion.ReleaseBuffer(LastDot + 1)`
+  — läuft bei **jedem Start** durch den Box-Build-Zweig
+
+### Die Behebung
+
+Statt `s.ReleaseBuffer(i)` gehört dort ein sauberes Kürzen:
+
+```cpp
+RegMailto = RegMailto.Left(i);
+```
+
+Das ist in allen Fällen richtig, ändert die Bedeutung nicht und kommt ohne
+Puffersperre aus. **Nicht mehr in dieser Sitzung geändert** — die Zeit reichte
+nicht, um es zu übersetzen und zu prüfen, und 142 Stellen wollen einzeln
+angesehen werden.
+
+### Nächster Schritt
+
+1. `eudora.cpp:3371` auf `Left(i)` umstellen, bauen, Gregor probieren lassen.
+   Ein Einzeiler, und er trifft genau den belegten Absturz.
+2. Danach die 142 Vorkommen durchgehen: jedes ohne vorangehendes `GetBuffer` auf
+   derselben Variablen ist ein Kandidat. Ein Werkzeug dafür wäre lohnend — das
+   ist eine **Fehlerklasse**, kein Einzelfall.
+3. `QCSharewareManager.cpp` zuerst, weil dieser Weg bei jedem Start läuft.
+
+### Nebenbefund aus dem Protokoll
+
+    Leeway 10, Out: MBX 1788158654, TOC 0
+    Out .mbx size: MBX 0, TOC 1
+
+Für eine **leere** `Out.mbx` (die Zeilen darüber melden `Size: 0`) wird eine
+Dateigröße von **1.788.158.654** gemeldet — 1,7 GB. Ein nicht initialisierter
+Wert. Zwei Zeilen später steht korrekt `MBX 0`. Eigener Befund, nicht
+untersucht.

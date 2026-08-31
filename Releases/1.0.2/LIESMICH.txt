@@ -81,6 +81,31 @@ nicht zutrifft. Dieses behaelt seinen Namen, weil es so veroeffentlicht ist.
 VORAUSSETZUNGEN
 ---------------
 
+WICHTIG - ohne diesen Schritt startet Eudora NICHT:
+
+Vier Debug-DLLs muessen ins Programmverzeichnis kopiert werden:
+
+    mfc140d.dll   msvcp140d.dll   vcruntime140d.dll   ucrtbased.dll
+
+Sie liegen auf jedem Rechner mit installiertem Visual Studio 2022 in
+
+    C:WindowsSysWOW64
+
+Das ist trotz des Namens der 32-BIT-Ordner. System32 enthaelt die
+64-Bit-Fassungen - die sind hier FALSCH.
+
+Aus dem Quellbaum gibt es dafuer ein Werkzeug, das auch die Architektur
+jeder Datei nachprueft:
+
+    powershell -ExecutionPolicy Bypass -File toolsaufzeit-holen.ps1 -Ziel "<dieses Verzeichnis>"
+
+FEHLER 0xc000007b beim Start bedeutet Bitness-Konflikt: eine 64-Bit-DLL in
+einem 32-Bit-Prozess. Eudora.exe ist 32 Bit. Haeufigste Ursache: die DLLs
+wurden von einer DLL-Sammelseite geladen, die stillschweigend die
+64-Bit-Fassung liefert. Solche Seiten NICHT benutzen - die richtigen
+Dateien sind bereits auf der Maschine.
+
+
 Debug-Laufzeiten von Visual Studio 2022 (mfc140d.dll, ucrtbased.dll,
 vcruntime140d.dll, msvcp140d.dll). Die liegen auf einem Rechner MIT
 installiertem Visual Studio in C:\Windows\SysWOW64. Ohne Visual Studio startet

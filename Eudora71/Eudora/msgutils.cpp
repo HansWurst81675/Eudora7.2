@@ -1622,11 +1622,21 @@ AddToBody(
 						if (!TagEnd)
 							break;
 
-						// Look for http-equiv=refresh inside of the current <meta> tag
+						// Look for http-equiv=refresh inside of the current <meta> tag,
+						// and for any charset declaration.  The latter has to go: the
+						// stored message body is Windows-1252 (ISOTranslate has already
+						// run on it in TextReader::ReadIt), while the tag still names the
+						// charset of the ORIGINAL mail.  MSHTML loads our temp file as a
+						// file path and believes that tag, which makes every umlaut a
+						// U+FFFD.  CTridentView::WriteTempFile writes the correct
+						// declaration at the top of the file instead.
 						*(LPTSTR)TagEnd = 0;
 
 						CString		TagContents = TagStart + 5;
-						bool		bIsBadMeta = HasBadAttributeValue(TagContents, "http-equiv", "refresh");
+						CString		TagContentsLower = TagContents;
+						TagContentsLower.MakeLower();
+						bool		bIsBadMeta = HasBadAttributeValue(TagContents, "http-equiv", "refresh") ||
+											 ( TagContentsLower.Find("charset") >= 0 );
 						*(LPTSTR)TagEnd = '>';
 
 						if (bIsBadMeta)

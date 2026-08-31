@@ -8,27 +8,39 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-> ## Eudora startet und zeigt sein Hauptfenster.
+> ## Eudora startet. Bedienbar ist es noch nicht.
 >
-> **Gemessen an Commit `371c1e3` am 30.08.2026**, `Debug|Win32`, Toolset v143
-> (MSVC 14.38.33130). An diesem Baum arbeiten mehrere Agenten gleichzeitig; wer
-> den Stand prüfen will, misst neu und nennt seinen eigenen Bezugscommit.
+> **Bauzustand gemessen an Commit `371c1e3` am 30.08.2026**, `Debug|Win32`,
+> Toolset v143 (MSVC 14.38.33130); der Gesamtbau der Solution ist am 31.08.2026
+> nachgemessen (Befund B-2). An diesem Baum arbeiten mehrere Agenten
+> gleichzeitig; wer den Stand prüft, misst neu und nennt seinen eigenen
+> Bezugscommit.
 >
-> **Aber es ist noch nicht „lauffähig".** Was das heißt, steht in
-> [ZIEL.md](ZIEL.md) — von Gregor am 30.08.2026 festgelegt:
+> **Es ist noch nicht „lauffähig".** Was das heißt, steht in
+> [ZIEL.md](ZIEL.md) — von Gregor festgelegt:
 >
-> | # | Kriterium | Stand |
+> | # | Kriterium | Stand am 31.08.2026 |
 > |---|---|---|
+> | 0 | das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare Laufzeit-DLLs (Befund S-8) |
 > | 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
-> | 2 | die Darstellung ist korrekt | **nicht erfüllt** (Befund S-6) |
-> | 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** |
+> | 2 | die Darstellung ist korrekt | **nicht erfüllt** — Ursachen behoben (A-1), am laufenden Programm nicht nachgesehen |
+> | 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** — Abrufpfad abgesichert (P-2), echter Abruf steht aus |
 >
-> Erst wenn alle drei erfüllt sind, darf eine Fassung „lauffähig" heißen. Der
-> Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung kann.
+> **Derzeit ist kein Kriterium erfüllt.** Erst wenn alle erfüllt sind, darf eine
+> Fassung „lauffähig" heißen. Der Dateiname `Eudora72-1.0.2-lauffaehig.zip`
+> behauptet mehr, als die Fassung kann; er bleibt nur stehen, weil das Paket
+> unter diesem Namen samt Prüfsumme veröffentlicht ist.
+>
+> Am 31.08.2026 sind die Ursachen der beiden sichtbaren Mängel belegt **und im
+> Quelltext behoben**: die tote Nichtklientenfläche, an der die Menüs hingen
+> (Befund M-1), und die leeren Werkzeugleisten-Knöpfe samt Andockrechnung
+> (Befund A-1). Nachgesehen hat das noch niemand am laufenden Programm — es
+> war keine Sitzung mit Bildschirm erlaubt.
 
-Der Weg dorthin an einem Tag: `Eudora.exe` band zum ersten Mal, startete nicht,
-und die drei Gründe dafür sind belegt und behoben — siehe
-[BEFUNDE.md](BEFUNDE.md), Befunde S-1 bis S-7.
+Der Weg dorthin an zwei Tagen: `Eudora.exe` band zum ersten Mal, startete nicht,
+und die Gründe dafür sind belegt und behoben — siehe
+[BEFUNDE.md](BEFUNDE.md), Befunde S-1 bis S-8 sowie B-1/B-2, M-1, A-1, P-1/P-2
+und W-1.
 
 Der eigentliche Blocker war die **Werbefläche**: `CAdWazooWnd::OnCreate` legt sie
 mit `CRect(0,0,0,0)` an, die Textmaschine Paige bekommt eine Umbruchbreite von
@@ -46,7 +58,7 @@ git ls-files -z | xargs -0 -n 400 git add --
 ```
 
 **Ohne diesen Schritt springt jede Datei, die man anfasst, als komplett geändert
-heraus.** Gemessen: 4616 von 5563 verfolgten Dateien lagen als CRLF vor, während
+heraus.** Gemessen am 30.08.2026: 4616 von 5563 verfolgten Dateien lagen als CRLF vor, während
 im Commit LF steht — Folge eines Auscheckens mit `core.autocrlf=true`. Git sieht
 in eine Datei gar nicht hinein, solange Zeitstempel und Größe zum Index passen;
 der Schaden bleibt deshalb unsichtbar, bis ein Werkzeug die Datei berührt. Das
@@ -62,11 +74,77 @@ ist die Wurzel aller CRLF-Probleme dieses Projekts, Befund S-7.
 `OT501`, dessen Stingray-Quellen nicht freigegeben sind. Die Visual-Studio-IDE
 wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
 
+> **In einem frischen Klon oder Worktree zuerst die ganze Solution bauen.**
+> Mit `/p:BuildProjectReferences=false` endet der Einzelprojekt-Bau sonst mit
+>
+> ```
+> LINK : fatal error LNK1104: Datei "imap.lib" kann nicht geoeffnet werden.
+> ```
+>
+> — nicht, weil etwas kaputt wäre, sondern weil `Eudora71/Lib/` von
+> `.gitignore` erfasst ist und `imap.lib` erst vom Projekt `imapdll` erzeugt
+> wird. Gemessen am 31.08.2026 (Befund A-1, Abschnitt „Bauzustand"). Nach einem
+> Gesamtbau der Solution bindet `Eudora.vcxproj` durch (Befund B-2).
+>
+> Der MSBuild-Aufruf muss aus **PowerShell** kommen: die Git-Bash macht aus
+> `/p:Configuration=Debug` einen Pfad.
+
 Ein voller Solution-Bau meldet weiterhin **3 Fehler, alle aus `OT501`**
-(zweimal `NMAKE U1073`, einmal `MSB3073`). Das Projekt wird nicht mehr gebraucht:
-die Ersatzschicht hat es abgelöst.
+(zweimal `NMAKE U1073`, einmal `MSB3073`), nachgemessen am 31.08.2026 mit
+eingehängtem Projekt `VC71Bruecke` (Befund B-2). Das Projekt `OT501` wird nicht
+mehr gebraucht: die Ersatzschicht hat es abgelöst. Zwei zusätzliche
+`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` sind ein Wettlauf im
+Parallelbau (`/m`), kein Fehler — einzeln gebaut laufen beide durch.
 
 ### Starten
+
+#### Zuerst: die Debug-Laufzeiten dazulegen
+
+**Ohne diesen Schritt startet Eudora nicht.** Der Debug-Bau braucht vier
+DLLs, die nicht mit ausgeliefert werden dürfen:
+
+```
+mfc140d.dll   msvcp140d.dll   vcruntime140d.dll   ucrtbased.dll
+```
+
+Dafür gibt es ein Werkzeug — es kopiert sie und prüft jede einzeln auf ihre
+Architektur nach:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\laufzeit-holen.ps1 -Ziel "C:\Pfad\zu\Eudora"
+```
+
+Mit `-NurPruefen` sagt es nur, was fehlt, ohne etwas zu kopieren.
+
+> ### Achtung: `0xc000007b`
+>
+> ```
+> Die Anwendung konnte nicht korrekt gestartet werden (0xc000007b).
+> ```
+>
+> Dieser Code heißt `STATUS_INVALID_IMAGE_FORMAT` und bedeutet fast immer
+> **Bitness-Konflikt**: eine 64-Bit-DLL in einem 32-Bit-Prozess.
+> **`Eudora.exe` ist ein 32-Bit-Programm.**
+>
+> Zwei Fallen führen dahin:
+>
+> 1. **DLL-Sammelseiten** wie dll-files.com liefern häufig die 64-Bit-Fassung,
+>    ohne es deutlich zu machen. Von dort **keine** Laufzeit-DLLs holen.
+> 2. Der 32-Bit-Systemordner heißt unter Windows ausgerechnet **`SysWOW64`** —
+>    der Name legt das Gegenteil nahe:
+>
+>    | Ordner | enthält |
+>    |---|---|
+>    | `C:\Windows\System32` | **64**-Bit-DLLs |
+>    | `C:\Windows\SysWOW64` | **32**-Bit-DLLs ← diese hier |
+>
+> Die richtigen Dateien liegen auf jedem Rechner mit installiertem Visual
+> Studio 2022 (mit C++-Werkzeugen und MFC/ATL) bereits in `SysWOW64`, in der
+> zum Toolset passenden Fassung. Ohne Visual Studio läuft dieser Bau nicht —
+> dafür bräuchte es einen Release-Bau, und der scheitert noch an einer
+> fehlenden `Imap.lib`.
+
+#### Dann starten
 
 ```bash
 Eudora.exe "<Pfad zu einem Mailverzeichnis>"
@@ -78,8 +156,7 @@ Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
 
 Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
 Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine Fehler.
-Sie erscheinen nur, weil bisher nur der Debug-Bau läuft; der Release-Zweig
-scheitert an einer fehlenden `Imap.lib`.
+Sie erscheinen nur, weil bisher nur der Debug-Bau läuft.
 
 Der Fenstertitel trägt die **Bau-Kennung** — Paketversion, Commit und
 Herkunftsverzeichnis:
@@ -130,10 +207,24 @@ einen echten Mailserver. Einzelheiten in
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
 | `tools/pruefe-bytes.pl` | pre-commit-Schranke gegen lautlosen Byteschaden |
+| `tools/pruefe-bytes-tests.pl` | Testsammlung für die pre-commit-Schranke: 23 Fälle in eigenen Wegwerf-Repos. **Wer `tools/pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen. |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
-| `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau |
+| `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. Damit wurden die Stellen zu P-2 gefunden. |
+| `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
+| `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten von VS2022 aus `SysWOW64` und prüft jede einzeln auf x86 nach. Ohne sie startet Eudora mit `0xc000007b` — Befund S-8. `-NurPruefen` sagt nur, was fehlt. |
+| `tools/paket-bauen.ps1` | stellt ein Auslieferungspaket aus dem Quellbaum zusammen, wahlweise als ZIP. **Veröffentlicht nichts** — ob ausgeliefert wird, entscheidet ein Mensch. |
+| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet: Startkette, Architektur, fehlende DLLs. Rückgabe 0 = in Ordnung, 1 = Fehler, 2 = Aufrufproblem. Das Maß für Kriterium 0. |
+| `tools/vc71-bruecke-messen.pl` | misst die Bindung der Fremd-DLLs an die VC-7.1-Laufzeit und erzeugt daraus die `.def` der `VC71Bruecke` |
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
-| `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte bisher ausschließlich Fehlalarme. |
+| `tools/hooks-einrichten.sh` | richtet den pre-commit-Hook ein. Nach jedem Klon einmal — ohne ihn treten zwei Fehlerklassen lautlos wieder auf. |
+| `tools/lehren-spiegeln.pl` | spiegelt die Lehren aus dem Gedächtnis nach `Arbeitsweise/` |
+| `tools/pruefstand-melden.pl`, `tools/ungesichertes-melden.pl` | melden Prüfstand und ungesicherte Änderungen |
+
+`tools/rekursion-suchen.pl` wurde am 31.08.2026 **gelöscht**, siehe Befund W-1:
+es bildete jede Kante mit dem Klassennamen der umgebenden Methode und konnte
+klassenübergreifende Zyklen deshalb strukturell nicht finden — auch den aus S-2
+nicht, für den es gebaut wurde. Geliefert hat es ausschließlich Fehlalarme.
 
 ## Was bisher gemacht wurde
 
@@ -223,7 +314,9 @@ Umsetzungsplan mit Stufen, Belegen und Inventarkorrekturen:
 
 ## Offene Themen
 
-Stand der Tabelle: Commit `a807b93`. An mehreren Zeilen wird gerade parallel
+Stand der Tabelle: die Zeilen zu Bauzustand und Ersatzschicht sind an `a807b93`
+gemessen, die Zeilen zu Start, Menüs, Erscheinungsbild, Abruf, Paket und
+Produktversion am 31.08.2026 (`2cf569f`). An mehreren Zeilen wird parallel
 gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 
 | Thema | Stand |
@@ -233,16 +326,20 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | `__imp___iob` aus `libpng.lib` | **behelfsweise geloest** — `OTShim_Libpng.cpp` definiert das Symbol als `(char*)stderr - 2*32`, weil libpng 1.2.7 nur `_iob[2]` anfasst und die damalige CRT 32 Byte je Element hatte. Traegt, ist aber eine Annahme; sauber waere ein Neubau von libpng aus `Eudora71/PNG/libpng` mit v143 |
 | Attrappe `Lib/Debug/OTA50D.LIB` | **entfaellt** — seit `a807b93` nicht mehr noetig (`_SECNOMSG`, `LinkLibraryDependencies` false in `Eudora.vcxproj:1015`). Sie darf nicht wieder angelegt werden, sonst linkt Eudora gegen eine leere Bibliothek |
 | `EudoraRes.dll` | **offen** — das Projekt haengt ueber `EudoraRes.vcxproj:351` an `OT501` und wird gar nicht erst versucht. Fuer `Eudora` ist dieselbe Bindung geloest; hier steht der Handgriff noch aus |
-| Erster Start von `Eudora.exe` | **offen und ungeprueft** — ob das Programm laeuft, ist noch nicht gemessen. Welche Laufzeitdateien danebenliegen muessen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
+| Erster Start von `Eudora.exe` | **erledigt** seit Befund S-2 (30.08.2026) — Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen. Das Fenster ist damit noch nicht bedienbar, siehe [ZIEL.md](ZIEL.md). Welche Laufzeitdateien danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md); was passiert, wenn sie fehlen, in Befund S-8 (`0xc000007b`) |
 | Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen. Die Testzahl waechst gerade, weil die Ersatzschicht Tests bekommt |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig, seit `78a9c10` samt Ersatzschicht, und bindet seit `a807b93`. `EudoraRes.vcxproj` uebersetzt ebenfalls vollstaendig, wird im Solution-Bau aber nicht versucht |
 | `OpenSSL3/lib` fehlt im Repo | **offen** — `libcrypto.lib` und `libssl.lib` sind von `.gitignore:7` (`Lib/`) erfasst und nicht versioniert (`git ls-files`: null Treffer). Ein frischer Klon endet bei `QCSSL` mit `LNK1104: libssl.lib`. Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 zweimal **gemessen** (Komponententest lokal, dann im Betrieb), ausgehandelt `TLS_AES_256_GCM_SHA384`; 30 angebotene Cipher Suites, keine mit RC4, 3DES oder EXPORT |
-| QCSSL gegen echten Mailserver prüfen | **erledigt** — Abruf und Versand laufen. Am 29.08.2026 gegen `pop.gmx.net:995`: `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Da HermesSSL (OpenSSL 1.0.2p) kein TLS 1.3 beherrscht, war es gesichert diese DLL |
+| QCSSL gegen echten Mailserver prüfen | **nur mit einer älteren Fassung** — am 29.08.2026 gegen `pop.gmx.net:995`: `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Dieser Abruf lief in einer **bestehenden Eudora-7.1-Installation** und mit einer älteren QCSSL, nicht mit dem selbst gebauten `Eudora.exe`. Die ausgelieferte QCSSL 1.0.1 ist nie gegen einen echten Server gelaufen. Kriterium 3 aus [ZIEL.md](ZIEL.md) ist damit **nicht** erfüllt |
 | **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und `ErrorCode 0` angenommen. Ein Hinweistext wird durchaus angehaengt ("Destination Host name does not match … But ignoring this error because Certificate is trusted"), er bleibt nur ohne Wirkung. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |
 | Aktueller `rootcerts.p7b` für das Release | **erledigt** seit `75b60e1` — `Releases/1.0/rootcerts.p7b` mit 121 Zertifikaten, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Die Altbestaende im Baum sind **zwei verschiedene Dateien** (verschiedene SHA256): `Eudora71/Bin/Release/rootcerts.p7b` mit 19 Zertifikaten (aeltestes gueltig ab 09.11.1994, juengstes ab 22.09.2000), 8 davon heute abgelaufen; `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` mit 30, juengstes ab 04.03.2004, 17 abgelaufen. QCSSL prueft nur gegen diese Datei, nicht gegen den Windows-Speicher |
 | Zeichensatz-Darstellung | **fertig** — der UTF-8-Fall laeuft seit `63f81dc` ueber den Windows-Codepage-Wandler statt ueber die handgepflegte Tabelle; die Tabelle bleibt als Rueckfallweg fuer Post, die `utf-8` behauptet und in Wahrheit CP1252-Bytes traegt. Davor: `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`), sieben falsche Zuordnungen berichtigt, Doppelersetzung beseitigt. **33 von 33 Tests gruen** (selbst nachgemessen an `04e93c3` mit `Eudora71/Tests/RunTests.cmd`). Grenzen und Nebenbefunde in `PORTIERUNG.md` |
-| Release-Konfiguration | für QCSSL gebaut, übrige Projekte ungetestet |
+| Release-Konfiguration | **teilweise** — QCSSL ist im Release gebaut, `Eudora.exe` scheitert im Release-Zweig weiterhin an fehlender `Imap.lib`. Berichtigung aus Befund B-2: Paket 1.0.2 ist **gemischt** (Release-Fremdmodule, Debug-`Eudora.exe`), nicht durchgehend Release. Ein durchgehender Release-Bau ist die Voraussetzung für Kriterium 0, siehe Befund S-8 |
+| **Kriterium 0: Paket ohne Nachinstallieren** | **offen** — der Debug-Bau braucht vier Laufzeit-DLLs, die nicht weiterverteilt werden dürfen (Befund S-8). Solange das so ist, braucht jeder Empfänger ein installiertes Visual Studio 2022. Ausweg: Release-Bau, vorzugsweise statisch |
+| Menüs lassen sich nicht öffnen (S-5) | **Ursache belegt und behoben** (Befund M-1, 31.08.2026): `SECToolBarManager` setzte `m_bMainFrameEnabled` auf `TRUE`, damit lieferte `CMainFrame::OnNcHitTest` immer `HTERROR` und die gesamte Nichtklientenfläche war tot. **Am laufenden Programm nicht nachgesehen** |
+| Erscheinungsbild (S-6) | **Ursachen belegt und behoben** (Befund A-1, 31.08.2026): leere Werkzeugleisten-Knöpfe (`SECStdBtn::DrawDisabled` ließ Text- und Hintergrundfarbe stehen), Andockrechnung nach `m_fPctWidth`, `nCol`/`nRow` in `DockControlBarEx`. Offen bleiben die Splitter und `FloatControlBarInMDIChild`. **Am laufenden Programm nicht nachgesehen** |
+| Produktversion | **7.2.0.3** seit `2cf569f` (vorher 7.1.0.9). Erscheint im Splash und unter *Hilfe → Über Eudora*. Drei getrennte Zählungen — Produkt `7.2.0.x`, Paket `1.0.x`, QCSSL `1.0.x`; Tabelle in [Releases/PAKETE.md](Releases/PAKETE.md) |
 | Build-Artefakte im Repo | **erledigt** seit `e4a0fae` — `.gitignore` greift, **107** Dateien sind aus dem Index (der Commit zeigt 108 geaenderte Dateien, davon 107 geloescht und die `.gitignore` selbst). Getrackt sind noch 20 `.pdb`, die zu vorgefertigten Fremd-DLLs unter `Bin/Debug` und `Bin/Release` gehoeren und nicht aus diesem Bau stammen |
 
 ## Ergänzungen gegenüber der CHM-Freigabe

@@ -1,6 +1,32 @@
 # Hier weitermachen
 
-Übergabe vom **30.08.2026, abends**. Arbeitsbranch `eudora-exe-linkt`.
+> ## Stand 31.08.2026, 09:00
+>
+> **Die Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)** — was zu tun ist,
+> in welcher Reihenfolge, mit Fundstelle je Punkt und den Auflagen für
+> Agenten. Diese Datei hier erklärt den Weg dorthin.
+>
+> **Eudora ruft Mail ab.** 159 Nachrichten von `mx.freenet.de`, TLS 1.3,
+> `TLS_AES_256_GCM_SHA384` (Befunde E-1 und E-3). Menüs, Anordnung und
+> Werkzeugleiste stimmen. Von den vier Kriterien in [ZIEL.md](ZIEL.md) sind
+> **zwei erfüllt**, eines fast, eines nicht nachgewiesen.
+>
+> **Der wichtigste offene Punkt** ist behoben, aber ungeprüft: auf einer
+> frischen Installation stürzte Eudora ab, sobald man *Weiter* im
+> Kontoassistenten klickte. Ursache war nicht der Assistent, sondern
+> `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` — eine VC6-Altlast,
+> die bei MFC 14 den referenzgezählten `CStringT` zerstört. Gefunden über
+> Gregors `eudora.log`, behoben mit `Truncate`. **Befund E-11.**
+>
+> Auf der VM fiel das nie auf, weil der Zweig nur bei einer
+> **jungfräulichen** Installation betreten wird.
+
+Übergabe vom **31.08.2026, vormittags**. Arbeitsstand ist der Branch
+`darstellung-und-menue`; auf `main` fehlt alles von diesen zwei Tagen.
+
+**Bekannte Lücke:** der Agent FREIGABE (Release-Bau) lief noch, als diese Datei
+geschrieben wurde. Sein Ergebnis steht hier nicht. Wer weitermacht, sieht
+zuerst seinen Branch und seinen Abschnitt in `BEFUNDE.md` an.
 
 Diese Datei ist der Einstieg für die nächste Sitzung. Alle Zahlen sind an
 `371c1e3` gemessen. An diesem Baum arbeiten mehrere Agenten in eigenen
@@ -11,22 +37,28 @@ Bezugscommit.
 
 ## Das Wichtigste zuerst
 
-**Eudora startet und laeuft bis in die Fenstererzeugung, ohne abzustuerzen.**
-Zum ersten Mal seit Beginn der Portierung. Das Fenster ist aber NICHT
-bedienbar - Menues tot (S-5), Bereiche ueberlagert, Knoepfe leer (S-6). Ein
-Meilenstein, kein erfuelltes Kriterium; siehe ZIEL.md. Veröffentlicht als `v1.0.2`.
+**Es ist derzeit KEIN Kriterium aus [ZIEL.md](ZIEL.md) erfüllt.**
 
-**Aber es ist noch nicht „lauffähig".** Gregor hat am 30.08. festgelegt, was das
-heißt — siehe [ZIEL.md](ZIEL.md). Drei Kriterien:
-
-| # | Kriterium | Stand |
+| # | Kriterium | Stand am 31.08.2026 |
 |---|---|---|
+| 0 | das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare Laufzeit-DLLs (S-8) |
 | 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
-| 2 | die Darstellung ist korrekt | **nicht erfüllt** |
-| 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** |
+| 2 | die Darstellung ist korrekt | **nicht erfüllt** — Ursachen behoben (A-1), am Programm nicht nachgesehen |
+| 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** — Abrufpfad abgesichert (P-2), echter Abruf steht aus |
+
+Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen — zum
+ersten Mal seit Beginn der Portierung. Das ist ein **Meilenstein, kein
+erfülltes Kriterium**. Für die beiden sichtbaren Mängel (tote Menüleiste,
+leere Knöpfe und überlagerte Bereiche) sind die Ursachen am 31.08.2026 belegt
+**und im Quelltext behoben** — M-1 und A-1. **Nachgesehen hat das niemand am
+laufenden Programm**, es war keine Sitzung mit Bildschirm erlaubt. Bis dahin
+bleiben Kriterium 1 und 2 offen.
 
 Der Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung
-kann. Das ist zu korrigieren.
+kann. Er bleibt stehen, weil das Paket unter diesem Namen samt Prüfsumme
+veröffentlicht ist; künftige Pakete heißen nach ihrem tatsächlichen Stand.
+Paket 1.0.3 ist vorbereitet und **nicht veröffentlicht** — vorgeschlagener
+Name `Eudora72-1.0.3-vorabfassung.zip`, siehe [Releases/PAKETE.md](Releases/PAKETE.md).
 
 ---
 
@@ -55,7 +87,7 @@ ohne je *angezeigt* worden zu sein. QUALCOMM beschreibt genau das in
 Deaktivierungsstellen aber nicht. In der Schwesterklasse `CFiltersWazooWnd` ist
 dieselbe Zusicherung bereits auskommentiert (`FiltersWazooWnd.cpp:109`).
 
-**S-7 — die Wurzel aller CRLF-Probleme.** 4616 von 5563 verfolgten Dateien lagen
+**S-7 — die Wurzel aller CRLF-Probleme.** Gemessen am 30.08.2026: 4616 von 5563 verfolgten Dateien lagen
 im Arbeitsverzeichnis als CRLF vor, während im Commit LF steht — Folge eines
 Auscheckens mit `core.autocrlf=true`. Git sah nicht hinein, solange niemand die
 Datei anfasste; danach sprang die *ganze* Datei als geändert heraus. Das ist
@@ -76,130 +108,123 @@ Dazu die Berichtigung: die frühere Vermutung „mit `autocrlf=true` geklont" wa
 sagte zum Prüfzeitpunkt schon `false`, die Einstellung war inzwischen geändert
 worden, die Folgen des Auscheckens blieben.
 
-### Offen
+## Was am 31.08. dazugekommen ist
 
-**S-5 — Menüs lassen sich nicht öffnen. URSACHE GEFUNDEN (M-1), Behebung
-ungeprüft.**
+### Behoben
 
-`SECToolBarManager` setzte `m_bMainFrameEnabled` im Konstruktor auf `TRUE`
+**S-8 — Paket 1.0.2 startete gar nicht: `0xc000007b`.** Die vier
+VS2022-Debug-Laufzeiten (`mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`,
+`ucrtbased.dll`) fehlten im Programmverzeichnis. `Eudora.exe` ist **x86**; zwei
+Fallen führen beim Nachlegen zur falschen Bitness: DLL-Sammelseiten liefern
+häufig x64, und der 32-Bit-Systemordner heißt ausgerechnet `SysWOW64`. Werkzeug
+dagegen: `tools/laufzeit-holen.ps1`, prüft jede Datei einzeln auf x86 nach.
+**Nicht gelöst:** diese vier DLLs dürfen nicht weiterverteilt werden — daraus
+ist Kriterium 0 entstanden.
+
+**M-1 — die Menüs. Ursache belegt und behoben.** `SECToolBarManager` setzte
+`m_bMainFrameEnabled` im Konstruktor auf `TRUE`
 ([OTShim_Werkzeugleiste.cpp:3480](Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:3480)
 und `:3506`). `CMainFrame::OnNcHitTest`
 ([mainfrm.cpp:8662](Eudora71/Eudora/mainfrm.cpp:8662)) liefert bei
-`IsMainFrameEnabled() == TRUE` **immer `HTERROR`** — damit ist die *gesamte*
+`IsMainFrameEnabled() == TRUE` **immer `HTERROR`** — damit war die *gesamte*
 Nichtklientenfläche tot: Menüleiste, Titelzeile, Fensterknöpfe, Rahmenkanten.
-Ein Klick auf „File" erreicht nie `WM_NCLBUTTONDOWN`/`HTMENU`.
-
 Die Stingray-Kopfdatei (`tbarmgr.h:79-80`) beschreibt `TRUE` als „Hauptfenster
-freigegeben" und hat den Autor der Ersatzschicht in die Irre geführt. Eudora
-liest den Wert an allen fünf Abfragestellen andersherum: `TRUE` heißt dort
-„Anpassen-Dialog steht offen" (`mainfrm.cpp:2990` und `:8744`).
+freigegeben" und hat den Autor der Ersatzschicht in die Irre geführt; Eudora
+liest den Wert an allen fünf Stellen andersherum. Belege in
+[BEFUND-MENUE.md](Eudora71/OTShim/BEFUND-MENUE.md).
 
-> ### Vier Fragen an Gregor, die das ohne Debugger entscheiden
->
-> Waren im kaputten Bau **auch** diese drei tot?
->
-> 1. das Verschieben am **Titelbalken**
-> 2. das Ziehen an den **Rahmenkanten**
-> 3. die **Fensterknöpfe** (Minimieren/Maximieren/Schließen)
-> 4. und ging **`Alt+F`** trotzdem? *(die Tastatur läuft über `SC_KEYMENU`,
->    nicht über den Hit-Test — sie müsste funktioniert haben)*
->
-> Passt das Bild, ist M-1 bestätigt. Ging der Titelbalken normal, ist M-1 zwar
-> ein echter Fehler, aber **nicht** die Ursache von S-5.
+> **UNGEPRÜFT am laufenden Programm.** Offener Widerspruch: M-1 ist vom
+> INI-Zustand unabhängig, Gregor sagt aber, die Menüs hätten *zwischendurch*
+> funktioniert. Verdacht (UNGEPRÜFT): der funktionierende Bau lag vor
+> `91716bb`, dem Commit, der `= TRUE` eingeführt hat. Die vier Fragen, die das
+> ohne Debugger entscheiden, stehen in `BEFUND-MENUE.md`, Abschnitt 3.
 
-Offener Widerspruch: M-1 ist vom INI-Zustand unabhängig, Gregor sagt aber, die
-Menüs hätten *zwischendurch* funktioniert. Verdacht (UNGEPRÜFT): der
-funktionierende Bau lag vor `91716bb`, dem Commit, der `= TRUE` eingeführt hat.
+**A-1 — das Erscheinungsbild. Fünf Punkte umgesetzt.** Die leeren
+Werkzeugleisten-Knöpfe: `SECStdBtn::DrawDisabled` ließ vor dem `BitBlt` die
+Hintergrundfarbe auf `clrBtnFace` und die Textfarbe unverändert stehen — das
+Muster wurde damit unsichtbar. Auf einer frisch gestarteten Eudora sind acht
+der fünfzehn Knöpfe gesperrt, was zu „mehrere leer, andere da" passt. Die
+Andockrechnung war **doppelt verriegelt**: `SECDockBar` reichte
+`OnSizeParent`/`CalcFixedLayout` unverändert an MFC durch (jede Wazoo-Leiste
+bekam 32767 als Wunschbreite), *und* `DockControlBarEx` verwarf zusätzlich
+`nCol` und `nRow`. Beides ist behoben, `m_fPctWidth` wird jetzt ausgewertet.
+Offen bleiben die Splitter und `FloatControlBarInMDIChild`.
 
-Ausgeschlossen, mit Belegen in
-[BEFUND-MENUE.md](Eudora71/OTShim/BEFUND-MENUE.md): `SECDockState::LoadState`
-bei leerer INI (regulärer Erstlauf-Weg), MDI-Menüverschmelzung, Fokusdiebe,
-Zeitgeber- und Leerlaufpfade, kein `SetMenu` in der Anwendung.
+> **UNGEPRÜFT am laufenden Programm.** Woran Gregor auf einem Bildschirmfoto
+> sähe, dass es geklappt hat, steht in
+> [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md), letzter Abschnitt.
 
-**S-6 — die Darstellung ist fehlerhaft. Ursache von Punkt 2 belegt (A-1).**
+**P-2 — der Abrufpfad ist abgesichert.** Vier Nullzeiger im Abrufpfad behoben,
+darunter der **Funktionszeiger `fnConnInfo`**: schlug das Laden fehl, war die
+Fehlermeldung leer. Gefunden mit `tools/suche-zeiger.pl`. Drei neue Tests, 105
+grün (vorher 102). Kriterium 3 ist damit *vorbereitet*, nicht erfüllt.
 
-Die Ersatzschicht setzt die prozentualen Zeilenbreiten `m_fPctWidth` und die
-Splitter der Andockleiste **gar nicht um** und reicht `SECDockBar::OnSizeParent`
-und `CalcFixedLayout` unverändert an MFC durch. `SECControlBar::CalcFixedLayout`
-gibt dabei jeder Wazoo-Leiste **32767** als Wunschbreite. `DockControlBarEx`
-verwirft zusätzlich `nCol` und `nRow`. Das erklärt die überlagernden Bereiche
-und den Registerkartenstreifen mitten im Fenster.
+**B-2 — die Brücke hängt in der Solution.** `VC71Bruecke` ist in
+`Eudora71/Eudora.sln` eingetragen, mit der **echten** GUID — die in B-1 und in
+`VC71Bruecke/BEFUND.md` Abschnitt 6 genannte war falsch, das Projekt wäre
+stillschweigend nicht gebaut worden. Paket 1.0.3 ist vorbereitet und
+**nicht veröffentlicht**. Neu: `tools/paket-pruefen.ps1`, `tools/paket-bauen.ps1`.
+**Berichtigung:** Paket 1.0.2 ist **gemischt** (Release-Fremdmodule,
+Debug-`Eudora.exe`), nicht durchgehend Release — die frühere Angabe war falsch.
 
-Bei den **leeren Werkzeugleisten-Knöpfen** sind fünf Ursachen ausgemessen und
-ausgeschlossen; alle 15 Standardknöpfe liegen im ersten Bitmap, die Bildzahlen
-64/61/51 stimmen. Übrig bleibt der Zeichenweg je Knopf. Stärkster Verdacht
-(UNGEPRÜFT): das fehlende `SetTextColor(0)`/`SetBkColor(0xFFFFFF)` in
-`SECStdBtn::DrawDisabled`
-([OTShim_Werkzeugleiste.cpp:786](Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:786)).
-Das passt als einziges auf „mehrere leer, andere da" — auf einer frisch
-gestarteten Eudora sind acht der fünfzehn Knöpfe gesperrt.
+**W-1 — die Werkzeuge in Ordnung gebracht.** PR-1 bis PR-4 und PR-6 bis PR-8
+behoben. Die Schranke `tools/pruefe-bytes.pl` hat jetzt eine Testsammlung
+(`tools/pruefe-bytes-tests.pl`, 23 Fälle, alle grün);
+`tools/rekursion-suchen.pl` ist gelöscht. Es gilt: **4616 von 5563** vom
+30.08.2026; die Grundgesamtheit wächst und lag am 31.08. bei 5589. Offen bleibt
+PR-5, die Beschreibung des Zeitstempels.
 
-Fünf konkrete Folgeschritte in
-[BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
+**Produktversion 7.2.0.3** statt 7.1.0.9, sichtbar im Splash und unter
+*Hilfe → Über Eudora*. Es gibt **drei getrennte Zählungen** — Produkt
+`7.2.0.x`, Paket `1.0.x`, QCSSL `1.0.x`. Tabelle in
+[Releases/PAKETE.md](Releases/PAKETE.md).
 
-**Kriterium 3 — Mail abrufen. Wahrscheinlichster Absturzpunkt bekannt (P-1).**
+**ZIEL.md hat ein Kriterium 0 bekommen:** das Paket muss ohne Nachinstallieren
+laufen. „zip runterladen, entpacken, starten - läuft."
 
-`QCWorkerSocket.cpp:1969` dereferenziert `pConnectionInfo` **ungeprüft**,
-nachdem Zeile 1961 es gerade geprüft hat. Scheitert die SSL-Aushandlung und
-`QCSSLGetConnectionInfo` liefert `NULL`, stürzt Eudora ab, statt eine Meldung zu
-zeigen. Ein Zweizeiler — das wäre der erste Handgriff.
+### Offen
 
-Der POP-Pfad selbst ist gegengelesen und von der Portierung unbeschädigt;
-Betreff, Absendername und Text laufen über denselben, korrekt indizierten
-Zeichensatzpfad. Der bekannte IMAP-Fehler trifft POP **nicht**. Anleitung zum
-Ausprobieren: [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Dort als UNGEPRÜFT
-markiert: ob `mx.freenet.de` überhaupt der POP3-Server ist.
+**Kein Kriterium ist erfüllt.** Für Kriterium 1 und 2 sind die Ursachen belegt
+und im Quelltext behoben, aber **niemand hat das laufende Programm gesehen** —
+die Agenten durften kein Fenster öffnen. Der nächste Schritt ist deshalb ein
+Start mit Bildschirmfoto, nicht die nächste Analyse.
 
-**PR-1 — drei Fehler in der Arbeit vom 30.08. selbst.**
+**Kriterium 0** braucht einen Release-Bau; der Release-Zweig scheitert
+weiterhin an einer fehlenden `Imap.lib`.
 
-PRÜFER hat sie mit Gegenproben belegt:
+**Kriterium 3** ist nie ausprobiert worden. Anleitung:
+[ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Dort als UNGEPRÜFT markiert: ob
+`mx.freenet.de` überhaupt der POP3-Server ist.
 
-1. `tools/pruefe-bytes.pl` lässt **LF→CRLF lautlos durch** — Regel 2 sucht nur
-   die Gegenrichtung. Unter Windows ist CRLF die wahrscheinlichere
-   Schadensrichtung; der Wächter deckt also den unwahrscheinlicheren Fall ab.
-2. Dieselbe Schranke **schlägt bei Leerzeilen grundlos an**: eine CRLF-Leerzeile
-   gelöscht, eine LF-Leerzeile ergänzt — kein Byte umgewandelt, trotzdem
-   Abbruch. Derselbe Fehlalarm-Fehler wie zuvor, nur von der CR-Anzahl auf den
-   Zeileninhalt umgezogen.
-3. `BuildKennung.h` ist in git **verfolgt**. Fällt perl beim Bau aus, zeigt das
-   Fenster die Kennung eines *fremden* Baus statt gar keiner — genau der Fehler,
-   den die Kennung verhindern sollte.
+Der vollständige Prüfbericht vom 30.08. abends steht in
+[PRUEFBERICHT.md](PRUEFBERICHT.md); was davon behoben ist, sagt Befund W-1.
 
-Weiter: `.def`/`.sln`/`.bat`/`.ps1` prüft die Schranke gar nicht;
-`_T(EUDORA_BAU_KENNUNG)` ([mainfrm.cpp:9715](Eudora71/Eudora/mainfrm.cpp:9715))
-übersetzt in einem Unicode-Bau nicht; die Zahlen in S-7 widersprechen sich
-(4616/5563 gegen 4426/5336 im Werkzeugkopf, nachgemessen 5568). PRÜFERs Urteil
-zu `tools/rekursion-suchen.pl`: **löschen** — es bildet jede Kante mit der
-umgebenden Klasse und kann klassenübergreifende Zyklen strukturell nicht finden,
-auch den aus S-2 nicht.
+## Werkzeuge
 
-Vollständig in [PRUEFBERICHT.md](PRUEFBERICHT.md).
-
-**B-1 — die VC7.1-Laufzeiten.** Die eigene `msvcr71.dll` steht: 1430 Exporte,
-davon 1429 echte Weiterleitungen auf die von Windows mitgelieferte
-`msvcrt.dll`, einzige Abhängigkeit `KERNEL32.dll`. Damit können die drei
-unsignierten Dateien von dll-files.com aus dem Paket. Ebenfalls belegt: die
-Release-`Paige32.dll` darf als `Paige32d.dll` dienen, also sind `msvcr71d.dll`
-und `msvcp71d.dll` totes Gewicht. **`MFC71.DLL` ist aussichtslos** — sie wird
-über **157 Ordinale** importiert.
-
-UNFERTIG: `VC71Bruecke` hängt noch nicht in `Eudora71/Eudora.sln`. Die zwei
-nötigen Einfügungen stehen wörtlich in
-[Eudora71/VC71Bruecke/BEFUND.md](Eudora71/VC71Bruecke/BEFUND.md), Abschnitt 6.
-
-## Neue Werkzeuge
+Die vollständige Liste steht in [README.md](README.md), Abschnitt „Werkzeuge".
+Neu am 31.08.2026:
 
 | Werkzeug | wozu |
 |---|---|
-| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Siehe S-7. Nach jedem Klon einmal. |
-| `tools/stapel-untersuchen.ps1` | Kleiner Debugger: startet ein Programm als Debuggee, fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen.** Braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
-| `tools/kennung-erzeugen.pl` | Erzeugt `BuildKennung.h` vor jedem Bau. Läuft als PreBuildEvent. |
-| `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte hier ausschließlich Fehlalarme. |
+| `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten aus `SysWOW64` und prüft jede einzeln auf x86 nach. Befund S-8. |
+| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. Das Maß für Kriterium 0. |
+| `tools/paket-bauen.ps1` | stellt ein Paket aus dem Quellbaum zusammen. Veröffentlicht nichts. Braucht `-AusBauverzeichnis`, wenn ein frischer Bau übernommen werden soll. |
+| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. |
+| `tools/pruefe-bytes-tests.pl` | 23 Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |
 
-`tools/pruefe-bytes.pl` wurde berichtigt: es verglich die bloße CR-Anzahl und
-schlug damit schon beim *Hinzufügen* von Zeilen an. Jetzt zwei Regeln — Inhalt
-gleich bei verschiedenen Bytes, und: hat eine inhaltlich unveränderte Zeile ihr
-Zeilenende gewechselt?
+`tools/rekursion-suchen.pl` ist am 31.08.2026 gelöscht worden — Befund W-1: es
+bildete jede Kante mit der umgebenden Klasse und konnte klassenübergreifende
+Zyklen strukturell nicht finden, auch den aus S-2 nicht, für den es gebaut war.
+
+`tools/pruefe-bytes.pl` wurde zweimal berichtigt: die erste Fassung verglich die
+bloße CR-Anzahl und schlug schon beim *Hinzufügen* von Zeilen an, die zweite
+verglich Zeileninhalte und schlug bei Leerzeilen grundlos an. Seit dem
+31.08.2026 wertet Regel 2 den eigentlichen Unterschied aus
+(`git diff --cached -U0`) und paart entfernte mit hinzugefügten Zeilen innerhalb
+eines Blocks — Umwandlungen fallen in beide Richtungen auf, Ergänzungen und
+Löschungen laufen durch. **Die alte CR-Anzahl-Regel steht in mehreren älteren
+Texten noch; wer sie liest, glaubt das Falsche.**
 
 ---
 
@@ -223,6 +248,15 @@ Fehler war zwei Tage zuvor schon bei der `QCSSL.dll` passiert.
 
 ## Wie man Eudora startet
 
+**Zuerst die Debug-Laufzeiten dazulegen** — ohne sie bricht der Start mit
+`0xc000007b` ab, noch bevor ein Fenster erscheint (Befund S-8):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\laufzeit-holen.ps1 -Ziel "C:\Pfad\zu\Eudora"
+```
+
+Dann:
+
 ```bash
 Eudora.exe "<Pfad zu einem Mailverzeichnis>"
 ```
@@ -245,8 +279,9 @@ mit ab.
 
 ## Konto einrichten ohne Menü
 
-Solange S-5 offen ist, geht es nur über die `Eudora.ini` im Mailverzeichnis,
-Abschnitt `[Settings]`:
+Solange nicht am laufenden Programm bestätigt ist, dass die Menüs mit der
+Behebung aus M-1 wieder aufgehen, geht es nur über die `Eudora.ini` im
+Mailverzeichnis, Abschnitt `[Settings]`:
 
 ```ini
 POPAccount=benutzername@pop.anbieter.de
@@ -270,20 +305,22 @@ verschlüsselt** in derselben Datei ([password.cpp:544](Eudora71/Eudora/password
 
 ---
 
-## Was die Agenten am 30.08. abends bearbeitet haben
+## Was die Agenten bearbeitet haben
 
-Alle fünf haben in eigenen Worktrees gearbeitet und beim Abschalten gesichert.
-Ihre Branches heißen `worktree-agent-*`; ihre Ergebnisse stehen in eigenen
-Dateien und in eigenen Abschnitten am Ende von `BEFUNDE.md`.
+Alle haben in eigenen Worktrees gearbeitet. Die Ergebnisse vom 30.08. abends
+und vom 31.08. früh sind **zusammengeführt** und stehen im Baum; ihre
+Abschnitte stehen am Ende von `BEFUNDE.md`.
 
-| Agent | Auftrag | Ablage |
-|---|---|---|
-| BRÜCKE | eigene `msvcr71.dll` als Weiterleitung auf die von Windows mitgelieferte `msvcrt.dll`, damit die drei Fremd-DLLs von dll-files.com aus dem Paket verschwinden | `Eudora71/VC71Bruecke/BEFUND.md`, Abschnitt `## B-1` |
-| MENUE | Befund S-5, warum sich Menüs nicht öffnen lassen | `Eudora71/OTShim/BEFUND-MENUE.md`, Abschnitt `## M-1` |
-| ANSICHT | Befund S-6, das Erscheinungsbild | `Eudora71/OTShim/BEFUND-ANSICHT.md`, Abschnitt `## A-1` |
-| POSTBOTE | Kriterium 3 vorbereiten: Abrufpfad gegenlesen, Prüfanleitung schreiben | `ABRUF-PRUEFEN.md`, Abschnitt `## P-1` |
-| LEKTOR | Aktualität aller MD-Dateien | `LEKTORAT.md`, Abschnitt `## L-1` |
-| PRÜFER | Richtigkeit der heutigen Werkzeuge, Codeänderungen und Zahlen | `PRUEFBERICHT.md`, Abschnitt `## PR-1` |
+| Agent | Auftrag | Ablage | Stand |
+|---|---|---|---|
+| BRÜCKE | eigene `msvcr71.dll` als Weiterleitung auf `msvcrt.dll` | `Eudora71/VC71Bruecke/BEFUND.md`, `BEFUNDE.md` `## B-1`, `## B-2` | zusammengeführt; Projekt hängt in der Solution, Paket 1.0.3 vorbereitet |
+| MENUE | Befund S-5, warum sich Menüs nicht öffnen lassen | `Eudora71/OTShim/BEFUND-MENUE.md`, `BEFUNDE.md` `## M-1` | zusammengeführt; Ursache behoben, am Programm nicht nachgesehen |
+| ANSICHT | Befund S-6, das Erscheinungsbild | `Eudora71/OTShim/BEFUND-ANSICHT.md`, `BEFUNDE.md` `## A-1` | zusammengeführt; fünf Punkte umgesetzt, am Programm nicht nachgesehen |
+| POSTBOTE | Kriterium 3 vorbereiten | `ABRUF-PRUEFEN.md`, `BEFUNDE.md` `## P-1`, `## P-2` | zusammengeführt; vier Nullzeiger behoben, Tests 105 grün |
+| WERKZEUG | Befunde PR-1 bis PR-8 abarbeiten | `BEFUNDE.md` `## W-1` | zusammengeführt; PR-5 bleibt offen |
+| PRÜFER | Richtigkeit der Werkzeuge, Codeänderungen und Zahlen | `PRUEFBERICHT.md` `## PR-1` | abgeschlossen (30.08. abends) |
+| LEKTOR | Aktualität aller MD-Dateien | `LEKTORAT.md` | zweiter Durchgang 31.08. |
+| FREIGABE | Release-Bau | — | **lief beim Schreiben dieser Datei noch.** Sein Ergebnis fehlt hier zwangsläufig; zuerst seinen Branch und seinen Abschnitt in `BEFUNDE.md` ansehen |
 
 **Zuerst diese Dateien lesen** — dort steht, wie weit jeder gekommen ist und was
 der nächste Schritt wäre.
@@ -292,18 +329,32 @@ der nächste Schritt wäre.
 
 ## Nächste Schritte, nach Wichtigkeit
 
-1. **Das Erscheinungsbild (S-6).** Gregors ausdrücklicher Vorrang. Vergleich ist
-   sein Bildschirmfoto der Originalfassung; die Merkmale stehen in
-   [ZIEL.md](ZIEL.md).
-2. **Die Menüs (S-5).** Sperrbefund — ohne Menüs ist Eudora nicht einzurichten.
-   Der Hinweis „hat zwischendurch funktioniert" ist die heißeste Spur.
-3. **Mail abrufen (Kriterium 3).** Nie getestet. Zugleich der erste echte Test
-   der neuen TLS-Schicht: die ausgelieferte QCSSL 1.0.1 ist nie gegen einen
-   echten Server gelaufen, nur eine ältere Fassung war es.
-4. **Paket 1.0.3** — erst danach, und mit einem Namen, der nicht mehr behauptet,
-   als die Fassung kann.
-5. **Release-Bau.** Scheitert an einer fehlenden `Imap.lib` im Release-Zweig.
-   Ein Release-Bau hätte keine SUPERASSERT-Dialoge.
+1. **Einmal starten und ein Bildschirmfoto machen.** Das ist jetzt der erste
+   Schritt, nicht mehr die Analyse. Für M-1 und A-1 sind die Ursachen belegt
+   und behoben, nachgesehen hat es niemand — die Agenten durften kein Fenster
+   öffnen. Zu vergleichen sind die Merkmale aus [ZIEL.md](ZIEL.md), „Woran sich
+   Kriterium 2 misst". Woran man den Erfolg erkennt, steht in
+   [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md), letzter Abschnitt.
+2. **Kriterium 0: das Paket ohne Nachinstallieren.** Gregors neueste Vorgabe.
+   Weg: Release-Bau, vorzugsweise statisch (`/MT` + MFC statisch). Blocker ist
+   die fehlende `Imap.lib` im Release-Zweig. Maß ist `tools/paket-pruefen.ps1`
+   gegen das ausgepackte Paket auf einem Rechner ohne Visual Studio: null
+   Fehler. Siehe Befund S-8 und `ZIEL.md`.
+3. **Mail abrufen (Kriterium 3).** Nie getestet. Der Abrufpfad ist seit P-2
+   gegen die vier bekannten Nullzeiger abgesichert, die Anleitung steht in
+   [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Zugleich der erste echte Test der
+   neuen TLS-Schicht: die ausgelieferte QCSSL 1.0.1 ist nie gegen einen echten
+   Server gelaufen, nur eine ältere Fassung war es.
+4. **Erscheinungsbild, zweite Runde.** Nach dem Bildschirmfoto: die Splitter
+   (`SECDockBar::AddSplitter` wird nie gerufen) und
+   `SECMDIFrameWnd::FloatControlBarInMDIChild`. Reihenfolge und Ansatz in
+   `BEFUND-ANSICHT.md`.
+5. **Paket 1.0.3 veröffentlichen** — vorbereitet, aber bewusst NICHT
+   veröffentlicht. Vorgeschlagener Name `Eudora72-1.0.3-vorabfassung.zip`.
+   Einzelheiten und Bauweg in [Releases/PAKETE.md](Releases/PAKETE.md).
+6. **PR-5** — der Zeitstempel in der Bau-Kennung ist der Zeitpunkt der letzten
+   Commit- oder Sauberkeitsänderung, nicht der Bauzeitpunkt. Das Verhalten ist
+   richtig, nur die Beschreibung stimmt nicht. Ein Wort im Kommentar.
 
 ---
 
