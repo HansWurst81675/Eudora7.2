@@ -3406,3 +3406,30 @@ Ehrlich: **verhalten.** Was ich sagen kann und was nicht:
 Meine Erwartung: **der Abruf scheitert eher an der Serveradresse als an
 Eudora.** Und wenn er scheitert, scheitert er jetzt mit einer Meldung statt
 mit einem Absturz - das ist der Unterschied, den diese Sitzung gemacht hat.
+
+### P-2.7 Nachtrag: drei Komponententests mehr (105 gruen)
+
+Ausgangsstand waren nicht mehr die 34 aus P-1.7, sondern **102** - andere
+Agenten haben in der Zwischenzeit ergaenzt. Dazu drei neue in
+`Eudora71/Tests/TestPopEmpfang.cpp`:
+
+| Test | Was er absichert |
+|---|---|
+| `Test_NachrichtOhneBetreff` | leerer Betreff, Betreff nur aus Zwischenraum, Betreff nur `=`, und ein angefangenes, nie geschlossenes kodiertes Wort - `Fix2047` darf dabei nicht ueber das Zeilenende hinauslesen |
+| `Test_SehrLangeKopfzeile` | 60 kodierte Woerter hintereinander, roh 1620 Zeichen, dekodiert 300. Beide Laengen sind im Test gegengeprueft, damit er nicht unbemerkt etwas anderes misst |
+| `Test_VollstaendigePopAntwort` | eine ganze RETR-Antwort: sechs Kopfzeilen (zwei kodiert, vier reines ASCII, die sich nicht aendern duerfen) und vier Rumpfzeilen mit Umlaut, scharfem s, Eurozeichen und geschuetztem Leerzeichen. Nachgestellt ist die Aufteilung aus `pop.cpp:656`. Jede Rumpfzeile wird zusaetzlich darauf geprueft, dass sie NACH der Uebersetzung noch auf CRLF endet - genau das ging schief, solange die neue Laenge weggeworfen wurde (P-1.1) |
+
+    Eudora71\Tests\RunTests.cmd
+    Ergebnis: 105 Tests, 105 bestanden, 0 fehlgeschlagen
+
+Damit ist von der Wunschliste des Auftrags abgedeckt: UTF-8-Umlaute in einer
+POP-Antwort, Betreff in Base64, Betreff in Quoted-Printable (die beiden
+letzten standen schon aus P-1.3), Nachricht ohne Betreff, sehr lange
+Kopfzeile.
+
+**Eine Falle fuer den naechsten, der hier Tests schreibt:** `"\xC3\x9Fe"` ist
+keine Bytefolge, sondern die Fluchtfolge `\x9FE` - C++ frisst das `e` als
+weitere Hexziffer. Der Uebersetzer meldet `C2022: "2558" zu gross fuer ein
+Zeichen`. Richtig ist `"\xC3\x9F" "e"`. Das gilt fuer jedes `a`-`f` direkt
+hinter einer `\x`-Folge, und der Fehler ist genau bei deutschen Umlauten
+(`\x9F` + `e` in "Strasse", "Gruesse") wahrscheinlich.
