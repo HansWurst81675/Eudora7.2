@@ -5204,3 +5204,52 @@ Die Kennung ist dafür gebaut, ein Bildschirmfoto einem Bau zuzuordnen — und
 genau in dem Zustand, in dem Gregor jetzt Fehler findet (frischer Start,
 Assistent offen, noch kein Postfach), fehlt sie. Damit versagt sie an der
 Stelle, für die sie da ist.
+
+## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
+
+Gregor: *„ich habe das verwendet: `C:\Users\Gregor\Eudora72-1.0.3`"*
+
+Nachgemessen mit `dumpbin -dependents`:
+
+| Verzeichnis | Bauart | Größe | Laufzeiten im Ordner |
+|---|---|---|---|
+| `Eudora72-1.0.3` | **DEBUG** | 10.208.256 B | `mfc140d`, `msvcp140d`, `vcruntime140d`, `ucrtbased`, `concrt140d`, `mfc140deu` |
+| `Eudora72-1.0.3-release` | RELEASE | 2.933.248 B | `mfc140`, `msvcp140`, `vcruntime140` |
+
+### Zwei Folgerungen, beide unangenehm
+
+**1. Der Absturz im Kontoassistenten (E-6) ist KEIN Release-Effekt.** Er
+passiert im Debug-Bau. Meine Erklärung in E-6 — „im Release entfallen alle
+ASSERT, deshalb Absturz statt Zusicherung" — **trägt nicht**. Es ist entweder
+ein Fehler unterhalb dessen, was `ASSERT` abfängt (Zugriff über einen ungültigen
+Zeiger), oder es kam eine Zusicherung, die als Absturz wahrgenommen wurde.
+
+Was das für die Suche bedeutet: der Debug-Bau bringt hier **keinen** zusätzlichen
+Hinweis, weil er schon der Debug-Bau war. Der Weg führt über
+`tools/stapel-untersuchen.ps1` gegen genau dieses Verzeichnis, mit der
+`Eudora.pdb` daneben.
+
+**2. Kriterium 0 ist NICHT erreicht.** Das Verzeichnis läuft auf dem
+Win11-Rechner nur, weil die sechs **nicht verteilbaren** Debug-Laufzeiten
+physisch darin liegen — ich hatte sie dort mit `laufzeit-holen.ps1` hinkopiert.
+Genau das darf nicht ausgeliefert werden (Microsoft nimmt die Debug-Fassungen
+ausdrücklich vom Weiterverteilen aus, siehe `ZIEL.md`, Kriterium 0).
+
+Meine Meldung in E-6, Kriterium 0 sei „im Kern erreicht", ist damit **falsch**
+und hiermit zurückgezogen.
+
+### Was noch offen ist
+
+Das **Release**-Paket (`Eudora72-1.0.3-release`, 2,9 MB) ist auf dem
+Win11-Rechner **nicht ausprobiert** worden. Ob es dort startet, ist weiter
+ungeprüft — und damit auch, was E-5 ursprünglich meldete.
+
+Ebenfalls unverändert offen: warum das Mailverzeichnis von Hand dazugelegt
+werden musste, obwohl beide Pakete eines enthalten.
+
+### Die Lehre, zum dritten Mal an einem Tag
+
+Ich habe eine Aussage über einen Zustand gemacht, ohne den Zustand zu prüfen —
+und zwar genau die Frage, um die es ging: **welches Paket lief da eigentlich?**
+Dieselbe Fehlerklasse wie bei den Werkzeugleisten-Knöpfen (E-2) und bei
+„SysWOW64 gilt als vorhanden" (E-5). Siehe `Arbeitsweise/erst-pruefen-dann-anweisen.md`.
