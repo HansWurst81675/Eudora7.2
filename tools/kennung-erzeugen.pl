@@ -71,7 +71,41 @@ my @t = localtime();
 my $zeit = sprintf("%04d-%02d-%02d %02d:%02d",
                    $t[5] + 1900, $t[4] + 1, $t[3], $t[2], $t[1]);
 
-my $kennung = "$version+$commit$marke $zeit";
+# --- Produktversion aus Eudora71/Version.h ------------------------------------
+#
+# Es gibt ZWEI Zaehlungen, und sie duerfen nicht auseinanderlaufen:
+#
+#   Produktversion   7.2.0.x   steht in Eudora71/Version.h, erscheint im
+#                              Splash und unter Hilfe -> Ueber Eudora
+#   Paketversion     1.0.x     steht in der Datei VERSION, benennt das ZIP
+#
+# Verabredung: die LETZTE Stelle ist in beiden dieselbe. Paket 1.0.3 traegt
+# Produktversion 7.2.0.3. Weicht das ab, wird hier gewarnt - bei der QCSSL.dll
+# sind genau so zwei verschiedene Binaerdateien unter derselben Kennung
+# ausgeliefert worden.
+
+my $produkt = '';
+if (open(my $vh, '<:raw', 'Eudora71/Version.h')) {
+    local $/;
+    my $t = <$vh>;
+    close $vh;
+    ($produkt) = $t =~ /EUDORA_BUILD_VERSION\s+"([0-9.]+)"/;
+    $produkt = '' unless defined $produkt;
+}
+
+if (length $produkt and $version =~ /(\d+)$/) {
+    my $letzte_paket = $1;
+    if ($produkt =~ /(\d+)$/ and $1 ne $letzte_paket) {
+        print "kennung-erzeugen: WARNUNG - Produktversion $produkt und Paketversion "
+            . "$version haben verschiedene letzte Stellen.\n";
+        print "  Verabredung ist, dass sie uebereinstimmen. Eine der beiden anpassen:\n";
+        print "  Eudora71/Version.h (Produkt) oder VERSION (Paket).\n";
+    }
+}
+
+my $kennung = length($produkt)
+            ? "Eudora $produkt / Paket $version+$commit$marke $zeit"
+            : "$version+$commit$marke $zeit";
 
 # --- Schreiben ----------------------------------------------------------------
 #

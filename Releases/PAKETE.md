@@ -3,6 +3,23 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
+## Drei Zählungen, und wie sie zusammenhängen
+
+| Zählung | wo sie steht | wo man sie sieht |
+|---|---|---|
+| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` | Splash und *Hilfe → Über Eudora*, dazu die Dateiversion der `Eudora.exe` |
+| **Paketversion** `1.0.x` | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
+| **QCSSL-Version** `1.0.x` | `qcssl.rc` | Versionsressource der `QCSSL.dll` |
+
+**Verabredung: Produkt- und Paketversion haben dieselbe letzte Stelle.**
+Paket 1.0.3 trägt Produktversion 7.2.0.3. `tools/kennung-erzeugen.pl` warnt,
+wenn die beiden auseinanderlaufen — bei der `QCSSL.dll` sind genau so zwei
+verschiedene Binärdateien unter derselben Kennung ausgeliefert worden.
+
+Die QCSSL-Zählung läuft bewusst eigenständig: sie folgt den Quellen der
+TLS-Schicht, nicht dem Paket. Paket 1.0.3 enthält QCSSL 1.0.1, weil sich
+dort seit 1.0.1 nichts geändert hat.
+
 Die Paketversion und die QCSSL-Version sind **verschiedene Zählungen**. Paket
 1.0.2 enthält QCSSL 1.0.1, weil sich die QCSSL-Quellen seit 1.0.1 nicht geändert
 haben.
