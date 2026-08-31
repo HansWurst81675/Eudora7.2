@@ -4581,3 +4581,97 @@ Commits verschoben. Wer eine Fundstelle benutzt, prüft sie nach.
 
 Nicht prüfbar in jenem Arbeitsbaum: die Größenangaben zu `Eudora.exe` und die
 MSBuild-Läufe aus P-2.4, B-2.1 und W-1.
+
+## X-1 — Die Werkzeuge angegriffen: neun Löcher in der Schranke (31.08.2026)
+
+Ein Angriffsdurchgang gegen die eigenen Werkzeuge, mit 15 selbst gebauten
+Fällen, von denen **keiner** in `tools/pruefe-bytes-tests.pl` steht.
+**Ergebnis: 9 Löcher, 0 Fehlalarme.** Die Bestandssammlung läuft weiter 23/23
+grün — diese Funde kommen obendrauf.
+
+### Schwer
+
+**L1 — Umbenennung hebelt die Schranke vollständig aus.** `pruefe-bytes.pl:198`
+benutzt `--diff-filter=ACM`. Ein `git mv alt.cpp neu.cpp` erscheint als `R088`
+und landet nie in der Prüfliste. Wer danach die Datei neu schreibt, kann jedes
+Zeilenende und jedes Sonderzeichen zerstören — Rückgabe 0. **`git mv` plus
+Neuschreiben ist genau der Ablauf einer Portierung.**
+
+**L2 — Latin-1 → UTF-8 umkodiert bleibt unerkannt.** Gezählt werden nur
+Ersatzzeichen (`EF BF BD`). Eine *saubere* Umkodierung (`0xE4` → `C3 A4`)
+erzeugt keines; der Inhalt ändert sich, also greift Regel 2, und dort verwirft
+Zeile 165 das Paar. Das ist genau der Schaden, gegen den die Regel
+„byte-erhaltend ändern" existiert.
+
+**L3 — Ein neu eingefügtes UTF-8-BOM** (`EF BB BF`) bleibt aus demselben Grund
+unerkannt.
+
+### Mittel
+
+**L4** — bei Dateien mit NUL-Byte ist Regel 2 blind: `git diff -U0` liefert nur
+„Binary files differ", kein `@@`. Derzeit latent — von 6392 erfassten Dateien
+enthält keine ein NUL-Byte.
+
+**L5** — die Vorausschau von 30 Zeilen (`:118`) ist eine harte Grenze, exakt
+gemessen: 30 eingefügte Zeilen vor der Umwandlung → erkannt, **31 → durch**.
+Ehrlich dazu: an echten Projektdateien wird es trotzdem erkannt, weil git
+wiederkehrende Zeilen in mehrere Blöcke zerlegt. Das Loch ist synthetisch
+belegt, an Projektmaterial nicht.
+
+**L6** — reine CR-Zeilenenden (Mac-Stil) → LF bleiben unerkannt; normalisiert
+wird nur `\r\n`.
+
+**L7** — verliert die letzte Zeile ihr CRLF, wird das bewusst durchgelassen
+(`:166`). Es ist trotzdem ein echter Byteverlust.
+
+### Leicht
+
+**L8** — neue Dateien werden gar nicht geprüft (`:205`); eine neue Datei mit
+Ersatzzeichen läuft durch. **L9** — eine in HEAD leere Datei gilt als „nicht
+vorhanden" und wird übersprungen.
+
+### Zusatzfund: der pre-commit-Hook wertet seinen ersten Schritt nicht aus
+
+`tools/hooks-einrichten.sh:20` ruft `lehren-spiegeln.pl` ohne `set -e` und ohne
+Prüfung von `$?`, danach `exec pruefe-bytes.pl`. Wenn das Spiegeln mit
+`exit 1` abbricht und „Der Commit wurde abgebrochen" meldet, **stimmt das
+nicht** — der Hook gibt 0 zurück. Die gespiegelten Lehren gehen weiterhin
+lautlos aus dem Commit heraus. Das ist derselbe Befund wie NP3-4, in anderer
+Gestalt.
+
+### `tools/suche-zeiger.pl` ist Rauschen
+
+Über 3237 Dateien: **345 Treffer**. Stichprobe von 15 zufällig gezogenen:
+**15 Fehlalarme, also 100 %.** Drei strukturelle Ursachen erklären 273 der 345
+(79 %): klammerloser `if`-Rumpf (211), einzeiliger Wächter mit `return` (16),
+Abstand größer als das Fenster von 40 Zeilen (46). In allen 23 handgeprüften
+Treffern **ein** plausibel echter: `EuImap/src/ImapMailbox.cpp:1022` prüft
+`pAccount`, `:1051` dereferenziert außerhalb des Blocks.
+
+Urteil: etwa ein brauchbarer Treffer auf 70 Ausgabezeilen. Ohne die drei
+Filter nicht benutzbar.
+
+### `tools/zeilenenden-angleichen.pl`: zwei Lücken
+
+**Es lässt Textdateien aus.** Von 9146 verfolgten Dateien erfasst das Muster
+6392; von den 2754 übrigen sind **773 eindeutig Text**. Projektrelevant fehlen
+`.ih` (6 C-Header, werden mitkompiliert), `.rgs` (12 ATL-Registrar-Skripte,
+landen als Ressource im Binary), `.hh` (7 Hilfe-Header), `.mc`, `.hpj`, dazu
+139 Dateien ohne Endung. `tools/dateiendungen.pl:30` führt `cc`, aber nicht
+`hh` und `ih`.
+
+**Es dreht absichtliche Arbeit still zurück.** Die Zeilen 129-141 schreiben den
+HEAD-Stand **richtungslos**. Wer im Arbeitsbaum absichtlich LF→CRLF korrigiert
+— etwa eine `.bat`, die CRLF braucht —, verliert das durch `--aendern`
+kommentarlos, und die Datei erscheint unter „angeglichen" statt unter
+„inhaltlich verschieden".
+
+**Entwarnung:** von den 6392 erfassten Dateien enthält **keine** ein NUL-Byte
+und **keine** ein UTF-16-BOM. Bilder, DLLs und Archive liegen alle außerhalb
+des Musters. Es fasst also keine Binärdatei fälschlich an.
+
+### Was daraus folgt
+
+Nichts davon ist heute akut — aber L1 und L2 sind die beiden Schäden, gegen die
+die Schranke überhaupt gebaut wurde, und gegen beide ist sie wirkungslos. Wer
+sie als Sicherheit betrachtet, irrt.
