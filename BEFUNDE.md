@@ -5156,3 +5156,51 @@ mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
 | 1 | startet, Hauptfenster bedienbar | **erfüllt** |
 | 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, aber ungeprüft |
 | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** (Debug-Bau) — im Release blockiert der Assistent |
+
+## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026, OFFEN)
+
+Gregor auf dem Win11-Rechner: *„und ich sehe hier keine versionsnummer in der
+titelzeile"*. Der Titel zeigt nur `Eudora`.
+
+### Es ist kein Bau-, sondern ein Anzeigeproblem — nachgemessen
+
+| Prüfung | Ergebnis |
+|---|---|
+| Kennung in der Release-EXE? | **ja**, bei Versatz 2.147.104: `Eudora 7.2.0.3 / Paket 1.0.3+b1f20e0` |
+| Vorlagentext `unbekannt` in der EXE? | **nein** — die echte Kennung wurde erzeugt, nicht die Vorlage |
+| Überschreibung im Baum? | **ja**, `mainfrm.cpp:9686` |
+
+### Die Ursache
+
+`CMainFrame::OnUpdateFrameTitle` läuft **nur, wenn MFC den Rahmentitel
+auffrischt** — also wenn sich ein MDI-Kindfenster ändert. Beim Start ohne
+geöffnetes Postfach, und während der modale Kontoassistent läuft, ist das nie
+der Fall. Der Titel steht dann noch so, wie er beim Erzeugen des Fensters
+gesetzt wurde, und die Ergänzung war nie dran.
+
+Auf dieser VM fiel es nicht auf, weil dort immer ein Postfach geöffnet war —
+der Titel lautete `Eudora [... ] - [In]`. Genau der Zustandsunterschied, der
+heute schon bei den Werkzeugleisten-Knöpfen zu einer falschen Meldung geführt
+hat (E-2).
+
+### Behebung
+
+Die Kennung muss **beim Setzen des Titels** dazukommen, nicht erst bei seiner
+Auffrischung. Zwei Wege:
+
+1. In `CMainFrame::OnCreate` bzw. direkt nach
+   `FinishInitAndShowWindow` (`eudora.cpp:1510`) einmal `OnUpdateFrameTitle(TRUE)`
+   aufrufen. Billig, nutzt den vorhandenen Code.
+2. Oder `m_strTitle` des Rahmens gleich mit der Kennung belegen — dann trägt
+   MFC sie bei jeder Auffrischung von selbst mit, und die Überschreibung könnte
+   ganz entfallen. Sauberer, aber `m_strTitle` wird an mehreren Stellen
+   benutzt; **UNGEPRÜFT**, ob das Nebenwirkungen hat.
+
+Weg 1 ist der kleinere Eingriff und wäre der erste Versuch.
+
+### Warum das mehr als Kosmetik ist
+
+Die Kennung ist dafür gebaut, ein Bildschirmfoto einem Bau zuzuordnen — und
+genau in dem Zustand, in dem Gregor jetzt Fehler findet (frischer Start,
+Assistent offen, noch kein Postfach), fehlt sie. Damit versagt sie an der
+Stelle, für die sie da ist.
