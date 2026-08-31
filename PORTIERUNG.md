@@ -1,14 +1,21 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
-Stand: 2026-08-30 · Branch `eudora-exe-linkt` (der frühere `vs2022-portierung-fixes`
-ist mit `22a6d77` nach `main` gemergt) · Messwerte an Commit `a807b93`
+Stand: 2026-08-31 · Branch `darstellung-und-menue` · Messwerte an Commit `a807b93`,
+wo nicht anders angegeben
 
 An diesem Baum arbeiten mehrere Agenten gleichzeitig. Jede Zahl hier nennt ihren
 Bezugscommit; wer sie weiterverwendet, misst nach.
 
 ## Kurzfassung
 
-> **`Eudora.exe` bindet.** Gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
+> **Eudora startet — aber das Hauptfenster ist nicht bedienbar.**
+>
+> Nach [ZIEL.md](ZIEL.md) ist damit **keines der drei Kriterien erfüllt**:
+> Menüs lassen sich nicht öffnen (S-5, Ursache gefunden), Bereiche überlagern
+> sich und Werkzeugleisten-Knöpfe sind leer (S-6), ein Mailabruf ist nie
+> geprüft worden. Ein Meilenstein, kein erfülltes Kriterium.
+>
+> Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
 > Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe
 > `OTA50D.LIB`:
 >
@@ -384,35 +391,58 @@ Release bei, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Einzelheiten in
 
 ## Nächster Schritt
 
-1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — erledigt. Abruf und Versand
-   laufen; am 29.08.2026 gegen `pop.gmx.net:995` protokolliert: `TLSv1.3`,
-   `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Einschränkung: die
-   Installation hatte HermesSSL samt aktuellem Wurzelzertifikatsspeicher, die
-   Kette wurde deshalb als vertrauenswürdig eingestuft. Dass die gemessene
-   TLS-Verbindung von dieser DLL stammt, ist gesichert — HermesSSL 7.8 gamma
-   beruht auf OpenSSL 1.0.2p und kann kein TLS 1.3.
-2. ~~Aktuellen `rootcerts.p7b` erzeugen und dem Release beilegen~~ — erledigt mit
-   `75b60e1`.
-3. ~~OT501-Ersatzschicht implementieren~~ — **erledigt.** Alle fünf Teile sind
-   geschrieben und eingehängt (`e50a89c`), `Eudora` übersetzt seit `78a9c10`
-   fehlerfrei und bindet seit `a807b93` mit **0 ungelösten Externen**, ohne die
-   Attrappe `OTA50D.LIB`. Der Weg mit allen Zwischenmessungen steht in
-   [Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md).
-4. **`EudoraRes.dll` beschaffen** — das Projekt hängt über
-   `EudoraRes.vcxproj:351` an `OT501` und wird im Solution-Bau nicht versucht.
-   Für `Eudora` ist dieselbe Bindung mit `a807b93` gelöst
-   (`LinkLibraryDependencies` auf `false`, `_SECNOMSG`); ob derselbe Handgriff
-   hier trägt, ist **nicht geprüft**.
-5. **`libpng` sauber nachziehen** — `__imp___iob` ist in `OTShim_Libpng.cpp` nur
+Stand 31.08.2026. Maßstab ist [ZIEL.md](ZIEL.md) — **derzeit ist keines der drei
+Kriterien erfüllt**.
+
+### Erledigt
+
+1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — mit einer **älteren**
+   Fassung erledigt: am 29.08.2026 gegen `pop.gmx.net:995`, `TLSv1.3`,
+   `TLS_AES_256_GCM_SHA384`, 256 Bit. Die ausgelieferte QCSSL 1.0.1 ist gegen
+   Komponententests geprüft, aber **nie gegen einen echten Server**. Einzelheiten
+   in [Releases/1.0/AUSLIEFERUNGEN.md](Releases/1.0/AUSLIEFERUNGEN.md).
+2. ~~Aktuellen `rootcerts.p7b` erzeugen~~ — erledigt mit `75b60e1`.
+3. ~~OT501-Ersatzschicht implementieren~~ — erledigt (`e50a89c`), 0 ungelöste
+   Externe ohne die Attrappe `OTA50D.LIB`.
+4. ~~`EudoraRes.dll` beschaffen~~ — **erledigt.** Sie wird gebaut und liegt in
+   `Bin/Debug`.
+5. ~~Ersten Start herrichten~~ — **erledigt.** Eudora startet. Die drei Hürden
+   dorthin sind als Befunde S-1 und S-2 festgehalten; die eigentliche war die
+   Werbefläche, die mit `CRect(0,0,0,0)` angelegt wurde und Paige in eine
+   Endlosrekursion trieb.
+
+### Offen, nach Wichtigkeit
+
+1. **Die Darstellung (S-6).** Gregors ausdrücklicher Vorrang. Ursache der
+   überlagernden Bereiche belegt: die Ersatzschicht setzt die prozentualen
+   Zeilenbreiten `m_fPctWidth` und die Splitter der Andockleiste **gar nicht um**
+   und reicht alles an MFC durch; `SECControlBar::CalcFixedLayout` gibt jeder
+   Wazoo-Leiste 32767 als Wunschbreite. Die leeren Werkzeugleisten-Knöpfe sind
+   auf den Zeichenweg eingegrenzt, stärkster Verdacht `SECStdBtn::DrawDisabled`.
+   Fünf konkrete Schritte in
+   [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
+2. **Die Menüs (S-5).** Ursache gefunden (M-1): `SECToolBarManager` setzte
+   `m_bMainFrameEnabled` auf `TRUE`, woraufhin `CMainFrame::OnNcHitTest` immer
+   `HTERROR` liefert und die gesamte Nichtklientenfläche tot ist. Behoben, aber
+   **die Wirkung im Programm ist ungeprüft**.
+3. **Mail abrufen (Kriterium 3).** Nie getestet. Wahrscheinlichster
+   Absturzpunkt bekannt: `QCWorkerSocket.cpp:1969` dereferenziert
+   `pConnectionInfo` ungeprüft. Anleitung in
+   [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md).
+4. **`MFC71.DLL` und `MSVCP71.dll`.** Nicht nachbaubar — `MFC71` wird über 157
+   Ordinale importiert. Dadurch fallen **Adressbuch, LDAP und Ph** aus. Die
+   `MSVCR71.dll` dagegen ist als eigener Nachbau vorhanden
+   (`Eudora71/VC71Bruecke`, 1429 Weiterleitungen auf Windows' `msvcrt.dll`).
+5. **Release-Bau.** Scheitert an einer fehlenden `Imap.lib` im Release-Zweig.
+   Ein Release-Bau hätte keine SUPERASSERT-Dialoge beim Start und bräuchte die
+   VS2022-**Debug**-Laufzeiten nicht.
+6. **`libpng` sauber nachziehen** — `__imp___iob` ist in `OTShim_Libpng.cpp` nur
    behelfsweise gelöst, gestützt auf die gemessene Annahme, dass libpng 1.2.7
-   ausschliesslich `_iob[2]` anfasst und die damalige CRT 32 Byte je Element
-   hatte. Ein Neubau aus `Eudora71/PNG/libpng` mit v143 macht die Annahme
-   überflüssig.
-6. **Ersten Start herrichten** — welche Laufzeitdateien danebenliegen müssen und
-   was noch fehlt (unter anderem `EudoraRes.dll`), steht in
-   [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
-7. Hostnamenprüfung — bewusst zurückgestellt, siehe oben. Der Befund ist
-   dokumentiert, nicht behoben.
+   ausschließlich `_iob[2]` anfasst. Ein Neubau aus `Eudora71/PNG/libpng` mit
+   v143 macht die Annahme überflüssig.
+7. **Hostnamenprüfung** — bewusst zurückgestellt. Der Befund ist dokumentiert,
+   der Patch liegt vorbereitet in `tools/patches/`, **nicht angewendet**. Nicht
+   ohne Gregors Wort anfassen.
 
 ## Rückschritte und ihre Ursachen
 
