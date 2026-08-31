@@ -37,10 +37,20 @@
 #      Ohne die vier VS2022-Debug-Laufzeiten scheitert der Start mit
 #      0xc000007b. Das ist am 31.08.2026 genau so passiert.
 
+#   -AusBauverzeichnis   uebernimmt zusaetzlich JEDE EXE und DLL aus
+#                        Eudora71\Bin\Debug in das Paket. Nur benutzen, wenn
+#                        die Solution VOLLSTAENDIG in Debug|Win32 gebaut wurde -
+#                        sonst mischt man frische und alte Stuecke, und
+#                        Eudora.exe passt womoeglich nicht mehr zu
+#                        EudoraRes.dll. Ohne den Schalter behaelt das Paket die
+#                        Binaerdateien der Grundlage; die Aenderungen 1. bis 5.
+#                        oben werden immer angewandt.
+
 param(
   [Parameter(Mandatory=$true)][string]$Ziel,
   [string]$Zip,
-  [string]$Grundlage
+  [string]$Grundlage,
+  [switch]$AusBauverzeichnis
 )
 
 $ErrorActionPreference = 'Stop'
@@ -70,6 +80,44 @@ function Nimm([string]$quelle, [string]$zielname) {
 function Weg([string]$name) {
   $z = Join-Path $Ziel $name
   if (Test-Path -LiteralPath $z) { Remove-Item -Force -LiteralPath $z; Write-Host ("  {0,-28} entfernt" -f $name) }
+}
+
+if ($AusBauverzeichnis) {
+  $binDbg = Join-Path $wurzel 'Eudora71\Bin\Debug'
+  if (-not (Test-Path -LiteralPath $binDbg)) { throw "kein Bauverzeichnis: $binDbg" }
+  Write-Host ''
+  Write-Host "0. Frische Bauergebnisse aus $binDbg"
+  # NUR diese Liste, und zwar mit Absicht.
+  #
+  # In Bin\Debug liegen NICHT nur eigene Bauergebnisse, sondern auch die
+  # vorgebauten Fremd-DLLs von 2006 in ihrer DEBUG-Fassung: DirServ, EudoraBk,
+  # EuMemMgr, ISock, Ldap, Ph, Paige32d. Die verlangen MSVCR71D.dll und
+  # MFC71D.DLL - beides nicht verteilbar. Wer das ganze Verzeichnis
+  # uebernimmt, baut sich genau den Fehler zurueck, an dem Paket 1.0.1
+  # gescheitert ist (Befund S-1). Gemessen: paket-pruefen.ps1 meldet dann
+  # "MSVCR71D.dll fehlt und wird beim Start gebraucht - von: EuMemMgr.dll".
+  #
+  # QCSSL.dll steht bewusst NICHT in der Liste: die Fassung in der Grundlage
+  # ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind verschiedene
+  # Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  $eigene = @(
+    'Eudora.exe', 'EudoraRes.dll', 'EuLang.dll', 'Imap.dll',
+    'QCSocket.dll', 'QCUtils.dll', 'plstclnt.dll'
+  )
+  $n = 0
+  foreach ($d in $eigene) {
+    $q = Join-Path $binDbg $d
+    if (Test-Path -LiteralPath $q) {
+      Copy-Item -LiteralPath $q -Destination (Join-Path $Ziel $d) -Force
+      Write-Host ("  {0,-28} uebernommen" -f $d)
+      $n++
+    } else {
+      Write-Host ("  {0,-28} NICHT gebaut - die Fassung der Grundlage bleibt stehen" -f $d) -ForegroundColor Yellow
+    }
+  }
+  Write-Host ("  {0} von {1} uebernommen" -f $n, $eigene.Count)
+  Write-Host '  ACHTUNG: Eudora.exe und EudoraRes.dll gehoeren zusammen. Wenn nur'
+  Write-Host '  eine von beiden frisch ist, koennen Ressourcennummern auseinanderlaufen.'
 }
 
 Write-Host ''
