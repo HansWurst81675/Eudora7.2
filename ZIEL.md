@@ -13,8 +13,8 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare DLLs (S-8) |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** (31.08.2026, Befund E-1) |
-| 2 | Die Darstellung ist korrekt | **nicht erfüllt** — die belegten Ursachen sind behoben, aber von Gregor nicht nachgesehen |
-| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **nicht geprüft** — der Abrufpfad ist abgesichert (P-2), ein echter Abruf steht aus |
+| 2 | Die Darstellung ist korrekt | **nicht erfüllt** — Anordnung und Menüs stimmen jetzt, aber die Werkzeugleiste hat weiter leere Felder (E-1) |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten abgerufen, Befund E-1 |
 
 Kriterium 0 kam am 31.08.2026 dazu; es steht vor den anderen dreien, weil ohne
 lauffähiges Paket niemand die anderen prüfen kann. Beschrieben ist es weiter
