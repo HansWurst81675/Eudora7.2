@@ -5506,3 +5506,165 @@ Für eine **leere** `Out.mbx` (die Zeilen darüber melden `Size: 0`) wird eine
 Dateigröße von **1.788.158.654** gemeldet — 1,7 GB. Ein nicht initialisierter
 Wert. Zwei Zeilen später steht korrekt `MBX 0`. Eigener Befund, nicht
 untersucht.
+
+
+## R-1 — Die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 Vorkommen sind falsch (31.08.2026)
+
+Werkzeug: **`tools/releasebuffer-pruefen.pl`** (neu). Gemessen ohne Visual
+Studio, reine Quelltextanalyse — **es ist keine Zeile C++ geändert worden**, und
+nichts davon ist übersetzt.
+
+E-11 hat einen Absturz auf frischen Installationen auf `ReleaseBuffer` ohne
+vorangehendes `GetBuffer` zurückgeführt (`eudora.cpp:3372`) und 142 Vorkommen im
+Baum gezählt. Dieser Abschnitt stuft sie ein.
+
+### Was das Werkzeug tut
+
+Für jedes `ReleaseBuffer(` bestimmt es den Empfänger, schätzt den
+Funktionsanfang (rückwärts bis zur nächsten schließenden Klammer in Spalte 1 —
+VC6-Stil, in diesem Baum durchgehend) und sucht darin ein `GetBuffer` bzw.
+`GetBufferSetLength` **auf derselben Variablen**.
+
+| Einstufung | Bedeutung | Anzahl |
+|---|---|---|
+| `ok` | das richtige Paar `GetBuffer`/`ReleaseBuffer` — bleibt | **117** |
+| `falsch` | kein `GetBuffer`, **und ein Argument** übergeben: hier wird gekürzt | **20** |
+| `lockbuffer` | davor steht `LockBuffer`, nicht `GetBuffer` — der richtige Partner ist `UnlockBuffer()` | **4** |
+| `danach` | `GetBuffer` steht erst **nach** dem `ReleaseBuffer` | **1** |
+| `verdaechtig` | kein `GetBuffer`, kein Argument | 0 |
+
+**25 Stellen sind zu ändern, 117 bleiben.** Aufruf:
+`perl tools/releasebuffer-pruefen.pl` (Rückgabe 1, sobald etwas zu tun ist),
+`--alle` zeigt auch die richtigen.
+
+### Die Zahl 142 war zufällig richtig
+
+Nachgemessen, weil eine Zahl ohne den Befehl, der sie erzeugt hat, nichts wert
+ist:
+
+| Messung | Ergebnis |
+|---|---|
+| `grep -rn "ReleaseBuffer(" --include=*.cpp` | 142 |
+| dasselbe **einschließlich `.CPP`** in Großschreibung | 143 |
+| davon eine reine **Kommentarzeile** (`eudora.cpp:3372`, „war ReleaseBuffer(i) …") | −1 |
+| in `.h`/`.inl` | 0 |
+| **echte Vorkommen** | **142** |
+| davon findet das Werkzeug | **142** |
+
+`--include=*.cpp` ist bei `grep` groß-/kleinschreibungsabhängig und übersieht
+`Eudora71/Eudora/PGHTMIMP.CPP`; dafür zählt es die Kommentarzeile mit, in der
+die Behebung von E-11 vermerkt ist. Die beiden Fehler heben sich auf.
+
+### Berichtigung zur Behebung von E-11
+
+`AUFGABEN.md` (A1) führt die Behebung als `RegMailto = RegMailto.Left(i);`.
+Im Quelltext steht **`RegMailto.Truncate(i);`** (`eudora.cpp:3372`, nachgelesen).
+Beides ist richtig; `Truncate` ist der kürzere Weg und kommt ohne temporäres
+Objekt aus. Die Doku ist nachgezogen.
+
+### DRINGEND: die Behebung von E-11 ist mit hoher Wahrscheinlichkeit unvollständig
+
+**`CEudoraApp::RegisterURLSchemes()` reicht von `eudora.cpp:3274` bis `:3417`.**
+In dieser **einen** Funktion stehen **drei** Vorkommen:
+
+| Zeile | Stand |
+|---|---|
+| 3372 | `RegMailto` — **behoben** (E-11), jetzt `Truncate(i)` |
+| 3403 | `RegClientsMail.ReleaseBuffer(LastSlash)` — **unverändert falsch** |
+| 3413 | `EudoraOption.ReleaseBuffer(SlashIndex)` — **unverändert falsch** |
+
+Was `eudora.log` belegt: die letzte Zeile vor dem Abbruch ist der Dialog
+`IDS_WARN_DEFAULT_MAILTO`, ausgegeben in **`eudora.cpp:3331`** — also **innerhalb
+dieser Funktion, vor allen drei Stellen**. Der Absturz liegt damit hinter 3331;
+dass er ausgerechnet an 3372 lag und nicht an 3403 oder 3413, ist **nicht
+belegt**. Beide sind auf dem Weg: 3403 im Zweig `if (bIsDefaultMailto)`, 3413
+ohne jede Bedingung.
+
+**Folge für den ersten Punkt der Arbeitsliste:** wenn Gregor das v1.0.3-ZIP auf
+dem Win11-Rechner probiert und es **weiterhin abstürzt**, ist das kein
+Widerspruch zu E-11, sondern der Hinweis auf 3403/3413. Beide gehören vor dem
+nächsten Paket behoben — es sind zwei Zeilen, und sie kosten einen Bau.
+
+### Die 20 Stellen der Einstufung `falsch`
+
+Nach Dringlichkeit, nicht nach Datei:
+
+| Stelle | Empfänger | wie oft der Weg läuft |
+|---|---|---|
+| `eudora.cpp:3403`, `:3413` | `RegClientsMail`, `EudoraOption` | **bei jeder frischen Installation** — dieselbe Funktion wie der E-11-Absturz |
+| `QCSharewareManager.cpp:1318` | `RetailVersion` | **bei jedem Start** (`Load`, Box-Build-Zweig) |
+| `sendmail.cpp:1782`, `:1788`, `:1815`, `:1865` | `szLine` | **bei jeder gesendeten Klartextmail** — `CString szLine(pSrcLine, …)` (`:1736`), dann `SetAt`, dann `ReleaseBuffer` |
+| `POPSession.cpp:1747` | `LoginName` | nur im Hesiod-Zweig (`stricmp(Server,"hesiod")`) |
+| `SMTPSession.cpp:328` | `Recipient` | beim Auswerten einer Serverantwort mit `<…>` |
+| `SMTPSession.cpp:683`, `Imapdll/src/Network.cpp:179` | `LoginName` | Anmeldung, Konto mit `@` |
+| `mime.cpp:2020` | `m_CID` | jede Nachricht mit eingebettetem Inhalt (`Content-ID` in `<…>`) |
+| `msgutils.cpp:2128`, `:2165`, `:2185`, `:2265` | `szPath` | Pfad- und Anhangbehandlung |
+| `fileutil.cpp:482` | `EudoraDir` | Verzeichnisbestimmung |
+| `guiutils.cpp:1605` | `File` | Dateiauswahl |
+| `PaigeEdtView.cpp:657` | `strTitle` | Fenstertitel über 31 Zeichen |
+| `MAPI/recip.cpp:52` | `FullAddress` | MAPI-Empfänger |
+
+Alle wollen **kürzen**. Der Ersatz ist in jedem Fall `s.Truncate(n)` (so ist
+E-11 behoben) oder `s = s.Left(n)`.
+
+### Die 4 Stellen `lockbuffer` — anderer Fehler, anderer Ersatz
+
+`Text2Html.cpp:912`, `:939`, `:955` und `PGHTMIMP.CPP:2944` holen den Puffer mit
+**`LockBuffer()`**, schreiben hinein und geben ihn mit `ReleaseBuffer()` zurück.
+Der Partner von `LockBuffer` ist **`UnlockBuffer`**; `ReleaseBuffer` ist es
+nicht. Gemessen im Baum: 7 `LockBuffer`, aber nur 2 `UnlockBuffer`.
+
+Das Muster ist dort überall dasselbe — ein abschließendes CRLF abschneiden:
+
+```cpp
+tempStr = szUrl.LockBuffer();
+tempStr[strlen(tempStr)-2] = '\0';
+szUrl.ReleaseBuffer();
+```
+
+Sauber wäre ohne Puffer: `if (szUrl.Right(2) == "\r\n") szUrl.Truncate(szUrl.GetLength()-2);`
+
+### Die eine Stelle `danach`
+
+`MimeStorage.cpp:270`:
+
+```cpp
+Message.ReleaseBuffer(0);
+Message.GetBuffer(::SafeStrlenMT(m_theMess));
+```
+
+`ReleaseBuffer(0)` **vor** dem `GetBuffer` — die Absicht ist „leeren, dann
+vorab belegen". Richtig wäre `Message.Empty();` gefolgt vom `GetBuffer`.
+Nebenbei: das `GetBuffer` in der Folgezeile hat selbst kein `ReleaseBuffer` —
+der Puffer bleibt gesperrt, solange die Funktion läuft.
+
+### Was von Hand gegengelesen ist
+
+Nicht alle 142, aber jede Einstufung mindestens einmal, und die kritischen
+vollständig: **8 der 20** `falsch` (`POPSession:1747`, `mime.cpp:2020`,
+`PaigeEdtView:657`, `QCSharewareManager:1318`, `SMTPSession:328`,
+`eudora.cpp:3403` und `:3413`, `sendmail.cpp:1782`), **alle 4** `lockbuffer`,
+der eine `danach`. **Kein Fehlalarm darunter.** Die Funktionsgrenzen von
+`RegisterURLSchemes` (3274–3417) und `SendPlain` (ab 1607) sind eigens
+nachgezählt.
+
+### Grenzen des Werkzeugs — im Kopf der Datei ausführlich
+
+Der Empfänger wird als **Text** verglichen: ein `GetBuffer` über einen Zeiger
+auf dasselbe Objekt wird nicht erkannt, `s` und `m_str.s` gelten als
+verschieden. Der Funktionsanfang ist geschätzt; wo die Schätzung an ihre Grenze
+läuft, steht `[Funktionsanfang unsicher]` in der Ausgabe (nach dem Ausbau der
+`LockBuffer`-Erkennung kommt das im Baum nicht mehr vor). Zeichenketten werden
+nicht ausgeblendet — ein `"ReleaseBuffer("` im Text wäre ein Fehlalarm; im Baum
+gibt es keinen.
+
+### UNGEPRÜFT
+
+- **Ob `CSimpleStringT::SetAt` den Puffer exklusiv hält.** Davon hängt ab, wie
+  gefährlich die vier `sendmail`-Stellen wirklich sind. Die MFC-Quellen liegen
+  in dieser Umgebung nicht vor. Unabhängig davon ist `ReleaseBuffer` ohne
+  `GetBuffer` nicht der zugesagte Vertrag.
+- **Ob 3403/3413 der tatsächliche Absturzpunkt sind.** Belegt ist nur, dass der
+  Absturz hinter `eudora.cpp:3331` liegt.
+- **Nichts davon ist übersetzt.** Es ist auch nichts geändert — dieser Abschnitt
+  ist eine Meldung, keine Behebung.

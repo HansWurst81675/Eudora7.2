@@ -207,7 +207,8 @@ Neu am 31.08.2026:
 | `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. Das Maß für Kriterium 0. |
 | `tools/paket-bauen.ps1` | stellt ein Paket aus dem Quellbaum zusammen. Veröffentlicht nichts. Braucht `-AusBauverzeichnis`, wenn ein frischer Bau übernommen werden soll. |
 | `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. |
-| `tools/pruefe-bytes-tests.pl` | 23 Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/pruefe-bytes-tests.pl` | Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/releasebuffer-pruefen.pl` | stuft die 142 `ReleaseBuffer`-Vorkommen ein — die Fehlerklasse hinter E-11. 25 sind zu ändern, Einzelheiten in Befund R-1. |
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |
 
 `tools/rekursion-suchen.pl` ist am 31.08.2026 gelöscht worden — Befund W-1: es

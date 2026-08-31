@@ -64,11 +64,21 @@ Ein einziger Lauf beantwortet fünf offene Punkte. Deshalb steht er hier oben.
 
 ### A1 · Die Behebung prüfen lassen
 
-`eudora.cpp:3372` wurde am 31.08. um 08:55 geändert:
+`eudora.cpp:3372` wurde am 31.08. um 08:55 geändert — **nachgelesen, im Code
+steht `Truncate`, nicht `Left`** (die frühere Angabe hier war falsch):
 
 ```cpp
-RegMailto = RegMailto.Left(i);      // war: RegMailto.ReleaseBuffer(i);
+RegMailto.Truncate(i);	// war ReleaseBuffer(i) ohne GetBuffer - Befund E-11
 ```
+
+> **WICHTIG, neu am 31.08. abends (Befund R-1):** in **derselben Funktion**
+> `CEudoraApp::RegisterURLSchemes()` (`eudora.cpp:3274-3417`) stehen **zwei
+> weitere** Vorkommen derselben Art, unverändert: `:3403`
+> (`RegClientsMail.ReleaseBuffer(LastSlash)`) und `:3413`
+> (`EudoraOption.ReleaseBuffer(SlashIndex)`). Der Beleg aus `eudora.log` sagt
+> nur, dass der Absturz **hinter `:3331`** liegt — nicht, dass er an `:3372`
+> lag. **Stürzt es weiterhin ab, sind das die nächsten Verdächtigen.** Zwei
+> Zeilen, ein Bau.
 
 Ursache und Beleg stehen in **E-11**. Kurzfassung: `ReleaseBuffer` ohne
 vorangehendes `GetBuffer` ist bei MFC 14 unzulässig — `CStringT` zählt
@@ -79,24 +89,45 @@ Referenzen. Auf Gregors VM fiel es nie auf, weil der Zweig nur bei einer
 **Zu tun:** Release bauen, Paket schnüren, Gregor auf dem Win11-Rechner
 probieren lassen: Assistent → *Weiter*. Der Bau lief beim Sitzungsende noch.
 
-### A2 · Die Fehlerklasse abstellen — **142 Vorkommen**
+### A2 · Die Fehlerklasse abstellen — **25 von 142 Vorkommen**, ausgezählt
 
-`ReleaseBuffer` ist im Baum **142-mal** benutzt. Nicht alle falsch: richtig ist
-`p = s.GetBuffer(n); … s.ReleaseBuffer();`. Falsch sind die ohne vorangehendes
-`GetBuffer` auf **derselben** Variablen.
+> **Das Werkzeug ist gebaut und gelaufen** (31.08.2026 abends): 
+> `perl tools/releasebuffer-pruefen.pl` — Rückgabe 1, sobald etwas zu tun ist,
+> `--alle` zeigt auch die richtigen. Vollständiger Befund mit allen Fundstellen,
+> Gegenproben und Grenzen: **R-1** in `BEFUNDE.md`.
 
-Besonders verdächtig, weil sie eine **Länge** übergeben und damit kürzen wollen:
+| Einstufung | Bedeutung | Anzahl |
+|---|---|---|
+| `ok` | richtiges Paar `GetBuffer`/`ReleaseBuffer` — **bleibt** | 117 |
+| `falsch` | kein `GetBuffer`, Länge übergeben (kürzt) | **20** |
+| `lockbuffer` | davor `LockBuffer` — der Partner ist `UnlockBuffer()` | **4** |
+| `danach` | `GetBuffer` erst danach (`MimeStorage.cpp:270`) | **1** |
 
-| Stelle | Bemerkung |
-|---|---|
-| `eudora.cpp:3372` | behoben (A1) |
-| `QCSharewareManager.cpp`, in `Load` | `RetailVersion.ReleaseBuffer(LastDot + 1)` — läuft bei **jedem Start** durch den Box-Build-Zweig |
-| `ConConProfile.cpp:198` | `m_szElementData.ReleaseBuffer(nNewDataLength)` |
+**Zu tun, in dieser Reihenfolge — nach Häufigkeit des Wegs, nicht nach Datei:**
 
-**Aufgabe für einen Agenten:** ein Werkzeug `tools/releasebuffer-pruefen.pl`,
-das je Vorkommen prüft, ob auf derselben Variablen vorher ein `GetBuffer` im
-selben Block steht. Ausgabe als Liste mit Datei:Zeile und Einstufung. Danach
-die echten Fälle einzeln beheben — `s = s.Left(i)` statt `s.ReleaseBuffer(i)`.
+1. `eudora.cpp:3403` und `:3413` — dieselbe Funktion wie der E-11-Absturz,
+   läuft bei jeder frischen Installation. Siehe den Kasten in A1.
+2. `QCSharewareManager.cpp:1318` (`RetailVersion`) — **bei jedem Start**.
+3. `sendmail.cpp:1782`, `:1788`, `:1815`, `:1865` (`szLine`) — **bei jeder
+   gesendeten Klartextmail**. `CString szLine(pSrcLine, …)` bei `:1736`, dann
+   `SetAt`, dann `ReleaseBuffer`.
+4. `mime.cpp:2020` (`m_CID`) — jede Nachricht mit `Content-ID` in `<…>`.
+5. Die übrigen zwölf: `msgutils.cpp:2128/2165/2185/2265`, `POPSession.cpp:1747`,
+   `SMTPSession.cpp:328/683`, `Imapdll/src/Network.cpp:179`,
+   `fileutil.cpp:482`, `guiutils.cpp:1605`, `PaigeEdtView.cpp:657`,
+   `MAPI/recip.cpp:52`.
+6. Die vier `LockBuffer`-Stellen (`Text2Html.cpp:912/939/955`,
+   `PGHTMIMP.CPP:2944`) — dort ist der Ersatz **nicht** `Truncate`, sondern
+   entweder `UnlockBuffer()` oder der Verzicht auf den Puffer:
+   `if (s.Right(2) == "\r\n") s.Truncate(s.GetLength()-2);`
+7. `MimeStorage.cpp:270` — `Message.Empty()` statt `ReleaseBuffer(0)`.
+
+**Ersatz beim Kürzen: `s.Truncate(n)`** — so ist E-11 behoben — oder
+`s = s.Left(n)`.
+
+**Nicht in der Liste, obwohl A2 sie früher nannte:** `ConConProfile.cpp:198`.
+Nachgemessen: dort steht ein `GetBuffer` auf derselben Variablen davor, die
+Stelle ist `ok`.
 
 Das ist eine **Fehlerklasse**, kein Einzelfall: eine VC6-Altlast, die sich erst
 zur Laufzeit meldet, und zwar nur auf bestimmten Wegen.

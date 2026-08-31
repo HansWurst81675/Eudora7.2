@@ -215,6 +215,7 @@ einen echten Mailserver. Einzelheiten in
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen. |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. Damit wurden die Stellen zu P-2 gefunden. |
+| `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: ist vorher ein `GetBuffer` auf **derselben** Variablen da? Das ist die Fehlerklasse hinter Befund E-11 (Absturz auf frischen Installationen). Gemessen: 117 richtig, 25 zu ändern. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio. |
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
 | `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten von VS2022 aus `SysWOW64` und prüft jede einzeln auf x86 nach. Ohne sie startet Eudora mit `0xc000007b` — Befund S-8. `-NurPruefen` sagt nur, was fehlt. |
 | `tools/paket-bauen.ps1` | stellt ein Auslieferungspaket aus dem Quellbaum zusammen, wahlweise als ZIP. **Veröffentlicht nichts** — ob ausgeliefert wird, entscheidet ein Mensch. |
