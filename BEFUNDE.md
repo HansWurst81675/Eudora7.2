@@ -5382,3 +5382,94 @@ ist noch nicht nachgelesen.
 dann *Weiter* per `BM_CLICK` an den Knopf senden — so wie es bei den
 SUPERASSERT-Dialogen schon gemacht wurde. Der Debugger fängt die
 Zugriffsverletzung und nennt Datei und Zeile. Ein Lauf von etwa einer Minute.
+
+## E-11 — Der Absturz liegt nicht im Assistenten: `ReleaseBuffer` ohne `GetBuffer` (31.08.2026, URSACHE GEFUNDEN)
+
+### Der Beleg: `eudora.log`
+
+Gregor hat die Protokolldatei geschickt. **Beide Sitzungen enden an derselben
+Stelle**, danach steht nichts mehr:
+
+    MAIN     8: 0.01 Dialog: "Eudora is not currently the default mail program.\n"
+    MAIN     8: 0.01 Dialog: "Would you like it to be the default mail program?"
+
+Damit ist der Kontoassistent **entlastet**. Der Absturz passiert in der
+Registrierung als Standard-Mailprogramm — der Klick auf *Weiter* schließt nur
+den Assistenten, und danach läuft dieser Weg.
+
+Die Meldung ist `IDS_WARN_DEFAULT_MAILTO` (`EudoraRes.rc:7909`), benutzt genau
+einmal: `eudora.cpp:3331`, in `CEudoraApp::RegisterURLSchemes` (ab `:3274`,
+gerufen aus `InitInstance` bei `:1591`).
+
+### Die Fundstelle, drei Zeilen nach dem Dialog
+
+`eudora.cpp:3369-3371`:
+
+```cpp
+if (!AddToRegistry(HKEY_CLASSES_ROOT, RegMailto, NULL, cmd))
+    ::ErrorDialog(IDS_REG_MAILTO_ERR);
+int i = RegMailto.Find('\');
+if (i >= 0)
+    RegMailto.ReleaseBuffer(i);          // <- hier
+```
+
+`RegMailto` ist ein **`CRString`** (`eudora.cpp:3287`), also ein aus einer
+Ressource geladener String.
+
+**`CString::ReleaseBuffer` ohne vorangehendes `GetBuffer` ist unzulässig.** Unter
+VC6 war das gutmütig: `CString` hielt einen eigenen Puffer, und
+`ReleaseBuffer(n)` setzte einfach die Länge. Bei **MFC 14** ist `CString` ein
+`CStringT` mit **Referenzzählung**: `ReleaseBuffer` setzt voraus, dass der Puffer
+exklusiv gesperrt ist, und schreibt in die gemeinsame Verwaltungsstruktur. Bei
+einem geteilten Puffer zerstört das fremde Daten.
+
+Das ist derselbe Klassiker wie die anderen VC6-Altlasten dieser Portierung
+(`std::auto_ptr`, Iteratoren als Zeiger, Standardargumente) — nur schlägt er
+erst zur Laufzeit zu.
+
+### Der Umfang: 142 Vorkommen im Baum
+
+`grep -rn "ReleaseBuffer(" --include=*.cpp Eudora71/` findet **142 Stellen**.
+Nicht alle sind falsch — richtig ist das Muster
+`p = s.GetBuffer(n); ... s.ReleaseBuffer();`. Falsch sind die Stellen **ohne**
+vorangehendes `GetBuffer` auf derselben Variablen.
+
+Auffällig auf den ersten Blick, weil sie eine **Länge** übergeben und damit
+kürzen wollen — also die gefährliche Form:
+
+- `eudora.cpp:3371` `RegMailto.ReleaseBuffer(i)` — **dieser Absturz**
+- `ConConProfile.cpp:198` `m_szElementData.ReleaseBuffer(nNewDataLength)`
+- `QCSharewareManager.cpp` (in `Load`) `RetailVersion.ReleaseBuffer(LastDot + 1)`
+  — läuft bei **jedem Start** durch den Box-Build-Zweig
+
+### Die Behebung
+
+Statt `s.ReleaseBuffer(i)` gehört dort ein sauberes Kürzen:
+
+```cpp
+RegMailto = RegMailto.Left(i);
+```
+
+Das ist in allen Fällen richtig, ändert die Bedeutung nicht und kommt ohne
+Puffersperre aus. **Nicht mehr in dieser Sitzung geändert** — die Zeit reichte
+nicht, um es zu übersetzen und zu prüfen, und 142 Stellen wollen einzeln
+angesehen werden.
+
+### Nächster Schritt
+
+1. `eudora.cpp:3371` auf `Left(i)` umstellen, bauen, Gregor probieren lassen.
+   Ein Einzeiler, und er trifft genau den belegten Absturz.
+2. Danach die 142 Vorkommen durchgehen: jedes ohne vorangehendes `GetBuffer` auf
+   derselben Variablen ist ein Kandidat. Ein Werkzeug dafür wäre lohnend — das
+   ist eine **Fehlerklasse**, kein Einzelfall.
+3. `QCSharewareManager.cpp` zuerst, weil dieser Weg bei jedem Start läuft.
+
+### Nebenbefund aus dem Protokoll
+
+    Leeway 10, Out: MBX 1788158654, TOC 0
+    Out .mbx size: MBX 0, TOC 1
+
+Für eine **leere** `Out.mbx` (die Zeilen darüber melden `Size: 0`) wird eine
+Dateigröße von **1.788.158.654** gemeldet — 1,7 GB. Ein nicht initialisierter
+Wert. Zwei Zeilen später steht korrekt `MBX 0`. Eigener Befund, nicht
+untersucht.
