@@ -5061,3 +5061,66 @@ nicht das Paket") — und ich habe ihn in meiner eigenen Prüfung wiederholt.
 **Es bleibt unbelegt, und die Vermutung, es sei erfüllt, ist widerlegt.** Ein
 Release-Bau allein genügt nicht; das Paket muss auf einer Maschine ohne
 Entwicklungsumgebung nachweislich starten.
+
+## E-6 — Das Release läuft auf Windows 11 ohne Visual Studio — der Kontoassistent stürzt bei *Weiter* ab (31.08.2026, TEILERFOLG)
+
+### Berichtigung zu E-5: es startet doch
+
+Gregor hat das **hier gepackte** ZIP auf dem zweiten Rechner (Windows 11, kein
+Visual Studio) ausgepackt und ein Mailverzeichnis hinzugefügt. **Eudora startet.**
+Bildschirmfoto zeigt: Hauptfenster im Windows-11-Erscheinungsbild, Menüleiste
+vollständig (*File* bis *Help* — ohne *Debug*, wie es im Release-Bau sein soll),
+Postfachbaum links mit *In/Out/Junk/Trash/Recent*, Statuszeile, und den
+**New Account Wizard**.
+
+Damit ist **Kriterium 0 im Kern erreicht**: das Paket läuft ohne
+Nachinstallieren auf einer Maschine ohne Entwicklungsumgebung. Einschränkung:
+das Mailverzeichnis musste von Hand dazugelegt werden — der Grund dafür ist
+noch nicht geklärt (im Paket liegt eines, siehe „Offene Frage" unten).
+
+Was in E-5 als „startet gar nicht" gemeldet war, betraf offenbar das aus der
+GitHub-Veröffentlichung heruntergeladene ZIP, nicht das hier gepackte. Der
+Unterschied ist noch nicht gemessen; **UNGEPRÜFT**, ob es am Zonenvermerk
+(*Mark of the Web*) lag.
+
+### NEU: Absturz im Kontoassistenten
+
+> *„wenn ich hier auf weiter klicke, stürzt es ab!"*
+
+Der Assistent zeigt die Begrüßungsseite („Welcome to Eudora!"); der Klick auf
+**Weiter >** beendet das Programm.
+
+**Das ist ein Release-Bau — und genau davor war gewarnt.** FREIGABE hatte
+festgehalten: *„im Release-Bau entfallen die SUPERASSERT-Dialoge und alle
+ASSERT/VERIFY"*. Ein Fehler, der im Debug-Bau nur eine Zusicherung ausgelöst
+hätte, wird hier zum Absturz. Im Debug-Bau ist der Assistent nie benutzt worden
+— Gregor hat sein Konto von Hand über die `Eudora.ini` eingetragen.
+
+**Wo zu suchen ist:** Projekt `Eudora71/AccountWizard`. Die Seitenklassen liegen
+in `Eudora71/AccountWizard/PrivateInc` (`WizardAcapPage.h`,
+`WizardClientPage.h`, `WizardConfirmpage.h`, `WizardFinishPage.h`,
+`WizardImapDirPage.h` und weitere). Der Übergang von der ersten Seite läuft über
+`OnWizardNext` der Begrüßungsseite.
+
+**Nächster Schritt:** den **Debug**-Bau nehmen und im Assistenten auf *Weiter*
+klicken. Dort meldet sich die Zusicherung mit Datei und Zeile, statt still
+abzustürzen — das ist der schnellste Weg zur Fundstelle. Falls es im Debug-Bau
+nicht auftritt, ist es ein reiner Release-Effekt (nicht initialisierte Variable
+oder ein Codepfad, der nur ohne `ASSERT` erreicht wird), und dann hilft
+`tools/stapel-untersuchen.ps1` gegen die Release-EXE mit der `Eudora.pdb`.
+
+### Offene Frage
+
+Warum musste das Mailverzeichnis von Hand dazugelegt werden? Das Paket enthält
+`Mailverzeichnis\Eudora.ini` — entweder wurde es beim Auspacken nicht
+mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
+übergeben wird. Zu klären.
+
+### Stand der vier Kriterien
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 0 | Paket ohne Nachinstallieren | **im Kern erreicht** — läuft auf Win11 ohne VS; Mailverzeichnis noch von Hand |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** |
+| 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, aber ungeprüft |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** (Debug-Bau) — im Release blockiert der Assistent |
