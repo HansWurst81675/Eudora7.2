@@ -4894,3 +4894,106 @@ Postfächer zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
 Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
 Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
 der Grund, ihn nicht auf sich beruhen zu lassen.
+
+## Z-2 — Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
+
+Befund E-2: In HTML-Nachrichten steht statt eines Umlauts ein Ersatzzeichen
+(`f<>r` statt `fuer`), im reinen Text derselben Sitzung stimmen die Umlaute.
+
+### Der HTML-Anzeigepfad, Schritt fuer Schritt (alles nachgelesen, nicht vermutet)
+
+1. `CTridentView::LoadMessage()` (`Eudora/TridentView.cpp:1453-1550`) legt mit
+   `GetTempFileName` eine **temporaere Datei** an, ruft
+   `WriteTempFile(theFile, ...)` (`:1496`) und danach
+   `m_pSite->Load((LPTSTR)(LPCTSTR)m_szTmpFile)` (`:1546`).
+2. `CSite::Load` (`Eudora/SITE.CPP:397-465`) reicht diesen **Dateipfad** an
+   MSHTML weiter — ueber `CreateURLMoniker` + `IPersistMoniker::Load` (`:423-440`),
+   ersatzweise `IPersistFile::Load` (`:453-460`).
+3. `CTridentView::WriteTempFile` (`Eudora/TridentView.cpp:1281-1440`) schreibt in
+   diese Datei: erst das Stylesheet (aus `read.css` oder aus
+   `IDS_INI_READMESSAGE_STYLE_SHEET`, `EudoraRes.rc:8129-8130`, Anfang:
+   `<HTML><HEAD><STYLE>`), dann Kopfzeilen, dann den Nachrichtenrumpf aus
+   `GetMessageForDisplay`.
+
+**In keinem dieser drei Schritte wird ein Zeichensatz angegeben.** Kein BOM,
+kein `<meta ... charset=...>`, keine Codepage-Umwandlung. Die Volltextsuche des
+Auftrags stimmt und ist damit erklaert: die Suche nach `IPersistStreamInit`
+liefert im ganzen Baum **keinen** Treffer, weil MSHTML hier ueber eine Datei
+geladen wird. MSHTML muss den Zeichensatz also selbst raten — aus dem Inhalt.
+
+### Woher das Ersatzzeichen kommt
+
+Was auf der Platte steht, ist **Windows-1252**: `TextReader::ReadIt`
+(`Eudora/TextReader.cpp:243-250`) uebersetzt jede Zeile mit
+`size = ISOTranslate(buf, size, iCharsetIdx)`, sobald `iCharsetIdx > 2` ist —
+und `ISOTranslate` (`Eudora/utils.cpp:1240-1283`) wandelt UTF-8 ueber
+`MultiByteToWideChar(CP_UTF8, ...)` + `WideCharToMultiByte(1252, ...)` nach
+CP1252. Das gilt fuer HTML-Teile genauso wie fuer Text, `bHtml`
+(`TextReader.cpp:63`) steuert nur den `<x-html>`-Rahmen, nicht die Uebersetzung.
+
+Der `<meta http-equiv="Content-Type" ... charset=utf-8>` aus der Originalmail
+ueberlebt diese Umwandlung dagegen unveraendert: der Tag-Filter in
+`GetBodyAsHTML` (`Eudora/msgutils.cpp:1616-1645`) sieht sich `<meta>` **nur auf
+`http-equiv=refresh`** an (`:1629`) und laesst jedes andere `<meta>` samt
+`charset`-Angabe stehen.
+
+Damit steht in der temporaeren Datei: CP1252-Bytes, dazu die Ansage "utf-8".
+MSHTML glaubt der Ansage, findet ein einzelnes Byte `0xFC`, das in UTF-8 nicht
+vorkommt, und setzt **ein** U+FFFD dafuer.
+
+Das passt genau zum Bild: **ein** Ersatzzeichen je Umlaut. Waere es umgekehrt —
+UTF-8-Bytes als CP1252 gelesen —, stuenden dort **zwei** Zeichen (`Ã¼`). Der
+Textpfad hat kein `<meta>` und keinen Rater und zeigt deshalb richtig an (E-1).
+
+### Behebung: zwei kleine Aenderungen, beide noetig
+
+1. **Den Zeichensatz ansagen**, als erste Bytes der temporaeren Datei, vor dem
+   Stylesheet, in `CTridentView::WriteTempFile` (`Eudora/TridentView.cpp`, direkt
+   vor dem `theFile.Write(szStyleSheet, ...)` bei `:1336`):
+
+       static const char szCharsetMeta[] =
+           "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">\r\n";
+       theFile.Write(szCharsetMeta, sizeof(szCharsetMeta) - 1);
+
+   `windows-1252` ist in **allen** Faellen richtig: bei `iCharsetIdx <= 2`
+   (Windows, US-ASCII, Latin-1) sind die Bytes unveraendert Latin-1/CP1252, bei
+   `iCharsetIdx > 2` hat `ISOTranslate` nach CP1252 gewandelt. Vor dem
+   Stylesheet und nicht in `IDS_INI_READMESSAGE_STYLE_SHEET`, weil eine
+   vorhandene `read.css` die Ressource ersetzt (`TridentView.cpp:1300-1322`) —
+   in der Ressource stuende die Ansage dann nur manchmal in der Datei.
+
+2. **Die fremde Zeichensatz-Ansage entfernen**, in `GetBodyAsHTML`
+   (`Eudora/msgutils.cpp:1629`), damit MSHTML nicht doch der spaeteren Angabe
+   der Mail folgt:
+
+       bool bIsBadMeta = HasBadAttributeValue(TagContents, "http-equiv", "refresh") ||
+                         (StrStrIA(TagContents, "charset") != NULL);
+
+   UNGEPRUEFT ist allein, ob Schritt 1 fuer sich genuegt: ob MSHTML die erste
+   oder die letzte `charset`-Angabe im Dokument gewinnen laesst, ist nicht
+   nachgemessen. Schritt 2 macht die Frage gegenstandslos, deshalb beide.
+
+### Nebenbefund (nicht behoben)
+
+Ein `<meta charset="utf-8">` im HTML5-Stil, ohne `http-equiv`, kommt in
+`GetBodyAsHTML` gar nicht erst in die Naehe der Pruefung; die Fassung von
+Schritt 2 oben faengt ihn ueber die Zeichenkette `charset` trotzdem mit ab.
+
+### Stand und naechster Schritt
+
+Ursache belegt, Anzeigepfad vollstaendig verfolgt, Fundstellen oben mit
+Datei:Zeile. Der Code ist **nicht** geaendert — die Frist reichte nicht mehr,
+um die Aenderung zu uebersetzen und zu pruefen, und eine ungebaute Aenderung an
+`TridentView.cpp` waere schlechter als keine.
+
+Naechster Schritt, in dieser Reihenfolge:
+
+1. Beide Aenderungen oben einsetzen (byte-erhaltend, `tools/aendere-zeile.pl`).
+   Fuer `StrStrIA` braucht `msgutils.cpp` `<shlwapi.h>` — falls das stoert,
+   genuegt ein zweites `HasBadAttributeValue(TagContents, "http-equiv",
+   "content-type")` ohne neuen Kopf, das deckt den Regelfall ab.
+2. In der PowerShell uebersetzen.
+3. Gegenprobe ohne Eudora-Start: eine UTF-8-HTML-Mail zustellen, danach in
+   `%TEMP%\eud*.htm` (Zwischendatei bleibt bis zum Aufraeumen liegen,
+   `TridentView.cpp:1469-1484`) nachsehen, ob die erste Zeile die
+   `windows-1252`-Ansage traegt und im Rumpf kein `charset=utf-8` mehr steht.
