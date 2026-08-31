@@ -148,7 +148,7 @@ for my $datei (@dateien) {
       }
       unless ($vorher) {
         for my $m ($i .. ($i + 60 > $#code ? $#code : $i + 60)) {
-          next if $m == $i and $code[$m] =~ /ReleaseBuffer/ and not passt($code[$m], $empf);
+          next if $m == $i and not passt($code[$m], $empf, 'GetBuffer(?:SetLength)?');
           if (passt($code[$m], $empf, 'GetBuffer(?:SetLength)?')) { $nachher = $m + 1; last }
         }
       }
