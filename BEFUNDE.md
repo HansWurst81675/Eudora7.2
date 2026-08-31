@@ -3425,6 +3425,22 @@ MBCS-Bau wie im Unicode-Bau: `__T(x)` ist dort `L##x`, und `##` haette die
 Erweiterung des Makros unterbunden — aus `_T(EUDORA_BAU_KENNUNG)` waere der
 Bezeichner `LEUDORA_BAU_KENNUNG` geworden.
 
+**Uebersetzt** (31.08.2026, Debug|Win32, eigener Worktree):
+
+    MSBuild.exe Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug
+                /p:Platform=Win32 /p:BuildProjectReferences=false /m /v:minimal
+
+Alle Quelldateien uebersetzen fehlerfrei, `mainfrm.cpp` eingeschlossen — die
+neue `BuildKennung.h` mit `_T("...")` und `#include <tchar.h>` traegt also. Der
+Lauf endet in `LNK1104: imap.lib kann nicht geoeffnet werden`: der Worktree ist
+frisch und `/p:BuildProjectReferences=false` baut die abhaengigen Projekte
+nicht mit. Das hat mit diesen Aenderungen nichts zu tun. **Nicht gemessen**
+wurde damit ein vollstaendiger Binaerbau — nur die Uebersetzung.
+
+Der Rueckfallzweig des PreBuildEvent ist getrennt geprueft: Datei fehlt →
+Vorlage wird kopiert; Datei schon gleich der Vorlage → Zeitstempel bleibt
+unveraendert, es entsteht also keine Neuuebersetzung.
+
 ### PR-7: es gilt 4616 von 5563
 
 Nachgemessen und in `BEFUNDE.md` (S-7), `README.md`, `WEITERMACHEN.md` und im

@@ -190,8 +190,12 @@ sub umwandlungen {
 
 # ---------------------------------------------------------------------------
 
-my @vorgemerkt = split /\n/,
-  (git_roh('diff', '--cached', '--name-only', '--diff-filter=ACM') || '');
+# "-z" statt Zeilentrennung: sonst reicht git Pfade mit Sonderzeichen in
+# Anfuehrungszeichen und mit Escapes heraus (core.quotepath), und die Schranke
+# fragt anschliessend nach einer Datei, die es unter dem Namen nicht gibt -
+# also wieder stilles Durchlassen.
+my @vorgemerkt = grep { length }
+  split /\0/, (git_roh('diff', '--cached', '--name-only', '-z', '--diff-filter=ACM') || '');
 my @dateien = grep { $_ =~ $D->{muster} } @vorgemerkt;
 my @fehler;
 
