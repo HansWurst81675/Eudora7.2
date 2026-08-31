@@ -7,13 +7,18 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > * die darstellung sollte korrekt sein
 > * ich möchte damit einen mail server verbinden und mails abrufen.
 
-## Die drei Kriterien
+## Die Kriterien
 
-| # | Kriterium | Stand am 30.08.2026 |
+| # | Kriterium | Stand am 31.08.2026 |
 |---|---|---|
+| 0 | Das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare DLLs (S-8) |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **strittig** — siehe unten |
-| 2 | Die Darstellung ist korrekt | **nicht erfüllt** |
-| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **nicht geprüft** |
+| 2 | Die Darstellung ist korrekt | **nicht erfüllt** — die belegten Ursachen sind behoben, aber von Gregor nicht nachgesehen |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **nicht geprüft** — der Abrufpfad ist abgesichert (P-2), ein echter Abruf steht aus |
+
+Kriterium 0 kam am 31.08.2026 dazu; es steht vor den anderen dreien, weil ohne
+lauffähiges Paket niemand die anderen prüfen kann. Beschrieben ist es weiter
+unten in einem eigenen Abschnitt.
 
 > ### Kriterium 1 ist nicht erfüllt
 >
@@ -30,15 +35,22 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > Kriterium.** „Zeigt sein Hauptfenster" heißt: man kann damit arbeiten —
 > nicht: es sind Pixel auf dem Schirm.
 >
-> Damit ist derzeit **keines der drei Kriterien erfüllt**. Was Paket 1.0.2
+> Damit ist derzeit **keines der Kriterien erfüllt**. Was Paket 1.0.2
 > belegt, ist bescheidener und trotzdem ein Fortschritt: der Bau ist
 > vollständig, die Abhängigkeiten lösen auf, und die Anwendung läuft bis in
 > die Fenstererzeugung, ohne abzustürzen. Das ist ein *Meilenstein*, kein
 > erfülltes Kriterium.
 >
+> **Stand 31.08.2026.** Für beide genannten Mängel sind die Ursachen inzwischen
+> belegt **und im Quelltext behoben**: die tote Nichtklientenfläche (M-1,
+> `m_bMainFrameEnabled`) und die leeren Werkzeugleisten-Knöpfe samt
+> Andockrechnung (A-1). **Das ändert am Stand hier nichts** — behoben im
+> Quelltext ist nicht dasselbe wie nachgesehen am laufenden Programm. Kriterium
+> 1 und 2 bleiben offen, bis Gregor das Fenster bedient hat.
+>
 > Zu besprechen in der nächsten Sitzung.
 
-**Erst wenn alle drei erfüllt sind, darf eine Fassung „lauffähig" heißen.**
+**Erst wenn alle Kriterien erfüllt sind, darf eine Fassung „lauffähig" heißen.**
 Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung".
 
 

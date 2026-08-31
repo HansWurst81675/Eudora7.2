@@ -115,3 +115,110 @@ Stellen beschrieben. Suchmuster:
 ```bash
 grep -rn "CR-Anzahl" --include=*.md .
 ```
+
+---
+
+# Zweiter Durchgang — 31.08.2026, vormittags
+
+Agent LEKTOR, Branch `lektorat-heute`, Ausgangsstand `2cf569f` auf
+`darstellung-und-menue`. Anlass: Gregors Frage „wird es alles auch wieder
+dokumentiert?"
+
+**Vorbemerkung zum Vorgehen.** Beim ersten Durchgang lief ich *parallel* zu den
+Agenten, deren Ergebnisse ich beschreiben sollte — nach neun Minuten fertig,
+die anderen nach fünfundzwanzig, meine Arbeit sofort veraltet. Diesmal waren
+BRUECKE, MENUE, ANSICHT, POSTBOTE und WERKZEUG bereits **zusammengeführt**.
+
+## Bekannte Lücke
+
+Der Agent **FREIGABE** (Release-Bau) lief noch, als dieser Durchgang endete.
+Sein Ergebnis fehlt in allen hier berichtigten Dateien — zwangsläufig, nicht
+aus Nachlässigkeit. Es wird die Zeile „Release-Konfiguration" in `README.md`,
+Kriterium 0 in `ZIEL.md` und Punkt 2 der nächsten Schritte in `WEITERMACHEN.md`
+betreffen. Wer weitermacht, liest zuerst seinen Branch und seinen Abschnitt in
+`BEFUNDE.md`.
+
+## Was fehlte und jetzt dasteht
+
+**Der Befund S-8 fehlte in `BEFUNDE.md` ganz.** Der Startfehler `0xc000007b`
+war nur im Commit `76efdb6`, in `README.md` und in `Releases/1.0.2/LIESMICH.txt`
+festgehalten — in der Datei, die die Befunde sammelt, stand er nicht. Jetzt ans
+Ende geschrieben, mit der Abgrenzung zu S-1 (dort lagen die *falschen*
+Fremd-DLLs bei, hier fehlte die eigene Laufzeit ganz) und mit dem, was er
+**nicht** löst: die vier Debug-DLLs dürfen nicht weiterverteilt werden.
+
+## Was berichtigt wurde
+
+| Datei | Was falsch oder veraltet war | Was jetzt dasteht |
+|---|---|---|
+| `BEFUNDE.md` | S-8 fehlte | Abschnitt `## S-8` am Ende |
+| `ZIEL.md` | die Kriterientabelle kannte **Kriterium 0 nicht**, obwohl der Abschnitt dazu weiter unten in derselben Datei stand | Tabelle mit 0 bis 3; Kriterium 2 und 3 präzisiert |
+| `ZIEL.md` | „keines der **drei** Kriterien" | „keines der Kriterien" — es sind vier |
+| `ZIEL.md` | der Kasten zu Kriterium 1 nannte S-5 und S-6 als offen | Nachtrag: Ursachen belegt und **im Quelltext behoben** (M-1, A-1), **das ändert am Stand nichts**, solange niemand das laufende Programm gesehen hat |
+| `README.md` | Stand-Kasten ohne Kriterium 0 | Tabelle 0 bis 3, ausdrücklich „derzeit ist kein Kriterium erfüllt" |
+| `README.md` | „Befunde S-1 bis S-7" | S-1 bis S-8 samt B-1/B-2, M-1, A-1, P-1/P-2, W-1 |
+| `README.md`, „Offene Themen" | **„Erster Start von `Eudora.exe` — offen und ungeprüft, ob das Programm läuft"** — dieselbe überholte Behauptung, die im ersten Durchgang schon an zwei anderen Stellen berichtigt wurde; hier war sie stehen geblieben | erledigt seit S-2, mit Verweis auf S-8 für den Fall fehlender Laufzeiten |
+| `README.md`, „Offene Themen" | „QCSSL gegen echten Mailserver prüfen — **erledigt**, Abruf und Versand laufen" | präzisiert: der Abruf lief mit einer **älteren** QCSSL in einer bestehenden 7.1-Installation, nicht mit dem selbst gebauten `Eudora.exe`; Kriterium 3 ist **nicht** erfüllt. Das war die offene Frage 2 aus dem ersten Durchgang |
+| `README.md`, „Offene Themen" | „Release-Konfiguration: für QCSSL gebaut" | dazu die Berichtigung aus B-2: Paket 1.0.2 ist **gemischt**, nicht durchgehend Release |
+| `README.md`, „Offene Themen" | S-5, S-6, Kriterium 0 und die Produktversion kamen gar nicht vor | vier neue Zeilen |
+| `README.md`, Werkzeuge | acht der achtzehn Werkzeuge fehlten in der Liste: `paket-bauen.ps1`, `paket-pruefen.ps1`, `suche-zeiger.pl`, `vc71-bruecke-messen.pl`, `hooks-einrichten.sh`, `lehren-spiegeln.pl`, `pruefstand-melden.pl`, `ungesichertes-melden.pl` | vollständige Liste, gegen den Inhalt von `tools/` abgeglichen |
+| `README.md`, Bauen | der Einzelprojekt-Bau war als funktionierend beschrieben | Kasten: im frischen Klon scheitert er an `imap.lib`, weil `Lib/` von `.gitignore` erfasst ist (belegt in `BEFUND-ANSICHT.md`, „Bauzustand"); nach einem Gesamtbau bindet er durch (B-2). Dazu: MSBuild muss aus PowerShell kommen |
+| `README.md` | „3 Fehler aus `OT501`" ohne Bezugsdatum | am 31.08.2026 mit eingehängtem `VC71Bruecke` nachgemessen (B-2); die zwei `LNK1104: QCUtils.lib` als Parallelbau-Wettlauf erklärt |
+| `README.md` | „Stand der Tabelle: Commit `a807b93`" für die ganze Tabelle | nach Zeilen getrennt datiert |
+| `WEITERMACHEN.md` | stand vollständig auf dem Stand vom 30.08. abends: S-5/S-6 „offen", B-1 „UNFERTIG — hängt noch nicht in der Solution", P-1 „ein Zweizeiler wäre der erste Handgriff" | neuer Abschnitt „Was am 31.08. dazugekommen ist" mit S-8, M-1, A-1, P-2, B-2, W-1, Produktversion und Kriterium 0 |
+| `WEITERMACHEN.md` | Kopf nannte `eudora-exe-linkt` als Arbeitsbranch | `darstellung-und-menue`, dazu die bekannte Lücke (FREIGABE) |
+| `WEITERMACHEN.md` | „Wie man Eudora startet" ohne die Laufzeiten | `laufzeit-holen.ps1` als **ersten** Schritt, sonst `0xc000007b` |
+| `WEITERMACHEN.md` | „Solange S-5 offen ist, geht es nur über die `Eudora.ini`" | „solange nicht am laufenden Programm bestätigt ist, dass die Menüs wieder aufgehen" |
+| `WEITERMACHEN.md` | nächste Schritte: Platz 1 war „das Erscheinungsbild analysieren" | Platz 1 ist **einmal starten und ein Bildschirmfoto machen**; Kriterium 0 auf Platz 2 |
+| `WEITERMACHEN.md` | Agententabelle mit fünf Agenten vom Vorabend | acht Agenten mit Zusammenführungsstand, FREIGABE als noch laufend |
+| `Eudora71/OTShim/BEFUND-ANSICHT.md` | Kopf: „**Es wurde keine einzige Quelldatei geändert**" — widersprach dem eigenen Abschnitt „Zweite Sitzung, 31.08.2026 — die Umsetzung" derselben Datei | Kasten davor, der den alten Text auf die erste Sitzung einschränkt. Der Text der Agenten selbst ist unangetastet |
+
+## Was bewusst stehen geblieben ist
+
+- **Die Abschnitte B-, M-, A-, P-, W- und F- in `BEFUNDE.md`.** Auftrag: nicht
+  anfassen. Dabei ist mir eines aufgefallen, das jemand mit Zuständigkeit
+  ansehen sollte: die Überschrift von **A-1** trägt weiterhin
+  „(30.08.2026, UNFERTIG)", und der Absatz darunter sagt „**Kein Code
+  geändert**". Beides ist seit den Commits `db28adb` und `1a4a6d5` überholt —
+  fünf Punkte sind umgesetzt. In `BEFUND-ANSICHT.md` habe ich die
+  entsprechende Stelle berichtigt, in `BEFUNDE.md` nicht.
+- **Die Dateinamen mit `lauffaehig`** in `Releases/`. Beide Pakete sind unter
+  diesem Namen samt Prüfsumme veröffentlicht; Umbenennen macht die Prüfsummen
+  unauffindbar. In `README.md`, `ZIEL.md`, `PAKETE.md` und der `LIESMICH.txt`
+  steht ausdrücklich, dass der Name mehr behauptet, als die Fassung kann.
+- **`BEFUNDE-ALTBESTAND.md`** — Archiv eines abgeschlossenen Stands.
+- **Der Kopfkommentar von `tools/pruefe-bytes.pl`** (Befund aus dem ersten
+  Durchgang): er beschrieb die alte CR-Anzahl-Regel. Nicht erneut geprüft, weil
+  WERKZEUG die Datei am 31.08. neu geschrieben hat — **wer sie anfasst, sieht
+  Zeile 2 bis 4 nach.**
+
+## Belegt, aber nicht berichtigt — hier geht es weiter
+
+| Stelle | Was daran falsch ist |
+|---|---|
+| `Arbeitsweise/was-lauffaehig-heisst.md` | kennt nur **drei** Kriterien und sagt „Alle drei müssen erfüllt sein". Seit dem 31.08.2026 gibt es **Kriterium 0** (Paket ohne Nachinstallieren). Nicht geändert, weil die Dateien unter `Arbeitsweise/` Spiegel des Gedächtnisses sind (`tools/lehren-spiegeln.pl`) und eine Änderung im Repo beim nächsten Spiegeln verloren geht — das ist Befund NP3-4. **Die Quelle im Gedächtnis muss nachgezogen werden, dann spiegeln.** |
+| `Arbeitsweise/quelldateien-nur-byte-erhaltend-aendern.md` (Z. 29, 37, 52, 57) | beschreibt `pruefe-bytes.pl` mit der **alten CR-Anzahl-Regel**. Seit `371c1e3` wird die CR-Anzahl nicht mehr verglichen; seit dem 31.08. wertet Regel 2 den eigentlichen Unterschied aus. Gleiche Spiegel-Einschränkung wie oben |
+| `Arbeitsweise/zeilenenden-nach-jedem-schreibzugriff-messen.md` (Z. 3, 9, 30), `Arbeitsweise/MEMORY.md` (Z. 5), `Arbeitsweise/README.md` (Z. 48) | dieselbe alte Regel. Als **Handgriff** („CR-Anzahl messen") bleibt der Rat richtig; als **Beschreibung der Schranke** ist er falsch |
+| `PORTIERUNG.md` Z. 663–682 | beschreibt die Fassung von `371c1e3`. Die Berichtigung vom 31.08. fehlt. Nicht mehr ganz richtig, aber auch nicht grob falsch |
+| `tools/patches/zertifikatspruefung-verschaerfen.md` Z. 105 | alte CR-Anzahl-Regel. Steht seit dem ersten Durchgang offen |
+
+## Was ich nicht geschafft habe
+
+Der Durchgang endete an Gregors Frist (VM-Abschaltung), nicht an einem
+Abschluss. **Nicht angesehen:**
+
+| Datei | warum sie zu prüfen wäre |
+|---|---|
+| `PORTIERUNG.md` (895 Zeilen) | nur der Abschnitt zur Schranke überflogen; der Rest ist aus beiden Durchgängen ungelesen |
+| `PRUEFBERICHT.md` (406 Zeilen) | PR-1 bis PR-8 sind laut W-1 bis auf PR-5 behoben; ob die Datei das sagt, ist ungeprüft |
+| `STARTUMGEBUNG.md` | im ersten Durchgang nur mit einem Kasten versehen; die vier VS2022-Debug-Laufzeiten aus S-8 gehören dort in die Aufstellung |
+| `ABRUF-PRUEFEN.md` (235 Zeilen) | POSTBOTE hat sie geschrieben und mit P-2 fortgeschrieben; ob Anleitung und Befund noch zusammenpassen, ist ungeprüft |
+| `Releases/1.0.2/LIESMICH.txt`, `Releases/1.0.3/LIESMICH.txt` | 1.0.3 ist neu und ungelesen; ob 1.0.2 nach S-8 noch stimmt, ist ungeprüft |
+| `Releases/1.0/README.md` (268 Zeilen), `Releases/1.0/AUSLIEFERUNGEN.md` | seit dem ersten Durchgang offen |
+| `Eudora71/OTShim/PLAN.md` (455 Zeilen), `INVENTAR.md` (201 Zeilen) | seit dem ersten Durchgang offen; die Ersatzschicht ist seit `e50a89c` vollständig eingehängt, der Stufenplan vermutlich überholt |
+| `Eudora71/VC71Bruecke/BEFUND.md`, Abschnitt 6 | B-2 sagt, die dort genannte GUID sei **falsch**. Ob die Datei das inzwischen selbst sagt, ist ungeprüft — wer sie abschreibt, bekommt eine Solution, in der `VC71Bruecke` still nicht gebaut wird |
+| `BEFUNDE-ALTBESTAND.md`, `Eudora71/OpenSSL3/BAUEN.md`, `Eudora71/Tests/QCSSL/README.md` | aus beiden Durchgängen offen |
+
+**Der nächste Schritt** ist `Eudora71/VC71Bruecke/BEFUND.md` Abschnitt 6 — dort
+steht eine Angabe, die nachweislich in einen stillen Fehler führt. Danach
+`STARTUMGEBUNG.md` (S-8) und `PRUEFBERICHT.md` (W-1).

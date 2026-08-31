@@ -3,10 +3,17 @@
 Agent ANSICHT, 30.08.2026. Branch `worktree-agent-a84c76a2ea910c75d`,
 ausgehend von `31810e2` (`origin/eudora-exe-linkt`).
 
-**UNFERTIG.** Die Sitzung wurde abgebrochen, bevor eine Behebung geschrieben
-werden konnte. Diese Datei haelt fest, was gemessen ist, was ausgeschlossen ist
-und wo die naechste Sitzung ansetzen muss. **Es wurde keine einzige Quelldatei
-geaendert** - der Code ist unveraendert der von `31810e2`.
+> **BERICHTIGT AM 31.08.2026 (LEKTOR).** Der Kasten unten galt fuer die ERSTE
+> Sitzung. In der zweiten Sitzung sind Quelldateien geaendert worden - siehe
+> den Abschnitt "Zweite Sitzung, 31.08.2026 - die Umsetzung" weiter unten und
+> "Stand und naechster Schritt" am Ende. Weiterhin gilt: **am laufenden
+> Programm hat es niemand nachgesehen.**
+
+**UNFERTIG (Stand der ersten Sitzung).** Die Sitzung wurde abgebrochen, bevor
+eine Behebung geschrieben werden konnte. Diese Datei haelt fest, was gemessen
+ist, was ausgeschlossen ist und wo die naechste Sitzung ansetzen muss. **Es
+wurde in der ersten Sitzung keine einzige Quelldatei geaendert** - der Code war
+unveraendert der von `31810e2`.
 
 Alles hier ist reine Quellcodeanalyse. Eudora wurde nicht gestartet (Auflage:
 nichts auf Gregors Bildschirm).
