@@ -4675,3 +4675,59 @@ des Musters. Es fasst also keine Binärdatei fälschlich an.
 Nichts davon ist heute akut — aber L1 und L2 sind die beiden Schäden, gegen die
 die Schranke überhaupt gebaut wurde, und gegen beide ist sie wirkungslos. Wer
 sie als Sicherheit betrachtet, irrt.
+
+## E-1 — Der erste erfolgreiche Mailabruf (31.08.2026, 08:15)
+
+**Gregor hat mit dieser Fassung Mail abgerufen.** Zum ersten Mal seit Beginn der
+Portierung. Belegt durch zwei Bildschirmfotos.
+
+Gebaut aus `93762c7`, Paket `C:\Users\Gregor\Eudora72-1.0.3`, Titelleiste:
+
+    Eudora [Eudora 7.2.0.3 / Paket 1.0.3+93762c7* 2026-08-31 08:04 - Eudora72-1.0.3] - [In]
+
+### Was funktioniert
+
+| | |
+|---|---|
+| **Mailabruf** | Fortschrittsbalken in der Statuszeile, danach **159 Nachrichten** im Eingangspostfach (`159/4319K/0K`) |
+| **Anzeige** | Absender, Datum, Größe, Betreff in der Liste; Vorschaubereich zeigt eine vollständige Nachricht mit Kopfzeilen und Text |
+| **Menüs** | das *File*-Menü klappt auf und ist vollständig — **Befund S-5 ist behoben**, die Behebung M-1 wirkt |
+| **Anordnung** | Postfachbaum links, Nachrichtenliste rechts oben, Vorschau darunter. **Keine sich überlagernden Bereiche mehr** — die neue Andockrechnung aus A-1 wirkt |
+| **Umlaute** | im Vorschaubereich korrekt („Guten Tag", „gültig", „vergangen") |
+
+### Was damit belegt ist
+
+**Kriterium 3 aus `ZIEL.md` ist erfüllt.** Ein Mailkonto lässt sich einrichten,
+verbinden, und Mail wird abgerufen und lesbar dargestellt. Das war nie zuvor
+geprüft.
+
+Zugleich ist damit der **erste echte Servertest der neuen TLS-Schicht**
+bestanden — bisher lag nur ein Test mit einer *älteren* QCSSL-Fassung vor
+(`AUSLIEFERUNGEN.md`).
+
+**Kriterium 1 ist erfüllt.** Das Fenster erscheint und ist bedienbar. Die
+Einstufung „strittig" vom 30.08. ist damit aufgehoben.
+
+### Was noch nicht stimmt
+
+**Die Werkzeugleiste hat weiterhin leere graue Felder** — auf dem ersten
+Bildschirmfoto der erste Knopf und drei weitere in der Mitte. Die Behebung an
+`SECStdBtn::DrawDisabled` (A-1) hat also **nur einen Teil** der Fälle
+erwischt. Damit ist **Kriterium 2 weiterhin nicht erfüllt**.
+
+Nächster Ansatz dafür steht in `BEFUND-ANSICHT.md`: der Zeichenweg je Knopf,
+Punkte 2 und 3 (`GetDrawData`, `TBBS_HIDDEN`), und `SetControlBarWidthsInRow`
+ist noch ein leerer Rumpf (`OTShim.cpp:2244`), `OnSizeParent` reicht noch durch
+(`:3276`).
+
+**Beim Start sind zwei bis drei SUPERASSERT-Dialoge wegzuklicken**, dazu einige
+Warnungen. Das ist der Debug-Bau; im Release-Bau entfallen sie.
+
+### Stand der vier Kriterien
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 0 | Paket läuft ohne Nachinstallieren | **nicht belegt** — der Paketprüfer trägt nicht, siehe PR-2 |
+| 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+| 2 | die Darstellung ist korrekt | **nicht erfüllt** — leere Werkzeugleisten-Knöpfe |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
