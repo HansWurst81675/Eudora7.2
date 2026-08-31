@@ -1941,7 +1941,16 @@ bool QCWorkerSocket::InitializeQCSSL()
 
 	if(m_bSSLMode && !m_bQCSSLInit)
 	{
-		bool bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);
+		// Der Funktionszeiger kann NULL sein: Network::SetSSLMode (:362-386)
+		// prueft keines seiner zehn GetProcAddress-Ergebnisse und setzt
+		// m_bSSLMode trotzdem. Ohne diese Pruefung stuerzt Eudora GENAU HIER
+		// ab - dreizehn Zeilen VOR der in :1957 abgefangenen Stelle, also
+		// bevor die dortige Pruefung ueberhaupt erreicht wird.
+		// g_fnQCSSLEndSession (:564) und g_fnQCSSLClean (:453) sind laengst
+		// geprueft; hier fehlte es (Befund PR-2.1).
+		bool bSuccess = false;
+		if (g_fnQCSSLBeginSession)
+			bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);
 		CTaskInfoMT *pTaskInfo = (CTaskInfoMT*) m_Settings->GetTaskInfo();
 		if(pTaskInfo)
 		{
