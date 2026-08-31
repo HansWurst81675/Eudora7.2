@@ -4731,3 +4731,57 @@ Warnungen. Das ist der Debug-Bau; im Release-Bau entfallen sie.
 | 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
 | 2 | die Darstellung ist korrekt | **nicht erfüllt** — leere Werkzeugleisten-Knöpfe |
 | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
+
+## E-2 — Werkzeugleiste vollständig, aber Umlaute in HTML-Mails zerstört (31.08.2026, 08:25)
+
+Zweites Bildschirmfoto aus demselben Lauf (`93762c7`, Paket 1.0.3).
+
+### Behoben: die leeren Werkzeugleisten-Knöpfe
+
+Auf diesem Bild ist die Werkzeugleiste **vollständig** — alle Symbole
+vorhanden, kein einziges graues Feld mehr. Die Behebung an
+`SECStdBtn::DrawDisabled` (A-1, Commit `db28adb`) **wirkt also doch**.
+
+Warum das erste Bildschirmfoto welche zeigte: dort war noch kein Postfach
+geöffnet und keine Nachricht ausgewählt, also waren die betroffenen Knöpfe
+gesperrt. Sobald Nachrichten da sind, werden sie freigegeben und normal
+gezeichnet. Der Fall „gesperrt und leer" ist damit behoben; der Fall „gesperrt
+und erkennbar grau" bleibt zu prüfen, wenn wieder einmal Knöpfe gesperrt sind.
+
+Auch der Aufgabenbereich unten („Task Status" / „Task Errors") sitzt jetzt als
+eigener Streifen am unteren Rand, nicht mehr senkrecht mitten im Fenster.
+
+### NEU UND OFFEN: Umlaute in HTML-Nachrichten werden zu `◆`
+
+    Video Lernkurs f◆r Excel 2019 - 2021 - G◆ltig bis 23.03.2022
+                     ^                      ^
+                     ü                      ü
+
+**Im reinen Text stimmten die Umlaute** — dieselbe Sitzung zeigte kurz zuvor
+„gültig" und „vergangen" richtig (Befund E-1). Der Fehler trifft also nur den
+**HTML-Anzeigepfad**, nicht `ISOTranslate` im Textpfad.
+
+Das Zeichen ist ein Ersatzzeichen, kein Zeichensalat: **die Quelle wird als
+etwas anderes gelesen, als sie ist.** Wahrscheinlich ist der Zeichensatz aus
+dem `Content-Type` oder aus einem `<meta charset>` nicht ausgewertet, und der
+Text kommt als UTF-8-Bytes in einen Wandler, der Windows-1252 erwartet — oder
+umgekehrt.
+
+**UNGEPRÜFT**, wo genau. Anzusehen wären:
+
+  - der HTML-Anzeigepfad (`TridentView.cpp`, `PgEmbeddedImage.cpp` und was
+    sonst die Vorschau mit HTML füllt)
+  - ob der Zeichensatz aus dem MIME-Kopf überhaupt bis dorthin gereicht wird
+  - `ISOTranslate` in `utils.cpp` wird hier offenbar **nicht** durchlaufen,
+    sonst wäre das Ergebnis dasselbe wie im Textpfad
+
+Gregors Einschätzung: *„das kann man beheben."*
+
+### Stand der vier Kriterien
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 0 | Paket ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** |
+| 2 | Darstellung korrekt | **fast** — Anordnung, Menüs und Werkzeugleiste stimmen; **Umlaute in HTML-Mails nicht** |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |

@@ -13,7 +13,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare DLLs (S-8) |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** (31.08.2026, Befund E-1) |
-| 2 | Die Darstellung ist korrekt | **nicht erfüllt** — Anordnung und Menüs stimmen jetzt, aber die Werkzeugleiste hat weiter leere Felder (E-1) |
+| 2 | Die Darstellung ist korrekt | **fast** — Anordnung, Menüs und Werkzeugleiste stimmen; Umlaute in HTML-Mails werden zu `◆` (E-2) |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten abgerufen, Befund E-1 |
 
 Kriterium 0 kam am 31.08.2026 dazu; es steht vor den anderen dreien, weil ohne
