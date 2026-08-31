@@ -46,7 +46,7 @@ git ls-files -z | xargs -0 -n 400 git add --
 ```
 
 **Ohne diesen Schritt springt jede Datei, die man anfasst, als komplett geändert
-heraus.** Gemessen: 4616 von 5563 verfolgten Dateien lagen als CRLF vor, während
+heraus.** Gemessen am 30.08.2026: 4616 von 5563 verfolgten Dateien lagen als CRLF vor, während
 im Commit LF steht — Folge eines Auscheckens mit `core.autocrlf=true`. Git sieht
 in eine Datei gar nicht hinein, solange Zeitstempel und Größe zum Index passen;
 der Schaden bleibt deshalb unsichtbar, bis ein Werkzeug die Datei berührt. Das
@@ -181,7 +181,13 @@ einen echten Mailserver. Einzelheiten in
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau |
 | `tools/laufzeit-holen.ps1` | holt die Debug-Laufzeiten von VS2022 aus `SysWOW64` und prüft jede auf x86 nach. Ohne sie startet Eudora mit `0xc000007b`. |
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
-| `tools/rekursion-suchen.pl` | Zyklensuche im Aufrufgraphen. **Grenze:** unterscheidet Überladungen nur am Namen und an der Argumentzahl, nicht an den Typen — lieferte bisher ausschließlich Fehlalarme. |
+| `tools/pruefe-bytes-tests.pl` | Testsammlung für die pre-commit-Schranke: 23 Fälle in eigenen Wegwerf-Repos. **Wer `tools/pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen. |
+
+`tools/rekursion-suchen.pl` wurde am 31.08.2026 **gelöscht**, siehe Befund W-1:
+es bildete jede Kante mit dem Klassennamen der umgebenden Methode und konnte
+klassenübergreifende Zyklen deshalb strukturell nicht finden — auch den aus S-2
+nicht, für den es gebaut wurde. Geliefert hat es ausschließlich Fehlalarme.
 
 ## Was bisher gemacht wurde
 

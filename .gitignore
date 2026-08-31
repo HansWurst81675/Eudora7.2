@@ -48,3 +48,11 @@ Eudora71/OpenSSL/out32/
 # hatte sie stillschweigend mit erfasst.
 !Eudora71/OpenSSL3/lib/
 !Eudora71/OpenSSL3/lib/*.lib
+
+# Die Bau-Kennung gehoert NICHT ins Repo. Solange sie verfolgt war, stand nach
+# einem frischen Klon die zuletzt eingecheckte Kennung darin - fremder Commit,
+# fremder Zeitstempel. Faellt perl beim Bau aus, zeigte das Fenster dann die
+# Kennung eines ganz anderen Baus. Verfolgt wird stattdessen
+# Eudora71/Eudora/BuildKennung-vorlage.h mit "unbekannt"; der PreBuildEvent
+# kopiert sie, wenn perl fehlt. Befund PR-4/W-1.
+Eudora71/Eudora/BuildKennung.h

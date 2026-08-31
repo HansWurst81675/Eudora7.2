@@ -9712,7 +9712,7 @@ void CMainFrame::OnUpdateFrameTitle(BOOL bAddToTitle)
 	}
 
 	CString strZusatz;
-	strZusatz.Format(_T("   [%s - %s]"), _T(EUDORA_BAU_KENNUNG), (LPCTSTR) strHerkunft);
+	strZusatz.Format(_T("   [%s - %s]"), EUDORA_BAU_KENNUNG, (LPCTSTR) strHerkunft);
 
 	CString strTitel;
 	GetWindowText(strTitel);
