@@ -4785,3 +4785,51 @@ Gregors Einschätzung: *„das kann man beheben."*
 | 1 | startet, Hauptfenster bedienbar | **erfüllt** |
 | 2 | Darstellung korrekt | **fast** — Anordnung, Menüs und Werkzeugleiste stimmen; **Umlaute in HTML-Mails nicht** |
 | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
+
+## E-3 — TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, gegen einen echten Server (31.08.2026, 08:09:43)
+
+Abgelesen in Eudoras eigenem Dialog *Tools → Last SSL Info*
+(„Eudora SSL Connection Information Manager"), Bildschirmfoto von Gregor.
+
+| | |
+|---|---|
+| Server | `mx.freenet.de`, `194.97.208.35` |
+| **Port** | **110** |
+| Zeitpunkt | Monday, August 31, 2026, 08:09:43 |
+| Negotiation Status | **Succeeded** |
+| SSL Version | **TLSv1.3** |
+| Encryption Algorithm | **TLS_AES_256_GCM_SHA384 (256 bits)** |
+
+### Warum das wichtig ist
+
+Damit ist die offene Frage aus `Releases/1.0/AUSLIEFERUNGEN.md` beantwortet.
+Dort stand: *„Der Mailserver-Test steht für sie aus."* Der bisherige
+erfolgreiche Abruf (29.08., `pop.gmx.net`) war mit `c875a750` gelaufen — der
+Fassung **ohne** den Regressionsfix H1 und **ohne** WACHEs fünf Befunde.
+
+**Jetzt ist die ausgelieferte QCSSL 1.0.1 (`ab55281a`) selbst gemessen:**
+TLS 1.3 mit einem AEAD-Verfahren, Aushandlung erfolgreich. Die strengeren
+Vorgaben aus M1 (Mindestprotokoll TLS 1.2 für alle Einstellungen) haben nichts
+verschlechtert — genau das war die Sorge, die in AUSLIEFERUNGEN.md formuliert
+war.
+
+### Port 110, nicht 995 — und das ist richtig so
+
+`ABRUF-PRUEFEN.md` empfiehlt `SSLReceiveUse=2` mit Port 995, also **implizites
+TLS**. Gregor hat stattdessen **Port 110 mit STARTTLS** benutzt, und es
+funktioniert: die Verbindung beginnt im Klartext auf dem gewöhnlichen
+POP3-Port und wird per `STLS` auf TLS 1.3 gehoben.
+
+Das ist kein Widerspruch, sondern der zweite gangbare Weg. `ABRUF-PRUEFEN.md`
+sollte beide nennen, statt nur einen — mit dem Hinweis, dass freenet auf 110
+mit STARTTLS nachweislich arbeitet.
+
+Nebenbei beantwortet: die in `ABRUF-PRUEFEN.md` als **UNGEPRÜFT** markierte
+Frage, ob `mx.freenet.de` überhaupt POP3 spricht. **Ja**, auf Port 110.
+
+### Was damit belegt ist
+
+Die ganze Kette trägt: OpenSSL 3.5.8 LTS → QCSSL 1.0.1 → `QCWorkerSocket` →
+POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
+Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
+(`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
