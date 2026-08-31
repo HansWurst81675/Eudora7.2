@@ -3847,3 +3847,52 @@ Gemerkt hat es `tools/ersetze-bereich.pl`, das die CR-Zahl vorher und nachher
 ausgibt: 1064 → 1062, obwohl der Block angeblich CR-frei war. Ohne diese
 Ausgabe waere der Schaden in den Commit gelaufen und die Schranke haette ihn
 erst dort gemeldet.
+
+## S-8 — Paket 1.0.2 startet mit `0xc000007b` (31.08.2026)
+
+Nachgetragen von LEKTOR am 31.08.2026. Der Befund war bis dahin nur im Commit
+`76efdb6`, in `README.md` und in `Releases/1.0.2/LIESMICH.txt` festgehalten, in
+dieser Datei fehlte er. Anlass fuer `ZIEL.md`, Kriterium 0.
+
+**Was Gregor sah.** Paket 1.0.2 ausgepackt, `Eudora.exe` gestartet:
+
+    Die Anwendung konnte nicht korrekt gestartet werden (0xc000007b)
+
+Kein Fenster, kein Absturzdialog, kein Protokolleintrag.
+
+**Ursache.** `0xc000007b` ist `STATUS_INVALID_IMAGE_FORMAT`. Der Lader hat eine
+Abhaengigkeit gefunden, die er nicht in den Prozess bringen kann. Im
+Programmverzeichnis fehlten die vier Debug-Laufzeiten des VS-2022-Baus
+vollstaendig (nachgemessen):
+
+    mfc140d.dll   msvcp140d.dll   vcruntime140d.dll   ucrtbased.dll
+
+**Warum es so leicht schiefgeht.** `Eudora.exe` ist ein **32-Bit**-Programm
+(`Debug|Win32`, im PE-Kopf nachgemessen). Zwei Fallen fuehren beim Nachlegen der
+DLLs zur 64-Bit-Fassung und damit erneut zu `0xc000007b`:
+
+| Falle | Warum |
+|---|---|
+| DLL-Sammelseiten wie dll-files.com | liefern haeufig die 64-Bit-Fassung, ohne es deutlich zu machen |
+| der Ordnername `SysWOW64` | er enthaelt die **32**-Bit-DLLs; die 64-Bit-DLLs liegen in `System32`. Der Name legt genau das Gegenteil nahe |
+
+**Behebung.** `tools/laufzeit-holen.ps1` (neu in `76efdb6`). Es holt die vier
+Dateien aus `C:\Windows\SysWOW64` und prueft **jede einzeln** im PE-Kopf auf
+x86 nach; kopiert wird nur, was wirklich x86 ist. Mit `-NurPruefen` sagt es nur,
+was fehlt. Gegen Gregors Testverzeichnis gelaufen: alle vier vorhanden und x86.
+Die auf dieser Maschine vorhandene Fassung ist 14.38.33142.0 gegen Toolset
+14.38.33130.
+
+**Was damit NICHT geloest ist.** Die vier Debug-DLLs duerfen nicht
+weiterverteilt werden — Microsoft nimmt die Debug-Fassungen der Laufzeit
+ausdruecklich davon aus, bei Visual Studio liegen sie deshalb unter
+`debug_nonredist`. Ein Redistributable gibt es nicht. Solange nur der Debug-Bau
+laeuft, braucht jeder Empfaenger des Pakets ein installiertes Visual Studio
+2022. Das widerspricht Kriterium 0 („zip runterladen, entpacken, starten —
+laeuft"). Der Ausweg ist ein **Release-Bau**, vorzugsweise statisch gebunden;
+Einzelheiten und Abwaegung in `ZIEL.md`, Abschnitt „Kriterium 0". Bis dahin
+misst `tools/paket-pruefen.ps1` den Paketinhalt gegen die Startkette.
+
+**Bezug zu anderen Befunden.** S-1 (Paket 1.0.1 startete nicht) hatte eine
+andere Ursache — dort lagen die *falschen* Fremd-DLLs bei. S-8 ist der Fall,
+dass die eigene Laufzeit ganz fehlt.
