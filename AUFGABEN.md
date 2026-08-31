@@ -21,6 +21,43 @@ sofort anfangen kann, ohne die Vorgeschichte zu kennen.
 
 ---
 
+## Ganz zuerst: das Release auf dem zweiten PC probieren
+
+**Am 31.08. um 09:00 nicht mehr geschafft — das ist der erste Schritt.**
+
+Auf GitHub hängt seit 09:00 ein **ausgetauschtes** ZIP:
+
+| | |
+|---|---|
+| Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
+| SHA256 | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
+| enthält | die **E-11-Behebung** (`eudora.cpp:3372`, `Truncate` statt `ReleaseBuffer`) |
+| dazu | Härtung von `InitPluginList`, Zeichensatz-Ansage für HTML (Z-2) |
+
+Die **erste** Fassung (`632c4066…`) hatte die Behebung noch nicht — die hat
+Gregor am 31.08. probiert, und sie stürzte beim Klick auf *Weiter* ab.
+
+**Zu tun, in dieser Reihenfolge:**
+
+1. Auf dem Win11-Rechner auspacken, `Eudora.exe` starten, im Assistenten
+   auf *Weiter* klicken. **Stürzt es noch ab?**
+   - **Nein** → E-11 ist bestätigt. Dann A2: die Fehlerklasse abstellen.
+   - **Ja** → `tools/stapel-untersuchen.ps1` mit der `Eudora.pdb` daneben.
+     Die `Eudora.pdb` liegt **nicht** im Paket, sie muss aus
+     `Eudora71/Bin/Release` dazu.
+2. Dabei gleich mitprüfen, was ohnehin ansteht:
+   - **Kriterium 0** — startet es dort ohne Nachinstallieren? (C2)
+   - **HTML-Umlaute** — eine Mail mit Umlauten öffnen (B1)
+   - **Die Kennung im Titel** — steht sie da, sobald ein Postfach offen
+     ist? Vorher nicht, das ist E-7.
+   - **Beim Beenden** — kommt der Index-Fehler aus E-4?
+3. Und die offene Frage aus E-6: **warum musste das Mailverzeichnis von
+   Hand dazugelegt werden**, obwohl das Paket eines enthält?
+
+Ein einziger Lauf beantwortet fünf offene Punkte. Deshalb steht er hier oben.
+
+---
+
 ## A — Zuerst: der Absturz auf frischen Installationen
 
 **Dringend, weil er jeden neuen Anwender trifft.**
