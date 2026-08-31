@@ -322,6 +322,15 @@ weitergeschrieben, ohne sie zu zaehlen.
   darf (PR-2). Zeilenenden und Kodierung unveraendert (LF, UTF-8).
 - Die **Quelle im Gedaechtnis** fuer `Arbeitsweise/was-lauffaehig-heisst.md`.
 
+## Was diesem Durchgang fehlt
+
+**Er ist nicht gegengeprueft.** Diese Datei haelt selbst fest, dass PRUEFER und
+LEKTOR getrennt gehoeren — *„wer prueft und korrigiert, winkt seine eigenen
+Befunde durch"*. In dieser Sitzung waren keine Agenten freigegeben, also hat
+eine Person Doku, Werkzeuge und die Pruefung der eigenen Arbeit gemacht. Der
+offene Punkt steht als **C4** in `AUFGABEN.md`, mit der Liste der vier eigenen
+Fehler, die beim Messen gegen die Quelle aufgefallen sind.
+
 ## Zwei Lehren aus dieser Sitzung, die in `Arbeitsweise/` gehoeren
 
 Sie stehen hier und nicht dort, weil `Arbeitsweise/` ein **Spiegel** des

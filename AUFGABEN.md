@@ -229,6 +229,41 @@ Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt (**E-6**).
 
 ---
 
+## C4 · NEU: diese Sitzung ist nicht gegengeprüft
+
+**Die 15 Commits vom 31.08.2026 abends hat niemand außer mir angesehen.** Das
+ist ein offener Punkt, nicht eine Formalie: `Arbeitsweise/doku-bei-jedem-commit-mitziehen.md`
+verlangt ausdrücklich die Trennung — *„wer prüft und korrigiert, winkt seine
+eigenen Befunde durch. LEKTOR hat PRUEFER am selben Tag fünfmal widerlegt."*
+In dieser Sitzung waren keine Agenten freigegeben, also fehlt sie.
+
+Ersatzweise ist gegen die Quelle gemessen worden statt gegen mein Urteil, und
+das hat vier eigene Fehler zutage gebracht — sie stehen in den Befunden, hier
+nur als Beleg, dass die Selbstprüfung nicht ausreicht:
+
+| Fehler | wo festgehalten |
+|---|---|
+| die Klammersuche lief bei klammerlosem `if` in die **nächste Funktion** | X-3 |
+| die Streichung der `//`-Kommentare ging verloren, eine Klammer **im Kommentar** zählte als Blockende | X-3 |
+| `passt()` an einer von vier Aufrufstellen ohne dritten Parameter (perl warnte zweimal je Lauf) | R-1, Nachtrag |
+| die Gegenprobe in X-2 nannte `HEAD` statt des Commits — die Anleitung lieferte damit „35 grün" statt „11 rot" | X-2 und LEKTORAT, dritter Durchgang |
+
+Dazu drei Aussagen, die ich zuerst behauptet und dann berichtigt habe: der
+`SSLReceiveUse`-Wert (aus dem Port geraten), zwei Treffer als „echt" eingestuft,
+die in einem auskommentierten Block standen, und `EUDORA_BUILD_NUMBER` habe
+keinen Verwender (mein grep hatte `.inc` nicht im Filter).
+
+**Zu tun:** einen PRÜFER-Durchgang über `git log origin/main..` dieser Sitzung —
+Schwerpunkt auf den drei umgebauten Werkzeugen (`pruefe-bytes.pl`,
+`suche-zeiger.pl`, `zeilenenden-angleichen.pl`), weil sie vor **jedem** Commit
+bzw. auf **allen** Dateien laufen. Die Testsammlungen sind da; was fehlt, ist ein
+zweites Paar Augen auf den Filtern und auf den Zahlen in R-1, X-3 und X-4.
+
+Kleinigkeit derselben Art: zweimal wurde mit `git add -A` gestaget statt mit
+Pfadangabe, wie `Arbeitsweise/commit-auf-extra-branch-und-pushen.md` es verlangt.
+Der Commit-Inhalt wurde danach kontrolliert (kein Bauartefakt, keine fremde
+Datei), aber die Regel sagt es anders.
+
 ## D — Die Werkzeuge
 
 ### D1 · ~~Neun Löcher in `pruefe-bytes.pl`~~ — **erledigt** (Befund X-2)
