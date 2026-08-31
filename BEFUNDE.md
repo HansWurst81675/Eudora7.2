@@ -2509,11 +2509,23 @@ Leisten in einer Reihe. Muss reproduziert werden, bevor etwas geaendert wird.
 von HEAD **ausschliesslich in den Zeilenenden**. Im Arbeitsverzeichnis standen
 sie als CRLF, im Commit als LF.
 
-> **Zu den Zahlen.** Der Kopf von `tools/zeilenenden-angleichen.pl` nennt
-> 4426 von 5336 — das war ein frueherer Durchlauf, der weniger Dateiendungen
-> beruecksichtigte (ohne `.def`, `.mak`, `.txt`, `.md`). Beide Zahlen sind
-> richtig gemessen, nur mit verschiedenem Suchmuster. Nach dem Angleichen
-> meldet das Werkzeug 5586 byteidentische Dateien.
+> **Zu den Zahlen** (nachgezogen am 31.08.2026 abends; Befund Z-1 hatte belegt,
+> dass W-1/PR-7 dieses Nachziehen zwar meldete, aber nicht ausgeführt hatte).
+> Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und lässt
+> sich nicht wiederholen — der Baum ist angeglichen. Nachprüfbar ist nur die
+> Grundgesamtheit, und die wächst mit jedem Commit und hängt an der
+> Endungsliste:
+>
+> | Dateien | Stand | Liste |
+> |---|---|---|
+> | 5563 | 30.08.2026 vormittags | alte Liste |
+> | 5568 | 30.08.2026 abends (PRUEFER) | alte Liste |
+> | 5589 | 31.08.2026 | alte Liste |
+> | 6385 | 31.08.2026 | neue gemeinsame Liste (`tools/dateiendungen.pl`) |
+> | 6394 | 31.08.2026 abends | dieselbe Liste, 0 Abweichungen |
+>
+> Die frühere Angabe „4426 von 5336" stammte aus einem Durchlauf mit kürzerer
+> Endungsliste und steht im Kopf des Werkzeugs seit W-1 nicht mehr.
 
 **Ursache.** Das Repo wurde seinerzeit mit `core.autocrlf=true` ausgecheckt. Git
 wandelte beim Auschecken LF nach CRLF und vermerkte die Datei trotzdem als
@@ -2534,13 +2546,20 @@ fruehere Vermutung, das Repo sei mit `autocrlf=true` geklont worden, war
 Zeitpunkt der Pruefung schon `false` sagte. Die Einstellung war inzwischen
 geaendert worden; die Folgen des Auscheckens blieben.
 
-Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`:
+Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`
+(Beschriftung am 31.08.2026 berichtigt — sie war vertauscht, Befund Z-1):
 
-    Index-Eintrag:  Blob 8c4fb68a...   size: 5781      (Groesse der CRLF-Fassung)
-    Arbeitskopie:   Blob 8c4fb68a...   5716 Bytes      (LF, inhaltlich gleich)
+    HEAD-Blob 8c4fb68a:   5716 Bytes, 0 CR, 65 LF     (die committete LF-Fassung)
+    Index-Eintrag:        size: 5781                  (die Groesse der CRLF-Arbeitskopie)
+    Arbeitskopie:         5781 Bytes                  (CRLF, inhaltlich gleich)
 
-Gleicher Blob-Hash, verschiedene Groesse. `git diff` meldete nichts,
-`git status` meldete "geaendert".
+5716 + 65 CR = 5781 — die Rechnung geht auf. Der Index trug also die **Groesse
+der CRLF-Datei** neben dem **Hash der LF-Fassung**, und genau deshalb sah git
+nicht hinein: Zeitstempel und Groesse passten zueinander.
+
+Die frühere Fassung dieses Beispiels beschriftete die 5716 als Arbeitskopie.
+Das trug nicht: eine Arbeitskopie mit 5716 Bytes und LF wäre byteidentisch zum
+Blob, und dann gäbe es nichts anzugleichen.
 
 **Behebung.** `tools/zeilenenden-angleichen.pl` schreibt jede betroffene Datei
 mit dem HEAD-Stand woertlich neu - aber nur, wenn sie sich danach nachweislich
@@ -2722,11 +2741,25 @@ kommt mit `MSGF_MENU`), sowie `SECDockState::LoadState` bei leerer INI.
 dort bricht der Bau am laengst behobenen `C2572` ab. Der lebende Stand ist
 `eudora-exe-linkt`.
 
-## A-1 — Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026, UNFERTIG)
+## A-1 — Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026)
+
+> **BERICHTIGUNG vom 31.08.2026.** Überschrift und Vorbemerkung galten für die
+> **erste** Sitzung. In der zweiten Sitzung sind fünf Punkte umgesetzt worden
+> (`db28adb`, `1a4a6d5`): `DrawDisabled` setzt Text- und Hintergrundfarbe,
+> `PreDrawButton` prüft `::SelectObject`, `TBBS_HIDDEN` ist ausgeräumt, die
+> Andockrechnung wertet `m_fPctWidth`, `nCol` und `nRow` aus. Die Wirkung ist
+> am 31.08. am laufenden Programm **belegt** (E-1, E-2): Menüs, Anordnung und
+> Werkzeugleiste stimmen. **Sämtliche Zeilenangaben dieses Abschnitts beziehen
+> sich auf `31810e2` und stimmen im heutigen Baum nicht mehr** — Befund Z-1 hat
+> das nachgemessen. Offen bleiben die Splitter,
+> `FloatControlBarInMDIChild` und `SetControlBarWidthsInRow` (`OTShim.cpp:2244`,
+> leerer Rumpf), dazu PR-2.5 (`DrawChecked` hat denselben Farbfehler).
+> LEKTOR und Z-1 hatten diese Berichtigung beide gemeldet; ausgeführt wurde sie
+> erst jetzt.
 
 Agent ANSICHT, Branch `worktree-agent-a84c76a2ea910c75d`, ausgehend von
-`31810e2`. **Kein Code geändert** — die Sitzung wurde vor der Umsetzung
-abgebrochen. Vollständige Analyse mit allen Fundstellen in
+`31810e2`. **Kein Code geändert** (Stand der ersten Sitzung) — sie wurde vor
+der Umsetzung abgebrochen. Vollständige Analyse mit allen Fundstellen in
 [`Eudora71/OTShim/BEFUND-ANSICHT.md`](Eudora71/OTShim/BEFUND-ANSICHT.md).
 
 ### Die sich überlagernden Bereiche: Ursache belegt

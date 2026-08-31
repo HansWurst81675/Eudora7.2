@@ -50,12 +50,20 @@ verschlüsselt aufgebaut (`POPSession.cpp:602-605`), noch bevor irgendein Passwo
 über die Leitung geht. Bei 1 und 3 schickt Eudora erst `CAPA`, dann `STLS`
 (`POPSession.cpp:2130-2143`) — ein Schritt mehr, der schiefgehen kann.
 
-### Welcher Servername? — beide Fälle abgedeckt
+### Welcher Servername? — beantwortet
 
-> **UNGEPRÜFT:** ob `mx.freenet.de` bei freenet auch der POP3-Server ist. Der Name
-> sieht nach einem MX-Eintrag aus, und MX-Namen sind für die *Zustellung an*
-> freenet gedacht, nicht für den Abruf. Ich habe kein Netz und kann es nicht
-> nachsehen.
+> **Erledigt am 31.08.2026 (Befund E-3): `mx.freenet.de` spricht POP3**, und
+> zwar auf **Port 110 mit STARTTLS**. Gregor hat darüber 159 Nachrichten
+> abgerufen, `TLSv1.3` / `TLS_AES_256_GCM_SHA384`, abgelesen in
+> *Tools → Last SSL Info*. Der Verdacht, es sei nur ein MX-Eintrag für die
+> Zustellung, war unbegründet.
+>
+> **Das ist nicht der Weg, den diese Anleitung unten empfiehlt** (Port 995,
+> implizites TLS). Beide funktionieren. Belegt ist **Port 110 mit STARTTLS** —
+> das entspricht `SSLReceiveUse=1` oder `=3`; **welchen der beiden Werte Gregor
+> gesetzt hatte, ist nicht festgehalten** und lässt sich nachträglich nur aus
+> seiner `Eudora.ini` ablesen. Die Tabelle darunter bleibt stehen, weil sie den
+> zweiten Weg und die Fehlersuche beschreibt.
 
 Es gibt genau zwei Möglichkeiten. **Woran du merkst, welche zutrifft:**
 

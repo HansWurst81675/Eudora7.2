@@ -37,22 +37,16 @@ Bezugscommit.
 
 ## Das Wichtigste zuerst
 
-**Es ist derzeit KEIN Kriterium aus [ZIEL.md](ZIEL.md) erfüllt.**
+**Der Stand der Kriterien steht in [ZIEL.md](ZIEL.md).** Dort und nur dort —
+hier stand bis zum 31.08.2026 abends eine zweite Tabelle, die dem Kasten am
+Anfang dieser Datei widersprach (sie war der Stand vom Vormittag und sagte
+„KEIN Kriterium erfüllt", während oben zwei erfüllte standen). Wer den Stand
+wissen will, liest `ZIEL.md`; wer ihn ändert, ändert ihn dort.
 
-| # | Kriterium | Stand am 31.08.2026 |
-|---|---|---|
-| 0 | das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare Laufzeit-DLLs (S-8) |
-| 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
-| 2 | die Darstellung ist korrekt | **nicht erfüllt** — Ursachen behoben (A-1), am Programm nicht nachgesehen |
-| 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** — Abrufpfad abgesichert (P-2), echter Abruf steht aus |
-
-Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen — zum
-ersten Mal seit Beginn der Portierung. Das ist ein **Meilenstein, kein
-erfülltes Kriterium**. Für die beiden sichtbaren Mängel (tote Menüleiste,
-leere Knöpfe und überlagerte Bereiche) sind die Ursachen am 31.08.2026 belegt
-**und im Quelltext behoben** — M-1 und A-1. **Nachgesehen hat das niemand am
-laufenden Programm**, es war keine Sitzung mit Bildschirm erlaubt. Bis dahin
-bleiben Kriterium 1 und 2 offen.
+Kurz: **zwei von vier Kriterien belegt** (Start und Bedienbarkeit E-1,
+Mailabruf E-1/E-3), Kriterium 2 fast (HTML-Umlaute an der Ursache behoben,
+Z-2, ungeprüft), Kriterium 0 offen — das Release-Paket ist auf keinem Rechner
+ohne Visual Studio gestartet worden (E-8).
 
 Der Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung
 kann. Er bleibt stehen, weil das Paket unter diesem Namen samt Prüfsumme
@@ -184,17 +178,20 @@ laufen. „zip runterladen, entpacken, starten - läuft."
 
 ### Offen
 
-**Kein Kriterium ist erfüllt.** Für Kriterium 1 und 2 sind die Ursachen belegt
-und im Quelltext behoben, aber **niemand hat das laufende Programm gesehen** —
-die Agenten durften kein Fenster öffnen. Der nächste Schritt ist deshalb ein
-Start mit Bildschirmfoto, nicht die nächste Analyse.
+**Kriterium 0** ist der offene Punkt. Der Release-Bau ist seit Befund F-1 da
+(es war `OTA50D.LIB` statt `OTA50R.LIB` in `Eudora.vcxproj:147`, dazu
+`MakeDox.pl` im Nachbereitungsschritt), aber **niemand hat das Release-Paket
+auf einem Rechner ohne Visual Studio gestartet** — der Win11-Lauf war der
+Debug-Bau mit beigelegten, nicht verteilbaren DLLs (E-8). Statisch binden ist
+ausgeschlossen (F-1.1).
 
-**Kriterium 0** braucht einen Release-Bau; der Release-Zweig scheitert
-weiterhin an einer fehlenden `Imap.lib`.
+**Kriterium 3 ist erledigt** (E-1, E-3): 159 Nachrichten von `mx.freenet.de`,
+Port 110 mit STARTTLS, `TLSv1.3`. Damit ist auch die in `ABRUF-PRUEFEN.md` als
+UNGEPRÜFT markierte Frage beantwortet — ja, `mx.freenet.de` spricht POP3.
 
-**Kriterium 3** ist nie ausprobiert worden. Anleitung:
-[ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Dort als UNGEPRÜFT markiert: ob
-`mx.freenet.de` überhaupt der POP3-Server ist.
+**Kriterium 2** hängt an den HTML-Umlauten: Ursache belegt und behoben (Z-2 —
+der Zeichensatz wurde der temporären Datei nirgends angesagt), Wirkung
+ungeprüft.
 
 Der vollständige Prüfbericht vom 30.08. abends steht in
 [PRUEFBERICHT.md](PRUEFBERICHT.md); was davon behoben ist, sagt Befund W-1.
@@ -267,8 +264,8 @@ Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
 
 Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
 Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine
-Fehler; sie erscheinen nur, weil bisher nur der Debug-Bau läuft (der
-Release-Zweig scheitert an einer fehlenden `Imap.lib`).
+Fehler; sie erscheinen nur im **Debug**-Bau. Im Release-Bau (seit F-1
+lauffähig) entfallen sie samt allen `ASSERT`/`VERIFY`.
 
 **Wichtig:** Gregor testet auf derselben Windows-Sitzung. Kein Programm mit
 Fenstern ohne Absprache starten — auch nicht durch Agenten. Beim Aufräumen von
@@ -329,22 +326,21 @@ der nächste Schritt wäre.
 
 ## Nächste Schritte, nach Wichtigkeit
 
-1. **Einmal starten und ein Bildschirmfoto machen.** Das ist jetzt der erste
-   Schritt, nicht mehr die Analyse. Für M-1 und A-1 sind die Ursachen belegt
-   und behoben, nachgesehen hat es niemand — die Agenten durften kein Fenster
-   öffnen. Zu vergleichen sind die Merkmale aus [ZIEL.md](ZIEL.md), „Woran sich
-   Kriterium 2 misst". Woran man den Erfolg erkennt, steht in
-   [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md), letzter Abschnitt.
-2. **Kriterium 0: das Paket ohne Nachinstallieren.** Gregors neueste Vorgabe.
-   Weg: Release-Bau, vorzugsweise statisch (`/MT` + MFC statisch). Blocker ist
-   die fehlende `Imap.lib` im Release-Zweig. Maß ist `tools/paket-pruefen.ps1`
-   gegen das ausgepackte Paket auf einem Rechner ohne Visual Studio: null
-   Fehler. Siehe Befund S-8 und `ZIEL.md`.
-3. **Mail abrufen (Kriterium 3).** Nie getestet. Der Abrufpfad ist seit P-2
-   gegen die vier bekannten Nullzeiger abgesichert, die Anleitung steht in
-   [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Zugleich der erste echte Test der
-   neuen TLS-Schicht: die ausgelieferte QCSSL 1.0.1 ist nie gegen einen echten
-   Server gelaufen, nur eine ältere Fassung war es.
+**Die vollständige Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)**; hier nur
+die Reihenfolge.
+
+1. **Das v1.0.3-Release auf dem zweiten PC auspacken und starten**, im
+   Assistenten auf *Weiter* klicken. Ein Lauf beantwortet fünf offene Punkte:
+   E-11 (Absturz behoben?), Kriterium 0, die HTML-Umlaute (Z-2), die fehlende
+   Bau-Kennung im Titel (E-7) und den Index-Fehler beim Beenden (E-4). Achtung
+   auf die Prüfsumme: das ZIP ist am 31.08. um 09:00 ausgetauscht worden, nur
+   `d4719047…` enthält die E-11-Behebung.
+2. **`paket-pruefen.ps1` brauchbar machen** (PR-2.0 bis PR-2.3) — die nötigen
+   Laufzeiten aus den **Importen** der Paketdateien ableiten statt aus einer
+   festen Liste, und „vorhanden" nur gelten lassen, wenn die Datei im Paket
+   liegt. Solange das offen ist, ist Kriterium 0 nicht nachweisbar.
+3. **`ReleaseBuffer` ohne `GetBuffer` abstellen** — die Fehlerklasse hinter
+   E-11. `tools/releasebuffer-pruefen.pl` stuft die 142 Vorkommen ein.
 4. **Erscheinungsbild, zweite Runde.** Nach dem Bildschirmfoto: die Splitter
    (`SECDockBar::AddSplitter` wird nie gerufen) und
    `SECMDIFrameWnd::FloatControlBarInMDIChild`. Reihenfolge und Ansatz in

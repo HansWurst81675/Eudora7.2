@@ -55,9 +55,10 @@ Mailserver**.
 > hat sich **nicht** bestätigt.
 
 `ab55281a` (QCSSL 1.0.1) ist die einzige, die man einsetzen sollte. Sie enthält
-alles Genannte. Der Mailserver-Test steht für sie aus.
+alles Genannte, **und ihr Mailserver-Test ist bestanden** — siehe den Kasten
+oben. Der Satz „Der Mailserver-Test steht für sie aus" stand hier bis zum
+31.08.2026 abends noch unter dem Kasten, der ihn widerlegt.
 
-Wer sie gegen einen echten Server prüft: Eudoras eigener Dialog
-*Tools → Last SSL Info* zeigt Protokoll und Verfahren an. Interessant ist, ob dort
-weiterhin `TLSv1.3` und ein AEAD-Verfahren steht — mit den strengeren Vorgaben aus
-M1 sollte sich nichts verschlechtert haben.
+Wer sie erneut gegen einen echten Server prüft: Eudoras eigener Dialog
+*Tools → Last SSL Info* zeigt Protokoll und Verfahren an. Erwartet werden
+`TLSv1.3` und ein AEAD-Verfahren.

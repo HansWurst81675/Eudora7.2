@@ -26,26 +26,33 @@ haben.
 
 > **Zur Benennung.** Beide ZIP-Dateien tragen im Namen das Wort `lauffaehig`.
 > Nach [ZIEL.md](../ZIEL.md) ist das für keine der beiden zutreffend: 1.0.1 startet
-> gar nicht, 1.0.2 erfüllt nur Kriterium 1 von dreien. Die Namen bleiben stehen,
+> gar nicht, 1.0.2 erfüllte damals nur eines der Kriterien. Die Namen bleiben stehen,
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.3 — vorbereitet am 31.08.2026, NICHT veröffentlicht
+## 1.0.3 — veröffentlicht am 31.08.2026, ZIP einmal ausgetauscht
 
-**Vorabfassung.** Der Name trägt bewusst nicht das Wort `lauffaehig`: nach
-[ZIEL.md](../ZIEL.md) ist derzeit **keines der drei Kriterien** erfüllt.
-Vorgeschlagener Dateiname `Eudora72-1.0.3-vorabfassung.zip`.
+**Release-Bau.** Erste Fassung, die ohne die vier nicht verteilbaren
+Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
+[ZIEL.md](../ZIEL.md) — hier bewusst keine zweite Fassung dieser Tabelle.
 
-Ob und wann das Paket veröffentlicht wird, entscheidet Gregor. Deshalb steht
-hier weder eine Prüfsumme noch eine Größe — beides entsteht erst beim
-Veröffentlichen.
+> **Achtung, zwei ZIPs unter derselben Kennung.** Das Paket ist am 31.08.2026
+> um 09:00 **ausgetauscht** worden. Nur die zweite Fassung enthält die Behebung
+> von Befund **E-11** (`eudora.cpp:3372`, `Left(i)` statt `ReleaseBuffer(i)`) —
+> mit der ersten stürzte Eudora auf einer frischen Installation beim Klick auf
+> *Weiter* im Kontoassistenten ab. Das ist genau der Fall, gegen den diese
+> Datei geschrieben wurde: **die Prüfsumme entscheidet, nicht der Name.**
 
 | | |
 |---|---|
-| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -AusBauverzeichnis -Zip "<verz>\..\Eudora72-1.0.3-vorabfassung.zip"` |
-| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` |
-| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) |
+| Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
+| ZIP | `Eudora72-1.0.3-release.zip`, `Eudora.exe` 2 933 248 B, `Release\|Win32` |
+| SHA256 (gültig) | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
+| SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
+| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
+| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — **taugt nicht als Freigabekriterium**, siehe PR-2.0 |
+| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — beschreibt noch den Debug-Weg, für ein Release-Paket hinfällig (F-1, nächster Schritt 3) |
 | QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
 
 **Was sich gegenüber 1.0.2 ändert.**
@@ -95,16 +102,17 @@ Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also nicht auf; es fällt
 erst bei Benutzung auf (Adressbuch, LDAP, Ph, S/MIME, Spamfilter). Das galt
 für 1.0.2 genauso — es war nur nicht gemessen.
 
-**Stand nach ZIEL.md.** Kriterium 1 nicht erfüllt (Fenster erscheint, Menüs
-seit M-1 behoben, **Wirkung ungeprüft**), Kriterium 2 nicht erfüllt
-(Darstellung in Arbeit, A-1), Kriterium 3 nicht geprüft (kein Mailabruf).
+**Stand nach ZIEL.md** (31.08.2026, abends): Kriterium 1 und 3 sind mit diesem
+Paket **belegt** — Gregor hat damit 159 Nachrichten abgerufen (E-1, E-3).
+Kriterium 2 fast, Kriterium 0 offen: das Release-ZIP ist auf einem Rechner
+**ohne** Visual Studio nicht gestartet worden (E-8).
 
 ## 1.0.2 — 30.08.2026
 
-**Startet.** Erste Fassung, bei der das Hauptfenster erscheint. Erfüllt damit
-**Kriterium 1 von dreien** ([ZIEL.md](../ZIEL.md)) — nicht mehr. Die Darstellung
-ist fehlerhaft (S-6), Menüs lassen sich nicht öffnen (S-5), ein Mailabruf ist
-nicht geprüft.
+**Startet.** Erste Fassung, bei der das Hauptfenster erscheint — Stand
+30.08.2026: die Darstellung war fehlerhaft (S-6), Menüs ließen sich nicht
+öffnen (S-5), ein Mailabruf war nicht geprüft. Behoben ist das erst in 1.0.3
+(M-1, A-1, E-1).
 
 | | |
 |---|---|

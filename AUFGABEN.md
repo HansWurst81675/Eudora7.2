@@ -242,13 +242,23 @@ von keinem der 105 Tests betreten.
   benutzt werden.
 - **Der Release-Zweig von `EudoraRes`** hängt noch über einen Projektverweis an
   `OT501` (`EudoraRes.vcxproj:351`).
-- **LEKTORAT unvollständig:** `PORTIERUNG.md` (Rest), `PRUEFBERICHT.md`,
-  `ABRUF-PRUEFEN.md`, beide `LIESMICH.txt`, `Releases/1.0/*`,
-  `Eudora71/OTShim/PLAN.md` sind ungeprüft.
-- **Die alte CR-Anzahl-Regel** steht noch in vier `Arbeitsweise/`-Dateien, in
-  `PORTIERUNG.md` und in einem Patch-Kommentar.
-- **`VC71Bruecke/BEFUND.md:462`** nennt eine **falsche GUID** — wer sie
-  abschreibt, bekommt ein Projekt, das stillschweigend nicht gebaut wird (B-2).
+- **LEKTORAT:** am 31.08.2026 abends sind **alle 45 Markdown-Dateien** gelesen
+  und die Widersprüche berichtigt worden (dritter Durchgang in `LEKTORAT.md`).
+  Ungeprüft bleiben die beiden `LIESMICH.txt` — insbesondere
+  `Releases/1.0.3/LIESMICH.txt`, die noch den Debug-Weg beschreibt und für ein
+  Release-Paket irreführend ist (F-1, nächster Schritt 3).
+- ~~**Die alte CR-Anzahl-Regel** steht noch in vier `Arbeitsweise/`-Dateien, in
+  `PORTIERUNG.md` und in einem Patch-Kommentar.~~ **Nachgemessen am 31.08.2026
+  abends: die Behauptung war zu weit gefasst.** Von acht Fundstellen war
+  **eine** falsch (`tools/patches/zertifikatspruefung-verschaerfen.md:105`,
+  jetzt berichtigt). Die `Arbeitsweise/`-Stellen beschreiben `aendere-zeile.pl`
+  — und das bricht wirklich bei geänderter CR-Zahl ab (`:33`) — oder den
+  Handgriff von Hand; beides richtig. `PORTIERUNG.md:664` sagt ausdrücklich,
+  dass die CR-Anzahl **nicht** mehr verglichen wird.
+- ~~**`VC71Bruecke/BEFUND.md:462`** nennt eine **falsche GUID**~~ — **berichtigt
+  am 31.08.2026 abends**, mit Kasten und der echten GUID aus
+  `VC71Bruecke.vcxproj:32` (gegengeprüft: sie steht fünfmal in
+  `Eudora71/Eudora.sln`).
 
 ---
 

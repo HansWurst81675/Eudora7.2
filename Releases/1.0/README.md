@@ -23,11 +23,11 @@ Diese DLL ist gegen **OpenSSL 3.5.8 LTS** gebaut:
 
 | | vorher | jetzt |
 |---|---|---|
-| Höchstes Protokoll | TLS 1.0 (Grenze der Bibliothek) | **keine Obergrenze gesetzt** — TLS 1.3 damit nicht ausgeschlossen, aber nicht nachgemessen |
+| Höchstes Protokoll | TLS 1.0 (Grenze der Bibliothek) | **keine Obergrenze gesetzt** — TLS 1.3 zweimal nachgemessen: 29.08.2026 gegen `pop.gmx.net:995` und am 31.08.2026 mit dieser Fassung gegen `mx.freenet.de:110` (STARTTLS), je `TLS_AES_256_GCM_SHA384` |
 | OpenSSL-Version | 0.9.7l (2006) | 3.5.8 LTS |
 | Sicherheitsupdates | seit ~2007 keine | bis 2030 |
 | SSLv2 / SSLv3 | angeboten | abgeschaltet (beide gebrochen) |
-| Mindestprotokoll | — | TLS 1.2 bei sieben der acht Werte von `m_ProtocolVersion`; beim Wert 3 (früher "TLSv1") TLS 1.0 |
+| Mindestprotokoll | — | TLS 1.2 bei **allen acht** Werten von `m_ProtocolVersion` (seit Befund M1; vorher setzte der Wert 3 — ausgerechnet die Voreinstellung — noch TLS 1.0) |
 
 Gegenüber dem verbreiteten **HermesSSL**-Paket (Version 7.8 gamma): das nutzt
 OpenSSL 1.0.2p, seit 2019 End-of-Life und ohne TLS 1.3. Wer HermesSSL bereits
@@ -182,7 +182,11 @@ Beide Dateien lassen sich auch einzeln zurücknehmen — sie hängen nicht vonei
 
 - **Die fehlerhafte Darstellung von Umlauten und Sonderzeichen.** Die steckt in
   `Eudora.exe`, nicht in einer DLL, und lässt sich nur durch einen Neubau der
-  ausführbaren Datei beheben. Der ist noch nicht möglich (siehe [PORTIERUNG.md](../../PORTIERUNG.md)).
+  ausführbaren Datei beheben. **Dieser Neubau ist inzwischen möglich** und die
+  Zeichenwandlung dort behoben (UTF-8 über den Windows-Codepage-Wandler,
+  33 von 33 Tests grün; HTML-Anzeige siehe Befund Z-2) — aber nur im Paket
+  `Eudora72-1.0.3`, nicht in diesem DLL-Austausch. Siehe
+  [PORTIERUNG.md](../../PORTIERUNG.md).
 - Alles Übrige an Eudora bleibt unverändert.
 
 ## Stand der Erprobung
@@ -234,8 +238,11 @@ verworfener Rückgabewerte. Die Prüfsumme in `QCSSL.dll.sha256` ist mitgezogen.
 
 Dazu zwei Einordnungen, damit nichts überschätzt wird:
 
-- Der Lauf gegen `pop.gmx.net:995` vom 29.08.2026 gilt dem **vorherigen** Build.
-  Mit dieser DLL ist er nicht wiederholt worden.
+- Der Lauf gegen `pop.gmx.net:995` vom 29.08.2026 galt dem **vorherigen** Build.
+  **Nachgeholt am 31.08.2026** mit genau dieser Fassung (`ab55281a`) gegen
+  `mx.freenet.de` auf Port 110 mit STARTTLS: `TLSv1.3`,
+  `TLS_AES_256_GCM_SHA384`, Status *Succeeded*, danach 159 abgerufene
+  Nachrichten (Befund E-3 in `BEFUNDE.md`).
 - Wiederholt wurde dagegen der Komponententest `Eudora71/Tests/QCSSL/messen.ps1`
   gegen genau diese DLL. Alle neun Fälle verhalten sich wie vor den Änderungen:
   1a Erfolg mit TLSv1.3, 1b und 1d Fehlschlag, 1c unverändert (das ist der

@@ -222,3 +222,97 @@ Abschluss. **Nicht angesehen:**
 **Der nächste Schritt** ist `Eudora71/VC71Bruecke/BEFUND.md` Abschnitt 6 — dort
 steht eine Angabe, die nachweislich in einen stillen Fehler führt. Danach
 `STARTUMGEBUNG.md` (S-8) und `PRUEFBERICHT.md` (W-1).
+
+
+---
+
+# Dritter Durchgang — 31.08.2026, abends
+
+Branch `claude/letzter-stand-b2ytpi`, Ausgangsstand `2107a85`. Anlass: Gregors
+Anweisung „alle md lesen". **Alle 45 Markdown-Dateien wurden gelesen** (659 KB),
+einschliesslich der 5475 Zeilen `BEFUNDE.md` und der 23 Regeln unter
+`Arbeitsweise/`. Damit ist die Liste „noch nicht angesehen" aus den ersten zwei
+Durchgaengen abgearbeitet.
+
+**Ohne Visual Studio gearbeitet** — dieser Durchgang lief in einer
+Linux-Umgebung ohne MSBuild, MSVC und PowerShell. Nichts wurde gebaut, nichts
+gestartet, **keine C++-Quelldatei angefasst**. Alle Aenderungen sind Text.
+
+## Der schwerste Fund: `ZIEL.md` war teilweise doppelt kodiert
+
+Der Commit `2107a85` („README.md und ZIEL.md auf den Stand vom 31.08.2026
+gebracht") hat **40 Zeilen von `ZIEL.md` doppelt UTF-8-kodiert** hinterlassen —
+aus der Ueberschrift wurde `# Was âlauffÃ¤hig" heiÃt`. `HEAD~1` war sauber, die
+uebrigen 44 Dateien sind es auch (gemessen ueber alle `*.md`).
+
+Berichtigt per Latin-1-Rundlauf, aber **nur auf Zeilen mit Mojibake-Marker**:
+richtig kodierte Zeilen scheitern an `encode('latin-1')` und bleiben unberuehrt.
+Nachgemessen: 0 Marker, 0 U+FFFD, LF-Anzahl unveraendert, 0 CR.
+
+## Widersprueche innerhalb einer Datei
+
+| Datei | Was sich widersprach | Behandlung |
+|---|---|---|
+| `ZIEL.md` | Die Berichtigung „Kriterium 0 ist NICHT belegt" — und drei Absaetze weiter „auf einem Rechner **ohne** Visual Studio: **null Fehler**" | Der widerlegte Absatz ist durch den tatsaechlichen Massstab ersetzt |
+| `WEITERMACHEN.md` | Kasten oben: „zwei Kriterien erfuellt"; Tabelle acht Zeilen darunter: „Es ist derzeit KEIN Kriterium erfuellt" | Die zweite Tabelle ist raus, sie war der Stand vom Vormittag |
+| `Releases/1.0/AUSLIEFERUNGEN.md` | Kasten „der Servertest ist bestanden" — und darunter „Der Mailserver-Test steht fuer sie aus." | Satz berichtigt |
+
+## Eine Quelle fuer die Kriterientabelle
+
+Die Tabelle stand an **fuenf** Stellen, in **drei** verschiedenen Fassungen
+(`ZIEL.md`, `README.md`, `AUFGABEN.md`, `WEITERMACHEN.md`, `Releases/PAKETE.md`).
+`ZIEL.md` ist jetzt ausdruecklich die Quelle; `README.md` fuehrt eine als solche
+gekennzeichnete Kurzfassung, die uebrigen verweisen.
+
+## Was vom 31.08. nicht nachgezogen war
+
+| Datei | Behauptung | Tatsaechlich |
+|---|---|---|
+| `README.md` (2x), `PORTIERUNG.md`, `WEITERMACHEN.md` (3x) | „der Release-Zweig scheitert an einer fehlenden `Imap.lib`" | F-1.4: es war `OTA50D.LIB` statt `OTA50R.LIB` in `Eudora.vcxproj:147`, dazu `MakeDox.pl`. Der Release-Bau bindet, 2 933 760 Byte |
+| `PORTIERUNG.md` | „keines der **drei** Kriterien erfuellt", „Hauptfenster nicht bedienbar", „Mailabruf nie getestet" | ueberholt durch E-1/E-3 |
+| `Releases/PAKETE.md` | 1.0.3 „vorbereitet, NICHT veroeffentlicht", keine Pruefsumme | veroeffentlicht, ZIP am 31.08. um 09:00 **ausgetauscht**; nur `d4719047…` traegt die E-11-Behebung |
+| `Releases/1.0/README.md` | „TLS 1.3 nicht nachgemessen", „TLS 1.2 bei sieben der acht Werte", „Neubau der exe noch nicht moeglich" | alle drei ueberholt (E-3, M1, das Paket 1.0.3 existiert) |
+| `ABRUF-PRUEFEN.md` | UNGEPRUEFT, ob `mx.freenet.de` POP3 spricht | E-3: ja, Port 110 mit STARTTLS |
+| `BEFUNDE.md`, A-1 | Ueberschrift „UNFERTIG", „Kein Code geaendert" | fuenf Punkte umgesetzt (`db28adb`, `1a4a6d5`), Wirkung belegt (E-1/E-2). LEKTOR und Z-1 hatten es beide gemeldet |
+| `BEFUNDE.md`, S-7 | Kasten nennt „4426 von 5336" im Werkzeugkopf; Beispiel beschriftet 5716 B als Arbeitskopie | W-1/PR-7 meldete das Nachziehen, fuehrte es aber nicht aus (Z-1). Jetzt ausgefuehrt: Tabelle mit Daten, Beispiel richtig beschriftet, heutiger Wert 6394 ergaenzt |
+| `Eudora71/VC71Bruecke/BEFUND.md:462` | GUID `{7B1E9C40-…}` | falsch. Richtig `{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}` — gegengeprueft in `VC71Bruecke.vcxproj:32` und fuenfmal in `Eudora71/Eudora.sln` |
+
+## Eine Behauptung, die sich beim Nachmessen als zu weit gefasst erwies
+
+`AUFGABEN.md` und der zweite Durchgang dieser Datei sagten, die **alte
+CR-Anzahl-Regel** stehe „noch in vier `Arbeitsweise/`-Dateien, in
+`PORTIERUNG.md` und in einem Patch-Kommentar". Gemessen: von acht Fundstellen
+war **eine** falsch. Die `Arbeitsweise/`-Stellen beschreiben `aendere-zeile.pl`
+— und das bricht tatsaechlich bei geaenderter CR-Zahl ab
+(`tools/aendere-zeile.pl:33`) — oder den Handgriff von Hand. `PORTIERUNG.md:664`
+sagt ausdruecklich das Richtige. Berichtigt wurde
+`tools/patches/zertifikatspruefung-verschaerfen.md:105`.
+
+Das ist derselbe Fehlertyp, den diese Datei anderen vorhaelt: eine Aussage
+weitergeschrieben, ohne sie zu zaehlen.
+
+## Was bewusst stehen geblieben ist
+
+- **Die Agentenberichte** `BEFUND-MENUE.md`, `BEFUND-ANSICHT.md`,
+  `VC71Bruecke/BEFUND.md`, `PRUEFBERICHT.md` und die Befundabschnitte in
+  `BEFUNDE.md` — sie sind datierte Belege. Wo sie ueberholt sind, steht jetzt
+  ein Kasten davor, der Text darunter bleibt unangetastet.
+- **`Arbeitsweise/`** ist ein **Spiegel** des Gedaechtnisverzeichnisses
+  (`tools/lehren-spiegeln.pl` kopiert von dort ins Repo, nicht umgekehrt). Der
+  Nachtrag „es sind vier Kriterien" in `was-lauffaehig-heisst.md` und die Zeile
+  in `MEMORY.md` **gehen beim naechsten Spiegeln verloren**, solange die Quelle
+  im Gedaechtnis nicht nachgezogen wird — Befund NP3-4. Der Nachtrag sagt das
+  selbst.
+- **`INVENTAR.md`** — sagt im Kopf selbst, dass es maschinell erzeugt und
+  fehlerhaft ist.
+- **Die Dateinamen mit `lauffaehig`** in `Releases/` — veroeffentlichte
+  Pruefsummen.
+
+## Offen
+
+- **`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg („ZUERST: DIE
+  VIER LAUFZEITEN HOLEN"). Fuer das ausgelieferte Release-Paket ist der ganze
+  Abschnitt hinfaellig und irrefuehrend. Es ist eine `.txt`, nicht Teil des
+  Auftrags „alle md" — aber es liegt im ausgelieferten ZIP und ist damit die
+  Datei, die ein Empfaenger zuerst liest.
+- Die **Quelle im Gedaechtnis** fuer `Arbeitsweise/was-lauffaehig-heisst.md`.

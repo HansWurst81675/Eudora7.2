@@ -8,12 +8,14 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 
 ## Kurzfassung
 
-> **Eudora startet — aber das Hauptfenster ist nicht bedienbar.**
+> **Eudora startet, ist bedienbar und ruft Mail ab** (31.08.2026, Befunde E-1
+> und E-3): 159 Nachrichten von `mx.freenet.de`, Port 110 mit STARTTLS,
+> `TLSv1.3` / `TLS_AES_256_GCM_SHA384`. Die Menüs gehen auf (M-1 wirkt), die
+> Bereiche überlagern sich nicht mehr (A-1 wirkt).
 >
-> Nach [ZIEL.md](ZIEL.md) ist damit **keines der drei Kriterien erfüllt**:
-> Menüs lassen sich nicht öffnen (S-5, Ursache gefunden), Bereiche überlagern
-> sich und Werkzeugleisten-Knöpfe sind leer (S-6), ein Mailabruf ist nie
-> geprüft worden. Ein Meilenstein, kein erfülltes Kriterium.
+> **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
+> zwei von vier Kriterien belegt, eines fast, Kriterium 0 offen. Hier steht
+> bewusst keine zweite Fassung dieser Tabelle.
 >
 > Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
 > Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe
@@ -31,11 +33,9 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
 > `LinkLibraryDependencies` auf `false`, `Eudora.vcxproj:1015`).
 >
-> **Eudora startet und zeigt sein Hauptfenster** (30.08.2026, Paket 1.0.2). Der
-> Absturz beim Start war die Werbefläche — Befund S-2 in `BEFUNDE.md`. Das heißt
-> aber noch nicht „lauffähig": von den drei Kriterien in `ZIEL.md` ist bisher nur
-> das erste erfüllt. `EudoraRes.dll` fehlt weiterhin und wird zur Laufzeit
-> nachgeladen — siehe `STARTUMGEBUNG.md`.
+> Dass Eudora überhaupt startet, war der Schritt vom 30.08.2026 (Paket 1.0.2):
+> der Absturz beim Start war die Werbefläche — Befund S-2. `EudoraRes.dll` wird
+> zur Laufzeit nachgeladen, nicht gebunden — siehe `STARTUMGEBUNG.md`.
 
 **16 der 18 Projekte werden fertig.** Zwei nicht:
 
@@ -391,16 +391,16 @@ Release bei, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Einzelheiten in
 
 ## Nächster Schritt
 
-Stand 31.08.2026. Maßstab ist [ZIEL.md](ZIEL.md) — **derzeit ist keines der drei
-Kriterien erfüllt**.
+Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
 
 ### Erledigt
 
 1. ~~`QCSSL.dll` gegen einen echten Mailserver testen~~ — mit einer **älteren**
-   Fassung erledigt: am 29.08.2026 gegen `pop.gmx.net:995`, `TLSv1.3`,
-   `TLS_AES_256_GCM_SHA384`, 256 Bit. Die ausgelieferte QCSSL 1.0.1 ist gegen
-   Komponententests geprüft, aber **nie gegen einen echten Server**. Einzelheiten
-   in [Releases/1.0/AUSLIEFERUNGEN.md](Releases/1.0/AUSLIEFERUNGEN.md).
+   Fassung erledigt: am 29.08.2026 gegen `pop.gmx.net:995`. **Und am 31.08.2026
+   mit der ausgelieferten QCSSL 1.0.1 selbst** (`ab55281a`): `mx.freenet.de`,
+   Port 110 mit STARTTLS, `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status
+   *Succeeded* (Befund E-3). Einzelheiten in
+   [Releases/1.0/AUSLIEFERUNGEN.md](Releases/1.0/AUSLIEFERUNGEN.md).
 2. ~~Aktuellen `rootcerts.p7b` erzeugen~~ — erledigt mit `75b60e1`.
 3. ~~OT501-Ersatzschicht implementieren~~ — erledigt (`e50a89c`), 0 ungelöste
    Externe ohne die Attrappe `OTA50D.LIB`.
@@ -413,29 +413,30 @@ Kriterien erfüllt**.
 
 ### Offen, nach Wichtigkeit
 
-1. **Die Darstellung (S-6).** Gregors ausdrücklicher Vorrang. Ursache der
-   überlagernden Bereiche belegt: die Ersatzschicht setzt die prozentualen
-   Zeilenbreiten `m_fPctWidth` und die Splitter der Andockleiste **gar nicht um**
-   und reicht alles an MFC durch; `SECControlBar::CalcFixedLayout` gibt jeder
-   Wazoo-Leiste 32767 als Wunschbreite. Die leeren Werkzeugleisten-Knöpfe sind
-   auf den Zeichenweg eingegrenzt, stärkster Verdacht `SECStdBtn::DrawDisabled`.
-   Fünf konkrete Schritte in
-   [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
-2. **Die Menüs (S-5).** Ursache gefunden (M-1): `SECToolBarManager` setzte
-   `m_bMainFrameEnabled` auf `TRUE`, woraufhin `CMainFrame::OnNcHitTest` immer
-   `HTERROR` liefert und die gesamte Nichtklientenfläche tot ist. Behoben, aber
-   **die Wirkung im Programm ist ungeprüft**.
-3. **Mail abrufen (Kriterium 3).** Nie getestet. Wahrscheinlichster
-   Absturzpunkt bekannt: `QCWorkerSocket.cpp:1969` dereferenziert
-   `pConnectionInfo` ungeprüft. Anleitung in
-   [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md).
+1. **Kriterium 0 nachweisen.** Das Release-Paket auf einem Rechner **ohne**
+   Visual Studio auspacken und starten. Das ist der einzige belastbare Nachweis
+   (E-8); `tools/paket-pruefen.ps1` taugt dafür nicht (PR-2.0 bis PR-2.3).
+   Derselbe Lauf beantwortet auch E-11, E-4, E-7 und die HTML-Umlaute (Z-2).
+2. **Die Darstellung, zweite Runde.** M-1 und A-1 wirken (E-1, E-2), offen
+   bleiben die Splitter (`SECDockBar::AddSplitter` wird nie gerufen),
+   `SECMDIFrameWnd::FloatControlBarInMDIChild` (leerer Rumpf, größter
+   verbliebener Einzelposten) und `SetControlBarWidthsInRow`. Dazu PR-2.5:
+   `DrawChecked` hat denselben Farbfehler, der in `DrawDisabled` behoben wurde.
+   Einzelheiten in [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
+3. **`ReleaseBuffer` ohne `GetBuffer`** — Befund E-11 war der Absturz auf
+   frischen Installationen, behoben in `eudora.cpp:3372`. Es ist eine
+   **Fehlerklasse**: 142 Vorkommen im Baum, gemessen mit
+   `tools/releasebuffer-pruefen.pl`.
 4. **`MFC71.DLL` und `MSVCP71.dll`.** Nicht nachbaubar — `MFC71` wird über 157
    Ordinale importiert. Dadurch fallen **Adressbuch, LDAP und Ph** aus. Die
    `MSVCR71.dll` dagegen ist als eigener Nachbau vorhanden
    (`Eudora71/VC71Bruecke`, 1429 Weiterleitungen auf Windows' `msvcrt.dll`).
-5. **Release-Bau.** Scheitert an einer fehlenden `Imap.lib` im Release-Zweig.
-   Ein Release-Bau hätte keine SUPERASSERT-Dialoge beim Start und bräuchte die
-   VS2022-**Debug**-Laufzeiten nicht.
+5. ~~**Release-Bau.**~~ **Erledigt** seit Befund F-1 (31.08.2026): der
+   Release-Zweig scheiterte an `OTA50D.LIB` statt `OTA50R.LIB` in
+   `Eudora.vcxproj:147` und an `MakeDox.pl` im Nachbereitungsschritt. Er bindet
+   jetzt, hat keine SUPERASSERT-Dialoge und braucht nur die drei verteilbaren
+   Laufzeit-DLLs. **Statisch** binden bleibt ausgeschlossen (F-1.1, sechs
+   MFC-Erweiterungs-DLLs).
 6. **`libpng` sauber nachziehen** — `__imp___iob` ist in `OTShim_Libpng.cpp` nur
    behelfsweise gelöst, gestützt auf die gemessene Annahme, dass libpng 1.2.7
    ausschließlich `_iob[2]` anfasst. Ein Neubau aus `Eudora71/PNG/libpng` mit

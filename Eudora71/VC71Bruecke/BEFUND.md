@@ -457,19 +457,31 @@ Auftragsbeschreibung.
   zu hinterlassen. Nötig sind zwei Einfügungen (die Datei ist **reines LF**,
   kein CR — byte-erhaltend arbeiten):
 
+  > **BERICHTIGUNG vom 31.08.2026 (Befund B-2.1, bestätigt durch Z-1).** Die
+  > hier ursprünglich genannte GUID `{7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}`
+  > war **falsch** — sie ist nicht die des Projekts. Richtig ist die aus
+  > `VC71Bruecke.vcxproj:32`:
+  >
+  >     {7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}
+  >
+  > Wer die falsche abschrieb, bekam eine Solution, in der das Projekt
+  > auftaucht, aber keiner Konfiguration zugeordnet ist — es wäre
+  > **stillschweigend nicht gebaut** worden. Unten steht jetzt die richtige.
+  >
+  > **Erledigt:** `VC71Bruecke` hängt seit B-2.1 in `Eudora71/Eudora.sln` und
+  > baut im Gesamtbau mit. Die Anleitung bleibt nur als Beleg stehen.
+
   1. vor der Zeile `Project(…) = "plstclnt", …` einfügen:
 
-         Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VC71Bruecke", "VC71Bruecke\VC71Bruecke.vcxproj", "{7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}"
+         Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VC71Bruecke", "VC71Bruecke\VC71Bruecke.vcxproj", "{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}"
          EndProject
 
   2. am Ende von `GlobalSection(ProjectConfigurationPlatforms)` einfügen:
 
-         {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}.Debug|x86.ActiveCfg = Debug|Win32
-         {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}.Debug|x86.Build.0 = Debug|Win32
-         {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}.Release|x86.ActiveCfg = Release|Win32
-         {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}.Release|x86.Build.0 = Release|Win32
-
-  Bis dahin baut man das Projekt einzeln mit dem Befehl aus 2.1.
+         {7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Debug|x86.ActiveCfg = Debug|Win32
+         {7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Debug|x86.Build.0 = Debug|Win32
+         {7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Release|x86.ActiveCfg = Release|Win32
+         {7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Release|x86.Build.0 = Release|Win32
 
 ### Nächster Schritt, wenn jemand hier weitermacht
 
