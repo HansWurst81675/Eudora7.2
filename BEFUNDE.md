@@ -4535,3 +4535,49 @@ misst `tools/paket-pruefen.ps1` den Paketinhalt gegen die Startkette.
 **Bezug zu anderen Befunden.** S-1 (Paket 1.0.1 startete nicht) hatte eine
 andere Ursache — dort lagen die *falschen* Fremd-DLLs bei. S-8 ist der Fall,
 dass die eigene Laufzeit ganz fehlt.
+
+## Z-1 — Alle Zahlen und Fundstellen des 31.08. nachgerechnet (31.08.2026)
+
+Ein Prüfdurchgang hat jede Zahl und jede Zeilenangabe der heutigen Befunde
+gegen die Quelle gehalten. **Nichts wurde geändert** — das hier ist die Liste
+der Abweichungen, damit niemand auf einer falschen Angabe aufbaut.
+
+### Falsch
+
+| Stelle | Behauptung | tatsächlich |
+|---|---|---|
+| P-2.1, P-2.3 | „die **zehn** `GetProcAddress`-Ergebnisse (`:373-383`)" | es sind **elf** (373…383). Die Zahl steht zweimal falsch da. |
+| P-2.1 | „in `Releases/1.0/` liegen **mehrere** `QCSSL.dll`-Fassungen" | es liegt **genau eine** (2.920.960 B), SHA256-identisch mit der im Paket 1.0.2. **Damit trägt die Begründung des Absturzszenarios so nicht.** |
+| P-2.2 | „**alle fünf** echten Aufrufer übergeben die Adresse eines Elements" | es gibt einen **sechsten**: `Eudora71/Imapdll/src/Network.cpp:539` reicht in `CNetStream::SetSSLMode` einen Zeigerparameter weiter. Nicht auf dem POP-Weg, aber „alle fünf" ist falsch. |
+| P-2.2 (Quelltext) | Kommentar „Zeile **2065** unten prüft ihn auch" | die Prüfung steht nach der eigenen Änderung bei **2070**; in 2065 steht etwas anderes. Die Korrektur hat ihre eigene Zeilenangabe veraltet gemacht. |
+| M-1 | `HTERROR` in `mainfrm.cpp:8670`, Funktion `8662-8671`, Kommentar `:8744` | durchweg **um eins daneben**: 8671, 8663–8672, 8745. Dieselbe Verschiebung ist in die neuen Quelltextkommentare übernommen worden (`OTShim_Werkzeugleiste.cpp:3790`, `.h:1153`). |
+| M-1 | Konstruktoren `:3480` und `:3506` | das war der **Vorzustand**. Heute `:3514` und `:3541`. Im Text nicht als „vorher" gekennzeichnet. |
+| A-1 | „Ursache belegt", fünf Fundstellen, 32767, Verdacht `DrawDisabled` | war an `31810e2` richtig, ist **heute überholt** — `1a4a6d5` und `db28adb` haben genau das behoben. Sämtliche Zeilenangaben des Abschnitts stimmen im heutigen Baum nicht mehr. Nur `SetControlBarWidthsInRow` ist noch leerer Rumpf (`OTShim.cpp:2244`) und `OnSizeParent` reicht noch durch (`:3276`). |
+| B-2.2 | Startkette des **ausgelieferten** Pakets = **elf** Module | **zwölf** — dazu `msvcr71d.dll`, weil die gepackte `Paige32d.dll` der Debug-Bau ist. Die Elferliste ist die von Paket **1.0.3**, nicht die des ausgelieferten. |
+| B-2.5 | Paket 1.0.2: **3 Fehler, 5 Warnungen** | heute mit dem eingecheckten Prüfer: **0 Fehler, 8 Warnungen**. Die Spalte stammt aus einem älteren Stand des Werkzeugs. |
+| W-1 / PR-7 | „S-7 nachgezogen, Tabelle eingefügt, Beispiel berichtigt" | **S-7 ist unverändert.** Der Kasten behauptet weiter, der Werkzeugkopf nenne „4426 von 5336" — das ist dort ersatzlos entfernt worden. Die Tabelle steht nur im Werkzeugkopf. Die Beschriftung des Beispiels ist weiterhin vertauscht. |
+| W-1 / PR-3 | Grundgesamtheit **6385** | heute **6392**. Wächst mit jedem Commit — kein Widerspruch, aber schon am Tag des Schreibens flüchtig. |
+
+### Bestätigt
+
+`P-2.1` alle vier Fundstellen exakt der Vorzustand, die Rechnung
+`CRString(8000 + (-1-10000))` geht auf · `P-2.3` acht Treffer, alle sieben
+Fehlalarm-Bewertungen stichprobenweise richtig · `P-2.4` `TextReader.cpp:251`
+und `utils.h:90` · `P-2.7` **105 Tests, 105 bestanden** selbst ausgeführt ·
+`M-1` `tbarmgr.h:79-80`, **genau fünf** Abfragestellen (2988, 8668, 8679, 8727,
+8743), `91716bb` als Einführungscommit, `RestoreMainFrame` wird gerufen ·
+`A-1` 15 Standardknöpfe, `secData`, `DockBar.cpp` prüft selbst auf
+`SWM_MODE_ADWARE` · `B-2.1` die echte GUID steht in der Solution, die falsche
+weiter in `VC71Bruecke/BEFUND.md:462` · `B-2.3` `EUMAPI.DLL` ist keine PE-Datei
+— und der als UNGEPRÜFT markierte Verdacht **stimmt**: Signatur `NE`, also eine
+**16-Bit-Datei** · `W-1` 23 Testfälle grün, Blob `8c4fb68a` = 5716 B mit 65 LF,
+5716+65 = 5781.
+
+### Was daraus folgt
+
+**Zeilenangaben veralten, sobald jemand dieselbe Datei anfasst.** Sieben der elf
+Abweichungen sind genau das — nicht falsch gemessen, sondern durch spätere
+Commits verschoben. Wer eine Fundstelle benutzt, prüft sie nach.
+
+Nicht prüfbar in jenem Arbeitsbaum: die Größenangaben zu `Eudora.exe` und die
+MSBuild-Läufe aus P-2.4, B-2.1 und W-1.
