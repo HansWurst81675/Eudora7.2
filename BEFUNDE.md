@@ -5253,3 +5253,81 @@ Ich habe eine Aussage über einen Zustand gemacht, ohne den Zustand zu prüfen �
 und zwar genau die Frage, um die es ging: **welches Paket lief da eigentlich?**
 Dieselbe Fehlerklasse wie bei den Werkzeugleisten-Knöpfen (E-2) und bei
 „SysWOW64 gilt als vorhanden" (E-5). Siehe `Arbeitsweise/erst-pruefen-dann-anweisen.md`.
+
+## E-9 — Absturz im Kontoassistenten bei *Weiter*: die Kette bis zur Importsuche (31.08.2026, OFFEN)
+
+Gregor, in **beiden** Bauarten reproduziert (Debug- und Release-Paket 1.0.3):
+*„beim klicken auf weiter stürzt es ab!"*
+
+Damit ist es **kein Release-Effekt** — die Erklärung aus E-6 ist endgültig
+widerlegt.
+
+### Die Kette, nachgelesen
+
+1. Die Begrüßungsseite `CWizardWelcomePage`
+   (`AccountWizard/Src/WizardWelcomePage.cpp`) hat **kein** `OnWizardNext`. Der
+   Klick auf *Weiter* führt also unmittelbar zur nächsten Seite.
+2. Nächste Seite ist `CWizardClientPage`, angehängt in
+   `WizardPropSheet.cpp:342-343` direkt nach der Begrüßungsseite.
+3. Deren `OnSetActive` (`WizardClientPage.cpp`) tut als erstes dies:
+
+   ```cpp
+   if (!m_pParent->m_pImporter)
+       m_pParent->m_pImporter = DEBUG_NEW CImportMail;
+
+   if (m_pParent->m_pImporter->InitPlugins())
+       m_pParent->m_pImporter->InitProviders();
+
+   CImportMail *pIM = m_pParent->m_pImporter;
+   ASSERT(pIM);
+   if (!pIM->m_newhead)
+   ```
+
+4. `CImportMail::InitPlugins` (`Eudora/MAPIImport.cpp`) reicht direkt an
+   `InitPluginList` weiter. Dort:
+
+   ```cpp
+   m_psDllStruct = DEBUG_NEW ImportDllStruct[iMatchingFiles];
+   m_iDllStructSize = iMatchingFiles;
+   ...
+   m_psDllStruct[iMatchingFiles].szDllPath = finder.GetFilePath();
+   InitDllStruct(iMatchingFiles);
+   ```
+
+### Zwei Auffälligkeiten in `InitPluginList`
+
+**a) Die Anzahl wird zweimal ermittelt, das Feld nur einmal bemessen.** Erst
+zählt eine Suche die Treffer, dann wird das Feld in dieser Größe angelegt, dann
+läuft eine **zweite** Suche und schreibt hinein. Liefern die beiden Suchen
+verschiedene Anzahlen, wird über das Feldende hinaus geschrieben.
+
+**b) Der Rückgabewert von `DEBUG_NEW` wird nicht geprüft**, und `InitDllStruct`
+wird für jeden Treffer gerufen — auch für einen, dessen DLL sich **nicht laden
+lässt**. Und genau das ist belegt: die Ablaufverfolgung vom 30.08. zeigt
+
+    LoadLibrary failed (...\Plugins\SMIME.dll): err = 126
+    LoadLibrary failed (...\Plugins\SpamHeaders.dll): err = 126
+    LoadLibrary failed (...\Plugins\SpamWatch.dll): err = 126
+
+Fehler 126 ist „Modul nicht gefunden" — diese drei Plugins brauchen `MFC71.DLL`
+und `MSVCP71.dll`, die dem Paket fehlen und nicht nachbaubar sind (B-2). Ob
+`m_szEudoraImportSearch` diese drei überhaupt trifft, ist **UNGEPRÜFT** — das
+ist die erste Frage, die morgen zu klären ist.
+
+### Wie man es entscheidet, ohne zu raten
+
+1. **`tools/stapel-untersuchen.ps1`** gegen das Paket, `Eudora.pdb` daneben.
+   Dann *Weiter* klicken. Der Debugger fängt die Zugriffsverletzung und nennt
+   die Zeile. Das ist der direkte Weg und dauert Minuten.
+2. **Gegenprobe ohne Debugger:** den Ordner `Plugins` im Paket umbenennen und
+   den Assistenten erneut versuchen. Stürzt es dann **nicht** ab, ist die
+   Plugin-Suche die Ursache — und der Verdacht auf `InitDllStruct` bestätigt.
+   Das kann Gregor selbst in zehn Sekunden machen.
+3. Erst danach `m_szEudoraImportSearch` und `InitDllStruct` genau lesen.
+
+### Umgehung, die nachweislich funktioniert
+
+Das Konto **über die `Eudora.ini` von Hand** eintragen, wie in
+`ABRUF-PRUEFEN.md` beschrieben. Auf diesem Weg hat Gregor am 31.08. um 08:09
+erfolgreich Mail abgerufen (E-1, E-3) — der Assistent ist für Kriterium 3 nicht
+nötig.
