@@ -3213,3 +3213,223 @@ steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) — wer e
 entfernt, holt sich den Stapelueberlauf aus S-2 zurueck.
 
 **Nichts davon haelt Paket 1.0.3 auf.**
+
+## P-2 - Kriterium 3 abgesichert: der Absturzpunkt vor dem ersten Abruf ist behoben
+
+**Geprueft am:** 2026-08-31, Agent POSTBOTE, Branch `abruf-absichern`
+(aus `darstellung-und-menue`, `76efdb6`).
+**Anlass:** Fortsetzung von P-1. Gregor will als naechstes selbst einen
+Mailserver verbinden. P-1.5a nannte den wahrscheinlichsten Absturzpunkt, P-1.8
+liess die Aenderung an `TextReader.cpp:251` unuebersetzt.
+**Verfahren:** nur Quellcode und Uebersetzer. Kein Eudora gestartet, keine
+Verbindung zu einem Mailserver, keine Zugangsdaten benutzt.
+**Ablieferung nebenan:** `ABRUF-PRUEFEN.md`, Abschnitte 1 (Servername),
+5a (SSL-Aushandlung) und 5b (Zertifikatsfehler) sind neu.
+
+### P-2.1 BEHOBEN: NULL-Zeiger nach gescheiterter SSL-Aushandlung (war P-1.5a)
+
+**Sicherheit: nachgewiesen (uebersetzt).**
+**Datei:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp`, Funktion
+`QCWorkerSocket::InitializeQCSSL` (ab `:1938`).
+
+Vier Zeilen, alle im Fehlerpfad einer gescheiterten SSL-Aushandlung:
+
+| vorher | Fundstelle | jetzt |
+|---|---|---|
+| `pConnectionInfo= fnConnInfo(...)` | `:1957` | Aufruf nur noch `if (fnConnInfo)` |
+| `if (pConnectionInfo->m_Outcome.m_bCertRejected)` | `:1969` | `if (pConnectionInfo && pConnectionInfo->...)` |
+| `pConnectionInfo = fnConnInfo(...)` | `:1989` | Aufruf nur noch `if (fnConnInfo)` |
+| `m_iSSLError = pConnectionInfo->...` und `if (pConnectionInfo->...)` | `:1991/:1992` | beide in ein `if (pConnectionInfo)` gefasst |
+
+Die Stelle `:1969` war die wichtigste: Zeile 1961 prueft `pConnectionInfo`,
+Zeile 1969 dereferenziert es acht Zeilen spaeter wieder ungeprueft. Der
+Zweig `:1986-1997` (kein `TaskInfo`, also IMAP oder Hauptfaden) pruefte
+ueberhaupt nicht.
+
+**Neu hinzugekommen: der Funktionszeiger.** `fnConnInfo` kann NULL sein, ohne
+dass etwas vorher schiefgelaufen sein muss. `Network::SetSSLMode`
+(`:362-386`) bricht nur ab, wenn `LoadLibrary("qcssl")` scheitert; die zehn
+`GetProcAddress`-Ergebnisse (`:373-383`) werden **gar nicht geprueft** und
+`m_bSSLMode` wird trotzdem gesetzt. Laedt also eine `QCSSL.dll` der falschen
+Fassung, in der `QCSSLGetConnectionInfo` fehlt, dann ist `fnConnInfo` NULL und
+der Aufruf in `:1957` stuerzt ab - **noch bevor** die alte Fundstelle `:1969`
+ueberhaupt erreicht wird. Genau dieser Fall ist bei Gregor moeglich, weil in
+`Releases/1.0/` mehrere `QCSSL.dll`-Fassungen liegen.
+
+**Die Meldung.** Ohne `ConnectionInfo` blieb `csError` bisher bei
+`"SSL Negotiation Failed: "` stehen und `errorCode` bei `-1`. `SetError`
+(`:680`) bildet daraus `CRString(8000 + (-1 - 10000))` = `CRString(-2001)` -
+eine Ressourcen-ID, die es nicht gibt; `LoadString` liefert dann den
+Leerstring. Gregor haette also `SSL Negotiation Failed: <nichts> Cause:
+<nichts> (-1)` gesehen. Jetzt haengt in diesem Fall ein Klartext-Zusatz daran,
+der auf die DLLs zeigt. Woertliche Zeichenkette statt neuer Ressourcen-ID -
+dasselbe Muster wie `QCWorkerSocket.cpp:700`
+(`"Connection closed by foreign host."`), damit `EudoraRes.rc` und
+`resource.h` unangetastet bleiben und keine Ressourcen-DLL neu gebaut werden
+muss.
+
+Am Ablauf aendert sich sonst nichts: `SetError(csError, errorCode)` und
+`m_bAbortConnection = TRUE` laufen wie bisher, der Abruf bricht geordnet ab.
+
+**Uebersetzt:**
+`MSBuild Eudora71\QCSocket\QCSocket.vcxproj /p:Configuration=Debug /p:Platform=Win32`
+- Exit 0, `Eudora71\Bin\Debug\QCSocket.dll` erzeugt. `QCWorkerSocket.cpp`
+fehlerfrei, nur die vorbestehenden `C4996`-Warnungen.
+
+### P-2.2 BEHOBEN: derselbe Fehlertyp, umgekehrt - `pSettings` in `SetSSLMode`
+
+**Sicherheit: nachgewiesen (uebersetzt). Heute nicht erreichbar.**
+**Datei:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:2050-2051`.
+
+`QCWorkerSocket::SetSSLMode` (`:2038`) dereferenzierte `pSettings` in den
+Zeilen 2050/2051 ungeprueft - und prueft denselben Zeiger fuenfzehn Zeilen
+weiter unten in `:2065` (`if(pSettings)`) sehr wohl. Der Autor hat NULL also
+fuer moeglich gehalten. Er ist es auch: die Deklaration in
+`QCWorkerSocket.h:62` und `:265` gibt `SSLSettings *pSettings = NULL` als
+**Vorgabewert** an.
+
+**Heute nicht erreichbar:** alle fuenf echten Aufrufer uebergeben die Adresse
+eines Elements, die nie NULL sein kann - `POPSession.cpp:604` und `:3489`,
+`SMTPSession.cpp:717` und `:837`, `password.cpp:392`, jeweils
+`&m_Settings->m_SSLSettings`. Der einzige Aufruf mit Vorgabewerten ist
+`Network::SetSSLMode(bVal)` in `:2041`, und das ist eine andere Funktion, die
+`pSettings` gar nicht anfasst. Gefunden hat es die Suche unten, nicht ein
+Absturz.
+
+Behoben, weil es derselbe Fehlertyp ist und die Zeile auf dem Abrufweg liegt.
+Die beiden Zuweisungen stehen jetzt in einem `if (pSettings)`.
+
+### P-2.3 Der Abrufpfad ist nach demselben Muster abgesucht
+
+**Verfahren:** `suche-zeiger.pl` (im Branch abgelegt) liest jede Datei mit
+`:raw`, findet jede Zeile der Form `if (p)`, `if (!p)`, `if (p == NULL)`,
+`if (p != NULL)`, verfolgt die Klammertiefe bis zum Ende des geschuetzten
+Blocks und meldet jede Dereferenzierung desselben Namens in den 40 Zeilen
+danach, sofern dazwischen nicht erneut geprueft wird.
+
+Abgesucht: `QCWorkerSocket.cpp`, `POPSession.cpp`, `pop.cpp`, `GetMail.cpp`,
+`header.cpp`, `TextReader.cpp`, `mime.cpp`, `lex822.cpp`, `QCMailSettings.cpp`,
+`SSLSettings.cpp`.
+
+Acht Treffer, einzeln nachgelesen:
+
+| Fundstelle | Bewertung |
+|---|---|
+| `QCWorkerSocket.cpp:2050` | **echter Fund** - P-2.2, behoben |
+| `QCWorkerSocket.cpp:453` | Fehlalarm: einzeiliges `if` ohne Block, der Aufruf ist der Rumpf |
+| `QCWorkerSocket.cpp:2042` | Fehlalarm: `if(!m_pSSLReference) m_pSSLReference = DEBUG_NEW ...`; `new` wirft bei MFC, liefert nicht NULL |
+| `POPSession.cpp:501`, `:896`, `:3228` | Fehlalarme: einzeiliges `if`, Zugriff im Rumpf |
+| `pop.cpp:312` | Fehlalarm: sauberes `if (!p) {...} else {...}` |
+| `pop.cpp:476` | Fehlalarm: Zugriff steht im geschuetzten Block |
+
+Das Muster "geprueft und ein paar Zeilen spaeter ungeprueft benutzt" kommt im
+Abrufpfad also **nur an diesen beiden Stellen** vor. Beide sind behoben.
+
+**Was die Suche NICHT findet, und wo deshalb noch etwas liegen koennte:**
+Zeiger, die nirgends geprueft werden. Die zehn ungeprueften
+`GetProcAddress`-Ergebnisse in `QCWorkerSocket.cpp:373-383` sind der wichtigste
+Fall dieser Art. Nur `QCSSLGetConnectionInfo` ist jetzt an seinen zwei
+Verwendungsstellen abgesichert; `g_fnQCSSLBeginSession` (`:1944`),
+`g_fnQCSSLWrite`, `g_fnQCSSLRead`, `g_fnQCSSLEndSession` sind es nicht.
+**UNGEPRUEFT**, ob eine der ausgelieferten `QCSSL.dll`-Fassungen wirklich einen
+dieser Exporte vermissen laesst - P-1.4 hat `qcssl.def` als in beiden
+Konfigurationen eingehaengt nachgewiesen, die Exporte sollten also da sein.
+Sauber waere, `Network::SetSSLMode` `m_bSSLMode` nur dann setzen zu lassen,
+wenn alle Zeiger aufgeloest wurden, und sonst eine Meldung zu zeigen. Das ist
+mehr als ein Zweizeiler und war in der Zeit nicht drin.
+
+### P-2.4 ERLEDIGT: `TextReader.cpp:251` ist jetzt uebersetzt (schliesst P-1.8)
+
+**Sicherheit: nachgewiesen (uebersetzt und gebunden).**
+
+P-1.8 musste die Aenderung aus P-1.1 unuebersetzt lassen, weil der damalige
+Arbeitsbaum an einem OTShim-Fehler haengenblieb. Auf `darstellung-und-menue`
+ist das behoben.
+
+    MSBuild Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32
+    -> Eudora71\Bin\Debug\Eudora.exe   (Exit 0, 10 224 128 Byte)
+
+`TextReader.cpp` uebersetzt fehlerfrei. Die Zuweisung
+`size = ISOTranslate(buf, size, iCharsetIdx);` erzeugt **keine** Warnung -
+insbesondere keine `C4244`; `size` ist `LONG` (`TextReader.cpp:77`) und
+`ISOTranslate` liefert `LONG` (`utils.h:90`). Die einzigen Warnungen in der
+Datei sind die vorbestehenden `C4996` zu `strncpy`, `sprintf`, `strcpy` und
+`strcat`. **P-1.8 ist damit geschlossen.**
+
+Zum Weg dorthin, fuer den naechsten, der es nachbaut:
+
+1. `Eudora.vcxproj` mit `/p:BuildProjectReferences=false` uebersetzt alles,
+   scheitert aber am Binden mit `LNK1104: imap.lib`.
+2. `Eudora71\Eudora.sln` laesst sich **nicht** mit
+   `/p:Platform=Win32` bauen: `MSB4126, Projektmappenkonfiguration
+   "Debug|Win32" ist ungueltig`.
+3. `Eudora.vcxproj` **mit** Projektverweisen baut `Imap.dll`, `QCSSL.dll`,
+   `QCSocket.dll` und die uebrigen Bibliotheken, scheitert dann aber an
+   `OT501.vcxproj` (`NMAKE U1073: OTA50D\OTA50D.lib`). Das ist eine fremde
+   Baustelle.
+4. Danach `Eudora.vcxproj` erneut **ohne** Projektverweise - jetzt liegen alle
+   `.lib` in `Eudora71\Lib\Debug`, und `Eudora.exe` entsteht.
+
+Der Umweg ueber Schritt 3 ist nur beim ersten Mal in einem frischen Worktree
+noetig.
+
+### P-2.5 Nicht angefasst
+
+- `tools/patches/zertifikatspruefung-verschaerfen.patch` bleibt unangewendet
+  (Gregors ausdrueckliche Entscheidung, siehe P-1.6).
+- Die uebrigen Altlasten aus P-1.5b bis P-1.5j. Sie stehen wortgleich in
+  `567a5d8` und sind unveraendert offen. Nach Aufwand-Nutzen als naechstes:
+  **P-1.5b** (`%39s` statt `%s`, `POPSession.cpp:1050`) und **P-1.5d**
+  (`sizeof(Server)-1` plus Nullterminierung, `POPSession.cpp:1739`, `:3342`,
+  `:3344`) - beides Einzeiler.
+
+### P-2.6 Wie zuversichtlich ich bin, dass der erste Abruf gelingt
+
+Ehrlich: **verhalten.** Was ich sagen kann und was nicht:
+
+- **Belegt:** der Absturz aus P-1.5a kann nicht mehr eintreten, und wo Eudora
+  vorher verschwand, kommt jetzt eine Meldung mit einem Hinweis auf die DLLs.
+- **Belegt:** Umlaute in Text und Betreff kommen richtig an (P-1.1 behoben und
+  jetzt auch uebersetzt, P-1.3 mit neun Tests vermessen).
+- **Belegt:** die Portierung hat den Abrufpfad nicht beschaedigt (P-1.4).
+- **UNGEPRUEFT und der wahrscheinlichste Stolperstein:** ob `mx.freenet.de`
+  ueberhaupt POP3 spricht. Ohne Netz nicht zu klaeren. `ABRUF-PRUEFEN.md`
+  Abschnitt 1 nennt jetzt das unterscheidende Merkmal - kommt der
+  Passwortdialog, stimmt der Server; kommt er nicht, ist es der Name oder der
+  Port.
+- **UNGEPRUEFT:** ob `rootcerts.p7b` die heutige CA von freenet enthaelt. Wenn
+  nicht, kommt der Vertrauensdialog. Das ist kein Scheitern - Abschnitt 5b
+  sagt, was der Text bedeutet und dass "OK" ihn dauerhaft wegraeumt.
+- **Nichts davon ist an einem laufenden Eudora geprueft.** Der erste echte
+  Abruf ist der erste echte Abruf.
+
+Meine Erwartung: **der Abruf scheitert eher an der Serveradresse als an
+Eudora.** Und wenn er scheitert, scheitert er jetzt mit einer Meldung statt
+mit einem Absturz - das ist der Unterschied, den diese Sitzung gemacht hat.
+
+### P-2.7 Nachtrag: drei Komponententests mehr (105 gruen)
+
+Ausgangsstand waren nicht mehr die 34 aus P-1.7, sondern **102** - andere
+Agenten haben in der Zwischenzeit ergaenzt. Dazu drei neue in
+`Eudora71/Tests/TestPopEmpfang.cpp`:
+
+| Test | Was er absichert |
+|---|---|
+| `Test_NachrichtOhneBetreff` | leerer Betreff, Betreff nur aus Zwischenraum, Betreff nur `=`, und ein angefangenes, nie geschlossenes kodiertes Wort - `Fix2047` darf dabei nicht ueber das Zeilenende hinauslesen |
+| `Test_SehrLangeKopfzeile` | 60 kodierte Woerter hintereinander, roh 1620 Zeichen, dekodiert 300. Beide Laengen sind im Test gegengeprueft, damit er nicht unbemerkt etwas anderes misst |
+| `Test_VollstaendigePopAntwort` | eine ganze RETR-Antwort: sechs Kopfzeilen (zwei kodiert, vier reines ASCII, die sich nicht aendern duerfen) und vier Rumpfzeilen mit Umlaut, scharfem s, Eurozeichen und geschuetztem Leerzeichen. Nachgestellt ist die Aufteilung aus `pop.cpp:656`. Jede Rumpfzeile wird zusaetzlich darauf geprueft, dass sie NACH der Uebersetzung noch auf CRLF endet - genau das ging schief, solange die neue Laenge weggeworfen wurde (P-1.1) |
+
+    Eudora71\Tests\RunTests.cmd
+    Ergebnis: 105 Tests, 105 bestanden, 0 fehlgeschlagen
+
+Damit ist von der Wunschliste des Auftrags abgedeckt: UTF-8-Umlaute in einer
+POP-Antwort, Betreff in Base64, Betreff in Quoted-Printable (die beiden
+letzten standen schon aus P-1.3), Nachricht ohne Betreff, sehr lange
+Kopfzeile.
+
+**Eine Falle fuer den naechsten, der hier Tests schreibt:** `"\xC3\x9Fe"` ist
+keine Bytefolge, sondern die Fluchtfolge `\x9FE` - C++ frisst das `e` als
+weitere Hexziffer. Der Uebersetzer meldet `C2022: "2558" zu gross fuer ein
+Zeichen`. Richtig ist `"\xC3\x9F" "e"`. Das gilt fuer jedes `a`-`f` direkt
+hinter einer `\x`-Folge, und der Fehler ist genau bei deutschen Umlauten
+(`\x9F` + `e` in "Strasse", "Gruesse") wahrscheinlich.
