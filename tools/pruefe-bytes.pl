@@ -268,6 +268,37 @@ my @fehler;
 
 my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
 
+# Doppelkodierung zaehlen - Regel 5, Befund X-7.
+#
+# Am 05.09.2026 hat ein Commit die ganze README.md doppelt kodiert: 238
+# Stellen, aus "koennen" wurde "kAPOSTROPHnnen", aus dem Gedankenstrich drei
+# Zeichen. Ursache war ein Werkzeug, das die Datei als Latin-1 gelesen und
+# als UTF-8 zurueckgeschrieben hat.
+#
+# Die Schranke hat es DURCHGELASSEN, und zwar zu Recht nach ihren damaligen
+# Regeln: das Ergebnis ist gueltiges UTF-8, es entstehen KEINE Ersatzzeichen
+# (U+FFFD), und die Zeilenenden bleiben unveraendert. Genau deshalb ist der
+# Schaden lautlos - er sieht fuer jede byteweise Pruefung normal aus.
+#
+# Erkennbar ist er an den Bytefolgen, die entstehen, wenn ein UTF-8-Byte aus
+# dem Bereich C2..DF ein zweites Mal kodiert wird. Die haeufigsten:
+#
+#   C3 83 C2 xx   aus C3 xx   (Umlaute, ss)
+#   C3 A2 C2 80   aus E2 80   (Gedanken- und Anfuehrungsstriche)
+#   C3 82 C2 xx   aus C2 xx   (geschuetztes Leerzeichen, Grad, Paragraf)
+#
+# Diese Folgen kommen in echtem Text praktisch nicht vor: sie hiessen woertlich
+# "A-Tilde, Klammeraffe-Rest" mitten in einem Wort.
+sub doppelkodiert {
+  my ($s) = @_;
+  return 0 unless defined $s;
+  my $n = 0;
+  $n += () = $s =~ /\xC3\x83\xC2/g;
+  $n += () = $s =~ /\xC3\xA2\xC2\x80/g;
+  $n += () = $s =~ /\xC3\x82\xC2/g;
+  return $n;
+}
+
 for my $e (@eintraege) {
   my $d      = $e->{neu};
   my $jetzt  = blob('',     $d);            # ':datei' = Index
@@ -281,6 +312,10 @@ for my $e (@eintraege) {
     my $bd = zaehle($jetzt, $BAD);
     push @fehler, "$d: neue Datei mit $bd Ersatzzeichen (U+FFFD) - diese Quellen sind Latin-1"
       if $bd;
+
+    my $dk = doppelkodiert($jetzt);
+    push @fehler, "$d: neue Datei mit $dk doppelt kodierten Stellen (Regel 5, X-7)"
+      if $dk;
     next;
   }
 
@@ -349,6 +384,13 @@ for my $e (@eintraege) {
         $d, $umbenannt, scalar(@um), join(', ', map { "$_ x$richtung{$_}" } sort keys %richtung), $bsp);
     }
   }
+
+  # Regel 5: Doppelkodierung. Gezaehlt wird der ZUWACHS - eine Datei, die
+  # schon vorher solche Stellen hatte, soll nicht bei jedem Commit anschlagen.
+  my $dk_a = doppelkodiert($vorher); my $dk_b = doppelkodiert($jetzt);
+  push @fehler, "$d$umbenannt: doppelt kodiert - $dk_b Stellen, vorher $dk_a "
+                . "(Datei als Latin-1 gelesen und als UTF-8 geschrieben?)"
+    if $dk_b > $dk_a;
 
   my $bd_a = zaehle($vorher, $BAD); my $bd_b = zaehle($jetzt, $BAD);
   push @fehler, "$d$umbenannt: Sonderzeichen zerstoert - $bd_b Ersatzzeichen (U+FFFD), vorher $bd_a"
