@@ -238,7 +238,15 @@ void CHeaderView::OnFromPooter()
 	if (pMenu)
 	{
 		CRect theRect;
+		// Befund E-18: pFld wurde ohne jede Pruefung dereferenziert. Dieser
+		// ganze Zweig laeuft NUR bei mehr als einer Persoenlichkeit (Zeile 233),
+		// war also bis zum 05.09.2026 nie betreten worden - Gregor hatte immer
+		// nur die dominante. Seit der Kontoassistent eine zweite anlegt, laeuft
+		// er, und GetHeaderCtrl kann NULL liefern.
 		CHeaderField* pFld = GetHeaderCtrl(HEADER_FROM);
+		if (pFld == NULL)
+			return;
+
 		pFld->GetLabelWindowRect(&theRect);
 
 		pMenu->TrackPopupMenu(TPM_LEFTALIGN, theRect.left - 1, theRect.bottom + 1, AfxGetMainWnd());
