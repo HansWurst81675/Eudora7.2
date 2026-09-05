@@ -255,6 +255,15 @@ void CWizardImportPage::SetupControls()
 	HTREEITEM hItem = m_ImportTree.GetFirstCheckedItem();
 	CImportChild *pChild = NULL;
 
+	//	Wurzelknoten UEBERSPRINGEN. InitTree oben legt zwei Arten von Knoten an:
+	//	Wurzeln tragen einen CImportProvider* (SetItemData(htiRoot, ...)), Blaetter
+	//	einen CImportChild*. GetFirstCheckedItem laeuft ueber BEIDE. Hat ein
+	//	Anbieter genau ein Kind, gilt die Wurzel nach dem Ankreuzen des Kindes als
+	//	voll angekreuzt und wird zuerst geliefert - der Zeiger waere dann vom
+	//	falschen Typ (Befund E-25, aufgezeigt vom Agenten ZEIGER).
+	while (hItem && m_ImportTree.ItemHasChildren(hItem))
+		hItem = m_ImportTree.GetNextCheckedItem(hItem);
+
 	if (hItem)
 		pChild = (CImportChild *) m_ImportTree.GetItemData(hItem);
 
@@ -366,10 +375,25 @@ bool CWizardImportPage::CopySettings()
 
 	HTREEITEM hItem = m_ImportTree.GetFirstCheckedItem();
 
+	//	Wurzelknoten UEBERSPRINGEN. InitTree oben legt zwei Arten von Knoten an:
+	//	Wurzeln tragen einen CImportProvider* (SetItemData(htiRoot, ...)), Blaetter
+	//	einen CImportChild*. GetFirstCheckedItem laeuft ueber BEIDE. Hat ein
+	//	Anbieter genau ein Kind, gilt die Wurzel nach dem Ankreuzen des Kindes als
+	//	voll angekreuzt und wird zuerst geliefert - der Zeiger waere dann vom
+	//	falschen Typ (Befund E-25, aufgezeigt vom Agenten ZEIGER).
+	while (hItem && m_ImportTree.ItemHasChildren(hItem))
+		hItem = m_ImportTree.GetNextCheckedItem(hItem);
+
 	if (!hItem)
 		return (false);
 	
 	CImportChild *pChild = (CImportChild *) m_ImportTree.GetItemData(hItem);
+
+	//	Ohne diese Pruefung wurde pChild weiter unten bedingungslos
+	//	dereferenziert (frueher Zeile 420), obwohl die Schwesterfunktion
+	//	SetupControls denselben Wert ausdruecklich als NULL-Fall behandelt.
+	if (!pChild)
+		return (false);
 	
 	//bool bMail = ((m_MailChk.IsWindowVisible()) && (m_MailChk.IsWindowEnabled()) && (m_MailChk.GetCheck() != 0));
 	//bool bAddr = ((m_AddrChk.IsWindowVisible()) && (m_AddrChk.IsWindowEnabled()) && (m_AddrChk.GetCheck() != 0));
