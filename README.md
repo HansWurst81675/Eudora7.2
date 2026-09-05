@@ -276,22 +276,34 @@ MSBuild.exe Eudora71/Eudora.sln -t:Build -p:Configuration=Release -p:Platform=x8
 Diese vier Fallen haben in diesem Projekt jeweils Zeit gekostet. Sie stehen
 hier, damit es kein zweites Mal passiert.
 
-#### 1. **Niemals `Rebuild` oder `Clean`** — es zerstört Unwiederbringliches
+#### 1. `OT501` kann **nie** bauen — und das ist keine Panne
 
-> `-t:Rebuild` und *Projektmappe bereinigen* löschen auch **vorgebaute**
-> Artefakte, die sich **nicht neu erzeugen lassen**, weil ihre Quellen nicht im
-> Repo liegen.
+`Eudora71/OT501` kapselt die **Stingray Objective Toolkit**. Das war ein
+kommerzielles Fremdprodukt; die CHM-Freigabe durfte es nicht enthalten. Im Repo
+liegen nur 39 `.cpp` (fast alle die mitgelieferte JPEG-Bibliothek) und 66
+Kopfdateien — eine vollständige Toolkit-Quelle hätte Hunderte.
 
-Am **05.09.2026** ist genau das passiert: ein `-t:Rebuild` hat
-`Eudora71/OT501/Src/OTA50R/OTA50R.lib` gelöscht — eine vorgebaute
-Stingray-Bibliothek. Der nächste Bau versuchte sie neu zu erzeugen und scheiterte
-an `.\utility\crypt\Blackbox.cpp`, einer Quelle, die es in dieser Freigabe nicht
-gibt. Die Bibliothek ist in **keinem** Release-ZIP und in **keinem** Commit —
-Bau-Artefakte sind mit `e4a0fae` bewusst aus dem Index genommen worden. Sie war
-damit endgültig weg.
+Der Bau bricht deshalb ab mit:
 
-**Nur `Build` benutzen.** Wenn wirklich alles neu soll: die Ausgabeverzeichnisse
-von Hand leeren und `Eudora71/OT501` dabei **auslassen**.
+```
+NMAKE : fatal error U1073: ".\utility\crypt\Blackbox.cpp" konnte nicht erstellt werden
+NMAKE : fatal error U1073: "OTA50R\OTA50R.lib" konnte nicht erstellt werden
+```
+
+Das Verzeichnis `Src/utility/crypt` gibt es nicht; von `Blackbox` liegt nur
+`Include/BLACKBOX.H` da, ohne Quelldatei. **`OTA50R.lib` hat nie existiert** —
+weder im Repo noch in irgendeinem Release-ZIP noch in einem Commit.
+
+Ersetzt wird das Ganze durch die eigene Schicht [OTShim](Eudora71/OTShim),
+rund 18.000 Zeilen. Seit dem 05.09.2026 ist OT501 aus dem Bau genommen (siehe
+Punkt 4) — davor scheiterte **jeder Bau aus einem frischen Klon** daran.
+
+> **Berichtigung.** Am 05.09.2026 stand hier zunächst, ein `-t:Rebuild` habe
+> eine vorgebaute `OTA50R.lib` gelöscht. Das war falsch. Nachgemessen: die vier
+> Dateien in `Src/OTA50R/` tragen unverändert den **31.08.2026, 07:22** — ein
+> Clean hätte sie gelöscht. Es waren zwei Objektdateien und eine PCH aus einem
+> Bauversuch, der an derselben fehlenden Quelle starb. Zerstört wurde nichts;
+> sichtbar wurde ein Mangel, der die ganze Zeit da war.
 
 #### 2. Die Plattform heißt in der Projektmappe anders als im Projekt
 
