@@ -2502,6 +2502,7 @@ void SECDockBar::SetBarInfo(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd)
 
 void SECDockBar::DockControlBar(CControlBar* pBar, LPCRECT lpRect)
 {
+	NormalizeBarArray();				// E-4
 	CDockBar::DockControlBar(pBar, lpRect);
 }
 
@@ -2526,6 +2527,29 @@ void SECDockBar::ReDockControlBar(CControlBar* pBar, LPCRECT lpRect)
 // dritten Wert als int entgegen (afxpriv.h:608).
 BOOL SECDockBar::RemoveControlBar(CControlBar* pBar, int nPosExclude, BOOL bAddPlaceHolder)
 {
+	if (pBar == NULL)
+		return FALSE;
+
+	// BEFUND E-4. CDockBar::RemoveControlBar (bardock.cpp:302-334) setzt
+	// zweierlei voraus:
+	//
+	//   1. Die Leiste steht an einer Stelle GROESSER 0 in m_arrBars. Sonst
+	//      wirft ENSURE(nPos > 0) eine CInvalidArgException - im Release-Bau
+	//      das Meldungsfenster "Encountered an improper argument".
+	//   2. Hinter der entfernten Stelle steht noch ein Eintrag: MFC liest
+	//      m_arrBars[nPos] UNMITTELBAR NACH m_arrBars.RemoveAt(nPos)
+	//      (bardock.cpp:321-322 und :328-329, ebenso RemovePlaceHolder
+	//      bardock.cpp:297). Das geht nur gut, solange das Feld mit einer
+	//      NULL-Marke endet - sonst greift CPtrArray::ElementAt daneben
+	//      (Zusicherung afxcoll.inl:213 im Debug-Bau, dieselbe Ausnahme im
+	//      Release-Bau).
+	//
+	// Beides wird hier hergestellt bzw. geprueft, bevor MFC uebernimmt.
+	NormalizeBarArray();
+
+	if (FindBar(pBar, nPosExclude) <= 0)
+		return FALSE;
+
 	return CDockBar::RemoveControlBar(pBar, nPosExclude, bAddPlaceHolder ? 1 : 0);
 }
 
@@ -2575,6 +2599,13 @@ int SECDockBar::PredictInsertPosition(CControlBar* /*pBarIns*/, CRect /*rect*/, 
 // Antwort bekommt wie bisher.
 CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 {
+	// E-4: CDockBar::CalcFixedLayout schiebt selbst NULL-Marken in m_arrBars
+	// (bardock.cpp:445 und :488). Weil diese Fassung bei JEDEM
+	// Anordnungsdurchlauf laeuft, ist sie die Stelle, an der der Aufbau
+	// laufend geradegezogen wird - auch fuer die Entfernwege, die MFC
+	// unmittelbar auf CDockBar aufruft und die diese Schicht nicht sieht.
+	NormalizeBarArray();
+
 	AssignRowExtents(bHorz);
 	CSize size = CDockBar::CalcFixedLayout(bStretch, bHorz);
 	ClearRowExtents();
@@ -2713,12 +2744,65 @@ void SECDockBar::DistributeRow(int nStart, int nEnd, int nAvail)
 }
 
 
+// NICHT im Original. BEFUND E-4: Eudora stuerzte beim Beenden ab.
+//
+// CDockBar sichert zwei Eigenschaften von m_arrBars zu und prueft sie in
+// CDockBar::AssertValid (bardock.cpp:746-748):
+//
+//     m_arrBars[0]                  == NULL   fuehrende Marke
+//     m_arrBars[GetUpperBound()]    == NULL   abschliessende Marke
+//
+// Die Abbauwege beim Beenden verlassen sich darauf, ohne es zu pruefen:
+// CDockBar::RemoveControlBar und CDockBar::RemovePlaceHolder lesen
+// m_arrBars[nPos] unmittelbar NACH m_arrBars.RemoveAt(nPos) (bardock.cpp:297,
+// :321-322, :328-329). Fehlt die abschliessende Marke, ist dieser Index um
+// eins zu gross: im Debug-Bau die Zusicherung in CPtrArray::ElementAt
+// (afxcoll.inl:213), im Release-Bau AfxThrowInvalidArgException, also das
+// Meldungsfenster "Encountered an improper argument".
+//
+// MoveControlBarToPosition ist die einzige Stelle im ganzen Bau, die
+// m_arrBars von Hand umbaut. Diese Fassung zieht den Aufbau danach wieder
+// gerade, statt sich darauf zu verlassen, dass jeder Zweig ihn von selbst
+// einhaelt. Leere Zeilen - zwei NULL-Marken hintereinander - fallen dabei
+// ebenfalls weg; MFC erzeugt sie nie, und CDockBar::Insert (bardock.cpp:695-734)
+// rechnet nicht mit ihnen.
+void SECDockBar::NormalizeBarArray()
+{
+	// 1. fuehrende Marke
+	if (m_arrBars.GetSize() == 0)
+	{
+		m_arrBars.Add(NULL);
+		return;
+	}
+
+	if (m_arrBars[0] != NULL)
+		m_arrBars.InsertAt(0, (void*) NULL);
+
+	// 2. keine zwei Marken hintereinander (leere Zeile)
+	for (int i = (int) m_arrBars.GetSize() - 1; i > 0; i--)
+	{
+		if (m_arrBars[i] == NULL && m_arrBars[i - 1] == NULL)
+			m_arrBars.RemoveAt(i);
+	}
+
+	// 3. abschliessende Marke
+	int nSize = (int) m_arrBars.GetSize();
+	if (m_arrBars[nSize - 1] != NULL)
+		m_arrBars.Add(NULL);
+}
+
+
 // NICHT im Original. Schiebt den Eintrag von pBar in m_arrBars an die Stelle,
 // die SECMDIFrameWnd::DockControlBarEx verlangt. Begruendung siehe OTShim.h.
 void SECDockBar::MoveControlBarToPosition(CControlBar* pBar, int nCol, int nRow)
 {
 	if (pBar == NULL || nCol < 0 || nRow < 0)
 		return;
+
+	// E-4: erst den Aufbau geradeziehen, dann darin rechnen. Sonst haengt
+	// die Zeilenzaehlung weiter unten davon ab, ob ein anderer Weg eine
+	// leere Zeile oder eine fehlende Marke hinterlassen hat.
+	NormalizeBarArray();
 
 	int nSize = (int) m_arrBars.GetSize();
 	int nOld = -1;
@@ -2774,6 +2858,7 @@ void SECDockBar::MoveControlBarToPosition(CControlBar* pBar, int nCol, int nRow)
 		// Zeile am Ende, also genau beim bisherigen Verhalten.
 		m_arrBars.Add(pBar);
 		m_arrBars.Add(NULL);
+		NormalizeBarArray();				// E-4
 		return;
 	}
 
@@ -2787,11 +2872,9 @@ void SECDockBar::MoveControlBarToPosition(CControlBar* pBar, int nCol, int nRow)
 
 	m_arrBars.InsertAt(nIns, (void*) pBar);
 
-	// m_arrBars muss mit einer NULL-Marke enden, sonst faellt in
-	// CDockBar::CalcFixedLayout das Zeilenende der letzten Zeile weg.
-	nSize = (int) m_arrBars.GetSize();
-	if (nSize == 0 || m_arrBars[nSize - 1] != NULL)
-		m_arrBars.Add(NULL);
+	// m_arrBars muss mit einer NULL-Marke anfangen UND enden, sonst greifen
+	// die Abbauwege beim Beenden daneben (E-4).
+	NormalizeBarArray();
 }
 
 

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-08-29T19:57:38.425Z
+  modified: 2026-09-05T17:51:39.000Z
 ---
 
 Bevor ich eine Ursache benenne, die vorhandene Quelle oeffnen. Wenn ich trotzdem
@@ -50,3 +50,49 @@ unklarer Repo-Historie `git reflog` und `git worktree list`, bei haengenden
 Prozessen die tatsaechliche Ausgabe. Und beim Formulieren: "ich vermute, weil X"
 statt "es ist so". Kostet eine Zeile und macht eine fehlende Quelle sofort
 sichtbar.
+
+---
+
+## Nachtrag 05.09.2026 - warum die Regel trotzdem nicht griff
+
+Gregor: *„gemessen statt geglaubt - das sollte ja bereits gelten! schon seit
+langem. warum immer noch fehlerhaft?"*
+
+Er hat recht, und die Antwort ist unangenehm einfach: ich habe die Regel auf
+**fremde Behauptungen** angewendet und nicht auf **mein eigenes Handeln**. Die
+Befunde dieser Sitzung sind sauber gemessen (D3a widerlegt, R-1 nachgerechnet,
+801 CRLF-Dateien belegt). Meine eigenen Handgriffe nicht - fuenfmal:
+
+| Handgriff | Was danebenlag und nicht angesehen wurde |
+|---|---|
+| „mein Rebuild hat `OTA50R.lib` zerstoert" | die Zeitstempel - unveraendert vom 31.08. Die Datei hat nie existiert. |
+| Debug/Release mit `strings` erkannt | 10,2 MB gegen 2,9 MB, direkt in derselben Ausgabe |
+| DLL-Namen aus Binaerdateien gegrept | `s.dll`, `ts.dll` im Ergebnis - sichtbare Bruchstuecke |
+| zwei Agenten in einen Arbeitsbaum | `git worktree list`, ein Befehl |
+| „schliess Eudora, dann tausche ich" | dass genau das Schliessen abstuerzt - eben gezeigt bekommen |
+
+**Der Grundsatz feuert nicht. Ein Handgriff feuert.** Wo dieses Projekt eine
+echte Schranke gebaut hat (`pruefe-bytes.pl` gegen Zeilenenden), ist die
+Fehlerklasse weg; wo es beim Merksatz blieb, kommt sie wieder.
+
+**Deshalb, an genau diesen vier Punkten, vor dem Handeln statt nach dem Reden:**
+
+1. **Vor einem Befehl, der loeschen kann** (`Rebuild`, `Clean`, `reset --hard`,
+   `checkout -B`, Ueberschreiben): erst auflisten, was er anfassen wird, und
+   pruefen, ob davon etwas nicht wiederherstellbar ist. `git status` und
+   Zeitstempel **vorher**, nicht hinterher zur Schadensdeutung.
+2. **Nach jeder Textersetzung** (perl `s///`, besonders ueber Zeilengrenzen):
+   das Ergebnis zurueckelesen und ansehen. Am 05.09. ist mir derselbe
+   Zeichenketten-Literal zweimal zerbrochen; beide Male nur aufgefallen, weil
+   ich zufaellig ausgegeben habe.
+3. **Vor jeder Agentenzuteilung:** `git worktree list`. Siehe
+   [[agenten-koordinieren]].
+4. **Wenn eine Messung einem offensichtlichen Signal widerspricht** - eine
+   4-MB-Datei neben einer 10-MB-Datei, beide angeblich gleich gebaut - ist die
+   **Messmethode** verdaechtig, nicht das Signal. Dann die Methode wechseln,
+   nicht das Ergebnis glauben.
+
+Und fuer die Selbstbeschuldigung eigens: sie ist genauso eine Behauptung wie
+jede andere. „Ich habe X kaputtgemacht" gehoert belegt, bevor ich es sage -
+sonst steht am Ende eine falsche Ursache in der README, und der echte Mangel
+bleibt unentdeckt.

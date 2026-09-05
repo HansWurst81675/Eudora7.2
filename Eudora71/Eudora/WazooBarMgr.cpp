@@ -285,9 +285,22 @@ CWazooBar* CWazooBarMgr::CreateNewWazooBar(CMDIFrameWnd* pFrameWnd)
 		CWnd* pMDIClient = CWnd::FromHandle(pMainFrame->m_hWndMDIClient);
 		pMDIClient->GetWindowRect(rectMDIClient);
 
-		CMDIChildWnd* pMDIFrame = (CMDIChildWnd *) pWazooBar->GetParentFrame();
-		ASSERT_KINDOF(CMDIChildWnd, pMDIFrame);
-		pMDIFrame->SetWindowPos(NULL, 0, 0, (rectMDIClient.Width() * 4) / 5, (rectMDIClient.Height() * 4) / 5, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		//	BEFUND E-4. Die Zeile darueber schickt ID_SEC_MDIFLOAT, aber in
+		//	dieser Fassung bleibt die Leiste ANGEDOCKT:
+		//	SECMDIFrameWnd::FloatControlBarInMDIChild ist Stufe 2 und tut
+		//	nichts (OTShim.cpp). GetParentFrame liefert dann das
+		//	HAUPTFENSTER, nicht das MDI-Kindfenster.
+		//
+		//	Der C-Cast prueft nichts, und ASSERT_KINDOF ist im Release-Bau
+		//	leer. Deshalb hier eine echte Laufzeitpruefung: ist es kein
+		//	MDI-Kindfenster, bleibt die Groesse so, wie DockControlBarEx sie
+		//	gesetzt hat.
+		CMDIChildWnd* pMDIFrame =
+			DYNAMIC_DOWNCAST(CMDIChildWnd, pWazooBar->GetParentFrame());
+		if (pMDIFrame != NULL)
+		{
+			pMDIFrame->SetWindowPos(NULL, 0, 0, (rectMDIClient.Width() * 4) / 5, (rectMDIClient.Height() * 4) / 5, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		}
 	}
 
 	//
@@ -433,17 +446,33 @@ bool CWazooBarMgr::SetDefaultWazooBarState(CWazooBar *pWazooBar, int nIndex, Def
 					CWnd* pMDIClient = CWnd::FromHandle(pMainFrame->m_hWndMDIClient);
 					pMDIClient->GetClientRect(rectMDIClient);
 
-					QCControlBarWorksheet* pMDIFrame = (QCControlBarWorksheet *) pWazooBar->GetParentFrame();
-					ASSERT_KINDOF(QCControlBarWorksheet, pMDIFrame);
-						
-					pMDIFrame->MoveWindow(rectMDIClient.left, rectMDIClient.top,rectMDIClient.Width(),__max(rectMDIClient.Height(),355));
+					//	BEFUND E-4 - HIER STAND DIE URSACHE.
+					//
+					//	GetParentFrame liefert das HAUPTFENSTER, weil
+					//	SECMDIFrameWnd::FloatControlBarInMDIChild (Stufe 2)
+					//	nichts tut und die Leiste angedockt bleibt. Der
+					//	C-Cast prueft nichts, ASSERT_KINDOF ist im
+					//	Release-Bau leer - und dann schrieb
+					//	    pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+					//	vier Byte an den Versatz dieses Feldes MITTEN IN DAS
+					//	CMainFrame-Objekt. Stille Speicherbeschaedigung
+					//	beim Start; der Absturz beim Beenden war die Folge.
+					//
+					//	Im Debug-Bau meldete sich das als Zusicherung
+					//	WazooBarMgr.cpp:409 - beobachtet am 05.09.2026.
+					QCControlBarWorksheet* pMDIFrame =
+						DYNAMIC_DOWNCAST(QCControlBarWorksheet, pWazooBar->GetParentFrame());
+					if (pMDIFrame != NULL)
+					{
+						pMDIFrame->MoveWindow(rectMDIClient.left, rectMDIClient.top,rectMDIClient.Width(),__max(rectMDIClient.Height(),355));
 
-					//
-					// Hack workaround for the problem where the
-					// initial MDI wazoo doesn't restore properly
-					// when MDI is in maximized window mode.
-					//
-					pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+						//
+						// Hack workaround for the problem where the
+						// initial MDI wazoo doesn't restore properly
+						// when MDI is in maximized window mode.
+						//
+						pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+					}
 				}
 			}
 
