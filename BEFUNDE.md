@@ -119,6 +119,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+| Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **offen** (zweiter Lauf geht durch) |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
@@ -6436,6 +6437,26 @@ Fehlerklasse.
 3. `perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` — sollte
    „Nichts gefunden" melden, jedenfalls für die Nachrichten, die mit der neuen
    Fassung geholt wurden.
+
+### Beide Bauten
+
+`MSBuild Eudora71/Eudora.sln -t:Build -p:Configuration=<Release|Debug> -p:Platform=x86 -m`,
+frischer Worktree, also von Grund auf:
+
+* **Release x86: grün**, Exitcode 0, **0 Fehler** im Protokoll,
+  `Eudora71/Bin/Release/Eudora.exe` neu geschrieben.
+* **Debug x86: grün** im zweiten Lauf, Exitcode 0, **0 Fehler**,
+  `Eudora71/Bin/Debug/Eudora.exe` neu geschrieben.
+
+**Nebenbefund: der erste Debug-Lauf brach ab** — zweimal
+`LNK1104: Datei "QCUtils.lib" kann nicht geöffnet werden`, in `OEImport` und
+`NSImport`. `QCUtils.lib` entstand ausweislich der Zeitstempel **erst danach**.
+In der Projektmappe fehlt also die Abhängigkeit der beiden Importer auf
+`QCUtils`; unter `-m` verlieren sie das Rennen. Mit der Fassung dieses Befundes
+hat das nichts zu tun (die Importer binden `utils.cpp` gar nicht ein), und der
+Release-Lauf traf es nur zufällig nicht. Der zweite Lauf fand die Bibliothek
+vor und lief durch. **Zu beheben wäre:** die Projektabhängigkeit in
+`Eudora.sln` nachtragen, sonst ist jeder Bau von Grund auf ein Glücksspiel.
 
 ### Offen geblieben (belegt, nicht behoben)
 
