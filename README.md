@@ -76,12 +76,19 @@ ist die Wurzel aller CRLF-Probleme dieses Projekts, Befund S-7.
 ### Bauen
 
 ```bash
-"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:BuildProjectReferences=false /m
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -t:Build -p:Configuration=Release -p:Platform=x86 -m
 ```
 
-`/p:BuildProjectReferences=false` ist nötig — sonst scheitert der Bau am Projekt
-`OT501`, dessen Stingray-Quellen nicht freigegeben sind. Die Visual-Studio-IDE
-wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
+Das ist der ganze Vorgang: Projektmappe laden, bauen. **Keine Zusatzschalter.**
+`/p:BuildProjectReferences=false` wird nicht mehr gebraucht — das Projekt `OT501`
+ist seit dem 05.09.2026 aus dem Bau genommen (Projektverweise und
+`.Build.0`-Zeilen entfernt), weil es niemand bindet. Gemessen und belegt in
+[PRUEFUNG-BAU.md](PRUEFUNG-BAU.md).
+
+Die Visual-Studio-IDE wird nicht gebraucht, nur die Installation
+(MSVC v143, MFC/ATL, Windows SDK). Achtung auf die **Plattform**: die
+Projektmappe kennt `x86`, die Projektdateien `Win32`. Wer `-p:Platform=Win32`
+an die `.sln` gibt, bekommt `MSB4126`.
 
 > **In einem frischen Klon oder Worktree zuerst die ganze Solution bauen.**
 > Mit `/p:BuildProjectReferences=false` endet der Einzelprojekt-Bau sonst mit
@@ -98,12 +105,18 @@ wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
 > Der MSBuild-Aufruf muss aus **PowerShell** kommen: die Git-Bash macht aus
 > `/p:Configuration=Debug` einen Pfad.
 
-Ein voller Solution-Bau meldet weiterhin **3 Fehler, alle aus `OT501`**
-(zweimal `NMAKE U1073`, einmal `MSB3073`), nachgemessen am 31.08.2026 mit
-eingehängtem Projekt `VC71Bruecke` (Befund B-2). Das Projekt `OT501` wird nicht
-mehr gebraucht: die Ersatzschicht hat es abgelöst. Zwei zusätzliche
-`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` sind ein Wettlauf im
-Parallelbau (`/m`), kein Fehler — einzeln gebaut laufen beide durch.
+Ein voller Solution-Bau meldet **0 Fehler**, nachgemessen am 05.09.2026 in vier
+frischen Klonen, Release und Debug, auch nach `-t:Clean` und mit `-t:Rebuild`
+([PRUEFUNG-BAU.md](PRUEFUNG-BAU.md)). Die drei früheren `OT501`-Fehler
+(zweimal `NMAKE U1073`, einmal `MSB3073`) entfallen, seit `OT501` aus dem Bau
+genommen ist.
+
+Der `LNK1181: QCUtils.lib` in `NSImport`, `OEImport`, `OLImport` und `plstclnt`
+war **kein bloßer Wettlauf**, sondern eine fehlende Baureihenfolge: die fünf
+Projekte banden `QCUtils.lib`, ohne einen Projektverweis auf `QCUtils` zu
+tragen. Beim ersten Bau traf es mal zu, mal nicht; **nach einem `Clean` traf es
+immer**, weil `Clean` `QCUtils.lib` mit löscht. Behoben am 05.09.2026, die
+Verweise stehen jetzt in den fünf Projektdateien.
 
 ### Starten
 
@@ -337,11 +350,11 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | `Eudora.exe` binden | **erledigt** seit `a807b93` — **0 ungeloeste Externe**, nachgemessen ohne die Attrappe. Verlauf 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — 0, Bezugscommits in `PLAN.md`, Abschnitt „Der Weg zum Linken" |
 | `__imp___iob` aus `libpng.lib` | **behelfsweise geloest** — `OTShim_Libpng.cpp` definiert das Symbol als `(char*)stderr - 2*32`, weil libpng 1.2.7 nur `_iob[2]` anfasst und die damalige CRT 32 Byte je Element hatte. Traegt, ist aber eine Annahme; sauber waere ein Neubau von libpng aus `Eudora71/PNG/libpng` mit v143 |
 | Attrappe `Lib/Debug/OTA50D.LIB` | **entfaellt** — seit `a807b93` nicht mehr noetig (`_SECNOMSG`, `LinkLibraryDependencies` false in `Eudora.vcxproj:1015`). Sie darf nicht wieder angelegt werden, sonst linkt Eudora gegen eine leere Bibliothek |
-| `EudoraRes.dll` | **offen** — das Projekt haengt ueber `EudoraRes.vcxproj:351` an `OT501` und wird gar nicht erst versucht. Fuer `Eudora` ist dieselbe Bindung geloest; hier steht der Handgriff noch aus |
+| `EudoraRes.dll` | **erledigt** — der Projektverweis auf `OT501` ist am 05.09.2026 aus `EudoraRes.vcxproj` entfernt. `EudoraRes.dll` entsteht seither in jedem Bau, Release wie Debug, gemessen in vier frischen Klonen; Versionsressource 7.2.0.3 ([PRUEFUNG-BAU.md](PRUEFUNG-BAU.md)) |
 | Erster Start von `Eudora.exe` | **erledigt** seit Befund S-2 (30.08.2026) — Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen. Am 31.08.2026 ist das Fenster bedienbar und ruft Mail ab, siehe oben und [ZIEL.md](ZIEL.md). Welche Laufzeitdateien danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md); was passiert, wenn sie fehlen, in Befund S-8 (`0xc000007b`) |
 | Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen. Die Testzahl waechst gerade, weil die Ersatzschicht Tests bekommt |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig, seit `78a9c10` samt Ersatzschicht, und bindet seit `a807b93`. `EudoraRes.vcxproj` uebersetzt ebenfalls vollstaendig, wird im Solution-Bau aber nicht versucht |
-| `OpenSSL3/lib` fehlt im Repo | **offen** — `libcrypto.lib` und `libssl.lib` sind von `.gitignore:7` (`Lib/`) erfasst und nicht versioniert (`git ls-files`: null Treffer). Ein frischer Klon endet bei `QCSSL` mit `LNK1104: libssl.lib`. Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
+| `OpenSSL3/lib` fehlt im Repo | **erledigt** — `.gitignore` nimmt `Eudora71/OpenSSL3/lib/` ausdruecklich wieder aus; `git ls-files` findet `libcrypto.lib` und `libssl.lib`. Vier frische Klone haben `QCSSL` ohne Zutun gebunden (05.09.2026). Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 zweimal **gemessen** (Komponententest lokal, dann im Betrieb), ausgehandelt `TLS_AES_256_GCM_SHA384`; 30 angebotene Cipher Suites, keine mit RC4, 3DES oder EXPORT |
 | QCSSL gegen echten Mailserver prüfen | **nur mit einer älteren Fassung** — am 29.08.2026 gegen `pop.gmx.net:995`: `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Dieser Abruf lief in einer **bestehenden Eudora-7.1-Installation** und mit einer älteren QCSSL, nicht mit dem selbst gebauten `Eudora.exe`. Die ausgelieferte QCSSL 1.0.1 ist nie gegen einen echten Server gelaufen. Kriterium 3 aus [ZIEL.md](ZIEL.md) ist damit **nicht** erfüllt |
 | **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und `ErrorCode 0` angenommen. Ein Hinweistext wird durchaus angehaengt ("Destination Host name does not match … But ignoring this error because Certificate is trusted"), er bleibt nur ohne Wirkung. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |
