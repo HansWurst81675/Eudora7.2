@@ -884,6 +884,13 @@ public:
 	// die fuehrende NULL-Marke beendet die (leere) Zeile vor Zeile 0.
 	void MoveControlBarToPosition(CControlBar* pBar, int nCol, int nRow);
 
+	// NICHT im Original. Stellt die beiden Zusagen wieder her, auf die sich
+	// CDockBar::AssertValid (bardock.cpp:746-748) und die Entfernwege in
+	// bardock.cpp verlassen: m_arrBars[0] ist NULL und der letzte Eintrag ist
+	// NULL. Zusaetzlich fallen leere Zeilen (zwei NULL-Marken hintereinander)
+	// weg, die MFC selbst nie erzeugt. Begruendung: Befund E-4.
+	void NormalizeBarArray();
+
 	// NICHT im Original. Verteilt die verfuegbare Zeilenlaenge anhand von
 	// SECControlBar::m_fPctWidth auf die sichtbaren Leisten einer Zeile und
 	// legt das Ergebnis in deren m_nRowExtent ab. Laeuft unmittelbar vor

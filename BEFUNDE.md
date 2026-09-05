@@ -127,13 +127,14 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) |
 | E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 |
 | E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** |
-| E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **offen** |
+| E-4 | Absturz beim Beenden: Index außerhalb `m_arrBars` | **Ursache gefunden und behoben** 05.09. (`WazooBarMgr.cpp:408`); am laufenden Programm noch nicht nachgeprüft |
 | E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 |
 | E-6 | Release läuft, Assistent stürzt bei *Weiter* ab | **überholt** durch E-8 (es war der Debug-Bau) |
 | E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **offen** (Behebung beschrieben, ein Aufruf) |
 | E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** |
 | E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig |
 | E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
+| E-12 | Zusicherung beim Start: der X1-Suchindex wird neu angelegt | **offen**, nicht angefasst — nur festgehalten |
 
 > **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
 > ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
@@ -5046,7 +5047,7 @@ POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
 Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
 (`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
 
-## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026, OFFEN)
+## E-4 — Absturz beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026; Release-Beleg und Härtung 05.09.2026)
 
 Beim **Schließen** von Eudora:
 
@@ -5106,6 +5107,240 @@ Postfächer zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
 Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
 Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
 der Grund, ihn nicht auf sich beruhen zu lassen.
+
+---
+
+## E-4, Fortschreibung vom 05.09.2026
+
+### Zweite Beobachtung, diesmal im Release-Bau
+
+Fassung 7.2.0.4: Meldungsfenster mit dem Titel „Eudora", Text
+**„Encountered an improper argument."**, ein OK-Knopf. Das ist die
+MFC-Meldung `AFX_IDP_INVALID_ARGUMENT` zu `CInvalidArgException`, geworfen von
+`AfxThrowInvalidArgException()`.
+
+Es ist **dieselbe Stelle** wie am 31.08. Nachgeschlagen in
+`…\ATLMFC\Include\afxcoll.inl` (MSVC 14.38.33130):
+
+```cpp
+_AFXCOLL_INLINE void*& CPtrArray::ElementAt(INT_PTR nIndex)
+    { ASSERT(nIndex >= 0 && nIndex < m_nSize);          // Zeile 213
+        if( nIndex < 0 || nIndex >= m_nSize )
+            AfxThrowInvalidArgException();              // Zeile 215
+        return m_pData[nIndex]; }
+```
+
+Zusicherung und Wurf stehen unmittelbar untereinander. Im Debug-Bau meldet sich
+die Zusicherung, im Release-Bau (`NDEBUG` → `stdafx.h:54` → `qcassert.h` →
+`SuperAssert.h:135`, `NEWASSERT` ist leer) bleibt der Wurf übrig. **Ein Fehler,
+zwei Erscheinungsformen.**
+
+Zeile 213 ist die **nicht-konstante** Fassung. Sie wird von
+`CPtrArray::operator[]` in nicht-konstantem Zusammenhang benutzt; die konstante
+Fassung `GetAt` steht bei Zeile 202. Das grenzt die Kandidaten ein.
+
+### Wo es abstürzt — aus Gregors Testverzeichnis abgelesen
+
+`C:\Users\Gregor\Eudora72-1.0.4-release` (nur gelesen):
+
+* `Mailverzeichnis\Audit.log`: **zwei Startsätze** (Ereignis 15), **kein
+  einziger Beendensatz** (Ereignis 1).
+* `Mailverzeichnis\Eudora.ini`: die Abschnitte `[Settings]`, `[Mappings]`,
+  `[Recent Mailboxes]`, `[Open Windows]` — aber **kein `[ToolBar-Summary]`**
+  und kein `[ToolBar-Bar0]` (die Namen stehen in `dockstat.cpp:21-22`).
+* `[Settings]` enthält `LastKnownCrashInfo=0`. Die führende Null setzt
+  `QCExceptionHandler::SaveCrashStateToINI` (`ExceptionHandler.cpp:238-259`) auf
+  `1`, sobald das Beenden durchläuft.
+* Registrierung `HKCU\Software\Qualcomm\Eudora`: die Unterschlüssel `C:`,
+  `CommandLine`, `LaunchManager` — **kein `ToolBar-Summary`**.
+  `CMainFrame::SaveBarState` (`mainfrm.cpp:2537-2580`) schreibt den
+  Leistenzustand absichtlich erst dorthin und kopiert ihn danach in die
+  INI-Datei. Nichts davon ist passiert.
+
+`CMainFrame::CloseDown` (`mainfrm.cpp:5117-5225`) arbeitet in dieser Reihenfolge:
+
+| Zeile | was | hat es geschrieben? |
+|---|---|---|
+| 5174 | `SaveOpenWindows(TRUE)` | **ja** — `[Open Windows]` steht in der INI |
+| 5178 | `TrimJunk()` | — |
+| 5180-5208 | Werbeleiste sichern und aushängen | — |
+| 5210 | `RemoveBogusAdToolBars()` | — |
+| 5212 | `SaveBarState(_T("ToolBar"))` | **nein** — weder Registrierung noch INI |
+| 5220 | `SaveCrashStateToINI()` | **nein** — die Null steht noch da |
+
+**Der Absturz liegt zwischen Zeile 5174 und dem ersten Schreibzugriff in
+Zeile 5212** — also im Block, der die Werbeleiste abräumt.
+
+### Die drei ungeschützten Zugriffe in diesem Block
+
+Alle `CPtrArray`-Zugriffe im Beenden-Weg sind durch `GetSize()` begrenzt — bis
+auf drei, und alle drei stehen in MFC selbst, in `bardock.cpp`:
+
+| Zeile | Funktion | Muster |
+|---|---|---|
+| 297 | `CDockBar::RemovePlaceHolder` | `RemoveAt(nOldPos);` … `m_arrBars[nOldPos]` |
+| 321-322 | `CDockBar::RemoveControlBar`, Platzhalterzweig | dasselbe |
+| 328-329 | `CDockBar::RemoveControlBar`, zweiter Zweig | dasselbe |
+
+Alle drei lesen `m_arrBars[nPos]` **unmittelbar nach** `m_arrBars.RemoveAt(nPos)`.
+Das greift genau dann daneben, wenn der entfernte Eintrag der **letzte** war —
+also wenn `m_arrBars` **nicht mit einer `NULL`-Marke endet**.
+
+Dieselbe Voraussetzung prüft MFC selbst, aber nur im Debug-Bau
+(`CDockBar::AssertValid`, `bardock.cpp:746-748`):
+
+```cpp
+ASSERT(m_arrBars.GetSize() != 0);
+ASSERT(m_arrBars[0] == NULL);
+ASSERT(m_arrBars[m_arrBars.GetUpperBound()] == NULL);
+```
+
+Dazu kommt `ENSURE(nPos > 0)` in `CDockBar::RemoveControlBar`
+(`bardock.cpp:309`). `ENSURE` ist `ASSERT` **plus**
+`AfxThrowInvalidArgException()` — steht die Leiste gar nicht in `m_arrBars`,
+gibt es wortgleich dieselbe Meldung.
+
+Und genau dieser Weg wird beim Beenden begangen:
+`CMainFrame::RemoveAdToolBarFromItsDockBar` (`mainfrm.cpp:6047-6073`) ruft
+`SECDockBar::RemoveControlBar` ausdrücklich auf, aufgerufen aus Zeile 5204 und
+aus `RemoveBogusAdToolBars` (`mainfrm.cpp:5900`).
+
+### DIE URSACHE — gefunden am 05.09.2026 abends
+
+Gregor hat den **Debug-Bau 7.2.0.4** laufen lassen. Beim **Start**:
+
+    SUPERASSERT Assertion Failure
+    Expression : (pMDIFrame)->IsKindOf((QCControlBarWorksheet::GetThisC...
+    Location   : CWazooBarMgr::SetDefaultWazooBarState, Line 409 in WazooBarMgr.cpp
+
+Beim **Beenden** derselben Sitzung dann wieder `afxcoll.inl:213`. Damit ist die
+Kette geschlossen.
+
+`WazooBarMgr.cpp:408-418` stand vor der Änderung so da:
+
+```cpp
+QCControlBarWorksheet* pMDIFrame = (QCControlBarWorksheet *) pWazooBar->GetParentFrame();
+ASSERT_KINDOF(QCControlBarWorksheet, pMDIFrame);
+
+pMDIFrame->MoveWindow(...);
+pMDIFrame->m_bFirstActivationAfterClose = TRUE;     // <-- der Schreibzugriff
+```
+
+**Warum `GetParentFrame()` das Falsche liefert.** Ein paar Zeilen darüber steht
+`pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0)` — „lass diese Leiste
+als MDI-Kindfenster schweben". Der Weg dorthin ist
+`SECMDIFrameWnd::FloatControlBarInMDIChild`, und die Fassung in der
+Ersatzschicht **tut nichts** — Stufe 2, ausdrücklich und begründet so
+hinterlegt (`OTShim.cpp`, Kommentar „bleibt deshalb einfach dort, wo
+DockControlBarEx sie unmittelbar davor hingesetzt hat"). Die Leiste bleibt am
+Hauptfenster angedockt. Ihr Elternfenster ist die `SECDockBar`, und die ist ein
+`CControlBar`, kein Rahmen — `CWnd::GetParentFrame()` läuft also weiter nach
+oben und liefert das **Hauptfenster**.
+
+**Warum es niemandem auffiel.** Der C-Cast prüft nichts. `ASSERT_KINDOF` schlägt
+im Debug-Bau an und ist im Release-Bau **leer** (`Eudora.vcxproj:132` NDEBUG →
+`stdafx.h:54` → `qcassert.h` → `SuperAssert.h:135`, `NEWASSERT` ist leer). Im
+Release läuft der Block einfach weiter.
+
+**Was dabei passiert.** `m_bFirstActivationAfterClose` ist ein `BOOL`-Feld von
+`QCControlBarWorksheet` (`workbook.h:97`). Der Zuweisung ist gleich, worauf der
+Zeiger wirklich zeigt: sie schreibt **vier Byte an den Versatz dieses Feldes in
+das `CMainFrame`-Objekt**. `CMainFrame` ist um ein Vielfaches größer als
+`QCControlBarWorksheet`; der Schreibzugriff landet also mitten im
+Hauptfenster-Objekt und verändert dort stillschweigend etwas anderes. Das ist
+**Speicherbeschädigung beim Start** — der Absturz beim Beenden ist die Folge.
+
+Dieselbe Falle ein zweites Mal, in `CWazooBarMgr::CreateNewWazooBar`
+(`WazooBarMgr.cpp:269-271`): derselbe C-Cast, diesmal auf `CMDIChildWnd`,
+dasselbe `ASSERT_KINDOF`. Dort wird nur `SetWindowPos` gerufen — eine
+`CWnd`-Methode, die also „nur" das falsche Fenster verschiebt, statt Speicher
+zu überschreiben. Falsch ist es trotzdem: das Hauptfenster wurde beim Start auf
+vier Fünftel des MDI-Bereichs gesetzt.
+
+### Die Behebung an der Wurzel
+
+`Eudora71/Eudora/WazooBarMgr.cpp`, beide Stellen:
+
+```cpp
+QCControlBarWorksheet* pMDIFrame =
+    DYNAMIC_DOWNCAST(QCControlBarWorksheet, pWazooBar->GetParentFrame());
+if (pMDIFrame != NULL)
+{
+    ...
+}
+```
+
+`DYNAMIC_DOWNCAST` prüft **zur Laufzeit** und **in beiden Bauten** — genau
+daran fehlte es. Ist es kein MDI-Kindfenster, bleibt der Block aus, und die
+Leiste behält die Größe, die `DockControlBarEx` ihr gegeben hat. Das ist
+ohnehin der Zustand, den die Stufe-2-Fassung von
+`FloatControlBarInMDIChild` herstellt.
+
+**Der Schreibzugriff auf ein fremdes Objekt findet nicht mehr statt.**
+
+### Die zweite Linie: die Härtung in SECDockBar
+
+`SECDockBar::MoveControlBarToPosition` (`OTShim.cpp`) ist die einzige Stelle im
+ganzen Bau, die `m_arrBars` von Hand umbaut. Ihre Indexrechnung ist **Zweig für
+Zweig durchgerechnet worden und liegt überall im Feld**; sie hängt aber davon
+ab, dass jeder Zweig die beiden Zusagen von selbst einhält, und die **führende**
+Marke prüft sie überhaupt nicht.
+
+Neu in `Eudora71/OTShim/OTShim.cpp` und `OTShim.h`:
+
+* **`SECDockBar::NormalizeBarArray()`** stellt her, was MFC voraussetzt:
+  `m_arrBars[0] == NULL`, letzter Eintrag `== NULL`, und keine zwei
+  `NULL`-Marken hintereinander (leere Zeile — MFC erzeugt sie nie, und
+  `CDockBar::Insert`, `bardock.cpp:695-734`, rechnet nicht mit ihr).
+* Aufgerufen am Anfang **und** am Ende von `MoveControlBarToPosition`, am
+  Anfang von `SECDockBar::DockControlBar` und am Anfang von
+  `SECDockBar::CalcFixedLayout`. Die letzte ist die wichtigste: sie läuft bei
+  **jedem** Anordnungsdurchlauf, also auch für die Entfernwege, die MFC
+  unmittelbar auf `CDockBar` aufruft und die diese Schicht sonst nicht sieht.
+* **`SECDockBar::RemoveControlBar`** zieht den Aufbau vorher gerade und gibt
+  `FALSE` zurück, statt MFC aufzurufen, wenn `FindBar(pBar, nPosExclude) <= 0` —
+  das ist der Fall, in dem `ENSURE(nPos > 0)` die Ausnahme wirft.
+
+### Was noch offen ist
+
+* **Welches Feld in `CMainFrame` getroffen wurde, ist nicht ausgerechnet.**
+  Dafür bräuchte es den Versatz von `m_bFirstActivationAfterClose` in
+  `QCControlBarWorksheet` und die Belegung von `CMainFrame` an derselben Stelle.
+  Für die Behebung ist das unerheblich — der Schreibzugriff ist weg —, für den
+  lückenlosen Beweis fehlt es.
+* **Am laufenden Programm ist nichts nachgeprüft.** Es ist nur gebaut worden.
+* Die Härtung in `SECDockBar` bleibt als zweite Linie stehen: sie fängt denselben
+  Indexfehler ab, gleich woher er käme.
+
+### Nachprüfen
+
+1. Eudora starten, ein Postfach öffnen, beenden.
+2. `Mailverzeichnis\Eudora.ini`: es muss jetzt `[ToolBar-Summary]` und
+   `[ToolBar-Bar0]` geben, und `LastKnownCrashInfo` muss mit **`1`** anfangen.
+3. `Mailverzeichnis\Audit.log`: es muss eine Zeile mit dem Ereignis **`1`**
+   (Shutdown) dazugekommen sein.
+
+Bleibt die Meldung stehen: `tools/stapel-untersuchen.ps1` in einer
+**32-Bit**-PowerShell, mit `Eudora.pdb` neben `Eudora.exe`. Im
+Zusicherungsdialog des Debug-Baus **„Wiederholen"** drücken — daraus wird ein
+Haltepunkt, den der Debugger als Ausnahme sieht.
+
+---
+
+## E-12 — Zusicherung beim Start: der X1-Suchindex wird neu angelegt (05.09.2026, OFFEN)
+
+Im Debug-Bau 7.2.0.4, beim Start, vor der E-4-Zusicherung:
+
+    SUPERASSERT Assertion Failure
+    Expression : !"Erasing X1 indices because DB schema was missing or ..."
+    Location   : SearchManager::Info::InitX1, Line 496 in SearchManager...
+
+**Nicht angefasst.** Der Text sagt selbst, was geschieht: das Schema der
+Suchdatenbank fehlt oder passt nicht, also wird der Index verworfen und neu
+angelegt. Auf einem frischen Mailverzeichnis ist das der normale erste Lauf.
+Festgehalten, damit es nicht als neuer Fehler durchgeht, wenn es jemand
+wiedersieht — und damit jemand prüft, ob die Meldung auch beim **zweiten**
+Start noch kommt. Dann wäre sie ein echter Befund.
 
 ## Z-2 — Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
 

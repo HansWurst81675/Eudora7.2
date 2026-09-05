@@ -179,15 +179,33 @@ nach `FinishInitAndShowWindow` (`eudora.cpp:1510`) aufrufen. Kleiner Eingriff.
 Das ist mehr als Kosmetik: die Kennung fehlt genau in dem Zustand, in dem
 Gregor Fehler findet — beim frischen Start.
 
-### B3 · Absturz beim Beenden (**E-4**)
+### B3 · Absturz beim Beenden (**E-4**) — URSACHE GEFUNDEN UND BEHOBEN 05.09., NACHPRÜFUNG OFFEN
 
-`afxcoll.inl:213` = `CPtrArray::ElementAt`, Index außerhalb des Arrays.
-Verdacht: `SECDockBar::MoveControlBarToPosition` (`OTShim.cpp:2718-2795`, am
-31.08. neu) baut `m_arrBars` von Hand um, ohne den Zustand mitzuziehen, den
-`CDockBar` parallel führt.
+**Die Ursache steht in `Eudora71/Eudora/WazooBarMgr.cpp:408`**, nicht in der
+Andockrechnung. `GetParentFrame()` liefert dort das **Hauptfenster** statt eines
+`QCControlBarWorksheet`, weil `SECMDIFrameWnd::FloatControlBarInMDIChild`
+(Stufe 2) nichts tut und die Leiste angedockt bleibt. Der C-Cast prueft nichts,
+`ASSERT_KINDOF` ist im Release-Bau leer — und dann schrieb
+`pMDIFrame->m_bFirstActivationAfterClose = TRUE;` vier Byte mitten in das
+`CMainFrame`-Objekt. Stille Speicherbeschädigung beim Start; der Absturz beim
+Beenden war die Folge.
 
-**Weg:** `tools/stapel-untersuchen.ps1`, im Zusicherungsdialog *Wiederholen*
-drücken — dann wird aus der Meldung ein Haltepunkt, den der Debugger sieht.
+Behoben mit `DYNAMIC_DOWNCAST` plus Nullprüfung an beiden Stellen
+(`WazooBarMgr.cpp:269` und `:408`). Zusätzlich als zweite Linie
+`SECDockBar::NormalizeBarArray` und ein Schutz in
+`SECDockBar::RemoveControlBar`. Volle Herleitung in BEFUNDE.md, Abschnitt
+„E-4, Fortschreibung vom 05.09.2026“.
+
+**Nachprüfen:** starten, Postfach öffnen, beenden.
+1. Im Debug-Bau darf die Zusicherung `WazooBarMgr.cpp:409` beim Start **nicht
+   mehr** kommen (die X1-Meldung davor ist E-12 und bleibt).
+2. In `Mailverzeichnis\Eudora.ini` muß `[ToolBar-Summary]`
+   stehen und `LastKnownCrashInfo` mit `1` anfangen.
+3. In `Audit.log` muß ein Satz mit dem Ereignis `1` (Shutdown) dazugekommen sein.
+
+Bleibt es dabei: `tools/stapel-untersuchen.ps1` in einer 32-Bit-PowerShell, mit
+`Eudora.pdb` neben `Eudora.exe`; im Zusicherungsdialog *Wiederholen* drücken —
+dann wird aus der Meldung ein Haltepunkt, den der Debugger sieht.
 
 ### B4 · Gesperrte Werkzeugleisten-Knöpfe
 
