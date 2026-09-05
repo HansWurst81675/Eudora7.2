@@ -622,8 +622,17 @@ CCreateContext* pContext)
 	{
 		if (GetIniShort(IDS_INI_COMP_COMPACT_TRANSLTORS))
 		{
-			VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pToolBar->GetButton(13)));	//change 13 when a new button is added before ID_TRANSLATORS_QUEUE
-			pMenuButton->SetHMenu( m_theTranslatorMenu.GetSafeHmenu() );
+			// BEFUND E-16: die feste 13 war schon im Original eine Wette auf die
+			// Reihenfolge von theCompMessageButtons ("change 13 when a new button
+			// is added before ID_TRANSLATORS_QUEUE"). Die Liste wird ein paar
+			// Zeilen weiter oben zur Laufzeit umgebaut. Der Platz wird deshalb
+			// gesucht statt geraten; CommandToIndex liefert -1, wenn es den Knopf
+			// nicht gibt, und GetButton beantwortet das mit NULL.
+			pMenuButton = ( CTBarMenuButton* ) ( m_pToolBar->GetButton(
+					m_pToolBar->CommandToIndex( ID_TRANSLATORS_QUEUE ) ) );
+			ASSERT( pMenuButton != NULL );
+			if ( pMenuButton )
+				pMenuButton->SetHMenu( m_theTranslatorMenu.GetSafeHmenu() );
 		}
 		SelectTranslators( pSummary->GetTranslators() );
 	}
