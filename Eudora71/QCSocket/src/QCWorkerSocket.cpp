@@ -1805,8 +1805,22 @@ int QCWorkerSocket::MessageWait(WORD Expect)
 				break;
 			}
 
-			TRACE( "%d Assert \n", m_hWnd);
-			ASSERT(0);
+			// KEIN ASSERT(0) hier - Befund E-21.
+			//
+			// Erreicht wird die Stelle, wenn das Warten zurueckkommt, ohne dass eines
+			// der behandelten Ereignisse vorlag - typischerweise mit LastError 10035
+			// (WSAEWOULDBLOCK): ein nicht blockierender Socketvorgang konnte nicht
+			// sofort ausgefuehrt werden. Das ist die NORMALE Antwort eines nicht
+			// blockierenden Sockets und kein Fehler.
+			//
+			// Gregor am 05.09.2026, Debug-Bau 7.2.0.7, mit Aufrufstapel:
+			//     Expression : 0
+			//     Location   : QCWorkerSocket::MessageWait, Line 1809
+			//     LastError  : 0x00002733 (10035)
+			//     0x6FE3E092 QCSocket.dll: QCWorkerSocket::WindowProc + 114875 bytes
+			//
+			// Die Schleife wartet danach ohnehin weiter - genau richtig. Im Release
+			// ist ASSERT leer, deshalb faellt es dort nicht auf.
 			
 			//bDone = TRUE;
 		}
