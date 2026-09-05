@@ -1126,6 +1126,14 @@ bool CMainFrame::FinishInitAndShowWindow(
 	m_ldb = MGR_Init( "Eudora", EudoraDir, "EudPriv\\Ads\\", (long)this, PlaylistCallback,
 		GetSharewareMode(), GetAdFailure() );
 
+	// Bau-Kennung einmal in die Titelzeile schreiben - Befund E-7.
+	// OnUpdateFrameTitle laeuft sonst erst, wenn MFC den Titel wegen eines
+	// Dokument- oder Fensterwechsels auffrischt. Solange kein Postfach offen
+	// ist, geschieht das nie, und im Titel steht nur "Eudora" - ausgerechnet
+	// beim frischen Start, also genau in dem Zustand, in dem Gregor Fehler
+	// meldet und ein Bildschirmfoto einem Bau zugeordnet werden muss.
+	OnUpdateFrameTitle(TRUE);
+
 	return true;
 }
 
