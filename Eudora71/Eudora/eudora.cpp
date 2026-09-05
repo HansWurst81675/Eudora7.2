@@ -837,6 +837,45 @@ CEudoraApp::InitApplication()
 }
 
 //	=========================================================================================
+//	AnyPersonalityHasAccount
+//
+//	The dominant personality lives in the [Settings] section of Eudora.ini, every named
+//	personality in a section of its own ([Persona-<name>]).  GetReturnAddress() only ever
+//	looks at the current personality, which is the dominant one at startup.  A user whose
+//	only account sits in a named personality was therefore greeted by the account wizard
+//	on every single start (E-17).  This helper answers the question the startup check
+//	really wants to ask: is there any account at all?
+//
+static BOOL AnyPersonalityHasAccount()
+{
+	const CString strReturnAddr = CPersonality::GetIniKeyName(IDS_INI_PERSONA_RETURN_ADDR);
+	const CString strPopAccount = CPersonality::GetIniKeyName(IDS_INI_PERSONA_POP_ACCOUNT);
+
+	for (LPSTR pszName = g_Personalities.List(); pszName && *pszName;
+		 pszName += strlen(pszName) + 1)
+	{
+		if (g_Personalities.IsDominant(pszName))
+			continue;			// already covered by GetReturnAddress()
+
+		char szValue[256];
+
+		szValue[0] = '\0';
+		g_Personalities.GetProfileString(pszName, strReturnAddr, "", szValue, sizeof(szValue));
+		::TrimWhitespaceMT(szValue);
+		if (szValue[0])
+			return TRUE;
+
+		szValue[0] = '\0';
+		g_Personalities.GetProfileString(pszName, strPopAccount, "", szValue, sizeof(szValue));
+		::TrimWhitespaceMT(szValue);
+		if (szValue[0])
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+//	=========================================================================================
 
 BOOL CEudoraApp::InitInstance()
 {
@@ -1615,9 +1654,12 @@ BOOL CEudoraApp::InitInstance()
 	// Check RegCode.dat after we're all started up
 	::PostMessage(pMainFrame->GetSafeHwnd(), WM_COMMAND, ID_CHECK_REG_CODE_FILE, 0);
 
-	// Put up New Account Wizard if no return address specified
+	// Put up New Account Wizard only if no account is set up at all.  GetReturnAddress()
+	// sees the dominant personality ([Settings]) only, so an account that lives in a
+	// named personality has to be asked for separately (E-17).
 	const char* ra = GetReturnAddress();
-	if (!ra || !*ra)
+	BOOL bHaveAccount = (ra && *ra) ? TRUE : AnyPersonalityHasAccount();
+	if (!bHaveAccount)
 	{
 		SetIniShort(IDS_INI_LAST_SETTINGS_CATEGORY, 0);
 		pMainFrame->PostMessage(WM_COMMAND, ID_SPECIAL_NEWACCOUNT);
@@ -1625,7 +1667,7 @@ BOOL CEudoraApp::InitInstance()
 
 	InitJunkFeature();
 
-	if (ra && *ra)
+	if (bHaveAccount)
 	{
 		// Show the tip-o-day only if the Wizard is not shown.
 		if (::GetIniShort(IDS_INI_SHOW_TIP_OF_THE_DAY))
