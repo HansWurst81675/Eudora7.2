@@ -253,6 +253,25 @@ CWazooBar* CWazooBarMgr::CreateNewWazooBar(CMDIFrameWnd* pFrameWnd)
 	pMainFrame->DockControlBarEx(pWazooBar, AFX_IDW_DOCKBAR_BOTTOM, 0, 0, (float)1.00, 180);
 	pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0);
 
+	// NUR wenn die Leiste wirklich ein MDI-Kindfenster geworden ist -
+	// Befund E-4. ID_SEC_MDIFLOAT oben laeuft in dieser Fassung ins Leere:
+	// SECMDIFrameWnd::FloatControlBarInMDIChild ist bewusst ohne Wirkung
+	// (OTShim.cpp:348), weil MFC kein Gegenstueck dafuer hat. Die Leiste
+	// bleibt angedockt, und GetParentFrame() liefert weiterhin das
+	// HAUPTFENSTER statt eines MDI-Kindfensters.
+	//
+	// Ohne diese Abfrage schrieb der Block darunter durch einen C-Cast, der
+	// nichts prueft, in ein Objekt des falschen Typs. Im Debug meldete sich
+	// ASSERT_KINDOF; im Release ist ASSERT leer (Eudora.vcxproj:132 NDEBUG
+	// -> stdafx.h:54 -> qcassert.h -> SuperAssert.h:135), der Zugriff blieb
+	// und beschaedigte fremden Speicher. Sichtbar wurde es erst beim
+	// BEENDEN als CPtrArray::ElementAt ausserhalb des Arrays (afxcoll.inl:213).
+	//
+	// IsMDIChild() liefert in dieser Stufe immer FALSE (OTShim.cpp:1565).
+	// Eudora fragt an vier weiteren Stellen genauso ab - WazooBarMgr.cpp:790
+	// und :821, WazooBar.cpp:652 und :690. Diese beiden hier fehlten.
+	if (pWazooBar->IsMDIChild())
+
 	//
 	// Set the initial size of the window to be 80% of the
 	// current MDI client area.
@@ -391,6 +410,15 @@ bool CWazooBarMgr::SetDefaultWazooBarState(CWazooBar *pWazooBar, int nIndex, Def
 				//
 				pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0);
 				pMainFrame->RecalcLayout(FALSE);	// make sure MDI client area size is up to date
+
+				// Dieselbe Verriegelung wie oben in CreateWazooBar - Befund E-4.
+				// ID_SEC_MDIFLOAT eine Zeile darueber laeuft ins Leere, die Leiste
+				// bleibt angedockt, und GetParentFrame() liefert das Hauptfenster.
+				// Der Block darunter castet es per C-Cast auf QCControlBarWorksheet
+				// und SCHREIBT dann m_bFirstActivationAfterClose - im Release ohne
+				// jede Pruefung, also mitten in ein fremdes Objekt. Das war die
+				// Speicherbeschaedigung hinter dem Absturz beim Beenden.
+				if (pWazooBar->IsMDIChild())
 
 				//
 				// Set the initial size of the window to be 80% of the
