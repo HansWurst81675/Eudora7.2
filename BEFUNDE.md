@@ -138,6 +138,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
 | E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** (Kriterium 3) |
 | E-12 | Zusicherung beim Start: der X1-Suchindex wird neu angelegt | **offen**, nicht angefasst — nur festgehalten |
+| E-12 | Fortschritt beim Abruf unsichtbar — der Abruf dauerte 0,02 Sekunden | **behoben, ungeprüft** |
 
 > **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
 > ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
@@ -6901,3 +6902,127 @@ vor und lief durch. **Zu beheben wäre:** die Projektabhängigkeit in
   weil Gregor über POP abruft und eine Änderung dort ungeprüft bliebe.
 * **Der Kopfzeilenpfad** (`lex822.cpp:544`) ist **nicht** betroffen: dort liegt
   der dekodierte Text am Stück vor, es gibt keine Grenze zum Zerreißen.
+## E-12 — Der Fortschritt beim Mailabruf ist nicht sichtbar: er dauert 0,02 Sekunden (05.09.2026, URSACHE BELEGT)
+
+**Gregor am 05.09.2026, Fassung 7.2.0.4, Paket 1.0.4:**
+
+> „mails lassen sich abrufen … status während des abrufes nicht sichtbar. es
+> sieht so aus, als würde nichts passieren."
+>
+> „ich möchte den fortschritt beim abrufen der mails sehen: von mir aus in der
+> status leiste des app."
+
+Der Gegenbeleg stand schon im Haus: am **31.08.2026** meldete Gregor zum
+Debug-Bau mit 159 Nachrichten ausdrücklich *„sichtbar im progress bar im
+status"* (E-1, E-3). Es sah also nach einem Rückschritt zwischen dem 31.08. und
+dem 05.09. aus. **Das ist es nicht.**
+
+### Was es NICHT ist — jeweils mit Beleg
+
+| Verdacht | Gegenbeleg |
+|---|---|
+| Rückschritt seit dem 31.08. | `git diff 1ea176f HEAD -- Eudora71/` berührt **keine** der beteiligten Dateien. Geändert wurden nur `MAPIImport.cpp`, `TridentView.cpp`, `eudora.cpp`, `mainfrm.cpp` (Titelzeile), `msgutils.cpp`, `Version.h` und die Projektdateien |
+| Der Umbau der Andockleisten (`OTShim.cpp`, 31.08. 07:09, Commit `1a4a6d5`) | `git merge-base --is-ancestor 1a4a6d5 1ea176f` sagt **ja**: der Umbau war im Bau vom 31.08. bereits enthalten — genau in dem Bau, in dem die Anzeige **funktionierte** |
+| `SetControlBarWidthsInRow` als leerer Rumpf (E3) | die Statusleiste läuft nicht über den SEC-Leistenverwalter. `OTShim.h:135` macht `SECStatusBar` zu einem `typedef` auf das reine MFC-`CStatusBar`; `mainfrm.cpp:1666` erzeugt sie unmittelbar |
+| Statusleiste unsichtbar oder 0 breit | Gregors Bildschirmfoto vom 05.09. zeigt links „For Help, press F1" und rechts „NUM" — die Leiste **wird gezeichnet** |
+| Werbeleiste / `BUILD_BOX_OR_SITE_R_VERSION` (S-2) | die Fortschrittsanzeige hängt an der Statusleiste und am Task-Status-Wazoo, nicht an `CAdWazooBar` (`WazooBarMgr.cpp:155`) |
+| Ein nötiger Aufruf steckt in einem `ASSERT` (im Release leer) | im ganzen Pfad steht kein `ASSERT` mit einer Nebenwirkung. Die Aufrufe mit Wirkung stehen in `VERIFY`, und `VERIFY` **wertet im Release aus**: `qcassert.h` überschreibt `ASSERT`/`VERIFY` nur im `#ifdef _DEBUG`-Zweig, im Release gilt MFCs `#define VERIFY(f) ((void)(f))` |
+| `SetPaneInfo` verliert den Eigenzeichnen-Merker | nachgesehen in `barstat.cpp` aus MSVC 14.38.33130: `SetPaneInfo` ruft `SetPaneText` **nur**, wenn sich der Stil ändert. Eudora übergibt beide Male `SBPS_NORMAL`, der Stil ändert sich also nicht |
+
+### Was es IST — aus Gregors eigenem Protokoll
+
+`C:\Users\Gregor\Eudora72-1.0.4-release\Mailverzeichnis\eudora.log`, Lauf vom
+05.09.2026 19:28:30, `LogLevel 25759 (0x649F)` — Bit `0x10` (`DEBUG_MASK_PROG`)
+ist gesetzt, die Fortschrittsmeldungen stehen also mit drin:
+
+```
+5628  8192: 2.07 Begin fetching messages for : adventskalender-mails@freenet.de@mx.freenet.de
+5628  8192: 2.09 Done fetching messages for : adventskalender-mails@freenet.de@mx.freenet.de
+```
+
+**Der Abruf dauerte 0,02 Sekunden.** Neun Nachrichten, 576 823 Bytes. Der ganze
+Postgang, vom Verbindungsaufbau bis „You have new mail!", lief von 2,02 s bis
+3,10 s — **1,08 Sekunden**. Am 31.08. waren es 159 Nachrichten in einem
+Debug-Bau; dort stand die Anzeige sekundenlang.
+
+Beide Anzeigewege sind auf **lange** Vorgänge ausgelegt und halten sich bei
+kurzen absichtlich zurück:
+
+1. **Das Fortschritts-Fenster** (`progress.cpp:238-241`) wartet erst
+   `ProgressIdle` Sekunden ab, ehe es sich überhaupt zeigen darf. Voreinstellung
+   in `EudoraRes.rc:8633`: **`ProgressIdle 3`** — drei Sekunden. Ein Postgang von
+   1,08 s erreicht diese Schwelle nie. Das Fenster **kann** hier gar nicht
+   erscheinen.
+2. **Die Statusleiste** hielt für den Fortschritt nur ein **16 Bildpunkte**
+   breites Feld bereit (`statbar.cpp:185`, `nImageListWidth + 2`) und
+   verbreiterte es erst in dem Augenblick auf 117, in dem eine Aufgabe einen
+   Prozentwert meldete (`statbar.cpp:528`) — um es beim Ende sofort wieder zu
+   schrumpfen. Verbreitern, Zeichnen und Schrumpfen lagen in derselben
+   Zwanzigstelsekunde. Gezeichnet wurde nur mit `InvalidateRect`, also
+   **angemeldet**, nicht ausgeführt; die Neuzeichnung wäre erst im nächsten
+   Leerlauf drangewesen — da war der Vorgang längst vorbei.
+
+**Es war also kein Unterschied zwischen Release und Debug, sondern ein
+Unterschied zwischen 159 Nachrichten und neun.**
+
+### Der Aufrufweg, zum Nachschlagen
+
+```
+POPSession.cpp:956   m_pTaskInfo->SetTotal(nTotalMessages*100)
+POPSession.cpp:1334  m_pTaskInfo->SetSoFar(...)             [Arbeitsfaden]
+  -> TaskInfo.cpp:103            PostDisplayMsg(msgTaskViewInfoChanged)
+  -> TaskStatusWazooWnd.cpp:136  erzeugt beim ersten Mal die Ansicht
+  -> TaskStatusView.cpp:259      NotifyStatusBar()
+  -> TaskStatusView.cpp:282      pStatusBar->SendMessage(msgStatusBarTask, &m_TheStatus)
+  -> statbar.cpp                 CStatusBarEx::OnMsgTaskStatus -> OnChangeRunningStatus
+  -> statbar.cpp                 CStatusBarEx::DrawItem zeichnet Balken und Laufsymbol
+```
+
+Der Weg über `progress.cpp` (`Progress()`, `MainProgress()`) ist ein **zweiter,
+davon unabhängiger**: er läuft nur im Hauptfaden (`ASSERT(::IsMainThreadMT())`)
+und bedient das Fortschritts-**Fenster**, nicht die Leiste. Im Protokoll sind
+seine Meldungen die Zeilen mit der Maske `16`: „Building mailbox 'In' table of
+contents", „Preparing new messages to display: 9".
+
+### Behebung (in `Eudora71/Eudora/statbar.cpp` und `statbar.h`)
+
+1. **Die Fortschrittsfläche ist von Anfang an da** (`Create`, vormals Zeile 185):
+   `StatBarGraphWidth + 1 + nImageListWidth + 2` statt `nImageListWidth + 2`. Das
+   Umlegen der Feldbreite mitten im Abruf entfällt ersatzlos. Die Rechnung stand
+   schon als Kommentar in der Originalzeile.
+2. **Nachlauf von 2 Sekunden** (`TASK_LINGER_MS`): fällt die letzte laufende
+   Aufgabe weg, wird der Ruhezustand nicht sofort übernommen, sondern über einen
+   Zeitgeber (`LINGER_TIMER_ID`) verzögert. Der Rumpf von `OnMsgTaskStatus` ist
+   dafür nach `ApplyTaskStatus()` herausgelöst, damit Nachlauf und Normalfall
+   denselben Weg nehmen.
+3. **Sofort zeichnen** statt nur anmelden: `UpdateWindow()` am Ende von
+   `OnChangeRunningStatus()`.
+4. **Text im Meldungsfeld**: solange eine Aufgabe läuft, steht dort statt „For
+   Help, press F1" die Meldung „There is one task running - 42%"
+   (`UpdateTaskPaneText()`, gebaut aus den vorhandenen Ressourcen
+   `IDS_STATUSBAR_TOOLTIP_TASK_BUSY_ONE` und `IDS_STATUSBAR_TOOLTIP_TASK_BUSY`,
+   also **ohne** neue Zeichenkette). Danach wird über `WM_SETMESSAGESTRING` /
+   `AFX_IDS_IDLEMESSAGE` auf die Ruhemeldung zurückgestellt — derselbe Weg wie in
+   `nicktree.cpp:1474`.
+
+### Was Gregor sehen müsste
+
+Beim nächsten *Mail abrufen*: unten **links** wechselt „For Help, press F1" auf
+„There is one task running", bei Prozentwerten mit angehängtem „ - nn%"; unten
+**rechts** neben „NUM" liegt jetzt ein rund 100 Bildpunkte breites Feld mit dem
+Balken und dem Laufsymbol. Beides bleibt nach dem Ende des Abrufs **zwei
+Sekunden** stehen.
+
+Bleibt beides leer, liegt der Fehler **nicht** in der Statusleiste, sondern
+davor: dann kommt `msgStatusBarTask` gar nicht an, und der nächste Blick geht auf
+`CTaskStatusWazooWnd` — wird die Wazoo-Ansicht überhaupt erzeugt?
+
+### Offen
+
+- Das **Fortschritts-Fenster** (`progress.cpp`) bleibt bei kurzen Vorgängen
+  weiterhin unsichtbar. Das ist so gewollt (`ProgressIdle 3`) und wurde **nicht**
+  angefasst. Wer es sehen will, trägt in `Eudora.ini` unter `[Settings]`
+  `ProgressIdle=0` ein.
+- Das **Task-Status-Fenster** (Knopf links unten) ist nicht am laufenden Programm
+  geprüft; es hängt am selben `CTaskInfoMT` und sollte die Aufgabe zeilenweise
+  zeigen.

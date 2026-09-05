@@ -2,6 +2,9 @@
 //
 
 #include "stdafx.h"
+
+#include <afxpriv.h>	// WM_SETMESSAGESTRING (Ruhemeldung wiederherstellen)
+
 #include "resource.h"
 #include "EudoraMsgs.h"
 #include "TaskErrorView.h"
@@ -39,6 +42,11 @@ const COLORREF nImageListBgColor = RGB(128,0,0);
 #define RUNNING_TIMER_ID  (1)
 #define WAITING_TIMER_ID  (2)
 #define ERROR_TIMER_ID    (3)
+#define LINGER_TIMER_ID   (4)
+
+// Nachlauf der Aufgabenanzeige in Millisekunden: so lange bleibt der letzte
+// Stand nach dem Ende der letzten Aufgabe stehen (Befund E-12).
+#define TASK_LINGER_MS    (2000)
 
 // --------------------------------------------------------------------------
 
@@ -101,7 +109,7 @@ CStatusBarEx::CStatusBarEx()
 	ASSERT(m_pStatBar == NULL);
 
 	m_bTaskError = false;
-	m_RunningTimerID = m_WaitingTimerID = m_ErrorTimerID = 0;
+	m_RunningTimerID = m_WaitingTimerID = m_ErrorTimerID = m_LingerTimerID = 0;
 
 	m_RunningImageIdx = SB_IL_RUNNING1;
 	m_ErrorImageIdx = SB_IL_ERROR1;
@@ -182,7 +190,12 @@ BOOL CStatusBarEx::Create(CWnd* pParentWnd, DWORD dwStyle, UINT nID)
 	int cxWidth;
 
 	GetPaneInfo(TASK_STATUS_INDEX, ID, nStyle, cxWidth);
-	SetPaneInfo(TASK_STATUS_INDEX, ID, SBPS_NORMAL, nImageListWidth + 2); // GetIniShort(IDS_INI_STATBAR_GRAPH_WIDTH)
+	// Die Fortschrittsflaeche ist von Anfang an vorhanden. Frueher war das Feld
+	// nur nImageListWidth+2 breit und wurde erst in dem Augenblick verbreitert,
+	// in dem eine Aufgabe einen Prozentwert meldete (OnMsgTaskStatus). Bei einem
+	// kurzen Abruf lagen Verbreitern, Zeichnen und Zurueckschrumpfen in
+	// derselben Zehntelsekunde - gezeichnet wurde dabei nichts (Befund E-12).
+	SetPaneInfo(TASK_STATUS_INDEX, ID, SBPS_NORMAL, GetIniShort(IDS_INI_STATBAR_GRAPH_WIDTH) + 1 + nImageListWidth + 2);
 	VERIFY(GetStatusBarCtrl().SetText(NULL, TASK_STATUS_INDEX, SBT_OWNERDRAW));
 
 	GetPaneInfo(WAIT_STATUS_INDEX, ID, nStyle, cxWidth);
@@ -506,41 +519,58 @@ LONG CStatusBarEx::OnMsgTaskStatus(WPARAM wParam, LPARAM lParam)
 	if (!pTaskStatus)
 	return (0);
 
-	if (m_TheTaskStatus != (*pTaskStatus))
+	// Ein neuer Stand hebt einen laufenden Nachlauf auf.
+	if (m_LingerTimerID)
+	{
+		KillTimer(m_LingerTimerID);
+		m_LingerTimerID = 0;
+	}
+
+	// Faellt die letzte laufende Aufgabe weg, wird der Ruhezustand NICHT sofort
+	// uebernommen, sondern erst nach TASK_LINGER_MS. Grund (Befund E-12): der
+	// Abruf von neun Nachrichten dauerte auf Gregors Rechner am 05.09.2026
+	// gemessene 0,02 Sekunden (eudora.log, "Begin/Done fetching messages").
+	// Ohne Nachlauf ist die Anzeige wieder weg, ehe sie gezeichnet ist.
+	if (m_TheTaskStatus.AnyRunning() && !pTaskStatus->AnyRunning())
+	{
+		m_PendingTaskStatus = (*pTaskStatus);
+		m_LingerTimerID = SetTimer(LINGER_TIMER_ID, TASK_LINGER_MS, NULL);
+
+		if (m_LingerTimerID)
+			return (0);
+	}
+
+	ApplyTaskStatus(*pTaskStatus);
+
+	return (0);
+}
+
+// --------------------------------------------------------------------------
+
+// Uebernimmt einen Aufgabenstand in die Anzeige. Das stand frueher im Rumpf von
+// OnMsgTaskStatus; getrennt davon, damit der Nachlauf denselben Weg nimmt.
+void CStatusBarEx::ApplyTaskStatus(const CTaskStatus &NewStatus)
+{
+	if (m_TheTaskStatus != NewStatus)
 	{
 		bool bStatusChanged = false;
 		bool bWaitChanged = false;
 
-		if ( (m_TheTaskStatus.AnyRunning() != pTaskStatus->AnyRunning())
-			|| (m_TheTaskStatus.HasPercent() != pTaskStatus->HasPercent())
-			|| (m_TheTaskStatus.GetPercent() != pTaskStatus->GetPercent())
-			|| (m_TheTaskStatus.GetPctCount() != pTaskStatus->GetPctCount())
-			|| (m_TheTaskStatus.GetRunCount() != pTaskStatus->GetRunCount())
-			|| (m_TheTaskStatus.GetSendCount() != pTaskStatus->GetSendCount())
-			|| (m_TheTaskStatus.GetRecvCount() != pTaskStatus->GetRecvCount()) )
+		if ( (m_TheTaskStatus.AnyRunning() != NewStatus.AnyRunning())
+			|| (m_TheTaskStatus.HasPercent() != NewStatus.HasPercent())
+			|| (m_TheTaskStatus.GetPercent() != NewStatus.GetPercent())
+			|| (m_TheTaskStatus.GetPctCount() != NewStatus.GetPctCount())
+			|| (m_TheTaskStatus.GetRunCount() != NewStatus.GetRunCount())
+			|| (m_TheTaskStatus.GetSendCount() != NewStatus.GetSendCount())
+			|| (m_TheTaskStatus.GetRecvCount() != NewStatus.GetRecvCount()) )
 		{
 			bStatusChanged = true;
-
-			if (m_TheTaskStatus.HasPercent() != pTaskStatus->HasPercent()) // If the percent status changes
-			{
-				if (pTaskStatus->HasPercent()) // changing from NO to YES percent
-				{
-					SetPaneInfo(TASK_STATUS_INDEX, 0, SBPS_NORMAL, GetIniShort(IDS_INI_STATBAR_GRAPH_WIDTH) + 1 + nImageListWidth + 2);
-				}
-				else
-				{
-					SetPaneInfo(TASK_STATUS_INDEX, 0, SBPS_NORMAL, nImageListWidth + 2);
-				}
-
-				// Because the pane rect has changed, we need to change the tooltip rect
-				SetTooltipRect(TASK_STATUS_INDEX, TASK_STATUS_INDEX);
-			}
 		}
 
-		if (m_TheTaskStatus.AnyWaiting() != pTaskStatus->AnyWaiting())
+		if (m_TheTaskStatus.AnyWaiting() != NewStatus.AnyWaiting())
 			bWaitChanged = true;
 
-		m_TheTaskStatus = (*pTaskStatus);
+		m_TheTaskStatus = NewStatus;
 
 		if (bStatusChanged)
 			OnChangeRunningStatus();
@@ -548,8 +578,47 @@ LONG CStatusBarEx::OnMsgTaskStatus(WPARAM wParam, LPARAM lParam)
 		if (bWaitChanged)
 			OnChangeWaitingStatus();
 	}
+}
 
-	return (0);
+// --------------------------------------------------------------------------
+
+// Schreibt den Fortschritt zusaetzlich als Text in das Meldungsfeld der
+// Statusleiste. Der Balken ist 100 Bildpunkte breit und leicht zu uebersehen;
+// der Text steht dort, wo sonst "For Help, press F1" steht.
+void CStatusBarEx::UpdateTaskPaneText()
+{
+	if (!::IsWindow(m_hWnd))
+		return;
+
+	if (m_TheTaskStatus.AnyRunning())
+	{
+		CString str;
+
+		if (m_TheTaskStatus.GetRunCount() == 1)
+			str = CRString(IDS_STATUSBAR_TOOLTIP_TASK_BUSY_ONE);
+		else
+			str.Format(CRString(IDS_STATUSBAR_TOOLTIP_TASK_BUSY), m_TheTaskStatus.GetRunCount());
+
+		if (m_TheTaskStatus.HasPercent())
+		{
+			char buf[32];
+			wsprintf(buf, " - %u%%", m_TheTaskStatus.GetPercent());
+			str += buf;
+		}
+
+		SetPaneText(0, str, TRUE);
+	}
+	else
+	{
+		// Zurueck auf die Ruhemeldung. Derselbe Weg wie in nicktree.cpp:1474
+		// und LinkHistoryWazooWnd.cpp:348.
+		CFrameWnd *pFrame = DYNAMIC_DOWNCAST(CFrameWnd, AfxGetMainWnd());
+
+		if (pFrame)
+			pFrame->PostMessage(WM_SETMESSAGESTRING, AFX_IDS_IDLEMESSAGE);
+		else
+			SetPaneText(0, NULL, TRUE);
+	}
 }
 
 // --------------------------------------------------------------------------
@@ -583,10 +652,16 @@ void CStatusBarEx::OnChangeRunningStatus()
 	}
 
 	SetStatusToolTipText(TASK_STATUS_INDEX);
-	
+	UpdateTaskPaneText();
+
 	CRect rct;
 	GetItemRect(TASK_STATUS_INDEX, LPRECT(rct));
 	InvalidateRect(rct, FALSE);
+
+	// Sofort zeichnen statt nur anmelden: ein Abruf weniger Nachrichten ist nach
+	// Bruchteilen einer Sekunde vorbei; eine bloss angemeldete Neuzeichnung
+	// kaeme dafuer zu spaet (Befund E-12).
+	UpdateWindow();
 }
 
 // --------------------------------------------------------------------------
@@ -710,6 +785,14 @@ void CStatusBarEx::OnTimer(UINT nIDEvent)
 		rct.left = rct.right - nImageListWidth;
 		InvalidateRect(rct);
 	}
+	else if (nIDEvent == m_LingerTimerID)
+	{
+		// Der Nachlauf ist abgelaufen: jetzt den zurueckgehaltenen Ruhezustand
+		// uebernehmen. Siehe OnMsgTaskStatus (Befund E-12).
+		KillTimer(m_LingerTimerID);
+		m_LingerTimerID = 0;
+		ApplyTaskStatus(m_PendingTaskStatus);
+	}
 
 	SECStatusBar::OnTimer(nIDEvent);
 }
@@ -747,6 +830,12 @@ void CStatusBarEx::OnDestroy()
 	{
 		KillTimer(m_ErrorTimerID);
 		m_ErrorTimerID = 0;
+	}
+
+	if (m_LingerTimerID)
+	{
+		KillTimer(m_LingerTimerID);
+		m_LingerTimerID = 0;
 	}
 
 	if (m_TaskImageList)
