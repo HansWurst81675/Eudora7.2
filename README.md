@@ -238,6 +238,119 @@ es bildete jede Kante mit dem Klassennamen der umgebenden Methode und konnte
 klassenübergreifende Zyklen deshalb strukturell nicht finden — auch den aus S-2
 nicht, für den es gebaut wurde. Geliefert hat es ausschließlich Fehlalarme.
 
+## Selbst bauen
+
+**Ziel: klonen, `Eudora71\Eudora.sln` in Visual Studio 2022 laden, *Projektmappe
+erstellen* — fertig. Ohne Kniffe.**
+
+### Voraussetzungen
+
+| | |
+|---|---|
+| Visual Studio 2022 | mit **Desktopentwicklung mit C++** |
+| Toolset | v143 (MSVC 14.38) |
+| Zusatzkomponente | **MFC und ATL für v143 (x86)** — ohne sie bricht der Bau sofort ab |
+| Plattform | **32 Bit.** Eudora ist x86, eine x64-Fassung gibt es nicht |
+
+Nach jedem frischen Klon **einmalig**:
+
+```bash
+git config core.autocrlf false
+sh tools/hooks-einrichten.sh
+perl tools/zeilenenden-angleichen.pl --aendern
+```
+
+Keiner der drei Schritte ist wahlfrei — ohne sie treten zwei Fehlerklassen
+lautlos wieder auf (Befund S-7).
+
+### Auf der Kommandozeile
+
+```bash
+MSBuild.exe Eudora71/Eudora.sln -t:Build -p:Configuration=Release -p:Platform=x86 -m
+```
+
+---
+
+### ⚠ Was den Bau kaputtmacht
+
+Diese vier Fallen haben in diesem Projekt jeweils Zeit gekostet. Sie stehen
+hier, damit es kein zweites Mal passiert.
+
+#### 1. **Niemals `Rebuild` oder `Clean`** — es zerstört Unwiederbringliches
+
+> `-t:Rebuild` und *Projektmappe bereinigen* löschen auch **vorgebaute**
+> Artefakte, die sich **nicht neu erzeugen lassen**, weil ihre Quellen nicht im
+> Repo liegen.
+
+Am **05.09.2026** ist genau das passiert: ein `-t:Rebuild` hat
+`Eudora71/OT501/Src/OTA50R/OTA50R.lib` gelöscht — eine vorgebaute
+Stingray-Bibliothek. Der nächste Bau versuchte sie neu zu erzeugen und scheiterte
+an `.\utility\crypt\Blackbox.cpp`, einer Quelle, die es in dieser Freigabe nicht
+gibt. Die Bibliothek ist in **keinem** Release-ZIP und in **keinem** Commit —
+Bau-Artefakte sind mit `e4a0fae` bewusst aus dem Index genommen worden. Sie war
+damit endgültig weg.
+
+**Nur `Build` benutzen.** Wenn wirklich alles neu soll: die Ausgabeverzeichnisse
+von Hand leeren und `Eudora71/OT501` dabei **auslassen**.
+
+#### 2. Die Plattform heißt in der Projektmappe anders als im Projekt
+
+| Datei | gültiger Name |
+|---|---|
+| `Eudora.sln` | **`x86`** |
+| `*.vcxproj` | **`Win32`** |
+
+Wer `-p:Platform=Win32` auf die *Projektmappe* anwendet, bekommt:
+
+```
+MSB4126: Die angegebene Projektmappenkonfiguration "Release|Win32" ist ungültig.
+```
+
+Nicht raten — nachlesen in `Eudora.sln`, Abschnitt
+`GlobalSection(SolutionConfigurationPlatforms)`.
+
+#### 3. MSBuild kann **0** zurückgeben, obwohl nichts gebaut wurde
+
+Der Rückgabewert allein trägt nicht. Am 05.09.2026 meldete die Shell `EXITCODE=0`,
+während MSBuild sieben Fehler ausgab und keine Datei erzeugte — die
+`Eudora.exe` blieb die alte, mit der **alten** Versionsnummer im Paket.
+
+**Immer drei Dinge prüfen:**
+
+```bash
+grep -cE "^.*error " bau.log          # 0 erwartet
+ls -la Eudora71/Bin/Release/Eudora.exe # Zeitstempel muss neu sein
+grep -aoE "7\.2\.0\.[0-9]" Eudora71/Bin/Release/Eudora.exe | sort -u
+```
+
+Die letzte Zeile muss dieselbe Nummer zeigen wie `EUDORA_BUILD_VERSION` in
+[Eudora71/Version.h](Eudora71/Version.h). Weicht sie ab, wurde nicht neu gebaut.
+
+#### 4. `OT501` ist aus dem Bau genommen — absichtlich
+
+Das Projekt kapselt die **Stingray Objective Toolkit**, deren Quellen die
+CHM-Freigabe nicht enthält. Es kann deshalb **nie** bauen. Ersetzt wird es durch
+die eigene Schicht [OTShim](Eudora71/OTShim).
+
+Belegt, dass es niemand braucht:
+
+- Kein einziges Projekt bindet `OTA50R.lib` oder `OTA50D.lib`. Die einzige
+  Erwähnung steht in `Eudora.vcxproj` unter `IgnoreSpecificDefaultLibraries` —
+  also ausdrücklich, um sie **nicht** zu binden.
+- Die beiden Projektverweise trugen bereits
+  `<LinkLibraryDependencies>false</LinkLibraryDependencies>`.
+- Keine Quelldatei bindet Stingray-Kopfdateien ein.
+
+Am 05.09.2026 wurden deshalb die Projektverweise aus `Eudora.vcxproj` und
+`EudoraRes.vcxproj` entfernt und die beiden `.Build.0`-Einträge aus
+`Eudora.sln`. Das Projekt bleibt in der Mappe **sichtbar**, wird aber nicht mehr
+gebaut. `..\OT501\Include` bleibt im Suchpfad — die Kopfdateien werden
+gebraucht, nur die Bibliothek nicht.
+
+**Wer OT501 wieder in den Bau nimmt, bricht den Bau.**
+
+---
+
 ## Was bisher gemacht wurde
 
 Der Quellcode ist von 1996–2006 und stammt aus der Zeit von Visual C++ 6.
