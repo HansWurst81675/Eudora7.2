@@ -255,6 +255,18 @@ CCreateContext* pContext)
 	CReadMessageDoc* Doc = (CReadMessageDoc*)pContext->m_pCurrentDoc;
 	ASSERT_KINDOF(CReadMessageDoc, Doc);
 
+	// BEFUND E-22: ASSERT_KINDOF ist im Release-Bau leer (stdafx.h:54 ->
+	// qcassert.h -> SuperAssert.h:135). Doc und Doc->m_Sum wurden danach
+	// ungeprueft benutzt - pSummary steckt in CLMOSRecord, in
+	// pSummary->m_Subject und in der Prioritaetsauswahl. Ohne
+	// Zusammenfassung ist ein Nachrichtenfenster nicht aufzubauen; FALSE
+	// bricht die Erzeugung geordnet ab.
+	if ( Doc == NULL || Doc->m_Sum == NULL )
+	{
+		ASSERT( 0 );
+		return FALSE;
+	}
+
 	pSummary = Doc->m_Sum;
 
 	// changed the default behavior to use mshtml if it's found and
@@ -404,8 +416,16 @@ CCreateContext* pContext)
 	DockControlBar( m_pFormattingToolBar );
 
 	// initialize the tow truck
-	
+	//
+	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
+	// Leiste liegt oder sein Kindfenster nicht entstanden ist. Alle fuenf
+	// Zugriffe in diesem Abschnitt gingen ungeprueft ueber den Zeiger - im
+	// Release-Bau ein stiller Abgang ohne Meldung, mitten in WM_CREATE des
+	// Nachrichtenfensters. CCompMessageFrame::OnCreateClient prueft an den
+	// entsprechenden Stellen (pMainFrame, pEditTextMenu) laengst; hier
+	// fehlte es durchgehend.
 	pStatic = ( CStatic* ) ( m_pToolBar->GetDlgItem( IDC_TOW_TRUCK ) );
+	if ( pStatic )
 	{
 		HICON hIcon = ::QCLoadIcon( IDI_TOWTRUCK );
 		pStatic->SetIcon( hIcon );
@@ -421,32 +441,42 @@ CCreateContext* pContext)
 	// initialize the label next to the subject edit
 	
 	pStaticBtn = ( CTBarStaticBtn* ) ( m_pToolBar->GetDlgItem( ID_SUBJECT_STATIC ) );
-	pStaticBtn->SetWindowText( CRString(IDS_COMP_HEADER_SUBJECT) );
-	pStaticBtn->AdjustSize();
+	if ( pStaticBtn )
+	{
+		pStaticBtn->SetWindowText( CRString(IDS_COMP_HEADER_SUBJECT) );
+		pStaticBtn->AdjustSize();
+	}
 
 	// initialize the subject edit control
 
 	pEdit = ( CEdit* )  ( m_pToolBar->GetDlgItem( IDC_SUBJECT ) );
-	pEdit->SetWindowText( pSummary->m_Subject );
+	if ( pEdit )
+		pEdit->SetWindowText( pSummary->m_Subject );
 
 
 	// initialize the priority combo
 	
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_PRIORITY_COMBO ) );
 	
-	for (i = IDB_PRIOR_HIGHEST; i <= IDB_PRIOR_LOWEST; i++)
-		pBitmapCombo->Add(new CBitmapComboItem(i, i - IDB_PRIOR_HIGHEST + IDS_PRIORITY_HIGHEST));
+	if ( pBitmapCombo )
+	{
+		for (i = IDB_PRIOR_HIGHEST; i <= IDB_PRIOR_LOWEST; i++)
+			pBitmapCombo->Add(new CBitmapComboItem(i, i - IDB_PRIOR_HIGHEST + IDS_PRIORITY_HIGHEST));
 
-	pBitmapCombo->SetCurSel( pSummary->m_Priority - 1 );
+		pBitmapCombo->SetCurSel( pSummary->m_Priority - 1 );
+	}
 	
 	
 	EnumFontFaces( theArray );
 
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
-	for( i = 0; i < theArray.GetSize(); i ++ )
+	if ( pCombo )
 	{
-		pCombo->AddString( theArray[i] );
+		for( i = 0; i < theArray.GetSize(); i ++ )
+		{
+			pCombo->AddString( theArray[i] );
+		}
 	}
 
 	// initialize the delete from server button

@@ -43,7 +43,14 @@ CMessageFrame::~CMessageFrame()
 
 void CMessageFrame::ActivateFrame(int nCmdShow /*= -1*/)
 {
-	CSummary* Sum = ((CMessageDoc*)GetActiveDocument())->m_Sum;
+	// BEFUND E-22: GetActiveDocument() liefert NULL, solange der Rahmen
+	// keine aktive Ansicht hat. Der Zugriff auf ->m_Sum ist dann ein Lesen
+	// ueber einen Nullzeiger. CMessageFrame::OnDestroy (Zeile 133) prueft
+	// an derselben Stelle bereits; ActivateFrame und OnNcLButtonDblClk
+	// taten es nicht. ActivateFrame liegt unmittelbar auf dem Weg
+	// CSummary::Display -> NewChildFrame -> InitialUpdateFrame.
+	CMessageDoc* pDoc = (CMessageDoc*)GetActiveDocument();
+	CSummary* Sum = pDoc ? pDoc->m_Sum : NULL;
 	
 	if (Sum)
 	{
@@ -97,7 +104,9 @@ void CMessageFrame::OnNcLButtonDblClk(UINT nHitTest, CPoint point)
 {
 	if (nHitTest == HTCAPTION && GetKeyState(VK_CONTROL) < 0)
 	{
-		CSummary* Sum = ((CMessageDoc*)GetActiveDocument())->m_Sum;
+		// BEFUND E-22, wie in ActivateFrame.
+		CMessageDoc* pMsgDoc = (CMessageDoc*)GetActiveDocument();
+		CSummary* Sum = pMsgDoc ? pMsgDoc->m_Sum : NULL;
 		
 		if (Sum && Sum->m_TheToc)
 		{
