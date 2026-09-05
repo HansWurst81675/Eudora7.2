@@ -1733,6 +1733,12 @@ BOOL CPOPSession::OpenPOPConnection_()
 	{
 		idPopPort		= m_Settings->m_SSLSettings.m_POPAlternatePort;
     	DefaultPort = 995;
+		// E-23: Steht SSLPOPAlternatePort nicht in der Ini (Wert 0), dann nimmt
+		// QCWorkerSocket::Open (QCWorkerSocket.cpp:1067) NICHT DefaultPort, sondern
+		// schlaegt den Dienstnamen "pop3" nach - und landet stillschweigend wieder
+		// auf 110, also unverschluesselt auf dem falschen Port. Hier erzwingen.
+		if (idPopPort == 0)
+			idPopPort = DefaultPort;
 	}
 
 	char Server[128];
@@ -1744,7 +1750,7 @@ BOOL CPOPSession::OpenPOPConnection_()
 		CString LoginName(szPOPAccount);
 		int At = LoginName.ReverseFind('@');
 		if (At > 0)
-			LoginName.ReleaseBuffer(At);
+			LoginName = LoginName.Left(At);	// R-1: ReleaseBuffer ohne GetBuffer ist bei MFC 14 unzulaessig
 		int nHesiodError = -1;
 		if (FAILED(QCHesiodLibMT::GetHesiodServer(CRString(IDS_POP_SERVICE), LoginName, Server, sizeof(Server), &nHesiodError)))
 			*Server = 0;

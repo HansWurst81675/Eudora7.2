@@ -237,50 +237,75 @@ int PgDocumentFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
-	for( i = 0; i < theArray.GetSize(); i ++ )
+	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
+	// Leiste liegt oder sein Kindfenster nicht entstanden ist.
+	if ( pCombo )
 	{
-		pCombo->AddString( theArray[i] );
+		for( i = 0; i < theArray.GetSize(); i ++ )
+		{
+			pCombo->AddString( theArray[i] );
+		}
 	}
 
 	// get the main frame window
 	pMainFrame = ( CMDIFrameWnd* ) AfxGetApp()->m_pMainWnd;
-	
-	// see if it's maximized
-	bMaximized = FALSE;
-	pMainFrame->MDIGetActive( &bMaximized );
-	i = ( bMaximized ? 1 : 0 );
 
-	// get the main window
-	VERIFY( pEditTextMenu = pMainFrame->GetMenu() );
-
-	// get the edit menu
-	VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 1 + i ) );
-
-	// Shareware: In reduced feature mode, you cannot right-click
-	if (UsingFullFeatureSet())
+	// BEFUND E-22: ab hier stand dieselbe Kette wie in
+	// CCompMessageFrame::OnCreateClient (dort Zeilen 664ff), nur OHNE deren
+	// Abfragen. VERIFY wertet im Release-Bau nur den Ausdruck aus und
+	// prueft nichts (afx.h). Liefert GetMenu oder GetSubMenu NULL - und die
+	// festen Plaetze 1+i, 11 und 10 sind eine Wette auf den Aufbau der
+	// Menueressource -, dann ist die naechste Zeile ein Zugriff ueber einen
+	// Nullzeiger: CMenu::GetSubMenu liest m_hMenu, MDIGetActive ist
+	// virtuell. Beides ist ein stiller Abgang mitten in WM_CREATE.
+	if (pMainFrame)
 	{
-		// FULL FEATURE mode
+		// see if it's maximized
+		bMaximized = FALSE;
+		pMainFrame->MDIGetActive( &bMaximized );
+		i = ( bMaximized ? 1 : 0 );
 
-		// get the insert menu
-		VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
-		i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
-		VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );	
-		// BEFUND E-16: GetButton beantwortet einen unbekannten Platz jetzt mit
-		// NULL statt mit einem Griff neben m_btns. Hier fehlte die Abfrage.
-		if ( pMenu && pMenuButton )
-			pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+		// get the main window
+		VERIFY( pEditTextMenu = pMainFrame->GetMenu() );
+
+		if (pEditTextMenu)
+		{
+			// get the edit menu
+			VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 1 + i ) );
+		}
+
+		if (pEditTextMenu)
+		{
+			// Shareware: In reduced feature mode, you cannot right-click
+			if (UsingFullFeatureSet())
+			{
+				// FULL FEATURE mode
+
+				// get the insert menu
+				VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
+				i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
+				VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );	
+				// BEFUND E-16: GetButton beantwortet einen unbekannten Platz jetzt mit
+				// NULL statt mit einem Griff neben m_btns. Hier fehlte die Abfrage.
+				if ( pMenu && pMenuButton )
+					pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+			}
+
+			// get the text menu
+			VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 10 ) );
+		}
+
+		if (pEditTextMenu)
+		{
+			// get the size menu
+			VERIFY( pMenu = pEditTextMenu->GetSubMenu( 10 ) );
+			i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_TEXT_SIZE );
+			VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );	
+			// BEFUND E-16, wie oben.
+			if ( pMenu && pMenuButton )
+				pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+		}
 	}
-
-	// get the text menu
-	VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 10 ) );
-
-	// get the size menu
-	VERIFY( pMenu = pEditTextMenu->GetSubMenu( 10 ) );
-	i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_TEXT_SIZE );
-	VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );	
-	// BEFUND E-16, wie oben.
-	if ( pMenu && pMenuButton )
-		pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
 
 	RecalcLayout();
 

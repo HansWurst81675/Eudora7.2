@@ -127,9 +127,11 @@ zuerst **E-11**, **R-1** und **E-1**.
 | PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
 | Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
 | X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 |
-| X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
+| X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** im Skript — auf dieser Maschine war der *eingerichtete* Hook bis 05.09.2026 noch die alte Fassung (X-5) |
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
+| X-5 | Commit um 09:06 auf den um 09:03 zusammengeführten Zweig; die Regel stand nur als Prosa | **behoben** — Schranke im `pre-commit`, 15 Testfälle, Auflagen 7–10 in `AUFGABEN.md` |
+| X-6 | Bau-Lauf: geratene Plattform (`MSB4126`) und Erfolgsmeldung ohne Bau; `tools/bauen.ps1` | **behoben** — das Werkzeug steht, drei Gegenproben grün |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
 | Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **offen** (zweiter Lauf geht durch) |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
@@ -6980,3 +6982,353 @@ Start noch kommt. Dann wäre sie ein echter Befund.
 > versehentlich `E-12`. Drei Agenten hatten unabhaengig „die naechste freie
 > Nummer“ gewaehlt, waehrend die anderen gleichzeitig schrieben. Kennungen
 > vergibt seitdem die Zuteilung, nicht der Agent – siehe [AGENTEN.md](AGENTEN.md).
+---
+
+## X-5 — Ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa (05.09.2026)
+
+Gregor am 05.09.2026:
+
+> „ich kündige ja immer an, wenn ich einen branch merge und lösche.
+> es sollte also alles commited und gepusht sein, klar?"
+>
+> „und für solche prüfungen haben wir genau extra agenten, die es feststellen
+> und verhindern sollen. die arbeiten also nicht sauber!"
+
+Er hat in beiden Sätzen recht. Der zweite trifft den Kern: es lag nicht daran,
+dass jemand die Regel nicht kannte, sondern daran, dass sie **niemand messen
+konnte**.
+
+### Die Zeitachse
+
+| Zeit | 31.08.2026 | Beleg |
+|---|---|---|
+| **09:03** | Gregor führt `darstellung-und-menue` nach `main` zusammen und kündigt an, den Zweig zu löschen | Merge-Commit `fa61618` |
+| 09:03–09:06 | der Assistent arbeitet weiter, ohne nachzusehen, wo er steht | — |
+| **09:06** | ein weiterer Commit landet auf `darstellung-und-menue` — dem bereits zusammengeführten Zweig | — |
+| später | eine spätere Sitzung zieht dieselbe Aussage unabhängig nach | — |
+
+**Inhaltlich ging nichts verloren.** Das ist der einzige gute Teil dieses
+Befundes, und er ist Zufall: dass ein anderer Durchgang zufällig dasselbe noch
+einmal geschrieben hat, ist kein Verfahren. Wäre der Zweig sofort gelöscht
+worden, wäre der Commit weg gewesen.
+
+### Die Ursache — nicht Vergesslichkeit, sondern der Entwurf
+
+Die Regel stand in `AUFGABEN.md` als Prosa: *„In kleinen Schritten committen und
+pushen."* Ein Satz in einer 420 Zeilen langen Liste, der davon lebt, dass ein
+Agent im richtigen Moment an ihn denkt.
+
+Genau das ist die Fehlerklasse, die dieses Projekt schon zweimal getroffen hat:
+
+* **NP3-4/X-2:** der `pre-commit`-Hook rief `lehren-spiegeln.pl` auf, wertete den
+  Rückgabewert aber nicht aus. Die Regel („die Lehren müssen mit") stand da, die
+  Durchsetzung fehlte.
+* **X-1:** die Byte-Schranke hatte neun Löcher. Erst als jemand sie **gegen
+  bekannte Fälle gemessen** hat, fielen sie auf.
+
+Die Lehre daraus heißt in `MEMORY.md` „Fehlerklassen abstellen": beim zweiten
+Auftreten baut man Werkzeug und Schranke, statt einzeln nachzubessern. Hier war
+es das dritte Mal.
+
+### Ein Nebenbefund, der dasselbe zeigt
+
+Beim Nachsehen fiel auf: der auf diesem Rechner **eingerichtete** Hook war noch
+die Fassung *vor* X-2 —
+
+```sh
+perl "$W/tools/lehren-spiegeln.pl"        # ohne || exit $?
+```
+
+`tools/hooks-einrichten.sh` war am 31.08. berichtigt worden, aber niemand hat das
+Skript danach noch einmal laufen lassen. Hooks liegen unter `.git/hooks` und
+werden nicht mitversioniert: **eine Behebung im Skript ist keine Behebung auf der
+Maschine.** X-2 stand fünf Tage lang als „behoben" im Verzeichnis, während der
+Fehler hier weiterlief. Die Statusspalte für X-2 ist entsprechend nachgezogen.
+
+Dazu kam ein zweiter Grund, warum niemand das Skript noch einmal laufen ließ: es
+schrieb nach `"$WURZEL/.git/hooks"`. In einem **Arbeitsbaum** ist `.git` eine
+*Datei*, kein Verzeichnis — aus einem Worktree heraus scheiterte das Einrichten
+also, und seit dem 31.08. arbeiten hier mehrere Agenten in Worktrees.
+
+### Die Behebung
+
+**1. Eine Schranke, die git erzwingt** — `tools/pruefe-branch.pl`. Sie bricht ab bei
+
+| Lage | Verhalten |
+|---|---|
+| abgelöster HEAD | **Abbruch** |
+| Zweig ist *echt* in `origin/main` enthalten (enthalten **und** dahinter) | **Abbruch** |
+| Gegenstück auf dem Server gelöscht (`[gone]`) | **Abbruch** |
+| Zweig steht gleichauf mit `origin/main` (frisch abgezweigt) | durchlassen |
+| auf `main` selbst | durchlassen |
+| kein `origin/main` vorhanden | durchlassen, **mit Meldung** |
+| Rebase, Cherry-Pick oder Halbierung läuft (git löst den HEAD selbst ab) | durchlassen |
+
+Der Ausweg steht in jeder Meldung; wer trotzdem will, nimmt `--no-verify` — dann
+aber mit Wissen, nicht aus Versehen.
+
+**2. `tools/pruefe-branch-tests.pl`** — 15 Fälle, jeder in zwei Durchläufen
+(hart: Rückgabewert; `--melden`: die Begründung, und dort darf **nie**
+abgebrochen werden). Jeder Fall baut ein eigenes Wegwerf-Paar aus barem „Server"
+und Klon unter dem Temp-Verzeichnis; im Projektbaum entsteht nichts.
+
+**Gegen die erste Fassung der Schranke gemessen: 11 grün, 3 rot.** Alle drei
+waren echte Fehler, keiner davon hätte sich beim Lesen gezeigt:
+
+| Fall | erste Fassung | Ursache |
+|---|---|---|
+| `g` frisch abgezweigter Zweig | **brach den ersten Commit ab** | „ist Vorfahr von `origin/main`" trifft auch auf jeden frischen Zweig zu — HEAD *ist* dort `origin/main` |
+| `k` leeres Repo, erster Commit | meldete „abgelöster HEAD" und brach ab | `rev-parse --abbrev-ref HEAD` scheitert auf einem Zweig ohne Commit; jetzt `symbolic-ref` |
+| `f` kein `origin` | ließ durch und **sagte nichts** | eine Prüfung, die ausgefallen ist, sah aus wie eine bestandene |
+
+Fall `g` ist der schwerste: eine Schranke, die den ersten Commit jedes neuen
+Zweiges abweist, wird binnen einer Stunde mit `--no-verify` umgangen und ist dann
+schlechter als keine. Das ist wörtlich die Lehre aus PR-1/PR-2.
+
+Sichtbar wurde außerdem, was die Klammern in `--format=%(upstream:track)` in
+einer Shell anrichten (Fall `j`, Zweigname `zweig(1){a}`):
+
+```
+sh: -c: line 1: syntax error near unexpected token `('
+```
+
+Die Prüfung fiel damit lautlos aus. Behoben nicht durch besseres Zitieren,
+sondern indem **die Shell entfällt**: beide Werkzeuge starten `git` über
+`fork`+`exec` wie `tools/pruefe-bytes.pl`. Damit kann kein Zweigname und kein
+Pfad mit Leerzeichen mehr etwas zerreißen.
+
+**3. Im Hook, als erster Schritt.** `tools/hooks-einrichten.sh` schreibt jetzt
+nach `--git-common-dir` (funktioniert also auch aus einem Arbeitsbaum) und legt
+diese Reihenfolge an:
+
+| # | Schritt | weist ab? |
+|---|---|---|
+| 1 | `pruefe-branch.pl` | ja, `\|\| exit $?` |
+| 2 | `lehren-spiegeln.pl` | ja, `\|\| exit $?` |
+| 3 | `release-pruefen.pl` | nein, meldet nur |
+| 4 | `pruefe-bytes.pl` | ja, `exec` |
+
+Zuerst, weil die Frage *„landet dieser Commit überhaupt irgendwo"* vor jeder
+Frage nach seinem Inhalt kommt.
+
+**Am laufenden Hook nachgewiesen** (Wegwerf-Repo, echter `git commit`): auf dem
+zusammengeführten und serverseitig gelöschten Zweig bricht er mit Rückgabewert
+`1` ab, und die Schritte 2–4 laufen **nicht** an — der Rückgabewert wird also
+wirklich ausgewertet. Derselbe Commit auf `main` geht durch, Schritte 2–4 laufen.
+
+**4. `tools/gesichert.pl`** beantwortet in einem Aufruf, was vor einem Merge zu
+wissen ist. Auch hier zwei Fehler beim Nachmessen:
+
+* Es nannte fremde Arbeitsbäume **„sauber"**, wenn dort nur nichts *uncommittet*
+  war. Ungepushte Commits sah es nicht — gemessen an `wt/paket` und `wt/zeiger`.
+  Jetzt prüft es je Arbeitsbaum: uncommittet, ungepusht, Gegenstück gelöscht,
+  Zweig bereits zusammengeführt, abgelöster HEAD.
+* Es las die Liste über die `branch`-Zeile von `worktree list --porcelain`. Ein
+  Baum mit abgelöstem HEAD hat keine — er fiel aus der Liste und blieb unsichtbar.
+
+**Darf ein Prüfwerkzeug den Zustand ändern?** `gesichert.pl` ruft
+`git fetch --prune`. Die Antwort ist ja, und zwar begründet: die zentrale Frage
+— *gibt es das Gegenstück auf dem Server noch?* — ist ohne frischen Serverstand
+nicht zu beantworten, und ohne `--prune` bleibt ein gelöschter Zweig als lebend
+stehen. Das Werkzeug gäbe dann **genau in dem Fall Entwarnung, für den es gebaut
+wurde**. Geändert werden dabei nur die Kopien der Serverzweige unter
+`refs/remotes/origin` — kein Arbeitsbaum, kein lokaler Zweig, kein Index, keine
+Datei. Wer auch das nicht will, nimmt `--ohne-holen`; der Bericht sagt dann
+ausdrücklich, dass der Serverstand alt sein kann. `pruefe-branch.pl` holt
+**nichts** — ein Hook gehört nicht ans Netz.
+
+**Nichts darf auf eine Eingabe warten.** Beide Werkzeuge setzen
+`GIT_TERMINAL_PROMPT=0`, `GIT_ASKPASS`, `SSH_ASKPASS`, `GIT_SSH_COMMAND=ssh
+-oBatchMode=yes` und `GCM_INTERACTIVE=never`; schlägt das Holen fehl, wird das
+gemeldet statt verschluckt. `GIT_OPTIONAL_LOCKS=0` hält die Werkzeuge von der
+Index-Sperre fern, solange andere Agenten arbeiten.
+
+**5. Die Auflagen in `AUFGABEN.md`** sind um die Punkte 7 bis 10 ergänzt: vor
+jedem Commit den Zweig messen; bei einer Merge-Ankündigung **sofort**
+`gesichert.pl` und melden; nach dem Merge auf `main` wechseln; und der Grundsatz,
+um den es hier geht:
+
+> Eine Auflage, die nur im Text steht, trägt nicht. Wer eine neue Regel
+> aufstellt, baut die Schranke dazu — ein Werkzeug mit Rückgabewert, im Hook, und
+> einen Testfall, der beweist, dass sie greift *und* dass sie nicht grundlos
+> anschlägt.
+
+### Was offen bleibt
+
+1. **Der Hook muss auf jeder Maschine eingerichtet werden.** Er liegt unter
+   `.git/hooks` und wird nicht mitversioniert. Nach jedem frischen Klon:
+   `sh tools/hooks-einrichten.sh`. Es gibt bisher **keine** Prüfung, die meldet,
+   dass der eingerichtete Hook älter ist als das Skript — genau daran ist X-2
+   fünf Tage lang gescheitert. Die naheliegende Schranke wäre ein Vergleich in
+   `pruefstand-melden.pl`.
+2. **`pruefe-branch.pl` holt nicht vom Server.** Der Fall `[gone]` wird also nur
+   erkannt, wenn vorher jemand `git fetch --prune` gelaufen ist — im Regelfall
+   `gesichert.pl`. Das ist Absicht (kein Netz im Hook), aber es ist eine Lücke:
+   wer nie holt, sieht einen gelöschten Zweig nicht.
+3. **Ungepushte Zweige in fremden Arbeitsbäumen.** Am 05.09.2026 gemessen:
+   `wt/kette`, `wt/paket` und `wt/zeiger` standen auf `2fee8e9`, ohne Gegenstück
+   auf dem Server. Der Stand steckte zufällig schon über PR #4 in `origin/main`,
+   es ging also nichts verloren — aber wieder nur zufällig, und `gesichert.pl`
+   meldet das jetzt.
+## X-6 — Ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben (05.09.2026)
+
+Zwei Fehler in **einem** Lauf. Der erste war laut, der zweite war leise — und
+der leise hätte beinahe ein falsches Paket in die Auslieferung gebracht.
+
+### 1. Die Plattform wurde geraten: `MSB4126`
+
+Der Aufruf lautete `-p:Platform=Win32`. `Eudora71/Eudora.sln` kennt auf
+Projektmappenebene aber nur zwei Paare:
+
+```
+GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    Debug|x86 = Debug|x86
+    Release|x86 = Release|x86
+EndGlobalSection
+```
+
+`Win32` steht eine Ebene tiefer, in den Projekten; die Projektmappe **bildet**
+`x86` darauf ab:
+
+```
+{B94694FC-1EAC-4E90-9006-E40CF1C85041}.Release|x86.ActiveCfg = Release|Win32
+```
+
+MSBuild brach ab mit *„Die angegebene Projektmappenkonfiguration
+`Release|Win32` ist ungültig"*. Der richtige Name stand die ganze Zeit in der
+Datei — er wurde nicht gelesen, sondern erraten.
+
+### 2. Der Rückgabewert war 0, obwohl nichts gebaut wurde
+
+Trotz des Abbruchs meldete der Shell-Aufruf **EXITCODE 0**. Aufgefallen ist es
+nur durch eine zusätzliche Handprüfung: in der `Eudora.exe` stand noch
+`7.2.0.3`, während `Version.h` schon `7.2.0.4` sagte. Ohne diese Prüfung wäre
+ein Paket mit der **alten** EXE unter der **neuen** Nummer herausgegangen —
+dieselbe Fehlerklasse wie V-1 (zwei verschiedene ZIPs unter einer Nummer), nur
+eine Stufe früher.
+
+Die Ursache ist benennbar und wiederholbar: `$LASTEXITCODE` gehört der
+**Pipeline**, nicht dem Programm. Steht ein natives Programm hinter einer
+Umleitung oder in einer Pipe, meldet die Shell den Wert des letzten Glieds.
+Beim Bauen des Werkzeugs ist mir derselbe Fehler noch einmal unterlaufen: der
+Aufruf `powershell -File tools\bauen.ps1 -NurPruefen | tail -35` gefolgt von
+`echo $?` meldete **EXITCODE=0**, obwohl das Skript mit 1 endete — der Wert kam
+von `tail`. Deshalb steht die Warnung jetzt im Kopf von `bauen.ps1`.
+
+Ein Bau-Werkzeug, das Erfolg meldet, ohne gebaut zu haben, ist schlimmer als
+keines: es ersetzt Unsicherheit durch falsche Sicherheit.
+
+### 3. Ein dritter Fehler beim Suchen nach dem zweiten
+
+Beim Nachsehen, ob der Release-Bau eine Debug-Laufzeit zieht, wurde mit `grep`
+über die ganzen Binärdateien gesucht statt in der Importtabelle. Ergebnis waren
+Bruchstücke wie `s.dll` und `ts.dll` — Treffer, die es nicht gibt. Für genau
+das gibt es seit S-8 den PE-Leser in `tools/paket-pruefen.ps1`.
+
+---
+
+### Die Abhilfe: `tools/bauen.ps1`
+
+PowerShell, weil das Werkzeug fast nur mit Windows redet: einen Prozess starten
+und dessen Rückgabewert **zuverlässig** bekommen, Zeitstempel, Dateigrößen,
+Versionsressourcen, PE-Köpfe. Und weil der bewährte PE-Leser aus
+`paket-pruefen.ps1` übernommen werden konnte, statt ihn in Perl ein zweites Mal
+zu schreiben — ein zweiter PE-Leser wäre eine zweite Fehlerquelle.
+
+```
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Debug -Ziel Rebuild
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -NurPruefen
+```
+
+Rückgabe 0 / 1 / 2 wie bei den anderen Werkzeugen. Nichts wartet auf eine
+Eingabe: `/nologo /noautoresponse /nr:false`, und die Standardeingabe jedes
+MSBuild-Laufs liegt auf einer leeren Datei.
+
+**Gegen Fehler 1:** Konfiguration und Plattform kommen aus
+`GlobalSection(SolutionConfigurationPlatforms)`, die Projektzuordnung aus
+`GlobalSection(ProjectConfigurationPlatforms)`. MSBuild wird über `vswhere.exe`
+gesucht (hier: *2022 Professional*); die feste Pfadliste ist nur Rückfallebene
+und wird als solche gemeldet.
+
+**Gegen Fehler 2 — vier voneinander unabhängige Prüfungen**, jede allein genügt
+für einen Fehlschlag:
+
+| # | Prüfung | Warum sie nötig ist |
+|---|---|---|
+| a | Rückgabewert über `Start-Process -PassThru`, **nicht** `$LASTEXITCODE` | genau die Stelle, an der der Wert verlorenging |
+| b | eigener `ErrorsOnly`-Dateilogger, Zeilen gezählt | MSBuild kann mit 0 zurückkommen und trotzdem Fehler gemeldet haben; ein Suchmuster auf `error` ginge an der **deutschen** Ausgabe vorbei (gemessen: „2815 Warnung(en) / 0 Fehler") |
+| c | Zeitstempel der Artefakte gegen eine **Dateisystem**-Marke vom Bau-Beginn | ein Artefakt, das nicht neuer ist, ist nicht gebaut worden |
+| d | Versionsressource der `Eudora.exe` gegen `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` | die Prüfung, die den Vorfall aufgedeckt hat |
+
+Zu c: bei `-Ziel Rebuild` ist „nicht neu" immer ein Fehlschlag. Bei
+`-Ziel Build` wäre das ein Fehlalarm, wenn sich nichts geändert hat; dort wird
+zusätzlich gegen die jüngste Quelldatei gemessen — ist eine Quelle neuer als das
+Artefakt, ist es ein Fehlschlag, sonst die ausdrückliche Meldung
+*„unverändert"*.
+
+**Gegen Fehler 3 — Nachkontrolle, eingebaut, nicht als zweites Werkzeug:** jede
+EXE/DLL/OCX/`.eif` im Ausgabeverzeichnis muss `x86` sein; im Release-Zweig darf
+keine Datei `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`,
+`vcruntime140_1d.dll` oder `ucrtbased.dll` importieren (F-1, S-8) — gelesen aus
+der **Importtabelle** des PE-Kopfes.
+
+### Was das Werkzeug beim ersten Einsatz gefunden hat
+
+**Aus einem reinen Projektmappen-Bau kommt nie eine `Eudora.exe` heraus.**
+Gemessen, `Release|x86`, frischer Worktree, 5:33 Minuten: 3 Fehler, alle aus
+`OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`), Rückgabewert 1. Sieben der
+neun überwachten Artefakte entstehen — `Eudora.exe` und `EudoraRes.dll` nicht.
+Beide Projekte führen `OT501.vcxproj` als **Projektverweis**, und MSBuild lässt
+ein Projekt aus, dessen Verweis gescheitert ist. Die Abhilfe stand seit Wochen
+als Handarbeit in `AUFGABEN.md` (`/p:BuildProjectReferences=false`); jetzt macht
+sie ein **zweiter Gang** von selbst — `EudoraRes.vcxproj` und `Eudora.vcxproj`
+einzeln, mit der aus der `.sln` abgelesenen *Projekt*konfiguration
+`Release|Win32`. Ergebnis: 5:02 Minuten, 0 Fehler, `Eudora.exe` 2 933 760 Byte,
+`EudoraRes.dll` 2 447 360 Byte, alle 34 PE-Dateien x86, keine Debug-Laufzeit.
+
+### Drei Gegenproben, alle grün
+
+| Gegenprobe | Erwartet | Gemessen |
+|---|---|---|
+| `-Konfiguration Release -Plattform Win32` | sauberer Abbruch mit Aufzählung | Rückgabe **2**, „Unbekannte Projektmappenkonfiguration", beide gültigen Paare aufgezählt |
+| `-Konfiguration Quatsch` | sauberer Abbruch | Rückgabe **2**, „Unbekannte Konfiguration" |
+| `-NurPruefen` gegen ein nie gebautes `Bin/Release` | Fehlschlag, nicht Erfolg | Rückgabe **1**, neun fehlende Artefakte namentlich; Architektur- und Debug-Laufzeitprüfung liefen trotzdem durch (22 PE-Dateien, alle x86) |
+
+**Und eine vierte, ungeplant:** Während der Messläufe wechselte ein anderer
+Agent im geteilten Arbeitsbaum die `Version.h` von `7.2.0.3` auf `7.2.0.4`,
+während der Bau schon lief. Das Werkzeug meldete daraufhin von selbst:
+
+```
+Versionsressource der Eudora.exe ist "7.2.0.3", Version.h sagt "7.2.0.4".
+Fester Teil der Versionsressource ist 7,2,0,3, EUDORA_BUILD_NUMBER sagt 7,2,0,4.
+ERGEBNIS: FEHLSCHLAG
+```
+
+Das ist wörtlich der Vorfall vom 05.09. — diesmal aufgefallen, ohne dass jemand
+von Hand nachgesehen hat. Genau dafür gibt es das Werkzeug.
+
+### Nebenbefund: jeder Bau verändert fünf versionierte Dateien
+
+`MIDL` schreibt bei jedem Bau `Eudora71/Eudora/EudoraExe_i.c`,
+`EudoraExe_p.c`, `GoogleDesktopSearchAPI_i.c`, `GoogleDesktopSearchAPI_p.c` und
+`dlldata.c` neu — **mit CRLF**, während sie im Repo mit LF liegen. Gemessen an
+`dlldata.c`: HEAD `CR=0 LF=40`, nach dem Bau `CR=40 LF=40`, inhaltlich
+identisch (`git diff --numstat` meldet 40/40). Alle fünf sind versioniert, der
+Arbeitsbaum ist nach jedem Bau also schmutzig, und wer pauschal `git add -A`
+sagt, committet einen reinen Zeilenendenwechsel in fünf Dateien. Das ist
+dieselbe Klasse lautloser Dateischäden wie S-7 und X-4. **Nicht behoben** — die
+Entscheidung (Eintrag in `.gitattributes`, aus der Versionierung nehmen, oder
+nach dem Bau zurücksetzen) steht aus.
+
+### Nebenbefund: geteilte Arbeitsbäume verlieren Arbeit
+
+Während dieser Sitzung hat ein anderer Agent in demselben Worktree
+`git checkout` auf einen anderen Branch ausgeführt. Dabei gingen die noch nicht
+committeten Änderungen dieses Befunds verloren — die neue `tools/bauen.ps1`
+(unversioniert) war anschließend weg. Wiederhergestellt wurde sie aus dem
+Sitzungsgedächtnis, weitergearbeitet in einem **eigenen** Worktree
+(`Eudora7.2-wt-baumeister`). Die Lehre steht schon im Gedächtnis („Agenten
+trennen mit Worktrees"), gilt aber offenbar auch umgekehrt: **ein Worktree
+gehört genau einem Agenten**, und wer einen fremden Worktree umschaltet,
+löscht fremde Arbeit.

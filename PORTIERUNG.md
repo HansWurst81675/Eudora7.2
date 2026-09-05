@@ -90,11 +90,29 @@ fertige `QCSSL.dll` liegt als einbaufertiges Paket in `Releases/1.0/`.
   Fassung, die MSBuild hier aufloest, abgelesen an den Include-Pfaden im Build-Log.
 - Konfiguration: `Debug|x86`; für QCSSL zusätzlich `Release|x86` gebaut,
   die übrigen Projekte sind im Release-Zweig ungetestet
-- Die IDE wird nicht gebraucht — gebaut wird mit MSBuild von der Kommandozeile:
+- Die IDE wird nicht gebraucht — gebaut wird von der Kommandozeile, und zwar
+  über `tools/bauen.ps1`:
+
+```
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Debug -Ziel Rebuild
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -NurPruefen
+```
+
+  Das Werkzeug ruft darunter genau diesen MSBuild-Aufruf auf:
 
 ```
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -p:Configuration=Debug -p:Platform=x86 -m -v:m -clp:ErrorsOnly;Summary
 ```
+
+  **Die Plattform heißt auf Projektmappenebene `x86`, nicht `Win32`.** `Win32`
+  steht eine Ebene tiefer in den Projekten; `Eudora.sln` bildet `x86` darauf ab
+  (`GlobalSection(ProjectConfigurationPlatforms)`). Wer `-p:Platform=Win32`
+  übergibt, bekommt `MSB4126` (Befund X-6). `bauen.ps1` liest die gültigen
+  Paare aus der `.sln`, sucht MSBuild über `vswhere.exe` und meldet Erfolg erst,
+  wenn Rückgabewert, Fehlerprotokoll, Zeitstempel der Artefakte und die
+  Versionsressource der `Eudora.exe` zusammenpassen — am 05.09.2026 hat ein
+  Aufruf von Hand Erfolg gemeldet, ohne gebaut zu haben.
 
 Ein voller Durchlauf dauerte hier zwischen einer und vier Minuten (OpenSSL beim
 ersten Mal deutlich länger) — Erfahrungswert von dieser Maschine, nicht gemessen.
@@ -129,6 +147,19 @@ außerdem ein toter Include-Pfad `..\OpenSSL\inc32` in `QCSocket.vcxproj:60`.
 Projekt und Pfad können entfallen.
 
 ## Blocker: OT501 (Stingray Objective Toolkit)
+
+> **Was das für den Bau bedeutet (gemessen 05.09.2026, `Release|x86`):** Das
+> Projekt `OT501` scheitert bei jedem Projektmappen-Bau mit drei Fehlern
+> (zweimal `NMAKE U1073`, einmal `MSB3073`). `Eudora.vcxproj` und
+> `EudoraRes.vcxproj` führen es als **Projektverweis**, und MSBuild lässt ein
+> Projekt aus, dessen Verweis gescheitert ist. Aus einem reinen
+> Projektmappen-Bau kommt deshalb **nie** eine `Eudora.exe` heraus — sieben der
+> neun überwachten Artefakte entstehen, die beiden wichtigsten nicht.
+> `tools/bauen.ps1` erkennt das und baut `EudoraRes.vcxproj` und
+> `Eudora.vcxproj` in einem **zweiten Gang** einzeln, mit
+> `/p:BuildProjectReferences=false`. Diese drei OT501-Fehler sind die einzigen,
+> die das Werkzeug als bekannt durchgehen lässt; jeder andere Fehler ist ein
+> Fehlschlag (Befund X-6).
 
 Die Freigabe des Computer History Museum enthält von OT501 nur **127 Header**
 (`.h`/`.H`) unter `Eudora71/OT501/Include`; das Verzeichnis zählt 130 Einträge, dazu

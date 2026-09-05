@@ -1313,7 +1313,14 @@ BOOL&		bNoFileChanges )
 			CString szCount;
 			szCount.Format("%u", uCount);
 			if (!::LongFileSupportMT(szNewDir))
-				szFilename.ReleaseBuffer(8 - szCount.GetLength());
+			{
+				// E-24: Hier stand ReleaseBuffer() ohne vorangehendes GetBuffer().
+				// Das kuerzt nichts, sondern setzt die Laenge hart und kann bei
+				// ATL/MFC AtlThrow ausloesen. Gemeint war ein Abschneiden auf
+				// insgesamt acht Zeichen fuer Datentraeger ohne lange Namen.
+				const int nKeep = 8 - szCount.GetLength();
+				szFilename = (nKeep > 0)? szFilename.Left(nKeep) : CString();
+			}
 			szFilename += szCount;
 		}
 
@@ -2529,6 +2536,63 @@ BOOL				bIsTransfer )	//(i) TRUE means Transfer New cmd, FALSE means Mailbox New
 	return NULL;
 }
 
+////////////////////////////////////////////////////////////////////////
+// RecentPathsEqual [static]
+//
+// E-24: Die Liste der zuletzt benutzten Postfaecher haelt nur Zeiger in die
+// QCMailboxCommand-Objekte. Ein Vergleich ueber den Zeiger erkennt zwei
+// Eintraege, die auf dasselbe Postfach zeigen, aber aus verschiedenen
+// Quellen stammen, nicht als gleich. Deshalb wird hier der Inhalt
+// verglichen, und zwar ohne Ruecksicht auf Gross-/Kleinschreibung, weil
+// Windows-Dateinamen nicht danach unterscheiden.
+////////////////////////////////////////////////////////////////////////
+static bool RecentPathsEqual(LPCTSTR pszLeft, LPCTSTR pszRight)
+{
+	if (pszLeft == pszRight)
+		return true;
+	if (!pszLeft || !pszRight)
+		return false;
+	return stricmp(pszLeft, pszRight) == 0;
+}
+
+////////////////////////////////////////////////////////////////////////
+// RecentListContains [static]
+//
+// Steht dieses Postfach schon in der Liste?
+////////////////////////////////////////////////////////////////////////
+static bool RecentListContains(const std::list<LPCTSTR>& theList, LPCTSTR pszPathname)
+{
+	for (std::list<LPCTSTR>::const_iterator it = theList.begin(); it != theList.end(); ++it)
+	{
+		if (RecentPathsEqual(*it, pszPathname))
+			return true;
+	}
+	return false;
+}
+
+////////////////////////////////////////////////////////////////////////
+// RecentListRemove [static]
+//
+// Entfernt alle Eintraege, die inhaltlich auf dasselbe Postfach zeigen,
+// und gibt zurueck, wie viele es waren.
+////////////////////////////////////////////////////////////////////////
+static size_t RecentListRemove(std::list<LPCTSTR>& theList, LPCTSTR pszPathname)
+{
+	size_t nRemoved = 0;
+	std::list<LPCTSTR>::iterator it = theList.begin();
+	while (it != theList.end())
+	{
+		if (RecentPathsEqual(*it, pszPathname))
+		{
+			it = theList.erase(it);
+			nRemoved++;
+		}
+		else
+			++it;
+	}
+	return nRemoved;
+}
+
 void QCMailboxDirector::BuildRecentMailboxesList()
 {
 	if (s_RecentMailboxList.empty() == false || GetIniShort(IDS_INI_MAX_RECENT_MAILBOX) == 0)
@@ -2551,13 +2615,34 @@ void QCMailboxDirector::BuildRecentMailboxesList()
 			// It will remain constant as the QCMailboxCommand object won't be deleted
 			// until the app shuts down.
 			QCMailboxCommand* pCommand = g_theMailboxDirector.FindByPathname(EudoraDir + MailboxPath);
-			if (pCommand) s_RecentMailboxList.push_back(((LPCTSTR)pCommand->GetPathname()) + EudoraDirLen);
+			if (pCommand)
+			{
+				// E-24: Doppelte Eintraege beim Lesen ueberspringen. Steht dasselbe
+				// Postfach mehrfach in der Ini -- etwa weil es einmal mit und einmal
+				// ohne Endung oder in anderer Schreibweise geschrieben wurde --, dann
+				// stuende es sonst mehrfach unter "Recent" im Postfachbaum. So heilt
+				// sich eine bereits doppelte Ini beim naechsten Start von selbst.
+				LPCTSTR RelativePathname = ((LPCTSTR)pCommand->GetPathname()) + EudoraDirLen;
+				if (!RecentListContains(s_RecentMailboxList, RelativePathname))
+					s_RecentMailboxList.push_back(RelativePathname);
+			}
 		}
 	}
 
 	// Put the In mailbox in the list if there's nothing in it, just so that it's not empty
 	if (s_RecentMailboxList.empty())
-		s_RecentMailboxList.push_front(CRString(IDS_IN_MBOX_FILENAME) + CRString(IDS_MAILBOX_EXTENSION));
+	{
+		// E-24: Hier wurde frueher ein Zeiger auf eine temporaere CString abgelegt.
+		// Die Liste haelt aber nur Zeiger und setzt voraus, dass sie in die dauerhaft
+		// vorhandenen QCMailboxCommand-Objekte zeigen. Der abgelegte Zeiger war schon
+		// nach dieser Anweisung ungueltig und konnte mit keinem echten Eintrag
+		// uebereinstimmen. Beim ersten Anklicken von "In" entstand deshalb ein
+		// zweiter Eintrag mit demselben Namen und demselben Symbol.
+		const CString InMailbox = CRString(IDS_IN_MBOX_FILENAME) + CRString(IDS_MAILBOX_EXTENSION);
+		QCMailboxCommand* pInCommand = g_theMailboxDirector.FindByPathname(EudoraDir + InMailbox);
+		if (pInCommand)
+			s_RecentMailboxList.push_front(((LPCTSTR)pInCommand->GetPathname()) + EudoraDirLen);
+	}
 }
 
 void QCMailboxDirector::UpdateRecentMailboxList(LPCTSTR MailboxPathname, BOOL bIsAdd)
@@ -2581,18 +2666,23 @@ void QCMailboxDirector::UpdateRecentMailboxList(LPCTSTR MailboxPathname, BOOL bI
 			if (bIsAdd)
 			{
 				// Don't need to do anything if the mailbox is already at the front of the list
-				if (s_RecentMailboxList.empty() || *(s_RecentMailboxList.begin()) != RelativePathname)
+				const bool bAlreadyInFront = (!s_RecentMailboxList.empty()
+					&& *(s_RecentMailboxList.begin()) == RelativePathname);
+
+				if (!bAlreadyInFront)
 				{
-					s_RecentMailboxList.remove(RelativePathname);
+					// E-24: std::list::remove vergleicht bei LPCTSTR die Zeiger, nicht den
+					// Inhalt. Ein Eintrag, der auf dasselbe Postfach zeigt, aber aus einer
+					// anderen Quelle stammt, wurde deshalb nicht entfernt -- das Postfach
+					// stand danach zweimal unter "Recent". Jetzt wird der Inhalt verglichen.
+					RecentListRemove(s_RecentMailboxList, RelativePathname);
 					s_RecentMailboxList.push_front(RelativePathname);
 					bMadeChange = TRUE;
 				}
 			}
 			else
 			{
-				const size_t ListSize = s_RecentMailboxList.size();
-				s_RecentMailboxList.remove(RelativePathname);
-				if (ListSize != s_RecentMailboxList.size())
+				if (RecentListRemove(s_RecentMailboxList, RelativePathname) > 0)
 					bMadeChange = TRUE;
 			}
 		}
@@ -2614,6 +2704,16 @@ void QCMailboxDirector::UpdateRecentMailboxList(LPCTSTR MailboxPathname, BOOL bI
 			char EntryName[64];
 			sprintf(EntryName, EntryFormat, i);
 			WriteEudoraProfileString(SectionName, EntryName, *it);
+		}
+
+		// E-24: Uebriggebliebene Zeilen aus der Ini entfernen. Wird die Liste kuerzer,
+		// blieben die alten Zeilen sonst stehen und tauchten beim naechsten Start
+		// wieder auf -- als zusaetzliche und damit doppelte Eintraege unter "Recent".
+		for (size_t nSlot = (size_t)i; nSlot <= MaxItems; nSlot++)
+		{
+			char EntryName[64];
+			sprintf(EntryName, EntryFormat, (int)nSlot);
+			WriteEudoraProfileString(SectionName, EntryName, NULL);
 		}
 
 		// Clear out the menus so that they get rebuilt the next time they are opened
