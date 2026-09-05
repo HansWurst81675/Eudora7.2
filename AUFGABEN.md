@@ -477,3 +477,32 @@ von keinem der 105 Tests betreten.
    nach.
 6. **In kleinen Schritten committen und pushen.** Was nicht gepusht ist, ist bei
    einem Abschalten verloren.
+
+### Auf welchem Zweig stehe ich?
+
+Am 31.08.2026 hat Gregor um **09:03** zusammengeführt und angekündigt, den Zweig
+zu löschen. Um **09:06** lag trotzdem ein weiterer Commit auf genau diesem Zweig.
+Inhaltlich ging nichts verloren — aber nur zufällig (Befund **X-5**).
+
+7. **Vor jedem Commit: auf welchem Zweig stehe ich, und lebt der noch?** Nicht
+   aus dem Gedächtnis, sondern gemessen: `perl tools/pruefe-branch.pl --melden`.
+   Der `pre-commit`-Hook prüft es als **ersten** Schritt und bricht ab. Wer den
+   Hook nicht eingerichtet hat (`sh tools/hooks-einrichten.sh`), arbeitet ohne
+   diese Schranke — sie liegt unter `.git/hooks` und wird nicht mitversioniert.
+8. **Kündigt Gregor einen Merge an, läuft SOFORT `perl tools/gesichert.pl`** —
+   vor jeder anderen Handlung, und das Ergebnis wird gemeldet. Es beantwortet in
+   einem Aufruf: alles committet? alles gepusht? sind die *anderen* Arbeitsbäume
+   sauber? Rückgabewert `0` heißt gesichert, `1` nennt, was fehlt. Die Ansage ist
+   der Auslöser, nicht der Nachweis: „es sollte alles committet und gepusht
+   sein" ist eine Erwartung, kein Messwert.
+9. **Nach einem Merge durch Gregor wird auf `main` gewechselt**, nicht auf dem
+   alten Zweig weitergearbeitet:
+   `git checkout main && git pull && git switch -c <neuer-name>`.
+   Ein Zweig, der in `origin/main` steckt, ist erledigt — was danach dort
+   committet wird, steht auf einem Ast, der beim nächsten Aufräumen abfällt.
+10. **Eine Auflage, die nur im Text steht, trägt nicht.** Das war der
+    Entwurfsfehler hinter X-5: die Regel stand hier als Prosa und hing daran,
+    dass ein Agent daran denkt. Wer eine neue Regel aufstellt, **baut die
+    Schranke dazu** — ein Werkzeug mit Rückgabewert, eingehängt im Hook, und
+    einen Testfall in einer Sammlung, der beweist, dass sie greift *und* dass sie
+    nicht grundlos anschlägt. Beides gehört in denselben Commit wie die Regel.

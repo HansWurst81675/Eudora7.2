@@ -262,7 +262,10 @@ einen echten Mailserver. Einzelheiten in
 | `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet: Startkette, Architektur, fehlende DLLs. Rückgabe 0 = in Ordnung, 1 = Fehler, 2 = Aufrufproblem. Das Maß für Kriterium 0. |
 | `tools/vc71-bruecke-messen.pl` | misst die Bindung der Fremd-DLLs an die VC-7.1-Laufzeit und erzeugt daraus die `.def` der `VC71Bruecke` |
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
-| `tools/hooks-einrichten.sh` | richtet den pre-commit-Hook ein. Nach jedem Klon einmal — ohne ihn treten zwei Fehlerklassen lautlos wieder auf. |
+| `tools/pruefe-branch.pl` | pre-commit-Schranke gegen Commits auf einen toten Zweig: schon in `origin/main` enthalten, Gegenstück auf dem Server gelöscht, oder abgelöster HEAD. Läuft als **erster** Schritt im Hook. `--melden` berichtet nur. Befund **X-5**. |
+| `tools/pruefe-branch-tests.pl` | Testsammlung dazu: **15 Fälle**, jeder in zwei Durchläufen (hart und `--melden`), in eigenen Wegwerf-Repos aus barem „Server" und Klon. **Wer `tools/pruefe-branch.pl` anfasst, lässt sie laufen.** |
+| `tools/gesichert.pl` | beantwortet in einem Aufruf: alles committet, alles gepusht, sind die **anderen** Arbeitsbäume sauber? **Sofort laufen lassen, wenn Gregor einen Merge ankündigt.** Rückgabe 0 = gesichert, 1 = es fehlt etwas. Holt dafür `git fetch --prune` (Begründung im Kopf der Datei); `--ohne-holen` verzichtet darauf. |
+| `tools/hooks-einrichten.sh` | richtet den pre-commit-Hook ein. Nach jedem Klon einmal — ohne ihn treten drei Fehlerklassen lautlos wieder auf. Schreibt nach `--git-common-dir`, läuft also auch aus einem Arbeitsbaum. |
 | `tools/lehren-spiegeln.pl` | spiegelt die Lehren aus dem Gedächtnis nach `Arbeitsweise/` |
 | `tools/pruefstand-melden.pl` | meldet, wie weit `BEFUNDE.md`, `README.md` und `PORTIERUNG.md` hinter dem Code herhinken. Maßstab ist die Zeile `<!-- pruefstand: <commit> -->` in jeder der drei Dateien — **wer eine davon nachzieht, zieht die Marke mit**. Ohne Marke sagt das Werkzeug „nicht messbar" und gibt 1 zurück, statt zu raten (Befunde NP3-6, NP3-7). |
 | `tools/ungesichertes-melden.pl` | meldet ungesicherte Änderungen |
