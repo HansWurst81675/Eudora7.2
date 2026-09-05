@@ -6,6 +6,12 @@ Agent **PRUEFER**, 05.09.2026. Arbeitsbaum `Eudora7.2-wt-beenden`, Branch
 
 Geändert wurde von mir **nichts** außer dieser Datei.
 
+> **Abgrenzung.** Während der Prüfung sind auf `origin/bau-und-pruefung` **vier
+> weitere Commits** gelandet (`b1ac542`, `44224a5`, `d15b551`, `840e360`;
+> `eudora.cpp`, `OTShim.cpp`, `README.md`, neu `tools/arbeitsbaum-frei.pl`).
+> **Dieser Bericht deckt sie nicht ab** — er endet bei `bcc59bb`. Was ich an
+> ihnen im Vorbeigehen gemessen habe, steht ganz am Schluss unter „Nachtrag".
+
 Jede Aussage ist mit „gemessen:" oder „VERMUTUNG:" gekennzeichnet. Wo nichts
 steht, ist es eine Folgerung aus den davor genannten Messungen.
 
@@ -668,3 +674,32 @@ Zusammenführen sollten erledigt werden:
   reproduzierbar — und E-7 in `BEFUNDE.md` steht für dieses Paket zu Recht auf
   „offen". Der Eintrag darf erst umgeschrieben werden, wenn ein Paket aus einem
   Commit ohne Sternchen existiert.
+
+---
+
+## Nachtrag: die vier Commits nach `bcc59bb`
+
+Während dieser Prüfung sind vier weitere Commits auf `origin/bau-und-pruefung`
+gelandet. **Sie sind nicht gegengelesen.** Was ich an ihnen gemessen habe,
+beschränkt sich auf das, was billig zu haben war — Zeilenenden und Kodierung:
+
+| Datei | CR alt→neu | LF alt→neu | +/− Zeilen | stimmt? |
+|---|---|---|---|---|
+| `Eudora71/Eudora/eudora.cpp` | 18 → **18** | 4835 → **4856** | +23 / −2 | ✅ netto +21 = +21 |
+| `Eudora71/OTShim/OTShim.cpp` | 4167 → **4168** | 4167 → **4168** | +4 / −3 | ✅ netto +1 = +1 |
+| `README.md` | 0 → 0 | 515 → **699** | +184 / 0 | ✅ +184 = +184 |
+
+**Kein Sprung.** Bemerkenswert richtig behandelt: `OTShim.cpp` ist eine **reine
+CRLF**-Datei (CR = LF = 4167). Die eine neue Zeile ist als CRLF eingefügt worden
+— CR und LF steigen beide um genau 1. `eudora.cpp` dagegen ist LF-lastig mit 18
+CR; dort bleibt die CR-Zahl unverändert, die neuen Zeilen sind LF. Beide Male
+wurde die vorhandene Mischung getroffen.
+
+**gemessen:** in den neuen Zeilen von `eudora.cpp` und `OTShim.cpp` steht **kein**
+Byte über `0x7F`.
+
+Ungeprüft geblieben sind: der Inhalt der beiden Quelländerungen, die 184 neuen
+README-Zeilen (die den in M-8 gemeldeten Widersprüchen möglicherweise weitere
+hinzufügen — oder sie beheben) und das komplett neue Werkzeug
+`tools/arbeitsbaum-frei.pl` mit 273 Zeilen, das wie `pruefe-branch.pl` ohne
+Testsammlung kommt.
