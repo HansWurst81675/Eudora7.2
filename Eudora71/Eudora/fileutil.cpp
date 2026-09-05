@@ -339,6 +339,20 @@ BOOL CheckMailDirectory(const char* dir, const char* Location)
 	strcat(szShortEDir, dir);
 	::TrimWhitespaceMT(szShortEDir);
 
+	// E-12: "C:Mailverzeichnis" is drive-relative, not absolute -- Windows
+	// resolves it against the current directory of drive C, so the mail
+	// directory would silently move as soon as anything calls
+	// SetCurrentDirectory() (a common file dialog is enough). Pin it down once.
+	{
+		char szAbsEDir[_MAX_PATH + 1];
+		char* pszAbsFilePart = NULL;
+		DWORD dwAbsLen = ::GetFullPathName(szShortEDir, sizeof(szAbsEDir), szAbsEDir, &pszAbsFilePart);
+		if (dwAbsLen > 0 && dwAbsLen < sizeof(szAbsEDir))
+			strcpy(szShortEDir, szAbsEDir);
+	}
+
+	// GetLongPathName leaves Edir untouched when it fails, so seed it first.
+	strcpy(Edir, szShortEDir);
 	GetLongPathName(szShortEDir, Edir, _MAX_PATH);
 
 	EudoraDirLen = strlen(Edir);
@@ -434,8 +448,18 @@ BOOL GetDirs(char* CmdLine)
 		}
 #endif
 
+		// E-12: a bare name like "Mailverzeichnis" carries neither a backslash
+		// nor a drive letter, so the heuristic below mistook it for an INI file
+		// name and fell back to the program directory as the mail directory.
+		// INIPath then named a directory: every profile read returned the
+		// default and every write was dropped, without an error anywhere.
+		// Ask the file system first -- an existing directory is a directory.
+		DWORD dwCmdLineAttr = ::GetFileAttributes(CmdLine);
+		BOOL bCmdLineIsDir = (dwCmdLineAttr != INVALID_FILE_ATTRIBUTES) &&
+							 ((dwCmdLineAttr & FILE_ATTRIBUTE_DIRECTORY) != 0);
+
 		// If the directory doesn't have any path, then assume it's an INI
-		if (!Ini && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
+		if (!Ini && !bCmdLineIsDir && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
 		{
 			Ini = CmdLine;
 		}
@@ -449,8 +473,14 @@ BOOL GetDirs(char* CmdLine)
 	if (!done && GetEnvironmentVariable(EudoraEnvironVar, buf, sizeof(buf)))
 	{
 		temp = buf;
+
+		// E-12: same as above -- trust the file system over the spelling.
+		DWORD dwEnvAttr = ::GetFileAttributes(temp);
+		BOOL bEnvIsDir = (dwEnvAttr != INVALID_FILE_ATTRIBUTES) &&
+						 ((dwEnvAttr & FILE_ATTRIBUTE_DIRECTORY) != 0);
+
 		// If the directory doesn't have any path, then assume it's an INI
-		if (!strchr(temp, SLASH) && temp[1] != ':')
+		if (!bEnvIsDir && (!strchr(temp, SLASH) && temp[1] != ':'))
 		{
 			Ini = temp;
 		}
@@ -479,7 +509,7 @@ BOOL GetDirs(char* CmdLine)
 			Ini = ::SafeStrdupMT(EudoraDir);
 			int Slash = EudoraDir.ReverseFind(SLASH);
 			if (Slash >= 0)
-				EudoraDir.ReleaseBuffer(Slash + 1);
+				EudoraDir = EudoraDir.Left(Slash + 1);	// R-1: ReleaseBuffer without GetBuffer truncates shared buffers
 			SetupINIFilename(Ini);
 			delete [] Ini;
 			Ini = NULL;

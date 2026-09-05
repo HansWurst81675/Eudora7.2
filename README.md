@@ -164,6 +164,12 @@ Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
 `eudora.cpp:3542` ab. Vorlage:
 `InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`.
 
+Ein **relativer** Verzeichnisname (`Eudora.exe Mailverzeichnis`) ist seit
+Befund **E-12** ebenfalls zulässig. Vorher hielt Eudora einen Namen ohne
+Backslash für einen Ini-*Dateinamen*, nahm das Programmverzeichnis als
+Datenwurzel und las und schrieb die Einstellungen anschließend ins Leere —
+ohne jede Fehlermeldung.
+
 Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
 Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine Fehler.
 Sie erscheinen nur, weil bisher nur der Debug-Bau läuft.
