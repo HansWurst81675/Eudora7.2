@@ -134,6 +134,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** |
 | E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig |
 | E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
+| E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** (Kriterium 3) |
 
 > **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
 > ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
@@ -6292,3 +6293,192 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
    „das ist die Fassung, die abstürzte" acht Zeichen lang.
 3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
+
+## E-12 — der Mailverzeichnis-Parameter wurde als Ini-Dateiname gedeutet
+
+**Gemeldet** 05.09.2026, Fassung 7.2.0.4, Agent KONTO. **Status: behoben,
+ungeprüft** (gebaut, aber am laufenden Programm noch nicht nachgesehen).
+
+Gregors Meldung: *„account daten eingegeben, wurden aber weder gespeichert, noch
+übernommen. kann mails nicht abrufen."* Gestartet hatte er mit
+
+```
+C:\Users\Gregor\Eudora72-1.0.4-release>Eudora.exe Mailverzeichnis
+```
+
+Ein **einziger** Fehler erklärt alle drei Beobachtungen.
+
+### Der Ablauf, Schritt für Schritt
+
+In `Eudora71/Eudora/fileutil.cpp`, Funktion `GetDirs`, stand:
+
+```c
+// If the directory doesn't have any path, then assume it's an INI
+if (!Ini && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
+{
+    Ini = CmdLine;
+}
+else
+{
+    status = CheckMailDirectory(CmdLine, CRString(IDS_FILE_COMMAND_LINE));
+    done = 1;
+}
+```
+
+Für `CmdLine = "Mailverzeichnis"` gilt: kein Backslash darin, und `CmdLine[1]`
+ist `a`, nicht `:`. Die Bedingung greift also, und Eudora hält den
+Verzeichnisnamen für einen **Ini-Dateinamen**. `done` bleibt `0`.
+
+Wenige Zeilen später:
+
+```c
+if (!done && EudoraDir.IsEmpty())
+{
+    EudoraDir = ExecutableDir;      // Datenwurzel = PROGRAMMverzeichnis
+    status = TRUE;
+}
+```
+
+Dann `SetupINIFilename("Mailverzeichnis")` in `rs.cpp`: der Name enthält keinen
+Backslash, also
+
+```c
+INIPath = EudoraDir;
+INIPath += Filename;
+```
+
+Ergebnis:
+
+```
+INIPath = C:\Users\Gregor\Eudora72-1.0.4-release\Mailverzeichnis
+```
+
+**Das ist ein Verzeichnis, keine Datei.** Eudora benutzte ein Verzeichnis als
+seine Ini-Datei. `GetPrivateProfileString` liefert dann für jeden Schlüssel den
+mitgegebenen Vorgabewert — bei den Kontofeldern die leere Zeichenkette —, und
+`WritePrivateProfileString` scheitert stillschweigend. Es gibt keine
+Fehlermeldung, an keiner Stelle.
+
+Damit fällt alles zusammen:
+
+| Beobachtung | Ursache |
+|---|---|
+| Dialog „Account Settings for `<Dominant>`" zeigt leere Felder | jeder Lesezugriff liefert die Vorgabe |
+| Eingaben werden nicht gespeichert | jeder Schreibzugriff verpufft |
+| Mail kann nicht abgerufen werden | `POPSession` liest Server und Konto über denselben Weg |
+
+### Der Messbeleg
+
+In Gregors Testverzeichnis lagen **zwei** Suchindex-Wurzeln:
+
+```
+Eudora72-1.0.4-release\Search\db.ini                   19:24   (Start von Hand, relativ)
+Eudora72-1.0.4-release\Mailverzeichnis\Search\db.ini   19:29   (Start über die .cmd, absolut)
+```
+
+Der Start von Hand um 19:24 benutzte also tatsächlich das **Programm**verzeichnis
+als Datenwurzel. Das ist der Fingerabdruck genau dieses Fehlers.
+
+`tools/Eudora starten.cmd` übergibt `%~dp0Mailverzeichnis`, also einen absoluten
+Pfad mit Backslashes — deshalb ist der Fehler beim Start über die .cmd nie
+aufgefallen, und deshalb lief Gregors zweiter Versuch (19:28) sauber durch, bis
+hin zu „You have new mail!" und einer `In.mbx` von 576 823 Bytes.
+
+### Zweiter, verdeckter Teil: laufwerksrelative Pfade
+
+`CheckMailDirectory` qualifiziert einen Pfad ohne Laufwerksbuchstaben so:
+
+```c
+szShortEDir[0] = (char)(drive + 'A' - 1);
+szShortEDir[1] = ':';
+szShortEDir[2] = '\0';
+strcat(szShortEDir, dir);            // -> "C:Mailverzeichnis"
+```
+
+`C:Mailverzeichnis` ist **nicht** absolut, sondern *laufwerksrelativ*: Windows
+löst es gegen das aktuelle Verzeichnis von Laufwerk C auf. `GetLongPathName`
+macht daraus nichts Absolutes — nachgemessen:
+
+```
+in='C:Mailverzeichnis'  ret=17  out='C:Mailverzeichnis'
+in='Mailverzeichnis'    ret=15  out='Mailverzeichnis'
+```
+
+Dieselbe Fehleinschätzung steckt in `SetupINIFilename`: die Prüfung
+`INIPath[1] != ':'` hält `C:Mailverzeichnis\Eudora.ini` bereits für „fully
+qualified". Sobald irgendetwas `SetCurrentDirectory()` aufruft — ein
+gewöhnlicher Datei-Öffnen-Dialog genügt —, zeigt so ein Pfad woandershin, und
+Einstellungen werden ab da aus einer anderen Datei gelesen und in eine andere
+geschrieben. Lautlos.
+
+### Der Nachweis am lebenden Objekt
+
+`GetPrivateProfileStringA("Settings", "RealName", "<VORGABE>", ...)` gegen beide
+Pfade, gemessen an Gregors echter Datei:
+
+```
+INIPath = ...\Mailverzeichnis             ->  RealName = '<VORGABE>'   (die Vorgabe!)
+INIPath = ...\Mailverzeichnis\Eudora.ini  ->  RealName = 'hans wurst'
+```
+
+Der erste Pfad ist genau der, den Eudora aus `Eudora.exe Mailverzeichnis`
+errechnete. Windows liefert wortlos die Vorgabe — in Eudoras Fall die leere
+Zeichenkette. Gemessen, nicht vermutet.
+
+### Was geändert wurde
+
+`Eudora71/Eudora/fileutil.cpp`
+
+1. **`GetDirs`, Kommandozeilenzweig:** vor der Heuristik wird jetzt das
+   Dateisystem gefragt. Ein existierendes Verzeichnis ist ein Verzeichnis:
+   ```c
+   DWORD dwCmdLineAttr = ::GetFileAttributes(CmdLine);
+   BOOL bCmdLineIsDir = (dwCmdLineAttr != INVALID_FILE_ATTRIBUTES) &&
+                        ((dwCmdLineAttr & FILE_ATTRIBUTE_DIRECTORY) != 0);
+
+   if (!Ini && !bCmdLineIsDir && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
+   ```
+   Der Fall „Argument ist wirklich eine Ini-Datei" bleibt damit erhalten — er
+   greift weiterhin, wenn der Name kein Verzeichnis benennt.
+2. **`GetDirs`, Umgebungsvariablenzweig:** dieselbe Prüfung, gleicher Fehler.
+3. **`CheckMailDirectory`:** der Pfad wird einmal mit `GetFullPathName` in einen
+   echten absoluten Pfad aufgelöst, bevor er in `EudoraDir` landet.
+4. **`CheckMailDirectory`:** `GetLongPathName` ließ `Edir` bei Misserfolg
+   *uninitialisiert* — anschließend lief `strlen(Edir)` über Zufallsbytes. `Edir`
+   wird jetzt vorher belegt.
+5. **`fileutil.cpp:482`** (Fundstelle aus **R-1**):
+   `EudoraDir.ReleaseBuffer(Slash + 1)` ohne vorheriges `GetBuffer` ersetzt durch
+   `EudoraDir = EudoraDir.Left(Slash + 1)`. Unter MFC 14 ist `ReleaseBuffer(n)`
+   ein `SetLength(n)` ohne `Fork`: bei geteiltem Puffer kürzt es still eine
+   fremde Zeichenkette mit. Die Stelle liegt mitten im Ini-Pfad.
+
+`Eudora71/Eudora/rs.cpp`
+
+6. **`SetupINIFilename`:** nach der bestehenden „fully qualify"-Prüfung wird
+   `INIPath` zusätzlich mit `GetFullPathName` aufgelöst.
+
+Alle Änderungen byte-erhaltend eingespielt (perl `:raw`); CR-Zahl in beiden
+Dateien unverändert 18.
+
+### Bauzustand
+
+Release **und** Debug, `x86`, jeweils 0 Fehler.
+
+### Was Gregor zum Nachprüfen tun muss
+
+```
+cd C:\Users\Gregor\Eudora72-1.0.4-release
+Eudora.exe Mailverzeichnis
+```
+
+— also **genau so wie beim Fehlversuch, mit dem relativen Pfad**. Erwartung:
+Die Kontodaten stehen im Dialog, und der Mailabruf läuft. Gegenprobe ohne
+Programmstart: `Mailverzeichnis\Eudora.ini` muss nach dem Beenden neuer sein als
+vorher, und im Programmverzeichnis darf **kein** `Search\db.ini` neu entstehen.
+
+### Offener Rest
+
+Die 24 übrigen `ReleaseBuffer`-Stellen aus **R-1** bleiben. Zwei davon,
+`POPSession.cpp:1747` und `SMTPSession.cpp:683`, stehen im POP- bzw.
+SMTP-Anmeldeweg, sind aber nur erreichbar, wenn der Server buchstäblich
+`hesiod` heißt — latent, hier nicht ursächlich.
