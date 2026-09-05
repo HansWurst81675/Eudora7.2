@@ -1144,6 +1144,93 @@ void ReadPlatform(CString& sPlatform, CString& sVer, CString* sMachineType /*= N
 
 
 //
+//	ISOIsUTF8Charset
+//
+//	Tells whether a charset index - the kind FindMIMECharset() returns - is the
+//	one for UTF-8.  The arithmetic behind that index lives in this file and
+//	nowhere else, so callers ask instead of working it out again.
+//
+//	Parameters:
+//		iCharsetIdx[in] - Index of the charset, as for ISOTranslate().
+//
+//	Return:
+//		TRUE if the index is the UTF-8 one.
+//
+BOOL ISOIsUTF8Charset(UINT iCharsetIdx)
+{
+	return (iCharsetIdx == (UINT)(IDS_MIME_UTF_8 - IDS_MIME_ISO_LATIN9 + 3));
+}
+
+
+//
+//	ISOIncompleteUTF8Tail
+//
+//	Counts the bytes at the END of a buffer that begin a UTF-8 character whose
+//	continuation bytes have not arrived yet.
+//
+//	Why this exists:  a message body is translated one read chunk at a time (see
+//	TextReader::ReadIt), and a chunk boundary can fall between the two bytes of a
+//	character.  Neither half is valid UTF-8 on its own, so ISOTranslate leaves
+//	both halves exactly as they were and the raw UTF-8 bytes reach the mailbox:
+//	one single "fuer" arrives as byte salad while every other umlaut in the very
+//	same message is correct.  The caller uses this count to hold the head bytes
+//	back and to put them in front of the next chunk.
+//
+//	Parameters:
+//		szBuf[in] - Buffer to look at.  Not modified.
+//		lSize[in] - Number of bytes in szBuf.
+//
+//	Return:
+//		0 to 3 - how many trailing bytes the caller should hold back.  Zero
+//		whenever the buffer ends on a character boundary, or on something that is
+//		not the start of a UTF-8 character at all: then there is nothing to wait
+//		for and everything stays as it was before.
+//
+LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)
+{
+	const unsigned char*	pBytes = (const unsigned char*)szBuf;
+	LONG					lTail;
+
+	if (!szBuf || lSize <= 0)
+	{
+		return 0;
+	}
+
+	// A character is at most four bytes long, so at most three of them can be
+	// missing.  Walk backwards over the continuation bytes 10xxxxxx until the
+	// lead byte turns up, then see how long that character was supposed to be.
+	for (lTail = 1; lTail <= 3 && lTail <= lSize; ++lTail)
+	{
+		unsigned char	cLead = pBytes[lSize - lTail];
+		LONG			lNeeded;
+
+		if ((cLead & 0xC0) == 0x80)
+		{
+			// Still a continuation byte - keep walking.
+			continue;
+		}
+
+		if ((cLead & 0xE0) == 0xC0)
+			lNeeded = 2;
+		else if ((cLead & 0xF0) == 0xE0)
+			lNeeded = 3;
+		else if ((cLead & 0xF8) == 0xF0)
+			lNeeded = 4;
+		else
+			return 0;	// Plain ASCII, or a byte that starts no character at all.
+
+		// Hold the bytes back only if the character really was cut short.  A
+		// complete character at the end of the buffer must not be delayed.
+		return (lTail < lNeeded) ? lTail : 0;
+	}
+
+	// Nothing but continuation bytes at the end, or the buffer is too short to
+	// tell.  That is not a character anybody can complete, so leave it alone.
+	return 0;
+}
+
+
+//
 //	ISOTranslate
 //
 //	Translates the specified buffer from the specified charset to CP1252.

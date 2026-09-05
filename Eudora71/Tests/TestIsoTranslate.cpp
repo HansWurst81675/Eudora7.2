@@ -633,6 +633,135 @@ static void Test_Latin9BehaeltCp1252Bytes(void)
 	TT_EndTest();
 }
 
+// ---------------------------------------------------------------------------
+// ISOIncompleteUTF8Tail - der Uebergang zwischen zwei Lesestuecken
+//
+// TextReader::ReadIt uebersetzt den Nachrichtenrumpf stueckweise. Faellt eine
+// Stueckgrenze mitten in ein UTF-8-Zeichen, ist keine der beiden Haelften
+// gueltiges UTF-8; ISOTranslate laesst beide stehen und im Postfach landen die
+// rohen Bytes. Genau ein Umlaut ist dann kaputt, alle anderen stimmen. Diese
+// Funktion sagt dem Aufrufer, wie viele Bytes er zurueckhalten muss.
+
+static void Test_AngefangenesZeichenWirdGezaehlt(void)
+{
+	// Jedes Mal wird ein Zeichen genau eine Stelle zu frueh abgeschnitten.
+	static const unsigned char szEin2[]  = { 'f', 0xC3 };					// u-Umlaut, 1 von 2
+	static const unsigned char szEin3a[] = { 'x', 0xE2 };					// Euro, 1 von 3
+	static const unsigned char szEin3b[] = { 'x', 0xE2, 0x82 };				// Euro, 2 von 3
+	static const unsigned char szEin4a[] = { 'x', 0xF0 };					// Emoji, 1 von 4
+	static const unsigned char szEin4c[] = { 'x', 0xF0, 0x9F, 0x98 };		// Emoji, 3 von 4
+
+	TT_BeginTest("ISOIncompleteUTF8Tail: angefangenes Zeichen wird gezaehlt");
+
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin2, (long)sizeof(szEin2)) != 1)
+		TT_Fail("C3 am Ende: erwartet 1, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin2, (long)sizeof(szEin2)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin3a, (long)sizeof(szEin3a)) != 1)
+		TT_Fail("E2 am Ende: erwartet 1, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin3a, (long)sizeof(szEin3a)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin3b, (long)sizeof(szEin3b)) != 2)
+		TT_Fail("E2 82 am Ende: erwartet 2, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin3b, (long)sizeof(szEin3b)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin4a, (long)sizeof(szEin4a)) != 1)
+		TT_Fail("F0 am Ende: erwartet 1, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin4a, (long)sizeof(szEin4a)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin4c, (long)sizeof(szEin4c)) != 3)
+		TT_Fail("F0 9F 98 am Ende: erwartet 3, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin4c, (long)sizeof(szEin4c)));
+
+	TT_EndTest();
+}
+
+static void Test_VollstaendigesZeichenWirdNichtZurueckgehalten(void)
+{
+	// Ein ganzes Zeichen am Pufferende darf nicht aufgehalten werden, sonst
+	// wandert bei jedem Stueck Text ins naechste und die Reihenfolge leidet.
+	static const unsigned char szAscii[] = { 'a', 'b', 'c' };
+	static const unsigned char sz2[]     = { 'f', 0xC3, 0xBC };				// u-Umlaut komplett
+	static const unsigned char sz3[]     = { 'x', 0xE2, 0x82, 0xAC };		// Euro komplett
+	static const unsigned char sz4[]     = { 'x', 0xF0, 0x9F, 0x98, 0x80 };	// Emoji komplett
+	static const unsigned char szCp[]    = { 'f', 0xFC, 'r' };				// CP1252, kein UTF-8
+	static const unsigned char szMuell[] = { 'a', 0x80 };					// Folgebyte ohne Kopf
+
+	TT_BeginTest("ISOIncompleteUTF8Tail: vollstaendiges Zeichen wird nicht zurueckgehalten");
+
+	if (UT_ISOIncompleteUTF8Tail((const char*)szAscii, (long)sizeof(szAscii)) != 0)
+		TT_Fail("reines ASCII: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)sz2, (long)sizeof(sz2)) != 0)
+		TT_Fail("C3 BC komplett: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)sz3, (long)sizeof(sz3)) != 0)
+		TT_Fail("E2 82 AC komplett: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)sz4, (long)sizeof(sz4)) != 0)
+		TT_Fail("F0 9F 98 80 komplett: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)szCp, (long)sizeof(szCp)) != 0)
+		TT_Fail("CP1252-Byte FC: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)szMuell, (long)sizeof(szMuell)) != 0)
+		TT_Fail("Folgebyte 80 ohne Kopf: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)szAscii, 0) != 0)
+		TT_Fail("leerer Puffer: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail(0, 5) != 0)
+		TT_Fail("kein Puffer: erwartet 0");
+
+	TT_EndTest();
+}
+
+static void Test_ZusammensetzenErgibtDenRichtigenText(void)
+{
+	// Der gemeldete Fall: "fuer" wird zwischen C3 und BC getrennt. Ohne
+	// Zurueckhalten bleiben beide Bytes roh stehen ("f C3 BC r"), mit
+	// Zurueckhalten kommt genau ein CP1252-Byte heraus ("f FC r").
+	static const unsigned char szStueck1[] = { 'f', 0xC3 };
+	static const unsigned char szStueck2[] = { 0xBC, 'r' };
+	static const unsigned char szErwartet[] = { 'f', 0xFC, 'r' };
+	unsigned char szPuffer[64];
+	long lHalt, lLen, lRet;
+
+	TT_BeginTest("ISOIncompleteUTF8Tail: getrenntes Zeichen wird ueber die Stueckgrenze heil");
+
+	// Stueck 1: was uebrig bleibt, wird zurueckgehalten und uebersetzt.
+	lHalt = UT_ISOIncompleteUTF8Tail((const char*)szStueck1, (long)sizeof(szStueck1));
+	lLen  = (long)sizeof(szStueck1) - lHalt;
+	memset(szPuffer, 0, sizeof(szPuffer));
+	memcpy(szPuffer, szStueck1, (size_t)lLen);
+	lRet = UT_ISOTranslate((char*)szPuffer, lLen, IDX_UTF8);
+
+	// Stueck 2: das zurueckgehaltene Byte kommt vorne wieder dran.
+	{
+		unsigned char szNaechstes[64];
+		long lNaechstesLen = lHalt + (long)sizeof(szStueck2);
+		long lRet2;
+
+		memset(szNaechstes, 0, sizeof(szNaechstes));
+		memcpy(szNaechstes, szStueck1 + lLen, (size_t)lHalt);
+		memcpy(szNaechstes + lHalt, szStueck2, sizeof(szStueck2));
+		lRet2 = UT_ISOTranslate((char*)szNaechstes, lNaechstesLen, IDX_UTF8);
+
+		memcpy(szPuffer + lRet, szNaechstes, (size_t)lRet2);
+		lRet += lRet2;
+	}
+
+	if (lRet != (long)sizeof(szErwartet) || memcmp(szPuffer, szErwartet, sizeof(szErwartet)) != 0)
+		TT_Fail("erwartet %s, erhalten %s",
+				Hex(szErwartet, (long)sizeof(szErwartet)), Hex(szPuffer, lRet > 0 ? lRet : 0));
+
+	TT_EndTest();
+}
+
+static void Test_UTF8IndexWirdErkannt(void)
+{
+	// TextReader haengt das Zurueckhalten an ISOIsUTF8Charset auf. Ein
+	// Einzelbyte-Zeichensatz darf nie zurueckhalten.
+	TT_BeginTest("ISOIsUTF8Charset: erkennt genau den UTF-8-Index");
+
+	if (!UT_ISOIsUTF8Charset(IDX_UTF8))
+		TT_Fail("Index %d ist UTF-8, wurde aber nicht erkannt", IDX_UTF8);
+	if (UT_ISOIsUTF8Charset(IDX_WINDOWS) || UT_ISOIsUTF8Charset(IDX_US_ASCII) ||
+		UT_ISOIsUTF8Charset(IDX_LATIN1)  || UT_ISOIsUTF8Charset(IDX_LATIN9))
+		TT_Fail("ein Index ausser %d wurde faelschlich als UTF-8 erkannt", IDX_UTF8);
+
+	TT_EndTest();
+}
+
 void RunIsoTranslateTests(void)
 {
 	TT_Suite("utils.cpp - Verhalten von ISOTranslate()");
@@ -660,4 +789,10 @@ void RunIsoTranslateTests(void)
 	Test_AbgeschnittenesZeichenAmZeilenende();
 	Test_ErgebnisNieLaengerAlsEingabe();
 	Test_Latin9BehaeltCp1252Bytes();
+
+	// Der Uebergang zwischen zwei Lesestuecken
+	Test_AngefangenesZeichenWirdGezaehlt();
+	Test_VollstaendigesZeichenWirdNichtZurueckgehalten();
+	Test_ZusammensetzenErgibtDenRichtigenText();
+	Test_UTF8IndexWirdErkannt();
 }

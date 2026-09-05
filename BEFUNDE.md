@@ -104,7 +104,8 @@ zuerst **E-11**, **R-1** und **E-1**.
 | P-2 | der Absturzpunkt vor dem ersten Abruf abgesichert | **behoben** |
 | W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben** (PR-5 offen) |
 | F-1 | Release-Bau: `OTA50D.LIB` statt `OTA50R.LIB`, `MakeDox.pl` | **behoben**; statisch binden bleibt ausgeschlossen |
-| Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben, ungeprüft** |
+| Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben**, an der Zwischendatei belegt (Fortschreibung 05.09.) |
+| Z-2b | ein einzelner Umlaut kaputt: UTF-8-Zeichen zerrissen an der Stückgrenze beim Abruf | **behoben, ungeprüft** (Fortschreibung von Z-2) |
 
 ## Prüfberichte über die eigene Arbeit
 
@@ -6292,3 +6293,166 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
    „das ist die Fassung, die abstürzte" acht Zeichen lang.
 3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
+
+## Z-2 (Fortschreibung, 05.09.2026, ZEICHEN) — der Rest von E-2: ein einziger Umlaut kaputt, alle anderen richtig
+
+Gregor am 05.09.2026, Fassung 7.2.0.4, im Vorschaufenster einer abgerufenen
+Nachricht — beides in **derselben Anzeige**:
+
+    "BestTV (U-TV) Android Player fÃ¼r LiveTV"      falsch
+    "Fritzbox als Werbe-Filter: So läuft Blocken"   richtig
+
+Das `ä` stimmt, das `ü` nicht. `fÃ¼r` ist die Signatur „UTF-8-Bytes als CP1252
+gelesen" (U+00FC = `C3 BC`).
+
+**Die Behebung von Z-2 ist nicht die Ursache und wird nicht zurückgenommen.**
+Die Ansage `charset=windows-1252` ist richtig. Die Ursache liegt beim **Abruf**,
+nicht bei der Anzeige, und sie ist eine andere als die von Z-2.
+
+### Der Widerspruch aufgelöst: es liegt an der Stelle im Bytestrom
+
+Die drei im Auftrag genannten Erklärungen — zwei Nachrichten, zwei MIME-Teile,
+zwei Kodierungen — sind alle **falsch**. Es ist eine Nachricht, ein Teil, ein
+Zeichensatz. Der Unterschied ist die **Position** der beiden Bytes im Strom.
+
+**Beleg 1 — die Zwischendatei.** `%TEMP%\eudA.htm`, 12 602 Bytes, 05.09.2026
+19:32, geschrieben von `CTridentView::WriteTempFile`. Sie enthält 33 Bytes über
+0x7F. **32 davon sind Windows-1252** (`E4` ä, `F6` ö, `FC` ü, `DF` ß, `D6` Ö,
+`96` Halbgeviertstrich, `B7` Mittelpunkt) — und **genau eines** ist eine
+UTF-8-Folge: `C3 BC` an Offset 4240, in „BestTV (U-TV) Android Player für
+LiveTV". Davor stehen als erste Bytes der Datei:
+
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+Diese Ansage ist für 32 von 33 Zeichen richtig. Nimmt man sie weg, sind
+schlagartig alle 32 falsch (das war der Ausgangsbefund mit den U+FFFD).
+
+**Beleg 2 — die rohen Bytes stehen schon im Postfach.**
+`Eudora72-1.0.4-release/Mailverzeichnis/In.mbx`, Offset 568472:
+`... Android Player f<C3><BC>r LiveTV ...`. Das Postfach wird beim **Abruf**
+geschrieben. Der Fehler ist also vor der Anzeige entstanden; `TridentView.cpp`
+und `msgutils.cpp` sind unbeteiligt.
+
+**Beleg 3 — der Schlüssel: dieselbe Zeichenkette, einmal richtig, einmal
+falsch, in derselben Nachricht.** In der Nachricht „10 Jahre waipu.tv" desselben
+Postfachs steht dasselbe Wort *auswählen* dreimal als `ausw<E4>hlen` (richtig)
+und einmal als `ausw<C3><A4>hlen` (roh). Und *für 8,74 €* steht einmal als
+`f<FC>r 8,74 <E2><82><AC>` und einmal als `f<C3><BC>r 8,74 <80>` — beide
+Zeichen jeweils andersherum. Ein Absender kann dieselbe Zeichenkette nicht
+zweimal verschieden kodieren, und ein MIME-Teil hat nur einen Zeichensatz. Der
+Unterschied **kann** nur an der Stelle im Strom liegen.
+
+### Die Ursache im Quelltext
+
+`TextReader::ReadIt` (`Eudora/TextReader.cpp`) liest den Rumpf **stückweise**:
+
+    for (size = ms->m_LineReader->ReadLine(buf, bSize); size > 0; ...)
+        ...
+        size = ISOTranslate(buf, size, iCharsetIdx);
+
+Der Puffer kommt aus `pop.cpp:663` (`char szBuffer[2048]`); wie groß ein Stück
+wirklich wird, hängt zusätzlich an der Zeilenlänge und an der
+Übertragungskodierung. Ein UTF-8-Zeichen ist **2 bis 4 Byte lang und kann auf
+der Stückgrenze auseinandergerissen werden.**
+
+Dann ist keine der beiden Hälften gültiges UTF-8:
+
+* `MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ...)` scheitert
+  (`utils.cpp`, in `ISOTranslate`) — absichtlich, siehe Z-2;
+* der Rückfall auf `pcXlateTable` findet ebenfalls nichts, denn die Tabelle
+  kennt nur **vollständige** Folgen;
+* beide Bytes bleiben stehen, jedes in seinem Stück.
+
+Ergebnis: **genau ein Umlaut ist kaputt, alle anderen stimmen** — Gregors Bild,
+Byte für Byte. `ISOTranslate` kann das nicht selbst beheben: es sieht immer nur
+ein Stück und kann nicht wissen, dass das nächste die Fortsetzung bringt.
+
+Das Verhalten von `ISOTranslate` war seit dem 31.08. sogar geprüft
+(`Tests/TestIsoTranslate.cpp`, „bei abgeschnittenem Zeichen fällt die Tabelle
+ein"). Übersehen wurde, dass der **Aufrufer** daraus einen Anzeigefehler macht.
+
+### Behebung
+
+Abgewogen wurden die beiden Wege aus dem Auftrag:
+
+* **(b) den Zeichensatz der Nachricht durchreichen und `utf-8` ansagen** —
+  verworfen. In der Zwischendatei stehen 32 CP1252-Bytes und 2 UTF-8-Bytes.
+  Keine einzige Ansage kann für beides richtig sein; `utf-8` würde 32 Zeichen
+  kaputtmachen, um 1 zu retten. Außerdem müsste der Zeichensatz durch
+  `GetMessageForDisplay` und den Postfach-Aufbau hindurchgereicht werden, wo er
+  gar nicht mehr existiert: nach dem Abruf gibt es nur noch CP1252.
+* **(a) den Rumpf zuverlässig nach CP1252 übersetzen und CP1252 ansagen** —
+  gewählt. Es ist die Zusage, die `ISOTranslate` ohnehin gibt; sie wurde nur an
+  der Stückgrenze gebrochen.
+
+Geändert, drei Dateien:
+
+1. **`Eudora/utils.cpp`** — zwei neue Funktionen vor `ISOTranslate`:
+   * `BOOL ISOIsUTF8Charset(UINT iCharsetIdx)` — die Rechnung für den
+     UTF-8-Index steht damit an einer Stelle statt an zweien;
+   * `LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)` — zählt die
+     Bytes am Pufferende, die ein **angefangenes** UTF-8-Zeichen sind (0 bis 3).
+     Ein vollständiges Zeichen am Ende ergibt 0, ein CP1252-Einzelbyte ergibt 0,
+     ein Folgebyte ohne Kopf ergibt 0.
+   `ISOTranslate` selbst ist **unverändert**; alle bestehenden Tests gelten
+   weiter.
+2. **`Eudora/utils.h`** — die beiden Deklarationen.
+3. **`Eudora/TextReader.cpp`** — der Übertrag. Vor der Schleife wird `bSize` um
+   drei weitere Bytes verkleinert (Platz, um die zurückgehaltenen Bytes vor das
+   nächste Stück zu setzen). In der Schleife, vor `ISOTranslate`: das
+   Zurückgehaltene vorn wieder anfügen, dann den angefangenen Rest des neuen
+   Stücks zurückhalten. `ISOTranslate` bekommt so nur noch ganze Zeichen zu
+   sehen. Nur bei UTF-8 — ein Einzelbyte-Zeichensatz hält nie etwas zurück.
+
+Endet ein MIME-Teil mitten in einem Zeichen, werden die ein bis drei
+zurückgehaltenen Bytes verworfen statt geschrieben: für sich sind sie kein
+Zeichen, und sie zu schreiben ergäbe genau den Bytesalat, um den es geht.
+
+### Prüfung
+
+`Eudora71/Tests`: **109 Tests, 109 bestanden**, darunter vier neue:
+
+* `ISOIncompleteUTF8Tail: angefangenes Zeichen wird gezaehlt`
+* `ISOIncompleteUTF8Tail: vollstaendiges Zeichen wird nicht zurueckgehalten`
+* `ISOIncompleteUTF8Tail: getrenntes Zeichen wird ueber die Stueckgrenze heil`
+* `ISOIsUTF8Charset: erkennt genau den UTF-8-Index`
+
+Der dritte ist der gemeldete Fall: `f C3` | `BC r` ergibt jetzt `f FC r` statt
+`f C3 BC r`.
+
+Neues Werkzeug **`tools/postfach-zeichen-pruefen.pl`** (liest nur): sucht in
+einer `.mbx` nach vollständigen UTF-8-Folgen und nennt Nachricht, Stelle und
+Umfeld. Im Postfach vom 05.09. findet es 249 Stellen in 8 Nachrichten, darunter
+die eine aus Gregors Beobachtung. Nach dem Abruf darf im Postfach **keine**
+vollständige UTF-8-Folge mehr stehen — das ist die Schranke für diese
+Fehlerklasse.
+
+### Was Gregor zum Nachprüfen tun muss
+
+1. Neue Fassung bauen und einsetzen.
+2. **Neu abrufen.** Schon abgerufene Nachrichten bleiben kaputt — die rohen
+   Bytes stehen im Postfach, nicht in der Anzeige. Das Vorher/Nachher ist nur an
+   frisch abgeholter Post zu sehen.
+3. `perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` — sollte
+   „Nichts gefunden" melden, jedenfalls für die Nachrichten, die mit der neuen
+   Fassung geholt wurden.
+
+### Offen geblieben (belegt, nicht behoben)
+
+* **Absender mit gemischter Kodierung.** In „10 Jahre waipu.tv" stehen an
+  manchen Stellen rohe CP1252-Bytes (`80` für €) **mitten in einem
+  UTF-8-Teil**. Der ganze Puffer fällt dann auf die Tabelle zurück, und was die
+  Tabelle nicht kennt — etwa `E2 80 AF` (U+202F, schmales geschütztes
+  Leerzeichen) — bleibt roh. Das ist eine eigene Klasse und braucht eine
+  eigene Entscheidung: die Tabelle erweitern, oder `MB_ERR_INVALID_CHARS`
+  gegen ein zeichenweises Verfahren tauschen, das nur die kaputten Bytes
+  stehenlässt und den Rest umsetzt.
+* **Der IMAP-Pfad.** `EuImap/src/ImapDownload.cpp:4662` ruft `ISOTranslate`
+  ebenfalls stückweise auf, hat also denselben Bruch — und zusätzlich einen um
+  eins verschobenen Zeichensatzindex: er kommt aus
+  `FindRStringIndexI(IDS_MIME_US_ASCII, ...)`, `ISOTranslate` erwartet aber die
+  Zählung von `FindMIMECharset` (der Test „POP: der Index wird um eins
+  verschoben — anders als im IMAP-Pfad" hält das bereits fest). Nicht angefasst,
+  weil Gregor über POP abruft und eine Änderung dort ungeprüft bliebe.
+* **Der Kopfzeilenpfad** (`lex822.cpp:544`) ist **nicht** betroffen: dort liegt
+  der dekodierte Text am Stück vor, es gibt keine Grenze zum Zerreißen.

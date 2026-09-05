@@ -23,7 +23,7 @@ gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
 |---|---|---|
 | 0 | Paket läuft ohne Nachinstallieren | **nicht belegt** — Release-Paket gebaut, aber `paket-pruefen.ps1` trägt nicht (PR-2) |
 | 1 | startet, Hauptfenster bedienbar | **erfüllt** (E-1) |
-| 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, Wirkung ungeprüft (Z-2) |
+| 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, Wirkung ungeprüft (Z-2); der einzelne zerrissene Umlaut ebenfalls (Z-2b) |
 | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten, TLS 1.3 (E-1, E-3) |
 
 ---
@@ -162,6 +162,16 @@ Gegenprobe ohne Eudora-Start: nach dem Anzeigen liegt die Zwischendatei als
 `%TEMP%\eud*.htm` (`TridentView.cpp:1469-1484`) — dort muss die
 `charset=windows-1252`-Zeile als **erste** stehen und keine fremde
 `charset`-Angabe mehr vorkommen.
+
+**Am 05.09. gemessen und erledigt:** die Zwischendatei stimmt, die Ansage steht
+als erste Zeile. Der verbliebene Rest von E-2 hatte eine **andere** Ursache und
+liegt beim Abruf, nicht bei der Anzeige (**Z-2b**): ein UTF-8-Zeichen, das auf
+die Grenze zweier Lesestücke fällt, wurde gar nicht übersetzt — genau **ein**
+Umlaut je Nachricht kam als `fÃ¼r` heraus. Behoben in `utils.cpp` und
+`TextReader.cpp`. **Zu prüfen bleibt: neu abrufen** (schon geholte Nachrichten
+bleiben kaputt, die rohen Bytes stehen im Postfach) und danach
+`perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` — es darf
+keine vollständige UTF-8-Folge mehr melden.
 
 ### B2 · Die Bau-Kennung fehlt im Titel (**E-7**) — **hochgestuft**
 
