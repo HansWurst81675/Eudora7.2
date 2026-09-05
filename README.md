@@ -327,6 +327,70 @@ perl tools/zeilenenden-angleichen.pl --aendern
 Keiner der drei Schritte ist wahlfrei — ohne sie treten zwei Fehlerklassen
 lautlos wieder auf (Befund S-7).
 
+### In Visual Studio 2022
+
+```bash
+git clone https://github.com/HansWurst81675/Eudora7.2.git
+cd Eudora7.2
+```
+
+`main` ist ausgecheckt — **und dabei bleibt es.** Auf `main` steht immer ein
+Stand, der fehlerfrei baut und aus dem sich jederzeit ein Release erstellen
+lässt. Ein Arbeitszweig wird nie zum Auschecken empfohlen; was gebraucht wird,
+gehört vorher nach `main` zusammengeführt.
+
+Dann `Eudora71\Eudora.sln` öffnen und:
+
+| | |
+|---|---|
+| Konfiguration | **`Release`** (oder `Debug`, siehe unten) |
+| Plattform | **`x86`** — in der IDE heißt sie so, in den Projektdateien `Win32` |
+| Befehl | **Erstellen → Projektmappe erstellen** |
+
+> **Nicht *Projektmappe neu erstellen*, nicht *Bereinigen*.** Warum, steht
+> weiter unten unter „Was den Bau kaputtmacht".
+
+Das Ergebnis landet in `Eudora71\Bin\Release` beziehungsweise `...\Bin\Debug`.
+
+**Die eigene EXE wird nicht byte-gleich zu einer ausgelieferten.** Vor jedem Bau
+schreibt [`tools/kennung-erzeugen.pl`](tools/kennung-erzeugen.pl) Bauzeitpunkt
+und Commit-Kürzel in eine Kopfdatei, die in der Titelzeile landet; dazu trägt
+jeder PE-Kopf einen eigenen Zeitstempel. Funktional ist es dieselbe Fassung, im
+Titel steht die eigene Bauzeit. Ein **Sternchen** hinter dem Commit-Kürzel
+heißt: beim Bau lagen uncommittete Änderungen vor — dieser Bau ist nicht
+reproduzierbar.
+
+`Eudora71\Bin\Release` liegt mit im Repo. Nach dem Klonen sind die Binärdateien
+also schon da, auch ohne einen einzigen Bau.
+
+### Debug bauen, wenn ein Fehler eingegrenzt werden soll
+
+Der Release-Bau meldet Fehler nur als Ergebnis — der Debug-Bau nennt Datei und
+Zeile. Der Unterschied ist erheblich:
+
+| | Release | Debug |
+|---|---|---|
+| Absturz beim Beenden | *„Encountered an improper argument."* | Zusicherungsdialog mit `afxcoll.inl:213` |
+
+Beides ist derselbe Fehler (`CInvalidArgException` gegen die gleichnamige
+Zusicherung), aber nur die zweite Fassung sagt, wo. **`ASSERT` ist im Release
+leer** — belegt über `Eudora.vcxproj:132` (`NDEBUG`) → `stdafx.h:54` →
+`qcassert.h` → `SuperAssert.h:135`.
+
+Im Zusicherungsdialog:
+
+- **Wiederholen** ist die wertvollste Antwort: daraus wird ein Haltepunkt, den
+  ein Debugger sieht — auch [`tools/stapel-untersuchen.ps1`](tools/stapel-untersuchen.ps1).
+  Das Werkzeug braucht die `Eudora.pdb` **neben** der `Eudora.exe` und muss in
+  einer **32-Bit**-PowerShell laufen.
+- **Ignorieren** führt meist weiter, verschleiert aber die Ursache.
+
+> **Ein Debug-Paket darf nicht weitergegeben werden.** Es verlangt
+> `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und `ucrtbased.dll` —
+> diese vier sind **nicht weiterverteilbar** und liegen nur auf Rechnern mit
+> Visual Studio. Ohne sie scheitert der Start mit `0xc000007b`. Das ist Befund
+> S-8, und daraus ist Kriterium 0 in [ZIEL.md](ZIEL.md) entstanden.
+
 ### Auf der Kommandozeile
 
 ```bash
