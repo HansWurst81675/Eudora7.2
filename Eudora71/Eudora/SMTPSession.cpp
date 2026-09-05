@@ -680,7 +680,7 @@ HRESULT QCSMTPThreadMT::StartSMTP(const char* SMTPServer)
 		CString LoginName(m_Settings->GetPOPAccount());
 		int At = LoginName.ReverseFind('@');
 		if (At > 0)
-			LoginName.ReleaseBuffer(At);
+			LoginName = LoginName.Left(At);	// R-1: ReleaseBuffer ohne GetBuffer ist bei MFC 14 unzulaessig
 		int nHesiodError = -1;
 		if (FAILED(QCHesiodLibMT::GetHesiodServer(CRString(IDS_POP_SERVICE), LoginName, Server, sizeof(Server), &nHesiodError)))
 			*Server = 0;
@@ -699,6 +699,10 @@ HRESULT QCSMTPThreadMT::StartSMTP(const char* SMTPServer)
 		if(m_Settings->m_SSLSettings.GetSSLSendUsage() == SSLSettings::SSLUseAlternatePort)
 		{
 			short port = m_Settings->m_SSLSettings.m_SMTPAlternatePort;
+			// E-23: dieselbe Falle wie beim Abruf - Port 0 laesst Open den
+			// Dienstnamen "smtp" nachschlagen und auf 25 landen statt auf 465.
+			if (port == 0)
+				port = 465;
 			Status = m_pNetConnection->Open(Server, IDS_SMTP_SERVICE, port, 465);
 		}
 		else
