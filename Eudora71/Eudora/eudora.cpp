@@ -3323,7 +3323,28 @@ BOOL CEudoraApp::RegisterURLSchemes()
 
 	const BOOL overWrite = GetIniShort(IDS_INI_DEFAULT_MAILTO_OVERWRITE);
 
-	if (defMailto[0] && !strstr(defMailto, appName)) 
+	// Eudora traegt sich NICHT mehr als Standard-Mailprogramm ein - Befund E-12.
+	//
+	// Gregor am 05.09.2026: "ich will nicht mein default mail programm aendern,
+	// die meldung kann also weg. und auch die pruefung."
+	//
+	// Das Eintragen unter HKEY_CLASSES_ROOT\mailto verlangt Administratorrechte.
+	// Ohne sie schlaegt AddToRegistry fehl, und der Anwender bekam die Meldung
+	// IDS_REG_MAILTO_ERR ("Eudora was unable to update the system registry") -
+	// fuer etwas, das er gar nicht wollte. Dazu kam vorher noch die Rueckfrage,
+	// ob Eudora das Standardprogramm werden soll.
+	//
+	// Beides ist hier abgeschaltet: keine Rueckfrage, kein Schreibversuch, keine
+	// Fehlermeldung. Wer Eudora zum Standardprogramm machen will, macht das in
+	// den Windows-Einstellungen unter "Standard-Apps" - dort gehoert es hin, und
+	// nur dort funktioniert es unter Windows 10 und 11 ueberhaupt noch
+	// zuverlaessig.
+	//
+	// Die Registrierung des Schemas x-eudora-option: weiter unten bleibt: sie ist
+	// Eudoras eigenes Schema, sie fragt nichts und meldet nichts.
+	const BOOL bStandardMailProgrammEintragen = FALSE;
+
+	if (bStandardMailProgrammEintragen && defMailto[0] && !strstr(defMailto, appName)) 
 	{
 		if (!gbAutomationRunning)
 		{
@@ -3335,7 +3356,7 @@ BOOL CEudoraApp::RegisterURLSchemes()
 			}
 		}
 	}
-	else if (stricmp(defMailto, cmd))
+	else if (bStandardMailProgrammEintragen && stricmp(defMailto, cmd))
 	{
 		// We are the default program, but if we are a new version, register this new path in place of the old one..
 		bSetDefaultMailto = TRUE;

@@ -1108,9 +1108,10 @@ void SECWorkbook::SetWorkbookMode(BOOL bEnabled)
 	{
 		static BOOL bGemeldet = FALSE;
 		OTShimNichtUmgesetzt(bGemeldet,
-			_T("Die Fensterleiste am unteren Rand des Hauptfensters ")
-			_T("(\"Auto-Wazoo\", Einstellung \"MDI Task Bar\"). Die Fenster ")
-			_T("bleiben ueber das Menue \"Window\" erreichbar."));
+			_T("Die Leiste am unteren Fensterrand, die alle offenen Fenster als ")
+			_T("Registerkarten zeigt (in den Einstellungen \"MDI Task Bar\"). ")
+			_T("Sie brauchen sie nicht: alle offenen Fenster stehen im Menue ")
+			_T("\"Window\"."));
 	}
 
 	// Bewusst keine Zuweisung an m_bWorkbookMode.
