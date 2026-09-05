@@ -566,6 +566,62 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
   Doppelersetzung, die der neue C3-Block ausgelöst hat. Belegt durch die Unit-Tests
   in `Eudora71/Tests`.
 
+## Werkzeuge für die Arbeitsweise
+
+Neben den Werkzeugen für Bau und Paket gibt es drei, die die Arbeit selbst
+absichern. Sie sind aus Fehlern entstanden, die zweimal aufgetreten sind.
+
+| Werkzeug | Beantwortet |
+|---|---|
+| [`tools/gesichert.pl`](tools/gesichert.pl) | Ist alles committet, gepusht, sind fremde Arbeitsbäume sauber? |
+| [`tools/pruefe-branch.pl`](tools/pruefe-branch.pl) | Läuft im `pre-commit`: bricht ab, wenn auf einen bereits zusammengeführten oder serverseitig gelöschten Zweig committet wird |
+| [`tools/arbeitsbaum-frei.pl`](tools/arbeitsbaum-frei.pl) | Welchen Arbeitsbaum darf der nächste Agent bekommen? |
+
+```bash
+perl tools/gesichert.pl
+```
+
+### Warum es sie gibt
+
+**`pruefe-branch.pl`** — am 31.08.2026 um 09:03 wurde ein Zweig zusammengeführt
+und angekündigt zu löschen; um **09:06**, drei Minuten später, ging ein weiterer
+Commit auf genau diesen Zweig. Inhaltlich ging nichts verloren, aber nur
+zufällig. Die Regel stand als Prosa in `AUFGABEN.md` und hing daran, dass jemand
+daran denkt. Jetzt prüft git es bei jedem Commit.
+
+**`arbeitsbaum-frei.pl`** — am 05.09.2026 bekamen zwei Agenten denselben
+Arbeitsbaum. Der zweite wechselte dort den Branch und löschte dabei die
+**unversionierte** Arbeit des ersten. Sie ging nur deshalb nicht verloren, weil
+der betroffene Agent es selbst bemerkte.
+
+Das Werkzeug führt ein Verzeichnis der Zuteilungen unter
+`.git/agenten-zuteilung`:
+
+```bash
+perl tools/arbeitsbaum-frei.pl --neu KONTO        # anlegen und buchen
+perl tools/arbeitsbaum-frei.pl --belegen KONTO    # vorhandenen buchen
+perl tools/arbeitsbaum-frei.pl --freigeben KONTO  # nach dem Rücklauf
+```
+
+Es nennt zusätzlich **namentlich**, welche unverfolgten Dateien ein
+Branchwechsel vernichten würde — meist Prüfberichte, die ein Agent geschrieben,
+aber nicht committet hat.
+
+> **Grenze, die das Werkzeug selbst nennt:** „keine Buchung" heißt **nicht**
+> „kein Agent darin". Ein Agent, der noch nichts geschrieben hat, ist von außen
+> nicht zu erkennen. Genau daran ist die erste Fassung gescheitert: sie meldete
+> zwei Bäume als frei, in denen gerade gearbeitet wurde. Deshalb das
+> Verzeichnis — und deshalb sagt das Werkzeug nicht „frei", sondern „keine
+> Buchung, nichts Ungesichertes".
+
+### Der Grundsatz dahinter
+
+**Eine Regel, die nur als Grundsatz existiert, feuert nicht — ein Handgriff
+feuert.** Wo dieses Projekt eine echte Schranke gebaut hat
+([`tools/pruefe-bytes.pl`](tools/pruefe-bytes.pl) gegen Zeilenenden, 35
+Testfälle), ist die Fehlerklasse verschwunden. Wo es beim Merksatz blieb, kam
+sie wieder. Wer hier eine neue Regel aufstellt, baut die Schranke dazu.
+
 ## Verwandte Projekte
 
 - [HermesMail](https://sourceforge.net/projects/hermesmail/) — rüstet ein
