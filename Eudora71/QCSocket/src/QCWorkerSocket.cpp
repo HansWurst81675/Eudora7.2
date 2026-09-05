@@ -368,7 +368,16 @@ void Network::SetSSLMode(bool bVal,CString person, SSLSettings *pSettings, CStri
 	//remove this when testing is done
 	assert(g_QCSSLDll!=NULL);
 	if(!g_QCSSLDll)
+	{
+		// E-23: Hier wurde ohne ein Wort zurueckgekehrt und m_bSSLMode blieb false.
+		// Der Aufrufer (POPSession.cpp:604, SMTPSession.cpp:717) prueft nichts und
+		// sprach danach IM KLARTEXT auf Port 995 bzw. 465 weiter - der Server
+		// antwortet mit einem TLS-Handschlag, Eudora sieht nur Muell und meldet
+		// "never got the banner". Mit gesetztem m_bSSLMode laeuft der Abruf in
+		// InitializeQCSSL (:1952) und meldet dort den fehlenden qcssl.dll sauber.
+		m_bSSLMode = bVal;
 		return;
+	}
 
 	g_fnQCSSLBeginSession = (FPNQCSSLBeginSession)GetProcAddress(g_QCSSLDll, "QCSSLBeginSession");
 	g_fnQCSSLEndSession = (FPNQCSSLEndSession)GetProcAddress(g_QCSSLDll, "QCSSLEndSession");
