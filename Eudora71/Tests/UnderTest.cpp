@@ -23,6 +23,7 @@
 
 // ------------------------------------------------------------------ utils.cpp
 #include "generated/utils_table.inc"
+#include "generated/utils_utf8tail.inc"
 #include "generated/utils_isotranslate.inc"
 
 // ----------------------------------------------------------------- hexbin.cpp
@@ -45,6 +46,16 @@ const unsigned char* UT_XlateRow(int iSet, int iRow)
 long UT_ISOTranslate(char* pBuf, long lSize, unsigned int uCharsetIdx)
 {
 	return ISOTranslate(pBuf, lSize, uCharsetIdx);
+}
+
+int UT_ISOIsUTF8Charset(unsigned int uCharsetIdx)
+{
+	return ISOIsUTF8Charset(uCharsetIdx) ? 1 : 0;
+}
+
+long UT_ISOIncompleteUTF8Tail(const char* pBuf, long lSize)
+{
+	return ISOIncompleteUTF8Tail(pBuf, lSize);
 }
 
 const unsigned char* UT_HexBinTable(void)	{ return HexBinTable; }

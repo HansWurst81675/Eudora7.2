@@ -61,6 +61,12 @@ $tabLine = Find-Line $u '^\s*unsigned char\s+pcXlateTable\b' $aStart
 $aEnd = Find-Line $u '^\};\s*$' $tabLine
 Write-Region $u $aStart $aEnd (Join-Path $OutDir "utils_table.inc") $utilsPath
 
+# Region A2: die beiden UTF-8-Helfer, die vor ISOTranslate stehen
+$a2Start = Find-Line $u '^\s*BOOL\s+ISOIsUTF8Charset\s*\(' 0
+$a2Line = Find-Line $u '^\s*LONG\s+ISOIncompleteUTF8Tail\s*\(' $a2Start
+$a2End = Find-Line $u '^\}\s*$' $a2Line
+Write-Region $u $a2Start $a2End (Join-Path $OutDir "utils_utf8tail.inc") $utilsPath
+
 # Region B: die Funktion ISOTranslate
 $bStart = Find-Line $u '^\s*LONG\s+ISOTranslate\s*\(' 0
 $bEnd = Find-Line $u '^\}\s*$' $bStart
