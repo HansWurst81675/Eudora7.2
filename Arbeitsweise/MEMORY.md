@@ -17,4 +17,4 @@
 - [Agenten trennen mit Worktrees](agenten-trennen-worktrees.md) — geteilter Index beschädigt fremde Commits; sonst mit Pfadangabe committen
 - [Teilweise ersetzte Header](teilweise-ersetzte-header.md) — Include-Wächter sind alles-oder-nichts; bei Teilersatz nicht setzen
 - [Nichts auf Gregors Bildschirm starten](nichts-auf-gregors-bildschirm-starten.md) — kein Fenster ohne Absprache; Prozesse immer nach Pfad filtern
-- [Was „lauffähig" heißt](was-lauffaehig-heisst.md) — Gregors drei Kriterien; alle drei müssen erfüllt sein, sonst anders benennen
+- [Was „lauffähig" heißt](was-lauffaehig-heisst.md) — Gregors Kriterien; seit 31.08.2026 sind es vier (Kriterium 0: Paket ohne Nachinstallieren), alle müssen erfüllt sein, sonst anders benennen

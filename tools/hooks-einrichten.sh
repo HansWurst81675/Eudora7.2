@@ -15,11 +15,20 @@ HOOK="$WURZEL/.git/hooks/pre-commit"
 
 cat > "$HOOK" <<'HOOKENDE'
 #!/bin/sh
+WURZEL="$(git rev-parse --show-toplevel)"
+
 # 1. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
-perl "$(git rev-parse --show-toplevel)/tools/lehren-spiegeln.pl"
+#
+#    Der Rueckgabewert MUSS ausgewertet werden. Bis zum 31.08.2026 stand hier
+#    nur der Aufruf: lehren-spiegeln.pl meldete "Der Commit wurde abgebrochen",
+#    der Hook lief aber weiter und gab am Ende den Wert der Schranke zurueck.
+#    Die Meldung war also unwahr, und die gespiegelten Lehren gingen weiterhin
+#    lautlos aus dem Commit heraus (Befund X-1, Zusatzfund; NP3-4).
+perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?
+
 # 2. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
-exec perl "$(git rev-parse --show-toplevel)/tools/pruefe-bytes.pl"
+exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 
 chmod +x "$HOOK"

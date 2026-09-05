@@ -1,30 +1,37 @@
-# Was âlauffÃ¤hig" heiÃt
+# Was „lauffähig" heißt
 
-Von Gregor am 30.08.2026 festgelegt, nachdem eine Fassung als âlauffÃ¤hig"
+Von Gregor am 30.08.2026 festgelegt, nachdem eine Fassung als „lauffähig"
 ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 
-> * es genÃ¼gt nicht, daÃ das programm startet
+> * es genügt nicht, daß das programm startet
 > * die darstellung sollte korrekt sein
-> * ich mÃ¶chte damit einen mail server verbinden und mails abrufen.
+> * ich möchte damit einen mail server verbinden und mails abrufen.
 
 ## Die Kriterien
 
+> **Diese Tabelle ist die Quelle.** Sie stand am 31.08.2026 an fünf Stellen im
+> Repo, dreimal mit verschiedenem Inhalt. `README.md`, `AUFGABEN.md`,
+> `WEITERMACHEN.md`, `PORTIERUNG.md` und `Releases/PAKETE.md` verweisen jetzt
+> hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn **hier**.
+
 | # | Kriterium | Stand am 31.08.2026 |
 |---|---|---|
-| 0 | Das Paket lÃ¤uft ohne Nachinstallieren | **nicht erfÃ¼llt** â der Win11-Lauf war der Debug-Bau mit beigelegten, nicht verteilbaren DLLs (E-8) |
-| 1 | Eudora startet und zeigt sein Hauptfenster | **erfÃ¼llt** (31.08.2026, Befund E-1) |
-| 2 | Die Darstellung ist korrekt | **fast** â Anordnung, MenÃ¼s und Werkzeugleiste stimmen; Umlaute in HTML-Mails werden zu `â` (E-2) |
-| 3 | Ein Mailkonto lÃ¤sst sich einrichten, verbinden und Mail abrufen | **erfÃ¼llt** â 159 Nachrichten abgerufen, Befund E-1 |
+| 0 | Das Paket läuft ohne Nachinstallieren | **nicht belegt** — das Release-Paket ist gebaut (F-1), aber auf keinem Rechner **ohne** Visual Studio gestartet worden. Der Win11-Lauf war der Debug-Bau mit beigelegten, nicht verteilbaren DLLs (E-8); `tools/paket-pruefen.ps1` taugt nicht als Nachweis (PR-2) |
+| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** auf einer eingerichteten Installation (Befund E-1). Auf einer **frischen** stürzte Eudora nach dem Kontoassistenten ab — Ursache E-11, behoben, **ungeprüft** |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2). Die Umlaute in HTML-Mail (`◆`) sind an der Ursache behoben (Z-2), am Programm **nicht nachgesehen** |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten von `mx.freenet.de`, Port 110, STARTTLS, TLSv1.3, `TLS_AES_256_GCM_SHA384` (E-1, E-3) |
+
+**Zwei von vier Kriterien sind belegt, eines fast, eines offen.**
 
 Kriterium 0 kam am 31.08.2026 dazu; es steht vor den anderen dreien, weil ohne
-lauffÃ¤higes Paket niemand die anderen prÃ¼fen kann. Beschrieben ist es weiter
+lauffähiges Paket niemand die anderen prüfen kann. Beschrieben ist es weiter
 unten in einem eigenen Abschnitt.
 
-> ### Kriterium 1 â erledigt am 31.08.2026
+> ### Kriterium 1 — erledigt am 31.08.2026
 >
-> **Seit Befund E-1 erfÃ¼llt:** das Fenster erscheint und ist bedienbar, die
-> MenÃ¼s klappen auf, die Bereiche Ã¼berlagern sich nicht mehr. Was folgt, ist
-> der Stand vom Vortag und bleibt stehen, weil die BegrÃ¼ndung weiter gilt.
+> **Seit Befund E-1 erfüllt:** das Fenster erscheint und ist bedienbar, die
+> Menüs klappen auf, die Bereiche überlagern sich nicht mehr. Was folgt, ist
+> der Stand vom Vortag und bleibt stehen, weil die Begründung weiter gilt.
 >
 > ### Wie es zu Kriterium 1 kam
 >
@@ -45,8 +52,8 @@ unten in einem eigenen Abschnitt.
 > behaupten mehr, als die Fassungen konnten. Sie bleiben nur stehen, weil die
 > Pakete unter diesen Namen samt Prüfsumme veröffentlicht sind.
 
-**Erst wenn alle Kriterien erfÃ¼llt sind, darf eine Fassung âlauffÃ¤hig" heiÃen.**
-Vorher heiÃt sie, was sie ist â etwa âstartet" oder âVorabfassung".
+**Erst wenn alle Kriterien erfüllt sind, darf eine Fassung „lauffähig" heißen.**
+Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung".
 
 
 ## Kriterium 0: das Paket muss ohne Nachinstallieren laufen
@@ -54,34 +61,34 @@ Vorher heiÃt sie, was sie ist â etwa âstartet" oder âVorabfass
 Von Gregor am 31.08.2026 festgelegt, nachdem Paket 1.0.2 mit `0xc000007b`
 scheiterte, weil vier Debug-DLLs von Visual Studio fehlten:
 
-> *âziel: mÃ¶glichst einfach: zip runterladen, entpacken, starten - lÃ¤uft. keine
-> fehlenden DLLs, keine fehlermeldungen, daÃ etwas nicht gefunden werden kann
-> oder nachinstalliert werden muÃ"*
+> *„ziel: möglichst einfach: zip runterladen, entpacken, starten - läuft. keine
+> fehlenden DLLs, keine fehlermeldungen, daß etwas nicht gefunden werden kann
+> oder nachinstalliert werden muß"*
 
 Und auf die Frage nach dem Weg dorthin:
 
-> *âsonst ja, statisch linken, ist mir auch egal."*
+> *„sonst ja, statisch linken, ist mir auch egal."*
 
 ### Was dem heute im Weg steht
 
 Der Debug-Bau braucht `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
-`ucrtbased.dll`. **Diese vier dÃ¼rfen nicht mitgeliefert werden** â Microsoft
-nimmt die Debug-Fassungen der Laufzeit ausdrÃ¼cklich vom Weiterverteilen aus,
+`ucrtbased.dll`. **Diese vier dürfen nicht mitgeliefert werden** — Microsoft
+nimmt die Debug-Fassungen der Laufzeit ausdrücklich vom Weiterverteilen aus,
 bei Visual Studio liegen sie deshalb in einem Ordner namens `debug_nonredist`.
-Ein Redistributable dafÃ¼r gibt es nicht; sie kommen nur mit einer
+Ein Redistributable dafür gibt es nicht; sie kommen nur mit einer
 Visual-Studio-Installation.
 
 ### Der Weg dorthin
 
 | Weg | Ergebnis |
 |---|---|
-| **Debug-Bau** | vier nicht verteilbare DLLs nÃ¶tig, dazu SUPERASSERT-Dialoge beim Start. **Ungeeignet fÃ¼rs Ausliefern.** |
-| **Release-Bau, dynamisch** | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` sind verteilbar und dÃ¼rfen beiliegen. Keine Dialoge mehr. Aber: drei Dateien mehr im Paket. |
-| **Release-Bau, statisch (`/MT` + MFC statisch)** | **keine Laufzeit-DLL nÃ¶tig.** Die `Eudora.exe` wird grÃ¶Ãer, das Paket kleiner und einfacher. Gregors bevorzugter Weg. |
+| **Debug-Bau** | vier nicht verteilbare DLLs nötig, dazu SUPERASSERT-Dialoge beim Start. **Ungeeignet fürs Ausliefern.** |
+| **Release-Bau, dynamisch** | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` sind verteilbar und dürfen beiliegen. Keine Dialoge mehr. Aber: drei Dateien mehr im Paket. |
+| **Release-Bau, statisch (`/MT` + MFC statisch)** | **keine Laufzeit-DLL nötig.** Die `Eudora.exe` wird größer, das Paket kleiner und einfacher. Gregors bevorzugter Weg. |
 
-Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die Ã¼brigen) bleiben
-davon unberÃ¼hrt â sie sind eigene Module mit eigener Laufzeit und brauchen
-weiterhin `MSVCR71.dll`. DafÃ¼r gibt es seit Befund B-1 einen **eigenen Nachbau**
+Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die übrigen) bleiben
+davon unberührt — sie sind eigene Module mit eigener Laufzeit und brauchen
+weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau**
 (`Eudora71/VC71Bruecke`), der auf die von Windows selbst mitgelieferte
 `msvcrt.dll` weiterleitet. Der darf mit ins Paket, er ist unser eigener Code.
 
@@ -90,12 +97,12 @@ weiterhin `MSVCR71.dll`. DafÃ¼r gibt es seit Befund B-1 einen **eigenen Nachba
 > ### Berichtigung vom 31.08.2026: Kriterium 0 ist NICHT belegt
 >
 > Ich hatte gemeldet, Kriterium 0 sei mit `tools/paket-pruefen.ps1`
-> âgemessen erfuellt". Das traegt nicht. PRUEFER hat mit einer Gegenprobe
+> „gemessen erfuellt". Das traegt nicht. PRUEFER hat mit einer Gegenprobe
 > gezeigt: **der Pruefer prueft die Maschine, nicht das Paket.**
 >
 > Aus einer ausgepackten Kopie wurden `EudoraRes.dll`, `QCSSL.dll`,
-> `SPELL32.DLL`, `EuGraph.ocx` und der ganze `Plugins`-Ordner geloescht â
-> das Ergebnis blieb **âkeine Fehler, EXIT=0"**. Fehlende Laufzeiten gelten
+> `SPELL32.DLL`, `EuGraph.ocx` und der ganze `Plugins`-Ordner geloescht —
+> das Ergebnis blieb **„keine Fehler, EXIT=0"**. Fehlende Laufzeiten gelten
 > ihm als vorhanden, sobald sie irgendwo in `SysWOW64` liegen.
 >
 > Dazu kommt: bei einem **Release**-Paket erzeugt seine feste
@@ -107,38 +114,47 @@ weiterhin `MSVCR71.dll`. DafÃ¼r gibt es seit Befund B-1 einen **eigenen Nachba
 > gelten.** Der einzige belastbare Nachweis fuer Kriterium 0 bleibt: das ZIP
 > auf einem Rechner **ohne** Visual Studio auspacken und starten.
 
+Der Maßstab bleibt damit: **das ZIP auf einem Rechner ohne Visual Studio
+auspacken und starten** — kein `0xc000007b`, keine Meldung über eine fehlende
+DLL, kein Nachinstallieren. Für das Release-Paket ist dieser Lauf noch nicht
+gemacht worden (E-8); für den Debug-Bau zählt er nicht, weil dort vier nicht
+verteilbare DLLs beiliegen mussten.
 
-
-`tools/paket-pruefen.ps1` gegen das ausgepackte Paket, auf einem Rechner **ohne**
-Visual Studio: **null Fehler**. Kein `0xc000007b`, keine Meldung Ã¼ber eine
-fehlende DLL, kein Nachinstallieren.
+Bis `tools/paket-pruefen.ps1` nach den **Importen** der Paketdateien statt nach
+einer festen Liste urteilt (PR-2.0), ist es kein Freigabekriterium.
 
 
 ## Woran sich Kriterium 2 misst
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert
-(Eudora 7 unter Windows XP). MaÃgeblich sind daraus:
+(Eudora 7 unter Windows XP). Maßgeblich sind daraus:
 
 - Werkzeugleiste mit **allen** Symbolen, keine leeren grauen Felder
 - Postfachbaum links, sauber abgegrenzt
 - Nachrichtenfenster mit Kopfzeilenbereich und Textbereich untereinander
 - Registerkarten am unteren Rand des Nachrichtenbereichs
-- keine sich Ã¼berlagernden Bereiche
+- keine sich überlagernden Bereiche
 
 Bekannte Abweichungen sind in `BEFUNDE.md` unter S-6 gesammelt.
 
 ## Woran sich Kriterium 3 misst
 
-Nachweis ist ein tatsÃ¤chlicher Abruf gegen einen echten Server, mit Beleg:
-Protokollversion und Verfahren aus *Tools â Last SSL Info*, und mindestens eine
+Nachweis ist ein tatsächlicher Abruf gegen einen echten Server, mit Beleg:
+Protokollversion und Verfahren aus *Tools → Last SSL Info*, und mindestens eine
 empfangene Nachricht, die lesbar dargestellt wird.
 
-Das ist zugleich der erste echte Test der neuen TLS-Schicht. Der letzte
-erfolgreiche Abruf (`pop.gmx.net`, TLS 1.3) fand mit einer **Ã¤lteren**
-QCSSL-Fassung statt â Einzelheiten in `Releases/1.0/AUSLIEFERUNGEN.md`.
+> **Erbracht am 31.08.2026, 08:09:43** (Befund E-3): `mx.freenet.de` auf
+> **Port 110 mit STARTTLS**, `TLSv1.3`, `TLS_AES_256_GCM_SHA384` (256 Bit),
+> Status *Succeeded*, danach 159 abgerufene und lesbar dargestellte Nachrichten.
+> Abgelesen in *Tools → Last SSL Info*.
 
-## Was daraus fÃ¼r die Benennung folgt
+Damit ist zugleich der erste echte Servertest der **ausgelieferten** QCSSL 1.0.1
+(`ab55281a`) bestanden. Der vorherige Lauf (`pop.gmx.net`, 29.08., TLS 1.3) war
+mit einer **älteren** Fassung gelaufen — Einzelheiten in
+`Releases/1.0/AUSLIEFERUNGEN.md`.
+
+## Was daraus für die Benennung folgt
 
 Der Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung
-kann. KÃ¼nftige Pakete heiÃen nach ihrem tatsÃ¤chlichen Stand. Siehe
+kann. Künftige Pakete heißen nach ihrem tatsächlichen Stand. Siehe
 `Releases/PAKETE.md`.

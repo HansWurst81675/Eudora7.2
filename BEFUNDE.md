@@ -1,3 +1,154 @@
+# BEFUNDE — Verzeichnis
+
+<!-- pruefstand: d826a3f -->
+<!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
+     wurde. Wer die Datei nachzieht, zieht die Marke mit.
+     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+
+Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen und
+inzwischen rund **5900 Zeilen** lang (nachzählen: `grep -c '^## ' BEFUNDE.md`,
+dieses Verzeichnis zählt mit). Jeder Agent schreibt seinen Abschnitt ans
+**Ende**, die Reihenfolge ist also zeitlich, nicht sachlich. Ohne dieses
+Verzeichnis findet niemand, was er sucht — und schlimmer: er findet einen
+Befund und weiß nicht, ob er noch gilt.
+
+**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil vier Kennungen
+eine Ebene tiefer stehen (`### NP2-2`, `### NP2-3`, `### NP3-8`, `### NP3-9`:
+sie sind Nachträge innerhalb eines größeren Abschnitts). Zeilennummern stehen
+hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses Projekt hat
+genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
+
+> **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**
+> Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
+> dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
+
+**Stand der Statusspalte:** 31.08.2026 abends, Commit `48d28a2`. Die Einstufung
+ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
+
+| Status | Bedeutung |
+|---|---|
+| **behoben** | Ursache beseitigt, im Repo |
+| **offen** | nichts geändert |
+| **teilweise** | ein Teil behoben, der Rest steht im Befund |
+| **überholt** | durch einen späteren Befund widerlegt oder gegenstandslos |
+| **Beleg** | kein Mangel, sondern eine Messung |
+| **Bericht** | Prüfdurchgang, seine Einzelbefunde stehen darin |
+| **ungeprüft** | behoben, aber am laufenden Programm nicht nachgesehen |
+
+## Was zuerst zu lesen ist
+
+Wer neu dazukommt: **`WEITERMACHEN.md`** (Einstieg und Übergabe),
+**`AUFGABEN.md`** (Arbeitsliste), **`ZIEL.md`** (der Maßstab). Aus dieser Datei
+zuerst **E-11**, **R-1** und **E-1**.
+
+## Korrektheitsprüfung vom 29.08.2026 (Agent PRUEFER)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| H1 | ungültige Protokollversion brach die TLS-Verbindung nicht mehr ab | **behoben** |
+| H2 | Zeichentabelle: sieben falsche Zuordnungen, Doppelersetzung | **behoben** |
+| M1 | Untergrenze TLS 1.0 galt ausgerechnet für die Voreinstellung | **behoben** |
+| M2 | `BIO_s_workersocket()` war für sich genommen nicht threadsicher | **behoben** |
+| M3 | `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht | **überholt** (Absicht, im Code vermerkt) |
+| M4 | Empfangsrichtung las die **Sende**einstellung (Originalfehler) | **behoben** |
+| M5 | `CSumList::GetTail()` lieferte den Kopf (Originalfehler) | **behoben** |
+| N1 | Zeigerschmuggel durch `BIO_set_fd` hält nur unter Win32 | **behoben** (x64-Rest im Befund) |
+| N2 | `static` bei `get_entry_info` verlorengegangen | **behoben** |
+| N3 | zwei Rückgabewerte wurden nicht ausgewertet | **behoben** |
+| N4 | `#undef` auf einen SDK-Wächter in `ExceptionHandler.cpp` | **behoben** |
+| N5 | `atlimage.h`: Laufzeitprüfung durch `TRUE` ersetzt | **behoben** (Änderung war nötig, bleibt) |
+| N6 | OTShim war in keinem Projekt eingehängt | **überholt** |
+| N7 | zwei kleine Stellen in OTShim, beide heute wirkungslos | **offen** |
+| N8 | `const_cast` mit anschließendem Schreibzugriff, 7 echte Fälle | **geprüft**, kein Handlungsbedarf |
+
+## Nachprüfungen 2 und 3 (PRUEFER, 29./30.08.2026)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| NP2-1 | Stufe 3 der Ersatzschicht hing in keinem Projekt | **überholt** |
+| NP2-2 | `SysColorChange()` tut nicht, was daneben steht | **offen** (folgenlos, Kommentar irreführend) |
+| NP2-3 | `BitBltTransparent` meldet Erfolg, ohne gezeichnet zu haben | **offen** |
+| NP3-1 | `ZeigeInhaltsfenster` läuft, bevor Eudora das Fenster umhängt | **offen** (nur sichtbar, kein Datenfehler) |
+| NP3-2 | `OnToolHitTest` als `int` statt `INT_PTR` — x64-Sperre | **offen** |
+| NP3-3 | Kommentar zu `CreateFromBitmap` zählt die Aufrufstellen falsch | **offen** |
+| NP3-4 | `lehren-spiegeln.pl` löschte die gespiegelten Dateien wieder | **behoben** (stagt nicht mehr; Hook siehe X-2) |
+| NP3-5 | `lehren-spiegeln.pl` war genau im Fehlerfall stumm | **behoben** (X-2) |
+| NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **behoben** |
+| NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** (Prüfstandsmarke) |
+| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **offen** |
+| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **teilweise** (POP behoben, IMAP offen) |
+| PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
+
+## Start, Paket, Auslieferung (S)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| S-1 | Paket 1.0.1 startete nicht: `MSVCR71D.dll` fehlte | **behoben** |
+| S-2 | Stapelüberlauf beim Start — die Werbefläche mit `CRect(0,0,0,0)` | **behoben** |
+| S-3 | erster Lauf durch Gregor: drei Beobachtungen | **teilweise** (S-3c: `MFC71`/`MSVCP71` dauerhaft offen) |
+| S-4 | Zusicherung im Adressbuch-Wazoo | **behoben** |
+| S-5 | Menüs ließen sich nicht öffnen | **behoben** (Ursache M-1, belegt in E-1) |
+| S-6 | Bereiche überlagern sich | **teilweise** (A-1 umgesetzt, Splitter offen) |
+| S-7 | die Wurzel aller CRLF-Probleme: Auschecken mit `autocrlf=true` | **behoben** |
+| S-8 | Paket 1.0.2 startete mit `0xc000007b` | **behoben** (und durch F-1 gegenstandslos) |
+
+## Arbeit der Agenten vom 30./31.08.2026
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| B-1 | eigene `msvcr71.dll` als Weiterleitung (1429 Forwarder) | **behoben** |
+| B-2 | Brücke in der Solution, Paket 1.0.3, neuer Paketprüfer | **behoben** (GUID-Berichtigung darin) |
+| M-1 | der Rahmen lieferte immer `HTERROR` — `m_bMainFrameEnabled` | **behoben**, Wirkung belegt (E-1) |
+| A-1 | Erscheinungsbild: fünf Punkte umgesetzt | **teilweise**, Wirkung belegt (E-1/E-2) |
+| P-1 | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | **teilweise** (P-1.5b bis P-1.5j offen) |
+| P-2 | der Absturzpunkt vor dem ersten Abruf abgesichert | **behoben** |
+| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben** (PR-5 offen) |
+| F-1 | Release-Bau: `OTA50D.LIB` statt `OTA50R.LIB`, `MakeDox.pl` | **behoben**; statisch binden bleibt ausgeschlossen |
+| Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben, ungeprüft** |
+
+## Prüfberichte über die eigene Arbeit
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| PR-1 | drei Löcher in der Commit-Schranke | **Bericht** → durch W-1 abgearbeitet |
+| PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
+| Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
+| X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 |
+| X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
+| X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
+| X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
+| R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
+
+## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) |
+| E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 |
+| E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** |
+| E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **offen** |
+| E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 |
+| E-6 | Release läuft, Assistent stürzt bei *Weiter* ab | **überholt** durch E-8 (es war der Debug-Bau) |
+| E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **offen** (Behebung beschrieben, ein Aufruf) |
+| E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** |
+| E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig |
+| E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
+
+> **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
+> ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
+> Befund — wer sie sucht, sucht umsonst.
+
+## Was in dieser Datei sonst noch steht
+
+Neben den Befunden vier Sammelkapitel, die **kein** Mangel sind und deshalb oben
+nicht auftauchen: „Geprueft und in Ordnung" (zweimal, aus der ersten Prüfung und
+aus Nachprüfung 3), „Geprueft und in Ordnung — Stufe 4, Bildschicht" und
+„Nachgeprueft: die beiden Meldungen des Agenten TABELLE". Sie sagen, wo eine
+spätere Prüfung **nicht** noch einmal anfangen muss — dafür sind sie da.
+
+---
+
 # Befundbericht Korrektheitspruefung
 
 **Geprueft am:** 2026-08-29
@@ -1841,6 +1992,14 @@ ueber verwaiste Kopien in `Arbeitsweise/` berichten lassen.
 
 ## NP3-6 - `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis heraus Entwarnung
 
+> **BEHOBEN am 31.08.2026 abends.** Die Pfade hängen jetzt an
+> `git rev-parse --show-toplevel`, und eine fehlende Datei ist eine **Warnung**
+> mit Rückgabe 1. Vorher nachgemessen und vorgeführt: aus `Eudora71/` heraus
+> dreimal „fehlt" und danach „Pruefung und Doku sind nah am Code", `rc=0`.
+> Nachher liefert das Werkzeug aus `Eudora71/Eudora/` **dasselbe** wie aus der
+> Wurzel. Gegenprobe mit fehlender Datei in einem Wegwerf-Repo: Warnung,
+> `rc=1`. Siehe auch NP3-7 — beide in einem Zug.
+
 **Sicherheit: nachgewiesen, ausgefuehrt.**
 
 **Datei:** `tools/pruefstand-melden.pl:41-44` und `:78-86`
@@ -1872,6 +2031,26 @@ und genau dann steht das Arbeitsverzeichnis nicht fest.
 ---
 
 ## NP3-7 - `pruefstand-melden.pl` nennt einen beliebigen Commit als Pruefstand
+
+> **BEHOBEN am 31.08.2026 abends, mit der hier vorgeschlagenen Marke.**
+> Jede beobachtete Datei trägt oben eine Zeile
+> `<!-- pruefstand: <commit> -->` und nennt damit den Commit, gegen den sie
+> zuletzt abgeglichen wurde. **Wo keine Marke steht, wird das gemeldet statt
+> geraten** (Rückgabe 1) — samt der Zeile, die einzusetzen ist.
+>
+> Wie irreführend das Raten war, zeigt die letzte Messung der alten Fassung:
+> *„PORTIERUNG.md abgeglichen bis `567a5d8`, seither 186 Commits"* — `567a5d8`
+> ist der Commit mit den Originalquellen von 2006, den ein Befund nur zitiert.
+> `README.md` bekam `b4b7de5` und 170 Commits.
+>
+> **Zur Laufzeit:** die 29,5 s sind auf dieser Linux-Maschine nicht
+> reproduzierbar (dort 0,73 s) — Prozessstarts kosten unter Windows ein
+> Vielfaches. Die maschinenunabhängige Zahl ist die Zahl der git-Aufrufe:
+> **182 vorher** (122 Hash-Kandidaten in `BEFUNDE.md`, 41 in `PORTIERUNG.md`,
+> 19 in `README.md`, je ein `git cat-file -t`), **3 nachher** — je Marke ein
+> `git rev-parse --verify`. Lokal 0,73 s → 0,03 s.
+>
+> `$gesamt` (berechnet und nie benutzt) ist ebenfalls weg.
 
 **Sicherheit: nachgewiesen, ausgefuehrt. Auswirkung: die Zahl ist irrefuehrend,
 nicht falsch gerundet.**
@@ -2509,11 +2688,23 @@ Leisten in einer Reihe. Muss reproduziert werden, bevor etwas geaendert wird.
 von HEAD **ausschliesslich in den Zeilenenden**. Im Arbeitsverzeichnis standen
 sie als CRLF, im Commit als LF.
 
-> **Zu den Zahlen.** Der Kopf von `tools/zeilenenden-angleichen.pl` nennt
-> 4426 von 5336 — das war ein frueherer Durchlauf, der weniger Dateiendungen
-> beruecksichtigte (ohne `.def`, `.mak`, `.txt`, `.md`). Beide Zahlen sind
-> richtig gemessen, nur mit verschiedenem Suchmuster. Nach dem Angleichen
-> meldet das Werkzeug 5586 byteidentische Dateien.
+> **Zu den Zahlen** (nachgezogen am 31.08.2026 abends; Befund Z-1 hatte belegt,
+> dass W-1/PR-7 dieses Nachziehen zwar meldete, aber nicht ausgeführt hatte).
+> Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und lässt
+> sich nicht wiederholen — der Baum ist angeglichen. Nachprüfbar ist nur die
+> Grundgesamtheit, und die wächst mit jedem Commit und hängt an der
+> Endungsliste:
+>
+> | Dateien | Stand | Liste |
+> |---|---|---|
+> | 5563 | 30.08.2026 vormittags | alte Liste |
+> | 5568 | 30.08.2026 abends (PRUEFER) | alte Liste |
+> | 5589 | 31.08.2026 | alte Liste |
+> | 6385 | 31.08.2026 | neue gemeinsame Liste (`tools/dateiendungen.pl`) |
+> | 6394 | 31.08.2026 abends | dieselbe Liste, 0 Abweichungen |
+>
+> Die frühere Angabe „4426 von 5336" stammte aus einem Durchlauf mit kürzerer
+> Endungsliste und steht im Kopf des Werkzeugs seit W-1 nicht mehr.
 
 **Ursache.** Das Repo wurde seinerzeit mit `core.autocrlf=true` ausgecheckt. Git
 wandelte beim Auschecken LF nach CRLF und vermerkte die Datei trotzdem als
@@ -2534,13 +2725,20 @@ fruehere Vermutung, das Repo sei mit `autocrlf=true` geklont worden, war
 Zeitpunkt der Pruefung schon `false` sagte. Die Einstellung war inzwischen
 geaendert worden; die Folgen des Auscheckens blieben.
 
-Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`:
+Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`
+(Beschriftung am 31.08.2026 berichtigt — sie war vertauscht, Befund Z-1):
 
-    Index-Eintrag:  Blob 8c4fb68a...   size: 5781      (Groesse der CRLF-Fassung)
-    Arbeitskopie:   Blob 8c4fb68a...   5716 Bytes      (LF, inhaltlich gleich)
+    HEAD-Blob 8c4fb68a:   5716 Bytes, 0 CR, 65 LF     (die committete LF-Fassung)
+    Index-Eintrag:        size: 5781                  (die Groesse der CRLF-Arbeitskopie)
+    Arbeitskopie:         5781 Bytes                  (CRLF, inhaltlich gleich)
 
-Gleicher Blob-Hash, verschiedene Groesse. `git diff` meldete nichts,
-`git status` meldete "geaendert".
+5716 + 65 CR = 5781 — die Rechnung geht auf. Der Index trug also die **Groesse
+der CRLF-Datei** neben dem **Hash der LF-Fassung**, und genau deshalb sah git
+nicht hinein: Zeitstempel und Groesse passten zueinander.
+
+Die frühere Fassung dieses Beispiels beschriftete die 5716 als Arbeitskopie.
+Das trug nicht: eine Arbeitskopie mit 5716 Bytes und LF wäre byteidentisch zum
+Blob, und dann gäbe es nichts anzugleichen.
 
 **Behebung.** `tools/zeilenenden-angleichen.pl` schreibt jede betroffene Datei
 mit dem HEAD-Stand woertlich neu - aber nur, wenn sie sich danach nachweislich
@@ -2722,11 +2920,25 @@ kommt mit `MSGF_MENU`), sowie `SECDockState::LoadState` bei leerer INI.
 dort bricht der Bau am laengst behobenen `C2572` ab. Der lebende Stand ist
 `eudora-exe-linkt`.
 
-## A-1 — Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026, UNFERTIG)
+## A-1 — Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026)
+
+> **BERICHTIGUNG vom 31.08.2026.** Überschrift und Vorbemerkung galten für die
+> **erste** Sitzung. In der zweiten Sitzung sind fünf Punkte umgesetzt worden
+> (`db28adb`, `1a4a6d5`): `DrawDisabled` setzt Text- und Hintergrundfarbe,
+> `PreDrawButton` prüft `::SelectObject`, `TBBS_HIDDEN` ist ausgeräumt, die
+> Andockrechnung wertet `m_fPctWidth`, `nCol` und `nRow` aus. Die Wirkung ist
+> am 31.08. am laufenden Programm **belegt** (E-1, E-2): Menüs, Anordnung und
+> Werkzeugleiste stimmen. **Sämtliche Zeilenangaben dieses Abschnitts beziehen
+> sich auf `31810e2` und stimmen im heutigen Baum nicht mehr** — Befund Z-1 hat
+> das nachgemessen. Offen bleiben die Splitter,
+> `FloatControlBarInMDIChild` und `SetControlBarWidthsInRow` (`OTShim.cpp:2244`,
+> leerer Rumpf), dazu PR-2.5 (`DrawChecked` hat denselben Farbfehler).
+> LEKTOR und Z-1 hatten diese Berichtigung beide gemeldet; ausgeführt wurde sie
+> erst jetzt.
 
 Agent ANSICHT, Branch `worktree-agent-a84c76a2ea910c75d`, ausgehend von
-`31810e2`. **Kein Code geändert** — die Sitzung wurde vor der Umsetzung
-abgebrochen. Vollständige Analyse mit allen Fundstellen in
+`31810e2`. **Kein Code geändert** (Stand der ersten Sitzung) — sie wurde vor
+der Umsetzung abgebrochen. Vollständige Analyse mit allen Fundstellen in
 [`Eudora71/OTShim/BEFUND-ANSICHT.md`](Eudora71/OTShim/BEFUND-ANSICHT.md).
 
 ### Die sich überlagernden Bereiche: Ursache belegt
@@ -5205,6 +5417,14 @@ genau in dem Zustand, in dem Gregor jetzt Fehler findet (frischer Start,
 Assistent offen, noch kein Postfach), fehlt sie. Damit versagt sie an der
 Stelle, für die sie da ist.
 
+> **Nachtrag vom 31.08.2026 abends (Befund V-1): es ist inzwischen mehr als
+> das.** Unter `v1.0.3` sind **zwei verschiedene ZIPs** veröffentlicht, und beide
+> `Eudora.exe` melden dieselbe Produktversion **7.2.0.3** — im Über-Dialog, im
+> Explorer und im Absturzbericht. Die Bau-Kennung ist damit das **einzige**
+> Merkmal am laufenden Programm, das die beiden auseinanderhält, weil sie den
+> Commit enthält. Und sie fehlt ausgerechnet im Zustand des Absturzes. Die
+> Behebung ist ein einziger Aufruf.
+
 ## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
 
 Gregor: *„ich habe das verwendet: `C:\Users\Gregor\Eudora72-1.0.3`"*
@@ -5473,3 +5693,602 @@ Für eine **leere** `Out.mbx` (die Zeilen darüber melden `Size: 0`) wird eine
 Dateigröße von **1.788.158.654** gemeldet — 1,7 GB. Ein nicht initialisierter
 Wert. Zwei Zeilen später steht korrekt `MBX 0`. Eigener Befund, nicht
 untersucht.
+
+
+## R-1 — Die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 Vorkommen sind falsch (31.08.2026)
+
+Werkzeug: **`tools/releasebuffer-pruefen.pl`** (neu). Branch
+`claude/letzter-stand-b2ytpi`, Commit `8f1c51e`, Berichtigung `26b52b8`.
+Gemessen ohne Visual Studio, ohne Agenten, reine Quelltextanalyse — **es ist
+keine Zeile C++ geändert worden**, und nichts davon ist übersetzt.
+
+E-11 hat einen Absturz auf frischen Installationen auf `ReleaseBuffer` ohne
+vorangehendes `GetBuffer` zurückgeführt (`eudora.cpp:3372`) und 142 Vorkommen im
+Baum gezählt. Dieser Abschnitt stuft sie ein.
+
+### Was das Werkzeug tut
+
+Für jedes `ReleaseBuffer(` bestimmt es den Empfänger, schätzt den
+Funktionsanfang (rückwärts bis zur nächsten schließenden Klammer in Spalte 1 —
+VC6-Stil, in diesem Baum durchgehend) und sucht darin ein `GetBuffer` bzw.
+`GetBufferSetLength` **auf derselben Variablen**.
+
+| Einstufung | Bedeutung | Anzahl |
+|---|---|---|
+| `ok` | das richtige Paar `GetBuffer`/`ReleaseBuffer` — bleibt | **117** |
+| `falsch` | kein `GetBuffer`, **und ein Argument** übergeben: hier wird gekürzt | **20** |
+| `lockbuffer` | davor steht `LockBuffer`, nicht `GetBuffer` — der richtige Partner ist `UnlockBuffer()` | **4** |
+| `danach` | `GetBuffer` steht erst **nach** dem `ReleaseBuffer` | **1** |
+| `verdaechtig` | kein `GetBuffer`, kein Argument | 0 |
+
+**25 Stellen sind zu ändern, 117 bleiben.** Aufruf:
+`perl tools/releasebuffer-pruefen.pl` (Rückgabe 1, sobald etwas zu tun ist),
+`--alle` zeigt auch die richtigen.
+
+### Die Zahl 142 war zufällig richtig
+
+Nachgemessen, weil eine Zahl ohne den Befehl, der sie erzeugt hat, nichts wert
+ist:
+
+| Messung | Ergebnis |
+|---|---|
+| `grep -rn "ReleaseBuffer(" --include=*.cpp` | 142 |
+| dasselbe **einschließlich `.CPP`** in Großschreibung | 143 |
+| davon eine reine **Kommentarzeile** (`eudora.cpp:3372`, „war ReleaseBuffer(i) …") | −1 |
+| in `.h`/`.inl` | 0 |
+| **echte Vorkommen** | **142** |
+| davon findet das Werkzeug | **142** |
+
+`--include=*.cpp` ist bei `grep` groß-/kleinschreibungsabhängig und übersieht
+`Eudora71/Eudora/PGHTMIMP.CPP`; dafür zählt es die Kommentarzeile mit, in der
+die Behebung von E-11 vermerkt ist. Die beiden Fehler heben sich auf.
+
+### Berichtigung zur Behebung von E-11
+
+`AUFGABEN.md` (A1) führt die Behebung als `RegMailto = RegMailto.Left(i);`.
+Im Quelltext steht **`RegMailto.Truncate(i);`** (`eudora.cpp:3372`, nachgelesen).
+Beides ist richtig; `Truncate` ist der kürzere Weg und kommt ohne temporäres
+Objekt aus. Die Doku ist nachgezogen.
+
+### DRINGEND: die Behebung von E-11 ist mit hoher Wahrscheinlichkeit unvollständig
+
+**`CEudoraApp::RegisterURLSchemes()` reicht von `eudora.cpp:3274` bis `:3417`.**
+In dieser **einen** Funktion stehen **drei** Vorkommen:
+
+| Zeile | Stand |
+|---|---|
+| 3372 | `RegMailto` — **behoben** (E-11), jetzt `Truncate(i)` |
+| 3403 | `RegClientsMail.ReleaseBuffer(LastSlash)` — **unverändert falsch** |
+| 3413 | `EudoraOption.ReleaseBuffer(SlashIndex)` — **unverändert falsch** |
+
+Was `eudora.log` belegt: die letzte Zeile vor dem Abbruch ist der Dialog
+`IDS_WARN_DEFAULT_MAILTO`, ausgegeben in **`eudora.cpp:3331`** — also **innerhalb
+dieser Funktion, vor allen drei Stellen**. Der Absturz liegt damit hinter 3331;
+dass er ausgerechnet an 3372 lag und nicht an 3403 oder 3413, ist **nicht
+belegt**. Beide sind auf dem Weg: 3403 im Zweig `if (bIsDefaultMailto)`, 3413
+ohne jede Bedingung.
+
+**Folge für den ersten Punkt der Arbeitsliste:** wenn Gregor das v1.0.3-ZIP auf
+dem Win11-Rechner probiert und es **weiterhin abstürzt**, ist das kein
+Widerspruch zu E-11, sondern der Hinweis auf 3403/3413. Beide gehören vor dem
+nächsten Paket behoben — es sind zwei Zeilen, und sie kosten einen Bau.
+
+### Die 20 Stellen der Einstufung `falsch`
+
+Nach Dringlichkeit, nicht nach Datei:
+
+| Stelle | Empfänger | wie oft der Weg läuft |
+|---|---|---|
+| `eudora.cpp:3403`, `:3413` | `RegClientsMail`, `EudoraOption` | **bei jeder frischen Installation** — dieselbe Funktion wie der E-11-Absturz |
+| `QCSharewareManager.cpp:1318` | `RetailVersion` | **bei jedem Start** (`Load`, Box-Build-Zweig) |
+| `sendmail.cpp:1782`, `:1788`, `:1815`, `:1865` | `szLine` | **bei jeder gesendeten Klartextmail** — `CString szLine(pSrcLine, …)` (`:1736`), dann `SetAt`, dann `ReleaseBuffer` |
+| `POPSession.cpp:1747` | `LoginName` | nur im Hesiod-Zweig (`stricmp(Server,"hesiod")`) |
+| `SMTPSession.cpp:328` | `Recipient` | beim Auswerten einer Serverantwort mit `<…>` |
+| `SMTPSession.cpp:683`, `Imapdll/src/Network.cpp:179` | `LoginName` | Anmeldung, Konto mit `@` |
+| `mime.cpp:2020` | `m_CID` | jede Nachricht mit eingebettetem Inhalt (`Content-ID` in `<…>`) |
+| `msgutils.cpp:2128`, `:2165`, `:2185`, `:2265` | `szPath` | Pfad- und Anhangbehandlung |
+| `fileutil.cpp:482` | `EudoraDir` | Verzeichnisbestimmung |
+| `guiutils.cpp:1605` | `File` | Dateiauswahl |
+| `PaigeEdtView.cpp:657` | `strTitle` | Fenstertitel über 31 Zeichen |
+| `MAPI/recip.cpp:52` | `FullAddress` | MAPI-Empfänger |
+
+Alle wollen **kürzen**. Der Ersatz ist in jedem Fall `s.Truncate(n)` (so ist
+E-11 behoben) oder `s = s.Left(n)`.
+
+### Die 4 Stellen `lockbuffer` — anderer Fehler, anderer Ersatz
+
+`Text2Html.cpp:912`, `:939`, `:955` und `PGHTMIMP.CPP:2944` holen den Puffer mit
+**`LockBuffer()`**, schreiben hinein und geben ihn mit `ReleaseBuffer()` zurück.
+Der Partner von `LockBuffer` ist **`UnlockBuffer`**; `ReleaseBuffer` ist es
+nicht. Gemessen im Baum: 7 `LockBuffer`, aber nur 2 `UnlockBuffer`.
+
+Das Muster ist dort überall dasselbe — ein abschließendes CRLF abschneiden:
+
+```cpp
+tempStr = szUrl.LockBuffer();
+tempStr[strlen(tempStr)-2] = '\0';
+szUrl.ReleaseBuffer();
+```
+
+Sauber wäre ohne Puffer: `if (szUrl.Right(2) == "\r\n") szUrl.Truncate(szUrl.GetLength()-2);`
+
+### Die eine Stelle `danach`
+
+`MimeStorage.cpp:270`:
+
+```cpp
+Message.ReleaseBuffer(0);
+Message.GetBuffer(::SafeStrlenMT(m_theMess));
+```
+
+`ReleaseBuffer(0)` **vor** dem `GetBuffer` — die Absicht ist „leeren, dann
+vorab belegen". Richtig wäre `Message.Empty();` gefolgt vom `GetBuffer`.
+Nebenbei: das `GetBuffer` in der Folgezeile hat selbst kein `ReleaseBuffer` —
+der Puffer bleibt gesperrt, solange die Funktion läuft.
+
+### Was von Hand gegengelesen ist
+
+Nicht alle 142, aber jede Einstufung mindestens einmal, und die kritischen
+vollständig: **8 der 20** `falsch` (`POPSession:1747`, `mime.cpp:2020`,
+`PaigeEdtView:657`, `QCSharewareManager:1318`, `SMTPSession:328`,
+`eudora.cpp:3403` und `:3413`, `sendmail.cpp:1782`), **alle 4** `lockbuffer`,
+der eine `danach`. **Kein Fehlalarm darunter.** Die Funktionsgrenzen von
+`RegisterURLSchemes` (3274–3417) und `SendPlain` (ab 1607) sind eigens
+nachgezählt.
+
+### Grenzen des Werkzeugs — im Kopf der Datei ausführlich
+
+Der Empfänger wird als **Text** verglichen: ein `GetBuffer` über einen Zeiger
+auf dasselbe Objekt wird nicht erkannt, `s` und `m_str.s` gelten als
+verschieden. Der Funktionsanfang ist geschätzt; wo die Schätzung an ihre Grenze
+läuft, steht `[Funktionsanfang unsicher]` in der Ausgabe (nach dem Ausbau der
+`LockBuffer`-Erkennung kommt das im Baum nicht mehr vor). Zeichenketten werden
+nicht ausgeblendet — ein `"ReleaseBuffer("` im Text wäre ein Fehlalarm; im Baum
+gibt es keinen.
+
+### Nachtrag: ein Fehler im Werkzeug selbst (Commit `26b52b8`)
+
+Beim Einbau der Einstufung `lockbuffer` hat `passt()` einen dritten Parameter
+bekommen, und **eine von vier Aufrufstellen** wurde nicht nachgezogen (`:151`,
+der Wächter in der Rückwärts-Suche). perl warnte bei jedem Lauf zweimal
+`Use of uninitialized value $ruf in regexp compilation`.
+
+**Wirkung auf das Ergebnis: keine.** Mit undefiniertem `$ruf` wurde der Ausdruck
+zu `\s*\(` und lieferte für die `ReleaseBuffer`-Zeile selbst 0 — genau das, was
+der Wächter erreichen sollte. Nachgemessen, vorher wie nachher: 117 ok,
+20 falsch, 4 lockbuffer, 1 danach, 0 verdächtig = 142.
+
+Aufgefallen ist es erst bei der Abschlussprüfung **nach** dem Commit, nicht
+vorher. Festgehalten, weil ein Werkzeug, dessen Warnungen man gewohnheitsmäßig
+übersieht, dasselbe Problem hat wie eine Schranke, die grundlos anschlägt.
+
+### UNGEPRÜFT
+
+- **Ob `CSimpleStringT::SetAt` den Puffer exklusiv hält.** Davon hängt ab, wie
+  gefährlich die vier `sendmail`-Stellen wirklich sind. Die MFC-Quellen liegen
+  in dieser Umgebung nicht vor. Unabhängig davon ist `ReleaseBuffer` ohne
+  `GetBuffer` nicht der zugesagte Vertrag.
+- **Ob 3403/3413 der tatsächliche Absturzpunkt sind.** Belegt ist nur, dass der
+  Absturz hinter `eudora.cpp:3331` liegt.
+- **Nichts davon ist übersetzt.** Es ist auch nichts geändert — dieser Abschnitt
+  ist eine Meldung, keine Behebung.
+
+
+## X-2 — Die neun Löcher der Schranke geschlossen, jedes mit eigenem Testfall (31.08.2026)
+
+Abarbeitung von **X-1** (neun Löcher in `tools/pruefe-bytes.pl`) und seines
+Zusatzfundes zum pre-commit-Hook. Branch `claude/letzter-stand-b2ytpi`, Commit
+`1819e61`, Stand davor `8f1c51e`. Gemessen ohne Visual Studio: perl 5.38,
+git 2.43, ohne Agenten. **Keine C++-Quelldatei angefasst.**
+
+### Die Sammlung ist der Beleg, nicht die Zusicherung
+
+`tools/pruefe-bytes-tests.pl` wächst von 23 auf **35 Fälle**. Die zwölf neuen
+sind nicht nachträglich passend geschriebene Tests: sie sind zuerst gegen die
+**alte** Schranke gelaufen. So lässt sich das nachrechnen — die neue Sammlung
+gegen die alte Schranke, in einem eigenen Verzeichnis:
+
+```sh
+D=$(mktemp -d)
+git show 8f1c51e:tools/pruefe-bytes.pl > $D/pruefe-bytes.pl
+cp tools/pruefe-bytes-tests.pl tools/dateiendungen.pl $D/
+perl $D/pruefe-bytes-tests.pl
+```
+
+```
+35 Faelle: 24 gruen, 11 rot
+ROT: L1a, L1b, L2a, L2b, L3, L4, L5, L6, L7, L8, L9
+```
+
+> **Der Bezugscommit gehört in den Befehl, nicht `HEAD`.** Hier stand zuerst
+> `git show HEAD:...`, und das war ab dem nächsten Commit falsch: `HEAD` trägt
+> die **behobene** Schranke, die Anleitung liefert dann „35 grün" und die
+> Gegenprobe sieht erfunden aus. Beim Durchlesen der Übergabe aufgefallen und
+> berichtigt — dieselbe Fehlerklasse wie die veralteten Zeilenangaben aus Z-1.
+
+**11 von 12 waren rot.** Der zwölfte (`L1c`) ist die Gegenkontrolle — eine
+reine Umbenennung ohne Änderung am Inhalt muss durchlaufen, vorher wie nachher.
+Gegen die neue Schranke: **35 grün, 0 rot.**
+
+### Was geändert wurde, Loch für Loch
+
+| Loch | Was durchlief | Behebung | Testfall |
+|---|---|---|---|
+| **L1** | `git mv alt.cpp neu.cpp` plus Neuschreiben — der Ablauf einer Portierung | `--diff-filter=ACM` → `ACMRT` und `--name-status` statt `--name-only`: bei `R` wird der Index-Blob des **neuen** gegen den HEAD-Blob des **alten** Pfads gehalten. Die Meldung nennt beide Namen | `L1a`, `L1b`, Gegenkontrolle `L1c` |
+| **L2** | eine **saubere** Umkodierung Latin-1 → UTF-8 (erzeugt kein Ersatzzeichen, also sah Regel 2 nichts) | neue Regel 3: `latin1_nach_utf8($vorher) eq $jetzt` — byteweise, ohne Modul, exakt. Beide Richtungen | `L2a`, `L2b` |
+| **L3** | ein neu eingefügtes UTF-8-BOM | neue Regel 4: BOM am Anfang des Index-Blobs, das im HEAD-Blob nicht stand | `L3` |
+| **L4** | Dateien mit NUL-Byte: `git diff` liefert nur „Binary files differ", Regel 2 sah gar nichts | `git diff --text` erzwingt den Textvergleich. **Kein** pauschaler Alarm für NUL-Dateien — der hätte jede berechtigte Änderung an ihnen getroffen | `L4` |
+| **L5** | die Vorausschau von 30 Zeilen war eine harte Grenze: 30 eingefügte Zeilen vor der Umwandlung wurden erkannt, **31 liefen durch** | gepaart wird über den ganzen Block. Die neue Obergrenze (`$MAX_PAARUNG = 20000`) ist nur eine Bremse gegen quadratische Laufzeit und liegt weit über dem größten Block im Baum (655 Zeilen) | `L5` (genau 31 Zeilen) |
+| **L6** | reine CR-Zeilenenden (alter Mac-Stil) → LF | Regel 1 normalisiert jetzt auch ein einzelnes CR, nicht nur CRLF | `L6` |
+| **L7** | die letzte Zeile verliert ihr CRLF — wurde bewusst durchgelassen, ist aber echter Byteverlust | nur die **Verlustrichtung** schlägt an. Einen Umbruch zu **ergänzen** bleibt erlaubt, sonst wäre der bestehende Fall `n` rot geworden | `L7`, Gegenkontrolle `n` |
+| **L8** | neue Dateien wurden vollständig übersprungen, auch mit Ersatzzeichen | bei `A` gibt es nichts zu vergleichen, aber die U+FFFD-Prüfung läuft jetzt | `L8`, Gegenkontrolle `k` |
+| **L9** | eine in HEAD **leere** Datei galt als „nicht vorhanden" und lief ungeprüft durch | `vorhanden()` fragt mit `git rev-parse --verify` nach dem Eintrag, getrennt von seinem Inhalt | `L9` |
+
+### Der Zusatzfund: der Hook log
+
+`tools/hooks-einrichten.sh` schrieb einen Hook, der den Rückgabewert von
+`lehren-spiegeln.pl` **nicht** auswertete. Das Werkzeug meldet „Der Commit wurde
+abgebrochen" und endet mit 1 — der Hook lief weiter und gab am Ende den Wert der
+Schranke zurück. **Die Meldung war unwahr.**
+
+Vorgeführt in einem Wegwerf-Repo, mit einem absichtlich scheiternden ersten
+Schritt:
+
+| Hook | Ausgabe | Rückgabe | Commit steht? |
+|---|---|---|---|
+| alt | `SPIEGELN MELDET ABBRUCH` | **0** | **ja** |
+| neu | `SPIEGELN MELDET ABBRUCH` | **1** | nein |
+
+Behoben mit `perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?`.
+
+**NP3-4 war bereits behoben** und ist hier nur der Vollständigkeit wegen
+erwähnt: `lehren-spiegeln.pl` stagt nicht mehr selbst (das hinterließ bei
+`git commit -- <pfad>` eine Löschung im echten Index), sondern bricht ab und
+lässt den Menschen `git add Arbeitsweise` tun. Genau dieser Abbruch war es, den
+der Hook verschluckte — die beiden Befunde greifen ineinander.
+
+### Dazu NP3-5: nicht mehr stumm
+
+`lehren-spiegeln.pl` endete wortlos mit 0, wenn das Gedächtnisverzeichnis nicht
+gefunden wurde. Ein Aufrufer konnte „es gibt nichts zu tun" nicht von „ich habe
+gar nicht erst hingesehen" unterscheiden. Es meldet den Fall jetzt auf `STDERR`
+**samt dem abgeleiteten Pfad** — denn wenn die Ableitung schiefgeht, sucht sonst
+niemand dort den Fehler — und endet im `--pruefen`-Modus mit 2.
+
+### Was von X-1 offen bleibt
+
+- **`tools/suche-zeiger.pl`**: 345 Treffer, Stichprobe 15 von 15 Fehlalarm.
+  Die drei strukturellen Filter (klammerloser `if`-Rumpf, einzeiliger Wächter
+  mit `return`, Abstand größer als das Fenster) sind **nicht** eingebaut.
+- **`tools/zeilenenden-angleichen.pl`**: die 773 ausgelassenen Textdateien
+  (`.ih`, `.rgs`, `.hh`, `.mc`, `.hpj`, 139 ohne Endung) und das richtungslose
+  Zurückschreiben sind **nicht** angefasst.
+
+Beides ist in `AUFGABEN.md` unter D3 und D4 beschrieben und braucht keinen
+Compiler — es ist nur nicht Teil dieses Auftrags gewesen.
+
+### Grenzen, die bleiben — und bewusst als Testfall festgehalten sind
+
+- **Endungen**: was nicht in `tools/dateiendungen.pl` steht, wird nicht geprüft.
+  Fall `o` (`.xyz`) hält diese Grenze fest, damit sie sichtbar bleibt.
+- **Zeichenketten** werden nicht ausgeblendet; ein `"ReleaseBuffer("` im Text
+  wäre für andere Werkzeuge ein Fehlalarm, für die Schranke ist es ohne Belang.
+- **Die Schranke prüft den Index, nicht die Arbeitskopie.** Das ist Absicht und
+  im Kopf der Datei begründet.
+- **Regel 3 kann eine Mojibake-Reparatur nicht von einer Umkodierung
+  unterscheiden.** Eine vollständig doppelt kodierte Datei zurückzurechnen
+  (`ZIEL.md` war am 31.08.2026 genau so beschädigt) sieht byteweise aus wie
+  „UTF-8 → Latin-1 umkodiert". Die Meldung sagt das ausdrücklich und lässt den
+  Menschen entscheiden; für den Fall gibt es `--no-verify`. Ein Fehlalarm ist
+  das nicht, sondern eine Frage, die nur ein Mensch beantworten kann.
+- `git commit --no-verify` umgeht alles. Auch das ist Absicht — eine Schranke
+  ohne Notausgang wird umgebaut, nicht befolgt.
+
+
+## X-3 — `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, davon 9 echte Kandidaten (31.08.2026)
+
+Abarbeitung von **D3** aus `AUFGABEN.md` (Befund X-1: „345 Treffer, Stichprobe 15
+von 15 Fehlalarm — ohne Filter nicht benutzbar"). Ohne Visual Studio gearbeitet,
+**keine Zeile C++ geändert**. Werkzeug: `tools/suche-zeiger.pl`.
+
+### Die Messkette
+
+| Stand | Treffer |
+|---|---|
+| vorher (X-1: 345 an anderem Dateimuster) | **347** |
+| nach den drei Filtern, die X-1 vorschlägt | 88 |
+| nach drei weiteren, aus einer Stichprobe von 15 abgeleitet | 29 |
+| nach drei weiteren, aus dem Nachlesen **aller** 29 | 20 |
+| nach der Berichtigung zweier eigener Fehler | **18** |
+
+Gemessen an **3295 Dateien** (`.cpp .CPP .c .h` unter `Eudora71`, ohne
+`Build/ Debug/ Release/`). Nachzurechnen mit
+
+```sh
+find Eudora71 -name "*.cpp" -o -name "*.h" -o -name "*.c" -o -name "*.CPP" \
+  | grep -v "/Build/\|/Debug/\|/Release/" | sort > /tmp/dateien.txt
+perl tools/suche-zeiger.pl $(cat /tmp/dateien.txt)
+```
+
+### Warum nicht nach Bauchgefühl gefiltert wurde
+
+X-1 nennt drei Ursachen mit Zahlen. Die Verteilung der Abstände zwischen
+Prüfung und Zugriff belegt sie unmittelbar:
+
+| Abstand | Treffer |
+|---|---|
+| **1 Zeile** | **212** |
+| 3–5 | 8 |
+| 6–10 | 24 |
+| 11–20 | 29 |
+| 21–40 | 28 |
+| **> 40** | **46** |
+
+212 mit Abstand 1 — das ist der klammerlose `if`-Rumpf, X-1 nennt 211.
+46 mit Abstand über 40 — X-1 nennt 46.
+
+### Die neun Filter
+
+| # | Was durchlief | Wie behoben |
+|---|---|---|
+| 1 | **der klammerlose Rumpf** (212): bei `if (p)` ohne Klammern ist die nächste Anweisung der Rumpf, also der geschützte Bereich | der geschützte Bereich reicht bis zum Semikolon der folgenden Anweisung |
+| 2 | **der einzeilige Wächter** (16): `if (!p) return;` auf **einer** Zeile — danach ist `p` garantiert belegt | das `return` wird jetzt auch auf der `if`-Zeile selbst gesucht, nicht nur in den sechs Folgezeilen |
+| 3 | **die abgeschnittene Blockende-Suche** (Großteil der 46): sie lief nur 40 Zeilen weit; bei längeren Blöcken landete das „Blockende" **mitten im Block**, und der gemeldete Zugriff stand in Wahrheit noch **innerhalb** des geschützten Bereichs | keine Fenstergrenze mehr, nur eine Notbremse |
+| 4 | **der `else`-Zweig eines negierten Wächters**: in `if (!p) {…} else {…}` ist `p` im `else` belegt | die **ganze** `else`-Kette wird übersprungen — bei einem **positiven** Wächter dagegen nicht, dort ist `p` im `else` NULL und ein Zugriff wäre ein echter Fehler |
+| 5 | **Zuweisung an den Zeiger**: `if (!pCDC) { pCDC = &dc; }` | eine Zuweisung zwischen Prüfung und Zugriff macht die Prüfung gegenstandslos. Ein Schreibzugriff **durch** den Zeiger zählt nicht |
+| 6 | **erneute Prüfung, die der alte Ausdruck nicht sah**: `return (pWnd) ? pWnd->…` (ternär) und `if ( (n>0) && pTocDoc && … )` — der alte Ausdruck verlangte `[^)]*` und scheiterte an der ersten inneren Klammer | jede Prüfung des Namens in einer Bedingung zählt, auch nach `&&` und vor `?` |
+| 7 | **ein `else`, das zu einem ÄUSSEREN `if` gehört**: `app.cpp:274-277` erzeugte vier Fehlalarme in einem Rutsch | ein `else`, das **weniger tief** steht als der Wächter, beendet die Suche |
+| 8 | **auskommentierter Code**: `pngerror.c:255` meldete einen Zugriff, der in einem `/* */`-Kommentar steht; `nickview.cpp:316/329` steht in einem **69 Zeilen langen** auskommentierten Block | Block- **und** Zeilenkommentare werden vor der Analyse ausgeblendet |
+| 9 | **eine Steueranweisung als Rumpf**: `if (m_pcip) for (…) { … }` — der Block gehört zum `for` und ist geschützt | erkannt und wie ein Block behandelt |
+
+**Bewusst NICHT eingebaut** — ein zehnter Filter „ein `return` auf oder über der
+Ebene des Wächters beendet den Weg" war fertig und ist wieder herausgeflogen: er
+entfernte **einen** Fehlalarm (`OLImportClass.cpp:2948`) und tötete **einen
+echten Fund** (`ImapChecker.cpp:945`, dessen `return` innerhalb des umgebenden
+Blocks steht, den man danach verlässt). Ein Wächter, der den echten Fall
+verliert, ist schlechter als einer, der einmal zu oft ruft. Steht so im Kopf des
+Werkzeugs, damit es niemand „nachbessert".
+
+### Zwei Fehler, die ich selbst eingebaut habe
+
+Beide fielen **nur** beim Nachlesen aller Treffer auf, nicht bei der
+Stichprobe — das ist das Argument für das Nachlesen:
+
+1. **Die Klammersuche lief in die nächste Funktion.** Als die 40-Zeilen-Grenze
+   fiel (Filter 3), scannte sie bei einem klammerlosen `if` weiter, fand die
+   Klammern der **folgenden** Funktion und setzte das Blockende dorthin.
+   `ImapConnection.cpp:1916` meldete einen Zugriff **95 Zeilen später in einer
+   anderen Funktion**. Behoben: erst entscheiden, ob der Rumpf überhaupt eine
+   Klammer hat, dann scannen.
+2. **Die Zeilenkommentare wurden nicht mehr gestrichen.** Beim Umstieg auf den
+   kommentarfreien Puffer ging das `s{//.*$}{}` verloren, und eine geschweifte
+   Klammer **im Kommentar** zählte als Blockende: `ImapAccount.cpp:3123` schreibt
+   `(\noselect}` in einen `//`-Kommentar, worauf der Block dort zu schließen
+   schien und zwei Zugriffe **innerhalb** des Blocks gemeldet wurden.
+
+### Was übrig bleibt: 18 Treffer, alle nachgelesen
+
+**Neun echte Kandidaten** — Prüfung vorhanden, Zugriff danach ungeschützt, und
+kein erkennbarer Grund, warum der Zeiger dort belegt sein müsste:
+
+| Stelle | Zeiger | Bemerkung |
+|---|---|---|
+| `EuImap/src/ImapMailbox.cpp:1637` → `:1659` | `pImapCommand` | `if (!pImapCommand) { ASSERT(0); … }` **ohne `return`** — im Release entfällt das `ASSERT` (F-1), dann läuft es weiter und greift zu. Der ernsteste der neun |
+| `Eudora/POPSession.cpp:896` → `:905` | `pDiskHost` | auf dem **Abrufpfad** — Nachbar der Befunde P-1/P-2 |
+| `EuImap/src/ImapChecker.cpp:945` → `:953` | `m_pTaskInfo` | Prüfung im umgebenden Block, Zugriff danach |
+| `EuImap/src/ImapMailbox.cpp:1022` → `:1051` | `pAccount` | der eine Treffer, den X-1 als plausibel echt nannte |
+| `EuImap/src/imapgets.cpp:735` → `:743` | `m_pAccount` | Passwortpfad |
+| `Eudora/TocFrame.cpp:3968` → `:3973` | `pTocDoc` | `if (pTocDoc) …;` dann `if (pFBView) pTocDoc->…` — anderer Wächter |
+| `Eudora/headervw.cpp:546` → `:551` | `pField` | zwei Zeilen nach dem Block |
+| `Eudora/PgEmbeddedObject.cpp:276` → `:303` | `pView` | Block schließt nach drei Zeilen, Zugriff 27 später |
+| `AccountWizard/Src/WizardImportPage.cpp:379` → `:420` | `pChild` | Block schließt bei 411 |
+
+**Drei unklar** — das Melden ist vertretbar, die Entscheidung braucht einen
+Menschen: `ImapAccount.cpp:3152`, `CompMessageFrame.cpp:644`,
+`StatMng.cpp:2399` (jeweils ein anderer Zweig eines umgebenden `if`/`switch`).
+
+**Sechs Fehlalarm:** `TridentView.cpp:584` (abgesichert über eine **abhängige**
+Variable — nicht filterbar), `Trnslate.cpp:4410`, `OLImportClass.cpp:2948`,
+`plist_cinfo.cpp:263` (Zugriff in einem Makrorumpf), und zwei in
+`OpenSSL/demos/maurice/example2.c` — **Fremdcode**.
+
+Quote: **6 von 18 (33 %)**, im eigenen Code ohne die OpenSSL-Beispiele
+**4 von 16 (25 %)**. Vorher: 15 von 15.
+
+### Empfehlung für den Aufruf
+
+Fremdcode ausschließen, dann sind es 16 Treffer:
+
+```sh
+... | grep -v "/OpenSSL/\|/PNG/\|/OT501/\|/expat/\|/Qt3.x/"
+```
+
+### Was das Werkzeug nicht kann
+
+Es liest Text, nicht Semantik. Ein Zeiger, der über einen **anderen** Namen
+abgesichert ist (`TridentView.cpp:584`), eine Prüfung in einer aufgerufenen
+Funktion, `ASSERT`/`VERIFY` als Prüfung, ein Zugriff in einem Makrorumpf — alles
+unsichtbar. **Ein Treffer ist ein Hinweis zum Nachlesen, kein Befund.** Die
+neun oben sind nachgelesen; wer sie behebt, braucht einen Bau.
+
+
+## X-4 — `zeilenenden-angleichen.pl`: 49 Dateien mehr, und es dreht keine Arbeit mehr zurück (31.08.2026)
+
+Abarbeitung von **D4** — der letzte offene Punkt aus Befund X-1. Ohne Visual
+Studio gearbeitet, **keine Zeile C++ geändert**.
+
+### Teil 1: die ausgelassenen Textdateien
+
+X-1 hat gemessen, dass das Werkzeug **773 eindeutige Textdateien** nicht erfasst.
+Nachgemessen am 31.08.2026 abends: von **9151** verfolgten Dateien erfasste das
+Muster **6395**; von den 2756 übrigen sind **771** Text (kein NUL-Byte, über 95 %
+druckbare Bytes).
+
+Aufgenommen sind die, die **Quellen dieses Projekts** sind — sechs Arten,
+49 Dateien:
+
+| Endung | Dateien | warum |
+|---|---|---|
+| `.ih` | 6 | C-Header des Regex-Teils, werden **mitkompiliert** |
+| `.rgs` | 12 | ATL-Registrar-Skripte, landen als **Ressource im Binary** |
+| `.mc` | 2 | gehen durch den **Message Compiler** |
+| `.user` | 18 | die `vcxproj.user`-Dateien, hier verfolgt |
+| `.hh` | 7 | Hilfe-Header |
+| `.hpj` | 4 | Hilfe-Projektdateien |
+
+Grundgesamtheit **6395 → 6444**. **Alle 49 waren byteidentisch zu HEAD** —
+nachgemessen, *bevor* die Liste erweitert wurde. Die Erweiterung deckt also
+keinen Schaden auf, sie schließt eine Lücke für die Zukunft. Und weil die Liste
+seit PR-3 **geteilt** ist, zieht die Commit-Schranke automatisch mit.
+
+**Bewusst draußen** geblieben, mit Begründung im Kopf von
+`tools/dateiendungen.pl`: 139 Dateien ohne Endung (eine Endungsliste kann sie
+nicht sicher von Binärdateien unterscheiden, eine Namensliste wäre Raten),
+100 `.pem` und 20 `.cer`, 96 `.r` (Mac-Rez von QuickTime), 48 `.ssl` / 28 `.com`
+/ 11 `.unix` (Makefiles des mitgelieferten OpenSSL), 37 Messwertdateien von
+OpenSSL, 42 Hilfe- und Handbuchbestände, 10 Testskripte von Visual Test. Alles
+Fremdbestand oder Beiwerk.
+
+### Teil 2: es dreht keine absichtliche Arbeit mehr zurück
+
+X-1s zweiter Vorhalt: *„Es dreht absichtliche Arbeit still zurück. Wer im
+Arbeitsbaum absichtlich LF→CRLF korrigiert — etwa eine `.bat`, die CRLF braucht
+—, verliert das durch `--aendern` kommentarlos."*
+
+**Der Vorhalt trifft zu, und byteweise sind die beiden Fälle nicht zu
+unterscheiden:** der Schaden, gegen den das Werkzeug gebaut wurde, sieht genauso
+aus wie die absichtliche Korrektur — Arbeitskopie CRLF, HEAD LF. Also keine
+Heuristik, sondern drei Sicherungen:
+
+| # | Sicherung | Warum |
+|---|---|---|
+| 1 | **jede angefasste Datei wird namentlich genannt** (bis zu 20, dann die Zahl) | vorher stand dort nur eine Zahl — man konnte hinterher nicht sagen, was das Werkzeug getan hat |
+| 2 | **vorgemerkte Dateien werden nicht angefasst** | wer eine Änderung an den Zeilenenden schon `git add` gegeben hat, hat sie absichtlich gemacht. Sie zurückzuschreiben würde vorgemerkte Arbeit still verwerfen. Eigene Zeile in der Ausgabe |
+| 3 | **die Gegenrichtung hat ihre eigene Zeile** (Arbeitskopie LF, HEAD CRLF) und bleibt unangetastet | das ist **nicht** der Schaden dieses Projekts. Vorher landete sie unter „inhaltlich verschieden" — eine falsche Beschriftung. Mit `--auch-umgekehrt` wird sie mitgezogen |
+
+### Gegenprobe in einem Wegwerf-Repo
+
+Vier Dateien, vier Fälle, einmal `--aendern`:
+
+| Datei | HEAD | Arbeitskopie | vorgemerkt | Ergebnis |
+|---|---|---|---|---|
+| `a.cpp` | LF | CRLF | nein | **angeglichen**, CR 2 → 0 |
+| `b.cpp` | LF | CRLF | **ja** | **unangetastet**, CR bleibt 2 |
+| `c.bat` | CRLF | LF | nein | **unangetastet** (Gegenrichtung), CR bleibt 0 |
+| `d.cpp` | LF | LF, Inhalt geändert | nein | **unangetastet** |
+
+Und mit `--aendern --auch-umgekehrt` wird `c.bat` sehr wohl angeglichen
+(CR 0 → 1). Jede der vier Dateien erscheint namentlich in der Ausgabe.
+
+### Stand am Baum
+
+    byteidentisch zu HEAD:            6442
+    Arbeitskopie CRLF, HEAD LF:          0
+    Arbeitskopie LF, HEAD CRLF:          0
+    vorgemerkt, nicht angefasst:         0
+    inhaltlich verschieden:              2   (die zwei Werkzeuge dieser Arbeit)
+    nicht in HEAD:                       0
+
+Die Commit-Schranke bleibt bei **35 von 35 grün** — die erweiterte Endungsliste
+bricht keinen ihrer Testfälle.
+
+**Damit ist Befund X-1 vollständig abgearbeitet.**
+
+
+## V-1 — Zwei verschiedene ZIPs unter derselben Versionsnummer (31.08.2026)
+
+Gregors Feststellung, wörtlich: *„Eigentlich illegal, weil die gleiche Vers.nr.
+Aber anderes zip"* — und dazu: **er hat die ausgetauschte Fassung nicht
+geprüft.**
+
+Beides trifft zu, und beides hat Folgen, die über die Formalie hinausgehen.
+
+### Es ist derselbe Fehler wie bei der QCSSL.dll
+
+`Releases/1.0/AUSLIEFERUNGEN.md` hält im ersten Absatz fest, warum es diese
+Datei überhaupt gibt: *„Die Versionskennung wurde erst spät eingebaut und dann
+einmal nicht mitgezogen. Dadurch tragen **zwei verschiedene Binärdateien
+dieselbe Kennung „QCSSL 1.0.0"**. Wer sagt ‚ich habe 1.0.0 getestet', meint also
+möglicherweise die eine oder die andere — und die unterscheiden sich in fünf
+behobenen Befunden."*
+
+Am 31.08.2026 um 09:00 ist genau das mit dem **Paket** passiert: unter
+`v1.0.3` hängen zwei verschiedene ZIPs, und der einzige Unterschied zwischen
+ihnen ist die Behebung eines Absturzes (E-11). Die Lehre war aufgeschrieben und
+hat nicht getragen — sie stand in der Datei über die *DLL*, nicht in der über
+die *Pakete*.
+
+### Was dadurch nicht mehr zusammengeht
+
+| Angabe | Problem |
+|---|---|
+| „Gregor hat 1.0.3 probiert und es stürzte ab" | stimmt — für die **erste** Fassung (`632c4066…`). Ohne Prüfsumme wäre das nicht mehr zuzuordnen |
+| die beiliegende `LIESMICH.txt` | beschreibt in der ersten Fassung einen Stand, den die zweite nicht mehr hat |
+| ein Fehlerbericht von außen | „Version 1.0.3" identifiziert das Programm **nicht** |
+| die **volle** SHA256 der ersten Fassung | steht **nirgends** im Repo, nur die ersten acht Zeichen. Zum Unterscheiden reicht das, zum Nachweisen nicht |
+
+### Und der Stand wird dadurch schwächer, nicht stärker
+
+**Keine der beiden veröffentlichten Fassungen ist von jemandem gestartet
+worden:**
+
+- Die **erste** hat Gregor probiert — sie stürzte beim Klick auf *Weiter* ab
+  (E-6, Ursache E-11).
+- Die **zweite** (mit der Behebung) hat **niemand** geprüft. Das ist der Stand
+  seit dem Austausch.
+- Der Lauf, der 159 Nachrichten abgerufen hat (E-1, E-3), war **keiner von
+  beiden**: er lief aus `C:\Users\Gregor\Eudora72-1.0.3`, dem **Debug**-Bau mit
+  von Hand hineinkopierten, nicht verteilbaren Laufzeit-DLLs (E-8).
+
+Für die Kriterien heißt das: 1 und 3 sind auf dem **Debug**-Bau belegt, nicht auf
+dem ausgelieferten Paket. Kriterium 0 ist unbelegt. Das steht so in `ZIEL.md`,
+wird aber leicht überlesen, wenn man „1.0.3 läuft" hört.
+
+### Die Zahl steckt auch in der EXE — und zwar dieselbe
+
+Gregors Nachtrag: *„Sie heißt übrigens 7.2.0.3"*. Das ist der Punkt, der die
+Sache verschärft: nicht nur Dateiname und Paketnummer sind bei beiden ZIPs
+gleich, sondern die **Produktversion im Binary**. Beide `Eudora.exe` melden
+unter *Hilfe → Über Eudora*, im Explorer und im Absturzbericht **7.2.0.3**.
+
+Damit ist die Angabe, die ein Anwender melden würde, für beide Fassungen
+identisch. Unterscheiden können sie nur zwei Dinge:
+
+1. die **SHA256 des ZIP** — und die volle Prüfsumme der ersten Fassung steht
+   nirgends im Repo (siehe oben);
+2. die **Bau-Kennung in der Titelleiste**, die den Commit enthält — **und die
+   fehlt, solange kein Postfach offen ist** (Befund E-7). Im Zustand des
+   Absturzes, mit offenem Kontoassistenten, steht im Titel nur „Eudora".
+
+**Das eine Merkmal, das die beiden Bauten auseinanderhält, ist genau dort nicht
+sichtbar, wo der Fehler auftritt.** Damit ist E-7 nicht mehr Kosmetik, sondern
+die Voraussetzung dafür, einen Fehlerbericht überhaupt einem Bau zuzuordnen —
+und die Behebung ist ein einziger Aufruf (`OnUpdateFrameTitle(TRUE)` nach
+`FinishInitAndShowWindow`).
+
+Was genau zu ändern ist, wenn die Version gehoben wird — **fünf Zeilen in zwei
+Dateien**, und die vier Angaben in `Version.h` sind nicht voneinander abgeleitet
+—, steht in `Releases/PAKETE.md`, Abschnitt „Wie man die Version hebt".
+
+### Die Regel, die daraus folgt
+
+**Ein veröffentlichtes Paket wird nicht ersetzt.** Muss etwas hinterher, bekommt
+es die nächste Nummer — nach der Verabredung in `Releases/PAKETE.md` also
+Paket **1.0.4** mit Produktversion **7.2.0.4**. Das kostet eine Zeile in
+`VERSION` und in `Eudora71/Version.h`; `tools/kennung-erzeugen.pl` warnt von
+selbst, wenn die beiden auseinanderlaufen.
+
+Das gilt auch dann — und besonders dann —, wenn die alte Fassung fehlerhaft ist:
+gerade dann muss man sie später noch benennen können. Zurückziehen ja,
+überschreiben nein.
+
+### Was jetzt zu tun ist
+
+1. **Die zweite Fassung auf dem Win11-Rechner starten.** Das ist ohnehin der
+   erste Punkt der Arbeitsliste; hier ist der zusätzliche Grund: es ist bisher
+   nur die *erste* geprüft, und die stürzte ab.
+2. **Die volle SHA256 der ersten Fassung** aus der GitHub-Veröffentlichung
+   nachtragen, solange sie noch abrufbar ist — sonst ist der einzige Beleg für
+   „das ist die Fassung, die abstürzte" acht Zeichen lang.
+3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
+   und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.

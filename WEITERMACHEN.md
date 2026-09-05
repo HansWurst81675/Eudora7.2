@@ -1,6 +1,135 @@
 # Hier weitermachen
 
-> ## Stand 31.08.2026, 09:00
+> ## Stand 31.08.2026, abends — Übergabe an die nächste Sitzung
+>
+> **Arbeitsstand ist der Branch `claude/letzter-stand-b2ytpi`**, alles gepusht,
+> `main` unberührt. Wer weitermacht, arbeitet auf diesem Branch weiter oder
+> führt ihn zusammen. Die Commits stehen unten; nachzählen mit
+> `git log --oneline origin/main..HEAD` — hier steht bewusst **keine Zahl**, die
+> beim nächsten Commit veraltet.
+>
+> **Diese Sitzung lief ohne Visual Studio** — auf einem Linux-Rechner mit perl,
+> git und python, ohne MSBuild, MSVC und PowerShell. Deshalb ist **keine Zeile
+> C++ geändert** worden und **nichts gebaut**. Geändert wurden Dokumentation und
+> Werkzeuge; beides ist hier nachprüfbar und wurde nachgeprüft.
+>
+> ### Vorab: die veröffentlichte Fassung hat noch niemand gestartet
+>
+> Gregor am 31.08. abends: *„Ich habe die neue Version nicht geprüft. Eigentlich
+> illegal, weil die gleiche Vers.nr. Aber anderes zip"*. Beides trifft zu
+> (Befund **V-1**):
+>
+> | Bau | Stand |
+> |---|---|
+> | Debug-Bau `Eudora72-1.0.3` | darauf sind Kriterium 1 und 3 belegt (E-1, E-3) — lief nur mit den vier **nicht verteilbaren** DLLs daneben (E-8) |
+> | Release-ZIP, **erste** Fassung `632c4066…` | probiert: **Absturz** bei *Weiter* (E-6/E-11) |
+> | Release-ZIP, **zweite** Fassung `d4719047…` | **von niemandem geprüft** |
+>
+> **„1.0.3 läuft" gilt also für keines der beiden veröffentlichten ZIPs.** Und
+> zwei verschiedene ZIPs unter derselben Nummer sind dieselbe Verwechslung, die
+> das Projekt bei der `QCSSL.dll` schon dokumentiert hat („QCSSL 1.0.0" zweimal).
+> Die Regel steht jetzt in `Releases/PAKETE.md`: **ein veröffentlichtes Paket
+> wird nicht ersetzt, das nächste heißt 1.0.4.** Wenn die Behebungen aus R-1
+> hineinkommen, ist das ohnehin ein neues Paket.
+>
+> ### Das Wichtigste für den nächsten Lauf auf dem Win11-Rechner
+>
+> **Die Behebung von E-11 ist wahrscheinlich unvollständig.**
+> `CEudoraApp::RegisterURLSchemes()` reicht von `eudora.cpp:3274` bis `:3417`,
+> und in dieser **einen** Funktion stehen **drei** Vorkommen von
+> `ReleaseBuffer` ohne `GetBuffer`:
+>
+> | Zeile | Stand |
+> |---|---|
+> | 3372 | behoben (E-11), jetzt `Truncate(i)` |
+> | **3403** | `RegClientsMail.ReleaseBuffer(LastSlash)` — **unverändert** |
+> | **3413** | `EudoraOption.ReleaseBuffer(SlashIndex)` — **unverändert** |
+>
+> `eudora.log` belegt nur, dass der Absturz **hinter `:3331`** liegt — nicht,
+> dass er an `:3372` lag. **Stürzt das ZIP weiterhin beim Klick auf *Weiter*
+> ab, sind das die nächsten Verdächtigen**, und es sind zwei Zeilen. Am besten
+> vor dem nächsten Paket beheben, dann kostet es keinen zweiten Lauf.
+> Vollständig in Befund **R-1**.
+>
+> ### Was diese Sitzung geliefert hat
+>
+> | Commit | Was |
+> |---|---|
+> | `3d19aca` | Doku zusammengezogen. `ZIEL.md` war im Commit davor in 40 Zeilen doppelt UTF-8-kodiert — berichtigt. Die Kriterientabelle stand an fünf Stellen in drei Fassungen; `ZIEL.md` ist jetzt die Quelle, die übrigen verweisen. Drei Dateien widersprachen sich in sich selbst. Vier Stellen behaupteten noch, der Release-Zweig scheitere an `Imap.lib`. Dritter Lektorats-Durchgang in `LEKTORAT.md`, **alle 45 Markdown-Dateien gelesen**. |
+> | `8f1c51e` | `tools/releasebuffer-pruefen.pl` — stuft die 142 `ReleaseBuffer`-Vorkommen ein: **117 richtig, 25 zu ändern**. Befund **R-1** mit allen Fundstellen, nach Häufigkeit des Wegs geordnet. |
+> | `1819e61` | Die **neun Löcher** der Commit-Schranke aus X-1 geschlossen, jedes mit eigenem Testfall (23 → 35 Fälle). Dazu der pre-commit-Hook, der den Abbruch des Spiegelns verschluckte. Befund **X-2**. |
+> | `f8b4dee` | Diese Übergabe, dazu in `AUFGABEN.md` die Angabe, welcher Punkt einen Compiler braucht. |
+> | `26b52b8` | Nachtrag: ein fehlender Parameter im neuen Werkzeug (perl warnte, das Ergebnis war unberührt — Nachtrag in R-1). |
+>
+> ### Zweite Runde derselben Sitzung: die Werkzeuge abgearbeitet
+>
+> | Befund | Was | Messung |
+> |---|---|---|
+> | **NP3-6/NP3-7** | `pruefstand-melden.pl` gab aus dem falschen Verzeichnis Entwarnung und nannte einen beliebigen Commit als Prüfstand | jetzt Prüfstandsmarke `<!-- pruefstand: … -->` in den drei beobachteten Dateien; 182 git-Aufrufe → 3 |
+> | **X-3** (D3) | `suche-zeiger.pl` war Rauschen: 347 Treffer, 15 von 15 Fehlalarm | **347 → 18**, neun Filter, **alle 18 von Hand nachgelesen**: 9 echte Kandidaten, 3 unklar, 6 Fehlalarm |
+> | **X-4** (D4) | `zeilenenden-angleichen.pl` ließ 771 Textdateien aus und drehte absichtliche Arbeit still zurück | 6 Dateiarten aufgenommen (6395 → **6444**), drei Sicherungen: namentliche Ausgabe, **vorgemerkte Dateien unangetastet**, Gegenrichtung getrennt |
+> | **PR-5** | „Zeitpunkt des Baus" war falsch beschrieben | an drei Stellen berichtigt. Damit ist **PR-1 bis PR-8 vollständig** |
+> | **LIESMICH 1.0.3** | beschrieb den Debug-Weg und hätte den Empfänger die vier **nicht verteilbaren** DLLs holen lassen | neu gefasst, mit der Warnung über die zwei ZIPs unter derselben Nummer |
+>
+> **Damit ist Befund X-1 vollständig abgearbeitet** (X-2, X-3, X-4).
+>
+> ### Neue Arbeit, die daraus entstanden ist
+>
+> **Neun Zeigerstellen** aus X-3 — Prüfung vorhanden, Zugriff danach
+> ungeschützt. Liste in `AUFGABEN.md` unter **D3a**. Der ernsteste:
+> `ImapMailbox.cpp:1637`, wo der Wächter `if (!pImapCommand) { ASSERT(0); … }`
+> **kein `return`** hat — im Release entfällt das `ASSERT` (F-1), dann läuft es
+> weiter und greift zu. Zweiter: `POPSession.cpp:896`, auf dem Abrufpfad.
+> **Das Ändern braucht einen Bau.**
+>
+> ### Nachprüfbar, alles in einem Zug
+>
+> ```sh
+> perl tools/pruefe-bytes-tests.pl        # 35 von 35 gruen
+> perl tools/releasebuffer-pruefen.pl     # 117 ok / 20 falsch / 4 lockbuffer / 1 danach
+> perl tools/zeilenenden-angleichen.pl    # 0 Abweichungen in allen Richtungen
+> perl tools/pruefstand-melden.pl         # rc=0, drei Marken
+> ```
+>
+> `suche-zeiger.pl` braucht seine Dateiliste; der Aufruf steht in Befund X-3.
+> Wie man die Gegenprobe gegen die **alte** Schranke nachrechnet, steht in X-2
+> als fertiger Befehlsblock.
+>
+> ### Was compilerfrei noch offen ist
+>
+> **Nur noch einer, und der ist bewusst nicht angefasst:**
+> `tools/paket-pruefen.ps1` (PR-2.0 bis PR-2.3) — es prüft die Maschine statt
+> das Paket und erzeugt bei einem Release-Paket vier Falschwarnungen, die zum
+> Lizenzverstoß anleiten. Der Umbau ist beschrieben (die nötigen Laufzeiten aus
+> den **Importen** der Paketdateien ableiten). **Hier lag keine PowerShell vor**,
+> und ein Blindumbau genau des Werkzeugs, an dem die Freigabe hängt, wäre
+> schlechter als der jetzige Zustand. Wer eine Windows-Sitzung hat, macht es
+> dort — die 101 PE-Dateien im Klon reichen zum Messen.
+>
+> Alles andere, was ohne Compiler ginge, ist abgearbeitet. Der Rest der
+> Arbeitsliste braucht einen Bau oder einen Start.
+>
+> ### `BEFUNDE.md` hat jetzt ein Verzeichnis
+>
+> Ganz oben in [BEFUNDE.md](BEFUNDE.md): alle **60 Kennungen** mit einem
+> Halbsatz und einer **Statusspalte** — behoben, offen, teilweise, überholt,
+> Beleg. Vorher musste man 5900 Zeilen durchsuchen und wusste hinterher nicht,
+> ob der gefundene Befund noch gilt. **Wer einen Befund fortschreibt, ändert
+> die Statusspalte dort mit** — sonst ist das Verzeichnis schlimmer als keines.
+>
+> Nebenbei aufgefallen: **E-10 gibt es nicht.** Die Kennung ist nie vergeben
+> worden, im ganzen Repo und im git-Verlauf gesucht. Wer sie sucht, sucht
+> umsonst; das steht jetzt im Verzeichnis.
+>
+> ### Auflage für den nächsten frischen Klon
+>
+> **`sh tools/hooks-einrichten.sh` einmal laufen lassen** — der Hook liegt unter
+> `.git/hooks` und wird von git nicht mitversioniert. Ein alter Hook aus einem
+> früheren Klon verschluckt den Abbruch des Spiegelns weiterhin (X-2).
+>
+> ---
+>
+> ## Stand 31.08.2026, 09:00 — der Vormittag
 >
 > **Die Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)** — was zu tun ist,
 > in welcher Reihenfolge, mit Fundstelle je Punkt und den Auflagen für
@@ -21,38 +150,37 @@
 > Auf der VM fiel das nie auf, weil der Zweig nur bei einer
 > **jungfräulichen** Installation betreten wird.
 
-Übergabe vom **31.08.2026, vormittags**. Arbeitsstand ist der Branch
-`darstellung-und-menue`; auf `main` fehlt alles von diesen zwei Tagen.
+Der Absatz oben war die Übergabe vom **31.08.2026, vormittags**; damals war der
+Arbeitsstand der Branch `darstellung-und-menue`. Er ist inzwischen über
+Pull Request #3 in `main` gelandet; der heutige Arbeitsstand steht im Kasten
+ganz oben.
 
-**Bekannte Lücke:** der Agent FREIGABE (Release-Bau) lief noch, als diese Datei
-geschrieben wurde. Sein Ergebnis steht hier nicht. Wer weitermacht, sieht
-zuerst seinen Branch und seinen Abschnitt in `BEFUNDE.md` an.
+**Die damals bekannte Lücke ist geschlossen:** der Agent FREIGABE (Release-Bau)
+lief noch, als diese Datei geschrieben wurde. Sein Ergebnis steht jetzt in
+`BEFUNDE.md` als Befund **F-1** — der Release-Zweig scheiterte an `OTA50D.LIB`
+statt `OTA50R.LIB` in `Eudora.vcxproj:147` und an `MakeDox.pl` im
+Nachbereitungsschritt; er bindet, und statisch binden ist ausgeschlossen (sechs
+MFC-Erweiterungs-DLLs).
 
-Diese Datei ist der Einstieg für die nächste Sitzung. Alle Zahlen sind an
-`371c1e3` gemessen. An diesem Baum arbeiten mehrere Agenten in eigenen
-Worktrees; wer eine Zahl weiterverwendet, misst nach und nennt seinen eigenen
-Bezugscommit.
+Diese Datei ist der Einstieg für die nächste Sitzung. Die Zahlen der Abschnitte
+vom 30. und 31.08. vormittags sind an `371c1e3` bzw. `a807b93` gemessen. An
+diesem Baum arbeiten mehrere Agenten in eigenen Worktrees; wer eine Zahl
+weiterverwendet, misst nach und nennt seinen eigenen Bezugscommit.
 
 ---
 
 ## Das Wichtigste zuerst
 
-**Es ist derzeit KEIN Kriterium aus [ZIEL.md](ZIEL.md) erfüllt.**
+**Der Stand der Kriterien steht in [ZIEL.md](ZIEL.md).** Dort und nur dort —
+hier stand bis zum 31.08.2026 abends eine zweite Tabelle, die dem Kasten am
+Anfang dieser Datei widersprach (sie war der Stand vom Vormittag und sagte
+„KEIN Kriterium erfüllt", während oben zwei erfüllte standen). Wer den Stand
+wissen will, liest `ZIEL.md`; wer ihn ändert, ändert ihn dort.
 
-| # | Kriterium | Stand am 31.08.2026 |
-|---|---|---|
-| 0 | das Paket läuft ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau, vier nicht verteilbare Laufzeit-DLLs (S-8) |
-| 1 | startet und zeigt sein Hauptfenster | **strittig** — das Fenster erscheint, ist aber nicht bedienbar |
-| 2 | die Darstellung ist korrekt | **nicht erfüllt** — Ursachen behoben (A-1), am Programm nicht nachgesehen |
-| 3 | Mailkonto verbinden und Mail abrufen | **nicht geprüft** — Abrufpfad abgesichert (P-2), echter Abruf steht aus |
-
-Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen — zum
-ersten Mal seit Beginn der Portierung. Das ist ein **Meilenstein, kein
-erfülltes Kriterium**. Für die beiden sichtbaren Mängel (tote Menüleiste,
-leere Knöpfe und überlagerte Bereiche) sind die Ursachen am 31.08.2026 belegt
-**und im Quelltext behoben** — M-1 und A-1. **Nachgesehen hat das niemand am
-laufenden Programm**, es war keine Sitzung mit Bildschirm erlaubt. Bis dahin
-bleiben Kriterium 1 und 2 offen.
+Kurz: **zwei von vier Kriterien belegt** (Start und Bedienbarkeit E-1,
+Mailabruf E-1/E-3), Kriterium 2 fast (HTML-Umlaute an der Ursache behoben,
+Z-2, ungeprüft), Kriterium 0 offen — das Release-Paket ist auf keinem Rechner
+ohne Visual Studio gestartet worden (E-8).
 
 Der Dateiname `Eudora72-1.0.2-lauffaehig.zip` behauptet mehr, als die Fassung
 kann. Er bleibt stehen, weil das Paket unter diesem Namen samt Prüfsumme
@@ -169,10 +297,11 @@ Debug-`Eudora.exe`), nicht durchgehend Release — die frühere Angabe war falsc
 
 **W-1 — die Werkzeuge in Ordnung gebracht.** PR-1 bis PR-4 und PR-6 bis PR-8
 behoben. Die Schranke `tools/pruefe-bytes.pl` hat jetzt eine Testsammlung
-(`tools/pruefe-bytes-tests.pl`, 23 Fälle, alle grün);
+(`tools/pruefe-bytes-tests.pl`, inzwischen 35 Fälle, alle grün);
 `tools/rekursion-suchen.pl` ist gelöscht. Es gilt: **4616 von 5563** vom
 30.08.2026; die Grundgesamtheit wächst und lag am 31.08. bei 5589. Offen bleibt
-PR-5, die Beschreibung des Zeitstempels.
+PR-5, die Beschreibung des Zeitstempels — **seit 31.08. abends ebenfalls
+behoben**, damit ist PR-1 bis PR-8 vollständig abgearbeitet.
 
 **Produktversion 7.2.0.3** statt 7.1.0.9, sichtbar im Splash und unter
 *Hilfe → Über Eudora*. Es gibt **drei getrennte Zählungen** — Produkt
@@ -184,17 +313,20 @@ laufen. „zip runterladen, entpacken, starten - läuft."
 
 ### Offen
 
-**Kein Kriterium ist erfüllt.** Für Kriterium 1 und 2 sind die Ursachen belegt
-und im Quelltext behoben, aber **niemand hat das laufende Programm gesehen** —
-die Agenten durften kein Fenster öffnen. Der nächste Schritt ist deshalb ein
-Start mit Bildschirmfoto, nicht die nächste Analyse.
+**Kriterium 0** ist der offene Punkt. Der Release-Bau ist seit Befund F-1 da
+(es war `OTA50D.LIB` statt `OTA50R.LIB` in `Eudora.vcxproj:147`, dazu
+`MakeDox.pl` im Nachbereitungsschritt), aber **niemand hat das Release-Paket
+auf einem Rechner ohne Visual Studio gestartet** — der Win11-Lauf war der
+Debug-Bau mit beigelegten, nicht verteilbaren DLLs (E-8). Statisch binden ist
+ausgeschlossen (F-1.1).
 
-**Kriterium 0** braucht einen Release-Bau; der Release-Zweig scheitert
-weiterhin an einer fehlenden `Imap.lib`.
+**Kriterium 3 ist erledigt** (E-1, E-3): 159 Nachrichten von `mx.freenet.de`,
+Port 110 mit STARTTLS, `TLSv1.3`. Damit ist auch die in `ABRUF-PRUEFEN.md` als
+UNGEPRÜFT markierte Frage beantwortet — ja, `mx.freenet.de` spricht POP3.
 
-**Kriterium 3** ist nie ausprobiert worden. Anleitung:
-[ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Dort als UNGEPRÜFT markiert: ob
-`mx.freenet.de` überhaupt der POP3-Server ist.
+**Kriterium 2** hängt an den HTML-Umlauten: Ursache belegt und behoben (Z-2 —
+der Zeichensatz wurde der temporären Datei nirgends angesagt), Wirkung
+ungeprüft.
 
 Der vollständige Prüfbericht vom 30.08. abends steht in
 [PRUEFBERICHT.md](PRUEFBERICHT.md); was davon behoben ist, sagt Befund W-1.
@@ -207,11 +339,12 @@ Neu am 31.08.2026:
 | Werkzeug | wozu |
 |---|---|
 | `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten aus `SysWOW64` und prüft jede einzeln auf x86 nach. Befund S-8. |
-| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. Das Maß für Kriterium 0. |
+| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket, **bevor** es jemand startet. **Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch (PR-2.0 bis PR-2.3). |
 | `tools/paket-bauen.ps1` | stellt ein Paket aus dem Quellbaum zusammen. Veröffentlicht nichts. Braucht `-AusBauverzeichnis`, wenn ein frischer Bau übernommen werden soll. |
-| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. |
-| `tools/pruefe-bytes-tests.pl` | 23 Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
-| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. |
+| `tools/suche-zeiger.pl` | findet Zeiger, die geprüft und danach außerhalb des Blocks dereferenziert werden. Damit wurde P-2 gefunden. Seit Befund **X-3** brauchbar: **18 Treffer statt 347**, neun Filter, alle Treffer nachgelesen. Die neun echten Kandidaten stehen in `AUFGABEN.md` unter D3a. |
+| `tools/pruefe-bytes-tests.pl` | Testfälle für die Schranke. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/releasebuffer-pruefen.pl` | stuft die 142 `ReleaseBuffer`-Vorkommen ein — die Fehlerklasse hinter E-11. 25 sind zu ändern, Einzelheiten in Befund R-1. |
+| `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten — **von der Schranke und von `zeilenenden-angleichen.pl`**. Wer sie erweitert, erweitert beide (X-4). |
 
 `tools/rekursion-suchen.pl` ist am 31.08.2026 gelöscht worden — Befund W-1: es
 bildete jede Kante mit der umgebenden Klasse und konnte klassenübergreifende
@@ -267,8 +400,8 @@ Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
 
 Beim ersten Start erscheinen drei bis vier Dialoge „SUPERASSERT Assertion
 Failure" — auf *Ignore Once* klicken. Das sind Debug-Zusicherungen, keine
-Fehler; sie erscheinen nur, weil bisher nur der Debug-Bau läuft (der
-Release-Zweig scheitert an einer fehlenden `Imap.lib`).
+Fehler; sie erscheinen nur im **Debug**-Bau. Im Release-Bau (seit F-1
+lauffähig) entfallen sie samt allen `ASSERT`/`VERIFY`.
 
 **Wichtig:** Gregor testet auf derselben Windows-Sitzung. Kein Programm mit
 Fenstern ohne Absprache starten — auch nicht durch Agenten. Beim Aufräumen von
@@ -327,34 +460,69 @@ der nächste Schritt wäre.
 
 ---
 
+## Was ohne Visual Studio geht — und was nicht
+
+Diese Frage kam am 31.08.2026 abends auf, als eine Sitzung ohne VM lief.
+Nachgemessen in einer Linux-Umgebung mit perl 5.38, git 2.43, python 3.11:
+
+**Geht vollständig, mit Nachweis:**
+
+| Arbeit | warum sie hier abschließbar ist |
+|---|---|
+| Die Werkzeuge unter `tools/` | perl und git reichen. `tools/pruefe-bytes-tests.pl` läuft (35 Fälle) und beweist jede Änderung an der Schranke — rot vorher, grün nachher. |
+| Quelltextanalyse über den ganzen Baum | `tools/releasebuffer-pruefen.pl` ist so entstanden. Fundstellen, Einstufungen, Funktionsgrenzen: alles Text. |
+| Der Paketprüfer (`paket-pruefen.ps1`, PR-2.0) | im Klon liegen **101 PE-Dateien**, darunter `Bin/Release`. Ein Import-Leser lässt sich also gegen echte x86-Binärdateien entwickeln und messen. Nur die `.ps1` selbst läuft ohne PowerShell nicht. |
+| Doku und Nachrechnen | grep-Arbeit. Befund Z-1 hat gezeigt, dass 11 von rund 40 geprüften Angaben falsch waren — das ist keine Fleißarbeit. |
+
+**Braucht zwingend Windows mit Visual Studio 2022:**
+
+jeder Bau, jeder Start, jedes Bildschirmfoto, die 105 Komponententests
+(MFC/MBCS über MSBuild), `stapel-untersuchen.ps1` (32-Bit-PowerShell) und
+`laufzeit-holen.ps1` — und damit der erste Punkt der Arbeitsliste.
+
+**Die Grenze, die dabei einzuhalten ist:** eine C++-Änderung, die hier
+entsteht, ist **ungeprüft**, weil sie nicht übersetzt. In genau dieser Lücke hat
+sich das Projekt am 31.08. dreimal geirrt (E-2, E-5, E-8). Deshalb: C++ nur mit
+ausdrücklichem UNGEPRÜFT-Vermerk in Commit und Befund — und die Werkzeug- und
+Doku-Arbeit zuerst, weil sie hier vollständig nachweisbar ist.
+
 ## Nächste Schritte, nach Wichtigkeit
 
-1. **Einmal starten und ein Bildschirmfoto machen.** Das ist jetzt der erste
-   Schritt, nicht mehr die Analyse. Für M-1 und A-1 sind die Ursachen belegt
-   und behoben, nachgesehen hat es niemand — die Agenten durften kein Fenster
-   öffnen. Zu vergleichen sind die Merkmale aus [ZIEL.md](ZIEL.md), „Woran sich
-   Kriterium 2 misst". Woran man den Erfolg erkennt, steht in
-   [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md), letzter Abschnitt.
-2. **Kriterium 0: das Paket ohne Nachinstallieren.** Gregors neueste Vorgabe.
-   Weg: Release-Bau, vorzugsweise statisch (`/MT` + MFC statisch). Blocker ist
-   die fehlende `Imap.lib` im Release-Zweig. Maß ist `tools/paket-pruefen.ps1`
-   gegen das ausgepackte Paket auf einem Rechner ohne Visual Studio: null
-   Fehler. Siehe Befund S-8 und `ZIEL.md`.
-3. **Mail abrufen (Kriterium 3).** Nie getestet. Der Abrufpfad ist seit P-2
-   gegen die vier bekannten Nullzeiger abgesichert, die Anleitung steht in
-   [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md). Zugleich der erste echte Test der
-   neuen TLS-Schicht: die ausgelieferte QCSSL 1.0.1 ist nie gegen einen echten
-   Server gelaufen, nur eine ältere Fassung war es.
+**Die vollständige Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)**; hier nur
+die Reihenfolge.
+
+1. **Das v1.0.3-Release auf dem zweiten PC auspacken und starten**, im
+   Assistenten auf *Weiter* klicken. Ein Lauf beantwortet fünf offene Punkte:
+   E-11 (Absturz behoben?), Kriterium 0, die HTML-Umlaute (Z-2), die fehlende
+   Bau-Kennung im Titel (E-7) und den Index-Fehler beim Beenden (E-4). Achtung
+   auf die Prüfsumme: das ZIP ist am 31.08. um 09:00 ausgetauscht worden, nur
+   `d4719047…` enthält die E-11-Behebung.
+2. **`paket-pruefen.ps1` brauchbar machen** (PR-2.0 bis PR-2.3) — die nötigen
+   Laufzeiten aus den **Importen** der Paketdateien ableiten statt aus einer
+   festen Liste, und „vorhanden" nur gelten lassen, wenn die Datei im Paket
+   liegt. Solange das offen ist, ist Kriterium 0 nicht nachweisbar.
+3. **`ReleaseBuffer` ohne `GetBuffer` beheben** — die Fehlerklasse hinter E-11
+   ist **ausgezählt** (Befund R-1): von 142 Vorkommen sind 117 richtig und **25
+   zu ändern**, `perl tools/releasebuffer-pruefen.pl` nennt sie einzeln. Zuerst
+   `eudora.cpp:3403` und `:3413` (dieselbe Funktion wie der E-11-Absturz), dann
+   `QCSharewareManager.cpp:1318` (jeder Start), dann die vier in `sendmail.cpp`
+   (jede gesendete Klartextmail). Das Ändern selbst braucht einen Bau.
 4. **Erscheinungsbild, zweite Runde.** Nach dem Bildschirmfoto: die Splitter
    (`SECDockBar::AddSplitter` wird nie gerufen) und
    `SECMDIFrameWnd::FloatControlBarInMDIChild`. Reihenfolge und Ansatz in
    `BEFUND-ANSICHT.md`.
-5. **Paket 1.0.3 veröffentlichen** — vorbereitet, aber bewusst NICHT
-   veröffentlicht. Vorgeschlagener Name `Eudora72-1.0.3-vorabfassung.zip`.
-   Einzelheiten und Bauweg in [Releases/PAKETE.md](Releases/PAKETE.md).
-6. **PR-5** — der Zeitstempel in der Bau-Kennung ist der Zeitpunkt der letzten
-   Commit- oder Sauberkeitsänderung, nicht der Bauzeitpunkt. Das Verhalten ist
-   richtig, nur die Beschreibung stimmt nicht. Ein Wort im Kommentar.
+5. ~~**Paket 1.0.3 veröffentlichen**~~ — **erledigt**, und zwar als
+   `Eudora72-1.0.3-release.zip`. Das ZIP ist am 31.08. um 09:00 **ausgetauscht**
+   worden; nur `d4719047…` trägt die E-11-Behebung. Einzelheiten in
+   [Releases/PAKETE.md](Releases/PAKETE.md). Die beiliegende
+   `Releases/1.0.3/LIESMICH.txt` ist am 31.08. abends neu gefasst — sie
+   beschrieb den Debug-Weg und hätte den Empfänger dazu gebracht, sich die vier
+   **nicht verteilbaren** Debug-Laufzeiten zu holen.
+6. ~~**PR-5**~~ — **erledigt** am 31.08.2026 abends: der Zeitstempel in der
+   Bau-Kennung ist der Zeitpunkt der letzten Commit- oder Sauberkeitsänderung,
+   nicht der Bauzeitpunkt. Das Verhalten war richtig, die Beschreibung falsch —
+   jetzt an drei Stellen richtig (Kopf des Werkzeugs, erzeugte
+   `BuildKennung.h`, und die Codestelle, an der der Unterschied entsteht).
 
 ---
 

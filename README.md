@@ -1,5 +1,10 @@
 # Eudora 7.2
 
+<!-- pruefstand: d826a3f -->
+<!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
+     wurde. Wer die Datei nachzieht, zieht die Marke mit.
+     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+
 Portierung des Eudora-7.1-Quellcodes auf Visual Studio 2022 — mit dem Ziel, den
 Mailclient wieder selbst bauen und weiterentwickeln zu können.
 
@@ -16,7 +21,8 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > Wer den Stand prüft, misst neu und nennt seinen eigenen Bezugscommit — an
 > diesem Baum arbeiten mehrere Agenten gleichzeitig.
 >
-> Was „lauffähig" heißt, hat Gregor in [ZIEL.md](ZIEL.md) festgelegt:
+> Was „lauffähig" heißt, hat Gregor in [ZIEL.md](ZIEL.md) festgelegt. **Dort
+> steht die maßgebliche Kriterientabelle**; die folgende ist ihre Kurzfassung:
 >
 > | # | Kriterium | Stand am 31.08.2026 |
 > |---|---|---|
@@ -42,7 +48,8 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 Der Weg dorthin an zwei Tagen: `Eudora.exe` band zum ersten Mal, startete nicht,
 und die Gründe dafür sind belegt und behoben — siehe
 [BEFUNDE.md](BEFUNDE.md), Befunde S-1 bis S-8 sowie B-1/B-2, M-1, A-1, P-1/P-2
-und W-1.
+und W-1. **Am Anfang von `BEFUNDE.md` steht ein Verzeichnis** aller Kennungen
+mit Statusspalte; ohne das findet man in 5900 Zeilen nichts wieder.
 
 Der eigentliche Blocker war die **Werbefläche**: `CAdWazooWnd::OnCreate` legt sie
 mit `CRect(0,0,0,0)` an, die Textmaschine Paige bekommt eine Umbruchbreite von
@@ -142,9 +149,10 @@ Mit `-NurPruefen` sagt es nur, was fehlt, ohne etwas zu kopieren.
 >
 > Die richtigen Dateien liegen auf jedem Rechner mit installiertem Visual
 > Studio 2022 (mit C++-Werkzeugen und MFC/ATL) bereits in `SysWOW64`, in der
-> zum Toolset passenden Fassung. Ohne Visual Studio läuft dieser Bau nicht —
-> dafür bräuchte es einen Release-Bau, und der scheitert noch an einer
-> fehlenden `Imap.lib`.
+> zum Toolset passenden Fassung. **Ohne Visual Studio läuft dieser Bau nicht.**
+> Dafür gibt es seit Befund F-1 den **Release-Bau**: er braucht nur
+> `mfc140.dll`, `msvcp140.dll` und `vcruntime140.dll`, und diese drei sind Teil
+> des Visual-C++-Redistributable und dürfen beiliegen.
 
 #### Dann starten
 
@@ -205,14 +213,15 @@ einen echten Mailserver. Einzelheiten in
 
 | Werkzeug | wozu |
 |---|---|
-| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. |
+| `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. Seit Befund **X-4**: erfasst 6444 statt 6395 Dateien, nennt jede angefasste **namentlich**, lässt **vorgemerkte** Dateien in Ruhe und behandelt die Gegenrichtung (Arbeitskopie LF, HEAD CRLF) getrennt — sie wird nur mit `--auch-umgekehrt` angeglichen. |
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
 | `tools/pruefe-bytes.pl` | pre-commit-Schranke gegen lautlosen Byteschaden |
-| `tools/pruefe-bytes-tests.pl` | Testsammlung für die pre-commit-Schranke: 23 Fälle in eigenen Wegwerf-Repos. **Wer `tools/pruefe-bytes.pl` anfasst, lässt sie laufen.** |
+| `tools/pruefe-bytes-tests.pl` | Testsammlung für die pre-commit-Schranke: **35 Fälle** in eigenen Wegwerf-Repos, darunter je einer für die neun Löcher aus Befund X-1. **Wer `tools/pruefe-bytes.pl` anfasst, lässt sie laufen.** |
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen. |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
-| `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. Damit wurden die Stellen zu P-2 gefunden. |
+| `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. Damit wurden die Stellen zu P-2 gefunden. Seit Befund **X-3** mit neun Filtern: **18 Treffer statt 347**, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio. |
+| `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: ist vorher ein `GetBuffer` auf **derselben** Variablen da? Das ist die Fehlerklasse hinter Befund E-11 (Absturz auf frischen Installationen). Gemessen: 117 richtig, 25 zu ändern. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio. |
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
 | `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten von VS2022 aus `SysWOW64` und prüft jede einzeln auf x86 nach. Ohne sie startet Eudora mit `0xc000007b` — Befund S-8. `-NurPruefen` sagt nur, was fehlt. |
 | `tools/paket-bauen.ps1` | stellt ein Auslieferungspaket aus dem Quellbaum zusammen, wahlweise als ZIP. **Veröffentlicht nichts** — ob ausgeliefert wird, entscheidet ein Mensch. |
@@ -221,7 +230,8 @@ einen echten Mailserver. Einzelheiten in
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
 | `tools/hooks-einrichten.sh` | richtet den pre-commit-Hook ein. Nach jedem Klon einmal — ohne ihn treten zwei Fehlerklassen lautlos wieder auf. |
 | `tools/lehren-spiegeln.pl` | spiegelt die Lehren aus dem Gedächtnis nach `Arbeitsweise/` |
-| `tools/pruefstand-melden.pl`, `tools/ungesichertes-melden.pl` | melden Prüfstand und ungesicherte Änderungen |
+| `tools/pruefstand-melden.pl` | meldet, wie weit `BEFUNDE.md`, `README.md` und `PORTIERUNG.md` hinter dem Code herhinken. Maßstab ist die Zeile `<!-- pruefstand: <commit> -->` in jeder der drei Dateien — **wer eine davon nachzieht, zieht die Marke mit**. Ohne Marke sagt das Werkzeug „nicht messbar" und gibt 1 zurück, statt zu raten (Befunde NP3-6, NP3-7). |
+| `tools/ungesichertes-melden.pl` | meldet ungesicherte Änderungen |
 
 `tools/rekursion-suchen.pl` wurde am 31.08.2026 **gelöscht**, siehe Befund W-1:
 es bildete jede Kante mit dem Klassennamen der umgebenden Methode und konnte
@@ -337,8 +347,8 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und `ErrorCode 0` angenommen. Ein Hinweistext wird durchaus angehaengt ("Destination Host name does not match … But ignoring this error because Certificate is trusted"), er bleibt nur ohne Wirkung. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |
 | Aktueller `rootcerts.p7b` für das Release | **erledigt** seit `75b60e1` — `Releases/1.0/rootcerts.p7b` mit 121 Zertifikaten, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Die Altbestaende im Baum sind **zwei verschiedene Dateien** (verschiedene SHA256): `Eudora71/Bin/Release/rootcerts.p7b` mit 19 Zertifikaten (aeltestes gueltig ab 09.11.1994, juengstes ab 22.09.2000), 8 davon heute abgelaufen; `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` mit 30, juengstes ab 04.03.2004, 17 abgelaufen. QCSSL prueft nur gegen diese Datei, nicht gegen den Windows-Speicher |
 | Zeichensatz-Darstellung | **fertig** — der UTF-8-Fall laeuft seit `63f81dc` ueber den Windows-Codepage-Wandler statt ueber die handgepflegte Tabelle; die Tabelle bleibt als Rueckfallweg fuer Post, die `utf-8` behauptet und in Wahrheit CP1252-Bytes traegt. Davor: `XLATE_CHARS` von 27 auf 123 erhoeht (`d03007f`), sieben falsche Zuordnungen berichtigt, Doppelersetzung beseitigt. **33 von 33 Tests gruen** (selbst nachgemessen an `04e93c3` mit `Eudora71/Tests/RunTests.cmd`). Grenzen und Nebenbefunde in `PORTIERUNG.md` |
-| Release-Konfiguration | **teilweise** — QCSSL ist im Release gebaut, `Eudora.exe` scheitert im Release-Zweig weiterhin an fehlender `Imap.lib`. Berichtigung aus Befund B-2: Paket 1.0.2 ist **gemischt** (Release-Fremdmodule, Debug-`Eudora.exe`), nicht durchgehend Release. Ein durchgehender Release-Bau ist die Voraussetzung für Kriterium 0, siehe Befund S-8 |
-| **Kriterium 0: Paket ohne Nachinstallieren** | **offen** — der Debug-Bau braucht vier Laufzeit-DLLs, die nicht weiterverteilt werden dürfen (Befund S-8). Solange das so ist, braucht jeder Empfänger ein installiertes Visual Studio 2022. Ausweg: Release-Bau, vorzugsweise statisch |
+| Release-Konfiguration | **erledigt** seit Befund F-1 (31.08.2026) — `Eudora.exe` bindet im Release-Zweig, 2 933 760 Byte, und braucht nur die drei **verteilbaren** Laufzeit-DLLs. Zwei Ursachen: in `Eudora.vcxproj:147` stand `OTA50D.LIB` (Debug-Name) statt `OTA50R.LIB` in `IgnoreSpecificDefaultLibraries`, und der Nachbereitungsschritt rief das nicht vorhandene `MakeDox.pl` (`MSB3073`). **Statisch** binden ist dagegen ausgeschlossen: Eudora hat sechs MFC-Erweiterungs-DLLs (F-1.1). Berichtigung aus B-2: Paket 1.0.2 war **gemischt** (Release-Fremdmodule, Debug-`Eudora.exe`) |
+| **Kriterium 0: Paket ohne Nachinstallieren** | **nicht belegt** — der Release-Bau ist da (F-1) und braucht keine Debug-Laufzeit mehr, aber niemand hat das Paket auf einem Rechner **ohne** Visual Studio gestartet. Der Win11-Lauf war der Debug-Bau (E-8). `tools/paket-pruefen.ps1` taugt nicht als Nachweis — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch (PR-2.0 bis PR-2.3) |
 | Menüs lassen sich nicht öffnen (S-5) | **Ursache belegt und behoben** (Befund M-1, 31.08.2026): `SECToolBarManager` setzte `m_bMainFrameEnabled` auf `TRUE`, damit lieferte `CMainFrame::OnNcHitTest` immer `HTERROR` und die gesamte Nichtklientenfläche war tot. **Am laufenden Programm nicht nachgesehen** |
 | Erscheinungsbild (S-6) | **Ursachen belegt und behoben** (Befund A-1, 31.08.2026): leere Werkzeugleisten-Knöpfe (`SECStdBtn::DrawDisabled` ließ Text- und Hintergrundfarbe stehen), Andockrechnung nach `m_fPctWidth`, `nCol`/`nRow` in `DockControlBarEx`. Offen bleiben die Splitter und `FloatControlBarInMDIChild`. **Am laufenden Programm nicht nachgesehen** |
 | Produktversion | **7.2.0.3** seit `2cf569f` (vorher 7.1.0.9). Erscheint im Splash und unter *Hilfe → Über Eudora*. Drei getrennte Zählungen — Produkt `7.2.0.x`, Paket `1.0.x`, QCSSL `1.0.x`; Tabelle in [Releases/PAKETE.md](Releases/PAKETE.md) |

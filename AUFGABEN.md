@@ -6,7 +6,14 @@ Belege: [BEFUNDE.md](BEFUNDE.md)
 
 Diese Datei ist die Arbeitsliste — was zu tun ist, in welcher Reihenfolge, und
 für jeden Punkt die Fundstelle. Sie ist so geschrieben, dass ein Agent damit
-sofort anfangen kann, ohne die Vorgeschichte zu kennen.
+sofort anfangen kann, ohne die Vorgeschichte zu kennen. Welcher Befund noch
+gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
+
+> **Braucht der Punkt Visual Studio?** Am 31.08.2026 abends lief eine Sitzung
+> ohne VM. Die Aufteilung steht in `WEITERMACHEN.md`, Abschnitt „Was ohne Visual
+> Studio geht". Kurz: **A2, C1, D1–D4 und jede Zählung gehen ohne Compiler**;
+> alles unter „Ganz zuerst", B1–B4, C2, C3 und E1–E3 brauchen einen Bau oder
+> einen Start.
 
 ---
 
@@ -25,6 +32,12 @@ sofort anfangen kann, ohne die Vorgeschichte zu kennen.
 
 **Am 31.08. um 09:00 nicht mehr geschafft — das ist der erste Schritt.**
 
+> **Und es ist weiterhin ungetan** (Stand 31.08. abends, Befund V-1): Gregor hat
+> die **erste** Fassung probiert, die abstürzte. Die **ausgetauschte** hat
+> niemand gestartet. „1.0.3 läuft" gilt für keines der beiden veröffentlichten
+> ZIPs — der erfolgreiche Lauf mit 159 Nachrichten war der **Debug**-Bau mit von
+> Hand hineinkopierten, nicht verteilbaren Laufzeiten (E-8).
+
 Auf GitHub hängt seit 09:00 ein **ausgetauschtes** ZIP:
 
 | | |
@@ -42,8 +55,12 @@ Gregor am 31.08. probiert, und sie stürzte beim Klick auf *Weiter* ab.
 1. Auf dem Win11-Rechner auspacken, `Eudora.exe` starten, im Assistenten
    auf *Weiter* klicken. **Stürzt es noch ab?**
    - **Nein** → E-11 ist bestätigt. Dann A2: die Fehlerklasse abstellen.
-   - **Ja** → `tools/stapel-untersuchen.ps1` mit der `Eudora.pdb` daneben.
-     Die `Eudora.pdb` liegt **nicht** im Paket, sie muss aus
+   - **Ja** → **zuerst `eudora.cpp:3403` und `:3413` ansehen**, nicht den
+     Debugger. In derselben Funktion `RegisterURLSchemes()` (3274–3417) stehen
+     zwei weitere `ReleaseBuffer` ohne `GetBuffer`, unverändert — Befund R-1.
+     `eudora.log` belegt nur, dass der Absturz hinter `:3331` liegt. Erst wenn
+     das nichts bringt: `tools/stapel-untersuchen.ps1` mit der `Eudora.pdb`
+     daneben. Die liegt **nicht** im Paket, sie muss aus
      `Eudora71/Bin/Release` dazu.
 2. Dabei gleich mitprüfen, was ohnehin ansteht:
    - **Kriterium 0** — startet es dort ohne Nachinstallieren? (C2)
@@ -64,11 +81,21 @@ Ein einziger Lauf beantwortet fünf offene Punkte. Deshalb steht er hier oben.
 
 ### A1 · Die Behebung prüfen lassen
 
-`eudora.cpp:3372` wurde am 31.08. um 08:55 geändert:
+`eudora.cpp:3372` wurde am 31.08. um 08:55 geändert — **nachgelesen, im Code
+steht `Truncate`, nicht `Left`** (die frühere Angabe hier war falsch):
 
 ```cpp
-RegMailto = RegMailto.Left(i);      // war: RegMailto.ReleaseBuffer(i);
+RegMailto.Truncate(i);	// war ReleaseBuffer(i) ohne GetBuffer - Befund E-11
 ```
+
+> **WICHTIG, neu am 31.08. abends (Befund R-1):** in **derselben Funktion**
+> `CEudoraApp::RegisterURLSchemes()` (`eudora.cpp:3274-3417`) stehen **zwei
+> weitere** Vorkommen derselben Art, unverändert: `:3403`
+> (`RegClientsMail.ReleaseBuffer(LastSlash)`) und `:3413`
+> (`EudoraOption.ReleaseBuffer(SlashIndex)`). Der Beleg aus `eudora.log` sagt
+> nur, dass der Absturz **hinter `:3331`** liegt — nicht, dass er an `:3372`
+> lag. **Stürzt es weiterhin ab, sind das die nächsten Verdächtigen.** Zwei
+> Zeilen, ein Bau.
 
 Ursache und Beleg stehen in **E-11**. Kurzfassung: `ReleaseBuffer` ohne
 vorangehendes `GetBuffer` ist bei MFC 14 unzulässig — `CStringT` zählt
@@ -79,24 +106,45 @@ Referenzen. Auf Gregors VM fiel es nie auf, weil der Zweig nur bei einer
 **Zu tun:** Release bauen, Paket schnüren, Gregor auf dem Win11-Rechner
 probieren lassen: Assistent → *Weiter*. Der Bau lief beim Sitzungsende noch.
 
-### A2 · Die Fehlerklasse abstellen — **142 Vorkommen**
+### A2 · Die Fehlerklasse abstellen — **25 von 142 Vorkommen**, ausgezählt
 
-`ReleaseBuffer` ist im Baum **142-mal** benutzt. Nicht alle falsch: richtig ist
-`p = s.GetBuffer(n); … s.ReleaseBuffer();`. Falsch sind die ohne vorangehendes
-`GetBuffer` auf **derselben** Variablen.
+> **Das Werkzeug ist gebaut und gelaufen** (31.08.2026 abends): 
+> `perl tools/releasebuffer-pruefen.pl` — Rückgabe 1, sobald etwas zu tun ist,
+> `--alle` zeigt auch die richtigen. Vollständiger Befund mit allen Fundstellen,
+> Gegenproben und Grenzen: **R-1** in `BEFUNDE.md`.
 
-Besonders verdächtig, weil sie eine **Länge** übergeben und damit kürzen wollen:
+| Einstufung | Bedeutung | Anzahl |
+|---|---|---|
+| `ok` | richtiges Paar `GetBuffer`/`ReleaseBuffer` — **bleibt** | 117 |
+| `falsch` | kein `GetBuffer`, Länge übergeben (kürzt) | **20** |
+| `lockbuffer` | davor `LockBuffer` — der Partner ist `UnlockBuffer()` | **4** |
+| `danach` | `GetBuffer` erst danach (`MimeStorage.cpp:270`) | **1** |
 
-| Stelle | Bemerkung |
-|---|---|
-| `eudora.cpp:3372` | behoben (A1) |
-| `QCSharewareManager.cpp`, in `Load` | `RetailVersion.ReleaseBuffer(LastDot + 1)` — läuft bei **jedem Start** durch den Box-Build-Zweig |
-| `ConConProfile.cpp:198` | `m_szElementData.ReleaseBuffer(nNewDataLength)` |
+**Zu tun, in dieser Reihenfolge — nach Häufigkeit des Wegs, nicht nach Datei:**
 
-**Aufgabe für einen Agenten:** ein Werkzeug `tools/releasebuffer-pruefen.pl`,
-das je Vorkommen prüft, ob auf derselben Variablen vorher ein `GetBuffer` im
-selben Block steht. Ausgabe als Liste mit Datei:Zeile und Einstufung. Danach
-die echten Fälle einzeln beheben — `s = s.Left(i)` statt `s.ReleaseBuffer(i)`.
+1. `eudora.cpp:3403` und `:3413` — dieselbe Funktion wie der E-11-Absturz,
+   läuft bei jeder frischen Installation. Siehe den Kasten in A1.
+2. `QCSharewareManager.cpp:1318` (`RetailVersion`) — **bei jedem Start**.
+3. `sendmail.cpp:1782`, `:1788`, `:1815`, `:1865` (`szLine`) — **bei jeder
+   gesendeten Klartextmail**. `CString szLine(pSrcLine, …)` bei `:1736`, dann
+   `SetAt`, dann `ReleaseBuffer`.
+4. `mime.cpp:2020` (`m_CID`) — jede Nachricht mit `Content-ID` in `<…>`.
+5. Die übrigen zwölf: `msgutils.cpp:2128/2165/2185/2265`, `POPSession.cpp:1747`,
+   `SMTPSession.cpp:328/683`, `Imapdll/src/Network.cpp:179`,
+   `fileutil.cpp:482`, `guiutils.cpp:1605`, `PaigeEdtView.cpp:657`,
+   `MAPI/recip.cpp:52`.
+6. Die vier `LockBuffer`-Stellen (`Text2Html.cpp:912/939/955`,
+   `PGHTMIMP.CPP:2944`) — dort ist der Ersatz **nicht** `Truncate`, sondern
+   entweder `UnlockBuffer()` oder der Verzicht auf den Puffer:
+   `if (s.Right(2) == "\r\n") s.Truncate(s.GetLength()-2);`
+7. `MimeStorage.cpp:270` — `Message.Empty()` statt `ReleaseBuffer(0)`.
+
+**Ersatz beim Kürzen: `s.Truncate(n)`** — so ist E-11 behoben — oder
+`s = s.Left(n)`.
+
+**Nicht in der Liste, obwohl A2 sie früher nannte:** `ConConProfile.cpp:198`.
+Nachgemessen: dort steht ein `GetBuffer` auf derselben Variablen davor, die
+Stelle ist `ok`.
 
 Das ist eine **Fehlerklasse**, kein Einzelfall: eine VC6-Altlast, die sich erst
 zur Laufzeit meldet, und zwar nur auf bestimmten Wegen.
@@ -115,7 +163,14 @@ Gegenprobe ohne Eudora-Start: nach dem Anzeigen liegt die Zwischendatei als
 `charset=windows-1252`-Zeile als **erste** stehen und keine fremde
 `charset`-Angabe mehr vorkommen.
 
-### B2 · Die Bau-Kennung fehlt im Titel (**E-7**)
+### B2 · Die Bau-Kennung fehlt im Titel (**E-7**) — **hochgestuft**
+
+> Seit Befund **V-1** ist das kein Schönheitsfehler mehr: unter `v1.0.3` sind
+> zwei verschiedene ZIPs veröffentlicht, und **beide melden Produktversion
+> 7.2.0.3**. Die Bau-Kennung enthält den Commit und ist damit das einzige
+> Merkmal am laufenden Programm, das die zwei Bauten unterscheidet — und sie
+> fehlt genau im Zustand des Absturzes (frischer Start, Assistent offen). Ein
+> Aufruf.
 
 Solange kein Postfach offen ist, steht im Titel nur `Eudora`. `OnUpdateFrameTitle`
 läuft erst bei einer Auffrischung. **Behebung:** einmal `OnUpdateFrameTitle(TRUE)`
@@ -174,36 +229,102 @@ Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt (**E-6**).
 
 ---
 
+## C4 · NEU: diese Sitzung ist nicht gegengeprüft
+
+**Die 15 Commits vom 31.08.2026 abends hat niemand außer mir angesehen.** Das
+ist ein offener Punkt, nicht eine Formalie: `Arbeitsweise/doku-bei-jedem-commit-mitziehen.md`
+verlangt ausdrücklich die Trennung — *„wer prüft und korrigiert, winkt seine
+eigenen Befunde durch. LEKTOR hat PRUEFER am selben Tag fünfmal widerlegt."*
+In dieser Sitzung waren keine Agenten freigegeben, also fehlt sie.
+
+Ersatzweise ist gegen die Quelle gemessen worden statt gegen mein Urteil, und
+das hat vier eigene Fehler zutage gebracht — sie stehen in den Befunden, hier
+nur als Beleg, dass die Selbstprüfung nicht ausreicht:
+
+| Fehler | wo festgehalten |
+|---|---|
+| die Klammersuche lief bei klammerlosem `if` in die **nächste Funktion** | X-3 |
+| die Streichung der `//`-Kommentare ging verloren, eine Klammer **im Kommentar** zählte als Blockende | X-3 |
+| `passt()` an einer von vier Aufrufstellen ohne dritten Parameter (perl warnte zweimal je Lauf) | R-1, Nachtrag |
+| die Gegenprobe in X-2 nannte `HEAD` statt des Commits — die Anleitung lieferte damit „35 grün" statt „11 rot" | X-2 und LEKTORAT, dritter Durchgang |
+
+Dazu drei Aussagen, die ich zuerst behauptet und dann berichtigt habe: der
+`SSLReceiveUse`-Wert (aus dem Port geraten), zwei Treffer als „echt" eingestuft,
+die in einem auskommentierten Block standen, und `EUDORA_BUILD_NUMBER` habe
+keinen Verwender (mein grep hatte `.inc` nicht im Filter).
+
+**Zu tun:** einen PRÜFER-Durchgang über `git log origin/main..` dieser Sitzung —
+Schwerpunkt auf den drei umgebauten Werkzeugen (`pruefe-bytes.pl`,
+`suche-zeiger.pl`, `zeilenenden-angleichen.pl`), weil sie vor **jedem** Commit
+bzw. auf **allen** Dateien laufen. Die Testsammlungen sind da; was fehlt, ist ein
+zweites Paar Augen auf den Filtern und auf den Zahlen in R-1, X-3 und X-4.
+
+Kleinigkeit derselben Art: zweimal wurde mit `git add -A` gestaget statt mit
+Pfadangabe, wie `Arbeitsweise/commit-auf-extra-branch-und-pushen.md` es verlangt.
+Der Commit-Inhalt wurde danach kontrolliert (kein Bauartefakt, keine fremde
+Datei), aber die Regel sagt es anders.
+
 ## D — Die Werkzeuge
 
-### D1 · Neun Löcher in `pruefe-bytes.pl` (**X-1**)
+### D1 · ~~Neun Löcher in `pruefe-bytes.pl`~~ — **erledigt** (Befund X-2)
 
-Die zwei schwersten sind genau die Schäden, gegen die die Schranke gebaut wurde:
+Alle neun sind geschlossen, **jedes mit eigenem Testfall**. Die Sammlung
+`tools/pruefe-bytes-tests.pl` wächst von 23 auf **35 Fälle**. Gegen die alte
+Schranke sind 11 der 12 neuen Fälle **rot** (der zwölfte ist die Gegenkontrolle),
+gegen die neue **35 grün**. Einzelheiten je Loch in X-2.
 
-- **L1** — eine **Umbenennung** hebelt sie vollständig aus (`:198`,
-  `--diff-filter=ACM`; ein `git mv` erscheint als `R088` und landet nie in der
-  Prüfliste). `git mv` + Neuschreiben ist der Ablauf einer Portierung.
-- **L2** — eine saubere Umkodierung **Latin-1 → UTF-8** bleibt unerkannt.
+### D2 · ~~Der pre-commit-Hook wertet seinen ersten Schritt nicht aus~~ — **erledigt**
 
-Dazu L3 bis L9, alle in X-1 mit Gegenprobe belegt.
+`perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?`. In einem Wegwerf-Repo
+vorgeführt: mit dem alten Hook lief der Commit trotz Abbruchmeldung durch, mit
+dem neuen nicht. Dazu NP3-5: `lehren-spiegeln.pl` meldet jetzt auf `STDERR`,
+wenn es das Gedächtnisverzeichnis nicht findet, samt dem abgeleiteten Pfad.
 
-### D2 · Der pre-commit-Hook wertet seinen ersten Schritt nicht aus (**X-1**)
+**Nach jedem frischen Klon einmal `sh tools/hooks-einrichten.sh` laufen lassen** —
+der Hook liegt unter `.git/hooks` und wird von git nicht mitversioniert. Ein
+alter Hook aus einem früheren Klon verschluckt den Abbruch weiterhin.
 
-`tools/hooks-einrichten.sh:20` prüft `$?` von `lehren-spiegeln.pl` nicht. Meldet
-das Spiegeln *„Der Commit wurde abgebrochen"*, stimmt das nicht — der Hook gibt
-0 zurück. Dieselbe Fehlerklasse wie NP3-4.
+### D3 · ~~`suche-zeiger.pl` ist Rauschen~~ — **erledigt** (Befund X-3)
 
-### D3 · `suche-zeiger.pl` ist Rauschen (**X-1**)
+**347 → 18 Treffer**, neun Filter, alle achtzehn von Hand nachgelesen.
+Fehlalarmquote 6 von 18; im eigenen Code, ohne die OpenSSL-Beispiele, 4 von 16.
+Vorher 15 von 15. Aufruf und Empfehlung (Fremdcode ausschließen) in X-3.
 
-345 Treffer, Stichprobe von 15: **15 Fehlalarme**. Drei strukturelle Ursachen
-erklären 79 %. Entweder die drei Filter einbauen oder das Werkzeug löschen.
+### D3a · NEU: die neun Zeigerstellen aus X-3 beheben — **braucht einen Bau**
 
-### D4 · `zeilenenden-angleichen.pl`: zwei Lücken (**X-1**)
+Prüfung vorhanden, Zugriff danach ungeschützt, kein erkennbarer Grund, warum der
+Zeiger dort belegt sein müsste. Nach Dringlichkeit:
 
-Es lässt **773 eindeutige Textdateien** aus (darunter `.ih` und `.rgs`, die
-mitkompiliert werden bzw. als Ressource ins Binary gehen). Und es dreht
-absichtliche Arbeit **richtungslos** zurück: wer LF→CRLF korrigiert, verliert
-das kommentarlos.
+1. **`EuImap/src/ImapMailbox.cpp:1637` → `:1659`** (`pImapCommand`) — der Block
+   des Wächters ist `if (!pImapCommand) { ASSERT(0); … }` **ohne `return`**. Im
+   **Release** entfällt das `ASSERT` (F-1), dann läuft es weiter und greift auf
+   den Nullzeiger zu. Der ernsteste der neun.
+2. **`Eudora/POPSession.cpp:896` → `:905`** (`pDiskHost`) — auf dem Abrufpfad,
+   direkter Nachbar von P-1/P-2.
+3. `EuImap/src/ImapChecker.cpp:945` → `:953` (`m_pTaskInfo`)
+4. `EuImap/src/ImapMailbox.cpp:1022` → `:1051` (`pAccount`)
+5. `EuImap/src/imapgets.cpp:735` → `:743` (`m_pAccount`)
+6. `Eudora/TocFrame.cpp:3968` → `:3973` (`pTocDoc`)
+7. `Eudora/headervw.cpp:546` → `:551` (`pField`)
+8. `Eudora/PgEmbeddedObject.cpp:276` → `:303` (`pView`)
+9. `AccountWizard/Src/WizardImportPage.cpp:379` → `:420` (`pChild`)
+
+Die Behebung ist jeweils dieselbe Form wie in P-2: die Prüfung mitziehen
+(`if (p && …)`) oder früh aussteigen. **Jede Änderung braucht einen Bau** —
+deshalb steht sie hier und nicht bei den compilerfreien Punkten. Drei weitere
+Treffer sind unklar und brauchen ein menschliches Urteil (`ImapAccount.cpp:3152`,
+`CompMessageFrame.cpp:644`, `StatMng.cpp:2399`).
+
+### D4 · ~~`zeilenenden-angleichen.pl`: zwei Lücken~~ — **erledigt** (Befund X-4)
+
+Sechs Dateiarten aufgenommen (`.ih .rgs .mc .user .hh .hpj`, 49 Dateien,
+Grundgesamtheit 6395 → 6444; alle 49 waren byteidentisch zu HEAD). Und drei
+Sicherungen gegen das richtungslose Zurückschreiben: jede angefasste Datei wird
+**namentlich** genannt, **vorgemerkte** Dateien werden nicht angefasst, und die
+**Gegenrichtung** hat ihre eigene Zeile und bleibt unangetastet
+(`--auch-umgekehrt`, wenn doch). Vier Fälle in einem Wegwerf-Repo gegengeprobt.
+
+**Damit ist Befund X-1 vollständig abgearbeitet** (X-2, X-3, X-4).
 
 ---
 
@@ -235,6 +356,14 @@ von keinem der 105 Tests betreten.
 
 - **`Out.mbx`-Größe 1.788.158.654 für eine leere Datei** (E-11, Nebenbefund) —
   nicht initialisierter Wert im Protokoll, zwei Zeilen später steht korrekt 0.
+- ~~**PR-5**, der Zeitstempel in der Bau-Kennung~~ — **erledigt am 31.08.2026
+  abends.** Der Kopf von `tools/kennung-erzeugen.pl` sagte „dem Zeitpunkt des
+  Baus"; tatsächlich nennt der Zeitstempel den Zeitpunkt, zu dem sich **Commit
+  oder Sauberkeit** zuletzt geändert haben — die Datei wird nur neu geschrieben,
+  wenn sich etwas außer dem Zeitstempel ändert. Das Verhalten ist richtig
+  gewählt (sonst übersetzt jeder Bau alles neu), nur die Beschreibung war
+  falsch. Jetzt an drei Stellen richtig: Kopf, erzeugte `BuildKennung.h`, und an
+  der Stelle im Code, an der der Unterschied entsteht.
 - **`EUMAPI.DLL` ist eine 16-Bit-Datei** von 1995 (Signatur `NE`, belegt in
   Z-1). Niemand importiert sie. Kann vermutlich aus dem Paket.
 - **`MFC71.DLL` und `MSVCP71.dll`** sind nicht nachbaubar (157 Ordinale, B-1).
@@ -242,13 +371,25 @@ von keinem der 105 Tests betreten.
   benutzt werden.
 - **Der Release-Zweig von `EudoraRes`** hängt noch über einen Projektverweis an
   `OT501` (`EudoraRes.vcxproj:351`).
-- **LEKTORAT unvollständig:** `PORTIERUNG.md` (Rest), `PRUEFBERICHT.md`,
-  `ABRUF-PRUEFEN.md`, beide `LIESMICH.txt`, `Releases/1.0/*`,
-  `Eudora71/OTShim/PLAN.md` sind ungeprüft.
-- **Die alte CR-Anzahl-Regel** steht noch in vier `Arbeitsweise/`-Dateien, in
-  `PORTIERUNG.md` und in einem Patch-Kommentar.
-- **`VC71Bruecke/BEFUND.md:462`** nennt eine **falsche GUID** — wer sie
-  abschreibt, bekommt ein Projekt, das stillschweigend nicht gebaut wird (B-2).
+- **LEKTORAT:** am 31.08.2026 abends sind **alle 45 Markdown-Dateien** gelesen
+  und die Widersprüche berichtigt worden (dritter Durchgang in `LEKTORAT.md`).
+  `Releases/1.0.3/LIESMICH.txt` ist ebenfalls neu gefasst — sie beschrieb den
+  Debug-Weg und hätte den Empfänger dazu gebracht, sich die vier **nicht
+  verteilbaren** Debug-Laufzeiten zu holen. Offen bleibt allein
+  `Releases/1.0.2/LIESMICH.txt`; sie beschreibt ein Paket, das nicht mehr
+  ausgeliefert wird.
+- ~~**Die alte CR-Anzahl-Regel** steht noch in vier `Arbeitsweise/`-Dateien, in
+  `PORTIERUNG.md` und in einem Patch-Kommentar.~~ **Nachgemessen am 31.08.2026
+  abends: die Behauptung war zu weit gefasst.** Von acht Fundstellen war
+  **eine** falsch (`tools/patches/zertifikatspruefung-verschaerfen.md:105`,
+  jetzt berichtigt). Die `Arbeitsweise/`-Stellen beschreiben `aendere-zeile.pl`
+  — und das bricht wirklich bei geänderter CR-Zahl ab (`:33`) — oder den
+  Handgriff von Hand; beides richtig. `PORTIERUNG.md:664` sagt ausdrücklich,
+  dass die CR-Anzahl **nicht** mehr verglichen wird.
+- ~~**`VC71Bruecke/BEFUND.md:462`** nennt eine **falsche GUID**~~ — **berichtigt
+  am 31.08.2026 abends**, mit Kasten und der echten GUID aus
+  `VC71Bruecke.vcxproj:32` (gegengeprüft: sie steht fünfmal in
+  `Eudora71/Eudora.sln`).
 
 ---
 

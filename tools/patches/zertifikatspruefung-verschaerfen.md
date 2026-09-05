@@ -102,10 +102,16 @@ git apply -R tools/patches/zertifikatspruefung-verschaerfen.patch
 Der Patch entfernt vier Zeilen und fügt zwei hinzu, die Datei schrumpft also um zwei
 Zeilen: **CR und LF gehen gemeinsam von 372 auf 370.**
 
-`tools/pruefe-bytes.pl` verlangt eine unveränderte CR-Anzahl und kann eine
-beabsichtigte Zeilenlöschung nicht von einem Werkzeugschaden unterscheiden. Der Hook
-wird den Commit deshalb abweisen. Das ist hier ein Fehlalarm; nachprüfen lässt er
-sich so:
+> **Berichtigt am 31.08.2026.** Hier stand: „`tools/pruefe-bytes.pl` verlangt
+> eine unveränderte CR-Anzahl". Das war die Fassung bis `371c1e3`. **Die
+> Schranke vergleicht die CR-Anzahl nicht mehr**: Regel 2 wertet seit dem
+> 31.08.2026 den eigentlichen Unterschied aus (`git diff --cached -U0`) und
+> paart entfernte mit hinzugefügten Zeilen. Eine beabsichtigte Zeilenlöschung
+> läuft damit **durch** — der unten beschriebene Fehlalarm tritt nicht mehr auf,
+> und `--no-verify` ist dafür nicht nötig. Gegenprobe:
+> `perl tools/pruefe-bytes-tests.pl`, Fälle `c1`/`c2`.
+
+Zur Sicherheit trotzdem nachmessen, bevor jemand `--no-verify` benutzt:
 
 ```
 git show :Eudora71/QCSSL/src/qccertificate.cpp | perl -ne "$c+=tr/\r//; $l+=tr/\n//; END{print qq{CR=$c LF=$l\n}}"

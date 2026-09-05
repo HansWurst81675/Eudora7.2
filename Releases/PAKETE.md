@@ -20,32 +20,98 @@ Die QCSSL-Zählung läuft bewusst eigenständig: sie folgt den Quellen der
 TLS-Schicht, nicht dem Paket. Paket 1.0.3 enthält QCSSL 1.0.1, weil sich
 dort seit 1.0.1 nichts geändert hat.
 
+### Wie man die Version hebt — vollständig, nachgemessen am 31.08.2026
+
+Für Paket **1.0.4** mit Produktversion **7.2.0.4** sind es **fünf Zeilen in zwei
+Dateien**:
+
+| Datei | Zeile | von | auf |
+|---|---|---|---|
+| `VERSION` | 1 | `1.0.3` | `1.0.4` |
+| `Eudora71/Version.h` | `EUDORA_VERSION4` | `3` | `4` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,3` | `7,2,0,4` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.3\0"` | `…7.2.0.4\0` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.3"` | `"7.2.0.4"` |
+
+**Die vier Angaben in `Version.h` sind NICHT voneinander abgeleitet** — jede
+steht für sich. Wer nur `EUDORA_VERSION4` ändert, hebt die Version an keiner
+sichtbaren Stelle; wer nur die Zeichenketten ändert, bekommt eine EXE, deren
+Dateiversion nicht zu ihrem Über-Dialog passt. Das ist die Falle.
+
+**`EUDORA_BUILD_MONTH` bleibt unangetastet.** Es steht auf Juni 2006
+(`REG_EUD_CLIENT_7_1_MONTH`) und ist keine Versionsangabe, sondern der Monat,
+gegen den Registrierungscodes ablaufen. Ein Hochsetzen entwertet **jeden**
+existierenden Eudora-Code und startet die Testfrist neu — Befund PR-2.8.
+
+**Wo die Zahl danach sichtbar wird** (gemessen, nicht vermutet):
+
+| Stelle | woraus |
+|---|---|
+| Dateiversion und Produktversion im Explorer, Reiter *Details* | `EUDORA_BUILD_NUMBER` über `Eudora71/VersionBeg.inc` (`FILEVERSION`, `PRODUCTVERSION`) |
+| Versionsressource `FileVersion` / `ProductVersion` | `EUDORA_BUILD_VERSION`, dieselbe `.inc` |
+| *Hilfe → Über Eudora* und der Startbildschirm | `EUDORA_BUILD_DESC` über `IDS_VERSION` in `EudoraExeVer.rc:13` und `EudoraResVer.rc:17` |
+| `guiutils.cpp:2362`, `msgdoc.cpp:1341` | `EUDORA_BUILD_VERSION` |
+| Absturzbericht | `ExceptionHandler.cpp:344` und `:497` |
+| `User-Agent` des PlaylistClient (`Eudora/7.2.0.3`) | drei Stellen unter `PlaylistClient/plstclnt_dll` |
+| Vergleich mit `RetailVersion` in der `Eudora.ini` | `QCSharewareManager.cpp:1323`, zurückgeschrieben in `:1326` |
+| als Zahl | `eudora.cpp:551`, `:1069`, `QComApplication.cpp:610` (`EUDORA_VERSION4`) |
+
+Die Bau-Kennung in der Titelleiste ist davon unabhängig: sie kommt aus
+`tools/kennung-erzeugen.pl` und enthält **Produktversion, Paketversion und
+Commit**. Sie ist damit die einzige Angabe, die zwei Bauten derselben Version
+unterscheidet — **und genau sie fehlt, solange kein Postfach offen ist**
+(Befund E-7). In dem Zustand, in dem der Absturz auftrat, sagt der Titel nur
+„Eudora".
+
 Die Paketversion und die QCSSL-Version sind **verschiedene Zählungen**. Paket
 1.0.2 enthält QCSSL 1.0.1, weil sich die QCSSL-Quellen seit 1.0.1 nicht geändert
 haben.
 
+> ### Ein veröffentlichtes Paket wird nicht ersetzt (Befund V-1)
+>
+> Muss etwas hinterher, bekommt es die **nächste Nummer** — Paket 1.0.4 mit
+> Produktversion 7.2.0.4. Am 31.08.2026 ist das **verletzt** worden: unter
+> `v1.0.3` hängen zwei verschiedene ZIPs, sie unterscheiden sich in der Behebung
+> von E-11. Damit identifiziert die Angabe „Version 1.0.3" das Programm nicht
+> mehr, und ein Fehlerbericht von außen ist keinem Bau zuzuordnen.
+>
+> **Das ist derselbe Fehler, den diese Datei bei der `QCSSL.dll` schon
+> dokumentiert** (zwei Binärdateien unter „QCSSL 1.0.0", siehe
+> [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), erster Absatz). Die Lehre stand in
+> der Datei über die DLL, nicht in der über die Pakete — jetzt steht sie hier.
+>
+> Zurückziehen ja, überschreiben nein. Das gilt besonders, wenn die alte Fassung
+> fehlerhaft ist: gerade dann muss man sie später noch benennen können.
+
 > **Zur Benennung.** Beide ZIP-Dateien tragen im Namen das Wort `lauffaehig`.
 > Nach [ZIEL.md](../ZIEL.md) ist das für keine der beiden zutreffend: 1.0.1 startet
-> gar nicht, 1.0.2 erfüllt nur Kriterium 1 von dreien. Die Namen bleiben stehen,
+> gar nicht, 1.0.2 erfüllte damals nur eines der Kriterien. Die Namen bleiben stehen,
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.3 — vorbereitet am 31.08.2026, NICHT veröffentlicht
+## 1.0.3 — veröffentlicht am 31.08.2026, ZIP einmal ausgetauscht
 
-**Vorabfassung.** Der Name trägt bewusst nicht das Wort `lauffaehig`: nach
-[ZIEL.md](../ZIEL.md) ist derzeit **keines der drei Kriterien** erfüllt.
-Vorgeschlagener Dateiname `Eudora72-1.0.3-vorabfassung.zip`.
+**Release-Bau.** Erste Fassung, die ohne die vier nicht verteilbaren
+Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
+[ZIEL.md](../ZIEL.md) — hier bewusst keine zweite Fassung dieser Tabelle.
 
-Ob und wann das Paket veröffentlicht wird, entscheidet Gregor. Deshalb steht
-hier weder eine Prüfsumme noch eine Größe — beides entsteht erst beim
-Veröffentlichen.
+> **Achtung, zwei ZIPs unter derselben Kennung.** Das Paket ist am 31.08.2026
+> um 09:00 **ausgetauscht** worden. Nur die zweite Fassung enthält die Behebung
+> von Befund **E-11** (`eudora.cpp:3372`, `Left(i)` statt `ReleaseBuffer(i)`) —
+> mit der ersten stürzte Eudora auf einer frischen Installation beim Klick auf
+> *Weiter* im Kontoassistenten ab. Das ist genau der Fall, gegen den diese
+> Datei geschrieben wurde: **die Prüfsumme entscheidet, nicht der Name.**
 
 | | |
 |---|---|
-| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -AusBauverzeichnis -Zip "<verz>\..\Eudora72-1.0.3-vorabfassung.zip"` |
-| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` |
-| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) |
+| Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
+| ZIP | `Eudora72-1.0.3-release.zip`, `Eudora.exe` 2 933 248 B, `Release\|Win32` |
+| SHA256 (gültig) | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
+| SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
+| Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
+| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — **taugt nicht als Freigabekriterium**, siehe PR-2.0 |
+| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — beschreibt noch den Debug-Weg, für ein Release-Paket hinfällig (F-1, nächster Schritt 3) |
 | QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
 
 **Was sich gegenüber 1.0.2 ändert.**
@@ -95,16 +161,25 @@ Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also nicht auf; es fällt
 erst bei Benutzung auf (Adressbuch, LDAP, Ph, S/MIME, Spamfilter). Das galt
 für 1.0.2 genauso — es war nur nicht gemessen.
 
-**Stand nach ZIEL.md.** Kriterium 1 nicht erfüllt (Fenster erscheint, Menüs
-seit M-1 behoben, **Wirkung ungeprüft**), Kriterium 2 nicht erfüllt
-(Darstellung in Arbeit, A-1), Kriterium 3 nicht geprüft (kein Mailabruf).
+**Stand nach ZIEL.md** (31.08.2026, abends). Hier ist genau zu unterscheiden,
+welcher Bau gemeint ist — **keine der beiden veröffentlichten Fassungen ist von
+jemandem gestartet worden** (Befund V-1):
+
+| Bau | Stand |
+|---|---|
+| **Debug**-Bau `Eudora72-1.0.3` (nicht veröffentlicht, nicht veröffentlichbar) | darauf sind Kriterium 1 und 3 belegt — 159 Nachrichten, TLSv1.3 (E-1, E-3). Er lief nur, weil die vier **nicht verteilbaren** Laufzeit-DLLs von Hand daneben lagen (E-8) |
+| **Release**-ZIP, erste Fassung (`632c4066…`) | von Gregor probiert: **Absturz** beim Klick auf *Weiter* im Kontoassistenten (E-6, Ursache E-11) |
+| **Release**-ZIP, zweite Fassung (`d4719047…`) | **von niemandem geprüft** — sie trägt die Behebung von E-11, aber es hat sie noch keiner gestartet |
+
+Kriterium 0 ist damit unbelegt, und die Behebung von E-11 unerprobt — zumal in
+derselben Funktion zwei weitere Vorkommen derselben Art stehen (R-1).
 
 ## 1.0.2 — 30.08.2026
 
-**Startet.** Erste Fassung, bei der das Hauptfenster erscheint. Erfüllt damit
-**Kriterium 1 von dreien** ([ZIEL.md](../ZIEL.md)) — nicht mehr. Die Darstellung
-ist fehlerhaft (S-6), Menüs lassen sich nicht öffnen (S-5), ein Mailabruf ist
-nicht geprüft.
+**Startet.** Erste Fassung, bei der das Hauptfenster erscheint — Stand
+30.08.2026: die Darstellung war fehlerhaft (S-6), Menüs ließen sich nicht
+öffnen (S-5), ein Mailabruf war nicht geprüft. Behoben ist das erst in 1.0.3
+(M-1, A-1, E-1).
 
 | | |
 |---|---|
