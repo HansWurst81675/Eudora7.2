@@ -238,6 +238,70 @@ es bildete jede Kante mit dem Klassennamen der umgebenden Methode und konnte
 klassenübergreifende Zyklen deshalb strukturell nicht finden — auch den aus S-2
 nicht, für den es gebaut wurde. Geliefert hat es ausschließlich Fehlalarme.
 
+## Starten
+
+**Am einfachsten: Doppelklick auf `Eudora starten.cmd`.** Sie liegt neben
+`Eudora.exe` und übergibt das Mailverzeichnis richtig.
+
+Wer von Hand startet, muss den **vollständigen Pfad** übergeben:
+
+```
+Eudora.exe "C:\Pfad\zum\Paket\Mailverzeichnis"
+```
+
+### ⚠ Ein relativer Pfad funktioniert nicht — und meldet keinen Fehler
+
+```
+Eudora.exe Mailverzeichnis          FALSCH - Daten landen im Programmverzeichnis
+```
+
+Das ist keine Kleinigkeit: Eudora startet, zeigt aber ein **leeres Konto**, die
+Einstellungen werden in die falsche Wurzel geschrieben, und Mail lässt sich
+nicht abrufen. Eine Fehlermeldung kommt **nicht**.
+
+Der Grund steht in [fileutil.cpp:437](Eudora71/Eudora/fileutil.cpp:437), in
+`GetDirs`:
+
+```c
+// If the directory doesn't have any path, then assume it's an INI
+if (!Ini && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
+    Ini = CmdLine;
+else
+    status = CheckMailDirectory(CmdLine, CRString(IDS_FILE_COMMAND_LINE));
+```
+
+`Mailverzeichnis` enthält keinen Backslash, und das zweite Zeichen ist kein `:`.
+Eudora hält den Namen deshalb für eine **INI-Datei**, nicht für ein Verzeichnis.
+`done` bleibt 0, und zwanzig Zeilen weiter greift:
+
+```c
+if (!done && EudoraDir.IsEmpty())
+    EudoraDir = ExecutableDir;      // Datenverzeichnis = PROGRAMMverzeichnis
+```
+
+Gemessen am 05.09.2026: nach `Eudora.exe Mailverzeichnis` entstand
+`Search\db.ini` im **Programmverzeichnis**, nach dem Start über die `.cmd`
+dagegen in `Mailverzeichnis\Search\`. Zwei Wurzeln, je nach Aufruf.
+
+Die Heuristik stammt aus einer Zeit, in der relative Pfade selten waren. Sie
+gehört behoben (erst prüfen, ob der Name ein existierendes Verzeichnis ist, und
+den Pfad einmal absolut auflösen) — bis dahin gilt: **vollständiger Pfad oder
+`Eudora starten.cmd`.**
+
+### Beim ersten und bei jedem weiteren Start
+
+| | |
+|---|---|
+| **erster Aufruf** | `Eudora.exe <vollständiger Pfad zum Mailverzeichnis>` — der Pfad wandert in die `Eudora.ini` |
+| **jeder weitere** | `Eudora.exe` allein genügt, der Pfad kommt aus der Ini |
+
+`Eudora starten.cmd` übergibt den Pfad trotzdem jedes Mal. Das schadet nicht —
+es wird derselbe Wert eingetragen, der schon drinsteht — und hält den Start
+auch dann in Ordnung, wenn das Verzeichnis verschoben oder auf einen anderen
+Rechner kopiert wird.
+
+---
+
 ## Selbst bauen
 
 **Ziel: klonen, `Eudora71\Eudora.sln` in Visual Studio 2022 laden, *Projektmappe
