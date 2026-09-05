@@ -11,49 +11,116 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**, Quellfassung
-> **7.2.0.11 / Paket 1.0.11** (`cat VERSION`, `Eudora71/Version.h`); zuletzt
-> gepackt und gestartet wurde **7.2.0.10 / Paket 1.0.10**. Wer wann was gemessen
-> hat, steht in [BEFUNDE.md](BEFUNDE.md) und im git-Verlauf — hier nicht.
+> **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**, Fassung
+> **7.2.0.12 / Paket 1.0.12** (`cat VERSION`, `Eudora71/Version.h`). Wer wann was
+> gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im git-Verlauf — hier nicht.
 
 ## Stand
 
-**Eudora baut, startet, ist bedienbar und ruft Mail ab. Verfassen, Öffnen per
-Doppelklick und Suchen noch nicht.**
+**Eudora baut, startet, ist bedienbar und ruft Mail über TLS ab. Verfassen,
+Öffnen per Doppelklick und Suchen noch nicht.**
 
 Belegt:
 
 | Was | Beleg |
 |---|---|
-| **Bau** | ganze Projektmappe aus einem frischen Klon: **18 erfolgreich, 0 Fehler, 1 übersprungen**, 2:37 min. Von Gregor am 06.09.2026 in der IDE nachgemessen |
-| **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste und Postfachbaum. Gregor hat mehrere Fassungen gestartet und bedient |
-| **Mailabruf** | POP3 über **Port 995 mit TLSv1.3**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded` (06.09.2026). Am 31.08. zusätzlich 159 Nachrichten von `mx.freenet.de` über Port 110 mit STARTTLS (Befunde E-1, E-3) |
-| **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) — alle drei von Gregor gesehen |
+| **Bau** | ganze Projektmappe aus einem frischen Klon: **18 erfolgreich, 0 Fehler, 1 übersprungen**, 2:37 min. Von Gregor am 06.09.2026 in der IDE nachgemessen. Das eine übersprungene ist `OT501`, siehe unten |
+| **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste, Postfachbaum |
+| **Mailabruf über TLS** | POP3 auf **Port 995**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Gemessen an 7.2.0.12 am 06.09.2026 gegen `mx.freenet.de`. Die richtige Einstellung dafür ist *Secure Sockets when Receiving* → **„Required, Alternate Port"** |
+| **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
 
-Noch nicht behoben, von Gregor am 05./06.09.2026 gesehen:
+### Offen — Stand 06.09.2026
 
-- **Strg-N** (neue Nachricht) stürzt ab
+- **Strg-N** (neue Nachricht) beendet Eudora **lautlos**, ohne Meldung
 - **Doppelklick** auf eine Nachricht öffnet sie nicht
 - **Suchtreffer** lassen sich nicht anklicken
-- Meldung **„Encountered an improper argument"**
-- **Kriterium 0:** das Paket ist auf keinem Rechner **ohne** Visual Studio
-  ausgepackt und gestartet worden
+- Meldung **„Encountered an improper argument"** im laufenden Betrieb
+- **Beenden** bricht ab
+- **Kriterium 0** aus [ZIEL.md](ZIEL.md): das Paket ist auf keinem Rechner **ohne**
+  Visual Studio ausgepackt und gestartet worden. Zwei Läufe gab es, beide auf
+  Maschinen **mit** VS2022 — dort liegen die Laufzeiten ohnehin herum, das
+  beweist nichts. Ein Weg ohne zweiten Rechner steht bereit:
+  [tools/Kriterium0-pruefen.wsb](tools/Kriterium0-pruefen.wsb) hängt das Paket in
+  die **Windows-Sandbox**, ein frisches Windows ohne alles.
 
-Was „lauffähig" heißt, legt [ZIEL.md](ZIEL.md) fest — **dort steht die
-maßgebliche Kriterientabelle**, nicht hier. Der nächste Schritt steht in
-[AUFGABEN.md](AUFGABEN.md) ganz oben.
+### Die Suche nach der Wurzel der Abstürze
 
-**Eine Nummer, ein Bau:** jede Fassung, die das Entwicklungsverzeichnis
-verlässt, zählt vorher hoch. Nachzuprüfen mit
-`perl tools/ausliefern.pl --pruefen`.
+Das ist die wichtigste Erkenntnis vom 06.09.2026, und sie stellt die bisherige
+Suche vom Kopf auf die Füße.
 
-Der Blocker beim Start war die **Werbefläche**: `CAdWazooWnd::OnCreate` legt sie
-mit `CRect(0,0,0,0)` an, die Textmaschine Paige bekommt eine Umbruchbreite von
-null und dreht sich in einer Endlosrekursion fest. Sie hängt jetzt an
-`QCSharewareManager::IsBoxBuild()`, dazu der Übersetzungsschalter
-`BUILD_BOX_OR_SITE_R_VERSION`. Damit entfallen **Werbung, Registrierung und
-Einführungsdialog** — das ist die Fassung, die QUALCOMM an Firmenkunden
-ausgeliefert hat (Befund S-2).
+Im **Windows-Ereignisprotokoll** (Quelle *Application Error*), das bis dahin
+niemand gelesen hatte, steht:
+
+```
+7.2.0.10   0xc0000374   STATUS_HEAP_CORRUPTION   in ntdll   (zweimal)
+7.2.0.7    0xc0000005                            in ntdll
+```
+
+**Der Heap wird beschädigt.** Damit sind `afxcoll.inl:213` und die Meldung
+„Encountered an improper argument" **Folge, nicht Ursache**: eine beschädigte
+`CPtrArray` trägt beschädigte `m_nSize` und `m_pData`, und dann meldet *jeder*
+Zugriff „Index außerhalb" — auch ein korrekt begrenzter. Wer dort einen
+unbegrenzten Index sucht, sucht am falschen Ort.
+
+Die Beschädigung selbst ist gefunden (**E-25**): eine **Doppelfreigabe** in
+`Eudora71/Importers/NSImport/NSImportClass.cpp`, `LocateNetscapePrefsFile`.
+`FileList` kommt als Zeiger *nach Wert* an; der Aufräumer gab den Knoten des
+**Aufrufers** frei und setzte nur die örtliche Kopie auf NULL — danach Zugriff
+auf Freigegebenes und eine zweite Freigabe. Letztes geladenes Modul im
+Fehlerbericht: `NSImport.eif`. Der Weg läuft **immer**, auch ohne Netscape.
+
+Eine beschädigte Halde wirkt **global und verzögert**. Das erklärt zwanglos alle
+fünf Beobachtungen aus einer Wurzel.
+
+> **Die Hypothese hat den Test nicht bestanden.** 7.2.0.12 stürzt weiter ab.
+
+### Das Absturzprotokoll — und warum es noch nichts verrät
+
+Eudora schreibt seinen eigenen Absturzbericht, ohne dass man etwas einschalten
+muss: **`Mailverzeichnis\Exception.log`** neben der EXE. Gregor hat 7.2.0.12 am
+06.09.2026 um 00:32 laufen lassen, und darin steht:
+
+```
+Eudora.exe caused an EXCEPTION_ACCESS_VIOLATION in module <UNKNOWN>
+at 0023:414E3345
+Call stack: 00894B53, 008962D7, 6FB9A3E6 (mfc140.dll), ...
+```
+
+Zwei Dinge daran zählen:
+
+**Erstens: das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die
+zu *keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle
+oder ein Funktionszeiger überschrieben wurde — also genau das Schadensbild einer
+beschädigten Halde. Die Doppelfreigabe E-25 war demnach **nicht die einzige
+Quelle**, oder nicht die entscheidende.
+
+**Zweitens: die Adressen sind derzeit nicht auflösbar.** Die EXE ist 2,8 MB
+groß; läge sie wie vorgesehen auf `0x00400000`, endete sie bei `0x006CD000`. Die
+protokollierte Adresse `0x00894B53` liegt weit dahinter. Windows lädt sie also
+**verschoben** (ASLR), und `Exception.log` schreibt die tatsächliche Ladeadresse
+**nicht mit**. Ohne sie ist jede Umrechnung in einen Funktionsnamen geraten.
+(Ein erster Versuch am 06.09. lieferte prompt einen Namen aus dem
+Ressourcenbereich — sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht
+stimmt.)
+
+Vorbereitet ist immerhin die andere Hälfte: `Eudora.vcxproj` erzeugt seit dem
+06.09.2026 eine **Zuordnungsdatei** `Eudora71/Bin/Release/Eudora.map` mit 51.075
+Namen. Sobald die Ladeadresse im Protokoll steht, wird aus jeder Zeile des
+Aufrufstapels ein Funktionsname.
+
+**Nächster Schritt, klein und lohnend:** den Absturzbehandler die Ladeadresse
+jedes Moduls mitschreiben lassen (`GetModuleHandle(NULL)` genügt für Eudora
+selbst). Dann beantwortet Gregors eigener Vorschlag — *„oder du schreibst eine
+log datei, während eudora ausgeführt wird, dann steht es darin, was der letzte
+aufruf war"* — die Frage ohne Debugger und ohne Visual Studio, aus einer
+Textdatei, die der Anwender einfach mitschicken kann.
+
+**Der zweite Weg, falls das nicht reicht:** **Page Heap** macht aus der
+Beschädigung einen Zugriffsfehler an der verursachenden Anweisung statt
+irgendwo später — als Administrator `gflags /p /enable Eudora.exe /full`,
+Debug-Bau starten, Strg-N, dann `tools\stapel-untersuchen.ps1` in einer
+**32-Bit**-PowerShell mit der `Eudora.pdb` neben der `Eudora.exe`; danach
+`gflags /p /disable Eudora.exe`.
 
 ## Bauen
 
