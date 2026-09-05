@@ -390,6 +390,19 @@ CCreateContext* pContext)
 
 	pDoc = ( CCompMessageDoc* ) ( pContext->m_pCurrentDoc );
 
+	// BEFUND E-22: pDoc und pDoc->m_Sum wurden hier ungeprueft benutzt
+	// (pDoc->GetText() unmittelbar darunter, pSummary in der ganzen
+	// restlichen Funktion), obwohl die Funktion 20 Zeilen weiter fuer die
+	// Werkzeugleisten sehr wohl auf NULL prueft und mit FALSE aufgibt.
+	// Ohne Zusammenfassung ist ein Verfassen-Fenster ohnehin nicht
+	// aufzubauen; FALSE bricht die Erzeugung geordnet ab, statt still
+	// ueber einen Nullzeiger zu schreiben.
+	if ( pDoc == NULL || pDoc->m_Sum == NULL )
+	{
+		ASSERT( 0 );
+		return FALSE;
+	}
+
 	// force the read
 	pDoc->GetText();
 
@@ -545,76 +558,96 @@ CCreateContext* pContext)
 	DockControlBar( m_pFormattingToolBar );
 	
 	// initialize the priority combo
+	//
+	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
+	// Leiste liegt oder sein Kindfenster nicht entstanden ist. Der Zugriff
+	// darauf ist ein Zugriff ueber einen Nullzeiger - im Release-Bau ein
+	// stiller Abgang ohne Meldung, mitten in WM_CREATE des
+	// Nachrichtenfensters, also genau das Bild "Strg-N: Absturz ohne
+	// Dialog". Ein paar Zeilen weiter unten prueft dieselbe Funktion
+	// pMainFrame und pEditTextMenu bereits; die vier Kombinationsfelder
+	// hatten die Abfrage nicht.
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_PRIORITY_COMBO ) );
-	
-	for (i = IDB_PRIOR_HIGHEST; i <= IDB_PRIOR_LOWEST; i++)
-		pBitmapCombo->Add(new CBitmapComboItem(i, i - IDB_PRIOR_HIGHEST + IDS_PRIORITY_HIGHEST));
 
-	pBitmapCombo->SetCurSel( pSummary->m_Priority - 1 );
+	if ( pBitmapCombo )
+	{
+		for (i = IDB_PRIOR_HIGHEST; i <= IDB_PRIOR_LOWEST; i++)
+			pBitmapCombo->Add(new CBitmapComboItem(i, i - IDB_PRIOR_HIGHEST + IDS_PRIORITY_HIGHEST));
+
+		pBitmapCombo->SetCurSel( pSummary->m_Priority - 1 );
+	}
 
 	// initialize the signature combo
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_SIGNATURE_COMBO ) );
-	pBitmapCombo->SetEditWidth( 100 );
-
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem( 0, IDS_SIGNATURE_NONE, 0 ) );
-
-	pos = g_theSignatureDirector.GetFirstSignaturePosition();
-
-	if ( pSummary->UseSignature() == MSF_USE_SIGNATURE )
+	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
+	if ( pBitmapCombo )
 	{
-		// look for the standard signature file
-		szCurrentSig = CRString( IDS_STANDARD_SIGNATURE );
-	}
-	else if ( pSummary->UseSignature() ==  MSF_ALT_SIGNATURE )
-	{
-		// user defined signature
-		szCurrentSig = (const char *)pSummary->m_SigSelected;
-	}
-	else if( pSummary->UseSignature() )
-	{
-		// look for the alternate signature file
-		szCurrentSig = CRString( IDS_ALTERNATE_SIGNATURE32  );
-	}
+		pBitmapCombo->SetEditWidth( 100 );
 
-	while( pos != NULL )
-	{
-		pSignatureCommand = g_theSignatureDirector.GetNext( pos );
-					
-		pBitmapComboItem = DEBUG_NEW_NOTHROW CBitmapComboItem( 0, pSignatureCommand->GetName(), 0);
-		
-		if ( pBitmapComboItem )
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem( 0, IDS_SIGNATURE_NONE, 0 ) );
+
+		pos = g_theSignatureDirector.GetFirstSignaturePosition();
+
+		if ( pSummary->UseSignature() == MSF_USE_SIGNATURE )
 		{
-			i = pBitmapCombo->Add( pBitmapComboItem );
+			// look for the standard signature file
+			szCurrentSig = CRString( IDS_STANDARD_SIGNATURE );
+		}
+		else if ( pSummary->UseSignature() ==  MSF_ALT_SIGNATURE )
+		{
+			// user defined signature
+			szCurrentSig = (const char *)pSummary->m_SigSelected;
+		}
+		else if( pSummary->UseSignature() )
+		{
+			// look for the alternate signature file
+			szCurrentSig = CRString( IDS_ALTERNATE_SIGNATURE32  );
+		}
 
-			if( ( i != CB_ERR ) && ( szCurrentSig.CompareNoCase( pBitmapComboItem->m_Text ) == 0 ) )
+		while( pos != NULL )
+		{
+			pSignatureCommand = g_theSignatureDirector.GetNext( pos );
+
+			pBitmapComboItem = DEBUG_NEW_NOTHROW CBitmapComboItem( 0, pSignatureCommand->GetName(), 0);
+
+			if ( pBitmapComboItem )
 			{
-				pBitmapCombo->SetCurSel( i );
+				i = pBitmapCombo->Add( pBitmapComboItem );
+
+				if( ( i != CB_ERR ) && ( szCurrentSig.CompareNoCase( pBitmapComboItem->m_Text ) == 0 ) )
+				{
+					pBitmapCombo->SetCurSel( i );
+				}
 			}
 		}
-	}
-	
-	if( pBitmapCombo->GetCurSel() == CB_ERR )
-	{
-		pBitmapCombo->SetCurSel( 0 );
+
+		if( pBitmapCombo->GetCurSel() == CB_ERR )
+		{
+			pBitmapCombo->SetCurSel( 0 );
+		}
 	}
 
 	// initialize the encoding combo
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_ENCODING_COMBO ) );
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_MIME, IDS_ENCODING_MIME, MSF_MIME));
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_BINHEX, IDS_ENCODING_BINHEX, MSF_BINHEX));
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_UUENCODE, IDS_ENCODING_UUENCODE, MSF_UUENCODE));
+	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
+	if ( pBitmapCombo )
+	{
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_MIME, IDS_ENCODING_MIME, MSF_MIME));
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_BINHEX, IDS_ENCODING_BINHEX, MSF_BINHEX));
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_UUENCODE, IDS_ENCODING_UUENCODE, MSF_UUENCODE));
 
-	if( pSummary->Encoding() == MSF_BINHEX )
-	{
-		pBitmapCombo->SetCurSel( 1 );
-	}
-	else if( pSummary->Encoding() == MSF_UUENCODE )
-	{
-		pBitmapCombo->SetCurSel( 2 );
-	}
-	else
-	{
-		pBitmapCombo->SetCurSel( 0 );
+		if( pSummary->Encoding() == MSF_BINHEX )
+		{
+			pBitmapCombo->SetCurSel( 1 );
+		}
+		else if( pSummary->Encoding() == MSF_UUENCODE )
+		{
+			pBitmapCombo->SetCurSel( 2 );
+		}
+		else
+		{
+			pBitmapCombo->SetCurSel( 0 );
+		}
 	}
 
 
@@ -642,9 +675,13 @@ CCreateContext* pContext)
 
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
-	for( i = 0; i < theArray.GetSize(); i ++ )
+	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
+	if ( pCombo )
 	{
-		pCombo->AddString( theArray[i] );
+		for( i = 0; i < theArray.GetSize(); i ++ )
+		{
+			pCombo->AddString( theArray[i] );
+		}
 	}
 
 	// get the main frame window
