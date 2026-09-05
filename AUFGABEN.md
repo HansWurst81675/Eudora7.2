@@ -378,6 +378,45 @@ Sicherungen gegen das richtungslose Zurückschreiben: jede angefasste Datei wird
 
 **Damit ist Befund X-1 vollständig abgearbeitet** (X-2, X-3, X-4).
 
+### D5 · NEU: `tools/bauen.ps1` — bauen, ohne belogen zu werden (Befund X-6)
+
+Am 05.09.2026 meldete ein Bau-Lauf **EXITCODE 0, ohne gebaut zu haben**: in der
+`Eudora.exe` stand noch 7.2.0.3, während `Version.h` schon 7.2.0.4 sagte. Um ein
+Haar wäre genau das ausgeliefert worden. Zweiter Fehler desselben Laufs: der
+Aufruf riet `-p:Platform=Win32`, die Projektmappe kennt aber nur `x86`
+(`MSB4126`). Einzelheiten in **X-6**.
+
+Seitdem wird so gebaut — **nicht** mehr mit einem MSBuild-Aufruf von Hand:
+
+```
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Debug -Ziel Rebuild
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -NurPruefen
+```
+
+Das Werkzeug liest Konfiguration und Plattform aus `Eudora71/Eudora.sln` und
+sucht MSBuild über `vswhere.exe`; geraten wird nichts. Erfolg meldet es **nur**,
+wenn vier voneinander unabhängige Prüfungen zustimmen: Rückgabewert (über
+`Start-Process -PassThru`, nicht `$LASTEXITCODE`), Fehlerprotokoll (eigener
+`ErrorsOnly`-Logger, damit kein Suchmuster an der deutschen MSBuild-Ausgabe
+vorbeigeht), Zeitstempel der Artefakte gegen den Bau-Beginn, und die
+Versionsressource der `Eudora.exe` gegen `EUDORA_BUILD_VERSION`. Eingebaut sind
+außerdem die Nachkontrollen: alles x86, und im Release-Zweig importiert keine
+Datei eine Debug-Laufzeit — gelesen aus der **Importtabelle** des PE-Kopfes,
+nicht per `grep` über die Datei. Rückgabe 0/1/2 wie bei den anderen Werkzeugen.
+
+**Nebenbefund, beim Bauen gemessen (05.09.2026):** Aus einem reinen
+Projektmappen-Bau kommt **nie** eine `Eudora.exe` heraus. `Eudora.vcxproj` und
+`EudoraRes.vcxproj` führen `OT501.vcxproj` als Projektverweis, OT501 scheitert
+(der bekannte Blocker), und MSBuild lässt ein Projekt aus, dessen Verweis
+gescheitert ist. Sieben der neun überwachten Artefakte entstehen, die beiden
+wichtigsten nicht. `bauen.ps1` erkennt das und hängt einen **zweiten Gang** an,
+der `EudoraRes.vcxproj` und `Eudora.vcxproj` einzeln mit
+`/p:BuildProjectReferences=false` baut — mit der *Projekt*konfiguration
+`Release|Win32`, die dafür aus der `.sln` abgelesen wird. Das ist genau die
+Handarbeit, die bisher in der Auflagenliste stand und beim Eiligsein vergessen
+wurde. Abschalten mit `-OhneZweitenGang`.
+
 ---
 
 ## E — Die Ersatzschicht
@@ -472,6 +511,13 @@ von keinem der 105 Tests betreten.
    `/p:BuildProjectReferences=false` ist seit dem 05.09.2026 **nicht mehr nötig
    und nicht mehr erwünscht**: `OT501` ist aus dem Bau genommen (**B-3**,
    Commit `d8cc9d3`).
+4. **Bauen mit `tools/bauen.ps1`**, in der PowerShell, nicht in der Git-Bash.
+   Kein MSBuild-Aufruf von Hand mehr: am 05.09.2026 hat einer Erfolg gemeldet,
+   ohne gebaut zu haben (X-6). Die Plattform heißt auf Projektmappenebene
+   **`x86`**, nicht `Win32`. Visual Studio liegt unter **Professional**.
+   Einzelprojekte brauchen `/p:BuildProjectReferences=false`; für den
+   Release-Zweig einmal **mit** Verweisen bauen, damit die `.lib` entstehen,
+   dann **ohne**.
 5. **Zeilenangaben veralten**, sobald jemand dieselbe Datei anfasst (Z-1: sieben
    von elf Abweichungen waren genau das). Wer eine Fundstelle benutzt, prüft sie
    nach.
