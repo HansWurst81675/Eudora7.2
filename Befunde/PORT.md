@@ -314,3 +314,7 @@ Beide Bauten grün, `-t:Build` (nie `Rebuild`, nie `Clean`), Projektmappe `x86`:
 Auch die Schranke `tools/pruefe-bytes.pl` läuft über den Index sauber durch,
 und `tools/releasebuffer-pruefen.pl` zählt nach der Änderung zwei falsche
 Stellen weniger.
+
+Nach dem Vorziehen des Zweigs auf `fehler-nach-1010` (81851e5) ist der Release-Bau
+**wiederholt** worden - der Stand enthält jetzt auch `QCMailboxDirector.cpp` eines
+anderen Agenten: `EXIT=0`, **0 Fehler**.
