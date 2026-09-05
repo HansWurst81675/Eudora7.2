@@ -33,6 +33,13 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > | fertige Projekte | **16 von 18** |
 > | `Eudora71/Tests/RunTests.cmd` | 33 Tests, 33 bestanden |
 >
+> > **Diese Bauzahlen sind vom 30.08.2026 und überholt.** Seit dem 05.09.2026
+> > ist `OT501` aus dem Bau genommen (Befund **B-3**, Commit `d8cc9d3`): die
+> > „3 Fehler aus `OT501`" entfallen, und `/p:BuildProjectReferences=false` ist
+> > nicht mehr nötig. Die Messung bleibt als Beleg stehen. **Der Rest dieser
+> > Datei ist am 05.09.2026 nicht gegengelesen worden** — die Prüfstandsmarke
+> > oben steht deshalb weiter auf `d826a3f`.
+>
 > Die OT501-Ersatzschicht ist damit vollständig: Verlauf der ungelösten Externen
 > 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**. Die leere Attrappe
 > `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
@@ -905,3 +912,54 @@ unverändert geblieben ist; bei Abweichung bricht das Werkzeug ab. Zusätzlich
 werden die CR-Zahlen vorher/nachher ausgegeben, damit ein versehentlicher Wechsel
 von LF auf CRLF sofort auffällt. Für `utils.cpp` gemessen: 118 CR vorher, 118 CR
 nachher, `tools/pruefe-bytes.pl` sauber.
+
+### Nachtrag 05.09.2026: das zerrissene Zeichen an der Stückgrenze
+
+Die Umstellung oben übersetzt UTF-8 zuverlässig — **solange ein Zeichen ganz in
+einem Lesestück liegt.** `TextReader::ReadIt` liest den Nachrichtenrumpf
+stückweise (`ReadLine`, Puffer aus `pop.cpp:663`, `char szBuffer[2048]`) und
+ruft `ISOTranslate()` je Stück auf. Ein UTF-8-Zeichen ist zwei bis vier Byte
+lang und kann auf der Stückgrenze auseinandergerissen werden.
+
+Dann ist keine der beiden Hälften gültiges UTF-8: `MultiByteToWideChar` scheitert
+an `MB_ERR_INVALID_CHARS`, der Rückfall auf `pcXlateTable` findet ebenfalls nichts
+(die Tabelle kennt nur vollständige Folgen), und **beide Bytes bleiben roh
+stehen**. Im Postfach landet `C3 BC` statt `FC`, und die Anzeige — die zu Recht
+`windows-1252` ansagt — macht daraus `Ã¼`.
+
+Das Bild ist verräterisch: **genau ein Umlaut einer Nachricht ist kaputt, alle
+anderen stimmen.** Belegt am 05.09.2026 an einer echten Nachricht (Befund Z-2,
+Fortschreibung): in einem Postfach steht dasselbe Wort *auswählen* dreimal
+richtig und einmal roh — dieselbe Zeichenkette, dieselbe Nachricht, derselbe
+MIME-Teil.
+
+**Behebung:** `ISOTranslate()` bleibt unverändert; es sieht immer nur ein Stück
+und kann das gar nicht wissen. Stattdessen zwei neue Funktionen in `utils.cpp`
+und ein Übertrag im Aufrufer:
+
+- `BOOL ISOIsUTF8Charset(UINT iCharsetIdx)` — die Rechnung für den UTF-8-Index
+  steht damit an einer Stelle statt an zweien.
+- `LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)` — zählt die Bytes
+  am Pufferende, die ein **angefangenes** UTF-8-Zeichen sind (0 bis 3). Ein
+  vollständiges Zeichen ergibt 0, ein einzelnes CP1252-Byte ergibt 0, ein
+  Folgebyte ohne Kopfbyte ergibt 0. Nur was wirklich abgeschnitten ist, wird
+  gezählt.
+- `TextReader::ReadIt` hält diese Bytes zurück und setzt sie vor das nächste
+  Stück. Dafür wird `bSize` bei UTF-8 um drei weitere Bytes verkleinert, damit
+  der Puffer vorn Platz hat. `ISOTranslate` bekommt so nur noch ganze Zeichen.
+  Endet ein MIME-Teil mitten in einem Zeichen, werden die ein bis drei Bytes
+  verworfen: für sich sind sie kein Zeichen.
+
+Vier neue Tests in `Tests/TestIsoTranslate.cpp`, darunter der gemeldete Fall
+`f C3` | `BC r` → `f FC r`. Die bestehenden Tests gelten unverändert weiter,
+insbesondere „bei abgeschnittenem Zeichen fällt die Tabelle ein" — der beschreibt
+weiter das Verhalten von `ISOTranslate` selbst.
+
+**Der IMAP-Pfad hat denselben Bruch** (`ImapDownload.cpp:4662` ruft ebenfalls je
+Stück) und ist nicht mitgeändert, weil dort ohnehin der Index um eins verschoben
+ist (Nebenbefund 1 oben) und eine Änderung ungeprüft bliebe.
+
+**Neues Werkzeug `tools/postfach-zeichen-pruefen.pl`** (liest nur): sucht in
+einer `.mbx` nach vollständigen UTF-8-Folgen und nennt Nachricht, Stelle und
+Umfeld. Nach dem Abruf darf dort **keine** mehr stehen — das ist die Schranke
+für diese Fehlerklasse, ohne dass das Programm gestartet werden muss.

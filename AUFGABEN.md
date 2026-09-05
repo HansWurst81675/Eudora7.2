@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-Stand **31.08.2026, 09:00**. Branch `darstellung-und-menue`.
+Stand **05.09.2026, abends**. Zweig `bau-und-pruefung` (Commit `3d03c50`).
 Einstieg: [WEITERMACHEN.md](WEITERMACHEN.md) · Maßstab: [ZIEL.md](ZIEL.md) ·
 Belege: [BEFUNDE.md](BEFUNDE.md)
 
@@ -9,69 +9,102 @@ für jeden Punkt die Fundstelle. Sie ist so geschrieben, dass ein Agent damit
 sofort anfangen kann, ohne die Vorgeschichte zu kennen. Welcher Befund noch
 gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
 
-> **Braucht der Punkt Visual Studio?** Am 31.08.2026 abends lief eine Sitzung
-> ohne VM. Die Aufteilung steht in `WEITERMACHEN.md`, Abschnitt „Was ohne Visual
-> Studio geht". Kurz: **A2, C1, D1–D4 und jede Zählung gehen ohne Compiler**;
-> alles unter „Ganz zuerst", B1–B4, C2, C3 und E1–E3 brauchen einen Bau oder
-> einen Start.
+> **Braucht der Punkt Visual Studio?** Die Aufteilung steht in
+> `WEITERMACHEN.md`, Abschnitt „Was ohne Visual Studio geht". Kurz: **A2, C1,
+> D1–D4 und jede Zählung gehen ohne Compiler**; alles unter „Ganz zuerst",
+> B1–B4, C2, C3 und E1–E3 brauchen einen Bau oder einen Start.
 
 ---
 
 ## Wo wir stehen
 
+Maßgeblich ist die Tabelle in [ZIEL.md](ZIEL.md). Kurzfassung, Stand
+**05.09.2026**:
+
 | # | Kriterium aus ZIEL.md | Stand |
 |---|---|---|
-| 0 | Paket läuft ohne Nachinstallieren | **nicht belegt** — Release-Paket gebaut, aber `paket-pruefen.ps1` trägt nicht (PR-2) |
-| 1 | startet, Hauptfenster bedienbar | **erfüllt** (E-1) |
-| 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, Wirkung ungeprüft (Z-2) |
-| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten, TLS 1.3 (E-1, E-3) |
+| 0 | Paket läuft ohne Nachinstallieren | **weiterhin nicht belegt** — nie auf einem Rechner ohne Visual Studio gestartet; `paket-pruefen.ps1` trägt nicht (PR-2.0 bis PR-2.3) |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** — Gregor hat 7.2.0.4 gestartet und bedient |
+| 2 | Darstellung korrekt | **fast** — E-7 (Titel) behoben, ungeprüft. **Offen: kein Fortschritt beim Mailabruf sichtbar** (E-13). Z-2 und Z-2b behoben, ungeprüft |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — Gregor: *„mails lassen sich abrufen"* |
 
 ---
 
-## Ganz zuerst: das Release auf dem zweiten PC probieren
+## Was am 05.09.2026 erledigt wurde
 
-**Am 31.08. um 09:00 nicht mehr geschafft — das ist der erste Schritt.**
+Damit niemand einen dieser Punkte noch einmal anfängt. Alle mit Commit belegt;
+nachzählen mit
+`git log --format='%h %ad %s' --date=format:'%d.%m %H:%M' d59cf63..HEAD`.
 
-> **Und es ist weiterhin ungetan** (Stand 31.08. abends, Befund V-1): Gregor hat
-> die **erste** Fassung probiert, die abstürzte. Die **ausgetauschte** hat
-> niemand gestartet. „1.0.3 läuft" gilt für keines der beiden veröffentlichten
-> ZIPs — der erfolgreiche Lauf mit 159 Nachrichten war der **Debug**-Bau mit von
-> Hand hineinkopierten, nicht verteilbaren Laufzeiten (E-8).
+| Befund | Was | Commit | Stand |
+|---|---|---|---|
+| **B-3** | `OT501` aus dem Bau genommen — ein frischer Klon baut ohne Kniffe | `d8cc9d3` | **behoben** |
+| **E-7** | Bau-Kennung fehlt im Titel | `bcc59bb` | behoben, **ungeprüft** |
+| — | zwei Meldungen: Standard-Mailprogramm-Rückfrage raus, Wazoo-Text verständlich | `44224a5` | behoben, **ungeprüft** |
+| **Z-2b** | ein einzelner Umlaut je Nachricht an der Lesestückgrenze zerrissen | `34c1d7f` | behoben, **ungeprüft** |
+| **E-12** | `Eudora.exe Mailverzeichnis` wurde als Ini-*Dateiname* gedeutet | `79c09d4` | behoben, **ungeprüft** |
+| **E-4** | Schreibzugriff durch einen ungeprüften Cast beim **Start** (sichtbar beim Beenden) | `1188e87` | behoben, **ungeprüft** |
+| **Z-3** | fehlende Projektabhängigkeit in `Eudora.sln` belegt | `ee08b8e` | **offen**, nur belegt |
+| **E-13** | Ursache für den unsichtbaren Fortschritt belegt und behoben | `bd3959c` auf `wt/fortschritt-arbeit` | **noch nicht in diesem Zweig** |
 
-Auf GitHub hängt seit 09:00 ein **ausgetauschtes** ZIP:
+„Ungeprüft" heißt hier: der Code ist geändert und gebaut, aber **niemand hat am
+laufenden Programm nachgesehen**. Das ist der erste Schritt unten.
 
-| | |
-|---|---|
-| Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
-| SHA256 | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
-| enthält | die **E-11-Behebung** (`eudora.cpp:3372`, `Truncate` statt `ReleaseBuffer`) |
-| dazu | Härtung von `InitPluginList`, Zeichensatz-Ansage für HTML (Z-2) |
+---
 
-Die **erste** Fassung (`632c4066…`) hatte die Behebung noch nicht — die hat
-Gregor am 31.08. probiert, und sie stürzte beim Klick auf *Weiter* ab.
+## Ganz zuerst: 7.2.0.5 bauen, packen und einmal durchsehen
+
+> ### Berichtigung vom 05.09.2026
+>
+> An dieser Stelle stand bis heute: *„Ganz zuerst: das Release auf dem zweiten
+> PC probieren — am 31.08. um 09:00 nicht mehr geschafft."* **Das ist
+> überholt.** Gregor hat am 05.09.2026 die Fassung 7.2.0.4 in der VM gestartet,
+> bedient und Mail damit abgerufen. Die Belege zu 1.0.3 stehen unverändert in
+> `BEFUNDE.md` (E-1, E-3, E-6, E-8, V-1).
+
+**Der Grund für einen neuen Bau: „7.2.0.4" bezeichnet inzwischen mehr als einen
+Bau.** `Releases/Eudora72-1.0.4-release.zip` (SHA256 `a3eb72e5…`) ist am 05.09.
+um **19:22** gepackt worden — danach sind noch fünf Quelländerungen unter
+derselben Produktversion gelandet (E-7 19:33, zwei Meldungen 19:45, Z-2b 20:14,
+E-12 20:30, E-4 20:33). Das ist dieselbe Verwechslung wie in **V-1**.
 
 **Zu tun, in dieser Reihenfolge:**
 
-1. Auf dem Win11-Rechner auspacken, `Eudora.exe` starten, im Assistenten
-   auf *Weiter* klicken. **Stürzt es noch ab?**
-   - **Nein** → E-11 ist bestätigt. Dann A2: die Fehlerklasse abstellen.
-   - **Ja** → **zuerst `eudora.cpp:3403` und `:3413` ansehen**, nicht den
-     Debugger. In derselben Funktion `RegisterURLSchemes()` (3274–3417) stehen
-     zwei weitere `ReleaseBuffer` ohne `GetBuffer`, unverändert — Befund R-1.
-     `eudora.log` belegt nur, dass der Absturz hinter `:3331` liegt. Erst wenn
-     das nichts bringt: `tools/stapel-untersuchen.ps1` mit der `Eudora.pdb`
-     daneben. Die liegt **nicht** im Paket, sie muss aus
-     `Eudora71/Bin/Release` dazu.
-2. Dabei gleich mitprüfen, was ohnehin ansteht:
-   - **Kriterium 0** — startet es dort ohne Nachinstallieren? (C2)
-   - **HTML-Umlaute** — eine Mail mit Umlauten öffnen (B1)
-   - **Die Kennung im Titel** — steht sie da, sobald ein Postfach offen
-     ist? Vorher nicht, das ist E-7.
-   - **Beim Beenden** — kommt der Index-Fehler aus E-4?
-3. Und die offene Frage aus E-6: **warum musste das Mailverzeichnis von
-   Hand dazugelegt werden**, obwohl das Paket eines enthält?
+1. **Produktversion hochzählen** auf `7.2.0.5` / Paket `1.0.5`. Die fünf Stellen
+   in zwei Dateien stehen in [Releases/PAKETE.md](Releases/PAKETE.md).
+2. **Ganze Projektmappe bauen**, `Release|x86`, aus der PowerShell.
+   `/p:BuildProjectReferences=false` **nicht** mehr benutzen (B-3). Danach die
+   drei Prüfungen aus `README.md`, „Was den Bau kaputtmacht", Punkt 3 — ein
+   Rückgabewert 0 allein trägt nicht.
+3. **Packen** mit `tools/paket-bauen.ps1`, **nicht veröffentlichen**.
+4. **Einmal durchsehen** — dieser eine Lauf beantwortet sieben offene Punkte:
+   - **Titelzeile**: steht die Bau-Kennung von Anfang an da? (E-7, B2)
+   - **Mail abrufen**: ist jetzt ein Fortschritt sichtbar? (E-13 — **nur, wenn
+     `wt/fortschritt-arbeit` vorher zusammengeführt ist**)
+   - **Umlaute**: neu abrufen, dann
+     `perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx`
+     (Z-2b, B1)
+   - **Beenden**: kommt die Meldung aus E-4 noch?
+   - **Konto**: werden die Einstellungen gespeichert und wiedergefunden? (E-12)
+   - **Meldungen**: kommt die Rückfrage nach dem Standard-Mailprogramm noch?
+   - **Kriterium 0**: das ZIP auf einem Rechner **ohne** Visual Studio auspacken
+     und starten (C2). Das ist der einzige belastbare Nachweis; er fehlt seit
+     dem 31.08.
+5. **Erst danach** an die offenen Punkte unten.
 
-Ein einziger Lauf beantwortet fünf offene Punkte. Deshalb steht er hier oben.
+---
+
+## Was offen bleibt
+
+| Punkt | wo | braucht |
+|---|---|---|
+| **Kriterium 0** — Paket auf einem Rechner ohne Visual Studio starten | C2, ZIEL.md | einen zweiten Rechner |
+| **Fortschritt beim Mailabruf** — Zweig `wt/fortschritt-arbeit` zusammenführen und nachsehen | E-13 | Bau + Start |
+| **`tools/paket-pruefen.ps1`** prüft die Maschine statt das Paket und leitet zum Lizenzverstoß an | C1, PR-2.0 bis PR-2.3 | PowerShell, **kein** Compiler |
+| **CRLF-Dateien in der Arbeitskopie** — gemessen am 05.09.2026 in `C:\Users\Gregor\Documents\github\Eudora7.2`: **800** Dateien liegen als CRLF vor, während in HEAD LF steht. Befehl: `perl tools/zeilenenden-angleichen.pl`. Behebbar mit `--aendern`. **Achtung: das ist eine Eigenschaft der Arbeitskopie, nicht des Repos** — in einem frischen Klon mit `core.autocrlf=false` sind es 0 | S-7, X-4 | perl |
+| **`ReleaseBuffer` ohne `GetBuffer`** — gemessen am 05.09.2026 mit `perl tools/releasebuffer-pruefen.pl`: **141 Vorkommen, 117 richtig, 24 zu ändern** (19 `falsch`, 4 `lockbuffer`, 1 `danach`). Am 31.08. waren es 142/117/25; eine Stelle ist mit E-12 nebenbei erledigt (`fileutil.cpp:482`) | A2, R-1 | Bau |
+| **`Z-3`** — fehlende Projektabhängigkeit in `Eudora.sln`: `OEImport`/`NSImport` linken vor `QCUtils` | Z-3 | Projektdatei, dann Gesamtbau |
+| **Neun Zeigerstellen** aus X-3 | D3a | Bau |
 
 ---
 
@@ -163,32 +196,51 @@ Gegenprobe ohne Eudora-Start: nach dem Anzeigen liegt die Zwischendatei als
 `charset=windows-1252`-Zeile als **erste** stehen und keine fremde
 `charset`-Angabe mehr vorkommen.
 
-### B2 · Die Bau-Kennung fehlt im Titel (**E-7**) — **hochgestuft**
+**Am 05.09. gemessen und erledigt:** die Zwischendatei stimmt, die Ansage steht
+als erste Zeile. Der verbliebene Rest von E-2 hatte eine **andere** Ursache und
+liegt beim Abruf, nicht bei der Anzeige (**Z-2b**): ein UTF-8-Zeichen, das auf
+die Grenze zweier Lesestücke fällt, wurde gar nicht übersetzt — genau **ein**
+Umlaut je Nachricht kam als `fÃ¼r` heraus. Behoben in `utils.cpp` und
+`TextReader.cpp`. **Zu prüfen bleibt: neu abrufen** (schon geholte Nachrichten
+bleiben kaputt, die rohen Bytes stehen im Postfach) und danach
+`perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` — es darf
+keine vollständige UTF-8-Folge mehr melden.
 
-> Seit Befund **V-1** ist das kein Schönheitsfehler mehr: unter `v1.0.3` sind
-> zwei verschiedene ZIPs veröffentlicht, und **beide melden Produktversion
-> 7.2.0.3**. Die Bau-Kennung enthält den Commit und ist damit das einzige
-> Merkmal am laufenden Programm, das die zwei Bauten unterscheidet — und sie
-> fehlt genau im Zustand des Absturzes (frischer Start, Assistent offen). Ein
-> Aufruf.
+### B2 · ~~Die Bau-Kennung fehlt im Titel (**E-7**)~~ — **behoben am 05.09.2026, zu prüfen**
 
-Solange kein Postfach offen ist, steht im Titel nur `Eudora`. `OnUpdateFrameTitle`
-läuft erst bei einer Auffrischung. **Behebung:** einmal `OnUpdateFrameTitle(TRUE)`
-nach `FinishInitAndShowWindow` (`eudora.cpp:1510`) aufrufen. Kleiner Eingriff.
+Behoben in `bcc59bb`: ein einmaliges `OnUpdateFrameTitle(TRUE)` am Ende von
+`CMainFrame::FinishInitAndShowWindow` (`mainfrm.cpp:1135`), also nachdem das
+Fenster steht. Die Funktion hängt die Kennung nicht doppelt an, sie prüft das
+selbst.
 
-Das ist mehr als Kosmetik: die Kennung fehlt genau in dem Zustand, in dem
-Gregor Fehler findet — beim frischen Start.
+> Warum das mehr als Kosmetik ist: Seit Befund **V-1** sind unter `v1.0.3` drei
+> verschiedene ZIPs veröffentlicht, und alle melden Produktversion `7.2.0.3`.
+> Dasselbe gilt jetzt für **7.2.0.4** — das lokal gepackte Paket 1.0.4 ist vor
+> fünf weiteren Quelländerungen desselben Tages entstanden. Die Bau-Kennung
+> enthält den Commit und ist damit das einzige Merkmal am laufenden Programm,
+> das die Bauten unterscheidet.
 
-### B3 · Absturz beim Beenden (**E-4**)
+**Zu tun:** starten und auf die Titelzeile sehen. Erwartet wird etwas wie
+`Eudora   [1.0.4+<commit> - …]`, **von Anfang an**, auch ohne geöffnetes
+Postfach. Ein Sternchen hinter dem Commit heißt: beim Bau lagen ungesicherte
+Änderungen vor.
 
-`afxcoll.inl:213` = `CPtrArray::ElementAt`, Index außerhalb des Arrays.
-Verdacht: `SECDockBar::MoveControlBarToPosition` (`OTShim.cpp:2718-2795`, am
-31.08. neu) baut `m_arrBars` von Hand um, ohne den Zustand mitzuziehen, den
-`CDockBar` parallel führt.
+### B3 · ~~Absturz beim Beenden (**E-4**)~~ — **behoben am 05.09.2026, zu prüfen**
 
-**Weg:** `tools/stapel-untersuchen.ps1`, im Zusicherungsdialog *Wiederholen*
-drücken — dann wird aus der Meldung ein Haltepunkt, den der Debugger sieht.
+> **Der Verdacht in diesem Punkt war falsch.** Hier stand: „`SECDockBar::
+> MoveControlBarToPosition` baut `m_arrBars` von Hand um". Gregors Debug-Bau
+> 7.2.0.4 hat etwas anderes gezeigt.
 
+Die Ursache liegt **beim Start**, nicht beim Beenden: `WazooBarMgr.cpp` castet
+an zwei Stellen per C-Cast — der prüft nichts — das **Hauptfenster** auf
+`CMDIChildWnd`/`QCControlBarWorksheet` und schreibt hinein. Im Debug meldete
+sich `ASSERT_KINDOF`, im Release ist `ASSERT` leer und der Schreibzugriff blieb.
+`afxcoll.inl:213` beim Beenden war nur die Folge.
+
+Behoben in `1188e87`: beide Blöcke sind mit `if (pWazooBar->IsMDIChild())`
+verriegelt (`WazooBarMgr.cpp:273` und `:421`). Einzelheiten in **E-4**.
+
+**Zu tun:** Eudora starten und wieder beenden. Kommt die Meldung noch?
 ### B4 · Gesperrte Werkzeugleisten-Knöpfe
 
 `DrawDisabled` ist behoben (E-2), aber geprüft ist nur der Zustand, in dem die
@@ -369,8 +421,11 @@ von keinem der 105 Tests betreten.
 - **`MFC71.DLL` und `MSVCP71.dll`** sind nicht nachbaubar (157 Ordinale, B-1).
   Adressbuch, LDAP und Ph fallen dauerhaft aus, solange die Fremd-DLLs von 2006
   benutzt werden.
-- **Der Release-Zweig von `EudoraRes`** hängt noch über einen Projektverweis an
-  `OT501` (`EudoraRes.vcxproj:351`).
+- ~~**Der Release-Zweig von `EudoraRes`** hängt noch über einen Projektverweis an
+  `OT501`~~ — **erledigt am 05.09.2026** (**B-3**, Commit `d8cc9d3`). Nachgesehen:
+  `grep -n OT501 Eudora71/Eudora/EudoraRes.vcxproj` liefert nur noch vier
+  `AdditionalIncludeDirectories` mit `..\OT501\Include`; die Kopfdateien werden
+  gebraucht, die Bibliothek nicht. Kein `ProjectReference` mehr.
 - **LEKTORAT:** am 31.08.2026 abends sind **alle 45 Markdown-Dateien** gelesen
   und die Widersprüche berichtigt worden (dritter Durchgang in `LEKTORAT.md`).
   `Releases/1.0.3/LIESMICH.txt` ist ebenfalls neu gefasst — sie beschrieb den
@@ -412,9 +467,11 @@ von keinem der 105 Tests betreten.
    **Niemals `sed`** — das cygwin-`sed` wirft CR weg (X-1). Zum Messen `perl`
    mit `:raw`, **nicht** `grep -c $'\r'`.
 4. **Bauen nur in der PowerShell**, nicht in der Git-Bash. Visual Studio liegt
-   unter **Professional**. Einzelprojekte brauchen
-   `/p:BuildProjectReferences=false`; für den Release-Zweig einmal **mit**
-   Verweisen bauen, damit die `.lib` entstehen, dann **ohne**.
+   unter **Professional**. **Die ganze Projektmappe bauen**, nicht ein
+   Einzelprojekt — die `.lib` entstehen erst dabei.
+   `/p:BuildProjectReferences=false` ist seit dem 05.09.2026 **nicht mehr nötig
+   und nicht mehr erwünscht**: `OT501` ist aus dem Bau genommen (**B-3**,
+   Commit `d8cc9d3`).
 5. **Zeilenangaben veralten**, sobald jemand dieselbe Datei anfasst (Z-1: sieben
    von elf Abweichungen waren genau das). Wer eine Fundstelle benutzt, prüft sie
    nach.

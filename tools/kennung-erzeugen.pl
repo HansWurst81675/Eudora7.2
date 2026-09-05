@@ -67,7 +67,23 @@ my $schmutzig = `git status --porcelain 2>/dev/null`;
 # sauber, der naechste Bau schriebe die Datei ohne Sternchen neu, damit waere
 # der Baum wieder schmutzig, und der uebernaechste Bau setzte das Sternchen
 # wieder. Die Kennung wuerde bei jedem Bau zwischen zwei Werten springen.
-my @geaendert = grep { !/^\?\?/ and !/BuildKennung\.h$/ }
+#
+# Und Bau-Ausgaben zaehlen ebenfalls nicht. Eudora71/Bin und Eudora71/Lib sind
+# zugleich Ausgabeverzeichnis UND verfolgt - dort liegen neben den erzeugten
+# Dateien auch die vorgebauten Fremdmodule von 2006. JEDER Bau macht damit
+# seinen eigenen Baum schmutzig.
+#
+# Die Folge war am 05.09.2026 zu sehen: der Release-Bau um 21:17 lief mit
+# sauberer Kennung "1.0.5+b82526d", der Debug-Bau eine Minute spaeter bekam
+# "1.0.5+b82526d*" - allein deshalb, weil der Release-Bau davor fuenf DLLs in
+# Bin/Release neu geschrieben hatte. Das Sternchen behauptet "nicht
+# reproduzierbar", obwohl keine Zeile Quelltext abwich.
+#
+# Ein Sternchen, das bei jedem zweiten Bau erscheint, wird ignoriert - und dann
+# nuetzt es nichts mehr an dem Tag, an dem es stimmt.
+#
+my @geaendert = grep { !/^\?\?/ and !/BuildKennung\.h$/
+                       and !m{\sEudora71/(Bin|Lib)/} }
                 grep { length }
                 split /\n/, ($schmutzig || '');
 my $marke = @geaendert ? '*' : '';

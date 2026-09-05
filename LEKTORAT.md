@@ -210,7 +210,7 @@ Abschluss. **Nicht angesehen:**
 | Datei | warum sie zu prüfen wäre |
 |---|---|
 | `PORTIERUNG.md` (895 Zeilen) | nur der Abschnitt zur Schranke überflogen; der Rest ist aus beiden Durchgängen ungelesen |
-| `PRUEFBERICHT.md` (406 Zeilen) | PR-1 bis PR-8 sind laut W-1 bis auf PR-5 behoben; ob die Datei das sagt, ist ungeprüft |
+| `PRUEFBERICHT.md` (406 Zeilen) | PR-1 bis PR-8 sind laut W-1 **vollständig** behoben (PR-5 seit `765c39b`); ob die Datei das sagt, ist ungeprüft |
 | `STARTUMGEBUNG.md` | im ersten Durchgang nur mit einem Kasten versehen; die vier VS2022-Debug-Laufzeiten aus S-8 gehören dort in die Aufstellung |
 | `ABRUF-PRUEFEN.md` (235 Zeilen) | POSTBOTE hat sie geschrieben und mit P-2 fortgeschrieben; ob Anleitung und Befund noch zusammenpassen, ist ungeprüft |
 | `Releases/1.0.2/LIESMICH.txt`, `Releases/1.0.3/LIESMICH.txt` | 1.0.3 ist neu und ungelesen; ob 1.0.2 nach S-8 noch stimmt, ist ungeprüft |
@@ -362,3 +362,64 @@ auskommentierten Block.
 *Handgriff:* ab etwa 30 Treffern abwaerts alle lesen. Eine Stichprobe misst die
 Quote, sie findet nicht den Sonderfall — und der Sonderfall ist meistens ein
 Fehler im Werkzeug, nicht im geprueften Code.
+
+---
+
+# Vierter Durchgang — 05.09.2026, abends
+
+Agent LEKTOR, Worktree `Eudora7.2-wt-kette`, Zweig `wt/lektor` aus
+`origin/bau-und-pruefung` (`3d03c50`). **Keine Zeile Quelltext geändert, nichts
+gebaut.**
+
+Anlass: an einem Tag haben sechs Agenten in getrennten Worktrees gearbeitet und
+mehrfach zusammengeführt. Die Dokumentation widersprach sich danach an sieben
+Stellen.
+
+## Was berichtigt wurde
+
+| Datei | Was falsch war | Was jetzt dasteht |
+|---|---|---|
+| `README.md` | „`/p:BuildProjectReferences=false` ist nötig — sonst scheitert der Bau am Projekt `OT501`" stand unverbunden neben dem neuen, richtigen Abschnitt „Selbst bauen" | eine Kurzfassung, die auf „Selbst bauen" verweist, mit Berichtigungskasten: `OT501` ist seit `d8cc9d3` aus dem Bau (Befund **B-3**). Der alte Satz steht als Zitat im Kasten |
+| `README.md` | „Stand" war vom 31.08. mit Paket 1.0.3 / Produktversion 7.2.0.3 | Stand vom 05.09., 7.2.0.4 / 1.0.4, mit Berichtigungskasten und dem Hinweis, dass ZIEL.md die Quelle ist |
+| `README.md` | „117 richtig, 25 zu ändern" bei `releasebuffer-pruefen.pl` | **nachgemessen am 05.09.**: 141 Vorkommen, 117 richtig, **24** zu ändern — eine Stelle ist mit E-12 nebenbei behoben worden (`fileutil.cpp:482`) |
+| `README.md` | „in 5900 Zeilen nichts wieder" | **6960**, nachgemessen |
+| `ZIEL.md` | die maßgebliche Kriterientabelle war vom 31.08. | Stand vom 05.09. mit Berichtigungskasten. Kriterium 1 und 3 sind jetzt an **7.2.0.4** belegt; Kriterium 2 hat einen neuen offenen Punkt (kein Fortschritt beim Abruf) und einen weggefallenen (E-7); Kriterium 0 hat sich nicht bewegt |
+| `BEFUNDE.md` | **E-4** und **E-7** standen auf „offen", sind aber behoben | beide auf „behoben, ungeprüft", je mit Fortschreibungsabschnitt und Commit |
+| `BEFUNDE.md` | **PR-5** stand an drei Stellen auf „offen", war aber in `765c39b` behoben | überall berichtigt; die Überschrift „PR-5 bleibt offen" heißt jetzt „PR-5 — behoben am 31.08.2026 abends" mit Berichtigungskasten |
+| `BEFUNDE.md` | für den OT501-Ausbau gab es keinen Befund | neuer Abschnitt **B-3** mit den vier Belegen, dass niemand `OT501` braucht |
+| `BEFUNDE.md` | `PR-3` bis `PR-8` und `P-3` kamen im Verzeichnis nicht vor | neuer Abschnitt „Unterbefunde, die man einzeln sucht" mit 13 Zeilen |
+| `AUFGABEN.md` | erster Schritt war „das Release auf dem zweiten PC probieren" (31.08.) | Stand vom 05.09.; erster Schritt ist Produktversion hochzählen, bauen, packen, durchsehen. Was heute erledigt wurde, steht in einer eigenen Tabelle |
+| `AUFGABEN.md` | Auflage 4 verlangte `/p:BuildProjectReferences=false` | berichtigt: ganze Projektmappe bauen, Schalter nicht mehr benutzen |
+| `WEITERMACHEN.md` | Einstieg war vom 31.08. abends | neuer Kasten für den 05.09. ganz oben; die beiden alten Kästen sind als **ÜBERHOLT** gekennzeichnet, nicht gelöscht |
+| `LEKTORAT.md` | „PR-1 bis PR-8 sind laut W-1 bis auf PR-5 behoben" | vollständig behoben |
+
+## Aufgelöst: eine doppelt vergebene Kennung
+
+`E-12` war **zweimal** vergeben — Agent KONTO (Mailverzeichnis-Argument,
+`79c09d4`) und Agent FORTSCHRITT (Fortschritt beim Mailabruf, `bd3959c` auf
+`wt/fortschritt-arbeit`). Beide hatten unabhängig „die nächste freie E-Nummer"
+gewählt.
+
+**Auflösung:** `E-12` bleibt bei KONTO (zuerst zusammengeführt, steht im
+Verzeichnis); FORTSCHRITTs Befund heißt jetzt **`E-13`** und trägt eine Zeile,
+dass er vorher `E-12` hieß.
+
+Beim Nachmessen kamen **drei weitere Dopplungen** heraus, die niemand gemeldet
+hatte: `P-1`, `P-2` und `PR-2` bezeichnen je zwei verschiedene Dinge. Sie werden
+**nicht** rückwirkend umbenannt — zu viele Querverweise hängen daran —, stehen
+aber jetzt im Verzeichnis als Dopplung ausgewiesen.
+
+**Damit das nicht wieder passiert**, steht im Verzeichnis der Befehl, der die
+vergebenen Kennungen über **alle** Zweige misst, dazu eine Tabelle der
+Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt (`X-5`, `X-6`,
+`E-13`) und die nächsten freien Kennungen.
+
+## Was ich bewusst nicht getan habe
+
+* **Keine Zeile Quelltext geändert, nichts gebaut.**
+* **Die Abschnitte zu `X-5` und `X-6` nicht hierher kopiert.** Sie liegen auf
+  `wt/schranke` und `wt/baumeister` und kommen mit dem Zusammenführen. Ein
+  Verzeichniseintrag ohne Abschnitt wäre genau der Fehler, gegen den das
+  Verzeichnis geschrieben ist; die Kennungen sind stattdessen **reserviert**.
+* **Nichts gelöscht, was ein Beleg ist.** Überholte Aussagen sind berichtigt und
+  als berichtigt gekennzeichnet, meist mit dem alten Wortlaut als Zitat.

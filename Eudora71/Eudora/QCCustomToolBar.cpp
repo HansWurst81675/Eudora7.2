@@ -298,9 +298,17 @@ void QCCustomToolBar::DropButton(CRect& dropRect, SECStdBtn* pDragBtn, BOOL bAdd
 	}
 
 	// Add the button at the calculated location - and give it the config focus.
+	// BEFUND E-16: AddButton begrenzt nIndex still auf [0, GetBtnCount()];
+	// der Zugriff darunter muss mit demselben Wert rechnen.
+	if (nIndex < 0)
+		nIndex = 0;
+	if (nIndex > GetBtnCount())
+		nIndex = GetBtnCount();
+
 	AddButton(nIndex, nID);
 	
-	m_btns[nIndex]->m_ulData = ulData;
+	if (nIndex < GetBtnCount())
+		m_btns[nIndex]->m_ulData = ulData;
 
 	if(!m_bAltDrag)
 		// Note that when perform an "ALT" drag operation, when the operation
@@ -692,8 +700,17 @@ LPCSTR	szSection )
 		// copy the image
 		( ( QCToolBarManager* ) m_pManager )->CopyButtonImage( uSrcIndex, uCommandID );
 		
+		// BEFUND E-16: iPosition kommt aus der Ini und wurde davor um nFailed
+		// verkleinert - der Wert kann negativ oder zu gross sein. AddButton
+		// begrenzt still, der Zugriff darunter tat es nicht.
+		if( iPosition < 0 )
+			iPosition = 0;
+		if( iPosition > GetBtnCount() )
+			iPosition = GetBtnCount();
+
 		AddButton( iPosition, uCommandID );
-		m_btns[ iPosition ]->m_ulData = lOrigCmdID;
+		if( iPosition < GetBtnCount() )
+			m_btns[ iPosition ]->m_ulData = lOrigCmdID;
 	}
 
 	if (GetIniShort(IDS_INI_ALLOW_IN_YOUR_FACE))
@@ -773,11 +790,24 @@ void QCCustomToolBar::LoadInYourFacePlugins()
 				{
 					//Add separators between plugin groups
 					if (modID != lastModID)
+					{
+						if (startPos > GetBtnCount())
+							startPos = GetBtnCount();
 						AddButton( startPos++, 0, TRUE, TRUE );
+					}
 
 					( ( QCToolBarManager* ) m_pManager )->CopyButtonImage( uSrcIndex, uCommandID );
+
+					// BEFUND E-16, dieselbe Rechnung wie oben.
+					if (startPos < 0)
+						startPos = 0;
+					if (startPos > GetBtnCount())
+						startPos = GetBtnCount();
+
 					AddButton( startPos, uCommandID );
-					m_btns[ startPos++ ]->m_ulData = lType;
+					if (startPos < GetBtnCount())
+						m_btns[ startPos ]->m_ulData = lType;
+					startPos++;
 				}
 
 				if ( szNewPlugins.Find(modStr) < 0)
@@ -1202,8 +1232,16 @@ BOOL QCCustomToolBar::ConvertOldStuff()
 
 		( ( QCToolBarManager* ) m_pManager )->CopyButtonImage( iSrcIndex, wCommand );
 		
+		// BEFUND E-16, dieselbe Rechnung wie in LoadCustomInfo.
+		if( iPosition < 0 )
+			iPosition = 0;
+		if( iPosition > GetBtnCount() )
+			iPosition = GetBtnCount();
+
 		AddButton( iPosition, wCommand );
-		m_btns[ iPosition++ ]->m_ulData = m_pBmpItems[ iSrcIndex ];
+		if( iPosition < GetBtnCount() )
+			m_btns[ iPosition ]->m_ulData = m_pBmpItems[ iSrcIndex ];
+		iPosition++;
 	}
 
 	if( idx > 0 )

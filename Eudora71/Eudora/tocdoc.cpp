@@ -644,7 +644,20 @@ BOOL CTocDoc::Read(BOOL HeaderOnly /*= FALSE*/)
 					// Repair the locale-specific In box name to be the
 					// proper locale-specific In box name.
 					//
-					ASSERT(0);
+					// KEIN ASSERT(0) hier - Befund E-19.
+					//
+					// Die drei Zeilen darunter REPARIEREN den Fall - der Kommentar darueber
+					// sagt es selbst ("Repair the locale-specific In box name"). Eine
+					// Zusicherung in einem Reparaturzweig feuert genau dann, wenn alles wie
+					// vorgesehen laeuft.
+					//
+					// Gregor am 05.09.2026 im Debug-Bau 7.2.0.6, beim Wechsel auf die zweite
+					// Persoenlichkeit:
+					//     Expression : 0
+					//     Location   : CTocDoc::Read, Line 647 in tocdoc.cpp
+					//
+					// Im Release ist ASSERT leer, deshalb ist es nie aufgefallen. Die Zeile
+					// steht seit dem ersten Commit im Baum, stammt also aus dem Original.
 					Name() = szInBoxName;
 					m_strTitle = szInBoxName;
 					needed_repair = TRUE;

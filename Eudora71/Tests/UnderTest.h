@@ -22,6 +22,11 @@ const unsigned char* UT_XlateRow(int iSet, int iRow);
 // Ruft die Originalfunktion ISOTranslate auf.
 long UT_ISOTranslate(char* pBuf, long lSize, unsigned int uCharsetIdx);
 
+// Ruft die Originalfunktionen ISOIsUTF8Charset und ISOIncompleteUTF8Tail auf.
+// Letztere zaehlt die Bytes am Pufferende, die ein angefangenes UTF-8-Zeichen sind.
+int  UT_ISOIsUTF8Charset(unsigned int uCharsetIdx);
+long UT_ISOIncompleteUTF8Tail(const char* pBuf, long lSize);
+
 // --- aus hexbin.cpp ------------------------------------------------------
 
 // Zeigt auf HexBinTable[256].

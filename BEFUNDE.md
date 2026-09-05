@@ -1,29 +1,40 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: d826a3f -->
+<!-- pruefstand: 3d03c50 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
-Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen und
-inzwischen rund **5900 Zeilen** lang (nachzählen: `grep -c '^## ' BEFUNDE.md`,
-dieses Verzeichnis zählt mit). Jeder Agent schreibt seinen Abschnitt ans
-**Ende**, die Reihenfolge ist also zeitlich, nicht sachlich. Ohne dieses
-Verzeichnis findet niemand, was er sucht — und schlimmer: er findet einen
-Befund und weiß nicht, ob er noch gilt.
+Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
+Gemessen am 05.09.2026 nach diesem Durchgang: **6960 Zeilen**, **119** Abschnitte
+auf zweiter und **190** auf dritter Ebene. Nachzählen:
 
-**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil vier Kennungen
-eine Ebene tiefer stehen (`### NP2-2`, `### NP2-3`, `### NP3-8`, `### NP3-9`:
-sie sind Nachträge innerhalb eines größeren Abschnitts). Zeilennummern stehen
-hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses Projekt hat
-genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
+```sh
+wc -l < BEFUNDE.md                  # Zeilen
+grep -c '^## '   BEFUNDE.md         # Abschnitte 2. Ebene (dieses Verzeichnis zählt mit)
+grep -cE '^### +[A-Z]' BEFUNDE.md   # Unterabschnitte
+```
 
+Jeder Agent schreibt seinen Abschnitt ans **Ende**, die Reihenfolge ist also
+zeitlich, nicht sachlich. Ohne dieses Verzeichnis findet niemand, was er sucht —
+und schlimmer: er findet einen Befund und weiß nicht, ob er noch gilt.
+
+**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil viele Kennungen
+eine Ebene tiefer stehen (`### NP2-2`, `### NP3-8`, `### PR-6`, `### P-3` und
+weitere: sie sind Unterpunkte innerhalb eines größeren Abschnitts). Welche das
+sind, steht unten unter **„Unterbefunde, die man einzeln sucht"**. Zeilennummern
+stehen hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses
+Projekt hat genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
 > **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**
 > Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
 > dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
 
-**Stand der Statusspalte:** 31.08.2026 abends, Commit `48d28a2`. Die Einstufung
-ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
+**Stand der Statusspalte:** 05.09.2026, Commit `3d03c50` (Zweig
+`bau-und-pruefung`). Die Einstufung ist am Text der Befunde und, wo nötig, am
+Quelltext nachgesehen. Nachgezogen am 05.09.2026: **E-4** und **E-7** standen
+auf „offen", sind aber behoben; **PR-5** stand an drei Stellen auf „offen", ist
+aber seit `765c39b` behoben. Neu aufgenommen: **B-3** (OT501 aus dem Bau) und
+**E-13** (Fortschritt beim Mailabruf).
 
 | Status | Bedeutung |
 |---|---|
@@ -92,7 +103,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | S-7 | die Wurzel aller CRLF-Probleme: Auschecken mit `autocrlf=true` | **behoben** |
 | S-8 | Paket 1.0.2 startete mit `0xc000007b` | **behoben** (und durch F-1 gegenstandslos) |
 
-## Arbeit der Agenten vom 30./31.08.2026
+## Arbeit der Agenten vom 30./31.08. und 05.09.2026
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
@@ -102,9 +113,11 @@ zuerst **E-11**, **R-1** und **E-1**.
 | A-1 | Erscheinungsbild: fünf Punkte umgesetzt | **teilweise**, Wirkung belegt (E-1/E-2) |
 | P-1 | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | **teilweise** (P-1.5b bis P-1.5j offen) |
 | P-2 | der Absturzpunkt vor dem ersten Abruf abgesichert | **behoben** |
-| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben** (PR-5 offen) |
+| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben, vollständig** — PR-5 ist seit `765c39b` erledigt; die frühere Angabe „PR-5 offen" war überholt |
 | F-1 | Release-Bau: `OTA50D.LIB` statt `OTA50R.LIB`, `MakeDox.pl` | **behoben**; statisch binden bleibt ausgeschlossen |
-| Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben, ungeprüft** |
+| Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben**, an der Zwischendatei belegt (Fortschreibung 05.09.) |
+| Z-2b | ein einzelner Umlaut kaputt: UTF-8-Zeichen zerrissen an der Stückgrenze beim Abruf | **behoben, ungeprüft** (Fortschreibung von Z-2) |
+| B-3 | `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe | **behoben** (05.09., `d8cc9d3`) — damit entfallen die drei Fehler aus B-2 |
 
 ## Prüfberichte über die eigene Arbeit
 
@@ -118,6 +131,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+| Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **offen** (zweiter Lauf geht durch) |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
@@ -127,18 +141,82 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) |
 | E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 |
 | E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** |
-| E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **offen** |
+| E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **behoben, ungeprüft** (05.09., `1188e87`: die Ursache liegt beim **Start**, ein ungeprüfter Cast in `WazooBarMgr.cpp`) |
 | E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 |
 | E-6 | Release läuft, Assistent stürzt bei *Weiter* ab | **überholt** durch E-8 (es war der Debug-Bau) |
-| E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **offen** (Behebung beschrieben, ein Aufruf) |
+| E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **behoben, ungeprüft** (05.09., `bcc59bb`: ein `OnUpdateFrameTitle(TRUE)` in `mainfrm.cpp:1135`) |
 | E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** |
 | E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig |
 | E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
+| E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** (Kriterium 3) |
+| E-13 | beim Mailabruf ist kein Fortschritt sichtbar — der Abruf dauert 0,02 s | **Ursache belegt**; Behebung liegt auf `wt/fortschritt-arbeit`, **nicht** in diesem Zweig. Hieß versehentlich `E-12` |
 
 > **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
 > ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
 > Befund — wer sie sucht, sucht umsonst.
 
+## Unterbefunde, die man einzeln sucht
+
+Diese Kennungen haben **keinen eigenen Abschnitt auf oberster Ebene**, sondern
+stehen als Unterpunkt in einem größeren Befund. Wer nach ihnen sucht und oben
+nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
+`P-3` bis dahin in keiner Zeile des Verzeichnisses vorkamen.
+
+| Kennung | steht in | Worum es geht | Status |
+|---|---|---|---|
+| PR-3 | `### PR-3` unter **W-1** | eine Liste der Textdateiarten statt zwei | **behoben** |
+| PR-4 | `### PR-4` unter **W-1** | `BuildKennung.h` ist nicht mehr in git verfolgt | **behoben** |
+| PR-5 | `### PR-5` unter **W-1** | Zeitstempel der Kennung ist nicht der Bauzeitpunkt | **behoben** (`765c39b`) |
+| PR-6 | `### PR-6` unter **W-1** | kein `_T` um ein Makro (bricht im Unicode-Bau) | **behoben** |
+| PR-7 | `### PR-7` unter **W-1** | die Zahlen in S-7 widersprachen sich: es gilt 4616 von 5563 | **behoben** |
+| PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelöscht — fand seinen eigenen Anlass nicht | **behoben** |
+| PR-2.0 … PR-2.9 | `### PR-2.x` unter **PR-2** | zehn Punkte der Nachprüfung vom 31.08. | PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
+| P-1.0 … P-1.8 | `### P-1.x` unter **P-1** (POP-Abrufpfad) | elf Altlasten auf dem Abrufpfad | P-1.1/P-1.8 **behoben**, P-1.5b–P-1.5j **offen** |
+| P-2.1 … P-2.7 | `### P-2.x` unter **P-2** (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
+| P-1, P-2, P-3 (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei Härtungslücken beim ersten Lauf der Ersatzschicht; **P-3** ist `SECDateTimeCtrl::FixedTime`, das die Stunde ausläßt (Fehler im Original, bewusst übernommen) | **offen** |
+| S-3a, S-3b, S-3c | `### S-3x` unter **S-3** | erster Lauf durch einen Anwender | S-3a **behoben**, S-3b/S-3c **offen** |
+| E-9, Nachtrag | unter **E-9** | die Plugins sind es NICHT — gemessen | **Beleg** |
+
+> ### Achtung: drei Kennungen sind doppelt vergeben
+>
+> Beim Zusammenführen mehrerer Agenten sind Kennungen zweimal vergeben worden.
+> Umbenannt wird **nicht** rückwirkend — zu viele Querverweise hängen daran.
+> Wer sucht, muss beide Fundstellen kennen:
+>
+> | Kennung | Bedeutung A | Bedeutung B |
+> |---|---|---|
+> | **P-1** | `### P-1` (PROBE): `OnActivateTab`/`ClearSelection` rufen `GetParent()` ungeprüft | `## P-1`: der POP-Abrufpfad, vor dem ersten Abruf gegengelesen |
+> | **P-2** | `### P-2` (PROBE): `SECTabWndBase::InsertTab` blendet ein Fenster ungeprüft aus | `## P-2`: der Absturzpunkt vor dem ersten Abruf abgesichert |
+> | **PR-2** | `PR-2` in `PRUEFBERICHT.md`: Schranke schlägt bei Leerzeilen grundlos an (**behoben**) | `## PR-2` hier: Nachprüfung der Arbeit vom 31.08. mit PR-2.0 bis PR-2.9 |
+>
+> **`E-12` war der vierte Fall und ist aufgelöst:** Agent KONTO und Agent
+> FORTSCHRITT haben unabhängig „die nächste freie E-Nummer" gewählt. `E-12`
+> bleibt beim Mailverzeichnis-Argument (KONTO, zuerst zusammengeführt); der
+> Fortschrittsbefund heißt seit dem 05.09.2026 **`E-13`**.
+>
+> **Wer eine neue Kennung vergibt, misst zuerst über alle Zweige:**
+>
+> ```sh
+> for b in $(git branch -a --format='%(refname:short)' | grep -v HEAD); do
+>   git grep -hoE '^#+ +E-[0-9]+' "$b" -- BEFUNDE.md 2>/dev/null
+> done | sed 's/#\+ *//' | sort -u -V
+> ```
+
+## Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt
+
+Diese Kennungen sind **vergeben**, ihr Befundtext steht aber noch nicht in
+`bau-und-pruefung`. Sie stehen hier, damit sie kein zweites Mal vergeben werden
+— genau das ist mit `E-12` passiert. Gemessen am 05.09.2026 mit dem Befehl aus
+dem Kasten oben.
+
+| Kennung | Worum es geht | Zweig | zu tun beim Zusammenführen |
+|---|---|---|---|
+| X-5 | ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa | `wt/schranke` (`5e1187a`) | Verzeichniszeile in die Tabelle „Prüfberichte über die eigene Arbeit" nachtragen |
+| X-6 | ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben | `wt/baumeister` | dito |
+| E-13 | Fortschritt beim Mailabruf ist nicht sichtbar (Abschnitt steht **hier**, der **Code** noch nicht) | Behebung in `bd3959c` auf `wt/fortschritt-arbeit` | dort die Überschrift `## E-12 — Der Fortschritt beim Mailabruf …` **entfernen**, sonst steht `E-12` zweimal in der Datei |
+
+**Nächste freie Kennungen, gemessen über alle Zweige am 05.09.2026:**
+`E-14`, `B-4`, `X-7`, `Z-4`. (`E-10` ist eine bewusste Lücke, siehe oben.)
 ## Was in dieser Datei sonst noch steht
 
 Neben den Befunden vier Sammelkapitel, die **kein** Mangel sind und deshalb oben
@@ -3808,7 +3886,7 @@ Aussage unten ist gemessen; die Gegenproben laufen als Testsammlung mit.
 | PR-2 | Schranke schlaegt bei Leerzeilen grundlos an | **behoben** |
 | PR-3 | `.def`/`.sln`/`.bat`/`.ps1` gar nicht geprueft | **behoben** |
 | PR-4 | `BuildKennung.h` verfolgt → fremde Kennung | **behoben** |
-| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | offen (nur Beschreibung) |
+| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | **behoben** (31.08. abends, `765c39b` — die frühere Angabe „offen" war überholt) |
 | PR-6 | `_T(EUDORA_BAU_KENNUNG)` bricht im Unicode-Bau | **behoben** |
 | PR-7 | Zahlen in S-7 widersprechen sich | **behoben** |
 | PR-8 | `rekursion-suchen.pl` findet den eigenen Anlass nicht | **geloescht** |
@@ -4037,12 +4115,31 @@ den Zyklus aus S-2 hat `stapel-untersuchen.ps1` gefunden, nicht dieses
 Werkzeug. Eine Zusicherung, die nicht traegt, ist schaedlicher als gar keine.
 Dieselbe Ueberlegung gilt fuer die Schranke oben; deshalb die Testsammlung.
 
-### PR-5 bleibt offen
+### PR-5 — behoben am 31.08.2026 abends (Commit `765c39b`)
 
-Der Zeitstempel in der Kennung ist der Zeitpunkt, zu dem sich Commit oder
-Sauberkeit zuletzt geaendert haben, nicht der Bauzeitpunkt. Das **Verhalten**
-ist richtig gewaehlt (sonst uebersetzt jeder Bau alles neu); nur die
-Beschreibung stimmt nicht. Ein Wort im Kommentar — nicht angefasst, weil die
+> **Berichtigung vom 05.09.2026.** Diese Überschrift lautete bis dahin
+> *„PR-5 bleibt offen"*, und an drei Stellen im Repo stand PR-5 auf „offen",
+> obwohl es bereits behoben war. Der alte Wortlaut ist berichtigt, der Befund
+> selbst bleibt stehen.
+
+Der Zeitstempel in der Bau-Kennung ist **nicht** der Bauzeitpunkt, sondern der
+Zeitpunkt, zu dem sich Commit oder Sauberkeit zuletzt geändert haben: die Datei
+`BuildKennung.h` wird nur neu geschrieben, wenn sich etwas **außer** dem
+Zeitstempel geändert hat — sonst übersetzt jeder Bau alles neu. Baut man zehnmal
+ohne zu committen, zeigen alle zehn Bauten dieselbe Uhrzeit.
+
+**Das Verhalten ist richtig gewählt; nur die Beschreibung war falsch.** Sie
+sagte „dem Zeitpunkt des Baus".
+
+Berichtigt an drei Stellen in `tools/kennung-erzeugen.pl` — im Kopfkommentar, in
+der erzeugten `BuildKennung.h` und an der Codestelle, an der der Unterschied
+entsteht. Nachzulesen:
+
+```sh
+grep -n 'Zeitpunkt' tools/kennung-erzeugen.pl
+```
+
+**Damit ist PR-1 bis PR-8 vollständig abgearbeitet.**
 Frist naeher war als der Nutzen.
 
 ### Nebenbefund: `sed` verschweigt CR
@@ -5046,7 +5143,7 @@ POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
 Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
 (`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
 
-## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026, OFFEN)
+## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026 — BEHOBEN am 05.09.2026, ungeprüft)
 
 Beim **Schließen** von Eudora:
 
@@ -5106,6 +5203,60 @@ Postfächer zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
 Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
 Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
 der Grund, ihn nicht auf sich beruhen zu lassen.
+
+### Behoben am 05.09.2026 (Commit `1188e87`) — und der Verdacht oben war falsch
+
+Gregors Debug-Bau 7.2.0.4 hat die Ursache gezeigt. Sie liegt **nicht** in
+`SECDockBar::MoveControlBarToPosition`, wie oben unter „Wahrscheinlichste
+Ursache (UNGEPRÜFT)" vermutet. Der Abschnitt bleibt als Beleg stehen, ist aber
+**widerlegt**.
+
+Der Beleg ist eine Zusicherung, die schon **beim Start** kam:
+
+```
+Expression : (pMDIFrame)->IsKindOf((QCControlBarWorksheet::GetThisC...
+Location   : CWazooBarMgr::SetDefaultWazooBarState, Line 409
+```
+
+### Die Kette
+
+`WazooBarMgr.cpp` schickt an zwei Stellen `ID_SEC_MDIFLOAT`, um eine angedockte
+Leiste in ein MDI-Kindfenster zu verwandeln. In dieser Fassung läuft das ins
+Leere: `SECMDIFrameWnd::FloatControlBarInMDIChild` ist bewusst ohne Wirkung
+(`OTShim.cpp:348`), weil MFC kein Gegenstück dafür hat.
+
+Die Leiste bleibt also angedockt, und `GetParentFrame()` liefert weiterhin das
+**Hauptfenster**. Beide Blöcke danach casten es per C-Cast — der prüft nichts —
+auf `CMDIChildWnd` beziehungsweise `QCControlBarWorksheet` und arbeiten damit.
+Die letzte dieser Zeilen ist ein **Schreibzugriff** auf einen Versatz in einem
+Objekt falschen Typs:
+
+```cpp
+pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+```
+
+Im Debug meldete sich `ASSERT_KINDOF`; im Release ist `ASSERT` leer
+(`Eudora.vcxproj:132` `NDEBUG` → `stdafx.h:54` → `qcassert.h` →
+`SuperAssert.h:135`). Der Zugriff blieb und beschädigte **beim Start** fremden
+Speicher. Sichtbar wurde es erst beim Beenden, wenn MFC die Leisten abräumt —
+daher die irreführende Spur zu `afxcoll.inl:213`.
+
+### Behebung
+
+Beide Blöcke bekommen die Abfrage, die Eudora an vier anderen Stellen längst
+benutzt (`WazooBarMgr.cpp:790`/`:821`, `WazooBar.cpp:652`/`:690`):
+
+```cpp
+if (pWazooBar->IsMDIChild())
+```
+
+`IsMDIChild()` liefert in dieser Stufe immer `FALSE` (`OTShim.cpp:1565`, mit
+Begründung im Kommentar). Die beiden Blöcke werden damit übersprungen — genau
+richtig, denn sie setzen etwas voraus, das nicht stattgefunden hat. Die Stellen
+stehen jetzt in `WazooBarMgr.cpp:273` und `:421`.
+
+> **Status: behoben, ungeprüft.** Dass die Meldung beim Beenden ausbleibt, hat
+> am laufenden Programm noch niemand bestätigt.
 
 ## Z-2 — Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
 
@@ -5369,7 +5520,7 @@ mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
 | 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, aber ungeprüft |
 | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** (Debug-Bau) — im Release blockiert der Assistent |
 
-## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026, OFFEN)
+## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026 — BEHOBEN am 05.09.2026, ungeprüft)
 
 Gregor auf dem Win11-Rechner: *„und ich sehe hier keine versionsnummer in der
 titelzeile"*. Der Titel zeigt nur `Eudora`.
@@ -5424,6 +5575,30 @@ Stelle, für die sie da ist.
 > Merkmal am laufenden Programm, das die beiden auseinanderhält, weil sie den
 > Commit enthält. Und sie fehlt ausgerechnet im Zustand des Absturzes. Die
 > Behebung ist ein einziger Aufruf.
+
+### Behoben am 05.09.2026 — Weg 1, ein Aufruf (Commit `bcc59bb`)
+
+Gregor zur Fassung 7.2.0.4: *„versionsnummer fehlt in der titelzeile - warum?
+korrigeiren!"* — derselbe Zustand, nur eine Fassung weiter.
+
+Umgesetzt ist **Weg 1** aus dem Abschnitt oben: am Ende von
+`CMainFrame::FinishInitAndShowWindow` (`mainfrm.cpp:1135`), also nachdem das
+Fenster steht, läuft einmal
+
+```cpp
+OnUpdateFrameTitle(TRUE);
+```
+
+Die Funktion hängt die Kennung nicht doppelt an, sie prüft das selbst
+(`mainfrm.cpp:9728`). Weg 2 (`m_strTitle` gleich belegen) ist **nicht**
+umgesetzt und bleibt ungeprüft.
+
+Release gebaut: 0 Fehler, 62 Warnungen, `Eudora.exe` mit 7.2.0.4.
+
+> **Status: behoben, ungeprüft.** Dass die Kennung jetzt tatsächlich im Titel
+> steht, hat am laufenden Programm noch **niemand** bestätigt — es liegt keine
+> Rückmeldung von Gregor dazu vor. Nachsehen kostet einen Blick auf die
+> Titelzeile beim nächsten Start.
 
 ## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
 
@@ -6292,3 +6467,516 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
    „das ist die Fassung, die abstürzte" acht Zeichen lang.
 3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
+
+## E-12 — der Mailverzeichnis-Parameter wurde als Ini-Dateiname gedeutet
+
+**Gemeldet** 05.09.2026, Fassung 7.2.0.4, Agent KONTO. **Status: behoben,
+ungeprüft** (gebaut, aber am laufenden Programm noch nicht nachgesehen).
+
+Gregors Meldung: *„account daten eingegeben, wurden aber weder gespeichert, noch
+übernommen. kann mails nicht abrufen."* Gestartet hatte er mit
+
+```
+C:\Users\Gregor\Eudora72-1.0.4-release>Eudora.exe Mailverzeichnis
+```
+
+Ein **einziger** Fehler erklärt alle drei Beobachtungen.
+
+### Der Ablauf, Schritt für Schritt
+
+In `Eudora71/Eudora/fileutil.cpp`, Funktion `GetDirs`, stand:
+
+```c
+// If the directory doesn't have any path, then assume it's an INI
+if (!Ini && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
+{
+    Ini = CmdLine;
+}
+else
+{
+    status = CheckMailDirectory(CmdLine, CRString(IDS_FILE_COMMAND_LINE));
+    done = 1;
+}
+```
+
+Für `CmdLine = "Mailverzeichnis"` gilt: kein Backslash darin, und `CmdLine[1]`
+ist `a`, nicht `:`. Die Bedingung greift also, und Eudora hält den
+Verzeichnisnamen für einen **Ini-Dateinamen**. `done` bleibt `0`.
+
+Wenige Zeilen später:
+
+```c
+if (!done && EudoraDir.IsEmpty())
+{
+    EudoraDir = ExecutableDir;      // Datenwurzel = PROGRAMMverzeichnis
+    status = TRUE;
+}
+```
+
+Dann `SetupINIFilename("Mailverzeichnis")` in `rs.cpp`: der Name enthält keinen
+Backslash, also
+
+```c
+INIPath = EudoraDir;
+INIPath += Filename;
+```
+
+Ergebnis:
+
+```
+INIPath = C:\Users\Gregor\Eudora72-1.0.4-release\Mailverzeichnis
+```
+
+**Das ist ein Verzeichnis, keine Datei.** Eudora benutzte ein Verzeichnis als
+seine Ini-Datei. `GetPrivateProfileString` liefert dann für jeden Schlüssel den
+mitgegebenen Vorgabewert — bei den Kontofeldern die leere Zeichenkette —, und
+`WritePrivateProfileString` scheitert stillschweigend. Es gibt keine
+Fehlermeldung, an keiner Stelle.
+
+Damit fällt alles zusammen:
+
+| Beobachtung | Ursache |
+|---|---|
+| Dialog „Account Settings for `<Dominant>`" zeigt leere Felder | jeder Lesezugriff liefert die Vorgabe |
+| Eingaben werden nicht gespeichert | jeder Schreibzugriff verpufft |
+| Mail kann nicht abgerufen werden | `POPSession` liest Server und Konto über denselben Weg |
+
+### Der Messbeleg
+
+In Gregors Testverzeichnis lagen **zwei** Suchindex-Wurzeln:
+
+```
+Eudora72-1.0.4-release\Search\db.ini                   19:24   (Start von Hand, relativ)
+Eudora72-1.0.4-release\Mailverzeichnis\Search\db.ini   19:29   (Start über die .cmd, absolut)
+```
+
+Der Start von Hand um 19:24 benutzte also tatsächlich das **Programm**verzeichnis
+als Datenwurzel. Das ist der Fingerabdruck genau dieses Fehlers.
+
+`tools/Eudora starten.cmd` übergibt `%~dp0Mailverzeichnis`, also einen absoluten
+Pfad mit Backslashes — deshalb ist der Fehler beim Start über die .cmd nie
+aufgefallen, und deshalb lief Gregors zweiter Versuch (19:28) sauber durch, bis
+hin zu „You have new mail!" und einer `In.mbx` von 576 823 Bytes.
+
+### Zweiter, verdeckter Teil: laufwerksrelative Pfade
+
+`CheckMailDirectory` qualifiziert einen Pfad ohne Laufwerksbuchstaben so:
+
+```c
+szShortEDir[0] = (char)(drive + 'A' - 1);
+szShortEDir[1] = ':';
+szShortEDir[2] = '\0';
+strcat(szShortEDir, dir);            // -> "C:Mailverzeichnis"
+```
+
+`C:Mailverzeichnis` ist **nicht** absolut, sondern *laufwerksrelativ*: Windows
+löst es gegen das aktuelle Verzeichnis von Laufwerk C auf. `GetLongPathName`
+macht daraus nichts Absolutes — nachgemessen:
+
+```
+in='C:Mailverzeichnis'  ret=17  out='C:Mailverzeichnis'
+in='Mailverzeichnis'    ret=15  out='Mailverzeichnis'
+```
+
+Dieselbe Fehleinschätzung steckt in `SetupINIFilename`: die Prüfung
+`INIPath[1] != ':'` hält `C:Mailverzeichnis\Eudora.ini` bereits für „fully
+qualified". Sobald irgendetwas `SetCurrentDirectory()` aufruft — ein
+gewöhnlicher Datei-Öffnen-Dialog genügt —, zeigt so ein Pfad woandershin, und
+Einstellungen werden ab da aus einer anderen Datei gelesen und in eine andere
+geschrieben. Lautlos.
+
+### Der Nachweis am lebenden Objekt
+
+`GetPrivateProfileStringA("Settings", "RealName", "<VORGABE>", ...)` gegen beide
+Pfade, gemessen an Gregors echter Datei:
+
+```
+INIPath = ...\Mailverzeichnis             ->  RealName = '<VORGABE>'   (die Vorgabe!)
+INIPath = ...\Mailverzeichnis\Eudora.ini  ->  RealName = 'hans wurst'
+```
+
+Der erste Pfad ist genau der, den Eudora aus `Eudora.exe Mailverzeichnis`
+errechnete. Windows liefert wortlos die Vorgabe — in Eudoras Fall die leere
+Zeichenkette. Gemessen, nicht vermutet.
+
+### Was geändert wurde
+
+`Eudora71/Eudora/fileutil.cpp`
+
+1. **`GetDirs`, Kommandozeilenzweig:** vor der Heuristik wird jetzt das
+   Dateisystem gefragt. Ein existierendes Verzeichnis ist ein Verzeichnis:
+   ```c
+   DWORD dwCmdLineAttr = ::GetFileAttributes(CmdLine);
+   BOOL bCmdLineIsDir = (dwCmdLineAttr != INVALID_FILE_ATTRIBUTES) &&
+                        ((dwCmdLineAttr & FILE_ATTRIBUTE_DIRECTORY) != 0);
+
+   if (!Ini && !bCmdLineIsDir && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
+   ```
+   Der Fall „Argument ist wirklich eine Ini-Datei" bleibt damit erhalten — er
+   greift weiterhin, wenn der Name kein Verzeichnis benennt.
+2. **`GetDirs`, Umgebungsvariablenzweig:** dieselbe Prüfung, gleicher Fehler.
+3. **`CheckMailDirectory`:** der Pfad wird einmal mit `GetFullPathName` in einen
+   echten absoluten Pfad aufgelöst, bevor er in `EudoraDir` landet.
+4. **`CheckMailDirectory`:** `GetLongPathName` ließ `Edir` bei Misserfolg
+   *uninitialisiert* — anschließend lief `strlen(Edir)` über Zufallsbytes. `Edir`
+   wird jetzt vorher belegt.
+5. **`fileutil.cpp:482`** (Fundstelle aus **R-1**):
+   `EudoraDir.ReleaseBuffer(Slash + 1)` ohne vorheriges `GetBuffer` ersetzt durch
+   `EudoraDir = EudoraDir.Left(Slash + 1)`. Unter MFC 14 ist `ReleaseBuffer(n)`
+   ein `SetLength(n)` ohne `Fork`: bei geteiltem Puffer kürzt es still eine
+   fremde Zeichenkette mit. Die Stelle liegt mitten im Ini-Pfad.
+
+`Eudora71/Eudora/rs.cpp`
+
+6. **`SetupINIFilename`:** nach der bestehenden „fully qualify"-Prüfung wird
+   `INIPath` zusätzlich mit `GetFullPathName` aufgelöst.
+
+Alle Änderungen byte-erhaltend eingespielt (perl `:raw`); CR-Zahl in beiden
+Dateien unverändert 18.
+
+### Bauzustand
+
+Release **und** Debug, `x86`, jeweils 0 Fehler.
+
+### Was Gregor zum Nachprüfen tun muss
+
+```
+cd C:\Users\Gregor\Eudora72-1.0.4-release
+Eudora.exe Mailverzeichnis
+```
+
+— also **genau so wie beim Fehlversuch, mit dem relativen Pfad**. Erwartung:
+Die Kontodaten stehen im Dialog, und der Mailabruf läuft. Gegenprobe ohne
+Programmstart: `Mailverzeichnis\Eudora.ini` muss nach dem Beenden neuer sein als
+vorher, und im Programmverzeichnis darf **kein** `Search\db.ini` neu entstehen.
+
+### Offener Rest
+
+Die 24 übrigen `ReleaseBuffer`-Stellen aus **R-1** bleiben. Zwei davon,
+`POPSession.cpp:1747` und `SMTPSession.cpp:683`, stehen im POP- bzw.
+SMTP-Anmeldeweg, sind aber nur erreichbar, wenn der Server buchstäblich
+`hesiod` heißt — latent, hier nicht ursächlich.
+## Z-2 (Fortschreibung, 05.09.2026, ZEICHEN) — der Rest von E-2: ein einziger Umlaut kaputt, alle anderen richtig
+
+Gregor am 05.09.2026, Fassung 7.2.0.4, im Vorschaufenster einer abgerufenen
+Nachricht — beides in **derselben Anzeige**:
+
+    "BestTV (U-TV) Android Player fÃ¼r LiveTV"      falsch
+    "Fritzbox als Werbe-Filter: So läuft Blocken"   richtig
+
+Das `ä` stimmt, das `ü` nicht. `fÃ¼r` ist die Signatur „UTF-8-Bytes als CP1252
+gelesen" (U+00FC = `C3 BC`).
+
+**Die Behebung von Z-2 ist nicht die Ursache und wird nicht zurückgenommen.**
+Die Ansage `charset=windows-1252` ist richtig. Die Ursache liegt beim **Abruf**,
+nicht bei der Anzeige, und sie ist eine andere als die von Z-2.
+
+### Der Widerspruch aufgelöst: es liegt an der Stelle im Bytestrom
+
+Die drei im Auftrag genannten Erklärungen — zwei Nachrichten, zwei MIME-Teile,
+zwei Kodierungen — sind alle **falsch**. Es ist eine Nachricht, ein Teil, ein
+Zeichensatz. Der Unterschied ist die **Position** der beiden Bytes im Strom.
+
+**Beleg 1 — die Zwischendatei.** `%TEMP%\eudA.htm`, 12 602 Bytes, 05.09.2026
+19:32, geschrieben von `CTridentView::WriteTempFile`. Sie enthält 33 Bytes über
+0x7F. **32 davon sind Windows-1252** (`E4` ä, `F6` ö, `FC` ü, `DF` ß, `D6` Ö,
+`96` Halbgeviertstrich, `B7` Mittelpunkt) — und **genau eines** ist eine
+UTF-8-Folge: `C3 BC` an Offset 4240, in „BestTV (U-TV) Android Player für
+LiveTV". Davor stehen als erste Bytes der Datei:
+
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+
+Diese Ansage ist für 32 von 33 Zeichen richtig. Nimmt man sie weg, sind
+schlagartig alle 32 falsch (das war der Ausgangsbefund mit den U+FFFD).
+
+**Beleg 2 — die rohen Bytes stehen schon im Postfach.**
+`Eudora72-1.0.4-release/Mailverzeichnis/In.mbx`, Offset 568472:
+`... Android Player f<C3><BC>r LiveTV ...`. Das Postfach wird beim **Abruf**
+geschrieben. Der Fehler ist also vor der Anzeige entstanden; `TridentView.cpp`
+und `msgutils.cpp` sind unbeteiligt.
+
+**Beleg 3 — der Schlüssel: dieselbe Zeichenkette, einmal richtig, einmal
+falsch, in derselben Nachricht.** In der Nachricht „10 Jahre waipu.tv" desselben
+Postfachs steht dasselbe Wort *auswählen* dreimal als `ausw<E4>hlen` (richtig)
+und einmal als `ausw<C3><A4>hlen` (roh). Und *für 8,74 €* steht einmal als
+`f<FC>r 8,74 <E2><82><AC>` und einmal als `f<C3><BC>r 8,74 <80>` — beide
+Zeichen jeweils andersherum. Ein Absender kann dieselbe Zeichenkette nicht
+zweimal verschieden kodieren, und ein MIME-Teil hat nur einen Zeichensatz. Der
+Unterschied **kann** nur an der Stelle im Strom liegen.
+
+### Die Ursache im Quelltext
+
+`TextReader::ReadIt` (`Eudora/TextReader.cpp`) liest den Rumpf **stückweise**:
+
+    for (size = ms->m_LineReader->ReadLine(buf, bSize); size > 0; ...)
+        ...
+        size = ISOTranslate(buf, size, iCharsetIdx);
+
+Der Puffer kommt aus `pop.cpp:663` (`char szBuffer[2048]`); wie groß ein Stück
+wirklich wird, hängt zusätzlich an der Zeilenlänge und an der
+Übertragungskodierung. Ein UTF-8-Zeichen ist **2 bis 4 Byte lang und kann auf
+der Stückgrenze auseinandergerissen werden.**
+
+Dann ist keine der beiden Hälften gültiges UTF-8:
+
+* `MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ...)` scheitert
+  (`utils.cpp`, in `ISOTranslate`) — absichtlich, siehe Z-2;
+* der Rückfall auf `pcXlateTable` findet ebenfalls nichts, denn die Tabelle
+  kennt nur **vollständige** Folgen;
+* beide Bytes bleiben stehen, jedes in seinem Stück.
+
+Ergebnis: **genau ein Umlaut ist kaputt, alle anderen stimmen** — Gregors Bild,
+Byte für Byte. `ISOTranslate` kann das nicht selbst beheben: es sieht immer nur
+ein Stück und kann nicht wissen, dass das nächste die Fortsetzung bringt.
+
+Das Verhalten von `ISOTranslate` war seit dem 31.08. sogar geprüft
+(`Tests/TestIsoTranslate.cpp`, „bei abgeschnittenem Zeichen fällt die Tabelle
+ein"). Übersehen wurde, dass der **Aufrufer** daraus einen Anzeigefehler macht.
+
+### Behebung
+
+Abgewogen wurden die beiden Wege aus dem Auftrag:
+
+* **(b) den Zeichensatz der Nachricht durchreichen und `utf-8` ansagen** —
+  verworfen. In der Zwischendatei stehen 32 CP1252-Bytes und 2 UTF-8-Bytes.
+  Keine einzige Ansage kann für beides richtig sein; `utf-8` würde 32 Zeichen
+  kaputtmachen, um 1 zu retten. Außerdem müsste der Zeichensatz durch
+  `GetMessageForDisplay` und den Postfach-Aufbau hindurchgereicht werden, wo er
+  gar nicht mehr existiert: nach dem Abruf gibt es nur noch CP1252.
+* **(a) den Rumpf zuverlässig nach CP1252 übersetzen und CP1252 ansagen** —
+  gewählt. Es ist die Zusage, die `ISOTranslate` ohnehin gibt; sie wurde nur an
+  der Stückgrenze gebrochen.
+
+Geändert, drei Dateien:
+
+1. **`Eudora/utils.cpp`** — zwei neue Funktionen vor `ISOTranslate`:
+   * `BOOL ISOIsUTF8Charset(UINT iCharsetIdx)` — die Rechnung für den
+     UTF-8-Index steht damit an einer Stelle statt an zweien;
+   * `LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)` — zählt die
+     Bytes am Pufferende, die ein **angefangenes** UTF-8-Zeichen sind (0 bis 3).
+     Ein vollständiges Zeichen am Ende ergibt 0, ein CP1252-Einzelbyte ergibt 0,
+     ein Folgebyte ohne Kopf ergibt 0.
+   `ISOTranslate` selbst ist **unverändert**; alle bestehenden Tests gelten
+   weiter.
+2. **`Eudora/utils.h`** — die beiden Deklarationen.
+3. **`Eudora/TextReader.cpp`** — der Übertrag. Vor der Schleife wird `bSize` um
+   drei weitere Bytes verkleinert (Platz, um die zurückgehaltenen Bytes vor das
+   nächste Stück zu setzen). In der Schleife, vor `ISOTranslate`: das
+   Zurückgehaltene vorn wieder anfügen, dann den angefangenen Rest des neuen
+   Stücks zurückhalten. `ISOTranslate` bekommt so nur noch ganze Zeichen zu
+   sehen. Nur bei UTF-8 — ein Einzelbyte-Zeichensatz hält nie etwas zurück.
+
+Endet ein MIME-Teil mitten in einem Zeichen, werden die ein bis drei
+zurückgehaltenen Bytes verworfen statt geschrieben: für sich sind sie kein
+Zeichen, und sie zu schreiben ergäbe genau den Bytesalat, um den es geht.
+
+### Prüfung
+
+`Eudora71/Tests`: **109 Tests, 109 bestanden**, darunter vier neue:
+
+* `ISOIncompleteUTF8Tail: angefangenes Zeichen wird gezaehlt`
+* `ISOIncompleteUTF8Tail: vollstaendiges Zeichen wird nicht zurueckgehalten`
+* `ISOIncompleteUTF8Tail: getrenntes Zeichen wird ueber die Stueckgrenze heil`
+* `ISOIsUTF8Charset: erkennt genau den UTF-8-Index`
+
+Der dritte ist der gemeldete Fall: `f C3` | `BC r` ergibt jetzt `f FC r` statt
+`f C3 BC r`.
+
+Neues Werkzeug **`tools/postfach-zeichen-pruefen.pl`** (liest nur): sucht in
+einer `.mbx` nach vollständigen UTF-8-Folgen und nennt Nachricht, Stelle und
+Umfeld. Im Postfach vom 05.09. findet es 249 Stellen in 8 Nachrichten, darunter
+die eine aus Gregors Beobachtung. Nach dem Abruf darf im Postfach **keine**
+vollständige UTF-8-Folge mehr stehen — das ist die Schranke für diese
+Fehlerklasse.
+
+### Was Gregor zum Nachprüfen tun muss
+
+1. Neue Fassung bauen und einsetzen.
+2. **Neu abrufen.** Schon abgerufene Nachrichten bleiben kaputt — die rohen
+   Bytes stehen im Postfach, nicht in der Anzeige. Das Vorher/Nachher ist nur an
+   frisch abgeholter Post zu sehen.
+3. `perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` — sollte
+   „Nichts gefunden" melden, jedenfalls für die Nachrichten, die mit der neuen
+   Fassung geholt wurden.
+
+### Beide Bauten
+
+`MSBuild Eudora71/Eudora.sln -t:Build -p:Configuration=<Release|Debug> -p:Platform=x86 -m`,
+frischer Worktree, also von Grund auf:
+
+* **Release x86: grün**, Exitcode 0, **0 Fehler** im Protokoll,
+  `Eudora71/Bin/Release/Eudora.exe` neu geschrieben.
+* **Debug x86: grün** im zweiten Lauf, Exitcode 0, **0 Fehler**,
+  `Eudora71/Bin/Debug/Eudora.exe` neu geschrieben.
+
+**Nebenbefund: der erste Debug-Lauf brach ab** — zweimal
+`LNK1104: Datei "QCUtils.lib" kann nicht geöffnet werden`, in `OEImport` und
+`NSImport`. `QCUtils.lib` entstand ausweislich der Zeitstempel **erst danach**.
+In der Projektmappe fehlt also die Abhängigkeit der beiden Importer auf
+`QCUtils`; unter `-m` verlieren sie das Rennen. Mit der Fassung dieses Befundes
+hat das nichts zu tun (die Importer binden `utils.cpp` gar nicht ein), und der
+Release-Lauf traf es nur zufällig nicht. Der zweite Lauf fand die Bibliothek
+vor und lief durch. **Zu beheben wäre:** die Projektabhängigkeit in
+`Eudora.sln` nachtragen, sonst ist jeder Bau von Grund auf ein Glücksspiel.
+
+### Offen geblieben (belegt, nicht behoben)
+
+* **Absender mit gemischter Kodierung.** In „10 Jahre waipu.tv" stehen an
+  manchen Stellen rohe CP1252-Bytes (`80` für €) **mitten in einem
+  UTF-8-Teil**. Der ganze Puffer fällt dann auf die Tabelle zurück, und was die
+  Tabelle nicht kennt — etwa `E2 80 AF` (U+202F, schmales geschütztes
+  Leerzeichen) — bleibt roh. Das ist eine eigene Klasse und braucht eine
+  eigene Entscheidung: die Tabelle erweitern, oder `MB_ERR_INVALID_CHARS`
+  gegen ein zeichenweises Verfahren tauschen, das nur die kaputten Bytes
+  stehenlässt und den Rest umsetzt.
+* **Der IMAP-Pfad.** `EuImap/src/ImapDownload.cpp:4662` ruft `ISOTranslate`
+  ebenfalls stückweise auf, hat also denselben Bruch — und zusätzlich einen um
+  eins verschobenen Zeichensatzindex: er kommt aus
+  `FindRStringIndexI(IDS_MIME_US_ASCII, ...)`, `ISOTranslate` erwartet aber die
+  Zählung von `FindMIMECharset` (der Test „POP: der Index wird um eins
+  verschoben — anders als im IMAP-Pfad" hält das bereits fest). Nicht angefasst,
+  weil Gregor über POP abruft und eine Änderung dort ungeprüft bliebe.
+* **Der Kopfzeilenpfad** (`lex822.cpp:544`) ist **nicht** betroffen: dort liegt
+  der dekodierte Text am Stück vor, es gibt keine Grenze zum Zerreißen.
+
+## B-3 — `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe (05.09.2026)
+
+Bis zum 05.09.2026 scheiterte **jeder Bau aus einem frischen Klon** am Projekt
+`OT501`. Es kapselt die **Stingray Objective Toolkit**, ein kommerzielles
+Fremdprodukt von 1995; die Quelltextfreigabe des CHM durfte es nicht enthalten.
+Im Repo liegen nur 39 `.cpp` (fast alle die mitgelieferte JPEG-Bibliothek) und
+die Kopfdateien. `OT501` kann deshalb **nie** bauen.
+
+Der Ausweg war bisher `/p:BuildProjectReferences=false` — ein Kniff, der in
+`README.md` stand und den jeder Neue kennen musste.
+
+### Belegt, dass niemand `OT501` braucht
+
+| Beleg | Fundstelle |
+|---|---|
+| Kein Projekt bindet `OTA50R.lib` oder `OTA50D.lib`. Die einzige Erwähnung schließt sie ausdrücklich **aus** | `Eudora.vcxproj`, `IgnoreSpecificDefaultLibraries` |
+| Die beiden Projektverweise trugen bereits `<LinkLibraryDependencies>false</LinkLibraryDependencies>` | `Eudora.vcxproj`, `EudoraRes.vcxproj` |
+| Keine Quelldatei bindet eine Stingray-Kopfdatei ein, die eine Bibliothek verlangt | — |
+| Ersetzt ist das Ganze durch die eigene Schicht `Eudora71/OTShim`, rund 18.000 Zeilen | Befund S-2 und `Eudora71/OTShim/INVENTAR.md` |
+
+### Was geändert wurde (Commit `d8cc9d3`)
+
+* die Projektverweise auf `OT501` aus `Eudora71/Eudora/Eudora.vcxproj` und
+  `Eudora71/Eudora/EudoraRes.vcxproj` entfernt,
+* die beiden `.Build.0`-Zeilen für `OT501` aus `Eudora71/Eudora.sln` entfernt.
+
+Das Projekt bleibt in der Projektmappe **sichtbar**, wird aber nicht mehr
+gebaut. `..\OT501\Include` bleibt im Suchpfad: die Kopfdateien werden gebraucht,
+nur die Bibliothek nicht.
+
+**Damit entfallen die drei Fehler**, die ein voller Solution-Bau bis dahin
+meldete (zweimal `NMAKE U1073`, einmal `MSB3073`, gemessen am 31.08.2026 in
+Befund B-2). `README.md` ist am 05.09.2026 entsprechend berichtigt — sowohl die
+Kurzfassung unter „Bauen" als auch der Abschnitt „Was den Bau kaputtmacht",
+Punkt 4.
+
+> **Berichtigung im selben Zug** (Commit `f468a02`): Es stand zwischenzeitlich
+> die Behauptung im Raum, ein `-t:Rebuild` habe eine vorgebaute `OTA50R.lib`
+> gelöscht. Das war falsch. `OTA50R.lib` hat **nie existiert** — weder im Repo
+> noch in einem Release-ZIP noch in einem Commit. Nachgemessen: die vier Dateien
+> in `Src/OTA50R/` tragen unverändert den **31.08.2026, 07:22**; ein Clean hätte
+> sie gelöscht. Es waren zwei Objektdateien und eine PCH aus einem Bauversuch,
+> der an derselben fehlenden Quelle starb. Zerstört wurde nichts; sichtbar wurde
+> ein Mangel, der die ganze Zeit da war.
+
+**Wer `OT501` wieder in den Bau nimmt, bricht den Bau.**
+
+## E-13 — Beim Mailabruf ist kein Fortschritt sichtbar: der Abruf dauert 0,02 Sekunden (05.09.2026)
+
+> **Diese Kennung hieß bis zum 05.09.2026 versehentlich `E-12`.** Zwei Agenten
+> haben unabhängig voneinander „die nächste freie E-Nummer" gewählt. `E-12` ist
+> an den Befund über das Mailverzeichnis-Argument vergeben (Commit `79c09d4`,
+> zuerst zusammengeführt und im Verzeichnis geführt); dieser Befund hier bekommt
+> `E-13`. Wer unter `E-12` den Fortschrittsbefund sucht, ist hier richtig.
+
+> **Stand des Codes:** Die Behebung liegt im Commit `bd3959c` auf dem Zweig
+> **`wt/fortschritt-arbeit`** und ist in `bau-und-pruefung` **noch nicht
+> enthalten**. Der vollständige Befundtext steht dort in `BEFUNDE.md`. Wer die
+> beiden Zweige zusammenführt, **entfernt dort die Überschrift `## E-12 — Der
+> Fortschritt beim Mailabruf …` zugunsten dieses Abschnitts** — sonst steht
+> `E-12` wieder zweimal in der Datei.
+
+**Gregor am 05.09.2026 zur Fassung 7.2.0.4:**
+
+> „mails lassen sich abrufen … status während des abrufes nicht sichtbar. es
+> sieht so aus, als würde nichts passieren."
+
+Am 31.08.2026 hatte er zum Debug-Bau mit 159 Nachrichten noch ausdrücklich
+*„sichtbar im progress bar im status"* gemeldet (E-1, E-3). Es sah deshalb nach
+einem Rückschritt aus. **Es ist keiner.**
+
+### Die naheliegende Erklärung war falsch — das ist die Lehre
+
+Alle Verdächtigen, die man ohne Messung genannt hätte, sind widerlegt:
+
+| Verdacht | Gegenbeleg |
+|---|---|
+| Rückschritt seit dem 31.08. | `git diff 1ea176f HEAD -- Eudora71/` berührt **keine** der beteiligten Dateien |
+| Der Umbau der Andockleisten (`OTShim.cpp`, Commit `1a4a6d5`) hat die Leiste zerstört | `git merge-base --is-ancestor 1a4a6d5 1ea176f` sagt **ja** — der Umbau war schon in dem Bau vom 31.08. drin, in dem die Anzeige **funktionierte** |
+| Unterschied Release gegen Debug: ein nötiger Aufruf steckt in einem `ASSERT` | im ganzen Pfad steht kein `ASSERT` mit Nebenwirkung. Die wirksamen Aufrufe stehen in `VERIFY`, und `VERIFY` **wertet im Release aus** |
+| Die Statusleiste läuft über die Ersatzschicht (`SetControlBarWidthsInRow` ist ein leerer Rumpf, E3) | `OTShim.h:135` macht `SECStatusBar` zu einem **`typedef` auf MFCs `CStatusBar`** — die Ersatzschicht ist gar nicht beteiligt |
+
+### Was es ist — aus Gregors eigenem Protokoll
+
+`Mailverzeichnis\eudora.log`, Lauf vom 05.09.2026, `LogLevel 0x649F` (Bit `0x10`
+= `DEBUG_MASK_PROG` gesetzt, die Fortschrittsmeldungen stehen also mit drin):
+
+```
+2.07 Begin fetching messages for : …@mx.freenet.de
+2.09 Done  fetching messages for : …@mx.freenet.de
+```
+
+**Der Abruf dauerte 0,02 Sekunden**, neun Nachrichten; der ganze Postgang
+1,08 Sekunden. Am 31.08. waren es 159 Nachrichten in einem Debug-Bau — dort
+stand die Anzeige sekundenlang. **Der Unterschied liegt zwischen 159 Nachrichten
+und neun, nicht zwischen Debug und Release.**
+
+Beide Anzeigewege halten sich bei kurzen Vorgängen absichtlich zurück:
+
+1. **Das Fortschritts-Fenster** (`progress.cpp:238-241`) wartet erst
+   `ProgressIdle` Sekunden ab. Voreinstellung `ProgressIdle 3`
+   (`EudoraRes.rc:8633`) — ein Postgang von 1,08 s erreicht die Schwelle nie.
+2. **Die Statusleiste** hielt für den Fortschritt nur **16 Bildpunkte** bereit
+   (`statbar.cpp:185`) und verbreiterte das Feld erst beim ersten Prozentwert,
+   um es sofort wieder zu schrumpfen. Gezeichnet wurde nur per
+   `InvalidateRect` — also **angemeldet**, nicht ausgeführt.
+
+### Behebung (auf `wt/fortschritt-arbeit`, `statbar.cpp` / `statbar.h`)
+
+Fortschrittsfläche von Anfang an in voller Breite; 2 Sekunden Nachlauf
+(`TASK_LINGER_MS`); `UpdateWindow()` statt nur `InvalidateRect`; und der
+Fortschritt zusätzlich als Text im Meldungsfeld, aus vorhandenen Ressourcen
+gebaut (ohne neue Zeichenkette).
+
+### Die Lehre
+
+**Wer eine Fortschrittsanzeige prüft, sieht zuerst nach, wie lange der Vorgang
+überhaupt dauert.** Das Protokoll des Anwenders hat hier vier Vermutungen auf
+einmal widerlegt, für die sonst Bauten und Debugger-Läufe nötig gewesen wären.
+
+---
+
+## E-14 — Zusicherung beim Start: der X1-Suchindex wird neu angelegt (05.09.2026, OFFEN)
+
+Im Debug-Bau 7.2.0.4, beim Start, vor der E-4-Zusicherung:
+
+    SUPERASSERT Assertion Failure
+    Expression : !"Erasing X1 indices because DB schema was missing or ..."
+    Location   : SearchManager::Info::InitX1, Line 496 in SearchManager...
+
+**Nicht angefasst.** Der Text sagt selbst, was geschieht: das Schema der
+Suchdatenbank fehlt oder passt nicht, also wird der Index verworfen und neu
+angelegt. Auf einem frischen Mailverzeichnis ist das der normale erste Lauf.
+Festgehalten, damit es nicht als neuer Fehler durchgeht, wenn es jemand
+wiedersieht — und damit jemand prüft, ob die Meldung auch beim **zweiten**
+Start noch kommt. Dann wäre sie ein echter Befund.
+
+> **Hinweis zur Kennung.** Dieser Befund hiess bis zum 05.09.2026
+> versehentlich `E-12`. Drei Agenten hatten unabhaengig „die naechste freie
+> Nummer“ gewaehlt, waehrend die anderen gleichzeitig schrieben. Kennungen
+> vergibt seitdem die Zuteilung, nicht der Agent – siehe [AGENTEN.md](AGENTEN.md).

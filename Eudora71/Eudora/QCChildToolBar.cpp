@@ -114,6 +114,18 @@ void QCChildToolBar::EnableDocking(DWORD dwDockStyle)
 void* QCChildToolBar::GetButton(
 INT iIndex )
 {
+	// BEFUND E-16. Ohne Schranke greift m_btns[ iIndex ] daneben, sobald der
+	// Aufrufer -1 uebergibt - und genau das liefert CommandToIndex, wenn der
+	// gesuchte Knopf nicht auf der Leiste liegt (CompMessageFrame.cpp:669, :683;
+	// ReadMessageFrame.cpp:503, :517; PgDocumentFrame.cpp:267, :277).
+	// m_btns ist ein CPtrArray. Der nicht-konstante operator[] geht auf
+	// CPtrArray::ElementAt - das ist die Zusicherung afxcoll.inl:213 im
+	// Debug-Bau und "Encountered an improper argument" im Release-Bau.
+	// Alle Aufrufer pruefen den Rueckgabewert bereits (VERIFY, danach
+	// "if (pMenu && pMenuButton)" bzw. eine Abfrage auf -1).
+	if ( iIndex < 0 || iIndex >= GetBtnCount() )
+		return NULL;
+
 	return ( void* )( m_btns[ iIndex ] );
 }
 
@@ -188,12 +200,29 @@ void QCChildToolBar::AddTranslatorButtons(int &startPos)
 	
 			// Separator between groups
 		if ((lastModID != 0)&&(modID != lastModID))
+		{
+			if (startPos > GetBtnCount())
+				startPos = GetBtnCount();
 			AddButton( startPos++, 0, TRUE, TRUE );
+		}
+
+		// BEFUND E-16: SECCustomToolBar::AddButton begrenzt die Einfuegestelle
+		// still auf [0, GetBtnCount()] und legt gar keinen Knopf an, wenn die
+		// Erzeugung fehlschlaegt. Die Zeilen darunter rechneten mit dem
+		// UNBEGRENZTEN Wert weiter - ein Griff neben m_btns, also
+		// CPtrArray::ElementAt (afxcoll.inl:213).
+		if (startPos < 0)
+			startPos = 0;
+		if (startPos > GetBtnCount())
+			startPos = GetBtnCount();
 
 		AddButton( startPos, uCommandID, FALSE, TRUE );
 		SetButtonStyle( startPos, TBBS_CHECKBOX );
 
-		m_btns[ startPos++ ]->m_ulData = lType;
+		if (startPos < GetBtnCount())
+			m_btns[ startPos ]->m_ulData = lType;
+
+		startPos++;
 		
 		lastModID = modID;
 	}

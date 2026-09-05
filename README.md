@@ -13,23 +13,50 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-> ## Eudora startet, ist bedienbar und ruft Mail ab.
+> ## Eudora startet, ist bedienbar und ruft Mail ab — verfassen noch nicht.
 >
-> **Gemessen am 31.08.2026** an dem Paket `Eudora72-1.0.3-release.zip`
-> (Produktversion 7.2.0.3, `Release|Win32`, Toolset v143 / MSVC 14.38.33130).
-> Der Gesamtbau der Solution ist in derselben Sitzung nachgemessen (Befund B-2).
+> **Gemessen am 05.09.2026** an **7.2.0.10 / Paket 1.0.10** (`Release|x86`,
+> Toolset v143 / MSVC 14.38.33130). Gregor hat an diesem Abend mehrere Fassungen
+> in der VM gestartet, bedient und Mail damit abgerufen.
+>
+> **Sein Fazit, wörtlich** (Stand 7.2.0.6):
+>
+> > *„release startet. mails können abgerufen werden. beenden geht nicht.
+> > ctrl-n = crash"*
+>
+> Für beide offenen Punkte liegen seither Behebungen vor — **E-16** (sechs
+> ungeprüfte `CPtrArray::ElementAt` in Eudoras eigenem Code) und **E-20**
+> (Feldüberlauf in `ListCtrlEx`). **Beide sind ungeprüft**; ob sie tragen, sagt
+> erst der nächste Lauf.
+>
+> Von Gregor an diesem Abend **selbst bestätigt**:
+>
+> | Beobachtung | Befund |
+> |---|---|
+> | Bau-Kennung im Titel, auch ohne offenes Postfach | **E-7** |
+> | Fortschritt beim Mailabruf sichtbar | **E-13** |
+> | Umlaute in HTML-Mail richtig | **Z-2b** |
+> | Zusicherung `WazooBarMgr.cpp:409` bleibt beim Start aus | **E-4**, zur Hälfte |
+>
 > Wer den Stand prüft, misst neu und nennt seinen eigenen Bezugscommit — an
 > diesem Baum arbeiten mehrere Agenten gleichzeitig.
+>
+> **Zur Versionsnummer:** die letzte Ziffer wandert schnell. Seit dem 05.09.2026
+> gilt **eine Nummer, ein Bau** — jede Fassung, die das Entwicklungsverzeichnis
+> verlässt, zählt vorher hoch. Vorher gab es dreimal denselben Fehler: drei
+> verschiedene ZIPs unter `v1.0.3`, fünf Quelländerungen unter `7.2.0.4`, zwei
+> Binärdateien unter `7.2.0.5`. Nachzuprüfen mit
+> `perl tools/ausliefern.pl --pruefen`.
 >
 > Was „lauffähig" heißt, hat Gregor in [ZIEL.md](ZIEL.md) festgelegt. **Dort
 > steht die maßgebliche Kriterientabelle**; die folgende ist ihre Kurzfassung:
 >
-> | # | Kriterium | Stand am 31.08.2026 |
+> | # | Kriterium | Stand am 05.09.2026 |
 > |---|---|---|
-> | 0 | das Paket läuft ohne Nachinstallieren | **nicht belegt** — das Release-Paket ist gebaut, aber auf keinem Rechner **ohne** Visual Studio nachgewiesen. `tools/paket-pruefen.ps1` taugt nicht als Nachweis, es prüft die Maschine statt das Paket (Befund PR-2) |
-> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** auf einer eingerichteten Installation — Gregor: *„menü funktioniert"* (Befund E-1). Auf einer **frischen** Installation stürzte der Kontoassistent beim Klick auf *Weiter* ab (Befund E-11); behoben in `eudora.cpp:3372`, am Programm noch nicht nachgesehen |
-> | 2 | die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen. Die falschen Zeichen in HTML-Mail (`◆`) sind an der Ursache behoben (Befund Z-2), am Programm noch nicht nachgesehen |
-> | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten von `mx.freenet.de`, Port 110, STARTTLS, TLSv1.3, `TLS_AES_256_GCM_SHA384` (Befunde E-1 und E-3) |
+> | 0 | das Paket läuft ohne Nachinstallieren | **nicht belegt** — auf keinem Rechner **ohne** Visual Studio gestartet. `tools/paket-pruefen.ps1` taugt nicht als Nachweis, es prüft die Maschine statt das Paket (PR-2) |
+> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** — Gregor hat mehrere Fassungen gestartet und bedient. Der Absturz auf frischen Installationen (E-11) ist behoben, dort aber nicht nachgesehen |
+> | 2 | die Darstellung ist korrekt | **fast** — Titel (E-7), Fortschritt (E-13) und Umlaute (Z-2b) sind bestätigt. **Offen: Strg-N stürzt ab** (E-16 behoben, ungeprüft) und das Beenden bricht ab (E-4 zur Hälfte) |
+> | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — Gregor: *„mails können abgerufen werden"*; am 31.08. 159 Nachrichten von `mx.freenet.de`, STARTTLS, TLSv1.3 (E-1, E-3) |
 >
 > **Zwei von vier Kriterien sind belegt, eines fast, eines offen.** Erst wenn
 > alle vier erfüllt sind, darf eine Fassung „lauffähig" heißen. Die Dateinamen
@@ -37,13 +64,7 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > mehr, als die Fassungen können; sie bleiben nur stehen, weil die Pakete unter
 > diesen Namen samt Prüfsumme veröffentlicht sind.
 >
-> **Der nächste Schritt** steht in [AUFGABEN.md](AUFGABEN.md) ganz oben: das
-> Paket auf dem zweiten PC (Windows 11, ohne Visual Studio) auspacken und
-> starten. Dieser eine Lauf beantwortet die Kriterien 0, 1 und 2 zusammen.
-> Achtung auf die Prüfsumme — das ZIP unter
-> [Releases v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3)
-> ist am 31.08. um 09:00 **ausgetauscht** worden. Nur die Fassung mit SHA256
-> `d4719047…` enthält die Behebung von E-11; die erste (`632c4066…`) stürzte ab.
+> **Der nächste Schritt** steht in [AUFGABEN.md](AUFGABEN.md) ganz oben.
 
 Der Weg dorthin an zwei Tagen: `Eudora.exe` band zum ersten Mal, startete nicht,
 und die Gründe dafür sind belegt und behoben — siehe
@@ -76,12 +97,19 @@ ist die Wurzel aller CRLF-Probleme dieses Projekts, Befund S-7.
 ### Bauen
 
 ```bash
-"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:BuildProjectReferences=false /m
+"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -t:Build -p:Configuration=Release -p:Platform=x86 -m
 ```
 
-`/p:BuildProjectReferences=false` ist nötig — sonst scheitert der Bau am Projekt
-`OT501`, dessen Stingray-Quellen nicht freigegeben sind. Die Visual-Studio-IDE
-wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
+Das ist der ganze Vorgang: Projektmappe laden, bauen. **Keine Zusatzschalter.**
+`/p:BuildProjectReferences=false` wird nicht mehr gebraucht — das Projekt `OT501`
+ist seit dem 05.09.2026 aus dem Bau genommen (Projektverweise und
+`.Build.0`-Zeilen entfernt), weil es niemand bindet. Gemessen und belegt in
+[PRUEFUNG-BAU.md](PRUEFUNG-BAU.md).
+
+Die Visual-Studio-IDE wird nicht gebraucht, nur die Installation
+(MSVC v143, MFC/ATL, Windows SDK). Achtung auf die **Plattform**: die
+Projektmappe kennt `x86`, die Projektdateien `Win32`. Wer `-p:Platform=Win32`
+an die `.sln` gibt, bekommt `MSB4126`.
 
 > **In einem frischen Klon oder Worktree zuerst die ganze Solution bauen.**
 > Mit `/p:BuildProjectReferences=false` endet der Einzelprojekt-Bau sonst mit
@@ -98,12 +126,18 @@ wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
 > Der MSBuild-Aufruf muss aus **PowerShell** kommen: die Git-Bash macht aus
 > `/p:Configuration=Debug` einen Pfad.
 
-Ein voller Solution-Bau meldet weiterhin **3 Fehler, alle aus `OT501`**
-(zweimal `NMAKE U1073`, einmal `MSB3073`), nachgemessen am 31.08.2026 mit
-eingehängtem Projekt `VC71Bruecke` (Befund B-2). Das Projekt `OT501` wird nicht
-mehr gebraucht: die Ersatzschicht hat es abgelöst. Zwei zusätzliche
-`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` sind ein Wettlauf im
-Parallelbau (`/m`), kein Fehler — einzeln gebaut laufen beide durch.
+Ein voller Solution-Bau meldet **0 Fehler**, nachgemessen am 05.09.2026 in vier
+frischen Klonen, Release und Debug, auch nach `-t:Clean` und mit `-t:Rebuild`
+([PRUEFUNG-BAU.md](PRUEFUNG-BAU.md)). Die drei früheren `OT501`-Fehler
+(zweimal `NMAKE U1073`, einmal `MSB3073`) entfallen, seit `OT501` aus dem Bau
+genommen ist.
+
+Der `LNK1181: QCUtils.lib` in `NSImport`, `OEImport`, `OLImport` und `plstclnt`
+war **kein bloßer Wettlauf**, sondern eine fehlende Baureihenfolge: die fünf
+Projekte banden `QCUtils.lib`, ohne einen Projektverweis auf `QCUtils` zu
+tragen. Beim ersten Bau traf es mal zu, mal nicht; **nach einem `Clean` traf es
+immer**, weil `Clean` `QCUtils.lib` mit löscht. Behoben am 05.09.2026, die
+Verweise stehen jetzt in den fünf Projektdateien.
 
 ### Starten
 
@@ -337,11 +371,11 @@ gearbeitet, sie veraltet also schnell — im Zweifel neu messen.
 | `Eudora.exe` binden | **erledigt** seit `a807b93` — **0 ungeloeste Externe**, nachgemessen ohne die Attrappe. Verlauf 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — 0, Bezugscommits in `PLAN.md`, Abschnitt „Der Weg zum Linken" |
 | `__imp___iob` aus `libpng.lib` | **behelfsweise geloest** — `OTShim_Libpng.cpp` definiert das Symbol als `(char*)stderr - 2*32`, weil libpng 1.2.7 nur `_iob[2]` anfasst und die damalige CRT 32 Byte je Element hatte. Traegt, ist aber eine Annahme; sauber waere ein Neubau von libpng aus `Eudora71/PNG/libpng` mit v143 |
 | Attrappe `Lib/Debug/OTA50D.LIB` | **entfaellt** — seit `a807b93` nicht mehr noetig (`_SECNOMSG`, `LinkLibraryDependencies` false in `Eudora.vcxproj:1015`). Sie darf nicht wieder angelegt werden, sonst linkt Eudora gegen eine leere Bibliothek |
-| `EudoraRes.dll` | **offen** — das Projekt haengt ueber `EudoraRes.vcxproj:351` an `OT501` und wird gar nicht erst versucht. Fuer `Eudora` ist dieselbe Bindung geloest; hier steht der Handgriff noch aus |
+| `EudoraRes.dll` | **erledigt** — der Projektverweis auf `OT501` ist am 05.09.2026 aus `EudoraRes.vcxproj` entfernt. `EudoraRes.dll` entsteht seither in jedem Bau, Release wie Debug, gemessen in vier frischen Klonen; Versionsressource 7.2.0.3 ([PRUEFUNG-BAU.md](PRUEFUNG-BAU.md)) |
 | Erster Start von `Eudora.exe` | **erledigt** seit Befund S-2 (30.08.2026) — Eudora startet und läuft bis in die Fenstererzeugung, ohne abzustürzen. Am 31.08.2026 ist das Fenster bedienbar und ruft Mail ab, siehe oben und [ZIEL.md](ZIEL.md). Welche Laufzeitdateien danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md); was passiert, wenn sie fehlen, in Befund S-8 (`0xc000007b`) |
 | Unit- und Komponententests | **vorhanden** — `Eudora71/Tests` (`RunTests.cmd`) und `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit laufen lassen. Die Testzahl waechst gerade, weil die Ersatzschicht Tests bekommt |
 | `Eudora.vcxproj` eigene Fehler | 269 — 74 — 25 — 16 — 4 — **0**. `Eudora.exe` kompiliert vollstaendig, seit `78a9c10` samt Ersatzschicht, und bindet seit `a807b93`. `EudoraRes.vcxproj` uebersetzt ebenfalls vollstaendig, wird im Solution-Bau aber nicht versucht |
-| `OpenSSL3/lib` fehlt im Repo | **offen** — `libcrypto.lib` und `libssl.lib` sind von `.gitignore:7` (`Lib/`) erfasst und nicht versioniert (`git ls-files`: null Treffer). Ein frischer Klon endet bei `QCSSL` mit `LNK1104: libssl.lib`. Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
+| `OpenSSL3/lib` fehlt im Repo | **erledigt** — `.gitignore` nimmt `Eudora71/OpenSSL3/lib/` ausdruecklich wieder aus; `git ls-files` findet `libcrypto.lib` und `libssl.lib`. Vier frische Klone haben `QCSSL` ohne Zutun gebunden (05.09.2026). Siehe [BAUEN.md](Eudora71/OpenSSL3/BAUEN.md) |
 | OpenSSL 3.5 statt 0.9.7l (2006) | **erledigt** — QCSSL baut gegen 3.5.8 LTS; TLS 1.3 zweimal **gemessen** (Komponententest lokal, dann im Betrieb), ausgehandelt `TLS_AES_256_GCM_SHA384`; 30 angebotene Cipher Suites, keine mit RC4, 3DES oder EXPORT |
 | QCSSL gegen echten Mailserver prüfen | **nur mit einer älteren Fassung** — am 29.08.2026 gegen `pop.gmx.net:995`: `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status `Succeeded`. Dieser Abruf lief in einer **bestehenden Eudora-7.1-Installation** und mit einer älteren QCSSL, nicht mit dem selbst gebauten `Eudora.exe`. Die ausgelieferte QCSSL 1.0.1 ist nie gegen einen echten Server gelaufen. Kriterium 3 aus [ZIEL.md](ZIEL.md) ist damit **nicht** erfüllt |
 | **Hostnamenpruefung greift nicht** | offen und sicherheitsrelevant — gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und `ErrorCode 0` angenommen. Ein Hinweistext wird durchaus angehaengt ("Destination Host name does not match … But ignoring this error because Certificate is trusted"), er bleibt nur ohne Wirkung. Altbestand von QUALCOMM. Siehe `PORTIERUNG.md` |

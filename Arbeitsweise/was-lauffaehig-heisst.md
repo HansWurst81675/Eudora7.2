@@ -16,20 +16,6 @@ war:
 **Alle drei müssen erfüllt sein.** Vorher heißt eine Fassung, was sie ist — etwa
 „startet" oder „Vorabfassung".
 
-> **Nachtrag vom 31.08.2026: es sind vier.** Gregor hat ein **Kriterium 0**
-> davorgesetzt, nachdem Paket 1.0.2 mit `0xc000007b` scheiterte: *„zip
-> runterladen, entpacken, starten - läuft. keine fehlenden DLLs, keine
-> fehlermeldungen, daß etwas nicht gefunden werden kann oder nachinstalliert
-> werden muß"*. Es steht **vor** den anderen dreien, weil ohne lauffähiges
-> Paket niemand die anderen prüfen kann. Maßgeblich ist die Tabelle in
-> `ZIEL.md`.
->
-> **Achtung, diese Datei ist ein Spiegel** (`tools/lehren-spiegeln.pl` kopiert
-> aus dem Gedächtnisverzeichnis ins Repo, nicht umgekehrt). Dieser Nachtrag
-> geht beim nächsten Spiegeln verloren, solange die **Quelle im Gedächtnis**
-> nicht nachgezogen wird — das ist Befund NP3-4. Wer mit dem Gedächtnis
-> arbeitet, zieht ihn dort nach.
-
 ## Und Kriterium 1 ist strenger, als ich es gelesen habe
 
 Ich hatte Kriterium 1 als erfüllt geführt, weil ein Fenster erscheint. Gregors

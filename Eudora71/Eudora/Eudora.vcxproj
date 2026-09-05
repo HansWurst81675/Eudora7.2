@@ -1030,10 +1030,6 @@ exit /b 0</Command>
       <Project>{63f4f8f8-dad9-4356-951c-4b8c929fef74}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\OT501\Src\OT501.vcxproj">
-      <Project>{36eb689a-7c2c-4c2e-8f1c-744fdd4ddfa2}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly><LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
     <ProjectReference Include="..\PlaylistClient\plstclnt_dll\plstclnt.vcxproj">
       <Project>{5039d1cb-8a81-4d6d-b131-06d88a24cbf5}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

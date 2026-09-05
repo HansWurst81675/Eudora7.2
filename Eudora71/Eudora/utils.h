@@ -88,6 +88,8 @@ int RichExcerptLevel(CRichEditCtrl* ctrl, int nChar);
 
 // Character set translation
 LONG ISOTranslate(LPTSTR szBuf, LONG lSize, UINT iCharsetIdx);
+BOOL ISOIsUTF8Charset(UINT iCharsetIdx);
+LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize);
 
 // Generic Function for retrieving a file's version
 BOOL GetFileVersion(LPCTSTR szDLLName, DWORD& dwMajorVersion, DWORD& dwMinorVersion);

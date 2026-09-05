@@ -265,7 +265,10 @@ int PgDocumentFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
 		i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
 		VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );	
-		pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+		// BEFUND E-16: GetButton beantwortet einen unbekannten Platz jetzt mit
+		// NULL statt mit einem Griff neben m_btns. Hier fehlte die Abfrage.
+		if ( pMenu && pMenuButton )
+			pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
 	}
 
 	// get the text menu
@@ -275,7 +278,9 @@ int PgDocumentFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	VERIFY( pMenu = pEditTextMenu->GetSubMenu( 10 ) );
 	i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_TEXT_SIZE );
 	VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );	
-	pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+	// BEFUND E-16, wie oben.
+	if ( pMenu && pMenuButton )
+		pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
 
 	RecalcLayout();
 

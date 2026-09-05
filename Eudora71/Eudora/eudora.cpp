@@ -837,6 +837,45 @@ CEudoraApp::InitApplication()
 }
 
 //	=========================================================================================
+//	AnyPersonalityHasAccount
+//
+//	The dominant personality lives in the [Settings] section of Eudora.ini, every named
+//	personality in a section of its own ([Persona-<name>]).  GetReturnAddress() only ever
+//	looks at the current personality, which is the dominant one at startup.  A user whose
+//	only account sits in a named personality was therefore greeted by the account wizard
+//	on every single start (E-17).  This helper answers the question the startup check
+//	really wants to ask: is there any account at all?
+//
+static BOOL AnyPersonalityHasAccount()
+{
+	const CString strReturnAddr = CPersonality::GetIniKeyName(IDS_INI_PERSONA_RETURN_ADDR);
+	const CString strPopAccount = CPersonality::GetIniKeyName(IDS_INI_PERSONA_POP_ACCOUNT);
+
+	for (LPSTR pszName = g_Personalities.List(); pszName && *pszName;
+		 pszName += strlen(pszName) + 1)
+	{
+		if (g_Personalities.IsDominant(pszName))
+			continue;			// already covered by GetReturnAddress()
+
+		char szValue[256];
+
+		szValue[0] = '\0';
+		g_Personalities.GetProfileString(pszName, strReturnAddr, "", szValue, sizeof(szValue));
+		::TrimWhitespaceMT(szValue);
+		if (szValue[0])
+			return TRUE;
+
+		szValue[0] = '\0';
+		g_Personalities.GetProfileString(pszName, strPopAccount, "", szValue, sizeof(szValue));
+		::TrimWhitespaceMT(szValue);
+		if (szValue[0])
+			return TRUE;
+	}
+
+	return FALSE;
+}
+
+//	=========================================================================================
 
 BOOL CEudoraApp::InitInstance()
 {
@@ -1615,9 +1654,12 @@ BOOL CEudoraApp::InitInstance()
 	// Check RegCode.dat after we're all started up
 	::PostMessage(pMainFrame->GetSafeHwnd(), WM_COMMAND, ID_CHECK_REG_CODE_FILE, 0);
 
-	// Put up New Account Wizard if no return address specified
+	// Put up New Account Wizard only if no account is set up at all.  GetReturnAddress()
+	// sees the dominant personality ([Settings]) only, so an account that lives in a
+	// named personality has to be asked for separately (E-17).
 	const char* ra = GetReturnAddress();
-	if (!ra || !*ra)
+	BOOL bHaveAccount = (ra && *ra) ? TRUE : AnyPersonalityHasAccount();
+	if (!bHaveAccount)
 	{
 		SetIniShort(IDS_INI_LAST_SETTINGS_CATEGORY, 0);
 		pMainFrame->PostMessage(WM_COMMAND, ID_SPECIAL_NEWACCOUNT);
@@ -1625,7 +1667,7 @@ BOOL CEudoraApp::InitInstance()
 
 	InitJunkFeature();
 
-	if (ra && *ra)
+	if (bHaveAccount)
 	{
 		// Show the tip-o-day only if the Wizard is not shown.
 		if (::GetIniShort(IDS_INI_SHOW_TIP_OF_THE_DAY))
@@ -3323,7 +3365,28 @@ BOOL CEudoraApp::RegisterURLSchemes()
 
 	const BOOL overWrite = GetIniShort(IDS_INI_DEFAULT_MAILTO_OVERWRITE);
 
-	if (defMailto[0] && !strstr(defMailto, appName)) 
+	// Eudora traegt sich NICHT mehr als Standard-Mailprogramm ein - Befund E-12.
+	//
+	// Gregor am 05.09.2026: "ich will nicht mein default mail programm aendern,
+	// die meldung kann also weg. und auch die pruefung."
+	//
+	// Das Eintragen unter HKEY_CLASSES_ROOT\mailto verlangt Administratorrechte.
+	// Ohne sie schlaegt AddToRegistry fehl, und der Anwender bekam die Meldung
+	// IDS_REG_MAILTO_ERR ("Eudora was unable to update the system registry") -
+	// fuer etwas, das er gar nicht wollte. Dazu kam vorher noch die Rueckfrage,
+	// ob Eudora das Standardprogramm werden soll.
+	//
+	// Beides ist hier abgeschaltet: keine Rueckfrage, kein Schreibversuch, keine
+	// Fehlermeldung. Wer Eudora zum Standardprogramm machen will, macht das in
+	// den Windows-Einstellungen unter "Standard-Apps" - dort gehoert es hin, und
+	// nur dort funktioniert es unter Windows 10 und 11 ueberhaupt noch
+	// zuverlaessig.
+	//
+	// Die Registrierung des Schemas x-eudora-option: weiter unten bleibt: sie ist
+	// Eudoras eigenes Schema, sie fragt nichts und meldet nichts.
+	const BOOL bStandardMailProgrammEintragen = FALSE;
+
+	if (bStandardMailProgrammEintragen && defMailto[0] && !strstr(defMailto, appName)) 
 	{
 		if (!gbAutomationRunning)
 		{
@@ -3335,7 +3398,7 @@ BOOL CEudoraApp::RegisterURLSchemes()
 			}
 		}
 	}
-	else if (stricmp(defMailto, cmd))
+	else if (bStandardMailProgrammEintragen && stricmp(defMailto, cmd))
 	{
 		// We are the default program, but if we are a new version, register this new path in place of the old one..
 		bSetDefaultMailto = TRUE;

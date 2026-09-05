@@ -1349,9 +1349,25 @@ void CListCtrlEx::InsertArr(unsigned int *& pArr, unsigned int &nLen, unsigned i
 {
 	if (pArr)
 	{
-		unsigned int *pTemp = DEBUG_NEW unsigned int [nLen + 1];
+		// Befund E-20: frueher stand hier [nLen + 1]. Geschrieben wird aber bis
+		// pTemp[nIdx], und nIdx kann GROESSER als nLen sein - dann schrieb die
+		// Zeile pTemp[nIdx] hinter das Feldende, und die Schleife darueber las
+		// pArr[i] fuer i >= nLen ebenfalls daneben.
+		//
+		// Der Fall tritt ein, sobald eine Spalte an einem Index eingefuegt wird,
+		// fuer den es noch keinen Eintrag gibt - bei Gregor am 05.09.2026, als
+		// eine ZWEITE Persoenlichkeit entstand und TaskStatusView.cpp:584
+		// daraufhin die Persona-Spalte anlegte.
+		const unsigned int nNeu = ((nIdx + 1) > (nLen + 1)) ? (nIdx + 1) : (nLen + 1);
+		unsigned int *pTemp = DEBUG_NEW unsigned int [nNeu];
 
-		for (unsigned int i=0; i<nIdx; i++)
+		// Alles vorbelegen: bei nIdx > nLen bleiben sonst Luecken uninitialisiert.
+		for (unsigned int v = 0; v < nNeu; v++)
+			pTemp[v] = nDefault;
+
+		// Kopieren nur bis nLen - alles darueber gibt es in pArr nicht.
+		const unsigned int nBis = (nIdx < nLen) ? nIdx : nLen;
+		for (unsigned int i=0; i<nBis; i++)
 			pTemp[i] = pArr[i];
 
 		pTemp[nIdx] = nDefault;
@@ -1361,7 +1377,7 @@ void CListCtrlEx::InsertArr(unsigned int *& pArr, unsigned int &nLen, unsigned i
 
 		delete[] pArr;
 		pArr = pTemp;
-		nLen++;
+		nLen = nNeu;
 	}
 }
 
@@ -1391,9 +1407,16 @@ void CListCtrlEx::NotifyInsertedCol(unsigned int nCol)
 
 	if (m_DispImageListArr)
 	{
-		CImageList **pTemp = DEBUG_NEW CImageList *[m_DispImageListArrLen + 1];
+		// Befund E-20, dieselbe Rechnung wie in InsertArr.
+		const unsigned int nNeu = ((nCol + 1) > (m_DispImageListArrLen + 1))
+		                          ? (nCol + 1) : (m_DispImageListArrLen + 1);
+		CImageList **pTemp = DEBUG_NEW CImageList *[nNeu];
 
-		for (unsigned int i=0; i<nCol; i++)
+		for (unsigned int v = 0; v < nNeu; v++)
+			pTemp[v] = NULL;
+
+		const unsigned int nBis2 = (nCol < m_DispImageListArrLen) ? nCol : m_DispImageListArrLen;
+		for (unsigned int i=0; i<nBis2; i++)
 			pTemp[i] = m_DispImageListArr[i];
 
 		pTemp[nCol] = NULL;
@@ -1403,7 +1426,7 @@ void CListCtrlEx::NotifyInsertedCol(unsigned int nCol)
 
 		delete[] m_DispImageListArr;
 		m_DispImageListArr = pTemp;
-		m_DispImageListArrLen++;
+		m_DispImageListArrLen = nNeu;
 	}
 }
 
