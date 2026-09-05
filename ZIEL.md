@@ -14,14 +14,28 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > `WEITERMACHEN.md`, `PORTIERUNG.md` und `Releases/PAKETE.md` verweisen jetzt
 > hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn **hier**.
 
-| # | Kriterium | Stand am 31.08.2026 |
+| # | Kriterium | Stand am 05.09.2026 |
 |---|---|---|
-| 0 | Das Paket läuft ohne Nachinstallieren | **nicht belegt** — das Release-Paket ist gebaut (F-1), aber auf keinem Rechner **ohne** Visual Studio gestartet worden. Der Win11-Lauf war der Debug-Bau mit beigelegten, nicht verteilbaren DLLs (E-8); `tools/paket-pruefen.ps1` taugt nicht als Nachweis (PR-2) |
-| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** auf einer eingerichteten Installation (Befund E-1). Auf einer **frischen** stürzte Eudora nach dem Kontoassistenten ab — Ursache E-11, behoben, **ungeprüft** |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2). Die Umlaute in HTML-Mail (`◆`) sind an der Ursache behoben (Z-2), am Programm **nicht nachgesehen** |
-| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten von `mx.freenet.de`, Port 110, STARTTLS, TLSv1.3, `TLS_AES_256_GCM_SHA384` (E-1, E-3) |
+| 0 | Das Paket läuft ohne Nachinstallieren | **weiterhin nicht belegt** — der Release-Bau steht (F-1), aber auf keinem Rechner **ohne** Visual Studio gestartet worden. Der Win11-Lauf vom 31.08. war der Debug-Bau mit beigelegten, nicht verteilbaren DLLs (E-8); `tools/paket-pruefen.ps1` taugt nicht als Nachweis (PR-2.0 bis PR-2.3) |
+| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — Gregor hat am 05.09.2026 die Fassung **7.2.0.4** in der VM gestartet und bedient. Auf einer **frischen** Installation stürzte Eudora am 31.08. nach dem Kontoassistenten ab (E-11, behoben); dieser Fall ist weiterhin **nicht** nachgesehen |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2). Der Titel trägt die Bau-Kennung wieder (E-7 behoben am 05.09., **am Programm nicht nachgesehen**). **Offen: beim Mailabruf ist kein Fortschritt sichtbar.** Umlaute in HTML-Mail (Z-2) und der einzelne zerrissene Umlaut je Nachricht (Z-2b) sind an der Ursache behoben, beide **ungeprüft** |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — Gregor am 05.09.2026 zu 7.2.0.4: *„mails lassen sich abrufen"*. Zuvor bereits am 31.08.: 159 Nachrichten von `mx.freenet.de`, Port 110, STARTTLS, TLSv1.3, `TLS_AES_256_GCM_SHA384` (E-1, E-3) |
 
 **Zwei von vier Kriterien sind belegt, eines fast, eines offen.**
+
+> ### Berichtigung vom 05.09.2026
+>
+> Bis zum 05.09.2026 stand in dieser Tabelle der Stand vom **31.08.2026**. Er
+> ist berichtigt, nicht gelöscht: die Belege zu 1.0.3 stehen unverändert in
+> `BEFUNDE.md` (E-1, E-2, E-3, E-8). Geändert hat sich dreierlei:
+>
+> * **Kriterium 1 und 3 sind jetzt an der Fassung 7.2.0.4 belegt**, nicht mehr
+>   nur an 1.0.3.
+> * **Kriterium 2 hat einen neuen offenen Punkt bekommen**, den es am 31.08.
+>   nicht gab: beim Abruf ist kein Fortschritt sichtbar. Dafür ist E-7 (fehlende
+>   Bau-Kennung im Titel) weggefallen.
+> * **Kriterium 0 hat sich nicht bewegt.** Es ist das einzige, das noch nie
+>   gemessen wurde.
 
 Kriterium 0 kam am 31.08.2026 dazu; es steht vor den anderen dreien, weil ohne
 lauffähiges Paket niemand die anderen prüfen kann. Beschrieben ist es weiter

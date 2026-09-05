@@ -1,29 +1,40 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: d826a3f -->
+<!-- pruefstand: 3d03c50 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
-Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen und
-inzwischen rund **5900 Zeilen** lang (nachzählen: `grep -c '^## ' BEFUNDE.md`,
-dieses Verzeichnis zählt mit). Jeder Agent schreibt seinen Abschnitt ans
-**Ende**, die Reihenfolge ist also zeitlich, nicht sachlich. Ohne dieses
-Verzeichnis findet niemand, was er sucht — und schlimmer: er findet einen
-Befund und weiß nicht, ob er noch gilt.
+Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
+Gemessen am 05.09.2026 nach diesem Durchgang: **6960 Zeilen**, **119** Abschnitte
+auf zweiter und **190** auf dritter Ebene. Nachzählen:
 
-**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil vier Kennungen
-eine Ebene tiefer stehen (`### NP2-2`, `### NP2-3`, `### NP3-8`, `### NP3-9`:
-sie sind Nachträge innerhalb eines größeren Abschnitts). Zeilennummern stehen
-hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses Projekt hat
-genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
+```sh
+wc -l < BEFUNDE.md                  # Zeilen
+grep -c '^## '   BEFUNDE.md         # Abschnitte 2. Ebene (dieses Verzeichnis zählt mit)
+grep -cE '^### +[A-Z]' BEFUNDE.md   # Unterabschnitte
+```
 
+Jeder Agent schreibt seinen Abschnitt ans **Ende**, die Reihenfolge ist also
+zeitlich, nicht sachlich. Ohne dieses Verzeichnis findet niemand, was er sucht —
+und schlimmer: er findet einen Befund und weiß nicht, ob er noch gilt.
+
+**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil viele Kennungen
+eine Ebene tiefer stehen (`### NP2-2`, `### NP3-8`, `### PR-6`, `### P-3` und
+weitere: sie sind Unterpunkte innerhalb eines größeren Abschnitts). Welche das
+sind, steht unten unter **„Unterbefunde, die man einzeln sucht"**. Zeilennummern
+stehen hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses
+Projekt hat genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
 > **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**
 > Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
 > dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
 
-**Stand der Statusspalte:** 31.08.2026 abends, Commit `48d28a2`. Die Einstufung
-ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
+**Stand der Statusspalte:** 05.09.2026, Commit `3d03c50` (Zweig
+`bau-und-pruefung`). Die Einstufung ist am Text der Befunde und, wo nötig, am
+Quelltext nachgesehen. Nachgezogen am 05.09.2026: **E-4** und **E-7** standen
+auf „offen", sind aber behoben; **PR-5** stand an drei Stellen auf „offen", ist
+aber seit `765c39b` behoben. Neu aufgenommen: **B-3** (OT501 aus dem Bau) und
+**E-13** (Fortschritt beim Mailabruf).
 
 | Status | Bedeutung |
 |---|---|
@@ -92,7 +103,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | S-7 | die Wurzel aller CRLF-Probleme: Auschecken mit `autocrlf=true` | **behoben** |
 | S-8 | Paket 1.0.2 startete mit `0xc000007b` | **behoben** (und durch F-1 gegenstandslos) |
 
-## Arbeit der Agenten vom 30./31.08.2026
+## Arbeit der Agenten vom 30./31.08. und 05.09.2026
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
@@ -102,10 +113,11 @@ zuerst **E-11**, **R-1** und **E-1**.
 | A-1 | Erscheinungsbild: fünf Punkte umgesetzt | **teilweise**, Wirkung belegt (E-1/E-2) |
 | P-1 | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | **teilweise** (P-1.5b bis P-1.5j offen) |
 | P-2 | der Absturzpunkt vor dem ersten Abruf abgesichert | **behoben** |
-| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben** (PR-5 offen) |
+| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben, vollständig** — PR-5 ist seit `765c39b` erledigt; die frühere Angabe „PR-5 offen" war überholt |
 | F-1 | Release-Bau: `OTA50D.LIB` statt `OTA50R.LIB`, `MakeDox.pl` | **behoben**; statisch binden bleibt ausgeschlossen |
 | Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben**, an der Zwischendatei belegt (Fortschreibung 05.09.) |
 | Z-2b | ein einzelner Umlaut kaputt: UTF-8-Zeichen zerrissen an der Stückgrenze beim Abruf | **behoben, ungeprüft** (Fortschreibung von Z-2) |
+| B-3 | `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe | **behoben** (05.09., `d8cc9d3`) — damit entfallen die drei Fehler aus B-2 |
 
 ## Prüfberichte über die eigene Arbeit
 
@@ -129,21 +141,82 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) |
 | E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 |
 | E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** |
-| E-4 | Absturz beim Beenden: Index außerhalb `m_arrBars` | **Ursache gefunden und behoben** 05.09. (`WazooBarMgr.cpp:408`); am laufenden Programm noch nicht nachgeprüft |
+| E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **behoben, ungeprüft** (05.09., `1188e87`: die Ursache liegt beim **Start**, ein ungeprüfter Cast in `WazooBarMgr.cpp`) |
 | E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 |
 | E-6 | Release läuft, Assistent stürzt bei *Weiter* ab | **überholt** durch E-8 (es war der Debug-Bau) |
-| E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **offen** (Behebung beschrieben, ein Aufruf) |
+| E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **behoben, ungeprüft** (05.09., `bcc59bb`: ein `OnUpdateFrameTitle(TRUE)` in `mainfrm.cpp:1135`) |
 | E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** |
 | E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig |
 | E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
 | E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** (Kriterium 3) |
-| E-12 | Zusicherung beim Start: der X1-Suchindex wird neu angelegt | **offen**, nicht angefasst — nur festgehalten |
-| E-12 | Fortschritt beim Abruf unsichtbar — der Abruf dauerte 0,02 Sekunden | **behoben, ungeprüft** |
+| E-13 | beim Mailabruf ist kein Fortschritt sichtbar — der Abruf dauert 0,02 s | **Ursache belegt**; Behebung liegt auf `wt/fortschritt-arbeit`, **nicht** in diesem Zweig. Hieß versehentlich `E-12` |
 
 > **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
 > ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
 > Befund — wer sie sucht, sucht umsonst.
 
+## Unterbefunde, die man einzeln sucht
+
+Diese Kennungen haben **keinen eigenen Abschnitt auf oberster Ebene**, sondern
+stehen als Unterpunkt in einem größeren Befund. Wer nach ihnen sucht und oben
+nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
+`P-3` bis dahin in keiner Zeile des Verzeichnisses vorkamen.
+
+| Kennung | steht in | Worum es geht | Status |
+|---|---|---|---|
+| PR-3 | `### PR-3` unter **W-1** | eine Liste der Textdateiarten statt zwei | **behoben** |
+| PR-4 | `### PR-4` unter **W-1** | `BuildKennung.h` ist nicht mehr in git verfolgt | **behoben** |
+| PR-5 | `### PR-5` unter **W-1** | Zeitstempel der Kennung ist nicht der Bauzeitpunkt | **behoben** (`765c39b`) |
+| PR-6 | `### PR-6` unter **W-1** | kein `_T` um ein Makro (bricht im Unicode-Bau) | **behoben** |
+| PR-7 | `### PR-7` unter **W-1** | die Zahlen in S-7 widersprachen sich: es gilt 4616 von 5563 | **behoben** |
+| PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelöscht — fand seinen eigenen Anlass nicht | **behoben** |
+| PR-2.0 … PR-2.9 | `### PR-2.x` unter **PR-2** | zehn Punkte der Nachprüfung vom 31.08. | PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
+| P-1.0 … P-1.8 | `### P-1.x` unter **P-1** (POP-Abrufpfad) | elf Altlasten auf dem Abrufpfad | P-1.1/P-1.8 **behoben**, P-1.5b–P-1.5j **offen** |
+| P-2.1 … P-2.7 | `### P-2.x` unter **P-2** (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
+| P-1, P-2, P-3 (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei Härtungslücken beim ersten Lauf der Ersatzschicht; **P-3** ist `SECDateTimeCtrl::FixedTime`, das die Stunde ausläßt (Fehler im Original, bewusst übernommen) | **offen** |
+| S-3a, S-3b, S-3c | `### S-3x` unter **S-3** | erster Lauf durch einen Anwender | S-3a **behoben**, S-3b/S-3c **offen** |
+| E-9, Nachtrag | unter **E-9** | die Plugins sind es NICHT — gemessen | **Beleg** |
+
+> ### Achtung: drei Kennungen sind doppelt vergeben
+>
+> Beim Zusammenführen mehrerer Agenten sind Kennungen zweimal vergeben worden.
+> Umbenannt wird **nicht** rückwirkend — zu viele Querverweise hängen daran.
+> Wer sucht, muss beide Fundstellen kennen:
+>
+> | Kennung | Bedeutung A | Bedeutung B |
+> |---|---|---|
+> | **P-1** | `### P-1` (PROBE): `OnActivateTab`/`ClearSelection` rufen `GetParent()` ungeprüft | `## P-1`: der POP-Abrufpfad, vor dem ersten Abruf gegengelesen |
+> | **P-2** | `### P-2` (PROBE): `SECTabWndBase::InsertTab` blendet ein Fenster ungeprüft aus | `## P-2`: der Absturzpunkt vor dem ersten Abruf abgesichert |
+> | **PR-2** | `PR-2` in `PRUEFBERICHT.md`: Schranke schlägt bei Leerzeilen grundlos an (**behoben**) | `## PR-2` hier: Nachprüfung der Arbeit vom 31.08. mit PR-2.0 bis PR-2.9 |
+>
+> **`E-12` war der vierte Fall und ist aufgelöst:** Agent KONTO und Agent
+> FORTSCHRITT haben unabhängig „die nächste freie E-Nummer" gewählt. `E-12`
+> bleibt beim Mailverzeichnis-Argument (KONTO, zuerst zusammengeführt); der
+> Fortschrittsbefund heißt seit dem 05.09.2026 **`E-13`**.
+>
+> **Wer eine neue Kennung vergibt, misst zuerst über alle Zweige:**
+>
+> ```sh
+> for b in $(git branch -a --format='%(refname:short)' | grep -v HEAD); do
+>   git grep -hoE '^#+ +E-[0-9]+' "$b" -- BEFUNDE.md 2>/dev/null
+> done | sed 's/#\+ *//' | sort -u -V
+> ```
+
+## Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt
+
+Diese Kennungen sind **vergeben**, ihr Befundtext steht aber noch nicht in
+`bau-und-pruefung`. Sie stehen hier, damit sie kein zweites Mal vergeben werden
+— genau das ist mit `E-12` passiert. Gemessen am 05.09.2026 mit dem Befehl aus
+dem Kasten oben.
+
+| Kennung | Worum es geht | Zweig | zu tun beim Zusammenführen |
+|---|---|---|---|
+| X-5 | ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa | `wt/schranke` (`5e1187a`) | Verzeichniszeile in die Tabelle „Prüfberichte über die eigene Arbeit" nachtragen |
+| X-6 | ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben | `wt/baumeister` | dito |
+| E-13 | Fortschritt beim Mailabruf ist nicht sichtbar (Abschnitt steht **hier**, der **Code** noch nicht) | Behebung in `bd3959c` auf `wt/fortschritt-arbeit` | dort die Überschrift `## E-12 — Der Fortschritt beim Mailabruf …` **entfernen**, sonst steht `E-12` zweimal in der Datei |
+
+**Nächste freie Kennungen, gemessen über alle Zweige am 05.09.2026:**
+`E-14`, `B-4`, `X-7`, `Z-4`. (`E-10` ist eine bewusste Lücke, siehe oben.)
 ## Was in dieser Datei sonst noch steht
 
 Neben den Befunden vier Sammelkapitel, die **kein** Mangel sind und deshalb oben
@@ -3813,7 +3886,7 @@ Aussage unten ist gemessen; die Gegenproben laufen als Testsammlung mit.
 | PR-2 | Schranke schlaegt bei Leerzeilen grundlos an | **behoben** |
 | PR-3 | `.def`/`.sln`/`.bat`/`.ps1` gar nicht geprueft | **behoben** |
 | PR-4 | `BuildKennung.h` verfolgt → fremde Kennung | **behoben** |
-| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | offen (nur Beschreibung) |
+| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | **behoben** (31.08. abends, `765c39b` — die frühere Angabe „offen" war überholt) |
 | PR-6 | `_T(EUDORA_BAU_KENNUNG)` bricht im Unicode-Bau | **behoben** |
 | PR-7 | Zahlen in S-7 widersprechen sich | **behoben** |
 | PR-8 | `rekursion-suchen.pl` findet den eigenen Anlass nicht | **geloescht** |
@@ -4042,12 +4115,31 @@ den Zyklus aus S-2 hat `stapel-untersuchen.ps1` gefunden, nicht dieses
 Werkzeug. Eine Zusicherung, die nicht traegt, ist schaedlicher als gar keine.
 Dieselbe Ueberlegung gilt fuer die Schranke oben; deshalb die Testsammlung.
 
-### PR-5 bleibt offen
+### PR-5 — behoben am 31.08.2026 abends (Commit `765c39b`)
 
-Der Zeitstempel in der Kennung ist der Zeitpunkt, zu dem sich Commit oder
-Sauberkeit zuletzt geaendert haben, nicht der Bauzeitpunkt. Das **Verhalten**
-ist richtig gewaehlt (sonst uebersetzt jeder Bau alles neu); nur die
-Beschreibung stimmt nicht. Ein Wort im Kommentar — nicht angefasst, weil die
+> **Berichtigung vom 05.09.2026.** Diese Überschrift lautete bis dahin
+> *„PR-5 bleibt offen"*, und an drei Stellen im Repo stand PR-5 auf „offen",
+> obwohl es bereits behoben war. Der alte Wortlaut ist berichtigt, der Befund
+> selbst bleibt stehen.
+
+Der Zeitstempel in der Bau-Kennung ist **nicht** der Bauzeitpunkt, sondern der
+Zeitpunkt, zu dem sich Commit oder Sauberkeit zuletzt geändert haben: die Datei
+`BuildKennung.h` wird nur neu geschrieben, wenn sich etwas **außer** dem
+Zeitstempel geändert hat — sonst übersetzt jeder Bau alles neu. Baut man zehnmal
+ohne zu committen, zeigen alle zehn Bauten dieselbe Uhrzeit.
+
+**Das Verhalten ist richtig gewählt; nur die Beschreibung war falsch.** Sie
+sagte „dem Zeitpunkt des Baus".
+
+Berichtigt an drei Stellen in `tools/kennung-erzeugen.pl` — im Kopfkommentar, in
+der erzeugten `BuildKennung.h` und an der Codestelle, an der der Unterschied
+entsteht. Nachzulesen:
+
+```sh
+grep -n 'Zeitpunkt' tools/kennung-erzeugen.pl
+```
+
+**Damit ist PR-1 bis PR-8 vollständig abgearbeitet.**
 Frist naeher war als der Nutzen.
 
 ### Nebenbefund: `sed` verschweigt CR
@@ -5051,7 +5143,7 @@ POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
 Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
 (`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
 
-## E-4 — Absturz beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026; Release-Beleg und Härtung 05.09.2026)
+## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026 — BEHOBEN am 05.09.2026, ungeprüft)
 
 Beim **Schließen** von Eudora:
 
@@ -5112,239 +5204,59 @@ Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
 Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
 der Grund, ihn nicht auf sich beruhen zu lassen.
 
----
+### Behoben am 05.09.2026 (Commit `1188e87`) — und der Verdacht oben war falsch
 
-## E-4, Fortschreibung vom 05.09.2026
+Gregors Debug-Bau 7.2.0.4 hat die Ursache gezeigt. Sie liegt **nicht** in
+`SECDockBar::MoveControlBarToPosition`, wie oben unter „Wahrscheinlichste
+Ursache (UNGEPRÜFT)" vermutet. Der Abschnitt bleibt als Beleg stehen, ist aber
+**widerlegt**.
 
-### Zweite Beobachtung, diesmal im Release-Bau
+Der Beleg ist eine Zusicherung, die schon **beim Start** kam:
 
-Fassung 7.2.0.4: Meldungsfenster mit dem Titel „Eudora", Text
-**„Encountered an improper argument."**, ein OK-Knopf. Das ist die
-MFC-Meldung `AFX_IDP_INVALID_ARGUMENT` zu `CInvalidArgException`, geworfen von
-`AfxThrowInvalidArgException()`.
-
-Es ist **dieselbe Stelle** wie am 31.08. Nachgeschlagen in
-`…\ATLMFC\Include\afxcoll.inl` (MSVC 14.38.33130):
-
-```cpp
-_AFXCOLL_INLINE void*& CPtrArray::ElementAt(INT_PTR nIndex)
-    { ASSERT(nIndex >= 0 && nIndex < m_nSize);          // Zeile 213
-        if( nIndex < 0 || nIndex >= m_nSize )
-            AfxThrowInvalidArgException();              // Zeile 215
-        return m_pData[nIndex]; }
+```
+Expression : (pMDIFrame)->IsKindOf((QCControlBarWorksheet::GetThisC...
+Location   : CWazooBarMgr::SetDefaultWazooBarState, Line 409
 ```
 
-Zusicherung und Wurf stehen unmittelbar untereinander. Im Debug-Bau meldet sich
-die Zusicherung, im Release-Bau (`NDEBUG` → `stdafx.h:54` → `qcassert.h` →
-`SuperAssert.h:135`, `NEWASSERT` ist leer) bleibt der Wurf übrig. **Ein Fehler,
-zwei Erscheinungsformen.**
+### Die Kette
 
-Zeile 213 ist die **nicht-konstante** Fassung. Sie wird von
-`CPtrArray::operator[]` in nicht-konstantem Zusammenhang benutzt; die konstante
-Fassung `GetAt` steht bei Zeile 202. Das grenzt die Kandidaten ein.
+`WazooBarMgr.cpp` schickt an zwei Stellen `ID_SEC_MDIFLOAT`, um eine angedockte
+Leiste in ein MDI-Kindfenster zu verwandeln. In dieser Fassung läuft das ins
+Leere: `SECMDIFrameWnd::FloatControlBarInMDIChild` ist bewusst ohne Wirkung
+(`OTShim.cpp:348`), weil MFC kein Gegenstück dafür hat.
 
-### Wo es abstürzt — aus Gregors Testverzeichnis abgelesen
-
-`C:\Users\Gregor\Eudora72-1.0.4-release` (nur gelesen):
-
-* `Mailverzeichnis\Audit.log`: **zwei Startsätze** (Ereignis 15), **kein
-  einziger Beendensatz** (Ereignis 1).
-* `Mailverzeichnis\Eudora.ini`: die Abschnitte `[Settings]`, `[Mappings]`,
-  `[Recent Mailboxes]`, `[Open Windows]` — aber **kein `[ToolBar-Summary]`**
-  und kein `[ToolBar-Bar0]` (die Namen stehen in `dockstat.cpp:21-22`).
-* `[Settings]` enthält `LastKnownCrashInfo=0`. Die führende Null setzt
-  `QCExceptionHandler::SaveCrashStateToINI` (`ExceptionHandler.cpp:238-259`) auf
-  `1`, sobald das Beenden durchläuft.
-* Registrierung `HKCU\Software\Qualcomm\Eudora`: die Unterschlüssel `C:`,
-  `CommandLine`, `LaunchManager` — **kein `ToolBar-Summary`**.
-  `CMainFrame::SaveBarState` (`mainfrm.cpp:2537-2580`) schreibt den
-  Leistenzustand absichtlich erst dorthin und kopiert ihn danach in die
-  INI-Datei. Nichts davon ist passiert.
-
-`CMainFrame::CloseDown` (`mainfrm.cpp:5117-5225`) arbeitet in dieser Reihenfolge:
-
-| Zeile | was | hat es geschrieben? |
-|---|---|---|
-| 5174 | `SaveOpenWindows(TRUE)` | **ja** — `[Open Windows]` steht in der INI |
-| 5178 | `TrimJunk()` | — |
-| 5180-5208 | Werbeleiste sichern und aushängen | — |
-| 5210 | `RemoveBogusAdToolBars()` | — |
-| 5212 | `SaveBarState(_T("ToolBar"))` | **nein** — weder Registrierung noch INI |
-| 5220 | `SaveCrashStateToINI()` | **nein** — die Null steht noch da |
-
-**Der Absturz liegt zwischen Zeile 5174 und dem ersten Schreibzugriff in
-Zeile 5212** — also im Block, der die Werbeleiste abräumt.
-
-### Die drei ungeschützten Zugriffe in diesem Block
-
-Alle `CPtrArray`-Zugriffe im Beenden-Weg sind durch `GetSize()` begrenzt — bis
-auf drei, und alle drei stehen in MFC selbst, in `bardock.cpp`:
-
-| Zeile | Funktion | Muster |
-|---|---|---|
-| 297 | `CDockBar::RemovePlaceHolder` | `RemoveAt(nOldPos);` … `m_arrBars[nOldPos]` |
-| 321-322 | `CDockBar::RemoveControlBar`, Platzhalterzweig | dasselbe |
-| 328-329 | `CDockBar::RemoveControlBar`, zweiter Zweig | dasselbe |
-
-Alle drei lesen `m_arrBars[nPos]` **unmittelbar nach** `m_arrBars.RemoveAt(nPos)`.
-Das greift genau dann daneben, wenn der entfernte Eintrag der **letzte** war —
-also wenn `m_arrBars` **nicht mit einer `NULL`-Marke endet**.
-
-Dieselbe Voraussetzung prüft MFC selbst, aber nur im Debug-Bau
-(`CDockBar::AssertValid`, `bardock.cpp:746-748`):
+Die Leiste bleibt also angedockt, und `GetParentFrame()` liefert weiterhin das
+**Hauptfenster**. Beide Blöcke danach casten es per C-Cast — der prüft nichts —
+auf `CMDIChildWnd` beziehungsweise `QCControlBarWorksheet` und arbeiten damit.
+Die letzte dieser Zeilen ist ein **Schreibzugriff** auf einen Versatz in einem
+Objekt falschen Typs:
 
 ```cpp
-ASSERT(m_arrBars.GetSize() != 0);
-ASSERT(m_arrBars[0] == NULL);
-ASSERT(m_arrBars[m_arrBars.GetUpperBound()] == NULL);
+pMDIFrame->m_bFirstActivationAfterClose = TRUE;
 ```
 
-Dazu kommt `ENSURE(nPos > 0)` in `CDockBar::RemoveControlBar`
-(`bardock.cpp:309`). `ENSURE` ist `ASSERT` **plus**
-`AfxThrowInvalidArgException()` — steht die Leiste gar nicht in `m_arrBars`,
-gibt es wortgleich dieselbe Meldung.
+Im Debug meldete sich `ASSERT_KINDOF`; im Release ist `ASSERT` leer
+(`Eudora.vcxproj:132` `NDEBUG` → `stdafx.h:54` → `qcassert.h` →
+`SuperAssert.h:135`). Der Zugriff blieb und beschädigte **beim Start** fremden
+Speicher. Sichtbar wurde es erst beim Beenden, wenn MFC die Leisten abräumt —
+daher die irreführende Spur zu `afxcoll.inl:213`.
 
-Und genau dieser Weg wird beim Beenden begangen:
-`CMainFrame::RemoveAdToolBarFromItsDockBar` (`mainfrm.cpp:6047-6073`) ruft
-`SECDockBar::RemoveControlBar` ausdrücklich auf, aufgerufen aus Zeile 5204 und
-aus `RemoveBogusAdToolBars` (`mainfrm.cpp:5900`).
+### Behebung
 
-### DIE URSACHE — gefunden am 05.09.2026 abends
-
-Gregor hat den **Debug-Bau 7.2.0.4** laufen lassen. Beim **Start**:
-
-    SUPERASSERT Assertion Failure
-    Expression : (pMDIFrame)->IsKindOf((QCControlBarWorksheet::GetThisC...
-    Location   : CWazooBarMgr::SetDefaultWazooBarState, Line 409 in WazooBarMgr.cpp
-
-Beim **Beenden** derselben Sitzung dann wieder `afxcoll.inl:213`. Damit ist die
-Kette geschlossen.
-
-`WazooBarMgr.cpp:408-418` stand vor der Änderung so da:
+Beide Blöcke bekommen die Abfrage, die Eudora an vier anderen Stellen längst
+benutzt (`WazooBarMgr.cpp:790`/`:821`, `WazooBar.cpp:652`/`:690`):
 
 ```cpp
-QCControlBarWorksheet* pMDIFrame = (QCControlBarWorksheet *) pWazooBar->GetParentFrame();
-ASSERT_KINDOF(QCControlBarWorksheet, pMDIFrame);
-
-pMDIFrame->MoveWindow(...);
-pMDIFrame->m_bFirstActivationAfterClose = TRUE;     // <-- der Schreibzugriff
+if (pWazooBar->IsMDIChild())
 ```
 
-**Warum `GetParentFrame()` das Falsche liefert.** Ein paar Zeilen darüber steht
-`pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0)` — „lass diese Leiste
-als MDI-Kindfenster schweben". Der Weg dorthin ist
-`SECMDIFrameWnd::FloatControlBarInMDIChild`, und die Fassung in der
-Ersatzschicht **tut nichts** — Stufe 2, ausdrücklich und begründet so
-hinterlegt (`OTShim.cpp`, Kommentar „bleibt deshalb einfach dort, wo
-DockControlBarEx sie unmittelbar davor hingesetzt hat"). Die Leiste bleibt am
-Hauptfenster angedockt. Ihr Elternfenster ist die `SECDockBar`, und die ist ein
-`CControlBar`, kein Rahmen — `CWnd::GetParentFrame()` läuft also weiter nach
-oben und liefert das **Hauptfenster**.
+`IsMDIChild()` liefert in dieser Stufe immer `FALSE` (`OTShim.cpp:1565`, mit
+Begründung im Kommentar). Die beiden Blöcke werden damit übersprungen — genau
+richtig, denn sie setzen etwas voraus, das nicht stattgefunden hat. Die Stellen
+stehen jetzt in `WazooBarMgr.cpp:273` und `:421`.
 
-**Warum es niemandem auffiel.** Der C-Cast prüft nichts. `ASSERT_KINDOF` schlägt
-im Debug-Bau an und ist im Release-Bau **leer** (`Eudora.vcxproj:132` NDEBUG →
-`stdafx.h:54` → `qcassert.h` → `SuperAssert.h:135`, `NEWASSERT` ist leer). Im
-Release läuft der Block einfach weiter.
-
-**Was dabei passiert.** `m_bFirstActivationAfterClose` ist ein `BOOL`-Feld von
-`QCControlBarWorksheet` (`workbook.h:97`). Der Zuweisung ist gleich, worauf der
-Zeiger wirklich zeigt: sie schreibt **vier Byte an den Versatz dieses Feldes in
-das `CMainFrame`-Objekt**. `CMainFrame` ist um ein Vielfaches größer als
-`QCControlBarWorksheet`; der Schreibzugriff landet also mitten im
-Hauptfenster-Objekt und verändert dort stillschweigend etwas anderes. Das ist
-**Speicherbeschädigung beim Start** — der Absturz beim Beenden ist die Folge.
-
-Dieselbe Falle ein zweites Mal, in `CWazooBarMgr::CreateNewWazooBar`
-(`WazooBarMgr.cpp:269-271`): derselbe C-Cast, diesmal auf `CMDIChildWnd`,
-dasselbe `ASSERT_KINDOF`. Dort wird nur `SetWindowPos` gerufen — eine
-`CWnd`-Methode, die also „nur" das falsche Fenster verschiebt, statt Speicher
-zu überschreiben. Falsch ist es trotzdem: das Hauptfenster wurde beim Start auf
-vier Fünftel des MDI-Bereichs gesetzt.
-
-### Die Behebung an der Wurzel
-
-`Eudora71/Eudora/WazooBarMgr.cpp`, beide Stellen:
-
-```cpp
-QCControlBarWorksheet* pMDIFrame =
-    DYNAMIC_DOWNCAST(QCControlBarWorksheet, pWazooBar->GetParentFrame());
-if (pMDIFrame != NULL)
-{
-    ...
-}
-```
-
-`DYNAMIC_DOWNCAST` prüft **zur Laufzeit** und **in beiden Bauten** — genau
-daran fehlte es. Ist es kein MDI-Kindfenster, bleibt der Block aus, und die
-Leiste behält die Größe, die `DockControlBarEx` ihr gegeben hat. Das ist
-ohnehin der Zustand, den die Stufe-2-Fassung von
-`FloatControlBarInMDIChild` herstellt.
-
-**Der Schreibzugriff auf ein fremdes Objekt findet nicht mehr statt.**
-
-### Die zweite Linie: die Härtung in SECDockBar
-
-`SECDockBar::MoveControlBarToPosition` (`OTShim.cpp`) ist die einzige Stelle im
-ganzen Bau, die `m_arrBars` von Hand umbaut. Ihre Indexrechnung ist **Zweig für
-Zweig durchgerechnet worden und liegt überall im Feld**; sie hängt aber davon
-ab, dass jeder Zweig die beiden Zusagen von selbst einhält, und die **führende**
-Marke prüft sie überhaupt nicht.
-
-Neu in `Eudora71/OTShim/OTShim.cpp` und `OTShim.h`:
-
-* **`SECDockBar::NormalizeBarArray()`** stellt her, was MFC voraussetzt:
-  `m_arrBars[0] == NULL`, letzter Eintrag `== NULL`, und keine zwei
-  `NULL`-Marken hintereinander (leere Zeile — MFC erzeugt sie nie, und
-  `CDockBar::Insert`, `bardock.cpp:695-734`, rechnet nicht mit ihr).
-* Aufgerufen am Anfang **und** am Ende von `MoveControlBarToPosition`, am
-  Anfang von `SECDockBar::DockControlBar` und am Anfang von
-  `SECDockBar::CalcFixedLayout`. Die letzte ist die wichtigste: sie läuft bei
-  **jedem** Anordnungsdurchlauf, also auch für die Entfernwege, die MFC
-  unmittelbar auf `CDockBar` aufruft und die diese Schicht sonst nicht sieht.
-* **`SECDockBar::RemoveControlBar`** zieht den Aufbau vorher gerade und gibt
-  `FALSE` zurück, statt MFC aufzurufen, wenn `FindBar(pBar, nPosExclude) <= 0` —
-  das ist der Fall, in dem `ENSURE(nPos > 0)` die Ausnahme wirft.
-
-### Was noch offen ist
-
-* **Welches Feld in `CMainFrame` getroffen wurde, ist nicht ausgerechnet.**
-  Dafür bräuchte es den Versatz von `m_bFirstActivationAfterClose` in
-  `QCControlBarWorksheet` und die Belegung von `CMainFrame` an derselben Stelle.
-  Für die Behebung ist das unerheblich — der Schreibzugriff ist weg —, für den
-  lückenlosen Beweis fehlt es.
-* **Am laufenden Programm ist nichts nachgeprüft.** Es ist nur gebaut worden.
-* Die Härtung in `SECDockBar` bleibt als zweite Linie stehen: sie fängt denselben
-  Indexfehler ab, gleich woher er käme.
-
-### Nachprüfen
-
-1. Eudora starten, ein Postfach öffnen, beenden.
-2. `Mailverzeichnis\Eudora.ini`: es muss jetzt `[ToolBar-Summary]` und
-   `[ToolBar-Bar0]` geben, und `LastKnownCrashInfo` muss mit **`1`** anfangen.
-3. `Mailverzeichnis\Audit.log`: es muss eine Zeile mit dem Ereignis **`1`**
-   (Shutdown) dazugekommen sein.
-
-Bleibt die Meldung stehen: `tools/stapel-untersuchen.ps1` in einer
-**32-Bit**-PowerShell, mit `Eudora.pdb` neben `Eudora.exe`. Im
-Zusicherungsdialog des Debug-Baus **„Wiederholen"** drücken — daraus wird ein
-Haltepunkt, den der Debugger als Ausnahme sieht.
-
----
-
-## E-12 — Zusicherung beim Start: der X1-Suchindex wird neu angelegt (05.09.2026, OFFEN)
-
-Im Debug-Bau 7.2.0.4, beim Start, vor der E-4-Zusicherung:
-
-    SUPERASSERT Assertion Failure
-    Expression : !"Erasing X1 indices because DB schema was missing or ..."
-    Location   : SearchManager::Info::InitX1, Line 496 in SearchManager...
-
-**Nicht angefasst.** Der Text sagt selbst, was geschieht: das Schema der
-Suchdatenbank fehlt oder passt nicht, also wird der Index verworfen und neu
-angelegt. Auf einem frischen Mailverzeichnis ist das der normale erste Lauf.
-Festgehalten, damit es nicht als neuer Fehler durchgeht, wenn es jemand
-wiedersieht — und damit jemand prüft, ob die Meldung auch beim **zweiten**
-Start noch kommt. Dann wäre sie ein echter Befund.
+> **Status: behoben, ungeprüft.** Dass die Meldung beim Beenden ausbleibt, hat
+> am laufenden Programm noch niemand bestätigt.
 
 ## Z-2 — Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
 
@@ -5608,7 +5520,7 @@ mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
 | 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, aber ungeprüft |
 | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** (Debug-Bau) — im Release blockiert der Assistent |
 
-## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026, OFFEN)
+## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026 — BEHOBEN am 05.09.2026, ungeprüft)
 
 Gregor auf dem Win11-Rechner: *„und ich sehe hier keine versionsnummer in der
 titelzeile"*. Der Titel zeigt nur `Eudora`.
@@ -5663,6 +5575,30 @@ Stelle, für die sie da ist.
 > Merkmal am laufenden Programm, das die beiden auseinanderhält, weil sie den
 > Commit enthält. Und sie fehlt ausgerechnet im Zustand des Absturzes. Die
 > Behebung ist ein einziger Aufruf.
+
+### Behoben am 05.09.2026 — Weg 1, ein Aufruf (Commit `bcc59bb`)
+
+Gregor zur Fassung 7.2.0.4: *„versionsnummer fehlt in der titelzeile - warum?
+korrigeiren!"* — derselbe Zustand, nur eine Fassung weiter.
+
+Umgesetzt ist **Weg 1** aus dem Abschnitt oben: am Ende von
+`CMainFrame::FinishInitAndShowWindow` (`mainfrm.cpp:1135`), also nachdem das
+Fenster steht, läuft einmal
+
+```cpp
+OnUpdateFrameTitle(TRUE);
+```
+
+Die Funktion hängt die Kennung nicht doppelt an, sie prüft das selbst
+(`mainfrm.cpp:9728`). Weg 2 (`m_strTitle` gleich belegen) ist **nicht**
+umgesetzt und bleibt ungeprüft.
+
+Release gebaut: 0 Fehler, 62 Warnungen, `Eudora.exe` mit 7.2.0.4.
+
+> **Status: behoben, ungeprüft.** Dass die Kennung jetzt tatsächlich im Titel
+> steht, hat am laufenden Programm noch **niemand** bestätigt — es liegt keine
+> Rückmeldung von Gregor dazu vor. Nachsehen kostet einen Blick auf die
+> Titelzeile beim nächsten Start.
 
 ## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
 
@@ -6902,127 +6838,145 @@ vor und lief durch. **Zu beheben wäre:** die Projektabhängigkeit in
   weil Gregor über POP abruft und eine Änderung dort ungeprüft bliebe.
 * **Der Kopfzeilenpfad** (`lex822.cpp:544`) ist **nicht** betroffen: dort liegt
   der dekodierte Text am Stück vor, es gibt keine Grenze zum Zerreißen.
-## E-12 — Der Fortschritt beim Mailabruf ist nicht sichtbar: er dauert 0,02 Sekunden (05.09.2026, URSACHE BELEGT)
 
-**Gregor am 05.09.2026, Fassung 7.2.0.4, Paket 1.0.4:**
+## B-3 — `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe (05.09.2026)
+
+Bis zum 05.09.2026 scheiterte **jeder Bau aus einem frischen Klon** am Projekt
+`OT501`. Es kapselt die **Stingray Objective Toolkit**, ein kommerzielles
+Fremdprodukt von 1995; die Quelltextfreigabe des CHM durfte es nicht enthalten.
+Im Repo liegen nur 39 `.cpp` (fast alle die mitgelieferte JPEG-Bibliothek) und
+die Kopfdateien. `OT501` kann deshalb **nie** bauen.
+
+Der Ausweg war bisher `/p:BuildProjectReferences=false` — ein Kniff, der in
+`README.md` stand und den jeder Neue kennen musste.
+
+### Belegt, dass niemand `OT501` braucht
+
+| Beleg | Fundstelle |
+|---|---|
+| Kein Projekt bindet `OTA50R.lib` oder `OTA50D.lib`. Die einzige Erwähnung schließt sie ausdrücklich **aus** | `Eudora.vcxproj`, `IgnoreSpecificDefaultLibraries` |
+| Die beiden Projektverweise trugen bereits `<LinkLibraryDependencies>false</LinkLibraryDependencies>` | `Eudora.vcxproj`, `EudoraRes.vcxproj` |
+| Keine Quelldatei bindet eine Stingray-Kopfdatei ein, die eine Bibliothek verlangt | — |
+| Ersetzt ist das Ganze durch die eigene Schicht `Eudora71/OTShim`, rund 18.000 Zeilen | Befund S-2 und `Eudora71/OTShim/INVENTAR.md` |
+
+### Was geändert wurde (Commit `d8cc9d3`)
+
+* die Projektverweise auf `OT501` aus `Eudora71/Eudora/Eudora.vcxproj` und
+  `Eudora71/Eudora/EudoraRes.vcxproj` entfernt,
+* die beiden `.Build.0`-Zeilen für `OT501` aus `Eudora71/Eudora.sln` entfernt.
+
+Das Projekt bleibt in der Projektmappe **sichtbar**, wird aber nicht mehr
+gebaut. `..\OT501\Include` bleibt im Suchpfad: die Kopfdateien werden gebraucht,
+nur die Bibliothek nicht.
+
+**Damit entfallen die drei Fehler**, die ein voller Solution-Bau bis dahin
+meldete (zweimal `NMAKE U1073`, einmal `MSB3073`, gemessen am 31.08.2026 in
+Befund B-2). `README.md` ist am 05.09.2026 entsprechend berichtigt — sowohl die
+Kurzfassung unter „Bauen" als auch der Abschnitt „Was den Bau kaputtmacht",
+Punkt 4.
+
+> **Berichtigung im selben Zug** (Commit `f468a02`): Es stand zwischenzeitlich
+> die Behauptung im Raum, ein `-t:Rebuild` habe eine vorgebaute `OTA50R.lib`
+> gelöscht. Das war falsch. `OTA50R.lib` hat **nie existiert** — weder im Repo
+> noch in einem Release-ZIP noch in einem Commit. Nachgemessen: die vier Dateien
+> in `Src/OTA50R/` tragen unverändert den **31.08.2026, 07:22**; ein Clean hätte
+> sie gelöscht. Es waren zwei Objektdateien und eine PCH aus einem Bauversuch,
+> der an derselben fehlenden Quelle starb. Zerstört wurde nichts; sichtbar wurde
+> ein Mangel, der die ganze Zeit da war.
+
+**Wer `OT501` wieder in den Bau nimmt, bricht den Bau.**
+
+## E-13 — Beim Mailabruf ist kein Fortschritt sichtbar: der Abruf dauert 0,02 Sekunden (05.09.2026)
+
+> **Diese Kennung hieß bis zum 05.09.2026 versehentlich `E-12`.** Zwei Agenten
+> haben unabhängig voneinander „die nächste freie E-Nummer" gewählt. `E-12` ist
+> an den Befund über das Mailverzeichnis-Argument vergeben (Commit `79c09d4`,
+> zuerst zusammengeführt und im Verzeichnis geführt); dieser Befund hier bekommt
+> `E-13`. Wer unter `E-12` den Fortschrittsbefund sucht, ist hier richtig.
+
+> **Stand des Codes:** Die Behebung liegt im Commit `bd3959c` auf dem Zweig
+> **`wt/fortschritt-arbeit`** und ist in `bau-und-pruefung` **noch nicht
+> enthalten**. Der vollständige Befundtext steht dort in `BEFUNDE.md`. Wer die
+> beiden Zweige zusammenführt, **entfernt dort die Überschrift `## E-12 — Der
+> Fortschritt beim Mailabruf …` zugunsten dieses Abschnitts** — sonst steht
+> `E-12` wieder zweimal in der Datei.
+
+**Gregor am 05.09.2026 zur Fassung 7.2.0.4:**
 
 > „mails lassen sich abrufen … status während des abrufes nicht sichtbar. es
 > sieht so aus, als würde nichts passieren."
->
-> „ich möchte den fortschritt beim abrufen der mails sehen: von mir aus in der
-> status leiste des app."
 
-Der Gegenbeleg stand schon im Haus: am **31.08.2026** meldete Gregor zum
-Debug-Bau mit 159 Nachrichten ausdrücklich *„sichtbar im progress bar im
-status"* (E-1, E-3). Es sah also nach einem Rückschritt zwischen dem 31.08. und
-dem 05.09. aus. **Das ist es nicht.**
+Am 31.08.2026 hatte er zum Debug-Bau mit 159 Nachrichten noch ausdrücklich
+*„sichtbar im progress bar im status"* gemeldet (E-1, E-3). Es sah deshalb nach
+einem Rückschritt aus. **Es ist keiner.**
 
-### Was es NICHT ist — jeweils mit Beleg
+### Die naheliegende Erklärung war falsch — das ist die Lehre
+
+Alle Verdächtigen, die man ohne Messung genannt hätte, sind widerlegt:
 
 | Verdacht | Gegenbeleg |
 |---|---|
-| Rückschritt seit dem 31.08. | `git diff 1ea176f HEAD -- Eudora71/` berührt **keine** der beteiligten Dateien. Geändert wurden nur `MAPIImport.cpp`, `TridentView.cpp`, `eudora.cpp`, `mainfrm.cpp` (Titelzeile), `msgutils.cpp`, `Version.h` und die Projektdateien |
-| Der Umbau der Andockleisten (`OTShim.cpp`, 31.08. 07:09, Commit `1a4a6d5`) | `git merge-base --is-ancestor 1a4a6d5 1ea176f` sagt **ja**: der Umbau war im Bau vom 31.08. bereits enthalten — genau in dem Bau, in dem die Anzeige **funktionierte** |
-| `SetControlBarWidthsInRow` als leerer Rumpf (E3) | die Statusleiste läuft nicht über den SEC-Leistenverwalter. `OTShim.h:135` macht `SECStatusBar` zu einem `typedef` auf das reine MFC-`CStatusBar`; `mainfrm.cpp:1666` erzeugt sie unmittelbar |
-| Statusleiste unsichtbar oder 0 breit | Gregors Bildschirmfoto vom 05.09. zeigt links „For Help, press F1" und rechts „NUM" — die Leiste **wird gezeichnet** |
-| Werbeleiste / `BUILD_BOX_OR_SITE_R_VERSION` (S-2) | die Fortschrittsanzeige hängt an der Statusleiste und am Task-Status-Wazoo, nicht an `CAdWazooBar` (`WazooBarMgr.cpp:155`) |
-| Ein nötiger Aufruf steckt in einem `ASSERT` (im Release leer) | im ganzen Pfad steht kein `ASSERT` mit einer Nebenwirkung. Die Aufrufe mit Wirkung stehen in `VERIFY`, und `VERIFY` **wertet im Release aus**: `qcassert.h` überschreibt `ASSERT`/`VERIFY` nur im `#ifdef _DEBUG`-Zweig, im Release gilt MFCs `#define VERIFY(f) ((void)(f))` |
-| `SetPaneInfo` verliert den Eigenzeichnen-Merker | nachgesehen in `barstat.cpp` aus MSVC 14.38.33130: `SetPaneInfo` ruft `SetPaneText` **nur**, wenn sich der Stil ändert. Eudora übergibt beide Male `SBPS_NORMAL`, der Stil ändert sich also nicht |
+| Rückschritt seit dem 31.08. | `git diff 1ea176f HEAD -- Eudora71/` berührt **keine** der beteiligten Dateien |
+| Der Umbau der Andockleisten (`OTShim.cpp`, Commit `1a4a6d5`) hat die Leiste zerstört | `git merge-base --is-ancestor 1a4a6d5 1ea176f` sagt **ja** — der Umbau war schon in dem Bau vom 31.08. drin, in dem die Anzeige **funktionierte** |
+| Unterschied Release gegen Debug: ein nötiger Aufruf steckt in einem `ASSERT` | im ganzen Pfad steht kein `ASSERT` mit Nebenwirkung. Die wirksamen Aufrufe stehen in `VERIFY`, und `VERIFY` **wertet im Release aus** |
+| Die Statusleiste läuft über die Ersatzschicht (`SetControlBarWidthsInRow` ist ein leerer Rumpf, E3) | `OTShim.h:135` macht `SECStatusBar` zu einem **`typedef` auf MFCs `CStatusBar`** — die Ersatzschicht ist gar nicht beteiligt |
 
-### Was es IST — aus Gregors eigenem Protokoll
+### Was es ist — aus Gregors eigenem Protokoll
 
-`C:\Users\Gregor\Eudora72-1.0.4-release\Mailverzeichnis\eudora.log`, Lauf vom
-05.09.2026 19:28:30, `LogLevel 25759 (0x649F)` — Bit `0x10` (`DEBUG_MASK_PROG`)
-ist gesetzt, die Fortschrittsmeldungen stehen also mit drin:
+`Mailverzeichnis\eudora.log`, Lauf vom 05.09.2026, `LogLevel 0x649F` (Bit `0x10`
+= `DEBUG_MASK_PROG` gesetzt, die Fortschrittsmeldungen stehen also mit drin):
 
 ```
-5628  8192: 2.07 Begin fetching messages for : adventskalender-mails@freenet.de@mx.freenet.de
-5628  8192: 2.09 Done fetching messages for : adventskalender-mails@freenet.de@mx.freenet.de
+2.07 Begin fetching messages for : …@mx.freenet.de
+2.09 Done  fetching messages for : …@mx.freenet.de
 ```
 
-**Der Abruf dauerte 0,02 Sekunden.** Neun Nachrichten, 576 823 Bytes. Der ganze
-Postgang, vom Verbindungsaufbau bis „You have new mail!", lief von 2,02 s bis
-3,10 s — **1,08 Sekunden**. Am 31.08. waren es 159 Nachrichten in einem
-Debug-Bau; dort stand die Anzeige sekundenlang.
+**Der Abruf dauerte 0,02 Sekunden**, neun Nachrichten; der ganze Postgang
+1,08 Sekunden. Am 31.08. waren es 159 Nachrichten in einem Debug-Bau — dort
+stand die Anzeige sekundenlang. **Der Unterschied liegt zwischen 159 Nachrichten
+und neun, nicht zwischen Debug und Release.**
 
-Beide Anzeigewege sind auf **lange** Vorgänge ausgelegt und halten sich bei
-kurzen absichtlich zurück:
+Beide Anzeigewege halten sich bei kurzen Vorgängen absichtlich zurück:
 
 1. **Das Fortschritts-Fenster** (`progress.cpp:238-241`) wartet erst
-   `ProgressIdle` Sekunden ab, ehe es sich überhaupt zeigen darf. Voreinstellung
-   in `EudoraRes.rc:8633`: **`ProgressIdle 3`** — drei Sekunden. Ein Postgang von
-   1,08 s erreicht diese Schwelle nie. Das Fenster **kann** hier gar nicht
-   erscheinen.
-2. **Die Statusleiste** hielt für den Fortschritt nur ein **16 Bildpunkte**
-   breites Feld bereit (`statbar.cpp:185`, `nImageListWidth + 2`) und
-   verbreiterte es erst in dem Augenblick auf 117, in dem eine Aufgabe einen
-   Prozentwert meldete (`statbar.cpp:528`) — um es beim Ende sofort wieder zu
-   schrumpfen. Verbreitern, Zeichnen und Schrumpfen lagen in derselben
-   Zwanzigstelsekunde. Gezeichnet wurde nur mit `InvalidateRect`, also
-   **angemeldet**, nicht ausgeführt; die Neuzeichnung wäre erst im nächsten
-   Leerlauf drangewesen — da war der Vorgang längst vorbei.
+   `ProgressIdle` Sekunden ab. Voreinstellung `ProgressIdle 3`
+   (`EudoraRes.rc:8633`) — ein Postgang von 1,08 s erreicht die Schwelle nie.
+2. **Die Statusleiste** hielt für den Fortschritt nur **16 Bildpunkte** bereit
+   (`statbar.cpp:185`) und verbreiterte das Feld erst beim ersten Prozentwert,
+   um es sofort wieder zu schrumpfen. Gezeichnet wurde nur per
+   `InvalidateRect` — also **angemeldet**, nicht ausgeführt.
 
-**Es war also kein Unterschied zwischen Release und Debug, sondern ein
-Unterschied zwischen 159 Nachrichten und neun.**
+### Behebung (auf `wt/fortschritt-arbeit`, `statbar.cpp` / `statbar.h`)
 
-### Der Aufrufweg, zum Nachschlagen
+Fortschrittsfläche von Anfang an in voller Breite; 2 Sekunden Nachlauf
+(`TASK_LINGER_MS`); `UpdateWindow()` statt nur `InvalidateRect`; und der
+Fortschritt zusätzlich als Text im Meldungsfeld, aus vorhandenen Ressourcen
+gebaut (ohne neue Zeichenkette).
 
-```
-POPSession.cpp:956   m_pTaskInfo->SetTotal(nTotalMessages*100)
-POPSession.cpp:1334  m_pTaskInfo->SetSoFar(...)             [Arbeitsfaden]
-  -> TaskInfo.cpp:103            PostDisplayMsg(msgTaskViewInfoChanged)
-  -> TaskStatusWazooWnd.cpp:136  erzeugt beim ersten Mal die Ansicht
-  -> TaskStatusView.cpp:259      NotifyStatusBar()
-  -> TaskStatusView.cpp:282      pStatusBar->SendMessage(msgStatusBarTask, &m_TheStatus)
-  -> statbar.cpp                 CStatusBarEx::OnMsgTaskStatus -> OnChangeRunningStatus
-  -> statbar.cpp                 CStatusBarEx::DrawItem zeichnet Balken und Laufsymbol
-```
+### Die Lehre
 
-Der Weg über `progress.cpp` (`Progress()`, `MainProgress()`) ist ein **zweiter,
-davon unabhängiger**: er läuft nur im Hauptfaden (`ASSERT(::IsMainThreadMT())`)
-und bedient das Fortschritts-**Fenster**, nicht die Leiste. Im Protokoll sind
-seine Meldungen die Zeilen mit der Maske `16`: „Building mailbox 'In' table of
-contents", „Preparing new messages to display: 9".
+**Wer eine Fortschrittsanzeige prüft, sieht zuerst nach, wie lange der Vorgang
+überhaupt dauert.** Das Protokoll des Anwenders hat hier vier Vermutungen auf
+einmal widerlegt, für die sonst Bauten und Debugger-Läufe nötig gewesen wären.
 
-### Behebung (in `Eudora71/Eudora/statbar.cpp` und `statbar.h`)
+---
 
-1. **Die Fortschrittsfläche ist von Anfang an da** (`Create`, vormals Zeile 185):
-   `StatBarGraphWidth + 1 + nImageListWidth + 2` statt `nImageListWidth + 2`. Das
-   Umlegen der Feldbreite mitten im Abruf entfällt ersatzlos. Die Rechnung stand
-   schon als Kommentar in der Originalzeile.
-2. **Nachlauf von 2 Sekunden** (`TASK_LINGER_MS`): fällt die letzte laufende
-   Aufgabe weg, wird der Ruhezustand nicht sofort übernommen, sondern über einen
-   Zeitgeber (`LINGER_TIMER_ID`) verzögert. Der Rumpf von `OnMsgTaskStatus` ist
-   dafür nach `ApplyTaskStatus()` herausgelöst, damit Nachlauf und Normalfall
-   denselben Weg nehmen.
-3. **Sofort zeichnen** statt nur anmelden: `UpdateWindow()` am Ende von
-   `OnChangeRunningStatus()`.
-4. **Text im Meldungsfeld**: solange eine Aufgabe läuft, steht dort statt „For
-   Help, press F1" die Meldung „There is one task running - 42%"
-   (`UpdateTaskPaneText()`, gebaut aus den vorhandenen Ressourcen
-   `IDS_STATUSBAR_TOOLTIP_TASK_BUSY_ONE` und `IDS_STATUSBAR_TOOLTIP_TASK_BUSY`,
-   also **ohne** neue Zeichenkette). Danach wird über `WM_SETMESSAGESTRING` /
-   `AFX_IDS_IDLEMESSAGE` auf die Ruhemeldung zurückgestellt — derselbe Weg wie in
-   `nicktree.cpp:1474`.
+## E-14 — Zusicherung beim Start: der X1-Suchindex wird neu angelegt (05.09.2026, OFFEN)
 
-### Was Gregor sehen müsste
+Im Debug-Bau 7.2.0.4, beim Start, vor der E-4-Zusicherung:
 
-Beim nächsten *Mail abrufen*: unten **links** wechselt „For Help, press F1" auf
-„There is one task running", bei Prozentwerten mit angehängtem „ - nn%"; unten
-**rechts** neben „NUM" liegt jetzt ein rund 100 Bildpunkte breites Feld mit dem
-Balken und dem Laufsymbol. Beides bleibt nach dem Ende des Abrufs **zwei
-Sekunden** stehen.
+    SUPERASSERT Assertion Failure
+    Expression : !"Erasing X1 indices because DB schema was missing or ..."
+    Location   : SearchManager::Info::InitX1, Line 496 in SearchManager...
 
-Bleibt beides leer, liegt der Fehler **nicht** in der Statusleiste, sondern
-davor: dann kommt `msgStatusBarTask` gar nicht an, und der nächste Blick geht auf
-`CTaskStatusWazooWnd` — wird die Wazoo-Ansicht überhaupt erzeugt?
+**Nicht angefasst.** Der Text sagt selbst, was geschieht: das Schema der
+Suchdatenbank fehlt oder passt nicht, also wird der Index verworfen und neu
+angelegt. Auf einem frischen Mailverzeichnis ist das der normale erste Lauf.
+Festgehalten, damit es nicht als neuer Fehler durchgeht, wenn es jemand
+wiedersieht — und damit jemand prüft, ob die Meldung auch beim **zweiten**
+Start noch kommt. Dann wäre sie ein echter Befund.
 
-### Offen
-
-- Das **Fortschritts-Fenster** (`progress.cpp`) bleibt bei kurzen Vorgängen
-  weiterhin unsichtbar. Das ist so gewollt (`ProgressIdle 3`) und wurde **nicht**
-  angefasst. Wer es sehen will, trägt in `Eudora.ini` unter `[Settings]`
-  `ProgressIdle=0` ein.
-- Das **Task-Status-Fenster** (Knopf links unten) ist nicht am laufenden Programm
-  geprüft; es hängt am selben `CTaskInfoMT` und sollte die Aufgabe zeilenweise
-  zeigen.
+> **Hinweis zur Kennung.** Dieser Befund hiess bis zum 05.09.2026
+> versehentlich `E-12`. Drei Agenten hatten unabhaengig „die naechste freie
+> Nummer“ gewaehlt, waehrend die anderen gleichzeitig schrieben. Kennungen
+> vergibt seitdem die Zuteilung, nicht der Agent – siehe [AGENTEN.md](AGENTEN.md).

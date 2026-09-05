@@ -1,6 +1,6 @@
 # Eudora 7.2
 
-<!-- pruefstand: d826a3f -->
+<!-- pruefstand: 3d03c50 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -15,21 +15,20 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 > ## Eudora startet, ist bedienbar und ruft Mail ab.
 >
-> **Gemessen am 31.08.2026** an dem Paket `Eudora72-1.0.3-release.zip`
-> (Produktversion 7.2.0.3, `Release|Win32`, Toolset v143 / MSVC 14.38.33130).
-> Der Gesamtbau der Solution ist in derselben Sitzung nachgemessen (Befund B-2).
-> Wer den Stand prüft, misst neu und nennt seinen eigenen Bezugscommit — an
-> diesem Baum arbeiten mehrere Agenten gleichzeitig.
+> **Gemessen am 05.09.2026** an der Fassung **7.2.0.4 / Paket 1.0.4**
+> (`Release|Win32`, Toolset v143 / MSVC 14.38.33130). Gregor hat sie in der VM
+> gestartet, bedient und Mail damit abgerufen.
 >
 > Was „lauffähig" heißt, hat Gregor in [ZIEL.md](ZIEL.md) festgelegt. **Dort
-> steht die maßgebliche Kriterientabelle**; die folgende ist ihre Kurzfassung:
+> steht die maßgebliche Kriterientabelle**; die folgende ist ihre Kurzfassung.
+> Wer den Stand ändert, ändert ihn **in `ZIEL.md`**, nicht hier.
 >
-> | # | Kriterium | Stand am 31.08.2026 |
+> | # | Kriterium | Stand am 05.09.2026 |
 > |---|---|---|
-> | 0 | das Paket läuft ohne Nachinstallieren | **nicht belegt** — das Release-Paket ist gebaut, aber auf keinem Rechner **ohne** Visual Studio nachgewiesen. `tools/paket-pruefen.ps1` taugt nicht als Nachweis, es prüft die Maschine statt das Paket (Befund PR-2) |
-> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** auf einer eingerichteten Installation — Gregor: *„menü funktioniert"* (Befund E-1). Auf einer **frischen** Installation stürzte der Kontoassistent beim Klick auf *Weiter* ab (Befund E-11); behoben in `eudora.cpp:3372`, am Programm noch nicht nachgesehen |
-> | 2 | die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen. Die falschen Zeichen in HTML-Mail (`◆`) sind an der Ursache behoben (Befund Z-2), am Programm noch nicht nachgesehen. Am 05.09. kam ein zweiter, eigener Fehler dazu und ist ebenfalls behoben: **ein einzelner** Umlaut je Nachricht wurde beim Abruf an der Stückgrenze zerrissen (`fÃ¼r`), Z-2b |
-> | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — 159 Nachrichten von `mx.freenet.de`, Port 110, STARTTLS, TLSv1.3, `TLS_AES_256_GCM_SHA384` (Befunde E-1 und E-3) |
+> | 0 | das Paket läuft ohne Nachinstallieren | **weiterhin nicht belegt** — auf keinem Rechner **ohne** Visual Studio nachgewiesen. `tools/paket-pruefen.ps1` taugt nicht als Nachweis, es prüft die Maschine statt das Paket (Befund PR-2.0 bis PR-2.3) |
+> | 1 | startet und zeigt sein Hauptfenster | **erfüllt** — Gregor hat 7.2.0.4 gestartet und bedient. Der Absturz auf frischen Installationen (E-11) ist behoben, aber weiterhin **nicht** auf einer frischen Installation nachgesehen |
+> | 2 | die Darstellung ist korrekt | **fast** — der Titel trägt die Bau-Kennung wieder (E-7 behoben, am Programm noch nicht nachgesehen). Offen: **beim Mailabruf ist kein Fortschritt sichtbar**. Ein einzelner Umlaut je Nachricht wurde beim Abruf zerrissen (`fÃ¼r`) — Z-2b, behoben, ungeprüft |
+> | 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** — Gregor am 05.09.2026: *„mails lassen sich abrufen"* |
 >
 > **Zwei von vier Kriterien sind belegt, eines fast, eines offen.** Erst wenn
 > alle vier erfüllt sind, darf eine Fassung „lauffähig" heißen. Die Dateinamen
@@ -37,19 +36,38 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > mehr, als die Fassungen können; sie bleiben nur stehen, weil die Pakete unter
 > diesen Namen samt Prüfsumme veröffentlicht sind.
 >
-> **Der nächste Schritt** steht in [AUFGABEN.md](AUFGABEN.md) ganz oben: das
-> Paket auf dem zweiten PC (Windows 11, ohne Visual Studio) auspacken und
-> starten. Dieser eine Lauf beantwortet die Kriterien 0, 1 und 2 zusammen.
-> Achtung auf die Prüfsumme — das ZIP unter
-> [Releases v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3)
-> ist am 31.08. um 09:00 **ausgetauscht** worden. Nur die Fassung mit SHA256
-> `d4719047…` enthält die Behebung von E-11; die erste (`632c4066…`) stürzte ab.
+> ### Achtung: „7.2.0.4" bezeichnet mehr als einen Bau
+>
+> `Releases/Eudora72-1.0.4-release.zip` (SHA256 `a3eb72e5…`) ist am 05.09.2026
+> um **19:22** gepackt worden, nur lokal, **nicht veröffentlicht**. Danach sind
+> an derselben Produktversion noch Quelländerungen gelandet — E-7 (19:33), die
+> zwei Meldungen (19:45), Z-2b (20:14), E-12 (20:30), E-4 (20:33) —, ohne dass
+> `Eudora71/Version.h` weitergezählt worden wäre. **Das ZIP ist also nicht der
+> aktuelle Stand von 7.2.0.4.** Nachzählen:
+> `git log --format='%h %ad %s' --date=format:'%d.%m %H:%M' d59cf63..HEAD`.
+>
+> Das ist dieselbe Verwechslung wie in Befund **V-1** (drei verschiedene ZIPs
+> unter `v1.0.3`). Vor der nächsten Auslieferung gehört die Produktversion
+> hochgezählt; die fünf Stellen dafür stehen in
+> [Releases/PAKETE.md](Releases/PAKETE.md).
+>
+> **Der nächste Schritt** steht in [AUFGABEN.md](AUFGABEN.md) ganz oben.
+
+> ### Berichtigung: der Stand vom 31.08.2026 ist überholt
+>
+> Bis zum 05.09.2026 stand hier der Stand vom **31.08.2026** mit Paket **1.0.3**
+> und Produktversion **7.2.0.3**, dazu als nächster Schritt „das Paket auf dem
+> zweiten PC auspacken und starten". Beides ist überholt: Gregor hat 7.2.0.4 in
+> der VM getestet. Der alte Stand ist hier **berichtigt**, nicht gelöscht —
+> dieses Projekt hat mehrfach Zeit verloren, weil jemand einen alten Stand für
+> den aktuellen hielt. Die Belege zu 1.0.3 stehen unverändert in
+> [BEFUNDE.md](BEFUNDE.md) (E-1, E-3, E-8, V-1).
 
 Der Weg dorthin an zwei Tagen: `Eudora.exe` band zum ersten Mal, startete nicht,
 und die Gründe dafür sind belegt und behoben — siehe
 [BEFUNDE.md](BEFUNDE.md), Befunde S-1 bis S-8 sowie B-1/B-2, M-1, A-1, P-1/P-2
 und W-1. **Am Anfang von `BEFUNDE.md` steht ein Verzeichnis** aller Kennungen
-mit Statusspalte; ohne das findet man in 5900 Zeilen nichts wieder.
+mit Statusspalte; ohne das findet man in 6960 Zeilen nichts wieder.
 
 Der eigentliche Blocker war die **Werbefläche**: `CAdWazooWnd::OnCreate` legt sie
 mit `CRect(0,0,0,0)` an, die Textmaschine Paige bekommt eine Umbruchbreite von
@@ -73,18 +91,43 @@ in eine Datei gar nicht hinein, solange Zeitstempel und Größe zum Index passen
 der Schaden bleibt deshalb unsichtbar, bis ein Werkzeug die Datei berührt. Das
 ist die Wurzel aller CRLF-Probleme dieses Projekts, Befund S-7.
 
-### Bauen
+### Bauen — die Kurzfassung
+
+**Die ausführliche Anleitung steht weiter unten unter [„Selbst bauen"](#selbst-bauen),
+zusammen mit dem Abschnitt „Was den Bau kaputtmacht". Sie gilt.** Hier steht nur
+der schnellste Weg.
 
 ```bash
-"C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug /p:Platform=Win32 /p:BuildProjectReferences=false /m
+MSBuild.exe Eudora71/Eudora.sln -t:Build -p:Configuration=Release -p:Platform=x86 -m
 ```
 
-`/p:BuildProjectReferences=false` ist nötig — sonst scheitert der Bau am Projekt
-`OT501`, dessen Stingray-Quellen nicht freigegeben sind. Die Visual-Studio-IDE
-wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
+Die Visual-Studio-IDE wird dafür nicht gebraucht, nur die Installation
+(MSVC v143, MFC/ATL, Windows SDK). Der Aufruf muss aus **PowerShell** kommen:
+die Git-Bash macht aus `-p:Configuration=Release` einen Pfad.
 
-> **In einem frischen Klon oder Worktree zuerst die ganze Solution bauen.**
-> Mit `/p:BuildProjectReferences=false` endet der Einzelprojekt-Bau sonst mit
+> ### Berichtigung vom 05.09.2026: `/p:BuildProjectReferences=false` ist nicht mehr nötig
+>
+> An dieser Stelle stand bis zum 05.09.2026:
+>
+> > *„`/p:BuildProjectReferences=false` ist nötig — sonst scheitert der Bau am
+> > Projekt `OT501`, dessen Stingray-Quellen nicht freigegeben sind."*
+>
+> **Das gilt nicht mehr.** Am 05.09.2026 ist `OT501` aus dem Bau genommen worden
+> (Commit `d8cc9d3`): die Projektverweise sind aus `Eudora.vcxproj` und
+> `EudoraRes.vcxproj` entfernt, dazu die beiden `.Build.0`-Zeilen aus
+> `Eudora.sln`. Das Projekt bleibt in der Mappe **sichtbar**, wird aber nicht
+> mehr gebaut. Warum das gefahrlos ist, steht unten unter
+> „Was den Bau kaputtmacht", Punkt 4 — dort mit den Belegen.
+>
+> Damit entfällt auch die alte Angabe **„3 Fehler, alle aus `OT501`"**
+> (zweimal `NMAKE U1073`, einmal `MSB3073`, gemessen am 31.08.2026, Befund B-2).
+> Ein frischer Klon baut jetzt ohne Kniffe durch.
+>
+> Der alte Text bleibt hier als Zitat stehen, damit niemand einen ausgetauschten
+> Stand für den aktuellen hält — dieses Projekt hat damit mehrfach Zeit verloren.
+
+> **In einem frischen Klon oder Worktree die ganze Projektmappe bauen, nicht ein
+> Einzelprojekt.** Wer `Eudora.vcxproj` allein baut, bekommt
 >
 > ```
 > LINK : fatal error LNK1104: Datei "imap.lib" kann nicht geoeffnet werden.
@@ -93,16 +136,12 @@ wird nicht gebraucht, nur die Installation (MSVC v143, MFC/ATL, Windows SDK).
 > — nicht, weil etwas kaputt wäre, sondern weil `Eudora71/Lib/` von
 > `.gitignore` erfasst ist und `imap.lib` erst vom Projekt `imapdll` erzeugt
 > wird. Gemessen am 31.08.2026 (Befund A-1, Abschnitt „Bauzustand"). Nach einem
-> Gesamtbau der Solution bindet `Eudora.vcxproj` durch (Befund B-2).
+> Gesamtbau der Projektmappe bindet `Eudora.vcxproj` durch (Befund B-2).
 >
-> Der MSBuild-Aufruf muss aus **PowerShell** kommen: die Git-Bash macht aus
-> `/p:Configuration=Debug` einen Pfad.
-
-Ein voller Solution-Bau meldet weiterhin **3 Fehler, alle aus `OT501`**
-(zweimal `NMAKE U1073`, einmal `MSB3073`), nachgemessen am 31.08.2026 mit
-eingehängtem Projekt `VC71Bruecke` (Befund B-2). Das Projekt `OT501` wird nicht
-mehr gebraucht: die Ersatzschicht hat es abgelöst. Zwei zusätzliche
-`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` sind ein Wettlauf im
+> Zwei zusätzliche `LNK1104: QCUtils.lib` in `NSImport` und `OLImport` sind ein
+> Wettlauf im Parallelbau (`/m`), kein Fehler — einzeln gebaut laufen beide
+> durch. Die Ursache ist eine fehlende Projektabhängigkeit in `Eudora.sln`,
+> Befund **Z-3**, offen.
 Parallelbau (`/m`), kein Fehler — einzeln gebaut laufen beide durch.
 
 ### Starten
@@ -227,7 +266,7 @@ einen echten Mailserver. Einzelheiten in
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen. |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe`. Damit wurde S-2 gefunden. |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. Damit wurden die Stellen zu P-2 gefunden. Seit Befund **X-3** mit neun Filtern: **18 Treffer statt 347**, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio. |
-| `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: ist vorher ein `GetBuffer` auf **derselben** Variablen da? Das ist die Fehlerklasse hinter Befund E-11 (Absturz auf frischen Installationen). Gemessen: 117 richtig, 25 zu ändern. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio. |
+| `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: ist vorher ein `GetBuffer` auf **derselben** Variablen da? Das ist die Fehlerklasse hinter Befund E-11 (Absturz auf frischen Installationen). **Gemessen am 05.09.2026** mit `perl tools/releasebuffer-pruefen.pl` auf Commit `3d03c50`: **141 Vorkommen — 117 richtig, 24 zu ändern** (19 `falsch`, 4 `lockbuffer`, 1 `danach`). Am 31.08. waren es noch 142/117/25; eine Stelle ist mit E-12 nebenbei behoben worden (`fileutil.cpp:482`). Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio. |
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
 | `tools/laufzeit-holen.ps1` | holt die vier Debug-Laufzeiten von VS2022 aus `SysWOW64` und prüft jede einzeln auf x86 nach. Ohne sie startet Eudora mit `0xc000007b` — Befund S-8. `-NurPruefen` sagt nur, was fehlt. |
 | `tools/paket-bauen.ps1` | stellt ein Auslieferungspaket aus dem Quellbaum zusammen, wahlweise als ZIP. **Veröffentlicht nichts** — ob ausgeliefert wird, entscheidet ein Mensch. |

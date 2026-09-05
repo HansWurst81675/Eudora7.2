@@ -1,55 +1,62 @@
 ---
 name: agenten-koordinieren
-description: "Ein Arbeitsbaum gehört genau einem Agenten; vor jedem Start prüfen, ob er frei ist, und nach jedem Rücklauf die Sicherung messen"
+description: "Fünf Kollisionsarten paralleler Agenten und das Verfahren gegen jede; die Zuteilung ist meine Aufgabe, nicht die der Agenten"
 metadata: 
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-05T18:37:10.093Z
+  modified: 2026-09-05T18:44:11.670Z
 ---
 
-**Ein Arbeitsbaum gehört genau einem Agenten — für dessen ganze Lebensdauer.**
+**Das Verfahren steht in [AGENTEN.md](AGENTEN.md) im Repo. Vor jeder Runde
+paralleler Agenten lesen und befolgen.**
 
 Gregor am 05.09.2026: *„du mußt deine agenten besser koordinieren, damit nichts
-verloren geht! das ist wichtig. jedes mal. bei jeder session!"*
+verloren geht! das ist wichtig. jedes mal. bei jeder session!"* und *„schreib es
+dir auf! und merke es dir. und befolge es bei der nächsten session! du mußt
+immer dazu lernen."*
 
-**Why:** Ich hatte BAUMEISTER und BEENDEN denselben Baum
-(`Eudora7.2-wt-paket`) zugeteilt. BEENDEN hat dort mit `git checkout -B` den
-Branch gewechselt und dabei BAUMEISTERs **unversionierte** Arbeit gelöscht.
-BAUMEISTER musste sie rekonstruieren und in einen anderen Baum ausweichen. Es
-ging am Ende nichts verloren — aber nur, weil der Agent es selbst gemerkt und
-gemeldet hat. Darauf ist kein Verlass.
+**Why:** An einem Abend liefen bis zu acht Agenten. Sie haben viel geschafft,
+sich aber **fünfmal** behindert — jedes Mal anders. Keine davon war ein Fehler
+der Agenten; alle fünf waren Fehler der Zuteilung, und die liegt bei mir.
 
-Ein zweiter Weg, auf dem Arbeit verschwindet: ein Agent liefert seinen Bericht
-als **unverfolgte Datei** im Arbeitsbaum ab und committet sie nicht. Beim
-nächsten Branchwechsel ist sie weg.
+| Art | Was passierte |
+|---|---|
+| **Raum** | Zwei Agenten bekamen denselben Arbeitsbaum. Der zweite wechselte den Branch und löschte die unversionierte Arbeit des ersten. |
+| **Zeit** | Sechs bauten gleichzeitig: 28 MSBuild-Prozesse, ein Debug-Bau stieg von 2 auf 14 Minuten. |
+| **Zusammenführung** | Alle hängten Befunde ans Ende von `BEFUNDE.md`. Jede Zusammenführung endete im Konflikt — viermal derselbe Handgriff. |
+| **Namensraum** | Zwei wählten unabhängig „die nächste freie E-Nummer" und nahmen beide `E-12`. |
+| **Doppelarbeit** | Ein Agent und ich haben denselben Fehler behoben. Beide Fassungen richtig, eine umsonst. |
 
-**How to apply:**
+**How to apply — die fünf Antworten:**
 
-- **Vor jedem Start:** `git worktree list` und nachsehen, ob der Baum schon
-  belegt ist. Belegt heißt: ein Agent läuft dort noch — nicht, ob Dateien
-  drinliegen. Ist keiner frei, einen neuen anlegen:
-  `git worktree add -b wt/<name> ../Eudora7.2-wt-<name> <basis>`
-- **Im Auftrag immer nennen:** der genaue Pfad des Baums, der Branchname, und
-  die Auflage *„arbeite ausschließlich in deinem eigenen Baum"*.
-- **Nie zwei Agenten auf dieselbe Datei ansetzen** — auch nicht auf
-  `BEFUNDE.md`. Wenn beide dort schreiben sollen, macht es einer, oder sie
-  schreiben in getrennte Dateien und ich führe zusammen.
-- **Befundkennungen vergebe ICH, nicht der Agent.** Am 05.09.2026 haben KONTO
-  und FORTSCHRITT unabhängig „die nächste freie E-Nummer" gewählt und beide
-  `E-12` genommen. Wer parallel arbeitet, kann keine freie Nummer bestimmen —
-  der Nachbar schreibt gleichzeitig. Also im Auftrag die Kennung **nennen**,
-  oder den Agenten in eine eigene Datei schreiben lassen und beim
-  Zusammenführen numerieren.
-- **Im Auftrag verlangen:** committen **und** pushen, nicht nur schreiben. Ein
-  Bericht, der unverfolgt im Baum liegt, ist nicht gesichert.
-- **Nach jedem Rücklauf messen**, nicht glauben: `perl tools/gesichert.pl`
-  zeigt je Baum, was uncommittet und was ungepusht ist.
-- **Wenn Gregor einen Merge ankündigt:** sofort alle Bäume prüfen, bevor
-  irgendetwas anderes passiert. Siehe [[main-muss-immer-baubar-sein]].
+1. **Ein Baum je Agent.** `perl tools/arbeitsbaum-frei.pl --neu NAME` legt an
+   und bucht; Pfad und Branch **wörtlich in den Auftrag**. Nach dem Rücklauf
+   `--freigeben NAME`. Das Verzeichnis ist nötig, weil aus dem Dateisystem
+   nicht ablesbar ist, ob dort jemand arbeitet — die erste Fassung des
+   Werkzeugs meldete prompt zwei benutzte Bäume als frei.
+2. **Bauten nacheinander.** Prüf- und Doku-Agenten bekommen die Auflage, **nicht
+   zu bauen**. Ich baue einmal am Ende über den zusammengeführten Stand — das
+   ist ohnehin der einzige Bau, der zählt.
+3. **Niemand schreibt in eine gemeinsame Datei.** Jeder Agent schreibt
+   `Befunde/<NAME>.md`; `BEFUNDE.md`, `AUFGABEN.md`, `README.md`,
+   `WEITERMACHEN.md`, `PORTIERUNG.md` fasst **kein** Agent an. Das Einarbeiten
+   ist ein eigener Auftrag (LEKTOR) und läuft **allein**, wenn die anderen
+   fertig sind. Damit sind Konflikte strukturell unmöglich.
+4. **Kennungen vergebe ich**, im Auftrag genannt, bei mehreren als Block
+   (KONTO `E-12`, ZEICHEN `E-13`, …). Ein Agent kann nicht wissen, was frei ist.
+5. **Die Buchung trägt die Aufgabe, nicht nur den Namen.** Und: sitzt ein Agent
+   an einer Sache, **arbeite ich nicht mit**. Was ich finde, geht per Nachricht
+   an ihn. Das hat funktioniert — Gregors Bildschirmfoto zeigte die Ursache von
+   E-4, ich schickte sie an den Agenten, und er behob sie gründlicher als ich.
 
-Der Grundsatz dahinter ist derselbe wie bei den Schranken: eine Regel, die nur
-in meinem Kopf existiert, trägt nicht. Sie muss vor dem Start geprüft und nach
-dem Rücklauf gemessen werden. Siehe [[fehlerklassen-abstellen]],
-[[agenten-trennen-worktrees]], [[wissen-gehoert-in-dateien]] und
-[[agenten-benennen]].
+**Was gut lief und bleibt:** deutsche Namen statt Nummern; Aufträge mit
+Fundstelle, Hypothese **und** der Aufforderung, die Hypothese zu widerlegen
+(zwei Agenten haben meine widerlegt und die echte Ursache gefunden);
+Nachrichten an laufende Agenten statt Warten auf den Rücklauf; die festen
+Auflagen in jedem Auftrag (kein Fenster starten, byte-erhaltend, Zeilenenden
+messen, committen **und** pushen, Gregors Testverzeichnis nur lesen).
+
+Siehe [[agenten-benennen]], [[agenten-trennen-worktrees]],
+[[nie-stillstehen]], [[fehlerklassen-abstellen]] und
+[[main-muss-immer-baubar-sein]].
