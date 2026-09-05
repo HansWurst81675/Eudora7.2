@@ -117,6 +117,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
+| X-6 | Bau-Lauf: geratene Plattform (`MSB4126`) und Erfolgsmeldung ohne Bau; `tools/bauen.ps1` | **behoben** — das Werkzeug steht, drei Gegenproben grün |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
@@ -6292,3 +6293,166 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
    „das ist die Fassung, die abstürzte" acht Zeichen lang.
 3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
+
+## X-6 — Ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben (05.09.2026)
+
+Zwei Fehler in **einem** Lauf. Der erste war laut, der zweite war leise — und
+der leise hätte beinahe ein falsches Paket in die Auslieferung gebracht.
+
+### 1. Die Plattform wurde geraten: `MSB4126`
+
+Der Aufruf lautete `-p:Platform=Win32`. `Eudora71/Eudora.sln` kennt auf
+Projektmappenebene aber nur zwei Paare:
+
+```
+GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    Debug|x86 = Debug|x86
+    Release|x86 = Release|x86
+EndGlobalSection
+```
+
+`Win32` steht eine Ebene tiefer, in den Projekten; die Projektmappe **bildet**
+`x86` darauf ab:
+
+```
+{B94694FC-1EAC-4E90-9006-E40CF1C85041}.Release|x86.ActiveCfg = Release|Win32
+```
+
+MSBuild brach ab mit *„Die angegebene Projektmappenkonfiguration
+`Release|Win32` ist ungültig"*. Der richtige Name stand die ganze Zeit in der
+Datei — er wurde nicht gelesen, sondern erraten.
+
+### 2. Der Rückgabewert war 0, obwohl nichts gebaut wurde
+
+Trotz des Abbruchs meldete der Shell-Aufruf **EXITCODE 0**. Aufgefallen ist es
+nur durch eine zusätzliche Handprüfung: in der `Eudora.exe` stand noch
+`7.2.0.3`, während `Version.h` schon `7.2.0.4` sagte. Ohne diese Prüfung wäre
+ein Paket mit der **alten** EXE unter der **neuen** Nummer herausgegangen —
+dieselbe Fehlerklasse wie V-1 (zwei verschiedene ZIPs unter einer Nummer), nur
+eine Stufe früher.
+
+Die Ursache ist benennbar und wiederholbar: `$LASTEXITCODE` gehört der
+**Pipeline**, nicht dem Programm. Steht ein natives Programm hinter einer
+Umleitung oder in einer Pipe, meldet die Shell den Wert des letzten Glieds.
+Beim Bauen des Werkzeugs ist mir derselbe Fehler noch einmal unterlaufen: der
+Aufruf `powershell -File tools\bauen.ps1 -NurPruefen | tail -35` gefolgt von
+`echo $?` meldete **EXITCODE=0**, obwohl das Skript mit 1 endete — der Wert kam
+von `tail`. Deshalb steht die Warnung jetzt im Kopf von `bauen.ps1`.
+
+Ein Bau-Werkzeug, das Erfolg meldet, ohne gebaut zu haben, ist schlimmer als
+keines: es ersetzt Unsicherheit durch falsche Sicherheit.
+
+### 3. Ein dritter Fehler beim Suchen nach dem zweiten
+
+Beim Nachsehen, ob der Release-Bau eine Debug-Laufzeit zieht, wurde mit `grep`
+über die ganzen Binärdateien gesucht statt in der Importtabelle. Ergebnis waren
+Bruchstücke wie `s.dll` und `ts.dll` — Treffer, die es nicht gibt. Für genau
+das gibt es seit S-8 den PE-Leser in `tools/paket-pruefen.ps1`.
+
+---
+
+### Die Abhilfe: `tools/bauen.ps1`
+
+PowerShell, weil das Werkzeug fast nur mit Windows redet: einen Prozess starten
+und dessen Rückgabewert **zuverlässig** bekommen, Zeitstempel, Dateigrößen,
+Versionsressourcen, PE-Köpfe. Und weil der bewährte PE-Leser aus
+`paket-pruefen.ps1` übernommen werden konnte, statt ihn in Perl ein zweites Mal
+zu schreiben — ein zweiter PE-Leser wäre eine zweite Fehlerquelle.
+
+```
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Debug -Ziel Rebuild
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -NurPruefen
+```
+
+Rückgabe 0 / 1 / 2 wie bei den anderen Werkzeugen. Nichts wartet auf eine
+Eingabe: `/nologo /noautoresponse /nr:false`, und die Standardeingabe jedes
+MSBuild-Laufs liegt auf einer leeren Datei.
+
+**Gegen Fehler 1:** Konfiguration und Plattform kommen aus
+`GlobalSection(SolutionConfigurationPlatforms)`, die Projektzuordnung aus
+`GlobalSection(ProjectConfigurationPlatforms)`. MSBuild wird über `vswhere.exe`
+gesucht (hier: *2022 Professional*); die feste Pfadliste ist nur Rückfallebene
+und wird als solche gemeldet.
+
+**Gegen Fehler 2 — vier voneinander unabhängige Prüfungen**, jede allein genügt
+für einen Fehlschlag:
+
+| # | Prüfung | Warum sie nötig ist |
+|---|---|---|
+| a | Rückgabewert über `Start-Process -PassThru`, **nicht** `$LASTEXITCODE` | genau die Stelle, an der der Wert verlorenging |
+| b | eigener `ErrorsOnly`-Dateilogger, Zeilen gezählt | MSBuild kann mit 0 zurückkommen und trotzdem Fehler gemeldet haben; ein Suchmuster auf `error` ginge an der **deutschen** Ausgabe vorbei (gemessen: „2815 Warnung(en) / 0 Fehler") |
+| c | Zeitstempel der Artefakte gegen eine **Dateisystem**-Marke vom Bau-Beginn | ein Artefakt, das nicht neuer ist, ist nicht gebaut worden |
+| d | Versionsressource der `Eudora.exe` gegen `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` | die Prüfung, die den Vorfall aufgedeckt hat |
+
+Zu c: bei `-Ziel Rebuild` ist „nicht neu" immer ein Fehlschlag. Bei
+`-Ziel Build` wäre das ein Fehlalarm, wenn sich nichts geändert hat; dort wird
+zusätzlich gegen die jüngste Quelldatei gemessen — ist eine Quelle neuer als das
+Artefakt, ist es ein Fehlschlag, sonst die ausdrückliche Meldung
+*„unverändert"*.
+
+**Gegen Fehler 3 — Nachkontrolle, eingebaut, nicht als zweites Werkzeug:** jede
+EXE/DLL/OCX/`.eif` im Ausgabeverzeichnis muss `x86` sein; im Release-Zweig darf
+keine Datei `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`,
+`vcruntime140_1d.dll` oder `ucrtbased.dll` importieren (F-1, S-8) — gelesen aus
+der **Importtabelle** des PE-Kopfes.
+
+### Was das Werkzeug beim ersten Einsatz gefunden hat
+
+**Aus einem reinen Projektmappen-Bau kommt nie eine `Eudora.exe` heraus.**
+Gemessen, `Release|x86`, frischer Worktree, 5:33 Minuten: 3 Fehler, alle aus
+`OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`), Rückgabewert 1. Sieben der
+neun überwachten Artefakte entstehen — `Eudora.exe` und `EudoraRes.dll` nicht.
+Beide Projekte führen `OT501.vcxproj` als **Projektverweis**, und MSBuild lässt
+ein Projekt aus, dessen Verweis gescheitert ist. Die Abhilfe stand seit Wochen
+als Handarbeit in `AUFGABEN.md` (`/p:BuildProjectReferences=false`); jetzt macht
+sie ein **zweiter Gang** von selbst — `EudoraRes.vcxproj` und `Eudora.vcxproj`
+einzeln, mit der aus der `.sln` abgelesenen *Projekt*konfiguration
+`Release|Win32`. Ergebnis: 5:02 Minuten, 0 Fehler, `Eudora.exe` 2 933 760 Byte,
+`EudoraRes.dll` 2 447 360 Byte, alle 34 PE-Dateien x86, keine Debug-Laufzeit.
+
+### Drei Gegenproben, alle grün
+
+| Gegenprobe | Erwartet | Gemessen |
+|---|---|---|
+| `-Konfiguration Release -Plattform Win32` | sauberer Abbruch mit Aufzählung | Rückgabe **2**, „Unbekannte Projektmappenkonfiguration", beide gültigen Paare aufgezählt |
+| `-Konfiguration Quatsch` | sauberer Abbruch | Rückgabe **2**, „Unbekannte Konfiguration" |
+| `-NurPruefen` gegen ein nie gebautes `Bin/Release` | Fehlschlag, nicht Erfolg | Rückgabe **1**, neun fehlende Artefakte namentlich; Architektur- und Debug-Laufzeitprüfung liefen trotzdem durch (22 PE-Dateien, alle x86) |
+
+**Und eine vierte, ungeplant:** Während der Messläufe wechselte ein anderer
+Agent im geteilten Arbeitsbaum die `Version.h` von `7.2.0.3` auf `7.2.0.4`,
+während der Bau schon lief. Das Werkzeug meldete daraufhin von selbst:
+
+```
+Versionsressource der Eudora.exe ist "7.2.0.3", Version.h sagt "7.2.0.4".
+Fester Teil der Versionsressource ist 7,2,0,3, EUDORA_BUILD_NUMBER sagt 7,2,0,4.
+ERGEBNIS: FEHLSCHLAG
+```
+
+Das ist wörtlich der Vorfall vom 05.09. — diesmal aufgefallen, ohne dass jemand
+von Hand nachgesehen hat. Genau dafür gibt es das Werkzeug.
+
+### Nebenbefund: jeder Bau verändert fünf versionierte Dateien
+
+`MIDL` schreibt bei jedem Bau `Eudora71/Eudora/EudoraExe_i.c`,
+`EudoraExe_p.c`, `GoogleDesktopSearchAPI_i.c`, `GoogleDesktopSearchAPI_p.c` und
+`dlldata.c` neu — **mit CRLF**, während sie im Repo mit LF liegen. Gemessen an
+`dlldata.c`: HEAD `CR=0 LF=40`, nach dem Bau `CR=40 LF=40`, inhaltlich
+identisch (`git diff --numstat` meldet 40/40). Alle fünf sind versioniert, der
+Arbeitsbaum ist nach jedem Bau also schmutzig, und wer pauschal `git add -A`
+sagt, committet einen reinen Zeilenendenwechsel in fünf Dateien. Das ist
+dieselbe Klasse lautloser Dateischäden wie S-7 und X-4. **Nicht behoben** — die
+Entscheidung (Eintrag in `.gitattributes`, aus der Versionierung nehmen, oder
+nach dem Bau zurücksetzen) steht aus.
+
+### Nebenbefund: geteilte Arbeitsbäume verlieren Arbeit
+
+Während dieser Sitzung hat ein anderer Agent in demselben Worktree
+`git checkout` auf einen anderen Branch ausgeführt. Dabei gingen die noch nicht
+committeten Änderungen dieses Befunds verloren — die neue `tools/bauen.ps1`
+(unversioniert) war anschließend weg. Wiederhergestellt wurde sie aus dem
+Sitzungsgedächtnis, weitergearbeitet in einem **eigenen** Worktree
+(`Eudora7.2-wt-baumeister`). Die Lehre steht schon im Gedächtnis („Agenten
+trennen mit Worktrees"), gilt aber offenbar auch umgekehrt: **ein Worktree
+gehört genau einem Agenten**, und wer einen fremden Worktree umschaltet,
+löscht fremde Arbeit.
