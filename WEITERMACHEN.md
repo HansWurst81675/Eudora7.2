@@ -1,6 +1,131 @@
 # Hier weitermachen
 
-> ## Stand 31.08.2026, abends — Übergabe an die nächste Sitzung
+> ## Stand 05.09.2026, abends — Übergabe an die nächste Sitzung
+>
+> **Arbeitsstand ist der Zweig `bau-und-pruefung`**, Commit `3d03c50`, gepusht.
+> `main` ist unberührt. Wer weitermacht, arbeitet dort weiter oder führt ihn
+> zusammen. Nachzählen — hier steht bewusst keine Zahl, die beim nächsten Commit
+> veraltet:
+>
+> ```sh
+> git log --format='%h %ad %s' --date=format:'%d.%m %H:%M' d59cf63..origin/bau-und-pruefung
+> git branch -a          # es liegen mehrere wt/*-Zweige daneben, siehe unten
+> ```
+>
+> **Diese Sitzung lief auf der Windows-VM mit Visual Studio 2022**, mit mehreren
+> Agenten gleichzeitig in getrennten Worktrees. Es ist gebaut und C++ geändert
+> worden.
+>
+> ### Das Wichtigste zuerst: zwei von vier Kriterien sind an 7.2.0.4 belegt
+>
+> Gregor hat die Fassung **7.2.0.4 / Paket 1.0.4** gestartet, bedient und Mail
+> damit abgerufen — *„mails lassen sich abrufen"*. Damit gelten **Kriterium 1
+> und 3** als erfüllt, nicht mehr nur an 1.0.3. Die maßgebliche Tabelle steht in
+> [ZIEL.md](ZIEL.md).
+>
+> **Kriterium 0 hat sich nicht bewegt** und ist das einzige, das noch nie
+> gemessen wurde: das ZIP auf einem Rechner **ohne** Visual Studio auspacken und
+> starten.
+>
+> ### Achtung: „7.2.0.4" bezeichnet mehr als einen Bau
+>
+> `Releases/Eudora72-1.0.4-release.zip` (SHA256 `a3eb72e5…`, nur lokal, **nicht
+> veröffentlicht**) ist um **19:22** gepackt worden. Danach sind noch fünf
+> Quelländerungen unter derselben Produktversion gelandet. **Das ZIP ist nicht
+> der aktuelle Stand von 7.2.0.4.** Das ist dieselbe Verwechslung wie in Befund
+> **V-1** (drei ZIPs unter `v1.0.3`). **Vor dem nächsten Bau die Produktversion
+> hochzählen** — die fünf Stellen stehen in
+> [Releases/PAKETE.md](Releases/PAKETE.md).
+>
+> ### Was heute geschehen ist
+>
+> | Befund | Was | Commit | Stand |
+> |---|---|---|---|
+> | **B-3** | `OT501` aus dem Bau genommen. Ein frischer Klon baut jetzt **ohne Kniffe** — `/p:BuildProjectReferences=false` ist nicht mehr nötig, und die drei OT501-Fehler aus B-2 entfallen | `d8cc9d3` | **behoben** |
+> | **E-7** | Bau-Kennung stand nicht im Titel, solange kein Postfach offen war. Ein Aufruf von `OnUpdateFrameTitle(TRUE)` in `mainfrm.cpp:1135` | `bcc59bb` | behoben, **ungeprüft** |
+> | — | zwei Meldungen: die Rückfrage nach dem Standard-Mailprogramm entfällt samt Schreibversuch; der „Auto-Wazoo"-Text ist ohne Hausjargon neu gefasst | `44224a5` | behoben, **ungeprüft** |
+> | **Z-2b** | genau **ein** Umlaut je Nachricht kam als `fÃ¼r` heraus: ein UTF-8-Zeichen auf der Grenze zweier Lesestücke wurde nicht übersetzt | `34c1d7f` | behoben, **ungeprüft** |
+> | **E-12** | `Eudora.exe Mailverzeichnis` (ohne Backslash) galt als Ini-**Dateiname**; `EudoraDir` wurde das Programmverzeichnis, Kontodaten wurden weder angezeigt noch gespeichert — **ohne jede Fehlermeldung** | `79c09d4` | behoben, **ungeprüft** |
+> | **E-4** | die Zusicherung beim Beenden kam von einem Schreibzugriff **beim Start**: ein C-Cast in `WazooBarMgr.cpp` prüft nichts, im Release ist `ASSERT` leer | `1188e87` | behoben, **ungeprüft** |
+> | **Z-3** | `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | `ee08b8e` | **offen**, nur belegt |
+>
+> **„Ungeprüft" heißt: gebaut, aber am laufenden Programm hat niemand
+> nachgesehen.** Das ist der nächste Schritt.
+>
+> ### Die Lehre des Tages: die naheliegende Erklärung war zweimal falsch
+>
+> **E-4.** Der Verdacht stand auf `SECDockBar::MoveControlBarToPosition`, weil
+> die Meldung beim *Beenden* kam und dort am selben Tag gearbeitet worden war.
+> Falsch. Die Ursache lag beim **Start**, in einem ungeprüften C-Cast — sichtbar
+> wurde sie erst Stunden später beim Abräumen.
+>
+> **E-13** (Fortschritt beim Mailabruf, Zweig `wt/fortschritt-arbeit`). Gregor:
+> *„status während des abrufes nicht sichtbar. es sieht so aus, als würde nichts
+> passieren."* Der naheliegende Schluss — „der Andockumbau hat die Leiste
+> zerstört", „Release gegen Debug" — war falsch. **Gregors eigenes Protokoll hat
+> vier Verdächtige auf einmal widerlegt:** `Mailverzeichnis\eudora.log` bei
+> `LogLevel 0x649F` zeigt `2.07 Begin fetching` → `2.09 Done fetching`. **Der
+> Abruf dauerte 0,02 Sekunden**, der ganze Postgang 1,08 s. Beide
+> Fortschrittsanzeigen blenden sich bei kurzen Vorgängen gar nicht erst ein:
+> `progress.cpp:238-241` wartet `ProgressIdle` = **3 Sekunden** ab
+> (`EudoraRes.rc:8633`), und `statbar.cpp:185` hielt nur 16 Bildpunkte bereit.
+> Am 31.08. waren es 159 Nachrichten — deshalb war die Anzeige damals sichtbar.
+>
+> **Wer die nächste Fortschrittsanzeige prüft, sieht zuerst nach, wie lange der
+> Vorgang überhaupt dauert.** Und: ein Anwenderprotokoll ist billiger als vier
+> Bauten.
+>
+> ### Was noch nicht in `bau-und-pruefung` steht
+>
+> Es liegen mehrere Arbeitszweige daneben, die noch zusammengeführt werden
+> müssen:
+>
+> | Zweig | Inhalt | beim Zusammenführen beachten |
+> |---|---|---|
+> | `wt/fortschritt-arbeit` | **E-13**, Fortschritt beim Mailabruf sichtbar machen (`statbar.cpp`/`.h`) | dort heißt der Befund noch `E-12` — **die Überschrift entfernen**, der Abschnitt steht bereits als `E-13` in `BEFUNDE.md`. Sonst steht `E-12` zweimal in der Datei |
+> | `wt/schranke` | **X-5**, Schranke gegen Commits auf einen toten Zweig | Verzeichniszeile in `BEFUNDE.md` nachtragen |
+> | `wt/baumeister` | **X-6**, ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben | dito |
+>
+> Welche Kennungen vergeben und welche frei sind, steht jetzt in `BEFUNDE.md`
+> unter **„Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt"** —
+> samt dem Befehl, mit dem man das über **alle** Zweige misst. Am 05.09.2026
+> sind `E-12`, `P-1`, `P-2` und `PR-2` doppelt vergeben gewesen; `E-12` ist
+> aufgelöst, die anderen drei sind im Verzeichnis als Dopplung ausgewiesen.
+>
+> ### Der nächste Schritt
+>
+> Steht in [AUFGABEN.md](AUFGABEN.md) ganz oben, in dieser Reihenfolge:
+>
+> 1. Produktversion auf **7.2.0.5 / Paket 1.0.5** hochzählen (PAKETE.md).
+> 2. Die **ganze Projektmappe** bauen, `Release|x86`, aus der PowerShell — und
+>    das Ergebnis mit den drei Prüfungen aus `README.md` nachmessen; ein
+>    Rückgabewert 0 allein trägt nicht.
+> 3. Packen, **nicht** veröffentlichen.
+> 4. Einmal durchsehen: Titelzeile, Mailabruf, Umlaute, Beenden, Kontodaten,
+>    Meldungen. Dieser eine Lauf beantwortet sieben offene Punkte.
+> 5. Das ZIP auf einem Rechner **ohne** Visual Studio starten — Kriterium 0.
+>
+> ### Nachprüfbar, alles ohne Compiler
+>
+> ```sh
+> perl tools/pruefe-bytes-tests.pl        # 35 von 35 gruen
+> perl tools/releasebuffer-pruefen.pl     # 141: 117 ok / 19 falsch / 4 lockbuffer / 1 danach
+> perl tools/zeilenenden-angleichen.pl    # in dieser Arbeitskopie am 05.09.: 800 CRLF-Dateien
+> perl tools/pruefstand-melden.pl         # rc=0, drei Marken
+> ```
+>
+> **Achtung bei der dritten Zeile:** „0 Abweichungen" gilt **nur** in einem
+> frischen Klon mit `core.autocrlf=false`. In
+> `C:\Users\Gregor\Documents\github\Eudora7.2` waren es am 05.09.2026 **800**
+> Dateien, die als CRLF vorliegen, während in HEAD LF steht — git meldet nichts,
+> solange niemand sie anfasst. Das ist eine Eigenschaft der **Arbeitskopie**,
+> nicht des Repos (Befunde S-7, X-4).
+
+> ## ÜBERHOLT — Stand 31.08.2026, abends
+>
+> **Dieser Kasten ist vom 31.08.2026 und beschreibt einen älteren Zweig
+> (`claude/letzter-stand-b2ytpi`, inzwischen zusammengeführt). Er bleibt als
+> Beleg stehen; der gültige Stand steht im Kasten darüber.**
 >
 > **Arbeitsstand ist der Branch `claude/letzter-stand-b2ytpi`**, alles gepusht,
 > `main` unberührt. Wer weitermacht, arbeitet auf diesem Branch weiter oder
@@ -129,7 +254,10 @@
 >
 > ---
 >
-> ## Stand 31.08.2026, 09:00 — der Vormittag
+> ## ÜBERHOLT — Stand 31.08.2026, 09:00 (der Vormittag)
+>
+> **Als Beleg stehengeblieben. Der gültige Stand steht im ersten Kasten dieser
+> Datei (05.09.2026).**
 >
 > **Die Arbeitsliste steht in [AUFGABEN.md](AUFGABEN.md)** — was zu tun ist,
 > in welcher Reihenfolge, mit Fundstelle je Punkt und den Auflagen für
@@ -299,9 +427,9 @@ Debug-`Eudora.exe`), nicht durchgehend Release — die frühere Angabe war falsc
 behoben. Die Schranke `tools/pruefe-bytes.pl` hat jetzt eine Testsammlung
 (`tools/pruefe-bytes-tests.pl`, inzwischen 35 Fälle, alle grün);
 `tools/rekursion-suchen.pl` ist gelöscht. Es gilt: **4616 von 5563** vom
-30.08.2026; die Grundgesamtheit wächst und lag am 31.08. bei 5589. Offen bleibt
-PR-5, die Beschreibung des Zeitstempels — **seit 31.08. abends ebenfalls
-behoben**, damit ist PR-1 bis PR-8 vollständig abgearbeitet.
+30.08.2026; die Grundgesamtheit wächst und lag am 31.08. bei 5589. Auch **PR-5**
+— die Beschreibung des Zeitstempels — ist **seit 31.08. abends behoben**
+(`765c39b`); damit ist PR-1 bis PR-8 vollständig abgearbeitet.
 
 **Produktversion 7.2.0.3** statt 7.1.0.9, sichtbar im Splash und unter
 *Hilfe → Über Eudora*. Es gibt **drei getrennte Zählungen** — Produkt
@@ -450,7 +578,7 @@ Abschnitte stehen am Ende von `BEFUNDE.md`.
 | MENUE | Befund S-5, warum sich Menüs nicht öffnen lassen | `Eudora71/OTShim/BEFUND-MENUE.md`, `BEFUNDE.md` `## M-1` | zusammengeführt; Ursache behoben, am Programm nicht nachgesehen |
 | ANSICHT | Befund S-6, das Erscheinungsbild | `Eudora71/OTShim/BEFUND-ANSICHT.md`, `BEFUNDE.md` `## A-1` | zusammengeführt; fünf Punkte umgesetzt, am Programm nicht nachgesehen |
 | POSTBOTE | Kriterium 3 vorbereiten | `ABRUF-PRUEFEN.md`, `BEFUNDE.md` `## P-1`, `## P-2` | zusammengeführt; vier Nullzeiger behoben, Tests 105 grün |
-| WERKZEUG | Befunde PR-1 bis PR-8 abarbeiten | `BEFUNDE.md` `## W-1` | zusammengeführt; PR-5 bleibt offen |
+| WERKZEUG | Befunde PR-1 bis PR-8 abarbeiten | `BEFUNDE.md` `## W-1` | zusammengeführt; **PR-1 bis PR-8 vollständig** — die frühere Angabe „PR-5 bleibt offen" war überholt, PR-5 ist seit `765c39b` behoben |
 | PRÜFER | Richtigkeit der Werkzeuge, Codeänderungen und Zahlen | `PRUEFBERICHT.md` `## PR-1` | abgeschlossen (30.08. abends) |
 | LEKTOR | Aktualität aller MD-Dateien | `LEKTORAT.md` | zweiter Durchgang 31.08. |
 | FREIGABE | Release-Bau | — | **lief beim Schreiben dieser Datei noch.** Sein Ergebnis fehlt hier zwangsläufig; zuerst seinen Branch und seinen Abschnitt in `BEFUNDE.md` ansehen |
@@ -542,8 +670,11 @@ Wort anwenden.
   ohne `-b`, nicht das Edit-Werkzeug auf bestehende Quellen.
 - **`grep -c $'\r'` misst Zeilenenden NICHT zuverlässig** — es zählt in Git Bash
   schlicht alle Zeilen. Immer mit Perl und `:raw` messen.
-- **Einzelprojekt-Bauten brauchen `/p:BuildProjectReferences=false`**, sonst
-  scheitern sie am Projekt `OT501`.
+- ~~**Einzelprojekt-Bauten brauchen `/p:BuildProjectReferences=false`**, sonst
+  scheitern sie am Projekt `OT501`.~~ **Überholt seit dem 05.09.2026** (Befund
+  **B-3**, Commit `d8cc9d3`): `OT501` ist aus dem Bau genommen, der Schalter ist
+  nicht mehr nötig. Statt eines Einzelprojekt-Baus die **ganze Projektmappe**
+  bauen — die `.lib` entstehen erst dabei.
 - **`$(SolutionDir)` zeigt beim Einzelprojekt-Bau auf das Projektverzeichnis**,
   nicht auf die Solution. `$(ProjectDir)..\..` benutzen.
 - **`perl` ist im MSBuild-Pfad nicht vorhanden.** Es liegt unter

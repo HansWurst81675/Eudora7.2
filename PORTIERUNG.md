@@ -33,6 +33,13 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > | fertige Projekte | **16 von 18** |
 > | `Eudora71/Tests/RunTests.cmd` | 33 Tests, 33 bestanden |
 >
+> > **Diese Bauzahlen sind vom 30.08.2026 und überholt.** Seit dem 05.09.2026
+> > ist `OT501` aus dem Bau genommen (Befund **B-3**, Commit `d8cc9d3`): die
+> > „3 Fehler aus `OT501`" entfallen, und `/p:BuildProjectReferences=false` ist
+> > nicht mehr nötig. Die Messung bleibt als Beleg stehen. **Der Rest dieser
+> > Datei ist am 05.09.2026 nicht gegengelesen worden** — die Prüfstandsmarke
+> > oben steht deshalb weiter auf `d826a3f`.
+>
 > Die OT501-Ersatzschicht ist damit vollständig: Verlauf der ungelösten Externen
 > 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**. Die leere Attrappe
 > `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
