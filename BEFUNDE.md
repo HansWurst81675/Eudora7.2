@@ -114,9 +114,10 @@ zuerst **E-11**, **R-1** und **E-1**.
 | PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
 | Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
 | X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 |
-| X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** |
+| X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** im Skript — auf dieser Maschine war der *eingerichtete* Hook bis 05.09.2026 noch die alte Fassung (X-5) |
 | X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau |
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
+| X-5 | Commit um 09:06 auf den um 09:03 zusammengeführten Zweig; die Regel stand nur als Prosa | **behoben** — Schranke im `pre-commit`, 15 Testfälle, Auflagen 7–10 in `AUFGABEN.md` |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
@@ -6292,3 +6293,192 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
    „das ist die Fassung, die abstürzte" acht Zeichen lang.
 3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
+
+---
+
+## X-5 — Ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa (05.09.2026)
+
+Gregor am 05.09.2026:
+
+> „ich kündige ja immer an, wenn ich einen branch merge und lösche.
+> es sollte also alles commited und gepusht sein, klar?"
+>
+> „und für solche prüfungen haben wir genau extra agenten, die es feststellen
+> und verhindern sollen. die arbeiten also nicht sauber!"
+
+Er hat in beiden Sätzen recht. Der zweite trifft den Kern: es lag nicht daran,
+dass jemand die Regel nicht kannte, sondern daran, dass sie **niemand messen
+konnte**.
+
+### Die Zeitachse
+
+| Zeit | 31.08.2026 | Beleg |
+|---|---|---|
+| **09:03** | Gregor führt `darstellung-und-menue` nach `main` zusammen und kündigt an, den Zweig zu löschen | Merge-Commit `fa61618` |
+| 09:03–09:06 | der Assistent arbeitet weiter, ohne nachzusehen, wo er steht | — |
+| **09:06** | ein weiterer Commit landet auf `darstellung-und-menue` — dem bereits zusammengeführten Zweig | — |
+| später | eine spätere Sitzung zieht dieselbe Aussage unabhängig nach | — |
+
+**Inhaltlich ging nichts verloren.** Das ist der einzige gute Teil dieses
+Befundes, und er ist Zufall: dass ein anderer Durchgang zufällig dasselbe noch
+einmal geschrieben hat, ist kein Verfahren. Wäre der Zweig sofort gelöscht
+worden, wäre der Commit weg gewesen.
+
+### Die Ursache — nicht Vergesslichkeit, sondern der Entwurf
+
+Die Regel stand in `AUFGABEN.md` als Prosa: *„In kleinen Schritten committen und
+pushen."* Ein Satz in einer 420 Zeilen langen Liste, der davon lebt, dass ein
+Agent im richtigen Moment an ihn denkt.
+
+Genau das ist die Fehlerklasse, die dieses Projekt schon zweimal getroffen hat:
+
+* **NP3-4/X-2:** der `pre-commit`-Hook rief `lehren-spiegeln.pl` auf, wertete den
+  Rückgabewert aber nicht aus. Die Regel („die Lehren müssen mit") stand da, die
+  Durchsetzung fehlte.
+* **X-1:** die Byte-Schranke hatte neun Löcher. Erst als jemand sie **gegen
+  bekannte Fälle gemessen** hat, fielen sie auf.
+
+Die Lehre daraus heißt in `MEMORY.md` „Fehlerklassen abstellen": beim zweiten
+Auftreten baut man Werkzeug und Schranke, statt einzeln nachzubessern. Hier war
+es das dritte Mal.
+
+### Ein Nebenbefund, der dasselbe zeigt
+
+Beim Nachsehen fiel auf: der auf diesem Rechner **eingerichtete** Hook war noch
+die Fassung *vor* X-2 —
+
+```sh
+perl "$W/tools/lehren-spiegeln.pl"        # ohne || exit $?
+```
+
+`tools/hooks-einrichten.sh` war am 31.08. berichtigt worden, aber niemand hat das
+Skript danach noch einmal laufen lassen. Hooks liegen unter `.git/hooks` und
+werden nicht mitversioniert: **eine Behebung im Skript ist keine Behebung auf der
+Maschine.** X-2 stand fünf Tage lang als „behoben" im Verzeichnis, während der
+Fehler hier weiterlief. Die Statusspalte für X-2 ist entsprechend nachgezogen.
+
+Dazu kam ein zweiter Grund, warum niemand das Skript noch einmal laufen ließ: es
+schrieb nach `"$WURZEL/.git/hooks"`. In einem **Arbeitsbaum** ist `.git` eine
+*Datei*, kein Verzeichnis — aus einem Worktree heraus scheiterte das Einrichten
+also, und seit dem 31.08. arbeiten hier mehrere Agenten in Worktrees.
+
+### Die Behebung
+
+**1. Eine Schranke, die git erzwingt** — `tools/pruefe-branch.pl`. Sie bricht ab bei
+
+| Lage | Verhalten |
+|---|---|
+| abgelöster HEAD | **Abbruch** |
+| Zweig ist *echt* in `origin/main` enthalten (enthalten **und** dahinter) | **Abbruch** |
+| Gegenstück auf dem Server gelöscht (`[gone]`) | **Abbruch** |
+| Zweig steht gleichauf mit `origin/main` (frisch abgezweigt) | durchlassen |
+| auf `main` selbst | durchlassen |
+| kein `origin/main` vorhanden | durchlassen, **mit Meldung** |
+| Rebase, Cherry-Pick oder Halbierung läuft (git löst den HEAD selbst ab) | durchlassen |
+
+Der Ausweg steht in jeder Meldung; wer trotzdem will, nimmt `--no-verify` — dann
+aber mit Wissen, nicht aus Versehen.
+
+**2. `tools/pruefe-branch-tests.pl`** — 15 Fälle, jeder in zwei Durchläufen
+(hart: Rückgabewert; `--melden`: die Begründung, und dort darf **nie**
+abgebrochen werden). Jeder Fall baut ein eigenes Wegwerf-Paar aus barem „Server"
+und Klon unter dem Temp-Verzeichnis; im Projektbaum entsteht nichts.
+
+**Gegen die erste Fassung der Schranke gemessen: 11 grün, 3 rot.** Alle drei
+waren echte Fehler, keiner davon hätte sich beim Lesen gezeigt:
+
+| Fall | erste Fassung | Ursache |
+|---|---|---|
+| `g` frisch abgezweigter Zweig | **brach den ersten Commit ab** | „ist Vorfahr von `origin/main`" trifft auch auf jeden frischen Zweig zu — HEAD *ist* dort `origin/main` |
+| `k` leeres Repo, erster Commit | meldete „abgelöster HEAD" und brach ab | `rev-parse --abbrev-ref HEAD` scheitert auf einem Zweig ohne Commit; jetzt `symbolic-ref` |
+| `f` kein `origin` | ließ durch und **sagte nichts** | eine Prüfung, die ausgefallen ist, sah aus wie eine bestandene |
+
+Fall `g` ist der schwerste: eine Schranke, die den ersten Commit jedes neuen
+Zweiges abweist, wird binnen einer Stunde mit `--no-verify` umgangen und ist dann
+schlechter als keine. Das ist wörtlich die Lehre aus PR-1/PR-2.
+
+Sichtbar wurde außerdem, was die Klammern in `--format=%(upstream:track)` in
+einer Shell anrichten (Fall `j`, Zweigname `zweig(1){a}`):
+
+```
+sh: -c: line 1: syntax error near unexpected token `('
+```
+
+Die Prüfung fiel damit lautlos aus. Behoben nicht durch besseres Zitieren,
+sondern indem **die Shell entfällt**: beide Werkzeuge starten `git` über
+`fork`+`exec` wie `tools/pruefe-bytes.pl`. Damit kann kein Zweigname und kein
+Pfad mit Leerzeichen mehr etwas zerreißen.
+
+**3. Im Hook, als erster Schritt.** `tools/hooks-einrichten.sh` schreibt jetzt
+nach `--git-common-dir` (funktioniert also auch aus einem Arbeitsbaum) und legt
+diese Reihenfolge an:
+
+| # | Schritt | weist ab? |
+|---|---|---|
+| 1 | `pruefe-branch.pl` | ja, `\|\| exit $?` |
+| 2 | `lehren-spiegeln.pl` | ja, `\|\| exit $?` |
+| 3 | `release-pruefen.pl` | nein, meldet nur |
+| 4 | `pruefe-bytes.pl` | ja, `exec` |
+
+Zuerst, weil die Frage *„landet dieser Commit überhaupt irgendwo"* vor jeder
+Frage nach seinem Inhalt kommt.
+
+**Am laufenden Hook nachgewiesen** (Wegwerf-Repo, echter `git commit`): auf dem
+zusammengeführten und serverseitig gelöschten Zweig bricht er mit Rückgabewert
+`1` ab, und die Schritte 2–4 laufen **nicht** an — der Rückgabewert wird also
+wirklich ausgewertet. Derselbe Commit auf `main` geht durch, Schritte 2–4 laufen.
+
+**4. `tools/gesichert.pl`** beantwortet in einem Aufruf, was vor einem Merge zu
+wissen ist. Auch hier zwei Fehler beim Nachmessen:
+
+* Es nannte fremde Arbeitsbäume **„sauber"**, wenn dort nur nichts *uncommittet*
+  war. Ungepushte Commits sah es nicht — gemessen an `wt/paket` und `wt/zeiger`.
+  Jetzt prüft es je Arbeitsbaum: uncommittet, ungepusht, Gegenstück gelöscht,
+  Zweig bereits zusammengeführt, abgelöster HEAD.
+* Es las die Liste über die `branch`-Zeile von `worktree list --porcelain`. Ein
+  Baum mit abgelöstem HEAD hat keine — er fiel aus der Liste und blieb unsichtbar.
+
+**Darf ein Prüfwerkzeug den Zustand ändern?** `gesichert.pl` ruft
+`git fetch --prune`. Die Antwort ist ja, und zwar begründet: die zentrale Frage
+— *gibt es das Gegenstück auf dem Server noch?* — ist ohne frischen Serverstand
+nicht zu beantworten, und ohne `--prune` bleibt ein gelöschter Zweig als lebend
+stehen. Das Werkzeug gäbe dann **genau in dem Fall Entwarnung, für den es gebaut
+wurde**. Geändert werden dabei nur die Kopien der Serverzweige unter
+`refs/remotes/origin` — kein Arbeitsbaum, kein lokaler Zweig, kein Index, keine
+Datei. Wer auch das nicht will, nimmt `--ohne-holen`; der Bericht sagt dann
+ausdrücklich, dass der Serverstand alt sein kann. `pruefe-branch.pl` holt
+**nichts** — ein Hook gehört nicht ans Netz.
+
+**Nichts darf auf eine Eingabe warten.** Beide Werkzeuge setzen
+`GIT_TERMINAL_PROMPT=0`, `GIT_ASKPASS`, `SSH_ASKPASS`, `GIT_SSH_COMMAND=ssh
+-oBatchMode=yes` und `GCM_INTERACTIVE=never`; schlägt das Holen fehl, wird das
+gemeldet statt verschluckt. `GIT_OPTIONAL_LOCKS=0` hält die Werkzeuge von der
+Index-Sperre fern, solange andere Agenten arbeiten.
+
+**5. Die Auflagen in `AUFGABEN.md`** sind um die Punkte 7 bis 10 ergänzt: vor
+jedem Commit den Zweig messen; bei einer Merge-Ankündigung **sofort**
+`gesichert.pl` und melden; nach dem Merge auf `main` wechseln; und der Grundsatz,
+um den es hier geht:
+
+> Eine Auflage, die nur im Text steht, trägt nicht. Wer eine neue Regel
+> aufstellt, baut die Schranke dazu — ein Werkzeug mit Rückgabewert, im Hook, und
+> einen Testfall, der beweist, dass sie greift *und* dass sie nicht grundlos
+> anschlägt.
+
+### Was offen bleibt
+
+1. **Der Hook muss auf jeder Maschine eingerichtet werden.** Er liegt unter
+   `.git/hooks` und wird nicht mitversioniert. Nach jedem frischen Klon:
+   `sh tools/hooks-einrichten.sh`. Es gibt bisher **keine** Prüfung, die meldet,
+   dass der eingerichtete Hook älter ist als das Skript — genau daran ist X-2
+   fünf Tage lang gescheitert. Die naheliegende Schranke wäre ein Vergleich in
+   `pruefstand-melden.pl`.
+2. **`pruefe-branch.pl` holt nicht vom Server.** Der Fall `[gone]` wird also nur
+   erkannt, wenn vorher jemand `git fetch --prune` gelaufen ist — im Regelfall
+   `gesichert.pl`. Das ist Absicht (kein Netz im Hook), aber es ist eine Lücke:
+   wer nie holt, sieht einen gelöschten Zweig nicht.
+3. **Ungepushte Zweige in fremden Arbeitsbäumen.** Am 05.09.2026 gemessen:
+   `wt/kette`, `wt/paket` und `wt/zeiger` standen auf `2fee8e9`, ohne Gegenstück
+   auf dem Server. Der Stand steckte zufällig schon über PR #4 in `origin/main`,
+   es ging also nichts verloren — aber wieder nur zufällig, und `gesichert.pl`
+   meldet das jetzt.
