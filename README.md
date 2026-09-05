@@ -11,9 +11,16 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**, Fassung
-> **7.2.0.12 / Paket 1.0.12** (`cat VERSION`, `Eudora71/Version.h`). Wer wann was
-> gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im git-Verlauf — hier nicht.
+> **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**.
+>
+> **Quellstand ist 7.2.0.12** (`cat VERSION`, `Eudora71/Version.h`) — das ist,
+> was ein Bau aus diesem Klon ergibt. **Gepackt ausgeliefert ist 1.0.10**
+> (`Releases/Eudora72-1.0.10-release.zip`). Ein **Paket 1.0.12 gibt es noch
+> nicht**; es soll erst entstehen, wenn der Strg-N-Absturz behoben ist. Wer die
+> beiden Zahlen verwechselt, sucht Fehler in einer Datei, die niemand hat.
+>
+> Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
+> git-Verlauf — hier nicht.
 
 ## Stand
 
@@ -36,12 +43,28 @@ Belegt:
 - **Suchtreffer** lassen sich nicht anklicken
 - Meldung **„Encountered an improper argument"** im laufenden Betrieb
 - **Beenden** bricht ab
-- **Kriterium 0** aus [ZIEL.md](ZIEL.md): das Paket ist auf keinem Rechner **ohne**
-  Visual Studio ausgepackt und gestartet worden. Zwei Läufe gab es, beide auf
-  Maschinen **mit** VS2022 — dort liegen die Laufzeiten ohnehin herum, das
-  beweist nichts. Ein Weg ohne zweiten Rechner steht bereit:
-  [tools/Kriterium0-pruefen.wsb](tools/Kriterium0-pruefen.wsb) hängt das Paket in
-  die **Windows-Sandbox**, ein frisches Windows ohne alles.
+- **Kriterium 0** aus [ZIEL.md](ZIEL.md): auf einem Rechner **ohne** Visual
+  Studio ist noch kein Paket ausgepackt und gestartet worden. Zwei Läufe gab es,
+  beide auf Maschinen **mit** VS2022 — dort liegen die Laufzeiten ohnehin herum,
+  das beweist nichts.
+
+  **Rechnerisch besteht 1.0.10 aber.** Am 06.09.2026 mit
+  `tools/paket-pruefen.ps1` gegen `Releases/Eudora72-1.0.10-release.zip`
+  gemessen: 35 Binärdateien, davon 13 in der Startkette, 251 Importe gegen
+  Windows-eigene Bibliotheken — *„In der Startkette fehlt nichts"*, EXITCODE 0.
+  Das Werkzeug liest die PE-Importtabellen und wertet einen Treffer in
+  `SysWOW64` **nicht** als erfüllt; es misst also wirklich das Paket und nicht
+  die Maschine. Vier Warnungen, alle vorher bekannt und ohne Einfluss auf den
+  Start: `EUMAPI.DLL` und `ifsmon.vxd` sind 16-Bit-Altlasten, die keine
+  Paketdatei importiert; `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie zur
+  Weitergabe freigegeben — ohne sie fallen Adressbuch, LDAP, Ph und S/MIME aus,
+  nicht der Start.
+
+  Was noch fehlt, ist der Beweis am lebenden Objekt. Zwei Wege: Gregor probiert
+  1.0.10 auf dem Laptop ohne VS2022, oder
+  [tools/Kriterium0-pruefen.wsb](tools/Kriterium0-pruefen.wsb) hängt das Paket
+  in die **Windows-Sandbox**, ein frisches Windows ohne alles. Durchgefallen ist
+  es nur bei `0xc000007b` oder einem DLL-Namen in der Meldung.
 
 ### Die Suche nach der Wurzel der Abstürze
 
