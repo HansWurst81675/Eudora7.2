@@ -162,16 +162,4 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ItemGroup>
-    <!-- Baureihenfolge. QCUtils.lib steht in AdditionalDependencies, aber
-         das sagt MSBuild nichts ueber die REIHENFOLGE; unter -m ist es ein
-         Wettlauf. In einem frischen Klon scheiterte der Bau damit an
-         LNK1181 (Befund Z-3, gemessen 05.09.2026).
-         ReferenceOutputAssembly=false: nur die Reihenfolge wird gebraucht,
-         gebunden wird weiter ueber AdditionalDependencies. -->
-    <ProjectReference Include="..\..\QCUtils\QCUtils.vcxproj">
-      <Project>{8153db1a-f996-48a8-a1a6-b183c086a94d}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
 </Project>
