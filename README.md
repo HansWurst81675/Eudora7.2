@@ -369,6 +369,41 @@ reproduzierbar.
 `Eudora71\Bin\Release` liegt mit im Repo. Nach dem Klonen sind die Binärdateien
 also schon da, auch ohne einen einzigen Bau.
 
+### ⚠ Nicht zu tief klonen — 141 Zeichen sind die Grenze
+
+```
+error MSB3491: In die Datei ".\Build\Release\Director.E7DEB109.tlog\
+DirectoryServicesUI.lastbuildstate" konnten keine Zeilen geschrieben werden.
+Der Pfad überschreitet das maximale Pfadlimit des Betriebssystems.
+Der vollqualifizierte Dateiname muss weniger als 260 Zeichen umfassen.
+```
+
+Der Bau erzeugt tiefere Pfade als das Repo selbst enthält. Gemessen am
+05.09.2026:
+
+| | |
+|---|---|
+| längste Datei **im Repo** | 103 Zeichen (`Documents/Manuals/WorldMail/…`) |
+| längster **erzeugter** Pfad | **118 Zeichen** — `Eudora71/DirectoryServices/DirectoryServicesUI/Build/Release/Director.E7DEB109.tlog/DirectoryServicesUI.lastbuildstate` |
+
+Nachzurechnen mit:
+
+```bash
+find Eudora71 -name "*.lastbuildstate" | awk '{print length($0)"  "$0}' | sort -rn | head -3
+```
+
+Daraus folgt: **das Klonverzeichnis darf höchstens 141 Zeichen lang sein.**
+
+| Pfad | Länge | |
+|---|---|---|
+| `C:\Eudora7.2` | 12 | ✅ |
+| `C:\Users\Gregor\Documents\github\Eudora7.2` | 42 | ✅ |
+| ein Pfad unter `AppData\Local\Temp\…` | 141 | ❌ |
+
+Der Fehler tritt **erst nach acht Minuten Bauzeit** auf, mitten im Lauf, und
+nennt als Ursache eine `.tlog`-Datei, die niemanden interessiert. Wer ihn nicht
+kennt, sucht lange an der falschen Stelle.
+
 ### Debug bauen, wenn ein Fehler eingegrenzt werden soll
 
 Der Release-Bau meldet Fehler nur als Ergebnis — der Debug-Bau nennt Datei und
