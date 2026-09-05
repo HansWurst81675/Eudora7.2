@@ -156,4 +156,21 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <ItemGroup>
+    <!-- Baureihenfolge, sonst linkt dieses Projekt gegen ein noch nicht
+         erzeugtes QCUtils.lib. In AdditionalDependencies steht QCUtils.lib
+         schon, aber das sagt MSBuild nichts ueber die REIHENFOLGE. Unter
+         -m (Parallelbau) ist das ein Wettlauf: in einem frischen Klon
+         scheitert der Bau mit
+           LINK : fatal error LNK1181: "QCUtils.lib" kann nicht geoeffnet werden
+         Gemessen am 05.09.2026 an einem frischen Klon, alle drei Importer
+         betroffen (Befund Z-3). ReferenceOutputAssembly=false, weil nur
+         die Reihenfolge gebraucht wird - gebunden wird weiterhin ueber
+         AdditionalDependencies, genau wie in Eudora.vcxproj. -->
+    <ProjectReference Include="....CUtilsCUtils\\\.vcxproj\\\"\\\>\\\\\\
+      <Project>{8153db1a-f996-48a8-a1a6-b183c086a94d}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+
 </Project>
