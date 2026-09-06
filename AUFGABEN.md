@@ -1,103 +1,49 @@
 # Aufgaben für die nächste Sitzung
 
-Stand **06.09.2026**. Zweig `fehler-nach-1010`.
-Einstieg: [WEITERMACHEN.md](WEITERMACHEN.md) · Maßstab: [ZIEL.md](ZIEL.md) ·
-Belege: [BEFUNDE.md](BEFUNDE.md) und `Befunde/*.md`
+**Stand 06.09.2026, 16:30.** Arbeitszweig `strg-n-diagnose`. Der Einstieg ist
+[WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen Messungen
+[CHANGELOG.md](CHANGELOG.md).
 
-Diese Datei ist die Arbeitsliste — was zu tun ist, in welcher Reihenfolge, und
-für jeden Punkt die Fundstelle. Sie ist so geschrieben, dass ein Agent damit
-sofort anfangen kann, ohne die Vorgeschichte zu kennen. Welcher Befund noch
-gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
+## Die Hauptarbeit: Kriterium 4 bis 6
 
-> **Braucht der Punkt Visual Studio?** Ohne Compiler gehen: **A2, C1, D3a-Analyse**
-> und jede Zählung. Alles unter „Ganz zuerst", B, C2 und E brauchen einen Bau
-> oder einen Start. Die Aufteilung im Einzelnen steht in `WEITERMACHEN.md`,
-> Abschnitt „Was ohne Visual Studio geht".
+Gregor hat sie am 06.09.2026 gesetzt, nachdem die ersten vier Kriterien
+gefallen waren ([ZIEL.md](ZIEL.md)):
 
----
-
-## Wo wir stehen
-
-Maßgeblich ist die Tabelle in [ZIEL.md](ZIEL.md). Kurz: **Bau, Start und
-Mailabruf sind belegt** (18 erfolgreich / 0 Fehler / 1 übersprungen aus frischem
-Klon; POP3 über Port 995 mit TLSv1.3). Offen sind Kriterium 0 und vier Fehler in
-der Bedienung.
-
----
-
-## Ganz zuerst: die vier Fehler, die Gregor sieht
-
-Alle vier stammen aus seiner Fehlerliste vom 05./06.09.2026 und stehen zwischen
-ihm und einer benutzbaren Fassung. **An dreien arbeiten Agenten.**
-
-| # | Was | Zustand |
+| # | | Stand |
 |---|---|---|
-| **1** | **Strg-N** (neue Nachricht) stürzt ab | in Arbeit |
-| **2** | **Doppelklick** auf eine Nachricht öffnet sie nicht | in Arbeit |
-| **3** | **Suchtreffer** lassen sich nicht anklicken | in Arbeit |
-| **4** | Meldung **„Encountered an improper argument"** | offen |
+| 4 | **Keine Abstürze** | nicht erfüllt |
+| 5 | **Eine neue Mail schreiben und abschicken** | nicht erfüllt |
+| 6 | **Eine Mail weiterleiten** | nicht erfüllt |
 
-Danach — und erst danach:
+**Alle drei hängen an E-27** — Strg-N und *Weiterleiten* beenden Eudora sofort.
+Gemessen: `0xC00000FD` STATUS_STACK_OVERFLOW, Endlosrekursion in `Paige32.dll`
+(`pgInstallFont`), 525 Windungen tief.
 
-5. **Produktversion hochzählen** (`Releases/PAKETE.md` nennt die Stellen), mit
-   `tools/bauen.ps1` bauen, mit `tools/paket-bauen.ps1` packen,
-   **nicht** veröffentlichen.
-6. **Einmal durchsehen**, weil ein Lauf mehrere ungeprüfte Behebungen auf einmal
-   beantwortet: **E-25** (Kontoassistent, *Weiter*), **E-24** („In" nur noch
-   einmal unter *Recent*), **E-4** (Beenden), **E-12** (Kontodaten werden
-   gespeichert und wiedergefunden).
-7. **Kriterium 0:** das ZIP auf einem Rechner **ohne** Visual Studio auspacken
-   und starten. Das ist der einzige belastbare Nachweis, und er fehlt seit dem
-   31.08.
+**Sieben Vermutungen sind widerlegt**, jede gebaut und gemessen — die Liste mit
+Messwerten steht in [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.17. **Nicht noch
+einmal durchprobieren.** Die nächste Frage lautet: entsteht in dieser
+Portierung überhaupt jemals ein Paige-Fenster?
 
----
+Alles Übrige in dieser Datei ist **nebenbei**, nicht statt dessen.
 
-## Was zuletzt erledigt wurde
+## Erledigt seit 1.0.10
 
-Damit niemand einen dieser Punkte noch einmal anfängt.
+Von Gregor bestätigt: **Kriterium 0** (Paket startet ohne Visual Studio),
+**E-30** (Symbole gesperrter Knöpfe), **E-28** (Doppelklick und Suchtreffer
+öffnen die Nachricht). Dazu **E-26** (Ladeadressen im Absturzbericht),
+**E-29** (`tools/absturz-auswerten.pl`) und die entfernte `dbghelp.dll` von
+2005. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 
-| Befund | Was | Stand |
-|---|---|---|
-| **E-25** | Absturz nach *Weiter* im Kontoassistenten: **Doppelfreigabe in `NSImport`**, belegt durch die Windows-Fehlerberichte (`0xC0000374`, Heap-Beschädigung, letztes geladenes Modul `NSImport.eif`) | behoben, **ungeprüft** |
-| **E-24** | „In" stand zweimal unter *Recent*: Zeigervergleich auf eine temporäre `CString` in `QCMailboxDirector.cpp:2560`; dabei `:1316` mitbehoben | behoben, **ungeprüft** |
-| **B-3** | `OT501` aus dem Bau genommen — ein frischer Klon baut ohne Kniffe | behoben |
-| **Z-3** | fehlende Projektabhängigkeit: `OEImport`/`NSImport`/`OLImport` und `plstclnt` linkten vor `QCUtils` | behoben, Verweise stehen in den Projektdateien |
-| **E-7** | Bau-Kennung fehlte im Titel | behoben, von Gregor gesehen |
-| **E-13** | beim Mailabruf war kein Fortschritt sichtbar | behoben, von Gregor gesehen |
-| **Z-2 / Z-2b** | Umlaute in HTML-Mail, und ein zerrissenes UTF-8-Zeichen je Nachricht | behoben, von Gregor gesehen |
-| **E-12** | `Eudora.exe Mailverzeichnis` wurde als Ini-*Dateiname* gedeutet | behoben, **ungeprüft** |
-| **E-4** | Schreibzugriff durch einen ungeprüften Cast beim **Start** (sichtbar beim Beenden) | behoben, **ungeprüft** |
-| **X-5** | Schranke gegen Commits auf einen toten Zweig, `tools/pruefe-branch.pl`, 15 Testfälle | behoben |
-| **X-6** | ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben; `tools/bauen.ps1` | behoben |
-
-> ### E-11 ist zurückgenommen
->
-> **E-11 war nie die Ursache des Absturzes im Kontoassistenten.** Die Ursache
-> ist **E-25** — eine Doppelfreigabe in `NSImport`, gemessen an
-> `0xC0000374` (`STATUS_HEAP_CORRUPTION`) in den Windows-Fehlerberichten. Alle
-> Verdächtigen der Form „hier fehlt eine NULL-Prüfung" sind damit entlastet,
-> auch `WizardImportPage.cpp:379 → :420`.
->
-> **Die Fehlerklasse R-1 bleibt trotzdem bestehen** (`ReleaseBuffer` ohne
-> `GetBuffer`, siehe A2). Sie ist ein echter Mangel — nur eben nicht dieser
-> Absturz. Wer E-11 in einer älteren Datei findet, liest hier weiter.
-
-„Ungeprüft" heißt: der Code ist geändert und gebaut, aber **niemand hat am
-laufenden Programm nachgesehen**.
-
----
-
-## Was offen bleibt
+## Was sonst noch offen ist
 
 | Punkt | wo | braucht |
 |---|---|---|
-| **Die vier Bedienfehler** oben | — | Bau + Start |
-| **Kriterium 0** — Paket auf einem Rechner ohne Visual Studio starten | C2, ZIEL.md | einen zweiten Rechner |
-| **`tools/paket-pruefen.ps1`** prüft die Maschine statt das Paket und leitet zum Lizenzverstoß an | C1, PR-2.0 bis PR-2.3 | PowerShell, **kein** Compiler |
-| **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse R-1, siehe A2 | A2, R-1 | Bau |
+| ***File → Exit*** bringt eine Meldung | — | Bau + Start |
+| Meldung **„Encountered an improper argument"** — MFCs `CInvalidArgException`, zweite Quelle neben dem behobenen E-16 | — | Bau + Start |
+| **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse R-1, 16 Stellen bleiben | A2, R-1 | Bau |
 | **Neun Zeigerstellen** aus X-3 | D3a | Bau |
+| **`EuMemMgr.dll` ist kein Projekt der Projektmappe** — vorgebaut, 2005, Version 7.0.0.9. Ausgerechnet sie löst den Aufrufstapel im Absturzbericht auf | — | — |
 | **Hostnamenprüfung greift nicht** (sicherheitsrelevant) | `PORTIERUNG.md` | **zurückgestellt**, siehe unten |
-| **CRLF-Dateien in der Arbeitskopie** — Eigenschaft der Arbeitskopie, nicht des Repos. `perl tools/zeilenenden-angleichen.pl` misst, `--aendern` behebt. In einem frischen Klon mit `core.autocrlf=false` sind es 0 | S-7, X-4 | perl |
 
 ---
 
