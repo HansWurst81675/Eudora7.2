@@ -97,7 +97,7 @@ fünf Beobachtungen aus einer Wurzel.
 
 > **Die Hypothese hat den Test nicht bestanden.** 7.2.0.12 stürzt weiter ab.
 
-### Das Absturzprotokoll — und warum es noch nichts verrät
+### Das Absturzprotokoll — und wie man es liest
 
 Eudora schreibt seinen eigenen Absturzbericht, ohne dass man etwas einschalten
 muss: **`Mailverzeichnis\Exception.log`** neben der EXE. Gregor hat 7.2.0.12 am
@@ -109,34 +109,48 @@ at 0023:414E3345
 Call stack: 00894B53, 008962D7, 6FB9A3E6 (mfc140.dll), ...
 ```
 
-Zwei Dinge daran zählen:
-
-**Erstens: das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die
-zu *keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle
-oder ein Funktionszeiger überschrieben wurde — also genau das Schadensbild einer
+**Das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die zu
+*keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle oder
+ein Funktionszeiger überschrieben wurde — genau das Schadensbild einer
 beschädigten Halde. Die Doppelfreigabe E-25 war demnach **nicht die einzige
-Quelle**, oder nicht die entscheidende.
+Quelle**.
 
-**Zweitens: die Adressen sind derzeit nicht auflösbar.** Die EXE ist 2,8 MB
-groß; läge sie wie vorgesehen auf `0x00400000`, endete sie bei `0x006CD000`. Die
-protokollierte Adresse `0x00894B53` liegt weit dahinter. Windows lädt sie also
-**verschoben** (ASLR), und `Exception.log` schreibt die tatsächliche Ladeadresse
-**nicht mit**. Ohne sie ist jede Umrechnung in einen Funktionsnamen geraten.
-(Ein erster Versuch am 06.09. lieferte prompt einen Namen aus dem
-Ressourcenbereich — sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht
-stimmt.)
+#### Warum die Adressen bis 7.2.0.12 nichts hergaben
 
-Vorbereitet ist immerhin die andere Hälfte: `Eudora.vcxproj` erzeugt seit dem
-06.09.2026 eine **Zuordnungsdatei** `Eudora71/Bin/Release/Eudora.map` mit 51.075
-Namen. Sobald die Ladeadresse im Protokoll steht, wird aus jeder Zeile des
-Aufrufstapels ein Funktionsname.
+Die EXE ist 2,8 MB groß; läge sie wie vorgesehen auf `0x00400000`, endete sie
+bei `0x006CD000`. Die protokollierte Adresse `0x00894B53` liegt weit dahinter.
+Windows lädt sie also **verschoben** (ASLR), und der Bericht schrieb die
+tatsächliche Ladeadresse **nicht mit**. Ohne sie ist jede Umrechnung in einen
+Funktionsnamen geraten. Ein erster Versuch am 06.09. rechnete gegen
+`0x00400000` und lieferte prompt einen Namen aus dem Ressourcenbereich —
+sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht stimmte.
 
-**Nächster Schritt, klein und lohnend:** den Absturzbehandler die Ladeadresse
-jedes Moduls mitschreiben lassen (`GetModuleHandle(NULL)` genügt für Eudora
-selbst). Dann beantwortet Gregors eigener Vorschlag — *„oder du schreibst eine
-log datei, während eudora ausgeführt wird, dann steht es darin, was der letzte
-aufruf war"* — die Frage ohne Debugger und ohne Visual Studio, aus einer
-Textdatei, die der Anwender einfach mitschicken kann.
+#### Beide Hälften sind jetzt da
+
+| Hälfte | Wo | Seit |
+|---|---|---|
+| **Namen zu Adressen**: `Eudora71/Bin/Release/Eudora.map`, 51.075 Einträge | `Eudora.vcxproj` erzeugt sie bei jedem Bau | 06.09.2026 |
+| **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](Eudora71/Eudora/ExceptionHandler.cpp) (E-26) | 06.09.2026 |
+
+Ein Bericht **ab 7.2.0.13** beginnt deshalb so:
+
+```
+Loaded modules - subtract the load address from a stack address to get
+the offset listed in the .map file of that module:
+Load address  Size      Module
+00E30000      002CD000  Eudora.exe
+6FB00000      ...       mfc140.dll
+```
+
+Adresse minus Ladeadresse ergibt den Versatz, den die `.map` kennt. Damit wird
+aus jeder Zeile des Aufrufstapels ein Funktionsname — **ohne Debugger und ohne
+Visual Studio**, aus einer Textdatei, die ein Anwender einfach mitschicken kann.
+Das war Gregors Vorschlag: *„oder du schreibst eine log datei, während eudora
+ausgeführt wird, dann steht es darin, was der letzte aufruf war."*
+
+Berichte von **7.2.0.12 und älter** haben die Tabelle nicht und bleiben
+unauflösbar. Das ist kein Mangel des Werkzeugs, sondern eine Tatsache über die
+alten Dateien — geraten wird nicht.
 
 **Der zweite Weg, falls das nicht reicht:** **Page Heap** macht aus der
 Beschädigung einen Zugriffsfehler an der verursachenden Anweisung statt
@@ -147,21 +161,31 @@ Debug-Bau starten, Strg-N, dann `tools\stapel-untersuchen.ps1` in einer
 
 ## Bauen
 
-### Nach einem frischen Klon: vier Schritte
+### Nach einem frischen Klon: ein Schritt
 
 ```bash
-git config core.autocrlf false
 sh tools/hooks-einrichten.sh
-perl tools/zeilenenden-angleichen.pl --aendern
-git ls-files -z | xargs -0 -n 400 git add --
 ```
 
-Keiner davon ist wahlfrei. **Ohne den dritten springt jede Datei, die man
-anfasst, als komplett geändert heraus:** die Arbeitskopie liegt dann als CRLF
-vor, während im Commit LF steht. Git sieht in eine Datei gar nicht hinein,
-solange Zeitstempel und Größe zum Index passen — der Schaden bleibt unsichtbar,
-bis ein Werkzeug die Datei berührt (Befund S-7). Ohne den zweiten fehlt der
-`pre-commit`-Hook; er liegt unter `.git/hooks` und wird nicht mitversioniert.
+Das war es. Der Hook liegt unter `.git/hooks` und wird von git nicht
+mitversioniert, muss also je Klon einmal eingerichtet werden; er prüft vor jedem
+Commit Zeilenenden, Kodierung und Zweigwahl.
+
+**Zeilenenden sind kein Thema mehr.** [.gitattributes](.gitattributes) setzt
+`* -text` und schaltet damit jede Umwandlung durch git ab — beim Auschecken wie
+beim Einchecken bleiben die Bytes, wie sie sind, unabhängig davon, wie
+`core.autocrlf` auf dem jeweiligen Rechner steht.
+
+Nachgemessen am 06.09.2026: ein frischer Auscheck des Stands, geprüft mit
+**erzwungenem** `core.autocrlf=true`, meldet **null geänderte Dateien**. Die
+Datei `Eudora71/Eudora/eudora.cpp` steht dabei als `i/mixed w/mixed` da — ihre
+absichtlich gemischten Zeilenenden aus den Neunzigern kommen unversehrt an.
+
+> Früher standen hier vier Schritte, darunter `git config core.autocrlf false`
+> und ein Lauf von `tools/zeilenenden-angleichen.pl`. Beides war nötig, **bevor**
+> es `.gitattributes` gab. Das Werkzeug bleibt liegen — es repariert einen
+> Arbeitsbaum, der aus jener Zeit stammt —, aber ein heutiger Klon braucht es
+> nicht.
 
 ### Der Bau
 
