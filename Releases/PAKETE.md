@@ -3,6 +3,22 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
+> **Diese Buchführung ist unvollständig — Stand 06.09.2026.** Der jüngste
+> ausführliche Abschnitt unten ist **1.0.3** vom 31.08.2026. Die Pakete
+> **1.0.4 bis 1.0.10** haben hier keinen Eintrag, obwohl sie gebaut und
+> teilweise veröffentlicht wurden; im Repo liegen als ZIP:
+>
+> ```sh
+> ls Releases/*.zip
+> ```
+>
+> — 1.0.1, 1.0.2, 1.0.3, 1.0.4 und **1.0.10** (die ausgelieferte Fassung), dazu
+> `Eudora72-QCSSL-1.0.1.zip`. Der Quellstand ist inzwischen **7.2.0.12 /
+> Paketnummer 1.0.12**; ein Paket 1.0.12 gibt es noch nicht. Wer wissen will,
+> was in einem dieser Pakete steckt, liest bis dahin `git log` und
+> `BEFUNDE.md`, nicht diese Datei. Der Mangel ist als **M-4** in
+> `PRUEFUNG-CODE.md` festgehalten und weiterhin offen.
+
 ## Drei Zählungen, und wie sie zusammenhängen
 
 | Zählung | wo sie steht | wo man sie sieht |
@@ -20,18 +36,26 @@ Die QCSSL-Zählung läuft bewusst eigenständig: sie folgt den Quellen der
 TLS-Schicht, nicht dem Paket. Paket 1.0.3 enthält QCSSL 1.0.1, weil sich
 dort seit 1.0.1 nichts geändert hat.
 
-### Wie man die Version hebt — vollständig, nachgemessen am 31.08.2026
+### Wie man die Version hebt — nachgemessen am 06.09.2026
 
-Für Paket **1.0.4** mit Produktversion **7.2.0.4** sind es **fünf Zeilen in zwei
-Dateien**:
+Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
+**1.0.12 / 7.2.0.12** auf **1.0.13 / 7.2.0.13**.
 
 | Datei | Zeile | von | auf |
 |---|---|---|---|
-| `VERSION` | 1 | `1.0.3` | `1.0.4` |
-| `Eudora71/Version.h` | `EUDORA_VERSION4` | `3` | `4` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,3` | `7,2,0,4` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.3\0"` | `…7.2.0.4\0` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.3"` | `"7.2.0.4"` |
+| `VERSION` | 1 | `1.0.12` | `1.0.13` |
+| `Eudora71/Version.h` | `EUDORA_VERSION4` | `12` | `13` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,12` | `7,2,0,13` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.12\0"` | `…7.2.0.13\0` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.12"` | `"7.2.0.13"` |
+
+Den aktuellen Ausgangswert liest man nicht ab, sondern misst ihn:
+
+```sh
+cat VERSION                                          # Paketnummer
+grep EUDORA_BUILD_VERSION Eudora71/Version.h         # Produktversion
+perl tools/ausliefern.pl --pruefen                   # beides gegeneinander
+```
 
 **Die vier Angaben in `Version.h` sind NICHT voneinander abgeleitet** — jede
 steht für sich. Wer nur `EUDORA_VERSION4` ändert, hebt die Version an keiner
@@ -69,11 +93,12 @@ haben.
 
 > ### Ein veröffentlichtes Paket wird nicht ersetzt (Befund V-1)
 >
-> Muss etwas hinterher, bekommt es die **nächste Nummer** — Paket 1.0.4 mit
-> Produktversion 7.2.0.4. Am 31.08.2026 ist das **verletzt** worden: unter
-> `v1.0.3` hängen zwei verschiedene ZIPs, sie unterscheiden sich in der Behebung
-> von E-11. Damit identifiziert die Angabe „Version 1.0.3" das Programm nicht
-> mehr, und ein Fehlerbericht von außen ist keinem Bau zuzuordnen.
+> Muss etwas hinterher, bekommt es die **nächste Nummer**. Am 31.08.2026 ist das
+> **verletzt** worden: unter `v1.0.3` hängen zwei verschiedene ZIPs. Damit
+> identifiziert die Angabe „Version 1.0.3" das Programm nicht mehr, und ein
+> Fehlerbericht von außen ist keinem Bau zuzuordnen. (Womit sich die beiden
+> unterscheiden, stand hier als *„die Behebung von E-11"* — E-11 ist
+> zurückgenommen, siehe den Kasten weiter unten.)
 >
 > **Das ist derselbe Fehler, den diese Datei bei der `QCSSL.dll` schon
 > dokumentiert** (zwei Binärdateien unter „QCSSL 1.0.0", siehe
@@ -97,11 +122,17 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 [ZIEL.md](../ZIEL.md) — hier bewusst keine zweite Fassung dieser Tabelle.
 
 > **Achtung, zwei ZIPs unter derselben Kennung.** Das Paket ist am 31.08.2026
-> um 09:00 **ausgetauscht** worden. Nur die zweite Fassung enthält die Behebung
-> von Befund **E-11** (`eudora.cpp:3372`, `Left(i)` statt `ReleaseBuffer(i)`) —
-> mit der ersten stürzte Eudora auf einer frischen Installation beim Klick auf
-> *Weiter* im Kontoassistenten ab. Das ist genau der Fall, gegen den diese
-> Datei geschrieben wurde: **die Prüfsumme entscheidet, nicht der Name.**
+> um 09:00 **ausgetauscht** worden. Die beiden Fassungen unterscheiden sich in
+> einer Änderung an `eudora.cpp:3372` (`Left(i)` statt `ReleaseBuffer(i)`). Das
+> ist genau der Fall, gegen den diese Datei geschrieben wurde: **die Prüfsumme
+> entscheidet, nicht der Name.**
+>
+> **Berichtigung (06.09.2026).** Hier stand, nur die zweite Fassung enthalte
+> „die Behebung von Befund **E-11**". **E-11 ist zurückgenommen** — die
+> Änderung behebt den Absturz im Kontoassistenten nicht. Die belegte Ursache
+> ist **E-25** (`Befunde/ASSISTENT.md`), und auch die war nicht die einzige:
+> 7.2.0.12 stürzt weiter ab. Die Unterscheidung der beiden ZIPs bleibt richtig,
+> ihre Begründung trägt nicht mehr.
 
 | | |
 |---|---|
@@ -111,7 +142,7 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 | SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
 | Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
 | Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — **taugt nicht als Freigabekriterium**, siehe PR-2.0 |
-| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — beschreibt noch den Debug-Weg, für ein Release-Paket hinfällig (F-1, nächster Schritt 3) |
+| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — am 31.08.2026 abends auf den Release-Weg umgeschrieben; die alte Debug-Fassung ist dort im Kasten benannt |
 | QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
 
 **Was sich gegenüber 1.0.2 ändert.**
@@ -130,9 +161,15 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 3. **Die drei Plugins als Release-Fassungen, ohne PDB.** 1.0.2 lieferte die
    Debug-Fassungen samt 12 MB Symboldateien. Ladbar sind beide nicht.
 4. **`laufzeit-holen.ps1` und `paket-pruefen.ps1` liegen im Paket**, mit
-   Hinweis ganz vorn in der LIESMICH.txt. Ohne die vier VS2022-Debug-Laufzeiten
-   scheitert der Start mit `0xc000007b` — genau das ist am 31.08.2026
-   passiert.
+   Hinweis ganz vorn in der LIESMICH.txt.
+
+   > **Berichtigung (06.09.2026).** Hier stand: *„Ohne die vier
+   > VS2022-Debug-Laufzeiten scheitert der Start mit `0xc000007b`."* Das ist im
+   > Abschnitt über ein **Release**-Paket falsch und widerspricht der eigenen
+   > Überschrift: 1.0.3 ist die erste Fassung, die **ohne** diese vier DLLs
+   > auskommt (Befund F-1). Sie dürfen auch gar nicht weitergegeben werden.
+   > `laufzeit-holen.ps1` liegt nur für den Fall bei, dass jemand einen
+   > **Debug**-Bau daneben ausprobiert.
 
 **Was der Paketprüfer sagt.** Zusammengestellt und geprüft am 31.08.2026:
 
@@ -161,18 +198,25 @@ Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also nicht auf; es fällt
 erst bei Benutzung auf (Adressbuch, LDAP, Ph, S/MIME, Spamfilter). Das galt
 für 1.0.2 genauso — es war nur nicht gemessen.
 
-**Stand nach ZIEL.md** (31.08.2026, abends). Hier ist genau zu unterscheiden,
-welcher Bau gemeint ist — **keine der beiden veröffentlichten Fassungen ist von
-jemandem gestartet worden** (Befund V-1):
+**Stand nach ZIEL.md** (31.08.2026, abends — der damalige Stand, hier als
+Zeitdokument):
 
 | Bau | Stand |
 |---|---|
 | **Debug**-Bau `Eudora72-1.0.3` (nicht veröffentlicht, nicht veröffentlichbar) | darauf sind Kriterium 1 und 3 belegt — 159 Nachrichten, TLSv1.3 (E-1, E-3). Er lief nur, weil die vier **nicht verteilbaren** Laufzeit-DLLs von Hand daneben lagen (E-8) |
-| **Release**-ZIP, erste Fassung (`632c4066…`) | von Gregor probiert: **Absturz** beim Klick auf *Weiter* im Kontoassistenten (E-6, Ursache E-11) |
-| **Release**-ZIP, zweite Fassung (`d4719047…`) | **von niemandem geprüft** — sie trägt die Behebung von E-11, aber es hat sie noch keiner gestartet |
+| **Release**-ZIP, erste Fassung (`632c4066…`) | von Gregor probiert: **Absturz** beim Klick auf *Weiter* im Kontoassistenten (E-6) |
+| **Release**-ZIP, zweite Fassung (`d4719047…`) | war am 31.08.2026 von niemandem gestartet |
 
-Kriterium 0 ist damit unbelegt, und die Behebung von E-11 unerprobt — zumal in
-derselben Funktion zwei weitere Vorkommen derselben Art stehen (R-1).
+> **Nachtrag (06.09.2026).** Zwei Dinge daran sind überholt. Erstens ist
+> **E-11 zurückgenommen** — die zweite 1.0.3-Fassung trug also nicht „die
+> Behebung des Absturzes", sondern eine Änderung an einer Stelle, die den
+> Absturz nicht verursacht hat; die richtige Erklärung ist **E-25**
+> (Doppelfreigabe in `NSImport.eif`), und selbst die reichte nicht: 7.2.0.12
+> stürzt weiter ab. Zweitens ist der Satz *„keine der beiden veröffentlichten
+> Fassungen ist von jemandem gestartet worden"* längst überholt — seither sind
+> 1.0.4 bis 1.0.10 gebaut und benutzt worden. **Kriterium 0 bleibt trotzdem
+> offen:** kein Paket ist auf einem Rechner **ohne** Visual Studio ausgepackt
+> und gestartet worden (siehe [ZIEL.md](../ZIEL.md) und `README.md`).
 
 ## 1.0.2 — 30.08.2026
 
@@ -194,8 +238,10 @@ derselben Funktion zwei weitere Vorkommen derselben Art stehen (R-1).
 1. Die sieben vorgebauten Fremd-DLLs von 2006 lagen als **Debug**-Fassungen bei
    und verlangten die nicht verteilbare VS2003-Debug-Laufzeit. Jetzt die
    Release-Fassungen (Befund S-1).
-2. Ohne vorhandene `Eudora.ini` bricht Eudora in `eudora.cpp:3542` ab. Eine
+2. Ohne vorhandene `Eudora.ini` lief Eudora nicht sinnvoll an. Eine
    vorbereitete liegt jetzt im Unterverzeichnis `Mailverzeichnis` (S-1).
+   *(Die frühere Formulierung „bricht in `eudora.cpp:3542` ab" ist falsch —
+   siehe README, Abschnitt „Starten".)*
 3. Der Stillstand nach dem Startbildschirm war die **Werbefläche**:
    `CAdWazooWnd::OnCreate` legt sie mit 0 × 0 Bildpunkten an, Paige verheddert
    sich in einer Endlosrekursion. Die Leiste wurde bedingungslos angelegt; sie
