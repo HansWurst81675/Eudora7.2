@@ -21,13 +21,22 @@ ist das Gedächtnisverzeichnis; maßgeblich für das Nachlesen ist diese Kopie.
 ## Woher die Regeln stammen
 
 Der größte Teil geht auf konkrete Fehlgriffe zurück, nicht auf allgemeine Vorsätze.
-Ein Agent hat dafür beide Sitzungsmitschriften ausgewertet — 7,6 MB Gesprächsverlauf
+Ein Agent hat dafuer beide Sitzungsmitschriften ausgewertet - beim ersten Mal
+7,6 MB, beim zweiten Mal am 06.09.2026 die vollen 34 MB Gespraechsverlauf
 — und die wiederkehrenden Muster herausgezogen. Jede Regel nennt in ihrem
 Abschnitt **Why** den belegten Anlass mit Datum.
 
 Der teuerste einzelne Fehler war dabei nicht ein falscher Codeeingriff, sondern
 **1 Stunde 46 Minuten Stillstand** am 28.08.2026 — in einer Zeit, die ausdrücklich
 für unbeaufsichtigtes Arbeiten freigegeben war.
+
+## Wo man anfaengt
+
+[LEHREN-AUS-DEM-CHAT.md](LEHREN-AUS-DEM-CHAT.md) fasst die wiederkehrenden
+Fehler nach Haeufigkeit zusammen, jeweils mit einem woertlichen Beleg und der
+Regel, die daraus folgt. Die Datei ist am 06.09.2026 aus beiden vollstaendigen
+Sitzungsmitschriften (34 MB, 474 Nachrichten von Gregor) entstanden. Wer nur
+eine Datei liest, liest diese.
 
 ## Die Regeln
 
@@ -51,6 +60,15 @@ für unbeaufsichtigtes Arbeiten freigegeben war.
 | [dummy-statt-weglassen](dummy-statt-weglassen.md) | Unbenutzte Funktionen als leeren Rumpf, nicht ausbauen |
 | [agenten-benennen](agenten-benennen.md) | Kurze deutsche Namen und eine Statustabelle |
 | [zurueckgestellte-befunde](zurueckgestellte-befunde.md) | Belegte Mängel, die bewusst später angegangen werden |
+| [version-eindeutig-machen](version-eindeutig-machen.md) | Titelzeile, Dateiversion und Verzeichnisname nennen denselben Stand |
+| [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | "Ich schalte ab" ist eine Frist, kein Gespraechsbeitrag |
+| [lehren-anwenden-nicht-nur-schreiben](lehren-anwenden-nicht-nur-schreiben.md) | Jede Lehre braucht Zeitpunkt, Werkzeug und messbares Merkmal |
+| [mannschaft-fuehren](mannschaft-fuehren.md) | Auftrag mit Symptom, Ruecklauf selbst nachmessen |
+| [main-muss-immer-baubar-sein](main-muss-immer-baubar-sein.md) | Massstab ist der frische Klon |
+| [nie-direkt-auf-main](nie-direkt-auf-main.md) | Jede Aenderung ueber einen eigenen Zweig |
+| [agenten-koordinieren](agenten-koordinieren.md) | Ein Arbeitsbaum je Agent |
+| [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) | Keine Handlungsanweisung ohne eigenen Versuch |
+| [was-lauffaehig-heisst](was-lauffaehig-heisst.md) | Gregors drei Kriterien |
 
 `MEMORY.md` ist das Inhaltsverzeichnis, das der Assistent zu Sitzungsbeginn lädt.
 

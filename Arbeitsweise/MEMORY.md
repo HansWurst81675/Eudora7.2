@@ -22,3 +22,7 @@
 - [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen
 - [Nie direkt auf main](nie-direkt-auf-main.md) — jede Änderung über einen eigenen Zweig; Gregor merged, nicht ich
 - [Mannschaft fuehren](mannschaft-fuehren.md) — Auftrag ohne Symptom liefert nichts; jeden Ruecklauf selbst nachmessen, nicht weitergeben
+- [Version eindeutig machen](version-eindeutig-machen.md) — Titelzeile, Dateiversion und Verzeichnisname nennen denselben Stand; waehrend Gregor testet wird nichts getauscht
+- [Abschalten ist ein Termin](abschalten-ist-ein-termin.md) — bei „abschalten“ oder „mergen“ beginnt der Abschluss; Frist minus 20 Minuten, dann nur noch sichern
+- [Lehren anwenden, nicht nur schreiben](lehren-anwenden-nicht-nur-schreiben.md) — jede Lehre braucht Zeitpunkt, Werkzeug und ein messbares Merkmal, sonst wirkt sie nicht
+- [Lehren aus dem Chat](LEHREN-AUS-DEM-CHAT.md) — die wiederkehrenden Fehler nach Haeufigkeit, mit Zitat und Regel; zu Sitzungsbeginn lesen
