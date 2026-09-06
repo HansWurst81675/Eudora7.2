@@ -185,8 +185,40 @@ param(
   [switch]$Ausfuehrlich,
   [switch]$OhneZweitenGang,
   [switch]$JedenFehlerZaehlen,
-  [string[]]$BekannteFehlerAus = @('OT501.vcxproj')
+  [string[]]$BekannteFehlerAus = @('OT501.vcxproj'),
+  [switch]$TrotzdemBauen
 )
+
+# BEFUND E-31: Kein zweiter Bau gleichzeitig.
+#
+# Am 06.09.2026 lief dieses Skript 51:59 Minuten statt der ueblichen 2:37,
+# weil nebenher zweimal MSBuild von Hand gestartet wurde. Sechs gleichzeitige
+# Bauten machen aus zweieinhalb Minuten vierzehn - sie werden nicht langsamer,
+# sie warten aufeinander. Schlimmer noch: die Artefaktpruefung am Ende verglich
+# danach Zeitstempel aus einem Mischzustand und meldete Unsinn.
+#
+# Die Regel steht seit dem 05.09.2026 in AGENTEN.md unter Regel 2. Sie wurde
+# trotzdem verletzt - deshalb steht sie jetzt hier als Schranke und nicht nur
+# als Satz.
+$fremd = @(Get-Process -Name MSBuild,cl,link -ErrorAction SilentlyContinue |
+           Where-Object { $_.Id -ne $PID })
+if ($fremd.Count -gt 0) {
+  $art = ($fremd | Group-Object ProcessName |
+          ForEach-Object { "$($_.Count)x $($_.Name)" }) -join ', '
+  Write-Host ''
+  Write-Host '  ABBRUCH: es laeuft bereits ein Bau.' -ForegroundColor Yellow
+  Write-Host "  Gefunden: $art"
+  Write-Host ''
+  Write-Host '  Zwei Bauten gleichzeitig sind nicht doppelt so schnell, sondern'
+  Write-Host '  langsamer als nacheinander - und die Artefaktpruefung am Ende'
+  Write-Host '  vergleicht dann Zeitstempel aus einem Mischzustand.'
+  Write-Host ''
+  Write-Host '  Warten, bis der andere fertig ist. Wer es trotzdem will:'
+  Write-Host '      -TrotzdemBauen'
+  Write-Host ''
+  if (-not $TrotzdemBauen) { exit 3 }
+  Write-Host '  -TrotzdemBauen gesetzt - es wird gebaut.' -ForegroundColor Yellow
+}
 
 $ErrorActionPreference = 'Stop'
 
