@@ -3704,6 +3704,7 @@ void CHeaderView::OnUpdateEditPasteAsQuote( CCmdUI* pCmdUI )
 
 int CHeaderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CHeaderView::OnCreate: Anfang");
     if (CFormView::OnCreate(lpCreateStruct) == -1)
         return -1;
 	
@@ -3736,6 +3737,7 @@ int CHeaderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		
 	++s_nObjectCount;
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CHeaderView::OnCreate: fertig");
 	return 0;
 }
 

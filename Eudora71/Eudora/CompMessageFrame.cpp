@@ -377,6 +377,7 @@ CCreateContext* pContext)
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Teiler angelegt");
 
 	if ( fRet ) {
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView CHeaderView");
 		fRet = m_wndSplitter.CreateView( 0, 0, RUNTIME_CLASS(CHeaderView),
 					CSize( 315, 88 ), pContext );
 	}
@@ -385,11 +386,13 @@ CCreateContext* pContext)
 	{
 		if(GetIniShort(IDS_INI_WORD_WRAP_ON_SCREEN) && GetIniShort(IDS_INI_WORD_WRAP))
 		{
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView PgFixedCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgFixedCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 		else
 		{
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView PgCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
@@ -889,6 +892,7 @@ CHeaderView* CCompMessageFrame::GetHeaderView()
 {
 	CHeaderView* pHV = (CHeaderView*) m_wndSplitter.GetPane( 0, 0 );
 	VERIFY( pHV );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView CHeaderView");
 	ASSERT( pHV->IsKindOf(RUNTIME_CLASS(CHeaderView)) );
 	return pHV;
 }
