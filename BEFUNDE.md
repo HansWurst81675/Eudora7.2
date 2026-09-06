@@ -163,14 +163,14 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-24 | unter „Recent" stand „In" zweimal im Postfachbaum | **behoben** (`Befunde/POSTFACH.md`) |
 | E-25 | der Absturz beim Klick auf *Weiter*: Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile` | **behoben** (`Befunde/ASSISTENT.md`) — **die Hypothese hat den Test aber nicht bestanden**: 7.2.0.12 stürzt weiter ab, E-25 war also nicht die einzige Quelle |
 | E-26 | der Absturzbericht nennt die Ladeadresse jedes Moduls (`QCExceptionHandler::WriteModuleTable`) | **behoben** (`277d3a4`) — kein eigener Abschnitt, beschrieben in `README.md` unter *„Das Absturzprotokoll"* |
+| E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache des Schweigens belegt, der Absturz selbst nicht**: der Behandler hing nur an `SetUnhandledExceptionFilter`; Heap-Beschädigung, `/GS`-Wächter, ungültiges Argument an die C-Laufzeit und `std::terminate` gehen daran vorbei. Drei davon sind seit 7.2.0.13 angemeldet, dazu 15 Spurmarken auf dem Weg und ein behobenes `ReleaseBuffer` ohne `GetBuffer` in `PaigeEdtView.cpp`. Beste offene Spur: `Paige32.dll`/`EuMemMgr.dll` gegen `MSVCR71` — zwei getrennte Halden (`Befunde/VERFASSER.md`) |
+| E-28 | **Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken** | **behoben** (`222c0ba`): `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen. Gesetzt wird er bedingungslos in `CMessageFrame::ActivateFrame`, gelöscht wurde er nur innerhalb von `if (m_InitialSize != wp.rcNormalPosition)` — also nur, wenn das Fenster verschoben oder in der Größe geändert wurde (`Befunde/OEFFNEN.md`) |
+| E-29 | die Adressen im Absturzbericht brauchen ein Werkzeug | **behoben** (`029703c`): `tools/absturz-auswerten.pl`, 15 Selbsttests. Löst mit der Modultabelle aus E-26 jede Stapelzeile in einen Funktionsnamen auf — und sagt bei älteren Berichten ausdrücklich, dass es **nicht** geht, statt zu raten (`Befunde/SPUR.md`) |
+| E-30 | abgeschaltete Knöpfe der Werkzeugleiste zeigen kein Symbol | **in Arbeit**. Die Symbole selbst sind in Ordnung: im Hauptfenster erscheinen sie vollständig, im Suchfenster fehlen genau die abgeschalteten. Gemessen: `SetDisabledImageList` kommt im Projekt nicht vor, `QCImageList` legt die Liste mit `ILC_COLORDDB` an (`Befunde/SYMBOLE-VORARBEIT.md`) |
 
 > **E-10, E-15, E-18 bis E-21 gibt es nicht.** Gesucht am 06.09.2026 im ganzen
-> Repo (`grep -rhoE '\bE-[0-9]+\b' --include=*.md .`): diese Kennungen sind nie
-> vergeben worden. Lücken in der Nummerierung, keine verlorenen Befunde — wer
-> sie sucht, sucht umsonst.
->
-> **E-27, E-28 und E-29** sind am 06.09.2026 vergeben und noch in Arbeit; sie
-> stehen absichtlich noch nicht hier.
+> Repo: diese Kennungen sind nie vergeben worden. Lücken in der Nummerierung,
+> keine verlorenen Befunde — wer sie sucht, sucht umsonst.
 
 ## Unterbefunde, die man einzeln sucht
 
