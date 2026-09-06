@@ -1219,6 +1219,26 @@ BOOL SECLoadToolBarResource(LPCTSTR lpszResourceName, CBitmap& bmp,
 							UINT** ppBtnArray = NULL);
 
 
+
+// BEFUND E-30. comctl32!CreateMappedBitmap setzt nur die FARBTABELLE einer
+// Bitmap um; eine Bitmap mit mehr als 8 Bit hat keine, und der Hintergrund
+// 192,192,192 der Werkzeugleistenbitmaps bleibt dann stehen, waehrend
+// COLOR_BTNFACE auf heutigem Windows 240,240,240 ist. Gesperrte Knoepfe
+// werden dadurch zu einer leeren grauen Flaeche. Beleg und Messung stehen
+// bei der Umsetzung in OTShim_Werkzeugleiste.cpp und in Befunde/SYMBOLE.md.
+
+// Ersetzt in einem DIB im Speicher jeden Punkt der Farbe crVon durch crNach.
+// Rueckgabe: Zahl der geaenderten Punkte, oder -1, wenn das Format nicht
+// behandelt wird (Farbtabelle, gepackt, unplausible Masse).
+long OTShimDibFarbeErsetzen(BYTE* pDib, DWORD dwGroesse,
+							COLORREF crVon, COLORREF crNach);
+
+// Laedt eine Bitmapressource fuer eine Werkzeugleiste: bis 8 Bit ueber
+// CBitmap::LoadMappedBitmap wie bisher, darueber mit eigener Umsetzung des
+// Hintergrunds auf COLOR_BTNFACE.
+BOOL SECLadeWerkzeugleistenBitmap(CBitmap& bmp, UINT nIDResource);
+
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 //

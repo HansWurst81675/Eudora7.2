@@ -335,6 +335,8 @@ maßgeblich.
 | `tools/absturz-auswerten-tests.pl` | Testsammlung dazu, **15 Fälle** mit künstlicher Karte und künstlichem Bericht. **Wer `absturz-auswerten.pl` anfasst, lässt sie laufen** |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. 18 Treffer, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio |
 | `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: steht vorher ein `GetBuffer` auf **derselben** Variablen? Das ist die Fehlerklasse **R-1**. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio |
+| `tools/pruefe-symbole.pl` | prüft die Werkzeugleisten-Ressourcen ohne Übersetzer: jede `TOOLBAR` hat eine gleichnamige `BITMAP`, jede Bilddatei ist da, jeder Knopf hat ein Bild, keine Ladestelle in der Ersatzschicht holt eine Bitmap ohne Farbtabelle noch über `CBitmap::LoadMappedBitmap`, und deren Hintergrund ist wirklich 192,192,192 (Befund E-30). `-v` listet jede Leiste |
+| `tools/pruefe-symbole-tests.pl` | Testsammlung dazu, **12 Fälle** auf künstlichen Arbeitsbäumen. **Wer `pruefe-symbole.pl` anfasst, lässt sie laufen** |
 | `tools/postfach-zeichen-pruefen.pl` | prüft ein `.mbx` auf unübersetzte UTF-8-Folgen (Befund Z-2b) |
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
 | `tools/laufzeit-holen.ps1` | holt die vier **Debug**-Laufzeiten aus `SysWOW64` und prüft jede auf x86 nach. Für den Release-Bau nicht nötig |
