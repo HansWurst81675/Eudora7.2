@@ -150,7 +150,83 @@ gemessen: `CR=0 HI=1` unveraendert.
 
 ---
 
-## 4. Was noch offen ist
+## 4. Die Probe: vorher und nachher
+
+Werkzeuge dafuer neu: `tools/strg-n-pruefen.ps1` (startet Eudora aus
+einem Testverzeichnis, schliesst Meldungsfenster, schickt den Befehl per
+`WM_COMMAND`, meldet Fenster und Beendigungscode) und
+`tools/befehl-schicken.ps1` (dasselbe von aussen, fuer einen Lauf unter
+`tools/stapel-untersuchen.ps1`). Beide beenden nur Eudora-Prozesse,
+deren Programmpfad im angegebenen Testverzeichnis liegt.
+
+**Vorher** (Stand 75a4d98, Testverzeichnis im Scratchpad, Strg-N):
+
+```
+ERGEBNIS: ABGESTUERZT - Eudora beendet mit Code 0xC0000005
+letzte Spurmarke: E-27 NPO: vor CreateHTMLStyles
+```
+
+Im ganzen Protokoll kein einziger vollstaendiger Durchlauf von
+`CPaigeEdtView::OnCreate`. Damit ist die erste Frage beantwortet:
+**in dieser Portierung entstand bis dahin nie ein Paige-Fenster.**
+
+**Nachher** (dieselbe Umgebung, nur `Eudora.exe` ausgetauscht):
+
+```
+E-27 NPO: vor pgNewNamedStyle
+E-27 NPO: nach pgNewNamedStyle
+E-27 NPO: vor Stilschleife
+E-27 NPO: nach Stilschleife
+E-27 NPO: vor CreateHTMLStyles
+E-27 NPO: nach CreateHTMLStyles          <- lief zum ersten Mal durch
+E-27 PaigeOnCreate: nach NewPaigeObject
+E-27 OnCreateClient: beide Ansichten angelegt
+E-27 OnMessageNewMessage: fertig
+ERGEBNIS: Eudora laeuft noch.
+```
+
+Das Verfassen-Fenster steht — der Titel des Hauptfensters wechselt auf
+das neue MDI-Kind —, und 60 Sekunden nach dem Befehl laeuft Eudora
+unveraendert weiter. *Weiterleiten* (32799) beendet Eudora ebenfalls
+nicht mehr. Das ist der erste belegte, vollstaendige Durchlauf von
+`CPaigeEdtView::NewPaigeObject` in dieser Portierung ueberhaupt.
+
+---
+
+## 5. Ein zweiter Fehler, der erst jetzt erreichbar ist
+
+Ein Lauf unter `tools/stapel-untersuchen.ps1` mit Strg-N brachte eine
+**andere** toedliche Ausnahme zutage:
+
+```
+AUSNAHME 0xC000041D  (STATUS_FATAL_USER_CALLBACK_EXCEPTION)
+EIP  Eudora.exe  AutoCompleterListBox::KillACListBox + 5
+                 AutoCompleteSearcher.cpp:551
+Weg: CMainFrame::OnMessageNewMessage -> CEudoraApp::NewChildFrame
+     -> CMDIChild::LoadFrame -> SECWorksheet::LoadFrame (OTShim.cpp:631)
+     -> ... -> CHeaderView::OnKillFocusTo (headervw.cpp:265)
+```
+
+`KillACListBox` fasst `m_AutoCompList` ohne Pruefung an. Dieses Feld ist
+nur nach `~AutoCompleterListBox` (`AutoCompleteSearcher.cpp:509`) NULL.
+Der Aufrufer prueft `pField->m_ACListBox` zwar auf NULL, aber `pField`
+entsteht aus einer ungeprueften Umdeutung
+`(CHeaderField*)GetDlgItem(nID)` (`headervw.cpp:287`) — waehrend
+`LoadFrame` laeuft, muss das noch nicht das erwartete Steuerelement
+sein.
+
+**Ehrliche Einordnung:** gemessen wurde das nur unter dem Debugger,
+waehrend das Begleitskript im 700-ms-Takt Meldungsfenster wegklickte und
+damit den Eingabefokus staendig verschob. Vier Laeufe ohne Debugger
+(dreimal Strg-N, davon einer mit 60 Sekunden Nachlauf, einmal
+Weiterleiten) haben den Fehler **nicht** ausgeloest. Er ist real, aber
+fokusabhaengig, und er hat mit Paige nichts zu tun — er war vorher nur
+unerreichbar, weil Eudora schon davor starb. Eigener Befund, in dieser
+Aenderung **nicht** behoben.
+
+---
+
+## 6. Was noch offen ist
 
 * Die Rechnung deckt `pg_globals` vollstaendig ab. `paige_rec`,
   `pg_undo`, `pg_hyperlink`, `pg_table` und die Strukturen aus

@@ -16,7 +16,8 @@
 param(
     [Parameter(Mandatory=$true)][string]$Verzeichnis,
     [int]$Befehl = 32797,          # ID_MESSAGE_NEW; 32799 = ID_MESSAGE_FORWARD
-    [int]$Sekunden = 40
+    [int]$Sekunden = 40,
+    [int]$Nachlauf = 20          # Beobachtungszeit nach dem Befehl
 )
 
 $ErrorActionPreference = "Stop"
@@ -90,7 +91,10 @@ function Schliesse-Meldungen([int]$pid_) {
     foreach ($f in (Hole-Fenster $pid_)) {
         if ($f.Klasse -eq "#32770" -and $f.Sichtbar) {
             Write-Host ("  Meldung: '" + $f.Titel + "' -> " + (Hole-Meldungstext $f.H))
-            [void][Fenster]::SendMessage($f.H, 0x0111, [IntPtr]1, [IntPtr]::Zero)
+            # PostMessage, nicht SendMessage: ein modaler Dialog haengt in
+            # seiner eigenen Nachrichtenschleife und nimmt ein SendMessage
+            # aus einem fremden Prozess nicht zuverlaessig an.
+            [void][Fenster]::PostMessage($f.H, 0x0111, [IntPtr]1, [IntPtr]::Zero)
             $n++
         }
     }
@@ -133,7 +137,7 @@ foreach ($f in $vorher) { Write-Host ("  [" + $f.Klasse + "] " + $f.Titel) }
 Write-Host "Schicke WM_COMMAND $Befehl"
 [void][Fenster]::PostMessage($haupt, 0x0111, [IntPtr]$Befehl, [IntPtr]::Zero)
 
-$ende = (Get-Date).AddSeconds(20)
+$ende = (Get-Date).AddSeconds($Nachlauf)
 while ((Get-Date) -lt $ende) {
     Start-Sleep -Milliseconds 700
     if ($p.HasExited) { break }
