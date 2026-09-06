@@ -31,6 +31,7 @@ extern QCMailboxDirector	g_theMailboxDirector;
 IMPLEMENT_DYNAMIC(CMessageFrame, CMDIChild)
 
 CMessageFrame::CMessageFrame()
+	: m_pSumBackPtr(NULL)
 {
 #ifdef OLDSTUFF
 	m_bWasIconic = FALSE;
@@ -55,6 +56,9 @@ void CMessageFrame::ActivateFrame(int nCmdShow /*= -1*/)
 	if (Sum)
 	{
 		Sum->m_FrameWnd = this;
+		// BEFUND E-28: Rueckzeiger merken, damit OnDestroy ihn auch dann
+		// loeschen kann, wenn GetActiveDocument() dort schon NULL liefert.
+		m_pSumBackPtr = Sum;
 		if(Sum->m_TheToc && Sum->m_TheToc->m_Type == MBT_OUT && Sum->IsQueued())
 			SetQueueStatus();
 	}
@@ -166,19 +170,42 @@ void CMessageFrame::OnDestroy()
 			if(Sum != NULL)
 			{
 				Sum->SetSavedPos( CRect( wp.rcNormalPosition ) );
-				//
-				// The following assignment used to be in 
-				// CMessageDoc::PreCloseFrame().  That seems like an odd
-				// place, especially since the 'm_FrameWnd' member is
-				// set here in the ActivateFrame() method.  Since it was
-				// causing shutdown crashes, it was moved here so that
-				// we can avoid race conditions between deletion of the
-				// CSummary object and the frame window object.
-				//
-				Sum->m_FrameWnd = NULL;
 			}
 		/*}*/
 	}
+
+	//
+	// BEFUND E-28: Der Rueckzeiger CSummary::m_FrameWnd wird in
+	// ActivateFrame BEDINGUNGSLOS gesetzt, hier aber bisher nur INNERHALB
+	// von "if (m_InitialSize != wp.rcNormalPosition)" geloescht - also nur
+	// dann, wenn der Benutzer das Fenster zwischendurch verschoben oder in
+	// der Groesse geaendert hat. Wird ein Nachrichtenfenster geoeffnet und
+	// unveraendert wieder geschlossen, bleibt m_FrameWnd auf dem gerade
+	// zerstoerten Rahmen stehen.
+	//
+	// CSummary::Display (summary.cpp:796) prueft nur auf NULL und ruft dann
+	// m_FrameWnd->ActivateFrame() auf - ein virtueller Aufruf ueber eine
+	// freigegebene vtable. Sichtbar ist das als "Doppelklick oeffnet die
+	// Nachricht nicht" (der Aufruf verpufft auf einem toten HWND) bzw. als
+	// Sprung an eine Adresse ausserhalb jedes Moduls, sobald der Speicher
+	// wiederverwendet wurde.
+	//
+	// Ausserdem wird der Zeiger jetzt ueber m_pSumBackPtr geloescht statt
+	// ueber GetActiveDocument(): letzteres liefert NULL, sobald der Rahmen
+	// beim Abbau keine aktive Ansicht mehr hat, und genau dann blieb der
+	// Rueckzeiger ebenfalls stehen. Der Vergleich "== this" verhindert,
+	// dass ein inzwischen anders belegter Rueckzeiger geloescht wird.
+	//
+	if (Sum != NULL && Sum->m_FrameWnd == this)
+		Sum->m_FrameWnd = NULL;
+
+	if (m_pSumBackPtr != NULL && m_pSumBackPtr != Sum &&
+		m_pSumBackPtr->m_FrameWnd == this)
+	{
+		m_pSumBackPtr->m_FrameWnd = NULL;
+	}
+
+	m_pSumBackPtr = NULL;
 
 	CMDIChild::OnDestroy();
 }

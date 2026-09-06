@@ -12,12 +12,20 @@
 /////////////////////////////////////////////////////////////////////////////
 // CMessageFrame frame
 
+class CSummary;
+
 class CMessageFrame : public CMDIChild
 {
 	DECLARE_DYNAMIC(CMessageFrame)
 
 protected:
 	CMsgSplitterWnd m_wndSplitter;
+
+	// BEFUND E-28: eigene Kopie des Rueckzeigers, den ActivateFrame in
+	// CSummary::m_FrameWnd eintraegt. OnDestroy braucht ihn, weil
+	// GetActiveDocument() beim Fensterabbau bereits NULL liefern kann und
+	// die Zusammenfassung dann nicht mehr zu finden waere.
+	CSummary*		m_pSumBackPtr;
 
 	CMessageFrame();			// protected constructor used by dynamic creation
 
