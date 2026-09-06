@@ -33,9 +33,20 @@ arbeiten** kann.
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | **nicht erfüllt** — Strg-N und *Weiterleiten* beenden Eudora; *File → Exit* bringt eine Meldung |
-| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **nicht erfüllt** — das Verfassen-Fenster entsteht gar nicht erst |
-| 6 | **Eine Mail lässt sich weiterleiten** | **nicht erfüllt** — derselbe Weg, derselbe Absturz |
+| 4 | **Keine Abstürze** | **fast** — Strg-N und *Weiterleiten* beenden Eudora nicht mehr (E-31, 06.09.2026). Es bleibt eine Meldung „An unhandled exception has occurred", und unter dem Debugger tritt ein zweiter, fokusabhängiger Fehler zutage: `0xC000041D` in `AutoCompleterListBox::KillACListBox` |
+| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **teilweise** — das Verfassen-Fenster **entsteht** jetzt. Schreiben und Abschicken ist noch nicht geprüft |
+| 6 | **Eine Mail lässt sich weiterleiten** | **teilweise** — derselbe Weg, ebenfalls kein Absturz mehr |
+
+**Die Ursache war eine einzige Zeile** (**E-31**), gemessen am 06.09.2026:
+`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` definierte `pg_time_t` als `time_t`.
+Unter VC6/VC7.1 waren das **vier** Byte, unter VS2022 sind es **acht** —
+`Paige32.dll` von 2005 rechnet mit vier. Damit war **jede** Struktur verschoben,
+die Eudora an Paige reicht: `def_style.procs` lag bei 536 statt 524,
+`sizeof(style_info)` bei 304 statt 292. `PgGlobals::InitFonts` schrieb bei jedem
+Start zwölf Byte über `def_style` hinaus, und ein Funktionszeiger zeigte ins
+Leere — das war der Stapelüberlauf.
+
+Bis dahin entstand in dieser Portierung **kein einziges Paige-Fenster**.
 
 Kriterien 4 bis 6 hängen am selben Fehler (**E-27**). Gemessen an Gregors
 Protokoll vom 06.09.2026: beide Wege enden in

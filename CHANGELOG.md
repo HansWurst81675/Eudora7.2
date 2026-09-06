@@ -13,9 +13,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | | |
 |---|---|
-| **E-27** | **Strg-N und Weiterleiten beenden Eudora.** Ursache eingekreist, nicht behoben — siehe 7.2.0.17 |
+| | Meldung **„An unhandled exception has occurred"** beim Verfassen. Die Spur endet bei `OnCreateClient: Auswahlfelder gefüllt, jetzt die Schriftnamen` |
+| **E-32** | Fokusabhängiger Fehler `0xC000041D` in `AutoCompleterListBox::KillACListBox` — nur unter dem Debugger ausgelöst |
 | **E-31** | *File → Exit* bringt eine Meldung statt sauber zu beenden |
-| | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
+| | Meldung **„Encountered an improper argument"** beim Anzeigen mancher Nachrichten |
 
 ## Erreicht
 
@@ -23,10 +24,83 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio,
 korrekte Darstellung, Mailabruf über POP3/TLS 1.3 auf Port 995.
 
-Die zweite Stufe — Kriterien 4 bis 6, *keine Abstürze / Mail schreiben / Mail
-weiterleiten* — ist **nicht** erfüllt. Alle drei hängen an E-27.
+Von der zweiten Stufe — Kriterien 4 bis 6 — ist der größte Brocken gefallen:
+**Strg-N und *Weiterleiten* beenden Eudora nicht mehr, das Verfassen-Fenster
+entsteht.** Siehe 7.2.0.18. Schreiben und Abschicken sind noch nicht geprüft.
 
 ---
+
+
+## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · **der Durchbruch**
+
+**E-31 — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile in
+`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695`:
+
+```c
+typedef time_t   pg_time_t;
+```
+
+`time_t` war unter VC6/VC7.1 **vier** Byte breit, unter VS2022 ist es **acht**.
+`Paige32.dll` stammt von 2005 und rechnet mit vier. `pg_time_t` steckt in
+`style_info` und fünfmal in `pg_doc_info` — und damit in `pg_globals` und in
+`paige_rec`. **Jede** Struktur, die Eudora an Paige reichte, war verschoben.
+
+Gemessen mit einem 32-Bit-Programm, das die ausgelieferte DLL lädt,
+`pgMemStartup`/`pgInit` auf einen genullten Puffer ruft und darin die Adressen
+der exportierten Standardprozeduren sucht:
+
+| Feld in `pg_globals` | die DLL sagt | VS2022 rechnete | nachher |
+|---|---|---|---|
+| `def_style.procs.init` | 524 | **536** | 524 |
+| `def_par.procs.line_proc` | 1300 | **1316** | 1300 |
+| `def_hooks` | 1360 | **1376** | 1360 |
+| `sizeof(style_info)` | 292 | **304** | 292 |
+
+Alle 30 Zeiger in `def_hooks` und alle 17 in `def_style.procs` lösen sich danach
+lückenlos auf. Kein `/Zp`, kein `#pragma pack` im Spiel — `time_t` ist der
+einzige Typ in `PGHEADER`, dessen Breite sich geändert hat.
+
+**Damit erklärt sich, warum die sieben Vermutungen aus 7.2.0.17 nichts
+brachten:** `PgGlobals::InitFonts` schrieb mit `memcpy(&def_style, &styleInfo,
+304)` zwölf Byte über die Struktur hinaus — bei jedem Start. Und
+`pPg->user_refcon = (long)pSB` landete 20 Byte neben dem echten Feld. Beides
+passiert, **bevor** der verdächtigte `pgNewNamedStyle` überhaupt gerufen wird.
+
+**Zwei Annahmen der Vorarbeit waren falsch.** Es *gibt* Paige-Quellen:
+`Eudora71/PaigeDLL/PGSOURCE`, 38 C-Dateien. Der Rekursionszyklus ist dort
+nachzulesen — `pgInstallFont` → `pgStyleSuperImpose` →
+`target_style->procs.init(...)` (`PGDEFSTL.C:1640`).
+
+### Die Probe
+
+| | vorher | nachher |
+|---|---|---|
+| Strg-N | `ABGESTUERZT, Code 0xC0000005`, letzte Marke `NPO: vor CreateHTMLStyles` | `OnMessageNewMessage: fertig`, **Fenster steht**, Eudora läuft weiter |
+| Vollständiges `CPaigeEdtView::OnCreate` im Protokoll | **kein einziges** | ja |
+| *Weiterleiten* | beendet Eudora | beendet Eudora nicht mehr |
+
+**In dieser Portierung entstand bis dahin nie ein Paige-Fenster.**
+
+### Was danach noch offen ist
+
+- Eine Meldung „An unhandled exception has occurred" bleibt. Die Spur endet
+  jetzt bei `OnCreateClient: Auswahlfelder gefüllt, jetzt die Schriftnamen` —
+  danach kommen fest verdrahtete Menü-Indizes (`GetSubMenu(11)`). Sechs neue
+  Marken sitzen dort
+- Unter dem Debugger tritt ein zweiter, **fokusabhängiger** Fehler zutage:
+  `0xC000041D` in `AutoCompleterListBox::KillACListBox+5`
+  (`AutoCompleteSearcher.cpp:551`), gerufen aus `CHeaderView::OnKillFocusTo`.
+  In vier Läufen ohne Debugger nicht ausgelöst
+- **Der eigentliche Schlussstein wäre ein Neubau von `Paige32.dll` mit VS2022** —
+  Quellen und `Paige32.vcproj` liegen vollständig vor. Dann kann keine
+  Kopfdatei mehr von der Binärdatei abweichen
+
+### Neue Werkzeuge
+
+`tools/strg-n-pruefen.ps1` startet Eudora, klickt Meldungen weg, schickt Strg-N
+und sagt, ob das Fenster aufgeht — ohne dass jemand danebensitzt.
+`tools/befehl-schicken.ps1` schickt einen beliebigen Menübefehl. Beide beenden
+nur Eudora-Prozesse aus dem angegebenen Testverzeichnis.
 
 ## 7.2.0.17 / Paket 1.0.17 — 06.09.2026 · nicht ausgeliefert
 
