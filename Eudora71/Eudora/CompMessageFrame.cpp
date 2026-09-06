@@ -690,6 +690,7 @@ CCreateContext* pContext)
 	// get the face names
 	EnumFontFaces( theArray );
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: nach EnumFontFaces");
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
 	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
@@ -702,6 +703,7 @@ CCreateContext* pContext)
 	}
 
 	// get the main frame window
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Schriftnamen eingefuellt");
 	pMainFrame = ( CMainFrame* ) AfxGetApp()->m_pMainWnd;
 	
 	if (pMainFrame)
@@ -712,21 +714,25 @@ CCreateContext* pContext)
 		i = ( bMaximized ? 1 : 0 );
 		
 		// get the main window
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Hauptfenster geholt");
 		VERIFY( pEditTextMenu = pMainFrame->GetMenu() );
 		
 		if (pEditTextMenu)
 		{
 			// get the edit menu
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Menue geholt");
 			VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 1 + i ) );
 			
 			if (pEditTextMenu)
 			{
 				// Shareware: In reduced feature mode, you get a less-capable format toolbar
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Untermenue 1+i geholt");
 				if (UsingFullFeatureSet())
 				{
 					// FULL FEATURE mode
 					
 					// get the insert menu
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: vor GetSubMenu 11");
 					VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
 					i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
 					VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );
