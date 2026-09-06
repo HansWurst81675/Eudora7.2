@@ -52,6 +52,24 @@ Verfassen-Fenster das Problem, sondern die ganze Paige-Anbindung.
 
 ## Ebenfalls offen
 
+- **E-32 — die Meldung „An unhandled exception has occurred" beim Verfassen.**
+  Das ist der letzte Schritt bis Kriterium 5. **Gemessen am 06.09.2026 nach der
+  Behebung von E-31:** die Spur läuft jetzt **vollständig** durch —
+  `OnCreateClient: vor GetSubMenu 11` → **`OnMessageNewMessage: fertig`**. Der
+  Fensterbau ist also fertig; die Ausnahme kommt **danach**, beim Anzeigen.
+
+  Der Verdacht steht: `AutoCompleterListBox::KillACListBox`
+  (`AutoCompleteSearcher.cpp:548`), gerufen aus `CHeaderView::OnKillFocusTo`.
+  Der Agent sah dort unter dem Debugger `0xC000041D`
+  (STATUS_FATAL_USER_CALLBACK_EXCEPTION — eine Ausnahme innerhalb einer
+  Fensterprozedur) und hielt es für fokusabhängig und selten. **Das stimmt
+  nicht:** Gregor bekommt die Meldung bei jedem Versuch, und sie ist modal —
+  deshalb lässt sich Eudora danach auch nicht mehr beenden.
+
+  **Nächster Schritt:** Marken in `KillACListBox` und `CHeaderView::OnKillFocusTo`
+  setzen, dann `tools/strg-n-pruefen.ps1 -Verzeichnis <Paket>` laufen lassen.
+  Der Weg dorthin ist damit derselbe wie bei E-31, und der hat funktioniert.
+
 - ***File → Exit*** bringt eine Meldung statt sauber zu beenden
 - Meldung **„Encountered an improper argument"** beim Anzeigen mancher
   Nachrichten. Das ist MFCs Text für `CInvalidArgException`, kommt also nicht
