@@ -423,3 +423,67 @@ Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt (`X-5`, `X-6`,
   Verzeichnis geschrieben ist; die Kennungen sind stattdessen **reserviert**.
 * **Nichts gelöscht, was ein Beleg ist.** Überholte Aussagen sind berichtigt und
   als berichtigt gekennzeichnet, meist mit dem alten Wortlaut als Zitat.
+
+---
+
+# Sechster Durchgang — 06.09.2026
+
+Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor` aus
+`9512108`. **Keine Zeile Quelltext geändert, nichts gebaut, Eudora nicht
+gestartet.** Der fünfte Durchgang ist der Vormittag desselben Tages
+(`Befunde/LEKTOR.md`, L-1 bis L-6): er hat `README.md`, `AUFGABEN.md`,
+`WEITERMACHEN.md` und `ZIEL.md` von Grabungsbericht auf Anleitung umgestellt
+und die Liste der übrigen Mängel aufgeschrieben. Dieser Durchgang arbeitet
+diese Liste ab.
+
+Anlass ist Gregors Frage: *„readme ist auf dem letzten stand? alle alten
+inhalte gelöscht?"*
+
+**Vorgehen: messen, nicht lesen.** Jede Tatsachenbehauptung der `README.md` ist
+gegen den Baum geprüft worden — jeder Pfad mit `ls`, jede Zeilenangabe
+`datei.cpp:1234` durch Nachsehen an der Stelle, jede Zahl durch Nachzählen,
+jeder angebotene Befehl durch Ausführen. Der vollständige Befund mit den
+Messbefehlen steht in **[Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md)**.
+
+**Ergebnis in einem Satz:** die `README.md` war **nicht** auf dem Stand — sechs
+Tatsachenbehauptungen waren falsch, darunter zwei Fundstellen, die auf etwas
+ganz anderes zeigten. Alle sechs sind berichtigt.
+
+## Zwei Fehlerklassen, die dabei sichtbar wurden
+
+1. **Zeilennummern in Fließtext veralten lautlos.** `eudora.cpp:3542` und
+   `mainfrm.cpp:1025` zeigten beide nicht mehr auf das Gemeinte. Wo es geht,
+   steht jetzt ein **Funktionsname** statt einer Nummer — der verschiebt sich
+   nicht.
+2. **Zahlen, die niemand pflegt, sind schlimmer als keine.** Der Absatz über
+   die `.lib` nannte „elf", „sieben", „vier", „sechs" — davon stimmte nur die
+   Vier. Er ist jetzt nach **Sorten** beschrieben, mit dem Erkennungsmerkmal
+   (Importbibliothek = hat eine `.exp` daneben) und drei Befehlen zum
+   Nachzählen.
+
+## Was berichtigt wurde
+
+| Datei | Was falsch war |
+|---|---|
+| `README.md` | `eudora.cpp:3542` als Abbruchstelle bei fehlender `Eudora.ini`; der Absatz über die `.lib`; `cat VERSION` als Beleg für die Quellversion; `mainfrm.cpp:1025`; Stingray-Header 30 statt 28; „121 Zertifikate"; `msvcr71.dll` fehlte in der Ergebnisliste |
+| `BEFUNDE.md` | `Z-3` stand auf „offen" (behoben mit `57fe6a4`); **E-14, E-16, E-17, E-22, E-23, E-24, E-25, E-26** fehlten im Verzeichnis ganz |
+| `PORTIERUNG.md` | der Kasten „gemessen 05.09.2026" war der Stand **vor** B-3; „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; die OpenSSL3-Libs lägen nicht im Repo; E-11; Port 110 als einziger Beleg |
+| `STARTUMGEBUNG.md` | Checkliste Punkt 1 verlangte die nicht verteilbaren Debug-Laufzeiten von jedem Paketanwender (L-3); `EudoraRes` hänge an OT501; die `Eudora.ini`-Fundstelle; die alte Bau-Kennung; „ob Eudora startet, sagt diese Datei nicht" |
+| `Releases/PAKETE.md` | die Buchführung endet sieben Pakete vor dem Stand; die Versionsanleitung war für 1.0.3→1.0.4 durchgerechnet; E-11 als Begründung der beiden 1.0.3-ZIPs; Debug-Laufzeiten im Release-Abschnitt (L-3) |
+| `ABRUF-PRUEFEN.md` | „Belegt ist Port 110 … das ist **nicht** der Weg, den diese Anleitung empfiehlt" — seit 06.09.2026 ist Port 995 gemessen |
+| `Eudora71/OpenSSL3/BAUEN.md` | Aufforderung ganz oben, OpenSSL selbst zu bauen, weil die `.lib` fehlten — sie liegen im Repo |
+| `PRUEFUNG-BAU.md`, `PRUEFUNG-BRANCH.md`, `PRUEFUNG-CODE.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | überholte Schlussfolgerungen (E-11, „Ursache wieder offen", M-11, roher MSBuild-Aufruf) als solche gekennzeichnet |
+| `Releases/1.0/README.md`, `Releases/1.0/AUSLIEFERUNGEN.md`, `Eudora71/VC71Bruecke/BEFUND.md`, `Eudora71/OTShim/PLAN.md`, `BEFUND-ANSICHT.md`, `BEFUND-MENUE.md`, `BEFUNDE-ALTBESTAND.md`, `tools/patches/zertifikatspruefung-verschaerfen.md` | „nicht getestet" / „nächster Schritt" / „zu prüfen", was längst entschieden ist |
+
+## Was ich bewusst nicht getan habe
+
+* **Keine Zeile Quelltext geändert, nichts gebaut, Eudora nicht gestartet.**
+* **Prüfberichte nicht umgeschrieben.** Ein Bericht ist ein Zeitdokument; seine
+  Messwerte bleiben stehen. Überholt ist die *Schlussfolgerung*, und die ist
+  mit einem Nachtragskasten gekennzeichnet, nicht ersetzt.
+* **`Releases/PAKETE.md` nicht um 1.0.4 bis 1.0.10 ergänzt.** Dafür bräuchte es
+  Messwerte an den ZIPs, die ich ohne Bau nicht erheben kann. Der Mangel steht
+  jetzt als Kasten am Anfang der Datei und als **M-4** im Verzeichnis.
+* **Kein Edit-Werkzeug.** Alle Änderungen über `tools/ersetze-bereich.pl` mit
+  `:raw`, nach jeder Änderung CR-Zahl und Doppelkodierung gegen `HEAD`
+  gemessen.

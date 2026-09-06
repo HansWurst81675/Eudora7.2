@@ -23,7 +23,7 @@ Diese DLL ist gegen **OpenSSL 3.5.8 LTS** gebaut:
 
 | | vorher | jetzt |
 |---|---|---|
-| Höchstes Protokoll | TLS 1.0 (Grenze der Bibliothek) | **keine Obergrenze gesetzt** — TLS 1.3 zweimal nachgemessen: 29.08.2026 gegen `pop.gmx.net:995` und am 31.08.2026 mit dieser Fassung gegen `mx.freenet.de:110` (STARTTLS), je `TLS_AES_256_GCM_SHA384` |
+| Höchstes Protokoll | TLS 1.0 (Grenze der Bibliothek) | **keine Obergrenze gesetzt** — TLS 1.3 dreimal nachgemessen: 29.08.2026 gegen `pop.gmx.net:995`, 31.08.2026 gegen `mx.freenet.de:110` (STARTTLS) und 06.09.2026 im selbst gebauten Eudora 7.2.0.12 gegen `mx.freenet.de:995`, je `TLS_AES_256_GCM_SHA384` |
 | OpenSSL-Version | 0.9.7l (2006) | 3.5.8 LTS |
 | Sicherheitsupdates | seit ~2007 keine | bis 2030 |
 | SSLv2 / SSLv3 | angeboten | abgeschaltet (beide gebrochen) |
@@ -121,12 +121,17 @@ powershell -ExecutionPolicy Bypass -File rootcerts-erzeugen.ps1
 - **Reproduzierbarkeit:** ein zweiter Lauf des Skripts über dieselbe Quelle liefert eine
   byte-identische Datei, SHA256 `b7b0739a8339c41944a9a4f9d72664cba207e414e0c867b869d4be48c44a62e7`.
 
-### Was ungeprüft bleibt
+### Was ungeprüft war — und seit dem 06.09.2026 belegt ist
 
-**Ob Eudora selbst die Datei annimmt, ist nicht getestet.** Dafür braucht es eine
-laufende Installation; das steht noch aus. Die Prüfungen oben zeigen, dass die Datei
-über genau die Schnittstelle lesbar ist, die Eudora benutzt, und dass die enthaltenen
-Wurzeln für aktuelle Mailserver ausreichen — mehr nicht.
+**Erledigt.** Eudora nimmt die Datei an: am 06.09.2026 hat das selbst gebaute
+Eudora 7.2.0.12 damit über Port 995 gegen `mx.freenet.de` **TLSv1.3**
+ausgehandelt, `Negotiation Status: Succeeded`, `TLS_AES_256_GCM_SHA384`.
+
+> Bis dahin stand hier: *„Ob Eudora selbst die Datei annimmt, ist nicht
+> getestet. Dafür braucht es eine laufende Installation; das steht noch aus."*
+> Die Prüfungen oben zeigten damals nur, dass die Datei über genau die
+> Schnittstelle lesbar ist, die Eudora benutzt, und dass die enthaltenen
+> Wurzeln für aktuelle Mailserver ausreichen.
 
 Wer **HermesSSL** installiert hat, hat bereits einen aktuellen Speicher; ihn zu
 ersetzen ist dann nicht nötig.
@@ -254,8 +259,11 @@ Im Betrieb ist kein Unterschied zu sehen — das ist beabsichtigt. Ausgetauscht 
 die Kryptoschicht; Oberfläche und Verhalten von Eudora bleiben unverändert. Der Gewinn
 liegt in Protokoll und Wartbarkeit, nicht in sichtbaren Funktionen.
 
-Der beiliegende **`rootcerts.p7b` ist in Eudora selbst nicht erprobt** — siehe
-"Was ungeprüft bleibt" im Abschnitt zum Wurzelzertifikatsspeicher.
+Der beiliegende **`rootcerts.p7b` ist inzwischen in Eudora selbst erprobt**: am
+06.09.2026 hat Eudora 7.2.0.12 damit über Port 995 gegen `mx.freenet.de`
+TLSv1.3 ausgehandelt (`Negotiation Status: Succeeded`). Siehe „Was ungeprüft
+bleibt" im Abschnitt zum Wurzelzertifikatsspeicher — der Vorbehalt dort ist
+damit eingelöst.
 
 Trotzdem die Schritte 3 und 4 ernst nehmen und die alten Dateien aufheben.
 

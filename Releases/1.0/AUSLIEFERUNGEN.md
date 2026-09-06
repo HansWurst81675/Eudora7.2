@@ -51,6 +51,11 @@ Mailserver**.
 > Status *Succeeded*, 08:09:43 Uhr. Danach 159 Nachrichten abgerufen.
 > Abgelesen in *Tools → Last SSL Info*. Einzelheiten in `BEFUNDE.md`, E-3.
 >
+> **Nachtrag 06.09.2026: auch Port 995 ist belegt.** Im selbst gebauten Eudora
+> 7.2.0.12, *Secure Sockets when Receiving* → „Required, Alternate Port":
+> `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Beide
+> Wege funktionieren.
+>
 > Die Sorge, die strengeren Vorgaben aus M1 könnten etwas verschlechtern,
 > hat sich **nicht** bestätigt.
 

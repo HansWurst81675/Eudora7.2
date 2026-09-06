@@ -111,15 +111,15 @@ Zeilen: **CR und LF gehen gemeinsam von 372 auf 370.**
 > und `--no-verify` ist dafür nicht nötig. Gegenprobe:
 > `perl tools/pruefe-bytes-tests.pl`, Fälle `c1`/`c2`.
 
-Zur Sicherheit trotzdem nachmessen, bevor jemand `--no-verify` benutzt:
+Zur Sicherheit trotzdem nachmessen:
 
 ```
 git show :Eudora71/QCSSL/src/qccertificate.cpp | perl -ne "$c+=tr/\r//; $l+=tr/\n//; END{print qq{CR=$c LF=$l\n}}"
 ```
 
 Stimmen CR und LF überein (370 = 370) und zeigt `git diff --cached` ausschließlich
-die sechs erwarteten Zeilen, ist die Änderung sauber und
-`git commit --no-verify` gerechtfertigt.
+die sechs erwarteten Zeilen, ist die Änderung sauber. **`--no-verify` ist dafür
+nicht mehr nötig** — siehe den Kasten darüber.
 
 ## Geprüft
 

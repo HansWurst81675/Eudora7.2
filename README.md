@@ -1,6 +1,6 @@
 # Eudora 7.2
 
-<!-- pruefstand: 81851e5 -->
+<!-- pruefstand: 9512108 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -13,11 +13,17 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 > **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**.
 >
-> **Quellstand ist 7.2.0.12** (`cat VERSION`, `Eudora71/Version.h`) — das ist,
-> was ein Bau aus diesem Klon ergibt. **Gepackt ausgeliefert ist 1.0.10**
+> **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
+> **7.2.0.12** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
+> schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
+> **1.0.12**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
+> getrennt ein. **Gepackt ausgeliefert ist 1.0.10**
 > (`Releases/Eudora72-1.0.10-release.zip`). Ein **Paket 1.0.12 gibt es noch
-> nicht**; es soll erst entstehen, wenn der Strg-N-Absturz behoben ist. Wer die
-> beiden Zahlen verwechselt, sucht Fehler in einer Datei, die niemand hat.
+> nicht**, obwohl `VERSION` die Nummer schon trägt; es soll erst entstehen,
+> wenn der Strg-N-Absturz behoben ist. Wer die beiden Zahlen verwechselt, sucht
+> Fehler in einer Datei, die niemand hat.
 >
 > Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
 > git-Verlauf — hier nicht.
@@ -225,16 +231,42 @@ MFC/ATL, Windows SDK). Belege zum Bauzustand: [PRUEFUNG-BAU.md](PRUEFUNG-BAU.md)
 | **`Eudora.exe`** | `Eudora71/Bin/<Konfiguration>` |
 | `EudoraRes.dll` | `Eudora71/Bin/<Konfiguration>` |
 | `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`, `EuLang.dll`, `plstclnt.dll` | `Eudora71/Bin/<Konfiguration>` |
+| `msvcr71.dll` (Projekt `VC71Bruecke`, Weiterleitung auf `msvcrt.dll`) | `Eudora71/Bin/<Konfiguration>` |
 | `NSImport.eif`, `OEImport.eif`, `OLImport.eif` (Importer-Plugins, DLLs mit eigener Endung) | `Eudora71/Bin/<Konfiguration>` |
 | `EudoraOldIcons.epi` (Icon-Plugin, ebenfalls eine DLL) | `Eudora71/EudoraOldIcons/<Konfiguration>` |
-| elf `.lib` | `Eudora71/Lib/<Konfiguration>` |
+| die `.lib` (siehe unten) | `Eudora71/Lib/<Konfiguration>` |
 | `libeay32.lib`, `ssleay32.lib` (Projekt `OpenSSL`, Altbestand) | `Eudora71/OpenSSL/out32` |
 
-Von den elf `.lib` sind sieben Importbibliotheken zu den DLLs (kenntlich an der
-begleitenden `.exp`); echte statische Bibliotheken sind nur vier: `AccountWizard`,
-`DirectoryServicesUI`, `EuImap`, `SearchEngine`. Daneben liegen dort sechs
-vorgefertigte Fremdbibliotheken, die kein Projekt der Solution erzeugt
-(`EuMemMgr`, `Paige32d`, `SSCEWD32`, `Uuid`, `libpng`, `zlib`).
+#### Die `.lib` in `Eudora71/Lib/<Konfiguration>` — drei Sorten
+
+Zahlen stehen hier absichtlich nicht: `Eudora71/Lib/` ist von `.gitignore`
+erfasst, der Inhalt hängt also davon ab, was zuletzt gebaut wurde, und jedes
+neue Projekt verschiebt ihn. Wer wissen will, was da liegt, unterscheidet nach
+diesen drei Merkmalen — sie halten auch dann noch, wenn ein Projekt dazukommt:
+
+| Sorte | woran man sie erkennt | woher |
+|---|---|---|
+| **Importbibliothek** zu einer DLL | daneben liegt eine gleichnamige `.exp` | jedes Projekt mit `<ConfigurationType>DynamicLibrary` und `<ImportLibrary>..\Lib\…` |
+| **echte statische Bibliothek** | keine `.exp`, wird beim Bau neu geschrieben | `AccountWizard`, `DirectoryServicesUI`, `EuImap`, `SearchEngine` — die vier Projekte mit `<ConfigurationType>StaticLibrary` |
+| **vorgefertigte Fremdbibliothek** | keine `.exp`, und `git ls-files Eudora71/Lib/` nennt sie | im Repo mitversioniert, kein Projekt erzeugt sie |
+
+Nachzählen, ohne etwas zu bauen:
+
+```sh
+ls Eudora71/Lib/Release/*.exp                       # die Importbibliotheken
+git ls-files Eudora71/Lib/                          # die mitgelieferten Fremdlibs
+grep -l StaticLibrary Eudora71/*/*.vcxproj Eudora71/*/*/*.vcxproj
+```
+
+Die mitgelieferten Fremdbibliotheken heißen in **Release** `EuMemMgr.lib`,
+`Paige32.lib`, `SSCEWD32.LIB`, `Uuid.Lib`, `libpng.lib`, `zlib.lib` — in
+**Debug** genauso, nur heißt Paige dort `Paige32d.lib`. Auf Groß- und
+Kleinschreibung achten: `SSCEWD32.LIB` und `Uuid.Lib` fallen sonst aus einem
+`ls *.lib` heraus.
+
+Eine Falle beim Zählen: `VC71Bruecke` baut die DLL `msvcr71.dll`, seine
+Importbibliothek heißt aber `msvcr71-bruecke.lib` — Projektname, DLL-Name und
+`.lib`-Name gehen hier auseinander.
 
 Unit- und Komponententests liegen in `Eudora71/Tests` (`RunTests.cmd`) und
 `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit
@@ -246,10 +278,27 @@ laufen lassen.
 Eudora.exe "<Pfad zu einem Mailverzeichnis>"
 ```
 
-Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
-`eudora.cpp:3542` ab. Vorlage:
+Ins Mailverzeichnis gehört eine `Eudora.ini`. Vorlage:
 `InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`. Welche Dateien
 danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+
+> **Berichtigung (06.09.2026).** Hier stand bis dahin: *„Das Mailverzeichnis
+> muss eine `Eudora.ini` enthalten, sonst bricht Eudora in `eudora.cpp:3542`
+> ab."* **Das stimmt nicht.** An `eudora.cpp:3542` steht
+> `CEudoraApp::RegisterMailbox`, und einen Abbruch wegen fehlender INI gibt es
+> im Code nicht: `GetDirs`/`CheckMailDirectory` (`fileutil.cpp`) prüfen nur, ob
+> das **Verzeichnis** existiert und schreibbar ist, und `SetupINIFilename`
+> (`rs.cpp`) setzt `INIPath` zusammen, ohne die Datei zu verlangen. Gemeint war
+> `VERIFY(GetShortPathName(INIPath, …) > 0)` in
+> **`CEudoraApp::RegisterCommandLine`** (`Eudora71/Eudora/eudora.cpp`) — das
+> schlägt bei fehlender Datei fehl, aber `VERIFY` wirkt **nur im Debug-Bau**
+> und bringt dort einen SUPERASSERT-Dialog, kein Programmende; im Release-Bau
+> tut es gar nichts. Ohne INI läuft Eudora also weiter, nur mit den Vorgaben
+> für jede Einstellung — was man nicht will, aber etwas anderes ist als ein
+> Abbruch. Der einzige Weg im Code, der wirklich vorzeitig endet, betrifft den
+> Start **ohne** Argument: dann sucht `StartEudoraWithDefaultLocation` das
+> zuletzt benutzte Verzeichnis in Registry und `%APPDATA%`, und erst wenn auch
+> das nichts hergibt, verlässt `InitInstance` lautlos das Programm.
 
 Der Fenstertitel trägt die **Bau-Kennung** — Paketversion, Commit und
 Herkunftsverzeichnis. Ein Sternchen hinter dem Commit heißt: beim Bau lagen
@@ -310,10 +359,14 @@ Port 995 (`Negotiation Status: Succeeded`).
 
 QCSSL prüft ausschließlich gegen `rootcerts.p7b`, nicht gegen den
 Windows-Zertifikatspeicher. Für die Auslieferung erzeugt
-`Releases/1.0/rootcerts-erzeugen.ps1` eine aktuelle Datei mit 121 Zertifikaten;
-die beiden Altbestände im Baum (`Eudora71/Bin/Release`,
-`InstallersForEudora/…/win32`) enthalten abgelaufene Zertifikate und sind nicht
-maßgeblich.
+`Releases/1.0/rootcerts-erzeugen.ps1` eine frische Datei aus dem
+Windows-Wurzelspeicher der Maschine — abgelaufene und noch nicht gültige
+Zertifikate bleiben draußen. Wie viele es sind, sagt das Skript am Ende selbst
+(*„Gegenprobe (wieder eingelesen): N Zertifikate"*); die Zahl hängt am
+Zertifikatstand des Rechners und wird hier deshalb nicht festgeschrieben. Die
+beiden Altbestände im Baum (`Eudora71/Bin/Release/rootcerts.p7b`,
+`InstallersForEudora/Eudora7.1/Data/win32/RootCerts`) enthalten abgelaufene
+Zertifikate und sind nicht maßgeblich.
 
 ## Werkzeuge
 
@@ -374,14 +427,20 @@ Zugriffsfunktionen. Betroffen waren vor allem die BIO-Schicht und
 
 `Eudora.exe` linkte gegen **Stingray Objective Toolkit 5.0.1**, eine kommerzielle
 MFC-Erweiterung von 1995. Die CHM-Freigabe durfte nur Qualcomm-eigenen Code
-enthalten — von OT501 sind deshalb nur die 127 Header übrig, die Quelldateien
-fehlen fast vollständig. Eine fertige Binärdatei von damals hilft nicht: mit VC6
-gegen MFC 4.21 übersetzt, verlinkt sie sich nicht mit VS 2022.
+enthalten — von OT501 sind deshalb nur die 127 Header unter
+`Eudora71/OT501/Include` übrig; von den Quelldateien der `SEC*`-Klassen fehlt
+alles, im Baum liegen nur noch mitgelieferte Fremdteile (JPEG, zlib). Eine
+fertige Binärdatei von damals hilft nicht: mit VC6 gegen MFC 4.21 übersetzt,
+verlinkt sie sich nicht mit VS 2022.
 
 Eudora baut darauf sein komplettes Fenstergerüst auf — `CMainFrame` erbt über
 `QCWorkbook` von `SECWorkbook`; insgesamt leitet Eudora an 30 Stellen von
 22 Stingray-Klassen ab und ruft 77 Methoden auf. **42** Quelldateien und
-30 Header unter `Eudora71/Eudora` nennen mindestens einen Stingray-Bezeichner.
+**28** Header unter `Eudora71/Eudora` nennen mindestens einen
+Stingray-Bezeichner (gezählt am 06.09.2026: Dateien, in denen ein Bezeichner
+der Form `SEC<Grossbuchstabe>…` mit mindestens einem Kleinbuchstaben vorkommt —
+das trennt die Stingray-Klassen von den gleichnamigen SSPI-Konstanten
+`SECBUFFER_*`).
 
 **Gewählter Weg und heutiger Zustand:** eine eigene Ersatzschicht auf modernes
 MFC, `Eudora71/OTShim/`, in fünf Teilen über `OTShimAll.h` eingebunden.
@@ -391,13 +450,15 @@ MFC, `Eudora71/OTShim/`, in fünf Teilen über `OTShimAll.h` eingebunden.
 sonst linkt Eudora gegen eine leere Bibliothek.
 
 > **Achtung, ein naheliegender Irrtum:** die Registerkartenleiste ist **nicht**
-> verzichtbar. Abschaltbar ist nur der MDI-Streifen hinter `m_bWorkbookMode`
-> (`mainfrm.cpp:1025`). Das Registerkarten-*Steuerelement*
-> `SEC3DTabWnd`/`SEC3DTabControl` sitzt in **jeder** Wazoo-Leiste und wird davon
-> nicht berührt. Mit leeren Rümpfen startet Eudora zwar, aber Mailboxes,
-> Nicknames, Filters, Directory Services, Link History und Task Status bleiben
-> leer. Die Registerkarten sind deshalb als eigener Teil ausgeführt
-> (`OTShim_Reiter.*`).
+> verzichtbar. Abschaltbar ist nur der MDI-Streifen — `CMainFrame::FinishInitAndShowWindow`
+> ruft dafür `ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))`, und
+> `SECWorkbook` in der Ersatzschicht hält `m_bWorkbookMode` dauerhaft auf
+> `FALSE` (`OTShim.cpp`, Konstruktor und `SetWorkbookMode`). Das
+> Registerkarten-*Steuerelement* `SEC3DTabWnd`/`SEC3DTabControl` sitzt in
+> **jeder** Wazoo-Leiste und wird davon nicht berührt. Mit leeren Rümpfen
+> startet Eudora zwar, aber Mailboxes, Nicknames, Filters, Directory Services,
+> Link History und Task Status bleiben leer. Die Registerkarten sind deshalb als
+> eigener Teil ausgeführt (`OTShim_Reiter.*`).
 
 Bestandsaufnahme: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md) —
 Umsetzungsplan mit Stufen und Belegen:

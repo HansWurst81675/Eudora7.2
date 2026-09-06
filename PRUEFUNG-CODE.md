@@ -517,6 +517,13 @@ Datei.
 **M-8 (mittel).** Die alten Abschnitte sind nicht nachgezogen und widersprechen
 dem neuen jetzt frontal:
 
+> **Nachtrag (06.09.2026): M-8 ist in `README.md` und `PORTIERUNG.md`
+> abgearbeitet** (Agent LEKTOR, `Befunde/LEKTOR-2.md`). Die Fundstellen unten
+> stimmen deshalb nicht mehr mit den heutigen Zeilennummern überein; die Spalte
+> „gemessener Stand" ist es, was zählt. **Ihre eigene Zielangabe „1.0.4 /
+> 7.2.0.4" ist inzwischen selbst überholt** — der Stand ist 7.2.0.12 /
+> Paketnummer 1.0.12.
+
 | Fundstelle | steht dort | gemessener Stand |
 |---|---|---|
 | `README.md:82-84` | „`/p:BuildProjectReferences=false` ist **nötig** — sonst scheitert der Bau am Projekt `OT501`" | nicht mehr nötig; der Projektverweis ist weg |
@@ -562,6 +569,19 @@ vorhandener Mangel. Aber es widerlegt den Satz „klonen, laden, *Projektmappe
 erstellen* — fertig. Ohne Kniffe." für den **ersten** Bau eines frischen Klons.
 Diese Zusage sollte entweder eingelöst (drei Projektverweise auf `QCUtils`
 nachtragen) oder auf „**zweimal** erstellen" abgeschwächt werden. **M-11.**
+
+> **M-11 ist behoben (nachgesehen am 06.09.2026).** Der `ProjectReference` auf
+> `QCUtils.vcxproj` steht in `NSImport`, `OEImport`, `OLImport` und `plstclnt`
+> — Commit `57fe6a4`, „Z-3 richtig behoben". Nachzählen:
+>
+> ```sh
+> grep -c QCUtils.vcxproj Eudora71/Importers/*/*.vcxproj \
+>         Eudora71/PlaylistClient/plstclnt_dll/plstclnt.vcxproj
+> ```
+>
+> Ein voller Projektmappen-Bau aus einem frischen Klon meldet am 06.09.2026
+> **18 erfolgreich, 0 Fehler, 1 übersprungen**. Der Verweis auf M-11 im
+> Mängelverzeichnis dieser Datei ist damit erledigt.
 
 ---
 
@@ -634,7 +654,7 @@ Was in diesen Commits hätte mitgezogen werden müssen und nicht wurde:
 | M-8 | `README.md:82,101,464,465,18,19,44,479` und `PORTIERUNG.md:32,47-49,55` sind überholt | mittel | siehe Tabelle oben |
 | M-9 | Kennungsform in `README.md:175` und `mainfrm.cpp:9686` veraltet | klein | — |
 | M-10 | `gesichert.pl` übersieht **unverfolgte** Dateien in fremden Arbeitsbäumen und nennt sie „sauber" | mittel | `tools/gesichert.pl`, Abschnitt 6 |
-| M-11 | Der erste Bau eines frischen Baums scheitert an drei `Importers`-Projekten ohne `QCUtils`-Projektverweis — der Satz „ohne Kniffe" trägt so nicht | mittel | Bauprobe, Lauf 1 |
+| M-11 | Der erste Bau eines frischen Baums scheitert an drei `Importers`-Projekten ohne `QCUtils`-Projektverweis — der Satz „ohne Kniffe" trägt so nicht | mittel | Bauprobe, Lauf 1 — **behoben** mit `57fe6a4` (06.09.2026 nachgesehen) |
 
 ---
 
@@ -661,8 +681,8 @@ Zusammenführen sollten erledigt werden:
    liegt bereits gebaut in diesem Arbeitsbaum, Kennung `1.0.4+bcc59bb` ohne
    Sternchen.
 6. In `gesichert.pl` die unverfolgten Dateien fremder Arbeitsbäume mitmelden
-   (M-10) und drei `ProjectReference` auf `QCUtils` in die `Importers` eintragen
-   (M-11) — oder den Satz „ohne Kniffe" auf „zweimal erstellen" abschwächen.
+   (M-10). ~~Drei `ProjectReference` auf `QCUtils` in die `Importers`
+   eintragen (M-11)~~ — **erledigt mit `57fe6a4`.**
 
 **Zwei Punkte gehören vor das Abschalten, nicht danach:**
 

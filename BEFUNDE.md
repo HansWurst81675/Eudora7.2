@@ -1,13 +1,13 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: 3d03c50 -->
+<!-- pruefstand: 9512108 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 05.09.2026 nach diesem Durchgang: **6960 Zeilen**, **119** Abschnitte
-auf zweiter und **190** auf dritter Ebene. Nachzählen:
+Gemessen am 06.09.2026: **7349 Zeilen**, **122** Abschnitte auf zweiter und **200**
+auf dritter Ebene. Nachzählen:
 
 ```sh
 wc -l < BEFUNDE.md                  # Zeilen
@@ -29,12 +29,15 @@ Projekt hat genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
 > Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
 > dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
 
-**Stand der Statusspalte:** 05.09.2026, Commit `3d03c50` (Zweig
-`bau-und-pruefung`). Die Einstufung ist am Text der Befunde und, wo nötig, am
-Quelltext nachgesehen. Nachgezogen am 05.09.2026: **E-4** und **E-7** standen
-auf „offen", sind aber behoben; **PR-5** stand an drei Stellen auf „offen", ist
-aber seit `765c39b` behoben. Neu aufgenommen: **B-3** (OT501 aus dem Bau) und
-**E-13** (Fortschritt beim Mailabruf).
+**Stand der Statusspalte:** 06.09.2026, Commit `9512108` (Zweig `wt/lektor`).
+Die Einstufung ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
+Nachgezogen am 06.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-2.md`): **Z-3**
+stand auf „offen", ist aber seit `57fe6a4` behoben; **E-14**, **E-16**,
+**E-17**, **E-22**, **E-23**, **E-24**, **E-25** und **E-26** fehlten im
+Verzeichnis ganz und sind eingetragen. Am 05.09.2026 nachgezogen: **E-4** und
+**E-7** standen auf „offen", sind aber behoben; **PR-5** stand an drei Stellen
+auf „offen", ist aber seit `765c39b` behoben. Neu aufgenommen war damals
+**B-3** (OT501 aus dem Bau) und **E-13** (Fortschritt beim Mailabruf).
 
 | Status | Bedeutung |
 |---|---|
@@ -133,7 +136,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-5 | Commit um 09:06 auf den um 09:03 zusammengeführten Zweig; die Regel stand nur als Prosa | **behoben** — Schranke im `pre-commit`, 15 Testfälle, Auflagen 7–10 in `AUFGABEN.md` |
 | X-6 | Bau-Lauf: geratene Plattform (`MSB4126`) und Erfolgsmeldung ohne Bau; `tools/bauen.ps1` | **behoben** — das Werkzeug steht, drei Gegenproben grün |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
-| Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **offen** (zweiter Lauf geht durch) |
+| Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **behoben** (`57fe6a4`) — `ProjectReference` auf `QCUtils.vcxproj` steht in `NSImport`, `OEImport`, `OLImport` und `plstclnt`; am 06.09.2026 in allen vier Projektdateien nachgesehen |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
@@ -152,10 +155,22 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** — und laut R-1 wahrscheinlich **unvollständig** |
 | E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** (Kriterium 3) |
 | E-13 | beim Mailabruf ist kein Fortschritt sichtbar — der Abruf dauert 0,02 s | **Ursache belegt**; Behebung liegt auf `wt/fortschritt-arbeit`, **nicht** in diesem Zweig. Hieß versehentlich `E-12` |
+| E-14 | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (`SearchManager::Info::InitX1`) | **offen, nicht angefasst** — auf einem frischen Mailverzeichnis der normale erste Lauf; echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
+| E-16 | Absturz beim Verfassen (Strg-N) und „Encountered an improper argument", `afxcoll.inl:213` | **offen** — sechs Stellen in `Befunde/VERFASSEN.md` gehärtet, die Ursache ist damit **nicht** gefunden |
+| E-17 | der Kontoassistent startete bei jedem Start, obwohl ein Konto eingerichtet war | **behoben** (`Befunde/PERSONA.md`) |
+| E-22 | Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken | **offen** — `Befunde/FENSTER.md`: Ursache **nicht** gefunden, aber ein Messwert, der die bisherige Suchrichtung widerlegt, und sechs belegte Schwachstellen auf dem Weg |
+| E-23 | POP3 nur über Port 110, dazu der Anmeldefehler bei freenet | **Ursache belegt**, drei Löcher gestopft (`Befunde/PORT.md`); Port 995 mit TLSv1.3 ist seit 06.09.2026 gemessen |
+| E-24 | unter „Recent" stand „In" zweimal im Postfachbaum | **behoben** (`Befunde/POSTFACH.md`) |
+| E-25 | der Absturz beim Klick auf *Weiter*: Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile` | **behoben** (`Befunde/ASSISTENT.md`) — **die Hypothese hat den Test aber nicht bestanden**: 7.2.0.12 stürzt weiter ab, E-25 war also nicht die einzige Quelle |
+| E-26 | der Absturzbericht nennt die Ladeadresse jedes Moduls (`QCExceptionHandler::WriteModuleTable`) | **behoben** (`277d3a4`) — kein eigener Abschnitt, beschrieben in `README.md` unter *„Das Absturzprotokoll"* |
 
-> **E-10 gibt es nicht.** Gesucht im ganzen Repo und im git-Verlauf: die Kennung
-> ist nie vergeben worden. Eine Lücke in der Nummerierung, kein verlorener
-> Befund — wer sie sucht, sucht umsonst.
+> **E-10, E-15, E-18 bis E-21 gibt es nicht.** Gesucht am 06.09.2026 im ganzen
+> Repo (`grep -rhoE '\bE-[0-9]+\b' --include=*.md .`): diese Kennungen sind nie
+> vergeben worden. Lücken in der Nummerierung, keine verlorenen Befunde — wer
+> sie sucht, sucht umsonst.
+>
+> **E-27, E-28 und E-29** sind am 06.09.2026 vergeben und noch in Arbeit; sie
+> stehen absichtlich noch nicht hier.
 
 ## Unterbefunde, die man einzeln sucht
 

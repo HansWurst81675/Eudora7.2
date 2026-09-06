@@ -1,22 +1,28 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
-<!-- pruefstand: d826a3f -->
+<!-- pruefstand: 9512108 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
-Stand: 2026-08-31 · Branch `darstellung-und-menue` · Messwerte an Commit `a807b93`,
-wo nicht anders angegeben
+Stand: 2026-09-06 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
+OT501*, *Umgebung*, *E-11* und *OpenSSL3* sind an diesem Tag gegen den Baum
+nachgemessen (Befund `Befunde/LEKTOR-2.md`, L-6). Ältere Messwerte im Rest der
+Datei nennen ihren eigenen Bezugscommit — meist `a807b93` vom 31.08.2026.
 
 An diesem Baum arbeiten mehrere Agenten gleichzeitig. Jede Zahl hier nennt ihren
 Bezugscommit; wer sie weiterverwendet, misst nach.
 
 ## Kurzfassung
 
-> **Eudora startet, ist bedienbar und ruft Mail ab** (31.08.2026, Befunde E-1
-> und E-3): 159 Nachrichten von `mx.freenet.de`, Port 110 mit STARTTLS,
-> `TLSv1.3` / `TLS_AES_256_GCM_SHA384`. Die Menüs gehen auf (M-1 wirkt), die
-> Bereiche überlagern sich nicht mehr (A-1 wirkt).
+> **Eudora startet, ist bedienbar und ruft Mail ab.** Zuletzt gemessen am
+> 06.09.2026 mit 7.2.0.12: POP3 auf **Port 995** gegen `mx.freenet.de`,
+> *Tools → Last SSL Info* meldet `Negotiation Status: Succeeded`, **TLSv1.3**,
+> `TLS_AES_256_GCM_SHA384`. Die richtige Einstellung dafür ist *Secure Sockets
+> when Receiving* → **„Required, Alternate Port"**. Der erste Abruf überhaupt
+> war am 31.08.2026 (Befunde E-1 und E-3): 159 Nachrichten, damals über
+> Port 110 mit STARTTLS. Die Menüs gehen auf (M-1 wirkt), die Bereiche
+> überlagern sich nicht mehr (A-1 wirkt).
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
 > zwei von vier Kriterien belegt, eines fast, Kriterium 0 offen. Hier steht
@@ -49,18 +55,23 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > der Absturz beim Start war die Werbefläche — Befund S-2. `EudoraRes.dll` wird
 > zur Laufzeit nachgeladen, nicht gebunden — siehe `STARTUMGEBUNG.md`.
 
-**16 der 18 Projekte werden fertig.** Zwei nicht:
+**18 der 19 Projekte werden fertig.** Nicht gebaut wird nur `OT501` (Stingray
+Objective Toolkit): die Quellen sind nicht freigegeben, und seit Befund **B-3**
+(`d8cc9d3`, 05.09.2026) hat das Projekt in `Eudora71/Eudora.sln` kein `Build.0`
+mehr — die Projektmappe überspringt es, statt an ihm zu scheitern. Gebraucht
+wird es nicht mehr; an seine Stelle ist `Eudora71/OTShim/` getreten.
 
-- `OT501` (Stingray Objective Toolkit) — die Quellen sind nicht freigegeben, das
-  Projekt bricht mit `NMAKE U1073` ab. Gebraucht wird es nicht mehr.
-- `EudoraRes` — hat einen Projektverweis auf `OT501` (`EudoraRes.vcxproj:351`) und
-  wird im Solution-Bau gar nicht erst versucht; es erscheint nicht in der
-  Fehlerliste, fertig wird es trotzdem nicht. Einzeln gebaut übersetzt es
-  vollständig. Für `Eudora` war dieselbe Bindung an `Eudora.vcxproj:1013` bis
-  `a807b93` genauso wirksam; dort ist sie jetzt gelöst.
+Gemessen am 06.09.2026 von Gregor in der IDE, ganze Projektmappe aus einem
+frischen Klon: **18 erfolgreich, 0 Fehler, 1 übersprungen**, 2:37 min.
 
-Ein voller Solution-Bau meldet 3 Fehler, alle aus `OT501`: zweimal `NMAKE U1073`
-(`Blackbox.cpp`, `OTA50D.lib`) und einmal `MSB3073`.
+> **Berichtigung (06.09.2026).** Hier stand: *„16 der 18 Projekte werden
+> fertig"*, `EudoraRes` habe einen Projektverweis auf `OT501`
+> (`EudoraRes.vcxproj:351`) und werde deshalb übersprungen, und *„ein voller
+> Solution-Bau meldet 3 Fehler, alle aus `OT501`"*. Nachgesehen am 06.09.2026:
+> `grep -n OT501 Eudora71/Eudora/EudoraRes.vcxproj` findet **keinen**
+> `ProjectReference`, nur Include-Pfade; die Datei hat überhaupt nur
+> 358 Zeilen, eine Zeile 351 mit diesem Inhalt kann es nicht geben. Dasselbe
+> gilt für `Eudora.vcxproj:1013`/`:1015`.
 
 Für `Eudora` sind alle 269 ursprünglichen Compilerfehler behoben (Verlauf
 269 - 74 - 25 - 16 - 4 - 0, null seit `3f6877a`), seit `78a9c10` übersetzt die
@@ -88,8 +99,8 @@ fertige `QCSSL.dll` liegt als einbaufertiges Paket in `Releases/1.0/`.
   `VC\Tools\MSVC\`); die `.vcxproj` legen nur `<PlatformToolset>v143` fest.
 - Windows SDK **10.0.22621.0**. Auch das steht in keiner `.vcxproj` — es ist die
   Fassung, die MSBuild hier aufloest, abgelesen an den Include-Pfaden im Build-Log.
-- Konfiguration: `Debug|x86`; für QCSSL zusätzlich `Release|x86` gebaut,
-  die übrigen Projekte sind im Release-Zweig ungetestet
+- Konfiguration: `Debug|x86` und `Release|x86` — beide bauen die ganze
+  Projektmappe durch (18 erfolgreich, 0 Fehler, 1 übersprungen; 06.09.2026)
 - Die IDE wird nicht gebraucht — gebaut wird von der Kommandozeile, und zwar
   über `tools/bauen.ps1`:
 
@@ -148,18 +159,22 @@ Projekt und Pfad können entfallen.
 
 ## Blocker: OT501 (Stingray Objective Toolkit)
 
-> **Was das für den Bau bedeutet (gemessen 05.09.2026, `Release|x86`):** Das
-> Projekt `OT501` scheitert bei jedem Projektmappen-Bau mit drei Fehlern
-> (zweimal `NMAKE U1073`, einmal `MSB3073`). `Eudora.vcxproj` und
-> `EudoraRes.vcxproj` führen es als **Projektverweis**, und MSBuild lässt ein
-> Projekt aus, dessen Verweis gescheitert ist. Aus einem reinen
-> Projektmappen-Bau kommt deshalb **nie** eine `Eudora.exe` heraus — sieben der
-> neun überwachten Artefakte entstehen, die beiden wichtigsten nicht.
-> `tools/bauen.ps1` erkennt das und baut `EudoraRes.vcxproj` und
-> `Eudora.vcxproj` in einem **zweiten Gang** einzeln, mit
-> `/p:BuildProjectReferences=false`. Diese drei OT501-Fehler sind die einzigen,
-> die das Werkzeug als bekannt durchgehen lässt; jeder andere Fehler ist ein
-> Fehlschlag (Befund X-6).
+> **Was das für den Bau bedeutet (nachgemessen 06.09.2026):** `OT501` wird
+> **nicht mehr gebaut**. In `Eudora71/Eudora.sln` hat die Projekt-GUID
+> `{36EB689A-…}` nur noch `ActiveCfg`, **kein** `Build.0` — die Projektmappe
+> überspringt es. `Eudora.vcxproj` und `EudoraRes.vcxproj` führen `OT501`
+> **nicht** als Projektverweis; geblieben ist der Include-Pfad
+> `..\OT501\Include` und die einzelne Quelldatei `..\OT501\Src\secaux.cpp`.
+> Ein Projektmappen-Bau liefert daher die `Eudora.exe`: **18 erfolgreich,
+> 0 Fehler, 1 übersprungen** (Gregor, 06.09.2026, IDE).
+>
+> > **Berichtigung.** Hier stand bis zum 06.09.2026 der Stand **vor** Befund
+> > **B-3** (Commit `d8cc9d3`, 05.09.2026): `OT501` scheitere mit drei Fehlern,
+> > `Eudora.vcxproj` und `EudoraRes.vcxproj` führten es als Projektverweis,
+> > *„aus einem reinen Projektmappen-Bau kommt deshalb **nie** eine
+> > `Eudora.exe`"*, und `tools/bauen.ps1` brauche einen **zweiten Gang** mit
+> > `/p:BuildProjectReferences=false`. Nichts davon gilt noch. Der Satz trug
+> > ein tagesaktuelles Datum und war deshalb besonders irreführend.
 
 Die Freigabe des Computer History Museum enthält von OT501 nur **127 Header**
 (`.h`/`.H`) unter `Eudora71/OT501/Include`; das Verzeichnis zählt 130 Einträge, dazu
@@ -466,9 +481,11 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    verbliebener Einzelposten) und `SetControlBarWidthsInRow`. Dazu PR-2.5:
    `DrawChecked` hat denselben Farbfehler, der in `DrawDisabled` behoben wurde.
    Einzelheiten in [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
-3. **`ReleaseBuffer` ohne `GetBuffer`** — Befund E-11 war der Absturz auf
-   frischen Installationen, behoben in `eudora.cpp:3372`. Es ist eine
-   **Fehlerklasse**: 142 Vorkommen im Baum, gemessen mit
+3. **`ReleaseBuffer` ohne `GetBuffer`** — **Befund E-11 ist zurückgenommen.** Er
+   erklärte den Absturz auf frischen Installationen mit einem `ReleaseBuffer` in
+   `eudora.cpp:3372`; die richtige Erklärung steht in **E-25**
+   (`Befunde/ASSISTENT.md`). Die **Fehlerklasse** bleibt richtig und offen:
+   142 Vorkommen im Baum, 25 davon falsch (Befund **R-1**), gemessen mit
    `tools/releasebuffer-pruefen.pl`.
 4. **`MFC71.DLL` und `MSVCP71.dll`.** Nicht nachbaubar — `MFC71` wird über 157
    Ordinale importiert. Dadurch fallen **Adressbuch, LDAP und Ph** aus. Die
@@ -568,10 +585,15 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
   (`libcrypto.lib`, `libssl.lib`), damit sich QCSSL ohne einen 25-minütigen
   OpenSSL-Lauf übersetzen lässt. Bauweg und Prüfsumme in
   [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
-  **Achtung:** die beiden `.lib` liegen **nicht** im Repo — `.gitignore:7` (`Lib/`)
-  erfasst auch dieses Verzeichnis (gemessen: `git ls-files Eudora71/OpenSSL3/lib`
-  liefert null Treffer). Nur die Header sind versioniert. In einem frischen Klon
-  endet `QCSSL` deshalb mit `LNK1104: libssl.lib`.
+  Beide `.lib` **liegen im Repo** (`git ls-files Eudora71/OpenSSL3/lib` nennt
+  sie); `.gitattributes` und die Ausnahmeregeln am Ende von `.gitignore`
+  (`!Eudora71/OpenSSL3/lib/*.lib`) sorgen dafür. Ein frischer Klon bindet
+  `QCSSL` ohne Zutun.
+
+  > **Berichtigung (06.09.2026).** Hier stand: *„die beiden `.lib` liegen
+  > **nicht** im Repo … in einem frischen Klon endet `QCSSL` deshalb mit
+  > `LNK1104: libssl.lib`"*, mit der Aufforderung, OpenSSL selbst zu bauen. Wer
+  > dem folgte, baute 25 Minuten OpenSSL ohne Not.
 - `Eudora71/Eudora/atlimage.h` — **geänderte Kopie eines Microsoft-Headers.**
   `CImage::IsTransparencySupported()` lautete im Original
   `return( _AtlBaseModule.m_bNT5orWin98 );`. Das `CAtlBaseModule` der ATL von v143

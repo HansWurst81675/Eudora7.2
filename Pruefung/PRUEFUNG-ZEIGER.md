@@ -43,7 +43,7 @@ Werkzeug tut also, was behauptet wird. Falsch ist nicht die Zählung, sondern da
 
 ### Rangfolge der echten Befunde nach tatsächlicher Gefahr
 
-1. **`WizardImportPage.cpp:420`** (`pChild`) — der einzige, bei dem eine **andere Stelle im selben Modul denselben Wert ausdrücklich als möglicherweise NULL behandelt** (`SetupControls`, 265). Dazu die Typverwechslung bei Wurzelknoten. Das ist der Assistentenpfad, auf dem Gregor die Abstürze E-6/E-9/E-11 gesehen hat.
+1. **`WizardImportPage.cpp:420`** (`pChild`) — der einzige, bei dem eine **andere Stelle im selben Modul denselben Wert ausdrücklich als möglicherweise NULL behandelt** (`SetupControls`, 265). Dazu die Typverwechslung bei Wurzelknoten. Das ist der Assistentenpfad, auf dem Gregor die Abstürze E-6/E-9 gesehen hat (früher stand hier auch E-11 — **zurückgenommen**, die belegte Ursache ist E-25).
 2. **`ImapMailbox.cpp:1051`** (`pAccount`) — `FindAccount` gibt NULL für einen echten Fehlerfall zurück (Konto nicht gefunden), und der Weg bis zum Zugriff bleibt offen. IMAP-Abrufpfad.
 3. **`TocFrame.cpp:3973`** (`pTocDoc`) — `GetTocDoc()` kann NULL geben, aber nur beim Abbau des Fensters, und dann fehlt vermutlich auch `pFBView`. **VERMUTUNG:** in der Praxis selten.
 4. **`CompMessageFrame.cpp:729`** (`pMainFrame`) — Wächter, der praktisch nie auslöst.
