@@ -793,6 +793,23 @@ BOOL CSummary::NukeMessageDocIfUnused(CSummary * pSum, CMessageDoc * pMessageDoc
 //
 BOOL CSummary::Display()
 {
+	//
+	// BEFUND E-28: m_FrameWnd wird von CMessageFrame::ActivateFrame gesetzt
+	// und war bis zu diesem Befund nur unter einer Bedingung wieder
+	// geloescht worden (msgframe.cpp, OnDestroy). Ein stehengebliebener
+	// Zeiger fuehrte hier zu einem virtuellen Aufruf ueber eine
+	// freigegebene vtable - im Release-Bau entweder wirkungslos (das
+	// Fenster geht nicht auf, "es passiert nichts") oder ein Sprung an eine
+	// Adresse ausserhalb jedes Moduls.
+	//
+	// Die Ursache ist in msgframe.cpp abgestellt. Diese Abfrage bleibt als
+	// zweite Schranke: ist der eingetragene Rahmen kein Fenster (mehr),
+	// wird der Eintrag verworfen und ein neues Fenster gebaut, statt auf
+	// einem toten Rahmen zu arbeiten.
+	//
+	if (m_FrameWnd && !::IsWindow(m_FrameWnd->GetSafeHwnd()))
+		m_FrameWnd = NULL;
+
 	if (m_FrameWnd)
 	{
 		//
