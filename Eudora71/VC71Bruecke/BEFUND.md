@@ -430,9 +430,15 @@ Repository nicht**:
   `patches/`)
 
 Die drei fremden Binärdateien `msvcr71.dll`, `msvcr71d.dll`, `msvcp71d.dll`
-liegen ebenfalls **nicht** im Repository — ich konnte das Auslieferungspaket
-also nicht gegenprüfen. Alle Aussagen über den Paketinhalt beruhen auf der
-Auftragsbeschreibung.
+lagen zum Zeitpunkt dieses Befunds nicht im Repository — ich konnte das
+Auslieferungspaket also nicht gegenprüfen. Alle Aussagen über den Paketinhalt
+beruhen auf der Auftragsbeschreibung.
+
+> **Nachtrag (06.09.2026).** Die drei liegen inzwischen unter `Releases/`
+> (`ls Releases/msvc*`). Gebraucht werden sie nicht mehr: seit Paket 1.0.3
+> bringt das Auslieferungspaket die selbst gebaute `msvcr71.dll` aus
+> `VC71Bruecke` mit, und `msvcr71d.dll`/`msvcp71d.dll` entfielen mit den
+> Release-Fassungen von `Paige32d.dll` und den Plugins.
 
 ---
 
@@ -484,6 +490,23 @@ Auftragsbeschreibung.
          {7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}.Release|x86.Build.0 = Release|Win32
 
 ### Nächster Schritt, wenn jemand hier weitermacht
+
+> **Alle vier Punkte sind erledigt (nachgesehen am 06.09.2026).**
+>
+> 1. **Startversuch mit der Brücke** — gemacht. `msvcr71.dll` aus dem Projekt
+>    `VC71Bruecke` liegt seit Paket 1.0.3 im Auslieferungspaket, die drei
+>    Fremdbinärdateien von dll-files.com sind draußen (`Releases/PAKETE.md`,
+>    Abschnitt 1.0.3, Punkt 1). Eudora startet damit und ruft Mail ab.
+> 2. **Am Auslieferungspaket nachgesehen** — `MFC71.DLL` und `MSVCP71.dll`
+>    liegen **nicht** bei und dürfen es auch nicht; Adressbuch, LDAP und Ph
+>    fallen deshalb dauerhaft aus (Befund **B-1**, Statuszeile S-3c).
+> 3. **`VC71Bruecke` steht in der Solution** — `grep -n VC71Bruecke
+>    Eudora71/Eudora.sln`. Es baut `msvcr71.dll` nach `Eudora71/Bin/
+>    <Konfiguration>` und die Importbibliothek `msvcr71-bruecke.lib`.
+> 4. **Eine `msvcp71.dll`-Brücke ist damit vom Tisch** — Punkt 2 hat ergeben,
+>    dass `MFC71.DLL` fehlt.
+>
+> Der ursprüngliche Wortlaut steht unten als Zeitdokument.
 
 1. **Startversuch mit der Brücke** (braucht Gregors Erlaubnis, ich durfte
    nicht): `Eudora71/Bin/Release/msvcr71.dll` neben `Eudora.exe` legen, die

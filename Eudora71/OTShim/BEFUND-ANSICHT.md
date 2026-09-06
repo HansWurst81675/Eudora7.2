@@ -365,8 +365,10 @@ weil `imap.lib` im Arbeitsverzeichnis fehlt. Das ist derselbe Zustand wie vor
 meiner Sitzung und deckt sich mit dem Hinweis in `BEFUNDE.md` (S-3b), dass der
 Release-Zweig an fehlender `Imap.lib` scheitert - hier trifft es auch Debug,
 weil `BuildProjectReferences=false` das `imapdll`-Projekt nicht mitbaut.
-**Zu pruefen:** ob ein Bau ohne `/p:BuildProjectReferences=false` oder ein Bau
-der ganzen Solution die Datei erzeugt.
+> **Beantwortet (06.09.2026).** Ja: ein Bau der ganzen Projektmappe erzeugt
+> `imap.lib`. Seit Befund **B-3** wird `/p:BuildProjectReferences=false` nicht
+> mehr gebraucht und ist auch nicht mehr erwuenscht; ein Projektmappen-Bau aus
+> einem frischen Klon meldet **18 erfolgreich, 0 Fehler, 1 uebersprungen**.
 
 Der MSBuild-Aufruf aus dem Auftrag laeuft aus der Git-Bash **nicht** durch:
 die Bash macht aus `/p:Configuration=Debug` einen Pfad. Er muss aus PowerShell
