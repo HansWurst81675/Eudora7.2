@@ -14,15 +14,15 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.13** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.14** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.13**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.14**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.13-release.zip`,
-> geschnürt am 06.09.2026 aus Commit `8f39527`, geprüft mit
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.14-release.zip`,
+> geschnürt am 06.09.2026 aus Commit `ba7d43a`, geprüft mit
 > `tools/paket-pruefen.ps1` (*„keine Fehler", „In der Startkette fehlt
 > nichts", Kriterium 0 — JA*). Die Bau-Kennung im Fenstertitel nennt beide
 > Nummern plus den Commit, ein Bildschirmfoto ist damit eindeutig zuzuordnen.
@@ -52,9 +52,9 @@ Belegt:
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
 | **Kriterium 0 — alle vier Ziele erfüllt** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
-### Was an 7.2.0.13 zu prüfen ist
+### Was an 7.2.0.14 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.13-release.zip`. Auspacken, **`Eudora starten.cmd`**
+Paket: `Releases/Eudora72-1.0.14-release.zip`. Auspacken, **`Eudora starten.cmd`**
 doppelklicken (nicht `Eudora.exe` — der Starter übergibt das Mailverzeichnis).
 
 | Prüfen | erwartet | wenn nicht |
@@ -69,7 +69,7 @@ doppelklicken (nicht `Eudora.exe` — der Starter übergibt das Mailverzeichnis)
 das Programm ohne jede Spur. Der Grund ist gefunden: der Absturzbehandler hing
 nur an `SetUnhandledExceptionFilter`, und vier Wege gehen daran vorbei —
 Heap-Beschädigung, der `/GS`-Wächter, ein ungültiges Argument an die
-C-Laufzeit, und `std::terminate`. Drei davon sind seit 7.2.0.13 angemeldet und
+C-Laufzeit, und `std::terminate`. Drei davon sind seit 7.2.0.14 angemeldet und
 schreiben Klartext.
 
 Nach einem Strg-N-Absturz also **zwei Dateien** im Mailverzeichnis ansehen:
@@ -170,7 +170,7 @@ sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht stimmte.
 | **Namen zu Adressen**: `Eudora71/Bin/Release/Eudora.map`, 51.075 Einträge | `Eudora.vcxproj` erzeugt sie bei jedem Bau | 06.09.2026 |
 | **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](Eudora71/Eudora/ExceptionHandler.cpp) (E-26) | 06.09.2026 |
 
-Ein Bericht **ab 7.2.0.13** beginnt deshalb so:
+Ein Bericht **ab 7.2.0.14** beginnt deshalb so:
 
 ```
 Loaded modules - subtract the load address from a stack address to get
@@ -416,7 +416,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen |
 | `tools/hooks-einrichten.sh` | richtet den `pre-commit`-Hook ein. Nach jedem Klon einmal. Schreibt nach `--git-common-dir`, läuft also auch aus einem Arbeitsbaum |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe` |
-| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (ab 7.2.0.13) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
+| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (ab 7.2.0.14) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
 | `tools/absturz-auswerten-tests.pl` | Testsammlung dazu, **15 Fälle** mit künstlicher Karte und künstlichem Bericht. **Wer `absturz-auswerten.pl` anfasst, lässt sie laufen** |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. 18 Treffer, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio |
 | `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: steht vorher ein `GetBuffer` auf **derselben** Variablen? Das ist die Fehlerklasse **R-1**. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio |
