@@ -93,3 +93,42 @@ vier Sitzungen schon.
 
 Siehe auch [[fehlerklassen-abstellen]], [[anweisungen-abarbeiten]] und
 [[wissen-gehoert-in-dateien]].
+
+---
+
+## Befund 06.09.2026 — die Spiegelung wirkt im Arbeitsbaum nicht
+
+`tools/lehren-spiegeln.pl` haengt im pre-commit-Hook und soll das
+Gedaechtnisverzeichnis des Assistenten nach `Arbeitsweise/` spiegeln, damit
+Lehren im Repo landen. Es leitet den Pfad des Gedaechtnisverzeichnisses aus der
+Repo-Wurzel ab. In einem Arbeitsbaum ist die Wurzel aber nicht
+`…\Eudora7.2`, sondern `…\Eudora7.2-wt-<name>`. Gemessen aus `wt/chronist`:
+
+```
+lehren-spiegeln: kein Gedaechtnis gefunden, nichts gespiegelt.
+  erwartet unter: C:\Users\Gregor/.claude/projects/
+                  C--Users-Gregor-Documents-github-Eudora7-2-wt-chronist/memory
+Rueckgabe=0
+```
+
+**Rueckgabe 0** — die Schranke meldet Erfolg, obwohl sie nichts getan hat. Da
+Agenten fast immer in einem Arbeitsbaum sitzen und genau dort ihre Lehren
+schreiben, ist die Spiegelung in der Praxis wirkungslos.
+
+Zwei Folgen, beide unangenehm:
+
+1. Eine Lehre, die ein Agent im Arbeitsbaum anlegt, kommt **nie** ins
+   Gedaechtnisverzeichnis. Beim naechsten Sitzungsbeginn wird sie nicht
+   geladen — sie steht nur im Repo und muss von Hand gelesen werden.
+2. Umgekehrt gilt dasselbe: Aenderungen im Gedaechtnis landen nicht im Repo.
+
+**Zu tun:** den Pfad in `tools/lehren-spiegeln.pl` ueber
+`git rev-parse --path-format=absolute --git-common-dir` statt ueber
+`--show-toplevel` bilden — so wie es `tools/hooks-einrichten.sh` fuer die Hooks
+schon macht — und bei „kein Gedaechtnis gefunden" nicht mit 0 zurueckkehren,
+sondern es sichtbar melden. Bis dahin gilt: **wer eine Lehre in einem
+Arbeitsbaum anlegt, sagt es im Bericht ausdruecklich**, damit sie von Hand ins
+Gedaechtnisverzeichnis uebernommen wird.
+
+Genau das ist der Fehler, gegen den diese Lehre geschrieben ist: eine Schranke,
+die schweigt statt zu greifen, ist so gut wie keine.
