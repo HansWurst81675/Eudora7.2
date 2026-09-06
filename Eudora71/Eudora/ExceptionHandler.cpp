@@ -37,6 +37,18 @@
 // Fuer die Modultabelle im Absturzbericht (Befund E-26).
 #include <tlhelp32.h>
 
+// Fuer _set_invalid_parameter_handler / _set_purecall_handler (stdlib.h) und
+// set_terminate (eh.h) - Befund E-27.
+#include <stdlib.h>
+#include <eh.h>
+
+// Eigene Ausnahmekennungen fuer die drei stillen Fehlerklassen. Bit 29 gesetzt
+// heisst "vom Anwendungsprogramm erhoben"; damit kollidieren sie mit keiner
+// Kennung von Windows oder der Laufzeitbibliothek.
+#define EU_EXCEPTION_INVALID_PARAMETER	0xE0455001UL
+#define EU_EXCEPTION_PURECALL			0xE0455002UL
+#define EU_EXCEPTION_TERMINATE			0xE0455003UL
+
 // Constants
 #define BUFF_SIZE 2048
 
@@ -93,6 +105,13 @@ void
 QCExceptionHandler::EnableCrashHandler()
 {
 	SetCrashHandlerFilter(QCCrashHandler);
+
+	// BEFUND E-27: SetCrashHandlerFilter deckt nur die strukturierten
+	// Ausnahmen ab. Diese drei Wege gehen daran vorbei und beenden den
+	// Prozess sonst lautlos.
+	_set_invalid_parameter_handler(QCInvalidParameterHandler);
+	_set_purecall_handler(QCPureCallHandler);
+	::set_terminate(QCTerminateHandler);
 }
 
 
@@ -105,6 +124,137 @@ void
 QCExceptionHandler::DisableCrashHandler()
 {
 	SetCrashHandlerFilter(NULL);
+
+	// Befund E-27, Gegenstueck zu EnableCrashHandler.
+	_set_invalid_parameter_handler(NULL);
+	_set_purecall_handler(NULL);
+	::set_terminate(NULL);
+}
+
+
+// ------------------------------------------------------------------------------------------
+//		* ReportSilentFailure													 [Protected]
+// ------------------------------------------------------------------------------------------
+//	BEFUND E-27. Gemeinsamer Rumpf der drei Haken gegen den stillen Abgang.
+//
+//	Schreibt zuerst eine Klartextzeile ans Ende der Exception.log - sie sagt,
+//	WELCHE Fehlerklasse zugeschlagen hat, und das steht in keinem Registersatz.
+//	Danach wird daraus eine echte strukturierte Ausnahme; QCCrashHandler haengt
+//	Zeit, Fassung, Modultabelle, Register und Aufrufstapel darunter.
+//
+//	Was hier NICHT eingefangen werden kann, und warum:
+//	  * 0xC0000374 (STATUS_HEAP_CORRUPTION). Der Windows-Heap ruft
+//	    RtlFailFast; das geht an jedem Filter vorbei. Sichtbar wird so ein
+//	    Abgang nur im Windows-Ereignisprotokoll (Anwendung, Quelle
+//	    "Anwendungsfehler"), nicht in der Exception.log.
+//	  * 0xC0000409 (/GS-Stapelwaechter). __report_gsfailure ruft __fastfail,
+//	    ebenfalls ohne Filter. EnableBufferOverflowHandler unten setzt zwar
+//	    weiterhin _qc_set_security_error_handler, aber dieser Haken stammt aus
+//	    MSVCR71 und wird von der Laufzeit von Visual Studio 2022 nicht mehr
+//	    gerufen - SecurityErrorHandler ist seit der Portierung toter Code.
+
+void
+QCExceptionHandler::ReportSilentFailure(
+	unsigned long				dwCode,
+	const char *				szWhat)
+{
+	if (m_szExceptionLogFileName[0] != _T('\0'))
+	{
+		HANDLE		hFile = ::CreateFile( m_szExceptionLogFileName,
+										  GENERIC_WRITE,
+										  0,
+										  0,
+										  OPEN_ALWAYS,
+										  FILE_ATTRIBUTE_NORMAL,
+										  0 );
+
+		if (INVALID_HANDLE_VALUE != hFile)
+		{
+			::SetFilePointer( hFile, 0, 0, FILE_END );
+
+			char		szLine[1024];
+			int			nLen = _snprintf( szLine, sizeof(szLine) - 1,
+										  "//=====================================================\r\n"
+										  "Stiller Abbruch der Laufzeitbibliothek (Befund E-27):\r\n"
+										  "  %s\r\n"
+										  "Ohne diesen Haken waere Eudora hier ohne jede Meldung verschwunden.\r\n\r\n",
+										  (szWhat != NULL) ? szWhat : "unbekannt" );
+
+			if (nLen > 0)
+			{
+				DWORD	dwWritten = 0;
+				::WriteFile( hFile, szLine, (DWORD)nLen, &dwWritten, NULL );
+			}
+
+			::CloseHandle( hFile );
+		}
+	}
+
+	::RaiseException( dwCode, 0, 0, NULL );
+}
+
+
+// ------------------------------------------------------------------------------------------
+//		* QCInvalidParameterHandler												 [Protected]
+// ------------------------------------------------------------------------------------------
+//	BEFUND E-27. Eine Funktion der C-Laufzeitbibliothek hat ein unzulaessiges
+//	Argument bekommen (etwa einen Nullzeiger als Formatangabe). Ohne
+//	angemeldeten Haken ruft die Laufzeit _invoke_watson und der Prozess ist
+//	augenblicklich weg - kein Dialog, kein Filter, keine Exception.log.
+//	Im Release-Bau liefert die Laufzeit keine Einzelheiten mit; die Zeiger sind
+//	dann alle NULL. Der Aufrufstapel im Bericht sagt trotzdem, wo es war.
+
+void __cdecl
+QCExceptionHandler::QCInvalidParameterHandler(
+	const wchar_t *				szExpression,
+	const wchar_t *				szFunction,
+	const wchar_t *				szFile,
+	unsigned int				nLine,
+	uintptr_t					/* nReserved */)
+{
+	char		szWhat[768];
+
+	_snprintf( szWhat, sizeof(szWhat) - 1,
+			   "ungueltiges Argument an eine C-Laufzeitfunktion "
+			   "(Funktion: %ls, Bedingung: %ls, Datei: %ls, Zeile: %u)",
+			   (szFunction   != NULL) ? szFunction   : L"unbekannt",
+			   (szExpression != NULL) ? szExpression : L"-",
+			   (szFile       != NULL) ? szFile       : L"-",
+			   nLine );
+
+	szWhat[sizeof(szWhat) - 1] = '\0';
+
+	ReportSilentFailure( EU_EXCEPTION_INVALID_PARAMETER, szWhat );
+}
+
+
+// ------------------------------------------------------------------------------------------
+//		* QCPureCallHandler														 [Protected]
+// ------------------------------------------------------------------------------------------
+//	BEFUND E-27. Aufruf einer rein virtuellen Funktion - in aller Regel ein
+//	virtueller Aufruf auf einem Objekt, das gerade erst gebaut oder schon
+//	abgebaut wird. Ohne Haken beendet die Laufzeit den Prozess wortlos.
+
+void __cdecl
+QCExceptionHandler::QCPureCallHandler()
+{
+	ReportSilentFailure( EU_EXCEPTION_PURECALL,
+						 "Aufruf einer rein virtuellen Funktion (pure virtual call)" );
+}
+
+
+// ------------------------------------------------------------------------------------------
+//		* QCTerminateHandler													 [Protected]
+// ------------------------------------------------------------------------------------------
+//	BEFUND E-27. Eine C++-Ausnahme wurde nirgends aufgefangen, oder eine
+//	Ausnahme flog aus einem Destruktor. std::terminate ruft sonst abort(), und
+//	abort() beendet den Prozess im Release-Bau ohne Fenster.
+
+void
+QCExceptionHandler::QCTerminateHandler()
+{
+	ReportSilentFailure( EU_EXCEPTION_TERMINATE,
+						 "nicht abgefangene C++-Ausnahme (std::terminate)" );
 }
 
 

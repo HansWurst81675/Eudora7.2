@@ -653,8 +653,15 @@ BOOL CPaigeEdtView::QuietPrint()
         else
             GetParentFrame()->GetWindowText(strTitle);
         
+        // BEFUND E-27: ReleaseBuffer(31) OHNE vorheriges GetBuffer. Unter MFC 14
+        // ist das SetLength(31) auf dem Puffer, den sich diese CString mit dem
+        // Dokument teilt (strTitle = pDoc->GetTitle() kopiert nur den Zeiger und
+        // erhoeht den Zaehler). Ohne Fork wird dabei in den GEMEINSAMEN Puffer
+        // geschrieben: der Titel des Dokuments selbst bekommt an Stelle 31 eine
+        // Null verpasst. Unter VC6 war CString anders gebaut, da fiel es nicht auf.
+        // Gemeint war schlicht Abschneiden.
         if (strTitle.GetLength() > 31)
-            strTitle.ReleaseBuffer(31);
+            strTitle = strTitle.Left(31);
                 
         DOCINFO docInfo;
         memset(&docInfo, 0, sizeof(DOCINFO));
