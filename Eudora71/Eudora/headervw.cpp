@@ -87,6 +87,11 @@ extern QCCommandStack		g_theCommandStack;
 
 #include "DebugNewHelpers.h"
 
+// Befund E-27: Spurmarken auf dem Weg von Strg-N. Der Absturz beim Verfassen
+// beendet Eudora ohne jede Meldung; die letzte geschriebene Marke in
+// eudora.log sagt, wie weit der Weg gekommen ist.
+#include "debug.h"
+
 
 // our own unique little windows message for scrolling stuff
 UINT wmScrollToShowCaret = RegisterWindowMessage( "wmScrollToShowCaret" );
@@ -530,6 +535,7 @@ void CHeaderView::OnInitialUpdate()
 	LONG	lYIncrement;
 	LONG	lTopSpace;
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CHeaderView::OnInitialUpdate: Anfang");
 	theDC.CreateCompatibleDC( NULL );
 
 	// subclass all of the static/edit pairs in our header form. this code
@@ -565,6 +571,7 @@ void CHeaderView::OnInitialUpdate()
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: Kopffelder untergeklinkt");
 	// reset the font
 	theDC.SelectObject( pOldFont );
 
@@ -665,8 +672,10 @@ void CHeaderView::OnInitialUpdate()
 
 	SetScrollSizes( MM_TEXT, m_docSize, m_pageSize, m_lineSize );
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: Bildlaufgroessen gesetzt, jetzt SetHeaderFromDoc");
 	// get the header
 	SetHeaderFromDoc();
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: SetHeaderFromDoc zurueck");
 
 	// if the message has been addressed and the subject is null,
 	// move the focus to the subject line
@@ -780,6 +789,7 @@ void CHeaderView::OnInitialUpdate()
 		SetTimer( AUTO_HEADER_BP_MAIL_TIMER, BP_INTERVAL, NULL );
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: Autovervollstaendigung eingerichtet");
 	CCompMessageFrame * pFrame = DYNAMIC_DOWNCAST( CCompMessageFrame, GetParentFrame() );
 
 	if (pFrame)

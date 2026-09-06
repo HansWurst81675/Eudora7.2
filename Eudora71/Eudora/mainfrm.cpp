@@ -4069,14 +4069,17 @@ CCompMessageDoc* CMainFrame::HuntForTopmostCompMessage(CWazooWnd* pWazooWnd)
 
 void CMainFrame::OnMessageNewMessage()
 {
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnMessageNewMessage: Anfang");
 	// Create A New Message
 	CCompMessageDoc* CompDoc = NULL;
 	CompDoc = NewCompDocument();
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnMessageNewMessage: NewCompDocument zurueck");
 	if ( CompDoc )
 	{
 		ASSERT_VALID(CompDoc);
 		NewChildFrame(CompMessageTemplate, CompDoc);
 	}
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnMessageNewMessage: fertig");
 }
 
 void CMainFrame::OnMessageReplyCtrlR()

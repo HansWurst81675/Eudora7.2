@@ -62,6 +62,11 @@ DAMAGE. */
 
 #include "DebugNewHelpers.h"
 
+// Befund E-27: Spurmarken auf dem Weg von Strg-N. Der Absturz beim Verfassen
+// beendet Eudora ohne jede Meldung; die letzte geschriebene Marke in
+// eudora.log sagt, wie weit der Weg gekommen ist.
+#include "debug.h"
+
 
 extern QCCommandStack		g_theCommandStack;
 extern QCPluginDirector		g_thePluginDirector;
@@ -367,7 +372,9 @@ CCreateContext* pContext)
 							ID_MESSAGE_SENDIMMEDIATELY
 						};
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CCompMessageFrame::OnCreateClient: Anfang");
 	fRet = m_wndSplitter.CreateStatic( this, 2, 1, WS_CHILD | WS_VISIBLE );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Teiler angelegt");
 
 	if ( fRet ) {
 		fRet = m_wndSplitter.CreateView( 0, 0, RUNTIME_CLASS(CHeaderView),
@@ -388,6 +395,7 @@ CCreateContext* pContext)
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: beide Ansichten angelegt");
 	pDoc = ( CCompMessageDoc* ) ( pContext->m_pCurrentDoc );
 
 	// BEFUND E-22: pDoc und pDoc->m_Sum wurden hier ungeprueft benutzt
@@ -422,6 +430,7 @@ CCreateContext* pContext)
 
 	pSummary = pDoc->m_Sum;
 	
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Text gelesen, baue das Uebersetzermenue");
 	// build the translators menu
 	m_theTranslatorMenu.CreatePopupMenu();
 
@@ -455,6 +464,7 @@ CCreateContext* pContext)
 	m_pFormattingToolBar->SetManager( m_pToolBarManager );
 	m_pFormattingToolBar->m_bAutoDelete = TRUE;
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Leisten erzeugt, lade die Leistenressource");
 	m_pToolBarManager->LoadToolBarResource( MAKEINTRESOURCE( IDR_COMPMESS ), MAKEINTRESOURCE( IDR_COMPMESS ) );
 	m_pToolBarManager->SetButtonMap( theCompMessageButtonMap );
 
@@ -490,8 +500,10 @@ CCreateContext* pContext)
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
 	m_pToolBar->EnableDocking(CBRS_ALIGN_TOP);
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor SetButtons der Nachrichtenleiste");
 	nButtons = DIM( theCompMessageButtons );
 	m_pToolBar->SetButtons( theCompMessageButtons,  nButtons );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: nach SetButtons der Nachrichtenleiste");
 
 	int transCount = m_theTranslatorMenu.GetMenuItemCount();
 	
@@ -557,6 +569,7 @@ CCreateContext* pContext)
 
 	DockControlBar( m_pFormattingToolBar );
 	
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Leisten angedockt, jetzt die Auswahlfelder");
 	// initialize the priority combo
 	//
 	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
@@ -670,6 +683,7 @@ CCreateContext* pContext)
 		SelectTranslators( pSummary->GetTranslators() );
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Auswahlfelder gefuellt, jetzt die Schriftnamen");
 	// get the face names
 	EnumFontFaces( theArray );
 
