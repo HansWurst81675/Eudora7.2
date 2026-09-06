@@ -1752,11 +1752,9 @@ void CPaigeEdtView::DeletePaigeObject()
     if (m_paigeRef)
     {
         // gotsta smoke ma stuff!
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: nach pgNew");
         paige_rec_ptr pPg = (paige_rec_ptr) UseMemory( m_paigeRef );
         PgStuffBucket* pSB = (PgStuffBucket*) pPg->user_refcon;
         delete pSB;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
         UnuseMemory( m_paigeRef );
 
         pgDispose(m_paigeRef);
@@ -1771,7 +1769,6 @@ void CPaigeEdtView::OnDestroy()
     if (hPalette)
         pgSetDevicePalette(m_paigeRef, (generic_var)0);
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: Anfang");
     DeletePaigeObject();
 
     CView::OnDestroy();
@@ -1942,7 +1939,6 @@ void CPaigeEdtView::OnLButtonDown(UINT nFlags, CPoint point)
 	// of hyperlink processing, bad things can/will happen.
         paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
         PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
         UnuseMemory( m_paigeRef );
 
         if ( pSB->hlinkProcessing == true ) {
@@ -2268,7 +2264,6 @@ void CPaigeEdtView::OnLButtonUp(UINT nFlags, CPoint point)
     {
         paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
         PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
         UnuseMemory( m_paigeRef );
 
         if ( pSB->hlinkProcessing == true ) {
@@ -2440,7 +2435,6 @@ void CPaigeEdtView::OnLButtonUp(UINT nFlags, CPoint point)
         
     paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
     PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
     UnuseMemory( m_paigeRef );
 
     if (pSB->hlinkEvent)
@@ -2471,7 +2465,6 @@ void CPaigeEdtView::OnLButtonUp(UINT nFlags, CPoint point)
                 paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
                 PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
                 pSB->hlinkEvent = 0;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
                 UnuseMemory( m_paigeRef );
             }
         }               
@@ -2536,7 +2529,6 @@ BOOL CPaigeEdtView::OnSetCursor( CWnd* pWnd, UINT nHitTest, UINT message )
 
 						paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
 						PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
 						UnuseMemory( m_paigeRef );
 						if (pSB->kind == PgStuffBucket::kAd)
 						{
@@ -3945,7 +3937,6 @@ void CPaigeEdtView::OnLButtonDblClk(UINT nFlags, CPoint point)
     {
         paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
         PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
         UnuseMemory( m_paigeRef );
 
         if ( pSB->hlinkProcessing == true ) {
@@ -4067,7 +4058,6 @@ void CPaigeEdtView::OnCopy(COleDataSource *clipBoardStuff)
 
     paige_rec_ptr pgRec = (paige_rec_ptr) UseMemory( m_paigeRef );
     PgStuffBucket* pSB = (PgStuffBucket*) pgRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
     UnuseMemory( m_paigeRef );
     assert( pSB->bOleExport == false );
     assert( pSB->pDS == NULL );
@@ -5178,7 +5168,6 @@ bool CPaigeEdtView::find_signature( select_pair_ptr sigRng,
 	}
 
 	pgPrepareStyleWalk( prp, 0, NULL, true );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
 	UnuseMemory( m_paigeRef );
 
 	if ( found )
@@ -5812,7 +5801,6 @@ void CPaigeEdtView::OnTimer(UINT nIDEvent)
             style_walk sw;
             paige_rec_ptr prp = (paige_rec_ptr) UseMemory( m_paigeRef );
             pgPrepareStyleWalk( prp, 0, &sw, false );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
             UnuseMemory( m_paigeRef );
 
             // walk my ass off!
@@ -6937,7 +6925,6 @@ BOOL CPaigeEdtView::GetSelectedHTML( CString& szHTML )
     paige_rec_ptr pRec = (paige_rec_ptr) UseMemory( m_paigeRef );
     paige_rec_ptr pRecCopy = (paige_rec_ptr) UseMemory( selRef );
     pRecCopy->user_refcon = pRec->user_refcon;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
     UnuseMemory( m_paigeRef );
     UnuseMemory( selRef );
 
@@ -9453,7 +9440,6 @@ int CPaigeEdtView::DoMoodMailCheck(CMoodWatch *pmoodwatch)
 	{
 		if (!moodwatch_Local.Init())
 		{
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
 			UnuseMemory( m_paigeRef );
 			return -1;
 		}
@@ -9527,7 +9513,6 @@ int CPaigeEdtView::DoMoodMailCheck(CMoodWatch *pmoodwatch)
 		}
 	}
 	pgPrepareStyleWalk( prp, 0, NULL, true );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
 	UnuseMemory( m_paigeRef );
 //	if(bDrawBadWords & m_bMoodMailDirty)
 //		DrawBadWords();
@@ -9647,7 +9632,6 @@ int CPaigeEdtView::ClearBadWords(select_pair_ptr pSel)
     style_walk sw;
     paige_rec_ptr prp = (paige_rec_ptr) UseMemory( m_paigeRef );
     pgPrepareStyleWalk( prp, pSel->begin, &sw, false );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
     UnuseMemory( m_paigeRef );
 	CObList DirtyList;
 	select_pair textRange;
@@ -9682,7 +9666,6 @@ int CPaigeEdtView::ClearBadWords()
     style_walk sw;
     paige_rec_ptr prp = (paige_rec_ptr) UseMemory( m_paigeRef );
     pgPrepareStyleWalk( prp, 0, &sw, false );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor UnuseMemory");
     UnuseMemory( m_paigeRef );
 	
 	select_pair textRange;
