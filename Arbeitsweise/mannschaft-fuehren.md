@@ -115,27 +115,3 @@ Hand am Bildschirm — nur als den, der entscheidet.
 4. **Jeden Rücklauf nachmessen**, bevor ich ihn weitergebe
 5. **Zusammenführen, einmal bauen, einmal packen** — eine Nummer je Bau
 6. **Lehren in `Arbeitsweise/`**, nicht nur in die Commit-Nachricht
-
----
-
-## Nachtrag 06.09.2026 — wie oft das schon gesagt wurde
-
-Gregors *„ich habe dir schon oft gesagt"* ist nachgezaehlt: **41 Nachrichten**
-in den beiden Sitzungsmitschriften betreffen die Fuehrung der Mannschaft. Das
-ist nach dem Sichern von Zwischenstaenden (45) die zweithaeufigste Beschwerde
-des Projekts — haeufiger als Doku, Versionen oder Stillstand.
-
-Die Klagen fallen in vier Gruppen, alle woertlich belegt:
-
-| Gruppe | Beleg |
-|---|---|
-| **Agenten liefern nichts** | *„der eine agent wollte noch readme.md pruefen, er hat gepennt"* (29.08.) · *„warum pennen die beiden immer?"* (29.08.) · *„lektor pennt?"* (05.09.) · *„der erste hat auch nichts mehr gefunden, obwohl er jede menge zu tun haette!"* (06.09.) |
-| **Agenten verschwinden** | *„den review agenten gab es aber bereits! wo ist er hin? warum gibt es ihn jetzt nicht mehr?"* (29.08.) · *„wir hatten noch einen agenten, der lessons learned gemacht hat. was ist aus dem geworden?"* (06.09.) |
-| **Agenten blockieren sich** | *„dann ueberlege dir, wie du die arbeit der agenten in zukunft koordinieren kannst, ohne dass sie sich gegenseitig blockieren und dinge kaputt machen!"* (05.09.) · *„wieso hast du 24 agenten, die etwas bauen?"* (05.09.) |
-| **Die Pruefer pruefen nicht** | *„und fuer solche pruefungen haben wir genau extra agenten, die es feststellen und verhindern sollen. die arbeiten also nicht sauber!"* (05.09.) · *„sowas haette der lektor vor dem commit finden muessen und den commit verhindern!"* (05.09.) |
-
-Die vierte Gruppe ist die, die noch keine Regel hat: **ein Pruefer, der nach dem
-Commit liest, ist kein Pruefer.** PRUEFER und LEKTOR muessen an einem Zeitpunkt
-haengen, an dem ihr Befund noch etwas verhindern kann — vor dem Commit, vor dem
-Packen, vor dem Merge. Ein Prueflauf danach erzeugt nur einen weiteren Befund
-in einer Liste, die ohnehin schon lang ist.
