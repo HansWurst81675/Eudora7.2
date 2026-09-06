@@ -24,8 +24,15 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Eudora baut, startet, ist bedienbar und ruft Mail über TLS ab. Verfassen,
-Öffnen per Doppelklick und Suchen noch nicht.**
+**Alle vier Kriterien aus [ZIEL.md](ZIEL.md) sind erfüllt.** Eudora baut aus
+einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio,
+die Darstellung stimmt, und Mail wird über TLS abgerufen. Das letzte offene
+Kriterium fiel am 06.09.2026.
+
+Damit ist das Ziel erreicht — **fehlerfrei ist es deshalb nicht.** Verfassen
+(Strg-N) beendet das Programm, das Beenden bricht ab, und die Werkzeugleiste
+zeigt abgeschaltete Knöpfe ohne Symbol. Was offen ist, steht unten
+vollständig.
 
 Belegt:
 
@@ -35,36 +42,28 @@ Belegt:
 | **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste, Postfachbaum |
 | **Mailabruf über TLS** | POP3 auf **Port 995**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Gemessen an 7.2.0.12 am 06.09.2026 gegen `mx.freenet.de`. Die richtige Einstellung dafür ist *Secure Sockets when Receiving* → **„Required, Alternate Port"** |
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
+| **Kriterium 0 — alle vier Ziele erfüllt** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
 ### Offen — Stand 06.09.2026
 
 - **Strg-N** (neue Nachricht) beendet Eudora **lautlos**, ohne Meldung
-- **Doppelklick** auf eine Nachricht öffnet sie nicht
-- **Suchtreffer** lassen sich nicht anklicken
-- Meldung **„Encountered an improper argument"** im laufenden Betrieb
 - **Beenden** bricht ab
-- **Kriterium 0** aus [ZIEL.md](ZIEL.md): auf einem Rechner **ohne** Visual
-  Studio ist noch kein Paket ausgepackt und gestartet worden. Zwei Läufe gab es,
-  beide auf Maschinen **mit** VS2022 — dort liegen die Laufzeiten ohnehin herum,
-  das beweist nichts.
+- **Werkzeugleiste:** abgeschaltete Knöpfe zeigen kein Symbol, sondern eine
+  leere graue Fläche (E-30, in Arbeit). Am 06.09.2026 an 7.2.0.10 gesehen:
+  im Fenster *Find Messages* fehlen genau die Symbole der Knöpfe, die dort
+  nicht anwendbar sind
+- Meldung **„Encountered an improper argument"** — reproduzierbar: *Find
+  Messages*, Suche mit einem Treffer, dann erscheint der Dialog (7.2.0.10)
 
-  **Rechnerisch besteht 1.0.10 aber.** Am 06.09.2026 mit
-  `tools/paket-pruefen.ps1` gegen `Releases/Eudora72-1.0.10-release.zip`
-  gemessen: 35 Binärdateien, davon 13 in der Startkette, 251 Importe gegen
-  Windows-eigene Bibliotheken — *„In der Startkette fehlt nichts"*, EXITCODE 0.
-  Das Werkzeug liest die PE-Importtabellen und wertet einen Treffer in
-  `SysWOW64` **nicht** als erfüllt; es misst also wirklich das Paket und nicht
-  die Maschine. Vier Warnungen, alle vorher bekannt und ohne Einfluss auf den
-  Start: `EUMAPI.DLL` und `ifsmon.vxd` sind 16-Bit-Altlasten, die keine
-  Paketdatei importiert; `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie zur
-  Weitergabe freigegeben — ohne sie fallen Adressbuch, LDAP, Ph und S/MIME aus,
-  nicht der Start.
+In Behebung, aber noch nicht von Gregor bestätigt:
 
-  Was noch fehlt, ist der Beweis am lebenden Objekt. Zwei Wege: Gregor probiert
-  1.0.10 auf dem Laptop ohne VS2022, oder
-  [tools/Kriterium0-pruefen.wsb](tools/Kriterium0-pruefen.wsb) hängt das Paket
-  in die **Windows-Sandbox**, ein frisches Windows ohne alles. Durchgefallen ist
-  es nur bei `0xc000007b` oder einem DLL-Namen in der Meldung.
+- **Doppelklick** auf eine Nachricht und **Suchtreffer anklicken** — Ursache
+  gefunden und behoben (**E-28**): `CSummary::m_FrameWnd` blieb als Zeiger auf
+  einen zerstörten Rahmen stehen, wenn ein Nachrichtenfenster geöffnet und
+  geschlossen wurde, **ohne** es zu verschieben oder in der Größe zu ändern.
+  Das Löschen des Rückzeigers stand in `CMessageFrame::OnDestroy` innerhalb von
+  `if (m_InitialSize != wp.rcNormalPosition)`. Gesetzt wird er dagegen
+  bedingungslos in `ActivateFrame`. Erst ab 7.2.0.13 im Bau.
 
 ### Die Suche nach der Wurzel der Abstürze
 
