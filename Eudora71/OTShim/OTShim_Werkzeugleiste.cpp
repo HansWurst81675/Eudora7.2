@@ -2017,11 +2017,12 @@ BOOL SECCustomToolBar::LoadBitmap(LPCTSTR lpszResourceName,
 	CBitmap bmp;
 
 	// Graustufen gegen die aktuellen Systemfarben tauschen - dasselbe, was
-	// SECLoadSysColorBitmap (OTShim.h) fuer einzelne Bilder tut.
+	// SECLoadSysColorBitmap (OTShim.h) fuer einzelne Bilder tut. Und den
+	// Hintergrund 192,192,192 gegen die Knopffarbe (Befund E-30).
 	BOOL bLoaded = FALSE;
 	if (IS_INTRESOURCE(lpszResourceName))
-		bLoaded = bmp.LoadMappedBitmap(
-					(UINT)(UINT_PTR)(void*)lpszResourceName);
+		bLoaded = SECLadeWerkzeugleistenBitmap(
+					bmp, (UINT)(UINT_PTR)(void*)lpszResourceName);
 	else
 		bLoaded = bmp.LoadBitmap(lpszResourceName);
 
@@ -3400,6 +3401,202 @@ struct OTShimToolBarData
 		{ return (WORD*)(this + 1); }
 };
 
+/////////////////////////////////////////////////////////////////////////////
+// BEFUND E-30 - der Hintergrund der Werkzeugleistenbitmap
+//
+// GEMESSEN, nicht vermutet (Messprogramm siehe Befunde/SYMBOLE.md):
+//
+//   comctl32!CreateMappedBitmap - das ist es, was CBitmap::LoadMappedBitmap
+//   aufruft (atlmfc/include/afxwin1.inl:193) - setzt NUR die FARBTABELLE
+//   einer Bitmap um. Eine Bitmap mit mehr als 8 Bit Farbtiefe hat keine
+//   Farbtabelle, also bleibt sie unveraendert:
+//
+//     res\icons\RTB1.bmp     8 Bit  ->  192,192,192 wird zu 240,240,240
+//     res\icons\tbar16.bmp  24 Bit  ->  192,192,192 bleibt 192,192,192
+//
+//   Die drei Bitmaps der HAUPTwerkzeugleiste (tbar16/32 und a/b) sind 24 Bit
+//   und haben 36-56% Flaeche in 192,192,192. GetSysColor(COLOR_BTNFACE) ist
+//   auf Windows 10 aber 240,240,240.
+//
+// FOLGE 1 (die auffaellige): SECStdBtn::CreateMask (Z. 779) baut die Maske
+//   fuer den GESPERRTEN Knopf, indem es den Knopfpuffer nach EINFARBIG
+//   kopiert und dabei secData.clrBtnFace als Hintergrundfarbe setzt. Alles,
+//   was diese Farbe hat, wird 1, alles Uebrige 0. Traegt das Bild seinen
+//   eigenen, um 48 Stufen dunkleren Hintergrund mit, dann wird das GANZE
+//   Bildrechteck zu 0 - und SECStdBtn::DrawDisabled malt seinen Pinsel genau
+//   dort, wo die Maske 0 ist. Der gesperrte Knopf wird dadurch zu einer
+//   einheitlichen grauen Flaeche statt zu einem gepraegten Symbol.
+//
+// FOLGE 2 (die leise): auch der freigegebene Knopf zeigt sein Symbol auf
+//   einem sichtbar dunkleren Quadrat.
+//
+// Unter VC6 fiel beides nicht auf: dort war COLOR_BTNFACE selbst
+// 192,192,192, die Umsetzung also folgenlos.
+//
+// DIE BEHEBUNG: beim Laden einer Werkzeugleistenbitmap OHNE Farbtabelle den
+// Hintergrund 192,192,192 selbst auf COLOR_BTNFACE umsetzen. NUR diese eine
+// Farbe - 128,128,128 und 255,255,255 kommen in den 24-Bit-Bitmaps als echte
+// Bildfarben vor (gemessen: 121 bzw. 342 Punkte in tbar16a.bmp), sie
+// mitzusetzen wuerde die Symbole selbst veraendern.
+
+// Der Hintergrund, den die Werkzeugleistenbitmaps von 1996 benutzen. Er ist
+// gemessen: in tbar16.bmp 44,8%, in tbar16a.bmp 56,1%, in tbar16b.bmp 36,2%
+// aller Punkte - jeweils die haeufigste Farbe mit grossem Abstand.
+#define OTSHIM_TB_HINTERGRUND	RGB(192, 192, 192)
+
+// Ersetzt in einem DIB IM SPEICHER (BITMAPINFOHEADER, dahinter ggf. die
+// Farbtabelle, dahinter die Punkte) jeden Punkt der Farbe crVon durch crNach.
+//
+// Rueckgabe: Zahl der geaenderten Punkte, oder -1, wenn das Format nicht
+// behandelt wird (Farbtabelle vorhanden, gepackt, unplausible Masse). -1 ist
+// KEIN Fehler des Aufrufers - es heisst nur "hier ist nichts zu tun".
+//
+// Absichtlich eine freie Funktion auf einem reinen Speicherblock: so laesst
+// sie sich ohne Fenster, ohne GDI und ohne Ressourcen pruefen
+// (Eudora71/Tests/TestSymbole.cpp).
+long OTShimDibFarbeErsetzen(BYTE* pDib, DWORD dwGroesse,
+							COLORREF crVon, COLORREF crNach)
+{
+	if (pDib == NULL || dwGroesse < sizeof(BITMAPINFOHEADER))
+		return -1;
+
+	BITMAPINFOHEADER* pKopf = (BITMAPINFOHEADER*)pDib;
+
+	if (pKopf->biSize < sizeof(BITMAPINFOHEADER) ||
+		(DWORD)pKopf->biSize > dwGroesse)
+		return -1;
+
+	// Nur ungepackte Bitmaps ohne Farbtabelle. Alles Uebrige kann
+	// CreateMappedBitmap selbst oder ist hier nicht vorgesehen.
+	if (pKopf->biCompression != BI_RGB)
+		return -1;
+	if (pKopf->biBitCount != 24 && pKopf->biBitCount != 32)
+		return -1;
+
+	LONG lBreite = pKopf->biWidth;
+	LONG lHoehe  = pKopf->biHeight;
+	if (lHoehe < 0)
+		lHoehe = -lHoehe;			// DIB von oben nach unten
+	if (lBreite <= 0 || lHoehe <= 0)
+		return -1;
+
+	// Eine 24- oder 32-Bit-Bitmap DARF eine Farbtabelle mitfuehren (biClrUsed
+	// als Vorschlag fuer Bildschirme mit Palette). Sie liegt vor den Punkten.
+	DWORD dwVersatz = (DWORD)pKopf->biSize +
+					  (DWORD)pKopf->biClrUsed * sizeof(RGBQUAD);
+	if (dwVersatz >= dwGroesse)
+		return -1;
+
+	const int nBytes  = pKopf->biBitCount / 8;
+	const DWORD dwZeile = (((DWORD)lBreite * (DWORD)nBytes) + 3) & ~(DWORD)3;
+
+	// Passt das ueberhaupt in den Block? Ohne diese Schranke liefe die
+	// Schleife unten aus dem Puffer heraus.
+	if (dwZeile == 0 || (DWORD)lHoehe > (dwGroesse - dwVersatz) / dwZeile)
+		return -1;
+
+	const BYTE bVonB  = GetBValue(crVon),  bVonG  = GetGValue(crVon),  bVonR  = GetRValue(crVon);
+	const BYTE bNachB = GetBValue(crNach), bNachG = GetGValue(crNach), bNachR = GetRValue(crNach);
+
+	long  lAnzahl = 0;
+	BYTE* pPunkte = pDib + dwVersatz;
+
+	for (LONG y = 0; y < lHoehe; ++y)
+	{
+		BYTE* q = pPunkte + (DWORD)y * dwZeile;
+		for (LONG x = 0; x < lBreite; ++x, q += nBytes)
+		{
+			if (q[0] == bVonB && q[1] == bVonG && q[2] == bVonR)
+			{
+				q[0] = bNachB;
+				q[1] = bNachG;
+				q[2] = bNachR;
+				++lAnzahl;
+			}
+		}
+	}
+
+	return lAnzahl;
+}
+
+// Laedt eine Bitmapressource fuer eine Werkzeugleiste.
+//
+// Bis 8 Bit Farbtiefe genau wie bisher ueber CBitmap::LoadMappedBitmap -
+// dieser Weg ist erprobt und comctl32 setzt die Farbtabelle richtig um.
+// Ab 16 Bit uebernimmt diese Fassung die Umsetzung des Hintergrunds selbst,
+// weil CreateMappedBitmap dort nachweislich nichts tut (siehe oben).
+//
+// Rueckgabe wie LoadMappedBitmap: TRUE, wenn bmp danach eine Bitmap haelt.
+BOOL SECLadeWerkzeugleistenBitmap(CBitmap& bmp, UINT nIDResource)
+{
+	HINSTANCE hInst = AfxFindResourceHandle(MAKEINTRESOURCE(nIDResource),
+										   RT_BITMAP);
+	HRSRC hRsrc = ::FindResource(hInst, MAKEINTRESOURCE(nIDResource),
+								 RT_BITMAP);
+	if (hRsrc == NULL)
+		return FALSE;
+
+	DWORD   dwGroesse = ::SizeofResource(hInst, hRsrc);
+	HGLOBAL hGlobal   = ::LoadResource(hInst, hRsrc);
+	const BITMAPINFOHEADER* pKopf =
+		(const BITMAPINFOHEADER*)::LockResource(hGlobal);
+
+	if (pKopf == NULL || dwGroesse < sizeof(BITMAPINFOHEADER))
+		return bmp.LoadMappedBitmap(nIDResource);
+
+	// Mit Farbtabelle: comctl32 kann es selbst, und zwar seit Jahren richtig.
+	if (pKopf->biBitCount <= 8)
+		return bmp.LoadMappedBitmap(nIDResource);
+
+	// Ohne Farbtabelle: umsetzen muessen wir selbst. Die Ressource ist
+	// schreibgeschuetzt, also auf einer Kopie arbeiten.
+	BYTE* pKopie = NULL;
+	try
+	{
+		pKopie = new BYTE[dwGroesse];
+	}
+	catch (CMemoryException* e)
+	{
+		e->Delete();
+		return FALSE;
+	}
+
+	::memcpy(pKopie, pKopf, dwGroesse);
+
+	OTShimDibFarbeErsetzen(pKopie, dwGroesse, OTSHIM_TB_HINTERGRUND,
+						   ::GetSysColor(COLOR_BTNFACE));
+
+	BITMAPINFOHEADER* pNeu = (BITMAPINFOHEADER*)pKopie;
+	DWORD dwVersatz = (DWORD)pNeu->biSize +
+					  (DWORD)pNeu->biClrUsed * sizeof(RGBQUAD);
+	if (pNeu->biCompression == BI_BITFIELDS)
+		dwVersatz += 3 * sizeof(DWORD);
+
+	HBITMAP hNeu = NULL;
+	if (dwVersatz < dwGroesse)
+	{
+		HDC hdc = ::GetDC(NULL);
+		if (hdc != NULL)
+		{
+			hNeu = ::CreateDIBitmap(hdc, pNeu, CBM_INIT, pKopie + dwVersatz,
+									(const BITMAPINFO*)pNeu, DIB_RGB_COLORS);
+			::ReleaseDC(NULL, hdc);
+		}
+	}
+
+	delete [] pKopie;
+
+	if (hNeu == NULL)
+		// Notfallweg: lieber die unveraenderte Bitmap als gar keine.
+		return bmp.LoadMappedBitmap(nIDResource);
+
+	if (bmp.GetSafeHandle() != NULL)
+		bmp.DeleteObject();
+
+	return bmp.Attach(hNeu);
+}
+
+
 // tbarcust.h:451. QCToolBarManager.cpp:346, 354, 360 ruft sie dreimal auf
 // und setzt die drei Bitmaps danach zu einer zusammen; dabei wird
 // ASSERT((int)nBmpItems == bmWidth / bmHeight) geprueft
@@ -3465,16 +3662,17 @@ BOOL SECLoadToolBarResource(LPCTSTR lpszResourceName, CBitmap& bmp,
 	::FreeResource(hGlobal);
 
 	// Die Bitmap traegt dieselbe Kennung wie die Werkzeugleistenressource.
-	// LoadMappedBitmap tauscht dabei die Graustufen gegen die aktuellen
-	// Systemfarben - dasselbe, was SECLoadSysColorBitmap (OTShim.h) fuer
-	// einzelne Bilder tut.
+	// SECLadeWerkzeugleistenBitmap setzt dabei die Graustufen gegen die
+	// aktuellen Systemfarben - und den Hintergrund 192,192,192 gegen die
+	// Knopffarbe auch dann, wenn die Bitmap keine Farbtabelle hat und
+	// comctl32 sie deshalb unveraendert laesst (Befund E-30).
 	if (bmp.GetSafeHandle() != NULL)
 		bmp.DeleteObject();
 
 	BOOL bLoaded;
 	if (IS_INTRESOURCE(lpszResourceName))
-		bLoaded = bmp.LoadMappedBitmap(
-					(UINT)(UINT_PTR)(void*)lpszResourceName);
+		bLoaded = SECLadeWerkzeugleistenBitmap(
+					bmp, (UINT)(UINT_PTR)(void*)lpszResourceName);
 	else
 		bLoaded = bmp.LoadBitmap(lpszResourceName);
 

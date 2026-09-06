@@ -259,6 +259,19 @@ Belegt in PLAN.md, Abschnitt „Berichtigungen" (`7d94c3d`).
 
 Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
 
+> **Nachgetragen am 06.09.2026 (Befund E-30).** Der Ladeweg der
+> Werkzeugleistenbitmaps geht nicht mehr unmittelbar über
+> `CBitmap::LoadMappedBitmap`, sondern über das neue
+> `SECLadeWerkzeugleistenBitmap` in `OTShim_Werkzeugleiste.cpp`. Grund:
+> `comctl32!CreateMappedBitmap` setzt **nur die Farbtabelle** einer Bitmap um,
+> und die sechs Bitmaps der Hauptwerkzeugleiste sind 24 Bit — sie haben keine.
+> Ihr Hintergrund 192,192,192 blieb deshalb stehen, während der Knopf in
+> `COLOR_BTNFACE` (heute 240,240,240) gemalt wird; gesperrte Knöpfe wurden
+> dadurch zu leeren grauen Flächen. Unter VC6 fiel das nicht auf, weil
+> `COLOR_BTNFACE` dort selbst 192,192,192 war. Messung, Behebung und die
+> beiden neuen Testsammlungen stehen in
+> **[Befunde/SYMBOLE.md](Befunde/SYMBOLE.md)**.
+
 ## Erledigt: OpenSSL 3.5.8 LTS hinter QCSSL
 
 QCSSL hing an **OpenSSL 0.9.7l von 2006** — maximal TLS 1.0. Damit kam Eudora an

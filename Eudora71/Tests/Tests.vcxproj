@@ -52,6 +52,12 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
+      <!-- Dasselbe ComCtl32 wie Eudora selbst (Eudora71\Eudora\Eudora.manifest).
+           Ohne diese Abhaengigkeit bindet das Testprogramm die Fassung 5.82,
+           und comctl32!CreateMappedBitmap stuerzt dort bei einer Bitmap mit
+           mehr als 8 Bit Farbtiefe ab (gemessen, siehe Befunde/SYMBOLE.md).
+           Geprueft werden soll das Verhalten, das Eudora tatsaechlich sieht. -->
+      <AdditionalManifestDependencies>type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'</AdditionalManifestDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -80,6 +86,7 @@
     <ClCompile Include="TestOTShimPalette.cpp" />
     <ClCompile Include="TestOTShimAndocken.cpp" />
     <ClCompile Include="TestPopEmpfang.cpp" />
+    <ClCompile Include="TestSymbole.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -88,9 +95,13 @@
     <ClInclude Include="UnderTest.h" />
     <ClInclude Include="OTShimProbe.h" />
     <ClInclude Include="UnderTest2047.h" />
+    <ClInclude Include="TestRes.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Extract.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Tests.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>
