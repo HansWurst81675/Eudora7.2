@@ -1606,6 +1606,32 @@ bool CPaigeEdtView::NewPaigeObject(long AddFlags /*= 0*/, long AddFlags2 /*= 0*/
     GetClientRect(&clientRect);
     clientRect.DeflateRect( m_pgBorder );
 
+    // BEFUND E-27: Hier starb Eudora bei Strg-N und bei "Weiterleiten".
+    //
+    // Der Teiler legt diese Ansicht mit CSize(10, 600) an
+    // (CompMessageFrame.cpp, CCompMessageFrame::OnCreateClient). Das
+    // Client-Rechteck ist also anfangs 10 Punkte breit. DeflateRect zieht
+    // links 8 und rechts 8 ab - heraus kommt links=8, rechts=2, also eine
+    // Breite von MINUS 6. Gemessen am 06.09.2026 aus dem laufenden
+    // Programm: "Rect=8,2,2,598".
+    //
+    // pgRectToShape macht daraus eine umgestuelpte Flaeche, pgNew nimmt sie
+    // noch an, und pgNewNamedStyle stirbt beim ersten Layout - in
+    // Paige32.dll, ohne Meldung und ohne Exception.log, weil der Absturz
+    // den Behandler umgeht.
+    //
+    // Das Lesefenster trifft es nicht: seine Ansicht ist von Anfang an
+    // breit genug. Deshalb sah es so aus, als laege es am Verfassen-Weg -
+    // es liegt an der Anfangsgroesse.
+    //
+    // Ein umgestuelptes Rechteck ist ohnehin sinnlos. Wird es leer, sobald
+    // der Rahmen breiter ist als die Ansicht; das erste WM_SIZE setzt kurz
+    // darauf die richtige Groesse.
+    if (clientRect.right < clientRect.left)
+        clientRect.right = clientRect.left;
+    if (clientRect.bottom < clientRect.top)
+        clientRect.bottom = clientRect.top;
+
     // All Paige areas are represented as Shapes
     RectToRectangle(&clientRect,&pgClientRect);
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewPaigeObject: vor pgRectToShape");
@@ -1642,10 +1668,12 @@ bool CPaigeEdtView::NewPaigeObject(long AddFlags /*= 0*/, long AddFlags2 /*= 0*/
     UnuseMemory( m_paigeRef );
 
     // Paige maintains a copy of the shape, so we can dispose what we created
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: nach UnuseMemory");
     pgDisposeShape(visArea);
     pgDisposeShape( excludeArea );
 
     // Set the body style to have the MessageFont
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: Formen freigegeben");
     LOGFONT lf;
     font_info fontInfo;
     style_info styleInfo;
@@ -1654,19 +1682,48 @@ bool CPaigeEdtView::NewPaigeObject(long AddFlags /*= 0*/, long AddFlags2 /*= 0*/
     par_info parMask;
     GetMessageFont().GetLogFont( &lf );
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: vor PgConvertLogFont");
     PgConvertLogFont( m_paigeRef, PgGlobalsPtr(), &lf, &fontInfo, &styleInfo, &styleInfoMask );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: nach PgConvertLogFont");
+    // BEFUND E-27, zweiter Teil: parInfo und parMask werden hier NICHT
+    // vorbelegt, anders als styleInfo und fontInfo (die fuellt
+    // PgConvertLogFont vollstaendig: *style = def_style, dazu zwei
+    // pgFillBlock). Was pgGetParInfo auf einem noch leeren Dokument nicht
+    // anfasst, bleibt Stapelmuell - und geht so an pgNewNamedStyle weiter.
+    //
+    // Die Datei haelt sich sonst selbst an diese Regel: OnSysColorChange
+    // nullt mit pgFillBlock, bevor es pgGetStyle ruft, und an drei weiteren
+    // Stellen steht pgInitParMask. Nur hier fehlte es.
+    //
+    // Gemessen am 06.09.2026: Strg-N stirbt mit 0xC00000FD
+    // (STATUS_STACK_OVERFLOW) in Paige32.dll, Endlosrekursion zwischen
+    // pgInstallFont und pgStyleSuperImpose. Kein Exception.log, weil ein
+    // voller Stapel keinen Platz mehr fuer den Behandler laesst.
+    pgFillBlock( &parInfo, sizeof(par_info), 0 );
+    pgFillBlock( &parMask, sizeof(par_info), 0 );
     pgGetParInfo( m_paigeRef, NULL, false, &parInfo, &parMask );
 
     //Set the tab space depending on the font and the tabstop value specified by the user.
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: nach pgGetParInfo");
     int avgWidth;
     avgWidth = GetMessageFont().CharWidth();
     parInfo.def_tab_space = avgWidth * GetIniShort(IDS_INI_TAB_STOP);
 
+	{
+		char szWerte[256];
+		wsprintf(szWerte, "E-27 NPO: Werte  Rect=%d,%d,%d,%d  avgWidth=%d  TabStop=%d  def_tab_space=%ld  point=%ld  fontname='%s'",
+			clientRect.left, clientRect.top, clientRect.right, clientRect.bottom,
+			avgWidth, (int)GetIniShort(IDS_INI_TAB_STOP), (long)parInfo.def_tab_space,
+			(long)styleInfo.point, (const char*)fontInfo.name);
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szWerte);
+	}
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: vor pgNewNamedStyle");
     long style_id = pgNewNamedStyle( m_paigeRef, body_style, &styleInfo, &fontInfo, &parInfo );
 
     //This is a hack to prevent the body_style from getting deleted. When paige fixes
     //up style runs, it deletes all styles which are unused, so we increment the 
     //used_ctr here to prevent it from being whacked.
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: nach pgNewNamedStyle");
     ASSERT(style_id);
 
     paige_rec_ptr pg;
@@ -1675,6 +1732,7 @@ bool CPaigeEdtView::NewPaigeObject(long AddFlags /*= 0*/, long AddFlags2 /*= 0*/
     register style_info_ptr             styles;
     register pg_short_t                 style_ctr, style_qty;
         
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: vor Stilschleife");
     styles = (style_info_ptr)UseMemory(pg->t_formats);
     style_qty = (pg_short_t)GetMemorySize(pg->t_formats);
         
@@ -1687,12 +1745,15 @@ bool CPaigeEdtView::NewPaigeObject(long AddFlags /*= 0*/, long AddFlags2 /*= 0*/
         }
     }
         
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: nach Stilschleife");
     UnuseMemory(pg->t_formats);
     UnuseMemory(m_paigeRef);
 
     // smack it full of HTML styles
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: vor CreateHTMLStyles");
     CreateHTMLStyles( m_paigeRef, /*PgGlobalsPtr()->def_font.name*/ (unsigned char *)lf.lfFaceName, NULL );
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NPO: nach CreateHTMLStyles");
     delete m_styleEx;
 	m_styleEx = DEBUG_NEW CPaigeStyle(m_paigeRef);
 
