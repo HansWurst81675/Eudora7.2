@@ -692,7 +692,15 @@ typedef HRGN			pg_region;			/* Used as a region */
 /* Time types for Paige based time (ie seconds since 00:00 01 JAN 1900: */
 
 #define PLATFORM_DELTA_TIME		0
-typedef time_t					pg_time_t;
+/* BEFUND E-31: time_t ist unter VS2022 acht Byte breit, unter VC6/VC7.1
+   war es vier. Paige32.dll und EuMemMgr.dll von 2005 rechnen mit vier.
+   Bleibt der Typ hier time_t, verschieben sich alle Paige-Strukturen,
+   die ein pg_time_t enthalten (style_info, pg_doc_info, pg_globals,
+   paige_rec ...), gegenueber der DLL. Gemessen am 06.09.2026 gegen die
+   ausgelieferte Paige32.dll: def_style.procs lag bei 536 statt 524,
+   def_par.procs bei 1316 statt 1300, def_hooks bei 1376 statt 1360.
+   Deshalb ein fest 32 Bit breiter Typ. */
+typedef long					pg_time_t;
 typedef	struct tm				pg_datetime;
 typedef pg_time_t PG_FAR *		pg_time_ptr;
 typedef pg_datetime PG_FAR *	pg_datetime_ptr;
