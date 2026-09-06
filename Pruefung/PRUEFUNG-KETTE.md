@@ -288,6 +288,13 @@ es stürzt weiterhin ab, dann ist das **kein** Widerspruch und **keine**
 weiterhin unerklärt und braucht einen Stapelabzug, keine weitere Quelltextsuche
 nach `ReleaseBuffer`.
 
+> **Nachtrag (06.09.2026).** Genau so ist es gekommen. Die Ursache ist seit dem
+> 05.09.2026 belegt: **E-25**, eine Doppelfreigabe in `NSImportClass.cpp`
+> (`Befunde/ASSISTENT.md`). Sie ist behoben, reichte aber nicht — 7.2.0.12
+> stürzt weiter ab. **E-11 ist zurückgenommen.** Der hier geforderte
+> Stapelabzug ist mit **E-26** möglich geworden: der Absturzbericht nennt jetzt
+> die Ladeadresse jedes Moduls, und `Eudora.map` entsteht bei jedem Bau.
+
 ---
 
 ## 5. Übersehen (zu Unrecht als `ok` eingestuft)
@@ -523,6 +530,14 @@ ATL-Quelle, die entgegen der Annahme von R-1 auf diesem Rechner vorliegt, kann
 die alte Fassung von `:3372` hätte es ebenso wenig gekonnt, weshalb E-11
 vermutlich nie die Ursache des Absturzes war und der Absturz nach der nächsten
 Behebung unverändert wiederkommen wird.**
+
+> **Nachtrag (06.09.2026): beides ist eingetreten.** **E-11 ist zurückgenommen**,
+> und der Absturz kam wieder. Die belegte Ursache ist **E-25** — eine
+> Doppelfreigabe in `NSImportClass.cpp` (`Befunde/ASSISTENT.md`), gefunden über
+> das Windows-Ereignisprotokoll (`0xc0000374 STATUS_HEAP_CORRUPTION`); auch die
+> war nicht die einzige, 7.2.0.12 stürzt weiter ab. Die Forderung dieses
+> Berichts nach einem **Stapelabzug** statt weiterer Quelltextsuche war richtig
+> und ist mit **E-26** (Modultabelle im Absturzbericht) umgesetzt.
 
 **Die zwei Stellen, die unter MFC 14 wirklich Schaden anrichten, stehen in
 R-1 ganz unten oder gar nicht — `SMTPSession.cpp:683` kürzt eine gespeicherte

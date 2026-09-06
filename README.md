@@ -1,6 +1,6 @@
 # Eudora 7.2
 
-<!-- pruefstand: 81851e5 -->
+<!-- pruefstand: 9512108 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -13,19 +13,34 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 > **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**.
 >
-> **Quellstand ist 7.2.0.12** (`cat VERSION`, `Eudora71/Version.h`) — das ist,
-> was ein Bau aus diesem Klon ergibt. **Gepackt ausgeliefert ist 1.0.10**
-> (`Releases/Eudora72-1.0.10-release.zip`). Ein **Paket 1.0.12 gibt es noch
-> nicht**; es soll erst entstehen, wenn der Strg-N-Absturz behoben ist. Wer die
-> beiden Zahlen verwechselt, sucht Fehler in einer Datei, die niemand hat.
+> **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
+> **7.2.0.14** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
+> schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
+> **1.0.14**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
+> getrennt ein.
+>
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.14-release.zip`,
+> geschnürt am 06.09.2026 aus Commit `ba7d43a`, geprüft mit
+> `tools/paket-pruefen.ps1` (*„keine Fehler", „In der Startkette fehlt
+> nichts", Kriterium 0 — JA*). Die Bau-Kennung im Fenstertitel nennt beide
+> Nummern plus den Commit, ein Bildschirmfoto ist damit eindeutig zuzuordnen.
 >
 > Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
 > git-Verlauf — hier nicht.
 
 ## Stand
 
-**Eudora baut, startet, ist bedienbar und ruft Mail über TLS ab. Verfassen,
-Öffnen per Doppelklick und Suchen noch nicht.**
+**Alle vier Kriterien aus [ZIEL.md](ZIEL.md) sind erfüllt.** Eudora baut aus
+einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio,
+die Darstellung stimmt, und Mail wird über TLS abgerufen. Das letzte offene
+Kriterium fiel am 06.09.2026.
+
+Damit ist das Ziel erreicht — **fehlerfrei ist es deshalb nicht.** Verfassen
+(Strg-N) beendet das Programm, das Beenden bricht ab, und die Werkzeugleiste
+zeigt abgeschaltete Knöpfe ohne Symbol. Was offen ist, steht unten
+vollständig.
 
 Belegt:
 
@@ -35,36 +50,59 @@ Belegt:
 | **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste, Postfachbaum |
 | **Mailabruf über TLS** | POP3 auf **Port 995**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Gemessen an 7.2.0.12 am 06.09.2026 gegen `mx.freenet.de`. Die richtige Einstellung dafür ist *Secure Sockets when Receiving* → **„Required, Alternate Port"** |
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
+| **Kriterium 0 — alle vier Ziele erfüllt** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
+
+### Was an 7.2.0.14 zu prüfen ist
+
+Paket: `Releases/Eudora72-1.0.14-release.zip`. Auspacken, **`Eudora starten.cmd`**
+doppelklicken (nicht `Eudora.exe` — der Starter übergibt das Mailverzeichnis).
+
+| Prüfen | erwartet | wenn nicht |
+|---|---|---|
+| **Doppelklick** auf eine Nachricht | öffnet sie | E-28 greift nicht |
+| **Suchtreffer anklicken** | öffnet die Nachricht | dito |
+| **Strg-N** | war bisher lautloser Tod | siehe unten — jetzt hinterlässt es Spuren |
+| **Beenden** | sauber | Absturz war bisher offen |
+| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe | E-30 noch offen, Symbole fehlen dort |
+
+**Strg-N ist der wichtigste Punkt, und er ist jetzt auswertbar.** Bisher starb
+das Programm ohne jede Spur. Der Grund ist gefunden: der Absturzbehandler hing
+nur an `SetUnhandledExceptionFilter`, und vier Wege gehen daran vorbei —
+Heap-Beschädigung, der `/GS`-Wächter, ein ungültiges Argument an die
+C-Laufzeit, und `std::terminate`. Drei davon sind seit 7.2.0.14 angemeldet und
+schreiben Klartext.
+
+Nach einem Strg-N-Absturz also **zwei Dateien** im Mailverzeichnis ansehen:
+
+- **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
+  noch erreicht wurde. 15 Spurmarken liegen auf dem Weg; sie schreiben **ohne**
+  INI-Änderung.
+- **`Exception.log`** — enthält jetzt die Modultabelle. Damit:
+
+```bash
+perl tools/absturz-auswerten.pl
+```
+
+Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
+Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
+Heap-Beschädigung — dann hilft nur Page Heap (siehe unten).
 
 ### Offen — Stand 06.09.2026
 
-- **Strg-N** (neue Nachricht) beendet Eudora **lautlos**, ohne Meldung
-- **Doppelklick** auf eine Nachricht öffnet sie nicht
-- **Suchtreffer** lassen sich nicht anklicken
-- Meldung **„Encountered an improper argument"** im laufenden Betrieb
+- **Strg-N** beendet Eudora; die schuldige Zeile ist **nicht** gefunden. Beste
+  Spur: `Paige32.dll` und `EuMemMgr.dll` sind vorgebaute Binärdateien von 2005,
+  die `malloc`/`free` aus `MSVCR71` holen — **zwei getrennte Halden** neben der
+  UCRT von `Eudora.exe`. Das Verfassen-Fenster ist der Hauptbenutzer von Paige.
+  Speicher, der über diese Grenze gereicht wird, ergibt genau `0xC0000374`
 - **Beenden** bricht ab
-- **Kriterium 0** aus [ZIEL.md](ZIEL.md): auf einem Rechner **ohne** Visual
-  Studio ist noch kein Paket ausgepackt und gestartet worden. Zwei Läufe gab es,
-  beide auf Maschinen **mit** VS2022 — dort liegen die Laufzeiten ohnehin herum,
-  das beweist nichts.
-
-  **Rechnerisch besteht 1.0.10 aber.** Am 06.09.2026 mit
-  `tools/paket-pruefen.ps1` gegen `Releases/Eudora72-1.0.10-release.zip`
-  gemessen: 35 Binärdateien, davon 13 in der Startkette, 251 Importe gegen
-  Windows-eigene Bibliotheken — *„In der Startkette fehlt nichts"*, EXITCODE 0.
-  Das Werkzeug liest die PE-Importtabellen und wertet einen Treffer in
-  `SysWOW64` **nicht** als erfüllt; es misst also wirklich das Paket und nicht
-  die Maschine. Vier Warnungen, alle vorher bekannt und ohne Einfluss auf den
-  Start: `EUMAPI.DLL` und `ifsmon.vxd` sind 16-Bit-Altlasten, die keine
-  Paketdatei importiert; `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie zur
-  Weitergabe freigegeben — ohne sie fallen Adressbuch, LDAP, Ph und S/MIME aus,
-  nicht der Start.
-
-  Was noch fehlt, ist der Beweis am lebenden Objekt. Zwei Wege: Gregor probiert
-  1.0.10 auf dem Laptop ohne VS2022, oder
-  [tools/Kriterium0-pruefen.wsb](tools/Kriterium0-pruefen.wsb) hängt das Paket
-  in die **Windows-Sandbox**, ein frisches Windows ohne alles. Durchgefallen ist
-  es nur bei `0xc000007b` oder einem DLL-Namen in der Meldung.
+- **Werkzeugleiste:** abgeschaltete Knöpfe zeigen kein Symbol (E-30, in
+  Arbeit). Die Symbole selbst sind in Ordnung — sie erscheinen im Hauptfenster
+  vollständig und fehlen nur dort, wo der Knopf abgeschaltet ist. Gemessen:
+  `SetDisabledImageList` kommt im Projekt nicht vor, und die Bilderliste wird
+  mit `ILC_COLORDDB` angelegt (heute 32 Bit statt der 8, für die der Code
+  geschrieben wurde). Siehe [Befunde/SYMBOLE-VORARBEIT.md](Befunde/SYMBOLE-VORARBEIT.md)
+- Meldung **„Encountered an improper argument"** — reproduzierbar: *Find
+  Messages*, Suche mit einem Treffer (7.2.0.10)
 
 ### Die Suche nach der Wurzel der Abstürze
 
@@ -97,7 +135,7 @@ fünf Beobachtungen aus einer Wurzel.
 
 > **Die Hypothese hat den Test nicht bestanden.** 7.2.0.12 stürzt weiter ab.
 
-### Das Absturzprotokoll — und warum es noch nichts verrät
+### Das Absturzprotokoll — und wie man es liest
 
 Eudora schreibt seinen eigenen Absturzbericht, ohne dass man etwas einschalten
 muss: **`Mailverzeichnis\Exception.log`** neben der EXE. Gregor hat 7.2.0.12 am
@@ -109,34 +147,48 @@ at 0023:414E3345
 Call stack: 00894B53, 008962D7, 6FB9A3E6 (mfc140.dll), ...
 ```
 
-Zwei Dinge daran zählen:
-
-**Erstens: das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die
-zu *keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle
-oder ein Funktionszeiger überschrieben wurde — also genau das Schadensbild einer
+**Das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die zu
+*keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle oder
+ein Funktionszeiger überschrieben wurde — genau das Schadensbild einer
 beschädigten Halde. Die Doppelfreigabe E-25 war demnach **nicht die einzige
-Quelle**, oder nicht die entscheidende.
+Quelle**.
 
-**Zweitens: die Adressen sind derzeit nicht auflösbar.** Die EXE ist 2,8 MB
-groß; läge sie wie vorgesehen auf `0x00400000`, endete sie bei `0x006CD000`. Die
-protokollierte Adresse `0x00894B53` liegt weit dahinter. Windows lädt sie also
-**verschoben** (ASLR), und `Exception.log` schreibt die tatsächliche Ladeadresse
-**nicht mit**. Ohne sie ist jede Umrechnung in einen Funktionsnamen geraten.
-(Ein erster Versuch am 06.09. lieferte prompt einen Namen aus dem
-Ressourcenbereich — sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht
-stimmt.)
+#### Warum die Adressen bis 7.2.0.12 nichts hergaben
 
-Vorbereitet ist immerhin die andere Hälfte: `Eudora.vcxproj` erzeugt seit dem
-06.09.2026 eine **Zuordnungsdatei** `Eudora71/Bin/Release/Eudora.map` mit 51.075
-Namen. Sobald die Ladeadresse im Protokoll steht, wird aus jeder Zeile des
-Aufrufstapels ein Funktionsname.
+Die EXE ist 2,8 MB groß; läge sie wie vorgesehen auf `0x00400000`, endete sie
+bei `0x006CD000`. Die protokollierte Adresse `0x00894B53` liegt weit dahinter.
+Windows lädt sie also **verschoben** (ASLR), und der Bericht schrieb die
+tatsächliche Ladeadresse **nicht mit**. Ohne sie ist jede Umrechnung in einen
+Funktionsnamen geraten. Ein erster Versuch am 06.09. rechnete gegen
+`0x00400000` und lieferte prompt einen Namen aus dem Ressourcenbereich —
+sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht stimmte.
 
-**Nächster Schritt, klein und lohnend:** den Absturzbehandler die Ladeadresse
-jedes Moduls mitschreiben lassen (`GetModuleHandle(NULL)` genügt für Eudora
-selbst). Dann beantwortet Gregors eigener Vorschlag — *„oder du schreibst eine
-log datei, während eudora ausgeführt wird, dann steht es darin, was der letzte
-aufruf war"* — die Frage ohne Debugger und ohne Visual Studio, aus einer
-Textdatei, die der Anwender einfach mitschicken kann.
+#### Beide Hälften sind jetzt da
+
+| Hälfte | Wo | Seit |
+|---|---|---|
+| **Namen zu Adressen**: `Eudora71/Bin/Release/Eudora.map`, 51.075 Einträge | `Eudora.vcxproj` erzeugt sie bei jedem Bau | 06.09.2026 |
+| **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](Eudora71/Eudora/ExceptionHandler.cpp) (E-26) | 06.09.2026 |
+
+Ein Bericht **ab 7.2.0.14** beginnt deshalb so:
+
+```
+Loaded modules - subtract the load address from a stack address to get
+the offset listed in the .map file of that module:
+Load address  Size      Module
+00E30000      002CD000  Eudora.exe
+6FB00000      ...       mfc140.dll
+```
+
+Adresse minus Ladeadresse ergibt den Versatz, den die `.map` kennt. Damit wird
+aus jeder Zeile des Aufrufstapels ein Funktionsname — **ohne Debugger und ohne
+Visual Studio**, aus einer Textdatei, die ein Anwender einfach mitschicken kann.
+Das war Gregors Vorschlag: *„oder du schreibst eine log datei, während eudora
+ausgeführt wird, dann steht es darin, was der letzte aufruf war."*
+
+Berichte von **7.2.0.12 und älter** haben die Tabelle nicht und bleiben
+unauflösbar. Das ist kein Mangel des Werkzeugs, sondern eine Tatsache über die
+alten Dateien — geraten wird nicht.
 
 **Der zweite Weg, falls das nicht reicht:** **Page Heap** macht aus der
 Beschädigung einen Zugriffsfehler an der verursachenden Anweisung statt
@@ -147,21 +199,31 @@ Debug-Bau starten, Strg-N, dann `tools\stapel-untersuchen.ps1` in einer
 
 ## Bauen
 
-### Nach einem frischen Klon: vier Schritte
+### Nach einem frischen Klon: ein Schritt
 
 ```bash
-git config core.autocrlf false
 sh tools/hooks-einrichten.sh
-perl tools/zeilenenden-angleichen.pl --aendern
-git ls-files -z | xargs -0 -n 400 git add --
 ```
 
-Keiner davon ist wahlfrei. **Ohne den dritten springt jede Datei, die man
-anfasst, als komplett geändert heraus:** die Arbeitskopie liegt dann als CRLF
-vor, während im Commit LF steht. Git sieht in eine Datei gar nicht hinein,
-solange Zeitstempel und Größe zum Index passen — der Schaden bleibt unsichtbar,
-bis ein Werkzeug die Datei berührt (Befund S-7). Ohne den zweiten fehlt der
-`pre-commit`-Hook; er liegt unter `.git/hooks` und wird nicht mitversioniert.
+Das war es. Der Hook liegt unter `.git/hooks` und wird von git nicht
+mitversioniert, muss also je Klon einmal eingerichtet werden; er prüft vor jedem
+Commit Zeilenenden, Kodierung und Zweigwahl.
+
+**Zeilenenden sind kein Thema mehr.** [.gitattributes](.gitattributes) setzt
+`* -text` und schaltet damit jede Umwandlung durch git ab — beim Auschecken wie
+beim Einchecken bleiben die Bytes, wie sie sind, unabhängig davon, wie
+`core.autocrlf` auf dem jeweiligen Rechner steht.
+
+Nachgemessen am 06.09.2026: ein frischer Auscheck des Stands, geprüft mit
+**erzwungenem** `core.autocrlf=true`, meldet **null geänderte Dateien**. Die
+Datei `Eudora71/Eudora/eudora.cpp` steht dabei als `i/mixed w/mixed` da — ihre
+absichtlich gemischten Zeilenenden aus den Neunzigern kommen unversehrt an.
+
+> Früher standen hier vier Schritte, darunter `git config core.autocrlf false`
+> und ein Lauf von `tools/zeilenenden-angleichen.pl`. Beides war nötig, **bevor**
+> es `.gitattributes` gab. Das Werkzeug bleibt liegen — es repariert einen
+> Arbeitsbaum, der aus jener Zeit stammt —, aber ein heutiger Klon braucht es
+> nicht.
 
 ### Der Bau
 
@@ -202,16 +264,42 @@ MFC/ATL, Windows SDK). Belege zum Bauzustand: [PRUEFUNG-BAU.md](PRUEFUNG-BAU.md)
 | **`Eudora.exe`** | `Eudora71/Bin/<Konfiguration>` |
 | `EudoraRes.dll` | `Eudora71/Bin/<Konfiguration>` |
 | `QCSSL.dll`, `Imap.dll`, `QCSocket.dll`, `QCUtils.dll`, `EuLang.dll`, `plstclnt.dll` | `Eudora71/Bin/<Konfiguration>` |
+| `msvcr71.dll` (Projekt `VC71Bruecke`, Weiterleitung auf `msvcrt.dll`) | `Eudora71/Bin/<Konfiguration>` |
 | `NSImport.eif`, `OEImport.eif`, `OLImport.eif` (Importer-Plugins, DLLs mit eigener Endung) | `Eudora71/Bin/<Konfiguration>` |
 | `EudoraOldIcons.epi` (Icon-Plugin, ebenfalls eine DLL) | `Eudora71/EudoraOldIcons/<Konfiguration>` |
-| elf `.lib` | `Eudora71/Lib/<Konfiguration>` |
+| die `.lib` (siehe unten) | `Eudora71/Lib/<Konfiguration>` |
 | `libeay32.lib`, `ssleay32.lib` (Projekt `OpenSSL`, Altbestand) | `Eudora71/OpenSSL/out32` |
 
-Von den elf `.lib` sind sieben Importbibliotheken zu den DLLs (kenntlich an der
-begleitenden `.exp`); echte statische Bibliotheken sind nur vier: `AccountWizard`,
-`DirectoryServicesUI`, `EuImap`, `SearchEngine`. Daneben liegen dort sechs
-vorgefertigte Fremdbibliotheken, die kein Projekt der Solution erzeugt
-(`EuMemMgr`, `Paige32d`, `SSCEWD32`, `Uuid`, `libpng`, `zlib`).
+#### Die `.lib` in `Eudora71/Lib/<Konfiguration>` — drei Sorten
+
+Zahlen stehen hier absichtlich nicht: `Eudora71/Lib/` ist von `.gitignore`
+erfasst, der Inhalt hängt also davon ab, was zuletzt gebaut wurde, und jedes
+neue Projekt verschiebt ihn. Wer wissen will, was da liegt, unterscheidet nach
+diesen drei Merkmalen — sie halten auch dann noch, wenn ein Projekt dazukommt:
+
+| Sorte | woran man sie erkennt | woher |
+|---|---|---|
+| **Importbibliothek** zu einer DLL | daneben liegt eine gleichnamige `.exp` | jedes Projekt mit `<ConfigurationType>DynamicLibrary` und `<ImportLibrary>..\Lib\…` |
+| **echte statische Bibliothek** | keine `.exp`, wird beim Bau neu geschrieben | `AccountWizard`, `DirectoryServicesUI`, `EuImap`, `SearchEngine` — die vier Projekte mit `<ConfigurationType>StaticLibrary` |
+| **vorgefertigte Fremdbibliothek** | keine `.exp`, und `git ls-files Eudora71/Lib/` nennt sie | im Repo mitversioniert, kein Projekt erzeugt sie |
+
+Nachzählen, ohne etwas zu bauen:
+
+```sh
+ls Eudora71/Lib/Release/*.exp                       # die Importbibliotheken
+git ls-files Eudora71/Lib/                          # die mitgelieferten Fremdlibs
+grep -l StaticLibrary Eudora71/*/*.vcxproj Eudora71/*/*/*.vcxproj
+```
+
+Die mitgelieferten Fremdbibliotheken heißen in **Release** `EuMemMgr.lib`,
+`Paige32.lib`, `SSCEWD32.LIB`, `Uuid.Lib`, `libpng.lib`, `zlib.lib` — in
+**Debug** genauso, nur heißt Paige dort `Paige32d.lib`. Auf Groß- und
+Kleinschreibung achten: `SSCEWD32.LIB` und `Uuid.Lib` fallen sonst aus einem
+`ls *.lib` heraus.
+
+Eine Falle beim Zählen: `VC71Bruecke` baut die DLL `msvcr71.dll`, seine
+Importbibliothek heißt aber `msvcr71-bruecke.lib` — Projektname, DLL-Name und
+`.lib`-Name gehen hier auseinander.
 
 Unit- und Komponententests liegen in `Eudora71/Tests` (`RunTests.cmd`) und
 `Eudora71/Tests/QCSSL` (`bauen.bat`, `messen.ps1`). Nach Vorgabe zu jedem Commit
@@ -223,10 +311,27 @@ laufen lassen.
 Eudora.exe "<Pfad zu einem Mailverzeichnis>"
 ```
 
-Das Mailverzeichnis **muss eine `Eudora.ini` enthalten**, sonst bricht Eudora in
-`eudora.cpp:3542` ab. Vorlage:
+Ins Mailverzeichnis gehört eine `Eudora.ini`. Vorlage:
 `InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`. Welche Dateien
 danebenliegen müssen, steht in [STARTUMGEBUNG.md](STARTUMGEBUNG.md).
+
+> **Berichtigung (06.09.2026).** Hier stand bis dahin: *„Das Mailverzeichnis
+> muss eine `Eudora.ini` enthalten, sonst bricht Eudora in `eudora.cpp:3542`
+> ab."* **Das stimmt nicht.** An `eudora.cpp:3542` steht
+> `CEudoraApp::RegisterMailbox`, und einen Abbruch wegen fehlender INI gibt es
+> im Code nicht: `GetDirs`/`CheckMailDirectory` (`fileutil.cpp`) prüfen nur, ob
+> das **Verzeichnis** existiert und schreibbar ist, und `SetupINIFilename`
+> (`rs.cpp`) setzt `INIPath` zusammen, ohne die Datei zu verlangen. Gemeint war
+> `VERIFY(GetShortPathName(INIPath, …) > 0)` in
+> **`CEudoraApp::RegisterCommandLine`** (`Eudora71/Eudora/eudora.cpp`) — das
+> schlägt bei fehlender Datei fehl, aber `VERIFY` wirkt **nur im Debug-Bau**
+> und bringt dort einen SUPERASSERT-Dialog, kein Programmende; im Release-Bau
+> tut es gar nichts. Ohne INI läuft Eudora also weiter, nur mit den Vorgaben
+> für jede Einstellung — was man nicht will, aber etwas anderes ist als ein
+> Abbruch. Der einzige Weg im Code, der wirklich vorzeitig endet, betrifft den
+> Start **ohne** Argument: dann sucht `StartEudoraWithDefaultLocation` das
+> zuletzt benutzte Verzeichnis in Registry und `%APPDATA%`, und erst wenn auch
+> das nichts hergibt, verlässt `InitInstance` lautlos das Programm.
 
 Der Fenstertitel trägt die **Bau-Kennung** — Paketversion, Commit und
 Herkunftsverzeichnis. Ein Sternchen hinter dem Commit heißt: beim Bau lagen
@@ -287,10 +392,14 @@ Port 995 (`Negotiation Status: Succeeded`).
 
 QCSSL prüft ausschließlich gegen `rootcerts.p7b`, nicht gegen den
 Windows-Zertifikatspeicher. Für die Auslieferung erzeugt
-`Releases/1.0/rootcerts-erzeugen.ps1` eine aktuelle Datei mit 121 Zertifikaten;
-die beiden Altbestände im Baum (`Eudora71/Bin/Release`,
-`InstallersForEudora/…/win32`) enthalten abgelaufene Zertifikate und sind nicht
-maßgeblich.
+`Releases/1.0/rootcerts-erzeugen.ps1` eine frische Datei aus dem
+Windows-Wurzelspeicher der Maschine — abgelaufene und noch nicht gültige
+Zertifikate bleiben draußen. Wie viele es sind, sagt das Skript am Ende selbst
+(*„Gegenprobe (wieder eingelesen): N Zertifikate"*); die Zahl hängt am
+Zertifikatstand des Rechners und wird hier deshalb nicht festgeschrieben. Die
+beiden Altbestände im Baum (`Eudora71/Bin/Release/rootcerts.p7b`,
+`InstallersForEudora/Eudora7.1/Data/win32/RootCerts`) enthalten abgelaufene
+Zertifikate und sind nicht maßgeblich.
 
 ## Werkzeuge
 
@@ -307,8 +416,12 @@ maßgeblich.
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen |
 | `tools/hooks-einrichten.sh` | richtet den `pre-commit`-Hook ein. Nach jedem Klon einmal. Schreibt nach `--git-common-dir`, läuft also auch aus einem Arbeitsbaum |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe` |
+| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (ab 7.2.0.14) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
+| `tools/absturz-auswerten-tests.pl` | Testsammlung dazu, **15 Fälle** mit künstlicher Karte und künstlichem Bericht. **Wer `absturz-auswerten.pl` anfasst, lässt sie laufen** |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. 18 Treffer, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio |
 | `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: steht vorher ein `GetBuffer` auf **derselben** Variablen? Das ist die Fehlerklasse **R-1**. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio |
+| `tools/pruefe-symbole.pl` | prüft die Werkzeugleisten-Ressourcen ohne Übersetzer: jede `TOOLBAR` hat eine gleichnamige `BITMAP`, jede Bilddatei ist da, jeder Knopf hat ein Bild, keine Ladestelle in der Ersatzschicht holt eine Bitmap ohne Farbtabelle noch über `CBitmap::LoadMappedBitmap`, und deren Hintergrund ist wirklich 192,192,192 (Befund E-30). `-v` listet jede Leiste |
+| `tools/pruefe-symbole-tests.pl` | Testsammlung dazu, **12 Fälle** auf künstlichen Arbeitsbäumen. **Wer `pruefe-symbole.pl` anfasst, lässt sie laufen** |
 | `tools/postfach-zeichen-pruefen.pl` | prüft ein `.mbx` auf unübersetzte UTF-8-Folgen (Befund Z-2b) |
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
 | `tools/laufzeit-holen.ps1` | holt die vier **Debug**-Laufzeiten aus `SysWOW64` und prüft jede auf x86 nach. Für den Release-Bau nicht nötig |
@@ -349,14 +462,20 @@ Zugriffsfunktionen. Betroffen waren vor allem die BIO-Schicht und
 
 `Eudora.exe` linkte gegen **Stingray Objective Toolkit 5.0.1**, eine kommerzielle
 MFC-Erweiterung von 1995. Die CHM-Freigabe durfte nur Qualcomm-eigenen Code
-enthalten — von OT501 sind deshalb nur die 127 Header übrig, die Quelldateien
-fehlen fast vollständig. Eine fertige Binärdatei von damals hilft nicht: mit VC6
-gegen MFC 4.21 übersetzt, verlinkt sie sich nicht mit VS 2022.
+enthalten — von OT501 sind deshalb nur die 127 Header unter
+`Eudora71/OT501/Include` übrig; von den Quelldateien der `SEC*`-Klassen fehlt
+alles, im Baum liegen nur noch mitgelieferte Fremdteile (JPEG, zlib). Eine
+fertige Binärdatei von damals hilft nicht: mit VC6 gegen MFC 4.21 übersetzt,
+verlinkt sie sich nicht mit VS 2022.
 
 Eudora baut darauf sein komplettes Fenstergerüst auf — `CMainFrame` erbt über
 `QCWorkbook` von `SECWorkbook`; insgesamt leitet Eudora an 30 Stellen von
 22 Stingray-Klassen ab und ruft 77 Methoden auf. **42** Quelldateien und
-30 Header unter `Eudora71/Eudora` nennen mindestens einen Stingray-Bezeichner.
+**28** Header unter `Eudora71/Eudora` nennen mindestens einen
+Stingray-Bezeichner (gezählt am 06.09.2026: Dateien, in denen ein Bezeichner
+der Form `SEC<Grossbuchstabe>…` mit mindestens einem Kleinbuchstaben vorkommt —
+das trennt die Stingray-Klassen von den gleichnamigen SSPI-Konstanten
+`SECBUFFER_*`).
 
 **Gewählter Weg und heutiger Zustand:** eine eigene Ersatzschicht auf modernes
 MFC, `Eudora71/OTShim/`, in fünf Teilen über `OTShimAll.h` eingebunden.
@@ -366,13 +485,15 @@ MFC, `Eudora71/OTShim/`, in fünf Teilen über `OTShimAll.h` eingebunden.
 sonst linkt Eudora gegen eine leere Bibliothek.
 
 > **Achtung, ein naheliegender Irrtum:** die Registerkartenleiste ist **nicht**
-> verzichtbar. Abschaltbar ist nur der MDI-Streifen hinter `m_bWorkbookMode`
-> (`mainfrm.cpp:1025`). Das Registerkarten-*Steuerelement*
-> `SEC3DTabWnd`/`SEC3DTabControl` sitzt in **jeder** Wazoo-Leiste und wird davon
-> nicht berührt. Mit leeren Rümpfen startet Eudora zwar, aber Mailboxes,
-> Nicknames, Filters, Directory Services, Link History und Task Status bleiben
-> leer. Die Registerkarten sind deshalb als eigener Teil ausgeführt
-> (`OTShim_Reiter.*`).
+> verzichtbar. Abschaltbar ist nur der MDI-Streifen — `CMainFrame::FinishInitAndShowWindow`
+> ruft dafür `ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))`, und
+> `SECWorkbook` in der Ersatzschicht hält `m_bWorkbookMode` dauerhaft auf
+> `FALSE` (`OTShim.cpp`, Konstruktor und `SetWorkbookMode`). Das
+> Registerkarten-*Steuerelement* `SEC3DTabWnd`/`SEC3DTabControl` sitzt in
+> **jeder** Wazoo-Leiste und wird davon nicht berührt. Mit leeren Rümpfen
+> startet Eudora zwar, aber Mailboxes, Nicknames, Filters, Directory Services,
+> Link History und Task Status bleiben leer. Die Registerkarten sind deshalb als
+> eigener Teil ausgeführt (`OTShim_Reiter.*`).
 
 Bestandsaufnahme: [Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md) —
 Umsetzungsplan mit Stufen und Belegen:

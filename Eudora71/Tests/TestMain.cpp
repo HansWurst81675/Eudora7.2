@@ -20,6 +20,7 @@ void RunOTShimReiterTests(void);
 void RunOTShimPaletteTests(void);
 void RunOTShimAndockenTests(void);
 void RunPopEmpfangTests(const char* szEudoraDir);
+void RunSymboleTests(void);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -98,6 +99,7 @@ int main(int argc, char* argv[])
 	RunOTShimPaletteTests();
 	RunOTShimAndockenTests();
 	RunPopEmpfangTests(szEudoraDir);
+	RunSymboleTests();
 
 	iFailed = TT_Summary();
 	return iFailed;

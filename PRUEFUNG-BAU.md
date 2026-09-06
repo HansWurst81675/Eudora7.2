@@ -80,14 +80,18 @@ gemessen:
 3. **Versionsressource** — `Eudora.exe` gegen `EUDORA_BUILD_VERSION` in
    `Eudora71/Version.h`.
 
-Der dritte Punkt trägt. `Version.h` sagt an diesem Commit `"7.2.0.3"`, und die
-gebauten Dateien melden dasselbe:
+Der dritte Punkt trägt. `Version.h` sagte **an dem Commit, an dem diese Prüfung
+lief (05.09.2026)**, `"7.2.0.3"`, und die gebauten Dateien meldeten dasselbe:
 
 | Datei | FileVersion | ProductVersion | FileDescription |
 |---|---|---|---|
 | `Bin/Release/Eudora.exe` (Klon c) | 7.2.0.3 | 7.2.0.3 | EUDORA |
 | `Bin/Debug/Eudora.exe` (Klon a) | 7.2.0.3 | 7.2.0.3 | EUDORA |
 | `Bin/Release/EudoraRes.dll` (Klon c) | 7.2.0.3 | — | — |
+
+> **Nicht als heutigen Stand lesen.** Der Quellstand ist seit dem 06.09.2026
+> **7.2.0.12** (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`). Die Zahlen in
+> dieser Tabelle sind der Beleg *jenes* Laufs, kein Sollwert.
 
 `InternalName` steht auf `EUDORA32`, `OriginalFilename` auf `EUDORA.EXE`,
 `CompanyName` auf `QUALCOMM Incorporated`. Die Ressource kommt über
@@ -423,6 +427,21 @@ sagt dann „unbekannt". Für die drei Einrichtungsschritte oben braucht man es
 aber (Git für Windows bringt es mit).
 
 ### Der Bau selbst
+
+> **Nachtrag (06.09.2026).** Der rohe `MSBuild.exe`-Aufruf unten ist **nicht
+> mehr der empfohlene Weg**. Er meldet Erfolg auch dann, wenn nichts gebaut
+> wurde — genau der Fall, der am 05.09.2026 als Befund **X-6** aufgeschrieben
+> wurde. Zu bauen ist mit
+>
+> ```powershell
+> powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
+> ```
+>
+> Das Werkzeug liest Konfiguration und Plattform aus der `.sln`, sucht MSBuild
+> über `vswhere.exe` und meldet Erfolg erst, wenn Rückgabewert,
+> Fehlerprotokoll, Zeitstempel der Artefakte und die Versionsressource der
+> `Eudora.exe` zusammenpassen. Der Aufruf unten bleibt hier stehen, weil die
+> beiden Stolpersteine darunter weiter gelten.
 
 ```bash
 "C:\Program Files\Microsoft Visual Studio\2022\Professional\MSBuild\Current\Bin\MSBuild.exe" Eudora71\Eudora.sln -t:Build -p:Configuration=Release -p:Platform=x86 -m

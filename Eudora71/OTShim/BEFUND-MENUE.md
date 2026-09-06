@@ -136,7 +136,15 @@ Das Binden bricht mit `LNK1104: imap.lib` ab; das ist eine Folge von
 `BuildProjectReferences=false` und hat mit dieser Aenderung nichts zu tun
 (Imapdll wurde nicht mitgebaut).
 
+> **Nachtrag (06.09.2026).** `/p:BuildProjectReferences=false` wird seit
+> Befund **B-3** nicht mehr gebraucht. Ein Bau der ganzen Projektmappe erzeugt
+> `imap.lib` mit und geht durch: 18 erfolgreich, 0 Fehler, 1 uebersprungen.
+
 ### Falsifizierbare Vorhersage fuer Gregor (kostet keinen Debugger)
+
+> **Entschieden (Befund E-1, 31.08.2026): M-1 war die Ursache.** Die Menues
+> gehen auf, das Hauptfenster ist bedienbar. Die Vorhersage unten bleibt als
+> Beleg fuer den Weg stehen; sie ist nicht mehr abzuarbeiten.
 
 Wenn M-1 die Ursache war, dann waren im kaputten Bau **ausser** den Menues auch
 kaputt:

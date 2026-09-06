@@ -62,6 +62,11 @@ DAMAGE. */
 
 #include "DebugNewHelpers.h"
 
+// Befund E-27: Spurmarken auf dem Weg von Strg-N. Der Absturz beim Verfassen
+// beendet Eudora ohne jede Meldung; die letzte geschriebene Marke in
+// eudora.log sagt, wie weit der Weg gekommen ist.
+#include "debug.h"
+
 
 extern QCCommandStack		g_theCommandStack;
 extern QCPluginDirector		g_thePluginDirector;
@@ -367,9 +372,12 @@ CCreateContext* pContext)
 							ID_MESSAGE_SENDIMMEDIATELY
 						};
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CCompMessageFrame::OnCreateClient: Anfang");
 	fRet = m_wndSplitter.CreateStatic( this, 2, 1, WS_CHILD | WS_VISIBLE );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Teiler angelegt");
 
 	if ( fRet ) {
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView CHeaderView");
 		fRet = m_wndSplitter.CreateView( 0, 0, RUNTIME_CLASS(CHeaderView),
 					CSize( 315, 88 ), pContext );
 	}
@@ -378,16 +386,19 @@ CCreateContext* pContext)
 	{
 		if(GetIniShort(IDS_INI_WORD_WRAP_ON_SCREEN) && GetIniShort(IDS_INI_WORD_WRAP))
 		{
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView PgFixedCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgFixedCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 		else
 		{
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView PgCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: beide Ansichten angelegt");
 	pDoc = ( CCompMessageDoc* ) ( pContext->m_pCurrentDoc );
 
 	// BEFUND E-22: pDoc und pDoc->m_Sum wurden hier ungeprueft benutzt
@@ -422,6 +433,7 @@ CCreateContext* pContext)
 
 	pSummary = pDoc->m_Sum;
 	
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Text gelesen, baue das Uebersetzermenue");
 	// build the translators menu
 	m_theTranslatorMenu.CreatePopupMenu();
 
@@ -455,6 +467,7 @@ CCreateContext* pContext)
 	m_pFormattingToolBar->SetManager( m_pToolBarManager );
 	m_pFormattingToolBar->m_bAutoDelete = TRUE;
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Leisten erzeugt, lade die Leistenressource");
 	m_pToolBarManager->LoadToolBarResource( MAKEINTRESOURCE( IDR_COMPMESS ), MAKEINTRESOURCE( IDR_COMPMESS ) );
 	m_pToolBarManager->SetButtonMap( theCompMessageButtonMap );
 
@@ -490,8 +503,10 @@ CCreateContext* pContext)
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
 	m_pToolBar->EnableDocking(CBRS_ALIGN_TOP);
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor SetButtons der Nachrichtenleiste");
 	nButtons = DIM( theCompMessageButtons );
 	m_pToolBar->SetButtons( theCompMessageButtons,  nButtons );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: nach SetButtons der Nachrichtenleiste");
 
 	int transCount = m_theTranslatorMenu.GetMenuItemCount();
 	
@@ -557,6 +572,7 @@ CCreateContext* pContext)
 
 	DockControlBar( m_pFormattingToolBar );
 	
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Leisten angedockt, jetzt die Auswahlfelder");
 	// initialize the priority combo
 	//
 	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
@@ -670,9 +686,11 @@ CCreateContext* pContext)
 		SelectTranslators( pSummary->GetTranslators() );
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Auswahlfelder gefuellt, jetzt die Schriftnamen");
 	// get the face names
 	EnumFontFaces( theArray );
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: nach EnumFontFaces");
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
 	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
@@ -685,6 +703,7 @@ CCreateContext* pContext)
 	}
 
 	// get the main frame window
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Schriftnamen eingefuellt");
 	pMainFrame = ( CMainFrame* ) AfxGetApp()->m_pMainWnd;
 	
 	if (pMainFrame)
@@ -695,21 +714,25 @@ CCreateContext* pContext)
 		i = ( bMaximized ? 1 : 0 );
 		
 		// get the main window
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Hauptfenster geholt");
 		VERIFY( pEditTextMenu = pMainFrame->GetMenu() );
 		
 		if (pEditTextMenu)
 		{
 			// get the edit menu
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Menue geholt");
 			VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 1 + i ) );
 			
 			if (pEditTextMenu)
 			{
 				// Shareware: In reduced feature mode, you get a less-capable format toolbar
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Untermenue 1+i geholt");
 				if (UsingFullFeatureSet())
 				{
 					// FULL FEATURE mode
 					
 					// get the insert menu
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: vor GetSubMenu 11");
 					VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
 					i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
 					VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );
@@ -875,6 +898,7 @@ CHeaderView* CCompMessageFrame::GetHeaderView()
 {
 	CHeaderView* pHV = (CHeaderView*) m_wndSplitter.GetPane( 0, 0 );
 	VERIFY( pHV );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView CHeaderView");
 	ASSERT( pHV->IsKindOf(RUNTIME_CLASS(CHeaderView)) );
 	return pHV;
 }

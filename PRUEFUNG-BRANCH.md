@@ -173,6 +173,12 @@ das andere zu — alle drei Indizes liegen deutlich unter der Länge, und
 > echten Mangel behoben — aber VERMUTLICH nicht den wirksamen. Wer das nächste
 > Paket baut, sollte nicht damit rechnen, dass der Absturz weg ist. Die
 > Gegenhypothese „`pMainFrame` ist NULL" wurde geprüft und widerlegt.
+>
+> > **Nachtrag (06.09.2026): dieser Verdacht hat sich bestätigt.** **E-11 ist
+> > zurückgenommen.** Die belegte Ursache ist **E-25** — eine Doppelfreigabe in
+> > `NSImportClass.cpp` (`Befunde/ASSISTENT.md`), gefunden über das
+> > Windows-Ereignisprotokoll (`0xc0000374 STATUS_HEAP_CORRUPTION`). Auch die
+> > reicht nicht aus: 7.2.0.12 stürzt weiter ab.
 
 **R-1 priorisiert außerdem falsch.** Als dringend geführt sind die vier
 `sendmail`-Stellen — die sind harmlos (eigener Puffer, Argument innerhalb der
@@ -277,8 +283,12 @@ Code — sie richten keinen Schaden an, solange sie berichtigt werden.
 
 ## 4. Was zuerst zu tun ist
 
-1. **Die Ursache des Absturzes bei *Weiter* ist wieder offen.** E-11 hat einen
-   echten Mangel behoben, aber vermutlich nicht den wirksamen.
+1. ~~**Die Ursache des Absturzes bei *Weiter* ist wieder offen.**~~ — **erledigt
+   am 05./06.09.2026.** Die Ursache ist **E-25** (`Befunde/ASSISTENT.md`): eine
+   Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile`, belegt am
+   Windows-Ereignisprotokoll (`STATUS_HEAP_CORRUPTION`). Sie ist behoben — und
+   war **nicht die einzige Quelle**: 7.2.0.12 stürzt weiter ab. **E-11 ist
+   zurückgenommen**, die Fehlerklasse R-1 bleibt.
 2. **Die 801 CRLF-Dateien angleichen**, bevor jemand eine davon anfasst.
 3. **`paket-pruefen.ps1`** auf Release-Laufzeiten umstellen und den
    SysWOW64-Freibrief entfernen — es gibt derzeit Entwarnung für genau den

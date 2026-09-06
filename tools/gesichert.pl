@@ -277,16 +277,30 @@ if (@baeume) {
             }
 
             if (!length $up) {
-                # Kein Gegenstueck. Hat der Zweig eigene Commits gegenueber main?
-                my $eigen = defined $haupt
-                          ? git_in($p, 'rev-list', '--count', "$haupt..refs/heads/$bn") : '';
+                # Kein eigenes Gegenstueck auf dem Server. Das heisst NICHT, dass
+                # die Commits verloren sind: sie koennen laengst unter einem
+                # anderen Zweignamen dort liegen - genau so ist es, wenn ein
+                # Agent von unserem Arbeitszweig abzweigt.
+                #
+                # Die erste Fassung verglich gegen origin/main und meldete
+                # deshalb am 06.09.2026 fuer wt/chronist und wt/paige je "36
+                # Commit(s), die nirgends gepusht sind", obwohl alle 36 in
+                # origin/strg-n-diagnose lagen. Nachgemessen mit
+                # "rev-list --count origin/strg-n-diagnose..wt/chronist": 0.
+                #
+                # Eine Schranke, die zweimal umsonst warnt, wird beim dritten Mal
+                # nicht mehr geglaubt. Deshalb wird jetzt gegen ALLE Zweige des
+                # Servers geprueft (--not --remotes=origin) und nicht nur gegen
+                # einen.
+                my $eigen = git_in($p, 'rev-list', '--count', "refs/heads/$bn",
+                                       '--not', '--remotes=origin');
                 $eigen = 0 unless $eigen =~ /^\d+$/;
                 if ($eigen) {
                     push @sagen,  "'$bn': $eigen Commit(s) nirgends gepusht";
-                    push @mangel, "Arbeitsbaum $p ('$bn') hat $eigen Commit(s), die nirgends gepusht sind";
+                    push @mangel, "Arbeitsbaum $p ('$bn') hat $eigen Commit(s), die auf keinem Server-Zweig liegen";
                 }
                 elsif (!$verschmolzen) {
-                    push @sagen, "'$bn': kein Gegenstueck, aber nichts Eigenes";
+                    push @sagen, "'$bn': kein eigenes Gegenstueck, aber alles liegt auf dem Server";
                 }
             }
             else {

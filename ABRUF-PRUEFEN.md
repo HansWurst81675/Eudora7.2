@@ -52,25 +52,29 @@ verschlüsselt aufgebaut (`POPSession.cpp:602-605`), noch bevor irgendein Passwo
 
 ### Welcher Servername? — beantwortet
 
-> **Erledigt am 31.08.2026 (Befund E-3): `mx.freenet.de` spricht POP3**, und
-> zwar auf **Port 110 mit STARTTLS**. Gregor hat darüber 159 Nachrichten
-> abgerufen, `TLSv1.3` / `TLS_AES_256_GCM_SHA384`, abgelesen in
-> *Tools → Last SSL Info*. Der Verdacht, es sei nur ein MX-Eintrag für die
+> **Erledigt: `mx.freenet.de` spricht POP3.** Zuletzt gemessen am **06.09.2026**
+> im selbst gebauten Eudora 7.2.0.12: **Port 995**, *Tools → Last SSL Info*
+> meldet `Negotiation Status: Succeeded`, **TLSv1.3**,
+> `TLS_AES_256_GCM_SHA384`. Die zugehörige Einstellung ist *Secure Sockets when
+> Receiving* → **„Required, Alternate Port"**, in der `Eudora.ini`
+> `SSLReceiveUse=2`. **Der empfohlene Weg dieser Anleitung ist damit der
+> gemessene.**
+>
+> Der erste Beleg überhaupt stammt vom 31.08.2026 (Befund E-3): 159 Nachrichten
+> über **Port 110 mit STARTTLS**, ebenfalls `TLSv1.3`. Beide Wege
+> funktionieren. Der Verdacht, `mx.freenet.de` sei nur ein MX-Eintrag für die
 > Zustellung, war unbegründet.
 >
-> **Das ist nicht der Weg, den diese Anleitung unten empfiehlt** (Port 995,
-> implizites TLS). Beide funktionieren. Belegt ist **Port 110 mit STARTTLS** —
-> das entspricht `SSLReceiveUse=1` oder `=3`; **welchen der beiden Werte Gregor
-> gesetzt hatte, ist nicht festgehalten** und lässt sich nachträglich nur aus
-> seiner `Eudora.ini` ablesen. Die Tabelle darunter bleibt stehen, weil sie den
-> zweiten Weg und die Fehlersuche beschreibt.
+> **Berichtigung (06.09.2026).** Hier stand: *„Belegt ist Port 110 mit
+> STARTTLS … das ist **nicht** der Weg, den diese Anleitung unten empfiehlt."*
+> Seit dem 06.09.2026 ist Port 995 gemessen.
 
-Es gibt genau zwei Möglichkeiten. **Woran du merkst, welche zutrifft:**
+Falls doch nichts zustande kommt — **woran du merkst, woran es liegt:**
 
 | Was passiert | Welcher Fall | Was tun |
 |---|---|---|
-| Eudora fragt nach dem Passwort, danach kommt eine Antwort vom Server — egal ob Erfolg oder `-ERR` | **`mx.freenet.de` ist auch der POP-Server.** Es horcht auf 995. | Nichts. Weiter bei Schritt 4. |
-| Es kommt gar nichts: Zeitüberschreitung, „connection refused", oder Eudora hängt in „Connecting…" und bricht dann ab. **Kein** Passwortdialog, **kein** Zertifikatsdialog, „Last SSL Info" bleibt leer | **Falscher Name oder falscher Port.** Auf 995 horcht dort nichts. | Zweiter Versuch mit `pop.freenet.de`, siehe unten. |
+| Eudora fragt nach dem Passwort, danach kommt eine Antwort vom Server — egal ob Erfolg oder `-ERR` | **`mx.freenet.de` ist auch der POP-Server.** Es horcht auf 995. Das ist der gemessene Normalfall. | Nichts. Weiter bei Schritt 4. |
+| Es kommt gar nichts: Zeitüberschreitung, „connection refused", oder Eudora hängt in „Connecting…" und bricht dann ab. **Kein** Passwortdialog, **kein** Zertifikatsdialog, „Last SSL Info" bleibt leer | Falscher Name, falscher Port oder eine Firewall dazwischen. | Zweiter Versuch mit `pop.freenet.de`, siehe unten. |
 
 Das unterscheidende Merkmal ist der **Passwortdialog**. Er kommt erst, nachdem die
 TCP-Verbindung steht und (bei `SSLReceiveUse=2`) TLS ausgehandelt ist
@@ -159,7 +163,7 @@ für Kriterium 3.
 | Eudora verschwindet beim Abruf kommentarlos, ohne Dialog | War bis 31.08. der wahrscheinlichste Absturz: ein NULL-Zeiger nach gescheiterter SSL-Aushandlung (`QCWorkerSocket.cpp:1969`, Befund P-1.5a) | **Behoben** (Befund P-2.1). Stürzt es trotzdem ab, ist es *nicht* diese Stelle — dann bitte melden, mit dem Zeitpunkt. |
 | „Server does not support SSL" (`IDS_SSL_NOSUPPORT`, `POPSession.cpp:2144`) | `SSLReceiveUse=3` gesetzt, aber der Server bietet in `CAPA` kein `STLS` an | Auf `SSLReceiveUse=2` und Port 995 umstellen. |
 | `-ERR` mit `[AUTH]` oder „authentication failed" | Benutzername oder Passwort falsch (`POPSession.cpp:1818-1878`) | `POPAccount` prüfen: muss `benutzer@server` sein, nicht die Mailadresse. Bei freenet ist der Anmeldename oft die vollständige Mailadresse — dann lautet `POPAccount` `name@freenet.de@mx.freenet.de`. |
-| Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe UNGEPRÜFT-Hinweis unter Schritt 1. |
+| Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe *„Welcher Servername? — beantwortet"* unter Schritt 2. |
 | Nachricht kommt an, aber Umlaute sind kaputt | Zeichensatzpfad | Genau festhalten, was dasteht (siehe unten) — daran lässt sich die Stelle bestimmen. |
 
 Der Zertifikatsdialog ist **nicht** notwendigerweise ein Fehler: die Prüfung ist in

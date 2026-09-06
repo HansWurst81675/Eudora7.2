@@ -152,6 +152,13 @@ Write-Host ''
 Write-Host '5. Werkzeuge ins Paket'
 Nimm (Join-Path $PSScriptRoot 'laufzeit-holen.ps1') 'laufzeit-holen.ps1'
 Nimm (Join-Path $PSScriptRoot 'paket-pruefen.ps1')  'paket-pruefen.ps1'
+# Der Starter MUSS mit. Ohne ihn bekommt Eudora beim ersten Start das
+# Mailverzeichnis nicht uebergeben und legt eine leere Einrichtung an
+# (Befund E-6). Im Paket 1.0.13 hat er zuerst gefehlt, weil das
+# Grundlagen-ZIP ihn nicht enthaelt und hier niemand ihn nachgereicht hat -
+# paket-pruefen.ps1 hat es gemeldet und damit seinen Zweck erfuellt. Damit es
+# nicht wiederkommt, kommt er jetzt aus tools\ statt aus der Grundlage.
+Nimm (Join-Path $PSScriptRoot 'Eudora starten.cmd') 'Eudora starten.cmd'
 
 $liesmich = Join-Path $wurzel 'Releases\1.0.3\LIESMICH.txt'
 if (Test-Path -LiteralPath $liesmich) {

@@ -185,8 +185,40 @@ param(
   [switch]$Ausfuehrlich,
   [switch]$OhneZweitenGang,
   [switch]$JedenFehlerZaehlen,
-  [string[]]$BekannteFehlerAus = @('OT501.vcxproj')
+  [string[]]$BekannteFehlerAus = @('OT501.vcxproj'),
+  [switch]$TrotzdemBauen
 )
+
+# BEFUND E-31: Kein zweiter Bau gleichzeitig.
+#
+# Am 06.09.2026 lief dieses Skript 51:59 Minuten statt der ueblichen 2:37,
+# weil nebenher zweimal MSBuild von Hand gestartet wurde. Sechs gleichzeitige
+# Bauten machen aus zweieinhalb Minuten vierzehn - sie werden nicht langsamer,
+# sie warten aufeinander. Schlimmer noch: die Artefaktpruefung am Ende verglich
+# danach Zeitstempel aus einem Mischzustand und meldete Unsinn.
+#
+# Die Regel steht seit dem 05.09.2026 in AGENTEN.md unter Regel 2. Sie wurde
+# trotzdem verletzt - deshalb steht sie jetzt hier als Schranke und nicht nur
+# als Satz.
+$fremd = @(Get-Process -Name MSBuild,cl,link -ErrorAction SilentlyContinue |
+           Where-Object { $_.Id -ne $PID })
+if ($fremd.Count -gt 0) {
+  $art = ($fremd | Group-Object ProcessName |
+          ForEach-Object { "$($_.Count)x $($_.Name)" }) -join ', '
+  Write-Host ''
+  Write-Host '  ABBRUCH: es laeuft bereits ein Bau.' -ForegroundColor Yellow
+  Write-Host "  Gefunden: $art"
+  Write-Host ''
+  Write-Host '  Zwei Bauten gleichzeitig sind nicht doppelt so schnell, sondern'
+  Write-Host '  langsamer als nacheinander - und die Artefaktpruefung am Ende'
+  Write-Host '  vergleicht dann Zeitstempel aus einem Mischzustand.'
+  Write-Host ''
+  Write-Host '  Warten, bis der andere fertig ist. Wer es trotzdem will:'
+  Write-Host '      -TrotzdemBauen'
+  Write-Host ''
+  if (-not $TrotzdemBauen) { exit 3 }
+  Write-Host '  -TrotzdemBauen gesetzt - es wird gebaut.' -ForegroundColor Yellow
+}
 
 $ErrorActionPreference = 'Stop'
 
@@ -779,6 +811,51 @@ function Hole-NeuesteQuelle {
   return $max
 }
 
+# Die Quellen GENAU DES PROJEKTS, das dieses Artefakt erzeugt.
+#
+# Warum nicht einfach die juengste Quelle im ganzen Baum: die Regel hat am
+# 06.09.2026 zweimal falschen Alarm geschlagen. EuLang.dll und msvcr71.dll
+# waren vom Vortag - zu Recht, denn an EuLang und VC71Bruecke hatte sich
+# nichts geaendert, MSBuild hat sie folgerichtig uebersprungen. Gemeldet
+# wurden sie trotzdem als "der Bau hat es nicht erneuert", weil IRGENDWO im
+# Baum eine neuere Quelle lag. Beide bauen einwandfrei, nachgemessen, und
+# ergeben byte-gleich grosse Dateien.
+#
+# Eine Schranke, die zweimal umsonst warnt, wird beim dritten Mal nicht mehr
+# geglaubt. Deshalb jetzt zweistufig:
+#   Fehler   das Artefakt ist aelter als die Quellen SEINES EIGENEN Projekts
+#            - dann hat der Bau wirklich versagt.
+#   Hinweis  es ist nur aelter als irgendeine Quelle anderswo - das ist der
+#            Normalfall eines Teilbaus und kein Fehler.
+function Hole-ProjektVerzeichnis {
+  param([string]$Artefakt)
+  $basis = [System.IO.Path]::GetFileNameWithoutExtension($Artefakt)
+  # msvcr71.dll entsteht im Projekt VC71Bruecke - der einzige Fall, in dem
+  # Dateiname und Projektname auseinanderfallen (Befund B-1).
+  if ($basis -ieq 'msvcr71') { $basis = 'VC71Bruecke' }
+  $treffer = Get-ChildItem -LiteralPath (Join-Path $wurzel 'Eudora71') -Recurse -File -Filter '*.vcxproj' -ErrorAction Ignore |
+             Where-Object { $_.FullName -notmatch 'OT501' -and
+                            [System.IO.Path]::GetFileNameWithoutExtension($_.Name) -ieq $basis } |
+             Select-Object -First 1
+  if ($null -eq $treffer) { return $null }
+  return $treffer.DirectoryName
+}
+
+function Hole-NeuesteQuelleFuer {
+  param([string]$Artefakt)
+  $verz = Hole-ProjektVerzeichnis -Artefakt $Artefakt
+  if ($null -eq $verz) { return $null }
+  $endungen = @('.c','.cpp','.cxx','.h','.hpp','.inc','.rc','.rc2','.idl','.def','.vcxproj','.props')
+  $max = [datetime]'1990-01-01'
+  Get-ChildItem -LiteralPath $verz -Recurse -File -ErrorAction Ignore |
+    Where-Object {
+      ($endungen -contains $_.Extension.ToLowerInvariant()) -and
+      ($_.FullName -notmatch '[\\/](Bin|Lib|Build|ResBuild|[.]vs)[\\/]')
+    } |
+    ForEach-Object { if ($_.LastWriteTime -gt $max) { $max = $_.LastWriteTime } }
+  return $max
+}
+
 if ($Ziel -eq 'Clean' -and -not $NurPruefen) {
   Write-Host ''
   Write-Host 'Ziel Clean - eine Artefaktpruefung waere sinnlos und wird uebersprungen.'
@@ -823,12 +900,19 @@ if ($Ziel -eq 'Clean' -and -not $NurPruefen) {
                       $fi.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss') + ' < ' +
                       $bauBeginn.ToString('yyyy-MM-dd HH:mm:ss') + ') - es wurde nicht gebaut.')
       } else {
-        $nq = Hole-NeuesteQuelle
-        if ($fi.LastWriteTime -lt $nq) {
+        $nq  = Hole-NeuesteQuelle
+        $nqp = Hole-NeuesteQuelleFuer -Artefakt $d
+        if (($null -ne $nqp) -and ($fi.LastWriteTime -lt $nqp)) {
           $stand = 'VERALTET'
-          Melde-Fehler ($d + ' ist aelter als der juengste Quelltext (' +
+          Melde-Fehler ($d + ' ist aelter als die Quellen des eigenen Projekts (' +
                         $fi.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss') + ' < ' +
-                        $nq.ToString('yyyy-MM-dd HH:mm:ss') + ') - der Bau hat es nicht erneuert.')
+                        $nqp.ToString('yyyy-MM-dd HH:mm:ss') + ') - der Bau hat es nicht erneuert.')
+        } elseif ($fi.LastWriteTime -lt $nq) {
+          $stand = 'unveraendert'
+          Melde-Warnung ($d + ' ist aelter als der juengste Quelltext im Baum, aber nicht' +
+                         ' aelter als die Quellen seines eigenen Projekts - MSBuild hat es' +
+                         ' zu Recht uebersprungen (Zeitstempel ' +
+                         $fi.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss') + ').')
         } else {
           $stand = 'unveraendert'
           Melde-Warnung ($d + ' wurde nicht neu geschrieben - es gab nichts zu tun (Zeitstempel ' +

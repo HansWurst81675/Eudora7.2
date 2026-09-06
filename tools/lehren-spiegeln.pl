@@ -27,7 +27,28 @@ use File::Copy;
 my $nur_pruefen = (@ARGV && $ARGV[0] eq '--pruefen');
 
 # Repo-Wurzel ueber git ermitteln
-my $wurzel = `git rev-parse --show-toplevel 2>/dev/null`;
+# BEFUND aus der Chat-Auswertung vom 06.09.2026: --show-toplevel liefert in
+# einem ARBEITSBAUM dessen eigenen Pfad, nicht den des Hauptrepos. Das Werkzeug
+# suchte dann unter ...-wt-<name>/memory, fand nichts - und kehrte still mit 0
+# zurueck. Da Agenten fast immer in einem Arbeitsbaum sitzen, ist damit KEINE
+# dort geschriebene Lehre je im Gedaechtnis gelandet. Genau deshalb wiederholen
+# sich Fehler, fuer die es laengst eine Lehre gibt.
+#
+# --git-common-dir zeigt auch aus einem Arbeitsbaum auf das .git des Hauptrepos;
+# dessen uebergeordnetes Verzeichnis ist die Repo-Wurzel.
+my $trenner = chr(92);
+my $gemein = `git rev-parse --path-format=absolute --git-common-dir 2>/dev/null`;
+$gemein = "" unless defined $gemein;
+$gemein =~ s/\s+\z//;
+my $wurzel = "";
+if (length $gemein) {
+    $wurzel = $gemein;
+    $wurzel =~ s/\Q$trenner\E/\//g;
+    $wurzel =~ s{/\.git\z}{};
+}
+unless (length $wurzel) {
+    $wurzel = `git rev-parse --show-toplevel 2>/dev/null`;
+}
 chomp $wurzel;
 exit 0 unless $wurzel && -d $wurzel;
 

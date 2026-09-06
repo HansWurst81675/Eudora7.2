@@ -106,6 +106,11 @@ extern QCStationeryDirector	g_theStationeryDirector;
 
 #include "DebugNewHelpers.h"
 
+// Befund E-27: Spurmarken auf dem Weg von Strg-N. Der Absturz beim Verfassen
+// beendet Eudora ohne jede Meldung; die letzte geschriebene Marke in
+// eudora.log sagt, wie weit der Weg gekommen ist.
+#include "debug.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // CCompMessageDoc
@@ -136,6 +141,7 @@ BOOL CCompMessageDoc::InitializeNew
 	const char  ResponseType
 )
 {
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CCompMessageDoc::InitializeNew: Anfang");
 	m_Headers[HEADER_TO] = To;
 	m_Headers[HEADER_FROM] = From? From : GetReturnAddress();
 	m_Headers[HEADER_SUBJECT] = Subject;
@@ -210,6 +216,7 @@ BOOL CCompMessageDoc::InitializeNew
            	ErrorDialog(IDS_ERR_MISSING_ATTACHMENT);
    	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 InitializeNew: Anhaenge geprueft, lege CSummary an");
 	m_Sum = DEBUG_NEW_MFCOBJ_NOTHROW CSummary;
 	CTocDoc* OutToc;
 
@@ -221,7 +228,9 @@ BOOL CCompMessageDoc::InitializeNew
 	m_Sum->m_TimeZoneMinutes = -GetGMTOffset() * 60;
 	m_Sum->m_Seconds = time(NULL) - m_Sum->m_TimeZoneMinutes;
 		
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 InitializeNew: vor OutToc->AddSum (meldet den Suchindex)");
 	OutToc->AddSum(m_Sum);
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 InitializeNew: nach OutToc->AddSum");
 
 	// Turn off notifying search manager (don't need to save previous value
 	// because the summary was just created)
@@ -265,6 +274,7 @@ BOOL CCompMessageDoc::InitializeNew
 		break;
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 InitializeNew: Titel gesetzt, jetzt die Uebersetzer");
 	RemoveIniFromCache(IDS_INI_DEFAULT_TRANSLATOR);
 	CString defINITrans = GetIniString(IDS_INI_DEFAULT_TRANSLATOR); 
 	
@@ -2231,6 +2241,7 @@ CCompMessageDoc* NewCompDocument
 
 #endif // COMMERCIAL
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewCompDocument: lege das Dokument an");
 	// create the new doc with the defaults
 	NewCompDoc = (CCompMessageDoc*)NewChildDocument(CompMessageTemplate);
 	if (NewCompDoc)
@@ -2311,8 +2322,10 @@ CCompMessageDoc* NewCompDocument
 	}
 //FORNOW	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewCompDocument: vor ApplyPersona");
 	// Add personality overrides
 	NewCompDoc->ApplyPersona( csPersona );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 NewCompDocument: nach ApplyPersona");
 	
 	g_Personalities.SetCurrent( csCurPersona );	// go back to default persona
 

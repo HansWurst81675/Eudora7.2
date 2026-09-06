@@ -56,3 +56,9 @@ Eudora71/OpenSSL/out32/
 # Eudora71/Eudora/BuildKennung-vorlage.h mit "unbekannt"; der PreBuildEvent
 # kopiert sie, wenn perl fehlt. Befund PR-4/W-1.
 Eudora71/Eudora/BuildKennung.h
+
+# Absturzauswertung: die 2005er dbghelp.dll aus dem Originalbestand hat den
+# Absturzbehandler selbst zum Absturz gebracht (05.09.2026 22:46). Windows
+# bringt eine neuere mit (10.0.19041) und findet sie, sobald keine im
+# Programmverzeichnis liegt. Wiederherstellbar aus git: 567a5d8.
+Eudora71/Bin/Release/dbghelp.dll

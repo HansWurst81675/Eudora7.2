@@ -13,17 +13,50 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > `WEITERMACHEN.md`, `PORTIERUNG.md` und `Releases/PAKETE.md` verweisen hierher,
 > statt sie zu wiederholen. Wer den Stand ändert, ändert ihn **hier**.
 
-Stand **06.09.2026**, gemessen an Fassung **7.2.0.10 / Paket 1.0.10** (die
-zuletzt gepackte und gestartete; Quellstand ist 7.2.0.11).
+Stand **06.09.2026**, gemessen an Fassung **7.2.0.14 / Paket 1.0.14**.
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 0 | Das Paket läuft ohne Nachinstallieren | **nicht belegt** — auf keinem Rechner **ohne** Visual Studio ausgepackt und gestartet. Der einzige Lauf auf einem fremden Rechner war am 31.08. der **Debug**-Bau mit beigelegten, nicht verteilbaren DLLs (E-8) |
-| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — Gregor hat mehrere Fassungen in der VM gestartet und bedient. Der Absturz nach *Weiter* im Kontoassistenten (**E-25**) ist an der Ursache behoben, aber **ungeprüft** |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), der Titel trägt die Bau-Kennung (E-7), der Fortschritt beim Abruf ist sichtbar (E-13), Umlaute stimmen (Z-2, Z-2b), „In" steht nur noch einmal unter *Recent* (E-24). **Offen:** Strg-N stürzt ab, Doppelklick öffnet keine Nachricht, Suchtreffer sind nicht anklickbar, Meldung „Encountered an improper argument" |
-| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor am 06.09.2026 bestätigt. Zuvor am 31.08. 159 Nachrichten von `mx.freenet.de` über Port 110 mit STARTTLS (E-1, E-3) |
+| 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen |
+| 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), der Titel trägt die Bau-Kennung (E-7), der Fortschritt beim Abruf ist sichtbar (E-13), Umlaute stimmen (Z-2, Z-2b), „In" steht nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen wieder ihr Symbol (E-30, an 7.2.0.14 bestätigt), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen einer HTML-Nachricht |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor am 06.09.2026 bestätigt |
 
-**Zwei von vier Kriterien sind belegt, eines fast, eines offen.**
+**Drei von vier Kriterien sind belegt, eines fast.**
+
+## Die zweite Stufe: benutzbar, nicht nur lauffähig
+
+Von Gregor am 06.09.2026 gesetzt, nachdem Kriterium 0 gefallen war. Ein
+Mailprogramm, das keine Mail schreiben kann, ist kein Mailprogramm — die vier
+Kriterien oben messen, ob es *läuft*, diese drei messen, ob man **damit
+arbeiten** kann.
+
+| # | Kriterium | Stand |
+|---|---|---|
+| 4 | **Keine Abstürze** | **fast** — Strg-N und *Weiterleiten* beenden Eudora nicht mehr (E-31, 06.09.2026). Es bleibt eine Meldung „An unhandled exception has occurred", und unter dem Debugger tritt ein zweiter, fokusabhängiger Fehler zutage: `0xC000041D` in `AutoCompleterListBox::KillACListBox` |
+| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **teilweise** — das Verfassen-Fenster **entsteht** jetzt. Schreiben und Abschicken ist noch nicht geprüft |
+| 6 | **Eine Mail lässt sich weiterleiten** | **teilweise** — derselbe Weg, ebenfalls kein Absturz mehr |
+
+**Die Ursache war eine einzige Zeile** (**E-31**), gemessen am 06.09.2026:
+`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` definierte `pg_time_t` als `time_t`.
+Unter VC6/VC7.1 waren das **vier** Byte, unter VS2022 sind es **acht** —
+`Paige32.dll` von 2005 rechnet mit vier. Damit war **jede** Struktur verschoben,
+die Eudora an Paige reicht: `def_style.procs` lag bei 536 statt 524,
+`sizeof(style_info)` bei 304 statt 292. `PgGlobals::InitFonts` schrieb bei jedem
+Start zwölf Byte über `def_style` hinaus, und ein Funktionszeiger zeigte ins
+Leere — das war der Stapelüberlauf.
+
+Bis dahin entstand in dieser Portierung **kein einziges Paige-Fenster**.
+
+Kriterien 4 bis 6 hängen am selben Fehler (**E-27**). Gemessen an Gregors
+Protokoll vom 06.09.2026: beide Wege enden in
+`CCompMessageFrame::OnCreateClient` zwischen `CreateStatic` und dem Anlegen der
+beiden Ansichten — also in `CreateView` für `CHeaderView` oder
+`PgCompMsgView`. Ein `Exception.log` entsteht dabei **nicht**; der
+Absturzbehandler kommt nicht zum Zug, was zu Heap-Beschädigung oder
+Sofortabbruch passt.
+
+**Erst wenn alle sieben Kriterien erfüllt sind, ist Eudora benutzbar.**
 
 **Erst wenn alle Kriterien erfüllt sind, darf eine Fassung „lauffähig" heißen.**
 Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung". Die
