@@ -21,3 +21,4 @@
 - [main muss immer baubar sein](main-muss-immer-baubar-sein.md) — Maßstab ist der frische Klon, nicht der eigene Arbeitsbaum
 - [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen
 - [Nie direkt auf main](nie-direkt-auf-main.md) — jede Änderung über einen eigenen Zweig; Gregor merged, nicht ich
+- [Mannschaft fuehren](mannschaft-fuehren.md) — Auftrag ohne Symptom liefert nichts; jeden Ruecklauf selbst nachmessen, nicht weitergeben
