@@ -14,16 +14,18 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.12** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.13** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.12**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.13**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
-> getrennt ein. **Gepackt ausgeliefert ist 1.0.10**
-> (`Releases/Eudora72-1.0.10-release.zip`). Ein **Paket 1.0.12 gibt es noch
-> nicht**, obwohl `VERSION` die Nummer schon trägt; es soll erst entstehen,
-> wenn der Strg-N-Absturz behoben ist. Wer die beiden Zahlen verwechselt, sucht
-> Fehler in einer Datei, die niemand hat.
+> getrennt ein.
+>
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.13-release.zip`,
+> geschnürt am 06.09.2026 aus Commit `8f39527`, geprüft mit
+> `tools/paket-pruefen.ps1` (*„keine Fehler", „In der Startkette fehlt
+> nichts", Kriterium 0 — JA*). Die Bau-Kennung im Fenstertitel nennt beide
+> Nummern plus den Commit, ein Bildschirmfoto ist damit eindeutig zuzuordnen.
 >
 > Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
 > git-Verlauf — hier nicht.
@@ -50,26 +52,57 @@ Belegt:
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
 | **Kriterium 0 — alle vier Ziele erfüllt** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
+### Was an 7.2.0.13 zu prüfen ist
+
+Paket: `Releases/Eudora72-1.0.13-release.zip`. Auspacken, **`Eudora starten.cmd`**
+doppelklicken (nicht `Eudora.exe` — der Starter übergibt das Mailverzeichnis).
+
+| Prüfen | erwartet | wenn nicht |
+|---|---|---|
+| **Doppelklick** auf eine Nachricht | öffnet sie | E-28 greift nicht |
+| **Suchtreffer anklicken** | öffnet die Nachricht | dito |
+| **Strg-N** | war bisher lautloser Tod | siehe unten — jetzt hinterlässt es Spuren |
+| **Beenden** | sauber | Absturz war bisher offen |
+| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe | E-30 noch offen, Symbole fehlen dort |
+
+**Strg-N ist der wichtigste Punkt, und er ist jetzt auswertbar.** Bisher starb
+das Programm ohne jede Spur. Der Grund ist gefunden: der Absturzbehandler hing
+nur an `SetUnhandledExceptionFilter`, und vier Wege gehen daran vorbei —
+Heap-Beschädigung, der `/GS`-Wächter, ein ungültiges Argument an die
+C-Laufzeit, und `std::terminate`. Drei davon sind seit 7.2.0.13 angemeldet und
+schreiben Klartext.
+
+Nach einem Strg-N-Absturz also **zwei Dateien** im Mailverzeichnis ansehen:
+
+- **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
+  noch erreicht wurde. 15 Spurmarken liegen auf dem Weg; sie schreiben **ohne**
+  INI-Änderung.
+- **`Exception.log`** — enthält jetzt die Modultabelle. Damit:
+
+```bash
+perl tools/absturz-auswerten.pl
+```
+
+Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
+Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
+Heap-Beschädigung — dann hilft nur Page Heap (siehe unten).
+
 ### Offen — Stand 06.09.2026
 
-- **Strg-N** (neue Nachricht) beendet Eudora **lautlos**, ohne Meldung
+- **Strg-N** beendet Eudora; die schuldige Zeile ist **nicht** gefunden. Beste
+  Spur: `Paige32.dll` und `EuMemMgr.dll` sind vorgebaute Binärdateien von 2005,
+  die `malloc`/`free` aus `MSVCR71` holen — **zwei getrennte Halden** neben der
+  UCRT von `Eudora.exe`. Das Verfassen-Fenster ist der Hauptbenutzer von Paige.
+  Speicher, der über diese Grenze gereicht wird, ergibt genau `0xC0000374`
 - **Beenden** bricht ab
-- **Werkzeugleiste:** abgeschaltete Knöpfe zeigen kein Symbol, sondern eine
-  leere graue Fläche (E-30, in Arbeit). Am 06.09.2026 an 7.2.0.10 gesehen:
-  im Fenster *Find Messages* fehlen genau die Symbole der Knöpfe, die dort
-  nicht anwendbar sind
+- **Werkzeugleiste:** abgeschaltete Knöpfe zeigen kein Symbol (E-30, in
+  Arbeit). Die Symbole selbst sind in Ordnung — sie erscheinen im Hauptfenster
+  vollständig und fehlen nur dort, wo der Knopf abgeschaltet ist. Gemessen:
+  `SetDisabledImageList` kommt im Projekt nicht vor, und die Bilderliste wird
+  mit `ILC_COLORDDB` angelegt (heute 32 Bit statt der 8, für die der Code
+  geschrieben wurde). Siehe [Befunde/SYMBOLE-VORARBEIT.md](Befunde/SYMBOLE-VORARBEIT.md)
 - Meldung **„Encountered an improper argument"** — reproduzierbar: *Find
-  Messages*, Suche mit einem Treffer, dann erscheint der Dialog (7.2.0.10)
-
-In Behebung, aber noch nicht von Gregor bestätigt:
-
-- **Doppelklick** auf eine Nachricht und **Suchtreffer anklicken** — Ursache
-  gefunden und behoben (**E-28**): `CSummary::m_FrameWnd` blieb als Zeiger auf
-  einen zerstörten Rahmen stehen, wenn ein Nachrichtenfenster geöffnet und
-  geschlossen wurde, **ohne** es zu verschieben oder in der Größe zu ändern.
-  Das Löschen des Rückzeigers stand in `CMessageFrame::OnDestroy` innerhalb von
-  `if (m_InitialSize != wp.rcNormalPosition)`. Gesetzt wird er dagegen
-  bedingungslos in `ActivateFrame`. Erst ab 7.2.0.13 im Bau.
+  Messages*, Suche mit einem Treffer (7.2.0.10)
 
 ### Die Suche nach der Wurzel der Abstürze
 
