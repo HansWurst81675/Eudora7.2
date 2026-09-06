@@ -34,6 +34,9 @@
 #include "MiniDump.h"
 #include "DebugNewHelpers.h"
 
+// Fuer die Modultabelle im Absturzbericht (Befund E-26).
+#include <tlhelp32.h>
+
 // Constants
 #define BUFF_SIZE 2048
 
@@ -319,6 +322,67 @@ QCExceptionHandler::QCCrashHandler(
 }
 
 
+
+// ------------------------------------------------------------------------------------------
+//		* WriteModuleTable														 [Protected]
+// ------------------------------------------------------------------------------------------
+//	Writes the load address of every loaded module into the exception report.
+//
+//	Ohne diese Tabelle sind die Adressen im Aufrufstapel nicht auswertbar.
+//	Windows laedt Eudora.exe verschoben (ASLR); die im Kopf der Datei
+//	vorgesehene Basis 0x00400000 gilt also nicht. Wer eine Stapeladresse einem
+//	Funktionsnamen zuordnen will, braucht Adresse minus Ladeadresse - erst
+//	dieser Versatz steht in Eudora71/Bin/Release/Eudora.map.
+//
+//	Am 06.09.2026 scheiterte genau daran die Auswertung eines Absturzes von
+//	7.2.0.12: gerechnet wurde gegen 0x00400000, und heraus kam ein Name aus dem
+//	Ressourcenbereich - sichtbarer Unsinn. Die Ladeadresse stand nirgends im
+//	Bericht. Seither steht sie hier. Befund E-26.
+//
+//	Toolhelp statt EnumProcessModules: es braucht keine zusaetzliche Bibliothek
+//	und funktioniert auch dann noch, wenn der Prozess bereits beschaedigt ist.
+
+void
+QCExceptionHandler::WriteModuleTable()
+{
+	HANDLE		hSnap = ::CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, ::GetCurrentProcessId());
+
+	if (INVALID_HANDLE_VALUE == hSnap)
+	{
+		_tprintf( _T("Loaded modules: not available (error %lu)\r\n\r\n"), ::GetLastError() );
+		return;
+	}
+
+	_tprintf( _T("Loaded modules - subtract the load address from a stack address to get\r\n") );
+	_tprintf( _T("the offset listed in the .map file of that module:\r\n") );
+	_tprintf( _T("Load address  Size      Module\r\n") );
+
+	MODULEENTRY32	Entry;
+
+	::ZeroMemory( &Entry, sizeof(Entry) );
+	Entry.dwSize = sizeof(Entry);
+
+	if (::Module32First(hSnap, &Entry))
+	{
+		do
+		{
+			_tprintf( _T("%08lX      %08lX  %s\r\n"),
+					  (unsigned long)(DWORD_PTR)Entry.modBaseAddr,
+					  (unsigned long)Entry.modBaseSize,
+					  Entry.szModule );
+		}
+		while (::Module32Next(hSnap, &Entry));
+	}
+	else
+	{
+		_tprintf( _T("  (Module32First failed, error %lu)\r\n"), ::GetLastError() );
+	}
+
+	::CloseHandle( hSnap );
+
+	_tprintf( _T("\r\n") );
+}
+
 // ------------------------------------------------------------------------------------------
 //		* GenerateExceptionReport												 [Protected]
 // ------------------------------------------------------------------------------------------
@@ -342,6 +406,10 @@ QCExceptionHandler::GenerateExceptionReport(
 		_tprintf( _T("%s\r\n"), TimeStr);
 	}
 	_tprintf( _T("%s\r\n\r\n"), EUDORA_BUILD_VERSION);
+
+	// Erst die Ladeadressen, dann der Stapel - ohne sie sind dessen
+	// Adressen keinem Funktionsnamen zuzuordnen (Befund E-26).
+	WriteModuleTable();
 
 	DWORD			dwOpts = GSTSO_PARAMS | GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE;
 	const TCHAR *	szBuff = NULL;

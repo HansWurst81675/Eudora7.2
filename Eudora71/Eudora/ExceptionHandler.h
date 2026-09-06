@@ -35,6 +35,9 @@ class QCExceptionHandler
 	static void					SecurityErrorHandler();
 	static void					GenerateBufferOverflowReport();
 
+	// Schreibt die Ladeadresse jedes Moduls in den Bericht (Befund E-26).
+	static void				WriteModuleTable();
+
 	// Helper functions
 	static int __cdecl			_tprintf(const TCHAR * format, ...);
 		
