@@ -49,8 +49,14 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 >
 > Die OT501-Ersatzschicht ist damit vollständig: Verlauf der ungelösten Externen
 > 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**. Die leere Attrappe
-> `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
-> `LinkLibraryDependencies` auf `false`, `Eudora.vcxproj:1015`).
+> `OTA50D.LIB` wird nicht mehr gebraucht: `_SECNOMSG` steht unter
+> `PreprocessorDefinitions`, und jeder der **15** `ProjectReference`-Einträge in
+> `Eudora.vcxproj` trägt `<ReferenceOutputAssembly>false</ReferenceOutputAssembly>`.
+> (Hier stand bis zum 07.09.2026 „`LinkLibraryDependencies` auf `false`,
+> `Eudora.vcxproj:1015`". Beides ist falsch: das Element heißt
+> `ReferenceOutputAssembly`, und `LinkLibraryDependencies` kommt in der Datei
+> überhaupt nicht vor. Die Berichtigung vom 06.09.2026 weiter unten sagt
+> ohnehin schon, dass die Zeilenangabe nicht stimmt.)
 >
 > Dass Eudora überhaupt startet, war der Schritt vom 30.08.2026 (Paket 1.0.2):
 > der Absturz beim Start war die Werbefläche — Befund S-2. `EudoraRes.dll` wird
@@ -228,7 +234,7 @@ andere werden nie aufgerufen; `SECStatusBar` erledigt ein `typedef`.
 
 **Alle fünf Teile sind eingehängt** (`e50a89c`). Stand an `a807b93`, gezählt mit
 `wc -l` und geprüft gegen `OTShimAll.h` sowie die `ClCompile`-Einträge in
-`Eudora.vcxproj:217`:
+`Eudora.vcxproj` (`grep -n OTShim Eudora71/Eudora/Eudora.vcxproj`):
 
 | Stufe | Dateien | Zeilen | eingehängt? |
 |---|---|---|---|
@@ -785,8 +791,9 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   28.08.2026 2003, am 29.08.2026 2183. Die bereits **getrackten** Altbestände bleiben
   sichtbar — sie müssten per `git rm --cached` aus dem Index.
 - **Drei Blocker unabhängig von OT501**, gefunden bei der Familienanalyse:
-  `statbar.h:71` deklariert `afx_msg void OnTimer(UINT)`, `ON_WM_TIMER()` verlangt in
-  MFC 14 aber `UINT_PTR`; der PNG-Code in `QCGraphics.cpp` greift an vier Stellen
+  `statbar.h` deklariert in `CStatusBarEx` `afx_msg void OnTimer(UINT)`,
+  `ON_WM_TIMER()` verlangt in MFC 14 aber `UINT_PTR`; der PNG-Code in
+  `QCGraphics.cpp` greift an vier Stellen
   direkt in die libpng-Strukturen (libpng-1.2-API, seit 1.4 gekapselt): `306`
   (`png_ptr->error_ptr` im Warn-Callback `libpng_warning`), `313` und `316`
   (`png_ptr->error_ptr` bzw. `longjmp(png_ptr->jmpbuf, 1)` im Fehler-Callback
@@ -945,7 +952,7 @@ und **`utf-8` liegt gar nicht im durchsuchten Bereich** (er endet bei
 
 **Über IMAP wird also kein einziger Zeichensatz übersetzt** — weder vorher noch
 nachher. Die Umstellung wirkt damit ausschließlich auf dem POP-Pfad
-(`lex822.cpp:544` für Kopfzeilen nach RFC 2047, `TextReader.cpp:251` für den
+(`lex822.cpp:544` für Kopfzeilen nach RFC 2047, `TextReader::ReadIt` für den
 Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
 `ImapDownload.cpp` auf `FindMIMECharset()` umstellen; das ist eine eigene
 Änderung mit eigenen Tests.
@@ -956,7 +963,8 @@ Ebenfalls Altbestand, ebenfalls nicht von dieser Umstellung verursacht.
 `ISOTranslate()` verkürzt den Puffer und gibt die neue Länge zurück. Zwei
 Aufrufer werfen den Rückgabewert weg und rechnen mit der **alten** Länge weiter:
 
-- `Eudora71/Eudora/TextReader.cpp:251` — `size` bleibt unverändert
+- `Eudora71/Eudora/TextReader.cpp`, `TextReader::ReadIt` — `size` bleibt
+  unverändert
 - `Eudora71/EuImap/src/ImapDownload.cpp:4662` — `inLen` bleibt unverändert
 
 Hinter dem übersetzten Text steht dann die Null, die `ISOTranslate` schreibt, und

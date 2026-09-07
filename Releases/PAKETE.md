@@ -124,6 +124,31 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.18 — veröffentlicht am 06.09.2026
+
+Die Fassung mit der Behebung von **E-31** (`pg_time_t`) — die erste, in der in
+dieser Portierung überhaupt ein Paige-Fenster entsteht. **Aus Anwendersicht
+bringt sie nichts:** Gregors Urteil lautet *„es crasht nicht, aber es passiert
+auch nichts. beenden kann ich es auch nicht. nichts statt crash ist auch keine
+verbesserung!"* Der Grund ist **E-32**, behoben erst am 07.09.2026 und damit
+**nicht** in diesem Paket.
+
+| | |
+|---|---|
+| Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18 |
+| Marke | `v1.0.18` auf Commit `e881164` (`git ls-remote --tags origin`) |
+| ZIP | `Eudora72-1.0.18-release.zip`, 9.330.115 B |
+| SHA256 | `809e005f31eb72dbe349175b97b6838e7341c25c872fc4625f682657200b7e72` |
+| Eudora.exe | 2.943.488 B, `Release\|Win32` |
+| Quellstand | 7.2.0.18 (`Eudora71/Version.h`) |
+
+Alle Zahlen am 07.09.2026 nachgemessen: `stat -c%s`, `sha256sum` gegen die
+beiliegende `.sha256`, `unzip -l` für die `Eudora.exe`.
+
+> **1.0.4 bis 1.0.17 haben weiter keinen Eintrag** (Mangel **M-4**). Für
+> 1.0.14 und 1.0.15 liegen die ZIPs im Repo, für die übrigen nicht — erfunden
+> wird hier nichts.
+
 ## 1.0.3 — veröffentlicht am 31.08.2026, ZIP einmal ausgetauscht
 
 **Release-Bau.** Erste Fassung, die ohne die vier nicht verteilbaren
@@ -146,7 +171,7 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 | | |
 |---|---|
 | Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
-| ZIP | `Eudora72-1.0.3-release.zip`, `Eudora.exe` 2 933 248 B, `Release\|Win32` |
+| ZIP | `Eudora72-1.0.3-release.zip`, 9.209.393 B; darin `Eudora.exe` **2.933.760 B**, `Release\|Win32`. Nachgezählt am 07.09.2026 mit `unzip -l Releases/Eudora72-1.0.3-release.zip` — hier stand bis dahin 2 933 248 B, das sind 512 Byte zu wenig |
 | SHA256 (gültig) | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
 | SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
 | Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
