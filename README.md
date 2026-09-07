@@ -216,7 +216,9 @@ sh tools/hooks-einrichten.sh
 
 Das war es. Der Hook liegt unter `.git/hooks` und wird von git nicht
 mitversioniert, muss also je Klon einmal eingerichtet werden; er prüft vor jedem
-Commit Zeilenenden, Kodierung und Zweigwahl.
+Commit Zweigwahl, Zeilenenden, Kodierung — und, sobald eine `.md`, `VERSION`
+oder `Eudora71/Version.h` mit im Commit ist, die Doku gegen sich selbst
+(`tools/doku-pruefen.pl`).
 
 **Zeilenenden sind kein Thema mehr.** [.gitattributes](.gitattributes) setzt
 `* -text` und schaltet damit jede Umwandlung durch git ab — beim Auschecken wie
@@ -418,6 +420,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. Nennt jede angefasste Datei namentlich, lässt vorgemerkte Dateien in Ruhe; die Gegenrichtung nur mit `--auch-umgekehrt` |
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
+| `tools/doku-pruefen.pl` | `pre-commit`-Schranke gegen Widersprüche in der Doku: Kriterienzahl gegen [ZIEL.md](ZIEL.md), doppelt vergebene Befundkennungen, Statuswidersprüche im Verzeichnis von [BEFUNDE.md](BEFUNDE.md), was im CHANGELOG als offen steht aber im Verzeichnis als behoben, Verweise ins Leere, und `Eudora71/Version.h` gegen sich selbst. Weist **nur** ab, wenn der Commit eine `.md`, `VERSION` oder `Version.h` anfasst. Auf Gregors Ansage *„ich traue dir nicht ganz, jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"* |
 | `tools/pruefe-bytes.pl` | `pre-commit`-Schranke gegen lautlosen Byteschaden: Zeilenenden, Kodierung, Doppelkodierung |
 | `tools/pruefe-bytes-tests.pl` | Testsammlung dazu, **35 Fälle** in eigenen Wegwerf-Repos. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen** |
 | `tools/pruefe-branch.pl` | `pre-commit`-Schranke gegen Commits auf einen toten Zweig: schon in `origin/main`, Gegenstück auf dem Server gelöscht, oder abgelöster HEAD. Läuft als **erster** Schritt im Hook; `--melden` berichtet nur (Befund X-5) |
@@ -425,7 +428,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen |
 | `tools/hooks-einrichten.sh` | richtet den `pre-commit`-Hook ein. Nach jedem Klon einmal. Schreibt nach `--git-common-dir`, läuft also auch aus einem Arbeitsbaum |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe` |
-| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (ab 7.2.0.14) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
+| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (**ab 7.2.0.13**, ausgeliefert erstmals in Paket 1.0.14) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
 | `tools/absturz-auswerten-tests.pl` | Testsammlung dazu, **15 Fälle** mit künstlicher Karte und künstlichem Bericht. **Wer `absturz-auswerten.pl` anfasst, lässt sie laufen** |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. 18 Treffer, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio |
 | `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: steht vorher ein `GetBuffer` auf **derselben** Variablen? Das ist die Fehlerklasse **R-1**. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio |

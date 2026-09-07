@@ -51,7 +51,18 @@ perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?
 perl "$WURZEL/tools/release-pruefen.pl" >/dev/null 2>&1 || \
   perl "$WURZEL/tools/release-pruefen.pl" || true
 
-# 4. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 4. Doku gegen sich selbst pruefen - aber nur, wenn dieser Commit die Doku oder
+#    die Versionsangaben anfasst. Ein Commit, der nur Quelltext aendert, soll
+#    nicht an einem Widerspruch zwischen zwei Markdown-Dateien haengen bleiben.
+#
+#    Gregor am 07.09.2026: "ich hasse es, wenn in den dokus falsche oder
+#    veraltete infos und werte stehen. das muss immer parallel gleich erledigt
+#    werden, klar?" - deshalb ueberhaupt abweisend (Befund L-7).
+if git diff --cached --name-only | grep -qE '(\.md$|^VERSION$|Eudora71/Version\.h$)'; then
+  perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
+fi
+
+# 5. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 
@@ -63,9 +74,11 @@ echo "Der Hook prueft in dieser Reihenfolge:"
 echo "  1. tools/pruefe-branch.pl    lebt der Zweig, auf den hier committet wird?"
 echo "  2. tools/lehren-spiegeln.pl  sind die Lehren im Repo?"
 echo "  3. tools/release-pruefen.pl  meldet nur, weist nicht ab"
-echo "  4. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo "  4. tools/doku-pruefen.pl     stimmt die Doku mit sich selbst? (nur bei"
+echo "                               Doku- oder Versionsaenderungen abweisend)"
+echo "  5. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
-echo "Die abweisenden Schritte 1, 2 und 4 werten JEDEN Rueckgabewert aus -"
+echo "Die abweisenden Schritte 1, 2, 4 und 5 werten JEDEN Rueckgabewert aus -"
 echo "genau das fehlte bis zum 31.08.2026 bei Schritt 2 (Befund X-2), und im"
 echo "eingerichteten Hook fehlte es bis zum 05.09.2026 immer noch (X-5)."
 echo
