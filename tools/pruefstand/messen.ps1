@@ -14,6 +14,7 @@
 param(
   [string]$Wurzel   = (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)),
   [string]$Pdb      = '',
+  [string]$Kopfdateien = '',
   [string[]]$Zusatz = @(),
   [string]$Arbeit   = ''
 )
@@ -21,6 +22,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 if (-not $Pdb)    { $Pdb    = Join-Path $Wurzel 'Eudora71\Bin\Release\Paige32.pdb' }
+if (-not $Kopfdateien) { $Kopfdateien = Join-Path $Wurzel 'Eudora71\PaigeDLL\PGHEADER' }
 if (-not $Arbeit) { $Arbeit = Join-Path $env:TEMP ('paige-messen-' + [guid]::NewGuid().ToString('N').Substring(0,8)) }
 
 function Finde-Cl {
@@ -59,7 +61,7 @@ New-Item -ItemType Directory -Force -Path $Arbeit | Out-Null
 Push-Location $Arbeit
 try {
   Write-Host (' cl        ' + $cl)
-  Write-Host (' PGHEADER  ' + (Join-Path $Wurzel 'Eudora71\PaigeDLL\PGHEADER'))
+  Write-Host (' PGHEADER  ' + $Kopfdateien)
   Write-Host (' DLL-PDB   ' + $Pdb)
   Write-Host (' Arbeit    ' + $Arbeit)
 
@@ -74,7 +76,7 @@ try {
   $argumente = @('/nologo','/Zi','/MD','/W3','/DWIN32','/D_WINDOWS','/DWIN32_COMPILE',
                  '/DNDEBUG','/DOEMRESOURCE','/D_CRT_SECURE_NO_WARNINGS') +
                $Zusatz +
-               @(('/I' + (Join-Path $Wurzel 'Eudora71\PaigeDLL\PGHEADER')), $q2,
+               @(('/I' + $Kopfdateien), $q2,
                  '/Feheute.exe','/Fdheute.pdb')
   & $cl @argumente 2>&1 | Where-Object { $_ -match 'error' } | ForEach-Object { Write-Host $_ -ForegroundColor Red }
   if (-not (Test-Path 'heute.pdb')) { Write-Host 'paige-groessen.cpp hat keine PDB erzeugt.' -ForegroundColor Red; exit 2 }
