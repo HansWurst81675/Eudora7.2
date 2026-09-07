@@ -3,27 +3,26 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 06.09.2026.** Der jüngste
+> **Diese Buchführung ist unvollständig — Stand 07.09.2026.** Der jüngste
 > ausführliche Abschnitt unten ist **1.0.3** vom 31.08.2026. Die Pakete
-> **1.0.4 bis 1.0.10** haben hier keinen Eintrag, obwohl sie gebaut und
-> teilweise veröffentlicht wurden; im Repo liegen als ZIP:
+> **1.0.4 und später** haben hier keinen eigenen Eintrag, obwohl sie gebaut und
+> teilweise veröffentlicht wurden. Im Repo liegen als ZIP (`ls Releases/*.zip`,
+> nachgezählt am 07.09.2026): **1.0.1, 1.0.2, 1.0.3, 1.0.4, 1.0.10, 1.0.14,
+> 1.0.15** und **1.0.18**, dazu `Eudora72-QCSSL-1.0.1.zip`. Als Marke
+> veröffentlicht sind `v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.10`, `v1.0.14`,
+> `v1.0.15` und `v1.0.18` (`git ls-remote --tags origin`).
 >
-> ```sh
-> ls Releases/*.zip
-> ```
->
-> — 1.0.1, 1.0.2, 1.0.3, 1.0.4 und **1.0.10** (die ausgelieferte Fassung), dazu
-> `Eudora72-QCSSL-1.0.1.zip`. Der Quellstand ist inzwischen **7.2.0.12 /
-> Paketnummer 1.0.12**; ein Paket 1.0.12 gibt es noch nicht. Wer wissen will,
-> was in einem dieser Pakete steckt, liest bis dahin `git log` und
-> `BEFUNDE.md`, nicht diese Datei. Der Mangel ist als **M-4** in
-> `PRUEFUNG-CODE.md` festgehalten und weiterhin offen.
+> Der Quellstand ist **7.2.0.18 / Paketnummer 1.0.18**, und das Paket dazu
+> liegt vor. Wer wissen will, was in einem dieser Pakete steckt, liest bis
+> dahin `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei. Der
+> Mangel ist als **M-4** in `PRUEFUNG-CODE.md` festgehalten und weiterhin
+> offen.
 
 ## Drei Zählungen, und wie sie zusammenhängen
 
 | Zählung | wo sie steht | wo man sie sieht |
 |---|---|---|
-| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` | Splash und *Hilfe → Über Eudora*, dazu die Dateiversion der `Eudora.exe` |
+| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` (`EUDORA_BUILD_DESC` → String `IDS_VERSION`) | *Hilfe → Über Eudora*, Startbildschirm, und der `X-Mailer`-Kopf jeder gesendeten Mail. **Nicht** in den Dateieigenschaften: `Eudora.exe` hat gar keinen `VS_VERSION_INFO`-Block (nachgesehen am 07.09.2026 in `Eudora71/Eudora/*.rc`) |
 | **Paketversion** `1.0.x` | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
 | **QCSSL-Version** `1.0.x` | `qcssl.rc` | Versionsressource der `QCSSL.dll` |
 
@@ -36,18 +35,28 @@ Die QCSSL-Zählung läuft bewusst eigenständig: sie folgt den Quellen der
 TLS-Schicht, nicht dem Paket. Paket 1.0.3 enthält QCSSL 1.0.1, weil sich
 dort seit 1.0.1 nichts geändert hat.
 
-### Wie man die Version hebt — nachgemessen am 06.09.2026
+### Wie man die Version hebt — nachgemessen am 07.09.2026
 
 Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
-**1.0.12 / 7.2.0.12** auf **1.0.13 / 7.2.0.13**.
+**1.0.18 / 7.2.0.18** auf **1.0.19 / 7.2.0.19**.
 
 | Datei | Zeile | von | auf |
 |---|---|---|---|
-| `VERSION` | 1 | `1.0.12` | `1.0.13` |
-| `Eudora71/Version.h` | `EUDORA_VERSION4` | `12` | `13` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,12` | `7,2,0,13` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.12\0"` | `…7.2.0.13\0` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.12"` | `"7.2.0.13"` |
+| `VERSION` | 1 | `1.0.18` | `1.0.19` |
+| `Eudora71/Version.h` | `EUDORA_VERSION4` | `18` | `19` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,18` | `7,2,0,19` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.18\0"` | `…7.2.0.19\0` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.18"` | `"7.2.0.19"` |
+
+> **`EUDORA_BUILD_NUMBER` ist seit 7.2.0.13 nicht mitgezogen worden** und steht
+> am 07.09.2026 auf `7,2,0,12`, während die drei anderen Angaben auf `18`
+> stehen. Kein Werkzeug hat das gemeldet: `tools/ausliefern.pl --pruefen` und
+> `tools/kennung-erzeugen.pl` vergleichen nur `EUDORA_BUILD_VERSION` gegen
+> `VERSION`. Folgenlos ist es nur, weil das Makro derzeit **nirgends benutzt**
+> wird (`grep -rn EUDORA_BUILD_NUMBER Eudora71/` — ein Treffer, die Definition
+> selbst); wer es je in eine `VERSIONINFO`-Ressource einsetzt, bekommt eine
+> `Eudora.exe`, deren Dateiversion nicht zu ihrer Produktversion passt.
+> **`tools/doku-pruefen.pl` meldet den Fall seit dem 07.09.2026.**
 
 Den aktuellen Ausgangswert liest man nicht ab, sondern misst ihn:
 
@@ -214,9 +223,13 @@ Zeitdokument):
 > (Doppelfreigabe in `NSImport.eif`), und selbst die reichte nicht: 7.2.0.12
 > stürzt weiter ab. Zweitens ist der Satz *„keine der beiden veröffentlichten
 > Fassungen ist von jemandem gestartet worden"* längst überholt — seither sind
-> 1.0.4 bis 1.0.10 gebaut und benutzt worden. **Kriterium 0 bleibt trotzdem
-> offen:** kein Paket ist auf einem Rechner **ohne** Visual Studio ausgepackt
-> und gestartet worden (siehe [ZIEL.md](../ZIEL.md) und `README.md`).
+> 1.0.4 bis 1.0.10 gebaut und benutzt worden.
+>
+> **Nachtrag (07.09.2026): Kriterium 0 ist erfüllt.** Der Satz „Kriterium 0
+> bleibt trotzdem offen: kein Paket ist auf einem Rechner **ohne** Visual Studio
+> ausgepackt und gestartet worden" stand hier bis heute. Er ist seit dem
+> 06.09.2026 überholt: Gregor hat `Eudora72-1.0.10-release.zip` genau so
+> gestartet — *„test bestanden: eudora läuft ohne VS2022 installiert."*
 
 ## 1.0.2 — 30.08.2026
 
