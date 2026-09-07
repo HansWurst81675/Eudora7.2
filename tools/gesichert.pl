@@ -272,7 +272,15 @@ if (@baeume) {
                     and git_rc('-C', $p, 'merge-base', '--is-ancestor', "refs/heads/$bn", $haupt) == 0) {
                     $verschmolzen = 1;
                     push @sagen,   "'$bn' ist zusammengefuehrt";
-                    push @hinweis, "Arbeitsbaum $p steht auf '$bn', und der ist bereits in $haupt - dort gehoert auf main gewechselt";
+                    # ACHTUNG, der Rat muss ausfuehrbar sein: ein Arbeitsbaum
+                    # kann NICHT auf main wechseln, solange der Hauptbaum darauf
+                    # steht - git sagt "'main' is already used by worktree at
+                    # ...". Bis zum 07.09.2026 stand hier genau dieser Rat, und
+                    # er scheiterte in allen drei Baeumen. Ein Hinweis, dem man
+                    # nicht folgen kann, ist so schlecht wie ein Fehlalarm.
+                    push @hinweis, "Arbeitsbaum $p steht auf '$bn', und der ist bereits in $haupt - "
+                                 . "dort nachziehen mit  git -C $p merge --ff-only $haupt  "
+                                 . "(nicht 'checkout main': das sperrt der Hauptbaum)";
                 }
             }
 
