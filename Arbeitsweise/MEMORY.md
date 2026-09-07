@@ -37,3 +37,8 @@
 - [Review sieht nur den Diff](review-sieht-nur-den-diff.md) — die veraltete unveränderte Datei steht in keinem Diff; vor dem Merge den Bestand prüfen, nicht die Änderung
 - [Schranke gegentesten](schranke-gegentesten.md) — jede neue Prüfung gegen den echten Fehler und gegen den erlaubten Fall fahren; stumm und Fehlalarm kosten dasselbe
 - [Daueraufgaben brauchen einen Takt](daueraufgaben-brauchen-einen-takt.md) — Lektor, Prüfer, Chronist laufen nach einem Ereignis; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet
+- [Messung muss den Weg treffen](messung-muss-den-weg-treffen.md) — ein Gegentest im falschen Betriebsmodus beweist nichts; `-NurPruefen` ließ die geprüfte Prüfung gar nicht laufen
+- [Gegenprobe umdrehen](gegenprobe-umdrehen.md) — nicht prüfen, ob der gewünschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt (Gregors Technik)
+- [Anwenderdatei nicht erschlagen](anwenderdatei-nicht-erschlagen.md) — was es beim Anwender oder im Original schon gibt, wird gelesen und ergänzt; 124 Dateizuordnungen wären verloren gewesen
+- [Anforderung gehört in den Maßstab](anforderung-gehoert-in-den-massstab.md) — ein Requirement, das nur in der Umsetzung steht, ist keins; nach `ZIEL.md` plus Schranke gegen das Gebaute
+- [ASSERT ist im Release nichts](assert-ist-im-release-nichts.md) — häufigste Ursachenklasse des Projekts; bei „es passiert nichts" zuerst nach `ASSERT(0)` und `VERIFY(` suchen

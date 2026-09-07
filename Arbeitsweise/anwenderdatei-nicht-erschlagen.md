@@ -1,0 +1,75 @@
+---
+name: anwenderdatei-nicht-erschlagen
+description: "Eine Datei, die es beim Anwender oder im Original schon gibt, wird gelesen und ergaenzt - nie neu geschrieben und ins Paket gelegt"
+metadata: 
+  node_type: memory
+  type: feedback
+  originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
+  modified: 2026-09-07T12:45:18.145Z
+---
+
+# Was es schon gibt, wird gelesen — nicht ueberschrieben
+
+Am 07.09.2026 habe ich `tools/DEudora.ini` angelegt, damit neue Konten die
+richtigen Vorgaben bekommen. Meine Fassung hatte **nur** einen `[Settings]`-Teil
+mit sechs Schluesseln — 67 Zeilen. `tools/paket-bauen.ps1` legt sie neben
+`Eudora.exe` ins Paket.
+
+Dann zeigte Gregor seine eigene Datei. Sie traegt zusaetzlich `[Mappings]` mit
+**124 Dateizuordnungen** (128 Zeilen). Wer mein Paket ueber eine bestehende
+Installation auspackt, verliert sie alle.
+
+Es gab keinen Grund, das nicht zu wissen:
+
+- Die Originaldatei von QUALCOMM lag **im Repo**:
+  `InstallersForEudora/Eudora7.1/Data/INIfiles/deudora.ini`, 128 Zeilen,
+  124 Zuordnungen. Ich hatte sie in derselben Stunde sogar geoeffnet.
+- Ich hatte `Eudora71/Eudora/MIMEMap.cpp:225-265` gelesen und richtig
+  festgestellt, dass eine Datei ohne `[Mappings]` beim **Lesen** nichts kaputt
+  macht (`Eudora.ini` zuerst, `DEudora.ini` danach, additiv). Daraus habe ich
+  „kein Risiko" geschlossen — und dabei die **zweite** Wirkung uebersehen:
+  nicht das Lesen ist der Schaden, sondern das **Auspacken ueber die vorhandene
+  Datei**.
+
+Aufgefallen ist es nur, weil Gregor die Datei von sich aus gezeigt hat.
+
+Die Berichtigung war: Originaldatei nehmen, die vier Zusatzzeilen in
+`[Settings]` einfuegen, und **byteweise** nachweisen, dass die 124 Zuordnungen
+unveraendert sind (`cmp` auf die extrahierten Zeilen: gleich). Dazu eine
+Schranke in `tools/doku-pruefen.pl` (Pruefung 11 / A-1), die roter wird, wenn
+die Zuordnungen fehlen — gegengetestet in beide Richtungen.
+
+**Warum:** Ein Werkzeug, das eine Datei erzeugt, sieht die Datei des Anwenders
+nicht. Der Schaden entsteht nicht bei mir, sondern beim Auspacken auf seinem
+Rechner, und er ist dort **nicht zurueckholbar** — es gibt kein `git checkout`
+in einer Installation. Und er wird nicht bemerkt: fehlende MIME-Zuordnungen
+aeussern sich Wochen spaeter als „der Anhang oeffnet falsch".
+
+**Wie anwenden — bevor ein Werkzeug eine Datei schreibt, packt oder kopiert:**
+
+1. **Fragen, ob es sie schon gibt.** Drei Orte durchsuchen, nicht einen:
+   ```
+   git ls-files | grep -i '<name>'
+   find . -iname '<name>' -not -path './.git/*'
+   unzip -l Releases/<letztes Paket>.zip | grep -i '<name>'
+   ```
+   Ein Treffer in `InstallersForEudora/` ist die **Originalfassung des
+   Herstellers** und damit der Ausgangspunkt, nicht eine Altlast.
+2. **Vom Original ausgehen, nur ergaenzen.** Die vorhandene Datei kopieren,
+   meine Zeilen einfuegen, und danach beweisen, dass der Rest identisch ist
+   (Zeilen zaehlen **und** `cmp`). „Ich habe die wichtigen Werte uebernommen"
+   ist kein Beweis.
+3. **Zwei Fragen trennen: liest es sich harmlos, und ueberschreibt es etwas?**
+   Ein additives Leseverhalten im Quelltext sagt nichts ueber das Auspacken.
+4. **Byteform des Originals uebernehmen.** Hier: CRLF, weil
+   `GetPrivateProfileString` sonst Werte verliert — die beiden vorhandenen INIs
+   im Paket hatten CRLF=128, meine erste Fassung nur-LF=67
+   ([[quelldateien-nur-byte-erhaltend-aendern]]).
+5. **Schranke dazu**, die den Verlust melden wuerde, mit Gegentest — sonst
+   passiert es beim naechsten Mal wieder ([[fehlerklassen-abstellen]],
+   [[schranke-gegentesten]]).
+6. **Gregors Testverzeichnis bleibt lesend.** Was dort liegt, wird nicht von mir
+   angefasst; wenn ich es wissen muss, frage ich nach dem Inhalt
+   ([[nichts-auf-gregors-bildschirm-starten]]).
+
+Siehe [[pruefen-statt-vermuten]] und [[lauffaehiges-ergebnis-liefern]].

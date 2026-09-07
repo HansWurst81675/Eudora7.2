@@ -105,6 +105,38 @@ Tages: Meldungsfenster mit `WM_COMMAND`/`IDOK` schließen, dann `WM_COMMAND` mit
 der Befehlskennung an `EudoraMainWindow`. Damit brauche ich Gregor nicht als
 Hand am Bildschirm — nur als den, der entscheidet.
 
+## 7. Nach einem zweiten Durchgang ist der gestagete Stand des ersten veraltet
+
+**Verstoss am 07.09.2026.** Der Agent BEENDER lief zweimal: erst mit 14
+Spurmarken und `SaveOpenWindows` als Spitzenkandidat, danach — mit einer neuen
+Messung von Gregor — mit 28 Marken und einem anderen Verdaechtigen. In seinem
+Arbeitsbaum lagen **gestaged** noch die Doku-Aenderungen des **ersten**
+Durchgangs: `BEFUNDE.md`, `CHANGELOG.md`, `WEITERMACHEN.md` mit „14 Marken" und
+dem ueberholten Kandidaten. Ich habe sie fast uebernommen.
+
+Was richtig war: die **Quelldateien** habe ich als Patch geholt
+(`git -C <Baum> diff --cached -- <Dateien> | git apply`) und danach je Datei den
+Hash verglichen — `QCCustomToolBar.cpp`, `eudora.cpp`, `mainfrm.cpp`,
+`Befunde/BEENDEN.md` alle gleich. Die drei Statusdateien habe ich **selbst**
+neu geschrieben, aus dem Endstand.
+
+**Regel.** Ein Ruecklauf ist an den **Lauf** gebunden, nicht an den Agenten.
+Nach einem zweiten Durchgang gilt:
+
+- **Nicht kopieren, sondern datieren.** Was im Arbeitsbaum gestaged liegt, kann
+  aus dem ersten Durchgang stammen. `git -C <Baum> diff --cached --stat` zeigt
+  *was*, nicht *wann* — die Zahlen im Text entscheiden (hier: „14" gegen „28").
+- **Quelltext uebernehmen, Statusdateien selbst schreiben.** Das ist ohnehin die
+  Regel aus [[agenten-koordinieren]] Punkt 3: `BEFUNDE.md`, `CHANGELOG.md`,
+  `README.md`, `WEITERMACHEN.md`, `AUFGABEN.md` fasst kein Agent an. Liegt dort
+  doch etwas, ist es ein Hinweis, keine Vorlage.
+- **Nach dem Uebernehmen je Datei den Hash gegen den Arbeitsbaum vergleichen**,
+  bevor der Baum zurueckgesetzt wird. `reset --hard` danach ist erst erlaubt,
+  wenn diese Gegenprobe steht.
+- **Der Bericht des Agenten wird gegen den letzten Stand gelesen**, nicht gegen
+  den, den ich im Kopf habe: in einen zweiten Auftrag gehoert, was der erste
+  ergab, damit der Ruecklauf zuordenbar ist.
+
 ## Die Reihenfolge einer Runde
 
 1. **Symptome sammeln** — von Gregor, aus Protokollen, aus eigenen Messungen

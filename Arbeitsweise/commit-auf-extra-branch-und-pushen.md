@@ -30,4 +30,4 @@ aus meiner eigenen, zusammengefassten Sitzungshaelfte fuer die einer zweiten,
 parallel laufenden Sitzung gehalten und Gregor diese Vermutung als Tatsache
 mitgeteilt. Das Reflog zeigte eine einzige durchgehende Kette in einem einzigen
 Arbeitsverzeichnis. Siehe auch
-[[vom-nutzer-geliefertes-material-zuerst-auswerten]].
+[[anweisungen-abarbeiten]].
