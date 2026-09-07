@@ -1,13 +1,13 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: 9512108 -->
+<!-- pruefstand: 060a4bf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 06.09.2026: **7349 Zeilen**, **122** Abschnitte auf zweiter und **200**
-auf dritter Ebene. Nachzählen:
+Gemessen am 07.09.2026: **7373 Zeilen**, **122** Abschnitte auf zweiter und
+**200** auf dritter Ebene. Nachzählen:
 
 ```sh
 wc -l < BEFUNDE.md                  # Zeilen
@@ -29,15 +29,20 @@ Projekt hat genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
 > Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
 > dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
 
-**Stand der Statusspalte:** 06.09.2026, Commit `9512108` (Zweig `wt/lektor`).
+**Stand der Statusspalte:** 07.09.2026, Commit `060a4bf` (Zweig `wt/lektor`).
 Die Einstufung ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
-Nachgezogen am 06.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-2.md`): **Z-3**
-stand auf „offen", ist aber seit `57fe6a4` behoben; **E-14**, **E-16**,
-**E-17**, **E-22**, **E-23**, **E-24**, **E-25** und **E-26** fehlten im
-Verzeichnis ganz und sind eingetragen. Am 05.09.2026 nachgezogen: **E-4** und
-**E-7** standen auf „offen", sind aber behoben; **PR-5** stand an drei Stellen
-auf „offen", ist aber seit `765c39b` behoben. Neu aufgenommen war damals
-**B-3** (OT501 aus dem Bau) und **E-13** (Fortschritt beim Mailabruf).
+Nachgezogen am 07.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-3.md`, L-7):
+**E-30** stand auf „in Arbeit", ist aber behoben und von Gregor bestätigt;
+**E-31**, **E-32** und **E-33** fehlten ganz und sind eingetragen; **R-1** nannte
+25 von 142 Stellen, gemessen sind 21 von 137; und der Kasten, der **E-15** und
+**E-18** bis **E-21** für nie vergeben erklärte, war falsch — alle fünf stehen
+in Quellkommentaren. Nachgezogen am 06.09.2026 (L-6): **Z-3** stand auf „offen",
+ist aber seit `57fe6a4` behoben; **E-14**, **E-16**, **E-17**, **E-22**,
+**E-23**, **E-24**, **E-25** und **E-26** fehlten im Verzeichnis ganz und sind
+eingetragen. Am 05.09.2026 nachgezogen: **E-4** und **E-7** standen auf „offen",
+sind aber behoben; **PR-5** stand an drei Stellen auf „offen", ist aber seit
+`765c39b` behoben. Neu aufgenommen war damals **B-3** (OT501 aus dem Bau) und
+**E-13** (Fortschritt beim Mailabruf).
 
 | Status | Bedeutung |
 |---|---|
@@ -135,7 +140,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | X-5 | Commit um 09:06 auf den um 09:03 zusammengeführten Zweig; die Regel stand nur als Prosa | **behoben** — Schranke im `pre-commit`, 15 Testfälle, Auflagen 7–10 in `AUFGABEN.md` |
 | X-6 | Bau-Lauf: geratene Plattform (`MSB4126`) und Erfolgsmeldung ohne Bau; `tools/bauen.ps1` | **behoben** — das Werkzeug steht, drei Gegenproben grün |
-| R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+| R-1 | die Fehlerklasse hinter E-11 ausgezählt | **offen** — gemessen am 07.09.2026 mit `tools/releasebuffer-pruefen.pl`: **137** Vorkommen, davon 116 richtig gepaart; **21** zu ändern (16 `falsch`, 4 `lockbuffer`, 1 `danach`). Zuerst `QCSharewareManager.cpp:1318` — die Stelle läuft **bei jedem Start**. Liste in `AUFGABEN.md` unter A2, mit dem Werkzeug jederzeit neu zu erzeugen |
 | Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **behoben** (`57fe6a4`) — `ProjectReference` auf `QCUtils.vcxproj` steht in `NSImport`, `OEImport`, `OLImport` und `plstclnt`; am 06.09.2026 in allen vier Projektdateien nachgesehen |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
 
@@ -166,11 +171,30 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache des Schweigens belegt, der Absturz selbst nicht**: der Behandler hing nur an `SetUnhandledExceptionFilter`; Heap-Beschädigung, `/GS`-Wächter, ungültiges Argument an die C-Laufzeit und `std::terminate` gehen daran vorbei. Drei davon sind seit 7.2.0.13 angemeldet, dazu 15 Spurmarken auf dem Weg und ein behobenes `ReleaseBuffer` ohne `GetBuffer` in `PaigeEdtView.cpp`. Beste offene Spur: `Paige32.dll`/`EuMemMgr.dll` gegen `MSVCR71` — zwei getrennte Halden (`Befunde/VERFASSER.md`) |
 | E-28 | **Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken** | **behoben** (`222c0ba`): `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen. Gesetzt wird er bedingungslos in `CMessageFrame::ActivateFrame`, gelöscht wurde er nur innerhalb von `if (m_InitialSize != wp.rcNormalPosition)` — also nur, wenn das Fenster verschoben oder in der Größe geändert wurde (`Befunde/OEFFNEN.md`) |
 | E-29 | die Adressen im Absturzbericht brauchen ein Werkzeug | **behoben** (`029703c`): `tools/absturz-auswerten.pl`, 15 Selbsttests. Löst mit der Modultabelle aus E-26 jede Stapelzeile in einen Funktionsnamen auf — und sagt bei älteren Berichten ausdrücklich, dass es **nicht** geht, statt zu raten (`Befunde/SPUR.md`) |
-| E-30 | abgeschaltete Knöpfe der Werkzeugleiste zeigen kein Symbol | **in Arbeit**. Die Symbole selbst sind in Ordnung: im Hauptfenster erscheinen sie vollständig, im Suchfenster fehlen genau die abgeschalteten. Gemessen: `SetDisabledImageList` kommt im Projekt nicht vor, `QCImageList` legt die Liste mit `ILC_COLORDDB` an (`Befunde/SYMBOLE-VORARBEIT.md`) |
+| E-30 | abgeschaltete Knöpfe der Werkzeugleiste zeigen kein Symbol | **behoben** und von Gregor bestätigt (Paket 1.0.14). Ursache waren die sechs **24-Bit**-Bitmaps der Hauptleiste: ohne Farbtabelle konnte `CreateMappedBitmap` das Buttongrau `192,192,192` nicht auf das heutige `COLOR_BTNFACE` (`240,240,240`) umsetzen, und die Maske erfasste das ganze Bildrechteck. Behoben in `OTShim/OTShim_Werkzeugleiste.cpp`, abgesichert durch `tools/pruefe-symbole.pl` und `Eudora71/Tests/TestSymbole.cpp` (`Befunde/SYMBOLE.md`) |
+| E-31 | `pg_time_t` war unter VS2022 **acht** Byte breit statt vier — damit war jede Paige-Struktur verschoben, und in dieser Portierung entstand nie ein Paige-Fenster | **behoben, ungeprüft** — der Abschnitt steht nicht hier, sondern in `CHANGELOG.md` unter 7.2.0.18 (mit allen Feldversätzen) und als Kommentar in `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H` |
+| E-32 | die **modale** Meldung „An unhandled exception has occurred" beim Verfassen, nach der sich Eudora nicht mehr beenden ließ | **behoben, ungeprüft** (07.09.2026, `060a4bf`): `CHeaderView::OnKillFocusRecipient` dereferenzierte `pField` ungeprüft. Beschrieben im Quellkommentar in `Eudora71/Eudora/headervw.cpp` und in `CHANGELOG.md` |
+| E-33 | *File → Exit* bringt eine Meldung statt sauber zu beenden | **offen** — noch nicht untersucht |
 
-> **E-10, E-15, E-18 bis E-21 gibt es nicht.** Gesucht am 06.09.2026 im ganzen
-> Repo: diese Kennungen sind nie vergeben worden. Lücken in der Nummerierung,
-> keine verlorenen Befunde — wer sie sucht, sucht umsonst.
+> **E-10 ist eine Lücke, E-15 und E-18 bis E-21 sind es NICHT.** Bis zum
+> 07.09.2026 stand hier, alle sechs Kennungen seien nie vergeben worden;
+> gesucht worden war aber nur in den `.md`-Dateien. Fünf davon sind in
+> **Quellkommentaren** vergeben und dort auch begründet:
+
+| Kennung | Worum es geht | Wo es steht | Status |
+|---|---|---|---|
+| E-15 | `ASSERT(g_TaskStatusView != NULL)` widersprach allen drei Aufrufern — sie fragen ausdrücklich auf NULL ab | `Eudora71/Eudora/TaskStatusView.cpp`, `QCGetTaskStatusView` | **behoben** im Quelltext, kein Abschnitt hier |
+| E-18 | `pFld` ohne Prüfung dereferenziert; der Zweig läuft nur bei mehr als einer Persönlichkeit und war bis 05.09.2026 nie betreten | `Eudora71/Eudora/headervw.cpp`, Persönlichkeitsmenü | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
+| E-19 | `ASSERT(0)` in einem **Reparaturzweig** — feuert genau dann, wenn alles wie vorgesehen läuft | `Eudora71/Eudora/tocdoc.cpp`, Reparatur des In-Postfachnamens | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
+| E-20 | `[nLen + 1]` statt `[nIdx + 1]`: geschrieben wird bis `pTemp[nIdx]`, und `nIdx` kann größer als `nLen` sein — dann schrieb die Zeile hinter das Feldende | `Eudora71/Eudora/ListCtrlEx.cpp`, `CListCtrlEx::InsertArr` und `NotifyInsertedCol` | **behoben** im Quelltext, kein Abschnitt hier |
+| E-21 | `ASSERT(0)`, wo `WSAEWOULDBLOCK` (10035) die normale Antwort eines nicht blockierenden Sockets ist | `Eudora71/QCSocket/src/QCWorkerSocket.cpp` | **behoben** im Quelltext, kein Abschnitt hier |
+
+> **E-10** dagegen gibt es tatsächlich nicht — 0 Abschnitte, bestätigt in
+> `PRUEFUNG-BRANCH.md`. Eine Lücke in der Nummerierung, kein verlorener Befund.
+>
+> **Die Lehre:** wer prüft, ob eine Kennung vergeben ist, muss den **Quelltext**
+> mitsuchen. `grep -rn 'E-18\b' --include=*.md` findet fünf Befunde nicht, die
+> es gibt.
 
 ## Unterbefunde, die man einzeln sucht
 

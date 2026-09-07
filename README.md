@@ -1,6 +1,6 @@
 # Eudora 7.2
 
-<!-- pruefstand: 9512108 -->
+<!-- pruefstand: 060a4bf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
@@ -11,20 +11,19 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **06.09.2026**.
+> **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.14** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.18** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.14**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.18**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.14-release.zip`,
-> geschnürt am 06.09.2026 aus Commit `ba7d43a`, geprüft mit
-> `tools/paket-pruefen.ps1` (*„keine Fehler", „In der Startkette fehlt
-> nichts", Kriterium 0 — JA*). Die Bau-Kennung im Fenstertitel nennt beide
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.18-release.zip`,
+> veröffentlicht als [v1.0.18](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18)
+> (Marke auf Commit `e881164`). Die Bau-Kennung im Fenstertitel nennt beide
 > Nummern plus den Commit, ein Bildschirmfoto ist damit eindeutig zuzuordnen.
 >
 > Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
@@ -32,16 +31,19 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Sieben Kriterien stehen in [ZIEL.md](ZIEL.md) — vier sind belegt, eines fast,
-drei nicht.** Eudora baut aus einem frischen Klon, das Paket startet auf einem
+**Acht Kriterien stehen in [ZIEL.md](ZIEL.md) — drei sind belegt, eines fast,
+vier nicht.** Eudora baut aus einem frischen Klon, das Paket startet auf einem
 Rechner ohne Visual Studio, die Darstellung stimmt weitgehend, und Mail wird
 über TLS abgerufen.
 
-**Benutzbar ist es noch nicht.** Verfassen und Weiterleiten öffnen zwar kein
-Fenster mehr mit einem Absturz, aber es erscheint eine **modale** Meldung „An
-unhandled exception has occurred" — und danach lässt sich Eudora nicht einmal
-mehr beenden (**E-32**). Gregors Urteil zu 1.0.18: *„es crasht nicht, aber es
-passiert auch nichts. nichts statt crash ist auch keine verbesserung!"*
+**Benutzbar ist es nicht.** Gregors Urteil zu Paket 1.0.18 vom 06.09.2026: *„es
+crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
+nichts statt crash ist auch keine verbesserung!"* Verfassen und Weiterleiten
+beendeten Eudora zwar nicht mehr, brachten aber eine **modale** Meldung „An
+unhandled exception has occurred", und danach ließ sich Eudora nicht mehr
+beenden. Die Ursache dieser Meldung ist am 07.09.2026 behoben (**E-32**,
+`CHeaderView::OnKillFocusRecipient`) — **auf Gregors Rechner nachgemessen ist
+das noch nicht**, und bis dahin gilt sein Urteil unverändert.
 
 Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md).
 
@@ -55,32 +57,32 @@ Belegt:
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
 | **Kriterium 0 — Paket laeuft ohne Nachinstallieren** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der ersten vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
-### Was an 7.2.0.14 zu prüfen ist
+### Was an 1.0.18 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.14-release.zip`. Auspacken, **`Eudora starten.cmd`**
+Paket: `Releases/Eudora72-1.0.18-release.zip`. Auspacken, **`Eudora starten.cmd`**
 doppelklicken (nicht `Eudora.exe` — der Starter übergibt das Mailverzeichnis).
 
 | Prüfen | erwartet | wenn nicht |
 |---|---|---|
 | **Doppelklick** auf eine Nachricht | öffnet sie | E-28 greift nicht |
 | **Suchtreffer anklicken** | öffnet die Nachricht | dito |
-| **Strg-N** | war bisher lautloser Tod | siehe unten — jetzt hinterlässt es Spuren |
-| **Beenden** | sauber | Absturz war bisher offen |
-| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe | E-30 noch offen, Symbole fehlen dort |
+| **Strg-N** | ein Verfassen-Fenster, das man benutzen kann | in 1.0.18 kommt hier die modale Meldung aus E-32; behoben ist sie erst im nächsten Bau |
+| ***File → Exit*** | beendet sauber | E-33, noch nicht untersucht |
+| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe zeigen ihr Symbol | E-30 greift nicht |
 
-**Strg-N ist der wichtigste Punkt, und er ist jetzt auswertbar.** Bisher starb
-das Programm ohne jede Spur. Der Grund ist gefunden: der Absturzbehandler hing
-nur an `SetUnhandledExceptionFilter`, und vier Wege gehen daran vorbei —
-Heap-Beschädigung, der `/GS`-Wächter, ein ungültiges Argument an die
-C-Laufzeit, und `std::terminate`. Drei davon sind seit 7.2.0.14 angemeldet und
-schreiben Klartext.
+**Strg-N ist der wichtigste Punkt.** Bis 06.09.2026 starb das Programm dort ohne
+jede Spur, und in dieser Portierung entstand nie ein Paige-Fenster. Die Ursache
+ist gefunden und behoben (**E-31**, `pg_time_t` acht Byte statt vier); seither
+läuft der Fensterbau vollständig durch. Was danach noch kam — die modale Meldung
+„An unhandled exception has occurred" — ist am 07.09.2026 behoben (**E-32**),
+**aber in Paket 1.0.18 noch nicht enthalten und von Gregor nicht nachgemessen.**
 
-Nach einem Strg-N-Absturz also **zwei Dateien** im Mailverzeichnis ansehen:
+Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
 
 - **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
   noch erreicht wurde. 15 Spurmarken liegen auf dem Weg; sie schreiben **ohne**
   INI-Änderung.
-- **`Exception.log`** — enthält jetzt die Modultabelle. Damit:
+- **`Exception.log`** — enthält seit 7.2.0.13 die Modultabelle. Damit:
 
 ```bash
 perl tools/absturz-auswerten.pl
@@ -90,53 +92,56 @@ Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
 Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
 Heap-Beschädigung — dann hilft nur Page Heap (siehe unten).
 
-### Offen — Stand 06.09.2026
+### Offen — Stand 07.09.2026
 
-- **Strg-N** beendet Eudora; die schuldige Zeile ist **nicht** gefunden. Beste
-  Spur: `Paige32.dll` und `EuMemMgr.dll` sind vorgebaute Binärdateien von 2005,
-  die `malloc`/`free` aus `MSVCR71` holen — **zwei getrennte Halden** neben der
-  UCRT von `Eudora.exe`. Das Verfassen-Fenster ist der Hauptbenutzer von Paige.
-  Speicher, der über diese Grenze gereicht wird, ergibt genau `0xC0000374`
-- **Beenden** bricht ab
-- **Werkzeugleiste:** abgeschaltete Knöpfe zeigen kein Symbol (E-30, in
-  Arbeit). Die Symbole selbst sind in Ordnung — sie erscheinen im Hauptfenster
-  vollständig und fehlen nur dort, wo der Knopf abgeschaltet ist. Gemessen:
-  `SetDisabledImageList` kommt im Projekt nicht vor, und die Bilderliste wird
-  mit `ILC_COLORDDB` angelegt (heute 32 Bit statt der 8, für die der Code
-  geschrieben wurde). Siehe [Befunde/SYMBOLE-VORARBEIT.md](Befunde/SYMBOLE-VORARBEIT.md)
-- Meldung **„Encountered an improper argument"** — reproduzierbar: *Find
-  Messages*, Suche mit einem Treffer (7.2.0.10)
+Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*;
+hier die drei Punkte, die ein Anwender merkt:
 
-### Die Suche nach der Wurzel der Abstürze
+- ***File → Exit*** bringt eine Meldung statt sauber zu beenden (**E-33**), noch
+  nicht untersucht
+- Meldung **„Encountered an improper argument"** beim Anzeigen mancher
+  Nachrichten — MFCs Text für `CInvalidArgException`, kommt also nicht aus
+  Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
+  behoben); es gibt eine zweite. Reproduzierbar über *Find Messages* mit einem
+  Treffer (gemessen an 7.2.0.10)
+- **Ob das Verfassen-Fenster sichtbar wird.** Der Fensterbau läuft durch
+  (`OnMessageNewMessage: fertig`) und E-32 ist behoben — dass der Anwender das
+  Fenster daraufhin auch **sieht und benutzen kann**, ist noch von niemandem
+  gesehen worden
 
-Das ist die wichtigste Erkenntnis vom 06.09.2026, und sie stellt die bisherige
-Suche vom Kopf auf die Füße.
+### Die Wurzel der Abstürze — gefunden
 
-Im **Windows-Ereignisprotokoll** (Quelle *Application Error*), das bis dahin
-niemand gelesen hatte, steht:
+**E-31, gemessen am 06.09.2026:** `pg_time_t` war unter VS2022 **acht** Byte
+breit statt vier. Eine Zeile in `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`:
 
-```
-7.2.0.10   0xc0000374   STATUS_HEAP_CORRUPTION   in ntdll   (zweimal)
-7.2.0.7    0xc0000005                            in ntdll
+```c
+typedef time_t   pg_time_t;
 ```
 
-**Der Heap wird beschädigt.** Damit sind `afxcoll.inl:213` und die Meldung
-„Encountered an improper argument" **Folge, nicht Ursache**: eine beschädigte
-`CPtrArray` trägt beschädigte `m_nSize` und `m_pData`, und dann meldet *jeder*
-Zugriff „Index außerhalb" — auch ein korrekt begrenzter. Wer dort einen
-unbegrenzten Index sucht, sucht am falschen Ort.
+`time_t` war unter VC6/VC7.1 vier Byte breit, unter VS2022 ist es acht.
+`Paige32.dll` stammt von 2005 und rechnet mit vier. `pg_time_t` steckt in
+`style_info` und fünfmal in `pg_doc_info` — und damit in `pg_globals` und in
+`paige_rec`: **jede** Struktur, die Eudora an Paige reichte, war verschoben.
+`PgGlobals::InitFonts` schrieb deshalb mit `memcpy(&def_style, &styleInfo, 304)`
+bei **jedem Start** zwölf Byte über die Struktur hinaus. Das ist die
+Heap-Beschädigung, die im Windows-Ereignisprotokoll (Quelle *Application Error*)
+als `0xc0000374 STATUS_HEAP_CORRUPTION` in `ntdll` auftauchte.
 
-Die Beschädigung selbst ist gefunden (**E-25**): eine **Doppelfreigabe** in
-`Eudora71/Importers/NSImport/NSImportClass.cpp`, `LocateNetscapePrefsFile`.
-`FileList` kommt als Zeiger *nach Wert* an; der Aufräumer gab den Knoten des
-**Aufrufers** frei und setzte nur die örtliche Kopie auf NULL — danach Zugriff
-auf Freigegebenes und eine zweite Freigabe. Letztes geladenes Modul im
-Fehlerbericht: `NSImport.eif`. Der Weg läuft **immer**, auch ohne Netscape.
+Die Messung mit allen Feldversätzen steht in [CHANGELOG.md](CHANGELOG.md) unter
+7.2.0.18.
 
-Eine beschädigte Halde wirkt **global und verzögert**. Das erklärt zwanglos alle
-fünf Beobachtungen aus einer Wurzel.
-
-> **Die Hypothese hat den Test nicht bestanden.** 7.2.0.12 stürzt weiter ab.
+> **Was vorher vermutet wurde, war falsch — und das bleibt hier stehen.** Bis
+> zum 06.09.2026 galt die **Doppelfreigabe E-25** in
+> `Eudora71/Importers/NSImport/NSImportClass.cpp` (`LocateNetscapePrefsFile`)
+> als die Wurzel. 7.2.0.12 stürzte damit weiter ab. Dazu sieben weitere
+> Vermutungen, jede gebaut, gestartet und gemessen, jede widerlegt (CHANGELOG,
+> 7.2.0.17). **Nicht noch einmal durchprobieren.** Die Härtung aus E-25 ist
+> unabhängig davon richtig und bleibt drin.
+>
+> Was daran richtig war: `afxcoll.inl:213` und „Encountered an improper
+> argument" sind **Folge, nicht Ursache**. Eine beschädigte `CPtrArray` trägt
+> beschädigte `m_nSize` und `m_pData`, und dann meldet *jeder* Zugriff „Index
+> außerhalb" — auch ein korrekt begrenzter.
 
 ### Das Absturzprotokoll — und wie man es liest
 
@@ -152,9 +157,9 @@ Call stack: 00894B53, 008962D7, 6FB9A3E6 (mfc140.dll), ...
 
 **Das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die zu
 *keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle oder
-ein Funktionszeiger überschrieben wurde — genau das Schadensbild einer
-beschädigten Halde. Die Doppelfreigabe E-25 war demnach **nicht die einzige
-Quelle**.
+ein Funktionszeiger überschrieben wurde — das Schadensbild einer beschädigten
+Halde. Die Doppelfreigabe E-25 war demnach **nicht die Quelle**; gefunden wurde
+sie erst am 06.09.2026 als **E-31** (siehe oben).
 
 #### Warum die Adressen bis 7.2.0.12 nichts hergaben
 
@@ -173,7 +178,8 @@ sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht stimmte.
 | **Namen zu Adressen**: `Eudora71/Bin/Release/Eudora.map`, 51.075 Einträge | `Eudora.vcxproj` erzeugt sie bei jedem Bau | 06.09.2026 |
 | **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](Eudora71/Eudora/ExceptionHandler.cpp) (E-26) | 06.09.2026 |
 
-Ein Bericht **ab 7.2.0.14** beginnt deshalb so:
+Ein Bericht **ab 7.2.0.13** beginnt deshalb so (ausgeliefert erstmals in Paket
+1.0.14 — 1.0.13 wurde übersprungen):
 
 ```
 Loaded modules - subtract the load address from a stack address to get
@@ -210,7 +216,9 @@ sh tools/hooks-einrichten.sh
 
 Das war es. Der Hook liegt unter `.git/hooks` und wird von git nicht
 mitversioniert, muss also je Klon einmal eingerichtet werden; er prüft vor jedem
-Commit Zeilenenden, Kodierung und Zweigwahl.
+Commit Zweigwahl, Zeilenenden, Kodierung — und, sobald eine `.md`, `VERSION`
+oder `Eudora71/Version.h` mit im Commit ist, die Doku gegen sich selbst
+(`tools/doku-pruefen.pl`).
 
 **Zeilenenden sind kein Thema mehr.** [.gitattributes](.gitattributes) setzt
 `* -text` und schaltet damit jede Umwandlung durch git ab — beim Auschecken wie
@@ -412,6 +420,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/zeilenenden-angleichen.pl` | Arbeitskopie byteidentisch zum Commit machen. Nach jedem Klon einmal. Nennt jede angefasste Datei namentlich, lässt vorgemerkte Dateien in Ruhe; die Gegenrichtung nur mit `--auch-umgekehrt` |
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
+| `tools/doku-pruefen.pl` | `pre-commit`-Schranke gegen Widersprüche in der Doku: Kriterienzahl gegen [ZIEL.md](ZIEL.md), doppelt vergebene Befundkennungen, Statuswidersprüche im Verzeichnis von [BEFUNDE.md](BEFUNDE.md), was im CHANGELOG als offen steht aber im Verzeichnis als behoben, Verweise ins Leere, und `Eudora71/Version.h` gegen sich selbst. Weist **nur** ab, wenn der Commit eine `.md`, `VERSION` oder `Version.h` anfasst. Auf Gregors Ansage *„ich traue dir nicht ganz, jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"* |
 | `tools/pruefe-bytes.pl` | `pre-commit`-Schranke gegen lautlosen Byteschaden: Zeilenenden, Kodierung, Doppelkodierung |
 | `tools/pruefe-bytes-tests.pl` | Testsammlung dazu, **35 Fälle** in eigenen Wegwerf-Repos. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen** |
 | `tools/pruefe-branch.pl` | `pre-commit`-Schranke gegen Commits auf einen toten Zweig: schon in `origin/main`, Gegenstück auf dem Server gelöscht, oder abgelöster HEAD. Läuft als **erster** Schritt im Hook; `--melden` berichtet nur (Befund X-5) |
@@ -419,7 +428,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/dateiendungen.pl` | gemeinsame Liste der Dateiarten, die als Text gelten. Wird von der Schranke und von `zeilenenden-angleichen.pl` geladen — zwei getrennte Listen sind schon auseinandergelaufen |
 | `tools/hooks-einrichten.sh` | richtet den `pre-commit`-Hook ein. Nach jedem Klon einmal. Schreibt nach `--git-common-dir`, läuft also auch aus einem Arbeitsbaum |
 | `tools/stapel-untersuchen.ps1` | kleiner Debugger: fängt die tödliche Ausnahme, läuft die EBP-Kette ab, symbolisiert mit `dbghelp`. **Muss in der 32-Bit-PowerShell laufen**, braucht die `.pdb` neben der `.exe` |
-| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (ab 7.2.0.14) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
+| `tools/absturz-auswerten.pl` | übersetzt die Adressen aus einer `Exception.log` in Funktionsnamen aus `Eudora71/Bin/Release/Eudora.map`. Nimmt die Ladeadresse aus der Modultabelle des Berichts (**ab 7.2.0.13**, ausgeliefert erstmals in Paket 1.0.14) und **rät nicht**, wenn sie fehlt — ein falscher Name ist schlimmer als keiner (Befund E-29). Läuft ohne Visual Studio |
 | `tools/absturz-auswerten-tests.pl` | Testsammlung dazu, **15 Fälle** mit künstlicher Karte und künstlichem Bericht. **Wer `absturz-auswerten.pl` anfasst, lässt sie laufen** |
 | `tools/suche-zeiger.pl` | sucht Zeiger, die auf `NULL` geprüft und danach außerhalb des geschützten Blocks dereferenziert werden. 18 Treffer, davon neun echte Kandidaten (Liste in `AUFGABEN.md`, D3a). Läuft ohne Visual Studio |
 | `tools/releasebuffer-pruefen.pl` | stuft jedes `ReleaseBuffer` im Baum ein: steht vorher ein `GetBuffer` auf **derselben** Variablen? Das ist die Fehlerklasse **R-1**. Rückgabe 1, sobald etwas zu tun ist. Läuft ohne Visual Studio |

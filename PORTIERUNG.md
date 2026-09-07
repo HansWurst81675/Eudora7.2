@@ -1,14 +1,15 @@
 # Eudora 7.1 → Visual Studio 2022: Portierungsstand
 
-<!-- pruefstand: 9512108 -->
+<!-- pruefstand: 060a4bf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
-Stand: 2026-09-06 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
-OT501*, *Umgebung*, *E-11* und *OpenSSL3* sind an diesem Tag gegen den Baum
-nachgemessen (Befund `Befunde/LEKTOR-2.md`, L-6). Ältere Messwerte im Rest der
-Datei nennen ihren eigenen Bezugscommit — meist `a807b93` vom 31.08.2026.
+Stand: 2026-09-07 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
+OT501*, *Umgebung*, *E-11*, *OpenSSL3* und *Nächster Schritt* sind gegen den
+Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, L-6, und
+`Befunde/LEKTOR-3.md`, L-7). Ältere Messwerte im Rest der Datei nennen ihren
+eigenen Bezugscommit — meist `a807b93` vom 31.08.2026.
 
 An diesem Baum arbeiten mehrere Agenten gleichzeitig. Jede Zahl hier nennt ihren
 Bezugscommit; wer sie weiterverwendet, misst nach.
@@ -25,8 +26,8 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > überlagern sich nicht mehr (A-1 wirkt).
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
-> vier von sieben Kriterien belegt, eines fast, drei nicht (Stand 06.09.2026, abends). Hier steht
-> bewusst keine zweite Fassung dieser Tabelle.
+> drei von acht Kriterien belegt, eines fast, vier nicht (Stand 07.09.2026).
+> Hier steht bewusst keine zweite Fassung dieser Tabelle.
 >
 > Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
 > Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe
@@ -42,14 +43,20 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > > **Diese Bauzahlen sind vom 30.08.2026 und überholt.** Seit dem 05.09.2026
 > > ist `OT501` aus dem Bau genommen (Befund **B-3**, Commit `d8cc9d3`): die
 > > „3 Fehler aus `OT501`" entfallen, und `/p:BuildProjectReferences=false` ist
-> > nicht mehr nötig. Die Messung bleibt als Beleg stehen. **Der Rest dieser
-> > Datei ist am 05.09.2026 nicht gegengelesen worden** — die Prüfstandsmarke
-> > oben steht deshalb weiter auf `d826a3f`.
+> > nicht mehr nötig. Die Messung bleibt als Beleg stehen. Die aktuelle Bauzahl
+> > steht in `README.md` unter *Stand*: **18 erfolgreich, 0 Fehler, 1
+> > übersprungen** — von Gregor am 06.09.2026 in der IDE nachgemessen.
 >
 > Die OT501-Ersatzschicht ist damit vollständig: Verlauf der ungelösten Externen
 > 1088 (651 verschiedene) — rund 299 — 8 — 3 — 1 — **0**. Die leere Attrappe
-> `OTA50D.LIB` wird nicht mehr gebraucht (`_SECNOMSG` und
-> `LinkLibraryDependencies` auf `false`, `Eudora.vcxproj:1015`).
+> `OTA50D.LIB` wird nicht mehr gebraucht: `_SECNOMSG` steht unter
+> `PreprocessorDefinitions`, und jeder der **15** `ProjectReference`-Einträge in
+> `Eudora.vcxproj` trägt `<ReferenceOutputAssembly>false</ReferenceOutputAssembly>`.
+> (Hier stand bis zum 07.09.2026 „`LinkLibraryDependencies` auf `false`,
+> `Eudora.vcxproj:1015`". Beides ist falsch: das Element heißt
+> `ReferenceOutputAssembly`, und `LinkLibraryDependencies` kommt in der Datei
+> überhaupt nicht vor. Die Berichtigung vom 06.09.2026 weiter unten sagt
+> ohnehin schon, dass die Zeilenangabe nicht stimmt.)
 >
 > Dass Eudora überhaupt startet, war der Schritt vom 30.08.2026 (Paket 1.0.2):
 > der Absturz beim Start war die Werbefläche — Befund S-2. `EudoraRes.dll` wird
@@ -227,7 +234,7 @@ andere werden nie aufgerufen; `SECStatusBar` erledigt ein `typedef`.
 
 **Alle fünf Teile sind eingehängt** (`e50a89c`). Stand an `a807b93`, gezählt mit
 `wc -l` und geprüft gegen `OTShimAll.h` sowie die `ClCompile`-Einträge in
-`Eudora.vcxproj:217`:
+`Eudora.vcxproj` (`grep -n OTShim Eudora71/Eudora/Eudora.vcxproj`):
 
 | Stufe | Dateien | Zeilen | eingehängt? |
 |---|---|---|---|
@@ -484,10 +491,12 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
 
 ### Offen, nach Wichtigkeit
 
-1. **Kriterium 0 nachweisen.** Das Release-Paket auf einem Rechner **ohne**
-   Visual Studio auspacken und starten. Das ist der einzige belastbare Nachweis
-   (E-8); `tools/paket-pruefen.ps1` taugt dafür nicht (PR-2.0 bis PR-2.3).
-   Derselbe Lauf beantwortet auch E-11, E-4, E-7 und die HTML-Umlaute (Z-2).
+1. ~~**Kriterium 0 nachweisen.**~~ **Erledigt am 06.09.2026:** Gregor hat
+   `Eudora72-1.0.10-release.zip` auf einem Rechner **ohne** Visual Studio
+   ausgepackt und gestartet — *„test bestanden: eudora läuft ohne VS2022
+   installiert."* Das ist der einzige belastbare Nachweis (E-8);
+   `tools/paket-pruefen.ps1` taugt dafür weiter nicht (PR-2.0 bis PR-2.3) und ist
+   deshalb **kein** Freigabekriterium.
 2. **Die Darstellung, zweite Runde.** M-1 und A-1 wirken (E-1, E-2), offen
    bleiben die Splitter (`SECDockBar::AddSplitter` wird nie gerufen),
    `SECMDIFrameWnd::FloatControlBarInMDIChild` (leerer Rumpf, größter
@@ -496,10 +505,14 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    Einzelheiten in [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
 3. **`ReleaseBuffer` ohne `GetBuffer`** — **Befund E-11 ist zurückgenommen.** Er
    erklärte den Absturz auf frischen Installationen mit einem `ReleaseBuffer` in
-   `eudora.cpp:3372`; die richtige Erklärung steht in **E-25**
-   (`Befunde/ASSISTENT.md`). Die **Fehlerklasse** bleibt richtig und offen:
-   142 Vorkommen im Baum, 25 davon falsch (Befund **R-1**), gemessen mit
-   `tools/releasebuffer-pruefen.pl`.
+   `CEudoraApp::RegisterURLSchemes` (damals `eudora.cpp:3372`); die richtige
+   Erklärung steht in **E-25** (`Befunde/ASSISTENT.md`). Die **Fehlerklasse**
+   bleibt richtig und offen: gemessen am 07.09.2026 mit
+   `tools/releasebuffer-pruefen.pl` — **137** Vorkommen im Baum, davon **116**
+   richtig gepaart, **16** falsch, **4** mit `LockBuffer` davor und **1** mit
+   `GetBuffer` erst danach; zu ändern sind also **21** (Befund **R-1**). Die
+   Einzelliste steht in `AUFGABEN.md` unter A2 und ist mit dem Werkzeug jederzeit
+   neu zu erzeugen.
 4. **`MFC71.DLL` und `MSVCP71.dll`.** Nicht nachbaubar — `MFC71` wird über 157
    Ordinale importiert. Dadurch fallen **Adressbuch, LDAP und Ph** aus. Die
    `MSVCR71.dll` dagegen ist als eigener Nachbau vorhanden
@@ -778,8 +791,9 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   28.08.2026 2003, am 29.08.2026 2183. Die bereits **getrackten** Altbestände bleiben
   sichtbar — sie müssten per `git rm --cached` aus dem Index.
 - **Drei Blocker unabhängig von OT501**, gefunden bei der Familienanalyse:
-  `statbar.h:71` deklariert `afx_msg void OnTimer(UINT)`, `ON_WM_TIMER()` verlangt in
-  MFC 14 aber `UINT_PTR`; der PNG-Code in `QCGraphics.cpp` greift an vier Stellen
+  `statbar.h` deklariert in `CStatusBarEx` `afx_msg void OnTimer(UINT)`,
+  `ON_WM_TIMER()` verlangt in MFC 14 aber `UINT_PTR`; der PNG-Code in
+  `QCGraphics.cpp` greift an vier Stellen
   direkt in die libpng-Strukturen (libpng-1.2-API, seit 1.4 gekapselt): `306`
   (`png_ptr->error_ptr` im Warn-Callback `libpng_warning`), `313` und `316`
   (`png_ptr->error_ptr` bzw. `longjmp(png_ptr->jmpbuf, 1)` im Fehler-Callback
@@ -938,7 +952,7 @@ und **`utf-8` liegt gar nicht im durchsuchten Bereich** (er endet bei
 
 **Über IMAP wird also kein einziger Zeichensatz übersetzt** — weder vorher noch
 nachher. Die Umstellung wirkt damit ausschließlich auf dem POP-Pfad
-(`lex822.cpp:544` für Kopfzeilen nach RFC 2047, `TextReader.cpp:251` für den
+(`lex822.cpp:544` für Kopfzeilen nach RFC 2047, `TextReader::ReadIt` für den
 Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
 `ImapDownload.cpp` auf `FindMIMECharset()` umstellen; das ist eine eigene
 Änderung mit eigenen Tests.
@@ -949,7 +963,8 @@ Ebenfalls Altbestand, ebenfalls nicht von dieser Umstellung verursacht.
 `ISOTranslate()` verkürzt den Puffer und gibt die neue Länge zurück. Zwei
 Aufrufer werfen den Rückgabewert weg und rechnen mit der **alten** Länge weiter:
 
-- `Eudora71/Eudora/TextReader.cpp:251` — `size` bleibt unverändert
+- `Eudora71/Eudora/TextReader.cpp`, `TextReader::ReadIt` — `size` bleibt
+  unverändert
 - `Eudora71/EuImap/src/ImapDownload.cpp:4662` — `inLen` bleibt unverändert
 
 Hinter dem übersetzten Text steht dann die Null, die `ISOTranslate` schreibt, und

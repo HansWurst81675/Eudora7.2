@@ -14,12 +14,16 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **06.09.2026, abends**, gemessen an Fassung **7.2.0.18 / Paket 1.0.18**.
+Stand **07.09.2026, morgens**, gemessen an Fassung **7.2.0.18 / Paket 1.0.18**.
 
-**Sieben Kriterien**: 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen,
-ob Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, nachdem Kriterium 0 gefallen
+**Acht Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
+Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, nachdem Kriterium 0 gefallen
 war — sie messen, ob man **damit arbeiten** kann. Ein Mailprogramm, das keine
-Mail schreiben kann, ist kein Mailprogramm.
+Mail schreiben kann, ist kein Mailprogramm. **Kriterium 7** ist am 07.09.2026
+nachgetragen, aus Gregors Urteil zu 1.0.18 (*„beenden kann ich es auch nicht"*).
+Es steht eigens da und nicht als Unterpunkt von Kriterium 4, weil eine Meldung
+beim Beenden kein Absturz ist, weil sie einen eigenen Befund hat (E-33) und weil
+sie nach der Behebung von E-32 einzeln nachzumessen ist.
 
 | # | Kriterium | Stand |
 |---|---|---|
@@ -27,22 +31,24 @@ Mail schreiben kann, ist kein Mailprogramm.
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
 | 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
-| 4 | **Keine Abstürze** | **nicht erfüllt** — Strg-N und *Weiterleiten* beenden Eudora zwar nicht mehr (E-31), aber es kommt eine **modale** Meldung „An unhandled exception has occurred", und danach lässt sich Eudora nicht einmal mehr beenden (**E-32**) |
-| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **nicht erfüllt** — der Fensterbau läuft zwar vollständig durch (`OnMessageNewMessage: fertig`), aber der Anwender sieht kein Fenster, sondern die Meldung aus E-32 |
-| 6 | **Eine Mail lässt sich weiterleiten** | **nicht erfüllt** — derselbe Weg, dasselbe Bild |
-| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — es kommt eine Meldung (**E-33**) |
+| 4 | **Keine Abstürze** | **nicht erfüllt** — Strg-N und *Weiterleiten* beenden Eudora nicht mehr (E-31), und die modale Meldung „An unhandled exception has occurred" ist am 07.09.2026 behoben (**E-32**, `CHeaderView::OnKillFocusRecipient` in `headervw.cpp`). **Von Gregor nicht nachgemessen** — bis dahin bleibt das Kriterium offen; „Encountered an improper argument" steht ohnehin noch aus |
+| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **nicht erfüllt** — der Fensterbau läuft vollständig durch (`OnMessageNewMessage: fertig`); ob der Anwender das Fenster nach der Behebung von E-32 auch **sieht**, ist nicht nachgemessen |
+| 6 | **Eine Mail lässt sich weiterleiten** | **nicht erfüllt** — derselbe Weg, derselbe offene Nachweis |
+| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — es kommt eine Meldung (**E-33**), noch nicht untersucht |
 
-**Vier von sieben Kriterien sind belegt, eines fast, drei nicht.**
+**Drei von acht Kriterien sind belegt (0, 1, 3), eines fast (2), vier nicht (4
+bis 7).**
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
 > es auch nicht. nichts statt crash ist auch keine verbesserung!"* Das ist der
 > Maßstab — nicht, wie weit die Spur im Protokoll kommt.
 >
-> Was sich verbessert hat, ist die **Ausgangslage**: bis 06.09.2026 entstand in
-> dieser Portierung kein einziges Paige-Fenster, und die Ursache war unbekannt.
-> Jetzt ist sie gefunden und behoben (E-31), und was übrig bleibt, ist ein
-> **einzelner benannter Punkt** statt einer ganzen Bibliothek.
+> Was sich verbessert hat, ist die **Ausgangslage**, nicht das Programm: bis
+> 06.09.2026 entstand in dieser Portierung kein einziges Paige-Fenster, und die
+> Ursache war unbekannt. Jetzt ist sie gefunden und behoben (E-31). Ob daraus für
+> den Anwender ein sichtbares Verfassen-Fenster wird, entscheidet der nächste
+> Lauf auf Gregors Rechner — nicht diese Datei.
 
 ## Kriterium 0: das Paket muss ohne Nachinstallieren laufen
 
@@ -57,8 +63,8 @@ Und auf die Frage nach dem Weg dorthin:
 
 > *„sonst ja, statisch linken, ist mir auch egal."*
 
-Kriterium 0 steht vor den anderen dreien, weil ohne lauffähiges Paket niemand
-die anderen prüfen kann.
+Kriterium 0 steht vor allen anderen, weil ohne lauffähiges Paket niemand die
+übrigen prüfen kann.
 
 ### Der Weg dorthin
 
@@ -77,8 +83,10 @@ weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau*
 ### Woran sich Kriterium 0 misst
 
 **Das ZIP auf einem Rechner ohne Visual Studio auspacken und starten** — kein
-`0xc000007b`, keine Meldung über eine fehlende DLL, kein Nachinstallieren. Für
-das Release-Paket ist dieser Lauf noch nicht gemacht worden.
+`0xc000007b`, keine Meldung über eine fehlende DLL, kein Nachinstallieren.
+**Erbracht am 06.09.2026** von Gregor selbst, mit dem **Release**-Paket
+`Eudora72-1.0.10-release.zip`: *„test bestanden: eudora läuft ohne VS2022
+installiert."*
 
 > **`tools/paket-pruefen.ps1` ist NICHT dieser Nachweis.** Am 31.08.2026 war
 > Kriterium 0 mit diesem Werkzeug als „gemessen erfüllt" gemeldet worden; die
