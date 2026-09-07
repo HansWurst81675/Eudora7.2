@@ -32,15 +32,18 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Alle vier Kriterien aus [ZIEL.md](ZIEL.md) sind erfüllt.** Eudora baut aus
-einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio,
-die Darstellung stimmt, und Mail wird über TLS abgerufen. Das letzte offene
-Kriterium fiel am 06.09.2026.
+**Sieben Kriterien stehen in [ZIEL.md](ZIEL.md) — vier sind belegt, eines fast,
+drei nicht.** Eudora baut aus einem frischen Klon, das Paket startet auf einem
+Rechner ohne Visual Studio, die Darstellung stimmt weitgehend, und Mail wird
+über TLS abgerufen.
 
-Damit ist das Ziel erreicht — **fehlerfrei ist es deshalb nicht.** Verfassen
-(Strg-N) beendet das Programm, das Beenden bricht ab, und die Werkzeugleiste
-zeigt abgeschaltete Knöpfe ohne Symbol. Was offen ist, steht unten
-vollständig.
+**Benutzbar ist es noch nicht.** Verfassen und Weiterleiten öffnen zwar kein
+Fenster mehr mit einem Absturz, aber es erscheint eine **modale** Meldung „An
+unhandled exception has occurred" — und danach lässt sich Eudora nicht einmal
+mehr beenden (**E-32**). Gregors Urteil zu 1.0.18: *„es crasht nicht, aber es
+passiert auch nichts. nichts statt crash ist auch keine verbesserung!"*
+
+Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md).
 
 Belegt:
 
@@ -50,7 +53,7 @@ Belegt:
 | **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste, Postfachbaum |
 | **Mailabruf über TLS** | POP3 auf **Port 995**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Gemessen an 7.2.0.12 am 06.09.2026 gegen `mx.freenet.de`. Die richtige Einstellung dafür ist *Secure Sockets when Receiving* → **„Required, Alternate Port"** |
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
-| **Kriterium 0 — alle vier Ziele erfüllt** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
+| **Kriterium 0 — Paket laeuft ohne Nachinstallieren** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der ersten vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
 ### Was an 7.2.0.14 zu prüfen ist
 

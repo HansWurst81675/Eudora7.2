@@ -10,59 +10,39 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 ## Die Kriterien
 
 > **Diese Tabelle ist die Quelle.** `README.md`, `AUFGABEN.md`,
-> `WEITERMACHEN.md`, `PORTIERUNG.md` und `Releases/PAKETE.md` verweisen hierher,
-> statt sie zu wiederholen. Wer den Stand ändert, ändert ihn **hier**.
+> `WEITERMACHEN.md`, `CHANGELOG.md`, `PORTIERUNG.md` und `Releases/PAKETE.md`
+> verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
+> **hier**.
 
-Stand **06.09.2026**, gemessen an Fassung **7.2.0.14 / Paket 1.0.14**.
+Stand **06.09.2026, abends**, gemessen an Fassung **7.2.0.18 / Paket 1.0.18**.
+
+**Sieben Kriterien**: 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen,
+ob Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, nachdem Kriterium 0 gefallen
+war — sie messen, ob man **damit arbeiten** kann. Ein Mailprogramm, das keine
+Mail schreiben kann, ist kein Mailprogramm.
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen |
+| 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), der Titel trägt die Bau-Kennung (E-7), der Fortschritt beim Abruf ist sichtbar (E-13), Umlaute stimmen (Z-2, Z-2b), „In" steht nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen wieder ihr Symbol (E-30, an 7.2.0.14 bestätigt), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen einer HTML-Nachricht |
-| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor am 06.09.2026 bestätigt |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
+| 4 | **Keine Abstürze** | **nicht erfüllt** — Strg-N und *Weiterleiten* beenden Eudora zwar nicht mehr (E-31), aber es kommt eine **modale** Meldung „An unhandled exception has occurred", und danach lässt sich Eudora nicht einmal mehr beenden (**E-32**) |
+| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **nicht erfüllt** — der Fensterbau läuft zwar vollständig durch (`OnMessageNewMessage: fertig`), aber der Anwender sieht kein Fenster, sondern die Meldung aus E-32 |
+| 6 | **Eine Mail lässt sich weiterleiten** | **nicht erfüllt** — derselbe Weg, dasselbe Bild |
+| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — es kommt eine Meldung (**E-33**) |
 
-**Drei von vier Kriterien sind belegt, eines fast.**
+**Vier von sieben Kriterien sind belegt, eines fast, drei nicht.**
 
-## Die zweite Stufe: benutzbar, nicht nur lauffähig
-
-Von Gregor am 06.09.2026 gesetzt, nachdem Kriterium 0 gefallen war. Ein
-Mailprogramm, das keine Mail schreiben kann, ist kein Mailprogramm — die vier
-Kriterien oben messen, ob es *läuft*, diese drei messen, ob man **damit
-arbeiten** kann.
-
-| # | Kriterium | Stand |
-|---|---|---|
-| 4 | **Keine Abstürze** | **fast** — Strg-N und *Weiterleiten* beenden Eudora nicht mehr (E-31, 06.09.2026). Es bleibt eine Meldung „An unhandled exception has occurred", und unter dem Debugger tritt ein zweiter, fokusabhängiger Fehler zutage: `0xC000041D` in `AutoCompleterListBox::KillACListBox` |
-| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **teilweise** — das Verfassen-Fenster **entsteht** jetzt. Schreiben und Abschicken ist noch nicht geprüft |
-| 6 | **Eine Mail lässt sich weiterleiten** | **teilweise** — derselbe Weg, ebenfalls kein Absturz mehr |
-
-**Die Ursache war eine einzige Zeile** (**E-31**), gemessen am 06.09.2026:
-`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` definierte `pg_time_t` als `time_t`.
-Unter VC6/VC7.1 waren das **vier** Byte, unter VS2022 sind es **acht** —
-`Paige32.dll` von 2005 rechnet mit vier. Damit war **jede** Struktur verschoben,
-die Eudora an Paige reicht: `def_style.procs` lag bei 536 statt 524,
-`sizeof(style_info)` bei 304 statt 292. `PgGlobals::InitFonts` schrieb bei jedem
-Start zwölf Byte über `def_style` hinaus, und ein Funktionszeiger zeigte ins
-Leere — das war der Stapelüberlauf.
-
-Bis dahin entstand in dieser Portierung **kein einziges Paige-Fenster**.
-
-Kriterien 4 bis 6 hängen am selben Fehler (**E-27**). Gemessen an Gregors
-Protokoll vom 06.09.2026: beide Wege enden in
-`CCompMessageFrame::OnCreateClient` zwischen `CreateStatic` und dem Anlegen der
-beiden Ansichten — also in `CreateView` für `CHeaderView` oder
-`PgCompMsgView`. Ein `Exception.log` entsteht dabei **nicht**; der
-Absturzbehandler kommt nicht zum Zug, was zu Heap-Beschädigung oder
-Sofortabbruch passt.
-
-**Erst wenn alle sieben Kriterien erfüllt sind, ist Eudora benutzbar.**
-
-**Erst wenn alle Kriterien erfüllt sind, darf eine Fassung „lauffähig" heißen.**
-Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung". Die
-Dateinamen `Eudora72-1.0.1-lauffaehig.zip` und `Eudora72-1.0.2-lauffaehig.zip`
-behaupten mehr, als die Fassungen können; sie bleiben nur stehen, weil die
-Pakete unter diesen Namen samt Prüfsumme veröffentlicht sind.
+> **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
+> zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
+> es auch nicht. nichts statt crash ist auch keine verbesserung!"* Das ist der
+> Maßstab — nicht, wie weit die Spur im Protokoll kommt.
+>
+> Was sich verbessert hat, ist die **Ausgangslage**: bis 06.09.2026 entstand in
+> dieser Portierung kein einziges Paige-Fenster, und die Ursache war unbekannt.
+> Jetzt ist sie gefunden und behoben (E-31), und was übrig bleibt, ist ein
+> **einzelner benannter Punkt** statt einer ganzen Bibliothek.
 
 ## Kriterium 0: das Paket muss ohne Nachinstallieren laufen
 

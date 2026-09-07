@@ -16,7 +16,7 @@ und wird nur von Gregor per Merge bewegt.
 
 ## Das Ziel, an dem alles hängt
 
-**Alle vier Kriterien aus [ZIEL.md](ZIEL.md) sind erfüllt.** Gregor hat am
+**Sieben Kriterien stehen in [ZIEL.md](ZIEL.md) - vier belegt, eines fast, drei nicht.** Gregor hat am
 06.09.2026 die zweite Stufe gesetzt — Kriterien **4 bis 6**:
 
 | # | | Stand |

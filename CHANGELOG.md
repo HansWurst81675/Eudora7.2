@@ -11,27 +11,32 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ## Noch offen (Stand 06.09.2026)
 
-| | |
-|---|---|
-| | Meldung **„An unhandled exception has occurred"** beim Verfassen. Die Spur endet bei `OnCreateClient: Auswahlfelder gefüllt, jetzt die Schriftnamen` |
-| **E-32** | Fokusabhängiger Fehler `0xC000041D` in `AutoCompleterListBox::KillACListBox` — nur unter dem Debugger ausgelöst |
-| **E-31** | *File → Exit* bringt eine Meldung statt sauber zu beenden |
-| | Meldung **„Encountered an improper argument"** beim Anzeigen mancher Nachrichten |
+| Kennung | | |
+|---|---|---|
+| **E-32** | **Meldung „An unhandled exception has occurred" beim Verfassen** | Sie ist **modal** — danach lässt sich Eudora nicht einmal mehr beenden. Der Fensterbau läuft vollständig durch (`OnMessageNewMessage: fertig`); die Ausnahme kommt erst beim Anzeigen. Verdacht: `AutoCompleterListBox::KillACListBox` aus `CHeaderView::OnKillFocusTo` |
+| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht |
+| — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | MFCs Text für `CInvalidArgException` — kommt also nicht aus Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16, behoben); es gibt eine zweite |
 
 ## Erreicht
 
-**Alle vier Kriterien aus [ZIEL.md](ZIEL.md) sind erfüllt** (06.09.2026): Bau aus
-frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio,
-korrekte Darstellung, Mailabruf über POP3/TLS 1.3 auf Port 995.
+| | |
+|---|---|
+| **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
+| **Kriterium 2** (Darstellung) | *fast* — offen bleibt „Encountered an improper argument" |
+| **Kriterien 4 bis 7** (benutzbar) | **nicht erfüllt** |
 
-Von der zweiten Stufe — Kriterien 4 bis 6 — ist der größte Brocken gefallen:
-**Strg-N und *Weiterleiten* beenden Eudora nicht mehr, das Verfassen-Fenster
-entsteht.** Siehe 7.2.0.18. Schreiben und Abschicken sind noch nicht geprüft.
+> **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
+> zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
+> es auch nicht. nichts statt crash ist auch keine verbesserung!"*
+>
+> Verbessert hat sich die **Ausgangslage**, nicht das Programm: die Ursache ist
+> gefunden und behoben, und was übrig bleibt, ist ein einzelner benannter Punkt
+> statt einer ganzen Bibliothek.
 
 ---
 
 
-## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · **der Durchbruch**
+## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · die Ursache gefunden
 
 **E-31 — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile in
 `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695`:

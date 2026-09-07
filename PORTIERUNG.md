@@ -25,7 +25,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > überlagern sich nicht mehr (A-1 wirkt).
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
-> zwei von vier Kriterien belegt, eines fast, Kriterium 0 offen. Hier steht
+> vier von sieben Kriterien belegt, eines fast, drei nicht (Stand 06.09.2026, abends). Hier steht
 > bewusst keine zweite Fassung dieser Tabelle.
 >
 > Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
