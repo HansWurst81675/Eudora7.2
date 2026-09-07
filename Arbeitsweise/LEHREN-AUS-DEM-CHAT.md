@@ -338,12 +338,45 @@ messbar funktioniert und sind als Verfahren festgehalten in
   E-32 endete auf einer Zeile in `Eudora71/Eudora/headervw.cpp` (`060a4bf`).
   Dass Thema 11 in diesem Fenster **null** Fundstellen hat, ist die Quittung
   dafuer.
-- **Vier Schranken statt vier Merksaetze.** Neu: `tools/doku-pruefen.pl`
-  (`060a4bf`), das die MDs gegeneinander haelt und im `pre-commit`-Hook
-  mitlaeuft. Repariert: `tools/bauen.ps1` bricht ab, wenn schon ein Bau laeuft
+- **Drei Schranken statt drei Merksaetze — und ein Werkzeug, das noch keine
+  ist.** Neu: `tools/doku-pruefen.pl` (`060a4bf`), das die MDs gegeneinander
+  haelt; es haengt aber noch **nicht** im `pre-commit`-Hook (gemessen am
+  07.09.2026: weder der installierte Hook noch `tools/hooks-einrichten.sh`
+  ruft es auf) und meldet derzeit acht Maengel, weshalb ein harter Aufruf
+  jeden Commit im Projekt blockieren wuerde. Erst die Maengel, dann der Hook.
+  Repariert: `tools/bauen.ps1` bricht ab, wenn schon ein Bau laeuft
   (`1bb1719`); `tools/gesichert.pl` schlaegt in Arbeitsbaeumen keinen Fehlalarm
   mehr (`c1ce069`); `tools/lehren-spiegeln.pl` findet das Gedaechtnis auch aus
   einem Arbeitsbaum, wo es blind war (`47fdf37`).
+
+### Ein Befund zur Wirksamkeit dieser Sammlung
+
+Gemessen am 07.09.2026, und der wichtigste offene Punkt dieser Fortschreibung:
+
+`perl tools/lehren-spiegeln.pl --pruefen` meldet in
+`Eudora7.2-wt-chronist` **keine Abweichung** (Rueckgabe 0) — die Reparatur vom
+06.09.2026 (`47fdf37`) haelt also, das Werkzeug findet das Gedaechtnis auch aus
+einem Arbeitsbaum. Nur prueft es die falsche Richtung:
+
+- Es spiegelt **Gedaechtnis → Repo**. Was im Gedaechtnisverzeichnis des
+  Assistenten fehlt, faellt auf; was **nur im Repo** liegt, nicht.
+- Die fuenf Lehren dieses Tages liegen nur im Repo. Das Gedaechtnisverzeichnis
+  enthaelt 31 Dateien, `Arbeitsweise/` 37; die dortige `MEMORY.md` hat
+  **25 Zeilen**, die im Repo **30**.
+- Die beim Sitzungsstart automatisch geladene `MEMORY.md` ist die im
+  Gedaechtnisverzeichnis. **Die fuenf neuen Lehren werden also beim naechsten
+  Start nicht geladen**, obwohl sie im Repo stehen und dort eine Indexzeile
+  haben.
+
+Damit ist genau die Fehlerklasse aus Thema 4 („aufschreiben reicht nicht")
+strukturell noch offen: Ein Chronist, der in einem Arbeitsbaum arbeitet, kann
+seine Lehren nicht wirksam machen — es gibt keinen Weg **Repo → Gedaechtnis**.
+
+**Was fehlt** (nicht von mir erledigt, weil es eine gemeinsame Datei im
+`pre-commit`-Hook betrifft und abzusprechen ist): ein zweiter Modus in
+`tools/lehren-spiegeln.pl`, der neue Dateien aus `Arbeitsweise/` und die
+fehlenden Indexzeilen in das Gedaechtnisverzeichnis zurueckschreibt, und ein
+`--pruefen`, das **beide** Richtungen meldet.
 
 ### Was daraus folgt — die drei Punkte fuer den 08.09.2026
 

@@ -70,13 +70,24 @@ zu prüfen sind. Ihr fehlen zwei Dinge, und genau an denen ist es gescheitert:
    wiederholen.
 3. **`perl tools/doku-pruefen.pl`** prüft das mechanisch — die Dokumente
    gegeneinander, nicht nur gegen den Quellstand. Rückgabe 0 = kein Mangel,
-   1 = Mangel, 2 = Aufruffehler. Es läuft seit dem 07.09.2026 (`060a4bf`) im
-   `pre-commit`-Hook mit, also auch dann, wenn niemand daran denkt.
-4. **Keine Erfolgsbehauptung, die eine zweite Datei bestreitet.** Vor jedem
+   1 = Mangel, 2 = Aufruffehler. Es gibt das Werkzeug seit dem 07.09.2026
+   (`060a4bf`), und es ist **noch keine Schranke**: gemessen am 07.09.2026 ruft
+   es weder der installierte `pre-commit`-Hook noch
+   `tools/hooks-einrichten.sh` auf. Bis das eingehängt ist, gilt es **von Hand**
+   vor jedem Commit, der eine MD berührt.
+4. **Warum es noch nicht im Hook hängt — und was zuerst passieren muss.**
+   Der Lauf vom 07.09.2026 meldet **acht Mängel** (vier Dateien nennen sieben
+   Kriterien, `ZIEL.md` führt acht; die Kennungen E-7, E-11, E-14 und E-16
+   stehen in `BEFUNDE.md` gleichzeitig als behoben und als offen). Ein
+   Hook-Aufruf mit `|| exit` würde damit **jeden Commit im Projekt blockieren**,
+   auch die der anderen Agenten. Reihenfolge also: erst die acht Mängel
+   beheben, dann das Werkzeug in `tools/hooks-einrichten.sh` aufnehmen — und
+   nicht umgekehrt.
+5. **Keine Erfolgsbehauptung, die eine zweite Datei bestreitet.** Vor jedem
    „erfüllt", „erreicht", „alle" in einer MD: nachsehen, ob eine andere Datei
    etwas anderes sagt. Wenn ja, ist nicht die andere Datei alt — dann ist die
    Behauptung unbelegt.
-5. **Eine Zeile mit veraltetem Messstand ist falsch, nicht alt.** Sie wird
+6. **Eine Zeile mit veraltetem Messstand ist falsch, nicht alt.** Sie wird
    berichtigt oder gelöscht, nicht stehen gelassen, bis jemand fragt.
 
 Siehe [doku-bei-jedem-commit-mitziehen](doku-bei-jedem-commit-mitziehen.md),

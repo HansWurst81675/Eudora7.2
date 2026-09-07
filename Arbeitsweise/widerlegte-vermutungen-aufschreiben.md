@@ -51,11 +51,12 @@ Zugriffsfehler, sondern `0xC000041D` — und das erklärt zugleich die modale
 Meldung, wegen der Eudora sich nicht mehr beenden ließ.
 
 **Drittens: eine Schranke schlägt zu, eine Mahnung nicht.** Statt der Zusage,
-sorgfältiger zu sein, sind vier Werkzeuge entstanden oder repariert worden:
+sorgfältiger zu sein, sind vier Werkzeuge entstanden oder repariert worden —
+drei davon lösen von selbst aus, das vierte noch nicht:
 
 | Werkzeug | Commit | was es jetzt von selbst tut |
 |---|---|---|
-| `tools/doku-pruefen.pl` | `060a4bf` (**neu**) | hält die MDs gegeneinander, läuft im pre-commit-Hook |
+| `tools/doku-pruefen.pl` | `060a4bf` (**neu**) | hält die MDs gegeneinander — noch **von Hand** aufzurufen, nicht im Hook |
 | `tools/bauen.ps1` | `1bb1719` | bricht ab, wenn schon ein Bau läuft |
 | `tools/gesichert.pl` | `c1ce069` | kein Fehlalarm mehr in Arbeitsbäumen — die Schranke wurde vorher überlesen |
 | `tools/lehren-spiegeln.pl` | `47fdf37` | findet das Gedächtnis auch aus einem Arbeitsbaum, wo es blind war |
