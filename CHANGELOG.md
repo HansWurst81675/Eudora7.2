@@ -13,7 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | Die Ersatzschicht bildet die Registerkartenleiste nicht nach. Ob das Menü *Window* sie auflistet, ist ungeprüft |
+| — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | *halb* — das Menü *Window* listet sie auf (von Gregor am 07.09.2026 nachgesehen: „1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht `OTShim` bildet sie nicht nach (`WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in `Eudora.ini`) |
 | **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht (Kriterium 7) |
 | — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34. Abgefangen, aber nicht behoben. MFC 14 prüft in den Sammlungen mit `ENSURE` statt `ASSERT`, und `ENSURE` wirft auch im Release-Bau |
 | — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle |
@@ -24,47 +24,40 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 |---|---|
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
 | **Kriterium 2** (Darstellung) | *fast* |
-| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab, fünfmal nachgemessen; von Gregor noch nicht bestätigt |
-| **Kriterien 5 und 6** (Mail schreiben, senden, empfangen) | **erfüllt** — von Gregor am 07.09.2026 bestätigt, mit Bildschirmfoto |
-| **Kriterium 8** (Fensterliste) | *halb* — das Menü *Window* listet sie auf; die Registerkartenleiste fehlt |
+| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab, fünfmal nachgemessen; offen bleibt das Beenden |
+| **Kriterien 5 und 6** (Mail schreiben, senden, weiterleiten) | **erfüllt** — von Gregor am 07.09.2026 bestätigt: *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."*, mit Bildschirmfoto |
+| **Kriterium 8** (Fensterliste) | *halb* — das Menü *Window* listet sie auf; die Registerkartenleiste am unteren Rand fehlt |
 | **Kriterium 7** (Beenden) | **nicht erfüllt** — der einzige verbliebene Fehler der zweiten Stufe |
 
-> **07.09.2026, Gregor:** *„ich habe kurz eine neue mail gesehen."* Der erste
-> sichtbare Fortschritt beim Verfassen seit Beginn der Portierung.
+> **07.09.2026, Gregor zu Paket 1.0.21:** *„mail können jetzt abgeschickt
+> werden."* und *„weiterleitung funktioniert übrigens."* Damit ist der Kreis
+> zum ersten Mal geschlossen — schreiben, senden, Antwort empfangen.
 >
-> Sein Maßstab von 1.0.18 gilt weiter: *„es crasht nicht, aber es passiert auch
-> nichts. nichts statt crash ist auch keine verbesserung!"*
+> **Sein Einwand steht daneben und gilt:** *„beenden geht nicht."* Und: *„kann
+> man die untere zeile (status) immer anzeigen lassen?"*
+>
+> Sein Maßstab von Paket 1.0.18 bleibt der Maßstab für alles Weitere: *„es
+> crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
+> nichts statt crash ist auch keine verbesserung!"* — kein Absturz ist kein
+> Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
 
-## Nach 7.2.0.18 — 07.09.2026 · noch nicht gebaut, noch nicht gepackt
+## Nach 7.2.0.21 — alles Gebaute ist gepackt
 
-Diese Änderungen liegen im Repo, aber in **keinem** Paket. Wer sie sehen will,
-muss bauen. `Eudora71/Version.h` und `VERSION` stehen weiter auf 7.2.0.18 /
-1.0.18 — wer daraus ein Paket schnürt, setzt beide Nummern vorher hoch, sonst
-tragen zwei verschiedene Bauten dieselbe Kennung.
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket 1.0.21 steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.21 / 1.0.21** (`cat
+VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
+neueren Stand ein Paket schnürt, setzt vorher beide Nummern hoch, sonst tragen
+zwei verschiedene Bauten dieselbe Kennung.
 
-- **E-32 behoben — die modale Meldung „An unhandled exception has occurred"
-  beim Verfassen.** `CHeaderView::OnKillFocusRecipient` in
-  `Eudora71/Eudora/headervw.cpp` dereferenzierte `pField`, obwohl die Abfrage
-  drei Zeilen darüber ausdrücklich mit NULL rechnet (`if (pField && …)`).
-  `GetDlgItem` liefert NULL, solange das Kopfzeilenfeld nicht existiert — und
-  `OnKillFocusTo` läuft während `LoadFrame`, also bevor die Felder da sind.
-  Weil der Zugriff **innerhalb einer Fensterprozedur** passiert, meldet Windows
-  `0xC000041D` (STATUS_FATAL_USER_CALLBACK_EXCEPTION) statt des üblichen
-  Zugriffsfehlers. Dieselbe Fehlerklasse wie E-18 und E-22.
-  **Von Gregor nicht nachgemessen**
-- **`tools/doku-pruefen.pl`** prüft die Dokumentation mechanisch gegen sich
-  selbst und gegen den Quellstand: Kriterienzahl gegen `ZIEL.md`, doppelt
-  vergebene Befundkennungen, Statuswidersprüche im Verzeichnis von
-  `BEFUNDE.md`, Verweise ins Leere, und ob eine Datei eine ältere Fassung als
-  den Quellstand behauptet. Auf Gregors Ansage *„ich traue dir nicht ganz,
-  jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"*
-- **Doku-Durchgang L-7** (`Befunde/LEKTOR-3.md`) — die falschen und veralteten
-  Werte in `README.md`, `ZIEL.md`, `WEITERMACHEN.md`, `AUFGABEN.md`,
-  `CHANGELOG.md`, `PORTIERUNG.md` und `Releases/PAKETE.md`, ausgelöst von
-  Gregors Ansage *„ich hasse es, wenn in den dokus falsche oder veraltete infos
-  und werte stehen"*
+> **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
+> `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
+> **E-32** als Behebung der modalen Meldung. Beides ist falsch: die
+> E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
+> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR am 07.09.2026 als
+> **W-3** und **W-5** (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte:
+> *„wäre vor dem mergen wichtig, daß keine lügen im main stehen!"*
 
 ---
 
@@ -213,9 +206,10 @@ menü oder über reiter in der statuszeile oder ähnlich."*
 Der Bezug ist unmittelbar: die modale Meldung, die mit E-33 abgeschaltet wurde,
 sagte wörtlich *„Die Leiste am unteren Fensterrand, die alle offenen Fenster als
 Registerkarten zeigt … Sie brauchen sie nicht: alle offenen Fenster stehen im
-Menü Window."* Die Ersatzschicht bildet diese Leiste nicht nach. Ob das Menü
-*Window* die Fenster wirklich auflistet, ist **ungeprüft** — das ist der erste
-Schritt.
+Menü Window."* Die Ersatzschicht bildet diese Leiste nicht nach. Dass das Menü
+*Window* die Fenster tatsächlich auflistet, hat Gregor am 07.09.2026
+nachgesehen („1 In", „2 Out") — damit ist Kriterium 8 zur Hälfte erfüllt, und
+der erste Schritt ist die **Leiste**, nicht das Menü.
 
 ## 7.2.0.20 / Paket 1.0.20 — 07.09.2026 · das Verfassen-Fenster erscheint
 
@@ -567,22 +561,23 @@ unter diesen Namen samt Prüfsumme veröffentlicht sind.
 Die offenen Enden mit Fundstelle — für jemanden, der das Repo frisch klont.
 **Stand 07.09.2026.**
 
-### 1. Ob das Verfassen-Fenster für den Anwender sichtbar wird
+### 1. Erledigt: das Verfassen-Fenster ist da
 
-Daran hängen Kriterium 5 und 6, und es ist **nicht gemessen**. E-31 und E-32
-sind behoben, der Fensterbau läuft im Protokoll vollständig durch
-(`OnMessageNewMessage: fertig`) — gesehen hat das Fenster niemand.
+**Kriterium 5 und 6 sind erfüllt** — von Gregor am 07.09.2026 bestätigt:
+*„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert
+übrigens."* Sein Bildschirmfoto zeigt *Out* 10:01 und die Antwort in *In*
+10:02. Behoben sind E-31, E-34, E-35 und E-36.
 
-**So misst man es:** `LogLevel=32896` in die `Eudora.ini`, Eudora starten,
-Strg-N, danach in `eudora.log` nach `CPaigeEdtView::OnCreate` und
-`OnMessageNewMessage: fertig` suchen. Ohne dass jemand danebensitzt:
+**So misst man es nach**, ohne dass jemand danebensitzt:
 
 ```
 powershell -ExecutionPolicy Bypass -File tools\strg-n-pruefen.ps1 -Verzeichnis <Paket>
 ```
 
 Das Werkzeug startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob
-das Fenster aufgeht.
+das Fenster aufgeht. Für das Protokoll braucht es `LogLevel=32896` unter
+`[Settings]` in der `Eudora.ini` — `PutDebugLog` prüft die Maske und kehrt
+sonst sofort zurück (`QCUtils/src/debug.cpp:140`).
 
 **Unter dem Debugger**, 32-Bit-PowerShell:
 
@@ -594,28 +589,48 @@ Eudora lässt sich dabei von außen steuern, ohne dass jemand klicken muss:
 Meldungsfenster mit `WM_COMMAND`/`IDOK` schließen, dann `WM_COMMAND` mit
 `ID_MESSAGE_NEWMESSAGE` (32797) an die Fensterklasse `EudoraMainWindow`.
 
-**Was Paige angeht:** `Eudora71/PaigeDLL` enthält **doch** Quellen — `PGSOURCE`
-mit 37 `.C`-Dateien, dazu `PAIGE32/Paige32.vcproj` und die alten Makefiles. Bis
-zum 06.09.2026 stand an dieser Stelle das Gegenteil, und das hat die Suche nach
+**Der Schlussstein wäre ein Neubau von `Paige32.dll` mit VS2022** — dann kann
+keine Kopfdatei mehr von der Binärdatei abweichen, und genau diese Abweichung
+war E-31. `Eudora71/PaigeDLL` enthält **doch** Quellen: `PGSOURCE` mit 37
+`.C`-Dateien, dazu `PAIGE32/Paige32.vcproj` und die alten Makefiles. Bis zum
+06.09.2026 stand an dieser Stelle das Gegenteil, und das hat die Suche nach
 E-31 unnötig lange aufgehalten. Der Rekursionszyklus ist dort nachzulesen
-(`PGDEFSTL.C:1640`). **Der eigentliche Schlussstein wäre ein Neubau von
-`Paige32.dll` mit VS2022** — dann kann keine Kopfdatei mehr von der Binärdatei
-abweichen, und genau diese Abweichung war E-31.
+(`PGDEFSTL.C:1640`).
 
 **Noch nicht versucht:** Page Heap (`gflags /p /enable Eudora.exe /full`, als
 Administrator).
 
-### 2. Die verbleibenden zwei Meldungen
+### 2. Kriterium 7 — *File → Exit* beendet Eudora nicht
 
-- **E-33** — *File → Exit* bringt eine Meldung statt sauber zu beenden. Noch
-  nicht untersucht, und nach der Behebung von E-32 neu zu messen: bis dahin
-  verdeckte die modale Meldung aus E-32 alles Weitere
-- „Encountered an improper argument" — das ist MFCs Text für
-  `CInvalidArgException`, kommt also aus MFC, nicht aus Eudora. Eine bekannte
-  Quelle war `QCChildToolBar::GetButton` mit Index minus 1 (E-16, behoben); es
-  gibt offenbar eine zweite
+Das ist der **einzige verbliebene Fehler** der zweiten Stufe. Gregors Wort am
+07.09.2026: *„beenden geht nicht."* Noch nicht untersucht. Wichtig dabei: die
+frühere Vermutung, eine modale Meldung aus E-32 verdecke das Beenden, ist
+gegenstandslos — PRUEFER hat die E-32-Ursachenbehauptung dreifach gemessen und
+verworfen (siehe 7.2.0.20). Der Weg führt über `CEudoraApp::OnAppExit` und
+`CMainFrame::OnClose` (`Eudora71/Eudora/eudora.cpp`, `MainFrm.cpp`), mit
+Spurmarken wie bei E-34 und `eudora.log` bei gesetztem `LogLevel=32896`.
 
-### 3. Die Altlast, die niemand bauen kann
+### 3. Kriterium 8 — die untere Statuszeile mit Reitern
+
+Gregors Frage am 07.09.2026: *„kann man die untere zeile (status) immer anzeigen
+lassen?"* Das Menü *Window* listet die offenen Fenster („1 In", „2 Out") — das
+ist nachgesehen. Was fehlt, ist die Leiste am unteren Fensterrand. Das Original
+hat sie: die **WazooBar**. Gelesen wird sie in
+`Eudora71/Eudora/WazooBar.cpp:572,578` aus `Eudora.ini`, Abschnitt
+`[WazooBars]`, Schlüssel `WazooBarIds`, `WazooBar%d`, `WazooMDI%d` (Namen in
+`EudoraRes.rc:10637-10640`). Die Ersatzschicht `OTShim` bildet die Leiste
+derzeit nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
+
+### 4. Die Meldung „Encountered an improper argument"
+
+MFCs Text für `CInvalidArgException`, kommt also aus MFC, nicht aus Eudora. Zwei
+Quellen sind bekannt und behoben: `QCChildToolBar::GetButton` mit Index minus
+eins (**E-16**) und dieselbe Funktion mit einem Index innerhalb der gemeldeten
+Anzahl (**E-34**, abgefangen). **Offen bleibt die Ursache:** warum meldet
+`GetBtnCount()` 27, während `m_btns[24]` wirft? Das Abfangen behandelt das
+Symptom. Reproduzierbar über *Find Messages* mit einem Treffer.
+
+### 5. Die Altlast, die niemand bauen kann
 
 - **`EuMemMgr.dll`** ist gar kein Projekt der Projektmappe — eine vorgebaute
   Binärdatei von 2005 (Version 7.0.0.9). Ausgerechnet sie löst den Aufrufstapel
@@ -624,7 +639,7 @@ Administrator).
   Grenze gereicht wird, ergibt `0xC0000374`. Für `Paige32.dll` gilt dasselbe —
   dort liegen aber Quellen vor (siehe 1.)
 
-### 4. Was beim Mitarbeiten hilft
+### 6. Was beim Mitarbeiten hilft
 
 - `AGENTEN.md` — wie parallele Arbeit koordiniert wird, aus fünf gemessenen
   Kollisionen

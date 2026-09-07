@@ -435,6 +435,91 @@ for my $datei (@aktuell) {
     }
 }
 
+# --- 8. Marken: keine Veroeffentlichung ankuendigen, die es nicht gibt -------
+# Befund W-0 (L-8, 07.09.2026): README.md, WEITERMACHEN.md und PAKETE.md nannten
+# v1.0.21 mit Adresse, waehrend die Marke noch nicht gesetzt war. Sie wurde es
+# eine halbe Stunde spaeter - der Text war also nicht falsch gemeint, aber eine
+# Weile lang schlicht unwahr. Zuerst gegen origin fragen; ohne Netz gegen die
+# oertlichen Marken.
+my %marke_da;
+{
+    my $fern = qx{git ls-remote --tags origin 2>$nirgendwo} || '';
+    $marke_da{$1} = 1 while $fern =~ m{refs/tags/(v[0-9][0-9.]*?)(?:\^\{\})?$}gm;
+    unless (keys %marke_da) {
+        my $ort = qx{git tag 2>$nirgendwo} || '';
+        $marke_da{$1} = 1 while $ort =~ /^(v[0-9][0-9.]*)$/gm;
+    }
+}
+if (keys %marke_da) {
+    for my $datei (@alle_md) {
+        my $inhalt = lies($datei);
+        next unless defined $inhalt;
+        my @zeilen = split /\n/, $inhalt;
+        for my $i (0 .. $#zeilen) {
+            while ($zeilen[$i] =~ m{releases/tag/(v[0-9][0-9.]*)}g) {
+                my $m = $1;
+                next if $marke_da{$m};
+                push @mangel, sprintf("%s:%d nennt die Veroeffentlichung %s - diese Marke gibt es nicht",
+                                      $datei, $i + 1, $m);
+            }
+        }
+    }
+}
+
+# --- 9. Eine alte Fassungsnummer als HEUTIGER Stand, auch in Zeitdokumenten --
+# Befund W-3 und W-17 (L-8): CHANGELOG.md sagte "Version.h und VERSION stehen
+# weiter auf 7.2.0.18 / 1.0.18", PRUEFUNG-BAU.md "der Quellstand ist seit dem
+# 06.09.2026 7.2.0.12". Beide Dateien waren von der Zeitdokument-Ausnahme
+# gedeckt - deshalb hier ALLE Dateien.
+#
+# Der erste Anlauf warf sieben Fehlalarme: zitierte Behauptungen, die
+# Geschichte von EUDORA_BUILD_NUMBER und datierte Messungen. Eine Schranke, die
+# zweimal umsonst warnt, wird beim dritten Mal nicht mehr geglaubt - deshalb
+# ist die Prueffrage eng gestellt, und die Ausschluesse gelten fuer das GANZE
+# Fenster: der zweite Anlauf prueft nur die erste Zeile und meldete eine
+# Ueberschrift, deren FOLGEzeile mit "**Behauptung** (README)" beginnt.
+my %stand_gemeldet;   # ein Satz wird nur einmal gemeldet, auch wenn das
+                      # Fenster zweier Zeilen ihn zweimal sieht
+my $behauptet_stand = qr{(?:Quellstand\s+ist|steht\s+auf|stehen\s+(?:weiter\s+)?auf|ist\s+seit)};
+for my $datei (@alle_md) {
+    my $inhalt = lies($datei);
+    next unless defined $inhalt;
+    my @zeilen = split /\n/, $inhalt;
+    for my $i (0 .. $#zeilen) {
+        my $z = $zeilen[$i];
+        next if $z =~ /^\s*[>|#]/;
+        my $fenster = join(' ', grep { defined } @zeilen[$i .. $i + 1]);
+        next if $fenster =~ /EUDORA_BUILD_NUMBER/;
+        next if $fenster =~ /\d{2}\.\d{2}\.20\d\d/;
+        next if $fenster =~ /Behauptung|behauptet|\bwar\b|damals|frueher|ueberholt/i;
+        next unless $fenster =~ /$behauptet_stand/;
+        next unless $fenster =~ /\bVERSION\b|Version\.h|Quellstand|Paketnummer/;
+        my %schon;
+        while ($fenster =~ /\b(7\.2\.0\.\d+)\b/g) {
+            next if $1 eq $quellstand or $schon{$1}++;
+            next if $stand_gemeldet{"$datei|$1"}++;
+            push @mangel, sprintf("%s:%d behauptet %s als gueltigen Quellstand, Version.h sagt %s",
+                                  $datei, $i + 1, $1, $quellstand);
+        }
+    }
+}
+
+# --- 10. Befundkennungen quer, in beide Richtungen ---------------------------
+# Befund W-8, W-10, W-11, W-24 (L-8), und von PRUEFER schon am 07.09.2026
+# gefordert (Befunde/PRUEFER-3.md:266). Zwei Richtungen:
+#   a) eine Kennung mit eigenem Abschnitt im CHANGELOG muss im Verzeichnis von
+#      BEFUNDE.md vorkommen. E-34, E-35 und E-36 fehlten dort vollstaendig -
+#      und ZIEL.md belegte Kriterium 4 mit genau diesen drei.
+#   b) eine Kennung, die irgendwo als "behoben" steht, darf im Verzeichnis
+#      nicht "offen" heissen (E-16, E-22).
+my $changelog_inhalt = lies('CHANGELOG.md') || '';
+my %im_changelog;
+$im_changelog{$1} = 1 while $changelog_inhalt =~ /^###\s+(E-\d+)\b/gm;
+for my $k (sort keys %im_changelog) {
+    next if exists $verzeichnis{$k};
+    push @mangel, sprintf("%s hat einen eigenen Abschnitt in CHANGELOG.md, fehlt aber im Verzeichnis von BEFUNDE.md", $k);
+}
+
 # --- Bilanz ------------------------------------------------------------------
 unless ($leise) {
     print "\n";

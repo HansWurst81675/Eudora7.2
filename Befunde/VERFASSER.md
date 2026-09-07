@@ -2,6 +2,15 @@
 
 Agent VERFASSER, 06.09.2026. Zweig `wt/verfasser`.
 
+> **Nachtrag 07.09.2026: die Ursache ist gefunden.** Es war **E-31** —
+> `pg_time_t` war unter VS2022 acht Byte breit statt vier, damit war jede
+> Struktur verschoben, die Eudora an Paige reichte (`CHANGELOG.md` unter
+> 7.2.0.21, Gegenmessung gegen `Paige32.pdb` unter 7.2.0.20). Was unten steht,
+> bleibt richtig und wichtig: es erklärt, **warum** der Absturz lautlos war —
+> ein voller Stapel lässt keinen Platz für den Absturzbehandler. Die dort als
+> „beste offene Spur" genannte Richtung (`Paige32`/`EuMemMgr` gegen `MSVCR71`)
+> ist damit **überholt**; sie war nicht falsch, nur nicht die Ursache.
+
 > „Strg-N (neue Nachricht verfassen) beendet Eudora lautlos, ohne jede Meldung.
 > Kein Dialog, kein Absturzfenster — das Programm ist einfach weg."
 

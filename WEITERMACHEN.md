@@ -54,34 +54,39 @@ gestartet, gemessen. Sie stehen samt Messwerten in
 [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21. **Nicht noch einmal
 durchprobieren.**
 
-**E-32 ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war
-die modale Meldung „An unhandled exception has occurred", die nach E-31 an die
-Stelle des Absturzes trat. `CHeaderView::OnKillFocusRecipient` in
-`Eudora71/Eudora/headervw.cpp` dereferenzierte `pField`, obwohl die Abfrage drei
-Zeilen darüber ausdrücklich mit NULL rechnet; `GetDlgItem` liefert NULL, solange
-das Kopfzeilenfeld noch nicht existiert, und genau das ist beim Aufbau des
-Verfassen-Fensters der Fall (`OnKillFocusTo` läuft während `LoadFrame`). Weil
-der Zugriff **innerhalb einer Fensterprozedur** passiert, meldet Windows
-`0xC000041D` (STATUS_FATAL_USER_CALLBACK_EXCEPTION) statt des üblichen
-Zugriffsfehlers — dieselbe Fehlerklasse wie E-18 und E-22.
+**E-32: der Code-Mangel ist behoben, die Ursachenbehauptung ist widerlegt.**
+`CHeaderView::OnKillFocusRecipient` in `Eudora71/Eudora/headervw.cpp`
+dereferenzierte `pField` ungeprüft, obwohl die Abfrage drei Zeilen darüber
+ausdrücklich mit NULL rechnet — das ist behoben (`060a4bf`) und bleibt richtig.
+Dass **diese** Stelle die modale Meldung „An unhandled exception has occurred"
+verursacht hätte, hat PRUEFER dreifach gemessen und **verworfen**
+(`Befunde/PRUEFER-3.md`, Abschnitt 2): die Funktion läuft bei Strg-N gar nicht,
+das Herausnehmen der Behebung bringt die Meldung nicht zurück, und im Paket
+1.0.18 tritt sie über denselben Weg nicht auf. Aufgeklärt hat die Meldung erst
+**E-34** — eine MFC-Ausnahme in `QCChildToolBar::GetButton`, die den ganzen
+Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-**Bauen, packen, Gregor geben.** Solange niemand Strg-N auf seinem Rechner
-gedrückt hat, ist alles darüber Vermutung: ob das Verfassen-Fenster sichtbar
-wird, ob eine Mail zu schreiben ist, ob sich Eudora danach beenden lässt. Der
-Weg dafür steht unten unter *Bauen und packen*, das Paket gehört in
-`Releases/` und die Nummer in `Eudora71/Version.h` und `VERSION`.
+**Kriterium 7 — das Beenden.** *File → Exit* beendet Eudora nicht (**E-33**),
+von Gregor am 07.09.2026 an Paket 1.0.21 bestätigt: *„beenden geht nicht."* Das
+ist der einzige verbliebene **Fehler**; alles Weitere ist Ausstattung. Der Weg:
+`CEudoraApp::OnAppExit` bzw. `CMainFrame::OnClose` in
+`Eudora71/Eudora/eudora.cpp` und `MainFrm.cpp`, mit Spurmarken wie bei E-34, und
+`eudora.log` bei gesetztem `LogLevel=32896` gegenlesen.
+
+**Danach Kriterium 8** — die untere Reiterleiste für die offenen Fenster. Das
+Menü *Window* listet sie schon auf; was fehlt, ist die **WazooBar**
+(`Eudora71/Eudora/WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in
+`Eudora.ini`, Namen in `EudoraRes.rc:10637-10640`). Die Ersatzschicht `OTShim`
+bildet sie nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
 
 ## Ebenfalls offen
 
-- ***File → Exit*** bringt eine Meldung statt sauber zu beenden (**E-33**).
-  Noch nicht untersucht — und nach der Behebung von E-32 neu zu messen: bis
-  dahin war jede Meldung von der modalen Meldung aus E-32 überdeckt
-- Meldung **„Encountered an improper argument"** beim Anzeigen mancher
-  Nachrichten. Das ist MFCs Text für `CInvalidArgException`, kommt also nicht
-  aus Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
-  behoben); es gibt eine zweite
+- Die Meldung **„Encountered an improper argument"** beim Anzeigen mancher
+  Nachrichten. Zwei Quellen sind behoben (E-16, E-34). **Offen ist die
+  Ursache:** warum meldet `GetBtnCount()` 27, während `m_btns[24]` wirft? Das
+  Abfangen behandelt das Symptom
 
 ## Wie man misst
 

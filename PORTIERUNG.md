@@ -5,6 +5,15 @@
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
+> **Für wen diese Datei ist.** Für jemanden, der **am Quelltext arbeitet** —
+> Mensch oder Agent. Sie ist das **Begründungsarchiv** der Portierung: welcher
+> Compilerfehler wodurch entstand, welches Muster wie oft auftrat, welche
+> Entscheidung warum so ausfiel. Sie ist **nicht** der Statusbericht; was jetzt
+> gilt, steht in [ZIEL.md](ZIEL.md), [README.md](README.md) und
+> [CHANGELOG.md](CHANGELOG.md). Gregor hat am 07.09.2026 gefragt *„ist es intern
+> für dich? oder für einen agenten?"* — die Antwort stand bis dahin nirgends
+> (Befund **W-31**, `Befunde/LEKTOR-4.md`).
+
 Stand: 2026-09-07 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
 OT501*, *Umgebung*, *E-11*, *OpenSSL3* und *Nächster Schritt* sind gegen den
 Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, L-6, und
@@ -496,9 +505,10 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
 1. ~~**Kriterium 0 nachweisen.**~~ **Erledigt am 06.09.2026:** Gregor hat
    `Eudora72-1.0.10-release.zip` auf einem Rechner **ohne** Visual Studio
    ausgepackt und gestartet — *„test bestanden: eudora läuft ohne VS2022
-   installiert."* Das ist der einzige belastbare Nachweis (E-8);
-   `tools/paket-pruefen.ps1` taugt dafür weiter nicht (PR-2.0 bis PR-2.3) und ist
-   deshalb **kein** Freigabekriterium.
+   installiert."* Das bleibt der belastbare Nachweis (E-8);
+   `tools/paket-pruefen.ps1` sagt seit der Behebung von PR-2.0 (06.09.2026,
+   `dfc8b40`) das Richtige voraus, ersetzt aber keinen Startversuch auf einem
+   fremden Rechner.
 2. **Die Darstellung, zweite Runde.** M-1 und A-1 wirken (E-1, E-2), offen
    bleiben die Splitter (`SECDockBar::AddSplitter` wird nie gerufen),
    `SECMDIFrameWnd::FloatControlBarInMDIChild` (leerer Rumpf, größter

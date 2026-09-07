@@ -71,8 +71,11 @@ Von Gregor bestätigt: **Kriterium 0** (Paket startet ohne Visual Studio),
 **E-30** (Symbole gesperrter Knöpfe), **E-28** (Doppelklick und Suchtreffer
 öffnen die Nachricht). Dazu **E-26** (Ladeadressen im Absturzbericht),
 **E-29** (`tools/absturz-auswerten.pl`) und die entfernte `dbghelp.dll` von
-2005. Gemessen, aber von Gregor **noch nicht** nachgesehen: **E-31** und
-**E-32**. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
+2005. **E-31 ist von Gregor mittelbar bestätigt** — ohne Paige-Fenster gibt es
+kein Verfassen-Fenster, und er hat am 07.09.2026 mit 7.2.0.21 eine Mail
+geschrieben und abgeschickt. Zu **E-32** siehe oben: Ursachenbehauptung von
+PRUEFER widerlegt, der Code-Mangel behoben. Einzelheiten in
+[CHANGELOG.md](CHANGELOG.md).
 
 ## Was sonst noch offen ist
 
@@ -141,11 +144,13 @@ abschreiben.
 
 ### B1 · Die Bedienfehler, die Gregor merkt
 
-Zwei sind behoben und bestätigt: Doppelklick und Suchtreffer öffnen die
-Nachricht (**E-28**), gesperrte Knöpfe zeigen ihr Symbol (**E-30**). Was bleibt,
-steht oben unter *Die Hauptarbeit* und in [ZIEL.md](ZIEL.md) als Kriterium 4
-bis 7 — Verfassen, Weiterleiten, *File → Exit* und die Meldung „Encountered an
-improper argument". Das ist der erste Schritt, nicht ein Punkt unter vielen.
+Vier sind behoben und bestätigt: Doppelklick und Suchtreffer öffnen die
+Nachricht (**E-28**), gesperrte Knöpfe zeigen ihr Symbol (**E-30**), eine Mail
+lässt sich schreiben und abschicken (Kriterium 5) und weiterleiten
+(Kriterium 6). Was bleibt, steht oben unter *Die Hauptarbeit*: **Kriterium 7**
+(*File → Exit*) und **Kriterium 8** (die untere Reiterleiste), dazu die Meldung
+„Encountered an improper argument". Das ist der erste Schritt, nicht ein Punkt
+unter vielen.
 
 ### B2 · Gesperrte Werkzeugleisten-Knöpfe — **erledigt**
 
@@ -171,26 +176,28 @@ Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
 ## C — Das Auslieferungspaket
 
-### C1 · `paket-pruefen.ps1` ist unbrauchbar als Freigabekriterium (**PR-2**)
+### C1 · `paket-pruefen.ps1` — **behoben am 06.09.2026** (PR-2.0)
 
-Zwei belegte Mängel:
+Zwei belegte Mängel, beide beseitigt:
 
-1. **Es prüft die Maschine, nicht das Paket.** Gegenprobe: `EudoraRes.dll`,
-   `QCSSL.dll`, `SPELL32.DLL`, `EuGraph.ocx` und `Plugins\` aus einer Kopie
-   gelöscht → *„keine Fehler, EXIT=0"*.
-2. **Bei einem Release-Paket erzeugt es vier Falschwarnungen** (feste
-   Debug-Laufzeitliste, `:360`). Wer ihnen folgt, holt mit `laufzeit-holen.ps1`
-   die **nicht verteilbaren** DLLs ins Paket — es leitet zum Lizenzverstoß an.
+1. **Es prüfte die Maschine, nicht das Paket.** Gegenprobe damals:
+   `EudoraRes.dll`, `QCSSL.dll`, `SPELL32.DLL`, `EuGraph.ocx` und `Plugins\` aus
+   einer Kopie gelöscht → *„keine Fehler, EXIT=0"*.
+2. **Bei einem Release-Paket erzeugte es vier Falschwarnungen** (feste
+   Debug-Laufzeitliste). Wer ihnen folgte, holte mit `laufzeit-holen.ps1` die
+   **nicht verteilbaren** DLLs ins Paket — es leitete zum Lizenzverstoß an.
 
-**Behebung:** die nötigen Laufzeiten aus den **Importen** der Paketdateien
-ableiten, nicht aus einer Liste. Und „vorhanden" nur gelten lassen, wenn die
-Datei **im Paket** liegt oder von Windows selbst stammt — nicht, wenn sie in
-`SysWOW64` einer Entwicklermaschine steht. `tools/bauen.ps1` liest die
-Importtabelle bereits; dort steht der Baustein.
+**Behoben in Commit `dfc8b40`:** die nötigen Laufzeiten werden aus den
+**PE-Import- und Verzögerungstabellen** der Paketdateien abgeleitet statt aus
+einer Liste (`tools/paket-pruefen.ps1:437`); ein Treffer in
+`SysWOW64`/`System32` gilt ausdrücklich **nicht** als vorhanden (`:546`); beim
+Debug-Paket weist es den Weg über `laufzeit-holen.ps1` selbst ab (`:577`). Drei
+Gegenproben in `Befunde/PAKET.md:106-127`.
 
-Das hindert **Kriterium 0** nicht mehr — es ist am 06.09.2026 am lebenden Objekt
-belegt (siehe C2). Es hindert nur, `paket-pruefen.ps1` als **Freigabekriterium**
-zu benutzen: sein „keine Fehler" sagt nichts über das Paket.
+**Was weiter gilt:** das Werkzeug ersetzt keinen Startversuch auf einem fremden
+Rechner. Es sagt, ob der Lader alles findet, was er vor dem ersten Befehl
+braucht — nicht, ob Eudora läuft. **Kriterium 0** ist ohnehin am lebenden Objekt
+belegt (siehe C2).
 
 ### C2 · Kriterium 0 auf einem Rechner ohne Visual Studio nachweisen — **erledigt**
 
@@ -301,12 +308,15 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
 - **Toter Include-Pfad** `..\OpenSSL\inc32` in `QCSocket.vcxproj:60` und das
   `OpenSSL`-Projekt in der Solution: gegen `libeay32.lib`/`ssleay32.lib` linkt
   kein Projekt mehr. Beides kann weg.
-- **`Releases/PAKETE.md` hinkt hinterher** — geführt sind dort 1.0.1, 1.0.2,
-  1.0.3 und 1.0.18; **1.0.4 bis 1.0.17 fehlen** (Mangel **M-4**). Wer das
-  nächste Paket schnürt, trägt seinen Abschnitt gleich mit ein. Weitere
-  überholte Stellen in anderen `.md` stehen in
-  [Befunde/LEKTOR.md](Befunde/LEKTOR.md) und
-  [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md).
+- **`Releases/PAKETE.md` hinkt hinterher** — einen eigenen Abschnitt haben
+  1.0.21, 1.0.18, 1.0.3, 1.0.2 und 1.0.1; **1.0.4 bis 1.0.17 sowie 1.0.19 und
+  1.0.20 fehlen** (Mangel **M-4**). In der Tabelle *Wo die Pakete liegen* stehen
+  1.0.4, 1.0.10, 1.0.14, 1.0.15 und 1.0.19 mit Prüfsumme; 1.0.20 fehlt auch
+  dort. Wer das nächste Paket schnürt, trägt seinen Abschnitt gleich mit ein.
+  Weitere überholte Stellen in anderen `.md` stehen in
+  [Befunde/LEKTOR.md](Befunde/LEKTOR.md),
+  [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) und
+  [Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md).
 
 ---
 

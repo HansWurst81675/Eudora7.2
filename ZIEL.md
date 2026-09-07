@@ -88,15 +88,20 @@ weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau*
 `Eudora72-1.0.10-release.zip`: *„test bestanden: eudora läuft ohne VS2022
 installiert."*
 
-> **`tools/paket-pruefen.ps1` ist NICHT dieser Nachweis.** Am 31.08.2026 war
-> Kriterium 0 mit diesem Werkzeug als „gemessen erfüllt" gemeldet worden; die
-> Gegenprobe hat es widerlegt: aus einer ausgepackten Kopie wurden
+> **`tools/paket-pruefen.ps1` war einmal kein Nachweis, ist es heute aber.** Am
+> 31.08.2026 war Kriterium 0 mit diesem Werkzeug als „gemessen erfüllt" gemeldet
+> worden; die Gegenprobe hat es widerlegt: aus einer ausgepackten Kopie wurden
 > `EudoraRes.dll`, `QCSSL.dll`, `SPELL32.DLL`, `EuGraph.ocx` und der ganze
-> `Plugins`-Ordner gelöscht — das Ergebnis blieb **„keine Fehler, EXIT=0"**.
-> **Der Prüfer prüft die Maschine, nicht das Paket.** Dazu erzeugt seine feste
-> Debug-Laufzeitliste bei einem **Release**-Paket vier Falschwarnungen; wer
-> ihnen folgt, holt sich die **nicht verteilbaren** DLLs ins Paket. Bis das
-> behoben ist (PR-2.0 bis PR-2.3), ist es kein Freigabekriterium.
+> `Plugins`-Ordner gelöscht — das Ergebnis blieb **„keine Fehler, EXIT=0"**. Das
+> Werkzeug prüfte die Maschine, nicht das Paket, und seine feste
+> Debug-Laufzeitliste erzeugte bei einem Release-Paket vier Falschwarnungen, die
+> zum Lizenzverstoß anleiteten. **Das ist am 06.09.2026 behoben** (PR-2.0,
+> Commit `dfc8b40`): es rechnet die Startkette aus den PE-Import- und
+> Verzögerungstabellen aus, zählt einen Treffer in `SysWOW64`/`System32`
+> ausdrücklich **nicht** als vorhanden und weist den Weg über
+> `laufzeit-holen.ps1` selbst ab — mit drei Gegenproben belegt
+> (`Befunde/PAKET.md`). Es ersetzt trotzdem keinen Startversuch auf einem
+> fremden Rechner: es sagt, ob der Lader alles findet, nicht ob Eudora läuft.
 
 ## Woran sich Kriterium 2 misst
 

@@ -166,8 +166,11 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
    > (Befund M-9). Der Code ist richtig, nur sein Beispiel ist alt.
 
 Wenn ein Paket geprüft werden soll, bevor es jemand auspackt, gibt es dafür
-`tools/paket-pruefen.ps1`. **Kein Freigabekriterium** — es prüft die Maschine
-mit, nicht nur das Paket (PR-2.0 bis PR-2.3).
+`tools/paket-pruefen.ps1`. Es rechnet die Startkette aus den PE-Importtabellen
+aus und zählt einen Treffer in `SysWOW64`/`System32` ausdrücklich **nicht** als
+vorhanden (PR-2.0 behoben am 06.09.2026, `Befunde/PAKET.md`). **Es ersetzt
+keinen Startversuch auf einem fremden Rechner** — es sagt, ob der Lader alles
+findet, nicht ob Eudora läuft.
 
 ## Was hier bewusst nicht steht
 

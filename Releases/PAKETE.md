@@ -218,7 +218,7 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 | SHA256 (gültig) | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
 | SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
 | Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
-| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — **taugt nicht als Freigabekriterium**, siehe PR-2.0 |
+| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — rechnet die Startkette aus den PE-Importtabellen aus, `SysWOW64` zählt nicht (PR-2.0 behoben am 06.09.2026). Ersetzt keinen Startversuch auf einem fremden Rechner |
 | LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — am 31.08.2026 abends auf den Release-Weg umgeschrieben; die alte Debug-Fassung ist dort im Kasten benannt |
 | QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
 

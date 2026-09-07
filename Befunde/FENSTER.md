@@ -2,6 +2,13 @@
 
 Agent FENSTER, 05./06.09.2026. Branch `wt/fenster-2` (von `fehler-nach-1010`).
 
+> **Nachtrag 07.09.2026: die Ursache ist gefunden.** Es war **E-28** —
+> `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen.
+> Behoben (`222c0ba`) und von Gregor bestätigt (Paket 1.0.14): Doppelklick und
+> Suchtreffer öffnen die Nachricht. Was unten steht, bleibt richtig: dieser
+> Durchgang fand die Ursache nicht, lieferte aber den Messwert, der die damalige
+> Suchrichtung widerlegte, und sechs belegte Schwachstellen auf dem Weg.
+
 Gregors Fehlerliste vom 05.09.2026, Fassung 7.2.0.10:
 
 > - wenn ich suche, läßt sich die mail nicht anklicken

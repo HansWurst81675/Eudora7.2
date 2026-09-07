@@ -1,5 +1,18 @@
 # Lektorat der Dokumentation
 
+**Diese Datei ist ein Fahrtenbuch, kein Statusbericht.** Sie sammelt die
+Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
+seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
+[README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
+
+Hier stehen der erste bis vierte, der sechste und der siebte Durchgang. Der
+**fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
+die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
+[Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7) und
+[Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md) (L-8, alle 47 MD-Dateien).
+
+## Erster Durchgang — 30.08.2026
+
 Durchgang vom 30.08.2026 durch den Agenten LEKTOR, Branch
 `worktree-agent-a3a787cbbe74cbbe2`, gemessener Ausgangsstand `371c1e3`.
 

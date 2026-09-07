@@ -51,8 +51,6 @@ Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum
 jeweils aktuellen Paket** steht im CHANGELOG beim zugehörigen Eintrag, nicht
 hier.
 
-Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md).
-
 Belegt:
 
 | Was | Beleg |
@@ -412,14 +410,25 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/kennung-erzeugen.pl` | erzeugt `BuildKennung.h` vor jedem Bau (PreBuildEvent) |
 | `tools/laufzeit-holen.ps1` | holt die vier **Debug**-Laufzeiten aus `SysWOW64` und prüft jede auf x86 nach. Für den Release-Bau nicht nötig |
 | `tools/paket-bauen.ps1` | stellt ein Auslieferungspaket aus dem Quellbaum zusammen, wahlweise als ZIP. **Veröffentlicht nichts** — ob ausgeliefert wird, entscheidet ein Mensch |
-| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket. **Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch (PR-2.0 bis PR-2.3) |
+| `tools/paket-pruefen.ps1` | prüft ein ausgepacktes Paket gegen Kriterium 0: rechnet aus den PE-Import- und Verzögerungstabellen die **Startkette** aus und zählt einen Treffer in `SysWOW64`/`System32` ausdrücklich **nicht** als vorhanden; beim Debug-Paket weist es den Weg über `laufzeit-holen.ps1` selbst ab (PR-2.0 behoben am 06.09.2026, drei Gegenproben in `Befunde/PAKET.md`). Es ersetzt keinen Startversuch auf einem fremden Rechner — es sagt, ob der Lader alles findet, was er vor dem ersten Befehl braucht |
 | `tools/ausliefern.pl` | prüft die Regel „eine Nummer, ein Bau" nach: `--pruefen` |
 | `tools/release-pruefen.pl` | prüft, ob das ausgelieferte Release zum Quellstand passt |
 | `tools/vc71-bruecke-messen.pl` | misst die Bindung der Fremd-DLLs an die VC-7.1-Laufzeit und erzeugt daraus die `.def` der `VC71Bruecke` |
 | `tools/gesichert.pl` | beantwortet in einem Aufruf: alles committet, alles gepusht, sind die **anderen** Arbeitsbäume sauber? **Sofort laufen lassen, wenn Gregor einen Merge ankündigt.** `--ohne-holen` verzichtet auf `git fetch --prune` |
 | `tools/ungesichertes-melden.pl` | meldet ungesicherte Änderungen |
 | `tools/lehren-spiegeln.pl` | spiegelt die Lehren aus dem Gedächtnis nach `Arbeitsweise/` |
-| `tools/pruefstand-melden.pl` | meldet, wie weit `BEFUNDE.md`, `README.md` und `PORTIERUNG.md` hinter dem Code herhinken. Maßstab ist die Zeile `<!-- pruefstand: <commit> -->` in jeder der drei Dateien — **wer eine davon nachzieht, zieht die Marke mit** |
+| `tools/pruefe-fensterbau.pl` | `pre-commit`-Schranke für den Fensterbau: keine modale Meldung in `Eudora71/OTShim/*.cpp` (E-33), `GetButton` hat Indexschranke **und** Ausnahmefang (E-34), jeder `GetButton`-Aufruf prüft sein Ergebnis auf NULL (E-35, E-36). Prüft alle `Eudora71/Eudora/*.cpp` — eine feste Dateiliste hatte genau die Lücke, in der E-36 lag. **Wer sie anfasst, lässt die drei Gegenproben laufen** |
+| `tools/strg-n-pruefen.ps1` | startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob das Verfassen-Fenster aufgeht. **Öffnet ein Fenster** — nicht ohne Absprache laufen lassen |
+| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Zweigwechsel vernichten würde. Verfahren in [AGENTEN.md](AGENTEN.md) |
+| `tools/befunde-einsammeln.pl` | führt die Befunddateien aus `Befunde/` in `BEFUNDE.md` zusammen (`--anhaengen`) und nennt die nächste freie Kennung (`--naechste E`) |
+| `tools/doku-pruefen.pl` | hält alle MD-Dateien gegen `ZIEL.md`, `VERSION` und `Eudora71/Version.h`: Kriterienzahl und Summe der Teile, doppelte oder widersprüchliche Befundkennungen, Verweise ins Leere, genannte ZIPs, die es nicht gibt, und eine alte Paketnummer als heutiger Stand. Holt seine Dateiliste aus `git ls-files` — eine Liste von Hand prüfte genau die Dateien nicht, an die niemand gedacht hat |
+| `tools/pruefstand-melden.pl` | meldet, wie weit `BEFUNDE.md`, `README.md` und `PORTIERUNG.md` hinter dem Code herlaufen (Marke `<!-- pruefstand: … -->`) |
+
+**Bewusst nicht in der Tabelle**, weil Hilfsmittel für einen einzelnen Befund:
+`tools/befehl-schicken.ps1` (schickt `WM_COMMAND` an ein Fenster) und
+`tools/zeiger-nachpruefen.pl` samt `tools/zeiger-nachpruefen-tests.pl`
+(Nachprüfung der Zeigerhärtungen). Damit sind alle 37 Dateien in `tools/`
+verzeichnet — nachgezählt am 07.09.2026 (Befund W-23, `Befunde/LEKTOR-4.md`).
 
 ## Was bisher gemacht wurde
 
