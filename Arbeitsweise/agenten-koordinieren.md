@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-05T18:44:11.670Z
 ---
 
-**Das Verfahren steht in [AGENTEN.md](AGENTEN.md) im Repo. Vor jeder Runde
+**Das Verfahren steht in [AGENTEN.md](../AGENTEN.md) im Repo. Vor jeder Runde
 paralleler Agenten lesen und befolgen.**
 
 Gregor am 05.09.2026: *„du mußt deine agenten besser koordinieren, damit nichts

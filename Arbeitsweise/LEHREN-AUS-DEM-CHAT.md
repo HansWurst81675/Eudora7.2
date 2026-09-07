@@ -368,9 +368,23 @@ einem Arbeitsbaum. Nur prueft es die falsche Richtung:
   Start nicht geladen**, obwohl sie im Repo stehen und dort eine Indexzeile
   haben.
 
+Dieselbe Fehlerklasse ein zweites Mal, und diesmal behoben: **vier Lehren
+hatten ueberhaupt keine Indexzeile** in `Arbeitsweise/MEMORY.md` — darunter
+drei der am 06.09.2026 neu geschriebenen, also genau die zu den Themen 4, 5
+und 6 mit zusammen 100 Fundstellen
+([lehren-anwenden-nicht-nur-schreiben](lehren-anwenden-nicht-nur-schreiben.md),
+[version-eindeutig-machen](version-eindeutig-machen.md),
+[abschalten-ist-ein-termin](abschalten-ist-ein-termin.md)) und dazu
+[erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md). Sie sind am
+07.09.2026 nachgetragen; seither sind alle 34 Lehre-Dateien indexiert und
+alle 111 Verweise innerhalb von `Arbeitsweise/` aufloesbar (geprueft, vorher
+war einer defekt).
+
 Damit ist genau die Fehlerklasse aus Thema 4 („aufschreiben reicht nicht")
 strukturell noch offen: Ein Chronist, der in einem Arbeitsbaum arbeitet, kann
 seine Lehren nicht wirksam machen — es gibt keinen Weg **Repo → Gedaechtnis**.
+Und dass eine Lehre ohne Indexzeile stillschweigend unwirksam bleibt, prueft
+bisher kein Werkzeug.
 
 **Was fehlt** (nicht von mir erledigt, weil es eine gemeinsame Datei im
 `pre-commit`-Hook betrifft und abzusprechen ist): ein zweiter Modus in
