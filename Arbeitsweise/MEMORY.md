@@ -21,6 +21,7 @@
 - [main muss immer baubar sein](main-muss-immer-baubar-sein.md) — Maßstab ist der frische Klon, nicht der eigene Arbeitsbaum
 - [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen
 - [Nie direkt auf main](nie-direkt-auf-main.md) — jede Änderung über einen eigenen Zweig; Gregor merged, nicht ich
+- [Erlaubnis nicht hineinlesen](erlaubnis-nicht-hineinlesen.md) - eine Aussage ueber Gregors Vorgehen ist keine Erlaubnis fuer mein Vorgehen; keine Regel selbst lockern
 - [Mannschaft fuehren](mannschaft-fuehren.md) — Auftrag ohne Symptom liefert nichts; jeden Ruecklauf selbst nachmessen, nicht weitergeben
 - [Text nicht durch Schichten schicken](text-nicht-durch-schichten-schicken.md) — Ersetzungstext in eine Datei, ueber Zeilenanker einsetzen; danach perl -c bzw. ScriptBlock::Create
 - [Abschalten ist ein Termin](abschalten-ist-ein-termin.md) — „ich schalte ab" ist eine Frist; genannte Zeit minus 20 Minuten ist das Ende der inhaltlichen Arbeit
