@@ -387,6 +387,37 @@ LPCSTR	szSection )
 	CString				szEntry;
 	CWinApp*			pApp = AfxGetApp();
 
+	// BEFUND E-33, Verdacht Platz 1: diese Schleife hat genau die Form von
+	// E-34 - Grenze aus GetBtnCount(), Zugriff mit m_btns[...]. Bei E-34 lief
+	// dieses Paar auseinander (protokolliert: "Ausnahme bei Index 24 von 27"),
+	// und CPtrArray::ElementAt wirft dort auch im Release-Bau
+	// CInvalidArgException - MFCs Text ist "Encountered an improper argument",
+	// genau die Meldung, die Gregor am 07.09.2026 beim Beenden gesehen hat.
+	//
+	// Warum HIER: SaveCustomInfo laeuft im normalen Betrieb NUR beim Beenden.
+	// Der Weg ist CloseDown Stufe 5 -> SaveBarState("ToolBar")
+	// (mainfrm.cpp) -> CMainFrame::SaveBarState (mainfrm.cpp:2570) ->
+	// QCToolBarManager::SaveState (QCToolBarManager.cpp:1202) -> hierher. Die
+	// beiden anderen Aufrufer sind ConvertOldStuff() (mainfrm.cpp:974, laeuft
+	// nur bei einer alten INI) und der Anpassen-Dialog
+	// (QCToolBarManager.cpp:1109).
+	//
+	// Die Einfassung faengt NICHT ab: sie protokolliert Platz, Anzahl und
+	// Grund und wirft mit THROW_LAST weiter. Damit bleibt das Verhalten
+	// unveraendert - dies ist eine Spurmarke, keine Behebung.
+	{
+		CString strAnfang;
+		strAnfang.Format(
+			_T("E-33 SaveCustomInfo: Abschnitt=%s GetBtnCount=%d"),
+			(szSection != NULL) ? szSection : "(NULL)",
+			(int)GetBtnCount());
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strAnfang);
+	}
+
+	iCurrentButton = 0;
+
+	TRY
+	{
 	for( iCurrentButton = 0; iCurrentButton < GetBtnCount(); iCurrentButton ++ )
 	{	
 		if( ( m_btns[ iCurrentButton ]->m_ulData != 0 ) &&
@@ -479,6 +510,27 @@ LPCSTR	szSection )
 			pApp->WriteProfileString(szSection, szEntry, szValue);
 		}	
 	}
+	}
+	CATCH_ALL(e)
+	{
+		// BEFUND E-33: nicht abfangen, nur benennen. GetErrorMessage liefert
+		// denselben Text, den Gregor im Meldungsfenster sieht; THROW_LAST
+		// wirft unveraendert weiter, damit sich am Ablauf nichts aendert.
+		TCHAR szGrund[256];
+		szGrund[0] = _T('\0');
+		if (e != NULL)
+			e->GetErrorMessage(szGrund, 256);
+
+		CString strMeldung;
+		strMeldung.Format(
+			_T("E-33 SaveCustomInfo: Ausnahme bei Index %d von %d - Grund: %s"),
+			(int)iCurrentButton, (int)GetBtnCount(),
+			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+
+		THROW_LAST();
+	}
+	END_CATCH_ALL
 	
 	szEntry.Format( "btn%u", iCurrentButton );
 	pApp->WriteProfileString(szSection, szEntry, NULL);

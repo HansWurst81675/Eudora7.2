@@ -932,6 +932,11 @@ void CPersonalityView::OnCmdDeletePersonality()
 		LV_FINDINFO lvFindInfo;
 		lvFindInfo.flags = LVFI_STRING;
 		lvFindInfo.lParam = NULL;
+
+		// E-37: merkt sich, ob mindestens eine Persoenlichkeit entfernt wurde.
+		// Die Liste wird dann EINMAL am Ende neu aufgebaut, nicht je Durchlauf.
+		bool bNeuAufbauen = false;
+
 		while (! strListPersonalities.IsEmpty())
 		{
 			CString strName = strListPersonalities.RemoveHead();
@@ -956,23 +961,73 @@ void CPersonalityView::OnCmdDeletePersonality()
 				//
 				if (g_Personalities.Remove(strName))
 				{
-					//
 					// Then, if successful, fixup the UI.
 					//
+					// E-37: Gregor hat am 07.09.2026 gemessen, dass das
+					// Loeschen WIRKT - "ja, sie verschwinden nach neustart" -,
+					// die Liste im Fenster aber stehen bleibt. FindItem
+					// liefert hier offenbar -1, und DeleteItem(-1) tut dann
+					// nichts. Abgesichert war das nur mit ASSERT, und ASSERT
+					// ist im Release-Bau weggelassen: der Anwender sieht,
+					// dass nichts passiert, und haelt das Loeschen fuer
+					// kaputt.
+					//
+					// Behoben so, dass es NICHT davon abhaengt, WARUM
+					// FindItem scheitert: der Fehlschlag wird protokolliert,
+					// damit die Ursache beim naechsten Lauf dasteht, und die
+					// Liste wird am Ende ueber PopulateView() neu aufgebaut.
+					// PopulateView leert sie zuerst und fuellt sie aus
+					// g_Personalities.List() - danach stimmt die Anzeige mit
+					// der Eudora.ini ueberein, gleichgueltig was FindItem
+					// gemeldet hat.
 					lvFindInfo.psz = strName;
 					int nIndex = theCtrl.FindItem(&lvFindInfo);
-					ASSERT(nIndex != -1);
-					theCtrl.DeleteItem(nIndex);
+					if (nIndex >= 0)
+					{
+						theCtrl.DeleteItem(nIndex);
+					}
+					else
+					{
+						CString strMeldung;
+						strMeldung.Format(
+							_T("E-37 OnCmdDeletePersonality: FindItem hat '%s' ")
+							_T("nicht gefunden (%d Eintraege in der Liste) - ")
+							_T("die Liste wird neu aufgebaut"),
+							(const char *) strName, (int) theCtrl.GetItemCount());
+						PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+					}
+
+					bNeuAufbauen = true;
 				}
 				else
 				{
+					// E-37: hier stand nur ASSERT(0), im Release-Bau also
+					// nichts. Remove() hat drei Ausgaenge mit FALSE, und nur
+					// einer davon meldet sich selbst (laufende Aufgaben).
+					CString strMeldung;
+					strMeldung.Format(
+						_T("E-37 OnCmdDeletePersonality: Remove('%s') hat FALSE ")
+						_T("geliefert - Eintrag nicht in [Personality] der ")
+						_T("Eudora.ini gefunden, oder laufende Aufgaben"),
+						(const char *) strName);
+					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
 					ASSERT(0);
 				}
 			}
 		}
+
+		// E-37: einmal am Ende, nicht in der Schleife - PopulateView leert die
+		// ganze Liste und fuellt sie neu, das braucht es nur ein Mal.
+		if (bNeuAufbauen)
+			PopulateView();
 	}
 	else
 	{
+		// E-37: auch hier stand nur ASSERT(0). Nichts markiert ist kein
+		// Fehler, aber es gehoert ins Protokoll - sonst ist von aussen nicht
+		// zu unterscheiden, ob nichts markiert war oder das Loeschen scheiterte.
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+			_T("E-37 OnCmdDeletePersonality: keine Persoenlichkeit markiert"));
 		ASSERT(0);
 	}
 }
