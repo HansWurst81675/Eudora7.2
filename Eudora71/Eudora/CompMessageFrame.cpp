@@ -1710,9 +1710,31 @@ LRESULT CCompMessageFrame::OnUserUpdateImmediateSend(WPARAM, LPARAM)
 		int nIndex = pToolBar->CommandToIndex(ID_MESSAGE_SENDIMMEDIATELY);
 		if (nIndex != -1)
 		{
-			//to avoid flickering of toolbar do not paint if it is in the same state
-			if(((TBarSendButton*)pToolBar->GetButton(nIndex))->IsBPWarning() != m_bBPWarning)
-				((TBarSendButton*)pToolBar->GetButton(nIndex))->SetBPWarning(m_bBPWarning);
+			// BEFUND E-35: GetButton kann NULL liefern, auch wenn nIndex im
+			// Bereich liegt. Seit E-34 faengt GetButton die MFC-Ausnahme aus
+			// m_btns[] ab und gibt dann NULL zurueck - die Abfrage
+			// "nIndex != -1" darueber schuetzt davor NICHT.
+			//
+			// Hier wurde der Rueckgabewert zweimal blind dereferenziert. Das
+			// ist der Absturz beim ZWEITEN Strg-N, gemessen am 07.09.2026:
+			// der erste Aufruf liefert ein Fenster, beim zweiten kommt
+			// OnUserUpdateImmediateSend dazwischen und greift auf NULL zu.
+			//
+			// Gefunden hat es tools/pruefe-fensterbau.pl, die Schranke, die
+			// genau nach diesem Muster sucht.
+			//
+			// Nebenbei: GetButton wurde zweimal gerufen, um denselben Knopf
+			// zu holen. Einmal genuegt.
+			TBarSendButton* pSendeKnopf =
+				(TBarSendButton*) pToolBar->GetButton(nIndex);
+
+			if (pSendeKnopf)
+			{
+				//to avoid flickering of toolbar do not paint if it is in the same state
+				if (pSendeKnopf->IsBPWarning() != m_bBPWarning)
+					pSendeKnopf->SetBPWarning(m_bBPWarning);
+			}
+
 			pToolBar->Invalidate(nIndex);
 		}
 	}
