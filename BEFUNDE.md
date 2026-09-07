@@ -5049,7 +5049,7 @@ ist noch ein leerer Rumpf (`OTShim.cpp:2244`), `OnSizeParent` reicht noch durch
 **Beim Start sind zwei bis drei SUPERASSERT-Dialoge wegzuklicken**, dazu einige
 Warnungen. Das ist der Debug-Bau; im Release-Bau entfallen sie.
 
-### Stand der vier Kriterien
+### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
@@ -5103,7 +5103,7 @@ umgekehrt.
 
 Gregors Einschätzung: *„das kann man beheben."*
 
-### Stand der vier Kriterien
+### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
@@ -5528,7 +5528,7 @@ Warum musste das Mailverzeichnis von Hand dazugelegt werden? Das Paket enthält
 mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
 übergeben wird. Zu klären.
 
-### Stand der vier Kriterien
+### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
