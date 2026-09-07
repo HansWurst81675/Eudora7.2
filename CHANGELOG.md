@@ -9,13 +9,13 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 06.09.2026)
+## Noch offen (Stand 07.09.2026)
 
 | Kennung | | |
 |---|---|---|
-| **E-32** | **Meldung „An unhandled exception has occurred" beim Verfassen** | Sie ist **modal** — danach lässt sich Eudora nicht einmal mehr beenden. Der Fensterbau läuft vollständig durch (`OnMessageNewMessage: fertig`); die Ausnahme kommt erst beim Anzeigen. Verdacht: `AutoCompleterListBox::KillACListBox` aus `CHeaderView::OnKillFocusTo` |
-| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht |
+| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht. Nach der Behebung von E-32 neu zu messen: bis dahin verdeckte die modale Meldung aus E-32 alles Weitere |
 | — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | MFCs Text für `CInvalidArgException` — kommt also nicht aus Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16, behoben); es gibt eine zweite |
+| — | **Ob der Anwender das Verfassen-Fenster sieht** | der Fensterbau läuft im Protokoll durch (`OnMessageNewMessage: fertig`) und E-32 ist behoben; auf einem Rechner hat das niemand nachgesehen. Daran hängen Kriterium 5 und 6 |
 
 ## Erreicht
 
@@ -24,25 +24,59 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
 | **Kriterium 2** (Darstellung) | *fast* — offen bleibt „Encountered an improper argument" |
 | **Kriterien 4 bis 7** (benutzbar) | **nicht erfüllt** |
+| **E-31 und E-32** | behoben, aber **von Gregor nicht nachgemessen** — und nicht in Paket 1.0.18 |
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
 > es auch nicht. nichts statt crash ist auch keine verbesserung!"*
 >
-> Verbessert hat sich die **Ausgangslage**, nicht das Programm: die Ursache ist
-> gefunden und behoben, und was übrig bleibt, ist ein einzelner benannter Punkt
-> statt einer ganzen Bibliothek.
+> Verbessert hat sich die **Ausgangslage**, nicht das Programm: bis dahin
+> entstand in dieser Portierung kein einziges Paige-Fenster, und die Ursache war
+> unbekannt. Jetzt ist sie gefunden und behoben. Ob daraus für den Anwender ein
+> benutzbares Verfassen-Fenster wird, entscheidet der nächste Lauf auf seinem
+> Rechner.
 
 ---
 
+## Nach 7.2.0.18 — 07.09.2026 · noch nicht gebaut, noch nicht gepackt
+
+Diese Änderungen liegen im Repo, aber in **keinem** Paket. Wer sie sehen will,
+muss bauen. `Eudora71/Version.h` und `VERSION` stehen weiter auf 7.2.0.18 /
+1.0.18 — wer daraus ein Paket schnürt, setzt beide Nummern vorher hoch, sonst
+tragen zwei verschiedene Bauten dieselbe Kennung.
+
+- **E-32 behoben — die modale Meldung „An unhandled exception has occurred"
+  beim Verfassen.** `CHeaderView::OnKillFocusRecipient` in
+  `Eudora71/Eudora/headervw.cpp` dereferenzierte `pField`, obwohl die Abfrage
+  drei Zeilen darüber ausdrücklich mit NULL rechnet (`if (pField && …)`).
+  `GetDlgItem` liefert NULL, solange das Kopfzeilenfeld nicht existiert — und
+  `OnKillFocusTo` läuft während `LoadFrame`, also bevor die Felder da sind.
+  Weil der Zugriff **innerhalb einer Fensterprozedur** passiert, meldet Windows
+  `0xC000041D` (STATUS_FATAL_USER_CALLBACK_EXCEPTION) statt des üblichen
+  Zugriffsfehlers. Dieselbe Fehlerklasse wie E-18 und E-22.
+  **Von Gregor nicht nachgemessen**
+- **`tools/doku-pruefen.pl`** prüft die Dokumentation mechanisch gegen sich
+  selbst und gegen den Quellstand: Kriterienzahl gegen `ZIEL.md`, doppelt
+  vergebene Befundkennungen, Statuswidersprüche im Verzeichnis von
+  `BEFUNDE.md`, Verweise ins Leere, und ob eine Datei eine ältere Fassung als
+  den Quellstand behauptet. Auf Gregors Ansage *„ich traue dir nicht ganz,
+  jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"*
+- **Doku-Durchgang L-7** (`Befunde/LEKTOR-3.md`) — die falschen und veralteten
+  Werte in `README.md`, `ZIEL.md`, `WEITERMACHEN.md`, `AUFGABEN.md`,
+  `CHANGELOG.md`, `PORTIERUNG.md` und `Releases/PAKETE.md`, ausgelöst von
+  Gregors Ansage *„ich hasse es, wenn in den dokus falsche oder veraltete infos
+  und werte stehen"*
+
+---
 
 ## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · die Ursache gefunden
 
-**E-31 — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile in
-`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695`:
+**E-31 — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile im
+Windows-Zweig von `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H` (`grep -n pg_time_t`):
 
 ```c
-typedef time_t   pg_time_t;
+typedef time_t   pg_time_t;      /* vorher */
+typedef long     pg_time_t;      /* nachher */
 ```
 
 `time_t` war unter VC6/VC7.1 **vier** Byte breit, unter VS2022 ist es **acht**.
@@ -72,9 +106,10 @@ brachten:** `PgGlobals::InitFonts` schrieb mit `memcpy(&def_style, &styleInfo,
 passiert, **bevor** der verdächtigte `pgNewNamedStyle` überhaupt gerufen wird.
 
 **Zwei Annahmen der Vorarbeit waren falsch.** Es *gibt* Paige-Quellen:
-`Eudora71/PaigeDLL/PGSOURCE`, 38 C-Dateien. Der Rekursionszyklus ist dort
-nachzulesen — `pgInstallFont` → `pgStyleSuperImpose` →
-`target_style->procs.init(...)` (`PGDEFSTL.C:1640`).
+`Eudora71/PaigeDLL/PGSOURCE`, **37** `.C`-Dateien (nachgezählt am 07.09.2026 —
+`git ls-files Eudora71/PaigeDLL/PGSOURCE` liefert 38 Einträge, davon einer
+`.SBT`). Der Rekursionszyklus ist dort nachzulesen — `pgInstallFont` →
+`pgStyleSuperImpose` → `target_style->procs.init(...)` (`PGDEFSTL.C:1640`).
 
 ### Die Probe
 
@@ -86,7 +121,17 @@ nachzulesen — `pgInstallFont` → `pgStyleSuperImpose` →
 
 **In dieser Portierung entstand bis dahin nie ein Paige-Fenster.**
 
-### Was danach noch offen ist
+### Was danach noch offen war
+
+> **Nachtrag 07.09.2026: E-32 ist behoben.** Der unten festgehaltene Verdacht
+> traf den Ort, aber nicht die Ursache. Es war nicht
+> `AutoCompleterListBox::KillACListBox` selbst, sondern der **ungeprüfte
+> Zeiger auf dem Weg dorthin**: `CHeaderView::OnKillFocusRecipient` in
+> `Eudora71/Eudora/headervw.cpp` dereferenzierte `pField`, obwohl die Abfrage
+> drei Zeilen darüber ausdrücklich mit NULL rechnet. `GetDlgItem` liefert NULL,
+> solange das Kopfzeilenfeld nicht existiert — und `OnKillFocusTo` läuft
+> während `LoadFrame`, also bevor die Felder da sind. Dieselbe Fehlerklasse wie
+> E-18 und E-22. **Von Gregor nicht nachgemessen.**
 
 - **E-32 — die Meldung „An unhandled exception has occurred" beim Verfassen.**
   Das ist der letzte Schritt bis Kriterium 5. **Gemessen am 06.09.2026 nach der
@@ -94,29 +139,22 @@ nachzulesen — `pgInstallFont` → `pgStyleSuperImpose` →
   `OnCreateClient: vor GetSubMenu 11` → **`OnMessageNewMessage: fertig`**. Der
   Fensterbau ist also fertig; die Ausnahme kommt **danach**, beim Anzeigen.
 
-  Der Verdacht steht: `AutoCompleterListBox::KillACListBox`
+  Der Verdacht am 06.09.2026: `AutoCompleterListBox::KillACListBox`
   (`AutoCompleteSearcher.cpp:548`), gerufen aus `CHeaderView::OnKillFocusTo`.
   Der Agent sah dort unter dem Debugger `0xC000041D`
   (STATUS_FATAL_USER_CALLBACK_EXCEPTION — eine Ausnahme innerhalb einer
-  Fensterprozedur) und hielt es für fokusabhängig und selten. **Das stimmt
-  nicht:** Gregor bekommt die Meldung bei jedem Versuch, und sie ist modal —
-  deshalb lässt sich Eudora danach auch nicht mehr beenden.
+  Fensterprozedur) und hielt es für fokusabhängig und selten. **Das stimmte
+  nicht:** Gregor bekam die Meldung bei jedem Versuch, und sie war modal —
+  deshalb ließ sich Eudora danach auch nicht mehr beenden.
 
-  **Nächster Schritt:** Marken in `KillACListBox` und `CHeaderView::OnKillFocusTo`
-  setzen, dann `tools/strg-n-pruefen.ps1 -Verzeichnis <Paket>` laufen lassen.
-  Der Weg dorthin ist damit derselbe wie bei E-31, und der hat funktioniert.
-
-- Eine Meldung „An unhandled exception has occurred" bleibt. Die Spur endet
-  jetzt bei `OnCreateClient: Auswahlfelder gefüllt, jetzt die Schriftnamen` —
-  danach kommen fest verdrahtete Menü-Indizes (`GetSubMenu(11)`). Sechs neue
-  Marken sitzen dort
-- Unter dem Debugger tritt ein zweiter, **fokusabhängiger** Fehler zutage:
-  `0xC000041D` in `AutoCompleterListBox::KillACListBox+5`
-  (`AutoCompleteSearcher.cpp:551`), gerufen aus `CHeaderView::OnKillFocusTo`.
-  In vier Läufen ohne Debugger nicht ausgelöst
+- Unter dem Debugger trat dieselbe Ausnahme als scheinbar zweiter,
+  **fokusabhängiger** Fehler zutage: `0xC000041D` in
+  `AutoCompleterListBox::KillACListBox+5` (`AutoCompleteSearcher.cpp:551`),
+  gerufen aus `CHeaderView::OnKillFocusTo`. In vier Läufen ohne Debugger nicht
+  ausgelöst — das war irreführend, es ist E-32
 - **Der eigentliche Schlussstein wäre ein Neubau von `Paige32.dll` mit VS2022** —
-  Quellen und `Paige32.vcproj` liegen vollständig vor. Dann kann keine
-  Kopfdatei mehr von der Binärdatei abweichen
+  Quellen (`PGSOURCE`, 37 `.C`-Dateien) und `PAIGE32/Paige32.vcproj` liegen
+  vor. Dann kann keine Kopfdatei mehr von der Binärdatei abweichen
 
 ### Neue Werkzeuge
 
@@ -302,56 +340,64 @@ unter diesen Namen samt Prüfsumme veröffentlicht sind.
 ## Wo man weitermachen kann
 
 Die offenen Enden mit Fundstelle — für jemanden, der das Repo frisch klont.
+**Stand 07.09.2026.**
 
-### 1. E-27: die Rekursion in Paige (der große Brocken)
+### 1. Ob das Verfassen-Fenster für den Anwender sichtbar wird
 
-**Nächste Frage:** Entsteht in dieser Portierung überhaupt jemals ein
-Paige-Fenster? Bisher ist kein einziger erfolgreicher Durchlauf von
-`CPaigeEdtView::NewPaigeObject` belegt. Fällt die Antwort „nein" aus, ist nicht
-das Verfassen-Fenster das Problem, sondern die ganze Paige-Anbindung.
+Daran hängen Kriterium 5 und 6, und es ist **nicht gemessen**. E-31 und E-32
+sind behoben, der Fensterbau läuft im Protokoll vollständig durch
+(`OnMessageNewMessage: fertig`) — gesehen hat das Fenster niemand.
 
-**So misst man es:** `LogLevel=32896` in die `Eudora.ini`, dann eine
-Nur-Text-Nachricht öffnen — HTML geht an Internet Explorer und sagt nichts aus —
-und in `eudora.log` nach `CPaigeEdtView::OnCreate` suchen.
+**So misst man es:** `LogLevel=32896` in die `Eudora.ini`, Eudora starten,
+Strg-N, danach in `eudora.log` nach `CPaigeEdtView::OnCreate` und
+`OnMessageNewMessage: fertig` suchen. Ohne dass jemand danebensitzt:
 
-**Werkzeug:** `tools/stapel-untersuchen.ps1`, **32-Bit-PowerShell**:
+```
+powershell -ExecutionPolicy Bypass -File tools\strg-n-pruefen.ps1 -Verzeichnis <Paket>
+```
+
+Das Werkzeug startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob
+das Fenster aufgeht.
+
+**Unter dem Debugger**, 32-Bit-PowerShell:
 
 ```
 C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -File tools\stapel-untersuchen.ps1 -Exe <Paket>\Eudora.exe -Argumente "<Mailverzeichnis>"
 ```
 
-Die Stapelabtastung zeigt den Zyklus und die seltenen Treffer, die hineinführen.
 Eudora lässt sich dabei von außen steuern, ohne dass jemand klicken muss:
 Meldungsfenster mit `WM_COMMAND`/`IDOK` schließen, dann `WM_COMMAND` mit
 `ID_MESSAGE_NEWMESSAGE` (32797) an die Fensterklasse `EudoraMainWindow`.
 
-**Was Paige angeht:** `Eudora71/PaigeDLL` enthält nur Kopfdateien und Makefiles,
-keine Quellen. An der Bibliothek selbst ist nichts zu reparieren — es geht
-darum, das Muster zu vermeiden, das sie nicht verträgt. Bei S-2 war das der Weg
-zur Lösung.
+**Was Paige angeht:** `Eudora71/PaigeDLL` enthält **doch** Quellen — `PGSOURCE`
+mit 37 `.C`-Dateien, dazu `PAIGE32/Paige32.vcproj` und die alten Makefiles. Bis
+zum 06.09.2026 stand an dieser Stelle das Gegenteil, und das hat die Suche nach
+E-31 unnötig lange aufgehalten. Der Rekursionszyklus ist dort nachzulesen
+(`PGDEFSTL.C:1640`). **Der eigentliche Schlussstein wäre ein Neubau von
+`Paige32.dll` mit VS2022** — dann kann keine Kopfdatei mehr von der Binärdatei
+abweichen, und genau diese Abweichung war E-31.
 
 **Noch nicht versucht:** Page Heap (`gflags /p /enable Eudora.exe /full`, als
-Administrator), und ein Vergleich der Strukturgrößen
-`style_info`/`font_info`/`par_info` zwischen `PAIGE.H` und dem, was die DLL von
-2005 erwartet.
+Administrator).
 
 ### 2. Die verbleibenden zwei Meldungen
 
-- *File → Exit* bringt eine Meldung. Noch nicht untersucht
+- **E-33** — *File → Exit* bringt eine Meldung statt sauber zu beenden. Noch
+  nicht untersucht, und nach der Behebung von E-32 neu zu messen: bis dahin
+  verdeckte die modale Meldung aus E-32 alles Weitere
 - „Encountered an improper argument" — das ist MFCs Text für
   `CInvalidArgException`, kommt also aus MFC, nicht aus Eudora. Eine bekannte
   Quelle war `QCChildToolBar::GetButton` mit Index minus 1 (E-16, behoben); es
   gibt offenbar eine zweite
 
-### 3. Zwei Altlasten, die niemand bauen kann
+### 3. Die Altlast, die niemand bauen kann
 
 - **`EuMemMgr.dll`** ist gar kein Projekt der Projektmappe — eine vorgebaute
   Binärdatei von 2005 (Version 7.0.0.9). Ausgerechnet sie löst den Aufrufstapel
-  im Absturzbericht auf
-- **`Paige32.dll`**, ebenfalls 2005, ohne Quellen. Beide holen `malloc`/`free`
-  aus `MSVCR71` — das sind **zwei getrennte Halden** neben der UCRT von
-  `Eudora.exe`. Speicher, der über diese Grenze gereicht wird, ergibt
-  `0xC0000374`
+  im Absturzbericht auf. Sie holt `malloc`/`free` aus `MSVCR71`, hat damit eine
+  **eigene Halde** neben der UCRT von `Eudora.exe`, und Speicher, der über diese
+  Grenze gereicht wird, ergibt `0xC0000374`. Für `Paige32.dll` gilt dasselbe —
+  dort liegen aber Quellen vor (siehe 1.)
 
 ### 4. Was beim Mitarbeiten hilft
 
