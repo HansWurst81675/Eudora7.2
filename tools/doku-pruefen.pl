@@ -77,9 +77,33 @@ unless (length $quellstand && length $paket) {
 }
 
 # --- 2. Die Dateien, die den AKTUELLEN Stand behaupten ------------------------
-# Zeitdokumente (Pruefberichte, Befundsammlungen) sind ausdruecklich nicht
-# dabei: sie beschreiben einen Zustand von damals und duerfen alt sein.
-my @aktuell = qw(README.md ZIEL.md WEITERMACHEN.md AUFGABEN.md CHANGELOG.md);
+# Bis zum 07.09.2026 stand hier eine Liste von fuenf Dateinamen, von Hand
+# gepflegt. Gregor fand daraufhin selbst drei Widersprueche und sagte: "ich
+# moechte dir nicht jede einzelne MD datei nennen, es betrifft ALLE!" - eine
+# Schranke, der man ihren Umfang von Hand nennen muss, prueft genau die Dateien
+# nicht, an die niemand gedacht hat. Gemessen an jenem Tag: 47 MD-Dateien im
+# Repo, davon kamen 16 in LEKTORAT.md nie vor.
+#
+# Deshalb holt sich das Werkzeug die Liste jetzt selbst aus git. Ausgenommen
+# sind nur zwei Gruppen, und zwar mit Begruendung:
+#   - Arbeitsweise/  ist ein Spiegel des Gedaechtnisses (tools/lehren-spiegeln.pl);
+#     eine Aenderung dort geht beim naechsten Spiegeln verloren. Die Quelle liegt
+#     im Gedaechtnisverzeichnis und wird dort nachgezogen (Befund NP3-4).
+#   - Zeitdokumente (Befunde/, Pruefung/, BEFUNDE.md, LEKTORAT.md, PRUEFUNG-*.md,
+#     Releases/PAKETE.md, Releases/1.0/) beschreiben einen Zustand von damals und
+#     DUERFEN alte Zahlen nennen. Sie werden nur auf Widersprueche in Befund-IDs
+#     geprueft, nicht auf Aktualitaet.
+my @alle_md = grep { length } split /\n/, (qx{git ls-files "*.md" 2>NUL} || '');
+@alle_md = grep { !m{^Arbeitsweise/} } @alle_md;
+
+my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$)};
+my @aktuell   = grep { $_ !~ $zeitdokument } @alle_md;
+my @zeitdok   = grep { $_ =~ $zeitdokument } @alle_md;
+
+unless (@aktuell) {
+    print "doku-pruefen: git ls-files liefert keine MD-Dateien - nichts geprueft.\n" unless $leise;
+    exit 2;
+}
 
 # --- 3. Kriterienzahl: ZIEL.md ist die Quelle --------------------------------
 my $ziel = lies('ZIEL.md');
@@ -114,6 +138,38 @@ for my $datei (@aktuell) {
                 push @mangel, sprintf("%s:%d nennt %d Kriterien, ZIEL.md fuehrt %d",
                                       $datei, $i + 1, $genannt, $anzahl_kriterien);
             }
+        }
+    }
+}
+
+# Zusaetzlich: die SUMME der genannten Teile muss zur Kriterienzahl passen.
+# Am 07.09.2026 stand in README.md und WEITERMACHEN.md "Neun Kriterien ... drei
+# belegt, eines fast, vier nicht" - das sind acht. Das Werkzeug hatte nur das
+# Wort vor "Kriterien" geprueft und die Summe uebersehen.
+for my $datei (@aktuell) {
+    my $inhalt = lies($datei);
+    next unless defined $inhalt;
+    # Zahlwoerter im Satz nach "N Kriterien" bis zum Satzende sammeln.
+    my @zeilen = split /\n/, $inhalt;
+    for my $i (0 .. $#zeilen) {
+        my $satz = $zeilen[$i];
+        $satz .= " " . $zeilen[$i+1] if $i < $#zeilen;
+        next unless $satz =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\s+Kriterien\s*(?:stehen|sind)?/i;
+        my $gesamt = $wort{ lc $1 };
+        next unless defined $gesamt;
+        # Achtung: der Satz enthaelt Punkte im Verweis "[ZIEL.md](ZIEL.md)".
+        # Ein Muster mit [^.] scheitert daran - am 07.09.2026 blieb die
+        # Summenpruefung deshalb stumm, obwohl die Summe falsch war.
+        my ($rest) = $satz =~ /Kriterien\b(.*?)\.\*\*/;
+        next unless defined $rest;
+        my $summe = 0;
+        while ($rest =~ /\b(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\b/gi) {
+            $summe += $wort{ lc $1 };
+        }
+        next unless $summe;
+        if ($summe != $gesamt) {
+            push @mangel, sprintf("%s:%d nennt %d Kriterien, die Aufteilung ergibt aber %d",
+                                  $datei, $i + 1, $gesamt, $summe);
         }
     }
 }
@@ -216,9 +272,17 @@ if (defined $changelog && defined $befunde) {
 }
 
 # --- 5. Verweise, die ins Leere zeigen ---------------------------------------
+# Ein Verweis in einer MD-Datei ist RELATIV ZU IHREM Verzeichnis zu lesen, nicht
+# zur Repo-Wurzel. Bis zum 07.09.2026 loeste das Werkzeug gegen die Wurzel auf
+# und meldete deshalb Eudora71/OTShim/INVENTAR.md -> 'PLAN.md' als fehlend,
+# obwohl die Datei direkt daneben liegt. Zwei Fehlalarme in einem Lauf - und
+# eine Schranke, die zweimal umsonst warnt, wird beim dritten Mal nicht mehr
+# geglaubt.
 for my $datei (@aktuell) {
     my $inhalt = lies($datei);
     next unless defined $inhalt;
+    (my $verzeichnis = $datei) =~ s{/[^/]+\z}{};
+    $verzeichnis = '.' if $verzeichnis eq $datei;
     my @zeilen = split /\n/, $inhalt;
     for my $i (0 .. $#zeilen) {
         while ($zeilen[$i] =~ /\[[^\]]*\]\(([^)#]+?)\)/g) {
@@ -226,21 +290,93 @@ for my $datei (@aktuell) {
             next if $ziel_pfad =~ m{^[a-z]+://};       # Netzadresse
             next if $ziel_pfad =~ /^mailto:/;
             $ziel_pfad =~ s/\s+\z//;
-            next if -e $ziel_pfad;
+            next if $ziel_pfad =~ /^#/;               # Sprungmarke in derselben Datei
+            next if -e $ziel_pfad;                    # von der Wurzel aus
+            next if -e "$verzeichnis/$ziel_pfad";     # neben der Datei
             push @mangel, sprintf("%s:%d verweist auf '%s' - gibt es nicht",
                                   $datei, $i + 1, $ziel_pfad);
         }
     }
 }
 
+# --- 5b. Genannte Auslieferungspakete, die es nicht mehr gibt -----------------
+# Am 07.09.2026 verwies README.md auf Releases/Eudora72-1.0.18-release.zip; das
+# ZIP war beim Aufraeumen entfernt worden (104 MB auf 16 MB). Ein entferntes ZIP
+# darf genannt werden - aber nur, wenn Releases/PAKETE.md es mit Pruefsumme und
+# Netzadresse fuehrt. Gregor: "wenn ein verweis auf ziel.md drin enthalten ist,
+# dann sollten die zahlen zueinander passen."
+my $pakete_md = lies('Releases/PAKETE.md') || '';
+for my $datei (@aktuell) {
+    my $inhalt = lies($datei);
+    next unless defined $inhalt;
+    my @zeilen = split /\n/, $inhalt;
+    for my $i (0 .. $#zeilen) {
+        while ($zeilen[$i] =~ /(Eudora72-[0-9.]+-[a-z]+\.zip)/g) {
+            my $zip = $1;
+            next if -e "Releases/$zip";
+            next if index($pakete_md, $zip) >= 0;
+            push @mangel, sprintf("%s:%d nennt '%s' - liegt nicht in Releases/ und steht auch nicht in Releases/PAKETE.md",
+                                  $datei, $i + 1, $zip);
+        }
+    }
+}
+
+# --- 5c. Eine alte Paketnummer als HEUTIGER Stand ----------------------------
+# Genau der Fehler, den Gregor am 07.09.2026 selbst fand: README.md nannte
+# Paketnummer 1.0.18, waehrend VERSION 1.0.21 sagte. Geprueft wird nur, wo eine
+# Nummer als der gueltige Stand behauptet wird - eine Nummer in einem datierten
+# Rueckblick ist richtig und wird nicht gemeldet.
+#
+# ACHTUNG, das war der erste Anlauf und er blieb stumm: die Pruefung lief
+# ZEILENWEISE, der Satz in README.md geht aber ueber zwei Zeilen ("Die
+# Paketnummer steht in der Datei VERSION und lautet / **1.0.21**;"). Deshalb
+# wird jetzt ueber den ganzen Text gesucht und ein Fenster von 200 Zeichen
+# hinter dem Stichwort abgesucht; die Zeilennummer wird aus dem Zeichenversatz
+# zurueckgerechnet.
+my ($paket_haupt) = $paket =~ /^([0-9]+\.[0-9]+)\./;
+$paket_haupt = '' unless defined $paket_haupt;
+if (length $paket_haupt) {
+    for my $datei (@aktuell) {
+        my $inhalt = lies($datei);
+        next unless defined $inhalt;
+        while ($inhalt =~ /(Paketnummer|Paket:|Paketnummer lautet|aktuelle[sr]? Paket|Zuletzt ver(?:ö|oe)ffentlicht)/g) {
+            my $ab = pos($inhalt);
+            my $fenster = substr($inhalt, $ab, 200);
+            # nur bis zum Ende des Absatzes schauen
+            $fenster =~ s/\r?\n\r?\n.*\z//s;
+            while ($fenster =~ /\b([0-9]+\.[0-9]+\.[0-9]+)\b/g) {
+                my $nr = $1;
+                next unless $nr =~ /^\Q$paket_haupt\E\./;
+                next if $nr eq $paket;
+                my $zeile = 1 + (() = substr($inhalt, 0, $ab) =~ /\n/g);
+                push @mangel, sprintf("%s:%d nennt Paketnummer %s als Stand, VERSION sagt %s",
+                                      $datei, $zeile, $nr, $paket);
+            }
+        }
+    }
+}
 # --- 6. Fassungsstand --------------------------------------------------------
 # Eine Datei ist aktuell, wenn sie den Quellstand ODER die Paketnummer nennt.
 # Sie darf daneben aeltere Fassungen erwaehnen - "die sieben Vermutungen stehen
 # unter 7.2.0.17" ist eine Fundstelle, kein veralteter Stand. Der erste Anlauf
 # hat genau das gemeldet und AUFGABEN.md damit zu Unrecht angeschwaerzt.
+#
+# Ausgenommen ist ausserdem, wer sich im Kopf SELBST datiert: eine Datei, die in
+# den ersten zwoelf Zeilen "Stand: <Datum>", "gemessen an <commit>" oder
+# "Geprueft ... am <Datum>" sagt, ist ein Zeitdokument und darf alt sein. Am
+# 07.09.2026 meldete das Werkzeug drei solche Dateien (VC71Bruecke/BEFUND.md,
+# PRUEFBERICHT.md, STARTUMGEBUNG.md) - alle drei nennen ihr Datum in Zeile 3.
+# Das Merkmal ist besser als eine Ausnahmeliste von Hand: eine Liste vergisst
+# die naechste Datei, das Merkmal nicht.
 for my $datei (@aktuell) {
     my $inhalt = lies($datei);
     next unless defined $inhalt;
+    my @kopf = (split /\n/, $inhalt)[0 .. 11];
+    my $kopf = join "\n", grep { defined } @kopf;
+    next if $kopf =~ /Stand:?\s*\d{2}\.\d{2}\.20\d\d/i;
+    next if $kopf =~ /gemessen an [`']?[0-9a-f]{7}/i;
+    next if $kopf =~ /Geprueft|Gepr(ü|ue)ft.*\bam\b/i;
+    next if $kopf =~ /Vorarbeit vom \d{2}\.\d{2}\.20\d\d/i;
     next unless $inhalt =~ /\b7\.2\.0\.\d+\b/ or $inhalt =~ /\b1\.0\.\d+\b/;
     next if index($inhalt, $quellstand) >= 0;
     next if index($inhalt, $paket)      >= 0;

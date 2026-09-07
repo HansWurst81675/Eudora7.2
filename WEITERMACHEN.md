@@ -6,29 +6,33 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.20 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.18 (`VERSION`) |
-| **Zuletzt veröffentlicht** | [v1.0.18](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18) — Marke auf Commit `e881164` |
-| **Zuletzt von Gregor gestartet** | Paket 1.0.20 — *„es crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht. nichts statt crash ist auch keine verbesserung!"* |
-| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.14 (E-28 Doppelklick und Suchtreffer, E-30 Symbole gesperrter Knöpfe) |
+| **Quellstand** | 7.2.0.21 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.21 (`VERSION`) |
+| **Zuletzt veröffentlicht** | [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) — `Releases/Eudora72-1.0.21-release.zip`, SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` |
+| **Zuletzt von Gregor gestartet** | Paket 1.0.21 am 07.09.2026 — *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."* |
+| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.21 (E-31/E-34/E-35/E-36: Verfassen, Abschicken, Weiterleiten) |
+| **Was er dabei bemängelt hat** | *„beenden geht nicht."* und *„kann man die untere zeile (status) immer anzeigen lassen?"* |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
-> [CHANGELOG.md](CHANGELOG.md)** — dort auch der Abschnitt *Wo man weitermachen
-> kann* mit den offenen Enden und Fundstellen. Diese Datei hier ist nur der
-> Einstieg.
+> [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen
+> Paket und der Abschnitt *Wo man weitermachen kann* mit den offenen Enden und
+> Fundstellen. Diese Datei hier ist nur der Einstieg.
 
 ## Das Ziel, an dem alles hängt
 
-**Acht Kriterien stehen in [ZIEL.md](ZIEL.md) — drei belegt, eines fast, vier
-nicht.** Gregor hat am 06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis
-6**; **7** ist am 07.09.2026 aus seinem Urteil zu 1.0.18 nachgetragen:
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf belegt (0, 1, 3, 5, 6),
+drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Gregor hat am
+06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis 6**; **7** ist am
+07.09.2026 aus seinem Urteil zu Paket 1.0.18 nachgetragen, **8** noch am
+selben Tag aus seinem Wunsch nach sichtbaren offenen Fenstern:
 
 | # | | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | nicht erfüllt |
-| 5 | **Eine neue Mail schreiben und abschicken** | nicht erfüllt |
-| 6 | **Eine Mail weiterleiten** | nicht erfüllt |
-| 7 | ***File → Exit*** beendet Eudora sauber | nicht erfüllt |
+| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen, das Beenden fehlt |
+| 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
+| 6 | **Eine Mail weiterleiten** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
+| 7 | ***File → Exit*** beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht."* |
+| 8 | Offene Fenster sichtbar und auswählbar | halb — Menü *Window* ja, Reiterleiste unten fehlt |
 
 ## Was seit dem 06.09.2026 anders ist
 
@@ -43,11 +47,11 @@ die ausgelieferte DLL von 2005 rechnet. Damit war **jede** Struktur verschoben,
 die Eudora an Paige reichte — und in dieser Portierung entstand bis dahin
 **kein einziges Paige-Fenster**. Seither läuft der Fensterbau vollständig durch
 (`OnMessageNewMessage: fertig`). Die Messung mit allen Feldversätzen steht in
-[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20.
+[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21.
 
 **Sieben Vermutungen sind auf diesem Weg widerlegt worden** — jede gebaut,
 gestartet, gemessen. Sie stehen samt Messwerten in
-[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20. **Nicht noch einmal
+[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21. **Nicht noch einmal
 durchprobieren.**
 
 **E-32 ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war

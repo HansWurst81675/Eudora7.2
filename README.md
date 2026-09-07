@@ -14,36 +14,42 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.20** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.21** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.18**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.21**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.18-release.zip`,
-> veröffentlicht als [v1.0.18](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18)
-> (Marke auf Commit `e881164`). Die Bau-Kennung im Fenstertitel nennt beide
-> Nummern plus den Commit, ein Bildschirmfoto ist damit eindeutig zuzuordnen.
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.21-release.zip`
+> (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`),
+> veröffentlicht als [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21).
+> Die Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
+> Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
+> und welchem Commit gehört, steht vollständig in
+> [Releases/PAKETE.md](Releases/PAKETE.md).
 >
 > Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
 > git-Verlauf — hier nicht.
 
 ## Stand
 
-**Acht Kriterien stehen in [ZIEL.md](ZIEL.md) — drei sind belegt, eines fast,
-vier nicht.** Eudora baut aus einem frischen Klon, das Paket startet auf einem
-Rechner ohne Visual Studio, die Darstellung stimmt weitgehend, und Mail wird
-über TLS abgerufen.
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf sind belegt (0, 1, 3, 5, 6),
+drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Eudora baut aus
+einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
+Darstellung stimmt weitgehend, Mail wird über TLS abgerufen — und seit dem
+07.09.2026 lässt sich **eine neue Mail schreiben, abschicken und die Antwort
+empfangen**. Gregor hat es bestätigt: *„mail können jetzt abgeschickt werden."*
 
-**Benutzbar ist es nicht.** Gregors Urteil zu Paket 1.0.20 vom 06.09.2026: *„es
-crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
-nichts statt crash ist auch keine verbesserung!"* Verfassen und Weiterleiten
-beendeten Eudora zwar nicht mehr, brachten aber eine **modale** Meldung „An
-unhandled exception has occurred", und danach ließ sich Eudora nicht mehr
-beenden. Die Ursache dieser Meldung ist am 07.09.2026 behoben (**E-32**,
-`CHeaderView::OnKillFocusRecipient`) — **auf Gregors Rechner nachgemessen ist
-das noch nicht**, und bis dahin gilt sein Urteil unverändert.
+**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt, sind zwei Dinge:
+*File → Exit* beendet Eudora nicht (*„beenden geht nicht"* — Kriterium 7), und
+die untere Statuszeile mit den Reitern für offene Fenster fehlt; die offenen
+Fenster stehen nur im *Window*-Menü (Kriterium 8, halb).
+
+Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md); was als
+Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum
+jeweils aktuellen Paket** steht im CHANGELOG beim zugehörigen Eintrag, nicht
+hier.
 
 Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md).
 
@@ -57,57 +63,25 @@ Belegt:
 | **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
 | **Kriterium 0 — Paket laeuft ohne Nachinstallieren** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der ersten vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
-### Was an 1.0.18 zu prüfen ist
-
-Paket: `Releases/Eudora72-1.0.18-release.zip`. Auspacken, **`Eudora starten.cmd`**
-doppelklicken (nicht `Eudora.exe` — der Starter übergibt das Mailverzeichnis).
-
-| Prüfen | erwartet | wenn nicht |
-|---|---|---|
-| **Doppelklick** auf eine Nachricht | öffnet sie | E-28 greift nicht |
-| **Suchtreffer anklicken** | öffnet die Nachricht | dito |
-| **Strg-N** | ein Verfassen-Fenster, das man benutzen kann | in 1.0.18 kommt hier die modale Meldung aus E-32; behoben ist sie erst im nächsten Bau |
-| ***File → Exit*** | beendet sauber | E-33, noch nicht untersucht |
-| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe zeigen ihr Symbol | E-30 greift nicht |
-
-**Strg-N ist der wichtigste Punkt.** Bis 06.09.2026 starb das Programm dort ohne
-jede Spur, und in dieser Portierung entstand nie ein Paige-Fenster. Die Ursache
-ist gefunden und behoben (**E-31**, `pg_time_t` acht Byte statt vier); seither
-läuft der Fensterbau vollständig durch. Was danach noch kam — die modale Meldung
-„An unhandled exception has occurred" — ist am 07.09.2026 behoben (**E-32**),
-**aber in Paket 1.0.20 noch nicht enthalten und von Gregor nicht nachgemessen.**
-
-Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
-
-- **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
-  noch erreicht wurde. 15 Spurmarken liegen auf dem Weg; sie schreiben **ohne**
-  INI-Änderung.
-- **`Exception.log`** — enthält seit 7.2.0.13 die Modultabelle. Damit:
-
-```bash
-perl tools/absturz-auswerten.pl
-```
-
-Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
-Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
-Heap-Beschädigung — dann hilft nur Page Heap (siehe unten).
-
 ### Offen — Stand 07.09.2026
 
 Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*;
-hier die drei Punkte, die ein Anwender merkt:
+hier die Punkte, die ein Anwender merkt:
 
-- ***File → Exit*** bringt eine Meldung statt sauber zu beenden (**E-33**), noch
-  nicht untersucht
+- ***File → Exit*** beendet Eudora nicht (**Kriterium 7**, Befund **E-33**),
+  noch nicht untersucht. Gregors Wort dazu am 07.09.2026: *„beenden geht
+  nicht."* Das ist der einzige verbliebene **Fehler**; alles Weitere hier ist
+  Ausstattung
+- **Die untere Statuszeile mit Reitern für die offenen Fenster fehlt**
+  (**Kriterium 8**, halb). Das Menü *Window* listet sie („1 In", „2 Out"), die
+  Leiste am unteren Fensterrand bildet die Ersatzschicht `OTShim` nicht nach.
+  Gregors Frage: *„kann man die untere zeile (status) immer anzeigen lassen?"*
 - Meldung **„Encountered an improper argument"** beim Anzeigen mancher
   Nachrichten — MFCs Text für `CInvalidArgException`, kommt also nicht aus
   Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
-  behoben); es gibt eine zweite. Reproduzierbar über *Find Messages* mit einem
-  Treffer (gemessen an 7.2.0.10)
-- **Ob das Verfassen-Fenster sichtbar wird.** Der Fensterbau läuft durch
-  (`OnMessageNewMessage: fertig`) und E-32 ist behoben — dass der Anwender das
-  Fenster daraufhin auch **sieht und benutzen kann**, ist noch von niemandem
-  gesehen worden
+  behoben), eine zweite ist mit E-34 abgefangen. Offen bleibt die Frage, warum
+  `GetBtnCount()` 27 meldet und `m_btns[24]` dennoch wirft — das Abfangen
+  behandelt das Symptom, nicht die Ursache
 
 ### Die Wurzel der Abstürze — gefunden
 
@@ -128,14 +102,14 @@ Heap-Beschädigung, die im Windows-Ereignisprotokoll (Quelle *Application Error*
 als `0xc0000374 STATUS_HEAP_CORRUPTION` in `ntdll` auftauchte.
 
 Die Messung mit allen Feldversätzen steht in [CHANGELOG.md](CHANGELOG.md) unter
-7.2.0.20.
+7.2.0.21.
 
 > **Was vorher vermutet wurde, war falsch — und das bleibt hier stehen.** Bis
 > zum 06.09.2026 galt die **Doppelfreigabe E-25** in
 > `Eudora71/Importers/NSImport/NSImportClass.cpp` (`LocateNetscapePrefsFile`)
 > als die Wurzel. 7.2.0.12 stürzte damit weiter ab. Dazu sieben weitere
 > Vermutungen, jede gebaut, gestartet und gemessen, jede widerlegt (CHANGELOG,
-> 7.2.0.20). **Nicht noch einmal durchprobieren.** Die Härtung aus E-25 ist
+> 7.2.0.21). **Nicht noch einmal durchprobieren.** Die Härtung aus E-25 ist
 > unabhängig davon richtig und bleibt drin.
 >
 > Was daran richtig war: `afxcoll.inl:213` und „Encountered an improper

@@ -26,8 +26,10 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > überlagern sich nicht mehr (A-1 wirkt).
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
-> drei von acht Kriterien belegt, eines fast, vier nicht (Stand 07.09.2026).
-> Hier steht bewusst keine zweite Fassung dieser Tabelle.
+> von **neun** Kriterien sind fünf belegt (0, 1, 3, 5, 6), drei fast oder halb
+> (2, 4, 8), eines ist nicht erfüllt (7 — das Beenden). Stand 07.09.2026,
+> Quellstand **7.2.0.21**, Paketnummer **1.0.21**. Hier steht bewusst keine
+> zweite Fassung dieser Tabelle.
 >
 > Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
 > Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe

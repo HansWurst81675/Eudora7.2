@@ -13,10 +13,9 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| — | **Der zweite Strg-N stürzt ab** | Selbst gemessen an 7.2.0.20: `#1` liefert ein Verfassen-Fenster mit Titel, `#2` beendet Eudora |
-| — | **Schreiben und Abschicken** im Verfassen-Fenster | nicht geprüft |
-| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht |
-| — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34; abgefangen, aber nicht behoben |
+| — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | Die Ersatzschicht bildet die Registerkartenleiste nicht nach. Ob das Menü *Window* sie auflistet, ist ungeprüft |
+| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht (Kriterium 7) |
+| — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34. Abgefangen, aber nicht behoben. MFC 14 prüft in den Sammlungen mit `ENSURE` statt `ASSERT`, und `ENSURE` wirft auch im Release-Bau |
 | — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle |
 
 ## Erreicht
@@ -25,15 +24,16 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 |---|---|
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
 | **Kriterium 2** (Darstellung) | *fast* |
-| **Kriterium 5** (Mail schreiben) | **halb** — das Fenster entsteht, Gregor hat es gesehen; Schreiben und Abschicken sind offen |
-| **Kriterien 4, 6, 7** | nicht erfüllt |
+| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab, fünfmal nachgemessen; von Gregor noch nicht bestätigt |
+| **Kriterien 5 und 6** (Mail schreiben, senden, empfangen) | **erfüllt** — von Gregor am 07.09.2026 bestätigt, mit Bildschirmfoto |
+| **Kriterium 8** (Fensterliste) | *halb* — das Menü *Window* listet sie auf; die Registerkartenleiste fehlt |
+| **Kriterium 7** (Beenden) | **nicht erfüllt** — der einzige verbliebene Fehler der zweiten Stufe |
 
-> **07.09.2026, Gregor:** *„ich habe kurz eine neue mail gesehen."* Das ist der
-> erste sichtbare Fortschritt beim Verfassen seit Beginn der Portierung.
+> **07.09.2026, Gregor:** *„ich habe kurz eine neue mail gesehen."* Der erste
+> sichtbare Fortschritt beim Verfassen seit Beginn der Portierung.
 >
-> Tags zuvor, zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts.
-> beenden kann ich es auch nicht. nichts statt crash ist auch keine
-> verbesserung!"* Dieser Maßstab gilt weiter.
+> Sein Maßstab von 1.0.18 gilt weiter: *„es crasht nicht, aber es passiert auch
+> nichts. nichts statt crash ist auch keine verbesserung!"*
 
 ---
 
@@ -68,6 +68,154 @@ tragen zwei verschiedene Bauten dieselbe Kennung.
 
 ---
 
+
+
+## 7.2.0.21 / Paket 1.0.21 — 07.09.2026 · fünf Verfassen-Fenster, kein Absturz
+
+Selbst nachgemessen, bevor es ausgeliefert wurde:
+
+```
+Strg-N #1: 2 Fenster   #2: 3   #3: 4   #4: 5   #5: 6
+danach 20 Sekunden offen stehen gelassen: Eudora lebt, kein Exception.log
+Titel: ... - [No Recipient, No Subject]
+```
+
+Drei Fehler lagen hintereinander. Der erste verhinderte das Fenster, der zweite
+tötete den zweiten Versuch, der dritte schlug zu, wenn man das Fenster einfach
+stehen ließ.
+
+
+### Von Gregor bestätigt: Mail schreiben, senden, empfangen
+
+Am 07.09.2026 mit dieser Fassung: *„mail können jetzt abgeschickt werden."*
+Sein Bildschirmfoto zeigt den vollen Kreis — im Postfach *Out* die gesendete
+Nachricht „test von freenet nach GMX" um 10:01, im Postfach *In* die Antwort
+darauf um 10:02: „Re: test von freenet nach GMX — ja, ist da." Mit Zitat der
+eigenen Zeile.
+
+**Damit sind Kriterium 5 und 6 aus [ZIEL.md](ZIEL.md) erfüllt.** Von den neun
+Kriterien sind fünf belegt, drei fast oder halb, und **eines nicht: das
+Beenden**.
+
+Ebenfalls nachgesehen: das Menü *Window* listet die offenen Fenster auf („1 In",
+„2 Out"). Kriterium 8 ist damit zur Hälfte erfüllt; was fehlt, ist die
+Registerkartenleiste am unteren Fensterrand, die die Ersatzschicht nicht
+nachbildet.
+
+**Offen bleibt:** *„beenden geht nicht"* (Kriterium 7) und Gregors Frage
+*„kann man die untere zeile (status) immer anzeigen lassen?"*
+
+### Was an 1.0.21 zu prüfen ist
+
+Paket: `Releases/Eudora72-1.0.21-release.zip` (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`).
+Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
+Starter übergibt das Mailverzeichnis.
+
+| Prüfen | erwartet | wenn nicht |
+|---|---|---|
+| **Strg-N** | ein Verfassen-Fenster, das man benutzen kann | E-31/E-34/E-35/E-36 greifen nicht |
+| **Mail abschicken** | landet in *Out*, kommt beim Empfänger an | Kriterium 5 wieder offen |
+| **Weiterleiten** (Strg-Umschalt-F) | Verfassen-Fenster mit dem Text darin | Kriterium 6 wieder offen |
+| **Doppelklick** auf eine Nachricht | öffnet sie | E-28 greift nicht |
+| **Suchtreffer anklicken** | öffnet die Nachricht | dito |
+| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe zeigen ihr Symbol | E-30 greift nicht |
+| ***File → Exit*** | beendet sauber | **bekannt: tut es nicht** (Kriterium 7) |
+| **Menü *Window*** | listet die offenen Fenster | E-34-Kette greift nicht |
+
+Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
+
+- **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
+  noch erreicht wurde. 15 Spurmarken liegen auf dem Weg. Sie schreiben **nur**,
+  wenn in `Eudora.ini` unter `[Settings]` `LogLevel=32896` steht —
+  `PutDebugLog` prüft die Maske und kehrt sonst sofort zurück
+  (`QCUtils/src/debug.cpp:140`).
+- **`Exception.log`** — enthält seit 7.2.0.13 die Modultabelle. Damit:
+
+```bash
+perl tools/absturz-auswerten.pl
+```
+
+Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
+Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
+Heap-Beschädigung — dann hilft nur Page Heap (siehe README).
+
+### E-34 — eine MFC-Ausnahme wickelte den ganzen Fensterbau ab
+
+Siehe 7.2.0.20. `QCChildToolBar::GetButton` fängt sie jetzt und gibt NULL
+zurück.
+
+### E-35 — der zweite Strg-N, und er war eine Folge von E-34
+
+`CCompMessageFrame::OnUserUpdateImmediateSend` dereferenzierte das Ergebnis von
+`GetButton` **zweimal blind**:
+
+```cpp
+if(((TBarSendButton*)pToolBar->GetButton(nIndex))->IsBPWarning() != m_bBPWarning)
+     ((TBarSendButton*)pToolBar->GetButton(nIndex))->SetBPWarning(m_bBPWarning);
+```
+
+Die Abfrage `nIndex != -1` darüber schützt nicht: **seit E-34 gibt `GetButton`
+auch bei gültigem Index NULL zurück.** Aus einer Ausnahme wurde ein NULL, und
+diese Stelle rechnete nicht damit. Beim ersten Strg-N kommt sie nicht dran, beim
+zweiten schon.
+
+Gefunden hat es **`tools/pruefe-fensterbau.pl`**, die Schranke, die zu diesem
+Zweck entstand.
+
+### E-36 — dasselbe zweimal in `PgCompMsgView`, gefunden vom eigenen Absturzbericht
+
+Aufgelöst mit `tools/absturz-auswerten.pl` — der Werkzeugkette aus E-26 und
+E-29, die genau dafür gebaut wurde:
+
+```
+#01  CMoodMailStatic::GetScore
+#02  PgCompMsgView::UpdateMoodMailButton + 0x51
+#03  PgCompMsgView::OnTimer + 0xD3
+```
+
+Ein Zeitgeber im offenen Verfassen-Fenster lief in einen Nullzeiger. Für
+`ID_MOOD_MAIL` gibt es überdies **keinen Befehlsbehandler** — der Knopf liegt
+gar nicht auf der Leiste, `CommandToIndex` liefert einen Index, den `GetButton`
+mit NULL beantwortet.
+
+**Die eigentliche Lehre steckt in der Schranke, nicht im Fehler:**
+`pruefe-fensterbau.pl` hatte eine **feste Dateiliste** — `CompMessageFrame`,
+`ReadMessageFrame`, `PgDocumentFrame`. `PgCompMsgView.cpp` fehlte darin, und
+genau dort lagen die vier blinden Zugriffe. Eine Schranke mit handgepflegter
+Liste hat immer genau die Lücke, die man nicht bedacht hat. Sie prüft jetzt alle
+`Eudora71/Eudora/*.cpp`: **10 Aufrufstellen statt 8**, Gegenprobe mit der
+Fassung von vor der Behebung rot.
+
+### Neu: `tools/pruefe-fensterbau.pl`
+
+Drei Schranken, drei Gegenproben, alle drei rot, echter Baum grün:
+
+| | |
+|---|---|
+| E-33 | keine modale Meldung in `Eudora71/OTShim/*.cpp` |
+| E-34 | `GetButton` hat Indexschranke **und** Ausnahmefang |
+| E-34 | jeder `GetButton`-Aufruf prüft sein Ergebnis auf NULL |
+
+Die Gegenproben haben **zwei Fehler in der Schranke selbst** gefunden. Der
+schlimmere: `OTShim.cpp:99` trägt im *Zeilen*kommentar den Text
+`dlg.Create in Eudora/*.cpp` — das `/*` darin öffnete beim Entfernen der
+Blockkommentare einen Scheinkommentar und fraß 1600 Zeichen. **Die Gegenprobe zu
+E-33 blieb dadurch grün, obwohl die modale Meldung wieder eingebaut war.** Eine
+Schranke, die eine Regression verschweigt, ist schlimmer als keine. Jetzt werden
+Zeilenkommentare zuerst entfernt.
+
+### Neues Kriterium 8
+
+Von Gregor am 07.09.2026 gesetzt: *„die offenen fenster (nibox, outbox, neue
+mail, ...) sollten irgendwie sichtbar und auswählbar sein. entweder über window
+menü oder über reiter in der statuszeile oder ähnlich."*
+
+Der Bezug ist unmittelbar: die modale Meldung, die mit E-33 abgeschaltet wurde,
+sagte wörtlich *„Die Leiste am unteren Fensterrand, die alle offenen Fenster als
+Registerkarten zeigt … Sie brauchen sie nicht: alle offenen Fenster stehen im
+Menü Window."* Die Ersatzschicht bildet diese Leiste nicht nach. Ob das Menü
+*Window* die Fenster wirklich auflistet, ist **ungeprüft** — das ist der erste
+Schritt.
 
 ## 7.2.0.20 / Paket 1.0.20 — 07.09.2026 · das Verfassen-Fenster erscheint
 

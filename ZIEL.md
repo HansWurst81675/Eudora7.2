@@ -14,16 +14,15 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **07.09.2026, morgens**, gemessen an Fassung **7.2.0.20 / Paket 1.0.20**.
+Stand **07.09.2026**, gemessen an Fassung **7.2.0.21 / Paket 1.0.21**.
 
-**Acht Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
-Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, nachdem Kriterium 0 gefallen
-war — sie messen, ob man **damit arbeiten** kann. Ein Mailprogramm, das keine
-Mail schreiben kann, ist kein Mailprogramm. **Kriterium 7** ist am 07.09.2026
-nachgetragen, aus Gregors Urteil zu 1.0.18 (*„beenden kann ich es auch nicht"*).
-Es steht eigens da und nicht als Unterpunkt von Kriterium 4, weil eine Meldung
-beim Beenden kein Absturz ist, weil sie einen eigenen Befund hat (E-33) und weil
-sie nach der Behebung von E-32 einzeln nachzumessen ist.
+**Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
+Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
+Beenden) am 07.09.2026 aus seinem Urteil zu 1.0.18 (*„beenden kann ich es auch
+nicht"*), **Kriterium 8** (die offenen Fenster sichtbar und auswählbar) am
+07.09.2026 nach dem ersten geglückten Verfassen-Fenster. Sie messen, ob man
+**damit arbeiten** kann. Ein Mailprogramm, das keine Mail schreiben kann, ist
+kein Mailprogramm.
 
 | # | Kriterium | Stand |
 |---|---|---|
@@ -31,13 +30,14 @@ sie nach der Behebung von E-32 einzeln nachzumessen ist.
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
 | 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
-| 4 | **Keine Abstürze** | **nicht erfüllt** — Strg-N und *Weiterleiten* beenden Eudora nicht mehr (E-31), und die modale Meldung „An unhandled exception has occurred" ist am 07.09.2026 behoben (**E-32**, `CHeaderView::OnKillFocusRecipient` in `headervw.cpp`). **Von Gregor nicht nachgemessen** — bis dahin bleibt das Kriterium offen; „Encountered an improper argument" steht ohnehin noch aus |
-| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **nicht erfüllt** — der Fensterbau läuft vollständig durch (`OnMessageNewMessage: fertig`); ob der Anwender das Fenster nach der Behebung von E-32 auch **sieht**, ist nicht nachgemessen |
-| 6 | **Eine Mail lässt sich weiterleiten** | **nicht erfüllt** — derselbe Weg, derselbe offene Nachweis |
-| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — es kommt eine Meldung (**E-33**), noch nicht untersucht |
+| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. **Offen bleibt das Beenden**, siehe Kriterium 7 |
+| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
+| 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
+| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht"*, von Gregor am 07.09.2026 an 7.2.0.21 bestätigt. Der einzige verbliebene Fehler der zweiten Stufe |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht bildet sie nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
 
-**Drei von acht Kriterien sind belegt (0, 1, 3), eines fast (2), vier nicht (4
-bis 7).**
+**Fünf von neun Kriterien sind belegt (0, 1, 3, 5, 6), drei fast oder halb
+(2, 4, 8), eines nicht (7 - das Beenden).**
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich

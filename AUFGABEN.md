@@ -5,36 +5,63 @@
 [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main` ist
 gesperrt; jeder Agent arbeitet in seinem eigenen Zweig ([AGENTEN.md](AGENTEN.md)).
 
-## Die Hauptarbeit: Kriterium 4 bis 7
+## Die Hauptarbeit: Kriterium 7 und 8
 
 Kriterien 4 bis 6 hat Gregor am 06.09.2026 gesetzt, nachdem die ersten vier
-gefallen waren; **7** ist am 07.09.2026 aus seinem Urteil zu 1.0.18
-nachgetragen ([ZIEL.md](ZIEL.md)):
+gefallen waren; **7** ist am 07.09.2026 aus seinem Urteil zu Paket 1.0.18
+nachgetragen, **8** noch am selben Tag aus seinem Wunsch nach sichtbaren
+offenen Fenstern ([ZIEL.md](ZIEL.md)):
 
 | # | | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | nicht erfüllt |
-| 5 | **Eine neue Mail schreiben und abschicken** | nicht erfüllt |
-| 6 | **Eine Mail weiterleiten** | nicht erfüllt |
-| 7 | ***File → Exit*** beendet Eudora sauber | nicht erfüllt |
+| 4 | **Keine Abstürze** | fast — Strg-N fünfmal ohne Absturz gemessen, das Beenden fehlt noch |
+| 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** — Gregor am 07.09.2026: *„mail können jetzt abgeschickt werden."* |
+| 6 | **Eine Mail weiterleiten** | **erfüllt** — Gregor am 07.09.2026: *„weiterleitung funktioniert übrigens."* |
+| 7 | ***File → Exit*** beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht."* |
+| 8 | Offene Fenster sichtbar und auswählbar | halb — das Menü *Window* listet sie, die Reiterleiste am unteren Rand fehlt |
 
-**Die Wurzel ist gefunden und behoben: E-31.** Strg-N und *Weiterleiten*
-beendeten Eudora mit `0xC00000FD` STATUS_STACK_OVERFLOW in `Paige32.dll`
-(`pgInstallFont`, 525 Windungen tief). Ursache war `pg_time_t` in
+**Damit bleiben genau zwei Punkte.** Beide sind von Gregor am 07.09.2026 in
+einem Satz benannt: *„mail können jetzt abgeschickt werden. kann man die untere
+zeile (status) immer anzeigen lassen? unter window menü sieht man die beiden
+fenster. beenden geht nicht."*
+
+### 1. Kriterium 7 — das Beenden (E-33)
+
+*File → Exit* beendet Eudora nicht. Das ist der einzige verbliebene **Fehler**
+der zweiten Stufe; alles andere ist Ausstattung. Noch nicht untersucht. Der Weg:
+`CEudoraApp::OnAppExit` bzw. `CMainFrame::OnClose` in
+`Eudora71/Eudora/eudora.cpp` und `MainFrm.cpp`, mit Spurmarken wie bei E-34, und
+`eudora.log` bei gesetztem `LogLevel=32896` gegenlesen.
+
+### 2. Kriterium 8 — die untere Statuszeile mit Reitern
+
+Gregors Frage lautet wörtlich *„kann man die untere zeile (status) immer
+anzeigen lassen?"*. Das Original hat sie: die **WazooBar**. Gelesen wird sie in
+`Eudora71/Eudora/WazooBar.cpp:572,578` aus `Eudora.ini`, Abschnitt
+`[WazooBars]`, Schlüssel `WazooBarIds`, `WazooBar%d`, `WazooMDI%d` (Namen in
+`EudoraRes.rc:10637-10640`). Die Ersatzschicht `OTShim` bildet die Leiste
+derzeit nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
+
+### Was schon nachgemessen ist — nicht wiederholen
+
+**Die Wurzel der Abstürze ist gefunden und behoben: E-31.** Strg-N und
+*Weiterleiten* beendeten Eudora mit `0xC00000FD` STATUS_STACK_OVERFLOW in
+`Paige32.dll` (`pgInstallFont`, 525 Windungen tief). Ursache war `pg_time_t` in
 `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`: acht Byte breit unter VS2022, vier in
-der DLL von 2005 — damit war jede Paige-Struktur verschoben. Die Meldung, die
-danach an die Stelle des Absturzes trat, ist ebenfalls behoben (**E-32**,
-`CHeaderView::OnKillFocusRecipient`).
+der DLL von 2005 — damit war jede Paige-Struktur verschoben.
 
-**Sieben Vermutungen sind auf dem Weg dahin widerlegt worden**, jede gebaut und
-gemessen — die Liste mit Messwerten steht in [CHANGELOG.md](CHANGELOG.md) unter
-7.2.0.20. **Nicht noch einmal durchprobieren.**
+Darauf folgten drei Fehler derselben Art, alle behoben und gemessen: **E-34**
+(eine MFC-Ausnahme in `QCChildToolBar::GetButton` wickelte den ganzen
+Fensterbau ab, ohne Meldung und ohne Absturz), **E-35** und **E-36** (blinde
+Zeigerzugriffe an den Aufrufstellen, die E-34 erst sichtbar machte).
 
-**Was jetzt zu tun ist: bauen, packen, Gregor geben.** Ob das Verfassen-Fenster
-für den Anwender sichtbar wird, ob eine Mail zu schreiben ist und ob sich Eudora
-mit *File → Exit* beenden lässt, hat niemand gesehen. Bis dahin gilt sein
-Urteil zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann
-ich es auch nicht. nichts statt crash ist auch keine verbesserung!"*
+**Meine E-32-Ursachenbehauptung ist von PRUEFER widerlegt** —
+`CHeaderView::OnKillFocusRecipient` war nicht die Ursache der modalen Meldung.
+Das steht so im [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20.
+
+**Sieben weitere Vermutungen sind widerlegt worden**, jede gebaut und gemessen —
+die Liste mit Messwerten steht im [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21.
+**Nicht noch einmal durchprobieren.**
 
 Alles Übrige in dieser Datei ist **nebenbei**, nicht statt dessen.
 
