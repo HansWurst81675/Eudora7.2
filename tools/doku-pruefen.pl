@@ -48,6 +48,7 @@
 
 use strict;
 use warnings;
+use File::Spec;
 
 my $leise = grep { $_ eq '--leise' } @ARGV;
 my @mangel;
@@ -93,7 +94,12 @@ unless (length $quellstand && length $paket) {
 #     Releases/PAKETE.md, Releases/1.0/) beschreiben einen Zustand von damals und
 #     DUERFEN alte Zahlen nennen. Sie werden nur auf Widersprueche in Befund-IDs
 #     geprueft, nicht auf Aktualitaet.
-my @alle_md = grep { length } split /\n/, (qx{git ls-files "*.md" 2>NUL} || '');
+# 2>NUL legt unter Git Bash eine DATEI namens NUL an - am 07.09.2026 im
+# Arbeitsbaum aufgeschlagen. File::Spec->devnull() liefert den richtigen
+# Namen fuer die jeweilige Umgebung.
+my $nirgendwo = File::Spec->devnull();
+my @alle_md = grep { length } split /
+/, (qx{git ls-files "*.md" 2>$nirgendwo} || '');
 @alle_md = grep { !m{^Arbeitsweise/} } @alle_md;
 
 my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$)};
