@@ -328,3 +328,36 @@ certutil -hashfile Eudora72-1.0.2-lauffaehig.zip SHA256
 ```
 
 Die Prüfsumme in der Tabelle oben sagt eindeutig, welche Fassung vorliegt.
+
+## Wo die Pakete liegen (Stand 07.09.2026)
+
+Die ZIPs sind am 07.09.2026 aus `Releases/` **entfernt** worden — sie lagen
+dort 104 MB und waren doppelt: veroeffentlicht bei GitHub und im git-Verlauf.
+Diese Tabelle nennt jede Fassung mit Pruefsumme, damit niemand sie im
+Arbeitsbaum sucht.
+
+| Fassung | SHA256 | wo |
+|---|---|---|
+| `Eudora72-1.0.1-lauffaehig.zip` | `d277cb0b2f3e02e4…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
+| `Eudora72-1.0.10-release.zip` | `68c8af8836e30343…` | [GitHub v1.0.10](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.10) |
+| `Eudora72-1.0.14-release.zip` | `23cb17e45f85a7a7…` | [GitHub v1.0.14](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.14) |
+| `Eudora72-1.0.15-release.zip` | `2a0c49b09f25c1d2…` | [GitHub v1.0.15](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.15) |
+| `Eudora72-1.0.18-release.zip` | `809e005f31eb72db…` | [GitHub v1.0.18](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18) |
+| `Eudora72-1.0.19-release.zip` | `27976d451c88a9ed…` | nur im git-Verlauf |
+| `Eudora72-1.0.2-lauffaehig.zip` | `5236be5015c0dd01…` | [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) — **bleibt im Repo**, `paket-bauen.ps1` braucht es als Grundlage |
+| `Eudora72-1.0.2-symbole.zip` | `2d98967911b1afd2…` | [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) |
+| `Eudora72-1.0.3-release.zip` | `d471904776d5c93a…` | [GitHub v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3) |
+| `Eudora72-1.0.4-release.zip` | `a3eb72e5f0beccb4…` | nur im git-Verlauf |
+| `Eudora72-QCSSL-1.0.1.zip` | `9339fb2edecfbf8b…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
+
+Ebenfalls entfernt: `Releases/1.0.2/` und die drei Fremd-DLLs
+`msvcr71.dll`, `msvcr71d.dll`, `msvcp71d.dll` — null Verweise im ganzen Repo.
+Die beiden `d`-Fassungen stammten von dll-files.com und durften ohnehin nicht
+weitergegeben werden; `msvcr71.dll` wird seit Befund B-1 selbst gebaut
+(`Eudora71/VC71Bruecke`).
+
+> **Nicht loeschen:** `Eudora72-1.0.2-lauffaehig.zip` sieht nach dem aeltesten
+> und nutzlosesten aus, ist aber die **Grundlage jedes neuen Pakets**
+> (`tools/paket-bauen.ps1`, Schalter `-Grundlage`). Dazu `Releases/1.0/`
+> (fuenf Werkzeugstellen) und `Releases/1.0.3/LIESMICH.txt` (kommt in jedes
+> Paket).
