@@ -74,15 +74,21 @@ Paket 1.0.21 selbst gemessen.
   aus `CMainFrame::OnClose` heraus, MFC 14 fängt sie in `AfxCallWndProc`,
   `CWinApp::ProcessWndProcException` zeigt die Meldung und liefert 0 — `WM_CLOSE`
   gilt als beantwortet, das Fenster bleibt. Dieselbe Fehlerklasse wie E-34
-- **Ein Konto lässt sich nicht löschen** (**E-37**). *„löschen der konten geht
-  übrigens auch nicht."* `CPersonalityView::OnDeletePersonality`
-  (`Eudora71/Eudora/PersonalityView.cpp:925-976`) behandelt **jeden** Fehlschlag
-  mit `ASSERT(0)` — vier Stellen, im Release-Bau allesamt ein Nichts
+- **Ein Konto ließ sich nicht löschen** (**E-37**) — *„löschen der konten geht
+  übrigens auch nicht: auf toFix liste!"* **Behoben am 07.09.2026, aber in
+  keinem Paket.** Gregors Nachmessung hat die erste Annahme widerlegt: *„ja, sie
+  verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die Liste im
+  Fenster blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
+  abgesichert war das nur mit `ASSERT`. Jetzt wird die Liste über
+  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. Offen bleibt,
+  **warum** `FindItem` den Eintrag nicht findet
 - **Die im Kontoassistenten eingegebenen Daten fehlen hinterher** (**E-38**):
-  Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Zwei
-  Kandidaten, beide gelesen, keiner gemessen — `UpdateData(TRUE)` in die falsche
-  Richtung in `OnSetActive` der Serverseiten, oder ein `VERIFY` um
-  `g_Personalities.Add`, das im Release-Bau nichts prüft
+  Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Gregor
+  hat am 07.09.2026 nachgesehen: **in der `Eudora.ini` stehen sie**. Damit
+  scheitert das **Lesen** — oder die Werte gehen verloren, weil Eudora nur per
+  `pkill` zu beenden ist. Sein Wort dazu: *„vielleicht fehlen die daten, wenn
+  ich eudora per task manager abschließen muß."* **Dieser Befund hängt an E-33
+  und wird erst danach gemessen**; vorher ist jede Aussage dazu wertlos
 - **Die untere Statuszeile mit Reitern für die offenen Fenster fehlt**
   (**Kriterium 8**, halb). Das Menü *Window* listet sie („1 In", „2 Out"), die
   Leiste am unteren Fensterrand bildet die Ersatzschicht `OTShim` nicht nach.
@@ -98,8 +104,8 @@ Paket 1.0.21 selbst gemessen.
 > `VERIFY(f)` zu `((void)(f))` verkürzt — der Ausdruck wird berechnet, das
 > Ergebnis aber **nicht** geprüft. Wo QUALCOMM einen Fehlschlag so
 > „behandelt" hat, passiert im ausgelieferten Programm lautlos gar nichts:
-> E-37 viermal, E-38 zweimal. Wer hier weitermacht, sucht zuerst nach `ASSERT(0)`
-> und `VERIFY(` auf dem betroffenen Weg.
+> E-37 viermal (behoben), E-38 zweimal, E-33 verwandt. Wer hier weitermacht,
+> sucht auf dem betroffenen Weg zuerst nach `ASSERT(0)` und `VERIFY(`.
 
 ### Vorgaben für neu angelegte Konten
 

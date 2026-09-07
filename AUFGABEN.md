@@ -54,31 +54,63 @@ die Meldung ist **„Encountered an improper argument"**. Daraus folgt dreierlei
 **Zu suchen ist also die Stelle, die auf dem Weg von `WM_CLOSE` bis zum Ende
 wirft** — ein Zugriff auf eine MFC-Sammlung (`operator[]`, `GetAt`, `RemoveAt`
 auf `CPtrArray`, `CObArray`, `CMapStringToOb`), ein `ENSURE_VALID`, oder ein
-Index, der aus einer Sammlung kommt. Der Weg selbst ist vollständig
-aufgeschrieben in `Befunde/BEENDEN.md`, mit 14 Spurmarken in
-`Eudora71/Eudora/eudora.cpp` und `mainfrm.cpp`. **Die Marken schreiben nur bei
-`LogLevel=32896`** unter `[Settings]` in der `Eudora.ini` — `PutDebugLog` prüft
-die Maske und kehrt sonst sofort zurück (`QCUtils/src/debug.cpp:138-143`).
+Index, der aus einer Sammlung kommt. Weil das Fenster nach der Meldung noch da
+ist, muss der Wurf **vor** `pApp->HideApplication()` (`winfrm.cpp:885`) fallen.
+
+**Verdacht:** `QCCustomToolBar::SaveCustomInfo`
+(`Eudora71/Eudora/QCCustomToolBar.cpp:421`, Zugriffe `:423`, `:424`, `:427`,
+`:491`, `:508`) — dieselbe Form wie E-34: Grenze aus `GetBtnCount()`, Zugriff
+über `m_btns[...]`, und MFC 14 führt in `afxcoll.inl:201-217`
+`AfxThrowInvalidArgException()` **auch im Release-Bau** aus. Die Stelle liegt in
+`CloseDown` Stufe 5 (`SaveBarState`) und wird im Betrieb **nur beim Beenden**
+erreicht. **Belegt ist das nicht, behoben ist nichts.**
+
+**Zwei Vermutungen sind auf dem Weg dahin widerlegt** — nicht wieder aufgreifen:
+`GetWindowPlacement` prüft sein Argument nicht mit `ENSURE`
+(`wincore.cpp:1214-1218`, nur `ASSERT`), und `CTocDoc::CanCloseFrame` wird gar
+nicht erreicht, weil ein MDI-Hauptfenster keine Ansicht hat und
+`GetActiveDocument()` NULL liefert. Statt dessen läuft
+`pApp->SaveAllModified()` (`winfrm.cpp:874`).
+
+**So wird es belegt — ein Bau, kein Suchen:** Paket schnüren, starten, beenden,
+und die **letzte** `E-33`-Zeile in `eudora.log` lesen. 28 Marken liegen:
+`QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
+`GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert, es wird
+nur protokolliert —, `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i` in
+`CloseDown` Stufe 5, `6a`…`6f` in `OnClose`), `eudora.cpp` an `OnAppExit` und
+`ExitInstance`.
+
+> **Zur Protokollmaske, berichtigt.** Ich hatte `LogLevel=32896` als *nötig*
+> angegeben. Es ist ausreichend, aber nicht nötig: gemessen an Gregors Log vom
+> 07.09.2026 enthält sein `LogLevel 25759` (0x649F) `DEBUG_MASK_MISC` (0x8000)
+> **nicht**, wohl aber `DEBUG_MASK_TOC_CORRUPT` (0x80) — und `PutDebugLog`
+> prüft nur, ob **ein** Bit gemeinsam ist (`QCUtils/src/debug.cpp:138-143`).
+> Deshalb erscheinen bei ihm die `MAIN 32896:`-Zeilen ohne Zutun.
 
 **Nicht mehr durchprobieren:** `CFileBrowseView::OnAppExit` (ausgeschlossen,
 siehe oben) und die Vermutung, eine modale Meldung der Ersatzschicht verdecke
 das Beenden (die modalen `AfxMessageBox` in `OTShim` sind durch
 `OutputDebugString` ersetzt, `tools/pruefe-fensterbau.pl` hält das).
 
-### 2. E-37 — ein Konto lässt sich nicht löschen
+### 2. E-37 — erledigt: ein Konto ließ sich scheinbar nicht löschen
 
-Gregor am 07.09.2026: *„löschen der konten geht übrigens auch nicht: auf toFix
-liste!"* `CPersonalityView::OnDeletePersonality`
-(`Eudora71/Eudora/PersonalityView.cpp:925-976`) behandelt **jeden** Fehlschlag
-mit `ASSERT(0)` — vier Stellen, im Release-Bau allesamt ein Nichts. Drei
-lautlose Ausgänge und ein lauter; welcher es ist, trennt **eine Messung ohne
-Bau**: Konto anklicken, `Entf` drücken und sehen, welcher Dialog kommt.
+**Behoben am 07.09.2026, aber in keinem Paket.** Gregors Nachmessung hat die
+erste Annahme widerlegt: auf die Frage „verschwindet der Eintrag nach einem
+Neustart?" antwortete er *„ja, sie verschwinden nach neustart"* — gelöscht wurde
+also immer korrekt, nur die Liste im Fenster blieb stehen. Damit war es kein
+Datenfehler, sondern ein Anzeigefehler.
 
-| was erscheint | Ursache | Fundstelle |
-|---|---|---|
-| kein Dialog | `GetSelectedPersonalities` gibt 0 | `PersonalityView.cpp:273-298`, `:974` |
-| „You have active task(s)…" | laufende Aufgaben | `persona.cpp:526-530` |
-| Rückfrage, danach nichts | `Remove` findet den Eintrag in `[Personality]` der `Eudora.ini` nicht | `persona.cpp:531-540`, `PersonalityView.cpp:966-969` |
+`FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und abgesichert war das nur
+mit `ASSERT(nIndex != -1)`. Behoben in
+`CPersonalityView::OnCmdDeletePersonality` unabhängig davon, **warum**
+`FindItem` scheitert: der Fehlschlag geht mit Name und Listenlänge ins
+Protokoll, und die Liste wird einmal am Ende über `PopulateView()` neu
+aufgebaut. Die drei stummen `ASSERT(0)`-Zweige melden jetzt ebenfalls.
+
+**Was daran offen bleibt:** warum `FindItem` den Eintrag nicht findet, obwohl
+Spalte 0 den rohen Kontonamen trägt (`PersonalityView.cpp:222-232`) und
+dieselbe Zeichenkette bei `Remove` erfolgreich war. Die neue Protokollzeile
+sagt es beim nächsten Lauf. **Nicht wieder von vorn suchen.**
 
 ### 3. E-38 — die Daten aus dem Kontoassistenten fehlen hinterher
 
