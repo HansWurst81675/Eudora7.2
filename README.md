@@ -14,7 +14,7 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.18** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.20** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
 > **1.0.18**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
@@ -36,7 +36,7 @@ vier nicht.** Eudora baut aus einem frischen Klon, das Paket startet auf einem
 Rechner ohne Visual Studio, die Darstellung stimmt weitgehend, und Mail wird
 über TLS abgerufen.
 
-**Benutzbar ist es nicht.** Gregors Urteil zu Paket 1.0.18 vom 06.09.2026: *„es
+**Benutzbar ist es nicht.** Gregors Urteil zu Paket 1.0.20 vom 06.09.2026: *„es
 crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
 nichts statt crash ist auch keine verbesserung!"* Verfassen und Weiterleiten
 beendeten Eudora zwar nicht mehr, brachten aber eine **modale** Meldung „An
@@ -75,7 +75,7 @@ jede Spur, und in dieser Portierung entstand nie ein Paige-Fenster. Die Ursache
 ist gefunden und behoben (**E-31**, `pg_time_t` acht Byte statt vier); seither
 läuft der Fensterbau vollständig durch. Was danach noch kam — die modale Meldung
 „An unhandled exception has occurred" — ist am 07.09.2026 behoben (**E-32**),
-**aber in Paket 1.0.18 noch nicht enthalten und von Gregor nicht nachgemessen.**
+**aber in Paket 1.0.20 noch nicht enthalten und von Gregor nicht nachgemessen.**
 
 Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
 
@@ -128,14 +128,14 @@ Heap-Beschädigung, die im Windows-Ereignisprotokoll (Quelle *Application Error*
 als `0xc0000374 STATUS_HEAP_CORRUPTION` in `ntdll` auftauchte.
 
 Die Messung mit allen Feldversätzen steht in [CHANGELOG.md](CHANGELOG.md) unter
-7.2.0.18.
+7.2.0.20.
 
 > **Was vorher vermutet wurde, war falsch — und das bleibt hier stehen.** Bis
 > zum 06.09.2026 galt die **Doppelfreigabe E-25** in
 > `Eudora71/Importers/NSImport/NSImportClass.cpp` (`LocateNetscapePrefsFile`)
 > als die Wurzel. 7.2.0.12 stürzte damit weiter ab. Dazu sieben weitere
 > Vermutungen, jede gebaut, gestartet und gemessen, jede widerlegt (CHANGELOG,
-> 7.2.0.17). **Nicht noch einmal durchprobieren.** Die Härtung aus E-25 ist
+> 7.2.0.20). **Nicht noch einmal durchprobieren.** Die Härtung aus E-25 ist
 > unabhängig davon richtig und bleibt drin.
 >
 > Was daran richtig war: `afxcoll.inl:213` und „Encountered an improper

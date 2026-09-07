@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **07.09.2026, morgens**, gemessen an Fassung **7.2.0.18 / Paket 1.0.18**.
+Stand **07.09.2026, morgens**, gemessen an Fassung **7.2.0.20 / Paket 1.0.20**.
 
 **Acht Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, nachdem Kriterium 0 gefallen

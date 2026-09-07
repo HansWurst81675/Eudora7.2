@@ -6,10 +6,10 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.18 (`Eudora71/Version.h`) |
+| **Quellstand** | 7.2.0.20 (`Eudora71/Version.h`) |
 | **Paketnummer** | 1.0.18 (`VERSION`) |
 | **Zuletzt veröffentlicht** | [v1.0.18](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18) — Marke auf Commit `e881164` |
-| **Zuletzt von Gregor gestartet** | Paket 1.0.18 — *„es crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht. nichts statt crash ist auch keine verbesserung!"* |
+| **Zuletzt von Gregor gestartet** | Paket 1.0.20 — *„es crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht. nichts statt crash ist auch keine verbesserung!"* |
 | **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.14 (E-28 Doppelklick und Suchtreffer, E-30 Symbole gesperrter Knöpfe) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
@@ -43,11 +43,11 @@ die ausgelieferte DLL von 2005 rechnet. Damit war **jede** Struktur verschoben,
 die Eudora an Paige reichte — und in dieser Portierung entstand bis dahin
 **kein einziges Paige-Fenster**. Seither läuft der Fensterbau vollständig durch
 (`OnMessageNewMessage: fertig`). Die Messung mit allen Feldversätzen steht in
-[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.18.
+[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20.
 
 **Sieben Vermutungen sind auf diesem Weg widerlegt worden** — jede gebaut,
 gestartet, gemessen. Sie stehen samt Messwerten in
-[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.17. **Nicht noch einmal
+[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20. **Nicht noch einmal
 durchprobieren.**
 
 **E-32 ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war

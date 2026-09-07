@@ -28,7 +28,7 @@ danach an die Stelle des Absturzes trat, ist ebenfalls behoben (**E-32**,
 
 **Sieben Vermutungen sind auf dem Weg dahin widerlegt worden**, jede gebaut und
 gemessen — die Liste mit Messwerten steht in [CHANGELOG.md](CHANGELOG.md) unter
-7.2.0.17. **Nicht noch einmal durchprobieren.**
+7.2.0.20. **Nicht noch einmal durchprobieren.**
 
 **Was jetzt zu tun ist: bauen, packen, Gregor geben.** Ob das Verfassen-Fenster
 für den Anwender sichtbar wird, ob eine Mail zu schreiben ist und ob sich Eudora

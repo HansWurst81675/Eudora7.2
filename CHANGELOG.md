@@ -13,28 +13,27 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht. Nach der Behebung von E-32 neu zu messen: bis dahin verdeckte die modale Meldung aus E-32 alles Weitere |
-| — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | MFCs Text für `CInvalidArgException` — kommt also nicht aus Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16, behoben); es gibt eine zweite |
-| — | **Ob der Anwender das Verfassen-Fenster sieht** | der Fensterbau läuft im Protokoll durch (`OnMessageNewMessage: fertig`) und E-32 ist behoben; auf einem Rechner hat das niemand nachgesehen. Daran hängen Kriterium 5 und 6 |
+| — | **Der zweite Strg-N stürzt ab** | Selbst gemessen an 7.2.0.20: `#1` liefert ein Verfassen-Fenster mit Titel, `#2` beendet Eudora |
+| — | **Schreiben und Abschicken** im Verfassen-Fenster | nicht geprüft |
+| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht |
+| — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34; abgefangen, aber nicht behoben |
+| — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle |
 
 ## Erreicht
 
 | | |
 |---|---|
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
-| **Kriterium 2** (Darstellung) | *fast* — offen bleibt „Encountered an improper argument" |
-| **Kriterien 4 bis 7** (benutzbar) | **nicht erfüllt** |
-| **E-31 und E-32** | behoben, aber **von Gregor nicht nachgemessen** — und nicht in Paket 1.0.18 |
+| **Kriterium 2** (Darstellung) | *fast* |
+| **Kriterium 5** (Mail schreiben) | **halb** — das Fenster entsteht, Gregor hat es gesehen; Schreiben und Abschicken sind offen |
+| **Kriterien 4, 6, 7** | nicht erfüllt |
 
-> **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
-> zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
-> es auch nicht. nichts statt crash ist auch keine verbesserung!"*
+> **07.09.2026, Gregor:** *„ich habe kurz eine neue mail gesehen."* Das ist der
+> erste sichtbare Fortschritt beim Verfassen seit Beginn der Portierung.
 >
-> Verbessert hat sich die **Ausgangslage**, nicht das Programm: bis dahin
-> entstand in dieser Portierung kein einziges Paige-Fenster, und die Ursache war
-> unbekannt. Jetzt ist sie gefunden und behoben. Ob daraus für den Anwender ein
-> benutzbares Verfassen-Fenster wird, entscheidet der nächste Lauf auf seinem
-> Rechner.
+> Tags zuvor, zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts.
+> beenden kann ich es auch nicht. nichts statt crash ist auch keine
+> verbesserung!"* Dieser Maßstab gilt weiter.
 
 ---
 
@@ -68,6 +67,84 @@ tragen zwei verschiedene Bauten dieselbe Kennung.
   und werte stehen"*
 
 ---
+
+
+## 7.2.0.20 / Paket 1.0.20 — 07.09.2026 · das Verfassen-Fenster erscheint
+
+**Gregor hat es selbst gesehen:** *„ich habe kurz eine neue mail gesehen."* Zum
+ersten Mal in dieser Portierung entsteht nach Strg-N ein Verfassen-Fenster mit
+Titel.
+
+### E-34 — eine MFC-Ausnahme im Fensterbau, ohne Meldung und ohne Absturz
+
+Gemessen am 07.09.2026 mit einer Marke **je Anweisung** in
+`CCompMessageFrame::OnCreateClient`: die letzte Marke, die noch feuerte, war
+`nach CommandToIndex(ID_EDIT_INSERT)`, die nächste nicht mehr. In
+`QCChildToolBar::GetButton` entstand eine MFC-Ausnahme. Sie wickelte
+`OnCreateClient` ab, MFC ließ `CWnd::OnCreate` fehlschlagen, `LoadFrame` gab
+FALSE, `CMultiDocTemplate::CreateNewFrame` gab **NULL** — kein Fenster, keine
+Meldung, kein Absturz. Genau Gregors *„es passiert nichts"*.
+
+Der Grund steht jetzt im Protokoll, und es ist **wörtlich** die Meldung, die
+Gregor seit Tagen sieht:
+
+```
+E-34 QCChildToolBar::GetButton: Ausnahme bei Index 24 von 27
+     - NULL zurueckgegeben. Grund: Encountered an improper argument.
+```
+
+Der Index liegt **innerhalb** der von `GetBtnCount()` gemeldeten Zahl — die
+Schranke aus E-16 greift also, und `m_btns[24]` wirft trotzdem. MFC 14 prüft in
+den Sammlungen mit `ENSURE` statt `ASSERT`, und **`ENSURE` wirft auch im
+Release-Bau**. `GetBtnCount()` und das tatsächlich indizierte Feld laufen
+auseinander; warum, ist noch offen.
+
+`GetButton` fängt die Ausnahme jetzt, protokolliert Index, Größe und Grund und
+gibt NULL zurück. Alle sechs Aufrufstellen prüfen den Rückgabewert bereits auf
+NULL — ein NULL ist verkraftbar, eine Ausnahme mitten im Fensterbau nicht.
+
+**Nachgemessen:**
+
+```
+nach InitialUpdateFrame:  sichtbar=1, 1552x1214, titel='No Recipient, No Subject'
+Haupttitel:               ... - [No Recipient, No Subject]
+```
+
+### Was noch nicht geht
+
+- **Der zweite Strg-N stürzt ab.** Selbst gemessen: `#1` liefert zwei
+  MDI-Fenster mit Titel, `#2` beendet Eudora. Ein Fenster reicht nicht
+- Ob man in dem Fenster **schreiben und abschicken** kann, ist nicht geprüft
+- ***File → Exit*** bringt weiter eine Meldung (E-33 der Zählung in ZIEL.md)
+
+### E-32 — meine Ursachenbehauptung ist widerlegt
+
+Der Prüfer hat sie dreifach gemessen und **verworfen**:
+`CHeaderView::OnKillFocusRecipient` läuft bei Strg-N überhaupt nicht (eine
+Messspur darin liefert null Zeilen, während die E-27-Marken derselben Sitzung
+alle durchlaufen); das Herausnehmen der Behebung bringt die Meldung nicht
+zurück; und im ausgelieferten Paket 1.0.18 tritt sie über denselben Testweg auch
+nicht auf. Der Code-Mangel dort ist echt — `pField` wird dereferenziert, obwohl
+drei Zeilen darüber auf NULL geprüft wird —, aber er war **nie gegen das Symptom
+geprüft**. Am Quelltext scheitert die Begründung zusätzlich: `EN_KILLFOCUS` kann
+nur ankommen, wenn das Feld existiert, dann liefert `GetDlgItem` nie NULL.
+
+Gefährlicher ist dort etwas anderes, das er gefunden hat: vor `SubclassDlgItem`
+(`headervw.cpp:2590`) liefert `GetDlgItem` ein **temporäres `CWnd`**, und der
+Zugriff auf `pField->m_ACListBox` liest hinter dessen Ende.
+
+### E-31 — viel stärker bestätigt als behauptet
+
+Der Prüfer hat eine bessere Messquelle gefunden als der Befund selbst hatte:
+`Eudora71/Bin/Release/Paige32.pdb` gehört zur ausgelieferten DLL von 2005
+(CodeView-GUID und Alter stimmen, PE-Zeitstempel 14.10.2005). Damit ist der
+Feldaufbau der DLL **messbar statt vermutbar**.
+
+Es waren nicht vier verschobene Felder, sondern **755 von 1922** und zehn zu
+große Strukturen (`paige_rec` +24, `pg_translator` +44). Nach der Behebung:
+**0 von 1922.** Und die offene Nebenbehauptung ist jetzt belegt: `time_t` war
+tatsächlich der einzige Typ — 91 von 92 gemeinsamen Strukturen sind feldweise
+identisch, die zwei Ausnahmen kommen in keiner der 56 Kopfdateien vor.
 
 ## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · die Ursache gefunden
 

@@ -9,7 +9,7 @@
 #define EUDORA_VERSION2 2
 #define EUDORA_VERSION3 0
 #define EUDORA_VERSION4 20
-#define EUDORA_BUILD_NUMBER    7,2,0,12
+#define EUDORA_BUILD_NUMBER    7,2,0,20
 #define EUDORA_BUILD_DESC      "Version 7.2.0.20\0"
 #define EUDORA_BUILD_VERSION   "7.2.0.20"
 
