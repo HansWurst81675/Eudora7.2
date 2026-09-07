@@ -303,6 +303,120 @@ pruefe('Zugriff ueber ein anderes Mitglied zaehlt nicht',
     '}',                                                               # 8
   ), []);
 
+# --- 18a. Zeiger als ARGUMENT in der Bedingung ---------------------------
+# Belegter Fehlalarm, Stichprobe 07.09.2026: AboutEMS.cpp:188 und
+# eudora.cpp:2252. Der Zeiger steht in einer Aufrufklammer, nicht als
+# Wahrheitswert - das ist keine Pruefung, also auch kein Treffer.
+pruefe('Zeiger als Argument in der Bedingung ist keine Pruefung (AboutEMS)',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CDC* pDC = hol();',                                           # 3
+    '    if (MemDC.CreateCompatibleDC(pDC))',                          # 4
+    '    {',                                                           # 5
+    '        eins();',                                                 # 6
+    '    }',                                                           # 7
+    '    pDC->DrawIcon(0, 0, icn);',                                   # 8
+    '}',                                                               # 9
+  ), []);
+
+pruefe('Zeiger als Argument hinter ! ist keine Pruefung (eudora.cpp)',
+  text(
+    'BOOL CEudoraApp::IsIdleMessage( MSG* pMsg )',                     # 1
+    '{',                                                               # 2
+    '    if (!CWinApp::IsIdleMessage(pMsg))',                          # 3
+    '        return m_bDoingIdleTimerProcessing;',                     # 4
+    '',                                                                # 5
+    '    UINT message = pMsg->message;',                               # 6
+    '}',                                                               # 7
+  ), []);
+
+# Gegenprobe: das Leeren der Aufrufklammern darf die echte Pruefung nicht
+# mitnehmen. E-32 muss weiter gefunden werden - das prueft Fall 1 oben, hier
+# noch einmal mit einem Aufruf DIREKT hinter der Pruefung.
+pruefe('Aufruf hinter der Pruefung nimmt die Pruefung nicht mit',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CFoo* p = hol();',                                            # 3
+    '    if (p && p->test(RUNTIME_CLASS(CFoo)))',                      # 4
+    '        p->eins();',                                              # 5
+    '    p->zwei();',                                                  # 6
+    '}',                                                               # 7
+  ), [6]);
+
+# --- 18b. Kurzschluss ueber mehrere Zeilen -------------------------------
+# Belegte Fehlalarme, Stichprobe 07.09.2026: MIMEMap.cpp:116/117,
+# nickdoc.cpp:2526/2527, sendmail.cpp:3568.
+pruefe('Kurzschluss !X || X->y auf derselben Zeile',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CFoo* doc = hol();',                                          # 3
+    '    if (doc)',                                                    # 4
+    '        eins();',                                                 # 5
+    '    if (!doc || !doc->GetText())',                                # 6
+    '        return;',                                                 # 7
+    '}',                                                               # 8
+  ), []);
+
+pruefe('Kurzschluss !X || X->y ueber mehrere Zeilen',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CFoo* nn = hol();',                                           # 3
+    '    if (!nn ||',                                                  # 4
+    '        FAILED(out.PutLine(nn->GetName())) ||',                   # 5
+    '        FAILED(out.PutLine(nn->GetAddr())))',                     # 6
+    '    {',                                                           # 7
+    '        return;',                                                 # 8
+    '    }',                                                           # 9
+    '}',                                                               # 10
+  ), []);
+
+pruefe('Kurzschluss X && X->y ueber mehrere Zeilen',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CFoo* p = hol();',                                            # 3
+    '    if (p)',                                                      # 4
+    '        eins();',                                                 # 5
+    '    if (p &&',                                                    # 6
+    '        p->zwei())',                                              # 7
+    '    {',                                                           # 8
+    '        drei();',                                                 # 9
+    '    }',                                                           # 10
+    '}',                                                               # 11
+  ), []);
+
+# --- 18c. Negierter Waechter um eine und-Verknuepfung --------------------
+# Belegter Fehlalarm, Stichprobe 07.09.2026: mboxtree.cpp:3580.
+pruefe('!(A && B) ist ein negierter Waechter fuer A und fuer B',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    if (! (pTargetCommand && pSourceCommand) )',                  # 3
+    '        return;',                                                 # 4
+    '',                                                                # 5
+    '    if( pSourceCommand->IsKindOf( RUNTIME_CLASS( X ) ) == FALSE )',# 6
+    '        return;',                                                 # 7
+    '    pTargetCommand->Tu();',                                       # 8
+    '}',                                                               # 9
+  ), []);
+
+# Gegenprobe: ohne das herausspringende return bleibt der Treffer stehen.
+pruefe('!(A && B) ohne Aussprung: Zugriff danach bleibt gemeldet',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    if (! (pA && pB) )',                                          # 3
+    '    {',                                                           # 4
+    '        melde();',                                                # 5
+    '    }',                                                           # 6
+    '    pB->Tu();',                                                   # 7
+    '}',                                                               # 8
+  ), [7]);
+
 # --- 18. while-Waechter --------------------------------------------------
 pruefe('while-Waechter schuetzt seinen Rumpf',
   text(

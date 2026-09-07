@@ -146,8 +146,93 @@ sub rumpfgrenzen {
 # Liefert 'positiv' (im Rumpf ist X belegt), 'negativ' (im Rumpf ist X NULL)
 # oder undef.
 # ---------------------------------------------------------------------------
+# Argumentlisten aus einer Bedingung herausnehmen.
+#
+# BELEGTER FEHLALARM (Stichprobe vom 07.09.2026, 2 von 15):
+#     if (MemDC.CreateCompatibleDC(pDC))        AboutEMS.cpp:188
+#     if (!CWinApp::IsIdleMessage(pMsg))        eudora.cpp:2252
+# Dort steht der Zeiger als ARGUMENT in der Klammer eines Aufrufs, nicht als
+# Wahrheitswert. Der Ausdruck fuer den "nackten Namen" sah aber nur eine
+# oeffnende Klammer davor und eine schliessende danach und hielt das fuer
+# eine Pruefung. Beide Stellen wurden dadurch falsch gemeldet.
+#
+# Deshalb werden Aufrufklammern von innen nach aussen geleert, bevor nach
+# einer Pruefung gesucht wird. Aus
+#     if (pField && pField->IsKindOf(RUNTIME_CLASS(CHeaderField)))
+# wird
+#     if (pField && pField->IsKindOf())
+# - pField bleibt nackt geprueft, das gehoert so. Aus
+#     if (MemDC.CreateCompatibleDC(pDC))
+# wird
+#     if (MemDC.CreateCompatibleDC())
+# - pDC ist weg, und damit auch der Fehlalarm.
+#
+# Die Schluesselwoerter if/while/for/switch/return/sizeof sind ausgenommen,
+# sonst wuerde die Bedingung selbst geleert.
+my %SCHLUESSELWORT = map { $_ => 1 }
+    qw(if while for switch return sizeof do else case new delete throw);
+
+sub argumente_entfernen {
+    my ($s) = @_;
+    for (my $runde = 0; $runde < 20; $runde++) {
+        my $vorher = $s;
+        # Kein Blick nach links: ein Aufrufname darf sehr wohl hinter einem
+        # Punkt, einem Pfeil oder zwei Doppelpunkten stehen -
+        # MemDC.CreateCompatibleDC(pDC), CWinApp::IsIdleMessage(pMsg).
+        # Genau daran ist der erste Versuch gescheitert.
+        $s =~ s{([A-Za-z_]\w*)\s*\(([^()]*)\)}
+               { $SCHLUESSELWORT{$1} ? "$1($2)" : "$1()" }ge;
+        last if $s eq $vorher;
+    }
+    return $s;
+}
+
+# Alles hinter der schliessenden Klammer der Bedingung abschneiden.
+# Ohne das steht in der Bedingung noch das Ende der Zeile ("... ) )" oder
+# "... ) {"), und der Test auf ein umfassendes !( ... ) scheitert an der
+# ueberzaehligen Klammer.
+sub bedingung_zuschneiden {
+    my ($s) = @_;
+    my $tiefe = 1;
+    for (my $i = 0; $i < length($s); $i++) {
+        my $c = substr($s, $i, 1);
+        $tiefe++ if $c eq '(';
+        if ($c eq ')') {
+            $tiefe--;
+            return substr($s, 0, $i) if $tiefe == 0;
+        }
+    }
+    return $s;
+}
+
 sub pruefung_art {
-    my ($bedingung, $name) = @_;
+    my ($bedingung, $name, $tiefe) = @_;
+    $tiefe ||= 0;
+    $bedingung = argumente_entfernen($bedingung) unless $tiefe;
+    return undef unless $bedingung =~ /(?<![\w:.>])\Q$name\E\b/;
+
+    # BELEGTER FEHLALARM (Stichprobe 07.09.2026): mboxtree.cpp:3580
+    #     if (! (pTargetCommand && pSourceCommand) )
+    # Das ist ein NEGIERTER Waechter fuer BEIDE Namen. Der alte Ausdruck sah
+    # nur "&& pSourceCommand )", hielt das fuer eine positive Pruefung und
+    # meldete den Zugriff hinter dem herausspringenden Rumpf.
+    # Deshalb: ein !( ... ) um die ganze Bedingung dreht die Aussage um.
+    if ($tiefe < 4 && $bedingung =~ /^\s*!\s*\((.*)\)\s*$/s) {
+        my $innen = $1;
+        # nur wenn die Klammer wirklich die ganze Bedingung umfasst
+        my $t = 0; my $ganz = 1;
+        for my $c (split //, $innen) {
+            $t++ if $c eq '(';
+            $t-- if $c eq ')';
+            if ($t < 0) { $ganz = 0; last }
+        }
+        if ($ganz && $t == 0) {
+            my $art = pruefung_art($innen, $name, $tiefe + 1);
+            return undef unless $art;
+            return $art eq 'positiv' ? 'negativ' : 'positiv';
+        }
+    }
+
     return 'negativ' if $bedingung =~ /!\s*\Q$name\E(?![\w:.\[(>-])/;
     return 'negativ' if $bedingung =~ /(?<![\w:.>])\Q$name\E\s*==\s*(?:NULL|nullptr|0)(?![\w.])/;
     return 'positiv' if $bedingung =~ /(?<![\w:.>])\Q$name\E\s*!=\s*(?:NULL|nullptr|0)(?![\w.])/;
@@ -172,6 +257,39 @@ sub zuweisung {
 sub ist_diagnose {
     my ($zeile) = @_;
     return $zeile =~ /\b(?:ASSERT|ASSERT_VALID|VERIFY|TRACE\d?|_ASSERTE|PutDebugLog)\s*\(/ ? 1 : 0;
+}
+
+# ---------------------------------------------------------------------------
+# Letzte Zeile der BEDINGUNG einer if/while-Zeile.
+#
+# BELEGTER FEHLALARM (Stichprobe 07.09.2026, 3 von 15):
+#     MIMEMap.cpp:116   if (!bestMac || (maybe->m_Creator[0] &&
+#     MIMEMap.cpp:117        (!bestMac->m_Creator[0] || ...
+#     nickdoc.cpp:2526  if (!nn ||
+#     nickdoc.cpp:2527       FAILED(out.PutLine(nn->GetName())) || ...
+#     sendmail.cpp:3568 if (!doc || !doc->GetText())
+# Hinter "!X ||" wird die rechte Seite nur ausgewertet, wenn X belegt ist -
+# die C-Kurzschlussauswertung sichert den Zugriff ab. Der Zugriff stand aber
+# auf einer SPAETEREN Zeile als der Waechter, und das Werkzeug sah nur
+# "spaeter, also ungeschuetzt".
+# Deshalb gilt die ganze Bedingung als geschuetzter Bereich - fuer beide
+# Vorzeichen, denn "X && X->y" ist genauso abgesichert wie "!X || X->y".
+# ---------------------------------------------------------------------------
+sub bedingungsende {
+    my ($zref, $if_zeile, $rumpf_ende) = @_;
+    my @z = @$zref;
+    my $offen = 0; my $gesehen = 0;
+    for (my $i = $if_zeile; $i <= $rumpf_ende; $i++) {
+        my $s = $z[$i];
+        my $k = 0;
+        if ($i == $if_zeile) { my $j = index($s, '('); $k = ($j < 0) ? 0 : $j }
+        for (; $k < length($s); $k++) {
+            my $c = substr($s, $k, 1);
+            if    ($c eq '(') { $offen++; $gesehen = 1 }
+            elsif ($c eq ')') { $offen--; return $i if $gesehen && $offen <= 0 }
+        }
+    }
+    return $if_zeile;
 }
 
 # ---------------------------------------------------------------------------
@@ -301,7 +419,7 @@ sub datei_pruefen {
             for my $i ($von .. $bis) {
                 next unless $z[$i] =~ /(?<![\w:.>])\Q$name\E\b/;
                 my $bed;
-                if    ($z[$i] =~ /\b(?:if|while)\s*\((.*)$/)  { $bed = $1 }
+                if    ($z[$i] =~ /\b(?:if|while)\s*\((.*)$/)  { $bed = bedingung_zuschneiden($1) }
                 elsif ($z[$i] =~ /^\s*(?:&&|\|\|)(.*)$/)      { $bed = $1 }
                 next unless defined $bed;
                 my $art = pruefung_art($bed, $name);
@@ -314,6 +432,8 @@ sub datei_pruefen {
             for my $p (@pruef) {
                 my ($zi, $art) = @$p;
                 my ($ende, $hat_else, $else_ende) = schutzbereich(\@z, $zi, $bis);
+                # Die Bedingung selbst ist immer geschuetzt (Kurzschluss).
+                push @schutz, [$zi, bedingungsende(\@z, $zi, $bis)];
                 if ($art eq 'positiv') {
                     push @schutz, [$zi, $ende];
                 }
