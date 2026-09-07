@@ -258,6 +258,15 @@ Der Commit `060a4bf` hat **keine** dieser Dateien angefasst. Nach der Lehre
 Ursachenbehauptung ohnehin nicht traegt, ist der Stand in ZIEL.md
 sachlich naeher an der Wahrheit als der Kommentar im Code.
 
+Bemerkenswert dabei: derselbe Commit hat `tools/doku-pruefen.pl` mitgebracht,
+das genau solche Widersprueche finden soll. Es findet diesen **nicht**, weil es
+nur `.md` gegen `.md` prueft — „behoben" steht hier im Quelltextkommentar und in
+der Commit-Nachricht, nicht in einer `.md`. Das Werkzeug meldet stattdessen
+acht andere, ungeloeste Widersprueche (vier Stellen nennen 7 Kriterien statt 8;
+E-7, E-11, E-14 und E-16 stehen in `BEFUNDE.md` gleichzeitig als behoben und
+als offen). Ein Pruefwerkzeug, dessen erster Lauf acht Maengel findet und deren
+keiner danach behoben wird, prueft nichts.
+
 ---
 
 ## 3. Die Fehlerklasse — `tools/zeiger-nachpruefen.pl`, 33 Tests, 19 belegte Stellen
@@ -400,6 +409,22 @@ gefunden hatte:
 ```
 
 **Behauptung bestaetigt.** Auch die bekannten OT501-Fehler sind bei 0.
+
+Zur Sicherheit ein zweites Mal, diesmal als **vollstaendiger Neubau**
+(`-Ziel Rebuild`), nachdem der Quellbaum wieder auf `HEAD` stand:
+
+```
+ Rueckgabewert    0  (erster Gang)
+ Fehler           0 neu, 0 bekannt (OT501)
+ Dauer            00:10:34
+ Eudora.exe         2.943.488 B   2026-09-07 08:10:12  neu
+ ERGEBNIS: ERFOLG - 0 Fehler, 0 Warnungen
+```
+
+`Eudora.exe` ist byteweise gleich gross wie beim ersten Lauf (2.943.488) —
+der Quellbaum ist also wirklich wieder der Stand von `HEAD`, und die
+Messspur aus Abschnitt 2 ist restlos entfernt (`headervw.cpp`: 96097 Byte,
+18 CR, 0 Byte ueber 127 — identisch mit `HEAD`).
 
 Zwei Randbeobachtungen an `tools/bauen.ps1` selbst:
 
