@@ -123,7 +123,9 @@ int main(int argc, char** argv)
                     (unsigned long)hr);
             return 1;
         }
-        fprintf(stderr, "Hinweis: DIA nicht registriert, geladen aus %s\n", genommen);
+        (void)genommen;   /* Absichtlich KEIN Hinweis auf stderr: PowerShell
+                              wertet jede stderr-Zeile eines fremden Programms
+                              als Fehler und verschluckt danach die Ausgabe. */
     }
 
     wchar_t pfad[1024];
