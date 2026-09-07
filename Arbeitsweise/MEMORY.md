@@ -32,3 +32,7 @@
 - [Erfolg aus Anwendersicht](erfolg-aus-anwendersicht.md) — die Überschrift nennt, was Gregor jetzt tun kann; kein Crash ist keine Verbesserung, Regressionen benennen
 - [Auftrag vor Selbstbetrachtung](auftrag-vor-selbstbetrachtung.md) — Sachfrage zuerst, Fehlereingeständnis in einem Satz, Selbstkritik in eine Lehre-Datei
 - [Widerlegte Vermutungen aufschreiben](widerlegte-vermutungen-aufschreiben.md) — jede Widerlegung mit ihrer Messung; den Versuch wählen, der eine Klasse erledigt
+- [Prüfumfang nicht von Hand](pruefumfang-nicht-von-hand.md) — Prüflisten und Agentenaufträge holen ihren Umfang aus der Quelle; „alle" heißt alle, gemessen 16 von 47 MDs nie geprüft
+- [Review sieht nur den Diff](review-sieht-nur-den-diff.md) — die veraltete unveränderte Datei steht in keinem Diff; vor dem Merge den Bestand prüfen, nicht die Änderung
+- [Schranke gegentesten](schranke-gegentesten.md) — jede neue Prüfung gegen den echten Fehler und gegen den erlaubten Fall fahren; stumm und Fehlalarm kosten dasselbe
+- [Daueraufgaben brauchen einen Takt](daueraufgaben-brauchen-einen-takt.md) — Lektor, Prüfer, Chronist laufen nach einem Ereignis; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet
