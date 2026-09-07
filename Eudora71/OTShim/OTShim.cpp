@@ -151,6 +151,25 @@ void SECTipOfDay::SetLeadInText(const TCHAR * lpNewLeadInText)
 /////////////////////////////////////////////////////////////////////////////
 // Sammelmeldung
 
+// BEFUND E-33: Diese Meldung war ein MODALER Dialog - und hat damit genau das
+// verhindert, was sie ankuendigt ("Eudora bleibt bedienbar").
+//
+// Gemessen am 07.09.2026: Strg-N legt das Verfassen-Fenster an, das Fenster
+// traegt sich in die Registerkartenleiste ein, diese Funktion meldet die
+// fehlende Leiste - und der modale Dialog schiebt sich VOR das neue Fenster.
+// Der Anwender sieht kein Verfassen-Fenster, sondern eine Meldung; und weil
+// gleich die naechste kommt, laesst sich Eudora danach auch nicht mehr
+// beenden. Gregors Worte zu Fassung 1.0.18: "es crasht nicht, aber es
+// passiert auch nichts. beenden kann ich es auch nicht."
+//
+// Eine Meldung ueber fehlendes BEIWERK darf das Programm nicht anhalten. Sie
+// geht jetzt in die Debug-Ausgabe (im Debugger mitlesbar, im Release-Bau
+// folgenlos) statt in einen Dialog.
+//
+// Absichtlich NICHT gewaehlt: ein nichtmodales Fenster. Es waere ein weiteres
+// Fenster, das aufgeht, ohne dass jemand danach gefragt hat - und die
+// Ersatzschicht meldet an mehreren Stellen.
+
 void OTShimNichtUmgesetzt(BOOL& rbBereitsGemeldet, LPCTSTR lpszWas)
 {
 	if (rbBereitsGemeldet)
@@ -160,15 +179,11 @@ void OTShimNichtUmgesetzt(BOOL& rbBereitsGemeldet, LPCTSTR lpszWas)
 
 	CString strMeldung;
 	strMeldung.Format(
-		_T("Diese Funktion steht in dieser Fassung nicht zur Verfuegung:\n\n")
-		_T("    %s\n\n")
-		_T("Die Ersatzschicht fuer das Stingray Objective Toolkit bildet die ")
-		_T("benutzten Klassen nach, aber nicht jede Funktion darin. Was hier ")
-		_T("fehlt, ist Beiwerk - Eudora bleibt bedienbar.\n\n")   
-		_T("Diese Meldung erscheint nur einmal je Sitzung."),
+		_T("OTShim: nicht umgesetzt - %s (Beiwerk der Ersatzschicht fuer das ")
+		_T("Stingray Objective Toolkit; Eudora bleibt bedienbar)\n"),
 		lpszWas);
 
-	::AfxMessageBox(strMeldung, MB_OK | MB_ICONINFORMATION);
+	::OutputDebugString(strMeldung);
 }
 
 
