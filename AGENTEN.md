@@ -171,6 +171,16 @@ hatte.
 5. **Einsammeln**: Befunddateien zusammenführen, Zweige in Abhängigkeitsreihen-
    folge zusammenführen.
 6. **Einmal bauen**, Release und Debug, und die Zusagen der Agenten nachmessen.
-7. **LEKTOR allein** über die Dokumentation laufen lassen.
+7. **LEKTOR allein** über die Dokumentation laufen lassen — und zwar über
+   **jede** Datei aus `git ls-files '*.md'` ohne `Arbeitsweise/`, nicht nur über
+   die, die im Auftrag stehen. Die Befunddateien der Runde sind Pflicht: was ein
+   Agent als behoben meldet, muss in `BEFUNDE.md`, `ZIEL.md` und `README.md`
+   ankommen, sonst arbeitet der nächste Agent gegen einen Stand, den es nicht
+   mehr gibt. Am 07.09.2026 waren **16 von 47** MD-Dateien in keinem Lektorat je
+   erwähnt, und drei davon trugen Ergebnisse, die anderswo noch als offen
+   standen — eines seit fünf Tagen, mit einer Liste der Fundstellen dabei (L-8,
+   Befund W-2 und W-22 in `Befunde/LEKTOR-4.md`). Mechanisch prüft
+   `perl tools/doku-pruefen.pl` denselben Umfang; es läuft im `pre-commit` und
+   im `pre-push` und weist ab.
 8. **Freigeben**: `arbeitsbaum-frei.pl --freigeben`, und `gesichert.pl` als
    letzte Probe, dass nichts uncommittet oder ungepusht liegenbleibt.

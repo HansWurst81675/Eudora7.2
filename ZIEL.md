@@ -10,59 +10,45 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 ## Die Kriterien
 
 > **Diese Tabelle ist die Quelle.** `README.md`, `AUFGABEN.md`,
-> `WEITERMACHEN.md`, `PORTIERUNG.md` und `Releases/PAKETE.md` verweisen hierher,
-> statt sie zu wiederholen. Wer den Stand ändert, ändert ihn **hier**.
+> `WEITERMACHEN.md`, `CHANGELOG.md`, `PORTIERUNG.md` und `Releases/PAKETE.md`
+> verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
+> **hier**.
 
-Stand **06.09.2026**, gemessen an Fassung **7.2.0.14 / Paket 1.0.14**.
+Stand **07.09.2026**, gemessen an Fassung **7.2.0.21 / Paket 1.0.21**.
+
+**Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
+Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
+Beenden) am 07.09.2026 aus seinem Urteil zu 1.0.18 (*„beenden kann ich es auch
+nicht"*), **Kriterium 8** (die offenen Fenster sichtbar und auswählbar) am
+07.09.2026 nach dem ersten geglückten Verfassen-Fenster. Sie messen, ob man
+**damit arbeiten** kann. Ein Mailprogramm, das keine Mail schreiben kann, ist
+kein Mailprogramm.
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen |
+| 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), der Titel trägt die Bau-Kennung (E-7), der Fortschritt beim Abruf ist sichtbar (E-13), Umlaute stimmen (Z-2, Z-2b), „In" steht nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen wieder ihr Symbol (E-30, an 7.2.0.14 bestätigt), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen einer HTML-Nachricht |
-| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor am 06.09.2026 bestätigt |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
+| 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
+| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. **Offen bleibt das Beenden**, siehe Kriterium 7 |
+| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
+| 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
+| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht"*, von Gregor am 07.09.2026 an 7.2.0.21 bestätigt. Der einzige verbliebene Fehler der zweiten Stufe |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht bildet sie nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
 
-**Drei von vier Kriterien sind belegt, eines fast.**
+**Fünf von neun Kriterien sind belegt (0, 1, 3, 5, 6), drei fast oder halb
+(2, 4, 8), eines nicht (7 - das Beenden).**
 
-## Die zweite Stufe: benutzbar, nicht nur lauffähig
-
-Von Gregor am 06.09.2026 gesetzt, nachdem Kriterium 0 gefallen war. Ein
-Mailprogramm, das keine Mail schreiben kann, ist kein Mailprogramm — die vier
-Kriterien oben messen, ob es *läuft*, diese drei messen, ob man **damit
-arbeiten** kann.
-
-| # | Kriterium | Stand |
-|---|---|---|
-| 4 | **Keine Abstürze** | **fast** — Strg-N und *Weiterleiten* beenden Eudora nicht mehr (E-31, 06.09.2026). Es bleibt eine Meldung „An unhandled exception has occurred", und unter dem Debugger tritt ein zweiter, fokusabhängiger Fehler zutage: `0xC000041D` in `AutoCompleterListBox::KillACListBox` |
-| 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **teilweise** — das Verfassen-Fenster **entsteht** jetzt. Schreiben und Abschicken ist noch nicht geprüft |
-| 6 | **Eine Mail lässt sich weiterleiten** | **teilweise** — derselbe Weg, ebenfalls kein Absturz mehr |
-
-**Die Ursache war eine einzige Zeile** (**E-31**), gemessen am 06.09.2026:
-`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` definierte `pg_time_t` als `time_t`.
-Unter VC6/VC7.1 waren das **vier** Byte, unter VS2022 sind es **acht** —
-`Paige32.dll` von 2005 rechnet mit vier. Damit war **jede** Struktur verschoben,
-die Eudora an Paige reicht: `def_style.procs` lag bei 536 statt 524,
-`sizeof(style_info)` bei 304 statt 292. `PgGlobals::InitFonts` schrieb bei jedem
-Start zwölf Byte über `def_style` hinaus, und ein Funktionszeiger zeigte ins
-Leere — das war der Stapelüberlauf.
-
-Bis dahin entstand in dieser Portierung **kein einziges Paige-Fenster**.
-
-Kriterien 4 bis 6 hängen am selben Fehler (**E-27**). Gemessen an Gregors
-Protokoll vom 06.09.2026: beide Wege enden in
-`CCompMessageFrame::OnCreateClient` zwischen `CreateStatic` und dem Anlegen der
-beiden Ansichten — also in `CreateView` für `CHeaderView` oder
-`PgCompMsgView`. Ein `Exception.log` entsteht dabei **nicht**; der
-Absturzbehandler kommt nicht zum Zug, was zu Heap-Beschädigung oder
-Sofortabbruch passt.
-
-**Erst wenn alle sieben Kriterien erfüllt sind, ist Eudora benutzbar.**
-
-**Erst wenn alle Kriterien erfüllt sind, darf eine Fassung „lauffähig" heißen.**
-Vorher heißt sie, was sie ist — etwa „startet" oder „Vorabfassung". Die
-Dateinamen `Eudora72-1.0.1-lauffaehig.zip` und `Eudora72-1.0.2-lauffaehig.zip`
-behaupten mehr, als die Fassungen können; sie bleiben nur stehen, weil die
-Pakete unter diesen Namen samt Prüfsumme veröffentlicht sind.
+> **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
+> zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
+> es auch nicht. nichts statt crash ist auch keine verbesserung!"* Das ist der
+> Maßstab — nicht, wie weit die Spur im Protokoll kommt.
+>
+> Was sich verbessert hat, ist die **Ausgangslage**, nicht das Programm: bis
+> 06.09.2026 entstand in dieser Portierung kein einziges Paige-Fenster, und die
+> Ursache war unbekannt. Jetzt ist sie gefunden und behoben (E-31). Ob daraus für
+> den Anwender ein sichtbares Verfassen-Fenster wird, entscheidet der nächste
+> Lauf auf Gregors Rechner — nicht diese Datei.
 
 ## Kriterium 0: das Paket muss ohne Nachinstallieren laufen
 
@@ -77,8 +63,8 @@ Und auf die Frage nach dem Weg dorthin:
 
 > *„sonst ja, statisch linken, ist mir auch egal."*
 
-Kriterium 0 steht vor den anderen dreien, weil ohne lauffähiges Paket niemand
-die anderen prüfen kann.
+Kriterium 0 steht vor allen anderen, weil ohne lauffähiges Paket niemand die
+übrigen prüfen kann.
 
 ### Der Weg dorthin
 
@@ -97,18 +83,25 @@ weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau*
 ### Woran sich Kriterium 0 misst
 
 **Das ZIP auf einem Rechner ohne Visual Studio auspacken und starten** — kein
-`0xc000007b`, keine Meldung über eine fehlende DLL, kein Nachinstallieren. Für
-das Release-Paket ist dieser Lauf noch nicht gemacht worden.
+`0xc000007b`, keine Meldung über eine fehlende DLL, kein Nachinstallieren.
+**Erbracht am 06.09.2026** von Gregor selbst, mit dem **Release**-Paket
+`Eudora72-1.0.10-release.zip`: *„test bestanden: eudora läuft ohne VS2022
+installiert."*
 
-> **`tools/paket-pruefen.ps1` ist NICHT dieser Nachweis.** Am 31.08.2026 war
-> Kriterium 0 mit diesem Werkzeug als „gemessen erfüllt" gemeldet worden; die
-> Gegenprobe hat es widerlegt: aus einer ausgepackten Kopie wurden
+> **`tools/paket-pruefen.ps1` war einmal kein Nachweis, ist es heute aber.** Am
+> 31.08.2026 war Kriterium 0 mit diesem Werkzeug als „gemessen erfüllt" gemeldet
+> worden; die Gegenprobe hat es widerlegt: aus einer ausgepackten Kopie wurden
 > `EudoraRes.dll`, `QCSSL.dll`, `SPELL32.DLL`, `EuGraph.ocx` und der ganze
-> `Plugins`-Ordner gelöscht — das Ergebnis blieb **„keine Fehler, EXIT=0"**.
-> **Der Prüfer prüft die Maschine, nicht das Paket.** Dazu erzeugt seine feste
-> Debug-Laufzeitliste bei einem **Release**-Paket vier Falschwarnungen; wer
-> ihnen folgt, holt sich die **nicht verteilbaren** DLLs ins Paket. Bis das
-> behoben ist (PR-2.0 bis PR-2.3), ist es kein Freigabekriterium.
+> `Plugins`-Ordner gelöscht — das Ergebnis blieb **„keine Fehler, EXIT=0"**. Das
+> Werkzeug prüfte die Maschine, nicht das Paket, und seine feste
+> Debug-Laufzeitliste erzeugte bei einem Release-Paket vier Falschwarnungen, die
+> zum Lizenzverstoß anleiteten. **Das ist am 06.09.2026 behoben** (PR-2.0,
+> Commit `dfc8b40`): es rechnet die Startkette aus den PE-Import- und
+> Verzögerungstabellen aus, zählt einen Treffer in `SysWOW64`/`System32`
+> ausdrücklich **nicht** als vorhanden und weist den Weg über
+> `laufzeit-holen.ps1` selbst ab — mit drei Gegenproben belegt
+> (`Befunde/PAKET.md`). Es ersetzt trotzdem keinen Startversuch auf einem
+> fremden Rechner: es sagt, ob der Lader alles findet, nicht ob Eudora läuft.
 
 ## Woran sich Kriterium 2 misst
 

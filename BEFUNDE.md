@@ -1,13 +1,13 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: 9512108 -->
+<!-- pruefstand: eceeecf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 06.09.2026: **7349 Zeilen**, **122** Abschnitte auf zweiter und **200**
-auf dritter Ebene. Nachzählen:
+Gemessen am 07.09.2026: **7373 Zeilen**, **122** Abschnitte auf zweiter und
+**200** auf dritter Ebene. Nachzählen:
 
 ```sh
 wc -l < BEFUNDE.md                  # Zeilen
@@ -29,15 +29,20 @@ Projekt hat genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
 > Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
 > dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
 
-**Stand der Statusspalte:** 06.09.2026, Commit `9512108` (Zweig `wt/lektor`).
+**Stand der Statusspalte:** 07.09.2026, Commit `060a4bf` (Zweig `wt/lektor`).
 Die Einstufung ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
-Nachgezogen am 06.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-2.md`): **Z-3**
-stand auf „offen", ist aber seit `57fe6a4` behoben; **E-14**, **E-16**,
-**E-17**, **E-22**, **E-23**, **E-24**, **E-25** und **E-26** fehlten im
-Verzeichnis ganz und sind eingetragen. Am 05.09.2026 nachgezogen: **E-4** und
-**E-7** standen auf „offen", sind aber behoben; **PR-5** stand an drei Stellen
-auf „offen", ist aber seit `765c39b` behoben. Neu aufgenommen war damals
-**B-3** (OT501 aus dem Bau) und **E-13** (Fortschritt beim Mailabruf).
+Nachgezogen am 07.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-3.md`, L-7):
+**E-30** stand auf „in Arbeit", ist aber behoben und von Gregor bestätigt;
+**E-31**, **E-32** und **E-33** fehlten ganz und sind eingetragen; **R-1** nannte
+25 von 142 Stellen, gemessen sind 21 von 137; und der Kasten, der **E-15** und
+**E-18** bis **E-21** für nie vergeben erklärte, war falsch — alle fünf stehen
+in Quellkommentaren. Nachgezogen am 06.09.2026 (L-6): **Z-3** stand auf „offen",
+ist aber seit `57fe6a4` behoben; **E-14**, **E-16**, **E-17**, **E-22**,
+**E-23**, **E-24**, **E-25** und **E-26** fehlten im Verzeichnis ganz und sind
+eingetragen. Am 05.09.2026 nachgezogen: **E-4** und **E-7** standen auf „offen",
+sind aber behoben; **PR-5** stand an drei Stellen auf „offen", ist aber seit
+`765c39b` behoben. Neu aufgenommen war damals **B-3** (OT501 aus dem Bau) und
+**E-13** (Fortschritt beim Mailabruf).
 
 | Status | Bedeutung |
 |---|---|
@@ -127,7 +132,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | PR-1 | drei Löcher in der Commit-Schranke | **Bericht** → durch W-1 abgearbeitet |
-| PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; PR-2.1 behoben, **PR-2.0 und PR-2.2 bis PR-2.7 offen** |
+| PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; **PR-2.0** und PR-2.1 behoben (PR-2.0 am 06.09.2026, `Befunde/PAKET.md`, drei Gegenproben), PR-2.8 kein Handlungsbedarf, **PR-2.2 bis PR-2.7 offen** |
 | Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
 | X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 |
 | X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** im Skript — auf dieser Maschine war der *eingerichtete* Hook bis 05.09.2026 noch die alte Fassung (X-5) |
@@ -135,9 +140,9 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | X-5 | Commit um 09:06 auf den um 09:03 zusammengeführten Zweig; die Regel stand nur als Prosa | **behoben** — Schranke im `pre-commit`, 15 Testfälle, Auflagen 7–10 in `AUFGABEN.md` |
 | X-6 | Bau-Lauf: geratene Plattform (`MSB4126`) und Erfolgsmeldung ohne Bau; `tools/bauen.ps1` | **behoben** — das Werkzeug steht, drei Gegenproben grün |
-| R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
+| R-1 | die Fehlerklasse hinter E-11 ausgezählt | **offen** — gemessen am 07.09.2026 mit `tools/releasebuffer-pruefen.pl`: **137** Vorkommen, davon 116 richtig gepaart; **21** zu ändern (16 `falsch`, 4 `lockbuffer`, 1 `danach`). Zuerst `QCSharewareManager.cpp:1318` — die Stelle läuft **bei jedem Start**. Liste in `AUFGABEN.md` unter A2, mit dem Werkzeug jederzeit neu zu erzeugen |
 | Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **behoben** (`57fe6a4`) — `ProjectReference` auf `QCUtils.vcxproj` steht in `NSImport`, `OEImport`, `OLImport` und `plstclnt`; am 06.09.2026 in allen vier Projektdateien nachgesehen |
-| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
+| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3` | **offen** — die Regel steht („ein veröffentlichtes Paket wird nicht ersetzt, es bekommt die nächste Nummer"), und die Prüfsummen unterscheiden die beiden (`Releases/PAKETE.md`). Der frühere Zusatz „keine der beiden ist gestartet worden" ist überholt: Gregor hat die erste Fassung gestartet (E-6). Eine **Schranke** zu der Regel gibt es nicht |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -156,21 +161,43 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** (Kriterium 3) |
 | E-13 | beim Mailabruf ist kein Fortschritt sichtbar — der Abruf dauert 0,02 s | **Ursache belegt**; Behebung liegt auf `wt/fortschritt-arbeit`, **nicht** in diesem Zweig. Hieß versehentlich `E-12` |
 | E-14 | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (`SearchManager::Info::InitX1`) | **offen, nicht angefasst** — auf einem frischen Mailverzeichnis der normale erste Lauf; echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
-| E-16 | Absturz beim Verfassen (Strg-N) und „Encountered an improper argument", `afxcoll.inl:213` | **offen** — sechs Stellen in `Befunde/VERFASSEN.md` gehärtet, die Ursache ist damit **nicht** gefunden |
+| E-16 | Absturz beim Verfassen (Strg-N) und „Encountered an improper argument", `afxcoll.inl:213` | **behoben** — sechs Indexstellen gehärtet (`Befunde/VERFASSEN.md`). Die Ursache, die dieser Befund **nicht** fand, ist **E-34**: die Schranke aus E-16 greift, `m_btns[24]` wirft trotzdem, weil MFC 14 in den Sammlungen mit `ENSURE` statt `ASSERT` prüft |
 | E-17 | der Kontoassistent startete bei jedem Start, obwohl ein Konto eingerichtet war | **behoben** (`Befunde/PERSONA.md`) |
-| E-22 | Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken | **offen** — `Befunde/FENSTER.md`: Ursache **nicht** gefunden, aber ein Messwert, der die bisherige Suchrichtung widerlegt, und sechs belegte Schwachstellen auf dem Weg |
+| E-22 | Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken | **überholt durch E-28** — dieser Befund fand die Ursache nicht, lieferte aber einen Messwert, der die damalige Suchrichtung widerlegte, und sechs belegte Schwachstellen auf dem Weg (`Befunde/FENSTER.md`). Die Ursache ist `CSummary::m_FrameWnd`, siehe **E-28** |
 | E-23 | POP3 nur über Port 110, dazu der Anmeldefehler bei freenet | **Ursache belegt**, drei Löcher gestopft (`Befunde/PORT.md`); Port 995 mit TLSv1.3 ist seit 06.09.2026 gemessen |
 | E-24 | unter „Recent" stand „In" zweimal im Postfachbaum | **behoben** (`Befunde/POSTFACH.md`) |
 | E-25 | der Absturz beim Klick auf *Weiter*: Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile` | **behoben** (`Befunde/ASSISTENT.md`) — **die Hypothese hat den Test aber nicht bestanden**: 7.2.0.12 stürzt weiter ab, E-25 war also nicht die einzige Quelle |
 | E-26 | der Absturzbericht nennt die Ladeadresse jedes Moduls (`QCExceptionHandler::WriteModuleTable`) | **behoben** (`277d3a4`) — kein eigener Abschnitt, beschrieben in `README.md` unter *„Das Absturzprotokoll"* |
-| E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache des Schweigens belegt, der Absturz selbst nicht**: der Behandler hing nur an `SetUnhandledExceptionFilter`; Heap-Beschädigung, `/GS`-Wächter, ungültiges Argument an die C-Laufzeit und `std::terminate` gehen daran vorbei. Drei davon sind seit 7.2.0.13 angemeldet, dazu 15 Spurmarken auf dem Weg und ein behobenes `ReleaseBuffer` ohne `GetBuffer` in `PaigeEdtView.cpp`. Beste offene Spur: `Paige32.dll`/`EuMemMgr.dll` gegen `MSVCR71` — zwei getrennte Halden (`Befunde/VERFASSER.md`) |
+| E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache gefunden und behoben: E-31** (`pg_time_t` acht Byte statt vier). Der Absturz war `0xC00000FD` STATUS_STACK_OVERFLOW in `Paige32.dll`; ein voller Stapel lässt keinen Platz für den Absturzbehandler, daher kein `Exception.log`. Dieser Befund hat davon die **Ursache des Schweigens** belegt: der Behandler hing nur an `SetUnhandledExceptionFilter`, und Heap-Beschädigung, `/GS`-Wächter, ungültiges Argument an die C-Laufzeit sowie `std::terminate` gehen daran vorbei — drei davon sind seit 7.2.0.13 angemeldet, dazu 15 Spurmarken. Die dort genannte „beste offene Spur" (`Paige32`/`EuMemMgr` gegen `MSVCR71`) ist durch E-31 **überholt** (`Befunde/VERFASSER.md`) |
 | E-28 | **Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken** | **behoben** (`222c0ba`): `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen. Gesetzt wird er bedingungslos in `CMessageFrame::ActivateFrame`, gelöscht wurde er nur innerhalb von `if (m_InitialSize != wp.rcNormalPosition)` — also nur, wenn das Fenster verschoben oder in der Größe geändert wurde (`Befunde/OEFFNEN.md`) |
 | E-29 | die Adressen im Absturzbericht brauchen ein Werkzeug | **behoben** (`029703c`): `tools/absturz-auswerten.pl`, 15 Selbsttests. Löst mit der Modultabelle aus E-26 jede Stapelzeile in einen Funktionsnamen auf — und sagt bei älteren Berichten ausdrücklich, dass es **nicht** geht, statt zu raten (`Befunde/SPUR.md`) |
-| E-30 | abgeschaltete Knöpfe der Werkzeugleiste zeigen kein Symbol | **in Arbeit**. Die Symbole selbst sind in Ordnung: im Hauptfenster erscheinen sie vollständig, im Suchfenster fehlen genau die abgeschalteten. Gemessen: `SetDisabledImageList` kommt im Projekt nicht vor, `QCImageList` legt die Liste mit `ILC_COLORDDB` an (`Befunde/SYMBOLE-VORARBEIT.md`) |
+| E-30 | abgeschaltete Knöpfe der Werkzeugleiste zeigen kein Symbol | **behoben** und von Gregor bestätigt (Paket 1.0.14). Ursache waren die sechs **24-Bit**-Bitmaps der Hauptleiste: ohne Farbtabelle konnte `CreateMappedBitmap` das Buttongrau `192,192,192` nicht auf das heutige `COLOR_BTNFACE` (`240,240,240`) umsetzen, und die Maske erfasste das ganze Bildrechteck. Behoben in `OTShim/OTShim_Werkzeugleiste.cpp`, abgesichert durch `tools/pruefe-symbole.pl` und `Eudora71/Tests/TestSymbole.cpp` (`Befunde/SYMBOLE.md`) |
+| E-31 | `pg_time_t` war unter VS2022 **acht** Byte breit statt vier — damit war jede Paige-Struktur verschoben, und in dieser Portierung entstand nie ein Paige-Fenster | **behoben und mittelbar bestätigt** — ohne Paige-Fenster gibt es kein Verfassen-Fenster, und Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt. Der Abschnitt mit allen Feldversätzen steht in `CHANGELOG.md` unter 7.2.0.21, dazu ein Kommentar in `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` |
+| E-32 | die **modale** Meldung „An unhandled exception has occurred" beim Verfassen, nach der sich Eudora nicht mehr beenden ließ | **Ursachenbehauptung widerlegt** (P-3, `Befunde/PRUEFER-3.md`): `CHeaderView::OnKillFocusRecipient` läuft bei Strg-N gar nicht, das Herausnehmen der Behebung bringt die Meldung nicht zurück, und im Paket 1.0.18 tritt sie über denselben Weg nicht auf. Der **Code-Mangel** dort ist echt und behoben (`060a4bf`) — er war nur nie die Ursache. Aufgeklärt hat die Meldung erst **E-34** |
+| E-33 | *File → Exit* beendet Eudora nicht (Kriterium 7) | **offen** — noch nicht untersucht. Von Gregor am 07.09.2026 an Paket 1.0.21 bestätigt: *„beenden geht nicht."* Die frühere Annahme, eine modale Meldung aus E-32 verdecke das Beenden, ist mit E-32 gegenstandslos |
+| E-34 | eine MFC-Ausnahme in `QCChildToolBar::GetButton` wickelte den **ganzen Fensterbau** ab — ohne Meldung, ohne Absturz, ohne Fenster. MFC 14 wirft dort `CInvalidArgException` („Encountered an improper argument"), wo MFC 6 nur eine Zusicherung prüfte; die Ausnahme lief aus `OnCreateClient` heraus, damit schlug `CWnd::OnCreate` fehl, `LoadFrame` gab FALSE und `CreateNewFrame` NULL | **behoben und von Gregor bestätigt** (Paket 1.0.20/1.0.21): Index-Schranke plus `TRY`/`CATCH_ALL` in `Eudora71/Eudora/QCChildToolBar.cpp`, Protokollzeile `E-34 … Ausnahme bei Index 24 von 27`. **Offen bleibt die Ursache**: warum meldet `GetBtnCount()` 27, während `m_btns[24]` wirft? |
+| E-35 | der **zweite** Strg-N starb — eine Folge von E-34: `OnUserUpdateImmediateSend` dereferenzierte den Rückgabewert von `GetButton` blind, und der war seit E-34 NULL statt einer Ausnahme | **behoben und von Gregor bestätigt** (Paket 1.0.21), `Eudora71/Eudora/CompMessageFrame.cpp` — Zeiger einmal fassen und prüfen |
+| E-36 | zweimal dasselbe in `UpdateMoodMailButton` und `UpdateBPButton`, vier blinde Zugriffe; gefunden vom eigenen Absturzbericht, nachdem ein Verfassen-Fenster einfach offen stehen blieb | **behoben und von Gregor bestätigt** (Paket 1.0.21), `Eudora71/Eudora/PgCompMsgView.cpp` |
 
-> **E-10, E-15, E-18 bis E-21 gibt es nicht.** Gesucht am 06.09.2026 im ganzen
-> Repo: diese Kennungen sind nie vergeben worden. Lücken in der Nummerierung,
-> keine verlorenen Befunde — wer sie sucht, sucht umsonst.
+> **E-10 ist eine Lücke, E-15 und E-18 bis E-21 sind es NICHT.** Bis zum
+> 07.09.2026 stand hier, alle sechs Kennungen seien nie vergeben worden;
+> gesucht worden war aber nur in den `.md`-Dateien. Fünf davon sind in
+> **Quellkommentaren** vergeben und dort auch begründet:
+
+| Kennung | Worum es geht | Wo es steht | Status |
+|---|---|---|---|
+| E-15 | `ASSERT(g_TaskStatusView != NULL)` widersprach allen drei Aufrufern — sie fragen ausdrücklich auf NULL ab | `Eudora71/Eudora/TaskStatusView.cpp`, `QCGetTaskStatusView` | **behoben** im Quelltext, kein Abschnitt hier |
+| E-18 | `pFld` ohne Prüfung dereferenziert; der Zweig läuft nur bei mehr als einer Persönlichkeit und war bis 05.09.2026 nie betreten | `Eudora71/Eudora/headervw.cpp`, Persönlichkeitsmenü | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
+| E-19 | `ASSERT(0)` in einem **Reparaturzweig** — feuert genau dann, wenn alles wie vorgesehen läuft | `Eudora71/Eudora/tocdoc.cpp`, Reparatur des In-Postfachnamens | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
+| E-20 | `[nLen + 1]` statt `[nIdx + 1]`: geschrieben wird bis `pTemp[nIdx]`, und `nIdx` kann größer als `nLen` sein — dann schrieb die Zeile hinter das Feldende | `Eudora71/Eudora/ListCtrlEx.cpp`, `CListCtrlEx::InsertArr` und `NotifyInsertedCol` | **behoben** im Quelltext, kein Abschnitt hier |
+| E-21 | `ASSERT(0)`, wo `WSAEWOULDBLOCK` (10035) die normale Antwort eines nicht blockierenden Sockets ist | `Eudora71/QCSocket/src/QCWorkerSocket.cpp` | **behoben** im Quelltext, kein Abschnitt hier |
+
+> **E-10** dagegen gibt es tatsächlich nicht — 0 Abschnitte, bestätigt in
+> `PRUEFUNG-BRANCH.md`. Eine Lücke in der Nummerierung, kein verlorener Befund.
+>
+> **Die Lehre:** wer prüft, ob eine Kennung vergeben ist, muss den **Quelltext**
+> mitsuchen. `grep -rn 'E-18\b' --include=*.md` findet fünf Befunde nicht, die
+> es gibt.
 
 ## Unterbefunde, die man einzeln sucht
 
@@ -186,8 +213,8 @@ nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
 | PR-5 | `### PR-5` unter **W-1** | Zeitstempel der Kennung ist nicht der Bauzeitpunkt | **behoben** (`765c39b`) |
 | PR-6 | `### PR-6` unter **W-1** | kein `_T` um ein Makro (bricht im Unicode-Bau) | **behoben** |
 | PR-7 | `### PR-7` unter **W-1** | die Zahlen in S-7 widersprachen sich: es gilt 4616 von 5563 | **behoben** |
-| PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelöscht — fand seinen eigenen Anlass nicht | **behoben** |
-| PR-2.0 … PR-2.9 | `### PR-2.x` unter **PR-2** | zehn Punkte der Nachprüfung vom 31.08. | PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
+| PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelöscht — fand seinen eigenen Anlass nicht; das Werkzeug liegt nicht mehr im Baum | **behoben** |
+| PR-2.0 … PR-2.9 | `### PR-2.x` unter **PR-2** | zehn Punkte der Nachprüfung vom 31.08. | PR-2.0 und PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
 | P-1.0 … P-1.8 | `### P-1.x` unter **P-1** (POP-Abrufpfad) | elf Altlasten auf dem Abrufpfad | P-1.1/P-1.8 **behoben**, P-1.5b–P-1.5j **offen** |
 | P-2.1 … P-2.7 | `### P-2.x` unter **P-2** (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
 | P-1, P-2, P-3 (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei Härtungslücken beim ersten Lauf der Ersatzschicht; **P-3** ist `SECDateTimeCtrl::FixedTime`, das die Stunde ausläßt (Fehler im Original, bewusst übernommen) | **offen** |
@@ -5049,7 +5076,7 @@ ist noch ein leerer Rumpf (`OTShim.cpp:2244`), `OnSizeParent` reicht noch durch
 **Beim Start sind zwei bis drei SUPERASSERT-Dialoge wegzuklicken**, dazu einige
 Warnungen. Das ist der Debug-Bau; im Release-Bau entfallen sie.
 
-### Stand der vier Kriterien
+### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
@@ -5103,7 +5130,7 @@ umgekehrt.
 
 Gregors Einschätzung: *„das kann man beheben."*
 
-### Stand der vier Kriterien
+### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
@@ -5528,7 +5555,7 @@ Warum musste das Mailverzeichnis von Hand dazugelegt werden? Das Paket enthält
 mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
 übergeben wird. Zu klären.
 
-### Stand der vier Kriterien
+### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|

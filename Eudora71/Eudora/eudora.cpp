@@ -2182,12 +2182,63 @@ CDocument* CEudoraApp::NewChildDocument(CDocTemplate* templ)
 CFrameWnd* CEudoraApp::NewChildFrame(CDocTemplate* templ, CDocument* pDoc, BOOL bDoIntialUpdate /* TRUE */)
 {
 	CFrameWnd* frame = templ->CreateNewFrame(pDoc, NULL);
-	
+
 	ASSERT_VALID(frame);
-	
+
+	// BEFUND E-34: Gregor sieht nach Strg-N kein brauchbares Fenster. Der
+	// Fensterbau laeuft durch (OnMessageNewMessage: fertig), es haengt auch
+	// ein sichtbares AfxMDIFrame140 im MDI-Bereich - aber ohne Titel. Hier
+	// wird protokolliert, was aus dem Rahmen wirklich geworden ist: ob er
+	// existiert, ob er sichtbar ist, wie gross er ist und wie er heisst.
+	if (frame)
+	{
+		char szNCF[256];
+		CRect rc(0, 0, 0, 0);
+		if (::IsWindow(frame->GetSafeHwnd()))
+			frame->GetWindowRect(&rc);
+		CString strTitel;
+		if (::IsWindow(frame->GetSafeHwnd()))
+			frame->GetWindowText(strTitel);
+		wsprintf(szNCF,
+			"E-34 NewChildFrame: nach CreateNewFrame  hwnd=%p sichtbar=%d "
+			"rect=%d,%d,%d,%d titel='%s'",
+			frame->GetSafeHwnd(),
+			(int)(::IsWindow(frame->GetSafeHwnd()) ? frame->IsWindowVisible() : 0),
+			rc.left, rc.top, rc.right, rc.bottom,
+			(LPCTSTR)strTitel);
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szNCF);
+	}
+	else
+	{
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+			"E-34 NewChildFrame: CreateNewFrame hat NULL geliefert");
+	}
+
 	if (frame)
 		templ->InitialUpdateFrame(frame, pDoc, bDoIntialUpdate);
-		
+
+	if (frame && ::IsWindow(frame->GetSafeHwnd()))
+	{
+		char szNCF2[256];
+		CRect rc2(0, 0, 0, 0);
+		frame->GetWindowRect(&rc2);
+		CString strTitel2;
+		frame->GetWindowText(strTitel2);
+		wsprintf(szNCF2,
+			"E-34 NewChildFrame: nach InitialUpdateFrame  sichtbar=%d "
+			"rect=%d,%d,%d,%d (%dx%d) titel='%s' update=%d",
+			(int)frame->IsWindowVisible(),
+			rc2.left, rc2.top, rc2.right, rc2.bottom,
+			rc2.Width(), rc2.Height(),
+			(LPCTSTR)strTitel2, (int)bDoIntialUpdate);
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szNCF2);
+	}
+	else if (frame)
+	{
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+			"E-34 NewChildFrame: nach InitialUpdateFrame ist das Fenster WEG");
+	}
+
 	return (frame);
 }
 

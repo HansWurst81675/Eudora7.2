@@ -36,17 +36,17 @@ void OTShimWzlNichtUmgesetzt(BOOL& rbBereitsGemeldet, LPCTSTR lpszWas)
 
 	rbBereitsGemeldet = TRUE;
 
+	// BEFUND E-33: siehe OTShimNichtUmgesetzt in OTShim.cpp. Auch diese
+	// Meldung war ein modaler Dialog und hielt das Programm an, um
+	// mitzuteilen, dass Beiwerk fehlt. Sie geht jetzt in die Debug-Ausgabe.
 	CString strMeldung;
 	strMeldung.Format(
-		_T("Diese Funktion steht in dieser Fassung nicht zur Verfuegung:\n\n")
-		_T("    %s\n\n")
-		_T("Der Ersatz fuer das Stingray Objective Toolkit bildet die ")
-		_T("Werkzeugleisten nach, aber nicht das Anpassen von Leisten und ")
-		_T("nicht das Ziehen von Knoepfen.\n\n")
-		_T("Diese Meldung erscheint nur einmal je Sitzung."),
+		_T("OTShim: nicht umgesetzt - %s (Anpassen von Leisten und Ziehen von ")
+		_T("Knoepfen bildet die Ersatzschicht nicht nach; Eudora bleibt ")
+		_T("bedienbar)\n"),
 		lpszWas);
 
-	::AfxMessageBox(strMeldung, MB_OK | MB_ICONINFORMATION);
+	::OutputDebugString(strMeldung);
 }
 
 

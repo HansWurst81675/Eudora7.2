@@ -1,8 +1,11 @@
 ---
 name: zeilenenden-nach-jedem-schreibzugriff-messen
 description: "Nach jedem Skript, das Dateien schreibt, die CR-Anzahl gegen HEAD messen - der Fehler ist lautlos"
-metadata:
+metadata: 
+  node_type: memory
   type: feedback
+  originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
+  modified: 2026-09-07T08:30:18.185Z
 ---
 
 Nach **jedem** Skript, das Dateien im Repo schreibt, und **vor** `git add`:
@@ -35,5 +38,20 @@ dagegen nicht, nur eine Messung.
 - Bei gemischten Zeilenenden im Repo (hier der Normalfall) nie pauschal
   konvertieren, sondern nur die Dateien zuruecksetzen, deren CR-Zahl abweicht.
 
-Siehe auch [[pruefen-statt-vermuten]] und
-[[doku-bei-jedem-commit-mitziehen]].
+**Nachtrag 07.09.2026 — das Messwerkzeug hat gelogen.** Beim Schreiben mehrerer
+MD-Dateien habe ich alles auf CRLF gesetzt, obwohl die Dateien reines LF waren;
+die Byte-Schranke im pre-commit-Hook hat es gefangen. Beim Nachmessen kamen
+dann drei Fehler dazu, alle drei lehrreich:
+
+- Gemessen wurde **nach** dem Schreiben statt **vorher gegen HEAD** — die Regel
+  im ersten Satz dieser Lehre, wortwoertlich nicht befolgt.
+- `grep -c` auf ein CR und Perl ohne `:raw` lesen unter Windows im
+  **Textmodus** und zaehlen dabei Unsinn: gemeldet wurden 559 CR bei
+  tatsaechlich 53. Also nur `tr -cd` bzw. Perl mit `binmode`/`:raw` — ein
+  Messwerkzeug, das die Groesse veraendert, die es messen soll, ist keins.
+- `tools/pruefe-bytes.pl` liest den **Index**, nicht den Arbeitsbaum. Nach dem
+  Zuruecknormalisieren muss neu gestaget werden, sonst prueft die Schranke die
+  alte Fassung und meldet den Fehler weiter.
+
+Siehe auch [[pruefen-statt-vermuten]],
+[[doku-bei-jedem-commit-mitziehen]] und [[schranke-gegentesten]].

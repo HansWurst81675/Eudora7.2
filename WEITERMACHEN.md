@@ -1,80 +1,92 @@
 # Hier weitermachen
 
-**Stand 06.09.2026, abends.** Arbeitszweig `strg-n-diagnose`; `main` ist gesperrt
-und wird nur von Gregor per Merge bewegt.
+**Stand 07.09.2026, morgens.** `main` ist gesperrt und wird nur von Gregor per
+Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
+(siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.17 (`Eudora71/Version.h`) |
-| **Zuletzt veröffentlicht** | [v1.0.15](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.15) — Messfassung mit Spurmarken |
-| **Zuletzt von Gregor bestätigt** | 7.2.0.14 |
+| **Quellstand** | 7.2.0.21 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.21 (`VERSION`) |
+| **Zuletzt veröffentlicht** | [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) — `Releases/Eudora72-1.0.21-release.zip`, SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` |
+| **Zuletzt von Gregor gestartet** | Paket 1.0.21 am 07.09.2026 — *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."* |
+| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.21 (E-31/E-34/E-35/E-36: Verfassen, Abschicken, Weiterleiten) |
+| **Was er dabei bemängelt hat** | *„beenden geht nicht."* und *„kann man die untere zeile (status) immer anzeigen lassen?"* |
 
-> **Die Fassungsgeschichte mit allen Messungen steht jetzt in
-> [CHANGELOG.md](CHANGELOG.md)** — dort auch der Abschnitt *Wo man weitermachen
-> kann* mit den offenen Enden und Fundstellen. Diese Datei hier ist nur der
-> Einstieg.
+> **Die Fassungsgeschichte mit allen Messungen steht in
+> [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen
+> Paket und der Abschnitt *Wo man weitermachen kann* mit den offenen Enden und
+> Fundstellen. Diese Datei hier ist nur der Einstieg.
 
 ## Das Ziel, an dem alles hängt
 
-**Alle vier Kriterien aus [ZIEL.md](ZIEL.md) sind erfüllt.** Gregor hat am
-06.09.2026 die zweite Stufe gesetzt — Kriterien **4 bis 6**:
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf belegt (0, 1, 3, 5, 6),
+drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Gregor hat am
+06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis 6**; **7** ist am
+07.09.2026 aus seinem Urteil zu Paket 1.0.18 nachgetragen, **8** noch am
+selben Tag aus seinem Wunsch nach sichtbaren offenen Fenstern:
 
 | # | | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | nicht erfüllt |
-| 5 | **Eine neue Mail schreiben und abschicken** | nicht erfüllt |
-| 6 | **Eine Mail weiterleiten** | nicht erfüllt |
+| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen, das Beenden fehlt |
+| 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
+| 6 | **Eine Mail weiterleiten** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
+| 7 | ***File → Exit*** beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht."* |
+| 8 | Offene Fenster sichtbar und auswählbar | halb — Menü *Window* ja, Reiterleiste unten fehlt |
 
-**Alle drei hängen an einem einzigen Fehler: E-27.** Das ist die Hauptarbeit.
-Alles andere läuft nebenher.
+## Was seit dem 06.09.2026 anders ist
 
-## E-27 — was gemessen ist
+**E-31 ist behoben — das war die Wurzel.** Strg-N und *Weiterleiten* beendeten
+Eudora mit `0xC00000FD STATUS_STACK_OVERFLOW` in `Paige32.dll`
+(`pgInstallFont`, 525 Windungen tief); deshalb entstand auch nie ein
+`Exception.log` — ein voller Stapel lässt keinen Platz mehr für den
+Absturzbehandler. Die Ursache war eine Zeile in
+`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`: `pg_time_t` erbte seine Breite von
+`time_t`, und das ist unter VS2022 **acht** Byte breit statt der vier, mit denen
+die ausgelieferte DLL von 2005 rechnet. Damit war **jede** Struktur verschoben,
+die Eudora an Paige reichte — und in dieser Portierung entstand bis dahin
+**kein einziges Paige-Fenster**. Seither läuft der Fensterbau vollständig durch
+(`OnMessageNewMessage: fertig`). Die Messung mit allen Feldversätzen steht in
+[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21.
 
-Strg-N und *Weiterleiten* beenden Eudora sofort und lautlos:
+**Sieben Vermutungen sind auf diesem Weg widerlegt worden** — jede gebaut,
+gestartet, gemessen. Sie stehen samt Messwerten in
+[CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21. **Nicht noch einmal
+durchprobieren.**
 
-```
-0xC00000FD  STATUS_STACK_OVERFLOW   in Paige32.dll, pgInstallFont
-525 Windungen tief; Weg hinein:
-    pgLocateStyleSheet -> pgStyleSuperImpose -> pgInstallFont
-```
+**E-32: der Code-Mangel ist behoben, die Ursachenbehauptung ist widerlegt.**
+`CHeaderView::OnKillFocusRecipient` in `Eudora71/Eudora/headervw.cpp`
+dereferenzierte `pField` ungeprüft, obwohl die Abfrage drei Zeilen darüber
+ausdrücklich mit NULL rechnet — das ist behoben (`060a4bf`) und bleibt richtig.
+Dass **diese** Stelle die modale Meldung „An unhandled exception has occurred"
+verursacht hätte, hat PRUEFER dreifach gemessen und **verworfen**
+(`Befunde/PRUEFER-3.md`, Abschnitt 2): die Funktion läuft bei Strg-N gar nicht,
+das Herausnehmen der Behebung bringt die Meldung nicht zurück, und im Paket
+1.0.18 tritt sie über denselben Weg nicht auf. Aufgeklärt hat die Meldung erst
+**E-34** — eine MFC-Ausnahme in `QCChildToolBar::GetButton`, die den ganzen
+Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
-Deshalb entstand nie ein `Exception.log`: ein voller Stapel lässt keinen Platz
-mehr, den Absturzbehandler auszuführen.
+## Der nächste Schritt
 
-**Sieben Vermutungen sind bereits widerlegt** — jede gebaut, gestartet,
-gemessen. Sie stehen samt Messwerten in [CHANGELOG.md](CHANGELOG.md) unter
-7.2.0.17. **Nicht noch einmal durchprobieren.**
+**Kriterium 7 — das Beenden.** *File → Exit* beendet Eudora nicht (**E-33**),
+von Gregor am 07.09.2026 an Paket 1.0.21 bestätigt: *„beenden geht nicht."* Das
+ist der einzige verbliebene **Fehler**; alles Weitere ist Ausstattung. Der Weg:
+`CEudoraApp::OnAppExit` bzw. `CMainFrame::OnClose` in
+`Eudora71/Eudora/eudora.cpp` und `MainFrm.cpp`, mit Spurmarken wie bei E-34, und
+`eudora.log` bei gesetztem `LogLevel=32896` gegenlesen.
 
-**Die nächste Frage:** Entsteht in dieser Portierung überhaupt jemals ein
-Paige-Fenster? Ein erfolgreicher Durchlauf von `CPaigeEdtView::NewPaigeObject`
-ist bisher nirgends belegt. Fällt die Antwort „nein" aus, ist nicht das
-Verfassen-Fenster das Problem, sondern die ganze Paige-Anbindung.
+**Danach Kriterium 8** — die untere Reiterleiste für die offenen Fenster. Das
+Menü *Window* listet sie schon auf; was fehlt, ist die **WazooBar**
+(`Eudora71/Eudora/WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in
+`Eudora.ini`, Namen in `EudoraRes.rc:10637-10640`). Die Ersatzschicht `OTShim`
+bildet sie nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
 
 ## Ebenfalls offen
 
-- **E-32 — die Meldung „An unhandled exception has occurred" beim Verfassen.**
-  Das ist der letzte Schritt bis Kriterium 5. **Gemessen am 06.09.2026 nach der
-  Behebung von E-31:** die Spur läuft jetzt **vollständig** durch —
-  `OnCreateClient: vor GetSubMenu 11` → **`OnMessageNewMessage: fertig`**. Der
-  Fensterbau ist also fertig; die Ausnahme kommt **danach**, beim Anzeigen.
-
-  Der Verdacht steht: `AutoCompleterListBox::KillACListBox`
-  (`AutoCompleteSearcher.cpp:548`), gerufen aus `CHeaderView::OnKillFocusTo`.
-  Der Agent sah dort unter dem Debugger `0xC000041D`
-  (STATUS_FATAL_USER_CALLBACK_EXCEPTION — eine Ausnahme innerhalb einer
-  Fensterprozedur) und hielt es für fokusabhängig und selten. **Das stimmt
-  nicht:** Gregor bekommt die Meldung bei jedem Versuch, und sie ist modal —
-  deshalb lässt sich Eudora danach auch nicht mehr beenden.
-
-  **Nächster Schritt:** Marken in `KillACListBox` und `CHeaderView::OnKillFocusTo`
-  setzen, dann `tools/strg-n-pruefen.ps1 -Verzeichnis <Paket>` laufen lassen.
-  Der Weg dorthin ist damit derselbe wie bei E-31, und der hat funktioniert.
-
-- ***File → Exit*** bringt eine Meldung statt sauber zu beenden
-- Meldung **„Encountered an improper argument"** beim Anzeigen mancher
-  Nachrichten. Das ist MFCs Text für `CInvalidArgException`, kommt also nicht
-  aus Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
-  behoben); es gibt eine zweite
+- Die Meldung **„Encountered an improper argument"** beim Anzeigen mancher
+  Nachrichten. Zwei Quellen sind behoben (E-16, E-34). **Offen ist die
+  Ursache:** warum meldet `GetBtnCount()` 27, während `m_btns[24]` wirft? Das
+  Abfangen behandelt das Symptom
 
 ## Wie man misst
 

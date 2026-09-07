@@ -399,6 +399,11 @@ CCreateContext* pContext)
 	}
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: beide Ansichten angelegt");
+	{
+		char szF[128];
+		wsprintf(szF, "E-34 OnCreateClient: fRet nach den Ansichten = %d", (int)fRet);
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szF);
+	}
 	pDoc = ( CCompMessageDoc* ) ( pContext->m_pCurrentDoc );
 
 	// BEFUND E-22: pDoc und pDoc->m_Sum wurden hier ungeprueft benutzt
@@ -734,14 +739,19 @@ CCreateContext* pContext)
 					// get the insert menu
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: vor GetSubMenu 11");
 					VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach GetSubMenu(11)");
 					i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach CommandToIndex(ID_EDIT_INSERT)");
 					VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach GetButton");
 
 					if (pMenu && pMenuButton)
 						pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach SetHMenu");
 				}
 				
 				// get the text menu
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetSubMenu 10");
 				VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 10 ) );
 				
 				if (pEditTextMenu)
@@ -755,13 +765,16 @@ CCreateContext* pContext)
 						pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
 					
 					// force the toolbar to recalculate the button sizes
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor SetToolBarInfo");
 					m_pToolBarManager->SetToolBarInfo( m_pToolBar );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor RecalcLayout");
 					RecalcLayout();
 				}
 			}
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor den SetCheck");
 	SetCheck( ID_QUOTED_PRINTABLE, pSummary->UseQP() );
 	SetCheck( ID_TEXT_AS_DOCUMENT, pSummary->TextAsDoc() );
 	SetCheck( ID_WORD_WRAP, pSummary->WordWrap() );
@@ -776,6 +789,7 @@ CCreateContext* pContext)
 	// provide an "accessor" routine to the view (perhaps ;-)
 //	m_ToolBar->SelectTranslators(Sum->GetTranslators());
 	
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor CantEdit");
 	if (pSummary->CantEdit()) {
 //		m_ToolBar->GetDlgItem(IDC_SIGNATURE_COMBO)->EnableWindow(FALSE);
 //		m_ToolBar->GetDlgItem(IDC_ENCODING_COMBO)->EnableWindow(FALSE);
@@ -790,13 +804,16 @@ CCreateContext* pContext)
 		DragAcceptFiles();
 
 	// force the toolbar to recalculate the button sizes
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor SetToolBarInfo");
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor RecalcLayout");
 	RecalcLayout();
 
 	// Size parent window
 	CRect MainWindowRect;
 	pMainFrame->GetRealClientRect(&MainWindowRect);
  
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetSavedPos");
 	if (pSummary->GetSavedPos().IsRectEmpty() == FALSE) {
 		// Window has been sized before, so use it
 		m_InitialSize = pSummary->GetSavedPos();
@@ -813,6 +830,7 @@ CCreateContext* pContext)
 			MessageCascadeSpot;
 		
 		// Start with toolbar size
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetClientRect der Leiste");
 		m_pToolBar->GetClientRect(&m_InitialSize);
 		
 		// Add height of caption and top and bottom window borders
@@ -822,6 +840,7 @@ CCreateContext* pContext)
 		// Use Message Width setting plus left and right window borders plus scrollbar width.
 		// Make sure window is at least as wide as the toolbars
 		CRect FTBRect;
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetClientRect der Formatleiste");
 		m_pFormattingToolBar->GetClientRect(&FTBRect);
 		int MW = GetIniShort(IDS_INI_MESSAGE_WIDTH) * CW + GetSystemMetrics(SM_CXVSCROLL);
 		if (m_InitialSize.right < MW)
@@ -852,10 +871,16 @@ CCreateContext* pContext)
 	}
 	
 	// place the window
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor MoveWindow");
 	MoveWindow(&m_InitialSize, FALSE);
 
 	// *guarantee* this is off initially
 	pDoc->SetModifiedFlag(FALSE);
+	{
+		char szF2[128];
+		wsprintf(szF2, "E-34 OnCreateClient: Rueckgabe = %d", (int)fRet);
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szF2);
+	}
 	return fRet;
 }
 
@@ -1685,9 +1710,31 @@ LRESULT CCompMessageFrame::OnUserUpdateImmediateSend(WPARAM, LPARAM)
 		int nIndex = pToolBar->CommandToIndex(ID_MESSAGE_SENDIMMEDIATELY);
 		if (nIndex != -1)
 		{
-			//to avoid flickering of toolbar do not paint if it is in the same state
-			if(((TBarSendButton*)pToolBar->GetButton(nIndex))->IsBPWarning() != m_bBPWarning)
-				((TBarSendButton*)pToolBar->GetButton(nIndex))->SetBPWarning(m_bBPWarning);
+			// BEFUND E-35: GetButton kann NULL liefern, auch wenn nIndex im
+			// Bereich liegt. Seit E-34 faengt GetButton die MFC-Ausnahme aus
+			// m_btns[] ab und gibt dann NULL zurueck - die Abfrage
+			// "nIndex != -1" darueber schuetzt davor NICHT.
+			//
+			// Hier wurde der Rueckgabewert zweimal blind dereferenziert. Das
+			// ist der Absturz beim ZWEITEN Strg-N, gemessen am 07.09.2026:
+			// der erste Aufruf liefert ein Fenster, beim zweiten kommt
+			// OnUserUpdateImmediateSend dazwischen und greift auf NULL zu.
+			//
+			// Gefunden hat es tools/pruefe-fensterbau.pl, die Schranke, die
+			// genau nach diesem Muster sucht.
+			//
+			// Nebenbei: GetButton wurde zweimal gerufen, um denselben Knopf
+			// zu holen. Einmal genuegt.
+			TBarSendButton* pSendeKnopf =
+				(TBarSendButton*) pToolBar->GetButton(nIndex);
+
+			if (pSendeKnopf)
+			{
+				//to avoid flickering of toolbar do not paint if it is in the same state
+				if (pSendeKnopf->IsBPWarning() != m_bBPWarning)
+					pSendeKnopf->SetBPWarning(m_bBPWarning);
+			}
+
 			pToolBar->Invalidate(nIndex);
 		}
 	}

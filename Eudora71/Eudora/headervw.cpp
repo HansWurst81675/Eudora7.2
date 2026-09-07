@@ -290,6 +290,26 @@ void CHeaderView::OnKillFocusRecipient(UINT nID)
 		pField->m_ACListBox->KillACListBox();
 
 
+	// BEFUND E-32: pField wurde hier ungeprueft dereferenziert, obwohl die
+	// Abfrage drei Zeilen darueber ausdruecklich mit NULL rechnet
+	// ("if (pField && ...)"). GetDlgItem liefert NULL, solange das
+	// Kopfzeilenfeld noch nicht existiert - und genau das ist beim Aufbau des
+	// Verfassen-Fensters der Fall: OnKillFocusTo laeuft waehrend LoadFrame,
+	// bevor die Felder da sind.
+	//
+	// Weil der Zugriff INNERHALB einer Fensterprozedur passiert, meldet
+	// Windows nicht den ueblichen Zugriffsfehler, sondern 0xC000041D
+	// (STATUS_FATAL_USER_CALLBACK_EXCEPTION). Eudora zeigt dann seine modale
+	// Meldung "An unhandled exception has occurred", das Verfassen-Fenster
+	// erscheint nie, und weil die Meldung modal ist, laesst sich das Programm
+	// danach auch nicht mehr beenden. Gemessen am 06.09.2026 an 7.2.0.18:
+	// die Spur laeuft bis "OnMessageNewMessage: fertig" durch, die Ausnahme
+	// kommt erst beim Anzeigen.
+	//
+	// Ohne Feld gibt es nichts zu erweitern; die Funktion ist dann fertig.
+	if (!pField)
+		return;
+
 	if (GetIniShort(IDS_INI_AUTO_EXPAND_NICKNAMES) &&
 		pField->IsKindOf(RUNTIME_CLASS(CHeaderField)))
 	{

@@ -44,11 +44,11 @@ Die DLL ist **statisch gelinkt**: keine `libeay32.dll`, keine `ssleay32.dll` dan
 ## Wurzelzertifikatsspeicher
 
 QCSSL prüft Serverzertifikate **nicht** gegen den Windows-Zertifikatspeicher, sondern
-gegen eine Datei `rootcerts.p7b` im Eudora-Verzeichnis ([QCSSLContext.cpp:53](../../Eudora71/QCSSL/src/QCSSLContext.cpp:53)).
+gegen eine Datei `rootcerts.p7b` im Eudora-Verzeichnis ([QCSSLContext.cpp:53](../../Eudora71/QCSSL/src/QCSSLContext.cpp)).
 Sie wird über die Windows-CryptoAPI geöffnet und Zertifikat für Zertifikat in OpenSSLs
-`X509_STORE` übertragen ([certstore.cpp:82](../../Eudora71/QCSSL/src/certstore.cpp:82) und
-[certstore.cpp:273](../../Eudora71/QCSSL/src/certstore.cpp:273)). Geladen wird sie in
-[QCSSLContext.cpp:486](../../Eudora71/QCSSL/src/QCSSLContext.cpp:486). Eine feste
+`X509_STORE` übertragen ([certstore.cpp:82](../../Eudora71/QCSSL/src/certstore.cpp) und
+[certstore.cpp:273](../../Eudora71/QCSSL/src/certstore.cpp)). Geladen wird sie in
+[QCSSLContext.cpp:486](../../Eudora71/QCSSL/src/QCSSLContext.cpp). Eine feste
 Obergrenze für die Zahl der Zertifikate gibt es dabei nicht.
 
 ### Warum der Original-Speicher nicht mehr reicht
@@ -98,7 +98,7 @@ verwirft abgelaufene und noch nicht gültige (hier: keine), sortiert nach Finger
 — damit das Ergebnis reproduzierbar ist — und schreibt sie über
 `X509Certificate2Collection.Export(Pkcs7)` heraus. Dieser Aufruf landet intern bei
 `CertSaveStore(..., CERT_STORE_SAVE_AS_PKCS7, ...)`, also **derselben Systemfunktion**,
-mit der Eudora den Speicher selbst zurückschreibt ([certstore.cpp:125](../../Eudora71/QCSSL/src/certstore.cpp:125)).
+mit der Eudora den Speicher selbst zurückschreibt ([certstore.cpp:125](../../Eudora71/QCSSL/src/certstore.cpp)).
 Das Format wird damit nicht nachgebaut, sondern von der Originalfunktion geschrieben.
 
 Nachbauen lässt sich das so:

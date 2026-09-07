@@ -1,5 +1,18 @@
 # Lektorat der Dokumentation
 
+**Diese Datei ist ein Fahrtenbuch, kein Statusbericht.** Sie sammelt die
+Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
+seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
+[README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
+
+Hier stehen der erste bis vierte, der sechste und der siebte Durchgang. Der
+**fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
+die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
+[Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7) und
+[Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md) (L-8, alle 47 MD-Dateien).
+
+## Erster Durchgang — 30.08.2026
+
 Durchgang vom 30.08.2026 durch den Agenten LEKTOR, Branch
 `worktree-agent-a3a787cbbe74cbbe2`, gemessener Ausgangsstand `371c1e3`.
 
@@ -487,3 +500,100 @@ ganz anderes zeigten. Alle sechs sind berichtigt.
 * **Kein Edit-Werkzeug.** Alle Änderungen über `tools/ersetze-bereich.pl` mit
   `:raw`, nach jeder Änderung CR-Zahl und Doppelkodierung gegen `HEAD`
   gemessen.
+
+---
+
+# Siebter Durchgang — 07.09.2026
+
+Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor` aus
+`060a4bf`. **Keine Zeile Quelltext geändert, nichts gebaut, Eudora nicht
+gestartet.** Vollständiger Bericht: `Befunde/LEKTOR-3.md` (L-7).
+
+Anlass war Gregors Ansage:
+
+> *„ich hasse es, wenn in den dokus falsche oder veraltete infos und werte
+> stehen. das muss immer parallel gleich erledigt werden, klar?"*
+
+## Kurzantwort
+
+**Vier Behauptungen waren nicht veraltet, sondern falsch**, und jede hätte
+jemanden in die Irre geführt, der danach gearbeitet hätte:
+
+1. `BEFUNDE.md` erklärte **E-15 und E-18 bis E-21 für nie vergeben** — *„gesucht
+   im ganzen Repo"*. Gesucht worden war nur in `*.md`; alle fünf sind in
+   Quellkommentaren vergeben und dort begründet, zwei davon stehen sogar im
+   `CHANGELOG`.
+2. `AUFGABEN.md` führte als *„den ernstesten der neun"* Zeigerstellen einen
+   Wächter *„ohne `return`"*. Der Block endet mit `return E_FAIL;` — es war ein
+   **Fehlalarm von `tools/suche-zeiger.pl`**, vierte Fehlerklasse dieses
+   Werkzeugs.
+3. `AUFGABEN.md` beschrieb den größten Darstellungsmangel an
+   `WazooBarMgr.cpp:377-400`. **Dieser Bereich ist vollständig
+   auskommentiert** (`//FORNOW`).
+4. `PORTIERUNG.md` begründete den Wegfall der Attrappe `OTA50D.LIB` mit
+   `LinkLibraryDependencies`. Das Element **gibt es in der Datei nicht**; es
+   heißt `ReferenceOutputAssembly`, und zwanzig Zeilen weiter unten sagte die
+   Datei selbst, dass die Zeilenangabe daneben liegt.
+
+Dazu **elf falsche Zahlen** (darunter „vier von sieben Kriterien belegt" —
+Summe 8 bei sieben Kriterien, und richtig sind drei von acht), **fünfzehn
+überholte Zustandsaussagen** und der Abschnitt *Wo man weitermachen kann* im
+`CHANGELOG`, der noch E-27 als großen Brocken führte und unter *„noch nicht
+versucht"* genau die Messung nannte, die E-31 gelöst hat.
+
+## Die Schranke ist umgebaut, nicht nur benutzt
+
+`tools/doku-pruefen.pl` hatte beim ersten Lauf acht Widersprüche gemeldet —
+**vier davon Fehlalarme**, alle aus einer Wurzel: jedes Wort „offen" oder
+„behoben" irgendwo in derselben Zeile galt als Status der Kennung. *„…solange
+kein Postfach **offen** ist"* reichte.
+
+Jetzt zählt ein Status nur, wo die Kennung ihn **besitzt**: allein in der ersten
+Spalte einer Verzeichniszeile, Status **fett**. Dafür drei scharfe Prüfungen
+dazu — doppelt vergebene Kennung, Statuswiderspruch im Verzeichnis, und
+`CHANGELOG`-*Noch offen* gegen das Verzeichnis. Die letzte hätte den heutigen
+Anlass gefunden: E-32 stand als offen und war behoben. Fünf Gegenproben auf
+einem Kopierbaum belegen, dass die Prüfungen greifen **und** dass die alte
+Prosa stumm bleibt.
+
+Ein Fehler im Werkzeug selbst dabei gefunden: gelesen wird mit `:raw`, also
+byteweise — `\x{2014}` im Muster konnte die drei Bytes `E2 80 94` nie treffen,
+und die Prüfung auf doppelte Überschriften lief ins Leere.
+
+Eingehängt in `tools/hooks-einrichten.sh` als Schritt 4, abweisend nur bei
+`.md`, `VERSION` oder `Eudora71/Version.h` im Commit. **Der eingerichtete Hook
+ist bewusst nicht überschrieben** — die anderen Arbeitsbäume haben die
+berichtigten Dateien noch nicht. Nach dem Merge einmal
+`sh tools/hooks-einrichten.sh`.
+
+## Was berichtigt wurde
+
+| Datei | Was falsch war |
+|---|---|
+| `ZIEL.md` | „sieben Kriterien" bei acht in der Tabelle; „vier von sieben belegt" (richtig: drei von acht); Kriterien 4 bis 7 auf den Stand vom 07.09.; „Kriterium 0 steht vor den anderen dreien"; „für das Release-Paket ist dieser Lauf noch nicht gemacht worden" gegen die eigene Tabelle; der Erfolgston „ein einzelner benannter Punkt statt einer ganzen Bibliothek" |
+| `README.md` | Quellstand 7.2.0.14 / Paket 1.0.14 statt 7.2.0.18 / 1.0.18; Gregors Urteil verkürzt zitiert; „die Wurzel ist E-25"; „Strg-N beendet Eudora, die schuldige Zeile ist nicht gefunden"; „E-30 in Arbeit"; zweimal 7.2.0.14 statt 7.2.0.13 |
+| `WEITERMACHEN.md` | Kopftabelle drei Fassungen alt; Arbeitszweig `strg-n-diagnose` (mit PR #9 zusammengeführt); „Alle drei hängen an E-27"; „Entsteht überhaupt jemals ein Paige-Fenster?"; der falsche Verdacht bei E-32 |
+| `AUFGABEN.md` | „Alle drei hängen an E-27"; A2 mit 24 statt 21 Stellen und 19 statt 16 falschen; D3a vollständig neu gemessen (siehe oben); E1 mit auskommentiertem Code als Fundstelle; E3 zwei verrutschte Nummern; B1 verwies auf einen Abschnitt, den es nicht gibt; B2 und C2 waren erledigt; C1 „Kriterium 0 nicht nachweisbar"; zwei neue Auflagen (Doku im selben Commit, Zahlen messen statt abschreiben) |
+| `CHANGELOG.md` | E-32 unter „Noch offen"; der falsche Verdacht auf `KillACListBox`; ein Punkt, der die Spur früher enden ließ als drei Absätze darüber; „38 C-Dateien" statt 37; `CPUDEFS.H:695`; der ganze Abschnitt *Wo man weitermachen kann*; neuer Abschnitt für den Stand nach 1.0.18, der noch in keinem Paket steckt |
+| `PORTIERUNG.md` | `LinkLibraryDependencies`; „vier von sieben Kriterien"; eine zweite Prüfstandsmarke, die der ersten widersprach; „Kriterium 0 nachweisen" als offener Punkt; „142 Vorkommen, 25 davon falsch"; `Eudora.vcxproj:217`, `statbar.h:71`, `TextReader.cpp:251` (zweimal) |
+| `Releases/PAKETE.md` | Quellstand 1.0.12; ZIP-Liste drei Pakete alt; Versionsanleitung für 1.0.12→1.0.13; `Eudora.exe` im 1.0.3-ZIP 512 Byte zu klein; „Dateiversion der `Eudora.exe`", die es nicht gibt; „Kriterium 0 bleibt offen"; neuer Abschnitt 1.0.18 mit gemessenen Zahlen |
+| `BEFUNDE.md` | der Kasten über die fünf Befunde, die es „nicht gibt"; E-31, E-32, E-33 fehlten im Verzeichnis; E-30 stand auf „in Arbeit"; R-1 mit „25 von 142"; Kopfzahl 7349 Zeilen; Prüfstandsmarke |
+
+## Was ich bewusst nicht getan habe
+
+* **Keine Zeile Quelltext geändert, nichts gebaut, Eudora nicht gestartet.**
+* **`EUDORA_BUILD_NUMBER` nicht berichtigt.** Es steht auf `7,2,0,12`, die drei
+  anderen Angaben in `Eudora71/Version.h` auf `18` — seit 7.2.0.13 nicht
+  mitgezogen, und kein Werkzeug hat es gemeldet. Folgenlos nur, weil das Makro
+  nirgends benutzt wird. Das ist Quelltext; `doku-pruefen.pl` meldet es jetzt
+  bei jedem Lauf unter *ZU TUN am Quellstand*, blockiert aber nichts.
+* **Den Fehlalarm in `tools/suche-zeiger.pl` nicht behoben.** Ein Filter ohne
+  Testfall ist der Fehler, den Auflage 10 verbietet, und das Werkzeug hat keine
+  Testsammlung.
+* **Prüfberichte nicht umgeschrieben** — Zeitdokumente. Überholte
+  Schlussfolgerungen bekommen einen datierten Nachtrag.
+* **`Releases/PAKETE.md` nicht um 1.0.4 bis 1.0.17 ergänzt.** Für die meisten
+  liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **M-4** bleibt
+  offen. Für 1.0.18 ist der Abschnitt da, weil dort alles messbar war.
+* **„30 Stellen, 22 Stingray-Klassen, 77 Methoden" in `README.md`** weiter
+  zurückgestellt — die Zählweise ist nicht dokumentiert, Raten wäre schlimmer.

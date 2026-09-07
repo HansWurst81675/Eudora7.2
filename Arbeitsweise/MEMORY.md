@@ -23,3 +23,16 @@
 - [Nie direkt auf main](nie-direkt-auf-main.md) — jede Änderung über einen eigenen Zweig; Gregor merged, nicht ich
 - [Mannschaft fuehren](mannschaft-fuehren.md) — Auftrag ohne Symptom liefert nichts; jeden Ruecklauf selbst nachmessen, nicht weitergeben
 - [Text nicht durch Schichten schicken](text-nicht-durch-schichten-schicken.md) — Ersetzungstext in eine Datei, ueber Zeilenanker einsetzen; danach perl -c bzw. ScriptBlock::Create
+- [Abschalten ist ein Termin](abschalten-ist-ein-termin.md) — „ich schalte ab" ist eine Frist; genannte Zeit minus 20 Minuten ist das Ende der inhaltlichen Arbeit
+- [Erst prüfen, dann anweisen](erst-pruefen-dann-anweisen.md) — keine Handlungsanweisung an Gregor, die ich nicht selbst durchgeführt und gemessen habe
+- [Lehren anwenden, nicht nur schreiben](lehren-anwenden-nicht-nur-schreiben.md) — eine Lehre ohne Auslöser und Werkzeug wirkt nicht; sie braucht einen Moment, in dem sie geprüft wird
+- [Version eindeutig machen](version-eindeutig-machen.md) — Titelzeile, Dateiversion und Verzeichnisname nennen denselben Stand, sichtbar im Programm
+- [Zweignamen vorher abstimmen](zweig-vorher-abstimmen.md) — kein `git checkout -b` ohne Gregors Ja zum Namen; nicht vereinbarte Zweige werden gelöscht
+- [Doku parallel berichtigen](doku-parallel-nicht-hinterher.md) — ein Wert, der mehrfach vorkommt, wird im selben Arbeitsschritt überall berichtigt; `tools/doku-pruefen.pl` hält die MDs gegeneinander
+- [Erfolg aus Anwendersicht](erfolg-aus-anwendersicht.md) — die Überschrift nennt, was Gregor jetzt tun kann; kein Crash ist keine Verbesserung, Regressionen benennen
+- [Auftrag vor Selbstbetrachtung](auftrag-vor-selbstbetrachtung.md) — Sachfrage zuerst, Fehlereingeständnis in einem Satz, Selbstkritik in eine Lehre-Datei
+- [Widerlegte Vermutungen aufschreiben](widerlegte-vermutungen-aufschreiben.md) — jede Widerlegung mit ihrer Messung; den Versuch wählen, der eine Klasse erledigt
+- [Prüfumfang nicht von Hand](pruefumfang-nicht-von-hand.md) — Prüflisten und Agentenaufträge holen ihren Umfang aus der Quelle; „alle" heißt alle, gemessen 16 von 47 MDs nie geprüft
+- [Review sieht nur den Diff](review-sieht-nur-den-diff.md) — die veraltete unveränderte Datei steht in keinem Diff; vor dem Merge den Bestand prüfen, nicht die Änderung
+- [Schranke gegentesten](schranke-gegentesten.md) — jede neue Prüfung gegen den echten Fehler und gegen den erlaubten Fall fahren; stumm und Fehlalarm kosten dasselbe
+- [Daueraufgaben brauchen einen Takt](daueraufgaben-brauchen-einen-takt.md) — Lektor, Prüfer, Chronist laufen nach einem Ereignis; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet

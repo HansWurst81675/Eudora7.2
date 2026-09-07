@@ -89,9 +89,10 @@ lief (05.09.2026)**, `"7.2.0.3"`, und die gebauten Dateien meldeten dasselbe:
 | `Bin/Debug/Eudora.exe` (Klon a) | 7.2.0.3 | 7.2.0.3 | EUDORA |
 | `Bin/Release/EudoraRes.dll` (Klon c) | 7.2.0.3 | — | — |
 
-> **Nicht als heutigen Stand lesen.** Der Quellstand ist seit dem 06.09.2026
-> **7.2.0.12** (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`). Die Zahlen in
-> dieser Tabelle sind der Beleg *jenes* Laufs, kein Sollwert.
+> **Nicht als heutigen Stand lesen.** Der Quellstand von damals war `7.2.0.3`;
+> den heutigen liest man ab, statt ihn hier abzuschreiben:
+> `grep EUDORA_BUILD_VERSION Eudora71/Version.h` (am 07.09.2026: `7.2.0.21`).
+> Die Zahlen in dieser Tabelle sind der Beleg *jenes* Laufs, kein Sollwert.
 
 `InternalName` steht auf `EUDORA32`, `OriginalFilename` auf `EUDORA.EXE`,
 `CompanyName` auf `QUALCOMM Incorporated`. Die Ressource kommt über

@@ -828,10 +828,33 @@ void PgCompMsgView::UpdateMoodMailButton(int nScore)
 			int nIndex = pToolBar->CommandToIndex(ID_MOOD_MAIL);
 			if (nIndex != -1)
 			{
+				// BEFUND E-36: derselbe Fehler wie E-35, an einer Stelle, die
+				// meine Schranke nicht kannte - sie hatte eine feste
+				// Dateiliste, in der PgCompMsgView.cpp fehlte.
+				//
+				// GetButton kann NULL liefern, auch wenn nIndex im Bereich
+				// liegt: seit E-34 faengt es die MFC-Ausnahme aus m_btns[] ab
+				// und gibt dann NULL zurueck. "nIndex != -1" schuetzt nicht.
+				//
+				// Gemessen am 07.09.2026 aus Eudoras eigenem Absturzbericht,
+				// aufgeloest mit tools/absturz-auswerten.pl:
+				//     #01 CMoodMailStatic::GetScore
+				//     #02 PgCompMsgView::UpdateMoodMailButton + 0x51
+				//     #03 PgCompMsgView::OnTimer + 0xD3
+				// Ein Zeitgeber im Verfassen-Fenster lief also in den
+				// Nullzeiger, waehrend das Fenster offen stand. Fuer
+				// ID_MOOD_MAIL gibt es ueberdies keinen Befehlsbehandler -
+				// der Knopf liegt gar nicht auf der Leiste.
+				//
+				// Nebenbei: GetButton wurde zweimal fuer denselben Knopf
+				// gerufen. Einmal genuegt.
+				CMoodMailStatic* pStimmung =
+					(CMoodMailStatic*) pToolBar->GetButton(nIndex);
+
 				//to avoid flickering of toolbar do not paint if it is the same score
-				if(((CMoodMailStatic*)pToolBar->GetButton(nIndex))->GetScore() != nScore)
-				{			
-					((CMoodMailStatic*)pToolBar->GetButton(nIndex))->SetScore(nScore);
+				if (pStimmung && pStimmung->GetScore() != nScore)
+				{
+					pStimmung->SetScore(nScore);
 					pToolBar->Invalidate(nIndex);
 				}
 			}
@@ -858,10 +881,16 @@ void PgCompMsgView::UpdateBPButton(bool bBPWarning)
 			int nIndex = pToolBar->CommandToIndex(ID_MESSAGE_SENDIMMEDIATELY);
 			if (nIndex != -1)
 			{
+				// BEFUND E-36, zweite Stelle: gleiches Muster wie oben und wie
+				// E-35 in CompMessageFrame.cpp. GetButton kann NULL liefern,
+				// auch bei gueltigem Index.
+				TBarSendButton* pSendeKnopf =
+					(TBarSendButton*) pToolBar->GetButton(nIndex);
+
 				//to avoid flickering of toolbar do not paint if it is in the same state
-				if(((TBarSendButton*)pToolBar->GetButton(nIndex))->IsBPWarning() != bBPWarning)
-				{			
-					((TBarSendButton*)pToolBar->GetButton(nIndex))->SetBPWarning(bBPWarning);
+				if (pSendeKnopf && pSendeKnopf->IsBPWarning() != bBPWarning)
+				{
+					pSendeKnopf->SetBPWarning(bBPWarning);
 					pToolBar->Invalidate(nIndex);
 				}
 			}

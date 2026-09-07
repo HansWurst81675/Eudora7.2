@@ -51,21 +51,63 @@ perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?
 perl "$WURZEL/tools/release-pruefen.pl" >/dev/null 2>&1 || \
   perl "$WURZEL/tools/release-pruefen.pl" || true
 
-# 4. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 4. Doku gegen sich selbst pruefen. Laeuft IMMER und weist IMMER ab.
+#
+#    Bis zum 07.09.2026 stand hier ein "if": die Pruefung lief nur, wenn der
+#    Commit selbst eine .md, VERSION oder Version.h anfasste. Genau daran ist
+#    sie vorbeigelaufen - eine veraltete Datei, die NIEMAND anfasst, steht in
+#    keinem Diff und wurde deshalb nie geprueft. Gregor fand am selben Tag drei
+#    Widersprueche selbst (Paketnummer 1.0.18 statt 1.0.21 im README, ein ZIP,
+#    das es nicht mehr gibt, und eine Kriterientabelle in AUFGABEN.md, die zwei
+#    erfuellte Kriterien als offen fuehrte) und sagte: "waere vor dem mergen
+#    wichtig, dass keine luegen im main stehen!" und "ich moechte dir nicht jede
+#    einzelne MD datei nennen, es betrifft ALLE!".
+#
+#    Das Werkzeug holt sich seine Dateiliste seit dem selbst aus
+#    git ls-files "*.md" und laeuft in unter einer Sekunde - es gibt keinen
+#    Grund mehr, es an eine Bedingung zu haengen.
+perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
+
+# 5. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 
 chmod +x "$HOOK"
 
+
+# --- pre-push: die Schranke vor dem Merge ------------------------------------
+# Gregor am 07.09.2026: "waere vor dem mergen wichtig, dass keine luegen im main
+# stehen!" - der pre-commit greift je Commit, aber gemergt wird ein ZWEIG. Ein
+# Zweig kann aus lauter gruenen Commits bestehen und am Ende trotzdem eine
+# veraltete Datei tragen, wenn zwischendurch VERSION oder Version.h weitergezogen
+# wurde. Deshalb hier noch einmal, gegen den fertigen Stand.
+HOOK_PUSH="$GITDIR/hooks/pre-push"
+cat > "$HOOK_PUSH" <<'HOOKPUSHENDE'
+#!/bin/sh
+# Erzeugt von tools/hooks-einrichten.sh - nicht von Hand aendern.
+WURZEL="$(git rev-parse --show-toplevel)"
+
+echo "pre-push: Doku gegen sich selbst pruefen (alle MD-Dateien)"
+perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
+
+echo "pre-push: Zeilenenden und Kodierung"
+perl "$WURZEL/tools/pruefe-bytes.pl" || exit $?
+
+exit 0
+HOOKPUSHENDE
+chmod +x "$HOOK_PUSH"
+echo "pre-push eingerichtet: $HOOK_PUSH"
 echo "pre-commit eingerichtet: $HOOK"
 echo
 echo "Der Hook prueft in dieser Reihenfolge:"
 echo "  1. tools/pruefe-branch.pl    lebt der Zweig, auf den hier committet wird?"
 echo "  2. tools/lehren-spiegeln.pl  sind die Lehren im Repo?"
 echo "  3. tools/release-pruefen.pl  meldet nur, weist nicht ab"
-echo "  4. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo "  4. tools/doku-pruefen.pl     stimmt die Doku mit sich selbst? (IMMER, alle"
+echo "                               MD-Dateien aus git ls-files, immer abweisend)"
+echo "  5. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
-echo "Die abweisenden Schritte 1, 2 und 4 werten JEDEN Rueckgabewert aus -"
+echo "Die abweisenden Schritte 1, 2, 4 und 5 werten JEDEN Rueckgabewert aus -"
 echo "genau das fehlte bis zum 31.08.2026 bei Schritt 2 (Befund X-2), und im"
 echo "eingerichteten Hook fehlte es bis zum 05.09.2026 immer noch (X-5)."
 echo
