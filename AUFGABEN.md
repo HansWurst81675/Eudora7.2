@@ -5,7 +5,7 @@
 [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main` ist
 gesperrt; jeder Agent arbeitet in seinem eigenen Zweig ([AGENTEN.md](AGENTEN.md)).
 
-## Die Hauptarbeit: Kriterium 7 und 8
+## Die Hauptarbeit: das Beenden, zwei Kontofehler, die Reiterleiste
 
 Kriterien 4 bis 6 hat Gregor am 06.09.2026 gesetzt, nachdem die ersten vier
 gefallen waren; **7** ist am 07.09.2026 aus seinem Urteil zu Paket 1.0.18
@@ -20,20 +20,125 @@ offenen Fenstern ([ZIEL.md](ZIEL.md)):
 | 7 | ***File → Exit*** beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht."* |
 | 8 | Offene Fenster sichtbar und auswählbar | halb — das Menü *Window* listet sie, die Reiterleiste am unteren Rand fehlt |
 
-**Damit bleiben genau zwei Punkte.** Beide sind von Gregor am 07.09.2026 in
-einem Satz benannt: *„mail können jetzt abgeschickt werden. kann man die untere
-zeile (status) immer anzeigen lassen? unter window menü sieht man die beiden
-fenster. beenden geht nicht."*
+**Damit bleiben vier Punkte.** Drei davon hat Gregor am 07.09.2026 an Paket
+1.0.21 selbst gemessen: *„mail können jetzt abgeschickt werden. kann man die
+untere zeile (status) immer anzeigen lassen? unter window menü sieht man die
+beiden fenster. beenden geht nicht."* — dazu *„löschen der konten geht übrigens
+auch nicht: auf toFix liste!"* (**E-37**) und *„obwohl daten (name, mailadresse,
+server) im wizard eingetragen werden, fehlen diese beim konto->eigenschaften!"*
+(**E-38**).
 
 ### 1. Kriterium 7 — das Beenden (E-33)
 
 *File → Exit* beendet Eudora nicht. Das ist der einzige verbliebene **Fehler**
-der zweiten Stufe; alles andere ist Ausstattung. Noch nicht untersucht. Der Weg:
-`CEudoraApp::OnAppExit` bzw. `CMainFrame::OnClose` in
-`Eudora71/Eudora/eudora.cpp` und `MainFrm.cpp`, mit Spurmarken wie bei E-34, und
-`eudora.log` bei gesetztem `LogLevel=32896` gegenlesen.
+der zweiten Stufe; alles andere ist Ausstattung.
 
-### 2. Kriterium 8 — die untere Statuszeile mit Reitern
+**Gregor hat am 07.09.2026 die entscheidende Messung gefahren:** *„exit: weder
+alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung:"* — und
+die Meldung ist **„Encountered an improper argument"**. Daraus folgt dreierlei:
+
+1. Das Beenden **beginnt**. Kreuz und Alt-F4 gehen über `WM_SYSCOMMAND`/
+   `SC_CLOSE` in dasselbe `CMainFrame::OnClose`; dass sie dasselbe Symptom
+   zeigen wie *File → Exit*, schließt den Menüweg und damit
+   `CFileBrowseView::OnAppExit` (`FileBrowseView.cpp:2218`) **aus**.
+2. Der Abbruch ist keine stille FALSE-Rückgabe, sondern eine **geworfene
+   Ausnahme**: „Encountered an improper argument" ist MFCs Text für
+   `CInvalidArgException`. Damit ist es **dieselbe Fehlerklasse wie E-34** —
+   MFC 14 prüft in seinen Sammlungen mit `ENSURE`/`ENSURE_ARG` und wirft auch
+   im Release-Bau, wo MFC 6 nur ein `ASSERT` hatte.
+3. Der Weg danach ist geklärt: `AfxCallWndProc` fängt (`wincore.cpp:270-277`),
+   `CWinApp::ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt die
+   Meldung und liefert **0** — `WM_CLOSE` gilt als beantwortet, das Fenster
+   bleibt. Eudora überschreibt `ProcessWndProcException` nirgends.
+
+**Zu suchen ist also die Stelle, die auf dem Weg von `WM_CLOSE` bis zum Ende
+wirft** — ein Zugriff auf eine MFC-Sammlung (`operator[]`, `GetAt`, `RemoveAt`
+auf `CPtrArray`, `CObArray`, `CMapStringToOb`), ein `ENSURE_VALID`, oder ein
+Index, der aus einer Sammlung kommt. Weil das Fenster nach der Meldung noch da
+ist, muss der Wurf **vor** `pApp->HideApplication()` (`winfrm.cpp:885`) fallen.
+
+**Verdacht:** `QCCustomToolBar::SaveCustomInfo`
+(`Eudora71/Eudora/QCCustomToolBar.cpp:421`, Zugriffe `:423`, `:424`, `:427`,
+`:491`, `:508`) — dieselbe Form wie E-34: Grenze aus `GetBtnCount()`, Zugriff
+über `m_btns[...]`, und MFC 14 führt in `afxcoll.inl:201-217`
+`AfxThrowInvalidArgException()` **auch im Release-Bau** aus. Die Stelle liegt in
+`CloseDown` Stufe 5 (`SaveBarState`) und wird im Betrieb **nur beim Beenden**
+erreicht. **Belegt ist das nicht, behoben ist nichts.**
+
+**Zwei Vermutungen sind auf dem Weg dahin widerlegt** — nicht wieder aufgreifen:
+`GetWindowPlacement` prüft sein Argument nicht mit `ENSURE`
+(`wincore.cpp:1214-1218`, nur `ASSERT`), und `CTocDoc::CanCloseFrame` wird gar
+nicht erreicht, weil ein MDI-Hauptfenster keine Ansicht hat und
+`GetActiveDocument()` NULL liefert. Statt dessen läuft
+`pApp->SaveAllModified()` (`winfrm.cpp:874`).
+
+**So wird es belegt — ein Bau, kein Suchen:** Paket schnüren, starten, beenden,
+und die **letzte** `E-33`-Zeile in `eudora.log` lesen. 28 Marken liegen:
+`QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
+`GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert, es wird
+nur protokolliert —, `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i` in
+`CloseDown` Stufe 5, `6a`…`6f` in `OnClose`), `eudora.cpp` an `OnAppExit` und
+`ExitInstance`.
+
+> **Zur Protokollmaske, berichtigt.** Ich hatte `LogLevel=32896` als *nötig*
+> angegeben. Es ist ausreichend, aber nicht nötig: gemessen an Gregors Log vom
+> 07.09.2026 enthält sein `LogLevel 25759` (0x649F) `DEBUG_MASK_MISC` (0x8000)
+> **nicht**, wohl aber `DEBUG_MASK_TOC_CORRUPT` (0x80) — und `PutDebugLog`
+> prüft nur, ob **ein** Bit gemeinsam ist (`QCUtils/src/debug.cpp:138-143`).
+> Deshalb erscheinen bei ihm die `MAIN 32896:`-Zeilen ohne Zutun.
+
+**Nicht mehr durchprobieren:** `CFileBrowseView::OnAppExit` (ausgeschlossen,
+siehe oben) und die Vermutung, eine modale Meldung der Ersatzschicht verdecke
+das Beenden (die modalen `AfxMessageBox` in `OTShim` sind durch
+`OutputDebugString` ersetzt, `tools/pruefe-fensterbau.pl` hält das).
+
+### 2. E-37 — erledigt: ein Konto ließ sich scheinbar nicht löschen
+
+**Behoben am 07.09.2026, aber in keinem Paket.** Gregors Nachmessung hat die
+erste Annahme widerlegt: auf die Frage „verschwindet der Eintrag nach einem
+Neustart?" antwortete er *„ja, sie verschwinden nach neustart"* — gelöscht wurde
+also immer korrekt, nur die Liste im Fenster blieb stehen. Damit war es kein
+Datenfehler, sondern ein Anzeigefehler.
+
+`FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und abgesichert war das nur
+mit `ASSERT(nIndex != -1)`. Behoben in
+`CPersonalityView::OnCmdDeletePersonality` unabhängig davon, **warum**
+`FindItem` scheitert: der Fehlschlag geht mit Name und Listenlänge ins
+Protokoll, und die Liste wird einmal am Ende über `PopulateView()` neu
+aufgebaut. Die drei stummen `ASSERT(0)`-Zweige melden jetzt ebenfalls.
+
+**Was daran offen bleibt:** warum `FindItem` den Eintrag nicht findet, obwohl
+Spalte 0 den rohen Kontonamen trägt (`PersonalityView.cpp:222-232`) und
+dieselbe Zeichenkette bei `Remove` erfolgreich war. Die neue Protokollzeile
+sagt es beim nächsten Lauf. **Nicht wieder von vorn suchen.**
+
+### 3. E-38 — die Daten aus dem Kontoassistenten fehlen hinterher
+
+Gregor am 07.09.2026: *„obwohl daten (name, mailadresse, server) im wizard
+eingetragen werden, fehlen diese beim konto->eigenschaften!"* Zwei Kandidaten,
+beide gelesen, **keiner gemessen**:
+
+- **(a)** `OnSetActive` der Serverseiten setzt erst `m_str… = Params->…` und
+  ruft dann `UpdateData(TRUE)` — also in die **falsche** Richtung, aus dem
+  Steuerelement in die Variable (`WizardInServerPage.cpp:116-119`,
+  `WizardOutServerPage.cpp:73-83`). Über beiden steht die richtige Fassung
+  `//UpdateData(false)` auskommentiert. **Beide Zeilen stammen aus dem Original
+  von 2006** (`git log -L`, `567a5d8`) — keine Regression der Portierung, aber
+  unter MFC 14 kann die Aufbaureihenfolge der Seite anders sein.
+- **(b)** `CPersonality::SavePersonaInfo` (`persona.cpp:924-1070`) bricht beim
+  **ersten** fehlgeschlagenen `WriteStrHelper` ab und lässt alles Folgende
+  ungeschrieben; der Aufrufer verpackt das in
+  `VERIFY(g_Personalities.Add(...))` (`WizardPropSheet.cpp:193`), und `VERIFY`
+  prüft im Release-Bau nicht. Die Schreibreihenfolge passt zum Symptom:
+  POPAccount, RealName, ReturnAddress, DefaultDomain, SMTPServer, POPServer.
+
+**Erste Messung ohne Bau:** in der `Eudora.ini` des Mailverzeichnisses den
+Abschnitt `[Persona-<Name>]` ansehen. Fehlen `RealName`, `ReturnAddress` und
+`SMTPServer` dort, ist es die Schreib- oder Übertragungsseite; stehen sie
+richtig da, liegt der Fehler beim **Lesen** (`GetParams`, `persona.cpp:279ff`,
+über `VERIFY` in `ModifyAcctSheet.cpp:47` ebenfalls stumm).
+
+### 4. Kriterium 8 — die untere Statuszeile mit Reitern
 
 Gregors Frage lautet wörtlich *„kann man die untere zeile (status) immer
 anzeigen lassen?"*. Das Original hat sie: die **WazooBar**. Gelesen wird sie in

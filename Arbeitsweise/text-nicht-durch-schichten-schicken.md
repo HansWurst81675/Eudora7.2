@@ -87,3 +87,47 @@ oder das Muster wird byteweise geschrieben.
 ueber einen ASCII-Zeilenanker — `perl -c` bzw. `[ScriptBlock]::Create` — erst
 dann `git add`. Wer den letzten Schritt weglaesst, hat die Lehre nicht
 angewendet, sondern nur gelesen ([[lehren-anwenden-nicht-nur-schreiben]]).
+
+---
+
+## Fuenfter und sechster Fall, 07.09.2026 — der Anker, den es nicht gibt
+
+Zwei Schaeden an einem Nachmittag, beide durch einen **falschen oder fehlenden
+Anker** im Ersetzungswerkzeug:
+
+| Datei | was passierte | wie es auffiel |
+|---|---|---|
+| `tools/doku-pruefen.pl` | `Zeilen 136..494 (359) -> 10 Zeilen (ersetzen)`, dazu die eigene Meldung `nicht gefunden von=136 bis=-1` — **359 Zeilen weg** | `perl -c`: *Global symbol „$behauptung" requires explicit package name* (Exit 255). Zuruecksetzen mit `git checkout --`, danach 467 Zeilen wie in HEAD |
+| `Eudora71/Eudora/PersonalityView.cpp` | Splice in eine Funktion hinein: verwaiste `}`, Rumpf doppelt | Klammerzaehlung nach dem Einsetzen; zuruecksetzen und die **ganze Funktion** in einem Stueck ersetzen (`920..978 -> 114 Zeilen`, `129 auf, 129 zu, ausgeglichen`) |
+
+Ein drittes Mal im gleichen Zeitraum hat es **richtig** gemeldet — die Ausgabe
+war schlicht `Anker fehlt`, und nichts wurde angefasst. Der Unterschied lag
+nicht am Text, sondern daran, dass das Werkzeug im Schadensfall **weitergerechnet
+hat**: Ende nicht gefunden → `bis=-1` → `splice` von 136 bis zum Ende.
+
+Und viertens, kleiner, aber gleicher Ursprung: eine Gegenprobe sollte
+`[Mappings]` aus einer Testdatei entfernen und traf den **Kommentarkopf** mit,
+in dem das Wort ebenfalls vorkommt — von 193 Zeilen blieben 3 uebrig. Nicht die
+Schranke war falsch, sondern die Verankerung (`^\[Mappings\]` statt
+`[Mappings]`).
+
+**Zusaetzlich zum Ablauf oben gilt damit:**
+
+- **Ein Werkzeug, das seinen Anker nicht findet, bricht ab.** Rueckgabe ungleich
+  0, kein Schreibzugriff, keine Ersatzrechnung. `bis=-1`, `bis=$#zeilen`,
+  „dann nehme ich das Dateiende" sind kein Rueckfall, sondern der Schaden. Wenn
+  eine Meldung wie `nicht gefunden` **und** eine Ersetzungsbilanz in derselben
+  Ausgabe stehen, ist das Werkzeug kaputt, nicht der Aufruf.
+- **Mehrzeilige Anker taugen nicht.** `'void Foo()' .. '  ASSERT(0);\n }\n}'`
+  hat nicht getroffen — Einrueckung, Leerzeilen und Zeilenenden sind nicht
+  vorhersagbar. Anker sind **eine** Zeile, ASCII, eindeutig; `grep -c` auf das
+  Muster muss **1** liefern, bevor ersetzt wird.
+- **Anker am Zeilenanfang festmachen** (`^`), sonst trifft das Muster auch den
+  Kommentar, der es beschreibt.
+- **Nach jedem Einsetzen die Struktur messen, nicht nur die Syntax:**
+  Zeilenzahl gegen HEAD (`git show HEAD:DATEI | wc -l`) und bei C++ die
+  Klammerbilanz. `perl -c` faengt den ersten Fall, eine ausgeglichene
+  Klammerzaehlung den zweiten — **beide** haben hier gegriffen, aber erst
+  hinterher.
+- **Eine Funktion wird als Ganzes ersetzt**, nicht in mehreren Splices. Zwei
+  Splices in dieselbe Funktion haben hier den doppelten Rumpf erzeugt.

@@ -14,9 +14,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | Kennung | | |
 |---|---|---|
 | — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | *halb* — das Menü *Window* listet sie auf (von Gregor am 07.09.2026 nachgesehen: „1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht `OTShim` bildet sie nicht nach (`WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in `Eudora.ini`) |
-| **E-33** | *File → Exit* bringt eine Meldung statt sauber zu beenden | noch nicht untersucht (Kriterium 7) |
-| — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34. Abgefangen, aber nicht behoben. MFC 14 prüft in den Sammlungen mit `ENSURE` statt `ASSERT`, und `ENSURE` wirft auch im Release-Bau |
-| — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle |
+| **E-33** | *File → Exit*, **Kreuz** und **Alt-F4** beenden Eudora nicht, sondern bringen **„Encountered an improper argument"** (Kriterium 7) | Gregor am 07.09.2026 gemessen, mit Bildschirmfoto: *„weder alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung"*. Belegt: das Beenden **beginnt**, der Abbruch ist eine **geworfene `CInvalidArgException`**, und `ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt sie und liefert 0 — das Fenster bleibt. **Ursache nicht belegt.** Verdacht `QCCustomToolBar::SaveCustomInfo` (`QCCustomToolBar.cpp:421`), 28 Spurmarken liegen (`Befunde/BEENDEN.md`) |
+| — | **E-38**: die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften* | *„obwohl daten (name, mailadresse, server) im wizard eingetragen werden, fehlen diese beim konto->eigenschaften!"* In der `Eudora.ini` **stehen** sie (von Gregor nachgesehen) — also scheitert das **Lesen**, oder die Werte gehen verloren, weil Eudora nur per `pkill` zu beenden ist. **Hängt an E-33** und wird erst danach gemessen; Gregors Wort: *„vielleicht fehlen die daten, wenn ich eudora per task manager abschließen muß"* |
+| — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34, und sie ist ein **Widerspruch**: beide lesen dasselbe `m_nSize` (`afxcoll.inl:201-217`), aus einem unveränderten Objekt kann das nicht werfen. Es bleiben Erklärungen außerhalb der Indexrechnung — abgebautes oder falsch typisiertes Leistenobjekt, beschädigter Heap. Abgefangen, nicht behoben |
+| — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten **und beim Beenden** | dieselbe Quelle wie E-34, andere Aufrufstellen |
+| — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wieder entstehen | `CPersonality::Remove` (`persona.cpp:565-566`) löscht den Abschnitt, leert aber **den INI-Zwischenspeicher nicht** und stellt die aktuelle Persönlichkeit **nicht** um. `FlushINIFile` (`rs.cpp:1237-1250`) schreibt `SavePassword` und `SavePasswordText` ausdrücklich in `g_Personalities.GetCurrent()` — der nächste `SetCurrent` legt damit die zwei Schlüssel im gelöschten Abschnitt wieder an. `SetCurrent` prüft nicht, ob der Name existiert (`persona.cpp:179-198`, Kommentar *„we're trusting souls"*). **Die Gefahr besteht unabhängig von der E-37-Behebung** — jeder spätere `SetCurrent` tut dasselbe —, mein `PopulateView()`-Aufruf verschiebt den Zeitpunkt nur nach vorn. Selbst beim Nachmessen der E-37-Behebung gefunden, **nicht am laufenden Programm bestätigt**. Naheliegende Behebung: nach erfolgreichem `Remove` auf `<Dominant>` umschalten, wenn die gelöschte die aktuelle war |
+| — | **`FindItem` liefert −1 in der Personalities-Liste** (Rest von E-37) | E-37 ist behoben, indem die Liste neu aufgebaut wird. **Warum** `FindItem` den Eintrag nicht findet, obwohl Spalte 0 den rohen Namen trägt (`PersonalityView.cpp:226-232`), sagt erst die neue Protokollzeile |
 
 ## Erreicht
 
@@ -43,21 +46,51 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.21 — alles Gebaute ist gepackt
+## Nach 7.2.0.21 — gebaut, aber NICHT gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket 1.0.21 steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.21 / 1.0.21** (`cat
-VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
-neueren Stand ein Paket schnürt, setzt vorher beide Nummern hoch, sonst tragen
-zwei verschiedene Bauten dieselbe Kennung.
+Diese Änderungen liegen im Repo und sind gebaut (0 Fehler), stecken aber in
+**keinem** Paket. Wer sie sehen will, muss bauen. `Eudora71/Version.h` und
+`VERSION` stehen weiter auf **7.2.0.21 / 1.0.21** — wer daraus ein Paket
+schnürt, setzt **vorher beide Nummern hoch**, sonst tragen zwei verschiedene
+Bauten dieselbe Kennung (Befund **V-1**, und Gregors Regel dazu: *„version muß
+eindeutig sein"*).
+
+- **E-37 behoben — ein Konto ließ sich scheinbar nicht löschen.**
+  `CPersonalityView::OnCmdDeletePersonality`
+  (`Eudora71/Eudora/PersonalityView.cpp`). Gregors Messung hat die erste
+  Annahme widerlegt: *„ja, sie verschwinden nach neustart"* — gelöscht wurde
+  immer korrekt, nur die Liste im Fenster blieb stehen. `FindItem` liefert −1,
+  `DeleteItem(−1)` tut nichts, und abgesichert war das nur mit
+  `ASSERT(nIndex != -1)`. Behoben unabhängig davon, **warum** `FindItem`
+  scheitert: der Fehlschlag geht mit Name und Listenlänge ins Protokoll, und
+  die Liste wird einmal am Ende über `PopulateView()` neu aufgebaut. Die drei
+  stummen `ASSERT(0)`-Zweige melden jetzt ebenfalls.
+  **Von Gregor nicht nachgemessen** — es ist in keinem Paket.
+- **28 Spurmarken für E-33**, das Beenden. Nur Diagnose, nichts behoben:
+  `QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
+  `GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert —,
+  `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`, `6a`…`6f`),
+  `eudora.cpp` an `OnAppExit` und `ExitInstance`. Der Weg ist vollständig
+  aufgeschrieben in [Befunde/BEENDEN.md](Befunde/BEENDEN.md).
+- **`tools/DEudora.ini`** — Vorgaben für neu angelegte Konten (**A-1** in
+  [ZIEL.md](ZIEL.md)), die `tools/paket-bauen.ps1` neben `Eudora.exe` ins Paket
+  legt und `tools/paket-pruefen.ps1` auf Vorhandensein **und Inhalt** prüft.
+- **`tools/bauen.ps1`** — dritter Fehlalarm dieses Werkzeugs beseitigt:
+  `Hole-NeuesteQuelleFuer` nahm alle Dateien im Projektverzeichnis, und
+  `Eudora.vcxproj` und `EudoraRes.vcxproj` liegen im gleichen Ordner. Eine
+  Änderung an `mainfrm.cpp` machte damit `EudoraRes.dll` scheinbar veraltet.
+  Jetzt kommt die Liste aus den Include-Angaben der Projektdatei.
+- **`tools/doku-pruefen.pl`** — Prüfungen 8 bis 11: angekündigte Marken, die es
+  nicht gibt; eine alte Fassungsnummer als heutiger Stand; Befundkennungen quer
+  gegen `BEFUNDE.md`; und A-1 gegen `tools/DEudora.ini`.
 
 > **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
 > `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
-> **E-32** als Behebung der modalen Meldung. Beides ist falsch: die
+> **E-32** als Behebung der modalen Meldung. Beides war falsch: die
 > E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
-> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR am 07.09.2026 als
-> **W-3** und **W-5** (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte:
-> *„wäre vor dem mergen wichtig, daß keine lügen im main stehen!"*
+> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
+> (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
+> wichtig, daß keine lügen im main stehen!"*
 
 ---
 

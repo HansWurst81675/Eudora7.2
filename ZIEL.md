@@ -103,6 +103,74 @@ installiert."*
 > (`Befunde/PAKET.md`). Es ersetzt trotzdem keinen Startversuch auf einem
 > fremden Rechner: es sagt, ob der Lader alles findet, nicht ob Eudora läuft.
 
+## Anforderungen neben den Kriterien
+
+Die neun Kriterien oben sagen, wann eine Fassung **abnahmefähig** ist. Daneben
+stellt Gregor einzelne Anforderungen, die kein Kriterium sind, aber genauso
+verbindlich — sie bekommen eine Kennung `A-n` und stehen hier, damit sie
+nachprüfbar sind und nicht nur in einer Werkzeugdatei behauptet werden.
+
+### A-1 — Vorgaben für ein **neu angelegtes** Konto
+
+Gestellt am 07.09.2026, mit zwei Bildschirmfotos der Kontoeinstellungen:
+
+> *„die zwei markierte dinge möchte ich als default bei jedem konto. zum testen
+> ist es wichtig, sonst werden die mails abgerufen und gelöscht, wenn ich nicht
+> dran denke."*
+
+und, nach der Klärung, dass ein bestehendes Konto damit nicht erreichbar ist:
+
+> *„für neue konten. bestehendes kann ich selbst korrigieren."*
+>
+> *„anforderung an neues konto: beide optionen so setzen, wenn ich per wizard
+> ein neues konto anlege."*
+
+**Verbindlich sind diese vier Werte.** Ein per Assistent oder über *New…* neu
+angelegtes Konto muss sie tragen:
+
+| Schlüssel | Wert | im Dialog | markiert am |
+|---|---|---|---|
+| `SSLSendUse` | `2` | *Secure Sockets when Sending* → **Required, Alternate Port** | 07.09.2026, Bild 1 |
+| `CheckMailByDefault` | `1` | *Check Mail* angehakt | 07.09.2026, Bild 1 |
+| `SSLReceiveUse` | `2` | *Secure Sockets when Receiving* → **Required, Alternate Port** | 07.09.2026, Bild 2 |
+| `LeaveMailOnServer` | `1` | *Leave mail on server* angehakt | 07.09.2026, Bild 2 |
+
+Die Zahlen der beiden SSL-Werte sind die Reihenfolge im Auswahlfeld
+(`SSLSettings::SSLUsage`, `Eudora71/Eudora/SSLSettings.h:30-36`): `0` Never,
+`1` If Available STARTTLS, `2` Required Alternate Port, `3` Required STARTTLS.
+
+**Begründung, die den Umfang festlegt:** Gregor nennt als Grund, dass Testmails
+sonst abgerufen **und auf dem Server gelöscht** werden. Das leisten die zwei von
+ihm markierten Häkchen **nicht** — *Check Mail* schaltet den Abruf ein, die
+SSL-Wahl betrifft nur die Verbindung. Erforderlich dafür ist
+`LeaveMailOnServer`; deshalb gehört es zur Anforderung, obwohl er es nicht
+markiert hat. Dazu `LeaveOnServerDays=0` und `ServerDelete=0`, die das Löschen
+auf anderen Wegen wieder einschalten würden.
+
+**Erfüllt** seit dem 07.09.2026 durch `tools/DEudora.ini`, die
+`tools/paket-bauen.ps1` neben `Eudora.exe` ins Paket legt. Eudora liest sie in
+`GetDefaultIniSetting` (`Eudora71/Eudora/rs.cpp:357-385`) **vor** den in
+`EudoraRes.rc` eingebauten Vorgaben. Belegt ist die Kette bis in die
+`Eudora.ini` hinein: `AccountWizard/Src/WizardPropSheet.cpp:137` →
+`CPersParams::GetDefaultParams` (`PersParams.cpp:195`, liest die Datei bei
+`:215` und `:236-237`) → der Assistent überschreibt die vier Werte nirgends
+(kein Treffer in ganz `Eudora71/AccountWizard`) → `WizardPropSheet.cpp:193`
+`g_Personalities.Add` → geschrieben in `persona.cpp:988` (`LeaveMailOnServer`)
+und `:1051` (`SSLReceiveUse`). **Am laufenden Programm hat es noch niemand
+nachgemessen.**
+
+`tools/paket-pruefen.ps1` warnt, wenn die Datei im Paket fehlt oder einen der
+vier Werte nicht trägt, und `tools/doku-pruefen.pl` hält die Datei gegen diese
+Tabelle — eine Anforderung ohne Schranke ist ein Versprechen.
+
+**Was A-1 ausdrücklich nicht verlangt:** ein **bestehendes** Konto zu ändern.
+`CPersonality::GetIniDefaultValue` (`persona.cpp:606-620`) liest beim Laden
+eines vorhandenen Kontos ausschließlich die Ressource, nie die `DEudora.ini`.
+Gregors Wort dazu: *„bestehendes kann ich selbst korrigieren."* Von Hand geht es
+in der `Eudora.ini` des Mailverzeichnisses — `<Dominant>` im Abschnitt
+`[Settings]`, jedes weitere in `[Persona-<Name>]` (`persona.cpp:897-898`,
+Präfix `:52`).
+
 ## Woran sich Kriterium 2 misst
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert

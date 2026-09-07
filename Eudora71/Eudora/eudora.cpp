@@ -805,6 +805,17 @@ void CEudoraApp::OnCheckMail()
 
 void CEudoraApp::OnAppExit()
 {
+	// BEFUND E-33: erste Spurmarke des Beenden-Weges. Sie unterscheidet die
+	// beiden Moeglichkeiten: kommt der Menuebefehl ID_APP_EXIT ueberhaupt an,
+	// oder beginnt das Beenden gar nicht?  Steht diese Zeile im Protokoll,
+	// ist die Befehlszustellung in Ordnung und der Fehler liegt dahinter.
+	// ACHTUNG: PutDebugLog prueft die Maske und kehrt sonst sofort zurueck
+	// (QCUtils/src/debug.cpp:140). Die Marken schreiben nur bei
+	// LogLevel=32896 unter [Settings] in der Eudora.ini (0x8000 | 0x80).
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		ShiftDown() ? "E-33 OnAppExit: Befehl angekommen, Shift gedrueckt - nur Fensterlage sichern"
+		            : "E-33 OnAppExit: Befehl angekommen, jetzt CWinApp::OnAppExit (WM_CLOSE)");
+
 	// If Shift was held down while doing a File->Exit, then just save the
 	// positions of the currently open windows, but don't quit
 	if (ShiftDown())
@@ -2008,6 +2019,13 @@ void CEudoraApp::SaveStdProfileSettings()
 
 int CEudoraApp::ExitInstance()
 {
+	// BEFUND E-33: letzte Spurmarke des Beenden-Weges. ExitInstance wird erst
+	// erreicht, wenn das Hauptfenster wirklich zerstoert ist (CWnd::OnNcDestroy
+	// setzt WM_QUIT ab, danach kehrt CWinThread::Run zurueck). Steht diese
+	// Zeile im Protokoll, ist das Beenden angekommen; fehlt sie, ist es unterwegs
+	// abgebrochen - dann sagt die letzte E-33-Zeile davor, wo.
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		"E-33 ExitInstance: erreicht - das Hauptfenster ist zerstoert");
 
 	// Clean up the directors/managers
 	VERIFY(QCLabelDirector::Destroy());

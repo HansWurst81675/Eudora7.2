@@ -21,6 +21,7 @@
 - [main muss immer baubar sein](main-muss-immer-baubar-sein.md) — Maßstab ist der frische Klon, nicht der eigene Arbeitsbaum
 - [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen
 - [Nie direkt auf main](nie-direkt-auf-main.md) — jede Änderung über einen eigenen Zweig; Gregor merged, nicht ich
+- [Erlaubnis nicht hineinlesen](erlaubnis-nicht-hineinlesen.md) - eine Aussage ueber Gregors Vorgehen ist keine Erlaubnis fuer mein Vorgehen; keine Regel selbst lockern
 - [Mannschaft fuehren](mannschaft-fuehren.md) — Auftrag ohne Symptom liefert nichts; jeden Ruecklauf selbst nachmessen, nicht weitergeben
 - [Text nicht durch Schichten schicken](text-nicht-durch-schichten-schicken.md) — Ersetzungstext in eine Datei, ueber Zeilenanker einsetzen; danach perl -c bzw. ScriptBlock::Create
 - [Abschalten ist ein Termin](abschalten-ist-ein-termin.md) — „ich schalte ab" ist eine Frist; genannte Zeit minus 20 Minuten ist das Ende der inhaltlichen Arbeit
@@ -36,3 +37,8 @@
 - [Review sieht nur den Diff](review-sieht-nur-den-diff.md) — die veraltete unveränderte Datei steht in keinem Diff; vor dem Merge den Bestand prüfen, nicht die Änderung
 - [Schranke gegentesten](schranke-gegentesten.md) — jede neue Prüfung gegen den echten Fehler und gegen den erlaubten Fall fahren; stumm und Fehlalarm kosten dasselbe
 - [Daueraufgaben brauchen einen Takt](daueraufgaben-brauchen-einen-takt.md) — Lektor, Prüfer, Chronist laufen nach einem Ereignis; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet
+- [Messung muss den Weg treffen](messung-muss-den-weg-treffen.md) — ein Gegentest im falschen Betriebsmodus beweist nichts; `-NurPruefen` ließ die geprüfte Prüfung gar nicht laufen
+- [Gegenprobe umdrehen](gegenprobe-umdrehen.md) — nicht prüfen, ob der gewünschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt (Gregors Technik)
+- [Anwenderdatei nicht erschlagen](anwenderdatei-nicht-erschlagen.md) — was es beim Anwender oder im Original schon gibt, wird gelesen und ergänzt; 124 Dateizuordnungen wären verloren gewesen
+- [Anforderung gehört in den Maßstab](anforderung-gehoert-in-den-massstab.md) — ein Requirement, das nur in der Umsetzung steht, ist keins; nach `ZIEL.md` plus Schranke gegen das Gebaute
+- [ASSERT ist im Release nichts](assert-ist-im-release-nichts.md) — häufigste Ursachenklasse des Projekts; bei „es passiert nichts" zuerst nach `ASSERT(0)` und `VERIFY(` suchen

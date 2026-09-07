@@ -39,3 +39,41 @@ Zeit für einen Weg aufwendet, den ich in Sekunden hätte ausschließen können.
   nicht als Anweisung.
 
 Siehe [[pruefen-statt-vermuten]] und [[was-lauffaehig-heisst]].
+
+## Nachtrag 07.09.2026 — zwei Funktionen mit fast gleichem Namen
+
+Ich habe Gregor gesagt, mit den Werten in `tools/DEudora.ini` sei die Sache
+erledigt: *„Damit brauchst du keinen Neubau."* Er hat es gefahren und
+geantwortet: **„greift nicht"**.
+
+Der Grund war eine Anleitung auf halb gelesenem Weg. Es gibt **zwei** Funktionen
+mit fast gleichem Namen, und nur eine liest die Datei:
+
+| Funktion | liest `DEudora.ini`? | benutzt fuer |
+|---|---|---|
+| `GetDefaultIniSetting` (`Eudora71/Eudora/rs.cpp:357-385`) | **ja** | ein **neu angelegtes** Konto, ueber `CPersParams::GetDefaultParams` |
+| `CPersonality::GetIniDefaultValue` (`Eudora71/Eudora/persona.cpp:606`) | **nein** — nur `QCLoadString`, also die Ressource | ein **bestehendes** Konto beim Anzeigen |
+
+Ich hatte den ersten Weg vollstaendig belegt (`WizardPropSheet.cpp:137` →
+`GetDefaultParams()` → `GetDefaultIniSetting`) und daraus geschlossen, die Datei
+wirke. Fuer den Dialog, den Gregor offen hatte — ein **bestehendes** Konto —
+lief der zweite Weg. Dazu zwei weitere Bedingungen, die ich nicht angesagt
+hatte: die Datei muss neben **genau der laufenden** `Eudora.exe` liegen
+(`ExecutableDir` aus `GetModuleFileName`, `fileutil.cpp:418-435`), und der
+Wert eines bestehenden Kontos steht ausdruecklich in der `Eudora.ini` und
+schlaegt jede Vorgabe.
+
+**Zusaetzlich zur Regel oben:**
+
+- **Bevor ich sage „damit wirkt X": alle Leser des Werts aufzaehlen**, nicht den
+  ersten gefundenen. `grep -rn '<Schluessel>\|<Funktionsname>'` ueber `*.cpp`
+  und `*.h`, und jeden Treffer einordnen. Ein zweiter, aehnlich benannter
+  Aufrufweg ist in diesem Quelltext die Regel, nicht die Ausnahme.
+- **Die Anleitung nennt den Geltungsbereich.** „Fuer **neue** Konten" ist eine
+  andere Zusage als „fuer dein offenes Fenster". Gregors Antwort darauf war
+  praezise: *„fuer neue konten. bestehendes kann ich selbst korrigieren."*
+- **Die Bedingungen gehoeren in die Anleitung**, nicht in die Erklaerung
+  danach: welcher Pfad, welcher Stand, welcher Weg im Programm.
+- **Und wenn ich es nicht selbst fahren kann, wird die Probe umgedreht** statt
+  bestaetigt — Gregors Test hat die Frage in einem Zug entschieden
+  ([[gegenprobe-umdrehen]]).

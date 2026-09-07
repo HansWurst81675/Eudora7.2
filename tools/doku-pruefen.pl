@@ -520,6 +520,59 @@ for my $k (sort keys %im_changelog) {
     push @mangel, sprintf("%s hat einen eigenen Abschnitt in CHANGELOG.md, fehlt aber im Verzeichnis von BEFUNDE.md", $k);
 }
 
+# --- 11. Anforderung A-1 gegen das Gebaute -----------------------------------
+# Gregor am 07.09.2026: "wo ist das requirement aufgeschrieben, welche default
+# werte bei neuem konto gesetzt werden sollen?" - Antwort damals: nirgends. Die
+# vier Werte standen nur in tools/DEudora.ini selbst, in README.md als
+# Beschreibung und in tools/paket-pruefen.ps1 als Pruefung. Damit behauptete das
+# Werkzeug etwas ueber sich selbst, und niemand konnte pruefen, ob es dem
+# entspricht, was gefordert war.
+#
+# Jetzt steht die Anforderung als A-1 in ZIEL.md, und diese Pruefung haelt die
+# Werkzeugdatei dagegen. Die Tabelle in ZIEL.md ist die QUELLE, tools/DEudora.ini
+# die Umsetzung - laufen sie auseinander, ist es ein Mangel, ganz gleich welche
+# Seite falsch ist.
+my $ziel_inhalt = lies('ZIEL.md') || '';
+my $deudora     = lies('tools/DEudora.ini');
+if ($ziel_inhalt =~ /###\s+A-1\b/) {
+    my ($abschnitt) = $ziel_inhalt =~ /###\s+A-1\b(.*?)(?=\n###\s|\n##\s|\z)/s;
+    $abschnitt = '' unless defined $abschnitt;
+    my %gefordert;
+    # Tabellenzeilen der Form  | `Schluessel` | `Wert` | ... |
+    while ($abschnitt =~ /^\|\s*`([A-Za-z][A-Za-z0-9_]*)`\s*\|\s*`(\d+)`\s*\|/gm) {
+        $gefordert{$1} = $2;
+    }
+    if (!keys %gefordert) {
+        push @mangel, "ZIEL.md: Abschnitt A-1 hat keine lesbare Wertetabelle - die Anforderung ist nicht pruefbar";
+    }
+    elsif (!defined $deudora) {
+        push @mangel, "ZIEL.md fordert in A-1 " . scalar(keys %gefordert) . " Vorgaben, tools/DEudora.ini fehlt";
+    }
+    else {
+        for my $k (sort keys %gefordert) {
+            my $soll = $gefordert{$k};
+            if ($deudora =~ /^\s*\Q$k\E\s*=\s*(\S+)\s*$/m) {
+                my $ist = $1;
+                push @mangel, sprintf("tools/DEudora.ini setzt %s=%s, ZIEL.md fordert in A-1 %s",
+                                      $k, $ist, $soll) if $ist ne $soll;
+            }
+            else {
+                push @mangel, sprintf("tools/DEudora.ini setzt %s nicht, ZIEL.md fordert in A-1 %s=%s",
+                                      $k, $k, $soll);
+            }
+        }
+        # Die Zuordnungen von QUALCOMM muessen drin bleiben - eine Fassung mit nur
+        # [Settings] haette sie beim Auspacken ueber eine Installation geloescht.
+        my $original = lies('InstallersForEudora/Eudora7.1/Data/INIfiles/deudora.ini');
+        if (defined $original) {
+            my $n_orig = () = $original =~ /^(?:both|in|out)=/gm;
+            my $n_neu  = () = $deudora  =~ /^(?:both|in|out)=/gm;
+            push @mangel, sprintf("tools/DEudora.ini hat %d Dateizuordnungen, die Originaldatei von QUALCOMM %d - eine Fassung mit nur [Settings] loescht sie beim Auspacken",
+                                  $n_neu, $n_orig) if $n_neu < $n_orig;
+        }
+    }
+}
+
 # --- Bilanz ------------------------------------------------------------------
 unless ($leise) {
     print "\n";

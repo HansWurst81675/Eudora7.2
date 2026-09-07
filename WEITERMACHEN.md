@@ -68,12 +68,55 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-**Kriterium 7 — das Beenden.** *File → Exit* beendet Eudora nicht (**E-33**),
-von Gregor am 07.09.2026 an Paket 1.0.21 bestätigt: *„beenden geht nicht."* Das
-ist der einzige verbliebene **Fehler**; alles Weitere ist Ausstattung. Der Weg:
-`CEudoraApp::OnAppExit` bzw. `CMainFrame::OnClose` in
-`Eudora71/Eudora/eudora.cpp` und `MainFrm.cpp`, mit Spurmarken wie bei E-34, und
-`eudora.log` bei gesetztem `LogLevel=32896` gegenlesen.
+**Ein Paket bauen und das Protokoll lesen — suchen muss niemand mehr.**
+
+**Kriterium 7 — das Beenden (E-33).** *File → Exit*, das **Kreuz** und
+**Alt-F4** beenden Eudora nicht, sondern bringen den Meldungsdialog
+**„Encountered an improper argument"**. Gregor am 07.09.2026 an Paket 1.0.21,
+mit Bildschirmfoto: *„exit: weder alt+F4, noch x rechts oben funktionieren. da
+kommt wieder die meldung"*. Das ist der einzige verbliebene **Fehler**; alles
+Weitere ist Ausstattung.
+
+Diese Messung hat drei Dinge entschieden ([Befunde/BEENDEN.md](Befunde/BEENDEN.md)):
+
+1. Das Beenden **beginnt** — alle drei Wege gehen durch dasselbe
+   `CMainFrame::OnClose`. `CFileBrowseView::OnAppExit`
+   (`FileBrowseView.cpp:2218`) ist damit **ausgeschlossen**.
+2. Der Abbruch ist eine **geworfene `CInvalidArgException`**, keine stille
+   FALSE-Rückgabe. `CMainFrame::SaveOpenWindows` ist deshalb **nicht** mehr der
+   Spitzenkandidat.
+3. `CWinApp::ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt die
+   Meldung und liefert 0 — `WM_CLOSE` gilt als beantwortet, das Fenster bleibt.
+   Das ist **bestätigt**, nicht mehr Vermutung.
+
+Weil das Fenster nach der Meldung noch da ist, muss der Wurf **vor**
+`pApp->HideApplication()` (`winfrm.cpp:885`) fallen. **Verdacht:**
+`QCCustomToolBar::SaveCustomInfo`
+(`Eudora71/Eudora/QCCustomToolBar.cpp:421`) — dieselbe Form wie E-34 (Grenze
+aus `GetBtnCount()`, Zugriff über `m_btns[...]`, und MFC 14 wirft dort auch im
+Release-Bau, `afxcoll.inl:201-217`), gelegen in `CloseDown` Stufe 5
+(`SaveBarState`), und im normalen Betrieb **nur beim Beenden** erreicht.
+**Belegt ist das nicht, behoben ist nichts.**
+
+**So wird es belegt:** ein Paket aus diesem Stand bauen, mit `LogLevel=32896`
+unter `[Settings]` in der `Eudora.ini` starten, beenden — und die **letzte**
+`E-33`-Zeile in `eudora.log` lesen. 28 Marken liegen: in
+`QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
+`GetErrorMessage` und `THROW_LAST()` (der Ablauf bleibt unverändert, es wird
+nur protokolliert), in `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`,
+`6a`…`6f`), in `eudora.cpp` an `OnAppExit` und `ExitInstance`.
+
+> **Zur Maske:** `LogLevel=32896` ist ausreichend, aber nicht nötig. Gemessen an
+> Gregors Log vom 07.09.2026: sein `LogLevel 25759` (0x649F) enthält
+> `DEBUG_MASK_MISC` (0x8000) **nicht**, wohl aber `DEBUG_MASK_TOC_CORRUPT`
+> (0x80) — und weil `PutDebugLog` nur auf ein gemeinsames Bit prüft, schreiben
+> die Marken trotzdem. Sichtbar an seinen `MAIN 32896:`-Zeilen.
+
+**E-38 hängt daran.** Die im Assistenten eingegebenen Daten stehen in der
+`Eudora.ini` (von Gregor nachgesehen), fehlen aber im Eigenschaften-Dialog.
+Gregor: *„vielleicht fehlen die daten, wenn ich eudora per task manager
+abschließen muß"* — das ist erst zu messen, wenn Eudora sich normal beenden
+lässt. Vorher ist jede Aussage dazu wertlos.
 
 **Danach Kriterium 8** — die untere Reiterleiste für die offenen Fenster. Das
 Menü *Window* listet sie schon auf; was fehlt, ist die **WazooBar**

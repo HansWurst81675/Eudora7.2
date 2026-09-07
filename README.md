@@ -64,22 +64,75 @@ Belegt:
 ### Offen — Stand 07.09.2026
 
 Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*;
-hier die Punkte, die ein Anwender merkt:
+hier die Punkte, die ein Anwender merkt. Alle vier hat Gregor am 07.09.2026 an
+Paket 1.0.21 selbst gemessen.
 
-- ***File → Exit*** beendet Eudora nicht (**Kriterium 7**, Befund **E-33**),
-  noch nicht untersucht. Gregors Wort dazu am 07.09.2026: *„beenden geht
-  nicht."* Das ist der einzige verbliebene **Fehler**; alles Weitere hier ist
-  Ausstattung
+- ***File → Exit* beendet Eudora nicht** (**Kriterium 7**, Befund **E-33**).
+  *„beenden geht nicht."* Auch **Alt-F4 und das Kreuz** im Titelbalken nicht, und
+  dabei erscheint **„Encountered an improper argument"** — MFCs Text für
+  `CInvalidArgException`. Damit ist die Ursache eingeordnet: eine Ausnahme fliegt
+  aus `CMainFrame::OnClose` heraus, MFC 14 fängt sie in `AfxCallWndProc`,
+  `CWinApp::ProcessWndProcException` zeigt die Meldung und liefert 0 — `WM_CLOSE`
+  gilt als beantwortet, das Fenster bleibt. Dieselbe Fehlerklasse wie E-34
+- **Ein Konto ließ sich nicht löschen** (**E-37**) — *„löschen der konten geht
+  übrigens auch nicht: auf toFix liste!"* **Behoben am 07.09.2026, aber in
+  keinem Paket.** Gregors Nachmessung hat die erste Annahme widerlegt: *„ja, sie
+  verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die Liste im
+  Fenster blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
+  abgesichert war das nur mit `ASSERT`. Jetzt wird die Liste über
+  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. Offen bleibt,
+  **warum** `FindItem` den Eintrag nicht findet
+- **Die im Kontoassistenten eingegebenen Daten fehlen hinterher** (**E-38**):
+  Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Gregor
+  hat am 07.09.2026 nachgesehen: **in der `Eudora.ini` stehen sie**. Damit
+  scheitert das **Lesen** — oder die Werte gehen verloren, weil Eudora nur per
+  `pkill` zu beenden ist. Sein Wort dazu: *„vielleicht fehlen die daten, wenn
+  ich eudora per task manager abschließen muß."* **Dieser Befund hängt an E-33
+  und wird erst danach gemessen**; vorher ist jede Aussage dazu wertlos
 - **Die untere Statuszeile mit Reitern für die offenen Fenster fehlt**
   (**Kriterium 8**, halb). Das Menü *Window* listet sie („1 In", „2 Out"), die
   Leiste am unteren Fensterrand bildet die Ersatzschicht `OTShim` nicht nach.
-  Gregors Frage: *„kann man die untere zeile (status) immer anzeigen lassen?"*
-- Meldung **„Encountered an improper argument"** beim Anzeigen mancher
-  Nachrichten — MFCs Text für `CInvalidArgException`, kommt also nicht aus
-  Eudora. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
+  *„kann man die untere zeile (status) immer anzeigen lassen?"*
+- Meldung **„Encountered an improper argument"** auch beim Anzeigen mancher
+  Nachrichten. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
   behoben), eine zweite ist mit E-34 abgefangen. Offen bleibt die Frage, warum
   `GetBtnCount()` 27 meldet und `m_btns[24]` dennoch wirft — das Abfangen
   behandelt das Symptom, nicht die Ursache
+
+> **Drei dieser Befunde schweigen aus demselben Grund.** MFC 6 prüfte mit
+> `ASSERT` und `VERIFY`; in einem Release-Bau ist `ASSERT` weggelassen und
+> `VERIFY(f)` zu `((void)(f))` verkürzt — der Ausdruck wird berechnet, das
+> Ergebnis aber **nicht** geprüft. Wo QUALCOMM einen Fehlschlag so
+> „behandelt" hat, passiert im ausgelieferten Programm lautlos gar nichts:
+> E-37 viermal (behoben), E-38 zweimal, E-33 verwandt. Wer hier weitermacht,
+> sucht auf dem betroffenen Weg zuerst nach `ASSERT(0)` und `VERIFY(`.
+
+### Vorgaben für neu angelegte Konten
+
+`tools/DEudora.ini` kommt mit dem Paket und liegt neben `Eudora.exe`. Eudora
+liest sie in `GetDefaultIniSetting` (`Eudora71/Eudora/rs.cpp:357-385`) **vor**
+den in `EudoraRes.rc` eingebauten Vorgaben. Gesetzt sind vier Werte:
+
+| Schlüssel | Wert | wirkt als |
+|---|---|---|
+| `SSLSendUse` | `2` | *Secure Sockets when Sending* → **Required, Alternate Port** |
+| `SSLReceiveUse` | `2` | dito beim Abruf — die Einstellung, mit der Kriterium 3 belegt ist |
+| `CheckMailByDefault` | `1` | *Check Mail* angehakt |
+| `LeaveMailOnServer` | `1` | Nachrichten **nicht** vom Server löschen |
+
+Die Datei ist die **Originaldatei von QUALCOMM** mit vier Zusatzzeilen: ihr
+Abschnitt `[Mappings]` mit 124 Dateizuordnungen ist unverändert übernommen. Eine
+Fassung mit nur `[Settings]` hätte beim Auspacken über eine bestehende
+Installation die Zuordnungen gelöscht.
+
+**Sie wirkt nur beim Anlegen** eines Kontos (`CPersParams::GetDefaultParams`,
+`PersParams.cpp:195`, gerufen aus `AccountWizard/Src/WizardPropSheet.cpp:137`
+und `ModifyAcctSheet.cpp:46`). Ein **vorhandenes** Konto liest seine Werte aus
+der `Eudora.ini` des Mailverzeichnisses, und dort über
+`CPersonality::GetIniDefaultValue` (`persona.cpp:606-620`) — die kennt die
+`DEudora.ini` **nicht**. Vorhandene Konten stellt man von Hand um:
+`<Dominant>` im Abschnitt `[Settings]`, jedes weitere in `[Persona-<Name>]`
+(`persona.cpp:897-898`, Präfix `:52`).
 
 ### Die Wurzel der Abstürze — gefunden
 

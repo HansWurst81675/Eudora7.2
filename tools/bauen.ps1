@@ -827,27 +827,70 @@ function Hole-NeuesteQuelle {
 #            - dann hat der Bau wirklich versagt.
 #   Hinweis  es ist nur aelter als irgendeine Quelle anderswo - das ist der
 #            Normalfall eines Teilbaus und kein Fehler.
-function Hole-ProjektVerzeichnis {
+function Hole-ProjektDatei {
   param([string]$Artefakt)
   $basis = [System.IO.Path]::GetFileNameWithoutExtension($Artefakt)
+  if ($basis -ieq 'msvcr71') { $basis = 'VC71Bruecke' }
+  return Get-ChildItem -LiteralPath (Join-Path $wurzel 'Eudora71') -Recurse -File -Filter '*.vcxproj' -ErrorAction Ignore |
+         Where-Object { $_.FullName -notmatch 'OT501' -and
+                        [System.IO.Path]::GetFileNameWithoutExtension($_.Name) -ieq $basis } |
+         Select-Object -First 1
+}
+
+function Hole-ProjektVerzeichnis {
+  param([string]$Artefakt)
   # msvcr71.dll entsteht im Projekt VC71Bruecke - der einzige Fall, in dem
   # Dateiname und Projektname auseinanderfallen (Befund B-1).
-  if ($basis -ieq 'msvcr71') { $basis = 'VC71Bruecke' }
-  $treffer = Get-ChildItem -LiteralPath (Join-Path $wurzel 'Eudora71') -Recurse -File -Filter '*.vcxproj' -ErrorAction Ignore |
-             Where-Object { $_.FullName -notmatch 'OT501' -and
-                            [System.IO.Path]::GetFileNameWithoutExtension($_.Name) -ieq $basis } |
-             Select-Object -First 1
+  $treffer = Hole-ProjektDatei -Artefakt $Artefakt
   if ($null -eq $treffer) { return $null }
   return $treffer.DirectoryName
 }
 
 function Hole-NeuesteQuelleFuer {
   param([string]$Artefakt)
-  $verz = Hole-ProjektVerzeichnis -Artefakt $Artefakt
-  if ($null -eq $verz) { return $null }
+
+  # Die Quellen eines Artefakts stehen in SEINER Projektdatei, nicht in seinem
+  # Verzeichnis. Bis zum 07.09.2026 hat diese Funktion alle Dateien mit
+  # passender Endung im Projektverzeichnis genommen - und Eudora.vcxproj und
+  # EudoraRes.vcxproj liegen im GLEICHEN Ordner. Eine Aenderung an mainfrm.cpp
+  # machte damit EudoraRes.dll scheinbar veraltet, obwohl die Ressourcen-DLL
+  # nur an .rc und Headern haengt. Ergebnis: "FEHLER EudoraRes.dll ist aelter
+  # als die Quellen des eigenen Projekts", und der Bau war gruen.
+  #
+  # Das war der dritte Fehlalarm aus diesem Werkzeug. Deshalb kommt die Liste
+  # jetzt aus den Include-Angaben der Projektdatei; nur wenn sich daraus keine
+  # Datei ergibt, wird auf den alten Verzeichnisdurchlauf zurueckgefallen.
+  $proj = Hole-ProjektDatei -Artefakt $Artefakt
+  if ($null -eq $proj) { return $null }
+
+  $max = [datetime]'1990-01-01'
+  $gezaehlt = 0
+  try {
+    $xml = [xml](Get-Content -Raw -LiteralPath $proj.FullName)
+    $knoten = $xml.SelectNodes('//*[local-name()="ClCompile" or local-name()="ClInclude" or local-name()="ResourceCompile" or local-name()="Midl"]')
+    foreach ($k in $knoten) {
+      $inc = $k.GetAttribute('Include')
+      if ([string]::IsNullOrWhiteSpace($inc)) { continue }
+      $p = Join-Path $proj.DirectoryName $inc
+      if (Test-Path -LiteralPath $p -PathType Leaf) {
+        $gezaehlt++
+        $t = (Get-Item -LiteralPath $p).LastWriteTime
+        if ($t -gt $max) { $max = $t }
+      }
+    }
+  } catch {
+    $gezaehlt = 0
+  }
+
+  # Die Projektdatei selbst zaehlt immer mit.
+  if ($proj.LastWriteTime -gt $max) { $max = $proj.LastWriteTime }
+
+  if ($gezaehlt -gt 0) { return $max }
+
+  # Rueckfall: Verzeichnisdurchlauf wie vorher.
   $endungen = @('.c','.cpp','.cxx','.h','.hpp','.inc','.rc','.rc2','.idl','.def','.vcxproj','.props')
   $max = [datetime]'1990-01-01'
-  Get-ChildItem -LiteralPath $verz -Recurse -File -ErrorAction Ignore |
+  Get-ChildItem -LiteralPath $proj.DirectoryName -Recurse -File -ErrorAction Ignore |
     Where-Object {
       ($endungen -contains $_.Extension.ToLowerInvariant()) -and
       ($_.FullName -notmatch '[\\/](Bin|Lib|Build|ResBuild|[.]vs)[\\/]')
