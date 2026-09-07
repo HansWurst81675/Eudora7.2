@@ -184,27 +184,46 @@ Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt (**E-6**).
 ### D3a · Die neun Zeigerstellen aus X-3 beheben — **braucht einen Bau**
 
 Prüfung vorhanden, Zugriff danach ungeschützt, kein erkennbarer Grund, warum der
-Zeiger dort belegt sein müsste. Nach Dringlichkeit:
+Zeiger dort belegt sein müsste. **Neu gemessen am 07.09.2026** mit
+`perl tools/suche-zeiger.pl <datei> …`; der Funktionsname steht dabei, weil die
+Zeilennummern verrutschen (bei `headervw.cpp` allein um 34, seit E-32).
 
-1. **`EuImap/src/ImapMailbox.cpp:1637` → `:1659`** (`pImapCommand`) — der Block
-   des Wächters ist `if (!pImapCommand) { ASSERT(0); … }` **ohne `return`**. Im
-   **Release** entfällt das `ASSERT`, dann läuft es weiter und greift auf den
-   Nullzeiger zu. Der ernsteste der neun.
-2. **`Eudora/POPSession.cpp:896` → `:905`** (`pDiskHost`) — auf dem Abrufpfad.
-3. `EuImap/src/ImapChecker.cpp:945` → `:953` (`m_pTaskInfo`)
-4. `EuImap/src/ImapMailbox.cpp:1022` → `:1051` (`pAccount`)
-5. `EuImap/src/imapgets.cpp:735` → `:743` (`m_pAccount`)
-6. `Eudora/TocFrame.cpp:3968` → `:3973` (`pTocDoc`)
-7. `Eudora/headervw.cpp:546` → `:551` (`pField`)
-8. `Eudora/PgEmbeddedObject.cpp:276` → `:303` (`pView`)
-9. `AccountWizard/Src/WizardImportPage.cpp:379` → `:420` (`pChild`)
+| # | Zeiger | Funktion | Prüfung → Zugriff |
+|---|---|---|---|
+| 1 | `pDiskHost` | `CPOPSession::DoReconcileUIDLInfo_` (`Eudora/POPSession.cpp`) | :896 → :905 — auf dem **Abrufpfad**, deshalb zuerst |
+| 2 | `m_pTaskInfo` | `CImapChecker::DownloadNewMessagesToTmpTocMT` (`EuImap/src/ImapChecker.cpp`) | :945 → :953 |
+| 3 | `m_pAccount` | `CImapLogin::Login` (`EuImap/src/imapgets.cpp`) | :735 → :743 |
+| 4 | `pTocDoc` | `CTocFrame::OnClose` (`Eudora/TocFrame.cpp`) | :3968 → :3973 |
+| 5 | `pField` | `CHeaderView::OnInitialUpdate` (`Eudora/headervw.cpp`) | :580 → :585 |
+| 6 | `pAccount` | `CImapMailbox::OpenOnDisplay` (`EuImap/src/ImapMailbox.cpp`) | :1022 → :1051 |
+| 7 | `pView` | `PgBindToObject` (`Eudora/PgEmbeddedObject.cpp`) | :276 → :303 |
+| 8 | `pChild` | `CWizardImportPage::CopySettings` (`AccountWizard/Src/WizardImportPage.cpp`) | :403 → :444 |
+| 9 | `pImapCommand` | `EuImap/src/ImapAccount.cpp` | :3152 → :3202 |
 
 Die Behebung ist jeweils dieselbe Form: die Prüfung mitziehen (`if (p && …)`)
-oder früh aussteigen. Drei weitere Treffer sind unklar und brauchen ein
-menschliches Urteil (`ImapAccount.cpp:3152`, `CompMessageFrame.cpp:644`,
-`StatMng.cpp:2399`).
+oder früh aussteigen.
 
-**Nummer 9 ist nicht der Assistenten-Absturz** — der ist E-25, siehe oben. Die
+> **Berichtigung (07.09.2026).** Als Nummer 1 und *„der ernsteste der neun"*
+> stand hier: *„`EuImap/src/ImapMailbox.cpp:1637` → `:1659` (`pImapCommand`) —
+> der Block des Wächters ist `if (!pImapCommand) { ASSERT(0); … }` **ohne
+> `return`**. Im Release entfällt das `ASSERT`, dann läuft es weiter und greift
+> auf den Nullzeiger zu."* **Das ist falsch.** Nachgesehen in
+> `CImapMailbox::CheckMail`: der Block endet mit `return E_FAIL;`, nach dem
+> Wächter ist der Zeiger also belegt.
+>
+> Es ist ein **Fehlalarm von `suche-zeiger.pl`**: bei einem **negativen**
+> Wächter (`if (!p)`) sucht das Werkzeug das `return` nur in den nächsten sechs
+> Zeilen, hier steht es fünfzehn Zeilen weiter. Das ist eine vierte
+> Fehlerklasse neben den drei, die X-1 schon abgestellt hat, und sie gehört ins
+> **Werkzeug**, nicht in diese Liste.
+>
+> Ebenfalls hier gestanden: drei *„unklare"* Treffer, `ImapAccount.cpp:3152`,
+> `CompMessageFrame.cpp:644` und `StatMng.cpp:2399`. Am 07.09.2026 nachgemessen
+> melden `CompMessageFrame.cpp` und `StatMng.cpp` **nichts** mehr;
+> `ImapAccount.cpp:3152` ist ein gewöhnlicher positiver Wächter und steht jetzt
+> als Nummer 9 in der Liste.
+
+**Nummer 8 ist nicht der Assistenten-Absturz** — der ist E-25, siehe oben. Die
 Stelle bleibt trotzdem zu härten.
 
 ---
@@ -213,12 +232,21 @@ Stelle bleibt trotzdem zu härten.
 
 ### E1 · `FloatControlBarInMDIChild` ist ein leerer Rumpf (**A-1**)
 
-`WazooBarMgr.cpp:377-400` dockt danach das Adressbuch an, schickt
-`ID_SEC_MDIFLOAT` (wirkungslos) und ruft `GetParentFrame()` — das liefert dann
-**das Hauptfenster** statt eines `QCControlBarWorksheet`. Im Debug greift
-`ASSERT_KINDOF`, **im Release läuft `MoveWindow` auf das Hauptfenster**.
+`CWazooBarMgr::CreateNewWazooBar` (`WazooBarMgr.cpp`, heute Zeile 254) und
+`CWazooBarMgr::SetDefaultWazooBarState` (heute Zeile 424) docken die Leiste an
+und schicken danach `ID_SEC_MDIFLOAT`. Der Befehl läuft ins Leere:
+`SECMDIFrameWnd::FloatControlBarInMDIChild` ist bewusst ohne Wirkung, weil MFC
+kein Gegenstück dafür hat. Die Leiste bleibt angedockt, und `GetParentFrame()`
+liefert weiterhin **das Hauptfenster** statt eines `QCControlBarWorksheet`. Im
+Debug greift `ASSERT_KINDOF`, **im Release liefe `MoveWindow` auf das
+Hauptfenster** — beide Stellen sind deshalb seit Befund **E-4** ausdrücklich
+abgesichert; der Kommentar dazu steht im Quelltext daneben.
 Der größte verbliebene Rest im Erscheinungsbild, dazu die Splitter
 (`SECDockBar::AddSplitter` wird nie gerufen).
+
+> **Berichtigung (07.09.2026).** Hier stand `WazooBarMgr.cpp:377-400` als
+> Fundstelle. Dieser Bereich ist **vollständig auskommentiert** — jede Zeile
+> beginnt mit `//FORNOW`. Die lebenden Stellen sind die beiden oben genannten.
 
 ### E2 · Der größte Eingriff an `OTShim.cpp` hat keinen Test (**PR-2**)
 
@@ -228,7 +256,9 @@ Verhalten (`CalcDynamicLayout(0, LM_HORZDOCK) == 32767`).
 
 ### E3 · `SetControlBarWidthsInRow` ist noch leer
 
-`OTShim.cpp:2244`, und `OnSizeParent` (`:3276`) reicht noch durch.
+`SECDockBar::SetControlBarWidthsInRow` in `Eudora71/OTShim/OTShim.cpp` (heute
+Zeile 2245) hat einen leeren Rumpf, und `SECDockBar::OnSizeParent` (heute
+Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
 
 ---
 
@@ -244,10 +274,12 @@ Verhalten (`CalcDynamicLayout(0, LM_HORZDOCK) == 32767`).
 - **Toter Include-Pfad** `..\OpenSSL\inc32` in `QCSocket.vcxproj:60` und das
   `OpenSSL`-Projekt in der Solution: gegen `libeay32.lib`/`ssleay32.lib` linkt
   kein Projekt mehr. Beides kann weg.
-- **`Releases/PAKETE.md` hinkt hinterher** — der jüngste dort geführte Abschnitt
-  ist 1.0.3, ausgeliefert ist 1.0.10. Wer das nächste Paket schnürt, trägt die
-  Lücke nach. Weitere überholte Stellen in anderen `.md` stehen in
-  [Befunde/LEKTOR.md](Befunde/LEKTOR.md).
+- **`Releases/PAKETE.md` hinkt hinterher** — geführt sind dort 1.0.1, 1.0.2,
+  1.0.3 und 1.0.18; **1.0.4 bis 1.0.17 fehlen** (Mangel **M-4**). Wer das
+  nächste Paket schnürt, trägt seinen Abschnitt gleich mit ein. Weitere
+  überholte Stellen in anderen `.md` stehen in
+  [Befunde/LEKTOR.md](Befunde/LEKTOR.md) und
+  [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md).
 
 ---
 
@@ -302,3 +334,14 @@ Verhalten (`CalcDynamicLayout(0, LM_HORZDOCK) == 32767`).
     Schranke dazu** — ein Werkzeug mit Rückgabewert, eingehängt im Hook, und
     einen Testfall in einer Sammlung, der beweist, dass sie greift *und* dass sie
     nicht grundlos anschlägt. Beides gehört in denselben Commit wie die Regel.
+11. **Die Doku gehört in denselben Commit wie die Änderung.** Gregor am
+    07.09.2026: *„ich hasse es, wenn in den dokus falsche oder veraltete infos
+    und werte stehen. das muss immer parallel gleich erledigt werden, klar?"*
+    Wer einen Befund behebt, zieht `BEFUNDE.md`, `CHANGELOG.md` und, wenn der
+    Stand sich ändert, `ZIEL.md` mit. Die Schranke dazu ist
+    `perl tools/doku-pruefen.pl`; sie läuft im `pre-commit`-Hook, sobald eine
+    `.md`, `VERSION` oder `Eudora71/Version.h` mit im Commit ist (Befund L-7).
+12. **Zahlen und Fundstellen werden gemessen, nicht abgeschrieben.** Jede Zahl
+    in der Doku braucht den Befehl, mit dem man sie nachzählt, daneben. Eine
+    Zahl, die niemand pflegt, ist schlimmer als keine (Lehre L-6.10). Wo eine
+    Zeilennummer unvermeidlich ist, gehört der **Funktionsname** dazu.
