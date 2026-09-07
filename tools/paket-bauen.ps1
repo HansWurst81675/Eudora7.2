@@ -159,6 +159,15 @@ Nimm (Join-Path $PSScriptRoot 'paket-pruefen.ps1')  'paket-pruefen.ps1'
 # paket-pruefen.ps1 hat es gemeldet und damit seinen Zweck erfuellt. Damit es
 # nicht wiederkommt, kommt er jetzt aus tools\ statt aus der Grundlage.
 Nimm (Join-Path $PSScriptRoot 'Eudora starten.cmd') 'Eudora starten.cmd'
+# Vorgaben fuer NEUE Konten. Eudora liest DEudora.ini aus dem Verzeichnis der
+# EXE (SetupINIFilename, Eudora71\Eudora\rs.cpp:1359-1368) und nimmt die Werte
+# dort VOR den eingebauten Vorgaben aus EudoraRes.rc (GetDefaultIniSetting,
+# rs.cpp:357-385). Ohne diese Datei legt der Kontoassistent jedes Konto mit
+# "If Available, STARTTLS" an und OHNE "Leave mail on server" - dann loescht
+# Eudora die abgeholten Nachrichten auf dem Server. Gregor am 07.09.2026: "zum
+# testen ist es wichtig, sonst werden die mails abgerufen und geloescht, wenn
+# ich nicht dran denke."
+Nimm (Join-Path $PSScriptRoot 'DEudora.ini') 'DEudora.ini'
 
 $liesmich = Join-Path $wurzel 'Releases\1.0.3\LIESMICH.txt'
 if (Test-Path -LiteralPath $liesmich) {

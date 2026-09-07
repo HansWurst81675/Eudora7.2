@@ -614,6 +614,34 @@ if (Test-Path -LiteralPath $starter -PathType Leaf) {
   Write-Host '   Eudora starten.cmd  FEHLT' -ForegroundColor Red
   Melde-Fehler 'Keine "Eudora starten.cmd" im Paket. Ohne sie bekommt Eudora beim ersten Start das Mailverzeichnis nicht uebergeben und legt eine leere Einrichtung an (Befund E-6).'
 }
+
+# DEudora.ini - Vorgaben fuer neue Konten. Kein FEHLER, sondern eine WARNUNG:
+# ohne sie laeuft Eudora, aber jedes neu angelegte Konto bekommt "If Available,
+# STARTTLS" statt "Required, Alternate Port" und loescht die abgeholten
+# Nachrichten auf dem Server, weil "Leave mail on server" aus ist. Gregor am
+# 07.09.2026: "zum testen ist es wichtig, sonst werden die mails abgerufen und
+# geloescht, wenn ich nicht dran denke." Geprueft wird auch der INHALT - eine
+# leere oder falsch gefuellte Datei ist so schlecht wie keine.
+$vorgaben = Join-Path $Paket 'DEudora.ini'
+if (Test-Path -LiteralPath $vorgaben -PathType Leaf) {
+  $soll = @{ 'SSLSendUse' = '2'; 'SSLReceiveUse' = '2'; 'CheckMailByDefault' = '1'; 'LeaveMailOnServer' = '1' }
+  $text = Get-Content -Raw -LiteralPath $vorgaben
+  $fehlend = @()
+  foreach ($k in ($soll.Keys | Sort-Object)) {
+    if ($text -notmatch ('(?m)^\s*' + [regex]::Escape($k) + '\s*=\s*' + [regex]::Escape($soll[$k]) + '\s*$')) {
+      $fehlend += ('{0}={1}' -f $k, $soll[$k])
+    }
+  }
+  if ($fehlend.Count -eq 0) {
+    Write-Host '   DEudora.ini (Kontovorgaben)' -ForegroundColor Green
+  } else {
+    Write-Host ('   DEudora.ini  unvollstaendig: ' + ($fehlend -join ', ')) -ForegroundColor Yellow
+    Melde-Warnung ('DEudora.ini im Paket, aber ohne ' + ($fehlend -join ', ') + '. Neue Konten bekommen dann die eingebauten Vorgaben aus EudoraRes.rc.')
+  }
+} else {
+  Write-Host '   DEudora.ini  FEHLT (Kontovorgaben)' -ForegroundColor Yellow
+  Melde-Warnung 'Keine DEudora.ini im Paket. Jedes neu angelegte Konto bekommt dann "If Available, STARTTLS" statt "Required, Alternate Port" und loescht die abgeholten Nachrichten auf dem Server (Leave mail on server ist aus).'
+}
 Write-Host ''
 
 # ------------------------------------------------ 5. Bekannte Luecken       --
