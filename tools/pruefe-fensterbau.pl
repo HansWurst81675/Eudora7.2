@@ -131,11 +131,14 @@ my @geprueft;
 
 # --- 3. Jeder GetButton-Aufruf prueft das Ergebnis --------------------------
 {
-    my @dateien = qw(
-        Eudora71/Eudora/CompMessageFrame.cpp
-        Eudora71/Eudora/ReadMessageFrame.cpp
-        Eudora71/Eudora/PgDocumentFrame.cpp
-    );
+    # BEFUND E-36: Hier stand eine FESTE Dateiliste (CompMessageFrame,
+    # ReadMessageFrame, PgDocumentFrame). PgCompMsgView.cpp fehlte darin - und
+    # genau dort lagen zwei weitere blinde Zugriffe, die erst Eudoras eigener
+    # Absturzbericht am 07.09.2026 zutage brachte (CMoodMailStatic::GetScore
+    # aus PgCompMsgView::OnTimer). Eine Schranke mit handgepflegter Dateiliste
+    # hat immer genau die Luecke, die man nicht bedacht hat.
+    my @dateien = map { my $x = $_; $x =~ s{^\Q$wurzel\E/}{}; $x }
+                  glob("$wurzel/Eudora71/Eudora/*.cpp");
     my $aufrufe = 0;
     my @ungeprueft;
     for my $rel (@dateien) {
