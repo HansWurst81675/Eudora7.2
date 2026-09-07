@@ -417,6 +417,115 @@ pruefe('!(A && B) ohne Aussprung: Zugriff danach bleibt gemeldet',
     '}',                                                               # 8
   ), [7]);
 
+# --- 18d. Abgeschaltete Praeprozessorbloecke -----------------------------
+# Belegte Fehlalarme, Handpruefung 07.09.2026: PgEmbeddedObject.cpp:246
+# steht zwischen "#if 0" (155) und "#endif" (252),
+# TridentReadMessageView.cpp:1092 in "#ifdef OLDSTUFF" (993).
+pruefe('#if 0 wird nicht uebersetzt, also kein Treffer',
+  text(
+    '#if 0',                                                           # 1
+    'void f()',                                                        # 2
+    '{',                                                               # 3
+    '    CFoo* pItem = hol();',                                        # 4
+    '    if (pItem)',                                                  # 5
+    '    {',                                                           # 6
+    '        pItem->eins();',                                          # 7
+    '    }',                                                           # 8
+    '    pItem->zwei();',                                              # 9
+    '}',                                                               # 10
+    '#endif',                                                          # 11
+  ), []);
+
+pruefe('#ifdef OLDSTUFF wird nicht uebersetzt, also kein Treffer',
+  text(
+    '#ifdef OLDSTUFF',                                                 # 1
+    'void f()',                                                        # 2
+    '{',                                                               # 3
+    '    CFoo* p = hol();',                                            # 4
+    '    if (p)',                                                      # 5
+    '        p->eins();',                                              # 6
+    '    p->zwei();',                                                  # 7
+    '}',                                                               # 8
+    '#endif',                                                          # 9
+  ), []);
+
+# Gegenprobe: der else-Zweig eines abgeschalteten #if WIRD uebersetzt.
+pruefe('der else-Zweig eines #if 0 wird uebersetzt und bleibt gemeldet',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CFoo* p = hol();',                                            # 3
+    '#if 0',                                                           # 4
+    '    p->tot();',                                                   # 5
+    '#else',                                                           # 6
+    '    if (p)',                                                      # 7
+    '        p->eins();',                                              # 8
+    '    p->zwei();',                                                  # 9
+    '#endif',                                                          # 10
+    '}',                                                               # 11
+  ), [9]);
+
+# Gegenprobe: ein gewoehnliches #ifdef bleibt stehen.
+pruefe('gewoehnliches #ifdef wird NICHT ausgeblendet',
+  text(
+    '#ifdef COMMERCIAL',                                               # 1
+    'void f()',                                                        # 2
+    '{',                                                               # 3
+    '    CFoo* p = hol();',                                            # 4
+    '    if (p)',                                                      # 5
+    '        p->eins();',                                              # 6
+    '    p->zwei();',                                                  # 7
+    '}',                                                               # 8
+    '#endif',                                                          # 9
+  ), [7]);
+
+# --- 18e. Aufruf mit Aufruf im Argument ----------------------------------
+# Belegter Fehlalarm, Handpruefung 07.09.2026: mime.cpp:628. Geprueft wird
+# innerMS, der Zeiger innerHD steht nur als Argument in einem Aufruf, der
+# selbst einen Aufruf im Argument hat.
+pruefe('Argument in einem Aufruf mit verschachtelten Aufrufen',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    if (!(innerMS = DEBUG_NEW MIMEState(ms->GetLineReader(), MimeStates.GetSize(), innerHD)) || !innerMS->m_Reader)',  # 3
+    '        return;',                                                 # 4
+    '    if (Vergleich(IDS_A, innerHD->contentType))',                 # 5
+    '        return;',                                                 # 6
+    '}',                                                               # 7
+  ), []);
+
+# --- 18f. positiver Waechter, dessen else-Zweig herausspringt ------------
+# Belegter Fehlalarm, Handpruefung 07.09.2026: compmsgd.cpp:2247-2250.
+pruefe('positiver Waechter mit herausspringendem else-Zweig',
+  text(
+    'CDoc* f()',                                                       # 1
+    '{',                                                               # 2
+    '    NewCompDoc = (CCompMessageDoc*)NewChildDocument(T);',         # 3
+    '    if (NewCompDoc)',                                             # 4
+    '        NewCompDoc->InitializeNew(a, b, c);',                     # 5
+    '    else',                                                        # 6
+    '        return (NewCompDoc);',                                    # 7
+    '',                                                                # 8
+    '    NewCompDoc->ApplyStationery(&d, e);',                         # 9
+    '    return NewCompDoc;',                                          # 10
+    '}',                                                               # 11
+  ), []);
+
+# Gegenprobe: ohne Aussprung im else bleibt der Treffer stehen.
+pruefe('positiver Waechter mit else OHNE Aussprung bleibt gemeldet',
+  text(
+    'void f()',                                                        # 1
+    '{',                                                               # 2
+    '    CFoo* p = hol();',                                            # 3
+    '    if (p)',                                                      # 4
+    '        p->eins();',                                              # 5
+    '    else',                                                        # 6
+    '        melde();',                                                # 7
+    '',                                                                # 8
+    '    p->zwei();',                                                  # 9
+    '}',                                                               # 10
+  ), [9]);
+
 # --- 18. while-Waechter --------------------------------------------------
 pruefe('while-Waechter schuetzt seinen Rumpf',
   text(

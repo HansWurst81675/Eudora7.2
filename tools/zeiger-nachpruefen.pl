@@ -115,6 +115,51 @@ sub ausblenden {
 }
 
 # ---------------------------------------------------------------------------
+# Abgeschaltete Praeprozessorbloecke leeren.
+#
+# BELEGTER FEHLALARM (Handpruefung 07.09.2026):
+#   PgEmbeddedObject.cpp:246  liegt zwischen "#if 0" (155) und "#endif" (252)
+#   TridentReadMessageView.cpp:1092 liegt in "#ifdef OLDSTUFF" (993)
+# Beides wird nicht uebersetzt. Ein Treffer darin kostet nur Zeit.
+#
+# Nur die Faelle, die sich OHNE Praeprozessor sicher entscheiden lassen:
+#   #if 0   und   #ifdef <NAME>, wenn <NAME> in der Liste unten steht.
+# Alles andere bleibt stehen - lieber ein Treffer zuviel als ein
+# uebersehener, und ein halber Praeprozessor waere schlimmer als keiner.
+# ---------------------------------------------------------------------------
+my @AUS = qw(OLDSTUFF NEVER _MAC MAC_COMPILE WIN16_COMPILE);
+
+sub totes_ausblenden {
+    my (@z) = @_;
+    my $aus = qr/^\s*#\s*if\s+0\b|^\s*#\s*ifdef\s+(?:@{[ join '|', @AUS ]})\s*$/;
+    my $i = 0;
+    while ($i <= $#z) {
+        if ($z[$i] =~ $aus) {
+            my $tiefe = 1;
+            $z[$i] = '';
+            my $k = $i + 1;
+            while ($k <= $#z && $tiefe > 0) {
+                if    ($z[$k] =~ /^\s*#\s*if(?:def|ndef)?\b/) { $tiefe++ }
+                elsif ($z[$k] =~ /^\s*#\s*endif\b/)           { $tiefe-- }
+                elsif ($z[$k] =~ /^\s*#\s*el(?:se|if)\b/ && $tiefe == 1) {
+                    # der ANDERE Zweig wird uebersetzt - ab hier stehenlassen
+                    $z[$k] = '';
+                    $i = $k + 1;
+                    $tiefe = 0;
+                    last;
+                }
+                $z[$k] = '' if $tiefe > 0;
+                $k++;
+            }
+            $i = $k if $tiefe == 0 && $i < $k;
+            next;
+        }
+        $i++;
+    }
+    return @z;
+}
+
+# ---------------------------------------------------------------------------
 # Funktionsrumpf finden: jede Klammer, die auf Tiefe 0 aufgeht.
 # Liefert Paare [erste_zeile, letzte_zeile], 0-basiert.
 # ---------------------------------------------------------------------------
@@ -180,8 +225,18 @@ sub argumente_entfernen {
         # Punkt, einem Pfeil oder zwei Doppelpunkten stehen -
         # MemDC.CreateCompatibleDC(pDC), CWinApp::IsIdleMessage(pMsg).
         # Genau daran ist der erste Versuch gescheitert.
+        #
+        # Der Aufruf wird zu "Name@" - OHNE Klammern. Der zweite Versuch
+        # hatte "Name()" eingesetzt, und damit lief die Schleife sofort in
+        # den Stillstand: aus "f()" wird wieder "f()", die Klammern blieben
+        # stehen, und ein aeusserer Aufruf mit einem Aufruf im Argument
+        # wurde nie geleert. Belegt an mime.cpp:628
+        #   if (!(innerMS = ... MIMEState(ms->GetLineReader(), ..., innerHD)))
+        # Dort blieb innerHD stehen und wurde als Pruefung gelesen, obwohl
+        # geprueft wird innerMS. Mit "Name@" laeuft die Schleife durch:
+        # GetLineReader@ , GetSize@ , dann MIMEState@ - innerHD ist weg.
         $s =~ s{([A-Za-z_]\w*)\s*\(([^()]*)\)}
-               { $SCHLUESSELWORT{$1} ? "$1($2)" : "$1()" }ge;
+               { $SCHLUESSELWORT{$1} ? "$1($2)" : "$1\@" }ge;
         last if $s eq $vorher;
     }
     return $s;
@@ -233,7 +288,7 @@ sub pruefung_art {
         }
     }
 
-    return 'negativ' if $bedingung =~ /!\s*\Q$name\E(?![\w:.\[(>-])/;
+    return 'negativ' if $bedingung =~ /!\s*\Q$name\E(?![\w:.\[(>\@-])/;
     return 'negativ' if $bedingung =~ /(?<![\w:.>])\Q$name\E\s*==\s*(?:NULL|nullptr|0)(?![\w.])/;
     return 'positiv' if $bedingung =~ /(?<![\w:.>])\Q$name\E\s*!=\s*(?:NULL|nullptr|0)(?![\w.])/;
     # nackter Name als Wahrheitswert
@@ -388,6 +443,44 @@ sub elsezweig {
 }
 
 # ---------------------------------------------------------------------------
+# Klammertiefe je Zeile (Tiefe NACH der Zeile).
+#
+# BELEGTER FEHLER IN DIE ANDERE RICHTUNG (07.09.2026): die erste Fassung
+# behandelte "ab hier ist der Zeiger geprueft" als Marke fuer den REST DER
+# FUNKTION. Damit verschwand StatMng.cpp:1574 - ein von Hand belegter
+# echter Treffer. Ursache: in StatMng.cpp steht bei 1524
+#     if (gStatData != NULL) { ... } else { ... return ...; }
+# aber das steckt im Zweig "else if (FileExistsMT(...))" von 1516, waehrend
+# 1574 im GESCHWISTERZWEIG bei 1568 liegt. Ein Aussprung in einem Zweig
+# sagt nichts ueber den anderen.
+# Deshalb reicht eine solche Marke nur bis dahin, wo der Block, in dem der
+# Waechter steht, wieder zugeht.
+# ---------------------------------------------------------------------------
+sub tiefen {
+    my (@z) = @_;
+    my @t; my $d = 0;
+    for my $i (0 .. $#z) {
+        for my $c (split //, $z[$i]) {
+            $d++ if $c eq '{';
+            $d-- if $c eq '}';
+        }
+        $t[$i] = $d;
+    }
+    return @t;
+}
+
+# Bis wohin gilt eine Marke, die auf Zeile $ende gesetzt wurde und im Block
+# der Tiefe $tiefe steht? Bis der Block wieder zugeht - oder bis zum Ende.
+sub reicht_bis {
+    my ($tref, $ende, $bis) = @_;
+    my $d = $tref->[$ende];
+    for my $k ($ende + 1 .. $bis) {
+        return $k - 1 if $tref->[$k] < $d;
+    }
+    return $bis;
+}
+
+# ---------------------------------------------------------------------------
 # Eine Datei (oder einen Text) untersuchen.
 # ---------------------------------------------------------------------------
 sub datei_pruefen {
@@ -398,9 +491,10 @@ sub datei_pruefen {
     }
     $inhalt =~ s/\r\n/\n/g;
     my @roh = split /\n/, $inhalt, -1;
-    my @z   = split /\n/, ausblenden($inhalt), -1;
+    my @z   = totes_ausblenden(split /\n/, ausblenden($inhalt), -1);
     my @treffer;
 
+    my @tiefe = tiefen(@z);
     for my $g (rumpfgrenzen(@z)) {
         my ($von, $bis) = @$g;
         next if $bis - $von < 2;
@@ -428,7 +522,6 @@ sub datei_pruefen {
             next unless @pruef;
 
             my @schutz;
-            my $sicher_ab;
             for my $p (@pruef) {
                 my ($zi, $art) = @$p;
                 my ($ende, $hat_else, $else_ende) = schutzbereich(\@z, $zi, $bis);
@@ -436,13 +529,30 @@ sub datei_pruefen {
                 push @schutz, [$zi, bedingungsende(\@z, $zi, $bis)];
                 if ($art eq 'positiv') {
                     push @schutz, [$zi, $ende];
+                    # BELEGTER FEHLALARM (Handpruefung 07.09.2026):
+                    #   compmsgd.cpp:2247  if (NewCompDoc)
+                    #   compmsgd.cpp:2249      else
+                    #   compmsgd.cpp:2250          return (NewCompDoc);
+                    # Springt der ELSE-Zweig eines POSITIVEN Waechters heraus,
+                    # ist der Zeiger danach belegt - genau umgekehrt zum
+                    # negativen Waechter, der in seinem EIGENEN Rumpf
+                    # herausspringt.
+                    if ($hat_else) {
+                        my $raus = 0;
+                        for my $k ($ende .. $else_ende) {
+                            $raus = 1 if $z[$k] =~ /\b(?:return|break|continue|goto|throw|exit)\b/;
+                        }
+                        push @schutz, [$else_ende, reicht_bis(\@tiefe, $else_ende, $bis)] if $raus;
+                    }
                 }
                 else {
                     my $raus = 0;
                     for my $k ($zi .. $ende) {
                         $raus = 1 if $z[$k] =~ /\b(?:return|break|continue|goto|throw|exit)\b/;
                     }
-                    if ($raus && (!defined $sicher_ab || $ende < $sicher_ab)) { $sicher_ab = $ende }
+                    # "ab hier geprueft" gilt nur bis der umgebende Block zugeht,
+                    # nicht bis zum Ende der Funktion - siehe reicht_bis.
+                    push @schutz, [$ende, reicht_bis(\@tiefe, $ende, $bis)] if $raus;
                     push @schutz, [$zi, $else_ende] if $hat_else;
                 }
             }
@@ -452,7 +562,6 @@ sub datei_pruefen {
                 next if $i <= $erste;
                 next unless hat_zugriff($z[$i], $name);
                 next if ist_diagnose($z[$i]);
-                next if defined $sicher_ab && $i > $sicher_ab;
                 my $drin = 0;
                 for my $s (@schutz) { $drin = 1 if $i >= $s->[0] && $i <= $s->[1] }
                 next if $drin;
