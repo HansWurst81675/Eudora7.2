@@ -407,10 +407,45 @@ LPCSTR	szSection )
 	// unveraendert - dies ist eine Spurmarke, keine Behebung.
 	{
 		CString strAnfang;
+		// BEFUND E-43, dritte Marke (08.09.2026). Die zweite Marke hat den
+		// Fall entschieden: gemessen wurde
+		//
+		//   this=0125D888  m_btns@0125DA70  GetBtnCount=24/24  m_btns.GetSize=0/0
+		//
+		// Vier Messungen, zwei stabile Werte, dasselbe Objekt, dieselbe
+		// Adresse. Damit ist ein Wettlauf und ein gerade freigegebenes
+		// Objekt AUSGESCHLOSSEN (letzteres auch unabhaengig davon: die
+		// Marke E-46 im Destruktor erscheint erst NACH diesem Punkt).
+		//
+		// Bleibt: der uebersetzte Code liest an zwei verschiedenen
+		// Adressen, obwohl GetBtnCount() woertlich "return
+		// (int)m_btns.GetSize()" ist (OTShim_Werkzeugleiste.h:744). Diese
+		// Marke sagt, WELCHE Adressen. CPtrArray erbt von CObject; die
+		// Aufteilung auf 32 Bit ist
+		//
+		//   +0  vptr        +4  m_pData     +8  m_nSize
+		//   +12 m_nMaxSize  +16 m_nGrowBy
+		//
+		// Steht die 24 in einem dieser Woerter, ist die Aufteilung
+		// verschoben und die Differenz sagt um wieviel. Steht sie in
+		// keinem, kommt sie nicht aus m_btns - dann ist GetBtnCount() im
+		// uebersetzten Code etwas anderes als die Kopfdatei behauptet.
+		const int nZaehler1 = (int)GetBtnCount();
+		const int nGroesse1 = (int)m_btns.GetSize();
+		const int nZaehler2 = (int)GetBtnCount();
+		const int nGroesse2 = (int)m_btns.GetSize();
+		const int * const pRoh = (const int *) (const void *) &m_btns;
 		strAnfang.Format(
-			_T("E-33 SaveCustomInfo: Abschnitt=%s GetBtnCount=%d"),
+			_T("E-43 SaveCustomInfo: Abschnitt=%s  this=%p  m_btns@%p  ")
+			_T("Versatz=%d  GetBtnCount=%d/%d  m_btns.GetSize=%d/%d  ")
+			_T("roh[0..4]=%d,%d,%d,%d,%d"),
 			(szSection != NULL) ? szSection : "(NULL)",
-			(int)GetBtnCount());
+			(void*)this,
+			(void*)&m_btns,
+			(int)((const char*)(const void*)&m_btns - (const char*)(const void*)this),
+			nZaehler1, nZaehler2,
+			nGroesse1, nGroesse2,
+			pRoh[0], pRoh[1], pRoh[2], pRoh[3], pRoh[4]);
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strAnfang);
 	}
 
@@ -420,6 +455,38 @@ LPCSTR	szSection )
 	{
 	for( iCurrentButton = 0; iCurrentButton < GetBtnCount(); iCurrentButton ++ )
 	{	
+		// E-33, feinere Spurmarke: die Einfassung um die ganze Schleife sagt
+		// nur "Ausnahme im Durchlauf N", nicht WO. Hier wird der reine
+		// Feldzugriff vom Rumpf getrennt: wirft schon m_btns[i], dann ist das
+		// Feld selbst nicht das, wofuer der Code es haelt; wirft erst der
+		// Rumpf, liegt es an Lookup/Format/WriteProfileString.
+		SECStdBtn* pKnopf = NULL;
+		TRY
+		{
+			pKnopf = m_btns[ iCurrentButton ];
+		}
+		CATCH_ALL(eZugriff)
+		{
+			TCHAR szG[256]; szG[0] = _T('\0');
+			if (eZugriff != NULL) eZugriff->GetErrorMessage(szG, 256);
+			CString strM;
+			strM.Format(
+				_T("E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[%d] wirft (GetSize=%d) - Grund: %s"),
+				(int)iCurrentButton, (int)m_btns.GetSize(),
+				(szG[0] != _T('\0')) ? szG : _T("(ohne Text)"));
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strM);
+			THROW_LAST();
+		}
+		END_CATCH_ALL
+
+		if (iCurrentButton == 0)
+		{
+			CString strM;
+			strM.Format(_T("E-33 SaveCustomInfo: m_btns[0] = %p, Feldzugriff hat NICHT geworfen"),
+				(void*)pKnopf);
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strM);
+		}
+
 		if( ( m_btns[ iCurrentButton ]->m_ulData != 0 ) &&
 			( m_btns[ iCurrentButton ]->m_nID != m_btns[ iCurrentButton ]->m_ulData ) )
 		{

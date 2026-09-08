@@ -1,8 +1,11 @@
 ---
 name: widerlegte-vermutungen-aufschreiben
 description: Jede widerlegte Vermutung mit ihrer Messung in die Befunddatei; das Ausschlussverfahren fuehrt zur Zeile
-metadata:
+metadata: 
+  node_type: memory
   type: erfolg
+  originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
+  modified: 2026-09-08T08:01:04.444Z
 ---
 
 # Widerlegte Vermutungen aufschreiben — so wird aus einem Verdacht eine Zeile
@@ -78,6 +81,33 @@ drei davon lösen von selbst aus, das vierte noch nicht:
    Rückgabewert**, kein Merksatz. Ein Werkzeug, das nur mahnt, wird überlesen;
    eines im pre-commit-Hook nicht.
 
+## Nachtrag 08.09.2026: aufgeschrieben, aber nicht gelesen
+
+PRUEFER hat am 07.09.2026 um 12:59 die ODR-Vermutung zu E-34 widerlegt — zwei
+`SECCustomToolBar`-Definitionen (`tbarcust.h:73` gegen
+`OTShim_Werkzeugleiste.h:693`) können nicht beide wirken, weil die Ersatzschicht
+`__TBARCUST_H__` setzt. Ich habe die Widerlegung selbst nach
+`Befunde/BEENDEN.md` geschrieben, sie steht dort in **Zeile 553**.
+
+Am 08.09.2026 um 06:34 habe ich dieselbe Vermutung neu aufgestellt („Zwei
+Definitionen derselben Klasse — die Originalkopfdatei und unsere
+Ersatzschicht") und vier Minuten damit verbracht, sie ein zweites Mal zu
+widerlegen. Aufgeschrieben war sie; gelesen habe ich sie nicht.
+
+**Also gehört zu Punkt 2 der Lesevorgang:**
+
+- **Vor dem ersten Versuch an einem Befund wird sein Abschnitt in
+  `Befunde/<NAME>.md` geöffnet** — nicht die Zusammenfassung im Chat, sondern
+  die Datei. Der Chat überlebt kein Abschalten, und mein eigener Kontext
+  vergisst schneller als die Datei ([[wissen-gehoert-in-dateien]]).
+- **Widerlegungen gehören an den Anfang des Abschnitts**, nicht als Nachtrag ans
+  Ende. Was unten steht, wird beim Überfliegen nicht gelesen — hier stand es in
+  Zeile 553 von 557.
+- **Eine Widerlegung, die von einem Agenten kommt, wird mit seinem Namen und
+  seiner Messung notiert.** Sie ist dann zitierbar und muss nicht nachgemessen
+  werden ([[mannschaft-fuehren]]).
+
 Siehe [pruefen-statt-vermuten](pruefen-statt-vermuten.md),
-[fehlerklassen-abstellen](fehlerklassen-abstellen.md) und
+[fehlerklassen-abstellen](fehlerklassen-abstellen.md),
+[zwei-werte-in-eine-ausgabe](zwei-werte-in-eine-ausgabe.md) und
 [wissen-gehoert-in-dateien](wissen-gehoert-in-dateien.md).

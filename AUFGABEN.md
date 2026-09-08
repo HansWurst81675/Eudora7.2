@@ -37,10 +37,21 @@ der zweiten Stufe; alles andere ist Ausstattung.
 alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung:"* — und
 die Meldung ist **„Encountered an improper argument"**. Daraus folgt dreierlei:
 
-1. Das Beenden **beginnt**. Kreuz und Alt-F4 gehen über `WM_SYSCOMMAND`/
-   `SC_CLOSE` in dasselbe `CMainFrame::OnClose`; dass sie dasselbe Symptom
-   zeigen wie *File → Exit*, schließt den Menüweg und damit
-   `CFileBrowseView::OnAppExit` (`FileBrowseView.cpp:2218`) **aus**.
+1. Der `WM_COMMAND`-Behandler ist ausgeschlossen — und **nur der.**
+   `CFileBrowseView::OnAppExit` (`FileBrowseView.cpp:2218`) kommt damit nicht
+   mehr in Frage.
+   **Berichtigung von PRUEFER am 07.09.2026** (`Befunde/PRUEFER-4.md`): meine
+   erste Folgerung *„also liegt der Wurf in `OnClose`/`CloseDown`"* **trägt
+   nicht**. Kreuz und Alt-F4 teilen zusätzlich `WM_SYSCOMMAND`/`SC_CLOSE`, den
+   *File → Exit* nicht hat — und dort steht `ENSURE_VALID(pFrameWnd)` in
+   `CFrameWnd::OnSysCommand` (`winfrm.cpp:1112-1114`, selbst nachgelesen):
+   dieselbe Ausnahme, dieselbe Meldung, **vor** jedem `OnClose`. Solange nicht
+   gemessen ist, ob *File → Exit* die Meldung **auch** bringt, sind zwei Wege
+   offen.
+   **Das ist die nächste Frage an Gregor, und sie kostet einen Klick:** bringt
+   *File → Exit* die Meldung, oder passiert dort lautlos nichts? Kommt sie auch
+   dort, ist der gemeinsame Grund `OnClose`/`CloseDown`; kommt sie nur bei
+   Kreuz und Alt-F4, ist es `OnSysCommand`.
 2. Der Abbruch ist keine stille FALSE-Rückgabe, sondern eine **geworfene
    Ausnahme**: „Encountered an improper argument" ist MFCs Text für
    `CInvalidArgException`. Damit ist es **dieselbe Fehlerklasse wie E-34** —
@@ -57,13 +68,26 @@ auf `CPtrArray`, `CObArray`, `CMapStringToOb`), ein `ENSURE_VALID`, oder ein
 Index, der aus einer Sammlung kommt. Weil das Fenster nach der Meldung noch da
 ist, muss der Wurf **vor** `pApp->HideApplication()` (`winfrm.cpp:885`) fallen.
 
-**Verdacht:** `QCCustomToolBar::SaveCustomInfo`
-(`Eudora71/Eudora/QCCustomToolBar.cpp:421`, Zugriffe `:423`, `:424`, `:427`,
-`:491`, `:508`) — dieselbe Form wie E-34: Grenze aus `GetBtnCount()`, Zugriff
-über `m_btns[...]`, und MFC 14 führt in `afxcoll.inl:201-217`
-`AfxThrowInvalidArgException()` **auch im Release-Bau** aus. Die Stelle liegt in
-`CloseDown` Stufe 5 (`SaveBarState`) und wird im Betrieb **nur beim Beenden**
-erreicht. **Belegt ist das nicht, behoben ist nichts.**
+**Verdacht, aber falsch begründet:** `QCCustomToolBar::SaveCustomInfo`
+(`Eudora71/Eudora/QCCustomToolBar.cpp:421`). Die Stelle liegt in `CloseDown`
+Stufe 5 (`SaveBarState`) und wird im Betrieb **nur beim Beenden** erreicht —
+das trägt, PRUEFER hat die Kette nachgemessen. **Die Begründung trägt nicht:**
+`GetBtnCount()` **ist** `m_btns.GetSize()` (`OTShim/OTShim_Werkzeugleiste.h:744`),
+wird je Durchlauf neu ausgewertet, und der Rumpf verändert `m_btns` nirgends —
+ein Indexfehler ist dort einfädig nicht möglich. Es ist also **nicht** die
+„E-34-Form mit auseinanderlaufendem Paar". Und `QCChildToolBar::GetButton` hat
+**genau dieselbe** Absicherung (`QCChildToolBar.cpp:120`) und hat trotzdem
+geworfen. **Belegt ist nichts, behoben ist nichts.**
+
+**Der Widerspruch dahinter ist der eigentliche Kern und weiter offen:** aus
+einem unveränderten `CPtrArray` kann „Index 24 von 27" nicht werfen. Es bleiben
+Erklärungen außerhalb der Indexrechnung — ein abgebautes oder falsch
+typisiertes Leistenobjekt, oder ein beschädigter Heap. PRUEFER hat dazu selbst
+zwei Vermutungen geprüft und **verworfen**: einen ODR-Bruch durch zwei
+`SECCustomToolBar`-Definitionen (widerlegt, `OTShim_Werkzeugleiste.h:1436`
+setzt `__TBARCUST_H__` und `:53-58` bricht mit `#error` ab) und eine
+Neuanlage des Abschnitts durch `RestorePassInfo` (widerlegt,
+`persona.cpp:1073-1129` berührt nur `m_Passwords` und `::POPPassword`).
 
 **Zwei Vermutungen sind auf dem Weg dahin widerlegt** — nicht wieder aufgreifen:
 `GetWindowPlacement` prüft sein Argument nicht mit `ENSURE`
@@ -73,7 +97,7 @@ nicht erreicht, weil ein MDI-Hauptfenster keine Ansicht hat und
 `pApp->SaveAllModified()` (`winfrm.cpp:874`).
 
 **So wird es belegt — ein Bau, kein Suchen:** Paket schnüren, starten, beenden,
-und die **letzte** `E-33`-Zeile in `eudora.log` lesen. 28 Marken liegen:
+und die **letzte** `E-33`-Zeile in `eudora.log` lesen. 32 Marken liegen:
 `QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
 `GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert, es wird
 nur protokolliert —, `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i` in
@@ -92,7 +116,7 @@ siehe oben) und die Vermutung, eine modale Meldung der Ersatzschicht verdecke
 das Beenden (die modalen `AfxMessageBox` in `OTShim` sind durch
 `OutputDebugString` ersetzt, `tools/pruefe-fensterbau.pl` hält das).
 
-### 2. E-37 — erledigt: ein Konto ließ sich scheinbar nicht löschen
+### 2. E-37 — Anzeige behoben, Ursache offen
 
 **Behoben am 07.09.2026, aber in keinem Paket.** Gregors Nachmessung hat die
 erste Annahme widerlegt: auf die Frage „verschwindet der Eintrag nach einem

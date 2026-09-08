@@ -243,7 +243,7 @@ ein solcher Abschnitt gebraucht wird, lautet der Kopf:
 ## Nach 7.2.0.21 — noch nicht gebaut, noch nicht gepackt
 
 Diese Änderungen liegen im Repo, aber in **keinem** Paket. `Eudora71/Version.h`
-und `VERSION` stehen auf 7.2.0.21 / 1.0.21 (`cat VERSION`,
+und `VERSION` standen damals auf 7.2.0.21 / 1.0.21 (`cat VERSION`,
 `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer daraus ein Paket schnürt,
 setzt beide Nummern vorher hoch, sonst tragen zwei Bauten dieselbe Kennung.
 ```

@@ -3,14 +3,14 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 07.09.2026.** Ausführliche
-> Abschnitte gibt es unten für **1.0.21**, **1.0.18**, **1.0.3**, **1.0.2** und
-> **1.0.1**. Die Pakete **1.0.4 bis 1.0.17** sowie **1.0.19** und **1.0.20**
-> haben hier keinen eigenen Eintrag, obwohl sie gebaut und teilweise
-> veröffentlicht wurden. Der Mangel ist als **M-4** in
+> **Diese Buchführung ist unvollständig — Stand 08.09.2026.** Ausführliche
+> Abschnitte gibt es unten für **1.0.23**, **1.0.22**, **1.0.21**, **1.0.18**,
+> **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis 1.0.17** sowie
+> **1.0.19** und **1.0.20** haben hier keinen eigenen Eintrag, obwohl sie
+> gebaut und teilweise veröffentlicht wurden. Der Mangel ist als **M-4** in
 > [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
 >
-> **Im Repo liegen als ZIP** (`ls Releases/*.zip`, nachgezählt am 07.09.2026):
+> **Im Repo liegen als ZIP** (`ls Releases/*.zip`, nachgezählt am 08.09.2026):
 > nur noch **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`, Baugrundlage für
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.21**
 > (`Eudora72-1.0.21-release.zip`). Alle übrigen ZIPs sind am 07.09.2026
@@ -22,11 +22,8 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `v1.0.14`, `v1.0.15`, `v1.0.18` und `v1.0.21`
 > (`git ls-remote --tags origin`).
 >
-> Der Quellstand ist **7.2.0.21 / Paketnummer 1.0.21**, und das Paket dazu
-> liegt vor. Wer wissen will, was in einem der nicht verzeichneten Pakete
-> steckt, liest `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei.
-> offen.
-
+> Wer wissen will, was in einem der nicht verzeichneten Pakete steckt, liest
+> `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei.
 ## Drei Zählungen, und wie sie zusammenhängen
 
 | Zählung | wo sie steht | wo man sie sieht |

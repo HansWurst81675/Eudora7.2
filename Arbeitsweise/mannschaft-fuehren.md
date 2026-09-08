@@ -109,7 +109,7 @@ Hand am Bildschirm — nur als den, der entscheidet.
 
 **Verstoss am 07.09.2026.** Der Agent BEENDER lief zweimal: erst mit 14
 Spurmarken und `SaveOpenWindows` als Spitzenkandidat, danach — mit einer neuen
-Messung von Gregor — mit 28 Marken und einem anderen Verdaechtigen. In seinem
+Messung von Gregor — mit 32 Marken und einem anderen Verdaechtigen. In seinem
 Arbeitsbaum lagen **gestaged** noch die Doku-Aenderungen des **ersten**
 Durchgangs: `BEFUNDE.md`, `CHANGELOG.md`, `WEITERMACHEN.md` mit „14 Marken" und
 dem ueberholten Kandidaten. Ich habe sie fast uebernommen.

@@ -11,20 +11,18 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
+> **Diese Datei sagt, was jetzt gilt.** Stand **08.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.21** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.23** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.21**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.23**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.21-release.zip`
-> (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`),
-> veröffentlicht als [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21).
-> Die Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.23-release.zip`. Die
+> Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in
 > [Releases/PAKETE.md](Releases/PAKETE.md).
@@ -34,17 +32,27 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf sind belegt (0, 1, 3, 5, 6),
-drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Eudora baut aus
-einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
-Darstellung stimmt weitgehend, Mail wird über TLS abgerufen — und seit dem
-07.09.2026 lässt sich **eine neue Mail schreiben, abschicken und die Antwort
-empfangen**. Gregor hat es bestätigt: *„mail können jetzt abgeschickt werden."*
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — sechs sind belegt
+(0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8).** Eudora baut aus einem
+frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
+Darstellung stimmt weitgehend, Mail wird über TLS abgerufen, eine neue Mail
+lässt sich **schreiben, abschicken und weiterleiten** — und seit dem
+08.09.2026 **beendet sich Eudora sauber**, über *File → Exit*, über **Alt-F4**
+und über das **Kreuz**. Gregor hat beides bestätigt: *„mail können jetzt
+abgeschickt werden."* und *„schließen klappt jetzt."*
 
-**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt, sind zwei Dinge:
-*File → Exit* beendet Eudora nicht (*„beenden geht nicht"* — Kriterium 7), und
-die untere Statuszeile mit den Reitern für offene Fenster fehlt; die offenen
-Fenster stehen nur im *Window*-Menü (Kriterium 8, halb).
+Dazu sind zwei Anforderungen aus [ZIEL.md](ZIEL.md) umgesetzt und von Gregor
+bestätigt: **A-1** (die Vorgaben *Leave mail on server* und *Secure Sockets*
+greifen bei einem **neu angelegten** Konto) und **A-2** (*Task Status* und
+*Task Errors* liegen **waagrecht am unteren Fensterrand** statt senkrecht
+links — *„jetzt ist sie unten, ja"*).
+
+**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: ein gelöschtes
+Konto bleibt in der Liste links stehen, bis Eudora neu startet (**E-37**), die
+im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften*
+(**E-38**), und die untere Leiste zeigt Aufgabenstatus und Aufgabenfehler,
+nicht die Reiter für die offenen Fenster (**Kriterium 8**, halb — die offenen
+Fenster stehen im *Window*-Menü).
 
 Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md); was als
 Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum
@@ -74,14 +82,24 @@ Paket 1.0.21 selbst gemessen.
   aus `CMainFrame::OnClose` heraus, MFC 14 fängt sie in `AfxCallWndProc`,
   `CWinApp::ProcessWndProcException` zeigt die Meldung und liefert 0 — `WM_CLOSE`
   gilt als beantwortet, das Fenster bleibt. Dieselbe Fehlerklasse wie E-34
-- **Ein Konto ließ sich nicht löschen** (**E-37**) — *„löschen der konten geht
-  übrigens auch nicht: auf toFix liste!"* **Behoben am 07.09.2026, aber in
-  keinem Paket.** Gregors Nachmessung hat die erste Annahme widerlegt: *„ja, sie
-  verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die Liste im
-  Fenster blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
+- **Ein Konto ließ sich scheinbar nicht löschen** (**E-37**) — *„löschen der
+  konten geht übrigens auch nicht: auf toFix liste!"* **Nur die Anzeige ist
+  behoben, die Ursache ist offen — und in keinem Paket.** Gregors Nachmessung:
+  *„ja, sie verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die
+  Liste blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
   abgesichert war das nur mit `ASSERT`. Jetzt wird die Liste über
-  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. Offen bleibt,
-  **warum** `FindItem` den Eintrag nicht findet
+  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. **Zwei Dinge
+  bleiben:** *warum* `FindItem` den Eintrag nicht findet, und das Löschen der
+  **aktuell benutzten** Persönlichkeit (**E-39** unten). Wer daraus liest
+  „Löschen ist gefixt", liest zu viel
+- **Wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt
+  teilweise wiederentstehen** (**E-39**, nicht behoben, nicht am laufenden
+  Programm bestätigt). `CPersonality::Remove` (`persona.cpp:565-566`) stellt die
+  aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`
+  und `SavePasswordText` ausdrücklich in `g_Personalities.GetCurrent()`
+  (`rs.cpp:1237-1250`) — der nächste `SetCurrent` legt damit zwei Schlüssel im
+  gelöschten Abschnitt wieder an. **Unabhängig von der E-37-Behebung**, die den
+  Zeitpunkt nur nach vorn verschiebt
 - **Die im Kontoassistenten eingegebenen Daten fehlen hinterher** (**E-38**):
   Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Gregor
   hat am 07.09.2026 nachgesehen: **in der `Eudora.ini` stehen sie**. Damit

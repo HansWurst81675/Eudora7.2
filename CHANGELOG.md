@@ -9,17 +9,16 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 07.09.2026)
+## Noch offen (Stand 08.09.2026)
 
 | Kennung | | |
 |---|---|---|
-| — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | *halb* — das Menü *Window* listet sie auf (von Gregor am 07.09.2026 nachgesehen: „1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht `OTShim` bildet sie nicht nach (`WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in `Eudora.ini`) |
-| **E-33** | *File → Exit*, **Kreuz** und **Alt-F4** beenden Eudora nicht, sondern bringen **„Encountered an improper argument"** (Kriterium 7) | Gregor am 07.09.2026 gemessen, mit Bildschirmfoto: *„weder alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung"*. Belegt: das Beenden **beginnt**, der Abbruch ist eine **geworfene `CInvalidArgException`**, und `ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt sie und liefert 0 — das Fenster bleibt. **Ursache nicht belegt.** Verdacht `QCCustomToolBar::SaveCustomInfo` (`QCCustomToolBar.cpp:421`), 28 Spurmarken liegen (`Befunde/BEENDEN.md`) |
-| — | **E-38**: die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften* | *„obwohl daten (name, mailadresse, server) im wizard eingetragen werden, fehlen diese beim konto->eigenschaften!"* In der `Eudora.ini` **stehen** sie (von Gregor nachgesehen) — also scheitert das **Lesen**, oder die Werte gehen verloren, weil Eudora nur per `pkill` zu beenden ist. **Hängt an E-33** und wird erst danach gemessen; Gregors Wort: *„vielleicht fehlen die daten, wenn ich eudora per task manager abschließen muß"* |
-| — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34, und sie ist ein **Widerspruch**: beide lesen dasselbe `m_nSize` (`afxcoll.inl:201-217`), aus einem unveränderten Objekt kann das nicht werfen. Es bleiben Erklärungen außerhalb der Indexrechnung — abgebautes oder falsch typisiertes Leistenobjekt, beschädigter Heap. Abgefangen, nicht behoben |
-| — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten **und beim Beenden** | dieselbe Quelle wie E-34, andere Aufrufstellen |
-| — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wieder entstehen | `CPersonality::Remove` (`persona.cpp:565-566`) löscht den Abschnitt, leert aber **den INI-Zwischenspeicher nicht** und stellt die aktuelle Persönlichkeit **nicht** um. `FlushINIFile` (`rs.cpp:1237-1250`) schreibt `SavePassword` und `SavePasswordText` ausdrücklich in `g_Personalities.GetCurrent()` — der nächste `SetCurrent` legt damit die zwei Schlüssel im gelöschten Abschnitt wieder an. `SetCurrent` prüft nicht, ob der Name existiert (`persona.cpp:179-198`, Kommentar *„we're trusting souls"*). **Die Gefahr besteht unabhängig von der E-37-Behebung** — jeder spätere `SetCurrent` tut dasselbe —, mein `PopulateView()`-Aufruf verschiebt den Zeitpunkt nur nach vorn. Selbst beim Nachmessen der E-37-Behebung gefunden, **nicht am laufenden Programm bestätigt**. Naheliegende Behebung: nach erfolgreichem `Remove` auf `<Dominant>` umschalten, wenn die gelöschte die aktuelle war |
-| — | **`FindItem` liefert −1 in der Personalities-Liste** (Rest von E-37) | E-37 ist behoben, indem die Liste neu aufgebaut wird. **Warum** `FindItem` den Eintrag nicht findet, obwohl Spalte 0 den rohen Namen trägt (`PersonalityView.cpp:226-232`), sagt erst die neue Protokollzeile |
+| **E-37** | **ein Konto lässt sich nicht löschen** — der Eintrag bleibt in der Liste stehen, bis Eudora neu startet | **Zwei Anläufe, der erste war eine Regression.** Gregor am 08.09.2026: *„die meldung kommt, wenn ich eine persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora geschlossen habe"* — mein `PopulateView()` hat geworfen und dem Anwender „Encountered an improper argument" gezeigt. Gelöscht **wird** korrekt; es ist ein Anzeigefehler. Zweiter Anlauf gebaut, **noch nicht bestätigt** |
+| **E-43** | `QCCustomToolBar::SaveCustomInfo` wirft beim Beenden — der **Leistenzustand wird nie gespeichert** | Das Beenden läuft nur, weil **E-42** den Wurf abfängt. **In 7.2.0.23 entschieden, was seit E-34 offen war:** vier Messungen in einer Zeile ergeben `GetBtnCount=24/24  m_btns.GetSize=0/0` bei gleichem `this` und gleicher Adresse. Der Wert **flackert also nicht** — und ein gerade freigegebenes Objekt ist ebenfalls ausgeschlossen, weil die Marke **E-46** im Destruktor erst *nach* dieser Stelle erscheint. Es bleibt: der übersetzte Code liest an **zwei verschiedenen Adressen**, obwohl `GetBtnCount()` wörtlich `return (int)m_btns.GetSize()` ist. Die dritte Marke gibt die Rohwörter des Feldes aus und sagt, welche. **Folge:** kein `[ToolBar...]`-Abschnitt in der `Eudora.ini` — und daraus folgte **E-44** |
+| — | **Kriterium 8**: die **Registerkartenleiste** am unteren Fensterrand für die offenen Fenster | *halb* — das Menü *Window* listet sie auf (von Gregor nachgesehen: „1 In", „2 Out"). Die Leiste am unteren Rand ist mit **E-44** jetzt sichtbar und waagrecht, zeigt aber *Task Status* und *Task Errors*, nicht die offenen Fenster |
+| — | **E-38**: die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften* | In der `Eudora.ini` **stehen** sie (von Gregor nachgesehen). Hing an E-33; jetzt, da Eudora sich normal beenden lässt, **neu zu messen** |
+| — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Unabhängig von E-37. Nicht am laufenden Programm bestätigt |
+| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. Beim Beenden ist sie mit E-42 weg, beim Anzeigen nicht |
 
 ## Erreicht
 
@@ -46,16 +45,23 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.21 — gebaut, aber NICHT gepackt
+## Nach 7.2.0.23 — alles Gebaute ist gepackt
 
-Diese Änderungen liegen im Repo und sind gebaut (0 Fehler), stecken aber in
-**keinem** Paket. Wer sie sehen will, muss bauen. `Eudora71/Version.h` und
-`VERSION` stehen weiter auf **7.2.0.21 / 1.0.21** — wer daraus ein Paket
-schnürt, setzt **vorher beide Nummern hoch**, sonst tragen zwei verschiedene
-Bauten dieselbe Kennung (Befund **V-1**, und Gregors Regel dazu: *„version muß
-eindeutig sein"*).
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.23** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.23 / 1.0.23** (`cat
+VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
+neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
+tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
+dazu: *„version muß eindeutig sein"*).
 
-- **E-37 behoben — ein Konto ließ sich scheinbar nicht löschen.**
+> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
+> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
+> Komma-Format `7,2,0,23`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
+> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
+> es gehört aber trotzdem mit hochgesetzt.
+
+- **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
   `CPersonalityView::OnCmdDeletePersonality`
   (`Eudora71/Eudora/PersonalityView.cpp`). Gregors Messung hat die erste
   Annahme widerlegt: *„ja, sie verschwinden nach neustart"* — gelöscht wurde
@@ -66,7 +72,7 @@ eindeutig sein"*).
   die Liste wird einmal am Ende über `PopulateView()` neu aufgebaut. Die drei
   stummen `ASSERT(0)`-Zweige melden jetzt ebenfalls.
   **Von Gregor nicht nachgemessen** — es ist in keinem Paket.
-- **28 Spurmarken für E-33**, das Beenden. Nur Diagnose, nichts behoben:
+- **32 Spurmarken für E-33**, das Beenden. Nur Diagnose, nichts behoben:
   `QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
   `GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert —,
   `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`, `6a`…`6f`),
@@ -95,6 +101,235 @@ eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.23 — Die Statusleiste liegt unten, und ein Prozess ohne Fenster kann nicht mehr entstehen
+
+**Was Gregor damit tun kann, was vorher nicht ging:** *Task Status* und *Task
+Errors* liegen jetzt **waagrecht am unteren Fensterrand**, über die ganze
+Breite, und bleiben dort — statt als schmale senkrechte Spalte links neben dem
+Postfach zu stehen. Von Gregor am 08.09.2026 an der Prüfinstanz bestätigt:
+*„jetzt ist sie unten, ja"*. Damit ist Anforderung **A-2** aus
+[ZIEL.md](ZIEL.md) umgesetzt.
+
+### A-2/E-44 — zwei Ursachen, nicht eine
+
+Der erste Verdacht war falsch: die Leiste wird **nicht** links angedockt. An
+einem frischen Profil gemessen (`tools/leisten-messen.ps1`, neu in diesem
+Stand) lag sie von Anfang an richtig — **unten, 1712×80** — und wurde nur
+unmittelbar danach durch `ID_SEC_HIDE` wieder **versteckt**
+(`WazooBarMgr.cpp`, `SetDefaultWazooBarState`, Fall 2). Diese Zeile ist weg.
+
+Das erklärte aber nicht Gregors Bildschirmbild. Dafür gab es eine zweite,
+unabhängige Ursache: der Standardzweig läuft **nur beim allerersten Start**.
+Ab dem zweiten greift `LoadWazooConfigFromIni` — und das stellt nur wieder
+her, *welche* Fenster in einer Leiste sitzen, **nicht die Andockseite**. Die
+käme aus MFCs `LoadBarState` und damit aus dem INI-Abschnitt `[ToolBar...]`,
+den es nicht gibt, weil `SaveBarState` beim Beenden jedes Mal abbricht
+(**E-43**). Nachgemessen: weder Gregors `Eudora.ini` noch die eines frischen
+Profils enthält einen solchen Abschnitt — **null Treffer** in beiden. Alle drei
+Leisten blieben deshalb auf `CBRS_LEFT` aus `CreateInitialWazooBars` stehen.
+
+Jetzt zieht der Lade-Zweig die Standardanordnung nach, **wenn** eine Leiste an
+keiner Andockleiste hängt (`m_pDockBar == NULL`) — dieselbe Prüfung, die das
+Projekt an anderer Stelle selbst benutzt. Ist eine Lage gespeichert, ändert
+sich nichts. Ergebnis: Postfächer links sichtbar, Kurznamen versteckt,
+Aufgabenstatus waagrecht unten sichtbar.
+
+> **Nachgebessert nach Gregors Bildschirmfoto:** im ersten Anlauf blieb die
+> **Kurznamen-Leiste** als 180 Pixel breite Spalte rechts dauerhaft offen. Die
+> Sichtbarkeit einer Wazoo-Leiste wird nirgends gespeichert (nachgesehen in
+> `SaveWazooConfigToIni`) — was ohne Zutun sichtbar bleibt, ist also keine
+> Entscheidung des Anwenders, sondern nur das `WS_VISIBLE` aus `Create`.
+> Deshalb läuft die Sichtbarkeitsstufe jetzt mit.
+
+### E-45 — der eine Aufräumschritt, der nicht übersprungen werden darf
+
+Gefunden von **PRUEFER** ([Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md)) als
+Fehler in **meiner** E-42-Behebung. Von den zwölf mit `AUFRAEUMEN` gefassten
+Schritten ist einer nicht bloß Aufräumen: `QCWorkbook::OnClose` löst sich auf
+`CFrameWnd::OnClose` auf, und deren **letzte** Anweisung ist `DestroyWindow()`
+(MFC 14, `winfrm.cpp:941`); `CMainFrame::OnClose` ruft es nirgends selbst.
+Fiele der Schritt aus, gäbe es kein `WM_QUIT`, kein `ExitInstance` und kein
+`IniStringCleanUp` — und das Fenster ist von `HideApplication` schon
+versteckt: übrig bliebe ein **Prozess ohne Fenster**, genau der Zustand, den
+Gregor tagelang hatte. Dieser Schritt hat jetzt einen eigenen Fangzweig, der
+`DestroyWindow()` nachholt.
+
+### E-46 — ein Verdacht aufgestellt und in derselben Sitzung widerlegt
+
+`CFrameWnd::PostNcDestroy` ist wörtlich `delete this`, `CMainFrame`
+überschreibt es nicht, und `DestroyWindow()` stellt `WM_NCDESTROY` synchron
+zu — der Aufruf steht aber **mitten** in `CMainFrame::OnClose`, danach laufen
+noch rund 230 Zeilen. Wäre der Verdacht richtig, hätte **E-43** damit seine
+Ursache gehabt. Entschieden an einer Marke im Destruktor: sie erscheint im
+Protokoll **nach** `nach QCWorkbook::OnClose`, nicht dazwischen. **Widerlegt.**
+Die Marke bleibt drin, weil sie die Reihenfolge dauerhaft belegt.
+
+### E-43 — der Widerspruch ist jetzt eingegrenzt statt bloß benannt
+
+Die verfeinerte Marke misst `GetBtnCount()` und `m_btns.GetSize()` **je
+zweimal in einer Ausgabe**. Gemessen: `GetBtnCount=24/24
+m_btns.GetSize=0/0`, gleiches `this`, gleiche Adresse. Damit sind ein Wettlauf
+und ein freigegebenes Objekt **beide ausgeschlossen** — es bleibt, dass der
+übersetzte Code an zwei Adressen liest, obwohl beide Ausdrücke wörtlich
+derselbe Code sind (`OTShim_Werkzeugleiste.h:744`). Eine dritte Marke gibt
+jetzt Versatz und Rohwörter des Feldes aus.
+
+**Widerlegt, ebenfalls in dieser Sitzung:** PRUEFERs Befund, das Protokoll sei
+im Normalbetrieb stumm. `DebugMask` ist zwar mit `0` vorbelegt, wird aber
+sofort aus der INI gesetzt, und der Vorgabewert steht in der Ressource
+(`EudoraRes.rc:8441`: `LogLevel\n25759`). 25759 ist 0x649F und enthält 0x80 —
+die Marken werden **ohne jede Einstellung** geschrieben. Gegenprobe: Gregors
+`Eudora.ini` hat keine Zeile `LogLevel`, und seine `eudora.log` enthält alle
+Marken.
+
+### Was an 1.0.23 zu prüfen ist
+
+Paket: `Releases/Eudora72-1.0.23-release.zip`, 9 340 228 Byte, SHA256
+`3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
+Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
+Starter übergibt das Mailverzeichnis. Die Titelzeile muss
+`Eudora 7.2.0.23 / Paket 1.0.23` nennen.
+
+1. **Die untere Leiste** — *Task Status* und *Task Errors* liegen waagrecht am
+   unteren Fensterrand, über die ganze Breite. **Von Gregor am 08.09.2026
+   bestätigt:** *„leiste unten paßt."* Rechts darf **keine** Kurznamen-Spalte
+   dauerhaft offenstehen.
+2. **E-37, gelöschtes Konto** (steckt seit 1.0.22 drin, noch unbestätigt):
+   eine Persönlichkeit anlegen und wieder löschen. Verschwindet der Eintrag
+   links **sofort**, ohne Neustart? Kommt noch „Encountered an improper
+   argument"?
+3. **E-38, Assistentendaten** — jetzt erstmals messbar, weil der Blocker E-33
+   weg ist: Konto über den Assistenten anlegen, Eudora **normal** beenden, neu
+   starten, *Konto → Eigenschaften* ansehen. Stehen Name, Mailadresse und
+   Server da?
+4. **Das Beenden** über alle drei Wege: *File → Exit*, **Alt-F4**, das
+   **Kreuz**.
+5. **E-43** braucht nur einen normalen Beendigungsvorgang. Danach steht in
+   `Mailverzeichnis\eudora.log` eine Zeile `E-43 SaveCustomInfo: … Versatz=…
+   roh[0..4]=…` — die entscheidet, warum der Leistenzustand nie gespeichert
+   wird.
+
+### Neu im Werkzeugkasten
+
+- `tools/leisten-messen.ps1` — misst Andockseite, Sichtbarkeit, Größe und Lage
+  jeder Wazoo-Leiste eines laufenden Eudora und schreibt das Urteil zu A-2
+  ausdrücklich hin. Der `-Pfadfilter` ist Absicht: auf Gregors Rechner läuft
+  sein eigenes Eudora, gemessen werden soll die Prüfinstanz. Das Skript
+  schickt keine Nachricht und beendet nichts.
+
+## 7.2.0.22 / Paket 1.0.22 — 08.09.2026 · das Beenden funktioniert
+
+**Gregors Urteil: *„schließen klappt jetzt."*** Alle drei Wege beenden Eudora —
+*File → Exit*, **Alt-F4** und das **Kreuz** oben rechts. Damit ist
+**Kriterium 7** aus [ZIEL.md](ZIEL.md) erfüllt, das letzte offene der zweiten
+Stufe.
+
+Ebenfalls von ihm bestätigt: *„default werte beim neuen persona konto für
+'leave message on server' greifen."* — **Anforderung A-1** ist damit am
+laufenden Programm belegt, nicht mehr nur am Codeweg.
+
+Paket: 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
+**Das ZIP liegt nicht mehr im Repo** — Gregor am 08.09.2026: *„0.22 brauche ich
+nicht, wenn es ein 0.23 gibt"*. Anders als bei den übrigen entfernten Paketen
+gibt es für 1.0.22 **keine Marke**; wer es wiederhaben will, baut es aus Commit
+`d003d46` neu (`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`) und
+prüft die Prüfsumme oben nach.
+
+### Der Grundsatz hinter der Behebung
+
+**Ein Fehler beim Aufräumen darf das Beenden nicht verhindern.** Nur eine
+bewusste Entscheidung des Anwenders — „Abbrechen" in einer Rückfrage — darf
+das. Vorher reichte eine geworfene Ausnahme oder ein Dialog, der sich nicht
+öffnen ließ: `AfxCallWndProc` fängt den Wurf, `CWinApp::ProcessWndProcException`
+(`appcore.cpp:1009-1039`) zeigt „Encountered an improper argument" und liefert
+**0** — damit gilt `WM_CLOSE` als beantwortet, und das Fenster bleibt stehen.
+
+### E-40 — eine Rückfrage, die sich nicht stellen lässt, galt als „Abbrechen"
+
+`CDoc::SaveModified` (`Eudora71/Eudora/doc.cpp`) und `CMessageDoc::SaveModified`
+(`Eudora71/Eudora/msgdoc.cpp`) hatten im `default`-Zweig nur `ASSERT(FALSE)` und
+`return FALSE`. **`IDCANCEL` hat einen eigenen Zweig darüber** — in `default`
+fällt vor allem die **0**, die `AfxMessageBox` liefert, wenn der Dialog gar
+nicht erzeugt werden kann. Dann hat niemand etwas entschieden, und Eudora bleibt
+offen, ohne dass der Anwender erfährt warum. Jetzt gehen Rückgabewert und Titel
+ins Protokoll, und das Schließen wird **fortgesetzt**.
+
+### E-41 — Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`, das das Menü nicht hat
+
+`CMainFrame::OnSysCommand` reichte `SC_CLOSE` ungeschützt an
+`CFrameWnd::OnSysCommand` weiter. Dort steht in MFC 14 `GetTopLevelFrame()`
+plus `ENSURE_VALID(pFrameWnd)` (`winfrm.cpp:1112-1114`) — und `ENSURE_VALID`
+wirft **auch im Release-Bau**, wo MFC 6 nur `ASSERT_VALID` hatte. Jetzt läuft
+`SC_CLOSE` in `TRY`/`CATCH_ALL`; scheitert die Systembehandlung, geht der Grund
+ins Protokoll und `WM_CLOSE` wird nachgeschickt — der Weg, den auch
+*File → Exit* nimmt.
+
+> **Diese Stelle hat PRUEFER gefunden, indem er meine Beweisführung verwarf.**
+> Ich hatte geschlossen: weil Kreuz und Alt-F4 dasselbe Symptom zeigen wie
+> *File → Exit*, liegt der Wurf in `OnClose`. Das trägt nicht — beide teilen
+> **zusätzlich** diesen Weg. Es folgt nur, dass der `WM_COMMAND`-Behandler
+> ausgeschlossen ist.
+
+### E-42 — zwölf Aufräumschritte konnten das Beenden abbrechen
+
+Neues Makro `AUFRAEUMEN(name, anweisung)` in `Eudora71/Eudora/mainfrm.cpp`:
+führt einen Schritt aus, meldet einen Fehlschlag mit Namen und Grund ins
+Protokoll und macht weiter. Abgesichert sind
+
+| in | Schritte |
+|---|---|
+| `OnClose` | `CloseImapConnections`, `EmptyTrash`, `CleanSSLLibrary`, `TrayItem`, `DeleteMenuObjects`, `QCWorkbook::OnClose` |
+| `CloseDown` | `TrimJunk`, `RemoveBogusAdToolBars`, `SaveBarState(ToolBar)`, `SaveWazooBarConfigToIni`, `SaveCrashStateToINI`, `WriteToolBarMarkerToIni` |
+
+Die Rückfragen in `CloseDown` Stufe 1 bis 3 laufen bewusst **nicht** hierdurch:
+wer „Abbrechen" drückt, will nicht beenden.
+
+### E-43 — der Fehler dahinter besteht weiter
+
+**Das Beenden läuft nur, weil E-42 den Fehler abfängt.** Er ist nicht
+verschwunden, er steht jetzt als Protokollzeile da:
+
+    E-33 SaveCustomInfo: Abschnitt=ToolBar-BarID59392  this=06283F80  GetBtnCount=24  m_btns.GetSize=0
+    E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[0] wirft (GetSize=0)
+    E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgeloest - Das Beenden wird fortgesetzt.
+
+**Damit ist der Widerspruch aufgelöst, der seit E-34 offen stand.**
+`GetBtnCount()` ist in `OTShim_Werkzeugleiste.h:744` nichts anderes als
+`m_btns.GetSize()`. Dass beide **in einem einzigen `Format`-Aufruf**
+verschiedene Werte liefern — 24 und 0 —, heißt: das Feld ändert sich
+**zwischen zwei Lesevorgängen**. Das ist kein Indexfehler, sondern ein Wettlauf
+oder ein bereits abgebautes Leistenobjekt.
+
+**Folge für den Anwender:** der Werkzeugleisten-Zustand wird **nie** gespeichert;
+über mehrere Starts entstehen dadurch krumme Fensterlayouts.
+
+Meine ODR-Vermutung dazu ist **widerlegt**: `class SECCustomToolBar` steht zwar
+in `OT501/Include/tbarcust.h:73` **und** in `OTShim_Werkzeugleiste.h:693`, aber
+`stdafx.h:52` zieht `OTShimAll.h` zuerst, und die Ersatzschicht setzt
+`__TBARCUST_H__` — damit ist `tbarcust.h` in **jeder** Übersetzungseinheit
+wirkungslos.
+
+### E-37 — der erste Anlauf war eine Regression
+
+**Nicht behoben.** Gregor am 08.09.2026: *„die meldung kommt, wenn ich eine
+persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora
+geschlossen habe"*. Mein `PopulateView()`-Aufruf hat geworfen, die Ausnahme lief
+aus dem Befehlsbehandler heraus, und der Anwender sah „Encountered an improper
+argument". Ein zweiter Anlauf sucht den Eintrag über den angezeigten Text und
+ruft `PopulateView()` nicht mehr — **von Gregor noch nicht bestätigt**.
+
+### Was an 1.0.22 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`.
+
+| Prüfen | erwartet |
+|---|---|
+| ***File → Exit*** | beendet |
+| **Alt-F4** | beendet |
+| **Kreuz** oben rechts | beendet |
+| **Neues Konto anlegen** | trägt *Leave mail on server* und *Required, Alternate Port* |
+| **Konto löschen** | verschwindet **sofort** aus der Liste, **ohne** Meldung |
 
 ## 7.2.0.21 / Paket 1.0.21 — 07.09.2026 · fünf Verfassen-Fenster, kein Absturz
 
@@ -131,9 +366,11 @@ nachbildet.
 **Offen bleibt:** *„beenden geht nicht"* (Kriterium 7) und Gregors Frage
 *„kann man die untere zeile (status) immer anzeigen lassen?"*
 
-### Was an 1.0.21 zu prüfen ist
+### Was an 1.0.22 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.21-release.zip` (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`).
+Paket (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`)
+liegt **nicht mehr im Repo** und hat keine Marke — neu zu bauen aus `d003d46`.
+Wer heute prueft, nimmt 1.0.23; die Anleitung dazu steht weiter oben.
 Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
 Starter übergibt das Mailverzeichnis.
 

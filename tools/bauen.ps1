@@ -846,44 +846,83 @@ function Hole-ProjektVerzeichnis {
   return $treffer.DirectoryName
 }
 
+$script:FehlendGemeldet = @{}
+
 function Hole-NeuesteQuelleFuer {
   param([string]$Artefakt)
 
   # Die Quellen eines Artefakts stehen in SEINER Projektdatei, nicht in seinem
-  # Verzeichnis. Bis zum 07.09.2026 hat diese Funktion alle Dateien mit
-  # passender Endung im Projektverzeichnis genommen - und Eudora.vcxproj und
+  # Verzeichnis. Bis zum 07.09.2026 nahm diese Funktion alle Dateien mit
+  # passender Endung im Projektverzeichnis - und Eudora.vcxproj und
   # EudoraRes.vcxproj liegen im GLEICHEN Ordner. Eine Aenderung an mainfrm.cpp
   # machte damit EudoraRes.dll scheinbar veraltet, obwohl die Ressourcen-DLL
-  # nur an .rc und Headern haengt. Ergebnis: "FEHLER EudoraRes.dll ist aelter
-  # als die Quellen des eigenen Projekts", und der Bau war gruen.
+  # nur an .rc, Bildern und Headern haengt: "FEHLER EudoraRes.dll ist aelter
+  # als die Quellen des eigenen Projekts" bei gruenem Bau. Dritter Fehlalarm
+  # aus diesem Werkzeug.
   #
-  # Das war der dritte Fehlalarm aus diesem Werkzeug. Deshalb kommt die Liste
-  # jetzt aus den Include-Angaben der Projektdatei; nur wenn sich daraus keine
-  # Datei ergibt, wird auf den alten Verzeichnisdurchlauf zurueckgefallen.
+  # ZWEI KORREKTUREN VON PRUEFER am selben Tag:
+  #  1. Der erste Anlauf sah nur ClCompile/ClInclude/ResourceCompile/Midl an.
+  #     Damit war die GEGENRICHTUNG offen: sechs Projekte tragen ihre
+  #     Exportliste als <None Include="....def">, EudoraRes.vcxproj seine 202
+  #     Ressourcen als <Image>/<None>, Eudora.vcxproj dazu .idl, .manifest und
+  #     sechs .rgs. Eine geaenderte Bilddatei markierte EudoraRes.dll nicht
+  #     mehr als veraltet, und bei msvcr71.dll blieb EINE Quelle uebrig,
+  #     waehrend die .def die Exporte bestimmt. Jetzt wird JEDE Include-Angabe
+  #     genommen, gleich unter welchem Knotennamen - gefiltert wird per Endung.
+  #  2. [System.IO.Path]::GetExtension wirft bei einer Include-Angabe mit
+  #     unerlaubtem Zeichen ("Illegales Zeichen im Pfad"). Ein try um die ganze
+  #     Schleife hat diesen Abbruch LAUTLOS in den Rueckfall verwandelt - die
+  #     Funktion sah danach wieder alle .cpp im Verzeichnis, und der alte
+  #     Fehlalarm war zurueck. Deshalb wird die Endung per Muster geholt, je
+  #     Eintrag geprueft, und der Rueckfall MELDET sich.
   $proj = Hole-ProjektDatei -Artefakt $Artefakt
   if ($null -eq $proj) { return $null }
 
+  $quellendungen = @('.c','.cpp','.cxx','.h','.hpp','.inc','.rc','.rc2','.idl',
+                     '.def','.bmp','.ico','.cur','.manifest','.rgs','.wav','.txt','.html')
   $max = [datetime]'1990-01-01'
   $gezaehlt = 0
-  try {
-    $xml = [xml](Get-Content -Raw -LiteralPath $proj.FullName)
-    $knoten = $xml.SelectNodes('//*[local-name()="ClCompile" or local-name()="ClInclude" or local-name()="ResourceCompile" or local-name()="Midl"]')
-    foreach ($k in $knoten) {
+  $fehlend  = 0
+  $unlesbar = 0
+  $xml = $null
+  try { $xml = [xml](Get-Content -Raw -LiteralPath $proj.FullName) } catch { $xml = $null }
+  if ($null -ne $xml) {
+    foreach ($k in $xml.SelectNodes('//*[@Include]')) {
       $inc = $k.GetAttribute('Include')
       if ([string]::IsNullOrWhiteSpace($inc)) { continue }
-      $p = Join-Path $proj.DirectoryName $inc
+      if ($inc -match '[$%*?"<>|]') { continue }   # Platzhalter und Muster
+      $end = ''
+      if ($inc -match '\.([A-Za-z0-9_]+)\s*$') { $end = '.' + $matches[1].ToLowerInvariant() }
+      if ($quellendungen -notcontains $end) { continue }
+      $p = $null
+      try { $p = Join-Path $proj.DirectoryName $inc } catch { $p = $null }
+      if ($null -eq $p) { $unlesbar++; continue }
       if (Test-Path -LiteralPath $p -PathType Leaf) {
         $gezaehlt++
         $t = (Get-Item -LiteralPath $p).LastWriteTime
         if ($t -gt $max) { $max = $t }
+      } else {
+        $fehlend++
       }
     }
-  } catch {
-    $gezaehlt = 0
   }
 
   # Die Projektdatei selbst zaehlt immer mit.
   if ($proj.LastWriteTime -gt $max) { $max = $proj.LastWriteTime }
+
+  if (-not $script:FehlendGemeldet.ContainsKey($proj.Name)) {
+    $script:FehlendGemeldet[$proj.Name] = $true
+    if ($fehlend -gt 0 -or $unlesbar -gt 0) {
+      Melde-Warnung ($proj.Name + ': ' + $fehlend + ' Include-Angabe(n) zeigen auf nicht' +
+                     ' vorhandene Dateien, ' + $unlesbar + ' sind nicht aufloesbar -' +
+                     ' bei der Aktualitaetspruefung uebersprungen.')
+    }
+    if ($gezaehlt -eq 0) {
+      Melde-Warnung ($proj.Name + ': keine Quelldatei aus der Projektdatei lesbar -' +
+                     ' Rueckfall auf den Verzeichnisdurchlauf. Dort koennen Projekte im' +
+                     ' gleichen Ordner verwechselt werden.')
+    }
+  }
 
   if ($gezaehlt -gt 0) { return $max }
 

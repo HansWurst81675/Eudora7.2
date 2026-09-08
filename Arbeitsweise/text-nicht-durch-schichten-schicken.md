@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-07T08:29:52.661Z
+  modified: 2026-09-08T07:56:55.649Z
 ---
 
 **Gregor am 06.09.2026:** *„das hatten wir schon mit bash und PS. warum lernst du
@@ -131,3 +131,31 @@ Schranke war falsch, sondern die Verankerung (`^\[Mappings\]` statt
   hinterher.
 - **Eine Funktion wird als Ganzes ersetzt**, nicht in mehreren Splices. Zwei
   Splices in dieselbe Funktion haben hier den doppelten Rumpf erzeugt.
+
+---
+
+## Siebter bis neunter Fall, 08.09.2026 — drei an einem Vormittag
+
+| Zeit | Was ich geschrieben habe | Was passiert ist |
+|---|---|---|
+| 07:34 | `cat > datei <<EOF` **ohne Apostrophe**, weil ich `$SHA` einsetzen wollte | Bash hat den ganzen Text **ausgeführt**: 90 Zeilen `command not found` aus den Backticks des Abschnitts, dazu `Eudora71/Eudora/doc.cpp: line 19: syntax error near unexpected token 'CDoc,'` — die Schale hat versucht, eine Quelldatei als Skript zu lesen. Der halbe CHANGELOG-Abschnitt kam leer heraus |
+| 07:18 | `\x{2014}` in einem Perl-Einzeiler, der `ZIEL.md` als Rohdatei schreibt | *„Wide character in print"* — und danach war **die ganze Datei** doppelt kodiert: `ZIEL.md` an **168 Stellen**, vorher 0. `tools/pruefe-bytes.pl` hat den Commit abgebrochen (`LF=211 → 234`, `hoch=390 → 848`); zurücksetzen und alle vier Änderungen wiederholen |
+| 07:38 | `\Q$rumpf\E` als **Suchtext** in einer Ersetzung | Perl hat die Variable eingesetzt statt den gemeinten Text; die Ersetzung kam nicht durch, ohne Fehlermeldung |
+
+**Was daraus folgt — zusätzlich zum Ablauf oben:**
+
+- **Ein Hier-Dokument ist immer `<<'MARKE'`, ausnahmslos.** Ohne Apostrophe
+  interpretiert die Schale `$`, `` ` `` und `\` im Text. Backticks in einem
+  Dokumentationsabschnitt sind der Normalfall, nicht die Ausnahme — in Markdown
+  steht in jeder zweiten Zeile einer.
+- **Ein Wert, der in den Text soll, kommt über einen Platzhalter hinein**, nicht
+  über die Schale: `@@SHA@@` in den Text schreiben und danach mit Perl auf
+  Rohbytes ersetzen. So habe ich es um 07:35 gemacht, und es lief auf Anhieb.
+- **Kein `\x{...}` in einem Einzeiler, der eine Rohdatei schreibt.** `\x{}`
+  erzeugt einen Perl-Zeichenstring; wird der ohne `:encoding` in eine
+  Latin-1-Datei geschrieben, kodiert Perl **den gesamten Puffer** nach UTF-8.
+  Sonderzeichen gehören in eine Datei, die byteweise gelesen wird — dann ist
+  jedes Byte, das hineingeht, dasselbe, das herauskommt.
+- **Nach jedem Schreibzugriff auf eine Repo-Datei `tools/pruefe-bytes.pl`.**
+  Hier war es die einzige Instanz, die den Schaden bemerkt hat
+  ([[zeilenenden-nach-jedem-schreibzugriff-messen]]).

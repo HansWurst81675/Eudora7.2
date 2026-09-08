@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-08-30T17:12:54.639Z
+  modified: 2026-09-08T07:58:38.293Z
 ---
 
 Gregor testet Eudora selbst auf derselben Windows-Sitzung, auf der ich arbeite.
@@ -43,4 +43,26 @@ dauernd etwas startet und fehler dialoge auftauchen."*
 - Es kann systemweit nur **einen** OutputDebugString-Mithörer geben
   (`DBWIN_BUFFER`). Zwei gleichzeitig, und beide bekommen nichts.
 
-Siehe [[lauffaehiges-ergebnis-liefern]] und [[agenten-benennen]].
+**Nachtrag 08.09.2026 — Erlaubnis ist nicht Ankündigung.** Für den
+Beenden-Test habe ich richtig gefragt und Gregors Ja bekommen (*„ich teste
+selbst, du startest bitte kein Eudora, solange ich messe"*). Trotzdem kam kurz
+darauf:
+
+> *„was ist das jetzt? das sieht nicht mehr so gut aus."*
+
+Auf seinem Bildschirm stand ein Eudora-Fenster mit zerfallener Aufteilung, und
+er konnte nicht wissen, ob es seine Installation war. Es war mein Prüfstand
+unter `C:\Temp\E33-pruefstand`. Also gehört zur Erlaubnis noch die Ansage:
+
+- **vor dem Start sagen, welcher Fenstertitel erscheint, aus welchem
+  Verzeichnis und wie lange** — dann ordnet er ein Fenster zu, statt zu fragen;
+- **nach dem Messen melden, dass der Bildschirm wieder frei ist**, und die
+  Prozesse nach Pfad beenden (siehe oben);
+- **was er dabei sieht, ist ein Messwert.** Seine Beobachtung war richtig: die
+  Fensteraufteilung war kaputt. Nachgemessen gegen das unveränderte Paket 1.0.21
+  auf gleich frischem Profil zeigte sich derselbe Aufbau — also ein Altbefund,
+  keine Regression meiner Änderung. Diese Gegenmessung gehört sofort dazu, nicht
+  erst auf Nachfrage.
+
+Siehe [[lauffaehiges-ergebnis-liefern]], [[keine-tastendruecke-verschicken]]
+und [[agenten-benennen]].

@@ -17,6 +17,7 @@
 - [Agenten trennen mit Worktrees](agenten-trennen-worktrees.md) — geteilter Index beschädigt fremde Commits; sonst mit Pfadangabe committen
 - [Teilweise ersetzte Header](teilweise-ersetzte-header.md) — Include-Wächter sind alles-oder-nichts; bei Teilersatz nicht setzen
 - [Nichts auf Gregors Bildschirm starten](nichts-auf-gregors-bildschirm-starten.md) — kein Fenster ohne Absprache; Prozesse immer nach Pfad filtern
+- [Keine Tastendruecke verschicken](keine-tastendruecke-verschicken.md) - SendKeys trifft das Fenster im Vordergrund, nicht mein Ziel; nur Fensterbotschaften an ein gemessenes Handle
 - [Was „lauffähig" heißt](was-lauffaehig-heisst.md) — Gregors drei Kriterien; alle drei müssen erfüllt sein, sonst anders benennen
 - [main muss immer baubar sein](main-muss-immer-baubar-sein.md) — Maßstab ist der frische Klon, nicht der eigene Arbeitsbaum
 - [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen
@@ -42,3 +43,6 @@
 - [Anwenderdatei nicht erschlagen](anwenderdatei-nicht-erschlagen.md) — was es beim Anwender oder im Original schon gibt, wird gelesen und ergänzt; 124 Dateizuordnungen wären verloren gewesen
 - [Anforderung gehört in den Maßstab](anforderung-gehoert-in-den-massstab.md) — ein Requirement, das nur in der Umsetzung steht, ist keins; nach `ZIEL.md` plus Schranke gegen das Gebaute
 - [ASSERT ist im Release nichts](assert-ist-im-release-nichts.md) — häufigste Ursachenklasse des Projekts; bei „es passiert nichts" zuerst nach `ASSERT(0)` und `VERIFY(` suchen
+- [Paket gegen den Bau messen](paket-gegen-den-bau-messen.md) — im Paket lag eine Debug-`Eudora.exe` vom 30.08.; nach jedem Paketbau `paket-pruefen.ps1`, Zeitstempel und Größe gegen das Bauverzeichnis
+- [Zwei Werte in eine Ausgabe](zwei-werte-in-eine-ausgabe.md) — `GetBtnCount=24` und `m_btns.GetSize=0` in derselben Zeile schlossen den zwei Tage offenen Widerspruch; getrennte Protokollzeilen lassen „zu anderer Zeit" immer offen
+- [Schranke liest nur Code](schranke-liest-nur-code.md) — Kommentare und Protokolltexte vor dem Suchen wegwerfen, Bereich am Rumpfende schließen; `pruefe-beenden.pl` hat sonst die eigene Begründung angeschwärzt

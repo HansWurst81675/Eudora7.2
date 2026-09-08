@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **07.09.2026**, gemessen an Fassung **7.2.0.21 / Paket 1.0.21**.
+Stand **08.09.2026**, gemessen an Fassung **7.2.0.22 / Paket 1.0.22**.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
@@ -33,11 +33,11 @@ kein Mailprogramm.
 | 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. **Offen bleibt das Beenden**, siehe Kriterium 7 |
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
-| 7 | *File → Exit* beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht"*, von Gregor am 07.09.2026 an 7.2.0.21 bestätigt. Der einzige verbliebene Fehler der zweiten Stufe |
+| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler selbst ist damit **nicht** verschwunden — er steht als Protokollzeile da (`E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst`) und ist als **E-43** weiter offen |
 | 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht bildet sie nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
 
-**Fünf von neun Kriterien sind belegt (0, 1, 3, 5, 6), drei fast oder halb
-(2, 4, 8), eines nicht (7 - das Beenden).**
+**Sechs von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7), zwei fast oder halb
+(2, 4), eines nicht (8 - die Reiterleiste).**
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
@@ -156,8 +156,9 @@ auf anderen Wegen wieder einschalten würden.
 `:215` und `:236-237`) → der Assistent überschreibt die vier Werte nirgends
 (kein Treffer in ganz `Eudora71/AccountWizard`) → `WizardPropSheet.cpp:193`
 `g_Personalities.Add` → geschrieben in `persona.cpp:988` (`LeaveMailOnServer`)
-und `:1051` (`SSLReceiveUse`). **Am laufenden Programm hat es noch niemand
-nachgemessen.**
+und `:1051` (`SSLReceiveUse`). **Am laufenden Programm bestätigt**: Gregor am
+08.09.2026 an Paket 1.0.22, nach dem Anlegen eines neuen Kontos: *„default
+werte beim neuen persona konto für ‚leave message on server' greifen."*
 
 `tools/paket-pruefen.ps1` warnt, wenn die Datei im Paket fehlt oder einen der
 vier Werte nicht trägt, und `tools/doku-pruefen.pl` hält die Datei gegen diese
@@ -171,7 +172,50 @@ in der `Eudora.ini` des Mailverzeichnisses — `<Dominant>` im Abschnitt
 `[Settings]`, jedes weitere in `[Persona-<Name>]` (`persona.cpp:897-898`,
 Präfix `:52`).
 
-## Woran sich Kriterium 2 misst
+### A-2 — *Task Status* und *Task Errors* waagrecht unten
+
+Gestellt am 08.09.2026, nachdem Gregor die Leisten im Prüfstand gesehen hatte:
+
+> *„task errors und task status wären waagrecht unten besser als senkrecht —
+> nach dem exit-fix korrigieren."*
+
+Beide Bereiche lagen **senkrecht** als schmale Spalten links neben dem
+MDI-Bereich. Verlangt ist eine **waagrechte** Anordnung am unteren Fensterrand.
+Die Reihenfolge, die Gregor selbst gesetzt hat, gilt: **erst** Kriterium 7 (das
+Beenden), dann das.
+
+Zusammenhang mit Kriterium 8: dort geht es um die **Reiterleiste** für die
+offenen Fenster (die WazooBar am unteren Rand). A-2 betrifft dieselbe Gegend
+des Fensters und dieselbe Ersatzschicht `OTShim` — wer eines angeht, sieht sich
+das andere gleich mit an.
+
+**Woran A-2 sich messen lässt.** Nach dem Start muss `tools/leisten-messen.ps1`
+für die Leiste mit der Kennung **320** melden: Andockseite **unten**,
+**Sichtbar = True**, Höhe **80**, Breite = Breite des Hauptfensters minus
+Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
+`[WazooBars]`-Abschnitt) **als auch** bei jedem weiteren Start mit vorhandener
+`Eudora.ini` — das sind zwei verschiedene Programmwege, und nur der zweite ist
+der, den Gregor gesehen hat.
+
+**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor noch nicht bestätigt.
+Zwei Ursachen, beide gemessen, beide behoben:
+
+1. Beim frischen Profil lag die Leiste schon richtig (unten, 1712×80) und wurde
+   nur durch `ID_SEC_HIDE` in `WazooBarMgr.cpp`, `SetDefaultWazooBarState`
+   Fall 2, sofort wieder **versteckt**. Diese Zeile ist entfallen.
+2. Ab dem zweiten Start läuft ein anderer Zweig, der die Andockseite
+   **überhaupt nicht** setzt: `LoadWazooConfigFromIni` (`WazooBar.cpp:552`)
+   stellt nur wieder her, welche Fenster in einer Leiste sitzen. Die Lage käme
+   aus MFCs `LoadBarState` und damit aus dem INI-Abschnitt `[ToolBar...]` —
+   den es nicht gibt, weil `SaveBarState` beim Beenden abbricht (**E-43**).
+   Jetzt wird die Standardanordnung nachgezogen, wenn eine Leiste an keiner
+   Andockleiste hängt.
+
+Fundstellen: `Eudora71/Eudora/WazooBarMgr.cpp` (`SetDefaultWazooBarState`,
+`LoadWazooBarConfigFromIni`), `Eudora71/Eudora/WazooBar.cpp:552`, Abschnitt
+`[WazooBars]` in der `Eudora.ini` (Schlüssel `WazooBarIds`, `WazooBar%d`,
+`WazooMDI%d`, Namen in `EudoraRes.rc:10637-10640`), und die Andockseite in
+`Eudora71/OTShim/OTShim.cpp:293` (`SECMDIFrameWnd::DockControlBarEx`).
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert
 (Eudora 7 unter Windows XP). Maßgeblich sind daraus:
