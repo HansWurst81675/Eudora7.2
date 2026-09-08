@@ -14,16 +14,15 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.21** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.22** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.21**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.22**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.21-release.zip`
-> (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`),
-> veröffentlicht als [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21).
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.22-release.zip`
+> (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`).
 > Die Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in

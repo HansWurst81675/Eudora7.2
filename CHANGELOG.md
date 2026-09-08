@@ -46,14 +46,14 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.21 — gebaut, aber NICHT gepackt
+## Nach 7.2.0.22 — alles Gebaute ist gepackt
 
-Diese Änderungen liegen im Repo und sind gebaut (0 Fehler), stecken aber in
-**keinem** Paket. Wer sie sehen will, muss bauen. `Eudora71/Version.h` und
-`VERSION` stehen weiter auf **7.2.0.21 / 1.0.21** — wer daraus ein Paket
-schnürt, setzt **vorher beide Nummern hoch**, sonst tragen zwei verschiedene
-Bauten dieselbe Kennung (Befund **V-1**, und Gregors Regel dazu: *„version muß
-eindeutig sein"*).
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.22** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.22 / 1.0.22** (`cat
+VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
+neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
+tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
+dazu: *„version muß eindeutig sein"*).
 
 - **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
   `CPersonalityView::OnCmdDeletePersonality`
@@ -131,9 +131,9 @@ nachbildet.
 **Offen bleibt:** *„beenden geht nicht"* (Kriterium 7) und Gregors Frage
 *„kann man die untere zeile (status) immer anzeigen lassen?"*
 
-### Was an 1.0.21 zu prüfen ist
+### Was an 1.0.22 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.21-release.zip` (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`).
+Paket: `Releases/Eudora72-1.0.22-release.zip` (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`).
 Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
 Starter übergibt das Mailverzeichnis.
 

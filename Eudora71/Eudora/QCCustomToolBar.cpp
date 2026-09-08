@@ -408,9 +408,13 @@ LPCSTR	szSection )
 	{
 		CString strAnfang;
 		strAnfang.Format(
-			_T("E-33 SaveCustomInfo: Abschnitt=%s GetBtnCount=%d"),
+			_T("E-33 SaveCustomInfo: Abschnitt=%s  this=%p  GetBtnCount=%d  ")
+			_T("m_btns.GetSize=%d  m_btns@%p"),
 			(szSection != NULL) ? szSection : "(NULL)",
-			(int)GetBtnCount());
+			(void*)this,
+			(int)GetBtnCount(),
+			(int)m_btns.GetSize(),
+			(void*)&m_btns);
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strAnfang);
 	}
 
@@ -420,6 +424,38 @@ LPCSTR	szSection )
 	{
 	for( iCurrentButton = 0; iCurrentButton < GetBtnCount(); iCurrentButton ++ )
 	{	
+		// E-33, feinere Spurmarke: die Einfassung um die ganze Schleife sagt
+		// nur "Ausnahme im Durchlauf N", nicht WO. Hier wird der reine
+		// Feldzugriff vom Rumpf getrennt: wirft schon m_btns[i], dann ist das
+		// Feld selbst nicht das, wofuer der Code es haelt; wirft erst der
+		// Rumpf, liegt es an Lookup/Format/WriteProfileString.
+		SECStdBtn* pKnopf = NULL;
+		TRY
+		{
+			pKnopf = m_btns[ iCurrentButton ];
+		}
+		CATCH_ALL(eZugriff)
+		{
+			TCHAR szG[256]; szG[0] = _T('\0');
+			if (eZugriff != NULL) eZugriff->GetErrorMessage(szG, 256);
+			CString strM;
+			strM.Format(
+				_T("E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[%d] wirft (GetSize=%d) - Grund: %s"),
+				(int)iCurrentButton, (int)m_btns.GetSize(),
+				(szG[0] != _T('\0')) ? szG : _T("(ohne Text)"));
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strM);
+			THROW_LAST();
+		}
+		END_CATCH_ALL
+
+		if (iCurrentButton == 0)
+		{
+			CString strM;
+			strM.Format(_T("E-33 SaveCustomInfo: m_btns[0] = %p, Feldzugriff hat NICHT geworfen"),
+				(void*)pKnopf);
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strM);
+		}
+
 		if( ( m_btns[ iCurrentButton ]->m_ulData != 0 ) &&
 			( m_btns[ iCurrentButton ]->m_nID != m_btns[ iCurrentButton ]->m_ulData ) )
 		{

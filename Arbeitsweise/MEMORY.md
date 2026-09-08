@@ -17,6 +17,7 @@
 - [Agenten trennen mit Worktrees](agenten-trennen-worktrees.md) — geteilter Index beschädigt fremde Commits; sonst mit Pfadangabe committen
 - [Teilweise ersetzte Header](teilweise-ersetzte-header.md) — Include-Wächter sind alles-oder-nichts; bei Teilersatz nicht setzen
 - [Nichts auf Gregors Bildschirm starten](nichts-auf-gregors-bildschirm-starten.md) — kein Fenster ohne Absprache; Prozesse immer nach Pfad filtern
+- [Keine Tastendruecke verschicken](keine-tastendruecke-verschicken.md) - SendKeys trifft das Fenster im Vordergrund, nicht mein Ziel; nur Fensterbotschaften an ein gemessenes Handle
 - [Was „lauffähig" heißt](was-lauffaehig-heisst.md) — Gregors drei Kriterien; alle drei müssen erfüllt sein, sonst anders benennen
 - [main muss immer baubar sein](main-muss-immer-baubar-sein.md) — Maßstab ist der frische Klon, nicht der eigene Arbeitsbaum
 - [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen

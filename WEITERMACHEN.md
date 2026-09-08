@@ -6,9 +6,9 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.21 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.21 (`VERSION`) |
-| **Zuletzt veröffentlicht** | [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) — `Releases/Eudora72-1.0.21-release.zip`, SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` |
+| **Quellstand** | 7.2.0.22 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.22 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.22** - `Releases/Eudora72-1.0.22-release.zip`, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
 | **Zuletzt von Gregor gestartet** | Paket 1.0.21 am 07.09.2026 — *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."* |
 | **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.21 (E-31/E-34/E-35/E-36: Verfassen, Abschicken, Weiterleiten) |
 | **Was er dabei bemängelt hat** | *„beenden geht nicht."* und *„kann man die untere zeile (status) immer anzeigen lassen?"* |
