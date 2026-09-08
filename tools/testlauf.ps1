@@ -51,6 +51,14 @@ param(
     [Parameter(Mandatory = $true)] [string]   $Verzeichnis,
     [Parameter(Mandatory = $true)] [string]   $Freigabe,
     [int]      $Sekunden      = 25,
+    # Wie lange nach WM_CLOSE auf das Ende gewartet wird, bevor abgeschossen
+    # wird. 30 s waren am 08.09.2026 zu kurz, um die Frage zu entscheiden, ob
+    # das Beenden haengt oder nur laenger dauert.
+    [int]      $SchliessSekunden = 30,
+    # Skript, das gefahren wird, SOLANGE das Fenster steht - bekommt
+    # -Pfadfilter <Verzeichnis> mit. So gehoert Messen und Aufraeumen in
+    # denselben Lauf und die Instanz bleibt nicht aus Versehen stehen.
+    [string]   $MessenSkript  = '',
     [string[]] $ErlaubtePfade = @('C:\Temp'),
     [switch]   $NurPruefen
 )
@@ -225,13 +233,24 @@ if ($proz.HasExited) {
     Write-Host ('  ' + $ergebnis)
 }
 
+# Messen, solange das Fenster steht.
+if ($MessenSkript -ne '' -and -not $proz.HasExited) {
+    Write-Host ''
+    Write-Host ('  --- ' + $MessenSkript + ' ---')
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $MessenSkript -Pfadfilter $voll 2>&1 |
+        ForEach-Object { Write-Host ('  ' + $_) }
+    Write-Host '  --- Ende der Messung ---'
+    Write-Host ''
+}
+
 # Beenden: WM_CLOSE an das gemessene Handle, danach nach Pfad gefiltert nachsehen.
 if (-not $proz.HasExited) {
     if ($hHaupt -ne [IntPtr]::Zero) {
         Write-Host '  Beende per WM_CLOSE an das gemessene Handle.'
+        $uhr = [System.Diagnostics.Stopwatch]::StartNew()
         [void][TL]::PostMessage($hHaupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)
     }
-    $frist = (Get-Date).AddSeconds(30)
+    $frist = (Get-Date).AddSeconds($SchliessSekunden)
     while (-not $proz.HasExited -and (Get-Date) -lt $frist) { Start-Sleep -Milliseconds 1000 }
     if (-not $proz.HasExited) {
         Write-Host '  Beendet sich nicht - wird nach Pfadpruefung abgeschossen.'
@@ -246,6 +265,11 @@ if (-not $proz.HasExited) {
     }
 }
 
+if ($null -ne $uhr) {
+    $uhr.Stop()
+    Write-Host ('  Zeit vom WM_CLOSE bis zum Ende: ' + [math]::Round($uhr.Elapsed.TotalSeconds, 1) + ' s')
+    $ergebnis = $ergebnis + '  Schliesszeit ' + [math]::Round($uhr.Elapsed.TotalSeconds, 1) + ' s.'
+}
 Write-Host ('  Beendet: ' + $proz.HasExited)
 
 # --- 6. Protokoll -----------------------------------------------------------
