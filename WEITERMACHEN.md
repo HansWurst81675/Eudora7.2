@@ -100,7 +100,7 @@ Release-Bau, `afxcoll.inl:201-217`), gelegen in `CloseDown` Stufe 5
 
 **So wird es belegt:** ein Paket aus diesem Stand bauen, mit `LogLevel=32896`
 unter `[Settings]` in der `Eudora.ini` starten, beenden — und die **letzte**
-`E-33`-Zeile in `eudora.log` lesen. 28 Marken liegen: in
+`E-33`-Zeile in `eudora.log` lesen. 32 Marken liegen: in
 `QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
 `GetErrorMessage` und `THROW_LAST()` (der Ablauf bleibt unverändert, es wird
 nur protokolliert), in `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`,

@@ -14,7 +14,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | Kennung | | |
 |---|---|---|
 | — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | *halb* — das Menü *Window* listet sie auf (von Gregor am 07.09.2026 nachgesehen: „1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht `OTShim` bildet sie nicht nach (`WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in `Eudora.ini`) |
-| **E-33** | *File → Exit*, **Kreuz** und **Alt-F4** beenden Eudora nicht, sondern bringen **„Encountered an improper argument"** (Kriterium 7) | Gregor am 07.09.2026 gemessen, mit Bildschirmfoto: *„weder alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung"*. Belegt: das Beenden **beginnt**, der Abbruch ist eine **geworfene `CInvalidArgException`**, und `ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt sie und liefert 0 — das Fenster bleibt. **Ursache nicht belegt.** Verdacht `QCCustomToolBar::SaveCustomInfo` (`QCCustomToolBar.cpp:421`), 28 Spurmarken liegen (`Befunde/BEENDEN.md`) |
+| **E-33** | *File → Exit*, **Kreuz** und **Alt-F4** beenden Eudora nicht, sondern bringen **„Encountered an improper argument"** (Kriterium 7) | Gregor am 07.09.2026 gemessen, mit Bildschirmfoto: *„weder alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung"*. Belegt: das Beenden **beginnt**, der Abbruch ist eine **geworfene `CInvalidArgException`**, und `ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt sie und liefert 0 — das Fenster bleibt. **Ursache nicht belegt.** Verdacht `QCCustomToolBar::SaveCustomInfo` (`QCCustomToolBar.cpp:421`), 32 Spurmarken liegen (`Befunde/BEENDEN.md`) |
 | — | **E-38**: die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften* | *„obwohl daten (name, mailadresse, server) im wizard eingetragen werden, fehlen diese beim konto->eigenschaften!"* In der `Eudora.ini` **stehen** sie (von Gregor nachgesehen) — also scheitert das **Lesen**, oder die Werte gehen verloren, weil Eudora nur per `pkill` zu beenden ist. **Hängt an E-33** und wird erst danach gemessen; Gregors Wort: *„vielleicht fehlen die daten, wenn ich eudora per task manager abschließen muß"* |
 | — | `GetBtnCount()` meldet 27, `m_btns[24]` wirft trotzdem | die Ursache hinter E-34, und sie ist ein **Widerspruch**: beide lesen dasselbe `m_nSize` (`afxcoll.inl:201-217`), aus einem unveränderten Objekt kann das nicht werfen. Es bleiben Erklärungen außerhalb der Indexrechnung — abgebautes oder falsch typisiertes Leistenobjekt, beschädigter Heap. Abgefangen, nicht behoben |
 | — | Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten **und beim Beenden** | dieselbe Quelle wie E-34, andere Aufrufstellen |
@@ -55,7 +55,7 @@ schnürt, setzt **vorher beide Nummern hoch**, sonst tragen zwei verschiedene
 Bauten dieselbe Kennung (Befund **V-1**, und Gregors Regel dazu: *„version muß
 eindeutig sein"*).
 
-- **E-37 behoben — ein Konto ließ sich scheinbar nicht löschen.**
+- **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
   `CPersonalityView::OnCmdDeletePersonality`
   (`Eudora71/Eudora/PersonalityView.cpp`). Gregors Messung hat die erste
   Annahme widerlegt: *„ja, sie verschwinden nach neustart"* — gelöscht wurde
@@ -66,7 +66,7 @@ eindeutig sein"*).
   die Liste wird einmal am Ende über `PopulateView()` neu aufgebaut. Die drei
   stummen `ASSERT(0)`-Zweige melden jetzt ebenfalls.
   **Von Gregor nicht nachgemessen** — es ist in keinem Paket.
-- **28 Spurmarken für E-33**, das Beenden. Nur Diagnose, nichts behoben:
+- **32 Spurmarken für E-33**, das Beenden. Nur Diagnose, nichts behoben:
   `QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
   `GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert —,
   `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`, `6a`…`6f`),

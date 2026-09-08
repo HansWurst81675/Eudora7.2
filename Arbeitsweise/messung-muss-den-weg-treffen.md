@@ -41,7 +41,7 @@ geprueste Weg nicht gelaufen war — ich habe sie gelesen und nicht gesehen.
 
 ## Fall 2: die Messung an einem Stand ohne die Aenderung
 
-Fuer E-33 (das Beenden) lagen **14, spaeter 28 Spurmarken** im Arbeitsbaum des
+Fuer E-33 (das Beenden) lagen **14, spaeter 32 Spurmarken** im Arbeitsbaum des
 Agenten. Gregor hat den Log von Paket 1.0.21 geschickt — und darin stand zum
 Beenden nichts. Das war kein Befund ueber das Beenden, sondern einer ueber mich:
 sein Paket kennt die Marken nicht, weil sie nicht gebaut und nicht gepackt

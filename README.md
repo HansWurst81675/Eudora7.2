@@ -74,14 +74,24 @@ Paket 1.0.21 selbst gemessen.
   aus `CMainFrame::OnClose` heraus, MFC 14 fängt sie in `AfxCallWndProc`,
   `CWinApp::ProcessWndProcException` zeigt die Meldung und liefert 0 — `WM_CLOSE`
   gilt als beantwortet, das Fenster bleibt. Dieselbe Fehlerklasse wie E-34
-- **Ein Konto ließ sich nicht löschen** (**E-37**) — *„löschen der konten geht
-  übrigens auch nicht: auf toFix liste!"* **Behoben am 07.09.2026, aber in
-  keinem Paket.** Gregors Nachmessung hat die erste Annahme widerlegt: *„ja, sie
-  verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die Liste im
-  Fenster blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
+- **Ein Konto ließ sich scheinbar nicht löschen** (**E-37**) — *„löschen der
+  konten geht übrigens auch nicht: auf toFix liste!"* **Nur die Anzeige ist
+  behoben, die Ursache ist offen — und in keinem Paket.** Gregors Nachmessung:
+  *„ja, sie verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die
+  Liste blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
   abgesichert war das nur mit `ASSERT`. Jetzt wird die Liste über
-  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. Offen bleibt,
-  **warum** `FindItem` den Eintrag nicht findet
+  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. **Zwei Dinge
+  bleiben:** *warum* `FindItem` den Eintrag nicht findet, und das Löschen der
+  **aktuell benutzten** Persönlichkeit (**E-39** unten). Wer daraus liest
+  „Löschen ist gefixt", liest zu viel
+- **Wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt
+  teilweise wiederentstehen** (**E-39**, nicht behoben, nicht am laufenden
+  Programm bestätigt). `CPersonality::Remove` (`persona.cpp:565-566`) stellt die
+  aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`
+  und `SavePasswordText` ausdrücklich in `g_Personalities.GetCurrent()`
+  (`rs.cpp:1237-1250`) — der nächste `SetCurrent` legt damit zwei Schlüssel im
+  gelöschten Abschnitt wieder an. **Unabhängig von der E-37-Behebung**, die den
+  Zeitpunkt nur nach vorn verschiebt
 - **Die im Kontoassistenten eingegebenen Daten fehlen hinterher** (**E-38**):
   Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Gregor
   hat am 07.09.2026 nachgesehen: **in der `Eudora.ini` stehen sie**. Damit

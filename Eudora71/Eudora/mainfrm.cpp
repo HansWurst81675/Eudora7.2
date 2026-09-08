@@ -5310,7 +5310,7 @@ BOOL CMainFrame::CloseDown()
 	// Grund: Gregor hat am 07.09.2026 gemessen, dass Kreuz und Alt-F4 dasselbe
 	// tun wie File -> Exit, und dass dabei der Meldungsdialog "Encountered an
 	// improper argument" erscheint. Das ist MFCs Text fuer
-	// CInvalidArgException (AFX_IDP_INVALID_ARGUMENT). Der Abbruch ist also
+	// CInvalidArgException (AFX_IDS_INVALID_ARG_EXCEPTION, 0xF025). Der Abbruch ist also
 	// KEINE stille FALSE-Rueckgabe, sondern eine geworfene Ausnahme;
 	// AfxCallWndProc faengt sie (wincore.cpp:270-277),
 	// CWinApp::ProcessWndProcException zeigt die Meldung und liefert 0

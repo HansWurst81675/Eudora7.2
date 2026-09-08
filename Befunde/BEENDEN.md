@@ -55,7 +55,7 @@ Daraus folgt dreierlei, und alles drei ist damit **gemessen**, nicht vermutet:
    (er war Platz 4 und die einzige Möglichkeit, Fall (a) zu erzeugen).
 2. **Der Abbruch ist eine geworfene Ausnahme, keine stille FALSE-Rückgabe.**
    „Encountered an improper argument" ist MFCs Text für
-   **`CInvalidArgException`** (`AFX_IDP_INVALID_ARGUMENT`). Damit ist
+   **`CInvalidArgException`** (`AFX_IDS_INVALID_ARG_EXCEPTION, 0xF025`). Damit ist
    `CMainFrame::SaveOpenWindows` als *lautloser* Ausgang **nicht mehr die
    führende Erklärung**; gesucht ist eine **Wurfstelle** auf demselben Weg.
 3. **Der Weg nach dem Wurf ist bestätigt** (bisher Platz 3, jetzt kein
@@ -349,7 +349,7 @@ legt `QCDockBar` an (`mainfrm.cpp:2165-2181`, `QCDockBar : SECDockBar`,
 `SECMiniDockFrameWnd::m_wndSECDockBar` (`OTShim.cpp:3398`). **Und**
 `RemoveBogusAdToolBars` läuft auch beim **Start** (`mainfrm.cpp:971`) — käme
 der Wurf von dort, hätte Gregor die Meldung schon beim Start. Bleibt als Loch
-der `else`-Zweig in `mainfrm.cpp:6182`, der MFCs ungesicherte Fassung ruft.
+der `else`-Zweig in `mainfrm.cpp:6263-6266`, der MFCs ungesicherte Fassung ruft.
 
 Nebenbefund derselben Funktion, unabhängig davon: die Schleife
 `for (int i = 0; bDeleteIt && (i < GetBtnCount()); i++)` (`mainfrm.cpp:5983`)
@@ -516,3 +516,42 @@ Die Behebung liegt nicht bei mir (so abgesprochen). Der Ort ist
 `tools/lehren-spiegeln.pl`, der Aufruf von `--git-common-dir`; gebraucht wird
 `--show-toplevel` (der Arbeitsbaum) für das Schreiben, und `--git-common-dir`
 höchstens noch zum **Finden** des Gedächtnisses.
+
+---
+
+## Nachtrag 07.09.2026: was PRUEFER an diesem Bericht berichtigt hat
+
+Nachgeprüft in `Befunde/PRUEFER-4.md`, 56 Stellen in 49 Dateien, 24 behauptete
+Zeilenangaben einzeln nachgeschlagen. Fünf Angaben dieses Berichts sind falsch:
+
+| Behauptet | Gemessen |
+|---|---|
+| die Meldung sei `AFX_IDP_INVALID_ARGUMENT` | **`AFX_IDS_INVALID_ARG_EXCEPTION`, `0xF025`** (`afxres.h:382`); der behauptete Bezeichner steht nirgends in `atlmfc`. Belegt am Ressourcenverzeichnis von `mfc140enu.dll`: `RT_STRING`-Block `0xF03`, Index 5 |
+| „Kreuz und Alt-F4 zeigen dasselbe ⇒ der Wurf liegt in `OnClose`/`CloseDown`" | **trägt nicht.** Kreuz und Alt-F4 teilen zusätzlich `WM_SYSCOMMAND`/`SC_CLOSE`, den *File → Exit* nicht hat — und dort steht `ENSURE_VALID(pFrameWnd)` in `CFrameWnd::OnSysCommand` (`winfrm.cpp:1112-1114`): dieselbe Ausnahme, dieselbe Meldung, **vor** jedem `OnClose`. Es folgt **nur**, dass der `WM_COMMAND`-Behandler ausgeschlossen ist |
+| der Verdacht auf `SaveCustomInfo` sei die „E-34-Form" | **Begründung widerlegt.** `GetBtnCount()` **ist** `m_btns.GetSize()` (`OTShim_Werkzeugleiste.h:744`), wird je Durchlauf neu ausgewertet, und der Rumpf verändert `m_btns` nirgends — einfädig ist dort kein Indexfehler möglich. `QCChildToolBar::GetButton` hat **dieselbe** Absicherung (`:120`) und hat trotzdem geworfen. Die Kette und die Einfassung sind bestätigt, der Verdacht bleibt **möglich, aber unbegründet** |
+| „28 Marken" | **32**: 28 in `mainfrm.cpp`, 2 in `eudora.cpp`, 2 in `QCCustomToolBar.cpp`. Die 28 gelten nur für `mainfrm.cpp` |
+| `mainfrm.cpp:6182` für den `else`-Zweig | **`mainfrm.cpp:6263-6266`**, in `RemoveAdToolBarFromItsDockBar` ab `:6242` |
+
+**Was PRUEFER bestätigt hat:** `appcore.cpp:1009-1039` liefert bei `WM_CLOSE`
+nachweislich 0 und zeigt den Ausnahmetext; `wincore.cpp:273` macht die 0 zur
+Antwort. `THROW_LAST()` = `(AfxThrowLastCleanup(), throw)` (`afx.h:867`),
+`END_CATCH_ALL` = `} } }` — **verschluckt wird nichts**, und `CATCH_ALL` fängt
+nur `CException*`, Speicherschutzverletzungen laufen durch. Ebenfalls genau:
+`winfrm.cpp:843`/`:885`, `bardock.cpp:302-308` mit `ENSURE(nPos > 0)` in `:308`,
+`debug.cpp:140`, `sendmail.cpp:3741`, `mainfrm.cpp:2570`,
+`QCToolBarManager.cpp:1109`, `QCCustomToolBar.cpp:421`.
+
+**Die offene Frage, die alles entscheidet und einen Klick kostet:** bringt
+*File → Exit* die Meldung **auch**, oder passiert dort lautlos nichts?
+
+- **Auch dort** → der gemeinsame Grund ist `OnClose`/`CloseDown`.
+- **Nur bei Kreuz und Alt-F4** → es ist `CFrameWnd::OnSysCommand`
+  (`winfrm.cpp:1112-1114`), und der ganze Rest dieses Berichts betrifft dann
+  einen anderen Fehler.
+
+**Zwei weitere Vermutungen hat PRUEFER selbst geprüft und verworfen:** ein
+ODR-Bruch durch zwei `SECCustomToolBar`-Definitionen (`tbarcust.h:73` gegen
+`OTShim_Werkzeugleiste.h:693`) — widerlegt, weil `:1436` `__TBARCUST_H__` setzt
+und `:53-58` mit `#error` abbricht; und dass `RestorePassInfo` den Abschnitt
+einer gelöschten Persönlichkeit neu schreibe — widerlegt,
+`persona.cpp:1073-1129` berührt nur `m_Passwords` und `::POPPassword`.
