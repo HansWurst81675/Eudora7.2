@@ -55,10 +55,17 @@ sub ohne_kommentare {
 }
 
 # ---------------------------------------------------------------- E-40 ------
-# Die zwoelf Schritte, die durch AUFRAEUMEN laufen muessen.
+# Die elf Schritte, die durch AUFRAEUMEN laufen muessen.
+#
+# 'QCWorkbook::OnClose' stand hier bis zum 08.09.2026 mit dabei. Er ist
+# ausdruecklich HERAUSGENOMMEN: PRUEFER-5 hat belegt, dass genau dieser Schritt
+# nicht uebersprungen werden darf, weil CFrameWnd::OnClose mit DestroyWindow()
+# endet (MFC 14, winfrm.cpp:941) und CMainFrame::OnClose es nirgends selbst
+# ruft - ohne ihn bliebe ein Prozess ohne Fenster uebrig (BEFUND E-45). Fuer
+# ihn gilt weiter unten eine eigene, umgekehrte Pruefung.
 my @schritte = (
     'CloseImapConnections', 'EmptyTrash', 'CleanSSLLibrary', 'TrayItem',
-    'DeleteMenuObjects', 'QCWorkbook::OnClose', 'TrimJunk',
+    'DeleteMenuObjects', 'TrimJunk',
     'RemoveBogusAdToolBars', 'SaveBarState(ToolBar)', 'SaveWazooBarConfigToIni',
     'SaveCrashStateToINI', 'WriteToolBarMarkerToIni',
 );
@@ -120,7 +127,7 @@ else {
             unless $makro =~ /GetErrorMessage/;
     }
 
-    # E-42: jeder der zwoelf Schritte muss eingefasst sein.
+    # E-42: jeder der elf Schritte muss eingefasst sein.
     for my $s (@schritte) {
         my $q = quotemeta $s;
         unless ($mainfrm =~ /AUFRAEUMEN\s*\(\s*"$q"/) {
@@ -128,6 +135,44 @@ else {
                         . "AUFRAEUMEN - er kann das Beenden abbrechen (E-42)";
         }
     }
+
+    # E-45: QCWorkbook::OnClose ist der Gegenfall. Er darf NICHT durch
+    # AUFRAEUMEN laufen (dann faellt DestroyWindow aus und es bleibt ein
+    # Prozess ohne Fenster), muss aber trotzdem gefasst sein UND das
+    # Zerstoeren des Fensters im Fangzweig nachholen.
+    if ($mainfrm =~ /AUFRAEUMEN\s*\(\s*"QCWorkbook::OnClose"/) {
+        push @mangel, 'mainfrm.cpp: QCWorkbook::OnClose laeuft durch AUFRAEUMEN - '
+                    . 'dann faellt DestroyWindow() aus und es bleibt ein Prozess '
+                    . 'ohne Fenster uebrig (E-45)';
+    }
+    else {
+        push @gesehen, 'QCWorkbook::OnClose laeuft nicht durch AUFRAEUMEN (E-45)';
+    }
+
+    # Den eigenen Fangzweig herausschneiden: von der Aufrufzeile bis zum
+    # naechsten END_CATCH_ALL. Kommentare vorher weg, damit die Erklaerung
+    # im Quelltext die Pruefung nicht selbst erfuellt.
+    my $rein = ohne_kommentare($mainfrm);
+    my ($zweig) = $rein =~ /QCWorkbook::OnClose\s*\(\s*\)\s*;(.*?)END_CATCH_ALL/s;
+    if (!defined $zweig) {
+        push @mangel, 'mainfrm.cpp: nach dem Aufruf von QCWorkbook::OnClose folgt '
+                    . 'kein END_CATCH_ALL - der Schritt ist ungefasst (E-45)';
+    }
+    else {
+        push @gesehen, 'eigener Fangzweig um QCWorkbook::OnClose (E-45)';
+        push @mangel, 'mainfrm.cpp: der Fangzweig um QCWorkbook::OnClose faengt '
+                    . 'nicht - CATCH_ALL fehlt (E-45)'
+            unless $zweig =~ /CATCH_ALL/;
+        push @mangel, 'mainfrm.cpp: der Fangzweig um QCWorkbook::OnClose holt das '
+                    . 'Zerstoeren des Fensters nicht nach - DestroyWindow fehlt (E-45)'
+            unless $zweig =~ /DestroyWindow\s*\(/;
+        push @mangel, 'mainfrm.cpp: der Fangzweig um QCWorkbook::OnClose meldet '
+                    . 'nichts - PutDebugLog fehlt (E-45)'
+            unless $zweig =~ /PutDebugLog/;
+    }
+    push @mangel, 'mainfrm.cpp: der Aufruf von QCWorkbook::OnClose steht nicht in '
+                . 'einem TRY (E-45)'
+        unless $rein =~ /TRY\s*\{\s*QCWorkbook::OnClose\s*\(\s*\)\s*;/s;
 
     # E-41: OnSysCommand muss SC_CLOSE einfassen und WM_CLOSE nachschicken.
     my ($sys) = ohne_kommentare($mainfrm) =~ /CMainFrame::OnSysCommand\s*\([^)]*\)\s*\{(.*?)\n\}/s;

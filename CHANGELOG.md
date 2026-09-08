@@ -14,10 +14,8 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | Kennung | | |
 |---|---|---|
 | **E-37** | **ein Konto lässt sich nicht löschen** — der Eintrag bleibt in der Liste stehen, bis Eudora neu startet | **Zwei Anläufe, der erste war eine Regression.** Gregor am 08.09.2026: *„die meldung kommt, wenn ich eine persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora geschlossen habe"* — mein `PopulateView()` hat geworfen und dem Anwender „Encountered an improper argument" gezeigt. Gelöscht **wird** korrekt; es ist ein Anzeigefehler. Zweiter Anlauf gebaut, **noch nicht bestätigt** |
-| **E-43** | `QCCustomToolBar::SaveCustomInfo` wirft beim Beenden — der **Leistenzustand wird nie gespeichert** | Das Beenden läuft nur, weil **E-42** den Wurf abfängt. Ursache eingegrenzt und der Widerspruch hinter E-34 damit aufgelöst: aus **einem** `Format`-Aufruf `GetBtnCount=24` **und** `m_btns.GetSize=0`. Das Feld ändert sich zwischen zwei Lesevorgängen — Wettlauf oder abgebautes Leistenobjekt, **kein** Indexfehler. **Folge:** krumme Fensterlayouts über mehrere Starts |
-| — | **Das Erscheinungsbild nach dem ersten Anlegen eines Kontos** ist falsch | Alle Wazoo-Bereiche liegen als schmale **senkrechte** Spalten links, der MDI-Bereich ist nach rechts gedrängt. Gregor am 08.09.2026: *„erscheinungsbild nach dem ersten anlegen von konto wie im screenshot. muß korrigiert werden."* Hängt mit **E-43** zusammen (der Leistenzustand wird nicht gespeichert) und mit **A-2** |
-| — | **A-2**: *Task Status* und *Task Errors* sollen **waagrecht unten** liegen | *„task errors und task status wären waagrecht unten besser als senkrecht — nach dem exit-fix korrigieren."* Anforderung in [ZIEL.md](ZIEL.md), nicht angefangen |
-| — | **Kriterium 8**: die offenen Fenster sichtbar und auswählbar | *halb* — das Menü *Window* listet sie auf (von Gregor nachgesehen: „1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht `OTShim` bildet sie nicht nach (`WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in `Eudora.ini`) |
+| **E-43** | `QCCustomToolBar::SaveCustomInfo` wirft beim Beenden — der **Leistenzustand wird nie gespeichert** | Das Beenden läuft nur, weil **E-42** den Wurf abfängt. **In 7.2.0.23 entschieden, was seit E-34 offen war:** vier Messungen in einer Zeile ergeben `GetBtnCount=24/24  m_btns.GetSize=0/0` bei gleichem `this` und gleicher Adresse. Der Wert **flackert also nicht** — und ein gerade freigegebenes Objekt ist ebenfalls ausgeschlossen, weil die Marke **E-46** im Destruktor erst *nach* dieser Stelle erscheint. Es bleibt: der übersetzte Code liest an **zwei verschiedenen Adressen**, obwohl `GetBtnCount()` wörtlich `return (int)m_btns.GetSize()` ist. Die dritte Marke gibt die Rohwörter des Feldes aus und sagt, welche. **Folge:** kein `[ToolBar...]`-Abschnitt in der `Eudora.ini` — und daraus folgte **E-44** |
+| — | **Kriterium 8**: die **Registerkartenleiste** am unteren Fensterrand für die offenen Fenster | *halb* — das Menü *Window* listet sie auf (von Gregor nachgesehen: „1 In", „2 Out"). Die Leiste am unteren Rand ist mit **E-44** jetzt sichtbar und waagrecht, zeigt aber *Task Status* und *Task Errors*, nicht die offenen Fenster |
 | — | **E-38**: die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften* | In der `Eudora.ini` **stehen** sie (von Gregor nachgesehen). Hing an E-33; jetzt, da Eudora sich normal beenden lässt, **neu zu messen** |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Unabhängig von E-37. Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. Beim Beenden ist sie mit E-42 weg, beim Anzeigen nicht |
@@ -96,6 +94,95 @@ dazu: *„version muß eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.23 — Die Statusleiste liegt unten, und ein Prozess ohne Fenster kann nicht mehr entstehen
+
+**Was Gregor damit tun kann, was vorher nicht ging:** *Task Status* und *Task
+Errors* liegen jetzt **waagrecht am unteren Fensterrand**, über die ganze
+Breite, und bleiben dort — statt als schmale senkrechte Spalte links neben dem
+Postfach zu stehen. Von Gregor am 08.09.2026 an der Prüfinstanz bestätigt:
+*„jetzt ist sie unten, ja"*. Damit ist Anforderung **A-2** aus
+[ZIEL.md](ZIEL.md) umgesetzt.
+
+### A-2/E-44 — zwei Ursachen, nicht eine
+
+Der erste Verdacht war falsch: die Leiste wird **nicht** links angedockt. An
+einem frischen Profil gemessen (`tools/leisten-messen.ps1`, neu in diesem
+Stand) lag sie von Anfang an richtig — **unten, 1712×80** — und wurde nur
+unmittelbar danach durch `ID_SEC_HIDE` wieder **versteckt**
+(`WazooBarMgr.cpp`, `SetDefaultWazooBarState`, Fall 2). Diese Zeile ist weg.
+
+Das erklärte aber nicht Gregors Bildschirmbild. Dafür gab es eine zweite,
+unabhängige Ursache: der Standardzweig läuft **nur beim allerersten Start**.
+Ab dem zweiten greift `LoadWazooConfigFromIni` — und das stellt nur wieder
+her, *welche* Fenster in einer Leiste sitzen, **nicht die Andockseite**. Die
+käme aus MFCs `LoadBarState` und damit aus dem INI-Abschnitt `[ToolBar...]`,
+den es nicht gibt, weil `SaveBarState` beim Beenden jedes Mal abbricht
+(**E-43**). Nachgemessen: weder Gregors `Eudora.ini` noch die eines frischen
+Profils enthält einen solchen Abschnitt — **null Treffer** in beiden. Alle drei
+Leisten blieben deshalb auf `CBRS_LEFT` aus `CreateInitialWazooBars` stehen.
+
+Jetzt zieht der Lade-Zweig die Standardanordnung nach, **wenn** eine Leiste an
+keiner Andockleiste hängt (`m_pDockBar == NULL`) — dieselbe Prüfung, die das
+Projekt an anderer Stelle selbst benutzt. Ist eine Lage gespeichert, ändert
+sich nichts. Ergebnis: Postfächer links sichtbar, Kurznamen versteckt,
+Aufgabenstatus waagrecht unten sichtbar.
+
+> **Nachgebessert nach Gregors Bildschirmfoto:** im ersten Anlauf blieb die
+> **Kurznamen-Leiste** als 180 Pixel breite Spalte rechts dauerhaft offen. Die
+> Sichtbarkeit einer Wazoo-Leiste wird nirgends gespeichert (nachgesehen in
+> `SaveWazooConfigToIni`) — was ohne Zutun sichtbar bleibt, ist also keine
+> Entscheidung des Anwenders, sondern nur das `WS_VISIBLE` aus `Create`.
+> Deshalb läuft die Sichtbarkeitsstufe jetzt mit.
+
+### E-45 — der eine Aufräumschritt, der nicht übersprungen werden darf
+
+Gefunden von **PRUEFER** ([Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md)) als
+Fehler in **meiner** E-42-Behebung. Von den zwölf mit `AUFRAEUMEN` gefassten
+Schritten ist einer nicht bloß Aufräumen: `QCWorkbook::OnClose` löst sich auf
+`CFrameWnd::OnClose` auf, und deren **letzte** Anweisung ist `DestroyWindow()`
+(MFC 14, `winfrm.cpp:941`); `CMainFrame::OnClose` ruft es nirgends selbst.
+Fiele der Schritt aus, gäbe es kein `WM_QUIT`, kein `ExitInstance` und kein
+`IniStringCleanUp` — und das Fenster ist von `HideApplication` schon
+versteckt: übrig bliebe ein **Prozess ohne Fenster**, genau der Zustand, den
+Gregor tagelang hatte. Dieser Schritt hat jetzt einen eigenen Fangzweig, der
+`DestroyWindow()` nachholt.
+
+### E-46 — ein Verdacht aufgestellt und in derselben Sitzung widerlegt
+
+`CFrameWnd::PostNcDestroy` ist wörtlich `delete this`, `CMainFrame`
+überschreibt es nicht, und `DestroyWindow()` stellt `WM_NCDESTROY` synchron
+zu — der Aufruf steht aber **mitten** in `CMainFrame::OnClose`, danach laufen
+noch rund 230 Zeilen. Wäre der Verdacht richtig, hätte **E-43** damit seine
+Ursache gehabt. Entschieden an einer Marke im Destruktor: sie erscheint im
+Protokoll **nach** `nach QCWorkbook::OnClose`, nicht dazwischen. **Widerlegt.**
+Die Marke bleibt drin, weil sie die Reihenfolge dauerhaft belegt.
+
+### E-43 — der Widerspruch ist jetzt eingegrenzt statt bloß benannt
+
+Die verfeinerte Marke misst `GetBtnCount()` und `m_btns.GetSize()` **je
+zweimal in einer Ausgabe**. Gemessen: `GetBtnCount=24/24
+m_btns.GetSize=0/0`, gleiches `this`, gleiche Adresse. Damit sind ein Wettlauf
+und ein freigegebenes Objekt **beide ausgeschlossen** — es bleibt, dass der
+übersetzte Code an zwei Adressen liest, obwohl beide Ausdrücke wörtlich
+derselbe Code sind (`OTShim_Werkzeugleiste.h:744`). Eine dritte Marke gibt
+jetzt Versatz und Rohwörter des Feldes aus.
+
+**Widerlegt, ebenfalls in dieser Sitzung:** PRUEFERs Befund, das Protokoll sei
+im Normalbetrieb stumm. `DebugMask` ist zwar mit `0` vorbelegt, wird aber
+sofort aus der INI gesetzt, und der Vorgabewert steht in der Ressource
+(`EudoraRes.rc:8441`: `LogLevel\n25759`). 25759 ist 0x649F und enthält 0x80 —
+die Marken werden **ohne jede Einstellung** geschrieben. Gegenprobe: Gregors
+`Eudora.ini` hat keine Zeile `LogLevel`, und seine `eudora.log` enthält alle
+Marken.
+
+### Neu im Werkzeugkasten
+
+- `tools/leisten-messen.ps1` — misst Andockseite, Sichtbarkeit, Größe und Lage
+  jeder Wazoo-Leiste eines laufenden Eudora und schreibt das Urteil zu A-2
+  ausdrücklich hin. Der `-Pfadfilter` ist Absicht: auf Gregors Rechner läuft
+  sein eigenes Eudora, gemessen werden soll die Prüfinstanz. Das Skript
+  schickt keine Nachricht und beendet nichts.
 
 ## 7.2.0.22 / Paket 1.0.22 — 08.09.2026 · das Beenden funktioniert
 

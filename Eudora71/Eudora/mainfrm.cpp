@@ -793,6 +793,22 @@ CMainFrame::CMainFrame() :
 
 CMainFrame::~CMainFrame()
 {
+	// BEFUND E-46, Spurmarke (08.09.2026): Diese Zeile klaert eine Frage, die
+	// seit E-33/E-34 offen ist. CFrameWnd::PostNcDestroy ist genau
+	// "delete this" (MFC 14, winfrm.cpp:269-275), und CFrameWnd::OnClose
+	// endet mit DestroyWindow() (winfrm.cpp:941). CMainFrame::OnClose ruft
+	// QCWorkbook::OnClose aber MITTEN in seinem Rumpf auf und arbeitet danach
+	// noch rund 230 Zeilen weiter - unter anderem SaveBarState("ToolBar"),
+	// aus dem E-33 stammt.
+	//
+	// Steht diese Marke im Protokoll ZWISCHEN "vor QCWorkbook::OnClose" und
+	// "nach QCWorkbook::OnClose", dann laufen alle folgenden Schritte auf
+	// einem bereits freigegebenen CMainFrame - und E-33 (GetBtnCount=24 bei
+	// m_btns.GetSize=0) haette damit seine Ursache. Steht sie danach, ist der
+	// Verdacht widerlegt. Die Marke selbst greift nichts an.
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		"E-46 CMainFrame::~CMainFrame betreten");
+
 	// DRW - Moved here from CAdView now that ads are served here.
 	MGR_Shutdown(m_ldb);
 
@@ -5211,7 +5227,46 @@ void CMainFrame::OnClose()
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 OnClose: vor QCWorkbook::OnClose (= CFrameWnd::OnClose)");
 
-	AUFRAEUMEN("QCWorkbook::OnClose", QCWorkbook::OnClose());
+	// BEFUND E-45 (PRUEFER-5, 08.09.2026): Dieser eine Schritt darf NICHT
+	// stillschweigend uebersprungen werden, alle anderen elf duerfen es.
+	//
+	// QCWorkbook::OnClose loest sich auf CFrameWnd::OnClose auf, und deren
+	// LETZTE Anweisung ist DestroyWindow() (MFC 14, winfrm.cpp:941).
+	// CMainFrame::OnClose ruft DestroyWindow nirgends selbst. Faellt der
+	// Schritt aus, gibt es also kein WM_NCDESTROY, kein WM_QUIT, kein
+	// ExitInstance - und damit auch kein IniStringCleanUp (eudora.cpp:2118),
+	// das den INI-Schreibpuffer leert. Das Fenster hat HideApplication
+	// (winfrm.cpp:885) zu diesem Zeitpunkt schon versteckt: Ergebnis waere
+	// ein Prozess ohne Fenster, den nur der Task-Manager beendet.
+	//
+	// Deshalb hier kein AUFRAEUMEN, sondern ein eigener Fangzweig, der das
+	// Zerstoeren des Fensters nachholt. Das ist keine Verschlechterung
+	// gegenueber dem Zustand vor E-42: dort fing AfxCallWndProc
+	// (wincore.cpp:252-278) dieselbe Ausnahme, und DestroyWindow lief
+	// ebenso nicht - nur sichtbar war es damals, weil eine Meldung kam.
+	TRY
+	{
+		QCWorkbook::OnClose();
+	}
+	CATCH_ALL(e)
+	{
+		TCHAR szGrund[256];
+		szGrund[0] = _T('\0');
+		if (e != NULL)
+			e->GetErrorMessage(szGrund, 256);
+
+		CString strMeldung;
+		strMeldung.Format(
+			_T("E-45 Beenden: Schritt 'QCWorkbook::OnClose' hat eine Ausnahme ")
+			_T("ausgeloest - Grund: %s. Das Fenster wird jetzt selbst zerstoert, ")
+			_T("damit WM_QUIT, ExitInstance und IniStringCleanUp noch laufen."),
+			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+
+		if (::IsWindow(m_hWnd))
+			DestroyWindow();
+	}
+	END_CATCH_ALL
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 OnClose: nach QCWorkbook::OnClose");

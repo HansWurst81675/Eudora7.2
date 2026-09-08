@@ -1,8 +1,11 @@
 ---
 name: erfolg-aus-anwendersicht
-description: Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung
-metadata:
+description: "Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung"
+metadata: 
+  node_type: memory
   type: feedback
+  originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
+  modified: 2026-09-08T07:57:28.547Z
 ---
 
 # Erfolg heißt: der Anwender kann etwas, was er vorher nicht konnte
@@ -63,6 +66,40 @@ dem Satz „Alle vier Kriterien aus `ZIEL.md` sind erfüllt (06.09.2026)" im
    Fortschritts ist.** Sonst prüft Gregor sie für mich — und das kostet ihn
    einen Testlauf.
 
+## Nachtrag 07./08.09.2026: „behoben" heißt, der Weg ist einmal gelaufen
+
+Am 07.09.2026 habe ich E-37 (*ein Konto lässt sich nicht löschen*) als
+**behoben** in die Commit-Nachricht, den `CHANGELOG.md` und `BEFUNDE.md`
+geschrieben. Gregor hat sofort nachgefragt:
+
+> *„dazu hast du wenigstens einen neuen bug erstellt, ja? sonst denkt jeder,
+> das löschen ist gefixt, was nur teilweise stimmt."*
+
+Am 08.09.2026, 07:19 Uhr, hat er es dann selbst gemessen:
+
+> *„die meldung kommt, wenn ich eine persona gelöscht habe."*
+> *„sie verschwindet links nicht, bis ich eudora geschlossen habe"*
+
+Mein Fix rief `PopulateView()`; der Aufruf **warf** — die Meldung
+„Encountered an improper argument" war meine eigene Behebung. Zur selben Zeit
+stand in `ZIEL.md` von meiner Hand „Kriterium 7 ist erfüllt" und im
+`CHANGELOG.md` „E-37 behoben". Übersetzt, kompiliert, alle Schranken grün —
+und der Weg, um den es ging (eine Persönlichkeit löschen), war **nie einmal
+durchlaufen**.
+
+**Die Regel dazu, als Ergänzung zu Punkt 2:**
+
+- **„Behoben" setzt einen Durchlauf voraus, keinen Bau.** Solange die geänderte
+  Zeile nicht **einmal ausgeführt** wurde — belegt durch eine Spurmarke im Log,
+  nicht durch ein Argument — heißt es „geändert, nicht durchlaufen".
+- **Eine Behebung, die eine Meldung erzeugt, ist eine Regression**, auch wenn
+  der ursprüngliche Fehler weg ist. Sie gehört in dieselbe Zeile wie der
+  Erfolg, nicht in einen späteren Befund.
+- **Wer „teilweise" behoben hat, schreibt den Rest sofort als eigenen Befund
+  auf.** Gregors Satz nennt den Schaden genau: der Eintrag „behoben" nimmt
+  jedem anderen den Anlass, noch hinzusehen.
+
 Siehe [was-lauffaehig-heisst](was-lauffaehig-heisst.md),
-[lauffaehiges-ergebnis-liefern](lauffaehiges-ergebnis-liefern.md) und
+[lauffaehiges-ergebnis-liefern](lauffaehiges-ergebnis-liefern.md),
+[messung-muss-den-weg-treffen](messung-muss-den-weg-treffen.md) und
 [version-eindeutig-machen](version-eindeutig-machen.md).

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-07T08:29:11.413Z
+  modified: 2026-09-08T07:57:11.327Z
 ---
 
 # Eine Schranke, die ich nicht gegen den echten Fehler gefahren habe, ist keine
@@ -55,5 +55,32 @@ Zeilennummern in `pruefe-fensterbau.pl`).
    ist erst zu entscheiden, ob die Schranke oder der Test falsch war — und das
    Ergebnis gehört in die Commit-Nachricht, nicht nur in den Kopf.
 
+## Nachtrag 08.09.2026: „irgendeiner ist rot" ist nicht dasselbe wie „alle"
+
+`tools/pruefe-beenden.pl` hatte vier Gegentests. Beim ersten Lauf schlugen
+**GT1 und GT4** an, GT2 und GT3 blieben stumm. Hätte ich nur auf „der Gegentest
+greift" geschaut, wäre die Schranke mit **zwei Löchern** in den Commit gegangen
+— und sie ist die Schranke, die Gregors wichtigstes Kriterium hält.
+
+Was danach richtig lief und Regel bleibt: erst habe ich geprüft, ob meine
+**Testmanipulation überhaupt angekommen** ist ([[messung-muss-den-weg-treffen]]),
+sie neu angesetzt — und dann waren beide Manipulationen im Baum und die
+Schranke schwieg trotzdem. Erst damit war belegt: zwei echte Löcher, nicht zwei
+kaputte Tests. Die Ursachen lagen beide in der Schranke
+([[schranke-liest-nur-code]]): `WM_CLOSE` steht auch im Protokolltext, und der
+`default:`-Bereich endete an der inneren Klammer.
+
+**Damit gilt zusätzlich zu Punkt 1:**
+
+- **Jeder Gegentest wird einzeln gefahren und muss einzeln rot werden.** Eine
+  Sammelmeldung „Gegentests schlagen an" ist kein Ergebnis; es gehört eine
+  Tabelle mit einer Zeile je Gegentest und dem **Text der Meldung** dazu.
+- **Bleibt einer stumm, ist die Reihenfolge:** erst nachmessen, ob die
+  Manipulation im Baum steht (`grep` auf die entfernte Zeile), dann entscheiden
+  — kaputter Test oder Loch in der Schranke. Nie umgekehrt raten.
+- **Eine Schranke ist erst fertig, wenn die Zahl der roten Gegentests gleich der
+  Zahl ihrer Prüfungen ist.** Vier Prüfungen, vier Gegentests, vier rote Läufe.
+
 Siehe [[fehlerklassen-abstellen]], [[lehren-anwenden-nicht-nur-schreiben]],
-[[tests-vor-jedem-commit-laufen-lassen]] und [[pruefen-statt-vermuten]].
+[[schranke-liest-nur-code]], [[tests-vor-jedem-commit-laufen-lassen]] und
+[[pruefen-statt-vermuten]].

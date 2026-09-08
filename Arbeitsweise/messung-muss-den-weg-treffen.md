@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-07T12:44:17.656Z
+  modified: 2026-09-08T07:58:23.408Z
 ---
 
 # Der Test muss den Weg treffen, den er prueft
@@ -75,5 +75,24 @@ nichts messen konnte ([[erst-pruefen-dann-anweisen]]).
   Schranke, und das Ergebnis gehoert in die Commit-Nachricht
   ([[schranke-gegentesten]]).
 
-Siehe [[schranke-gegentesten]], [[gegenprobe-umdrehen]],
-[[pruefen-statt-vermuten]] und [[widerlegte-vermutungen-aufschreiben]].
+## Fall 3, 08.09.2026: derselbe Auslöser, diesmal richtig behandelt
+
+Beim Gegentest von `tools/pruefe-beenden.pl` blieben zwei von vier Prüfungen
+stumm. Der erste Gedanke wäre wieder „die Schranke greift nicht" gewesen. Statt
+dessen habe ich zuerst nachgemessen, ob die **Manipulation** im Baum steht —
+`grep` auf die Zeile, die ich entfernt haben wollte. Sie stand noch da: das
+Suchmuster meiner Testmanipulation hatte nicht getroffen, geändert wurde
+nichts. Nach dem zweiten, treffenden Anlauf waren beide Manipulationen im Baum
+**und** die Schranke schwieg weiter — erst damit war belegt, dass es zwei echte
+Löcher waren (`WM_CLOSE` steht auch im Protokolltext; der `default:`-Bereich
+endete an der inneren Klammer, siehe [[schranke-liest-nur-code]]).
+
+Der Ablauf, der das entschieden hat, in dieser Reihenfolge und nicht anders:
+**Manipulation nachmessen → Manipulation berichtigen → Schranke bewerten.**
+Wer bei Schritt drei anfängt, bekommt in beiden Richtungen ein falsches
+Ergebnis: eine gute Schranke gilt als stumm, oder ein Loch gilt als kaputter
+Test.
+
+Siehe [[schranke-gegentesten]], [[schranke-liest-nur-code]],
+[[gegenprobe-umdrehen]], [[pruefen-statt-vermuten]] und
+[[widerlegte-vermutungen-aufschreiben]].

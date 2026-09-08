@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-07T08:29:37.686Z
+  modified: 2026-09-08T07:58:08.284Z
 ---
 
 # Eine Daueraufgabe ohne Auslöser läuft nicht
@@ -67,5 +67,45 @@ die veralteten Zahlen gefunden, die Gregor selbst finden musste.
    eingepflegt?"* — wenn sie das erste Mal ausgelöst hat, was sie prüft, war
    der Takt nicht da.
 
+## Nachtrag 08.09.2026: der Auslöser stand in der Lehre, nicht im Werkzeug
+
+Vier weitere Fragen an einem Vormittag, alle vor demselben Merge:
+
+| Zeit | Gregor |
+|---|---|
+| 07:15 | *„standard frage: alles gesichert? alles commited? readme updated? changelog auch? findings eingepflegt? vom lektor, prüfer, chronist?"* |
+| 07:31 | *„laß' mal wieder den lektor los: … AUFGABEN.md ist veraltet. er soll prüfen, ob andere MDs auch"* |
+| 07:32 | *„haben wir ein review? und neue tests für die neue version? wenn nicht, nachholen!"* |
+| 07:41 | *„vor dem commiten und mergen soll noch der lektor und chronist auf die dokumente schauen und auf unseren chat schauen."* |
+
+Die Zeiten der Agentenstarts danach: LEKTOR **07:32:43**, PRUEFER **07:33:04**,
+CHRONIST **07:42:30** — jeder unter zwei Minuten **nach** seiner Frage. Gepusht
+hatte ich an diesem Morgen bereits um 05:49 und um 06:06, also zweimal ohne
+LEKTOR, obwohl in dieser Lehre „vor jedem Push eines Zweigs, den Gregor mergen
+soll" steht. Dasselbe beim Test: die fünf bestehenden Testsammlungen liefen um
+06:06, aber die **neue** Schranke für das behobene Beenden
+(`tools/pruefe-beenden.pl`) ist erst um 07:37 entstanden — nach seiner Frage.
+
+**Warum es sich wiederholt hat:** Der Auslöser stand in der Lehre, und die
+Lehre liest niemand im Moment des Pushes. Ein Auslöser wirkt erst, wenn er in
+dem Werkzeug steht, das den Moment ohnehin durchläuft
+([[fehlerklassen-abstellen]], [[lehren-anwenden-nicht-nur-schreiben]]).
+
+**Also, zusätzlich:**
+
+- **Der Zeitabstand zwischen Gregors Frage und meinem Agentenstart ist das
+  Maß.** Unter zwei Minuten heißt: seine Frage war der Auslöser, nicht mein
+  Takt. Dieser Abstand ist messbar und gehört in jede Bilanz, in der ich
+  behaupte, die Rollen liefen.
+- **Zu jeder Behebung gehört im selben Commit eine neue Prüfung**, die genau sie
+  festhält — nicht der Lauf der alten Sammlungen. „Alle Tests grün" nach einem
+  Fix, für den es keinen Test gibt, ist eine leere Aussage
+  ([[tests-vor-jedem-commit-laufen-lassen]]).
+- **Ein Push, zu dem kein LEKTOR-Rücklauf vorliegt, wird gemeldet, nicht
+  stillschweigend gemacht** — mit dem Satz, dass die Doku ungeprüft ist. Besser
+  ist die Schranke: der Hook fragt nach einem Rücklauf, bevor er den Push
+  durchlässt.
+
 Siehe [[mannschaft-fuehren]], [[lehren-anwenden-nicht-nur-schreiben]],
-[[nie-stillstehen]] und [[anweisungen-abarbeiten]].
+[[tests-vor-jedem-commit-laufen-lassen]], [[nie-stillstehen]] und
+[[anweisungen-abarbeiten]].

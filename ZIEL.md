@@ -179,7 +179,7 @@ Gestellt am 08.09.2026, nachdem Gregor die Leisten im Prüfstand gesehen hatte:
 > *„task errors und task status wären waagrecht unten besser als senkrecht —
 > nach dem exit-fix korrigieren."*
 
-Beide Bereiche liegen heute **senkrecht** als schmale Spalten links neben dem
+Beide Bereiche lagen **senkrecht** als schmale Spalten links neben dem
 MDI-Bereich. Verlangt ist eine **waagrechte** Anordnung am unteren Fensterrand.
 Die Reihenfolge, die Gregor selbst gesetzt hat, gilt: **erst** Kriterium 7 (das
 Beenden), dann das.
@@ -189,12 +189,33 @@ offenen Fenster (die WazooBar am unteren Rand). A-2 betrifft dieselbe Gegend
 des Fensters und dieselbe Ersatzschicht `OTShim` — wer eines angeht, sieht sich
 das andere gleich mit an.
 
-**Nicht angefangen.** Fundstellen zum Einstieg: `Eudora71/Eudora/WazooBar.cpp`,
-Abschnitt `[WazooBars]` in der `Eudora.ini` (Schlüssel `WazooBarIds`,
-`WazooBar%d`, `WazooMDI%d`, Namen in `EudoraRes.rc:10637-10640`), und die
-Andockseite in `Eudora71/OTShim/OTShim_Werkzeugleiste.cpp`.
+**Woran A-2 sich messen lässt.** Nach dem Start muss `tools/leisten-messen.ps1`
+für die Leiste mit der Kennung **320** melden: Andockseite **unten**,
+**Sichtbar = True**, Höhe **80**, Breite = Breite des Hauptfensters minus
+Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
+`[WazooBars]`-Abschnitt) **als auch** bei jedem weiteren Start mit vorhandener
+`Eudora.ini` — das sind zwei verschiedene Programmwege, und nur der zweite ist
+der, den Gregor gesehen hat.
 
-## Woran sich Kriterium 2 misst
+**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor noch nicht bestätigt.
+Zwei Ursachen, beide gemessen, beide behoben:
+
+1. Beim frischen Profil lag die Leiste schon richtig (unten, 1712×80) und wurde
+   nur durch `ID_SEC_HIDE` in `WazooBarMgr.cpp`, `SetDefaultWazooBarState`
+   Fall 2, sofort wieder **versteckt**. Diese Zeile ist entfallen.
+2. Ab dem zweiten Start läuft ein anderer Zweig, der die Andockseite
+   **überhaupt nicht** setzt: `LoadWazooConfigFromIni` (`WazooBar.cpp:552`)
+   stellt nur wieder her, welche Fenster in einer Leiste sitzen. Die Lage käme
+   aus MFCs `LoadBarState` und damit aus dem INI-Abschnitt `[ToolBar...]` —
+   den es nicht gibt, weil `SaveBarState` beim Beenden abbricht (**E-43**).
+   Jetzt wird die Standardanordnung nachgezogen, wenn eine Leiste an keiner
+   Andockleiste hängt.
+
+Fundstellen: `Eudora71/Eudora/WazooBarMgr.cpp` (`SetDefaultWazooBarState`,
+`LoadWazooBarConfigFromIni`), `Eudora71/Eudora/WazooBar.cpp:552`, Abschnitt
+`[WazooBars]` in der `Eudora.ini` (Schlüssel `WazooBarIds`, `WazooBar%d`,
+`WazooMDI%d`, Namen in `EudoraRes.rc:10637-10640`), und die Andockseite in
+`Eudora71/OTShim/OTShim.cpp:293` (`SECMDIFrameWnd::DockControlBarEx`).
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert
 (Eudora 7 unter Windows XP). Maßgeblich sind daraus:

@@ -506,8 +506,23 @@ bool CWazooBarMgr::SetDefaultWazooBarState(CWazooBar *pWazooBar, int nIndex, Def
 
 			if ((DST_SHOWHIDE == tWhichType) || (DST_ALL == tWhichType))
 			{
-				// Hide the Task Status/Task Error window
-				pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0);
+				// ANFORDERUNG A-2 (BEFUND E-44, 08.09.2026): Hier stand
+				//
+				//     // Hide the Task Status/Task Error window
+				//     pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0);
+				//
+				// Das war die ganze Ursache. Die Leiste liegt zu diesem
+				// Zeitpunkt schon richtig: unten, ueber die volle Breite,
+				// 80 Pixel hoch (gemessen am 08.09.2026 mit
+				// tools/leisten-messen.ps1 an einem frischen Profil:
+				// Andockseite unten, 1712x80) - sie wurde nur unmittelbar
+				// danach wieder versteckt. Aufgabenstatus und
+				// Aufgabenfehler bleiben jetzt sichtbar, waagrecht unten.
+				//
+				// Das ist bewusst KEIN ID_SEC_SHOW: die Leiste ist seit
+				// CreateInitialWazooBars mit WS_VISIBLE erzeugt
+				// (WazooBarMgr.cpp:136), es genuegt, das Verstecken zu
+				// lassen.
 			}
 		}
 		break;
@@ -591,6 +606,102 @@ BOOL CWazooBarMgr::LoadWazooBarConfigFromIni()
 			ASSERT_KINDOF(CWazooBar, pWazooBar);
 
 			VERIFY(pWazooBar->LoadWazooConfigFromIni());
+		}
+
+		// ANFORDERUNG A-2 (BEFUND E-44, 08.09.2026): Hier fehlte die
+		// Anordnung vollstaendig.
+		//
+		// LoadWazooConfigFromIni (WazooBar.cpp:552) stellt NUR wieder her,
+		// WELCHE Fenster in einer Leiste sitzen, und wo die Reiter sitzen -
+		// die Andockseite und die Groesse holt es nicht. Die kommt sonst
+		// aus MFCs LoadBarState, also aus dem INI-Abschnitt
+		// [ToolBar-...], den QCToolBarManager::LoadState in
+		// CMainFrame::FinishInitAndShowWindow (mainfrm.cpp:936) einliest.
+		//
+		// Genau dieser Abschnitt fehlt aber, denn SaveBarState("ToolBar")
+		// bricht beim Beenden jedes Mal ab (BEFUND E-43). Gemessen am
+		// 08.09.2026: weder Gregors Eudora.ini noch die eines frischen
+		// Profils enthaelt ueberhaupt einen [ToolBar...]-Abschnitt.
+		//
+		// Folge: sobald ein [WazooBars]-Abschnitt existiert - also ab dem
+		// zweiten Start - blieben alle drei Leisten auf dem Stil, mit dem
+		// CreateInitialWazooBars sie erzeugt hat, und das ist CBRS_LEFT
+		// (WazooBarMgr.cpp:136). Deshalb standen Aufgabenstatus und
+		// Aufgabenfehler senkrecht links statt waagrecht unten.
+		//
+		// Behebung: konnte die Lage nicht wiederhergestellt werden -
+		// erkennbar daran, dass die Leiste an keiner Andockleiste haengt -
+		// dann wird die Standardanordnung nachgezogen. Dieselbe Pruefung
+		// benutzt das Projekt schon selbst (mainfrm.cpp:994: "Normally,
+		// LoadBarState() will take care of redocking"). Ist eine Lage
+		// gespeichert, aendert sich nichts.
+		//
+		// Zwei Durchlaeufe in derselben Reihenfolge wie im Standardzweig
+		// oben: erst die festen Lagen, dann die verhaeltnismaessigen.
+		// DST_SHOWHIDE wird ABSICHTLICH nicht aufgerufen - was sichtbar
+		// ist, soll die gespeicherte Einstellung bestimmen.
+		// Erst sammeln, dann anordnen. Die Pruefung auf m_pDockBar muss VOR
+		// dem ersten Andocken laufen, denn danach ist das Feld gesetzt.
+		CPtrArray arrOhneLage;
+
+		pos = m_WazooBarList.GetHeadPosition();
+		for (int idx = 0; pos; idx++)
+		{
+			CWazooBar* pWazooBar = (CWazooBar *) m_WazooBarList.GetNext(pos);
+			ASSERT_KINDOF(CWazooBar, pWazooBar);
+
+			// Die Reklameleiste hat ihre eigene Behandlung (Fall 3) und
+			// wuerde LoadWazooConfigFromIni ein zweites Mal aufrufen.
+			if (pWazooBar->GetDlgCtrlID() == IDC_AD_WAZOO_BAR)
+				continue;
+
+			if (pWazooBar->m_pDockBar == NULL)
+			{
+				arrOhneLage.Add((void*) pWazooBar);
+				arrOhneLage.Add((void*) (INT_PTR) idx);
+			}
+		}
+
+		// Drei Durchlaeufe in derselben Reihenfolge wie im Standardzweig:
+		// feste Lagen, verhaeltnismaessige Lagen, dann sichtbar/versteckt.
+		//
+		// DST_SHOWHIDE laeuft hier MIT - anders als zuerst gebaut. Grund:
+		// die Sichtbarkeit einer Wazoo-Leiste wird nirgends gespeichert
+		// (nachgesehen in SaveWazooConfigToIni, WazooBar.cpp:776 - dort
+		// stehen nur Reiterlage und Klassennamen). Was ohne DST_SHOWHIDE
+		// sichtbar bliebe, waere also keine Entscheidung des Anwenders,
+		// sondern nur das WS_VISIBLE aus CreateInitialWazooBars - und das
+		// liess die Kurznamen-Leiste als 180 Pixel breite Spalte
+		// dauerhaft offenstehen (gemessen am 08.09.2026: Kennung 319,
+		// rechts, sichtbar, 180x1093). Mit DST_SHOWHIDE ergibt sich die
+		// vom Programm vorgesehene Anordnung: Postfaecher links sichtbar,
+		// Kurznamen versteckt, Aufgabenstatus waagrecht unten sichtbar
+		// (letzteres, weil Fall 2 die Leiste seit A-2 nicht mehr
+		// versteckt).
+		const DefaultStateType tStufen[3] = { DST_SIZE_FIXED, DST_SIZE_RELATIVE, DST_SHOWHIDE };
+
+		for (int iStufe = 0; iStufe < 3; iStufe++)
+		{
+			for (int iEintrag = 0; iEintrag + 1 < arrOhneLage.GetSize(); iEintrag += 2)
+			{
+				CWazooBar* pWazooBar = (CWazooBar *) arrOhneLage[iEintrag];
+				const int idx = (int) (INT_PTR) arrOhneLage[iEintrag + 1];
+
+				VERIFY(SetDefaultWazooBarState(pWazooBar, idx, tStufen[iStufe]));
+			}
+		}
+
+		if (arrOhneLage.GetSize() > 0)
+		{
+			CString strMeldung;
+			strMeldung.Format(
+				_T("E-44 WazooBars: fuer %d Leiste(n) war keine Lage ")
+				_T("gespeichert (kein [ToolBar...]-Abschnitt, siehe E-43) - ")
+				_T("die Standardanordnung wurde nachgezogen: Postfaecher ")
+				_T("links, Kurznamen versteckt, Aufgabenstatus waagrecht ")
+				_T("unten."),
+				(int) (arrOhneLage.GetSize() / 2));
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
 		}
 	}
 		
