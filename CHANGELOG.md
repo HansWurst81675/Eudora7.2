@@ -229,7 +229,12 @@ Ebenfalls von ihm bestätigt: *„default werte beim neuen persona konto für
 'leave message on server' greifen."* — **Anforderung A-1** ist damit am
 laufenden Programm belegt, nicht mehr nur am Codeweg.
 
-Paket: `Releases/Eudora72-1.0.22-release.zip`, 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
+Paket: 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
+**Das ZIP liegt nicht mehr im Repo** — Gregor am 08.09.2026: *„0.22 brauche ich
+nicht, wenn es ein 0.23 gibt"*. Anders als bei den übrigen entfernten Paketen
+gibt es für 1.0.22 **keine Marke**; wer es wiederhaben will, baut es aus Commit
+`d003d46` neu (`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`) und
+prüft die Prüfsumme oben nach.
 
 ### Der Grundsatz hinter der Behebung
 
@@ -363,7 +368,9 @@ nachbildet.
 
 ### Was an 1.0.22 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.22-release.zip` (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`).
+Paket (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`)
+liegt **nicht mehr im Repo** und hat keine Marke — neu zu bauen aus `d003d46`.
+Wer heute prueft, nimmt 1.0.23; die Anleitung dazu steht weiter oben.
 Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
 Starter übergibt das Mailverzeichnis.
 
