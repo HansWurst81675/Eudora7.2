@@ -125,8 +125,23 @@ if ($anzahl_kriterien == 0) {
 }
 
 # Wortzahlen, die jemand hinschreibt, gegen die tatsaechliche Zahl
+#
+# WAS AM 08.09.2026 GEAENDERT WURDE (Befund L-10.1)
+#
+# In dieser Tabelle fehlten "neun" und "zehn" - und ZIEL.md fuehrt NEUN
+# Kriterien. Damit war die Kriterienpruefung fuer den tatsaechlichen Umfang des
+# Projekts BLIND: "$gesamt = $wort{'neun'}" lieferte undef, und beide Pruefungen
+# (Wortzahl gegen ZIEL.md, Summe der Teile) brachen mit "next unless defined"
+# ab. Gemessen an ZIEL.md:39, wo bis zum 08.09.2026 stand:
+#
+#   "Sechs von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7), zwei fast oder
+#    halb (2, 4), eines nicht (8 - die Reiterleiste)."
+#
+# Das widersprach der eigenen Tabelle DREI Zeilen darueber, die fuer Kriterium 8
+# "halb" sagt - und die Schranke hat es nie gemeldet.
 my %wort = (
-    zwei => 2, drei => 3, vier => 4, fuenf => 5, sechs => 6, sieben => 7, acht => 8,
+    zwei => 2, drei => 3, vier => 4, fuenf => 5, sechs => 6, sieben => 7,
+    acht => 8, neun => 9, zehn => 10,
 );
 for my $datei (@aktuell) {
     my $inhalt = lies($datei);
@@ -135,7 +150,11 @@ for my $datei (@aktuell) {
     for my $i (0 .. $#zeilen) {
         my $z = $zeilen[$i];
         # "vier Kriterien", "alle vier Kriterien", "sieben Kriterien"
-        while ($z =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht)\s+Kriterien/gi) {
+        # Das \*{0,2} ist am 08.09.2026 dazugekommen (Befund L-10.1): in
+        # PORTIERUNG.md:38 steht "von **neun** Kriterien" - die Auszeichnung
+        # zwischen Zahlwort und Wort liess das Muster ins Leere laufen, und die
+        # Zahl wurde nie gegen ZIEL.md gehalten.
+        while ($z =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+Kriterien/gi) {
             my $genannt = $wort{ lc $1 };
             next unless defined $genannt;
             # "die ersten vier Kriterien" ist eine Aussage ueber eine Teilmenge
@@ -354,6 +373,23 @@ if (length $paket_haupt) {
                 my $nr = $1;
                 next unless $nr =~ /^\Q$paket_haupt\E\./;
                 next if $nr eq $paket;
+                # Nachgetragen am 08.09.2026 (Befund L-10.2). Der Kommentar
+                # oben behauptet seit dem 07.09.2026: "eine Nummer in einem
+                # datierten Rueckblick ist richtig und wird nicht gemeldet" -
+                # umgesetzt war das NICHT. Gemeldet wurden dadurch zwei Saetze
+                # in CHANGELOG.md, die genau das sind: "Paket:
+                # Releases/Eudora72-1.0.22-release.zip" unter der Ueberschrift
+                # "## 7.2.0.22 / Paket 1.0.22". Zwei Fehlalarme in einem Lauf,
+                # und eine Schranke, die umsonst warnt, wird ignoriert
+                # (Befund X-1). Prueffrage: nennt die UEBERSCHRIFT des
+                # Abschnitts, in dem der Satz liegt, dieselbe Nummer? Dann ist
+                # der Satz eine Aussage UEBER jene Fassung. Nennt sie eine
+                # ANDERE - wie "## 7.2.0.21 / Paket 1.0.21" ueber einem Satz
+                # mit 1.0.22 -, bleibt es ein Mangel; genau so stand es dort.
+                my $davor = substr($inhalt, 0, $ab);
+                my $ueberschrift = '';
+                $ueberschrift = $1 while $davor =~ /^(##[^\n]*)$/gm;
+                next if index($ueberschrift, $nr) >= 0;
                 my $zeile = 1 + (() = substr($inhalt, 0, $ab) =~ /\n/g);
                 push @mangel, sprintf("%s:%d nennt Paketnummer %s als Stand, VERSION sagt %s",
                                       $datei, $zeile, $nr, $paket);

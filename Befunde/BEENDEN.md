@@ -4,6 +4,28 @@ Untersucht am 07.09.2026 auf `wt/pruefer`, Ausgangsstand `009263b`. **Nur
 Quelltext gelesen und gemessen — Eudora wurde nicht gestartet, nichts gebaut,
 nichts committet.**
 
+> **Nachtrag 08.09.2026: der Fall ist entschieden.** **Kriterium 7** in
+> [ZIEL.md](../ZIEL.md) ist **erfüllt** — Gregor an Paket 1.0.22: *„schließen
+> klappt jetzt."* Alle drei Wege beenden: *File → Exit*, **Alt-F4** und das
+> **Kreuz**.
+>
+> Behoben durch **E-40** (eine Rückfrage, die sich nicht öffnen lässt, galt als
+> „Abbrechen"), **E-41** (Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`
+> in `CFrameWnd::OnSysCommand`, das *File → Exit* nicht hat — die Folgerung des
+> **zweiten** Durchgangs, unten am Ende dieser Datei, hat getragen) und **E-42**
+> (zwölf Aufräumschritte konnten das Beenden abbrechen). Dazu **E-45**: einer
+> der zwölf Schritte, `QCWorkbook::OnClose`, darf **nicht** übersprungen werden
+> — sonst bleibt ein Prozess ohne Fenster übrig. Gefunden hat das PRUEFER
+> ([PRUEFER-5.md](PRUEFER-5.md)).
+>
+> **Der Wurf selbst ist nicht verschwunden:** `SaveBarState("ToolBar")` wirft
+> weiter und steht als **E-43** offen — abgefangen, nicht behoben. Der daraus
+> abgeleitete Verdacht **E-46** (freigegebenes `CMainFrame`-Objekt) ist am
+> 08.09.2026 **widerlegt**.
+>
+> Alles, was unten steht, bleibt als **vermessener Weg** richtig und ist
+> ausdrücklich nicht überschrieben.
+
 > **Zwei Durchgänge, ein Befund.** Der erste hat den Weg vermessen und eine
 > Messung vorgeschlagen; Gregor hat sie am 07.09.2026 gefahren (siehe unten),
 > und ihr Ergebnis hat die Rangliste umgeworfen. Was der zweite Durchgang

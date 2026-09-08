@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **08.09.2026**, gemessen an Fassung **7.2.0.22 / Paket 1.0.22**.
+Stand **08.09.2026**, gemessen an Fassung **7.2.0.23 / Paket 1.0.23**.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
@@ -28,16 +28,19 @@ kein Mailprogramm.
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28), die Leiste am unteren Rand liegt waagrecht statt senkrecht links (**E-44**, in 7.2.0.23). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
-| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. **Offen bleibt das Beenden**, siehe Kriterium 7 |
+| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. Das Beenden ist mit Kriterium 7 erledigt. **Offen bleiben zwei Stellen derselben Klasse:** die Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten, und der Wurf in `SaveCustomInfo` beim Beenden (**E-43**) — er wird abgefangen, nicht behoben |
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
 | 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler selbst ist damit **nicht** verschwunden — er steht als Protokollzeile da (`E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst`) und ist als **E-43** weiter offen |
-| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht bildet sie nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Die Leiste am unteren Fensterrand ist seit **E-44** (7.2.0.23) sichtbar und waagrecht — sie zeigt aber *Task Status* und *Task Errors*, nicht die **Registerkartenleiste für die offenen Fenster**: die bildet die Ersatzschicht nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
 
-**Sechs von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7), zwei fast oder halb
-(2, 4), eines nicht (8 - die Reiterleiste).**
+**Neun Kriterien: sechs sind belegt (0, 1, 3, 5, 6, 7), drei fast oder halb
+(2, 4, 8).**
+
+Was an **8** fehlt, ist die Reiterleiste für die offenen Fenster. Die Leiste am
+unteren Rand gibt es seit **E-44**, aber sie zeigt etwas anderes.
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
@@ -197,7 +200,10 @@ Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
 `Eudora.ini` — das sind zwei verschiedene Programmwege, und nur der zweite ist
 der, den Gregor gesehen hat.
 
-**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor noch nicht bestätigt.
+**Umgesetzt in 7.2.0.23** (Befund **E-44**) und **von Gregor am 08.09.2026
+bestätigt**: *„jetzt ist sie unten, ja"*. Gemessen mit
+`tools/leisten-messen.ps1`: Leiste **320**, Andockseite **unten**, sichtbar,
+**1712×80**.
 Zwei Ursachen, beide gemessen, beide behoben:
 
 1. Beim frischen Profil lag die Leiste schon richtig (unten, 1712×80) und wurde

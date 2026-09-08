@@ -1,17 +1,17 @@
 # Hier weitermachen
 
-**Stand 07.09.2026, morgens.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 08.09.2026, mittags.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.22 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.22 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.22** - `Releases/Eudora72-1.0.22-release.zip`, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
-| **Zuletzt von Gregor gestartet** | Paket 1.0.21 am 07.09.2026 — *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."* |
-| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.21 (E-31/E-34/E-35/E-36: Verfassen, Abschicken, Weiterleiten) |
-| **Was er dabei bemängelt hat** | *„beenden geht nicht."* und *„kann man die untere zeile (status) immer anzeigen lassen?"* |
+| **Quellstand** | 7.2.0.23 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.23 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.23** — `Releases/Eudora72-1.0.23-release.zip`, SHA256 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`, 9 340 228 Byte, `Eudora.exe` vom 08.09.2026 10:51. **Noch nicht committet**, als Marke **nicht** veröffentlicht; die jüngste Marke ist [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
+| **Zuletzt von Gregor gestartet** | Paket **1.0.22** am 08.09.2026 — *„schließen klappt jetzt."* und *„default werte beim neuen persona konto für ‚leave message on server' greifen."*; dazu die Prüfinstanz mit 7.2.0.23 zu A-2 — *„jetzt ist sie unten, ja"* |
+| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.22: **E-40/E-41/E-42** (Beenden, Kriterium 7) und **A-1** (Vorgaben für ein neues Konto). 7.2.0.23: **E-44** (Anforderung A-2). Davor 7.2.0.21: E-31/E-34/E-35/E-36 (Verfassen, Abschicken, Weiterleiten) |
+| **Was er dabei bemängelt hat** | *„die meldung kommt, wenn ich eine persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora geschlossen habe"* — beides **E-37**, der zweite Behebungsanlauf ist gebaut und **nicht bestätigt** |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen
@@ -20,19 +20,24 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 ## Das Ziel, an dem alles hängt
 
-**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf belegt (0, 1, 3, 5, 6),
-drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Gregor hat am
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — sechs sind belegt
+(0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8).** Gregor hat am
 06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis 6**; **7** ist am
 07.09.2026 aus seinem Urteil zu Paket 1.0.18 nachgetragen, **8** noch am
 selben Tag aus seinem Wunsch nach sichtbaren offenen Fenstern:
 
 | # | | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen, das Beenden fehlt |
+| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen; das Beenden ist erledigt, offen bleiben die Meldung beim Anzeigen mancher Nachrichten und der abgefangene Wurf in `SaveCustomInfo` (**E-43**) |
 | 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
 | 6 | **Eine Mail weiterleiten** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
-| 7 | ***File → Exit*** beendet Eudora sauber | **nicht erfüllt** — *„beenden geht nicht."* |
-| 8 | Offene Fenster sichtbar und auswählbar | halb — Menü *Window* ja, Reiterleiste unten fehlt |
+| 7 | ***File → Exit*** beendet Eudora sauber | **erfüllt** (08.09.2026, von Gregor bestätigt) — *„schließen klappt jetzt."* Alle drei Wege: Menü, Alt-F4, Kreuz |
+| 8 | Offene Fenster sichtbar und auswählbar | halb — Menü *Window* ja; die Leiste unten gibt es seit **E-44**, sie zeigt aber *Task Status* und *Task Errors* statt der Reiter |
+
+**Dazu zwei Anforderungen, die kein Kriterium sind:** **A-1** (Vorgaben für ein
+neu angelegtes Konto) und **A-2** (*Task Status* und *Task Errors* waagrecht
+unten) — beide umgesetzt und **von Gregor bestätigt**, beide in
+[ZIEL.md](ZIEL.md) aufgeschrieben.
 
 ## Was seit dem 06.09.2026 anders ist
 
@@ -68,69 +73,64 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-**Ein Paket bauen und das Protokoll lesen — suchen muss niemand mehr.**
+**Kriterium 7 ist erledigt, A-1 und A-2 sind bestätigt.** Was jetzt ansteht,
+steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter *Die Hauptarbeit*; hier
+die Reihenfolge in einem Satz je Punkt.
 
-**Kriterium 7 — das Beenden (E-33).** *File → Exit*, das **Kreuz** und
-**Alt-F4** beenden Eudora nicht, sondern bringen den Meldungsdialog
-**„Encountered an improper argument"**. Gregor am 07.09.2026 an Paket 1.0.21,
-mit Bildschirmfoto: *„exit: weder alt+F4, noch x rechts oben funktionieren. da
-kommt wieder die meldung"*. Das ist der einzige verbliebene **Fehler**; alles
-Weitere ist Ausstattung.
+1. **E-37 zu Ende bringen** — ein gelöschtes Konto bleibt in der Liste stehen,
+   bis Eudora neu startet. Der zweite Anlauf ist in 7.2.0.23 gebaut und **von
+   Gregor nicht bestätigt**; der erste war eine **Regression** und hat dem
+   Anwender „Encountered an improper argument" gezeigt. Das ist der einzige
+   Punkt, an dem die Portierung zwischenzeitlich **schlechter** war als vorher
+   — deshalb zuerst. Fundstelle:
+   `CPersonalityView::OnCmdDeletePersonality`
+   (`Eudora71/Eudora/PersonalityView.cpp`). Offen bleibt auch, **warum**
+   `FindItem` −1 liefert und **warum** `PopulateView` geworfen hat.
+2. **E-38 messen** — die im Kontoassistenten eingegebenen Daten fehlen unter
+   *Konto → Eigenschaften*. Der Befund hing an E-33; **der Blocker ist weg**,
+   weil Eudora sich normal beenden lässt. Der erste Handgriff kostet keinen
+   Bau: nach einem **normalen** Beenden den Abschnitt `[Persona-<Name>]` in der
+   `Eudora.ini` ansehen. Stehen die Werte da, scheitert das **Lesen**
+   (`GetParams`, `persona.cpp:279ff`, stumm über `VERIFY` in
+   `ModifyAcctSheet.cpp:47`); fehlen sie, ist es die Schreibseite.
+3. **E-39** — wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr
+   INI-Abschnitt teilweise wiederentstehen. `CPersonality::Remove`
+   (`persona.cpp:565-566`) stellt die aktuelle Persönlichkeit nicht um.
+   Naheliegend: nach erfolgreichem `Remove` auf `<Dominant>` umschalten.
+4. **Kriterium 8** — die Reiterleiste für die offenen Fenster. Die Leiste am
+   unteren Rand ist mit **E-44** da und liegt waagrecht; was fehlt, sind die
+   **Reiter**. Gelesen wird die Anordnung in
+   `Eudora71/Eudora/WazooBar.cpp:552` aus dem Abschnitt `[WazooBars]` der
+   `Eudora.ini` (`WazooBarIds`, `WazooBar%d`, `WazooMDI%d`, Namen in
+   `EudoraRes.rc:10637-10640`); die Ersatzschicht `OTShim` bildet die Reiter
+   nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
+5. **E-43** — `QCCustomToolBar::SaveCustomInfo` wirft beim Beenden, der
+   Leistenzustand wird **nie** gespeichert. Abgefangen, nicht behoben; Folge
+   ist ein fehlender `[ToolBar…]`-Abschnitt in der `Eudora.ini` (am 08.09.2026
+   in zwei Profilen nachgemessen: null Treffer), und daraus folgte E-44.
+   Eingegrenzt auf `GetBtnCount=24/24` bei `m_btns.GetSize=0/0` — gleiches
+   Objekt, gleiche Adresse, in **einer** Protokollzeile gemessen. Der Wert
+   flackert also nicht, und ein freigegebenes Objekt ist ausgeschlossen
+   (**E-46** ist damit **widerlegt**). Es bleibt: der übersetzte Code liest an
+   zwei verschiedenen Adressen. Die dritte Marke gibt die Rohwörter des Feldes
+   aus und sagt, welche.
 
-Diese Messung hat drei Dinge entschieden ([Befunde/BEENDEN.md](Befunde/BEENDEN.md)):
-
-1. Das Beenden **beginnt** — alle drei Wege gehen durch dasselbe
-   `CMainFrame::OnClose`. `CFileBrowseView::OnAppExit`
-   (`FileBrowseView.cpp:2218`) ist damit **ausgeschlossen**.
-2. Der Abbruch ist eine **geworfene `CInvalidArgException`**, keine stille
-   FALSE-Rückgabe. `CMainFrame::SaveOpenWindows` ist deshalb **nicht** mehr der
-   Spitzenkandidat.
-3. `CWinApp::ProcessWndProcException` (`appcore.cpp:1009-1039`) zeigt die
-   Meldung und liefert 0 — `WM_CLOSE` gilt als beantwortet, das Fenster bleibt.
-   Das ist **bestätigt**, nicht mehr Vermutung.
-
-Weil das Fenster nach der Meldung noch da ist, muss der Wurf **vor**
-`pApp->HideApplication()` (`winfrm.cpp:885`) fallen. **Verdacht:**
-`QCCustomToolBar::SaveCustomInfo`
-(`Eudora71/Eudora/QCCustomToolBar.cpp:421`) — dieselbe Form wie E-34 (Grenze
-aus `GetBtnCount()`, Zugriff über `m_btns[...]`, und MFC 14 wirft dort auch im
-Release-Bau, `afxcoll.inl:201-217`), gelegen in `CloseDown` Stufe 5
-(`SaveBarState`), und im normalen Betrieb **nur beim Beenden** erreicht.
-**Belegt ist das nicht, behoben ist nichts.**
-
-**So wird es belegt:** ein Paket aus diesem Stand bauen, mit `LogLevel=32896`
-unter `[Settings]` in der `Eudora.ini` starten, beenden — und die **letzte**
-`E-33`-Zeile in `eudora.log` lesen. 32 Marken liegen: in
-`QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
-`GetErrorMessage` und `THROW_LAST()` (der Ablauf bleibt unverändert, es wird
-nur protokolliert), in `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`,
-`6a`…`6f`), in `eudora.cpp` an `OnAppExit` und `ExitInstance`.
-
-> **Zur Maske:** `LogLevel=32896` ist ausreichend, aber nicht nötig. Gemessen an
-> Gregors Log vom 07.09.2026: sein `LogLevel 25759` (0x649F) enthält
-> `DEBUG_MASK_MISC` (0x8000) **nicht**, wohl aber `DEBUG_MASK_TOC_CORRUPT`
-> (0x80) — und weil `PutDebugLog` nur auf ein gemeinsames Bit prüft, schreiben
-> die Marken trotzdem. Sichtbar an seinen `MAIN 32896:`-Zeilen.
-
-**E-38 hängt daran.** Die im Assistenten eingegebenen Daten stehen in der
-`Eudora.ini` (von Gregor nachgesehen), fehlen aber im Eigenschaften-Dialog.
-Gregor: *„vielleicht fehlen die daten, wenn ich eudora per task manager
-abschließen muß"* — das ist erst zu messen, wenn Eudora sich normal beenden
-lässt. Vorher ist jede Aussage dazu wertlos.
-
-**Danach Kriterium 8** — die untere Reiterleiste für die offenen Fenster. Das
-Menü *Window* listet sie schon auf; was fehlt, ist die **WazooBar**
-(`Eudora71/Eudora/WazooBar.cpp:572,578`, Abschnitt `[WazooBars]` in
-`Eudora.ini`, Namen in `EudoraRes.rc:10637-10640`). Die Ersatzschicht `OTShim`
-bildet sie nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
+> **Was nicht mehr zu suchen ist.** Das Beenden ist entschieden: E-40 (eine
+> Rückfrage, die sich nicht öffnen lässt, galt als Abbrechen), E-41 (Alt-F4 und
+> das Kreuz laufen durch ein `ENSURE_VALID`, das *File → Exit* nicht hat) und
+> E-42 (zwölf Aufräumschritte konnten den Ablauf abbrechen), dazu E-45 (der
+> eine Schritt, der **nicht** übersprungen werden darf). Der Weg dorthin steht
+> in [Befunde/BEENDEN.md](Befunde/BEENDEN.md), das Review in
+> [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md). **Nicht wieder von vorn
+> aufrollen.**
 
 ## Ebenfalls offen
 
 - Die Meldung **„Encountered an improper argument"** beim Anzeigen mancher
   Nachrichten. Zwei Quellen sind behoben (E-16, E-34). **Offen ist die
-  Ursache:** warum meldet `GetBtnCount()` 27, während `m_btns[24]` wirft? Das
-  Abfangen behandelt das Symptom
-
+  Ursache** — dieselbe Frage wie bei E-43: `GetBtnCount()` ist wörtlich
+  `return (int)m_btns.GetSize()`, und trotzdem melden die beiden verschiedene
+  Werte. Das Abfangen behandelt das Symptom
 ## Wie man misst
 
 Alles, was man dafür braucht, steht bereit — es muss niemand danebensitzen.

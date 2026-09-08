@@ -25,11 +25,13 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | | |
 |---|---|
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
-| **Kriterium 2** (Darstellung) | *fast* |
-| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab, fünfmal nachgemessen; offen bleibt das Beenden |
+| **Kriterium 2** (Darstellung) | *fast* — dazu liegt die Leiste am unteren Rand seit **E-44** waagrecht |
+| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab, fünfmal nachgemessen; das Beenden ist mit Kriterium 7 erledigt. Offen bleiben die Meldung beim Anzeigen mancher Nachrichten und der abgefangene Wurf in `SaveCustomInfo` (**E-43**) |
 | **Kriterien 5 und 6** (Mail schreiben, senden, weiterleiten) | **erfüllt** — von Gregor am 07.09.2026 bestätigt: *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."*, mit Bildschirmfoto |
-| **Kriterium 8** (Fensterliste) | *halb* — das Menü *Window* listet sie auf; die Registerkartenleiste am unteren Rand fehlt |
-| **Kriterium 7** (Beenden) | **nicht erfüllt** — der einzige verbliebene Fehler der zweiten Stufe |
+| **Kriterium 7** (Beenden) | **erfüllt** — von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt: *„schließen klappt jetzt."* Alle drei Wege beenden: *File → Exit*, Alt-F4, das Kreuz. Behoben durch **E-40**, **E-41**, **E-42**, ergänzt um **E-45** |
+| **Kriterium 8** (Fensterliste) | *halb* — das Menü *Window* listet sie auf; die Leiste am unteren Rand ist mit **E-44** sichtbar und waagrecht, zeigt aber *Task Status* und *Task Errors* statt der Registerkarten |
+| **Anforderung A-1** (Vorgaben für ein neues Konto) | **belegt** — Gregor am 08.09.2026: *„default werte beim neuen persona konto für ‚leave message on server' greifen."* |
+| **Anforderung A-2** (Aufgabenleiste waagrecht unten) | **belegt** — Gregor am 08.09.2026: *„jetzt ist sie unten, ja"*; gemessen mit `tools/leisten-messen.ps1`: Leiste 320, unten, sichtbar, 1712×80 |
 
 > **07.09.2026, Gregor zu Paket 1.0.21:** *„mail können jetzt abgeschickt
 > werden."* und *„weiterleitung funktioniert übrigens."* Damit ist der Kreis
@@ -45,14 +47,20 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.22 — alles Gebaute ist gepackt
+## Nach 7.2.0.23 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.22** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.22 / 1.0.22** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.23** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.23 / 1.0.23** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
-dazu: *„version muß eindeutig sein"*).
+dazu: *„version muß eindeutig sein"*). **Alle fünf Zeilen**, nicht vier:
+`EUDORA_BUILD_NUMBER` blieb beim Heben auf 7.2.0.23 zurück und ist am
+08.09.2026 nachgezogen worden (die Tabelle dazu steht in
+[Releases/PAKETE.md](Releases/PAKETE.md)).
+
+Das ZIP zu 1.0.23 liegt im Arbeitsbaum, ist aber **noch nicht committet**, und
+als Marke ist es **nicht** veröffentlicht — die jüngste Marke ist `v1.0.21`.
 
 - **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
   `CPersonalityView::OnCmdDeletePersonality`
@@ -327,9 +335,14 @@ nachbildet.
 **Offen bleibt:** *„beenden geht nicht"* (Kriterium 7) und Gregors Frage
 *„kann man die untere zeile (status) immer anzeigen lassen?"*
 
-### Was an 1.0.22 zu prüfen ist
+### Was an 1.0.21 zu prüfen war
 
-Paket: `Releases/Eudora72-1.0.22-release.zip` (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`).
+> **Berichtigt am 08.09.2026 (L-10).** Hier stand *„Was an 1.0.22 zu prüfen
+> ist"* mit dem ZIP und der Prüfsumme von **1.0.22** — mitten im Abschnitt zu
+> **7.2.0.21**. Die Prüfliste darunter (Strg-N, Abschicken, Weiterleiten)
+> gehört zu 1.0.21; die Prüfsumme ist gegen die Datei nachgemessen.
+
+Paket: `Releases/Eudora72-1.0.21-release.zip` (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`, 9 331 078 Byte, am 08.09.2026 mit `sha256sum` nachgemessen).
 Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
 Starter übergibt das Mailverzeichnis.
 

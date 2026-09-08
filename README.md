@@ -11,19 +11,21 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
+> **Diese Datei sagt, was jetzt gilt.** Stand **08.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.22** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.23** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.22**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.23**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.22-release.zip`
-> (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`).
-> Die Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.23-release.zip`
+> (SHA256 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`,
+> 9 340 228 Byte, gebaut am 08.09.2026 — **noch nicht committet und nicht als
+> Marke veröffentlicht**; die jüngste Marke ist `v1.0.21`). Die
+> Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in
 > [Releases/PAKETE.md](Releases/PAKETE.md).
@@ -33,17 +35,29 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf sind belegt (0, 1, 3, 5, 6),
-drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Eudora baut aus
-einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
-Darstellung stimmt weitgehend, Mail wird über TLS abgerufen — und seit dem
-07.09.2026 lässt sich **eine neue Mail schreiben, abschicken und die Antwort
-empfangen**. Gregor hat es bestätigt: *„mail können jetzt abgeschickt werden."*
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — sechs sind belegt
+(0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8).** Eudora baut aus einem
+frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
+Darstellung stimmt weitgehend, Mail wird über TLS abgerufen, eine neue Mail
+lässt sich **schreiben, abschicken und weiterleiten** — und seit dem
+08.09.2026 **beendet sich Eudora sauber**, über *File → Exit*, über **Alt-F4**
+und über das **Kreuz**. Gregor hat beides bestätigt: *„mail können jetzt
+abgeschickt werden."* und *„schließen klappt jetzt."*
 
-**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt, sind zwei Dinge:
-*File → Exit* beendet Eudora nicht (*„beenden geht nicht"* — Kriterium 7), und
-die untere Statuszeile mit den Reitern für offene Fenster fehlt; die offenen
-Fenster stehen nur im *Window*-Menü (Kriterium 8, halb).
+Dazu sind zwei Anforderungen aus [ZIEL.md](ZIEL.md) umgesetzt und von Gregor
+bestätigt: **A-1** (die Vorgaben *Leave mail on server* und *Secure Sockets*
+greifen bei einem **neu angelegten** Konto) und **A-2** (*Task Status* und
+*Task Errors* liegen **waagrecht am unteren Fensterrand** statt senkrecht
+links — *„jetzt ist sie unten, ja"*).
+
+**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: ein gelöschtes
+Konto bleibt in der Liste links stehen, bis Eudora neu startet (**E-37** — der
+zweite Behebungsanlauf ist in 7.2.0.23 gebaut, aber **von Gregor nicht
+bestätigt**), die im Kontoassistenten eingegebenen Daten fehlen unter
+*Konto → Eigenschaften* (**E-38** — der Blocker E-33 ist weg, der Befund ist
+damit erstmals messbar und noch nicht neu gemessen), und die untere Leiste
+zeigt Aufgabenstatus und Aufgabenfehler, nicht die Reiter für die offenen
+Fenster (**Kriterium 8**, halb — die offenen Fenster stehen im *Window*-Menü).
 
 Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md); was als
 Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum
@@ -57,32 +71,28 @@ Belegt:
 | **Bau** | ganze Projektmappe aus einem frischen Klon: **18 erfolgreich, 0 Fehler, 1 übersprungen**, 2:37 min. Von Gregor am 06.09.2026 in der IDE nachgemessen. Das eine übersprungene ist `OT501`, siehe unten |
 | **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste, Postfachbaum |
 | **Mailabruf über TLS** | POP3 auf **Port 995**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Gemessen an 7.2.0.12 am 06.09.2026 gegen `mx.freenet.de`. Die richtige Einstellung dafür ist *Secure Sockets when Receiving* → **„Required, Alternate Port"** |
-| **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
+| **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b), Leiste am unteren Rand waagrecht (E-44) |
+| **Kriterium 7 — sauberes Beenden** | Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden — *File → Exit*, **Alt-F4** und das **Kreuz**. Behoben durch **E-40**, **E-41**, **E-42**, ergänzt um **E-45** in 7.2.0.23 |
+| **Anforderung A-1 — Vorgaben für ein neues Konto** | Gregor am 08.09.2026: *„default werte beim neuen persona konto für ‚leave message on server' greifen."* Die Anforderung selbst steht in [ZIEL.md](ZIEL.md), die Werte in `tools/DEudora.ini`; `tools/doku-pruefen.pl` hält beides gegeneinander |
+| **Anforderung A-2 — Aufgabenleiste waagrecht unten** | Gregor am 08.09.2026 an der Prüfinstanz: *„jetzt ist sie unten, ja"*. Gemessen mit `tools/leisten-messen.ps1`: Leiste **320**, Andockseite **unten**, sichtbar, **1712×80** |
 | **Kriterium 0 — Paket laeuft ohne Nachinstallieren** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der ersten vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
-### Offen — Stand 07.09.2026
+### Offen — Stand 08.09.2026
 
 Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*;
-hier die Punkte, die ein Anwender merkt. Alle vier hat Gregor am 07.09.2026 an
-Paket 1.0.21 selbst gemessen.
+hier die Punkte, die ein Anwender merkt. **Das Beenden steht nicht mehr dabei**
+— Kriterium 7 ist seit Paket 1.0.22 erfüllt und von Gregor bestätigt.
 
-- ***File → Exit* beendet Eudora nicht** (**Kriterium 7**, Befund **E-33**).
-  *„beenden geht nicht."* Auch **Alt-F4 und das Kreuz** im Titelbalken nicht, und
-  dabei erscheint **„Encountered an improper argument"** — MFCs Text für
-  `CInvalidArgException`. Damit ist die Ursache eingeordnet: eine Ausnahme fliegt
-  aus `CMainFrame::OnClose` heraus, MFC 14 fängt sie in `AfxCallWndProc`,
-  `CWinApp::ProcessWndProcException` zeigt die Meldung und liefert 0 — `WM_CLOSE`
-  gilt als beantwortet, das Fenster bleibt. Dieselbe Fehlerklasse wie E-34
-- **Ein Konto ließ sich scheinbar nicht löschen** (**E-37**) — *„löschen der
-  konten geht übrigens auch nicht: auf toFix liste!"* **Nur die Anzeige ist
-  behoben, die Ursache ist offen — und in keinem Paket.** Gregors Nachmessung:
-  *„ja, sie verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die
-  Liste blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
-  abgesichert war das nur mit `ASSERT`. Jetzt wird die Liste über
-  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. **Zwei Dinge
-  bleiben:** *warum* `FindItem` den Eintrag nicht findet, und das Löschen der
-  **aktuell benutzten** Persönlichkeit (**E-39** unten). Wer daraus liest
-  „Löschen ist gefixt", liest zu viel
+- **Ein Konto lässt sich nicht löschen** (**E-37**) — *„löschen der konten geht
+  übrigens auch nicht: auf toFix liste!"*, und am 08.09.2026: *„sie verschwindet
+  links nicht, bis ich eudora geschlossen habe"*. **Nicht behoben.** Gelöscht
+  **wird** korrekt (*„ja, sie verschwinden nach neustart"*) — es ist ein
+  Anzeigefehler. Zwei Anläufe: der **erste war eine Regression** und zeigte dem
+  Anwender „Encountered an improper argument" (mein `PopulateView()`-Aufruf hat
+  geworfen); der **zweite** sucht den Eintrag über `GetItemText` statt
+  `FindItem` und ruft `PopulateView()` nicht mehr — **gebaut in 7.2.0.23, von
+  Gregor nicht bestätigt.** Offen bleibt außerdem, *warum* `FindItem` −1
+  liefert. Wer daraus liest „Löschen ist gefixt", liest zu viel
 - **Wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt
   teilweise wiederentstehen** (**E-39**, nicht behoben, nicht am laufenden
   Programm bestätigt). `CPersonality::Remove` (`persona.cpp:565-566`) stellt die
@@ -94,27 +104,40 @@ Paket 1.0.21 selbst gemessen.
 - **Die im Kontoassistenten eingegebenen Daten fehlen hinterher** (**E-38**):
   Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Gregor
   hat am 07.09.2026 nachgesehen: **in der `Eudora.ini` stehen sie**. Damit
-  scheitert das **Lesen** — oder die Werte gehen verloren, weil Eudora nur per
-  `pkill` zu beenden ist. Sein Wort dazu: *„vielleicht fehlen die daten, wenn
-  ich eudora per task manager abschließen muß."* **Dieser Befund hängt an E-33
-  und wird erst danach gemessen**; vorher ist jede Aussage dazu wertlos
-- **Die untere Statuszeile mit Reitern für die offenen Fenster fehlt**
-  (**Kriterium 8**, halb). Das Menü *Window* listet sie („1 In", „2 Out"), die
-  Leiste am unteren Fensterrand bildet die Ersatzschicht `OTShim` nicht nach.
-  *„kann man die untere zeile (status) immer anzeigen lassen?"*
-- Meldung **„Encountered an improper argument"** auch beim Anzeigen mancher
+  scheitert das **Lesen** — oder die Werte gingen verloren, weil Eudora nur per
+  `pkill` zu beenden war. Sein Wort dazu: *„vielleicht fehlen die daten, wenn
+  ich eudora per task manager abschließen muß."* **Dieser Befund hing an E-33;
+  der Blocker ist weg**, weil Eudora sich seit 1.0.22 normal beenden lässt — er
+  ist damit **erstmals messbar** und noch nicht neu gemessen
+- **Die Reiterleiste für die offenen Fenster fehlt** (**Kriterium 8**, halb).
+  Das Menü *Window* listet sie („1 In", „2 Out"). Die Leiste am unteren
+  Fensterrand gibt es seit **E-44** (1.0.23) — sie liegt waagrecht über die
+  ganze Breite, zeigt aber *Task Status* und *Task Errors*. Die Reiter für die
+  offenen Fenster bildet die Ersatzschicht `OTShim` nicht nach
+- Meldung **„Encountered an improper argument"** beim Anzeigen mancher
   Nachrichten. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
   behoben), eine zweite ist mit E-34 abgefangen. Offen bleibt die Frage, warum
-  `GetBtnCount()` 27 meldet und `m_btns[24]` dennoch wirft — das Abfangen
-  behandelt das Symptom, nicht die Ursache
+  `GetBtnCount()` und `m_btns.GetSize()` verschiedene Werte melden, obwohl das
+  eine wörtlich das andere zurückgibt — das Abfangen behandelt das Symptom,
+  nicht die Ursache
+- **Der Leistenzustand wird nie gespeichert** (**E-43**, offen). Beim Beenden
+  wirft `QCCustomToolBar::SaveCustomInfo`; der Wurf wird seit E-42 abgefangen,
+  deshalb beendet Eudora trotzdem. Folge für den Anwender: in der `Eudora.ini`
+  entsteht kein `[ToolBar…]`-Abschnitt — am 08.09.2026 in Gregors Profil **und**
+  in einem frischen nachgemessen, **null Treffer**. Eingegrenzt ist es auf
+  `GetBtnCount=24/24` bei `m_btns.GetSize=0/0`, gleiches Objekt, gleiche
+  Adresse — der Wert flackert also nicht, und ein freigegebenes Objekt ist
+  ausgeschlossen (**E-46** widerlegt)
 
 > **Drei dieser Befunde schweigen aus demselben Grund.** MFC 6 prüfte mit
 > `ASSERT` und `VERIFY`; in einem Release-Bau ist `ASSERT` weggelassen und
 > `VERIFY(f)` zu `((void)(f))` verkürzt — der Ausdruck wird berechnet, das
 > Ergebnis aber **nicht** geprüft. Wo QUALCOMM einen Fehlschlag so
 > „behandelt" hat, passiert im ausgelieferten Programm lautlos gar nichts:
-> E-37 viermal (behoben), E-38 zweimal, E-33 verwandt. Wer hier weitermacht,
-> sucht auf dem betroffenen Weg zuerst nach `ASSERT(0)` und `VERIFY(`.
+> E-37 viermal (die Stellen melden jetzt, behoben ist der Befund **nicht**),
+> E-38 zweimal, E-33 verwandt — und beim Beenden waren es zwölf Schritte
+> (E-42). Wer hier weitermacht, sucht auf dem betroffenen Weg zuerst nach
+> `ASSERT(0)` und `VERIFY(`.
 
 ### Vorgaben für neu angelegte Konten
 

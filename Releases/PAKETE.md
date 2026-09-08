@@ -3,29 +3,34 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 07.09.2026.** Ausführliche
-> Abschnitte gibt es unten für **1.0.21**, **1.0.18**, **1.0.3**, **1.0.2** und
-> **1.0.1**. Die Pakete **1.0.4 bis 1.0.17** sowie **1.0.19** und **1.0.20**
-> haben hier keinen eigenen Eintrag, obwohl sie gebaut und teilweise
-> veröffentlicht wurden. Der Mangel ist als **M-4** in
+> **Diese Buchführung ist unvollständig — Stand 08.09.2026.** Ausführliche
+> Abschnitte gibt es unten für **1.0.23**, **1.0.22**, **1.0.21**, **1.0.18**,
+> **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis 1.0.17** sowie
+> **1.0.19** und **1.0.20** haben hier keinen eigenen Eintrag, obwohl sie
+> gebaut und teilweise veröffentlicht wurden. Der Mangel ist als **M-4** in
 > [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
 >
-> **Im Repo liegen als ZIP** (`ls Releases/*.zip`, nachgezählt am 07.09.2026):
-> nur noch **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`, Baugrundlage für
-> `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.21**
-> (`Eudora72-1.0.21-release.zip`). Alle übrigen ZIPs sind am 07.09.2026
-> entfernt worden, um das Repo von 104 MB auf 16 MB zu bringen; jedes von
-> ihnen ist unten mit Prüfsumme und Netzadresse verzeichnet und über seine
-> Marke weiter abrufbar.
+> **Versioniert im Repo** sind drei ZIPs (`git ls-files Releases/`, gemessen am
+> 08.09.2026): **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`, Baugrundlage für
+> `tools/paket-bauen.ps1` — **nicht löschen**), **1.0.21** und **1.0.22**.
+> Alle übrigen ZIPs sind am 07.09.2026 entfernt worden, um das Repo von 104 MB
+> auf 16 MB zu bringen; jedes von ihnen ist unten mit Prüfsumme und Netzadresse
+> verzeichnet und über seine Marke weiter abrufbar.
+>
+> **Das ZIP zu 1.0.23 liegt im Arbeitsbaum, ist aber noch nicht committet** —
+> `git status` führt `Releases/Eudora72-1.0.23-release.zip` als unverfolgt, und
+> die begleitende `.sha256`-Datei fehlt bisher (beides gemessen am 08.09.2026,
+> 11 Uhr). Die Prüfsumme steht unten im Abschnitt 1.0.23; wer das Paket
+> committet, legt die `.sha256` gleich mit dazu.
 >
 > **Als Marke veröffentlicht** sind `v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.10`,
 > `v1.0.14`, `v1.0.15`, `v1.0.18` und `v1.0.21`
-> (`git ls-remote --tags origin`).
+> (`git ls-remote --tags origin`, gemessen am 08.09.2026). **`v1.0.22` und
+> `v1.0.23` gibt es nicht** — beide Pakete sind gebaut, aber nicht als
+> Veröffentlichung gesetzt.
 >
-> Der Quellstand ist **7.2.0.21 / Paketnummer 1.0.21**, und das Paket dazu
-> liegt vor. Wer wissen will, was in einem der nicht verzeichneten Pakete
-> steckt, liest `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei.
-> offen.
+> Wer wissen will, was in einem der nicht verzeichneten Pakete steckt, liest
+> `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei.
 
 ## Drei Zählungen, und wie sie zusammenhängen
 
@@ -66,6 +71,13 @@ Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
 > selbst); wer es je in eine `VERSIONINFO`-Ressource einsetzt, bekommt eine
 > `Eudora.exe`, deren Dateiversion nicht zu ihrer Produktversion passt.
 > **`tools/doku-pruefen.pl` meldet den Fall seit dem 07.09.2026.**
+>
+> **Und er ist am 08.09.2026 gleich wieder aufgetreten:** beim Heben auf
+> 7.2.0.23 blieb `EUDORA_BUILD_NUMBER` auf `7,2,0,22` stehen, während die
+> anderen vier Angaben auf `23` gingen — vier von fünf Zeilen. Gemeldet hat es
+> `tools/doku-pruefen.pl` unter *Zu tun am Quellstand*, berichtigt am
+> 08.09.2026. **Wer die Version hebt, geht die Tabelle oben Zeile für Zeile
+> durch; „ich weiß, welche es sind" hat jetzt zweimal nicht gereicht.**
 
 Den aktuellen Ausgangswert liest man nicht ab, sondern misst ihn:
 
@@ -132,6 +144,76 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.23 — gebaut am 08.09.2026, nicht als Marke veröffentlicht
+
+**Die Fassung, mit der Anforderung A-2 erfüllt ist:** *Task Status* und *Task
+Errors* liegen waagrecht am unteren Fensterrand. Von Gregor am 08.09.2026
+bestätigt: *„jetzt ist sie unten, ja"*.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.23-release.zip` |
+| **SHA256** | `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045` |
+| **Größe** | 9 340 228 Byte |
+| **Quellstand** | 7.2.0.23 (`Eudora71/Version.h`) |
+| **Marke** | **keine** — nicht veröffentlicht |
+| **Eudora.exe im ZIP** | 2 957 312 Byte, 08.09.2026 10:51 (`unzip -l`) |
+| **QCSSL** | 1.0.1 — dieselbe Datei wie in 1.0.21 und 1.0.22 (2 920 960 Byte, 30.08.2026 17:57) |
+
+Alle Zahlen am 08.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
+**Im Repo ist dieses ZIP noch nicht committet**, und die `.sha256`-Datei daneben
+fehlt — beides steht im Kopfkasten oben.
+
+| Befund | was | Stand |
+|---|---|---|
+| **E-44** | *Task Status* und *Task Errors* waagrecht unten statt senkrecht links — zwei Ursachen, beide gemessen (`ID_SEC_HIDE` beim frischen Profil; keine Andockseite in `LoadWazooConfigFromIni` ab dem zweiten Start) | **behoben, von Gregor bestätigt** |
+| **E-45** | `QCWorkbook::OnClose` darf **nicht** übersprungen werden, sonst bleibt ein Prozess ohne Fenster übrig; eigener Fangzweig holt `DestroyWindow()` nach | **behoben** (von PRUEFER gefunden, `Befunde/PRUEFER-5.md`) |
+| **E-46** | Verdacht, `CMainFrame::OnClose` arbeite auf einem freigegebenen Objekt weiter — Spurmarke im Destruktor | **widerlegt**: die Marke erscheint erst *nach* der Stelle |
+| **E-43** | `SaveCustomInfo` wirft weiter; die verfeinerte Marke misst vier Werte in einer Zeile und schließt „flackernder Wert" und „freigegebenes Objekt" aus | **offen, Ursache eingegrenzt** |
+| **E-37** | zweiter Anlauf für das Löschen eines Kontos — Suche über `GetItemText` statt `FindItem`, ohne `PopulateView()` | **gebaut, von Gregor nicht bestätigt** |
+
+**Was in dieser Fassung noch nicht geht:** ein gelöschtes Konto verschwindet
+möglicherweise weiter erst nach einem Neustart aus der Liste (**E-37**, nicht
+bestätigt), die im Kontoassistenten eingegebenen Daten fehlen unter
+*Konto → Eigenschaften* (**E-38**, jetzt erstmals messbar), und die Leiste am
+unteren Rand zeigt *Task Status* und *Task Errors*, nicht die Reiter für die
+offenen Fenster (Kriterium 8, halb). Die Einzelheiten stehen im
+[CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.23.
+
+## 1.0.22 — gebaut am 08.09.2026, nicht als Marke veröffentlicht
+
+**Die Fassung, mit der Kriterium 7 erfüllt ist:** Eudora beendet sich über
+*File → Exit*, über **Alt-F4** und über das **Kreuz**. Von Gregor am 08.09.2026
+bestätigt: *„schließen klappt jetzt."* Ebenfalls von ihm bestätigt ist
+Anforderung **A-1**: *„default werte beim neuen persona konto für ‚leave
+message on server' greifen."*
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.22-release.zip` |
+| **SHA256** | `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c` |
+| **Größe** | 9 339 516 Byte |
+| **Quellstand** | 7.2.0.22 (`Eudora71/Version.h`) |
+| **Marke** | **keine** — nicht veröffentlicht |
+| **Eudora.exe im ZIP** | 2 956 288 Byte, 08.09.2026 08:58 (`unzip -l`) |
+| **QCSSL** | 1.0.1 (unverändert seit 1.0.1) |
+
+Alle Zahlen am 08.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
+
+| Befund | was | wo |
+|---|---|---|
+| **E-40** | eine Rückfrage, die sich nicht öffnen lässt, galt als „Abbrechen" | `Eudora71/Eudora/doc.cpp`, `msgdoc.cpp` (`SaveModified`) |
+| **E-41** | Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`, das *File → Exit* nicht hat | `Eudora71/Eudora/mainfrm.cpp` (`OnSysCommand`) |
+| **E-42** | zwölf Aufräumschritte konnten das Beenden abbrechen — neues Makro `AUFRAEUMEN` | `Eudora71/Eudora/mainfrm.cpp` (`OnClose`, `CloseDown`) |
+| **A-1** | Vorgaben für ein **neu angelegtes** Konto greifen | `tools/DEudora.ini`, Anforderung in [ZIEL.md](../ZIEL.md) |
+
+**Was in dieser Fassung noch nicht geht:** *Task Status* und *Task Errors*
+liegen senkrecht links (Anforderung **A-2**, erst in 1.0.23 behoben), der erste
+E-37-Anlauf war eine **Regression** und zeigte beim Löschen einer Persönlichkeit
+„Encountered an improper argument", und `SaveCustomInfo` wirft beim Beenden
+weiter (**E-43**, abgefangen). Die Prüfanleitung steht im
+[CHANGELOG.md](../CHANGELOG.md) unter *Was an 1.0.22 zu prüfen ist*.
 
 ## 1.0.21 — veröffentlicht am 07.09.2026
 
@@ -372,12 +454,17 @@ certutil -hashfile Eudora72-1.0.2-lauffaehig.zip SHA256
 
 Die Prüfsumme in der Tabelle oben sagt eindeutig, welche Fassung vorliegt.
 
-## Wo die Pakete liegen (Stand 07.09.2026)
+## Wo die Pakete liegen (Stand 08.09.2026)
 
 Die ZIPs sind am 07.09.2026 aus `Releases/` **entfernt** worden — sie lagen
 dort 104 MB und waren doppelt: veroeffentlicht bei GitHub und im git-Verlauf.
 Diese Tabelle nennt jede Fassung mit Pruefsumme, damit niemand sie im
 Arbeitsbaum sucht.
+
+**Was seither wieder im Repo liegt** (`git ls-files Releases/`, gemessen am
+08.09.2026): `Eudora72-1.0.2-lauffaehig.zip`, `Eudora72-1.0.21-release.zip` und
+`Eudora72-1.0.22-release.zip`, jedes mit `.sha256` daneben. Das ZIP zu 1.0.23
+ist gebaut, aber noch nicht committet.
 
 | Fassung | SHA256 | wo |
 |---|---|---|
