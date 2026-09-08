@@ -38,7 +38,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > von **neun** Kriterien sind **sechs belegt** (0, 1, 3, 5, 6, 7), **drei** fast
 > oder halb (2, 4, 8). Was an 8 fehlt, ist die Reiterleiste für die offenen
 > Fenster; die Leiste am unteren Rand gibt es seit E-44. Stand 08.09.2026,
-> Quellstand **7.2.0.23**, Paketnummer **1.0.23**. Hier steht bewusst keine
+> Quellstand **7.2.0.24**, Paketnummer **1.0.24**. Hier steht bewusst keine
 > zweite Fassung dieser Tabelle.
 >
 > Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,

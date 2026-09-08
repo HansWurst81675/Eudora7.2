@@ -201,7 +201,8 @@ Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
 der, den Gregor gesehen hat.
 
 **Umgesetzt in 7.2.0.23** (Befund **E-44**) und **von Gregor am 08.09.2026
-bestätigt**: *„jetzt ist sie unten, ja"*. Gemessen mit
+zweimal bestätigt** — an der Prüfinstanz *„jetzt ist sie unten, ja"*, danach am
+ausgelieferten Paket 1.0.23 *„leiste unten paßt."*. Gemessen mit
 `tools/leisten-messen.ps1`: Leiste **320**, Andockseite **unten**, sichtbar,
 **1712×80**.
 Zwei Ursachen, beide gemessen, beide behoben:

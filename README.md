@@ -14,17 +14,14 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **08.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.23** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.24** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.23**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.24**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.23-release.zip`
-> (SHA256 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`,
-> 9 340 228 Byte, gebaut am 08.09.2026 — **noch nicht committet und nicht als
-> Marke veröffentlicht**; die jüngste Marke ist `v1.0.21`). Die
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.24-release.zip`. Die
 > Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in
@@ -50,14 +47,18 @@ greifen bei einem **neu angelegten** Konto) und **A-2** (*Task Status* und
 *Task Errors* liegen **waagrecht am unteren Fensterrand** statt senkrecht
 links — *„jetzt ist sie unten, ja"*).
 
-**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: ein gelöschtes
-Konto bleibt in der Liste links stehen, bis Eudora neu startet (**E-37** — der
-zweite Behebungsanlauf ist in 7.2.0.23 gebaut, aber **von Gregor nicht
-bestätigt**), die im Kontoassistenten eingegebenen Daten fehlen unter
-*Konto → Eigenschaften* (**E-38** — der Blocker E-33 ist weg, der Befund ist
-damit erstmals messbar und noch nicht neu gemessen), und die untere Leiste
+**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: die untere Leiste
 zeigt Aufgabenstatus und Aufgabenfehler, nicht die Reiter für die offenen
-Fenster (**Kriterium 8**, halb — die offenen Fenster stehen im *Window*-Menü).
+Fenster (**Kriterium 8**, halb — die offenen Fenster stehen im *Window*-Menü),
+und beim Öffnen der Kurznamen-Leiste kommt ein Fehlerdialog des
+Verzeichnisdienstes (**E-47**) — dort fehlen `MFC71.DLL` und `MSVCP71.dll`, die
+Microsoft nie als Redistributable herausgegeben hat.
+
+**In 7.2.0.24 behoben, von Gregor noch nicht bestätigt:** **E-43** — und mit
+ihm **E-37** (ein gelöschtes Konto blieb in der Liste stehen) und **E-38** (die
+Eigenschaften wirkten leer, weil sie zu einem Geistereintrag gehörten). Alle
+drei hingen an **einer** Ursache: `SECControlBar` war zweimal definiert, und
+dadurch lasen zwei Übersetzungseinheiten dasselbe Feld acht Byte auseinander.
 
 Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md); was als
 Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum

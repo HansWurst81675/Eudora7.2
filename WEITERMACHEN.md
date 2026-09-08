@@ -1,17 +1,17 @@
 # Hier weitermachen
 
-**Stand 08.09.2026, mittags.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 08.09.2026, nachmittags.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.23 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.23 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.23** — `Releases/Eudora72-1.0.23-release.zip`, SHA256 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`, 9 340 228 Byte, `Eudora.exe` vom 08.09.2026 10:51. **Noch nicht committet**, als Marke **nicht** veröffentlicht; die jüngste Marke ist [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
-| **Zuletzt von Gregor gestartet** | Paket **1.0.22** am 08.09.2026 — *„schließen klappt jetzt."* und *„default werte beim neuen persona konto für ‚leave message on server' greifen."*; dazu die Prüfinstanz mit 7.2.0.23 zu A-2 — *„jetzt ist sie unten, ja"* |
-| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.22: **E-40/E-41/E-42** (Beenden, Kriterium 7) und **A-1** (Vorgaben für ein neues Konto). 7.2.0.23: **E-44** (Anforderung A-2). Davor 7.2.0.21: E-31/E-34/E-35/E-36 (Verfassen, Abschicken, Weiterleiten) |
-| **Was er dabei bemängelt hat** | *„die meldung kommt, wenn ich eine persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora geschlossen habe"* — beides **E-37**, der zweite Behebungsanlauf ist gebaut und **nicht bestätigt** |
+| **Quellstand** | 7.2.0.24 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.24 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.24** - `Releases/Eudora72-1.0.24-release.zip`, SHA256 `3e518707a7697567ee3d34fbf6e062f8fdcbf49de8d2140a01c809af19e4ae53`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.23](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.23) |
+| **Zuletzt von Gregor gestartet** | Paket **1.0.23** am 08.09.2026 — dabei gemeldet: *„konto löschen geht immer noch nicht"* (E-37) und der Verzeichnisdienst-Dialog (**E-47**). 1.0.24 liegt bei ihm, ist aber noch nicht gemessen |
+| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.23 (**A-2**/E-44: *Task Status* und *Task Errors* waagrecht unten — *„leiste unten paßt."*). Davor 7.2.0.22 (**Kriterium 7**: *„schließen klappt jetzt."*, und **A-1**) |
+| **Was als Nächstes zu messen ist** | **E-37** an 1.0.24: löscht sich ein Konto jetzt sichtbar, ohne Meldung? Die Vorhersage ist ja — E-37 hing an **E-43**, und das ist behoben. Damit fällt auch **E-38** weg, das Gregor selbst aufgeklärt hat |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen
