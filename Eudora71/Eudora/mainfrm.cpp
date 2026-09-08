@@ -5076,6 +5076,38 @@ BOOL CMainFrame::OnQueryEndSession()
 	return (QCWorkbook::OnQueryEndSession());
 }
 
+// E-42: Ein Fehler beim AUFRAEUMEN darf das Beenden nicht verhindern.
+//
+// Der Weg von WM_CLOSE bis ExitInstance besteht zum groessten Teil aus
+// Aufraeumschritten: Fensterlagen sichern, Leistenzustand schreiben, IMAP
+// trennen, Papierkorb leeren, Menueobjekte freigeben. Wirft einer davon,
+// faengt AfxCallWndProc die Ausnahme, CWinApp::ProcessWndProcException zeigt
+// sie und liefert 0 - WM_CLOSE gilt als beantwortet, und das Fenster bleibt
+// stehen. Der Anwender kann Eudora dann nur noch abschiessen.
+//
+// AUFRAEUMEN(name, anweisung) fuehrt einen solchen Schritt aus, meldet einen
+// Fehlschlag mit Namen und Grund ins Protokoll und macht weiter. Bewusste
+// Entscheidungen des Anwenders - die Rueckfragen in CloseDown - laufen
+// bewusst NICHT hierdurch: wer "Abbrechen" drueckt, will nicht beenden.
+#define AUFRAEUMEN(name, anweisung)                                           \
+	do {                                                                      \
+		TRY { anweisung; }                                                    \
+		CATCH_ALL(e)                                                          \
+		{                                                                     \
+			TCHAR szGrund[256];                                               \
+			szGrund[0] = _T('\0');                                            \
+			if (e != NULL) e->GetErrorMessage(szGrund, 256);                  \
+			CString strMeldung;                                               \
+			strMeldung.Format(                                                \
+				_T("E-42 Beenden: Schritt '%s' hat eine Ausnahme ausgeloest ") \
+				_T("- Grund: %s. Das Beenden wird fortgesetzt."),              \
+				_T(name),                                                     \
+				(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));      \
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung); \
+		}                                                                     \
+		END_CATCH_ALL                                                         \
+	} while (0)
+
 void CMainFrame::OnClose()
 {
 	// This code is required for handling the close of the print preview window.
@@ -5116,7 +5148,7 @@ void CMainFrame::OnClose()
 
 #ifdef IMAP4
 	// Do any IMAP cleanup required:
-	CImapMailMgr::CloseImapConnections ();
+	AUFRAEUMEN("CloseImapConnections", CImapMailMgr::CloseImapConnections());
 #endif
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
@@ -5126,7 +5158,7 @@ void CMainFrame::OnClose()
 	{
 		// we're going down regardless of whether the user confirms
 		// the Empty Trash warning or not...
-		EmptyTrash();
+		AUFRAEUMEN("EmptyTrash", EmptyTrash());
 	}
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
@@ -5146,7 +5178,7 @@ void CMainFrame::OnClose()
 	g_RecipientList.Write();
 #endif
 
-	Network::CleanSSLLibrary();
+	AUFRAEUMEN("CleanSSLLibrary", Network::CleanSSLLibrary());
 	// Winsock and Dialup must shutdown before the app can.
 	if (NetConnection)
 	{
@@ -5157,14 +5189,14 @@ void CMainFrame::OnClose()
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 6d nach CleanSSLLibrary, vor TrayItem");
 
-	TrayItem(IDR_MAINFRAME,NIM_DELETE); // SHAREWARE. Pro: IDR_MAINFRAME, Light: IDR_MAINFRAME_LIGHT
+	AUFRAEUMEN("TrayItem", TrayItem(IDR_MAINFRAME, NIM_DELETE));	// SHAREWARE. Pro: IDR_MAINFRAME, Light: IDR_MAINFRAME_LIGHT
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 6e nach TrayItem, vor DeleteMenuObjects");
 
 	// Get rid of any dynamic menu C++ objects.  Don't need to delete the menu
 	// items because that will be taken care of when the window is destoyed.
-	CDynamicMenu::DeleteMenuObjects(GetMenu(), FALSE);
+	AUFRAEUMEN("DeleteMenuObjects", CDynamicMenu::DeleteMenuObjects(GetMenu(), FALSE));
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 6f nach DeleteMenuObjects");
@@ -5179,7 +5211,7 @@ void CMainFrame::OnClose()
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 OnClose: vor QCWorkbook::OnClose (= CFrameWnd::OnClose)");
 
-	QCWorkbook::OnClose();
+	AUFRAEUMEN("QCWorkbook::OnClose", QCWorkbook::OnClose());
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 OnClose: nach QCWorkbook::OnClose");
@@ -5324,7 +5356,7 @@ BOOL CMainFrame::CloseDown()
 		"E-33 5a vor TrimJunk");
 
 	// Trim the junk mailbox.  For now trim on every quit, eventually be more clever.
-	TrimJunk();
+	AUFRAEUMEN("TrimJunk", TrimJunk());
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 5b nach TrimJunk");
@@ -5376,7 +5408,7 @@ BOOL CMainFrame::CloseDown()
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 			"E-33 5e vor RemoveBogusAdToolBars");
 
-		RemoveBogusAdToolBars();
+		AUFRAEUMEN("RemoveBogusAdToolBars", RemoveBogusAdToolBars());
 
 		// BEFUND E-33, Verdacht Platz 1: SaveBarState fuehrt ueber
 		// CMainFrame::SaveBarState (mainfrm.cpp:2570) und
@@ -5390,12 +5422,12 @@ BOOL CMainFrame::CloseDown()
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 			"E-33 5f vor SaveBarState(ToolBar)");
 
-		SaveBarState(_T("ToolBar"));
+		AUFRAEUMEN("SaveBarState(ToolBar)", SaveBarState(_T("ToolBar")));
 
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 			"E-33 5g nach SaveBarState(ToolBar), vor SaveWazooBarConfigToIni");
 
-		m_WazooBarMgr.SaveWazooBarConfigToIni(); // saves docked and floating window *sizes*
+		AUFRAEUMEN("SaveWazooBarConfigToIni", m_WazooBarMgr.SaveWazooBarConfigToIni());	// docked and floating window *sizes*
 
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 			"E-33 5h nach SaveWazooBarConfigToIni");
@@ -5404,12 +5436,12 @@ BOOL CMainFrame::CloseDown()
 	// If we got this far without crashing, remember that.
 	// (Used for future crash detection). Do before
 	// WriteToolBarMarkerToIni, because it flushes the INI file.
-	g_QCExceptionHandler.SaveCrashStateToINI();
+	AUFRAEUMEN("SaveCrashStateToINI", g_QCExceptionHandler.SaveCrashStateToINI());
 
 	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
 		"E-33 5i nach SaveCrashStateToINI, vor WriteToolBarMarkerToIni");
 
-	WriteToolBarMarkerToIni();
+	AUFRAEUMEN("WriteToolBarMarkerToIni", WriteToolBarMarkerToIni());
 
 	// BEFUND E-33: Stufe 5 bestanden. Ab hier kann CloseDown nicht mehr FALSE
 	// liefern; was jetzt noch schiefgeht, ist eine Ausnahme (Leisten, Wazoo).
@@ -5424,10 +5456,62 @@ VOID CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 	if (nID == ID_SYSTEM_MENU_CHECKMAIL)
 	{
 		g_pApp->OnCheckMail();
-	} else 
-		CFrameWnd::OnSysCommand(nID,lParam);
+		return;
+	}
 
-	return;
+	// E-41: Alt-F4 und das Kreuz oben rechts kommen als SC_CLOSE hier an und
+	// gehen dann durch CFrameWnd::OnSysCommand. Dort steht in MFC 14
+	//     CFrameWnd* pFrameWnd = GetTopLevelFrame();
+	//     ENSURE_VALID(pFrameWnd);
+	// (winfrm.cpp:1112-1114). ENSURE_VALID wirft AUCH IM RELEASE-BAU eine
+	// CInvalidArgException - MFC 6 hatte dort nur ASSERT_VALID, das im
+	// Release verschwindet. Faellt der Wurf, faengt ihn AfxCallWndProc, und
+	// CWinApp::ProcessWndProcException zeigt "Encountered an improper
+	// argument" und liefert 0: WM_SYSCOMMAND gilt als beantwortet, und das
+	// Fenster bleibt stehen. Genau das meldet Gregor am 07.09.2026: "weder
+	// alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung".
+	//
+	// Ein Fehler auf DIESEM Weg darf das Beenden nicht verhindern. Deshalb
+	// wird SC_CLOSE abgesichert und, wenn die Systembehandlung scheitert,
+	// direkt an OnClose weitergereicht - der Weg, den auch File -> Exit
+	// nimmt und der ohne dieses ENSURE_VALID auskommt.
+	if ((nID & 0xFFF0) == SC_CLOSE)
+	{
+		BOOL bSystemwegOk = TRUE;
+		TRY
+		{
+			CFrameWnd::OnSysCommand(nID, lParam);
+		}
+		CATCH_ALL(e)
+		{
+			TCHAR szGrund[256];
+			szGrund[0] = _T('\0');
+			if (e != NULL)
+				e->GetErrorMessage(szGrund, 256);
+
+			CString strMeldung;
+			strMeldung.Format(
+				_T("E-41 CMainFrame::OnSysCommand: SC_CLOSE hat in MFC eine Ausnahme ")
+				_T("ausgeloest - Grund: %s. Das Beenden wird ueber WM_CLOSE fortgesetzt."),
+				(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+
+			bSystemwegOk = FALSE;
+		}
+		END_CATCH_ALL
+
+		// Steht das Fenster nach der Ausnahme noch, dann ist das Beenden
+		// nicht angelaufen: WM_CLOSE selbst nachschicken.
+		if (!bSystemwegOk && ::IsWindow(m_hWnd))
+		{
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+				"E-41 OnSysCommand: schicke WM_CLOSE nach");
+			PostMessage(WM_CLOSE, 0, 0);
+		}
+		return;
+	}
+
+	CFrameWnd::OnSysCommand(nID, lParam);
 }
 
 void CMainFrame::OnHelp()

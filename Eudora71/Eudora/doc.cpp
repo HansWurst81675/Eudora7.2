@@ -8,6 +8,7 @@
 #include "doc.h"
 #include "resource.h"
 #include "guiutils.h"
+#include "debug.h"		// E-40: PutDebugLog
 
 #include "DebugNewHelpers.h"
 
@@ -53,7 +54,8 @@ BOOL CDoc::SaveModified()
 
 	CString prompt;
 	AfxFormatString1(prompt, IDS_SAVE_CHANGES, m_strTitle);
-	switch (AfxMessageBox(prompt, MB_YESNOCANCEL))
+	const int nAntwort = AfxMessageBox(prompt, MB_YESNOCANCEL);
+	switch (nAntwort)
 	{
 	case IDCANCEL:
 		return (FALSE);       // don't continue
@@ -68,8 +70,27 @@ BOOL CDoc::SaveModified()
 		break;
 
 	default:
-		ASSERT(FALSE);
-		return (FALSE);       // don't continue
+		// E-40: Hier stand nur ASSERT(FALSE) und return FALSE - im
+		// Release-Bau also ein stummes "der Anwender hat Abbrechen
+		// gedrueckt". Das ist falsch: IDCANCEL hat einen eigenen Zweig
+		// darueber. In den default-Zweig faellt vor allem die 0, die
+		// AfxMessageBox liefert, wenn der Dialog gar nicht erzeugt werden
+		// kann - dann hat niemand etwas entschieden, und Eudora bleibt
+		// offen, ohne dass der Anwender erfaehrt warum.
+		// Gregor am 07.09.2026: "beenden geht nicht."
+		//
+		// Jetzt: melden und das Schliessen FORTSETZEN. Eine Rueckfrage, die
+		// sich nicht stellen laesst, darf das Beenden nicht blockieren.
+		{
+			CString strMeldung;
+			strMeldung.Format(
+				_T("E-40 CDoc::SaveModified: AfxMessageBox lieferte %d fuer '%s' - ")
+				_T("weder Ja, Nein noch Abbrechen. Der Dialog kam vermutlich nicht ")
+				_T("zustande; das Schliessen wird fortgesetzt."),
+				(int) nAntwort, (const char *) m_strTitle);
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+		}
+		break;
 	}
 
 	// If we get here, it may be the case that the user hit

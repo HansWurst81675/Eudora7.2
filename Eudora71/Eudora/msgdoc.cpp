@@ -1054,8 +1054,22 @@ BOOL CMessageDoc::SaveModified()
 		break;
 
 	default:
-		ASSERT(FALSE);
-		return (FALSE);       // don't continue
+		// E-40: wie in CDoc::SaveModified stand hier nur ASSERT(FALSE) und
+		// return FALSE - im Release-Bau ein stummes "Abbrechen", obwohl
+		// IDCANCEL seinen eigenen Zweig oben hat. In den default-Zweig
+		// faellt vor allem die 0 von AfxMessageBox, wenn der Dialog nicht
+		// zustande kommt. Dann hat niemand entschieden, und Eudora bleibt
+		// offen. Melden und das Schliessen fortsetzen.
+		{
+			CString strMeldung;
+			strMeldung.Format(
+				_T("E-40 CMessageDoc::SaveModified: AfxMessageBox lieferte %d fuer ")
+				_T("'%s' - weder Ja, Nein noch Abbrechen. Der Dialog kam vermutlich ")
+				_T("nicht zustande; das Schliessen wird fortgesetzt."),
+				(int) nResult, (const char *) GetTitle());
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+		}
+		break;
 	}
 
 	// If we get here, it may be the case that the user hit
