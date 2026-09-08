@@ -488,15 +488,36 @@ for my $datei (@alle_md) {
     for my $i (0 .. $#zeilen) {
         my $z = $zeilen[$i];
         next if $z =~ /^\s*[>|#]/;
-        my $fenster = join(' ', grep { defined } @zeilen[$i .. $i + 1]);
+        # L-9-Klasse, 08.09.2026: das Zwei-Zeilen-Fenster nahm die FOLGEzeile
+        # auch dann mit, wenn sie ein Blockzitat war. Damit meldete die
+        # Schranke Befunde/LEKTOR-5.md:318 - dort steht eine LEERZEILE, und
+        # die Zeile danach ist das Zitat, mit dem der Lektor den Mangel in
+        # Releases/PAKETE.md gerade BELEGT. Ein Zitat ist keine Behauptung;
+        # geprueft wird nur, was die Datei selbst sagt.
+        my $fenster = join(' ', grep { defined && !/^\s*[>|#]/ } @zeilen[$i .. $i + 1]);
         next if $fenster =~ /EUDORA_BUILD_NUMBER/;
         next if $fenster =~ /\d{2}\.\d{2}\.20\d\d/;
         next if $fenster =~ /Behauptung|behauptet|\bwar\b|damals|frueher|ueberholt/i;
         next unless $fenster =~ /$behauptet_stand/;
         next unless $fenster =~ /\bVERSION\b|Version\.h|Quellstand|Paketnummer/;
         my %schon;
+        # L-9-Klasse, 08.09.2026, zweiter Teil: eine Versionsnummer INNERHALB
+        # deutscher Anfuehrungszeichen ist ein Zitat und keine Behauptung der
+        # Datei. Gemeldet hatte die Schranke Befunde/LEKTOR-5.md:651 - dort
+        # zitiert der Lektor den Kopfkasten von Releases/PAKETE.md, um dessen
+        # Mangel zu belegen. Gearbeitet wird auf Rohbytes, weil die MDs UTF-8
+        # sind und die Zeichen sonst nicht zuverlaessig treffen:
+        #   E2 80 9E = "  (oeffnend)      E2 80 9C = "  (schliessend)
+        my $zitiert = '';
+        {
+            my $rest = $fenster;
+            while ($rest =~ /\xe2\x80\x9e(.*?)(?:\xe2\x80\x9c|$)/gs) {
+                $zitiert .= $1 . ' ';
+            }
+        }
         while ($fenster =~ /\b(7\.2\.0\.\d+)\b/g) {
             next if $1 eq $quellstand or $schon{$1}++;
+            next if index($zitiert, $1) >= 0;
             next if $stand_gemeldet{"$datei|$1"}++;
             push @mangel, sprintf("%s:%d behauptet %s als gueltigen Quellstand, Version.h sagt %s",
                                   $datei, $i + 1, $1, $quellstand);
