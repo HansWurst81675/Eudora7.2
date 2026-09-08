@@ -13,12 +13,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **E-37** | **ein Konto lässt sich nicht löschen** — der Eintrag bleibt in der Liste stehen, bis Eudora neu startet | **Zwei Anläufe, der erste war eine Regression.** Gregor am 08.09.2026: *„die meldung kommt, wenn ich eine persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora geschlossen habe"* — mein `PopulateView()` hat geworfen und dem Anwender „Encountered an improper argument" gezeigt. Gelöscht **wird** korrekt; es ist ein Anzeigefehler. Zweiter Anlauf gebaut, **noch nicht bestätigt** |
-| **E-43** | `QCCustomToolBar::SaveCustomInfo` wirft beim Beenden — der **Leistenzustand wird nie gespeichert** | Das Beenden läuft nur, weil **E-42** den Wurf abfängt. **In 7.2.0.23 entschieden, was seit E-34 offen war:** vier Messungen in einer Zeile ergeben `GetBtnCount=24/24  m_btns.GetSize=0/0` bei gleichem `this` und gleicher Adresse. Der Wert **flackert also nicht** — und ein gerade freigegebenes Objekt ist ebenfalls ausgeschlossen, weil die Marke **E-46** im Destruktor erst *nach* dieser Stelle erscheint. Es bleibt: der übersetzte Code liest an **zwei verschiedenen Adressen**, obwohl `GetBtnCount()` wörtlich `return (int)m_btns.GetSize()` ist. Die dritte Marke gibt die Rohwörter des Feldes aus und sagt, welche. **Folge:** kein `[ToolBar...]`-Abschnitt in der `Eudora.ini` — und daraus folgte **E-44** |
+| **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. Keine Behebung in Sicht |
 | — | **Kriterium 8**: die **Registerkartenleiste** am unteren Fensterrand für die offenen Fenster | *halb* — das Menü *Window* listet sie auf (von Gregor nachgesehen: „1 In", „2 Out"). Die Leiste am unteren Rand ist mit **E-44** jetzt sichtbar und waagrecht, zeigt aber *Task Status* und *Task Errors*, nicht die offenen Fenster |
-| — | **E-38**: die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften* | In der `Eudora.ini` **stehen** sie (von Gregor nachgesehen). Hing an E-33; jetzt, da Eudora sich normal beenden lässt, **neu zu messen** |
-| — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Unabhängig von E-37. Nicht am laufenden Programm bestätigt |
-| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. Beim Beenden ist sie mit E-42 weg, beim Anzeigen nicht |
+| — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
+| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
 
 ## Erreicht
 
@@ -47,10 +45,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.23 — alles Gebaute ist gepackt
+## Nach 7.2.0.24 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.23** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.23 / 1.0.23** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.24** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.24 / 1.0.24** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
@@ -61,6 +59,13 @@ dazu: *„version muß eindeutig sein"*). **Alle fünf Zeilen**, nicht vier:
 
 Das ZIP zu 1.0.23 liegt im Arbeitsbaum, ist aber **noch nicht committet**, und
 als Marke ist es **nicht** veröffentlicht — die jüngste Marke ist `v1.0.21`.
+
+> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
+> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
+> Komma-Format `7,2,0,23`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
+> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
+> es gehört aber trotzdem mit hochgesetzt.
 
 - **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
   `CPersonalityView::OnCmdDeletePersonality`
@@ -102,6 +107,102 @@ als Marke ist es **nicht** veröffentlicht — die jüngste Marke ist `v1.0.21`.
 ---
 
 
+
+## 7.2.0.24 — Eine Ursache, vier Befunde: das Konto-Löschen geht wieder
+
+**Was Gregor damit tun kann, was vorher nicht ging:** ein Konto löschen, ohne
+dass „Encountered an improper argument" erscheint und der Eintrag links stehen
+bleibt. Und die Fenstergrößen und Leistenlagen überleben jetzt einen Neustart —
+sie wurden bisher **nie** gespeichert.
+
+**Noch nicht bestätigt.** Bis Gregor es gemessen hat, gilt das als gebaut.
+
+### Die eine Ursache: `SECControlBar` war zweimal definiert
+
+Zwei Definitionen derselben Klasse, und der Ersatz hat ein Feld mehr:
+
+| | |
+|---|---|
+| `OT501/Include/sbarcore.h:118` | Original-`SECControlBar` |
+| `OTShim/OTShim.h:496` | Ersatz-`SECControlBar`, **ein Feld mehr**: `int m_nRowExtent` (`:533`) |
+| `OTShim/OTShim.h:984` | setzt `__SBARCORE_H__` |
+| `OTShim_Werkzeugleiste.h:84` | band unter `#ifndef __SBARCORE_H__` das **Original** ein |
+
+Welche Fassung eine Übersetzungseinheit zu sehen bekam, hing damit allein an
+der Einbindereihenfolge: `QCCustomToolBar.cpp` sieht über `stdafx.h` →
+`OTShimAll.h` → `OTShim.h` den **Ersatz**, `OTShim_Werkzeugleiste.cpp` bindet
+nur den eigenen Header ein und sah das **Original**. Compilerschalter und
+Include-Pfade sind sonst gleich — nachgemessen aus dem echten Compileraufruf
+in `Eudora.tlog/CL.command.1.tlog`, einziger Unterschied `/Yu"stdafx.h"`.
+
+Folge: das Knopffeld `m_btns` lag in beiden Übersetzungseinheiten **acht Byte
+auseinander**. Der Binder nimmt eine Fassung, der übrige Code liest daneben.
+
+**Gemessen, vorher:**
+```
+Versatz=488  GetBtnCount=24/24  m_btns.GetSize=0/0  roh[0..4]=24,25,0,0,0
+```
+**Nachher:**
+```
+Versatz=488  GetBtnCount=24/24  m_btns.GetSize=24/24  roh[0..4]=15146180,10425560,24,25,0
+```
+`24` und `25` sind Anzahl und Kapazität des Knopffeldes; sie liegen jetzt dort,
+wo `CPtrArray` sie hat, statt acht Byte davor.
+
+Behoben, indem `OTShim_Werkzeugleiste.h` die **Ersatzschicht** einbindet
+(`#include "OTShim.h"`) statt des Originals.
+
+### Was alles daran hing
+
+| Befund | Wie er zusammenhängt |
+|---|---|
+| **E-43** | `SaveCustomInfo` warf bei **jedem** Beenden → der Leistenzustand wurde **nie** gespeichert. Jetzt: **13** `[ToolBar…]`-Abschnitte in der `Eudora.ini` statt **0**, und keine `E-42`-Zeile mehr |
+| **E-37** | `CPersonality::Remove` löscht den INI-Abschnitt und ruft dann `DeleteCommand` → `NotifyClients(CA_DELETE)` → `QCCustomToolBar::Notify` (`:951`), wo in `:970` dasselbe Muster steht. Der Wurf fliegt aus `Remove()` heraus, der Anzeige-Code darunter wird nie erreicht. Belegt durch die Abwesenheit jeder Spur: **keine einzige E-37-Marke** in Gregors Protokoll |
+| **E-38** | war **gar kein Fehler**. Gregor am 08.09.2026: *„nach dem löschen eines kontos, wenn das konto noch sichtbar ist, dann fehlen die daten in den eigenschaften … beim neuen konto sind sie zu sehen."* Die leeren Felder gehörten zu einem Geistereintrag, den E-37 in der Liste stehen ließ |
+| **E-34** | dasselbe Muster an einer dritten Stelle (`QCChildToolBar::GetButton`) — die dortige Umgehung bleibt, die Wurzel ist jetzt weg |
+
+### Die Schranke dazu
+
+`tools/pruefe-waechter.pl`: bindet ein Header der Ersatzschicht ein
+OT501-Original ein, dessen Wächter **irgendeine** Ersatzdatei setzt, muss
+sichergestellt sein, dass der Wächter dann immer schon steht. Sie fand genau
+einen Verstoß — den echten — und ließ den legitimen Fall durch
+(`OTShim.h:1052`, Wächter steht ab `:985`).
+
+Die zugehörige Lehre `Arbeitsweise/teilweise-ersetzte-header.md` gibt es seit
+dem **30.08.2026**. Sie hat neun Tage lang nichts verhindert. Das ist der
+Grund, warum aus Lehren jetzt Schranken werden.
+
+### Neu: `tools/testlauf.ps1`
+
+Nachdem ich am 08.09.2026 **viermal unangekündigt** eine Eudora-Instanz
+gestartet hatte — Gregor: *„hast du was gestartet?"*, *„absprache?"* — ist das
+Starten zum Messen an ein Werkzeug gebunden, das erzwingt: eine **Freigabe** im
+Klartext, Verzeichnis nur unter `C:\Temp`, **gleiche Dateiversion** von
+`Eudora.exe` und `EudoraRes.dll`, Beenden per Fensterbotschaft an ein
+**gemessenes** Handle, Aufräumen immer nach Pfad gefiltert, und jeder Lauf mit
+Freigabetext in `tools/TESTLAEUFE.md`.
+
+Die Versionsprüfung stammt aus einem eigenen Fehler desselben Tages: ich hatte
+nur die `Eudora.exe` ins Testverzeichnis kopiert, nicht die `EudoraRes.dll`.
+Eudora brachte darauf *„Eudora has loaded a Resource DLL that does not match
+this version of Eudora"* auf Gregors Bildschirm, und meine Messung war wertlos,
+ohne dass ich es merkte.
+
+### Was an 1.0.24 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken; von Hand wäre es
+`Eudora.exe "<Pfad>\Mailverzeichnis"`. Die Titelzeile muss
+`Eudora 7.2.0.24 / Paket 1.0.24` nennen.
+
+1. **Ein Konto löschen** (E-37): verschwindet der Eintrag links **sofort**,
+   ohne Neustart? Kommt noch „Encountered an improper argument"?
+2. **Fenster verschieben, beenden, neu starten** (E-43): steht die
+   Werkzeugleiste wieder da, wo sie war? In der `Eudora.ini` müssen jetzt
+   `[ToolBar…]`-Abschnitte stehen.
+3. **Beenden** über alle drei Wege: *File → Exit*, Alt-F4, das Kreuz.
+4. **Eine Nachricht anzeigen**, bei der bisher „Encountered an improper
+   argument" kam — gut möglich, dass sie mit weg ist.
 
 ## 7.2.0.23 — Die Statusleiste liegt unten, und ein Prozess ohne Fenster kann nicht mehr entstehen
 
@@ -184,6 +285,37 @@ die Marken werden **ohne jede Einstellung** geschrieben. Gegenprobe: Gregors
 `Eudora.ini` hat keine Zeile `LogLevel`, und seine `eudora.log` enthält alle
 Marken.
 
+### Was an 1.0.23 zu prüfen ist
+
+Paket: `Releases/Eudora72-1.0.23-release.zip`, 9 340 228 Byte, SHA256
+`3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
+aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
+Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
+`Eudora.exe` **ohne** Parameter beim ersten Start: dann sucht Eudora die Ini im
+Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
+**E-6**). Die Titelzeile muss
+`Eudora 7.2.0.23 / Paket 1.0.23` nennen.
+
+1. **Die untere Leiste** — *Task Status* und *Task Errors* liegen waagrecht am
+   unteren Fensterrand, über die ganze Breite. **Von Gregor am 08.09.2026
+   bestätigt:** *„leiste unten paßt."* Rechts darf **keine** Kurznamen-Spalte
+   dauerhaft offenstehen.
+2. **E-37, gelöschtes Konto** (steckt seit 1.0.22 drin, noch unbestätigt):
+   eine Persönlichkeit anlegen und wieder löschen. Verschwindet der Eintrag
+   links **sofort**, ohne Neustart? Kommt noch „Encountered an improper
+   argument"?
+3. **E-38, Assistentendaten** — jetzt erstmals messbar, weil der Blocker E-33
+   weg ist: Konto über den Assistenten anlegen, Eudora **normal** beenden, neu
+   starten, *Konto → Eigenschaften* ansehen. Stehen Name, Mailadresse und
+   Server da?
+4. **Das Beenden** über alle drei Wege: *File → Exit*, **Alt-F4**, das
+   **Kreuz**.
+5. **E-43** braucht nur einen normalen Beendigungsvorgang. Danach steht in
+   `Mailverzeichnis\eudora.log` eine Zeile `E-43 SaveCustomInfo: … Versatz=…
+   roh[0..4]=…` — die entscheidet, warum der Leistenzustand nie gespeichert
+   wird.
+
 ### Neu im Werkzeugkasten
 
 - `tools/leisten-messen.ps1` — misst Andockseite, Sichtbarkeit, Größe und Lage
@@ -203,7 +335,12 @@ Ebenfalls von ihm bestätigt: *„default werte beim neuen persona konto für
 'leave message on server' greifen."* — **Anforderung A-1** ist damit am
 laufenden Programm belegt, nicht mehr nur am Codeweg.
 
-Paket: `Releases/Eudora72-1.0.22-release.zip`, 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
+Paket: 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
+**Das ZIP liegt nicht mehr im Repo** — Gregor am 08.09.2026: *„0.22 brauche ich
+nicht, wenn es ein 0.23 gibt"*. Anders als bei den übrigen entfernten Paketen
+gibt es für 1.0.22 **keine Marke**; wer es wiederhaben will, baut es aus Commit
+`d003d46` neu (`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`) und
+prüft die Prüfsumme oben nach.
 
 ### Der Grundsatz hinter der Behebung
 
@@ -290,7 +427,9 @@ ruft `PopulateView()` nicht mehr — **von Gregor noch nicht bestätigt**.
 
 ### Was an 1.0.22 zu prüfen ist
 
-Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`.
+Auspacken und **`Eudora starten.cmd`** doppelklicken; von Hand wäre es
+`Eudora.exe "<Pfad>\Mailverzeichnis"`. `Eudora.exe` **ohne** Parameter legt beim
+ersten Start eine leere Einrichtung an (Befund **E-6**).
 
 | Prüfen | erwartet |
 |---|---|
