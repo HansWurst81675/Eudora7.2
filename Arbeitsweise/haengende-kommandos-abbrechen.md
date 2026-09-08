@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:57:45.141Z
 ---
 
+Schranke: keine - ein hängendes Kommando zeigt sich zur Laufzeit im Chat; im Repo bleibt keine Spur, gegen die sich prüfen ließe
+
 Wenn ein Kommando nicht vorankommt: früh abbrechen und einen anderen Weg nehmen
 oder gezielt neu versuchen — nicht zweimal in dasselbe Zeitlimit laufen.
 

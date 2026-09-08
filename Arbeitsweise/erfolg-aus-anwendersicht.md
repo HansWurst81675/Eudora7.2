@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:57:28.547Z
 ---
 
+Schranke: keine - „was Gregor jetzt tun kann" ist ein Urteil über die Bedienbarkeit des laufenden Programms; kein Werkzeug kann ein Fenster bedienen und beurteilen
+
 # Erfolg heißt: der Anwender kann etwas, was er vorher nicht konnte
 
 **Gregor am 06.09.2026, 17:06 Uhr**, mit meiner eigenen Überschrift aus dem

@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:58:38.293Z
 ---
 
+Schranke: tools/testlauf.ps1 (vor jedem Programmstart)
+
 Gregor testet Eudora selbst auf derselben Windows-Sitzung, auf der ich arbeite.
 Jedes Programm, das ich oder ein Agent startet, landet auf **seinem** Bildschirm
 — mit Fenstern, Fehlerdialogen und Zusicherungsmeldungen, die seine eigenen

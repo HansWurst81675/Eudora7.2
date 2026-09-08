@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-05T20:21:49.945Z
 ---
 
+Schranke: keine - tools/pruefe-branch.pl lässt Commits auf main ausdrücklich durch („main selbst ist nie das Problem", Zeile 165); eine Prüfung, die den Zweignamen main abweist, gibt es nicht
+
 **Nie direkt auf `main` committen. Jede Änderung geht über einen eigenen Zweig.**
 
 Gregor am 05.09.2026: *„keine direkten änderungen am main branch. ich werde ihn

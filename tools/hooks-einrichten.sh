@@ -82,7 +82,24 @@ perl "$WURZEL/tools/pruefe-fensterbau.pl" || exit $?
 #    kann durch eine spaetere, gut gemeinte Aenderung lautlos verschwinden.
 perl "$WURZEL/tools/pruefe-beenden.pl" || exit $?
 
-# 7. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 7. Die Include-Waechter der Ersatzschicht (Lehre teilweise-ersetzte-header).
+#
+#    Der staerkste Beleg dieses Projekts dafuer, dass eine Lehre ohne Ausloeser
+#    nichts verhindert: die Lehre lag seit dem 30.08.2026 im Gedaechtnis und
+#    hat neun Tage lang nichts abgewehrt. Genau der Fehler, den sie beschreibt
+#    - ein Include-Waechter fuer einen nur teilweise ersetzten Header - war die
+#    Wurzel von E-34, E-37, E-38 und E-43. Das Werkzeug gibt es seit dem
+#    08.09.2026; ab hier haengt es an einem Moment, den jeder Commit durchlaeuft.
+perl "$WURZEL/tools/pruefe-waechter.pl" || exit $?
+
+# 8. Jede Lehre in Arbeitsweise/ muss ihre Schranke nennen.
+#
+#    Gregor am 08.09.2026: "mach dir aus lessons leared alles schranken, die
+#    dann greifen." Ohne diese Pruefung entsteht die naechste Lehre wieder als
+#    reiner Text - und Text wird nicht gelesen, wenn es eilig ist.
+perl "$WURZEL/tools/lehren-schranken.pl" || exit $?
+
+# 9. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 
@@ -121,9 +138,12 @@ echo "  4. tools/doku-pruefen.pl     stimmt die Doku mit sich selbst? (IMMER, al
 echo "                               MD-Dateien aus git ls-files, immer abweisend)"
 echo "  5. tools/pruefe-fensterbau.pl haelt der Fensterbau? (E-33..E-36)"
 echo "  6. tools/pruefe-beenden.pl   haelt das Beenden? (E-40..E-42)"
-echo "  7. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo "  7. tools/pruefe-waechter.pl  stehen die Include-Waechter richtig?"
+echo "  8. tools/lehren-schranken.pl nennt jede Lehre ihre Schranke?"
+echo "  9. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
-echo "Die abweisenden Schritte 1, 2, 4 und 5 werten JEDEN Rueckgabewert aus -"
+echo "Abweisend sind alle Schritte ausser 3, und sie werten JEDEN"
+echo "Rueckgabewert aus -"
 echo "genau das fehlte bis zum 31.08.2026 bei Schritt 2 (Befund X-2), und im"
 echo "eingerichteten Hook fehlte es bis zum 05.09.2026 immer noch (X-5)."
 echo

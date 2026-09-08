@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-05T17:20:39.006Z
 ---
 
+Schranke: tools/bauen.ps1 (vor jedem Merge nach main)
+
 Auf `main` steht **immer** ein Stand, der fehlerfrei baut und aus dem sich
 **jederzeit** ein eigenes Release erstellen lässt.
 

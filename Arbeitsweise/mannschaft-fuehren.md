@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: keine - ob ein Auftrag ein Symptom nennt und ob ich den Rücklauf selbst nachgemessen habe, steht im Auftragstext und im Chat, nicht in einer Datei im Repo
+
 # Die Mannschaft führen, nicht nur verteilen
 
 **Gregor, mehrfach und zuletzt am 06.09.2026:** *„ich habe dir schon oft gesagt,
