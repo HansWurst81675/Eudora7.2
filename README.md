@@ -54,7 +54,8 @@ und beim Öffnen der Kurznamen-Leiste kommt ein Fehlerdialog des
 Verzeichnisdienstes (**E-47**) — dort fehlen `MFC71.DLL` und `MSVCP71.dll`, die
 Microsoft nie als Redistributable herausgegeben hat.
 
-**In 7.2.0.24 behoben, von Gregor noch nicht bestätigt:** **E-43** — und mit
+**In 7.2.0.24 behoben und von Gregor am 08.09.2026 bestätigt** (*„persona
+läßt sich löschen. keine messagebox“*)**:** **E-43** — und mit
 ihm **E-37** (ein gelöschtes Konto blieb in der Liste stehen) und **E-38** (die
 Eigenschaften wirkten leer, weil sie zu einem Geistereintrag gehörten). Alle
 drei hingen an **einer** Ursache: `SECControlBar` war zweimal definiert, und
