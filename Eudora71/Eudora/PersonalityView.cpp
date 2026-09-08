@@ -933,10 +933,6 @@ void CPersonalityView::OnCmdDeletePersonality()
 		lvFindInfo.flags = LVFI_STRING;
 		lvFindInfo.lParam = NULL;
 
-		// E-37: merkt sich, ob mindestens eine Persoenlichkeit entfernt wurde.
-		// Die Liste wird dann EINMAL am Ende neu aufgebaut, nicht je Durchlauf.
-		bool bNeuAufbauen = false;
-
 		while (! strListPersonalities.IsEmpty())
 		{
 			CString strName = strListPersonalities.RemoveHead();
@@ -972,16 +968,34 @@ void CPersonalityView::OnCmdDeletePersonality()
 					// dass nichts passiert, und haelt das Loeschen fuer
 					// kaputt.
 					//
-					// Behoben so, dass es NICHT davon abhaengt, WARUM
-					// FindItem scheitert: der Fehlschlag wird protokolliert,
-					// damit die Ursache beim naechsten Lauf dasteht, und die
-					// Liste wird am Ende ueber PopulateView() neu aufgebaut.
-					// PopulateView leert sie zuerst und fuellt sie aus
-					// g_Personalities.List() - danach stimmt die Anzeige mit
-					// der Eudora.ini ueberein, gleichgueltig was FindItem
-					// gemeldet hat.
-					lvFindInfo.psz = strName;
-					int nIndex = theCtrl.FindItem(&lvFindInfo);
+					// E-37, zweiter Anlauf. Der erste hat NICHT gewirkt:
+					// Gregor am 08.09.2026 - "die meldung kommt, wenn ich eine
+					// persona geloescht habe" und "sie verschwindet links
+					// nicht, bis ich eudora geschlossen habe". Mein
+					// PopulateView() hat geworfen; die Ausnahme lief aus dem
+					// Befehlsbehandler heraus, CWinApp::ProcessWndProcException
+					// zeigte "Encountered an improper argument", und die Liste
+					// blieb unveraendert. Eine Behebung, die dem Anwender eine
+					// Meldung einbringt, ist keine.
+					//
+					// Jetzt ohne FindItem und ohne PopulateView: der Eintrag
+					// wird ueber den angezeigten Text gesucht. Spalte 0 traegt
+					// den rohen Namen (PopulateView, PersonalityView.cpp:222-232
+					// setzt theItem.pszText auf den Namen aus
+					// g_Personalities.List()), und dieselbe Zeichenkette war
+					// bei Remove erfolgreich. Damit stellt sich die Frage, warum
+					// FindItem -1 liefert, gar nicht mehr.
+					int nIndex = -1;
+					const int nAnzahl = theCtrl.GetItemCount();
+					for (int iZeile = 0; iZeile < nAnzahl; iZeile++)
+					{
+						if (theCtrl.GetItemText(iZeile, 0) == strName)
+						{
+							nIndex = iZeile;
+							break;
+						}
+					}
+
 					if (nIndex >= 0)
 					{
 						theCtrl.DeleteItem(nIndex);
@@ -990,14 +1004,12 @@ void CPersonalityView::OnCmdDeletePersonality()
 					{
 						CString strMeldung;
 						strMeldung.Format(
-							_T("E-37 OnCmdDeletePersonality: FindItem hat '%s' ")
-							_T("nicht gefunden (%d Eintraege in der Liste) - ")
-							_T("die Liste wird neu aufgebaut"),
-							(const char *) strName, (int) theCtrl.GetItemCount());
+							_T("E-37 OnCmdDeletePersonality: '%s' steht nicht in ")
+							_T("der Liste (%d Eintraege) - Anzeige nicht ")
+							_T("aktualisiert, die Persoenlichkeit ist aber entfernt"),
+							(const char *) strName, nAnzahl);
 						PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
 					}
-
-					bNeuAufbauen = true;
 				}
 				else
 				{
@@ -1016,10 +1028,6 @@ void CPersonalityView::OnCmdDeletePersonality()
 			}
 		}
 
-		// E-37: einmal am Ende, nicht in der Schleife - PopulateView leert die
-		// ganze Liste und fuellt sie neu, das braucht es nur ein Mal.
-		if (bNeuAufbauen)
-			PopulateView();
 	}
 	else
 	{

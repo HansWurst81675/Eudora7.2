@@ -68,7 +68,21 @@ perl "$WURZEL/tools/release-pruefen.pl" >/dev/null 2>&1 || \
 #    Grund mehr, es an eine Bedingung zu haengen.
 perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
 
-# 5. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 5. Fensterbau absichern (Befunde E-33/E-34/E-35/E-36): keine modale Meldung
+#    in der Ersatzschicht, GetButton mit Indexschranke UND Ausnahmefang, jeder
+#    GetButton-Aufruf prueft sein Ergebnis auf NULL.
+#    Diese Schranke gibt es seit dem 07.09.2026 - sie hing bis zum 08.09.2026
+#    aber NICHT im Hook, lief also nur, wenn jemand daran dachte. Genau das
+#    soll ein Hook verhindern.
+perl "$WURZEL/tools/pruefe-fensterbau.pl" || exit $?
+
+# 6. Das Beenden absichern (Kriterium 7, Befunde E-40/E-41/E-42). Gregor am
+#    08.09.2026: "haben wir ein review? und neue tests fuer die neue version?
+#    wenn nicht, nachholen!" Die Behebung besteht aus drei Teilen, und jeder
+#    kann durch eine spaetere, gut gemeinte Aenderung lautlos verschwinden.
+perl "$WURZEL/tools/pruefe-beenden.pl" || exit $?
+
+# 7. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 
@@ -105,7 +119,9 @@ echo "  2. tools/lehren-spiegeln.pl  sind die Lehren im Repo?"
 echo "  3. tools/release-pruefen.pl  meldet nur, weist nicht ab"
 echo "  4. tools/doku-pruefen.pl     stimmt die Doku mit sich selbst? (IMMER, alle"
 echo "                               MD-Dateien aus git ls-files, immer abweisend)"
-echo "  5. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo "  5. tools/pruefe-fensterbau.pl haelt der Fensterbau? (E-33..E-36)"
+echo "  6. tools/pruefe-beenden.pl   haelt das Beenden? (E-40..E-42)"
+echo "  7. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo "Die abweisenden Schritte 1, 2, 4 und 5 werten JEDEN Rueckgabewert aus -"
 echo "genau das fehlte bis zum 31.08.2026 bei Schritt 2 (Befund X-2), und im"
