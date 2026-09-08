@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:54:15.228Z
 ---
 
+Schranke: tools/paket-pruefen.ps1 (nach jedem Paketbau, vor der Übergabe)
+
 # Das Paket ist nicht der Bau, solange ich es nicht gemessen habe
 
 Am 08.09.2026, 06:59 Uhr, hat `tools/paket-pruefen.ps1` einen Fehler gemeldet,

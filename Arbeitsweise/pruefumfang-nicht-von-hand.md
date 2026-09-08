@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T08:28:27.764Z
 ---
 
+Schranke: tools/doku-pruefen.pl (pre-commit, pre-push — holt seine Dateiliste aus git ls-files, nicht aus einer gepflegten Aufzählung)
+
 # Der Umfang einer Prüfung darf nicht von Hand aufgezählt werden
 
 **Gregor am 07.09.2026, 08:15 Uhr**, nachdem er in drei Dateien hintereinander

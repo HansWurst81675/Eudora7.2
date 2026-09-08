@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: tools/testlauf.ps1 (vor jedem Programmstart — -Freigabe verlangt den Satz, mit dem Gregor erlaubt hat)
+
 Gregor sagte am 07.09.2026 zu einer Änderung, die uncommittet im Arbeitsbaum
 lag: *„ich selbst brauche ja keinen zweig dafür, mir reicht der main. oder was
 meinst du?"*

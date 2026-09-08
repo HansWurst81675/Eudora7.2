@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:55:51.680Z
 ---
 
+Schranke: keine - dass eine Schranke ihre eigene Begründung liest, zeigt sich erst an ihrem Gegentest; es gibt keine Prüfung, die für jede Schranke das Wegwerfen von Kommentaren verlangt
+
 # Eine Schranke, die Kommentare mitliest, prüft ihre eigene Begründung
 
 Am 08.09.2026 habe ich `tools/pruefe-beenden.pl` geschrieben — die Schranke, die

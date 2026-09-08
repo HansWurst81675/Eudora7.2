@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:56:55.649Z
 ---
 
+Schranke: tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
+
 **Gregor am 06.09.2026:** *„das hatten wir schon mit bash und PS. warum lernst du
 nicht daraus? warum passiert dir das immer wieder?"*
 

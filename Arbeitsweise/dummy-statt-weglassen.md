@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T08:30:06.510Z
 ---
 
+Schranke: tools/bauen.ps1 (nach jeder Änderung an der Ersatzschicht — ein ausgebautes Symbol meldet sich als Binderfehler)
+
 Gregors Vorgabe vom 28.08.2026: "fuer nicht genutzte funktionen, methoden und
 klassen einfach einen dummy implementieren, wenn er nicht gebraucht wird."
 

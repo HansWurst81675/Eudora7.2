@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T08:01:04.444Z
 ---
 
+Schranke: keine - welche Vermutung ich unterwegs verworfen habe, weiß nur ich; ein Werkzeug sieht in BEFUNDE.md nur, was dort steht, nicht was fehlt
+
 # Widerlegte Vermutungen aufschreiben — so wird aus einem Verdacht eine Zeile
 
 Diese Lehre hält fest, **was am 06./07.09.2026 funktioniert hat**, damit es

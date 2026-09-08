@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T12:45:43.666Z
 ---
 
+Schranke: tools/doku-pruefen.pl (pre-commit, pre-push — Abschnitt 11 hält ZIEL.md gegen das Gebaute)
+
 # Eine Anforderung, die nur im Gebauten steht, ist keine
 
 **Gregor am 07.09.2026:** *„wo ist das requirement aufgeschrieben, welche

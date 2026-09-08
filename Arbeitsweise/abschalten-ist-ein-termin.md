@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:57:47.222Z
 ---
 
+Schranke: tools/gesichert.pl (sobald Gregor das Abschalten ankündigt, und vor jedem Merge)
+
 # „Ich schalte ab" ist eine Frist, kein Gespraechsbeitrag
 
 **Gregor am 31.08.2026, acht Minuten nach dem vereinbarten Termin:**

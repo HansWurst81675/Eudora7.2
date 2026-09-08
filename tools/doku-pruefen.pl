@@ -65,6 +65,24 @@ sub lies {
     return $inhalt;
 }
 
+# Ein Zustandswort auf einen von vier Werten bringen. Alles andere liefert
+# undef - damit zaehlen nur Woerter, die wirklich einen Zustand nennen, und
+# eine Auszeichnung wie **Kriterium 7** oder *File -> Exit* wird ignoriert.
+# "nicht erfuellt" MUSS vor "erfuellt" geprueft werden, sonst schluckt der
+# Teilstring die Verneinung.
+sub normzustand {
+    my ($wort) = @_;
+    return undef unless defined $wort;
+    my $w = lc $wort;
+    $w =~ s/\x{c3}\x{bc}/ue/g;   # UTF-8 u-Umlaut
+    $w =~ s/^\s+|\s+$//g;
+    return 'nicht erfuellt' if $w =~ /^nicht\s+erfuellt$/;
+    return 'erfuellt'       if $w =~ /^erfuellt$/;
+    return 'fast'           if $w =~ /^fast$/;
+    return 'halb'           if $w =~ /^halb$/;
+    return undef;
+}
+
 # --- 1. Quellstand ------------------------------------------------------------
 my $version_h = lies('Eudora71/Version.h') || '';
 my $paket     = lies('VERSION') || '';
@@ -180,6 +198,100 @@ for my $datei (@aktuell) {
     }
 }
 
+
+# --- 3b. Der ZUSTAND jedes einzelnen Kriteriums ------------------------------
+#
+# Gregor am 08.09.2026, nachdem ich gemeldet hatte, ich muesse zwei
+# Falschaussagen in main berichtigen: "per anweisung ist sowas nicht erlaubt
+# und nicht moeglich."
+#
+# Er hat recht, und die Schranke hier ist schuld. Sie prueft seit dem
+# 07.09.2026 die ANZAHL der Kriterien und die Summe der Aufteilung - aber
+# nicht, was ueber ein EINZELNES Kriterium behauptet wird. Deshalb stand in
+# CHANGELOG.md ueber den Merge hinweg
+#
+#     | **Kriterium 7** (Beenden) | **nicht erfuellt** - der einzige
+#       verbliebene Fehler der zweiten Stufe |
+#
+# waehrend ZIEL.md Kriterium 7 als **erfuellt** fuehrt, von Gregor bestaetigt.
+# Zwei Tage lang, in main, unbemerkt.
+#
+# ZIEL.md ist die Quelle. Wer anderswo einen Zustand behauptet, muss denselben
+# behaupten.
+#
+# NICHT gemeldet wird:
+#   - eine Zeile unter einer Ueberschrift, die eine Fassung nennt (die
+#     CHANGELOG-Abschnitte sind Zeitdokumente: "## 7.2.0.21 ..." darf sagen,
+#     was damals galt)
+#   - eine Zeile mit einem Datum darin
+#   - eine Zeile, die sich selbst als Rueckschau kennzeichnet (war, damals,
+#     frueher, ueberholt, Behauptung)
+# Dieselben Ausschluesse benutzt Pruefung 5c.
+
+my %kriterium_zustand;   # Nummer -> Zustand aus ZIEL.md
+{
+    my $ziel = lies('ZIEL.md');
+    if (defined $ziel) {
+        for my $z (split /\n/, $ziel) {
+            next unless $z =~ /^\|\s*([0-8])\s*\|/;
+            my $nr = $1;
+            # letzte fett- oder kursivgesetzte Auszeichnung der Zeile ist der Zustand
+            my @aus = ($z =~ /\*\*([^*]+)\*\*|\*([^*]+)\*/g);
+            my $zustand;
+            for my $a (@aus) {
+                next unless defined $a;
+                my $k = normzustand($a);
+                $zustand = $k if defined $k;
+                last if defined $zustand;
+            }
+            $kriterium_zustand{$nr} = $zustand if defined $zustand;
+        }
+    }
+}
+
+if (!keys %kriterium_zustand) {
+    push @mangel, 'ZIEL.md: aus der Kriterientabelle laesst sich kein einziger '
+                . 'Zustand lesen - dann ist der Zustand nirgends pruefbar';
+}
+
+for my $datei (@alle_md) {
+    next if $datei eq 'ZIEL.md';
+    my $inhalt = lies($datei);
+    next unless defined $inhalt;
+    my @z = split /\n/, $inhalt;
+    my $ueberschrift = '';
+
+    for my $i (0 .. $#z) {
+        my $zeile = $z[$i];
+        $ueberschrift = $zeile if $zeile =~ /^\#{1,6}\s/;
+
+        # Zeitdokument-Abschnitt? Ueberschrift nennt eine Fassung.
+        next if $ueberschrift =~ /\b\d+\.\d+\.\d+\.\d+\b/;
+        next if $ueberschrift =~ /\b1\.0\.\d+\b/;
+
+        next if $zeile =~ /\d{2}\.\d{2}\.20\d\d/;
+        next if $zeile =~ /\bwar\b|damals|frueher|ueberholt|\x{c3}\x{bc}berholt|Behauptung|behauptete/i;
+
+        while ($zeile =~ /Kriterium\s+\*{0,2}([0-8])\*{0,2}/g) {
+            my $nr = $1;
+            next unless exists $kriterium_zustand{$nr};
+            my $soll = $kriterium_zustand{$nr};
+
+            # Zustandswoerter in DIESER Zeile sammeln.
+            my @aus = ($zeile =~ /\*\*([^*]+)\*\*|\*([^*]+)\*/g);
+            for my $a (@aus) {
+                next unless defined $a;
+                my $ist = normzustand($a);
+                next unless defined $ist;
+                next if $ist eq $soll;
+                push @mangel, sprintf(
+                    "%s:%d fuehrt Kriterium %s als '%s', ZIEL.md sagt '%s'",
+                    $datei, $i + 1, $nr, $ist, $soll);
+                last;
+            }
+        }
+    }
+}
 # --- 4. Befundkennungen ------------------------------------------------------
 #
 # Ein Status zaehlt nur dort, wo die Kennung ihn BESITZT:

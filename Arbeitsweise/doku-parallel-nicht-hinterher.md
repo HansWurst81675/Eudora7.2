@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: tools/doku-pruefen.pl (pre-commit, pre-push)
+
 # Doku parallel berichtigen, nicht hinterher
 
 **Gregor am 07.09.2026, 07:04 Uhr:** *„ich hasse es, wenn in den dokus falshe

@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-30T13:01:09.897Z
 ---
 
+Schranke: tools/bauen.ps1 (nach jeder Änderung an stdafx.h oder einer Projektdatei — baut die ganze Projektmappe, zweiter Gang eingeschlossen)
+
 Wer eine Datei ändert, die **mehrere Projekte einbinden**, muss danach die **ganze
 Solution** bauen — nicht nur das Projekt, an dem er gerade arbeitet.
 

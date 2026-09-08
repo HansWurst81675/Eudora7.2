@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: tools/doku-pruefen.pl (pre-commit, pre-push — Abschnitt 7 hält Version.h gegen sich selbst und gegen VERSION)
+
 # Jede ausgelieferte Fassung muss sich selbst benennen
 
 **Gregor am 05.09.2026, nachdem ich ihm mitten im Test zwei Staende
