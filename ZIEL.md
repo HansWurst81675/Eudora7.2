@@ -197,7 +197,8 @@ Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
 `Eudora.ini` — das sind zwei verschiedene Programmwege, und nur der zweite ist
 der, den Gregor gesehen hat.
 
-**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor noch nicht bestätigt.
+**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor am 08.09.2026 am
+ausgelieferten Paket bestätigt: *„leiste unten paßt."*
 Zwei Ursachen, beide gemessen, beide behoben:
 
 1. Beim frischen Profil lag die Leiste schon richtig (unten, 1712×80) und wurde
