@@ -81,9 +81,52 @@
 #include "secres.h"			// IDD_TOOLBAR_CUSTOMIZE, IDS_TOOLBAR_CUSTOMIZE
 #endif
 
-#ifndef __SBARCORE_H__
-#include "sbarcore.h"		// SECControlBar (Stufe 2)
+// BEFUND E-43, URSACHE UND BEHEBUNG (08.09.2026)
+//
+// Hier stand
+//
+//     #ifndef __SBARCORE_H__
+//     #include "sbarcore.h"      // SECControlBar (Stufe 2)
+//     #endif
+//
+// und das war neun Tage lang der teuerste Fehler des Projekts.
+//
+// sbarcore.h ist das OT501-ORIGINAL. Seinen Waechter __SBARCORE_H__ setzt
+// aber OTShim.h:984, weil OTShim.h:496 die Klasse SECControlBar ERSETZT.
+// Welche der beiden Fassungen eine Uebersetzungseinheit zu sehen bekam, hing
+// damit allein an der Einbindereihenfolge:
+//
+//   QCCustomToolBar.cpp        stdafx.h -> OTShimAll.h -> OTShim.h zuerst
+//                              => Waechter gesetzt   => ERSATZ
+//   OTShim_Werkzeugleiste.cpp  bindet nur diesen Header ein
+//                              => Waechter offen     => ORIGINAL
+//
+// Der Ersatz hat ein Feld mehr als das Original: int m_nRowExtent
+// (OTShim.h:533). Damit liegt m_btns in den beiden Uebersetzungseinheiten
+// acht Byte auseinander. Der Binder nimmt EINE Fassung von GetBtnCount(),
+// und der uebrige Code liest daneben. Gemessen an Gregors eudora.log,
+// dreimal gleich:
+//
+//   Versatz=488  GetBtnCount=24/24  m_btns.GetSize=0/0  roh[0..4]=24,25,0,0,0
+//
+// 24 und 25 sind Anzahl und Kapazitaet des Knopffeldes - acht Byte VOR der
+// Stelle, an der QCCustomToolBar.cpp sie sucht. Das ist E-43, rueckwirkend
+// auch E-34 ("Ausnahme bei Index 24 von 27"), und es ist der Grund, warum
+// der Leistenzustand nie gespeichert wurde und die Fensterlagen ueber
+// mehrere Starts krumm wurden.
+//
+// Behebung: nicht das Original einbinden, sondern die Ersatzschicht. OTShim.h
+// bringt SECControlBar mit UND setzt den Waechter - danach ist die Fassung
+// eindeutig, egal in welcher Reihenfolge uebersetzt wird. Ein Zyklus entsteht
+// nicht: OTShim.h bindet diese Datei nicht ein, das tut nur OTShimAll.h.
+//
+// Die Schranke dazu ist tools/pruefe-waechter.pl. Sie haette diesen Fehler am
+// Tag seiner Entstehung gemeldet; die Lehre allein
+// (Arbeitsweise/teilweise-ersetzte-header.md, 30.08.2026) hat es nicht getan.
+#ifndef __OTSHIM_H__
+#include "OTShim.h"			// SECControlBar (ERSATZ) und __SBARCORE_H__
 #endif
+
 
 #ifndef __SBARMGR_H__
 #include "sbarmgr.h"		// SECControlBarManager (Stufe 2)

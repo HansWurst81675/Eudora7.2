@@ -187,8 +187,12 @@ Marken.
 
 Paket: `Releases/Eudora72-1.0.23-release.zip`, 9 340 228 Byte, SHA256
 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
-Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
-Starter übergibt das Mailverzeichnis. Die Titelzeile muss
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
+aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
+Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
+`Eudora.exe` **ohne** Parameter beim ersten Start: dann sucht Eudora die Ini im
+Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
+**E-6**). Die Titelzeile muss
 `Eudora 7.2.0.23 / Paket 1.0.23` nennen.
 
 1. **Die untere Leiste** — *Task Status* und *Task Errors* liegen waagrecht am
@@ -321,7 +325,9 @@ ruft `PopulateView()` nicht mehr — **von Gregor noch nicht bestätigt**.
 
 ### Was an 1.0.22 zu prüfen ist
 
-Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`.
+Auspacken und **`Eudora starten.cmd`** doppelklicken; von Hand wäre es
+`Eudora.exe "<Pfad>\Mailverzeichnis"`. `Eudora.exe` **ohne** Parameter legt beim
+ersten Start eine leere Einrichtung an (Befund **E-6**).
 
 | Prüfen | erwartet |
 |---|---|
@@ -371,8 +377,12 @@ nachbildet.
 Paket (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`)
 liegt **nicht mehr im Repo** und hat keine Marke — neu zu bauen aus `d003d46`.
 Wer heute prueft, nimmt 1.0.23; die Anleitung dazu steht weiter oben.
-Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
-Starter übergibt das Mailverzeichnis.
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
+aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
+Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
+`Eudora.exe` **ohne** Parameter beim ersten Start: dann sucht Eudora die Ini im
+Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
+**E-6**).
 
 | Prüfen | erwartet | wenn nicht |
 |---|---|---|
