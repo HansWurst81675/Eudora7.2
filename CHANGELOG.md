@@ -45,14 +45,21 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.22 — alles Gebaute ist gepackt
+## Nach 7.2.0.23 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.22** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.22 / 1.0.22** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.23** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.23 / 1.0.23** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
 dazu: *„version muß eindeutig sein"*).
+
+> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
+> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
+> Komma-Format `7,2,0,23`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
+> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
+> es gehört aber trotzdem mit hochgesetzt.
 
 - **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
   `CPersonalityView::OnCmdDeletePersonality`
@@ -175,6 +182,33 @@ sofort aus der INI gesetzt, und der Vorgabewert steht in der Ressource
 die Marken werden **ohne jede Einstellung** geschrieben. Gegenprobe: Gregors
 `Eudora.ini` hat keine Zeile `LogLevel`, und seine `eudora.log` enthält alle
 Marken.
+
+### Was an 1.0.23 zu prüfen ist
+
+Paket: `Releases/Eudora72-1.0.23-release.zip`, 9 340 228 Byte, SHA256
+`3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
+Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
+Starter übergibt das Mailverzeichnis. Die Titelzeile muss
+`Eudora 7.2.0.23 / Paket 1.0.23` nennen.
+
+1. **Die untere Leiste** — *Task Status* und *Task Errors* liegen waagrecht am
+   unteren Fensterrand, über die ganze Breite. **Von Gregor am 08.09.2026
+   bestätigt:** *„leiste unten paßt."* Rechts darf **keine** Kurznamen-Spalte
+   dauerhaft offenstehen.
+2. **E-37, gelöschtes Konto** (steckt seit 1.0.22 drin, noch unbestätigt):
+   eine Persönlichkeit anlegen und wieder löschen. Verschwindet der Eintrag
+   links **sofort**, ohne Neustart? Kommt noch „Encountered an improper
+   argument"?
+3. **E-38, Assistentendaten** — jetzt erstmals messbar, weil der Blocker E-33
+   weg ist: Konto über den Assistenten anlegen, Eudora **normal** beenden, neu
+   starten, *Konto → Eigenschaften* ansehen. Stehen Name, Mailadresse und
+   Server da?
+4. **Das Beenden** über alle drei Wege: *File → Exit*, **Alt-F4**, das
+   **Kreuz**.
+5. **E-43** braucht nur einen normalen Beendigungsvorgang. Danach steht in
+   `Mailverzeichnis\eudora.log` eine Zeile `E-43 SaveCustomInfo: … Versatz=…
+   roh[0..4]=…` — die entscheidet, warum der Leistenzustand nie gespeichert
+   wird.
 
 ### Neu im Werkzeugkasten
 

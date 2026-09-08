@@ -6,12 +6,12 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.22 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.22 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.22** - `Releases/Eudora72-1.0.22-release.zip`, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
-| **Zuletzt von Gregor gestartet** | Paket 1.0.21 am 07.09.2026 — *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."* |
-| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.21 (E-31/E-34/E-35/E-36: Verfassen, Abschicken, Weiterleiten) |
-| **Was er dabei bemängelt hat** | *„beenden geht nicht."* und *„kann man die untere zeile (status) immer anzeigen lassen?"* |
+| **Quellstand** | 7.2.0.23 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.23 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.23** - `Releases/Eudora72-1.0.23-release.zip`, SHA256 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
+| **Zuletzt von Gregor gestartet** | Paket **1.0.23** am 08.09.2026 — *„leiste unten paßt."*, mit Bildschirmfoto der Titelzeile `Eudora 7.2.0.23 / Paket 1.0.23+43034b4* 2026-09-08 10:50` |
+| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.23 (**A-2**/E-44: *Task Status* und *Task Errors* waagrecht unten). Davor 7.2.0.22 (**Kriterium 7**: *„schließen klappt jetzt."*, und **A-1**: *„default werte beim neuen persona konto für 'leave message on server' greifen."*) |
+| **Was er dabei bemängelt hat** | offen bleiben **E-37** (gelöschtes Konto bleibt in der Liste stehen), **E-38** (Assistentendaten fehlen unter *Konto → Eigenschaften* — jetzt neu zu messen, weil der Blocker E-33 weg ist) und **Kriterium 8** (die untere Leiste zeigt Aufgabenstatus, nicht die Reiter der offenen Fenster) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen

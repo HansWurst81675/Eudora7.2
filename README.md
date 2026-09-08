@@ -11,19 +11,18 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **07.09.2026**.
+> **Diese Datei sagt, was jetzt gilt.** Stand **08.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.22** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.23** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.22**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.23**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.22-release.zip`
-> (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`).
-> Die Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.23-release.zip`. Die
+> Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in
 > [Releases/PAKETE.md](Releases/PAKETE.md).
@@ -33,17 +32,27 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — fünf sind belegt (0, 1, 3, 5, 6),
-drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7).** Eudora baut aus
-einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
-Darstellung stimmt weitgehend, Mail wird über TLS abgerufen — und seit dem
-07.09.2026 lässt sich **eine neue Mail schreiben, abschicken und die Antwort
-empfangen**. Gregor hat es bestätigt: *„mail können jetzt abgeschickt werden."*
+**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — sechs sind belegt
+(0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8).** Eudora baut aus einem
+frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
+Darstellung stimmt weitgehend, Mail wird über TLS abgerufen, eine neue Mail
+lässt sich **schreiben, abschicken und weiterleiten** — und seit dem
+08.09.2026 **beendet sich Eudora sauber**, über *File → Exit*, über **Alt-F4**
+und über das **Kreuz**. Gregor hat beides bestätigt: *„mail können jetzt
+abgeschickt werden."* und *„schließen klappt jetzt."*
 
-**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt, sind zwei Dinge:
-*File → Exit* beendet Eudora nicht (*„beenden geht nicht"* — Kriterium 7), und
-die untere Statuszeile mit den Reitern für offene Fenster fehlt; die offenen
-Fenster stehen nur im *Window*-Menü (Kriterium 8, halb).
+Dazu sind zwei Anforderungen aus [ZIEL.md](ZIEL.md) umgesetzt und von Gregor
+bestätigt: **A-1** (die Vorgaben *Leave mail on server* und *Secure Sockets*
+greifen bei einem **neu angelegten** Konto) und **A-2** (*Task Status* und
+*Task Errors* liegen **waagrecht am unteren Fensterrand** statt senkrecht
+links — *„jetzt ist sie unten, ja"*).
+
+**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: ein gelöschtes
+Konto bleibt in der Liste links stehen, bis Eudora neu startet (**E-37**), die
+im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften*
+(**E-38**), und die untere Leiste zeigt Aufgabenstatus und Aufgabenfehler,
+nicht die Reiter für die offenen Fenster (**Kriterium 8**, halb — die offenen
+Fenster stehen im *Window*-Menü).
 
 Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md); was als
 Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum

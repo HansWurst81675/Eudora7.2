@@ -354,7 +354,29 @@ if (length $paket_haupt) {
                 my $nr = $1;
                 next unless $nr =~ /^\Q$paket_haupt\E\./;
                 next if $nr eq $paket;
-                my $zeile = 1 + (() = substr($inhalt, 0, $ab) =~ /\n/g);
+
+                # L-9-Klasse, 08.09.2026: die Pruefung war kontextblind. In
+                # einem Abschnitt UEBER Paket 1.0.22 ist die Zeile
+                # "Paket: Releases/Eudora72-1.0.22-release.zip" richtig und
+                # muss dort auch stehen bleiben - der CHANGELOG ist nach
+                # Fassungen gegliedert. Gemeldet wurden CHANGELOG.md:205 und
+                # :339, beide innerhalb von "## 7.2.0.22 / Paket 1.0.22" bzw.
+                # "### Was an 1.0.22 zu pruefen ist".
+                #
+                # Deshalb: die naechste Ueberschrift OBERHALB der Fundstelle
+                # heranziehen. Nennt sie dieselbe Nummer, ist die Aussage auf
+                # ihren Abschnitt bezogen und keine Behauptung ueber heute.
+                my $davor = substr($inhalt, 0, $ab);
+                my @alle_u = ($davor =~ /^\#{1,6} [^\n]*$/mg);
+                my $ueberschrift = @alle_u ? $alle_u[-1] : '';
+                if (length $ueberschrift) {
+                    my ($klein) = $nr =~ /\.([0-9]+)$/;
+                    next if index($ueberschrift, $nr) >= 0;
+                    next if defined $klein
+                        and $ueberschrift =~ /\b7\.2\.0\.\Q$klein\E\b/;
+                }
+
+                my $zeile = 1 + (() = $davor =~ /\n/g);
                 push @mangel, sprintf("%s:%d nennt Paketnummer %s als Stand, VERSION sagt %s",
                                       $datei, $zeile, $nr, $paket);
             }
