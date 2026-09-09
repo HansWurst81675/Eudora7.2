@@ -1657,6 +1657,13 @@ BOOL CTridentView::DoFindFirst(const char* szSearch, BOOL bMatchCase, BOOL bWhol
 				// we have to wait until the trident control is
 				// is ready to go before we can do anything with it.
 
+				// BEFUND E-62 (09.09.2026): WM_QUIT nicht verschlucken.
+				if (msg.message == WM_QUIT)
+				{
+					::PostQuitMessage((int) msg.wParam);
+					return FALSE;
+				}
+
 				TranslateMessage(&msg);
 				DispatchMessage(&msg);
 			}
@@ -1667,6 +1674,13 @@ BOOL CTridentView::DoFindFirst(const char* szSearch, BOOL bMatchCase, BOOL bWhol
 		{
 			// we have to wait until the trident control is
 			// is ready to go before we can do anything with it.
+
+			// BEFUND E-62 (09.09.2026): WM_QUIT nicht verschlucken.
+			if (msg.message == WM_QUIT)
+			{
+				::PostQuitMessage((int) msg.wParam);
+				return FALSE;
+			}
 
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -2173,6 +2187,16 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 	{
 		// we have to wait until the trident control is
 		// is ready to go before we can do anything with it.
+
+		// BEFUND E-62 (09.09.2026): WM_QUIT nicht verschlucken. Hier
+		// besonders wichtig: SetRedraw(FALSE) steht davor, ein Abbruch
+		// mitten im Warten wuerde die Ansicht sonst dunkel lassen.
+		if (msg.message == WM_QUIT)
+		{
+			::PostQuitMessage((int) msg.wParam);
+			SetRedraw( TRUE );
+			return FALSE;
+		}
 
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);

@@ -17,6 +17,10 @@
 #   -JedenFehlerZaehlen     auch die bekannten OT501-Fehler zaehlen mit
 #   -BekannteFehlerAus <Projekt[]>
 #                           Vorgabe OT501.vcxproj, Begruendung unten
+#   -Ungesichert            baut auch mit ungesicherten Quelldateien
+#   -ZeitschrankeMinuten <Zahl>
+#                           Vorgabe 45. Laeuft ein MSBuild-Lauf darueber
+#                           hinaus, wird er abgeschossen (Befund X-7)
 #
 # Rueckgabe: 0 = gebaut UND geprueft, 1 = FEHLER, 2 = Aufrufproblem.
 # Warnungen allein aendern die Rueckgabe nicht.
@@ -62,8 +66,9 @@
 #      Dagegen stehen hier VIER voneinander unabhaengige Pruefungen, und jede
 #      einzelne kann den Lauf zum Fehlschlag erklaeren:
 #
-#        a) Rueckgabewert. MSBuild wird ueber Start-Process -PassThru -Wait
-#           gestartet und der Wert an $p.ExitCode abgelesen, nicht an
+#        a) Rueckgabewert. MSBuild wird ueber Start-Process -PassThru
+#           gestartet - OHNE -Wait, siehe Befund X-7 in Starte-MSBuild - und
+#           der Wert an $p.ExitCode abgelesen, nicht an
 #           $LASTEXITCODE. $LASTEXITCODE gehoert der Pipeline, nicht dem
 #           Programm - steht ein natives Programm hinter einer Umleitung oder
 #           in einer Pipe, wird der Wert des letzten Glieds gemeldet. Das ist
@@ -186,8 +191,67 @@ param(
   [switch]$OhneZweitenGang,
   [switch]$JedenFehlerZaehlen,
   [string[]]$BekannteFehlerAus = @('OT501.vcxproj'),
-  [switch]$TrotzdemBauen
+  [switch]$TrotzdemBauen,
+  # Baut auch mit ungesicherten Quelldateien. Siehe die Pruefung dazu weiter
+  # unten - sie ist da, weil ein Bau die Zeit ist, in der Arbeit liegenbleibt.
+  [switch]$Ungesichert,
+  # Zeitschranke je MSBuild-Lauf. Der vollstaendige Bau dauert gemessen rund
+  # acht Minuten; 45 ist reichlich und faengt trotzdem den Fall auf, dass ein
+  # Lauf nicht fertig wird (Befund X-7). Siehe Starte-MSBuild.
+  [int]$ZeitschrankeMinuten = 45
 )
+
+# --- Ungesicherte Quelldateien --------------------------------------------
+#
+# WARUM DAS HIER STEHT
+#
+# Gregor am 09.09.2026: "ja, ich sagte dir immer: sichern, sonst ist es weg!"
+# Und es war weg: waehrend ein Bau lief, hat er gemergt und danach
+# "git checkout main --force" gefahren. Drei Aenderungen von mir waren damit
+# verloren - eine Quelldatei, eine Lehre und ein Werkzeug. Rekonstruierbar nur,
+# weil die Vorlagen zufaellig noch im Kladdenordner lagen.
+#
+# Der Ausloeser ist immer derselbe: ein Bau dauert Minuten, in denen ich nichts
+# tue und Gregor arbeitet. Genau dann darf nichts Ungesichertes im Baum liegen.
+# Deshalb prueft es die Stelle, die den Bau startet - nicht eine Lehre, die man
+# beim Eiligsein nicht liest (Arbeitsweise/commit-auf-extra-branch-und-pushen.md).
+#
+# Geprueft werden nur QUELLEN. Bauergebnisse unter Bin/ und Build/ zaehlen
+# nicht, sonst waere die Pruefung nach jedem Bau selbst rot.
+
+if (-not $Ungesichert -and -not $NurPruefen) {
+  $offen = @()
+  try {
+    $roh = & git -C $PSScriptRoot\.. status --porcelain 2>$null
+    foreach ($z in $roh) {
+      if ([string]::IsNullOrWhiteSpace($z)) { continue }
+      $pfad = $z.Substring(3).Trim('"')
+      if ($pfad -like 'Eudora71/Bin/*')   { continue }
+      if ($pfad -like 'Eudora71/*/Build/*') { continue }
+      if ($pfad -like 'Releases/*')       { continue }
+      if ($pfad -like 'tools/TESTLAEUFE.md') { continue }
+      $offen += $pfad
+    }
+  } catch { }
+
+  if ($offen.Count -gt 0) {
+    Write-Host ''
+    Write-Host '  BAU ABGEWIESEN: ungesicherte Quelldateien im Arbeitsbaum'
+    Write-Host ''
+    foreach ($p in $offen) { Write-Host ('    ' + $p) }
+    Write-Host ''
+    Write-Host '  Ein Bau dauert Minuten. In dieser Zeit arbeitet Gregor weiter -'
+    Write-Host '  am 09.09.2026 hat ein "git checkout main --force" waehrend eines'
+    Write-Host '  Baus drei Aenderungen vernichtet. Erst sichern:'
+    Write-Host ''
+    Write-Host '      git add -A && git commit -m "..."'
+    Write-Host '      git push origin <zweig>'
+    Write-Host ''
+    Write-Host '  Wenn es diesmal wirklich nur ein Wegwerfbau ist:  -Ungesichert'
+    Write-Host ''
+    exit 1
+  }
+}
 
 # BEFUND E-31: Kein zweiter Bau gleichzeitig.
 #
@@ -594,12 +658,58 @@ function Starte-MSBuild([string[]]$eigeneArgumente, [string]$logBasis) {
   Write-Host ('Aufruf: MSBuild ' + ($alle -join ' '))
   Write-Host '---------------------------------------------------------------------'
 
+  # BEFUND X-7 (09.09.2026): hier stand -Wait, und der Bau von 7.2.0.29 ist
+  # daran HAENGENGEBLIEBEN.
+  #
+  # Gemessen: MSBuild war um 12:17:52 fertig - 0 Fehler, Eudora.exe gelinkt,
+  # das Protokoll mit 3,7 MB vollstaendig geschrieben. Danach lief bauen.ps1
+  # noch zwoelf Minuten weiter, ohne CPU-Verbrauch (6,53 s unveraendert ueber
+  # sechs Sekunden Messung), ohne einen einzigen Kindprozess und ohne eine
+  # weitere Zeile Ausgabe. Der Prozess musste abgeschossen werden.
+  #
+  # Der Grund liegt in der Bedeutung von -Wait: PowerShell wartet damit nicht
+  # auf DEN Prozess, sondern auf ihn UND seine Nachkommen - dafuer legt es ein
+  # Auftragsobjekt an. MSBuild startet mit /m eigene Knoten, und der
+  # Nachbearbeitungsschritt BIND startet weitere Programme. Bleibt eines davon
+  # haengen oder wird es umgehaengt, wartet -Wait weiter, obwohl MSBuild
+  # selbst laengst beendet ist. Von aussen sieht das aus wie ein Bau, der
+  # nicht fertig wird - der teuerste Zustand ueberhaupt, weil er zwoelf
+  # Minuten kostet und nichts anzeigt.
+  #
+  # Deshalb: KEIN -Wait. Gewartet wird auf den MSBuild-Prozess selbst, mit
+  # Zeitschranke. Laeuft er ueber, wird er abgeschossen und der Lauf gilt als
+  # gescheitert - lieber ein klarer Fehlschlag als ein Warten ohne Ende.
+  # Dieselbe Regel wie fuer Nachrichtenschleifen im Programm, siehe
+  # Arbeitsweise/eigene-schleife-verschluckt-nichts.md.
   $uhr = [Diagnostics.Stopwatch]::StartNew()
   $p = Start-Process -FilePath $msbuild -ArgumentList $alle `
-                     -NoNewWindow -PassThru -Wait `
+                     -NoNewWindow -PassThru `
                      -RedirectStandardInput $leereEingabe `
                      -WorkingDirectory $slnOrdner
-  $p.WaitForExit()
+
+  # UND JETZT DER ZWEITE TEIL VON X-7. Ohne -Wait liefert $p.ExitCode $null:
+  # PowerShell haelt den Prozesszeiger nicht offen, und sobald der Prozess
+  # endet, kommt .NET nicht mehr an seinen Rueckgabewert. Gemessen beim
+  # ersten Lauf nach der Umstellung: der Bau war einwandfrei (1:10, 0 Fehler,
+  # Eudora.exe 7.2.0.29 frisch gelinkt, Versionsprobe gruen) - und wurde
+  # trotzdem als FEHLSCHLAG gemeldet, weil "MSBuild hat keinen
+  # Rueckgabewert geliefert".
+  #
+  # Das Lesen von .Handle merkt den Zeiger im Objekt vor. Danach ueberlebt
+  # der Rueckgabewert das Ende des Prozesses. Muss VOR dem Warten stehen -
+  # danach ist es zu spaet.
+  $null = $p.Handle
+
+  $grenzeMs = $ZeitschrankeMinuten * 60 * 1000
+  if (-not $p.WaitForExit($grenzeMs)) {
+    Write-Host ''
+    Write-Host ('  ABBRUCH: MSBuild laeuft seit ' + $ZeitschrankeMinuten +
+                ' Minuten und ist nicht fertig. Der Lauf wird abgebrochen.') -ForegroundColor Red
+    Write-Host ('  Zeitschranke aendern:  -ZeitschrankeMinuten <Zahl>')
+    Write-Host ''
+    try { $p.Kill() } catch { }
+    try { $p.WaitForExit(30000) | Out-Null } catch { }
+  }
   $uhr.Stop()
 
   Remove-Item -LiteralPath $leereEingabe -Force -ErrorAction Ignore

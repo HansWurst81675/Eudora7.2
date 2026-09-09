@@ -360,7 +360,7 @@ Feld existiert. Aufgeklärt hat die Meldung erst **E-34** — eine MFC-Ausnahme 
 2005. **E-31 ist mittelbar bestätigt** — ohne Paige-Fenster gibt es kein
 Verfassen-Fenster, und Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail
 geschrieben und abgeschickt. Zu **E-32** siehe oben: Ursachenbehauptung
-widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
+widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 ```
 
 `CHANGELOG.md:47-56` entfällt mit W-3. Die zweite Stelle dort,
@@ -644,7 +644,7 @@ Messung nicht; sie steht unter 7.2.0.20.
 
 > `Zwei sind behoben und bestätigt: Doppelklick und Suchtreffer öffnen die`
 > `Nachricht (**E-28**), gesperrte Knöpfe zeigen ihr Symbol (**E-30**). Was bleibt,`
-> `steht oben unter *Die Hauptarbeit* und in [ZIEL.md](ZIEL.md) als Kriterium 4`
+> `steht oben unter *Die Hauptarbeit* und in [ZIEL.md](../ZIEL.md) als Kriterium 4`
 > `bis 7 — Verfassen, Weiterleiten, *File → Exit* und die Meldung „Encountered an`
 > `improper argument". Das ist der erste Schritt, nicht ein Punkt unter vielen.`
 
@@ -793,12 +793,12 @@ eine alte Marke.
 ## W-19 (mittel) — `README.md:54` ist eine Dublette von `:49`
 
 ```
-49  Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md); was als
-50  Nächstes zu tun ist, in [AUFGABEN.md](AUFGABEN.md). **Die Prüfanleitung zum
+49  Was offen ist, steht vollständig in [CHANGELOG.md](../CHANGELOG.md); was als
+50  Nächstes zu tun ist, in [AUFGABEN.md](../AUFGABEN.md). **Die Prüfanleitung zum
 51  jeweils aktuellen Paket** steht im CHANGELOG beim zugehörigen Eintrag, nicht
 52  hier.
 53
-54  Was offen ist, steht vollständig in [CHANGELOG.md](CHANGELOG.md).
+54  Was offen ist, steht vollständig in [CHANGELOG.md](../CHANGELOG.md).
 ```
 
 **Vorschlag:** Zeile 53 und 54 streichen.
@@ -832,14 +832,14 @@ hier"*.
 
 **Diese Datei ist ein Fahrtenbuch, kein Statusbericht.** Sie sammelt die
 Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
-seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
-[README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
+seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](../ZIEL.md),
+[README.md](../README.md) und [CHANGELOG.md](../CHANGELOG.md).
 
 Hier stehen der erste bis vierte, der sechste und der siebte Durchgang. Der
-**fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
-die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
-[Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7) und
-[Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md) (L-8).
+**fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](LEKTOR.md);
+die späteren in [Befunde/LEKTOR-2.md](LEKTOR-2.md) (L-6),
+[Befunde/LEKTOR-3.md](LEKTOR-3.md) (L-7) und
+[Befunde/LEKTOR-4.md](LEKTOR-4.md) (L-8).
 
 ## Erster Durchgang — 30.08.2026
 
@@ -960,7 +960,7 @@ Kriterium 5 ohne Zuschauer zu messen; `arbeitsbaum-frei.pl` und
 ```
 | `tools/pruefe-fensterbau.pl` | `pre-commit`-Schranke für den Fensterbau: keine modale Meldung in `Eudora71/OTShim/*.cpp` (E-33), `GetButton` hat Indexschranke **und** Ausnahmefang (E-34), jeder `GetButton`-Aufruf prüft sein Ergebnis auf NULL. Prüft alle `Eudora71/Eudora/*.cpp` — eine feste Dateiliste hatte genau die Lücke, in der E-36 lag. **Wer sie anfasst, lässt die drei Gegenproben laufen** |
 | `tools/strg-n-pruefen.ps1` | startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob das Verfassen-Fenster aufgeht. **Öffnet ein Fenster** — nicht ohne Absprache laufen lassen (Auflage 1) |
-| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Branchwechsel vernichten würde. Verfahren in [AGENTEN.md](AGENTEN.md) |
+| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Branchwechsel vernichten würde. Verfahren in [AGENTEN.md](../AGENTEN.md) |
 | `tools/befunde-einsammeln.pl` | führt die Befunddateien aus `Befunde/` in `BEFUNDE.md` zusammen (`--anhaengen`) und nennt die nächste freie Kennung (`--naechste E`) |
 ```
 
@@ -1016,7 +1016,7 @@ Die Ziele tragen eine Zeilennummer im Pfad und lösen deshalb nicht auf:
 Die Dateien selbst sind da (`ls Eudora71/QCSSL/src/QCSSLContext.cpp
 Eudora71/QCSSL/src/certstore.cpp`). **Vorschlag:** die Zeilennummer aus dem Ziel
 in den Verweistext holen —
-`[QCSSLContext.cpp:53](../../Eudora71/QCSSL/src/QCSSLContext.cpp)`.
+`[QCSSLContext.cpp:53](../Eudora71/QCSSL/src/QCSSLContext.cpp)`.
 
 ---
 
@@ -1102,10 +1102,10 @@ hier nennt ihren Bezugscommit; wer sie weiterverwendet, misst nach."*
 > **Für wen diese Datei ist.** Für jeden, der am **Quelltext** arbeitet — Agent
 > oder Mensch —, und zwar als Begründungsarchiv: sie sagt, *warum* eine Änderung
 > so aussieht, wie sie aussieht, mit Fundstelle und Bezugscommit. Sie ist **kein
-> Statusbericht**. Was jetzt gilt, steht in [ZIEL.md](ZIEL.md) (der Maßstab),
-> [README.md](README.md) (Bauen und Starten) und [CHANGELOG.md](CHANGELOG.md)
+> Statusbericht**. Was jetzt gilt, steht in [ZIEL.md](../ZIEL.md) (der Maßstab),
+> [README.md](../README.md) (Bauen und Starten) und [CHANGELOG.md](../CHANGELOG.md)
 > (was in welchem Paket steckt); wo man weitermacht, in
-> [WEITERMACHEN.md](WEITERMACHEN.md). Ältere Abschnitte hier gelten für ihren
+> [WEITERMACHEN.md](../WEITERMACHEN.md). Ältere Abschnitte hier gelten für ihren
 > Bezugscommit, nicht für heute.
 ```
 

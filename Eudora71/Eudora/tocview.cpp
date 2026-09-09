@@ -3479,6 +3479,17 @@ void CTocView::SizeColumn(int FieldNum)
 		GetMessage(&msg, m_hWnd, 0, 0);
 		message = msg.message;
 
+		// BEFUND E-62 (09.09.2026): hier drohte ein HAENGER. WM_QUIT kommt
+		// trotz Fensterfilter, GetMessage liefert 0, und while (1) wertet
+		// das nicht aus - die Schleife wartete danach fuer immer, mit
+		// gehaltenem Mausfang und einem invertierten Strich auf dem Schirm.
+		// Ausgeloest schon durch das Ziehen einer Spaltenbreite.
+		if (message == WM_QUIT)
+		{
+			::PostQuitMessage((int) msg.wParam);
+			break;
+		}
+
 		if (message == WM_LBUTTONUP || (message >= WM_KEYFIRST && message <= WM_KEYLAST &&
 			msg.wParam == VK_ESCAPE))
 		{

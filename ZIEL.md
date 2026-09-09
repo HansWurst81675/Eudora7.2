@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **08.09.2026**, gemessen an Fassung **7.2.0.22 / Paket 1.0.22**.
+Stand **09.09.2026**, gemessen an Fassung **7.2.0.29 / Paket 1.0.29**.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
@@ -30,14 +30,14 @@ kein Mailprogramm.
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
 | 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
-| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. **Offen bleibt das Beenden**, siehe Kriterium 7 |
+| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. Das Beenden ist erledigt (Kriterium 7), und mit **E-43** sind auch **E-37** und **E-38** weggefallen. **Offen bleibt eine Stelle:** die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten |
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
-| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler selbst ist damit **nicht** verschwunden — er steht als Protokollzeile da (`E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst`) und ist als **E-43** weiter offen |
-| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb, Behebung gebaut** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Die fehlende **Registerkartenleiste am unteren Fensterrand** ist in **7.2.0.25** umgesetzt (Anforderung **A-3**, Befund **E-48**): gemessen zwei offene Fenster, zwei beschriftete Karten. **Erfüllt ist das Kriterium erst, wenn Gregor bestätigt hat, dass ein Klick auf eine Karte ihr Fenster nach vorn holt** |
-
-**Sechs von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7), zwei fast oder halb
-(2, 4), eines nicht (8 - die Reiterleiste).**
+| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler dahinter, **E-43**, ist in 7.2.0.24 an der Wurzel behoben und ebenfalls bestätigt: die Protokollzeile `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst` kommt nicht mehr |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund **E-48**, umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben (**E-50**) und noch nicht nachgesehen |
+**Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
+erfüllt (2, 4).** Beiden fehlt dasselbe: die Meldung „Encountered an improper
+argument" beim **Anzeigen** mancher Nachrichten.
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
@@ -184,10 +184,11 @@ MDI-Bereich. Verlangt ist eine **waagrechte** Anordnung am unteren Fensterrand.
 Die Reihenfolge, die Gregor selbst gesetzt hat, gilt: **erst** Kriterium 7 (das
 Beenden), dann das.
 
-Zusammenhang mit Kriterium 8: dort geht es um die **Reiterleiste** für die
-offenen Fenster (die WazooBar am unteren Rand). A-2 betrifft dieselbe Gegend
-des Fensters und dieselbe Ersatzschicht `OTShim` — wer eines angeht, sieht sich
-das andere gleich mit an.
+Zusammenhang mit Kriterium 8: dort geht es um die **Registerkartenleiste** für
+die offenen Fenster am unteren Rand. A-2 betrifft dieselbe Gegend des Fensters
+und dieselbe Ersatzschicht `OTShim` — und genau so ist es gekommen: die
+Registerkarten sind als **A-3** unmittelbar danach umgesetzt worden
+(siehe unten), in derselben Schicht.
 
 **Woran A-2 sich messen lässt.** Nach dem Start muss `tools/leisten-messen.ps1`
 für die Leiste mit der Kennung **320** melden: Andockseite **unten**,
@@ -249,9 +250,14 @@ Es fehlten also nur Anschlüsse in der Ersatzschicht, nicht die Funktion selbst.
 
 **Umgesetzt in 7.2.0.25**, am laufenden Programm gemessen und fotografiert
 (zwei offene Fenster, zwei beschriftete Karten: `In` und
-`No Recipient, No S…`, die aktive hervorgehoben). **Von Gregor noch nicht
-bestätigt** — offen ist vor allem, ob ein **Klick** die Karte nach vorn holt;
-das lässt sich von außen kaum messen.
+`No Recipient, No S…`, die aktive hervorgehoben). **Von Gregor am 09.09.2026
+bestätigt:** der Klick auf eine Karte holt das Fenster nach vorn, und die
+Beschriftungen stimmen mit dem Menü *Window*. Damit ist **Kriterium 8** ganz
+erfüllt. Drei Mängel, die er dabei an 1.0.25 gefunden hat, sind als **E-50** in
+7.2.0.26 behoben und noch nicht nachgesehen; ein **Nebenbefund ohne Nummer**
+bleibt offen — nach einem Neustart stehen die Fenster nicht im Vollbild,
+obwohl sie beim Beenden so waren. Der gehört nicht zu A-3, sondern zum
+Fensterzustand (`SaveOpenWindows`), und ist getrennt zu messen.
 
 Vier Ursachen lagen dazwischen, jede einzeln gemessen:
 
@@ -329,8 +335,13 @@ Splitter selbst. AddSplitter wird nie aufgerufen …"*
 derselben Fensterebene, und beides ist „Mechanik da, Anschluss fehlt".
 Deshalb zusammen umzusetzen, nicht nacheinander.
 
-**Umgesetzt in 7.2.0.26, von Gregor noch nicht bestätigt.** Drei Anläufe, zwei
-davon am laufenden Programm widerlegt:
+**Umgesetzt in 7.2.0.26, nachgebessert in 7.2.0.27 (E-52) und in 7.2.0.29
+(E-54: der Ziehrahmen war nach rechts unsichtbar; E-55: acht Pixel leerer
+Streifen unter der Werkzeugleiste), von Gregor noch nicht bestätigt.** Bestätigt ist nur der **Gegenfall**: am 09.09.2026
+*„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*, also die
+Höhenänderung des unteren Bereichs samt Auffrischen. Das seitliche Ziehen hat
+er noch nicht beurteilt. Drei Anläufe, zwei davon am laufenden Programm
+widerlegt:
 
 | Anlauf | Messung | Urteil |
 |---|---|---|

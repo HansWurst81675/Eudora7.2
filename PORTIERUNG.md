@@ -35,15 +35,10 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > überlagern sich nicht mehr (A-1 wirkt).
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
-> von **neun** Kriterien sind **sechs belegt** (0, 1, 3, 5, 6, 7), zwei fast
-> oder halb (2, 4), eines nicht (8 — die Reiterleiste). Stand 08.09.2026,
-> Quellstand **7.2.0.27**, Paketnummer **1.0.27**. Hier steht bewusst keine
-> zweite Fassung dieser Tabelle.
->
-> Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,
-> Toolset v143, in einem frisch ausgecheckten Baum **ohne** die Attrappe
-> `OTA50D.LIB`:
->
+> **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
+> sind fast erfüllt (2, 4). Beiden fehlt dasselbe: die Meldung „Encountered an
+> improper argument" beim **Anzeigen** mancher Nachrichten. Stand 09.09.2026,
+> Quellstand **7.2.0.29**, Paketnummer **1.0.29**. Hier steht bewusst keine
 > | Messung | Ergebnis |
 > |---|---|
 > | `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |

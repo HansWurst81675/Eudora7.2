@@ -52,6 +52,40 @@ unless (length $wurzel) {
 chomp $wurzel;
 exit 0 unless $wurzel && -d $wurzel;
 
+# ZWEI Wurzeln, nicht eine - Befund L-11.5 vom 09.09.2026 (LEKTOR).
+#
+# $wurzel oben ist der HAUPTBAUM (aus --git-common-dir). Das ist fuer den
+# Namen des Gedaechtnisverzeichnisses richtig und bleibt so - siehe den
+# Befund darueber.
+#
+# Das ZIEL der Kopien ist aber der Arbeitsbaum, in dem gerade committet wird.
+# Bis heute stand hier nur $wurzel, und damit hat dieses Werkzeug aus JEDEM
+# Arbeitsbaum in den HAUPTBAUM geschrieben. Gemessen am 09.09.2026 aus
+# Eudora7.2-wt-lektor:
+#
+#   git rev-parse --git-common-dir  -> C:/Users/Gregor/.../Eudora7.2/.git
+#   git rev-parse --show-toplevel   -> C:/Users/Gregor/.../Eudora7.2-wt-lektor
+#   geschrieben wurde nach          -> Eudora7.2/Arbeitsweise/   (falsch)
+#
+# Zwei Folgen, beide gemessen:
+#
+#   1. Der pre-commit-Hook hat aus wt/lektor Dateien im Hauptbaum geaendert -
+#      genau die Kollision, gegen die es AGENTEN.md und die Lehre
+#      agenten-trennen-worktrees.md gibt.
+#   2. Er brach danach ab mit "Bitte mit committen: git add Arbeitsweise" -
+#      im Arbeitsbaum, wo sich nichts geaendert hatte. Der Commit war damit
+#      nicht durchfuehrbar, und die Wiederholung half nicht: der Vergleich
+#      lief weiter gegen die Kopie im Hauptbaum und meldete "gleich".
+#      Arbeitsweise/ im Arbeitsbaum blieb dabei still veraltet - gemessen
+#      9 570 Byte gegen 9 862 Byte in LEHREN-AUS-DEM-CHAT.md.
+#
+# Deshalb: Name aus dem Hauptbaum, Ziel aus dem Arbeitsbaum.
+my $baum = `git rev-parse --show-toplevel 2>/dev/null`;
+$baum = "" unless defined $baum;
+$baum =~ s/\s+\z//;
+$baum =~ s/\Q$trenner\E/\//g;
+$baum = $wurzel unless length $baum && -d $baum;
+
 # Gedaechtnisverzeichnis: aus dem Repo-Pfad abgeleitet, wie Claude Code es bildet
 # (Laufwerksbuchstabe und Trenner werden zu Bindestrichen).
 my $projektname = $wurzel;
@@ -74,7 +108,7 @@ unless (-d $gedaechtnis) {
     exit($nur_pruefen ? 2 : 0);
 }
 
-my $ziel = "$wurzel/Arbeitsweise";
+my $ziel = "$baum/Arbeitsweise";   # ZIEL: dieser Arbeitsbaum (L-11.5)
 unless (-d $ziel) {
     mkdir $ziel or die "Kann $ziel nicht anlegen: $!\n";
 }

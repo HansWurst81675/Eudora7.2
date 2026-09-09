@@ -177,3 +177,8 @@ Zuordnung zu Themen ist mein Urteil, die Zahlen sind maschinell gezaehlt.
 2. **Vor der ersten Auslieferung** die drei Werte pruefen: Titelzeile,
    Dateiversion, Verzeichnisname.
 3. **Beim ersten Wort ueber Abschalten** in den Abschluss gehen — nicht danach.
+
+**Schranke:** keine — diese Datei ist die Auswertung des Mitschnitts mit
+Fundstellenzahlen, nicht selbst eine Lehre. Jede der sieben Fehlerklassen hat
+eine eigene Lehre-Datei mit eigener Schranke; dass keine davon ohne Schranke
+bleibt, prueft `tools/lehren-schranken.pl` vor jedem Commit.

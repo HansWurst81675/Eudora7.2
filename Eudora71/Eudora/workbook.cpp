@@ -1415,6 +1415,32 @@ BOOL QCWorkbook::CalcLogoTopLeft(CPoint* TopLeft, CPoint* pIntersectPoint /*= NU
 
 	ASSERT((TopLeft != NULL) ^ (pIntersectPoint != NULL));
 
+	// BEFUND E-58 (PRUEFER-6, 09.09.2026): ein Klick rechts im
+	// Registerkartenstreifen oeffnete den Browser, ohne dass dort etwas zu
+	// sehen war.
+	//
+	// Zwei Ursachen zusammen:
+	//   1. Die Treffpruefung unten fragt NUR nach x
+	//      (pIntersectPoint->x >= nLeftEdge). Ein y-Vergleich fehlt ganz -
+	//      getroffen ist damit der gesamte rechte Rand des Fensters, nicht
+	//      die 111 x 23 Pixel des Logos.
+	//   2. Das Logo wird ueberhaupt nicht gezeichnet: dafuer sorgte im
+	//      Original SECWorkbook::OnPaint mit OnDrawBorder, und diese
+	//      Ersatzschicht ruft OnDrawBorder von nirgends. Es gibt also kein
+	//      Bild, auf das man klicken koennte.
+	//
+	// Sichtbar wurde das erst mit A-3, weil QCWorkbook::OnLButtonDown
+	// (workbook.cpp:1132) nur bei m_bWorkbookMode ueberhaupt fragt - und der
+	// ist seit dem Registerkartenstreifen an. Eine Rueckentwicklung in
+	// 1.0.25 bis 1.0.28.
+	//
+	// Solange das Logo nicht gezeichnet wird, gibt es keinen Treffer. Der
+	// Weg ueber TopLeft bleibt unberuehrt: wer OnDrawBorder wieder ruft,
+	// bekommt die Stelle nach wie vor. Dann - und erst dann - gehoert hier
+	// eine vollstaendige Pruefung gegen das Rechteck hin, samt y.
+	if (pIntersectPoint != NULL)
+		return FALSE;
+
 	//
 	// The task bar rect stretches all the way to the edge of the
 	// frame window, so we can't use the right hand edge of that rect.
@@ -1527,7 +1553,19 @@ void QCWorkbook::OnDrawBorder(CDC* pDC)
 ////////////////////////////////////////////////////////////////////////
 BOOL QCWorkbook::IsTabLabelTruncated(SECWorksheet* pSheet)
 {
-	CPaintDC dc(this);		// device context for painting
+	// BEFUND E-57 (PRUEFER-6, 09.09.2026). Hier stand CPaintDC.
+	//
+	// CPaintDC ruft BeginPaint/EndPaint - und das darf NUR aus der
+	// Behandlung von WM_PAINT heraus geschehen. Diese Fassung wird von
+	// OnNotify (workbook.cpp:1633, TTN_NEEDTEXT) gerufen, also bei jeder
+	// Mausbewegung ueber dem Registerkartenstreifen. BeginPaint erklaert
+	// dabei den Ungueltigkeitsbereich des Fensters fuer erledigt, OHNE
+	// etwas zu malen: was gerade neu gezeichnet werden sollte, wird
+	// verworfen. Das ist Gregors Befund "hier ist kein refresh drin".
+	//
+	// CClientDC holt denselben Zeichenkontext ohne diese Nebenwirkung; zum
+	// Messen von Textbreiten reicht er vollstaendig.
+	CClientDC dc(this);		// device context for measuring, NOT for painting
     
 	CPoint ptIcon;			// unused
 	CRect rectText;
