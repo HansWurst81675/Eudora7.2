@@ -45,10 +45,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.27 — alles Gebaute ist gepackt
+## Nach 7.2.0.28 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.27** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.27 / 1.0.27** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.28** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.28 / 1.0.28** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
@@ -101,6 +101,54 @@ dazu: *„version muß eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.28 — Beim Schließen bleibt kein Strich stehen
+
+**Was Gregor damit tun kann, was in 1.0.27 nicht ging:** ein Fenster schließen,
+ohne dass an der Stelle der verschwundenen Registerkarte eine Linie
+zurückbleibt.
+
+**Von Gregor noch nicht bestätigt.**
+
+### E-53 — eine Unsymmetrie in meinem eigenen Code
+
+> *„schönheitsfehler beim schließen, da bleibt ein strich übrig."*
+
+`StreifenAuffrischen` erklärt den Registerkartenstreifen mit
+`InflateRect(2, 2)` für ungültig — gefüllt wurde in `OnPaint` aber nur der
+Streifen **ohne** diesen Rand. Die zwei Pixel ringsum blieben also stehen, und
+genau dort liegen die Kanten, die `QCWorkbook::GetTabPts` um (+2,−2)
+verschiebt. Jetzt wird gefüllt, was auch für ungültig erklärt wird; beide
+Stellen benutzen denselben Betrag.
+
+### Zwei Schranken gegen Fehler in meiner Arbeitsweise
+
+Diese Fassung bringt keinen weiteren Programmcode, aber zwei Werkzeuge, die
+zwei Fehler von mir künftig verhindern:
+
+**`tools/release-veroeffentlichen.ps1`** — der einzige erlaubte Weg zu einem
+Release. Ich hatte v1.0.27 veröffentlicht, **bevor** Gregor es geprüft hatte;
+sein Befund E-53 kam danach, und die Fassung war released und fehlerhaft
+zugleich. Seine Anweisung: *„erst teste ich hier lokal, wenn ich es für gut
+befunden habe, kannst du ein github release bauen."* Das Werkzeug verlangt
+seine Freigabe im Klartext und eine Bestätigung im CHANGELOG-Abschnitt der
+Fassung; steht dort „noch nicht bestätigt", weist es ab.
+
+**`tools/bauen.ps1` weist ungesicherte Quelldateien ab.** Während ein Bau
+lief, hat Gregor gemergt und danach `git checkout main --force` gefahren —
+drei Änderungen von mir waren weg, darunter die E-53-Behebung selbst.
+Rekonstruierbar nur, weil die Vorlagen zufällig noch im Kladdenordner lagen.
+Der Auslöser ist immer derselbe: ein Bau dauert Minuten, in denen ich nichts
+tue und er weiterarbeitet. Wegwerfbauten gehen weiter mit `-Ungesichert`.
+
+### Was an 1.0.28 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`**. Titel: `Eudora 7.2.0.28 / Paket 1.0.28`.
+
+1. Mehrere Fenster öffnen, dann eines **schließen** — bleibt ein Strich?
+2. Und weiter offen aus 1.0.27: bleibt der Trennbalken nach dem Verbreitern
+   greifbar, stehen die Karten einfach statt doppelt, überlebt die Breite
+   einen Neustart, und **friert nirgends etwas ein**?
 
 ## 7.2.0.27 — Der Trennbalken bleibt greifbar, die Karten stehen nicht doppelt
 
