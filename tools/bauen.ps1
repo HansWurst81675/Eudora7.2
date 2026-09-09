@@ -687,6 +687,19 @@ function Starte-MSBuild([string[]]$eigeneArgumente, [string]$logBasis) {
                      -RedirectStandardInput $leereEingabe `
                      -WorkingDirectory $slnOrdner
 
+  # UND JETZT DER ZWEITE TEIL VON X-7. Ohne -Wait liefert $p.ExitCode $null:
+  # PowerShell haelt den Prozesszeiger nicht offen, und sobald der Prozess
+  # endet, kommt .NET nicht mehr an seinen Rueckgabewert. Gemessen beim
+  # ersten Lauf nach der Umstellung: der Bau war einwandfrei (1:10, 0 Fehler,
+  # Eudora.exe 7.2.0.29 frisch gelinkt, Versionsprobe gruen) - und wurde
+  # trotzdem als FEHLSCHLAG gemeldet, weil "MSBuild hat keinen
+  # Rueckgabewert geliefert".
+  #
+  # Das Lesen von .Handle merkt den Zeiger im Objekt vor. Danach ueberlebt
+  # der Rueckgabewert das Ende des Prozesses. Muss VOR dem Warten stehen -
+  # danach ist es zu spaet.
+  $null = $p.Handle
+
   $grenzeMs = $ZeitschrankeMinuten * 60 * 1000
   if (-not $p.WaitForExit($grenzeMs)) {
     Write-Host ''

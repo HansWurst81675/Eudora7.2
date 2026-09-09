@@ -26,6 +26,27 @@ cat > "$HOOK" <<'HOOKENDE'
 #!/bin/sh
 WURZEL="$(git rev-parse --show-toplevel)"
 
+# BEFUND X-8 (09.09.2026): die Haken liegen in .git/hooks und gelten damit
+# fuer ALLE Arbeitsbaeume - die Werkzeuge liegen aber je Arbeitsbaum. Ein
+# neues Werkzeug im Hauptbaum machte deshalb JEDEN anderen Arbeitsbaum
+# committierunfaehig: perl fand die Datei nicht, der Hook gab einen Fehler
+# zurueck. Gemessen an LEKTOR, der eine halbe Stunde nicht committen konnte,
+# obwohl seine Arbeit fertig und alle seine Schranken gruen waren.
+#
+# Also: fehlt ein Werkzeug in DIESEM Arbeitsbaum, wird es uebersprungen und
+# gemeldet. Fehlt es im Hauptbaum, ist das ein Fehler des Hauptbaums und
+# faellt dort auf. Ein Werkzeug, das noch in keinem Zweig liegt, darf keine
+# fremde Arbeit blockieren.
+schranke() {
+  if [ ! -f "$WURZEL/tools/$1" ]; then
+    echo "pre-commit: tools/$1 gibt es in diesem Arbeitsbaum nicht - uebersprungen."
+    echo "  Die Haken gelten fuer alle Arbeitsbaeume, die Werkzeuge liegen je"
+    echo "  Arbeitsbaum (Befund X-8). Im Hauptbaum laeuft die Schranke."
+    return 0
+  fi
+  perl "$WURZEL/tools/$1"
+}
+
 # 1. Schranke gegen Commits auf einen toten Zweig: schon zusammengefuehrt,
 #    Gegenstueck auf dem Server geloescht, oder abgeloester HEAD.
 #
@@ -33,7 +54,7 @@ WURZEL="$(git rev-parse --show-toplevel)"
 #    vor jeder Frage nach seinem Inhalt kommt. Am 31.08.2026 um 09:06 ist ein
 #    Commit auf einen drei Minuten zuvor zusammengefuehrten Zweig gelegt worden
 #    (Befund X-5).
-perl "$WURZEL/tools/pruefe-branch.pl" || exit $?
+schranke pruefe-branch.pl || exit $?
 
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
@@ -43,7 +64,7 @@ perl "$WURZEL/tools/pruefe-branch.pl" || exit $?
 #    der Hook lief aber weiter und gab am Ende den Wert der Schranke zurueck.
 #    Die Meldung war also unwahr, und die gespiegelten Lehren gingen weiterhin
 #    lautlos aus dem Commit heraus (Befund X-1, Zusatzfund; NP3-4).
-perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?
+schranke lehren-spiegeln.pl || exit $?
 
 # 3. Release gegen den Quellstand pruefen. Meldet nur, weist NICHT ab - deshalb
 #    steht hier bewusst kein "|| exit". Erst still laufen lassen; nur wenn etwas
@@ -66,7 +87,7 @@ perl "$WURZEL/tools/release-pruefen.pl" >/dev/null 2>&1 || \
 #    Das Werkzeug holt sich seine Dateiliste seit dem selbst aus
 #    git ls-files "*.md" und laeuft in unter einer Sekunde - es gibt keinen
 #    Grund mehr, es an eine Bedingung zu haengen.
-perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
+schranke doku-pruefen.pl || exit $?
 
 # 5. Fensterbau absichern (Befunde E-33/E-34/E-35/E-36): keine modale Meldung
 #    in der Ersatzschicht, GetButton mit Indexschranke UND Ausnahmefang, jeder
@@ -74,27 +95,27 @@ perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
 #    Diese Schranke gibt es seit dem 07.09.2026 - sie hing bis zum 08.09.2026
 #    aber NICHT im Hook, lief also nur, wenn jemand daran dachte. Genau das
 #    soll ein Hook verhindern.
-perl "$WURZEL/tools/pruefe-fensterbau.pl" || exit $?
+schranke pruefe-fensterbau.pl || exit $?
 
 # 6. Das Beenden absichern (Kriterium 7, Befunde E-40/E-41/E-42). Gregor am
 #    08.09.2026: "haben wir ein review? und neue tests fuer die neue version?
 #    wenn nicht, nachholen!" Die Behebung besteht aus drei Teilen, und jeder
 #    kann durch eine spaetere, gut gemeinte Aenderung lautlos verschwinden.
-perl "$WURZEL/tools/pruefe-beenden.pl" || exit $?
+schranke pruefe-beenden.pl || exit $?
 
 # 7. Include-Waechter: ein Header, der nur TEILWEISE ersetzt wird, darf den
 #    Waechter des Originals NICHT setzen. Genau daran hing E-43 - SECControlBar
 #    war zweimal definiert, acht Byte auseinander, und die Folge waren E-34,
 #    E-37 und E-38. Die Schranke gab es seit dem 09.09.2026, hing aber nicht
 #    im Hook; gefunden von tools/lehren-schranken.pl am 09.09.2026.
-perl "$WURZEL/tools/pruefe-waechter.pl" || exit $?
+schranke pruefe-waechter.pl || exit $?
 
 # 8. Jede Lehre in Arbeitsweise/ braucht eine Schranke-Zeile. Gregor am
 #    08.09.2026: "mach dir aus lessons leared alles schranken, die dann
 #    greifen." Eine Lehre ohne Ausloeser wirkt nicht - und dieses Werkzeug
 #    prueft auch, ob die genannte Schranke wirklich in DIESER Datei steht.
 #    Es hat sich damit am 09.09.2026 selbst gefunden: es fehlte hier.
-perl "$WURZEL/tools/lehren-schranken.pl" || exit $?
+schranke lehren-schranken.pl || exit $?
 
 # 9. Eigene Nachrichtenschleifen: WM_QUIT darf nicht verschluckt werden, und
 #    es darf nicht ohne Zeitschranke gewartet werden. Aus E-51 (meine eigene
@@ -102,10 +123,11 @@ perl "$WURZEL/tools/lehren-schranken.pl" || exit $?
 #    Schleife nahm WM_QUIT heraus, ohne sie zurueckzustellen). Beim ersten
 #    Lauf hat die Schranke sieben weitere Stellen in Eudoras eigenem Code
 #    gefunden, zwei davon mit echter Haengegefahr (E-62).
-perl "$WURZEL/tools/pruefe-nachrichtenschleife.pl" || exit $?
+schranke pruefe-nachrichtenschleife.pl || exit $?
 
 # 10. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
-exec perl "$WURZEL/tools/pruefe-bytes.pl"
+schranke pruefe-bytes.pl
+exit $?
 HOOKENDE
 
 chmod +x "$HOOK"
@@ -123,11 +145,22 @@ cat > "$HOOK_PUSH" <<'HOOKPUSHENDE'
 # Erzeugt von tools/hooks-einrichten.sh - nicht von Hand aendern.
 WURZEL="$(git rev-parse --show-toplevel)"
 
+# Dieselbe Hilfsfunktion wie im pre-commit, aus demselben Grund (Befund X-8):
+# die Haken gelten fuer alle Arbeitsbaeume, die Werkzeuge liegen je
+# Arbeitsbaum.
+schranke() {
+  if [ ! -f "$WURZEL/tools/$1" ]; then
+    echo "pre-push: tools/$1 gibt es in diesem Arbeitsbaum nicht - uebersprungen."
+    return 0
+  fi
+  perl "$WURZEL/tools/$1"
+}
+
 echo "pre-push: Doku gegen sich selbst pruefen (alle MD-Dateien)"
-perl "$WURZEL/tools/doku-pruefen.pl" || exit $?
+schranke doku-pruefen.pl || exit $?
 
 echo "pre-push: Zeilenenden und Kodierung"
-perl "$WURZEL/tools/pruefe-bytes.pl" || exit $?
+schranke pruefe-bytes.pl || exit $?
 
 exit 0
 HOOKPUSHENDE
