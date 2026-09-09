@@ -4215,6 +4215,37 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 		// einen Teil (gemessen am 09.09.2026: von 11 kamen 7 an). Der
 		// Unterschied zwischen der Andockleiste und der Leiste darin ist der
 		// Streifen, der dem Balken bleibt.
+		// BEFUND E-66, ERSTE URSACHE (PRUEFER-7, 09.09.2026).
+		//
+		// Der Zuschlag aus CalcFixedLayout landet NICHT dort, wo man ihn
+		// braucht - jedenfalls nicht rechts und unten.
+		//
+		// CDockBar::CalcFixedLayout der MFC beginnt die Anordnung in JEDER
+		// Andockleiste bei
+		//     CPoint pt(-afxData.cxBorder2, -afxData.cyBorder2);
+		// (bardock.cpp:387, MSVC 14.38.33130), also oben links im
+		// Clientbereich. Die Leisten liegen damit immer am ANFANG, und der
+		// Zuschlag bleibt am ENDE liegen:
+		//     links  -> Ende ist die Innenkante  -> Streifen sitzt richtig
+		//     rechts -> Ende ist der Fensterrand -> Streifen sitzt falsch
+		// Gemessen von PRUEFER: rechts ergibt die Suche an der Innenkante
+		// nFrei = -2, die Bedingung nFrei >= 2 scheitert, AddSplitter laeuft
+		// nie, HitTest liefert NULL. Deshalb war rechts nichts zu greifen.
+		//
+		// Statt den Balken an den Fensterrand zu legen - dort will ihn
+		// niemand suchen - werden die Leisten um den Streifen ANS ENDE
+		// GERUECKT. Danach liegt der freie Platz an der Innenkante, also
+		// zwischen Nachrichtenbereich und Leiste, wo Gregor ihn greifen will.
+		//
+		// WARUM HIER UND NICHT IN CalcFixedLayout: dort hat die Andockleiste
+		// ihre neue Groesse noch nicht (MFC verschiebt mit DeferWindowPos,
+		// BEFUND E-52). Diese Fassung laeuft aus OnSize, also NACH dem
+		// Setzen der Groesse - und nach jedem Anordnungsdurchlauf erneut,
+		// weil jeder von ihnen in WM_SIZE endet.
+		const UINT nIdLeiste = (UINT) GetDlgCtrlID();
+		const BOOL bAmEnde   = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT ||
+								nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM);
+
 		int nFrei = 0;
 		if (nPos >= 0)
 		{
@@ -4229,13 +4260,48 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 				// diese Fassung fuer AFX_IDW_DOCKBAR_TOP gar nicht erst
 				// laufen (BEFUND E-55). Ein Zweig, den nichts erreicht,
 				// waere ein Kommentar, der dem Code widerspricht.
-				switch ((UINT) GetDlgCtrlID())
+				switch (nIdLeiste)
 				{
-					case AFX_IDW_DOCKBAR_LEFT:   nFrei = rect.right  - rectLeiste.right;  break;
-					case AFX_IDW_DOCKBAR_RIGHT:  nFrei = rectLeiste.left - rect.left;     break;
-					case AFX_IDW_DOCKBAR_BOTTOM: nFrei = rectLeiste.top  - rect.top;      break;
-					default: break;
+					case AFX_IDW_DOCKBAR_LEFT:
+						nFrei = rect.right - rectLeiste.right;
+						break;
+					case AFX_IDW_DOCKBAR_RIGHT:
+						// Gemessen wird am ENDE, weil der Zuschlag dort
+						// liegt - und nicht an der Innenkante, wo er
+						// hingehoert. Das Rueckem folgt gleich.
+						nFrei = rect.right - rectLeiste.right;
+						break;
+					case AFX_IDW_DOCKBAR_BOTTOM:
+						nFrei = rect.bottom - rectLeiste.bottom;
+						break;
+					default:
+						break;
 				}
+			}
+		}
+
+		// Die Leisten ans Ende ruecken, damit der Streifen an die Innenkante
+		// kommt. Nur rechts und unten, nur wenn ueberhaupt etwas frei ist,
+		// und nur um den gemessenen Betrag - nichts davon ist geraten.
+		if (bAmEnde && nFrei >= 2)
+		{
+			for (int iBar = 0; iBar < m_arrBars.GetSize(); iBar++)
+			{
+				CControlBar* pBar = GetDockedControlBar(iBar);
+				if (pBar == NULL || !::IsWindow(pBar->GetSafeHwnd()))
+					continue;
+				if ((pBar->GetStyle() & WS_VISIBLE) == 0)
+					continue;
+
+				CRect rectBar;
+				pBar->GetWindowRect(&rectBar);
+				ScreenToClient(&rectBar);
+
+				const int dx = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT)  ? nFrei : 0;
+				const int dy = (nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM) ? nFrei : 0;
+
+				pBar->SetWindowPos(NULL, rectBar.left + dx, rectBar.top + dy,
+					0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 			}
 		}
 
