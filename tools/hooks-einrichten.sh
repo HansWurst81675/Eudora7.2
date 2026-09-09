@@ -82,7 +82,21 @@ perl "$WURZEL/tools/pruefe-fensterbau.pl" || exit $?
 #    kann durch eine spaetere, gut gemeinte Aenderung lautlos verschwinden.
 perl "$WURZEL/tools/pruefe-beenden.pl" || exit $?
 
-# 7. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 7. Include-Waechter: ein Header, der nur TEILWEISE ersetzt wird, darf den
+#    Waechter des Originals NICHT setzen. Genau daran hing E-43 - SECControlBar
+#    war zweimal definiert, acht Byte auseinander, und die Folge waren E-34,
+#    E-37 und E-38. Die Schranke gab es seit dem 09.09.2026, hing aber nicht
+#    in diesem Einrichtungsskript; gefunden von tools/lehren-schranken.pl.
+perl "$WURZEL/tools/pruefe-waechter.pl" || exit $?
+
+# 8. Jede Lehre in Arbeitsweise/ braucht eine Schranke-Zeile. Gregor am
+#    08.09.2026: "mach dir aus lessons leared alles schranken, die dann
+#    greifen." Eine Lehre ohne Ausloeser wirkt nicht - und dieses Werkzeug
+#    prueft auch, ob die genannte Schranke wirklich in DIESER Datei steht.
+#    Es hat sich damit am 09.09.2026 selbst gefunden: es fehlte hier.
+perl "$WURZEL/tools/lehren-schranken.pl" || exit $?
+
+# 9. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 

@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-05T18:44:11.670Z
 ---
 
+Schranke: tools/arbeitsbaum-frei.pl (vor jedem Agentenstart)
+
 **Das Verfahren steht in [AGENTEN.md](AGENTEN.md) im Repo. Vor jeder Runde
 paralleler Agenten lesen und befolgen.**
 

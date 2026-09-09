@@ -9,12 +9,13 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 08.09.2026)
+## Noch offen (Stand 09.09.2026)
 
 | Kennung | | |
 |---|---|---|
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. Keine Behebung in Sicht |
-| — | **Kriterium 8**: die **Registerkartenleiste** am unteren Fensterrand für die offenen Fenster | *halb* — das Menü *Window* listet sie auf (von Gregor nachgesehen: „1 In", „2 Out"). Die Leiste am unteren Rand ist mit **E-44** jetzt sichtbar und waagrecht, zeigt aber *Task Status* und *Task Errors*, nicht die offenen Fenster |
+| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. Gehört **nicht** zur Registerkartenleiste (E-48/E-50), sondern zum Fensterzustand über `SaveOpenWindows`. Getrennt zu messen, noch nicht angefasst |
+| — | **Gebaut, aber von Gregor nicht bestätigt:** **E-49** (linken Bereich breiter ziehen, Anforderung **A-4**), **E-50** (drei Mängel an der Registerkartenleiste), **E-52** (Trennbalken bleibt greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das seitliche Ziehen hat er noch nicht beurteilt |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
 
@@ -23,13 +24,15 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | | |
 |---|---|
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
-| **Kriterium 2** (Darstellung) | *fast* — dazu liegt die Leiste am unteren Rand seit **E-44** waagrecht |
-| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab, fünfmal nachgemessen; das Beenden ist mit Kriterium 7 erledigt. Offen bleiben die Meldung beim Anzeigen mancher Nachrichten und der abgefangene Wurf in `SaveCustomInfo` (**E-43**) |
+| **Kriterium 2** (Darstellung) | *fast* — offen ist die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten. **Neu zu messen** seit 7.2.0.24: sie stammt aus derselben Quelle wie E-34/E-43 |
+| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen), das Beenden läuft sauber (Kriterium 7), und die Fehlerklasse hinter E-34/E-37/E-43 ist seit 7.2.0.24 an der Wurzel weg |
 | **Kriterien 5 und 6** (Mail schreiben, senden, weiterleiten) | **erfüllt** — von Gregor am 07.09.2026 bestätigt: *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."*, mit Bildschirmfoto |
-| **Kriterium 7** (Beenden) | **erfüllt** — von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt: *„schließen klappt jetzt."* Alle drei Wege beenden: *File → Exit*, Alt-F4, das Kreuz. Behoben durch **E-40**, **E-41**, **E-42**, ergänzt um **E-45** |
-| **Kriterium 8** (Fensterliste) | *halb* — das Menü *Window* listet sie auf; die Leiste am unteren Rand ist mit **E-44** sichtbar und waagrecht, zeigt aber *Task Status* und *Task Errors* statt der Registerkarten |
-| **Anforderung A-1** (Vorgaben für ein neues Konto) | **belegt** — Gregor am 08.09.2026: *„default werte beim neuen persona konto für ‚leave message on server' greifen."* |
-| **Anforderung A-2** (Aufgabenleiste waagrecht unten) | **belegt** — Gregor am 08.09.2026: *„jetzt ist sie unten, ja"*; gemessen mit `tools/leisten-messen.ps1`: Leiste 320, unten, sichtbar, 1712×80 |
+| **Kriterium 8** (Fensterliste) | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf, und die Registerkartenleiste am unteren Rand ist da; der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü (**A-3** / **E-48**) |
+| **Kriterium 7** (Beenden) | **erfüllt** — von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt: *„schließen klappt jetzt."* Alle drei Wege beenden: *File → Exit*, Alt-F4 und das Kreuz (E-40, E-41, E-42, ergänzt um E-45) |
+| **A-1** (Vorgaben für ein neu angelegtes Konto) | **erfüllt** — *„default werte beim neuen persona konto für 'leave message on server' greifen."* |
+| **A-2** (*Task Status* und *Task Errors* waagrecht unten) | **erfüllt** — *„leiste unten paßt."* |
+| **A-3** (offene Fenster als Registerkarten direkt auswählen) | **erfüllt** — von Gregor am 09.09.2026 bestätigt (**E-48**, umgesetzt in 7.2.0.25). Damit ist Kriterium 8 ganz erfüllt |
+| **A-4** (den linken Bereich breiter ziehen) | **gebaut, nicht bestätigt** — **E-49** in 7.2.0.26, in 7.2.0.27 durch **E-52** nachgebessert. Bestätigt ist nur die Höhenänderung des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* |
 
 > **07.09.2026, Gregor zu Paket 1.0.21:** *„mail können jetzt abgeschickt
 > werden."* und *„weiterleitung funktioniert übrigens."* Damit ist der Kreis
@@ -45,56 +48,33 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.24 — alles Gebaute ist gepackt
+## Nach 7.2.0.27 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.24** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.24 / 1.0.24** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.27** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.27 / 1.0.27** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
-dazu: *„version muß eindeutig sein"*). **Alle fünf Zeilen**, nicht vier:
-`EUDORA_BUILD_NUMBER` blieb beim Heben auf 7.2.0.23 zurück und ist am
-08.09.2026 nachgezogen worden (die Tabelle dazu steht in
-[Releases/PAKETE.md](Releases/PAKETE.md)).
-
-Das ZIP zu 1.0.23 liegt im Arbeitsbaum, ist aber **noch nicht committet**, und
-als Marke ist es **nicht** veröffentlicht — die jüngste Marke ist `v1.0.21`.
+dazu: *„version muß eindeutig sein"*).
 
 > **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
 > `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
-> Komma-Format `7,2,0,23`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> Komma-Format, heute `7,2,0,27`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
 > übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
 > wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
 > es gehört aber trotzdem mit hochgesetzt.
 
-- **E-37: nur die ANZEIGE behoben — ein Konto liess sich scheinbar nicht loeschen.**
-  `CPersonalityView::OnCmdDeletePersonality`
-  (`Eudora71/Eudora/PersonalityView.cpp`). Gregors Messung hat die erste
-  Annahme widerlegt: *„ja, sie verschwinden nach neustart"* — gelöscht wurde
-  immer korrekt, nur die Liste im Fenster blieb stehen. `FindItem` liefert −1,
-  `DeleteItem(−1)` tut nichts, und abgesichert war das nur mit
-  `ASSERT(nIndex != -1)`. Behoben unabhängig davon, **warum** `FindItem`
-  scheitert: der Fehlschlag geht mit Name und Listenlänge ins Protokoll, und
-  die Liste wird einmal am Ende über `PopulateView()` neu aufgebaut. Die drei
-  stummen `ASSERT(0)`-Zweige melden jetzt ebenfalls.
-  **Von Gregor nicht nachgemessen** — es ist in keinem Paket.
-- **32 Spurmarken für E-33**, das Beenden. Nur Diagnose, nichts behoben:
-  `QCCustomToolBar.cpp:408-415` vor der Schleife samt `TRY`/`CATCH_ALL` mit
-  `GetErrorMessage` und `THROW_LAST()` — der Ablauf bleibt unverändert —,
-  `mainfrm.cpp` je **Aufruf** statt je Stufe (`5a`…`5i`, `6a`…`6f`),
-  `eudora.cpp` an `OnAppExit` und `ExitInstance`. Der Weg ist vollständig
-  aufgeschrieben in [Befunde/BEENDEN.md](Befunde/BEENDEN.md).
-- **`tools/DEudora.ini`** — Vorgaben für neu angelegte Konten (**A-1** in
-  [ZIEL.md](ZIEL.md)), die `tools/paket-bauen.ps1` neben `Eudora.exe` ins Paket
-  legt und `tools/paket-pruefen.ps1` auf Vorhandensein **und Inhalt** prüft.
-- **`tools/bauen.ps1`** — dritter Fehlalarm dieses Werkzeugs beseitigt:
-  `Hole-NeuesteQuelleFuer` nahm alle Dateien im Projektverzeichnis, und
-  `Eudora.vcxproj` und `EudoraRes.vcxproj` liegen im gleichen Ordner. Eine
-  Änderung an `mainfrm.cpp` machte damit `EudoraRes.dll` scheinbar veraltet.
-  Jetzt kommt die Liste aus den Include-Angaben der Projektdatei.
-- **`tools/doku-pruefen.pl`** — Prüfungen 8 bis 11: angekündigte Marken, die es
-  nicht gibt; eine alte Fassungsnummer als heutiger Stand; Befundkennungen quer
-  gegen `BEFUNDE.md`; und A-1 gegen `tools/DEudora.ini`.
+> **Berichtigt am 09.09.2026 (LEKTOR, L-11).** Hier stand bis dahin eine
+> Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
+> darunter *„E-37: nur die ANZEIGE behoben"* und *„32 Spurmarken für E-33"*.
+> **Beides ist überholt und widersprach schon der Überschrift dieses
+> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von **E-43**,
+> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
+> liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
+> die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
+> ausgeliefert. Seit 1.0.27 ist **nichts** dazugekommen, was nicht im Paket
+> steckt — die Werkzeuge der letzten Bauten stehen in den Abschnitten zu
+> 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
 
 > **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
 > `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
@@ -108,6 +88,200 @@ als Marke ist es **nicht** veröffentlicht — die jüngste Marke ist `v1.0.21`.
 
 
 
+## 7.2.0.27 — Der Trennbalken bleibt greifbar, die Karten stehen nicht doppelt
+
+**Was Gregor damit tun kann, was in 1.0.26 nicht ging:** den linken Bereich
+verbreitern und **gleich weiterziehen** — der Balken bleibt an der Kante
+greifbar, ohne dass man erst das Fenster verändern muss. Und die
+Registerkarten stehen danach nicht mehr doppelt.
+
+**Das seitliche Ziehen hat Gregor noch nicht beurteilt.** Bestätigt ist der
+Gegenfall, die Höhe: *„verschieben rauf / runter — bug gefixt, die anzeige ist
+korrekt."*
+
+### Seine Meldung war die Diagnose
+
+> *„verschieben links / rechts vom mailverzeichnis: hier ist kein refresh
+> drin. nach vergrößern (verschiebung nach rechts), kann man den balken nicht
+> mehr greifen. erst wenn ich das fenster verändere, dann geht es wieder."*
+
+Der letzte Halbsatz nennt die Ursache: MFC verschiebt die Leisten mit
+`DeferWindowPos` (`lpLayout->hDWP`). Wenn `OnSizeParent` zurückkommt, hat die
+Andockleiste ihre neue Größe **noch nicht** — `GetClientRect` liefert dort die
+**alte**. Der Balken landete an der alten Stelle, und erst der nächste
+Anordnungsdurchlauf zog es gerade. Das war „das Fenster verändern".
+
+Behoben, indem der Balken in **`OnSize`** entsteht statt in `OnSizeParent`:
+`WM_SIZE` kommt, nachdem das Fenster seine Größe hat.
+
+Die doppelten Karten in seinem Bildschirmfoto — *„In"* und *„markus bakus,
+10:02"* je zweimal — kamen aus derselben Wurzel: `RecalcLayout` ordnet neu an,
+erklärt aber nichts für ungültig, was an der alten Stelle stand.
+`OnSplitterMoved` frischt jetzt mit
+`RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN` auf.
+
+**Bestätigt ist der Gegenfall**, und er stützt die Deutung: *„verschieben rauf
+/ runter — bug gefixt, die anzeige ist korrekt."* Bei der Höhe greift dasselbe
+Auffrischen schon seit 1.0.26.
+
+### Was an 1.0.27 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`**. Titel: `Eudora 7.2.0.27 / Paket 1.0.27`.
+
+1. Linken Bereich nach rechts ziehen — und **gleich noch einmal** ziehen,
+   ohne etwas anderes anzufassen. Bleibt der Balken greifbar?
+2. Stehen die Registerkarten danach **einfach** da, nicht doppelt?
+3. Beenden und neu starten — ist die Breite noch da?
+4. Und weiter der wichtigste Punkt: **friert irgendwo etwas ein?**
+
+## 7.2.0.26 — Der linke Bereich lässt sich breiter ziehen, und die Karten frischen auf
+
+**Was Gregor damit tun kann, was vorher nicht ging:** den Trennbalken zwischen
+Postfachbereich und Nachrichtenliste mit der Maus nach rechts ziehen und so
+links mehr sehen (Anforderung **A-4**). Dazu drei Nachbesserungen an der
+Registerkartenleiste, die er selbst gefunden hat (**E-50**).
+
+**Beides von Gregor noch nicht bestätigt.** Beim Ziehen kann ich es
+grundsätzlich nicht selbst messen — dazu braucht es eine **physisch**
+gedrückte Maustaste; siehe unten, warum das so sein muss.
+
+### A-4 — drei Anläufe, zwei davon am laufenden Programm widerlegt
+
+Die Splitter-Mechanik lag vollständig in der Ersatzschicht — `AddSplitter`,
+`HitTest`, `StartTracking`, `CalcTrackingLimits`, `DrawTrackerRect`, dazu
+`OnSetCursor` und `OnLButtonDown`. Nur wurde `AddSplitter` nie aufgerufen,
+`Track` war leer und `OnSplitterMoved` tat nichts. Und ein Balken braucht
+Platz **im Clientbereich der Andockleiste** — liegt er unter dem Kindfenster,
+gehen die Mausereignisse dorthin.
+
+| Anlauf | Messung | Urteil |
+|---|---|---|
+| 1. über `SetBorders` | Andockleiste Client **176**, Leiste 318 **180** | verworfen: der Rand verkleinert den Innenbereich und vergrößert die Andockleiste **nicht**; die Leiste ragte über |
+| 2. Zuschlag in `CalcFixedLayout`, abhängig von einer eigenen Prüfung über `m_arrBars` | Andockleiste blieb **180** | verworfen: keine Wirkung — die Bedingung griff nicht |
+| Messversuch: Zuschlag **11**, bedingungslos | Andockleiste **187**, freier Streifen **7** | belegt: der Weg stimmt, und **MFC verbraucht 4 Pixel des Zuschlags selbst** |
+| 3. Bedingung am Ergebnis, Balken nach dem **nachgemessenen** Platz | Andockleiste **188**, freier Streifen **8** | steht |
+
+Aus dem Messversuch folgt die eigentliche Lehre: eine feste Pixelzahl wäre
+hier immer geraten gewesen. `OnSizeParent` misst deshalb den Unterschied
+zwischen Andockleiste und Leiste darin und legt den Balken genau dorthin.
+Bleiben weniger als zwei Pixel, gibt es lieber **keinen** Balken als einen,
+den niemand trifft.
+
+`OnSplitterMoved` ändert die Andockgröße über `GetBarInfo`/`SetBarInfo` —
+genau die Felder, die `SECControlBar::CalcFixedLayout` auswertet. Damit
+überlebt die neue Breite einen Neustart, denn den `[ToolBar…]`-Abschnitt in
+der `Eudora.ini` gibt es seit der Behebung von **E-43** überhaupt erst.
+
+### Die Ziehschleife hätte Eudora einfrieren können
+
+Der erste Entwurf von `Splitter::Track` lief mit `while(::GetMessage(...))`.
+Zweimal hat das die Prüfinstanz zum **Hängen** gebracht: kommt kein
+`WM_LBUTTONUP` — weil der Mausfang verlorengeht, das Fenster den Fokus
+verliert oder die Nachricht auf anderem Weg verschwindet —, wartet die
+Schleife für immer, und das Programm ist tot. Genau die Fehlerklasse, die
+Gregor tagelang gekostet hat (*„beenden kann ich es auch nicht"*).
+
+Jetzt: höchstens 100 ms warten, danach Fenster, Mausfang und die **physische**
+Maustaste erneut prüfen. Ist sie los, ist das Ziehen vorbei, ganz gleich
+welche Nachricht kam. Der Preis ist ehrlich zu nennen: ein künstlicher Zug
+über Fensterbotschaften lässt sich damit nicht mehr fahren, das Ziehen kann
+nur ein Mensch prüfen. Eine Schleife, die sich bequem testen lässt, aber das
+Programm einfrieren kann, wäre der schlechtere Tausch.
+
+### E-50 — drei Nachbesserungen an der Registerkartenleiste
+
+Alle drei von Gregor am 09.09.2026 an 1.0.25 gefunden, alle mit derselben
+Wurzel: **der Streifen wird nur beim Neuzeichnen gemalt, und niemand erklärt
+ihn für ungültig, wenn sich etwas ändert.**
+
+| Beobachtung | Ursache | Behebung |
+|---|---|---|
+| *„der button bzw. die karte bleibt eingedrückt, auch wenn man im anderen fenster ist"* | `QCWorkbook::OnLButtonDown` setzt `SetSelected(TRUE)` (`workbook.cpp:1109`) — und **niemand** setzt es je zurück; im Original tat das die Stingray-Ebene | die Marke wird gelöscht, sobald ein anderer Rahmen aktiv ist. Sie bedeutet laut eigenem Feldkommentar nur *„Karte gewählt, Rahmen noch nicht aktiv"* |
+| *„beim skalieren (kleiner machen) ist die darstellung falsch"* | die Kartenbreite hängt an der Fensterbreite (`recalcTabWidth` teilt die Fläche auf) | `WM_SIZE` frischt den Streifen auf |
+| *„die karten sind dann weg"* beim Öffnen/Schließen | dieselbe Sache: die Breite ändert sich mit der Kartenzahl | `AddSheet`/`RemoveSheet` frischen auf |
+
+### Was an 1.0.26 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.26 / Paket 1.0.26`.
+
+**A-4, der Trennbalken:**
+
+1. Maus auf die Kante zwischen Postfachbereich und Nachrichtenliste — wird
+   der Zeiger zum **Größenzeiger** (Doppelpfeil)?
+2. Nach **rechts ziehen** — wird der linke Bereich breiter? Über 180 Pixel
+   hinaus?
+3. Nach links ziehen — wird er wieder schmaler?
+4. Eudora beenden und neu starten — ist die Breite noch da?
+5. **Und das Wichtigste: friert dabei nichts ein.** Falls doch, sofort sagen —
+   dann fliegt A-4 wieder heraus.
+
+**A-3, die Registerkarten:**
+
+6. Bleibt die Karte des **aktiven** Fensters eingedrückt und lösen sich die
+   anderen?
+7. Fenster kleiner ziehen — bleiben die Karten richtig?
+8. Fenster öffnen und schließen — bleiben die Karten sichtbar?
+
+## 7.2.0.25 — Die offenen Fenster stehen als Registerkarten unten
+
+**Was Gregor damit tun kann, was vorher nicht ging:** unten am Fenster steht
+für jedes offene Fenster eine Registerkarte, wie die Reiter in einem Browser —
+statt nur der Liste im Menü *Window*. Das ist Anforderung **A-3** und der
+fehlende Teil von **Kriterium 8**.
+
+**Von Gregor noch nicht bestätigt.** Gemessen und fotografiert habe ich es
+(zwei offene Fenster → zwei beschriftete Karten, `In` und
+`No Recipient, No S…`, die aktive hervorgehoben). Was ich von außen kaum
+messen kann, ist der **Klick**: holt eine Karte ihr Fenster nach vorn?
+
+### Die Leiste war nicht weg — sie war abgeschaltet
+
+Das Hauptfenster heißt nicht zufällig `QCWorkbook`: Stingrays *Workbook* ist
+genau so eine Reiterleiste. Eudoras Code dafür liegt vollständig im
+Quellbaum — Zeichnen, Geometrie, Treffertest, Kurzhinweise, Kontextmenü, der
+Ein-/Ausschalter in den Einstellungen und der INI-Schlüssel `ShowMDITaskbar`
+mit der Vorgabe **1**. `mainfrm.cpp:1042` schaltet die Leiste bei **jedem**
+Start ein. Nur nahm die Ersatzschicht den Schalter nicht an.
+
+### Vier Ursachen, jede einzeln gemessen
+
+| | war | ist |
+|---|---|---|
+| `SECWorkbook::SetWorkbookMode` | Attrappe: meldete „nicht umgesetzt" und setzte `m_bWorkbookMode` **absichtlich nicht** | setzt den Betrieb und reserviert den Streifen |
+| `SECWorkbook::GetTabPts` | lieferte **sechs Nullpunkte** — Eudora zeichnete jede Karte an Punkt (0,0) mit Größe null | echte Kartenform aus sechs Punkten; gezählt werden nur **sichtbare** Blätter |
+| `recalcTabWidth()` | **liefert** die Breite nur zurück und setzt `m_cxTab` nicht; ich hatte den Rückgabewert weggeworfen | `m_cxTab = recalcTabWidth()` |
+| Streifenlage | begann bei `rectClient.left` = 0 — dort liegt die **linke Leiste** (Client-x 6…186). Karte 0 verschwand darunter, sichtbar war nur der Rand von Karte 1 bei x 182…262 | beginnt und endet am **MDI-Bereich** |
+| Beschriftung | `OnDrawTab` zeichnet nur den **Rahmen** | `OnDrawTabIconAndLabel` wird mitgerufen — virtuell, von Eudora überschrieben, von niemandem aufgerufen |
+
+Die dritte Zeile ist die lehrreichste: die Streifenlage stammt aus Eudoras
+eigener Rechnung (`QCGetTaskBarRect`, `workbook.cpp:930`), die dort ebenfalls
+`rectClient.left` nimmt. Im Original hat das gepasst; bei uns reicht die
+linke Wazoo-Leiste bis ganz nach unten. Das ist eine **bewusste Abweichung
+vom Original**, und sie steht als solche im Quelltext.
+
+### Am Werkzeug
+
+`tools/leisten-messen.ps1` misst jetzt auch den Streifen — Unterkante des
+MDI-Bereichs gegen den Rahmen — zählt die offenen MDI-Fenster und kann mit
+`-Abbild` ein Bild des Fensters speichern. Das Bild entsteht über
+**`PrintWindow`**, nachdem der erste Versuch mit einem Bildschirmabzug ein
+fremdes Dialogfenster mitfotografiert hatte und die Messung damit wertlos
+war, ohne dass es auffiel.
+
+### Was an 1.0.25 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.25 / Paket 1.0.25`.
+
+1. Steht unten je offenem Fenster eine **Registerkarte**?
+2. **Holt ein Klick auf eine Karte ihr Fenster nach vorn?** — der wichtigste
+   Punkt.
+3. Ändert sich der Streifen beim Öffnen und Schließen eines Fensters?
+4. Sind die Beschriftungen dieselben wie im Menü *Window*?
+5. Schaltet *Show MDI task bar* in den Einstellungen die Leiste aus und wieder
+   ein, und überlebt das einen Neustart?
+
 ## 7.2.0.24 — Eine Ursache, vier Befunde: das Konto-Löschen geht wieder
 
 **Was Gregor damit tun kann, was vorher nicht ging:** ein Konto löschen, ohne
@@ -115,7 +289,9 @@ dass „Encountered an improper argument" erscheint und der Eintrag links stehen
 bleibt. Und die Fenstergrößen und Leistenlagen überleben jetzt einen Neustart —
 sie wurden bisher **nie** gespeichert.
 
-**Noch nicht bestätigt.** Bis Gregor es gemessen hat, gilt das als gebaut.
+**Von Gregor am 08.09.2026 bestätigt:** *„0.24 – persona läßt sich löschen. keine messagebox“*. Damit
+ist die ganze Kette belegt – nicht nur am Quelltext abgelesen, sondern am
+laufenden Programm.
 
 ### Die eine Ursache: `SECControlBar` war zweimal definiert
 
@@ -287,8 +463,14 @@ Marken.
 
 ### Was an 1.0.23 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.23-release.zip`, 9 340 228 Byte, SHA256
+Paket: 9 340 228 Byte, SHA256
 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
+**Das ZIP liegt nicht mehr im Repo** — am 09.09.2026 entfernt, wie die der
+übrigen überholten Fassungen, damit das Repo nicht weiter wächst. Neu zu bauen
+aus dem Commit dieses Abschnitts mit
+`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`; die Prüfsumme
+oben ist der Nachweis. Die Marke [v1.0.23](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.23)
+bleibt bestehen.
 Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
 aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
 Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
@@ -474,16 +656,17 @@ nachbildet.
 **Offen bleibt:** *„beenden geht nicht"* (Kriterium 7) und Gregors Frage
 *„kann man die untere zeile (status) immer anzeigen lassen?"*
 
-### Was an 1.0.21 zu prüfen war
+### Was an 1.0.22 zu prüfen ist
 
-> **Berichtigt am 08.09.2026 (L-10).** Hier stand *„Was an 1.0.22 zu prüfen
-> ist"* mit dem ZIP und der Prüfsumme von **1.0.22** — mitten im Abschnitt zu
-> **7.2.0.21**. Die Prüfliste darunter (Strg-N, Abschicken, Weiterleiten)
-> gehört zu 1.0.21; die Prüfsumme ist gegen die Datei nachgemessen.
-
-Paket: `Releases/Eudora72-1.0.21-release.zip` (SHA256 `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c`, 9 331 078 Byte, am 08.09.2026 mit `sha256sum` nachgemessen).
-Auspacken, **`Eudora starten.cmd`** doppelklicken — nicht `Eudora.exe`, der
-Starter übergibt das Mailverzeichnis.
+Paket (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`)
+liegt **nicht mehr im Repo** und hat keine Marke — neu zu bauen aus `d003d46`.
+Wer heute prueft, nimmt 1.0.23; die Anleitung dazu steht weiter oben.
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
+aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
+Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
+`Eudora.exe` **ohne** Parameter beim ersten Start: dann sucht Eudora die Ini im
+Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
+**E-6**).
 
 | Prüfen | erwartet | wenn nicht |
 |---|---|---|
@@ -940,7 +1123,7 @@ unter diesen Namen samt Prüfsumme veröffentlicht sind.
 ## Wo man weitermachen kann
 
 Die offenen Enden mit Fundstelle — für jemanden, der das Repo frisch klont.
-**Stand 07.09.2026.**
+**Stand 09.09.2026.**
 
 ### 1. Erledigt: das Verfassen-Fenster ist da
 
@@ -981,35 +1164,49 @@ E-31 unnötig lange aufgehalten. Der Rekursionszyklus ist dort nachzulesen
 **Noch nicht versucht:** Page Heap (`gflags /p /enable Eudora.exe /full`, als
 Administrator).
 
-### 2. Kriterium 7 — *File → Exit* beendet Eudora nicht
+### 2. Erledigt: Kriterium 7 — Eudora beendet sich sauber
 
-Das ist der **einzige verbliebene Fehler** der zweiten Stufe. Gregors Wort am
-07.09.2026: *„beenden geht nicht."* Noch nicht untersucht. Wichtig dabei: die
-frühere Vermutung, eine modale Meldung aus E-32 verdecke das Beenden, ist
-gegenstandslos — PRUEFER hat die E-32-Ursachenbehauptung dreifach gemessen und
-verworfen (siehe 7.2.0.20). Der Weg führt über `CEudoraApp::OnAppExit` und
-`CMainFrame::OnClose` (`Eudora71/Eudora/eudora.cpp`, `MainFrm.cpp`), mit
-Spurmarken wie bei E-34 und `eudora.log` bei gesetztem `LogLevel=32896`.
+**Von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt:** *„schließen klappt
+jetzt."* Alle drei Wege beenden — *File → Exit*, **Alt-F4** und das **Kreuz**.
+Behoben durch **E-40**, **E-41** und **E-42**, ergänzt um **E-45**. Der Weg
+dorthin steht in [Befunde/BEENDEN.md](Befunde/BEENDEN.md), das Review in
+[Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md), die Schranke ist
+`tools/pruefe-beenden.pl` (elf eingefasste Aufräumschritte; der zwölfte,
+`QCWorkbook::OnClose`, darf ausdrücklich **nicht** durch `AUFRAEUMEN` laufen).
+**Nicht wieder von vorn aufrollen.**
 
-### 3. Kriterium 8 — die untere Statuszeile mit Reitern
+### 3. Erledigt: Kriterium 8 — die offenen Fenster als Registerkarten
 
-Gregors Frage am 07.09.2026: *„kann man die untere zeile (status) immer anzeigen
-lassen?"* Das Menü *Window* listet die offenen Fenster („1 In", „2 Out") — das
-ist nachgesehen. Was fehlt, ist die Leiste am unteren Fensterrand. Das Original
-hat sie: die **WazooBar**. Gelesen wird sie in
-`Eudora71/Eudora/WazooBar.cpp:572,578` aus `Eudora.ini`, Abschnitt
-`[WazooBars]`, Schlüssel `WazooBarIds`, `WazooBar%d`, `WazooMDI%d` (Namen in
-`EudoraRes.rc:10637-10640`). Die Ersatzschicht `OTShim` bildet die Leiste
-derzeit nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
+**Von Gregor am 09.09.2026 an Paket 1.0.25 bestätigt:** der Klick auf eine
+Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü
+*Window*. Die Leiste war nicht abwesend, sondern **abgeschaltet** — Eudoras
+Code liegt vollständig in `workbook.cpp`, der Einschalter in `mainfrm.cpp`, die
+INI-Vorgabe `ShowMDITaskbar\n1` in `EudoraRes.rc`. Es fehlten vier Anschlüsse
+in der Ersatzschicht `OTShim` (**E-48**, umgesetzt in 7.2.0.25). Drei Mängel,
+die Gregor dabei gemeldet hat, sind als **E-50** in 7.2.0.26 behoben und
+**noch nicht** von ihm beurteilt.
 
 ### 4. Die Meldung „Encountered an improper argument"
 
-MFCs Text für `CInvalidArgException`, kommt also aus MFC, nicht aus Eudora. Zwei
-Quellen sind bekannt und behoben: `QCChildToolBar::GetButton` mit Index minus
-eins (**E-16**) und dieselbe Funktion mit einem Index innerhalb der gemeldeten
-Anzahl (**E-34**, abgefangen). **Offen bleibt die Ursache:** warum meldet
-`GetBtnCount()` 27, während `m_btns[24]` wirft? Das Abfangen behandelt das
-Symptom. Reproduzierbar über *Find Messages* mit einem Treffer.
+MFCs Text für `CInvalidArgException`, kommt also aus MFC, nicht aus Eudora.
+Zwei Quellen sind bekannt und behoben: `QCChildToolBar::GetButton` mit Index
+minus eins (**E-16**) und dieselbe Funktion mit einem Index innerhalb der
+gemeldeten Anzahl (**E-34**, abgefangen).
+
+**Die Ursache dahinter ist seit 7.2.0.24 gefunden und behoben: E-43.**
+`SECControlBar` war **zweimal definiert** — `OT501/Include/sbarcore.h`
+(Original) und `OTShim/OTShim.h` (Ersatz, mit einem Feld mehr) —, und deshalb
+lasen zwei Übersetzungseinheiten dasselbe Feld acht Byte auseinander. Genau
+das war die Antwort auf die Frage, warum `GetBtnCount()` und `m_btns.GetSize()`
+verschiedene Werte melden, obwohl das eine wörtlich das andere zurückgibt.
+Gemessen vorher `GetBtnCount=24/24 m_btns.GetSize=0/0`, nachher `24/24` gegen
+`24/24`.
+
+**Was bleibt:** die Meldung beim **Anzeigen** mancher Nachrichten ist damit
+**neu zu messen** — gut möglich, dass sie mit verschwunden ist. Reproduzierbar
+war sie über *Find Messages* mit einem Treffer. **Erst messen, dann suchen.**
+Sie ist der einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt*
+heißen.
 
 ### 5. Die Altlast, die niemand bauen kann
 

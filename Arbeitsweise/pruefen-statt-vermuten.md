@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-05T17:51:39.000Z
 ---
 
+Schranke: keine - ob ich vor einer Aussage die Quelle geöffnet habe, ist im Repo nicht sichtbar; stehen bleibt nur die Aussage, nicht ihr Weg
+
 Bevor ich eine Ursache benenne, die vorhandene Quelle oeffnen. Wenn ich trotzdem
 vermute, die Vermutung als solche kennzeichnen und dazusagen, worauf sie sich
 stuetzt.

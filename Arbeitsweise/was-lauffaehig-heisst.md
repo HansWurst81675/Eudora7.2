@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+Schranke: keine - die drei Kriterien werden am laufenden Programm beurteilt (Fenster kommt, lässt sich bedienen, Mail geht hinaus); das dritte braucht einen echten Server und einen Menschen, der hinsieht
+
 Gregor hat am 30.08.2026 festgelegt, was „lauffähig" bei Eudora 7.2 heißt,
 nachdem ich ein Paket so genannt hatte, das zwar startete, aber nicht bedienbar
 war:

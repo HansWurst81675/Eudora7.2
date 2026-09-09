@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:58:23.408Z
 ---
 
+Schranke: tools/testlauf.ps1 (vor jedem Programmstart — prüft vorher, ob Eudora.exe und EudoraRes.dll dieselbe Dateiversion tragen)
+
 # Der Test muss den Weg treffen, den er prueft
 
 Am 07.09.2026 zweimal in einer Stunde dasselbe: eine Messung lief, lieferte ein

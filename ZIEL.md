@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **08.09.2026**, gemessen an Fassung **7.2.0.23 / Paket 1.0.23**.
+Stand **09.09.2026**, gemessen an Fassung **7.2.0.27 / Paket 1.0.27**.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
@@ -28,19 +28,16 @@ kein Mailprogramm.
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28), die Leiste am unteren Rand liegt waagrecht statt senkrecht links (**E-44**, in 7.2.0.23). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
+| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen:** Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt |
-| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. Das Beenden ist mit Kriterium 7 erledigt. **Offen bleiben zwei Stellen derselben Klasse:** die Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten, und der Wurf in `SaveCustomInfo` beim Beenden (**E-43**) — er wird abgefangen, nicht behoben |
+| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. Das Beenden ist erledigt (Kriterium 7), und mit **E-43** sind auch **E-37** und **E-38** weggefallen. **Offen bleibt eine Stelle:** die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten |
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
-| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler selbst ist damit **nicht** verschwunden — er steht als Protokollzeile da (`E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst`) und ist als **E-43** weiter offen |
-| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Die Leiste am unteren Fensterrand ist seit **E-44** (7.2.0.23) sichtbar und waagrecht — sie zeigt aber *Task Status* und *Task Errors*, nicht die **Registerkartenleiste für die offenen Fenster**: die bildet die Ersatzschicht nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
-
-**Neun Kriterien: sechs sind belegt (0, 1, 3, 5, 6, 7), drei fast oder halb
-(2, 4, 8).**
-
-Was an **8** fehlt, ist die Reiterleiste für die offenen Fenster. Die Leiste am
-unteren Rand gibt es seit **E-44**, aber sie zeigt etwas anderes.
+| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler dahinter, **E-43**, ist in 7.2.0.24 an der Wurzel behoben und ebenfalls bestätigt: die Protokollzeile `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst` kommt nicht mehr |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund **E-48**, umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben (**E-50**) und noch nicht nachgesehen |
+**Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
+erfüllt (2, 4).** Beiden fehlt dasselbe: die Meldung „Encountered an improper
+argument" beim **Anzeigen** mancher Nachrichten.
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
@@ -187,10 +184,11 @@ MDI-Bereich. Verlangt ist eine **waagrechte** Anordnung am unteren Fensterrand.
 Die Reihenfolge, die Gregor selbst gesetzt hat, gilt: **erst** Kriterium 7 (das
 Beenden), dann das.
 
-Zusammenhang mit Kriterium 8: dort geht es um die **Reiterleiste** für die
-offenen Fenster (die WazooBar am unteren Rand). A-2 betrifft dieselbe Gegend
-des Fensters und dieselbe Ersatzschicht `OTShim` — wer eines angeht, sieht sich
-das andere gleich mit an.
+Zusammenhang mit Kriterium 8: dort geht es um die **Registerkartenleiste** für
+die offenen Fenster am unteren Rand. A-2 betrifft dieselbe Gegend des Fensters
+und dieselbe Ersatzschicht `OTShim` — und genau so ist es gekommen: die
+Registerkarten sind als **A-3** unmittelbar danach umgesetzt worden
+(siehe unten), in derselben Schicht.
 
 **Woran A-2 sich messen lässt.** Nach dem Start muss `tools/leisten-messen.ps1`
 für die Leiste mit der Kennung **320** melden: Andockseite **unten**,
@@ -200,11 +198,8 @@ Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
 `Eudora.ini` — das sind zwei verschiedene Programmwege, und nur der zweite ist
 der, den Gregor gesehen hat.
 
-**Umgesetzt in 7.2.0.23** (Befund **E-44**) und **von Gregor am 08.09.2026
-zweimal bestätigt** — an der Prüfinstanz *„jetzt ist sie unten, ja"*, danach am
-ausgelieferten Paket 1.0.23 *„leiste unten paßt."*. Gemessen mit
-`tools/leisten-messen.ps1`: Leiste **320**, Andockseite **unten**, sichtbar,
-**1712×80**.
+**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor am 08.09.2026 am
+ausgelieferten Paket bestätigt: *„leiste unten paßt."*
 Zwei Ursachen, beide gemessen, beide behoben:
 
 1. Beim frischen Profil lag die Leiste schon richtig (unten, 1712×80) und wurde
@@ -223,6 +218,145 @@ Fundstellen: `Eudora71/Eudora/WazooBarMgr.cpp` (`SetDefaultWazooBarState`,
 `[WazooBars]` in der `Eudora.ini` (Schlüssel `WazooBarIds`, `WazooBar%d`,
 `WazooMDI%d`, Namen in `EudoraRes.rc:10637-10640`), und die Andockseite in
 `Eudora71/OTShim/OTShim.cpp:293` (`SECMDIFrameWnd::DockControlBarEx`).
+
+### A-3 — Offene Fenster als Registerkarten direkt auswählen
+
+Gestellt am 09.09.2026, nachdem Gregor 1.0.24 geprüft hatte:
+
+> *„es ist nur übers menü zu sehen, welches fenster gerade offen ist, ich möchte
+> noch eine möglichkeit haben, ähnlich wie im web browser (tabs) die einzelnen
+> fenster direkt auszuwählen."*
+
+Das ist der noch fehlende Teil von **Kriterium 8**. Mit A-3 ist es ganz erfüllt.
+
+**Der Befund dazu ist E-48.** Und die Lage ist besser als gedacht: die Leiste
+ist nicht *nicht vorhanden*, sondern **abgeschaltet**. Nachgemessen am
+09.09.2026:
+
+| Stück | wo | Zustand |
+|---|---|---|
+| Ein-/Ausschalter | `mainfrm.cpp:1042` `ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))` | **da** |
+| INI-Schlüssel und Vorgabe | `EudoraRes.rc:7959` `ShowMDITaskbar\n1` | **da, Vorgabe „an"** |
+| Einstellungsseite | `settings.cpp:1060`, Ankreuzfeld *„Show MDI task bar"* (`EudoraRes.rc:2704`) | **da** |
+| Zeichnen | `QCWorkbook::OnDrawTab`, `OnDrawTabIconAndLabel`, `OnDrawBorder`, `GetTabPts` (`workbook.cpp:1254ff`) | **da** |
+| Geometrie | `QCGetTabRect`, `QCGetTaskBarRect`, `recalcTabWidth`, `CountVisibleTabs` | **da** |
+| Maus | `OnLButtonDown`, `TabHitTest`, `OnContextMenu`, `OnSetCursor` | **da** |
+| Kurzhinweise | `InitMDITaskBarTooltips`, `RecalcToolTipRects`, `OnNotify` | **da** |
+| Blattliste | `AddSheet`/`RemoveSheet` → `ResetTaskBar`; die Liste führt `SECWorkbook` (`OTShim.cpp:923/936`) | **da** |
+| **`SECWorkbook::SetWorkbookMode`** | `OTShim.cpp:1120` | **Attrappe** — meldet „nicht umgesetzt", setzt `m_bWorkbookMode` **nicht** und reserviert keinen Rand |
+| **Wer `OnDrawTab` ruft** | — | **fehlt** — der Streifen wird nie gezeichnet |
+
+Es fehlten also nur Anschlüsse in der Ersatzschicht, nicht die Funktion selbst.
+
+**Umgesetzt in 7.2.0.25**, am laufenden Programm gemessen und fotografiert
+(zwei offene Fenster, zwei beschriftete Karten: `In` und
+`No Recipient, No S…`, die aktive hervorgehoben). **Von Gregor am 09.09.2026
+bestätigt:** der Klick auf eine Karte holt das Fenster nach vorn, und die
+Beschriftungen stimmen mit dem Menü *Window*. Damit ist **Kriterium 8** ganz
+erfüllt. Drei Mängel, die er dabei an 1.0.25 gefunden hat, sind als **E-50** in
+7.2.0.26 behoben und noch nicht nachgesehen; ein **Nebenbefund ohne Nummer**
+bleibt offen — nach einem Neustart stehen die Fenster nicht im Vollbild,
+obwohl sie beim Beenden so waren. Der gehört nicht zu A-3, sondern zum
+Fensterzustand (`SaveOpenWindows`), und ist getrennt zu messen.
+
+Vier Ursachen lagen dazwischen, jede einzeln gemessen:
+
+| | war | ist |
+|---|---|---|
+| `SECWorkbook::SetWorkbookMode` | Attrappe, meldete „nicht umgesetzt" und setzte `m_bWorkbookMode` nicht | setzt den Betrieb und reserviert den Streifen |
+| `SECWorkbook::GetTabPts` | lieferte **sechs Nullpunkte** → jede Karte an Punkt (0,0) mit Größe null | echte Kartenform; gezählt werden nur **sichtbare** Blätter, wie in `CountVisibleTabs` |
+| `recalcTabWidth()` | **liefert** die Breite nur zurück, setzt `m_cxTab` nicht — der Rückgabewert war weggeworfen | `m_cxTab = recalcTabWidth()` |
+| Streifenlage | begann bei `rectClient.left` = 0 und lag damit **unter der linken Leiste** (Client-x 6…186); nur der Rand von Karte 1 war zu sehen | beginnt am **MDI-Bereich**. Bewusste Abweichung von `QCGetTaskBarRect` (`workbook.cpp:930`), das dort ebenfalls `rectClient.left` nimmt |
+| Beschriftung | `OnDrawTab` zeichnet nur den **Rahmen** | `OnDrawTabIconAndLabel` wird mitgerufen — sie ist virtuell und wurde von niemandem aufgerufen |
+
+**Woran A-3 sich messen lässt.** Bei laufendem Eudora mit mindestens zwei
+offenen Fenstern:
+
+1. Am unteren Fensterrand steht ein Streifen mit **einer Registerkarte je
+   offenem Fenster**, beschriftet wie im Menü *Window* (dort nachzuzählen).
+2. **Ein Klick** auf eine Karte holt das zugehörige Fenster nach vorn.
+3. Die aktive Karte ist von den übrigen unterscheidbar.
+4. Öffnet oder schließt man ein Fenster, ändert sich der Streifen sofort.
+5. Das Ankreuzfeld *„Show MDI task bar"* in den Einstellungen schaltet ihn
+   aus und wieder ein, und der Zustand überlebt einen Neustart.
+6. `tools/leisten-messen.ps1` muss den Streifen als Messwert ausgeben können —
+   ein Bildschirmfoto ist kein Beleg.
+
+**Nicht verlangt:** Karten verschieben, schließen per Mittelklick oder ein
+Kontextmenü über das hinaus, was `OnContextMenu` schon mitbringt.
+
+### A-4 — Das linke Fenster breiter ziehen können
+
+Gestellt am 09.09.2026, unmittelbar nach A-3:
+
+> *„ich noch das fenster links (mailverzeichnis, persona, …) möchte vergrößern
+> können. also den trennbalken nach rechts, damit ich mehr sehe."*
+
+Gemeint ist die Wazoo-Leiste **318** (Postfächer, Dateien, Signaturen,
+Briefpapier, Persönlichkeiten). Sie ist heute auf **180 Pixel** festgenagelt —
+gesetzt in `WazooBarMgr.cpp`, `SetDefaultWazooBarState` Fall 0
+(`DockControlBarEx(pWazooBar, AFX_IDW_DOCKBAR_LEFT, 0, 0, 1.00, 180)`) — und
+lässt sich mit der Maus nicht verändern.
+
+**Der Befund dazu ist E-49.** Wie bei A-3 ist die Mechanik vorhanden und nur
+nicht angeschlossen. Nachgemessen am 09.09.2026:
+
+| Stück | wo | Zustand |
+|---|---|---|
+| Klasse `SECDockBar::Splitter` mit Lage, Art, Ausrichtung, Grenzen | `OTShim.h:724ff` | **da** |
+| `AddSplitter` | `OTShim.cpp:3038`, 17 Anweisungen | **umgesetzt** |
+| `HitTest` (findet den Balken unter dem Zeiger) | `OTShim.cpp:3159`, 7 Anweisungen | **umgesetzt** |
+| `StartTracking` (Ziehen beginnen) | `OTShim.cpp:3199`, 7 Anweisungen | **umgesetzt** |
+| `CalcTrackingLimits` (wie weit man ziehen darf) | `OTShim.cpp:3178`, 11 Anweisungen | **umgesetzt** |
+| `Splitter::DrawTrackerRect` (der Ziehbalken) | `OTShim.cpp:3255`, 14 Anweisungen | **umgesetzt** |
+| `DeleteAllSplitters` | `OTShim.cpp:3066` | **umgesetzt** |
+| Eudoras eigene Überschreibung `QCDockBar::CalcTrackingLimits` | `DockBar.cpp:149` | **da** — sorgt dafür, dass die Reklameleiste nicht überfahren wird |
+| Eudoras `QCDockBar::NormalizeRow` | `DockBar.cpp:223` | **da** |
+| **Der Aufruf von `AddSplitter`** | — | **fehlt** — `m_arrSplitters` bleibt leer, `HitTest` liefert immer NULL, und damit kommt es nie zum Ziehen |
+
+Der Kommentar im Kopf sagt es selbst (`OTShim.h:702`): *„STUFE 2 OFFEN: die
+Splitter selbst. AddSplitter wird nie aufgerufen …"*
+
+**Woran A-4 sich messen lässt.** Bei laufendem Eudora:
+
+1. Fährt man mit der Maus auf die Kante zwischen linkem Bereich und
+   Nachrichtenliste, wird der Zeiger zum **Größenzeiger**.
+2. Ziehen nach rechts **verbreitert** den linken Bereich, ziehen nach links
+   verschmälert ihn; der Nachrichtenbereich gibt entsprechend nach.
+3. Die Breite lässt sich über **180 Pixel hinaus** vergrößern — das ist
+   Gregors eigentliche Bitte.
+4. Die eingestellte Breite **überlebt einen Neustart** (sie landet im
+   `[ToolBar…]`-Abschnitt der `Eudora.ini`, der seit **E-43** überhaupt
+   erst geschrieben wird).
+5. `tools/leisten-messen.ps1` gibt die geänderte Breite als Zahl aus — vorher
+   180, hinterher der neue Wert.
+
+**Zusammenhang mit A-3:** beides sitzt in derselben Ersatzschicht und
+derselben Fensterebene, und beides ist „Mechanik da, Anschluss fehlt".
+Deshalb zusammen umzusetzen, nicht nacheinander.
+
+**Umgesetzt in 7.2.0.26, in 7.2.0.27 nachgebessert (E-52), von Gregor noch
+nicht bestätigt.** Bestätigt ist nur der **Gegenfall**: am 09.09.2026
+*„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*, also die
+Höhenänderung des unteren Bereichs samt Auffrischen. Das seitliche Ziehen hat
+er noch nicht beurteilt. Drei Anläufe, zwei davon am laufenden Programm
+widerlegt:
+
+| Anlauf | Messung | Urteil |
+|---|---|---|
+| über `SetBorders` | Andockleiste Client **176**, Leiste 318 **180** | verworfen — der Rand verkleinert den Innenbereich und vergrößert die Andockleiste **nicht** |
+| Zuschlag in `CalcFixedLayout`, Bedingung über `m_arrBars` | Andockleiste blieb **180** | verworfen — keine Wirkung |
+| Messversuch: Zuschlag **11**, bedingungslos | **187**, freier Streifen **7** | belegt: der Weg stimmt, MFC verbraucht **4 Pixel** des Zuschlags selbst |
+| Bedingung am Ergebnis, Balken nach nachgemessenem Platz | **188**, freier Streifen **8** | steht |
+
+**Was ich nicht selbst prüfen kann:** das Ziehen. `Splitter::Track` bricht ab,
+sobald die **physische** Maustaste los ist — das muss so sein, weil der erste
+Entwurf mit `while(::GetMessage(...))` die Prüfinstanz **zweimal eingefroren**
+hat, wenn kein `WM_LBUTTONUP` kam. Ein künstlicher Zug über Fensterbotschaften
+ist damit nicht mehr möglich. Nachweisbar ist nur die Voraussetzung: 8 Pixel
+freier Streifen, an dem der Balken sitzt.
+
+## Woran sich Kriterium 2 misst
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert
 (Eudora 7 unter Windows XP). Maßgeblich sind daraus:

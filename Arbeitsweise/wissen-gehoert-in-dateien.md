@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:57:27.061Z
 ---
 
+Schranke: tools/lehren-spiegeln.pl (pre-commit)
+
 Jeder Agent, der etwas herausfindet, schreibt sein Ergebnis in eine **Datei im Repo**
 und committet sie. Ein Bericht, der nur im Chat steht, ist verloren, sobald der
 Prozess endet oder mein Kontext zusammengefasst wird.

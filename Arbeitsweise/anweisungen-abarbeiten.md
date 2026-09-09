@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:56:30.619Z
 ---
 
+Schranke: keine - ob ich Gregors Nachricht ausgewertet habe, steht nur im Chatverlauf; im Repo ist eine abgearbeitete Anweisung von einer überlesenen nicht zu unterscheiden
+
 Jede Nachricht von Gregor ist ein Auftrag, kein Gesprächsbeitrag. Vier Punkte, an
 denen ich in diesem Projekt wiederholt danebenlag:
 

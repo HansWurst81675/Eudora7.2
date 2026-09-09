@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:54:39.291Z
 ---
 
+Schranke: keine - ob zwei widersprüchliche Werte in derselben Ausgabe stehen, entscheidet der Entwurf der Messung; im Repo bleibt nur das Ergebnis, nicht seine Form
+
 # Wer zwei Werte vergleichen will, schreibt sie in eine Ausgabe
 
 Der Widerspruch aus E-34 stand vom 06.09. bis zum 08.09.2026 offen:

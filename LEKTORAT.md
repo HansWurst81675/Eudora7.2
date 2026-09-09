@@ -11,13 +11,20 @@ die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
 [Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md) (L-8, alle 47 MD-Dateien),
 [Befunde/LEKTOR-5.md](Befunde/LEKTOR-5.md) (L-9, 41 Befunde am 08.09.2026) und
-[Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md) (L-10, das Einarbeiten von L-9).
+[Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md) — dort stehen **L-10** (das
+Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
+09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
 [Befunde/PRUEFER-4.md](Befunde/PRUEFER-4.md) (P-4, E-37 und die
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
+
+> **Stand dieser Datei: 09.09.2026.** Der jüngste Durchgang ist **L-11**; er
+> steht nicht hier, sondern in
+> [Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md). Gemessen an Quellstand
+> **7.2.0.27** / Paket **1.0.27**.
 
 ## Erster Durchgang — 30.08.2026
 

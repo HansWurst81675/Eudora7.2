@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:57:52.682Z
 ---
 
+Schranke: tools/arbeitsbaum-frei.pl (vor jedem Agentenstart — die Buchung verlangt einen Namen)
+
 Jeder Agent bekommt einen kurzen, sprechenden deutschen Namen in Grossbuchstaben,
 der sagt, woran er arbeitet - nicht die technische Auftrags-ID.
 

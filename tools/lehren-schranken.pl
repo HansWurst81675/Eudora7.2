@@ -62,8 +62,21 @@ sub lies {
 
 # --- Die Lehren einsammeln --------------------------------------------------
 
+# Drei Dateien in Arbeitsweise/ sind KEINE Lehre und brauchen deshalb auch
+# keine Schranke-Zeile. Sie am 09.09.2026 einzeln zu melden hat den pre-commit
+# fuer JEDEN Commit im Repo blockiert - das Werkzeug hing seit 12:13 im Hook
+# und wies ab, ohne dass es einen behebbaren Mangel gab (Befund L-11.3):
+#
+#   MEMORY.md               das Verzeichnis des Gedaechtnisses
+#   README.md               das Verzeichnis DIESES Ordners (nur im Repo,
+#                           nicht im Gedaechtnisverzeichnis)
+#   LEHREN-AUS-DEM-CHAT.md  eine SAMMLUNG von Zitaten aus dem Chat, aus der
+#                           die einzelnen Lehren erst hervorgegangen sind
+#
+# Die Ausnahme ist eng: sie nennt drei Dateinamen. Jede echte Lehre ohne
+# Schranke-Zeile wird weiter gemeldet - gegengetestet am 09.09.2026.
 my @lehren = sort glob("$wurzel/Arbeitsweise/*.md");
-@lehren = grep { $_ !~ m{/MEMORY\.md$} } @lehren;
+@lehren = grep { $_ !~ m{/(?:MEMORY|README|LEHREN-AUS-DEM-CHAT)\.md$} } @lehren;
 
 if (!@lehren) {
     print "\n  lehren-schranken.pl: keine Lehren in Arbeitsweise/ gefunden.\n";

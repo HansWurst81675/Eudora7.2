@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T12:46:23.800Z
 ---
 
+Schranke: keine - kein Werkzeug durchsucht den betroffenen Weg nach ASSERT(0) und VERIFY(; welcher Weg gerade schweigt, weiß nur die Beobachtung, nicht das Repo
+
 # „Es passiert nichts" — dann zuerst nach `ASSERT` suchen
 
 Das ist inzwischen die **haeufigste Ursachenklasse dieser Portierung**. Stand

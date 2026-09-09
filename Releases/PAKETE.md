@@ -3,31 +3,37 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 08.09.2026.** Ausführliche
-> Abschnitte gibt es unten für **1.0.23**, **1.0.22**, **1.0.21**, **1.0.18**,
-> **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis 1.0.17** sowie
-> **1.0.19** und **1.0.20** haben hier keinen eigenen Eintrag, obwohl sie
-> gebaut und teilweise veröffentlicht wurden. Der Mangel ist als **M-4** in
+> **Diese Buchführung ist unvollständig — Stand 09.09.2026.** Ausführliche
+> Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
+> **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
+> 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
+> haben hier keinen eigenen Eintrag, obwohl sie gebaut und teilweise
+> veröffentlicht wurden. Der Mangel ist als **M-4** in
 > [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
 >
-> **Versioniert im Repo** sind drei ZIPs (`git ls-files Releases/`, gemessen am
-> 08.09.2026): **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`, Baugrundlage für
-> `tools/paket-bauen.ps1` — **nicht löschen**), **1.0.21** und **1.0.22**.
-> Alle übrigen ZIPs sind am 07.09.2026 entfernt worden, um das Repo von 104 MB
-> auf 16 MB zu bringen; jedes von ihnen ist unten mit Prüfsumme und Netzadresse
-> verzeichnet und über seine Marke weiter abrufbar.
+> **Versioniert im Repo sind nur noch zwei ZIPs** (`git ls-files Releases/`,
+> gemessen am 09.09.2026): **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`,
+> Baugrundlage für `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.27**
+> (`Eudora72-1.0.27-release.zip`, die veröffentlichte Fassung). Die ZIPs zu
+> **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt worden; ihre
+> `.sha256`-Dateien für 1.0.21 und 1.0.22 liegen weiter im Repo, das ZIP
+> daneben nicht. **Kein Verweis in dieser Datei darf auf eine dieser Dateien
+> zeigen, als läge sie im Arbeitsbaum.**
 >
-> **Das ZIP zu 1.0.23 liegt im Arbeitsbaum, ist aber noch nicht committet** —
-> `git status` führt `Releases/Eudora72-1.0.23-release.zip` als unverfolgt, und
-> die begleitende `.sha256`-Datei fehlt bisher (beides gemessen am 08.09.2026,
-> 11 Uhr). Die Prüfsumme steht unten im Abschnitt 1.0.23; wer das Paket
-> committet, legt die `.sha256` gleich mit dazu.
+> **Zu 1.0.27 fehlt die `.sha256`-Datei** — `git ls-files Releases/` führt
+> `Eudora72-1.0.27-release.zip` ohne Begleitdatei (gemessen am 09.09.2026).
+> Die Prüfsumme steht unten im Abschnitt 1.0.27; wer die Datei anlegt,
+> übernimmt sie von dort und rechnet sie nach.
 >
 > **Als Marke veröffentlicht** sind `v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.10`,
-> `v1.0.14`, `v1.0.15`, `v1.0.18` und `v1.0.21`
-> (`git ls-remote --tags origin`, gemessen am 08.09.2026). **`v1.0.22` und
-> `v1.0.23` gibt es nicht** — beide Pakete sind gebaut, aber nicht als
-> Veröffentlichung gesetzt.
+> `v1.0.14`, `v1.0.15`, `v1.0.18`, `v1.0.21`, `v1.0.23`, `v1.0.24` und
+> `v1.0.27` (`git ls-remote --tags origin`, gemessen am 09.09.2026).
+> **`v1.0.22`, `v1.0.25` und `v1.0.26` gibt es nicht.** Und: die
+> **Veröffentlichungen** (Releases mit Dateien) zu `v1.0.18`, `v1.0.21`,
+> `v1.0.23` und `v1.0.24` hat Gregor am 09.09.2026 **gelöscht** — die
+> **Marken** bestehen weiter, die ZIPs hängen aber nicht mehr daran. Wer einem
+> Verweis auf eine dieser Marken folgt, findet den Quellstand, **nicht** das
+> Paket. Abrufbar ist als Paket nur noch **v1.0.27**.
 >
 > Wer wissen will, was in einem der nicht verzeichneten Pakete steckt, liest
 > `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei.
@@ -145,7 +151,57 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.23 — gebaut am 08.09.2026, nicht als Marke veröffentlicht
+## 1.0.27 — veröffentlicht am 09.09.2026
+
+**Die einzige Fassung, die heute noch als Paket abrufbar ist.** Sie bringt
+gegenüber 1.0.26 zwei Nachbesserungen am Trennbalken links (**E-52**): der
+Balken bleibt nach dem Verbreitern greifbar, und die Registerkarten stehen
+danach nicht doppelt. **Von Gregor noch nicht beurteilt** — bestätigt ist nur
+der Gegenfall, die Höhe: *„verschieben rauf / runter — bug gefixt, die anzeige
+ist korrekt."*
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.27-release.zip` (**im Repo versioniert**) |
+| **SHA256** | `69595d4b380204eb5ac6d327ce8ded65080b356594090a2465394ced07f81b3a` |
+| **Größe** | 9 342 224 Byte |
+| **Quellstand** | 7.2.0.27 — alle drei Makros in `Eudora71/Version.h` stimmen überein (`EUDORA_VERSION4 27`, `EUDORA_BUILD_NUMBER 7,2,0,27`, `EUDORA_BUILD_VERSION "7.2.0.27"`) |
+| **Marke** | [v1.0.27](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.27) — **die einzige Veröffentlichung, an der noch Dateien hängen** |
+| **`Eudora.exe` im ZIP** | 2 960 896 Byte, 09.09.2026 11:02 (`unzip -l`) |
+| **`EudoraRes.dll` im ZIP** | 2 447 360 Byte, 09.09.2026 11:02 |
+| **`QCSSL.dll`** | 1.0.1 — dieselbe Datei wie seit 1.0.1 (2 920 960 Byte, 30.08.2026 17:57) |
+| **`DEudora.ini`** | 6 960 Byte, 07.09.2026 15:15 — die Vorgaben für ein neu angelegtes Konto (**A-1**) |
+| **`.sha256` daneben** | **fehlt** (siehe Kopfkasten) |
+
+Alle Zahlen am 09.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
+
+> **Paket gegen den Bau gemessen.** `Eudora.exe` im ZIP ist 2 960 896 Byte
+> groß; `Eudora71/Bin/Release/Eudora.exe` im Hauptbaum hat **dieselbe Größe**,
+> trägt aber den Zeitstempel 09.09.2026 11:35 gegen 11:02 im ZIP. Größe und
+> Quellstand stimmen also, der Bau im Arbeitsbaum ist nach dem Packen noch
+> einmal gelaufen. Das Bauverzeichnis dieses Arbeitsbaums
+> (`Eudora7.2-wt-lektor`) enthält **keine** `Eudora.exe` — hier wird nicht
+> gebaut.
+
+| Befund | was | Stand |
+|---|---|---|
+| **E-52** | nach dem Verbreitern war der Trennbalken nicht mehr greifbar, und die Registerkarten standen doppelt — MFC verschiebt die Leisten mit `DeferWindowPos`, in `OnSizeParent` ist die neue Größe noch nicht gesetzt. Der Balken entsteht jetzt in `OnSize`, und `OnSplitterMoved` frischt mit `RDW_INVALIDATE \| RDW_ERASE \| RDW_ALLCHILDREN` auf | **behoben, nicht bestätigt** |
+| **E-49** | der linke Bereich lässt sich breiter ziehen (Anforderung **A-4**) — aus 1.0.26 übernommen, Endstand 188 Pixel Andockleiste bei 180 Pixel Leiste, 8 Pixel freier Streifen | **behoben, nicht bestätigt** |
+| **E-50** | drei Mängel an der Registerkartenleiste — aus 1.0.26 übernommen | **behoben, nicht bestätigt** |
+| **E-51** | die eigene Ziehschleife konnte Eudora einfrieren; jetzt höchstens 100 ms Wartezeit, danach Fenster, Mausfang und **physische** Maustaste erneut geprüft | **behoben, bevor es ausgeliefert wurde** |
+| **E-48** | die Registerkartenleiste für die offenen Fenster (Anforderung **A-3**) — aus 1.0.25 übernommen | **behoben, von Gregor am 09.09.2026 bestätigt** |
+| **E-43** | `SECControlBar` war zweimal definiert — aus 1.0.24 übernommen; mit ihm fielen **E-37** und **E-38** weg | **behoben, von Gregor am 08.09.2026 bestätigt** |
+
+**Was in dieser Fassung nicht geht:** nach einem Neustart stehen die Fenster
+nicht im Vollbild, obwohl sie beim Beenden so waren (Nebenbefund **ohne
+Kennung**, von Gregor an 1.0.25 gemeldet); beim Öffnen der
+Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog **E-47**
+(`MFC71.DLL` und `MSVCP71.dll` fehlen, keine Behebung in Sicht); die Meldung
+„Encountered an improper argument" beim **Anzeigen** mancher Nachrichten ist
+**seit E-43 neu zu messen**; und **E-39** ist offen. Die Prüfanleitung steht
+im [CHANGELOG.md](../CHANGELOG.md) unter *Was an 1.0.27 zu prüfen ist*.
+
+## 1.0.23 — gebaut am 08.09.2026, Marke v1.0.23 gesetzt, Paket nicht mehr abrufbar
 
 **Die Fassung, mit der Anforderung A-2 erfüllt ist:** *Task Status* und *Task
 Errors* liegen waagrecht am unteren Fensterrand. Von Gregor am 08.09.2026
@@ -153,17 +209,19 @@ bestätigt: *„jetzt ist sie unten, ja"*.
 
 | | |
 |---|---|
-| **Paket** | `Releases/Eudora72-1.0.23-release.zip` |
+| **Paket** | `Eudora72-1.0.23-release.zip` — **nicht mehr im Repo und nicht mehr abrufbar**; die Veröffentlichung zu `v1.0.23` ist am 09.09.2026 gelöscht worden, die Marke besteht |
 | **SHA256** | `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045` |
 | **Größe** | 9 340 228 Byte |
 | **Quellstand** | 7.2.0.23 (`Eudora71/Version.h`) |
-| **Marke** | **keine** — nicht veröffentlicht |
-| **Eudora.exe im ZIP** | 2 957 312 Byte, 08.09.2026 10:51 (`unzip -l`) |
+| **Marke** | `v1.0.23` — gesetzt, aber ohne Dateien daran |
+| **Eudora.exe im ZIP** | 2 957 312 Byte, 08.09.2026 10:51 (`unzip -l`, gemessen am 08.09.2026, solange das ZIP noch da war) |
 | **QCSSL** | 1.0.1 — dieselbe Datei wie in 1.0.21 und 1.0.22 (2 920 960 Byte, 30.08.2026 17:57) |
 
 Alle Zahlen am 08.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
-**Im Repo ist dieses ZIP noch nicht committet**, und die `.sha256`-Datei daneben
-fehlt — beides steht im Kopfkasten oben.
+**Das ZIP liegt heute nicht mehr im Repo** — es ist am 09.09.2026 durch das zu
+1.0.27 ersetzt worden (`git status`: Umbenennung
+`Eudora72-1.0.23-release.zip` → `Eudora72-1.0.27-release.zip`). Die Prüfsumme
+oben ist alles, was von dieser Fassung bleibt.
 
 | Befund | was | Stand |
 |---|---|---|
@@ -191,7 +249,7 @@ message on server' greifen."*
 
 | | |
 |---|---|
-| **Paket** | `Releases/Eudora72-1.0.22-release.zip` |
+| **Paket** | `Eudora72-1.0.22-release.zip` — **nicht mehr im Repo**; nur die `.sha256`-Datei liegt noch in `Releases/`. Es gibt keine Marke `v1.0.22` und keine Veröffentlichung |
 | **SHA256** | `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c` |
 | **Größe** | 9 339 516 Byte |
 | **Quellstand** | 7.2.0.22 (`Eudora71/Version.h`) |
@@ -224,11 +282,11 @@ die Kriterien 5 und 6 aus [ZIEL.md](../ZIEL.md) belegt.
 
 | | |
 |---|---|
-| **Paket** | `Releases/Eudora72-1.0.21-release.zip` |
+| **Paket** | `Eudora72-1.0.21-release.zip` — **nicht mehr im Repo**; nur die `.sha256`-Datei liegt noch in `Releases/` |
 | **SHA256** | `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` |
 | **Größe** | 9 331 078 Byte |
 | **Quellstand** | 7.2.0.21 (`Eudora71/Version.h`) |
-| **Marke** | [v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
+| **Marke** | `v1.0.21` — die Marke besteht, die **Veröffentlichung** ist am 09.09.2026 gelöscht; das ZIP hängt nicht mehr daran |
 | **Eudora.exe gebaut** | 07.09.2026, 09:48 |
 | **QCSSL** | 1.0.1 (unverändert seit 1.0.1) |
 
@@ -260,7 +318,7 @@ verbesserung!"* Der Grund ist **E-32**, behoben erst am 07.09.2026 und damit
 
 | | |
 |---|---|
-| Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18 |
+| Veröffentlichung | **am 09.09.2026 gelöscht.** Die Marke `v1.0.18` besteht weiter, das ZIP hängt nicht mehr daran |
 | Marke | `v1.0.18` auf Commit `e881164` (`git ls-remote --tags origin`) |
 | ZIP | `Eudora72-1.0.18-release.zip`, 9.330.115 B |
 | SHA256 | `809e005f31eb72dbe349175b97b6838e7341c25c872fc4625f682657200b7e72` |
@@ -296,7 +354,7 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 | | |
 |---|---|
 | Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
-| ZIP | `Eudora72-1.0.3-release.zip`, 9.209.393 B; darin `Eudora.exe` **2.933.760 B**, `Release\|Win32`. Nachgezählt am 07.09.2026 mit `unzip -l Releases/Eudora72-1.0.3-release.zip` — hier stand bis dahin 2 933 248 B, das sind 512 Byte zu wenig |
+| ZIP | `Eudora72-1.0.3-release.zip`, 9.209.393 B; darin `Eudora.exe` **2.933.760 B**, `Release\|Win32`. Nachgezählt am 07.09.2026 mit `unzip -l Releases/Eudora72-1.0.3-release.zip` — hier stand bis dahin 2 933 248 B, das sind 512 Byte zu wenig. **Das ZIP liegt heute nicht mehr im Arbeitsbaum**, der Befehl ist die Messung von damals |
 | SHA256 (gültig) | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
 | SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
 | Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
@@ -454,31 +512,50 @@ certutil -hashfile Eudora72-1.0.2-lauffaehig.zip SHA256
 
 Die Prüfsumme in der Tabelle oben sagt eindeutig, welche Fassung vorliegt.
 
-## Wo die Pakete liegen (Stand 08.09.2026)
+## Wo die Pakete liegen (Stand 09.09.2026)
 
 Die ZIPs sind am 07.09.2026 aus `Releases/` **entfernt** worden — sie lagen
 dort 104 MB und waren doppelt: veroeffentlicht bei GitHub und im git-Verlauf.
 Diese Tabelle nennt jede Fassung mit Pruefsumme, damit niemand sie im
 Arbeitsbaum sucht.
 
-**Was seither wieder im Repo liegt** (`git ls-files Releases/`, gemessen am
-08.09.2026): `Eudora72-1.0.2-lauffaehig.zip`, `Eudora72-1.0.21-release.zip` und
-`Eudora72-1.0.22-release.zip`, jedes mit `.sha256` daneben. Das ZIP zu 1.0.23
-ist gebaut, aber noch nicht committet.
+**Im Repo liegen heute genau zwei ZIPs** (`git ls-files Releases/`, gemessen am
+09.09.2026): `Eudora72-1.0.2-lauffaehig.zip` (Baugrundlage, mit `.sha256`) und
+`Eudora72-1.0.27-release.zip` (die veröffentlichte Fassung, **ohne** `.sha256`).
+Die ZIPs zu **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt; von
+1.0.21 und 1.0.22 liegt nur noch die `.sha256`-Datei da, ohne ZIP daneben.
+
+> **Abrufbar ist als Paket nur noch `v1.0.27`.** Gregor hat am 09.09.2026 die
+> **Veröffentlichungen** zu `v1.0.18`, `v1.0.21`, `v1.0.23` und `v1.0.24`
+> gelöscht. Die **Marken** bestehen weiter — wer einem Verweis darauf folgt,
+> findet den Quellstand, aber **kein ZIP**. Die Prüfsummen unten bleiben
+> trotzdem stehen: sie sagen eindeutig, welche Fassung jemand in der Hand hat,
+> der eines dieser Pakete früher heruntergeladen hat.
 
 | Fassung | SHA256 | wo |
 |---|---|---|
-| `Eudora72-1.0.1-lauffaehig.zip` | `d277cb0b2f3e02e4…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
-| `Eudora72-1.0.10-release.zip` | `68c8af8836e30343…` | [GitHub v1.0.10](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.10) |
-| `Eudora72-1.0.14-release.zip` | `23cb17e45f85a7a7…` | [GitHub v1.0.14](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.14) |
-| `Eudora72-1.0.15-release.zip` | `2a0c49b09f25c1d2…` | [GitHub v1.0.15](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.15) |
-| `Eudora72-1.0.18-release.zip` | `809e005f31eb72db…` | [GitHub v1.0.18](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.18) |
+| `Eudora72-1.0.27-release.zip` | `69595d4b380204eb5ac6d327ce8ded65080b356594090a2465394ced07f81b3a` | **im Repo** und [GitHub v1.0.27](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.27) — die einzige Veröffentlichung mit Dateien |
+| `Eudora72-1.0.24-release.zip` | siehe [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.24 | Marke `v1.0.24` gesetzt, **Veröffentlichung am 09.09.2026 gelöscht**; nur im git-Verlauf |
+| `Eudora72-1.0.23-release.zip` | `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045` | Marke `v1.0.23` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf |
+| `Eudora72-1.0.22-release.zip` | `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c` | **keine Marke**, nie veröffentlicht; nur im git-Verlauf, `.sha256` in `Releases/` |
+| `Eudora72-1.0.21-release.zip` | `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` | Marke `v1.0.21` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf, `.sha256` in `Releases/` |
+| `Eudora72-1.0.18-release.zip` | `809e005f31eb72db…` | Marke `v1.0.18` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf |
 | `Eudora72-1.0.19-release.zip` | `27976d451c88a9ed…` | nur im git-Verlauf |
-| `Eudora72-1.0.2-lauffaehig.zip` | `5236be5015c0dd01…` | [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) — **bleibt im Repo**, `paket-bauen.ps1` braucht es als Grundlage |
-| `Eudora72-1.0.2-symbole.zip` | `2d98967911b1afd2…` | [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) |
-| `Eudora72-1.0.3-release.zip` | `d471904776d5c93a…` | [GitHub v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3) |
+| `Eudora72-1.0.15-release.zip` | `2a0c49b09f25c1d2…` | [GitHub v1.0.15](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.15) |
+| `Eudora72-1.0.14-release.zip` | `23cb17e45f85a7a7…` | [GitHub v1.0.14](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.14) |
+| `Eudora72-1.0.10-release.zip` | `68c8af8836e30343…` | [GitHub v1.0.10](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.10) |
 | `Eudora72-1.0.4-release.zip` | `a3eb72e5f0beccb4…` | nur im git-Verlauf |
+| `Eudora72-1.0.3-release.zip` | `d471904776d5c93a…` | [GitHub v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3) |
+| `Eudora72-1.0.2-lauffaehig.zip` | `5236be5015c0dd01…` | **im Repo** und [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) — **bleibt im Repo**, `paket-bauen.ps1` braucht es als Grundlage |
+| `Eudora72-1.0.2-symbole.zip` | `2d98967911b1afd2…` | [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) |
+| `Eudora72-1.0.1-lauffaehig.zip` | `d277cb0b2f3e02e4…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
 | `Eudora72-QCSSL-1.0.1.zip` | `9339fb2edecfbf8b…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
+
+> **Zu 1.0.25 und 1.0.26 ist hier keine Prüfsumme verzeichnet.** Beide Pakete
+> hat Gregor geprüft (A-3 an 1.0.25, die Meldung zu E-52 an 1.0.26), aber keine
+> Marke dafür gesetzt und kein ZIP im Repo hinterlassen. Was drinsteckte, steht
+> im [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.25 und 7.2.0.26. Das ist Teil
+> des Mangels **M-4** aus dem Kopfkasten.
 
 Ebenfalls entfernt: `Releases/1.0.2/` und die drei Fremd-DLLs
 `msvcr71.dll`, `msvcr71d.dll`, `msvcp71d.dll` — null Verweise im ganzen Repo.

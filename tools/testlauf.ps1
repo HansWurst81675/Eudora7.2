@@ -274,6 +274,15 @@ Write-Host ('  Beendet: ' + $proz.HasExited)
 
 # --- 6. Protokoll -----------------------------------------------------------
 
+# Zeilenenden und BOM, gemessen am 09.09.2026 (LEKTOR, Befund L-11.2):
+# Set-Content/Add-Content schreiben unter Windows PowerShell 5.1 CRLF, und
+# -Encoding utf8 setzt eine BOM davor. tools/TESTLAEUFE.md war dadurch die
+# EINZIGE MD-Datei im Repo mit CRLF - 17 Zeilen, alle CRLF, plus BOM. Genau
+# dieselbe Fehlerklasse war am 08.09.2026 als L-9.15 an
+# Pruefung/PRUEFUNG-ZEIGER.md schon einmal von Hand berichtigt worden; von
+# Hand nachbessern hilft hier nichts, weil dieses Werkzeug die Datei bei jedem
+# Lauf weiterschreibt. Deshalb schreibt es jetzt ueber .NET: LF, kein BOM.
+$ohneBom = New-Object System.Text.UTF8Encoding($false)
 $wurzel = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
 $buch = Join-Path (Join-Path $wurzel 'tools') 'TESTLAEUFE.md'
 if (-not (Test-Path -LiteralPath $buch)) {
@@ -283,13 +292,17 @@ if (-not (Test-Path -LiteralPath $buch)) {
         'Jede Zeile ist ein Start von Eudora durch mich, mit der Freigabe, auf die er',
         'sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum.',
         '',
+        'Diese Datei ist ein Protokoll vergangener Laeufe. Sie nennt absichtlich alte',
+        'Fassungsnummern und wird von `tools/doku-pruefen.pl` deshalb als Zeitdokument',
+        'behandelt.',
+        '',
         '| Zeit | Verzeichnis | Freigabe | Ergebnis |',
         '|---|---|---|---|'
-    )
-    Set-Content -LiteralPath $buch -Value $kopf -Encoding utf8
+    ) -join "`n"
+    [System.IO.File]::WriteAllText($buch, $kopf + "`n", $ohneBom)
 }
 $zeile = '| ' + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + ' | `' + $voll + '` | ' +
          ($Freigabe -replace '\|', '/') + ' | ' + ($ergebnis -replace '\|', '/') + ' |'
-Add-Content -LiteralPath $buch -Value $zeile -Encoding utf8
+[System.IO.File]::AppendAllText($buch, $zeile + "`n", $ohneBom)
 Write-Host ('  Protokolliert in ' + $buch)
 Write-Host ''

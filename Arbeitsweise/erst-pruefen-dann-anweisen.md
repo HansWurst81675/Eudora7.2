@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-31T05:44:00.043Z
 ---
 
+Schranke: keine - ob ich eine Anleitung vor der Weitergabe selbst gefahren habe, steht nur im Chat; im Repo sieht eine ungeprüfte Anleitung genauso aus wie eine geprüfte
+
 Wenn ich Gregor sage „schau unter *Hilfe → Über*" oder „starte es aus diesem
 Verzeichnis", muss ich vorher **geprüft haben, dass dieser Weg funktioniert**.
 

@@ -1,17 +1,17 @@
 # Hier weitermachen
 
-**Stand 08.09.2026, nachmittags.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 09.09.2026, abends.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.24 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.24 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.24** - `Releases/Eudora72-1.0.24-release.zip`, SHA256 `3e518707a7697567ee3d34fbf6e062f8fdcbf49de8d2140a01c809af19e4ae53`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.23](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.23) |
-| **Zuletzt von Gregor gestartet** | Paket **1.0.23** am 08.09.2026 — dabei gemeldet: *„konto löschen geht immer noch nicht"* (E-37) und der Verzeichnisdienst-Dialog (**E-47**). 1.0.24 liegt bei ihm, ist aber noch nicht gemessen |
-| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.23 (**A-2**/E-44: *Task Status* und *Task Errors* waagrecht unten — *„leiste unten paßt."*). Davor 7.2.0.22 (**Kriterium 7**: *„schließen klappt jetzt."*, und **A-1**) |
-| **Was als Nächstes zu messen ist** | **E-37** an 1.0.24: löscht sich ein Konto jetzt sichtbar, ohne Meldung? Die Vorhersage ist ja — E-37 hing an **E-43**, und das ist behoben. Damit fällt auch **E-38** weg, das Gregor selbst aufgeklärt hat |
+| **Quellstand** | 7.2.0.27 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.27 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.27** — `Releases/Eudora72-1.0.27-release.zip` |
+| **Zuletzt von Gregor bestätigt** | **A-3 an 1.0.25** (09.09.2026): der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window* — damit ist **Kriterium 8** erfüllt. Am selben Tag die **Höhenänderung** des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Dabei drei Mängel an der Kartenleiste gemeldet, alle in 1.0.26 behoben (**E-50**), und ein **Nebenbefund ohne Nummer**: nach einem Neustart stehen die Fenster nicht im Vollbild. Davor **1.0.24**: *„persona läßt sich löschen. keine messagebox"* (**E-43**, und mit ihm **E-37** und **E-38**) |
+| **Was als Nächstes zu messen ist** | **A-4 an 1.0.27** (Befunde **E-49** und **E-52**): wird der Zeiger auf der Kante zum Doppelpfeil, lässt sich der linke Bereich über 180 Pixel hinaus breiter ziehen, bleibt der Balken danach **gleich noch einmal** greifbar, stehen die Karten **einfach** da statt doppelt, überlebt die Breite einen Neustart — und **friert nichts ein**? Der letzte Punkt zuerst: die Ziehschleife hat in meinen eigenen Tests zweimal die Prüfinstanz eingefroren, bevor sie abgesichert war (**E-51**) |
+| **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen. Nachweisbar ist nur die Voraussetzung: 8 Pixel freier Streifen (Andockleiste 188, Leiste 180) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen
@@ -20,24 +20,31 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 ## Das Ziel, an dem alles hängt
 
-**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — sechs sind belegt
-(0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8).** Gregor hat am
-06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis 6**; **7** ist am
-07.09.2026 aus seinem Urteil zu Paket 1.0.18 nachgetragen, **8** noch am
-selben Tag aus seinem Wunsch nach sichtbaren offenen Fenstern:
+**Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
+erfüllt (2, 4).** Die Tabelle dazu steht in [ZIEL.md](ZIEL.md) und ist die
+Quelle. Gregor hat am 06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis
+6**; **7** ist am 07.09.2026 aus seinem Urteil zu Paket 1.0.18 nachgetragen,
+**8** noch am selben Tag aus seinem Wunsch nach sichtbaren offenen Fenstern.
 
 | # | | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen; das Beenden ist erledigt, offen bleiben die Meldung beim Anzeigen mancher Nachrichten und der abgefangene Wurf in `SaveCustomInfo` (**E-43**) |
+| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen; das Beenden ist erledigt, und mit **E-43** sind **E-37** und **E-38** weggefallen. Offen bleibt die Meldung beim Anzeigen mancher Nachrichten |
 | 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
 | 6 | **Eine Mail weiterleiten** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
 | 7 | ***File → Exit*** beendet Eudora sauber | **erfüllt** (08.09.2026, von Gregor bestätigt) — *„schließen klappt jetzt."* Alle drei Wege: Menü, Alt-F4, Kreuz |
-| 8 | Offene Fenster sichtbar und auswählbar | halb — Menü *Window* ja; die Leiste unten gibt es seit **E-44**, sie zeigt aber *Task Status* und *Task Errors* statt der Reiter |
+| 8 | Offene Fenster sichtbar und auswählbar | **erfüllt** (09.09.2026, von Gregor bestätigt) — Menü *Window* und die Registerkartenleiste unten; der Klick holt das Fenster nach vorn (**A-3** / **E-48**) |
 
-**Dazu zwei Anforderungen, die kein Kriterium sind:** **A-1** (Vorgaben für ein
-neu angelegtes Konto) und **A-2** (*Task Status* und *Task Errors* waagrecht
-unten) — beide umgesetzt und **von Gregor bestätigt**, beide in
-[ZIEL.md](ZIEL.md) aufgeschrieben.
+**Beiden noch nicht erfüllten Kriterien fehlt dasselbe:** die Meldung
+„Encountered an improper argument" beim **Anzeigen** mancher Nachrichten. Sie
+ist der letzte bekannte Fehler, den ein Anwender merkt — und **neu zu messen**,
+seit **E-43** die Fehlerklasse an der Wurzel behoben hat.
+
+**Dazu vier Anforderungen, die kein Kriterium sind**, alle in
+[ZIEL.md](ZIEL.md) aufgeschrieben: **A-1** (Vorgaben für ein neu angelegtes
+Konto), **A-2** (*Task Status* und *Task Errors* waagrecht unten) und **A-3**
+(offene Fenster als Registerkarten) sind umgesetzt und **von Gregor
+bestätigt**; **A-4** (den linken Bereich breiter ziehen) ist **gebaut und
+nicht bestätigt**.
 
 ## Was seit dem 06.09.2026 anders ist
 
@@ -73,47 +80,38 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-**Kriterium 7 ist erledigt, A-1 und A-2 sind bestätigt.** Was jetzt ansteht,
-steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter *Die Hauptarbeit*; hier
-die Reihenfolge in einem Satz je Punkt.
+**Der nächste Schritt gehört Gregor: vier gebaute Behebungen warten auf sein
+Urteil.** Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
+*Die Hauptarbeit*; hier die Reihenfolge in einem Satz je Punkt.
 
-1. **E-37 zu Ende bringen** — ein gelöschtes Konto bleibt in der Liste stehen,
-   bis Eudora neu startet. Der zweite Anlauf ist in 7.2.0.23 gebaut und **von
-   Gregor nicht bestätigt**; der erste war eine **Regression** und hat dem
-   Anwender „Encountered an improper argument" gezeigt. Das ist der einzige
-   Punkt, an dem die Portierung zwischenzeitlich **schlechter** war als vorher
-   — deshalb zuerst. Fundstelle:
-   `CPersonalityView::OnCmdDeletePersonality`
-   (`Eudora71/Eudora/PersonalityView.cpp`). Offen bleibt auch, **warum**
-   `FindItem` −1 liefert und **warum** `PopulateView` geworfen hat.
-2. **E-38 messen** — die im Kontoassistenten eingegebenen Daten fehlen unter
-   *Konto → Eigenschaften*. Der Befund hing an E-33; **der Blocker ist weg**,
-   weil Eudora sich normal beenden lässt. Der erste Handgriff kostet keinen
-   Bau: nach einem **normalen** Beenden den Abschnitt `[Persona-<Name>]` in der
-   `Eudora.ini` ansehen. Stehen die Werte da, scheitert das **Lesen**
-   (`GetParams`, `persona.cpp:279ff`, stumm über `VERIFY` in
-   `ModifyAcctSheet.cpp:47`); fehlen sie, ist es die Schreibseite.
-3. **E-39** — wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr
+1. **A-4 / E-49 und E-52 an 1.0.27 prüfen** — den linken Bereich am
+   Trennbalken nach rechts ziehen, über 180 Pixel hinaus, und **gleich noch
+   einmal** ziehen. Bleibt der Balken greifbar? Stehen die Registerkarten
+   danach einfach da, nicht doppelt? Überlebt die Breite einen Neustart?
+   **Und vor allem: friert nichts ein** (**E-51**)? Die fünf Prüfschritte
+   stehen in [ZIEL.md](ZIEL.md) unter A-4.
+2. **E-50 an 1.0.26 prüfen** — die drei Mängel an der Registerkartenleiste:
+   bleibt eine Karte eingedrückt, wenn ein anderes Fenster aktiv ist; stimmt
+   die Darstellung beim Skalieren; bleiben die Karten beim Öffnen und Schließen
+   stehen. Alle drei hatten dieselbe Wurzel — der Streifen wurde nur beim
+   Neuzeichnen gemalt, und niemand erklärte ihn für ungültig.
+3. **Die Meldung „Encountered an improper argument" beim Anzeigen neu messen.**
+   Das ist der letzte bekannte Fehler, den ein Anwender merkt, und der einzige
+   Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt* heißen. **Seit
+   E-43** ist die Fehlerklasse dahinter an der Wurzel behoben — gut möglich,
+   dass die Meldung mit verschwunden ist. **Erst messen, dann suchen.**
+4. **Der Nebenbefund ohne Nummer: die Fenster stehen nach einem Neustart nicht
+   im Vollbild**, obwohl sie beim Beenden so waren (Gregor am 09.09.2026 an
+   1.0.25). Das ist der Fensterzustand über `CMainFrame::SaveOpenWindows`,
+   **nicht** die Kartenleiste. Erster Handgriff ohne Bau: nach einem normalen
+   Beenden in der `Eudora.ini` nachsehen, ob der Maximiert-Zustand dort steht.
+5. **E-39** — wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr
    INI-Abschnitt teilweise wiederentstehen. `CPersonality::Remove`
    (`persona.cpp:565-566`) stellt die aktuelle Persönlichkeit nicht um.
    Naheliegend: nach erfolgreichem `Remove` auf `<Dominant>` umschalten.
-4. **Kriterium 8** — die Reiterleiste für die offenen Fenster. Die Leiste am
-   unteren Rand ist mit **E-44** da und liegt waagrecht; was fehlt, sind die
-   **Reiter**. Gelesen wird die Anordnung in
-   `Eudora71/Eudora/WazooBar.cpp:552` aus dem Abschnitt `[WazooBars]` der
-   `Eudora.ini` (`WazooBarIds`, `WazooBar%d`, `WazooMDI%d`, Namen in
-   `EudoraRes.rc:10637-10640`); die Ersatzschicht `OTShim` bildet die Reiter
-   nicht nach — dort liegt der Ansatz, nicht in Eudora selbst.
-5. **E-43** — `QCCustomToolBar::SaveCustomInfo` wirft beim Beenden, der
-   Leistenzustand wird **nie** gespeichert. Abgefangen, nicht behoben; Folge
-   ist ein fehlender `[ToolBar…]`-Abschnitt in der `Eudora.ini` (am 08.09.2026
-   in zwei Profilen nachgemessen: null Treffer), und daraus folgte E-44.
-   Eingegrenzt auf `GetBtnCount=24/24` bei `m_btns.GetSize=0/0` — gleiches
-   Objekt, gleiche Adresse, in **einer** Protokollzeile gemessen. Der Wert
-   flackert also nicht, und ein freigegebenes Objekt ist ausgeschlossen
-   (**E-46** ist damit **widerlegt**). Es bleibt: der übersetzte Code liest an
-   zwei verschiedenen Adressen. Die dritte Marke gibt die Rohwörter des Feldes
-   aus und sagt, welche.
+6. **E-47** — der Fehlerdialog des Verzeichnisdienstes. Ursache belegt
+   (`MFC71.DLL` und `MSVCP71.dll` fehlen und wird es immer), **keine Behebung
+   in Sicht**; betrifft Adressbuch, LDAP, Ph und S/MIME, nicht den Start.
 
 > **Was nicht mehr zu suchen ist.** Das Beenden ist entschieden: E-40 (eine
 > Rückfrage, die sich nicht öffnen lässt, galt als Abbrechen), E-41 (Alt-F4 und
@@ -123,14 +121,35 @@ die Reihenfolge in einem Satz je Punkt.
 > in [Befunde/BEENDEN.md](Befunde/BEENDEN.md), das Review in
 > [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md). **Nicht wieder von vorn
 > aufrollen.**
+>
+> **Ebenso entschieden ist E-43** — `SECControlBar` war **zweimal definiert**
+> (`OT501/Include/sbarcore.h` und `OTShim/OTShim.h`, der Ersatz mit einem Feld
+> mehr), und zwei Übersetzungseinheiten lasen dasselbe Feld acht Byte
+> auseinander. Gemessen vorher `GetBtnCount=24/24 m_btns.GetSize=0/0`, nachher
+> `24/24` gegen `24/24`. Die `Eudora.ini` enthält seither **13**
+> `[ToolBar…]`-Abschnitte statt **0**. Damit fielen **E-37** und **E-38** mit
+> weg, und **E-46** (freigegebenes `CMainFrame`-Objekt) ist **widerlegt**.
+> Schranke: `tools/pruefe-waechter.pl`.
 
 ## Ebenfalls offen
 
-- Die Meldung **„Encountered an improper argument"** beim Anzeigen mancher
-  Nachrichten. Zwei Quellen sind behoben (E-16, E-34). **Offen ist die
-  Ursache** — dieselbe Frage wie bei E-43: `GetBtnCount()` ist wörtlich
-  `return (int)m_btns.GetSize()`, und trotzdem melden die beiden verschiedene
-  Werte. Das Abfangen behandelt das Symptom
+- **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse **R-1**, **16** Stellen
+  bleiben (gemessen am 07.09.2026 mit `perl tools/releasebuffer-pruefen.pl`).
+  Die Reihenfolge steht in [AUFGABEN.md](AUFGABEN.md) unter A2, nach
+  Häufigkeit des Wegs sortiert.
+- **Neun Zeigerstellen** aus X-3 ([AUFGABEN.md](AUFGABEN.md), D3a).
+- **E-14** — die Zusicherung beim Start, der X1-Suchindex werde neu angelegt.
+  Auf einem frischen Mailverzeichnis ist das der normale erste Lauf; ein
+  echter Befund wird es erst, wenn die Meldung auch beim **zweiten** Start
+  kommt.
+- **E-13** — beim Mailabruf ist kein Fortschritt sichtbar. Die Behebung liegt
+  auf `wt/fortschritt-arbeit`, **nicht** in diesem Zweig.
+- **`EuMemMgr.dll` ist kein Projekt der Projektmappe** — vorgebaut, 2005,
+  Version 7.0.0.9. Ausgerechnet sie löst den Aufrufstapel im Absturzbericht auf.
+- **Die Hostnamenprüfung greift nicht** (sicherheitsrelevant, in
+  `PORTIERUNG.md` beschrieben) — von Gregor ausdrücklich **zurückgestellt**,
+  siehe [AUFGABEN.md](AUFGABEN.md) am Ende.
+
 ## Wie man misst
 
 Alles, was man dafür braucht, steht bereit — es muss niemand danebensitzen.

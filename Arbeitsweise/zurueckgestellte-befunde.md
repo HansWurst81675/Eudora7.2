@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+Schranke: keine - „bewusst später" entscheidet Gregor im Gespräch; ein Werkzeug kann einen zurückgestellten Befund nicht von einem vergessenen unterscheiden
+
 Diese Befunde sind belegt und dokumentiert, aber auf Gregors Wunsch **zurueckgestellt**.
 Nicht von selbst aufgreifen. Erst wieder anfassen, wenn er es aufruft - seine Begruendung
 am 28.08.2026: "das koennen wir spaeter angehen, wenn alles soweit laeuft." Vorrang hat
