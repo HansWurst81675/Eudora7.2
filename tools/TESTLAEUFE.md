@@ -12,3 +12,6 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-09-09 09:23:40 | `C:\Temp\E44-layout` | Gregor am 09.09.2026: 'du kannst aktuell ausfuehren, um zu testen' | Hauptfenster 460142 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 60.6 s. |
 | 2026-09-09 09:32:00 | `C:\Temp\E44-layout` | Gregor am 09.09.2026: 'du kannst aktuell ausfuehren, um zu testen' | Hauptfenster 525648 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 60.8 s. |
 | 2026-09-09 09:36:49 | `C:\Temp\E44-layout` | Gregor am 09.09.2026: 'du kannst aktuell ausfuehren, um zu testen' | Hauptfenster 1246528 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 60.8 s. |
+| 2026-09-09 10:23:18 | `C:\Temp\E44-layout` | Gregor am 09.09.2026: 'du kannst aktuell ausfuehren, um zu testen' | Hauptfenster 656546 - Eudora  Schliesszeit 1 s. |
+| 2026-09-09 10:25:27 | `C:\Temp\E44-layout` | Gregor am 09.09.2026: 'du kannst aktuell ausfuehren, um zu testen' | Hauptfenster 1967170 - Eudora  Schliesszeit 1 s. |
+| 2026-09-09 10:31:15 | `C:\Temp\E44-layout` | Gregor am 09.09.2026: 'du kannst aktuell ausfuehren, um zu testen' | Hauptfenster 460190 - Eudora  Schliesszeit 1 s. |

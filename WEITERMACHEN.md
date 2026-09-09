@@ -6,12 +6,12 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.25 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.25 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.25** — `Releases/Eudora72-1.0.25-release.zip` |
-| **Zuletzt von Gregor bestätigt** | **1.0.24 am 08.09.2026**: *„0.24 → persona läßt sich löschen. keine messagebox"* — damit sind **E-43**, **E-37** und **E-38** belegt, alle drei an einer Ursache. Davor 1.0.23: *„leiste unten paßt."* (**A-2**) |
-| **Was als Nächstes zu messen ist** | **A-3 an 1.0.25**: steht unten je offenem Fenster eine Registerkarte, und **holt ein Klick darauf das Fenster nach vorn**? Der Klick ist der Punkt, den ich von außen kaum messen kann — gezeichnet und beschriftet sind die Karten nachweislich (zwei Fenster, zwei Karten, fotografiert) |
-| **Was danach kommt** | **A-4** (Trennbalken links, Befund **E-49**): die Splitter-Mechanik ist in der Ersatzschicht vollständig umgesetzt, es fehlen drei Rümpfe — `Splitter::Track` (die Ziehschleife), der Aufruf von `AddSplitter` beim Layout und `OnSplitterMoved`. Dazu muss die Andockleiste Platz für den Balken reservieren, sonst liegt er unter dem Kindfenster und bekommt keine Mausereignisse |
+| **Quellstand** | 7.2.0.27 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.27 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.27** — `Releases/Eudora72-1.0.27-release.zip` |
+| **Zuletzt von Gregor bestätigt** | **A-3 an 1.0.25** (09.09.2026): der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Dabei drei Mängel gemeldet, alle in 1.0.26 behoben (**E-50**). Davor **1.0.24**: *„persona läßt sich löschen. keine messagebox"* |
+| **Was als Nächstes zu messen ist** | **A-4 an 1.0.26**: wird der Zeiger auf der Kante zum Doppelpfeil, lässt sich der linke Bereich über 180 Pixel hinaus breiter ziehen, überlebt die Breite einen Neustart — und **friert nichts ein**? Der letzte Punkt zuerst: die Ziehschleife hat in meinen eigenen Tests zweimal die Prüfinstanz eingefroren, bevor sie abgesichert war |
+| **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen. Nachweisbar ist nur die Voraussetzung: 8 Pixel freier Streifen (Andockleiste 188, Leiste 180) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen

@@ -45,10 +45,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.25 — alles Gebaute ist gepackt
+## Nach 7.2.0.27 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.25** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.25 / 1.0.25** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.27** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.27 / 1.0.27** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
@@ -101,6 +101,139 @@ dazu: *„version muß eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.27 — Der Trennbalken bleibt greifbar, die Karten stehen nicht doppelt
+
+**Was Gregor damit tun kann, was in 1.0.26 nicht ging:** den linken Bereich
+verbreitern und **gleich weiterziehen** — der Balken bleibt an der Kante
+greifbar, ohne dass man erst das Fenster verändern muss. Und die
+Registerkarten stehen danach nicht mehr doppelt.
+
+**Von Gregor noch nicht bestätigt.**
+
+### Seine Meldung war die Diagnose
+
+> *„verschieben links / rechts vom mailverzeichnis: hier ist kein refresh
+> drin. nach vergrößern (verschiebung nach rechts), kann man den balken nicht
+> mehr greifen. erst wenn ich das fenster verändere, dann geht es wieder."*
+
+Der letzte Halbsatz nennt die Ursache: MFC verschiebt die Leisten mit
+`DeferWindowPos` (`lpLayout->hDWP`). Wenn `OnSizeParent` zurückkommt, hat die
+Andockleiste ihre neue Größe **noch nicht** — `GetClientRect` liefert dort die
+**alte**. Der Balken landete an der alten Stelle, und erst der nächste
+Anordnungsdurchlauf zog es gerade. Das war „das Fenster verändern".
+
+Behoben, indem der Balken in **`OnSize`** entsteht statt in `OnSizeParent`:
+`WM_SIZE` kommt, nachdem das Fenster seine Größe hat.
+
+Die doppelten Karten in seinem Bildschirmfoto — *„In"* und *„markus bakus,
+10:02"* je zweimal — kamen aus derselben Wurzel: `RecalcLayout` ordnet neu an,
+erklärt aber nichts für ungültig, was an der alten Stelle stand.
+`OnSplitterMoved` frischt jetzt mit
+`RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN` auf.
+
+**Bestätigt ist der Gegenfall**, und er stützt die Deutung: *„verschieben rauf
+/ runter — bug gefixt, die anzeige ist korrekt."* Bei der Höhe greift dasselbe
+Auffrischen schon seit 1.0.26.
+
+### Was an 1.0.27 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`**. Titel: `Eudora 7.2.0.27 / Paket 1.0.27`.
+
+1. Linken Bereich nach rechts ziehen — und **gleich noch einmal** ziehen,
+   ohne etwas anderes anzufassen. Bleibt der Balken greifbar?
+2. Stehen die Registerkarten danach **einfach** da, nicht doppelt?
+3. Beenden und neu starten — ist die Breite noch da?
+4. Und weiter der wichtigste Punkt: **friert irgendwo etwas ein?**
+
+## 7.2.0.26 — Der linke Bereich lässt sich breiter ziehen, und die Karten frischen auf
+
+**Was Gregor damit tun kann, was vorher nicht ging:** den Trennbalken zwischen
+Postfachbereich und Nachrichtenliste mit der Maus nach rechts ziehen und so
+links mehr sehen (Anforderung **A-4**). Dazu drei Nachbesserungen an der
+Registerkartenleiste, die er selbst gefunden hat (**E-50**).
+
+**Beides von Gregor noch nicht bestätigt.** Beim Ziehen kann ich es
+grundsätzlich nicht selbst messen — dazu braucht es eine **physisch**
+gedrückte Maustaste; siehe unten, warum das so sein muss.
+
+### A-4 — drei Anläufe, zwei davon am laufenden Programm widerlegt
+
+Die Splitter-Mechanik lag vollständig in der Ersatzschicht — `AddSplitter`,
+`HitTest`, `StartTracking`, `CalcTrackingLimits`, `DrawTrackerRect`, dazu
+`OnSetCursor` und `OnLButtonDown`. Nur wurde `AddSplitter` nie aufgerufen,
+`Track` war leer und `OnSplitterMoved` tat nichts. Und ein Balken braucht
+Platz **im Clientbereich der Andockleiste** — liegt er unter dem Kindfenster,
+gehen die Mausereignisse dorthin.
+
+| Anlauf | Messung | Urteil |
+|---|---|---|
+| 1. über `SetBorders` | Andockleiste Client **176**, Leiste 318 **180** | verworfen: der Rand verkleinert den Innenbereich und vergrößert die Andockleiste **nicht**; die Leiste ragte über |
+| 2. Zuschlag in `CalcFixedLayout`, abhängig von einer eigenen Prüfung über `m_arrBars` | Andockleiste blieb **180** | verworfen: keine Wirkung — die Bedingung griff nicht |
+| Messversuch: Zuschlag **11**, bedingungslos | Andockleiste **187**, freier Streifen **7** | belegt: der Weg stimmt, und **MFC verbraucht 4 Pixel des Zuschlags selbst** |
+| 3. Bedingung am Ergebnis, Balken nach dem **nachgemessenen** Platz | Andockleiste **188**, freier Streifen **8** | steht |
+
+Aus dem Messversuch folgt die eigentliche Lehre: eine feste Pixelzahl wäre
+hier immer geraten gewesen. `OnSizeParent` misst deshalb den Unterschied
+zwischen Andockleiste und Leiste darin und legt den Balken genau dorthin.
+Bleiben weniger als zwei Pixel, gibt es lieber **keinen** Balken als einen,
+den niemand trifft.
+
+`OnSplitterMoved` ändert die Andockgröße über `GetBarInfo`/`SetBarInfo` —
+genau die Felder, die `SECControlBar::CalcFixedLayout` auswertet. Damit
+überlebt die neue Breite einen Neustart, denn den `[ToolBar…]`-Abschnitt in
+der `Eudora.ini` gibt es seit der Behebung von **E-43** überhaupt erst.
+
+### Die Ziehschleife hätte Eudora einfrieren können
+
+Der erste Entwurf von `Splitter::Track` lief mit `while(::GetMessage(...))`.
+Zweimal hat das die Prüfinstanz zum **Hängen** gebracht: kommt kein
+`WM_LBUTTONUP` — weil der Mausfang verlorengeht, das Fenster den Fokus
+verliert oder die Nachricht auf anderem Weg verschwindet —, wartet die
+Schleife für immer, und das Programm ist tot. Genau die Fehlerklasse, die
+Gregor tagelang gekostet hat (*„beenden kann ich es auch nicht"*).
+
+Jetzt: höchstens 100 ms warten, danach Fenster, Mausfang und die **physische**
+Maustaste erneut prüfen. Ist sie los, ist das Ziehen vorbei, ganz gleich
+welche Nachricht kam. Der Preis ist ehrlich zu nennen: ein künstlicher Zug
+über Fensterbotschaften lässt sich damit nicht mehr fahren, das Ziehen kann
+nur ein Mensch prüfen. Eine Schleife, die sich bequem testen lässt, aber das
+Programm einfrieren kann, wäre der schlechtere Tausch.
+
+### E-50 — drei Nachbesserungen an der Registerkartenleiste
+
+Alle drei von Gregor am 09.09.2026 an 1.0.25 gefunden, alle mit derselben
+Wurzel: **der Streifen wird nur beim Neuzeichnen gemalt, und niemand erklärt
+ihn für ungültig, wenn sich etwas ändert.**
+
+| Beobachtung | Ursache | Behebung |
+|---|---|---|
+| *„der button bzw. die karte bleibt eingedrückt, auch wenn man im anderen fenster ist"* | `QCWorkbook::OnLButtonDown` setzt `SetSelected(TRUE)` (`workbook.cpp:1109`) — und **niemand** setzt es je zurück; im Original tat das die Stingray-Ebene | die Marke wird gelöscht, sobald ein anderer Rahmen aktiv ist. Sie bedeutet laut eigenem Feldkommentar nur *„Karte gewählt, Rahmen noch nicht aktiv"* |
+| *„beim skalieren (kleiner machen) ist die darstellung falsch"* | die Kartenbreite hängt an der Fensterbreite (`recalcTabWidth` teilt die Fläche auf) | `WM_SIZE` frischt den Streifen auf |
+| *„die karten sind dann weg"* beim Öffnen/Schließen | dieselbe Sache: die Breite ändert sich mit der Kartenzahl | `AddSheet`/`RemoveSheet` frischen auf |
+
+### Was an 1.0.26 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.26 / Paket 1.0.26`.
+
+**A-4, der Trennbalken:**
+
+1. Maus auf die Kante zwischen Postfachbereich und Nachrichtenliste — wird
+   der Zeiger zum **Größenzeiger** (Doppelpfeil)?
+2. Nach **rechts ziehen** — wird der linke Bereich breiter? Über 180 Pixel
+   hinaus?
+3. Nach links ziehen — wird er wieder schmaler?
+4. Eudora beenden und neu starten — ist die Breite noch da?
+5. **Und das Wichtigste: friert dabei nichts ein.** Falls doch, sofort sagen —
+   dann fliegt A-4 wieder heraus.
+
+**A-3, die Registerkarten:**
+
+6. Bleibt die Karte des **aktiven** Fensters eingedrückt und lösen sich die
+   anderen?
+7. Fenster kleiner ziehen — bleiben die Karten richtig?
+8. Fenster öffnen und schließen — bleiben die Karten sichtbar?
 
 ## 7.2.0.25 — Die offenen Fenster stehen als Registerkarten unten
 
@@ -342,8 +475,14 @@ Marken.
 
 ### Was an 1.0.23 zu prüfen ist
 
-Paket: `Releases/Eudora72-1.0.23-release.zip`, 9 340 228 Byte, SHA256
+Paket: 9 340 228 Byte, SHA256
 `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
+**Das ZIP liegt nicht mehr im Repo** — am 09.09.2026 entfernt, wie die der
+übrigen überholten Fassungen, damit das Repo nicht weiter wächst. Neu zu bauen
+aus dem Commit dieses Abschnitts mit
+`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`; die Prüfsumme
+oben ist der Nachweis. Die Marke [v1.0.23](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.23)
+bleibt bestehen.
 Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
 aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
 Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist

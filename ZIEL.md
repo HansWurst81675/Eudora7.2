@@ -329,6 +329,23 @@ Splitter selbst. AddSplitter wird nie aufgerufen …"*
 derselben Fensterebene, und beides ist „Mechanik da, Anschluss fehlt".
 Deshalb zusammen umzusetzen, nicht nacheinander.
 
+**Umgesetzt in 7.2.0.26, von Gregor noch nicht bestätigt.** Drei Anläufe, zwei
+davon am laufenden Programm widerlegt:
+
+| Anlauf | Messung | Urteil |
+|---|---|---|
+| über `SetBorders` | Andockleiste Client **176**, Leiste 318 **180** | verworfen — der Rand verkleinert den Innenbereich und vergrößert die Andockleiste **nicht** |
+| Zuschlag in `CalcFixedLayout`, Bedingung über `m_arrBars` | Andockleiste blieb **180** | verworfen — keine Wirkung |
+| Messversuch: Zuschlag **11**, bedingungslos | **187**, freier Streifen **7** | belegt: der Weg stimmt, MFC verbraucht **4 Pixel** des Zuschlags selbst |
+| Bedingung am Ergebnis, Balken nach nachgemessenem Platz | **188**, freier Streifen **8** | steht |
+
+**Was ich nicht selbst prüfen kann:** das Ziehen. `Splitter::Track` bricht ab,
+sobald die **physische** Maustaste los ist — das muss so sein, weil der erste
+Entwurf mit `while(::GetMessage(...))` die Prüfinstanz **zweimal eingefroren**
+hat, wenn kein `WM_LBUTTONUP` kam. Ein künstlicher Zug über Fensterbotschaften
+ist damit nicht mehr möglich. Nachweisbar ist nur die Voraussetzung: 8 Pixel
+freier Streifen, an dem der Balken sitzt.
+
 ## Woran sich Kriterium 2 misst
 
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert

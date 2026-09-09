@@ -891,6 +891,14 @@ public:
 	// weg, die MFC selbst nie erzeugt. Begruendung: Befund E-4.
 	void NormalizeBarArray();
 
+	// NICHT im Original, ANFORDERUNG A-4 (Befund E-49). Setzt den Innenrand
+	// der Andockleiste so, dass an der zum MDI-Bereich zeigenden Seite ein
+	// Streifen von Splitter::cx bzw. ::cy frei bleibt. Nur dort kann ein
+	// Trennbalken Mausereignisse bekommen - liegt er unter dem Kindfenster,
+	// gehen sie an dieses. Laeuft bei jedem Anordnungsdurchlauf, weil der
+	// Rand davon abhaengt, ob ueberhaupt eine Leiste sichtbar angedockt ist.
+
+
 	// NICHT im Original. Verteilt die verfuegbare Zeilenlaenge anhand von
 	// SECControlBar::m_fPctWidth auf die sichtbaren Leisten einer Zeile und
 	// legt das Ergebnis in deren m_nRowExtent ab. Laeuft unmittelbar vor
@@ -921,6 +929,13 @@ protected:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnDestroy();
 	afx_msg LRESULT OnSizeParent(WPARAM wParam, LPARAM lParam);
+
+	// NICHT im Original, ANFORDERUNG A-4 (Befund E-52). Der Trennbalken wird
+	// hier angelegt und nicht in OnSizeParent: MFC verschiebt die Leisten mit
+	// DeferWindowPos, sodass die Andockleiste dort ihre neue Groesse noch
+	// nicht hat. WM_SIZE kommt danach.
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void TrennbalkenNeuAnlegen();
 	DECLARE_MESSAGE_MAP()
 
 	friend class SECMiniDockFrameWnd;
@@ -1518,6 +1533,14 @@ protected:
 	virtual void OnDrawTab(CDC* pDC, SECWorksheet* pSheet);
 	virtual void OnDrawBorder(CDC* pDC);
 	virtual void OnDrawTabIconAndLabel(CDC* pDC, SECWorksheet* pSheet);
+
+	// NICHT im Original, ANFORDERUNG A-3 (Befund E-50). Erklaert den
+	// Registerkartenstreifen fuer ungueltig. Wird gebraucht, wenn sich die
+	// Zahl der Karten aendert (AddSheet/RemoveSheet) oder das Fenster seine
+	// Groesse aendert - dann stimmt auch die Kartenbreite nicht mehr.
+	void StreifenAuffrischen();
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 // Operationen
 public:
