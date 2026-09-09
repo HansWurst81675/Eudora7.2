@@ -102,7 +102,7 @@ dazu: *„version muß eindeutig sein"*).
 
 
 
-## 7.2.0.29 — Acht Befunde des Prüfers, in einem Bau
+## 7.2.0.29 — Acht Befunde des Prüfers und sieben aus der neuen Schranke
 
 **Was Gregor damit tun kann, was vorher nicht ging:** den Trennbalken ziehen
 und dabei **sehen**, wohin (E-54); den Registerkartenstreifen in den
@@ -115,7 +115,9 @@ leere Streifen unter der Werkzeugleiste ist weg (E-55).
 erst sein Test, dann die Veröffentlichung
 ([Arbeitsweise/release-erst-nach-gregors-test.md](Arbeitsweise/release-erst-nach-gregors-test.md)).
 
-Alle acht kommen aus **PRÜFERs sechstem Durchgang** über die A-3/A-4-Arbeit.
+Acht davon kommen aus **PRÜFERs sechstem Durchgang** über die A-3/A-4-Arbeit,
+sieben weitere aus dem ersten Lauf der Schranke, die daraus entstanden ist
+(**E-62**, unten).
 Sie wurden bewusst in **einem** Bau zusammengefasst: ein Bau kostet rund zwölf
 Minuten, weil `OTShim.h` über `stdafx.h` im vorkompilierten Kopf liegt und
 jede Änderung daran alle 364 Quellen neu übersetzt (siehe *Warum das Bauen so
@@ -162,6 +164,47 @@ Die Trefferprüfung liefert jetzt `FALSE`, solange nichts gezeichnet wird. Der
 Weg über `TopLeft` bleibt unberührt: wer `OnDrawBorder` wieder ruft, bekommt
 die Stelle nach wie vor — dann, und erst dann, gehört dort eine vollständige
 Prüfung gegen das Rechteck hin, samt y.
+
+### E-62 — die neue Schranke fand beim ersten Lauf sieben weitere Stellen
+
+Aus E-51 und E-61 ist `tools/pruefe-nachrichtenschleife.pl` entstanden: eine
+eigene Nachrichtenschleife muss `WM_QUIT` zurückstellen und darf nicht ohne
+Zeitschranke warten. Beim **ersten Lauf über den ganzen Baum** hat sie
+**sieben weitere Stellen** gemeldet — alle in **Eudoras eigenem Code**, keine
+aus der Portierung.
+
+| Stelle | Was passierte |
+|---|---|
+| `EscapePressed` (`guiutils.cpp:1666`) | wird während **langer Vorgänge** gerufen, also gerade beim Mailabruf — und nahm dabei `WM_QUIT` heraus, ohne sie zurückzustellen |
+| `LeftClickAttachment` (`guiutils.cpp:2910`) | **hängt**, siehe unten |
+| `SyncPlayMedia` (`guiutils.cpp:3387`) | verschluckte das Beenden, während ein Anhang abgespielt wird |
+| `CTocView::SizeColumn` (`tocview.cpp:3458`) | **hängt**, siehe unten |
+| `CTocFrame::DoPreviewDisplay` (`TocFrame.cpp:3673`) | verschluckte das Beenden beim Warten auf die Vorschau |
+| `CTridentView::DoFindFirst`, zwei Schleifen | dasselbe beim Suchen |
+| `CTridentView::Print` | dasselbe beim Drucken, dazu bliebe `SetRedraw(FALSE)` stehen |
+
+**Zwei davon hängen, statt nur zu verschlucken.** `LeftClickAttachment` und
+`CTocView::SizeColumn` warten so:
+
+```cpp
+while (1)
+{
+    MSG msg;
+    GetMessage(&msg, m_hWnd, 0, 0);   // Rueckgabewert wird nicht ausgewertet
+    ...
+}
+```
+
+`WM_QUIT` kommt **trotz** Fensterfilter — so ist `GetMessage` dokumentiert.
+Der Rückgabewert wird dann 0, aber `while (1)` fragt ihn nicht, und die
+Nachricht ist verbraucht. Die Schleife wartet danach **für immer** auf eine
+Nachricht, die nie mehr kommt, und hält dabei den Mausfang. Bei `SizeColumn`
+genügt dafür das Ziehen einer **Spaltenbreite** im Postfachfenster.
+
+Damit ist eine mögliche Ursache von Gregors *„beenden kann ich es auch nicht"*
+benannt, die **nicht** aus der Portierung stammt, sondern im Original steht —
+und die man von Hand kaum findet, weil sie nur in einem bestimmten Moment
+zuschlägt.
 
 ### Warum das Bauen so lange dauert
 

@@ -82,7 +82,29 @@ perl "$WURZEL/tools/pruefe-fensterbau.pl" || exit $?
 #    kann durch eine spaetere, gut gemeinte Aenderung lautlos verschwinden.
 perl "$WURZEL/tools/pruefe-beenden.pl" || exit $?
 
-# 7. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 7. Include-Waechter: ein Header, der nur TEILWEISE ersetzt wird, darf den
+#    Waechter des Originals NICHT setzen. Genau daran hing E-43 - SECControlBar
+#    war zweimal definiert, acht Byte auseinander, und die Folge waren E-34,
+#    E-37 und E-38. Die Schranke gab es seit dem 09.09.2026, hing aber nicht
+#    im Hook; gefunden von tools/lehren-schranken.pl am 09.09.2026.
+perl "$WURZEL/tools/pruefe-waechter.pl" || exit $?
+
+# 8. Jede Lehre in Arbeitsweise/ braucht eine Schranke-Zeile. Gregor am
+#    08.09.2026: "mach dir aus lessons leared alles schranken, die dann
+#    greifen." Eine Lehre ohne Ausloeser wirkt nicht - und dieses Werkzeug
+#    prueft auch, ob die genannte Schranke wirklich in DIESER Datei steht.
+#    Es hat sich damit am 09.09.2026 selbst gefunden: es fehlte hier.
+perl "$WURZEL/tools/lehren-schranken.pl" || exit $?
+
+# 9. Eigene Nachrichtenschleifen: WM_QUIT darf nicht verschluckt werden, und
+#    es darf nicht ohne Zeitschranke gewartet werden. Aus E-51 (meine eigene
+#    Ziehschleife hat die Pruefinstanz zweimal eingefroren) und E-61 (dieselbe
+#    Schleife nahm WM_QUIT heraus, ohne sie zurueckzustellen). Beim ersten
+#    Lauf hat die Schranke sieben weitere Stellen in Eudoras eigenem Code
+#    gefunden, zwei davon mit echter Haengegefahr (E-62).
+perl "$WURZEL/tools/pruefe-nachrichtenschleife.pl" || exit $?
+
+# 10. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 exec perl "$WURZEL/tools/pruefe-bytes.pl"
 HOOKENDE
 
@@ -121,9 +143,16 @@ echo "  4. tools/doku-pruefen.pl     stimmt die Doku mit sich selbst? (IMMER, al
 echo "                               MD-Dateien aus git ls-files, immer abweisend)"
 echo "  5. tools/pruefe-fensterbau.pl haelt der Fensterbau? (E-33..E-36)"
 echo "  6. tools/pruefe-beenden.pl   haelt das Beenden? (E-40..E-42)"
-echo "  7. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo "  7. tools/pruefe-waechter.pl  setzt ein nur teilweise ersetzter Header den"
+echo "                               Waechter des Originals? (E-43)"
+echo "  8. tools/lehren-schranken.pl hat jede Lehre eine greifende Schranke?"
+echo "  9. tools/pruefe-nachrichtenschleife.pl"
+echo "                               verschluckt eine eigene Schleife WM_QUIT?"
+echo "                               (E-51, E-61, E-62)"
+echo " 10. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
-echo "Die abweisenden Schritte 1, 2, 4 und 5 werten JEDEN Rueckgabewert aus -"
+echo "Abweisend sind alle ausser Schritt 3 - der meldet bloss."
+echo "Jeder von ihnen wertet JEDEN Rueckgabewert aus -"
 echo "genau das fehlte bis zum 31.08.2026 bei Schritt 2 (Befund X-2), und im"
 echo "eingerichteten Hook fehlte es bis zum 05.09.2026 immer noch (X-5)."
 echo

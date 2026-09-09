@@ -84,13 +84,27 @@ for my $datei (@lehren) {
     $kurz =~ s{^\Q$wurzel\E/}{};
 
     # Die Zeile suchen. Fett, kursiv und Listenpunkt sind erlaubt.
-    my ($zeile) = $inhalt =~ /^[\s>*\-]*\**Schranke\**\s*:\s*([^\n]+)$/m;
+    # Der Doppelpunkt steht mal INNERHALB der Fettschrift ("**Schranke:**"),
+    # mal davor ("**Schranke**:"). Beides kommt im Verzeichnis vor. Am
+    # 09.09.2026 hat die alte Fassung "**Schranke:** keine - ..." als
+    # "** keine - ..." gelesen und die Begruendung deshalb verworfen: der
+    # keine-Zweig prueft auf /^keine/, und davor standen zwei Sterne.
+    my ($zeile) = $inhalt =~ /^[\s>*\-]*\**Schranke\**\s*:\**\s*([^\n]+)$/m;
 
     unless (defined $zeile) {
         push @ohne_zeile, $kurz;
         next;
     }
     $zeile =~ s/\s+$//;
+
+    # Gedankenstriche in BYTES, nicht als Zeichen. Gelesen wird mit
+    # <:raw, ein Gedankenstrich ist also die Bytefolge e2 80 94 (bzw. 93 fuer
+    # den kurzen) und NICHT \x{2014}. Am 09.09.2026 hat die alte Fassung
+    # deshalb "keine - <Begruendung>" mit Gedankenstrich nicht als
+    # Begruendung erkannt und eine tragfaehige Ausnahme abgewiesen. Dieselbe
+    # Klasse wie in doku-pruefen.pl: eine Musterpruefung, die auf einer
+    # anderen Kodierungsebene sucht als die Datei liegt.
+    $zeile =~ s/\xe2\x80[\x93\x94]/-/g;
 
     if ($zeile =~ /^keine\b/i) {
         my ($grund) = $zeile =~ /^keine\s*[-\x{2014}:]\s*(.+)$/i;
