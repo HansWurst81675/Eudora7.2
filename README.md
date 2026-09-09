@@ -5,33 +5,81 @@
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
-Portierung des Eudora-7.1-Quellcodes auf Visual Studio 2022 — mit dem Ziel, den
-Mailclient wieder selbst bauen und weiterentwickeln zu können.
+**Der Mailclient Eudora 7.1, wieder baubar — mit Visual Studio 2022 unter
+Windows 10 und 11.**
 
-Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
-(2018, mit Genehmigung von Qualcomm).
+Eudora war von 1988 bis 2006 einer der meistbenutzten Mailclients überhaupt.
+2018 hat das [Computer History
+Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
+den Quellcode mit Genehmigung von Qualcomm freigegeben — als Archiv, nicht als
+baubares Projekt: er verlangt Visual C++ 6 und 7.1 von 1998 und 2003, dazu die
+kommerzielle Bibliothek *Stingray Objective Toolkit*, die es nicht mehr zu
+kaufen gibt.
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **09.09.2026**.
->
-> **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.30** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
-> ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
-> schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.30**; sie benennt das ZIP. Dieses Paket gibt es noch **nicht** —
-> ausgeliefert und veröffentlicht ist die Fassung davor, und die Nummern gehen
-> bewusst **vor** dem Paket hoch (Befund **V-1**, siehe CHANGELOG). `cat VERSION` liefert also **nicht** die
-> Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
-> getrennt ein.
->
-> **Das jüngste Paket liegt unter [Releases/](Releases/) und ist in
-> [Releases/PAKETE.md](Releases/PAKETE.md) mit Prüfsumme geführt.** Die
-> Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
-> Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
-> und welchem Commit gehört, steht vollständig in
-> [Releases/PAKETE.md](Releases/PAKETE.md).
->
-> Wer wann was gemessen hat, steht in [BEFUNDE.md](BEFUNDE.md) und im
-> git-Verlauf — hier nicht.
+**Dieses Repo macht daraus wieder ein Programm, das man bauen und benutzen
+kann.** Aus einem frischen Klon entsteht mit einem Befehl eine `Eudora.exe`,
+die auf einem heutigen Windows startet, Mail über TLS 1.3 abruft und
+verschickt.
+
+| | |
+|---|---|
+| **Sofort ausprobieren** | [Neuestes Paket herunterladen](https://github.com/HansWurst81675/Eudora7.2/releases/latest) — auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren |
+| **Selbst bauen** | [Bauen](#bauen) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
+| **Was geht und was nicht** | [Stand](#stand) und [ZIEL.md](ZIEL.md) |
+| **Was gefunden und behoben wurde** | [CHANGELOG.md](CHANGELOG.md) je Fassung, [BEFUNDE.md](BEFUNDE.md) je Befund mit Messung |
+| **Wie portiert wurde** | [PORTIERUNG.md](PORTIERUNG.md) |
+
+## Was es kann
+
+* **Mail abrufen und verschicken** über POP3 und SMTP mit **TLS 1.3** — das
+  Original von 2006 kann nur SSL 3.0 / TLS 1.0 und kommt damit an keinen
+  heutigen Mailserver mehr heran.
+* **Ohne Installation starten.** Das Paket enthält alles, was der Lader
+  braucht; es schreibt nichts in die Registrierung und nichts nach
+  `C:\Program Files`.
+* **Selbst weiterbauen.** Der Quellbaum übersetzt vollständig mit MSVC v143
+  und MFC 14, ohne die Stingray-Bibliothek — an ihrer Stelle steht ein
+  Nachbau im Verzeichnis [`Eudora71/OTShim`](Eudora71/OTShim) (siehe [Die
+  Ersatzschicht für Stingray OT501](#die-ersatzschicht-für-stingray-ot501)).
+* **Schreiben, senden, antworten, weiterleiten**, Anhänge, mehrere
+  Persönlichkeiten, die Postfachverwaltung — der Alltag funktioniert.
+
+## Was es nicht kann
+
+* **Kein fertiges Installationsprogramm.** Es gibt ein ZIP, sonst nichts.
+* **Adressbuch, LDAP, Ph und S/MIME fallen aus.** Diese Teile brauchen
+  `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
+  Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
+  **E-47**).
+* **Die Filter sind zurzeit gefährlich.** Ein Filterlauf über ein ganzes
+  Postfach verschiebt **alle** Nachrichten statt nur der passenden (**E-64**),
+  und eine Regel der Form *„Junk Score is less than N"* wird durch bloßes
+  Ansehen im Filterfenster unbrauchbar (**E-67**). Wird gerade behoben — bis
+  dahin: `Filters.pce` sichern und Filter nicht auf ganze Postfächer anwenden.
+* **Kein IMAP getestet.** Der Code ist da, geprüft ist nur POP3.
+* **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
+
+Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
+unter *Noch offen*.
+
+## Herunterladen und starten
+
+1. [Neuestes Release](https://github.com/HansWurst81675/Eudora7.2/releases/latest)
+   herunterladen, ZIP auspacken — an eine Stelle, an der man schreiben darf,
+   also **nicht** nach `C:\Program Files`.
+2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
+   den Zugangsdaten des Mailkontos.
+3. Die Titelzeile nennt die Fassung, zum Beispiel
+   `Eudora 7.2.0.29 / Paket 1.0.29` — diese Angabe gehört in jeden
+   Fehlerbericht.
+
+Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
+Programm. Wer eine neue Fassung auspackt, kopiert dieses Verzeichnis herüber
+und behält damit Mails, Konten und Filter.
+
+> **Prüfsummen** zu jedem Paket stehen in
+> [Releases/PAKETE.md](Releases/PAKETE.md), zusammen mit dem Commit, aus dem
+> es gebaut wurde.
 
 ## Stand
 
@@ -269,6 +317,24 @@ irgendwo später — als Administrator `gflags /p /enable Eudora.exe /full`,
 Debug-Bau starten, Strg-N, dann `tools\stapel-untersuchen.ps1` in einer
 **32-Bit**-PowerShell mit der `Eudora.pdb` neben der `Eudora.exe`; danach
 `gflags /p /disable Eudora.exe`.
+
+## Fassungen und Pakete
+
+Zwei Nummern, und sie bedeuten Verschiedenes:
+
+| Nummer | steht in | bedeutet |
+|---|---|---|
+| **Quellstand**, z. B. `7.2.0.30` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `1.0.30` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+
+`cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
+gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
+verschiedene Bauten dieselbe Kennung, und ein Fehlerbericht ist keinem Stand
+mehr zuzuordnen (Befund **V-1**).
+
+Die Titelzeile nennt beide Nummern plus den Commit; ein Bildschirmfoto ist
+damit eindeutig. Welches ZIP zu welcher Marke und welchem Commit gehört, führt
+[Releases/PAKETE.md](Releases/PAKETE.md) mit Prüfsumme.
 
 ## Bauen
 
