@@ -483,6 +483,14 @@ if (length $paket_haupt) {
             my $fenster = substr($inhalt, $ab, 200);
             # nur bis zum Ende des Absatzes schauen
             $fenster =~ s/\r?\n\r?\n.*\z//s;
+            # ... und in einer Tabelle nur bis zum Ende der ZEILE. Jede
+            # Tabellenzeile ist eine eigene Aussage; eine Tabelle hat aber
+            # keine Leerzeilen, deshalb lief das Fenster bisher in die
+            # naechste Zeile hinein. Gemeldet wurde am 09.09.2026
+            # WEITERMACHEN.md:10 ("Paket 1.0.25") wegen der Zahl 1.0.24 in
+            # Zeile 12 - und die steht dort zu Recht, als datierte
+            # Rueckschau "Zuletzt von Gregor bestaetigt".
+            $fenster =~ s/\r?\n\|.*\z//s;
             while ($fenster =~ /\b([0-9]+\.[0-9]+\.[0-9]+)\b/g) {
                 my $nr = $1;
                 next unless $nr =~ /^\Q$paket_haupt\E\./;

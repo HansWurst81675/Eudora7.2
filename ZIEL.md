@@ -34,7 +34,7 @@ kein Mailprogramm.
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
 | 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler selbst ist damit **nicht** verschwunden — er steht als Protokollzeile da (`E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst`) und ist als **E-43** weiter offen |
-| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Was fehlt, ist die **Registerkartenleiste am unteren Fensterrand**: die Ersatzschicht bildet sie nicht nach. Gregors Frage dazu: *„kann man die untere zeile (status) immer anzeigen lassen?"* |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **halb, Behebung gebaut** — das Menü *Window* listet sie auf, von Gregor nachgesehen („1 In", „2 Out"). Die fehlende **Registerkartenleiste am unteren Fensterrand** ist in **7.2.0.25** umgesetzt (Anforderung **A-3**, Befund **E-48**): gemessen zwei offene Fenster, zwei beschriftete Karten. **Erfüllt ist das Kriterium erst, wenn Gregor bestätigt hat, dass ein Klick auf eine Karte ihr Fenster nach vorn holt** |
 
 **Sechs von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7), zwei fast oder halb
 (2, 4), eines nicht (8 - die Reiterleiste).**
@@ -245,7 +245,23 @@ ist nicht *nicht vorhanden*, sondern **abgeschaltet**. Nachgemessen am
 | **`SECWorkbook::SetWorkbookMode`** | `OTShim.cpp:1120` | **Attrappe** — meldet „nicht umgesetzt", setzt `m_bWorkbookMode` **nicht** und reserviert keinen Rand |
 | **Wer `OnDrawTab` ruft** | — | **fehlt** — der Streifen wird nie gezeichnet |
 
-Es fehlen also genau zwei Dinge in der Ersatzschicht, nicht die Funktion selbst.
+Es fehlten also nur Anschlüsse in der Ersatzschicht, nicht die Funktion selbst.
+
+**Umgesetzt in 7.2.0.25**, am laufenden Programm gemessen und fotografiert
+(zwei offene Fenster, zwei beschriftete Karten: `In` und
+`No Recipient, No S…`, die aktive hervorgehoben). **Von Gregor noch nicht
+bestätigt** — offen ist vor allem, ob ein **Klick** die Karte nach vorn holt;
+das lässt sich von außen kaum messen.
+
+Vier Ursachen lagen dazwischen, jede einzeln gemessen:
+
+| | war | ist |
+|---|---|---|
+| `SECWorkbook::SetWorkbookMode` | Attrappe, meldete „nicht umgesetzt" und setzte `m_bWorkbookMode` nicht | setzt den Betrieb und reserviert den Streifen |
+| `SECWorkbook::GetTabPts` | lieferte **sechs Nullpunkte** → jede Karte an Punkt (0,0) mit Größe null | echte Kartenform; gezählt werden nur **sichtbare** Blätter, wie in `CountVisibleTabs` |
+| `recalcTabWidth()` | **liefert** die Breite nur zurück, setzt `m_cxTab` nicht — der Rückgabewert war weggeworfen | `m_cxTab = recalcTabWidth()` |
+| Streifenlage | begann bei `rectClient.left` = 0 und lag damit **unter der linken Leiste** (Client-x 6…186); nur der Rand von Karte 1 war zu sehen | beginnt am **MDI-Bereich**. Bewusste Abweichung von `QCGetTaskBarRect` (`workbook.cpp:930`), das dort ebenfalls `rectClient.left` nimmt |
+| Beschriftung | `OnDrawTab` zeichnet nur den **Rahmen** | `OnDrawTabIconAndLabel` wird mitgerufen — sie ist virtuell und wurde von niemandem aufgerufen |
 
 **Woran A-3 sich messen lässt.** Bei laufendem Eudora mit mindestens zwei
 offenen Fenstern:

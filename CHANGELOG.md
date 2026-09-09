@@ -45,10 +45,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.24 — alles Gebaute ist gepackt
+## Nach 7.2.0.25 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.24** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.24 / 1.0.24** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.25** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.25 / 1.0.25** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
@@ -101,6 +101,65 @@ dazu: *„version muß eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.25 — Die offenen Fenster stehen als Registerkarten unten
+
+**Was Gregor damit tun kann, was vorher nicht ging:** unten am Fenster steht
+für jedes offene Fenster eine Registerkarte, wie die Reiter in einem Browser —
+statt nur der Liste im Menü *Window*. Das ist Anforderung **A-3** und der
+fehlende Teil von **Kriterium 8**.
+
+**Von Gregor noch nicht bestätigt.** Gemessen und fotografiert habe ich es
+(zwei offene Fenster → zwei beschriftete Karten, `In` und
+`No Recipient, No S…`, die aktive hervorgehoben). Was ich von außen kaum
+messen kann, ist der **Klick**: holt eine Karte ihr Fenster nach vorn?
+
+### Die Leiste war nicht weg — sie war abgeschaltet
+
+Das Hauptfenster heißt nicht zufällig `QCWorkbook`: Stingrays *Workbook* ist
+genau so eine Reiterleiste. Eudoras Code dafür liegt vollständig im
+Quellbaum — Zeichnen, Geometrie, Treffertest, Kurzhinweise, Kontextmenü, der
+Ein-/Ausschalter in den Einstellungen und der INI-Schlüssel `ShowMDITaskbar`
+mit der Vorgabe **1**. `mainfrm.cpp:1042` schaltet die Leiste bei **jedem**
+Start ein. Nur nahm die Ersatzschicht den Schalter nicht an.
+
+### Vier Ursachen, jede einzeln gemessen
+
+| | war | ist |
+|---|---|---|
+| `SECWorkbook::SetWorkbookMode` | Attrappe: meldete „nicht umgesetzt" und setzte `m_bWorkbookMode` **absichtlich nicht** | setzt den Betrieb und reserviert den Streifen |
+| `SECWorkbook::GetTabPts` | lieferte **sechs Nullpunkte** — Eudora zeichnete jede Karte an Punkt (0,0) mit Größe null | echte Kartenform aus sechs Punkten; gezählt werden nur **sichtbare** Blätter |
+| `recalcTabWidth()` | **liefert** die Breite nur zurück und setzt `m_cxTab` nicht; ich hatte den Rückgabewert weggeworfen | `m_cxTab = recalcTabWidth()` |
+| Streifenlage | begann bei `rectClient.left` = 0 — dort liegt die **linke Leiste** (Client-x 6…186). Karte 0 verschwand darunter, sichtbar war nur der Rand von Karte 1 bei x 182…262 | beginnt und endet am **MDI-Bereich** |
+| Beschriftung | `OnDrawTab` zeichnet nur den **Rahmen** | `OnDrawTabIconAndLabel` wird mitgerufen — virtuell, von Eudora überschrieben, von niemandem aufgerufen |
+
+Die dritte Zeile ist die lehrreichste: die Streifenlage stammt aus Eudoras
+eigener Rechnung (`QCGetTaskBarRect`, `workbook.cpp:930`), die dort ebenfalls
+`rectClient.left` nimmt. Im Original hat das gepasst; bei uns reicht die
+linke Wazoo-Leiste bis ganz nach unten. Das ist eine **bewusste Abweichung
+vom Original**, und sie steht als solche im Quelltext.
+
+### Am Werkzeug
+
+`tools/leisten-messen.ps1` misst jetzt auch den Streifen — Unterkante des
+MDI-Bereichs gegen den Rahmen — zählt die offenen MDI-Fenster und kann mit
+`-Abbild` ein Bild des Fensters speichern. Das Bild entsteht über
+**`PrintWindow`**, nachdem der erste Versuch mit einem Bildschirmabzug ein
+fremdes Dialogfenster mitfotografiert hatte und die Messung damit wertlos
+war, ohne dass es auffiel.
+
+### Was an 1.0.25 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.25 / Paket 1.0.25`.
+
+1. Steht unten je offenem Fenster eine **Registerkarte**?
+2. **Holt ein Klick auf eine Karte ihr Fenster nach vorn?** — der wichtigste
+   Punkt.
+3. Ändert sich der Streifen beim Öffnen und Schließen eines Fensters?
+4. Sind die Beschriftungen dieselben wie im Menü *Window*?
+5. Schaltet *Show MDI task bar* in den Einstellungen die Leiste aus und wieder
+   ein, und überlebt das einen Neustart?
 
 ## 7.2.0.24 — Eine Ursache, vier Befunde: das Konto-Löschen geht wieder
 

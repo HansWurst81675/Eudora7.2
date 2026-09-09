@@ -1006,19 +1006,126 @@ int SECWorkbook::GetSheetCount() const
 //
 // UNGEPRUEFT: die tatsaechlichen Koordinaten des Originals. Ohne
 // Registerkartenstreifen gibt es keinen Bezugspunkt, an dem sie haengen
-// koennten. Deshalb liefert diese Fassung sechs Nullpunkte: QCGetTabRect
-// bildet daraus ein leeres Rechteck, und die einzige Stelle, die davon auch
-// ohne Registerkartenbetrieb erreicht wird - InvalidateRect in
-// QCWorksheet::OnMDIActivate (workbook.cpp:143) - erklaert damit nur ein paar
-// Pixel in der linken oberen Ecke des Rahmens fuer ungueltig, die ohnehin vom
-// MDI-Bereich verdeckt sind.
-void SECWorkbook::GetTabPts(SECWorksheet* /*pSheet*/, CPoint*& pts, int& count)
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Der Streifen fuer die Registerkarten, in Clientkoordinaten des Rahmens.
+// Beide Stellen, die ihn brauchen - OnPaint und GetTabPts - rechnen ueber
+// diese Funktion, damit sie nicht auseinanderlaufen koennen. Die Rechnung ist
+// wortgleich zu QCWorkbook::QCGetTaskBarRect (workbook.cpp:924-946): von der
+// Unterkante des MDI-Bereichs plus zwei Pixel, Hoehe m_cyTab + 6.
+static void OTShimStreifenRect(const CWnd* pRahmen, CWnd* pClient, int cyTab,
+	CRect& rect)
+{
+	rect.SetRectEmpty();
+	if (pRahmen == NULL || pClient == NULL)
+		return;
+	if (!::IsWindow(pRahmen->GetSafeHwnd()) || !::IsWindow(pClient->GetSafeHwnd()))
+		return;
+
+	CRect rectClient;
+	pRahmen->GetClientRect(&rectClient);
+
+	CRect rectMDI;
+	pClient->GetClientRect(&rectMDI);
+	pClient->MapWindowPoints(const_cast<CWnd*>(pRahmen), &rectMDI);
+
+	// ABWEICHUNG von QCWorkbook::QCGetTaskBarRect, und zwar mit Absicht:
+	// dort steht rectTaskBar.left = rectClient.left, also der linke Rand des
+	// RAHMENS. Gemessen am 09.09.2026 liegt dort aber die linke Wazoo-Leiste
+	// (Client-x 6 bis 186), und die erste Karte verschwand vollstaendig
+	// darunter - sichtbar war nur der rechte Rand der zweiten Karte bei
+	// x 182 bis 262. Der Streifen faengt deshalb dort an, wo der MDI-Bereich
+	// anfaengt, und hoert dort auf, wo er aufhoert.
+	//
+	// QCGetTaskBarRect selbst bleibt unangetastet; es wird nur zum
+	// Ungueltigerklaeren benutzt (QCInvalidateAllTabs), und ein zu grosses
+	// Rechteck schadet dort nicht. Die Kartenlage kommt aus GetTabPts, und
+	// die rechnet ueber diese Funktion - Zeichnen und Treffertest bleiben
+	// also miteinander im Reinen.
+	rect.left   = rectMDI.left;
+	rect.top    = rectMDI.bottom + 2;
+	rect.right  = rectMDI.right;
+	rect.bottom = rect.top + cyTab + 6;
+}
+
+
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Hier stand eine Attrappe, die sechs Nullpunkte lieferte. Folge: Eudora
+// zeichnete JEDE Karte an Punkt (0,0) mit Groesse null - der Streifen war
+// reserviert und blieb leer. Gemessen am 09.09.2026 mit
+// tools/leisten-messen.ps1 -Abbild: 127 Pixel Streifen, keine Karte darin.
+//
+// Die sechs Punkte sind kein Zierat, Eudora liest sie einzeln aus:
+//   QCGetTabRect (workbook.cpp:757)  rectTab = pts[0] bis pts[4]
+//                                    -> pts[0] ist OBEN LINKS,
+//                                       pts[4] UNTEN RECHTS
+//   OnDrawTab (:1265)  Region von pts[0]+1 bis pts[4]-1
+//         (:1283-1291) Schatten ueber pts[1] (unten links), pts[5] (oben
+//                      rechts) und pts[2] (unten links)
+// Daraus ergibt sich die Reihenfolge, die hier geliefert wird:
+//   0 oben links   1 unten links   2 unten links
+//   3 unten rechts 4 unten rechts  5 oben rechts
+//
+// QCWorkbook::GetTabPts (:978) verschiebt anschliessend alle Punkte um
+// (+2,-2) und zieht bei 3, 4 und 5 noch ein Pixel in x ab. Das ist
+// beruecksichtigt: die Karten beginnen zwei Pixel weiter links und der
+// Streifen ist zwei Pixel hoeher angesetzt, als er gezeichnet wird.
+//
+// Gezaehlt werden nur SICHTBARE Blaetter - genau wie in
+// QCWorkbook::CountVisibleTabs (:1042), sonst laufen Breite und Platz
+// auseinander.
+void SECWorkbook::GetTabPts(SECWorksheet* pSheet, CPoint*& pts, int& count)
 {
 	count = 6;
 	pts = new CPoint[count];
 
 	for (int i = 0; i < count; i++)
 		pts[i] = CPoint(0, 0);
+
+	if (pSheet == NULL || m_pWBClient == NULL)
+		return;
+
+	// Platz dieses Blattes unter den sichtbaren Blaettern.
+	int nPlatz = -1;
+	int nZaehler = 0;
+	for (int i = 0; i < m_worksheets.GetSize(); i++)
+	{
+		SECWorksheet* pAnderes = (SECWorksheet*) m_worksheets[i];
+		if (pAnderes == NULL || !::IsWindow(pAnderes->GetSafeHwnd()))
+			continue;
+		if ((pAnderes->GetStyle() & WS_VISIBLE) == 0)
+			continue;
+
+		if (pAnderes == pSheet)
+			nPlatz = nZaehler;
+		nZaehler++;
+	}
+
+	if (nPlatz < 0)
+		return;						// nicht sichtbar - keine Karte
+
+	CRect rectStreifen;
+	OTShimStreifenRect(this, m_pWBClient, m_cyTab, rectStreifen);
+	if (rectStreifen.IsRectEmpty())
+		return;
+
+	const int cxKarte = (m_cxTab > 8) ? m_cxTab : 8;
+	const int links   = rectStreifen.left + 2 + nPlatz * cxKarte;
+	const int rechts  = links + cxKarte - 2;
+	const int oben    = rectStreifen.top + 2;
+	const int unten   = oben + m_cyTab;
+
+	// Ueber den rechten Rand hinaus wird nicht gezeichnet.
+	if (links >= rectStreifen.right)
+		return;
+
+	pts[0] = CPoint(links,  oben);
+	pts[1] = CPoint(links,  unten);
+	pts[2] = CPoint(links,  unten);
+	pts[3] = CPoint(rechts, unten);
+	pts[4] = CPoint(rechts, unten);
+	pts[5] = CPoint(rechts, oben);
 }
 
 
@@ -1228,23 +1335,20 @@ void SECWorkbook::OnPaint()
 
 	CPaintDC dc(this);
 
-	CRect rectClient;
-	GetClientRect(&rectClient);
-
-	CRect rectMDI;
-	m_pWBClient->GetClientRect(&rectMDI);
-	m_pWBClient->MapWindowPoints(this, &rectMDI);
-
-	CRect rectStreifen(rectClient.left, rectMDI.bottom + 2,
-					   rectClient.right, rectClient.bottom);
+	CRect rectStreifen;
+	OTShimStreifenRect(this, m_pWBClient, m_cyTab, rectStreifen);
 	if (rectStreifen.Height() <= 0 || rectStreifen.Width() <= 0)
 		return;
 
 	// Untergrund. Ohne ihn stehen beim Verkleinern Reste der alten Karten.
 	dc.FillSolidRect(&rectStreifen, ::GetSysColor(COLOR_BTNFACE));
 
-	// Kartenbreite neu bestimmen - virtuell, also QCWorkbook::recalcTabWidth.
-	recalcTabWidth();
+	// Kartenbreite neu bestimmen. recalcTabWidth ist virtuell und landet in
+	// QCWorkbook (workbook.cpp:999) - aber es LIEFERT die Breite nur zurueck,
+	// es setzt m_cxTab nicht. Genau das war am 09.09.2026 der zweite Fehler:
+	// ich hatte den Rueckgabewert weggeworfen, und alle Karten blieben auf
+	// dem Ausgangswert 100.
+	m_cxTab = recalcTabWidth();
 
 	// Je offenem Fenster eine Karte. Die Liste fuehrt AddSheet/RemoveSheet;
 	// Eudora ruft ueber ResetTaskBar nach jeder Aenderung QCInvalidateAllTabs,
@@ -1257,8 +1361,14 @@ void SECWorkbook::OnPaint()
 		if (!::IsWindow(pSheet->GetSafeHwnd()))
 			continue;
 
-		// Virtuell: QCWorkbook::OnDrawTab zeichnet Rahmen, Symbol und Text.
+		// Zwei Aufrufe, nicht einer. QCWorkbook::OnDrawTab (workbook.cpp:1254)
+		// zeichnet nur den RAHMEN der Karte; Symbol und Beschriftung stehen in
+		// der eigenen virtuellen OnDrawTabIconAndLabel (:1346), und die ruft
+		// OnDrawTab NICHT selbst auf - nachgesehen ueber den ganzen Rumpf.
+		// Gemessen am 09.09.2026: mit nur OnDrawTab standen zwei leere Kaesten
+		// im Streifen.
 		OnDrawTab(&dc, pSheet);
+		OnDrawTabIconAndLabel(&dc, pSheet);
 	}
 }
 
