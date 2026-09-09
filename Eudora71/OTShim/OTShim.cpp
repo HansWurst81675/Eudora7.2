@@ -1392,7 +1392,23 @@ void SECWorkbook::OnPaint()
 		return;
 
 	// Untergrund. Ohne ihn stehen beim Verkleinern Reste der alten Karten.
-	dc.FillSolidRect(&rectStreifen, ::GetSysColor(COLOR_BTNFACE));
+	//
+	// BEFUND E-53 (Gregor, 09.09.2026): "schoenheitsfehler beim schliessen,
+	// da bleibt ein strich uebrig." Nach dem Schliessen eines Fensters stand
+	// an der Stelle der verschwundenen Karte noch eine waagrechte Linie.
+	//
+	// Die Ursache war eine Unsymmetrie in DIESER Datei: StreifenAuffrischen
+	// erklaert den Streifen mit InflateRect(2, 2) fuer ungueltig, gefuellt
+	// wurde aber nur der Streifen selbst. Die zwei Pixel Rand ringsum blieben
+	// also stehen - und genau dort liegen die Kanten, die
+	// QCWorkbook::GetTabPts um (+2,-2) verschiebt.
+	//
+	// Jetzt wird gefuellt, was auch fuer ungueltig erklaert wird. Beide
+	// Stellen benutzen denselben Betrag; wer ihn aendert, aendert ihn hier
+	// und dort.
+	CRect rectFuellen(rectStreifen);
+	rectFuellen.InflateRect(2, 2);
+	dc.FillSolidRect(&rectFuellen, ::GetSysColor(COLOR_BTNFACE));
 
 	// Kartenbreite neu bestimmen. recalcTabWidth ist virtuell und landet in
 	// QCWorkbook (workbook.cpp:999) - aber es LIEFERT die Breite nur zurueck,

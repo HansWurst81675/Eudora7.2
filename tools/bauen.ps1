@@ -186,8 +186,63 @@ param(
   [switch]$OhneZweitenGang,
   [switch]$JedenFehlerZaehlen,
   [string[]]$BekannteFehlerAus = @('OT501.vcxproj'),
-  [switch]$TrotzdemBauen
+  [switch]$TrotzdemBauen,
+  # Baut auch mit ungesicherten Quelldateien. Siehe die Pruefung dazu weiter
+  # unten - sie ist da, weil ein Bau die Zeit ist, in der Arbeit liegenbleibt.
+  [switch]$Ungesichert
 )
+
+# --- Ungesicherte Quelldateien --------------------------------------------
+#
+# WARUM DAS HIER STEHT
+#
+# Gregor am 09.09.2026: "ja, ich sagte dir immer: sichern, sonst ist es weg!"
+# Und es war weg: waehrend ein Bau lief, hat er gemergt und danach
+# "git checkout main --force" gefahren. Drei Aenderungen von mir waren damit
+# verloren - eine Quelldatei, eine Lehre und ein Werkzeug. Rekonstruierbar nur,
+# weil die Vorlagen zufaellig noch im Kladdenordner lagen.
+#
+# Der Ausloeser ist immer derselbe: ein Bau dauert Minuten, in denen ich nichts
+# tue und Gregor arbeitet. Genau dann darf nichts Ungesichertes im Baum liegen.
+# Deshalb prueft es die Stelle, die den Bau startet - nicht eine Lehre, die man
+# beim Eiligsein nicht liest (Arbeitsweise/commit-auf-extra-branch-und-pushen.md).
+#
+# Geprueft werden nur QUELLEN. Bauergebnisse unter Bin/ und Build/ zaehlen
+# nicht, sonst waere die Pruefung nach jedem Bau selbst rot.
+
+if (-not $Ungesichert -and -not $NurPruefen) {
+  $offen = @()
+  try {
+    $roh = & git -C $PSScriptRoot\.. status --porcelain 2>$null
+    foreach ($z in $roh) {
+      if ([string]::IsNullOrWhiteSpace($z)) { continue }
+      $pfad = $z.Substring(3).Trim('"')
+      if ($pfad -like 'Eudora71/Bin/*')   { continue }
+      if ($pfad -like 'Eudora71/*/Build/*') { continue }
+      if ($pfad -like 'Releases/*')       { continue }
+      if ($pfad -like 'tools/TESTLAEUFE.md') { continue }
+      $offen += $pfad
+    }
+  } catch { }
+
+  if ($offen.Count -gt 0) {
+    Write-Host ''
+    Write-Host '  BAU ABGEWIESEN: ungesicherte Quelldateien im Arbeitsbaum'
+    Write-Host ''
+    foreach ($p in $offen) { Write-Host ('    ' + $p) }
+    Write-Host ''
+    Write-Host '  Ein Bau dauert Minuten. In dieser Zeit arbeitet Gregor weiter -'
+    Write-Host '  am 09.09.2026 hat ein "git checkout main --force" waehrend eines'
+    Write-Host '  Baus drei Aenderungen vernichtet. Erst sichern:'
+    Write-Host ''
+    Write-Host '      git add -A && git commit -m "..."'
+    Write-Host '      git push origin <zweig>'
+    Write-Host ''
+    Write-Host '  Wenn es diesmal wirklich nur ein Wegwerfbau ist:  -Ungesichert'
+    Write-Host ''
+    exit 1
+  }
+}
 
 # BEFUND E-31: Kein zweiter Bau gleichzeitig.
 #
