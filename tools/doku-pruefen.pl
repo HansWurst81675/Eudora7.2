@@ -203,7 +203,16 @@ for my $datei (@aktuell) {
     for my $i (0 .. $#zeilen) {
         my $satz = $zeilen[$i];
         $satz .= " " . $zeilen[$i+1] if $i < $#zeilen;
-        next unless $satz =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\s+Kriterien\s*(?:stehen|sind)?/i;
+        # \*{0,2} zweimal - die Gesamtzahl darf fett stehen ("von **neun**
+        # Kriterien"). Ohne das lief die ganze Summenpruefung an der fetten
+        # Schreibweise vorbei, und zwar STUMM: $gesamt blieb undef, das "next"
+        # darunter griff, und ein falscher Satz wurde nie gemeldet. Gemessen am
+        # 09.09.2026 mit der umgedrehten Gegenprobe (L-12.2): erst der Fall
+        # "**Drei** von **neun** Kriterien ... **zwei**" - Summe 5 statt 9 -
+        # hat es gezeigt. Der richtige Satz war vorher auch still, nur aus dem
+        # falschen Grund. Dieselbe Luecke wie L-10.1 in der Wortzahlpruefung
+        # darueber, dort am 08.09.2026 geschlossen.
+        next unless $satz =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+\*{0,2}Kriterien\s*(?:stehen|sind)?/i;
         my $gesamt = $wort{ lc $1 };
         next unless defined $gesamt;
         # Achtung: der Satz enthaelt Punkte im Verweis "[ZIEL.md](ZIEL.md)".
@@ -212,6 +221,27 @@ for my $datei (@aktuell) {
         my ($rest) = $satz =~ /Kriterien\b(.*?)\.\*\*/;
         next unless defined $rest;
         my $summe = 0;
+        # Satzform "N von M Kriterien" - Befund L-12.2, gemeldet aus L-11.
+        #
+        # Bei "Sieben von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7, 8),
+        # zwei sind fast erfuellt (2, 4)." steht der ERSTE Teil - die sieben -
+        # VOR dem Wort "Kriterien". $rest beginnt aber erst dahinter, also
+        # fiel er aus der Summe heraus: gezaehlt wurden nur die zwei.
+        #
+        # Zwei Folgen, beide am 09.09.2026 im Gegentest gemessen:
+        #   - eine arithmetisch RICHTIGE Aussage (7 + 2 = 9) wurde als Mangel
+        #     gemeldet. Eine Schranke, die richtige Saetze anschwaerzt, wird
+        #     ignoriert (Befund X-1);
+        #   - im echten Fehlerfall "Drei von neun ... zwei" stand eine FALSCHE
+        #     Zahl in der Meldung ("ergibt aber 2" statt 5). Die Meldung kam
+        #     also zufaellig richtig heraus, aus dem falschen Grund.
+        #
+        # \*{0,2} an drei Stellen, weil die Zahlwoerter fett stehen duerfen
+        # ("**sieben** von **neun** Kriterien") - dieselbe Luecke, die in der
+        # Wortzahlpruefung darueber am 08.09.2026 als L-10.1 geschlossen wurde.
+        if ($satz =~ /\b(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+von\s+\*{0,2}(?:zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+\*{0,2}Kriterien/i) {
+            $summe += $wort{ lc $1 };
+        }
         while ($rest =~ /\b(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\b/gi) {
             $summe += $wort{ lc $1 };
         }

@@ -15,7 +15,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 |---|---|---|
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. Keine Behebung in Sicht |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. Gehört **nicht** zur Registerkartenleiste (E-48/E-50), sondern zum Fensterzustand über `SaveOpenWindows`. Getrennt zu messen, noch nicht angefasst |
-| — | **Gebaut, aber von Gregor nicht bestätigt:** **E-49** (linken Bereich breiter ziehen, Anforderung **A-4**), **E-50** (drei Mängel an der Registerkartenleiste), **E-52** (Trennbalken bleibt greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das seitliche Ziehen hat er noch nicht beurteilt |
+| — | **Gebaut, aber von Gregor nicht bestätigt:** **E-49** (linken Bereich breiter ziehen, Anforderung **A-4**), **E-50** (drei Mängel an der Registerkartenleiste), **E-52** (Trennbalken bleibt greifbar, Karten nicht doppelt), **E-53** (kein Strich beim Schließen, 7.2.0.28) und die neun aus 7.2.0.29: **E-54** bis **E-62** | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das seitliche Ziehen hat er noch nicht beurteilt |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
 
@@ -32,7 +32,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **A-1** (Vorgaben für ein neu angelegtes Konto) | **erfüllt** — *„default werte beim neuen persona konto für 'leave message on server' greifen."* |
 | **A-2** (*Task Status* und *Task Errors* waagrecht unten) | **erfüllt** — *„leiste unten paßt."* |
 | **A-3** (offene Fenster als Registerkarten direkt auswählen) | **erfüllt** — von Gregor am 09.09.2026 bestätigt (**E-48**, umgesetzt in 7.2.0.25). Damit ist Kriterium 8 ganz erfüllt |
-| **A-4** (den linken Bereich breiter ziehen) | **gebaut, nicht bestätigt** — **E-49** in 7.2.0.26, in 7.2.0.27 durch **E-52** nachgebessert. Bestätigt ist nur die Höhenänderung des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* |
+| **A-4** (den linken Bereich breiter ziehen) | **gebaut, nicht bestätigt** — **E-49** in 7.2.0.26, in 7.2.0.27 durch **E-52** und in 7.2.0.29 durch **E-54** (der Ziehrahmen war nach rechts unsichtbar) und **E-55** (acht Pixel leerer Streifen unter der Werkzeugleiste) nachgebessert. Bestätigt ist nur die Höhenänderung des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* |
 
 > **07.09.2026, Gregor zu Paket 1.0.21:** *„mail können jetzt abgeschickt
 > werden."* und *„weiterleitung funktioniert übrigens."* Damit ist der Kreis
@@ -48,10 +48,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.27 — alles Gebaute ist gepackt
+## Nach 7.2.0.29 — alles Gebaute ist gepackt
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.27** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.27 / 1.0.27** (`cat
+Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.29** steckt.
+`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.29 / 1.0.29** (`cat
 VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
 neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
 tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
@@ -72,8 +72,9 @@ dazu: *„version muß eindeutig sein"*).
 > mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
 > liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
 > die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
-> ausgeliefert. Seit 1.0.27 ist **nichts** dazugekommen, was nicht im Paket
-> steckt — die Werkzeuge der letzten Bauten stehen in den Abschnitten zu
+> ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
+> was nicht in seinem Paket steckt — die Werkzeuge der letzten Bauten stehen
+> in den Abschnitten zu
 > 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
 
 > **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
@@ -87,6 +88,198 @@ dazu: *„version muß eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.29 — Acht Befunde des Prüfers und sieben aus der neuen Schranke
+
+**Was Gregor damit tun kann, was vorher nicht ging:** den Trennbalken ziehen
+und dabei **sehen**, wohin (E-54); den Registerkartenstreifen in den
+Einstellungen wieder **abschalten** (E-56); rechts im Streifen klicken, ohne
+dass sich ein **Browser** öffnet (E-58). Dazu drei Fehler, die noch nicht
+aufgefallen sind, aber Schaden anrichten konnten (E-57, E-60, E-61), und der
+leere Streifen unter der Werkzeugleiste ist weg (E-55).
+
+**Von Gregor noch nicht bestätigt.** Diese Fassung entsteht **ohne** Release —
+erst sein Test, dann die Veröffentlichung
+([Arbeitsweise/release-erst-nach-gregors-test.md](Arbeitsweise/release-erst-nach-gregors-test.md)).
+
+Acht davon kommen aus **PRÜFERs sechstem Durchgang** über die A-3/A-4-Arbeit,
+sieben weitere aus dem ersten Lauf der Schranke, die daraus entstanden ist
+(**E-62**, unten).
+Sie wurden bewusst in **einem** Bau zusammengefasst: ein Bau kostet rund zwölf
+Minuten, weil `OTShim.h` über `stdafx.h` im vorkompilierten Kopf liegt und
+jede Änderung daran alle 364 Quellen neu übersetzt (siehe *Warum das Bauen so
+lange dauert* unten).
+
+### Was Gregor sieht
+
+| Befund | Vorher | Jetzt |
+|---|---|---|
+| **E-54** | der Ziehrahmen war beim Ziehen **nach rechts unsichtbar** — man zog ins Blinde | er wird auf dem **Bildschirm** gezeichnet, wie MFC es beim Ziehen von Leisten macht, und ist über die ganze Strecke zu sehen |
+| **E-55** | ein **acht Pixel hoher leerer Streifen** unter der Werkzeugleiste | weg — der Greifstreifen entsteht nur noch links, rechts und unten |
+| **E-56** | *Show MDI task bar* **abschalten** ließ den Kartenstreifen stehen | er verschwindet |
+| **E-58** | ein Klick in den **rechten Rand** des Streifens öffnete den **Browser**, ohne dass dort etwas zu sehen war | kein Treffer, solange das Logo nicht gezeichnet wird |
+
+### Was er nicht sieht, was aber wichtiger ist
+
+| Befund | Was passieren konnte |
+|---|---|
+| **E-57** | `IsTabLabelTruncated` legte bei **jeder Mausbewegung** über dem Streifen eine `CPaintDC` an — außerhalb von `WM_PAINT`. `BeginPaint` erklärt den Ungültigkeitsbereich für erledigt, **ohne zu malen**: was gerade neu gezeichnet werden sollte, wurde verworfen. Das ist Gregors Satz *„hier ist kein refresh drin"*, und er galt weiter, obwohl E-52 behoben war |
+| **E-60** | ein Trennbalken konnte **während des Ziehens gelöscht** werden. `Track` verteilt fremde Nachrichten, eine davon löst einen Anordnungsdurchlauf aus — und der lief durch `EndRecycleSplitters`, das genau das Objekt löschte, in dessen Methode man noch stand. Neu ist die Marke `m_bTracking`, die Freigabe **und** Löschen fernhält |
+| **E-61** | `Track` **verschluckte `WM_QUIT`**. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange; wer sie nicht zurückstellt, hat das Beenden des Programms verschluckt — **genau die Fehlerklasse aus Kriterium 7**, diesmal von mir selbst neu eingebaut. Jetzt wird sie mit `::PostQuitMessage` zurückgestellt und das Ziehen abgebrochen |
+| **E-59** | `m_cxTab` wurde nur in `OnPaint` gesetzt. Alles, was die Kartenbreite braucht, **ohne zu malen** — `TabHitTest`, `QCGetTabRect`, `CalcLogoTopLeft` —, rechnete zwischen einer Änderung und dem nächsten Malen mit dem alten Wert, und ein Klick traf die Nachbarkarte |
+
+### E-58 war eine Rückentwicklung, die ich selbst eingebaut habe
+
+`CalcLogoTopLeft` prüft die Trefferlage **nur über x**:
+
+```cpp
+if (nLeftEdge > 0 && (!pIntersectPoint || pIntersectPoint->x >= nLeftEdge))
+```
+
+Ein y-Vergleich fehlt ganz. Getroffen war damit der **gesamte rechte
+Fensterrand**, nicht die 111 × 23 Pixel des Logos. Und das Logo wird
+überhaupt nicht gezeichnet, weil `OnDrawBorder` in dieser Ersatzschicht von
+niemandem gerufen wird — im Original tat das `SECWorkbook::OnPaint`.
+
+Das war jahrelang harmlos, weil `QCWorkbook::OnLButtonDown` die Frage **nur
+bei `m_bWorkbookMode`** stellt (`workbook.cpp:1132`) — und der Schalter ist
+erst seit **A-3** an. Also eine Rückentwicklung aus 1.0.25 bis 1.0.28, die
+niemand gemeldet hat, weil ein Browserfenster nach einem Klick ins Leere nicht
+wie ein Programmfehler aussieht.
+
+Die Trefferprüfung liefert jetzt `FALSE`, solange nichts gezeichnet wird. Der
+Weg über `TopLeft` bleibt unberührt: wer `OnDrawBorder` wieder ruft, bekommt
+die Stelle nach wie vor — dann, und erst dann, gehört dort eine vollständige
+Prüfung gegen das Rechteck hin, samt y.
+
+### E-62 — die neue Schranke fand beim ersten Lauf sieben weitere Stellen
+
+Aus E-51 und E-61 ist `tools/pruefe-nachrichtenschleife.pl` entstanden: eine
+eigene Nachrichtenschleife muss `WM_QUIT` zurückstellen und darf nicht ohne
+Zeitschranke warten. Beim **ersten Lauf über den ganzen Baum** hat sie
+**sieben weitere Stellen** gemeldet — alle in **Eudoras eigenem Code**, keine
+aus der Portierung.
+
+| Stelle | Was passierte |
+|---|---|
+| `EscapePressed` (`guiutils.cpp:1666`) | wird während **langer Vorgänge** gerufen, also gerade beim Mailabruf — und nahm dabei `WM_QUIT` heraus, ohne sie zurückzustellen |
+| `LeftClickAttachment` (`guiutils.cpp:2910`) | **hängt**, siehe unten |
+| `SyncPlayMedia` (`guiutils.cpp:3387`) | verschluckte das Beenden, während ein Anhang abgespielt wird |
+| `CTocView::SizeColumn` (`tocview.cpp:3458`) | **hängt**, siehe unten |
+| `CTocFrame::DoPreviewDisplay` (`TocFrame.cpp:3673`) | verschluckte das Beenden beim Warten auf die Vorschau |
+| `CTridentView::DoFindFirst`, zwei Schleifen | dasselbe beim Suchen |
+| `CTridentView::Print` | dasselbe beim Drucken, dazu bliebe `SetRedraw(FALSE)` stehen |
+
+**Zwei davon hängen, statt nur zu verschlucken.** `LeftClickAttachment` und
+`CTocView::SizeColumn` warten so:
+
+```cpp
+while (1)
+{
+    MSG msg;
+    GetMessage(&msg, m_hWnd, 0, 0);   // Rueckgabewert wird nicht ausgewertet
+    ...
+}
+```
+
+`WM_QUIT` kommt **trotz** Fensterfilter — so ist `GetMessage` dokumentiert.
+Der Rückgabewert wird dann 0, aber `while (1)` fragt ihn nicht, und die
+Nachricht ist verbraucht. Die Schleife wartet danach **für immer** auf eine
+Nachricht, die nie mehr kommt, und hält dabei den Mausfang. Bei `SizeColumn`
+genügt dafür das Ziehen einer **Spaltenbreite** im Postfachfenster.
+
+Damit ist eine mögliche Ursache von Gregors *„beenden kann ich es auch nicht"*
+benannt, die **nicht** aus der Portierung stammt, sondern im Original steht —
+und die man von Hand kaum findet, weil sie nur in einem bestimmten Moment
+zuschlägt.
+
+### Warum das Bauen so lange dauert
+
+Gregor am 09.09.2026: *„schau nach, warum das bauen so lange dauert"*. Die
+Antwort ist eine Include-Kette:
+
+`Eudora71/Eudora/stdafx.h:52` → `OTShimAll.h` → `OTShim.h`
+
+Damit liegt die **Ersatzschicht im vorkompilierten Kopf** aller 364 Quellen
+des Eudora-Projekts. Jede Änderung an `OTShim.h` macht ihn ungültig, und alle
+364 werden neu übersetzt — gemessen 357 von 371 Objektdateien. Es genügt
+sogar ein `git switch`, das nur den Zeitstempel der Datei anfasst.
+
+| Abschnitt | Dauer |
+|---|---|
+| Neuübersetzen nach einer Änderung an `OTShim.h` | ~7 min |
+| zweiter Durchlauf für `EudoraRes` und `Eudora` mit `/p:BuildProjectReferences=false` (nötig, weil `OT501` als Projektverweis scheitert) | ~5 min |
+| Paket schnüren und prüfen | ~3 min |
+
+Deshalb wurden diese acht Befunde in **einem** Bau zusammengefasst statt
+einzeln geliefert.
+
+### Was an 1.0.29 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.29 / Paket 1.0.29`.
+
+1. **Trennbalken links, nach rechts ziehen** — ist der Ziehrahmen die ganze
+   Strecke über **zu sehen** (E-54)? Wird der linke Bereich breiter?
+2. Nach links ziehen — wird er wieder schmaler? **Friert nichts ein?**
+3. **Unter der Werkzeugleiste** — ist dort ein leerer Streifen (E-55)? Sollte
+   weg sein.
+4. *Tools → Options → Interface*, **Show MDI task bar abschalten** — ist der
+   Kartenstreifen weg (E-56)? Wieder einschalten — ist er wieder da?
+5. **Rechts im Kartenstreifen klicken**, hinter der letzten Karte — öffnet
+   sich ein **Browser** (E-58)? Sollte nicht.
+6. Maus über eine Karte mit langem Titel halten — kommt der Kurzhinweis, und
+   bleibt die Anzeige daneben **richtig** (E-57)?
+7. *File → Exit* während nichts gezogen wird — beendet es sauber (E-61 darf
+   Kriterium 7 nicht beschädigt haben)?
+
+## 7.2.0.28 — Beim Schließen bleibt kein Strich stehen
+
+**Was Gregor damit tun kann, was in 1.0.27 nicht ging:** ein Fenster schließen,
+ohne dass an der Stelle der verschwundenen Registerkarte eine Linie
+zurückbleibt.
+
+**Von Gregor noch nicht bestätigt.**
+
+### E-53 — eine Unsymmetrie in meinem eigenen Code
+
+> *„schönheitsfehler beim schließen, da bleibt ein strich übrig."*
+
+`StreifenAuffrischen` erklärt den Registerkartenstreifen mit
+`InflateRect(2, 2)` für ungültig — gefüllt wurde in `OnPaint` aber nur der
+Streifen **ohne** diesen Rand. Die zwei Pixel ringsum blieben also stehen, und
+genau dort liegen die Kanten, die `QCWorkbook::GetTabPts` um (+2,−2)
+verschiebt. Jetzt wird gefüllt, was auch für ungültig erklärt wird; beide
+Stellen benutzen denselben Betrag.
+
+### Zwei Schranken gegen Fehler in meiner Arbeitsweise
+
+Diese Fassung bringt keinen weiteren Programmcode, aber zwei Werkzeuge, die
+zwei Fehler von mir künftig verhindern:
+
+**`tools/release-veroeffentlichen.ps1`** — der einzige erlaubte Weg zu einem
+Release. Ich hatte v1.0.27 veröffentlicht, **bevor** Gregor es geprüft hatte;
+sein Befund E-53 kam danach, und die Fassung war released und fehlerhaft
+zugleich. Seine Anweisung: *„erst teste ich hier lokal, wenn ich es für gut
+befunden habe, kannst du ein github release bauen."* Das Werkzeug verlangt
+seine Freigabe im Klartext und eine Bestätigung im CHANGELOG-Abschnitt der
+Fassung; steht dort „noch nicht bestätigt", weist es ab.
+
+**`tools/bauen.ps1` weist ungesicherte Quelldateien ab.** Während ein Bau
+lief, hat Gregor gemergt und danach `git checkout main --force` gefahren —
+drei Änderungen von mir waren weg, darunter die E-53-Behebung selbst.
+Rekonstruierbar nur, weil die Vorlagen zufällig noch im Kladdenordner lagen.
+Der Auslöser ist immer derselbe: ein Bau dauert Minuten, in denen ich nichts
+tue und er weiterarbeitet. Wegwerfbauten gehen weiter mit `-Ungesichert`.
+
+### Was an 1.0.28 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`**. Titel: `Eudora 7.2.0.28 / Paket 1.0.28`.
+
+1. Mehrere Fenster öffnen, dann eines **schließen** — bleibt ein Strich?
+2. Und weiter offen aus 1.0.27: bleibt der Trennbalken nach dem Verbreitern
+   greifbar, stehen die Karten einfach statt doppelt, überlebt die Breite
+   einen Neustart, und **friert nirgends etwas ein**?
 
 ## 7.2.0.27 — Der Trennbalken bleibt greifbar, die Karten stehen nicht doppelt
 

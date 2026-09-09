@@ -426,7 +426,13 @@ Ausgangsstand: `3b9f609`. **Nichts gebaut, nichts gestartet, nicht gepusht.**
 
 ## Was ich am Auftrag berichtigt habe
 
-### L-11.0 — **Eine Kennung `E-53` gibt es nicht**
+### L-11.0 — „Eine Kennung `E-53` gibt es nicht" — **diese Meldung war falsch**
+
+> **Widerlegt um 12:45 desselben Tages, siehe L-11.7 am Ende.** E-53 lag auf
+> dem Zweig `karten-und-trennbalken`, der noch nicht gepusht war und den
+> `wt/lektor` deshalb nicht sehen konnte. Die höchste vergebene Kennung ist
+> **E-62**. Der Abschnitt darunter bleibt stehen, weil er die Messung zeigt,
+> die zu dem falschen Schluss geführt hat.
 
 Der Auftrag nannte „neue Befunde **E-48 bis E-53**" und führte **E-53** unter
 *gebaut, aber nicht bestätigt*. Gemessen:
@@ -873,7 +879,7 @@ Von diesen sieben ist **keiner zu ändern**:
 | `Arbeitsweise/agenten-koordinieren.md:13` | `Arbeitsweise/` ist ein **Spiegel** des Gedächtnisverzeichnisses (`tools/lehren-spiegeln.pl`); eine Änderung hier geht beim nächsten Spiegeln verloren. Die Quelle trägt denselben Fehler und liegt **nicht** in meinem Arbeitsbaum |
 | `Befunde/LEKTOR-5.md:483` | die Zeile **zitiert** vorgeschlagenen Text für `README.md` in einem Blockzitat; dort im Wurzelverzeichnis ist `](ZIEL.md)` **richtig**. Ein Zitat zu berichtigen wäre eine Verfälschung |
 | `Befunde/LEKTOR-5.md:490`, `Befunde/LEKTOR-6.md:365`, `:373` sowie **zwei Treffer in der Tabelle, die Du gerade liest** | die „Verweise" stehen in **Schrägstrichen** — als Beispiel dafür, wie der Fehler aussieht. Das ist eine Schwäche meines Prüfskripts (es überliest Inline-Code nicht), kein Mangel in der Doku. Die beiden neuen Treffer sind erst durch **diesen Bericht** entstanden: 5 vor dem Anhängen, 7 danach |
-## L-11.4 — Der Hook zeigt auf ein Werkzeug, das es in keinem Zweig gibt
+## L-11.4 — Der Hook zeigte auf ein Werkzeug, das es in keinem Zweig gab
 
 **Nach der Behebung von L-11.3 scheiterte derselbe Commit erneut**, diesmal so:
 
@@ -910,10 +916,218 @@ unter meinem Commit einzureichen. Ebenso habe ich `--no-verify` nicht benutzt.
 > HEAD:<pfad>` und ein Probelauf —, und `tools/lehren-schranken.pl` liest den
 > Hook schon.
 >
-> **Bis das gelöst ist, bleibt der Merge in `wt/lektor` offen.** Alles ist
-> gestaged und alle Schranken außer dieser einen sind grün; sobald
-> `tools/pruefe-nachrichtenschleife.pl` in einem Zweig liegt, den `wt/lektor`
-> sieht, genügt ein einzelner `git commit`.
+> **Nachtrag, 12:34 desselben Tages — gelöst, und zwar besser als von mir
+> vorgeschlagen.** Ein anderer Agent hat den Hook umgebaut und den Fall als
+> **Befund X-8** aufgeschrieben: `WURZEL` kommt jetzt aus `--show-toplevel`,
+> und eine Hilfsfunktion `schranke()` **überspringt** ein Werkzeug, das es im
+> aktuellen Arbeitsbaum nicht gibt, statt den Commit abzuweisen. Sein
+> Kommentar nennt die Messung ausdrücklich: *„gemessen an LEKTOR, der eine
+> halbe Stunde nicht committen konnte, obwohl seine Arbeit fertig und alle
+> seine Schranken gruen waren."* Mein Commit lief unmittelbar danach durch:
+>
+> ```
+> pre-commit: tools/pruefe-nachrichtenschleife.pl gibt es in diesem
+> Arbeitsbaum nicht - uebersprungen.
+> [wt/lektor 46936e1] L-11: Doku auf 7.2.0.27 / 1.0.27 …
+> ```
+>
+> Damit ist mein Vorschlag oben („erst committen, dann in den Hook") **nicht**
+> die gewählte Lösung — die gewählte ist allgemeiner und deckt auch den Fall
+> ab, dass ein Werkzeug absichtlich nur in einem Arbeitsbaum liegt. Sie steht
+> aber nur im laufenden Hook, nicht in `tools/hooks-einrichten.sh`: siehe
+> **L-11.6**.
+
+## L-11.5 — `lehren-spiegeln.pl` schrieb aus **jedem** Arbeitsbaum in den Hauptbaum
+
+**Das ist der schwerste Befund dieses Durchgangs**, und er ist genau die
+Gefahr, gegen die es `AGENTEN.md` und
+[../Arbeitsweise/agenten-trennen-worktrees.md](../Arbeitsweise/agenten-trennen-worktrees.md)
+gibt: ein Werkzeug, das aus meinem Arbeitsbaum Dateien in einem **fremden**
+schreibt — und zwar aus dem `pre-commit`-Haken heraus, also bei jedem Commit.
+
+**Gefunden, weil zwei Commit-Versuche in Folge mit derselben Meldung
+abbrachen** und `git status` danach **keine** Änderung zeigte:
+
+```
+Arbeitsweise/ wurde aktualisiert (1 Datei(en)):
+  LEHREN-AUS-DEM-CHAT.md
+Die Kopien liegen jetzt im Arbeitsverzeichnis, sind aber nicht gestaget.
+```
+
+**Die Ursache, gemessen aus `Eudora7.2-wt-lektor`:**
+
+| Befehl | Ergebnis |
+|---|---|
+| `git rev-parse --path-format=absolute --git-common-dir` | `C:/Users/Gregor/…/Eudora7.2/.git` → **Hauptbaum** |
+| `git rev-parse --show-toplevel` | `C:/Users/Gregor/…/Eudora7.2-wt-lektor` → **dieser Arbeitsbaum** |
+| `$ziel` im Werkzeug | war `"$wurzel/Arbeitsweise"` mit `$wurzel` aus dem **common-dir** |
+
+Das Werkzeug hat `$wurzel` **absichtlich** aus `--git-common-dir` genommen —
+für den **Namen des Gedächtnisverzeichnisses** ist das richtig, und der
+Kommentar darüber begründet es mit einem eigenen Befund vom 06.09.2026. Nur
+wurde derselbe Pfad auch als **Ziel** der Kopien benutzt. Damit galt: Name aus
+dem Hauptbaum — richtig; Ziel aus dem Hauptbaum — falsch.
+
+**Zwei Folgen, beide gemessen:**
+
+1. **Fremdschreiben.** Der Hook hat aus `wt/lektor` `Arbeitsweise/` im
+   **Hauptbaum** geändert. Zeitstempel dort:
+   `LEHREN-AUS-DEM-CHAT.md` **12:24**, `eigene-schleife-verschluckt-nichts.md`
+   **12:17** — beides während meiner Commit-Versuche.
+2. **Der Arbeitsbaum veraltet lautlos, und die Schranke merkt es nicht.**
+   `perl tools/lehren-spiegeln.pl` aus `wt/lektor` gab **0** zurück — es
+   verglich das Gedächtnis mit der Kopie im **Hauptbaum**, fand sie gleich und
+   war zufrieden. Gemessen im selben Moment:
+
+   | Datei | Gedächtnis | Hauptbaum | `wt/lektor` |
+   |---|---|---|---|
+   | `LEHREN-AUS-DEM-CHAT.md` | 9 862 B | 9 862 B | **9 570 B** |
+   | `eigene-schleife-verschluckt-nichts.md` | 3 648 B | 3 648 B | **fehlte ganz** |
+   | `MEMORY.md` | — | auf Stand | **veraltet** |
+
+   Da Agenten fast immer in einem Arbeitsbaum sitzen, ist damit **keine** heute
+   geschriebene Lehre je in dem Zweig gelandet, aus dem committet wird. Das
+   Versprechen des Hooks — *„sind die Lehren im Repo?"* — war in jedem
+   Arbeitsbaum wertlos. Es ist derselbe Fehler wie der Befund vom 06.09.2026,
+   nur an der anderen Hälfte derselben Zeile.
+
+**Behoben** mit zwei Wurzeln statt einer: `$wurzel` (Hauptbaum) bleibt für den
+Namen des Gedächtnisverzeichnisses, neu ist `$baum` aus `--show-toplevel` als
+**Ziel** der Kopien. Fällt `--show-toplevel` aus, wird auf `$wurzel`
+zurückgefallen — das alte Verhalten. `perl -c` fehlerfrei, CR=0.
+
+**Gegenprobe, beide Richtungen:**
+
+| Versuch | erwartet | gemessen |
+|---|---|---|
+| **vorher**, aus `wt/lektor`, bei veraltetem Spiegel | Mangel | **0 — stumm** (der eigentliche Fehler) |
+| nachher, `--pruefen` aus `wt/lektor` | Mangel | `Arbeitsweise/ ist nicht auf dem Stand des Gedaechtnisses: eigene-schleife-verschluckt-nichts.md, LEHREN-AUS-DEM-CHAT.md, MEMORY.md`, Rückgabe **1** |
+| nachher, spiegeln aus `wt/lektor` | drei Dateien **in wt/lektor**, Abbruch mit Bitte zu stagen | genau so; danach `9 862 B` und `3 648 B` **im Arbeitsbaum** |
+| nachher, zweiter Lauf aus `wt/lektor` | still | **0** |
+| nachher, `--pruefen` **aus dem Hauptbaum** (Umkehrprobe: zielt es dort weiter auf den Hauptbaum?) | still | **0** — der Hauptbaum bleibt sein eigenes Ziel |
+
+> **Was daran hängen bleibt:** die drei Dateien, die jetzt zum ersten Mal in
+> `wt/lektor` ankommen, sind fremde Arbeit (CHRONIST bzw. Gregors Gedächtnis).
+> Ich habe sie nicht geschrieben, nur den Spiegel dorthin gerichtet, wo er
+> hingehört. Und: **im Hauptbaum liegen dieselben drei Dateien jetzt als
+> Änderung, die niemand bestellt hat** — geschrieben von meinem Hook, bevor der
+> Fehler gefunden war. Ich habe sie dort **nicht angefasst**; wer im Hauptbaum
+> committet, sieht sie und muss entscheiden.
+
+## L-11.6 — `tools/hooks-einrichten.sh` und der laufende Hook sind wieder auseinander
+
+Gemessen um 12:34 am 09.09.2026, nach der Behebung von **X-8** durch einen
+anderen Agenten: der laufende `.git/hooks/pre-commit` ist **neu gebaut** —
+`WURZEL` kommt jetzt aus `--show-toplevel`, und eine Hilfsfunktion
+`schranke()` **überspringt** ein Werkzeug, das es im aktuellen Arbeitsbaum
+nicht gibt, statt den Commit abzuweisen. Genau das hat meinen Commit
+schließlich durchgelassen:
+
+```
+pre-commit: tools/pruefe-nachrichtenschleife.pl gibt es in diesem
+Arbeitsbaum nicht - uebersprungen.
+[wt/lektor 46936e1] L-11: Doku auf 7.2.0.27 / 1.0.27 …
+```
+
+**`tools/hooks-einrichten.sh` kennt diese Fassung nicht.** Ein frischer Klon
+bekommt weiter den alten Hook: ohne `schranke()`-Wächter und ohne
+`pruefe-nachrichtenschleife.pl`. Damit gilt dieselbe Aussage wie in L-11.3,
+nur umgekehrt — was im Repo läuft und was das Einrichtungsskript aufsetzt,
+sind zwei verschiedene Haken.
+
+**Ich habe das Skript NICHT ein zweites Mal nachgezogen.** Der Hook wird in
+diesem Moment von einem anderen Agenten umgebaut (Zeitstempel 12:13, 12:23,
+12:34 innerhalb einer halben Stunde), und zwei Agenten, die dieselbe Datei
+nachziehen, ist genau die Kollision aus `AGENTEN.md`. **Zu tun, sobald der
+Hook steht:** `tools/hooks-einrichten.sh` einmal gegen
+`.git/hooks/pre-commit` stellen und gleich ziehen — und danach eine Schranke,
+die beide gegeneinander hält. Ohne die läuft dieser Widerspruch zum dritten
+Mal auf.
+
+## L-11.7 — Nachtrag um 12:45: ein fremder Merge in meinem Arbeitsbaum, und eine widerlegte eigene Aussage
+
+**Beides gehört in denselben Abschnitt, weil das eine das andere aufgedeckt
+hat.**
+
+### Der Merge
+
+Drei Minuten nach meinem Commit `46936e1` hat **ein anderer Vorgang in meinem
+Arbeitsbaum** `git merge karten-und-trennbalken` gefahren. Gemessen um 12:43:
+
+| gemessen | Ergebnis |
+|---|---|
+| `MERGE_MSG` | `Merge branch 'karten-und-trennbalken' into wt/lektor` |
+| `MERGE_HEAD` | `9ae3bb8` — *„X-8: fremde Arbeitsbaeume nicht durch ein neues Werkzeug blockieren"* |
+| `ORIG_HEAD` | `46936e1` — mein eigener Commit, der Merge sitzt also darauf |
+| Konflikte | `PORTIERUNG.md`, `WEITERMACHEN.md`, `tools/hooks-einrichten.sh` |
+| mitgebracht | 8 Commits, darunter `E-53 behoben`, `E-62`, Quellstand **7.2.0.28** und **7.2.0.29** |
+
+**Ich habe diesen Merge nicht angefangen und nicht abgeschlossen.** Während ich
+den Konflikt in `PORTIERUNG.md` löste, war der in `WEITERMACHEN.md` plötzlich
+schon aufgelöst — mit Text, den ich nicht geschrieben habe (Befunde **E-54**,
+**E-55**, **E-61**, die ich gar nicht kannte). **Zwei Agenten haben in
+demselben Augenblick dieselben Dateien im selben Arbeitsbaum bearbeitet.** Das
+ist genau die Kollision, gegen die es [../AGENTEN.md](../AGENTEN.md) gibt.
+**Ich habe daraufhin aufgehört, den Merge anzufassen**, und nur noch das
+berichtigt, was zweifelsfrei mein eigener Text ist.
+
+**Was ich am Merge getan habe, und nichts darüber hinaus:**
+
+- `PORTIERUNG.md`: den Konflikt aufgelöst als **mein Inhalt + ihre Zahlen**.
+  Die Gegenseite hatte die neueren Nummern (7.2.0.29 / 1.0.29) und den
+  **überholten** Inhalt (*„sechs belegt … eines nicht (8 — die
+  Reiterleiste)"*), meine Seite den richtigen Inhalt und die alten Nummern.
+  **Nicht gestaget** — wer den Merge abschließt, entscheidet.
+- `WEITERMACHEN.md`: **nicht angefasst.**
+- Quellstand in `ZIEL.md` und `AUFGABEN.md` von 7.2.0.27 / 1.0.27 auf
+  **7.2.0.29 / 1.0.29** gezogen, gemessen an `Eudora71/Version.h` (alle drei
+  Makros stimmen: `29`, `7,2,0,29`, `"7.2.0.29"`) und `VERSION`.
+- `BEFUNDE.md`: Kennzahlen neu gemessen (**7 606 Zeilen**, 123 / 204
+  Abschnitte) und die Falschaussage unten berichtigt.
+
+`perl tools/doku-pruefen.pl` danach: **0**, *Kein Widerspruch gefunden* — 22
+geprüfte Dateien, **61** Kennungen im Verzeichnis.
+
+> **Achtung, das Paket 1.0.29 liegt nicht im Repo.** `git ls-files Releases/`
+> führt weiter nur `Eudora72-1.0.2-lauffaehig.zip` und
+> `Eudora72-1.0.27-release.zip`. Wer in `Releases/PAKETE.md` einen Abschnitt
+> für 1.0.29 schreibt, hat kein ZIP, gegen das er messen kann. Der
+> CHANGELOG-Abschnitt heißt *„Nach 7.2.0.29 — alles Gebaute ist gepackt"* —
+> das ist **zu prüfen**, nicht abzuschreiben.
+
+### Meine Aussage „es gibt kein E-53" war falsch
+
+**Und sie war falsch, obwohl ich sie dreimal gemessen hatte.** Meine Messung
+(oben unter L-11.0) war:
+
+```
+grep -rn "E-53" --include=*.md .              # 0
+git grep -n "E-53" origin/lessons_learned      # 0
+git log --all --oneline -S"E-53"               # 0
+```
+
+Alle drei stimmen — und alle drei sind **blind für einen Zweig, der in einem
+anderen Arbeitsbaum entsteht und noch nicht gepusht ist.** Genau dort lag
+`karten-und-trennbalken` mit **E-53** (*„schönheitsfehler beim schließen, da
+bleibt ein strich übrig"*, behoben in 7.2.0.28, von Gregor noch nicht
+bestätigt) und danach **E-54** bis **E-62**.
+
+**Die höchste vergebene Kennung ist `E-62`, nicht `E-52`.** Der Satz in
+`BEFUNDE.md` ist berichtigt und trägt die Widerlegung samt Messung bei sich.
+
+**Die Lehre ist nicht „besser greppen".** `git log --all` sieht nur, was
+*dieses* Repo kennt. Wer den Kennungsraum wissen will, braucht `git branch -a`
+**und** `git worktree list` — oder er fragt Gregor, denn Kennungen vergibt er
+([../AGENTEN.md](../AGENTEN.md), Abschnitt 4). Ich habe das nicht getan und
+daraufhin eine falsche Aussage in `BEFUNDE.md` geschrieben; sie stand
+dort 25 Minuten.
+
+> **Zur Einordnung des Auftrags:** der Auftrag nannte „neue Befunde **E-48 bis
+> E-53**" und lag damit **richtig**. Meine Meldung „E-53 gibt es nicht" war der
+> Fehler, nicht der Auftrag. Was stimmte: E-53 war zu dem Zeitpunkt in keinem
+> Zweig, den `wt/lektor` sehen konnte — deshalb konnte ich ihn nicht prüfen.
+> Der richtige Satz wäre gewesen: *„E-53 ist von hier aus nicht messbar, bitte
+> den Zweig nennen"* — nicht *„es gibt ihn nicht"*.
 
 
 ## Die Schranken am Ende
@@ -934,8 +1148,9 @@ unter meinem Commit einzureichen. Ebenso habe ich `--no-verify` nicht benutzt.
 1. **Der Fehlalarm der Summenprüfung** in `tools/doku-pruefen.pl` (oben
    gemessen). **Gemeldet, nicht behoben** — der Auftrag verlangt es so. Die
    Behebung wäre ein Zweizeiler.
-2. **Es gibt kein `E-53`.** Wenn Gregor einen sechsten neuen Befund im Sinn
-   hatte, fehlt er im Repo. **Ich habe keine Kennung vergeben.**
+2. ~~**Es gibt kein `E-53`.**~~ **Widerlegt, siehe L-11.7.** E-53 existiert auf
+   `karten-und-trennbalken`; die höchste Kennung ist **E-62**. Mein Auftrag lag
+   richtig, meine Meldung war falsch.
 3. **Zu `Releases/Eudora72-1.0.27-release.zip` fehlt die `.sha256`-Datei.** Die
    Prüfsumme steht in `Releases/PAKETE.md`, damit sie nicht verloren geht; ob
    die Datei angelegt wird, entscheide ich nicht. Ebenso liegen die
@@ -961,10 +1176,204 @@ unter meinem Commit einzureichen. Ebenso habe ich `--no-verify` nicht benutzt.
    jedem Commit läuft. Wenn Gregor sie anders will, sind sie in zwei
    Handgriffen zurückgenommen.** Was ich **nicht** getan habe: `--no-verify`
    benutzen.
-9. **Verfahrensvorschlag, nicht umgesetzt:** eine neue Schranke erst in den
+9. **Drei Werkzeuge habe ich heute angefasst, nicht zwei** — dazu kommt
+   `tools/lehren-spiegeln.pl` (L-11.5). Diese Änderung war nicht nötig, um zu
+   committen; sie war nötig, weil das Werkzeug aus meinem Arbeitsbaum in den
+   **Hauptbaum** geschrieben hat. Fünf Gegenproben, beide Richtungen, im
+   Bericht.
+10. **Im Hauptbaum liegen jetzt drei Änderungen in `Arbeitsweise/`, die von
+   meinem Hook stammen** (`LEHREN-AUS-DEM-CHAT.md`,
+   `eigene-schleife-verschluckt-nichts.md`, `MEMORY.md`, Zeitstempel 12:17 und
+   12:24). Ich habe sie dort **nicht angefasst** — mein Arbeitsbaum ist
+   `wt/lektor`. Wer im Hauptbaum committet, sieht sie; inhaltlich sind sie
+   richtig (der Spiegel des Gedächtnisses), sie sind nur am falschen Ort
+   entstanden.
+11. **`tools/hooks-einrichten.sh` und der laufende Hook sind wieder
+   auseinander** (L-11.6). **Bewusst nicht nachgezogen:** der Hook wird gerade
+   von einem anderen Agenten umgebaut, drei Fassungen in einer halben Stunde.
+   Zu tun, sobald er steht — und danach eine Schranke, die beide gegeneinander
+   hält, sonst läuft der Widerspruch zum dritten Mal auf.
+12. **`Arbeitsweise/eigene-schleife-verschluckt-nichts.md` nennt
+   `tools/pruefe-nachrichtenschleife.pl`, und die Datei liegt in keinem
+   Zweig** — nur unverfolgt im Hauptbaum. `tools/lehren-schranken.pl` meldet
+   das zu Recht als Mangel: *„nennt tools/pruefe-nachrichtenschleife.pl — die
+   Datei gibt es nicht"*. **Ich habe die fremde Datei nicht kopiert und die
+   Schranke nicht dafür gelockert.** Sobald der andere Agent sie committet,
+   ist der Mangel weg. Solange sie fehlt, blockiert sie jeden weiteren Commit
+   in diesem Arbeitsbaum — dieselbe Klasse wie X-8, nur eine Schranke weiter:
+   der Hook überspringt ein fehlendes Werkzeug inzwischen, `lehren-schranken.pl`
+   nicht.
+13. **Verfahrensvorschlag, nicht umgesetzt:** eine neue Schranke erst in den
    Hook hängen, wenn sie im Bestand 0 zurückgibt. Heute ist das Gegenteil
-   passiert, und das Repo war stundenlang nicht committierbar.
-10. **Der Nebenbefund ohne Nummer ist nur aufgeschrieben, nicht untersucht.**
+   passiert, und das Repo war eine halbe Stunde nicht committierbar.
+14. **Der Nebenbefund ohne Nummer ist nur aufgeschrieben, nicht untersucht.**
    Er steht jetzt in `AUFGABEN.md`, `WEITERMACHEN.md`, `CHANGELOG.md`,
    `README.md`, `ZIEL.md` und `Releases/PAKETE.md` — überall mit dem
    ausdrücklichen Hinweis, dass er **nicht** zur Registerkartenleiste gehört.
+
+## L-12 — Die andere Seite derselben Kollision, und der Abschluss des Merges
+
+**Dieser Abschnitt ist von dem Agenten geschrieben, den L-11.7 „ein fremder
+Vorgang in meinem Arbeitsbaum" nennt.** Beide Seiten sind LEKTOR, beide haben
+denselben Fortsetzungsauftrag bekommen, beide haben in `wt/lektor` gearbeitet,
+und **jede hat die andere für den Eindringling gehalten.** Das ist der Befund;
+alles Weitere ist Nacharbeit.
+
+### L-12.1 — Zwei Agenten, ein Arbeitsbaum, gemessen
+
+Ich habe den Merge um **12:40** angefangen. Aufgefallen ist mir die zweite
+Hand nicht am Merge, sondern daran, dass eine Ersetzung **ins Leere lief**:
+
+| Zeit | gemessen |
+|---|---|
+| 12:39:45 | `Befunde/LEKTOR-6.md` ändert sich, ohne dass ich schreibe |
+| 12:40 | mein `git merge karten-und-trennbalken`, drei Konflikte |
+| 12:44:54 | ich löse `PORTIERUNG.md` und `WEITERMACHEN.md` auf |
+| 12:47:39 | `BEFUNDE.md` ändert sich — **Inhalt**, nicht nur Zeitstempel |
+| 12:48:03 | `ZIEL.md` und `AUFGABEN.md` ändern sich |
+| 12:49:33 | letzte fremde Schreibung (`Befunde/LEKTOR-6.md`, L-11.7) |
+| danach | 100 Messungen im Abstand von 6 s: **keine fremde Schreibung mehr** |
+
+**Der Auslöser war ein Werkzeug, das abbrach statt still nichts zu tun.** Mein
+Ersetzungsskript sucht jeden Text **exakt** und bricht ab, wenn er nicht genau
+einmal dasteht. Es meldete `in BEFUNDE.md steht der gesuchte Text 0 mal` — für
+eine Zeile, die ich neun Minuten vorher selbst gelesen hatte. Ein Skript mit
+`s///` ohne Trefferprüfung hätte an dieser Stelle geschwiegen, und die
+Kollision wäre erst im Commit aufgefallen, wenn überhaupt.
+
+> **Die Lehre:** ein Werkzeug, das den erwarteten Zustand **prüft** statt ihn
+> vorauszusetzen, findet auch das, wonach es gar nicht sucht. Dasselbe Muster
+> wie `pruefe-bytes.pl` — die Trefferzahl ist die Messung, nicht die Absicht.
+
+**Prozesse gemessen:** 13 `claude.exe` seit 08:08/08:10, kein `perl` oder
+`node` mit `lektor` in der Befehlszeile. Welcher der 13 die zweite Hand war,
+ist von hier aus **nicht** feststellbar — das ist die eigentliche Lücke:
+`AGENTEN.md` verteilt Arbeitsbäume, aber **nichts hält fest, wer gerade in
+einem sitzt.** Eine Marke im Arbeitsbaum (Agentenname, PID, Zeit), die beim
+Start geschrieben und beim Ende entfernt wird, hätte beide Seiten in der
+ersten Sekunde gewarnt. Nicht umgesetzt — das entscheidet Gregor.
+
+### L-12.2 — Was ich zurückgenommen habe, und warum
+
+Auf Auflage, und in beiden Fällen ist die Lösung auf
+`karten-und-trennbalken` die bessere:
+
+- **`tools/hooks-einrichten.sh`** — dort hängt jetzt zusätzlich
+  `pruefe-nachrichtenschleife.pl` mit ein, plus die `schranke()`-Hilfsfunktion
+  aus X-8, die ein im eigenen Arbeitsbaum **fehlendes** Werkzeug überspringt
+  statt den Commit abzuweisen. Meine Fassung kannte nur die ersten beiden
+  Werkzeuge und hätte den Blocker aus L-11.4/X-8 wieder aufgemacht.
+- **`tools/lehren-schranken.pl`** — meine Fassung nahm drei Dateien im
+  **Werkzeug** aus. Die andere Lösung schreibt statt dessen eine Zeile
+  `**Schranke:** keine — <Begründung>` in die Datei selbst. Das ist der
+  bessere Weg, und zwar aus einem Grund, den ich selbst schon aufgeschrieben
+  hatte: eine Ausnahmeliste im Werkzeug ist **von Hand gepflegter Prüfumfang**
+  ([../Arbeitsweise/pruefumfang-nicht-von-hand.md](../Arbeitsweise/pruefumfang-nicht-von-hand.md)).
+  Sie steht dort, wo niemand sie liest, und veraltet lautlos. Die Zeile in der
+  Datei steht da, wo die Frage aufkommt.
+
+Beide Dateien sind mit `git checkout karten-und-trennbalken --` geholt und
+danach **byte-gleich** mit dort (`git hash-object` gegen
+`git rev-parse <zweig>:<datei>`, zweimal identisch). `sh -n` und `perl -c`
+fehlerfrei.
+
+### L-12.3 — Die Summenprüfung: der Zweizeiler, und was die umgedrehte Gegenprobe zusätzlich fand
+
+Gemeldet war ein Fehlalarm: die Satzform **„N von M Kriterien"** verstand
+`tools/doku-pruefen.pl` nicht. Bei *„Sieben von neun Kriterien sind belegt
+(…), zwei sind fast erfüllt (…)"* steht der erste Teil **vor** dem Wort
+`Kriterien`; gezählt wurde nur der Rest dahinter.
+
+**Gegengeprüft wurde in einem eigenen kleinen `git`-Repo**, weil das Werkzeug
+seinen Prüfumfang aus `git ls-files` holt — in einem Verzeichnis ohne Repo
+läuft die Prüfung gar nicht an, und die Messung träfe den Weg nicht
+([../Arbeitsweise/messung-muss-den-weg-treffen.md](../Arbeitsweise/messung-muss-den-weg-treffen.md)).
+
+| Fall | Satz | erwartet | vorher | nachher |
+|---|---|---|---|---|
+| 1 | „Sieben von neun … zwei" (7+2=9) | still | **gemeldet** | still |
+| 2 | „Drei von neun … zwei" (3+2=5) | gemeldet | gemeldet* | gemeldet |
+| 3 | „neun Kriterien: sieben … zwei" | still | still | still |
+| 4 | „neun Kriterien: drei … zwei" | gemeldet | gemeldet | gemeldet |
+| 5 | fett: „**Sieben** von **neun** …" | still | still* | still |
+| 6 | fett: „**Drei** von **neun** …" | gemeldet | **still** | gemeldet |
+
+\* **Zwei Treffer, die nur zufällig richtig aussahen.** Fall 2 wurde vorher
+gemeldet, aber mit einer **falschen Zahl** (*„ergibt aber 2"* statt 5) — die
+richtige Meldung aus dem falschen Grund. Und Fall 5 war vorher still, **weil
+die Prüfung an der fetten Schreibweise überhaupt nicht anlief**, nicht weil
+die Summe stimmte.
+
+**Fall 6 ist der eigentliche Fang, und er kommt aus Gregors Technik**
+([../Arbeitsweise/gegenprobe-umdrehen.md](../Arbeitsweise/gegenprobe-umdrehen.md)):
+nicht prüfen, ob der gewünschte Zustand erscheint, sondern ob der **umgekehrte
+Wert durchkommt**. Hätte ich nur Fall 5 gemessen — „richtiger Satz, bleibt
+still, gut" —, wäre die Prüfung für die gesamte fette Schreibweise **stumm**
+geblieben, und genau so steht der Satz in `PORTIERUNG.md`. Es ist dieselbe
+Lücke, die in der Wortzahlprüfung zwanzig Zeilen darüber am 08.09.2026 als
+L-10.1 geschlossen wurde: das **zweite** Auftreten derselben Fehlerklasse
+([../Arbeitsweise/fehlerklassen-abstellen.md](../Arbeitsweise/fehlerklassen-abstellen.md)).
+
+Gegen den Bestand: `perl tools/doku-pruefen.pl` **0**, *Kein Widerspruch
+gefunden*, 22 geprüfte Dateien — **kein neuer Fehlalarm** durch die
+Verbreiterung.
+
+Der Gegentest liegt als `sh`-Skript vor und ist wiederholbar; er baut sein
+Repo in einem eigenen Verzeichnis auf und räumt es wieder ab.
+
+### L-12.4 — Was nach dem Abgleich mit 1.0.29 übrig blieb
+
+Von meinen Aussagen aus L-11 (Stand 1.0.27) hat der Abgleich **eine** als
+weiterhin richtig und **von `karten-und-trennbalken` übersehen** bestätigt:
+
+> **Kriterium 8 ist erfüllt, und die Kurzfassungen sagen es immer noch nicht.**
+> `ZIEL.md` führt Kriterium 8 seit dem 09.09.2026 als **erfüllt** (Gregor
+> bestätigt), und `karten-und-trennbalken` hat `ZIEL.md` **nicht** angefasst —
+> die Quelle stimmt also. `PORTIERUNG.md` sagte dort weiter *„sechs belegt …
+> eines nicht (8 — die Reiterleiste)"*, und `WEITERMACHEN.md` nannte
+> dieselbe Bilanz. Beide Dateien wurden auf `karten-und-trennbalken` am
+> 09.09.2026 angefasst — aber nur die **Nummern** wurden gezogen, nicht die
+> Aussage. Genau der Fall aus
+> [../Arbeitsweise/review-sieht-nur-den-diff.md](../Arbeitsweise/review-sieht-nur-den-diff.md):
+> die veraltete Zeile stand in keinem Diff.
+
+Weggefallen ist alles, was nur die Fassungsnummern betraf — das hat
+`karten-und-trennbalken` selbst nachgezogen. Neu dazugekommen beim Abgleich:
+
+1. `CHANGELOG.md`, Zeile *„Gebaut, aber von Gregor nicht bestätigt"* nannte
+   E-49, E-50 und E-52. **E-53 und E-54 bis E-62 fehlten** — zehn gebaute,
+   unbestätigte Behebungen, die in der Übersicht nicht vorkamen.
+2. `CHANGELOG.md` und `ZIEL.md` führten A-4 als *„in 7.2.0.27 durch E-52
+   nachgebessert"*. **E-54** (Ziehrahmen nach rechts unsichtbar) und **E-55**
+   (acht Pixel leerer Streifen unter der Werkzeugleiste) betreffen A-4
+   unmittelbar und fehlten.
+3. `WEITERMACHEN.md` schickte Gregor zum Prüfen an **1.0.27** — zwei Pakete
+   alt. Jetzt 1.0.29, mit E-54 und E-55 in der Prüfliste.
+4. `CHANGELOG.md`: *„Seit 1.0.27 ist nichts dazugekommen, was nicht im Paket
+   steckt."* Auf **Behebungen** eingegrenzt und auf 1.0.29 gezogen; für die
+   **Werkzeuge** ist es nicht nachgemessen, und `tools/` ist im Paket ohnehin
+   nicht die Frage.
+
+### L-12.5 — `Releases/PAKETE.md` ist zwei Pakete im Rückstand
+
+**Unabhängig von L-11.7 gemessen, und dort schon als Warnung notiert — hier
+mit Zahlen:**
+
+| gemessen | Ergebnis |
+|---|---|
+| `VERSION` | **1.0.29** |
+| `Eudora71/Version.h` | **7.2.0.29** |
+| `CHANGELOG.md`, Abschnitte | 7.2.0.28 **und** 7.2.0.29, beide mit *„Was an 1.0.2x zu prüfen ist"* |
+| `Releases/PAKETE.md`, jüngster Abschnitt | **1.0.27** |
+| ZIP im Repo | nur `Eudora72-1.0.2-lauffaehig.zip` und `Eudora72-1.0.27-release.zip` |
+
+Für **1.0.28** und **1.0.29** gibt es also eine Prüfanleitung, aber weder
+Eintrag noch Prüfsumme noch Paket. Wer der Anleitung folgt, hat nichts zum
+Auspacken. **Nicht behoben** — eine Prüfsumme, die ich nicht selbst gegen ein
+vorhandenes ZIP gemessen habe, schreibe ich nicht hin
+([../Arbeitsweise/paket-gegen-den-bau-messen.md](../Arbeitsweise/paket-gegen-den-bau-messen.md)).
+`doku-pruefen.pl` meldet es **nicht**: `Releases/PAKETE.md` ist als
+Zeitdokument von der Aktualitätsprüfung ausgenommen. Das ist die Lücke — die
+Ausnahme gilt zu Recht für *alte* Abschnitte, aber nicht dafür, dass der
+**jüngste** Abschnitt hinter `VERSION` zurückbleibt. Eine Schranke dagegen
+wäre in einer Zeile zu haben und ist **nicht** gebaut.

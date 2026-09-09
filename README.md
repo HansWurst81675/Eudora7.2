@@ -14,14 +14,14 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > **Diese Datei sagt, was jetzt gilt.** Stand **09.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
-> **7.2.0.27** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
+> **7.2.0.29** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
 > ist die Produktversion, die ein Bau aus diesem Klon in die `Eudora.exe`
 > schreibt. Die **Paketnummer** steht in der Datei `VERSION` und lautet
-> **1.0.27**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
+> **1.0.29**; sie benennt das ZIP. `cat VERSION` liefert also **nicht** die
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.27-release.zip`. Die
+> **Beide zeigen auf dasselbe ZIP.** Die
 > Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in
@@ -482,6 +482,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
 | `tools/doku-pruefen.pl` | `pre-commit`-Schranke gegen Widersprüche in der Doku: Kriterienzahl gegen [ZIEL.md](ZIEL.md), doppelt vergebene Befundkennungen, Statuswidersprüche im Verzeichnis von [BEFUNDE.md](BEFUNDE.md), was im CHANGELOG als offen steht aber im Verzeichnis als behoben, Verweise ins Leere, und `Eudora71/Version.h` gegen sich selbst. Weist **nur** ab, wenn der Commit eine `.md`, `VERSION` oder `Version.h` anfasst. Auf Gregors Ansage *„ich traue dir nicht ganz, jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"* |
+| `tools/summe-gegentest.sh` | Gegentest zur Summenprüfung in `doku-pruefen.pl`, **6 Fälle in beide Richtungen** in einem eigenen Wegwerf-Repo — je ein richtiger Satz, der still bleiben muss, und ein falscher, der gemeldet werden muss, auch in fetter Schreibweise. **Wer die Kriterienprüfung in `doku-pruefen.pl` anfasst, lässt ihn laufen** |
 | `tools/pruefe-bytes.pl` | `pre-commit`-Schranke gegen lautlosen Byteschaden: Zeilenenden, Kodierung, Doppelkodierung |
 | `tools/pruefe-bytes-tests.pl` | Testsammlung dazu, **35 Fälle** in eigenen Wegwerf-Repos. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen** |
 | `tools/pruefe-branch.pl` | `pre-commit`-Schranke gegen Commits auf einen toten Zweig: schon in `origin/main`, Gegenstück auf dem Server gelöscht, oder abgelöster HEAD. Läuft als **erster** Schritt im Hook; `--melden` berichtet nur (Befund X-5) |

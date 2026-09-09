@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **09.09.2026**, gemessen an Fassung **7.2.0.27 / Paket 1.0.27**.
+Stand **09.09.2026**, gemessen an Fassung **7.2.0.29 / Paket 1.0.29**.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
@@ -335,8 +335,9 @@ Splitter selbst. AddSplitter wird nie aufgerufen …"*
 derselben Fensterebene, und beides ist „Mechanik da, Anschluss fehlt".
 Deshalb zusammen umzusetzen, nicht nacheinander.
 
-**Umgesetzt in 7.2.0.26, in 7.2.0.27 nachgebessert (E-52), von Gregor noch
-nicht bestätigt.** Bestätigt ist nur der **Gegenfall**: am 09.09.2026
+**Umgesetzt in 7.2.0.26, nachgebessert in 7.2.0.27 (E-52) und in 7.2.0.29
+(E-54: der Ziehrahmen war nach rechts unsichtbar; E-55: acht Pixel leerer
+Streifen unter der Werkzeugleiste), von Gregor noch nicht bestätigt.** Bestätigt ist nur der **Gegenfall**: am 09.09.2026
 *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*, also die
 Höhenänderung des unteren Bereichs samt Auffrischen. Das seitliche Ziehen hat
 er noch nicht beurteilt. Drei Anläufe, zwei davon am laufenden Programm

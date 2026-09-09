@@ -6,11 +6,11 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.27 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.27 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.27** — `Releases/Eudora72-1.0.27-release.zip` |
+| **Quellstand** | 7.2.0.29 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.29 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.29**; die Prüfsummen aller Pakete stehen in [Releases/PAKETE.md](Releases/PAKETE.md) |
 | **Zuletzt von Gregor bestätigt** | **A-3 an 1.0.25** (09.09.2026): der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window* — damit ist **Kriterium 8** erfüllt. Am selben Tag die **Höhenänderung** des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Dabei drei Mängel an der Kartenleiste gemeldet, alle in 1.0.26 behoben (**E-50**), und ein **Nebenbefund ohne Nummer**: nach einem Neustart stehen die Fenster nicht im Vollbild. Davor **1.0.24**: *„persona läßt sich löschen. keine messagebox"* (**E-43**, und mit ihm **E-37** und **E-38**) |
-| **Was als Nächstes zu messen ist** | **A-4 an 1.0.27** (Befunde **E-49** und **E-52**): wird der Zeiger auf der Kante zum Doppelpfeil, lässt sich der linke Bereich über 180 Pixel hinaus breiter ziehen, bleibt der Balken danach **gleich noch einmal** greifbar, stehen die Karten **einfach** da statt doppelt, überlebt die Breite einen Neustart — und **friert nichts ein**? Der letzte Punkt zuerst: die Ziehschleife hat in meinen eigenen Tests zweimal die Prüfinstanz eingefroren, bevor sie abgesichert war (**E-51**) |
+| **Was als Nächstes zu messen ist** | **A-4 an 1.0.29** (Befunde **E-49**, **E-52**, **E-54**, **E-55**): wird der Zeiger auf der Kante zum Doppelpfeil, ist der **Ziehrahmen sichtbar**, auch wenn man nach **rechts** zieht (E-54), lässt sich der linke Bereich über 180 Pixel hinaus breiter ziehen, bleibt der Balken danach **gleich noch einmal** greifbar, stehen die Karten **einfach** da statt doppelt, ist der **leere Streifen unter der Werkzeugleiste** weg (E-55), überlebt die Breite einen Neustart — und **friert nichts ein**? Der letzte Punkt zuerst: die Ziehschleife hat in meinen eigenen Tests zweimal die Prüfinstanz eingefroren, bevor sie abgesichert war (**E-51**), und **E-61** hat gezeigt, dass dieselbe Schleife das Beenden verschlucken konnte |
 | **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen. Nachweisbar ist nur die Voraussetzung: 8 Pixel freier Streifen (Andockleiste 188, Leiste 180) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
@@ -84,7 +84,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 Urteil.** Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
 *Die Hauptarbeit*; hier die Reihenfolge in einem Satz je Punkt.
 
-1. **A-4 / E-49 und E-52 an 1.0.27 prüfen** — den linken Bereich am
+1. **A-4 / E-49, E-52, E-54 und E-55 an 1.0.29 prüfen** — den linken Bereich am
    Trennbalken nach rechts ziehen, über 180 Pixel hinaus, und **gleich noch
    einmal** ziehen. Bleibt der Balken greifbar? Stehen die Registerkarten
    danach einfach da, nicht doppelt? Überlebt die Breite einen Neustart?

@@ -62,21 +62,8 @@ sub lies {
 
 # --- Die Lehren einsammeln --------------------------------------------------
 
-# Drei Dateien in Arbeitsweise/ sind KEINE Lehre und brauchen deshalb auch
-# keine Schranke-Zeile. Sie am 09.09.2026 einzeln zu melden hat den pre-commit
-# fuer JEDEN Commit im Repo blockiert - das Werkzeug hing seit 12:13 im Hook
-# und wies ab, ohne dass es einen behebbaren Mangel gab (Befund L-11.3):
-#
-#   MEMORY.md               das Verzeichnis des Gedaechtnisses
-#   README.md               das Verzeichnis DIESES Ordners (nur im Repo,
-#                           nicht im Gedaechtnisverzeichnis)
-#   LEHREN-AUS-DEM-CHAT.md  eine SAMMLUNG von Zitaten aus dem Chat, aus der
-#                           die einzelnen Lehren erst hervorgegangen sind
-#
-# Die Ausnahme ist eng: sie nennt drei Dateinamen. Jede echte Lehre ohne
-# Schranke-Zeile wird weiter gemeldet - gegengetestet am 09.09.2026.
 my @lehren = sort glob("$wurzel/Arbeitsweise/*.md");
-@lehren = grep { $_ !~ m{/(?:MEMORY|README|LEHREN-AUS-DEM-CHAT)\.md$} } @lehren;
+@lehren = grep { $_ !~ m{/MEMORY\.md$} } @lehren;
 
 if (!@lehren) {
     print "\n  lehren-schranken.pl: keine Lehren in Arbeitsweise/ gefunden.\n";
@@ -97,13 +84,27 @@ for my $datei (@lehren) {
     $kurz =~ s{^\Q$wurzel\E/}{};
 
     # Die Zeile suchen. Fett, kursiv und Listenpunkt sind erlaubt.
-    my ($zeile) = $inhalt =~ /^[\s>*\-]*\**Schranke\**\s*:\s*([^\n]+)$/m;
+    # Der Doppelpunkt steht mal INNERHALB der Fettschrift ("**Schranke:**"),
+    # mal davor ("**Schranke**:"). Beides kommt im Verzeichnis vor. Am
+    # 09.09.2026 hat die alte Fassung "**Schranke:** keine - ..." als
+    # "** keine - ..." gelesen und die Begruendung deshalb verworfen: der
+    # keine-Zweig prueft auf /^keine/, und davor standen zwei Sterne.
+    my ($zeile) = $inhalt =~ /^[\s>*\-]*\**Schranke\**\s*:\**\s*([^\n]+)$/m;
 
     unless (defined $zeile) {
         push @ohne_zeile, $kurz;
         next;
     }
     $zeile =~ s/\s+$//;
+
+    # Gedankenstriche in BYTES, nicht als Zeichen. Gelesen wird mit
+    # <:raw, ein Gedankenstrich ist also die Bytefolge e2 80 94 (bzw. 93 fuer
+    # den kurzen) und NICHT \x{2014}. Am 09.09.2026 hat die alte Fassung
+    # deshalb "keine - <Begruendung>" mit Gedankenstrich nicht als
+    # Begruendung erkannt und eine tragfaehige Ausnahme abgewiesen. Dieselbe
+    # Klasse wie in doku-pruefen.pl: eine Musterpruefung, die auf einer
+    # anderen Kodierungsebene sucht als die Datei liegt.
+    $zeile =~ s/\xe2\x80[\x93\x94]/-/g;
 
     if ($zeile =~ /^keine\b/i) {
         my ($grund) = $zeile =~ /^keine\s*[-\x{2014}:]\s*(.+)$/i;
