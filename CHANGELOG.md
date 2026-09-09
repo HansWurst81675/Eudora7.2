@@ -15,7 +15,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 |---|---|---|
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. Keine Behebung in Sicht |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. Gehört **nicht** zur Registerkartenleiste (E-48/E-50), sondern zum Fensterzustand über `SaveOpenWindows`. Getrennt zu messen, noch nicht angefasst |
-| **E-63** | die **letzte** Registerkarte zeigt keinen Kurzhinweis, alle anderen schon | Von Gregor am 09.09.2026 an 1.0.29 gemeldet, mit Bildschirmfoto, und von ihm zurückgestellt: *„den fehler notieren wir, wird im nächsten release behoben."* Verdacht und Gegentest stehen in [BEFUNDE.md](BEFUNDE.md) |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen kann ich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
@@ -49,14 +48,20 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 7.2.0.29 — alles Gebaute ist gepackt
+## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
 
-Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.29** steckt.
-`Eudora71/Version.h` und `VERSION` stehen auf **7.2.0.29 / 1.0.29** (`cat
-VERSION`, `grep EUDORA_BUILD_VERSION Eudora71/Version.h`) — wer aus einem
-neueren Stand ein Paket schnürt, setzt **vorher beide Nummern hoch**, sonst
-tragen zwei verschiedene Bauten dieselbe Kennung (Befund **V-1**, Gregors Regel
-dazu: *„version muß eindeutig sein"*).
+Im Repo liegen **Änderungen, die in keinem Paket stecken**: **E-67** (Trennbalken
+rechts) und **E-63** (Kurzhinweis der letzten Karte), beide gebaut und
+fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
+**Filtern**, Gregors nächstem Gebiet.
+
+`Eudora71/Version.h` und `VERSION` stehen deshalb schon auf **7.2.0.30 /
+1.0.30**, obwohl es dieses Paket noch nicht gibt. Der Grund steht im
+Abschnitt 7.2.0.30: der Bau vom 09.09.2026 trug **7.2.0.29** — dieselbe Nummer
+wie das veröffentlichte Paket, aber anderen Code. Wer daraus ein Paket
+geschnürt hätte, hätte zwei verschiedene Bauten unter derselben Kennung
+ausgeliefert (Befund **V-1**, Gregors Regel dazu: *„version muß eindeutig
+sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 > **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
 > `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
@@ -89,6 +94,89 @@ dazu: *„version muß eindeutig sein"*).
 ---
 
 
+
+## 7.2.0.30 — Trennbalken rechts, Kurzhinweis der letzten Karte (in Arbeit)
+
+**Noch nicht gebaut, nicht gepackt, nicht ausgeliefert.** Dieser Abschnitt
+wächst, während an den Filtern gearbeitet wird — Gregors nächstes Gebiet.
+
+**Was Gregor damit tun können wird, was in 1.0.29 nicht ging:** den
+Trennbalken **rechts** ziehen (**E-67**), und der Kurzhinweis erscheint auch
+auf der **letzten** Registerkarte (**E-63**).
+
+### E-67 — rechts spiegelverkehrt gerechnet
+
+Gregor an 1.0.29: *„rechts ist zwar ein balken sichtbar, aber nicht
+verschiebbar"*.
+
+`SECDockBar::CalcTrackingLimits` rechnete für **beide** senkrechten
+Andockleisten dieselben Grenzen:
+
+```
+min = Rahmen links  + nMindest
+max = Rahmen rechts - nFreiraum
+```
+
+Für **links** stimmt das. Für **rechts** ist es spiegelverkehrt, und zwar so,
+dass gar nichts mehr geht: der Balken sitzt dort an der **linken** Kante der
+Andockleiste. In deren Koordinaten ist `rectRahmen.left` stark negativ und
+`rectRahmen.right` liegt bei etwa **188** — damit wird `max = 188 − 200 =
+−12`, also **kleiner als der Ort des Balkens**. Eine Notbremse zieht `max` auf
+`min + nMindest` hoch, und zwischen zwei Grenzen, die 16 Pixel
+auseinanderliegen und beide weit links vom Balken stehen, lässt sich nichts
+ziehen. Der Balken nimmt den Mausfang und bewegt sich nicht.
+
+Die Regel, die für alle vier Seiten stimmt und jetzt dasteht:
+
+| Leiste | angewachsen an | zum MDI-Bereich hin |
+|---|---|---|
+| **links** | `min = links + nMindest` | `max = rechts − nFreiraum` |
+| **rechts** | `max = rechts − nMindest` | `min = links + nFreiraum` |
+| **oben** | `min = oben + nMindest` | `max = unten − nFreiraum` |
+| **unten** | `max = unten − nMindest` | `min = oben + nFreiraum` |
+
+**Nebenbei mitgefunden: unten war ebenso falsch, nur unauffällig.** Die alte
+Rechnung war nach oben zu großzügig (der MDI-Bereich ließ sich auf 16 Pixel
+zusammenschieben) und nach unten zu streng (die Leiste ließ sich nicht unter
+200 Pixel Höhe verkleinern). Gregor hatte am 09.09.2026 nur die eine Richtung
+geprüft — *„verschieben rauf / runter — bug gefixt"* —, deshalb hat es
+niemand gemerkt. Genau der Fall aus der Lehre *Gegenprobe umdrehen*: geprüft
+wurde, ob der gewünschte Zustand eintritt, nicht ob der unerwünschte
+durchkommt.
+
+### E-63 — die letzte Karte bekam nie ein Kurzhinweis-Feld
+
+Gregor an 1.0.29: *„alle karten, bis auf die letzte (warum?) zeigen einen
+tooltip beim maus over."*
+
+`RecalcToolTipRects` (`workbook.cpp:1709`) meldet nur Blätter mit `WS_VISIBLE`
+als Feld an. Gerufen wird es unter anderem aus `AddSheet` über `ResetTaskBar`
+— und dort ist das eben angelegte MDI-Kindfenster **noch nicht sichtbar**. Es
+bekommt kein Feld. Jedes **spätere** `AddSheet` rechnet alle Felder neu und
+repariert die älteren; nur die zuletzt hinzugekommene Karte bleibt ohne, und
+das ist die rechte.
+
+Im Original gibt es dagegen eine Selbstheilung, und sie steht in
+`QCWorkbook::OnDrawBorder` (`workbook.cpp:1533`) — *„This is as good a place
+as any to figure out if somebody has done something behind our backs"*.
+`OnDrawBorder` wird in dieser Portierung **von niemandem gerufen**; im
+Original tat das `SECWorkbook::OnPaint` der Stingray-Ebene. **Dieselbe Wurzel
+wie E-58**, der Browser-Klick ins Leere.
+
+`OnDrawBorder` wiederzubeleben kam nicht in Frage — das würde auch das
+Werbelogo zeichnen. Die Selbstheilung steht deshalb jetzt beim Zeichnen der
+Karten und vergleicht die Zahl der **angemeldeten Felder** mit der Zahl der
+**sichtbaren Karten**. Das ist die Messung selbst und nicht ihr Ergebnis:
+stimmen die Zahlen, passiert nichts; stimmen sie nicht, wird einmal neu
+gerechnet, danach stimmen sie.
+
+### Warum die Nummer schon hochgesetzt ist
+
+Der Bau vom 09.09.2026, 13:0x trug **7.2.0.29** — dieselbe Nummer wie das
+veröffentlichte Paket, aber anderen Code. Das ist **Befund V-1** in Reinform
+(*„version muß eindeutig sein"*): wer daraus ein Paket geschnürt hätte, hätte
+zwei verschiedene Bauten unter derselben Kennung ausgeliefert. Die Nummern
+stehen deshalb **sofort** auf 7.2.0.30 / 1.0.30, lange vor dem nächsten Paket.
 
 ## 7.2.0.29 — Acht Befunde des Prüfers und sieben aus der neuen Schranke
 
