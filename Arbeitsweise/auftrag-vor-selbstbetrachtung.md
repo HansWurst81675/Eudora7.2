@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: keine - betrifft die Reihenfolge innerhalb meiner Antwort; Antworten liegen nicht im Repo und sind mechanisch nicht prüfbar
+
 # Den Auftrag abarbeiten, nicht die eigenen Unzulänglichkeiten
 
 **Gregor am 06.09.2026, 16:38 Uhr:** *„du scheinst dich mit deinen eigenen

@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: keine - kein Hook ruft die Testsammlungen unter tools/*-tests.pl auf; tools/pruefstand-melden.pl meldet nur den Rückstand und weist nichts ab
+
 Gregors Vorgabe vom 28.08.2026: "lass die zwei pruefstand und feldversuch immer mit
 laufen, bevor du etwas commitest - oder von mir aus auch hinterher. man kann im
 fehlerfall nochmal zurueck."

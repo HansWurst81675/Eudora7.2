@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:58:08.284Z
 ---
 
+Schranke: tools/rollen-faellig.pl (vor jedem Push; noch nicht in tools/hooks-einrichten.sh verdrahtet, weil sie heute abweist — Entscheidung liegt bei Gregor)
+
 # Eine Daueraufgabe ohne Auslöser läuft nicht
 
 **Gregor am 06.09.2026, 16:28 Uhr:**

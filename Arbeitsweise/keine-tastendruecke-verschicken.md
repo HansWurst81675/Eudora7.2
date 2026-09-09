@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: tools/testlauf.ps1 (vor jedem Programmstart — beendet per WM_CLOSE an ein gemessenes Fensterhandle, nie per Tastendruck)
+
 Am 08.09.2026 wollte ich beim Beenden-Test (E-33) prüfen, ob ein **echtes**
 Alt+F4 Eudora schließt. `FindWindow('EudoraMainWindow', $null)` gab **0** zurück
 — ich habe den Tastendruck trotzdem abgeschickt:

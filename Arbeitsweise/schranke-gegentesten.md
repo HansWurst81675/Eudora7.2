@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-08T07:57:11.327Z
 ---
 
+Schranke: keine - keine Prüfung verlangt zu jeder Schranke einen Gegentest; gemessen am 08.09.2026 haben 3 von 10 Schranken eine Testsammlung unter tools/*-tests.pl
+
 # Eine Schranke, die ich nicht gegen den echten Fehler gefahren habe, ist keine
 
 Am 07.09.2026 habe ich `tools/doku-pruefen.pl` um vier Prüfungen erweitert.

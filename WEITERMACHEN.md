@@ -6,12 +6,12 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.24 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.24 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.24** - `Releases/Eudora72-1.0.24-release.zip`, SHA256 `3e518707a7697567ee3d34fbf6e062f8fdcbf49de8d2140a01c809af19e4ae53`. Als Marke noch **nicht** veröffentlicht; die jüngste Marke ist [v1.0.23](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.23) |
-| **Zuletzt von Gregor gestartet** | Paket **1.0.23** am 08.09.2026 — dabei gemeldet: *„konto löschen geht immer noch nicht"* (E-37) und der Verzeichnisdienst-Dialog (**E-47**). 1.0.24 liegt bei ihm, ist aber noch nicht gemessen |
-| **Zuletzt von Gregor bestätigte Behebungen** | 7.2.0.23 (**A-2**/E-44: *Task Status* und *Task Errors* waagrecht unten — *„leiste unten paßt."*). Davor 7.2.0.22 (**Kriterium 7**: *„schließen klappt jetzt."*, und **A-1**) |
-| **Was als Nächstes zu messen ist** | **E-37** an 1.0.24: löscht sich ein Konto jetzt sichtbar, ohne Meldung? Die Vorhersage ist ja — E-37 hing an **E-43**, und das ist behoben. Damit fällt auch **E-38** weg, das Gregor selbst aufgeklärt hat |
+| **Quellstand** | 7.2.0.27 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.27 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.27** — `Releases/Eudora72-1.0.27-release.zip` |
+| **Zuletzt von Gregor bestätigt** | **A-3 an 1.0.25** (09.09.2026): der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Dabei drei Mängel gemeldet, alle in 1.0.26 behoben (**E-50**). Davor **1.0.24**: *„persona läßt sich löschen. keine messagebox"* |
+| **Was als Nächstes zu messen ist** | **A-4 an 1.0.26**: wird der Zeiger auf der Kante zum Doppelpfeil, lässt sich der linke Bereich über 180 Pixel hinaus breiter ziehen, überlebt die Breite einen Neustart — und **friert nichts ein**? Der letzte Punkt zuerst: die Ziehschleife hat in meinen eigenen Tests zweimal die Prüfinstanz eingefroren, bevor sie abgesichert war |
+| **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen. Nachweisbar ist nur die Voraussetzung: 8 Pixel freier Streifen (Andockleiste 188, Leiste 180) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen

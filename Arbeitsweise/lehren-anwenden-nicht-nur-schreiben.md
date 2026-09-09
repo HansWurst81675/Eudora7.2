@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: tools/lehren-schranken.pl (pre-commit)
+
 # Aufgeschrieben ist nicht befolgt
 
 **Gregor am 06.09.2026:** *„daher lessons learned, weil ich merke, dass du immer

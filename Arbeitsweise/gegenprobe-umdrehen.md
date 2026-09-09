@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T12:44:49.139Z
 ---
 
+Schranke: keine - die umgedrehte Gegenprobe ist eine Entwurfsfrage der Messung; im Repo bleibt nur ihr Ergebnis stehen, nicht die Frage, ob auch der verbotene Wert probiert wurde
+
 # Den Wert umdrehen, nicht bestaetigen
 
 Am 07.09.2026 hatte ich `tools/DEudora.ini` mit `CheckMailByDefault=1`

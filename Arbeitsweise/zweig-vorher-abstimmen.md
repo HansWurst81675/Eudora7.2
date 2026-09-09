@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: keine - das Repo führt keine Liste der mit Gregor vereinbarten Zweignamen; tools/pruefe-branch.pl erkennt tote Zweige, nicht unabgesprochene
+
 # Zweignamen vorher abstimmen, nicht nachher erklären
 
 **Gregor am 07.09.2026, 06:53 Uhr:** *„doch: da ist wieder ein branch erstellt.

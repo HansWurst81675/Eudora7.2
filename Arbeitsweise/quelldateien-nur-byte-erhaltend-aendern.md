@@ -5,6 +5,8 @@ metadata:
   type: project
 ---
 
+Schranke: tools/pruefe-bytes.pl (pre-commit, pre-push)
+
 Die Eudora-Quellen von 1996-2006 sind **Latin-1-kodiert** (nicht UTF-8) und haben
 **gemischte Zeilenenden** innerhalb derselben Datei. Beides muss jede Aenderung
 unangetastet lassen.

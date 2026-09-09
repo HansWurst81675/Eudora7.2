@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-28T18:20:00.000Z
 ---
 
+Schranke: tools/ungesichertes-melden.pl (nach jedem Arbeitsschritt und vor jeder Pause)
+
 Bei laengeren Umbauten in diesem Repo Zwischenstaende laufend auf einem separaten
 Branch committen und sofort nach `origin` pushen — nicht bis zum Ende der Sitzung
 warten. Gregor hat das am 28.08.2026 ausdruecklich als **Anweisung** wiederholt:

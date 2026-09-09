@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T08:30:18.185Z
 ---
 
+Schranke: tools/pruefe-bytes.pl (pre-commit, pre-push)
+
 Nach **jedem** Skript, das Dateien im Repo schreibt, und **vor** `git add`:
 CR-Anzahl der Arbeitskopie gegen `git show HEAD:<datei>` vergleichen. Weicht sie
 ab, zurueckwandeln, bevor irgendetwas gestaget wird.

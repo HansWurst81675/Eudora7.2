@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T12:45:18.145Z
 ---
 
+Schranke: tools/paket-pruefen.ps1 (vor jeder Übergabe an Gregor — prüft die Eudora.ini im Mailverzeichnis und die Vollständigkeit von DEudora.ini)
+
 # Was es schon gibt, wird gelesen — nicht ueberschrieben
 
 Am 07.09.2026 habe ich `tools/DEudora.ini` angelegt, damit neue Konten die

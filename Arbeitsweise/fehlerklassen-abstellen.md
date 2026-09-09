@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:57:09.641Z
 ---
 
+Schranke: tools/lehren-schranken.pl (pre-commit)
+
 Wenn derselbe Fehler zum zweiten Mal auftritt, ist das kein Anlass, ihn nochmals
 zu beheben, sondern ihn **unmöglich zu machen**: ein Werkzeug, das den richtigen
 Weg zum bequemsten macht, und eine Schranke, die den falschen Weg blockiert.

@@ -8,6 +8,8 @@ metadata:
   modified: 2026-09-07T08:28:47.513Z
 ---
 
+Schranke: tools/doku-pruefen.pl (pre-commit, pre-push — prüft alle MDs, nicht die geänderten)
+
 # Ein Review über den Diff findet die alte Lüge nicht
 
 **Gregor am 07.09.2026, 08:15 und 08:17 Uhr:**
