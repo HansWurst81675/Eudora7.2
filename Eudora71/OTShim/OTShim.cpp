@@ -3610,8 +3610,21 @@ void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
 	const int nMindest  = 4 * Splitter::cx;		// schmalste Leiste
 	const int nFreiraum = 200;					// Rest fuer den MDI-Bereich
 
-	// BEFUND E-67 (Gregor, 09.09.2026, an Paket 1.0.29): "rechts ist zwar ein
-	// balken sichtbar, aber nicht verschiebbar".
+	// BEFUND E-66, ZWEITE URSACHE (Gregor, 09.09.2026, an Paket 1.0.29):
+	// "rechts ist zwar ein balken sichtbar, aber nicht verschiebbar".
+	//
+	// ACHTUNG: das hier behebt nur die ZWEITE, verdeckte Ursache. Die erste
+	// steht in TrennbalkenNeuAnlegen und ist noch offen: fuer die rechte
+	// Andockleiste ergibt die Messung nFrei = -2, es entsteht also gar kein
+	// Balken, und diese Grenzen greifen ins Leere. PRUEFER hat das am
+	// 09.09.2026 an bardock.cpp:387 nachgewiesen - MFC legt die Kindleiste in
+	// JEDER Andockleiste buendig bei (-cxBorder2, -cyBorder2) ab, weshalb der
+	// Zuschlag immer am GROSSEN Ende liegenbleibt: links an der Innenkante
+	// (nFrei etwa 7, Balken entsteht), rechts am Fensterrand (nFrei = -2,
+	// die Bedingung nFrei >= 2 scheitert, AddSplitter laeuft nie).
+	//
+	// Meine erste Zuordnung - es liege allein an den Grenzen - war damit
+	// unvollstaendig. Sie stimmt, sie reicht nur nicht.
 	//
 	// Hier stand fuer BEIDE senkrechten Andockleisten dieselbe Rechnung:
 	//     min = Rahmen links  + nMindest

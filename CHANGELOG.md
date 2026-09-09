@@ -50,8 +50,9 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
 
-Im Repo liegen **Änderungen, die in keinem Paket stecken**: **E-67** (Trennbalken
-rechts) und **E-63** (Kurzhinweis der letzten Karte), beide gebaut und
+Im Repo liegen **Änderungen, die in keinem Paket stecken**: die zweite Ursache
+von **E-66** (Trennbalken rechts) und **E-63** (Kurzhinweis der letzten Karte),
+beide gebaut und
 fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
 **Filtern**, Gregors nächstem Gebiet.
 
@@ -101,10 +102,11 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 wächst, während an den Filtern gearbeitet wird — Gregors nächstes Gebiet.
 
 **Was Gregor damit tun können wird, was in 1.0.29 nicht ging:** den
-Trennbalken **rechts** ziehen (**E-67**), und der Kurzhinweis erscheint auch
+Trennbalken **rechts** ziehen (**E-66**, siehe die Einschränkung unten), und der
+Kurzhinweis erscheint auch
 auf der **letzten** Registerkarte (**E-63**).
 
-### E-67 — rechts spiegelverkehrt gerechnet
+### E-66 — rechts spiegelverkehrt gerechnet (zweite von zwei Ursachen)
 
 Gregor an 1.0.29: *„rechts ist zwar ein balken sichtbar, aber nicht
 verschiebbar"*.
@@ -143,6 +145,23 @@ geprüft — *„verschieben rauf / runter — bug gefixt"* —, deshalb hat es
 niemand gemerkt. Genau der Fall aus der Lehre *Gegenprobe umdrehen*: geprüft
 wurde, ob der gewünschte Zustand eintritt, nicht ob der unerwünschte
 durchkommt.
+
+> **Das behebt nur die HÄLFTE, und das gehört gesagt.** PRÜFER hat am
+> 09.09.2026 die **erste** Ursache nachgewiesen, und sie sitzt woanders:
+> `TrennbalkenNeuAnlegen` misst den freien Streifen für die rechte
+> Andockleiste bei `rectLeiste.left - rect.left`, aber
+> `CDockBar::CalcFixedLayout` der MFC (`bardock.cpp:387`) setzt die Kindleiste
+> in **jeder** Andockleiste bündig auf `(-cxBorder2, -cyBorder2)`. Der
+> Zuschlag von zwölf Pixeln bleibt darum immer am **großen** Ende liegen:
+> links an der Innenkante (`nFrei ≈ 7`, der Balken entsteht), rechts am
+> **Fensterrand** (`nFrei = −2`, die Bedingung `nFrei >= 2` scheitert,
+> `AddSplitter` läuft nie, `HitTest` liefert `NULL`).
+>
+> Solange das so ist, entsteht rechts **gar kein** Balken, und die hier
+> berichtigten Grenzen greifen ins Leere. Meine erste Zuordnung — es liege
+> allein an den Grenzen — war unvollständig: sie stimmt, sie reicht nur nicht.
+> Auch **widerlegt** ist meine Spur „`BrauchtGreifstreifen` lässt rechts nicht
+> zu": die Bedingung ist für links und rechts identisch.
 
 ### E-63 — die letzte Karte bekam nie ein Kurzhinweis-Feld
 
