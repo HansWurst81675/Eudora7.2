@@ -18,6 +18,16 @@ nachgeschlagen.
 
 ## 1. E-37 — ist die Behebung richtig und vollständig?
 
+> **Nachtrag 08.09.2026: dieses Urteil ist am laufenden Programm widerlegt.**
+> Die Behebung hat sehr wohl Schaden angerichtet — der `PopulateView()`-Aufruf
+> hat geworfen, die Ausnahme lief aus dem Befehlsbehandler heraus, und Gregor
+> sah **„Encountered an improper argument"**: *„die meldung kommt, wenn ich eine
+> persona gelöscht habe"*. Der Eintrag verschwand außerdem weiter nicht: *„sie
+> verschwindet links nicht, bis ich eudora geschlossen habe"*. **E-37 steht
+> wieder als nicht behoben**, der zweite Anlauf ist in 7.2.0.23 gebaut und
+> unbestätigt. Der Abschnitt bleibt als Zeitdokument stehen — aber **nicht als
+> Beleg zitieren**; genau das ist einmal passiert.
+
 **Urteil: teilweise bestätigt.** Die Behebung wirkt und richtet keinen neuen
 Schaden an. Zwei Aussagen der Behauptung sind aber falsch, und ein vorhandener
 Mangel bleibt unbenannt.

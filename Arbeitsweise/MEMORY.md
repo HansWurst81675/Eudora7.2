@@ -45,4 +45,5 @@
 - [ASSERT ist im Release nichts](assert-ist-im-release-nichts.md) — häufigste Ursachenklasse des Projekts; bei „es passiert nichts" zuerst nach `ASSERT(0)` und `VERIFY(` suchen
 - [Paket gegen den Bau messen](paket-gegen-den-bau-messen.md) — im Paket lag eine Debug-`Eudora.exe` vom 30.08.; nach jedem Paketbau `paket-pruefen.ps1`, Zeitstempel und Größe gegen das Bauverzeichnis
 - [Zwei Werte in eine Ausgabe](zwei-werte-in-eine-ausgabe.md) — `GetBtnCount=24` und `m_btns.GetSize=0` in derselben Zeile schlossen den zwei Tage offenen Widerspruch; getrennte Protokollzeilen lassen „zu anderer Zeit" immer offen
+- [Eigene Schleife verschluckt nichts](eigene-schleife-verschluckt-nichts.md) — WM_QUIT zurückstellen und nie ohne Zeitschranke warten; die Schranke fand sieben weitere Stellen im Original
 - [Schranke liest nur Code](schranke-liest-nur-code.md) — Kommentare und Protokolltexte vor dem Suchen wegwerfen, Bereich am Rumpfende schließen; `pruefe-beenden.pl` hat sonst die eigene Begründung angeschwärzt

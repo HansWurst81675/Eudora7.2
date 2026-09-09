@@ -740,6 +740,14 @@ public:
 			CRect m_rect;
 			int m_nPos;
 			BOOL m_bInUse;
+			// NICHT im Original. PRUEFER-6 (09.09.2026): waehrend Track laeuft,
+			// dispatcht die Schleife fremde Nachrichten. Eine davon kann einen
+			// Anordnungsdurchlauf ausloesen, der ueber
+			// TrennbalkenNeuAnlegen -> EndRecycleSplitters GENAU DIESEN
+			// Splitter loescht - Track arbeitet danach auf freigegebenem
+			// Speicher, und StartTracking benutzt den Zeiger anschliessend
+			// noch fuer OnSplitterMoved. Diese Marke schuetzt ihn.
+			BOOL m_bTracking;
 			int m_nMin, m_nMax;
 
 		protected:
@@ -1403,7 +1411,8 @@ public:
 
 // Operationen
 public:
-	// workbook.cpp:729; mainfrm.cpp:5660, 5716
+	// Reihenfolge gegen SECWB.H:96 nachgesehen, siehe OTShim.cpp.
+	// Aufrufstellen: workbook.cpp:729, mainfrm.cpp:5995 und 6051.
 	void SetMargins(int left, int right, int top, int bottom);
 	// Von Eudora nicht aufgerufen; Gegenstueck zu SetMargins.
 	void GetMargins(int& left, int& right, int& top, int& bottom);

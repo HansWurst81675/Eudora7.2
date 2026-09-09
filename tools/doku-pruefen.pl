@@ -120,7 +120,13 @@ my @alle_md = grep { length } split /
 /, (qx{git ls-files "*.md" 2>$nirgendwo} || '');
 @alle_md = grep { !m{^Arbeitsweise/} } @alle_md;
 
-my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$)};
+# tools/TESTLAEUFE.md ist am 09.09.2026 dazugekommen (Befund L-11.2): die
+# Datei ist ein von tools/testlauf.ps1 fortgeschriebenes PROTOKOLL vergangener
+# Laeufe. Sie nennt zwangslaeufig die Fassung, mit der damals getestet wurde,
+# und wurde deshalb bei jedem Lauf unter "Zur Kenntnis" gemeldet, ohne dass
+# jemand etwas daran tun konnte. Eine Schranke, die umsonst warnt, wird
+# ignoriert (Befund X-1).
+my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$|tools/TESTLAEUFE\.md$)};
 my @aktuell   = grep { $_ !~ $zeitdokument } @alle_md;
 my @zeitdok   = grep { $_ =~ $zeitdokument } @alle_md;
 
@@ -143,8 +149,23 @@ if ($anzahl_kriterien == 0) {
 }
 
 # Wortzahlen, die jemand hinschreibt, gegen die tatsaechliche Zahl
+#
+# WAS AM 08.09.2026 GEAENDERT WURDE (Befund L-10.1)
+#
+# In dieser Tabelle fehlten "neun" und "zehn" - und ZIEL.md fuehrt NEUN
+# Kriterien. Damit war die Kriterienpruefung fuer den tatsaechlichen Umfang des
+# Projekts BLIND: "$gesamt = $wort{'neun'}" lieferte undef, und beide Pruefungen
+# (Wortzahl gegen ZIEL.md, Summe der Teile) brachen mit "next unless defined"
+# ab. Gemessen an ZIEL.md:39, wo bis zum 08.09.2026 stand:
+#
+#   "Sechs von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7), zwei fast oder
+#    halb (2, 4), eines nicht (8 - die Reiterleiste)."
+#
+# Das widersprach der eigenen Tabelle DREI Zeilen darueber, die fuer Kriterium 8
+# "halb" sagt - und die Schranke hat es nie gemeldet.
 my %wort = (
-    zwei => 2, drei => 3, vier => 4, fuenf => 5, sechs => 6, sieben => 7, acht => 8,
+    zwei => 2, drei => 3, vier => 4, fuenf => 5, sechs => 6, sieben => 7,
+    acht => 8, neun => 9, zehn => 10,
 );
 for my $datei (@aktuell) {
     my $inhalt = lies($datei);
@@ -153,7 +174,11 @@ for my $datei (@aktuell) {
     for my $i (0 .. $#zeilen) {
         my $z = $zeilen[$i];
         # "vier Kriterien", "alle vier Kriterien", "sieben Kriterien"
-        while ($z =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht)\s+Kriterien/gi) {
+        # Das \*{0,2} ist am 08.09.2026 dazugekommen (Befund L-10.1): in
+        # PORTIERUNG.md:38 steht "von **neun** Kriterien" - die Auszeichnung
+        # zwischen Zahlwort und Wort liess das Muster ins Leere laufen, und die
+        # Zahl wurde nie gegen ZIEL.md gehalten.
+        while ($z =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+Kriterien/gi) {
             my $genannt = $wort{ lc $1 };
             next unless defined $genannt;
             # "die ersten vier Kriterien" ist eine Aussage ueber eine Teilmenge
@@ -178,7 +203,16 @@ for my $datei (@aktuell) {
     for my $i (0 .. $#zeilen) {
         my $satz = $zeilen[$i];
         $satz .= " " . $zeilen[$i+1] if $i < $#zeilen;
-        next unless $satz =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\s+Kriterien\s*(?:stehen|sind)?/i;
+        # \*{0,2} zweimal - die Gesamtzahl darf fett stehen ("von **neun**
+        # Kriterien"). Ohne das lief die ganze Summenpruefung an der fetten
+        # Schreibweise vorbei, und zwar STUMM: $gesamt blieb undef, das "next"
+        # darunter griff, und ein falscher Satz wurde nie gemeldet. Gemessen am
+        # 09.09.2026 mit der umgedrehten Gegenprobe (L-12.2): erst der Fall
+        # "**Drei** von **neun** Kriterien ... **zwei**" - Summe 5 statt 9 -
+        # hat es gezeigt. Der richtige Satz war vorher auch still, nur aus dem
+        # falschen Grund. Dieselbe Luecke wie L-10.1 in der Wortzahlpruefung
+        # darueber, dort am 08.09.2026 geschlossen.
+        next unless $satz =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+\*{0,2}Kriterien\s*(?:stehen|sind)?/i;
         my $gesamt = $wort{ lc $1 };
         next unless defined $gesamt;
         # Achtung: der Satz enthaelt Punkte im Verweis "[ZIEL.md](ZIEL.md)".
@@ -187,6 +221,27 @@ for my $datei (@aktuell) {
         my ($rest) = $satz =~ /Kriterien\b(.*?)\.\*\*/;
         next unless defined $rest;
         my $summe = 0;
+        # Satzform "N von M Kriterien" - Befund L-12.2, gemeldet aus L-11.
+        #
+        # Bei "Sieben von neun Kriterien sind belegt (0, 1, 3, 5, 6, 7, 8),
+        # zwei sind fast erfuellt (2, 4)." steht der ERSTE Teil - die sieben -
+        # VOR dem Wort "Kriterien". $rest beginnt aber erst dahinter, also
+        # fiel er aus der Summe heraus: gezaehlt wurden nur die zwei.
+        #
+        # Zwei Folgen, beide am 09.09.2026 im Gegentest gemessen:
+        #   - eine arithmetisch RICHTIGE Aussage (7 + 2 = 9) wurde als Mangel
+        #     gemeldet. Eine Schranke, die richtige Saetze anschwaerzt, wird
+        #     ignoriert (Befund X-1);
+        #   - im echten Fehlerfall "Drei von neun ... zwei" stand eine FALSCHE
+        #     Zahl in der Meldung ("ergibt aber 2" statt 5). Die Meldung kam
+        #     also zufaellig richtig heraus, aus dem falschen Grund.
+        #
+        # \*{0,2} an drei Stellen, weil die Zahlwoerter fett stehen duerfen
+        # ("**sieben** von **neun** Kriterien") - dieselbe Luecke, die in der
+        # Wortzahlpruefung darueber am 08.09.2026 als L-10.1 geschlossen wurde.
+        if ($satz =~ /\b(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+von\s+\*{0,2}(?:zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+\*{0,2}Kriterien/i) {
+            $summe += $wort{ lc $1 };
+        }
         while ($rest =~ /\b(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\b/gi) {
             $summe += $wort{ lc $1 };
         }
@@ -284,25 +339,78 @@ for my $datei (@alle_md) {
         # while-Schleife. Das setzt pos($zeile) zurueck, die aeussere Suche
         # faengt wieder von vorn an und kommt nie ans Ende. Gemessen: 1939 ms
         # ohne diese Pruefung, ueber 200000 ms mit ihr.
-        my $kopie = $zeile;
-        my @aus = ($kopie =~ /\*\*([^*]+)\*\*|\*([^*]+)\*/g);
-
-        # NUR das ZUERST genannte Kriterium wird beurteilt.
+        # Die Auszeichnungen der Zeile EINMAL sammeln, aus einer KOPIE, und zu
+        # jeder mitschreiben, ob unmittelbar davor ein "nicht" steht.
         #
-        # Auch das ist eine gemessene Falle: CHANGELOG.md:27 ist die Zeile
+        # Hier lag am 09.09.2026 eine Endlosschleife: die innere Suche lief
+        # mit /g im Listenkontext auf derselben Zeichenkette wie die aeussere
+        # while-Schleife. Das setzt pos($zeile) zurueck, die aeussere Suche
+        # faengt wieder von vorn an und kommt nie ans Ende. Gemessen: 1939 ms
+        # ohne diese Pruefung, ueber 200000 ms mit ihr. Die Suche laeuft
+        # deshalb weiter nur auf $kopie.
+        my $kopie = $zeile;
+        my @aus;                       # [Wort, verneint?]
+        while ($kopie =~ /\*\*([^*]+)\*\*|\*([^*]+)\*/g) {
+            my $wort = defined $1 ? $1 : $2;
+            next unless defined $wort;
+            my $vor = substr($kopie, 0, $-[0]);
+            push @aus, [ $wort, ($vor =~ /\bnicht\s+$/i) ? 1 : 0 ];
+        }
+
+        # VON WELCHEM Kriterium handelt die Zeile?
+        #
+        # Erste Falle, gemessen am 08.09.2026: CHANGELOG.md:27 ist die Zeile
         # ueber Kriterium 4 (Zustand "fast", richtig) und erwaehnt im Text
         # nebenbei "Kriterium 7". Die erste Fassung dieser Pruefung hat das
         # "fast" dem Kriterium 7 zugeordnet und Alarm geschlagen. Der Zustand
         # in einer Zeile gehoert dem Kriterium, VON DEM die Zeile handelt -
-        # und das ist das erste.
-        if (my ($nr) = $zeile =~ /Kriterium\s+\*{0,2}([0-8])\*{0,2}/) {
+        # und das ist das ZUERST genannte.
+        #
+        # Zweite Falle, gemessen am 09.09.2026 (Befund L-11.1, Fehlalarm):
+        #
+        #   AUFGABEN.md:19  "| 4 | **Keine Abstuerze** | *fast* - ... das
+        #                    Beenden ist erledigt (Kriterium 7) ..."
+        #
+        # Diese Zeile handelt von Kriterium 4 - und das steht in der ERSTEN
+        # SPALTE einer Tabelle, nicht als Wort "Kriterium 4". Die Suche fand
+        # "Kriterium 7" und ordnete ihm "fast" zu. Deshalb gilt jetzt: traegt
+        # die erste Spalte einer Tabellenzeile nur eine Ziffer 0-8, ist DAS
+        # der Gegenstand der Zeile. Es ist dieselbe Form, in der die
+        # Kriterientabelle in ZIEL.md selbst gelesen wird: "| 4 | ... | ... |".
+        my $nr;
+        if    ($zeile =~ /^\|\s*([0-8])\s*\|/)                { $nr = $1 }
+        elsif ($zeile =~ /Kriterium\s+\*{0,2}([0-8])\*{0,2}/) { $nr = $1 }
+
+        if (defined $nr) {
             my $soll = exists $kriterium_zustand{$nr} ? $kriterium_zustand{$nr} : undef;
             if (defined $soll) {
 
                 for my $a (@aus) {
-                    next unless defined $a;
-                    my $ist = normzustand($a);
+                    my $ist = normzustand($a->[0]);
                     next unless defined $ist;
+
+                    # Dritte Falle, gemessen am 09.09.2026 (Befund L-11.1,
+                    # Fehlalarm):
+                    #
+                    #   AUFGABEN.md:53  "... der einzige Grund, warum
+                    #                    Kriterium 2 und Kriterium 4 nicht
+                    #                    *erfuellt* heissen."
+                    #
+                    # Die Verneinung stand AUSSERHALB der Auszeichnung und
+                    # wurde nicht gesehen - die Schranke meldete das genaue
+                    # Gegenteil der Aussage. Eine verneinte Auszeichnung sagt
+                    # nur "NICHT erfuellt"; das widerspricht ZIEL.md genau
+                    # dann, wenn ZIEL.md "erfuellt" sagt, und ist mit "fast"
+                    # oder "halb" vertraeglich.
+                    if ($a->[1]) {
+                        next unless $ist eq 'erfuellt';
+                        next unless $soll eq 'erfuellt';
+                        push @mangel, sprintf(
+                            "%s:%d fuehrt Kriterium %s als 'nicht erfuellt', ZIEL.md sagt '%s'",
+                            $datei, $i + 1, $nr, $soll);
+                        last;
+                    }
+
                     next if $ist eq $soll;
                     push @mangel, sprintf(
                         "%s:%d fuehrt Kriterium %s als '%s', ZIEL.md sagt '%s'",

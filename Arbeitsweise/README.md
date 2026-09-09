@@ -80,3 +80,7 @@ am Mitschnitt. Genau so ist eine falsche Begründung in
 Schuldeingeständnis, das sich beim Nachmessen als sachlich falsch erwies. Wenn diese
 Regeln denselben Rang wie Code haben sollen, bräuchten sie dieselbe Prüfung wie die
 übrige Dokumentation — einen zweiten Durchgang, der jede zitierte Tatsache belegt.
+
+**Schranke:** keine — diese Datei ist das Inhaltsverzeichnis des Verzeichnisses,
+nicht selbst eine Lehre. Die Schranken stehen bei den einzelnen Lehren; dass
+jede eine hat, prueft `tools/lehren-schranken.pl` vor jedem Commit.

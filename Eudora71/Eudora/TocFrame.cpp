@@ -3865,6 +3865,15 @@ bool CTocFrame::DoPreviewDisplay()
 					//	while we wait for Trident to be ready.
 					PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 
+					// BEFUND E-62 (09.09.2026): WM_QUIT nicht verschlucken.
+					// Gewartet wird hier auf die Trident-Anzeige; kommt
+					// waehrenddessen ein Beenden, war es bisher weg.
+					if (msg.message == WM_QUIT)
+					{
+						::PostQuitMessage((int) msg.wParam);
+						break;
+					}
+
 					//	Avoid handling messages that are for us and are irrelevant given that
 					//	we're still currently doing the preview display.
 					if ( m_hWnd && (msg.hwnd == m_hWnd) &&
