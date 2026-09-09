@@ -36,8 +36,8 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
 > von **neun** Kriterien sind **sechs belegt** (0, 1, 3, 5, 6, 7), zwei fast
-> oder halb (2, 4), eines nicht (8 — die Reiterleiste). Stand 08.09.2026,
-> Quellstand **7.2.0.28**, Paketnummer **1.0.28**. Hier steht bewusst keine
+> oder halb (2, 4), eines nicht (8 — die Reiterleiste). Stand 09.09.2026,
+> Quellstand **7.2.0.29**, Paketnummer **1.0.29**. Hier steht bewusst keine
 > zweite Fassung dieser Tabelle.
 >
 > Zum Bau, gemessen an `a807b93`, 30.08.2026, `Debug|x86`,

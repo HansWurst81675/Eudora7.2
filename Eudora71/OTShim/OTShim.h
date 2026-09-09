@@ -740,6 +740,14 @@ public:
 			CRect m_rect;
 			int m_nPos;
 			BOOL m_bInUse;
+			// NICHT im Original. PRUEFER-6 (09.09.2026): waehrend Track laeuft,
+			// dispatcht die Schleife fremde Nachrichten. Eine davon kann einen
+			// Anordnungsdurchlauf ausloesen, der ueber
+			// TrennbalkenNeuAnlegen -> EndRecycleSplitters GENAU DIESEN
+			// Splitter loescht - Track arbeitet danach auf freigegebenem
+			// Speicher, und StartTracking benutzt den Zeiger anschliessend
+			// noch fuer OnSplitterMoved. Diese Marke schuetzt ihn.
+			BOOL m_bTracking;
 			int m_nMin, m_nMax;
 
 		protected:
