@@ -151,7 +151,7 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.29 — gebaut und freigegeben am 09.09.2026
+## 1.0.29 — veröffentlicht am 09.09.2026
 
 **Die aktuelle Fassung, und die einzige, die als Paket im Repo liegt.** Sie
 bringt gegenüber 1.0.28 fünfzehn Behebungen: acht aus **PRÜFERs** sechstem
@@ -167,7 +167,7 @@ keinen Kurzhinweis).
 | **SHA256** | `cf60bb3a806204ea4ae85af5cbaccc46f432f22f699b5063ae1d36a2a998158c` |
 | **Größe** | 9 342 274 Byte |
 | **Quellstand** | 7.2.0.29 — alle drei Makros in `Eudora71/Version.h` stimmen überein (`EUDORA_VERSION4 29`, `EUDORA_BUILD_NUMBER 7,2,0,29`, `EUDORA_BUILD_VERSION "7.2.0.29"`) |
-| **Marke** | `v1.0.29` — wird unmittelbar nach diesem Commit angelegt |
+| **Marke** | [v1.0.29](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.29) — zeigt auf Commit `15a7cb8`, den Stand, aus dem dieses Paket gebaut ist |
 | **`Eudora.exe` im ZIP** | 2 961 408 Byte, 09.09.2026 12:37 |
 | **`EudoraRes.dll` im ZIP** | 2 447 360 Byte, 09.09.2026 12:17 |
 | **`.sha256` daneben** | **fehlt** (siehe Kopfkasten) |
