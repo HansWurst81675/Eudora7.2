@@ -173,9 +173,38 @@ if ($NurPruefen) {
 $marke = 'v' + $Fassung
 if ($Titel -eq '') { $Titel = ('7.2.0.' + $Fassung.Split('.')[-1] + ' / Paket ' + $Fassung) }
 
+# --target ist PFLICHT, nicht Beiwerk.
+#
+# Ohne ihn legt "gh release create" die Marke auf den Kopf des VORGABEZWEIGS
+# an - also auf main. Bei diesem Projekt merged Gregor selbst, main hinkt dem
+# Arbeitszweig also regelmaessig hinterher. Die Marke haette dann auf einen
+# Stand gezeigt, der die veroeffentlichte Fassung gar nicht enthaelt: das ZIP
+# 7.2.0.29, die Marke aber auf 7.2.0.24. Genau das macht einen Fehlerbericht
+# von aussen unzuordenbar (Befund V-1, Gregors Regel "version muss eindeutig
+# sein").
+#
+# Genommen wird der Commit, auf dem dieser Lauf steht - und er muss auf dem
+# Server liegen, sonst kennt GitHub ihn nicht.
+$commit = (& git rev-parse HEAD).Trim()
+if ($LASTEXITCODE -ne 0 -or $commit -notmatch '^[0-9a-f]{40}$') {
+    Write-Host ''
+    Write-Host '  ABBRUCH: git rev-parse HEAD hat keinen Commit geliefert.'
+    Write-Host ''
+    exit 1
+}
+& git branch -r --contains $commit *> $null
+if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host ('  ABBRUCH: der Commit ' + $commit.Substring(0,7) + ' liegt in keinem Zweig auf dem Server.')
+    Write-Host '  Erst pushen, dann veroeffentlichen - sonst zeigt die Marke ins Leere.'
+    Write-Host ''
+    exit 1
+}
+Write-Host ('  Marke zeigt auf ' + $commit)
+
 $argumente = @('release', 'create', $marke,
     ($zip + '#Eudora72-' + $Fassung + '-release.zip (auspacken, Eudora starten.cmd doppelklicken)'),
-    '--title', $Titel, '--latest')
+    '--title', $Titel, '--latest', '--target', $commit)
 if ($Notizen -ne '' -and (Test-Path $Notizen)) { $argumente += @('--notes-file', $Notizen) }
 
 Write-Host ''
