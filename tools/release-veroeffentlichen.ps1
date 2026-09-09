@@ -118,7 +118,15 @@ if (-not (Test-Path $cl)) {
                    'eigene Dokumentation sie fuer ungeprueft erklaert, wird ' +
                    'nicht veroeffentlicht.')
         }
-        if ($text -notmatch 'best(ae|a)tigt') {
+        # \u00e4 ist das a-Umlaut. Diese Datei bleibt reines ASCII (eigene
+        # Regel), das Muster muss den Umlaut aber treffen: die MD-Dateien sind
+        # UTF-8 und schreiben "bestaetigt" richtig als "bestaetigt".
+        #
+        # Am 09.09.2026 hat genau das ein fertiges, freigegebenes Release
+        # abgewiesen - die Bestaetigung STAND im CHANGELOG, nur mit Umlaut.
+        # Eine Schranke, die das Richtige abweist, wird umgangen statt
+        # befolgt (Lehre schranke-gegentesten).
+        if ($text -notmatch 'best(\u00e4|ae|a)tigt') {
             Melde ('Im CHANGELOG-Abschnitt zu 7.2.0.' + $klein +
                    ' steht keine Bestaetigung. Erst Gregors Rueckmeldung ' +
                    'eintragen, dann veroeffentlichen.')
