@@ -46,7 +46,7 @@ nach der Stelle).
 > lag und noch nicht bei `origin` war: **E-53** (ein Strich bleibt beim
 > Schließen eines Fensters stehen, behoben in 7.2.0.28, von Gregor noch nicht
 > bestätigt) und danach **E-54** bis **E-62**. Die höchste vergebene Kennung
-> ist damit **E-62**, nicht E-52.
+> ist damit **E-62**, nicht E-52. **Nachtrag 09.09.2026 (PRUEFER, Filter):** seither sind **E-63** bis **E-69** vergeben, die höchste ist damit **E-69**.
 >
 > **Die Lehre daraus ist nicht „besser greppen", sondern:** ein Kennungsraum
 > lässt sich nicht aus einem einzelnen Arbeitsbaum messen. `git log --all`
@@ -222,6 +222,12 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-61 | `Splitter::Track` **verschluckte `WM_QUIT`** — Eudora hätte weitergelaufen, obwohl es enden sollte | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange; wer sie nicht zurückstellt, hat das Beenden des Programms verschluckt. Genau die Klasse aus **Kriterium 7** (*„beenden kann ich es auch nicht"*), diesmal von mir selbst neu eingebaut. Jetzt: `::PostQuitMessage((int) msg.wParam)` und das Ziehen abbrechen |
 | E-62 | **sieben eigene Nachrichtenschleifen in Eudoras Quellen verschluckten `WM_QUIT`** — zwei davon mit echter Hängegefahr | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Nicht von Hand gefunden, sondern beim **ersten Lauf** der Schranke `tools/pruefe-nachrichtenschleife.pl`, die wegen E-51 und E-61 entstanden war. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange, `DispatchMessage` tut mit `WM_QUIT` **nichts** — die Aufforderung zu beenden ist weg. Betroffen: `EscapePressed` (`guiutils.cpp:1666`, wird während **langer Vorgänge** gerufen, also gerade beim Mailabruf), `SyncPlayMedia` (`:3387`), `CTocFrame::DoPreviewDisplay` (`TocFrame.cpp:3673`), `CTridentView::DoFindFirst` (zwei Schleifen) und `CTridentView::Print`. **Die zwei schwersten hängen, statt nur zu verschlucken:** `LeftClickAttachment` (`guiutils.cpp:2910`) und `CTocView::SizeColumn` (`tocview.cpp:3458`) warten in `while (1)` mit `GetMessage(&msg, hWnd, 0, 0)`. `WM_QUIT` kommt **trotz** Fensterfilter, `GetMessage` liefert dann 0 — und weil `while (1)` den Rückgabewert nicht auswertet, wartet die Schleife danach **für immer** auf eine Nachricht, die nie mehr kommt, mit gehaltenem Mausfang. Ausgelöst schon durch das Ziehen einer **Spaltenbreite** im Postfachfenster. Damit ist eine mögliche Ursache von Gregors *„beenden kann ich es auch nicht"* benannt, die **nicht** aus der Portierung stammt, sondern im Original steht |
 | E-63 | die **letzte** Registerkarte zeigt keinen Kurzhinweis, alle anderen schon | **offen, bewusst zurückgestellt.** Von Gregor am 09.09.2026 an 1.0.29 gemeldet, mit Bildschirmfoto: *„alle karten, bis auf die letzte (warum?) zeigen einen tooltip beim maus over. beim letzten (ganz rechts) nicht."* Seine Entscheidung dazu: *„den fehler notieren wir, wird im nächsten release behoben."* — **Verdacht, noch nicht am laufenden Programm belegt:** `QCWorkbook::AddSheet` ruft `ResetTaskBar` → `RecalcToolTipRects` (`workbook.cpp:1226`, `:788`, `:1709`), und dort werden nur Blätter mit `WS_VISIBLE` als Kurzhinweis-Feld angemeldet. Ist das MDI-Kindfenster in diesem Moment noch nicht sichtbar, bekommt es kein Feld. Jedes **spätere** `AddSheet` rechnet alle Felder neu und repariert die älteren — nur das **zuletzt hinzugekommene** bleibt ohne, und das ist genau die rechte Karte. Dazu passt, dass im Original eine Selbstheilung existiert: `QCWorkbook::OnDrawBorder` (`workbook.cpp:1533`) prüft `m_lastVisCount != CountVisibleTabs()` und ruft dann `ResetTaskBar` — **diese Fassung wird in der Ersatzschicht von niemandem gerufen** (dieselbe Wurzel wie **E-58**). **Vorhersage zum Gegentest:** Fenstergröße ändern ruft `QCWorkbook::OnSize` → `RecalcToolTipRects`, danach müsste der Kurzhinweis auch auf der letzten Karte erscheinen. Steht das nicht, ist der Verdacht widerlegt |
+| E-64 | ein Filterlauf über das ganze In-Postfach verschob **alle** Nachrichten, nicht nur die passenden — **Datenverlust** | **offen, Ursache noch nicht abschließend belegt.** Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *„filter greifen (z.b. verschieben nach spam), aber wenn man es z.b. auf die ganze in-mailbox anwendet, dann werden ALLE (!) mails verschoben."* **Der Schaden ist nachgemessen**, nicht nur berichtet: in seiner `eudora.log` (Sitzung 12:51:30) steht bei 0.12 `Junk .mbx size: MBX 0`, bei 0.01 `In .mbx size: MBX 1089243`, dann bei 4.06–4.10 ein Handfilterlauf über 22 Nachrichten (`Messages left to filter: 21 … 0`) und bei 4.11 `Junk.mbx, Size: 1089243` — **byte-genau der ganze Posteingang**. Belegt ist außerdem, dass `CFilter::Action` gelaufen ist (vier LMOS-Sätze aus `filtersd.cpp:1166`, dessen einziger Weg über `if (filt->Match(...))` in `filtersd.cpp:2323` führt) **mit einer Aktion `ID_FLT_SERVER_OPT`, die in seiner `Filters.pce` gar nicht steht** — die Filterobjekte im Speicher weichen also von der Datei ab. **Offener Widerspruch:** die Trefferzeile `Filter "%s" matches "%s"` (`filtersd.cpp:2312-2318`) fehlt im ganzen Protokoll, obwohl `DEBUG_MASK_FILTERS` (0x400) in `LogLevel 0x649F` gesetzt ist und dasselbe Verfahren für LMOS schreibt. Die entscheidende Messung (eine Zeile mit Filtername, Kopf, Verb, Wert, Aktionen und Match-Ergebnis, geschrieben mit `MISC\|TOC_CORRUPT`) steht in `Befunde/PRUEFER-7.md` |
+| E-65 | Filter lassen sich **anlegen, aber nicht bearbeiten** | **offen, drei Kandidaten, keiner bestätigt.** Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *„filter kann man setzen, aber nicht mehr editieren."* Belegt ist das Bild dazu: seine `Filters.pce` enthält vier Regeln, davon **zwei wortgleich** — ein Anwender, der neu anlegt, weil er nicht ändern kann. Kandidaten, alle **Vermutung**: (1) die rechte Hälfte hat Breite null, weil `CFiltersWazooWnd::OnActivateWazoo` (`FiltersWazooWnd.cpp:185-186`) Spalte 0 mindestens 140 Pixel gibt und Spalte 1 `SetColumnInfo(1, 0, 0)`, während die Mindestbreite von 420 aus `OnGetMinMaxInfo` nur für ein frei schwebendes Fenster gilt; (2) `static BOOL bFuncEntered` (`:133`) ist **prozessweit**, nicht je Fenster — nach einem Neuaufbau des Wazoo-Fensters werden Teiler und Ansichten nie wieder angelegt; (3) stiller Abbruch nach der bekannten Klasse: `ASSERT(0); return;` in `:153`, `:169`, `filtersv.cpp:180` und `:967`. **Die Frage an Gregor, die entscheidet:** bleibt die rechte Hälfte leer, sind die Felder grau, oder wird die Änderung nicht behalten? |
+| E-66 | der Trennbalken der **rechten** Andockleiste ist sichtbar, lässt sich aber nicht ziehen (unten ebenso) | **offen, Ursache belegt.** Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *„rechts ist zwar ein balken sichtbar, aber nicht verschiebbar."* Links geht es seit A-4. **Ursache 1 (wirksam):** `TrennbalkenNeuAnlegen` misst den freien Streifen für `AFX_IDW_DOCKBAR_RIGHT` bei `rectLeiste.left - rect.left` (`OTShim.cpp:4165`), aber `CDockBar::CalcFixedLayout` der MFC (`…\14.38.33130\atlmfc\src\mfc\bardock.cpp:387`) setzt die Kindleiste in **jeder** Andockleiste bündig auf `(-cxBorder2, -cyBorder2)`; der Zuschlag `3*Splitter::cx = 12` bleibt darum immer am **großen** Ende liegen — links die Innenkante (`nFrei ≈ 7`, Balken entsteht), rechts der Fensterrand (`nFrei = -2`, Bedingung `nFrei >= 2` in `:4174` scheitert, `AddSplitter` läuft nie, `HitTest` liefert `NULL`). `BrauchtGreifstreifen` und die Bedingung `nVorhanden > 8` sind für links und rechts identisch — die Spur „andere Bedingung für rechts" ist **widerlegt**. **Ursache 2 (belegt, heute verdeckt):** `CalcTrackingLimits` (`:3622-3623`, waagrecht `:3637-3638`) rechnet `m_nMin`/`m_nMax` für rechts/unten sinnverkehrt; für eine rechte Leiste ergibt sich `m_nMax = -10`, der zulässige Bereich liegt links vom Balken, `Splitter::Track` klemmt sofort fest. **Messung, die entscheidet, ohne Bau:** Mauszeiger über den rechten Streifen — normaler Pfeil = Ursache 1, Doppelpfeil = Ursache 2. Gegenprobe: der **untere** Balken muss nach derselben Rechnung ebenfalls tot sein. Umfang: eine Datei, 30 bis 45 Zeilen |
+| E-67 | ein Filter *„«Junk Score» is less than N"* wird durch bloßes **Anschauen** im Filterfenster zu *„matches regexp N"* und greift nie wieder | **offen, belegt durch Nachrechnen am Quelltext.** `filtersv.cpp:1210` und `:1222` prüfen `if (m_Verb0 > NumVerbsNonJunk)` mit `NumVerbsNonJunk == 14`, kodiert wird beim Speichern aber mit `m_Verb0 += 14` (`:1378`) — „is less than" wird also **14**, und `14 > 14` ist falsch. Die Rückrechnung unterbleibt, `DDX_CBIndex` ruft `SetCurSel(14)` auf ein Feld mit **zwei** Einträgen → `CB_ERR`. Beim nächsten `UpdateData(TRUE)` liest `DDX_CBIndex` `-1`, `:1378` macht daraus `13`, `:1413` schreibt das in den Filter (`IDS_MATCHES_REGEX`), und weil sich der Wert unterscheidet, setzt `:1404` das Änderungskennzeichen — der verfälschte Filter wird **gespeichert**. Danach fällt die Bedingung in `CFilter::MatchValue` (`filtersd.cpp:679-694`) immer durch. **Behebung: zwei Zeichen** (`>` → `>=`). Gegentest: Filter anlegen, Filterfenster öffnen, wegklicken, `Filters.pce` ansehen — dort steht dann `verb regex` statt `verb less` |
+| E-68 | **Zielpostfächer verschwinden aus `Filters.pce`** — Schreiben und Lesen sind unsymmetrisch | **offen, belegt.** Zwei Wege: (a) `copyInstead ` wird gelesen (`filtersd.cpp:2746`) und füllt dabei `m_Mailbox` statt `m_CopyTo[i]` (der Quelltext nennt es selbst *„legacy code that never gets executed"*), der Schreibzweig prüft aber `m_CopyTo[i]` (`:3120`) und schreibt nichts; (b) beim Transfer steht das Schlüsselwort unter `if (filt->IsTransferTo())`, die **Pfadzeile** darunter nicht (`:3132-3133`) — nach einer ausgeführten Copy-Aktion, die `SetCopyTo()` auf demselben Filterobjekt hinterlässt (`:1369`), entsteht eine kennungslose Zeile, die `Read` verwirft (`:2599-2600`). Dazu die **fehlende Grenzprüfung**: `Read` zählt den Aktionszähler in 19 Zweigen hoch, ohne je gegen `NUM_FILT_ACTS` (= 5) zu prüfen — im ganzen Bereich `:2526-2907` kommt die Konstante nicht vor; eine `.pre`-Datei mit sechs Aktionen je Regel schreibt über `m_Actions[5]` hinaus |
+| E-69 | `CFiltersDoc::FilterMsg` bricht den Filterlauf im Freigabebau **lautlos** ab und meldet Erfolg | **offen, belegt.** Drei `ASSERT(0)` — `filtersd.cpp:2241` (kein TOC), `:2286` (Nachrichtendokument nicht ladbar), `:2302` (Nachrichtentext leer) — führen alle auf `break` aus der Filterschleife; die Funktion liefert danach `FA_NORMAL` (`:2354-2358`), also dasselbe wie „durchgelaufen, nichts getroffen". Weder `pop.cpp:999` noch `sendmail.cpp:186` noch `TocFrame.cpp:2398` sehen einen Unterschied: keine Meldung, kein Protokolleintrag (die Debug-Zeile `:2312-2320` steht erst **hinter** dem Treffer), kein Berichtseintrag. Verwandt: `FilterReportWazooWnd.cpp:65` — fehlt das Wazoo-Fenster, entfällt der **ganze** Filterbericht kommentarlos, und `ClearAllLists()` (`filtersd.cpp:3618`) wirft die gesammelten Einträge weg. Genau [assert-ist-im-release-nichts](Arbeitsweise/assert-ist-im-release-nichts.md) |
 | X-7 | **`bauen.ps1` blieb hängen, nachdem der Bau längst fertig war** — zwölf Minuten Stillstand ohne eine Zeile Ausgabe | **behoben** am 09.09.2026, beim Bau von 7.2.0.29 selbst aufgetreten. **Gemessen:** MSBuild war um **12:17:52** fertig — 0 Fehler, `Eudora.exe` gelinkt, Protokoll mit 3,7 MB vollständig geschrieben. Danach lief `bauen.ps1` bis 12:29 weiter: **CPU flach** (6,53 s unverändert über sechs Sekunden Messung), **kein einziger Kindprozess**, Protokoll unverändert. Der Prozess musste abgeschossen werden. **Ursache:** `Start-Process -Wait` wartet nicht auf *den* Prozess, sondern auf ihn **und seine Nachkommen** — dafür legt PowerShell ein Auftragsobjekt an. MSBuild startet mit `/m` eigene Knoten, der Nachbearbeitungsschritt **BIND** startet weitere Programme. Bleibt eines davon hängen oder wird es umgehängt, wartet `-Wait` weiter, obwohl MSBuild selbst beendet ist. **Behebung:** kein `-Wait` mehr; gewartet wird auf den MSBuild-Prozess selbst mit `WaitForExit($ms)` und Zeitschranke (`-ZeitschrankeMinuten`, Vorgabe 45). Läuft er über, wird er abgeschossen und der Lauf gilt als gescheitert. **Dieselbe Regel wie für Nachrichtenschleifen im Programm** (E-51, E-61): nie ohne Zeitschranke warten — ein Warten ohne Ende ist teurer als ein klarer Fehlschlag, weil es nichts anzeigt. **Die Behebung hatte einen zweiten Teil:** ohne `-Wait` liefert `$p.ExitCode` **`$null`** — PowerShell hält den Prozesszeiger nicht offen. Der erste Lauf nach der Umstellung war einwandfrei (1:10, 0 Fehler, `Eudora.exe` 7.2.0.29 frisch gelinkt, Versionsprobe grün) und wurde trotzdem als **FEHLSCHLAG** gemeldet. Abhilfe: `$null = $p.Handle` **vor** dem Warten merkt den Zeiger vor. Gegengetestet mit `cmd /c exit 0` und `exit 3`: mit Vormerken 0 und 3 abgelesen, ohne Vormerken leer |
 | X-8 | **ein neues Werkzeug im Hauptbaum machte jeden anderen Arbeitsbaum committierunfähig** | **behoben** am 09.09.2026. Die Haken liegen in `.git/hooks` und gelten damit für **alle** Arbeitsbäume — die Werkzeuge liegen aber **je Arbeitsbaum**. Kaum war `tools/pruefe-nachrichtenschleife.pl` im Hauptbaum eingehängt, fand `perl` es in `wt/lektor` nicht, der Hook gab einen Fehler zurück, und **jeder** Commit dort wurde abgewiesen. **Gemessen an LEKTOR:** eine halbe Stunde nicht committierbar, obwohl seine Arbeit fertig und alle seine eigenen Schranken grün waren — er hat weder die fremde Datei kopiert noch `--no-verify` benutzt, sondern gemeldet. Dieselbe Sache eine Stufe vorher mit `lehren-schranken.pl`. **Behebung:** eine Hilfsfunktion `schranke()` in beiden Haken — fehlt ein Werkzeug in **diesem** Arbeitsbaum, wird es übersprungen und gemeldet. Fehlt es im Hauptbaum, fällt das dort auf. Gegengetestet in einem frischen `git init` ohne `tools/`: alle Schranken übersprungen, Rückgabewert 0; im Hauptbaum laufen sie unverändert. **Die Lehre dahinter:** ein Werkzeug, das noch in keinem Zweig liegt, darf keine fremde Arbeit blockieren — [[agenten-trennen-worktrees]] |
 | — | **Nebenbefund, noch nicht eingeordnet:** nach einem Neustart stehen die Fenster nicht im **Vollbild**, obwohl sie beim Beenden so waren | Gregor am 09.09.2026 an 1.0.25. Das ist der **Fensterzustand**, nicht die Registerkartenleiste — ein eigener Weg über `SaveOpenWindows` und den `[ToolBar…]`-Abschnitt, den es seit **E-43** überhaupt erst gibt. Getrennt zu messen, damit es nicht unter A-3 verschwindet |
@@ -7605,3 +7611,84 @@ und die E-33/E-42-Marken. `DEBUG_MASK_MISC` (0x8000) fehlt in der Vorgabe
 tatsächlich — `DEBUG_MASK_TOC_CORRUPT` (0x80) ist gesetzt, und weil die Marken
 mit `MISC | TOC_CORRUPT` schreiben, genügt das. Die Maske ist also nicht
 optimal gewählt, aber wirksam.
+
+---
+
+## E-64 bis E-69 — Filter: drei Meldungen Gregors an 1.0.29 und die Bestandsaufnahme (09.09.2026, PRUEFER)
+
+Der vollständige Bericht steht in **[Befunde/PRUEFER-7.md](Befunde/PRUEFER-7.md)**;
+hier nur, was man wissen muss, um zu entscheiden.
+
+Gregors Auftrag nach dem Release: *„habe gleich das naechste gebiet nach dem
+release: filter."* Dazu drei Meldungen, alle mit Bildschirmfotos belegt: der
+Trennbalken **rechts** lässt sich nicht ziehen (**E-66**), Filter lassen sich
+setzen, aber nicht bearbeiten (**E-65**), und ein Filterlauf über das ganze
+In-Postfach verschiebt **alle** Nachrichten (**E-64**).
+
+**Der erste Satz zuerst, weil er alles andere einordnet:** die Filterdateien
+sind **seit dem Ursprungscommit unverändert**. `git log --oneline` über
+`filtersd.cpp`, `filtersv.cpp`, `FiltersWazooWnd.cpp`, `MakeFilter.cpp`,
+`FilterReportView.cpp`, `FilterReportWazooWnd.cpp`, `JunkMail.cpp`,
+`filtersd.h`, `filtersv.h`, `resource.h` und `EudoraRes.rc` liefert genau
+einen Commit, `567a5d8`. Die einzige angefasste Datei des ganzen Filterwegs
+ist `EuImap/src/ImapFiltersd.cpp` (`03c94fe`, zwei Zeilen, `std::auto_ptr` →
+`std::unique_ptr`). **Kein Filterbefund dieses Durchgangs ist bei der
+Portierung entstanden** — sie sind alle aus dem Original mitgekommen und
+werden erst jetzt sichtbar, weil zum ersten Mal jemand mit Filtern arbeitet.
+
+**Und die Ersatzschicht ist unschuldig, was die Filter angeht.** Im Filterkern
+kommt **keine einzige `SEC*`-Klasse** vor; `CFiltersWazooWnd` erbt von
+`CWazooWnd`, und das ist ein schlichtes `CWnd` (`WazooWnd.h:16`). Erst der
+Behälter `CWazooBar` erbt von `SECControlBar` (`WazooBar.h:60`). Auch der
+reguläre Ausdruck ist echt (POSIX `regcomp`/`regexec`, `filtersd.cpp:364-380`),
+kein leerer Rumpf. Die Vermutung aus dem Auftrag — *„eine Vergleichsfunktion,
+die IMMER passt liefert"* — ist damit **widerlegt**: es gibt sie nicht.
+
+**Die Bestandsaufnahme in Zahlen** (Umfang aus der Quelle erhoben, nicht von
+Hand gelistet): **10** nutzbare Kopfzeilen von 15 IDs, **16** Operatoren
+(14 allgemein + 2 nur für den Junk-Score), **4** Verknüpfungen, **19**
+Aktionen auf **5** Plätzen je Filter, **3** Filterlisten (Vor-, Haupt-,
+Nachfilter), **12** Stellen im Programm, an denen gefiltert wird. Davon ist
+**eine einzige** Aktion ohne eigenen Zweig (`ID_FLT_NOTIFY_USER`, wirkt nur
+zusammen mit Transfer/Copy/Junk) und **eine** Anwendungsstelle unvollständig
+(`SearchView.cpp:3722`: *„Nicht Junk"* aus dem Suchfenster ruft `DeclareJunk`
+mit `NULL/*&filt*/` — auskommentiert, also **ohne** Filterlauf). Die
+Shareware-Schranke `IsRestrictedFilterAction` würde 12 der 19 Aktionen
+sperren, greift in diesem Bau aber nicht: `Eudora.vcxproj:78`/`:132` setzen
+`BUILD_BOX_OR_SITE_R_VERSION`, `DEFAULT_SWM_MODE = SWM_MODE_PRO`, und Gregors
+Protokoll schreibt in jeder Sitzung `Mode 2`.
+
+**Was an E-64 neu ist und was nicht.** Neu ist, dass der Schaden **gemessen**
+ist statt berichtet — Junk.mbx wächst in einer Sitzung von 0 auf byte-genau
+die Größe, die In.mbx vorher hatte. Neu ist auch die Spur: `CFilter::Action`
+lief mit einer Aktion, die in der Filterdatei **nicht steht**, die
+Filterobjekte im Speicher weichen also von der Datei ab, und der einzige Weg,
+der sie anfasst, ist `CFiltersViewRight::DoDataExchange` in Speicherrichtung —
+angestoßen **ungefragt** bei jedem Wegklicken vom Filterreiter
+(`FiltersWazooWnd.cpp:122` → `filtersd.cpp:2058-2072`). Damit hängen **E-64
+und E-65 am selben Faden**.
+
+**Nicht** geklärt ist der Widerspruch: die Trefferzeile aus
+`filtersd.cpp:2312-2318` fehlt im ganzen Protokoll, obwohl ihre Maske gesetzt
+ist und dasselbe Verfahren nebenan (LMOS) schreibt. Deshalb ist der nächste
+Schritt zu E-64 **keine Behebung, sondern eine Messung**: eine Zeile je
+Nachricht und Filter mit Name, Kopf, Verb, Wert, Aktionen und Match-Ergebnis,
+geschrieben mit `MISC | TOC_CORRUPT` — **nicht** mit `DEBUG_MASK_FILTERS`,
+denn genau deren Wirksamkeit steht hier in Frage
+([messung-muss-den-weg-treffen](Arbeitsweise/messung-muss-den-weg-treffen.md),
+[zwei-werte-in-eine-ausgabe](Arbeitsweise/zwei-werte-in-eine-ausgabe.md)).
+
+**Zwei Härtungen gehören unabhängig von der Ursache mit ins selbe Paket:** ein
+leerer Wert darf bei `contains`/`is`/`starts with`/`ends with` **nicht**
+treffen (`strstr(text, "")` liefert heute einen Treffer, `filtersd.cpp:712`),
+und ein Filter, der fast alle bearbeiteten Nachrichten trifft, soll den Lauf
+**abbrechen und melden** statt ihn zu Ende zu bringen. Ein Anwender bekommt
+seine Mails nicht zurück.
+
+**Reihenfolge der Behebung, nach Schaden:** E-64 (erst messen), dazu die beiden
+Härtungen und E-69 im selben Zug, weil dieselben Dateien angefasst werden;
+dann E-67 (zwei Zeichen, `>` → `>=`); dann E-68; dann E-65 (erst Gregors
+Antwort auf **eine** Frage abwarten: leere Hälfte, graue Felder oder
+Änderung wird nicht behalten?); dann E-66 (eine Datei, 30 bis 45 Zeilen); zum
+Schluss die Lücke im Suchfenster — und die erst, wenn E-64 erledigt ist, weil
+sie einen weiteren Filterlauf **einschaltet**.
