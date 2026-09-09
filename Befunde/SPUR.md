@@ -211,3 +211,73 @@ Das ist das erwartete Ergebnis und der Beleg, dass nicht geraten wird.
 | `tools/absturz-auswerten.pl` | das Werkzeug |
 | `tools/absturz-auswerten-tests.pl` | 15 Selbsttests |
 | `Eudora71/Eudora/ExceptionHandler.cpp` | Quelle der Modultabelle (Befund E-26, nicht von SPUR geändert) |
+
+---
+
+### 8. Das Absturzprotokoll — und wie man es liest
+
+> Dieser Abschnitt stand bis zum 09.09.2026 in `README.md`. Er ist dort
+> herausgenommen worden, weil er kein Anwenderwissen ist, sondern die
+> Bedienungsanleitung zu Befund **E-26** und zu diesem Werkzeug.
+
+Eudora schreibt seinen eigenen Absturzbericht, ohne dass man etwas einschalten
+muss: **`Mailverzeichnis\Exception.log`** neben der EXE. Gregor hat 7.2.0.12 am
+06.09.2026 um 00:32 laufen lassen, und darin steht:
+
+```
+Eudora.exe caused an EXCEPTION_ACCESS_VIOLATION in module <UNKNOWN>
+at 0023:414E3345
+Call stack: 00894B53, 008962D7, 6FB9A3E6 (mfc140.dll), ...
+```
+
+**Das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die zu
+*keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle oder
+ein Funktionszeiger überschrieben wurde — das Schadensbild einer beschädigten
+Halde. Die Doppelfreigabe E-25 war demnach **nicht die Quelle**; gefunden wurde
+sie erst am 06.09.2026 als **E-31** (siehe oben).
+
+#### 8a. Warum die Adressen bis 7.2.0.12 nichts hergaben
+
+Die EXE ist 2,8 MB groß; läge sie wie vorgesehen auf `0x00400000`, endete sie
+bei `0x006CD000`. Die protokollierte Adresse `0x00894B53` liegt weit dahinter.
+Windows lädt sie also **verschoben** (ASLR), und der Bericht schrieb die
+tatsächliche Ladeadresse **nicht mit**. Ohne sie ist jede Umrechnung in einen
+Funktionsnamen geraten. Ein erster Versuch am 06.09. rechnete gegen
+`0x00400000` und lieferte prompt einen Namen aus dem Ressourcenbereich —
+sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht stimmte.
+
+#### 8b. Beide Hälften sind jetzt da
+
+| Hälfte | Wo | Seit |
+|---|---|---|
+| **Namen zu Adressen**: `Eudora71/Bin/Release/Eudora.map`, 51.075 Einträge | `Eudora.vcxproj` erzeugt sie bei jedem Bau | 06.09.2026 |
+| **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](../Eudora71/Eudora/ExceptionHandler.cpp) (E-26) | 06.09.2026 |
+
+Ein Bericht **ab 7.2.0.13** beginnt deshalb so (ausgeliefert erstmals in Paket
+1.0.14 — 1.0.13 wurde übersprungen):
+
+```
+Loaded modules - subtract the load address from a stack address to get
+the offset listed in the .map file of that module:
+Load address  Size      Module
+00E30000      002CD000  Eudora.exe
+6FB00000      ...       mfc140.dll
+```
+
+Adresse minus Ladeadresse ergibt den Versatz, den die `.map` kennt. Damit wird
+aus jeder Zeile des Aufrufstapels ein Funktionsname — **ohne Debugger und ohne
+Visual Studio**, aus einer Textdatei, die ein Anwender einfach mitschicken kann.
+Das war Gregors Vorschlag: *„oder du schreibst eine log datei, während eudora
+ausgeführt wird, dann steht es darin, was der letzte aufruf war."*
+
+Berichte von **7.2.0.12 und älter** haben die Tabelle nicht und bleiben
+unauflösbar. Das ist kein Mangel des Werkzeugs, sondern eine Tatsache über die
+alten Dateien — geraten wird nicht.
+
+**Der zweite Weg, falls das nicht reicht:** **Page Heap** macht aus der
+Beschädigung einen Zugriffsfehler an der verursachenden Anweisung statt
+irgendwo später — als Administrator `gflags /p /enable Eudora.exe /full`,
+Debug-Bau starten, Strg-N, dann `tools\stapel-untersuchen.ps1` in einer
+**32-Bit**-PowerShell mit der `Eudora.pdb` neben der `Eudora.exe`; danach
+`gflags /p /disable Eudora.exe`.
+

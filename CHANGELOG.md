@@ -1002,7 +1002,7 @@ perl tools/absturz-auswerten.pl
 
 Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
 Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
-Heap-Beschädigung — dann hilft nur Page Heap (siehe README).
+Heap-Beschädigung — dann hilft nur Page Heap (siehe `Befunde/SPUR.md`, Abschnitt 8).
 
 ### E-34 — eine MFC-Ausnahme wickelte den ganzen Fensterbau ab
 
