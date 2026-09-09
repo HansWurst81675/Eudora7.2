@@ -256,6 +256,11 @@ if (!keys %kriterium_zustand) {
 
 for my $datei (@alle_md) {
     next if $datei eq 'ZIEL.md';
+    # Zeitdokumente sagen, was AN JENEM TAG galt, und duerfen dem heutigen
+    # Stand widersprechen - dieselbe Liste wie in Pruefung 4 und 9.
+    # Ohne das meldete die Schranke Befunde/LEKTOR-5.md:112, wo der Lektor am
+    # 08.09.2026 gerade BEANSTANDET, dass Kriterium 7 falsch gefuehrt wird.
+    next if $datei =~ $zeitdokument;
     my $inhalt = lies($datei);
     next unless defined $inhalt;
     my @z = split /\n/, $inhalt;
@@ -272,22 +277,38 @@ for my $datei (@alle_md) {
         next if $zeile =~ /\d{2}\.\d{2}\.20\d\d/;
         next if $zeile =~ /\bwar\b|damals|frueher|ueberholt|\x{c3}\x{bc}berholt|Behauptung|behauptete/i;
 
-        while ($zeile =~ /Kriterium\s+\*{0,2}([0-8])\*{0,2}/g) {
-            my $nr = $1;
-            next unless exists $kriterium_zustand{$nr};
-            my $soll = $kriterium_zustand{$nr};
+        # Die Zustandswoerter EINMAL pro Zeile sammeln, aus einer KOPIE.
+        #
+        # Hier lag am 09.09.2026 eine Endlosschleife: die innere Suche lief
+        # mit /g im Listenkontext auf derselben Zeichenkette wie die aeussere
+        # while-Schleife. Das setzt pos($zeile) zurueck, die aeussere Suche
+        # faengt wieder von vorn an und kommt nie ans Ende. Gemessen: 1939 ms
+        # ohne diese Pruefung, ueber 200000 ms mit ihr.
+        my $kopie = $zeile;
+        my @aus = ($kopie =~ /\*\*([^*]+)\*\*|\*([^*]+)\*/g);
 
-            # Zustandswoerter in DIESER Zeile sammeln.
-            my @aus = ($zeile =~ /\*\*([^*]+)\*\*|\*([^*]+)\*/g);
-            for my $a (@aus) {
-                next unless defined $a;
-                my $ist = normzustand($a);
-                next unless defined $ist;
-                next if $ist eq $soll;
-                push @mangel, sprintf(
-                    "%s:%d fuehrt Kriterium %s als '%s', ZIEL.md sagt '%s'",
-                    $datei, $i + 1, $nr, $ist, $soll);
-                last;
+        # NUR das ZUERST genannte Kriterium wird beurteilt.
+        #
+        # Auch das ist eine gemessene Falle: CHANGELOG.md:27 ist die Zeile
+        # ueber Kriterium 4 (Zustand "fast", richtig) und erwaehnt im Text
+        # nebenbei "Kriterium 7". Die erste Fassung dieser Pruefung hat das
+        # "fast" dem Kriterium 7 zugeordnet und Alarm geschlagen. Der Zustand
+        # in einer Zeile gehoert dem Kriterium, VON DEM die Zeile handelt -
+        # und das ist das erste.
+        if (my ($nr) = $zeile =~ /Kriterium\s+\*{0,2}([0-8])\*{0,2}/) {
+            my $soll = exists $kriterium_zustand{$nr} ? $kriterium_zustand{$nr} : undef;
+            if (defined $soll) {
+
+                for my $a (@aus) {
+                    next unless defined $a;
+                    my $ist = normzustand($a);
+                    next unless defined $ist;
+                    next if $ist eq $soll;
+                    push @mangel, sprintf(
+                        "%s:%d fuehrt Kriterium %s als '%s', ZIEL.md sagt '%s'",
+                        $datei, $i + 1, $nr, $ist, $soll);
+                    last;
+                }
             }
         }
     }

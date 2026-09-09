@@ -218,6 +218,103 @@ Fundstellen: `Eudora71/Eudora/WazooBarMgr.cpp` (`SetDefaultWazooBarState`,
 `WazooMDI%d`, Namen in `EudoraRes.rc:10637-10640`), und die Andockseite in
 `Eudora71/OTShim/OTShim.cpp:293` (`SECMDIFrameWnd::DockControlBarEx`).
 
+### A-3 — Offene Fenster als Registerkarten direkt auswählen
+
+Gestellt am 09.09.2026, nachdem Gregor 1.0.24 geprüft hatte:
+
+> *„es ist nur übers menü zu sehen, welches fenster gerade offen ist, ich möchte
+> noch eine möglichkeit haben, ähnlich wie im web browser (tabs) die einzelnen
+> fenster direkt auszuwählen."*
+
+Das ist der noch fehlende Teil von **Kriterium 8**. Mit A-3 ist es ganz erfüllt.
+
+**Der Befund dazu ist E-48.** Und die Lage ist besser als gedacht: die Leiste
+ist nicht *nicht vorhanden*, sondern **abgeschaltet**. Nachgemessen am
+09.09.2026:
+
+| Stück | wo | Zustand |
+|---|---|---|
+| Ein-/Ausschalter | `mainfrm.cpp:1042` `ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))` | **da** |
+| INI-Schlüssel und Vorgabe | `EudoraRes.rc:7959` `ShowMDITaskbar\n1` | **da, Vorgabe „an"** |
+| Einstellungsseite | `settings.cpp:1060`, Ankreuzfeld *„Show MDI task bar"* (`EudoraRes.rc:2704`) | **da** |
+| Zeichnen | `QCWorkbook::OnDrawTab`, `OnDrawTabIconAndLabel`, `OnDrawBorder`, `GetTabPts` (`workbook.cpp:1254ff`) | **da** |
+| Geometrie | `QCGetTabRect`, `QCGetTaskBarRect`, `recalcTabWidth`, `CountVisibleTabs` | **da** |
+| Maus | `OnLButtonDown`, `TabHitTest`, `OnContextMenu`, `OnSetCursor` | **da** |
+| Kurzhinweise | `InitMDITaskBarTooltips`, `RecalcToolTipRects`, `OnNotify` | **da** |
+| Blattliste | `AddSheet`/`RemoveSheet` → `ResetTaskBar`; die Liste führt `SECWorkbook` (`OTShim.cpp:923/936`) | **da** |
+| **`SECWorkbook::SetWorkbookMode`** | `OTShim.cpp:1120` | **Attrappe** — meldet „nicht umgesetzt", setzt `m_bWorkbookMode` **nicht** und reserviert keinen Rand |
+| **Wer `OnDrawTab` ruft** | — | **fehlt** — der Streifen wird nie gezeichnet |
+
+Es fehlen also genau zwei Dinge in der Ersatzschicht, nicht die Funktion selbst.
+
+**Woran A-3 sich messen lässt.** Bei laufendem Eudora mit mindestens zwei
+offenen Fenstern:
+
+1. Am unteren Fensterrand steht ein Streifen mit **einer Registerkarte je
+   offenem Fenster**, beschriftet wie im Menü *Window* (dort nachzuzählen).
+2. **Ein Klick** auf eine Karte holt das zugehörige Fenster nach vorn.
+3. Die aktive Karte ist von den übrigen unterscheidbar.
+4. Öffnet oder schließt man ein Fenster, ändert sich der Streifen sofort.
+5. Das Ankreuzfeld *„Show MDI task bar"* in den Einstellungen schaltet ihn
+   aus und wieder ein, und der Zustand überlebt einen Neustart.
+6. `tools/leisten-messen.ps1` muss den Streifen als Messwert ausgeben können —
+   ein Bildschirmfoto ist kein Beleg.
+
+**Nicht verlangt:** Karten verschieben, schließen per Mittelklick oder ein
+Kontextmenü über das hinaus, was `OnContextMenu` schon mitbringt.
+
+### A-4 — Das linke Fenster breiter ziehen können
+
+Gestellt am 09.09.2026, unmittelbar nach A-3:
+
+> *„ich noch das fenster links (mailverzeichnis, persona, …) möchte vergrößern
+> können. also den trennbalken nach rechts, damit ich mehr sehe."*
+
+Gemeint ist die Wazoo-Leiste **318** (Postfächer, Dateien, Signaturen,
+Briefpapier, Persönlichkeiten). Sie ist heute auf **180 Pixel** festgenagelt —
+gesetzt in `WazooBarMgr.cpp`, `SetDefaultWazooBarState` Fall 0
+(`DockControlBarEx(pWazooBar, AFX_IDW_DOCKBAR_LEFT, 0, 0, 1.00, 180)`) — und
+lässt sich mit der Maus nicht verändern.
+
+**Der Befund dazu ist E-49.** Wie bei A-3 ist die Mechanik vorhanden und nur
+nicht angeschlossen. Nachgemessen am 09.09.2026:
+
+| Stück | wo | Zustand |
+|---|---|---|
+| Klasse `SECDockBar::Splitter` mit Lage, Art, Ausrichtung, Grenzen | `OTShim.h:724ff` | **da** |
+| `AddSplitter` | `OTShim.cpp:3038`, 17 Anweisungen | **umgesetzt** |
+| `HitTest` (findet den Balken unter dem Zeiger) | `OTShim.cpp:3159`, 7 Anweisungen | **umgesetzt** |
+| `StartTracking` (Ziehen beginnen) | `OTShim.cpp:3199`, 7 Anweisungen | **umgesetzt** |
+| `CalcTrackingLimits` (wie weit man ziehen darf) | `OTShim.cpp:3178`, 11 Anweisungen | **umgesetzt** |
+| `Splitter::DrawTrackerRect` (der Ziehbalken) | `OTShim.cpp:3255`, 14 Anweisungen | **umgesetzt** |
+| `DeleteAllSplitters` | `OTShim.cpp:3066` | **umgesetzt** |
+| Eudoras eigene Überschreibung `QCDockBar::CalcTrackingLimits` | `DockBar.cpp:149` | **da** — sorgt dafür, dass die Reklameleiste nicht überfahren wird |
+| Eudoras `QCDockBar::NormalizeRow` | `DockBar.cpp:223` | **da** |
+| **Der Aufruf von `AddSplitter`** | — | **fehlt** — `m_arrSplitters` bleibt leer, `HitTest` liefert immer NULL, und damit kommt es nie zum Ziehen |
+
+Der Kommentar im Kopf sagt es selbst (`OTShim.h:702`): *„STUFE 2 OFFEN: die
+Splitter selbst. AddSplitter wird nie aufgerufen …"*
+
+**Woran A-4 sich messen lässt.** Bei laufendem Eudora:
+
+1. Fährt man mit der Maus auf die Kante zwischen linkem Bereich und
+   Nachrichtenliste, wird der Zeiger zum **Größenzeiger**.
+2. Ziehen nach rechts **verbreitert** den linken Bereich, ziehen nach links
+   verschmälert ihn; der Nachrichtenbereich gibt entsprechend nach.
+3. Die Breite lässt sich über **180 Pixel hinaus** vergrößern — das ist
+   Gregors eigentliche Bitte.
+4. Die eingestellte Breite **überlebt einen Neustart** (sie landet im
+   `[ToolBar…]`-Abschnitt der `Eudora.ini`, der seit **E-43** überhaupt
+   erst geschrieben wird).
+5. `tools/leisten-messen.ps1` gibt die geänderte Breite als Zahl aus — vorher
+   180, hinterher der neue Wert.
+
+**Zusammenhang mit A-3:** beides sitzt in derselben Ersatzschicht und
+derselben Fensterebene, und beides ist „Mechanik da, Anschluss fehlt".
+Deshalb zusammen umzusetzen, nicht nacheinander.
+
+## Woran sich Kriterium 2 misst
+
 Gregor hat als Vergleich ein Bildschirmfoto der Originalfassung geliefert
 (Eudora 7 unter Windows XP). Maßgeblich sind daraus:
 
