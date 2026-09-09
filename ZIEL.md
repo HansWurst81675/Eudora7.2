@@ -172,6 +172,19 @@ in der `Eudora.ini` des Mailverzeichnisses — `<Dominant>` im Abschnitt
 `[Settings]`, jedes weitere in `[Persona-<Name>]` (`persona.cpp:897-898`,
 Präfix `:52`).
 
+**Warum `tools/DEudora.ini` die Originaldatei ist und keine kurze Eigenbau-Fassung.**
+Sie ist die **Originaldatei von QUALCOMM** mit vier Zusatzzeilen: ihr Abschnitt
+`[Mappings]` mit 124 Dateizuordnungen ist unverändert übernommen. Eine Fassung
+mit nur `[Settings]` hätte beim Auspacken über eine bestehende Installation
+genau diese Zuordnungen gelöscht. `tools/doku-pruefen.pl` zählt sie deshalb
+gegen `InstallersForEudora/Eudora7.1/Data/INIfiles/deudora.ini` nach und weist
+ab, sobald es weniger werden.
+
+Zweiter Aufrufer neben dem Assistenten ist `ModifyAcctSheet.cpp:46` (*New…* im
+Kontodialog) — auch dieser Weg geht über `CPersParams::GetDefaultParams` und
+trägt die vier Werte damit ebenfalls.
+
+
 ### A-2 — *Task Status* und *Task Errors* waagrecht unten
 
 Gestellt am 08.09.2026, nachdem Gregor die Leisten im Prüfstand gesehen hatte:
