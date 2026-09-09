@@ -1113,25 +1113,45 @@ void SECWorkbook::OnDrawTabIconAndLabel(CDC* /*pDC*/, SECWorksheet* /*pSheet*/)
 // mainfrm.cpp:1025 (Start, Wert aus IDS_INI_MDI_TASKBAR) und settings.cpp:1060
 // (Umschalten in den Einstellungen).
 //
-// VORGABE: m_bWorkbookMode bleibt FALSE. QCWorkbook::ShowMDITaskBar fragt den
-// Wert unmittelbar danach ab (workbook.cpp:723) und ueberspringt bei FALSE
-// SetMargins, RecalcLayout und ResetTaskBar - der MDI-Bereich behaelt also
-// die volle Hoehe.
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Hier stand eine Attrappe: sie meldete "nicht umgesetzt" und setzte
+// m_bWorkbookMode ABSICHTLICH nicht. Damit lief Eudoras gesamter
+// Registerkarten-Code nie an, obwohl er vollstaendig vorliegt.
+//
+// Gregor am 09.09.2026: "es ist nur uebers menue zu sehen, welches fenster
+// gerade offen ist, ich moechte noch eine moeglichkeit haben, aehnlich wie im
+// web browser (tabs) die einzelnen fenster direkt auszuwaehlen."
+//
+// Was Eudora selbst mitbringt und was nur auf diesen Schalter gewartet hat:
+//   mainfrm.cpp:1042   ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))
+//   EudoraRes.rc:7959  "ShowMDITaskbar\n1" - die Vorgabe ist AN
+//   workbook.cpp:720   QCWorkbook::ShowMDITaskBar ruft uns und setzt danach
+//                      selbst die Raender (0,0,0,30), RecalcLayout und
+//                      ResetTaskBar
+//   workbook.cpp:1254  OnDrawTab, :1346 OnDrawTabIconAndLabel
+//   workbook.cpp:745   QCGetTabRect, :924 QCGetTaskBarRect, :999 recalcTabWidth
+//   workbook.cpp:1095  OnLButtonDown, :1739 TabHitTest - der Klick holt das
+//                      Fenster nach vorn
+//
+// Diese Fassung tut deshalb nur zweierlei: sie merkt sich den Betrieb und
+// reserviert den Streifen. Den Rand setzt QCWorkbook unmittelbar danach
+// nochmals genauer - der Wert hier ist die Vorgabe fuer den Fall, dass
+// jemand SetWorkbookMode direkt ruft.
 void SECWorkbook::SetWorkbookMode(BOOL bEnabled)
 {
-	if (bEnabled)
+	m_bWorkbookMode = bEnabled;
+
+	if (m_pWBClient != NULL)
 	{
-		static BOOL bGemeldet = FALSE;
-		OTShimNichtUmgesetzt(bGemeldet,
-			_T("Die Leiste am unteren Fensterrand, die alle offenen Fenster als ")
-			_T("Registerkarten zeigt (in den Einstellungen \"MDI Task Bar\"). ")
-			_T("Sie brauchen sie nicht: alle offenen Fenster stehen im Menue ")
-			_T("\"Window\"."));
+		if (bEnabled)
+			m_pWBClient->SetMargins(0, 0, 0, m_cyTab + 10);
+		else
+			m_pWBClient->SetMargins(0, 0, 0, 0);
 	}
 
-	// Bewusst keine Zuweisung an m_bWorkbookMode.
-	if (m_pWBClient != NULL)
-		m_pWBClient->SetMargins(0, 0, 0, 0);
+	if (::IsWindow(GetSafeHwnd()))
+		Invalidate(FALSE);
 }
 
 
@@ -1181,12 +1201,65 @@ BOOL SECWorkbook::OnEraseBkgnd(CDC* pDC)
 // abraeumen, sonst schickt Windows WM_PAINT endlos nach. CWnd::OnPaint ruft
 // Default() und damit DefFrameProc, das BeginPaint/EndPaint erledigt.
 //
-// Im Original stuende hier der Streifen: OnDrawBorder, dann fuer jedes Sheet
-// OnDrawTab und OnDrawTabIconAndLabel. Bei m_bWorkbookMode == FALSE faellt
-// das komplett weg.
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Hier war der zweite fehlende Anschluss. Eudora zeichnet eine einzelne
+// Registerkarte selbst (QCWorkbook::OnDrawTab, workbook.cpp:1254) - aber
+// NIEMAND rief die Funktion auf. Im Original tut das die Rahmenklasse beim
+// Neuzeichnen; genau das holt diese Fassung nach.
+//
+// Der Streifen liegt unter dem MDI-Bereich. Seine Lage wird hier genauso
+// gerechnet wie in QCWorkbook::QCGetTaskBarRect (workbook.cpp:924-946):
+// Unterkante des MDI-Bereichs plus zwei Pixel, von da bis zum Fensterrand.
+// Beide Rechnungen muessen dasselbe ergeben, sonst zeichnet Eudora seine
+// Karten neben den Streifen.
+//
+// recalcTabWidth() ist virtuell; der Aufruf landet in QCWorkbook (:999) und
+// setzt m_cxTab auf die Breite, die bei der aktuellen Fensterbreite und
+// Kartenzahl herauskommt. Ohne ihn blieben alle Karten auf dem Ausgangswert.
 void SECWorkbook::OnPaint()
 {
-	SECMDIFrameWnd::OnPaint();
+	if (!m_bWorkbookMode || m_pWBClient == NULL ||
+		!::IsWindow(m_pWBClient->GetSafeHwnd()))
+	{
+		SECMDIFrameWnd::OnPaint();
+		return;
+	}
+
+	CPaintDC dc(this);
+
+	CRect rectClient;
+	GetClientRect(&rectClient);
+
+	CRect rectMDI;
+	m_pWBClient->GetClientRect(&rectMDI);
+	m_pWBClient->MapWindowPoints(this, &rectMDI);
+
+	CRect rectStreifen(rectClient.left, rectMDI.bottom + 2,
+					   rectClient.right, rectClient.bottom);
+	if (rectStreifen.Height() <= 0 || rectStreifen.Width() <= 0)
+		return;
+
+	// Untergrund. Ohne ihn stehen beim Verkleinern Reste der alten Karten.
+	dc.FillSolidRect(&rectStreifen, ::GetSysColor(COLOR_BTNFACE));
+
+	// Kartenbreite neu bestimmen - virtuell, also QCWorkbook::recalcTabWidth.
+	recalcTabWidth();
+
+	// Je offenem Fenster eine Karte. Die Liste fuehrt AddSheet/RemoveSheet;
+	// Eudora ruft ueber ResetTaskBar nach jeder Aenderung QCInvalidateAllTabs,
+	// wir landen also wieder hier.
+	for (int i = 0; i < m_worksheets.GetSize(); i++)
+	{
+		SECWorksheet* pSheet = (SECWorksheet*) m_worksheets[i];
+		if (pSheet == NULL)
+			continue;
+		if (!::IsWindow(pSheet->GetSafeHwnd()))
+			continue;
+
+		// Virtuell: QCWorkbook::OnDrawTab zeichnet Rahmen, Symbol und Text.
+		OnDrawTab(&dc, pSheet);
+	}
 }
 
 
