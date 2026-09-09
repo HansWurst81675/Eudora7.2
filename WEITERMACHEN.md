@@ -8,7 +8,7 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 |---|---|
 | **Quellstand** | 7.2.0.29 (`Eudora71/Version.h`) |
 | **Paketnummer** | 1.0.29 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.29** wird gerade gebaut; die Prüfsummen aller Pakete stehen in [Releases/PAKETE.md](Releases/PAKETE.md) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.29** — `Releases/Eudora72-1.0.29-release.zip`, 9 342 274 B, SHA256 `cf60bb3a806204ea…`. Bei Gregor abgelegt unter `C:SERSGREGORudora72-1.0.29-release`, **von ihm noch nicht beurteilt** |
 | **Zuletzt von Gregor bestätigt** | **A-3 an 1.0.25** (09.09.2026): der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Dabei drei Mängel gemeldet, alle in 1.0.26 behoben (**E-50**). Davor **1.0.24**: *„persona läßt sich löschen. keine messagebox"* |
 | **Was als Nächstes zu messen ist** | **A-4 an 1.0.26**: wird der Zeiger auf der Kante zum Doppelpfeil, lässt sich der linke Bereich über 180 Pixel hinaus breiter ziehen, überlebt die Breite einen Neustart — und **friert nichts ein**? Der letzte Punkt zuerst: die Ziehschleife hat in meinen eigenen Tests zweimal die Prüfinstanz eingefroren, bevor sie abgesichert war |
 | **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen. Nachweisbar ist nur die Voraussetzung: 8 Pixel freier Streifen (Andockleiste 188, Leiste 180) |

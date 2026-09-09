@@ -21,7 +21,7 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 > Quellversion, sondern die Paketnummer — beide liest `tools/ausliefern.pl`
 > getrennt ein.
 >
-> **Beide zeigen auf dasselbe ZIP.** Die
+> **Beide zeigen auf dasselbe:** `Releases/Eudora72-1.0.29-release.zip`. Die
 > Bau-Kennung im Fenstertitel nennt beide Nummern plus den Commit, ein
 > Bildschirmfoto ist damit eindeutig zuzuordnen. Welches ZIP zu welcher Marke
 > und welchem Commit gehört, steht vollständig in
