@@ -1411,7 +1411,8 @@ public:
 
 // Operationen
 public:
-	// workbook.cpp:729; mainfrm.cpp:5660, 5716
+	// Reihenfolge gegen SECWB.H:96 nachgesehen, siehe OTShim.cpp.
+	// Aufrufstellen: workbook.cpp:729, mainfrm.cpp:5995 und 6051.
 	void SetMargins(int left, int right, int top, int bottom);
 	// Von Eudora nicht aufgerufen; Gegenstueck zu SetMargins.
 	void GetMargins(int& left, int& right, int& top, int& bottom);

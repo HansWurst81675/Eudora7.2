@@ -733,9 +733,23 @@ void SECWorkbookClient::Dump(CDumpContext& dc) const
 #endif
 
 
-// Reihenfolge der Argumente wie im Original (SECWB.H:96): left, right, top,
-// bottom - CRect legt sie als left, top, right, bottom ab.
-// workbook.cpp:729; mainfrm.cpp:5660, 5716
+// Reihenfolge der Argumente wie im Original, NACHGESEHEN und nicht vermutet:
+// Eudora71/OT501/Include/SECWB.H:96 lautet wortgleich
+//     void SetMargins(int left, int right, int top, int bottom);
+// und :101 fuehrt m_margins als CRect. CRect legt seine Felder als left,
+// top, right, bottom ab - die Reihenfolge der ARGUMENTE ist also eine
+// andere als die der FELDER, und genau daran laesst sich eine Verwechslung
+// nicht ansehen.
+//
+// Zweiter Beleg, aus dem Verhalten: alle drei Aufrufstellen uebergeben
+// (0, 0, 0, N), und N landet unten - der Registerkartenstreifen erscheint
+// am unteren Rand des MDI-Bereichs, von Gregor am 09.09.2026 an 1.0.25
+// bestaetigt. Waeren Argumente und Felder vertauscht, stuende der Streifen
+// rechts.
+//
+// Aufrufstellen (Zeilennummern am 09.09.2026 nachgezaehlt, sie standen
+// vorher zwei Fassungen daneben): workbook.cpp:729 (Registerkarten),
+// mainfrm.cpp:5995 und 6051 (Sponsorenanzeige und Registerkarten).
 void SECWorkbookClient::SetMargins(int left, int right, int top, int bottom)
 {
 	m_margins.SetRect(left, top, right, bottom);
@@ -761,7 +775,7 @@ void SECWorkbookClient::GetMargins(int& left, int& right, int& top, int& bottom)
 // Bei m_bWorkbookMode == FALSE setzt SetWorkbookMode keine Raender, das
 // Rechteck bleibt also unveraendert und der MDI-Bereich fuellt den Rahmen.
 // Eudora setzt trotzdem an zwei Stellen von sich aus Raender
-// (mainfrm.cpp:5660, 5716, Sponsorenanzeige); die werden hier ehrlich
+// (mainfrm.cpp:5995 und 6051, Sponsorenanzeige); die werden hier ehrlich
 // beruecksichtigt.
 void SECWorkbookClient::CalcWindowRect(LPRECT lpClientRect, UINT nAdjustType)
 {
@@ -3004,9 +3018,9 @@ CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 	{
 		// Dreifache Balkenbreite: vier Pixel gehen an MFC, der Rest bleibt
 		// als Greifstreifen uebrig. Wieviel es am Ende wirklich ist, rechnet
-		// OnSizeParent aus dem Unterschied zwischen Andockleiste und Leiste
-		// aus - hier wird also nichts festgenagelt, was dort nachgemessen
-		// werden kann.
+		// TrennbalkenNeuAnlegen aus dem Unterschied zwischen Andockleiste
+		// und Leiste aus - hier wird also nichts festgenagelt, was dort
+		// nachgemessen werden kann.
 		if (bHorz)
 			size.cy += 3 * Splitter::cy;
 		else
@@ -4141,11 +4155,14 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 				pErste->GetWindowRect(&rectLeiste);
 				ScreenToClient(&rectLeiste);
 
+				// OBEN fehlt hier absichtlich: BrauchtGreifstreifen laesst
+				// diese Fassung fuer AFX_IDW_DOCKBAR_TOP gar nicht erst
+				// laufen (BEFUND E-55). Ein Zweig, den nichts erreicht,
+				// waere ein Kommentar, der dem Code widerspricht.
 				switch ((UINT) GetDlgCtrlID())
 				{
 					case AFX_IDW_DOCKBAR_LEFT:   nFrei = rect.right  - rectLeiste.right;  break;
 					case AFX_IDW_DOCKBAR_RIGHT:  nFrei = rectLeiste.left - rect.left;     break;
-					case AFX_IDW_DOCKBAR_TOP:    nFrei = rect.bottom - rectLeiste.bottom; break;
 					case AFX_IDW_DOCKBAR_BOTTOM: nFrei = rectLeiste.top  - rect.top;      break;
 					default: break;
 				}
@@ -4166,10 +4183,7 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 					AddSplitter(Splitter::BarSplitter, Splitter::Vertical,
 						rect.left, rect.top, rect.left + nFrei, rect.bottom, nPos);
 					break;
-				case AFX_IDW_DOCKBAR_TOP:
-					AddSplitter(Splitter::BarSplitter, Splitter::Horizontal,
-						rect.left, rect.bottom - nFrei, rect.right, rect.bottom, nPos);
-					break;
+				// OBEN fehlt auch hier, aus demselben Grund (E-55).
 				case AFX_IDW_DOCKBAR_BOTTOM:
 					AddSplitter(Splitter::BarSplitter, Splitter::Horizontal,
 						rect.left, rect.top, rect.right, rect.top + nFrei, nPos);
