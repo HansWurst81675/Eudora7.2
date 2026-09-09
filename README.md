@@ -11,7 +11,7 @@ Mailclient wieder selbst bauen und weiterentwickeln zu können.
 Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
 (2018, mit Genehmigung von Qualcomm).
 
-> **Diese Datei sagt, was jetzt gilt.** Stand **08.09.2026**.
+> **Diese Datei sagt, was jetzt gilt.** Stand **09.09.2026**.
 >
 > **Zwei Nummern, die nichts miteinander zu tun haben.** Der **Quellstand** ist
 > **7.2.0.29** — das steht in `Eudora71/Version.h` (`EUDORA_BUILD_VERSION`) und
@@ -32,27 +32,36 @@ Grundlage ist die Quelltextfreigabe des [Computer History Museum](https://comput
 
 ## Stand
 
-**Neun Kriterien stehen in [ZIEL.md](ZIEL.md) — sechs sind belegt
-(0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8).** Eudora baut aus einem
-frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, die
-Darstellung stimmt weitgehend, Mail wird über TLS abgerufen, eine neue Mail
-lässt sich **schreiben, abschicken und weiterleiten** — und seit dem
-08.09.2026 **beendet sich Eudora sauber**, über *File → Exit*, über **Alt-F4**
-und über das **Kreuz**. Gregor hat beides bestätigt: *„mail können jetzt
-abgeschickt werden."* und *„schließen klappt jetzt."*
+**Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
+erfüllt (2, 4).** Die Tabelle dazu steht in [ZIEL.md](ZIEL.md) und ist die
+Quelle. Eudora baut aus einem frischen Klon, das Paket startet auf einem
+Rechner ohne Visual Studio, die Darstellung stimmt weitgehend, Mail wird über
+TLS abgerufen, eine neue Mail lässt sich **schreiben, abschicken und
+weiterleiten**, Eudora **beendet sich sauber** über *File → Exit*, **Alt-F4**
+und das **Kreuz**, und die offenen Fenster stehen als **Registerkarten am
+unteren Rand** — ein Klick holt das Fenster nach vorn. Gregors Bestätigungen
+dazu: *„mail können jetzt abgeschickt werden."*, *„schließen klappt jetzt."*
+und, am 09.09.2026, das Urteil zu den Registerkarten.
 
-Dazu sind zwei Anforderungen aus [ZIEL.md](ZIEL.md) umgesetzt und von Gregor
-bestätigt: **A-1** (die Vorgaben *Leave mail on server* und *Secure Sockets*
-greifen bei einem **neu angelegten** Konto) und **A-2** (*Task Status* und
-*Task Errors* liegen **waagrecht am unteren Fensterrand** statt senkrecht
-links — *„jetzt ist sie unten, ja"*).
+Dazu sind **drei** Anforderungen aus [ZIEL.md](ZIEL.md) umgesetzt und von
+Gregor bestätigt: **A-1** (die Vorgaben *Leave mail on server* und *Secure
+Sockets* greifen bei einem **neu angelegten** Konto), **A-2** (*Task Status*
+und *Task Errors* liegen **waagrecht am unteren Fensterrand** statt senkrecht
+links — *„jetzt ist sie unten, ja"*) und **A-3** (die offenen Fenster als
+Registerkarten direkt auswählbar — damit ist Kriterium 8 geschlossen). Eine
+vierte, **A-4** (den linken Bereich breiter ziehen), ist **gebaut und noch
+nicht bestätigt**; bestätigt ist von ihr nur der Gegenfall, die Höhe:
+*„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*
 
-**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: die untere Leiste
-zeigt Aufgabenstatus und Aufgabenfehler, nicht die Reiter für die offenen
-Fenster (**Kriterium 8**, halb — die offenen Fenster stehen im *Window*-Menü),
-und beim Öffnen der Kurznamen-Leiste kommt ein Fehlerdialog des
-Verzeichnisdienstes (**E-47**) — dort fehlen `MFC71.DLL` und `MSVCP71.dll`, die
-Microsoft nie als Redistributable herausgegeben hat.
+**Fertig ist es nicht.** Was ein Anwender jetzt noch merkt: nach einem Neustart
+stehen die Fenster **nicht im Vollbild**, obwohl sie beim Beenden so waren
+(Nebenbefund **ohne Kennung**); beim Öffnen der Kurznamen-Leiste kommt ein
+Fehlerdialog des Verzeichnisdienstes (**E-47**) — dort fehlen `MFC71.DLL` und
+`MSVCP71.dll`, die Microsoft nie als Redistributable herausgegeben hat; und
+manche Nachrichten bringen beim **Anzeigen** die Meldung „Encountered an
+improper argument". Das Letzte ist der einzige Grund, warum Kriterium 2 und
+Kriterium 4 nicht *erfüllt* heißen — und es ist **neu zu messen**, seit E-43
+die Fehlerklasse dahinter an der Wurzel behoben hat.
 
 **In 7.2.0.24 behoben und von Gregor am 08.09.2026 bestätigt** (*„persona
 läßt sich löschen. keine messagebox“*)**:** **E-43** — und mit
@@ -73,64 +82,66 @@ Belegt:
 | **Bau** | ganze Projektmappe aus einem frischen Klon: **18 erfolgreich, 0 Fehler, 1 übersprungen**, 2:37 min. Von Gregor am 06.09.2026 in der IDE nachgemessen. Das eine übersprungene ist `OT501`, siehe unten |
 | **Start und Bedienung** | Hauptfenster, Menüs, Werkzeugleiste, Postfachbaum |
 | **Mailabruf über TLS** | POP3 auf **Port 995**, *Tools → Last SSL Info*: `Negotiation Status: Succeeded`, **TLSv1.3**, `TLS_AES_256_GCM_SHA384`. Gemessen an 7.2.0.12 am 06.09.2026 gegen `mx.freenet.de`. Die richtige Einstellung dafür ist *Secure Sockets when Receiving* → **„Required, Alternate Port"** |
-| **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b) |
+| **Darstellung** | Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute in HTML-Mail (Z-2b), Leiste am unteren Rand waagrecht (E-44) |
+| **Kriterium 7 — sauberes Beenden** | Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden — *File → Exit*, **Alt-F4** und das **Kreuz**. Behoben durch **E-40**, **E-41**, **E-42**, ergänzt um **E-45** in 7.2.0.23 |
+| **Anforderung A-1 — Vorgaben für ein neues Konto** | Gregor am 08.09.2026: *„default werte beim neuen persona konto für ‚leave message on server' greifen."* Die Anforderung selbst steht in [ZIEL.md](ZIEL.md), die Werte in `tools/DEudora.ini`; `tools/doku-pruefen.pl` hält beides gegeneinander |
+| **Anforderung A-2 — Aufgabenleiste waagrecht unten** | Gregor am 08.09.2026 an der Prüfinstanz: *„jetzt ist sie unten, ja"*. Gemessen mit `tools/leisten-messen.ps1`: Leiste **320**, Andockseite **unten**, sichtbar, **1712×80** |
+| **Kriterium 8 / Anforderung A-3 — offene Fenster als Registerkarten** | Gregor am 09.09.2026 an Paket 1.0.25: der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Behoben durch **E-48** in 7.2.0.25; die Leiste war nicht abwesend, sondern **abgeschaltet**. `tools/leisten-messen.ps1` kann den Registerkartenstreifen messen und mit `-Abbild` ein Bild davon speichern |
+| **E-43 — Persönlichkeit löschen, ohne Meldung** | Gregor am 08.09.2026 an Paket 1.0.24: *„persona läßt sich löschen. keine messagebox"*. **Mit ihm fielen E-37 und E-38 weg** — alle drei hatten eine Ursache, `SECControlBar` war zweimal definiert. Gemessen: `[ToolBar…]`-Abschnitte in der `Eudora.ini` **13 statt 0**. Schranke: `tools/pruefe-waechter.pl` |
+| **Höhe des unteren Bereichs verschiebbar** | Gregor am 09.09.2026: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen (Anforderung **A-4**, Befunde **E-49** und **E-52**) ist gebaut und **noch nicht** beurteilt |
 | **Kriterium 0 — Paket laeuft ohne Nachinstallieren** | Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* Damit ist das letzte offene der ersten vier Kriterien aus [ZIEL.md](ZIEL.md) belegt — keine fehlende DLL, kein `0xc000007b`, nichts nachzuinstallieren. Vorhergesagt hatte es `tools/paket-pruefen.ps1` aus den PE-Importtabellen (13 Module in der Startkette, 251 Importe gegen Windows-eigene Bibliotheken, *„In der Startkette fehlt nichts"*) — die Vorhersage und der Lauf am lebenden Objekt stimmen überein |
 
-### Offen — Stand 07.09.2026
+### Offen — Stand 09.09.2026
 
 Die vollständige Liste steht in [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*;
-hier die Punkte, die ein Anwender merkt. Alle vier hat Gregor am 07.09.2026 an
-Paket 1.0.21 selbst gemessen.
+hier die Punkte, die ein Anwender merkt. **Nicht mehr dabei sind das Beenden**
+(Kriterium 7, seit 1.0.22 erfüllt und bestätigt), **das Löschen eines Kontos**
+(E-37/E-38, mit **E-43** in 1.0.24 weggefallen und bestätigt) und **die
+Registerkartenleiste** (Kriterium 8, seit 1.0.25 erfüllt und am 09.09.2026
+bestätigt).
 
-- ***File → Exit* beendet Eudora nicht** (**Kriterium 7**, Befund **E-33**).
-  *„beenden geht nicht."* Auch **Alt-F4 und das Kreuz** im Titelbalken nicht, und
-  dabei erscheint **„Encountered an improper argument"** — MFCs Text für
-  `CInvalidArgException`. Damit ist die Ursache eingeordnet: eine Ausnahme fliegt
-  aus `CMainFrame::OnClose` heraus, MFC 14 fängt sie in `AfxCallWndProc`,
-  `CWinApp::ProcessWndProcException` zeigt die Meldung und liefert 0 — `WM_CLOSE`
-  gilt als beantwortet, das Fenster bleibt. Dieselbe Fehlerklasse wie E-34
-- **Ein Konto ließ sich scheinbar nicht löschen** (**E-37**) — *„löschen der
-  konten geht übrigens auch nicht: auf toFix liste!"* **Nur die Anzeige ist
-  behoben, die Ursache ist offen — und in keinem Paket.** Gregors Nachmessung:
-  *„ja, sie verschwinden nach neustart"* — gelöscht wurde immer korrekt, nur die
-  Liste blieb stehen. `FindItem` liefert −1, `DeleteItem(−1)` tut nichts, und
-  abgesichert war das nur mit `ASSERT`. Jetzt wird die Liste über
-  `PopulateView()` neu aufgebaut und der Fehlschlag protokolliert. **Zwei Dinge
-  bleiben:** *warum* `FindItem` den Eintrag nicht findet, und das Löschen der
-  **aktuell benutzten** Persönlichkeit (**E-39** unten). Wer daraus liest
-  „Löschen ist gefixt", liest zu viel
+- **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (den linken Bereich
+  breiter ziehen, Anforderung **A-4**), **E-50** (drei Mängel an der
+  Registerkartenleiste) und **E-52** (der Trennbalken bleibt greifbar, die
+  Karten stehen nicht doppelt). Was daran zu prüfen ist, steht in
+  [AUFGABEN.md](AUFGABEN.md) unter *Gebaut, nicht bestätigt* und in
+  [ZIEL.md](ZIEL.md) unter A-4. **Solange er nichts gesagt hat, gilt keine
+  dieser drei als erledigt.**
+- **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim
+  Beenden so waren. Gregor am 09.09.2026 an 1.0.25. **Nebenbefund ohne
+  Kennung**, noch nicht angefasst; er gehört zum Fensterzustand über
+  `CMainFrame::SaveOpenWindows`, **nicht** zur Registerkartenleiste.
+- Meldung **„Encountered an improper argument"** beim **Anzeigen** mancher
+  Nachrichten. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
+  behoben), eine zweite hat **E-43** an der Wurzel erledigt: `SECControlBar`
+  war zweimal definiert, und zwei Übersetzungseinheiten lasen dasselbe Feld
+  acht Byte auseinander. **Seither ist diese Meldung neu zu messen** — gut
+  möglich, dass sie mit verschwunden ist. Erst messen, dann suchen.
 - **Wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt
   teilweise wiederentstehen** (**E-39**, nicht behoben, nicht am laufenden
   Programm bestätigt). `CPersonality::Remove` (`persona.cpp:565-566`) stellt die
   aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`
   und `SavePasswordText` ausdrücklich in `g_Personalities.GetCurrent()`
   (`rs.cpp:1237-1250`) — der nächste `SetCurrent` legt damit zwei Schlüssel im
-  gelöschten Abschnitt wieder an. **Unabhängig von der E-37-Behebung**, die den
-  Zeitpunkt nur nach vorn verschiebt
-- **Die im Kontoassistenten eingegebenen Daten fehlen hinterher** (**E-38**):
-  Name, Mailadresse und Server sind unter *Konto → Eigenschaften* leer. Gregor
-  hat am 07.09.2026 nachgesehen: **in der `Eudora.ini` stehen sie**. Damit
-  scheitert das **Lesen** — oder die Werte gehen verloren, weil Eudora nur per
-  `pkill` zu beenden ist. Sein Wort dazu: *„vielleicht fehlen die daten, wenn
-  ich eudora per task manager abschließen muß."* **Dieser Befund hängt an E-33
-  und wird erst danach gemessen**; vorher ist jede Aussage dazu wertlos
-- **Die untere Statuszeile mit Reitern für die offenen Fenster fehlt**
-  (**Kriterium 8**, halb). Das Menü *Window* listet sie („1 In", „2 Out"), die
-  Leiste am unteren Fensterrand bildet die Ersatzschicht `OTShim` nicht nach.
-  *„kann man die untere zeile (status) immer anzeigen lassen?"*
-- Meldung **„Encountered an improper argument"** auch beim Anzeigen mancher
-  Nachrichten. Eine Quelle war `QCChildToolBar::GetButton` mit Index −1 (E-16,
-  behoben), eine zweite ist mit E-34 abgefangen. Offen bleibt die Frage, warum
-  `GetBtnCount()` 27 meldet und `m_btns[24]` dennoch wirft — das Abfangen
-  behandelt das Symptom, nicht die Ursache
+  gelöschten Abschnitt wieder an. **Unabhängig von E-43**, das den Zeitpunkt
+  nur nach vorn verschiebt.
+- **Der Fehlerdialog des Verzeichnisdienstes** (**E-47**): *„Directory Services
+  unavailable during this session…"* beim Öffnen der Kurznamen-Leiste.
+  `RegisterCOMObjects()` scheitert, weil `DirServ.dll`, `ISock.dll`, `Ph.dll`,
+  `Ldap.dll` und `EudoraBk.dll` **`MFC71.DLL` und `MSVCP71.dll`** brauchen — die
+  hat Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch,
+  LDAP, Ph und S/MIME, **nicht** den Start. **Keine Behebung in Sicht.**
 
-> **Drei dieser Befunde schweigen aus demselben Grund.** MFC 6 prüfte mit
-> `ASSERT` und `VERIFY`; in einem Release-Bau ist `ASSERT` weggelassen und
-> `VERIFY(f)` zu `((void)(f))` verkürzt — der Ausdruck wird berechnet, das
-> Ergebnis aber **nicht** geprüft. Wo QUALCOMM einen Fehlschlag so
-> „behandelt" hat, passiert im ausgelieferten Programm lautlos gar nichts:
-> E-37 viermal (behoben), E-38 zweimal, E-33 verwandt. Wer hier weitermacht,
-> sucht auf dem betroffenen Weg zuerst nach `ASSERT(0)` und `VERIFY(`.
+> **Warum solche Befunde lange schweigen.** MFC 6 prüfte mit `ASSERT` und
+> `VERIFY`; in einem Release-Bau ist `ASSERT` weggelassen und `VERIFY(f)` zu
+> `((void)(f))` verkürzt — der Ausdruck wird berechnet, das Ergebnis aber
+> **nicht** geprüft. Wo QUALCOMM einen Fehlschlag so „behandelt" hat, passiert
+> im ausgelieferten Programm lautlos gar nichts: bei E-37 an vier Stellen, bei
+> E-38 an zwei, bei E-33 verwandt — und beim Beenden waren es zwölf Schritte
+> (E-42). **Das ist die häufigste Ursachenklasse dieses Projekts.** Wer hier
+> weitermacht, sucht auf dem betroffenen Weg zuerst nach `ASSERT(0)` und
+> `VERIFY(`. Die Lehre dazu:
+> [Arbeitsweise/assert-ist-im-release-nichts.md](Arbeitsweise/assert-ist-im-release-nichts.md).
 
 ### Vorgaben für neu angelegte Konten
 
@@ -471,6 +482,7 @@ Zertifikate und sind nicht maßgeblich.
 | `tools/aendere-zeile.pl` | eine einzelne Zeile byte-erhaltend ändern |
 | `tools/ersetze-bereich.pl` | einen Zeilenbereich byte-erhaltend ersetzen |
 | `tools/doku-pruefen.pl` | `pre-commit`-Schranke gegen Widersprüche in der Doku: Kriterienzahl gegen [ZIEL.md](ZIEL.md), doppelt vergebene Befundkennungen, Statuswidersprüche im Verzeichnis von [BEFUNDE.md](BEFUNDE.md), was im CHANGELOG als offen steht aber im Verzeichnis als behoben, Verweise ins Leere, und `Eudora71/Version.h` gegen sich selbst. Weist **nur** ab, wenn der Commit eine `.md`, `VERSION` oder `Version.h` anfasst. Auf Gregors Ansage *„ich traue dir nicht ganz, jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"* |
+| `tools/summe-gegentest.sh` | Gegentest zur Summenprüfung in `doku-pruefen.pl`, **6 Fälle in beide Richtungen** in einem eigenen Wegwerf-Repo — je ein richtiger Satz, der still bleiben muss, und ein falscher, der gemeldet werden muss, auch in fetter Schreibweise. **Wer die Kriterienprüfung in `doku-pruefen.pl` anfasst, lässt ihn laufen** |
 | `tools/pruefe-bytes.pl` | `pre-commit`-Schranke gegen lautlosen Byteschaden: Zeilenenden, Kodierung, Doppelkodierung |
 | `tools/pruefe-bytes-tests.pl` | Testsammlung dazu, **35 Fälle** in eigenen Wegwerf-Repos. **Wer `pruefe-bytes.pl` anfasst, lässt sie laufen** |
 | `tools/pruefe-branch.pl` | `pre-commit`-Schranke gegen Commits auf einen toten Zweig: schon in `origin/main`, Gegenstück auf dem Server gelöscht, oder abgelöster HEAD. Läuft als **erster** Schritt im Hook; `--melden` berichtet nur (Befund X-5) |
