@@ -1260,6 +1260,44 @@ void QCWorkbook::OnDrawTab(CDC* pDC, SECWorksheet* pSheet)
 
 	ASSERT_VALID(pDC);
 
+	// BEFUND E-63 (Gregor, 09.09.2026, an Paket 1.0.29): "alle karten, bis
+	// auf die letzte (warum?) zeigen einen tooltip beim maus over. beim
+	// letzten (ganz rechts) nicht."
+	//
+	// URSACHE: RecalcToolTipRects (:1709) meldet nur Blaetter mit WS_VISIBLE
+	// als Kurzhinweis-Feld an. Gerufen wird es unter anderem aus AddSheet
+	// (:1226) ueber ResetTaskBar - und dort ist das eben angelegte
+	// MDI-Kindfenster noch nicht sichtbar. Es bekommt also kein Feld. Jedes
+	// SPAETERE AddSheet rechnet alle Felder neu und repariert damit die
+	// aelteren; nur das zuletzt hinzugekommene bleibt ohne, und das ist
+	// genau die rechte Karte.
+	//
+	// Im Original gab es dagegen eine Selbstheilung, und sie steht in
+	// OnDrawBorder (:1533): "This is as good a place as any to figure out if
+	// somebody has done something behind our backs". OnDrawBorder wird in
+	// dieser Portierung von NIEMANDEM gerufen - im Original tat das
+	// SECWorkbook::OnPaint der Stingray-Ebene (dieselbe Wurzel wie E-58, der
+	// Browser-Klick ins Leere).
+	//
+	// Statt OnDrawBorder wiederzubeleben - das wuerde auch das Werbelogo
+	// zeichnen, das hier niemand will - steht die Selbstheilung jetzt hier,
+	// in einer Fassung, die beim Malen jeder Karte laeuft.
+	//
+	// Verglichen wird die Zahl der ANGEMELDETEN Felder mit der Zahl der
+	// SICHTBAREN Karten. Das ist die Messung selbst und nicht ihr Ergebnis:
+	// stimmen die Zahlen ueberein, passiert nichts, und die Pruefung kostet
+	// eine Fensterbotschaft. Stimmen sie nicht, wird einmal neu gerechnet,
+	// danach stimmen sie - die Sache haelt sich also selbst an.
+	//
+	// m_lastVisCount taugt dafuer NICHT: recalcTabWidth setzt es bei jedem
+	// Malen neu, es ist beim Eintritt hier also immer schon aktuell.
+	if (m_hWndTooltip != NULL && m_bWorkbookMode && !m_bInRecalcLayout)
+	{
+		const LRESULT nFelder = ::SendMessage(m_hWndTooltip, TTM_GETTOOLCOUNT, 0, 0);
+		if ((int) nFelder != CountVisibleTabs())
+			RecalcToolTipRects();
+	}
+
 	ASSERT_KINDOF(SECWorksheet, pSheet);
 	GetTabPts(pSheet, tab_pts, count);
 	rgn.CreateRectRgn(tab_pts[0].x + 1, tab_pts[0].y + 1, tab_pts[4].x - 1, tab_pts[4].y);

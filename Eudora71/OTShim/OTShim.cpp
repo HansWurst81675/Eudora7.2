@@ -3610,12 +3610,64 @@ void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
 	const int nMindest  = 4 * Splitter::cx;		// schmalste Leiste
 	const int nFreiraum = 200;					// Rest fuer den MDI-Bereich
 
+	// BEFUND E-67 (Gregor, 09.09.2026, an Paket 1.0.29): "rechts ist zwar ein
+	// balken sichtbar, aber nicht verschiebbar".
+	//
+	// Hier stand fuer BEIDE senkrechten Andockleisten dieselbe Rechnung:
+	//     min = Rahmen links  + nMindest
+	//     max = Rahmen rechts - nFreiraum
+	//
+	// Fuer LINKS stimmt das: die Leiste haengt am linken Rand, schmaler als
+	// nMindest darf sie nicht werden, und rechts von ihr muss der MDI-Bereich
+	// seine nFreiraum behalten.
+	//
+	// Fuer RECHTS ist es spiegelverkehrt - und zwar so falsch, dass GAR
+	// NICHTS mehr geht. Der Balken sitzt dort an der LINKEN Kante der
+	// Andockleiste, also bei kleinem x in ihren eigenen Koordinaten. Der
+	// Rahmen reicht weit nach links, rectRahmen.left ist stark negativ,
+	// rectRahmen.right liegt bei der Breite der Leiste, also um 188. Damit
+	// wird max = 188 - 200 = -12, und das ist KLEINER als der Ort des
+	// Balkens. Die Notbremse darunter zieht max auf min + nMindest hoch, und
+	// zwischen zwei Grenzen, die 16 Pixel auseinanderliegen und beide weit
+	// links vom Balken stehen, laesst sich nichts ziehen. Genau das sieht
+	// Gregor: der Balken ist da, er nimmt den Mausfang, und er bewegt sich
+	// nicht.
+	//
+	// Die Regel, die fuer alle vier Seiten stimmt: die Seite, an der die
+	// Leiste ANGEWACHSEN ist, bekommt nMindest - sonst koennte man sie auf
+	// null ziehen. Die Seite zum MDI-Bereich hin bekommt nFreiraum - sonst
+	// koennte man den Nachrichtenbereich verschwinden lassen.
+	//
+	//     LINKS   angewachsen links  -> min = links  + nMindest
+	//             MDI rechts         -> max = rechts - nFreiraum
+	//     RECHTS  angewachsen rechts -> max = rechts - nMindest
+	//             MDI links          -> min = links  + nFreiraum
+	//     OBEN    angewachsen oben   -> min = oben   + nMindest
+	//             MDI unten          -> max = unten  - nFreiraum
+	//     UNTEN   angewachsen unten  -> max = unten  - nMindest
+	//             MDI oben           -> min = oben   + nFreiraum
+	//
+	// UNTEN war damit ebenfalls falsch, nur unauffaellig: die alte Rechnung
+	// war nach oben zu grosszuegig (der MDI-Bereich liess sich auf 16 Pixel
+	// zusammenschieben) und nach unten zu streng (die Leiste liess sich nicht
+	// unter 200 Pixel Hoehe verkleinern). Gregor hat am 09.09.2026 nur die
+	// eine Richtung geprueft - "verschieben rauf / runter - bug gefixt" - und
+	// deshalb hat es niemand gemerkt. Es ist hier mit berichtigt.
+	const UINT nIdLeiste = (UINT) GetDlgCtrlID();
+	const BOOL bAmEnde   = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT ||
+							nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM);
+
 	if (pSplitter->m_orientation == Splitter::Vertical)
 	{
 		if (rectRahmen.IsRectEmpty())
 		{
 			pSplitter->m_nMin = rect.left;
 			pSplitter->m_nMax = rect.right;
+		}
+		else if (bAmEnde)
+		{
+			pSplitter->m_nMin = rectRahmen.left  + nFreiraum;
+			pSplitter->m_nMax = rectRahmen.right - nMindest;
 		}
 		else
 		{
@@ -3631,6 +3683,11 @@ void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
 		{
 			pSplitter->m_nMin = rect.top;
 			pSplitter->m_nMax = rect.bottom;
+		}
+		else if (bAmEnde)
+		{
+			pSplitter->m_nMin = rectRahmen.top    + nFreiraum;
+			pSplitter->m_nMax = rectRahmen.bottom - nMindest;
 		}
 		else
 		{
