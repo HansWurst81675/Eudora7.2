@@ -4148,6 +4148,46 @@ BOOL SECDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 			Splitter* pSplitter = HitTest(pt);
 			if (pSplitter != NULL)
 			{
+				// SPURMARKE ZU E-66, fuenfter Teil.
+				//
+				// Gemessen an 1.0.32: 26 Zeilen "Streifen", NULL Zeilen
+				// "Bewegung" und NULL "Klick". WM_SETCURSOR steigt vom
+				// Kindfenster zum Elternfenster auf, WM_MOUSEMOVE nicht -
+				// der Zeiger steht also ueber einem KIND der Andockleiste,
+				// nicht ueber ihr selbst. Der Streifen ist verdeckt.
+				//
+				// Was fehlt, um es zu beheben: WO der Zeiger steht, und WEM
+				// dieser Punkt gehoert. pWnd ist das Fenster, das die
+				// Nachricht zuerst bekommen hat - steht dort etwas anderes
+				// als diese Andockleiste, ist der Fall entschieden und der
+				// Name sagt gleich, wo die Behandlung hingehoert.
+				//
+				// Hoechstens eine Zeile je Sekunde, sonst laeuft das
+				// Protokoll bei jeder Mausbewegung voll.
+				static DWORD s_dwLetzte = 0;
+				const DWORD dwJetzt = ::GetTickCount();
+				if (dwJetzt - s_dwLetzte > 1000)
+				{
+					s_dwLetzte = dwJetzt;
+					char szMarke[256];
+					const char* pszWer = "?";
+					if (pWnd == NULL)
+						pszWer = "NULL";
+					else if (pWnd == this)
+						pszWer = "die Andockleiste selbst";
+					else if (pWnd->GetRuntimeClass() != NULL)
+						pszWer = pWnd->GetRuntimeClass()->m_lpszClassName;
+
+					_snprintf(szMarke, sizeof(szMarke),
+						"E-66 Zeiger: Leiste=%u Punkt=%d,%d Balken=%d..%d "
+						"Empfaenger=%s HitTestCode=%u",
+						(unsigned) GetDlgCtrlID(), (int) pt.x, (int) pt.y,
+						(int) pSplitter->m_rect.left,
+						(int) pSplitter->m_rect.right,
+						pszWer, (unsigned) nHitTest);
+					szMarke[sizeof(szMarke) - 1] = '\0';
+					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+				}
 				LPCTSTR lpszCursor = (pSplitter->m_orientation == Splitter::Vertical)
 					? IDC_SIZEWE : IDC_SIZENS;
 				::SetCursor(::LoadCursor(NULL, lpszCursor));
@@ -4362,6 +4402,10 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 
 		int nFrei  = 0;
 		int nSchub = 0;
+		// Fuer die Spurmarke: die LAGE der Leiste, nicht nur ihre Breite.
+		// Genau die fehlte bisher, und ohne sie war nicht zu entscheiden, ob
+		// der freie Streifen vor oder hinter der Leiste liegt.
+		CRect rectLeisteMerk(0, 0, 0, 0);
 		const BOOL pSplitterSenkrecht =
 			(nIdLeiste == AFX_IDW_DOCKBAR_LEFT || nIdLeiste == AFX_IDW_DOCKBAR_RIGHT);
 		if (nPos >= 0)
@@ -4399,6 +4443,7 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 				const int nGesamt  = (pSplitterSenkrecht) ? rect.Width()  : rect.Height();
 				const int nBelegt  = (pSplitterSenkrecht) ? rectLeiste.Width() : rectLeiste.Height();
 				nFrei = nGesamt - nBelegt;
+				rectLeisteMerk = rectLeiste;
 
 				switch (nIdLeiste)
 				{
@@ -4446,11 +4491,14 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 			// entscheidet, ob ueberhaupt ein Balken entsteht.
 			char szMarke[256];
 			_snprintf(szMarke, sizeof(szMarke),
-				"E-66 Streifen: Leiste=%u Client=%d,%d..%d,%d nPos=%d "
-				"nFrei=%d nSchub=%d amEnde=%d",
+				"E-66 Streifen: Leiste=%u Client=%d..%d Bar=%d..%d nPos=%d "
+				"nFrei=%d nSchub=%d amEnde=%d Balken=%d..%d",
 				(unsigned) nIdLeiste,
-				(int) rect.left, (int) rect.top, (int) rect.right, (int) rect.bottom,
-				(int) nPos, (int) nFrei, (int) nSchub, (int) bAmEnde);
+				(int) rect.left, (int) rect.right,
+				(int) rectLeisteMerk.left, (int) rectLeisteMerk.right,
+				(int) nPos, (int) nFrei, (int) nSchub, (int) bAmEnde,
+				(int) ((nIdLeiste == AFX_IDW_DOCKBAR_LEFT) ? rect.right - nFrei : rect.left),
+				(int) ((nIdLeiste == AFX_IDW_DOCKBAR_LEFT) ? rect.right : rect.left + nFrei));
 			szMarke[sizeof(szMarke) - 1] = '\0';
 			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
 		}

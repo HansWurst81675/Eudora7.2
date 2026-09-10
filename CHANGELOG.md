@@ -96,6 +96,48 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.33 — Messfassung III: wem gehört der Streifen?
+
+**Das Protokoll von 1.0.32 hat den Fall entschieden** — jedenfalls zur
+Hälfte. Gregor ist über beide Balken gefahren und hat geklickt:
+
+| Marke | Anzahl |
+|---|---|
+| `E-66 Streifen:` | 26 |
+| `E-66 Bewegung UEBER dem Streifen:` | **0** |
+| `E-66 Klick:` | **0** |
+
+**Weder Mausbewegungen noch Klicks erreichen die Andockleiste.** `WM_SETCURSOR`
+steigt vom Kindfenster zum Elternfenster auf, `WM_MOUSEMOVE` tut das
+**nicht** — also steht der Zeiger über einem **Kind** der Andockleiste, nicht
+über ihr selbst. Der Streifen, den die Rechnung für frei hält, ist von der
+Leiste **verdeckt**. Der Doppelpfeil ist nur der aufsteigende
+Zeigersetz-Aufruf.
+
+Damit sind zwei der drei möglichen Ursachen vom Tisch: es liegt weder an der
+Trefferprüfung noch an der Maustaste allein.
+
+**Was noch fehlt, um es zu beheben:** *wo* der Zeiger steht und *wem* dieser
+Punkt gehört. Bisher wurde nur die **Breite** der Leiste gemessen, nie ihre
+**Lage** — und ohne die ist nicht zu entscheiden, ob der freie Streifen vor
+oder hinter ihr liegt.
+
+Zwei Erweiterungen:
+
+| Marke | neu darin |
+|---|---|
+| `E-66 Streifen:` | `Bar=links..rechts`, die **Lage** der Leiste, und `Balken=…`, wohin der Trennbalken gelegt wird |
+| `E-66 Zeiger:` | Punkt, Balkenlage, **Empfänger** der Nachricht mit Klassennamen, und der Trefferkennwert von Windows — höchstens eine Zeile je Sekunde |
+
+Steht im Empfänger etwas anderes als *die Andockleiste selbst*, ist der Fall
+vollständig entschieden, und der Klassenname sagt zugleich, wo die Behandlung
+hingehört.
+
+### Was an 1.0.33 zu prüfen ist
+
+Wie bei 1.0.32: über beide Balken fahren, je einmal klicken und ziehen, dann
+die `eudora.log`. Nichts weiter.
+
 ## 7.2.0.32 — Messfassung II: kommt der Klick überhaupt an?
 
 **Was das Protokoll von 1.0.31 ergeben hat** — und warum diese Fassung nötig
