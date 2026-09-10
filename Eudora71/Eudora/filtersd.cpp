@@ -1143,7 +1143,23 @@ BOOL FilterDarfVomServerLoeschen(const char* szFilter, const char* szBetreff, co
 		szWeg ? szWeg : "?", szName, szBetreff ? szBetreff : "?",
 		bErlaubt ? "ERLAUBT (FilterMayDeleteFromServer=1)" : "VERWEIGERT");
 	szMarke[sizeof(szMarke) - 1] = '\0';
-	PutDebugLog(DEBUG_MASK_MISC, szMarke);
+
+	// DEBUG_MASK_FILTERS (0x400), NICHT DEBUG_MASK_MISC.
+	//
+	// Am 10.09.2026 sind alle Spurmarken auf MISC umgestellt worden,
+	// damit sie sich ueber LogLevel abschalten lassen - MISC (0x8000)
+	// ist in der Vorgabe 25759 AUS. Fuer eine Marke, die eine
+	// Ursachensuche begleitet, ist das richtig.
+	//
+	// Fuer DIESE Zeile ist es falsch: sie meldet einen VERSUCH, Post
+	// auf dem Server zu loeschen. Gemessen an Gregors Protokoll von
+	// 1.0.43: null E-73-Zeilen - nicht weil nichts versucht worden
+	// waere, sondern weil man es nicht gesehen haette.
+	//
+	// Eine Sicherheitsmeldung darf nicht abschaltbar sein. FILTERS
+	// (0x400) ist in der Vorgabe AN und passt inhaltlich: es IST eine
+	// Filteraktion.
+	PutDebugLog(DEBUG_MASK_FILTERS, szMarke);
 
 	return bErlaubt;
 }

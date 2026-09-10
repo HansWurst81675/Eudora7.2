@@ -583,6 +583,40 @@ Die Seiten *Junk Mail* und *Junk Mail Extras* unter *Tools → Options*
 Verhalten, das im Quelltext eindeutig belegt ist und trotzdem niemand
 erwartet.
 
+### Bei IMAP fragt ein Filterlauf nach dem Kennwort
+
+Wer ein **IMAP**-Postfach markiert und *Filter Messages* auslöst, wird nach
+dem Kennwort gefragt — auch dann, wenn er nur lokal sortieren will.
+
+**Das ist kein Fehler dieser Portierung**, sondern Verhalten des Originals,
+und der Autor hat es selbst als unfertig gekennzeichnet
+(`EuImap/src/ImapMailbox.cpp:5388`):
+
+> *„In the case of manual filtering forcing us to always be online might
+> sometimes be overly harsh. For example, if all filters do things like
+> labelling that need no connection then we shouldn't force the user online.
+> This is a first pass … We'll deal with this properly then."*
+
+**Der sachliche Grund:** bei IMAP liegt die Nachricht auf dem Server. Ein
+Filter, der sie verschiebt, muss dort ein `UID COPY` und ein
+`UID STORE +FLAGS (\Deleted)` schicken — **Verschieben ist bei IMAP immer
+auch Löschen.** Ohne Verbindung geht das nicht. Ein Filter, der nur ein
+Etikett setzt oder einen Ton abspielt, bräuchte sie dagegen nicht; genau
+darauf zielt der Kommentar.
+
+Unterschieden wird das nicht: `CImapMailbox::FilterMessages` ruft
+`GetConnectionState(bDontAllowOffline)` — der Parameter heißt wörtlich
+*offline nicht erlauben* — und danach `OpenMailbox(TRUE)`.
+
+**Der Schalter `IMAPAllowOffline` hilft hier nicht.** Er steht in der
+`Eudora.ini` mit eingebauter Vorgabe `1` (`EudoraRes.rc:7191`) und erlaubt
+IMAP-Aktionen im Offline-Betrieb — beim Filtern wird er übergangen, weil der
+Aufruf ausdrücklich `bDontAllowOffline` mitgibt.
+
+**Was hilft:** die Verbindung einmal aufbauen und das Kennwort speichern
+lassen, oder bei POP filtern. Ein Filterlauf über ein **POP**-Postfach
+arbeitet rein lokal und fragt nichts.
+
 **Ein leeres Suchfeld trifft alles.** *„enthält nichts"* ist für jede
 Nachricht wahr. Verbunden mit *Transfer To* verschiebt so eine Regel das
 ganze Postfach. Diese Portierung fängt es an zwei Stellen ab: ein leerer
