@@ -837,6 +837,39 @@ bool CMainFrame::FinishInitAndShowWindow(
 	int			nWindowState,
 	CWnd *		pAboutDlg)
 {
+	// SPURMARKE ZU E-44. Nur fuer die Messung; faellt mit dem Befund weg.
+	// Sie nennt zu einem Zeitpunkt fuer JEDE Leiste, ob sie an einer
+	// Andockleiste haengt - und zwar Kennung und Andockleiste in
+	// derselben Zeile, damit man zwei Zeitpunkte nebeneinanderlegen kann.
+	struct E44 {
+		static void Marke(CFrameWnd* pRahmen, LPCTSTR pszWann)
+		{
+			if (pRahmen == NULL)
+				return;
+			POSITION pos = pRahmen->m_listControlBars.GetHeadPosition();
+			while (pos != NULL)
+			{
+				CControlBar* pBar = (CControlBar*) pRahmen->m_listControlBars.GetNext(pos);
+				if (pBar == NULL)
+					continue;
+				const UINT nId = (UINT) pBar->GetDlgCtrlID();
+				// Nur die Wazoo-Leisten und die Reklameleiste, sonst wird
+				// das Protokoll unlesbar.
+				if (nId != 316 && nId != 318 && nId != 319 && nId != 320)
+					continue;
+				char szM[192];
+				_snprintf(szM, sizeof(szM),
+					"E-44 %s: Leiste=%u DockBar=%u sichtbar=%d Stil=0x%08lx",
+					(LPCSTR) pszWann, nId,
+					(pBar->m_pDockBar != NULL) ? (UINT) pBar->m_pDockBar->GetDlgCtrlID() : 0,
+					(int) pBar->IsWindowVisible(),
+					(unsigned long) pBar->m_dwStyle);
+				szM[sizeof(szM) - 1] = '\0';
+				PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+			}
+		}
+	};
+
 	QCToolBarManager *		pMgr = reinterpret_cast<QCToolBarManager *>(m_pControlBarManager);
 
 	if (!pMgr)
@@ -949,6 +982,7 @@ bool CMainFrame::FinishInitAndShowWindow(
 	//	This completes the work previously done by CMainFrame::LoadBarState (or more
 	//	accurately SECMDIFrameWnd::LoadBarState).
 	SetDockState(state);
+	E44::Marke(this, _T("nach SetDockState"));
 	pMgr->LoadState(_T("ToolBar"));
 
 	//	Detemine if we're currently using large toolbar buttons.
@@ -1005,7 +1039,9 @@ bool CMainFrame::FinishInitAndShowWindow(
 	// (Or equivalently, CMainFrame::SetDockState now that we're doing
 	// the work of CMainFrame::LoadBarState in two steps).
 	//
+	E44::Marke(this, _T("vor LoadWazooBarConfig"));
 	m_WazooBarMgr.LoadWazooBarConfigFromIni();
+	E44::Marke(this, _T("nach LoadWazooBarConfig"));
 
 	// BEFUND E-70, ZWEITER TEIL (gemessen am 10.09.2026 an 1.0.41).
 	//

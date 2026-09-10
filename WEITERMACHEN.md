@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 10.09.2026, mittags.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 10.09.2026, nachmittags.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
@@ -8,12 +8,13 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 |---|---|
 | **Quellstand** | 7.2.0.42 (`Eudora71/Version.h`) |
 | **Paketnummer** | 1.0.42 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.41** — `Releases/Eudora72-1.0.41-release.zip`, 9 346 106 B. **1.0.42 ist gebaut, aber noch nicht gepackt** |
-| **Zuletzt von Gregor bestätigt** | **1.0.29 am 09.09.2026**: *„1-6, ok"* zu **E-54** bis **E-58** und **E-61**. Seither hat er E-65/E-66 bestätigt (*„1. ja / 2. ja / 3. ja"*) und dass Filter sich löschen lassen |
-| **Was als Nächstes zu messen ist** | **E-75 an 1.0.40.** Strg+J löste bei Gregor *Junk* aus statt *Filter Messages*, weil `CtrlJMapping=1` beim ersten Start eines leeren Mailverzeichnisses stillschweigend gesetzt wird. Behoben für neue Mailverzeichnisse. **In einem bestehenden wirkt es nicht** — dort steht die `1` schon und muss von Hand auf `CtrlJMapping=2`. Zu prüfen: filtert Strg+J wieder, und steht im Menü *Special* das richtige Kürzel? |
-| **Offen, mit Marken im Bau** | **E-70** (Andockgrößen überleben keinen Neustart; Marken `E-70 gesichert:`/`E-70 geladen:` seit 1.0.37, noch nie ausgewertet). **E-68** (`copyInstead` schreibt/liest asymmetrisch, und `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — Pufferüberlauf ab sechs Aktionen je Regel). **E-47** (MFC71/MSVCP71). Kriterien 2 und 4 stehen auf *fast* |
-| **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73** schreiben je Nachricht und je Filter eine Protokollzeile. E-64 hat am 10.09. den Beweis zu E-75 geliefert und darf erst raus, wenn Gregor 1.0.40 beurteilt hat |
-| **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen (**E-51**) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.42** — `Releases/Eudora72-1.0.42-release.zip`, 9 346 100 B, SHA256 `a0b2e92d7729162f…`. `paket-pruefen.ps1`: keine Fehler, Kriterium 0 **JA**. Bei Gregor abgelegt |
+| **Zuletzt von Gregor bestätigt** | **1.0.42 am 10.09.2026**: *„filter fenstergröße nach neustart gespeichert: PASS"* (**E-70**) und *„filter funktionieren"* (**E-64**, **E-72**, **E-75**). Davor 1.0.29 mit *„1-6, ok"* zu E-54 bis E-58 und E-61, dazu E-65/E-66 (*„1. ja / 2. ja / 3. ja"*) |
+| **Was als Nächstes zu messen ist** | **E-44 — die Spur, die aus E-70 herausfiel.** Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* kommt bei **jedem** Start, und ihre Begründung stimmt nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). Der Zustand ist also gespeichert und wird nicht angewandt. Zwei Marken `E-44 nach SetDockState:` und `E-44 vor/nach LoadWazooBarConfig:` liegen seit 7.2.0.43 im Bau, **noch nicht gebaut**. Das könnte auch erklären, warum Fenster nach einem Neustart nicht im Vollbild stehen |
+| **Offen, zurückgestellt** | **E-71** (Filterbericht bleibt leer) — von Gregor am 10.09.2026 ausdrücklich auf die nächste Fassung geschoben: *„kann aber als ToDo für die nächste version aufgeschrieben werden"*. **Nicht von selbst aufgreifen.** Belegt ist, dass der Lauf trifft; zu messen ist `CFilterActions::EndFiltering` |
+| **Offen, mit Marken im Bau** | **E-76** (das schwebende Filterfenster lässt sich nur seitlich vergrößern; Marke seit 7.2.0.41, noch nicht ausgewertet). **E-66** (Marken seit 1.0.35, seit dem Umbau auf `ZiehenAmRand` **nie wieder gelesen** — `tools/spuren-auswerten.pl` weist den Paketbau deshalb ab). **E-68** (`copyInstead` schreibt/liest asymmetrisch, `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — PRÜFER rechnet nach). **E-47** (MFC71/MSVCP71) |
+| **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73**, **E-76** und die neuen **E-44** schreiben je Nachricht, Filter oder Anordnungsdurchlauf eine Protokollzeile. E-64, E-70, E-72 und E-73 sind bestätigt und dürfen raus |
+| **Was ich dabei nicht selbst messen kann** | das Ziehen mit der Maus. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist (**E-51**). Alles andere lässt sich seit Gregors Freigabe vom 10.09.2026 (*„du kannst ja jetzt lokal ausführen, ich greife nicht rein"*) über `tools/testlauf.ps1` und `tools/leisten-messen.ps1` selbst messen — genau so ist der zweite Teil von E-70 gefunden worden |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen
