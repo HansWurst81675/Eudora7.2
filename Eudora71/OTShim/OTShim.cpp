@@ -3713,6 +3713,22 @@ void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
 }
 
 
+// SPURMARKE ZU BEFUND E-66 (Gregor, 09.09.2026, an Paket 1.0.30):
+// "balken lassen sich nicht verschieben. beim anklicken ist der maus cursor
+// als zwei pfeile zu sehen, aber er greift nicht."
+//
+// Der Doppelpfeil belegt, dass HitTest den Balken FINDET - er existiert also
+// seit der Behebung der ersten Ursache. Es scheitert danach: entweder in der
+// Ziehschleife oder beim Anwenden. Welches von beidem, ist von aussen nicht
+// zu sehen, und ich habe heute schon zweimal falsch geraten.
+//
+// Diese Marke schreibt alle Zahlen EINES Zuges in EINE Zeile (Lehre
+// zwei-werte-in-eine-ausgabe): welche Andockleiste, wo der Balken sitzt,
+// welche Grenzen gelten, wo der Zug anfing und aufhoerte, was
+// herauskam - und beim Anwenden, ob die Leiste ueberhaupt gefunden wurde und
+// welche Groesse vorher und nachher dastand.
+//
+// SIE GEHOERT WIEDER RAUS, sobald E-66 verstanden ist.
 void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
 {
 	if (pSplit == NULL)
@@ -3726,6 +3742,25 @@ void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
 	// genau in der Richtung unsichtbar, in die gezogen werden soll - die
 	// Leiste ist nur ihre eigene Breite breit. Siehe Splitter::Track.
 	int nDelta = pSplit->Track(this, pt, NULL);
+
+	{
+		CRect rectMarke;
+		GetClientRect(&rectMarke);
+		char szMarke[320];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Zug: Leiste=%u Client=%d..%d Balken=%d..%d Lage=%d "
+			"Klick=%d,%d Min=%d Max=%d Delta=%d",
+			(unsigned) GetDlgCtrlID(),
+			(int) rectMarke.left, (int) rectMarke.right,
+			(int) pSplit->m_rect.left, (int) pSplit->m_rect.right,
+			(int) pSplit->m_nPos,
+			(int) pt.x, (int) pt.y,
+			(int) pSplit->m_nMin, (int) pSplit->m_nMax,
+			(int) nDelta);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
 	if (nDelta != 0)
 		OnSplitterMoved(pSplit, nDelta);
 }
@@ -3749,10 +3784,32 @@ void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
 	if (pSplitter == NULL || nDelta == 0)
 		return;
 
-	SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar,
-		GetDockedControlBar(pSplitter->m_nPos));
+	// SPURMARKE ZU BEFUND E-66, zweiter Teil. Siehe StartTracking.
+	//
+	// Drei Dinge koennen hier schiefgehen, und von aussen sehen alle drei
+	// gleich aus - "der Balken greift nicht":
+	//   1. GetDockedControlBar(m_nPos) liefert NULL, weil m_nPos nicht mehr
+	//      auf die Leiste zeigt, die gemeint war.
+	//   2. Die Leiste ist keine SECControlBar, dann liefert DYNAMIC_DOWNCAST
+	//      NULL und diese Fassung kehrt wortlos zurueck.
+	//   3. Beides geht gut, aber SetBarInfo bleibt ohne Wirkung, weil
+	//      CalcFixedLayout die geaenderte Andockgroesse nicht auswertet.
+	// Deshalb wird JEDER dieser Faelle gemeldet, nicht nur der Erfolg.
+	CControlBar* pRoh = GetDockedControlBar(pSplitter->m_nPos);
+	SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, pRoh);
 	if (pBar == NULL)
+	{
+		char szMarke[256];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Anwenden ABGEBROCHEN: Leiste=%u Lage=%d roh=%s Klasse=%s Delta=%d",
+			(unsigned) GetDlgCtrlID(), (int) pSplitter->m_nPos,
+			(pRoh == NULL) ? "NULL" : "da",
+			(pRoh == NULL) ? "-" : (LPCSTR) pRoh->GetRuntimeClass()->m_lpszClassName,
+			(int) nDelta);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
 		return;
+	}
 
 	const UINT nID = (UINT) GetDlgCtrlID();
 	const int nMindest = 4 * Splitter::cx;
@@ -4246,7 +4303,10 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 		const BOOL bAmEnde   = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT ||
 								nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM);
 
-		int nFrei = 0;
+		int nFrei  = 0;
+		int nSchub = 0;
+		const BOOL pSplitterSenkrecht =
+			(nIdLeiste == AFX_IDW_DOCKBAR_LEFT || nIdLeiste == AFX_IDW_DOCKBAR_RIGHT);
 		if (nPos >= 0)
 		{
 			CControlBar* pErste = GetDockedControlBar(nPos);
@@ -4260,30 +4320,49 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 				// diese Fassung fuer AFX_IDW_DOCKBAR_TOP gar nicht erst
 				// laufen (BEFUND E-55). Ein Zweig, den nichts erreicht,
 				// waere ein Kommentar, der dem Code widerspricht.
+				// BEFUND E-66, DRITTE URSACHE - und diesmal ist es meine
+				// eigene Behebung von gestern, die sich selbst im Weg steht.
+				//
+				// Gemessen wurde der freie Streifen als Abstand zwischen
+				// Leistenkante und Andockleistenkante. Fuer rechts und unten
+				// wird die Leiste unmittelbar danach GENAU DORTHIN gerueckt -
+				// also ist der Abstand beim naechsten Durchlauf null, die
+				// Bedingung nFrei >= 2 scheitert, und der Balken wird nicht
+				// mehr angelegt. Eine Messung, die ihr eigenes Ergebnis
+				// zerstoert.
+				//
+				// Getrennt wird das jetzt in ZWEI Groessen, die verschiedene
+				// Dinge bedeuten:
+				//   nFrei = wie BREIT der Streifen ist. Aus der Differenz der
+				//           GROESSEN, nicht der Lagen - die aendert sich beim
+				//           Ruecken nicht.
+				//   nSchub = wie WEIT noch zu ruecken ist. Aus der Differenz
+				//           der Lagen. Nach dem Ruecken null, beim naechsten
+				//           Durchlauf passiert also nichts mehr.
+				const int nGesamt  = (pSplitterSenkrecht) ? rect.Width()  : rect.Height();
+				const int nBelegt  = (pSplitterSenkrecht) ? rectLeiste.Width() : rectLeiste.Height();
+				nFrei = nGesamt - nBelegt;
+
 				switch (nIdLeiste)
 				{
-					case AFX_IDW_DOCKBAR_LEFT:
-						nFrei = rect.right - rectLeiste.right;
-						break;
 					case AFX_IDW_DOCKBAR_RIGHT:
-						// Gemessen wird am ENDE, weil der Zuschlag dort
-						// liegt - und nicht an der Innenkante, wo er
-						// hingehoert. Das Rueckem folgt gleich.
-						nFrei = rect.right - rectLeiste.right;
+						nSchub = rect.right - rectLeiste.right;
 						break;
 					case AFX_IDW_DOCKBAR_BOTTOM:
-						nFrei = rect.bottom - rectLeiste.bottom;
+						nSchub = rect.bottom - rectLeiste.bottom;
 						break;
 					default:
+						nSchub = 0;		// links: MFC legt schon richtig ab
 						break;
 				}
 			}
 		}
 
 		// Die Leisten ans Ende ruecken, damit der Streifen an die Innenkante
-		// kommt. Nur rechts und unten, nur wenn ueberhaupt etwas frei ist,
-		// und nur um den gemessenen Betrag - nichts davon ist geraten.
-		if (bAmEnde && nFrei >= 2)
+		// kommt. Nur rechts und unten, nur solange ueberhaupt noch zu ruecken
+		// ist - nSchub wird dabei von selbst null, die Sache haelt sich also
+		// an.
+		if (bAmEnde && nFrei >= 2 && nSchub > 0)
 		{
 			for (int iBar = 0; iBar < m_arrBars.GetSize(); iBar++)
 			{
@@ -4297,12 +4376,26 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 				pBar->GetWindowRect(&rectBar);
 				ScreenToClient(&rectBar);
 
-				const int dx = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT)  ? nFrei : 0;
-				const int dy = (nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM) ? nFrei : 0;
+				const int dx = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT)  ? nSchub : 0;
+				const int dy = (nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM) ? nSchub : 0;
 
 				pBar->SetWindowPos(NULL, rectBar.left + dx, rectBar.top + dy,
 					0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 			}
+		}
+
+		{
+			// SPURMARKE ZU E-66, dritter Teil: was hier herauskommt,
+			// entscheidet, ob ueberhaupt ein Balken entsteht.
+			char szMarke[256];
+			_snprintf(szMarke, sizeof(szMarke),
+				"E-66 Streifen: Leiste=%u Client=%d,%d..%d,%d nPos=%d "
+				"nFrei=%d nSchub=%d amEnde=%d",
+				(unsigned) nIdLeiste,
+				(int) rect.left, (int) rect.top, (int) rect.right, (int) rect.bottom,
+				(int) nPos, (int) nFrei, (int) nSchub, (int) bAmEnde);
+			szMarke[sizeof(szMarke) - 1] = '\0';
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
 		}
 
 		// Unter zwei Pixeln laesst sich nichts greifen - dann lieber kein
