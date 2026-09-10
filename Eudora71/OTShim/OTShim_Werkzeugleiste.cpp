@@ -4454,6 +4454,8 @@ void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
 	if (pApp == NULL || m_pFrameWnd == NULL)
 		return;
 
+	int nGesetzt = 0;
+
 	POSITION pos = m_pFrameWnd->m_listControlBars.GetHeadPosition();
 	while (pos != NULL)
 	{
@@ -4474,12 +4476,18 @@ void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
 		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockVertCx"), nId);
 		const int cx = pApp->GetProfileInt(lpszAbschnitt, szSchluessel, 0);
 		if (cx > 0)
+		{
 			pBar->AndockgroesseSetzen(FALSE, cx, 4 * SECDockBar::Splitter::cx);
+			nGesetzt++;
+		}
 
 		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockHorzCy"), nId);
 		const int cy = pApp->GetProfileInt(lpszAbschnitt, szSchluessel, 0);
 		if (cy > 0)
+		{
 			pBar->AndockgroesseSetzen(TRUE, cy, 4 * SECDockBar::Splitter::cx);
+			nGesetzt++;
+		}
 
 		// SPURMARKE ZU E-70, Gegenstueck zur Sicherung.
 		char szM[192];
@@ -4490,6 +4498,13 @@ void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
 		szM[sizeof(szM) - 1] = '\0';
 		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
 	}
+
+	// AndockgroesseSetzen schreibt nur Felder. Ohne Neuberechnung
+	// wirkt der geladene Wert erst beim naechsten Umbau des Rahmens -
+	// beim Anwender also gar nicht, weil er dann schon die Vorgabe
+	// gesehen hat.
+	if (nGesetzt > 0 && ::IsWindow(m_pFrameWnd->GetSafeHwnd()))
+		m_pFrameWnd->RecalcLayout();
 }
 
 
