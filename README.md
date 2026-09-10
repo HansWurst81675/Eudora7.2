@@ -87,6 +87,13 @@ und behält damit Mails, Konten und Filter.
 > [Releases/PAKETE.md](Releases/PAKETE.md), zusammen mit dem Commit, aus dem
 > es gebaut wurde.
 
+### Post automatisch einsortieren
+
+Wie ein Filter entsteht, wann er läuft, was seine fünf Aktionen tun, wo die
+Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
+[FILTER.md](FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
+jeder eingehenden Nachricht **0** bleibt.
+
 ### Einen Fehler melden
 
 Fehler gehören in die
@@ -120,6 +127,10 @@ Die Schlüssel stehen im Abschnitt `[Settings]` der **`Eudora.ini`** im
 Mailverzeichnis. Die Spalte *Original* nennt den eingebauten Wert von
 Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
 
+Hier stehen nur die **Abweichungen**. Die vollständige Liste aller Filter-
+und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
+[FILTER.md](FILTER.md).
+
 | Schlüssel | hier | Original | was er tut |
 |---|---|---|---|
 | `FilterMayDeleteFromServer` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`) |
@@ -149,6 +160,9 @@ darf keine Post löschen.
 
 > **Wer eine dieser Sperren löst, sollte wissen warum.** Die Wege 1 und 2
 > löschen **ohne Rückfrage**, und was auf dem Server gelöscht ist, ist weg.
+
+Was die Junk-Punktzahl bedeutet, woher sie kommt und warum sie hier bei
+jeder eingehenden Nachricht 0 bleibt, steht in [FILTER.md](FILTER.md).
 
 ### Warum Strg+J hier filtert
 
@@ -422,6 +436,7 @@ Eudora7.2/
 |---|---|
 | Woran wird „fertig" gemessen? | [ZIEL.md](ZIEL.md) — die Quelle für Kriterien und Anforderungen |
 | Was hat sich je Fassung geändert? | [CHANGELOG.md](CHANGELOG.md) |
+| Wie funktionieren Filter und Junk, und welche INI-Schlüssel gehören dazu? | [FILTER.md](FILTER.md) |
 | Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](BEFUNDE.md), Einzelbefunde in `Befunde/` |
 | Was ist als Nächstes zu tun? | [AUFGABEN.md](AUFGABEN.md), Einstieg in [WEITERMACHEN.md](WEITERMACHEN.md) |
 | Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](PORTIERUNG.md) |
