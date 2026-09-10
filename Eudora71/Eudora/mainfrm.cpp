@@ -1007,6 +1007,29 @@ bool CMainFrame::FinishInitAndShowWindow(
 	//
 	m_WazooBarMgr.LoadWazooBarConfigFromIni();
 
+	// BEFUND E-70, ZWEITER TEIL (gemessen am 10.09.2026 an 1.0.41).
+	//
+	// Das Laden der Andockgroessen in QCToolBarManager::LoadState oben
+	// funktioniert - im Protokoll steht "E-70 geladen: Leiste=319
+	// cx=437 -> jetzt cx=437". Gemessen wurde die Leiste danach am
+	// Fenster: 180 Pixel breit. Dazwischen liegt genau dieser Aufruf.
+	//
+	// LoadWazooBarConfigFromIni dockt jede Leiste, fuer die keine Lage
+	// wiederhergestellt werden konnte, mit einer FEST VERDRAHTETEN
+	// Breite von 180 an (WazooBarMgr.cpp:409, :418, :493). Dass dieser
+	// Nachziehweg ueberhaupt laeuft, gehoert zu BEFUND E-44 und ist hier
+	// nicht angetastet.
+	//
+	// Deshalb werden die Groessen nach dem Anordnen noch einmal geladen.
+	// GroessenLaden loest selbst ein RecalcLayout aus, wenn es etwas
+	// gesetzt hat.
+	if (pMgr)
+	{
+		CString szMgrSection;
+		szMgrSection.Format(_T("%s-ToolBarManager"), _T("ToolBar"));
+		pMgr->GroessenLaden(szMgrSection);
+	}
+
 //FORNOW	if (NULL == m_wndWazooBar.m_pDockBar)
 //FORNOW	{
 //FORNOW		//
