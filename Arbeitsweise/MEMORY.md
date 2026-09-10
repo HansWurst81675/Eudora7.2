@@ -48,3 +48,5 @@
 - [Kein Paket mit offenem Datenverlust](kein-paket-mit-offenem-datenverlust.md) — ein Paket ist eine Aufforderung zu handeln; erst den Weg schliessen, dann ausliefern
 - [Eigene Schleife verschluckt nichts](eigene-schleife-verschluckt-nichts.md) — WM_QUIT zurückstellen und nie ohne Zeitschranke warten; die Schranke fand sieben weitere Stellen im Original
 - [Schranke liest nur Code](schranke-liest-nur-code.md) — Kommentare und Protokolltexte vor dem Suchen wegwerfen, Bereich am Rumpfende schließen; `pruefe-beenden.pl` hat sonst die eigene Begründung angeschwärzt
+- [Release erst nach Gregors Test](release-erst-nach-gregors-test.md) — ein Release ist eine Aussage nach außen; erst prüft er lokal, dann wird veröffentlicht
+- [Eingebaute Messung auslesen](eingebaute-messung-auslesen.md) — die Spurmarke zu E-70 lag drei Pakete lang ungelesen im Bau; der Einbau ist noch keine Messung

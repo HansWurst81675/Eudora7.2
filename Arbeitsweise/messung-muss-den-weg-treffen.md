@@ -95,6 +95,51 @@ Wer bei Schritt drei anfängt, bekommt in beiden Richtungen ein falsches
 Ergebnis: eine gute Schranke gilt als stumm, oder ein Loch gilt als kaputter
 Test.
 
+## Fall 4, 10.09.2026: die Messgroesse stammte gar nicht von dem Ereignis
+
+Ich hatte ein Paket-ZIP versehentlich nach `C:\Users\Gregor` entpackt. Die
+erste Frage war: lag dort vorher schon eine Installation, die ich gerade
+ueberschrieben habe? Ich habe die **Zeitstempel** angesehen, dort stand
+ueberall der 30.08., und daraus geschlossen: ja, dort lag schon etwas.
+
+Das war falsch, und zwar nicht knapp. `Expand-Archive` **uebernimmt die
+Aenderungszeit aus dem ZIP**. Nachgemessen an einer Datei, deren
+Aenderungszeit ich vor dem Packen auf den 30.08. gesetzt hatte:
+
+    LastWriteTime = 2026-08-30 10:00:00      <- aus dem ZIP
+    CreationTime  = 2026-09-10 13:27:51      <- vom Auspacken
+    jetzt         = 2026-09-10 13:27:51
+
+Die Aenderungszeit kann ueber das Auspacken nichts aussagen, weil sie das
+Auspacken nicht ueberlebt — sie wird davon ueberschrieben. Die **Erstellzeit**
+im Dateisystem entsteht dagegen genau bei diesem Ereignis. Sie hat die Frage
+dann beantwortet: 156 der 157 Dateien um 12:05 neu angelegt, dort lag
+vorher nichts. Die eine Ausnahme war `Mailverzeichnis\Eudora.ini`, angelegt
+um 09:21 — die einzige Datei, die ich tatsaechlich zerstoert hatte.
+
+**Warum das hierher gehoert:** Fall 1 und 2 fragen, ob die Messung den
+geprueften **Weg** trifft. Dieser Fall fragt eine Stufe frueher, ob die
+gewaehlte **Groesse** von dem Ereignis erzeugt wird, nach dem ich frage. Eine
+Groesse, die von woanders herkopiert wird — Zeitstempel aus einem Archiv, eine
+Versionsnummer aus einer Vorlage, eine Pruefsumme aus einer Begleitdatei —
+traegt keine Aussage ueber das Ereignis. Sie liefert trotzdem eine Zahl, und
+zwar eine, die aussieht wie ein Beleg.
+
+**Wie anwenden, zusaetzlich:**
+
+- **Vor der Messung: welches Ereignis hat diese Groesse geschrieben?** Wenn
+  die Antwort nicht das Ereignis ist, nach dem ich frage, ist die Groesse
+  falsch gewaehlt — egal wie plausibel die Zahl aussieht.
+- **Bei Dateien heisst das konkret:** `LastWriteTime` gehoert dem *Inhalt* und
+  wandert mit ihm mit (Kopieren, Auspacken, Wiederherstellen).
+  `CreationTime` gehoert *diesem Verzeichniseintrag* und entsteht beim
+  Anlegen. Wer wissen will, wann eine Datei **hierher** kam, nimmt die
+  Erstellzeit; wer wissen will, wann der Inhalt entstand, die Aenderungszeit.
+- **Eine Schadensfeststellung ist eine Behauptung wie jede andere**
+  ([[pruefen-statt-vermuten]]): erst die falsche Groesse, dann die falsche
+  Schadensmeldung. Beide standen schon geschrieben, bevor die richtige
+  Messung lief.
+
 Siehe [[schranke-gegentesten]], [[schranke-liest-nur-code]],
 [[gegenprobe-umdrehen]], [[pruefen-statt-vermuten]] und
 [[widerlegte-vermutungen-aufschreiben]].

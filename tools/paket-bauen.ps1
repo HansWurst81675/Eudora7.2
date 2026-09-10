@@ -105,6 +105,53 @@ if (Test-Path -LiteralPath $pruefer) {
   }
 }
 
+# --- Schranke: kein Paket mit einer nie ausgewerteten Spurmarke ------------
+#
+# Die Spurmarken zu E-70 lagen seit Paket 1.0.37 im Bau. Ausgewertet wurden
+# sie zum ersten Mal an 1.0.40 - dazwischen sind 1.0.38, 1.0.39 und 1.0.40
+# gebaut und ausgeliefert worden, jedes mit der Bitte an Gregor, etwas
+# ANDERES zu pruefen. Als das Protokoll endlich gelesen wurde, sagte es in
+# zwei Zeilen alles: 40 mal "E-70 gesichert", 0 mal "E-70 geladen".
+#
+# Eine eingebaute Messung, die niemand ausliest, ist keine Messung. Der
+# Moment, an dem sie ausgelesen gehoert, ist das naechste Paket - also hier.
+$spurpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'spuren-auswerten.pl'
+if (Test-Path -LiteralPath $spurpruefer) {
+
+  # perl wird auch hier GESUCHT, nicht vorausgesetzt - und wenn es fehlt,
+  # wird nicht gebaut. Dieselbe Begruendung wie bei der Schranke darueber:
+  # "Werkzeug fehlt" ist kein Freibrief.
+  $perlS = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlS) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlS = $k; break }
+    }
+  }
+
+  if (-not $perlS) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Spurmarken-Pruefung'
+    Write-Host '  konnte nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlS $spurpruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Erst das Protokoll der letzten Fassung auf diese'
+    Write-Host '  Marke hin lesen und das Ergebnis in Befunde\SPURMARKEN.md'
+    Write-Host '  eintragen - oder die Marke ausbauen. Soll sie bewusst ohne'
+    Write-Host '  Auswertung weiterlaufen, gehoert in die Spalte "ausgewertet":'
+    Write-Host '      entfaellt: <Begruendung>'
+    Write-Host ''
+    exit 1
+  }
+}
+
 $ErrorActionPreference = 'Stop'
 
 $wurzel = Split-Path -Parent $PSScriptRoot
