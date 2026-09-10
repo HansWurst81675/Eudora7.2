@@ -837,11 +837,11 @@ bool CMainFrame::FinishInitAndShowWindow(
 	int			nWindowState,
 	CWnd *		pAboutDlg)
 {
-	// SPURMARKE ZU E-44. Nur fuer die Messung; faellt mit dem Befund weg.
+	// SPURMARKE ZU E-78 (fruehere Arbeitskennung E-44; E-44 selbst ist behoben). Nur fuer die Messung; faellt mit dem Befund weg.
 	// Sie nennt zu einem Zeitpunkt fuer JEDE Leiste, ob sie an einer
 	// Andockleiste haengt - und zwar Kennung und Andockleiste in
 	// derselben Zeile, damit man zwei Zeitpunkte nebeneinanderlegen kann.
-	struct E44 {
+	struct E78 {
 		static void Marke(CFrameWnd* pRahmen, LPCTSTR pszWann)
 		{
 			if (pRahmen == NULL)
@@ -859,7 +859,7 @@ bool CMainFrame::FinishInitAndShowWindow(
 					continue;
 				char szM[192];
 				_snprintf(szM, sizeof(szM),
-					"E-44 %s: Leiste=%u DockBar=%u sichtbar=%d Stil=0x%08lx",
+					"E-78 %s: Leiste=%u DockBar=%u sichtbar=%d Stil=0x%08lx",
 					(LPCSTR) pszWann, nId,
 					(pBar->m_pDockBar != NULL) ? (UINT) pBar->m_pDockBar->GetDlgCtrlID() : 0,
 					(int) pBar->IsWindowVisible(),
@@ -982,7 +982,7 @@ bool CMainFrame::FinishInitAndShowWindow(
 	//	This completes the work previously done by CMainFrame::LoadBarState (or more
 	//	accurately SECMDIFrameWnd::LoadBarState).
 	SetDockState(state);
-	E44::Marke(this, _T("nach SetDockState"));
+	E78::Marke(this, _T("nach SetDockState"));
 	pMgr->LoadState(_T("ToolBar"));
 
 	//	Detemine if we're currently using large toolbar buttons.
@@ -1039,9 +1039,9 @@ bool CMainFrame::FinishInitAndShowWindow(
 	// (Or equivalently, CMainFrame::SetDockState now that we're doing
 	// the work of CMainFrame::LoadBarState in two steps).
 	//
-	E44::Marke(this, _T("vor LoadWazooBarConfig"));
+	E78::Marke(this, _T("vor LoadWazooBarConfig"));
 	m_WazooBarMgr.LoadWazooBarConfigFromIni();
-	E44::Marke(this, _T("nach LoadWazooBarConfig"));
+	E78::Marke(this, _T("nach LoadWazooBarConfig"));
 
 	// BEFUND E-70, ZWEITER TEIL (gemessen am 10.09.2026 an 1.0.41).
 	//
