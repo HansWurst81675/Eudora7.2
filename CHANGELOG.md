@@ -96,6 +96,88 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.34 — Der Trennbalken sitzt jetzt in der Leiste, nicht in der Andockleiste
+
+**Was Gregor damit tun kann, was seit A-4 nie ging:** die **rechte** Leiste
+mit der Maus breiter ziehen — und damit das **Filterfenster** benutzen, dessen
+rechte Hälfte bisher außerhalb der 188 Pixel lag. Die linke und die untere
+Leiste gehen auf demselben Weg.
+
+Das ist **keine Nachbesserung mehr, sondern ein anderer Ort** für denselben
+Zweck. Der Grund steht in den Messungen.
+
+### Was die drei Messfassungen ergeben haben
+
+| Fassung | Marke | Ergebnis |
+|---|---|---|
+| 1.0.31 | `E-66 Zug:` | **0 Zeilen** — die Ziehschleife wird nie betreten, obwohl beide Balken entstehen |
+| 1.0.32 | `E-66 Bewegung`, `E-66 Klick` | **je 0 Zeilen** — die Andockleiste bekommt weder Mausbewegung noch Klick |
+| 1.0.33 | `E-66 Zeiger:` | Empfänger **`CWazooBar`**, **`CFiltersViewLeft`**, **`QC3DTabWnd`** — **nie** die Andockleiste |
+
+Dazu die Lage, die alles erklärt:
+
+```
+E-66 Streifen: Leiste=59421 Client=0..188 Bar=-2..178 nFrei=8 nSchub=10 Balken=0..8
+```
+
+Die Leiste liegt bei **−2..178**, der freie Platz also bei **178..188** — der
+Trennbalken lag bei **0..8**, mitten **unter** der Leiste. Der Doppelpfeil
+erschien trotzdem, weil `WM_SETCURSOR` zum Elternfenster **aufsteigt**;
+Maustasten tun das nicht.
+
+### Warum der bisherige Ort grundsätzlich falsch war
+
+`CDockBar::CalcFixedLayout` ordnet die Leisten **immer am Anfang** an:
+
+```cpp
+CPoint pt(-afxData.cxBorder2, -afxData.cyBorder2);   // bardock.cpp:387
+```
+
+Links landet der Zuschlag dadurch an der Innenkante — deshalb sah es dort
+zeitweise nach Erfolg aus. Rechts landet er am **Fensterrand**, und dort
+sucht ihn niemand. Mein Gegenmittel, die Leisten ans Ende zu rücken, hält
+nicht: MFC ordnet bei jedem Durchlauf neu an, `nSchub` war in **jeder** Zeile
+wieder 10.
+
+### Der neue Ort
+
+Der Greifstreifen liegt in **`SECControlBar::CalcInsideRect`**, also in der
+Leiste selbst. Dort ist er von keinem Kindfenster verdeckt — `CWazooBar::OnSize`
+legt sein Registerfenster nach `GetInsideRect` (`WazooBar.cpp:1244-1249`),
+also genau nach dieser Fassung. Was dort abgezogen wird, gehört der Leiste,
+und die Mausnachrichten kommen bei ihr an.
+
+Er sitzt automatisch an der richtigen Kante: bei einer links angedockten
+Leiste rechts, bei einer rechts angedockten links, bei einer unten
+angedockten oben — jeweils zum Nachrichtenbereich hin, dort, wo ein Anwender
+ihn sucht. Oben bleibt ausgenommen (**E-55**).
+
+**Was bleibt, ist die Ziehschleife.** `SECDockBar::ZiehenAmRand` benutzt
+weiterhin `Splitter::Track` und `OnSplitterMoved` — dort stecken die teuer
+erkauften Sicherungen: höchstens 100 ms warten und die physische Maustaste
+prüfen (**E-51**), auf den Bildschirm zeichnen (**E-54**), `WM_QUIT`
+zurückstellen (**E-61**). Zwei Ziehschleifen wären eine zu viel. Der Splitter
+ist dabei ein **Stapelobjekt** und lebt genau so lange wie der Zug — damit
+kann **E-60** an dieser Stelle nicht auftreten.
+
+**Entfallen:** der Zuschlag in `SECDockBar::CalcFixedLayout` (er hätte jetzt
+einen leeren Streifen am Fensterrand hinterlassen) und 197 Zeilen
+`TrennbalkenNeuAnlegen`. Die Fassung bleibt mit leerem Rumpf stehen, weil sie
+an `ON_WM_SIZE` hängt.
+
+### Was an 1.0.34 zu prüfen ist
+
+1. **Rechte Leiste breiter ziehen** — Zeiger an die linke Kante der rechten
+   Leiste, dort wird er zum Doppelpfeil, ziehen.
+2. Dann **Filterfenster** öffnen: ist die rechte Hälfte erreichbar, lässt
+   sich eine Regel bearbeiten? Das ist **E-65**, und es sollte damit von
+   selbst erledigt sein.
+3. **Linke Leiste**, gleicher Handgriff an ihrer rechten Kante.
+4. **Untere Leiste**, an ihrer Oberkante — auch kleiner ziehen, nicht nur
+   größer.
+5. Überlebt die Breite einen **Neustart**?
+6. **Friert nichts ein?** Falls doch, sofort sagen.
+
 ## 7.2.0.33 — Messfassung III: wem gehört der Streifen?
 
 **Das Protokoll von 1.0.32 hat den Fall entschieden** — jedenfalls zur

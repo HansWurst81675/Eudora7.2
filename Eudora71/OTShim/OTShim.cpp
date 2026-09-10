@@ -1782,6 +1782,7 @@ BEGIN_MESSAGE_MAP(SECControlBar, CControlBar)
 	ON_WM_CONTEXTMENU()
 	ON_WM_DESTROY()
 	ON_WM_ERASEBKGND()
+	ON_WM_SETCURSOR()			// A-4 / E-66: Groessenzeiger am Greifrand
 END_MESSAGE_MAP()
 
 
@@ -2034,9 +2035,102 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 // (QCCustomToolBar.cpp:162) uebergibt die beiden Ausrichtungsbits einzeln,
 // also genau die Angabe, die CControlBar::CalcInsideRect schon aus m_dwStyle
 // zieht (barcore.cpp:1151-1184). Der zweite Wert bleibt deshalb unbenutzt.
+// ANFORDERUNG A-4, BEFUND E-66 (10.09.2026) - der Greifstreifen liegt HIER,
+// in der Leiste, und nicht mehr in der Andockleiste.
+//
+// WARUM DER ORT GEWECHSELT HAT, gemessen an 1.0.32 und 1.0.33:
+//
+//   E-66 Zeiger: Leiste=59421 Punkt=0,260 Balken=0..8 Empfaenger=CWazooBar
+//   E-66 Zeiger: Leiste=59421 Punkt=7,260 Balken=0..8 Empfaenger=CFiltersViewLeft
+//   E-66 Zeiger: Leiste=59421 Punkt=1,250 Balken=0..8 Empfaenger=QC3DTabWnd
+//   E-66 Streifen: Leiste=59421 Client=0..188 Bar=-2..178 nFrei=8 Balken=0..8
+//
+// Der Empfaenger war NIE die Andockleiste. Der Grund steht in der letzten
+// Zeile: die Leiste liegt bei -2..178, der Balken lag bei 0..8 - also
+// mitten unter ihr. CDockBar::CalcFixedLayout ordnet die Leisten IMMER am
+// Anfang an (CPoint pt(-cxBorder2, -cyBorder2), bardock.cpp:387); links
+// landet der freie Platz dadurch an der Innenkante, rechts am Fensterrand.
+// Der Versuch, die Leisten ans Ende zu ruecken, haelt nicht: MFC ordnet bei
+// jedem Durchlauf neu an, nSchub war in JEDER Zeile wieder 10.
+//
+// In der Leiste dagegen ist der Streifen von keinem Kindfenster verdeckt -
+// CWazooBar::OnSize legt sein Registerfenster nach GetInsideRect
+// (WazooBar.cpp:1244-1249), also genau nach dieser Fassung hier. Was hier
+// abgezogen wird, gehoert der Leiste selbst, und die Mausnachrichten kommen
+// bei ihr an.
+//
+// Der Streifen liegt an der Kante zum Nachrichtenbereich, also dort, wo ein
+// Anwender ihn sucht: bei einer links angedockten Leiste rechts, bei einer
+// rechts angedockten links, bei einer unten angedockten oben.
 void SECControlBar::CalcInsideRect(CRect& rect, BOOL bHorz, BOOL /*bVert*/) const
 {
 	CControlBar::CalcInsideRect(rect, bHorz);
+
+	switch (GreifrandSeite())
+	{
+		case CBRS_ALIGN_LEFT:	rect.right  -= cxGreifrand;	break;
+		case CBRS_ALIGN_RIGHT:	rect.left   += cxGreifrand;	break;
+		case CBRS_ALIGN_BOTTOM:	rect.top    += cxGreifrand;	break;
+		default:											break;
+	}
+
+	// Nicht ins Negative laufen lassen - eine sehr schmale Leiste haette
+	// sonst einen Innenbereich mit negativer Breite.
+	if (rect.right < rect.left)
+		rect.right = rect.left;
+	if (rect.bottom < rect.top)
+		rect.bottom = rect.top;
+}
+
+
+// A-4 / E-66: an welcher Seite dieser Leiste liegt der Greifstreifen?
+// Liefert 0, wenn keiner hingehoert.
+//
+// OBEN ist ausgenommen: dort sitzt die Werkzeugleiste, deren Hoehe sich aus
+// ihren Knoepfen ergibt und die niemand ziehen will (BEFUND E-55).
+// Schwebende Leisten haben ihren eigenen Rahmen zum Ziehen.
+UINT SECControlBar::GreifrandSeite() const
+{
+	if (IsFloating())
+		return 0;
+
+	const DWORD dwSeite = (m_dwStyle & CBRS_ALIGN_ANY);
+	if (dwSeite == CBRS_ALIGN_LEFT ||
+		dwSeite == CBRS_ALIGN_RIGHT ||
+		dwSeite == CBRS_ALIGN_BOTTOM)
+	{
+		return (UINT) dwSeite;
+	}
+
+	return 0;
+}
+
+
+// A-4 / E-66: liegt der Punkt (Clientkoordinaten DIESER Leiste) im
+// Greifstreifen? Gemessen wird gegen den Clientbereich, nicht gegen den
+// Innenbereich - der ist um genau diesen Streifen kleiner.
+BOOL SECControlBar::AmGreifrand(CPoint pt) const
+{
+	const UINT nSeite = GreifrandSeite();
+	if (nSeite == 0)
+		return FALSE;
+
+	CRect rect;
+	GetClientRect(&rect);
+	if (rect.IsRectEmpty())
+		return FALSE;
+
+	switch (nSeite)
+	{
+		case CBRS_ALIGN_LEFT:
+			return (pt.x >= rect.right - cxGreifrand && pt.x < rect.right);
+		case CBRS_ALIGN_RIGHT:
+			return (pt.x >= rect.left && pt.x < rect.left + cxGreifrand);
+		case CBRS_ALIGN_BOTTOM:
+			return (pt.y >= rect.top && pt.y < rect.top + cxGreifrand);
+		default:
+			return FALSE;
+	}
 }
 
 
@@ -2399,9 +2493,56 @@ void SECControlBar::OnSize(UINT nType, int cx, int cy)
 
 // CControlBar::OnLButtonDown startet das Ziehen ueber m_pDockContext
 // (barcore.cpp) - genau das soll passieren.
+// A-4 / E-66 (10.09.2026): ein Klick in den Greifstreifen startet den Zug.
+//
+// Hier - und nicht in der Andockleiste - weil die Mausnachrichten nur hier
+// ankommen. Gemessen an 1.0.32: ueber der Andockleiste kamen NULL
+// WM_MOUSEMOVE und NULL WM_LBUTTONDOWN an, obwohl der Zeiger richtig
+// gesetzt wurde. WM_SETCURSOR steigt zum Elternfenster auf, Maustasten tun
+// das nicht.
+//
+// Gezogen und angewandt wird weiterhin von SECDockBar: dort steht die
+// Ziehschleife mit ihren Sicherungen (BEFUND E-51: hoechstens 100 ms warten,
+// physische Maustaste pruefen; BEFUND E-61: WM_QUIT zurueckstellen) und die
+// Umrechnung auf die Andockgroesse. Zwei Ziehschleifen waeren eine zu viel.
 void SECControlBar::OnLButtonDown(UINT nFlags, CPoint pt)
 {
+	if (AmGreifrand(pt))
+	{
+		SECDockBar* pDock = DYNAMIC_DOWNCAST(SECDockBar, GetParent());
+		if (pDock != NULL)
+		{
+			CPoint ptDock(pt);
+			ClientToScreen(&ptDock);
+			pDock->ScreenToClient(&ptDock);
+			pDock->ZiehenAmRand(this, ptDock);
+			return;
+		}
+	}
+
 	CControlBar::OnLButtonDown(nFlags, pt);
+}
+
+
+// A-4 / E-66: der Groessenzeiger ueber dem Greifstreifen.
+BOOL SECControlBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	if (nHitTest == HTCLIENT && GreifrandSeite() != 0)
+	{
+		CPoint pt;
+		if (::GetCursorPos(&pt))
+		{
+			ScreenToClient(&pt);
+			if (AmGreifrand(pt))
+			{
+				const BOOL bSenkrecht = (GreifrandSeite() != CBRS_ALIGN_BOTTOM);
+				::SetCursor(::LoadCursor(NULL, bSenkrecht ? IDC_SIZEWE : IDC_SIZENS));
+				return TRUE;
+			}
+		}
+	}
+
+	return CControlBar::OnSetCursor(pWnd, nHitTest, message);
 }
 
 void SECControlBar::OnLButtonUp(UINT nFlags, CPoint pt)
@@ -2962,16 +3103,16 @@ int SECDockBar::PredictInsertPosition(CControlBar* /*pBarIns*/, CRect /*rect*/, 
 // dazu steht unten im Rumpf.)
 
 
-// ANFORDERUNG A-4, BEFUND E-55 (09.09.2026)
+// ANFORDERUNG A-4, BEFUND E-55 (09.09.2026), mit E-66 auf die Leisten
+// uebergegangen.
 //
-// Welche Andockleiste einen Greifstreifen bekommt - an EINER Stelle, weil
-// zwei Stellen davon abhaengen: CalcFixedLayout schafft den Platz,
-// TrennbalkenNeuAnlegen belegt ihn. Standen die Listen getrennt da, blieb
-// oben ein acht Pixel hoher leerer Streifen unter der Werkzeugleiste
-// (PRUEFER-6).
+// Die Auswahl - links, rechts, unten, aber nicht oben - gilt weiter, sie
+// steht nur nicht mehr hier: SECControlBar::GreifrandSeite entscheidet
+// dasselbe anhand von CBRS_ALIGN_..., also an der Leiste statt an der
+// Andockleiste. OBEN bleibt aussen vor, weil dort die Werkzeugleiste sitzt,
+// deren Hoehe sich aus ihren Knoepfen ergibt (E-55).
 //
-// OBEN bleibt aussen vor: dort sitzt die Werkzeugleiste, deren Hoehe sich
-// aus ihren Knoepfen ergibt und die niemand ziehen will.
+// Diese Fassung wird nur noch von ZiehenAmRand gebraucht.
 static BOOL BrauchtGreifstreifen(UINT nIdLeiste)
 {
 	return (nIdLeiste == AFX_IDW_DOCKBAR_LEFT  ||
@@ -3011,30 +3152,26 @@ CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 	//
 	// Deshalb jetzt eine Bedingung, die am ERGEBNIS haengt statt an einer
 	// eigenen Rechnung ueber m_arrBars: hat die Basis ueberhaupt eine
-	// nennenswerte Groesse geliefert, steht dort auch eine Leiste.
-	// BEFUND E-55 (PRUEFER-6, 09.09.2026): der Zuschlag galt fuer ALLE VIER
-	// Andockleisten. Oben braucht ihn niemand - dort steht die Werkzeugleiste,
-	// und die soll nicht in der Hoehe gezogen werden. Was Gregor stattdessen
-	// bekam, war ein acht Pixel hoher leerer Streifen UNTER der
-	// Werkzeugleiste. Deshalb sind es jetzt drei Leisten: links, rechts,
-	// unten. Genau dieselbe Liste steht in TrennbalkenNeuAnlegen, damit nicht
-	// eine Stelle Platz schafft, den die andere nicht belegt.
-	const UINT nIdLeiste = (UINT) GetDlgCtrlID();
-	const BOOL bAndockleiste = BrauchtGreifstreifen(nIdLeiste);
-	const int nVorhanden = bHorz ? size.cy : size.cx;
-
-	if (bAndockleiste && !m_bFloating && nVorhanden > 8)
-	{
-		// Dreifache Balkenbreite: vier Pixel gehen an MFC, der Rest bleibt
-		// als Greifstreifen uebrig. Wieviel es am Ende wirklich ist, rechnet
-		// TrennbalkenNeuAnlegen aus dem Unterschied zwischen Andockleiste
-		// und Leiste aus - hier wird also nichts festgenagelt, was dort
-		// nachgemessen werden kann.
-		if (bHorz)
-			size.cy += 3 * Splitter::cy;
-		else
-			size.cx += 3 * Splitter::cx;
-	}
+	// KEIN ZUSCHLAG MEHR. Er stand hier von A-4 bis 7.2.0.33 und ist mit
+	// BEFUND E-66 hinfaellig geworden.
+	//
+	// Die Ueberlegung war: die Andockleiste um einen Streifen groesser
+	// machen, damit darin Platz fuer einen Trennbalken bleibt. Das geht
+	// nicht auf, weil CDockBar::CalcFixedLayout die Leisten IMMER am Anfang
+	// anordnet (CPoint pt(-cxBorder2, -cyBorder2), bardock.cpp:387): links
+	// landet der Streifen dadurch an der Innenkante, rechts am Fensterrand -
+	// und dort sucht ihn niemand. Der Versuch, die Leisten ans Ende zu
+	// ruecken, haelt nicht; MFC ordnet bei jedem Durchlauf neu an. Gemessen
+	// an 1.0.32: nSchub war in JEDER Zeile wieder 10.
+	//
+	// Der Greifstreifen liegt jetzt IN DER LEISTE
+	// (SECControlBar::CalcInsideRect). Die Andockleiste braucht dafuer keine
+	// zusaetzliche Breite - im Gegenteil: der Zuschlag haette jetzt einen
+	// leeren Streifen am Fensterrand hinterlassen.
+	//
+	// Mit dem Zuschlag entfallen auch BrauchtGreifstreifen, nVorhanden und
+	// die ganze Balkenmechanik der Andockleiste. Was davon noch gebraucht
+	// wird, steht in ZiehenAmRand.
 
 	return size;
 }
@@ -3788,6 +3925,86 @@ void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
 // waagerechten). Damit ueberlebt die neue Breite auch das Speichern in die
 // Eudora.ini - der [ToolBar...]-Abschnitt entsteht seit der Behebung von
 // E-43 ueberhaupt erst.
+// ANFORDERUNG A-4, BEFUND E-66 (10.09.2026)
+//
+// Eine Leiste meldet einen Zug an ihrem eigenen Greifrand hierher. Der Punkt
+// kommt in Clientkoordinaten DIESER Andockleiste.
+//
+// Warum der Umweg ueber die Andockleiste, wenn der Griff in der Leiste
+// sitzt: hier steht die Ziehschleife mit ihren teuer erkauften Sicherungen
+// (E-51 hoechstens 100 ms warten und die physische Maustaste pruefen, E-54
+// auf den Bildschirm zeichnen, E-60 den ziehenden Balken nicht loeschen,
+// E-61 WM_QUIT zurueckstellen) und die Umrechnung auf die Andockgroesse
+// (OnSplitterMoved). Eine zweite Schleife waere eine zu viel.
+//
+// Der Splitter ist hier ein STAPELOBJEKT und landet nicht in m_arrSplitters:
+// er lebt genau so lange wie der Zug. Damit entfaellt die ganze
+// Wiederverwendungs- und Loeschmechanik, und E-60 kann an dieser Stelle
+// nicht auftreten.
+void SECDockBar::ZiehenAmRand(CControlBar* pBar, CPoint ptDock)
+{
+	if (pBar == NULL || !::IsWindow(pBar->GetSafeHwnd()))
+		return;
+
+	// Die Stelle der Leiste in m_arrBars - OnSplitterMoved braucht sie, um
+	// die richtige Leiste zu vergroessern.
+	int nPos = -1;
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		if (GetDockedControlBar(i) == pBar)
+		{
+			nPos = i;
+			break;
+		}
+	}
+	if (nPos < 0)
+		return;
+
+	const UINT nIdLeiste = (UINT) GetDlgCtrlID();
+	if (!BrauchtGreifstreifen(nIdLeiste))
+		return;					// oben wird nicht gezogen (E-55)
+
+	const BOOL bSenkrecht = (nIdLeiste == AFX_IDW_DOCKBAR_LEFT ||
+							 nIdLeiste == AFX_IDW_DOCKBAR_RIGHT);
+
+	// Der Balken sitzt am Greifrand der Leiste, in Koordinaten der
+	// Andockleiste. Gemessen, nicht geraten: die Lage kommt aus dem
+	// Fensterrechteck der Leiste selbst.
+	CRect rectBar;
+	pBar->GetWindowRect(&rectBar);
+	ScreenToClient(&rectBar);
+
+	CRect rectBalken(rectBar);
+	switch (nIdLeiste)
+	{
+		case AFX_IDW_DOCKBAR_LEFT:
+			rectBalken.left = rectBar.right - SECControlBar::cxGreifrand;
+			break;
+		case AFX_IDW_DOCKBAR_RIGHT:
+			rectBalken.right = rectBar.left + SECControlBar::cxGreifrand;
+			break;
+		case AFX_IDW_DOCKBAR_BOTTOM:
+			rectBalken.bottom = rectBar.top + SECControlBar::cxGreifrand;
+			break;
+		default:
+			return;
+	}
+
+	Splitter balken(Splitter::BarSplitter,
+					bSenkrecht ? Splitter::Vertical : Splitter::Horizontal,
+					rectBalken);
+	balken.m_nPos = nPos;
+
+	CalcTrackingLimits(&balken);
+
+	// NULL als Zeichenziel heisst "auf den Bildschirm" (BEFUND E-54).
+	const int nDelta = balken.Track(this, ptDock, NULL);
+
+	if (nDelta != 0)
+		OnSplitterMoved(&balken, nDelta);
+}
+
+
 void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
 {
 	if (pSplitter == NULL || nDelta == 0)
@@ -4328,207 +4545,28 @@ void SECDockBar::OnSize(UINT nType, int cx, int cy)
 
 // ANFORDERUNG A-4 (BEFUND E-49/E-52, 09.09.2026)
 //
-// Legt den Trennbalken an der Innenkante der ersten sichtbaren Leiste an.
-// BeginRecycleSplitters/EndRecycleSplitters verwenden bestehende Balken
-// wieder, statt bei jedem Durchlauf neu anzulegen.
+// Legte den Trennbalken in der Andockleiste an - stillgelegt, siehe unten.
 void SECDockBar::TrennbalkenNeuAnlegen()
 {
-	// PRUEFER-6: waehrend eines Zuges gar nicht anfassen. Sonst wird m_nPos
-	// unter der laufenden Schleife ueberschrieben, und OnSplitterMoved
-	// aendert hinterher die falsche Leiste.
-	for (int iZieht = 0; iZieht < m_arrSplitters.GetSize(); iZieht++)
-	{
-		Splitter* pZieht = (Splitter*) m_arrSplitters[iZieht];
-		if (pZieht != NULL && pZieht->m_bTracking)
-			return;
-	}
-
-	BeginRecycleSplitters();
-
-	if (!m_bFloating && ::IsWindow(GetSafeHwnd()) &&
-		BrauchtGreifstreifen((UINT) GetDlgCtrlID()))
-	{
-		// Die erste sichtbar angedockte Leiste - an ihrer Innenkante sitzt
-		// der Balken, und ihre Groesse aendert OnSplitterMoved.
-		int nPos = -1;
-		for (int i = 0; i < m_arrBars.GetSize(); i++)
-		{
-			CControlBar* pBar = GetDockedControlBar(i);
-			if (pBar != NULL && (pBar->GetStyle() & WS_VISIBLE) != 0)
-			{
-				nPos = i;
-				break;
-			}
-		}
-
-		CRect rect;
-		GetClientRect(&rect);
-
-		// Wieviel Platz wirklich frei ist, wird NACHGEMESSEN statt geraten:
-		// CalcFixedLayout schlaegt einen Betrag auf, MFC verbraucht davon
-		// einen Teil (gemessen am 09.09.2026: von 11 kamen 7 an). Der
-		// Unterschied zwischen der Andockleiste und der Leiste darin ist der
-		// Streifen, der dem Balken bleibt.
-		// BEFUND E-66, ERSTE URSACHE (PRUEFER-7, 09.09.2026).
-		//
-		// Der Zuschlag aus CalcFixedLayout landet NICHT dort, wo man ihn
-		// braucht - jedenfalls nicht rechts und unten.
-		//
-		// CDockBar::CalcFixedLayout der MFC beginnt die Anordnung in JEDER
-		// Andockleiste bei
-		//     CPoint pt(-afxData.cxBorder2, -afxData.cyBorder2);
-		// (bardock.cpp:387, MSVC 14.38.33130), also oben links im
-		// Clientbereich. Die Leisten liegen damit immer am ANFANG, und der
-		// Zuschlag bleibt am ENDE liegen:
-		//     links  -> Ende ist die Innenkante  -> Streifen sitzt richtig
-		//     rechts -> Ende ist der Fensterrand -> Streifen sitzt falsch
-		// Gemessen von PRUEFER: rechts ergibt die Suche an der Innenkante
-		// nFrei = -2, die Bedingung nFrei >= 2 scheitert, AddSplitter laeuft
-		// nie, HitTest liefert NULL. Deshalb war rechts nichts zu greifen.
-		//
-		// Statt den Balken an den Fensterrand zu legen - dort will ihn
-		// niemand suchen - werden die Leisten um den Streifen ANS ENDE
-		// GERUECKT. Danach liegt der freie Platz an der Innenkante, also
-		// zwischen Nachrichtenbereich und Leiste, wo Gregor ihn greifen will.
-		//
-		// WARUM HIER UND NICHT IN CalcFixedLayout: dort hat die Andockleiste
-		// ihre neue Groesse noch nicht (MFC verschiebt mit DeferWindowPos,
-		// BEFUND E-52). Diese Fassung laeuft aus OnSize, also NACH dem
-		// Setzen der Groesse - und nach jedem Anordnungsdurchlauf erneut,
-		// weil jeder von ihnen in WM_SIZE endet.
-		const UINT nIdLeiste = (UINT) GetDlgCtrlID();
-		const BOOL bAmEnde   = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT ||
-								nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM);
-
-		int nFrei  = 0;
-		int nSchub = 0;
-		// Fuer die Spurmarke: die LAGE der Leiste, nicht nur ihre Breite.
-		// Genau die fehlte bisher, und ohne sie war nicht zu entscheiden, ob
-		// der freie Streifen vor oder hinter der Leiste liegt.
-		CRect rectLeisteMerk(0, 0, 0, 0);
-		const BOOL pSplitterSenkrecht =
-			(nIdLeiste == AFX_IDW_DOCKBAR_LEFT || nIdLeiste == AFX_IDW_DOCKBAR_RIGHT);
-		if (nPos >= 0)
-		{
-			CControlBar* pErste = GetDockedControlBar(nPos);
-			if (pErste != NULL && ::IsWindow(pErste->GetSafeHwnd()))
-			{
-				CRect rectLeiste;
-				pErste->GetWindowRect(&rectLeiste);
-				ScreenToClient(&rectLeiste);
-
-				// OBEN fehlt hier absichtlich: BrauchtGreifstreifen laesst
-				// diese Fassung fuer AFX_IDW_DOCKBAR_TOP gar nicht erst
-				// laufen (BEFUND E-55). Ein Zweig, den nichts erreicht,
-				// waere ein Kommentar, der dem Code widerspricht.
-				// BEFUND E-66, DRITTE URSACHE - und diesmal ist es meine
-				// eigene Behebung von gestern, die sich selbst im Weg steht.
-				//
-				// Gemessen wurde der freie Streifen als Abstand zwischen
-				// Leistenkante und Andockleistenkante. Fuer rechts und unten
-				// wird die Leiste unmittelbar danach GENAU DORTHIN gerueckt -
-				// also ist der Abstand beim naechsten Durchlauf null, die
-				// Bedingung nFrei >= 2 scheitert, und der Balken wird nicht
-				// mehr angelegt. Eine Messung, die ihr eigenes Ergebnis
-				// zerstoert.
-				//
-				// Getrennt wird das jetzt in ZWEI Groessen, die verschiedene
-				// Dinge bedeuten:
-				//   nFrei = wie BREIT der Streifen ist. Aus der Differenz der
-				//           GROESSEN, nicht der Lagen - die aendert sich beim
-				//           Ruecken nicht.
-				//   nSchub = wie WEIT noch zu ruecken ist. Aus der Differenz
-				//           der Lagen. Nach dem Ruecken null, beim naechsten
-				//           Durchlauf passiert also nichts mehr.
-				const int nGesamt  = (pSplitterSenkrecht) ? rect.Width()  : rect.Height();
-				const int nBelegt  = (pSplitterSenkrecht) ? rectLeiste.Width() : rectLeiste.Height();
-				nFrei = nGesamt - nBelegt;
-				rectLeisteMerk = rectLeiste;
-
-				switch (nIdLeiste)
-				{
-					case AFX_IDW_DOCKBAR_RIGHT:
-						nSchub = rect.right - rectLeiste.right;
-						break;
-					case AFX_IDW_DOCKBAR_BOTTOM:
-						nSchub = rect.bottom - rectLeiste.bottom;
-						break;
-					default:
-						nSchub = 0;		// links: MFC legt schon richtig ab
-						break;
-				}
-			}
-		}
-
-		// Die Leisten ans Ende ruecken, damit der Streifen an die Innenkante
-		// kommt. Nur rechts und unten, nur solange ueberhaupt noch zu ruecken
-		// ist - nSchub wird dabei von selbst null, die Sache haelt sich also
-		// an.
-		if (bAmEnde && nFrei >= 2 && nSchub > 0)
-		{
-			for (int iBar = 0; iBar < m_arrBars.GetSize(); iBar++)
-			{
-				CControlBar* pBar = GetDockedControlBar(iBar);
-				if (pBar == NULL || !::IsWindow(pBar->GetSafeHwnd()))
-					continue;
-				if ((pBar->GetStyle() & WS_VISIBLE) == 0)
-					continue;
-
-				CRect rectBar;
-				pBar->GetWindowRect(&rectBar);
-				ScreenToClient(&rectBar);
-
-				const int dx = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT)  ? nSchub : 0;
-				const int dy = (nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM) ? nSchub : 0;
-
-				pBar->SetWindowPos(NULL, rectBar.left + dx, rectBar.top + dy,
-					0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-			}
-		}
-
-		{
-			// SPURMARKE ZU E-66, dritter Teil: was hier herauskommt,
-			// entscheidet, ob ueberhaupt ein Balken entsteht.
-			char szMarke[256];
-			_snprintf(szMarke, sizeof(szMarke),
-				"E-66 Streifen: Leiste=%u Client=%d..%d Bar=%d..%d nPos=%d "
-				"nFrei=%d nSchub=%d amEnde=%d Balken=%d..%d",
-				(unsigned) nIdLeiste,
-				(int) rect.left, (int) rect.right,
-				(int) rectLeisteMerk.left, (int) rectLeisteMerk.right,
-				(int) nPos, (int) nFrei, (int) nSchub, (int) bAmEnde,
-				(int) ((nIdLeiste == AFX_IDW_DOCKBAR_LEFT) ? rect.right - nFrei : rect.left),
-				(int) ((nIdLeiste == AFX_IDW_DOCKBAR_LEFT) ? rect.right : rect.left + nFrei));
-			szMarke[sizeof(szMarke) - 1] = '\0';
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
-		}
-
-		// Unter zwei Pixeln laesst sich nichts greifen - dann lieber kein
-		// Balken als einer, den niemand trifft.
-		if (nPos >= 0 && !rect.IsRectEmpty() && nFrei >= 2)
-		{
-			switch ((UINT) GetDlgCtrlID())
-			{
-				case AFX_IDW_DOCKBAR_LEFT:
-					AddSplitter(Splitter::BarSplitter, Splitter::Vertical,
-						rect.right - nFrei, rect.top, rect.right, rect.bottom, nPos);
-					break;
-				case AFX_IDW_DOCKBAR_RIGHT:
-					AddSplitter(Splitter::BarSplitter, Splitter::Vertical,
-						rect.left, rect.top, rect.left + nFrei, rect.bottom, nPos);
-					break;
-				// OBEN fehlt auch hier, aus demselben Grund (E-55).
-				case AFX_IDW_DOCKBAR_BOTTOM:
-					AddSplitter(Splitter::BarSplitter, Splitter::Horizontal,
-						rect.left, rect.top, rect.right, rect.top + nFrei, nPos);
-					break;
-				default:
-					break;
-			}
-		}
-	}
-
-	EndRecycleSplitters();
+	// STILLGELEGT mit BEFUND E-66 (10.09.2026).
+	//
+	// Diese Fassung hat den Trennbalken in der ANDOCKLEISTE angelegt. Dort
+	// erreicht ihn keine Maus: gemessen an 1.0.32 kamen ueber der
+	// Andockleiste NULL WM_MOUSEMOVE und NULL WM_LBUTTONDOWN an, weil der
+	// Streifen von der Leiste verdeckt wird (Bar=-2..178 bei Client=0..188,
+	// Balken lag bei 0..8). Der Zeiger wurde trotzdem richtig gesetzt, weil
+	// WM_SETCURSOR zum Elternfenster aufsteigt und Maustasten nicht.
+	//
+	// Der Griff sitzt jetzt in der Leiste selbst
+	// (SECControlBar::AmGreifrand), und der Zug laeuft ueber ZiehenAmRand.
+	//
+	// Die Fassung bleibt mit leerem Rumpf stehen statt zu verschwinden: sie
+	// haengt an ON_WM_SIZE, und ein Aufruf ins Leere ist besser als ein
+	// Aufrufer, der ins Nichts zeigt (Lehre dummy-statt-weglassen). Die
+	// Balkenmechanik darunter - AddSplitter, HitTest, Recycle - bleibt
+	// ebenfalls, weil ZiehenAmRand Splitter, Track und OnSplitterMoved
+	// weiterbenutzt.
+	DeleteAllSplitters();
 }
 
 
