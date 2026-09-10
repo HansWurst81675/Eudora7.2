@@ -38,7 +38,8 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
 > sind fast erfüllt (2, 4). Beiden fehlt dasselbe: die Meldung „Encountered an
 > improper argument" beim **Anzeigen** mancher Nachrichten. Stand 09.09.2026,
-> Quellstand **7.2.0.29**, Paketnummer **1.0.29**. Hier steht bewusst keine
+> Quellstand **7.2.0.30**, Paketnummer **1.0.30** (in Arbeit; ausgeliefert und
+> veröffentlicht ist die Fassung davor, siehe CHANGELOG). Hier steht bewusst keine
 > | Messung | Ergebnis |
 > |---|---|
 > | `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |
@@ -269,6 +270,24 @@ Seit `78a9c10` übersetzt `Eudora` damit fehlerfrei, und seit `a807b93` bindet d
 durchweg verzichtbar. Das gilt nur für den MDI-Streifen hinter `m_bWorkbookMode`,
 nicht für `SEC3DTabWnd`/`SEC3DTabControl`, das Steuerelement in jeder Wazoo-Leiste.
 Belegt in PLAN.md, Abschnitt „Berichtigungen" (`7d94c3d`).
+
+**Woran man den Irrtum merkt:** `CMainFrame::FinishInitAndShowWindow` ruft für
+den MDI-Streifen `ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))` — das ist
+der abschaltbare Teil. Das Registerkarten-*Steuerelement*
+`SEC3DTabWnd`/`SEC3DTabControl` sitzt dagegen in **jeder** Wazoo-Leiste. Mit
+leeren Rümpfen startet Eudora zwar, aber *Mailboxes*, *Nicknames*, *Filters*,
+*Directory Services*, *Link History* und *Task Status* bleiben leer. Die
+Registerkarten sind deshalb als eigener Teil der Ersatzschicht ausgeführt
+(`Eudora71/OTShim/OTShim_Reiter.*`).
+
+> **Achtung, veraltete Aussage im Umlauf.** Bis zum 09.09.2026 stand in
+> `README.md`, `SECWorkbook` halte `m_bWorkbookMode` „dauerhaft auf `FALSE`".
+> Das galt bis **E-48** / Anforderung **A-3**. Seither schaltet
+> `SECWorkbook::SetWorkbookMode` (`OTShim.cpp:1319`) den Wert um, und
+> `Befunde/PRUEFER-6.md` führt vier Regressionen auf, die erst dadurch
+> entstanden sind, dass er jetzt `TRUE` ist. Der Kommentar in
+> `Eudora71/OTShim/OTShim.h:1024,1468` („bleibt fest FALSE") ist ebenfalls
+> überholt — **Quelltext, hier nicht geändert.**
 
 Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
 
@@ -641,6 +660,14 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
   erweitert (deutsche Umlaute + Latin-1 U+00A0..U+00FF), Patch aus
   https://github.com/HansWurst81675/Eudora_patches
 
+- `Eudora71/VC71Bruecke` — **eigener Nachbau der `MSVCR71.dll`** als Weiterleitung
+  auf die von Windows mitgelieferte `msvcrt.dll` (1430 Exporte, davon 1429
+  Weiterleitungen). Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die
+  übrigen) brauchen diese Laufzeit. `MFC71.DLL` und `MSVCP71.dll` sind dagegen
+  **nicht** nachbaubar — 157 Importe nach Ordinal, kein einziger nach Namen
+  (Befund **B-1**); Adressbuch, LDAP, Ph und S/MIME fallen deshalb dauerhaft aus.
+  Alle Messungen: [Eudora71/VC71Bruecke/BEFUND.md](Eudora71/VC71Bruecke/BEFUND.md).
+
 ## Zwei Fehler in der Zeichentabelle - gefunden und behoben
 
 `Eudora71/Tests` prueft die Uebersetzungstabelle aus `utils.cpp` gegen CP1252,
@@ -810,6 +837,33 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   `LRESULT(WPARAM,LPARAM)`.
 - `AccountWizard` meldete gelegentlich `C1041` (PDB-Zugriff) beim Parallelbau — ein
   Race, verschwindet beim erneuten Bauen. Falls es stört: `/FS` bzw. serieller Bau.
+
+- **`ASSERT` und `VERIFY` sind im Freigabebau nichts — die häufigste
+  Ursachenklasse dieses Projekts.** MFC 6 prüfte damit; in einem Release-Bau ist
+  `ASSERT` weggelassen und `VERIFY(f)` zu `((void)(f))` verkürzt — der Ausdruck
+  wird berechnet, das Ergebnis aber **nicht** geprüft. Wo QUALCOMM einen
+  Fehlschlag so „behandelt" hat, passiert im ausgelieferten Programm lautlos gar
+  nichts: bei **E-37** an vier Stellen, bei **E-38** an zwei, bei **E-33**
+  verwandt — und beim Beenden waren es zwölf Schritte (**E-42**). Wer auf einem
+  Weg sucht, auf dem „gar nichts passiert", sucht dort **zuerst** nach
+  `ASSERT(0)` und `VERIFY(`. Die Lehre dazu:
+  [Arbeitsweise/assert-ist-im-release-nichts.md](Arbeitsweise/assert-ist-im-release-nichts.md).
+  Dieser Absatz stand bis zum 09.09.2026 in `README.md`.
+- **Die Wurzel der Abstürze ist gefunden — nicht noch einmal durchprobieren.**
+  Bis zum 06.09.2026 galt die Doppelfreigabe **E-25** in
+  `Eudora71/Importers/NSImport/NSImportClass.cpp` (`LocateNetscapePrefsFile`) als
+  die Ursache; die Fassung danach stürzte damit weiter ab. Dazu sieben weitere
+  Vermutungen, jede gebaut, gestartet und gemessen, jede widerlegt. Die
+  tatsächliche Ursache war **E-31**: `pg_time_t` war unter VS2022 acht Byte breit
+  statt vier (`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`), womit jede an
+  `Paige32.dll` gereichte Struktur verschoben war. Messung mit allen
+  Feldversätzen: [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21, Herleitung in
+  `Befunde/PAIGE.md`. Die Härtung aus E-25 ist unabhängig davon richtig und
+  bleibt drin.
+  **Was daran richtig war:** `afxcoll.inl:213` und „Encountered an improper
+  argument" sind **Folge, nicht Ursache**. Eine beschädigte `CPtrArray` trägt
+  beschädigte `m_nSize` und `m_pData`, und dann meldet *jeder* Zugriff „Index
+  außerhalb" — auch ein korrekt begrenzter.
 
 ## Verworfene Alternativen
 

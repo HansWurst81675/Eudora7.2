@@ -1,0 +1,4 @@
+	SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar,
+		GetDockedControlBar(pSplitter->m_nPos));
+	if (pBar == NULL)
+		return;
