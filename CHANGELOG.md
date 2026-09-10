@@ -96,6 +96,94 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.40 — Strg+J filtert wieder, statt in den Junk-Ordner zu schieben
+
+**Was Gregor damit tun kann, was vorher nicht ging:** mit Strg+J filtern, so
+wie er es seit jeher tut, ohne dass die ausgewählten Nachrichten stattdessen
+im Junk-Ordner landen.
+
+Gemeldet am 10.09.2026 an 1.0.39: *„filter erwischt immer noch zu viele
+mails"* — und der entscheidende Satz kam kurz darauf: *„ich drücke zum
+filtern ja immer noch ctrl-J"*.
+
+### Der Filter war nicht schuld
+
+Das Protokoll von 1.0.39 zeigt zwei völlig verschiedene Läufe unter derselben
+Fortschrittsanzeige:
+
+```
+6.26  E-64 FilterMsg: Liste=1 Filter=1 verlangt WhenToApply=4 … Masken=[5]
+7.38  E-64 Match=1 Filter="From:newsletter@service.freenet.de" … "Coole Comics | …"
+7.38  E-64 Match=0 Filter="From:newsletter@service.freenet.de" … "Fwd: Neue Anmeldung …"
+```
+
+Das ist der echte Filterlauf, und er arbeitet **richtig**: eine Nachricht
+trifft, eine nicht, nur die treffende wird verschoben.
+
+```
+9.07  Messages left to filter: 9
+9.07  … acht weitere Zeilen, keine einzige E-64-Marke …
+9.08  Messages left to filter: 0
+```
+
+Hier wurde `CFiltersDoc::FilterMsg` **überhaupt nicht aufgerufen**. `Junk.mbx`
+wuchs trotzdem von 174 196 auf 501 987 Bytes.
+
+**Gegenprobe am Bestand:** von zwölf Nachrichten in `Junk.mbx` haben zehn
+keinen Filtergrund. Sechs davon kommen von `adventskalender-mails@freenet.de`
+— für die sieht Gregors zweiter Filter ausdrücklich `HW_Bxo.mbx` als Ziel
+vor. Diese Datei ist 0 Bytes groß.
+
+### E-75 — Strg+J war auf „Junk" umgelegt worden
+
+Vor der Junk-Funktion war Strg+J in Eudora *Filter Messages*. Seit Eudora 6
+möchte das Programm die Taste für *Junk* haben und fragt vorher — der Dialog
+dafür steht bis heute in den Ressourcen (`IDD_CTRL_J_FOR_JUNK`):
+
+> *The Ctrl-J key combination is currently associated with the „Filter
+> Messages" menu item. Would you like to switch it to be associated with the
+> „Junk" menu item?*
+
+**Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da
+sind.** Andernfalls greift in `CMainFrame::InitJunkMenus`
+(`mainfrm.cpp:7911-7934`) der `else`-Zweig und legt Strg+J **stillschweigend**
+auf Junk — festgeschrieben als `CtrlJMapping=1` in der `Eudora.ini`. Der
+Zweig läuft nur ein einziges Mal; später angelegte Filter ändern nichts mehr
+daran.
+
+Gregor hatte mit einem **leeren Mailverzeichnis** angefangen. Beim ersten
+Start gab es keine Filter, also wurde umgelegt, ohne zu fragen. Die Filter
+kamen danach.
+
+**Behebung:** sind beim ersten Start keine manuellen Filter vorhanden, bleibt
+Strg+J auf `CTRL_J_FILTER` — so, wie es vor der Junk-Funktion war und wie das
+Menü `IDR_MAINFRAME` es unverändert beschriftet. Wer Junk auf Strg+J will,
+stellt es in den Einstellungen um; `InitJunkMenus` beschriftet das Menü dann
+entsprechend um.
+
+### Warum es so lange wie ein Filterlauf aussah
+
+Drei verschiedene Befehle zeigten dieselbe Zeile `Messages left to filter`:
+
+| Befehl | Fundstelle | zeigt jetzt |
+|---|---|---|
+| *Filter Messages* | `TocFrame.cpp:2380` | `Messages left to filter` (unverändert) |
+| *Junk* / *Not Junk* | `TocFrame.cpp:1156` | `Messages left to mark` |
+| *Recheck Junk* | `TocFrame.cpp:996` | `Messages left to scan for junk` |
+
+Die Zeichenkette `IDS_JUNK_MESSAGES_LEFT` gab es bereits, sie wurde nur beim
+Abruf benutzt; für das Markieren ist `IDS_JUNK_MESSAGES_MARK` neu.
+
+### Für ein bestehendes Mailverzeichnis
+
+Diese Änderung wirkt nur dort, wo `CtrlJMapping` noch nicht festgeschrieben
+ist. Steht die `1` schon in der `Eudora.ini`, hilft nur der Handgriff bei
+geschlossenem Eudora:
+
+```
+CtrlJMapping=2
+```
+
 ## 7.2.0.39 — Kein Filter und kein Junk-Fang löscht mehr auf dem Server
 
 **Was Gregor damit tun kann, was vorher gefährlich war:** filtern und Mail
