@@ -221,6 +221,86 @@ Dieselbe Datei trägt die 124 Dateizuordnungen von QUALCOMM im Abschnitt
 `[Mappings]`. Wer sie ersetzt, verliert sie — deshalb liegt im Paket die
 Originaldatei mit unseren Zeilen **ergänzt**, nicht eine eigene.
 
+## Mehr ins Protokoll schreiben lassen
+
+Eudora führt ein Protokoll in `eudora.log` im Mailverzeichnis. **Wie viel
+darin landet, steuert ein einziger Schlüssel** — ohne Neubau, ohne
+Codeänderung:
+
+```ini
+[Settings]
+LogLevel=25759
+```
+
+`LogLevel` ist keine Stufe von 0 bis 5, sondern eine **Summe von Schaltern**.
+Jeder Bereich hat seinen Wert; addiert wird, was man sehen will. Die
+eingebaute Vorgabe ist **25759**, und sie enthält bereits die meisten
+Bereiche.
+
+| Wert | Bereich | in 25759 |
+|---:|---|:---:|
+| 1 | allgemeine Protokollzeilen | an |
+| 2 | Empfang einer Nachricht | an |
+| 4 | Wählverbindung | an |
+| 8 | Dialogmeldungen | an |
+| 16 | Fortschrittsanzeigen | an |
+| 32 | **alle gesendeten Bytes** | aus |
+| 64 | **alle empfangenen Bytes** | aus |
+| 128 | Prüfung auf beschädigte Inhaltsverzeichnisse | an |
+| 256 | Zusatzmodule, Grundzüge | aus |
+| 512 | Zusatzmodule, ausführlich | aus |
+| 1024 | **Filteraktionen** | an |
+| 2048 | fehlgeschlagene `ASSERT`/`VERIFY` | aus |
+| 4096 | Abspiellisten | aus |
+| 8192 | *Leave mail on server* | an |
+| 16384 | Suche und Suchindex | an |
+| 32768 | **Spurmarken dieser Portierung** | **aus** |
+
+Belegt in `Eudora71/QCUtils/public/inc/debug.h:15-32`; gelesen wird der
+Schlüssel in `eudora.cpp:1192`, ausgewertet in `debug.cpp:140-146`.
+
+### Die Spurmarken einschalten
+
+Diese Portierung schreibt an Stellen, an denen ein Befund untersucht wurde,
+Zeilen der Form `E-44 …`, `E-64 …`, `E-70 …`. Sie hängen alle am Schalter
+**32768** und sind deshalb **standardmäßig aus**. Einschalten heißt: den
+Wert addieren.
+
+```ini
+[Settings]
+LogLevel=58527
+```
+
+58527 ist 25759 + 32768. Eudora muss beim Ändern geschlossen sein, sonst
+überschreibt es die Datei beim Beenden.
+
+> **Warum das hier steht.** Bis zum 10.09.2026 waren diese Marken fest
+> eingeschaltet — sie hingen zusätzlich am Schalter 128, und der ist in der
+> Vorgabe an. Das machte das Protokoll unlesbar und zwang dazu, jede Marke
+> nach Gebrauch von Hand wieder auszubauen. Gregors Hinweis darauf hat das
+> abgestellt: *„damit kann man im bedarfsfall mehr logs zu debug zwecken
+> rausschreiben, ohne den code zu ändern."*
+
+### Wenn etwas nicht tut, was es soll
+
+Der schnellste Weg zu einer belastbaren Aussage:
+
+1. Eudora beenden.
+2. `eudora.log` im Mailverzeichnis löschen — dann steht darin nur der
+   nächste Lauf.
+3. `LogLevel=58527` eintragen.
+4. Eudora starten, **genau die eine Sache tun**, um die es geht, beenden.
+5. `eudora.log` ansehen. Die Zeilen tragen die Befundnummer am Anfang.
+
+Für Filterläufe lohnt zusätzlich Schalter **1024** (in der Vorgabe schon an):
+er schreibt zu jeder Regel, die greift, eine Zeile
+`Filter "…" matches "…"`.
+
+**Was ein volles Protokoll kostet:** die Schalter 32 und 64 schreiben jedes
+gesendete und empfangene Byte mit, also auch Ihre Zugangsdaten und den
+vollständigen Text jeder Mail. Sie sind aus gutem Grund aus. Wer sie
+einschaltet, sollte die Datei danach löschen und sie niemandem schicken.
+
 ## Stand
 
 Die Messlatte steht in [ZIEL.md](ZIEL.md): neun Kriterien, an denen sich
@@ -455,8 +535,8 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.0.42` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.42` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.0.43` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `1.0.43` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

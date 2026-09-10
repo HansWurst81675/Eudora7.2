@@ -1431,7 +1431,7 @@ void CFiltersViewRight::DoDataExchange(CDataExchange* pDX)
 	// nicht seine, und sie duerfen ihn nicht ueberschreiben.
 	if (pDX->m_bSaveAndValidate == TRUE && filt && m_pGeladen != filt)
 	{
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-72 Zurueckschreiben verweigert: die Ansicht hat diesen Filter nie geladen");
 		return;
 	}

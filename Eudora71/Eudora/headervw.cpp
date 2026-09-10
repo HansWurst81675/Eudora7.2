@@ -555,7 +555,7 @@ void CHeaderView::OnInitialUpdate()
 	LONG	lYIncrement;
 	LONG	lTopSpace;
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CHeaderView::OnInitialUpdate: Anfang");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CHeaderView::OnInitialUpdate: Anfang");
 	theDC.CreateCompatibleDC( NULL );
 
 	// subclass all of the static/edit pairs in our header form. this code
@@ -591,7 +591,7 @@ void CHeaderView::OnInitialUpdate()
 		}
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: Kopffelder untergeklinkt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: Kopffelder untergeklinkt");
 	// reset the font
 	theDC.SelectObject( pOldFont );
 
@@ -692,10 +692,10 @@ void CHeaderView::OnInitialUpdate()
 
 	SetScrollSizes( MM_TEXT, m_docSize, m_pageSize, m_lineSize );
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: Bildlaufgroessen gesetzt, jetzt SetHeaderFromDoc");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: Bildlaufgroessen gesetzt, jetzt SetHeaderFromDoc");
 	// get the header
 	SetHeaderFromDoc();
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: SetHeaderFromDoc zurueck");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: SetHeaderFromDoc zurueck");
 
 	// if the message has been addressed and the subject is null,
 	// move the focus to the subject line
@@ -809,7 +809,7 @@ void CHeaderView::OnInitialUpdate()
 		SetTimer( AUTO_HEADER_BP_MAIL_TIMER, BP_INTERVAL, NULL );
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnInitialUpdate: Autovervollstaendigung eingerichtet");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: Autovervollstaendigung eingerichtet");
 	CCompMessageFrame * pFrame = DYNAMIC_DOWNCAST( CCompMessageFrame, GetParentFrame() );
 
 	if (pFrame)
@@ -3724,7 +3724,7 @@ void CHeaderView::OnUpdateEditPasteAsQuote( CCmdUI* pCmdUI )
 
 int CHeaderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CHeaderView::OnCreate: Anfang");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CHeaderView::OnCreate: Anfang");
     if (CFormView::OnCreate(lpCreateStruct) == -1)
         return -1;
 	
@@ -3757,7 +3757,7 @@ int CHeaderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		
 	++s_nObjectCount;
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CHeaderView::OnCreate: fertig");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CHeaderView::OnCreate: fertig");
 	return 0;
 }
 

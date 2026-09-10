@@ -372,12 +372,12 @@ CCreateContext* pContext)
 							ID_MESSAGE_SENDIMMEDIATELY
 						};
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 CCompMessageFrame::OnCreateClient: Anfang");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CCompMessageFrame::OnCreateClient: Anfang");
 	fRet = m_wndSplitter.CreateStatic( this, 2, 1, WS_CHILD | WS_VISIBLE );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Teiler angelegt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Teiler angelegt");
 
 	if ( fRet ) {
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView CHeaderView");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView CHeaderView");
 		fRet = m_wndSplitter.CreateView( 0, 0, RUNTIME_CLASS(CHeaderView),
 					CSize( 315, 88 ), pContext );
 	}
@@ -386,23 +386,23 @@ CCreateContext* pContext)
 	{
 		if(GetIniShort(IDS_INI_WORD_WRAP_ON_SCREEN) && GetIniShort(IDS_INI_WORD_WRAP))
 		{
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView PgFixedCompMsgView");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView PgFixedCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgFixedCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 		else
 		{
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView PgCompMsgView");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView PgCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: beide Ansichten angelegt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: beide Ansichten angelegt");
 	{
 		char szF[128];
 		wsprintf(szF, "E-34 OnCreateClient: fRet nach den Ansichten = %d", (int)fRet);
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szF);
+		PutDebugLog(DEBUG_MASK_MISC, szF);
 	}
 	pDoc = ( CCompMessageDoc* ) ( pContext->m_pCurrentDoc );
 
@@ -438,7 +438,7 @@ CCreateContext* pContext)
 
 	pSummary = pDoc->m_Sum;
 	
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Text gelesen, baue das Uebersetzermenue");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Text gelesen, baue das Uebersetzermenue");
 	// build the translators menu
 	m_theTranslatorMenu.CreatePopupMenu();
 
@@ -472,7 +472,7 @@ CCreateContext* pContext)
 	m_pFormattingToolBar->SetManager( m_pToolBarManager );
 	m_pFormattingToolBar->m_bAutoDelete = TRUE;
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Leisten erzeugt, lade die Leistenressource");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Leisten erzeugt, lade die Leistenressource");
 	m_pToolBarManager->LoadToolBarResource( MAKEINTRESOURCE( IDR_COMPMESS ), MAKEINTRESOURCE( IDR_COMPMESS ) );
 	m_pToolBarManager->SetButtonMap( theCompMessageButtonMap );
 
@@ -508,10 +508,10 @@ CCreateContext* pContext)
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
 	m_pToolBar->EnableDocking(CBRS_ALIGN_TOP);
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor SetButtons der Nachrichtenleiste");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor SetButtons der Nachrichtenleiste");
 	nButtons = DIM( theCompMessageButtons );
 	m_pToolBar->SetButtons( theCompMessageButtons,  nButtons );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: nach SetButtons der Nachrichtenleiste");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: nach SetButtons der Nachrichtenleiste");
 
 	int transCount = m_theTranslatorMenu.GetMenuItemCount();
 	
@@ -577,7 +577,7 @@ CCreateContext* pContext)
 
 	DockControlBar( m_pFormattingToolBar );
 	
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Leisten angedockt, jetzt die Auswahlfelder");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Leisten angedockt, jetzt die Auswahlfelder");
 	// initialize the priority combo
 	//
 	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
@@ -691,11 +691,11 @@ CCreateContext* pContext)
 		SelectTranslators( pSummary->GetTranslators() );
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: Auswahlfelder gefuellt, jetzt die Schriftnamen");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Auswahlfelder gefuellt, jetzt die Schriftnamen");
 	// get the face names
 	EnumFontFaces( theArray );
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: nach EnumFontFaces");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: nach EnumFontFaces");
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
 	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
@@ -708,7 +708,7 @@ CCreateContext* pContext)
 	}
 
 	// get the main frame window
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Schriftnamen eingefuellt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Schriftnamen eingefuellt");
 	pMainFrame = ( CMainFrame* ) AfxGetApp()->m_pMainWnd;
 	
 	if (pMainFrame)
@@ -719,39 +719,39 @@ CCreateContext* pContext)
 		i = ( bMaximized ? 1 : 0 );
 		
 		// get the main window
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Hauptfenster geholt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Hauptfenster geholt");
 		VERIFY( pEditTextMenu = pMainFrame->GetMenu() );
 		
 		if (pEditTextMenu)
 		{
 			// get the edit menu
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Menue geholt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Menue geholt");
 			VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 1 + i ) );
 			
 			if (pEditTextMenu)
 			{
 				// Shareware: In reduced feature mode, you get a less-capable format toolbar
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: Untermenue 1+i geholt");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Untermenue 1+i geholt");
 				if (UsingFullFeatureSet())
 				{
 					// FULL FEATURE mode
 					
 					// get the insert menu
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OCC: vor GetSubMenu 11");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: vor GetSubMenu 11");
 					VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach GetSubMenu(11)");
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach GetSubMenu(11)");
 					i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach CommandToIndex(ID_EDIT_INSERT)");
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach CommandToIndex(ID_EDIT_INSERT)");
 					VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach GetButton");
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach GetButton");
 
 					if (pMenu && pMenuButton)
 						pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-35 nach SetHMenu");
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach SetHMenu");
 				}
 				
 				// get the text menu
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetSubMenu 10");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetSubMenu 10");
 				VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 10 ) );
 				
 				if (pEditTextMenu)
@@ -765,16 +765,16 @@ CCreateContext* pContext)
 						pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
 					
 					// force the toolbar to recalculate the button sizes
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor SetToolBarInfo");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor SetToolBarInfo");
 					m_pToolBarManager->SetToolBarInfo( m_pToolBar );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor RecalcLayout");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor RecalcLayout");
 					RecalcLayout();
 				}
 			}
 		}
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor den SetCheck");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor den SetCheck");
 	SetCheck( ID_QUOTED_PRINTABLE, pSummary->UseQP() );
 	SetCheck( ID_TEXT_AS_DOCUMENT, pSummary->TextAsDoc() );
 	SetCheck( ID_WORD_WRAP, pSummary->WordWrap() );
@@ -789,7 +789,7 @@ CCreateContext* pContext)
 	// provide an "accessor" routine to the view (perhaps ;-)
 //	m_ToolBar->SelectTranslators(Sum->GetTranslators());
 	
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor CantEdit");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor CantEdit");
 	if (pSummary->CantEdit()) {
 //		m_ToolBar->GetDlgItem(IDC_SIGNATURE_COMBO)->EnableWindow(FALSE);
 //		m_ToolBar->GetDlgItem(IDC_ENCODING_COMBO)->EnableWindow(FALSE);
@@ -804,16 +804,16 @@ CCreateContext* pContext)
 		DragAcceptFiles();
 
 	// force the toolbar to recalculate the button sizes
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor SetToolBarInfo");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor SetToolBarInfo");
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor RecalcLayout");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor RecalcLayout");
 	RecalcLayout();
 
 	// Size parent window
 	CRect MainWindowRect;
 	pMainFrame->GetRealClientRect(&MainWindowRect);
  
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetSavedPos");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetSavedPos");
 	if (pSummary->GetSavedPos().IsRectEmpty() == FALSE) {
 		// Window has been sized before, so use it
 		m_InitialSize = pSummary->GetSavedPos();
@@ -830,7 +830,7 @@ CCreateContext* pContext)
 			MessageCascadeSpot;
 		
 		// Start with toolbar size
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetClientRect der Leiste");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetClientRect der Leiste");
 		m_pToolBar->GetClientRect(&m_InitialSize);
 		
 		// Add height of caption and top and bottom window borders
@@ -840,7 +840,7 @@ CCreateContext* pContext)
 		// Use Message Width setting plus left and right window borders plus scrollbar width.
 		// Make sure window is at least as wide as the toolbars
 		CRect FTBRect;
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor GetClientRect der Formatleiste");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetClientRect der Formatleiste");
 		m_pFormattingToolBar->GetClientRect(&FTBRect);
 		int MW = GetIniShort(IDS_INI_MESSAGE_WIDTH) * CW + GetSystemMetrics(SM_CXVSCROLL);
 		if (m_InitialSize.right < MW)
@@ -871,7 +871,7 @@ CCreateContext* pContext)
 	}
 	
 	// place the window
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-34 OCC: vor MoveWindow");
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor MoveWindow");
 	MoveWindow(&m_InitialSize, FALSE);
 
 	// *guarantee* this is off initially
@@ -879,7 +879,7 @@ CCreateContext* pContext)
 	{
 		char szF2[128];
 		wsprintf(szF2, "E-34 OnCreateClient: Rueckgabe = %d", (int)fRet);
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szF2);
+		PutDebugLog(DEBUG_MASK_MISC, szF2);
 	}
 	return fRet;
 }
@@ -923,7 +923,7 @@ CHeaderView* CCompMessageFrame::GetHeaderView()
 {
 	CHeaderView* pHV = (CHeaderView*) m_wndSplitter.GetPane( 0, 0 );
 	VERIFY( pHV );
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnCreateClient: vor CreateView CHeaderView");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView CHeaderView");
 	ASSERT( pHV->IsKindOf(RUNTIME_CLASS(CHeaderView)) );
 	return pHV;
 }

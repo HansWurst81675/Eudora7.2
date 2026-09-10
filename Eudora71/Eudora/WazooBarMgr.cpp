@@ -701,7 +701,7 @@ BOOL CWazooBarMgr::LoadWazooBarConfigFromIni()
 				_T("links, Kurznamen versteckt, Aufgabenstatus waagrecht ")
 				_T("unten."),
 				(int) (arrOhneLage.GetSize() / 2));
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 		}
 	}
 		

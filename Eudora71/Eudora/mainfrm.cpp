@@ -806,7 +806,7 @@ CMainFrame::~CMainFrame()
 	// einem bereits freigegebenen CMainFrame - und E-33 (GetBtnCount=24 bei
 	// m_btns.GetSize=0) haette damit seine Ursache. Steht sie danach, ist der
 	// Verdacht widerlegt. Die Marke selbst greift nichts an.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-46 CMainFrame::~CMainFrame betreten");
 
 	// DRW - Moved here from CAdView now that ads are served here.
@@ -865,7 +865,7 @@ bool CMainFrame::FinishInitAndShowWindow(
 					(int) pBar->IsWindowVisible(),
 					(unsigned long) pBar->m_dwStyle);
 				szM[sizeof(szM) - 1] = '\0';
-				PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+				PutDebugLog(DEBUG_MASK_MISC, szM);
 			}
 		}
 	};
@@ -2576,7 +2576,7 @@ BOOL CMainFrame::SaveOpenWindows(BOOL Close)
 				(const char*)strTitel,
 				WindowType,
 				doc->GetRuntimeClass() ? doc->GetRuntimeClass()->m_lpszClassName : "?");
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szE33);
+			PutDebugLog(DEBUG_MASK_MISC, szE33);
 			break;
 		}
 		if (WindowType == IDR_TOC)
@@ -4169,17 +4169,17 @@ CCompMessageDoc* CMainFrame::HuntForTopmostCompMessage(CWazooWnd* pWazooWnd)
 
 void CMainFrame::OnMessageNewMessage()
 {
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnMessageNewMessage: Anfang");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnMessageNewMessage: Anfang");
 	// Create A New Message
 	CCompMessageDoc* CompDoc = NULL;
 	CompDoc = NewCompDocument();
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnMessageNewMessage: NewCompDocument zurueck");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnMessageNewMessage: NewCompDocument zurueck");
 	if ( CompDoc )
 	{
 		ASSERT_VALID(CompDoc);
 		NewChildFrame(CompMessageTemplate, CompDoc);
 	}
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, "E-27 OnMessageNewMessage: fertig");
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnMessageNewMessage: fertig");
 }
 
 void CMainFrame::OnMessageReplyCtrlR()
@@ -5178,7 +5178,7 @@ BOOL CMainFrame::OnQueryEndSession()
 				_T("- Grund: %s. Das Beenden wird fortgesetzt."),              \
 				_T(name),                                                     \
 				(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));      \
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung); \
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung); \
 		}                                                                     \
 		END_CATCH_ALL                                                         \
 	} while (0)
@@ -5193,7 +5193,7 @@ void CMainFrame::OnClose()
 	// BEFUND E-33: das Beenden hat begonnen. Diese Marke wird sowohl von
 	// File -> Exit (ueber CEudoraApp::OnAppExit -> CWinApp::OnAppExit ->
 	// SendMessage(WM_CLOSE)) als auch vom Kreuz im Fensterrahmen erreicht.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: WM_CLOSE angekommen");
 
 	if (m_lpfnCloseProc != NULL && !(*m_lpfnCloseProc)(this))
@@ -5204,12 +5204,12 @@ void CMainFrame::OnClose()
 		// BEFUND E-33: hier endet das Beenden ohne jede Meldung, und Eudora
 		// laeuft weiter - das ist Gregors Symptom "beenden geht nicht".
 		// Welche Stufe abgelehnt hat, sagt die letzte E-33-Zeile davor.
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 OnClose: ABBRUCH - CloseDown hat FALSE geliefert, Eudora laeuft weiter");
 		return;
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: CloseDown hat TRUE geliefert");
 
 	// BEFUND E-33, zweiter Durchgang: auch dieser Abschnitt bekommt Marken je
@@ -5218,7 +5218,7 @@ void CMainFrame::OnClose()
 	// entscheidend: Gregors Hauptfenster steht nach der Meldung noch da und
 	// nimmt weiter Alt-F4 an. Die Ausnahme muss also VOR HideApplication
 	// fallen, sonst waere das Fenster verschwunden und nur der Prozess uebrig.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 6a vor CloseImapConnections");
 
 #ifdef IMAP4
@@ -5226,7 +5226,7 @@ void CMainFrame::OnClose()
 	AUFRAEUMEN("CloseImapConnections", CImapMailMgr::CloseImapConnections());
 #endif
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 6b nach CloseImapConnections, vor EmptyTrash");
 
 	if (GetIniShort(IDS_INI_EMPTY_TRASH_ON_QUIT))
@@ -5236,7 +5236,7 @@ void CMainFrame::OnClose()
 		AUFRAEUMEN("EmptyTrash", EmptyTrash());
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 6c nach EmptyTrash");
 
 	SetIcon(FALSE);
@@ -5261,19 +5261,19 @@ void CMainFrame::OnClose()
 		NetConnection = NULL;
 	}
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 6d nach CleanSSLLibrary, vor TrayItem");
 
 	AUFRAEUMEN("TrayItem", TrayItem(IDR_MAINFRAME, NIM_DELETE));	// SHAREWARE. Pro: IDR_MAINFRAME, Light: IDR_MAINFRAME_LIGHT
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 6e nach TrayItem, vor DeleteMenuObjects");
 
 	// Get rid of any dynamic menu C++ objects.  Don't need to delete the menu
 	// items because that will be taken care of when the window is destoyed.
 	AUFRAEUMEN("DeleteMenuObjects", CDynamicMenu::DeleteMenuObjects(GetMenu(), FALSE));
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 6f nach DeleteMenuObjects");
 
 	// BEFUND E-33: QCWorkbook::OnClose loest sich auf CFrameWnd::OnClose auf -
@@ -5283,7 +5283,7 @@ void CMainFrame::OnClose()
 	// (MFC 14, winfrm.cpp:843-935). Das ist der Abschnitt, in dem eine
 	// MFC-Ausnahme am meisten anrichtet: HideApplication hat das Hauptfenster
 	// dann schon versteckt.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: vor QCWorkbook::OnClose (= CFrameWnd::OnClose)");
 
 	// BEFUND E-45 (PRUEFER-5, 08.09.2026): Dieser eine Schritt darf NICHT
@@ -5320,14 +5320,14 @@ void CMainFrame::OnClose()
 			_T("ausgeloest - Grund: %s. Das Fenster wird jetzt selbst zerstoert, ")
 			_T("damit WM_QUIT, ExitInstance und IniStringCleanUp noch laufen."),
 			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+		PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 
 		if (::IsWindow(m_hWnd))
 			DestroyWindow();
 	}
 	END_CATCH_ALL
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: nach QCWorkbook::OnClose");
 
 	// Get rid of TOCs still in memory
@@ -5352,7 +5352,7 @@ void CMainFrame::OnClose()
 	// BEFUND E-33: OnClose ist vollstaendig durchgelaufen. Fehlt danach die
 	// Marke aus CEudoraApp::ExitInstance, dann ist das Hauptfenster trotz
 	// allem nicht zerstoert worden.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: durchgelaufen");
 }
 
@@ -5364,7 +5364,7 @@ BOOL CMainFrame::CloseDown()
 	// geschriebene E-33-Zeile sagt, wie weit das Beenden gekommen ist.
 	// Stufe 1 fasst zusammen, was ohne Zutun des Anwenders laeuft:
 	// Aufgabenzaehler, IMAP-Warteschlangen, RAS und MAPI.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 CloseDown: Stufe 1 - Aufgaben, IMAP, RAS und MAPI beginnen");
 
 	int nTaskCount = QCGetTaskManager()->GetTaskCount();
@@ -5410,7 +5410,7 @@ BOOL CMainFrame::CloseDown()
 	// BEFUND E-33: Stufe 2 - Filter und Rufnamen. Beide Aufrufe koennen FALSE
 	// liefern; g_Nicknames wird nur durch ein ASSERT geprueft, das im
 	// Release-Bau nichts tut.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 CloseDown: Stufe 2 - Filter und Rufnamen beginnen");
 
 	if (!CanCloseFiltersFrame())
@@ -5431,7 +5431,7 @@ BOOL CMainFrame::CloseDown()
 	// SendQueuedMessagesAndQuit im Hintergrund und ExitAfterSend
 	// (sendmail.cpp:3741) schickt WM_CLOSE NUR nach, wenn kein Sendefehler
 	// aufgetreten ist. Genau dann beendet sich Eudora nie.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 CloseDown: Stufe 3 - QuerySendQueuedMessages beginnt");
 	if (! QuerySendQueuedMessages()) 
 		return FALSE; 
@@ -5441,13 +5441,13 @@ BOOL CMainFrame::CloseDown()
 	// TRUE)"): sie bricht ab, sobald ein offenes Fenster das Schliessen
 	// verweigert. Bleibt diese Zeile die letzte im Protokoll, liegt der Fehler
 	// dort - die Marke in SaveOpenWindows nennt dann das Fenster.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 CloseDown: Stufe 4 - SaveOpenWindows beginnt");
 	if (! SaveOpenWindows(TRUE)) 
 		return FALSE;
 
 	// BEFUND E-33: Stufe 5 - ab hier kein Veto des Anwenders mehr.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 CloseDown: Stufe 5 - TrimJunk und Leisten beginnen");
 
 	// BEFUND E-33, zweiter Durchgang: von hier bis WriteToolBarMarkerToIni
@@ -5466,13 +5466,13 @@ BOOL CMainFrame::CloseDown()
 	// Eine Ausnahme faellt immer zwischen zwei Marken. Die letzte geschriebene
 	// E-33-Zeile nennt damit den Aufruf, der geworfen hat - das ist der Beleg,
 	// den eine Stufenmarke allein nicht liefern kann.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 5a vor TrimJunk");
 
 	// Trim the junk mailbox.  For now trim on every quit, eventually be more clever.
 	AUFRAEUMEN("TrimJunk", TrimJunk());
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 5b nach TrimJunk");
 
 	if (!m_bFlushBars)
@@ -5505,21 +5505,21 @@ BOOL CMainFrame::CloseDown()
 			// Meldung wirft. Die Schranke aus BEFUND E-4 sitzt nur in
 			// SECDockBar::RemoveControlBar (OTShim.cpp:2541), also nur im
 			// IsKindOf-Zweig von mainfrm.cpp:6179.
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+			PutDebugLog(DEBUG_MASK_MISC,
 				"E-33 5c vor RemoveControlBar(m_pToolBarAd)");
 
 			RemoveControlBar(m_pToolBarAd);
 
 			RemoveAdToolBarFromItsDockBar(m_pToolBarAd);
 
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+			PutDebugLog(DEBUG_MASK_MISC,
 				"E-33 5d nach RemoveAdToolBarFromItsDockBar(m_pToolBarAd)");
 		}
 		SetIniWindowPos(IDS_INI_AD_TOOLBAR_WIN_POS, rectAdToolBar);
 		SetIniShort(IDS_INI_AD_TOOLBAR_FLOATING, iFloating);
 		SetIniShort(IDS_INI_AD_TOOLBAR_DOCKING, iDocking);
 
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 5e vor RemoveBogusAdToolBars");
 
 		AUFRAEUMEN("RemoveBogusAdToolBars", RemoveBogusAdToolBars());
@@ -5533,17 +5533,17 @@ BOOL CMainFrame::CloseDown()
 		// dieses Paar auseinanderlief und CPtrArray::ElementAt
 		// (afxcoll.inl:212-217) auch im Release-Bau warf. SaveCustomInfo
 		// laeuft im normalen Betrieb NUR beim Beenden.
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 5f vor SaveBarState(ToolBar)");
 
 		AUFRAEUMEN("SaveBarState(ToolBar)", SaveBarState(_T("ToolBar")));
 
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 5g nach SaveBarState(ToolBar), vor SaveWazooBarConfigToIni");
 
 		AUFRAEUMEN("SaveWazooBarConfigToIni", m_WazooBarMgr.SaveWazooBarConfigToIni());	// docked and floating window *sizes*
 
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 5h nach SaveWazooBarConfigToIni");
 	}
 
@@ -5552,14 +5552,14 @@ BOOL CMainFrame::CloseDown()
 	// WriteToolBarMarkerToIni, because it flushes the INI file.
 	AUFRAEUMEN("SaveCrashStateToINI", g_QCExceptionHandler.SaveCrashStateToINI());
 
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 5i nach SaveCrashStateToINI, vor WriteToolBarMarkerToIni");
 
 	AUFRAEUMEN("WriteToolBarMarkerToIni", WriteToolBarMarkerToIni());
 
 	// BEFUND E-33: Stufe 5 bestanden. Ab hier kann CloseDown nicht mehr FALSE
 	// liefern; was jetzt noch schiefgeht, ist eine Ausnahme (Leisten, Wazoo).
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 CloseDown: Stufe 6 - TrimJunk und Leisten sind durch, liefere TRUE");
 
 	return TRUE;
@@ -5608,7 +5608,7 @@ VOID CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 				_T("E-41 CMainFrame::OnSysCommand: SC_CLOSE hat in MFC eine Ausnahme ")
 				_T("ausgeloest - Grund: %s. Das Beenden wird ueber WM_CLOSE fortgesetzt."),
 				(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 
 			bSystemwegOk = FALSE;
 		}
@@ -5618,7 +5618,7 @@ VOID CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 		// nicht angelaufen: WM_CLOSE selbst nachschicken.
 		if (!bSystemwegOk && ::IsWindow(m_hWnd))
 		{
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+			PutDebugLog(DEBUG_MASK_MISC,
 				"E-41 OnSysCommand: schicke WM_CLOSE nach");
 			PostMessage(WM_CLOSE, 0, 0);
 		}

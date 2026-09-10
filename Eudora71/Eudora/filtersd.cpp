@@ -1143,7 +1143,7 @@ BOOL FilterDarfVomServerLoeschen(const char* szFilter, const char* szBetreff, co
 		szWeg ? szWeg : "?", szName, szBetreff ? szBetreff : "?",
 		bErlaubt ? "ERLAUBT (FilterMayDeleteFromServer=1)" : "VERWEIGERT");
 	szMarke[sizeof(szMarke) - 1] = '\0';
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	PutDebugLog(DEBUG_MASK_MISC, szMarke);
 
 	return bErlaubt;
 }
@@ -2407,7 +2407,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 			"vorhandene Masken=[%s]",
 			(int) ffType, nZahl, (int) WhenToApply, szMask);
 		szMarke[sizeof(szMarke) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		PutDebugLog(DEBUG_MASK_MISC, szMarke);
 	}
 
 	while (pos)
@@ -2432,7 +2432,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 					// hier, FilterMsg meldet FA_NORMAL, und der Anwender
 					// sieht ungefilterte Post ohne Hinweis. Der Abbruch
 					// bleibt richtig - stumm darf er nicht sein.
-					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+					PutDebugLog(DEBUG_MASK_MISC,
 						"E-69 FilterMsg abgebrochen: kein CTocDoc zur Nachricht");
 					ASSERT(0);
 					break;
@@ -2480,7 +2480,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 					if (!doc)
 					{
 						// BEFUND E-69, siehe oben.
-						PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+						PutDebugLog(DEBUG_MASK_MISC,
 							"E-69 FilterMsg abgebrochen: GetMessageDoc lieferte NULL");
 						ASSERT(0);
 						break;
@@ -2499,7 +2499,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 				if (!text)
 				{
 					// BEFUND E-69, siehe oben.
-					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+					PutDebugLog(DEBUG_MASK_MISC,
 						"E-69 FilterMsg abgebrochen: kein Nachrichtentext");
 					ASSERT(0);
 					break;
@@ -2552,7 +2552,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 					(LPCSTR) filt->m_Header[1], (int) filt->m_Verb[1],
 					(LPCSTR) filt->m_Value[1], szBetreff);
 				szMarke[sizeof(szMarke) - 1] = '\0';
-				PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+				PutDebugLog(DEBUG_MASK_MISC, szMarke);
 			}
 
 			if (bTrifft)
@@ -2946,7 +2946,7 @@ BOOL CFiltersDoc::Read(const char *filtFileName, BOOL bDoChecks /* = false */ )
 				(const char*) filt->m_Name, (const char*) szFileName,
 				NUM_FILT_ACTS, buf);
 			szMarke[sizeof(szMarke) - 1] = '\0';
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+			PutDebugLog(DEBUG_MASK_MISC, szMarke);
 			continue;
 		}
 

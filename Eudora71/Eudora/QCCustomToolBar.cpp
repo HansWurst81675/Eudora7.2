@@ -446,7 +446,7 @@ LPCSTR	szSection )
 			nZaehler1, nZaehler2,
 			nGroesse1, nGroesse2,
 			pRoh[0], pRoh[1], pRoh[2], pRoh[3], pRoh[4]);
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strAnfang);
+		PutDebugLog(DEBUG_MASK_MISC, strAnfang);
 	}
 
 	iCurrentButton = 0;
@@ -474,7 +474,7 @@ LPCSTR	szSection )
 				_T("E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[%d] wirft (GetSize=%d) - Grund: %s"),
 				(int)iCurrentButton, (int)m_btns.GetSize(),
 				(szG[0] != _T('\0')) ? szG : _T("(ohne Text)"));
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strM);
+			PutDebugLog(DEBUG_MASK_MISC, strM);
 			THROW_LAST();
 		}
 		END_CATCH_ALL
@@ -484,7 +484,7 @@ LPCSTR	szSection )
 			CString strM;
 			strM.Format(_T("E-33 SaveCustomInfo: m_btns[0] = %p, Feldzugriff hat NICHT geworfen"),
 				(void*)pKnopf);
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strM);
+			PutDebugLog(DEBUG_MASK_MISC, strM);
 		}
 
 		if( ( m_btns[ iCurrentButton ]->m_ulData != 0 ) &&
@@ -593,7 +593,7 @@ LPCSTR	szSection )
 			_T("E-33 SaveCustomInfo: Ausnahme bei Index %d von %d - Grund: %s"),
 			(int)iCurrentButton, (int)GetBtnCount(),
 			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+		PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 
 		THROW_LAST();
 	}

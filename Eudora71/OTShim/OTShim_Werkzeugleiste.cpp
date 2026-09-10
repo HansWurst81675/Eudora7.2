@@ -4443,7 +4443,7 @@ void SECToolBarManager::GroessenSichern(LPCTSTR lpszAbschnitt) const
 			(LPCSTR) lpszAbschnitt, nId,
 			pBar->AndockgroesseHolen(FALSE), pBar->AndockgroesseHolen(TRUE));
 		szM[sizeof(szM) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+		PutDebugLog(DEBUG_MASK_MISC, szM);
 	}
 }
 
@@ -4496,7 +4496,7 @@ void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
 			(LPCSTR) lpszAbschnitt, nId, cx, cy,
 			pBar->AndockgroesseHolen(FALSE), pBar->AndockgroesseHolen(TRUE));
 		szM[sizeof(szM) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+		PutDebugLog(DEBUG_MASK_MISC, szM);
 	}
 
 	// AndockgroesseSetzen schreibt nur Felder. Ohne Neuberechnung

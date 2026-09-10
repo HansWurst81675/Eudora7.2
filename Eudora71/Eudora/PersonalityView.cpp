@@ -1008,7 +1008,7 @@ void CPersonalityView::OnCmdDeletePersonality()
 							_T("der Liste (%d Eintraege) - Anzeige nicht ")
 							_T("aktualisiert, die Persoenlichkeit ist aber entfernt"),
 							(const char *) strName, nAnzahl);
-						PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+						PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 					}
 				}
 				else
@@ -1022,7 +1022,7 @@ void CPersonalityView::OnCmdDeletePersonality()
 						_T("geliefert - Eintrag nicht in [Personality] der ")
 						_T("Eudora.ini gefunden, oder laufende Aufgaben"),
 						(const char *) strName);
-					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+					PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 					ASSERT(0);
 				}
 			}
@@ -1034,7 +1034,7 @@ void CPersonalityView::OnCmdDeletePersonality()
 		// E-37: auch hier stand nur ASSERT(0). Nichts markiert ist kein
 		// Fehler, aber es gehoert ins Protokoll - sonst ist von aussen nicht
 		// zu unterscheiden, ob nichts markiert war oder das Loeschen scheiterte.
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			_T("E-37 OnCmdDeletePersonality: keine Persoenlichkeit markiert"));
 		ASSERT(0);
 	}

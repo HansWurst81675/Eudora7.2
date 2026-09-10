@@ -2015,7 +2015,7 @@ static void E76Marke(LPCTSTR pszWoher, int nLength, DWORD dwMode,
 		(int) szVorher.cx, (int) szVorher.cy,
 		(int) szErgebnis.cx, (int) szErgebnis.cy);
 	szM[sizeof(szM) - 1] = '\0';
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+	PutDebugLog(DEBUG_MASK_MISC, szM);
 }
 
 
@@ -3975,7 +3975,7 @@ void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
 			(int) pSplit->m_nMin, (int) pSplit->m_nMax,
 			(int) nDelta);
 		szMarke[sizeof(szMarke) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		PutDebugLog(DEBUG_MASK_MISC, szMarke);
 	}
 
 	if (nDelta != 0)
@@ -4104,7 +4104,7 @@ void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
 			(pRoh == NULL) ? "-" : (LPCSTR) pRoh->GetRuntimeClass()->m_lpszClassName,
 			(int) nDelta);
 		szMarke[sizeof(szMarke) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		PutDebugLog(DEBUG_MASK_MISC, szMarke);
 		return;
 	}
 
@@ -4165,7 +4165,7 @@ void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
 			(int) pSplitter->m_nMin, (int) pSplitter->m_nMax,
 			(int) cxVorher, (int) cxNachher, (int) rectNach.Width());
 		szMarke[sizeof(szMarke) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		PutDebugLog(DEBUG_MASK_MISC, szMarke);
 	}
 
 	if (pRahmen != NULL && ::IsWindow(pRahmen->GetSafeHwnd()))
@@ -4503,7 +4503,7 @@ BOOL SECDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 						(int) pSplitter->m_rect.right,
 						pszWer, (unsigned) nHitTest);
 					szMarke[sizeof(szMarke) - 1] = '\0';
-					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+					PutDebugLog(DEBUG_MASK_MISC, szMarke);
 				}
 				LPCTSTR lpszCursor = (pSplitter->m_orientation == Splitter::Vertical)
 					? IDC_SIZEWE : IDC_SIZENS;
@@ -4549,7 +4549,7 @@ void SECDockBar::OnMouseMove(UINT nFlags, CPoint point)
 			(unsigned) GetDlgCtrlID(), (int) point.x, (int) point.y,
 			(int) pTreffer->m_rect.left, (int) pTreffer->m_rect.right);
 		szMarke[sizeof(szMarke) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		PutDebugLog(DEBUG_MASK_MISC, szMarke);
 	}
 
 	CDockBar::OnMouseMove(nFlags, point);
@@ -4571,7 +4571,7 @@ void SECDockBar::OnLButtonDown(UINT nFlags, CPoint point)
 			(unsigned) GetDlgCtrlID(), (int) point.x, (int) point.y,
 			(pSplitter == NULL) ? "NEIN" : "ja");
 		szMarke[sizeof(szMarke) - 1] = '\0';
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		PutDebugLog(DEBUG_MASK_MISC, szMarke);
 	}
 
 	if (pSplitter != NULL)
