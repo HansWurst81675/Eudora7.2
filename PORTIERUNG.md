@@ -38,7 +38,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
 > sind fast erfüllt (2, 4). Beiden fehlt dasselbe: die Meldung „Encountered an
 > improper argument" beim **Anzeigen** mancher Nachrichten. Stand 10.09.2026,
-> Quellstand **7.2.0.35**, Paketnummer **1.0.35** (in Arbeit; ausgeliefert und
+> Quellstand **7.2.0.39**, Paketnummer **1.0.39** (in Arbeit; ausgeliefert und
 > veröffentlicht ist die Fassung davor, siehe CHANGELOG). Hier steht bewusst keine
 > | Messung | Ergebnis |
 > |---|---|

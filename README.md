@@ -110,6 +110,56 @@ Damit ein Bericht verwertbar ist, gehören drei Dinge hinein:
 Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*.
 
+## Einstellungen, die es nur hier gibt
+
+Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab. Jede
+Abweichung steht hier mit ihrem Schlüssel, ihrer Vorgabe und dem Grund — und
+jede lässt sich zurückdrehen.
+
+Die Schlüssel stehen im Abschnitt `[Settings]` der **`Eudora.ini`** im
+Mailverzeichnis. Die Spalte *Original* nennt den eingebauten Wert von
+Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
+
+| Schlüssel | hier | Original | was er tut |
+|---|---|---|---|
+| `FilterMayDeleteFromServer` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`) |
+| `DeleteFetchedJunk` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
+| `LeaveMailOnServer` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
+| `SSLSendUse`, `SSLReceiveUse` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
+
+### Warum die drei Löschsperren
+
+Eudora kennt **drei** Wege, Post auf dem Server zu löschen, und sie sind
+voneinander unabhängig:
+
+1. **Kein `Leave mail on server`** — POP3 löscht nach dem Abholen. Eingebaute
+   Vorgabe: löschen.
+2. **`Delete fetched junk`** — was als Junk gilt, wird zusätzlich vom Server
+   geworfen. Eingebaute Vorgabe: **an**.
+3. **Die Filteraktion „Server Options"** mit *Delete* — sticht im Original
+   sogar `Leave mail on server`.
+
+Am 10.09.2026 hat Weg 3 ein ganzes Postfach geleert, ohne dass die Aktion je
+eingestellt worden war: sie war durch einen Fehler in das Filterobjekt
+geraten (**E-72**, **E-73**). Weg 2 ist hier abgeschaltet, weil die
+Junk-Bewertung auf Zusatzmodule angewiesen ist, die in dieser Portierung gar
+nicht laden können (**E-47**) — eine Einstufung, der man nicht trauen kann,
+darf keine Post löschen.
+
+> **Wer eine dieser Sperren löst, sollte wissen warum.** Die Wege 1 und 2
+> löschen **ohne Rückfrage**, und was auf dem Server gelöscht ist, ist weg.
+
+### Vorgaben für neu angelegte Konten
+
+`DEudora.ini` **neben der `Eudora.exe`** liefert die Vorgaben für Konten, die
+neu entstehen — gelesen in `GetDefaultIniSetting` (`rs.cpp:357-385`), noch vor
+den eingebauten Werten. Sie ändert **kein bestehendes Konto**; dort gilt, was
+in der `Eudora.ini` des Mailverzeichnisses steht.
+
+Dieselbe Datei trägt die 124 Dateizuordnungen von QUALCOMM im Abschnitt
+`[Mappings]`. Wer sie ersetzt, verliert sie — deshalb liegt im Paket die
+Originaldatei mit unseren Zeilen **ergänzt**, nicht eine eigene.
+
 ## Stand
 
 Die Messlatte steht in [ZIEL.md](ZIEL.md): neun Kriterien, an denen sich
@@ -343,8 +393,8 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.0.35` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.35` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.0.39` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `1.0.39` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

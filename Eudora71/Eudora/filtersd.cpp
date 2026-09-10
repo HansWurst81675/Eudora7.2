@@ -693,6 +693,26 @@ BOOL CFilter::MatchValue(int NumCondition, const char* Contents, CSummary *pSum)
 		}
 	}
 
+	// BEFUND E-72, ZWEITE LINIE (10.09.2026).
+	//
+	// Ein LEERER Suchwert darf nicht auf alles passen. "enthaelt nichts"
+	// ist fuer jede Nachricht wahr - ein Filter mit leerem Wert und der
+	// Aktion "transfer" schiebt damit den ganzen Posteingang. Genau das
+	// hat Gregor gesehen: "irgendwo werden alle mails durch den filter
+	// angefasst und verschoben, nicht nur die, fuer die es filter gibt."
+	//
+	// Die erste Linie ist die Sperre in CFiltersViewRight::DoDataExchange,
+	// die verhindert, dass ein Wert ueberhaupt geleert wird. Diese hier
+	// greift, wenn schon eine geleerte Regel in der Filters.pce steht -
+	// und die gibt es bei Gregor bereits.
+	//
+	// Die Junk-Score-Verben stehen oben und sind hier durch: sie
+	// vergleichen Zahlen, kein leerer Text.
+	if (value.IsEmpty())
+	{
+		return FALSE;
+	}
+
 	//for non-regex filters
 	if( !((verb == IDS_MATCHES_REGEX) || (verb == IDS_MATCHES_REGEX)))
 	{
@@ -1152,10 +1172,73 @@ int CFilter::Action(const char* text, CSummary*& Sum, CFilterActions* fltAct, CO
 							if ( pMsgRecord )
 							{
 								bool bChanged = false;
-								if ((m_ServerOpt & SO_DELETE) && pMsgRecord->GetDeleteFlag() == LMOS_DONOT_DELETE)
+
+								// BEFUND E-73 (Gregor, 10.09.2026): "wenn ich
+								// mails filtere, dann werden sie gleichzeitig
+								// auf dem server geloescht? das moechte ich
+								// NICHT!"
+								//
+								// WAS HIER GESCHAH: die Filteraktion "Server
+								// Options" mit SO_DELETE merkt die Nachricht
+								// auf dem Server zum Loeschen vor - und zwar
+								// UNABHAENGIG von LeaveMailOnServer. Im
+								// Original ist das gewollt: eine ausdruecklich
+								// eingestellte Aktion sticht die allgemeine
+								// Einstellung.
+								//
+								// Nur hatte Gregor sie nie eingestellt. PRUEFER
+								// hat am 09.09.2026 gemessen, dass diese Aktion
+								// LIEF, obwohl sie in seiner Filters.pce gar
+								// nicht steht - sie kam aus dem
+								// Zurueckschreiben der leeren, unerreichbaren
+								// rechten Fensterhaelfte (BEFUND E-72).
+								// Zusammen mit dem dabei geleerten Suchwert
+								// ("enthaelt nichts" trifft jede Nachricht)
+								// wurde damit der GANZE Posteingang zum
+								// Loeschen auf dem Server vorgemerkt. Bei
+								// seinem freenet-Konto ist genau das passiert.
+								//
+								// SEINE ENTSCHEIDUNG, woertlich: "ja, 1 auf
+								// jeden fall! Filteraktion darf nicht mehr vom
+								// Server loeschen".
+								//
+								// Deshalb: eine Filteraktion loescht nichts
+								// mehr auf dem Server. Wer es doch will, setzt
+								// in der Eudora.ini unter [Settings]
+								//     FilterMayDeleteFromServer=1
+								// Vorgabe ist 0. Das Abholen (SO_FETCH) bleibt
+								// unberuehrt - es vernichtet nichts.
+								//
+								// ABWEICHUNG VOM ORIGINAL, bewusst: eine
+								// Aktion, die Post unwiederbringlich loescht,
+								// darf nicht stillschweigend gegen die
+								// Einstellung "auf dem Server lassen" laufen.
+								if (m_ServerOpt & SO_DELETE)
 								{
-									pMsgRecord->SetDeleteFlag(LMOS_DELETE_MESSAGE);
-									bChanged = true;
+									const BOOL bErlaubt = (BOOL) ::GetPrivateProfileInt(
+										_T("Settings"), _T("FilterMayDeleteFromServer"),
+										0, INIPath);
+
+									char szMarke[320];
+									char szName[64];
+									strncpy(szName, m_Name, sizeof(szName));
+									szName[sizeof(szName) - 1] = '\0';
+									_snprintf(szMarke, sizeof(szMarke),
+										"E-73 Filter \"%s\" wollte die Nachricht \"%s\" "
+										"auf dem Server loeschen - %s",
+										szName, Sum->GetSubject(),
+										bErlaubt ? "ERLAUBT (FilterMayDeleteFromServer=1)"
+												 : "VERWEIGERT");
+									szMarke[sizeof(szMarke) - 1] = '\0';
+									PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+												szMarke);
+
+									if (bErlaubt &&
+										pMsgRecord->GetDeleteFlag() == LMOS_DONOT_DELETE)
+									{
+										pMsgRecord->SetDeleteFlag(LMOS_DELETE_MESSAGE);
+										bChanged = true;
+									}
 								}
 								if ((m_ServerOpt& SO_FETCH) && pMsgRecord->GetRetrieveFlag() == LMOS_DONOT_RETRIEVE)
 								{
@@ -2220,6 +2303,44 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 	char*	text = NULL;
 	bool	bAllocatedText = true;
 	POSITION pos = pFiltList->GetHeadPosition();
+
+	// SPURMARKE ZU E-64, am EINGANG statt am Ergebnis (10.09.2026).
+	//
+	// Gemessen an 1.0.36: der Filterlauf findet statt ("Messages left to
+	// filter: 2, 1, 0" steht im Protokoll), Nachrichten werden verschoben -
+	// und die Marke am Vergleich schweigt. Es kann also nur zweierlei sein:
+	// die Liste ist leer, oder kein Filter ist fuer DIESEN Lauf zustaendig.
+	// Welches von beidem, sagt nur eine Marke am EINGANG. Ich habe zweimal
+	// das Ergebnis gemessen und beide Male nichts erfahren.
+	{
+		int nZahl = 0;
+		int nMasken[8];
+		POSITION posZ = pFiltList->GetHeadPosition();
+		while (posZ != NULL && nZahl < 8)
+		{
+			CFilter* pF = pFiltList->GetNext(posZ);
+			nMasken[nZahl++] = (pF != NULL) ? pF->m_WhenToApply : -1;
+		}
+
+		char szMarke[320];
+		char szMask[128];
+		szMask[0] = '\0';
+		for (int i = 0; i < nZahl; i++)
+		{
+			char szEins[16];
+			_snprintf(szEins, sizeof(szEins), "%s%d", (i ? "," : ""), nMasken[i]);
+			szEins[sizeof(szEins) - 1] = '\0';
+			strncat(szMask, szEins, sizeof(szMask) - strlen(szMask) - 1);
+		}
+		szMask[sizeof(szMask) - 1] = '\0';
+
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-64 FilterMsg: Liste=%d Filter=%d verlangt WhenToApply=%d "
+			"vorhandene Masken=[%s]",
+			(int) ffType, nZahl, (int) WhenToApply, szMask);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
 
 	while (pos)
 	{

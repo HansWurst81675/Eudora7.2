@@ -96,6 +96,86 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.39 — Kein Filter und kein Junk-Fang löscht mehr auf dem Server
+
+**Was Gregor damit tun kann, was vorher gefährlich war:** filtern und Mail
+abrufen, ohne dass Post auf dem Server verschwindet.
+
+Am 10.09.2026 war sein freenet-Postfach leer. Seine eigene Vermutung — *„evtl.
+war leave on server nicht aktiviert"* — war naheliegend und **falsch**: in
+seiner `Eudora.ini` steht für **beide** Konten `LeaveMailOnServer=1`.
+
+### Eudora kennt drei Wege, Post auf dem Server zu löschen
+
+Sie sind voneinander unabhängig, und zwei davon sind im Original **an**:
+
+| Weg | eingebaute Vorgabe | wer ihn auslöst |
+|---|---|---|
+| kein `Leave mail on server` | **löschen** (`LeaveMailOnServer\n0`) | POP3 nach dem Abholen |
+| `Delete fetched junk` | **an** (`DeleteFetchedJunk\n1`) | die Junk-Einstufung ab `MinScoreToJunk` (50) |
+| Filteraktion **„Server Options"** mit *Delete* | — | eine Filterregel; sticht im Original sogar `Leave mail on server` |
+
+### E-73 — die Filteraktion, die niemand eingestellt hatte
+
+`CFilter::Action` (`filtersd.cpp:1156-1178`) merkt die Nachricht auf dem
+Server zum Löschen vor, sobald die Aktion `ID_FLT_SERVER_OPT` mit `SO_DELETE`
+im Filter steht. **PRÜFER hatte am 09.09.2026 gemessen, dass genau diese
+Aktion lief, obwohl sie in Gregors `Filters.pce` gar nicht steht.** Damals
+sah das nach einer Randnotiz aus; es war der Kern.
+
+Sie kam aus **E-72**: die unerreichbare rechte Hälfte des Filterfensters
+schrieb beim Wegklicken ihren uninitialisierten Zustand in den ausgewählten
+Filter — Häkchen, Werte **und die Aktionsliste**. Zusammen mit dem dabei
+geleerten Suchwert (*„enthält nichts"* trifft jede Nachricht) wurde damit der
+ganze Posteingang verschoben **und zum Löschen auf dem Server vorgemerkt**.
+
+**Behebung, Gregors Entscheidung wörtlich:** *„ja, 1 auf jeden fall!
+Filteraktion darf nicht mehr vom Server löschen"*. Eine Filteraktion löscht
+jetzt nichts mehr auf dem Server. Der Versuch wird **protokolliert**, auch
+wenn er abgelehnt wird:
+
+```
+E-73 Filter "…" wollte die Nachricht "…" auf dem Server loeschen - VERWEIGERT
+```
+
+Damit sieht man, ob eine Regel die Aktion noch trägt, ohne dass sie Schaden
+anrichtet. Rückschalter: `FilterMayDeleteFromServer=1` in `[Settings]`,
+Vorgabe **0**.
+
+### E-74 — `Delete fetched junk` ist im Original an
+
+Der zweite Weg, unabhängig von Filtern: `CJunkMail::ProcessOne`
+(`JunkMail.cpp:453-457`) merkt jede als Junk eingestufte Nachricht zum
+Löschen auf dem Server vor. Die eingebaute Vorgabe ist **1**.
+
+Das ist hier besonders heikel, weil die Junk-Bewertung auf die Zusatzmodule
+*SpamWatch* und *SpamHeaders* angewiesen ist — und die sind in dieser
+Portierung **gar nicht ladbar**, weil ihnen `MFC71.DLL` und `MSVCP71.dll`
+fehlen (**E-47**). Einer Einstufung, der man nicht trauen kann, darf man
+keine Löschentscheidung überlassen.
+
+`tools/DEudora.ini` setzt deshalb `DeleteFetchedJunk=0` für **neu angelegte**
+Konten. Bestehende Konten ändert das nicht — dort steht der Wert in der
+`Eudora.ini` des Mailverzeichnisses.
+
+### Beide Abweichungen sind dokumentiert
+
+Neu in der README: **Einstellungen, die es nur hier gibt** — eine Tabelle mit
+Schlüssel, Wert hier, Wert im Original und Begründung, dazu die drei
+Löschwege im Zusammenhang. Gregor: *„sowas gehört dann in die doku oder in
+readme"*.
+
+### Was an 1.0.39 zu prüfen ist
+
+Gregor testet mit einem **leeren Mailverzeichnis** — damit greifen die
+Vorgaben aus `DEudora.ini`.
+
+1. Neue Persönlichkeit anlegen: steht **Leave mail on server** an?
+2. *Tools → Options → Junk Mail*: steht **Delete fetched junk** aus?
+3. Mail abrufen, filtern — bleibt auf dem Server alles liegen?
+4. Steht eine `E-73`-Zeile im Protokoll? Dann trägt eine Regel die
+   Serveroption noch; schaden kann sie nicht mehr.
+
 ## 7.2.0.35 — Die Breite wird gesetzt, nicht der ganze Zustand wiederhergestellt
 
 Gregor an 1.0.34: *„der rechte balken läßt sich aber nicht beliebig weit nach

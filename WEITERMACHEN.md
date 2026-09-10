@@ -6,8 +6,8 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.35 (`Eudora71/Version.h`) — in Arbeit |
-| **Paketnummer** | 1.0.35 (`VERSION`) — in Arbeit, es gibt dieses Paket noch nicht |
+| **Quellstand** | 7.2.0.39 (`Eudora71/Version.h`) — in Arbeit |
+| **Paketnummer** | 1.0.39 (`VERSION`) — in Arbeit, es gibt dieses Paket noch nicht |
 | **Zuletzt gebaut und gepackt** | Paket **1.0.30** — `Releases/Eudora72-1.0.30-release.zip`, 9 343 260 B, SHA256 `1077891d606f9f98…`. Bei Gregor abgelegt unter `C:\Users\Gregor\Eudora72-1.0.30-release`. **Kein Release** — veröffentlicht ist die Fassung davor |
 | **Zuletzt von Gregor bestätigt** | **1.0.29 am 09.09.2026**: *„1-6, ok"* zu **E-54** bis **E-58** und **E-61**, dazu *„rechtklick zeigt ja einen liste der offenen fenster: sehr gut."* Ein Restfehler daraus (**E-63**) ist in 1.0.30 behoben, aber noch nicht beurteilt |
 | **Was als Nächstes zu messen ist** | **E-66 an 1.0.30 — der wichtigste offene Punkt.** Gregors Messung: *„balken lassen sich nicht verschieben. beim anklicken ist der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Der Doppelpfeil belegt, dass `HitTest` den Balken **findet** — die erste Ursache ist behoben, es scheitert **danach**, in `Splitter::Track` oder in `OnSplitterMoved`. **Nächster Schritt:** die Spurmarke aus der Kladde (`marke-n.txt`, `marke2-*.txt`) in `StartTracking` und `OnSplitterMoved` einsetzen, bauen, Gregor einmal ziehen lassen, `eudora.log` auswerten. **Nicht weiter raten** — an diesem Tag sind schon zwei Vermutungen zu E-66 und zwei zu E-64 am Code gescheitert |

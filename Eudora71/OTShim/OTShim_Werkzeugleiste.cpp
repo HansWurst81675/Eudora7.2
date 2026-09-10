@@ -17,6 +17,11 @@
 
 #include "OTShim_Werkzeugleiste.h"
 
+// NUR FUER DIE SPURMARKEN zu E-70. Siehe OTShim.cpp, dort steht dieselbe
+// Begruendung: PutDebugLog und die DEBUG_MASK_-Werte stehen in QCUtils, und
+// der Suchpfad des Eudora-Projekts kennt sie.
+#include "debug.h"
+
 // secaux.cpp:23 legt dieses Objekt an. Der Zeichencode liest es unmittelbar,
 // genau wie Eudora es tut (TBarSendButton.cpp:74, MoodMailStatic.cpp:63,
 // QCCustomizeToolBar.cpp:17).
@@ -4427,6 +4432,18 @@ void SECToolBarManager::GroessenSichern(LPCTSTR lpszAbschnitt) const
 		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockHorzCy"), nId);
 		pApp->WriteProfileInt(lpszAbschnitt, szSchluessel,
 							  pBar->AndockgroesseHolen(TRUE));
+
+		// SPURMARKE ZU E-70: Gregor an 1.0.36 - "nein, daten werden nicht
+		// uebernommen". Also wird entweder nicht geschrieben, nicht
+		// gelesen, oder das Gelesene wird spaeter ueberschrieben. Diese
+		// Marke beantwortet die erste Frage.
+		char szM[192];
+		_snprintf(szM, sizeof(szM),
+			"E-70 gesichert: Abschnitt=%s Leiste=%u cx=%d cy=%d",
+			(LPCSTR) lpszAbschnitt, nId,
+			pBar->AndockgroesseHolen(FALSE), pBar->AndockgroesseHolen(TRUE));
+		szM[sizeof(szM) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
 	}
 }
 
@@ -4463,6 +4480,15 @@ void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
 		const int cy = pApp->GetProfileInt(lpszAbschnitt, szSchluessel, 0);
 		if (cy > 0)
 			pBar->AndockgroesseSetzen(TRUE, cy, 4 * SECDockBar::Splitter::cx);
+
+		// SPURMARKE ZU E-70, Gegenstueck zur Sicherung.
+		char szM[192];
+		_snprintf(szM, sizeof(szM),
+			"E-70 geladen: Abschnitt=%s Leiste=%u cx=%d cy=%d -> jetzt cx=%d cy=%d",
+			(LPCSTR) lpszAbschnitt, nId, cx, cy,
+			pBar->AndockgroesseHolen(FALSE), pBar->AndockgroesseHolen(TRUE));
+		szM[sizeof(szM) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
 	}
 }
 
