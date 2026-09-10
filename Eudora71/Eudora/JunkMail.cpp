@@ -684,8 +684,28 @@ CSummary *CJunkMail::DeclareJunk( CSummary *pSum, bool bJunk, bool bAddNotJunked
 			pSum->SetJunkScore((unsigned char)sJunkScore);
 		}
 
-		// If user is deleting junk from the server, mark this message for deletion.
-		if (GetIniShort(IDS_INI_DELETE_FETCHED_JUNK))
+		// BEFUND E-73, DRITTER WEG (PRUEFER, 10.09.2026): AUCH VON HIER AUS
+		// LOESCHT EINE FILTERAKTION AUF DEM SERVER.
+		//
+		// Die Filteraktion "Junk" ruft CFilter::Action -> DeclareJunk
+		// (filtersd.cpp:1537-1553), und dann steht hier bei
+		// DeleteFetchedJunk=1 ein SetServerStatus(ID_MESSAGE_SERVER_DELETE),
+		// das ueber CSummary::SetServerStatus (summary.cpp:2650-2679) das
+		// LMOS-Loeschkennzeichen setzt. Der Rueckschalter
+		// FilterMayDeleteFromServer wurde nie gefragt - E-73 war also nur
+		// auf dem POP-Weg von CFilter::Action geschlossen.
+		//
+		// E-74 hat DeleteFetchedJunk in tools/DEudora.ini auf 0 gesetzt. Das
+		// ist die Vorgabe fuer NEUE Konten und ruehrt eine vorhandene
+		// Eudora.ini nicht an - wer die 1 schon stehen hat, loescht weiter.
+		//
+		// pFilt == NULL heisst laut dem Kopfkommentar dieser Funktion
+		// ausdruecklich "aus einer Filteraktion gerufen". Nur dann greift
+		// der Rueckschalter. Junkt der Anwender selbst (pFilt != NULL),
+		// bleibt alles wie im Original - das ist eine bewusste Handlung.
+		if (GetIniShort(IDS_INI_DELETE_FETCHED_JUNK) &&
+			(pFilt != NULL ||
+			 FilterDarfVomServerLoeschen("Junk", pSum->GetSubject(), "Junk-Filteraktion")))
 		{
 			pSum->SetServerStatus(ID_MESSAGE_SERVER_DELETE);
 		}

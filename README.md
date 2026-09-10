@@ -55,11 +55,13 @@ verschickt.
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
   **E-47**).
-* **Die Filter sind zurzeit gefährlich.** Ein Filterlauf über ein ganzes
-  Postfach verschiebt **alle** Nachrichten statt nur der passenden (**E-64**),
-  und eine Regel der Form *„Junk Score is less than N"* wird durch bloßes
-  Ansehen im Filterfenster unbrauchbar (**E-67**). Wird gerade behoben — bis
-  dahin: `Filters.pce` sichern und Filter nicht auf ganze Postfächer anwenden.
+* **Eine Filterregel verträgt kein bloßes Ansehen.** Eine Regel der Form
+  *„Junk Score is less than N"* wird unbrauchbar, sobald man sie im
+  Filterfenster anklickt (**E-67**, offen). Sichern Sie `Filters.pce`, bevor
+  Sie im Filterfenster stöbern. Das Filtern selbst arbeitet korrekt — dass
+  ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
+  ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
+  Grenzen liegen, steht in [FILTER.md](FILTER.md).
 * **Kein IMAP getestet.** Der Code ist da, geprüft ist nur POP3.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
@@ -87,6 +89,13 @@ und behält damit Mails, Konten und Filter.
 > [Releases/PAKETE.md](Releases/PAKETE.md), zusammen mit dem Commit, aus dem
 > es gebaut wurde.
 
+### Post automatisch einsortieren
+
+Wie ein Filter entsteht, wann er läuft, was seine fünf Aktionen tun, wo die
+Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
+[FILTER.md](FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
+jeder eingehenden Nachricht **0** bleibt.
+
 ### Einen Fehler melden
 
 Fehler gehören in die
@@ -109,6 +118,188 @@ Damit ein Bericht verwertbar ist, gehören drei Dinge hinein:
 
 Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 [CHANGELOG.md](CHANGELOG.md) unter *Noch offen*.
+
+## Einstellungen, die es nur hier gibt
+
+Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab. Jede
+Abweichung steht hier mit ihrem Schlüssel, ihrer Vorgabe und dem Grund — und
+jede lässt sich zurückdrehen.
+
+Die Schlüssel stehen im Abschnitt `[Settings]` der **`Eudora.ini`** im
+Mailverzeichnis. Die Spalte *Original* nennt den eingebauten Wert von
+Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
+
+Hier stehen nur die **Abweichungen**. Die vollständige Liste aller Filter-
+und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
+[FILTER.md](FILTER.md).
+
+| Schlüssel | hier | Original | was er tut |
+|---|---|---|---|
+| `FilterMayDeleteFromServer` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`) |
+| `DeleteFetchedJunk` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
+| `LeaveMailOnServer` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
+| `SSLSendUse`, `SSLReceiveUse` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
+| `CtrlJMapping` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
+
+### Warum die drei Löschsperren
+
+Eudora kennt **drei** Wege, Post auf dem Server zu löschen, und sie sind
+voneinander unabhängig:
+
+1. **Kein `Leave mail on server`** — POP3 löscht nach dem Abholen. Eingebaute
+   Vorgabe: löschen.
+2. **`Delete fetched junk`** — was als Junk gilt, wird zusätzlich vom Server
+   geworfen. Eingebaute Vorgabe: **an**.
+3. **Die Filteraktion „Server Options"** mit *Delete* — sticht im Original
+   sogar `Leave mail on server`.
+
+Am 10.09.2026 hat Weg 3 ein ganzes Postfach geleert, ohne dass die Aktion je
+eingestellt worden war: sie war durch einen Fehler in das Filterobjekt
+geraten (**E-72**, **E-73**). Weg 2 ist hier abgeschaltet, weil die
+Junk-Bewertung auf Zusatzmodule angewiesen ist, die in dieser Portierung gar
+nicht laden können (**E-47**) — eine Einstufung, der man nicht trauen kann,
+darf keine Post löschen.
+
+> **Wer eine dieser Sperren löst, sollte wissen warum.** Die Wege 1 und 2
+> löschen **ohne Rückfrage**, und was auf dem Server gelöscht ist, ist weg.
+
+Was die Junk-Punktzahl bedeutet, woher sie kommt und warum sie hier bei
+jeder eingehenden Nachricht 0 bleibt, steht in [FILTER.md](FILTER.md).
+
+### Warum Strg+J hier filtert
+
+Vor der Junk-Funktion war **Strg+J** in Eudora *Filter Messages*. Seit
+Eudora 6 möchte das Programm die Taste für *Junk* haben und fragt vorher —
+der Dialog dafür steht bis heute in den Ressourcen (`IDD_CTRL_J_FOR_JUNK`):
+
+> *The Ctrl-J key combination is currently associated with the „Filter
+> Messages" menu item. Would you like to switch it to be associated with the
+> „Junk" menu item?*
+
+**Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da
+sind.** Andernfalls legt `CMainFrame::InitJunkMenus` (`mainfrm.cpp`) die
+Taste **stillschweigend** auf *Junk* und schreibt `CtrlJMapping=1` fest. Der
+Zweig läuft nur ein einziges Mal — später angelegte Filter ändern nichts
+mehr daran.
+
+Wer mit einem **leeren Mailverzeichnis** anfängt und die Filter danach
+anlegt, landet also dauerhaft auf *Junk*, ohne es je gelesen zu haben. Genau
+das ist am 10.09.2026 passiert: neun Nachrichten wanderten in den
+Junk-Ordner, während der Fortschrittsbalken „Messages left to filter" zeigte
+(**E-75**). Hier bleibt Strg+J deshalb auf *Filter Messages*.
+
+**In einem bestehenden Mailverzeichnis wirkt das nicht** — dort steht der
+Wert schon in der `Eudora.ini` und wird nicht mehr überschrieben. Bei
+geschlossenem Eudora von Hand ändern:
+
+```ini
+[Settings]
+CtrlJMapping=2
+```
+
+Umgekehrt geht es genauso: Wer *Junk* auf Strg+J will, stellt es in den
+Einstellungen um oder trägt `1` ein. *Filter Messages* liegt dann auf
+Strg+Umschalt+L. Welche Belegung gilt, steht im Menü — unter *Special* neben
+*Filter Messages* und unter *Message* neben *Junk*.
+
+### Drei Befehle, eine Fortschrittsanzeige
+
+Im Original melden *Filter Messages*, *Junk / Not Junk* und *Recheck Junk*
+alle dieselbe Zeile `Messages left to filter`. Ein Junk-Lauf sieht damit aus
+wie ein Filterlauf, obwohl kein einziger Filter befragt wird. Hier sagen die
+beiden Junk-Befehle `Messages left to mark` beziehungsweise `Messages left
+to scan for junk`.
+
+### Vorgaben für neu angelegte Konten
+
+`DEudora.ini` **neben der `Eudora.exe`** liefert die Vorgaben für Konten, die
+neu entstehen — gelesen in `GetDefaultIniSetting` (`rs.cpp:357-385`), noch vor
+den eingebauten Werten. Sie ändert **kein bestehendes Konto**; dort gilt, was
+in der `Eudora.ini` des Mailverzeichnisses steht.
+
+Dieselbe Datei trägt die 124 Dateizuordnungen von QUALCOMM im Abschnitt
+`[Mappings]`. Wer sie ersetzt, verliert sie — deshalb liegt im Paket die
+Originaldatei mit unseren Zeilen **ergänzt**, nicht eine eigene.
+
+## Mehr ins Protokoll schreiben lassen
+
+Eudora führt ein Protokoll in `eudora.log` im Mailverzeichnis. **Wie viel
+darin landet, steuert ein einziger Schlüssel** — ohne Neubau, ohne
+Codeänderung:
+
+```ini
+[Settings]
+LogLevel=25759
+```
+
+`LogLevel` ist keine Stufe von 0 bis 5, sondern eine **Summe von Schaltern**.
+Jeder Bereich hat seinen Wert; addiert wird, was man sehen will. Die
+eingebaute Vorgabe ist **25759**, und sie enthält bereits die meisten
+Bereiche.
+
+| Wert | Bereich | in 25759 |
+|---:|---|:---:|
+| 1 | allgemeine Protokollzeilen | an |
+| 2 | Empfang einer Nachricht | an |
+| 4 | Wählverbindung | an |
+| 8 | Dialogmeldungen | an |
+| 16 | Fortschrittsanzeigen | an |
+| 32 | **alle gesendeten Bytes** | aus |
+| 64 | **alle empfangenen Bytes** | aus |
+| 128 | Prüfung auf beschädigte Inhaltsverzeichnisse | an |
+| 256 | Zusatzmodule, Grundzüge | aus |
+| 512 | Zusatzmodule, ausführlich | aus |
+| 1024 | **Filteraktionen** | an |
+| 2048 | fehlgeschlagene `ASSERT`/`VERIFY` | aus |
+| 4096 | Abspiellisten | aus |
+| 8192 | *Leave mail on server* | an |
+| 16384 | Suche und Suchindex | an |
+| 32768 | **Spurmarken dieser Portierung** | **aus** |
+
+Belegt in `Eudora71/QCUtils/public/inc/debug.h:15-32`; gelesen wird der
+Schlüssel in `eudora.cpp:1192`, ausgewertet in `debug.cpp:140-146`.
+
+### Die Spurmarken einschalten
+
+Diese Portierung schreibt an Stellen, an denen ein Befund untersucht wurde,
+Zeilen der Form `E-44 …`, `E-64 …`, `E-70 …`. Sie hängen alle am Schalter
+**32768** und sind deshalb **standardmäßig aus**. Einschalten heißt: den
+Wert addieren.
+
+```ini
+[Settings]
+LogLevel=58527
+```
+
+58527 ist 25759 + 32768. Eudora muss beim Ändern geschlossen sein, sonst
+überschreibt es die Datei beim Beenden.
+
+> **Warum das hier steht.** Bis zum 10.09.2026 waren diese Marken fest
+> eingeschaltet — sie hingen zusätzlich am Schalter 128, und der ist in der
+> Vorgabe an. Das machte das Protokoll unlesbar und zwang dazu, jede Marke
+> nach Gebrauch von Hand wieder auszubauen. Gregors Hinweis darauf hat das
+> abgestellt: *„damit kann man im bedarfsfall mehr logs zu debug zwecken
+> rausschreiben, ohne den code zu ändern."*
+
+### Wenn etwas nicht tut, was es soll
+
+Der schnellste Weg zu einer belastbaren Aussage:
+
+1. Eudora beenden.
+2. `eudora.log` im Mailverzeichnis löschen — dann steht darin nur der
+   nächste Lauf.
+3. `LogLevel=58527` eintragen.
+4. Eudora starten, **genau die eine Sache tun**, um die es geht, beenden.
+5. `eudora.log` ansehen. Die Zeilen tragen die Befundnummer am Anfang.
+
+Für Filterläufe lohnt zusätzlich Schalter **1024** (in der Vorgabe schon an):
+er schreibt zu jeder Regel, die greift, eine Zeile
+`Filter "…" matches "…"`.
+
+**Was ein volles Protokoll kostet:** die Schalter 32 und 64 schreiben jedes
+gesendete und empfangene Byte mit, also auch Ihre Zugangsdaten und den
+vollständigen Text jeder Mail. Sie sind aus gutem Grund aus. Wer sie
+einschaltet, sollte die Datei danach löschen und sie niemandem schicken.
 
 ## Stand
 
@@ -327,6 +518,7 @@ Eudora7.2/
 |---|---|
 | Woran wird „fertig" gemessen? | [ZIEL.md](ZIEL.md) — die Quelle für Kriterien und Anforderungen |
 | Was hat sich je Fassung geändert? | [CHANGELOG.md](CHANGELOG.md) |
+| Wie funktionieren Filter und Junk, und welche INI-Schlüssel gehören dazu? | [FILTER.md](FILTER.md) |
 | Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](BEFUNDE.md), Einzelbefunde in `Befunde/` |
 | Was ist als Nächstes zu tun? | [AUFGABEN.md](AUFGABEN.md), Einstieg in [WEITERMACHEN.md](WEITERMACHEN.md) |
 | Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](PORTIERUNG.md) |
@@ -343,8 +535,8 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.0.30` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.30` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.0.43` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `1.0.43` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

@@ -165,7 +165,7 @@ INT iIndex )
 			_T("- NULL zurueckgegeben. Grund: %s"),
 			(int)iIndex, (int)GetBtnCount(),
 			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+		PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 
 		pKnopf = NULL;
 	}

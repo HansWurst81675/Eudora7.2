@@ -9,13 +9,20 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 09.09.2026)
+## Noch offen (Stand 10.09.2026)
 
 | Kennung | | |
 |---|---|---|
-| **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. Keine Behebung in Sicht |
-| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. Gehört **nicht** zur Registerkartenleiste (E-48/E-50), sondern zum Fensterzustand über `SaveOpenWindows`. Getrennt zu messen, noch nicht angefasst |
-| — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen kann ich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
+| **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
+| **E-78** | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von E-70 am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
+| **E-71** | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
+| **E-76** | das **freischwebende Filterfenster** lässt sich nur seitlich vergrößern, nicht nach unten | Von Gregor am 10.09.2026 an 1.0.40 gemeldet. Marke seit 7.2.0.41 im Bau, **noch nicht ausgelesen** — sie schreibt nur beim Ziehen mit gedrückter Maustaste, das hier nicht auslösbar ist |
+| **E-77** | **IMAP-Postfachnamen mit Umlauten** werden roh angezeigt: `Entw&APw-rfe` statt *Entwürfe* | Von Gregor am 10.09.2026 an 1.0.42 gemeldet. Modifiziertes UTF-7 (RFC 3501, 5.1.3), das Eudora nicht dekodiert — in `Eudora71/` kommt keine UTF-7-Behandlung vor. Bei der Behebung gehört die Gegenrichtung dazu: beim Anlegen und Umbenennen muss der Name wieder kodiert werden |
+| **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
+| **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
+| **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
+| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-44**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
+| — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
 
@@ -95,6 +102,705 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 ---
 
 
+
+## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
+
+**Was Gregor damit tun kann, was vorher gefährlich war:** über IMAP abrufen
+und filtern, ohne dass Post auf dem Server verschwindet. Dazu: das Protokoll
+gezielt aufdrehen, ohne dass jemand den Code ändert.
+
+### Zwei Löschwege, die E-73 offengelassen hatte
+
+E-73 galt seit 7.2.0.38 als behoben — eine Filteraktion sollte nichts mehr
+auf dem Server löschen. PRÜFER hat die Behebung gegen den Quelltext
+nachgerechnet und **zwei Wege gefunden, die daran vorbeiliefen**:
+
+| Weg | warum er vorbeilief |
+|---|---|
+| **IMAP** | Bei einem IMAP-Postfach verzweigt `CFilter::Action` nach `ImapAction` (`filtersd.cpp:1213-1216`) und erreicht den geprüften POP-Zweig nie. Von dort geht es über `ImapSetServerOpt` (`EuImap/src/ImapFiltersd.cpp:791-794`) in ein `STORE \Deleted`. `IMAP4` ist in **beiden** Konfigurationen gebaut |
+| **Junk-Filteraktion** | `ID_FLT_JUNK` (`filtersd.cpp:1581-1600`) → `CJunkMail::DeclareJunk` → bei `DeleteFetchedJunk=1` ein `SetServerStatus(…SERVER_DELETE)` (`JunkMail.cpp:707-711`) |
+
+**Der zweite ist besonders heikel**, weil **E-74** ihn nicht abdeckte: dort
+war `DeleteFetchedJunk=0` nur in `tools/DEudora.ini` gesetzt worden, und das
+gilt ausschließlich für **neu angelegte** Konten. Wer die `1` schon in seiner
+`Eudora.ini` stehen hatte, löschte weiter — ausgelöst durch eine
+Filteraktion.
+
+Beide fragen jetzt dieselbe Funktion `FilterDarfVomServerLoeschen`. Manuelles
+Junken bleibt unverändert. Die Schranke
+`tools/pruefe-filter-serverloeschung.pl` hält das fest und hat beim ersten
+Lauf genau diese zwei Lücken gefunden — in einer Behebung, die als fertig
+galt.
+
+### E-68: der Überlauf beim Lesen von `Filters.pce`, halb behoben
+
+`NUM_FILT_ACTS` ist 5, `CFiltersDoc::Read` zählte den Aktionszähler aber in
+**21 Zweigen** hoch, ohne je gegen diese Grenze zu prüfen. Nachgerechnet ist
+der Schaden größer als beschrieben: derselbe Zähler indiziert **elf weitere
+Felder**, darunter `CString`-Felder. `m_Desc[5]` trifft `m_DoPersonality`,
+und `CString::operator=` fasst das als Zeichenkettenzeiger auf — kein
+Zahlenschaden, sondern Speicherzerstörung.
+
+Auslösen lässt sich das **nicht durch Bedienung**: `CFiltersDoc::Write` ist
+gebunden und schreibt nie mehr als fünf. Es braucht eine fremde
+`Filters.pce` — von Hand bearbeitet, aus einem anderen Programm übernommen,
+oder eine `.pre`/`.pst`-Datei, die Eudora liest und nie schreibt.
+
+Die Grenze ist eingebaut; überzählige Zeilen werden verworfen und
+protokolliert. Die zweite Hälfte von E-68 — `copyInstead` wird anders
+geschrieben als gelesen — bleibt **offen**.
+
+### Das Protokoll lässt sich jetzt aufdrehen, ohne den Code anzufassen
+
+Gregors Hinweis: *„in der ini ein debuglevel setzen, dann kommt mehr oder
+weniger ins log raus. damit kann man im bedarfsfall mehr logs zu debug
+zwecken rausschreiben, ohne den code zu ändern."*
+
+Das gibt es in Eudora seit jeher — `LogLevel` in der `Eudora.ini` — und diese
+Portierung hat es bis heute umgangen. Die Spurmarken riefen `PutDebugLog` mit
+`DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT`. Das **ODER** machte die
+Abschaltbarkeit zunichte: `MISC` ist in der Vorgabe aus, `TOC_CORRUPT` an,
+also schrieb jede Marke immer.
+
+**146 Stellen in 16 Dateien** hängen jetzt an `MISC` allein:
+
+```ini
+LogLevel=25759   ; Vorgabe — die Spurmarken schweigen
+LogLevel=58527   ; 25759 + 32768 — sie schreiben
+```
+
+Damit dürfen die Marken im Code bleiben. Die vollständige Tabelle aller
+sechzehn Schalter steht in [README.md](README.md), Abschnitt *Mehr ins
+Protokoll schreiben lassen*.
+
+### Neu: E-77, und was die Filterdoku jetzt sagt
+
+**E-77** — IMAP-Postfachnamen mit Umlauten werden roh angezeigt:
+`Entw&APw-rfe` statt *Entwürfe*. Das ist modifiziertes UTF-7 (RFC 3501,
+5.1.3), und Eudora dekodiert es nicht; in `Eudora71/` kommt keine
+UTF-7-Behandlung vor. Offen.
+
+**[FILTER.md](FILTER.md)** ist neu — 666 Zeilen zu Filtern und Junk, mit
+allen 38 INI-Schlüsseln samt eingebauter Vorgabe und Fundstelle. Gregors
+Frage nach den Junk-Werten ist dort beantwortet: die **100** ist
+`ManualJunkScore`, die Punktzahl beim Junken von Hand; die automatische
+Schwelle ist `MinScoreToJunk` mit Vorgabe **50**. Praktisch bleibt jede
+Nachricht bei 0, weil die Bewertung von `SpamWatch` und `SpamHeaders` kommt
+und beide wegen **E-47** nicht laden.
+
+### Was aus dem Protokoll bestätigt wurde
+
+Von Gregor an 1.0.42 gemessen: *„filter fenstergröße nach neustart
+gespeichert: PASS"* (**E-70**), *„filter funktionieren"* (**E-64**, **E-72**,
+**E-75**), *„imap: funktioniert"* — `imap.gmx.net:993`, TLSv1.3,
+`TLS_AES_256_GCM_SHA384`. **Kriterium 3** in [ZIEL.md](ZIEL.md) nennt jetzt
+beides, POP3 und IMAP.
+
+**E-71** ist dagegen **neu eingestuft**: der Filterbericht bleibt leer, auch
+nachdem die Filter greifen. Die frühere Einordnung *„kein eigener Fehler,
+Folge von E-72"* ist damit widerlegt. Auf Gregors Wunsch zurückgestellt.
+
+## 7.2.0.42 — Die Breite der Seitenleisten überlebt einen Neustart wirklich
+
+**Was Gregor damit tun kann, was in 1.0.41 noch nicht ging:** eine Leiste
+breiter ziehen und sie beim nächsten Start genauso breit wiederfinden.
+
+1.0.41 hatte den halben Weg gebracht: das Laden lief, aber die Breite kam
+beim Anwender nicht an. Gregors Urteil dazu: *„0.41 speichert nicht die
+fenstergröße korrekt, nach dem neustart immer noch falsch!"*
+
+### Was die Messung am laufenden Programm zeigte
+
+Mit Gregors Freigabe (*„du kannst ja jetzt lokal ausführen, ich greife nicht
+rein"*) ließ sich das zum ersten Mal selbst durchspielen: `DockVertCx319=437`
+in die `Eudora.ini` geschrieben, gestartet, die Leiste am Fenster
+ausgemessen.
+
+| | |
+|---|---|
+| `Eudora.ini` vorher | `DockVertCx319=437` |
+| Protokoll beim Start | `E-70 geladen: Leiste=319 cx=437 -> jetzt cx=437` |
+| unmittelbar danach | `E-44 WazooBars: für 3 Leiste(n) war keine Lage gespeichert — die Standardanordnung wurde nachgezogen` |
+| **Fenster gemessen** | **Leiste 319: 180 Pixel breit** |
+| Protokoll beim Beenden | `E-70 gesichert: Leiste=319 cx=180` |
+| `Eudora.ini` danach | `DockVertCx319=180` |
+
+Der geladene Wert kommt an und wird eine Zeile später überschrieben.
+`CWazooBarMgr::LoadWazooBarConfigFromIni` läuft **nach** dem Laden und dockt
+jede Leiste, für die keine Lage wiederhergestellt werden konnte, mit einer
+**fest verdrahteten Breite von 180** an (`WazooBarMgr.cpp:409`, `:418`,
+`:493`).
+
+**Das war ohne die Freigabe nicht zu finden.** Die Spurmarke allein sagte
+*„geladen: cx=437"* und hätte wie ein Erfolg ausgesehen. Erst die Messung am
+Fenster daneben zeigte die 180.
+
+### Behoben
+
+Die Größen werden nach dem Anordnen **noch einmal** geladen — an der Stelle,
+an der die Anordnung nachweislich fertig ist. Das wirkt unabhängig davon, ob
+der Nachziehweg lief.
+
+**Nachgemessen, an einer sichtbaren Leiste:** mit `DockVertCx318=512` in der
+`Eudora.ini` startet die linke Leiste jetzt **512 Pixel breit** statt 180.
+
+### Was dabei offen bleibt
+
+Dass der Nachziehweg überhaupt läuft, gehört zu **E-44**:
+`SetDockState` stellt die Andockung nicht wieder her — `m_pDockBar` bleibt
+`NULL` —, obwohl dreizehn `[ToolBar-*]`-Abschnitte in der `Eudora.ini`
+stehen. Das ist hier **nicht** angetastet: es wäre ein zweiter Eingriff in
+einen Bereich, der gerade funktioniert, und der Zusammenhang gehört erst
+gemessen.
+
+Eine **versteckte** Leiste behält im Fenster ihre Erzeugungsgröße, weil sie
+gar nicht angeordnet wird. Ihr gespeicherter Wert bleibt trotzdem erhalten —
+im Protokoll steht `gesichert: Leiste=319 cx=512`. Sobald sie sichtbar wird,
+gilt die gespeicherte Breite.
+
+## 7.2.0.41 — Die Breite des Filterfensters überlebt einen Neustart
+
+**Was Gregor damit tun kann, was vorher nicht ging:** das Filterfenster
+breiter ziehen und es beim nächsten Start genauso wiederfinden.
+
+Gemeldet am 10.09.2026 an 1.0.40: *„speichert aber nicht die fenster größe
+von filters nach dem neustart"* — dieselbe Sache, die er schon an 1.0.34
+angesprochen hatte.
+
+### Die Spurmarke aus 1.0.37 hat es entschieden
+
+Seit 7.2.0.37 schrieben `E-70 gesichert:` und `E-70 geladen:` bei jedem
+Sichern und Laden eine Zeile ins Protokoll. Ausgewertet worden waren sie nie.
+Gregors Protokoll von 1.0.40 sagt:
+
+```
+E-70 gesichert:  40 Zeilen
+E-70 geladen:     0 Zeilen
+```
+
+Und in seiner `Eudora.ini` steht `DockVertCx319=586` — genau die Breite, die
+er eingestellt hatte. **Der Wert wird richtig geschrieben und nie gelesen.**
+
+Zwei Zahlen in einer Ausgabe, und die Frage war beantwortet. Ohne die zweite
+hätte man weiter über das Schreiben nachgedacht.
+
+### Der Grund stand im eigenen Kommentar
+
+```cpp
+// KATEGORIE C laut PLAN.md: Eudora ruft diese Fassung nie auf.
+void SECToolBarManager::LoadState(LPCTSTR lpszProfileName)
+```
+
+Genau dort war der Aufruf von `GroessenLaden` eingebaut. Gerufen wird
+stattdessen `QCToolBarManager::LoadState`.
+
+Dass das **Sichern** funktionierte, hat die Lücke verdeckt:
+`QCToolBarManager::SaveState` ruft `SECToolBarManager::SaveState`
+ausdrücklich auf — das Gegenstück `LoadState` tut das nicht. Eine Asymmetrie,
+die man nur sieht, wenn man beide Seiten nebeneinanderlegt.
+
+**Behoben** an der symmetrischen Stelle: `QCToolBarManager::LoadState` ruft
+jetzt `GroessenLaden`. Der Zeitpunkt stimmt — `mainfrm.cpp` ruft erst
+`SetDockState` (Zeile 951), dann `LoadState` (952); die Größen werden also
+nach dem MFC-Zustand gesetzt und nicht wieder überschrieben.
+
+Dazu ein `RecalcLayout` am Ende von `GroessenLaden`: `AndockgroesseSetzen`
+schreibt nur Felder. Ohne Neuberechnung wirkt der geladene Wert erst beim
+nächsten Umbau des Rahmens — beim Anwender also gar nicht, weil er dann
+schon die Vorgabe gesehen hat.
+
+### Nebenbei bestätigt: der Filterlauf arbeitet richtig
+
+Gregor hatte drei Nachrichten markiert und gefiltert, ohne dass sich etwas
+bewegte. Das Protokoll zeigt, dass jede Nachricht gegen **alle drei** Filter
+geprüft wurde:
+
+```
+E-64 FilterMsg: Liste=1 Filter=3 verlangt WhenToApply=4 vorhandene Masken=[5,5,5]
+E-64 Match=0 Filter="From:angebot@email.waipu.tv" … Betreff="Hans, unsere TV-Empfehlungen der Woche"
+```
+
+`Match=0` war korrekt: die Nachricht kommt von `neues@mail.waipu.tv`, der
+Filter sucht `angebot@email.waipu.tv`. Gregors eigenes Urteil dazu:
+*„fehlalarm: die mail adresse war im filter eine andere"*. Damit ist **E-64**
+an einem Fall mit drei Filtern und mehreren Nachrichten bestätigt.
+
+### Und noch eines bestätigt: die Menübeschriftung stimmt
+
+Nach dem Wechsel auf 1.0.40 stand unter *Special* „Filter Messages
+Ctrl+Shift+L" statt „Ctrl+J". Das war **kein Fehler**, sondern die richtige
+Auskunft über einen falschen Zustand: das mitgebrachte Mailverzeichnis trug
+noch `CtrlJMapping=1`. Nach dem Umstellen auf `2` — *„ok, mit dem wert 2 ist
+das menü jetzt korrekt. paßt"*. `CMainFrame::InitJunkMenus` beschriftet das
+Menü also zuverlässig um.
+
+## 7.2.0.40 — Strg+J filtert wieder, statt in den Junk-Ordner zu schieben
+
+**Was Gregor damit tun kann, was vorher nicht ging:** mit Strg+J filtern, so
+wie er es seit jeher tut, ohne dass die ausgewählten Nachrichten stattdessen
+im Junk-Ordner landen.
+
+Gemeldet am 10.09.2026 an 1.0.39: *„filter erwischt immer noch zu viele
+mails"* — und der entscheidende Satz kam kurz darauf: *„ich drücke zum
+filtern ja immer noch ctrl-J"*.
+
+### Der Filter war nicht schuld
+
+Das Protokoll von 1.0.39 zeigt zwei völlig verschiedene Läufe unter derselben
+Fortschrittsanzeige:
+
+```
+6.26  E-64 FilterMsg: Liste=1 Filter=1 verlangt WhenToApply=4 … Masken=[5]
+7.38  E-64 Match=1 Filter="From:newsletter@service.freenet.de" … "Coole Comics | …"
+7.38  E-64 Match=0 Filter="From:newsletter@service.freenet.de" … "Fwd: Neue Anmeldung …"
+```
+
+Das ist der echte Filterlauf, und er arbeitet **richtig**: eine Nachricht
+trifft, eine nicht, nur die treffende wird verschoben.
+
+```
+9.07  Messages left to filter: 9
+9.07  … acht weitere Zeilen, keine einzige E-64-Marke …
+9.08  Messages left to filter: 0
+```
+
+Hier wurde `CFiltersDoc::FilterMsg` **überhaupt nicht aufgerufen**. `Junk.mbx`
+wuchs trotzdem von 174 196 auf 501 987 Bytes.
+
+**Gegenprobe am Bestand:** von zwölf Nachrichten in `Junk.mbx` haben zehn
+keinen Filtergrund. Sechs davon kommen von `adventskalender-mails@freenet.de`
+— für die sieht Gregors zweiter Filter ausdrücklich `HW_Bxo.mbx` als Ziel
+vor. Diese Datei ist 0 Bytes groß.
+
+### E-75 — Strg+J war auf „Junk" umgelegt worden
+
+Vor der Junk-Funktion war Strg+J in Eudora *Filter Messages*. Seit Eudora 6
+möchte das Programm die Taste für *Junk* haben und fragt vorher — der Dialog
+dafür steht bis heute in den Ressourcen (`IDD_CTRL_J_FOR_JUNK`):
+
+> *The Ctrl-J key combination is currently associated with the „Filter
+> Messages" menu item. Would you like to switch it to be associated with the
+> „Junk" menu item?*
+
+**Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da
+sind.** Andernfalls greift in `CMainFrame::InitJunkMenus`
+(`mainfrm.cpp:7911-7934`) der `else`-Zweig und legt Strg+J **stillschweigend**
+auf Junk — festgeschrieben als `CtrlJMapping=1` in der `Eudora.ini`. Der
+Zweig läuft nur ein einziges Mal; später angelegte Filter ändern nichts mehr
+daran.
+
+Gregor hatte mit einem **leeren Mailverzeichnis** angefangen. Beim ersten
+Start gab es keine Filter, also wurde umgelegt, ohne zu fragen. Die Filter
+kamen danach.
+
+**Behebung:** sind beim ersten Start keine manuellen Filter vorhanden, bleibt
+Strg+J auf `CTRL_J_FILTER` — so, wie es vor der Junk-Funktion war und wie das
+Menü `IDR_MAINFRAME` es unverändert beschriftet. Wer Junk auf Strg+J will,
+stellt es in den Einstellungen um; `InitJunkMenus` beschriftet das Menü dann
+entsprechend um.
+
+### Warum es so lange wie ein Filterlauf aussah
+
+Drei verschiedene Befehle zeigten dieselbe Zeile `Messages left to filter`:
+
+| Befehl | Fundstelle | zeigt jetzt |
+|---|---|---|
+| *Filter Messages* | `TocFrame.cpp:2380` | `Messages left to filter` (unverändert) |
+| *Junk* / *Not Junk* | `TocFrame.cpp:1156` | `Messages left to mark` |
+| *Recheck Junk* | `TocFrame.cpp:996` | `Messages left to scan for junk` |
+
+Die Zeichenkette `IDS_JUNK_MESSAGES_LEFT` gab es bereits, sie wurde nur beim
+Abruf benutzt; für das Markieren ist `IDS_JUNK_MESSAGES_MARK` neu.
+
+### Für ein bestehendes Mailverzeichnis
+
+Diese Änderung wirkt nur dort, wo `CtrlJMapping` noch nicht festgeschrieben
+ist. Steht die `1` schon in der `Eudora.ini`, hilft nur der Handgriff bei
+geschlossenem Eudora:
+
+```
+CtrlJMapping=2
+```
+
+## 7.2.0.39 — Kein Filter und kein Junk-Fang löscht mehr auf dem Server
+
+**Was Gregor damit tun kann, was vorher gefährlich war:** filtern und Mail
+abrufen, ohne dass Post auf dem Server verschwindet.
+
+Am 10.09.2026 war sein freenet-Postfach leer. Seine eigene Vermutung — *„evtl.
+war leave on server nicht aktiviert"* — war naheliegend und **falsch**: in
+seiner `Eudora.ini` steht für **beide** Konten `LeaveMailOnServer=1`.
+
+### Eudora kennt drei Wege, Post auf dem Server zu löschen
+
+Sie sind voneinander unabhängig, und zwei davon sind im Original **an**:
+
+| Weg | eingebaute Vorgabe | wer ihn auslöst |
+|---|---|---|
+| kein `Leave mail on server` | **löschen** (`LeaveMailOnServer\n0`) | POP3 nach dem Abholen |
+| `Delete fetched junk` | **an** (`DeleteFetchedJunk\n1`) | die Junk-Einstufung ab `MinScoreToJunk` (50) |
+| Filteraktion **„Server Options"** mit *Delete* | — | eine Filterregel; sticht im Original sogar `Leave mail on server` |
+
+### E-73 — die Filteraktion, die niemand eingestellt hatte
+
+`CFilter::Action` (`filtersd.cpp:1156-1178`) merkt die Nachricht auf dem
+Server zum Löschen vor, sobald die Aktion `ID_FLT_SERVER_OPT` mit `SO_DELETE`
+im Filter steht. **PRÜFER hatte am 09.09.2026 gemessen, dass genau diese
+Aktion lief, obwohl sie in Gregors `Filters.pce` gar nicht steht.** Damals
+sah das nach einer Randnotiz aus; es war der Kern.
+
+Sie kam aus **E-72**: die unerreichbare rechte Hälfte des Filterfensters
+schrieb beim Wegklicken ihren uninitialisierten Zustand in den ausgewählten
+Filter — Häkchen, Werte **und die Aktionsliste**. Zusammen mit dem dabei
+geleerten Suchwert (*„enthält nichts"* trifft jede Nachricht) wurde damit der
+ganze Posteingang verschoben **und zum Löschen auf dem Server vorgemerkt**.
+
+**Behebung, Gregors Entscheidung wörtlich:** *„ja, 1 auf jeden fall!
+Filteraktion darf nicht mehr vom Server löschen"*. Eine Filteraktion löscht
+jetzt nichts mehr auf dem Server. Der Versuch wird **protokolliert**, auch
+wenn er abgelehnt wird:
+
+```
+E-73 Filter "…" wollte die Nachricht "…" auf dem Server loeschen - VERWEIGERT
+```
+
+Damit sieht man, ob eine Regel die Aktion noch trägt, ohne dass sie Schaden
+anrichtet. Rückschalter: `FilterMayDeleteFromServer=1` in `[Settings]`,
+Vorgabe **0**.
+
+### E-74 — `Delete fetched junk` ist im Original an
+
+Der zweite Weg, unabhängig von Filtern: `CJunkMail::ProcessOne`
+(`JunkMail.cpp:453-457`) merkt jede als Junk eingestufte Nachricht zum
+Löschen auf dem Server vor. Die eingebaute Vorgabe ist **1**.
+
+Das ist hier besonders heikel, weil die Junk-Bewertung auf die Zusatzmodule
+*SpamWatch* und *SpamHeaders* angewiesen ist — und die sind in dieser
+Portierung **gar nicht ladbar**, weil ihnen `MFC71.DLL` und `MSVCP71.dll`
+fehlen (**E-47**). Einer Einstufung, der man nicht trauen kann, darf man
+keine Löschentscheidung überlassen.
+
+`tools/DEudora.ini` setzt deshalb `DeleteFetchedJunk=0` für **neu angelegte**
+Konten. Bestehende Konten ändert das nicht — dort steht der Wert in der
+`Eudora.ini` des Mailverzeichnisses.
+
+### Beide Abweichungen sind dokumentiert
+
+Neu in der README: **Einstellungen, die es nur hier gibt** — eine Tabelle mit
+Schlüssel, Wert hier, Wert im Original und Begründung, dazu die drei
+Löschwege im Zusammenhang. Gregor: *„sowas gehört dann in die doku oder in
+readme"*.
+
+### Was an 1.0.39 zu prüfen ist
+
+Gregor testet mit einem **leeren Mailverzeichnis** — damit greifen die
+Vorgaben aus `DEudora.ini`.
+
+1. Neue Persönlichkeit anlegen: steht **Leave mail on server** an?
+2. *Tools → Options → Junk Mail*: steht **Delete fetched junk** aus?
+3. Mail abrufen, filtern — bleibt auf dem Server alles liegen?
+4. Steht eine `E-73`-Zeile im Protokoll? Dann trägt eine Regel die
+   Serveroption noch; schaden kann sie nicht mehr.
+
+## 7.2.0.35 — Die Breite wird gesetzt, nicht der ganze Zustand wiederhergestellt
+
+Gregor an 1.0.34: *„der rechte balken läßt sich aber nicht beliebig weit nach
+links schieben. er wird dann auf eine bestimmte breite vom linken fenster (wo
+die filter namen stehen) zurückgesetzt."*
+
+**Der Griff sitzt also richtig** — E-66 ist an der Stelle erledigt, an der er
+bis 1.0.33 gar nicht zu fassen war. Was bleibt, ist das **Anwenden**.
+
+### Warum das Protokoll zu 1.0.34 nichts sagen konnte
+
+Ein Fehler von mir, und er gehört benannt: **alle Spurmarken saßen im
+stillgelegten Weg** über die Andockleiste. Der neue Weg über `ZiehenAmRand`
+war unbeobachtet. Die Zeilen, die im Protokoll standen, stammten aus dem
+**mitkopierten** `Mailverzeichnis` der Vorfassung — sie sahen aus wie eine
+Messung und waren eine Erinnerung.
+
+### Was geändert ist
+
+Das Anwenden lief über `GetBarInfo` → Feld ändern → `SetBarInfo`. Und
+`SECControlBar::SetBarInfo` ruft am Ende `CControlBar::SetBarInfo` — **MFCs
+vollständige Zustandswiederherstellung**: Sichtbarkeit, Andockzustand und
+Lage werden aus der Aufzeichnung neu gesetzt. Für das Laden einer
+gespeicherten Anordnung ist das richtig. Für das Ändern **einer Zahl**
+während des Betriebs ist es zu viel: alles andere in der Aufzeichnung ist der
+Stand von **vor** dem Zug.
+
+Jetzt wird nur noch die eine Zahl gesetzt, unmittelbar an der Leiste
+(`AndockgroesseHolen` / `AndockgroesseSetzen`). Dass es dafür zwei eigene
+Fassungen braucht, liegt daran, dass `m_szDockVert` und `m_szDockHorz` zu
+`CControlBar` gehören und von außen nicht erreichbar sind.
+
+**Das ist ein Verdacht, keine Gewissheit** — deshalb misst dieselbe Fassung
+gleich mit.
+
+### Die Marke am neuen Weg
+
+`E-66 Anwenden:` schreibt bei jedem Zug eine Zeile: Andockleiste, Stelle der
+Leiste, Delta, die Grenzen `Min`/`Max`, die Andockgröße **vorher → nachher**
+und die Fensterbreite, die dabei herausgekommen ist.
+
+Damit ist beim nächsten Mal unterscheidbar, ob
+
+* die Grenzen den Zug abschneiden (`Delta` kleiner als gezogen),
+* die Zahl gesetzt wird, aber nicht wirkt (`Andock 188 → 400`, Fenster
+  trotzdem 188),
+* oder etwas sie danach wieder zurücksetzt (Fenster erst breit, beim
+  nächsten Anordnungsdurchlauf wieder 188).
+
+### Was an 1.0.35 zu prüfen ist
+
+Rechte Leiste weit nach links ziehen — so weit, dass sie zurückspringt. Dann
+die `eudora.log`. **Wichtig:** wenn Du das `Mailverzeichnis` aus einer
+Vorfassung mitkopierst, lösche vorher die `eudora.log` darin, sonst stehen
+alte Zeilen darin, die wie eine frische Messung aussehen.
+
+## 7.2.0.34 — Der Trennbalken sitzt jetzt in der Leiste, nicht in der Andockleiste
+
+**Was Gregor damit tun kann, was seit A-4 nie ging:** die **rechte** Leiste
+mit der Maus breiter ziehen — und damit das **Filterfenster** benutzen, dessen
+rechte Hälfte bisher außerhalb der 188 Pixel lag. Die linke und die untere
+Leiste gehen auf demselben Weg.
+
+Das ist **keine Nachbesserung mehr, sondern ein anderer Ort** für denselben
+Zweck. Der Grund steht in den Messungen.
+
+### Was die drei Messfassungen ergeben haben
+
+| Fassung | Marke | Ergebnis |
+|---|---|---|
+| 1.0.31 | `E-66 Zug:` | **0 Zeilen** — die Ziehschleife wird nie betreten, obwohl beide Balken entstehen |
+| 1.0.32 | `E-66 Bewegung`, `E-66 Klick` | **je 0 Zeilen** — die Andockleiste bekommt weder Mausbewegung noch Klick |
+| 1.0.33 | `E-66 Zeiger:` | Empfänger **`CWazooBar`**, **`CFiltersViewLeft`**, **`QC3DTabWnd`** — **nie** die Andockleiste |
+
+Dazu die Lage, die alles erklärt:
+
+```
+E-66 Streifen: Leiste=59421 Client=0..188 Bar=-2..178 nFrei=8 nSchub=10 Balken=0..8
+```
+
+Die Leiste liegt bei **−2..178**, der freie Platz also bei **178..188** — der
+Trennbalken lag bei **0..8**, mitten **unter** der Leiste. Der Doppelpfeil
+erschien trotzdem, weil `WM_SETCURSOR` zum Elternfenster **aufsteigt**;
+Maustasten tun das nicht.
+
+### Warum der bisherige Ort grundsätzlich falsch war
+
+`CDockBar::CalcFixedLayout` ordnet die Leisten **immer am Anfang** an:
+
+```cpp
+CPoint pt(-afxData.cxBorder2, -afxData.cyBorder2);   // bardock.cpp:387
+```
+
+Links landet der Zuschlag dadurch an der Innenkante — deshalb sah es dort
+zeitweise nach Erfolg aus. Rechts landet er am **Fensterrand**, und dort
+sucht ihn niemand. Mein Gegenmittel, die Leisten ans Ende zu rücken, hält
+nicht: MFC ordnet bei jedem Durchlauf neu an, `nSchub` war in **jeder** Zeile
+wieder 10.
+
+### Der neue Ort
+
+Der Greifstreifen liegt in **`SECControlBar::CalcInsideRect`**, also in der
+Leiste selbst. Dort ist er von keinem Kindfenster verdeckt — `CWazooBar::OnSize`
+legt sein Registerfenster nach `GetInsideRect` (`WazooBar.cpp:1244-1249`),
+also genau nach dieser Fassung. Was dort abgezogen wird, gehört der Leiste,
+und die Mausnachrichten kommen bei ihr an.
+
+Er sitzt automatisch an der richtigen Kante: bei einer links angedockten
+Leiste rechts, bei einer rechts angedockten links, bei einer unten
+angedockten oben — jeweils zum Nachrichtenbereich hin, dort, wo ein Anwender
+ihn sucht. Oben bleibt ausgenommen (**E-55**).
+
+**Was bleibt, ist die Ziehschleife.** `SECDockBar::ZiehenAmRand` benutzt
+weiterhin `Splitter::Track` und `OnSplitterMoved` — dort stecken die teuer
+erkauften Sicherungen: höchstens 100 ms warten und die physische Maustaste
+prüfen (**E-51**), auf den Bildschirm zeichnen (**E-54**), `WM_QUIT`
+zurückstellen (**E-61**). Zwei Ziehschleifen wären eine zu viel. Der Splitter
+ist dabei ein **Stapelobjekt** und lebt genau so lange wie der Zug — damit
+kann **E-60** an dieser Stelle nicht auftreten.
+
+**Entfallen:** der Zuschlag in `SECDockBar::CalcFixedLayout` (er hätte jetzt
+einen leeren Streifen am Fensterrand hinterlassen) und 197 Zeilen
+`TrennbalkenNeuAnlegen`. Die Fassung bleibt mit leerem Rumpf stehen, weil sie
+an `ON_WM_SIZE` hängt.
+
+### Was an 1.0.34 zu prüfen ist
+
+1. **Rechte Leiste breiter ziehen** — Zeiger an die linke Kante der rechten
+   Leiste, dort wird er zum Doppelpfeil, ziehen.
+2. Dann **Filterfenster** öffnen: ist die rechte Hälfte erreichbar, lässt
+   sich eine Regel bearbeiten? Das ist **E-65**, und es sollte damit von
+   selbst erledigt sein.
+3. **Linke Leiste**, gleicher Handgriff an ihrer rechten Kante.
+4. **Untere Leiste**, an ihrer Oberkante — auch kleiner ziehen, nicht nur
+   größer.
+5. Überlebt die Breite einen **Neustart**?
+6. **Friert nichts ein?** Falls doch, sofort sagen.
+
+## 7.2.0.33 — Messfassung III: wem gehört der Streifen?
+
+**Das Protokoll von 1.0.32 hat den Fall entschieden** — jedenfalls zur
+Hälfte. Gregor ist über beide Balken gefahren und hat geklickt:
+
+| Marke | Anzahl |
+|---|---|
+| `E-66 Streifen:` | 26 |
+| `E-66 Bewegung UEBER dem Streifen:` | **0** |
+| `E-66 Klick:` | **0** |
+
+**Weder Mausbewegungen noch Klicks erreichen die Andockleiste.** `WM_SETCURSOR`
+steigt vom Kindfenster zum Elternfenster auf, `WM_MOUSEMOVE` tut das
+**nicht** — also steht der Zeiger über einem **Kind** der Andockleiste, nicht
+über ihr selbst. Der Streifen, den die Rechnung für frei hält, ist von der
+Leiste **verdeckt**. Der Doppelpfeil ist nur der aufsteigende
+Zeigersetz-Aufruf.
+
+Damit sind zwei der drei möglichen Ursachen vom Tisch: es liegt weder an der
+Trefferprüfung noch an der Maustaste allein.
+
+**Was noch fehlt, um es zu beheben:** *wo* der Zeiger steht und *wem* dieser
+Punkt gehört. Bisher wurde nur die **Breite** der Leiste gemessen, nie ihre
+**Lage** — und ohne die ist nicht zu entscheiden, ob der freie Streifen vor
+oder hinter ihr liegt.
+
+Zwei Erweiterungen:
+
+| Marke | neu darin |
+|---|---|
+| `E-66 Streifen:` | `Bar=links..rechts`, die **Lage** der Leiste, und `Balken=…`, wohin der Trennbalken gelegt wird |
+| `E-66 Zeiger:` | Punkt, Balkenlage, **Empfänger** der Nachricht mit Klassennamen, und der Trefferkennwert von Windows — höchstens eine Zeile je Sekunde |
+
+Steht im Empfänger etwas anderes als *die Andockleiste selbst*, ist der Fall
+vollständig entschieden, und der Klassenname sagt zugleich, wo die Behandlung
+hingehört.
+
+### Was an 1.0.33 zu prüfen ist
+
+Wie bei 1.0.32: über beide Balken fahren, je einmal klicken und ziehen, dann
+die `eudora.log`. Nichts weiter.
+
+## 7.2.0.32 — Messfassung II: kommt der Klick überhaupt an?
+
+**Was das Protokoll von 1.0.31 ergeben hat** — und warum diese Fassung nötig
+ist. 13 Zeilen `E-66 Streifen:`, **keine einzige** `E-66 Zug:`. Die
+Ziehschleife wird also nie betreten. Die Geometrie stimmt dagegen:
+
+| Andockleiste | Clientbereich | `nPos` | `nFrei` | `nSchub` |
+|---|---|---|---|---|
+| links (59420) | 0,0..188,703 | 1 | **8** | 0 |
+| rechts (59421) | 0,0..188,703 | 1 | **8** | 10 |
+
+Beide Balken entstehen, acht Pixel breit, an der richtigen Kante. Es
+scheitert am **Klick**, nicht an der Rechnung — und `ON_WM_LBUTTONDOWN` steht
+in der Nachrichtentabelle.
+
+**Der Verdacht, der zu allen Beobachtungen passt:** `WM_SETCURSOR` steigt vom
+Kindfenster zum Elternfenster **auf**, Maustasten tun das **nicht**. Die
+Andockleiste bekäme dann den Zeiger zu setzen — daher der Doppelpfeil, den
+Gregor sieht — während der Klick bei einem Kindfenster landet, das den
+Streifen verdeckt.
+
+**Die Messung, die das entscheidet:** Mausbewegungen steigen ebenfalls
+**nicht** auf. Zwei neue Marken:
+
+| Marke | wann | was sie beweist |
+|---|---|---|
+| `E-66 Bewegung UEBER dem Streifen:` | Maus über dem Streifen | erscheint sie, gehört der Andockleiste dieser Pixel wirklich |
+| `E-66 Klick:` | jeder Klick in die Andockleiste | kommt der Klick an, und trifft er? Mit Punkt und Treffer ja/nein |
+
+Drei Ausgänge, drei verschiedene Ursachen:
+
+* **Beide Marken bleiben aus** → ein Kindfenster verdeckt den Streifen. Der
+  Zeiger stimmt nur, weil `WM_SETCURSOR` aufsteigt.
+* **Bewegung ja, Klick nein** → die Maustaste geht woanders hin, obwohl die
+  Bewegung ankommt.
+* **Klick ja, `Treffer=NEIN`** → die Trefferprüfung rechnet beim Klick anders
+  als beim Zeigersetzen.
+
+### Was an 1.0.32 zu prüfen ist
+
+Nur eines: **mit dem Zeiger über den linken und den rechten Trennbalken
+fahren und jeweils einmal klicken und ziehen.** Danach die `eudora.log`.
+Mehr nicht — diese Fassung soll messen, nicht gefallen.
+
+## 7.2.0.31 — Messfassung: warum der Trennbalken nicht greift
+
+**Was Gregor damit tun kann:** dieselbe Fassung wie 1.0.30, plus **drei
+Spurmarken**, die beim Ziehen des Trennbalkens ins Protokoll schreiben, was
+wirklich passiert. Einmal ziehen, `eudora.log` schicken — danach ist **E-66**
+entschieden, statt weiter geraten zu werden.
+
+**Dazu behoben: die dritte Ursache von E-66.**
+
+### E-66, dritte Ursache — meine eigene Messung zerstörte ihr Ergebnis
+
+Gregor an 1.0.30: *„balken lassen sich nicht verschieben. beim anklicken ist
+der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Und:
+*„in der 0.30 version ist das filter fenster noch nicht skalierbar bzw. der
+fenster rand nicht verschiebbar."*
+
+Der Doppelpfeil war der entscheidende Hinweis: `HitTest` **findet** den
+Balken, er existiert also. Beim Einsetzen der Spurmarke kam der Grund durch
+Lesen heraus — und es ist die Behebung vom Vortag selbst:
+
+Der freie Streifen wurde als **Abstand** zwischen Leistenkante und
+Andockleistenkante gemessen. Für rechts und unten wird die Leiste
+unmittelbar danach **genau dorthin gerückt** — also ist der Abstand beim
+nächsten Anordnungsdurchlauf null, die Bedingung `nFrei >= 2` scheitert, und
+der Balken wird **nicht mehr angelegt**. Eine Messung, die ihr eigenes
+Ergebnis zerstört.
+
+Dass der Doppelpfeil trotzdem erscheint, passt genau dazu: der Balken
+entsteht im ersten Durchlauf und verschwindet im nächsten — je nachdem, wann
+man hinsieht, ist er da oder nicht.
+
+Getrennt wird das jetzt in **zwei Größen mit verschiedener Bedeutung**:
+
+| | woraus | Verhalten nach dem Rücken |
+|---|---|---|
+| `nFrei` — wie **breit** der Streifen ist | Differenz der **Größen** | unverändert, die Größen ändern sich beim Rücken nicht |
+| `nSchub` — wie **weit** noch zu rücken ist | Differenz der **Lagen** | wird von selbst null, es passiert nichts mehr |
+
+Damit hält sich die Sache selbst an, statt zwischen zwei Zuständen zu
+pendeln.
+
+### Die drei Spurmarken
+
+Jede schreibt **eine** Zeile, alle mit `MISC | TOC_CORRUPT` — also ohne dass
+etwas eingestellt werden muss:
+
+| Marke | wann | beantwortet |
+|---|---|---|
+| `E-66 Streifen:` | bei jedem Anordnungsdurchlauf | entsteht überhaupt ein Balken? Mit Andockleiste, Clientbereich, `nFrei`, `nSchub` |
+| `E-66 Zug:` | bei jedem Ziehversuch | liefert die Ziehschleife etwas? Mit Balkenlage, Grenzen, Klickpunkt, Delta |
+| `E-66 Anwenden ABGEBROCHEN:` | wenn das Anwenden scheitert | **welcher** der drei möglichen Gründe — Leiste nicht gefunden, falsche Klasse (mit echtem Klassennamen), oder Größe unverändert |
+
+Drei Fehlerfälle, die von außen alle gleich aussehen — *„der Balken greift
+nicht"* —, sind damit unterscheidbar.
+
+**Warum Marken und nicht die nächste Vermutung:** am 09.09.2026 sind **vier**
+Vermutungen am Code gescheitert — zwei zu E-64 (eine Attrappe, die immer
+`TRUE` liefert; ein `default`-Zweig in `MatchValue`) und zwei zu E-66
+(`BrauchtGreifstreifen` lasse rechts nicht zu; es liege allein an
+`CalcTrackingLimits`). Was sich lesen lässt, wird gelesen; was nicht, soll
+das Programm selbst sagen.
+
+**Die Marken gehören wieder heraus, sobald E-66 steht** — ebenso die Marke
+`E-64 Match=` aus 7.2.0.30, die je Nachricht **und** Filter eine Zeile
+schreibt.
+
+### Was an 1.0.31 zu prüfen ist
+
+1. **Trennbalken rechts** greifen und ziehen — mehrfach, auch nach einer
+   Größenänderung des Hauptfensters.
+2. **Trennbalken links** desselbe — er ging in 1.0.29; falls er jetzt nicht
+   mehr geht, hat eine der drei Behebungen ihn beschädigt, und das steht in
+   der Marke `E-66 Streifen:`.
+3. Danach die **`eudora.log`** schicken, ganz gleich ob es geht oder nicht.
+   Geht es, steht dort warum; geht es nicht, steht dort auch warum.
 
 ## 7.2.0.30 — Trennbalken rechts, Kurzhinweis der letzten Karte (in Arbeit)
 

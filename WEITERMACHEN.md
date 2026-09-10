@@ -1,19 +1,20 @@
 # Hier weitermachen
 
-**Stand 09.09.2026, abends.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 10.09.2026, nachmittags.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.30 (`Eudora71/Version.h`) — in Arbeit |
-| **Paketnummer** | 1.0.30 (`VERSION`) — in Arbeit, es gibt dieses Paket noch nicht |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.30** — `Releases/Eudora72-1.0.30-release.zip`, 9 343 260 B, SHA256 `1077891d606f9f98…`. Bei Gregor abgelegt unter `C:\Users\Gregor\Eudora72-1.0.30-release`. **Kein Release** — veröffentlicht ist die Fassung davor |
-| **Zuletzt von Gregor bestätigt** | **1.0.29 am 09.09.2026**: *„1-6, ok"* zu **E-54** bis **E-58** und **E-61**, dazu *„rechtklick zeigt ja einen liste der offenen fenster: sehr gut."* Ein Restfehler daraus (**E-63**) ist in 1.0.30 behoben, aber noch nicht beurteilt |
-| **Was als Nächstes zu messen ist** | **E-66 an 1.0.30 — der wichtigste offene Punkt.** Gregors Messung: *„balken lassen sich nicht verschieben. beim anklicken ist der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Der Doppelpfeil belegt, dass `HitTest` den Balken **findet** — die erste Ursache ist behoben, es scheitert **danach**, in `Splitter::Track` oder in `OnSplitterMoved`. **Nächster Schritt:** die Spurmarke aus der Kladde (`marke-n.txt`, `marke2-*.txt`) in `StartTracking` und `OnSplitterMoved` einsetzen, bauen, Gregor einmal ziehen lassen, `eudora.log` auswerten. **Nicht weiter raten** — an diesem Tag sind schon zwei Vermutungen zu E-66 und zwei zu E-64 am Code gescheitert |
-| **Was Gregor sonst noch prüfen kann** | **E-63** (Kurzhinweis auf der letzten Registerkarte), **E-67** (ein Filter *„Junk Score is less than N"* darf das Ansehen im Filterfenster überstehen), der **untere** Trennbalken auch nach unten (war bei 200 Pixeln gesperrt) |
-| **Die Messung, die E-64 entscheidet** | Ein Filterlauf über **eine Kopie** eines Postfachs mit 1.0.30, danach die `eudora.log`: dort steht zu jeder Nachricht und jedem Filter eine Zeile `E-64 Match=…` mit Kopfzeile, Verb, Wert und Betreff. **E-64 ist nicht behoben** — Filter auf ein ganzes Postfach können weiterhin alles verschieben |
-| **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen (**E-51**) |
+| **Quellstand** | 7.2.0.43 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.43 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.42** — `Releases/Eudora72-1.0.42-release.zip`, 9 346 100 B. **1.0.43 ist in Arbeit, noch nicht gebaut** |
+| **Zuletzt von Gregor bestätigt** | **1.0.43 am 10.09.2026**: *„filter fenstergröße nach neustart gespeichert: PASS"* (**E-70**) und *„filter funktionieren"* (**E-64**, **E-72**, **E-75**). Davor 1.0.29 mit *„1-6, ok"* zu E-54 bis E-58 und E-61, dazu E-65/E-66 (*„1. ja / 2. ja / 3. ja"*) |
+| **Was als Nächstes zu messen ist** | **E-44 — die Spur, die aus E-70 herausfiel.** Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* kommt bei **jedem** Start, und ihre Begründung stimmt nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). Der Zustand ist also gespeichert und wird nicht angewandt. Zwei Marken `E-44 nach SetDockState:` und `E-44 vor/nach LoadWazooBarConfig:` liegen seit 7.2.0.43 im Bau, **noch nicht gebaut**. Das könnte auch erklären, warum Fenster nach einem Neustart nicht im Vollbild stehen |
+| **Offen, zurückgestellt** | **E-71** (Filterbericht bleibt leer) — von Gregor am 10.09.2026 ausdrücklich auf die nächste Fassung geschoben: *„kann aber als ToDo für die nächste version aufgeschrieben werden"*. **Nicht von selbst aufgreifen.** Belegt ist, dass der Lauf trifft; zu messen ist `CFilterActions::EndFiltering` |
+| **Offen, mit Marken im Bau** | **E-76** (das schwebende Filterfenster lässt sich nur seitlich vergrößern; Marke seit 7.2.0.41, noch nicht ausgewertet). **E-66** (Marken seit 1.0.35, seit dem Umbau auf `ZiehenAmRand` **nie wieder gelesen** — `tools/spuren-auswerten.pl` weist den Paketbau deshalb ab). **E-68** (`copyInstead` schreibt/liest asymmetrisch, `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — PRÜFER rechnet nach). **E-47** (MFC71/MSVCP71) |
+| **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73**, **E-76** und die neuen **E-44** schreiben je Nachricht, Filter oder Anordnungsdurchlauf eine Protokollzeile. E-64, E-70, E-72 und E-73 sind bestätigt und dürfen raus |
+| **Was ich dabei nicht selbst messen kann** | das Ziehen mit der Maus. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist (**E-51**). Alles andere lässt sich seit Gregors Freigabe vom 10.09.2026 (*„du kannst ja jetzt lokal ausführen, ich greife nicht rein"*) über `tools/testlauf.ps1` und `tools/leisten-messen.ps1` selbst messen — genau so ist der zweite Teil von E-70 gefunden worden |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
 > [CHANGELOG.md](CHANGELOG.md)** — dort auch die Prüfanleitung zum aktuellen

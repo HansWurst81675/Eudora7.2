@@ -1067,7 +1067,7 @@ BOOL CMessageDoc::SaveModified()
 				_T("'%s' - weder Ja, Nein noch Abbrechen. Der Dialog kam vermutlich ")
 				_T("nicht zustande; das Schliessen wird fortgesetzt."),
 				(int) nResult, (const char *) GetTitle());
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 		}
 		break;
 	}

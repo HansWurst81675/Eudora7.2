@@ -812,7 +812,7 @@ void CEudoraApp::OnAppExit()
 	// ACHTUNG: PutDebugLog prueft die Maske und kehrt sonst sofort zurueck
 	// (QCUtils/src/debug.cpp:140). Die Marken schreiben nur bei
 	// LogLevel=32896 unter [Settings] in der Eudora.ini (0x8000 | 0x80).
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		ShiftDown() ? "E-33 OnAppExit: Befehl angekommen, Shift gedrueckt - nur Fensterlage sichern"
 		            : "E-33 OnAppExit: Befehl angekommen, jetzt CWinApp::OnAppExit (WM_CLOSE)");
 
@@ -2024,7 +2024,7 @@ int CEudoraApp::ExitInstance()
 	// setzt WM_QUIT ab, danach kehrt CWinThread::Run zurueck). Steht diese
 	// Zeile im Protokoll, ist das Beenden angekommen; fehlt sie, ist es unterwegs
 	// abgebrochen - dann sagt die letzte E-33-Zeile davor, wo.
-	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 ExitInstance: erreicht - das Hauptfenster ist zerstoert");
 
 	// Clean up the directors/managers
@@ -2224,11 +2224,11 @@ CFrameWnd* CEudoraApp::NewChildFrame(CDocTemplate* templ, CDocument* pDoc, BOOL 
 			(int)(::IsWindow(frame->GetSafeHwnd()) ? frame->IsWindowVisible() : 0),
 			rc.left, rc.top, rc.right, rc.bottom,
 			(LPCTSTR)strTitel);
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szNCF);
+		PutDebugLog(DEBUG_MASK_MISC, szNCF);
 	}
 	else
 	{
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-34 NewChildFrame: CreateNewFrame hat NULL geliefert");
 	}
 
@@ -2249,11 +2249,11 @@ CFrameWnd* CEudoraApp::NewChildFrame(CDocTemplate* templ, CDocument* pDoc, BOOL 
 			rc2.left, rc2.top, rc2.right, rc2.bottom,
 			rc2.Width(), rc2.Height(),
 			(LPCTSTR)strTitel2, (int)bDoIntialUpdate);
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szNCF2);
+		PutDebugLog(DEBUG_MASK_MISC, szNCF2);
 	}
 	else if (frame)
 	{
-		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
+		PutDebugLog(DEBUG_MASK_MISC,
 			"E-34 NewChildFrame: nach InitialUpdateFrame ist das Fenster WEG");
 	}
 

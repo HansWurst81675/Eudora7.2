@@ -125,7 +125,24 @@ schranke lehren-schranken.pl || exit $?
 #    gefunden, zwei davon mit echter Haengegefahr (E-62).
 schranke pruefe-nachrichtenschleife.pl || exit $?
 
-# 10. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 10. Keine Filteraktion loescht Post auf dem SERVER, ohne den Rueckschalter
+#     FilterMayDeleteFromServer zu fragen (E-73). Gregor am 10.09.2026: "ja,
+#     1 auf jeden fall! Filteraktion darf nicht mehr vom Server loeschen".
+#     E-73 war zuerst nur an EINER von DREI Stellen geschlossen - der
+#     IMAP-Weg und die Junk-Filteraktion liefen daran vorbei. Genau das
+#     findet diese Schranke; sie ist mit "--selbsttest" in beide Richtungen
+#     gegengetestet.
+schranke pruefe-filter-serverloeschung.pl || exit $?
+
+# 11. Die Grenze beim Einlesen von Filters.pce (E-68): der Aktionszaehler in
+#     CFiltersDoc::Read darf nicht ueber NUM_FILT_ACTS hinauslaufen, sonst
+#     schreibt die sechste Aktion einer Regel hinter m_Actions[5] und hinter
+#     elf gleich grosse Nachbarfelder. Die Grenze haengt an einer Liste von
+#     Schluesselwoertern - diese Schranke haelt die Liste gegen die Zweige,
+#     die wirklich hochzaehlen. Auch sie hat "--selbsttest".
+schranke pruefe-filter-aktionsgrenze.pl || exit $?
+
+# 12. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
 HOOKENDE
@@ -182,7 +199,13 @@ echo "  8. tools/lehren-schranken.pl hat jede Lehre eine greifende Schranke?"
 echo "  9. tools/pruefe-nachrichtenschleife.pl"
 echo "                               verschluckt eine eigene Schleife WM_QUIT?"
 echo "                               (E-51, E-61, E-62)"
-echo " 10. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo " 10. tools/pruefe-filter-serverloeschung.pl"
+echo "                               loescht eine Filteraktion am Rueckschalter"
+echo "                               vorbei auf dem Server? (E-73)"
+echo " 11. tools/pruefe-filter-aktionsgrenze.pl"
+echo "                               laeuft der Aktionszaehler beim Einlesen von"
+echo "                               Filters.pce ueber das Feld hinaus? (E-68)"
+echo " 12. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo "Abweisend sind alle ausser Schritt 3 - der meldet bloss."
 echo "Jeder von ihnen wertet JEDEN Rueckgabewert aus -"

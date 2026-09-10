@@ -1130,6 +1130,15 @@ public:
 	virtual void LoadState(LPCTSTR lpszProfileName);
 	virtual void SaveState(LPCTSTR lpszProfileName) const;
 
+	// NICHT im Original. BEFUND E-70 (10.09.2026): die Andockgroessen der
+	// Leisten ueberleben einen Neustart nicht, weil CDockState::SaveState
+	// die Stingray-Zusatzfelder gar nicht erst zu Gesicht bekommt (nicht
+	// virtueller Aufruf ueber CControlBarInfo*). Diese beiden Fassungen
+	// schreiben und lesen sie deshalb selbst, in denselben INI-Abschnitt
+	// wie der uebrige Verwalterzustand.
+	void GroessenSichern(LPCTSTR lpszAbschnitt) const;
+	void GroessenLaden(LPCTSTR lpszAbschnitt);
+
 	// GEBRAUCHT: QCToolBarManager.cpp:1168
 	virtual void SetDefaultDockState();
 

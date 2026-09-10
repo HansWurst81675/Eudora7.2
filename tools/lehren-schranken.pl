@@ -63,7 +63,18 @@ sub lies {
 # --- Die Lehren einsammeln --------------------------------------------------
 
 my @lehren = sort glob("$wurzel/Arbeitsweise/*.md");
-@lehren = grep { $_ !~ m{/MEMORY\.md$} } @lehren;
+
+# Drei Dateien in Arbeitsweise/ sind KEINE Lehren und brauchen deshalb auch
+# keine Schranke-Zeile:
+#   MEMORY.md               das Verzeichnis der Lehren, eine Zeile je Lehre
+#   README.md               erklaert, was dieses Verzeichnis ist
+#   LEHREN-AUS-DEM-CHAT.md  die Rohauswertung, aus der Lehren erst entstehen
+#
+# Bis zum 08.09.2026 stand hier nur MEMORY.md. Die beiden anderen wurden
+# mitgezaehlt und als Mangel gemeldet - und eine Schranke, die umsonst warnt,
+# wird ignoriert (Befund X-1).
+my %keine_lehre = map { $_ => 1 } qw(MEMORY.md README.md LEHREN-AUS-DEM-CHAT.md);
+@lehren = grep { my $n = $_; $n =~ s{^.*/}{}; !$keine_lehre{$n} } @lehren;
 
 if (!@lehren) {
     print "\n  lehren-schranken.pl: keine Lehren in Arbeitsweise/ gefunden.\n";

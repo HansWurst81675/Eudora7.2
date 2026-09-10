@@ -137,6 +137,33 @@ for my $datei (@quellen) {
     copy($q, $z) or warn "Kopieren von $datei fehlgeschlagen: $!\n";
 }
 
+# --- Die Gegenrichtung: was NUR im Repo steht -------------------------------
+#
+# Gespiegelt wird Gedaechtnis -> Repo. Eine Lehre, die jemand nur nach
+# Arbeitsweise/ schreibt, wird deshalb beim naechsten Lauf ueberschrieben und
+# ist weg. Genau das ist am 10.09.2026 passiert (Commit 3c80c9e: "Der Nachtrag
+# war beim vorigen Commit verlorengegangen") - und am selben Tag ein zweites
+# Mal, unbemerkt: Arbeitsweise/release-erst-nach-gregors-test.md lag im Repo
+# und hatte im Gedaechtnis kein Gegenstueck.
+#
+# Dieses Werkzeug hat davon nie etwas gesagt, weil es nur in eine Richtung
+# sieht. Es weist deshalb nicht ab - eine fehlende Quelle ist kein Grund,
+# einen Commit aufzuhalten -, aber es nennt die Datei beim Namen.
+{
+    my %quelle = map { $_ => 1 } @quellen;
+    if (opendir(my $zh, $ziel)) {
+        my @nur_repo = sort grep { /\.md$/i && !$quelle{$_} && $_ ne 'README.md' }
+                       readdir($zh);
+        closedir($zh);
+        if (@nur_repo) {
+            print STDERR "lehren-spiegeln: steht NUR im Repo, nicht im Gedaechtnis -\n";
+            print STDERR "  beim naechsten Schreiben an der Quelle geht das verloren:\n";
+            print STDERR "    Arbeitsweise/$_\n" for @nur_repo;
+            print STDERR "  Zurueckholen:  cp Arbeitsweise/<datei> \"$gedaechtnis/\"\n";
+        }
+    }
+}
+
 exit 0 unless @geaendert;
 
 if ($nur_pruefen) {

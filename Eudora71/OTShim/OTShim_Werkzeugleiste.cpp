@@ -17,6 +17,11 @@
 
 #include "OTShim_Werkzeugleiste.h"
 
+// NUR FUER DIE SPURMARKEN zu E-70. Siehe OTShim.cpp, dort steht dieselbe
+// Begruendung: PutDebugLog und die DEBUG_MASK_-Werte stehen in QCUtils, und
+// der Suchpfad des Eudora-Projekts kennt sie.
+#include "debug.h"
+
 // secaux.cpp:23 legt dieses Objekt an. Der Zeichencode liest es unmittelbar,
 // genau wie Eudora es tut (TBarSendButton.cpp:74, MoodMailStatic.cpp:63,
 // QCCustomizeToolBar.cpp:17).
@@ -4370,7 +4375,138 @@ void SECToolBarManager::LoadState(LPCTSTR lpszProfileName)
 
 	if (nToolbars == 0)
 		SetDefaultDockState();
+
+	GroessenLaden(szSection);		// BEFUND E-70
 }
+
+// BEFUND E-70 (Gregor, 10.09.2026, an Paket 1.0.34): "neustart: das fenster
+// wird auf den default wert zurueck gesetzt, also nicht die groesse, die ich
+// vorm beenden eingestellt habe".
+//
+// URSACHE, seit Langem als Luecke bekannt und in OTShim.cpp bei
+// SECControlBarInfo dokumentiert: CDockState::SaveState ruft
+// pInfo->SaveState(...) ueber einen CControlBarInfo* und NICHT virtuell
+// (dockstat.cpp), und CDockState::LoadState legt CControlBarInfo-Objekte an,
+// keine SECControlBarInfo. Die Stingray-Zusatzfelder - darunter
+// m_szDockHorz und m_szDockVert - kommen also gar nicht erst in die Hand
+// der Klasse, die sie kennt. Ueber SetDockState wird nur der MFC-Anteil
+// wiederhergestellt: Sichtbarkeit, Andockleiste, Lage.
+//
+// BERICHTIGUNG einer eigenen Behauptung: der CHANGELOG hat seit 7.2.0.26
+// geschrieben, die neue Breite ueberlebe einen Neustart. Das war falsch und
+// ist durch Gregors Messung widerlegt.
+//
+// Die Groessen werden deshalb hier selbst geschrieben und gelesen, in
+// denselben Abschnitt wie der uebrige Verwalterzustand, je Leiste unter
+// ihrer Fensterkennung. Das umgeht die MFC-Luecke, statt sie zu beklagen.
+static void OTShimGroessenSchluessel(TCHAR* szZiel, size_t nZiel,
+									 LPCTSTR lpszWas, UINT nId)
+{
+	_sntprintf(szZiel, nZiel, _T("%s%u"), lpszWas, nId);
+	szZiel[nZiel - 1] = _T('\0');
+}
+
+
+void SECToolBarManager::GroessenSichern(LPCTSTR lpszAbschnitt) const
+{
+	CWinApp* pApp = AfxGetApp();
+	if (pApp == NULL || m_pFrameWnd == NULL)
+		return;
+
+	POSITION pos = m_pFrameWnd->m_listControlBars.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CControlBar* pRoh = (CControlBar*) m_pFrameWnd->m_listControlBars.GetNext(pos);
+		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, pRoh);
+		if (pBar == NULL || !::IsWindow(pBar->GetSafeHwnd()))
+			continue;
+
+		const UINT nId = (UINT) pBar->GetDlgCtrlID();
+		if (nId == 0)
+			continue;
+
+		TCHAR szSchluessel[64];
+		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockVertCx"), nId);
+		pApp->WriteProfileInt(lpszAbschnitt, szSchluessel,
+							  pBar->AndockgroesseHolen(FALSE));
+		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockHorzCy"), nId);
+		pApp->WriteProfileInt(lpszAbschnitt, szSchluessel,
+							  pBar->AndockgroesseHolen(TRUE));
+
+		// SPURMARKE ZU E-70: Gregor an 1.0.36 - "nein, daten werden nicht
+		// uebernommen". Also wird entweder nicht geschrieben, nicht
+		// gelesen, oder das Gelesene wird spaeter ueberschrieben. Diese
+		// Marke beantwortet die erste Frage.
+		char szM[192];
+		_snprintf(szM, sizeof(szM),
+			"E-70 gesichert: Abschnitt=%s Leiste=%u cx=%d cy=%d",
+			(LPCSTR) lpszAbschnitt, nId,
+			pBar->AndockgroesseHolen(FALSE), pBar->AndockgroesseHolen(TRUE));
+		szM[sizeof(szM) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szM);
+	}
+}
+
+
+void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
+{
+	CWinApp* pApp = AfxGetApp();
+	if (pApp == NULL || m_pFrameWnd == NULL)
+		return;
+
+	int nGesetzt = 0;
+
+	POSITION pos = m_pFrameWnd->m_listControlBars.GetHeadPosition();
+	while (pos != NULL)
+	{
+		CControlBar* pRoh = (CControlBar*) m_pFrameWnd->m_listControlBars.GetNext(pos);
+		SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, pRoh);
+		if (pBar == NULL)
+			continue;
+
+		const UINT nId = (UINT) pBar->GetDlgCtrlID();
+		if (nId == 0)
+			continue;
+
+		// 0 heisst "nichts aufgezeichnet" - dann bleibt der Vorgabewert
+		// stehen, den die Leiste beim Anlegen bekommen hat. Eine gesicherte
+		// Null gibt es nicht: AndockgroesseSetzen laesst nichts unter das
+		// Mindestmass durch.
+		TCHAR szSchluessel[64];
+		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockVertCx"), nId);
+		const int cx = pApp->GetProfileInt(lpszAbschnitt, szSchluessel, 0);
+		if (cx > 0)
+		{
+			pBar->AndockgroesseSetzen(FALSE, cx, 4 * SECDockBar::Splitter::cx);
+			nGesetzt++;
+		}
+
+		OTShimGroessenSchluessel(szSchluessel, 64, _T("DockHorzCy"), nId);
+		const int cy = pApp->GetProfileInt(lpszAbschnitt, szSchluessel, 0);
+		if (cy > 0)
+		{
+			pBar->AndockgroesseSetzen(TRUE, cy, 4 * SECDockBar::Splitter::cx);
+			nGesetzt++;
+		}
+
+		// SPURMARKE ZU E-70, Gegenstueck zur Sicherung.
+		char szM[192];
+		_snprintf(szM, sizeof(szM),
+			"E-70 geladen: Abschnitt=%s Leiste=%u cx=%d cy=%d -> jetzt cx=%d cy=%d",
+			(LPCSTR) lpszAbschnitt, nId, cx, cy,
+			pBar->AndockgroesseHolen(FALSE), pBar->AndockgroesseHolen(TRUE));
+		szM[sizeof(szM) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szM);
+	}
+
+	// AndockgroesseSetzen schreibt nur Felder. Ohne Neuberechnung
+	// wirkt der geladene Wert erst beim naechsten Umbau des Rahmens -
+	// beim Anwender also gar nicht, weil er dann schon die Vorgabe
+	// gesehen hat.
+	if (nGesetzt > 0 && ::IsWindow(m_pFrameWnd->GetSafeHwnd()))
+		m_pFrameWnd->RecalcLayout();
+}
+
 
 // GEBRAUCHT: QCToolBarManager::SaveState (QCToolBarManager.cpp:1205) ruft
 // diese Fassung ausdruecklich auf, bevor es seine eigenen Zusatzangaben
@@ -4388,6 +4524,8 @@ void SECToolBarManager::SaveState(LPCTSTR lpszProfileName) const
 	pApp->WriteProfileInt(szSection, szToolBarTips, m_bToolTips);
 	pApp->WriteProfileInt(szSection, szToolBarCoolLook, m_bCoolLook);
 	pApp->WriteProfileInt(szSection, szToolBarLargeButtons, m_bLargeBmp);
+
+	GroessenSichern(szSection);		// BEFUND E-70
 }
 
 // Typkennung fuer das Wiederherstellen. QCToolBarManager.cpp:1341 wertet

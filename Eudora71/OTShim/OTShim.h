@@ -606,6 +606,21 @@ public:
 	// zweistellige virtuelle CControlBar::CalcInsideRect (afxext.h:170).
 	// QCCustomToolBar.cpp:162 ruft die dreistellige Fassung auf.
 	void CalcInsideRect(CRect& rect, BOOL bHorz, BOOL bVert = FALSE) const;
+
+	// NICHT im Original. A-4 / E-66: Breite des Greifstreifens an der Kante
+	// zum Nachrichtenbereich, und die Pruefung, ob ein Punkt darin liegt.
+	// Beides oeffentlich, weil SECDockBar beim Ziehen danach fragt.
+	enum { cxGreifrand = 6 };
+	BOOL AmGreifrand(CPoint pt) const;
+	UINT GreifrandSeite() const;		// CBRS_ALIGN_..., 0 = kein Rand
+
+	// NICHT im Original. E-66 (10.09.2026): die Andockgroesse lesen und
+	// setzen, ohne den Umweg ueber Get/SetBarInfo - das ruft MFCs
+	// vollstaendige Zustandswiederherstellung auf und setzt dabei mehr
+	// zurueck, als eine Groessenaenderung anfassen darf.
+	// bWaagerecht waehlt zwischen m_szDockHorz.cy und m_szDockVert.cx.
+	int AndockgroesseHolen(BOOL bWaagerecht) const;
+	int AndockgroesseSetzen(BOOL bWaagerecht, int nNeu, int nMindest);
 	inline SECControlBarManager* GetManager() const;
 	inline void SetManager(SECControlBarManager*);
 
@@ -662,6 +677,12 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);	// WazooBar.cpp:1238
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint pt);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint pt);
+	// NICHT im Original. ANFORDERUNG A-4, BEFUND E-66 (10.09.2026): der
+	// Greifstreifen liegt in der LEISTE, nicht in der Andockleiste. Nur hier
+	// ist er von keinem Kindfenster verdeckt - gemessen an 1.0.32/1.0.33:
+	// ueber der Andockleiste war der Empfaenger jeder Zeigernachricht
+	// CWazooBar, CFiltersViewLeft oder QC3DTabWnd, nie die Andockleiste.
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint pt);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnDestroy();							// WazooBar.cpp:1226
@@ -835,6 +856,12 @@ public:
 	// Splitter und Innenkanten
 	Splitter * HitTest(CPoint pt);
 	void StartTracking(Splitter* pSplit, CPoint pt);
+	// NICHT im Original. A-4 / E-66 (10.09.2026): eine Leiste meldet einen
+	// Zug an ihrem eigenen Greifrand hierher. Der Punkt kommt in
+	// Clientkoordinaten DIESER Andockleiste. Damit laeuft dieselbe
+	// Ziehschleife und dieselbe Anwendung wie beim Balken in der
+	// Andockleiste - nur der Ort, an dem gegriffen wird, ist ein anderer.
+	void ZiehenAmRand(CControlBar* pBar, CPoint ptDock);
 	Splitter * GetSplitter(int i)
 		{ return ((Splitter *)(m_arrSplitters[i])); };
 	virtual void AddSplitter(Splitter::Type type, Splitter::Orientation orientation,

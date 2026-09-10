@@ -65,6 +65,10 @@ DAMAGE. */
 #include "QCFindMgr.h"
 
 #include "DebugNewHelpers.h"
+
+// BEFUND E-72: PutDebugLog und die DEBUG_MASK_-Werte fuer die Spurmarke im
+// verweigerten Zurueckschreiben.
+#include "debug.h"
  
 // --------------------------------------------------------------------------
 
@@ -902,6 +906,7 @@ CFiltersViewRight::CFiltersViewRight()
 	m_Action3 = -1;
 	m_Action4 = -1;
 	//}}AFX_DATA_INIT
+	m_pGeladen = NULL;		// BEFUND E-72
 	m_ActionIndex = -1;
 	for (int i = 0; i < NUM_FILT_ACTS; i++)
 	{
@@ -1347,6 +1352,12 @@ void CFiltersViewRight::DoDataExchange(CDataExchange* pDX)
 			}
 
 		}
+
+		// BEFUND E-72: ab hier tragen die Felder diesen Filter. Erst jetzt
+		// darf spaeter zurueckgeschrieben werden. Ohne Filter wird die
+		// Marke geloescht, sonst wuerde ein alter Stand einen neu
+		// gewaehlten Filter ueberschreiben.
+		m_pGeladen = filt;
 	}
 	
 	//{{AFX_DATA_MAP(CFiltersViewRight)
@@ -1387,6 +1398,44 @@ void CFiltersViewRight::DoDataExchange(CDataExchange* pDX)
 
 	
 	// If we're retreiving from controls, then get info after calling DDX_ routines
+	// BEFUND E-72 (Gregor, 10.09.2026): "irgendwo werden alle mails durch
+	// den filter angefasst und verschoben" - und der leere Filterbericht,
+	// und die verlorenen Merkmale in Filters.pce, und E-67. VIER
+	// Beobachtungen, EINE Ursache.
+	//
+	// Diese Fassung schreibt beim Wegklicken vom Filterreiter ALLES aus den
+	// Eingabefeldern in den ausgewaehlten Filter zurueck - Haekchen,
+	// Kopfzeile, Verb, Wert. Ausgeloest wird es bei JEDEM Verlassen des
+	// Reiters (CFiltersWazooWnd::OnDeactivateWazoo, FiltersWazooWnd.cpp:122
+	// ruft CanCloseFrame, das ruft UpdateData(TRUE)).
+	//
+	// Solange die rechte Haelfte UNERREICHBAR war (E-65: die Andockleiste
+	// war 188 Pixel breit, die linke Spalte allein 140), wurden ihre Felder
+	// nie gefuellt. Zurueckgeschrieben wurde also LEERE.
+	//
+	// Belegt an Gregors Filters.pce vom 10.09.2026: Regel 1 hat noch
+	// "incoming" und "manual" und ihren Wert; Regel 2 hat nur noch
+	// "incoming" - kein "manual", kein "transfer". Daraus folgt der Rest:
+	//   - ein Filter ohne Merkmale ist fuer keinen Lauf mehr zustaendig ->
+	//     leerer Filterbericht, und die Spurmarke E-64 schweigt, obwohl der
+	//     Lauf stattfindet ("Messages left to filter: 1" steht im
+	//     Protokoll).
+	//   - wird der WERT geleert, die AKTION aber nicht, heisst die Regel
+	//     "enthaelt nichts" - und das trifft JEDE Nachricht. Ein Filter mit
+	//     "transfer Junk.mbx" und leerem Wert schiebt den ganzen
+	//     Posteingang.
+	//
+	// DIE SPERRE: zurueckgeschrieben wird nur, was diese Ansicht auch
+	// WIRKLICH GELADEN hat. m_pGeladen wird am Ende des Ladezweigs gesetzt;
+	// stimmt es nicht mit dem gewaehlten Filter ueberein, sind die Felder
+	// nicht seine, und sie duerfen ihn nicht ueberschreiben.
+	if (pDX->m_bSaveAndValidate == TRUE && filt && m_pGeladen != filt)
+	{
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-72 Zurueckschreiben verweigert: die Ansicht hat diesen Filter nie geladen");
+		return;
+	}
+
 	if (pDX->m_bSaveAndValidate == TRUE && filt)
 	{
 		BOOL ActionChanged = FALSE;

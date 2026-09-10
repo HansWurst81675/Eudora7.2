@@ -88,7 +88,7 @@ BOOL CDoc::SaveModified()
 				_T("weder Ja, Nein noch Abbrechen. Der Dialog kam vermutlich nicht ")
 				_T("zustande; das Schliessen wird fortgesetzt."),
 				(int) nAntwort, (const char *) m_strTitle);
-			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, strMeldung);
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 		}
 		break;
 	}

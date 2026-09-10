@@ -98,3 +98,46 @@ Und fuer die Selbstbeschuldigung eigens: sie ist genauso eine Behauptung wie
 jede andere. „Ich habe X kaputtgemacht" gehoert belegt, bevor ich es sage -
 sonst steht am Ende eine falsche Ursache in der README, und der echte Mangel
 bleibt unentdeckt.
+
+---
+
+## Nachtrag 10.09.2026 - die Quelle stand fuenf Zeilen ueber meinem Einbau
+
+Befund E-70: die Fenstergroessen ueberleben keinen Neustart. Ich habe das
+Laden der Groessen in `SECToolBarManager::LoadState` eingebaut
+(`Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:4379`) und vier Fassungen lang
+gemessen, warum nichts geladen wird.
+
+Ueber der Funktion steht, seit dem Tag der Portierung und von mir selbst
+geschrieben:
+
+    // KATEGORIE C laut PLAN.md: Eudora ruft diese Fassung nie auf.
+    // QCToolBarManager::QCLoadState ... ist die Ersatzfassung
+    void SECToolBarManager::LoadState(LPCTSTR lpszProfileName)
+
+Zeile 4341. Der Einbau steht in Zeile 4379. **38 Zeilen dazwischen, und die
+Antwort auf vier Fassungen Fehlersuche stand oben drueber.**
+
+Verdeckt hat es, dass die Gegenrichtung lief: `GroessenSichern` in derselben
+Klasse wurde sehr wohl gerufen, weil `QCToolBarManager::SaveState` seine
+Basisfassung ausdruecklich aufruft — das Gegenstueck `LoadState` aber nicht.
+"Die Haelfte funktioniert" hat wie ein Beleg dafuer ausgesehen, dass die
+Stelle richtig ist.
+
+**Was daraus folgt, zusaetzlich zu den vier Punkten oben:**
+
+5. **Bevor ich eine Zeile in eine fremde Funktion setze, lese ich den
+   Kommentarkopf dieser Funktion** — nicht die Datei, nicht das
+   Architekturpapier, den Block direkt darueber. Er kostet zehn Sekunden und
+   ist die einzige Quelle, die genau von dieser Stelle handelt.
+6. **Ein eigener Kommentar, der meiner Aenderung widerspricht, ist ein
+   Alarmzeichen, kein Hintergrundrauschen.** "Wird nie aufgerufen" und "hier
+   baue ich den Aufruf ein" schliessen sich aus; eins von beidem ist falsch,
+   und das ist **vor** dem Bau zu entscheiden, nicht nach vier Paketen.
+7. **Bei einem Paar aus Sichern und Laden wird die Symmetrie nachgesehen,
+   nicht angenommen.** Dass der eine Weg laeuft, sagt nichts ueber den
+   anderen — hier war genau diese Asymmetrie die Ursache
+   ([[widerlegte-vermutungen-aufschreiben]]).
+
+Siehe [[eingebaute-messung-auslesen]] — der zweite Teil desselben Vorfalls:
+die Spurmarken, die es gesagt haetten, lagen seit vier Fassungen im Bau.
