@@ -6,9 +6,9 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.40 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.40 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.40** — `Releases/Eudora72-1.0.40-release.zip`, 9 345 502 B, SHA256 `5c133c99eda2a2fc…`. Bei Gregor abgelegt unter `C:\Users\Gregor\Eudora72-1.0.40-release`. `paket-pruefen.ps1`: keine Fehler, Kriterium 0 **JA**. **Kein Release** — Gregor hat es noch nicht beurteilt |
+| **Quellstand** | 7.2.0.41 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.41 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.40** — `Releases/Eudora72-1.0.40-release.zip`, 9 345 502 B, SHA256 `5c133c99eda2a2fc…`. Bei Gregor abgelegt unter `C:SERSGREGORudora72-1.0.40-release`. **Kein Release** — 1.0.41 ist gebaut, aber noch nicht gepackt |
 | **Zuletzt von Gregor bestätigt** | **1.0.29 am 09.09.2026**: *„1-6, ok"* zu **E-54** bis **E-58** und **E-61**. Seither hat er E-65/E-66 bestätigt (*„1. ja / 2. ja / 3. ja"*) und dass Filter sich löschen lassen |
 | **Was als Nächstes zu messen ist** | **E-75 an 1.0.40.** Strg+J löste bei Gregor *Junk* aus statt *Filter Messages*, weil `CtrlJMapping=1` beim ersten Start eines leeren Mailverzeichnisses stillschweigend gesetzt wird. Behoben für neue Mailverzeichnisse. **In einem bestehenden wirkt es nicht** — dort steht die `1` schon und muss von Hand auf `CtrlJMapping=2`. Zu prüfen: filtert Strg+J wieder, und steht im Menü *Special* das richtige Kürzel? |
 | **Offen, mit Marken im Bau** | **E-70** (Andockgrößen überleben keinen Neustart; Marken `E-70 gesichert:`/`E-70 geladen:` seit 1.0.37, noch nie ausgewertet). **E-68** (`copyInstead` schreibt/liest asymmetrisch, und `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — Pufferüberlauf ab sechs Aktionen je Regel). **E-47** (MFC71/MSVCP71). Kriterien 2 und 4 stehen auf *fast* |

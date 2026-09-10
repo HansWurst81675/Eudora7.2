@@ -96,6 +96,82 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.41 — Die Breite des Filterfensters überlebt einen Neustart
+
+**Was Gregor damit tun kann, was vorher nicht ging:** das Filterfenster
+breiter ziehen und es beim nächsten Start genauso wiederfinden.
+
+Gemeldet am 10.09.2026 an 1.0.40: *„speichert aber nicht die fenster größe
+von filters nach dem neustart"* — dieselbe Sache, die er schon an 1.0.34
+angesprochen hatte.
+
+### Die Spurmarke aus 1.0.37 hat es entschieden
+
+Seit 7.2.0.37 schrieben `E-70 gesichert:` und `E-70 geladen:` bei jedem
+Sichern und Laden eine Zeile ins Protokoll. Ausgewertet worden waren sie nie.
+Gregors Protokoll von 1.0.40 sagt:
+
+```
+E-70 gesichert:  40 Zeilen
+E-70 geladen:     0 Zeilen
+```
+
+Und in seiner `Eudora.ini` steht `DockVertCx319=586` — genau die Breite, die
+er eingestellt hatte. **Der Wert wird richtig geschrieben und nie gelesen.**
+
+Zwei Zahlen in einer Ausgabe, und die Frage war beantwortet. Ohne die zweite
+hätte man weiter über das Schreiben nachgedacht.
+
+### Der Grund stand im eigenen Kommentar
+
+```cpp
+// KATEGORIE C laut PLAN.md: Eudora ruft diese Fassung nie auf.
+void SECToolBarManager::LoadState(LPCTSTR lpszProfileName)
+```
+
+Genau dort war der Aufruf von `GroessenLaden` eingebaut. Gerufen wird
+stattdessen `QCToolBarManager::LoadState`.
+
+Dass das **Sichern** funktionierte, hat die Lücke verdeckt:
+`QCToolBarManager::SaveState` ruft `SECToolBarManager::SaveState`
+ausdrücklich auf — das Gegenstück `LoadState` tut das nicht. Eine Asymmetrie,
+die man nur sieht, wenn man beide Seiten nebeneinanderlegt.
+
+**Behoben** an der symmetrischen Stelle: `QCToolBarManager::LoadState` ruft
+jetzt `GroessenLaden`. Der Zeitpunkt stimmt — `mainfrm.cpp` ruft erst
+`SetDockState` (Zeile 951), dann `LoadState` (952); die Größen werden also
+nach dem MFC-Zustand gesetzt und nicht wieder überschrieben.
+
+Dazu ein `RecalcLayout` am Ende von `GroessenLaden`: `AndockgroesseSetzen`
+schreibt nur Felder. Ohne Neuberechnung wirkt der geladene Wert erst beim
+nächsten Umbau des Rahmens — beim Anwender also gar nicht, weil er dann
+schon die Vorgabe gesehen hat.
+
+### Nebenbei bestätigt: der Filterlauf arbeitet richtig
+
+Gregor hatte drei Nachrichten markiert und gefiltert, ohne dass sich etwas
+bewegte. Das Protokoll zeigt, dass jede Nachricht gegen **alle drei** Filter
+geprüft wurde:
+
+```
+E-64 FilterMsg: Liste=1 Filter=3 verlangt WhenToApply=4 vorhandene Masken=[5,5,5]
+E-64 Match=0 Filter="From:angebot@email.waipu.tv" … Betreff="Hans, unsere TV-Empfehlungen der Woche"
+```
+
+`Match=0` war korrekt: die Nachricht kommt von `neues@mail.waipu.tv`, der
+Filter sucht `angebot@email.waipu.tv`. Gregors eigenes Urteil dazu:
+*„fehlalarm: die mail adresse war im filter eine andere"*. Damit ist **E-64**
+an einem Fall mit drei Filtern und mehreren Nachrichten bestätigt.
+
+### Und noch eines bestätigt: die Menübeschriftung stimmt
+
+Nach dem Wechsel auf 1.0.40 stand unter *Special* „Filter Messages
+Ctrl+Shift+L" statt „Ctrl+J". Das war **kein Fehler**, sondern die richtige
+Auskunft über einen falschen Zustand: das mitgebrachte Mailverzeichnis trug
+noch `CtrlJMapping=1`. Nach dem Umstellen auf `2` — *„ok, mit dem wert 2 ist
+das menü jetzt korrekt. paßt"*. `CMainFrame::InitJunkMenus` beschriftet das
+Menü also zuverlässig um.
+
 ## 7.2.0.40 — Strg+J filtert wieder, statt in den Junk-Ordner zu schieben
 
 **Was Gregor damit tun kann, was vorher nicht ging:** mit Strg+J filtern, so
