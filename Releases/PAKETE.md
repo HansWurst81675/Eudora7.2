@@ -623,6 +623,7 @@ Die ZIPs zu **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt; von
 
 | Fassung | SHA256 | wo |
 |---|---|---|
+| `Eudora72-1.0.41-release.zip` | `22949297c77c6f55c6f1e27d5a03646ccecb2fd3b538f7ecdf9909d8014d15ce` | **nicht im Repo** — liegt im Hauptarbeitsbaum unter `Releases/`, 9 346 106 B, gebaut am 10.09.2026, `paket-pruefen.ps1` ohne Fehler, Kriterium 0 **JA**. Keine Marke, nie veröffentlicht — Gregor hat es noch nicht beurteilt. Eingetragen von PRÜFER am 10.09.2026, weil `WEITERMACHEN.md:11` es nennt und `doku-pruefen.pl` sonst jeden Commit abweist |
 | `Eudora72-1.0.27-release.zip` | `69595d4b380204eb5ac6d327ce8ded65080b356594090a2465394ced07f81b3a` | **im Repo** und [GitHub v1.0.27](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.27) — die einzige Veröffentlichung mit Dateien |
 | `Eudora72-1.0.24-release.zip` | siehe [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.24 | Marke `v1.0.24` gesetzt, **Veröffentlichung am 09.09.2026 gelöscht**; nur im git-Verlauf |
 | `Eudora72-1.0.23-release.zip` | `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045` | Marke `v1.0.23` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf |

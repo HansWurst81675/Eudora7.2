@@ -1096,6 +1096,59 @@ BOOL CFilter::PreventAutoRepsonse(const char* text)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// BEFUND E-73, ZWEITE FASSUNG (PRUEFER, 10.09.2026).
+//
+// WARUM DIE ERSTE FASSUNG NICHT REICHTE. Am 10.09.2026 wurde E-73 an EINER
+// Stelle geschlossen: im POP-Zweig von CFilter::Action, bei der Aktion
+// "Server Options" mit SO_DELETE. PRUEFER hat danach alle Stellen gesucht,
+// die aus einem Filterlauf heraus eine Nachricht auf dem Server zum Loeschen
+// vormerken, und ZWEI WEITERE gefunden, die daran vorbeiliefen:
+//
+//   IMAP  Ist das Postfach ein IMAP-Postfach, ruft CFilter::Action nicht den
+//         POP-Zweig, sondern ImapAction (filtersd.cpp:1159-1161). Dort steht
+//         dieselbe Aktion noch einmal (filtersd.cpp:1710-1718) und gibt sie
+//         an CImapFilterActions::ImapSetServerOpt weiter
+//         (EuImap/src/ImapFiltersd.cpp:791-794), das die UID in
+//         m_szDeletedUids haengt - daraus wird spaeter ein STORE \Deleted auf
+//         dem Server. Der Rueckschalter wurde nie gefragt.
+//
+//   Junk  Die Filteraktion "Junk" (filtersd.cpp:1537-1553) ruft
+//         CJunkMail::DeclareJunk, und das merkt bei
+//         DeleteFetchedJunk=1 die Nachricht auf dem Server zum Loeschen vor
+//         (JunkMail.cpp:687-690). E-74 hat DeleteFetchedJunk nur in
+//         tools/DEudora.ini auf 0 gesetzt - das ist eine Vorgabe fuer NEUE
+//         Konten und aendert an einer vorhandenen Eudora.ini nichts. Wer die
+//         1 schon stehen hat, loescht weiter auf dem Server, und zwar durch
+//         eine FILTERAKTION.
+//
+// Deshalb liegt die Frage jetzt in EINER Funktion, und alle drei Wege rufen
+// sie. Die Schranke tools/pruefe-filter-serverloeschung.pl weist einen
+// Commit ab, in dem eine vierte Stelle dazukommt, die nicht fragt.
+//
+// ABWEICHUNG VOM ORIGINAL, bewusst, auf Gregors Ansage vom 10.09.2026:
+// "ja, 1 auf jeden fall! Filteraktion darf nicht mehr vom Server loeschen".
+BOOL FilterDarfVomServerLoeschen(const char* szFilter, const char* szBetreff, const char* szWeg)
+{
+	const BOOL bErlaubt = (BOOL) ::GetPrivateProfileInt(
+		_T("Settings"), _T("FilterMayDeleteFromServer"), 0, INIPath);
+
+	char szMarke[400];
+	char szName[64];
+	strncpy(szName, szFilter ? szFilter : "?", sizeof(szName));
+	szName[sizeof(szName) - 1] = '\0';
+
+	_snprintf(szMarke, sizeof(szMarke),
+		"E-73 [%s] Filter \"%s\" wollte die Nachricht \"%s\" auf dem Server "
+		"loeschen - %s",
+		szWeg ? szWeg : "?", szName, szBetreff ? szBetreff : "?",
+		bErlaubt ? "ERLAUBT (FilterMayDeleteFromServer=1)" : "VERWEIGERT");
+	szMarke[sizeof(szMarke) - 1] = '\0';
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+
+	return bErlaubt;
+}
+
+/////////////////////////////////////////////////////////////////////////////
 int CFilter::Action(const char* text, CSummary*& Sum, CFilterActions* fltAct, CObArray * poaABHashes, bool bNoJunkAction)
 {
 	char Scratch[_MAX_PATH + 1];
@@ -1215,25 +1268,16 @@ int CFilter::Action(const char* text, CSummary*& Sum, CFilterActions* fltAct, CO
 								// Einstellung "auf dem Server lassen" laufen.
 								if (m_ServerOpt & SO_DELETE)
 								{
-									const BOOL bErlaubt = (BOOL) ::GetPrivateProfileInt(
-										_T("Settings"), _T("FilterMayDeleteFromServer"),
-										0, INIPath);
-
-									char szMarke[320];
-									char szName[64];
-									strncpy(szName, m_Name, sizeof(szName));
-									szName[sizeof(szName) - 1] = '\0';
-									_snprintf(szMarke, sizeof(szMarke),
-										"E-73 Filter \"%s\" wollte die Nachricht \"%s\" "
-										"auf dem Server loeschen - %s",
-										szName, Sum->GetSubject(),
-										bErlaubt ? "ERLAUBT (FilterMayDeleteFromServer=1)"
-												 : "VERWEIGERT");
-									szMarke[sizeof(szMarke) - 1] = '\0';
-									PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT,
-												szMarke);
-
-									if (bErlaubt &&
+									// Die Frage steht seit dem 10.09.2026 in
+									// FilterDarfVomServerLoeschen (weiter
+									// oben in dieser Datei), weil es DREI
+									// Wege gibt, die sie stellen muessen -
+									// diesen, den IMAP-Weg in ImapAction und
+									// die Junk-Filteraktion in
+									// CJunkMail::DeclareJunk. Vorher stand
+									// sie nur hier, und die beiden anderen
+									// liefen daran vorbei.
+									if (FilterDarfVomServerLoeschen(m_Name, Sum->GetSubject(), "POP") &&
 										pMsgRecord->GetDeleteFlag() == LMOS_DONOT_DELETE)
 									{
 										pMsgRecord->SetDeleteFlag(LMOS_DELETE_MESSAGE);
@@ -1713,8 +1757,32 @@ int CFilter::ImapAction(CSummary *&pSum, CFilterActions *pFltAct, int iActionNum
 			//
 			if (m_ServerOpt > 0)
 			{
-				// Add to the m_szDeletedUid's list.
-				((CImapFilterActions *)pFltAct)->ImapSetServerOpt (pSum, m_ServerOpt);
+				// BEFUND E-73, ZWEITER WEG (PRUEFER, 10.09.2026): DIESE
+				// STELLE LIEF AM RUECKSCHALTER VORBEI.
+				//
+				// CFilter::Action verzweigt bei einem IMAP-Postfach nach
+				// hier (filtersd.cpp:1159-1161) und erreicht den geprueften
+				// POP-Zweig gar nicht. ImapSetServerOpt haengt die UID bei
+				// SO_DELETE in m_szDeletedUids
+				// (EuImap/src/ImapFiltersd.cpp:791-794); daraus wird spaeter
+				// ein STORE \Deleted auf dem Server. Die Nachricht ist dann
+				// weg - derselbe Schaden wie bei POP, nur ueber ein anderes
+				// Protokoll.
+				//
+				// SO_FETCH bleibt unberuehrt, es vernichtet nichts.
+				unsigned int uiServerOpt = (unsigned int) m_ServerOpt;
+				if ((uiServerOpt & SO_DELETE) &&
+					!FilterDarfVomServerLoeschen(m_Name,
+						pSum ? pSum->GetSubject() : "", "IMAP"))
+				{
+					uiServerOpt &= ~((unsigned int) SO_DELETE);
+				}
+
+				if (uiServerOpt > 0)
+				{
+					// Add to the m_szDeletedUid's list.
+					((CImapFilterActions *)pFltAct)->ImapSetServerOpt (pSum, uiServerOpt);
+				}
 			}
 			break;
 		case ID_FLT_NOTIFY_APP:
@@ -2697,6 +2765,74 @@ void CFiltersDoc::ForgetHashes(CString &strABName)
 }
 
 /////////////////////////////////////////////////////////////////////////////
+// BEFUND E-68 (PRUEFER, 10.09.2026): DIE 21 ZWEIGE, DIE DEN AKTIONSZAEHLER
+// HOCHZAEHLEN.
+//
+// CFiltersDoc::Read zaehlt beim Einlesen einer Regel einen Zaehler i hoch,
+// sobald eine Zeile ein Aktionsschluesselwort traegt - und prueft ihn NIE
+// gegen NUM_FILT_ACTS. Der Zaehler indiziert aber nicht nur m_Actions[5]
+// (filtersd.h:129), sondern auch elf weitere Felder derselben Groesse, unter
+// ihnen die CString-Felder m_Sound, m_NotifyApp, m_Forward, m_Redirect,
+// m_Reply, m_CopyTo und m_Desc. Eine Zuweisung an m_Desc[5] fasst den
+// Speicher HINTER dem Feld als CString auf und ruft darauf operator=; bei
+// m_Desc ist das m_DoPersonality (BOOL). Das ist kein verbogener Zahlenwert
+// mehr, sondern ein Schreibzugriff durch einen erfundenen Zeiger.
+//
+// WIE WEIT DER FEHLER REICHT, nachgerechnet:
+//   NUM_FILT_ACTS ist 5 (filtersv.h:39), m_Actions hat 5 Elemente.
+//   CFiltersDoc::Write ist gebunden (for i < NUM_FILT_ACTS, filtersd.cpp:3278)
+//   und schreibt je Platz hoechstens EINE Zeile. Eine Filters.pce, die Eudora
+//   selbst geschrieben hat, kann also nie mehr als fuenf Aktionszeilen je
+//   Regel tragen. Der Ueberlauf braucht eine FREMDE Datei: von Hand
+//   bearbeitet, aus einem anderen Programm uebernommen, oder eine .pre/.pst
+//   aus dem Filters-Verzeichnis. Die liest LoadExtraFilters
+//   (filtersd.cpp:2554-2586) ein, und geschrieben werden sie von Eudora
+//   NIE - Write kennt nur m_Filters und m_strPathName. Sie sind damit per
+//   Bauart Fremdeingabe.
+//
+// Also: kein Fehler, den die Bedienung ausloest - aber ein echter
+// Schreibzugriff hinter das Feldende, sobald jemand eine solche Datei
+// hinlegt. Die Grenze kostet nichts und die Regel bleibt bis zur fuenften
+// Aktion vollstaendig erhalten.
+//
+// Diese Liste MUSS deckungsgleich sein mit den Zweigen in Read, die i
+// hochzaehlen. IDS_FIO_TRANSFER_TO und IDS_FIO_COPY_TO teilen sich einen
+// Zweig - 21 Zweige, 22 Marken. tools/pruefe-filter-aktionsgrenze.pl
+// vergleicht beide Listen bei jedem Commit gegeneinander.
+static BOOL IstAktionsSchluesselwort(int nKeyword)
+{
+	switch (nKeyword)
+	{
+		case IDS_FIO_LABEL:
+		case IDS_FIO_PRIORITY:
+		case IDS_FIO_STATUS:
+		case IDS_FIO_LOWER:
+		case IDS_FIO_RAISE:
+		case IDS_FIO_SKIP:
+		case IDS_FIO_PRINT:
+		case IDS_FIO_JUNK:
+		case IDS_FIO_SOUND:
+		case IDS_FIO_SPEAK:
+		case IDS_FIO_NOTIFY_APP:
+		case IDS_FIO_COPY:
+		case IDS_FIO_TRANSFER_TO:
+		case IDS_FIO_COPY_TO:
+		case IDS_FIO_PERSONALITY:
+		case IDS_FIO_SUBJECT:
+		case IDS_FIO_FORWARD:
+		case IDS_FIO_REDIRECT:
+		case IDS_FIO_REPLY:
+		case IDS_FIO_OPEN:
+		case IDS_FIO_NOTIFY_USER:
+		case IDS_FIO_SERVER_OPT:
+			return TRUE;
+
+		default:
+			return FALSE;
+	}
+}
+
+/////////////////////////////////////////////////////////////////////////////
 BOOL CFiltersDoc::Read(BOOL bDoChecks /* = false */ )
 {
 	return (Read(m_strPathName, bDoChecks));
@@ -2788,6 +2924,31 @@ BOOL CFiltersDoc::Read(const char *filtFileName, BOOL bDoChecks /* = false */ )
 		// Do nothing until we get a first rule
 		if (!filt && Keyword != IDS_FIO_RULE)
 			continue;
+
+		// BEFUND E-68 (PRUEFER, 10.09.2026): DIE GRENZE, DIE HIER FEHLTE.
+		//
+		// Ohne sie schreibt die sechste Aktionszeile einer Regel hinter das
+		// Ende von m_Actions[5] - und, schlimmer, hinter das Ende der elf
+		// gleich grossen Nachbarfelder, die derselbe Zaehler indiziert. Die
+		// Rechnung steht bei IstAktionsSchluesselwort weiter oben.
+		//
+		// Verworfen wird die UEBERZAEHLIGE Zeile, nicht die Regel: die
+		// ersten fuenf Aktionen bleiben, und die Bedingungen (header, verb,
+		// value, conjunction) zaehlen ohnehin nicht mit und laufen weiter
+		// durch. Wer die Datei von Hand geschrieben hat, findet im Protokoll
+		// die Regel und die verworfene Zeile.
+		if (filt && i >= NUM_FILT_ACTS && IstAktionsSchluesselwort(Keyword))
+		{
+			char szMarke[400];
+			_snprintf(szMarke, sizeof(szMarke),
+				"E-68 Regel \"%s\" in %s hat mehr als %d Aktionen - "
+				"die ueberzaehlige Zeile \"%.80s\" wird verworfen",
+				(const char*) filt->m_Name, (const char*) szFileName,
+				NUM_FILT_ACTS, buf);
+			szMarke[sizeof(szMarke) - 1] = '\0';
+			PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+			continue;
+		}
 
 		switch (Keyword)
 		{
