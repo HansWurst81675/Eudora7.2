@@ -151,6 +151,41 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.41 — gebaut am 10.09.2026, kein Release
+
+**Nicht veröffentlicht.** Gregor hat die Fassung noch nicht beurteilt; ein
+Release entsteht erst danach (Lehre `release-erst-nach-gregors-test`). Das ZIP
+liegt **nicht** im Repo, sondern nur im Arbeitsbaum unter
+`Releases/Eudora72-1.0.41-release.zip` und ausgepackt bei Gregor unter
+`%USERPROFILE%\Eudora72-1.0.41-release`.
+
+Inhaltlich bringt sie **E-70** (die Andockgrößen überleben einen Neustart —
+der Aufruf saß in `SECToolBarManager::LoadState`, die Eudora nie aufruft) und
+die Bestätigung von **E-64** als Fehlalarm. Neu eingebaut ist die Spurmarke zu
+**E-76**.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.41-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `22949297c77c6f55c6f1e27d5a03646ccecb2fd3b538f7ecdf9909d8014d15ce` |
+| **Größe** | 9 346 106 Byte, 157 Einträge |
+| **Quellstand** | 7.2.0.41 (`Eudora71/Version.h`) |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im ZIP** | 2 966 016 Byte, 10.09.2026 13:12 |
+| **`EudoraRes.dll` im ZIP** | 2 447 360 Byte, 10.09.2026 13:10 |
+| **`.sha256` daneben** | fehlt |
+
+Alle Zahlen am 10.09.2026 nachgemessen: `Get-FileHash`, `Length` und die
+Einträge im ZIP über `System.IO.Compression.ZipFile`. `paket-pruefen.ps1`
+meldete beim Bau keine Fehler, Kriterium 0 **JA**.
+
+> **Das ZIP hat keine eigene Wurzelebene.** Alle 157 Einträge liegen auf der
+> obersten Ebene. Es darf deshalb nur in ein **eigenes, leeres** Verzeichnis
+> ausgepackt werden — am 10.09.2026 ist es einmal direkt nach
+> `C:\Users\Gregor` gegangen und hat dort eine `Eudora.ini` des Anwenders
+> überschrieben (Lehre `anwenderdatei-nicht-erschlagen`,
+> `tools/home-aufraeumen.ps1`).
+
 ## 1.0.29 — veröffentlicht am 09.09.2026
 
 **Die aktuelle Fassung, und die einzige, die als Paket im Repo liegt.** Sie
