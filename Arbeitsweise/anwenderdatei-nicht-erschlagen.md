@@ -75,3 +75,41 @@ aeussern sich Wochen spaeter als „der Anhang oeffnet falsch".
    ([[nichts-auf-gregors-bildschirm-starten]]).
 
 Siehe [[pruefen-statt-vermuten]] und [[lauffaehiges-ergebnis-liefern]].
+
+## Nachtrag 10.09.2026 — dasselbe noch einmal, diesmal durch das Auspacken selbst
+
+Punkt 3 dieser Lehre trennt zwei Fragen: *liest es sich harmlos* und
+*ueberschreibt es etwas*. Am 10.09.2026 habe ich die zweite Frage nicht
+gestellt und den Schaden dann selbst angerichtet — nicht ueber eine Datei im
+Paket, sondern ueber das **Ziel des Auspackens**.
+
+Beim Ablegen von Paket 1.0.40 habe ich das ZIP nach `C:\Users\Gregor`
+entpackt, statt in ein Unterverzeichnis. **Das Paket-ZIP hat keine eigene
+Wurzelebene:** `Eudora.exe`, `Mailverzeichnis\`, `Plugins\` und 154 weitere
+Eintraege liegen direkt auf der obersten Ebene. Also landeten 157 Dateien
+direkt im Benutzerverzeichnis, und `Mailverzeichnis\Eudora.ini` — Gregors
+eigene, um 09:21 angelegte Fassung — wurde von der Paketvorlage
+ueberschrieben.
+
+Aufgeraeumt hat es `tools/home-aufraeumen.ps1`: geloescht wird nur, was in
+**Groesse und Zeitstempel** exakt zum Paket passt, Ordner nur, wenn sie leer
+sind, und die `Eudora.ini` wird aus dem Stand zurueckgestellt, der zu den
+uebrigen Dateien passt (`Junk.mbx` 492875 B, `GMX.mbx` 37604 B,
+`Filters.pce` 404 B — das ist 1.0.36 und kein anderer Stand).
+
+**Wie anwenden, zusaetzlich zu den sechs Punkten oben:**
+
+7. **Nie in ein Verzeichnis auspacken, in dem schon etwas anderes wohnt.**
+   Ziel ist immer ein eigenes, neu angelegtes Unterverzeichnis — auch dann,
+   wenn das ZIP scheinbar eine Wurzelebene hat.
+8. **Vor jedem Auspacken die oberste Ebene des Archivs auflisten.** Ein
+   Befehl, und er beantwortet die einzige Frage, auf die es ankommt:
+
+       unzip -l <paket>.zip | awk '{print $4}' | cut -d/ -f1 | sort -u | head
+
+   Mehr als ein Eintrag heisst: das Archiv bringt keine Wurzel mit und darf
+   nur in ein leeres Verzeichnis.
+9. **Gregors Benutzerverzeichnis ist kein Arbeitsverzeichnis.** Was dort
+   liegt, ist seins ([[nichts-auf-gregors-bildschirm-starten]]); ein
+   Paketinhalt gehoert nach `%USERPROFILE%\Eudora72-<Fassung>-release\`, so
+   wie die Fassungen davor auch.

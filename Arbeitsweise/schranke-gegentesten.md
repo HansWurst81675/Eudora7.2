@@ -83,6 +83,45 @@ kaputte Tests. Die Ursachen lagen beide in der Schranke
 - **Eine Schranke ist erst fertig, wenn die Zahl der roten Gegentests gleich der
   Zahl ihrer Prüfungen ist.** Vier Prüfungen, vier Gegentests, vier rote Läufe.
 
+## Nachtrag 10.09.2026: der Gegentest hat einen echten Fehler gefangen — und zwar nicht durch Nachdenken
+
+`tools/mailverzeichnis-uebernehmen.ps1` sollte Gregors ganzes Mailverzeichnis
+in die naechste Fassung mitnehmen. Darin stand:
+
+    Copy-Item -LiteralPath (Join-Path $q '*') -Destination $z -Recurse
+
+**Mit `-LiteralPath` nimmt Copy-Item das Sternchen woertlich.** Es gibt keine
+Datei dieses Namens, also wurde **nichts** kopiert — kein Fehler, kein
+Abbruch, ein sauberer Lauf. Ohne Gegentest waere Gregor mit einem leeren
+Mailverzeichnis dagestanden, und das nach dem Vormittag, an dem er schon
+einmal schrieb: *"meine inhalte (screenshots) sind in den mails weg."*
+
+Gefunden hat es nicht die Ueberlegung und nicht das Lesen des Skripts,
+sondern die **Nachmessung im Skript selbst**: es zaehlt am Ende Quelle gegen
+Ziel und meldete *"4 Posten sind im Ziel kleiner"*. Nach der Berichtigung auf
+`-Path`: Postfach, `attach` und `Embedded` uebernommen, die Paketvorlage im
+Ziel blieb stehen, `CtrlJMapping` 1 -> 2, der Name mit Umlauten unveraendert.
+
+**Damit gehoert zu dieser Lehre ein Punkt, der bisher fehlte, weil sie nur
+von *pruefenden* Werkzeugen handelte:**
+
+- **Ein Werkzeug, das etwas *tut*, misst am Ende sein eigenes Ergebnis nach**
+  — und zwar an der Groesse, um die es geht (hier: Zahl und Groesse der
+  Posten in Quelle und Ziel), nicht an seinem eigenen Rueckgabewert. Ein
+  Kopierbefehl, der nichts kopiert, ist erfolgreich; nur der Vergleich
+  danach weiss es besser.
+- **Die Nachmessung ist billiger als der Gegentest und faengt anderes.** Der
+  Gegentest laeuft einmal bei mir; die Nachmessung laeuft **jedes Mal**, auch
+  bei Gregor, auch mit Eingaben, die ich nicht vorhergesehen habe. Beide
+  gehoeren ins Skript, nicht eins statt des anderen.
+- **Was eine Nachmessung taugt, entscheidet ihr Bezug.** Hier: Quelle gegen
+  Ziel. Ein `if ($?) { "fertig" }` haette dasselbe Skript gruen gemeldet.
+
+Der Gegentest selbst lief in beide Richtungen und in einem nachgebauten
+Verzeichnis, nicht bei Gregor: von 158 Paketdateien wurden 155 entfernt,
+waehrend eine geaenderte Datei, eine fremde Datei und eine fremde DLL
+stehenblieben — und der Ordner deshalb auch.
+
 Siehe [[fehlerklassen-abstellen]], [[lehren-anwenden-nicht-nur-schreiben]],
 [[schranke-liest-nur-code]], [[tests-vor-jedem-commit-laufen-lassen]] und
 [[pruefen-statt-vermuten]].

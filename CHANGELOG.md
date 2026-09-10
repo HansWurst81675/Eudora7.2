@@ -96,6 +96,64 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.42 — Die Breite der Seitenleisten überlebt einen Neustart wirklich
+
+**Was Gregor damit tun kann, was in 1.0.41 noch nicht ging:** eine Leiste
+breiter ziehen und sie beim nächsten Start genauso breit wiederfinden.
+
+1.0.41 hatte den halben Weg gebracht: das Laden lief, aber die Breite kam
+beim Anwender nicht an. Gregors Urteil dazu: *„0.41 speichert nicht die
+fenstergröße korrekt, nach dem neustart immer noch falsch!"*
+
+### Was die Messung am laufenden Programm zeigte
+
+Mit Gregors Freigabe (*„du kannst ja jetzt lokal ausführen, ich greife nicht
+rein"*) ließ sich das zum ersten Mal selbst durchspielen: `DockVertCx319=437`
+in die `Eudora.ini` geschrieben, gestartet, die Leiste am Fenster
+ausgemessen.
+
+| | |
+|---|---|
+| `Eudora.ini` vorher | `DockVertCx319=437` |
+| Protokoll beim Start | `E-70 geladen: Leiste=319 cx=437 -> jetzt cx=437` |
+| unmittelbar danach | `E-44 WazooBars: für 3 Leiste(n) war keine Lage gespeichert — die Standardanordnung wurde nachgezogen` |
+| **Fenster gemessen** | **Leiste 319: 180 Pixel breit** |
+| Protokoll beim Beenden | `E-70 gesichert: Leiste=319 cx=180` |
+| `Eudora.ini` danach | `DockVertCx319=180` |
+
+Der geladene Wert kommt an und wird eine Zeile später überschrieben.
+`CWazooBarMgr::LoadWazooBarConfigFromIni` läuft **nach** dem Laden und dockt
+jede Leiste, für die keine Lage wiederhergestellt werden konnte, mit einer
+**fest verdrahteten Breite von 180** an (`WazooBarMgr.cpp:409`, `:418`,
+`:493`).
+
+**Das war ohne die Freigabe nicht zu finden.** Die Spurmarke allein sagte
+*„geladen: cx=437"* und hätte wie ein Erfolg ausgesehen. Erst die Messung am
+Fenster daneben zeigte die 180.
+
+### Behoben
+
+Die Größen werden nach dem Anordnen **noch einmal** geladen — an der Stelle,
+an der die Anordnung nachweislich fertig ist. Das wirkt unabhängig davon, ob
+der Nachziehweg lief.
+
+**Nachgemessen, an einer sichtbaren Leiste:** mit `DockVertCx318=512` in der
+`Eudora.ini` startet die linke Leiste jetzt **512 Pixel breit** statt 180.
+
+### Was dabei offen bleibt
+
+Dass der Nachziehweg überhaupt läuft, gehört zu **E-44**:
+`SetDockState` stellt die Andockung nicht wieder her — `m_pDockBar` bleibt
+`NULL` —, obwohl dreizehn `[ToolBar-*]`-Abschnitte in der `Eudora.ini`
+stehen. Das ist hier **nicht** angetastet: es wäre ein zweiter Eingriff in
+einen Bereich, der gerade funktioniert, und der Zusammenhang gehört erst
+gemessen.
+
+Eine **versteckte** Leiste behält im Fenster ihre Erzeugungsgröße, weil sie
+gar nicht angeordnet wird. Ihr gespeicherter Wert bleibt trotzdem erhalten —
+im Protokoll steht `gesichert: Leiste=319 cx=512`. Sobald sie sichtbar wird,
+gilt die gespeicherte Breite.
+
 ## 7.2.0.41 — Die Breite des Filterfensters überlebt einen Neustart
 
 **Was Gregor damit tun kann, was vorher nicht ging:** das Filterfenster
