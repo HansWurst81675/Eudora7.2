@@ -55,5 +55,57 @@ dann drei Fehler dazu, alle drei lehrreich:
   Zuruecknormalisieren muss neu gestaget werden, sonst prueft die Schranke die
   alte Fassung und meldet den Fehler weiter.
 
+
+**Nachtrag 10.09.2026 — dieselbe Lehre, nicht angewendet, und was mich
+gerettet hat.** Beim Einbau von E-75 habe ich die Zeilenenden von vier
+Dateien mit `grep -c $'\r'` gezaehlt. Ergebnis: CR gleich Zeilenzahl in allen
+vier Dateien, also scheinbar reines CRLF. Ich habe daraufhin ein
+Aenderungsskript mit `\r\n` geschrieben. **Alle fuenf Ersetzungen passten
+0x** — die Dateien sind in Wahrheit LF, mainfrm.cpp und TocFrame.cpp mit
+genau 18 CRLF-Ausreissern.
+
+Der Absatz `grep -c` in dieser Lehre stand da schon. Ich habe ihn nicht
+befolgt.
+
+Die Ursache ist praeziser als bisher beschrieben und hat nichts mit dem
+Windows-Textmodus zu tun: **`$'\r'` kommt durch die Werkzeugschicht als
+leeres Muster an**, und `grep -c ''` zaehlt jede Zeile. Nachgemessen an
+`resource.h`, die kein einziges CR-Byte enthaelt:
+
+    grep -c $'\r' resource.h      4472      <- alle Zeilen
+    grep -c "$CR" resource.h         0      <- CR=$(printf '\r'), richtig
+    grep -c '' resource.h         4472      <- das leere Muster, gleiche Zahl
+
+Verwandt mit [[text-nicht-durch-schichten-schicken]]: ein Steuerzeichen
+ueberlebt den Weg durch die Schichten nicht, und zwar auch dann nicht, wenn
+es nur ein *Suchmuster* ist und kein Ersetzungstext.
+
+**Der verlaessliche Messbefehl** ist Perl auf `:raw`, und er nennt beide
+Zahlen in einer Zeile (siehe [[zwei-werte-in-eine-ausgabe]]):
+
+    perl -e 'open my $h,"<:raw",$ARGV[0];local $/;my $t=<$h>;
+             my $crlf=()=$t=~/\r\n/g; my $lf=()=$t=~/\n/g;
+             printf "CRLF=%d nur-LF=%d\n",$crlf,$lf-$crlf;' datei
+
+**Was mich wirklich gerettet hat, war nicht die Regel, sondern die Bauform
+des Skripts:** es prueft erst *alle* Ersetzungen gegen *alle* Dateien, meldet
+zu jeder, wie oft sie passt, und schreibt **nur, wenn jede genau einmal
+passt**. Ein Skript, das Datei fuer Datei ersetzt und schreibt, haette hier
+nichts gefunden und nichts geaendert — und ich haette den Bau angeworfen und
+mich ueber das unveraenderte Verhalten gewundert.
+
+Dazu gehoert die zweite Haelfte: das Skript zaehlt die CRLF **vor** und
+**nach** der Aenderung und schreibt nur, wenn die Zahl gleich geblieben ist.
+Damit misst es die eigene Annahme ueber die Zeilenenden nach, statt ihr zu
+vertrauen.
+
+Also, als Bauform fuer jedes Aenderungsskript an Quelldateien:
+
+1. alle Dateien lesen, Zeilenenden zaehlen und merken,
+2. alle Ersetzungen im Speicher ausfuehren und jede auf **genau einmal**
+   pruefen, bei Abweichung abbrechen, **ohne etwas zu schreiben**,
+3. Zeilenenden gegen Schritt 1 halten, bei Abweichung abbrechen,
+4. erst dann schreiben.
+
 Siehe auch [[pruefen-statt-vermuten]],
 [[doku-bei-jedem-commit-mitziehen]] und [[schranke-gegentesten]].
