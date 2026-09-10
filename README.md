@@ -55,11 +55,13 @@ verschickt.
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
   **E-47**).
-* **Die Filter sind zurzeit gefährlich.** Ein Filterlauf über ein ganzes
-  Postfach verschiebt **alle** Nachrichten statt nur der passenden (**E-64**),
-  und eine Regel der Form *„Junk Score is less than N"* wird durch bloßes
-  Ansehen im Filterfenster unbrauchbar (**E-67**). Wird gerade behoben — bis
-  dahin: `Filters.pce` sichern und Filter nicht auf ganze Postfächer anwenden.
+* **Eine Filterregel verträgt kein bloßes Ansehen.** Eine Regel der Form
+  *„Junk Score is less than N"* wird unbrauchbar, sobald man sie im
+  Filterfenster anklickt (**E-67**, offen). Sichern Sie `Filters.pce`, bevor
+  Sie im Filterfenster stöbern. Das Filtern selbst arbeitet korrekt — dass
+  ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
+  ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
+  Grenzen liegen, steht in [FILTER.md](FILTER.md).
 * **Kein IMAP getestet.** Der Code ist da, geprüft ist nur POP3.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 

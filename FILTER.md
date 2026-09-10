@@ -25,7 +25,9 @@ Portierung; [BEFUNDE.md](BEFUNDE.md) — die vollständigen Befunde;
 
 > **Ein Filterlauf kann Post auf dem Server löschen.** In dieser Portierung
 > ist der Weg gesperrt (**E-73**), aber nur, solange
-> `FilterMayDeleteFromServer` auf `0` steht. Siehe
+> `FilterMayDeleteFromServer` auf `0` steht — im Abschnitt `[Settings]` der
+> **`Eudora.ini` in Ihrem Mailverzeichnis**. Steht der Schlüssel dort gar
+> nicht, gilt `0`, und die Sperre greift. Siehe
 > [Die Aktion „Server Options"](#die-aktion-server-options).
 
 ---
@@ -235,7 +237,20 @@ sticht das sogar die Einstellung *Leave mail on server*.
 
 **In dieser Portierung tut die Aktion nichts mehr auf dem Server**, solange
 `FilterMayDeleteFromServer` nicht ausdrücklich auf `1` gesetzt ist
-(`filtersd.cpp:1216-1240`). Der Versuch wird abgelehnt und protokolliert:
+(`filtersd.cpp:1216-1240`). Der Schlüssel steht im Abschnitt `[Settings]`
+der **`Eudora.ini` in Ihrem Mailverzeichnis** — also dort, wo auch Ihre
+Konten stehen, nicht in der `DEudora.ini` neben der `Eudora.exe`:
+
+```ini
+[Settings]
+FilterMayDeleteFromServer=0
+```
+
+Fehlt der Schlüssel, gilt `0`. Eudora muss beim Ändern geschlossen sein,
+sonst überschreibt es die Datei beim Beenden. Alle übrigen Schlüssel stehen
+in [Die Einstellungen in der `Eudora.ini`](#die-einstellungen-in-der-eudoraini).
+
+Der Versuch wird abgelehnt und protokolliert:
 
 ```
 E-73 Filter "<Name>" wollte die Nachricht "<Betreff>" auf dem Server
@@ -297,8 +312,24 @@ danach in einem anderen Postfach liegt.
 
 *Tools → Filter Report* (`EudoraRes.rc:5790`).
 
-Der Bericht bekommt einen Eintrag, wenn eine Regel eine Nachricht
-**verschoben** hat und entweder
+> **Der Filterbericht bleibt in dieser Fassung leer — Befund E-71, offen.**
+> Am 10.09.2026 an Paket 1.0.42 gemessen, nachdem die Filter nachweislich
+> griffen: *„filter report fenster ist leer: kommt nichts an."* Der Rest
+> dieses Abschnitts beschreibt, was **vorgesehen** ist, nicht, was Sie
+> beobachten werden.
+>
+> Belegt ist, dass der Lauf trifft: im Protokoll steht `E-64 Match=1` und
+> unmittelbar danach die Zeile `Filter "…" matches "…"` auf Protokollkanal
+> 1024 — dem Kanal des Berichts. Es scheitert also **nach** dem Vermerken,
+> vermutlich in `CFilterActions::EndFiltering`, wo `m_NotifyReportList`
+> abgearbeitet und über `CFilterReportView::GetFilterReportView()` das
+> Fenster gesucht wird; findet es keines, verfällt die Liste.
+>
+> Auf Gregors Wunsch zurückgestellt: *„kann aber als ToDo für die nächste
+> version aufgeschrieben werden."*
+
+**Vorgesehen ist:** der Bericht bekommt einen Eintrag, wenn eine Regel eine
+Nachricht **verschoben** hat und entweder
 
 * die Regel selbst *Notify User → In Report* eingestellt hat, oder
 * die Einstellung `FilterReport` gesetzt ist — *Options → Getting Attention →
@@ -312,8 +343,12 @@ sobald etwas darin steht (`filtersd.cpp:3769-3771`).
 gedruckt oder nur weitergeleitet haben. Die Bedingung `bDidMoveAction`
 verlangt ein Verschieben oder Kopieren (`filtersd.cpp:1584`).
 
-Ein leerer Bericht nach einem Lauf, bei dem sichtbar etwas passiert ist, war
-Befund **E-71** — kein eigener Fehler, sondern Folge von **E-72**.
+**Berichtigung einer früheren Einstufung.** Hier stand, ein leerer Bericht
+sei *„kein eigener Fehler, sondern Folge von E-72"* — ein Filter ohne
+Merkmale sei für keinen Lauf zuständig und habe darum nichts zu berichten.
+Diese Begründung ist widerlegt: E-72 ist behoben, die Filter greifen (von
+Gregor an 1.0.42 bestätigt), und der Bericht bleibt trotzdem leer. **E-71 ist
+ein eigener, offener Befund.**
 
 ---
 
@@ -601,10 +636,11 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 | Befund | was passiert |
 |---|---|
 | **E-67** | eine Regel `«Junk Score» is less than N` wird durch bloßes Anschauen im Filterfenster zu `matches regexp N` |
-| **E-68** | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen; ab sechs Aktionen je Regel liest `CFiltersDoc::Read` über den Puffer hinaus |
+| **E-68**, halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
 | **E-69** | `CFiltersDoc::FilterMsg` kann den Lauf im Freigabebau lautlos abbrechen und trotzdem Erfolg melden |
+| **E-71** | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
 | **E-76** | das freischwebende Filterfenster lässt sich nicht nach unten vergrößern |
-| **E-47** | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben |
+| **E-47** | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
 
 Behoben, aber gut zu wissen, weil sie erklären, warum ältere `Filters.pce`
 beschädigt sein können: **E-64**, **E-72**, **E-73**, **E-74**, **E-75**.
