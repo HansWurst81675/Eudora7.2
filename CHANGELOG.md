@@ -96,6 +96,82 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.31 — Messfassung: warum der Trennbalken nicht greift
+
+**Was Gregor damit tun kann:** dieselbe Fassung wie 1.0.30, plus **drei
+Spurmarken**, die beim Ziehen des Trennbalkens ins Protokoll schreiben, was
+wirklich passiert. Einmal ziehen, `eudora.log` schicken — danach ist **E-66**
+entschieden, statt weiter geraten zu werden.
+
+**Dazu behoben: die dritte Ursache von E-66.**
+
+### E-66, dritte Ursache — meine eigene Messung zerstörte ihr Ergebnis
+
+Gregor an 1.0.30: *„balken lassen sich nicht verschieben. beim anklicken ist
+der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Und:
+*„in der 0.30 version ist das filter fenster noch nicht skalierbar bzw. der
+fenster rand nicht verschiebbar."*
+
+Der Doppelpfeil war der entscheidende Hinweis: `HitTest` **findet** den
+Balken, er existiert also. Beim Einsetzen der Spurmarke kam der Grund durch
+Lesen heraus — und es ist die Behebung vom Vortag selbst:
+
+Der freie Streifen wurde als **Abstand** zwischen Leistenkante und
+Andockleistenkante gemessen. Für rechts und unten wird die Leiste
+unmittelbar danach **genau dorthin gerückt** — also ist der Abstand beim
+nächsten Anordnungsdurchlauf null, die Bedingung `nFrei >= 2` scheitert, und
+der Balken wird **nicht mehr angelegt**. Eine Messung, die ihr eigenes
+Ergebnis zerstört.
+
+Dass der Doppelpfeil trotzdem erscheint, passt genau dazu: der Balken
+entsteht im ersten Durchlauf und verschwindet im nächsten — je nachdem, wann
+man hinsieht, ist er da oder nicht.
+
+Getrennt wird das jetzt in **zwei Größen mit verschiedener Bedeutung**:
+
+| | woraus | Verhalten nach dem Rücken |
+|---|---|---|
+| `nFrei` — wie **breit** der Streifen ist | Differenz der **Größen** | unverändert, die Größen ändern sich beim Rücken nicht |
+| `nSchub` — wie **weit** noch zu rücken ist | Differenz der **Lagen** | wird von selbst null, es passiert nichts mehr |
+
+Damit hält sich die Sache selbst an, statt zwischen zwei Zuständen zu
+pendeln.
+
+### Die drei Spurmarken
+
+Jede schreibt **eine** Zeile, alle mit `MISC | TOC_CORRUPT` — also ohne dass
+etwas eingestellt werden muss:
+
+| Marke | wann | beantwortet |
+|---|---|---|
+| `E-66 Streifen:` | bei jedem Anordnungsdurchlauf | entsteht überhaupt ein Balken? Mit Andockleiste, Clientbereich, `nFrei`, `nSchub` |
+| `E-66 Zug:` | bei jedem Ziehversuch | liefert die Ziehschleife etwas? Mit Balkenlage, Grenzen, Klickpunkt, Delta |
+| `E-66 Anwenden ABGEBROCHEN:` | wenn das Anwenden scheitert | **welcher** der drei möglichen Gründe — Leiste nicht gefunden, falsche Klasse (mit echtem Klassennamen), oder Größe unverändert |
+
+Drei Fehlerfälle, die von außen alle gleich aussehen — *„der Balken greift
+nicht"* —, sind damit unterscheidbar.
+
+**Warum Marken und nicht die nächste Vermutung:** am 09.09.2026 sind **vier**
+Vermutungen am Code gescheitert — zwei zu E-64 (eine Attrappe, die immer
+`TRUE` liefert; ein `default`-Zweig in `MatchValue`) und zwei zu E-66
+(`BrauchtGreifstreifen` lasse rechts nicht zu; es liege allein an
+`CalcTrackingLimits`). Was sich lesen lässt, wird gelesen; was nicht, soll
+das Programm selbst sagen.
+
+**Die Marken gehören wieder heraus, sobald E-66 steht** — ebenso die Marke
+`E-64 Match=` aus 7.2.0.30, die je Nachricht **und** Filter eine Zeile
+schreibt.
+
+### Was an 1.0.31 zu prüfen ist
+
+1. **Trennbalken rechts** greifen und ziehen — mehrfach, auch nach einer
+   Größenänderung des Hauptfensters.
+2. **Trennbalken links** desselbe — er ging in 1.0.29; falls er jetzt nicht
+   mehr geht, hat eine der drei Behebungen ihn beschädigt, und das steht in
+   der Marke `E-66 Streifen:`.
+3. Danach die **`eudora.log`** schicken, ganz gleich ob es geht oder nicht.
+   Geht es, steht dort warum; geht es nicht, steht dort auch warum.
+
 ## 7.2.0.30 — Trennbalken rechts, Kurzhinweis der letzten Karte (in Arbeit)
 
 **Noch nicht gebaut, nicht gepackt, nicht ausgeliefert.** Dieser Abschnitt
