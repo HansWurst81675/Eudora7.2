@@ -606,6 +606,21 @@ public:
 	// zweistellige virtuelle CControlBar::CalcInsideRect (afxext.h:170).
 	// QCCustomToolBar.cpp:162 ruft die dreistellige Fassung auf.
 	void CalcInsideRect(CRect& rect, BOOL bHorz, BOOL bVert = FALSE) const;
+
+	// NICHT im Original. A-4 / E-66: Breite des Greifstreifens an der Kante
+	// zum Nachrichtenbereich, und die Pruefung, ob ein Punkt darin liegt.
+	// Beides oeffentlich, weil SECDockBar beim Ziehen danach fragt.
+	enum { cxGreifrand = 6 };
+	BOOL AmGreifrand(CPoint pt) const;
+	UINT GreifrandSeite() const;		// CBRS_ALIGN_..., 0 = kein Rand
+
+	// NICHT im Original. E-66 (10.09.2026): die Andockgroesse lesen und
+	// setzen, ohne den Umweg ueber Get/SetBarInfo - das ruft MFCs
+	// vollstaendige Zustandswiederherstellung auf und setzt dabei mehr
+	// zurueck, als eine Groessenaenderung anfassen darf.
+	// bWaagerecht waehlt zwischen m_szDockHorz.cy und m_szDockVert.cx.
+	int AndockgroesseHolen(BOOL bWaagerecht) const;
+	int AndockgroesseSetzen(BOOL bWaagerecht, int nNeu, int nMindest);
 	inline SECControlBarManager* GetManager() const;
 	inline void SetManager(SECControlBarManager*);
 
@@ -662,6 +677,12 @@ protected:
 	afx_msg void OnSize(UINT nType, int cx, int cy);	// WazooBar.cpp:1238
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint pt);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint pt);
+	// NICHT im Original. ANFORDERUNG A-4, BEFUND E-66 (10.09.2026): der
+	// Greifstreifen liegt in der LEISTE, nicht in der Andockleiste. Nur hier
+	// ist er von keinem Kindfenster verdeckt - gemessen an 1.0.32/1.0.33:
+	// ueber der Andockleiste war der Empfaenger jeder Zeigernachricht
+	// CWazooBar, CFiltersViewLeft oder QC3DTabWnd, nie die Andockleiste.
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint pt);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnDestroy();							// WazooBar.cpp:1226
@@ -740,6 +761,14 @@ public:
 			CRect m_rect;
 			int m_nPos;
 			BOOL m_bInUse;
+			// NICHT im Original. PRUEFER-6 (09.09.2026): waehrend Track laeuft,
+			// dispatcht die Schleife fremde Nachrichten. Eine davon kann einen
+			// Anordnungsdurchlauf ausloesen, der ueber
+			// TrennbalkenNeuAnlegen -> EndRecycleSplitters GENAU DIESEN
+			// Splitter loescht - Track arbeitet danach auf freigegebenem
+			// Speicher, und StartTracking benutzt den Zeiger anschliessend
+			// noch fuer OnSplitterMoved. Diese Marke schuetzt ihn.
+			BOOL m_bTracking;
 			int m_nMin, m_nMax;
 
 		protected:
@@ -827,6 +856,12 @@ public:
 	// Splitter und Innenkanten
 	Splitter * HitTest(CPoint pt);
 	void StartTracking(Splitter* pSplit, CPoint pt);
+	// NICHT im Original. A-4 / E-66 (10.09.2026): eine Leiste meldet einen
+	// Zug an ihrem eigenen Greifrand hierher. Der Punkt kommt in
+	// Clientkoordinaten DIESER Andockleiste. Damit laeuft dieselbe
+	// Ziehschleife und dieselbe Anwendung wie beim Balken in der
+	// Andockleiste - nur der Ort, an dem gegriffen wird, ist ein anderer.
+	void ZiehenAmRand(CControlBar* pBar, CPoint ptDock);
 	Splitter * GetSplitter(int i)
 		{ return ((Splitter *)(m_arrSplitters[i])); };
 	virtual void AddSplitter(Splitter::Type type, Splitter::Orientation orientation,
@@ -891,6 +926,14 @@ public:
 	// weg, die MFC selbst nie erzeugt. Begruendung: Befund E-4.
 	void NormalizeBarArray();
 
+	// NICHT im Original, ANFORDERUNG A-4 (Befund E-49). Setzt den Innenrand
+	// der Andockleiste so, dass an der zum MDI-Bereich zeigenden Seite ein
+	// Streifen von Splitter::cx bzw. ::cy frei bleibt. Nur dort kann ein
+	// Trennbalken Mausereignisse bekommen - liegt er unter dem Kindfenster,
+	// gehen sie an dieses. Laeuft bei jedem Anordnungsdurchlauf, weil der
+	// Rand davon abhaengt, ob ueberhaupt eine Leiste sichtbar angedockt ist.
+
+
 	// NICHT im Original. Verteilt die verfuegbare Zeilenlaenge anhand von
 	// SECControlBar::m_fPctWidth auf die sichtbaren Leisten einer Zeile und
 	// legt das Ergebnis in deren m_nRowExtent ab. Laeuft unmittelbar vor
@@ -921,6 +964,13 @@ protected:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnDestroy();
 	afx_msg LRESULT OnSizeParent(WPARAM wParam, LPARAM lParam);
+
+	// NICHT im Original, ANFORDERUNG A-4 (Befund E-52). Der Trennbalken wird
+	// hier angelegt und nicht in OnSizeParent: MFC verschiebt die Leisten mit
+	// DeferWindowPos, sodass die Andockleiste dort ihre neue Groesse noch
+	// nicht hat. WM_SIZE kommt danach.
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void TrennbalkenNeuAnlegen();
 	DECLARE_MESSAGE_MAP()
 
 	friend class SECMiniDockFrameWnd;
@@ -1388,7 +1438,8 @@ public:
 
 // Operationen
 public:
-	// workbook.cpp:729; mainfrm.cpp:5660, 5716
+	// Reihenfolge gegen SECWB.H:96 nachgesehen, siehe OTShim.cpp.
+	// Aufrufstellen: workbook.cpp:729, mainfrm.cpp:5995 und 6051.
 	void SetMargins(int left, int right, int top, int bottom);
 	// Von Eudora nicht aufgerufen; Gegenstueck zu SetMargins.
 	void GetMargins(int& left, int& right, int& top, int& bottom);
@@ -1518,6 +1569,14 @@ protected:
 	virtual void OnDrawTab(CDC* pDC, SECWorksheet* pSheet);
 	virtual void OnDrawBorder(CDC* pDC);
 	virtual void OnDrawTabIconAndLabel(CDC* pDC, SECWorksheet* pSheet);
+
+	// NICHT im Original, ANFORDERUNG A-3 (Befund E-50). Erklaert den
+	// Registerkartenstreifen fuer ungueltig. Wird gebraucht, wenn sich die
+	// Zahl der Karten aendert (AddSheet/RemoveSheet) oder das Fenster seine
+	// Groesse aendert - dann stimmt auch die Kartenbreite nicht mehr.
+	void StreifenAuffrischen();
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 
 // Operationen
 public:

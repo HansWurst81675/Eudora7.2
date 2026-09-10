@@ -1,0 +1,16 @@
+void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
+{
+	if (pSplit == NULL)
+		return;
+
+	// Die virtuelle Fassung, damit QCDockBar seine Grenzen setzen kann.
+	CalcTrackingLimits(pSplit);
+
+	// BEFUND E-54: NULL als Zeichenziel heisst "auf den Bildschirm", nicht
+	// "in den Clientbereich dieser Andockleiste". Sonst ist der Ziehrahmen
+	// genau in der Richtung unsichtbar, in die gezogen werden soll - die
+	// Leiste ist nur ihre eigene Breite breit. Siehe Splitter::Track.
+	int nDelta = pSplit->Track(this, pt, NULL);
+	if (nDelta != 0)
+		OnSplitterMoved(pSplit, nDelta);
+}

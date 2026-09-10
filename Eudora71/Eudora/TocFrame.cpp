@@ -993,7 +993,10 @@ void CTocFrame::OnRecheckMessagesForJunk()
 		return;
 	}
 		
-	CountdownProgress(CRString(IDS_FILTER_MESSAGES_LEFT), iSelCount);
+	// E-75: nicht "Messages left to filter" - hier wird neu bewertet,
+	// nicht gefiltert. Derselbe Text fuer beides liess das Junken wie
+	// einen Filterlauf aussehen.
+	CountdownProgress(CRString(IDS_JUNK_MESSAGES_LEFT), iSelCount);
 
 	CObArray	oaABHashes;
 
@@ -1153,7 +1156,9 @@ void CTocFrame::SetJunkStatus(bool bJunk)
 			return;
 		}
 			
-		CountdownProgress(CRString(IDS_FILTER_MESSAGES_LEFT), iSelCount);
+		// E-75: nicht "Messages left to filter" - hier wird der
+		// Junk-Status gesetzt, nicht gefiltert.
+		CountdownProgress(CRString(IDS_JUNK_MESSAGES_MARK), iSelCount);
 
 		// Hash the address book for translator use and potentially
 		// determining if we need to add not junked senders to the AB.
@@ -3864,6 +3869,15 @@ bool CTocFrame::DoPreviewDisplay()
 					//	or key presses - go ahead and remove it so that we can process it
 					//	while we wait for Trident to be ready.
 					PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+
+					// BEFUND E-62 (09.09.2026): WM_QUIT nicht verschlucken.
+					// Gewartet wird hier auf die Trident-Anzeige; kommt
+					// waehrenddessen ein Beenden, war es bisher weg.
+					if (msg.message == WM_QUIT)
+					{
+						::PostQuitMessage((int) msg.wParam);
+						break;
+					}
 
 					//	Avoid handling messages that are for us and are irrelevant given that
 					//	we're still currently doing the preview display.

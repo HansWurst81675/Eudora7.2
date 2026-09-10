@@ -51,8 +51,59 @@ param(
   [string]$Zip,
   [string]$Grundlage,
   [switch]$AusBauverzeichnis,
-  [ValidateSet('Debug','Release')][string]$Bauart = 'Debug'
+  [ValidateSet('Debug','Release')][string]$Bauart = 'Debug',
+  # Baut auch, wenn ein bekannter Datenverlustweg offen ist. Braucht eine
+  # Begruendung, die ins Protokoll geht. Siehe die Schranke unten.
+  [string]$TrotzDatenverlust = ''
 )
+
+# --- Schranke: kein Paket bei offenem Datenverlustweg ----------------------
+#
+# Am 10.09.2026 ist Gregors Postfach auf dem Server geleert worden. Ich hatte
+# den Weg dorthin am selben Vormittag gefunden und beschrieben - und dann ein
+# Paket ausgeliefert, das nur EINEN von zwei Wegen sperrt, mit der
+# Aufforderung zu testen. Das Testen hat den Verlust ausgeloest.
+#
+# Der Fehler war nicht die Analyse, sondern die Auslieferung.
+$pruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-datenverlust.pl'
+if (Test-Path -LiteralPath $pruefer) {
+
+  # perl wird GESUCHT, nicht vorausgesetzt. Beim ersten Lauf am 10.09.2026
+  # stand es im Kindprozess nicht im Suchpfad; der Aufruf schlug fehl, und
+  # die Schranke wies ab - richtig herum, aber aus dem falschen Grund. Eine
+  # Schranke, die aus Versehen abweist, wird abgeschaltet.
+  $perl = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perl) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perl = $k; break }
+    }
+  }
+
+  if (-not $perl) {
+    # FAIL CLOSED: ohne Pruefung kein Paket. Der ganze Zweck ist, nicht
+    # blind auszuliefern - "Werkzeug fehlt" ist kein Freibrief.
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Datenverlust-Pruefung'
+    Write-Host '  konnte nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perl $pruefer
+  if ($LASTEXITCODE -ne 0) {
+    if ($TrotzDatenverlust.Trim().Length -lt 10) {
+      Write-Host ''
+      Write-Host '  KEIN PAKET. Erst den Weg schliessen, dann ausliefern.'
+      Write-Host '  Wer es trotzdem muss:  -TrotzDatenverlust "<Begruendung>"'
+      Write-Host ''
+      exit 1
+    }
+    Write-Host ('  TROTZDEM GEBAUT, Begruendung: ' + $TrotzDatenverlust)
+  }
+}
 
 $ErrorActionPreference = 'Stop'
 

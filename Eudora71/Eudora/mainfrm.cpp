@@ -7927,8 +7927,26 @@ void CMainFrame::InitJunkMenus()
 		}
 		else
 		{
-			// User has no manual filters: map Ctrl-J to Junk.
-			sCtrlJ = CTRL_J_JUNK;
+			// BEFUND E-75 (Gregor, 10.09.2026): hier stand CTRL_J_JUNK.
+			//
+			// Wer mit leerem Mailverzeichnis anfaengt, hat beim ersten
+			// Start noch keine Filter. Dann legte das Original Strg+J
+			// STILLSCHWEIGEND auf "Junk" - ohne die Frage aus
+			// IDD_CTRL_J_FOR_JUNK, die es sonst stellt. Die spaeter
+			// angelegten Filter aendern daran nichts mehr, denn dieser
+			// Zweig wird nur einmal durchlaufen.
+			//
+			// Gregor filterte mit Strg+J, wie er es seit jeher tat, und
+			// junkte in Wahrheit neun Nachrichten nach Junk.mbx - sechs
+			// davon gegen seinen eigenen Filter, der HW_Bxo.mbx als Ziel
+			// hatte. Im Protokoll fehlt zu diesem Lauf jede E-64-Marke:
+			// FilterMsg wurde nie gerufen.
+			//
+			// Strg+J bleibt daher auf "Filter Messages" - so, wie es vor
+			// der Junk-Funktion war und wie IDR_MAINFRAME es beschriftet.
+			// Wer Junk auf Strg+J will, stellt es in den Einstellungen um
+			// (settings.cpp), und InitJunkMenus beschriftet das Menue um.
+			sCtrlJ = CTRL_J_FILTER;
 		}
 	}
 	SetIniShort(IDS_INI_WHO_GETS_CTRL_J, sCtrlJ);

@@ -17,6 +17,15 @@
 
 #include "OTShim.h"
 
+// NUR FUER DIE SPURMARKEN zu E-66. PutDebugLog und die DEBUG_MASK_-Werte
+// stehen in QCUtils; Eudoras eigene Quellen binden dieselbe Kopfdatei ein
+// (mainfrm.cpp:69). Der Suchpfad des Eudora-Projekts kennt sie, und diese
+// Datei wird als Teil davon uebersetzt.
+//
+// Die Marken sind vorlaeufig - fliegen sie wieder raus, geht dieser Include
+// mit.
+#include "debug.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // SECTipOfDay
@@ -733,9 +742,23 @@ void SECWorkbookClient::Dump(CDumpContext& dc) const
 #endif
 
 
-// Reihenfolge der Argumente wie im Original (SECWB.H:96): left, right, top,
-// bottom - CRect legt sie als left, top, right, bottom ab.
-// workbook.cpp:729; mainfrm.cpp:5660, 5716
+// Reihenfolge der Argumente wie im Original, NACHGESEHEN und nicht vermutet:
+// Eudora71/OT501/Include/SECWB.H:96 lautet wortgleich
+//     void SetMargins(int left, int right, int top, int bottom);
+// und :101 fuehrt m_margins als CRect. CRect legt seine Felder als left,
+// top, right, bottom ab - die Reihenfolge der ARGUMENTE ist also eine
+// andere als die der FELDER, und genau daran laesst sich eine Verwechslung
+// nicht ansehen.
+//
+// Zweiter Beleg, aus dem Verhalten: alle drei Aufrufstellen uebergeben
+// (0, 0, 0, N), und N landet unten - der Registerkartenstreifen erscheint
+// am unteren Rand des MDI-Bereichs, von Gregor am 09.09.2026 an 1.0.25
+// bestaetigt. Waeren Argumente und Felder vertauscht, stuende der Streifen
+// rechts.
+//
+// Aufrufstellen (Zeilennummern am 09.09.2026 nachgezaehlt, sie standen
+// vorher zwei Fassungen daneben): workbook.cpp:729 (Registerkarten),
+// mainfrm.cpp:5995 und 6051 (Sponsorenanzeige und Registerkarten).
 void SECWorkbookClient::SetMargins(int left, int right, int top, int bottom)
 {
 	m_margins.SetRect(left, top, right, bottom);
@@ -761,7 +784,7 @@ void SECWorkbookClient::GetMargins(int& left, int& right, int& top, int& bottom)
 // Bei m_bWorkbookMode == FALSE setzt SetWorkbookMode keine Raender, das
 // Rechteck bleibt also unveraendert und der MDI-Bereich fuellt den Rahmen.
 // Eudora setzt trotzdem an zwei Stellen von sich aus Raender
-// (mainfrm.cpp:5660, 5716, Sponsorenanzeige); die werden hier ehrlich
+// (mainfrm.cpp:5995 und 6051, Sponsorenanzeige); die werden hier ehrlich
 // beruecksichtigt.
 void SECWorkbookClient::CalcWindowRect(LPRECT lpClientRect, UINT nAdjustType)
 {
@@ -788,6 +811,12 @@ IMPLEMENT_DYNCREATE(SECWorkbook, SECMDIFrameWnd)
 BEGIN_MESSAGE_MAP(SECWorkbook, SECMDIFrameWnd)
 	ON_WM_ERASEBKGND()
 	ON_WM_PAINT()
+	// BEFUND E-50 (Gregor, 09.09.2026): "beim skalieren (kleiner machen), ist
+	// die darstellung falsch." Aendert sich die Fensterbreite, aendert sich
+	// die Kartenbreite mit (recalcTabWidth teilt die Flaeche auf) - ohne
+	// Auffrischen bleibt das Alte stehen. QCWorkbook::OnSize ruft diese
+	// Fassung ausdruecklich auf (workbook.cpp:906).
+	ON_WM_SIZE()
 	ON_WM_LBUTTONDOWN()
 	ON_WM_LBUTTONUP()
 	ON_WM_DESTROY()
@@ -920,6 +949,51 @@ INT_PTR SECWorkbook::OnToolHitTest(CPoint point, TOOLINFO* pTI) const
 // haengen nur ResetTaskBar an. Mehr als Listenpflege ist hier also nicht zu
 // tun; die Zeichenarbeit des Originals entfaellt mit dem Streifen.
 
+// BEFUND E-50 (Gregor, 09.09.2026): "Aendert sich der Streifen, wenn du ein
+// Fenster oeffnest oder schliesst? ja, die karten sind dann weg."
+//
+// Der Streifen wird nur beim Neuzeichnen des Rahmens gemalt. Aendert sich die
+// Zahl der Karten, aendert sich auch ihre Breite (recalcTabWidth teilt die
+// Flaeche durch die Zahl der sichtbaren Blaetter) - dann steht ueberall das
+// Alte, bis irgendetwas den Bereich fuer ungueltig erklaert. Eudora tut das
+// ueber ResetTaskBar, aber erst NACH AddSheet/RemoveSheet und nur, wenn der
+// Registerkartenbetrieb schon lief. Hier wird es zuverlaessig nachgezogen.
+// Vorwaertsdeklaration: die Fassung steht weiter unten bei den uebrigen
+// Registerkarten-Funktionen, wird aber schon hier gebraucht.
+static void OTShimStreifenRect(const CWnd* pRahmen, CWnd* pClient, int cyTab,
+	CRect& rect);
+
+
+void SECWorkbook::StreifenAuffrischen()
+{
+	// m_pWBClient muss geprueft werden, BEVOR recalcTabWidth laeuft:
+	// QCWorkbook::recalcTabWidth (workbook.cpp:1005) greift ohne eigene
+	// Pruefung darauf zu.
+	if (!m_bWorkbookMode || m_pWBClient == NULL || !::IsWindow(GetSafeHwnd()))
+		return;
+
+	// BEFUND E-59 (PRUEFER-6, 09.09.2026): m_cxTab wurde ausschliesslich in
+	// OnPaint gesetzt. Alles, was die Kartenbreite BRAUCHT, ohne zu malen -
+	// GetTabPts (:1155) und damit QCGetTabRect, TabHitTest und
+	// CalcLogoTopLeft -, rechnete zwischen einer Aenderung und dem naechsten
+	// Malen mit dem alten Wert. Ein Klick traf dann die Nachbarkarte.
+	//
+	// Die Breite gehoert also dorthin, wo die Aenderung gemeldet wird, nicht
+	// erst dorthin, wo gemalt wird.
+	m_cxTab = recalcTabWidth();
+
+	CRect rectStreifen;
+	OTShimStreifenRect(this, m_pWBClient, m_cyTab, rectStreifen);
+	if (rectStreifen.IsRectEmpty())
+		return;
+
+	// Zwei Pixel Zugabe nach allen Seiten: QCWorkbook::GetTabPts verschiebt
+	// die Karten um (+2,-2), sonst bliebe ein Rest stehen.
+	rectStreifen.InflateRect(2, 2);
+	InvalidateRect(&rectStreifen, TRUE);
+}
+
+
 void SECWorkbook::AddSheet(SECWorksheet* pSheet)
 {
 	if (pSheet == NULL)
@@ -930,6 +1004,8 @@ void SECWorkbook::AddSheet(SECWorksheet* pSheet)
 		return;						// schon drin
 
 	pSheet->m_nPosition = (int) m_worksheets.Add(pSheet);
+
+	StreifenAuffrischen();
 }
 
 
@@ -952,6 +1028,8 @@ void SECWorkbook::RemoveSheet(SECWorksheet* pSheet)
 		if (pOther != NULL)
 			pOther->m_nPosition = i;
 	}
+
+	StreifenAuffrischen();
 }
 
 
@@ -1006,19 +1084,126 @@ int SECWorkbook::GetSheetCount() const
 //
 // UNGEPRUEFT: die tatsaechlichen Koordinaten des Originals. Ohne
 // Registerkartenstreifen gibt es keinen Bezugspunkt, an dem sie haengen
-// koennten. Deshalb liefert diese Fassung sechs Nullpunkte: QCGetTabRect
-// bildet daraus ein leeres Rechteck, und die einzige Stelle, die davon auch
-// ohne Registerkartenbetrieb erreicht wird - InvalidateRect in
-// QCWorksheet::OnMDIActivate (workbook.cpp:143) - erklaert damit nur ein paar
-// Pixel in der linken oberen Ecke des Rahmens fuer ungueltig, die ohnehin vom
-// MDI-Bereich verdeckt sind.
-void SECWorkbook::GetTabPts(SECWorksheet* /*pSheet*/, CPoint*& pts, int& count)
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Der Streifen fuer die Registerkarten, in Clientkoordinaten des Rahmens.
+// Beide Stellen, die ihn brauchen - OnPaint und GetTabPts - rechnen ueber
+// diese Funktion, damit sie nicht auseinanderlaufen koennen. Die Rechnung ist
+// wortgleich zu QCWorkbook::QCGetTaskBarRect (workbook.cpp:924-946): von der
+// Unterkante des MDI-Bereichs plus zwei Pixel, Hoehe m_cyTab + 6.
+static void OTShimStreifenRect(const CWnd* pRahmen, CWnd* pClient, int cyTab,
+	CRect& rect)
+{
+	rect.SetRectEmpty();
+	if (pRahmen == NULL || pClient == NULL)
+		return;
+	if (!::IsWindow(pRahmen->GetSafeHwnd()) || !::IsWindow(pClient->GetSafeHwnd()))
+		return;
+
+	CRect rectClient;
+	pRahmen->GetClientRect(&rectClient);
+
+	CRect rectMDI;
+	pClient->GetClientRect(&rectMDI);
+	pClient->MapWindowPoints(const_cast<CWnd*>(pRahmen), &rectMDI);
+
+	// ABWEICHUNG von QCWorkbook::QCGetTaskBarRect, und zwar mit Absicht:
+	// dort steht rectTaskBar.left = rectClient.left, also der linke Rand des
+	// RAHMENS. Gemessen am 09.09.2026 liegt dort aber die linke Wazoo-Leiste
+	// (Client-x 6 bis 186), und die erste Karte verschwand vollstaendig
+	// darunter - sichtbar war nur der rechte Rand der zweiten Karte bei
+	// x 182 bis 262. Der Streifen faengt deshalb dort an, wo der MDI-Bereich
+	// anfaengt, und hoert dort auf, wo er aufhoert.
+	//
+	// QCGetTaskBarRect selbst bleibt unangetastet; es wird nur zum
+	// Ungueltigerklaeren benutzt (QCInvalidateAllTabs), und ein zu grosses
+	// Rechteck schadet dort nicht. Die Kartenlage kommt aus GetTabPts, und
+	// die rechnet ueber diese Funktion - Zeichnen und Treffertest bleiben
+	// also miteinander im Reinen.
+	rect.left   = rectMDI.left;
+	rect.top    = rectMDI.bottom + 2;
+	rect.right  = rectMDI.right;
+	rect.bottom = rect.top + cyTab + 6;
+}
+
+
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Hier stand eine Attrappe, die sechs Nullpunkte lieferte. Folge: Eudora
+// zeichnete JEDE Karte an Punkt (0,0) mit Groesse null - der Streifen war
+// reserviert und blieb leer. Gemessen am 09.09.2026 mit
+// tools/leisten-messen.ps1 -Abbild: 127 Pixel Streifen, keine Karte darin.
+//
+// Die sechs Punkte sind kein Zierat, Eudora liest sie einzeln aus:
+//   QCGetTabRect (workbook.cpp:757)  rectTab = pts[0] bis pts[4]
+//                                    -> pts[0] ist OBEN LINKS,
+//                                       pts[4] UNTEN RECHTS
+//   OnDrawTab (:1265)  Region von pts[0]+1 bis pts[4]-1
+//         (:1283-1291) Schatten ueber pts[1] (unten links), pts[5] (oben
+//                      rechts) und pts[2] (unten links)
+// Daraus ergibt sich die Reihenfolge, die hier geliefert wird:
+//   0 oben links   1 unten links   2 unten links
+//   3 unten rechts 4 unten rechts  5 oben rechts
+//
+// QCWorkbook::GetTabPts (:978) verschiebt anschliessend alle Punkte um
+// (+2,-2) und zieht bei 3, 4 und 5 noch ein Pixel in x ab. Das ist
+// beruecksichtigt: die Karten beginnen zwei Pixel weiter links und der
+// Streifen ist zwei Pixel hoeher angesetzt, als er gezeichnet wird.
+//
+// Gezaehlt werden nur SICHTBARE Blaetter - genau wie in
+// QCWorkbook::CountVisibleTabs (:1042), sonst laufen Breite und Platz
+// auseinander.
+void SECWorkbook::GetTabPts(SECWorksheet* pSheet, CPoint*& pts, int& count)
 {
 	count = 6;
 	pts = new CPoint[count];
 
 	for (int i = 0; i < count; i++)
 		pts[i] = CPoint(0, 0);
+
+	if (pSheet == NULL || m_pWBClient == NULL)
+		return;
+
+	// Platz dieses Blattes unter den sichtbaren Blaettern.
+	int nPlatz = -1;
+	int nZaehler = 0;
+	for (int i = 0; i < m_worksheets.GetSize(); i++)
+	{
+		SECWorksheet* pAnderes = (SECWorksheet*) m_worksheets[i];
+		if (pAnderes == NULL || !::IsWindow(pAnderes->GetSafeHwnd()))
+			continue;
+		if ((pAnderes->GetStyle() & WS_VISIBLE) == 0)
+			continue;
+
+		if (pAnderes == pSheet)
+			nPlatz = nZaehler;
+		nZaehler++;
+	}
+
+	if (nPlatz < 0)
+		return;						// nicht sichtbar - keine Karte
+
+	CRect rectStreifen;
+	OTShimStreifenRect(this, m_pWBClient, m_cyTab, rectStreifen);
+	if (rectStreifen.IsRectEmpty())
+		return;
+
+	const int cxKarte = (m_cxTab > 8) ? m_cxTab : 8;
+	const int links   = rectStreifen.left + 2 + nPlatz * cxKarte;
+	const int rechts  = links + cxKarte - 2;
+	const int oben    = rectStreifen.top + 2;
+	const int unten   = oben + m_cyTab;
+
+	// Ueber den rechten Rand hinaus wird nicht gezeichnet.
+	if (links >= rectStreifen.right)
+		return;
+
+	pts[0] = CPoint(links,  oben);
+	pts[1] = CPoint(links,  unten);
+	pts[2] = CPoint(links,  unten);
+	pts[3] = CPoint(rechts, unten);
+	pts[4] = CPoint(rechts, unten);
+	pts[5] = CPoint(rechts, oben);
 }
 
 
@@ -1113,25 +1298,67 @@ void SECWorkbook::OnDrawTabIconAndLabel(CDC* /*pDC*/, SECWorksheet* /*pSheet*/)
 // mainfrm.cpp:1025 (Start, Wert aus IDS_INI_MDI_TASKBAR) und settings.cpp:1060
 // (Umschalten in den Einstellungen).
 //
-// VORGABE: m_bWorkbookMode bleibt FALSE. QCWorkbook::ShowMDITaskBar fragt den
-// Wert unmittelbar danach ab (workbook.cpp:723) und ueberspringt bei FALSE
-// SetMargins, RecalcLayout und ResetTaskBar - der MDI-Bereich behaelt also
-// die volle Hoehe.
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Hier stand eine Attrappe: sie meldete "nicht umgesetzt" und setzte
+// m_bWorkbookMode ABSICHTLICH nicht. Damit lief Eudoras gesamter
+// Registerkarten-Code nie an, obwohl er vollstaendig vorliegt.
+//
+// Gregor am 09.09.2026: "es ist nur uebers menue zu sehen, welches fenster
+// gerade offen ist, ich moechte noch eine moeglichkeit haben, aehnlich wie im
+// web browser (tabs) die einzelnen fenster direkt auszuwaehlen."
+//
+// Was Eudora selbst mitbringt und was nur auf diesen Schalter gewartet hat:
+//   mainfrm.cpp:1042   ShowMDITaskBar(GetIniShort(IDS_INI_MDI_TASKBAR))
+//   EudoraRes.rc:7959  "ShowMDITaskbar\n1" - die Vorgabe ist AN
+//   workbook.cpp:720   QCWorkbook::ShowMDITaskBar ruft uns und setzt danach
+//                      selbst die Raender (0,0,0,30), RecalcLayout und
+//                      ResetTaskBar
+//   workbook.cpp:1254  OnDrawTab, :1346 OnDrawTabIconAndLabel
+//   workbook.cpp:745   QCGetTabRect, :924 QCGetTaskBarRect, :999 recalcTabWidth
+//   workbook.cpp:1095  OnLButtonDown, :1739 TabHitTest - der Klick holt das
+//                      Fenster nach vorn
+//
+// Diese Fassung tut deshalb nur zweierlei: sie merkt sich den Betrieb und
+// reserviert den Streifen. Den Rand setzt QCWorkbook unmittelbar danach
+// nochmals genauer - der Wert hier ist die Vorgabe fuer den Fall, dass
+// jemand SetWorkbookMode direkt ruft.
 void SECWorkbook::SetWorkbookMode(BOOL bEnabled)
 {
-	if (bEnabled)
+	m_bWorkbookMode = bEnabled;
+
+	if (m_pWBClient != NULL)
 	{
-		static BOOL bGemeldet = FALSE;
-		OTShimNichtUmgesetzt(bGemeldet,
-			_T("Die Leiste am unteren Fensterrand, die alle offenen Fenster als ")
-			_T("Registerkarten zeigt (in den Einstellungen \"MDI Task Bar\"). ")
-			_T("Sie brauchen sie nicht: alle offenen Fenster stehen im Menue ")
-			_T("\"Window\"."));
+		if (bEnabled)
+			m_pWBClient->SetMargins(0, 0, 0, m_cyTab + 10);
+		else
+			m_pWBClient->SetMargins(0, 0, 0, 0);
 	}
 
-	// Bewusst keine Zuweisung an m_bWorkbookMode.
-	if (m_pWBClient != NULL)
-		m_pWBClient->SetMargins(0, 0, 0, 0);
+	if (!::IsWindow(GetSafeHwnd()))
+		return;
+
+	Invalidate(FALSE);
+
+	// BEFUND E-56 (PRUEFER-6, 09.09.2026): beim ABSCHALTEN blieb der
+	// Registerkartenstreifen stehen.
+	//
+	// Der Grund liegt in QCWorkbook::ShowMDITaskBar (workbook.cpp:718-736):
+	// RecalcLayout und ResetTaskBar stehen dort INNERHALB von
+	// if (m_bWorkbookMode). Beim Einschalten laeuft also beides, beim
+	// Ausschalten nichts - der Rand ist zwar auf 0 gesetzt, aber niemand
+	// ordnet neu an, und der alte Streifen bleibt unter dem Kindbereich
+	// sichtbar liegen.
+	//
+	// Nachgeholt wird es hier, weil der Weg ueber Eudoras Quelle ihn fuer
+	// beide Richtungen doppelt laufen liesse. RDW_ALLCHILDREN, weil der
+	// MDI-Clientbereich selbst ein Kindfenster ist.
+	if (!bEnabled)
+	{
+		RecalcLayout();
+		RedrawWindow(NULL, NULL,
+			RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+	}
 }
 
 
@@ -1181,12 +1408,117 @@ BOOL SECWorkbook::OnEraseBkgnd(CDC* pDC)
 // abraeumen, sonst schickt Windows WM_PAINT endlos nach. CWnd::OnPaint ruft
 // Default() und damit DefFrameProc, das BeginPaint/EndPaint erledigt.
 //
-// Im Original stuende hier der Streifen: OnDrawBorder, dann fuer jedes Sheet
-// OnDrawTab und OnDrawTabIconAndLabel. Bei m_bWorkbookMode == FALSE faellt
-// das komplett weg.
+// ANFORDERUNG A-3 (BEFUND E-48, 09.09.2026)
+//
+// Hier war der zweite fehlende Anschluss. Eudora zeichnet eine einzelne
+// Registerkarte selbst (QCWorkbook::OnDrawTab, workbook.cpp:1254) - aber
+// NIEMAND rief die Funktion auf. Im Original tut das die Rahmenklasse beim
+// Neuzeichnen; genau das holt diese Fassung nach.
+//
+// Der Streifen liegt unter dem MDI-Bereich. Seine Lage wird hier genauso
+// gerechnet wie in QCWorkbook::QCGetTaskBarRect (workbook.cpp:924-946):
+// Unterkante des MDI-Bereichs plus zwei Pixel, von da bis zum Fensterrand.
+// Beide Rechnungen muessen dasselbe ergeben, sonst zeichnet Eudora seine
+// Karten neben den Streifen.
+//
+// recalcTabWidth() ist virtuell; der Aufruf landet in QCWorkbook (:999) und
+// setzt m_cxTab auf die Breite, die bei der aktuellen Fensterbreite und
+// Kartenzahl herauskommt. Ohne ihn blieben alle Karten auf dem Ausgangswert.
+void SECWorkbook::OnSize(UINT nType, int cx, int cy)
+{
+	SECMDIFrameWnd::OnSize(nType, cx, cy);
+
+	if (nType != SIZE_MINIMIZED)
+		StreifenAuffrischen();
+}
+
+
 void SECWorkbook::OnPaint()
 {
-	SECMDIFrameWnd::OnPaint();
+	if (!m_bWorkbookMode || m_pWBClient == NULL ||
+		!::IsWindow(m_pWBClient->GetSafeHwnd()))
+	{
+		SECMDIFrameWnd::OnPaint();
+		return;
+	}
+
+	CPaintDC dc(this);
+
+	CRect rectStreifen;
+	OTShimStreifenRect(this, m_pWBClient, m_cyTab, rectStreifen);
+	if (rectStreifen.Height() <= 0 || rectStreifen.Width() <= 0)
+		return;
+
+	// Untergrund. Ohne ihn stehen beim Verkleinern Reste der alten Karten.
+	//
+	// BEFUND E-53 (Gregor, 09.09.2026): "schoenheitsfehler beim schliessen,
+	// da bleibt ein strich uebrig." Nach dem Schliessen eines Fensters stand
+	// an der Stelle der verschwundenen Karte noch eine waagrechte Linie.
+	//
+	// Die Ursache war eine Unsymmetrie in DIESER Datei: StreifenAuffrischen
+	// erklaert den Streifen mit InflateRect(2, 2) fuer ungueltig, gefuellt
+	// wurde aber nur der Streifen selbst. Die zwei Pixel Rand ringsum blieben
+	// also stehen - und genau dort liegen die Kanten, die
+	// QCWorkbook::GetTabPts um (+2,-2) verschiebt.
+	//
+	// Jetzt wird gefuellt, was auch fuer ungueltig erklaert wird. Beide
+	// Stellen benutzen denselben Betrag; wer ihn aendert, aendert ihn hier
+	// und dort.
+	CRect rectFuellen(rectStreifen);
+	rectFuellen.InflateRect(2, 2);
+	dc.FillSolidRect(&rectFuellen, ::GetSysColor(COLOR_BTNFACE));
+
+	// Kartenbreite neu bestimmen. recalcTabWidth ist virtuell und landet in
+	// QCWorkbook (workbook.cpp:999) - aber es LIEFERT die Breite nur zurueck,
+	// es setzt m_cxTab nicht. Genau das war am 09.09.2026 der zweite Fehler:
+	// ich hatte den Rueckgabewert weggeworfen, und alle Karten blieben auf
+	// dem Ausgangswert 100.
+	m_cxTab = recalcTabWidth();
+
+	// BEFUND E-50 (Gregor, 09.09.2026): "der button bzw. die karte bleibt
+	// eingedrueckt, auch wenn man im anderen fenster ist."
+	//
+	// QCWorkbook::OnLButtonDown setzt beim Klick pSheet->SetSelected(TRUE)
+	// (workbook.cpp:1109) - und NIEMAND setzt es je wieder zurueck. Im
+	// Original tat das die Stingray-Ebene. OnDrawTab entscheidet ueber
+	// IsSelected() || pSheet == GetActiveFrame() (:1271), also blieb jede
+	// einmal angeklickte Karte fuer immer gedrueckt.
+	//
+	// m_bSelected bedeutet laut eigenem Feldkommentar "Registerkarte
+	// gewaehlt, Rahmen noch nicht aktiv". Sobald ein anderer Rahmen aktiv
+	// ist, hat die Marke ihren Zweck verloren - hier wird sie geloescht.
+	// Die aktive Karte bleibt gedrueckt, weil GetActiveFrame() sie ohnehin
+	// als aktiv ausweist.
+	CWnd* pAktiv = GetActiveFrame();
+	for (int iMarke = 0; iMarke < m_worksheets.GetSize(); iMarke++)
+	{
+		SECWorksheet* pBlatt = (SECWorksheet*) m_worksheets[iMarke];
+		if (pBlatt == NULL)
+			continue;
+		if (pBlatt != (SECWorksheet*) pAktiv && pBlatt->IsSelected())
+			pBlatt->SetSelected(FALSE);
+	}
+
+	// Je offenem Fenster eine Karte. Die Liste fuehrt AddSheet/RemoveSheet;
+	// Eudora ruft ueber ResetTaskBar nach jeder Aenderung QCInvalidateAllTabs,
+	// wir landen also wieder hier.
+	for (int i = 0; i < m_worksheets.GetSize(); i++)
+	{
+		SECWorksheet* pSheet = (SECWorksheet*) m_worksheets[i];
+		if (pSheet == NULL)
+			continue;
+		if (!::IsWindow(pSheet->GetSafeHwnd()))
+			continue;
+
+		// Zwei Aufrufe, nicht einer. QCWorkbook::OnDrawTab (workbook.cpp:1254)
+		// zeichnet nur den RAHMEN der Karte; Symbol und Beschriftung stehen in
+		// der eigenen virtuellen OnDrawTabIconAndLabel (:1346), und die ruft
+		// OnDrawTab NICHT selbst auf - nachgesehen ueber den ganzen Rumpf.
+		// Gemessen am 09.09.2026: mit nur OnDrawTab standen zwei leere Kaesten
+		// im Streifen.
+		OnDrawTab(&dc, pSheet);
+		OnDrawTabIconAndLabel(&dc, pSheet);
+	}
 }
 
 
@@ -1450,6 +1782,7 @@ BEGIN_MESSAGE_MAP(SECControlBar, CControlBar)
 	ON_WM_CONTEXTMENU()
 	ON_WM_DESTROY()
 	ON_WM_ERASEBKGND()
+	ON_WM_SETCURSOR()			// A-4 / E-66: Groessenzeiger am Greifrand
 END_MESSAGE_MAP()
 
 
@@ -1665,10 +1998,42 @@ CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 }
 
 
+// SPURMARKE ZU E-76. Nur fuer die Messung; faellt mit dem Befund weg.
+static void E76Marke(LPCTSTR pszWoher, int nLength, DWORD dwMode,
+                     BOOL bSchwebt, CSize szVorher, CSize szErgebnis)
+{
+	char szM[224];
+	_snprintf(szM, sizeof(szM),
+		"E-76 %s: nLength=%d dwMode=0x%04lx%s%s%s%s schwebt=%d "
+		"vorher=%dx%d ergebnis=%dx%d",
+		(LPCSTR) pszWoher, nLength, (unsigned long) dwMode,
+		(dwMode & LM_LENGTHY)  ? " LENGTHY"  : "",
+		(dwMode & LM_COMMIT)   ? " COMMIT"   : "",
+		(dwMode & LM_HORZ)     ? " HORZ"     : "",
+		(dwMode & LM_STRETCH)  ? " STRETCH"  : "",
+		(int) bSchwebt,
+		(int) szVorher.cx, (int) szVorher.cy,
+		(int) szErgebnis.cx, (int) szErgebnis.cy);
+	szM[sizeof(szM) - 1] = '\0';
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+}
+
+
 // Fuer Leisten mit CBRS_SIZE_DYNAMIC. CSearchBar bringt eine eigene Fassung
 // mit (SearchBar.cpp:1340), CWazooBar nicht.
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 {
+	// SPURMARKE ZU BEFUND E-76 (Gregor, 10.09.2026, an Paket 1.0.40):
+	// "filter fenster laesst sich nicht nach unten vergroessern, nur zur
+	// seite". Sie nennt Eingang und Ausgang in EINER Zeile - zwei
+	// getrennte liessen offen, ob sie zum selben Aufruf gehoeren.
+	//
+	// SIE GEHOERT WIEDER RAUS, sobald E-76 verstanden ist: beim Ziehen
+	// wird sie oft gerufen. Deshalb schreibt sie nur, solange die Leiste
+	// schwebt.
+	const BOOL bSchwebt = IsFloating();
+	const CSize szVorher = m_szFloat;
+
 	if (dwMode & LM_HORZDOCK)
 		return CalcFixedLayout(TRUE, TRUE);
 	if (dwMode & LM_VERTDOCK)
@@ -1676,7 +2041,7 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 
 	// Schwebend zieht der Anwender an den Raendern; nLength ist die neue
 	// Ausdehnung in Ziehrichtung.
-	if (nLength > 0 && IsFloating())
+	if (nLength > 0 && bSchwebt)
 	{
 		CSize size = m_szFloat;
 		if (dwMode & LM_LENGTHY)
@@ -1687,10 +2052,15 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 		if (dwMode & LM_COMMIT)
 			m_szFloat = size;
 
+		E76Marke(_T("dynamisch"), nLength, dwMode, bSchwebt, szVorher, size);
 		return size;
 	}
 
-	return CalcFixedLayout((dwMode & LM_STRETCH) != 0, (dwMode & LM_HORZ) != 0);
+	const CSize szFest = CalcFixedLayout((dwMode & LM_STRETCH) != 0,
+	                                     (dwMode & LM_HORZ) != 0);
+	if (bSchwebt)
+		E76Marke(_T("fest"), nLength, dwMode, bSchwebt, szVorher, szFest);
+	return szFest;
 }
 
 
@@ -1702,9 +2072,102 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 // (QCCustomToolBar.cpp:162) uebergibt die beiden Ausrichtungsbits einzeln,
 // also genau die Angabe, die CControlBar::CalcInsideRect schon aus m_dwStyle
 // zieht (barcore.cpp:1151-1184). Der zweite Wert bleibt deshalb unbenutzt.
+// ANFORDERUNG A-4, BEFUND E-66 (10.09.2026) - der Greifstreifen liegt HIER,
+// in der Leiste, und nicht mehr in der Andockleiste.
+//
+// WARUM DER ORT GEWECHSELT HAT, gemessen an 1.0.32 und 1.0.33:
+//
+//   E-66 Zeiger: Leiste=59421 Punkt=0,260 Balken=0..8 Empfaenger=CWazooBar
+//   E-66 Zeiger: Leiste=59421 Punkt=7,260 Balken=0..8 Empfaenger=CFiltersViewLeft
+//   E-66 Zeiger: Leiste=59421 Punkt=1,250 Balken=0..8 Empfaenger=QC3DTabWnd
+//   E-66 Streifen: Leiste=59421 Client=0..188 Bar=-2..178 nFrei=8 Balken=0..8
+//
+// Der Empfaenger war NIE die Andockleiste. Der Grund steht in der letzten
+// Zeile: die Leiste liegt bei -2..178, der Balken lag bei 0..8 - also
+// mitten unter ihr. CDockBar::CalcFixedLayout ordnet die Leisten IMMER am
+// Anfang an (CPoint pt(-cxBorder2, -cyBorder2), bardock.cpp:387); links
+// landet der freie Platz dadurch an der Innenkante, rechts am Fensterrand.
+// Der Versuch, die Leisten ans Ende zu ruecken, haelt nicht: MFC ordnet bei
+// jedem Durchlauf neu an, nSchub war in JEDER Zeile wieder 10.
+//
+// In der Leiste dagegen ist der Streifen von keinem Kindfenster verdeckt -
+// CWazooBar::OnSize legt sein Registerfenster nach GetInsideRect
+// (WazooBar.cpp:1244-1249), also genau nach dieser Fassung hier. Was hier
+// abgezogen wird, gehoert der Leiste selbst, und die Mausnachrichten kommen
+// bei ihr an.
+//
+// Der Streifen liegt an der Kante zum Nachrichtenbereich, also dort, wo ein
+// Anwender ihn sucht: bei einer links angedockten Leiste rechts, bei einer
+// rechts angedockten links, bei einer unten angedockten oben.
 void SECControlBar::CalcInsideRect(CRect& rect, BOOL bHorz, BOOL /*bVert*/) const
 {
 	CControlBar::CalcInsideRect(rect, bHorz);
+
+	switch (GreifrandSeite())
+	{
+		case CBRS_ALIGN_LEFT:	rect.right  -= cxGreifrand;	break;
+		case CBRS_ALIGN_RIGHT:	rect.left   += cxGreifrand;	break;
+		case CBRS_ALIGN_BOTTOM:	rect.top    += cxGreifrand;	break;
+		default:											break;
+	}
+
+	// Nicht ins Negative laufen lassen - eine sehr schmale Leiste haette
+	// sonst einen Innenbereich mit negativer Breite.
+	if (rect.right < rect.left)
+		rect.right = rect.left;
+	if (rect.bottom < rect.top)
+		rect.bottom = rect.top;
+}
+
+
+// A-4 / E-66: an welcher Seite dieser Leiste liegt der Greifstreifen?
+// Liefert 0, wenn keiner hingehoert.
+//
+// OBEN ist ausgenommen: dort sitzt die Werkzeugleiste, deren Hoehe sich aus
+// ihren Knoepfen ergibt und die niemand ziehen will (BEFUND E-55).
+// Schwebende Leisten haben ihren eigenen Rahmen zum Ziehen.
+UINT SECControlBar::GreifrandSeite() const
+{
+	if (IsFloating())
+		return 0;
+
+	const DWORD dwSeite = (m_dwStyle & CBRS_ALIGN_ANY);
+	if (dwSeite == CBRS_ALIGN_LEFT ||
+		dwSeite == CBRS_ALIGN_RIGHT ||
+		dwSeite == CBRS_ALIGN_BOTTOM)
+	{
+		return (UINT) dwSeite;
+	}
+
+	return 0;
+}
+
+
+// A-4 / E-66: liegt der Punkt (Clientkoordinaten DIESER Leiste) im
+// Greifstreifen? Gemessen wird gegen den Clientbereich, nicht gegen den
+// Innenbereich - der ist um genau diesen Streifen kleiner.
+BOOL SECControlBar::AmGreifrand(CPoint pt) const
+{
+	const UINT nSeite = GreifrandSeite();
+	if (nSeite == 0)
+		return FALSE;
+
+	CRect rect;
+	GetClientRect(&rect);
+	if (rect.IsRectEmpty())
+		return FALSE;
+
+	switch (nSeite)
+	{
+		case CBRS_ALIGN_LEFT:
+			return (pt.x >= rect.right - cxGreifrand && pt.x < rect.right);
+		case CBRS_ALIGN_RIGHT:
+			return (pt.x >= rect.left && pt.x < rect.left + cxGreifrand);
+		case CBRS_ALIGN_BOTTOM:
+			return (pt.y >= rect.top && pt.y < rect.top + cxGreifrand);
+		default:
+			return FALSE;
+	}
 }
 
 
@@ -1825,6 +2288,40 @@ void SECControlBar::GetBarInfo(SECControlBarInfo* pInfo)
 	// Zuletzt bekommt die abgeleitete Klasse ihre Gelegenheit
 	// (SearchBar.cpp:1162, QCCustomToolBar.cpp:334).
 	GetBarInfoEx(pInfo);
+}
+
+
+// BEFUND E-66 (10.09.2026): die Andockgroesse lesen und setzen, ohne den
+// Umweg ueber Get/SetBarInfo.
+//
+// Warum eigene Fassungen: m_szDockVert und m_szDockHorz gehoeren zu
+// CControlBar und sind geschuetzt - von aussen, also aus SECDockBar, nicht
+// erreichbar. Der bisherige Weg lief deshalb ueber GetBarInfo, Feld aendern,
+// SetBarInfo. Das ruft am Ende CControlBar::SetBarInfo, und das ist MFCs
+// vollstaendige Zustandswiederherstellung: Sichtbarkeit, Andockzustand und
+// Lage werden aus der Aufzeichnung neu gesetzt. Fuer das Laden einer
+// gespeicherten Anordnung ist das richtig; fuer das Aendern EINER Zahl
+// waehrend des Betriebs setzt es zu viel zurueck - alles andere in der
+// Aufzeichnung ist der Stand von VOR dem Zug.
+int SECControlBar::AndockgroesseHolen(BOOL bWaagerecht) const
+{
+	return bWaagerecht ? m_szDockHorz.cy : m_szDockVert.cx;
+}
+
+
+// Liefert den Wert, der wirklich gesetzt wurde - nicht den gewuenschten.
+// Der Aufrufer soll protokollieren koennen, was angekommen ist.
+int SECControlBar::AndockgroesseSetzen(BOOL bWaagerecht, int nNeu, int nMindest)
+{
+	if (nNeu < nMindest)
+		nNeu = nMindest;
+
+	if (bWaagerecht)
+		m_szDockHorz.cy = nNeu;
+	else
+		m_szDockVert.cx = nNeu;
+
+	return nNeu;
 }
 
 
@@ -2067,9 +2564,56 @@ void SECControlBar::OnSize(UINT nType, int cx, int cy)
 
 // CControlBar::OnLButtonDown startet das Ziehen ueber m_pDockContext
 // (barcore.cpp) - genau das soll passieren.
+// A-4 / E-66 (10.09.2026): ein Klick in den Greifstreifen startet den Zug.
+//
+// Hier - und nicht in der Andockleiste - weil die Mausnachrichten nur hier
+// ankommen. Gemessen an 1.0.32: ueber der Andockleiste kamen NULL
+// WM_MOUSEMOVE und NULL WM_LBUTTONDOWN an, obwohl der Zeiger richtig
+// gesetzt wurde. WM_SETCURSOR steigt zum Elternfenster auf, Maustasten tun
+// das nicht.
+//
+// Gezogen und angewandt wird weiterhin von SECDockBar: dort steht die
+// Ziehschleife mit ihren Sicherungen (BEFUND E-51: hoechstens 100 ms warten,
+// physische Maustaste pruefen; BEFUND E-61: WM_QUIT zurueckstellen) und die
+// Umrechnung auf die Andockgroesse. Zwei Ziehschleifen waeren eine zu viel.
 void SECControlBar::OnLButtonDown(UINT nFlags, CPoint pt)
 {
+	if (AmGreifrand(pt))
+	{
+		SECDockBar* pDock = DYNAMIC_DOWNCAST(SECDockBar, GetParent());
+		if (pDock != NULL)
+		{
+			CPoint ptDock(pt);
+			ClientToScreen(&ptDock);
+			pDock->ScreenToClient(&ptDock);
+			pDock->ZiehenAmRand(this, ptDock);
+			return;
+		}
+	}
+
 	CControlBar::OnLButtonDown(nFlags, pt);
+}
+
+
+// A-4 / E-66: der Groessenzeiger ueber dem Greifstreifen.
+BOOL SECControlBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	if (nHitTest == HTCLIENT && GreifrandSeite() != 0)
+	{
+		CPoint pt;
+		if (::GetCursorPos(&pt))
+		{
+			ScreenToClient(&pt);
+			if (AmGreifrand(pt))
+			{
+				const BOOL bSenkrecht = (GreifrandSeite() != CBRS_ALIGN_BOTTOM);
+				::SetCursor(::LoadCursor(NULL, bSenkrecht ? IDC_SIZEWE : IDC_SIZENS));
+				return TRUE;
+			}
+		}
+	}
+
+	return CControlBar::OnSetCursor(pWnd, nHitTest, message);
 }
 
 void SECControlBar::OnLButtonUp(UINT nFlags, CPoint pt)
@@ -2130,6 +2674,7 @@ const int SECDockBar::ClientEdge::cy = 2;
 
 BEGIN_MESSAGE_MAP(SECDockBar, CDockBar)
 	ON_WM_CREATE()
+	ON_WM_SIZE()				// A-4: hier entsteht der Trennbalken (E-52)
 	ON_WM_SETCURSOR()
 	ON_WM_MOUSEMOVE()
 	ON_WM_LBUTTONDOWN()
@@ -2612,6 +3157,41 @@ int SECDockBar::PredictInsertPosition(CControlBar* /*pBarIns*/, CRect /*rect*/, 
 // Zuteilung wieder zurueckgenommen, damit ein CalcFixedLayout ausserhalb des
 // Anordnungsdurchlaufs (etwa aus CAdWazooBar, AdWazooBar.cpp:239) dieselbe
 // Antwort bekommt wie bisher.
+// ANFORDERUNG A-4 (BEFUND E-49, 09.09.2026)
+//
+// Gregor: "ich noch das fenster links (mailverzeichnis, persona, ...) moechte
+// vergroessern koennen. also den trennbalken nach rechts, damit ich mehr sehe."
+//
+// Damit ein Trennbalken ueberhaupt Mausereignisse bekommen kann, muss er im
+// Clientbereich der ANDOCKLEISTE liegen und nicht unter dem Kindfenster. Den
+// Platz dafuer schafft der Innenrand: CDockBar::CalcFixedLayout ruft
+// CalcInsideRect (bardock.cpp) und rueckt die Leisten um die Randbreiten ein,
+// und CControlBar::CalcFixedLayout schlaegt dieselben Breiten auf die
+// Gesamtgroesse wieder auf. Der Streifen bleibt also frei, ohne dass hier
+// eine einzige Koordinate von Hand gerechnet wird.
+//
+// (Der erste Anlauf lief ueber SetBorders und ist widerlegt; die Messung
+// dazu steht unten im Rumpf.)
+
+
+// ANFORDERUNG A-4, BEFUND E-55 (09.09.2026), mit E-66 auf die Leisten
+// uebergegangen.
+//
+// Die Auswahl - links, rechts, unten, aber nicht oben - gilt weiter, sie
+// steht nur nicht mehr hier: SECControlBar::GreifrandSeite entscheidet
+// dasselbe anhand von CBRS_ALIGN_..., also an der Leiste statt an der
+// Andockleiste. OBEN bleibt aussen vor, weil dort die Werkzeugleiste sitzt,
+// deren Hoehe sich aus ihren Knoepfen ergibt (E-55).
+//
+// Diese Fassung wird nur noch von ZiehenAmRand gebraucht.
+static BOOL BrauchtGreifstreifen(UINT nIdLeiste)
+{
+	return (nIdLeiste == AFX_IDW_DOCKBAR_LEFT  ||
+			nIdLeiste == AFX_IDW_DOCKBAR_RIGHT ||
+			nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM);
+}
+
+
 CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 {
 	// E-4: CDockBar::CalcFixedLayout schiebt selbst NULL-Marken in m_arrBars
@@ -2624,6 +3204,46 @@ CSize SECDockBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 	AssignRowExtents(bHorz);
 	CSize size = CDockBar::CalcFixedLayout(bStretch, bHorz);
 	ClearRowExtents();
+
+	// A-4: Platz fuer den Trennbalken.
+	//
+	// ZWEI ANLAEUFE VERWORFEN, beide am laufenden Programm widerlegt:
+	//
+	//   1. ueber SetBorders. Gemessen: Andockleiste Client 176, Leiste 318
+	//      aber 180 - der Rand verkleinert den INNENbereich und vergroessert
+	//      die Andockleiste NICHT. Die Leiste ragte ueber.
+	//   2. Zuschlag hier, aber abhaengig von BrauchtTrennbalken(). Gemessen:
+	//      gar keine Wirkung, Andockleiste blieb 180 breit.
+	//
+	// Der Messversuch danach - Zuschlag 11, bedingungslos - ergab
+	// Andockleiste 187 bei Leiste 180, also 7 Pixel frei. Damit ist belegt:
+	// dieser Rueckgabewert bestimmt die Groesse sehr wohl, und MFC verbraucht
+	// davon 4 Pixel fuer sich (Zuschlag minus 4 kommt an). Schuld war also
+	// die Bedingung.
+	//
+	// Deshalb jetzt eine Bedingung, die am ERGEBNIS haengt statt an einer
+	// eigenen Rechnung ueber m_arrBars: hat die Basis ueberhaupt eine
+	// KEIN ZUSCHLAG MEHR. Er stand hier von A-4 bis 7.2.0.33 und ist mit
+	// BEFUND E-66 hinfaellig geworden.
+	//
+	// Die Ueberlegung war: die Andockleiste um einen Streifen groesser
+	// machen, damit darin Platz fuer einen Trennbalken bleibt. Das geht
+	// nicht auf, weil CDockBar::CalcFixedLayout die Leisten IMMER am Anfang
+	// anordnet (CPoint pt(-cxBorder2, -cyBorder2), bardock.cpp:387): links
+	// landet der Streifen dadurch an der Innenkante, rechts am Fensterrand -
+	// und dort sucht ihn niemand. Der Versuch, die Leisten ans Ende zu
+	// ruecken, haelt nicht; MFC ordnet bei jedem Durchlauf neu an. Gemessen
+	// an 1.0.32: nSchub war in JEDER Zeile wieder 10.
+	//
+	// Der Greifstreifen liegt jetzt IN DER LEISTE
+	// (SECControlBar::CalcInsideRect). Die Andockleiste braucht dafuer keine
+	// zusaetzliche Breite - im Gegenteil: der Zuschlag haette jetzt einen
+	// leeren Streifen am Fensterrand hinterlassen.
+	//
+	// Mit dem Zuschlag entfallen auch BrauchtGreifstreifen, nVorhanden und
+	// die ganze Balkenmechanik der Andockleiste. Was davon noch gebraucht
+	// wird, steht in ZiehenAmRand.
+
 	return size;
 }
 
@@ -3072,12 +3692,16 @@ void SECDockBar::DeleteAllSplitters()
 }
 
 
+// PRUEFER-6 (09.09.2026): ein Splitter, der GERADE gezogen wird, darf nicht
+// zur Wiederverwendung freigegeben und schon gar nicht geloescht werden.
+// Track dispatcht fremde Nachrichten, eine davon kann einen
+// Anordnungsdurchlauf ausloesen - und der lief bisher genau hier durch.
 void SECDockBar::BeginRecycleSplitters()
 {
 	for (int i = 0; i < m_arrSplitters.GetSize(); i++)
 	{
 		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
-		if (pSplitter != NULL)
+		if (pSplitter != NULL && !pSplitter->m_bTracking)
 			pSplitter->m_bInUse = FALSE;
 	}
 }
@@ -3090,7 +3714,7 @@ void SECDockBar::EndRecycleSplitters()
 	for (int i = (int) m_arrSplitters.GetSize() - 1; i >= 0; i--)
 	{
 		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
-		if (pSplitter != NULL && pSplitter->m_bInUse)
+		if (pSplitter != NULL && (pSplitter->m_bInUse || pSplitter->m_bTracking))
 			continue;
 
 		delete pSplitter;
@@ -3171,10 +3795,18 @@ SECDockBar::Splitter* SECDockBar::HitTest(CPoint pt)
 	return NULL;
 }
 
-
+// ANFORDERUNG A-4 (BEFUND E-49, 09.09.2026)
+//
 // DockBar.cpp:149 (QCDockBar) verfeinert die Grenzen anschliessend, damit die
 // Werbeleiste nicht unter ihre Mindestgroesse gezogen wird. Diese Fassung
-// liefert die aeussere Schranke: den Client-Bereich der Andockleiste.
+// liefert die aeussere Schranke.
+//
+// GEAENDERT gegenueber dem ersten Anlauf: als Obergrenze stand hier der
+// Clientbereich der ANDOCKLEISTE. Der ist aber genau so breit wie die Leiste
+// selbst - damit haette sich die Leiste nur VERSCHMAELERN lassen, und Gregors
+// Bitte war das Gegenteil ("den trennbalken nach rechts, damit ich mehr
+// sehe"). Die Obergrenze kommt deshalb aus dem Rahmen, abzueglich eines
+// Freiraums, damit der MDI-Bereich nicht auf null gezogen werden kann.
 void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
 {
 	if (pSplitter == NULL)
@@ -3183,19 +3815,137 @@ void SECDockBar::CalcTrackingLimits(Splitter* pSplitter)
 	CRect rect;
 	GetClientRect(&rect);
 
+	// Der Rahmen, in Clientkoordinaten DIESER Andockleiste.
+	CRect rectRahmen(0, 0, 0, 0);
+	CFrameWnd* pRahmen = GetDockingFrame();
+	if (pRahmen != NULL && ::IsWindow(pRahmen->GetSafeHwnd()))
+	{
+		pRahmen->GetClientRect(&rectRahmen);
+		pRahmen->MapWindowPoints(this, &rectRahmen);
+	}
+
+	const int nMindest  = 4 * Splitter::cx;		// schmalste Leiste
+	const int nFreiraum = 200;					// Rest fuer den MDI-Bereich
+
+	// BEFUND E-66, ZWEITE URSACHE (Gregor, 09.09.2026, an Paket 1.0.29):
+	// "rechts ist zwar ein balken sichtbar, aber nicht verschiebbar".
+	//
+	// ACHTUNG: das hier behebt nur die ZWEITE, verdeckte Ursache. Die erste
+	// steht in TrennbalkenNeuAnlegen und ist noch offen: fuer die rechte
+	// Andockleiste ergibt die Messung nFrei = -2, es entsteht also gar kein
+	// Balken, und diese Grenzen greifen ins Leere. PRUEFER hat das am
+	// 09.09.2026 an bardock.cpp:387 nachgewiesen - MFC legt die Kindleiste in
+	// JEDER Andockleiste buendig bei (-cxBorder2, -cyBorder2) ab, weshalb der
+	// Zuschlag immer am GROSSEN Ende liegenbleibt: links an der Innenkante
+	// (nFrei etwa 7, Balken entsteht), rechts am Fensterrand (nFrei = -2,
+	// die Bedingung nFrei >= 2 scheitert, AddSplitter laeuft nie).
+	//
+	// Meine erste Zuordnung - es liege allein an den Grenzen - war damit
+	// unvollstaendig. Sie stimmt, sie reicht nur nicht.
+	//
+	// Hier stand fuer BEIDE senkrechten Andockleisten dieselbe Rechnung:
+	//     min = Rahmen links  + nMindest
+	//     max = Rahmen rechts - nFreiraum
+	//
+	// Fuer LINKS stimmt das: die Leiste haengt am linken Rand, schmaler als
+	// nMindest darf sie nicht werden, und rechts von ihr muss der MDI-Bereich
+	// seine nFreiraum behalten.
+	//
+	// Fuer RECHTS ist es spiegelverkehrt - und zwar so falsch, dass GAR
+	// NICHTS mehr geht. Der Balken sitzt dort an der LINKEN Kante der
+	// Andockleiste, also bei kleinem x in ihren eigenen Koordinaten. Der
+	// Rahmen reicht weit nach links, rectRahmen.left ist stark negativ,
+	// rectRahmen.right liegt bei der Breite der Leiste, also um 188. Damit
+	// wird max = 188 - 200 = -12, und das ist KLEINER als der Ort des
+	// Balkens. Die Notbremse darunter zieht max auf min + nMindest hoch, und
+	// zwischen zwei Grenzen, die 16 Pixel auseinanderliegen und beide weit
+	// links vom Balken stehen, laesst sich nichts ziehen. Genau das sieht
+	// Gregor: der Balken ist da, er nimmt den Mausfang, und er bewegt sich
+	// nicht.
+	//
+	// Die Regel, die fuer alle vier Seiten stimmt: die Seite, an der die
+	// Leiste ANGEWACHSEN ist, bekommt nMindest - sonst koennte man sie auf
+	// null ziehen. Die Seite zum MDI-Bereich hin bekommt nFreiraum - sonst
+	// koennte man den Nachrichtenbereich verschwinden lassen.
+	//
+	//     LINKS   angewachsen links  -> min = links  + nMindest
+	//             MDI rechts         -> max = rechts - nFreiraum
+	//     RECHTS  angewachsen rechts -> max = rechts - nMindest
+	//             MDI links          -> min = links  + nFreiraum
+	//     OBEN    angewachsen oben   -> min = oben   + nMindest
+	//             MDI unten          -> max = unten  - nFreiraum
+	//     UNTEN   angewachsen unten  -> max = unten  - nMindest
+	//             MDI oben           -> min = oben   + nFreiraum
+	//
+	// UNTEN war damit ebenfalls falsch, nur unauffaellig: die alte Rechnung
+	// war nach oben zu grosszuegig (der MDI-Bereich liess sich auf 16 Pixel
+	// zusammenschieben) und nach unten zu streng (die Leiste liess sich nicht
+	// unter 200 Pixel Hoehe verkleinern). Gregor hat am 09.09.2026 nur die
+	// eine Richtung geprueft - "verschieben rauf / runter - bug gefixt" - und
+	// deshalb hat es niemand gemerkt. Es ist hier mit berichtigt.
+	const UINT nIdLeiste = (UINT) GetDlgCtrlID();
+	const BOOL bAmEnde   = (nIdLeiste == AFX_IDW_DOCKBAR_RIGHT ||
+							nIdLeiste == AFX_IDW_DOCKBAR_BOTTOM);
+
 	if (pSplitter->m_orientation == Splitter::Vertical)
 	{
-		pSplitter->m_nMin = rect.left;
-		pSplitter->m_nMax = rect.right;
+		if (rectRahmen.IsRectEmpty())
+		{
+			pSplitter->m_nMin = rect.left;
+			pSplitter->m_nMax = rect.right;
+		}
+		else if (bAmEnde)
+		{
+			pSplitter->m_nMin = rectRahmen.left  + nFreiraum;
+			pSplitter->m_nMax = rectRahmen.right - nMindest;
+		}
+		else
+		{
+			pSplitter->m_nMin = rectRahmen.left  + nMindest;
+			pSplitter->m_nMax = rectRahmen.right - nFreiraum;
+		}
+		if (pSplitter->m_nMax < pSplitter->m_nMin + nMindest)
+			pSplitter->m_nMax = pSplitter->m_nMin + nMindest;
 	}
 	else
 	{
-		pSplitter->m_nMin = rect.top;
-		pSplitter->m_nMax = rect.bottom;
+		if (rectRahmen.IsRectEmpty())
+		{
+			pSplitter->m_nMin = rect.top;
+			pSplitter->m_nMax = rect.bottom;
+		}
+		else if (bAmEnde)
+		{
+			pSplitter->m_nMin = rectRahmen.top    + nFreiraum;
+			pSplitter->m_nMax = rectRahmen.bottom - nMindest;
+		}
+		else
+		{
+			pSplitter->m_nMin = rectRahmen.top    + nMindest;
+			pSplitter->m_nMax = rectRahmen.bottom - nFreiraum;
+		}
+		if (pSplitter->m_nMax < pSplitter->m_nMin + nMindest)
+			pSplitter->m_nMax = pSplitter->m_nMin + nMindest;
 	}
 }
 
 
+// SPURMARKE ZU BEFUND E-66 (Gregor, 09.09.2026, an Paket 1.0.30):
+// "balken lassen sich nicht verschieben. beim anklicken ist der maus cursor
+// als zwei pfeile zu sehen, aber er greift nicht."
+//
+// Der Doppelpfeil belegt, dass HitTest den Balken FINDET - er existiert also
+// seit der Behebung der ersten Ursache. Es scheitert danach: entweder in der
+// Ziehschleife oder beim Anwenden. Welches von beidem, ist von aussen nicht
+// zu sehen, und ich habe heute schon zweimal falsch geraten.
+//
+// Diese Marke schreibt alle Zahlen EINES Zuges in EINE Zeile (Lehre
+// zwei-werte-in-eine-ausgabe): welche Andockleiste, wo der Balken sitzt,
+// welche Grenzen gelten, wo der Zug anfing und aufhoerte, was
+// herauskam - und beim Anwenden, ob die Leiste ueberhaupt gefunden wurde und
+// welche Groesse vorher und nachher dastand.
+//
+// SIE GEHOERT WIEDER RAUS, sobald E-66 verstanden ist.
 void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
 {
 	if (pSplit == NULL)
@@ -3204,17 +3954,235 @@ void SECDockBar::StartTracking(Splitter* pSplit, CPoint pt)
 	// Die virtuelle Fassung, damit QCDockBar seine Grenzen setzen kann.
 	CalcTrackingLimits(pSplit);
 
-	int nDelta = pSplit->Track(this, pt, this);
+	// BEFUND E-54: NULL als Zeichenziel heisst "auf den Bildschirm", nicht
+	// "in den Clientbereich dieser Andockleiste". Sonst ist der Ziehrahmen
+	// genau in der Richtung unsichtbar, in die gezogen werden soll - die
+	// Leiste ist nur ihre eigene Breite breit. Siehe Splitter::Track.
+	int nDelta = pSplit->Track(this, pt, NULL);
+
+	{
+		CRect rectMarke;
+		GetClientRect(&rectMarke);
+		char szMarke[320];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Zug: Leiste=%u Client=%d..%d Balken=%d..%d Lage=%d "
+			"Klick=%d,%d Min=%d Max=%d Delta=%d",
+			(unsigned) GetDlgCtrlID(),
+			(int) rectMarke.left, (int) rectMarke.right,
+			(int) pSplit->m_rect.left, (int) pSplit->m_rect.right,
+			(int) pSplit->m_nPos,
+			(int) pt.x, (int) pt.y,
+			(int) pSplit->m_nMin, (int) pSplit->m_nMax,
+			(int) nDelta);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
 	if (nDelta != 0)
 		OnSplitterMoved(pSplit, nDelta);
 }
 
-
-// STUFE 2 OFFEN: hier verteilte das Original die Zeilenbreite neu
-// (m_fPctWidth der beiden angrenzenden Leisten). Ohne Splitter wird die
-// Fassung nie erreicht.
-void SECDockBar::OnSplitterMoved(Splitter* /*pSplitter*/, int /*nDelta*/)
+// ANFORDERUNG A-4 (BEFUND E-49, 09.09.2026)
+//
+// Hier stand ein leerer Rumpf. Im Original verteilte er die Zeilenbreite auf
+// die angrenzenden Leisten (m_fPctWidth). Solange in einer Zeile nur EINE
+// Leiste steht - und das ist bei Eudora der Regelfall -, genuegt es, deren
+// Andockgroesse um die gezogene Strecke zu aendern. Genau das ist Gregors
+// Bitte: den linken Bereich breiter machen.
+//
+// Gelesen und geschrieben wird ueber GetBarInfo/SetBarInfo, weil
+// SECControlBar::CalcFixedLayout genau diese Felder auswertet
+// (m_szDockVert bei senkrecht angedockten Leisten, m_szDockHorz bei
+// waagerechten). Damit ueberlebt die neue Breite auch das Speichern in die
+// Eudora.ini - der [ToolBar...]-Abschnitt entsteht seit der Behebung von
+// E-43 ueberhaupt erst.
+// ANFORDERUNG A-4, BEFUND E-66 (10.09.2026)
+//
+// Eine Leiste meldet einen Zug an ihrem eigenen Greifrand hierher. Der Punkt
+// kommt in Clientkoordinaten DIESER Andockleiste.
+//
+// Warum der Umweg ueber die Andockleiste, wenn der Griff in der Leiste
+// sitzt: hier steht die Ziehschleife mit ihren teuer erkauften Sicherungen
+// (E-51 hoechstens 100 ms warten und die physische Maustaste pruefen, E-54
+// auf den Bildschirm zeichnen, E-60 den ziehenden Balken nicht loeschen,
+// E-61 WM_QUIT zurueckstellen) und die Umrechnung auf die Andockgroesse
+// (OnSplitterMoved). Eine zweite Schleife waere eine zu viel.
+//
+// Der Splitter ist hier ein STAPELOBJEKT und landet nicht in m_arrSplitters:
+// er lebt genau so lange wie der Zug. Damit entfaellt die ganze
+// Wiederverwendungs- und Loeschmechanik, und E-60 kann an dieser Stelle
+// nicht auftreten.
+void SECDockBar::ZiehenAmRand(CControlBar* pBar, CPoint ptDock)
 {
+	if (pBar == NULL || !::IsWindow(pBar->GetSafeHwnd()))
+		return;
+
+	// Die Stelle der Leiste in m_arrBars - OnSplitterMoved braucht sie, um
+	// die richtige Leiste zu vergroessern.
+	int nPos = -1;
+	for (int i = 0; i < m_arrBars.GetSize(); i++)
+	{
+		if (GetDockedControlBar(i) == pBar)
+		{
+			nPos = i;
+			break;
+		}
+	}
+	if (nPos < 0)
+		return;
+
+	const UINT nIdLeiste = (UINT) GetDlgCtrlID();
+	if (!BrauchtGreifstreifen(nIdLeiste))
+		return;					// oben wird nicht gezogen (E-55)
+
+	const BOOL bSenkrecht = (nIdLeiste == AFX_IDW_DOCKBAR_LEFT ||
+							 nIdLeiste == AFX_IDW_DOCKBAR_RIGHT);
+
+	// Der Balken sitzt am Greifrand der Leiste, in Koordinaten der
+	// Andockleiste. Gemessen, nicht geraten: die Lage kommt aus dem
+	// Fensterrechteck der Leiste selbst.
+	CRect rectBar;
+	pBar->GetWindowRect(&rectBar);
+	ScreenToClient(&rectBar);
+
+	CRect rectBalken(rectBar);
+	switch (nIdLeiste)
+	{
+		case AFX_IDW_DOCKBAR_LEFT:
+			rectBalken.left = rectBar.right - SECControlBar::cxGreifrand;
+			break;
+		case AFX_IDW_DOCKBAR_RIGHT:
+			rectBalken.right = rectBar.left + SECControlBar::cxGreifrand;
+			break;
+		case AFX_IDW_DOCKBAR_BOTTOM:
+			rectBalken.bottom = rectBar.top + SECControlBar::cxGreifrand;
+			break;
+		default:
+			return;
+	}
+
+	Splitter balken(Splitter::BarSplitter,
+					bSenkrecht ? Splitter::Vertical : Splitter::Horizontal,
+					rectBalken);
+	balken.m_nPos = nPos;
+
+	CalcTrackingLimits(&balken);
+
+	// NULL als Zeichenziel heisst "auf den Bildschirm" (BEFUND E-54).
+	const int nDelta = balken.Track(this, ptDock, NULL);
+
+	if (nDelta != 0)
+		OnSplitterMoved(&balken, nDelta);
+}
+
+
+void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
+{
+	if (pSplitter == NULL || nDelta == 0)
+		return;
+
+	// SPURMARKE ZU BEFUND E-66, zweiter Teil. Siehe StartTracking.
+	//
+	// Drei Dinge koennen hier schiefgehen, und von aussen sehen alle drei
+	// gleich aus - "der Balken greift nicht":
+	//   1. GetDockedControlBar(m_nPos) liefert NULL, weil m_nPos nicht mehr
+	//      auf die Leiste zeigt, die gemeint war.
+	//   2. Die Leiste ist keine SECControlBar, dann liefert DYNAMIC_DOWNCAST
+	//      NULL und diese Fassung kehrt wortlos zurueck.
+	//   3. Beides geht gut, aber SetBarInfo bleibt ohne Wirkung, weil
+	//      CalcFixedLayout die geaenderte Andockgroesse nicht auswertet.
+	// Deshalb wird JEDER dieser Faelle gemeldet, nicht nur der Erfolg.
+	CControlBar* pRoh = GetDockedControlBar(pSplitter->m_nPos);
+	SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, pRoh);
+	if (pBar == NULL)
+	{
+		char szMarke[256];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Anwenden ABGEBROCHEN: Leiste=%u Lage=%d roh=%s Klasse=%s Delta=%d",
+			(unsigned) GetDlgCtrlID(), (int) pSplitter->m_nPos,
+			(pRoh == NULL) ? "NULL" : "da",
+			(pRoh == NULL) ? "-" : (LPCSTR) pRoh->GetRuntimeClass()->m_lpszClassName,
+			(int) nDelta);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		return;
+	}
+
+	const UINT nID = (UINT) GetDlgCtrlID();
+	const int nMindest = 4 * Splitter::cx;
+
+	// BEFUND E-66, Nachtrag vom 10.09.2026. Gregor an 1.0.34: "der rechte
+	// balken laesst sich aber nicht beliebig weit nach links schieben. er
+	// wird dann auf eine bestimmte breite ... zurueckgesetzt."
+	//
+	// Der Weg ueber GetBarInfo/SetBarInfo ist dafuer das falsche Werkzeug.
+	// SECControlBar::SetBarInfo ruft am Ende CControlBar::SetBarInfo, und
+	// das ist MFCs vollstaendige ZUSTANDSWIEDERHERSTELLUNG: es setzt
+	// Sichtbarkeit, Andockzustand und Lage aus der Aufzeichnung neu. Fuer
+	// das Laden einer gespeicherten Anordnung ist das richtig, fuer das
+	// Aendern EINER Zahl waehrend des Betriebs ist es zu viel - alles
+	// andere in der Aufzeichnung ist der Stand von VOR dem Zug.
+	//
+	// Geaendert wird deshalb nur noch die eine Zahl, unmittelbar an der
+	// Leiste. Dass es dafuer eine eigene Fassung braucht, liegt daran, dass
+	// m_szDockVert und m_szDockHorz zu CControlBar gehoeren und von aussen
+	// nicht erreichbar sind.
+	int cxVorher = 0;
+	int cxNachher = 0;
+
+	if (nID == AFX_IDW_DOCKBAR_LEFT || nID == AFX_IDW_DOCKBAR_RIGHT)
+	{
+		// Links: nach rechts ziehen macht breiter. Rechts: umgekehrt.
+		const int nZuwachs = (nID == AFX_IDW_DOCKBAR_LEFT) ? nDelta : -nDelta;
+		cxVorher  = pBar->AndockgroesseHolen(FALSE);
+		cxNachher = pBar->AndockgroesseSetzen(FALSE, cxVorher + nZuwachs, nMindest);
+	}
+	else if (nID == AFX_IDW_DOCKBAR_TOP || nID == AFX_IDW_DOCKBAR_BOTTOM)
+	{
+		const int nZuwachs = (nID == AFX_IDW_DOCKBAR_TOP) ? nDelta : -nDelta;
+		cxVorher  = pBar->AndockgroesseHolen(TRUE);
+		cxNachher = pBar->AndockgroesseSetzen(TRUE, cxVorher + nZuwachs, nMindest);
+	}
+	else
+	{
+		return;
+	}
+
+	CFrameWnd* pRahmen = GetDockingFrame();
+
+	{
+		// SPURMARKE: was ist angekommen, und was hat es bewirkt? Die alten
+		// Marken sassen alle im stillgelegten Weg ueber die Andockleiste -
+		// der neue Weg ueber ZiehenAmRand war unbeobachtet, und deshalb
+		// konnte das Protokoll zu 1.0.34 nichts sagen.
+		CRect rectNach;
+		pBar->GetWindowRect(&rectNach);
+		char szMarke[256];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Anwenden: Leiste=%u Lage=%d Delta=%d Min=%d Max=%d "
+			"Andock %d -> %d Fenster jetzt %d breit",
+			(unsigned) nID, (int) pSplitter->m_nPos, (int) nDelta,
+			(int) pSplitter->m_nMin, (int) pSplitter->m_nMax,
+			(int) cxVorher, (int) cxNachher, (int) rectNach.Width());
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
+	if (pRahmen != NULL && ::IsWindow(pRahmen->GetSafeHwnd()))
+	{
+		pRahmen->RecalcLayout();
+
+		// BEFUND E-52 (Gregor, 09.09.2026): "verschieben links / rechts vom
+		// mailverzeichnis: hier ist kein refresh drin." Sein Bildschirmfoto
+		// zeigte die Registerkarten DOPPELT - das Alte an der alten Stelle,
+		// das Neue daneben.
+		//
+		// RecalcLayout ordnet neu an, erklaert aber nichts fuer ungueltig,
+		// was an der alten Stelle stand. Bei einer Aenderung der Aufteilung
+		// muss der ganze Rahmen samt Kindern neu gezeichnet werden.
+		pRahmen->RedrawWindow(NULL, NULL,
+			RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+	}
 }
 
 
@@ -3228,6 +4196,7 @@ SECDockBar::Splitter::Splitter(Type type, Orientation orientation, const RECT & 
 	m_rect        = rect;
 	m_nPos        = -1;
 	m_bInUse      = FALSE;
+	m_bTracking   = FALSE;
 	m_nMin        = 0;
 	m_nMax        = 0;
 
@@ -3273,14 +4242,182 @@ void SECDockBar::Splitter::DrawTrackerRect(LPCRECT lpRect,
 }
 
 
-// STUFE 2 OFFEN. Im Original laeuft hier die Mausschleife, bis der Anwender
-// loslaesst, und der Rueckgabewert ist die zurueckgelegte Strecke.
-// Aufgerufen wird die Fassung nur aus StartTracking, und dorthin fuehrt nur
-// ein Treffer auf einen Splitter - den es in dieser Stufe nicht gibt.
-// 0 heisst "nicht verschoben", der Aufrufer laesst dann alles, wie es ist.
-int SECDockBar::Splitter::Track(CWnd* /*pWnd*/, CPoint /*point*/, CWnd* /*pWndClipTo*/)
+// ANFORDERUNG A-4 (BEFUND E-49, 09.09.2026)
+//
+// Hier lief im Original die Mausschleife, bis der Anwender loslaesst. Die
+// Attrappe lieferte 0 ("nicht verschoben"), also blieb jedes Ziehen folgenlos.
+//
+// Gezeichnet wird mit DrawTrackerRect, das es schon gab: es invertiert das
+// Rechteck (PATINVERT mit dem Halbtonpinsel), zweimal aufgerufen loescht es
+// sich also selbst wieder. Deshalb die Reihenfolge: einmal zeichnen, bei
+// jeder Bewegung loeschen und neu zeichnen, am Ende einmal loeschen.
+//
+// Abgebrochen wird bei Escape und wenn der Mausfang verlorengeht - dann
+// liefert die Fassung 0, und der Aufrufer laesst alles, wie es ist.
+int SECDockBar::Splitter::Track(CWnd* pWnd, CPoint point, CWnd* pWndClipTo)
 {
-	return 0;
+	if (pWnd == NULL || !::IsWindow(pWnd->GetSafeHwnd()))
+		return 0;
+
+	// BEFUND E-54 (PRUEFER-6, 09.09.2026): der Ziehrahmen war beim Ziehen
+	// nach RECHTS unsichtbar. Gezeichnet wurde auf den Zeichenkontext der
+	// Andockleiste - und die ist nur 188 Pixel breit. Alles, was rechts davon
+	// liegt, fiel aus dem sichtbaren Bereich; zu sehen war also genau das
+	// nicht, was Gregor erreichen will ("den trennbalken nach rechts").
+	//
+	// Deshalb: pWndClipTo == NULL heisst jetzt "auf den Bildschirm zeichnen",
+	// in BILDSCHIRMkoordinaten. Genau so macht es MFC beim Ziehen von
+	// Leisten (CDockContext::InitLoop, dockcont.cpp): Fenstersperre auf dem
+	// Arbeitsflaechenfenster, dann GetDCEx mit DCX_WINDOW und
+	// DCX_LOCKWINDOWUPDATE. Die Sperre sammelt die Malbereiche der anderen
+	// Fenster und zeichnet sie beim Aufheben nach - sonst reisst der
+	// invertierte Rahmen Loecher, die stehen bleiben (Gregors Befund E-53:
+	// "da bleibt ein strich uebrig").
+	CWnd* pZeichenfenster = pWndClipTo;
+	BOOL  bGesperrt       = FALSE;
+	CDC*  pDC             = NULL;
+
+	if (pZeichenfenster != NULL)
+	{
+		pDC = pZeichenfenster->GetDC();
+	}
+	else
+	{
+		pZeichenfenster = CWnd::GetDesktopWindow();
+		if (pZeichenfenster == NULL)
+			return 0;
+
+		bGesperrt = pZeichenfenster->LockWindowUpdate();
+		pDC = pZeichenfenster->GetDCEx(NULL,
+			DCX_WINDOW | DCX_CACHE | (bGesperrt ? DCX_LOCKWINDOWUPDATE : 0));
+	}
+
+	if (pDC == NULL)
+	{
+		if (bGesperrt)
+			pZeichenfenster->UnlockWindowUpdate();
+		return 0;
+	}
+
+	const BOOL bSenkrecht = (m_orientation == Vertical);
+
+	// Der Ziehbalken in BILDSCHIRMkoordinaten - DrawTrackerRect rechnet
+	// selbst in den Clientbereich von pWndClipTo um.
+	CRect rectZieh(m_rect);
+	pWnd->ClientToScreen(&rectZieh);
+
+	const int nStart = bSenkrecht ? point.x : point.y;
+	int nJetzt = nStart;
+	BOOL bAbbruch = FALSE;
+
+	pWnd->SetCapture();
+	m_bErase = FALSE;
+
+	// PRUEFER-6 (09.09.2026): ab hier zieht dieser Balken. Die Marke haelt
+	// BeginRecycleSplitters, EndRecycleSplitters und TrennbalkenNeuAnlegen
+	// von ihm fern. Die Schleife unten verteilt fremde Nachrichten, und eine
+	// davon kann einen Anordnungsdurchlauf ausloesen - der hat bisher genau
+	// dieses Objekt geloescht, waehrend es noch benutzt wurde.
+	m_bTracking = TRUE;
+
+	DrawTrackerRect(&rectZieh, pWndClipTo, pDC, pWnd);
+
+	// KEIN blockierendes GetMessage.
+	//
+	// Der erste Anlauf lief mit while(::GetMessage(...)). Am 09.09.2026 hat
+	// das die Testinstanz zum Haengen gebracht: kommt kein WM_LBUTTONUP -
+	// weil der Mausfang verlorenging, das Fenster den Fokus verlor oder die
+	// Nachricht auf anderem Weg verschwand -, wartet die Schleife fuer immer,
+	// und das Programm ist tot. Genau diese Klasse von Fehler hat Gregor
+	// tagelang gekostet ("beenden kann ich es auch nicht").
+	//
+	// Deshalb: hoechstens 100 ms warten, danach die Abbruchgruende erneut
+	// pruefen. Der wichtigste ist die PHYSISCHE Maustaste - ist sie los, ist
+	// das Ziehen vorbei, ganz gleich welche Nachricht kam.
+	BOOL bFertig = FALSE;
+	while (!bFertig)
+	{
+		if (!::IsWindow(pWnd->GetSafeHwnd()) ||
+			::GetCapture() != pWnd->GetSafeHwnd())
+		{
+			bAbbruch = TRUE;
+			break;
+		}
+
+		if ((::GetKeyState(VK_LBUTTON) & 0x8000) == 0)
+			break;						// Taste ist los - fertig
+
+		::MsgWaitForMultipleObjects(0, NULL, FALSE, 100, QS_ALLINPUT);
+
+		MSG msg;
+		while (!bFertig && ::PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		{
+		if (msg.message == WM_LBUTTONUP)
+		{
+			bFertig = TRUE;
+			break;
+		}
+
+		if (msg.message == WM_RBUTTONDOWN ||
+			(msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE))
+		{
+			bAbbruch = TRUE;
+			bFertig  = TRUE;
+			break;
+		}
+
+		// PRUEFER-6 (09.09.2026): WM_QUIT darf nicht verschluckt werden.
+		// PeekMessage mit PM_REMOVE nimmt sie aus der Schlange; wer sie
+		// danach nicht zurueckstellt, hat das Beenden des Programms
+		// verschluckt - Eudora laeuft weiter, obwohl es enden sollte. Genau
+		// die Fehlerklasse aus Kriterium 7 ("beenden kann ich es auch
+		// nicht"). Also wieder einstellen und das Ziehen abbrechen.
+		if (msg.message == WM_QUIT)
+		{
+			::PostQuitMessage((int) msg.wParam);
+			bAbbruch = TRUE;
+			bFertig  = TRUE;
+			break;
+		}
+
+		if (msg.message == WM_MOUSEMOVE)
+		{
+			// Wegen SetCapture kommen die Bewegungen bei pWnd an, lParam ist
+			// also dessen Clientkoordinate.
+			const CPoint pt((int)(short) LOWORD(msg.lParam),
+							(int)(short) HIWORD(msg.lParam));
+			int nNeu = bSenkrecht ? pt.x : pt.y;
+
+			if (nNeu < m_nMin) nNeu = m_nMin;
+			if (nNeu > m_nMax) nNeu = m_nMax;
+
+			if (nNeu != nJetzt)
+			{
+				DrawTrackerRect(&rectZieh, pWndClipTo, pDC, pWnd);	// loeschen
+				if (bSenkrecht)
+					rectZieh.OffsetRect(nNeu - nJetzt, 0);
+				else
+					rectZieh.OffsetRect(0, nNeu - nJetzt);
+				DrawTrackerRect(&rectZieh, pWndClipTo, pDC, pWnd);	// neu
+				nJetzt = nNeu;
+			}
+			continue;
+		}
+
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+	}
+
+	m_bTracking = FALSE;			// PRUEFER-6: Schutz wieder aufheben
+
+	DrawTrackerRect(&rectZieh, pWndClipTo, pDC, pWnd);		// letztes Loeschen
+	::ReleaseCapture();
+	pZeichenfenster->ReleaseDC(pDC);
+	if (bGesperrt)
+		pZeichenfenster->UnlockWindowUpdate();		// BEFUND E-54
+
+	return bAbbruch ? 0 : (nJetzt - nStart);
 }
 
 
@@ -3328,6 +4465,46 @@ BOOL SECDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 			Splitter* pSplitter = HitTest(pt);
 			if (pSplitter != NULL)
 			{
+				// SPURMARKE ZU E-66, fuenfter Teil.
+				//
+				// Gemessen an 1.0.32: 26 Zeilen "Streifen", NULL Zeilen
+				// "Bewegung" und NULL "Klick". WM_SETCURSOR steigt vom
+				// Kindfenster zum Elternfenster auf, WM_MOUSEMOVE nicht -
+				// der Zeiger steht also ueber einem KIND der Andockleiste,
+				// nicht ueber ihr selbst. Der Streifen ist verdeckt.
+				//
+				// Was fehlt, um es zu beheben: WO der Zeiger steht, und WEM
+				// dieser Punkt gehoert. pWnd ist das Fenster, das die
+				// Nachricht zuerst bekommen hat - steht dort etwas anderes
+				// als diese Andockleiste, ist der Fall entschieden und der
+				// Name sagt gleich, wo die Behandlung hingehoert.
+				//
+				// Hoechstens eine Zeile je Sekunde, sonst laeuft das
+				// Protokoll bei jeder Mausbewegung voll.
+				static DWORD s_dwLetzte = 0;
+				const DWORD dwJetzt = ::GetTickCount();
+				if (dwJetzt - s_dwLetzte > 1000)
+				{
+					s_dwLetzte = dwJetzt;
+					char szMarke[256];
+					const char* pszWer = "?";
+					if (pWnd == NULL)
+						pszWer = "NULL";
+					else if (pWnd == this)
+						pszWer = "die Andockleiste selbst";
+					else if (pWnd->GetRuntimeClass() != NULL)
+						pszWer = pWnd->GetRuntimeClass()->m_lpszClassName;
+
+					_snprintf(szMarke, sizeof(szMarke),
+						"E-66 Zeiger: Leiste=%u Punkt=%d,%d Balken=%d..%d "
+						"Empfaenger=%s HitTestCode=%u",
+						(unsigned) GetDlgCtrlID(), (int) pt.x, (int) pt.y,
+						(int) pSplitter->m_rect.left,
+						(int) pSplitter->m_rect.right,
+						pszWer, (unsigned) nHitTest);
+					szMarke[sizeof(szMarke) - 1] = '\0';
+					PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+				}
 				LPCTSTR lpszCursor = (pSplitter->m_orientation == Splitter::Vertical)
 					? IDC_SIZEWE : IDC_SIZENS;
 				::SetCursor(::LoadCursor(NULL, lpszCursor));
@@ -3340,8 +4517,41 @@ BOOL SECDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 }
 
 
+// SPURMARKE ZU E-66, vierter Teil - die entscheidende.
+//
+// Stand nach 1.0.31: das Protokoll enthaelt 13 Zeilen "E-66 Streifen:" und
+// KEINE EINZIGE "E-66 Zug:". Die Ziehschleife wird also nie betreten,
+// obwohl beide Balken entstehen (links nFrei=8 nSchub=0, rechts nFrei=8
+// nSchub=10, Andockleiste je 188 breit) und obwohl der Mauszeiger sich in
+// den Doppelpfeil verwandelt.
+//
+// DER VERDACHT: WM_SETCURSOR steigt vom Kindfenster zum Elternfenster AUF,
+// Maustasten tun das NICHT. Die Andockleiste bekaeme dann den Zeiger zu
+// setzen, waehrend der Klick bei einem Kindfenster landet, das den Streifen
+// verdeckt.
+//
+// DIE MESSUNG, die das entscheidet: Mausbewegungen steigen ebenfalls NICHT
+// auf. Kommt hier eine Zeile, waehrend der Zeiger ueber dem Streifen steht,
+// gehoert der Andockleiste dieser Pixel wirklich - dann liegt es nicht am
+// Verdecken. Kommt keine, ist der Verdacht belegt.
+//
+// Geschrieben wird nur bei einem TREFFER, sonst stuende das Protokoll bei
+// jeder Mausbewegung voll.
 void SECDockBar::OnMouseMove(UINT nFlags, CPoint point)
 {
+	Splitter* pTreffer = HitTest(point);
+	if (pTreffer != NULL)
+	{
+		char szMarke[192];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Bewegung UEBER dem Streifen: Leiste=%u Punkt=%d,%d "
+			"Balken=%d..%d",
+			(unsigned) GetDlgCtrlID(), (int) point.x, (int) point.y,
+			(int) pTreffer->m_rect.left, (int) pTreffer->m_rect.right);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
 	CDockBar::OnMouseMove(nFlags, point);
 }
 
@@ -3349,6 +4559,21 @@ void SECDockBar::OnMouseMove(UINT nFlags, CPoint point)
 void SECDockBar::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	Splitter* pSplitter = HitTest(point);
+
+	// SPURMARKE ZU E-66: kommt hier ueberhaupt ein Klick an, und trifft er?
+	// Bleibt diese Zeile aus, waehrend "E-66 Bewegung" erscheint, liegt es
+	// an der Trefferpruefung; bleiben beide aus, verdeckt ein Kindfenster
+	// den Streifen.
+	{
+		char szMarke[192];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Klick: Leiste=%u Punkt=%d,%d Treffer=%s",
+			(unsigned) GetDlgCtrlID(), (int) point.x, (int) point.y,
+			(pSplitter == NULL) ? "NEIN" : "ja");
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
 	if (pSplitter != NULL)
 	{
 		StartTracking(pSplitter, point);
@@ -3372,9 +4597,76 @@ void SECDockBar::OnDestroy()
 // WM_SIZEPARENT ist der Anordnungsdurchlauf des Rahmens (afxpriv.h). Hier
 // wuerde das Original die prozentualen Breiten anwenden und danach die
 // Splitter neu setzen. Kategorie A - CDockBar ordnet die Leisten selbst an.
+// ANFORDERUNG A-4 (BEFUND E-49, 09.09.2026)
+//
+// Hier stand nur die Weiterleitung an die Basis. Der Anordnungsdurchlauf ist
+// aber die einzige Stelle, an der die Lage der Leisten feststeht - also die
+// Stelle, an der die Trennbalken entstehen muessen. Ohne diesen Aufruf blieb
+// m_arrSplitters leer, HitTest lieferte immer NULL, und weder OnSetCursor
+// noch OnLButtonDown kamen je zum Zug (beide waren fertig umgesetzt).
+//
+// BeginRecycleSplitters/EndRecycleSplitters sind dafuer da: bestehende
+// Balken werden wiederverwendet statt bei jedem Durchlauf neu angelegt.
 LRESULT SECDockBar::OnSizeParent(WPARAM wParam, LPARAM lParam)
 {
+	// Hier wird NICHT mehr der Trennbalken angelegt.
+	//
+	// BEFUND E-52 (Gregor, 09.09.2026): "nach vergroessern (verschiebung nach
+	// rechts), kann man den balken nicht mehr greifen. erst wenn ich das
+	// fenster veraendere, dann geht es wieder."
+	//
+	// Der Grund steht in seinem Satz: MFC verschiebt die Leisten mit
+	// DeferWindowPos (lpLayout->hDWP). Wenn OnSizeParent zurueckkommt, hat
+	// die Andockleiste ihre neue Groesse noch NICHT - GetClientRect liefert
+	// die alte. Der Balken landete also an der alten Stelle, und erst der
+	// naechste Anordnungsdurchlauf zog es gerade.
+	//
+	// Angelegt wird er deshalb in OnSize: dort ist die Groesse wirklich
+	// gesetzt.
 	return CDockBar::OnSizeParent(wParam, lParam);
+}
+
+
+// ANFORDERUNG A-4, BEFUND E-52 (09.09.2026)
+//
+// Der Anordnungsdurchlauf ist die falsche Stelle (siehe OnSizeParent) - hier
+// ist die richtige: WM_SIZE kommt, NACHDEM das Fenster seine neue Groesse
+// hat. Erst dann stimmt der Streifen, den der Balken belegen soll.
+void SECDockBar::OnSize(UINT nType, int cx, int cy)
+{
+	CDockBar::OnSize(nType, cx, cy);
+
+	if (nType == SIZE_MINIMIZED)
+		return;
+
+	TrennbalkenNeuAnlegen();
+}
+
+
+// ANFORDERUNG A-4 (BEFUND E-49/E-52, 09.09.2026)
+//
+// Legte den Trennbalken in der Andockleiste an - stillgelegt, siehe unten.
+void SECDockBar::TrennbalkenNeuAnlegen()
+{
+	// STILLGELEGT mit BEFUND E-66 (10.09.2026).
+	//
+	// Diese Fassung hat den Trennbalken in der ANDOCKLEISTE angelegt. Dort
+	// erreicht ihn keine Maus: gemessen an 1.0.32 kamen ueber der
+	// Andockleiste NULL WM_MOUSEMOVE und NULL WM_LBUTTONDOWN an, weil der
+	// Streifen von der Leiste verdeckt wird (Bar=-2..178 bei Client=0..188,
+	// Balken lag bei 0..8). Der Zeiger wurde trotzdem richtig gesetzt, weil
+	// WM_SETCURSOR zum Elternfenster aufsteigt und Maustasten nicht.
+	//
+	// Der Griff sitzt jetzt in der Leiste selbst
+	// (SECControlBar::AmGreifrand), und der Zug laeuft ueber ZiehenAmRand.
+	//
+	// Die Fassung bleibt mit leerem Rumpf stehen statt zu verschwinden: sie
+	// haengt an ON_WM_SIZE, und ein Aufruf ins Leere ist besser als ein
+	// Aufrufer, der ins Nichts zeigt (Lehre dummy-statt-weglassen). Die
+	// Balkenmechanik darunter - AddSplitter, HitTest, Recycle - bleibt
+	// ebenfalls, weil ZiehenAmRand Splitter, Track und OnSplitterMoved
+	// weiterbenutzt.
+	DeleteAllSplitters();
 }
 
 

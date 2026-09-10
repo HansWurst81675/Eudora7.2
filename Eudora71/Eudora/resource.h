@@ -1820,6 +1820,7 @@
 #define IDS_FILTER_MESSAGES_LEFT        3701
 #define IDS_TRANSFER_TO                 3702
 #define IDS_COPY_TO                     3703
+#define IDS_JUNK_MESSAGES_MARK          3704
 #define IDS_FIO_RULE                    3774
 #define IDS_FIO_INCOMING                3775
 #define IDS_FIO_OUTGOING                3776

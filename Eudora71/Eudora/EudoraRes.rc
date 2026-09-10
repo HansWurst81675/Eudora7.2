@@ -9652,6 +9652,7 @@ BEGIN
     IDS_FILTER_MESSAGES_LEFT "Messages left to filter: "
     IDS_TRANSFER_TO         "&Transfer to:"
     IDS_COPY_TO             "&Copy to:"
+    IDS_JUNK_MESSAGES_MARK  "Messages left to mark: "
 END
 
 STRINGTABLE 
