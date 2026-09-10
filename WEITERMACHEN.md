@@ -1,18 +1,18 @@
 # Hier weitermachen
 
-**Stand 09.09.2026, abends.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 10.09.2026, mittags.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.40 (`Eudora71/Version.h`) — in Arbeit |
-| **Paketnummer** | 1.0.40 (`VERSION`) — in Arbeit, es gibt dieses Paket noch nicht |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.30** — `Releases/Eudora72-1.0.30-release.zip`, 9 343 260 B, SHA256 `1077891d606f9f98…`. Bei Gregor abgelegt unter `C:\Users\Gregor\Eudora72-1.0.30-release`. **Kein Release** — veröffentlicht ist die Fassung davor |
-| **Zuletzt von Gregor bestätigt** | **1.0.29 am 09.09.2026**: *„1-6, ok"* zu **E-54** bis **E-58** und **E-61**, dazu *„rechtklick zeigt ja einen liste der offenen fenster: sehr gut."* Ein Restfehler daraus (**E-63**) ist in 1.0.30 behoben, aber noch nicht beurteilt |
-| **Was als Nächstes zu messen ist** | **E-66 an 1.0.30 — der wichtigste offene Punkt.** Gregors Messung: *„balken lassen sich nicht verschieben. beim anklicken ist der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Der Doppelpfeil belegt, dass `HitTest` den Balken **findet** — die erste Ursache ist behoben, es scheitert **danach**, in `Splitter::Track` oder in `OnSplitterMoved`. **Nächster Schritt:** die Spurmarke aus der Kladde (`marke-n.txt`, `marke2-*.txt`) in `StartTracking` und `OnSplitterMoved` einsetzen, bauen, Gregor einmal ziehen lassen, `eudora.log` auswerten. **Nicht weiter raten** — an diesem Tag sind schon zwei Vermutungen zu E-66 und zwei zu E-64 am Code gescheitert |
-| **Was Gregor sonst noch prüfen kann** | **E-63** (Kurzhinweis auf der letzten Registerkarte), **E-67** (ein Filter *„Junk Score is less than N"* darf das Ansehen im Filterfenster überstehen), der **untere** Trennbalken auch nach unten (war bei 200 Pixeln gesperrt) |
-| **Die Messung, die E-64 entscheidet** | Ein Filterlauf über **eine Kopie** eines Postfachs mit 1.0.30, danach die `eudora.log`: dort steht zu jeder Nachricht und jedem Filter eine Zeile `E-64 Match=…` mit Kopfzeile, Verb, Wert und Betreff. **E-64 ist nicht behoben** — Filter auf ein ganzes Postfach können weiterhin alles verschieben |
+| **Quellstand** | 7.2.0.40 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.40 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.40** — `Releases/Eudora72-1.0.40-release.zip`, 9 345 502 B, SHA256 `5c133c99eda2a2fc…`. Bei Gregor abgelegt unter `C:\Users\Gregor\Eudora72-1.0.40-release`. `paket-pruefen.ps1`: keine Fehler, Kriterium 0 **JA**. **Kein Release** — Gregor hat es noch nicht beurteilt |
+| **Zuletzt von Gregor bestätigt** | **1.0.29 am 09.09.2026**: *„1-6, ok"* zu **E-54** bis **E-58** und **E-61**. Seither hat er E-65/E-66 bestätigt (*„1. ja / 2. ja / 3. ja"*) und dass Filter sich löschen lassen |
+| **Was als Nächstes zu messen ist** | **E-75 an 1.0.40.** Strg+J löste bei Gregor *Junk* aus statt *Filter Messages*, weil `CtrlJMapping=1` beim ersten Start eines leeren Mailverzeichnisses stillschweigend gesetzt wird. Behoben für neue Mailverzeichnisse. **In einem bestehenden wirkt es nicht** — dort steht die `1` schon und muss von Hand auf `CtrlJMapping=2`. Zu prüfen: filtert Strg+J wieder, und steht im Menü *Special* das richtige Kürzel? |
+| **Offen, mit Marken im Bau** | **E-70** (Andockgrößen überleben keinen Neustart; Marken `E-70 gesichert:`/`E-70 geladen:` seit 1.0.37, noch nie ausgewertet). **E-68** (`copyInstead` schreibt/liest asymmetrisch, und `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — Pufferüberlauf ab sechs Aktionen je Regel). **E-47** (MFC71/MSVCP71). Kriterien 2 und 4 stehen auf *fast* |
+| **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73** schreiben je Nachricht und je Filter eine Protokollzeile. E-64 hat am 10.09. den Beweis zu E-75 geliefert und darf erst raus, wenn Gregor 1.0.40 beurteilt hat |
 | **Was ich dabei nicht selbst messen kann** | das Ziehen. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist — anders lässt sich das Einfrieren nicht ausschließen (**E-51**) |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
