@@ -4160,8 +4160,41 @@ BOOL SECDockBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
 }
 
 
+// SPURMARKE ZU E-66, vierter Teil - die entscheidende.
+//
+// Stand nach 1.0.31: das Protokoll enthaelt 13 Zeilen "E-66 Streifen:" und
+// KEINE EINZIGE "E-66 Zug:". Die Ziehschleife wird also nie betreten,
+// obwohl beide Balken entstehen (links nFrei=8 nSchub=0, rechts nFrei=8
+// nSchub=10, Andockleiste je 188 breit) und obwohl der Mauszeiger sich in
+// den Doppelpfeil verwandelt.
+//
+// DER VERDACHT: WM_SETCURSOR steigt vom Kindfenster zum Elternfenster AUF,
+// Maustasten tun das NICHT. Die Andockleiste bekaeme dann den Zeiger zu
+// setzen, waehrend der Klick bei einem Kindfenster landet, das den Streifen
+// verdeckt.
+//
+// DIE MESSUNG, die das entscheidet: Mausbewegungen steigen ebenfalls NICHT
+// auf. Kommt hier eine Zeile, waehrend der Zeiger ueber dem Streifen steht,
+// gehoert der Andockleiste dieser Pixel wirklich - dann liegt es nicht am
+// Verdecken. Kommt keine, ist der Verdacht belegt.
+//
+// Geschrieben wird nur bei einem TREFFER, sonst stuende das Protokoll bei
+// jeder Mausbewegung voll.
 void SECDockBar::OnMouseMove(UINT nFlags, CPoint point)
 {
+	Splitter* pTreffer = HitTest(point);
+	if (pTreffer != NULL)
+	{
+		char szMarke[192];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Bewegung UEBER dem Streifen: Leiste=%u Punkt=%d,%d "
+			"Balken=%d..%d",
+			(unsigned) GetDlgCtrlID(), (int) point.x, (int) point.y,
+			(int) pTreffer->m_rect.left, (int) pTreffer->m_rect.right);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
 	CDockBar::OnMouseMove(nFlags, point);
 }
 
@@ -4169,6 +4202,21 @@ void SECDockBar::OnMouseMove(UINT nFlags, CPoint point)
 void SECDockBar::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	Splitter* pSplitter = HitTest(point);
+
+	// SPURMARKE ZU E-66: kommt hier ueberhaupt ein Klick an, und trifft er?
+	// Bleibt diese Zeile aus, waehrend "E-66 Bewegung" erscheint, liegt es
+	// an der Trefferpruefung; bleiben beide aus, verdeckt ein Kindfenster
+	// den Streifen.
+	{
+		char szMarke[192];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Klick: Leiste=%u Punkt=%d,%d Treffer=%s",
+			(unsigned) GetDlgCtrlID(), (int) point.x, (int) point.y,
+			(pSplitter == NULL) ? "NEIN" : "ja");
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
+
 	if (pSplitter != NULL)
 	{
 		StartTracking(pSplitter, point);

@@ -343,8 +343,8 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.0.31` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.31` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.0.32` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `1.0.32` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

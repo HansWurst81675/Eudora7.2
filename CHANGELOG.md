@@ -96,6 +96,50 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.32 — Messfassung II: kommt der Klick überhaupt an?
+
+**Was das Protokoll von 1.0.31 ergeben hat** — und warum diese Fassung nötig
+ist. 13 Zeilen `E-66 Streifen:`, **keine einzige** `E-66 Zug:`. Die
+Ziehschleife wird also nie betreten. Die Geometrie stimmt dagegen:
+
+| Andockleiste | Clientbereich | `nPos` | `nFrei` | `nSchub` |
+|---|---|---|---|---|
+| links (59420) | 0,0..188,703 | 1 | **8** | 0 |
+| rechts (59421) | 0,0..188,703 | 1 | **8** | 10 |
+
+Beide Balken entstehen, acht Pixel breit, an der richtigen Kante. Es
+scheitert am **Klick**, nicht an der Rechnung — und `ON_WM_LBUTTONDOWN` steht
+in der Nachrichtentabelle.
+
+**Der Verdacht, der zu allen Beobachtungen passt:** `WM_SETCURSOR` steigt vom
+Kindfenster zum Elternfenster **auf**, Maustasten tun das **nicht**. Die
+Andockleiste bekäme dann den Zeiger zu setzen — daher der Doppelpfeil, den
+Gregor sieht — während der Klick bei einem Kindfenster landet, das den
+Streifen verdeckt.
+
+**Die Messung, die das entscheidet:** Mausbewegungen steigen ebenfalls
+**nicht** auf. Zwei neue Marken:
+
+| Marke | wann | was sie beweist |
+|---|---|---|
+| `E-66 Bewegung UEBER dem Streifen:` | Maus über dem Streifen | erscheint sie, gehört der Andockleiste dieser Pixel wirklich |
+| `E-66 Klick:` | jeder Klick in die Andockleiste | kommt der Klick an, und trifft er? Mit Punkt und Treffer ja/nein |
+
+Drei Ausgänge, drei verschiedene Ursachen:
+
+* **Beide Marken bleiben aus** → ein Kindfenster verdeckt den Streifen. Der
+  Zeiger stimmt nur, weil `WM_SETCURSOR` aufsteigt.
+* **Bewegung ja, Klick nein** → die Maustaste geht woanders hin, obwohl die
+  Bewegung ankommt.
+* **Klick ja, `Treffer=NEIN`** → die Trefferprüfung rechnet beim Klick anders
+  als beim Zeigersetzen.
+
+### Was an 1.0.32 zu prüfen ist
+
+Nur eines: **mit dem Zeiger über den linken und den rechten Trennbalken
+fahren und jeweils einmal klicken und ziehen.** Danach die `eudora.log`.
+Mehr nicht — diese Fassung soll messen, nicht gefallen.
+
 ## 7.2.0.31 — Messfassung: warum der Trennbalken nicht greift
 
 **Was Gregor damit tun kann:** dieselbe Fassung wie 1.0.30, plus **drei
