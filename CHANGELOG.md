@@ -96,6 +96,103 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
+
+**Was Gregor damit tun kann, was vorher gefährlich war:** über IMAP abrufen
+und filtern, ohne dass Post auf dem Server verschwindet. Dazu: das Protokoll
+gezielt aufdrehen, ohne dass jemand den Code ändert.
+
+### Zwei Löschwege, die E-73 offengelassen hatte
+
+E-73 galt seit 7.2.0.38 als behoben — eine Filteraktion sollte nichts mehr
+auf dem Server löschen. PRÜFER hat die Behebung gegen den Quelltext
+nachgerechnet und **zwei Wege gefunden, die daran vorbeiliefen**:
+
+| Weg | warum er vorbeilief |
+|---|---|
+| **IMAP** | Bei einem IMAP-Postfach verzweigt `CFilter::Action` nach `ImapAction` (`filtersd.cpp:1213-1216`) und erreicht den geprüften POP-Zweig nie. Von dort geht es über `ImapSetServerOpt` (`EuImap/src/ImapFiltersd.cpp:791-794`) in ein `STORE \Deleted`. `IMAP4` ist in **beiden** Konfigurationen gebaut |
+| **Junk-Filteraktion** | `ID_FLT_JUNK` (`filtersd.cpp:1581-1600`) → `CJunkMail::DeclareJunk` → bei `DeleteFetchedJunk=1` ein `SetServerStatus(…SERVER_DELETE)` (`JunkMail.cpp:707-711`) |
+
+**Der zweite ist besonders heikel**, weil **E-74** ihn nicht abdeckte: dort
+war `DeleteFetchedJunk=0` nur in `tools/DEudora.ini` gesetzt worden, und das
+gilt ausschließlich für **neu angelegte** Konten. Wer die `1` schon in seiner
+`Eudora.ini` stehen hatte, löschte weiter — ausgelöst durch eine
+Filteraktion.
+
+Beide fragen jetzt dieselbe Funktion `FilterDarfVomServerLoeschen`. Manuelles
+Junken bleibt unverändert. Die Schranke
+`tools/pruefe-filter-serverloeschung.pl` hält das fest und hat beim ersten
+Lauf genau diese zwei Lücken gefunden — in einer Behebung, die als fertig
+galt.
+
+### E-68: der Überlauf beim Lesen von `Filters.pce`, halb behoben
+
+`NUM_FILT_ACTS` ist 5, `CFiltersDoc::Read` zählte den Aktionszähler aber in
+**21 Zweigen** hoch, ohne je gegen diese Grenze zu prüfen. Nachgerechnet ist
+der Schaden größer als beschrieben: derselbe Zähler indiziert **elf weitere
+Felder**, darunter `CString`-Felder. `m_Desc[5]` trifft `m_DoPersonality`,
+und `CString::operator=` fasst das als Zeichenkettenzeiger auf — kein
+Zahlenschaden, sondern Speicherzerstörung.
+
+Auslösen lässt sich das **nicht durch Bedienung**: `CFiltersDoc::Write` ist
+gebunden und schreibt nie mehr als fünf. Es braucht eine fremde
+`Filters.pce` — von Hand bearbeitet, aus einem anderen Programm übernommen,
+oder eine `.pre`/`.pst`-Datei, die Eudora liest und nie schreibt.
+
+Die Grenze ist eingebaut; überzählige Zeilen werden verworfen und
+protokolliert. Die zweite Hälfte von E-68 — `copyInstead` wird anders
+geschrieben als gelesen — bleibt **offen**.
+
+### Das Protokoll lässt sich jetzt aufdrehen, ohne den Code anzufassen
+
+Gregors Hinweis: *„in der ini ein debuglevel setzen, dann kommt mehr oder
+weniger ins log raus. damit kann man im bedarfsfall mehr logs zu debug
+zwecken rausschreiben, ohne den code zu ändern."*
+
+Das gibt es in Eudora seit jeher — `LogLevel` in der `Eudora.ini` — und diese
+Portierung hat es bis heute umgangen. Die Spurmarken riefen `PutDebugLog` mit
+`DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT`. Das **ODER** machte die
+Abschaltbarkeit zunichte: `MISC` ist in der Vorgabe aus, `TOC_CORRUPT` an,
+also schrieb jede Marke immer.
+
+**146 Stellen in 16 Dateien** hängen jetzt an `MISC` allein:
+
+```ini
+LogLevel=25759   ; Vorgabe — die Spurmarken schweigen
+LogLevel=58527   ; 25759 + 32768 — sie schreiben
+```
+
+Damit dürfen die Marken im Code bleiben. Die vollständige Tabelle aller
+sechzehn Schalter steht in [README.md](README.md), Abschnitt *Mehr ins
+Protokoll schreiben lassen*.
+
+### Neu: E-77, und was die Filterdoku jetzt sagt
+
+**E-77** — IMAP-Postfachnamen mit Umlauten werden roh angezeigt:
+`Entw&APw-rfe` statt *Entwürfe*. Das ist modifiziertes UTF-7 (RFC 3501,
+5.1.3), und Eudora dekodiert es nicht; in `Eudora71/` kommt keine
+UTF-7-Behandlung vor. Offen.
+
+**[FILTER.md](FILTER.md)** ist neu — 666 Zeilen zu Filtern und Junk, mit
+allen 38 INI-Schlüsseln samt eingebauter Vorgabe und Fundstelle. Gregors
+Frage nach den Junk-Werten ist dort beantwortet: die **100** ist
+`ManualJunkScore`, die Punktzahl beim Junken von Hand; die automatische
+Schwelle ist `MinScoreToJunk` mit Vorgabe **50**. Praktisch bleibt jede
+Nachricht bei 0, weil die Bewertung von `SpamWatch` und `SpamHeaders` kommt
+und beide wegen **E-47** nicht laden.
+
+### Was aus dem Protokoll bestätigt wurde
+
+Von Gregor an 1.0.42 gemessen: *„filter fenstergröße nach neustart
+gespeichert: PASS"* (**E-70**), *„filter funktionieren"* (**E-64**, **E-72**,
+**E-75**), *„imap: funktioniert"* — `imap.gmx.net:993`, TLSv1.3,
+`TLS_AES_256_GCM_SHA384`. **Kriterium 3** in [ZIEL.md](ZIEL.md) nennt jetzt
+beides, POP3 und IMAP.
+
+**E-71** ist dagegen **neu eingestuft**: der Filterbericht bleibt leer, auch
+nachdem die Filter greifen. Die frühere Einordnung *„kein eigener Fehler,
+Folge von E-72"* ist damit widerlegt. Auf Gregors Wunsch zurückgestellt.
+
 ## 7.2.0.42 — Die Breite der Seitenleisten überlebt einen Neustart wirklich
 
 **Was Gregor damit tun kann, was in 1.0.41 noch nicht ging:** eine Leiste

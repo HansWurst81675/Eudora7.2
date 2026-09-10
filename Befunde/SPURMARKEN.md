@@ -37,6 +37,58 @@ Protokoll endlich gelesen wurde, sagte es in zwei Zeilen alles: **40** mal
 | E-76 | 1.0.41 | entfaellt: braucht eine gedrückte Maustaste, siehe E-51 | Die Marke schreibt nur, wenn jemand am Rand eines **schwebenden** Fensters zieht. Das lässt sich hier nicht auslösen — dasselbe Hindernis wie bei **E-51**: `Splitter::Track` und die Größenänderung eines Rahmens brechen ab, sobald die physische Maustaste los ist. Sie bleibt drin und wartet auf den nächsten Bericht von Gregor. Sie nennt `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die Maße vorher wie nachher in einer Zeile |
 | E-44 | 1.0.43 | | zwei Zeitpunkte mit derselben Angabe: `nach SetDockState` und `vor`/`nach LoadWazooBarConfig`, je Leiste mit Kennung, Andockleiste, Sichtbarkeit und Stil. Sagt die erste „hat Andockleiste" und die zweite „keine", geht die Zuordnung dazwischen verloren; sagt schon die erste „keine", wirkt `SetDockState` nicht |
 
+## Alle Marken im Quelltext
+
+Gemessen am 10.09.2026 über alle `.cpp` in `Eudora71/Eudora` und
+`Eudora71/OTShim`: **19 Befunde, 146 Protokollstellen in 16 Dateien.**
+
+**Alle hängen an `DEBUG_MASK_MISC` (32768) und schweigen in der Vorgabe.**
+Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
+[README.md](../README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+
+| Befund | Stellen | wo | was die Zeilen sagen |
+|---|---:|---|---|
+| **E-27** | 61 | `CompMessageFrame.cpp`, `PaigeEdtView.cpp`, `compmsgd.cpp`, `headervw.cpp`, `mainfrm.cpp` | der ganze Aufbau eines Nachrichtenfensters, Schritt für Schritt: `InitializeNew: Anfang`, `OnCreateClient`, `CHeaderView::OnCreate` … Die dichteste Messung im Baum — sie zeigt, an welcher Stelle ein Fensteraufbau hängenbleibt |
+| **E-33** | 34 | `QCCustomToolBar.cpp`, `eudora.cpp`, `mainfrm.cpp` | das Beenden in nummerierten Schritten (`5a vor TrimJunk`, `5b nach TrimJunk`, `5c vor RemoveControlBar`). Damit ist zu sehen, **wo** ein Beenden stehenbleibt |
+| **E-34** | 19 | `CompMessageFrame.cpp`, `QCChildToolBar.cpp`, `eudora.cpp` | `NewChildFrame` mit Fensterkennung, Sichtbarkeit, Rechteck und Titel vor und nach `InitialUpdateFrame` |
+| **E-35** | 4 | `CompMessageFrame.cpp` | Werkzeugleistenknöpfe: `CommandToIndex`, `GetButton`, `GetSubMenu` — die Klasse, aus der `GetBtnCount=24` bei `m_btns.GetSize=0` kam |
+| **E-37** | 3 | `PersonalityView.cpp` | Löschen einer Persönlichkeit, mit dem Namen in der Zeile |
+| **E-40** | 2 | `doc.cpp`, `msgdoc.cpp` | was `SaveModified` von `AfxMessageBox` zurückbekommt |
+| **E-41** | 2 | `mainfrm.cpp` | `OnSysCommand` mit `SC_CLOSE` — Alt+F4 und das Fensterkreuz |
+| **E-42** | 1 | `mainfrm.cpp` | `Beenden: Schritt '…'` — der Name des Aufräumschritts, der gerade läuft |
+| **E-43** | 1 | `QCCustomToolBar.cpp` | `SaveCustomInfo` mit dem INI-Abschnitt, in den geschrieben wird |
+| **E-44** | 2 | `mainfrm.cpp`, `WazooBarMgr.cpp` | je Leiste Kennung, Andockleiste, Sichtbarkeit und Stil — **an zwei Zeitpunkten**: nach `SetDockState` und um `LoadWazooBarConfigFromIni` herum. Dazu die Meldung, für wie viele Leisten die Standardanordnung nachgezogen wurde |
+| **E-45** | 1 | `mainfrm.cpp` | ob `QCWorkbook::OnClose` durchgelaufen ist |
+| **E-46** | 1 | `mainfrm.cpp` | ob der Destruktor des Hauptfensters erreicht wird |
+| **E-64** | 2 | `filtersd.cpp` | **am Eingang** von `FilterMsg`: wie viele Filter in der Liste sind und welche Masken sie tragen. Dazu je Vergleich `Match=0/1` mit Kopfzeile, Verb, Wert und Betreff |
+| **E-66** | 9 | `OTShim.cpp` | Ziehen am Greifrand: Zeigerwechsel, Streifenlage, Bewegung, `Anwenden` und `Anwenden ABGEBROCHEN` mit Maßen |
+| **E-68** | 1 | `filtersd.cpp` | eine Regel in `Filters.pce` hat mehr Aktionen als `NUM_FILT_ACTS` — die überzählige wird verworfen und hier genannt |
+| **E-69** | 3 | `filtersd.cpp` | die drei Stellen, an denen `FilterMsg` abbricht (kein TOC, kein Nachrichtendokument, `GetMessageDoc` liefert nichts). Vorher waren das `ASSERT(0)` — im Freigabebau also **nichts** |
+| **E-70** | 4 | `OTShim_Werkzeugleiste.cpp`, `QCToolBarManager.cpp`, `mainfrm.cpp` | `gesichert:` und `geladen:` je Leiste mit `cx`/`cy` vorher und nachher. **Diese zwei Zeilen nebeneinander haben E-70 entschieden** |
+| **E-72** | 1 | `filtersv.cpp` | wenn das Filterfenster einen Filter zurückschreiben wollte, den es nie geladen hat |
+| **E-73** | 1 | `filtersd.cpp` | wenn eine Filteraktion auf dem Server löschen wollte — mit Filtername, Betreff und dem Urteil `VERWEIGERT` oder `ERLAUBT` |
+| **E-76** | 1 | `OTShim.cpp` | Größenänderung einer schwebenden Leiste: `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating`, Maße vorher und nachher |
+
+### Wie man das benutzt
+
+Tritt ein Fehler in einem dieser Bereiche auf, ist die Messung schon
+eingebaut. Es braucht **keinen neuen Bau**:
+
+1. Eudora beenden, `eudora.log` löschen.
+2. `LogLevel=58527` in `[Settings]` der `Eudora.ini`.
+3. Starten, genau die eine Sache tun, beenden.
+4. Im Protokoll nach der Befundnummer suchen.
+
+**Warum diese Tabelle vollständig sein muss:** eine Marke, von der niemand
+weiß, ist so nutzlos wie keine. Bis zum 10.09.2026 kannte diese Datei fünf
+von neunzehn — die übrigen vierzehn lagen im Quelltext und schrieben
+mit, ohne dass jemand sie zuordnen konnte.
+
+**Wo noch nie gemessen wurde:** Mailversand und -abruf. Dort gibt es
+Eudoras eigene Schalter (`RCVD` 2, `TRANS` 32, `RCV` 64, `LMOS` 8192), aber
+keine Marke aus dieser Portierung. Wenn dort etwas auftaucht, gehört eine
+gesetzt — nicht auf Vorrat.
+
 ## Prüfen
 
 ```
