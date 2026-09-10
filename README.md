@@ -126,6 +126,7 @@ Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
 | `DeleteFetchedJunk` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
 | `LeaveMailOnServer` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
 | `SSLSendUse`, `SSLReceiveUse` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
+| `CtrlJMapping` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
 
 ### Warum die drei Löschsperren
 
@@ -148,6 +149,50 @@ darf keine Post löschen.
 
 > **Wer eine dieser Sperren löst, sollte wissen warum.** Die Wege 1 und 2
 > löschen **ohne Rückfrage**, und was auf dem Server gelöscht ist, ist weg.
+
+### Warum Strg+J hier filtert
+
+Vor der Junk-Funktion war **Strg+J** in Eudora *Filter Messages*. Seit
+Eudora 6 möchte das Programm die Taste für *Junk* haben und fragt vorher —
+der Dialog dafür steht bis heute in den Ressourcen (`IDD_CTRL_J_FOR_JUNK`):
+
+> *The Ctrl-J key combination is currently associated with the „Filter
+> Messages" menu item. Would you like to switch it to be associated with the
+> „Junk" menu item?*
+
+**Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da
+sind.** Andernfalls legt `CMainFrame::InitJunkMenus` (`mainfrm.cpp`) die
+Taste **stillschweigend** auf *Junk* und schreibt `CtrlJMapping=1` fest. Der
+Zweig läuft nur ein einziges Mal — später angelegte Filter ändern nichts
+mehr daran.
+
+Wer mit einem **leeren Mailverzeichnis** anfängt und die Filter danach
+anlegt, landet also dauerhaft auf *Junk*, ohne es je gelesen zu haben. Genau
+das ist am 10.09.2026 passiert: neun Nachrichten wanderten in den
+Junk-Ordner, während der Fortschrittsbalken „Messages left to filter" zeigte
+(**E-75**). Hier bleibt Strg+J deshalb auf *Filter Messages*.
+
+**In einem bestehenden Mailverzeichnis wirkt das nicht** — dort steht der
+Wert schon in der `Eudora.ini` und wird nicht mehr überschrieben. Bei
+geschlossenem Eudora von Hand ändern:
+
+```ini
+[Settings]
+CtrlJMapping=2
+```
+
+Umgekehrt geht es genauso: Wer *Junk* auf Strg+J will, stellt es in den
+Einstellungen um oder trägt `1` ein. *Filter Messages* liegt dann auf
+Strg+Umschalt+L. Welche Belegung gilt, steht im Menü — unter *Special* neben
+*Filter Messages* und unter *Message* neben *Junk*.
+
+### Drei Befehle, eine Fortschrittsanzeige
+
+Im Original melden *Filter Messages*, *Junk / Not Junk* und *Recheck Junk*
+alle dieselbe Zeile `Messages left to filter`. Ein Junk-Lauf sieht damit aus
+wie ein Filterlauf, obwohl kein einziger Filter befragt wird. Hier sagen die
+beiden Junk-Befehle `Messages left to mark` beziehungsweise `Messages left
+to scan for junk`.
 
 ### Vorgaben für neu angelegte Konten
 
