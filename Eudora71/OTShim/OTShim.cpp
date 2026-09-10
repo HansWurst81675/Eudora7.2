@@ -1998,10 +1998,42 @@ CSize SECControlBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 }
 
 
+// SPURMARKE ZU E-76. Nur fuer die Messung; faellt mit dem Befund weg.
+static void E76Marke(LPCTSTR pszWoher, int nLength, DWORD dwMode,
+                     BOOL bSchwebt, CSize szVorher, CSize szErgebnis)
+{
+	char szM[224];
+	_snprintf(szM, sizeof(szM),
+		"E-76 %s: nLength=%d dwMode=0x%04lx%s%s%s%s schwebt=%d "
+		"vorher=%dx%d ergebnis=%dx%d",
+		(LPCSTR) pszWoher, nLength, (unsigned long) dwMode,
+		(dwMode & LM_LENGTHY)  ? " LENGTHY"  : "",
+		(dwMode & LM_COMMIT)   ? " COMMIT"   : "",
+		(dwMode & LM_HORZ)     ? " HORZ"     : "",
+		(dwMode & LM_STRETCH)  ? " STRETCH"  : "",
+		(int) bSchwebt,
+		(int) szVorher.cx, (int) szVorher.cy,
+		(int) szErgebnis.cx, (int) szErgebnis.cy);
+	szM[sizeof(szM) - 1] = '\0';
+	PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szM);
+}
+
+
 // Fuer Leisten mit CBRS_SIZE_DYNAMIC. CSearchBar bringt eine eigene Fassung
 // mit (SearchBar.cpp:1340), CWazooBar nicht.
 CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 {
+	// SPURMARKE ZU BEFUND E-76 (Gregor, 10.09.2026, an Paket 1.0.40):
+	// "filter fenster laesst sich nicht nach unten vergroessern, nur zur
+	// seite". Sie nennt Eingang und Ausgang in EINER Zeile - zwei
+	// getrennte liessen offen, ob sie zum selben Aufruf gehoeren.
+	//
+	// SIE GEHOERT WIEDER RAUS, sobald E-76 verstanden ist: beim Ziehen
+	// wird sie oft gerufen. Deshalb schreibt sie nur, solange die Leiste
+	// schwebt.
+	const BOOL bSchwebt = IsFloating();
+	const CSize szVorher = m_szFloat;
+
 	if (dwMode & LM_HORZDOCK)
 		return CalcFixedLayout(TRUE, TRUE);
 	if (dwMode & LM_VERTDOCK)
@@ -2009,7 +2041,7 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 
 	// Schwebend zieht der Anwender an den Raendern; nLength ist die neue
 	// Ausdehnung in Ziehrichtung.
-	if (nLength > 0 && IsFloating())
+	if (nLength > 0 && bSchwebt)
 	{
 		CSize size = m_szFloat;
 		if (dwMode & LM_LENGTHY)
@@ -2020,10 +2052,15 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 		if (dwMode & LM_COMMIT)
 			m_szFloat = size;
 
+		E76Marke(_T("dynamisch"), nLength, dwMode, bSchwebt, szVorher, size);
 		return size;
 	}
 
-	return CalcFixedLayout((dwMode & LM_STRETCH) != 0, (dwMode & LM_HORZ) != 0);
+	const CSize szFest = CalcFixedLayout((dwMode & LM_STRETCH) != 0,
+	                                     (dwMode & LM_HORZ) != 0);
+	if (bSchwebt)
+		E76Marke(_T("fest"), nLength, dwMode, bSchwebt, szVorher, szFest);
+	return szFest;
 }
 
 
