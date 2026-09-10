@@ -32,9 +32,10 @@ Protokoll endlich gelesen wurde, sagte es in zwei Zeilen alles: **40** mal
 | Befund | eingebaut | ausgewertet | was sie gesagt hat |
 |---|---|---|---|
 | E-64 | 1.0.39 | 1.0.41 | jede Nachricht gegen alle drei Filter geprüft, `Match=0` war richtig — die Nachricht kam von einer anderen Adresse, als der Filter suchte. Gregors Urteil: Fehlalarm. Eine ältere Marke zu E-64 liegt seit 1.0.30 an derselben Stelle |
-| E-66 | 1.0.35 | | die Marken im stillgelegten Weg über die Andockleiste waren bis 1.0.34 ausgewertet; mit 1.0.35 sind sie auf den neuen Weg über `ZiehenAmRand` umgesetzt worden und seitdem **nicht wieder gelesen** |
+| E-66 | 1.0.35 | 1.0.42 | **über Gregors Urteil statt über das Protokoll.** An 1.0.42: *„1. ja / 2. ja / 3. ja"* zu Balken lässt sich ziehen, rechte Hälfte des Filterfensters erreichbar, Änderungen bleiben stehen. Genau das sollten die Marken klären — sie haben ihren Zweck erfüllt und dürfen ausgebaut werden. Bis dahin schreiben sie bei jedem Zeigerwechsel über einer Leiste eine Zeile |
 | E-70 | 1.0.37 | 1.0.40 | 40 Zeilen `E-70 gesichert`, 0 Zeilen `E-70 geladen`. Der Wert wird geschrieben und nie gelesen — der Aufruf stand in `SECToolBarManager::LoadState`, die Eudora nie aufruft. Behoben in 7.2.0.41 |
-| E-76 | 1.0.41 | | läuft mit der aktuellen Fassung mit: `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die Maße vorher wie nachher in einer Zeile |
+| E-76 | 1.0.41 | entfaellt: braucht eine gedrückte Maustaste, siehe E-51 | Die Marke schreibt nur, wenn jemand am Rand eines **schwebenden** Fensters zieht. Das lässt sich hier nicht auslösen — dasselbe Hindernis wie bei **E-51**: `Splitter::Track` und die Größenänderung eines Rahmens brechen ab, sobald die physische Maustaste los ist. Sie bleibt drin und wartet auf den nächsten Bericht von Gregor. Sie nennt `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die Maße vorher wie nachher in einer Zeile |
+| E-44 | 1.0.43 | | zwei Zeitpunkte mit derselben Angabe: `nach SetDockState` und `vor`/`nach LoadWazooBarConfig`, je Leiste mit Kennung, Andockleiste, Sichtbarkeit und Stil. Sagt die erste „hat Andockleiste" und die zweite „keine", geht die Zuordnung dazwischen verloren; sagt schon die erste „keine", wirkt `SetDockState` nicht |
 
 ## Prüfen
 
