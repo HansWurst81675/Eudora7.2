@@ -96,6 +96,62 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.35 — Die Breite wird gesetzt, nicht der ganze Zustand wiederhergestellt
+
+Gregor an 1.0.34: *„der rechte balken läßt sich aber nicht beliebig weit nach
+links schieben. er wird dann auf eine bestimmte breite vom linken fenster (wo
+die filter namen stehen) zurückgesetzt."*
+
+**Der Griff sitzt also richtig** — E-66 ist an der Stelle erledigt, an der er
+bis 1.0.33 gar nicht zu fassen war. Was bleibt, ist das **Anwenden**.
+
+### Warum das Protokoll zu 1.0.34 nichts sagen konnte
+
+Ein Fehler von mir, und er gehört benannt: **alle Spurmarken saßen im
+stillgelegten Weg** über die Andockleiste. Der neue Weg über `ZiehenAmRand`
+war unbeobachtet. Die Zeilen, die im Protokoll standen, stammten aus dem
+**mitkopierten** `Mailverzeichnis` der Vorfassung — sie sahen aus wie eine
+Messung und waren eine Erinnerung.
+
+### Was geändert ist
+
+Das Anwenden lief über `GetBarInfo` → Feld ändern → `SetBarInfo`. Und
+`SECControlBar::SetBarInfo` ruft am Ende `CControlBar::SetBarInfo` — **MFCs
+vollständige Zustandswiederherstellung**: Sichtbarkeit, Andockzustand und
+Lage werden aus der Aufzeichnung neu gesetzt. Für das Laden einer
+gespeicherten Anordnung ist das richtig. Für das Ändern **einer Zahl**
+während des Betriebs ist es zu viel: alles andere in der Aufzeichnung ist der
+Stand von **vor** dem Zug.
+
+Jetzt wird nur noch die eine Zahl gesetzt, unmittelbar an der Leiste
+(`AndockgroesseHolen` / `AndockgroesseSetzen`). Dass es dafür zwei eigene
+Fassungen braucht, liegt daran, dass `m_szDockVert` und `m_szDockHorz` zu
+`CControlBar` gehören und von außen nicht erreichbar sind.
+
+**Das ist ein Verdacht, keine Gewissheit** — deshalb misst dieselbe Fassung
+gleich mit.
+
+### Die Marke am neuen Weg
+
+`E-66 Anwenden:` schreibt bei jedem Zug eine Zeile: Andockleiste, Stelle der
+Leiste, Delta, die Grenzen `Min`/`Max`, die Andockgröße **vorher → nachher**
+und die Fensterbreite, die dabei herausgekommen ist.
+
+Damit ist beim nächsten Mal unterscheidbar, ob
+
+* die Grenzen den Zug abschneiden (`Delta` kleiner als gezogen),
+* die Zahl gesetzt wird, aber nicht wirkt (`Andock 188 → 400`, Fenster
+  trotzdem 188),
+* oder etwas sie danach wieder zurücksetzt (Fenster erst breit, beim
+  nächsten Anordnungsdurchlauf wieder 188).
+
+### Was an 1.0.35 zu prüfen ist
+
+Rechte Leiste weit nach links ziehen — so weit, dass sie zurückspringt. Dann
+die `eudora.log`. **Wichtig:** wenn Du das `Mailverzeichnis` aus einer
+Vorfassung mitkopierst, lösche vorher die `eudora.log` darin, sonst stehen
+alte Zeilen darin, die wie eine frische Messung aussehen.
+
 ## 7.2.0.34 — Der Trennbalken sitzt jetzt in der Leiste, nicht in der Andockleiste
 
 **Was Gregor damit tun kann, was seit A-4 nie ging:** die **rechte** Leiste

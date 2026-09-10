@@ -2254,6 +2254,40 @@ void SECControlBar::GetBarInfo(SECControlBarInfo* pInfo)
 }
 
 
+// BEFUND E-66 (10.09.2026): die Andockgroesse lesen und setzen, ohne den
+// Umweg ueber Get/SetBarInfo.
+//
+// Warum eigene Fassungen: m_szDockVert und m_szDockHorz gehoeren zu
+// CControlBar und sind geschuetzt - von aussen, also aus SECDockBar, nicht
+// erreichbar. Der bisherige Weg lief deshalb ueber GetBarInfo, Feld aendern,
+// SetBarInfo. Das ruft am Ende CControlBar::SetBarInfo, und das ist MFCs
+// vollstaendige Zustandswiederherstellung: Sichtbarkeit, Andockzustand und
+// Lage werden aus der Aufzeichnung neu gesetzt. Fuer das Laden einer
+// gespeicherten Anordnung ist das richtig; fuer das Aendern EINER Zahl
+// waehrend des Betriebs setzt es zu viel zurueck - alles andere in der
+// Aufzeichnung ist der Stand von VOR dem Zug.
+int SECControlBar::AndockgroesseHolen(BOOL bWaagerecht) const
+{
+	return bWaagerecht ? m_szDockHorz.cy : m_szDockVert.cx;
+}
+
+
+// Liefert den Wert, der wirklich gesetzt wurde - nicht den gewuenschten.
+// Der Aufrufer soll protokollieren koennen, was angekommen ist.
+int SECControlBar::AndockgroesseSetzen(BOOL bWaagerecht, int nNeu, int nMindest)
+{
+	if (nNeu < nMindest)
+		nNeu = nMindest;
+
+	if (bWaagerecht)
+		m_szDockHorz.cy = nNeu;
+	else
+		m_szDockVert.cx = nNeu;
+
+	return nNeu;
+}
+
+
 void SECControlBar::SetBarInfo(SECControlBarInfo* pInfo, CFrameWnd* pFrameWnd)
 {
 	ASSERT(pInfo != NULL);
@@ -4040,25 +4074,37 @@ void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
 	const UINT nID = (UINT) GetDlgCtrlID();
 	const int nMindest = 4 * Splitter::cx;
 
-	SECControlBarInfo info;
-	pBar->GetBarInfo(&info);
+	// BEFUND E-66, Nachtrag vom 10.09.2026. Gregor an 1.0.34: "der rechte
+	// balken laesst sich aber nicht beliebig weit nach links schieben. er
+	// wird dann auf eine bestimmte breite ... zurueckgesetzt."
+	//
+	// Der Weg ueber GetBarInfo/SetBarInfo ist dafuer das falsche Werkzeug.
+	// SECControlBar::SetBarInfo ruft am Ende CControlBar::SetBarInfo, und
+	// das ist MFCs vollstaendige ZUSTANDSWIEDERHERSTELLUNG: es setzt
+	// Sichtbarkeit, Andockzustand und Lage aus der Aufzeichnung neu. Fuer
+	// das Laden einer gespeicherten Anordnung ist das richtig, fuer das
+	// Aendern EINER Zahl waehrend des Betriebs ist es zu viel - alles
+	// andere in der Aufzeichnung ist der Stand von VOR dem Zug.
+	//
+	// Geaendert wird deshalb nur noch die eine Zahl, unmittelbar an der
+	// Leiste. Dass es dafuer eine eigene Fassung braucht, liegt daran, dass
+	// m_szDockVert und m_szDockHorz zu CControlBar gehoeren und von aussen
+	// nicht erreichbar sind.
+	int cxVorher = 0;
+	int cxNachher = 0;
 
 	if (nID == AFX_IDW_DOCKBAR_LEFT || nID == AFX_IDW_DOCKBAR_RIGHT)
 	{
 		// Links: nach rechts ziehen macht breiter. Rechts: umgekehrt.
 		const int nZuwachs = (nID == AFX_IDW_DOCKBAR_LEFT) ? nDelta : -nDelta;
-		int cxNeu = info.m_szDockVert.cx + nZuwachs;
-		if (cxNeu < nMindest)
-			cxNeu = nMindest;
-		info.m_szDockVert.cx = cxNeu;
+		cxVorher  = pBar->AndockgroesseHolen(FALSE);
+		cxNachher = pBar->AndockgroesseSetzen(FALSE, cxVorher + nZuwachs, nMindest);
 	}
 	else if (nID == AFX_IDW_DOCKBAR_TOP || nID == AFX_IDW_DOCKBAR_BOTTOM)
 	{
 		const int nZuwachs = (nID == AFX_IDW_DOCKBAR_TOP) ? nDelta : -nDelta;
-		int cyNeu = info.m_szDockHorz.cy + nZuwachs;
-		if (cyNeu < nMindest)
-			cyNeu = nMindest;
-		info.m_szDockHorz.cy = cyNeu;
+		cxVorher  = pBar->AndockgroesseHolen(TRUE);
+		cxNachher = pBar->AndockgroesseSetzen(TRUE, cxVorher + nZuwachs, nMindest);
 	}
 	else
 	{
@@ -4066,7 +4112,24 @@ void SECDockBar::OnSplitterMoved(Splitter* pSplitter, int nDelta)
 	}
 
 	CFrameWnd* pRahmen = GetDockingFrame();
-	pBar->SetBarInfo(&info, pRahmen);
+
+	{
+		// SPURMARKE: was ist angekommen, und was hat es bewirkt? Die alten
+		// Marken sassen alle im stillgelegten Weg ueber die Andockleiste -
+		// der neue Weg ueber ZiehenAmRand war unbeobachtet, und deshalb
+		// konnte das Protokoll zu 1.0.34 nichts sagen.
+		CRect rectNach;
+		pBar->GetWindowRect(&rectNach);
+		char szMarke[256];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Anwenden: Leiste=%u Lage=%d Delta=%d Min=%d Max=%d "
+			"Andock %d -> %d Fenster jetzt %d breit",
+			(unsigned) nID, (int) pSplitter->m_nPos, (int) nDelta,
+			(int) pSplitter->m_nMin, (int) pSplitter->m_nMax,
+			(int) cxVorher, (int) cxNachher, (int) rectNach.Width());
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+	}
 
 	if (pRahmen != NULL && ::IsWindow(pRahmen->GetSafeHwnd()))
 	{

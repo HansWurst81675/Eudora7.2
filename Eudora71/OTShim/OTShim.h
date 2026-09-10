@@ -613,6 +613,14 @@ public:
 	enum { cxGreifrand = 6 };
 	BOOL AmGreifrand(CPoint pt) const;
 	UINT GreifrandSeite() const;		// CBRS_ALIGN_..., 0 = kein Rand
+
+	// NICHT im Original. E-66 (10.09.2026): die Andockgroesse lesen und
+	// setzen, ohne den Umweg ueber Get/SetBarInfo - das ruft MFCs
+	// vollstaendige Zustandswiederherstellung auf und setzt dabei mehr
+	// zurueck, als eine Groessenaenderung anfassen darf.
+	// bWaagerecht waehlt zwischen m_szDockHorz.cy und m_szDockVert.cx.
+	int AndockgroesseHolen(BOOL bWaagerecht) const;
+	int AndockgroesseSetzen(BOOL bWaagerecht, int nNeu, int nMindest);
 	inline SECControlBarManager* GetManager() const;
 	inline void SetManager(SECControlBarManager*);
 
