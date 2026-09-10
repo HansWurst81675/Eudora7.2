@@ -17,6 +17,15 @@
 
 #include "OTShim.h"
 
+// NUR FUER DIE SPURMARKEN zu E-66. PutDebugLog und die DEBUG_MASK_-Werte
+// stehen in QCUtils; Eudoras eigene Quellen binden dieselbe Kopfdatei ein
+// (mainfrm.cpp:69). Der Suchpfad des Eudora-Projekts kennt sie, und diese
+// Datei wird als Teil davon uebersetzt.
+//
+// Die Marken sind vorlaeufig - fliegen sie wieder raus, geht dieser Include
+// mit.
+#include "debug.h"
+
 
 /////////////////////////////////////////////////////////////////////////////
 // SECTipOfDay
