@@ -103,6 +103,61 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.47 — Kopfzeilen bleiben lesbar, auch auf schwarzem Grund (E-81)
+
+**Was Gregor damit tun kann:** die Kopfzeilen auch bei Werbemails lesen, die
+sich einen dunklen Hintergrund setzen.
+
+Gemeldet am 11.09.2026 an 1.0.46: *„schönheitsfehler: schwarzer text auf dem
+schwarzen hintergrund ist nicht sichtbar. nur beim markieren erscheint er."*
+
+Eudora schreibt die Kopfzeilen als `<SPAN CLASS=EUDORAHEADER>` in **dasselbe**
+HTML-Dokument, in dem danach die Mail steht. Das Stylesheet dieses Dokuments
+kennt `BODY`, `TT` und `BLOCKQUOTE.CITE` — für `EUDORAHEADER` gibt es **keine
+einzige Regel**. Die Kopfzeilen erben deshalb, was die Mail für ihren `<BODY>`
+vorgibt.
+
+Jetzt gibt es eine Regel, die Vordergrund **und** Hintergrund festlegt. Beides
+muss sein: nur die Schriftfarbe zu setzen würde bei einer Mail mit hellem Text
+auf dunklem Grund denselben Fehler spiegelverkehrt erzeugen.
+
+Wer eine eigene `read.css` im Eudora-Verzeichnis hat, ersetzt das Stylesheet
+vollständig — für den ändert sich nichts.
+
+## 7.2.0.46 — der „Blah Blah Blah"-Knopf schaltet wieder (E-80, Teil 2)
+
+**Was Gregor damit tun kann:** die technischen Kopfzeilen ein- und ausblenden,
+statt sie nur dauerhaft gekürzt zu sehen. **Von ihm bestätigt:** *„ja, jetzt
+geht es"*.
+
+Gemeldet am 11.09.2026 an 1.0.45: *„header schaut jetzt kürzer aus. aber: der
+bla bla button ändert nichts."* Teil 1 stimmte also — nur umschalten ließ sich
+nichts.
+
+**Der Knopf schaltete seinen eigenen Zustand nie um.** Die Kette:
+
+| Schritt | Stelle | was dort passiert |
+|---|---|---|
+| 1 | `ReadMessageFrame.cpp:179` | der Knopf steht als `TBBS_CHECKBOX` in der Leiste |
+| 2 | `:981-998` | `GetCheck` liest das Bit `TBBS_CHECKED` |
+| 3 | `:949-977` | `OnButtonSetCheck` setzt es — läuft **genau einmal**, beim Anlegen des Fensters |
+| 4 | `TridentReadMessageView.cpp:161` | der Klick geht an die **Ansicht**, nicht an den Rahmen |
+| 5 | `ReadMessageFrame.cpp:688` | `CReadMessageFrame::OnBlahBlahBlah` steht in keiner Botschaftstabelle — **tote Funktion** |
+
+Beide Ansichten **lesen** den Zustand, keine setzt ihn. Deshalb meldete die
+Spurmarke in jedem einzelnen Lauf `Knopf=0` — die Zahl stand da, und ich habe
+sie nicht zu Ende gedacht.
+
+**Woher die Lücke kommt:** im Original schaltete die Stingray-Leiste einen
+Checkbox-Knopf beim Klick selbst um. Der OTShim-Ersatz setzt `TBBS_CHECKED` nur
+über `ON_UPDATE_COMMAND_UI`, und so einen Eintrag gibt es für diesen Knopf
+nirgends. Dieselbe Klasse wie **E-43** und **E-70**: Verhalten, das beim Ersatz
+des Toolkits weggefallen ist und erst auffällt, wenn jemand den Knopf drückt.
+
+Behoben in **beiden** Ansichten über die registrierte Botschaft
+`umsgButtonSetCheck` — der Weg, den `summary.cpp:2518-2520` für zwei andere
+Knöpfe schon benutzt.
+
 ## 7.2.0.44 — Messfassung für die Spaltenbreite im Filterfenster
 
 **Was Gregor damit tun kann:** die Ursache dafür messen, dass die linke

@@ -8127,7 +8127,7 @@ BEGIN
     IDS_INI_PVTABLE_ROW_END "PreviewTableRowEnd\n</td></tr>\r\n"
     IDS_INI_PVTABLE_END     "PreviewTableEnd\n</table>\r\n"
     IDS_INI_READMESSAGE_STYLE_SHEET 
-                            "MessageStyleSheet\n<HTML><HEAD><STYLE>\r\nBODY {font-family=""%s""}\r\nTT {font-family=""%s""}\r\nBLOCKQUOTE.CITE {padding-left:0.5em; margin-left:0; margin-right:0; margin-top:0; margin-bottom:0; border-left:""solid %s"";}\r\n</STYLE></HEAD>\r\n<BODY>\r\n"
+                            "MessageStyleSheet\n<HTML><HEAD><STYLE>\r\nBODY {font-family=""%s""}\r\nTT {font-family=""%s""}\r\nBLOCKQUOTE.CITE {padding-left:0.5em; margin-left:0; margin-right:0; margin-top:0; margin-bottom:0; border-left:""solid %s"";}\r\nSPAN.EUDORAHEADER {color:black; background-color:white; color:windowtext; background-color:window;}\r\n</STYLE></HEAD>\r\n<BODY>\r\n"
     IDS_INI_FILTER_INCOMING_MAIL "FilterIncomingMail\n1"
     IDS_INI_FETCH_INLINE_CONTENT "FetchInlineContent\n1"
     IDS_INI_IMPORT_TABLES   "ImportTables\n0"
