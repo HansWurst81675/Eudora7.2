@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 10.09.2026)
+## Noch offen (Stand 11.09.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -21,10 +21,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
-| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-44**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
+| — | die **Zertifikatsprüfung nimmt Zertifikate an, deren Kette nicht verifiziert werden konnte** | Nebenbefund **ohne Nummer** — die Kennung vergibt Gregor. `QCCertificateUtils::CertificateCallback` behandelt `X509_V_ERR_CERT_UNTRUSTED` (27) und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) mit `iOK = 1` (`Eudora71/QCSSL/src/qccertificate.cpp:110-113`). `iOK` ist der Rückgabewert des Callbacks: `1` sagt OpenSSL ausdrücklich *„Zertifikat in Ordnung"* — der Prüffehler wird also nicht übergangen, sondern ins Gegenteil verkehrt; anders als in allen Nachbarzweigen wird weder ein Fehlercode gesetzt noch eine Warnung angehängt, der Anwender sieht nichts. Seit dem 30.08.2026 als **zurückgestellter** Befund geführt (`tools/patches/zertifikatspruefung-verschaerfen.patch`). **Gebaut, aber von Gregor nicht beurteilt:** die Verschärfung liegt im Zweig `zertifikate` (Commit `b3be298`) — dort hängen beide Fehlercodes am schon vorhandenen Zweig für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, `iOK` bleibt 0, die Verbindung wird abgelehnt, und der Anwender sieht `IDS_CERTERR_CHAINNOTTRUSTED` |
+| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
+| — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** **R-1** (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), **V-1** (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und **E-14** (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
 
 ## Erreicht
 
