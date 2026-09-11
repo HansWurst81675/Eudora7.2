@@ -96,6 +96,13 @@ Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
 [FILTER.md](FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
 jeder eingehenden Nachricht **0** bleibt.
 
+### Was nicht in der Oberfläche steht
+
+Schalter ohne Menüpunkt, die Regeln für die `Eudora.ini` und das
+Verhalten, das sich nicht von selbst meldet — gesammelt und belegt in
+[EINSTELLUNGEN.md](EINSTELLUNGEN.md). Dort steht auch, was beim Umstieg
+auf eine neue Fassung mitkopiert werden muss.
+
 ### Beim Start wird nach dem IMAP-Kennwort gefragt: das Fenster schließen
 
 Wer ein **IMAP**-Postfach benutzt und beim Beenden ein IMAP-Postfachfenster
@@ -179,7 +186,7 @@ und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
 | `FilterMayDeleteFromServer` | `[Settings]` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`). Der Abschnitt steht hier fest im Quelltext, `filtersd.cpp:1132` |
 | `DeleteFetchedJunk` | `[Settings]` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
 | `LeaveMailOnServer` | `[Settings]` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
-| `SSLSendUse`, `SSLReceiveUse` | `[Settings]` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
+| `SSLSendUse`, `SSLReceiveUse` | `[Settings]` | **2** | **1** | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
 | `CtrlJMapping` | `[Settings]` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
 
 | `TabooHeaders` | `[Settings]` | Originalliste **plus 16 Einträge** | 28 Einträge, Stand 2006 | Welche Kopfzeilen der Knopf *Blah Blah Blah* versteckt. Die eingebaute Liste kennt `X-UID`, aber nicht `X-`; `Received`, aber nicht `DKIM-`. An 134 echten Nachrichten nachgerechnet blieben damit über 60 technische Kopfzeilenarten stehen, darunter `DKIM-Signature` und `Authentication-Results`. Ergänzt sind `X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`. **Achtung:** ein Eintrag in der `Eudora.ini` **ersetzt** die Liste vollständig, er ergänzt sie nicht — wer etwas hinzufügen will, schreibt die ganze Liste hin |
@@ -624,6 +631,7 @@ Eudora7.2/
 | Woran wird „fertig" gemessen? | [ZIEL.md](ZIEL.md) — die Quelle für Kriterien und Anforderungen |
 | Was hat sich je Fassung geändert? | [CHANGELOG.md](CHANGELOG.md) |
 | Wie funktionieren Filter und Junk, und welche INI-Schlüssel gehören dazu? | [FILTER.md](FILTER.md) |
+| Welche Schalter gibt es ohne Menüpunkt, und was überrascht beim Betrieb? | [EINSTELLUNGEN.md](EINSTELLUNGEN.md) |
 | Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](BEFUNDE.md), Einzelbefunde in `Befunde/` |
 | Was ist als Nächstes zu tun? | [AUFGABEN.md](AUFGABEN.md), Einstieg in [WEITERMACHEN.md](WEITERMACHEN.md) |
 | Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](PORTIERUNG.md) |
