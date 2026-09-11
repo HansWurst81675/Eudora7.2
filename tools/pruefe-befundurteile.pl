@@ -28,9 +28,27 @@ use warnings;
 # keine andere MD-Datei im Repo dieselbe Kennung in einem Absatz nennen,
 # der eines der Erledigt-Woerter enthaelt.
 #
-# Umgekehrt wird NICHT geprueft: dass ein behobener Befund anderswo als
-# offen steht, ist unschoen, aber ungefaehrlich - der Leser wird dann
-# vorsichtiger als noetig, nicht sorgloser.
+# DIE UMGEKEHRTE RICHTUNG - AM 11.09.2026 NACHGETRAGEN.
+#
+# Hier stand bis dahin: "Umgekehrt wird NICHT geprueft: dass ein behobener
+# Befund anderswo als offen steht, ist unschoen, aber ungefaehrlich - der
+# Leser wird dann vorsichtiger als noetig, nicht sorgloser."
+#
+# Das ist widerlegt. Gregor am 11.09.2026: "wir hatten eine absprache: keine
+# luegen auf main, ja? was ist daraus geworden?" An dem Tag stand auf main:
+#
+#   - der Zertifikats-Patch als "nicht angewandt", waehrend er seit b3be298
+#     im Code war und Gregor die Fassung bereits getestet hatte
+#   - AUFGABEN.md mit "vier Behebungen warten auf Gregors Urteil", waehrend
+#     drei davon (E-49, E-50, E-52) laengst von ihm bestaetigt waren
+#
+# Wer dem glaubt, prueft Dinge nach, die durch sind, oder laesst eine
+# Aenderung ungetestet liegen, weil sie angeblich gar nicht drin ist. Beides
+# kostet GREGORS Zeit - und genau darueber hat er sich an dem Tag mehrfach
+# beschwert: "deine nacharbeiten dauern mir immer zu lange!"
+#
+# "Vorsichtiger als noetig" ist kein harmloser Zustand, wenn die Vorsicht
+# Arbeit ausloest. Deshalb wird jetzt BEIDE Richtungen geprueft.
 #
 # WAS BEWUSST DURCHGELASSEN WIRD
 #
@@ -142,6 +160,28 @@ for my $zeile (split /\n/, $befunde) {
 
 my @offene = sort grep { $urteil{$_} eq 'offen' } keys %urteil;
 
+# Die Gegenrichtung, seit 11.09.2026: was BEFUNDE.md als behoben fuehrt.
+my @behobene = sort grep { $urteil{$_} eq 'erledigt' } keys %urteil;
+
+# Statusworte, die einen Befund als NICHT erledigt ausgeben. Bewusst eng:
+# "offen" allein steht zu haeufig in Nebensaetzen. Ein CHANGELOG-Abschnitt
+# darf beschreiben, wie ein Befund WAR - das ist Fassungsgeschichte, keine
+# Luege. Angeschlagen wird nur bei einem dieser Worte dicht hinter der
+# Kennung.
+#
+# "zurueckgestellt" steht hier bewusst NICHT, obwohl es nach einem
+# Befundstatus klingt. Es ist mehrdeutig: im CHANGELOG-Abschnitt zu E-61
+# heisst es "WM_QUIT wird zurueckgestellt und das Ziehen abgebrochen" - eine
+# technische Beschreibung, kein Urteil. Die Gegenprobe im Bestand hat genau
+# daran angeschlagen, bevor die Schranke ausgeliefert wurde. Ein Wort, das in
+# zwei Bedeutungen vorkommt, taugt nicht als Merkmal.
+my @unerledigt = (
+    'nicht angewandt', 'nicht begonnen',
+    'liegt bereit', 'liegt nur bereit',
+    'bleibt liegen', 'bleibt unangewendet', 'wartet auf',
+    'noch nicht beurteilt',
+);
+
 # --- 2. Die Dokumente, die ein LESER trifft ------------------------------
 #
 # Bewusst eine feste Liste und kein Verzeichnisdurchlauf. Geprueft werden
@@ -185,8 +225,39 @@ for my $datei (@dateien) {
         my ($text, $zeile) = @_;
         return unless length $text;
         return if grep { index(lc $text, lc $_) >= 0 } @ausnahme;
+        # --- Gegenrichtung: behoben, aber als unerledigt gefuehrt ------
+        for my $k (@behobene) {
+            next unless $text =~ /\Q$k\E(?!\d)/;   # E-7 darf nicht in E-71 treffen
+            my $pos = 0;
+            while ((my $i = index($text, $k, $pos)) >= 0) {
+                # Dieselbe Grenze wie oben: steht hinter der Kennung eine
+                # Ziffer, ist es eine andere (E-7 in E-71).
+                if (substr($text, $i + length($k), 1) =~ /\d/) { $pos = $i + 1; next; }
+                # In einer TABELLENZEILE zaehlt die ganze Zeile als Umfeld:
+                # sie beschreibt genau einen Befund, und sein Urteil steht in
+                # der dritten Spalte, also weit hinter der Kennung. Mit einem
+                # 40-Zeichen-Fenster ging die Gegenprobe durch, obwohl in
+                # derselben Zeile "nicht angewandt" stand - gemessen am
+                # 11.09.2026, bevor die Schranke ausgeliefert wurde.
+                my $umfeld = ($text =~ /^\s*\|/)
+                           ? lc $text
+                           : lc substr($text, $i, length($k) + 40);
+                for my $w (@unerledigt) {
+                    next unless index($umfeld, lc $w) >= 0;
+                    my $kurz = $text;
+                    $kurz =~ s/\s+/ /g;
+                    $kurz = substr($kurz, 0, 100) . '…' if length($kurz) > 100;
+                    push @mangel, sprintf(
+                        "%s:%d nennt %s als '%s' - BEFUNDE.md fuehrt ihn BEHOBEN\n        %s",
+                        $datei, $zeile, $k, $w, $kurz);
+                    last;
+                }
+                $pos = $i + 1;
+            }
+        }
+
         for my $k (@offene) {
-            next unless $text =~ /\Q$k\E/;
+            next unless $text =~ /\Q$k\E(?!\d)/;   # E-7 darf nicht in E-71 treffen
 
             # Steht die Kennung selbst als offen da - "(E-67, offen)" -,
             # ist sie richtig eingestuft, auch wenn im selben Absatz von
@@ -195,6 +266,9 @@ for my $datei (@dateien) {
             my $nahe = 0;
             my $pos = 0;
             while ((my $i = index($text, $k, $pos)) >= 0) {
+                # Dieselbe Grenze wie oben: steht hinter der Kennung eine
+                # Ziffer, ist es eine andere (E-7 in E-71).
+                if (substr($text, $i + length($k), 1) =~ /\d/) { $pos = $i + 1; next; }
                 my $umfeld = lc substr($text, $i, length($k) + 40);
                 $nahe = 1 if grep { index($umfeld, lc $_) >= 0 } @offen;
                 $pos = $i + 1;
@@ -245,6 +319,7 @@ print "\n  Befundurteile gegen BEFUNDE.md\n";
 print '  ', '-' x 68, "\n";
 printf "  Kennungen in BEFUNDE.md        %d\n", scalar keys %urteil;
 printf "  davon offen                    %d\n", scalar @offene;
+printf "  davon behoben                  %d\n", scalar @behobene;
 printf "  gepruefte Dokumente            %d\n", $geprueft;
 print '  ', '-' x 68, "\n";
 
@@ -261,5 +336,6 @@ if (@mangel) {
     exit 1;
 }
 
-print "\n  Kein Dokument erklaert einen offenen Befund fuer erledigt.\n\n";
+print "\n  Kein Dokument erklaert einen offenen Befund fuer erledigt -\n"
+    . "  und keinen behobenen fuer unerledigt.\n\n";
 exit 0;

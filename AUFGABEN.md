@@ -30,22 +30,30 @@ löschen. keine messagebox"*) — und damit fielen **E-37** und **E-38** mit weg
 weil beide Symptome derselben Ursache waren. **E-37, E-38 und E-43 stehen
 deshalb nicht mehr in dieser Datei als Aufgabe.**
 
-### 1. Gebaut, nicht bestätigt — das braucht nur einen Start
+### 1. Gebaut, nicht bestätigt — es ist nur noch einer, und der ist nicht prüfbar
 
-Vier Behebungen sind gebaut und von Gregor noch nicht beurteilt. Ohne sein
-Urteil ist keine davon erledigt.
+**Nachgemessen am 11.09.2026 gegen [BEFUNDE.md](BEFUNDE.md).** Bis dahin stand
+hier, vier Behebungen warteten auf Gregors Urteil. Drei davon hat er längst
+bestätigt:
 
-| Befund | was zu prüfen ist | wo es steht |
-|---|---|---|
-| **E-49** (Anforderung **A-4**) | den **linken Bereich** am Trennbalken nach rechts ziehen, über 180 Pixel hinaus; nach einem Neustart muss die Breite noch da sein | [ZIEL.md](ZIEL.md), Abschnitt A-4 — fünf Prüfschritte |
-| **E-50** | die drei Mängel an der Registerkartenleiste: bleibt eine Karte eingedrückt, wenn ein anderes Fenster aktiv ist? Stimmt die Darstellung beim Skalieren? Bleiben die Karten beim Öffnen und Schließen stehen? | [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.26 |
-| **E-52** | nach dem Verbreitern **gleich noch einmal** ziehen — bleibt der Balken greifbar? Stehen die Karten danach einfach da, nicht doppelt? | [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.27 |
-| **E-51** | nichts eigens zu prüfen, aber im Auge zu behalten: **friert irgendwo etwas ein?** Die Ziehschleife hat das an der eigenen Prüfinstanz zweimal getan, bevor sie ausgeliefert wurde | [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.26 |
+| Befund | Stand laut `BEFUNDE.md` |
+|---|---|
+| **E-49** (Anforderung **A-4**) | **bestätigt** |
+| **E-50** | **bestätigt** |
+| **E-52** | **bestätigt** |
+| **E-51** | gebaut, nicht beurteilt — und **nicht beurteilbar** |
 
-**Bestätigt ist bei E-52 nur der Gegenfall**, die Höhe. Das seitliche Ziehen
-hat Gregor noch nicht beurteilt. Wer irgendwo „bestätigt" schreibt, wo nur
-gebaut ist, macht denselben Fehler, den `tools/doku-pruefen.pl` seit dem
-08.09.2026 abfängt.
+**E-51 lässt sich nicht prüfen, nicht von Gregor und nicht von mir.** Es geht
+darum, ob beim Ziehen irgendwo etwas einfriert; die Ziehschleife läuft nur mit
+einer **physisch gedrückten Maustaste**, und die kann dieses Projekt nicht
+erzeugen (`Arbeitsweise/keine-tastendruecke-verschicken.md`). Es bleibt beim
+Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
+
+> **Warum das hier so lange falsch stand.** Am 11.09.2026 wurde der Stand-Kopf
+> dieser Datei von 09.09. auf 11.09. gesetzt, ohne den Inhalt gegen
+> `BEFUNDE.md` zu halten — damit war sie nachher *falscher* als vorher: das
+> alte Datum hatte wenigstens gewarnt. `tools/pruefe-stand-md.pl` prüft das
+> Datum, nicht den Widerspruch dahinter. Gefunden hat es Gregor.
 
 ### 2. Die Meldung „Encountered an improper argument" beim Anzeigen
 
