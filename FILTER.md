@@ -135,7 +135,7 @@ Im Menü steht `Ctrl+J` (`EudoraRes.rc:5768`) — aber die Taste ist
 umschaltbar. `CMainFrame::OnCtrlJ` fragt den Wert `CtrlJMapping`
 (`mainfrm.cpp:3942-3948`):
 
-| `CtrlJMapping` | Strg+J | Strg+Umschalt+J | Strg+Umschalt+L |
+| `CtrlJMapping` | Strg+J | `[Settings]` | Strg+Umschalt+J | Strg+Umschalt+L |
 |---|---|---|---|
 | `1` (*Junk*) | *Junk* | *Not Junk* | *Filter Messages* |
 | `2` (*Filter*) | *Filter Messages* | — | — |
@@ -514,61 +514,88 @@ beruht, darf man keine Post zum Löschen anvertrauen.
 
 ## Die Einstellungen in der `Eudora.ini`
 
-Alle Schlüssel stehen im Abschnitt `[Settings]` der `Eudora.ini` **im
-Mailverzeichnis**. Die Spalte *eingebaute Vorgabe* ist der Wert, den Eudora
-ohne Eintrag benutzt; er steht in `Eudora71/Eudora/EudoraRes.rc` im Format
+Die Schlüssel stehen in der `Eudora.ini` **im Mailverzeichnis**. Die Spalte
+*eingebaute Vorgabe* ist der Wert, den Eudora ohne Eintrag benutzt; er steht
+in `Eudora71/Eudora/EudoraRes.rc` im Format
 `IDS_INI_XXX "SchlüsselName\nVorgabe"`.
+
+> **Achtung: nicht alles gehört nach `[Settings]`.** Eudora ordnet jeden
+> Schlüssel **automatisch** einem Abschnitt zu, allein nach seiner internen
+> Nummer (`GetSectionID`, `rs.cpp:89-97`):
+>
+> | Nummernbereich | Abschnitt |
+> |---|---|
+> | bis 10800 | `[Settings]` |
+> | 10801 … 10900 | **`[Debug]`** |
+> | 10901 … 11100 | **`[Window Position]`** |
+> | ab 11101 | `[Settings]` |
+>
+> Ein Eintrag im falschen Abschnitt wird **stillschweigend ignoriert** — kein
+> Fehler, keine Meldung, er wirkt einfach nicht. Genau das ist am 11.09.2026
+> passiert: `UseMyFilterWindowPosition=1` stand in `[Settings]`, Eudora las
+> aus `[Window Position]` die eingebaute Vorgabe `0`. **Diese Anleitung war
+> daran schuld** — sie behauptete, alle Schlüssel gehörten nach `[Settings]`.
+>
+> Welcher Abschnitt gilt, steht unten in jeder Tabelle in der Spalte
+> *Abschnitt*. Nachschlagen lässt es sich auch:
+> `perl tools/pruefe-ini-abschnitte.pl --was <Name>`.
+>
+> Die vollständige Suchreihenfolge — Persönlichkeit, `Eudora.ini`,
+> `DEudora.ini`, eingebauter Wert — steht in [README.md](README.md) unter
+> *Wo ein Schlüssel stehen muss*. Wichtig für diese Tabellen ist daraus nur:
+> ein Eintrag im Abschnitt der **aktiven Persönlichkeit** (`[Persona-…]`)
+> schlägt beides — wer dort etwas stehen hat, ändert es dort.
 
 Wo diese Portierung abweicht, steht das dabei — die Begründungen stehen in
 [README.md](README.md), Abschnitt *Einstellungen, die es nur hier gibt*.
 
 ### Filter
 
-| Schlüssel | Vorgabe | Fundstelle | was er tut |
-|---|---|---|---|
-| `FilterIncomingMail` | `1` | `EudoraRes.rc:8131` | Eingangsfilter überhaupt laufen lassen |
-| `FilterReport` | `0` | `EudoraRes.rc:10287` | Filterbericht führen (*Getting Attention*) |
-| `FilterMayDeleteFromServer` | `0` | `filtersd.cpp:1219` | **gibt es nur hier.** Erlaubt der Aktion *Server Options → Delete*, auf dem Server zu löschen |
-| `FilterTransferName` | `0` | `EudoraRes.rc:10004` | wie das Zielpostfach auf der Schaltfläche steht: `0` Name, `1` Ordnerpfad, `2` Dateipfad (`controls.cpp:337-352`) |
-| `WarnBadFilterDir` | `1` | `EudoraRes.rc:7839` | warnen, wenn *Make Filter* ein Postfach außerhalb des Mailverzeichnisses anlegen soll (`MakeFilter.cpp:504`) |
-| `FilterFromFolder` | *leer* | `EudoraRes.rc:7840` | zuletzt benutzter Ordner für *Make Filter* nach **From** (`MakeFilter.cpp:278`) |
-| `FilterRecipFolder` | *leer* | `EudoraRes.rc:7841` | dasselbe für **Any Recipient** |
-| `FilterSubjectFolder` | *leer* | `EudoraRes.rc:7842` | dasselbe für **Subject** |
-| `FiltersWindowPosition` | `1,2,580,480` | `EudoraRes.rc:7570` | Lage des freischwebenden Filterfensters |
-| `FiltersWindowSplitterPosition` | `140` | `EudoraRes.rc:7583` | Lage des Trennbalkens im Filterfenster |
-| `UseMyFilterWindowPosition` | `0` | `EudoraRes.rc:7589` | die gespeicherte Lage benutzen |
-| `FilterReportWindowPosition` | `10,10,500,300` | `EudoraRes.rc:7572` | Lage des Berichtsfensters |
-| `ImapFilterIncoming` | `1` | `EudoraRes.rc:8182` | Eingangsfilter für IMAP-Konten (in dieser Portierung ungetestet) |
-| `ImapFiltersWindowPosition` | `1,2,580,480` | `EudoraRes.rc:7587` | Lage des IMAP-Filterfensters |
-| `CtrlJMapping` | `0` | `EudoraRes.rc:8734` | Belegung von Strg+J: `0` unentschieden, `1` *Junk*, `2` *Filter Messages* (`JunkMail.h:61-63`) |
+| Schlüssel | Vorgabe | Abschnitt | Fundstelle | was er tut |
+|---|---|---|---|---|
+| `FilterIncomingMail` | `1` | `[Settings]` | `EudoraRes.rc:8131` | Eingangsfilter überhaupt laufen lassen |
+| `FilterReport` | `0` | `[Settings]` | `EudoraRes.rc:10287` | Filterbericht führen (*Getting Attention*) |
+| `FilterMayDeleteFromServer` | `0` | `[Settings]` | `filtersd.cpp:1132` | **gibt es nur hier.** Erlaubt der Aktion *Server Options → Delete*, auf dem Server zu löschen. Der Abschnitt steht fest im Quelltext, nicht über `GetSectionID` |
+| `FilterTransferName` | `0` | `[Settings]` | `EudoraRes.rc:10004` | wie das Zielpostfach auf der Schaltfläche steht: `0` Name, `1` Ordnerpfad, `2` Dateipfad (`controls.cpp:337-352`) |
+| `WarnBadFilterDir` | `1` | `[Settings]` | `EudoraRes.rc:7839` | warnen, wenn *Make Filter* ein Postfach außerhalb des Mailverzeichnisses anlegen soll (`MakeFilter.cpp:504`) |
+| `FilterFromFolder` | *leer* | `[Settings]` | `EudoraRes.rc:7840` | zuletzt benutzter Ordner für *Make Filter* nach **From** (`MakeFilter.cpp:278`) |
+| `FilterRecipFolder` | *leer* | `[Settings]` | `EudoraRes.rc:7841` | dasselbe für **Any Recipient** |
+| `FilterSubjectFolder` | *leer* | `[Settings]` | `EudoraRes.rc:7842` | dasselbe für **Subject** |
+| `FiltersWindowPosition` | `1,2,580,480` | **`[Window Position]`** | `EudoraRes.rc:7570` | Lage des freischwebenden Filterfensters |
+| `FiltersWindowSplitterPosition` | `140` | **`[Window Position]`** | `EudoraRes.rc:7583` | Lage des Trennbalkens im Filterfenster |
+| `UseMyFilterWindowPosition` | `0` | **`[Window Position]`** | `EudoraRes.rc:7589` | die gespeicherte Lage benutzen |
+| `FilterReportWindowPosition` | `10,10,500,300` | **`[Window Position]`** | `EudoraRes.rc:7572` | Lage des Berichtsfensters |
+| `ImapFilterIncoming` | `1` | `[Settings]` | `EudoraRes.rc:8182` | Eingangsfilter für IMAP-Konten (in dieser Portierung ungetestet) |
+| `ImapFiltersWindowPosition` | `1,2,580,480` | **`[Window Position]`** | `EudoraRes.rc:7587` | Lage des IMAP-Filterfensters |
+| `CtrlJMapping` | `0` | `[Settings]` | `EudoraRes.rc:8734` | Belegung von Strg+J: `0` unentschieden, `1` *Junk*, `2` *Filter Messages* (`JunkMail.h:61-63`) |
 
 ### Junk
 
-| Schlüssel | Vorgabe | Fundstelle | was er tut |
-|---|---|---|---|
-| `MinScoreToJunk` | `50` | `EudoraRes.rc:8375` | ab dieser Punktzahl gilt eine Nachricht als Junk (`JunkMail.cpp:441`) |
-| `ManualJunkScore` | `100` | `EudoraRes.rc:8380` | Punktzahl beim Markieren von Hand; `0` heißt „unverändert lassen" (`JunkMail.cpp:681-684`) |
-| `ManualNotJunkScore` | `0` | `EudoraRes.rc:8381` | Punktzahl bei *Not Junk* (`JunkMail.cpp:716`) |
-| `UseJunkMailbox` | `0` | `EudoraRes.rc:7739` | Junk beim Abruf automatisch nach *Junk* verschieben (`pop.cpp:152-155`) |
-| `DeleteFetchedJunk` | `1` | `EudoraRes.rc:7693` | **hier auf `0`.** Als Junk Eingestuftes zusätzlich auf dem Server löschen (`JunkMail.cpp:453-457`) |
-| `DeletePartiallyFetchedJunk` | `0` | `EudoraRes.rc:7694` | dasselbe für nur teilweise abgeholte Nachrichten |
-| `AddressBookIsWhitelist` | `0` | `EudoraRes.rc:7695` | Absender aus dem Adressbuch sind nie Junk (`JunkMail.cpp:428-437`) |
-| `NonJunkToAddressBook` | `1` | `EudoraRes.rc:7696` | Absender von *Not Junk* ins Adressbuch aufnehmen |
-| `NonJunkAddressBook` | *leer* | `EudoraRes.rc:7697` | in welches Adressbuch |
-| `JunkNeverUnread` | `0` | `EudoraRes.rc:8374` | *Junk* nie als ungelesen anzeigen |
-| `IgnoreJunkDate` | `1` | `EudoraRes.rc:8383` | Datum der Junk-Nachricht auf den Eingangszeitpunkt setzen |
-| `AgeJunkOff` | `1` | `EudoraRes.rc:8376` | alte Junk-Nachrichten selbsttätig entfernen |
-| `AgeJunkOffDays` | `30` | `EudoraRes.rc:8377` | ab welchem Alter in Tagen (`tocdoc.cpp:4508`) |
-| `MinAgeOffScore` | `0` | `EudoraRes.rc:8379` | nur Junk ab dieser Punktzahl entfernen |
-| `WarnBeforeAging` | `1` | `EudoraRes.rc:8378` | vorher fragen |
-| `DaysBetweenJunkAgeOff` | `1` | `EudoraRes.rc:7691` | wie oft aufgeräumt wird |
-| `LastAgeOff` | `0` | `EudoraRes.rc:7692` | wann zuletzt aufgeräumt wurde (schreibt Eudora selbst) |
-| `JunkTrimMbox` | `Trash` | `EudoraRes.rc:8382` | wohin das Entfernte wandert |
-| `AlwaysEnableJunkMenus` | `0` | `EudoraRes.rc:8373` | *Junk* / *Not Junk* auch dort anbieten, wo sie sonst grau sind (`msgdoc.cpp:848`, `:872`) |
-| `MailboxShowJunk` | `0` | `EudoraRes.rc:8778` | Spalte mit der Junk-Punktzahl in jedem Postfach zeigen (`tocview.cpp:714`) |
-| `AskedAboutJunk` | `0` | `EudoraRes.rc:7740` | ob die Einstiegsfrage schon gestellt wurde |
-| `JunkMailboxName` | `Junk` | `EudoraRes.rc:7698` | Name des Junk-Postfachs bei IMAP |
-| `ImapScoreJunk` | `1` | `EudoraRes.rc:8095` | Junk-Bewertung auf IMAP-Konten |
+| Schlüssel | Vorgabe | Abschnitt | Fundstelle | was er tut |
+|---|---|---|---|---|
+| `MinScoreToJunk` | `50` | `[Settings]` | `EudoraRes.rc:8375` | ab dieser Punktzahl gilt eine Nachricht als Junk (`JunkMail.cpp:441`) |
+| `ManualJunkScore` | `100` | `[Settings]` | `EudoraRes.rc:8380` | Punktzahl beim Markieren von Hand; `0` heißt „unverändert lassen" (`JunkMail.cpp:681-684`) |
+| `ManualNotJunkScore` | `0` | `[Settings]` | `EudoraRes.rc:8381` | Punktzahl bei *Not Junk* (`JunkMail.cpp:716`) |
+| `UseJunkMailbox` | `0` | `[Settings]` | `EudoraRes.rc:7739` | Junk beim Abruf automatisch nach *Junk* verschieben (`pop.cpp:152-155`) |
+| `DeleteFetchedJunk` | `1` | `[Settings]` | `EudoraRes.rc:7693` | **hier auf `0`.** Als Junk Eingestuftes zusätzlich auf dem Server löschen (`JunkMail.cpp:453-457`) |
+| `DeletePartiallyFetchedJunk` | `0` | `[Settings]` | `EudoraRes.rc:7694` | dasselbe für nur teilweise abgeholte Nachrichten |
+| `AddressBookIsWhitelist` | `0` | `[Settings]` | `EudoraRes.rc:7695` | Absender aus dem Adressbuch sind nie Junk (`JunkMail.cpp:428-437`) |
+| `NonJunkToAddressBook` | `1` | `[Settings]` | `EudoraRes.rc:7696` | Absender von *Not Junk* ins Adressbuch aufnehmen |
+| `NonJunkAddressBook` | *leer* | `[Settings]` | `EudoraRes.rc:7697` | in welches Adressbuch |
+| `JunkNeverUnread` | `0` | `[Settings]` | `EudoraRes.rc:8374` | *Junk* nie als ungelesen anzeigen |
+| `IgnoreJunkDate` | `1` | `[Settings]` | `EudoraRes.rc:8383` | Datum der Junk-Nachricht auf den Eingangszeitpunkt setzen |
+| `AgeJunkOff` | `1` | `[Settings]` | `EudoraRes.rc:8376` | alte Junk-Nachrichten selbsttätig entfernen |
+| `AgeJunkOffDays` | `30` | `[Settings]` | `EudoraRes.rc:8377` | ab welchem Alter in Tagen (`tocdoc.cpp:4508`) |
+| `MinAgeOffScore` | `0` | `[Settings]` | `EudoraRes.rc:8379` | nur Junk ab dieser Punktzahl entfernen |
+| `WarnBeforeAging` | `1` | `[Settings]` | `EudoraRes.rc:8378` | vorher fragen |
+| `DaysBetweenJunkAgeOff` | `1` | `[Settings]` | `EudoraRes.rc:7691` | wie oft aufgeräumt wird |
+| `LastAgeOff` | `0` | `[Settings]` | `EudoraRes.rc:7692` | wann zuletzt aufgeräumt wurde (schreibt Eudora selbst) |
+| `JunkTrimMbox` | `Trash` | `[Settings]` | `EudoraRes.rc:8382` | wohin das Entfernte wandert |
+| `AlwaysEnableJunkMenus` | `0` | `[Settings]` | `EudoraRes.rc:8373` | *Junk* / *Not Junk* auch dort anbieten, wo sie sonst grau sind (`msgdoc.cpp:848`, `:872`) |
+| `MailboxShowJunk` | `0` | `[Settings]` | `EudoraRes.rc:8778` | Spalte mit der Junk-Punktzahl in jedem Postfach zeigen (`tocview.cpp:714`) |
+| `AskedAboutJunk` | `0` | `[Settings]` | `EudoraRes.rc:7740` | ob die Einstiegsfrage schon gestellt wurde |
+| `JunkMailboxName` | `Junk` | `[Settings]` | `EudoraRes.rc:7698` | Name des Junk-Postfachs bei IMAP |
+| `ImapScoreJunk` | `1` | `[Settings]` | `EudoraRes.rc:8095` | Junk-Bewertung auf IMAP-Konten |
 
 Die Seiten *Junk Mail* und *Junk Mail Extras* unter *Tools → Options*
 (`EudoraRes.rc:4208-4268`) erscheinen nur im vollen Funktionsumfang
@@ -582,6 +609,46 @@ Die Seiten *Junk Mail* und *Junk Mail Extras* unter *Tools → Options*
 
 Verhalten, das im Quelltext eindeutig belegt ist und trotzdem niemand
 erwartet.
+
+### Bei IMAP fragt ein Filterlauf nach dem Kennwort
+
+Wer ein **IMAP**-Postfach markiert und *Filter Messages* auslöst, wird nach
+dem Kennwort gefragt — auch dann, wenn er nur lokal sortieren will.
+
+**Das ist kein Fehler dieser Portierung**, sondern Verhalten des Originals,
+und der Autor hat es selbst als unfertig gekennzeichnet
+(`EuImap/src/ImapMailbox.cpp:5388`):
+
+> *„In the case of manual filtering forcing us to always be online might
+> sometimes be overly harsh. For example, if all filters do things like
+> labelling that need no connection then we shouldn't force the user online.
+> This is a first pass … We'll deal with this properly then."*
+
+**Der sachliche Grund:** bei IMAP liegt die Nachricht auf dem Server. Ein
+Filter, der sie verschiebt, muss dort ein `UID COPY` und ein
+`UID STORE +FLAGS (\Deleted)` schicken — **Verschieben ist bei IMAP immer
+auch Löschen.** Ohne Verbindung geht das nicht. Ein Filter, der nur ein
+Etikett setzt oder einen Ton abspielt, bräuchte sie dagegen nicht; genau
+darauf zielt der Kommentar.
+
+Unterschieden wird das nicht: `CImapMailbox::FilterMessages` ruft
+`GetConnectionState(bDontAllowOffline)` — der Parameter heißt wörtlich
+*offline nicht erlauben* — und danach `OpenMailbox(TRUE)`.
+
+**Der Schalter `IMAPAllowOffline` hilft hier nicht.** Er steht in der
+`Eudora.ini` mit eingebauter Vorgabe `1` (`EudoraRes.rc:7191`) und erlaubt
+IMAP-Aktionen im Offline-Betrieb — beim Filtern wird er übergangen, weil der
+Aufruf ausdrücklich `bDontAllowOffline` mitgibt.
+
+**Was hilft:** die Verbindung einmal aufbauen und das Kennwort speichern
+lassen, oder bei POP filtern. Ein Filterlauf über ein **POP**-Postfach
+arbeitet rein lokal und fragt nichts.
+
+**Nicht zu verwechseln** mit der Kennwortfrage **beim Start**: die kommt
+nicht vom Filtern, sondern davon, dass Eudora ein beim Beenden offenes
+IMAP-Postfachfenster wieder herstellt. Dagegen hilft, das Fenster vorher zu
+schließen — [README.md](README.md), Abschnitt *Beim Start wird nach dem
+IMAP-Kennwort gefragt*.
 
 **Ein leeres Suchfeld trifft alles.** *„enthält nichts"* ist für jede
 Nachricht wahr. Verbunden mit *Transfer To* verschiebt so eine Regel das

@@ -6,14 +6,15 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.43 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.43 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.42** — `Releases/Eudora72-1.0.42-release.zip`, 9 346 100 B. **1.0.43 ist in Arbeit, noch nicht gebaut** |
-| **Zuletzt von Gregor bestätigt** | **1.0.43 am 10.09.2026**: *„filter fenstergröße nach neustart gespeichert: PASS"* (**E-70**) und *„filter funktionieren"* (**E-64**, **E-72**, **E-75**). Davor 1.0.29 mit *„1-6, ok"* zu E-54 bis E-58 und E-61, dazu E-65/E-66 (*„1. ja / 2. ja / 3. ja"*) |
+| **Quellstand** | 7.2.0.44 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.47 (`VERSION`) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.43** — auf GitHub als `v1.0.43` veroeffentlicht, SHA256 `e68d8a8a579c6644…`. **1.0.44 ist in Arbeit** |
+| **Zuletzt von Gregor bestätigt** | **1.0.44 am 10.09.2026**: *„filter fenstergröße nach neustart gespeichert: PASS"* (**E-70**) und *„filter funktionieren"* (**E-64**, **E-72**, **E-75**). Davor 1.0.29 mit *„1-6, ok"* zu E-54 bis E-58 und E-61, dazu E-65/E-66 (*„1. ja / 2. ja / 3. ja"*) |
 | **Was als Nächstes zu messen ist** | **E-44 — die Spur, die aus E-70 herausfiel.** Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* kommt bei **jedem** Start, und ihre Begründung stimmt nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). Der Zustand ist also gespeichert und wird nicht angewandt. Zwei Marken `E-44 nach SetDockState:` und `E-44 vor/nach LoadWazooBarConfig:` liegen seit 7.2.0.43 im Bau, **noch nicht gebaut**. Das könnte auch erklären, warum Fenster nach einem Neustart nicht im Vollbild stehen |
 | **Offen, zurückgestellt** | **E-71** (Filterbericht bleibt leer) — von Gregor am 10.09.2026 ausdrücklich auf die nächste Fassung geschoben: *„kann aber als ToDo für die nächste version aufgeschrieben werden"*. **Nicht von selbst aufgreifen.** Belegt ist, dass der Lauf trifft; zu messen ist `CFilterActions::EndFiltering` |
 | **Offen, mit Marken im Bau** | **E-76** (das schwebende Filterfenster lässt sich nur seitlich vergrößern; Marke seit 7.2.0.41, noch nicht ausgewertet). **E-66** (Marken seit 1.0.35, seit dem Umbau auf `ZiehenAmRand` **nie wieder gelesen** — `tools/spuren-auswerten.pl` weist den Paketbau deshalb ab). **E-68** (`copyInstead` schreibt/liest asymmetrisch, `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — PRÜFER rechnet nach). **E-47** (MFC71/MSVCP71) |
 | **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73**, **E-76** und die neuen **E-44** schreiben je Nachricht, Filter oder Anordnungsdurchlauf eine Protokollzeile. E-64, E-70, E-72 und E-73 sind bestätigt und dürfen raus |
+| **Von Gregor fuer den 11.09.2026 bestellt** | **1.** die Sache mit den **Zertifikaten** erklaeren, die zurueckgestellt wurde — `tools/patches/zertifikatspruefung-verschaerfen.patch` samt Begruendung daneben, dazu der Wurzelzertifikatsspeicher von 2004 (`rootcerts.p7b`, 17 von 30 Zertifikaten im August 2026 abgelaufen) und der fehlende Namensabgleich (nur CN, keine SAN, kein SNI). Fundstellen in `PORTIERUNG.md:435-470`. **2.** die **ToDo-Liste** durchsehen: was ist noch offen, was davon lohnt als Naechstes |
 | **Was ich dabei nicht selbst messen kann** | das Ziehen mit der Maus. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist (**E-51**). Alles andere lässt sich seit Gregors Freigabe vom 10.09.2026 (*„du kannst ja jetzt lokal ausführen, ich greife nicht rein"*) über `tools/testlauf.ps1` und `tools/leisten-messen.ps1` selbst messen — genau so ist der zweite Teil von E-70 gefunden worden |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in

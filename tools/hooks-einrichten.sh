@@ -142,7 +142,18 @@ schranke pruefe-filter-serverloeschung.pl || exit $?
 #     die wirklich hochzaehlen. Auch sie hat "--selbsttest".
 schranke pruefe-filter-aktionsgrenze.pl || exit $?
 
-# 12. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 12. Abschnittsangaben der Doku gegen GetSectionID. Eudora ordnet jeden
+#     INI-Schluessel allein nach seiner Nummer einem Abschnitt zu
+#     (rs.cpp:89-97); ein Eintrag im falschen Abschnitt wirkt nicht, ohne
+#     jede Meldung. Am 11.09.2026 hat Gregor deshalb Zeit verloren -
+#     UseMyFilterWindowPosition stand in [Settings] statt in
+#     [Window Position], und die Anleitung war schuld. Beim Nachpruefen
+#     stand derselbe Fehler ein zweites Mal in der README: LogLevel gehoert
+#     nach [Debug]. Zweimal dieselbe Fehlerklasse ist der Zeitpunkt fuer
+#     eine Schranke statt einer weiteren Korrektur.
+schranke pruefe-ini-abschnitte.pl || exit $?
+
+# 13. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
 HOOKENDE
@@ -205,7 +216,10 @@ echo "                               vorbei auf dem Server? (E-73)"
 echo " 11. tools/pruefe-filter-aktionsgrenze.pl"
 echo "                               laeuft der Aktionszaehler beim Einlesen von"
 echo "                               Filters.pce ueber das Feld hinaus? (E-68)"
-echo " 12. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo " 12. tools/pruefe-ini-abschnitte.pl"
+echo "                               steht ein INI-Schluessel in der Doku im"
+echo "                               Abschnitt, den GetSectionID ihm gibt?"
+echo " 13. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo "Abweisend sind alle ausser Schritt 3 - der meldet bloss."
 echo "Jeder von ihnen wertet JEDEN Rueckgabewert aus -"

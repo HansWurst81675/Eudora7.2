@@ -8127,7 +8127,7 @@ BEGIN
     IDS_INI_PVTABLE_ROW_END "PreviewTableRowEnd\n</td></tr>\r\n"
     IDS_INI_PVTABLE_END     "PreviewTableEnd\n</table>\r\n"
     IDS_INI_READMESSAGE_STYLE_SHEET 
-                            "MessageStyleSheet\n<HTML><HEAD><STYLE>\r\nBODY {font-family=""%s""}\r\nTT {font-family=""%s""}\r\nBLOCKQUOTE.CITE {padding-left:0.5em; margin-left:0; margin-right:0; margin-top:0; margin-bottom:0; border-left:""solid %s"";}\r\n</STYLE></HEAD>\r\n<BODY>\r\n"
+                            "MessageStyleSheet\n<HTML><HEAD><STYLE>\r\nBODY {font-family=""%s""}\r\nTT {font-family=""%s""}\r\nBLOCKQUOTE.CITE {padding-left:0.5em; margin-left:0; margin-right:0; margin-top:0; margin-bottom:0; border-left:""solid %s"";}\r\nSPAN.EUDORAHEADER {color:black; background-color:white; color:windowtext; background-color:window;}\r\n</STYLE></HEAD>\r\n<BODY>\r\n"
     IDS_INI_FILTER_INCOMING_MAIL "FilterIncomingMail\n1"
     IDS_INI_FETCH_INLINE_CONTENT "FetchInlineContent\n1"
     IDS_INI_IMPORT_TABLES   "ImportTables\n0"
@@ -9993,7 +9993,7 @@ BEGIN
     IDS_INI_BIG_MESSAGE_THRESHOLD "BigMessageThreshold\n40960"
     IDS_INI_NEW_MAIL_SOUND  "NewMailSound\n"
     IDS_INI_USER_TABOO_HEADERS 
-                            "TabooHeaders\nX-UID,Received,Status,X-UIDL,Message,In-Reply,X-Priority,Importance,Mime-Version,Content-,X-Persona,Resent-Message,References,Return,X400,X-400,Mail-System,Errors-To,X-List,Delivery,Disposition,X-Juno,Precedence,X-Attachments,X-MSMail,X-MimeOLE,X-Nav,X-Habeas"
+                            "TabooHeaders\nX-UID,Received,Status,X-UIDL,Message,In-Reply,X-Priority,Importance,Mime-Version,Content-,X-Persona,Resent-Message,References,Return,X400,X-400,Mail-System,Errors-To,X-List,Delivery,Disposition,X-Juno,Precedence,X-Attachments,X-MSMail,X-MimeOLE,X-Nav,X-Habeas,X-,DKIM-,ARC-,Authentication-Results,Envelope-To,Delivered-To,List-,Feedback-ID,Thread-,Accept-Language,User-Agent,Auto-Submitted,Autocrypt,UI-OutboundReport,UI-InboundReport,msip_"
 END
 
 STRINGTABLE 

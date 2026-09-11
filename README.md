@@ -96,6 +96,45 @@ Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
 [FILTER.md](FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
 jeder eingehenden Nachricht **0** bleibt.
 
+### Beim Start wird nach dem IMAP-Kennwort gefragt: das Fenster schließen
+
+Wer ein **IMAP**-Postfach benutzt und beim Beenden ein IMAP-Postfachfenster
+offen stehen lässt, wird beim **nächsten Start** nach dem Kennwort gefragt —
+auch dann, wenn bei dieser Persönlichkeit *Check mail* **abgewählt** ist.
+
+**Was hilft:** das IMAP-Postfachfenster **vor dem Beenden schließen**. Dann
+steht beim nächsten Start nichts wieder herzustellen, und es wird nichts
+gefragt. Wer das Fenster offen behalten will, lässt statt dessen das Kennwort
+speichern.
+
+**Warum das so ist.** Eudora merkt sich beim Beenden alle offenen Fenster im
+Abschnitt `[Open Windows]` der `Eudora.ini`, jedes als eigene Zeile
+`OpenWindow<n>=…` (`CMainFrame::SaveOpenWindows`, `mainfrm.cpp:2504`). Beim
+Start öffnet es sie wieder (`CMainFrame::LoadOpenWindows`, `mainfrm.cpp:2307`;
+gelesen `:2337`, geöffnet `:2403`). Ein IMAP-Postfach zu öffnen heißt aber,
+sich anzumelden — und die Anmeldung fragt nach, sobald kein Kennwort
+gespeichert ist. Die Kette ist durchgehend nachgesehen:
+
+`CTocDoc::Display` (`tocdoc.cpp:3424`) → `OpenOnDisplay` (`:3451`) →
+`CImapMailbox::OpenMailbox` (`EuImap/src/ImapMailbox.cpp:817`) → `GetLogin`
+(`:825` bzw. `:700`) → `CImapAccount::Login`
+(`EuImap/src/ImapAccount.cpp:3763`) → Kennwortdialog (`:3824`).
+
+**Warum *Check mail* nichts daran ändert.** Das Häkchen setzt den Schlüssel
+`CheckMailByDefault` (`EudoraRes.rc:10791`, Schaltfläche `:2926`). Gelesen
+wird er an zwei Stellen, und keine davon hat mit dem Öffnen von Fenstern zu
+tun: `CPersonality::GetParams` (`persona.cpp:271`, `:333`) holt ihn, um das
+Häkchen im Dialog anzuzeigen, und `CPersonality::CheckMailList`
+(`persona.cpp:675`, Schlüssel `:683`) stellt daraus die Liste der Konten
+zusammen, die beim **Mailabruf** drankommen (`GetMail`, `GetMail.cpp:82`,
+`:112`). Das Wiederherstellen der Fenster fragt diese Liste nicht — die
+beiden Wege haben keine gemeinsame Stelle.
+
+Das ist **kein Fehler dieser Portierung**, sondern Verhalten des Originals;
+es hat deshalb keine Befundnummer. Verwandt: bei IMAP fragt auch ein
+**Filterlauf** nach dem Kennwort, aus einem anderen Grund — siehe
+[FILTER.md](FILTER.md), Abschnitt *Was überrascht*.
+
 ### Einen Fehler melden
 
 Fehler gehören in die
@@ -125,21 +164,80 @@ Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab. Jede
 Abweichung steht hier mit ihrem Schlüssel, ihrer Vorgabe und dem Grund — und
 jede lässt sich zurückdrehen.
 
-Die Schlüssel stehen im Abschnitt `[Settings]` der **`Eudora.ini`** im
-Mailverzeichnis. Die Spalte *Original* nennt den eingebauten Wert von
-Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
+Die Schlüssel stehen in der **`Eudora.ini`** im Mailverzeichnis. In welchem
+**Abschnitt**, sagt die gleichnamige Spalte — das ist keine Formsache,
+sondern entscheidet, ob der Eintrag überhaupt gelesen wird; warum, steht
+unter *Wo ein Schlüssel stehen muss*. Die Spalte *Original* nennt den
+eingebauten Wert von Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
 
 Hier stehen nur die **Abweichungen**. Die vollständige Liste aller Filter-
 und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
 [FILTER.md](FILTER.md).
 
-| Schlüssel | hier | Original | was er tut |
+| Schlüssel | Abschnitt | hier | Original | was er tut |
+|---|---|---|---|---|
+| `FilterMayDeleteFromServer` | `[Settings]` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`). Der Abschnitt steht hier fest im Quelltext, `filtersd.cpp:1132` |
+| `DeleteFetchedJunk` | `[Settings]` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
+| `LeaveMailOnServer` | `[Settings]` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
+| `SSLSendUse`, `SSLReceiveUse` | `[Settings]` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
+| `CtrlJMapping` | `[Settings]` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
+
+| `TabooHeaders` | `[Settings]` | Originalliste **plus 16 Einträge** | 28 Einträge, Stand 2006 | Welche Kopfzeilen der Knopf *Blah Blah Blah* versteckt. Die eingebaute Liste kennt `X-UID`, aber nicht `X-`; `Received`, aber nicht `DKIM-`. An 175 echten Nachrichten nachgerechnet blieben damit über 60 technische Kopfzeilenarten stehen, darunter `DKIM-Signature` und `Authentication-Results`. Ergänzt sind `X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`. **Achtung:** ein Eintrag in der `Eudora.ini` **ersetzt** die Liste vollständig, er ergänzt sie nicht — wer etwas hinzufügen will, schreibt die ganze Liste hin |
+| `MessageStyleSheet` | `[Settings]` | plus eine Regel für `SPAN.EUDORAHEADER` | ohne diese Regel | Das Stylesheet der Nachrichtenansicht. Eudora schreibt die Kopfzeilen in **dasselbe** HTML-Dokument wie die Mail; ohne eigene Regel erben sie deren Hintergrund und sind bei einer Mail mit dunklem Grund unsichtbar. Die neue Regel setzt Vordergrund **und** Hintergrund — erst `black` auf `white`, dann dieselben Angaben als `windowtext`/`window` für den Fall, dass MSHTML die Systemfarben kennt. Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig und diese Regel entfällt |
+
+### Wo ein Schlüssel stehen muss
+
+Eudora ordnet jeden INI-Schlüssel **automatisch** einem Abschnitt zu, allein
+nach seiner internen Nummer — `GetSectionID`, `Eudora71/Eudora/rs.cpp:89-97`.
+Der Name des Schlüssels spielt dabei keine Rolle, nur die Nummer:
+
+| Nummernbereich | Abschnitt | Beispiel |
+|---|---|---|
+| bis 10800 | `[Settings]` | `LeaveMailOnServer` = 10113 |
+| 10801 … 10900 | `[Debug]` | `LogLevel` = 10802 |
+| 10901 … 11100 | `[Window Position]` | `UseMyFilterWindowPosition` = 10922 |
+| ab 11101 | `[Settings]` | — |
+
+> **Ein Eintrag im falschen Abschnitt wirkt nicht — ohne jede Meldung.** Am
+> 11.09.2026 stand `UseMyFilterWindowPosition=1` unter `[Settings]`; Eudora
+> las aus `[Window Position]` die eingebaute `0`, und die eingestellte
+> Breite der linken Spalte im Filterfenster ging bei jedem Neustart wieder
+> verloren. Kein Fehler, kein Hinweis, nur ein Schalter, der nichts tut.
+> Schuld war die Anleitung: sie hatte behauptet, alle Schlüssel gehörten
+> nach `[Settings]`.
+
+Die Nummern stehen in `Eudora71/Eudora/resource.h`, die Schlüsselnamen in
+`Eudora71/Eudora/EudoraRes.rc` im Format `IDS_INI_XXX "Name\nVorgabe"`. Wer
+nachsehen will, wohin ein bestimmter Schlüssel gehört, fragt danach:
+
+```
+perl tools/pruefe-ini-abschnitte.pl --was LogLevel
+perl tools/pruefe-ini-abschnitte.pl --tabelle
+```
+
+**In welcher Reihenfolge gesucht wird.** Eudora geht für jeden Schlüssel vier
+Stufen durch und nimmt den ersten Wert, den es findet (`GetIniString`,
+`rs.cpp:334-346`):
+
+| # | Datei | Abschnitt | Fundstelle |
 |---|---|---|---|
-| `FilterMayDeleteFromServer` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`) |
-| `DeleteFetchedJunk` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
-| `LeaveMailOnServer` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
-| `SSLSendUse`, `SSLReceiveUse` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
-| `CtrlJMapping` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
+| 1 | `Eudora.ini` im Mailverzeichnis | der der **aktiven Persönlichkeit**: `[Persona-<Name>]` — bei der vorherrschenden `[Settings]` | `rs.cpp:334`, `persona.cpp:887-903` |
+| 2 | `Eudora.ini` im Mailverzeichnis | der aus der Nummer errechnete | `rs.cpp:337` |
+| 3 | `DEudora.ini` **neben der `Eudora.exe`** | derselbe errechnete | `rs.cpp:339`, Pfad `rs.cpp:1365` |
+| 4 | der eingebaute Wert aus `EudoraRes.rc` | — | `rs.cpp:342-346` |
+
+Daraus folgt eine Tücke, die zu kennen Zeit spart: solange **keine zweite
+Persönlichkeit** eingerichtet ist, ist der Persönlichkeitsabschnitt gerade
+`[Settings]`. Ein dorthin verirrter `[Debug]`- oder
+`[Window Position]`-Schlüssel wird dann über Stufe 1 doch gefunden und
+**scheint zu wirken** — und hört damit auf, sobald eine zweite Persönlichkeit
+aktiv wird. Verlässlich ist allein der Abschnitt, der zur Nummer gehört;
+dorthin schreibt Eudora den Wert auch selbst zurück (`FlushINIFile`,
+`rs.cpp:1189`, Abschnitt `:1203`, geschrieben `:1250` und `:1257`).
+
+Damit derselbe Fehler nicht ein drittes Mal in die Anleitung gerät, prüft
+`tools/pruefe-ini-abschnitte.pl` jede Abschnittsangabe in allen Dokumenten
+dieses Repos gegen `resource.h`.
 
 ### Warum die drei Löschsperren
 
@@ -228,9 +326,16 @@ darin landet, steuert ein einziger Schlüssel** — ohne Neubau, ohne
 Codeänderung:
 
 ```ini
-[Settings]
+[Debug]
 LogLevel=25759
 ```
+
+> **`[Debug]`, nicht `[Settings]`.** `LogLevel` trägt die Nummer 10802 und
+> fällt damit in den Bereich, den `GetSectionID` dem Abschnitt `[Debug]`
+> zuweist — siehe [Wo ein Schlüssel stehen
+> muss](#wo-ein-schlüssel-stehen-muss). Bis zum 11.09.2026 stand hier
+> `[Settings]`; das war falsch. Dasselbe gilt für die beiden Nachbarn
+> `LogFileName` (10801) und `LogFileSize` (10803).
 
 `LogLevel` ist keine Stufe von 0 bis 5, sondern eine **Summe von Schaltern**.
 Jeder Bereich hat seinen Wert; addiert wird, was man sehen will. Die
@@ -267,7 +372,7 @@ Zeilen der Form `E-44 …`, `E-64 …`, `E-70 …`. Sie hängen alle am Schalter
 Wert addieren.
 
 ```ini
-[Settings]
+[Debug]
 LogLevel=58527
 ```
 
@@ -535,8 +640,8 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.0.43` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.43` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `1.0.47` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

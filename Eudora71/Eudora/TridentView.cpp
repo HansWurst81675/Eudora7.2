@@ -22,6 +22,7 @@ DAMAGE. */
 //
 
 #include "stdafx.h"
+#include "debug.h"
 
 #include "shlobj.h"
 #include "eudora.h"
@@ -1422,7 +1423,26 @@ CTridentView::WriteTempFile(
 			//	* We were concentrated, which already decided what headers should be output
 			//	* The setting IDS_INI_SHOW_ALL_HEADERS is on
 			bool		bIncludeTabooHeaders = ( in_bIsBlahBlahBlah || m_bWasConcentrated || ShouldShowAllHeaders() );
-						
+
+			// SPURMARKE ZU BEFUND E-80 (Gregor, 11.09.2026): der Knopf
+			// "Blah Blah Blah" blendet die Kopfzeilen nicht aus.
+			//
+			// Drei Bedingungen mit ODER - eine genuegt, damit alle
+			// Kopfzeilen erscheinen. Welche es ist, sagt diese Zeile.
+			// Die erste Marke lag in PgReadMsgView und schwieg: Gregors
+			// Nachricht laeuft ueber Trident, nicht ueber Paige.
+			{
+				char szM[192];
+				_snprintf(szM, sizeof(szM),
+					"E-80 trident: Knopf=%d konzentriert=%d ShowAllHeaders=%d "
+					"-> Kopfzeilen%s",
+					(int) in_bIsBlahBlahBlah, (int) m_bWasConcentrated,
+					(int) ShouldShowAllHeaders(),
+					bIncludeTabooHeaders ? " ALLE" : " gekuerzt");
+				szM[sizeof(szM) - 1] = 0;
+				PutDebugLog(DEBUG_MASK_MISC, szM);
+			}
+
 			// Write out the headers that we're displaying
 			WriteHeaders(theFile, pDoc, szHeaders, bIncludeTabooHeaders);
 

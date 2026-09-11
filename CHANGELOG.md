@@ -103,6 +103,185 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.47 — Kopfzeilen bleiben lesbar, auch auf schwarzem Grund (E-81)
+
+**Was Gregor damit tun kann:** die Kopfzeilen auch bei Werbemails lesen, die
+sich einen dunklen Hintergrund setzen.
+
+Gemeldet am 11.09.2026 an 1.0.46: *„schönheitsfehler: schwarzer text auf dem
+schwarzen hintergrund ist nicht sichtbar. nur beim markieren erscheint er."*
+
+Eudora schreibt die Kopfzeilen als `<SPAN CLASS=EUDORAHEADER>` in **dasselbe**
+HTML-Dokument, in dem danach die Mail steht. Das Stylesheet dieses Dokuments
+kennt `BODY`, `TT` und `BLOCKQUOTE.CITE` — für `EUDORAHEADER` gibt es **keine
+einzige Regel**. Die Kopfzeilen erben deshalb, was die Mail für ihren `<BODY>`
+vorgibt.
+
+Jetzt gibt es eine Regel, die Vordergrund **und** Hintergrund festlegt. Beides
+muss sein: nur die Schriftfarbe zu setzen würde bei einer Mail mit hellem Text
+auf dunklem Grund denselben Fehler spiegelverkehrt erzeugen.
+
+Wer eine eigene `read.css` im Eudora-Verzeichnis hat, ersetzt das Stylesheet
+vollständig — für den ändert sich nichts.
+
+## 7.2.0.46 — der „Blah Blah Blah"-Knopf schaltet wieder (E-80, Teil 2)
+
+**Was Gregor damit tun kann:** die technischen Kopfzeilen ein- und ausblenden,
+statt sie nur dauerhaft gekürzt zu sehen. **Von ihm bestätigt:** *„ja, jetzt
+geht es"*.
+
+Gemeldet am 11.09.2026 an 1.0.45: *„header schaut jetzt kürzer aus. aber: der
+bla bla button ändert nichts."* Teil 1 stimmte also — nur umschalten ließ sich
+nichts.
+
+**Der Knopf schaltete seinen eigenen Zustand nie um.** Die Kette:
+
+| Schritt | Stelle | was dort passiert |
+|---|---|---|
+| 1 | `ReadMessageFrame.cpp:179` | der Knopf steht als `TBBS_CHECKBOX` in der Leiste |
+| 2 | `:981-998` | `GetCheck` liest das Bit `TBBS_CHECKED` |
+| 3 | `:949-977` | `OnButtonSetCheck` setzt es — läuft **genau einmal**, beim Anlegen des Fensters |
+| 4 | `TridentReadMessageView.cpp:161` | der Klick geht an die **Ansicht**, nicht an den Rahmen |
+| 5 | `ReadMessageFrame.cpp:688` | `CReadMessageFrame::OnBlahBlahBlah` steht in keiner Botschaftstabelle — **tote Funktion** |
+
+Beide Ansichten **lesen** den Zustand, keine setzt ihn. Deshalb meldete die
+Spurmarke in jedem einzelnen Lauf `Knopf=0` — die Zahl stand da, und ich habe
+sie nicht zu Ende gedacht.
+
+**Woher die Lücke kommt:** im Original schaltete die Stingray-Leiste einen
+Checkbox-Knopf beim Klick selbst um. Der OTShim-Ersatz setzt `TBBS_CHECKED` nur
+über `ON_UPDATE_COMMAND_UI`, und so einen Eintrag gibt es für diesen Knopf
+nirgends. Dieselbe Klasse wie **E-43** und **E-70**: Verhalten, das beim Ersatz
+des Toolkits weggefallen ist und erst auffällt, wenn jemand den Knopf drückt.
+
+Behoben in **beiden** Ansichten über die registrierte Botschaft
+`umsgButtonSetCheck` — der Weg, den `summary.cpp:2518-2520` für zwei andere
+Knöpfe schon benutzt.
+
+## 7.2.0.44 — Messfassung für die Spaltenbreite im Filterfenster
+
+**Was Gregor damit tun kann:** die Ursache dafür messen, dass die linke
+Spalte im Filterfenster nach einem Neustart anders breit ist — ohne dass
+etwas geraten wird.
+
+Gemeldet am 11.09.2026 an 1.0.43: *„die breite der linken spalte beim filter
+wird nicht über den neustart gespeichert. auch wenn ich sie breiter gezogen
+habe."*
+
+### Zwei Ursachen, die erste davon meine
+
+**Der Schalter stand im falschen Abschnitt.** Eudora ordnet jeden INI-Schlüssel
+**automatisch** einem Abschnitt zu, allein nach seiner internen Nummer
+(`rs.cpp:88`):
+
+| Nummernbereich | Abschnitt |
+|---|---|
+| 10900 … 11100 | `[Window Position]` |
+| alles andere | `[Settings]` |
+
+`UseMyFilterWindowPosition` hat die Nummer **10922**. Gregor hatte ihn nach
+`[Settings]` geschrieben — weil `FILTER.md` behauptete, dort gehörten *alle*
+Schlüssel hin. Nachgemessen mit derselben Windows-Funktion, die Eudora
+benutzt:
+
+```
+[Window Position]  UseMyFilterWindowPosition = 0    ← das liest Eudora
+[Settings]         UseMyFilterWindowPosition = 1    ← das steht da
+```
+
+Ein Eintrag im falschen Abschnitt wird **stillschweigend ignoriert**. Für
+**23 der 38** dokumentierten Schlüssel war die Angabe falsch;
+[FILTER.md](FILTER.md) nennt den Abschnitt jetzt in jeder Tabellenzeile, und
+die Zuordnung wird aus `resource.h` und `EudoraRes.rc` gelesen statt von Hand
+gepflegt.
+
+**Und auch im richtigen Abschnitt bleibt der Wert nicht.** Gregors Messung:
+
+| | 08:08 | 08:18 |
+|---|---|---|
+| eingetragen | — | **312** |
+| danach in der Datei | 237 | **368** |
+| Breite der Filterleiste | 527 | 668 |
+
+`SetColumnInfo` setzt nur eine **Wunschbreite** (`FiltersWazooWnd.cpp:185`);
+wirksam wird sie erst durch die Neuberechnung, die das nachfolgende
+`PostMessage(WM_SIZE, …)` auslöst. Beim Schließen schreibt Eudora die
+**tatsächliche** Breite zurück (`:70`), nicht die gewünschte — weicht sie ab,
+schaukelt sich der Wert von Lauf zu Lauf auf.
+
+**In der VM tritt es nicht auf**, weil die Leiste dort schmaler ist. Es ist
+dieselbe Fassung: in beiden Protokollen steht `Version 7.2.0.43`.
+
+### Was diese Fassung dazu beiträgt
+
+Zwei Spurmarken, die die ganze Kette in je einer Zeile nennen:
+
+```
+E-79 geladen:   INI=312 Schalter=1 Elternbreite=668 Viertel=167
+                -> gesetzt=312, danach ist=368 min=0
+E-79 gesichert: ist=368 min=0 -> INI=368
+```
+
+Damit ist in einem einzigen Start-und-Beenden zu sehen, an welcher Stelle der
+Wert sich ändert. Sie hängen wie alle anderen an `DEBUG_MASK_MISC` und
+schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
+[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+
+**Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
+dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
+gescheitert.
+
+### Der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80)
+
+Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
+erwartung: doppelklick auf mail: je nach button wird der header angezeigt
+oder ausgeblendet. aktuell: er wird immer angezeigt."*
+
+**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
+eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
+als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
+2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
+aber nicht `DKIM-`.
+
+Nachgerechnet an **175 echten Nachrichten aus sechs Postfächern**
+(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
+lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
+**über 60 Kopfzeilenarten** stehen:
+
+| Kopfzeile | kam vor | Kopfzeile | kam vor |
+|---|---|---|---|
+| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
+| `Authentication-Results` | 70× | `X-Mailer` | 55× |
+| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
+| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
+| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
+
+Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
+
+**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
+damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
+neuen Liste lässt genau **acht** Kopfzeilen übrig: `From`, `To`, `Cc`, `Bcc`,
+`Subject`, `Date`, `Reply-To`, `Sender`.
+
+**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
+Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
+abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
+`Subject` — und keine einzige technische.
+
+**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
+`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
+angefasst. Wer alles sehen will, drückt den Knopf oder setzt
+`ShowAllHeaders=1`.
+
+**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
+`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
+nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
+(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
+sah es so aus, als steche der Content Concentrator den Knopf aus
+(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
+Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
+Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
+
 ## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
 
 **Was Gregor damit tun kann, was vorher gefährlich war:** über IMAP abrufen

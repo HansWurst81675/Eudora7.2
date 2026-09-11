@@ -22,6 +22,7 @@ DAMAGE. */
 //
 
 #include "stdafx.h"
+#include "debug.h"
 
 #include "QCUtils.h"	// must be early else bad stuff happens
 #include "resource.h"
@@ -247,6 +248,10 @@ void PgReadMsgView::SetTabooHeadersStyle()
 //	long		endOfText = pgTextSize(m_paigeRef);
 	BOOL		SetStyleSheet = FALSE;
 
+	// SPURMARKE ZU BEFUND E-80: wie viele Kopfzeilen werden ueberhaupt
+	// als "taboo" markiert? Ist das 0, kann der Knopf nichts ausblenden.
+	int nE80Markiert = 0;
+
 	pgFindPar(m_paigeRef, currentOffset, &paraOffsets.begin, &paraOffsets.end);
 	szHeader = (char *) pgExamineText(m_paigeRef, currentOffset, &textRef, &textLength);
 
@@ -330,6 +335,7 @@ void PgReadMsgView::SetTabooHeadersStyle()
 		{
 			pgSetStyleSheet(m_paigeRef, &paraOffsets, m_TabooHeadersStyleID, draw_none);
 			SetStyleSheet = FALSE;
+			nE80Markiert++;		// SPURMARKE ZU E-80
 		}
 
 		paraOffsets.begin = tempOffsets.begin;
@@ -338,6 +344,16 @@ void PgReadMsgView::SetTabooHeadersStyle()
 
 	UnuseMemory(textRef);
 
+	// SPURMARKE ZU E-80, Stufe 1 und 2 in einer Zeile.
+	{
+		char szM[192];
+		_snprintf(szM, sizeof(szM),
+			"E-80 taboo: Kopfbytes=%ld Listeneintraege=%d markiert=%d StilID=%ld",
+			(long) m_HeaderBytes, (int) pTabooHeaderArray->GetSize(),
+			nE80Markiert, (long) m_TabooHeadersStyleID);
+		szM[sizeof(szM) - 1] = 0;
+		PutDebugLog(DEBUG_MASK_MISC, szM);
+	}
 }
 
 // ExportMessage:
@@ -531,6 +547,25 @@ void PgReadMsgView::OnBlahBlahBlah()
 	if (!pDoc)
 		return;
 
+	// BEHEBUNG ZU BEFUND E-80 (Gregor, 11.09.2026): "der bla bla button
+	// aendert nichts". Niemand schaltet den Knopfzustand um - GetCheck
+	// liest TBBS_CHECKED, und gesetzt wird das nur beim Anlegen des
+	// Fensters (ReadMessageFrame.cpp:498-503). Im Original erledigte das
+	// die Stingray-Leiste beim Klick selbst; der OTShim-Ersatz setzt
+	// TBBS_CHECKED nur ueber ON_UPDATE_COMMAND_UI, und so einen Eintrag
+	// gibt es fuer ID_BLAHBLAHBLAH nicht. Also schaltet die Ansicht
+	// selbst um - ueber denselben Weg, den summary.cpp:2518-2520 fuer
+	// zwei andere Knoepfe schon benutzt.
+	{
+		extern UINT umsgButtonSetCheck;
+		if (pParentFrame)
+		{
+			BOOL bVorherE80 = pParentFrame->GetCheck(ID_BLAHBLAHBLAH);
+			pParentFrame->SendMessage(umsgButtonSetCheck, ID_BLAHBLAHBLAH,
+				bVorherE80 ? FALSE : TRUE);
+		}
+	}
+
 	//	If we're reloading, then we'll redraw as we do so
 	ReloadAndConcentrateIfAppropriate(m_fRO, true);
 
@@ -549,6 +584,22 @@ void PgReadMsgView::OnBlahBlahBlah()
 		TabooHeaderStyleInfo.styles[hidden_text_var] = 0;
 	else 
 		TabooHeaderStyleInfo.styles[hidden_text_var] = 1;
+
+	// SPURMARKE ZU E-80, Stufe 3: was der Knopf meldet und was daraus
+	// fuer den Stil folgt. 0 heisst sichtbar, 1 heisst versteckt.
+	{
+		char szM[192];
+		_snprintf(szM, sizeof(szM),
+			"E-80 umschalten: Rahmen=%s GetCheck=%d ShowAllHeaders=%d "
+			"-> BlahBlahBlah=%d hidden=%d",
+			pParentFrame ? "ja" : "NEIN",
+			pParentFrame ? (int) pParentFrame->GetCheck(ID_BLAHBLAHBLAH) : -1,
+			(int) pDoc->m_Sum->ShowAllHeaders(),
+			(int) bIsBlahBlahBlah,
+			(int) TabooHeaderStyleInfo.styles[hidden_text_var]);
+		szM[sizeof(szM) - 1] = 0;
+		PutDebugLog(DEBUG_MASK_MISC, szM);
+	}
 			
 	//	The next time the text is drawn, this will cause all the text using the
 	//	stylesheet to be redrawn with the new style info (if changeStyleDrawMode
