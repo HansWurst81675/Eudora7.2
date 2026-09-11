@@ -753,12 +753,29 @@ Gemessen: TLS 1.3 im Komponententest gegen einen lokalen Server, am 29.08.2026
 gegen `pop.gmx.net:995` und am 06.09.2026 im selbst gebauten Eudora über
 Port 995 (`Negotiation Status: Succeeded`).
 
-> **Offen und sicherheitsrelevant: die Hostnamenprüfung greift nicht.** Gemessen:
-> ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und `ErrorCode 0`
-> angenommen. Ein Hinweistext wird angehängt, bleibt aber ohne Wirkung.
-> Altbestand von QUALCOMM, Einzelheiten in [PORTIERUNG.md](PORTIERUNG.md). Der
-> vorbereitete Patch ist **zurückgestellt** und wird nicht ohne Gregors Wort
-> angewendet (`tools/patches/zertifikatspruefung-verschaerfen.patch`).
+**Seit 7.2.0.48 wird eine Kette geprüft, die sich nicht verifizieren lässt.**
+Bis dahin behandelte der Verifikations-Callback zwei OpenSSL-Prüffehler als
+Erfolg (`X509_V_ERR_CERT_UNTRUSTED` und
+`X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE`): er setzte `iOK = 1` und sagte
+OpenSSL damit ausdrücklich *„Zertifikat in Ordnung"* — ohne Fehlercode, ohne
+Warnung, ohne dass der Anwender etwas sah. Jetzt wird die Verbindung
+abgelehnt und `IDS_CERTERR_CHAINNOTTRUSTED` gemeldet.
+
+**Was das für den Betrieb heißt:** Eudora lehnt Verbindungen ab, die es vorher
+klaglos annahm. Wer ein bestimmtes Zertifikat trotzdem will, gibt es einzeln
+über den Zertifikatsspeicher frei — dieser Weg ist unberührt, denn die Prüfung
+sieht dort zuerst nach. Weg fällt nur die pauschale Annahme.
+
+Am 11.09.2026 an zwei GMX-Konten gemessen: IMAP über Port 993 und POP3 über
+995 laufen unverändert, `Successfully retrieved`. Für diese Konten war die
+pauschale Annahme also nie nötig.
+
+> **Weiterhin offen und sicherheitsrelevant: die Hostnamenprüfung greift
+> nicht.** Das ist ein **anderer** Mangel als die Vertrauenskette oben.
+> Gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und
+> `ErrorCode 0` angenommen. Ein Hinweistext wird angehängt, bleibt aber ohne
+> Wirkung. Altbestand von QUALCOMM, Einzelheiten in
+> [PORTIERUNG.md](PORTIERUNG.md).
 
 QCSSL prüft ausschließlich gegen `rootcerts.p7b`, nicht gegen den
 Windows-Zertifikatspeicher. Für die Auslieferung erzeugt

@@ -612,3 +612,72 @@ berichtigten Dateien noch nicht. Nach dem Merge einmal
   offen. Für 1.0.18 ist der Abschnitt da, weil dort alles messbar war.
 * **„30 Stellen, 22 Stingray-Klassen, 77 Methoden" in `README.md`** weiter
   zurückgestellt — die Zählweise ist nicht dokumentiert, Raten wäre schlimmer.
+
+# Achter Durchgang — 09. bis 11.09.2026
+
+Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`. **Keine
+Zeile Quelltext geändert, nichts gebaut, Eudora nicht gestartet.**
+Ausführliche Berichte: `Befunde/LEKTOR-6.md` (L-12) und die Commits
+`a660b1b`, `77b9aa1`, `be5a9cb`, `a788753`.
+
+Nachgetragen am 11.09.2026, nachdem Gregor gefragt hat:
+
+> *„ist eins von MDs, ich fragte, ob alles aktualisiert ist, du sagst, ja.
+> war es der letzte ‚Siebter Durchgang — 07.09.2026'? danach nichts mehr?"*
+
+**Er hatte recht.** Drei Arbeitsgänge waren gelaufen, ohne dass diese Datei
+etwas davon wusste. Die Berichte lagen in `Befunde/`, die Historie blieb beim
+07.09. stehen — und auf die Frage, ob alles aktuell sei, kam ein „ja", das
+nur für die 21 Dateien galt, die `doku-pruefen.pl` kennt. Im Repo liegen 47.
+
+## Was in diesen drei Gängen berichtigt wurde
+
+* **Die INI-Abschnittszuordnung hat vier Zweige, nicht zwei.** `GetSectionID`
+  (`rs.cpp:89-97`) trennt bis 10800 `[Settings]`, **10801–10900 `[Debug]`**,
+  10901–11100 `[Window Position]`, ab 11101 wieder `[Settings]`. Damit gehört
+  **`LogLevel` (10802) nach `[Debug]`** — die Anweisung an Gregor, es nach
+  `[Settings]` zu setzen, war falsch. Dass sie trotzdem wirkte, liegt daran,
+  dass bei der vorherrschenden Persönlichkeit der zuerst durchsuchte
+  Abschnitt wörtlich `[Settings]` heißt. Schranke dazu gebaut:
+  `tools/pruefe-ini-abschnitte.pl`.
+* **Die Zeilenangabe `rs.cpp:293`** war falsch, richtig ist `rs.cpp:334`.
+* **`## Noch offen` stand auf dem 10.09.**, während der CHANGELOG schon vom
+  11.09. erzählte. Zwölf Zeilen einzeln gegen `BEFUNDE.md` geprüft, drei
+  Befunde ergänzt, die dort offen stehen und hier nie genannt waren (**R-1**,
+  **V-1**, **E-14**), dazu die Zertifikatsprüfung als Nebenbefund ohne
+  Kennung.
+* **Der Abschnitt für 7.2.0.48 fehlte ganz**, und **7.2.0.45** ebenso — dessen
+  Text steckte als `###`-Unterabschnitt mitten in `7.2.0.44`. Ein
+  Zwischenstandstext vom 09.09. stand ganz oben statt bei seiner Fassung.
+  Beides von Gregor gefunden: *„reihenfolge stimmt nicht: oben 2.29 / dann
+  0.47 / 0.46 / ..."*
+* **`WEITERMACHEN.md`** hinkte einen Arbeitstag und vier Fassungen hinterher.
+
+## Was daraus an Schranken entstand
+
+* **`tools/pruefe-doku-takt.pl`** — kein Paket ohne beschriebene Fassung,
+  eingehängt in `paket-bauen.ps1`. Sie prüft inzwischen auch, dass die
+  Abschnitte absteigend stehen und keine Nummer fehlt; beim ersten Lauf fand
+  sie drei Altlasten (7.2.0.36, .37, .38 ohne Abschnitt).
+* **`tools/rollen-faellig.pl` endlich angeschlossen.** Es gab sie seit dem
+  08.09. und sie meldete korrekt — nur rief sie niemand auf.
+* **`tools/pruefe-stand-md.pl`** — jede Datei mit „Stand"-Kopf gegen den
+  jüngsten CHANGELOG-Vorgang, und jede Rollenhistorie gegen den jüngsten
+  Bericht ihrer Rolle. **Genau diese Schranke hätte den Fund gemacht, um den
+  es hier geht.** Sie misst das Datum in der letzten *Überschrift*, nicht
+  irgendwo im Text — sonst hätte der 09.09. im Fließtext diese Datei
+  fälschlich für fortgeschrieben erklärt.
+
+## Was ich bewusst nicht getan habe
+
+* **`Arbeitsweise/README.md`** nicht angefasst: die Tabelle „Die Regeln" führt
+  27 von 54 Lehren und ist seit Wochen unvollständig. Sie im Vorbeigehen um
+  zwei Zeilen zu ergänzen hätte den Eindruck erweckt, sie sei gepflegt. Das
+  ist ein Bestandsmangel und gehört als solcher angegangen.
+* **7.2.0.36, .37 und .38 nicht nachgeschrieben.** Für diese Fassungen gab es
+  Pakete, aber nie einen CHANGELOG-Abschnitt. Sie nachzuerzählen wäre
+  Archäologie; sie stehen als benannte Altlast in der Schranke, damit *neue*
+  Lücken auffallen.
+* **`PRUEFBERICHT.md` nicht fortgeschrieben**, sondern als abgeschlossen
+  gekennzeichnet: er gilt für den Stand `371c1e3` vom 30.08.2026, und PRÜFER
+  berichtet seither in `Befunde/PRUEFER-*.md`.

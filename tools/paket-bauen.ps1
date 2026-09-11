@@ -225,6 +225,45 @@ if (Test-Path -LiteralPath $dokupruefer) {
   }
 }
 
+
+# --- Schranke: keine Datei, die einen Stand behauptet, den sie nicht hat --
+#
+# Gregor am 11.09.2026, auf LEKTORAT.md zeigend: "ich fragte, ob alles
+# aktualisiert ist, du sagst, ja. war es der letzte 'Siebter Durchgang -
+# 07.09.2026'? danach nichts mehr?" - Meine Antwort war falsch: gemessen
+# hatte ich 21 von 47 MDs.
+$standpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-stand-md.pl'
+if (Test-Path -LiteralPath $standpruefer) {
+
+  $perlM = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlM) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlM = $k; break }
+    }
+  }
+
+  if (-not $perlM) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Stand-Pruefung konnte'
+    Write-Host '  nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlM $standpruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Erst die Standangaben nachziehen und die'
+    Write-Host '  Rollenhistorien fortschreiben - VOR dem Merge, nicht'
+    Write-Host '  auf Nachfrage danach.'
+    Write-Host ''
+    exit 1
+  }
+}
+
 $ErrorActionPreference = 'Stop'
 
 $wurzel = Split-Path -Parent $PSScriptRoot
