@@ -22,6 +22,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
 | — | die **Zertifikatsprüfung nimmt Zertifikate an, deren Kette nicht verifiziert werden konnte** | Nebenbefund **ohne Nummer** — die Kennung vergibt Gregor. `QCCertificateUtils::CertificateCallback` behandelt `X509_V_ERR_CERT_UNTRUSTED` (27) und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) mit `iOK = 1` (`Eudora71/QCSSL/src/qccertificate.cpp:110-113`). `iOK` ist der Rückgabewert des Callbacks: `1` sagt OpenSSL ausdrücklich *„Zertifikat in Ordnung"* — der Prüffehler wird also nicht übergangen, sondern ins Gegenteil verkehrt; anders als in allen Nachbarzweigen wird weder ein Fehlercode gesetzt noch eine Warnung angehängt, der Anwender sieht nichts. Seit dem 30.08.2026 als **zurückgestellter** Befund geführt (`tools/patches/zertifikatspruefung-verschaerfen.patch`). **Gebaut, aber von Gregor nicht beurteilt:** die Verschärfung liegt im Zweig `zertifikate` (Commit `b3be298`) — dort hängen beide Fehlercodes am schon vorhandenen Zweig für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, `iOK` bleibt 0, die Verbindung wird abgelehnt, und der Anwender sieht `IDS_CERTERR_CHAINNOTTRUSTED` |
+| — | **eine IMAP-Aufgabe bleibt in der Warteschlange stehen** und wird nie gestartet — *„Waiting in the task queue to be started …"* | Nebenbefund **ohne Nummer**, von Gregor am 11.09.2026 an 1.0.48 gemeldet, mit Bildschirmfoto: eine Aufgabe *Resyncing* steht in der Liste, und beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht die Zertifikatsprüfung** — im selben Lauf stand die IMAP-Verbindung und eine Mail kam an. **Drei Ursachen ausgeschlossen:** `CanScheduleTask` blockiert nur POP-Empfang derselben Persönlichkeit (`QCTaskManager.cpp:383-390`); die verzögerte Einreihung scheidet aus, weil `DelayTasks` und `StartTasks` **niemand aufruft** (beide tot); die Obergrenze `MaxConcurrentTasks` steht auf 10 und ist bei einer Aufgabe nicht erreicht. **Offener Verdacht:** `StartWorkerThread` prüft `pTaskInfo->m_pThread` auf NULL und tut bei NULL **nichts** — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`); darüber steht ein `ASSERT`, das im Freigabebau nichts tut. Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in einer Zeile nennt |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
@@ -104,6 +105,57 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 ---
 
 
+
+## 7.2.0.48 — die Zertifikatsprüfung nimmt nicht mehr alles an
+
+**Was Gregor damit tun kann:** darauf vertrauen, dass eine TLS-Verbindung
+abgelehnt wird, deren Zertifikatskette Eudora nicht verifizieren konnte.
+**Von ihm am 11.09.2026 bestätigt** — IMAP läuft damit unverändert weiter.
+
+Bisher behandelte der Verifikations-Callback zwei OpenSSL-Prüffehler als
+Erfolg:
+
+```c
+case X509_V_ERR_CERT_UNTRUSTED:                  /* 27 */
+case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE: /* 21 */
+    iOK = 1;
+    break;
+```
+
+`iOK` ist der Rückgabewert des Callbacks. `iOK = 1` sagt OpenSSL ausdrücklich
+**„Zertifikat in Ordnung"** — der Fehler wurde also nicht übergangen, sondern
+ins Gegenteil verkehrt. Anders als in allen benachbarten Zweigen wurde weder
+ein Fehlercode gesetzt noch eine Warnung angehängt; der Anwender bekam nichts
+zu sehen. Fehler 27 stammt aus `check_trust()` und tritt im gewöhnlichen
+Kettenaufbau auf, nicht nur in Randfällen.
+
+Jetzt hängen beide Codes am bereits vorhandenen, korrekt ausgeführten Zweig
+für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`. `iOK` bleibt 0, die
+Verbindung wird abgelehnt, und der Anwender sieht
+`IDS_CERTERR_CHAINNOTTRUSTED`.
+
+**Der Ausweg bleibt:** der `switch` wird nur erreicht, wenn das Zertifikat
+nicht schon im vom Anwender bestätigten Speicher liegt. Die Einzelfreigabe
+geht weiter, weg fällt die pauschale Annahme.
+
+**Gemessen an Gregors Konten:** `Open 212.227.17.186:993` und
+`Successfully retrieved markus.bakus@gmx.de` — GMX' Kette hält der echten
+Prüfung stand. Die pauschale Annahme war also nicht nötig, um seine Konten zu
+erreichen. Der Verdacht, Eudoras `rootcerts.p7b` von 2006 könnte zu alt sein,
+ist damit für diese beiden Konten widerlegt.
+
+### Eine DLL, die im Paket fehlte
+
+Beim Bereitstellen fiel auf: der Bau erzeugte eine frische `QCSSL.dll`, im
+fertigen Paket lag aber die alte aus der Grundlage. Der Patch ändert genau
+diese eine DLL — Gregor hätte die unveränderte Prüfung getestet und nichts
+bemerkt. Aufgefallen ist es nur am **Zeitstempel**; `paket-pruefen.ps1` kennt
+die Datei nicht.
+
+Die Begründung im Bauskript stimmte, aber nur für den **Debug**-Bau: dort ist
+die DLL 4.645.376 B gegen 2.920.960 B in der Grundlage, also eine andere
+Bauart. Im **Release**-Bau sind es 2.921.472 B — dieselbe Bauart. `QCSSL.dll`
+kommt deshalb ab jetzt bei `-Bauart Release` mit.
 
 ## 7.2.0.47 — Kopfzeilen bleiben lesbar, auch auf schwarzem Grund (E-81)
 
