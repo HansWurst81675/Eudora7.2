@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 09.09.2026**, gemessen an Quellstand **7.2.0.29** / Paket **1.0.29**
+**Stand 11.09.2026**, gemessen an Quellstand **7.2.0.48** / Paket **1.0.48**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -284,7 +284,7 @@ abschreiben.
 
 ### B1 · Die Bedienfehler, die Gregor merkt
 
-**Neun sind behoben und von Gregor bestätigt** (Stand 09.09.2026): Doppelklick
+**Neun sind behoben und von Gregor bestätigt** (Stand 11.09.2026, seither sind **E-79**, **E-80** und **E-81** dazugekommen und ebenfalls bestätigt): Doppelklick
 und Suchtreffer öffnen die Nachricht (**E-28**), gesperrte Knöpfe zeigen ihr
 Symbol (**E-30**), eine Mail lässt sich schreiben und abschicken (Kriterium 5)
 und weiterleiten (Kriterium 6), Eudora **beendet sich** über alle drei Wege

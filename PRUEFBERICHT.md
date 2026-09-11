@@ -1,5 +1,11 @@
 # PRUEFBERICHT — unabhaengige Nachpruefung des Standes 371c1e3
 
+> **Dies ist ein abgeschlossener Bericht vom 30.08.2026 — nicht der aktuelle
+> Stand.** PRÜFER berichtet seither in `Befunde/PRUEFER-*.md`; der jüngste ist
+> [Befunde/PRUEFER-8.md](Befunde/PRUEFER-8.md) vom 11.09.2026 (vier Schranken
+> zu E-80, E-81 und der Zertifikatsprüfung, 55 Gegenproben). Was hier steht,
+> gilt für den Stand `371c1e3` und wird nicht fortgeschrieben.
+
 Geprueft von PRUEFER am 30.08.2026, Branch `pruefung-a8fcd110`, abgezweigt von
 `eudora-exe-linkt` (371c1e3 "Bau-Kennung in der Titelleiste, Schranke von
 Fehlalarmen befreit").
