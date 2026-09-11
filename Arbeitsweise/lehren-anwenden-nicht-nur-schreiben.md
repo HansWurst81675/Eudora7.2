@@ -134,3 +134,98 @@ Gedaechtnisverzeichnis uebernommen wird.
 
 Genau das ist der Fehler, gegen den diese Lehre geschrieben ist: eine Schranke,
 die schweigt statt zu greifen, ist so gut wie keine.
+
+
+## Nachtrag 11.09.2026: die Bilanz eines Tages — vier Schranken haben gegriffen, und alles andere musste Gregor finden
+
+Dieser Tag ist der bisher klarste Beleg für den Satz oben, weil er beide Seiten
+in einer einzigen Schicht zeigt.
+
+**Was eine Schranke gefangen hat — jedes Mal zu Recht, jedes Mal ohne dass
+Gregor fragen musste:**
+
+| Schranke | wie oft | was sie aufgehalten hat |
+|---|---|---|
+| `spuren-auswerten.pl` | **2×** | E-80 fehlte ganz in `SPURMARKEN.md`; danach Fließtext, wo eine Fassungsnummer oder „entfällt: …" hingehört |
+| `doku-pruefen.pl` | 1 Lauf, **2 Befunde** | drei MDs nannten noch 1.0.44; `Version.h` nur zur Hälfte auf 7.2.0.47 umgestellt |
+| `pruefe-doku-takt.pl` | **1×** | der CHANGELOG-Abschnitt zu 7.2.0.48 fehlte — der Paketbau brach ab, „zum ersten Mal hat der Takt funktioniert" |
+| `rollen-faellig.pl` | **1×** | CHRONIST überfällig, 45 geänderte Dateien in seinem Bereich — dieser Bericht ist das Ergebnis |
+
+**Was keine Schranke gefangen hat — und wer es stattdessen gefunden hat:**
+
+| Mangel | gefunden von |
+|---|---|
+| „genau acht" Kopfzeilen, gemessen zehn ([[ausreisser-ist-der-befund]]) | PRÜFER |
+| „175 echte Nachrichten", gemessen 134 ([[pruefen-statt-vermuten]]) | PRÜFER |
+| `taboo-rechnen.pl` rechnete mit der Liste von 2006 ([[pruefumfang-nicht-von-hand]]) | PRÜFER |
+| 43 IMAP-Dateien beim Übernehmen verloren ([[werkzeug-vor-eigenbau]]) | **Gregor**, am laufenden Programm |
+| CHANGELOG: falsche Reihenfolge, 7.2.0.45 fehlte ([[review-sieht-nur-den-diff]]) | **Gregor** |
+| `QCSSL.dll` fehlte im Paket ([[paket-gegen-den-bau-messen]]) | ein mitausgegebener Zeitstempel, also Zufall |
+
+**Der Befund ist nicht, dass ich an diesem Tag mehr Fehler gemacht habe als
+sonst.** Er ist, dass die Trennlinie exakt dort verläuft, wo eine Schranke
+steht: **kein einziger Mangel, für den es eine Prüfung gab, hat es bis zu Gregor
+geschafft** — und von den sechs, für die es keine gab, hat er zwei selbst finden
+müssen und einer wurde nur zufällig bemerkt.
+
+Dazu kommt der schärfste Einzelfall dieses Tages: `tools/rollen-faellig.pl`
+**gab es seit dem 08.09.2026**, es meldete richtig, und es hing an nichts. Drei
+Tage lang stand in [[daueraufgaben-brauchen-einen-takt]] geschrieben, es sei
+„noch nicht verdrahtet" — von mir geschrieben, von mir nicht verdrahtet. Eine
+fertige Schranke ohne Aufrufstelle wirkt so wenig wie eine Lehre, die nur Text
+ist; hier gab es beides gleichzeitig ([[werkzeug-vor-eigenbau]]).
+
+**Was daraus als Handgriff folgt:**
+
+- **Zu jedem Mangel, den nicht eine Schranke gefunden hat, gehört die Frage:
+  welche hätte ihn finden können?** Die Antwort ist entweder eine neue Prüfung
+  oder ein Satz, warum es keine geben kann. Beides gehört in den Bericht, nicht
+  in den Kopf.
+- **Ein Mangel, den Gregor gefunden hat, zählt doppelt.** Er ist zugleich ein
+  Befund über die Sache und einer über die fehlende Schranke
+  ([[fehlerklassen-abstellen]]).
+- **Eine neue Schranke wird am Tag ihrer Entstehung angeschlossen**, sonst ist
+  sie nicht entstanden.
+
+### Noch am selben Tag: die Spiegelung hat meine acht Arbeitskopien überschrieben
+
+Der Abschnitt darüber sagt, `tools/lehren-spiegeln.pl` finde aus einem
+Arbeitsbaum kein Gedächtnisverzeichnis und kehre still mit 0 zurück. **Das gilt
+nicht mehr — es findet es.** Beim ersten Commit-Versuch dieses Berichts, aus
+`Eudora7.2-wt-chronist`, hat der pre-commit-Hook gemeldet:
+
+```
+Arbeitsweise/ wurde aktualisiert (8 Datei(en)):
+  doku-parallel-nicht-hinterher.md
+  ...
+Der Commit wurde abgebrochen.
+```
+
+„Aktualisiert" heißt hier: **meine acht frisch geschriebenen Nachträge waren im
+Arbeitsbaum weg**, ersetzt durch die älteren Stände aus dem Gedächtnis.
+Nachgemessen: `grep -c "Nachtrag 11.09.2026"` lieferte danach **0**. Die Arbeit
+war nur deshalb nicht verloren, weil sie bereits im **Index** lag — ich hatte
+vor dem Commit `git add Arbeitsweise/` gefahren, um `pruefe-bytes.pl` gegen den
+Index laufen zu lassen. `git checkout -- Arbeitsweise/` hat sie zurückgeholt.
+
+**Die Richtung ist Gedächtnis → Repo, und sie ist nicht verhandelbar.** Wer eine
+Lehre nur im Repo ändert, schreibt in die Kopie; der nächste Hooklauf stellt den
+Stand der Quelle wieder her. Der Ablauf, der funktioniert hat, in dieser
+Reihenfolge:
+
+1. im Arbeitsbaum schreiben,
+2. **`git add Arbeitsweise/`** — der Index ist die einzige Sicherung gegen
+   Schritt 5,
+3. die geänderten Dateien ins Gedächtnisverzeichnis kopieren (der Hook nennt den
+   Pfad selbst),
+4. `perl tools/lehren-spiegeln.pl` von Hand fahren — es muss **stumm** sein;
+   jede Zeile „wurde aktualisiert" heißt, dass Repo und Gedächtnis noch
+   auseinanderlaufen,
+5. dann committen.
+
+**Was hier noch fehlt — Vorschlag an PRÜFER, nicht von mir gebaut:**
+`lehren-spiegeln.pl` überschreibt eine Arbeitskopie, ohne zu prüfen, ob sie von
+`HEAD` abweicht. Genau dann ist sie nämlich ungesicherte Arbeit. Es müsste in
+diesem Fall **abbrechen und die Datei nennen**, statt sie zu ersetzen — und das
+Wort „aktualisiert" durch „überschrieben" ersetzen, damit die Meldung sagt, was
+geschieht ([[anwenderdatei-nicht-erschlagen]], [[werkzeug-vor-eigenbau]]).

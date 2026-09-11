@@ -50,3 +50,5 @@
 - [Schranke liest nur Code](schranke-liest-nur-code.md) — Kommentare und Protokolltexte vor dem Suchen wegwerfen, Bereich am Rumpfende schließen; `pruefe-beenden.pl` hat sonst die eigene Begründung angeschwärzt
 - [Release erst nach Gregors Test](release-erst-nach-gregors-test.md) — ein Release ist eine Aussage nach außen; erst prüft er lokal, dann wird veröffentlicht
 - [Eingebaute Messung auslesen](eingebaute-messung-auslesen.md) — die Spurmarke zu E-70 lag drei Pakete lang ungelesen im Bau; der Einbau ist noch keine Messung
+- [Ausreißer ist der Befund](ausreisser-ist-der-befund.md) — was in der eigenen Messausgabe nicht ins Ergebnis passt, ist der Befund; „3x Referer“ machte aus acht Kopfzeilen zehn
+- [Werkzeug vor Eigenbau](werkzeug-vor-eigenbau.md) — erst in tools/WERKZEUGE.md nachsehen; ein fertiges Werkzeug ohne Aufrufstelle wirkt wie eine Lehre, die nur Text ist

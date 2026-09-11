@@ -129,3 +129,40 @@ Und: **wenn Gregor die Standardfrage stellt, ist die Antwort schon zu spaet.**
 Die Frage ist die Schranke, die ich mir selbst haette setzen muessen
 ([[daueraufgaben-brauchen-einen-takt]]). Ein „behoben" ist erst fertig, wenn
 kein MD es noch als offen fuehrt.
+
+## Nachtrag 11.09.2026: eine Fundstelle liegt außerhalb des Repos
+
+Punkt 1 dieser Lehre sagt: den alten Wert im **ganzen Baum** suchen. Am
+11.09.2026 hat sich gezeigt, dass der Baum nicht alle Fundstellen enthält.
+
+Die widerlegte Zahl „175 echte Nachrichten" (gemessen 134, siehe
+[[pruefen-statt-vermuten]]) stand in `BEFUNDE.md`, `CHANGELOG.md`, `README.md` —
+alle drei mit `grep -rn` zu finden, alle drei von `doku-pruefen.pl` erreichbar —
+**und in den Release Notes von v1.0.47**, veröffentlicht am 11.09.2026 um
+08:52 UTC. Die vierte Fundstelle steht in keinem `git ls-files`, wird von keiner
+Schranke gelesen und lässt sich nicht im selben Arbeitsschritt mitberichtigen,
+weil sie eine Veröffentlichung ist.
+
+Nachgemessen am 11.09.2026 gegen 14 Uhr:
+
+    gh release view v1.0.47 | grep -n "134\|175"
+
+Dort steht inzwischen **134**; die Notes sind nachträglich berichtigt worden,
+und im Repo führt nur noch `Befunde/PRUEFER-8.md` die 175 — als Beleg der
+Widerlegung, wo sie hingehört. Der Vorgang ist damit sauber abgeschlossen. Genau
+deshalb ist er hier festzuhalten: **die Berichtigung war ein eigener Handgriff
+nach der Veröffentlichung**, und nur weil PRÜFER nachgezählt hat, ist er
+überhaupt passiert.
+
+**Also gehört zu Punkt 1:**
+
+- **Die Release Notes sind eine Kopie der Doku und werden wie eine behandelt.**
+  Wer einen Wert ändert, der schon veröffentlicht wurde, sieht mit
+  `gh release view v<Nummer>` dort nach. Die Suche über `grep -rn --include=*.md`
+  findet diese Fundstelle nie.
+- **Was veröffentlicht ist, wird nicht mehr zurückgeholt.** Der Zeitpunkt, an dem
+  eine Zahl geprüft werden muss, liegt **vor** dem Release, nicht beim nächsten
+  Lektorat ([[release-erst-nach-gregors-test]], [[daueraufgaben-brauchen-einen-takt]]).
+- **Eine Zahl, die nach außen geht, bekommt vorher denselben Befehl daneben wie
+  jede andere.** Genau die Werte, die in eine Veröffentlichung wandern, schreibe
+  ich am ehesten aus dem Kopf ab.

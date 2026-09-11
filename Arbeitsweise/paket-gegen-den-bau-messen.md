@@ -56,3 +56,50 @@ Behebung nicht enthält ([[messung-muss-den-weg-treffen]]).
 
 Siehe [[version-eindeutig-machen]], [[lauffaehiges-ergebnis-liefern]],
 [[erst-pruefen-dann-anweisen]] und [[schranke-gegentesten]].
+
+## Nachtrag 11.09.2026: diesmal fehlte die eine DLL, auf die es ankam
+
+Punkt 2 oben verlangt, Zeitstempel und Größe der **Startkette** gegen das
+Bauverzeichnis zu legen: `Eudora.exe`, `QCSSL.dll`, `EudoraRes.dll`. Am
+11.09.2026 hat genau dieser Handgriff einen zweiten Fall gefangen — und zwar
+den, der am meisten gekostet hätte:
+
+| Datei | im Bau | im Paket |
+|---|---|---|
+| `QCSSL.dll` | 11.09., 10:56, **2.921.472 B** | 30.08., 17:57, **2.920.960 B** |
+
+Der Zertifikats-Patch dieses Tages ändert **genau diese eine DLL** und keine
+andere. Gregor hätte die unveränderte Prüfung getestet, nichts bemerkt und
+gemeldet, die Verschärfung wirke nicht — ein Testbericht über einen Bau vom
+30.08. ([[messung-muss-den-weg-treffen]]).
+
+**Zwei Dinge sind hier anders als am 08.09.:**
+
+1. **`paket-pruefen.ps1` hat geschwiegen, und zwar zu Recht: es kennt die Datei
+   nicht.** Seine Prüfliste ist von Hand gepflegt, `QCSSL.dll` stand nicht
+   darauf. Eine Schranke mit handgepflegtem Umfang prüft genau das nicht, woran
+   niemand gedacht hat ([[pruefumfang-nicht-von-hand]]).
+2. **Gefunden hat es nur der mitausgegebene Zeitstempel**, also ein Nebenprodukt,
+   kein Prüfschritt. Beim nächsten Mal steht dieselbe Datei vielleicht ohne
+   Zeitstempel da.
+
+Der Unterschied der beiden Bauarten erklärt, warum die DLL überhaupt fehlte:
+im **Debug**-Bau ist sie 4.645.376 B gegen 2.920.960 B in der Grundlage, also
+eine andere Bauart — deshalb wurde sie bewusst nicht übernommen. Im
+**Release**-Bau sind es 2.921.472 B, 512 Byte mehr als die Grundlage, dieselbe
+Bauart. Die Begründung im Bauskript stimmte, aber nur für eine der beiden
+Bauarten, und galt trotzdem für beide. Seither kommt `QCSSL.dll` bei
+`-Bauart Release` mit.
+
+**Also zusätzlich zu Punkt 2:**
+
+- **Die Prüfliste ist die Ausgabe des Baus, nicht eine Aufzählung.** Was der Bau
+  in `Eudora71/Bin/<Bauart>/` erzeugt hat, wird Datei für Datei gegen das Paket
+  gelegt; was der Bau erzeugt und im Paket **fehlt**, wird genannt. Das ist der
+  Vorschlag an PRÜFER; ich habe ihn nicht gebaut.
+- **Eine Begründung, die „nicht übernehmen" sagt, nennt die Bauart, für die sie
+  gilt.** Ein Satz ohne diese Angabe wird auf beide angewandt und ist dann in
+  einer von beiden falsch.
+- **Der Patch sagt, welche Datei zu prüfen ist.** Wer eine einzelne Quelldatei
+  ändert, weiß, welche Binärdatei sich bewegen muss — und misst genau diese im
+  Paket nach, bevor er das Paket meldet.
