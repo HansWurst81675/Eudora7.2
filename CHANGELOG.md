@@ -245,7 +245,7 @@ als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
 2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
 aber nicht `DKIM-`.
 
-Nachgerechnet an **175 echten Nachrichten aus sechs Postfächern**
+Nachgerechnet an **134 echten Nachrichten aus sechs Postfächern**
 (`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
 lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
 **über 60 Kopfzeilenarten** stehen:
@@ -262,8 +262,10 @@ Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
 
 **16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
 damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
-neuen Liste lässt genau **acht** Kopfzeilen übrig: `From`, `To`, `Cc`, `Bcc`,
-`Subject`, `Date`, `Reply-To`, `Sender`.
+neuen Liste lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`,
+`Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`. Das letzte ist ein
+Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft
+`Referer: ` deshalb nicht. Ein Einzeiler in der `.rc` würde ihn schließen.
 
 **Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
 Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026

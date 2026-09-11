@@ -152,6 +152,79 @@ if (Test-Path -LiteralPath $spurpruefer) {
   }
 }
 
+# --- Schranke: kein Paket ohne beschriebene Fassung ------------------------
+#
+# Gregor am 11.09.2026, nachdem Release v1.0.47 gebaut, gemergt und
+# veroeffentlicht war und er DANACH nach dem Lektor fragen musste:
+#
+#   "nein, lektor sollte vor dem commit und merge fertig sein, nicht
+#    hinterher laufen - vor allem nicht auf meine nachfrage!"
+#
+# und kurz darauf: "jedes mal das gleiche chaos bei dir."
+#
+# Die Ursache ist ein fehlender AUSLOESER, keine Nachlaessigkeit im
+# Einzelfall. Lektor, Pruefer und Chronist liefen, weil Gregor fragte. Der
+# Moment, an dem die Doku stehen muss, ist das Paket - also hier, an
+# derselben Stelle wie die Spurmarken-Schranke darueber.
+$dokupruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-doku-takt.pl'
+if (Test-Path -LiteralPath $dokupruefer) {
+
+  $perlD = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlD) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlD = $k; break }
+    }
+  }
+
+  if (-not $perlD) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Doku-Pruefung konnte'
+    Write-Host '  nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlD $dokupruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Erst den CHANGELOG-Abschnitt fuer diese Fassung'
+    Write-Host '  schreiben und den Abschnitt "Noch offen" nachziehen -'
+    Write-Host '  VOR dem Paket, nicht auf Nachfrage danach.'
+    Write-Host ''
+    exit 1
+  }
+
+  # --- Schranke: kein Paket, solange eine Rolle ueberfaellig ist ----------
+  #
+  # rollen-faellig.pl gibt es seit dem 08.09.2026 und es meldet richtig -
+  # es war nur nie angeschlossen. In der Lehre stand dazu "noch nicht
+  # verdrahtet, weil sie heute abweist - Entscheidung liegt bei Gregor".
+  # Am 11.09.2026 hat er entschieden: "du behaeltst den ueberblick, nicht
+  # ich." Eine fertige Schranke, die nicht angeschlossen ist, wirkt so
+  # wenig wie eine Lehre, die nur Text ist.
+  #
+  # Wer eine Rolle gerade beauftragt hat, meldet das mit
+  #   perl tools/rollen-faellig.pl --laufend LEKTOR
+  $rollenpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'rollen-faellig.pl'
+  if (Test-Path -LiteralPath $rollenpruefer) {
+    & $perlD $rollenpruefer
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host ''
+      Write-Host '  KEIN PAKET, solange eine Rolle ueberfaellig ist. Lektor,'
+      Write-Host '  Pruefer und Chronist gehoeren VOR die Auslieferung -'
+      Write-Host '  nicht auf Gregors Nachfrage danach.'
+      Write-Host ''
+      Write-Host '  Laeuft eine Rolle schon? Dann melden mit:'
+      Write-Host '      perl tools/rollen-faellig.pl --laufend LEKTOR'
+      Write-Host ''
+      exit 1
+    }
+  }
+}
+
 $ErrorActionPreference = 'Stop'
 
 $wurzel = Split-Path -Parent $PSScriptRoot
@@ -196,13 +269,21 @@ if ($AusBauverzeichnis) {
   # gescheitert ist (Befund S-1). Gemessen: paket-pruefen.ps1 meldet dann
   # "MSVCR71D.dll fehlt und wird beim Start gebraucht - von: EuMemMgr.dll".
   #
-  # QCSSL.dll steht bewusst NICHT in der Liste: die Fassung in der Grundlage
-  # ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind verschiedene
-  # Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  # QCSSL.dll steht im DEBUG-Bau bewusst NICHT in der Liste: die Fassung in
+  # der Grundlage ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind
+  # verschiedene Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  #
+  # Im RELEASE-Bau gilt das nicht: dort ist die DLL 2.921.472 B, also 512
+  # Byte groesser als die Grundlage - dieselbe Bauart. Sie MUSS dann mit,
+  # sonst geht jede Aenderung an QCSSL ins Leere. Gemessen am 11.09.2026:
+  # der Zertifikats-Patch aendert ausschliesslich qccertificate.cpp, der Bau
+  # erzeugte eine frische QCSSL.dll - und im Paket lag die alte vom 30.08.
+  # Aufgefallen nur am Zeitstempel; paket-pruefen.ps1 kennt die Datei nicht.
   $eigene = @(
     'Eudora.exe', 'EudoraRes.dll', 'EuLang.dll', 'Imap.dll',
     'QCSocket.dll', 'QCUtils.dll', 'plstclnt.dll'
   )
+  if ($Bauart -eq 'Release') { $eigene += 'QCSSL.dll' }
   $n = 0
   foreach ($d in $eigene) {
     $q = Join-Path $binBau $d
