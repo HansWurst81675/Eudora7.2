@@ -58,54 +58,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
-
-Im Repo liegen **Änderungen, die in keinem Paket stecken**: die zweite Ursache
-von **E-66** (Trennbalken rechts) und **E-63** (Kurzhinweis der letzten Karte),
-beide gebaut und
-fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
-**Filtern**, Gregors nächstem Gebiet.
-
-`Eudora71/Version.h` und `VERSION` stehen deshalb schon auf **7.2.0.30 /
-1.0.30**, obwohl es dieses Paket noch nicht gibt. Der Grund steht im
-Abschnitt 7.2.0.30: der Bau vom 09.09.2026 trug **7.2.0.29** — dieselbe Nummer
-wie das veröffentlichte Paket, aber anderen Code. Wer daraus ein Paket
-geschnürt hätte, hätte zwei verschiedene Bauten unter derselben Kennung
-ausgeliefert (Befund **V-1**, Gregors Regel dazu: *„version muß eindeutig
-sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
-
-> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
-> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
-> Komma-Format, heute `7,2,0,29`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
-> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
-> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
-> es gehört aber trotzdem mit hochgesetzt.
-
-> **Berichtigt am 09.09.2026 (LEKTOR, L-11).** Hier stand bis dahin eine
-> Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
-> darunter *„E-37: nur die ANZEIGE behoben"* und *„32 Spurmarken für E-33"*.
-> **Beides ist überholt und widersprach schon der Überschrift dieses
-> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von **E-43**,
-> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
-> liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
-> die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
-> ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
-> was nicht in seinem Paket steckt — die Werkzeuge der letzten Bauten stehen
-> in den Abschnitten zu
-> 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
-
-> **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
-> `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
-> **E-32** als Behebung der modalen Meldung. Beides war falsch: die
-> E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
-> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
-> (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
-> wichtig, daß keine lügen im main stehen!"*
-
----
-
-
-
 ## 7.2.0.48 — die Zertifikatsprüfung nimmt nicht mehr alles an
 
 **Was Gregor damit tun kann:** darauf vertrauen, dass eine TLS-Verbindung
@@ -212,6 +164,59 @@ Behoben in **beiden** Ansichten über die registrierte Botschaft
 `umsgButtonSetCheck` — der Weg, den `summary.cpp:2518-2520` für zwei andere
 Knöpfe schon benutzt.
 
+## 7.2.0.45 — der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80, Teil 1)
+
+Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
+erwartung: doppelklick auf mail: je nach button wird der header angezeigt
+oder ausgeblendet. aktuell: er wird immer angezeigt."*
+
+**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
+eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
+als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
+2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
+aber nicht `DKIM-`.
+
+Nachgerechnet an **134 echten Nachrichten aus sechs Postfächern**
+(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
+lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
+**über 60 Kopfzeilenarten** stehen:
+
+| Kopfzeile | kam vor | Kopfzeile | kam vor |
+|---|---|---|---|
+| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
+| `Authentication-Results` | 70× | `X-Mailer` | 55× |
+| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
+| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
+| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
+
+Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
+
+**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
+damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
+neuen Liste lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`,
+`Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`. Das letzte ist ein
+Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft
+`Referer: ` deshalb nicht. Ein Einzeiler in der `.rc` würde ihn schließen.
+
+**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
+Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
+abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
+`Subject` — und keine einzige technische.
+
+**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
+`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
+angefasst. Wer alles sehen will, drückt den Knopf oder setzt
+`ShowAllHeaders=1`.
+
+**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
+`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
+nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
+(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
+sah es so aus, als steche der Content Concentrator den Knopf aus
+(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
+Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
+Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
+
 ## 7.2.0.44 — Messfassung für die Spaltenbreite im Filterfenster
 
 **Was Gregor damit tun kann:** die Ursache dafür messen, dass die linke
@@ -284,59 +289,6 @@ schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
 **Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
 dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
 gescheitert.
-
-### Der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80)
-
-Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
-erwartung: doppelklick auf mail: je nach button wird der header angezeigt
-oder ausgeblendet. aktuell: er wird immer angezeigt."*
-
-**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
-eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
-als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
-2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
-aber nicht `DKIM-`.
-
-Nachgerechnet an **134 echten Nachrichten aus sechs Postfächern**
-(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
-lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
-**über 60 Kopfzeilenarten** stehen:
-
-| Kopfzeile | kam vor | Kopfzeile | kam vor |
-|---|---|---|---|
-| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
-| `Authentication-Results` | 70× | `X-Mailer` | 55× |
-| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
-| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
-| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
-
-Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
-
-**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
-damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
-neuen Liste lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`,
-`Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`. Das letzte ist ein
-Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft
-`Referer: ` deshalb nicht. Ein Einzeiler in der `.rc` würde ihn schließen.
-
-**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
-Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
-abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
-`Subject` — und keine einzige technische.
-
-**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
-`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
-angefasst. Wer alles sehen will, drückt den Knopf oder setzt
-`ShowAllHeaders=1`.
-
-**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
-`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
-nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
-(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
-sah es so aus, als steche der Content Concentrator den Knopf aus
-(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
-Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
-Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
 
 ## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
 
@@ -1036,6 +988,54 @@ schreibt.
    der Marke `E-66 Streifen:`.
 3. Danach die **`eudora.log`** schicken, ganz gleich ob es geht oder nicht.
    Geht es, steht dort warum; geht es nicht, steht dort auch warum.
+
+## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
+
+Im Repo liegen **Änderungen, die in keinem Paket stecken**: die zweite Ursache
+von **E-66** (Trennbalken rechts) und **E-63** (Kurzhinweis der letzten Karte),
+beide gebaut und
+fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
+**Filtern**, Gregors nächstem Gebiet.
+
+`Eudora71/Version.h` und `VERSION` stehen deshalb schon auf **7.2.0.30 /
+1.0.30**, obwohl es dieses Paket noch nicht gibt. Der Grund steht im
+Abschnitt 7.2.0.30: der Bau vom 09.09.2026 trug **7.2.0.29** — dieselbe Nummer
+wie das veröffentlichte Paket, aber anderen Code. Wer daraus ein Paket
+geschnürt hätte, hätte zwei verschiedene Bauten unter derselben Kennung
+ausgeliefert (Befund **V-1**, Gregors Regel dazu: *„version muß eindeutig
+sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
+
+> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
+> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
+> Komma-Format, heute `7,2,0,29`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
+> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
+> es gehört aber trotzdem mit hochgesetzt.
+
+> **Berichtigt am 09.09.2026 (LEKTOR, L-11).** Hier stand bis dahin eine
+> Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
+> darunter *„E-37: nur die ANZEIGE behoben"* und *„32 Spurmarken für E-33"*.
+> **Beides ist überholt und widersprach schon der Überschrift dieses
+> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von **E-43**,
+> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
+> liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
+> die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
+> ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
+> was nicht in seinem Paket steckt — die Werkzeuge der letzten Bauten stehen
+> in den Abschnitten zu
+> 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
+
+> **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
+> `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
+> **E-32** als Behebung der modalen Meldung. Beides war falsch: die
+> E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
+> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
+> (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
+> wichtig, daß keine lügen im main stehen!"*
+
+---
+
+
 
 ## 7.2.0.30 — Trennbalken rechts, Kurzhinweis der letzten Karte (in Arbeit)
 

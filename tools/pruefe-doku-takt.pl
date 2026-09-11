@@ -179,7 +179,67 @@ if (defined $offen_jahr) {
     push @mangel, "CHANGELOG.md hat keinen Abschnitt '## Noch offen (Stand TT.MM.JJJJ)'";
 }
 
+# --- 5. Reihenfolge und Luecken der Fassungsabschnitte ---------------------
+# Gregor am 11.09.2026: "reihenfolge stimmt nicht: oben 2.29 / dann 0.47 /
+# 0.46 / ..." Zwei Maengel auf einmal, die die Pruefungen darueber beide
+# nicht sehen: ein Zwischenstandsabschnitt vom 09.09. stand ganz oben, und
+# 7.2.0.45 fehlte als Abschnitt ganz - der Text steckte als
+# "###"-Unterabschnitt mitten in 7.2.0.44.
+my @abschnitte;
+while ($cl =~ /^##\s+(\d+\.\d+\.\d+\.\d+)/mg) {
+    push @abschnitte, $1;
+}
+
+if (@abschnitte >= 2) {
+    # Absteigend? Die juengste Fassung gehoert nach oben.
+    my $letzte;
+    my $unordnung = 0;
+    for my $a (@abschnitte) {
+        my ($nr) = $a =~ /(\d+)$/;
+        if (defined $letzte and $nr >= $letzte) {
+            push @mangel,
+              "CHANGELOG.md: Abschnitt '$a' steht hinter einer aelteren "
+            . "Fassung - die Abschnitte muessen absteigend stehen, die "
+            . "juengste Fassung oben";
+            $unordnung = 1;
+            last;
+        }
+        $letzte = $nr;
+    }
+    push @gut, sprintf('%d Fassungsabschnitte, absteigend geordnet', scalar @abschnitte)
+        unless $unordnung;
+
+    # Luecken: zwischen der juengsten und der aeltesten genannten Fassung
+    # darf keine Nummer fehlen, die es als Paket gegeben hat.
+    my %da = map { my ($n) = $_ =~ /(\d+)$/; ($n => 1) } @abschnitte;
+    my ($hoch) = $abschnitte[0]  =~ /(\d+)$/;
+    my ($tief) = $abschnitte[-1] =~ /(\d+)$/;
+    my @fehlt;
+    for my $i ($tief .. $hoch) {
+        push @fehlt, $i unless $da{$i};
+    }
+    # BEKANNTE ALTLAST, nicht jedes Mal neu melden: fuer 7.2.0.36, .37 und
+    # .38 gab es Pakete (Releases/Eudora72-1.0.3{6,7,8}-release), aber nie
+    # einen CHANGELOG-Abschnitt. Am 11.09.2026 von dieser Pruefung gefunden
+    # und bewusst stehengelassen - sie nachzuschreiben waere Archaeologie,
+    # und der Zweck der Schranke ist, dass NEUE Luecken auffallen.
+    # Wer sie nachtraegt, streicht die Nummer hier.
+    my %altlast = map { $_ => 1 } (36, 37, 38);
+    my @echt = grep { $_ >= 36 and not $altlast{$_} } @fehlt;
+    my @bekannt = grep { $altlast{$_} } @fehlt;
+    push @gut, 'bekannte Luecke ohne Abschnitt: 7.2.0.' . join(', 7.2.0.', @bekannt)
+        if @bekannt;
+    if (@echt) {
+        push @mangel,
+          "CHANGELOG.md: kein Abschnitt fuer 7.2.0." . join(', 7.2.0.', @echt)
+        . " - eine Fassung ohne Abschnitt ist eine Blackbox";
+    } else {
+        push @gut, "keine Luecke ab 7.2.0.36";
+    }
+}
+
 # --- Ausgabe ---------------------------------------------------------------
+
 unless ($leise and not @mangel) {
     print "\n  ------------------------------------------------------------\n";
     print "  pruefe-doku-takt\n";
