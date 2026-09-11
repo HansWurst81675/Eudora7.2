@@ -7,7 +7,7 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 | | |
 |---|---|
 | **Quellstand** | 7.2.0.44 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.44 (`VERSION`) |
+| **Paketnummer** | 1.0.47 (`VERSION`) |
 | **Zuletzt gebaut und gepackt** | Paket **1.0.43** — auf GitHub als `v1.0.43` veroeffentlicht, SHA256 `e68d8a8a579c6644…`. **1.0.44 ist in Arbeit** |
 | **Zuletzt von Gregor bestätigt** | **1.0.44 am 10.09.2026**: *„filter fenstergröße nach neustart gespeichert: PASS"* (**E-70**) und *„filter funktionieren"* (**E-64**, **E-72**, **E-75**). Davor 1.0.29 mit *„1-6, ok"* zu E-54 bis E-58 und E-61, dazu E-65/E-66 (*„1. ja / 2. ja / 3. ja"*) |
 | **Was als Nächstes zu messen ist** | **E-44 — die Spur, die aus E-70 herausfiel.** Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* kommt bei **jedem** Start, und ihre Begründung stimmt nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). Der Zustand ist also gespeichert und wird nicht angewandt. Zwei Marken `E-44 nach SetDockState:` und `E-44 vor/nach LoadWazooBarConfig:` liegen seit 7.2.0.43 im Bau, **noch nicht gebaut**. Das könnte auch erklären, warum Fenster nach einem Neustart nicht im Vollbild stehen |

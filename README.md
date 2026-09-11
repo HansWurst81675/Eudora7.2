@@ -182,6 +182,9 @@ und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
 | `SSLSendUse`, `SSLReceiveUse` | `[Settings]` | **2** | 0 | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
 | `CtrlJMapping` | `[Settings]` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
 
+| `TabooHeaders` | `[Settings]` | Originalliste **plus 16 Einträge** | 28 Einträge, Stand 2006 | Welche Kopfzeilen der Knopf *Blah Blah Blah* versteckt. Die eingebaute Liste kennt `X-UID`, aber nicht `X-`; `Received`, aber nicht `DKIM-`. An 175 echten Nachrichten nachgerechnet blieben damit über 60 technische Kopfzeilenarten stehen, darunter `DKIM-Signature` und `Authentication-Results`. Ergänzt sind `X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`. **Achtung:** ein Eintrag in der `Eudora.ini` **ersetzt** die Liste vollständig, er ergänzt sie nicht — wer etwas hinzufügen will, schreibt die ganze Liste hin |
+| `MessageStyleSheet` | `[Settings]` | plus eine Regel für `SPAN.EUDORAHEADER` | ohne diese Regel | Das Stylesheet der Nachrichtenansicht. Eudora schreibt die Kopfzeilen in **dasselbe** HTML-Dokument wie die Mail; ohne eigene Regel erben sie deren Hintergrund und sind bei einer Mail mit dunklem Grund unsichtbar. Die neue Regel setzt Vordergrund **und** Hintergrund — erst `black` auf `white`, dann dieselben Angaben als `windowtext`/`window` für den Fall, dass MSHTML die Systemfarben kennt. Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig und diese Regel entfällt |
+
 ### Wo ein Schlüssel stehen muss
 
 Eudora ordnet jeden INI-Schlüssel **automatisch** einem Abschnitt zu, allein
@@ -638,7 +641,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.44` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.47` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
