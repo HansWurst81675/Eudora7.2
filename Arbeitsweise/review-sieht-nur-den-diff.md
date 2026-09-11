@@ -59,3 +59,47 @@ Bestand — und nur das Zweite ist die Zusage, die er hören will.
 
 Siehe [[pruefumfang-nicht-von-hand]], [[doku-parallel-nicht-hinterher]],
 [[main-muss-immer-baubar-sein]] und [[nie-direkt-auf-main]].
+
+## Nachtrag 11.09.2026: eine Schranke, die nur den neuesten Eintrag prüft, prüft den Diff
+
+Diese Lehre handelte bisher von **Menschen**, die den Diff lesen. Am 11.09.2026
+hat eine frisch gebaute **Schranke** denselben Zuschnitt gehabt.
+
+`tools/pruefe-doku-takt.pl` ist am Vormittag entstanden und prüfte, ob
+`CHANGELOG.md` einen Abschnitt für den **aktuellen** Quellstand aus `Version.h`
+hat. Sie hat noch am selben Tag zu Recht ein Paket verweigert, weil der
+Abschnitt zu 7.2.0.48 fehlte. Was sie nicht sehen konnte, war der **Bestand
+darüber und darunter** — und dort lagen zwei Mängel, die Gregor selbst finden
+musste:
+
+> *„reihenfolge stimmt nicht: oben 2.29 / dann 0.47 / 0.46 / ..."*
+
+1. Ein Zwischenstandstext vom 09.09. („Nach 1.0.29 — es wird an 7.2.0.30
+   gearbeitet") stand **ganz oben**, vor allen Fassungsabschnitten.
+2. **7.2.0.45 fehlte als Abschnitt ganz.** Der Text dazu steckte als
+   `###`-Unterabschnitt mitten in 7.2.0.44 — mein eigener Einfügefehler: ich
+   hatte an `## 7.2.0.44` verankert, statt einen eigenen Fassungsabschnitt
+   anzulegen.
+
+Beide Mängel sind **unveränderte alte Zeilen**. Kein Diff zeigt sie, und eine
+Prüfung, die nur nach dem neuesten Abschnitt fragt, ebenso wenig. Die Schranke
+kann es seit `a788753`: Abschnitte müssen absteigend stehen, und zwischen der
+jüngsten und der ältesten genannten Fassung darf keine Nummer fehlen. **Beim
+ersten scharfen Lauf hat sie sofort drei weitere Lücken gefunden** — 7.2.0.36,
+.37 und .38 haben Pakete, aber nie einen Abschnitt bekommen. Sie stehen jetzt
+als benannte Altlast in der Schranke, damit **neue** Lücken auffallen.
+
+**Also gehört zu Punkt 1 und 2 dieser Lehre:**
+
+- **Eine Schranke wird danach beurteilt, ob sie den Bestand oder die Änderung
+  prüft.** „Gibt es einen Abschnitt für den aktuellen Stand?" ist eine
+  Diff-Frage. „Sind alle Abschnitte da und in der richtigen Ordnung?" ist eine
+  Bestandsfrage. Nur die zweite hält, was der Merge verspricht.
+- **Bei jeder Liste, die über die Zeit wächst** — Fassungen, Befundkennungen,
+  Paketnummern — wird zusätzlich **Reihenfolge und Lückenlosigkeit** geprüft,
+  nicht nur die Existenz des neuesten Eintrags. Das ist billig und fängt genau
+  die Fehler, die niemand mehr ansieht.
+- **Altlasten werden benannt und gezählt, nicht stillschweigend ausgenommen.**
+  Drei fehlende Abschnitte stehen im Skript mit Nummer; wer sie nachträgt,
+  streicht sie dort. Eine stille Ausnahme wäre wieder eine Namensliste
+  ([[pruefumfang-nicht-von-hand]]).

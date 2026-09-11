@@ -141,3 +141,60 @@ Stelle richtig ist.
 
 Siehe [[eingebaute-messung-auslesen]] — der zweite Teil desselben Vorfalls:
 die Spurmarken, die es gesagt haetten, lagen seit vier Fassungen im Bau.
+
+---
+
+## Nachtrag 11.09.2026 — „175 echte Nachrichten": die Zahl war nie reproduzierbar
+
+Oben steht seit dem 29.08.2026 der Satz: *keine Zahl ohne den Befehl, der sie
+erzeugt hat — und den Befehl daneben schreiben, damit der nächste sie nachrechnen
+kann statt sie zu glauben.* Am 11.09.2026 habe ich genau das wieder nicht getan.
+
+Zu Befund E-80 habe ich geschrieben, die Rechnung sei an **175 echten
+Nachrichten aus sechs Postfächern** gefahren worden. PRÜFER hat nachgezählt
+(`Befunde/PRUEFER-8.md`, 2.3): **134**. „Sechs Postfächer" stimmt — sieben
+`.mbx`, davon `Trash.mbx` leer. Die 175 kommt in keinem Bestand heraus; mit den
+Sicherungskopien `In.mbx.001` und `In.mbx.002` wären es 200.
+
+**Der Schaden ist nicht die Zahl, sondern ihre Verbreitung.** Sie stand am Ende
+in `BEFUNDE.md`, `CHANGELOG.md`, `README.md` **und in den veröffentlichten
+Release Notes von v1.0.47** (11.09.2026, 08:52 UTC) — also auch an einer Stelle,
+die keine Schranke des Projekts je wieder liest. Eine ungemessene Zahl wandert
+innerhalb eines Arbeitstages aus meinem Kopf in eine Veröffentlichung. Alle vier
+Fundstellen sind inzwischen berichtigt, drei davon im Commit `fd62016`, die
+Release Notes von Hand danach ([[doku-parallel-nicht-hinterher]]).
+
+### Der Befehl, der sie erzeugt — und was er nebenbei zeigt
+
+    cat <Laufverzeichnis>/Mailverzeichnis/*.mbx | grep -c "^From ???@???"
+
+Gefahren am 11.09.2026, 14 Uhr, über alle Laufverzeichnisse:
+
+| Laufverzeichnis | Trennerzeilen |
+|---|---|
+| `Eudora72-1.0.42-release` | 87 |
+| `1.0.43` bis `1.0.47-release` | **134** |
+| `Eudora72-1.0.48-release` | **148** |
+
+Damit ist PRÜFERs 134 bestätigt — **und zugleich ist die 148 der Beleg dafür,
+warum eine nackte Zahl hier gar nicht tragen kann**: Gregor arbeitet in 1.0.48,
+seit der Messung heute Vormittag sind vierzehn Nachrichten dazugekommen. Die
+Messgröße wächst, während ich über sie schreibe.
+
+**Was daraus folgt, zusätzlich zu den Punkten oben:**
+
+8. **Eine Zahl, die ich in eine MD schreibe, bekommt den Befehl mit**, der sie
+   erzeugt — in derselben Zeile oder direkt darunter, ausführbar. Was sich nicht
+   in einen Befehl fassen lässt, ist eine Schätzung und wird so genannt.
+9. **Zu einer Zahl über einen fremden Datenbestand gehören Ort und Zeitpunkt.**
+   „134 Nachrichten" ist keine Eigenschaft des Projekts, sondern eine Ablesung:
+   *134, gemessen am 11.09.2026 in `1.0.47-release`*. Ohne beides veraltet der
+   Satz, ohne dass jemand etwas falsch gemacht hätte.
+10. **Vor dem Veröffentlichen wird jede Zahl der Release Notes gegen ihre Quelle
+    gefahren, nicht gegen die MD, aus der ich sie kopiere.** Abschreiben
+    vervielfältigt nur den Fehler ([[doku-parallel-nicht-hinterher]]).
+11. **Wenn eine Zahl sich nicht reproduzieren lässt, wird sie ersetzt und der
+    Widerspruch genannt** — nicht gerundet, nicht stehen gelassen. „Ich kann
+    nicht sagen, woher die Zahl stammt; im heutigen Bestand kommt sie nicht
+    heraus" ist der Satz, den PRÜFER geschrieben hat, und er ist der richtige
+    ([[widerlegte-vermutungen-aufschreiben]]).

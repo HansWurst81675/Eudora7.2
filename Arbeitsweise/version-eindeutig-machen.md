@@ -74,3 +74,42 @@ Gregor gerade unter welchem Pfad ausfuehrt und aus welchem Commit sie stammt.
 Kann ich das nicht, darf ich ihn nicht um einen Test bitten.
 
 Siehe auch [[erst-pruefen-dann-anweisen]] und [[lauffaehiges-ergebnis-liefern]].
+
+## Nachtrag 11.09.2026: eine Nummer steht an mehr Stellen, als ich mir merke
+
+Punkt 2 oben verlangt, Verzeichnisname, Dateiversion und Titelzeile
+nebeneinanderzulegen. Am 11.09.2026 war die Fassung **innerhalb einer einzigen
+Datei** uneinheitlich, und zwar unauffällig:
+
+```
+#define EUDORA_VERSION4 44          <- alt
+#define EUDORA_BUILD_NUMBER    7,2,0,47
+#define EUDORA_BUILD_DESC      "Version 7.2.0.47\0"
+#define EUDORA_BUILD_VERSION   "7.2.0.47"
+```
+
+`EUDORA_VERSION1..4` gehen in die **Ressourcen der EXE** — das Feld, das
+Windows im Eigenschaftendialog anzeigt. Das Paket hätte also in einem Feld
+7.2.0.47 getragen und im anderen 7.2.0.44, und der Unterschied wäre erst bei
+Gregor sichtbar geworden, an genau der Stelle, an der er eine Fassung
+identifiziert.
+
+**Gefunden hat es `tools/doku-pruefen.pl`, Abschnitt 7** — also die Schranke
+dieser Lehre, im scharfen Lauf vor dem Commit (`3e8f289`). Danach wurde noch
+einmal komplett gebaut. Seit demselben Tag hält auch `tools/pruefe-doku-takt.pl`
+`VERSION` gegen die vier `EUDORA_VERSION*`-Makros, und zwar im Paketbau. Das ist
+der Fall, in dem die Bauart dieser Lehre funktioniert hat: **nicht gemerkt,
+sondern geprüft.**
+
+**Was ich daraus mitnehme, zusätzlich zu Punkt 2:**
+
+- **„Die Version hochsetzen" ist kein Handgriff, sondern eine Suche.** Der alte
+  Wert wird gesucht, nicht die Stelle, an der er „hingehört" — in `Version.h`
+  allein steht die Fassungsnummer an **vier** Stellen in drei Schreibweisen
+  (`44`, `7,2,0,44` und `"7.2.0.44"`).
+- **Zwei Schreibweisen derselben Zahl sind zwei Fundstellen.** Eine Suche nach
+  `7.2.0.44` findet `7,2,0,44` nicht. Wer eine Versionsnummer sucht, sucht auch
+  die Komma-Form und die nackte letzte Stelle.
+- **Nach dem Hochsetzen wird neu gebaut, nicht nachgebessert.** Eine berichtigte
+  `Version.h` über einem alten Bau ergibt eine EXE, die immer noch die alte
+  Nummer trägt ([[messung-muss-den-weg-treffen]]).
