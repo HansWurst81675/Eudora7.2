@@ -269,13 +269,21 @@ if ($AusBauverzeichnis) {
   # gescheitert ist (Befund S-1). Gemessen: paket-pruefen.ps1 meldet dann
   # "MSVCR71D.dll fehlt und wird beim Start gebraucht - von: EuMemMgr.dll".
   #
-  # QCSSL.dll steht bewusst NICHT in der Liste: die Fassung in der Grundlage
-  # ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind verschiedene
-  # Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  # QCSSL.dll steht im DEBUG-Bau bewusst NICHT in der Liste: die Fassung in
+  # der Grundlage ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind
+  # verschiedene Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  #
+  # Im RELEASE-Bau gilt das nicht: dort ist die DLL 2.921.472 B, also 512
+  # Byte groesser als die Grundlage - dieselbe Bauart. Sie MUSS dann mit,
+  # sonst geht jede Aenderung an QCSSL ins Leere. Gemessen am 11.09.2026:
+  # der Zertifikats-Patch aendert ausschliesslich qccertificate.cpp, der Bau
+  # erzeugte eine frische QCSSL.dll - und im Paket lag die alte vom 30.08.
+  # Aufgefallen nur am Zeitstempel; paket-pruefen.ps1 kennt die Datei nicht.
   $eigene = @(
     'Eudora.exe', 'EudoraRes.dll', 'EuLang.dll', 'Imap.dll',
     'QCSocket.dll', 'QCUtils.dll', 'plstclnt.dll'
   )
+  if ($Bauart -eq 'Release') { $eigene += 'QCSSL.dll' }
   $n = 0
   foreach ($d in $eigene) {
     $q = Join-Path $binBau $d
