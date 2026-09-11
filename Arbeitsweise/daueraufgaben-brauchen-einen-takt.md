@@ -8,7 +8,13 @@ metadata:
   modified: 2026-09-08T07:58:08.284Z
 ---
 
-Schranke: tools/rollen-faellig.pl (vor jedem Push; noch nicht in tools/hooks-einrichten.sh verdrahtet, weil sie heute abweist — Entscheidung liegt bei Gregor)
+Schranke: tools/rollen-faellig.pl UND tools/pruefe-doku-takt.pl, beide in tools/paket-bauen.ps1 eingehängt (seit 11.09.2026)
+
+> **Berichtigt am 11.09.2026.** Hier stand drei Tage lang „noch nicht verdrahtet, weil sie heute abweist — Entscheidung liegt bei Gregor". Das war der eigentliche Fehler: `rollen-faellig.pl` gab es seit dem 08.09., es meldete richtig und gab bei fälligen Rollen **1** zurück — es war nur an nichts angeschlossen. Eine fertige Schranke ohne Anschluss wirkt genauso wenig wie eine Lehre, die nur Text ist, und hier gab es beides gleichzeitig.
+>
+> Gregor am 11.09.2026, nachdem Release v1.0.47 gebaut, gemergt und veröffentlicht war und er danach nach dem Lektor fragen musste: *„nein, lektor sollte vor dem commit und merge fertig sein, nicht hinterher laufen - vor allem nicht auf meine nachfrage!"*, *„jedes mal das gleiche chaos bei dir."* und *„du behältst den überblick, nicht ich."* Damit ist die Entscheidung gefallen.
+>
+> **Eingehängt in den Paketbau, nicht in den Push-Haken.** Ein Haken, der jeden Push abweist, blockiert auch das Sichern von Zwischenständen — und laufende Arbeit zu sichern ist wichtiger, als dabei die Rollen im Takt zu haben. Ein Paket dagegen ist die Auslieferung: da muss die Doku stehen. Dieselbe Begründung wie bei `spuren-auswerten.pl`, der Schranke, die am 11.09.2026 zweimal gegriffen und mich zweimal zurückgeschickt hat — der Beleg, dass diese Bauart wirkt.
 
 # Eine Daueraufgabe ohne Auslöser läuft nicht
 
