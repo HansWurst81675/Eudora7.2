@@ -52,3 +52,4 @@
 - [Eingebaute Messung auslesen](eingebaute-messung-auslesen.md) — die Spurmarke zu E-70 lag drei Pakete lang ungelesen im Bau; der Einbau ist noch keine Messung
 - [Ausreißer ist der Befund](ausreisser-ist-der-befund.md) — was in der eigenen Messausgabe nicht ins Ergebnis passt, ist der Befund; „3x Referer“ machte aus acht Kopfzeilen zehn
 - [Werkzeug vor Eigenbau](werkzeug-vor-eigenbau.md) — erst in tools/WERKZEUGE.md nachsehen; ein fertiges Werkzeug ohne Aufrufstelle wirkt wie eine Lehre, die nur Text ist
+- [Fertig heißt fertig](fertig-heisst-fertig.md) — mergen, löschen, Release, Doku aktuell; kommt etwas nach, war es kein "fertig"
