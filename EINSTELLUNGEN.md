@@ -95,7 +95,7 @@ Mailverzeichnis ein eigenes Verzeichnis
 **Den Namen merkt sich die `Eudora.ini`** unter dem Schlüssel `AccountDir`
 (`Eudora71/Eudora/EudoraRes.rc:10439`), geschrieben in den Abschnitt der
 **Persönlichkeit** — nicht in den, der zur Nummer gehört
-(`QCImapMailboxDirector.cpp:214-236`, `WriteProfileString` auf `:226`). Daraus
+(`QCImapMailboxDirector.cpp:214-236`, `WriteProfileString` auf `:227`). Daraus
 folgt die Tücke: die `Eudora.ini` allein sieht vollständig aus und nennt ein
 Verzeichnis, das es nicht gibt. IMAP tut dann gar nichts.
 
