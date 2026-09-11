@@ -116,6 +116,7 @@ schranke pruefe-waechter.pl || exit $?
 #    prueft auch, ob die genannte Schranke wirklich in DIESER Datei steht.
 #    Es hat sich damit am 09.09.2026 selbst gefunden: es fehlte hier.
 schranke lehren-schranken.pl || exit $?
+schranke lehren-uebersicht.pl || exit $?
 
 # 9. Eigene Nachrichtenschleifen: WM_QUIT darf nicht verschluckt werden, und
 #    es darf nicht ohne Zeitschranke gewartet werden. Aus E-51 (meine eigene
@@ -207,6 +208,7 @@ echo "  6. tools/pruefe-beenden.pl   haelt das Beenden? (E-40..E-42)"
 echo "  7. tools/pruefe-waechter.pl  setzt ein nur teilweise ersetzter Header den"
 echo "                               Waechter des Originals? (E-43)"
 echo "  8. tools/lehren-schranken.pl hat jede Lehre eine greifende Schranke?"
+echo "  9. tools/lehren-uebersicht.pl deckt die Tabelle in Arbeitsweise/README.md den Bestand?"
 echo "  9. tools/pruefe-nachrichtenschleife.pl"
 echo "                               verschluckt eine eigene Schleife WM_QUIT?"
 echo "                               (E-51, E-61, E-62)"
