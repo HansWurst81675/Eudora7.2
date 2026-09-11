@@ -103,6 +103,79 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 
 
 
+## 7.2.0.44 — Messfassung für die Spaltenbreite im Filterfenster
+
+**Was Gregor damit tun kann:** die Ursache dafür messen, dass die linke
+Spalte im Filterfenster nach einem Neustart anders breit ist — ohne dass
+etwas geraten wird.
+
+Gemeldet am 11.09.2026 an 1.0.43: *„die breite der linken spalte beim filter
+wird nicht über den neustart gespeichert. auch wenn ich sie breiter gezogen
+habe."*
+
+### Zwei Ursachen, die erste davon meine
+
+**Der Schalter stand im falschen Abschnitt.** Eudora ordnet jeden INI-Schlüssel
+**automatisch** einem Abschnitt zu, allein nach seiner internen Nummer
+(`rs.cpp:88`):
+
+| Nummernbereich | Abschnitt |
+|---|---|
+| 10900 … 11100 | `[Window Position]` |
+| alles andere | `[Settings]` |
+
+`UseMyFilterWindowPosition` hat die Nummer **10922**. Gregor hatte ihn nach
+`[Settings]` geschrieben — weil `FILTER.md` behauptete, dort gehörten *alle*
+Schlüssel hin. Nachgemessen mit derselben Windows-Funktion, die Eudora
+benutzt:
+
+```
+[Window Position]  UseMyFilterWindowPosition = 0    ← das liest Eudora
+[Settings]         UseMyFilterWindowPosition = 1    ← das steht da
+```
+
+Ein Eintrag im falschen Abschnitt wird **stillschweigend ignoriert**. Für
+**23 der 38** dokumentierten Schlüssel war die Angabe falsch;
+[FILTER.md](FILTER.md) nennt den Abschnitt jetzt in jeder Tabellenzeile, und
+die Zuordnung wird aus `resource.h` und `EudoraRes.rc` gelesen statt von Hand
+gepflegt.
+
+**Und auch im richtigen Abschnitt bleibt der Wert nicht.** Gregors Messung:
+
+| | 08:08 | 08:18 |
+|---|---|---|
+| eingetragen | — | **312** |
+| danach in der Datei | 237 | **368** |
+| Breite der Filterleiste | 527 | 668 |
+
+`SetColumnInfo` setzt nur eine **Wunschbreite** (`FiltersWazooWnd.cpp:185`);
+wirksam wird sie erst durch die Neuberechnung, die das nachfolgende
+`PostMessage(WM_SIZE, …)` auslöst. Beim Schließen schreibt Eudora die
+**tatsächliche** Breite zurück (`:70`), nicht die gewünschte — weicht sie ab,
+schaukelt sich der Wert von Lauf zu Lauf auf.
+
+**In der VM tritt es nicht auf**, weil die Leiste dort schmaler ist. Es ist
+dieselbe Fassung: in beiden Protokollen steht `Version 7.2.0.43`.
+
+### Was diese Fassung dazu beiträgt
+
+Zwei Spurmarken, die die ganze Kette in je einer Zeile nennen:
+
+```
+E-79 geladen:   INI=312 Schalter=1 Elternbreite=668 Viertel=167
+                -> gesetzt=312, danach ist=368 min=0
+E-79 gesichert: ist=368 min=0 -> INI=368
+```
+
+Damit ist in einem einzigen Start-und-Beenden zu sehen, an welcher Stelle der
+Wert sich ändert. Sie hängen wie alle anderen an `DEBUG_MASK_MISC` und
+schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
+[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+
+**Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
+dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
+gescheitert.
+
 ## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
 
 **Was Gregor damit tun kann, was vorher gefährlich war:** über IMAP abrufen
