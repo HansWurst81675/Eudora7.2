@@ -9993,7 +9993,7 @@ BEGIN
     IDS_INI_BIG_MESSAGE_THRESHOLD "BigMessageThreshold\n40960"
     IDS_INI_NEW_MAIL_SOUND  "NewMailSound\n"
     IDS_INI_USER_TABOO_HEADERS 
-                            "TabooHeaders\nX-UID,Received,Status,X-UIDL,Message,In-Reply,X-Priority,Importance,Mime-Version,Content-,X-Persona,Resent-Message,References,Return,X400,X-400,Mail-System,Errors-To,X-List,Delivery,Disposition,X-Juno,Precedence,X-Attachments,X-MSMail,X-MimeOLE,X-Nav,X-Habeas"
+                            "TabooHeaders\nX-UID,Received,Status,X-UIDL,Message,In-Reply,X-Priority,Importance,Mime-Version,Content-,X-Persona,Resent-Message,References,Return,X400,X-400,Mail-System,Errors-To,X-List,Delivery,Disposition,X-Juno,Precedence,X-Attachments,X-MSMail,X-MimeOLE,X-Nav,X-Habeas,X-,DKIM-,ARC-,Authentication-Results,Envelope-To,Delivered-To,List-,Feedback-ID,Thread-,Accept-Language,User-Agent,Auto-Submitted,Autocrypt,UI-OutboundReport,UI-InboundReport,msip_"
 END
 
 STRINGTABLE 

@@ -176,6 +176,57 @@ schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
 dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
 gescheitert.
 
+### Der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80)
+
+Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
+erwartung: doppelklick auf mail: je nach button wird der header angezeigt
+oder ausgeblendet. aktuell: er wird immer angezeigt."*
+
+**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
+eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
+als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
+2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
+aber nicht `DKIM-`.
+
+Nachgerechnet an **175 echten Nachrichten aus sechs Postfächern**
+(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
+lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
+**über 60 Kopfzeilenarten** stehen:
+
+| Kopfzeile | kam vor | Kopfzeile | kam vor |
+|---|---|---|---|
+| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
+| `Authentication-Results` | 70× | `X-Mailer` | 55× |
+| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
+| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
+| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
+
+Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
+
+**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
+damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
+neuen Liste lässt genau **acht** Kopfzeilen übrig: `From`, `To`, `Cc`, `Bcc`,
+`Subject`, `Date`, `Reply-To`, `Sender`.
+
+**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
+Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
+abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
+`Subject` — und keine einzige technische.
+
+**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
+`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
+angefasst. Wer alles sehen will, drückt den Knopf oder setzt
+`ShowAllHeaders=1`.
+
+**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
+`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
+nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
+(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
+sah es so aus, als steche der Content Concentrator den Knopf aus
+(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
+Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
+Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
+
 ## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
 
 **Was Gregor damit tun kann, was vorher gefährlich war:** über IMAP abrufen
