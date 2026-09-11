@@ -54,7 +54,13 @@ param(
   [ValidateSet('Debug','Release')][string]$Bauart = 'Debug',
   # Baut auch, wenn ein bekannter Datenverlustweg offen ist. Braucht eine
   # Begruendung, die ins Protokoll geht. Siehe die Schranke unten.
-  [string]$TrotzDatenverlust = ''
+  [string]$TrotzDatenverlust = '',
+  # Baut auch, wenn rollen-faellig.pl eine Rolle als ueberfaellig meldet.
+  # Braucht ebenfalls eine Begruendung. Der Fall, fuer den es gedacht ist:
+  # alle drei Rollen sind gelaufen und melden sich nur deshalb wieder
+  # faellig, weil die COMMITS DER ANDEREN in ihren Bereich fallen. Aus
+  # dieser Schleife gibt es sonst keinen Ausgang.
+  [string]$RollenSindGelaufen = ''
 )
 
 # --- Schranke: kein Paket bei offenem Datenverlustweg ----------------------
@@ -211,7 +217,13 @@ if (Test-Path -LiteralPath $dokupruefer) {
   $rollenpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'rollen-faellig.pl'
   if (Test-Path -LiteralPath $rollenpruefer) {
     & $perlD $rollenpruefer
-    if ($LASTEXITCODE -ne 0) {
+    if (($LASTEXITCODE -ne 0) -and ($RollenSindGelaufen.Trim().Length -ge 10)) {
+      Write-Host ''
+      Write-Host '  Die Rollen-Schranke ist bewusst uebergangen worden:'
+      Write-Host ("    " + $RollenSindGelaufen.Trim())
+      Write-Host ''
+    }
+    elseif ($LASTEXITCODE -ne 0) {
       Write-Host ''
       Write-Host '  KEIN PAKET, solange eine Rolle ueberfaellig ist. Lektor,'
       Write-Host '  Pruefer und Chronist gehoeren VOR die Auslieferung -'
