@@ -547,6 +547,25 @@ void PgReadMsgView::OnBlahBlahBlah()
 	if (!pDoc)
 		return;
 
+	// BEHEBUNG ZU BEFUND E-80 (Gregor, 11.09.2026): "der bla bla button
+	// aendert nichts". Niemand schaltet den Knopfzustand um - GetCheck
+	// liest TBBS_CHECKED, und gesetzt wird das nur beim Anlegen des
+	// Fensters (ReadMessageFrame.cpp:498-503). Im Original erledigte das
+	// die Stingray-Leiste beim Klick selbst; der OTShim-Ersatz setzt
+	// TBBS_CHECKED nur ueber ON_UPDATE_COMMAND_UI, und so einen Eintrag
+	// gibt es fuer ID_BLAHBLAHBLAH nicht. Also schaltet die Ansicht
+	// selbst um - ueber denselben Weg, den summary.cpp:2518-2520 fuer
+	// zwei andere Knoepfe schon benutzt.
+	{
+		extern UINT umsgButtonSetCheck;
+		if (pParentFrame)
+		{
+			BOOL bVorherE80 = pParentFrame->GetCheck(ID_BLAHBLAHBLAH);
+			pParentFrame->SendMessage(umsgButtonSetCheck, ID_BLAHBLAHBLAH,
+				bVorherE80 ? FALSE : TRUE);
+		}
+	}
+
 	//	If we're reloading, then we'll redraw as we do so
 	ReloadAndConcentrateIfAppropriate(m_fRO, true);
 
