@@ -521,12 +521,14 @@ in `Eudora71/Eudora/EudoraRes.rc` im Format
 
 > **Achtung: nicht alles gehört nach `[Settings]`.** Eudora ordnet jeden
 > Schlüssel **automatisch** einem Abschnitt zu, allein nach seiner internen
-> Nummer (`rs.cpp:88`, `GetSectionID`):
+> Nummer (`GetSectionID`, `rs.cpp:89-97`):
 >
 > | Nummernbereich | Abschnitt |
 > |---|---|
-> | 10900 … 11100 | **`[Window Position]`** |
-> | alles andere | `[Settings]` |
+> | bis 10800 | `[Settings]` |
+> | 10801 … 10900 | **`[Debug]`** |
+> | 10901 … 11100 | **`[Window Position]`** |
+> | ab 11101 | `[Settings]` |
 >
 > Ein Eintrag im falschen Abschnitt wird **stillschweigend ignoriert** — kein
 > Fehler, keine Meldung, er wirkt einfach nicht. Genau das ist am 11.09.2026
@@ -535,9 +537,14 @@ in `Eudora71/Eudora/EudoraRes.rc` im Format
 > daran schuld** — sie behauptete, alle Schlüssel gehörten nach `[Settings]`.
 >
 > Welcher Abschnitt gilt, steht unten in jeder Tabelle in der Spalte
-> *Abschnitt*. Und weil Eudora vor der `Eudora.ini` **zuerst im Abschnitt
-> der Persönlichkeit** nachsieht (`rs.cpp:293`), schlägt ein dortiger Eintrag
-> beide — wer etwas in `[Persona-…]` stehen hat, ändert es dort.
+> *Abschnitt*. Nachschlagen lässt es sich auch:
+> `perl tools/pruefe-ini-abschnitte.pl --was <Name>`.
+>
+> Die vollständige Suchreihenfolge — Persönlichkeit, `Eudora.ini`,
+> `DEudora.ini`, eingebauter Wert — steht in [README.md](README.md) unter
+> *Wo ein Schlüssel stehen muss*. Wichtig für diese Tabellen ist daraus nur:
+> ein Eintrag im Abschnitt der **aktiven Persönlichkeit** (`[Persona-…]`)
+> schlägt beides — wer dort etwas stehen hat, ändert es dort.
 
 Wo diese Portierung abweicht, steht das dabei — die Begründungen stehen in
 [README.md](README.md), Abschnitt *Einstellungen, die es nur hier gibt*.
@@ -548,7 +555,7 @@ Wo diese Portierung abweicht, steht das dabei — die Begründungen stehen in
 |---|---|---|---|---|
 | `FilterIncomingMail` | `1` | `[Settings]` | `EudoraRes.rc:8131` | Eingangsfilter überhaupt laufen lassen |
 | `FilterReport` | `0` | `[Settings]` | `EudoraRes.rc:10287` | Filterbericht führen (*Getting Attention*) |
-| `FilterMayDeleteFromServer` | `0` | `filtersd.cpp:1219` | **gibt es nur hier.** Erlaubt der Aktion *Server Options → Delete*, auf dem Server zu löschen |
+| `FilterMayDeleteFromServer` | `0` | `[Settings]` | `filtersd.cpp:1132` | **gibt es nur hier.** Erlaubt der Aktion *Server Options → Delete*, auf dem Server zu löschen. Der Abschnitt steht fest im Quelltext, nicht über `GetSectionID` |
 | `FilterTransferName` | `0` | `[Settings]` | `EudoraRes.rc:10004` | wie das Zielpostfach auf der Schaltfläche steht: `0` Name, `1` Ordnerpfad, `2` Dateipfad (`controls.cpp:337-352`) |
 | `WarnBadFilterDir` | `1` | `[Settings]` | `EudoraRes.rc:7839` | warnen, wenn *Make Filter* ein Postfach außerhalb des Mailverzeichnisses anlegen soll (`MakeFilter.cpp:504`) |
 | `FilterFromFolder` | *leer* | `[Settings]` | `EudoraRes.rc:7840` | zuletzt benutzter Ordner für *Make Filter* nach **From** (`MakeFilter.cpp:278`) |
@@ -636,6 +643,12 @@ Aufruf ausdrücklich `bDontAllowOffline` mitgibt.
 **Was hilft:** die Verbindung einmal aufbauen und das Kennwort speichern
 lassen, oder bei POP filtern. Ein Filterlauf über ein **POP**-Postfach
 arbeitet rein lokal und fragt nichts.
+
+**Nicht zu verwechseln** mit der Kennwortfrage **beim Start**: die kommt
+nicht vom Filtern, sondern davon, dass Eudora ein beim Beenden offenes
+IMAP-Postfachfenster wieder herstellt. Dagegen hilft, das Fenster vorher zu
+schließen — [README.md](README.md), Abschnitt *Beim Start wird nach dem
+IMAP-Kennwort gefragt*.
 
 **Ein leeres Suchfeld trifft alles.** *„enthält nichts"* ist für jede
 Nachricht wahr. Verbunden mit *Transfer To* verschiebt so eine Regel das
