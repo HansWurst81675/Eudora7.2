@@ -7,7 +7,7 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 | | |
 |---|---|
 | **Quellstand** | 7.2.0.48 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.49 (`VERSION`) |
+| **Paketnummer** | 1.0.50 (`VERSION`) |
 | **Zuletzt gebaut und gepackt** | Paket **1.0.48** (Quellstand 7.2.0.48). Auf GitHub veröffentlicht ist `v1.0.47`; 1.0.48 liegt nur lokal unter `C:\Users\Gregor\Eudora72-1.0.48-release` |
 | **Zuletzt von Gregor bestätigt** | **1.0.48 am 11.09.2026**: die verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993. Davor an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
 | **Was als Nächstes zu messen ist** | **Der hängende Resync.** Gregor am 11.09.2026 an 1.0.48: eine IMAP-Aufgabe bleibt auf *„Waiting in the task queue to be started …"* stehen und wird nie gestartet; beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht** die Zertifikatsprüfung — im selben Lauf stand die Verbindung und eine Mail kam an. Drei Ursachen sind am Quelltext ausgeschlossen (siehe `CHANGELOG.md`, *Noch offen*); der offene Verdacht ist `StartWorkerThread`, das bei `m_pThread == NULL` **nichts** tut — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`). Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in **einer** Zeile nennt |

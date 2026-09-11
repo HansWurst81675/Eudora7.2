@@ -56,6 +56,60 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.50 — losgerissene Fenster behalten ihre Größe (E-84)
+
+**Was Gregor damit tun kann:** ein losgerissenes Fenster einmal auf die
+gewünschte Größe ziehen und es beim nächsten Start so wiederfinden. **Noch
+nicht von ihm bestätigt.**
+
+Gemeldet am 11.09.2026, unmittelbar nach der Bestätigung von E-76: *„das
+undocked initiale fenster ist recht klein, die größe (nach der änderung) wird
+nach dem schließen vom filter und eudora nicht gespeichert. beim nächsten mal
+wieder klein."*
+
+### Die Größe kam nie in die INI
+
+`SECControlBar::GetBarInfo` überträgt `m_szFloat` brav in die Info
+(`OTShim.cpp:2304`), `SetBarInfo` holt es zurück (`:2362`). Dazwischen liegt
+das Speichern — und dort ging es verloren:
+
+```c
+BOOL SECControlBarInfo::SaveState(LPCTSTR lpszProfileName, int nIndex)
+{
+    return CControlBarInfo::SaveState(lpszProfileName, nIndex);
+}
+```
+
+Eine reine Weiterleitung an MFC, und **MFC kennt `m_szFloat` nicht**. Die
+Stingray-Felder wurden in die Info geschrieben und beim nächsten Start nie
+gelesen.
+
+### Warum das so gebaut war — und warum es hier trotzdem geändert wird
+
+Der Kommentar in `SECControlBarInfo::Serialize` begründet, den SEC-Anteil
+wegzulassen: *„das Format müsste dann zum Original passen … eine eigene
+Erweiterung würde eine Datei erzeugen, die ein späterer echter Nachbau nicht
+mehr lesen kann."*
+
+**Das Argument gilt — für `Serialize`.** Die Funktion schreibt ein
+**Binärformat**, in dem ein zusätzliches Feld alles Nachfolgende verschiebt.
+`SaveState` und `LoadState` schreiben dagegen in die **INI**: ein zusätzlicher
+Schlüssel stört niemanden, der ihn nicht kennt, und fehlt er, gilt der
+bisherige Wert. `Serialize` bleibt deshalb unberührt.
+
+**Der erste Anlauf saß an der falschen Stelle.** Er stand in
+`SECControlBarInfo::SaveState` — und in der `Eudora.ini` kam kein einziger
+Eintrag an. Die Funktion wird beim Speichern gar nicht durchlaufen. Der
+tatsächliche Weg steht seit **E-70** im Baum: `QCToolBarManager::SaveState` →
+`SECToolBarManager::SaveState` → `GroessenSichern`, und dort wurden bis jetzt
+nur `DockVertCx` und `DockHorzCy` geschrieben — die **Andock**größen. Die
+schwebende Größe kam nirgends vor.
+
+Die Behebung hängt sich an denselben Mechanismus: zwei weitere Schlüssel,
+`FloatCx<id>` und `FloatCy<id>`, geschrieben und gelesen wie die beiden
+vorhandenen. Kein neuer Weg, keine zweite Stelle, die jemand übersehen kann. Eine Größe von `0` wird gar nicht erst geschrieben — sie
+wäre schlimmer als kein Eintrag, weil `LoadState` sie übernehmen müsste.
+
 ## 7.2.0.49 — das schwebende Filterfenster lässt sich nach unten ziehen (E-76)
 
 **Was Gregor damit tun kann:** ein freischwebendes Filterfenster nicht nur

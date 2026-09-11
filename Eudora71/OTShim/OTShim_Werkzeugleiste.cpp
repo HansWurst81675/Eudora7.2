@@ -4433,6 +4433,25 @@ void SECToolBarManager::GroessenSichern(LPCTSTR lpszAbschnitt) const
 		pApp->WriteProfileInt(lpszAbschnitt, szSchluessel,
 							  pBar->AndockgroesseHolen(TRUE));
 
+		// BEFUND E-84 (Gregor, 11.09.2026): "das undocked initiale fenster
+		// ist recht klein, die groesse (nach der aenderung) wird nach dem
+		// schliessen vom filter und eudora nicht gespeichert."
+		//
+		// Bis hierher wurden nur die ANDOCKgroessen gesichert. Die
+		// schwebende Groesse m_szFloat kam nirgends vor - und der Weg ueber
+		// SECControlBarInfo::SaveState, wo der erste Anlauf sass, wird beim
+		// Speichern gar nicht durchlaufen.
+		//
+		// Eine 0 wird nicht geschrieben: sie waere schlimmer als kein
+		// Eintrag, weil GroessenLaden sie uebernehmen muesste.
+		if (pBar->m_szFloat.cx > 0 && pBar->m_szFloat.cy > 0)
+		{
+			OTShimGroessenSchluessel(szSchluessel, 64, _T("FloatCx"), nId);
+			pApp->WriteProfileInt(lpszAbschnitt, szSchluessel, pBar->m_szFloat.cx);
+			OTShimGroessenSchluessel(szSchluessel, 64, _T("FloatCy"), nId);
+			pApp->WriteProfileInt(lpszAbschnitt, szSchluessel, pBar->m_szFloat.cy);
+		}
+
 		// SPURMARKE ZU E-70: Gregor an 1.0.36 - "nein, daten werden nicht
 		// uebernommen". Also wird entweder nicht geschrieben, nicht
 		// gelesen, oder das Gelesene wird spaeter ueberschrieben. Diese
@@ -4467,6 +4486,19 @@ void SECToolBarManager::GroessenLaden(LPCTSTR lpszAbschnitt)
 		const UINT nId = (UINT) pBar->GetDlgCtrlID();
 		if (nId == 0)
 			continue;
+
+		// BEFUND E-84: die schwebende Groesse zurueckholen, bevor die
+		// Andockgroessen drankommen. Fehlt der Eintrag, liefert
+		// GetProfileInt die 0 und es bleibt bei der Anfangsgroesse.
+		{
+			TCHAR szF[64];
+			OTShimGroessenSchluessel(szF, 64, _T("FloatCx"), nId);
+			const int cx = pApp->GetProfileInt(lpszAbschnitt, szF, 0);
+			OTShimGroessenSchluessel(szF, 64, _T("FloatCy"), nId);
+			const int cy = pApp->GetProfileInt(lpszAbschnitt, szF, 0);
+			if (cx > 0 && cy > 0)
+				pBar->m_szFloat = CSize(cx, cy);
+		}
 
 		// 0 heisst "nichts aufgezeichnet" - dann bleibt der Vorgabewert
 		// stehen, den die Leiste beim Anlegen bekommen hat. Eine gesicherte

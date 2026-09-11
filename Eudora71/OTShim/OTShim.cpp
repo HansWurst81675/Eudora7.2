@@ -5327,6 +5327,11 @@ BOOL SECControlBarInfo::LoadState(LPCTSTR lpszProfileName, int nIndex,
 
 BOOL SECControlBarInfo::SaveState(LPCTSTR lpszProfileName, int nIndex)
 {
+	// BEFUND E-84: hier sass mein erster Anlauf, die schwebende Groesse zu
+	// sichern - wirkungslos. Diese Funktion wird beim Speichern nicht
+	// durchlaufen; gemessen daran, dass in der Eudora.ini kein einziger
+	// Eintrag ankam. Der Weg geht ueber SECToolBarManager::GroessenSichern,
+	// und dort steht die Behebung.
 	return CControlBarInfo::SaveState(lpszProfileName, nIndex);
 }
 
