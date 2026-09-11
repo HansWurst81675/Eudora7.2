@@ -22,6 +22,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
 | — | die **Zertifikatsprüfung nimmt Zertifikate an, deren Kette nicht verifiziert werden konnte** | Nebenbefund **ohne Nummer** — die Kennung vergibt Gregor. `QCCertificateUtils::CertificateCallback` behandelt `X509_V_ERR_CERT_UNTRUSTED` (27) und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) mit `iOK = 1` (`Eudora71/QCSSL/src/qccertificate.cpp:110-113`). `iOK` ist der Rückgabewert des Callbacks: `1` sagt OpenSSL ausdrücklich *„Zertifikat in Ordnung"* — der Prüffehler wird also nicht übergangen, sondern ins Gegenteil verkehrt; anders als in allen Nachbarzweigen wird weder ein Fehlercode gesetzt noch eine Warnung angehängt, der Anwender sieht nichts. Seit dem 30.08.2026 als **zurückgestellter** Befund geführt (`tools/patches/zertifikatspruefung-verschaerfen.patch`). **Gebaut, aber von Gregor nicht beurteilt:** die Verschärfung liegt im Zweig `zertifikate` (Commit `b3be298`) — dort hängen beide Fehlercodes am schon vorhandenen Zweig für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`, `iOK` bleibt 0, die Verbindung wird abgelehnt, und der Anwender sieht `IDS_CERTERR_CHAINNOTTRUSTED` |
+| — | **eine IMAP-Aufgabe bleibt in der Warteschlange stehen** und wird nie gestartet — *„Waiting in the task queue to be started …"* | Nebenbefund **ohne Nummer**, von Gregor am 11.09.2026 an 1.0.48 gemeldet, mit Bildschirmfoto: eine Aufgabe *Resyncing* steht in der Liste, und beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht die Zertifikatsprüfung** — im selben Lauf stand die IMAP-Verbindung und eine Mail kam an. **Drei Ursachen ausgeschlossen:** `CanScheduleTask` blockiert nur POP-Empfang derselben Persönlichkeit (`QCTaskManager.cpp:383-390`); die verzögerte Einreihung scheidet aus, weil `DelayTasks` und `StartTasks` **niemand aufruft** (beide tot); die Obergrenze `MaxConcurrentTasks` steht auf 10 und ist bei einer Aufgabe nicht erreicht. **Offener Verdacht:** `StartWorkerThread` prüft `pTaskInfo->m_pThread` auf NULL und tut bei NULL **nichts** — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`); darüber steht ein `ASSERT`, das im Freigabebau nichts tut. Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in einer Zeile nennt |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
@@ -57,53 +58,56 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
+## 7.2.0.48 — die Zertifikatsprüfung nimmt nicht mehr alles an
 
-Im Repo liegen **Änderungen, die in keinem Paket stecken**: die zweite Ursache
-von **E-66** (Trennbalken rechts) und **E-63** (Kurzhinweis der letzten Karte),
-beide gebaut und
-fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
-**Filtern**, Gregors nächstem Gebiet.
+**Was Gregor damit tun kann:** darauf vertrauen, dass eine TLS-Verbindung
+abgelehnt wird, deren Zertifikatskette Eudora nicht verifizieren konnte.
+**Von ihm am 11.09.2026 bestätigt** — IMAP läuft damit unverändert weiter.
 
-`Eudora71/Version.h` und `VERSION` stehen deshalb schon auf **7.2.0.30 /
-1.0.30**, obwohl es dieses Paket noch nicht gibt. Der Grund steht im
-Abschnitt 7.2.0.30: der Bau vom 09.09.2026 trug **7.2.0.29** — dieselbe Nummer
-wie das veröffentlichte Paket, aber anderen Code. Wer daraus ein Paket
-geschnürt hätte, hätte zwei verschiedene Bauten unter derselben Kennung
-ausgeliefert (Befund **V-1**, Gregors Regel dazu: *„version muß eindeutig
-sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
+Bisher behandelte der Verifikations-Callback zwei OpenSSL-Prüffehler als
+Erfolg:
 
-> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
-> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
-> Komma-Format, heute `7,2,0,29`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
-> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
-> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
-> es gehört aber trotzdem mit hochgesetzt.
+```c
+case X509_V_ERR_CERT_UNTRUSTED:                  /* 27 */
+case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE: /* 21 */
+    iOK = 1;
+    break;
+```
 
-> **Berichtigt am 09.09.2026 (LEKTOR, L-11).** Hier stand bis dahin eine
-> Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
-> darunter *„E-37: nur die ANZEIGE behoben"* und *„32 Spurmarken für E-33"*.
-> **Beides ist überholt und widersprach schon der Überschrift dieses
-> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von **E-43**,
-> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
-> liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
-> die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
-> ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
-> was nicht in seinem Paket steckt — die Werkzeuge der letzten Bauten stehen
-> in den Abschnitten zu
-> 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
+`iOK` ist der Rückgabewert des Callbacks. `iOK = 1` sagt OpenSSL ausdrücklich
+**„Zertifikat in Ordnung"** — der Fehler wurde also nicht übergangen, sondern
+ins Gegenteil verkehrt. Anders als in allen benachbarten Zweigen wurde weder
+ein Fehlercode gesetzt noch eine Warnung angehängt; der Anwender bekam nichts
+zu sehen. Fehler 27 stammt aus `check_trust()` und tritt im gewöhnlichen
+Kettenaufbau auf, nicht nur in Randfällen.
 
-> **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
-> `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
-> **E-32** als Behebung der modalen Meldung. Beides war falsch: die
-> E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
-> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
-> (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
-> wichtig, daß keine lügen im main stehen!"*
+Jetzt hängen beide Codes am bereits vorhandenen, korrekt ausgeführten Zweig
+für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`. `iOK` bleibt 0, die
+Verbindung wird abgelehnt, und der Anwender sieht
+`IDS_CERTERR_CHAINNOTTRUSTED`.
 
----
+**Der Ausweg bleibt:** der `switch` wird nur erreicht, wenn das Zertifikat
+nicht schon im vom Anwender bestätigten Speicher liegt. Die Einzelfreigabe
+geht weiter, weg fällt die pauschale Annahme.
 
+**Gemessen an Gregors Konten:** `Open 212.227.17.186:993` und
+`Successfully retrieved markus.bakus@gmx.de` — GMX' Kette hält der echten
+Prüfung stand. Die pauschale Annahme war also nicht nötig, um seine Konten zu
+erreichen. Der Verdacht, Eudoras `rootcerts.p7b` von 2006 könnte zu alt sein,
+ist damit für diese beiden Konten widerlegt.
 
+### Eine DLL, die im Paket fehlte
+
+Beim Bereitstellen fiel auf: der Bau erzeugte eine frische `QCSSL.dll`, im
+fertigen Paket lag aber die alte aus der Grundlage. Der Patch ändert genau
+diese eine DLL — Gregor hätte die unveränderte Prüfung getestet und nichts
+bemerkt. Aufgefallen ist es nur am **Zeitstempel**; `paket-pruefen.ps1` kennt
+die Datei nicht.
+
+Die Begründung im Bauskript stimmte, aber nur für den **Debug**-Bau: dort ist
+die DLL 4.645.376 B gegen 2.920.960 B in der Grundlage, also eine andere
+Bauart. Im **Release**-Bau sind es 2.921.472 B — dieselbe Bauart. `QCSSL.dll`
+kommt deshalb ab jetzt bei `-Bauart Release` mit.
 
 ## 7.2.0.47 — Kopfzeilen bleiben lesbar, auch auf schwarzem Grund (E-81)
 
@@ -159,6 +163,59 @@ des Toolkits weggefallen ist und erst auffällt, wenn jemand den Knopf drückt.
 Behoben in **beiden** Ansichten über die registrierte Botschaft
 `umsgButtonSetCheck` — der Weg, den `summary.cpp:2518-2520` für zwei andere
 Knöpfe schon benutzt.
+
+## 7.2.0.45 — der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80, Teil 1)
+
+Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
+erwartung: doppelklick auf mail: je nach button wird der header angezeigt
+oder ausgeblendet. aktuell: er wird immer angezeigt."*
+
+**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
+eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
+als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
+2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
+aber nicht `DKIM-`.
+
+Nachgerechnet an **134 echten Nachrichten aus sechs Postfächern**
+(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
+lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
+**über 60 Kopfzeilenarten** stehen:
+
+| Kopfzeile | kam vor | Kopfzeile | kam vor |
+|---|---|---|---|
+| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
+| `Authentication-Results` | 70× | `X-Mailer` | 55× |
+| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
+| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
+| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
+
+Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
+
+**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
+damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
+neuen Liste lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`,
+`Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`. Das letzte ist ein
+Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft
+`Referer: ` deshalb nicht. Ein Einzeiler in der `.rc` würde ihn schließen.
+
+**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
+Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
+abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
+`Subject` — und keine einzige technische.
+
+**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
+`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
+angefasst. Wer alles sehen will, drückt den Knopf oder setzt
+`ShowAllHeaders=1`.
+
+**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
+`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
+nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
+(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
+sah es so aus, als steche der Content Concentrator den Knopf aus
+(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
+Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
+Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
 
 ## 7.2.0.44 — Messfassung für die Spaltenbreite im Filterfenster
 
@@ -232,59 +289,6 @@ schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
 **Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
 dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
 gescheitert.
-
-### Der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80)
-
-Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
-erwartung: doppelklick auf mail: je nach button wird der header angezeigt
-oder ausgeblendet. aktuell: er wird immer angezeigt."*
-
-**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
-eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
-als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
-2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
-aber nicht `DKIM-`.
-
-Nachgerechnet an **134 echten Nachrichten aus sechs Postfächern**
-(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
-lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
-**über 60 Kopfzeilenarten** stehen:
-
-| Kopfzeile | kam vor | Kopfzeile | kam vor |
-|---|---|---|---|
-| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
-| `Authentication-Results` | 70× | `X-Mailer` | 55× |
-| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
-| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
-| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
-
-Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
-
-**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
-damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
-neuen Liste lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`,
-`Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`. Das letzte ist ein
-Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft
-`Referer: ` deshalb nicht. Ein Einzeiler in der `.rc` würde ihn schließen.
-
-**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
-Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
-abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
-`Subject` — und keine einzige technische.
-
-**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
-`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
-angefasst. Wer alles sehen will, drückt den Knopf oder setzt
-`ShowAllHeaders=1`.
-
-**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
-`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
-nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
-(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
-sah es so aus, als steche der Content Concentrator den Knopf aus
-(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
-Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
-Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
 
 ## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
 
@@ -984,6 +988,54 @@ schreibt.
    der Marke `E-66 Streifen:`.
 3. Danach die **`eudora.log`** schicken, ganz gleich ob es geht oder nicht.
    Geht es, steht dort warum; geht es nicht, steht dort auch warum.
+
+## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
+
+Im Repo liegen **Änderungen, die in keinem Paket stecken**: die zweite Ursache
+von **E-66** (Trennbalken rechts) und **E-63** (Kurzhinweis der letzten Karte),
+beide gebaut und
+fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
+**Filtern**, Gregors nächstem Gebiet.
+
+`Eudora71/Version.h` und `VERSION` stehen deshalb schon auf **7.2.0.30 /
+1.0.30**, obwohl es dieses Paket noch nicht gibt. Der Grund steht im
+Abschnitt 7.2.0.30: der Bau vom 09.09.2026 trug **7.2.0.29** — dieselbe Nummer
+wie das veröffentlichte Paket, aber anderen Code. Wer daraus ein Paket
+geschnürt hätte, hätte zwei verschiedene Bauten unter derselben Kennung
+ausgeliefert (Befund **V-1**, Gregors Regel dazu: *„version muß eindeutig
+sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
+
+> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
+> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
+> Komma-Format, heute `7,2,0,29`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
+> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
+> es gehört aber trotzdem mit hochgesetzt.
+
+> **Berichtigt am 09.09.2026 (LEKTOR, L-11).** Hier stand bis dahin eine
+> Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
+> darunter *„E-37: nur die ANZEIGE behoben"* und *„32 Spurmarken für E-33"*.
+> **Beides ist überholt und widersprach schon der Überschrift dieses
+> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von **E-43**,
+> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
+> liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
+> die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
+> ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
+> was nicht in seinem Paket steckt — die Werkzeuge der letzten Bauten stehen
+> in den Abschnitten zu
+> 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
+
+> **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
+> `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
+> **E-32** als Behebung der modalen Meldung. Beides war falsch: die
+> E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
+> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
+> (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
+> wichtig, daß keine lügen im main stehen!"*
+
+---
+
+
 
 ## 7.2.0.30 — Trennbalken rechts, Kurzhinweis der letzten Karte (in Arbeit)
 
