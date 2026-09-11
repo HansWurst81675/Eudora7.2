@@ -7,7 +7,7 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 | | |
 |---|---|
 | **Quellstand** | 7.2.0.48 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.48 (`VERSION`) |
+| **Paketnummer** | 1.0.49 (`VERSION`) |
 | **Zuletzt gebaut und gepackt** | Paket **1.0.48** (Quellstand 7.2.0.48). Auf GitHub veröffentlicht ist `v1.0.47`; 1.0.48 liegt nur lokal unter `C:\Users\Gregor\Eudora72-1.0.48-release` |
 | **Zuletzt von Gregor bestätigt** | **1.0.48 am 11.09.2026**: die verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993. Davor an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
 | **Was als Nächstes zu messen ist** | **Der hängende Resync.** Gregor am 11.09.2026 an 1.0.48: eine IMAP-Aufgabe bleibt auf *„Waiting in the task queue to be started …"* stehen und wird nie gestartet; beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht** die Zertifikatsprüfung — im selben Lauf stand die Verbindung und eine Mail kam an. Drei Ursachen sind am Quelltext ausgeschlossen (siehe `CHANGELOG.md`, *Noch offen*); der offene Verdacht ist `StartWorkerThread`, das bei `m_pThread == NULL` **nichts** tut — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`). Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in **einer** Zeile nennt |
@@ -134,6 +134,37 @@ Urteil.** Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
 > `[ToolBar…]`-Abschnitte statt **0**. Damit fielen **E-37** und **E-38** mit
 > weg, und **E-46** (freigegebenes `CMainFrame`-Objekt) ist **widerlegt**.
 > Schranke: `tools/pruefe-waechter.pl`.
+
+## Alles Offene auf einen Blick
+
+Diese Tabelle wird aus `BEFUNDE.md` **erzeugt** — `tools/offene-befunde.pl`
+setzt sie und weist im pre-commit ab, wenn ein Befund fehlt oder einer
+darinsteht, der längst behoben ist. Von Hand eintragen lohnt nicht; der
+nächste Lauf überschreibt es.
+
+**Keiner dieser Punkte ist Gregor zugewiesen.** Was von ihm kommt, sind
+Beobachtungen, die nur auffallen, wenn sie eintreten — siehe *Was ich dabei
+nicht selbst messen kann*.
+
+<!-- offene-befunde: Anfang -->
+
+| Kennung | worum es geht |
+|---|---|
+| **E-83** | eine IMAP-Aufgabe bleibt in der Warteschlange stehen und wird nie gestartet — *„Waitin… |
+| **E-78** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… |
+| **E-77** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… |
+| **E-71** | der Filterbericht ist nach einem Filterlauf leer |
+| **E-69** | CFiltersDoc::FilterMsg bricht den Filterlauf im Freigabebau lautlos ab und meldet Erfolg |
+| **E-67** | ein Filter *„«Junk Score» is less than N"* wird durch bloßes Anschauen im Filterfenst… |
+| **E-47** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … |
+| **E-39** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… |
+| **E-14** | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) |
+
+<!-- offene-befunde: Ende -->
+
+Wofür jeder steht und was als Nächstes zu messen ist, steht in
+[BEFUNDE.md](BEFUNDE.md) und in [CHANGELOG.md](CHANGELOG.md) unter
+*Noch offen*.
 
 ## Ebenfalls offen
 

@@ -16,7 +16,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
 | **E-78** | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von E-70 am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
 | **E-71** | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
-| **E-76** | das **freischwebende Filterfenster** lässt sich nur seitlich vergrößern, nicht nach unten | Von Gregor am 10.09.2026 an 1.0.40 gemeldet. Marke seit 7.2.0.41 im Bau, **noch nicht ausgelesen** — sie schreibt nur beim Ziehen mit gedrückter Maustaste, das hier nicht auslösbar ist |
 | **E-77** | **IMAP-Postfachnamen mit Umlauten** werden roh angezeigt: `Entw&APw-rfe` statt *Entwürfe* | Von Gregor am 10.09.2026 an 1.0.42 gemeldet. Modifiziertes UTF-7 (RFC 3501, 5.1.3), das Eudora nicht dekodiert — in `Eudora71/` kommt keine UTF-7-Behandlung vor. Bei der Behebung gehört die Gegenrichtung dazu: beim Anlegen und Umbenennen muss der Name wieder kodiert werden |
 | **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
@@ -56,6 +55,68 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.49 — das schwebende Filterfenster lässt sich nach unten ziehen (E-76)
+
+**Was Gregor damit tun kann:** ein freischwebendes Filterfenster nicht nur
+seitlich, sondern auch nach unten größer ziehen. **Noch nicht von ihm
+bestätigt.**
+
+Gemeldet am 10.09.2026 an 1.0.40, am 11.09.2026 bestätigt: *„e-76: nein,
+immer noch bug."* Dazu der Satz, der die Sache gelöst hat: *„könnte gerade
+was im log stehen, falls trace eingeschaltet."*
+
+### Die Spurmarke hat nach sieben Fassungen geliefert
+
+Sie lag seit 7.2.0.41 im Bau und schrieb nur, solange die Leiste schwebt —
+auslösen ließ sie sich nicht, weil dafür eine **physisch gedrückte Maustaste**
+nötig ist. Gregor hat gezogen, und damit stand alles im Protokoll:
+
+```
+dynamisch: nLength=105 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x105
+dynamisch: nLength=172 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x172
+dynamisch: nLength=234 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x234
+dynamisch: nLength=299 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x299
+dynamisch: nLength=780 dwMode=0x0042 COMMIT  HORZ -> ergebnis=780x100
+```
+
+Das Ziehen rechnet richtig: 105, 172, 234, 299. Der **letzte** Aufruf, der das
+Ergebnis übernehmen soll, trägt `dwMode=0x0042` — `LM_COMMIT | LM_HORZ`, aber
+**kein `LM_LENGTHY`**. Damit läuft er in den `else`-Zweig:
+
+```c
+if (dwMode & LM_LENGTHY) size.cy = max(nLength, 20);
+else                     size.cx = max(nLength, 20);
+```
+
+und setzt die **Breite** auf 780 — denn das ist, was `nLength` beim COMMIT
+trägt. Die Höhe bleibt der alte Wert. Danach speichert
+`if (dwMode & LM_COMMIT) m_szFloat = size;` genau diese Rückfall-Größe. Die
+gezogenen 299 sind weg. Beim Verkleinern spiegelbildlich dasselbe: 99, 94,
+70, 47 werden korrekt gerechnet, der COMMIT macht daraus wieder 100.
+
+### Die Behebung
+
+Ein Merker hält die zuletzt in Ziehrichtung gerechnete Größe fest; beim
+COMMIT wird er genommen, statt aus einem `nLength` zu rechnen, das dort etwas
+anderes bedeutet. Wurde nie gezogen, steht der Merker auf `(0,0)` und es
+bleibt beim Bisherigen.
+
+**Nicht gemacht:** beim COMMIT die Höhe aus `nLength` lesen und `LM_HORZ` als
+Richtungsangabe deuten — das baut denselben Fehler nur anders herum ein.
+
+**Beim Bauen gefangen:** mein erstes Skript hat den Merker auch in
+`SECControlBarInfo` initialisiert, einer Klasse, die ihn gar nicht hat. Zwei
+`C2065`, sofort gemeldet. Genau dafür baut man, bevor man ausliefert.
+
+### Außerdem: 16 fehlende Behebungsfassungen nachgetragen
+
+Gregor: *„die tabelle sollte auch enthalten, in welchem build welcher befund
+behoben wurde."* Gemessen: 38 der behobenen Befunde nannten ihre Fassung, 16
+nicht. Nachgetragen aus der Git-Geschichte — und dort, wo der gefundene
+Commit den Befund möglicherweise nur **anlegte** statt ihn zu beheben, steht
+das ausdrücklich dabei. Eine geratene Zahl, die sicher aussieht, ist
+schlimmer als eine, die ihre Herkunft nennt.
 
 ## 7.2.0.48 — die Zertifikatsprüfung nimmt nicht mehr alles an (E-82)
 

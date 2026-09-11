@@ -520,6 +520,14 @@ public:
 	CPoint m_ptDockHorz;
 	CSize m_szDockVert;			// Masse senkrecht angedockt
 	CSize m_szFloat;			// Masse schwebend
+
+	// NICHT im Original. BEFUND E-76: beim Ziehen am Rand eines schwebenden
+	// Fensters ruft MFC CalcDynamicLayout mehrfach mit LM_LENGTHY und zum
+	// Schluss einmal mit LM_COMMIT - und beim COMMIT FEHLT LM_LENGTHY,
+	// waehrend nLength die Breite traegt. Wer dort neu rechnet, wirft die
+	// gezogene Hoehe weg. Dieser Merker haelt sie fest.
+	// Gemessen an Gregors Protokoll vom 11.09.2026, 21:14 Uhr.
+	CSize m_szZuletztGezogen;	// zuletzt in Ziehrichtung gerechnet
 	DWORD m_dwMRUDockingState;	// gemerkter Andockzustand fuer "Allow Docking"
 	float m_fPctWidth;			// Anteil an der Zeilenbreite - Stufe 2 offen
 	float m_fDockedPctWidth;	// derselbe Anteil vor dem Schweben

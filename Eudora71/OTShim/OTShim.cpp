@@ -1799,6 +1799,7 @@ SECControlBar::SECControlBar()
 	m_ptDockHorz = CPoint(0, 0);
 	m_szDockVert = CSize(200, 100);
 	m_szFloat    = CSize(200, 100);
+	m_szZuletztGezogen = CSize(0, 0);   // E-76
 
 	m_dwMRUDockingState = CBRS_ALIGN_ANY;
 	m_fPctWidth       = (float)1.0;
@@ -2044,13 +2045,37 @@ CSize SECControlBar::CalcDynamicLayout(int nLength, DWORD dwMode)
 	if (nLength > 0 && bSchwebt)
 	{
 		CSize size = m_szFloat;
+
+		// BEHEBUNG ZU BEFUND E-76 (Gregor, 10.09.2026, bestaetigt 11.09.2026):
+		// "filter fenster laesst sich nicht nach unten vergroessern, nur zur
+		// seite".
+		//
+		// Die Spurmarke hat es gezeigt: beim Ziehen kommt dwMode=0x0022, also
+		// LM_LENGTHY|LM_HORZ, und nLength ist die neue Hoehe - 105, 172, 234,
+		// 299. Der ABSCHLIESSENDE Aufruf traegt dwMode=0x0042, also
+		// LM_COMMIT|LM_HORZ OHNE LM_LENGTHY, und nLength ist dort die BREITE
+		// (780). Ohne Merker landet er im else-Zweig, setzt die Breite neu,
+		// laesst die Hoehe auf dem alten Wert - und speichert genau das.
+		// Ergebnis im Protokoll: 780x299 beim Ziehen, 780x100 nach dem COMMIT.
 		if (dwMode & LM_LENGTHY)
+		{
 			size.cy = max(nLength, 20);
-		else
+			m_szZuletztGezogen = size;
+		}
+		else if (!(dwMode & LM_COMMIT))
+		{
 			size.cx = max(nLength, 20);
+			m_szZuletztGezogen = size;
+		}
 
 		if (dwMode & LM_COMMIT)
+		{
+			// Die zuletzt gezogene Groesse gilt. Nur wenn nie gezogen wurde
+			// - dann steht der Merker auf (0,0) -, bleibt es beim Bisherigen.
+			if (m_szZuletztGezogen.cx > 0 && m_szZuletztGezogen.cy > 0)
+				size = m_szZuletztGezogen;
 			m_szFloat = size;
+		}
 
 		E76Marke(_T("dynamisch"), nLength, dwMode, bSchwebt, szVorher, size);
 		return size;
