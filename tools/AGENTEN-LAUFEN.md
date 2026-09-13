@@ -9,4 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-09-13 20:58 | Alle MDs gegen den Bestand 7.2.0.51 pruefen |
+| CHRONIST | 2026-09-13 21:35 | Gesprächsverlauf dieser Sitzung auswerten, Lehren aktualisieren |
