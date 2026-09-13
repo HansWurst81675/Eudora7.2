@@ -266,5 +266,52 @@ if (length $upstream) {
     }
 }
 
+# ---------------------------------------------------------------------------
+# Ein Arbeitsbaum-Zweig muss SEINEN EIGENEN Upstream haben.
+# ---------------------------------------------------------------------------
+#
+# Gregor am 13.09.2026 um 19:22:58: "was spielt ihr da fuer ein ping-pong?"
+# Arbeitsbaeume sind dafuer da, dass drei Agenten sich nicht in die Quere
+# kommen. Verfolgt der Zweig eines Agenten den Zweig eines ANDEREN, ist genau
+# diese Trennung aufgehoben: sein "git push" landet auf fremdem Gebiet.
+#
+# Im Wegwerf-Repo gemessen, vier Faelle:
+#
+#   git checkout -B wt/x fix-imap_utf8          -> KEIN Upstream
+#   git worktree add -b wt/x <pfad> <lokal>     -> KEIN Upstream
+#   git push -u origin wt/x                     -> origin/wt/x          RICHTIG
+#   git checkout -B wt/x origin/fix-imap_utf8   -> origin/fix-imap_utf8 FALSCH
+#
+# Eine LOKALE Basis vererbt nichts; eine REMOTE-Basis (mit "origin/" davor)
+# setzt den Upstream auf sich selbst. Das ist der Weg, auf dem ein
+# Agentenzweig an einem fremden Gegenstueck haengt.
+#
+# Die Faelle ganz ohne Upstream faengt die Pruefung weiter oben ab. Hier geht
+# es um den Zweig, der einen HAT, aber den falschen.
+if ($branch =~ m{^wt/(.+)$}) {
+    my $eigen = "origin/wt/$1";
+    if (length($upstream) && $upstream ne $eigen) {
+        print "\n";
+        print "  ABBRUCH: '$branch' verfolgt '$upstream' statt '$eigen'.\n";
+        print "\n";
+        print "  Ein Arbeitsbaum-Zweig, der ein FREMDES Gegenstueck verfolgt, hebt\n";
+        print "  die Trennung auf, fuer die es Arbeitsbaeume ueberhaupt gibt: ein\n";
+        print "  'git push' ohne Argumente landet auf dem fremden Zweig. Gregor am\n";
+        print "  13.09.2026: \"was spielt ihr da fuer ein ping-pong?\"\n";
+        print "\n";
+        print "  Richtigstellen - eigenes Gegenstueck anlegen und daran binden:\n";
+        print "\n";
+        print "      git push -u origin $branch\n";
+        print "\n";
+        print "  Ursache ist fast immer eine Basis mit 'origin/' davor beim\n";
+        print "  Anlegen (git checkout -B $branch origin/<basis>). Eine LOKALE\n";
+        print "  Basis vererbt nichts - siehe den Messblock ueber dieser Pruefung.\n";
+        print "\n";
+        print "  (Bewusst trotzdem committen: git commit --no-verify)\n";
+        print "\n";
+        exit($nur_melden ? 0 : 1);
+    }
+}
+
 melde("pruefe-branch: '$branch' ist eigenstaendig und lebt - in Ordnung\n");
 exit 0;

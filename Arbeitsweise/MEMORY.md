@@ -57,3 +57,4 @@
 - [Erfolgsmeldung aus dem Ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) — nach dem Schreiben die Datei messen, nicht den eigenen Kontrollfluss; „eingefuegt" stand unter dem Abbruch
 - [Prüfstand kann blind sein](pruefstand-kann-blind-sein.md) — ein kaputter und ein grüner Prüfstand melden beide nichts; die Testsuite war drei Tage nicht baubar
 - [Auslöser an den Anfang](ausloeser-an-den-anfang.md) — eine Schranke am Ende beantwortet eine Frage, die am Anfang gestellt werden musste; die Rollenschranke lief acht Minuten nach Gregors Frage
+- [Arbeitsbaum braucht eigenes Gegenstück](arbeitsbaum-braucht-eigenes-gegenstueck.md) — wt/<name> muss origin/wt/<name> verfolgen, sonst landet der Push auf fremdem Gebiet; eine Remote-Basis vererbt den Upstream, eine lokale nicht
