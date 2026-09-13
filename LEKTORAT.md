@@ -758,6 +758,7 @@ Tabelle sagte weiter, sie sei es nicht.
 | `ZIEL.md` | der Kopf sagt „Diese Tabelle ist die Quelle" und stand auf 7.2.0.48 / 1.0.48 |
 | `PORTIERUNG.md` | 1.0.50 als „in Arbeit"; „veröffentlicht ist die Fassung davor" — es sind zwei davor |
 | `Releases/PAKETE.md` | „1.0.30 bis 1.0.48 dazugekommen"; „im Repo liegen zwei ZIPs … `Eudora72-1.0.27-release.zip` (die veröffentlichte Fassung)". `git ls-files Releases/` sagt: das zweite ZIP ist **1.0.30**, und veröffentlicht ist `v1.0.48`. Beide Hälften falsch |
+| `README.md`, *Was es nicht kann* | *„Kein IMAP getestet. Der Code ist da, geprüft ist nur POP3."* — `ZIEL.md` führt IMAP seit dem **10.09.2026** als von Gregor bestätigt (*„imap: funktioniert"*, `imap.gmx.net:993`), und seither sind **E-83** und **E-77** als IMAP-Befunde aufgelaufen, die dort nicht vorkamen. Der Punkt, den ein Anwender zuerst liest, war damit in beide Richtungen falsch |
 | `Befunde/SPURMARKEN.md` | Kopfzahlen „19 Befunde, 146 Protokollstellen in 16 Dateien" vom 10.09.; allein die Tabelle darunter summierte sich auf 157. Heute gemessen: **23 Befunde, 158 Stellen in 20 Dateien**. Zwei Zeilen fehlten (**E-44**, **E-79**), zwei Zahlen stimmten nicht (E-78 hat eine Formatzeile, nicht zwei; E-80 drei Stellen, nicht vier) |
 
 ## Was bewusst stehen geblieben ist
@@ -790,7 +791,7 @@ Jede Änderung als Perl-Skript mit `<:raw`/`>:raw`, ohne `use utf8`, jeder Anker
 genau einmal geprüft, CR-Anzahl vor und nach jedem Schreibzugriff bilanziert
 (alle Dateien 0). Vor jedem Commit die acht verlangten Schranken, alle 0.
 
-**Fünf Commits unterwegs statt eines am Ende** — die ausdrückliche Auflage
+**Sieben Commits unterwegs statt eines am Ende** — die ausdrückliche Auflage
 dieses Auftrags, nachdem der Vorlauf vom 11.09.2026 mit null Dateien und null
 Commits endete. Der erste Commit stand, sobald die erste Datei fertig war. Der
 Zweig `wt/lektor` war auf dem Server gelöscht; der `pre-commit`-Hook hat das
