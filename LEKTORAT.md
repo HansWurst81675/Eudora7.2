@@ -13,7 +13,9 @@ die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-5.md](Befunde/LEKTOR-5.md) (L-9, 41 Befunde am 08.09.2026) und
 [Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md) — dort stehen **L-10** (das
 Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
-09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`).
+09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`) und
+[Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
+7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
@@ -21,10 +23,16 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 13.09.2026.** Der jüngste Durchgang ist der **neunte**
-> und steht ganz unten; gemessen an Quellstand **7.2.0.50** / Paket **1.0.50**.
-> Die Durchgänge **L-6** bis **L-11** stehen nicht hier, sondern in
-> `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-6.md`.
+> **Stand dieser Datei: 13.09.2026.** Der jüngste Durchgang ist **L-12** und
+> steht in `Befunde/LEKTOR-7.md`; gemessen an Quellstand **7.2.0.51** / Paket
+> **1.0.51**. Der jüngste Durchgang *in dieser Datei* ist weiterhin der
+> **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-12** stehen nicht
+> hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-7.md`.
+>
+> **L-12 in einem Satz:** E-85 (Umlaute über IMAP) war behoben, während vier
+> Dokumente ihn noch als offen führten — und dreimal an diesem Tag stand die
+> Doku still, während der Zweig weiterlief, zweimal davon mit einer Aussage,
+> die ich selbst eine Stunde zuvor geschrieben hatte.
 
 ## Erster Durchgang — 30.08.2026
 
