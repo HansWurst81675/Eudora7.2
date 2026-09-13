@@ -954,6 +954,78 @@ static void Test_ChunkRestMuellFaelltNichtDurch(void)
 	TT_EndTest();
 }
 
+static void Test_ChunkLaesstDasByteDahinterInRuhe(void)
+{
+	// DIE SCHRANKE ZU PRUEFER-10 (13.09.2026).
+	//
+	// ISOTranslate schreibt eine Null an szBuf[lSize] - ein Byte HINTER den
+	// uebergebenen Bereich. Der POP3-Weg haelt dafuer Platz frei; der
+	// IMAP-Weg kann das nicht: CChunkReader gibt bei text/plain eine ZEILE
+	// aus der Mitte seines eigenen Puffers heraus (imapgets.cpp,
+	// *pBuf = m_pStart), und das Byte dahinter ist das ERSTE BYTE DER
+	// NAECHSTEN ZEILE. Ohne die Rettung in ISOTranslateChunk verliert jede
+	// Zeile einer utf-8-Nachricht ihr erstes Zeichen, und ein NUL-Byte
+	// landet in der Mailboxdatei.
+	//
+	// Nachgestellt wird genau das: ein Puffer mit zwei Zeilen, uebersetzt
+	// wird nur die erste. Die zweite muss unversehrt bleiben.
+	//
+	// GEGENPROBE in Gregors Richtung: geprueft wird nicht, ob das Ergebnis
+	// stimmt, sondern ob der falsche Wert durchkommt - das Waechterbyte
+	// steht auf 'X' und muss 'X' bleiben. Ohne die Rettung steht dort 0x00.
+	static const unsigned char aIdx[] = { IDX_UTF8, IDX_LATIN9 };
+	unsigned int	u;
+
+	TT_BeginTest("ISOTranslateChunk: das Byte hinter dem Stueck bleibt unangetastet");
+
+	for (u = 0; u < sizeof(aIdx) / sizeof(aIdx[0]); ++u)
+	{
+		// Erste Zeile: "fuer\r\n" mit u-Umlaut als UTF-8 bzw. als Latin-9.
+		// Danach beginnt die zweite Zeile mit dem Waechter 'X'.
+		char	szPuffer[32];
+		char*	pBuf = szPuffer;
+		char	szUebertrag[4];
+		long	lUebertrag = 0;
+		long	lZeile;
+		long	lRaus;
+
+		memset(szPuffer, 'Z', sizeof(szPuffer));
+
+		if (aIdx[u] == IDX_UTF8)
+		{
+			szPuffer[0] = 'f';
+			szPuffer[1] = (char)0xC3;
+			szPuffer[2] = (char)0xBC;
+			szPuffer[3] = 'r';
+			szPuffer[4] = '\r';
+			szPuffer[5] = '\n';
+			lZeile = 6;
+		}
+		else
+		{
+			szPuffer[0] = 'f';
+			szPuffer[1] = (char)0xFC;
+			szPuffer[2] = 'r';
+			szPuffer[3] = '\r';
+			szPuffer[4] = '\n';
+			lZeile = 5;
+		}
+
+		szPuffer[lZeile] = 'X';
+
+		lRaus = UT_ISOTranslateChunk(&pBuf, lZeile, (unsigned int)aIdx[u],
+									 szUebertrag, &lUebertrag);
+		(void)lRaus;
+
+		if (szPuffer[lZeile] != 'X')
+			TT_Fail("Index %u: das erste Byte der naechsten Zeile wurde auf "
+					"0x%02X gesetzt, erwartet 'X' (0x58)",
+					(unsigned)aIdx[u], (unsigned char)szPuffer[lZeile]);
+	}
+
+	TT_EndTest();
+}
+
 void RunIsoTranslateTests(void)
 {
 	TT_Suite("utils.cpp - Verhalten von ISOTranslate()");
@@ -993,4 +1065,5 @@ void RunIsoTranslateTests(void)
 	Test_ChunkDreibyteUndVierbyte();
 	Test_ChunkLaesstNichtUtf8InRuhe();
 	Test_ChunkRestMuellFaelltNichtDurch();
+	Test_ChunkLaesstDasByteDahinterInRuhe();
 }
