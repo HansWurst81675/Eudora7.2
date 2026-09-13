@@ -99,6 +99,14 @@ unless ($massstab) {
 
 my (@mangel, @gut);
 
+# Der zweite Massstab: Quellstand und Paketnummer, so wie der Baum sie fuehrt.
+# Eine Datei, die im Kopf andere nennt, behauptet einen Stand, den sie nicht
+# hat - auch wenn ihr Datum von heute ist.
+my $vh = lies("$wurzel/Eudora71/Version.h");
+my ($quellstand) = defined $vh ? $vh =~ /EUDORA_BUILD_VERSION\s+"([0-9.]+)"/ : ();
+my $paket = lies("$wurzel/VERSION");
+if (defined $paket) { $paket =~ s/\s+//g; } else { $paket = ''; }
+
 # --- 1. Standdateien -------------------------------------------------------
 my @dateien = split /\n/, `git -C "$wurzel" ls-files "*.md" 2>/dev/null`;
 unless (@dateien) {
@@ -123,6 +131,37 @@ for my $f (@dateien) {
         push @mangel,
           "$f behauptet 'Stand " . lesbar($z) . "', der juengste Vorgang im "
         . "CHANGELOG ist vom " . lesbar($massstab);
+    }
+
+    # Nennt der Kopf ausserdem einen QUELLSTAND oder eine PAKETNUMMER, muss
+    # sie stimmen. Am 13.09.2026 gefunden: AUFGABEN.md trug "Stand 11.09.2026"
+    # - das Datum war frisch - und dahinter "gemessen an Quellstand 7.2.0.48 /
+    # Paket 1.0.48", waehrend der Baum auf 7.2.0.50 stand. Die Datumspruefung
+    # allein liess das durch, und genau so entsteht die gefaehrlichste Sorte
+    # Doku: eine, die frisch aussieht und es nicht ist.
+    #
+    # Gregor am 13.09.2026: "keine luegen auf dem main, gilt immer noch."
+    # NUR die Zeile mit dem Stand, nicht der ganze Kopf. Der erste Anlauf
+    # suchte in zwanzig Zeilen und schlug bei Releases/PAKETE.md an, wo
+    # "1.0.4" mitten im Fliesstext steht - ein Fehlalarm, gefunden beim
+    # Gegentest vor der Auslieferung.
+    my ($standzeile) = grep { /Stand/ } split /\n/, $kopf;
+    $standzeile = '' unless defined $standzeile;
+
+    if ($quellstand and $standzeile =~ /Quellstand[^\n]{0,12}?(\d+\.\d+\.\d+\.\d+)/) {
+        my $genannt = $1;
+        if ($genannt ne $quellstand) {
+            push @mangel,
+              "$f nennt in der Stand-Zeile Quellstand $genannt, "
+            . "Eudora71/Version.h sagt $quellstand";
+        }
+    }
+    if ($paket and $standzeile =~ /Paket[^\n]{0,12}?(\d+\.\d+\.\d+)/) {
+        my $genannt = $1;
+        if ($genannt ne $paket) {
+            push @mangel,
+              "$f nennt in der Stand-Zeile Paket $genannt, VERSION sagt $paket";
+        }
     }
 }
 push @gut, sprintf('%d Datei(en) mit Stand-Kopf geprueft, Massstab %s',
