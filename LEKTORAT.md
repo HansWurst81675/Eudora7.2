@@ -5,7 +5,7 @@ Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
 seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
 [README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
 
-Hier stehen der erste bis vierte, der sechste und der siebte Durchgang. Der
+Hier stehen der erste bis vierte, der sechste bis neunte Durchgang. Der
 **fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
 die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
@@ -21,10 +21,10 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 09.09.2026.** Der jüngste Durchgang ist **L-11**; er
-> steht nicht hier, sondern in
-> [Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md). Gemessen an Quellstand
-> **7.2.0.27** / Paket **1.0.27**.
+> **Stand dieser Datei: 13.09.2026.** Der jüngste Durchgang ist der **neunte**
+> und steht ganz unten; gemessen an Quellstand **7.2.0.50** / Paket **1.0.50**.
+> Die Durchgänge **L-6** bis **L-11** stehen nicht hier, sondern in
+> `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-6.md`.
 
 ## Erster Durchgang — 30.08.2026
 
@@ -681,3 +681,118 @@ nur für die 21 Dateien galt, die `doku-pruefen.pl` kennt. Im Repo liegen 47.
 * **`PRUEFBERICHT.md` nicht fortgeschrieben**, sondern als abgeschlossen
   gekennzeichnet: er gilt für den Stand `371c1e3` vom 30.08.2026, und PRÜFER
   berichtet seither in `Befunde/PRUEFER-*.md`.
+
+---
+
+# Neunter Durchgang — 13.09.2026
+
+Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`, Ausgangsstand `da95db4`
+(`main` nach dem Merge von `e84-bestaetigt`). Gemessener Quellstand **7.2.0.50**
+/ Paket **1.0.50**.
+
+**Auftrag: den Bestand prüfen, nicht den Diff.** Alle **121** MD-Dateien im
+Verzeichnis (`git ls-files '*.md'`), nicht nur die zuletzt angefassten — die
+Lehre [review-sieht-nur-den-diff](Arbeitsweise/review-sieht-nur-den-diff.md).
+Der Auftrag sprach von 47 Dateien; das war die Zahl aus dem achten Durchgang
+(L-8) und stimmt seit dem 08.09.2026 nicht mehr.
+
+## Die schwersten Funde
+
+**1. `AUFGABEN.md` erklärte drei Befunde für bestätigt, die es nicht sind.**
+Abschnitt 1 führte **E-49**, **E-50** und **E-52** als *„bestätigt"* und berief
+sich dabei ausdrücklich auf `BEFUNDE.md`. Dort steht bei allen dreien *„von
+Gregor noch nicht bestätigt"* (`BEFUNDE.md:210`, `:211`, `:213`). Nachgezählt
+über alle Urteilszeilen: **vierzehn** behobene Befunde sind unbestätigt — E-49,
+E-50, E-52 bis E-63 —, nicht einer. Die Überschrift *„vier gebaute Behebungen
+warten auf Gregors Urteil"* stand wortgleich in `AUFGABEN.md` und
+`WEITERMACHEN.md`.
+
+Das ist bemerkenswert, weil der achte Durchgang genau diesen Abschnitt
+berichtigt hat: er drehte den Widerspruch um, statt ihn aufzulösen.
+`tools/pruefe-befundurteile.pl` fängt diese Klasse — aber es prüft sieben
+Anwenderdokumente, und **`AUFGABEN.md` ist nicht darunter**, obwohl der
+Kommentar im Werkzeug selbst (`:42`) diese Datei als Anlass nennt. *Gemeldet,
+nicht geändert: `tools/` gehörte während dieses Durchgangs PRÜFER.*
+
+**2. `ABRUF-PRUEFEN.md` beschrieb eine Zertifikatsprüfung, die es nicht mehr
+gibt.** Dort stand, die Prüfung sei *„in dieser Fassung bewusst nachsichtig"*
+und der Patch *„absichtlich **nicht** eingespielt"*. Am Quelltext gemessen: er
+**ist** eingespielt. `qccertificate.cpp:82-90` hängt
+`X509_V_ERR_CERT_UNTRUSTED` und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE`
+am ablehnenden Zweig, `iOK` bleibt 0. Das ist **E-82**, von Gregor am
+11.09.2026 bestätigt. Dieselbe überholte Aussage stand in `AUFGABEN.md` unter
+*Zurückgestellt*. Zurückgestellt ist nur noch die **Hostnamensprüfung** (nur
+`CN`, keine SAN, kein SNI).
+
+**3. `CHANGELOG.md` sperrte zwei Fassungen für die Veröffentlichung.** Die
+Abschnitte **7.2.0.49** und **7.2.0.50** trugen beide *„Noch nicht von ihm
+bestätigt"*, obwohl Gregor beide am 11.09.2026 bestätigt hat.
+`tools/release-veroeffentlichen.ps1` sucht im Abschnitt der Fassung nach *„noch
+nicht best"* und weist ab, wenn es das findet (`:115`) — beide Fassungen waren
+damit von einer Veröffentlichung ausgeschlossen, durch eine Aussage, die nicht
+mehr stimmte. Kein Schönheitsfehler, sondern eine geschlossene Tür.
+
+**4. Der INI-Schlüssel zu E-84 stand mit falschem Abschnitt in der Doku.**
+`EINSTELLUNGEN.md` und `README.md` nannten `[ToolBar]`. Gemessen:
+`mainfrm.cpp:4456` übergibt `ToolBar`, `SECToolBarManager::SaveState` setzt
+daraus `%s-ToolBarManager` — und in Gregors `Eudora.ini` steht `FloatCx319=751`
+unter **`[ToolBar-ToolBarManager]`**. Dazu `WriteProfileString` statt
+`WriteProfileInt`. In `BEFUNDE.md` stand außerdem noch der **alte Schlüsselname
+`BarFloatSize<n>`** aus dem ersten, wirkungslosen Anlauf, samt dessen Stelle
+(`SECControlBarInfo::SaveState`) als angebliche Fundstelle der Behebung.
+
+**5. Die Spurmarke zu E-76 stand als `entfaellt`, obwohl sie geliefert hatte.**
+`Befunde/SPURMARKEN.md` sagte *„wartet auf den nächsten Bericht von Gregor"*.
+Der Bericht kam am 11.09.2026: er hat an 1.0.48 gezogen, und die Marke schrieb
+die fünf Zeilen, die E-76 entschieden haben — und an 1.0.50 ein zweites Mal,
+`E-76 fest: vorher=751x403`, der Beleg für E-84. Dieselbe Klasse wie bei E-70
+([eingebaute-messung-auslesen](Arbeitsweise/eingebaute-messung-auslesen.md)),
+nur andersherum: dort war die Marke ungelesen, hier war sie gelesen und die
+Tabelle sagte weiter, sie sei es nicht.
+
+## Was sonst berichtigt wurde
+
+| Datei | was nicht stimmte |
+|---|---|
+| `WEITERMACHEN.md` | Quellstand 7.2.0.48 statt 7.2.0.50; „zuletzt gebaut 1.0.48"; „auf GitHub veröffentlicht ist `v1.0.47`" (es ist `v1.0.48`, `gh release list`); „zuletzt von Gregor bestätigt 1.0.48"; E-76 als offen und E-66 als nie ausgewertet geführt, obwohl `spuren-auswerten.pl` beide als erledigt meldet; Prüfschritte, die auf die Pakete 1.0.29 und 1.0.26 zeigten |
+| `ZIEL.md` | der Kopf sagt „Diese Tabelle ist die Quelle" und stand auf 7.2.0.48 / 1.0.48 |
+| `PORTIERUNG.md` | 1.0.50 als „in Arbeit"; „veröffentlicht ist die Fassung davor" — es sind zwei davor |
+| `Releases/PAKETE.md` | „1.0.30 bis 1.0.48 dazugekommen"; „im Repo liegen zwei ZIPs … `Eudora72-1.0.27-release.zip` (die veröffentlichte Fassung)". `git ls-files Releases/` sagt: das zweite ZIP ist **1.0.30**, und veröffentlicht ist `v1.0.48`. Beide Hälften falsch |
+| `Befunde/SPURMARKEN.md` | Kopfzahlen „19 Befunde, 146 Protokollstellen in 16 Dateien" vom 10.09.; allein die Tabelle darunter summierte sich auf 157. Heute gemessen: **23 Befunde, 158 Stellen in 20 Dateien**. Zwei Zeilen fehlten (**E-44**, **E-79**), zwei Zahlen stimmten nicht (E-78 hat eine Formatzeile, nicht zwei; E-80 drei Stellen, nicht vier) |
+
+## Was bewusst stehen geblieben ist
+
+* **Die historischen Abschnitte in `BEFUNDE.md`** (`:1325`, `:3457`, `:3543`,
+  `:3789`), die den Zertifikats-Patch als *nicht angewandt* führen. Sie stehen
+  unter datierten Überschriften vom 30.08.2026 und sind **für ihren Tag
+  richtig**. Ein Fahrtenbuch wird nicht nachträglich umgeschrieben; der
+  gültige Stand steht in der Urteilszeile zu E-82.
+* **`Befunde/LEKTOR-*.md`, `Befunde/PRUEFER-*.md` und die übrigen Berichte
+  unter `Befunde/`** — dieselbe Begründung. Es sind Berichte zu einem Stand,
+  keine Zustandsbeschreibungen.
+* **Die Kriterientabelle in `ZIEL.md`** selbst. Sie ist gegen `BEFUNDE.md` und
+  `CHANGELOG.md` gehalten worden und stimmt; nur ihr Stand-Kopf war alt.
+* **`tools/`** — dort arbeitete PRÜFER. Der Befund zu
+  `pruefe-befundurteile.pl` (`AUFGABEN.md` fehlt in der Prüfliste) ist deshalb
+  gemeldet und nicht behoben.
+* **`Arbeitsweise/`** bis auf zwei Zwangsläufigkeiten: der Spiegel-Hook legte
+  die neue Lehre `agent-vor-dem-ende-nicht-starten.md` herein und verlangte
+  sie im selben Commit. Ihre Zeile *„Schranke: keine mechanische möglich — …"*
+  wies `tools/lehren-schranken.pl` ab, weil der keine-Zweig `keine - <Grund>`
+  verlangt; berichtigt in beiden Fassungen, auch in der Quelle unter
+  `~/.claude`. Die Lehrentabelle in `Arbeitsweise/README.md` ist damit neu
+  gesetzt — **sie deckt jetzt alle 56 Lehren**, der im achten Durchgang
+  benannte Bestandsmangel (27 von 54) ist erledigt.
+
+## Wie gearbeitet wurde
+
+Jede Änderung als Perl-Skript mit `<:raw`/`>:raw`, ohne `use utf8`, jeder Anker
+genau einmal geprüft, CR-Anzahl vor und nach jedem Schreibzugriff bilanziert
+(alle Dateien 0). Vor jedem Commit die acht verlangten Schranken, alle 0.
+
+**Fünf Commits unterwegs statt eines am Ende** — die ausdrückliche Auflage
+dieses Auftrags, nachdem der Vorlauf vom 11.09.2026 mit null Dateien und null
+Commits endete. Der erste Commit stand, sobald die erste Datei fertig war. Der
+Zweig `wt/lektor` war auf dem Server gelöscht; der `pre-commit`-Hook hat das
+gemeldet und den Commit verweigert, bevor etwas nur lokal entstehen konnte —
+die Schranke hat genau das getan, wofür sie gebaut ist.
