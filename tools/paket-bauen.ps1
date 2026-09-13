@@ -276,6 +276,43 @@ if (Test-Path -LiteralPath $standpruefer) {
   }
 }
 
+
+# --- Schranke: kein Paket, solange ein Agentenauftrag offen ist -----------
+#
+# Gregor am 13.09.2026, mit der Auswertung von 474 Nachrichten: Platz 1 der
+# Fehlerliste ist "Zwischenstand nicht gesichert, Wissen geht verloren" mit
+# 45 Fundstellen. Sein Satz: "das habe ich mir als deine aussage notiert,
+# aber 1 passiert trotzdem!"
+#
+# Am 11.09.2026 sind zwei Agentenauftraege restlos verlorengegangen: beide
+# liefen noch, als die Sitzung endete, und hatten nichts committet. Ein
+# Agent ist ein Prozess OHNE SPUR IM REPO, bis er selbst schreibt.
+$agentenpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'agenten-laufen.pl'
+if (Test-Path -LiteralPath $agentenpruefer) {
+
+  $perlA = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlA) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlA = $k; break }
+    }
+  }
+
+  if ($perlA) {
+    & $perlA $agentenpruefer
+    if ($LASTEXITCODE -ne 0) {
+      Write-Host ''
+      Write-Host '  KEIN PAKET, solange ein Agentenauftrag offen ist.'
+      Write-Host '  Hat er geliefert, austragen mit:'
+      Write-Host '      perl tools/agenten-laufen.pl --fertig <ROLLE>'
+      Write-Host ''
+      exit 1
+    }
+  }
+}
+
 $ErrorActionPreference = 'Stop'
 
 $wurzel = Split-Path -Parent $PSScriptRoot
