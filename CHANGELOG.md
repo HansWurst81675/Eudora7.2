@@ -59,8 +59,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 ## 7.2.0.50 — losgerissene Fenster behalten ihre Größe (E-84)
 
 **Was Gregor damit tun kann:** ein losgerissenes Fenster einmal auf die
-gewünschte Größe ziehen und es beim nächsten Start so wiederfinden. **Noch
-nicht von ihm bestätigt.**
+gewünschte Größe ziehen und es beim nächsten Start so wiederfinden. **Von ihm
+am 11.09.2026 bestätigt** — belegt an beiden Enden: in seiner `Eudora.ini`
+stehen `FloatCx319=751` und `FloatCy319=403`, und der erste Aufruf nach dem
+Neustart meldet `E-76 fest: vorher=751x403` statt der Anfangsgröße `200x100`.
 
 Gemeldet am 11.09.2026, unmittelbar nach der Bestätigung von E-76: *„das
 undocked initiale fenster ist recht klein, die größe (nach der änderung) wird
@@ -107,17 +109,22 @@ schwebende Größe kam nirgends vor.
 
 Die Behebung hängt sich an denselben Mechanismus: zwei weitere Schlüssel,
 `FloatCx<id>` und `FloatCy<id>`, geschrieben und gelesen wie die beiden
-vorhandenen. Kein neuer Weg, keine zweite Stelle, die jemand übersehen kann. Eine Größe von `0` wird gar nicht erst geschrieben — sie
-wäre schlimmer als kein Eintrag, weil `LoadState` sie übernehmen müsste.
+vorhandenen. Kein neuer Weg, keine zweite Stelle, die jemand übersehen kann.
+Eine Größe von `0` wird gar nicht erst geschrieben — sie wäre schlimmer als
+kein Eintrag, weil `GroessenLaden` sie übernehmen müsste.
+
+Die beiden Schlüssel stehen im Abschnitt `[ToolBar-ToolBarManager]`; Vorgabe,
+Fundstelle und die Regel dazu in [EINSTELLUNGEN.md](EINSTELLUNGEN.md).
 
 ## 7.2.0.49 — das schwebende Filterfenster lässt sich nach unten ziehen (E-76)
 
 **Was Gregor damit tun kann:** ein freischwebendes Filterfenster nicht nur
-seitlich, sondern auch nach unten größer ziehen. **Noch nicht von ihm
-bestätigt.**
+seitlich, sondern auch nach unten größer ziehen. **Von ihm am 11.09.2026
+bestätigt:** *„e-76: paßt: läßt sich jetzt vergrößern."*
 
-Gemeldet am 10.09.2026 an 1.0.40, am 11.09.2026 bestätigt: *„e-76: nein,
-immer noch bug."* Dazu der Satz, der die Sache gelöst hat: *„könnte gerade
+Gemeldet am 10.09.2026 an 1.0.40 und am 11.09.2026 als **noch vorhanden**
+wiederholt: *„e-76: nein, immer noch bug."* Dazu der Satz, der die Sache
+gelöst hat: *„könnte gerade
 was im log stehen, falls trace eingeschaltet."*
 
 ### Die Spurmarke hat nach sieben Fassungen geliefert
