@@ -56,6 +56,28 @@ schranke() {
 #    (Befund X-5).
 schranke pruefe-branch.pl || exit $?
 
+# 1b. Rollenstand MELDEN - nicht abweisen, deshalb steht hier kein "|| exit".
+#
+#     Am 13.09.2026 um 18:57 fragte Gregor: "maschst du wieder alles allein?
+#     magst du die anderen nicht so?" Gemessen im Transkript: die drei Rollen
+#     wurden um 18:59, 18:59 und 19:00 gestartet - also NACH seiner Frage -
+#     und tools/rollen-faellig.pl lief zum ersten Mal um 19:05, acht Minuten
+#     danach. In den 43 Minuten davor (18:14 bis 18:57, 84 Werkzeugaufrufe)
+#     ist die Schranke kein einziges Mal gelaufen.
+#
+#     Der Grund war der Zeitpunkt, nicht das Werkzeug: rollen-faellig.pl hing
+#     bis dahin NUR in paket-bauen.ps1, also am allerletzten Schritt. Da ist
+#     die Arbeit getan - eine Rolle haette sie aber BEGLEITEN sollen. Der
+#     erste Commit eines Arbeitsblocks kommt frueh; das ist der richtige
+#     Moment, um den Rollenstand zu sehen.
+#
+#     Bewusst nur meldend: eine faellige Rolle darf das Committen nicht
+#     blockieren, sonst wird die Schranke umgangen und faengt dann auch
+#     nichts mehr. Abweisend bleibt sie beim Paketbau.
+if [ -f "$WURZEL/tools/rollen-faellig.pl" ]; then
+  perl "$WURZEL/tools/rollen-faellig.pl" 2>/dev/null | grep -E "FAELLIG|ist faellig" | head -4
+fi
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #
@@ -117,6 +139,16 @@ schranke pruefe-waechter.pl || exit $?
 #    Es hat sich damit am 09.09.2026 selbst gefunden: es fehlte hier.
 schranke lehren-schranken.pl || exit $?
 schranke lehren-uebersicht.pl || exit $?
+
+# 8b. Jede Rolle, die eine Schranke kennt, muss in AGENTEN.md nachschlagbar
+#     sein. Am 13.09.2026 um 19:33 beauftragte Gregor "den lektor" mit den
+#     lessons learned - zustaendig ist CHRONIST. Er berichtigte es 59 Sekunden
+#     spaeter selbst. Beim Nachmessen: AGENTEN.md enthielt das Wort CHRONIST
+#     KEIN EINZIGES MAL; die Rolle war nur im Quelltext von rollen-faellig.pl
+#     definiert. Weder Gregor noch ich konnten sie nachschlagen - das ist eine
+#     fehlende Quelle, keine Unaufmerksamkeit.
+#     Gegenprobe: --selbsttest, vier Faelle.
+schranke pruefe-rollen-doku.pl || exit $?
 
 # 9. Eigene Nachrichtenschleifen: WM_QUIT darf nicht verschluckt werden, und
 #    es darf nicht ohne Zeitschranke gewartet werden. Aus E-51 (meine eigene
@@ -269,6 +301,8 @@ echo
 echo "Der pre-push prueft zusaetzlich, gegen den fertigen Zweig:"
 echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selbst"
 echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
+echo "  tools/pruefe-rollen-doku.pl  ist jede Rolle aus rollen-faellig.pl in"
+echo "                               AGENTEN.md nachschlagbar? (pre-commit)"
 echo "  tools/pruefe-testbau.pl      laesst sich EudoraTests.exe ueberhaupt bauen?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
 echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"
