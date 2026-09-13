@@ -17,7 +17,55 @@ beziehen sich auf den Stand 82a6d6f.
 | Es gibt weitere Stellen im IMAP-Weg mit der alten Skala | **widerlegt** — `ImapLex822.cpp` rechnete schon immer auf der neuen |
 | `ISOTranslateChunk` schreibt vor den Anfang des Stücks | **widerlegt** — kein Pfad kann das, Beweis unten |
 | `imapgets.cpp` hat einen zweiten Schreibweg mit derselben Lücke | **widerlegt** — `CFileWriter` schreibt Anhänge, dort ist Nicht-Übersetzen richtig |
-| **Die Behebung führt einen neuen Fehler ein** | **BESTÄTIGT — siehe Befund 1** |
+| **Die Behebung führt einen neuen Fehler ein** | **BESTÄTIGT — siehe Befund 1, inzwischen behoben** |
+
+Dazu die zwei roten Tests: **beide waren falsch, nicht der Code.** Siehe den
+letzten Abschnitt.
+
+Stand am Ende: **121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+---
+
+## Die drei Fragen zur Speichersicherheit, kurz beantwortet
+
+**1. Gibt es einen Pfad, auf dem `lErgebnis > 0` ist, ohne dass vorher
+`pBuf += lHolen` mit `lHolen >= lErgebnis` gelaufen ist?**
+
+**Nein.** `lErgebnis` wird an genau einer Stelle auf einen Wert > 0 gesetzt —
+im inneren `else`-Zweig von Schritt 1 —, und in demselben Block stehen
+unmittelbar danach die Deckelung `else if (lErgebnis > lHolen) lErgebnis =
+lHolen;` und `pBuf += lHolen;`. Beide werden zusammen ausgeführt oder gar
+nicht; zwischen diesem Block und dem `memcpy` in Schritt 4 gibt es keine
+weitere Zuweisung an `pBuf` (Schritt 2 ändert nur `lSize`, Schritt 3 nur den
+Inhalt). Also gilt beim `memcpy` immer `pBuf - lErgebnis >= pBuf - lHolen =
+*ppBuf beim Eintritt`. Der ausführliche Beweis samt der Invariante
+`1 <= lHolen` steht weiter unten unter "Ist `ISOTranslateChunk`
+speichersicher?".
+
+**2. Bleibt `lErgebnis` im Fall `*plUebertrag > 0, lNoetig == 0` von einem
+früheren Durchlauf stehen?**
+
+**Nein.** `utils.cpp`, Deklarationsblock von `ISOTranslateChunk`:
+`LONG lErgebnis = 0;` — bei der Deklaration initialisiert, und es ist eine
+gewöhnliche lokale Variable ohne `static`. Jeder Aufruf beginnt bei 0. Im Zweig
+`lNoetig == 0` wird `*plUebertrag = 0` gesetzt und sonst nichts; `lErgebnis`
+bleibt 0, Schritt 4 wird nicht betreten, `pBuf` bleibt unverschoben. (Der
+Nebeneffekt: die zurückgehaltenen Bytes verschwinden — das ist Befund 2, kein
+Speicherproblem.)
+
+**3. Schreibt `ISOTranslate` mit `szBuf[lSize] = 0` über das Ende hinaus, wenn
+`pBuf` bei `m_bMustReadSingleLines` mitten in den Puffer zeigt?**
+
+**JA — das ist der gefundene Fehler, Befund 1.** Bei `m_bMustReadSingleLines`
+gilt nicht die Rechnung mit der `BUFLEN + 4`-Reserve: `GetNextChunk` liefert
+`*pBuf = m_pStart` und `*lBytes = inLen`, und `m_pNext = m_pStart + inLen` ist
+das erste Byte der nächsten Zeile IM SELBEN PUFFER. `pBuf[lSize]` trifft genau
+dieses Byte. Die Reserve am Pufferende hilft dort nicht.
+
+Nicht argumentiert, sondern gemessen: mit herausgenommener Rettung meldet die
+neue Schranke *"Index 4: das erste Byte der naechsten Zeile wurde auf 0x00
+gesetzt, erwartet 'X' (0x58)"* — und dasselbe für Index 3 (Latin-9). Behoben in
+`86a5441`.
 
 ---
 
@@ -69,9 +117,17 @@ nächste Zeile steht, nicht das Pufferende.
 - Letzte Zeile eines Pufferinhalts: `m_pNext` zeigt hinter die Daten, aber noch
   in die +4-Reserve.
 
-**Vorschlag:** Das Byte an `pBuf[lSize]` in `ISOTranslateChunk` vor Schritt 3
-sichern und danach wiederherstellen. Das trifft genau die Stelle, an der der
-fremde Puffer benutzt wird, und lässt `ISOTranslate` unangetastet.
+**BEHOBEN** (Commit `86a5441`): Das Byte an `pBuf[lSize]` wird in
+`ISOTranslateChunk` um beide `ISOTranslate`-Aufrufe auf dem fremden Puffer
+herum gerettet — vor dem Aufruf gelesen, danach zurückgeschrieben, und nur
+dort, wo `ISOTranslate` überhaupt schreibt (`iCharsetIdx > 2`, `lSize >= 0`).
+`ISOTranslate` selbst bleibt unangetastet, so wie der Kommentar dort es
+verlangt.
+
+Dazu die Schranke `ISOTranslateChunk: das Byte hinter dem Stueck bleibt
+unangetastet` (`Eudora71/Tests/TestIsoTranslate.cpp`): zwei Zeilen in einem
+Puffer, Wächterbyte `'X'` hinter der ersten, geprüft für UTF-8 und Latin-9.
+Gegengetestet — mit herausgenommener Rettung schlägt sie an.
 
 ---
 
@@ -201,3 +257,78 @@ steckt in `ISOTranslate`, nicht in `ISOTranslateChunk`.
 Dort gibt es keine Zeichensatzumwandlung und darf auch keine geben: eine
 angehängte Datei muss byteweise so ankommen, wie sie abgeschickt wurde. Der
 POP3-Weg macht es genauso. **Keine zweite Lücke.**
+
+Der gemeinsame `CChunkReader` ist aber die Quelle von Befund 1 — der zweite
+Schreibweg hat die Lücke nicht, weil er gar nicht übersetzt.
+
+---
+
+## Die zwei roten Tests: beide waren falsch, nicht der Code
+
+### `SECImage: FlipHorz/FlipVert/… melden sich`
+
+Die Vermutung stimmt. `OTShimNichtUmgesetzt` (`Eudora71/OTShim/OTShim.cpp`)
+ruft seit E-33 (07.09.2026) `::OutputDebugString`, nicht mehr `AfxMessageBox`.
+Die Probe in `Eudora71/Tests/OTShimProbe.cpp` fängt `CWinApp::DoMessageBox` ab
+und sieht deshalb nichts; sie zählte auf null, der Test erwartete fünf.
+
+Berichtigt, aber **nicht entschärft, sondern umgedreht**: aus der Zählung wird
+eine Schranke GEGEN E-33 — kein Rumpf darf ein Meldungsfenster aufmachen.
+Damit sie nicht grün ist, weil gar nichts lief, belegen die Rückgabewerte, dass
+alle sechs Rümpfe gelaufen sind. Was nicht prüfbar ist (ob die Meldung wirklich
+in der Debug-Ausgabe ankommt, ob das Merkzeichen sie beim zweiten Mal
+unterdrückt), behauptet der Test nicht mehr — `::OutputDebugString` lässt sich
+im eigenen Prozess ohne Debugger nicht verlässlich mitlesen.
+
+Gegengetestet: mit `AfxMessageBox(strMeldung)` statt `::OutputDebugString`
+schlägt die Schranke an — *"E-33 ist zurueck: 6 modale Meldung(en) aus den
+Ruempfen"*.
+
+### `SECControlBar::CalcDynamicLayout: der Schwebe-Zweig zieht an einem Rand`
+
+**Der Test war falsch, der Code hat recht.** Er erwartete von
+`CalcDynamicLayout(320, LM_COMMIT)` das Ergebnis 320x150 — also genau das, was
+BEFUND E-76 WAR. Die Schranke war am 13.09.2026 gegen die *Erwartung*
+geschrieben, nicht gegen das Gemessene, und konnte nie laufen, weil
+`EudoraTests.exe` seit dem 10.09. nicht linkte.
+
+Gemessen hat es die Spurmarke `E76Marke` in `OTShim.cpp`: beim abschließenden
+Aufruf ist `dwMode = LM_COMMIT|LM_HORZ` **ohne** `LM_LENGTHY`, und `nLength`
+trägt dort die BREITE (780), nicht die gezogene Höhe. Wer beim COMMIT `nLength`
+als Breite übernimmt, speichert 780x100 statt 780x299 — Gregors Meldung
+*"filter fenster laesst sich nicht nach unten vergroessern, nur zur seite"*.
+Deshalb ignoriert die Behebung `nLength` beim COMMIT und nimmt
+`m_szZuletztGezogen`. E-76 ist am laufenden Programm bestätigt.
+
+Der Test prüft jetzt das bestätigte Verhalten und bekommt eine Gegenprobe in
+Gregors Richtung: der gemessene Ablauf (105/172/234/299 mit
+`LM_LENGTHY|LM_HORZ`, dann `LM_COMMIT|LM_HORZ` mit der Breite 780) muss die
+gezogene Höhe überleben.
+
+Gegengetestet: mit dem alten Zweig (`else` statt `else if (!(dwMode &
+LM_COMMIT))`, kein Merker beim Speichern) schlägt die Schranke an und meldet
+exakt die aus dem Protokoll bekannten 780x100.
+
+### Nachgezogen: ein Testname, der seit E-85 nicht mehr stimmte
+
+`TestPopEmpfang.cpp`: *"POP: der Index wird um eins verschoben — anders als im
+IMAP-Pfad"* war grün und trotzdem veraltet. Der Test beschrieb sich selbst als
+"Belegstelle fuer den bekannten IMAP-Fehler" — den es seit E-85 nicht mehr
+gibt. Name und Begründung nachgezogen; die Messungen bleiben, denn sie
+begründen jetzt, WARUM die Verschiebung nötig ist.
+
+---
+
+## Was zurückbleibt
+
+- Befund 2 und 3 in `ISOTranslateChunk` sind nicht behoben: beide sind
+  unerreichbar, beide beschreiben aber einen Fall, den es so nicht gibt.
+- `ISOTranslate` selbst null-terminiert weiterhin einen Byte hinter dem
+  Bereich. Jeder künftige Aufrufer mit fremdem Puffer läuft in dieselbe Falle.
+  Der Kommentar in `utils.cpp` warnt davor, das zu ändern; eine Schranke, die
+  neue Aufrufstellen darauf prüft, gibt es nicht.
+- `SECControlBar::CalcDynamicLayout`: zieht der Anwender erst in der Höhe und
+  dann in der Breite, setzt der Breiten-Zweig `size = m_szFloat` und verwirft
+  damit die gerade gezogene Höhe im Merker. Ob MFC beim Ziehen an einer Ecke
+  beide Richtungen nacheinander meldet, ist ungeprüft. Nicht gemessen, deshalb
+  hier nur notiert.
