@@ -140,6 +140,16 @@ schranke pruefe-waechter.pl || exit $?
 schranke lehren-schranken.pl || exit $?
 schranke lehren-uebersicht.pl || exit $?
 
+# 8b. Jede Rolle, die eine Schranke kennt, muss in AGENTEN.md nachschlagbar
+#     sein. Am 13.09.2026 um 19:33 beauftragte Gregor "den lektor" mit den
+#     lessons learned - zustaendig ist CHRONIST. Er berichtigte es 59 Sekunden
+#     spaeter selbst. Beim Nachmessen: AGENTEN.md enthielt das Wort CHRONIST
+#     KEIN EINZIGES MAL; die Rolle war nur im Quelltext von rollen-faellig.pl
+#     definiert. Weder Gregor noch ich konnten sie nachschlagen - das ist eine
+#     fehlende Quelle, keine Unaufmerksamkeit.
+#     Gegenprobe: --selbsttest, vier Faelle.
+schranke pruefe-rollen-doku.pl || exit $?
+
 # 9. Eigene Nachrichtenschleifen: WM_QUIT darf nicht verschluckt werden, und
 #    es darf nicht ohne Zeitschranke gewartet werden. Aus E-51 (meine eigene
 #    Ziehschleife hat die Pruefinstanz zweimal eingefroren) und E-61 (dieselbe
@@ -291,6 +301,8 @@ echo
 echo "Der pre-push prueft zusaetzlich, gegen den fertigen Zweig:"
 echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selbst"
 echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
+echo "  tools/pruefe-rollen-doku.pl  ist jede Rolle aus rollen-faellig.pl in"
+echo "                               AGENTEN.md nachschlagbar? (pre-commit)"
 echo "  tools/pruefe-testbau.pl      laesst sich EudoraTests.exe ueberhaupt bauen?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
 echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"

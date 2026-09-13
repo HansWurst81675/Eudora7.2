@@ -184,3 +184,30 @@ hatte.
    im `pre-push` und weist ab.
 8. **Freigeben**: `arbeitsbaum-frei.pl --freigeben`, und `gesichert.pl` als
    letzte Probe, dass nichts uncommittet oder ungepusht liegenbleibt.
+
+---
+
+## Die drei Daueraufgaben — wer wofür zuständig ist
+
+Diese drei Rollen laufen nicht auf Zuruf, sondern nach einem festen Auslöser
+(`tools/rollen-faellig.pl`). Die Tabelle ist die **nachschlagbare** Fassung
+dessen, was dieses Werkzeug im Quelltext führt; `tools/pruefe-rollen-doku.pl`
+hält beide gegeneinander.
+
+| Rolle | Zuständig für | Auftrag | Bericht |
+|---|---|---|---|
+| **LEKTOR** | die Dokumentation gegen den Bestand | Alle MDs gegen den Bestand prüfen, nicht gegen den Diff | `Befunde/LEKTOR-N.md` |
+| **PRUEFER** | die Behebungen im Quelltext | Jede Behebung gegen die MFC-Quelle nachrechnen, Gegenvermutungen aufstellen | `Befunde/PRUEFER-N.md` |
+| **CHRONIST** | die Lehren aus dem Verlauf | Den Chat seit dem letzten Lauf auswerten, Lehren anlegen und ergänzen | `Arbeitsweise/*.md` |
+
+**Warum diese Tabelle hier steht:** Am 13.09.2026 um 19:33 beauftragte Gregor
+*„den lektor"* damit, *„lessons leared"* zu aktualisieren — zuständig ist
+dafür CHRONIST. Er bemerkte es 59 Sekunden später selbst (*„halt: das war der
+chronist, ja?"*). Beim Nachmessen zeigte sich: **AGENTEN.md enthielt das Wort
+CHRONIST kein einziges Mal.** Die Rolle war nur im Quelltext von
+`rollen-faellig.pl` definiert, also für niemanden nachschlagbar — weder für
+Gregor noch für mich.
+
+Wer eine Rolle beauftragt, prüft die Zuständigkeit an **dieser** Tabelle.
+Passt der genannte Name nicht zur Aufgabe, wird das gesagt, bevor der Agent
+startet.

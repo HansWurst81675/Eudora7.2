@@ -88,6 +88,7 @@ eine Datei liest, liest diese.
 | [quelldateien-nur-byte-erhaltend-aendern](quelldateien-nur-byte-erhaltend-aendern.md) | Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden - nur byte-erhaltend aendern, nie mit dem Edit-Werkzeug |
 | [release-erst-nach-gregors-test](release-erst-nach-gregors-test.md) | Ein GitHub-Release entsteht erst, nachdem Gregor die Fassung lokal geprüft und für gut befunden hat |
 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) | Ein Diff-Review kann eine veraltete unveraenderte Datei nicht sehen; vor dem Merge wird der Bestand geprueft, nicht die Aenderung |
+| [rollenzuweisung-pruefen](rollenzuweisung-pruefen.md) | Einer falschen Rollenzuweisung im Auftrag folgen, statt sie zu benennen - und die Rolle stand in keiner nachschlagbaren Quelle |
 | [schranke-gegentesten](schranke-gegentesten.md) | Jede neue Schranke gegen den echten Fehler fahren und gegen den erlaubten Fall; eine stumme Pruefung und ein Fehlalarm sind derselbe Schaden |
 | [schranke-liest-nur-code](schranke-liest-nur-code.md) | Eine Schranke, die Quelltext mit Regex prueft, muss Kommentare und Protokolltexte vorher wegwerfen und ihren Bereich am Rumpfende abschliessen - sonst liest sie ihre eigene Begruendung |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |

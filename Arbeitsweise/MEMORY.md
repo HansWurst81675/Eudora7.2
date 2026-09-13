@@ -58,3 +58,4 @@
 - [Prüfstand kann blind sein](pruefstand-kann-blind-sein.md) — ein kaputter und ein grüner Prüfstand melden beide nichts; die Testsuite war drei Tage nicht baubar
 - [Auslöser an den Anfang](ausloeser-an-den-anfang.md) — eine Schranke am Ende beantwortet eine Frage, die am Anfang gestellt werden musste; die Rollenschranke lief acht Minuten nach Gregors Frage
 - [Arbeitsbaum braucht eigenes Gegenstück](arbeitsbaum-braucht-eigenes-gegenstueck.md) — wt/<name> muss origin/wt/<name> verfolgen, sonst landet der Push auf fremdem Gebiet; eine Remote-Basis vererbt den Upstream, eine lokale nicht
+- [Rollenzuweisung prüfen](rollenzuweisung-pruefen.md) — die Aufgabe entscheidet, nicht der genannte Name; CHRONIST stand in AGENTEN.md kein einziges Mal
