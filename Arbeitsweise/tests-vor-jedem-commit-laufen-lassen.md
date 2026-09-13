@@ -5,7 +5,7 @@ metadata:
   type: feedback
 ---
 
-Schranke: keine - kein Hook ruft die Testsammlungen unter tools/*-tests.pl auf; tools/pruefstand-melden.pl meldet nur den Rückstand und weist nichts ab
+Schranke: tools/pruefe-testbau.pl (pre-push) - weist ab, wenn sich die Testsammlung nicht mehr BAUEN laesst; bei roten Tests bewusst nicht. Dass die Tests auch LAUFEN, prueft weiterhin kein Hook - siehe pruefstand-kann-blind-sein.md
 
 Gregors Vorgabe vom 28.08.2026: "lass die zwei pruefstand und feldversuch immer mit
 laufen, bevor du etwas commitest - oder von mir aus auch hinterher. man kann im
