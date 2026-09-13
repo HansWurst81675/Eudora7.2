@@ -108,3 +108,55 @@ sie abzustellen. Deshalb ist die Stelle in
 * Bei Perl ist `perl -c DATEI` in Ordnung — dort ist der Rückgabewert
   tatsächlich ungleich 0. Das ist der Unterschied, und er ist nicht
   offensichtlich, also wird er gemessen und nicht vermutet.
+
+---
+
+## Dritter und vierter Fall, 13.09.2026 — beim Nachprüfen genau dieser Lehre
+
+Beim Gegentest der drei Schranken, die an diesem Tag gegriffen haben, ist mir
+derselbe Fehler zweimal hintereinander unterlaufen. Das ist kein Zufall,
+sondern der Beleg, wie nah dieser Griff liegt.
+
+**Dritter Fall — der Rückgabewert kam vom falschen Prozess.** Gemessen wurde
+
+```
+perl tools/pruefe-bytes.pl 2>&1 | tail -12; echo "EXIT=$?"
+```
+
+Das meldete `EXIT=0` — also „die Schranke lässt das Mojibake durch". Falsch:
+`$?` trägt hinter einer Pipe den Rückgabewert des **letzten** Glieds, hier
+`tail`, und `tail` gelingt immer. Ohne Pipe gemessen:
+
+```
+AUSGABE=$(perl tools/pruefe-bytes.pl 2>&1); RC=$?
+```
+
+**Vierter Fall — die Messung traf den Weg nicht.** Auch ohne Pipe blieb die
+Schranke zunächst still, Rückgabe 0. Grund: `pruefe-bytes.pl` ist eine
+pre-commit-Schranke und sieht nur **vorgemerkte** Dateien. Der Gegentest lief
+ohne `git add`, also im falschen Betriebsmodus
+([[messung-muss-den-weg-treffen]]). Mit `git add` dann sofort:
+
+```
+RUECKGABE_MIT_STAGING=1
+COMMIT ABGEBROCHEN - lautloser Schaden erkannt:
+  * CHANGELOG.md: doppelt kodiert - 1 Stellen, vorher 0
+```
+
+**Why:** Beide Male hätte ich um ein Haar eine **funktionierende Schranke für
+kaputt erklärt** — das Gegenstück zum Fehler oben, aber derselbe Mechanismus:
+ein Urteil, das an etwas anderem hängt als am gemessenen Ergebnis. Ein
+Fehlurteil in dieser Richtung ist teurer, als es aussieht, denn es hätte zum
+Umbau einer Schranke geführt, die richtig arbeitet.
+
+**How to apply:**
+
+* **Nie `$?` hinter einer Pipe.** Erst in eine Variable
+  (`AUS=$(befehl 2>&1); RC=$?`), dann urteilen, dann anzeigen. Wer die Ausgabe
+  gleich durch `tail` schickt, misst `tail`.
+* **Vor dem Urteil über eine Schranke prüfen, ob sie überhaupt gelaufen ist.**
+  Eine stille Schranke heißt „nichts gefunden" **oder** „hat nichts
+  angesehen". Bei `pruefe-bytes.pl` ist der Unterschied ein `git add`.
+* Eine Schranke, die im Gegentest nichts meldet, ist erst dann verdächtig,
+  wenn der Gegentest selbst nachgewiesen hat, dass er den geprüften Weg trifft
+  — nicht vorher.
