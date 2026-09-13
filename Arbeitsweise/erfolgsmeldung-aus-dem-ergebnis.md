@@ -48,3 +48,63 @@ Verwandt: [[zeilenenden-nach-jedem-schreibzugriff-messen]] misst dieselbe Datei
 auf eine andere Eigenschaft — dort lautlos falscher Inhalt, hier gar keiner.
 Und [[gegenprobe-umdrehen]]: nicht fragen, ob mein Skript zufrieden ist,
 sondern ob der gewünschte Zustand in der Datei steht.
+
+---
+
+## Zweiter Fall am selben Tag, 13.09.2026 — die Probe, die diese Lehren empfehlen
+
+Ein PowerShell-Syntaxcheck meldete `Syntax ok` für eine Datei, die nicht parst.
+Benutzt wurde genau die Probe, die
+[[text-nicht-durch-schichten-schicken]] seit dem 06.09.2026 empfiehlt:
+
+```
+powershell -Command "[ScriptBlock]::Create((Get-Content -Raw 'DATEI'))"
+```
+
+**Nachgemessen am 13.09.2026** an einer Datei mit fehlender schließender
+Klammer:
+
+```
+Ausnahme beim Aufrufen von "Create" mit 1 Argument(en): ...
+    + FullyQualifiedErrorId : ParseException
+
+Syntax ok
+EXITCODE=0
+```
+
+Dieselbe Form wie beim Perl-Einzeiler oben: **die Erfolgsmeldung steht unter
+der Fehlermeldung, und der Rückgabewert ist 0.** `[ScriptBlock]::Create`
+wirft eine nicht-terminierende `MethodInvocationException`; `powershell
+-Command` läuft weiter und beendet sich mit 0. Ein Hook, der daran hängt,
+lässt die kaputte Datei durch. Gefunden wurde der Fehler erst mit:
+
+```powershell
+$t = $null; $e = $null
+[void][System.Management.Automation.Language.Parser]::ParseFile($pfad, [ref]$t, [ref]$e)
+if ($e -and $e.Count) { Write-Error ("Parserfehler: " + $e[0].Message); exit 1 }
+```
+
+**Why:** Es ist nicht nur dieselbe Klasse, es ist derselbe Mechanismus. Der
+Perl-Einzeiler hing seinen `print` an den Kontrollfluss statt an das Ergebnis;
+dieser Check hängt sein `Syntax ok` an den Kontrollfluss statt an den
+ausgewerteten Fehlerbehälter. Beide Male ist die Ausnahme sichtbar in der
+Ausgabe und wird trotzdem nicht zum Urteil.
+
+**Das Schwerwiegende daran:** die falsche Probe stand in einer *Lehre*. Eine
+Lehre, die eine stumme Prüfung empfiehlt, verbreitet die Fehlerklasse, statt
+sie abzustellen. Deshalb ist die Stelle in
+[[text-nicht-durch-schichten-schicken]] am 13.09.2026 berichtigt worden.
+
+**How to apply — für jede Prüfung, die irgendwo hängt:**
+
+* **Die Prüfung muss einen Rückgabewert ungleich 0 liefern, sonst ist sie
+  keine Prüfung.** `echo "ok"` hinter einem Aufruf ist eine Behauptung, kein
+  Ergebnis.
+* **Jede Prüfung wird einmal gegen den echten Fehler gefahren, bevor sie in
+  einen Hook kommt** ([[schranke-gegentesten]]). Genau dieser Gegentest hat
+  hier zwei Minuten gekostet und die stumme Probe sofort entlarvt.
+* **Bei PowerShell nie `[ScriptBlock]::Create` als Syntaxprobe**, sondern
+  `Parser::ParseFile` mit ausgewertetem `[ref]$fehler` und explizitem `exit 1`.
+* Bei Perl ist `perl -c DATEI` in Ordnung — dort ist der Rückgabewert
+  tatsächlich ungleich 0. Das ist der Unterschied, und er ist nicht
+  offensichtlich, also wird er gemessen und nicht vermutet.
