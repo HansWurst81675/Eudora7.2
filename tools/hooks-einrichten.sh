@@ -154,7 +154,26 @@ schranke pruefe-filter-aktionsgrenze.pl || exit $?
 #     eine Schranke statt einer weiteren Korrektur.
 schranke pruefe-ini-abschnitte.pl || exit $?
 
-# 13. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 13. Ziehen am schwebenden Fenster. CalcDynamicLayout bekommt beim Ziehen
+#     LM_LENGTHY und nLength als Hoehe, beim ABSCHLIESSENDEN Aufruf aber
+#     LM_COMMIT ohne LM_LENGTHY und nLength als BREITE. Der alte nackte
+#     else-Zweig fing genau den ab und warf die gezogene Hoehe weg (E-76,
+#     Gregor am 10.09.2026: "filter fenster laesst sich nicht nach unten
+#     vergroessern, nur zur seite"). Gegenprobe:
+#     pruefe-fenster-ziehen-tests.pl, 14 Faelle in beide Richtungen.
+schranke pruefe-fenster-ziehen.pl || exit $?
+
+# 14. Leistengroessen paarig. Was GroessenSichern schreibt, muss
+#     GroessenLaden lesen - und beide muessen auf dem Weg liegen, den Eudora
+#     wirklich geht. Zweimal dieselbe Fehlerklasse: bei E-70 fehlte das
+#     Lesen (der Aufruf sass in einer Funktion, ueber der "Eudora ruft diese
+#     Fassung nie auf" steht), bei E-84 das Schreiben (der erste Anlauf sass
+#     in SECControlBarInfo::SaveState, die beim Speichern nicht durchlaufen
+#     wird - er uebersetzte sauber und bewirkte nichts). Gegenprobe:
+#     pruefe-leistengroessen-paar-tests.pl, 17 Faelle in beide Richtungen.
+schranke pruefe-leistengroessen-paar.pl || exit $?
+
+# 15. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
 HOOKENDE
@@ -221,7 +240,13 @@ echo "                               Filters.pce ueber das Feld hinaus? (E-68)"
 echo " 12. tools/pruefe-ini-abschnitte.pl"
 echo "                               steht ein INI-Schluessel in der Doku im"
 echo "                               Abschnitt, den GetSectionID ihm gibt?"
-echo " 13. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo " 13. tools/pruefe-fenster-ziehen.pl"
+echo "                               rechnet der abschliessende Aufruf von"
+echo "                               CalcDynamicLayout wieder aus nLength? (E-76)"
+echo " 14. tools/pruefe-leistengroessen-paar.pl"
+echo "                               kennt einen Groessenschluessel nur EINE der"
+echo "                               beiden Seiten? (E-70, E-84)"
+echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo "Abweisend sind alle ausser Schritt 3 - der meldet bloss."
 echo "Jeder von ihnen wertet JEDEN Rueckgabewert aus -"
