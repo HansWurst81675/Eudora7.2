@@ -313,5 +313,44 @@ if ($branch =~ m{^wt/(.+)$}) {
     }
 }
 
+# ---------------------------------------------------------------------------
+# Ist der Zweigname mit Gregor abgestimmt? MELDET NUR, weist nicht ab.
+# ---------------------------------------------------------------------------
+#
+# Gregor am 07.09.2026: "ziele-berichtigen - der branch ist illegal und wird
+# geloescht. den haben wir gar nicht vereinbart." Die Lehre dazu steht seit
+# dem 11.09.2026 in Arbeitsweise/zweig-vorher-abstimmen.md und hatte bis zum
+# 13.09.2026 die Zeile "Schranke: keine". An diesem einen Tag habe ich dann
+# DREI Zweige selbst benannt: release-050-protokoll, lehre-erfolgsmeldung und
+# ziel-kriterium-2. Dass eine aufgeschriebene Regel dreimal an einem Tag
+# gebrochen wird, belegt den fehlenden Ausloeser, nicht die fehlende Einsicht.
+#
+# Bewusst nur MELDEND: eine Schranke, die jeden Commit auf einem neuen Zweig
+# blockiert, wird umgangen - und faengt dann auch die Faelle nicht mehr, fuer
+# die es sie gibt (Arbeitsweise/pruefstand-kann-blind-sein.md). Der erste
+# Commit kommt frueh genug, um noch umzubenennen.
+{
+    my $wurzel = git('rev-parse', '--show-toplevel');
+    $wurzel =~ s/\Q${\ chr(92)}\E/\//g if length $wurzel;
+    my $liste = length($wurzel) ? "$wurzel/tools/ZWEIGE.md" : "";
+    if (length($branch) && $branch !~ m{^wt/} && length($liste) && -f $liste) {
+        my $inhalt = "";
+        if (open(my $h, "<:raw", $liste)) { local $/; $inhalt = <$h>; close $h; }
+        unless ($inhalt =~ /`\Q$branch\E`/) {
+            print "\n";
+            print "  HINWEIS: '$branch' steht nicht in tools/ZWEIGE.md.\n";
+            print "\n";
+            print "  Ein Zweig wird erst angelegt, wenn Gregor den NAMEN bestaetigt hat\n";
+            print "  (07.09.2026: \"den haben wir gar nicht vereinbart\"). Am 13.09.2026\n";
+            print "  sind drei Zweige an einem Tag an dieser Regel vorbeigegangen.\n";
+            print "\n";
+            print "  Ist der Name abgestimmt? Dann eintragen:  tools/ZWEIGE.md\n";
+            print "  Ist er es nicht? Dann jetzt fragen - der erste Commit ist frueh\n";
+            print "  genug zum Umbenennen.\n";
+            print "\n";
+        }
+    }
+}
+
 melde("pruefe-branch: '$branch' ist eigenstaendig und lebt - in Ordnung\n");
 exit 0;
