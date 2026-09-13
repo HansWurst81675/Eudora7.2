@@ -62,6 +62,7 @@ eine Datei liest, liest diese.
 | [dummy-statt-weglassen](dummy-statt-weglassen.md) | Nicht benutzte Funktionen, Methoden und Klassen als Dummy implementieren, statt sie auszubauen |
 | [eigene-schleife-verschluckt-nichts](eigene-schleife-verschluckt-nichts.md) | Eine eigene Nachrichtenschleife darf WM_QUIT nicht entnehmen, ohne sie zurückzustellen — und nicht ohne Zeitschranke warten |
 | [eingebaute-messung-auslesen](eingebaute-messung-auslesen.md) | Eine Spurmarke, die niemand ausliest, ist keine Messung - der Moment des Auslesens gehoert an das naechste Paket |
+| [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
