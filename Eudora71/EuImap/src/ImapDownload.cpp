@@ -4659,7 +4659,19 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 				// As a first pass at handling other charsets we pass the text
 				// through a translator function.  A more elegant solution would
 				// be to create a decoder for other charsets.
-				ISOTranslate(pBuf, inLen, iCharsetIdx);
+				// E-85: ISOTranslate liefert die Laenge NACH der Uebersetzung.
+				// Ein UTF-8-Zeichen wird auf dem Weg nach CP1252 kuerzer, also
+				// schrumpft der Inhalt - der Rueckgabewert wurde hier aber
+				// verworfen. outLen trug weiter die Laenge VOR der Uebersetzung
+				// bis zum m_mbxFile.Put() weiter unten, und die ueberzaehligen
+				// Altbytes landeten mit in der Mailboxdatei. Der POP3-Weg macht
+				// es richtig: Eudora/TextReader.cpp, "size = ISOTranslate(...)".
+				LONG lUebersetzt = ISOTranslate(pBuf, inLen, iCharsetIdx);
+				if (lUebersetzt >= 0 && lUebersetzt <= inLen)
+				{
+					inLen  = lUebersetzt;
+					outLen = lUebersetzt;
+				}
 			}
 
 			// If we'er uuing or hexing, those decoders write out the decoded contents
