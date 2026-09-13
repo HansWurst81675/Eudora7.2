@@ -56,6 +56,72 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.51 — Umlaute in per IMAP abgerufenen Nachrichten (E-85)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen,
+statt Zeichensalat zu sehen: in *für* steht das `ü` als UTF-8 `C3 BC`, und
+wer diese zwei Bytes als CP1252 liest, bekommt zwei Zeichen statt einem.
+**Von Gregor noch nicht bestätigt.**
+
+Sein Hinweis war der Schlüssel: *„das hatten wir ja bereits gefixt, soweit ich
+mich erinnern kann?"* — **Z-2b** war am 05.09.2026 genau dieser Fehler, behoben
+in `utils.cpp`, `utils.h` und `TextReader.cpp`. `TextReader` wird von acht
+Dateien benutzt, und **keine davon gehört zum IMAP-Weg**.
+
+Gefunden wurden **drei** Mängel, alle in `EuImap/src/ImapDownload.cpp`:
+
+**Der schwerwiegendste: `charset=utf-8` wurde gar nicht erkannt.** Zeile 4645
+suchte den Zeichensatz mit
+
+```c
+FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9, params->value, -1)
+```
+
+Der Bereich endet bei `IDS_MIME_ISO_LATIN9` = **3613**; `IDS_MIME_UTF_8` ist
+**3614** und liegt damit **dahinter**. Der Aufruf lieferte `-1`, die Bedingung
+darunter war falsch, und es wurde **überhaupt nicht übersetzt** — die
+UTF-8-Bytes gingen roh in die Mailboxdatei und wurden später als CP1252
+angezeigt. Der POP3-Weg macht es seit jeher richtig (`mime.cpp:382`,
+`FindMIMECharset`): er sucht bis `IDS_MIME_UTF_8` **und** verschiebt das
+Ergebnis um eins, damit Index 0 für `windows-*` frei bleibt. Genau diese
+Verschiebung fehlte ebenfalls — beide Wege rechneten auf **verschiedenen
+Skalen**, während `ISOTranslate` nur eine davon kennt. Jetzt benutzt IMAP
+dieselbe Funktion.
+
+**Der zweite: der Rückgabewert von `ISOTranslate` wurde verworfen.** Die
+Funktion liefert die Länge **nach** der Übersetzung; UTF-8 wird auf dem Weg
+nach CP1252 kürzer. `outLen` behielt die alte Länge bis zum `m_mbxFile.Put()`,
+also wurden die überzähligen Altbytes mitgeschrieben.
+
+**Der dritte: der Übertrag über die Stückgrenze fehlte.** Die Behebung von
+Z-2b hält angefangene UTF-8-Zeichen am Ende eines Lesestücks zurück — nur im
+POP3-Weg. IMAP liest bei `text/plain` zeilenweise, bei **`text/html` aber in
+Blöcken von 8192 Bytes**, und hielt nichts zurück. Neu dafür ist
+`ISOTranslateChunk` in `utils.cpp`. Der POP3-Weg schiebt den Übertrag *vor*
+das Stück; das geht hier nicht, weil der Zeiger aus
+`CChunkReader::GetNextChunk` in fremden Speicher zeigt. Deshalb umgekehrt: das
+Zeichen wird **hinter** seine eigenen, verbrauchten Bytes geschrieben.
+
+**Vier Tests** in `TestIsoTranslate.cpp`, jeder über **alle** Stückgrößen von 1
+bis über die Textlänge hinaus. Einer davon hat einen Fehler in meinem eigenen
+Entwurf gefunden: ein Zeichen, dessen Übersetzung **länger** ist als die
+verbrauchten Bytes, wurde verworfen. Das trifft Zeichen außerhalb der BMP —
+U+1F600 ist in UTF-16 ein Surrogatpaar und wird zu **zwei** Fragezeichen. Jetzt
+wird gekürzt statt verworfen.
+
+**Nebenbefund: die Testsuite ließ sich seit dem 10.09.2026 nicht mehr bauen.**
+`OTShim.cpp` ruft seit der Spurmarke zu E-76 `PutDebugLog`, das in QCUtils
+liegt und nicht zum Testprojekt gehört — Linkerfehler, zwei Tage lang
+unbemerkt. Damit sind auch **PRÜFERs Schranken vom 13.09.2026 nie gelaufen**.
+Eine Attrappe in `OTShimProbe.cpp` schließt das.
+
+**Testlauf: 120 Tests, 118 bestanden, 2 fehlgeschlagen.** Beide roten sind
+**vorbestehend** und nicht von dieser Änderung: `SECImage: FlipHorz meldet
+sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit **E-33** nur
+noch `OutputDebugString` benutzt — ein veralteter Test; und
+`SECControlBar::CalcDynamicLayout`, PRÜFERs E-76-Schranke, die nie laufen
+konnte. Beide sind offen.
+
 ## 7.2.0.50 — losgerissene Fenster behalten ihre Größe (E-84)
 
 **Was Gregor damit tun kann:** ein losgerissenes Fenster einmal auf die

@@ -38,9 +38,9 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
 > sind fast erfüllt (2, 4). Beiden fehlt dasselbe: die Meldung „Encountered an
 > improper argument" beim **Anzeigen** mancher Nachrichten. Stand 13.09.2026,
-> Quellstand **7.2.0.50**, Paketnummer **1.0.50** — gebaut und von Gregor am
-> 11.09.2026 bestätigt. **Veröffentlicht** ist bei GitHub aber erst `v1.0.48`;
-> die Freigabe der beiden neueren Pakete steht noch aus (siehe CHANGELOG). Hier steht bewusst keine
+> Quellstand **7.2.0.51**, Paketnummer **1.0.51** — gebaut für Gregors Test von
+> **E-85** (Umlaute über IMAP), noch **nicht** von ihm bestätigt.
+> **Veröffentlicht** ist bei GitHub `v1.0.50` (13.09.2026). Hier steht bewusst keine
 > | Messung | Ergebnis |
 > |---|---|
 > | `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |

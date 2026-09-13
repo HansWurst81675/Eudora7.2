@@ -4646,8 +4646,31 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 					{
 						if (strcmp(params->name, CRString(IDS_MIME_CHARSET)) == 0)
 						{
-							iCharsetIdx = FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9,
-															params->value, -1);
+							// E-85: hier stand
+							//
+							//   FindRStringIndexI(IDS_MIME_US_ASCII,
+							//                     IDS_MIME_ISO_LATIN9, ...)
+							//
+							// Der Bereich endet bei IDS_MIME_ISO_LATIN9 = 3613,
+							// IDS_MIME_UTF_8 ist 3614 und liegt damit DAHINTER:
+							// "charset=utf-8" wurde nie gefunden, der Aufruf gab
+							// -1 zurueck, die Bedingung unten war falsch und es
+							// wurde GAR NICHT uebersetzt. Die UTF-8-Bytes gingen
+							// roh in die Mailboxdatei und wurden spaeter als
+							// CP1252 angezeigt: aus 66 C3 BC 72 wird die bekannte
+							// Bytefolge mit dem A-Tilde davor, statt "fuer".
+							//
+							// Ausserdem fehlte das Verschieben um eins, mit dem
+							// FindMIMECharset den Index 0 fuer "windows-*"
+							// freihaelt. IMAP und POP3 rechneten dadurch auf
+							// zwei verschiedenen Skalen, waehrend ISOTranslate
+							// und ISOIsUTF8Charset nur eine davon kennen.
+							//
+							// Jetzt dieselbe Funktion wie im POP3-Weg
+							// (mime.cpp:382), damit es nur noch eine Skala gibt.
+							iCharsetIdx = FindMIMECharset(params->value);
+							if (iCharsetIdx < 0)
+								iCharsetIdx = 0;
 							break;
 						}
 						else
@@ -4658,8 +4681,11 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 				}
 			}
 
-			// iCharsetIdx = 0 is US ASCII and 1 is Latin1 which are not translated.
-			if (iCharsetIdx > 1)
+			// E-85: seit FindMIMECharset gilt hier dieselbe Skala wie im
+			// POP3-Weg - 0 ist "windows-*", 1 us-ascii, 2 Latin1, 3 Latin9,
+			// 4 UTF-8. Uebersetzt wird ab 3, so wie TextReader.cpp es tut;
+			// vorher stand hier > 1, gemuenzt auf die alte, eigene Skala.
+			if (iCharsetIdx > 2)
 			{
 				// As a first pass at handling other charsets we pass the text
 				// through a translator function.  A more elegant solution would

@@ -6,8 +6,8 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.50 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.50 (`VERSION`) |
+| **Quellstand** | 7.2.0.51 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.51 (`VERSION`) |
 | **Zuletzt gebaut und gepackt** | Paket **1.0.50** (Quellstand 7.2.0.50), lokal unter `C:\Users\Gregor\Eudora72-1.0.50-release`. **Auf GitHub veröffentlicht ist `v1.0.50`** (13.09.2026, Marke `7a10f6b`, ZIP 9.348.715 B, SHA256 `ff143a59…`) — ausgeliefert wurde genau das Verzeichnis, das Gregor am 11.09.2026 getestet hat, nicht ein Neubau |
 | **Zuletzt von Gregor bestätigt** | **1.0.50 am 11.09.2026**: **E-84**, die Größe eines losgerissenen Fensters überlebt den Neustart — belegt an beiden Enden (`FloatCx319=751` in der `Eudora.ini`, `E-76 fest: vorher=751x403` beim ersten Aufruf danach). Davor an 1.0.49 **E-76** (*„e-76: paßt: läßt sich jetzt vergrößern."*), an 1.0.48 **E-82** (verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993), an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
 | **Was als Nächstes zu messen ist** | **Der hängende Resync.** Gregor am 11.09.2026 an 1.0.48: eine IMAP-Aufgabe bleibt auf *„Waiting in the task queue to be started …"* stehen und wird nie gestartet; beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht** die Zertifikatsprüfung — im selben Lauf stand die Verbindung und eine Mail kam an. Drei Ursachen sind am Quelltext ausgeschlossen (siehe `CHANGELOG.md`, *Noch offen*); der offene Verdacht ist `StartWorkerThread`, das bei `m_pThread == NULL` **nichts** tut — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`). Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in **einer** Zeile nennt |

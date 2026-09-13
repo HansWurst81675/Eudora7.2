@@ -1331,13 +1331,19 @@ LONG ISOTranslateChunk(char** ppBuf, LONG lSize, UINT iCharsetIdx,
 			szVereint[lNoetig] = 0;
 
 			lErgebnis = ISOTranslate(szVereint, lNoetig, iCharsetIdx);
-			if (lErgebnis < 0 || lErgebnis > lHolen)
-			{
-				// Passt nicht in den Platz, den die verbrauchten Bytes
-				// hergeben. Lieber das Zeichen fallen lassen als ueber
-				// fremden Speicher schreiben.
+
+			// Das Ergebnis muss in den Platz passen, den die verbrauchten
+			// Bytes dieses Stuecks hergeben - davor liegt fremder Speicher.
+			//
+			// Laenger als ein Byte wird es nur bei Zeichen ausserhalb der
+			// BMP: U+1F600 etwa ist in UTF-16 ein Surrogatpaar und wird zu
+			// ZWEI Fragezeichen. Passen sie nicht beide, wird gekuerzt statt
+			// verworfen - ein Fragezeichen sagt dasselbe wie zwei, ein
+			// verschwundenes Zeichen dagegen faellt beim Lesen auf.
+			if (lErgebnis < 0)
 				lErgebnis = 0;
-			}
+			else if (lErgebnis > lHolen)
+				lErgebnis = lHolen;
 
 			*plUebertrag = 0;
 			pBuf  += lHolen;
