@@ -4463,6 +4463,11 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 		long nBytesHandled = 0;
 		LPSTR pBuf = NULL;
 
+		// E-85: Bytes eines UTF-8-Zeichens, das auf der Stueckgrenze
+		// angefangen hat und erst im naechsten Stueck zu Ende geht.
+		char szUTF8Uebertrag[4];
+		long lUTF8Uebertrag = 0;
+
 		// Call IsFancy () on the first line of the text.
 		bIsFirstLine = TRUE;
 
@@ -4666,8 +4671,14 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 				// bis zum m_mbxFile.Put() weiter unten, und die ueberzaehligen
 				// Altbytes landeten mit in der Mailboxdatei. Der POP3-Weg macht
 				// es richtig: Eudora/TextReader.cpp, "size = ISOTranslate(...)".
-				LONG lUebersetzt = ISOTranslate(pBuf, inLen, iCharsetIdx);
-				if (lUebersetzt >= 0 && lUebersetzt <= inLen)
+				// E-85, zweiter Teil: ueber die Stueckgrenze hinweg. Bei
+				// text/html liest der ChunkReader in Bloecken, nicht in
+				// Zeilen - ein Umlaut auf der Blockgrenze wurde dadurch zu
+				// Bytesalat. ISOTranslateChunk haelt die angefangenen Bytes
+				// zurueck und versetzt pBuf, wenn es sie eingearbeitet hat.
+				LONG lUebersetzt = ISOTranslateChunk(&pBuf, inLen, iCharsetIdx,
+													 szUTF8Uebertrag, &lUTF8Uebertrag);
+				if (lUebersetzt >= 0)
 				{
 					inLen  = lUebersetzt;
 					outLen = lUebersetzt;

@@ -762,6 +762,180 @@ static void Test_UTF8IndexWirdErkannt(void)
 	TT_EndTest();
 }
 
+// ---------------------------------------------------------------------------
+// ISOTranslateChunk - der Uebertrag im IMAP-Weg (E-85)
+//
+// Der POP3-Weg schiebt den Uebertrag VOR das Stueck. Das geht im IMAP-Weg
+// nicht, weil der Zeiger aus CChunkReader::GetNextChunk in fremden Speicher
+// zeigt. ISOTranslateChunk setzt das Zeichen deshalb HINTER seine eigenen,
+// verbrauchten Bytes und versetzt den Anfang nach rechts. Geprueft wird hier
+// genau das: dass am Ende derselbe Text herauskommt wie ohne Stueckelung.
+// ---------------------------------------------------------------------------
+
+// Uebersetzt einen Text in Stuecken fester Laenge und haengt die Ergebnisse
+// aneinander - so, wie CImapDownloader::Write es tut.
+static long ChunkLauf(const unsigned char* pEin, long lEin, long lStueck,
+					  unsigned int uIdx, char* pAus, long lAusMax)
+{
+	char	szArbeit[512];
+	char	szUebertrag[4];
+	long	lUebertrag = 0;
+	long	lGelesen = 0;
+	long	lGeschrieben = 0;
+
+	while (lGelesen < lEin)
+	{
+		long	lDies = lEin - lGelesen;
+		char*	pBuf = szArbeit;
+		long	lRaus;
+
+		if (lDies > lStueck)
+			lDies = lStueck;
+
+		// Der Chunkreader gibt einen Zeiger auf seinen eigenen Puffer; wir
+		// bilden das nach, damit ISOTranslateChunk denselben Spielraum hat.
+		memcpy(szArbeit, pEin + lGelesen, (size_t)lDies);
+		szArbeit[lDies] = 0;
+
+		lRaus = UT_ISOTranslateChunk(&pBuf, lDies, uIdx, szUebertrag, &lUebertrag);
+
+		if (lRaus > 0 && lGeschrieben + lRaus <= lAusMax)
+		{
+			memcpy(pAus + lGeschrieben, pBuf, (size_t)lRaus);
+			lGeschrieben += lRaus;
+		}
+
+		lGelesen += lDies;
+	}
+
+	return lGeschrieben;
+}
+
+static void Test_ChunkGrenzeMittenImZeichen(void)
+{
+	// "fuer" mit u-Umlaut als UTF-8: 66 C3 BC 72. Bei Stueckgroesse 2 faellt
+	// die Grenze genau zwischen C3 und BC - der Fall, der vor E-85 zu
+	// Bytesalat wurde.
+	static const unsigned char szEin[] = { 'f', 0xC3, 0xBC, 'r' };
+	static const unsigned char szSoll[] = { 'f', 0xFC, 'r' };	// CP1252
+	char	szAus[64];
+	long	lAus;
+	long	lStueck;
+
+	TT_BeginTest("ISOTranslateChunk: Grenze mitten im Zeichen");
+
+	// Jede Stueckgroesse muss dasselbe ergeben - das ist der eigentliche Punkt.
+	for (lStueck = 1; lStueck <= 5; lStueck++)
+	{
+		lAus = ChunkLauf(szEin, (long)sizeof(szEin), lStueck, IDX_UTF8,
+						 szAus, (long)sizeof(szAus));
+
+		if (lAus != (long)sizeof(szSoll))
+		{
+			TT_Fail("Stueckgroesse %ld: Laenge erwartet %ld, erhalten %ld",
+					lStueck, (long)sizeof(szSoll), lAus);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+		}
+		else if (memcmp(szAus, szSoll, sizeof(szSoll)) != 0)
+		{
+			TT_Fail("Stueckgroesse %ld: falscher Inhalt", lStueck);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+			TT_Note("  erwartet: %s", Hex(szSoll, (long)sizeof(szSoll)));
+		}
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkDreibyteUndVierbyte(void)
+{
+	// Euro (E2 82 AC) und Emoji (F0 9F 98 80) koennen an drei bzw. vier
+	// Stellen zerrissen werden. Das Emoji hat kein CP1252-Gegenstueck und
+	// wird zum Fragezeichen - auch das muss ueber die Grenze hinweg stimmen.
+	static const unsigned char szEuro[]  = { 'a', 0xE2, 0x82, 0xAC, 'b' };
+	static const unsigned char szEuroS[] = { 'a', 0x80, 'b' };			// CP1252-Euro
+	static const unsigned char szEmo[]   = { 'a', 0xF0, 0x9F, 0x98, 0x80, 'b' };
+	static const unsigned char szEmoS[]  = { 'a', '?', 'b' };
+	char	szAus[64];
+	long	lAus;
+	long	lStueck;
+
+	TT_BeginTest("ISOTranslateChunk: Drei- und Vierbytezeichen ueber die Grenze");
+
+	for (lStueck = 1; lStueck <= 6; lStueck++)
+	{
+		lAus = ChunkLauf(szEuro, (long)sizeof(szEuro), lStueck, IDX_UTF8,
+						 szAus, (long)sizeof(szAus));
+		if (lAus != (long)sizeof(szEuroS) || memcmp(szAus, szEuroS, sizeof(szEuroS)) != 0)
+		{
+			TT_Fail("Euro, Stueckgroesse %ld", lStueck);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+			TT_Note("  erwartet: %s", Hex(szEuroS, (long)sizeof(szEuroS)));
+		}
+
+		lAus = ChunkLauf(szEmo, (long)sizeof(szEmo), lStueck, IDX_UTF8,
+						 szAus, (long)sizeof(szAus));
+		if (lAus != (long)sizeof(szEmoS) || memcmp(szAus, szEmoS, sizeof(szEmoS)) != 0)
+		{
+			TT_Fail("Emoji, Stueckgroesse %ld", lStueck);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+			TT_Note("  erwartet: %s", Hex(szEmoS, (long)sizeof(szEmoS)));
+		}
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkLaesstNichtUtf8InRuhe(void)
+{
+	// Latin-9 und CP1252 gehen den kurzen Weg durch ISOTranslate. Ein
+	// Uebertrag darf dabei gar nicht erst entstehen, sonst verschwaende die
+	// Funktion Bytes an Zeichensaetzen, die sie nicht betrifft.
+	static const unsigned char szEin[]  = { 'f', 0xFC, 'r' };	// CP1252 direkt
+	char	szAus[64];
+	long	lAus;
+
+	TT_BeginTest("ISOTranslateChunk: Nicht-UTF-8 bleibt unangetastet");
+
+	lAus = ChunkLauf(szEin, (long)sizeof(szEin), 2, IDX_WINDOWS,
+					 szAus, (long)sizeof(szAus));
+
+	if (lAus != (long)sizeof(szEin) || memcmp(szAus, szEin, sizeof(szEin)) != 0)
+	{
+		TT_Fail("CP1252: erwartet unveraendert, Laenge %ld erhalten %ld",
+				(long)sizeof(szEin), lAus);
+		TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkRestMuellFaelltNichtDurch(void)
+{
+	// Endet die Nachricht mitten in einem Zeichen, bleiben ein bis drei
+	// Bytes im Uebertrag liegen. Sie duerfen nicht geschrieben werden - auf
+	// sich gestellt sind sie kein Zeichen, und genau daraus entstand der
+	// Bytesalat, gegen den das hier gebaut ist.
+	static const unsigned char szEin[] = { 'a', 'b', 0xC3 };	// C3 ohne Folgebyte
+	static const unsigned char szSoll[] = { 'a', 'b' };
+	char	szAus[64];
+	long	lAus;
+
+	TT_BeginTest("ISOTranslateChunk: angefangenes Zeichen am Ende faellt weg");
+
+	lAus = ChunkLauf(szEin, (long)sizeof(szEin), 2, IDX_UTF8,
+					 szAus, (long)sizeof(szAus));
+
+	if (lAus != (long)sizeof(szSoll) || memcmp(szAus, szSoll, sizeof(szSoll)) != 0)
+	{
+		TT_Fail("erwartet 'ab' (%ld Bytes), erhalten %ld",
+				(long)sizeof(szSoll), lAus);
+		TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+	}
+
+	TT_EndTest();
+}
+
 void RunIsoTranslateTests(void)
 {
 	TT_Suite("utils.cpp - Verhalten von ISOTranslate()");
@@ -795,4 +969,10 @@ void RunIsoTranslateTests(void)
 	Test_VollstaendigesZeichenWirdNichtZurueckgehalten();
 	Test_ZusammensetzenErgibtDenRichtigenText();
 	Test_UTF8IndexWirdErkannt();
+
+	// Der Uebertrag im IMAP-Weg (E-85)
+	Test_ChunkGrenzeMittenImZeichen();
+	Test_ChunkDreibyteUndVierbyte();
+	Test_ChunkLaesstNichtUtf8InRuhe();
+	Test_ChunkRestMuellFaelltNichtDurch();
 }
