@@ -662,41 +662,60 @@ static void Test_UnsinnLaden(void)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// 9. Die Ruempfe melden sich
+// 9. Die Ruempfe melden sich - OHNE Dialog
 //
 // Projektregel "Dummy statt Weglassen": nicht umgesetzte Methoden haben einen
-// Rumpf, der sich einmal je Sitzung meldet. Geprueft wird, dass die Meldung
-// wirklich kommt und dass sie sich - wie im Original - nicht wiederholt.
+// Rumpf, der sich einmal je Sitzung meldet.
+//
+// BERICHTIGT AM 13.09.2026 (PRUEFER-10). Der Test zaehlte ueber
+// OTShimProbeMeldungen() die abgefangenen AfxMessageBox-Aufrufe und erwartete
+// fuenf davon. Das war einmal richtig, ist es aber seit BEFUND E-33
+// (07.09.2026) nicht mehr: OTShimNichtUmgesetzt (OTShim.cpp) ruft seither
+// ::OutputDebugString statt AfxMessageBox, weil der modale Dialog genau das
+// verhindert hat, was er ankuendigte ("Eudora bleibt bedienbar") - Gregors
+// Worte zu 1.0.18: "es crasht nicht, aber es passiert auch nichts. beenden
+// kann ich es auch nicht." Die Probe in OTShimProbe.cpp faengt DoMessageBox
+// ab und sieht deshalb nichts mehr; sie zaehlte auf null, der Test war rot.
+//
+// Der Test wurde NICHT entschaerft, sondern umgedreht: aus der Zaehlung wird
+// eine SCHRANKE GEGEN E-33. Sie schlaegt an, sobald ein Rumpf wieder einen
+// modalen Dialog aufmacht. Damit sie nicht deshalb gruen ist, weil gar
+// nichts lief, wird zusaetzlich geprueft, dass jeder Rumpf wirklich gerufen
+// wurde - das belegen die Rueckgabewerte.
+//
+// NICHT PRUEFBAR und hier bewusst nicht behauptet: dass die Meldung wirklich
+// in der Debug-Ausgabe landet und dass das statische Merkzeichen der
+// Fundstelle sie beim zweiten Mal unterdrueckt. ::OutputDebugString laesst
+// sich im eigenen Prozess ohne Debugger nicht verlaesslich mitlesen; ein
+// Nachbau ueber DBWIN_BUFFER waere sitzungsglobal und unter dem Debugger
+// stumm. Lieber eine kleine Aussage, die stimmt, als eine grosse, die nur
+// so aussieht.
 
 static void Test_RuempfeMelden(void)
 {
 	SECDib dib;
 
-	TT_BeginTest("SECImage: FlipHorz/FlipVert/Rotate90/Crop/UnPadBits melden sich");
+	TT_BeginTest("SECImage: FlipHorz/FlipVert/Rotate90/Crop/UnPadBits melden sich ohne Dialog");
 
 	OTShimProbeZuruecksetzen();
 
-	if (dib.FlipHorz())		TT_Fail("FlipHorz liefert TRUE, erwartet FALSE");
-	if (OTShimProbeMeldungen() != 1)
-		TT_Fail("FlipHorz hat %d Meldungen abgesetzt, erwartet 1", OTShimProbeMeldungen());
-
-	// Zweiter Aufruf: das statische Merkzeichen der Fundstelle verhindert
-	// eine zweite Meldung. Der Rueckgabewert bleibt FALSE.
-	if (dib.FlipHorz())		TT_Fail("zweiter FlipHorz liefert TRUE");
-	if (OTShimProbeMeldungen() != 1)
-		TT_Fail("nach dem zweiten FlipHorz %d Meldungen, erwartet weiterhin 1",
-				OTShimProbeMeldungen());
-
+	// Jeder Rumpf liefert FALSE - daran ist zu sehen, dass er gelaufen ist.
+	if (dib.FlipHorz())			TT_Fail("FlipHorz liefert TRUE, erwartet FALSE");
+	if (dib.FlipHorz())			TT_Fail("zweiter FlipHorz liefert TRUE");
 	if (dib.FlipVert())			TT_Fail("FlipVert liefert TRUE, erwartet FALSE");
 	if (dib.Rotate90())			TT_Fail("Rotate90 liefert TRUE, erwartet FALSE");
 	if (dib.Crop(0, 0, 1, 1))	TT_Fail("Crop liefert TRUE, erwartet FALSE");
 	if (dib.UnPadBits())		TT_Fail("UnPadBits liefert TRUE, erwartet FALSE");
 
-	// Jede Fundstelle bringt ihr eigenes Merkzeichen mit: fuenf verschiedene
-	// Ruempfe, fuenf Meldungen.
-	if (OTShimProbeMeldungen() != 5)
-		TT_Fail("insgesamt %d Meldungen, erwartet 5 (je Fundstelle eine)",
-				OTShimProbeMeldungen());
+	// ContrastImage hat keinen Rueckgabewert, gehoert aber zur selben Gruppe.
+	dib.ContrastImage(0);
+
+	// DIE SCHRANKE GEGEN E-33: sechs Ruempfe sind gelaufen, und kein
+	// einziger darf ein Meldungsfenster aufgemacht haben.
+	if (OTShimProbeMeldungen() != 0)
+		TT_Fail("E-33 ist zurueck: %d modale Meldung(en) aus den Ruempfen, "
+				"zuletzt \"%s\" - sie gehoeren in die Debug-Ausgabe",
+				OTShimProbeMeldungen(), OTShimProbeLetzteMeldung());
 
 	// PadBits ist KEIN Rumpf - die Daten liegen hier immer aufgefuellt vor.
 	if (!dib.PadBits())

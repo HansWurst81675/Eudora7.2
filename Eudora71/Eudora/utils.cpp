@@ -1277,6 +1277,7 @@ LONG ISOTranslateChunk(char** ppBuf, LONG lSize, UINT iCharsetIdx,
 	LONG			lTail;
 	LONG			lNeu;
 	char			szVereint[8];
+	char			cHinterher;
 
 	if (!ppBuf || !*ppBuf || !szUebertrag || !plUebertrag)
 		return lSize;
@@ -1285,8 +1286,33 @@ LONG ISOTranslateChunk(char** ppBuf, LONG lSize, UINT iCharsetIdx,
 
 	// Nur UTF-8 wird laenger als ein Byte je Zeichen; alles andere kann ein
 	// Stueck nicht in der Mitte eines Zeichens verlassen.
+	//
+	// DAS BYTE HINTER DEM STUECK WIRD GERETTET (PRUEFER-10, 13.09.2026).
+	// ISOTranslate schreibt eine Null an szBuf[lSize] - EIN BYTE HINTER den
+	// uebergebenen Bereich. Im POP3-Weg ist dafuer Platz: TextReader::ReadIt
+	// laesst ihn ausdruecklich frei (TextReader.cpp: "It's safer to make
+	// ourselves leave space for ISOTranslate than to change ISOTranslate").
+	// Hier gibt es diesen Platz nicht. CChunkReader liefert bei text/plain
+	// eine ZEILE aus der Mitte seines eigenen Puffers (imapgets.cpp,
+	// *pBuf = m_pStart), und das Byte dahinter ist das ERSTE BYTE DER
+	// NAECHSTEN ZEILE. Ohne diese Rettung verliert jede Zeile einer
+	// utf-8-Nachricht ihr erstes Zeichen, und ein NUL-Byte landet in der
+	// Mailboxdatei.
+	//
+	// Gerettet wird nur, wo ISOTranslate wirklich schreibt: bei
+	// iCharsetIdx <= 2 kehrt es vor der Nullterminierung zurueck.
 	if (!ISOIsUTF8Charset(iCharsetIdx))
+	{
+		if (iCharsetIdx > 2 && lSize >= 0)
+		{
+			cHinterher = pBuf[lSize];
+			lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+			pBuf[lSize] = cHinterher;
+			return lNeu;
+		}
+
 		return ISOTranslate(pBuf, lSize, iCharsetIdx);
+	}
 
 	// --- 1. Den Uebertrag des vorigen Stuecks vervollstaendigen --------------
 	if (*plUebertrag > 0)
@@ -1361,7 +1387,18 @@ LONG ISOTranslateChunk(char** ppBuf, LONG lSize, UINT iCharsetIdx,
 	}
 
 	// --- 3. Der Rest ist jetzt lauter ganze Zeichen -------------------------
-	lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+	// Auch hier das Byte hinter dem Stueck retten - Begruendung siehe oben.
+	if (lSize >= 0)
+	{
+		cHinterher = pBuf[lSize];
+		lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+		pBuf[lSize] = cHinterher;
+	}
+	else
+	{
+		lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+	}
+
 	if (lNeu < 0 || lNeu > lSize)
 		lNeu = lSize;
 
