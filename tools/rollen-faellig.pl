@@ -55,6 +55,37 @@ while (@ARGV) {
     else { die "rollen-faellig.pl: unbekannter Schalter '$a'\n"; }
 }
 
+# Eine Rolle, die in tools/AGENTEN-LAUFEN.md steht, LAEUFT gerade - und ist
+# damit nicht mehr "faellig", sondern unterwegs.
+#
+# Gregor am 13.09.2026: "du hast nach mind. 51 releases noch keine
+# funktionierende tool chain, auf die du dich verlassen kannst?" Der Anlass
+# war unter anderem diese Stelle: die Meldung unten empfahl
+#
+#     perl tools/rollen-faellig.pl --laufend LEKTOR
+#
+# als Ausweg - aber %laufend ist eine LOKALE Variable. Der Aufruf wirkte nur
+# in sich selbst und hinterliess nichts; beim naechsten Lauf war die Rolle
+# wieder faellig. Ein Werkzeug, das einen Befehl vorschlaegt, der nichts tut,
+# ist schlimmer als eines, das schweigt: man glaubt ihm und sucht den Fehler
+# woanders.
+#
+# Den Zustand gibt es laengst, nur an anderer Stelle - agenten-laufen.pl
+# fuehrt ihn in tools/AGENTEN-LAUFEN.md. Also wird er hier gelesen, statt
+# einen zweiten danebenzustellen. Der Schalter --laufend bleibt fuer den Fall,
+# dass eine Rolle ohne Agenten bearbeitet wird.
+{
+    my $wurzelA = -f 'VERSION' ? '.' : '..';
+    if (open my $hA, '<:raw', "$wurzelA/tools/AGENTEN-LAUFEN.md") {
+        while (my $z = <$hA>) {
+            next unless $z =~ /^\|\s*([A-Z]+)\s*\|/;
+            next if $1 eq 'ROLLE';
+            $laufend{$1} = 1;
+        }
+        close $hA;
+    }
+}
+
 sub git {
     my (@arg) = @_;
     my @aus = `git @arg 2>&1`;
@@ -139,7 +170,9 @@ for my $r (@rollen) {
                 . ") haben sich $wieviel Datei(en) in seinem Bereich geaendert - $liste.\n"
                 . "      Zustaendig fuer: $r->{was}.\n"
                 . "      Auftrag: $r->{auftrag}\n"
-                . "      Laeuft die Rolle schon? Dann: perl tools/rollen-faellig.pl --laufend $name";
+                . "      Laeuft die Rolle schon? Dann eintragen mit:\n"
+                . "          perl tools/agenten-laufen.pl --start $name \"<Auftrag>\"\n"
+                . "      Das haelt den Zustand fest; --laufend wirkt nur im selben Aufruf.";
 }
 
 print "\n  Daueraufgaben: laufen Lektor, Pruefer und Chronist im Takt?\n";
