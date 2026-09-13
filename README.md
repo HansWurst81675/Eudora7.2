@@ -62,7 +62,12 @@ verschickt.
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
-* **Kein IMAP getestet.** Der Code ist da, geprüft ist nur POP3.
+* **IMAP läuft, aber eine Aufgabe kann hängenbleiben.** Von Gregor am
+  10.09.2026 bestätigt — *„imap: funktioniert"*, `imap.gmx.net:993`. Zwei
+  Befunde sind dort offen: **E-83**, eine IMAP-Aufgabe bleibt auf *„Waiting in
+  the task queue to be started …"* stehen und wird nie gestartet (beim Beenden
+  warnt Eudora dann *„You currently have 1 task(s) running"*), und **E-77**,
+  Postfachnamen mit Umlauten stehen roh da: `Entw&APw-rfe` statt *Entwürfe*.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
