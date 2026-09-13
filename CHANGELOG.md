@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 11.09.2026)
+## Noch offen (Stand 13.09.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -26,6 +26,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
 | — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** **R-1** (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), **V-1** (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und **E-14** (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
+| — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit **E-33** nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu E-76** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
 
 ## Erreicht
 
