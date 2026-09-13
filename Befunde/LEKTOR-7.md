@@ -187,3 +187,32 @@ Alle Rückgabewerte **ohne Pipe** gemessen. Das ist keine Formalie:
 gelingt immer — dieselbe Falle, die CHRONIST am selben Tag als dritten Fall in
 [[erfolgsmeldung-aus-dem-ergebnis]] aufgeschrieben hat. Die ersten Messungen
 dieses Durchgangs sind so entstanden und wurden wiederholt.
+
+## Berichtigung, 13.09.2026 — meine Zählung der Werkzeuge war falsch
+
+In der Commit-Nachricht zu `f768087` steht:
+
+> Werkzeuge im Verzeichnis 84, in WERKZEUGE.md 72 — seine Zahl 82 zählte
+> anders, die Lücke besteht also fort und ist größer als er sagt.
+
+**Das stimmt nicht.** Nachgemessen mit dem richtigen Maßstab:
+
+```
+ls tools/*.pl tools/*.ps1 tools/*.sh        -> 84
+Werkzeugnamen in WERKZEUGE.md, alle Formen  -> 84
+```
+
+Meine 72 kam aus `grep -c '^| `tools/'` — das zählt nur Tabellenzeilen, die
+**mit** der Backtick-Form beginnen. Ein Werkzeug, das im Fließtext oder in einer
+anderen Spalte genannt wird, fällt heraus. `pruefe-stand-md-tests.pl` schien
+sogar dann noch zu fehlen, als ich alle Backtick-Formen zählte — es steht in der
+Datei, nur ohne das `tools/`-Präfix.
+
+**LEKTORs Zahl war richtig, meine war es nicht.** Der Fehler ist derselbe, vor
+dem `Arbeitsweise/pruefumfang-nicht-von-hand.md` warnt: ein Maßstab, der enger
+ist als die Sache, die er messen soll. Er fällt nicht auf, weil er eine Zahl
+liefert — und eine Zahl sieht aus wie eine Messung.
+
+Dass die falsche Zahl in einer **Commit-Nachricht** steht, macht es schlimmer:
+die lässt sich nicht mehr ändern, sie geht mit nach `main`, und sie behauptet
+dort etwas über die Arbeit eines anderen.
