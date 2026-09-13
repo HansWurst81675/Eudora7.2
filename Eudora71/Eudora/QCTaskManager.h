@@ -118,6 +118,15 @@ public:
 	void DoPostProcessing();
 	
 	
+	// -----------------------------------------------------------------
+	// BEFUND E-83: Spurmarken zur haengenden Aufgabe in der Warteschlange.
+	// SpurmarkeE83 schreibt ALLES in EINE Zeile; SpurmarkeE83Sweep wird aus
+	// der Leerlaufschleife gerufen und meldet die liegengebliebenen Aufgaben
+	// regelmaessig, solange sie in der Liste stehen.
+	// -----------------------------------------------------------------
+	void SpurmarkeE83(const char *szWo, CTaskInfoMT *pTaskInfo);
+	void SpurmarkeE83Sweep();
+
 	//Method that controls when to send ID_POST_PROCESSING message to EudoraApp
 	//bool SendPostProcessMsg();
 
