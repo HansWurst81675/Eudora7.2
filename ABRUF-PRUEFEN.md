@@ -166,10 +166,23 @@ für Kriterium 3.
 | Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe *„Welcher Servername? — beantwortet"* unter Schritt 2. |
 | Nachricht kommt an, aber Umlaute sind kaputt | Zeichensatzpfad | Genau festhalten, was dasteht (siehe unten) — daran lässt sich die Stelle bestimmen. |
 
-Der Zertifikatsdialog ist **nicht** notwendigerweise ein Fehler: die Prüfung ist in
-dieser Fassung bewusst nachsichtig (`tools/patches/zertifikatspruefung-verschaerfen.patch`
-ist absichtlich **nicht** eingespielt). Sie lässt mehr durch, als streng richtig
-wäre — der Abruf wird daran also eher nicht scheitern.
+Der Zertifikatsdialog ist **nicht** notwendigerweise ein Fehler: er kommt immer
+dann, wenn Eudora die Kette nicht bis zu einer bekannten Wurzel zurückverfolgen
+konnte — mit dem Wurzelspeicher `rootcerts.p7b` von 2004 ist das häufig.
+
+**Seit 7.2.0.48 ist die Prüfung aber nicht mehr nachsichtig** (Befund
+**E-82**, von Gregor am 11.09.2026 bestätigt). Bis dahin nahm der
+Verifikations-Callback die Fehler `X509_V_ERR_CERT_UNTRUSTED` (27) und
+`X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) ausdrücklich als *Erfolg* an,
+ohne dem Anwender etwas zu zeigen. Jetzt hängen beide am Zweig für
+`X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`
+(`Eudora71/QCSSL/src/qccertificate.cpp:82-90`): die Verbindung wird abgelehnt,
+und der Dialog erscheint. **Wer also seit 1.0.48 einen Dialog sieht, den er
+vorher nicht sah, sieht kein neues Problem, sondern ein bisher verschwiegenes.**
+
+**Nicht verschärft ist die Hostnamensprüfung** — Eudora vergleicht nur den `CN`,
+nicht die `subjectAltName`-Einträge, und sendet kein SNI. Das ist
+zurückgestellt, siehe [AUFGABEN.md](AUFGABEN.md).
 
 ## 5a. „SSL negotiation failed" — im Einzelnen
 
