@@ -190,8 +190,15 @@ my $eml = join("\r\n",
     # nimmt einen ANDEREN Weg durch den Code (Fix2047 / Translate2047 in
     # lex822.cpp) als der Rumpf. Stuende er hier, liesse sich bei einem
     # Fehlschlag nicht mehr sagen, welcher der beiden Wege ihn verursacht hat.
-    'Subject: Testmail fuer die drei Faelle aus E-85: (0) charset=utf-8 wird erkannt, '
-      . '(1) Laenge nach der Uebersetzung, (2) Umlaut auf der 8192-Byte-Blockgrenze',
+    # Gefaltet nach RFC 5322: Fortsetzungszeilen beginnen mit einem
+    # Leerzeichen, keine Zeile ueber 78 Zeichen. Ungefaltet waere der Betreff
+    # 155 Zeichen lang - und ein Server, der ihn selbst umbricht, koennte
+    # dabei etwas anrichten, das hinterher wie E-85 aussieht, aber keins ist.
+    # Die Testnachricht darf nicht selbst zur Fehlerquelle werden.
+    'Subject: Testmail fuer die drei Faelle aus E-85:',
+    ' (0) charset=utf-8 wird ueberhaupt erkannt,',
+    ' (1) Laenge nach der Uebersetzung wird uebernommen,',
+    ' (2) Umlaut auf der 8192-Byte-Blockgrenze bleibt heil',
     "Date: $datum",
     'MIME-Version: 1.0',
     'Content-Type: text/html; charset=utf-8',
