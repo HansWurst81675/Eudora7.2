@@ -24,3 +24,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-08-30 16:21:16 | v1.0.2 | nicht dokumentiert | veroeffentlicht |
 | 2026-08-30 15:08:07 | v1.0.1 | nicht dokumentiert | veroeffentlicht |
 | 2026-09-09 13:25:20 | v1.0.29 | Gregor am 09.09.2026 zu Paket 1.0.29: '1-6, ok.' und 'bau mir mit dem bug ein 0.29 release auf github. den fehler notieren wir, wird im naechsten release behoben.' | veroeffentlicht |
+| 2026-09-13 13:24:37 | v1.0.50 | Gregor am 13.09.2026: 'gemerged, jetzt 0.50 releasen' - E-76 und E-84 hatte er zuvor am laufenden Programm bestaetigt | veroeffentlicht |
