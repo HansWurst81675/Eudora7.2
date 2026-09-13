@@ -34,15 +34,18 @@ Protokoll endlich gelesen wurde, sagte es in zwei Zeilen alles: **40** mal
 | E-64 | 1.0.39 | 1.0.41 | jede Nachricht gegen alle drei Filter geprüft, `Match=0` war richtig — die Nachricht kam von einer anderen Adresse, als der Filter suchte. Gregors Urteil: Fehlalarm. Eine ältere Marke zu E-64 liegt seit 1.0.30 an derselben Stelle |
 | E-66 | 1.0.35 | 1.0.42 | **über Gregors Urteil statt über das Protokoll.** An 1.0.42: *„1. ja / 2. ja / 3. ja"* zu Balken lässt sich ziehen, rechte Hälfte des Filterfensters erreichbar, Änderungen bleiben stehen. Genau das sollten die Marken klären — sie haben ihren Zweck erfüllt und dürfen ausgebaut werden. Bis dahin schreiben sie bei jedem Zeigerwechsel über einer Leiste eine Zeile |
 | E-70 | 1.0.37 | 1.0.40 | 40 Zeilen `E-70 gesichert`, 0 Zeilen `E-70 geladen`. Der Wert wird geschrieben und nie gelesen — der Aufruf stand in `SECToolBarManager::LoadState`, die Eudora nie aufruft. Behoben in 7.2.0.41 |
-| E-76 | 1.0.41 | entfaellt: braucht eine gedrückte Maustaste, siehe E-51 | Die Marke schreibt nur, wenn jemand am Rand eines **schwebenden** Fensters zieht. Das lässt sich hier nicht auslösen — dasselbe Hindernis wie bei **E-51**: `Splitter::Track` und die Größenänderung eines Rahmens brechen ab, sobald die physische Maustaste los ist. Sie bleibt drin und wartet auf den nächsten Bericht von Gregor. Sie nennt `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die Maße vorher wie nachher in einer Zeile |
+| E-76 | 1.0.41 | 1.0.48 | **nach sieben Fassungen geliefert.** Auslösen ließ sie sich hier nie — dafür braucht es eine physisch gedrückte Maustaste, dasselbe Hindernis wie bei **E-51**. Gregor hat am 11.09.2026 an 1.0.48 gezogen, und damit stand alles im Protokoll: beim Ziehen `nLength=105`, `172`, `234`, `299` — richtig gerechnet —, und im **letzten** Aufruf `nLength=780 dwMode=0x0042 COMMIT HORZ -> ergebnis=780x100`: `LM_COMMIT|LM_HORZ` **ohne** `LM_LENGTHY`, also der falsche Zweig. Behoben in 7.2.0.49. **Ein zweites Mal geliefert an 1.0.50:** `E-76 fest: vorher=751x403` statt der Anfangsgröße `200x100` war der Beleg, dass **E-84** wirklich sitzt. Sie nennt `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die Maße vorher wie nachher in einer Zeile |
 | E-78 | 1.0.43 | entfaellt: geht mit 1.0.44 zum ersten Mal zu Gregor - 1.0.43 lief bei ihm nur mit der Vorgabe LogLevel=25759, bei der die Marke schweigt |
 | E-80 | 1.0.45 | 1.0.45 | Ausgewertet am 11.09.2026 in drei Messläufen (`C:\Temp\E80b`). Erst schwieg sie: die Marke lag in `PgReadMsgView`, der Paige-Textansicht, Gregors Nachricht laeuft aber ueber Trident (`ReadMessageFrame.cpp:277-281`). Nach dem Umzug nach `TridentView.cpp:1425` sagte sie `Knopf=0 konzentriert=1 ShowAllHeaders=0 -> Kopfzeilen ALLE` beim ersten Aufbau und `konzentriert=0 -> Kopfzeilen gekuerzt` danach. **Damit war der Verdacht auf den Content Concentrator erledigt** — im laufenden Betrieb greift die Kuerzung. Sie kuerzte nur fast nichts weg, weil die Liste `TabooHeaders` aus 2006 stammt. Die Marke bleibt drin und nennt Knopf, Concentrator, `ShowAllHeaders` und das Ergebnis in einer Zeile |
 | E-79 | 1.0.44 | entfaellt: E-79 war durch die EINSTELLUNG behoben, nicht durch Code — `UseMyFilterWindowPosition=1`, von Gregor am 11.09.2026 an 1.0.44 bestätigt. Die Marke bleibt drin, weil sie sofort sagen würde, wenn die Breite wieder wandert | zwei Zeilen je Lauf: `geladen:` nennt den Wert aus der `Eudora.ini`, den Schalter `UseMyFilterWindowPosition`, die Breite des Elternfensters, das Viertel davon, den gesetzten und den danach tatsächlichen Wert; `gesichert:` nennt, was beim Schließen zurückgeschrieben wird. Damit ist in einem Start-und-Beenden zu sehen, an welcher Stelle die Breite sich ändert |
 
 ## Alle Marken im Quelltext
 
-Gemessen am 10.09.2026 über alle `.cpp` in `Eudora71/Eudora` und
-`Eudora71/OTShim`: **19 Befunde, 146 Protokollstellen in 16 Dateien.**
+Gemessen am 13.09.2026 über alle `.cpp` in `Eudora71/Eudora` und
+`Eudora71/OTShim`, gezählt werden Protokolltexte, die mit `E-nn` beginnen:
+**23 Befunde, 158 Stellen in 20 Dateien.** Am 10.09.2026 waren es 19 Befunde in
+16 Dateien — die Zahl hier war seither nicht nachgezogen worden, obwohl die
+Tabelle darunter gewachsen ist.
 
 **Alle hängen an `DEBUG_MASK_MISC` (32768) und schweigen in der Vorgabe.**
 Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
@@ -59,7 +62,9 @@ Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
 | **E-41** | 2 | `mainfrm.cpp` | `OnSysCommand` mit `SC_CLOSE` — Alt+F4 und das Fensterkreuz |
 | **E-42** | 1 | `mainfrm.cpp` | `Beenden: Schritt '…'` — der Name des Aufräumschritts, der gerade läuft |
 | **E-43** | 1 | `QCCustomToolBar.cpp` | `SaveCustomInfo` mit dem INI-Abschnitt, in den geschrieben wird |
-| **E-78** | 2 | `mainfrm.cpp`, `WazooBarMgr.cpp` | je Leiste Kennung, Andockleiste, Sichtbarkeit und Stil — **an zwei Zeitpunkten**: nach `SetDockState` und um `LoadWazooBarConfigFromIni` herum. Dazu die Meldung, für wie viele Leisten die Standardanordnung nachgezogen wurde |
+| **E-78** | 1 | `mainfrm.cpp:862` | je Leiste Kennung, Andockleiste, Sichtbarkeit und Stil. **Eine** Formatzeile, aus **zwei** Zeitpunkten heraus geschrieben (nach `SetDockState` und um `LoadWazooBarConfigFromIni` herum) — welcher gerade dran ist, steht im ersten `%s`. Die Meldung *„für N Leiste(n) war keine Lage gespeichert"* gehört dazu, trägt im Text aber **E-44** |
+| **E-44** | 1 | `WazooBarMgr.cpp:698` | *„für N Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* — die Meldung, an der **E-78** hängt: sie erscheint bei jedem Start, obwohl dreizehn solche Abschnitte in der `Eudora.ini` stehen |
+| **E-79** | 2 | `FiltersWazooWnd.cpp:77`, `:216` | `gesichert:` nennt, was beim Schließen in die `Eudora.ini` zurückgeht; `geladen:` den Wert aus der INI, den Schalter `UseMyFilterWindowPosition`, die Elternbreite, das Viertel davon, den gesetzten und den danach tatsächlichen Wert. In einem Start-und-Beenden ist damit zu sehen, an welcher Stelle die Breite sich ändert |
 | **E-45** | 1 | `mainfrm.cpp` | ob `QCWorkbook::OnClose` durchgelaufen ist |
 | **E-46** | 1 | `mainfrm.cpp` | ob der Destruktor des Hauptfensters erreicht wird |
 | **E-64** | 2 | `filtersd.cpp` | **am Eingang** von `FilterMsg`: wie viele Filter in der Liste sind und welche Masken sie tragen. Dazu je Vergleich `Match=0/1` mit Kopfzeile, Verb, Wert und Betreff |
@@ -69,7 +74,7 @@ Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
 | **E-70** | 4 | `OTShim_Werkzeugleiste.cpp`, `QCToolBarManager.cpp`, `mainfrm.cpp` | `gesichert:` und `geladen:` je Leiste mit `cx`/`cy` vorher und nachher. **Diese zwei Zeilen nebeneinander haben E-70 entschieden** |
 | **E-72** | 1 | `filtersv.cpp` | wenn das Filterfenster einen Filter zurückschreiben wollte, den es nie geladen hat |
 | **E-73** | 1 | `filtersd.cpp` | wenn eine Filteraktion auf dem Server löschen wollte — mit Filtername, Betreff und dem Urteil `VERWEIGERT` oder `ERLAUBT` |
-| **E-80** | 4 | `TridentView.cpp`, `PgReadMsgView.cpp` | Trident (die Stelle, die zaehlt): Zustand des Knopfes, `m_bWasConcentrated`, `ShouldShowAllHeaders()` und das Ergebnis in einer Zeile. Paige: wie viele Kopfzeilen als taboo markiert wurden, wie viele Listeneintraege es gibt und was der Knopf am Stil umschaltet — diese drei schweigen bei Gregor, weil seine Nachrichten ueber Trident laufen |
+| **E-80** | 3 | `TridentView.cpp`, `PgReadMsgView.cpp` | Trident (die Stelle, die zaehlt): Zustand des Knopfes, `m_bWasConcentrated`, `ShouldShowAllHeaders()` und das Ergebnis in einer Zeile. Paige: wie viele Kopfzeilen als taboo markiert wurden, wie viele Listeneintraege es gibt und was der Knopf am Stil umschaltet — diese drei schweigen bei Gregor, weil seine Nachrichten ueber Trident laufen |
 | **E-76** | 1 | `OTShim.cpp` | Größenänderung einer schwebenden Leiste: `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating`, Maße vorher und nachher |
 
 ### Wie man das benutzt
