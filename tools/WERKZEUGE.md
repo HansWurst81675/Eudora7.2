@@ -82,9 +82,18 @@ Verweise sind von der **Wurzel** des Arbeitsbaums aus zu lesen, nicht von
 | `tools/release-veroeffentlichen.ps1` | der **einzige** erlaubte Weg zu einem GitHub-Release. Erst nach Gregors eigenem Test — 1.0.27 war veröffentlicht und fehlerhaft zugleich |
 | `tools/lehren-schranken.pl` | hält jede Lehre in `Arbeitsweise/` gegen die Schranke, die sie durchsetzen soll. Eine Lehre ohne Schranke ist Text |
 | `tools/rollen-faellig.pl` | weist einen Push ab, solange eine Daueraufgabe (LEKTOR, PRUEFER, CHRONIST) fällig ist |
+| `tools/agenten-laufen.pl` | kein Agent ohne Spur im Repo: trägt ein, welche Rolle läuft, und `--fertig <ROLLE>` meldet sie ab. Siehe `tools/AGENTEN-LAUFEN.md` |
+| `tools/pruefe-befundurteile.pl` | Schranke: **kein Dokument darf einen Befund für erledigt erklären, den `BEFUNDE.md` offen führt.** Genau die Fehlerklasse, die ein Lektorat sonst von Hand suchen müsste |
+| `tools/offene-befunde.pl` | erzeugt die Liste der offenen Befunde aus `BEFUNDE.md` und setzt sie in `WEITERMACHEN.md` — der Prüfumfang kommt damit aus der Quelle, nicht aus der Hand |
+| `tools/imap-pruefserver.pl` | ein IMAP-Server, der nur mitschreibt, was Eudora von ihm will. Damit lässt sich prüfen, ob eine Filteraktion Post auf dem Server löschen würde — **ohne ein echtes Postfach zu gefährden** (Befund E-73) |
+| `tools/postfaecher-inventar.pl` | was steckt in den alten Testverzeichnissen, und ist es anderswo schon vorhanden? Liest nur |
+| `tools/nachricht-oeffnen.ps1` | öffnet eine Nachricht in einem **laufenden** Eudora über Fensterbotschaften an ein gemessenes Handle — keine Tastendrücke ins Leere. Setzt ein laufendes Eudora voraus, **also nur nach Absprache** |
 
 **Nicht in der Tabelle**, weil Hilfsmittel für einen einzelnen Befund:
-`tools/befehl-schicken.ps1` (schickt `WM_COMMAND` an ein Fenster) und
+`tools/befehl-schicken.ps1` (schickt `WM_COMMAND` an ein Fenster),
+`tools/e80-messen.ps1` (ein Lauf, drei Schritte: starten, Nachricht öffnen,
+die angezeigte HTML-Fassung einsammeln — **öffnet ein Fenster, nur nach
+Absprache**) und
 `tools/zeiger-nachpruefen.pl` samt `tools/zeiger-nachpruefen-tests.pl`
 (Nachprüfung der Zeigerhärtungen).
 
