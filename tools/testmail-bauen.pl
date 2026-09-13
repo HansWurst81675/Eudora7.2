@@ -231,6 +231,23 @@ IMAP-Weg liest text/html in Bloecken von 8192 Bytes. Faellt keine Grenze in
 ein Mehrbytezeichen, wird der dritte der drei Maengel aus E-85 gar nicht
 beruehrt - dann sieht der Test gut aus und hat nichts geprueft.
 
+ZUERST, SONST IST DER TEST WERTLOS
+----------------------------------
+
+    EINE SCHON ABGERUFENE NACHRICHT BLEIBT KAPUTT.
+
+Die Uebersetzung passiert beim ABRUF, nicht beim Anzeigen:
+CImapDownloader::Write uebersetzt und schreibt das Ergebnis mit
+m_mbxFile.Put() in die lokale Mailboxdatei. Was dort einmal falsch steht,
+steht falsch - die Anzeige liest nur noch, was schon da liegt.
+
+Eudora holt den Rumpf auch nicht von selbst noch einmal: das Flag
+IsIMAPMessageBodyDownloaded() entscheidet an sechs Stellen, ob geladen wird.
+Ist der Rumpf da, bleibt er.
+
+Also: NEUE Nachricht schicken und abrufen. Eine vorhandene zu oeffnen zeigt
+den alten Schaden und sagt ueber den Patch gar nichts.
+
 SO WIRD GETESTET
 ----------------
 
