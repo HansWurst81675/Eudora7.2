@@ -210,6 +210,23 @@ schranke doku-pruefen.pl || exit $?
 echo "pre-push: Zeilenenden und Kodierung"
 schranke pruefe-bytes.pl || exit $?
 
+# Laesst sich die Testsammlung ueberhaupt noch bauen? Vom 10.09.2026 bis zum
+# 13.09.2026 nicht - und drei Tage lang hat es niemand gemerkt. Die Spurmarke
+# zu E-76 hatte PutDebugLog aus QCUtils in OTShim.cpp gebracht, und OTShim.cpp
+# wird von Tests.vcxproj mituebersetzt: LNK2019, kein EudoraTests.exe. Folge:
+# die Schranken vom 13.09.2026 sind nie gegen die Tests gefahren, und zwei
+# rote Tests blieben drei Tage unsichtbar.
+#
+# Hier im pre-push und nicht im pre-commit, weil der Bau Zeit kostet: am
+# 13.09.2026 gemessen 17,7 Sekunden fuer Bau UND Lauf der ganzen Sammlung.
+# Einmal je Zweig ist das billig, einmal je Commit waere es laestig - und eine
+# laestige Schranke wird umgangen.
+#
+# Die Schranke weist NUR beim Baufehler ab, NICHT bei roten Tests. Ein roter
+# Test ist ein Ergebnis, kein Grund, einen Push zu verweigern.
+echo "pre-push: laesst sich die Testsammlung bauen?"
+schranke pruefe-testbau.pl || exit $?
+
 exit 0
 HOOKPUSHENDE
 chmod +x "$HOOK_PUSH"
@@ -247,6 +264,15 @@ echo " 14. tools/pruefe-leistengroessen-paar.pl"
 echo "                               kennt einen Groessenschluessel nur EINE der"
 echo "                               beiden Seiten? (E-70, E-84)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo
+echo
+echo "Der pre-push prueft zusaetzlich, gegen den fertigen Zweig:"
+echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selbst"
+echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
+echo "  tools/pruefe-testbau.pl      laesst sich EudoraTests.exe ueberhaupt bauen?"
+echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
+echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"
+echo "                               Baufehler ab, nicht bei roten Tests."
 echo
 echo "Abweisend sind alle ausser Schritt 3 - der meldet bloss."
 echo "Jeder von ihnen wertet JEDEN Rueckgabewert aus -"

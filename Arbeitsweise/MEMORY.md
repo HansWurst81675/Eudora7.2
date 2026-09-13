@@ -55,3 +55,4 @@
 - [Fertig heißt fertig](fertig-heisst-fertig.md) — mergen, löschen, Release, Doku aktuell; kommt etwas nach, war es kein "fertig"
 - [Agent vor dem Ende nicht starten](agent-vor-dem-ende-nicht-starten.md) — ein Subagent, der beim Sitzungsende laeuft, verliert alles; im Auftrag frueh committen lassen
 - [Erfolgsmeldung aus dem Ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) — nach dem Schreiben die Datei messen, nicht den eigenen Kontrollfluss; „eingefuegt" stand unter dem Abbruch
+- [Prüfstand kann blind sein](pruefstand-kann-blind-sein.md) — ein kaputter und ein grüner Prüfstand melden beide nichts; die Testsuite war drei Tage nicht baubar
