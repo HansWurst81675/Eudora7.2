@@ -43,6 +43,7 @@ eine Datei liest, liest diese.
 | Datei | Worum es geht |
 |---|---|
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
+| [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
 | [agenten-koordinieren](agenten-koordinieren.md) | Fünf Kollisionsarten paralleler Agenten und das Verfahren gegen jede; die Zuteilung ist meine Aufgabe, nicht die der Agenten |
 | [agenten-trennen-worktrees](agenten-trennen-worktrees.md) | Parallele Agenten teilen sich Arbeitsverzeichnis und git-Index — mit Worktrees trennen, sonst mit Pfadangabe committen |
