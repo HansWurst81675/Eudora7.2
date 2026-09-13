@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| CHRONIST | 2026-09-13 21:35 | Gesprächsverlauf dieser Sitzung auswerten, Lehren aktualisieren |
