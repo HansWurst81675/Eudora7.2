@@ -4358,6 +4358,8 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 	int nReadStatus = -1;
 	BOOL bIsFirstLine = TRUE;
 	int iCharsetIdx = iUnsetCharsetIdx;
+	CString szE85Charset;		// E-85 Spurmarke: Zeichensatztext aus der Kopfzeile
+	BOOL	bE85Gemeldet = FALSE;	// E-85 Spurmarke: nur einmal je Nachrichtenteil
 
 	// Sanity:
 	if (! (readfn && read_data) )
@@ -4671,6 +4673,7 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 							iCharsetIdx = FindMIMECharset(params->value);
 							if (iCharsetIdx < 0)
 								iCharsetIdx = 0;
+							szE85Charset = params->value;	// E-85 Spurmarke
 							break;
 						}
 						else
@@ -4679,6 +4682,38 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 						}
 					}
 				}
+			}
+
+			// E-85 Spurmarke: alle Werte des Uebersetzungswegs in EINER Zeile,
+			// einmal je Nachrichtenteil - nicht je Chunk, das waere bei
+			// 8192-Byte-Bloecken eine Flut. Zwei getrennte Zeilen liessen die
+			// Ausrede "zu anderer Zeit" offen, siehe
+			// Arbeitsweise/zwei-werte-in-eine-ausgabe.md.
+			// Maske: RCV wie die beiden anderen Stellen dieser Datei, dazu
+			// RCVD, damit die Marke auch bei der kleineren Protokollstufe
+			// "Log receipt of a message" erscheint.
+			if (!bE85Gemeldet)
+			{
+				static const char * const szE85Typen[] = {
+					"text", "multipart", "message", "application", "audio",
+					"image", "video", "model", "other", "bogusmulti" };
+
+				const char * szE85Typ = "typ?";
+				if (m_CurrentBodyType < (sizeof(szE85Typen) / sizeof(szE85Typen[0])))
+					szE85Typ = szE85Typen[m_CurrentBodyType];
+
+				CString szE85Zeile;
+				szE85Zeile.Format(
+					"E-85 imap: charset=%s idx=%d uebersetzt=%s typ=%s/%s zeilenweise=%s",
+					szE85Charset.IsEmpty()? "(keiner)" : (LPCSTR)szE85Charset,
+					iCharsetIdx,
+					(iCharsetIdx > 2)? "ja" : "nein",
+					szE85Typ,
+					(LPCSTR)m_szCurrentBodySubtype,
+					m_bMustReadSingleLines? "ja" : "nein");
+
+				::PutDebugLog(DEBUG_MASK_RCV | DEBUG_MASK_RCVD, szE85Zeile);
+				bE85Gemeldet = TRUE;
 			}
 
 			// E-85: seit FindMIMECharset gilt hier dieselbe Skala wie im
