@@ -54,3 +54,4 @@
 - [Werkzeug vor Eigenbau](werkzeug-vor-eigenbau.md) — erst in tools/WERKZEUGE.md nachsehen; ein fertiges Werkzeug ohne Aufrufstelle wirkt wie eine Lehre, die nur Text ist
 - [Fertig heißt fertig](fertig-heisst-fertig.md) — mergen, löschen, Release, Doku aktuell; kommt etwas nach, war es kein "fertig"
 - [Agent vor dem Ende nicht starten](agent-vor-dem-ende-nicht-starten.md) — ein Subagent, der beim Sitzungsende laeuft, verliert alles; im Auftrag frueh committen lassen
+- [Erfolgsmeldung aus dem Ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) — nach dem Schreiben die Datei messen, nicht den eigenen Kontrollfluss; „eingefuegt" stand unter dem Abbruch
