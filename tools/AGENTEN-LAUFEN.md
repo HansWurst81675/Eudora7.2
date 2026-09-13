@@ -11,4 +11,3 @@ nächsten Paket geklärt sein.
 |---|---|---|
 | LEKTOR | 2026-09-13 20:58 | Alle MDs gegen den Bestand 7.2.0.51 pruefen |
 | PRUEFER | 2026-09-13 20:58 | E-85: drei Behebungen im IMAP-Weg nachrechnen |
-| CHRONIST | 2026-09-13 20:58 | Lehren aus dem 13.09.2026 auswerten |
