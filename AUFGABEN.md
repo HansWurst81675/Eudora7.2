@@ -1,13 +1,13 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 11.09.2026**, gemessen an Quellstand **7.2.0.48** / Paket **1.0.48**
+**Stand 13.09.2026**, gemessen an Quellstand **7.2.0.50** / Paket **1.0.50**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
 ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 ([AGENTEN.md](AGENTEN.md)).
 
-## Die Hauptarbeit: vier gebaute Behebungen warten auf Gregors Urteil
+## Die Hauptarbeit: vierzehn gebaute Behebungen warten auf Gregors Urteil
 
 **Alle neun Kriterien aus [ZIEL.md](ZIEL.md) sind entweder erfüllt oder haben
 eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
@@ -30,23 +30,29 @@ löschen. keine messagebox"*) — und damit fielen **E-37** und **E-38** mit weg
 weil beide Symptome derselben Ursache waren. **E-37, E-38 und E-43 stehen
 deshalb nicht mehr in dieser Datei als Aufgabe.**
 
-### 1. Gebaut, nicht bestätigt — es ist nur noch einer, und der ist nicht prüfbar
+### 1. Gebaut, nicht bestätigt — vierzehn Befunde
 
-**Nachgemessen am 11.09.2026 gegen [BEFUNDE.md](BEFUNDE.md).** Bis dahin stand
-hier, vier Behebungen warteten auf Gregors Urteil. Drei davon hat er längst
-bestätigt:
+**Nachgemessen am 13.09.2026** über alle Urteilszeilen in
+[BEFUNDE.md](BEFUNDE.md): **vierzehn** behobene Befunde stehen dort als *von
+Gregor nicht bestätigt*, alle aus 7.2.0.26 bis 7.2.0.30 und alle rund um
+Registerkartenleiste und Trennbalken.
 
-| Befund | Stand laut `BEFUNDE.md` |
-|---|---|
-| **E-49** (Anforderung **A-4**) | **bestätigt** |
-| **E-50** | **bestätigt** |
-| **E-52** | **bestätigt** |
-| **E-51** | gebaut, nicht beurteilt — und **nicht beurteilbar** |
+| Befund | Fassung | merkt ein Anwender das? |
+|---|---|---|
+| **E-49** (Anforderung **A-4**) | 7.2.0.26 | ja — den linken Bereich breiter ziehen |
+| **E-50** | 7.2.0.26 | ja — drei Mängel an der Registerkartenleiste |
+| **E-52** | 7.2.0.27 | ja — Trennbalken nicht mehr greifbar, Karten doppelt |
+| **E-53** | 7.2.0.28 | ja — beim Schließen blieb ein Strich stehen |
+| **E-54**, **E-55** | 7.2.0.29 | ja — unsichtbarer Ziehrahmen; acht Pixel leerer Streifen |
+| **E-58** | 7.2.0.29 | ja — ein Klick in den rechten Rand öffnete den Browser |
+| **E-63** | 7.2.0.30 | ja — die letzte Registerkarte zeigt keinen Kurzhinweis |
+| **E-56**, **E-57**, **E-59**, **E-60**, **E-61**, **E-62** | 7.2.0.29 | nein — von PRÜFER gefundene Robustheitsmängel im selben Code: Benutzung nach dem Freigeben, verschlucktes `WM_QUIT`, Ressourcen je Mausbewegung |
 
-**E-51 lässt sich nicht prüfen, nicht von Gregor und nicht von mir.** Es geht
-darum, ob beim Ziehen irgendwo etwas einfriert; die Ziehschleife läuft nur mit
-einer **physisch gedrückten Maustaste**, und die kann dieses Projekt nicht
-erzeugen (`Arbeitsweise/keine-tastendruecke-verschicken.md`). Es bleibt beim
+**E-51 steht nicht in dieser Liste**, weil es behoben wurde, bevor es
+ausgeliefert war. Prüfbar wäre es ohnehin nicht, nicht von Gregor und nicht von
+mir: es geht darum, ob beim Ziehen etwas einfriert, und die Ziehschleife läuft
+nur mit einer **physisch gedrückten Maustaste**
+(`Arbeitsweise/keine-tastendruecke-verschicken.md`). Es bleibt beim
 Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
 
 > **Warum das hier so lange falsch stand.** Am 11.09.2026 wurde der Stand-Kopf
@@ -54,6 +60,14 @@ Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
 > `BEFUNDE.md` zu halten — damit war sie nachher *falscher* als vorher: das
 > alte Datum hatte wenigstens gewarnt. `tools/pruefe-stand-md.pl` prüft das
 > Datum, nicht den Widerspruch dahinter. Gefunden hat es Gregor.
+>
+> **Am 13.09.2026 dasselbe noch einmal, andersherum.** Der Abschnitt erklärte
+> danach **E-49**, **E-50** und **E-52** für *bestätigt* — `BEFUNDE.md` führt
+> alle drei ausdrücklich als *von Gregor noch nicht bestätigt*. Die Berichtigung
+> vom 11.09. hat den Widerspruch nicht aufgelöst, sondern umgedreht.
+> `tools/pruefe-befundurteile.pl` fängt genau diese Klasse — es prüft aber nur
+> sieben Anwenderdokumente, und **`AUFGABEN.md` ist nicht darunter**, obwohl
+> der Kommentar im Werkzeug selbst diese Datei als Anlass nennt (`:42`).
 
 ### 2. Die Meldung „Encountered an improper argument" beim Anzeigen
 
@@ -492,9 +506,14 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
 
 ## Zurückgestellt — nicht von selbst aufgreifen
 
-`tools/patches/zertifikatspruefung-verschaerfen.patch` (Hostnamensprüfung,
-`X509_V_ERR_CERT_UNTRUSTED`). Gregor hat entschieden, das später anzugehen.
-**Nicht ohne sein Wort anwenden.**
+Von `tools/patches/zertifikatspruefung-verschaerfen.patch` ist der Teil zu
+`X509_V_ERR_CERT_UNTRUSTED` **erledigt** — er ist als Befund **E-82** in
+7.2.0.48 eingespielt und von Gregor am 11.09.2026 bestätigt
+(`Eudora71/QCSSL/src/qccertificate.cpp:82-90`).
+
+**Zurückgestellt bleibt die Hostnamensprüfung:** Eudora vergleicht nur den
+`CN`, nicht die `subjectAltName`-Einträge, und sendet kein SNI. Gregor hat
+entschieden, das später anzugehen. **Nicht ohne sein Wort anwenden.**
 
 ---
 

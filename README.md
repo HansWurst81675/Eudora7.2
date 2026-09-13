@@ -62,7 +62,12 @@ verschickt.
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
-* **Kein IMAP getestet.** Der Code ist da, geprüft ist nur POP3.
+* **IMAP läuft, aber eine Aufgabe kann hängenbleiben.** Von Gregor am
+  10.09.2026 bestätigt — *„imap: funktioniert"*, `imap.gmx.net:993`. Zwei
+  Befunde sind dort offen: **E-83**, eine IMAP-Aufgabe bleibt auf *„Waiting in
+  the task queue to be started …"* stehen und wird nie gestartet (beim Beenden
+  warnt Eudora dann *„You currently have 1 task(s) running"*), und **E-77**,
+  Postfachnamen mit Umlauten stehen roh da: `Entw&APw-rfe` statt *Entwürfe*.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
@@ -189,7 +194,7 @@ und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
 | `SSLSendUse`, `SSLReceiveUse` | `[Settings]` | **2** | **1** | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
 | `CtrlJMapping` | `[Settings]` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
 
-| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar]` | **gespeichert** | *gibt es nicht* | Breite und Höhe eines losgerissenen Fensters, je Leisten-Kennung. Bis 7.2.0.49 sicherte `GroessenSichern` nur die **Andock**größen; die schwebende Größe kam nirgends vor (**E-84**). Einzelheiten in [EINSTELLUNGEN.md](EINSTELLUNGEN.md) |
+| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | **gespeichert** | *gibt es nicht* | Breite und Höhe eines losgerissenen Fensters, je Leisten-Kennung. Bis 7.2.0.49 sicherte `GroessenSichern` nur die **Andock**größen; die schwebende Größe kam nirgends vor (**E-84**). Einzelheiten in [EINSTELLUNGEN.md](EINSTELLUNGEN.md) |
 | `TabooHeaders` | `[Settings]` | Originalliste **plus 16 Einträge** | 28 Einträge, Stand 2006 | Welche Kopfzeilen der Knopf *Blah Blah Blah* versteckt. Die eingebaute Liste kennt `X-UID`, aber nicht `X-`; `Received`, aber nicht `DKIM-`. An 134 echten Nachrichten nachgerechnet blieben damit über 60 technische Kopfzeilenarten stehen, darunter `DKIM-Signature` und `Authentication-Results`. Ergänzt sind `X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`. **Achtung:** ein Eintrag in der `Eudora.ini` **ersetzt** die Liste vollständig, er ergänzt sie nicht — wer etwas hinzufügen will, schreibt die ganze Liste hin |
 | `MessageStyleSheet` | `[Settings]` | plus eine Regel für `SPAN.EUDORAHEADER` | ohne diese Regel | Das Stylesheet der Nachrichtenansicht. Eudora schreibt die Kopfzeilen in **dasselbe** HTML-Dokument wie die Mail; ohne eigene Regel erben sie deren Hintergrund und sind bei einer Mail mit dunklem Grund unsichtbar. Die neue Regel setzt Vordergrund **und** Hintergrund — erst `black` auf `white`, dann dieselben Angaben als `windowtext`/`window` für den Fall, dass MSHTML die Systemfarben kennt. Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig und diese Regel entfällt |
 

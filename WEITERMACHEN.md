@@ -1,20 +1,20 @@
 # Hier weitermachen
 
-**Stand 11.09.2026, mittags.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 13.09.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.48 (`Eudora71/Version.h`) |
+| **Quellstand** | 7.2.0.50 (`Eudora71/Version.h`) |
 | **Paketnummer** | 1.0.50 (`VERSION`) |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.48** (Quellstand 7.2.0.48). Auf GitHub veröffentlicht ist `v1.0.47`; 1.0.48 liegt nur lokal unter `C:\Users\Gregor\Eudora72-1.0.48-release` |
-| **Zuletzt von Gregor bestätigt** | **1.0.48 am 11.09.2026**: die verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993. Davor an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
+| **Zuletzt gebaut und gepackt** | Paket **1.0.50** (Quellstand 7.2.0.50), lokal unter `C:\Users\Gregor\Eudora72-1.0.50-release`. **Auf GitHub veröffentlicht ist `v1.0.48`** — 1.0.49 und 1.0.50 sind von Gregor bestätigt, aber noch nicht released; er gibt das frei (`tools/release-veroeffentlichen.ps1`) |
+| **Zuletzt von Gregor bestätigt** | **1.0.50 am 11.09.2026**: **E-84**, die Größe eines losgerissenen Fensters überlebt den Neustart — belegt an beiden Enden (`FloatCx319=751` in der `Eudora.ini`, `E-76 fest: vorher=751x403` beim ersten Aufruf danach). Davor an 1.0.49 **E-76** (*„e-76: paßt: läßt sich jetzt vergrößern."*), an 1.0.48 **E-82** (verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993), an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
 | **Was als Nächstes zu messen ist** | **Der hängende Resync.** Gregor am 11.09.2026 an 1.0.48: eine IMAP-Aufgabe bleibt auf *„Waiting in the task queue to be started …"* stehen und wird nie gestartet; beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht** die Zertifikatsprüfung — im selben Lauf stand die Verbindung und eine Mail kam an. Drei Ursachen sind am Quelltext ausgeschlossen (siehe `CHANGELOG.md`, *Noch offen*); der offene Verdacht ist `StartWorkerThread`, das bei `m_pThread == NULL` **nichts** tut — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`). Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in **einer** Zeile nennt |
 | **Offen, zurückgestellt** | **E-71** (Filterbericht bleibt leer) — von Gregor am 10.09.2026 ausdrücklich auf die nächste Fassung geschoben: *„kann aber als ToDo für die nächste version aufgeschrieben werden"*. **Nicht von selbst aufgreifen.** Belegt ist, dass der Lauf trifft; zu messen ist `CFilterActions::EndFiltering` |
-| **Offen, mit Marken im Bau** | **E-76** (das schwebende Filterfenster lässt sich nur seitlich vergrößern; Marke seit 7.2.0.41, noch nicht ausgewertet). **E-66** (Marken seit 1.0.35, seit dem Umbau auf `ZiehenAmRand` **nie wieder gelesen** — `tools/spuren-auswerten.pl` weist den Paketbau deshalb ab). **E-68** (`copyInstead` schreibt/liest asymmetrisch, `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — PRÜFER rechnet nach). **E-47** (MFC71/MSVCP71) |
-| **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73**, **E-76** und die neuen **E-44** schreiben je Nachricht, Filter oder Anordnungsdurchlauf eine Protokollzeile. E-64, E-70, E-72 und E-73 sind bestätigt und dürfen raus |
-| **Von Gregor fuer den 11.09.2026 bestellt** | **1.** die Sache mit den **Zertifikaten** erklaeren, die zurueckgestellt wurde — `tools/patches/zertifikatspruefung-verschaerfen.patch` samt Begruendung daneben, dazu der Wurzelzertifikatsspeicher von 2004 (`rootcerts.p7b`, 17 von 30 Zertifikaten im August 2026 abgelaufen) und der fehlende Namensabgleich (nur CN, keine SAN, kein SNI). Fundstellen in `PORTIERUNG.md:435-470`. **2.** die **ToDo-Liste** durchsehen: was ist noch offen, was davon lohnt als Naechstes |
+| **Offen, mit Marken im Bau** | **E-78** (Marke seit 1.0.43 in `mainfrm.cpp`; in `Befunde/SPURMARKEN.md` als `entfaellt` geführt, weil 1.0.43 bei Gregor nur mit `LogLevel=25759` lief, bei dem sie schweigt). **E-69** (die drei Abbruchstellen in `CFiltersDoc::FilterMsg` protokollieren jetzt, statt nur zu assertieren). **E-68** (`copyInstead` schreibt/liest asymmetrisch, `CFiltersDoc::Read` prüft `NUM_FILT_ACTS` nicht — PRÜFER rechnet nach). **E-47** (MFC71/MSVCP71) |
+| **Aufräumen, sobald die Befunde sitzen** | Die Spurmarken **E-64**, **E-66**, **E-70**, **E-72**, **E-73**, **E-76** und die neuen **E-44** schreiben je Nachricht, Filter oder Anordnungsdurchlauf eine Protokollzeile. E-64, E-70, E-72, E-73 und **E-76** sind bestätigt und dürfen raus — E-76 hat mit 1.0.49 geliefert und mit 1.0.50 ein zweites Mal (der Beleg zu E-84 stammt aus dieser Marke) |
+| **Von Gregor am 11.09.2026 bestellt** | **1.** die Sache mit den **Zertifikaten** erklaeren, die zurueckgestellt wurde — `tools/patches/zertifikatspruefung-verschaerfen.patch` samt Begruendung daneben, dazu der Wurzelzertifikatsspeicher von 2004 (`rootcerts.p7b`, 17 von 30 Zertifikaten im August 2026 abgelaufen) und der fehlende Namensabgleich (nur CN, keine SAN, kein SNI). Fundstellen in `PORTIERUNG.md:435-470`. **2.** die **ToDo-Liste** durchsehen: was ist noch offen, was davon lohnt als Naechstes |
 | **Was ich dabei nicht selbst messen kann** | das Ziehen mit der Maus. `Splitter::Track` bricht ab, sobald die **physische** Maustaste los ist (**E-51**). Alles andere lässt sich seit Gregors Freigabe vom 10.09.2026 (*„du kannst ja jetzt lokal ausführen, ich greife nicht rein"*) über `tools/testlauf.ps1` und `tools/leisten-messen.ps1` selbst messen — genau so ist der zweite Teil von E-70 gefunden worden |
 
 > **Die Fassungsgeschichte mit allen Messungen steht in
@@ -84,17 +84,21 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-**Der nächste Schritt gehört Gregor: vier gebaute Behebungen warten auf sein
-Urteil.** Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
+**Der nächste Schritt gehört Gregor: vierzehn gebaute Behebungen warten auf
+sein Urteil** — am 13.09.2026 über alle Urteilszeilen in `BEFUNDE.md` gezählt.
+Sie stecken alle im aktuellen Paket **1.0.50**; die Fassungsnummern unten sagen
+nur, wann sie entstanden sind. Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
 *Die Hauptarbeit*; hier die Reihenfolge in einem Satz je Punkt.
 
-1. **A-4 / E-49, E-52, E-54 und E-55 an 1.0.29 prüfen** — den linken Bereich am
+1. **A-4 / E-49, E-52, E-54 und E-55 prüfen** (gebaut in 7.2.0.26 bis
+   7.2.0.29, enthalten in 1.0.50) — den linken Bereich am
    Trennbalken nach rechts ziehen, über 180 Pixel hinaus, und **gleich noch
    einmal** ziehen. Bleibt der Balken greifbar? Stehen die Registerkarten
    danach einfach da, nicht doppelt? Überlebt die Breite einen Neustart?
    **Und vor allem: friert nichts ein** (**E-51**)? Die fünf Prüfschritte
    stehen in [ZIEL.md](ZIEL.md) unter A-4.
-2. **E-50 an 1.0.26 prüfen** — die drei Mängel an der Registerkartenleiste:
+2. **E-50 prüfen** (gebaut in 7.2.0.26, enthalten in 1.0.50) — die drei Mängel
+   an der Registerkartenleiste:
    bleibt eine Karte eingedrückt, wenn ein anderes Fenster aktiv ist; stimmt
    die Darstellung beim Skalieren; bleiben die Karten beim Öffnen und Schließen
    stehen. Alle drei hatten dieselbe Wurzel — der Streifen wurde nur beim
