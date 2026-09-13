@@ -247,7 +247,38 @@ Commits nachgemessen und bestätigt gefunden. Zwei Ergänzungen:
 
 ---
 
-## 7. Vorcommit-Prüfungen
+## 7. Die vier Schranken vom 11.09.2026 haben keine Aufrufstelle
+
+Beim Einhängen meiner beiden ist es aufgefallen: `tools/hooks-einrichten.sh`
+ist die einzige Stelle, an der eine Schranke einen **Auslöser** bekommt — der
+`pre-commit` selbst liegt unter `.git/hooks/` und ist nicht im Repo. Dort
+stehen zwölf Schranken. **Keine** der vier aus PRUEFER-8 ist darunter:
+
+| Schranke | im Hook-Installer |
+|---|---|
+| `pruefe-taboo-liste.pl` | nein |
+| `pruefe-blahblah-knopf.pl` | nein |
+| `pruefe-kopfzeilen-stil.pl` | nein |
+| `pruefe-zertifikatspruefung.pl` | nein (bei dieser mit Absicht: sie meldet ohne `--streng` nur, solange der Zweig `zertifikate` nicht gemergt ist) |
+
+Damit sind drei fertige, gegengetestete Schranken genau das, wovor die Lehre
+*Lehren anwenden, nicht nur schreiben* warnt: sie laufen nur, wenn jemand
+daran denkt. Eine Schranke ohne Auslöser ist eine Lehre, die nur Text ist.
+
+**Meine beiden habe ich deshalb eingehängt** — als Schritt 13 und 14 in
+`tools/hooks-einrichten.sh`, jeweils mit Begründung im Kommentar.
+`bash -n` läuft sauber. Ich habe **nicht** in Gregors `.git/hooks/pre-commit`
+geschrieben; das ist eine Änderung an seiner Einrichtung und nicht meine.
+Wirksam wird es bei ihm erst mit `bash tools/hooks-einrichten.sh`.
+
+Nebenbefund dazu: der **eingerichtete** Hook ist gegenüber dem Installer
+veraltet. Er kennt `lehren-spiegeln`, `doku-pruefen`, `lehren-schranken`,
+`lehren-uebersicht` und `pruefe-ini-abschnitte` nicht, die im Installer
+stehen. Wer den Installer ergänzt und nicht neu ausführt, ändert nichts.
+
+---
+
+## 8. Vorcommit-Prüfungen
 
 Vor **jedem** der beiden Commits gelaufen, jedes Mal alle 0:
 
