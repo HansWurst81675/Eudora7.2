@@ -36,8 +36,11 @@ kein Mailprogramm.
 | 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler dahinter, **E-43**, ist in 7.2.0.24 an der Wurzel behoben und ebenfalls bestätigt: die Protokollzeile `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst` kommt nicht mehr |
 | 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund **E-48**, umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben (**E-50**) und noch nicht nachgesehen |
 **Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
-erfüllt (2, 4).** Beiden fehlt dasselbe: die Meldung „Encountered an improper
-argument" beim **Anzeigen** mancher Nachrichten.
+erfüllt (2, 4).** Beiden gemeinsam fehlt die Meldung „Encountered an improper
+argument" beim **Anzeigen** mancher Nachrichten. **Kriterium 2 fehlt darüber
+hinaus** die Darstellung von IMAP-Postfachnamen mit Umlauten (**E-77**, offen);
+die Umlaute in per IMAP abgerufenen Nachrichten sind mit **E-85** in 7.2.0.51
+behoben, aber noch nicht von Gregor am laufenden Programm bestätigt.
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich
