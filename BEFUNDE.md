@@ -120,8 +120,8 @@ zuerst **E-11**, **R-1** und **E-1**.
 | NP3-5 | `lehren-spiegeln.pl` war genau im Fehlerfall stumm | **behoben** (X-2) |
 | NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **behoben** |
 | NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** (Prüfstandsmarke) |
-| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **offen** |
-| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **teilweise** (POP behoben, IMAP offen) |
+| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **behoben** in 7.2.0.52, am laufenden Programm belegt. **Dieser Befund stand hier, als Gregor am 13.09.2026 denselben Fehler als E-85 meldete — und wurde nicht gelesen.** Er nannte die Ursache, die Zeilennummern und die Handlungsanweisung („denselben Aufruf verwenden wie `mime.cpp:382-390`, am besten durch Aufruf von `FindMIMECharset` selbst, und die Abfrage in Zeile 4657 auf `> 2` ziehen"). Genau so wurde es behoben — nur über zwei Anläufe und eine ausgelieferte Zwischenfassung hinweg. Siehe **E-85** |
+| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **behoben** — POP schon früher, **IMAP in 7.2.0.51** (`ImapDownload.cpp`, `inLen`/`outLen` werden nachgezogen). Auch dieser Befund stand bereits hier, als derselbe Mangel unter **E-85** neu gesucht wurde |
 | PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
 
 ## Start, Paket, Auslieferung (S)
