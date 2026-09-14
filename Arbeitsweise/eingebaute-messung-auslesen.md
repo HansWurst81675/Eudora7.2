@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-10T00:00:00.000Z
+  modified: 2026-09-14T00:00:00.000Z
 ---
 
 Schranke: tools/spuren-auswerten.pl (paket-bauen)
@@ -86,6 +86,75 @@ wenn `entfaellt:` mit tragfaehiger Begruendung dasteht. Eine Zeile ohne Marke
 im Quelltext wird gemeldet, weist aber nicht ab. Die Einbindung in
 `tools/paket-bauen.ps1` ist einzeln gefahren worden, nicht nur gelesen
 ([[messung-muss-den-weg-treffen]]).
+
+## Nachtrag 13./14.09.2026: die andere Richtung — gar nichts eingebaut
+
+Alles oben beschreibt **eine** Richtung: die Marke war da und wurde nicht
+gelesen. Am 13.09.2026 kam die Umkehrung, und sie ist teurer.
+
+Bei **E-85** (Umlaute in per IMAP abgerufenen Nachrichten) habe ich zweimal
+„behoben" gemeldet — Commit `881d5c4` um 18:45 Uhr, an Gregor um 19:00 Uhr —
+und ein Paket 1.0.51 ausgeliefert, **ohne eine einzige Messung im Programm**,
+die gesagt hätte, ob der geänderte Weg überhaupt genommen wird. Der erste Fix
+reparierte den Suchbereich, der zweite die Quelle. Beide Male hiess es vorher
+„behoben".
+
+Um 20:22:48 Uhr, als Gregors Bild den Fehler weiter zeigte, stand da:
+
+> *„Das Protokoll zeigt Abrufe (‚1 message(s) left to download'), aber **keine
+> Spurmarke aus dem IMAP-Übersetzungsweg** — die habe ich nicht eingebaut."*
+
+Was an ihre Stelle trat, war eine Ersatzmessung, die nichts entscheiden
+konnte: Bytefolgen in der Mailboxdatei zählen. Ergebnis 322 UTF-8-Folgen
+gegen 228 CP1252-Umlaute, **gemischt** — und dazu mein eigener Satz *„ich
+kann nicht sagen, ob dieser Teil von 0.51 stammt oder von 0.50"*. Die Datei
+enthält Nachrichten aus Tagen; eine Messung, die die Fassungen nicht trennen
+kann, ist keine.
+
+Drei Minuten später habe ich es selbst benannt:
+
+> *„Ich habe keine Spurmarke in den Übersetzungsweg gebaut — derselbe Fehler,
+> den `Arbeitsweise/eingebaute-messung-auslesen.md` beschreibt, nur diesmal
+> von der anderen Seite: gar nichts eingebaut."*
+
+Mit der Marke war es am nächsten Morgen in **einer Zeile** entschieden:
+
+    E-85 imap: teil-charset=utf-8  tl-charset=(keiner)  idx=4  uebersetzt=ja
+
+Der Top-Level-Header nennt keinen Zeichensatz, der MIME-Teil nennt `utf-8`.
+Vorher stand dort `idx=0, uebersetzt=nein`. Dazu die Gegenprobe in der
+Mailboxdatei: **null** unübersetzte UTF-8-Folgen im zuletzt geschriebenen
+Teil, am Vortag 76.
+
+**Warum die Schranke oben das nicht fängt:** `spuren-auswerten.pl` hält die
+Marken **im Quelltext** gegen `Befunde/SPURMARKEN.md`. Eine Marke, die es
+nicht gibt, steht in keiner der beiden Listen. Die fehlende Marke ist für
+dieses Werkzeug **unsichtbar** — genau wie der stumme Prüfstand in
+[[pruefstand-kann-blind-sein]]. Beides sind Lücken, die sich nicht von selbst
+melden, weil nichts fehlschlägt.
+
+**Die Ergänzung zur Regel:**
+
+- **Die Spurmarke gehört in denselben Commit wie die Behebung**, nicht in den
+  Commit danach und erst recht nicht in den nach dem zweiten Fehlversuch. Wer
+  eine Zeile ändert, deren Wirkung Gregor melden soll, baut im selben Zug die
+  Zeile ein, die sagt, ob sie durchlaufen wurde.
+- **Eine Behebung ohne beobachtbaren Weg ist nicht lieferbar.** Nicht „nicht
+  bestätigt" — **nicht lieferbar**. Das Paket kostet Gregor einen Testlauf,
+  und der Testlauf kann nichts entscheiden.
+- **Ersatzmessungen an Dateien, die über mehrere Fassungen gewachsen sind,
+  zählen nicht.** Sie liefern eine Zahl, keine Zuordnung. Wer eine solche Zahl
+  nennt, nennt im selben Satz, was sie **nicht** trennen kann.
+- **Für diese Richtung greift eine andere Schranke:**
+  `tools/pruefe-behoben-belegt.pl` (`pre-commit`) weist jedes neu geschriebene
+  „behoben" ab, das keinen Beleg nennt — und eine Spurmarke mit ihrem
+  Messwert ist einer der vier zulässigen Belege. Damit hat jetzt jede der
+  beiden Richtungen ihre eigene: `spuren-auswerten.pl` gegen die ungelesene
+  Marke, `pruefe-behoben-belegt.pl` gegen die fehlende.
+
+Siehe [[unterschied-im-selben-bild]] — der zweite Teil desselben Vorfalls:
+während die Marke fehlte, lag der Befund die ganze Zeit sichtbar in Gregors
+Bildschirmfoto.
 
 Siehe [[pruefen-statt-vermuten]] — der zweite Teil desselben Vorfalls: der
 Grund stand als Kommentar fuenf Zeilen ueber dem Einbau. Ausserdem
