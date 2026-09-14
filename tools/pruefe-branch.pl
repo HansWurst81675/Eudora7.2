@@ -160,11 +160,47 @@ if (!length $kopf) {
     exit 0;
 }
 
-# --- main selbst ist nie das Problem -------------------------------------------
+# --- Fall 4: der Zweig IST main ------------------------------------------------
+#
+# Diese Stelle hiess bis zum 14.09.2026 "main selbst ist nie das Problem" und
+# liess einen Commit auf main mit "in Ordnung" durch. Gemeint war: wer AUF main
+# steht, kann nicht auf einem erledigten Zweig stehen. Das stimmt - uebersehen
+# war nur, dass das Committen auf main selbst verboten ist:
+#
+#   Gregor am 05.09.2026: "keine direkten aenderungen am main branch. ich werde
+#   ihn sperren, damit du das nicht dauernd machen kannst."
+#
+# Die Sperre bei GitHub greift, aber erst beim PUSH. Am 14.09.2026 ist genau das
+# eingetreten: ein Commit ging lokal durch, der Push wurde abgewiesen, und die
+# Arbeit musste nachtraeglich auf einen Zweig verschoben werden. Der lokale Hook
+# hatte dazu nichts gesagt - er hatte "in Ordnung" gemeldet.
+#
+# Eine Schranke, die den haeufigsten Fall ihrer eigenen Regel durchlaesst, ist
+# keine Schranke. Deshalb bricht sie hier ab.
+#
+# Der Ausweg steht in der Meldung: wer bewusst auf main committen will - Gregor
+# beim Zusammenfuehren von Hand - nimmt --no-verify. Das ist eine Entscheidung,
+# kein Versehen, und genau der Unterschied, um den es geht.
 
 if ($branch eq 'main' or $branch eq 'master') {
-    melde("pruefe-branch: auf $branch - in Ordnung\n");
-    exit 0;
+    print "\n";
+    print "  COMMIT ABGEBROCHEN - '$branch' nimmt keine direkten Commits\n";
+    print "\n";
+    print "  Gregor am 05.09.2026: \"keine direkten aenderungen am main\n";
+    print "  branch. ich werde ihn sperren, damit du das nicht dauernd\n";
+    print "  machen kannst.\"\n";
+    print "\n";
+    print "  Jede Aenderung geht ueber einen eigenen Zweig, dessen NAME\n";
+    print "  vorher abgestimmt ist (tools/ZWEIGE.md). Gregor merged.\n";
+    print "\n";
+    print "      git switch -c <abgestimmter-name> origin/main\n";
+    print "      git commit ...\n";
+    print "\n";
+    print "  Die Aenderungen bleiben dabei erhalten - switch nimmt sie mit.\n";
+    print "\n";
+    print "  (Bewusst trotzdem committen: git commit --no-verify)\n";
+    print "\n";
+    exit($nur_melden ? 0 : 1);
 }
 
 # --- Fall 2: schon zusammengefuehrt? -------------------------------------------

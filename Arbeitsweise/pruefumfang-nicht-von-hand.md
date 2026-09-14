@@ -130,3 +130,51 @@ Umfang aus `Eudora71/Bin/<Bauart>/` holen — jede dort erzeugte Datei, die auch
 im Paket liegt, wird nach Größe und Zeitstempel verglichen; was der Bau erzeugt
 und im Paket **fehlt**, wird genannt. Dann fällt die nächste DLL auf, an die
 niemand gedacht hat.
+
+## Nachtrag 14.09.2026 — der Zaehler war enger als die Frage, und ich habe damit einem Agenten widersprochen
+
+In der Commit-Nachricht zu `f768087` stand von mir: in `tools/WERKZEUGE.md`
+fehlten **12 von 84** Werkzeugen, und LEKTORs Zahl sei zu niedrig.
+
+Nachgemessen: **84 von 84 sind dokumentiert.** Die Uebersicht war vollstaendig,
+LEKTOR hatte recht.
+
+Meine 72 kam aus
+
+```
+grep -c '^| `tools/' tools/WERKZEUGE.md
+```
+
+Das zaehlt **nur Tabellenzeilen, die mit der Backtick-Form beginnen**.
+Werkzeuge, die im Fliesstext oder in einer anderen Spalte stehen, fallen
+heraus. Der Zaehler hat also nicht gemessen, was in der Datei steht, sondern
+was in **einer bestimmten Schreibweise** darin steht — und die Differenz zur
+Wirklichkeit habe ich als Luecke im Bestand gemeldet.
+
+**Warum das schlimmer ist als eine falsche Zahl:** Die Zahl stand in einer
+Commit-Nachricht, also dauerhaft, und sie war gegen einen Agenten gerichtet,
+der richtig gezaehlt hatte ([[mannschaft-fuehren]]: jeden Ruecklauf selbst
+nachmessen — das gilt auch dann, wenn das Nachmessen den Agenten bestaetigt).
+Die Berichtigung musste hinterher in einen eigenen Commit.
+
+**Wie anwenden, zusaetzlich:**
+
+- **Ein Zaehler wird gegen die Quelle gehalten, nicht gegen sich selbst.** Die
+  Frage „sind alle Werkzeuge dokumentiert" hat zwei Seiten: `ls tools/` und die
+  Datei. Wer nur eine Seite zaehlt, misst seine eigene Schreibweise.
+  Nachgemessen wird mit einer Schleife ueber die tatsaechlichen Dateien:
+
+  ```
+  for f in tools/*.pl tools/*.sh tools/*.ps1; do
+      grep -qF "$(basename "$f")" tools/WERKZEUGE.md || echo "FEHLT: $f"
+  done
+  ```
+
+  Das ist am 14.09.2026 gefahren worden und hat **keine** Luecke gemeldet.
+- **Ein Muster mit Zeilenanfang und Formatzeichen (`^| \``) misst Formatierung.**
+  Sobald die Antwort eine Aussage ueber Inhalt sein soll, ist so ein Muster der
+  falsche Zaehler ([[schranke-liest-nur-code]] — dieselbe Verwechslung, dort in
+  die andere Richtung).
+- **Wer einem Agenten widerspricht, misst vorher nach** und nennt die Messung
+  in derselben Zeile wie den Widerspruch ([[auftrag-darf-nicht-loeschen]],
+  Punkt 4).
