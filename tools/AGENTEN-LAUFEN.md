@@ -9,4 +9,5 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-09-14 07:20 | E-86: HTML-Nachrichten verlieren Hintergrund und Bildrahmen |
+| CHRONIST | 2026-09-14 07:39 | Gespraechsverlauf auswerten, Lehren aktualisieren (Gregors Auftrag vom 13.09.) |
+| LEKTOR | 2026-09-14 07:39 | Doku gegen den Bestand 7.2.0.53 |
