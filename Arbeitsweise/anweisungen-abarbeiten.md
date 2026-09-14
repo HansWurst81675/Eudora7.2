@@ -51,3 +51,43 @@ letzte Antwort verwerfen; (c) eine Festlegung — dann in eine Datei; (d) eine
 Anweisung — dann ausführen, nicht bestätigen. Nachrichten, die eintrafen, während
 ich beschäftigt war, gehen sonst unter: am 28.08.2026 sind zwei aus der
 Warteschlange komplett verlorengegangen.
+
+---
+
+## Nachtrag 14.09.2026 — Punkt 5: ein Bild ist Material, und ein zitierter Befund ist eine Anweisung
+
+Punkt 1 oben sagt, geliefertes Material werde ausgewertet und nicht nur
+entgegengenommen. Der Anlass war damals ein ZIP-Archiv. **Ein Bildschirmfoto
+ist dasselbe Material**, und es ist im Alltag das haeufigere.
+
+Gemessen an E-85, 13.09.2026: die entscheidende Kombination — Betreff richtig,
+Rumpf falsch — stand ab **11:01:42** in Gregors Bild. Ausgewertet wurde sie um
+**20:29:19**. Dazwischen: **9 Stunden 27 Minuten, 318 Werkzeugaufrufe**,
+zweimal „behoben" gemeldet und ein Paket ausgeliefert, das den Fehler nicht
+behob. Die Auswertung selbst brauchte danach **null** Werkzeugaufrufe. Die
+ganze Rechnung steht in [[unterschied-im-selben-bild]]; hier zaehlt nur, dass
+sie unter Punkt 1 gehoert: das Material lag vor, es wurde nicht ausgewertet.
+
+**Dazu ein sechster Fall, der in dieser Liste noch fehlte: Gregor zitiert
+etwas aus dem eigenen Repo.** Am 14.09.2026 um 07:50 Uhr schickte er zwei
+Zeilen aus `BEFUNDE.md` und fragte *„dsa hat jemand auf dem schirm?"*. Das ist
+keine Sachfrage — es ist ein Hinweis darauf, dass die Antwort schon im Haus
+liegt ([[bestand-vor-neuer-suche]]).
+
+**Und beide entscheidenden Nachrichten dieses Tages kamen als Einwurf**,
+mitten in einen laufenden Zug: die zitierten Befunde und
+*„du hast deine tools immer noch nciht im griff, was?"* (12:16:15). Das ist
+die Form, in der 54 Prozent seiner Nachrichten eintreffen
+([[einwurf-ist-ein-messwert]]) — also nicht die Ausnahme, sondern der
+Regelfall, fuer den die Auswertung eingerichtet sein muss.
+
+**Zu Punkt 1 ergaenzt, als Handgriff:**
+
+* **Ein Bild wird gelesen, bevor der naechste Werkzeugaufruf laeuft** — einmal
+  auf das, was falsch ist, und einmal auf das, was daneben richtig ist.
+* **Zitiert Gregor eine Kennung (`NP3-8`, `E-87`, `V-1`), wird zuerst die
+  Stelle im Repo geoeffnet**, nicht die Sache neu untersucht.
+* **Ein Einwurf unterbricht den laufenden Zug nicht, aber er wird vor dem
+  naechsten Werkzeugaufruf gelesen und beantwortet.** Was waehrend einer
+  langen Arbeit eintrifft, geht sonst unter — das steht seit dem 28.08.2026
+  in Punkt 4 und ist am 13.09.2026 wieder passiert.
