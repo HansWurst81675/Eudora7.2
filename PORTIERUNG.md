@@ -39,7 +39,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > sind fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
 > improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2** hat
 > mit **E-77** (IMAP-Postfachnamen roh) einen weiteren offenen Punkt. Stand 13.09.2026,
-> Quellstand **7.2.0.51**, Paketnummer **1.0.51** — gebaut für Gregors Test von
+> Quellstand **7.2.0.52**, Paketnummer **1.0.52** — gebaut für Gregors Test von
 > **E-85** (Umlaute über IMAP), noch **nicht** von ihm bestätigt.
 > **Veröffentlicht** ist bei GitHub `v1.0.50` (13.09.2026). Hier steht bewusst keine
 > | Messung | Ergebnis |

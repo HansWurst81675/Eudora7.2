@@ -57,6 +57,92 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.52 — der Zeichensatz stand nie im Nachrichtenkopf (E-85, zweiter Anlauf)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen —
+auch in HTML-Newslettern, also in der Sorte Nachricht, bei der es vorher nie
+funktionierte. **Von ihm noch nicht bestätigt.**
+
+**7.2.0.51 hat den Fehler nicht behoben, und sein Test hat das gezeigt.** Seine
+Meldung: *„das ist auf jeden fall eine frische mail, ist aber falsch
+dargestellt!"* — dazu das Bild, auf dem der **Betreff richtig** und der **Rumpf
+falsch** war. Diese Kombination war der Schlüssel.
+
+### Die Ursache
+
+`CImapDownloader::Write` holte den Zeichensatz aus `m_pHd->m_TLMime`. **TL heißt
+Top Level.** Das Feld wird genau **einmal** gefüllt — beim Holen des
+Nachrichtenkopfs in `UIDFetchHeaderFull` — und beim Durchlauf durch die
+MIME-Teile nie wieder gelesen.
+
+Bei `multipart/alternative`, und das ist jeder HTML-Newsletter, steht im
+Top-Level-Header **kein `charset`**, sondern nur `boundary`. Der Zeichensatz
+steht im **einzelnen Teil**; dessen Struktur trägt ihn auch
+(`PARAMETER *parameter`, `Imapdll/public/inc/exports.h:147`) — nur hat ihn dort
+nie jemand ausgelesen.
+
+Damit hat die Behebung in 7.2.0.51 den **Suchbereich** repariert
+(`FindMIMECharset` statt einer Suche, die vor `IDS_MIME_UTF_8` endet) und
+durchsuchte weiterhin die **falsche Quelle**. Bei einer einteiligen
+`text/plain`-Nachricht steht der Zeichensatz tatsächlich im Nachrichtenkopf —
+dort war der Weg immer richtig, und **deshalb ist es nie aufgefallen**.
+
+Zwei Gegenproben, beide am Quelltext: in ganz `EuImap` gibt es **keine zweite
+Stelle**, die den Zeichensatz eines Teils liest; und die einzige weitere
+Verwendung von `charset` ist `Translate2047` im **Kopfzeilen**weg — genau
+deshalb war der Betreff richtig.
+
+### Die Behebung
+
+Neues Feld `m_szCurrentCharset`, gesetzt an denselben drei Stellen, an denen
+schon `m_CurrentBodyType` und `m_szCurrentBodySubtype` gesetzt werden, gefüllt
+aus `body->parameter`. Der Zeichensatz des Teils hat Vorrang, der
+Nachrichtenkopf bleibt Rückfall.
+
+**Dazu die Spurmarke, die von Anfang an hätte dastehen müssen.** Sie nennt
+**beide** Quellen in **einer** Zeile:
+
+```
+E-85 imap: teil-charset=… tl-charset=… idx=… uebersetzt=… typ=…/… zeilenweise=…
+```
+
+Einmal je Nachrichtenteil, nicht je Block. Ohne sie ließ sich nicht
+unterscheiden, ob der Übersetzungsweg nicht greift oder ob nur eine alte
+Nachricht angezeigt wird — und genau diese Unterscheidung hat einen ganzen
+Testdurchgang gekostet.
+
+### E-83: eine Vermutung widerlegt, eine neue Spur
+
+Der Verdacht, der seit dem 11.09.2026 in `BEFUNDE.md` stand — `StartWorkerThread`
+tue bei `m_pThread == NULL` stumm nichts — **hält nicht**. `m_pThread` wird an
+genau einer Stelle geschrieben und nirgends wieder auf NULL gesetzt.
+
+Außerdem war eine der drei „ausgeschlossenen" Ursachen **falsch
+ausgeschlossen**: die Doku behauptete, `DelayTasks`/`StartTasks` rufe niemand
+auf — tatsächlich ruft `QCTaskGroup` beide, und die wird an drei Stellen
+benutzt.
+
+Der neue, stärkste Kandidat: `RemoveWorkerThread` fordert die Nachbearbeitung
+nur unter zwei Bedingungen an, und IMAP-Aktionen aus `CActionQueue::OnIdle`
+laufen daran vorbei. Bleibt eine Aufgabe liegen, wird der Destruktor von
+`CImapAction` nie erreicht, der `ActionDone()` ruft — **die Aktionswarteschlange
+bleibt für immer in Bearbeitung und keine weitere IMAP-Aktion läuft**. Das wäre
+zugleich die Erklärung dafür, dass nichts Neues abgerufen wird. Noch **nicht**
+am laufenden Programm gemessen, deshalb nicht behoben — aber die Spurmarke
+dafür ist drin und meldet alle 15 Sekunden jede liegengebliebene Aufgabe.
+
+### Zum Prüfen
+
+**Eine schon abgerufene Nachricht bleibt kaputt.** Die Übersetzung passiert beim
+**Abruf** und landet in der Mailboxdatei; die Anzeige liest nur, was dort steht.
+Es muss also eine **neue** Nachricht sein.
+
+**Emoji werden zu `?`, und das ist richtig** — die Mailboxdatei speichert
+CP1252, darin gibt es kein Emoji. Umlaute, Anführungszeichen, Gedankenstrich und
+Eurozeichen müssen dagegen stimmen.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
 ## 7.2.0.51 — Umlaute in per IMAP abgerufenen Nachrichten (E-85)
 
 **Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen,
