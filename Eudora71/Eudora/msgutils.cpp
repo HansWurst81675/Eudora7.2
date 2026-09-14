@@ -3146,8 +3146,6 @@ bool E88OriginalEinsetzen(
 // bekannt, und nachgeladen wird beim Verfassen nichts. Die Hoehe ist die
 // wichtige Zahl: sie bestimmt, wie weit der Zeilenabstand aufreisst, und
 // damit die Lesbarkeit.
-#define E89_VORGABE_BREITE	200
-#define E89_VORGABE_HOEHE	90
 
 
 //
@@ -3357,7 +3355,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 	int		nBilder = 0;		// <img> insgesamt
 	int		nSchonGut = 0;		// unveraendert gelassen
 	int		nAusCss = 0;		// mindestens ein Mass aus style="..." geholt
-	int		nVorgabe = 0;		// mindestens ein Mass geraten
+	int		nOhneMass = 0;		// kein Mass bekannt - Bild unangetastet gelassen
 	int		nGedeckelt = 0;		// war breiter oder hoeher als der Deckel
 
 	const int	nLen = pszHtml ? (int) strlen(pszHtml) : 0;
@@ -3455,7 +3453,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		// noch treffen kann.
 		//
 		bool	bProzB = false, bProzH = false;
-		bool	bAusCss = false, bGeraten = false;
+		bool	bAusCss = false;
 
 		int		nBreite = bHatBreite ? E89ZahlLesen((LPCTSTR) szBreiteWert, bProzB) : 0;
 		int		nHoehe  = bHatHoehe  ? E89ZahlLesen((LPCTSTR) szHoeheWert,  bProzH) : 0;
@@ -3496,21 +3494,28 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 			}
 		}
 
-		if (nBreite <= 0)
+		//
+		// Ist nach Attribut und CSS immer noch kein Mass bekannt, bleibt das
+		// Bild UNANGETASTET.
+		//
+		// Hier stand bis zum 14.09.2026 eine Vorgabe von 200x90. Auf Gregors
+		// Bild zu 1.0.57 erschien sie als leerer grauer Kasten mitten im
+		// Text - Platz, der weggenommen wird, ohne dass etwas zu sehen ist.
+		// Vorher stand dort nichts. Seine Spurmarke nannte drei solche Faelle
+		// in einer einzigen Nachricht (Vorgabe=3).
+		//
+		// Eine geratene Zahl ist schlechter als keine: Paige kennt die
+		// wirkliche Bildgroesse, sobald es die Datei geladen hat, und traegt
+		// sie selbst nach. Seit die Bildhoehe in PGHTMIMP.CPP wieder in die
+		// Zeilenhoehe eingeht, ist dieses Nachtragen auch nicht mehr
+		// schaedlich - es war nie die Groesse, die den Text zugedeckt hat,
+		// sondern die verworfene Zeilenhoehe.
+		//
+		if (nBreite <= 0 && nHoehe <= 0)
 		{
-			nBreite = E89_VORGABE_BREITE;
-			bProzB  = false;
-			if (nHoehe > 0 && nHoehe < nBreite)
-				nBreite = nHoehe;			// kleines Sinnbild bleibt klein
-			bGeraten = true;
-		}
-
-		if (nHoehe <= 0)
-		{
-			nHoehe = E89_VORGABE_HOEHE;
-			if (!bProzB && nBreite > 0 && nBreite < nHoehe)
-				nHoehe = nBreite;			// kleines Sinnbild bleibt klein
-			bGeraten = true;
+			nOhneMass++;
+			i = j + 1;
+			continue;
 		}
 
 		//
@@ -3563,7 +3568,6 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		}
 
 		if (bAusCss)	nAusCss++;
-		if (bGeraten)	nVorgabe++;
 		if (bGedeckelt)	nGedeckelt++;
 
 		//
@@ -3604,7 +3608,12 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 		szAus += CString(pszHtml + nKopiertAb, (i + 4) - nKopiertAb);
 		szAus += szRest;
-		szAus += " width=\"" + szNeueBreite + "\" height=\"" + szNeueHoehe + "\"";
+		// Nur schreiben, was bekannt ist. Ein Bild, von dem nur die Breite
+		// im CSS steht, bekommt width - und keine erfundene Hoehe.
+		if (nBreite > 0)
+			szAus += " width=\"" + szNeueBreite + "\"";
+		if (nHoehe > 0)
+			szAus += " height=\"" + szNeueHoehe + "\"";
 		if (bSelbstSchliessend)
 			szAus += " /";
 		szAus += ">";
@@ -3623,8 +3632,8 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 	out_szSpur.Format(
 		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
-		"Vorgabe=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
-		nBilder, nSchonGut, nAusCss, nVorgabe, nGedeckelt, bGeaendert ? 1 : 0,
+		"ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		nBilder, nSchonGut, nAusCss, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
 		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
 
 	return bGeaendert;

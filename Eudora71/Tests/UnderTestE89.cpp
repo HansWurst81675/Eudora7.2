@@ -39,5 +39,3 @@ bool UTE89_BilderMessbarMachen(const char* pszHtml,
 
 int UTE89_MaxBreite(void)		{ return E89_MAX_BREITE; }
 int UTE89_MaxHoehe(void)		{ return E89_MAX_HOEHE; }
-int UTE89_VorgabeBreite(void)	{ return E89_VORGABE_BREITE; }
-int UTE89_VorgabeHoehe(void)	{ return E89_VORGABE_HOEHE; }

@@ -2108,11 +2108,35 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 
 	            if (image_record.source_height) {
 	               
-	               current_style.ascent = image_record.source_height;
-	               current_style.ascent = (short)original_descent;
+	               // E-89: die Bildhoehe muss in die Zeilenhoehe eingehen.
+	               //
+	               // Hier stand bis zum 14.09.2026 eine Zeile, die die gerade
+	               // gesetzte Bildhoehe sofort wieder wegwarf:
+	               //
+	               //     current_style.ascent = image_record.source_height;
+	               //     current_style.ascent = (short)original_descent;   <- weg
+	               //
+	               // original_descent stammt aus dem TEXTSTIL (Zeile 2039,
+	               // aufgenommen bevor das Bild bekannt war). Uebrig blieb
+	               // ascent = max(Text-Ascent, Text-Descent), also etwa 3 bis
+	               // 12 Bildpunkte - unabhaengig davon, wie hoch das Bild ist.
+	               // Ein 150 Punkt hohes Bild sass damit in einer textkleinen
+	               // Zeile und deckte zu, was darueber stand.
+	               //
+	               // Dass current_style wirklich der Stil ist, der ins Embed
+	               // geht, ist gemessen: ProcessEmbed (Zeile 2962) setzt
+	               // translator.format = current_style, und der Aufruf steht
+	               // zwanzig Zeilen weiter unten.
+	               //
+	               // Gregor am 14.09.2026 an 1.0.57, nachdem eine Behebung
+	               // ueber die Bildabmessungen nichts gebracht hatte: "findest
+	               // du, es ist leserlich? ich nicht!" Seine Spurmarke sagte
+	               // aus-CSS=0 gedeckelt=0 - die Groesse war nie das Problem.
+	               current_style.ascent = (short)image_record.source_height;
 	               
 	               if (original_ascent > current_style.ascent)
 	                  current_style.ascent = (short)original_ascent;
+
 	            }
 	            
 	            if (!translator.bytes_transferred)

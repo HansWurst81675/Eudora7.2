@@ -59,6 +59,48 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.58 — die Bildhöhe zählt wieder für die Zeilenhöhe (E-89)
+
+> **Noch nicht bestätigt.** Zu prüfen ist dasselbe wie bei 1.0.57: eine
+> Newsletter-Mail mit Bildern weiterleiten und ins Verfassenfenster sehen.
+> Die Schwelle ist nicht „schön", sondern **nichts liegt übereinander, jeder
+> Satz ist lesbar**.
+
+**Die Ursache war eine einzige tote Zeile.** In `PGHTMIMP.CPP:2110-2111` stand:
+
+```c
+current_style.ascent = image_record.source_height;   // Bildhöhe gesetzt
+current_style.ascent = (short)original_descent;      // … sofort überschrieben
+```
+
+`original_descent` stammt aus dem **Textstil**, aufgenommen bevor das Bild
+überhaupt bekannt war. Übrig blieb `ascent = max(Text-Ascent, Text-Descent)` —
+drei bis zwölf Bildpunkte, **unabhängig davon, wie hoch das Bild ist**. Ein
+150 Punkt hohes Bild saß in einer textkleinen Zeile und deckte zu, was darüber
+stand. Die zweite Zeile ist gestrichen; damit wirkt die erste wie beabsichtigt.
+
+**Dass diese Stelle zählt, ist gemessen:** `ProcessEmbed` (`:2962`) setzt
+`translator.format = current_style`, und der Aufruf steht zwanzig Zeilen
+darunter.
+
+**Der Umweg aus 7.2.0.57 ist zurückgenommen.** Die Vorgabe 200×90 für Bilder
+ohne bekanntes Maß erschien auf Gregors Bild als leerer grauer Kasten: Platz,
+der weggenommen wird, ohne dass etwas zu sehen ist. Ein Bild ohne Maß bleibt
+jetzt unangetastet — Paige kennt die wirkliche Größe, sobald es die Datei
+geladen hat. Dabei fiel ein zweiter Fehler auf: die Vorgabe traf auch Bilder,
+von denen **nur die Breite** bekannt war; die bekommen jetzt ihre Breite und
+keine erfundene Höhe. Der Deckel gegen zu breite Bilder bleibt.
+
+**Wie 7.2.0.57 sich widerlegt hat:** die eingebaute Spurmarke nannte in
+Gregors Lauf `gesamt=25 unveraendert=22 aus-CSS=0 gedeckelt=0` — kein einziges
+Bild hatte seine Größe im CSS, keines war zu breit, geändert wurden 48 Bytes
+von 62.057. Die Bilder überlappten, **obwohl ihre Größe stimmte**. Damit war
+die Größe als Ursache ausgeschlossen und die Suche auf die **Position**
+gelenkt.
+
+**Tests: 148 von 148.** Vier davon umgeschrieben, weil sie die Vorgabe
+festhielten; sie prüfen jetzt das Gegenteil.
+
 ## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
 
 > **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
