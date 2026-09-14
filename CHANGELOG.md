@@ -61,10 +61,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ## 7.2.0.58 — die Bildhöhe zählt wieder für die Zeilenhöhe (E-89)
 
-> **Noch nicht bestätigt.** Zu prüfen ist dasselbe wie bei 1.0.57: eine
-> Newsletter-Mail mit Bildern weiterleiten und ins Verfassenfenster sehen.
-> Die Schwelle ist nicht „schön", sondern **nichts liegt übereinander, jeder
-> Satz ist lesbar**.
+> **Von Gregor am 14.09.2026 an 1.0.58 bestätigt.** Auf seinem Bild steht die
+> Tonerkartusche sauber über ihrem Text, „Artikelnummer" und „Nachbestellung
+> mit Order No" sind frei und lesbar. Auf die Rückfrage, wo noch etwas
+> überlappe: *„keine überlappung."*
 
 **Die Ursache war eine einzige tote Zeile.** In `PGHTMIMP.CPP:2110-2111` stand:
 
