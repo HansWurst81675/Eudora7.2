@@ -89,6 +89,13 @@ Bildmaßen. Die Frage war nur, wie groß er ist.
 Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt),
 20×20. Gregors Entscheidung: *„ok, option a"*.
 
+**Von Gregor an 1.0.60 gemessen — der Text ist frei, aber die Bilder werden
+zerschnitten (E-95).** Auf seinem Bild ist der blaue Doctolib-Kreis **blau**,
+nicht grau: Paige hat das Bild geladen und kennt seine echte Größe. Es ist
+**eingebettet** (`cid:`), und unser `height="20"` schneidet es ab. Bei externen
+Bildern (`http:`) ist die Vorgabe dagegen richtig — dort weiß Paige nichts. Die
+Unterscheidung fehlt und kommt in 7.2.0.61.
+
 **Tests: 150 von 150.**
 
 **Neu aufgeschrieben, nicht behoben:** die Betreffzeile wird mitten im Wort
