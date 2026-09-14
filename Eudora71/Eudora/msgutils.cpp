@@ -3073,72 +3073,141 @@ bool E88OriginalEinsetzen(
 // Verfassenfenster ist damit nur noch Arbeitsflaeche. Es muss nicht schoen
 // sein und dem Original nicht gleichen - es muss lesbar sein.
 //
-// DIE URSACHE, gemessen und nicht vermutet:
+// ZWEI URSACHEN, beide gemessen und nicht vermutet:
 //
-// Paiges HTML-Leser holt die Bildgroesse ausschliesslich aus den
-// HTML-Attributen width und height (PGHTMIMP.CPP:2019-2022,
-// image_width_attribute / image_height_attribute). Steht die Groesse nur im
-// CSS - style="width:16px" -, bleiben source_width und source_height auf 0.
-// Was dann passiert, steht in PgEmbeddedImage.cpp:424-427: die Masse werden
-// aus der geladenen Bilddatei nachgetragen, also die ORIGINALGROESSE. Und
-// weil das erst beim Laden geschieht, war der Absatz da schon umbrochen;
+// (1) KEINE AUSWERTBARE GROESSE. Paiges HTML-Leser holt die Bildgroesse
+// ausschliesslich aus den Attributen width und height
+// (PGHTMIMP.CPP:2019-2022, image_width_attribute / image_height_attribute).
+// Steht die Groesse nur im CSS - style="width:16px" -, bleiben source_width
+// und source_height auf 0. Was dann passiert, steht in
+// PgEmbeddedImage.cpp:424-427: die Masse werden beim Laden aus der
+// Bilddatei nachgetragen, also die ORIGINALGROESSE. Weil das erst beim
+// Laden geschieht, war der Absatz da schon umbrochen;
 // PgEmbeddedImage.cpp:458-507 versucht die Stelle nachtraeglich
 // wiederzufinden - ueber embed->style == embed_ptr->style, was beim ersten
 // Bild gleichen Stils stehenbleibt und bei mehreren Bildern die falsche
 // Stelle trifft. Das ist das Uebereinanderliegen.
 //
-// Daraus folgt die Regel: ein Bild ueberlappt genau dann nicht, wenn Paige
-// seine Groesse schon beim Einlesen kennt. Also muss jedes <img> in der
-// Editorfassung width und height als HTML-Attribut tragen.
+// (2) AUSWERTBAR, ABER ZU BREIT. Gregors zweites Thunderbild-Bild
+// (freenet/audibene-Rundbrief) zeigt dasselbe Kopflogo im schmalen
+// Verfassenfenster schmal und in der breiteren Leseansicht breiter -
+// proportional auf die verfuegbare Spaltenbreite gerechnet. Ein Bild mit
+// width="1200" sprengt die Zeile auch dann, wenn Paige die Zahl lesen
+// kann. Der Massstab ist also nicht "Originalgroesse vermeiden", sondern
+// "nie breiter als der verfuegbare Raum".
+//
+// WARUM EIN FESTER DECKEL UND KEINE ECHTE FENSTERBREITE - gemessen, nicht
+// vermutet: umgeschrieben wird in CSummary::ComposeMessage, und der Aufruf
+// dort geht mit in_bDisplayOrQueueImmediately = kDontDisplayOrQueue
+// (summary.h:142) hinein. Beide Zweige, die ein Fenster erzeugen koennten,
+// haengen an dieser Bedingung (summary.cpp:1818-1837) - zum Zeitpunkt der
+// Umschrift existiert das Verfassenfenster noch nicht. Ein gespeichertes
+// Mass gibt es auch nicht: unter den INI-Schluesseln steht keiner fuer die
+// Groesse eines Verfassenfensters (EudoraRes.rc). Es bleibt ein fester,
+// grosszuegiger Deckel - besser als gar keiner, und Hoehe und Breite
+// werden gemeinsam gerechnet, damit nichts verzerrt.
 //
 // GEMESSEN an Gregors gesicherten Postfaechern (alle .mbx unter
 // C:\Users\Gregor\Eudora72-Postfaecher-gesichert, Stand 14.09.2026):
 // 2884 <img> insgesamt, davon 2601 mit Attribut, 122 nur mit CSS-Groesse
-// und 161 ganz ohne Groessenangabe. Beide letzten Gruppen ueberlappen; die
-// dritte ist die groessere, und genau sie ist im Auftrag mitgemeint
-// ("jedes <img> ohne auswertbare Groessenangabe").
+// und 161 ganz ohne Groessenangabe. Ursache (1) trifft die letzten beiden
+// Gruppen, Ursache (2) kann jede der drei treffen.
 //
 // WARUM NICHT DER PLATZHALTER (das Bild durch "[Bild]" ersetzen): das waere
 // radikaler und sicherer lesbar, aber es wuerde E-88 zerstoeren.
 // E88OriginalEinsetzen vergleicht den Klartext des Originals mit dem
 // Klartext der Editorfassung und verlangt, dass er darin als EIN
 // zusammenhaengendes Stueck steckt. E88NurText wirft Markierungen weg -
-// ein zusaetzliches width=... height=... in einer Markierung aendert am
+// ein geaendertes width=... innerhalb einer Markierung aendert am
 // Vergleichstext also nichts, ein eingefuegtes "[Bild]" dagegen zerreisst
-// ihn mitten im Zitat, und das Original ginge nie wieder hinaus. Das
-// Ergaenzen von Attributen ist die einzige der beiden Moeglichkeiten, die
-// mit E-88 zusammengeht.
+// ihn mitten im Zitat, und das Original ginge nie wieder hinaus. Nur der
+// Weg ueber die Attribute geht mit E-88 zusammen.
 //
-// WAS NICHT ANGETASTET WIRD: Bilder, die ihre Groesse schon als Attribut
-// tragen (die grosse Mehrheit), bleiben Zeichen fuer Zeichen wie sie sind -
-// auch wenn sie gross sind. Der Befund ist das Ueberlappen, nicht die
-// Groesse. src bleibt in jedem Fall unberuehrt, damit eingebettete
-// cid:-Teile weiter gefunden werden.
+// WAS NICHT ANGETASTET WIRD: ein Bild, das width und height als Attribut
+// traegt und unter dem Deckel bleibt, bleibt Zeichen fuer Zeichen wie es
+// ist - das sind die meisten. src bleibt in jedem Fall unberuehrt, damit
+// eingebettete cid:-Teile weiter gefunden werden.
 //
 // WO ES WIRKT: allein auf der Fassung, die CSummary::ComposeMessage in den
 // Editor gibt. Das Original fuer E-88 wird an derselben Stelle, aber aus
 // der UNVERAENDERTEN Zeichenkette gemerkt.
 //
 
-// Vorgabemasse fuer ein Bild, dessen Groesse nirgends steht. Die Hoehe ist
-// die wichtige Zahl: sie bestimmt, wie weit der Zeilenabstand aufreisst,
-// und damit die Lesbarkeit. 90 Bildpunkte sind etwa vier Textzeilen - gross
-// genug, um ein Bild zu erkennen, klein genug, um den Absatz
-// zusammenzuhalten.
-#define E89_VORGABE_BREITE	120
+// Der Deckel. Kein Bild darf im Editor breiter oder hoeher werden; wird es
+// gedeckelt, geht das andere Mass im selben Verhaeltnis mit. 600 Bildpunkte
+// sind grosszuegig gewaehlt: schmaler als jedes brauchbare Fenster soll die
+// Arbeitsflaeche nicht wirken, und wer breiter zieht, verliert nichts, was
+// hinausgeht.
+#define E89_MAX_BREITE		600
+#define E89_MAX_HOEHE		600
+
+// Vorgabemasse fuer ein Bild, dessen Groesse nirgends steht. Hier gibt es
+// nichts zu rechnen - weder Originalgroesse noch Seitenverhaeltnis sind
+// bekannt, und nachgeladen wird beim Verfassen nichts. Die Hoehe ist die
+// wichtige Zahl: sie bestimmt, wie weit der Zeilenabstand aufreisst, und
+// damit die Lesbarkeit.
+#define E89_VORGABE_BREITE	200
 #define E89_VORGABE_HOEHE	90
+
+
+//
+// E89ZahlLesen: fuehrende Zahl einer Laengenangabe holen.
+//
+// Erkannt werden "120", "120px", "120pt", "120.0px" und "100%"; alles
+// andere ("auto", "3em", "calc(...)", leer) liefert 0. Lieber die Vorgabe
+// als eine falsche Zahl.
+//
+static int E89ZahlLesen( const char* pszWert, bool& out_bProzent )
+{
+	out_bProzent = false;
+
+	if (!pszWert)
+		return 0;
+
+	const char*		r = pszWert;
+
+	while (*r == ' ' || *r == '\t')
+		r++;
+
+	if (*r < '0' || *r > '9')
+		return 0;
+
+	int		nWert = 0;
+	while (*r >= '0' && *r <= '9')
+	{
+		if (nWert < 100000)
+			nWert = nWert * 10 + (*r - '0');
+		r++;
+	}
+	if (*r == '.')
+	{
+		r++;
+		while (*r >= '0' && *r <= '9')
+			r++;
+	}
+	while (*r == ' ' || *r == '\t')
+		r++;
+
+	if (*r == '%')
+	{
+		out_bProzent = true;
+		return nWert;
+	}
+	if (_strnicmp(r, "px", 2) == 0 || _strnicmp(r, "pt", 2) == 0)
+		return nWert;
+	if (*r == ';' || *r == 0)
+		return nWert;		// blanke Zahl - HTML will sie so, CSS verlangt
+							// eine Einheit, aber Absender schreiben sie weg
+
+	return 0;
+}
 
 
 //
 // E89CssMass: aus einem style="..."-Wert die Laenge zu einer Eigenschaft holen.
 //
-// Rueckgabe: > 0 = Wert in Bildpunkten (oder in Prozent, siehe
-// out_bProzent). 0 = nichts Brauchbares gefunden.
-//
-// Bewusst eng: erkannt werden nur "px", "pt" und die blanke Zahl, dazu "%".
-// "em", "rem", "auto", "inherit" und alles andere liefern 0 - lieber die
-// Vorgabe als eine falsche Zahl. Der Name muss am Anfang einer Eigenschaft
-// stehen, sonst wuerde "max-width" als "width" durchgehen.
+// Der Name muss am Anfang einer Eigenschaft stehen, sonst ginge "max-width"
+// als "width" durch.
 //
 static int E89CssMass( const char* pszStyle, const char* pszName, bool& out_bProzent )
 {
@@ -3154,8 +3223,7 @@ static int E89CssMass( const char* pszStyle, const char* pszName, bool& out_bPro
 		if (_strnicmp(p, pszName, nNameLen) != 0)
 			continue;
 
-		// Steht der Name am Anfang einer Eigenschaft? Davor darf nur
-		// Leerraum und dahinter ein ';' oder der Anfang stehen.
+		// Davor darf nur Leerraum stehen, und davor ein ';' oder der Anfang.
 		const char*		q = p;
 		while (q > pszStyle && (q[-1] == ' ' || q[-1] == '\t' || q[-1] == '\r' || q[-1] == '\n'))
 			q--;
@@ -3169,41 +3237,8 @@ static int E89CssMass( const char* pszStyle, const char* pszName, bool& out_bPro
 		if (*r != ':')
 			continue;
 		r++;
-		while (*r == ' ' || *r == '\t')
-			r++;
 
-		// Zahl lesen, Nachkommastellen abschneiden.
-		if (*r < '0' || *r > '9')
-			return 0;
-
-		int		nWert = 0;
-		while (*r >= '0' && *r <= '9')
-		{
-			if (nWert < 100000)
-				nWert = nWert * 10 + (*r - '0');
-			r++;
-		}
-		if (*r == '.')
-		{
-			r++;
-			while (*r >= '0' && *r <= '9')
-				r++;
-		}
-		while (*r == ' ' || *r == '\t')
-			r++;
-
-		if (*r == '%')
-		{
-			out_bProzent = true;
-			return nWert;
-		}
-		if (_strnicmp(r, "px", 2) == 0 || _strnicmp(r, "pt", 2) == 0)
-			return nWert;
-		if (*r == ';' || *r == 0)
-			return nWert;		// blanke Zahl - CSS verlangt eine Einheit,
-								// aber Absender schreiben sie oft weg
-
-		return 0;				// em, rem, vw, calc(...) - nicht raten
+		return E89ZahlLesen(r, out_bProzent);
 	}
 
 	return 0;
@@ -3211,14 +3246,19 @@ static int E89CssMass( const char* pszStyle, const char* pszName, bool& out_bPro
 
 
 //
-// E89Attribut: ein HTML-Attribut aus dem Bereich zwischen "<img" und ">"
-// holen. Rueckgabe true, wenn das Attribut da ist - auch dann, wenn sein
-// Wert leer ist, denn schon seine Anwesenheit haelt uns davon ab, es zu
-// ueberschreiben.
+// E89Attribut: ein HTML-Attribut im Bereich zwischen "<img" und ">" finden.
 //
-static bool E89Attribut( const char* pszAttrs, int nLen, const char* pszName, CString& out_szWert )
+// Rueckgabe true, wenn das Attribut da ist - auch dann, wenn sein Wert leer
+// ist. out_nVon/out_nBis (beide duerfen NULL sein) umschliessen das ganze
+// Attribut samt Namen, Gleichheitszeichen und Anfuehrungszeichen; damit
+// laesst es sich beim Neuschreiben der Markierung herausnehmen.
+//
+static bool E89Attribut( const char* pszAttrs, int nLen, const char* pszName,
+						 CString& out_szWert, int* out_nVon, int* out_nBis )
 {
 	out_szWert.Empty();
+	if (out_nVon) *out_nVon = -1;
+	if (out_nBis) *out_nBis = -1;
 
 	const int	nNameLen = (int) strlen(pszName);
 	int			i = 0;
@@ -3233,7 +3273,8 @@ static bool E89Attribut( const char* pszAttrs, int nLen, const char* pszName, CS
 		if (i >= nLen)
 			break;
 
-		int		nAnfang = i;
+		const int	nAnfang = i;
+
 		while (i < nLen && pszAttrs[i] != '=' && pszAttrs[i] != ' ' &&
 			   pszAttrs[i] != '\t' && pszAttrs[i] != '\r' && pszAttrs[i] != '\n' &&
 			   pszAttrs[i] != '/')
@@ -3241,6 +3282,7 @@ static bool E89Attribut( const char* pszAttrs, int nLen, const char* pszName, CS
 
 		const bool	bTreffer = ( (i - nAnfang) == nNameLen &&
 								 _strnicmp(pszAttrs + nAnfang, pszName, nNameLen) == 0 );
+		const int	nNameEnde = i;
 
 		while (i < nLen && (pszAttrs[i] == ' ' || pszAttrs[i] == '\t' ||
 							pszAttrs[i] == '\r' || pszAttrs[i] == '\n'))
@@ -3278,12 +3320,16 @@ static bool E89Attribut( const char* pszAttrs, int nLen, const char* pszName, CS
 			if (bTreffer)
 			{
 				out_szWert = CString(pszAttrs + nWertAnfang, nWertEnde - nWertAnfang);
+				if (out_nVon) *out_nVon = nAnfang;
+				if (out_nBis) *out_nBis = i;
 				return true;
 			}
 		}
 		else if (bTreffer)
 		{
 			// Attribut ohne Wert, etwa <img ... ismap>
+			if (out_nVon) *out_nVon = nAnfang;
+			if (out_nBis) *out_nBis = nNameEnde;
 			return true;
 		}
 	}
@@ -3295,20 +3341,24 @@ static bool E89Attribut( const char* pszAttrs, int nLen, const char* pszName, CS
 //
 // E89BilderMessbarMachen
 //
-// Liefert in out_szHtml dieselbe Nachricht, in der jedes <img> eine fuer
-// Paige auswertbare Groesse traegt. Rueckgabe: true, wenn wirklich etwas
-// ergaenzt wurde - nur dann ist out_szHtml gefuellt.
+// Liefert in out_szHtml dieselbe Nachricht, in der jedes <img> eine
+// Groesse traegt, die Paige lesen kann und die unter dem Deckel bleibt.
+// Rueckgabe: true, wenn wirklich etwas geaendert wurde - nur dann ist
+// out_szHtml gefuellt.
 //
-// out_szSpur bekommt in jedem Fall eine Zeile fuer das Protokoll.
+// out_szSpur bekommt in jedem Fall eine Zeile fuer das Protokoll. Alle
+// Zahlen stehen in DERSELBEN Zeile: getrennte Zeilen lassen immer die
+// Ausrede offen, sie seien zu anderer Zeit entstanden.
 //
 bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& out_szSpur )
 {
 	out_szHtml.Empty();
 
 	int		nBilder = 0;		// <img> insgesamt
-	int		nSchonGut = 0;		// trugen width und height bereits
+	int		nSchonGut = 0;		// unveraendert gelassen
 	int		nAusCss = 0;		// mindestens ein Mass aus style="..." geholt
 	int		nVorgabe = 0;		// mindestens ein Mass geraten
+	int		nGedeckelt = 0;		// war breiter oder hoeher als der Deckel
 
 	const int	nLen = pszHtml ? (int) strlen(pszHtml) : 0;
 
@@ -3387,86 +3437,174 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 			nAttrEnde--;
 		}
 
-		CString		szWert, szStyle;
+		const char*	pAttrs   = pszHtml + nAttrAnfang;
 		const int	nAttrLen = nAttrEnde - nAttrAnfang;
 
-		const bool	bHatBreite = E89Attribut(pszHtml + nAttrAnfang, nAttrLen, "width", szWert);
-		const bool	bHatHoehe  = E89Attribut(pszHtml + nAttrAnfang, nAttrLen, "height", szWert);
+		CString		szBreiteWert, szHoeheWert, szStyle;
+		int			nBVon = -1, nBBis = -1, nHVon = -1, nHBis = -1;
 
-		if (bHatBreite && bHatHoehe)
-		{
-			nSchonGut++;
-			i = j + 1;
-			continue;			// Zeichen fuer Zeichen unveraendert
-		}
+		const bool	bHatBreite = E89Attribut(pAttrs, nAttrLen, "width",  szBreiteWert, &nBVon, &nBBis);
+		const bool	bHatHoehe  = E89Attribut(pAttrs, nAttrLen, "height", szHoeheWert,  &nHVon, &nHBis);
 
-		E89Attribut(pszHtml + nAttrAnfang, nAttrLen, "style", szStyle);
+		E89Attribut(pAttrs, nAttrLen, "style", szStyle, NULL, NULL);
 
+		//
+		// Die beiden Masse bestimmen. Reihenfolge: Attribut, dann CSS,
+		// dann Vorgabe. Was aus dem Attribut kommt, ist bereits das, was
+		// Paige sehen wuerde - es zaehlt trotzdem mit, weil der Deckel es
+		// noch treffen kann.
+		//
 		bool	bProzB = false, bProzH = false;
-		int		nCssB = E89CssMass((LPCTSTR) szStyle, "width",  bProzB);
-		int		nCssH = E89CssMass((LPCTSTR) szStyle, "height", bProzH);
+		bool	bAusCss = false, bGeraten = false;
+
+		int		nBreite = bHatBreite ? E89ZahlLesen((LPCTSTR) szBreiteWert, bProzB) : 0;
+		int		nHoehe  = bHatHoehe  ? E89ZahlLesen((LPCTSTR) szHoeheWert,  bProzH) : 0;
 
 		// Eine Hoehe in Prozent kann Paige nicht: numeric_value liest dort
-		// nur die Zahl (PGHTMIMP.CPP:2022), aus "50%" wuerden 50 Bildpunkte.
-		// Lieber die Vorgabe als eine erfundene Zahl.
+		// nur die Zahl (PGHTMIMP.CPP:2022), aus "50%" wuerden 50
+		// Bildpunkte. Lieber die Vorgabe als eine erfundene Zahl.
 		if (bProzH)
-			nCssH = 0;
-
-		CString		szZusatz;
-		bool		bAusCss = false, bGeraten = false;
-
-		if (!bHatBreite)
 		{
-			CString		szB;
+			nHoehe = 0;
+			bProzH = false;
+		}
 
-			if (nCssB > 0)
+		if (nBreite <= 0)
+		{
+			bool	bProz = false;
+			int		nCss = E89CssMass((LPCTSTR) szStyle, "width", bProz);
+
+			if (nCss > 0)
 			{
 				// Prozentbreite kann Paige: decimal_value_percent rechnet
 				// sie gegen die Seitenbreite (PGHTMIMP.CPP:2020).
-				szB.Format(bProzB ? "%d%%" : "%d", nCssB);
+				nBreite = nCss;
+				bProzB  = bProz;
 				bAusCss = true;
 			}
-			else
-			{
-				int		nB = E89_VORGABE_BREITE;
-				if (nCssH > 0 && nCssH < nB)
-					nB = nCssH;			// kleines Sinnbild bleibt klein
-				szB.Format("%d", nB);
-				bGeraten = true;
-			}
-
-			szZusatz += " width=\"" + szB + "\"";
 		}
 
-		if (!bHatHoehe)
+		if (nHoehe <= 0)
 		{
-			CString		szH;
+			bool	bProz = false;
+			int		nCss = E89CssMass((LPCTSTR) szStyle, "height", bProz);
 
-			if (nCssH > 0)
+			if (nCss > 0 && !bProz)
 			{
-				szH.Format("%d", nCssH);
+				nHoehe  = nCss;
 				bAusCss = true;
 			}
-			else
-			{
-				int		nH = E89_VORGABE_HOEHE;
-				if (nCssB > 0 && !bProzB && nCssB < nH)
-					nH = nCssB;			// kleines Sinnbild bleibt klein
-				szH.Format("%d", nH);
-				bGeraten = true;
-			}
-
-			szZusatz += " height=\"" + szH + "\"";
 		}
 
-		if (bAusCss)
-			nAusCss++;
-		if (bGeraten)
-			nVorgabe++;
+		if (nBreite <= 0)
+		{
+			nBreite = E89_VORGABE_BREITE;
+			bProzB  = false;
+			if (nHoehe > 0 && nHoehe < nBreite)
+				nBreite = nHoehe;			// kleines Sinnbild bleibt klein
+			bGeraten = true;
+		}
 
-		// alles bis hinter die Attribute uebernehmen, dann ergaenzen
-		szAus += CString(pszHtml + nKopiertAb, nAttrEnde - nKopiertAb);
-		szAus += szZusatz;
+		if (nHoehe <= 0)
+		{
+			nHoehe = E89_VORGABE_HOEHE;
+			if (!bProzB && nBreite > 0 && nBreite < nHoehe)
+				nHoehe = nBreite;			// kleines Sinnbild bleibt klein
+			bGeraten = true;
+		}
+
+		//
+		// Der Deckel. Proportional, damit nichts verzerrt: wird die Breite
+		// auf E89_MAX_BREITE gestutzt, geht die Hoehe im selben Verhaeltnis
+		// mit, und danach umgekehrt.
+		//
+		bool	bGedeckelt = false;
+
+		if (!bProzB && nBreite > E89_MAX_BREITE)
+		{
+			nHoehe = (int) (((double) nHoehe * E89_MAX_BREITE) / (double) nBreite);
+			if (nHoehe < 1)
+				nHoehe = 1;
+			nBreite = E89_MAX_BREITE;
+			bGedeckelt = true;
+		}
+
+		if (nHoehe > E89_MAX_HOEHE)
+		{
+			if (!bProzB)
+			{
+				nBreite = (int) (((double) nBreite * E89_MAX_HOEHE) / (double) nHoehe);
+				if (nBreite < 1)
+					nBreite = 1;
+			}
+			nHoehe = E89_MAX_HOEHE;
+			bGedeckelt = true;
+		}
+
+		//
+		// Muss die Markierung ueberhaupt angefasst werden? Nur, wenn ein
+		// Mass fehlt oder sich ein Wert aendert. Die grosse Mehrheit der
+		// Bilder faellt hier heraus und bleibt Zeichen fuer Zeichen stehen.
+		//
+		CString		szNeueBreite, szNeueHoehe;
+
+		szNeueBreite.Format(bProzB ? "%d%%" : "%d", nBreite);
+		szNeueHoehe.Format("%d", nHoehe);
+
+		const bool	bAendern = ( !bHatBreite || !bHatHoehe ||
+								 szNeueBreite != szBreiteWert ||
+								 szNeueHoehe  != szHoeheWert );
+
+		if (!bAendern)
+		{
+			nSchonGut++;
+			i = j + 1;
+			continue;
+		}
+
+		if (bAusCss)	nAusCss++;
+		if (bGeraten)	nVorgabe++;
+		if (bGedeckelt)	nGedeckelt++;
+
+		//
+		// Die Markierung neu schreiben: alle Attribute ausser width und
+		// height unveraendert uebernehmen, die beiden hinten anhaengen.
+		// Ein zweites width weiter vorn duerfte nicht stehenbleiben -
+		// find_parameter nimmt das erste, das es findet
+		// (PGHTMIMP.CPP:2019), also muss das alte wirklich weg.
+		//
+		CString		szRest;
+		{
+			int		nA1 = nBVon, nE1 = nBBis;
+			int		nA2 = nHVon, nE2 = nHBis;
+
+			if (nA1 < 0 || (nA2 >= 0 && nA2 < nA1))
+			{
+				int t;
+				t = nA1; nA1 = nA2; nA2 = t;
+				t = nE1; nE1 = nE2; nE2 = t;
+			}
+
+			int		nPos = 0;
+
+			if (nA1 >= 0)
+			{
+				szRest += CString(pAttrs + nPos, nA1 - nPos);
+				nPos = nE1;
+			}
+			if (nA2 >= 0)
+			{
+				szRest += CString(pAttrs + nPos, nA2 - nPos);
+				nPos = nE2;
+			}
+			szRest += CString(pAttrs + nPos, nAttrLen - nPos);
+		}
+
+		szRest.TrimRight();
+
+		szAus += CString(pszHtml + nKopiertAb, (i + 4) - nKopiertAb);
+		szAus += szRest;
+		szAus += " width=\"" + szNeueBreite + "\" height=\"" + szNeueHoehe + "\"";
 		if (bSelbstSchliessend)
 			szAus += " /";
 		szAus += ">";
@@ -3484,9 +3622,9 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 	}
 
 	out_szSpur.Format(
-		"E-89 Bilder im Editor: gesamt=%d schon-mit-Attribut=%d aus-CSS=%d "
-		"Vorgabe=%d geaendert=%d Bytes vorher=%d nachher=%d",
-		nBilder, nSchonGut, nAusCss, nVorgabe, bGeaendert ? 1 : 0,
+		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
+		"Vorgabe=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		nBilder, nSchonGut, nAusCss, nVorgabe, nGedeckelt, bGeaendert ? 1 : 0,
 		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
 
 	return bGeaendert;

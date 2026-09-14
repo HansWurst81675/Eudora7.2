@@ -168,4 +168,15 @@ $jStart = Find-Line $u '^int IsFancy\s*\(' 0
 $jEnd = Find-Line $u '^\}\s*$' $jStart
 Write-Region $u $jStart $jEnd (Join-Path $OutDir "utils_isfancy.inc") $utilsPath
 
+# ---------------------------------------------------------------- msgutils.cpp (E-89)
+# Region K: die vier Funktionen, die aus einem <img> ohne auswertbare Groesse
+# eines mit Groesse machen (Befund E-89). Reine Textverarbeitung, HTML rein und
+# HTML raus - genau die Sorte Code, die sich ohne Fenster und ohne Paige pruefen
+# laesst. Die Region beginnt bei den Deckel-Konstanten, weil der geschnittene
+# Code sie braucht.
+$kStart = Find-Line $mu '^#define\s+E89_MAX_BREITE\b' 0
+$kLine = Find-Line $mu '^bool E89BilderMessbarMachen\s*\(' $kStart
+$kEnd = Find-Line $mu '^\}\s*$' $kLine
+Write-Region $mu $kStart $kEnd (Join-Path $OutDir "msgutils_e89.inc") $msgPath
+
 Write-Host "Extract.ps1: fertig."
