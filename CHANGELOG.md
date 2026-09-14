@@ -20,7 +20,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
-| E-83 | **eine IMAP-Aufgabe bleibt in der Warteschlange stehen** und wird nie gestartet — *„Waiting in the task queue to be started …"* | Von Gregor am 11.09.2026 an 1.0.48 gemeldet, mit Bildschirmfoto: eine Aufgabe *Resyncing* steht in der Liste, und beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht die Zertifikatsprüfung** — im selben Lauf stand die IMAP-Verbindung und eine Mail kam an. **Drei Ursachen ausgeschlossen:** `CanScheduleTask` blockiert nur POP-Empfang derselben Persönlichkeit (`QCTaskManager.cpp:383-390`); die verzögerte Einreihung scheidet aus, weil `DelayTasks` und `StartTasks` **niemand aufruft** (beide tot); die Obergrenze `MaxConcurrentTasks` steht auf 10 und ist bei einer Aufgabe nicht erreicht. **Offener Verdacht:** `StartWorkerThread` prüft `pTaskInfo->m_pThread` auf NULL und tut bei NULL **nichts** — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`); darüber steht ein `ASSERT`, das im Freigabebau nichts tut. Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in einer Zeile nennt |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
@@ -56,6 +55,55 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.53 — die Aufgabe war fertig, nicht wartend (E-83)
+
+**Was Gregor damit tun kann:** Eudora beenden, ohne dass *„You currently have
+1 task(s) running"* im Weg steht. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: *„immer noch die gleiche meldung, kann deshalb eudora nicht
+beenden."* — und diesmal war die Spurmarke drin, die es entscheiden konnte.
+
+**Die Anzeige log.** Im Fenster stand *„Waiting in the task queue to be started
+…"*, im Protokoll stand:
+
+```
+E-83 liegengeblieben: uid=35 zustand=FERTIG(5) m_pThread=gesetzt
+                      aktiv=1/10 titel="Resyncing"
+```
+
+Der Zustand ist **FERTIG**. Die Aufgabe wartete nie auf ihren Start — der Text
+stammt aus `Register()` und wird nie überschrieben. Zwei Wochen lang hat dieser
+Satz die Suche in die falsche Richtung geschickt.
+
+**Die Zählung zeigt das Leck:**
+
+| | |
+|---|---|
+| fertig, Nachbearbeitung angefordert | 15 |
+| fertig, **ohne** Nachbearbeitung | **17** |
+| liegengeblieben, alle 15 s gemeldet | 17 |
+
+`QCTaskManager::RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn
+`IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()` — sonst stand dort
+**nichts**. Das war eine Sackgasse: `DoPostProcessing` arbeitet ausschließlich
+`m_PostProcessList` ab, und dort hinein kommt eine Aufgabe **nur** über
+`RequestPostProcessing()`. Auch der Leerlauf holt sie nicht nach. Sie blieb in
+`m_TaskInfoList` stehen und zählte weiter als laufend.
+
+`m_nStartIdle` wird nur in `StartTasks()` gesetzt, also für Aufgaben aus einer
+`QCTaskGroup`. IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei und
+setzen auch `IsIgnoreIdle` nicht — deshalb traf es gerade IMAP.
+
+**Zwei Vermutungen sind dabei widerlegt worden**, beide aus `BEFUNDE.md`: der
+Verdacht auf `StartWorkerThread` mit `m_pThread == NULL` (der Zeiger war in
+jeder gemessenen Zeile gesetzt), und eine der drei „ausgeschlossenen" Ursachen
+war **falsch ausgeschlossen** — `DelayTasks`/`StartTasks` werden sehr wohl
+gerufen, von `QCTaskGroup` an drei Stellen.
+
+Dass die Ursache jetzt dasteht statt einer weiteren Vermutung, liegt an einer
+Spurmarke, die Zustand, Faden, Zähler und Obergrenze in **einer** Zeile nennt.
+Zwei getrennte Zeilen hätten die Ausrede „zu anderer Zeit" offengelassen.
 
 ## 7.2.0.52 — der Zeichensatz stand nie im Nachrichtenkopf (E-85, zweiter Anlauf)
 
