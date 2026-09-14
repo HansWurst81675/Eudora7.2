@@ -63,3 +63,4 @@
 - [Unterschied im selben Bild](unterschied-im-selben-bild.md) — was im selben Bild richtig ist, schließt jede gemeinsame Ursache aus; Betreff richtig / Rumpf falsch stand 9h27min und 318 Werkzeugaufrufe lang ungelesen da
 - [Anzeige ist kein Zustand](anzeige-ist-kein-zustand.md) — ein Oberflächentext ist eine Behauptung des Programms über sich selbst; E-83 suchte drei Tage ein Startproblem, das es nie gab
 - [Auftrag darf nicht löschen](auftrag-darf-nicht-loeschen.md) — zwei von zwei Agentenaufträgen trugen reset --hard; der Nachfolger merge --ff-only scheiterte genau in der Lage, für die er geschrieben war
+- [Testdaten müssen durchkommen](testdaten-muessen-durchkommen.md) — die Testmail traf den Fehler und scheiterte am Spamfilter (550); der echte Fall aus Gregors Postfach hatte den Prüfweg schon überlebt

@@ -95,6 +95,7 @@ eine Datei liest, liest diese.
 | [schranke-gegentesten](schranke-gegentesten.md) | Jede neue Schranke gegen den echten Fehler fahren und gegen den erlaubten Fall; eine stumme Pruefung und ein Fehlalarm sind derselbe Schaden |
 | [schranke-liest-nur-code](schranke-liest-nur-code.md) | Eine Schranke, die Quelltext mit Regex prueft, muss Kommentare und Protokolltexte vorher wegwerfen und ihren Bereich am Rumpfende abschliessen - sonst liest sie ihre eigene Begruendung |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
+| [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |
 | [tests-vor-jedem-commit-laufen-lassen](tests-vor-jedem-commit-laufen-lassen.md) | Unit- und Komponententests gehoeren zu jedem Commit - Ergebnis mitteilen, auch wenn es rot ist |
 | [text-nicht-durch-schichten-schicken](text-nicht-durch-schichten-schicken.md) | Ersetzungstext mit Backslashes oder Anfuehrungszeichen nie inline durch Bash/PowerShell nach Perl reichen; in eine Datei schreiben und ueber Zeilenanker einsetzen |
 | [unterschied-im-selben-bild](unterschied-im-selben-bild.md) | Was im selben Bild richtig ist, schliesst jede gemeinsame Ursache aus - der Unterschied ist der Befund |
