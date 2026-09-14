@@ -2590,6 +2590,12 @@ BOOL CEudoraApp::IdleSendMail()
 BOOL CEudoraApp::IdleTaskManagerPostProcessing()
 {
 	BOOL	bDidSomething = FALSE;
+
+	// BEFUND E-83: solange eine Aufgabe in der Liste liegt, schreibt die
+	// Spurmarke alle 15 Sekunden EINE Zeile mit Zustand, m_pThread und
+	// aktiven Aufgaben gegen die Obergrenze. Sie haengt an
+	// DEBUG_MASK_MISC und schweigt in der Vorgabe (LogLevel=58527).
+	QCGetTaskManager()->SpurmarkeE83Sweep();
 	
 	if ( QCGetTaskManager()->IsPostProcessingRequested() )
 	{
