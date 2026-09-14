@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-09-14 08:35 | E-87: Formatierung geht beim Weiterleiten verloren |
