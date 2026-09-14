@@ -62,12 +62,18 @@ verschickt.
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
-* **IMAP läuft, aber eine Aufgabe kann hängenbleiben.** Von Gregor am
-  10.09.2026 bestätigt — *„imap: funktioniert"*, `imap.gmx.net:993`. Zwei
-  Befunde sind dort offen: **E-83**, eine IMAP-Aufgabe bleibt auf *„Waiting in
-  the task queue to be started …"* stehen und wird nie gestartet (beim Beenden
-  warnt Eudora dann *„You currently have 1 task(s) running"*), und **E-77**,
-  Postfachnamen mit Umlauten stehen roh da: `Entw&APw-rfe` statt *Entwürfe*.
+* **HTML-Nachrichten werden falsch dargestellt** (**E-86**, offen): Bilder in
+  der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um
+  verlinkte Bilder. Betroffen ist nur die Anzeige — die Nachricht selbst
+  bleibt unversehrt.
+* **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
+  `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
+  10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
+* **Noch nicht im Download enthalten:** zwei IMAP-Fehler sind im Quelltext
+  erledigt, aber **nicht veröffentlicht** — das neueste Release ist `v1.0.50`.
+  Im Quellstand 7.2.0.52 kommen abgerufene Nachrichten nicht mehr als
+  Zeichensalat an, im Quellstand 7.2.0.53 lässt Eudora sich wieder beenden,
+  ohne eine laufende Aufgabe zu melden. Wer das braucht, baut selbst.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
@@ -172,165 +178,18 @@ Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 
 ## Einstellungen, die es nur hier gibt
 
-Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab. Jede
-Abweichung steht hier mit ihrem Schlüssel, ihrer Vorgabe und dem Grund — und
-jede lässt sich zurückdrehen.
+Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab — und
+jede Abweichung lässt sich zurückdrehen.
 
-Die Schlüssel stehen in der **`Eudora.ini`** im Mailverzeichnis. In welchem
-**Abschnitt**, sagt die gleichnamige Spalte — das ist keine Formsache,
-sondern entscheidet, ob der Eintrag überhaupt gelesen wird; warum, steht
-unter *Wo ein Schlüssel stehen muss*. Die Spalte *Original* nennt den
-eingebauten Wert von Eudora 7.1 (nachgesehen in `EudoraRes.rc`).
+**Die vollständige Liste steht in [EINSTELLUNGEN.md](EINSTELLUNGEN.md)**, mit
+Schlüssel, Abschnitt, Vorgabe hier, Vorgabe im Original und Fundstelle im
+Quelltext. Dort und nur dort — bis zum 14.09.2026 standen dieselben Schlüssel
+in **zwei** Tabellen, hier und dort, und zwölf davon in beiden. Zwei Listen
+mit denselben Werten laufen zwangsläufig auseinander; Gregor hat es bemerkt
+und entschieden: *„nur in einstellungen, nicht in readme"*.
 
-Hier stehen nur die **Abweichungen**. Die vollständige Liste aller Filter-
-und Junk-Schlüssel mit ihren eingebauten Vorgaben und Fundstellen steht in
-[FILTER.md](FILTER.md).
-
-| Schlüssel | Abschnitt | hier | Original | was er tut |
-|---|---|---|---|---|
-| `FilterMayDeleteFromServer` | `[Settings]` | **0** | *gibt es nicht* | Erlaubt einer **Filteraktion**, Post auf dem Server zu löschen. Bei 0 wird der Versuch abgelehnt und protokolliert (`E-73 … VERWEIGERT`). Der Abschnitt steht hier fest im Quelltext, `filtersd.cpp:1132` |
-| `DeleteFetchedJunk` | `[Settings]` | **0** | **1** | Löscht als **Junk eingestufte** Post auf dem Server. Steht in `tools/DEudora.ini` und gilt damit für **neu angelegte** Konten |
-| `LeaveMailOnServer` | `[Settings]` | **1** | **0** | Lässt abgeholte Post auf dem Server liegen. Ebenfalls Vorgabe für neue Konten (Anforderung **A-1**) |
-| `SSLSendUse`, `SSLReceiveUse` | `[Settings]` | **2** | **1** | TLS für Senden und Abrufen verlangen, alternativer Port (465 / 995) — sonst kommt Eudora an keinen heutigen Mailserver heran |
-| `CtrlJMapping` | `[Settings]` | **2**, wenn beim ersten Start keine Filter da sind | **1** in derselben Lage | Welcher Befehl auf **Strg+J** liegt: `1` = *Junk*, `2` = *Filter Messages*. Eingebaut steht `0` — „noch nicht entschieden"; den echten Wert setzt Eudora beim ersten Start selbst |
-
-| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | **gespeichert** | *gibt es nicht* | Breite und Höhe eines losgerissenen Fensters, je Leisten-Kennung. Bis 7.2.0.49 sicherte `GroessenSichern` nur die **Andock**größen; die schwebende Größe kam nirgends vor (**E-84**). Einzelheiten in [EINSTELLUNGEN.md](EINSTELLUNGEN.md) |
-| `TabooHeaders` | `[Settings]` | Originalliste **plus 16 Einträge** | 28 Einträge, Stand 2006 | Welche Kopfzeilen der Knopf *Blah Blah Blah* versteckt. Die eingebaute Liste kennt `X-UID`, aber nicht `X-`; `Received`, aber nicht `DKIM-`. An 134 echten Nachrichten nachgerechnet blieben damit über 60 technische Kopfzeilenarten stehen, darunter `DKIM-Signature` und `Authentication-Results`. Ergänzt sind `X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`. **Achtung:** ein Eintrag in der `Eudora.ini` **ersetzt** die Liste vollständig, er ergänzt sie nicht — wer etwas hinzufügen will, schreibt die ganze Liste hin |
-| `MessageStyleSheet` | `[Settings]` | plus eine Regel für `SPAN.EUDORAHEADER` | ohne diese Regel | Das Stylesheet der Nachrichtenansicht. Eudora schreibt die Kopfzeilen in **dasselbe** HTML-Dokument wie die Mail; ohne eigene Regel erben sie deren Hintergrund und sind bei einer Mail mit dunklem Grund unsichtbar. Die neue Regel setzt Vordergrund **und** Hintergrund — erst `black` auf `white`, dann dieselben Angaben als `windowtext`/`window` für den Fall, dass MSHTML die Systemfarben kennt. Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig und diese Regel entfällt |
-
-### Wo ein Schlüssel stehen muss
-
-Eudora ordnet jeden INI-Schlüssel **automatisch** einem Abschnitt zu, allein
-nach seiner internen Nummer — `GetSectionID`, `Eudora71/Eudora/rs.cpp:89-97`.
-Der Name des Schlüssels spielt dabei keine Rolle, nur die Nummer:
-
-| Nummernbereich | Abschnitt | Beispiel |
-|---|---|---|
-| bis 10800 | `[Settings]` | `LeaveMailOnServer` = 10113 |
-| 10801 … 10900 | `[Debug]` | `LogLevel` = 10802 |
-| 10901 … 11100 | `[Window Position]` | `UseMyFilterWindowPosition` = 10922 |
-| ab 11101 | `[Settings]` | — |
-
-> **Ein Eintrag im falschen Abschnitt wirkt nicht — ohne jede Meldung.** Am
-> 11.09.2026 stand `UseMyFilterWindowPosition=1` unter `[Settings]`; Eudora
-> las aus `[Window Position]` die eingebaute `0`, und die eingestellte
-> Breite der linken Spalte im Filterfenster ging bei jedem Neustart wieder
-> verloren. Kein Fehler, kein Hinweis, nur ein Schalter, der nichts tut.
-> Schuld war die Anleitung: sie hatte behauptet, alle Schlüssel gehörten
-> nach `[Settings]`.
-
-Die Nummern stehen in `Eudora71/Eudora/resource.h`, die Schlüsselnamen in
-`Eudora71/Eudora/EudoraRes.rc` im Format `IDS_INI_XXX "Name\nVorgabe"`. Wer
-nachsehen will, wohin ein bestimmter Schlüssel gehört, fragt danach:
-
-```
-perl tools/pruefe-ini-abschnitte.pl --was LogLevel
-perl tools/pruefe-ini-abschnitte.pl --tabelle
-```
-
-**In welcher Reihenfolge gesucht wird.** Eudora geht für jeden Schlüssel vier
-Stufen durch und nimmt den ersten Wert, den es findet (`GetIniString`,
-`rs.cpp:334-346`):
-
-| # | Datei | Abschnitt | Fundstelle |
-|---|---|---|---|
-| 1 | `Eudora.ini` im Mailverzeichnis | der der **aktiven Persönlichkeit**: `[Persona-<Name>]` — bei der vorherrschenden `[Settings]` | `rs.cpp:334`, `persona.cpp:887-903` |
-| 2 | `Eudora.ini` im Mailverzeichnis | der aus der Nummer errechnete | `rs.cpp:337` |
-| 3 | `DEudora.ini` **neben der `Eudora.exe`** | derselbe errechnete | `rs.cpp:339`, Pfad `rs.cpp:1365` |
-| 4 | der eingebaute Wert aus `EudoraRes.rc` | — | `rs.cpp:342-346` |
-
-Daraus folgt eine Tücke, die zu kennen Zeit spart: solange **keine zweite
-Persönlichkeit** eingerichtet ist, ist der Persönlichkeitsabschnitt gerade
-`[Settings]`. Ein dorthin verirrter `[Debug]`- oder
-`[Window Position]`-Schlüssel wird dann über Stufe 1 doch gefunden und
-**scheint zu wirken** — und hört damit auf, sobald eine zweite Persönlichkeit
-aktiv wird. Verlässlich ist allein der Abschnitt, der zur Nummer gehört;
-dorthin schreibt Eudora den Wert auch selbst zurück (`FlushINIFile`,
-`rs.cpp:1189`, Abschnitt `:1203`, geschrieben `:1250` und `:1257`).
-
-Damit derselbe Fehler nicht ein drittes Mal in die Anleitung gerät, prüft
-`tools/pruefe-ini-abschnitte.pl` jede Abschnittsangabe in allen Dokumenten
-dieses Repos gegen `resource.h`.
-
-### Warum die drei Löschsperren
-
-Eudora kennt **drei** Wege, Post auf dem Server zu löschen, und sie sind
-voneinander unabhängig:
-
-1. **Kein `Leave mail on server`** — POP3 löscht nach dem Abholen. Eingebaute
-   Vorgabe: löschen.
-2. **`Delete fetched junk`** — was als Junk gilt, wird zusätzlich vom Server
-   geworfen. Eingebaute Vorgabe: **an**.
-3. **Die Filteraktion „Server Options"** mit *Delete* — sticht im Original
-   sogar `Leave mail on server`.
-
-Am 10.09.2026 hat Weg 3 ein ganzes Postfach geleert, ohne dass die Aktion je
-eingestellt worden war: sie war durch einen Fehler in das Filterobjekt
-geraten (**E-72**, **E-73**). Weg 2 ist hier abgeschaltet, weil die
-Junk-Bewertung auf Zusatzmodule angewiesen ist, die in dieser Portierung gar
-nicht laden können (**E-47**) — eine Einstufung, der man nicht trauen kann,
-darf keine Post löschen.
-
-> **Wer eine dieser Sperren löst, sollte wissen warum.** Die Wege 1 und 2
-> löschen **ohne Rückfrage**, und was auf dem Server gelöscht ist, ist weg.
-
-Was die Junk-Punktzahl bedeutet, woher sie kommt und warum sie hier bei
-jeder eingehenden Nachricht 0 bleibt, steht in [FILTER.md](FILTER.md).
-
-### Warum Strg+J hier filtert
-
-Vor der Junk-Funktion war **Strg+J** in Eudora *Filter Messages*. Seit
-Eudora 6 möchte das Programm die Taste für *Junk* haben und fragt vorher —
-der Dialog dafür steht bis heute in den Ressourcen (`IDD_CTRL_J_FOR_JUNK`):
-
-> *The Ctrl-J key combination is currently associated with the „Filter
-> Messages" menu item. Would you like to switch it to be associated with the
-> „Junk" menu item?*
-
-**Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da
-sind.** Andernfalls legt `CMainFrame::InitJunkMenus` (`mainfrm.cpp`) die
-Taste **stillschweigend** auf *Junk* und schreibt `CtrlJMapping=1` fest. Der
-Zweig läuft nur ein einziges Mal — später angelegte Filter ändern nichts
-mehr daran.
-
-Wer mit einem **leeren Mailverzeichnis** anfängt und die Filter danach
-anlegt, landet also dauerhaft auf *Junk*, ohne es je gelesen zu haben. Genau
-das ist am 10.09.2026 passiert: neun Nachrichten wanderten in den
-Junk-Ordner, während der Fortschrittsbalken „Messages left to filter" zeigte
-(**E-75**). Hier bleibt Strg+J deshalb auf *Filter Messages*.
-
-**In einem bestehenden Mailverzeichnis wirkt das nicht** — dort steht der
-Wert schon in der `Eudora.ini` und wird nicht mehr überschrieben. Bei
-geschlossenem Eudora von Hand ändern:
-
-```ini
-[Settings]
-CtrlJMapping=2
-```
-
-Umgekehrt geht es genauso: Wer *Junk* auf Strg+J will, stellt es in den
-Einstellungen um oder trägt `1` ein. *Filter Messages* liegt dann auf
-Strg+Umschalt+L. Welche Belegung gilt, steht im Menü — unter *Special* neben
-*Filter Messages* und unter *Message* neben *Junk*.
-
-### Drei Befehle, eine Fortschrittsanzeige
-
-Im Original melden *Filter Messages*, *Junk / Not Junk* und *Recheck Junk*
-alle dieselbe Zeile `Messages left to filter`. Ein Junk-Lauf sieht damit aus
-wie ein Filterlauf, obwohl kein einziger Filter befragt wird. Hier sagen die
-beiden Junk-Befehle `Messages left to mark` beziehungsweise `Messages left
-to scan for junk`.
-
-### Vorgaben für neu angelegte Konten
-
-`DEudora.ini` **neben der `Eudora.exe`** liefert die Vorgaben für Konten, die
-neu entstehen — gelesen in `GetDefaultIniSetting` (`rs.cpp:357-385`), noch vor
-den eingebauten Werten. Sie ändert **kein bestehendes Konto**; dort gilt, was
-in der `Eudora.ini` des Mailverzeichnisses steht.
-
-Dieselbe Datei trägt die 124 Dateizuordnungen von QUALCOMM im Abschnitt
-`[Mappings]`. Wer sie ersetzt, verliert sie — deshalb liegt im Paket die
-Originaldatei mit unseren Zeilen **ergänzt**, nicht eine eigene.
+Was ein Anwender beim **ersten Start** wissen muss, steht weiter unten unter
+*Ein Mailverzeichnis übernehmen* und *Mehr ins Protokoll schreiben lassen*.
 
 ## Mehr ins Protokoll schreiben lassen
 
@@ -655,7 +514,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.50` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.55` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

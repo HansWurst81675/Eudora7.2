@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **13.09.2026**, gemessen an Fassung **7.2.0.50 / Paket 1.0.50**.
+Stand **14.09.2026**, gemessen an Fassung **7.2.0.55 / Paket 1.0.55**.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
@@ -28,16 +28,24 @@ kein Mailprogramm.
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
-| 2 | Die Darstellung ist korrekt | **fast** — Fenster, Menüs und Werkzeugleiste stimmen (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute **im lokal geschriebenen Text** (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Offen, und zwar dreifach:** die Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten; **Umlaute in per IMAP abgerufenen Nachrichten** kommen falsch an (**E-85**, von Gregor am 13.09.2026 gemeldet, noch nicht behoben); **IMAP-Postfachnamen mit Umlauten** stehen roh da, `Entw&APw-rfe` statt *Entwürfe* (**E-77**). Die Zeile hat bis zum 13.09.2026 schlicht „Umlaute" als erledigt geführt — Gregor hat den Widerspruch gefunden |
+| 2 | Die Darstellung ist korrekt | **fast.** Erfüllt sind: Fenster, Menüs und Werkzeugleiste (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute im lokal geschriebenen Text (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Umlaute in per IMAP abgerufenen Nachrichten** sind seit 7.2.0.52 in Ordnung: **E-85** war eine Kette aus vier Mängeln — der Zeichensatz wurde aus dem Top-Level-Header statt aus dem MIME-Teil gelesen, der Suchbereich endete vor `IDS_MIME_UTF_8`, der Rückgabewert von `ISOTranslate` wurde verworfen, und der Übertrag über die Stückgrenze fehlte; die Behebung führte zudem eine Regression ein, die PRÜFER vor der Auslieferung fand. **Am laufenden Programm belegt:** `uebersetzt=ja` im Protokoll, null unübersetzte UTF-8-Folgen in der Mailboxdatei. **Was diesem Kriterium noch fehlt, steht in der Zeile darunter.** |
+| 2a | *offen zu Kriterium 2* | **E-86**: HTML-Nachrichten werden falsch dargestellt — Bilder in der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um verlinkte Bilder. **E-77**: IMAP-Postfachnamen mit Umlauten stehen roh da, `Entw&APw-rfe` statt *Entwürfe* — modifiziertes UTF-7, ein anderer Weg als E-85. Dazu die Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt. **Seit 10.09.2026 auch IMAP:** *„imap: funktioniert“*, `imap.gmx.net:993`, TLSv1.3, `TLS_AES_256_GCM_SHA384` (256 Bit) |
 | 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. Das Beenden ist erledigt (Kriterium 7), und mit **E-43** sind auch **E-37** und **E-38** weggefallen. **Offen bleibt eine Stelle:** die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten |
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
 | 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler dahinter, **E-43**, ist in 7.2.0.24 an der Wurzel behoben und ebenfalls bestätigt: die Protokollzeile `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst` kommt nicht mehr |
 | 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund **E-48**, umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben (**E-50**) und noch nicht nachgesehen |
+
 **Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
-erfüllt (2, 4).** Beiden fehlt dasselbe: die Meldung „Encountered an improper
-argument" beim **Anzeigen** mancher Nachrichten.
+erfüllt (2, 4).** Was Kriterium 2 noch fehlt, steht vollständig in der Zeile
+**2a**: **E-86** (HTML-Nachrichten falsch dargestellt), **E-77**
+(IMAP-Postfachnamen mit Umlauten) und die Meldung „Encountered an improper
+argument" beim **Anzeigen** mancher Nachrichten — diese Meldung fehlt auch
+Kriterium 4. Die Umlaute in per IMAP abgerufenen Nachrichten sind mit **E-85**
+in **7.2.0.52** behoben und **am laufenden Programm belegt** (`uebersetzt=ja`
+im Protokoll, null unübersetzte UTF-8-Folgen in der Mailboxdatei); 7.2.0.51
+hatte nur den Suchbereich repariert, nicht die Quelle.
 
 > **Aus Anwendersicht hat sich am 06.09.2026 nichts verbessert.** Gregors Urteil
 > zu 1.0.18: *„es crasht nicht, aber es passiert auch nichts. beenden kann ich

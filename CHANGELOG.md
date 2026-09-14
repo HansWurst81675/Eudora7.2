@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 11.09.2026)
+## Noch offen (Stand 14.09.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -20,12 +20,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
-| E-83 | **eine IMAP-Aufgabe bleibt in der Warteschlange stehen** und wird nie gestartet — *„Waiting in the task queue to be started …"* | Von Gregor am 11.09.2026 an 1.0.48 gemeldet, mit Bildschirmfoto: eine Aufgabe *Resyncing* steht in der Liste, und beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht die Zertifikatsprüfung** — im selben Lauf stand die IMAP-Verbindung und eine Mail kam an. **Drei Ursachen ausgeschlossen:** `CanScheduleTask` blockiert nur POP-Empfang derselben Persönlichkeit (`QCTaskManager.cpp:383-390`); die verzögerte Einreihung scheidet aus, weil `DelayTasks` und `StartTasks` **niemand aufruft** (beide tot); die Obergrenze `MaxConcurrentTasks` steht auf 10 und ist bei einer Aufgabe nicht erreicht. **Offener Verdacht:** `StartWorkerThread` prüft `pTaskInfo->m_pThread` auf NULL und tut bei NULL **nichts** — kein Start, kein Fehler, keine Meldung (`QCTaskManager.cpp:406-410`); darüber steht ein `ASSERT`, das im Freigabebau nichts tut. Zu belegen mit einer Spurmarke, die Zustand, `m_pThread`, aktive Aufgaben und Obergrenze in einer Zeile nennt |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
 | — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** **R-1** (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), **V-1** (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und **E-14** (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
+| — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit **E-33** nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu E-76** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
 
 ## Erreicht
 
@@ -55,6 +55,368 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.55 — HTML bleibt erhalten, beim Lesen wie beim Weiterleiten (E-86, E-87)
+
+**Was Gregor damit tun kann:** eine HTML-Nachricht weiterleiten oder
+beantworten, ohne dass Fettung, Kursiv, Verweise, Schriftfarben und
+Tabellenhintergründe verlorengehen. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: die weitergeleitete Nachricht kam beim Empfänger als Fließtext
+mit blauen Verweisen an — *„kommt auch so an"*. Seine Entscheidung zur
+Umsetzung: *„neue INI-Einstellung machen, die für beides gilt. und HTML immer
+behält. und es aber dokumentieren."*
+
+### Ein Weg, nicht zwei
+
+Antworten und Weiterleiten laufen beide durch `CSummary::ComposeMessage`
+(`summary.cpp`, ab Zeile 899) — `ID_MESSAGE_FORWARD` und `ID_MESSAGE_REPLY`
+sind zwei `case` derselben Funktion. Ein Schalter an einer Stelle genügt.
+
+Die Stelle, die ich zuerst genannt hatte (`TocFrame.cpp:1684`), war **nicht**
+der normale Weg, sondern der Sonderfall *Antwort auf mehrere ausgewählte
+Nachrichten*.
+
+### Die Ursache
+
+`summary.cpp:1110` verwarf das Ergebnis der eigenen Messung:
+
+```c
+IsRich = IsFancy(fullMes);
+if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
+    IsRich = IS_ASCII;
+```
+
+`IsFancy` hatte den Rumpf bereits **als HTML erkannt** — herabgestuft wurde
+trotzdem, sobald die Flags `MSF_XRICH`/`MSFEX_FLOWED` im Übersichtseintrag
+fehlten. `IS_ASCII` bedeutet für `QuoteText`, dass nicht der HTML-Zweig über
+`GetBodyAsHTML` genommen wird, sondern `WrapText` mit `">"`-Präfix. Die blauen
+Verweise im Ergebnis stammten von `MakeAutoURLSpaghetti`, nicht aus der
+Nachricht.
+
+### Der Schalter
+
+| Schlüssel | Abschnitt | Vorgabe | wirkt |
+|---|---|---|---|
+| `KeepHTMLInResponses` | `[Settings]` | **1** | die Messung am Rumpf zählt mehr als die Flags |
+
+`0` stellt das alte Verhalten her. Dokumentiert in
+[EINSTELLUNGEN.md](EINSTELLUNGEN.md) — **und nur dort**: bis zum 14.09.2026
+standen dieselben Schlüssel in zwei Tabellen, im README und in
+`EINSTELLUNGEN.md`, zwölf davon in beiden. Gregors Entscheidung: *„nur in
+einstellungen, nicht in readme"*. Das README verweist jetzt.
+
+### Was der Schalter NICHT behebt
+
+Verfasst wird mit **Paige**, und dessen HTML-Leser kennt **kein `span` und
+keine einzige CSS-Eigenschaft** (`PGHTMDEF.C:20-48` — weder
+`background-color` noch `border`, `padding`, `margin`); aus `div` wertet er
+allein `align` aus. Was Paige nicht versteht, ist nach `ExportMessage`
+endgültig fort — **und genau dieser Text geht hinaus.**
+
+Es überleben also: **Fettung, Kursiv, Verweise, Schriftfarben,
+`<table bgcolor>`.** Es überleben **nicht**: CSS-Kästen und -Hintergründe
+eines modernen Newsletters. Das ist keine Stelle, die HTML wegwirft, sondern
+ein Editor, der es nicht halten kann — dafür reicht kein Schalter. Als Grenze
+dokumentiert in `EINSTELLUNGEN.md`.
+
+**Offen und Gregors Entscheidung:** ob der Original-HTML-Block am Paige-Editor
+vorbeigeführt und beim Senden wieder eingesetzt werden soll. Das ist ein
+Eingriff in den Sendeweg, kein Schalter.
+
+### Und die Anzeige: HTML-Nachrichten sehen aus wie im Browser (E-86)
+
+**Was Gregor damit tun kann:** einen HTML-Newsletter öffnen und ihn so sehen,
+wie ihn ein Browser zeigt — abgerundete Kästen statt eckiger, keine blauen
+Rahmen um verlinkte Bilder. **Von ihm noch nicht bestätigt.**
+
+**Zwei Verdächte wurden vorher widerlegt, beide am laufenden Programm.** Der
+erste war meiner: Eudora lege sein eigenes `<html><head><body>` um die
+Nachricht, MSHTML verwerfe deren zweites, und damit fielen Hintergrund und
+Rahmenangaben weg. Der zweite: beim Zusammensetzen gehe etwas verloren.
+
+Gemessen mit einer Spurmarke, die die fertige Anzeigedatei sichert:
+
+```
+E-86 fixup: FixupSource laeuft  BODY-Elemente=1  Hintergrund=#ffffff
+```
+
+**`BODY-Elemente=1`** — es gibt kein zweites `<body>`. Und die gesicherte
+Datei hat **36.078 Bytes, 67 Tabellen, 12 Bilder und alle 118
+`border`-Angaben** der Nachricht, sogar eine mehr als das Original (Eudoras
+Zitatbalken). Beim Zusammensetzen geht **nichts** verloren.
+
+**Die Ursache war der Rendermodus.** MSHTML läuft ohne besondere Anweisung im
+Standardmodus des **Internet Explorer 7 von 2006**. Die Mail enthält dreimal
+`border-radius`, das dieser Modus nicht kennt — abgerundete Ecken werden zu
+Kästen, und was im CSS einen Rahmen unterdrücken soll, greift nur teilweise.
+
+Behoben mit einer Zeile, als erste im Kopf der Anzeigedatei:
+
+```html
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+```
+
+**Gegenprobe am laufenden Programm:** dieselbe Spurmarke meldet jetzt
+`Hintergrund=transparent` statt `#ffffff`. Der Modus hat nachweislich
+gewechselt.
+
+**Nebenbei gelernt:** Der erste Messlauf war ungültig. Das Werkzeug öffnete die
+erstbeste Nachricht — die weitergeleitete aus dem Out-Postfach, die durch E-87
+ohnehin formatierungslos ist (Anzeigedatei 4774 B, `<body>` ohne Attribute).
+Erst als in der `Eudora.ini` nur noch ein Postfach als offenes Fenster stand,
+wurde die richtige getroffen.
+
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+## 7.2.0.54 — zwei Spurmarken, die E-86 entscheiden
+
+**Was Gregor damit tun kann:** die Newsletter-Mail öffnen und danach zwei
+Dinge liefern, die den Befund entscheiden — die Datei `E86-Anzeige.htm` im
+Eudora-Verzeichnis und die Zeile `E-86 fixup:` im Protokoll. **Behoben ist
+E-86 damit nicht.**
+
+**Der erste Verdacht ist widerlegt, und zwar gemessen.** Er lautete: Eudora
+legt sein eigenes `<html><head><body>` um die Nachricht, MSHTML verwirft
+deren zweites `<head>`/`<body>`, und damit fallen Hintergrundfarbe,
+`img{border:0}` und die Bildgrößen weg.
+
+Nachgemessen wurde mit einer **echten** Nachricht aus Gregors Postfach: der
+Weg des Programms wurde nachgebaut, beide Fassungen in MSHTML geladen und der
+**berechnete** Stil aus dem DOM gelesen. Für alle fünf geprüften Nachrichten:
+
+```
+MAIL-ALLEIN     body-Hintergrund=#000000  img-in-a-Rahmen=0px
+EUDORA-FASSUNG  body-Hintergrund=#000000  img-in-a-Rahmen=0px  Stylesheets=3
+```
+
+`Stylesheets=3` heißt: Eudoras Stylesheet **und** die beiden der Mail —
+MSHTML verwirft nichts. Das Abbild zeigt schwarzen Grund und rahmenlose
+Bilder.
+
+Dazu passt, dass das Original den Fall längst kennt: **`CTridentView::FixupSource`**
+(`TridentView.cpp:1912`) existiert ausdrücklich für das zweite `<body>`-Tag
+und kopiert dessen Attribute auf das erste.
+
+**Deshalb wurde nichts geändert.** Ein Symptom zu überdecken, dessen Ursache
+nicht belegt ist, hätte den Befund nur unsichtbar gemacht.
+
+Stattdessen zwei Spurmarken, beide nur bei eingeschaltetem Protokoll:
+
+1. `LoadMessage` legt die fertige Anzeigedatei als **`E86-Anzeige.htm`** im
+   Eudora-Verzeichnis ab. Bisher löschte der nächste Aufbau sie — sie war
+   nicht zu greifen.
+2. `FixupSource` meldet in **einer** Zeile, ob es läuft, wie viele
+   `BODY`-Elemente MSHTML angelegt hat und welchen Hintergrund es berechnet.
+
+**Auch das ist gemessen:** angezeigt wird über MSHTML, nicht über Paige —
+`UsingTrident()` hängt an `UseBidentAlways`, Vorgabe 1, und Gregors
+`Eudora.ini` setzt den Schlüssel nicht. Die zweite Ansicht scheidet als
+Erklärung aus.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+## 7.2.0.53 — Eudora lässt sich wieder beenden (E-83)
+
+**Was Gregor damit tun kann:** Eudora beenden, ohne dass *„You currently have
+1 task(s) running"* im Weg steht. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: *„immer noch die gleiche meldung, kann deshalb eudora nicht
+beenden."* — und diesmal war die Spurmarke drin, die es entscheiden konnte.
+
+**Die Anzeige log.** Im Fenster stand *„Waiting in the task queue to be started
+…"*, im Protokoll stand:
+
+```
+E-83 liegengeblieben: uid=35 zustand=FERTIG(5) m_pThread=gesetzt
+                      aktiv=1/10 titel="Resyncing"
+```
+
+Der Zustand ist **FERTIG**. Die Aufgabe wartete nie auf ihren Start — der Text
+stammt aus `Register()` und wird nie überschrieben. Zwei Wochen lang hat dieser
+Satz die Suche in die falsche Richtung geschickt.
+
+**Die Zählung zeigt das Leck:**
+
+| | |
+|---|---|
+| fertig, Nachbearbeitung angefordert | 15 |
+| fertig, **ohne** Nachbearbeitung | **17** |
+| liegengeblieben, alle 15 s gemeldet | 17 |
+
+`QCTaskManager::RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn
+`IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()` — sonst stand dort
+**nichts**. Das war eine Sackgasse: `DoPostProcessing` arbeitet ausschließlich
+`m_PostProcessList` ab, und dort hinein kommt eine Aufgabe **nur** über
+`RequestPostProcessing()`. Auch der Leerlauf holt sie nicht nach. Sie blieb in
+`m_TaskInfoList` stehen und zählte weiter als laufend.
+
+`m_nStartIdle` wird nur in `StartTasks()` gesetzt, also für Aufgaben aus einer
+`QCTaskGroup`. IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei und
+setzen auch `IsIgnoreIdle` nicht — deshalb traf es gerade IMAP.
+
+**Zwei Vermutungen sind dabei widerlegt worden**, beide aus `BEFUNDE.md`: der
+Verdacht auf `StartWorkerThread` mit `m_pThread == NULL` (der Zeiger war in
+jeder gemessenen Zeile gesetzt), und eine der drei „ausgeschlossenen" Ursachen
+war **falsch ausgeschlossen** — `DelayTasks`/`StartTasks` werden sehr wohl
+gerufen, von `QCTaskGroup` an drei Stellen.
+
+Dass die Ursache jetzt dasteht statt einer weiteren Vermutung, liegt an einer
+Spurmarke, die Zustand, Faden, Zähler und Obergrenze in **einer** Zeile nennt.
+Zwei getrennte Zeilen hätten die Ausrede „zu anderer Zeit" offengelassen.
+
+## 7.2.0.52 — der Zeichensatz stand nie im Nachrichtenkopf (E-85, zweiter Anlauf)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen —
+auch in HTML-Newslettern, also in der Sorte Nachricht, bei der es vorher nie
+funktionierte. **Von ihm noch nicht bestätigt.**
+
+**7.2.0.51 hat den Fehler nicht behoben, und sein Test hat das gezeigt.** Seine
+Meldung: *„das ist auf jeden fall eine frische mail, ist aber falsch
+dargestellt!"* — dazu das Bild, auf dem der **Betreff richtig** und der **Rumpf
+falsch** war. Diese Kombination war der Schlüssel.
+
+### Die Ursache
+
+`CImapDownloader::Write` holte den Zeichensatz aus `m_pHd->m_TLMime`. **TL heißt
+Top Level.** Das Feld wird genau **einmal** gefüllt — beim Holen des
+Nachrichtenkopfs in `UIDFetchHeaderFull` — und beim Durchlauf durch die
+MIME-Teile nie wieder gelesen.
+
+Bei `multipart/alternative`, und das ist jeder HTML-Newsletter, steht im
+Top-Level-Header **kein `charset`**, sondern nur `boundary`. Der Zeichensatz
+steht im **einzelnen Teil**; dessen Struktur trägt ihn auch
+(`PARAMETER *parameter`, `Imapdll/public/inc/exports.h:147`) — nur hat ihn dort
+nie jemand ausgelesen.
+
+Damit hat die Behebung in 7.2.0.51 den **Suchbereich** repariert
+(`FindMIMECharset` statt einer Suche, die vor `IDS_MIME_UTF_8` endet) und
+durchsuchte weiterhin die **falsche Quelle**. Bei einer einteiligen
+`text/plain`-Nachricht steht der Zeichensatz tatsächlich im Nachrichtenkopf —
+dort war der Weg immer richtig, und **deshalb ist es nie aufgefallen**.
+
+Zwei Gegenproben, beide am Quelltext: in ganz `EuImap` gibt es **keine zweite
+Stelle**, die den Zeichensatz eines Teils liest; und die einzige weitere
+Verwendung von `charset` ist `Translate2047` im **Kopfzeilen**weg — genau
+deshalb war der Betreff richtig.
+
+### Die Behebung
+
+Neues Feld `m_szCurrentCharset`, gesetzt an denselben drei Stellen, an denen
+schon `m_CurrentBodyType` und `m_szCurrentBodySubtype` gesetzt werden, gefüllt
+aus `body->parameter`. Der Zeichensatz des Teils hat Vorrang, der
+Nachrichtenkopf bleibt Rückfall.
+
+**Dazu die Spurmarke, die von Anfang an hätte dastehen müssen.** Sie nennt
+**beide** Quellen in **einer** Zeile:
+
+```
+E-85 imap: teil-charset=… tl-charset=… idx=… uebersetzt=… typ=…/… zeilenweise=…
+```
+
+Einmal je Nachrichtenteil, nicht je Block. Ohne sie ließ sich nicht
+unterscheiden, ob der Übersetzungsweg nicht greift oder ob nur eine alte
+Nachricht angezeigt wird — und genau diese Unterscheidung hat einen ganzen
+Testdurchgang gekostet.
+
+### E-83: eine Vermutung widerlegt, eine neue Spur
+
+Der Verdacht, der seit dem 11.09.2026 in `BEFUNDE.md` stand — `StartWorkerThread`
+tue bei `m_pThread == NULL` stumm nichts — **hält nicht**. `m_pThread` wird an
+genau einer Stelle geschrieben und nirgends wieder auf NULL gesetzt.
+
+Außerdem war eine der drei „ausgeschlossenen" Ursachen **falsch
+ausgeschlossen**: die Doku behauptete, `DelayTasks`/`StartTasks` rufe niemand
+auf — tatsächlich ruft `QCTaskGroup` beide, und die wird an drei Stellen
+benutzt.
+
+Der neue, stärkste Kandidat: `RemoveWorkerThread` fordert die Nachbearbeitung
+nur unter zwei Bedingungen an, und IMAP-Aktionen aus `CActionQueue::OnIdle`
+laufen daran vorbei. Bleibt eine Aufgabe liegen, wird der Destruktor von
+`CImapAction` nie erreicht, der `ActionDone()` ruft — **die Aktionswarteschlange
+bleibt für immer in Bearbeitung und keine weitere IMAP-Aktion läuft**. Das wäre
+zugleich die Erklärung dafür, dass nichts Neues abgerufen wird. Noch **nicht**
+am laufenden Programm gemessen, deshalb nicht behoben — aber die Spurmarke
+dafür ist drin und meldet alle 15 Sekunden jede liegengebliebene Aufgabe.
+
+### Zum Prüfen
+
+**Eine schon abgerufene Nachricht bleibt kaputt.** Die Übersetzung passiert beim
+**Abruf** und landet in der Mailboxdatei; die Anzeige liest nur, was dort steht.
+Es muss also eine **neue** Nachricht sein.
+
+**Emoji werden zu `?`, und das ist richtig** — die Mailboxdatei speichert
+CP1252, darin gibt es kein Emoji. Umlaute, Anführungszeichen, Gedankenstrich und
+Eurozeichen müssen dagegen stimmen.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+## 7.2.0.51 — Umlaute in per IMAP abgerufenen Nachrichten (E-85)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen,
+statt Zeichensalat zu sehen: in *für* steht das `ü` als UTF-8 `C3 BC`, und
+wer diese zwei Bytes als CP1252 liest, bekommt zwei Zeichen statt einem.
+**Von Gregor noch nicht bestätigt.**
+
+Sein Hinweis war der Schlüssel: *„das hatten wir ja bereits gefixt, soweit ich
+mich erinnern kann?"* — **Z-2b** war am 05.09.2026 genau dieser Fehler, behoben
+in `utils.cpp`, `utils.h` und `TextReader.cpp`. `TextReader` wird von acht
+Dateien benutzt, und **keine davon gehört zum IMAP-Weg**.
+
+Gefunden wurden **drei** Mängel, alle in `EuImap/src/ImapDownload.cpp`:
+
+**Der schwerwiegendste: `charset=utf-8` wurde gar nicht erkannt.** Zeile 4645
+suchte den Zeichensatz mit
+
+```c
+FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9, params->value, -1)
+```
+
+Der Bereich endet bei `IDS_MIME_ISO_LATIN9` = **3613**; `IDS_MIME_UTF_8` ist
+**3614** und liegt damit **dahinter**. Der Aufruf lieferte `-1`, die Bedingung
+darunter war falsch, und es wurde **überhaupt nicht übersetzt** — die
+UTF-8-Bytes gingen roh in die Mailboxdatei und wurden später als CP1252
+angezeigt. Der POP3-Weg macht es seit jeher richtig (`mime.cpp:382`,
+`FindMIMECharset`): er sucht bis `IDS_MIME_UTF_8` **und** verschiebt das
+Ergebnis um eins, damit Index 0 für `windows-*` frei bleibt. Genau diese
+Verschiebung fehlte ebenfalls — beide Wege rechneten auf **verschiedenen
+Skalen**, während `ISOTranslate` nur eine davon kennt. Jetzt benutzt IMAP
+dieselbe Funktion.
+
+**Der zweite: der Rückgabewert von `ISOTranslate` wurde verworfen.** Die
+Funktion liefert die Länge **nach** der Übersetzung; UTF-8 wird auf dem Weg
+nach CP1252 kürzer. `outLen` behielt die alte Länge bis zum `m_mbxFile.Put()`,
+also wurden die überzähligen Altbytes mitgeschrieben.
+
+**Der dritte: der Übertrag über die Stückgrenze fehlte.** Die Behebung von
+Z-2b hält angefangene UTF-8-Zeichen am Ende eines Lesestücks zurück — nur im
+POP3-Weg. IMAP liest bei `text/plain` zeilenweise, bei **`text/html` aber in
+Blöcken von 8192 Bytes**, und hielt nichts zurück. Neu dafür ist
+`ISOTranslateChunk` in `utils.cpp`. Der POP3-Weg schiebt den Übertrag *vor*
+das Stück; das geht hier nicht, weil der Zeiger aus
+`CChunkReader::GetNextChunk` in fremden Speicher zeigt. Deshalb umgekehrt: das
+Zeichen wird **hinter** seine eigenen, verbrauchten Bytes geschrieben.
+
+**Vier Tests** in `TestIsoTranslate.cpp`, jeder über **alle** Stückgrößen von 1
+bis über die Textlänge hinaus. Einer davon hat einen Fehler in meinem eigenen
+Entwurf gefunden: ein Zeichen, dessen Übersetzung **länger** ist als die
+verbrauchten Bytes, wurde verworfen. Das trifft Zeichen außerhalb der BMP —
+U+1F600 ist in UTF-16 ein Surrogatpaar und wird zu **zwei** Fragezeichen. Jetzt
+wird gekürzt statt verworfen.
+
+**Nebenbefund: die Testsuite ließ sich seit dem 10.09.2026 nicht mehr bauen.**
+`OTShim.cpp` ruft seit der Spurmarke zu E-76 `PutDebugLog`, das in QCUtils
+liegt und nicht zum Testprojekt gehört — Linkerfehler, zwei Tage lang
+unbemerkt. Damit sind auch **PRÜFERs Schranken vom 13.09.2026 nie gelaufen**.
+Eine Attrappe in `OTShimProbe.cpp` schließt das.
+
+**Testlauf: 120 Tests, 118 bestanden, 2 fehlgeschlagen.** Beide roten sind
+**vorbestehend** und nicht von dieser Änderung: `SECImage: FlipHorz meldet
+sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit **E-33** nur
+noch `OutputDebugString` benutzt — ein veralteter Test; und
+`SECControlBar::CalcDynamicLayout`, PRÜFERs E-76-Schranke, die nie laufen
+konnte. Beide sind offen.
 
 ## 7.2.0.50 — losgerissene Fenster behalten ihre Größe (E-84)
 

@@ -56,6 +56,28 @@ schranke() {
 #    (Befund X-5).
 schranke pruefe-branch.pl || exit $?
 
+# 1b. Rollenstand MELDEN - nicht abweisen, deshalb steht hier kein "|| exit".
+#
+#     Am 13.09.2026 um 18:57 fragte Gregor: "maschst du wieder alles allein?
+#     magst du die anderen nicht so?" Gemessen im Transkript: die drei Rollen
+#     wurden um 18:59, 18:59 und 19:00 gestartet - also NACH seiner Frage -
+#     und tools/rollen-faellig.pl lief zum ersten Mal um 19:05, acht Minuten
+#     danach. In den 43 Minuten davor (18:14 bis 18:57, 84 Werkzeugaufrufe)
+#     ist die Schranke kein einziges Mal gelaufen.
+#
+#     Der Grund war der Zeitpunkt, nicht das Werkzeug: rollen-faellig.pl hing
+#     bis dahin NUR in paket-bauen.ps1, also am allerletzten Schritt. Da ist
+#     die Arbeit getan - eine Rolle haette sie aber BEGLEITEN sollen. Der
+#     erste Commit eines Arbeitsblocks kommt frueh; das ist der richtige
+#     Moment, um den Rollenstand zu sehen.
+#
+#     Bewusst nur meldend: eine faellige Rolle darf das Committen nicht
+#     blockieren, sonst wird die Schranke umgangen und faengt dann auch
+#     nichts mehr. Abweisend bleibt sie beim Paketbau.
+if [ -f "$WURZEL/tools/rollen-faellig.pl" ]; then
+  perl "$WURZEL/tools/rollen-faellig.pl" 2>/dev/null | grep -E "FAELLIG|ist faellig" | head -4
+fi
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #
@@ -118,6 +140,16 @@ schranke pruefe-waechter.pl || exit $?
 schranke lehren-schranken.pl || exit $?
 schranke lehren-uebersicht.pl || exit $?
 
+# 8b. Jede Rolle, die eine Schranke kennt, muss in AGENTEN.md nachschlagbar
+#     sein. Am 13.09.2026 um 19:33 beauftragte Gregor "den lektor" mit den
+#     lessons learned - zustaendig ist CHRONIST. Er berichtigte es 59 Sekunden
+#     spaeter selbst. Beim Nachmessen: AGENTEN.md enthielt das Wort CHRONIST
+#     KEIN EINZIGES MAL; die Rolle war nur im Quelltext von rollen-faellig.pl
+#     definiert. Weder Gregor noch ich konnten sie nachschlagen - das ist eine
+#     fehlende Quelle, keine Unaufmerksamkeit.
+#     Gegenprobe: --selbsttest, vier Faelle.
+schranke pruefe-rollen-doku.pl || exit $?
+
 # 9. Eigene Nachrichtenschleifen: WM_QUIT darf nicht verschluckt werden, und
 #    es darf nicht ohne Zeitschranke gewartet werden. Aus E-51 (meine eigene
 #    Ziehschleife hat die Pruefinstanz zweimal eingefroren) und E-61 (dieselbe
@@ -173,6 +205,30 @@ schranke pruefe-fenster-ziehen.pl || exit $?
 #     pruefe-leistengroessen-paar-tests.pl, 17 Faelle in beide Richtungen.
 schranke pruefe-leistengroessen-paar.pl || exit $?
 
+# 14b. Ein neues "behoben" muss sagen, WORAN es belegt ist. Gregor am
+#      14.09.2026: "wenn eine aufgabe erledigt ist, dann sollte diese auch
+#      als solche gekennzeichnet werden." Die Gegenrichtung ist die teurere:
+#      am 13.09.2026 stand in BEFUNDE.md "Alle drei Maengel behoben in
+#      7.2.0.51", waehrend Paket 1.0.51 unterwegs war, das den Fehler nicht
+#      behob. Geprueft wird NUR der Zuwachs an BEFUNDE.md - im Bestand
+#      stehen Dutzende alter Zeilen ohne Beleg, und eine Schranke, die
+#      siebzigmal meckert, wird abgeschaltet.
+#      Gegenprobe: --selbsttest, zehn Faelle; dazu am echten Stand
+#      48c1ee2 abgewiesen, 26718ef und 34eba35 durch.
+schranke pruefe-behoben-belegt.pl || exit $?
+
+# 14c. Ein zitierter Oberflaechentext ist eine Behauptung des Programms ueber
+#      sich selbst, kein Messwert. E-83 stand drei Tage unter der Ueberschrift
+#      "wird nie gestartet" - gefolgert aus dem Wort "waiting". Die Aufgabe
+#      wartete nie, sie war fertig; der Text kommt aus Register()
+#      (QCTaskManager.cpp:191) und wurde fuer sie nie ueberschrieben. Alle
+#      vier Verdaechte lagen daraufhin im Startweg, keiner dort, wo der
+#      Fehler war. Auch hier nur der Zuwachs: im Bestand stehen vier alte
+#      Zitate ohne Herkunft (E-16, E-33, E-34, E-47).
+#      Gegenprobe: --selbsttest, sieben Faelle, darunter die beiden
+#      gemessenen Fehlalarme (deutsches Zitat, Quelltextkommentar).
+schranke pruefe-anzeigetext.pl || exit $?
+
 # 15. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
@@ -210,6 +266,23 @@ schranke doku-pruefen.pl || exit $?
 echo "pre-push: Zeilenenden und Kodierung"
 schranke pruefe-bytes.pl || exit $?
 
+# Laesst sich die Testsammlung ueberhaupt noch bauen? Vom 10.09.2026 bis zum
+# 13.09.2026 nicht - und drei Tage lang hat es niemand gemerkt. Die Spurmarke
+# zu E-76 hatte PutDebugLog aus QCUtils in OTShim.cpp gebracht, und OTShim.cpp
+# wird von Tests.vcxproj mituebersetzt: LNK2019, kein EudoraTests.exe. Folge:
+# die Schranken vom 13.09.2026 sind nie gegen die Tests gefahren, und zwei
+# rote Tests blieben drei Tage unsichtbar.
+#
+# Hier im pre-push und nicht im pre-commit, weil der Bau Zeit kostet: am
+# 13.09.2026 gemessen 17,7 Sekunden fuer Bau UND Lauf der ganzen Sammlung.
+# Einmal je Zweig ist das billig, einmal je Commit waere es laestig - und eine
+# laestige Schranke wird umgangen.
+#
+# Die Schranke weist NUR beim Baufehler ab, NICHT bei roten Tests. Ein roter
+# Test ist ein Ergebnis, kein Grund, einen Push zu verweigern.
+echo "pre-push: laesst sich die Testsammlung bauen?"
+schranke pruefe-testbau.pl || exit $?
+
 exit 0
 HOOKPUSHENDE
 chmod +x "$HOOK_PUSH"
@@ -246,7 +319,24 @@ echo "                               CalcDynamicLayout wieder aus nLength? (E-76
 echo " 14. tools/pruefe-leistengroessen-paar.pl"
 echo "                               kennt einen Groessenschluessel nur EINE der"
 echo "                               beiden Seiten? (E-70, E-84)"
+echo " 14b. tools/pruefe-behoben-belegt.pl"
+echo "                               nennt ein neues \"behoben\" in BEFUNDE.md,"
+echo "                               WORAN es belegt ist?"
+echo " 14c. tools/pruefe-anzeigetext.pl"
+echo "                               nennt ein zitierter Oberflaechentext seine"
+echo "                               Herkunft? (E-83)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
+echo
+echo
+echo "Der pre-push prueft zusaetzlich, gegen den fertigen Zweig:"
+echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selbst"
+echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
+echo "  tools/pruefe-rollen-doku.pl  ist jede Rolle aus rollen-faellig.pl in"
+echo "                               AGENTEN.md nachschlagbar? (pre-commit)"
+echo "  tools/pruefe-testbau.pl      laesst sich EudoraTests.exe ueberhaupt bauen?"
+echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
+echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"
+echo "                               Baufehler ab, nicht bei roten Tests."
 echo
 echo "Abweisend sind alle ausser Schritt 3 - der meldet bloss."
 echo "Jeder von ihnen wertet JEDEN Rueckgabewert aus -"

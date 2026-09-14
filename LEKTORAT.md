@@ -13,7 +13,11 @@ die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-5.md](Befunde/LEKTOR-5.md) (L-9, 41 Befunde am 08.09.2026) und
 [Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md) — dort stehen **L-10** (das
 Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
-09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`).
+09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`) und
+[Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
+7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression)
+und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
@@ -21,10 +25,23 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 13.09.2026.** Der jüngste Durchgang ist der **neunte**
-> und steht ganz unten; gemessen an Quellstand **7.2.0.50** / Paket **1.0.50**.
-> Die Durchgänge **L-6** bis **L-11** stehen nicht hier, sondern in
-> `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-6.md`.
+> **Stand dieser Datei: 14.09.2026.** Der jüngste Durchgang ist **L-13** und
+> steht in `Befunde/LEKTOR-8.md`; gemessen an Quellstand **7.2.0.53** / Paket
+> **1.0.53**, über **133** MD-Dateien. Der jüngste Durchgang *in dieser Datei*
+> ist weiterhin der **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-13**
+> stehen nicht hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-8.md`.
+>
+> **L-13 in einem Satz:** Drei Fassungen in vierundzwanzig Stunden haben die
+> Doku an neun Stellen stehenlassen — zwei davon sagten das **Gegenteil** des
+> Bestands, und eine davon widersprach sich **innerhalb derselben Datei**
+> (`ZIEL.md` Zeile 31 gegen Zeile 43). Dazu waren **E-85 und E-86 für
+> `pruefe-befundurteile.pl` unsichtbar**: das eine Urteil war länger als das
+> 60-Zeichen-Fenster, das andere enthielt weder „offen" noch „behoben".
+>
+> **L-12 in einem Satz:** E-85 (Umlaute über IMAP) war behoben, während vier
+> Dokumente ihn noch als offen führten — und dreimal an diesem Tag stand die
+> Doku still, während der Zweig weiterlief, zweimal davon mit einer Aussage,
+> die ich selbst eine Stunde zuvor geschrieben hatte.
 
 ## Erster Durchgang — 30.08.2026
 
@@ -797,3 +814,31 @@ Commits endete. Der erste Commit stand, sobald die erste Datei fertig war. Der
 Zweig `wt/lektor` war auf dem Server gelöscht; der `pre-commit`-Hook hat das
 gemeldet und den Commit verweigert, bevor etwas nur lokal entstehen konnte —
 die Schranke hat genau das getan, wofür sie gebaut ist.
+
+---
+
+# Dreizehnter Durchgang — 14.09.2026 (L-13)
+
+**Der Bericht steht vollständig in [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md).**
+Hier nur der Eintrag ins Fahrtenbuch, damit diese Datei nicht wieder hinter den
+Berichten zurückbleibt.
+
+Gemessen an Quellstand **7.2.0.53** / Paket **1.0.53**, über **133** MD-Dateien
+und alle **88** Werkzeuge in `tools/`.
+
+| | |
+|---|---|
+| **Der schwerste Fund** | `ZIEL.md` widersprach **sich selbst**: Zeile 31 sagte richtig *„seit 7.2.0.52 in Ordnung, am laufenden Programm belegt"*, zwölf Zeilen darunter stand *„mit E-85 in 7.2.0.51 behoben, aber noch nicht bestätigt"* |
+| **Der zweitschwerste** | `BEFUNDE.md` widersprach sich **in einer einzigen Zeile**: *„Alle drei Mängel behoben in 7.2.0.51 — Regression noch offen"* gegen *„(3) in 7.2.0.51 gleich mitbehoben"* im selben Absatz |
+| **Der stillste** | **E-85 und E-86 waren für `pruefe-befundurteile.pl` unsichtbar** — das eine Urteil war länger als das 60-Zeichen-Fenster, das andere enthielt weder *offen* noch *behoben*. Beide gingen durch jede Gegenprüfung, ohne gewogen zu werden |
+| **Zeilenangaben** | 16 nachgemessen, **8 falsch**, alle berichtigt. Das Muster: berichtigt wurde, was *vor* der letzten Änderung derselben Datei gemessen war |
+| **Ein abgebrochener Satz** | `PORTIERUNG.md` endete seit einem früheren Umbau mit *„Hier steht bewusst keine"* — ohne Objekt, direkt vor einer Tabelle. Kein Werkzeug prüft darauf |
+| **Zwölf offene Befunde** | einzeln am Quelltext nachgemessen, alle weiterhin offen, jeder jetzt mit Datum und Fundstelle. **E-14** steht ausdrücklich als *nicht entscheidbar* da |
+| **Drei neue Schranken** | `pruefe-behoben-belegt.pl` (10/10), `pruefe-anzeigetext.pl` (7/7), `arbeitsbaum-angleichen.sh` (12/12) — alle in beide Richtungen gegengetestet, zwei davon hat erst der Gegentest brauchbar gemacht |
+| **Gemessen, nicht geändert** | `Arbeitsweise/*.md` ist ein **Spiegel** des Sitzungsgedächtnisses; `lehren-spiegeln.pl` macht Berichtigungen dort im `pre-commit` lautlos rückgängig. Drei gemessene Berichtigungen sind so verlorengegangen — die Quelle gehört CHRONIST |
+
+**Was beim nächsten Mal zuerst drankommt:** beide Hauptwidersprüche standen
+**innerhalb einer Datei**. `doku-pruefen.pl` hält Dateien *gegeneinander* —
+keine Schranke prüft eine Datei gegen sich selbst. Eine Prüfung, die zu **einer**
+Kennung zwei verschiedene Fassungsnummern in derselben Datei findet, hätte beide
+gefunden und wäre billig.

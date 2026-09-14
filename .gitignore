@@ -62,3 +62,12 @@ Eudora71/Eudora/BuildKennung.h
 # bringt eine neuere mit (10.0.19041) und findet sie, sobald keine im
 # Programmverzeichnis liegt. Wiederherstellbar aus git: 567a5d8.
 Eudora71/Bin/Release/dbghelp.dll
+
+# Release-ZIPs gehoeren nicht ins Repo - sie werden gebaut, nicht versioniert.
+# Ausgenommen die Grundlage, aus der paket-bauen.ps1 jedes Paket aufbaut, und
+# die Pruefsummen, die die Buchfuehrung in Releases/PAKETE.md belegen.
+# Am 14.09.2026 ist Eudora72-1.0.41-release.zip (9,3 MB) versehentlich mit
+# "git add -A" hineingeraten und hat einen Merge blockiert.
+Releases/Eudora72-*-release.zip
+!Releases/Eudora72-1.0.2-lauffaehig.zip
+Releases/Eudora72-*-release/

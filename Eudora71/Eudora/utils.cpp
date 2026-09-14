@@ -1231,6 +1231,193 @@ LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)
 
 
 //
+//	ISOTranslateChunk
+//
+//	Wie ISOTranslate, aber ueber eine Stueckgrenze hinweg: die Bytes eines
+//	UTF-8-Zeichens, das am Ende eines Lesestuecks angefangen hat, werden
+//	zurueckgehalten und beim naechsten Aufruf mit seinem Anfang vereinigt.
+//
+//	WARUM ES DIESE FUNKTION GIBT (E-85, 13.09.2026)
+//
+//	Der Uebertrag stand bisher nur in TextReader::ReadIt, also im POP3-Weg
+//	(Behebung von Z-2b, 05.09.2026). Der IMAP-Weg liest mit CChunkReader
+//	ebenfalls stueckweise - bei text/plain zeilenweise, bei text/html aber in
+//	Bloecken von BUFLEN Bytes - und hielt nichts zurueck. Ein Umlaut auf der
+//	Blockgrenze wurde dadurch zu Bytesalat, genau wie vor Z-2b.
+//
+//	Der POP3-Weg schiebt den Uebertrag VOR das Stueck; dafuer hat sein Puffer
+//	drei Bytes Vorlauf. Hier geht das nicht: der Zeiger kommt von
+//	CChunkReader::GetNextChunk und zeigt in fremden Speicher, vor dem kein
+//	Platz reserviert ist. Deshalb wird umgekehrt vorgegangen - das aus dem
+//	Uebertrag entstandene Zeichen wird HINTER seine verbrauchten Bytes
+//	geschrieben, und der Anfang des Stuecks wandert entsprechend nach rechts.
+//	Geschrieben wird dabei nur in Bytes, die zu diesem Stueck gehoeren und
+//	bereits verbraucht sind.
+//
+//	ppBuf        [in/out] Zeiger auf das Stueck; wird nach rechts versetzt,
+//	                      wenn ein Uebertrag eingearbeitet wurde
+//	lSize        [in]     Laenge des Stuecks
+//	iCharsetIdx  [in]     Zeichensatz-Index wie bei ISOTranslate
+//	szUebertrag  [in/out] Puffer von mindestens 4 Bytes fuer die
+//	                      zurueckgehaltenen Bytes
+//	plUebertrag  [in/out] wie viele davon belegt sind; zu Beginn 0
+//
+//	Rueckgabe: die Laenge ab *ppBuf, die geschrieben werden darf. 0 heisst,
+//	dass dieses Stueck vollstaendig im Uebertrag steckt - dann ist nichts zu
+//	schreiben und der naechste Aufruf setzt fort.
+//
+LONG ISOTranslateChunk(char** ppBuf, LONG lSize, UINT iCharsetIdx,
+					   char* szUebertrag, LONG* plUebertrag)
+{
+	char*			pBuf;
+	unsigned char	cLead;
+	LONG			lNoetig;
+	LONG			lHolen;
+	LONG			lErgebnis = 0;
+	LONG			lTail;
+	LONG			lNeu;
+	char			szVereint[8];
+	char			cHinterher;
+
+	if (!ppBuf || !*ppBuf || !szUebertrag || !plUebertrag)
+		return lSize;
+
+	pBuf = *ppBuf;
+
+	// Nur UTF-8 wird laenger als ein Byte je Zeichen; alles andere kann ein
+	// Stueck nicht in der Mitte eines Zeichens verlassen.
+	//
+	// DAS BYTE HINTER DEM STUECK WIRD GERETTET (PRUEFER-10, 13.09.2026).
+	// ISOTranslate schreibt eine Null an szBuf[lSize] - EIN BYTE HINTER den
+	// uebergebenen Bereich. Im POP3-Weg ist dafuer Platz: TextReader::ReadIt
+	// laesst ihn ausdruecklich frei (TextReader.cpp: "It's safer to make
+	// ourselves leave space for ISOTranslate than to change ISOTranslate").
+	// Hier gibt es diesen Platz nicht. CChunkReader liefert bei text/plain
+	// eine ZEILE aus der Mitte seines eigenen Puffers (imapgets.cpp,
+	// *pBuf = m_pStart), und das Byte dahinter ist das ERSTE BYTE DER
+	// NAECHSTEN ZEILE. Ohne diese Rettung verliert jede Zeile einer
+	// utf-8-Nachricht ihr erstes Zeichen, und ein NUL-Byte landet in der
+	// Mailboxdatei.
+	//
+	// Gerettet wird nur, wo ISOTranslate wirklich schreibt: bei
+	// iCharsetIdx <= 2 kehrt es vor der Nullterminierung zurueck.
+	if (!ISOIsUTF8Charset(iCharsetIdx))
+	{
+		if (iCharsetIdx > 2 && lSize >= 0)
+		{
+			cHinterher = pBuf[lSize];
+			lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+			pBuf[lSize] = cHinterher;
+			return lNeu;
+		}
+
+		return ISOTranslate(pBuf, lSize, iCharsetIdx);
+	}
+
+	// --- 1. Den Uebertrag des vorigen Stuecks vervollstaendigen --------------
+	if (*plUebertrag > 0)
+	{
+		cLead = (unsigned char)szUebertrag[0];
+
+		if ((cLead & 0xE0) == 0xC0)
+			lNoetig = 2;
+		else if ((cLead & 0xF0) == 0xE0)
+			lNoetig = 3;
+		else if ((cLead & 0xF8) == 0xF0)
+			lNoetig = 4;
+		else
+			lNoetig = 0;		// Kein Kopfbyte - der Uebertrag ist wertlos.
+
+		if (lNoetig == 0)
+		{
+			*plUebertrag = 0;
+		}
+		else
+		{
+			lHolen = lNoetig - *plUebertrag;
+
+			if (lHolen > lSize)
+			{
+				// Auch dieses Stueck reicht nicht. Anhaengen, soweit der
+				// Uebertragspuffer es fasst, und nichts schreiben.
+				if (*plUebertrag + lSize <= 4)
+				{
+					memcpy(szUebertrag + *plUebertrag, pBuf, (size_t)lSize);
+					*plUebertrag += lSize;
+				}
+				else
+				{
+					*plUebertrag = 0;	// laenger als jedes Zeichen - verwerfen
+				}
+				return 0;
+			}
+
+			memcpy(szVereint, szUebertrag, (size_t)*plUebertrag);
+			memcpy(szVereint + *plUebertrag, pBuf, (size_t)lHolen);
+			szVereint[lNoetig] = 0;
+
+			lErgebnis = ISOTranslate(szVereint, lNoetig, iCharsetIdx);
+
+			// Das Ergebnis muss in den Platz passen, den die verbrauchten
+			// Bytes dieses Stuecks hergeben - davor liegt fremder Speicher.
+			//
+			// Laenger als ein Byte wird es nur bei Zeichen ausserhalb der
+			// BMP: U+1F600 etwa ist in UTF-16 ein Surrogatpaar und wird zu
+			// ZWEI Fragezeichen. Passen sie nicht beide, wird gekuerzt statt
+			// verworfen - ein Fragezeichen sagt dasselbe wie zwei, ein
+			// verschwundenes Zeichen dagegen faellt beim Lesen auf.
+			if (lErgebnis < 0)
+				lErgebnis = 0;
+			else if (lErgebnis > lHolen)
+				lErgebnis = lHolen;
+
+			*plUebertrag = 0;
+			pBuf  += lHolen;
+			lSize -= lHolen;
+		}
+	}
+
+	// --- 2. Das angefangene Zeichen am Ende zurueckhalten -------------------
+	lTail = ISOIncompleteUTF8Tail(pBuf, lSize);
+	if (lTail > 0 && lTail <= 4)
+	{
+		memcpy(szUebertrag, pBuf + lSize - lTail, (size_t)lTail);
+		*plUebertrag = lTail;
+		lSize -= lTail;
+	}
+
+	// --- 3. Der Rest ist jetzt lauter ganze Zeichen -------------------------
+	// Auch hier das Byte hinter dem Stueck retten - Begruendung siehe oben.
+	if (lSize >= 0)
+	{
+		cHinterher = pBuf[lSize];
+		lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+		pBuf[lSize] = cHinterher;
+	}
+	else
+	{
+		lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+	}
+
+	if (lNeu < 0 || lNeu > lSize)
+		lNeu = lSize;
+
+	// --- 4. Das Zeichen aus dem Uebertrag davorsetzen -----------------------
+	// Es wird hinter seine eigenen, verbrauchten Bytes geschrieben, damit es
+	// unmittelbar vor dem uebersetzten Rest steht.
+	if (lErgebnis > 0)
+	{
+		memcpy(pBuf - lErgebnis, szVereint, (size_t)lErgebnis);
+		pBuf  -= lErgebnis;
+		lNeu  += lErgebnis;
+	}
+
+	*ppBuf = pBuf;
+	return lNeu;
+}
+
+
+//
 //	ISOTranslate
 //
 //	Translates the specified buffer from the specified charset to CP1252.

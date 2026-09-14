@@ -25,6 +25,7 @@
 #include "generated/utils_table.inc"
 #include "generated/utils_utf8tail.inc"
 #include "generated/utils_isotranslate.inc"
+#include "generated/utils_chunk.inc"	// ruft ISOTranslate, muss danach stehen
 
 // ----------------------------------------------------------------- hexbin.cpp
 #include "generated/hexbin_table.inc"
@@ -56,6 +57,12 @@ int UT_ISOIsUTF8Charset(unsigned int uCharsetIdx)
 long UT_ISOIncompleteUTF8Tail(const char* pBuf, long lSize)
 {
 	return ISOIncompleteUTF8Tail(pBuf, lSize);
+}
+
+long UT_ISOTranslateChunk(char** ppBuf, long lSize, unsigned int uCharsetIdx,
+						  char* szUebertrag, long* plUebertrag)
+{
+	return ISOTranslateChunk(ppBuf, lSize, uCharsetIdx, szUebertrag, plUebertrag);
 }
 
 const unsigned char* UT_HexBinTable(void)	{ return HexBinTable; }

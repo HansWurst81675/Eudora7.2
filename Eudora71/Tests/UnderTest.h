@@ -27,6 +27,11 @@ long UT_ISOTranslate(char* pBuf, long lSize, unsigned int uCharsetIdx);
 int  UT_ISOIsUTF8Charset(unsigned int uCharsetIdx);
 long UT_ISOIncompleteUTF8Tail(const char* pBuf, long lSize);
 
+// Ruft ISOTranslateChunk auf: ISOTranslate ueber eine Stueckgrenze hinweg (E-85).
+// ppBuf wird nach rechts versetzt, wenn ein Uebertrag eingearbeitet wurde.
+long UT_ISOTranslateChunk(char** ppBuf, long lSize, unsigned int uCharsetIdx,
+						  char* szUebertrag, long* plUebertrag);
+
 // --- aus hexbin.cpp ------------------------------------------------------
 
 // Zeigt auf HexBinTable[256].

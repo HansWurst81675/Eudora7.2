@@ -94,3 +94,25 @@ extern "C" BOOL SuperAssertionA(LPCSTR /*szType*/, LPCSTR /*szExpression*/,
 {
 	return FALSE;
 }
+
+
+//
+// PutDebugLog - Attrappe fuer die Spurmarken in der Ersatzschicht
+//
+// OTShim.cpp und OTShim_Werkzeugleiste.cpp schreiben seit der Spurmarke zu
+// E-66 (und wieder zu E-76, 3acb82f vom 10.09.2026) ins Eudora-Protokoll.
+// Die Funktion selbst liegt in QCUtils, und QCUtils gehoert nicht zum
+// Testprojekt - seither liess sich EudoraTests.exe nicht mehr linken:
+//
+//   OTShim.obj : error LNK2019: Verweis auf nicht aufgeloestes externes
+//   Symbol "void __cdecl PutDebugLog(unsigned long,char const *,int)"
+//
+// Gemerkt hat es zwei Tage lang niemand. Die Attrappe schluckt die Marken;
+// geprueft wird in den Tests ohnehin das Verhalten, nicht das Protokoll.
+//
+void PutDebugLog(unsigned long dwMask, const char* szText, int iLen)
+{
+	(void)dwMask;
+	(void)szText;
+	(void)iLen;
+}

@@ -60,7 +60,13 @@ param(
   # alle drei Rollen sind gelaufen und melden sich nur deshalb wieder
   # faellig, weil die COMMITS DER ANDEREN in ihren Bereich fallen. Aus
   # dieser Schleife gibt es sonst keinen Ausgang.
-  [string]$RollenSindGelaufen = ''
+    [string]$RollenSindGelaufen = '',
+    # Baut auch, wenn ein Agentenauftrag noch offen steht. Braucht eine
+    # Begruendung, die ins Protokoll geht. Gedacht fuer den Fall, dass ein
+    # Agent ABSICHTLICH weiterlaeuft und seine Arbeit nicht in dieses Paket
+    # gehoert - am 14.09.2026 hat Gregor den Bau ausdruecklich angewiesen
+    # ("bau 1.0.53"), waehrend PRUEFER an einem anderen Befund arbeitete.
+    [string]$AgentLaeuftAbsichtlich = ''
 )
 
 # --- Schranke: kein Paket bei offenem Datenverlustweg ----------------------
@@ -302,14 +308,26 @@ if (Test-Path -LiteralPath $agentenpruefer) {
 
   if ($perlA) {
     & $perlA $agentenpruefer
-    if ($LASTEXITCODE -ne 0) {
-      Write-Host ''
-      Write-Host '  KEIN PAKET, solange ein Agentenauftrag offen ist.'
-      Write-Host '  Hat er geliefert, austragen mit:'
-      Write-Host '      perl tools/agenten-laufen.pl --fertig <ROLLE>'
-      Write-Host ''
-      exit 1
-    }
+      if (($LASTEXITCODE -ne 0) -and ($AgentLaeuftAbsichtlich.Trim().Length -ge 10)) {
+        Write-Host ''
+        Write-Host '  Die Agenten-Schranke ist bewusst uebergangen worden:'
+        Write-Host ("    " + $AgentLaeuftAbsichtlich.Trim())
+        Write-Host ''
+        $global:LASTEXITCODE = 0
+      }
+      if ($LASTEXITCODE -ne 0) {
+        Write-Host ''
+        Write-Host '  KEIN PAKET, solange ein Agentenauftrag offen ist.'
+        Write-Host '  Hat er geliefert, austragen mit:'
+        Write-Host '      perl tools/agenten-laufen.pl --fertig <ROLLE>'
+        Write-Host ''
+        Write-Host '  Laeuft er ABSICHTLICH weiter und gehoert seine Arbeit nicht in'
+        Write-Host '  dieses Paket, dann mit Begruendung:'
+        Write-Host '      -AgentLaeuftAbsichtlich "<warum>"'
+        Write-Host '  Die Begruendung geht ins Protokoll.'
+        Write-Host ''
+        exit 1
+      }
   }
 }
 

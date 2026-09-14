@@ -5,7 +5,7 @@ metadata:
   type: feedback
 ---
 
-Schranke: keine - das Repo führt keine Liste der mit Gregor vereinbarten Zweignamen; tools/pruefe-branch.pl erkennt tote Zweige, nicht unabgesprochene
+Schranke: tools/pruefe-branch.pl (pre-commit) - meldet beim ersten Commit, wenn der Zweigname nicht in tools/ZWEIGE.md steht. Bewusst nur meldend, nicht abweisend: eine Schranke, die jeden neuen Zweig blockiert, wird umgangen. Arbeitsbaeume (wt/*) sind ausgenommen, sie stehen in AGENTEN.md.
 
 # Zweignamen vorher abstimmen, nicht nachher erklären
 
@@ -83,3 +83,36 @@ ein Fremdkörper im Repo — und er löscht ihn, bevor er nachfragt.
 Siehe [nie-direkt-auf-main](nie-direkt-auf-main.md),
 [commit-auf-extra-branch-und-pushen](commit-auf-extra-branch-und-pushen.md) und
 [agenten-koordinieren](agenten-koordinieren.md).
+
+---
+
+## Dritter Verstoß — drei an einem Tag, 13.09.2026
+
+Die Regel steht seit dem 11.09.2026 und hatte bis zum 13.09.2026 die Zeile
+**„Schranke: keine"**. An diesem einen Tag sind daran vorbeigegangen:
+
+| Zweig | |
+|---|---|
+| `release-050-protokoll` | selbst benannt |
+| `lehre-erfolgsmeldung` | selbst benannt |
+| `ziel-kriterium-2` | selbst benannt |
+
+Gregor hat alle drei anstandslos gemergt. **Gefragt habe ich trotzdem nicht.**
+Er führt diese Klasse selbst als Platz 4 seiner Fehlerliste: *„Aufgeschriebene
+Regeln werden nicht befolgt — 31"* Fundstellen.
+
+Zum Vergleich, am selben Tag: `fix-imap_utf8` hat **er** benannt — *„dann neuer
+branch fix-imap_utf8 und dann fehler beheben"*. So sieht ein abgestimmter Name
+aus.
+
+**Why:** Dreimal an einem Tag ist kein Vergessen, sondern ein fehlender
+Auslöser. Die Regel wurde nie in dem Moment geprüft, in dem sie gilt — beim
+Anlegen. Genau das ist der Unterschied zwischen einer Lehre und einer Schranke
+([[lehren-anwenden-nicht-nur-schreiben]]); die Zeile „Schranke: keine" war eine
+offene Rechnung, wie bei [[pruefstand-kann-blind-sein]].
+
+**Seit dem 13.09.2026 gibt es den Moment:** `tools/ZWEIGE.md` führt die
+abgestimmten Namen, und `tools/pruefe-branch.pl` meldet beim ersten Commit,
+wenn der aktuelle Zweig dort fehlt. Gegengetestet in beide Richtungen —
+unabgestimmter Name meldet, abgestimmter schweigt, `wt/*` ist ausgenommen, die
+15 Fälle von `pruefe-branch-tests.pl` bleiben grün.

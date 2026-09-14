@@ -161,3 +161,66 @@ Schranke war falsch, sondern die Verankerung (`^\[Mappings\]` statt
 - **Nach jedem Schreibzugriff auf eine Repo-Datei `tools/pruefe-bytes.pl`.**
   Hier war es die einzige Instanz, die den Schaden bemerkt hat
   ([[zeilenenden-nach-jedem-schreibzugriff-messen]]).
+
+---
+
+## Zehnter Fall, 13.09.2026 — und warum diese Lehre nicht greift
+
+Ein Zeilenanker für eine Schranke sollte lauten
+
+    '^\s*LONG\s+...'
+
+In der Datei stand danach
+
+    ^s*LONGs+...
+
+— **alle Backslashes weg, die Anführungszeichen dazu.** Vierter Tag in Folge
+mit derselben Klasse, zehnter dokumentierter Fall seit dem 06.09.2026. Die
+Lehre stand die ganze Zeit da und ist beim Schreiben nicht gelesen worden,
+weil nichts sie aufgerufen hat.
+
+**Why — der strukturelle Grund, und er ist der eigentliche Befund:** Als
+Schranke steht über dieser Lehre `tools/ersetze-bereich.pl`. Das Werkzeug ist
+gut, aber es ist **kein Auslöser, sondern ein Angebot**. Es greift nur, wenn
+ich es aufrufe — und der Fehler passiert genau dann, wenn ich es *nicht*
+aufrufe, weil inline einen Handgriff kürzer ist. Eine Schranke, die man
+benutzen muss, damit sie greift, prüft nicht den Weg, auf dem der Fehler
+entsteht ([[messung-muss-den-weg-treffen]]).
+
+Das unterscheidet diese Lehre von den wirksamen: `pruefe-bytes.pl` hängt im
+pre-commit und fragt niemanden. Deshalb hat es am 08.09.2026 die
+Doppelkodierung gefunden — und am 13.09.2026 wieder, ein Mojibake im
+CHANGELOG. Diese Lehre hat nichts Vergleichbares.
+
+**Was den zehnten Fall gefangen hätte:** die Nachmessung aus dieser Lehre
+selbst — `grep -c` auf den eingesetzten Anker, Rückgabe muss 1 sein — war
+nicht gelaufen. Sie ist der billigste Handgriff, den es gibt, und sie ist
+mittlerweile in [[erfolgsmeldung-aus-dem-ergebnis]] als eigene Regel
+festgehalten: **nach jedem Schreibzugriff das Ergebnis in der Datei zählen,
+nie den Kontrollfluss melden.**
+
+## Berichtigung: die Probe in dieser Lehre war selbst stumm
+
+Oben stand seit dem 06.09.2026 als PowerShell-Probe:
+
+    powershell -Command "[ScriptBlock]::Create((Get-Content -Raw 'DATEI'))"
+
+**Diese Probe taugt nicht.** Am 13.09.2026 nachgemessen an einer Datei mit
+fehlender schließender Klammer: `[ScriptBlock]::Create` wirft eine
+nicht-terminierende `MethodInvocationException`, `powershell -Command` läuft
+weiter und beendet sich mit **Rückgabewert 0**. Eine nachgestellte Meldung
+`Syntax ok` erscheint unter der Fehlermeldung — und ein Hook, der daran
+hängt, lässt die kaputte Datei durch. Genau das ist am 13.09.2026 passiert.
+
+**Richtig ist:**
+
+```powershell
+$t = $null; $e = $null
+[void][System.Management.Automation.Language.Parser]::ParseFile($pfad, [ref]$t, [ref]$e)
+if ($e -and $e.Count) { Write-Error ("Parserfehler: " + $e[0].Message); exit 1 }
+```
+
+`perl -c DATEI` bleibt richtig — dort ist der Rückgabewert tatsächlich
+ungleich 0. Der Unterschied zwischen beiden ist nicht offensichtlich; er ist
+gemessen worden, nicht vermutet ([[pruefen-statt-vermuten]]). Die ganze
+Geschichte steht in [[erfolgsmeldung-aus-dem-ergebnis]].

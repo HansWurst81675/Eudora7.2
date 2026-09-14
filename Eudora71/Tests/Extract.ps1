@@ -72,6 +72,13 @@ $bStart = Find-Line $u '^\s*LONG\s+ISOTranslate\s*\(' 0
 $bEnd = Find-Line $u '^\}\s*$' $bStart
 Write-Region $u $bStart $bEnd (Join-Path $OutDir "utils_isotranslate.inc") $utilsPath
 
+# Region B2: ISOTranslateChunk - der Uebertrag ueber die Stueckgrenze (E-85).
+# Steht in utils.cpp zwischen ISOIncompleteUTF8Tail und ISOTranslate, faellt
+# also weder in Region A2 noch in Region B.
+$b2Start = Find-Line $u '^\s*LONG\s+ISOTranslateChunk\s*\(' 0
+$b2End = Find-Line $u '^\}\s*$' $b2Start
+Write-Region $u $b2Start $b2End (Join-Path $OutDir "utils_chunk.inc") $utilsPath
+
 # ---------------------------------------------------------------- hexbin.cpp
 $hexPath = Join-Path $SrcDir "hexbin.cpp"
 $h = Read-Lines $hexPath
