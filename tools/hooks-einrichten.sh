@@ -215,7 +215,18 @@ schranke pruefe-leistengroessen-paar.pl || exit $?
 #     20f4820^ (weist ab) gegen 26718ef (laesst durch).
 schranke pruefe-behoben-belegt.pl || exit $?
 
-# 16. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 16. Ein angezeigter Text ist kein gemessener Zustand. E-83 stand vom
+#     11.09. bis zum 14.09.2026 offen, weil seine Ueberschrift aus Eudoras
+#     Aufgabenfenster kam: "Waiting in the task queue to be started ...".
+#     Gesucht wurde ein Startproblem; das Protokoll sagte dann
+#     zustand=FERTIG(5). Der Text wird in Register() einmal gesetzt und nie
+#     ueberschrieben. Wer einen Oberflaechentext zitiert, sagt in derselben
+#     Zeile, wo er gesetzt wird und ob ihn jemand umschreibt. Gegenprobe:
+#     --selbsttest, 7 Faelle, davon zwei gemessene Fehlalarme; dazu der
+#     echte Stand 3256792 (weist ab) gegen den vom 14.09. (laesst durch).
+schranke pruefe-anzeigetext.pl || exit $?
+
+# 17. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
 HOOKENDE
@@ -313,6 +324,10 @@ echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selb
 echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
 echo "  tools/pruefe-rollen-doku.pl  ist jede Rolle aus rollen-faellig.pl in"
 echo "                               AGENTEN.md nachschlagbar? (pre-commit)"
+echo "  tools/pruefe-anzeigetext.pl   wer einen Oberflaechentext zitiert, sagt, wo er"
+echo "                               gesetzt wird und ob ihn jemand ueberschreibt."
+echo "                               Aus E-83: die Anzeige sagte Waiting, der Zustand"
+echo "                               war FERTIG (pre-commit)."
 echo "  tools/pruefe-behoben-belegt.pl  kein neu geschriebenes \"behoben\" ohne Beleg"
 echo "                               dass der Weg einmal gelaufen ist (pre-commit)."
 echo "                               Aus E-85, am 13.09.2026 zweimal behoben gemeldet,"

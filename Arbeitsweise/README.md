@@ -50,6 +50,7 @@ eine Datei liest, liest diese.
 | [anforderung-gehoert-in-den-massstab](anforderung-gehoert-in-den-massstab.md) | Eine Anforderung, die nur in der Umsetzung steht, ist keine; sie gehoert nach ZIEL.md und braucht eine Schranke, die beide Seiten gegeneinander haelt |
 | [anweisungen-abarbeiten](anweisungen-abarbeiten.md) | Gregors Nachrichten sind Arbeitsaufträge — Material sofort auswerten, Absprachen festhalten, nichts Neues erfinden |
 | [anwenderdatei-nicht-erschlagen](anwenderdatei-nicht-erschlagen.md) | Eine Datei, die es beim Anwender oder im Original schon gibt, wird gelesen und ergaenzt - nie neu geschrieben und ins Paket gelegt |
+| [anzeige-ist-kein-zustand](anzeige-ist-kein-zustand.md) | Ein Text aus der Oberflaeche ist eine Behauptung des Programms ueber sich selbst - E-83 suchte drei Tage ein Startproblem, das es nie gab |
 | [arbeitsbaum-braucht-eigenes-gegenstueck](arbeitsbaum-braucht-eigenes-gegenstueck.md) | Ein Arbeitsbaum-Zweig ohne eigenen Upstream hebt die Trennung auf, fuer die es Arbeitsbaeume gibt - und die fertige Ursachenerklaerung war falsch |
 | [assert-ist-im-release-nichts](assert-ist-im-release-nichts.md) | ASSERT und VERIFY sind im Release-Bau weg; bei \"es passiert nichts\" zuerst auf dem betroffenen Weg nach ASSERT(0) und VERIFY( suchen |
 | [auftrag-vor-selbstbetrachtung](auftrag-vor-selbstbetrachtung.md) | Sachfrage zuerst beantworten; Selbstkritik gehoert in eine Lehre-Datei, nicht in die Antwort |
