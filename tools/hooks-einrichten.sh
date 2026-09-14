@@ -205,6 +205,30 @@ schranke pruefe-fenster-ziehen.pl || exit $?
 #     pruefe-leistengroessen-paar-tests.pl, 17 Faelle in beide Richtungen.
 schranke pruefe-leistengroessen-paar.pl || exit $?
 
+# 14b. Ein neues "behoben" muss sagen, WORAN es belegt ist. Gregor am
+#      14.09.2026: "wenn eine aufgabe erledigt ist, dann sollte diese auch
+#      als solche gekennzeichnet werden." Die Gegenrichtung ist die teurere:
+#      am 13.09.2026 stand in BEFUNDE.md "Alle drei Maengel behoben in
+#      7.2.0.51", waehrend Paket 1.0.51 unterwegs war, das den Fehler nicht
+#      behob. Geprueft wird NUR der Zuwachs an BEFUNDE.md - im Bestand
+#      stehen Dutzende alter Zeilen ohne Beleg, und eine Schranke, die
+#      siebzigmal meckert, wird abgeschaltet.
+#      Gegenprobe: --selbsttest, zehn Faelle; dazu am echten Stand
+#      48c1ee2 abgewiesen, 26718ef und 34eba35 durch.
+schranke pruefe-behoben-belegt.pl || exit $?
+
+# 14c. Ein zitierter Oberflaechentext ist eine Behauptung des Programms ueber
+#      sich selbst, kein Messwert. E-83 stand drei Tage unter der Ueberschrift
+#      "wird nie gestartet" - gefolgert aus dem Wort "waiting". Die Aufgabe
+#      wartete nie, sie war fertig; der Text kommt aus Register()
+#      (QCTaskManager.cpp:191) und wurde fuer sie nie ueberschrieben. Alle
+#      vier Verdaechte lagen daraufhin im Startweg, keiner dort, wo der
+#      Fehler war. Auch hier nur der Zuwachs: im Bestand stehen vier alte
+#      Zitate ohne Herkunft (E-16, E-33, E-34, E-47).
+#      Gegenprobe: --selbsttest, sieben Faelle, darunter die beiden
+#      gemessenen Fehlalarme (deutsches Zitat, Quelltextkommentar).
+schranke pruefe-anzeigetext.pl || exit $?
+
 # 15. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
@@ -295,6 +319,12 @@ echo "                               CalcDynamicLayout wieder aus nLength? (E-76
 echo " 14. tools/pruefe-leistengroessen-paar.pl"
 echo "                               kennt einen Groessenschluessel nur EINE der"
 echo "                               beiden Seiten? (E-70, E-84)"
+echo " 14b. tools/pruefe-behoben-belegt.pl"
+echo "                               nennt ein neues \"behoben\" in BEFUNDE.md,"
+echo "                               WORAN es belegt ist?"
+echo " 14c. tools/pruefe-anzeigetext.pl"
+echo "                               nennt ein zitierter Oberflaechentext seine"
+echo "                               Herkunft? (E-83)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo

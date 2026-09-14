@@ -37,11 +37,15 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
 > **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
 > sind fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
-> improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2** hat
-> mit **E-77** (IMAP-Postfachnamen roh) einen weiteren offenen Punkt. Stand 13.09.2026,
-> Quellstand **7.2.0.53**, Paketnummer **1.0.53** — gebaut für Gregors Test von
-> **E-85** (Umlaute über IMAP), noch **nicht** von ihm bestätigt.
-> **Veröffentlicht** ist bei GitHub `v1.0.50` (13.09.2026). Hier steht bewusst keine
+> improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
+> darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
+> (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
+> Stand 14.09.2026, Quellstand **7.2.0.53**, Paketnummer **1.0.53**. Als ZIP
+> gepackt wurde zuletzt die Fassung davor; 7.2.0.53 behebt **E-83**
+> (Eudora ließ sich nicht beenden)
+> und wartet auf Gregors Test. **Veröffentlicht** ist bei GitHub `v1.0.50`
+> (13.09.2026). Hier steht bewusst keine zweite Fassung dieser Tabelle.
+>
 > | Messung | Ergebnis |
 > |---|---|
 > | `Eudora.vcxproj` einzeln (`-p:BuildProjectReferences=false`) | **0 Fehler** — `Eudora.exe`, 10 203 136 Byte |
@@ -1020,12 +1024,15 @@ Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
 `ImapDownload.cpp` auf `FindMIMECharset()` umstellen; das ist eine eigene
 Änderung mit eigenen Tests.
 
-> **Erledigt am 13.09.2026 als E-85.** Genau diese Umstellung ist in 7.2.0.51
-> gebaut: `ImapDownload.cpp:4671` ruft jetzt `FindMIMECharset(params->value)`,
-> die Wächterbedingung darunter heißt `if (iCharsetIdx > 2)` (`:4688`) statt
-> `> 1`, und damit rechnen POP3 und IMAP auf **derselben** Skala. Am Quelltext
-> belegt, von Gregor noch nicht am laufenden Programm bestätigt — Einzelheiten
-> unter **E-85** in `BEFUNDE.md`.
+> **Erledigt am 13./14.09.2026 als E-85.** Genau diese Umstellung ist in
+> 7.2.0.51 gebaut: `ImapDownload.cpp:4742` ruft jetzt `FindMIMECharset()`, die
+> Wächterbedingung darunter heißt `if (iCharsetIdx > 2)` (`:4785`) statt `> 1`,
+> und damit rechnen POP3 und IMAP auf **derselben** Skala. **Das allein hat den
+> Fehler nicht behoben:** der IMAP-Weg durchsuchte weiterhin den Top-Level-Kopf
+> (`m_pHd->m_TLMime`), in dem bei `multipart/alternative` gar kein `charset`
+> steht. Erst **7.2.0.52** nimmt den Zeichensatz aus dem MIME-Teil
+> (`m_szCurrentCharset`, `ImapDownload.cpp:2837, 3074, 3324`). **Am laufenden
+> Programm belegt** — Einzelheiten unter **E-85** in `BEFUNDE.md`.
 
 ### Nebenbefund 2: zwei Aufrufer werten die neue Länge nicht aus
 
@@ -1052,7 +1059,7 @@ ein Grund, diesen Befund bald anzugehen — er liegt aber in `TextReader.cpp` un
 > **Erledigt am 13.09.2026 als E-85, Teil (1).** `ImapDownload.cpp` wertet den
 > Rückgabewert jetzt aus: `LONG lUebersetzt = ISOTranslateChunk(...)`, und bei
 > `lUebersetzt >= 0` gehen `inLen` **und** `outLen` auf den neuen Wert
-> (`:4705-4711`). `TextReader.cpp` hatte es schon richtig.
+> (`:4802-4808`). `TextReader.cpp` hatte es schon richtig.
 
 ### Neues Werkzeug: `tools/ersetze-bereich.pl`
 
@@ -1118,7 +1125,7 @@ ist (Nebenbefund 1 oben) und eine Änderung ungeprüft bliebe.
 > **Erledigt am 13.09.2026 als E-85, Teil (2).** Der Übertrag steckt jetzt in
 > einer eigenen Funktion, `ISOTranslateChunk` (`Eudora/utils.cpp:1269`,
 > deklariert in `utils.h:93`), statt im Aufrufer — `TextReader::ReadIt` und
-> `ImapDownload.cpp:4705` benutzen dieselbe. Sie hält die angefangenen Bytes
+> `ImapDownload.cpp:4802` benutzen dieselbe. Sie hält die angefangenen Bytes
 > zurück und versetzt den Puffer, wenn sie eingearbeitet sind. Vier Tests über
 > alle Stückgrößen in `Tests/TestIsoTranslate.cpp`; der Voraussetzung
 > „Index um eins verschoben" ist mit Nebenbefund 1 die Grundlage entzogen.
