@@ -2922,6 +2922,7 @@ bool E88OriginalEinsetzen(
 		const char*			pszOriginalHtml,
 		const char*			pszEditorText,
 		char				cAntwortTyp,
+		bool				bAnwenderHatGetippt,
 		CString&			out_szNeuerRumpf,
 		CString&			out_szSpur )
 {
@@ -2961,7 +2962,45 @@ bool E88OriginalEinsetzen(
 		{
 			nFund = szEditorText.Find(szOrigText);
 			if (nFund < 0)
-				szUrteil = "EDITOR (Anwender hat im Zitat geaendert)";
+			{
+				//
+				// Der Klartext des Originals steckt nicht als ein Stueck in
+				// der Editorfassung. Bis zum 14.09.2026 hiess das immer
+				// "der Anwender hat im Zitat geaendert", und die magere
+				// Editorfassung ging hinaus.
+				//
+				// GEMESSEN AN GREGORS LAUF mit 1.0.58, beim Weiterleiten
+				// einer bereits weitergeleiteten Nachricht (Fw: Fw:):
+				//
+				//   Fassung=EDITOR (Anwender hat im Zitat geaendert)
+				//   OrigBytes=105125 EditorBytes=17889 Fundstelle=-1
+				//
+				// Er hatte nichts geaendert. Hinaus gingen trotzdem 17889
+				// statt 105125 Byte - 83 Prozent des Inhalts fehlten, und
+				// niemand haette es gemerkt. Bei verschachtelten Zitaten
+				// baut Paige den Text so um, dass der Vergleich ins Leere
+				// greift.
+				//
+				// Deshalb zaehlt jetzt zuerst, ob der Anwender ueberhaupt
+				// etwas getippt hat. Paige fuehrt darueber Buch
+				// (CPaigeEdtView::HasChanged, PaigeEdtView.h:193). Hat er
+				// nichts angefasst, gibt es nichts zu schuetzen, und das
+				// Original geht hinaus - ohne Zusatz davor, denn es gibt
+				// keinen.
+				//
+				// Die Regel kann nur helfen, nie schaden: sie greift
+				// ausschliesslich, wenn nachweislich nicht getippt wurde.
+				// Im Zweifel bleibt es bei der bisherigen Entscheidung.
+				//
+				if (bAnwenderHatGetippt)
+					szUrteil = "EDITOR (Anwender hat im Zitat geaendert)";
+				else
+				{
+					nFund    = 0;
+					nVorLen  = 0;
+					nNachLen = 0;
+				}
+			}
 			else
 			{
 				nVorLen  = nFund;
@@ -3047,9 +3086,10 @@ bool E88OriginalEinsetzen(
 	//
 	out_szSpur.Format(
 		"E-88 vor dem Absenden: Fassung=%s Schalter=%d OrigBytes=%d EditorBytes=%d "
-		"NeuBytes=%d ZusatzVor=%d ZusatzNach=%d Fundstelle=%d Typ=%d",
+		"NeuBytes=%d ZusatzVor=%d ZusatzNach=%d Fundstelle=%d Typ=%d getippt=%d",
 		(LPCTSTR) szUrteil, nSchalter, nOrigLen, nEditorLen,
-		out_szNeuerRumpf.GetLength(), nVorLen, nNachLen, nFund, (int) cAntwortTyp );
+		out_szNeuerRumpf.GetLength(), nVorLen, nNachLen, nFund, (int) cAntwortTyp,
+		bAnwenderHatGetippt ? 1 : 0 );
 
 	return bErsetzt;
 }
@@ -3141,13 +3181,13 @@ bool E88OriginalEinsetzen(
 #define E89_MAX_BREITE		600
 #define E89_MAX_HOEHE		600
 
+#define E89_VORGABE_KLEIN	20
+
 // Vorgabemasse fuer ein Bild, dessen Groesse nirgends steht. Hier gibt es
 // nichts zu rechnen - weder Originalgroesse noch Seitenverhaeltnis sind
 // bekannt, und nachgeladen wird beim Verfassen nichts. Die Hoehe ist die
 // wichtige Zahl: sie bestimmt, wie weit der Zeilenabstand aufreisst, und
 // damit die Lesbarkeit.
-#define E89_VORGABE_BREITE	200
-#define E89_VORGABE_HOEHE	90
 
 
 //
@@ -3357,7 +3397,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 	int		nBilder = 0;		// <img> insgesamt
 	int		nSchonGut = 0;		// unveraendert gelassen
 	int		nAusCss = 0;		// mindestens ein Mass aus style="..." geholt
-	int		nVorgabe = 0;		// mindestens ein Mass geraten
+	int		nOhneMass = 0;		// kein Mass bekannt - Bild unangetastet gelassen
 	int		nGedeckelt = 0;		// war breiter oder hoeher als der Deckel
 
 	const int	nLen = pszHtml ? (int) strlen(pszHtml) : 0;
@@ -3455,7 +3495,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		// noch treffen kann.
 		//
 		bool	bProzB = false, bProzH = false;
-		bool	bAusCss = false, bGeraten = false;
+		bool	bAusCss = false;
 
 		int		nBreite = bHatBreite ? E89ZahlLesen((LPCTSTR) szBreiteWert, bProzB) : 0;
 		int		nHoehe  = bHatHoehe  ? E89ZahlLesen((LPCTSTR) szHoeheWert,  bProzH) : 0;
@@ -3496,21 +3536,45 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 			}
 		}
 
-		if (nBreite <= 0)
+		//
+		// Ist nach Attribut und CSS kein Mass bekannt, bekommt das Bild ein
+		// KLEINES Vorgabemass - gerade so hoch wie eine Textzeile.
+		//
+		// Der Weg dahin, in drei Schritten an einem Tag:
+		//
+		//  1. 7.2.0.57 gab 200x90 vor. Auf Gregors Bild stand daraufhin ein
+		//     grosser grauer Kasten mitten im Text.
+		//  2. 7.2.0.58/59 liess das Bild ganz in Ruhe. Dann fehlt aber das
+		//     height-Attribut, und genau daran haengt die Zeilenhoehe:
+		//     image_record.source_height kommt aus numeric_value() ueber das
+		//     ATTRIBUT (PGHTMIMP.CPP:2022), nicht aus der Bilddatei. Ohne
+		//     Attribut ist der Wert null, der ganze Block wird uebersprungen,
+		//     die Zeile bleibt textklein - und der Text wird zugedeckt.
+		//     Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+		//     "gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0", und der
+		//     blaue Kreis lag ueber dem Verifizierungscode.
+		//  3. Jetzt ein kleines Mass. Die Zeile wird so hoch, dass nichts
+		//     zugedeckt wird, und der Platzhalter faellt kaum auf.
+		//
+		// Den grauen Kasten selbst gibt es so oder so: Paige zeichnet ihn fuer
+		// jedes Bild, das es nicht geladen hat - auf Gregors Bildern stehen
+		// welche in ECHTEN Bildmassen. Die Frage ist nur, wie gross er ist.
+		//
+		// Gregors Entscheidung am 14.09.2026 zwischen kleiner Vorgabe, gar
+		// keiner und den alten 200x90: "ok, option a".
+		//
+		if (nBreite <= 0 && nHoehe <= 0)
 		{
-			nBreite = E89_VORGABE_BREITE;
-			bProzB  = false;
-			if (nHoehe > 0 && nHoehe < nBreite)
-				nBreite = nHoehe;			// kleines Sinnbild bleibt klein
-			bGeraten = true;
+			nBreite = E89_VORGABE_KLEIN;
+			nHoehe  = E89_VORGABE_KLEIN;
+			nOhneMass++;
 		}
-
-		if (nHoehe <= 0)
+		else if (nHoehe <= 0)
 		{
-			nHoehe = E89_VORGABE_HOEHE;
-			if (!bProzB && nBreite > 0 && nBreite < nHoehe)
-				nHoehe = nBreite;			// kleines Sinnbild bleibt klein
-			bGeraten = true;
+			// Breite bekannt, Hoehe nicht: die Zeilenhoehe haengt an der
+			// Hoehe, also muss sie dastehen.
+			nHoehe = E89_VORGABE_KLEIN;
+			nOhneMass++;
 		}
 
 		//
@@ -3563,7 +3627,6 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		}
 
 		if (bAusCss)	nAusCss++;
-		if (bGeraten)	nVorgabe++;
 		if (bGedeckelt)	nGedeckelt++;
 
 		//
@@ -3604,7 +3667,12 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 		szAus += CString(pszHtml + nKopiertAb, (i + 4) - nKopiertAb);
 		szAus += szRest;
-		szAus += " width=\"" + szNeueBreite + "\" height=\"" + szNeueHoehe + "\"";
+		// Nur schreiben, was bekannt ist. Ein Bild, von dem nur die Breite
+		// im CSS steht, bekommt width - und keine erfundene Hoehe.
+		if (nBreite > 0)
+			szAus += " width=\"" + szNeueBreite + "\"";
+		if (nHoehe > 0)
+			szAus += " height=\"" + szNeueHoehe + "\"";
 		if (bSelbstSchliessend)
 			szAus += " /";
 		szAus += ">";
@@ -3623,8 +3691,8 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 	out_szSpur.Format(
 		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
-		"Vorgabe=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
-		nBilder, nSchonGut, nAusCss, nVorgabe, nGedeckelt, bGeaendert ? 1 : 0,
+		"ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		nBilder, nSchonGut, nAusCss, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
 		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
 
 	return bGeaendert;

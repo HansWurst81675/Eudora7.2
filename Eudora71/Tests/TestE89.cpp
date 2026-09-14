@@ -105,26 +105,22 @@ void RunE89Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------- (3)
-	TT_BeginTest("E-89: gar keine Groessenangabe - die Vorgabe greift");
+	TT_BeginTest("E-89: gar keine Groessenangabe - kleine Vorgabe, damit die Zeile stimmt");
 	{
-		CString		szB, szH;
-		szB.Format("width=\"%d\"", UTE89_VorgabeBreite());
-		szH.Format("height=\"%d\"", UTE89_VorgabeHoehe());
-
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"https://example.invalid/bild.jpg\" alt=\"Bild\">"
 			"</body></html>", szAus, szSpur);
 
-		// Hier ist nichts zu rechnen: weder Originalgroesse noch
-		// Seitenverhaeltnis sind bekannt, und nachgeladen wird beim
-		// Verfassen nichts. Der Test haelt die getroffene Entscheidung
-		// fest, damit sie nicht unbemerkt wandert.
-		TT_CHECK(bGeaendert);
-		TT_CHECK(szAus.Find(szB) >= 0);
-		TT_CHECK(szAus.Find(szH) >= 0);
-		TT_CHECK(szSpur.Find("Vorgabe=1") >= 0);
+		// Bis zum 14.09.2026 wurde hier eine Vorgabe von 200x90 eingesetzt.
+		// Auf Gregors Bild zu 1.0.57 erschien sie als leerer grauer Kasten
+		// mitten im Text: Platz, der weggenommen wird, ohne dass etwas zu
+		// sehen ist. Eine geratene Zahl ist schlechter als keine - Paige
+		// kennt die wirkliche Groesse, sobald es die Datei geladen hat.
+		TT_CHECK_MSG(bGeaendert,
+					 "ohne Hoehe bleibt die Zeile textklein und der Text wird zugedeckt");
+		TT_CHECK(szAus.Find("height=\"20\"") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);
-		TT_Note("%s", (LPCTSTR) szAus);
 	}
 	TT_EndTest();
 
@@ -170,17 +166,13 @@ void RunE89Tests(void)
 	// ------------------------------------------------------------- (5b)
 	TT_BeginTest("E-89 Gegenprobe: max-width darf nicht als width durchgehen");
 	{
-		CString		szB;
-		szB.Format("width=\"%d\"", UTE89_VorgabeBreite());
-
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"x.png\" style=\"max-width:480px\"></body></html>",
 			szAus, szSpur);
 
-		TT_CHECK(bGeaendert);
 		TT_CHECK_MSG(szAus.Find("width=\"480\"") < 0,
 					 "max-width ist eine Obergrenze, keine Breite - 480 waere geraten");
-		TT_CHECK(szAus.Find(szB) >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szAus);
 	}
 	TT_EndTest();
@@ -203,19 +195,17 @@ void RunE89Tests(void)
 	// ------------------------------------------------------------- (6b)
 	TT_BeginTest("E-89 Gegenprobe: Prozenthoehe wird NICHT zur Pixelzahl");
 	{
-		CString		szH;
-		szH.Format("height=\"%d\"", UTE89_VorgabeHoehe());
-
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"x.png\" style=\"height:50%\"></body></html>",
 			szAus, szSpur);
 
-		TT_CHECK(bGeaendert);
+		TT_CHECK_MSG(szAus.Find("height=\"50\"") < 0,
+					 "aus einer Prozenthoehe darf keine Pixelzahl werden");
 		// numeric_value liest bei der Hoehe nur die Zahl
 		// (PGHTMIMP.CPP:2022) - aus "50%" wuerden 50 Bildpunkte.
 		TT_CHECK_MSG(szAus.Find("height=\"50\"") < 0,
 					 "Aus einer Prozenthoehe darf keine Pixelzahl werden");
-		TT_CHECK(szAus.Find(szH) >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szAus);
 	}
 	TT_EndTest();
@@ -223,18 +213,14 @@ void RunE89Tests(void)
 	// ------------------------------------------------------------- (6c)
 	TT_BeginTest("E-89 Gegenprobe: em und auto werden nicht als Pixel gelesen");
 	{
-		CString		szB;
-		szB.Format("width=\"%d\"", UTE89_VorgabeBreite());
-
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"a.png\" style=\"width:10em\">"
 			"<img src=\"b.png\" style=\"width:auto\"></body></html>", szAus, szSpur);
 
-		TT_CHECK(bGeaendert);
+		TT_CHECK_MSG(szAus.Find("width=\"10\"") < 0,
+					 "10em ist nicht 10 Bildpunkte");
 		TT_CHECK_MSG(szAus.Find("width=\"10\"") < 0, "10em ist nicht 10 Bildpunkte");
-		// zweimal die Vorgabe, also zwei Treffer
-		TT_CHECK(szAus.Find(szB) >= 0);
-		TT_CHECK(szAus.Find(szB, szAus.Find(szB) + 1) >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=2") >= 0);
 		TT_CHECK(szSpur.Find("gesamt=2") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);
 		TT_Note("%s", (LPCTSTR) szAus);
@@ -344,7 +330,7 @@ void RunE89Tests(void)
 		// Attribute geht und nicht den ueber den Platzhalter.
 		UTE88_SetSchalter(1);
 		bool	bErsetzt = UTE88_OriginalEinsetzen(kOriginalMitCss, (LPCTSTR) szEditor,
-												   4, szNeu, szSpur88);
+												    4, true, szNeu, szSpur88);
 
 		TT_CHECK_MSG(bErsetzt, "E-89 hat E-88 den Weg zum Original verbaut");
 		TT_CHECK(szSpur88.Find("Fassung=ORIGINAL") >= 0);
@@ -372,7 +358,7 @@ void RunE89Tests(void)
 		UTE88_SetSchalter(1);
 		bool	bErsetzt = UTE88_OriginalEinsetzen(kOriginalMitCss,
 												   (LPCTSTR) szMitPlatzhalter,
-												   4, szNeu, szSpur88);
+												    4, true, szNeu, szSpur88);
 
 		TT_CHECK_MSG(!bErsetzt, "Mit Platzhalter muesste der Vergleich scheitern - "
 								"tut er es nicht, ist die Begruendung von E-89 falsch");
@@ -396,7 +382,7 @@ void RunE89Tests(void)
 		TT_CHECK(szSpur.Find("gesamt=4") >= 0);
 		TT_CHECK(szSpur.Find("unveraendert=1") >= 0);
 		TT_CHECK(szSpur.Find("aus-CSS=1") >= 0);
-		TT_CHECK(szSpur.Find("Vorgabe=1") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_CHECK(szSpur.Find("gedeckelt=1") >= 0);
 		// Das unangetastete Bild muss wortgleich dastehen.
 		TT_CHECK(szAus.Find("<img src=\"a.png\" width=\"100\" height=\"50\">") >= 0);

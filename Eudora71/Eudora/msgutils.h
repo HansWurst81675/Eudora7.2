@@ -50,6 +50,7 @@ bool E88OriginalEinsetzen(
 				const char *		pszOriginalHtml,
 				const char *		pszEditorText,
 				char				cAntwortTyp,
+				bool				bAnwenderHatGetippt,
 				CString &			out_szNeuerRumpf,
 				CString &			out_szSpur);
 

@@ -21,6 +21,7 @@ void UTE88_SetSchalter(int nWert);
 bool UTE88_OriginalEinsetzen(const char* pszOriginalHtml,
 							 const char* pszEditorText,
 							 char cAntwortTyp,
+							 bool bAnwenderHatGetippt,
 							 CString& out_szNeuerRumpf,
 							 CString& out_szSpur);
 

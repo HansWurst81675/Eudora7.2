@@ -354,21 +354,26 @@ static void Test_EmojiWirdZuFragezeichen(void)
 	// blieben alle vier Bytes stehen und wurden als vier CP1252-Zeichen
 	// angezeigt: der Zeichensalat.
 	//
-	// Gemessen: der Wandler liefert ZWEI Fragezeichen, nicht eines. Ein Zeichen
+	// Bis zum 14.09.2026 wurden daraus ZWEI Fragezeichen - ein Zeichen
 	// ausserhalb der BMP ist in UTF-16 ein Ersatzzeichenpaar, und
-	// WideCharToMultiByte setzt fuer jede der beiden Haelften ein Ersatzzeichen.
-	// Zwei Fragezeichen statt vier Salatzeichen - das ist der Gewinn.
-	static const unsigned char szExpected[] = { '?', '?' };
+	// WideCharToMultiByte setzt fuer jede Haelfte eines. Auf Gregors Bild zu
+	// 1.0.58 stand daraufhin eine Reihe von vierzig "??" quer ueber den Text:
+	// "das mit den vielen fragezeichen gefaellt mir immer noch nicht".
+	//
+	// Seither wird das Zeichen GESTRICHEN. Ein Emoji, das sich nicht
+	// darstellen laesst, traegt keine Information, die ein Fragezeichen
+	// rettet - es war Schmuck. Vierzig Fragezeichen sehen dagegen nach Fehler
+	// aus. Gregors Entscheidung: "versuchen wir dann B".
 	unsigned char szOut[32];
 	long lRet;
 
-	TT_BeginTest("ISOTranslate: ein Emoji (vier Byte) wird zu Fragezeichen statt zu Bytesalat");
+	TT_BeginTest("ISOTranslate: ein Emoji (vier Byte) faellt ersatzlos weg");
 
 	lRet = TranslateCp(0x1F600, szOut, sizeof(szOut));
 
-	if (lRet != (long)sizeof(szExpected) || memcmp(szOut, szExpected, sizeof(szExpected)) != 0)
-		TT_Fail("U+1F600 (F0 9F 98 80) -> erwartet %s, erhalten %ld Bytes: %s",
-				Hex(szExpected, (long)sizeof(szExpected)), lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+	if (lRet != 0)
+		TT_Fail("U+1F600 (F0 9F 98 80) -> erwartet 0 Bytes, erhalten %ld: %s",
+				lRet, Hex(szOut, lRet > 0 ? lRet : 0));
 
 	TT_EndTest();
 }
@@ -469,6 +474,16 @@ static void Test_JedesZeichenWirdZuGenauEinemByte(void)
 		long lRet;
 
 		if (lCp >= 0xD800 && lCp <= 0xDFFF) continue;	// Ersatzzeichenbereich
+
+		// Seit dem 14.09.2026 werden unsichtbare Zeichen GESTRICHEN statt
+		// zu Fragezeichen gemacht - sie sind unsichtbar gemeint, und in
+		// Newslettern stehen sie zu Dutzenden zwischen den Buchstaben
+		// (eine verbreitete Technik gegen Spamfilter). Fuer sie gilt die
+		// Regel "genau ein Byte" also nicht mehr; sie werden zu null Bytes.
+		if (lCp >= 0x200B && lCp <= 0x200F) continue;	// Zero Width, Richtungsmarken
+		if (lCp >= 0x2060 && lCp <= 0x2064) continue;	// Word Joiner und Nachbarn
+		if (lCp >= 0xFE00 && lCp <= 0xFE0F) continue;	// Variationswaehler
+		if (lCp == 0xFEFF)                  continue;	// Byte Order Mark
 		if (lCp >= 0xFDD0 && lCp <= 0xFDEF) continue;	// Nichtzeichen
 		if ((lCp & 0xFFFE) == 0xFFFE)       continue;	// Nichtzeichen
 
@@ -507,7 +522,7 @@ static void Test_NewsletterMitEmoji(void)
 	{
 		0x84,'A','n','g','e','b','o','t',0x93,' ',0x96,' ',
 		'j','e','t','z','t',' ','f',0xFC,'r',' ','9',',','9','9',' ',0x80,
-		' ', '?','?', ' ','G','r',0xFC,0xDF,'e',0x92
+		' ', ' ','G','r',0xFC,0xDF,'e',0x92
 	};
 	unsigned char szIn[128];
 	unsigned char szOut[128];
@@ -872,32 +887,16 @@ static void Test_ChunkDreibyteUndVierbyte(void)
 			TT_Note("  erwartet: %s", Hex(szEuroS, (long)sizeof(szEuroS)));
 		}
 
-		// Das Emoji U+1F600 ist in UTF-16 ein Surrogatpaar und wird ohne
-		// Stueckelung zu ZWEI Fragezeichen. Faellt die Grenze so, dass nur
-		// ein Byte Platz bleibt, wird auf eines gekuerzt. Beides ist richtig;
-		// falsch waere nur, wenn das Zeichen ganz verschwaende oder 'a' und
-		// 'b' litten.
+		// Das Emoji U+1F600 faellt seit dem 14.09.2026 ersatzlos weg (E-90),
+		// auch ueber eine Stueckgrenze hinweg. Uebrig bleiben 'a' und 'b'
+		// unmittelbar nebeneinander. Falsch waere, wenn 'a' oder 'b' litten
+		// oder rohe UTF-8-Bytes stehenblieben.
 		lAus = ChunkLauf(szEmo, (long)sizeof(szEmo), lStueck, IDX_UTF8,
 						 szAus, (long)sizeof(szAus));
-		if (lAus < 3 || lAus > 4 ||
-			szAus[0] != 'a' || szAus[lAus - 1] != 'b')
+		if (lAus != 2 || szAus[0] != 'a' || szAus[1] != 'b')
 		{
-			TT_Fail("Emoji, Stueckgroesse %ld: Rahmen stimmt nicht", lStueck);
+			TT_Fail("Emoji, Stueckgroesse %ld: erwartet 61 62", lStueck);
 			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
-			TT_Note("  erwartet: 61 3F [3F] 62");
-		}
-		else
-		{
-			long i;
-			for (i = 1; i < lAus - 1; ++i)
-			{
-				if (szAus[i] != '?')
-				{
-					TT_Fail("Emoji, Stueckgroesse %ld: Byte %ld ist kein Fragezeichen",
-							lStueck, i);
-					TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus));
-				}
-			}
 		}
 	}
 

@@ -59,6 +59,128 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
+
+> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Der
+> blaue Kreis darf den Verifizierungscode nicht mehr zudecken.
+
+**Warum es einen dritten Anlauf braucht — wir haben uns selbst im Weg
+gestanden.** Die Zeilenhöhe hängt an `image_record.source_height`, und der Wert
+kommt aus dem **`height`-Attribut** der Nachricht (`PGHTMIMP.CPP:2022`), nicht
+aus der Bilddatei. Fehlt das Attribut, ist er null, der ganze Block wird
+übersprungen, und die Zeile bleibt textklein. Genau dann deckt das Bild den Text
+zu.
+
+Die 200×90-Vorgabe, die in 7.2.0.58 **entfernt** wurde, war das, was diesen Wert
+bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+
+```
+E-89 Bilder im Editor: gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0
+```
+
+Ein Bild ohne Maß — und der blaue Kreis lag über dem Code.
+
+**Jetzt ein kleines Maß**, gerade so hoch wie eine Textzeile (20 Punkte). Die
+Zeile wird so hoch, dass nichts zugedeckt wird, und der Platzhalter fällt kaum
+auf. Den grauen Kasten selbst gibt es ohnehin: Paige zeichnet ihn für jedes
+Bild, das es nicht geladen hat — auf Gregors Bildern stehen welche in **echten**
+Bildmaßen. Die Frage war nur, wie groß er ist.
+
+Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt),
+20×20. Gregors Entscheidung: *„ok, option a"*.
+
+**Tests: 150 von 150.**
+
+## 7.2.0.59 — kein Inhaltsverlust mehr beim Weiterleiten (E-93), und die Fragezeichen sind weg (E-90)
+
+> **Noch nicht bestätigt.** Die Prüfanleitung steht unten.
+
+### E-93: beim Weiterleiten gingen 83 Prozent des Inhalts verloren
+
+Gefunden am 14.09.2026 beim Vergleich zweier Bilder: dieselbe Nachricht, einmal
+über Thunderbird weitergeleitet, einmal über Eudora. Die Eudora-Fassung zeigte
+ein zu einem Streifen gequetschtes Logo. **Die eingebaute Spurmarke nannte die
+Ursache in einer Zeile:**
+
+```
+Fassung=EDITOR (Anwender hat im Zitat geaendert)
+OrigBytes=105125  EditorBytes=17889  Fundstelle=-1
+```
+
+Hinaus gingen **17.889 statt 105.125 Byte**, obwohl niemand etwas angefasst
+hatte. E-88 prüft, ob der Klartext des Originals als ein zusammenhängendes
+Stück in der Editorfassung steckt. Bei einer Weiterleitung **einer bereits
+weitergeleiteten** Nachricht (`Fw: Fw:`) baut Paige den verschachtelten Text so
+um, dass der Vergleich ins Leere greift — und der Fehlschlag wurde als „der
+Anwender hat im Zitat geändert" gedeutet.
+
+**Jetzt wird zuerst gefragt, ob überhaupt getippt wurde.** Paige führt darüber
+Buch (`CPaigeEdtView::HasChanged`). Hat der Anwender nichts angefasst, gibt es
+nichts zu schützen, und das Original geht hinaus. Die Regel greift
+ausschließlich in diesem Fall; im Zweifel bleibt alles beim Alten.
+
+### E-90: nicht darstellbare Zeichen fallen weg statt zu Fragezeichen zu werden
+
+Ein Emoji ergab **zwei** Fragezeichen, weil es außerhalb der Grundebene liegt
+und Windows jede Hälfte des Surrogatpaars einzeln ersetzt. Unsichtbare Zeichen
+(Zero-Width-Space und Verwandte, in Newslettern zu Dutzenden zwischen den
+Buchstaben) wurden ebenfalls zu Fragezeichen. Beides fällt jetzt ersatzlos weg.
+Kyrillisch, Griechisch und Polnisch bleiben unangetastet.
+
+## Zum Prüfen
+
+| | |
+|---|---|
+| **1. Der Inhaltsverlust** | Die verschachtelte Weiterleitung (`Fw: Fw:`) noch einmal weiterleiten, **ohne etwas dazuzuschreiben**. Die angekommene Nachricht muss so vollständig aussehen wie die Thunderbird-Fassung |
+| **2. Die Gegenprobe** | Dasselbe noch einmal, aber **etwas dazuschreiben**. Der eigene Text muss ankommen |
+| **3. Im Protokoll** | `LogLevel=58527`. Bei 1 muss `Fassung=ORIGINAL` und `getippt=0` stehen, bei 2 `Fassung=EDITOR` und `getippt=1` |
+| **4. Die Fragezeichen** | Eine Nachricht mit Emoji ansehen. Statt `?? ?? ??` steht dort jetzt nichts |
+
+**Tests: 150 von 150**, zwei davon neu — der zweite ist die Gegenprobe, ohne
+die die neue Regel den eigenen Text verschlucken könnte.
+
+## 7.2.0.58 — die Bildhöhe zählt wieder für die Zeilenhöhe (E-89)
+
+> **Von Gregor am 14.09.2026 an 1.0.58 bestätigt.** Auf seinem Bild steht die
+> Tonerkartusche sauber über ihrem Text, „Artikelnummer" und „Nachbestellung
+> mit Order No" sind frei und lesbar. Auf die Rückfrage, wo noch etwas
+> überlappe: *„keine überlappung."*
+
+**Die Ursache war eine einzige tote Zeile.** In `PGHTMIMP.CPP:2110-2111` stand:
+
+```c
+current_style.ascent = image_record.source_height;   // Bildhöhe gesetzt
+current_style.ascent = (short)original_descent;      // … sofort überschrieben
+```
+
+`original_descent` stammt aus dem **Textstil**, aufgenommen bevor das Bild
+überhaupt bekannt war. Übrig blieb `ascent = max(Text-Ascent, Text-Descent)` —
+drei bis zwölf Bildpunkte, **unabhängig davon, wie hoch das Bild ist**. Ein
+150 Punkt hohes Bild saß in einer textkleinen Zeile und deckte zu, was darüber
+stand. Die zweite Zeile ist gestrichen; damit wirkt die erste wie beabsichtigt.
+
+**Dass diese Stelle zählt, ist gemessen:** `ProcessEmbed` (`:2962`) setzt
+`translator.format = current_style`, und der Aufruf steht zwanzig Zeilen
+darunter.
+
+**Der Umweg aus 7.2.0.57 ist zurückgenommen.** Die Vorgabe 200×90 für Bilder
+ohne bekanntes Maß erschien auf Gregors Bild als leerer grauer Kasten: Platz,
+der weggenommen wird, ohne dass etwas zu sehen ist. Ein Bild ohne Maß bleibt
+jetzt unangetastet — Paige kennt die wirkliche Größe, sobald es die Datei
+geladen hat. Dabei fiel ein zweiter Fehler auf: die Vorgabe traf auch Bilder,
+von denen **nur die Breite** bekannt war; die bekommen jetzt ihre Breite und
+keine erfundene Höhe. Der Deckel gegen zu breite Bilder bleibt.
+
+**Wie 7.2.0.57 sich widerlegt hat:** die eingebaute Spurmarke nannte in
+Gregors Lauf `gesamt=25 unveraendert=22 aus-CSS=0 gedeckelt=0` — kein einziges
+Bild hatte seine Größe im CSS, keines war zu breit, geändert wurden 48 Bytes
+von 62.057. Die Bilder überlappten, **obwohl ihre Größe stimmte**. Damit war
+die Größe als Ursache ausgeschlossen und die Suche auf die **Position**
+gelenkt.
+
+**Tests: 148 von 148.** Vier davon umgeschrieben, weil sie die Vorgabe
+festhielten; sie prüfen jetzt das Gegenteil.
+
 ## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
 
 > **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,

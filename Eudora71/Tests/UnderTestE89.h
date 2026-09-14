@@ -23,7 +23,5 @@ bool UTE89_BilderMessbarMachen(const char* pszHtml,
 // eine Aenderung des Deckels im Test nicht auf.
 int UTE89_MaxBreite(void);
 int UTE89_MaxHoehe(void);
-int UTE89_VorgabeBreite(void);
-int UTE89_VorgabeHoehe(void);
 
 #endif

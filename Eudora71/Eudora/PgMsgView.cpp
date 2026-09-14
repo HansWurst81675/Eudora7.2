@@ -433,7 +433,7 @@ void PgMsgView::ExportMessage( CMessageDoc* pMsgDoc /* = NULL */ )
 		CString				szSpur;
 
 		if ( E88OriginalEinsetzen( (LPCTSTR) pComp->m_szE88OriginalHTML, pMem,
-								   pComp->m_ResponseType, szNeuerRumpf, szSpur ) )
+								   pComp->m_ResponseType, HasChanged(), szNeuerRumpf, szSpur ) )
 		{
 			pDoc->SetText( (LPCTSTR) szNeuerRumpf );
 

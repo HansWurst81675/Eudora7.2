@@ -1531,12 +1531,95 @@ LONG ISOTranslate(LPTSTR szBuf, LONG lSize, UINT iCharsetIdx)
 			iWide = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
 										szBuf, (int)lSize, pwWide, (int)lSize);
 
+			// E-90: was CP1252 nicht darstellen kann, wird GESTRICHEN statt
+			// durch ein Fragezeichen ersetzt.
+			//
+			// Gregor am 14.09.2026 an 1.0.58, zu einem Newsletter, dessen
+			// Betreff und Text mit Emoji gespickt waren: "das mit den vielen
+			// fragezeichen gefaellt mir immer noch nicht". Auf seinem Bild
+			// stand eine Reihe von vierzig "??" quer ueber den Text.
+			//
+			// GEMESSEN am 14.09.2026, was WideCharToMultiByte(1252, 0, ...)
+			// mit diesen Zeichen tut:
+			//
+			//     ZERO WIDTH SPACE      U+200B  ->  '?'
+			//     ZERO WIDTH JOINER     U+200D  ->  '?'
+			//     VARIATION SELECTOR-16 U+FE0F  ->  '?'
+			//     WORD JOINER           U+2060  ->  '?'
+			//     Feuer-Emoji           U+1F525 ->  '??'  (ZWEI, nicht eines)
+			//
+			// Das Emoji ergibt zwei Fragezeichen, weil es ausserhalb der
+			// Grundebene liegt und intern aus einem Surrogatpaar besteht -
+			// Windows ersetzt jede Haelfte einzeln. Die Fragezeichenwueste
+			// ist also doppelt so lang wie die Zahl der Emoji.
+			//
+			// Unsichtbare Zeichen stehen in Newslettern zu Dutzenden zwischen
+			// den Buchstaben, eine verbreitete Technik gegen Spamfilter. Sie
+			// sind unsichtbar gemeint und gehoeren ersatzlos weg.
+			//
+			// Ein Emoji, das sich nicht darstellen laesst, traegt keine
+			// Information, die ein Fragezeichen rettet: es war Schmuck. Vierzig
+			// Fragezeichen sehen dagegen nach Fehler aus. Gregors Entscheidung
+			// zwischen "ein Fragezeichen statt zwei" und "ganz weg": "versuchen
+			// wir dann B".
+			//
+			// BEWUSST ENG: gestrichen wird NUR, was ohnehin unsichtbar ist,
+			// und was ausserhalb der Grundebene liegt (Surrogate). Kyrillisch,
+			// Griechisch, Polnisch bleiben unangetastet - sie tragen Text, und
+			// die Best-Fit-Tabelle holt davon heraus, was sie kann.
+			bool	bGanzGefiltert = false;
+
+			if (iWide > 0)
+			{
+				int		iVon, iNach = 0;
+
+				for (iVon = 0; iVon < iWide; iVon++)
+				{
+					const WCHAR	w = pwWide[iVon];
+
+					// Surrogate: alles ausserhalb der Grundebene, also jedes
+					// Emoji und jedes seltene Schriftzeichen.
+					if (w >= 0xD800 && w <= 0xDFFF)
+						continue;
+
+					// Unsichtbare Steuer- und Formatzeichen.
+					if (w == 0x200B || w == 0x200C || w == 0x200D ||	// Zero Width Space/NJ/J
+						w == 0x200E || w == 0x200F ||					// Links-rechts-Marken
+						(w >= 0x2060 && w <= 0x2064) ||					// Word Joiner und Nachbarn
+						(w >= 0xFE00 && w <= 0xFE0F) ||					// Variationswaehler
+						w == 0xFEFF)									// Byte Order Mark
+						continue;
+
+					pwWide[iNach++] = w;
+				}
+
+				// Merker: hier stand Text, und der Filter hat ihn restlos
+				// weggenommen. Das ist etwas ANDERES als ein gescheitertes
+				// MultiByteToWideChar, das ebenfalls 0 liefert - dort muss
+				// der Tabellenweg einspringen, hier nicht.
+				bGanzGefiltert = (iNach == 0);
+				iWide = iNach;
+			}
+
 			if (iWide > 0)
 			{
 				// A single byte code page never produces more than one byte per
 				// wide character, so the output buffer always fits as well.
 				iOut = WideCharToMultiByte(1252, 0, pwWide, iWide,
 										   pOut, (int)lSize, "?", NULL);
+			}
+
+			// Sind ALLE Zeichen gestrichen worden - ein Text, der nur aus
+			// Emoji bestand -, dann ist das Ergebnis LEER und nicht etwa
+			// unveraendert. Ohne diesen Zweig faellt der Aufruf durch auf den
+			// Tabellenweg, und die rohen UTF-8-Bytes stehen als Bytesalat da:
+			// gemessen am 14.09.2026, "F0 9F 98 80" kam unveraendert durch.
+			if (bGanzGefiltert)
+			{
+				free(pScratch);
+				lSize = 0;
+				szBuf[0] = 0;
+				return 0;
 			}
 
 			if (iOut > 0 && iOut <= lSize)
