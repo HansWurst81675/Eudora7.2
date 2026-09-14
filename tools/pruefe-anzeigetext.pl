@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+# Liefert entmojibake_nur_kodierung_gefiltert().
+use FindBin;
+require "$FindBin::Bin/entmojibaken.pl";
+
 # pruefe-anzeigetext.pl - ein zitierter Oberflaechentext ist eine Behauptung
 # des Programms ueber sich selbst, kein Messwert.
 #
@@ -206,14 +210,18 @@ sub zeilen_aus_diff {
     my $cmd = defined $bereich
             ? "git show $bereich --format= --unified=0 -- $DATEI 2>&1"
             : "git diff --cached --unified=0 -- $DATEI 2>&1";
-    my @neu;
+    my (@neu, @alt);
     for my $z (`$cmd`) {
-        next unless $z =~ /^\+[^+]/;
-        $z =~ s/^\+//;
-        $z =~ s/\r?\n$//;
-        push @neu, $z;
+        if ($z =~ /^\+[^+]/) {
+            (my $t = $z) =~ s/^\+//; $t =~ s/\r?\n$//; push @neu, $t;
+        }
+        elsif ($z =~ /^-[^-]/) {
+            (my $t = $z) =~ s/^-//;  $t =~ s/\r?\n$//; push @alt, $t;
+        }
     }
-    return @neu;
+    # Eine rein umkodierte Zeile ist kein Zuwachs - siehe Kommentar bei
+    # entmojibake_nur_kodierung_gefiltert() in entmojibaken.pl.
+    return entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
 }
 
 sub zeilen_aus_datei {

@@ -40,7 +40,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
-> Stand 14.09.2026, Quellstand **7.2.0.56**, Paketnummer **1.0.56**. Als ZIP
+> Stand 14.09.2026, Quellstand **7.2.0.57**, Paketnummer **1.0.57**. Als ZIP
 > gepackt wurde zuletzt die Fassung davor; 7.2.0.53 behebt **E-83**
 > (Eudora ließ sich nicht beenden)
 > und wartet auf Gregors Test. **Veröffentlicht** ist bei GitHub `v1.0.50`
@@ -1088,7 +1088,7 @@ Dann ist keine der beiden Hälften gültiges UTF-8: `MultiByteToWideChar` scheit
 an `MB_ERR_INVALID_CHARS`, der Rückfall auf `pcXlateTable` findet ebenfalls nichts
 (die Tabelle kennt nur vollständige Folgen), und **beide Bytes bleiben roh
 stehen**. Im Postfach landet `C3 BC` statt `FC`, und die Anzeige — die zu Recht
-`windows-1252` ansagt — macht daraus `Ã¼`.
+`windows-1252` ansagt — macht daraus `ü`.
 
 Das Bild ist verräterisch: **genau ein Umlaut einer Nachricht ist kaputt, alle
 anderen stimmen.** Belegt am 05.09.2026 an einer echten Nachricht (Befund Z-2,

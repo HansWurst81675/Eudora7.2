@@ -244,23 +244,36 @@ $rc = $LASTEXITCODE
 
 # --- 6. Protokoll ----------------------------------------------------------
 
+# Zeilenenden und BOM, gemessen am 14.09.2026 (LEKTOR): dieselbe Fehlerklasse
+# wie L-11.2 in tools/testlauf.ps1 und L-9.15 in Pruefung/PRUEFUNG-ZEIGER.md.
+# Set-Content/Add-Content schreiben unter Windows PowerShell 5.1 CRLF, und
+# -Encoding utf8 setzt eine BOM davor. tools/RELEASES.md trug dadurch BOM und
+# 27 CRLF-Zeilen. Bei testlauf.ps1 wurde das am 09.09.2026 abgestellt, hier
+# nicht - das Nachbarskript blieb stehen, und beim naechsten Release waere der
+# Schaden zurueckgekommen. Deshalb auch hier ueber .NET: LF, kein BOM.
+$ohneBom = New-Object System.Text.UTF8Encoding($false)
 $buch = Join-Path (Join-Path $wurzel 'tools') 'RELEASES.md'
-if (-not (Test-Path $buch)) {
-    Set-Content -LiteralPath $buch -Encoding utf8 -Value @(
+if (-not (Test-Path -LiteralPath $buch)) {
+    $kopf = @(
         '# Veroeffentlichte Releases',
         '',
         'Jede Zeile ist ein Release, das ich veroeffentlicht habe, mit der Freigabe,',
         'auf die es sich stuetzt. Angelegt und gefuellt von',
         '`tools/release-veroeffentlichen.ps1` - siehe dort, warum.',
         '',
+        'Diese Datei ist ein Protokoll vergangener Releases. Sie nennt absichtlich',
+        'alte Fassungsnummern und wird von `tools/doku-pruefen.pl` deshalb als',
+        'Zeitdokument behandelt.',
+        '',
         '| Zeit | Fassung | Freigabe | Ergebnis |',
-        '|---|---|---|---|')
+        '|---|---|---|---|'
+    ) -join "`n"
+    [System.IO.File]::WriteAllText($buch, $kopf + "`n", $ohneBom)
 }
-Add-Content -LiteralPath $buch -Encoding utf8 -Value (
-    '| ' + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + ' | ' + $marke + ' | ' +
-    ($Freigabe -replace '\|', '/') + ' | ' +
-    $(if ($rc -eq 0) { 'veroeffentlicht' } else { 'gh lieferte ' + $rc }) + ' |')
-
+$zeile = '| ' + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + ' | ' + $marke + ' | ' +
+         ($Freigabe -replace '\|', '/') + ' | ' +
+         $(if ($rc -eq 0) { 'veroeffentlicht' } else { 'gh lieferte ' + $rc }) + ' |'
+[System.IO.File]::AppendAllText($buch, $zeile + "`n", $ohneBom)
 Write-Host ('  Protokolliert in ' + $buch)
 Write-Host ''
 exit $rc

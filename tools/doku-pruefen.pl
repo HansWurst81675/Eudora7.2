@@ -126,7 +126,12 @@ my @alle_md = grep { length } split /
 # und wurde deshalb bei jedem Lauf unter "Zur Kenntnis" gemeldet, ohne dass
 # jemand etwas daran tun konnte. Eine Schranke, die umsonst warnt, wird
 # ignoriert (Befund X-1).
-my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$|tools/TESTLAEUFE\.md$)};
+# tools/RELEASES.md ist am 14.09.2026 dazugekommen (LEKTOR): dieselbe Klasse -
+# ein von tools/release-veroeffentlichen.ps1 fortgeschriebenes PROTOKOLL
+# veroeffentlichter Releases. Es nennt zwangslaeufig alte Fassungen (die
+# hoechste veroeffentlichte ist v1.0.50, gebaut ist laengst mehr), und kein
+# Mensch konnte an der Meldung etwas aendern, ohne das Protokoll zu faelschen.
+my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$|tools/TESTLAEUFE\.md$|tools/RELEASES\.md$)};
 my @aktuell   = grep { $_ !~ $zeitdokument } @alle_md;
 my @zeitdok   = grep { $_ =~ $zeitdokument } @alle_md;
 

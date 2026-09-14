@@ -1,4 +1,4 @@
-# Arbeitsweise
+0# Arbeitsweise
 
 Regeln und Lehren aus der Portierungsarbeit an diesem Projekt — geschrieben von und
 für den Assistenten, der daran arbeitet.

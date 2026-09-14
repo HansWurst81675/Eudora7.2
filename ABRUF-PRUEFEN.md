@@ -126,7 +126,7 @@ nachdem TLS steht.
 **a) Die Statuszeile** zählt die Nachrichten durch und endet ohne Fehlerdialog.
 
 **b) Der Postfacheintrag** erscheint in `In`. Betreff und Absender müssen lesbar
-sein — **keine** Zeichenketten der Form `=?UTF-8?B?…?=` und keine Folgen wie `Ã¼`
+sein — **keine** Zeichenketten der Form `=?UTF-8?B?…?=` und keine Folgen wie `ü`
 statt `ü`. Die Nachricht öffnen: Umlaute im Text müssen richtig stehen, und am
 Zeilenende darf kein Rest hängen.
 

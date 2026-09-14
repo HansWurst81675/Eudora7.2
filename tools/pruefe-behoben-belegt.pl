@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+# Liefert entmojibake_text() - siehe Kommentar in zeilen_aus_diff().
+use FindBin;
+require "$FindBin::Bin/entmojibaken.pl";
+
 # pruefe-behoben-belegt.pl - ein neues "behoben" ohne Beleg wird abgewiesen.
 #
 # ---------------------------------------------------------------------------
@@ -236,14 +240,24 @@ sub zeilen_aus_diff {
         $cmd = "git show $bereich --format= --unified=0 -- $DATEI 2>&1";
     }
     my @aus = `$cmd`;
-    my @neu;
+    my (@neu, @alt);
     for my $z (@aus) {
-        next unless $z =~ /^\+[^+]/;
-        $z =~ s/^\+//;
-        $z =~ s/\r?\n$//;
-        push @neu, $z;
+        if ($z =~ /^\+[^+]/) {
+            (my $t = $z) =~ s/^\+//; $t =~ s/\r?\n$//; push @neu, $t;
+        }
+        elsif ($z =~ /^-[^-]/) {
+            (my $t = $z) =~ s/^-//;  $t =~ s/\r?\n$//; push @alt, $t;
+        }
     }
-    return @neu;
+
+    # Eine Zeile, die sich NUR in der Kodierung geaendert hat, ist kein
+    # Zuwachs. Am 14.09.2026 hat die Berichtigung von 1517 doppelt
+    # umkodierten Zeilen in BEFUNDE.md diese Schranke 46-mal ausgeloest,
+    # obwohl kein einziges Urteil neu geschrieben wurde - es waren die
+    # alten Zeilen aus dem Bestand, die der Kommentar oben ausdruecklich
+    # in Ruhe lassen will. Darum wird jede entfernte Zeile entmojibakt
+    # und gegen die hinzugefuegten gehalten.
+    return entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
 }
 
 sub zeilen_aus_datei {
