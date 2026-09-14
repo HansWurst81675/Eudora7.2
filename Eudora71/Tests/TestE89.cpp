@@ -330,7 +330,7 @@ void RunE89Tests(void)
 		// Attribute geht und nicht den ueber den Platzhalter.
 		UTE88_SetSchalter(1);
 		bool	bErsetzt = UTE88_OriginalEinsetzen(kOriginalMitCss, (LPCTSTR) szEditor,
-												   4, szNeu, szSpur88);
+												    4, true, szNeu, szSpur88);
 
 		TT_CHECK_MSG(bErsetzt, "E-89 hat E-88 den Weg zum Original verbaut");
 		TT_CHECK(szSpur88.Find("Fassung=ORIGINAL") >= 0);
@@ -358,7 +358,7 @@ void RunE89Tests(void)
 		UTE88_SetSchalter(1);
 		bool	bErsetzt = UTE88_OriginalEinsetzen(kOriginalMitCss,
 												   (LPCTSTR) szMitPlatzhalter,
-												   4, szNeu, szSpur88);
+												    4, true, szNeu, szSpur88);
 
 		TT_CHECK_MSG(!bErsetzt, "Mit Platzhalter muesste der Vergleich scheitern - "
 								"tut er es nicht, ist die Begruendung von E-89 falsch");

@@ -2922,6 +2922,7 @@ bool E88OriginalEinsetzen(
 		const char*			pszOriginalHtml,
 		const char*			pszEditorText,
 		char				cAntwortTyp,
+		bool				bAnwenderHatGetippt,
 		CString&			out_szNeuerRumpf,
 		CString&			out_szSpur )
 {
@@ -2961,7 +2962,45 @@ bool E88OriginalEinsetzen(
 		{
 			nFund = szEditorText.Find(szOrigText);
 			if (nFund < 0)
-				szUrteil = "EDITOR (Anwender hat im Zitat geaendert)";
+			{
+				//
+				// Der Klartext des Originals steckt nicht als ein Stueck in
+				// der Editorfassung. Bis zum 14.09.2026 hiess das immer
+				// "der Anwender hat im Zitat geaendert", und die magere
+				// Editorfassung ging hinaus.
+				//
+				// GEMESSEN AN GREGORS LAUF mit 1.0.58, beim Weiterleiten
+				// einer bereits weitergeleiteten Nachricht (Fw: Fw:):
+				//
+				//   Fassung=EDITOR (Anwender hat im Zitat geaendert)
+				//   OrigBytes=105125 EditorBytes=17889 Fundstelle=-1
+				//
+				// Er hatte nichts geaendert. Hinaus gingen trotzdem 17889
+				// statt 105125 Byte - 83 Prozent des Inhalts fehlten, und
+				// niemand haette es gemerkt. Bei verschachtelten Zitaten
+				// baut Paige den Text so um, dass der Vergleich ins Leere
+				// greift.
+				//
+				// Deshalb zaehlt jetzt zuerst, ob der Anwender ueberhaupt
+				// etwas getippt hat. Paige fuehrt darueber Buch
+				// (CPaigeEdtView::HasChanged, PaigeEdtView.h:193). Hat er
+				// nichts angefasst, gibt es nichts zu schuetzen, und das
+				// Original geht hinaus - ohne Zusatz davor, denn es gibt
+				// keinen.
+				//
+				// Die Regel kann nur helfen, nie schaden: sie greift
+				// ausschliesslich, wenn nachweislich nicht getippt wurde.
+				// Im Zweifel bleibt es bei der bisherigen Entscheidung.
+				//
+				if (bAnwenderHatGetippt)
+					szUrteil = "EDITOR (Anwender hat im Zitat geaendert)";
+				else
+				{
+					nFund    = 0;
+					nVorLen  = 0;
+					nNachLen = 0;
+				}
+			}
 			else
 			{
 				nVorLen  = nFund;
@@ -3047,9 +3086,10 @@ bool E88OriginalEinsetzen(
 	//
 	out_szSpur.Format(
 		"E-88 vor dem Absenden: Fassung=%s Schalter=%d OrigBytes=%d EditorBytes=%d "
-		"NeuBytes=%d ZusatzVor=%d ZusatzNach=%d Fundstelle=%d Typ=%d",
+		"NeuBytes=%d ZusatzVor=%d ZusatzNach=%d Fundstelle=%d Typ=%d getippt=%d",
 		(LPCTSTR) szUrteil, nSchalter, nOrigLen, nEditorLen,
-		out_szNeuerRumpf.GetLength(), nVorLen, nNachLen, nFund, (int) cAntwortTyp );
+		out_szNeuerRumpf.GetLength(), nVorLen, nNachLen, nFund, (int) cAntwortTyp,
+		bAnwenderHatGetippt ? 1 : 0 );
 
 	return bErsetzt;
 }

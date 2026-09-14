@@ -83,9 +83,10 @@ static CString Text2Html(LPCTSTR szSource, BOOL, BOOL)
 bool UTE88_OriginalEinsetzen(const char* pszOriginalHtml,
 							 const char* pszEditorText,
 							 char cAntwortTyp,
+							 bool bAnwenderHatGetippt,
 							 CString& out_szNeuerRumpf,
 							 CString& out_szSpur)
 {
 	return E88OriginalEinsetzen(pszOriginalHtml, pszEditorText, cAntwortTyp,
-								out_szNeuerRumpf, out_szSpur);
+								bAnwenderHatGetippt, out_szNeuerRumpf, out_szSpur);
 }

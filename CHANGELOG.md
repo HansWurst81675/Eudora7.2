@@ -59,6 +59,54 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.59 — kein Inhaltsverlust mehr beim Weiterleiten (E-93), und die Fragezeichen sind weg (E-90)
+
+> **Noch nicht bestätigt.** Die Prüfanleitung steht unten.
+
+### E-93: beim Weiterleiten gingen 83 Prozent des Inhalts verloren
+
+Gefunden am 14.09.2026 beim Vergleich zweier Bilder: dieselbe Nachricht, einmal
+über Thunderbird weitergeleitet, einmal über Eudora. Die Eudora-Fassung zeigte
+ein zu einem Streifen gequetschtes Logo. **Die eingebaute Spurmarke nannte die
+Ursache in einer Zeile:**
+
+```
+Fassung=EDITOR (Anwender hat im Zitat geaendert)
+OrigBytes=105125  EditorBytes=17889  Fundstelle=-1
+```
+
+Hinaus gingen **17.889 statt 105.125 Byte**, obwohl niemand etwas angefasst
+hatte. E-88 prüft, ob der Klartext des Originals als ein zusammenhängendes
+Stück in der Editorfassung steckt. Bei einer Weiterleitung **einer bereits
+weitergeleiteten** Nachricht (`Fw: Fw:`) baut Paige den verschachtelten Text so
+um, dass der Vergleich ins Leere greift — und der Fehlschlag wurde als „der
+Anwender hat im Zitat geändert" gedeutet.
+
+**Jetzt wird zuerst gefragt, ob überhaupt getippt wurde.** Paige führt darüber
+Buch (`CPaigeEdtView::HasChanged`). Hat der Anwender nichts angefasst, gibt es
+nichts zu schützen, und das Original geht hinaus. Die Regel greift
+ausschließlich in diesem Fall; im Zweifel bleibt alles beim Alten.
+
+### E-90: nicht darstellbare Zeichen fallen weg statt zu Fragezeichen zu werden
+
+Ein Emoji ergab **zwei** Fragezeichen, weil es außerhalb der Grundebene liegt
+und Windows jede Hälfte des Surrogatpaars einzeln ersetzt. Unsichtbare Zeichen
+(Zero-Width-Space und Verwandte, in Newslettern zu Dutzenden zwischen den
+Buchstaben) wurden ebenfalls zu Fragezeichen. Beides fällt jetzt ersatzlos weg.
+Kyrillisch, Griechisch und Polnisch bleiben unangetastet.
+
+## Zum Prüfen
+
+| | |
+|---|---|
+| **1. Der Inhaltsverlust** | Die verschachtelte Weiterleitung (`Fw: Fw:`) noch einmal weiterleiten, **ohne etwas dazuzuschreiben**. Die angekommene Nachricht muss so vollständig aussehen wie die Thunderbird-Fassung |
+| **2. Die Gegenprobe** | Dasselbe noch einmal, aber **etwas dazuschreiben**. Der eigene Text muss ankommen |
+| **3. Im Protokoll** | `LogLevel=58527`. Bei 1 muss `Fassung=ORIGINAL` und `getippt=0` stehen, bei 2 `Fassung=EDITOR` und `getippt=1` |
+| **4. Die Fragezeichen** | Eine Nachricht mit Emoji ansehen. Statt `?? ?? ??` steht dort jetzt nichts |
+
+**Tests: 150 von 150**, zwei davon neu — der zweite ist die Gegenprobe, ohne
+die die neue Regel den eigenen Text verschlucken könnte.
+
 ## 7.2.0.58 — die Bildhöhe zählt wieder für die Zeilenhöhe (E-89)
 
 > **Von Gregor am 14.09.2026 an 1.0.58 bestätigt.** Auf seinem Bild steht die
