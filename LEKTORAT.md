@@ -15,7 +15,9 @@ die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`) und
 [Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
-7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression).
+7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression)
+und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
@@ -23,11 +25,18 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 13.09.2026.** Der jüngste Durchgang ist **L-12** und
-> steht in `Befunde/LEKTOR-7.md`; gemessen an Quellstand **7.2.0.51** / Paket
-> **1.0.51**. Der jüngste Durchgang *in dieser Datei* ist weiterhin der
-> **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-12** stehen nicht
-> hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-7.md`.
+> **Stand dieser Datei: 14.09.2026.** Der jüngste Durchgang ist **L-13** und
+> steht in `Befunde/LEKTOR-8.md`; gemessen an Quellstand **7.2.0.53** / Paket
+> **1.0.53**, über **133** MD-Dateien. Der jüngste Durchgang *in dieser Datei*
+> ist weiterhin der **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-13**
+> stehen nicht hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-8.md`.
+>
+> **L-13 in einem Satz:** Drei Fassungen in vierundzwanzig Stunden haben die
+> Doku an neun Stellen stehenlassen — zwei davon sagten das **Gegenteil** des
+> Bestands, und eine davon widersprach sich **innerhalb derselben Datei**
+> (`ZIEL.md` Zeile 31 gegen Zeile 43). Dazu waren **E-85 und E-86 für
+> `pruefe-befundurteile.pl` unsichtbar**: das eine Urteil war länger als das
+> 60-Zeichen-Fenster, das andere enthielt weder „offen" noch „behoben".
 >
 > **L-12 in einem Satz:** E-85 (Umlaute über IMAP) war behoben, während vier
 > Dokumente ihn noch als offen führten — und dreimal an diesem Tag stand die

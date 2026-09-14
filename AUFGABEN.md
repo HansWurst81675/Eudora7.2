@@ -11,8 +11,17 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 
 **Alle neun Kriterien aus [ZIEL.md](ZIEL.md) sind entweder erfüllt oder haben
 eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
-fast erfüllt (2, 4) — und **beiden fehlt dasselbe**: die Meldung
-„Encountered an improper argument" beim **Anzeigen** mancher Nachrichten.
+fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
+improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2 fehlt
+darüber hinaus** **E-86** (HTML-Nachrichten falsch dargestellt) und **E-77**
+(IMAP-Postfachnamen roh) — beides steht in `ZIEL.md` in der eigenen Zeile
+**2a**. Bis zum 14.09.2026 stand hier „beiden fehlt **dasselbe**", und das
+stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
+
+**Dazu warten zwei frische Behebungen auf sein Urteil:** **E-85** (Umlaute
+über IMAP, 7.2.0.52, am laufenden Programm belegt) und **E-83** (Eudora liess
+sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen). Gepackt ist
+**1.0.52**; 7.2.0.53 ist noch nicht als Paket gebaut.
 
 | # | | Stand |
 |---|---|---|

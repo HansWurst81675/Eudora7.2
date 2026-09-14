@@ -11,19 +11,21 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > veröffentlicht wurden. Der Mangel ist als **M-4** in
 > [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
 >
-> **Versioniert im Repo sind nur noch zwei ZIPs** (`git ls-files Releases/`,
-> gemessen am 09.09.2026): **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`,
-> Baugrundlage für `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.27**
-> (`Eudora72-1.0.27-release.zip`, die veröffentlichte Fassung). Die ZIPs zu
-> **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt worden; ihre
-> `.sha256`-Dateien für 1.0.21 und 1.0.22 liegen weiter im Repo, das ZIP
-> daneben nicht. **Kein Verweis in dieser Datei darf auf eine dieser Dateien
-> zeigen, als läge sie im Arbeitsbaum.**
+> **Versioniert im Repo sind nur noch zwei ZIPs** — **am 14.09.2026 neu
+> gemessen mit `git ls-files Releases/`, und die frühere Angabe stimmte
+> nicht mehr**: **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`, Baugrundlage für
+> `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
+> (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
+> veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
+> veröffentlicht ist inzwischen `v1.0.50`. Die ZIPs zu **1.0.21**, **1.0.23**
+> und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
+> und 1.0.22 liegen weiter im Repo, das ZIP daneben nicht. **Kein Verweis in
+> dieser Datei darf auf eine dieser Dateien zeigen, als läge sie im
+> Arbeitsbaum.**
 >
-> **Zu 1.0.27 fehlt die `.sha256`-Datei** — `git ls-files Releases/` führt
-> `Eudora72-1.0.27-release.zip` ohne Begleitdatei (gemessen am 09.09.2026).
-> Die Prüfsumme steht unten im Abschnitt 1.0.27; wer die Datei anlegt,
-> übernimmt sie von dort und rechnet sie nach.
+> **Zu 1.0.30 fehlt die `.sha256`-Datei** — `git ls-files Releases/` führt
+> `Eudora72-1.0.30-release.zip` ohne Begleitdatei (gemessen am 14.09.2026).
+> Dasselbe galt zuvor für 1.0.27, dessen ZIP es nicht mehr gibt.
 >
 > **Als Marke veröffentlicht** sind `v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.10`,
 > `v1.0.14`, `v1.0.15`, `v1.0.18`, `v1.0.21`, `v1.0.23`, `v1.0.24` und
