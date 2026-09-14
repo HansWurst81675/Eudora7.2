@@ -56,7 +56,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.53 — die Aufgabe war fertig, nicht wartend (E-83)
+## 7.2.0.53 — Eudora lässt sich wieder beenden (E-83)
 
 **Was Gregor damit tun kann:** Eudora beenden, ohne dass *„You currently have
 1 task(s) running"* im Weg steht. **Von ihm noch nicht bestätigt.**
