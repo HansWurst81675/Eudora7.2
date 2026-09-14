@@ -172,6 +172,17 @@ protected:
 
 public:	// so sendmail.cpp can access it
 	CString m_ExtraHeaders;
+
+	//
+	// BEFUND E-88: der Rumpf, wie QuoteText ihn beim Antworten oder
+	// Weiterleiten gebaut hat - also mit allem, was Paige nicht versteht.
+	// Wird in CSummary::ComposeMessage gesetzt und in
+	// PgMsgView::ExportMessage ausgewertet. Leer heisst: alles beim alten.
+	// Ueberlebt das Schliessen des Fensters nicht; das ist beabsichtigt,
+	// denn danach ist das Original ohnehin nur noch in Out.mbx und dort
+	// bereits durch den Editor gegangen.
+	//
+	CString m_szE88OriginalHTML;
 	CString m_Headers[MaxHeaders];
 	BOOL m_HeadersInvalidFlag[NumHeaders];
 };

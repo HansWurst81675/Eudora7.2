@@ -8,10 +8,10 @@
 #define EUDORA_VERSION1 7
 #define EUDORA_VERSION2 2
 #define EUDORA_VERSION3 0
-#define EUDORA_VERSION4 55
-#define EUDORA_BUILD_NUMBER    7,2,0,55
-#define EUDORA_BUILD_DESC      "Version 7.2.0.55\0"
-#define EUDORA_BUILD_VERSION   "7.2.0.55"
+#define EUDORA_VERSION4 56
+#define EUDORA_BUILD_NUMBER    7,2,0,56
+#define EUDORA_BUILD_DESC      "Version 7.2.0.56\0"
+#define EUDORA_BUILD_VERSION   "7.2.0.56"
 
 // This is the month in which the product was built.
 // It is used for determining whether a registered Pro user is qualified
