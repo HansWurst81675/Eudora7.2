@@ -143,3 +143,49 @@ zwar eine, die aussieht wie ein Beleg.
 Siehe [[schranke-gegentesten]], [[schranke-liest-nur-code]],
 [[gegenprobe-umdrehen]], [[pruefen-statt-vermuten]] und
 [[widerlegte-vermutungen-aufschreiben]].
+
+## Fall 5, 14.09.2026: die Messung traf einen Teil des Weges und wurde fuer den ganzen ausgegeben
+
+Auf Gregors Frage zu E-86 habe ich geantwortet:
+
+> *„Deine Frage ist beantwortet und im Befund vermerkt: **nur beim Lesen, nicht
+> beim Versenden.** Der Rahmen wird ausschliesslich in `TridentView.cpp`
+> gebaut; der Verfassen-Weg laeuft ueber eine andere Klasse und fasst ihn nie
+> an. Die Nachricht selbst bleibt unversehrt — wer sie weiterleitet, verschickt
+> sie korrekt."*
+
+**Gemessen hatte ich genau eine Sache:** dass der HTML-Rahmen aus
+`TridentView.cpp` beim Verfassen nicht gebaut wird. Das ist richtig. Daraus
+folgt aber nichts ueber den Zustand der Nachricht — der Verfassen-Weg baut den
+Text **neu auf**, ueber `PgCompMsgView` auf Paige-Grundlage, und dabei geht
+das CSS verloren.
+
+Widerlegt hat es Gregor am selben Tag, und zwar am Empfaenger: er hat die
+weitergeleitete Nachricht dort geoeffnet — *„kommt auch so an."* Damit war es
+kein Anzeigefehler im Verfassenfenster, sondern die Formatierung ist beim
+Verschicken tatsaechlich weg. Der Befund E-88 entstand daraus.
+
+**Warum das hierher gehoert und nicht zu [[widerlegte-vermutungen-aufschreiben]]:**
+Es war keine Vermutung. Es war eine **Messung**, und sie war korrekt — sie hat
+nur einen **Abschnitt** des Weges getroffen und wurde fuer den ganzen Weg
+ausgegeben. Die Faelle 1 und 2 fragen, ob die Messung den geprueften Weg
+ueberhaupt erreicht; Fall 4 fragt, ob die gewaehlte Groesse von dem gesuchten
+Ereignis stammt; dieser Fall fragt, **wie weit** die Messung reicht.
+
+Am selben Tag derselbe Griff ein zweites Mal: auf Gregors *„du hast deine tools
+immer noch nciht im griff"* habe ich einen gemeinsamen Nenner genannt, der
+einen von vier Faellen deckt ([[verwerfen-nur-mit-zaehler]]).
+
+**Wie anwenden, zusaetzlich:**
+
+- **Eine Aussage darf nicht weiter reichen als die Messung.** Gemessen wurde
+  „`TridentView.cpp` wird beim Verfassen nicht aufgerufen"; das ist auch der
+  Satz, der gesagt werden darf. *„Wer sie weiterleitet, verschickt sie
+  korrekt"* ist eine Aussage ueber einen Weg, der nie gemessen wurde.
+- **Vor jedem „betrifft nur X" wird der Weg aufgezaehlt.** Lesen, Verfassen,
+  Speichern, Versenden, Empfangen sind fuenf Abschnitte. Ein Satz ueber „den
+  ganzen Weg" braucht fuer jeden Abschnitt eine Messung oder ein ausdrueckliches
+  *„nicht geprueft"*.
+- **Die billigste Messung des Versandwegs ist der Empfaenger.** Gregor hat sie
+  in einem Satz geliefert, nachdem ich sie zwei Antworten lang nicht gefahren
+  hatte ([[erst-pruefen-dann-anweisen]]).
