@@ -41,6 +41,8 @@ DAMAGE. */
 #include "summary.h"
 #include "TocFrame.h"
 #include "etf2html.h"
+#include "compmsgd.h"		// E-88: m_szE88OriginalHTML
+#include "debug.h"			// E-88: Spurmarke vor dem Absenden
 #include "helpcntx.h"				// for CContextMenu helper
 
 // #include "PgEmbeddedImage.h"
@@ -405,6 +407,53 @@ void PgMsgView::ExportMessage( CMessageDoc* pMsgDoc /* = NULL */ )
 	char* pMem = (char*) UseMemoryToCStr( pgmRef );
 
 	pDoc->SetText( pMem );
+
+	//
+	// BEFUND E-88: hier - und nur hier - entscheidet sich, welche Fassung
+	// die Nachricht wird.
+	//
+	// Was einen Absatz weiter oben in pDoc->SetText() ging, ist die Fassung
+	// aus dem Editor. Sie hat den Weg durch Paige hinter sich und damit
+	// alles verloren, was Paige nicht kennt: jede CSS-Eigenschaft, also
+	// Kaesten, Hintergruende und die Groessenangaben von 162 der 1506
+	// Bilder in Gregors Postfach. Genau diese Fassung landet ueber
+	// CCompMessageDoc::Write in Out.mbx und geht von dort per SMTP hinaus
+	// (sendmail.cpp:3368) - das Verfassenfenster zeigt sie an, aber es
+	// zeigt nicht, was ihr fehlt.
+	//
+	// E88OriginalEinsetzen ersetzt sie durch das aufgehobene Original,
+	// sobald sich belegen laesst, dass der Anwender im Zitat nichts
+	// geaendert hat. Laesst es sich nicht belegen, bleibt es bei der
+	// Editorfassung. Die Spurmarke wird in beiden Faellen geschrieben.
+	//
+	if ( pDoc->IsKindOf(RUNTIME_CLASS(CCompMessageDoc)) )
+	{
+		CCompMessageDoc *	pComp = (CCompMessageDoc *) pDoc;
+		CString				szNeuerRumpf;
+		CString				szSpur;
+
+		if ( E88OriginalEinsetzen( (LPCTSTR) pComp->m_szE88OriginalHTML, pMem,
+								   pComp->m_ResponseType, szNeuerRumpf, szSpur ) )
+		{
+			pDoc->SetText( (LPCTSTR) szNeuerRumpf );
+
+			//
+			// Ohne diese drei Zeilen waere der Umbau wirkungslos: der
+			// Sendeweg entscheidet ueber text/plain oder text/html nicht
+			// am Rumpf, sondern an den Flags des Uebersichtseintrags
+			// (sendmail.cpp:788-795 fuer die Content-Type-Zeile,
+			// compmsgd.cpp:1057-1061 fuer die Frage, ob eine HTML-Fassung
+			// ueberhaupt gebaut wird). Der Export oben hat sie nach dem
+			// Inhalt des Editors gesetzt; wir setzen sie nach dem Inhalt,
+			// der wirklich hinausgeht.
+			//
+			pSum->SetFlag(MSF_XRICH);
+			pSum->SetFlagEx(MSFEX_HTML);
+			pSum->UnsetFlagEx(MSFEX_SEND_PLAIN);
+		}
+
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
 	
 	// get out before someone gets hurt
 	UnuseAndDispose( pgmRef );

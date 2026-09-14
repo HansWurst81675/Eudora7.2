@@ -40,3 +40,15 @@ BOOL FindAttachment(CString &csAttachment);
 int		GetAttachments(
 				const char *		in_szMessage,
 				CString &			out_szAttachments);
+
+//
+// BEFUND E-88: Original-HTML beim Antworten und Weiterleiten unangetastet
+// aufheben und beim Senden wieder einsetzen. Erlaeuterung am Rumpf in
+// msgutils.cpp. out_szSpur wird immer gefuellt und gehoert ins Protokoll.
+//
+bool E88OriginalEinsetzen(
+				const char *		pszOriginalHtml,
+				const char *		pszEditorText,
+				char				cAntwortTyp,
+				CString &			out_szNeuerRumpf,
+				CString &			out_szSpur);

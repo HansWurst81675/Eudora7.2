@@ -68,6 +68,7 @@ DAMAGE. */
 
 #include "QCSharewareManager.h"
 #include "msgutils.h"
+#include "debug.h"		// E-88: Spurmarke auf der Leitung
 
 #include <QCUtils.h>
 #include "statmng.h"
@@ -3370,6 +3371,29 @@ HRESULT QCSMTPMessage::WriteBody()
 
 	// Put up the subject line for progress	
 	Progress(0, SMTPmsg->GetHeaderLine(HEADER_SUBJECT), ::SafeStrlenMT(MessageBody));
+
+	//
+	// BEFUND E-88: die letzte Messstelle vor der Leitung.
+	//
+	// Was hier in MessageBody steht, ist genau das, was der Empfaenger
+	// bekommt - aus Out.mbx zurueckgelesen, nicht aus dem Verfassenfenster.
+	// Die Marke in PgMsgView::ExportMessage sagt, welche Fassung gewaehlt
+	// wurde; diese hier sagt, was daraus wirklich geworden ist. Weichen
+	// beide voneinander ab, liegt der Fehler zwischen Editor und Mailbox.
+	//
+	{
+		CString		szSpur;
+		szSpur.Format(
+			"E-88 auf der Leitung: Bytes=%d IsFancy=%d IsXRich=%d IsHTML=%d "
+			"SendPlainOnly=%d Betreff=%s",
+			(int) ::SafeStrlenMT(MessageBody),
+			(int) ::IsFancy(MessageBody),
+			(int) SMTPmsg->m_Sum->IsXRich(),
+			(int) SMTPmsg->m_Sum->IsHTML(),
+			(int) SMTPmsg->m_Sum->SendPlainOnly(),
+			SMTPmsg->GetHeaderLine(HEADER_SUBJECT) );
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
 
 	// Is this a MIME-encoded .msg file?
 	CString		tmpHeaders;

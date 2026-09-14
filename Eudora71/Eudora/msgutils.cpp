@@ -2782,3 +2782,274 @@ int GetAttachments(
 	return nAttachments;
 }
 
+
+
+//
+// BEFUND E-88: das Original-HTML unangetastet aufheben und beim Senden
+// wieder einsetzen.
+//
+// Warum ueberhaupt: verfasst wird mit Paige. Dessen HTML-Leser kennt keine
+// einzige CSS-Eigenschaft (PGHTMDEF.C:20-48) und wertet aus <div> allein
+// align aus. Alles, was eine Nachricht an Kaesten, Hintergruenden und per
+// CSS gesetzten Bildgroessen mitbringt, ist nach dem Weg durch den Editor
+// endgueltig fort - und zwar nicht nur in der Anzeige, sondern in dem Text,
+// den PgMsgView::ExportMessage ueber pDoc->SetText() zum Rumpf der
+// Nachricht macht. Genau dieser Rumpf geht spaeter per SMTP hinaus
+// (sendmail.cpp:3368).
+//
+// Was hier passiert: beim Antworten und Weiterleiten legt
+// CSummary::ComposeMessage den Rumpf, wie QuoteText ihn gebaut hat, im
+// Verfassendokument ab (CCompMessageDoc::m_szE88OriginalHTML). Beim
+// Speichern und damit vor jedem Absenden wird geprueft, ob der Klartext
+// dieses Originals im Klartext der Editorfassung als ein zusammenhaengendes
+// Stueck wiederzufinden ist. Ist er das, geht das Original unveraendert
+// hinaus, davor und dahinter das, was der Anwender selbst geschrieben hat.
+// Ist er es nicht, bleibt alles beim alten.
+//
+// Die Wahl des Verfahrens ist in der Commit-Nachricht begruendet. Kurz: der
+// Vergleich ist zustandslos - er braucht kein Merken eines frueheren
+// Zustandes, keine Aenderungszaehler und keine Annahme darueber, wo der
+// Anwender tippt. Findet er das Original nicht, faellt er auf das alte
+// Verhalten zurueck; er kann also nichts kaputt machen, was heute heil ist.
+//
+// Abschalten mit ForwardOriginalHTML=0 in [Settings].
+//
+
+//
+// E88NurText: aus HTML den blanken Vergleichstext gewinnen.
+//
+// Absichtlich grob. Der Text dient nur dem Vergleich, nicht der Anzeige.
+// Alles, was Paige beim Ein- und Auslesen umformen koennte, wird gleich
+// behandelt und damit unschaedlich:
+//   - Markierungen <...> fallen weg, samt allem in <script>/<style>
+//   - Entitaeten (&nbsp;, &auml;, &#228;) werden zu einem Fragezeichen
+//   - jedes Zeichen ueber 127 wird zu einem Fragezeichen
+//   - jede Folge von Leerraum wird zu einem einzelnen Leerzeichen
+// Die letzten beiden Regeln sind der Grund, warum der Vergleich ueberhaupt
+// aufgeht: Paige schreibt Umlaute mal als Zeichen, mal als Entitaet, und es
+// bricht Zeilen anders um als das Original.
+//
+static void E88NurText( const char* pszHtml, CString& out_szText )
+{
+	out_szText.Empty();
+	if (!pszHtml)
+		return;
+
+	int			nLen = (int) strlen(pszHtml);
+	char*		pBuf = DEBUG_NEW_NOTHROW char[nLen + 1];
+	if (!pBuf)
+		return;
+
+	char*		q = pBuf;
+	bool		bLetzterWarLeer = true;		// fuehrenden Leerraum verschlucken
+
+	for (int i = 0; i < nLen; )
+	{
+		unsigned char	c = (unsigned char) pszHtml[i];
+
+		if (c == '<')
+		{
+			// Markierung ueberspringen. Ist sie nie geschlossen, ist der
+			// Rest der Zeichenkette eine Markierung - das ist dasselbe
+			// Ergebnis, das ein Empfaenger saehe.
+			const char*		pEnde = strchr(pszHtml + i, '>');
+			if (!pEnde)
+				break;
+			i = (int)(pEnde - pszHtml) + 1;
+			continue;
+		}
+
+		if (c == '&')
+		{
+			// Entitaet ueberspringen, wenn sie kurz genug ist, um eine zu sein
+			const char*		pSemi = strchr(pszHtml + i, ';');
+			if (pSemi && (pSemi - (pszHtml + i)) <= 10)
+			{
+				i = (int)(pSemi - pszHtml) + 1;
+				c = '?';		// faellt unten in den Normalfall
+			}
+			else
+			{
+				c = '?';
+				i++;
+			}
+
+			*q++ = (char) c;
+			bLetzterWarLeer = false;
+			continue;
+		}
+
+		i++;
+
+		if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+		{
+			if (!bLetzterWarLeer)
+			{
+				*q++ = ' ';
+				bLetzterWarLeer = true;
+			}
+			continue;
+		}
+
+		if (c > 127)
+			c = '?';
+
+		*q++ = (char) c;
+		bLetzterWarLeer = false;
+	}
+
+	// abschliessenden Leerraum abschneiden
+	while (q > pBuf && *(q - 1) == ' ')
+		q--;
+
+	*q = 0;
+	out_szText = pBuf;
+	delete [] pBuf;
+}
+
+
+//
+// E88OriginalEinsetzen
+//
+// Rueckgabe: true, wenn out_szNeuerRumpf gefuellt wurde und an die Stelle
+// der Editorfassung treten soll. false heisst: alles beim alten lassen.
+//
+// out_szSpur bekommt in jedem Fall eine Zeile fuer das Protokoll - auch
+// wenn nichts ersetzt wird. Ohne diese Zeile merkte niemand, dass eine
+// Nachricht anders hinausgeht, als das Verfassenfenster sie zeigt.
+//
+bool E88OriginalEinsetzen(
+		const char*			pszOriginalHtml,
+		const char*			pszEditorText,
+		char				cAntwortTyp,
+		CString&			out_szNeuerRumpf,
+		CString&			out_szSpur )
+{
+	out_szNeuerRumpf.Empty();
+
+	const int	nOrigLen   = pszOriginalHtml ? (int) strlen(pszOriginalHtml) : 0;
+	const int	nEditorLen = pszEditorText   ? (int) strlen(pszEditorText)   : 0;
+	const int	nSchalter  = (int) GetIniShort(IDS_INI_FORWARD_ORIGINAL_HTML);
+
+	// Der eine Ort, an dem alles zusammenkommt. Erst am Ende ergaenzt um
+	// das Urteil - siehe die Zuweisungen an szUrteil.
+	CString		szUrteil;
+
+	if (!nSchalter)
+		szUrteil = "EDITOR (Schalter aus)";
+	else if (nOrigLen == 0)
+		szUrteil = "EDITOR (kein Original gemerkt)";
+	else if (nEditorLen == 0)
+		szUrteil = "EDITOR (Editorfassung leer)";
+	else if (::IsFancy(pszOriginalHtml) != IS_HTML)
+		szUrteil = "EDITOR (Original ist kein HTML)";
+
+	CString		szOrigText, szEditorText;
+	int			nFund = -1;
+	int			nVorLen = 0, nNachLen = 0;
+
+	if (szUrteil.IsEmpty())
+	{
+		E88NurText(pszOriginalHtml, szOrigText);
+		E88NurText(pszEditorText,   szEditorText);
+
+		// Ein sehr kurzes Original koennte zufaellig irgendwo stecken.
+		// Unter 40 Zeichen Klartext ist der Vergleich nichts wert.
+		if (szOrigText.GetLength() < 40)
+			szUrteil = "EDITOR (Original zu kurz zum Vergleichen)";
+		else
+		{
+			nFund = szEditorText.Find(szOrigText);
+			if (nFund < 0)
+				szUrteil = "EDITOR (Anwender hat im Zitat geaendert)";
+			else
+			{
+				nVorLen  = nFund;
+				nNachLen = szEditorText.GetLength() - nFund - szOrigText.GetLength();
+			}
+		}
+	}
+
+	bool	bErsetzt = false;
+
+	if (szUrteil.IsEmpty())
+	{
+		//
+		// Das Original steckt unveraendert in der Editorfassung. Es geht
+		// hinaus, wie es war; davor und dahinter kommt das, was der
+		// Anwender selbst geschrieben hat.
+		//
+		// Bewusste Einschraenkung: sein eigener Zusatz geht als Klartext
+		// hinaus, nicht mit seiner Auszeichnung. Ihn aus dem Editor-HTML
+		// herauszuschneiden hiesse, an einer geratenen Stelle in fremde
+		// Markierungen zu schneiden - und ein halb offener Kasten kann den
+		// ganzen Rest der Nachricht verschlucken. Klartext kann das nicht.
+		//
+		CString		szVor, szNach;
+
+		if (nVorLen > 0)
+			szVor = szEditorText.Left(nVorLen);
+		if (nNachLen > 0)
+			szNach = szEditorText.Right(nNachLen);
+
+		szVor.TrimLeft();
+		szNach.TrimRight();
+
+		// Das Original ist bereits ein vollstaendiges <x-html>-Stueck.
+		// Der Zusatz muss deshalb hinein, nicht davor.
+		CString		szOrig(pszOriginalHtml);
+		int			nAuf = -1;
+
+		if (!szVor.IsEmpty() || !szNach.IsEmpty())
+		{
+			// erste schliessende Klammer der ersten Markierung suchen
+			if (szOrig.GetLength() > 0 && szOrig[0] == '<')
+				nAuf = szOrig.Find('>');
+		}
+
+		if (nAuf < 0)
+		{
+			// Kein Platz zum Einsetzen gefunden: dann nur dann ersetzen,
+			// wenn es gar nichts einzusetzen gibt.
+			if (szVor.IsEmpty() && szNach.IsEmpty())
+			{
+				out_szNeuerRumpf = szOrig;
+				bErsetzt = true;
+				szUrteil = "ORIGINAL (unveraendert)";
+			}
+			else
+				szUrteil = "EDITOR (kein Platz fuer den Zusatz)";
+		}
+		else
+		{
+			CString		szVorHtml, szNachHtml;
+
+			if (!szVor.IsEmpty())
+				szVorHtml = Text2Html(szVor, TRUE, FALSE) + "<br>";
+			if (!szNach.IsEmpty())
+				szNachHtml = CString("<br>") + Text2Html(szNach, TRUE, FALSE);
+
+			int		nSchluss = szOrig.ReverseFind('<');
+			if (!szNachHtml.IsEmpty() && nSchluss > nAuf)
+				szOrig = szOrig.Left(nSchluss) + szNachHtml + szOrig.Mid(nSchluss);
+			else if (!szNachHtml.IsEmpty())
+				szOrig += szNachHtml;
+
+			out_szNeuerRumpf = szOrig.Left(nAuf + 1) + szVorHtml + szOrig.Mid(nAuf + 1);
+			bErsetzt = true;
+			szUrteil = "ORIGINAL (mit Zusatz)";
+		}
+	}
+
+	//
+	// Alle Werte in EINER Zeile. Getrennte Zeilen lassen immer die Ausrede
+	// offen, sie seien zu anderer Zeit entstanden.
+	//
+	out_szSpur.Format(
+		"E-88 vor dem Absenden: Fassung=%s Schalter=%d OrigBytes=%d EditorBytes=%d "
+		"NeuBytes=%d ZusatzVor=%d ZusatzNach=%d Fundstelle=%d Typ=%d",
+		(LPCTSTR) szUrteil, nSchalter, nOrigLen, nEditorLen,
+		out_szNeuerRumpf.GetLength(), nVorLen, nNachLen, nFund, (int) cAntwortTyp );
+
+	return bErsetzt;
+}

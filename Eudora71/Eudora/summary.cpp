@@ -1496,6 +1496,27 @@ BOOL CSummary::ComposeMessage
 	{
 		bSuccess = TRUE;
 
+		//
+		// BEFUND E-88: das Original aufheben, bevor es durch Paige geht.
+		//
+		// "Body" ist genau der Rumpf, den QuoteText gebaut hat - beim
+		// Weiterleiten das Zitat, beim Antworten Anrede und Zitat, beim
+		// Umleiten die Nachricht selbst. Er enthaelt noch alles: Kaesten,
+		// Hintergruende, per CSS gesetzte Bildgroessen. Nach dem Weg durch
+		// den Editor ist davon nichts mehr uebrig, und zwar auch in dem
+		// Text nicht, der spaeter per SMTP hinausgeht.
+		//
+		// Nicht gemerkt wird bei Briefpapier: dann baut das Verfassen-
+		// dokument seinen Rumpf aus zwei Quellen, und welche davon der
+		// Anwender meint, ist hier nicht zu entscheiden.
+		//
+		if ( !pszStationery && Body &&
+			 GetIniShort(IDS_INI_FORWARD_ORIGINAL_HTML) &&
+			 (::IsFancy(Body) == IS_HTML) )
+		{
+			comp->m_szE88OriginalHTML = Body;
+		}
+
 		// Change status of non-comp messages, saving a pointer to the orginal message
 		// and original state so that it can be undone if the response is cancelled
 		if ( !IsComp() )
