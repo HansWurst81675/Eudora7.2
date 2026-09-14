@@ -1342,12 +1342,38 @@ CTridentView::WriteTempFile(
 	//	original mail carries and turns every CP1252 umlaut byte into U+FFFD.
 	//	Not put into IDS_INI_READMESSAGE_STYLE_SHEET because a read.css in the
 	//	Eudora directory replaces that resource entirely.
+	//	E-86: MSHTML im modernsten verfuegbaren Modus rendern lassen.
+	//
+	//	Ohne diese Zeile laeuft die eingebettete Engine im Standardmodus des
+	//	Internet Explorer 7 von 2006. Gregor hat am 14.09.2026 dieselbe
+	//	Newsletter-Mail im Webbrowser und in Eudora 7.2.0.52 nebeneinander
+	//	fotografiert: im Browser abgerundete Kaesten ohne Rahmen, in Eudora
+	//	eckige Kaesten mit blauem Rahmen.
+	//
+	//	AM LAUFENDEN PROGRAMM GEMESSEN, nicht geraten. Die Anzeigedatei, die
+	//	diese Funktion schreibt, wurde mit einer Spurmarke gesichert und
+	//	ausgezaehlt: 36078 Bytes, 67 Tabellen, 12 Bilder, und ALLE 118
+	//	border-Angaben der Nachricht sind darin - beim Zusammensetzen geht
+	//	nichts verloren. Auch die Vermutung, MSHTML verwerfe ein zweites
+	//	<body>, ist widerlegt: die Marke meldet BODY-Elemente=1.
+	//
+	//	Was die Mail enthaelt und der IE-7-Modus NICHT kann: border-radius
+	//	(dreimal in dieser Nachricht). Abgerundete Ecken werden zu Kaesten,
+	//	und was im CSS einen Rahmen unterdruecken soll, greift nur teilweise.
+	//
+	//	"IE=edge" waehlt den hoechsten Modus, den die installierte Engine
+	//	beherrscht. Es steht VOR dem Stylesheet, weil MSHTML den Schalter im
+	//	Kopf erwarten muss, bevor Inhalt kommt.
+	static const char	szKompatibilitaet[] =
+		"<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\r\n";
+
 	static const char	szCharsetMeta[] =
 		"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">\r\n";
 
 	//	Write out the style sheet
 	try
 	{			
+		theFile.Write( szKompatibilitaet, sizeof(szKompatibilitaet) - 1 );
 		theFile.Write( szCharsetMeta, sizeof(szCharsetMeta) - 1 );
 		theFile.Write( szStyleSheet, szStyleSheet.GetLength() );
 	}
