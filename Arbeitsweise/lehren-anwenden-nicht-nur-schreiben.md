@@ -229,3 +229,38 @@ Reihenfolge:
 diesem Fall **abbrechen und die Datei nennen**, statt sie zu ersetzen — und das
 Wort „aktualisiert" durch „überschrieben" ersetzen, damit die Meldung sagt, was
 geschieht ([[anwenderdatei-nicht-erschlagen]], [[werkzeug-vor-eigenbau]]).
+
+## Nachtrag 14.09.2026 — die Bilanz desselben Tages, an dem vier Schranken fehlten
+
+Der Nachtrag vom 11.09.2026 zeigt die Trennlinie von der guten Seite: kein
+Mangel, fuer den es eine Pruefung gab, hat es bis zu Gregor geschafft. Der
+14.09.2026 zeigt dieselbe Linie von der anderen Seite.
+
+**Was eine Rolle oder Schranke gefangen hat:**
+
+| Pruefung | was sie aufgehalten hat |
+|---|---|
+| **PRUEFER** | eine von mir eingebaute Regression: `ISOTranslate` nullt ein Byte hinter dem Bereich; im IMAP-Weg haette **jede Zeile** ihr erstes Zeichen verloren. Gefunden **vor** der Auslieferung, danach in einen Test gegossen ([[funktion-bringt-ihre-vorbedingung-mit]]) |
+| GitHub-Sperre beim Push | ein Commit direkt auf `main` — die lokale Schranke laesst `main` ausdruecklich durch ([[nie-direkt-auf-main]]) |
+
+**Was keine Schranke gefangen hat, obwohl es eine gab:**
+
+| Mangel | die Schranke, die es gab | warum sie nicht griff |
+|---|---|---|
+| E-85 zwei Tage lang neu ausgearbeitet | `tools/befund-suchen.pl` — nein: es gab sie an diesem Tag noch nicht, wohl aber den Befund NP3-8 seit dem 30.08. | kein Zeitpunkt, an dem der Bestand gelesen wird ([[bestand-vor-neuer-suche]]) |
+| `git reset --hard` warf den Agenten-Austrag weg | `tools/ungesichertes-melden.pl`, gebaut und dokumentiert | **keine Aufrufstelle** vor verwerfenden Befehlen ([[verwerfen-nur-mit-zaehler]]) |
+| `PORTIERUNG.md` auf 0 Zeilen | keine | — |
+| E-87 beim Merge verloren | keine | — |
+
+**Die mittlere Zeile ist die, um die es in dieser Lehre geht.** Das Werkzeug
+existierte, es funktioniert — gegengetestet am selben Tag in beide Richtungen
+—, und es hat nichts verhindert, weil niemand es in dem Moment aufgerufen hat,
+in dem es gebraucht wurde. Das ist derselbe Befund wie bei
+`tools/rollen-faellig.pl` am 11.09.2026, nur drei Tage spaeter und mit einem
+anderen Werkzeug.
+
+**Daraus, als Regel fuer jedes neue Werkzeug:** die Aufrufstelle wird im selben
+Commit eingetragen wie das Werkzeug — in einen Hook, in `CLAUDE.md`, in eine
+Auftragsvorlage oder in die Lehre, die es traegt. Ein Werkzeug ohne genannten
+Auslaeser ist nicht fertig, sondern nur geschrieben
+([[werkzeug-vor-eigenbau]], [[ausloeser-an-den-anfang]]).

@@ -1488,13 +1488,68 @@ BOOL CSummary::ComposeMessage
 		bTurbo = NewTo && *NewTo && (TR != ShiftDown());
 	}
 
+	//
+	// BEFUND E-88: das Original aufheben, bevor es durch Paige geht.
+	//
+	// "Body" ist genau der Rumpf, den QuoteText gebaut hat - beim
+	// Weiterleiten das Zitat, beim Antworten Anrede und Zitat, beim
+	// Umleiten die Nachricht selbst. Er enthaelt noch alles: Kaesten,
+	// Hintergruende, per CSS gesetzte Bildgroessen. Nach dem Weg durch
+	// den Editor ist davon nichts mehr uebrig, und zwar auch in dem
+	// Text nicht, der spaeter per SMTP hinausgeht.
+	//
+	// Nicht gemerkt wird bei Briefpapier: dann baut das Verfassen-
+	// dokument seinen Rumpf aus zwei Quellen, und welche davon der
+	// Anwender meint, ist hier nicht zu entscheiden.
+	//
+	const bool	bE88Merken = ( !pszStationery && Body &&
+							   GetIniShort(IDS_INI_FORWARD_ORIGINAL_HTML) &&
+							   (::IsFancy(Body) == IS_HTML) );
+
+	//
+	// BEFUND E-89: das Verfassenfenster lesbar machen.
+	//
+	// Hier trennen sich die beiden Fassungen, und nur hier. "Body" bleibt
+	// von jetzt an unangetastet und wird weiter unten als Original
+	// gemerkt; "EditorBody" ist die Arbeitsfassung fuer Paige, in der
+	// jedes <img> eine Groesse traegt, die Paiges HTML-Leser auswerten
+	// kann (Begruendung am Rumpf von E89BilderMessbarMachen in
+	// msgutils.cpp). Ohne das liegen Logos und Kacheln in Originalgroesse
+	// ueber dem Text - Gregor an 1.0.56: "da ist alles durcheinander, man
+	// kann ja nichts lesen."
+	//
+	// Die Umschrift laeuft NUR, wenn das Original auch wirklich aufgehoben
+	// wird (bE88Merken). Ist der Schalter ForwardOriginalHTML aus, geht
+	// die Editorfassung selbst hinaus - dann darf an ihr nichts geaendert
+	// werden, was der Empfaenger zu sehen bekaeme. Beides haengt deshalb
+	// an derselben Bedingung, damit es nicht auseinanderlaufen kann.
+	//
+	CString			szE89Editor;
+	CString			szE89Spur;
+	const char *	EditorBody = Body;
+
+	if ( bE88Merken && E89BilderMessbarMachen(Body, szE89Editor, szE89Spur) )
+		EditorBody = (LPCTSTR) szE89Editor;
+
+	if ( bE88Merken )
+		PutDebugLog(DEBUG_MASK_MISC, szE89Spur);
+
 	CCompMessageDoc *	comp = ComposeMessage( m_TheToc, false, NewTo, Sub, NewCc, sAttach,
-											   Body, pszStationery, csPersona, ResponseType,
+											   EditorBody, pszStationery, csPersona, ResponseType,
 											   fullMes, m_Precedence, IsRich, nPriority,
 											   kDontDisplayOrQueue );
 	if (comp)
 	{
 		bSuccess = TRUE;
+
+		//
+		// Das Original - "Body", nicht "EditorBody". Die eine Zeile, an der
+		// haengt, dass E-89 dem Befund E-88 nichts wegnimmt.
+		//
+		if ( bE88Merken )
+		{
+			comp->m_szE88OriginalHTML = Body;
+		}
 
 		// Change status of non-comp messages, saving a pointer to the orginal message
 		// and original state so that it can be undone if the response is cancelled

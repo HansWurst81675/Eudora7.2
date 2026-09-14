@@ -40,3 +40,27 @@ BOOL FindAttachment(CString &csAttachment);
 int		GetAttachments(
 				const char *		in_szMessage,
 				CString &			out_szAttachments);
+
+//
+// BEFUND E-88: Original-HTML beim Antworten und Weiterleiten unangetastet
+// aufheben und beim Senden wieder einsetzen. Erlaeuterung am Rumpf in
+// msgutils.cpp. out_szSpur wird immer gefuellt und gehoert ins Protokoll.
+//
+bool E88OriginalEinsetzen(
+				const char *		pszOriginalHtml,
+				const char *		pszEditorText,
+				char				cAntwortTyp,
+				CString &			out_szNeuerRumpf,
+				CString &			out_szSpur);
+
+//
+// BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
+// der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
+// Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in
+// msgutils.cpp. Rueckgabe true heisst: out_szHtml ist gefuellt und tritt
+// an die Stelle des Eingangstextes. out_szSpur gehoert ins Protokoll.
+//
+bool E89BilderMessbarMachen(
+				const char *		pszHtml,
+				CString &			out_szHtml,
+				CString &			out_szSpur);

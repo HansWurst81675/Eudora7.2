@@ -9,4 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-09-14 11:11 | E-88: Original-HTML am Editor vorbei, beim Senden zusammensetzen |
+| LEKTOR | 2026-09-14 13:04 | Alle MDs gegen den Bestand 7.2.0.56 pruefen; Versionsrueckstaende in FILTER.md, ZIEL.md, tools/RELEASES.md, tools/WERKZEUGE.md, tools/ZWEIGE.md |

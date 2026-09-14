@@ -87,6 +87,10 @@
     <ClCompile Include="TestOTShimAndocken.cpp" />
     <ClCompile Include="TestPopEmpfang.cpp" />
     <ClCompile Include="TestSymbole.cpp" />
+    <ClCompile Include="UnderTestE88.cpp" />
+    <ClCompile Include="TestE88.cpp" />
+    <ClCompile Include="UnderTestE89.cpp" />
+    <ClCompile Include="TestE89.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +99,8 @@
     <ClInclude Include="UnderTest.h" />
     <ClInclude Include="OTShimProbe.h" />
     <ClInclude Include="UnderTest2047.h" />
+    <ClInclude Include="UnderTestE88.h" />
+    <ClInclude Include="UnderTestE89.h" />
     <ClInclude Include="TestRes.h" />
   </ItemGroup>
   <ItemGroup>

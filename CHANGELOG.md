@@ -56,6 +56,238 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.57 — im Verfassenfenster liegen die Bilder nicht mehr über dem Text (E-89)
+
+**Was Gregor damit tun kann:** einen Newsletter weiterleiten und dabei
+**lesen, was er schreibt**. Bisher lagen Logo und Kacheln in Originalgröße
+über der Überschrift und über den Absätzen — *„1 und da ist alles
+durcheinander, man kann ja nichts lesen."* (14.09.2026, an 1.0.56). **Von
+ihm noch nicht bestätigt.**
+
+**Der Maßstab ist Thunderbird — aber nur seine Schwelle, nicht sein
+Aussehen.** Gregor hat sein Thunderbird-Verfassenfenster mit derselben
+Nachricht gezeigt: auch dort ist es nicht schön, rote Hilfslinien um jede
+Tabellenzelle. Aber jedes Bild sitzt in seiner Zelle, und der Text daneben
+ist vollständig lesbar. Thunderbird rechnet mit Gecko, also mit einer
+echten HTML-Maschine; Paige übersetzt HTML in ein eigenes Format und kennt
+keine einzige CSS-Eigenschaft (`PGHTMDEF.C:20-48`). **Das Bild links ist
+nicht erreichbar. Die Lesbarkeit ist es.**
+
+### Warum das Verfassenfenster überhaupt geändert werden darf
+
+Seit **E-88** (7.2.0.56) geht beim Senden das aufgehobene Original hinaus,
+nicht die Editorfassung. Das Verfassenfenster ist damit nur noch
+Arbeitsfläche: es muss dem Original nicht gleichen, es muss lesbar sein.
+Ohne E-88 wäre dieselbe Änderung ein Eingriff in die versandte Nachricht
+gewesen.
+
+### Zwei Ursachen, beide gemessen
+
+**(1) Keine auswertbare Größe.** Paiges HTML-Leser holt die Bildgröße
+**ausschließlich** aus den Attributen `width` und `height`
+(`PGHTMIMP.CPP:2019-2022`). Steht sie nur im CSS — `style="width:16px"` —,
+bleiben `source_width` und `source_height` auf `0`. Nachgetragen werden sie
+erst beim **Laden** des Bildes, aus der Datei, also in **Originalgröße**
+(`PgEmbeddedImage.cpp:424-427`) — da war der Absatz längst umbrochen. Der
+Nachtrag sucht seine Stelle dann über `embed->style == embed_ptr->style`
+(`PgEmbeddedImage.cpp:458-507`) und bleibt beim **ersten** Bild gleichen
+Stils stehen; bei mehreren Bildern trifft er die falsche. Genau das ist das
+Übereinanderliegen.
+
+**(2) Auswertbar, aber zu breit.** Ein zweites Thunderbird-Bild
+(freenet/audibene-Rundbrief) zeigt dasselbe Kopflogo im schmalen
+Verfassenfenster schmal und in der breiteren Leseansicht breiter —
+proportional auf die verfügbare Spaltenbreite gerechnet. Ein `<img>` mit
+`width="1200"` sprengt die Zeile auch dann, wenn Paige die Zahl lesen kann.
+
+**Gemessen an Gregors gesicherten Postfächern** (alle `.mbx` unter
+`C:\Users\Gregor\Eudora72-Postfaecher-gesichert`): **2884** `<img>`, davon
+**2601** mit Attribut, **122** nur mit CSS-Größe, **161** ganz ohne
+Größenangabe.
+
+### Was jetzt passiert
+
+`E89BilderMessbarMachen` (`msgutils.cpp`) schreibt die Fassung um, die in
+den Editor geht:
+
+* aus `style="width:16px"` wird zusätzlich `width="16"`; das `style` bleibt
+  stehen, Paige sieht ohnehin darüber hinweg
+* aus `style="width:100%"` wird `width="100%"` — `decimal_value_percent`
+  rechnet Prozent gegen die Seitenbreite (`PGHTMIMP.CPP:2020`). Für die
+  **Höhe** geht das nicht: dort liest `numeric_value` nur die Zahl, aus
+  `50%` würden 50 Bildpunkte. Also lieber die Vorgabe
+* wo gar nichts steht, greift **200x90**. Hier ist nichts zu rechnen —
+  weder Originalgröße noch Seitenverhältnis sind bekannt, und nachgeladen
+  wird beim Verfassen nichts
+* **kein Bild wird breiter oder höher als 600 Bildpunkte**; das jeweils
+  andere Maß geht im selben Verhältnis mit, damit nichts verzerrt
+
+Ein Bild, das `width` und `height` bereits als Attribut trägt und unter dem
+Deckel bleibt, wird **Zeichen für Zeichen** nicht angefasst — das sind die
+meisten. `src` bleibt in jedem Fall unberührt, damit eingebettete
+`cid:`-Teile weiter gefunden werden.
+
+**Gemessen statt vermutet, dass die echte Fensterbreite nicht zu haben
+ist:** der Aufruf in `CSummary::ComposeMessage` geht mit
+`kDontDisplayOrQueue` hinein (`summary.h:142`), und beide Zweige, die ein
+Fenster erzeugen könnten, hängen an dieser Bedingung
+(`summary.cpp:1818-1837`). Zur Umschreibzeit gibt es kein
+Verfassenfenster, und ein gespeichertes Maß auch nicht. Deshalb ein fester
+Deckel.
+
+### Warum nicht der Platzhalter
+
+Das Bild durch `[Bild]` zu ersetzen wäre radikaler und sicherer lesbar —
+und würde **E-88 zerstören**. `E88OriginalEinsetzen` verlangt, dass der
+Klartext des Originals in der Editorfassung als **ein** zusammenhängendes
+Stück steckt. `E88NurText` wirft Markierungen weg, ein zusätzliches
+`width=` ist für den Vergleich also unsichtbar; ein eingefügtes `[Bild]`
+mitten im Zitat zerreißt ihn, und das Original ginge nie wieder hinaus. Ein
+Test fährt genau diese Gegenprobe, damit die Begründung nicht nur behauptet
+ist.
+
+### Wie sichergestellt ist, dass das Original unberührt bleibt
+
+Die beiden Fassungen trennen sich an **einer** Stelle in `summary.cpp`:
+`ComposeMessage` bekommt `EditorBody`, gemerkt wird `Body`. Beides hängt an
+derselben Bedingung `bE88Merken` — ist `ForwardOriginalHTML` auf `0`, geht
+die Editorfassung selbst hinaus, und dann unterbleibt auch die Umschrift.
+Jeder Testaufruf misst zusätzlich nach, dass der Eingangstext danach Byte
+für Byte derselbe ist.
+
+### Zum Prüfen
+
+`LogLevel=58527` in die `Eudora.ini` (die Vorgabe `25759` enthält
+`DEBUG_MASK_MISC` nicht), dann einen Newsletter mit Bildern weiterleiten.
+Im Verfassenfenster: **nichts liegt übereinander, jeder Satz ist lesbar.**
+Im Protokoll steht eine Zeile
+
+```
+E-89 Bilder im Editor: gesamt=… unveraendert=… aus-CSS=… Vorgabe=… gedeckelt=… geaendert=… Bytes vorher=… nachher=…
+```
+
+und unmittelbar danach beim Absenden die beiden E-88-Zeilen, die weiterhin
+`Fassung=ORIGINAL` sagen müssen. Sagen sie das nicht mehr, hat E-89 dem
+Befund E-88 etwas weggenommen — dann ist es ein Fehler, kein Fortschritt.
+
+**Grenzen, die bleiben:** Kästen, Rahmen und Hintergründe erscheinen im
+Verfassenfenster weiterhin nicht; die Tabellenaufteilung wird nicht
+nachgebaut; und wo keine Größe bekannt ist, ist 200x90 geraten und kann
+verzerren. Beim Empfänger ändert sich davon nichts.
+
+**Gebaut:** 0 Fehler. **Tests:** 148 von 148 bestanden — 131 alte, 17 neue
+zu E-89, davon sieben Gegenproben.
+
+## 7.2.0.56 — die weitergeleitete Nachricht kommt an, wie sie gelesen wurde (E-88)
+
+**Was Gregor damit tun kann:** einen Newsletter weiterleiten oder
+beantworten und darauf zählen, dass der Empfänger ihn mit Kästen,
+Hintergründen, richtigen Bildgrößen und Emoji sieht — also so, wie Gregor
+ihn beim Lesen vor sich hatte. **Von ihm noch nicht bestätigt.**
+
+Das ist die zweite Hälfte von **E-87**. Dort wurde erreicht, dass HTML
+überhaupt zitiert wird; hier geht es darum, dass es den Verfassen-Editor
+unbeschädigt überlebt. Seine Entscheidung zur Umsetzung: *„ich nehme deine
+empfehlung."*
+
+### Warum es keinen anderen Weg gab
+
+Verfasst wird mit **Paige**. Dessen HTML-Leser kennt **keine einzige
+CSS-Eigenschaft** (`PGHTMDEF.C:20-48`), aus `div` wertet er allein `align`
+aus (`PGHTMIMP.CPP:1193-1201`). Von **1506** `<img>` in Gregors Postfach
+tragen **1262** ihre Größe als HTML-Attribut — die kann Paige
+(`PGHTMIMP.CPP:1897-1916`) —, **162 nur als CSS**; die erschienen in
+Originalgröße und überlagerten den Text. Ein zweiter, HTML-fähiger Editor
+steht nicht zur Verfügung: Trident-Ansichten gibt es nur zum Lesen,
+`CCompMessageFrame` erzeugt fest `PgCompMsgView`.
+
+Den Editor HTML beibringen war also ausgeschlossen. Bleibt: den Editor
+umgehen.
+
+### Was jetzt passiert
+
+`CSummary::ComposeMessage` legt den Rumpf, wie `QuoteText` ihn gebaut hat,
+im Verfassendokument ab (`summary.cpp:1497`). `PgMsgView::ExportMessage`
+(`PgMsgView.cpp:407`) — die eine Stelle, an der die Editor-Fassung über
+`pDoc->SetText()` zum Rumpf der Nachricht wird und damit auf die Leitung
+geht (`sendmail.cpp:3368`) — setzt statt ihrer das Original ein, **sobald
+sich belegen lässt, dass im Zitat nichts geändert wurde.**
+
+Der Beleg ist ein zustandsloser Vergleich: der Klartext des Originals
+(Markierungen weg, Entitäten und alles über 127 zu `?`, Leerraum
+zusammengezogen) muss sich im Klartext der Editor-Fassung als **ein
+zusammenhängendes Stück** wiederfinden. Was davor und dahinter steht, ist
+Gregors eigener Text und wird wieder angesetzt. Findet sich das Original
+nicht — weil im Zitat etwas geändert wurde —, bleibt es bei der
+Editor-Fassung.
+
+**Warum gerade dieses Verfahren:** es braucht keinen gemerkten Vorzustand,
+keinen Änderungszähler und keine Annahme darüber, wo der Anwender tippt.
+Paiges eigener Zähler (`PaigeEdtView.h:192-193`) taugte nicht, weil jedes
+Zwischenspeichern ihn zurücksetzt (`compmsgd.cpp:1815`). Die Annahme „der
+Zusatz steht immer vorn" taugte nicht, weil eine angehängte Signatur
+dahinter steht. Und eine von Hand gebaute MIME-Nachricht mit zwei Teilen
+hätte an `sendmail.cpp` vorbei eine zweite Erzeugung aufgemacht — zu viel
+Fläche für einen Fehler, den vor dem Absenden niemand sieht.
+
+### Die beiden Sicherungen
+
+Sie sind Bedingung, nicht Zugabe — das Verfassenfenster zeigt ja etwas
+anderes als das, was hinausgeht.
+
+* **Drei Spurmarken**, alle `DEBUG_MASK_MISC` (`LogLevel=58527`).
+  `E-88 vor dem Absenden` nennt die gewählte Fassung und den Grund, beide
+  Größen, die Länge des eigenen Zusatzes davor und dahinter und den
+  Antworttyp. `E-88 auf der Leitung` nennt, was **wirklich** hinausgeht.
+  `E-88 eingebettete Teile` meldet, wenn das Aufräumen der eingebetteten
+  Bilder übersprungen wurde — dazu der Abschnitt darunter.
+* **Der Schalter `ForwardOriginalHTML`** (Vorgabe `1`, `[Settings]`,
+  `EudoraRes.rc:7668`). Mit `0` gilt wieder das Verhalten von 7.2.0.55.
+  Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitt 3.
+
+### Die Bilder mussten mitgesichert werden
+
+`PgMsgView::SaveInfo` warf bisher jeden eingebetteten Teil weg, dessen
+`cid:`-Kennung im Paige-Inhalt nicht mehr vorkam. Das ist richtig, solange
+die Paige-Fassung die Nachricht ist — setzt `ExportMessage` gleich darauf
+das Original ein, zeigt dieses auf bereits gelöschte Teile, und beim
+Empfänger fehlte das Bild **ohne jede Meldung**. Solange ein Original
+aufgehoben ist, unterbleibt das Aufräumen; der Preis sind höchstens ein
+paar unreferenzierte Teile in der Nachricht — derselbe Zustand, in dem sie
+vor dieser Schleife ohnehin war.
+
+### Was das NICHT behebt
+
+* **Das Verfassenfenster bleibt schlicht.** Paige kann weiterhin kein CSS,
+  und daran ändert der Umbau nichts — er ändert nur, was hinausgeht.
+* **Wer im zitierten Teil etwas ändert, bekommt wieder die alte Fassung.**
+  Das ist Absicht: sonst ginge die Änderung verloren.
+* **Der eigene Zusatz geht als reiner Text hinaus**, nicht mit seiner
+  Auszeichnung.
+* **Nach dem Schließen des Verfassenfensters ist das Original fort.** Wird
+  die Nachricht später aus *Out* erneut geöffnet, gilt wieder das alte
+  Verhalten; die Spurmarke sagt dann `EDITOR (kein Original gemerkt)`.
+
+**Testlauf: 131 Tests, 131 bestanden, 0 fehlgeschlagen** — zehn davon neu
+zu E-88 (`TestE88.cpp`), darunter fünf **Gegenproben**: im Zitat geändert,
+mitten im Zitat gelöscht, Schalter auf `0`, kein Original gemerkt, reiner
+Textrumpf. Der geprüfte Code wird von `Extract.ps1` bei jedem Bau frisch
+aus `msgutils.cpp` geschnitten, nicht abgeschrieben.
+
+### Zum Prüfen
+
+1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Settings]`.
+2. Starten, den Newsletter aus **E-86** weiterleiten — einmal ohne
+   Kommentar, einmal mit einem Satz darüber. Beide an die eigene Adresse.
+3. Im Protokoll nach `E-88` suchen. Erwartet: `Fassung=ORIGINAL
+   (unveraendert)` beim ersten, `Fassung=ORIGINAL (mit Zusatz)` beim
+   zweiten, und `E-88 auf der Leitung` mit `IsFancy=2` (HTML).
+4. Die angekommenen Nachrichten neben das Original halten.
+
+Steht dort `Fassung=EDITOR`, sagt der Klammerzusatz den Grund.
+
+---
+
 ## 7.2.0.55 — HTML bleibt erhalten, beim Lesen wie beim Weiterleiten (E-86, E-87)
 
 **Was Gregor damit tun kann:** eine HTML-Nachricht weiterleiten oder
@@ -120,9 +352,10 @@ eines modernen Newsletters. Das ist keine Stelle, die HTML wegwirft, sondern
 ein Editor, der es nicht halten kann — dafür reicht kein Schalter. Als Grenze
 dokumentiert in `EINSTELLUNGEN.md`.
 
-**Offen und Gregors Entscheidung:** ob der Original-HTML-Block am Paige-Editor
-vorbeigeführt und beim Senden wieder eingesetzt werden soll. Das ist ein
-Eingriff in den Sendeweg, kein Schalter.
+**Seit 7.2.0.56 erledigt:** der Original-HTML-Block wird am Paige-Editor
+vorbeigeführt und beim Senden wieder eingesetzt (**E-88**, Abschnitt
+darüber). CSS-Kästen und -Hintergründe kommen damit beim Empfänger an —
+im Verfassenfenster sind sie weiterhin nicht zu sehen.
 
 ### Und die Anzeige: HTML-Nachrichten sehen aus wie im Browser (E-86)
 

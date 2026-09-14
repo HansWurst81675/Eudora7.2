@@ -64,3 +64,6 @@
 - [Anzeige ist kein Zustand](anzeige-ist-kein-zustand.md) — ein Oberflächentext ist eine Behauptung des Programms über sich selbst; E-83 suchte drei Tage ein Startproblem, das es nie gab
 - [Auftrag darf nicht löschen](auftrag-darf-nicht-loeschen.md) — zwei von zwei Agentenaufträgen trugen reset --hard; der Nachfolger merge --ff-only scheiterte genau in der Lage, für die er geschrieben war
 - [Testdaten müssen durchkommen](testdaten-muessen-durchkommen.md) — die Testmail traf den Fehler und scheiterte am Spamfilter (550); der echte Fall aus Gregors Postfach hatte den Prüfweg schon überlebt
+- [Bestand vor neuer Suche](bestand-vor-neuer-suche.md) — die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md; erst offene-befunde.pl, vor jedem neuen Befund befund-suchen.pl
+- [Verwerfen nur mit Zähler](verwerfen-nur-mit-zaehler.md) — ein verwerfender Befehl wirkt auf seinen Umfang, nicht auf meine Absicht; PORTIERUNG.md 1129 Zeilen auf 0
+- [Funktion bringt ihre Vorbedingung mit](funktion-bringt-ihre-vorbedingung-mit.md) — ISOTranslate nullt ein Byte hinter dem Bereich; im IMAP-Weg ist das die nächste Zeile

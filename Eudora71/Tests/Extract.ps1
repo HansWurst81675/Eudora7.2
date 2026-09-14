@@ -149,4 +149,34 @@ $hLine = Find-Line $l '^BOOL\s+Fix2047\s*\(' $hStart
 $hEnd = Find-Line $l '^\}\s*$' $hLine
 Write-Region $l $hStart $hEnd (Join-Path $OutDir "lex822_2047.inc") $lexPath
 
+
+# ---------------------------------------------------------------- msgutils.cpp
+# Region I: E88NurText und E88OriginalEinsetzen am Stueck (Befund E-88).
+# Das ist die Entscheidung, ob die Original-Fassung oder die Editor-Fassung
+# hinausgeht. Sie muss gepruefbar sein, ohne Eudora zu starten - eine falsche
+# Entscheidung sieht vor dem Absenden niemand.
+$msgPath = Join-Path $SrcDir "msgutils.cpp"
+$mu = Read-Lines $msgPath
+$iStart = Find-Line $mu '^static void E88NurText\s*\(' 0
+$iLine = Find-Line $mu '^bool E88OriginalEinsetzen\s*\(' $iStart
+$iEnd = Find-Line $mu '^\}\s*$' $iLine
+Write-Region $mu $iStart $iEnd (Join-Path $OutDir "msgutils_e88.inc") $msgPath
+
+# ---------------------------------------------------------------- utils.cpp (IsFancy)
+# E88OriginalEinsetzen ruft IsFancy. Wieder geschnitten statt abgeschrieben.
+$jStart = Find-Line $u '^int IsFancy\s*\(' 0
+$jEnd = Find-Line $u '^\}\s*$' $jStart
+Write-Region $u $jStart $jEnd (Join-Path $OutDir "utils_isfancy.inc") $utilsPath
+
+# ---------------------------------------------------------------- msgutils.cpp (E-89)
+# Region K: die vier Funktionen, die aus einem <img> ohne auswertbare Groesse
+# eines mit Groesse machen (Befund E-89). Reine Textverarbeitung, HTML rein und
+# HTML raus - genau die Sorte Code, die sich ohne Fenster und ohne Paige pruefen
+# laesst. Die Region beginnt bei den Deckel-Konstanten, weil der geschnittene
+# Code sie braucht.
+$kStart = Find-Line $mu '^#define\s+E89_MAX_BREITE\b' 0
+$kLine = Find-Line $mu '^bool E89BilderMessbarMachen\s*\(' $kStart
+$kEnd = Find-Line $mu '^\}\s*$' $kLine
+Write-Region $mu $kStart $kEnd (Join-Path $OutDir "msgutils_e89.inc") $msgPath
+
 Write-Host "Extract.ps1: fertig."
