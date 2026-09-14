@@ -1,4 +1,4 @@
-﻿# Veroeffentlichte Releases
+# Veroeffentlichte Releases
 
 Jede Zeile ist ein Release, das ich veroeffentlicht habe, mit der Freigabe,
 auf die es sich stuetzt. Angelegt und gefuellt von
