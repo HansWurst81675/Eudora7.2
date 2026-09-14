@@ -62,12 +62,19 @@ verschickt.
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
-* **IMAP läuft, aber eine Aufgabe kann hängenbleiben.** Von Gregor am
-  10.09.2026 bestätigt — *„imap: funktioniert"*, `imap.gmx.net:993`. Zwei
-  Befunde sind dort offen: **E-83**, eine IMAP-Aufgabe bleibt auf *„Waiting in
-  the task queue to be started …"* stehen und wird nie gestartet (beim Beenden
-  warnt Eudora dann *„You currently have 1 task(s) running"*), und **E-77**,
-  Postfachnamen mit Umlauten stehen roh da: `Entw&APw-rfe` statt *Entwürfe*.
+* **HTML-Nachrichten werden falsch dargestellt** (**E-86**, offen): Bilder in
+  der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um
+  verlinkte Bilder. Betroffen ist nur die Anzeige — die Nachricht selbst
+  bleibt unversehrt.
+* **IMAP läuft, ein Darstellungsfehler bleibt.** Von Gregor am 10.09.2026
+  bestätigt — *„imap: funktioniert"*, `imap.gmx.net:993`. **Offen ist E-77:**
+  Postfachnamen mit Umlauten stehen roh da, `Entw&APw-rfe` statt *Entwürfe*.
+  Zwei weitere IMAP-Befunde sind **behoben, aber noch nicht veröffentlicht**
+  (das neueste Release ist `v1.0.50`): **E-85** — abgerufene Nachrichten kamen
+  als Zeichensalat an statt mit Umlauten, behoben im Quellstand 7.2.0.52 — und
+  **E-83** — eine Aufgabe blieb in der Warteschlange stehen, sodass Eudora
+  beim Beenden *„You currently have 1 task(s) running"* meldete, behoben im
+  Quellstand 7.2.0.53.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
