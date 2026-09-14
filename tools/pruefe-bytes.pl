@@ -292,10 +292,38 @@ my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
 sub doppelkodiert {
   my ($s) = @_;
   return 0 unless defined $s;
+
+  # AUSNAHME, eng gefasst: eine kaputte Bytefolge, die jemand ZEIGT, steht in
+  # Anfuehrung - in Backticks oder in Anfuehrungszeichen. Wer sie versehentlich
+  # erzeugt, erzeugt sie im Fliesstext.
+  #
+  # Gemessen am 14.09.2026: in BEFUNDE.md stehen drei solche Belege, alle drei
+  # angefuehrt, alle drei absichtlich:
+  #
+  #     5437   ... stuenden dort **zwei** Zeichen (`A-Tilde u`). Der ...
+  #     6793       "BestTV (U-TV) Android Player fA-Tilde-ur LiveTV"   falsch
+  #     6796   Das `ae` stimmt, das `ue` nicht. `fA-Tilde-ur` ist die Signatur ...
+  #
+  # Sie belegen, WIE der Schaden aussieht - zu E-85 und NP3-8. Wer sie
+  # repariert, nimmt dem Befund seinen Beweis. Ohne diese Ausnahme muss man
+  # die Schranke mit --no-verify umgehen, um ihre eigene Regel durchzusetzen,
+  # und eine Schranke, die man umgehen muss, ist die falsche Schranke
+  # (Arbeitsweise/schranke-gegentesten.md).
+  #
+  # Warum das nicht als Schlupfloch taugt: ein Werkzeug, das eine Datei als
+  # Latin-1 liest und als UTF-8 zurueckschreibt - der Fall, um den es hier
+  # geht (X-7, README.md am 05.09.2026: 238 Stellen) - trifft jedes Wort, nicht
+  # nur die eingerahmten. Von 1517 beschaedigten Zeilen in BEFUNDE.md waren
+  # genau diese drei angefuehrt.
+  my $t = $s;
+  $t =~ s/`[^`\n]*`//g;                                   # Backticks
+  $t =~ s/"[^"\n]*"//g;                                   # gerade Anfuehrung
+  $t =~ s/\xe2\x80\x9e[^\n]*?\xe2\x80\x9c//g;             # deutsche Anfuehrung
+
   my $n = 0;
-  $n += () = $s =~ /\xC3\x83\xC2/g;
-  $n += () = $s =~ /\xC3\xA2\xC2\x80/g;
-  $n += () = $s =~ /\xC3\x82\xC2/g;
+  $n += () = $t =~ /\xC3\x83\xC2/g;
+  $n += () = $t =~ /\xC3\xA2\xC2\x80/g;
+  $n += () = $t =~ /\xC3\x82\xC2/g;
   return $n;
 }
 
@@ -362,16 +390,38 @@ for my $e (@eintraege) {
   my $ohne_a = $vorher; $ohne_a =~ s/\Q$CR\E\Q$LF\E/$LF/g; $ohne_a =~ s/\Q$CR\E/$LF/g;
   my $ohne_b = $jetzt;  $ohne_b =~ s/\Q$CR\E\Q$LF\E/$LF/g; $ohne_b =~ s/\Q$CR\E/$LF/g;
 
+  my $md_nach_lf = ($d =~ /\.md$/i)
+                && ($d !~ m{^Eudora71/})
+                && (index($jetzt, $CR) < 0)
+                && (index($vorher, $CR) >= 0);
+
   if ($ohne_a eq $ohne_b and $vorher ne $jetzt) {
-    push @fehler, sprintf(
-      "%s%s: NUR die Zeilenenden geaendert, kein Inhalt - CRLF %d -> %d, LF %d -> %d",
-      $d, $umbenannt, $crlf_a, $crlf_b, $lf_a, $lf_b);
-    $gemeldet = 1;
+    # Ausnahme, eng gefasst: die .md ausserhalb von Eudora71/ SOLLEN laut
+    # CLAUDE.md reine LF haben. Wer eine solche Datei von CRLF auf LF bringt,
+    # stellt den Sollzustand her - das ist das Gegenteil des lautlosen
+    # Schadens, den diese Regel abwehrt. Erlaubt ist ausschliesslich die
+    # Richtung ZU reinen LF hin: nachher darf kein einziges CR mehr drin
+    # stehen, und vorher muss mindestens eines dagewesen sein. Der umgekehrte
+    # Weg - eine MD nach CRLF drehen - faellt weiter durch diese Regel.
+    # Gemessen am 14.09.2026 (LEKTOR): tools/RELEASES.md trug BOM und 27 CR,
+    # tools/TESTLAEUFE.md BOM und 17 CR, Pruefung/PRUEFUNG-ZEIGER.md war mit
+    # 193 CR durchgehend CRLF. Ohne diese Ausnahme liesse sich die eigene
+    # Byte-Regel nicht durchsetzen, ohne die Schranke zu umgehen.
+    unless ($md_nach_lf) {
+      push @fehler, sprintf(
+        "%s%s: NUR die Zeilenenden geaendert, kein Inhalt - CRLF %d -> %d, LF %d -> %d",
+        $d, $umbenannt, $crlf_a, $crlf_b, $lf_a, $lf_b);
+      $gemeldet = 1;
+    }
   }
   # Regel 2: Inhalt UND Zeilenenden geaendert. Siehe die Begruendung oben.
   else {
     my @um = umwandlungen($e);
-    if (@um) {
+    # Dieselbe Ausnahme wie in Regel 1: eine .md ausserhalb Eudora71/
+    # auf reine LF zu bringen ist der Sollzustand. Hier greift der Fall,
+    # bei dem ZUSAETZLICH die BOM wegfaellt - dann ist der Inhalt nicht
+    # mehr gleich, und Regel 1 sieht die Datei gar nicht.
+    if (@um && !$md_nach_lf) {
       $gemeldet = 1;
       my %richtung;
       $richtung{ $_->[1] . ' -> ' . $_->[2] }++ for @um;

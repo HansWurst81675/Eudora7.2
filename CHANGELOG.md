@@ -13,6 +13,9 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
+| **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
+| **E-91** | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu E-89, nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
+| **E-92** | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
 | **E-78** | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von E-70 am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
 | **E-71** | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
@@ -56,7 +59,20 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.57 — im Verfassenfenster liegen die Bilder nicht mehr über dem Text (E-89)
+## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
+
+> **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
+> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Tonerkartusche über
+> „Artikelnummer" und „Nachbestellung mit Order-No", darunter steht ein leerer
+> grauer Kasten. **Die Spurmarke aus seinem Lauf widerlegt die angenommene
+> Ursache:** `gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3 gedeckelt=0` — kein
+> einziges Bild hatte seine Größe im CSS, keines war zu breit, geändert wurden
+> 48 Bytes von 62.057. Die Bilder überlappen, **obwohl ihre Größe stimmt**.
+> Damit ist die fehlende Bildgröße als Ursache ausgeschlossen; gesucht wird ab
+> jetzt bei der **Position**, nicht der Ausdehnung. Der Stand bleibt im
+> Programm, weil er nichts verschlechtert außer der 200x90-Vorgabe — die
+> erzeugt den grauen Kasten und wird zurückgenommen. Einzelheiten in
+> [BEFUNDE.md](BEFUNDE.md) unter E-89.
 
 **Was Gregor damit tun kann:** einen Newsletter weiterleiten und dabei
 **lesen, was er schreibt**. Bisher lagen Logo und Kacheln in Originalgröße

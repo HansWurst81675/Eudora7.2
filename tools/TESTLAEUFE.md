@@ -1,4 +1,4 @@
-﻿# Testlaeufe
+# Testlaeufe
 
 Jede Zeile ist ein Start von Eudora durch mich, mit der Freigabe, auf die er
 sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum.

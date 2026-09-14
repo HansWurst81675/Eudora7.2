@@ -60,6 +60,17 @@ sub alle_mit {
 
 sub schreib {
     my ($pfad, $bytes) = @_;
+    # Unterverzeichnisse anlegen: ohne das liessen sich Faelle mit einem Pfad
+    # wie Eudora71/Eudora/x.cpp gar nicht stellen - und genau solche Pfade
+    # braucht jede Regel, die nach dem Ort der Datei unterscheidet.
+    if ($pfad =~ m{^(.*)/[^/]+$}) {
+        my $verz = $1;
+        my $teil = '';
+        for my $stueck (split m{/}, $verz) {
+            $teil = length($teil) ? "$teil/$stueck" : $stueck;
+            mkdir $teil unless -d $teil;
+        }
+    }
     open(my $f, '>:raw', $pfad) or die "schreiben $pfad: $!\n";
     print $f $bytes;
     close $f;
@@ -269,6 +280,53 @@ my @faelle = (
     datei => 'L6.cpp', erwartet => 1,
     roh_vorher  => 'eins' . $CR . 'zwei' . $CR . 'drei' . $CR,
     roh_nachher => 'eins' . $LF . 'zwei' . $LF . 'drei' . $LF },
+
+  # --- Ausnahme fuer die .md ausserhalb Eudora71/, LEKTOR 14.09.2026 --------
+  # Drei Dateien (tools/RELEASES.md, tools/TESTLAEUFE.md,
+  # Pruefung/PRUEFUNG-ZEIGER.md) verletzten die eigene Byte-Regel aus
+  # CLAUDE.md - .md sind UTF-8 ohne BOM mit reinen LF. Sie auf LF zu bringen
+  # ist der Sollzustand, nicht der Schaden. Beide Richtungen stehen hier, denn
+  # eine Ausnahme, die auch rueckwaerts durchlaesst, waere ein Loch.
+  { schl => 'L12a', name => 'MD ausserhalb Eudora71 von CRLF nach LF - der Sollzustand',
+    datei => 'L12a.md', erwartet => 0,
+    roh_vorher  => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' . $CR . $LF,
+    roh_nachher => 'eins' . $LF . 'zwei' . $LF . 'drei' . $LF },
+
+  { schl => 'L12b', name => 'dieselbe MD rueckwaerts, LF nach CRLF - muss anschlagen',
+    datei => 'L12b.md', erwartet => 1,
+    roh_vorher  => 'eins' . $LF . 'zwei' . $LF . 'drei' . $LF,
+    roh_nachher => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' . $CR . $LF },
+
+  { schl => 'L12c', name => 'MD nur TEILWEISE auf LF gebracht, ein CR bleibt - muss anschlagen',
+    datei => 'L12c.md', erwartet => 1,
+    roh_vorher  => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' . $CR . $LF,
+    roh_nachher => 'eins' . $LF . 'zwei' . $CR . $LF . 'drei' . $LF },
+
+  { schl => 'L12d', name => 'Quelldatei unter Eudora71 von CRLF nach LF - Ausnahme gilt NICHT',
+    datei => 'Eudora71/Eudora/L12d.cpp', erwartet => 1,
+    roh_vorher  => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' . $CR . $LF,
+    roh_nachher => 'eins' . $LF . 'zwei' . $LF . 'drei' . $LF },
+
+  { schl => 'L12e', name => 'MD unter Eudora71 von CRLF nach LF - Ausnahme gilt NICHT',
+    datei => 'Eudora71/L12e.md', erwartet => 1,
+    roh_vorher  => 'eins' . $CR . $LF . 'zwei' . $CR . $LF . 'drei' . $CR . $LF,
+    roh_nachher => 'eins' . $LF . 'zwei' . $LF . 'drei' . $LF },
+
+  # Der Fall, der am 14.09.2026 wirklich auftrat: tools/RELEASES.md und
+  # tools/TESTLAEUFE.md trugen BOM UND CRLF. Weil mit der BOM auch der Inhalt
+  # abweicht, sieht Regel 1 die Datei gar nicht - es greift Regel 2. Beide
+  # brauchen die Ausnahme, sonst laesst sich die eigene Byte-Regel nicht
+  # durchsetzen, ohne die Schranke zu umgehen.
+  { schl => 'L12f', name => 'MD wird BOM UND CRLF los - der reale Fall vom 14.09.2026',
+    datei => 'L12f.md', erwartet => 0,
+    roh_vorher  => chr(0xEF).chr(0xBB).chr(0xBF) . 'eins' . $CR . $LF . 'zwei' . $CR . $LF,
+    roh_nachher =>                                 'eins' . $LF        . 'zwei' . $LF },
+
+  # Die Gegenrichtung desselben Falls: die Ausnahme darf kein Loch sein.
+  { schl => 'L12g', name => 'MD bekommt BOM UND CRLF - muss anschlagen',
+    datei => 'L12g.md', erwartet => 1,
+    roh_vorher  =>                                 'eins' . $LF        . 'zwei' . $LF,
+    roh_nachher => chr(0xEF).chr(0xBB).chr(0xBF) . 'eins' . $CR . $LF . 'zwei' . $CR . $LF },
 
   { schl => 'L7', name => 'letzte Zeile VERLIERT ihren Zeilenumbruch',
     datei => 'L7.cpp', erwartet => 1,
