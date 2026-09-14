@@ -40,7 +40,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
-> Stand 14.09.2026, Quellstand **7.2.0.59**, Paketnummer **1.0.59**. Als ZIP
+> Stand 14.09.2026, Quellstand **7.2.0.60**, Paketnummer **1.0.60**. Als ZIP
 > gepackt wurde zuletzt die Fassung davor; 7.2.0.53 behebt **E-83**
 > (Eudora ließ sich nicht beenden)
 > und wartet auf Gregors Test. **Veröffentlicht** ist bei GitHub `v1.0.50`

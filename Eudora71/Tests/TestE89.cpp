@@ -105,7 +105,7 @@ void RunE89Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------- (3)
-	TT_BeginTest("E-89: gar keine Groessenangabe - das Bild bleibt unangetastet");
+	TT_BeginTest("E-89: gar keine Groessenangabe - kleine Vorgabe, damit die Zeile stimmt");
 	{
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"https://example.invalid/bild.jpg\" alt=\"Bild\">"
@@ -116,9 +116,9 @@ void RunE89Tests(void)
 		// mitten im Text: Platz, der weggenommen wird, ohne dass etwas zu
 		// sehen ist. Eine geratene Zahl ist schlechter als keine - Paige
 		// kennt die wirkliche Groesse, sobald es die Datei geladen hat.
-		TT_CHECK_MSG(!bGeaendert,
-					 "ohne bekanntes Mass wird nichts geschrieben");
-		TT_CHECK(szAus.IsEmpty());
+		TT_CHECK_MSG(bGeaendert,
+					 "ohne Hoehe bleibt die Zeile textklein und der Text wird zugedeckt");
+		TT_CHECK(szAus.Find("height=\"20\"") >= 0);
 		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);
 	}
@@ -170,8 +170,8 @@ void RunE89Tests(void)
 			"<html><body><img src=\"x.png\" style=\"max-width:480px\"></body></html>",
 			szAus, szSpur);
 
-		TT_CHECK_MSG(!bGeaendert,
-					 "max-width ist eine Obergrenze, keine Breite - ohne bekanntes Mass bleibt das Bild stehen");
+		TT_CHECK_MSG(szAus.Find("width=\"480\"") < 0,
+					 "max-width ist eine Obergrenze, keine Breite - 480 waere geraten");
 		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szAus);
 	}
@@ -199,8 +199,8 @@ void RunE89Tests(void)
 			"<html><body><img src=\"x.png\" style=\"height:50%\"></body></html>",
 			szAus, szSpur);
 
-		TT_CHECK_MSG(!bGeaendert,
-					 "eine Prozenthoehe ist kein Pixelmass - das Bild bleibt stehen");
+		TT_CHECK_MSG(szAus.Find("height=\"50\"") < 0,
+					 "aus einer Prozenthoehe darf keine Pixelzahl werden");
 		// numeric_value liest bei der Hoehe nur die Zahl
 		// (PGHTMIMP.CPP:2022) - aus "50%" wuerden 50 Bildpunkte.
 		TT_CHECK_MSG(szAus.Find("height=\"50\"") < 0,
@@ -217,8 +217,8 @@ void RunE89Tests(void)
 			"<html><body><img src=\"a.png\" style=\"width:10em\">"
 			"<img src=\"b.png\" style=\"width:auto\"></body></html>", szAus, szSpur);
 
-		TT_CHECK_MSG(!bGeaendert,
-					 "em und auto sind keine Pixelmasse - beide Bilder bleiben stehen");
+		TT_CHECK_MSG(szAus.Find("width=\"10\"") < 0,
+					 "10em ist nicht 10 Bildpunkte");
 		TT_CHECK_MSG(szAus.Find("width=\"10\"") < 0, "10em ist nicht 10 Bildpunkte");
 		TT_CHECK(szSpur.Find("ohne-Mass=2") >= 0);
 		TT_CHECK(szSpur.Find("gesamt=2") >= 0);

@@ -59,6 +59,38 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
+
+> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Der
+> blaue Kreis darf den Verifizierungscode nicht mehr zudecken.
+
+**Warum es einen dritten Anlauf braucht — wir haben uns selbst im Weg
+gestanden.** Die Zeilenhöhe hängt an `image_record.source_height`, und der Wert
+kommt aus dem **`height`-Attribut** der Nachricht (`PGHTMIMP.CPP:2022`), nicht
+aus der Bilddatei. Fehlt das Attribut, ist er null, der ganze Block wird
+übersprungen, und die Zeile bleibt textklein. Genau dann deckt das Bild den Text
+zu.
+
+Die 200×90-Vorgabe, die in 7.2.0.58 **entfernt** wurde, war das, was diesen Wert
+bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+
+```
+E-89 Bilder im Editor: gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0
+```
+
+Ein Bild ohne Maß — und der blaue Kreis lag über dem Code.
+
+**Jetzt ein kleines Maß**, gerade so hoch wie eine Textzeile (20 Punkte). Die
+Zeile wird so hoch, dass nichts zugedeckt wird, und der Platzhalter fällt kaum
+auf. Den grauen Kasten selbst gibt es ohnehin: Paige zeichnet ihn für jedes
+Bild, das es nicht geladen hat — auf Gregors Bildern stehen welche in **echten**
+Bildmaßen. Die Frage war nur, wie groß er ist.
+
+Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt),
+20×20. Gregors Entscheidung: *„ok, option a"*.
+
+**Tests: 150 von 150.**
+
 ## 7.2.0.59 — kein Inhaltsverlust mehr beim Weiterleiten (E-93), und die Fragezeichen sind weg (E-90)
 
 > **Noch nicht bestätigt.** Die Prüfanleitung steht unten.

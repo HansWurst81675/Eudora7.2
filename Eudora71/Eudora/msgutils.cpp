@@ -3181,6 +3181,8 @@ bool E88OriginalEinsetzen(
 #define E89_MAX_BREITE		600
 #define E89_MAX_HOEHE		600
 
+#define E89_VORGABE_KLEIN	20
+
 // Vorgabemasse fuer ein Bild, dessen Groesse nirgends steht. Hier gibt es
 // nichts zu rechnen - weder Originalgroesse noch Seitenverhaeltnis sind
 // bekannt, und nachgeladen wird beim Verfassen nichts. Die Hoehe ist die
@@ -3535,27 +3537,44 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		}
 
 		//
-		// Ist nach Attribut und CSS immer noch kein Mass bekannt, bleibt das
-		// Bild UNANGETASTET.
+		// Ist nach Attribut und CSS kein Mass bekannt, bekommt das Bild ein
+		// KLEINES Vorgabemass - gerade so hoch wie eine Textzeile.
 		//
-		// Hier stand bis zum 14.09.2026 eine Vorgabe von 200x90. Auf Gregors
-		// Bild zu 1.0.57 erschien sie als leerer grauer Kasten mitten im
-		// Text - Platz, der weggenommen wird, ohne dass etwas zu sehen ist.
-		// Vorher stand dort nichts. Seine Spurmarke nannte drei solche Faelle
-		// in einer einzigen Nachricht (Vorgabe=3).
+		// Der Weg dahin, in drei Schritten an einem Tag:
 		//
-		// Eine geratene Zahl ist schlechter als keine: Paige kennt die
-		// wirkliche Bildgroesse, sobald es die Datei geladen hat, und traegt
-		// sie selbst nach. Seit die Bildhoehe in PGHTMIMP.CPP wieder in die
-		// Zeilenhoehe eingeht, ist dieses Nachtragen auch nicht mehr
-		// schaedlich - es war nie die Groesse, die den Text zugedeckt hat,
-		// sondern die verworfene Zeilenhoehe.
+		//  1. 7.2.0.57 gab 200x90 vor. Auf Gregors Bild stand daraufhin ein
+		//     grosser grauer Kasten mitten im Text.
+		//  2. 7.2.0.58/59 liess das Bild ganz in Ruhe. Dann fehlt aber das
+		//     height-Attribut, und genau daran haengt die Zeilenhoehe:
+		//     image_record.source_height kommt aus numeric_value() ueber das
+		//     ATTRIBUT (PGHTMIMP.CPP:2022), nicht aus der Bilddatei. Ohne
+		//     Attribut ist der Wert null, der ganze Block wird uebersprungen,
+		//     die Zeile bleibt textklein - und der Text wird zugedeckt.
+		//     Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+		//     "gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0", und der
+		//     blaue Kreis lag ueber dem Verifizierungscode.
+		//  3. Jetzt ein kleines Mass. Die Zeile wird so hoch, dass nichts
+		//     zugedeckt wird, und der Platzhalter faellt kaum auf.
+		//
+		// Den grauen Kasten selbst gibt es so oder so: Paige zeichnet ihn fuer
+		// jedes Bild, das es nicht geladen hat - auf Gregors Bildern stehen
+		// welche in ECHTEN Bildmassen. Die Frage ist nur, wie gross er ist.
+		//
+		// Gregors Entscheidung am 14.09.2026 zwischen kleiner Vorgabe, gar
+		// keiner und den alten 200x90: "ok, option a".
 		//
 		if (nBreite <= 0 && nHoehe <= 0)
 		{
+			nBreite = E89_VORGABE_KLEIN;
+			nHoehe  = E89_VORGABE_KLEIN;
 			nOhneMass++;
-			i = j + 1;
-			continue;
+		}
+		else if (nHoehe <= 0)
+		{
+			// Breite bekannt, Hoehe nicht: die Zeilenhoehe haengt an der
+			// Hoehe, also muss sie dastehen.
+			nHoehe = E89_VORGABE_KLEIN;
+			nOhneMass++;
 		}
 
 		//
