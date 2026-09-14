@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 13.09.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 14.09.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
