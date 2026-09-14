@@ -1,112 +1,112 @@
-# BEFUNDE Ã¢ÂÂ Verzeichnis
+# BEFUNDE — Verzeichnis
 
 <!-- pruefstand: eceeecf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
-Diese Datei ist die Befundsammlung des Projekts, gewachsen durch AnhÃÂ¤ngen.
+Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
 Gemessen am 09.09.2026: **7606 Zeilen**, **123** Abschnitte auf zweiter und
-**204** auf dritter Ebene. NachzÃÂ¤hlen:
+**204** auf dritter Ebene. Nachzählen:
 
 ```sh
 wc -l < BEFUNDE.md                  # Zeilen
-grep -c '^## '   BEFUNDE.md         # Abschnitte 2. Ebene (dieses Verzeichnis zÃÂ¤hlt mit)
+grep -c '^## '   BEFUNDE.md         # Abschnitte 2. Ebene (dieses Verzeichnis zählt mit)
 grep -cE '^### +[A-Z]' BEFUNDE.md   # Unterabschnitte
 ```
 
 Jeder Agent schreibt seinen Abschnitt ans **Ende**, die Reihenfolge ist also
-zeitlich, nicht sachlich. Ohne dieses Verzeichnis findet niemand, was er sucht Ã¢ÂÂ
-und schlimmer: er findet einen Befund und weiÃÂ nicht, ob er noch gilt.
+zeitlich, nicht sachlich. Ohne dieses Verzeichnis findet niemand, was er sucht —
+und schlimmer: er findet einen Befund und weiß nicht, ob er noch gilt.
 
-**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` Ã¢ÂÂ mit `#\+`, weil viele Kennungen
+**Suchen:** `grep -n '^#\+ E-4' BEFUNDE.md` — mit `#\+`, weil viele Kennungen
 eine Ebene tiefer stehen (`### NP2-2`, `### NP3-8`, `### PR-6`, `### P-3` und
-weitere: sie sind Unterpunkte innerhalb eines grÃÂ¶ÃÂeren Abschnitts). Welche das
-sind, steht unten unter **Ã¢ÂÂUnterbefunde, die man einzeln sucht"**. Zeilennummern
-stehen hier absichtlich nicht Ã¢ÂÂ sie veralten mit jedem AnhÃÂ¤ngen, und dieses
+weitere: sie sind Unterpunkte innerhalb eines größeren Abschnitts). Welche das
+sind, steht unten unter **„Unterbefunde, die man einzeln sucht"**. Zeilennummern
+stehen hier absichtlich nicht — sie veralten mit jedem Anhängen, und dieses
 Projekt hat genug Zeit mit veralteten Fundstellen verloren (Befund Z-1).
-> **Auflage: wer einen Befund fortschreibt, ÃÂ¤ndert die Statusspalte hier mit.**
-> Ein Verzeichnis, das falsche StÃÂ¤nde behauptet, ist schlimmer als keines Ã¢ÂÂ
-> dasselbe gilt hier wie fÃÂ¼r ein Werkzeug, das nur Fehlalarme liefert (X-1).
+> **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**
+> Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines —
+> dasselbe gilt hier wie für ein Werkzeug, das nur Fehlalarme liefert (X-1).
 
 **Stand der Statusspalte:** 09.09.2026, Zweig `wt/lektor`, Quellstand
 **7.2.0.29** / Paket **1.0.29**. Nachgezogen am 09.09.2026 (Agent LEKTOR,
-Befund `Befunde/LEKTOR-6.md`, L-11): **E-44** stand auf Ã¢ÂÂvon Gregor noch nicht
-bestÃÂ¤tigt", ist aber am 08.09.2026 von ihm bestÃÂ¤tigt; **E-46** stand auf
-Ã¢ÂÂoffen, Spurmarke gesetzt", ist aber **widerlegt** (die Marke erscheint erst
+Befund `Befunde/LEKTOR-6.md`, L-11): **E-44** stand auf „von Gregor noch nicht
+bestätigt", ist aber am 08.09.2026 von ihm bestätigt; **E-46** stand auf
+„offen, Spurmarke gesetzt", ist aber **widerlegt** (die Marke erscheint erst
 nach der Stelle).
 
 > **Berichtigung meiner eigenen Aussage, noch am selben Tag.** Hier stand bis
-> 12:45 Uhr: *Ã¢ÂÂEine Kennung E-53 gibt es nicht Ã¢ÂÂ die hÃÂ¶chste vergebene ist
+> 12:45 Uhr: *„Eine Kennung E-53 gibt es nicht — die höchste vergebene ist
 > E-52."* **Das war falsch, und zwar nachweisbar falsch, obwohl ich es
 > gemessen hatte.** Meine Messung war
 > `grep -rn "E-53" --include=*.md .`, `git grep` gegen
-> `origin/lessons_learned` und `git log --all -S"E-53"` Ã¢ÂÂ dreimal null Treffer.
+> `origin/lessons_learned` und `git log --all -S"E-53"` — dreimal null Treffer.
 > Sie hat nur nicht gefunden, was auf dem Zweig **`karten-und-trennbalken`**
 > lag und noch nicht bei `origin` war: **E-53** (ein Strich bleibt beim
-> SchlieÃÂen eines Fensters stehen, behoben in 7.2.0.28, von Gregor noch nicht
-> bestÃÂ¤tigt) und danach **E-54** bis **E-62**. Die hÃÂ¶chste vergebene Kennung
-> ist damit **E-62**, nicht E-52. **Nachtrag 09.09.2026 (PRUEFER, Filter):** seither sind **E-63** bis **E-69** vergeben, die hÃÂ¶chste ist damit **E-69**.
+> Schließen eines Fensters stehen, behoben in 7.2.0.28, von Gregor noch nicht
+> bestätigt) und danach **E-54** bis **E-62**. Die höchste vergebene Kennung
+> ist damit **E-62**, nicht E-52. **Nachtrag 09.09.2026 (PRUEFER, Filter):** seither sind **E-63** bis **E-69** vergeben, die höchste ist damit **E-69**.
 >
-> **Die Lehre daraus ist nicht Ã¢ÂÂbesser greppen", sondern:** ein Kennungsraum
-> lÃÂ¤sst sich nicht aus einem einzelnen Arbeitsbaum messen. `git log --all`
-> sieht nur, was dieses Repo schon kennt Ã¢ÂÂ ein Zweig, der in einem anderen
+> **Die Lehre daraus ist nicht „besser greppen", sondern:** ein Kennungsraum
+> lässt sich nicht aus einem einzelnen Arbeitsbaum messen. `git log --all`
+> sieht nur, was dieses Repo schon kennt — ein Zweig, der in einem anderen
 > Arbeitsbaum entsteht und noch nicht gepusht ist, ist unsichtbar. Wer die
-> hÃÂ¶chste Kennung braucht, fragt vorher `git branch -a` **und**
+> höchste Kennung braucht, fragt vorher `git branch -a` **und**
 > `git worktree list` ab, oder er fragt Gregor.
 
-**FrÃÂ¼here StÃÂ¤nde dieser Zeile:** 07.09.2026, Commit `060a4bf` (Zweig `wt/lektor`).
-Die Einstufung ist am Text der Befunde und, wo nÃÂ¶tig, am Quelltext nachgesehen.
+**Frühere Stände dieser Zeile:** 07.09.2026, Commit `060a4bf` (Zweig `wt/lektor`).
+Die Einstufung ist am Text der Befunde und, wo nötig, am Quelltext nachgesehen.
 Nachgezogen am 07.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-3.md`, L-7):
-**E-30** stand auf Ã¢ÂÂin Arbeit", ist aber behoben und von Gregor bestÃÂ¤tigt;
+**E-30** stand auf „in Arbeit", ist aber behoben und von Gregor bestätigt;
 **E-31**, **E-32** und **E-33** fehlten ganz und sind eingetragen; **R-1** nannte
 25 von 142 Stellen, gemessen sind 21 von 137; und der Kasten, der **E-15** und
-**E-18** bis **E-21** fÃÂ¼r nie vergeben erklÃÂ¤rte, war falsch Ã¢ÂÂ alle fÃÂ¼nf stehen
-in Quellkommentaren. Nachgezogen am 06.09.2026 (L-6): **Z-3** stand auf Ã¢ÂÂoffen",
+**E-18** bis **E-21** für nie vergeben erklärte, war falsch — alle fünf stehen
+in Quellkommentaren. Nachgezogen am 06.09.2026 (L-6): **Z-3** stand auf „offen",
 ist aber seit `57fe6a4` behoben; **E-14**, **E-16**, **E-17**, **E-22**,
 **E-23**, **E-24**, **E-25** und **E-26** fehlten im Verzeichnis ganz und sind
-eingetragen. Am 05.09.2026 nachgezogen: **E-4** und **E-7** standen auf Ã¢ÂÂoffen",
-sind aber behoben; **PR-5** stand an drei Stellen auf Ã¢ÂÂoffen", ist aber seit
+eingetragen. Am 05.09.2026 nachgezogen: **E-4** und **E-7** standen auf „offen",
+sind aber behoben; **PR-5** stand an drei Stellen auf „offen", ist aber seit
 `765c39b` behoben. Neu aufgenommen war damals **B-3** (OT501 aus dem Bau) und
 **E-13** (Fortschritt beim Mailabruf).
 
 | Status | Bedeutung |
 |---|---|
 | **behoben** | Ursache beseitigt, im Repo |
-| **offen** | nichts geÃÂ¤ndert |
+| **offen** | nichts geändert |
 | **teilweise** | ein Teil behoben, der Rest steht im Befund |
-| **ÃÂ¼berholt** | durch einen spÃÂ¤teren Befund widerlegt oder gegenstandslos |
+| **überholt** | durch einen späteren Befund widerlegt oder gegenstandslos |
 | **Beleg** | kein Mangel, sondern eine Messung |
-| **Bericht** | PrÃÂ¼fdurchgang, seine Einzelbefunde stehen darin |
-| **ungeprÃÂ¼ft** | behoben, aber am laufenden Programm nicht nachgesehen |
+| **Bericht** | Prüfdurchgang, seine Einzelbefunde stehen darin |
+| **ungeprüft** | behoben, aber am laufenden Programm nicht nachgesehen |
 
 ## Was zuerst zu lesen ist
 
-Wer neu dazukommt: **`WEITERMACHEN.md`** (Einstieg und ÃÂbergabe),
-**`AUFGABEN.md`** (Arbeitsliste), **`ZIEL.md`** (der MaÃÂstab). Aus dieser Datei
+Wer neu dazukommt: **`WEITERMACHEN.md`** (Einstieg und Übergabe),
+**`AUFGABEN.md`** (Arbeitsliste), **`ZIEL.md`** (der Maßstab). Aus dieser Datei
 zuerst **E-11**, **R-1** und **E-1**.
 
-## KorrektheitsprÃÂ¼fung vom 29.08.2026 (Agent PRUEFER)
+## Korrektheitsprüfung vom 29.08.2026 (Agent PRUEFER)
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| H1 | ungÃÂ¼ltige Protokollversion brach die TLS-Verbindung nicht mehr ab | **behoben** |
+| H1 | ungültige Protokollversion brach die TLS-Verbindung nicht mehr ab | **behoben** |
 | H2 | Zeichentabelle: sieben falsche Zuordnungen, Doppelersetzung | **behoben** |
-| M1 | Untergrenze TLS 1.0 galt ausgerechnet fÃÂ¼r die Voreinstellung | **behoben** |
-| M2 | `BIO_s_workersocket()` war fÃÂ¼r sich genommen nicht threadsicher | **behoben** |
-| M3 | `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht | **ÃÂ¼berholt** (Absicht, im Code vermerkt) |
+| M1 | Untergrenze TLS 1.0 galt ausgerechnet für die Voreinstellung | **behoben** |
+| M2 | `BIO_s_workersocket()` war für sich genommen nicht threadsicher | **behoben** |
+| M3 | `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht | **überholt** (Absicht, im Code vermerkt) |
 | M4 | Empfangsrichtung las die **Sende**einstellung (Originalfehler) | **behoben** |
 | M5 | `CSumList::GetTail()` lieferte den Kopf (Originalfehler) | **behoben** |
-| N1 | Zeigerschmuggel durch `BIO_set_fd` hÃÂ¤lt nur unter Win32 | **behoben** (x64-Rest im Befund) |
+| N1 | Zeigerschmuggel durch `BIO_set_fd` hält nur unter Win32 | **behoben** (x64-Rest im Befund) |
 | N2 | `static` bei `get_entry_info` verlorengegangen | **behoben** |
-| N3 | zwei RÃÂ¼ckgabewerte wurden nicht ausgewertet | **behoben** |
-| N4 | `#undef` auf einen SDK-WÃÂ¤chter in `ExceptionHandler.cpp` | **behoben** |
-| N5 | `atlimage.h`: LaufzeitprÃÂ¼fung durch `TRUE` ersetzt | **behoben** (ÃÂnderung war nÃÂ¶tig, bleibt) |
-| N6 | OTShim war in keinem Projekt eingehÃÂ¤ngt | **ÃÂ¼berholt** |
+| N3 | zwei Rückgabewerte wurden nicht ausgewertet | **behoben** |
+| N4 | `#undef` auf einen SDK-Wächter in `ExceptionHandler.cpp` | **behoben** |
+| N5 | `atlimage.h`: Laufzeitprüfung durch `TRUE` ersetzt | **behoben** (Änderung war nötig, bleibt) |
+| N6 | OTShim war in keinem Projekt eingehängt | **überholt** |
 | N7 | zwei kleine Stellen in OTShim, beide heute wirkungslos | **offen** |
-| N8 | `const_cast` mit anschlieÃÂendem Schreibzugriff, 7 echte FÃÂ¤lle | **geprÃÂ¼ft**, kein Handlungsbedarf |
+| N8 | `const_cast` mit anschließendem Schreibzugriff, 7 echte Fälle | **geprüft**, kein Handlungsbedarf |
 
-## NachprÃÂ¼fungen 2 und 3 (PRUEFER, 29./30.08.2026)
+## Nachprüfungen 2 und 3 (PRUEFER, 29./30.08.2026)
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
@@ -119,21 +119,21 @@ zuerst **E-11**, **R-1** und **E-1**.
 | NP3-4 | `lehren-spiegeln.pl` löschte die gespiegelten Dateien wieder | **behoben** (stagt nicht mehr; Hook siehe X-2) |
 | NP3-5 | `lehren-spiegeln.pl` war genau im Fehlerfall stumm | **behoben** (X-2) |
 | NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **behoben** |
-| NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** (PrÃÂ¼fstandsmarke) |
-| NP3-8 | der IMAP-Empfang ÃÂ¼bersetzt **keinen** Zeichensatz (Originalfehler) | **behoben** in 7.2.0.52, am laufenden Programm belegt. **Dieser Befund stand hier, als Gregor am 13.09.2026 denselben Fehler als E-85 meldete Ã¢ÂÂ und wurde nicht gelesen.** Er nannte die Ursache, die Zeilennummern und die Handlungsanweisung (Ã¢ÂÂdenselben Aufruf verwenden wie `mime.cpp:382-390`, am besten durch Aufruf von `FindMIMECharset` selbst, und die Abfrage in Zeile 4657 auf `> 2` ziehen"). Genau so wurde es behoben Ã¢ÂÂ nur ÃÂ¼ber zwei AnlÃÂ¤ufe und eine ausgelieferte Zwischenfassung hinweg. Siehe **E-85** |
-| NP3-9 | RÃÂ¼ckgabewert von `ISOTranslate` an zwei Stellen verworfen | **behoben** Ã¢ÂÂ POP schon frÃÂ¼her, **IMAP in 7.2.0.51** (`ImapDownload.cpp`, `inLen`/`outLen` werden nachgezogen). Auch dieser Befund stand bereits hier, als derselbe Mangel unter **E-85** neu gesucht wurde |
-| PROBE | drei Funde beim ersten AusfÃÂ¼hren der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (HÃÂ¤rtungslÃÂ¼cken) |
+| NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** (Prüfstandsmarke) |
+| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **behoben** in 7.2.0.52, am laufenden Programm belegt. **Dieser Befund stand hier, als Gregor am 13.09.2026 denselben Fehler als E-85 meldete — und wurde nicht gelesen.** Er nannte die Ursache, die Zeilennummern und die Handlungsanweisung („denselben Aufruf verwenden wie `mime.cpp:382-390`, am besten durch Aufruf von `FindMIMECharset` selbst, und die Abfrage in Zeile 4657 auf `> 2` ziehen"). Genau so wurde es behoben — nur über zwei Anläufe und eine ausgelieferte Zwischenfassung hinweg. Siehe **E-85** |
+| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **behoben** — POP schon früher, **IMAP in 7.2.0.51** (`ImapDownload.cpp`, `inLen`/`outLen` werden nachgezogen). Auch dieser Befund stand bereits hier, als derselbe Mangel unter **E-85** neu gesucht wurde |
+| PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
 
 ## Start, Paket, Auslieferung (S)
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | S-1 | Paket 1.0.1 startete nicht: `MSVCR71D.dll` fehlte | **behoben** |
-| S-2 | StapelÃÂ¼berlauf beim Start Ã¢ÂÂ die WerbeflÃÂ¤che mit `CRect(0,0,0,0)` | **behoben** |
+| S-2 | Stapelüberlauf beim Start — die Werbefläche mit `CRect(0,0,0,0)` | **behoben** |
 | S-3 | erster Lauf durch Gregor: drei Beobachtungen | **teilweise** (S-3c: `MFC71`/`MSVCP71` dauerhaft offen) |
 | S-4 | Zusicherung im Adressbuch-Wazoo | **behoben** |
-| S-5 | MenÃÂ¼s lieÃÂen sich nicht ÃÂ¶ffnen | **behoben** (Ursache M-1, belegt in E-1) |
-| S-6 | Bereiche ÃÂ¼berlagern sich | **teilweise** (A-1 umgesetzt, Splitter offen) |
+| S-5 | Menüs ließen sich nicht öffnen | **behoben** (Ursache M-1, belegt in E-1) |
+| S-6 | Bereiche überlagern sich | **teilweise** (A-1 umgesetzt, Splitter offen) |
 | S-7 | die Wurzel aller CRLF-Probleme: Auschecken mit `autocrlf=true` | **behoben** |
 | S-8 | Paket 1.0.2 startete mit `0xc000007b` | **behoben** (und durch F-1 gegenstandslos) |
 
@@ -142,23 +142,23 @@ zuerst **E-11**, **R-1** und **E-1**.
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | B-1 | eigene `msvcr71.dll` als Weiterleitung (1429 Forwarder) | **behoben** |
-| B-2 | BrÃÂ¼cke in der Solution, Paket 1.0.3, neuer PaketprÃÂ¼fer | **behoben** (GUID-Berichtigung darin) |
-| M-1 | der Rahmen lieferte immer `HTERROR` Ã¢ÂÂ `m_bMainFrameEnabled` | **behoben**, Wirkung belegt (E-1) |
-| A-1 | Erscheinungsbild: fÃÂ¼nf Punkte umgesetzt | **teilweise**, Wirkung belegt (E-1/E-2) |
+| B-2 | Brücke in der Solution, Paket 1.0.3, neuer Paketprüfer | **behoben** (GUID-Berichtigung darin) |
+| M-1 | der Rahmen lieferte immer `HTERROR` — `m_bMainFrameEnabled` | **behoben**, Wirkung belegt (E-1) |
+| A-1 | Erscheinungsbild: fünf Punkte umgesetzt | **teilweise**, Wirkung belegt (E-1/E-2) |
 | P-1 | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | **teilweise** (P-1.5b bis P-1.5j offen) |
 | P-2 | der Absturzpunkt vor dem ersten Abruf abgesichert | **behoben** |
-| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben, vollstÃÂ¤ndig** Ã¢ÂÂ PR-5 ist seit `765c39b` erledigt; die frÃÂ¼here Angabe Ã¢ÂÂPR-5 offen" war ÃÂ¼berholt |
+| W-1 | die Werkzeuge in Ordnung gebracht (PR-1 bis PR-8) | **behoben, vollständig** — PR-5 ist seit `765c39b` erledigt; die frühere Angabe „PR-5 offen" war überholt |
 | F-1 | Release-Bau: `OTA50D.LIB` statt `OTA50R.LIB`, `MakeDox.pl` | **behoben**; statisch binden bleibt ausgeschlossen |
 | Z-2 | HTML-Umlaute: der Zeichensatz wird nirgends angesagt | **behoben**, an der Zwischendatei belegt (Fortschreibung 05.09.) |
-| Z-2b | ein einzelner Umlaut kaputt: UTF-8-Zeichen zerrissen an der StÃÂ¼ckgrenze beim Abruf | **behoben, ungeprÃÂ¼ft** (Fortschreibung von Z-2) |
-| B-3 | `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe | **behoben** (05.09., `d8cc9d3`) Ã¢ÂÂ damit entfallen die drei Fehler aus B-2 |
+| Z-2b | ein einzelner Umlaut kaputt: UTF-8-Zeichen zerrissen an der Stückgrenze beim Abruf | **behoben, ungeprüft** (Fortschreibung von Z-2) |
+| B-3 | `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe | **behoben** (05.09., `d8cc9d3`) — damit entfallen die drei Fehler aus B-2 |
 
-## PrÃÂ¼fberichte ÃÂ¼ber die eigene Arbeit
+## Prüfberichte über die eigene Arbeit
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| PR-1 | drei LÃÂ¶cher in der Commit-Schranke | **Bericht** Ã¢ÂÂ durch W-1 abgearbeitet |
-| PR-2 | NachprÃÂ¼fung des 31.08.: neun Punkte | **Bericht**; **PR-2.0** und PR-2.1 behoben (PR-2.0 am 06.09.2026, `Befunde/PAKET.md`, drei Gegenproben), PR-2.8 kein Handlungsbedarf, **PR-2.2 bis PR-2.7 offen** |
+| PR-1 | drei Löcher in der Commit-Schranke | **Bericht** → durch W-1 abgearbeitet |
+| PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; **PR-2.0** und PR-2.1 behoben (PR-2.0 am 06.09.2026, `Befunde/PAKET.md`, drei Gegenproben), PR-2.8 kein Handlungsbedarf, **PR-2.2 bis PR-2.7 offen** |
 | Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt |
 | X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 |
 | X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** im Skript — auf dieser Maschine war der *eingerichtete* Hook bis 05.09.2026 noch die alte Fassung (X-5) |
@@ -175,7 +175,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) |
-| E-2 | Werkzeugleiste vollstÃÂ¤ndig, HTML-Umlaute zerstÃÂ¶rt | **Beleg**; Ursache in Z-2 |
+| E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 |
 | E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** |
 | E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **behoben, ungeprüft** in **7.2.0.3** (05.09., `1188e87`: die Ursache liegt beim **Start**, ein ungeprüfter Cast in `WazooBarMgr.cpp`) |
 | E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 |
@@ -189,103 +189,103 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-14 | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (`SearchManager::Info::InitX1`) | **offen, nicht angefasst** — auf einem frischen Mailverzeichnis der normale erste Lauf; echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt **Am 14.09.2026 geprüft: nicht entscheidbar.** Der Befund lässt sich nur am **zweiten** Start eines gewachsenen Mailverzeichnisses messen, und dazu liegt keine Messung vor. **Stand ungeprüft seit dem 05.09.2026** — zu messen, indem Eudora zweimal hintereinander auf demselben Verzeichnis gestartet wird und beim zweiten Mal auf die Zusicherung geachtet wird |
 | E-16 | Absturz beim Verfassen (Strg-N) und „Encountered an improper argument", `afxcoll.inl:213` | **behoben** in **7.2.0.5** — sechs Indexstellen gehärtet (`Befunde/VERFASSEN.md`). Die Ursache, die dieser Befund **nicht** fand, ist **E-34**: die Schranke aus E-16 greift, `m_btns[24]` wirft trotzdem, weil MFC 14 in den Sammlungen mit `ENSURE` statt `ASSERT` prüft |
 | E-17 | der Kontoassistent startete bei jedem Start, obwohl ein Konto eingerichtet war | **behoben** in **7.2.0.7** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) (`Befunde/PERSONA.md`) |
-| E-22 | Doppelklick ÃÂ¶ffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken | **ÃÂ¼berholt durch E-28** Ã¢ÂÂ dieser Befund fand die Ursache nicht, lieferte aber einen Messwert, der die damalige Suchrichtung widerlegte, und sechs belegte Schwachstellen auf dem Weg (`Befunde/FENSTER.md`). Die Ursache ist `CSummary::m_FrameWnd`, siehe **E-28** |
-| E-23 | POP3 nur ÃÂ¼ber Port 110, dazu der Anmeldefehler bei freenet | **Ursache belegt**, drei LÃÂ¶cher gestopft (`Befunde/PORT.md`); Port 995 mit TLSv1.3 ist seit 06.09.2026 gemessen |
-| E-24 | unter Ã¢ÂÂRecent" stand Ã¢ÂÂIn" zweimal im Postfachbaum | **behoben** in **7.2.0.10** (`Befunde/POSTFACH.md`) |
-| E-25 | der Absturz beim Klick auf *Weiter*: Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile` | **behoben** in **7.2.0.10** (`Befunde/ASSISTENT.md`) Ã¢ÂÂ **die Hypothese hat den Test aber nicht bestanden**: 7.2.0.12 stÃÂ¼rzt weiter ab, E-25 war also nicht die einzige Quelle |
-| E-26 | der Absturzbericht nennt die Ladeadresse jedes Moduls (`QCExceptionHandler::WriteModuleTable`) | **behoben** in **7.2.0.12** (`277d3a4`) Ã¢ÂÂ kein eigener Abschnitt, beschrieben in `Befunde/SPUR.md` unter *Ã¢ÂÂDas Absturzprotokoll"* |
-| E-27 | **Strg-N beendet Eudora lautlos** Ã¢ÂÂ ohne Dialog, ohne Protokoll | **Ursache gefunden und behoben: E-31** in **7.2.0.12** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) (`pg_time_t` acht Byte statt vier). Der Absturz war `0xC00000FD` STATUS_STACK_OVERFLOW in `Paige32.dll`; ein voller Stapel lÃÂ¤sst keinen Platz fÃÂ¼r den Absturzbehandler, daher kein `Exception.log`. Dieser Befund hat davon die **Ursache des Schweigens** belegt: der Behandler hing nur an `SetUnhandledExceptionFilter`, und Heap-BeschÃÂ¤digung, `/GS`-WÃÂ¤chter, ungÃÂ¼ltiges Argument an die C-Laufzeit sowie `std::terminate` gehen daran vorbei Ã¢ÂÂ drei davon sind seit 7.2.0.13 angemeldet, dazu 15 Spurmarken. Die dort genannte Ã¢ÂÂbeste offene Spur" (`Paige32`/`EuMemMgr` gegen `MSVCR71`) ist durch E-31 **ÃÂ¼berholt** (`Befunde/VERFASSER.md`) |
-| E-28 | **Doppelklick ÃÂ¶ffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken** | **behoben** in **7.2.0.12** (`222c0ba`): `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstÃÂ¶rten Rahmen stehen. Gesetzt wird er bedingungslos in `CMessageFrame::ActivateFrame`, gelÃÂ¶scht wurde er nur innerhalb von `if (m_InitialSize != wp.rcNormalPosition)` Ã¢ÂÂ also nur, wenn das Fenster verschoben oder in der GrÃÂ¶ÃÂe geÃÂ¤ndert wurde (`Befunde/OEFFNEN.md`) |
-| E-29 | die Adressen im Absturzbericht brauchen ein Werkzeug | **behoben** in **7.2.0.12** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) (`029703c`): `tools/absturz-auswerten.pl`, 15 Selbsttests. LÃÂ¶st mit der Modultabelle aus E-26 jede Stapelzeile in einen Funktionsnamen auf Ã¢ÂÂ und sagt bei ÃÂ¤lteren Berichten ausdrÃÂ¼cklich, dass es **nicht** geht, statt zu raten (`Befunde/SPUR.md`) |
-| E-30 | abgeschaltete KnÃÂ¶pfe der Werkzeugleiste zeigen kein Symbol | **behoben** und von Gregor bestÃÂ¤tigt (Paket 1.0.14). Ursache waren die sechs **24-Bit**-Bitmaps der Hauptleiste: ohne Farbtabelle konnte `CreateMappedBitmap` das Buttongrau `192,192,192` nicht auf das heutige `COLOR_BTNFACE` (`240,240,240`) umsetzen, und die Maske erfasste das ganze Bildrechteck. Behoben in `OTShim/OTShim_Werkzeugleiste.cpp`, abgesichert durch `tools/pruefe-symbole.pl` und `Eudora71/Tests/TestSymbole.cpp` (`Befunde/SYMBOLE.md`) |
-| E-31 | `pg_time_t` war unter VS2022 **acht** Byte breit statt vier Ã¢ÂÂ damit war jede Paige-Struktur verschoben, und in dieser Portierung entstand nie ein Paige-Fenster | **behoben und mittelbar bestÃÂ¤tigt** in **7.2.0.17** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) Ã¢ÂÂ ohne Paige-Fenster gibt es kein Verfassen-Fenster, und Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt. Der Abschnitt mit allen FeldversÃÂ¤tzen steht in `CHANGELOG.md` unter 7.2.0.21, dazu ein Kommentar in `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` |
-| E-32 | die **modale** Meldung Ã¢ÂÂAn unhandled exception has occurred" beim Verfassen, nach der sich Eudora nicht mehr beenden lieÃÂ | **Ursachenbehauptung widerlegt** (P-3, `Befunde/PRUEFER-3.md`): `CHeaderView::OnKillFocusRecipient` lÃÂ¤uft bei Strg-N gar nicht, das Herausnehmen der Behebung bringt die Meldung nicht zurÃÂ¼ck, und im Paket 1.0.18 tritt sie ÃÂ¼ber denselben Weg nicht auf. Der **Code-Mangel** dort ist echt und behoben (`060a4bf`) Ã¢ÂÂ er war nur nie die Ursache. AufgeklÃÂ¤rt hat die Meldung erst **E-34** |
-| E-33 | *File Ã¢ÂÂ Exit*, das **Kreuz** und **Alt-F4** beenden Eudora nicht, sondern bringen die Meldung **Ã¢ÂÂEncountered an improper argument"** (Kriterium 7) | **behoben** in 7.2.0.22, von Gregor am 08.09.2026 bestÃÂ¤tigt: *Ã¢ÂÂschlieÃÂen klappt jetzt."* Alle drei Wege beenden. Behoben durch **E-40**, **E-41** und **E-42** nach dem Grundsatz: ein Fehler beim *AufrÃÂ¤umen* darf das Beenden nicht verhindern, nur eine bewusste Entscheidung des Anwenders. **Der Fehler selbst ist damit nicht verschwunden** Ã¢ÂÂ er steht als Protokollzeile da und ist als **E-43** weiter offen |
-| E-40 | eine RÃÂ¼ckfrage, die sich nicht **ÃÂ¶ffnen** lÃÂ¤sst, galt als Ã¢ÂÂAbbrechen" und hielt Eudora offen | **behoben** in 7.2.0.22. `CDoc::SaveModified` (`Eudora71/Eudora/doc.cpp`) und `CMessageDoc::SaveModified` (`Eudora71/Eudora/msgdoc.cpp`) hatten im `default`-Zweig nur `ASSERT(FALSE)` und `return FALSE`. `IDCANCEL` hat einen **eigenen** Zweig darÃÂ¼ber; in `default` fÃÂ¤llt vor allem die **0**, die `AfxMessageBox` liefert, wenn der Dialog nicht erzeugt werden kann Ã¢ÂÂ dann hat niemand entschieden. Jetzt: RÃÂ¼ckgabewert und Titel ins Protokoll, SchlieÃÂen wird fortgesetzt |
-| E-41 | **Alt-F4 und das Kreuz** laufen durch ein `ENSURE_VALID`, das *File Ã¢ÂÂ Exit* nicht hat | **behoben** in 7.2.0.22. `CMainFrame::OnSysCommand` reichte `SC_CLOSE` ungeschÃÂ¼tzt an `CFrameWnd::OnSysCommand` weiter; dort steht in MFC 14 `GetTopLevelFrame()` plus `ENSURE_VALID(pFrameWnd)` (`winfrm.cpp:1112-1114`), und `ENSURE_VALID` wirft **auch im Release-Bau**, wo MFC 6 nur `ASSERT_VALID` hatte. Jetzt `TRY`/`CATCH_ALL` mit `WM_CLOSE` als RÃÂ¼ckfallweg. **Gefunden hat die Stelle PRUEFER**, indem er meine BeweisfÃÂ¼hrung verwarf: aus Ã¢ÂÂKreuz und Alt-F4 zeigen dasselbe wie das MenÃÂ¼" folgt **nicht**, dass der Wurf in `OnClose` liegt |
-| E-42 | zwÃÂ¶lf **AufrÃÂ¤umschritte** beim Beenden konnten den Ablauf abbrechen und das Fenster stehen lassen | **behoben** in 7.2.0.22. Neues Makro `AUFRAEUMEN(name, anweisung)` in `Eudora71/Eudora/mainfrm.cpp`: fÃÂ¼hrt den Schritt aus, meldet einen Fehlschlag mit Namen und Grund ins Protokoll, macht weiter. In `OnClose`: `CloseImapConnections`, `EmptyTrash`, `CleanSSLLibrary`, `TrayItem`, `DeleteMenuObjects`, `QCWorkbook::OnClose`. In `CloseDown`: `TrimJunk`, `RemoveBogusAdToolBars`, `SaveBarState(ToolBar)`, `SaveWazooBarConfigToIni`, `SaveCrashStateToINI`, `WriteToolBarMarkerToIni`. Die RÃÂ¼ckfragen in `CloseDown` Stufe 1 bis 3 laufen bewusst **nicht** hierdurch |
-| E-43 | `SECControlBar` war **zweimal definiert** Ã¢ÂÂ dadurch lasen zwei ÃÂbersetzungseinheiten dasselbe Feld acht Byte auseinander | **behoben** in 7.2.0.24, **von Gregor am 08.09.2026 bestÃÂ¤tigt**: *Ã¢ÂÂ0.24 Ã¢ÂÂ persona lÃÂ¤ÃÂt sich lÃÂ¶schen. keine messageboxÃ¢ÂÂ*. **Die Wurzel von E-34, E-37 und E-38 zugleich.** `OT501/Include/sbarcore.h:118` (Original) und `OTShim/OTShim.h:496` (Ersatz) definieren beide `SECControlBar`; der Ersatz hat **ein Feld mehr**, `int m_nRowExtent` (`OTShim.h:533`). `OTShim_Werkzeugleiste.h:84` band unter `#ifndef __SBARCORE_H__` das **Original** ein, und denselben WÃÂ¤chter setzt `OTShim.h:984`. Welche Fassung eine ÃÂbersetzungseinheit sah, hing damit allein an der Reihenfolge: `QCCustomToolBar.cpp` ÃÂ¼ber `stdafx.h` Ã¢ÂÂ `OTShimAll.h` Ã¢ÂÂ `OTShim.h` zuerst (Ersatz), `OTShim_Werkzeugleiste.cpp` ohne `stdafx.h` (Original). Compilerschalter und Include-Pfade sind sonst gleich Ã¢ÂÂ nachgemessen aus `Eudora.tlog/CL.command.1.tlog`, einziger Unterschied `/Yu"stdafx.h"`. **Gemessen vorher:** `GetBtnCount=24/24 m_btns.GetSize=0/0 roh[0..4]=24,25,0,0,0`. **Nachher:** `GetBtnCount=24/24 m_btns.GetSize=24/24 roh[0..4]=15146180,10425560,24,25,0` Ã¢ÂÂ `m_nSize` und `m_nMaxSize` liegen jetzt dort, wo `CPtrArray` sie hat. **Wirkung:** die `Eudora.ini` des Testprofils enthÃÂ¤lt zum ersten Mal `[ToolBarÃ¢ÂÂ¦]`-Abschnitte, **13 statt 0**; keine `E-42`-Zeile mehr beim Beenden. Behoben durch `#include "OTShim.h"` statt `sbarcore.h`. Die Schranke dazu ist **`tools/pruefe-waechter.pl`**; die Lehre `Arbeitsweise/teilweise-ersetzte-header.md` gab es seit dem 30.08.2026 und sie hat nichts verhindert |
-| E-47 | beim ÃÂffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt der Fehlerdialog *Ã¢ÂÂDirectory Services unavailable during this session due to unsuccessful initialization"* | **offen, Ursache belegt, keine Behebung in Sicht.** Text in `DirectoryServices/DirectoryServicesUI/inc/DSRightViewImpl.h:44`, angezeigt in `DSRightViewImpl.cpp:255` aus `DSRightView::OnActivateWazoo` Ã¢ÂÂ **nur** wenn `RegisterCOMObjects()` fehlschlÃÂ¤gt. Es schlÃÂ¤gt fehl, weil die dort genannten `DirServ.dll`, `ISock.dll`, `Ph.dll`, `Ldap.dll` und `EudoraBk.dll` **`MFC71.DLL` und `MSVCP71.dll` brauchen**, und die hat Microsoft nie als Redistributable verÃÂ¶ffentlicht. `tools/paket-pruefen.ps1` fÃÂ¼hrt beide seit dem 31.08.2026 als hingenommene LÃÂ¼cke Ã¢ÂÂ **dass dabei ein Fehlerdialog erscheint, stand dort nicht**. Von Gregor am 08.09.2026 an 1.0.23 gesehen. **Widerlegt:** mein erster Verdacht, A-2 habe die Leiste aufgemacht. Gemessen mit `tools/leisten-messen.ps1`: Leiste 319 ist **rechts, Sichtbar = False**, und Gregors eigenes Protokoll meldet *Ã¢ÂÂKurznamen versteckt"*. Die Leiste wird also von A-2 nicht geÃÂ¶ffnet Ã¢ÂÂ sie war von Hand aufgemacht worden |
-| E-48 | die **Registerkartenleiste** fÃÂ¼r die offenen Fenster fehlte (Anforderung **A-3**, Kriterium 8) | **behoben** in 7.2.0.25, von Gregor am 09.09.2026 bestÃÂ¤tigt: der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem MenÃÂ¼ *Window*. Die Leiste war nicht abwesend, sondern **abgeschaltet**: Eudoras Code liegt vollstÃÂ¤ndig im Quellbaum (`workbook.cpp`), `mainfrm.cpp:1042` schaltet sie bei jedem Start ein, INI-Vorgabe `ShowMDITaskbar\n1`. Vier AnschlÃÂ¼sse fehlten in der Ersatzschicht: `SetWorkbookMode` war eine Attrappe; `GetTabPts` lieferte **sechs Nullpunkte** (jede Karte an (0,0) mit GrÃÂ¶ÃÂe null); `recalcTabWidth()` **liefert** die Breite nur zurÃÂ¼ck und wurde weggeworfen; `OnDrawTabIconAndLabel` wurde von niemandem gerufen, weshalb zwei **leere** KÃÂ¤sten standen. Dazu eine bewusste Abweichung: der Streifen beginnt am **MDI-Bereich**, nicht bei `rectClient.left` wie in `QCGetTaskBarRect` Ã¢ÂÂ dort liegt bei uns die linke Wazoo-Leiste, und Karte 0 verschwand darunter |
-| E-49 | der **linke Bereich** lieÃÂ sich nicht breiter ziehen (Anforderung **A-4**) | **behoben** in 7.2.0.26, von Gregor noch nicht bestÃÂ¤tigt. Die Splitter-Mechanik war vollstÃÂ¤ndig umgesetzt (`AddSplitter`, `HitTest`, `StartTracking`, `CalcTrackingLimits`, `DrawTrackerRect`, `OnSetCursor`, `OnLButtonDown`) Ã¢ÂÂ nur wurde `AddSplitter` nie gerufen, `Track` war leer und `OnSplitterMoved` tat nichts. **Drei AnlÃÂ¤ufe, zwei am laufenden Programm widerlegt:** `SetBorders` ergab Andockleiste Client **176** bei Leiste **180** (der Rand verkleinert den Innenbereich statt die Leiste zu vergrÃÂ¶ÃÂern); eine Bedingung ÃÂ¼ber `m_arrBars` ergab **gar keine Wirkung**; ein Messversuch mit Zuschlag **11** ergab **187**, also **7 frei** Ã¢ÂÂ daraus folgt, dass der Weg ÃÂ¼ber `CalcFixedLayout` stimmt und **MFC 4 Pixel des Zuschlags selbst verbraucht**. Endstand: Bedingung am Ergebnis, und `OnSizeParent` **misst** den freien Platz nach statt ihn zu raten Ã¢ÂÂ 8 Pixel |
-| E-50 | drei MÃÂ¤ngel an der neuen Registerkartenleiste, von Gregor an 1.0.25 gefunden | **behoben** in 7.2.0.26, noch nicht bestÃÂ¤tigt. Alle drei mit derselben Wurzel: **der Streifen wird nur beim Neuzeichnen gemalt, und niemand erklÃÂ¤rt ihn fÃÂ¼r ungÃÂ¼ltig.** (1) *Ã¢ÂÂdie karte bleibt eingedrÃÂ¼ckt, auch wenn man im anderen fenster ist"* Ã¢ÂÂ `QCWorkbook::OnLButtonDown` setzt `SetSelected(TRUE)` (`workbook.cpp:1109`) und **niemand** setzt es zurÃÂ¼ck; im Original tat das die Stingray-Ebene. Die Marke wird jetzt gelÃÂ¶scht, sobald ein anderer Rahmen aktiv ist. (2) *Ã¢ÂÂbeim skalieren ist die darstellung falsch"* Ã¢ÂÂ `WM_SIZE` frischt auf. (3) *Ã¢ÂÂdie karten sind dann weg"* beim ÃÂffnen/SchlieÃÂen Ã¢ÂÂ `AddSheet`/`RemoveSheet` frischen auf. **Nebenbefund, NICHT hier eingeordnet:** *Ã¢ÂÂnach dem neustart sind die fenster nicht im vollbild modus, wie beim beenden"* Ã¢ÂÂ das ist der Fensterzustand, ein eigener Weg ÃÂ¼ber `SaveOpenWindows`, getrennt zu messen |
-| E-51 | meine eigene **Ziehschleife** konnte Eudora einfrieren | **behoben, bevor es ausgeliefert wurde.** in **7.2.0.27** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) `Splitter::Track` lief im ersten Entwurf mit `while(::GetMessage(...))`. Kommt kein `WM_LBUTTONUP` Ã¢ÂÂ Mausfang verloren, Fokus weg, Nachricht anderswo hin Ã¢ÂÂ, wartet die Schleife fÃÂ¼r immer und das Programm ist tot. **Zweimal an der eigenen PrÃÂ¼finstanz eingetreten**, beide Male musste der Prozess abgeschossen werden. Jetzt: hÃÂ¶chstens 100 ms warten, danach Fenster, Mausfang und die **physische** Maustaste erneut prÃÂ¼fen. Der Preis ist benannt: ein kÃÂ¼nstlicher Zug ÃÂ¼ber Fensterbotschaften ist damit nicht mehr mÃÂ¶glich, das Ziehen kann nur ein Mensch prÃÂ¼fen |
-| E-52 | nach dem Verbreitern war der **Trennbalken nicht mehr greifbar**, und die Registerkarten standen **doppelt** | **behoben** in 7.2.0.27, von Gregor noch nicht bestÃÂ¤tigt. Von ihm an 1.0.26 gemeldet: *Ã¢ÂÂnach vergrÃÂ¶ÃÂern (verschiebung nach rechts), kann man den balken nicht mehr greifen. erst wenn ich das fenster verÃÂ¤ndere, dann geht es wieder."* und *Ã¢ÂÂverschieben links / rechts vom mailverzeichnis: hier ist kein refresh drin."* Ã¢ÂÂ **sein zweiter Halbsatz war die Diagnose.** MFC verschiebt die Leisten mit `DeferWindowPos` (`lpLayout->hDWP`); wenn `OnSizeParent` zurÃÂ¼ckkommt, hat die Andockleiste ihre neue GrÃÂ¶ÃÂe **noch nicht**, und `GetClientRect` liefert die alte. Der Balken landete an der alten Stelle. Behoben, indem er in `OnSize` entsteht Ã¢ÂÂ `WM_SIZE` kommt, nachdem die GrÃÂ¶ÃÂe gesetzt ist. Die doppelten Karten kamen aus derselben Wurzel: `RecalcLayout` ordnet neu an, erklÃÂ¤rt aber nichts fÃÂ¼r ungÃÂ¼ltig. `OnSplitterMoved` frischt jetzt mit `RDW_INVALIDATE \| RDW_ERASE \| RDW_ALLCHILDREN` auf. **BestÃÂ¤tigt ist der Gegenfall:** *Ã¢ÂÂverschieben rauf / runter Ã¢ÂÂ bug gefixt, die anzeige ist korrekt."*, also greift die HÃÂ¶henÃÂ¤nderung samt Auffrischen |
-| E-53 | beim **SchlieÃÂen** eines Fensters blieb an der Stelle der Registerkarte ein **Strich** stehen | **behoben** in 7.2.0.28, von Gregor noch nicht bestÃÂ¤tigt. Sein Wort: *Ã¢ÂÂschÃÂ¶nheitsfehler beim schlieÃÂen, da bleibt ein strich ÃÂ¼brig."* Die Ursache war eine **Unsymmetrie in meinem eigenen Code**: `SECWorkbook::StreifenAuffrischen` erklÃÂ¤rt den Streifen mit `InflateRect(2, 2)` fÃÂ¼r ungÃÂ¼ltig, gefÃÂ¼llt wurde in `OnPaint` aber nur der Streifen **ohne** diesen Rand. Die zwei Pixel ringsum blieben stehen Ã¢ÂÂ und genau dort liegen die Kanten, die `QCWorkbook::GetTabPts` um (+2,Ã¢ÂÂ2) verschiebt. Jetzt wird gefÃÂ¼llt, was auch fÃÂ¼r ungÃÂ¼ltig erklÃÂ¤rt wird; beide Stellen benutzen denselben Betrag |
-| E-54 | beim Ziehen des Trennbalkens **nach rechts** war der **Ziehrahmen unsichtbar** Ã¢ÂÂ man zog ins Blinde | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden. `SECDockBar::StartTracking` gab **sich selbst** als Zeichenziel mit (`pSplit->Track(this, pt, this)`), und `DrawTrackerRect` rechnet in den Clientbereich dieses Fensters um. Die Andockleiste ist aber nur **188 Pixel** breit Ã¢ÂÂ alles rechts davon fiel aus dem sichtbaren Bereich, also genau die Richtung, in die Gregor ziehen will. Jetzt heiÃÂt `pWndClipTo == NULL` Ã¢ÂÂin **Bildschirm**koordinaten auf den Bildschirm zeichnen", so wie MFC es beim Ziehen von Leisten macht (`CDockContext::InitLoop`): Fenstersperre auf dem ArbeitsflÃÂ¤chenfenster, dann `GetDCEx` mit `DCX_WINDOW\|DCX_CACHE\|DCX_LOCKWINDOWUPDATE`. Die Sperre ist der Grund, weshalb kein Rest stehen bleibt Ã¢ÂÂ sie sammelt die Malbereiche der anderen Fenster und zeichnet sie beim Aufheben nach |
-| E-55 | ein **acht Pixel hoher leerer Streifen** unter der Werkzeugleiste | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden. Der Zuschlag in `SECDockBar::CalcFixedLayout`, der den Greifstreifen fÃÂ¼r A-4 schafft, galt fÃÂ¼r **alle vier** Andockleisten Ã¢ÂÂ auch fÃÂ¼r die obere, in der die Werkzeugleiste sitzt und wo niemand etwas ziehen will. ÃÂbrig blieb dort nur der leere Platz. Die Entscheidung steht jetzt an **einer** Stelle (`BrauchtGreifstreifen`, links/rechts/unten) und wird von `CalcFixedLayout` **und** `TrennbalkenNeuAnlegen` benutzt Ã¢ÂÂ vorher standen zwei Listen getrennt da, und die eine schuf Platz, den die andere nicht belegte |
-| E-56 | beim **Abschalten** von *Show MDI task bar* blieb der Registerkartenstreifen stehen | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. In `QCWorkbook::ShowMDITaskBar` (`workbook.cpp:718-736`) stehen `RecalcLayout` und `ResetTaskBar` **innerhalb** von `if (m_bWorkbookMode)` Ã¢ÂÂ beim Einschalten lÃÂ¤uft beides, beim Ausschalten **nichts**. Der Rand wird auf 0 gesetzt, aber niemand ordnet neu an. Nachgeholt in `SECWorkbook::SetWorkbookMode`, nur im Ausschaltzweig (sonst liefe es doppelt), mit `RDW_ALLCHILDREN`, weil der MDI-Clientbereich selbst ein Kindfenster ist |
-| E-57 | `QCWorkbook::IsTabLabelTruncated` legte bei **jeder Mausbewegung** ÃÂ¼ber dem Streifen eine `CPaintDC` an Ã¢ÂÂ **auÃÂerhalb** von `WM_PAINT` | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden, und es erklÃÂ¤rt Gregors Satz *Ã¢ÂÂhier ist kein refresh drin"*. `CPaintDC` ruft `BeginPaint`/`EndPaint`; das erklÃÂ¤rt den UngÃÂ¼ltigkeitsbereich des Fensters fÃÂ¼r **erledigt, ohne etwas zu malen**. Gerufen wird die Fassung aus `OnNotify` (`workbook.cpp:1633`, `TTN_NEEDTEXT`), also bei jeder Mausbewegung. Was gerade neu gezeichnet werden sollte, wurde damit verworfen. Zum **Messen** von Textbreiten genÃÂ¼gt `CClientDC`, und der hat diese Nebenwirkung nicht |
-| E-58 | ein Klick in den **rechten Rand** des Registerkartenstreifens ÃÂ¶ffnete den **Browser**, ohne dass dort etwas zu sehen war | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden Ã¢ÂÂ eine **RÃÂ¼ckentwicklung aus 1.0.25 bis 1.0.28**, denn `QCWorkbook::OnLButtonDown` fragt nur bei `m_bWorkbookMode` (`workbook.cpp:1132`), und der ist erst seit A-3 an. Zwei Ursachen zusammen: `CalcLogoTopLeft` prÃÂ¼ft **nur x** (`pIntersectPoint->x >= nLeftEdge`), ein y-Vergleich fehlt ganz Ã¢ÂÂ getroffen war damit der gesamte rechte Fensterrand statt der 111 ÃÂ 23 Pixel des Logos; und das Logo wird **ÃÂ¼berhaupt nicht gezeichnet**, weil `OnDrawBorder` in dieser Ersatzschicht von niemandem gerufen wird. Solange kein Bild da ist, gibt es keinen Treffer: die TrefferprÃÂ¼fung liefert `FALSE`. Der Weg ÃÂ¼ber `TopLeft` bleibt unberÃÂ¼hrt, damit das Zeichnen spÃÂ¤ter ohne weiteres nachgezogen werden kann |
-| E-59 | `m_cxTab` wurde **nur in `OnPaint`** gesetzt | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden. Alles, was die Kartenbreite **braucht, ohne zu malen** Ã¢ÂÂ `GetTabPts` und damit `QCGetTabRect`, `TabHitTest` und `CalcLogoTopLeft` Ã¢ÂÂ, rechnete zwischen einer ÃÂnderung und dem nÃÂ¤chsten Malen mit dem alten Wert; ein Klick traf dann die Nachbarkarte. Die Breite wird jetzt dort bestimmt, wo die ÃÂnderung gemeldet wird (`StreifenAuffrischen`). Dabei musste eine PrÃÂ¼fung auf `m_pWBClient` **vor** den Aufruf: `QCWorkbook::recalcTabWidth` greift ohne eigene PrÃÂ¼fung darauf zu |
-| E-60 | ein Trennbalken konnte **wÃÂ¤hrend des Ziehens gelÃÂ¶scht** werden Ã¢ÂÂ Benutzung nach dem Freigeben | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden. `Splitter::Track` verteilt fremde Nachrichten (`TranslateMessage`/`DispatchMessage`), und eine davon kann einen Anordnungsdurchlauf auslÃÂ¶sen. Der lief durch `TrennbalkenNeuAnlegen` Ã¢ÂÂ `BeginRecycleSplitters`/`EndRecycleSplitters`, und dort wurde genau das Objekt gelÃÂ¶scht, in dessen Methode man sich noch befand. Neu ist eine Marke `m_bTracking`: `BeginRecycleSplitters` gibt einen ziehenden Balken nicht frei, `EndRecycleSplitters` lÃÂ¶scht ihn nicht, und `TrennbalkenNeuAnlegen` kehrt sofort zurÃÂ¼ck, solange gezogen wird |
-| E-61 | `Splitter::Track` **verschluckte `WM_QUIT`** Ã¢ÂÂ Eudora hÃÂ¤tte weitergelaufen, obwohl es enden sollte | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Von PRÃÂFER gefunden. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange; wer sie nicht zurÃÂ¼ckstellt, hat das Beenden des Programms verschluckt. Genau die Klasse aus **Kriterium 7** (*Ã¢ÂÂbeenden kann ich es auch nicht"*), diesmal von mir selbst neu eingebaut. Jetzt: `::PostQuitMessage((int) msg.wParam)` und das Ziehen abbrechen |
-| E-62 | **sieben eigene Nachrichtenschleifen in Eudoras Quellen verschluckten `WM_QUIT`** Ã¢ÂÂ zwei davon mit echter HÃÂ¤ngegefahr | **behoben** in 7.2.0.29, von Gregor noch nicht bestÃÂ¤tigt. Nicht von Hand gefunden, sondern beim **ersten Lauf** der Schranke `tools/pruefe-nachrichtenschleife.pl`, die wegen E-51 und E-61 entstanden war. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange, `DispatchMessage` tut mit `WM_QUIT` **nichts** Ã¢ÂÂ die Aufforderung zu beenden ist weg. Betroffen: `EscapePressed` (`guiutils.cpp:1666`, wird wÃÂ¤hrend **langer VorgÃÂ¤nge** gerufen, also gerade beim Mailabruf), `SyncPlayMedia` (`:3387`), `CTocFrame::DoPreviewDisplay` (`TocFrame.cpp:3673`), `CTridentView::DoFindFirst` (zwei Schleifen) und `CTridentView::Print`. **Die zwei schwersten hÃÂ¤ngen, statt nur zu verschlucken:** `LeftClickAttachment` (`guiutils.cpp:2910`) und `CTocView::SizeColumn` (`tocview.cpp:3458`) warten in `while (1)` mit `GetMessage(&msg, hWnd, 0, 0)`. `WM_QUIT` kommt **trotz** Fensterfilter, `GetMessage` liefert dann 0 Ã¢ÂÂ und weil `while (1)` den RÃÂ¼ckgabewert nicht auswertet, wartet die Schleife danach **fÃÂ¼r immer** auf eine Nachricht, die nie mehr kommt, mit gehaltenem Mausfang. AusgelÃÂ¶st schon durch das Ziehen einer **Spaltenbreite** im Postfachfenster. Damit ist eine mÃÂ¶gliche Ursache von Gregors *Ã¢ÂÂbeenden kann ich es auch nicht"* benannt, die **nicht** aus der Portierung stammt, sondern im Original steht |
-| E-63 | die **letzte** Registerkarte zeigt keinen Kurzhinweis, alle anderen schon | **behoben** in 7.2.0.30, von Gregor noch nicht bestÃÂ¤tigt Ã¢ÂÂ der Verdacht unten hat sich beim Nachlesen bestÃÂ¤tigt, und die Selbstheilung des Originals steht jetzt in `QCWorkbook::OnDrawTab`: sie vergleicht die Zahl der **angemeldeten Kurzhinweis-Felder** mit der Zahl der **sichtbaren Karten** und rechnet nur bei Abweichung neu. `OnDrawBorder` wiederzubeleben kam nicht in Frage, das wÃÂ¼rde auch das Werbelogo zeichnen. **Vorher:** Von Gregor am 09.09.2026 an 1.0.29 gemeldet, mit Bildschirmfoto: *Ã¢ÂÂalle karten, bis auf die letzte (warum?) zeigen einen tooltip beim maus over. beim letzten (ganz rechts) nicht."* Seine Entscheidung dazu: *Ã¢ÂÂden fehler notieren wir, wird im nÃÂ¤chsten release behoben."* Ã¢ÂÂ **Verdacht, noch nicht am laufenden Programm belegt:** `QCWorkbook::AddSheet` ruft `ResetTaskBar` Ã¢ÂÂ `RecalcToolTipRects` (`workbook.cpp:1226`, `:788`, `:1709`), und dort werden nur BlÃÂ¤tter mit `WS_VISIBLE` als Kurzhinweis-Feld angemeldet. Ist das MDI-Kindfenster in diesem Moment noch nicht sichtbar, bekommt es kein Feld. Jedes **spÃÂ¤tere** `AddSheet` rechnet alle Felder neu und repariert die ÃÂ¤lteren Ã¢ÂÂ nur das **zuletzt hinzugekommene** bleibt ohne, und das ist genau die rechte Karte. Dazu passt, dass im Original eine Selbstheilung existiert: `QCWorkbook::OnDrawBorder` (`workbook.cpp:1533`) prÃÂ¼ft `m_lastVisCount != CountVisibleTabs()` und ruft dann `ResetTaskBar` Ã¢ÂÂ **diese Fassung wird in der Ersatzschicht von niemandem gerufen** (dieselbe Wurzel wie **E-58**). **Vorhersage zum Gegentest:** FenstergrÃÂ¶ÃÂe ÃÂ¤ndern ruft `QCWorkbook::OnSize` Ã¢ÂÂ `RecalcToolTipRects`, danach mÃÂ¼sste der Kurzhinweis auch auf der letzten Karte erscheinen. Steht das nicht, ist der Verdacht widerlegt |
-| E-64 | **BESTÃÂTIGT von Gregor am 10.09.2026 an 1.0.42:** *Ã¢ÂÂfilter funktionierenÃ¢ÂÂ*. Ein Filterlauf ÃÂ¼ber das ganze In-Postfach verschob **alle** Nachrichten, nicht nur die passenden Ã¢ÂÂ DATENVERLUST | **behoben** in 7.2.0.36, Ursache am 10.09.2026 geklÃÂ¤rt: kein eigener Fehler, sondern die Folge von **E-72** Ã¢ÂÂ ein Filter, dessen Suchwert durch das ZurÃÂ¼ckschreiben geleert wurde, heiÃÂt *Ã¢ÂÂenthÃÂ¤lt nichtsÃ¢ÂÂ* und trifft damit jede Nachricht. **Gegenbeweis mit frischem Filter** (Protokoll 1.0.36, 09:10): zwei Nachrichten geprÃÂ¼ft, `Match=1` und `Match=0`, nur die passende verschoben. FrÃÂ¼herer Stand: Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *Ã¢ÂÂfilter greifen (z.b. verschieben nach spam), aber wenn man es z.b. auf die ganze in-mailbox anwendet, dann werden ALLE (!) mails verschoben."* **Der Schaden ist nachgemessen**, nicht nur berichtet: in seiner `eudora.log` (Sitzung 12:51:30) steht bei 0.12 `Junk .mbx size: MBX 0`, bei 0.01 `In .mbx size: MBX 1089243`, dann bei 4.06Ã¢ÂÂ4.10 ein Handfilterlauf ÃÂ¼ber 22 Nachrichten (`Messages left to filter: 21 Ã¢ÂÂ¦ 0`) und bei 4.11 `Junk.mbx, Size: 1089243` Ã¢ÂÂ **byte-genau der ganze Posteingang**. Belegt ist auÃÂerdem, dass `CFilter::Action` gelaufen ist (vier LMOS-SÃÂ¤tze aus `filtersd.cpp:1166`, dessen einziger Weg ÃÂ¼ber `if (filt->Match(...))` in `filtersd.cpp:2323` fÃÂ¼hrt) **mit einer Aktion `ID_FLT_SERVER_OPT`, die in seiner `Filters.pce` gar nicht steht** Ã¢ÂÂ die Filterobjekte im Speicher weichen also von der Datei ab. **Offener Widerspruch:** die Trefferzeile `Filter "%s" matches "%s"` (`filtersd.cpp:2312-2318`) fehlt im ganzen Protokoll, obwohl `DEBUG_MASK_FILTERS` (0x400) in `LogLevel 0x649F` gesetzt ist und dasselbe Verfahren fÃÂ¼r LMOS schreibt. Die entscheidende Messung (eine Zeile mit Filtername, Kopf, Verb, Wert, Aktionen und Match-Ergebnis, geschrieben mit `MISC\|TOC_CORRUPT`) steht in `Befunde/PRUEFER-7.md` |
-| E-65 | Filter lassen sich **anlegen, aber nicht bearbeiten** | **KEIN eigener Fehler Ã¢ÂÂ Folge von E-66.** in **7.2.0.29** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) Gregor am 09.09.2026 auf die Frage, was Ã¢ÂÂnicht editierenÃ¢ÂÂ genau heiÃÂt: *Ã¢ÂÂhier sehe ich nur teile des namens, der inhalt steht vermutlich weiter rechts, fÃÂ¼r mich nicht erreichbar. und da der balken nicht verschiebbar ist, komme ich da nicht dran.Ã¢ÂÂ* Damit ist von PRUEFERs drei Kandidaten der erste bestÃÂ¤tigt und die beiden anderen sind vom Tisch: das Filterfenster ist ein statischer Teiler mit **zwei Spalten** (`FiltersWazooWnd.cpp:149-151`), links die Regelliste, rechts die Regel selbst. Die linke Spalte bekommt `max(140, Breite/4)` (`:181-185`), die rechte den Rest Ã¢ÂÂ und bei einer rund 188 Pixel breiten Andockleiste bleibt davon nichts ÃÂ¼brig. **Behebung = E-66.** **Umgehung ohne Bau, aus dem Code gelesen und NICHT am laufenden Programm geprÃÂ¼ft:** in `Eudora.ini` `UseMyFilterWindowPosition=1` und `FiltersWindowSplitterPosition=60` setzen (SchlÃÂ¼sselnamen aus `EudoraRes.rc:7583` und `:7589`, Vorgaben 140 und 0); dann bleibt `nSplit` bei 60 stehen, statt auf `max(nSplit, 140, Breite/4)` hochgezogen zu werden, und die rechte Spalte bekommt den Rest | Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *Ã¢ÂÂfilter kann man setzen, aber nicht mehr editieren."* Belegt ist das Bild dazu: seine `Filters.pce` enthÃÂ¤lt vier Regeln, davon **zwei wortgleich** Ã¢ÂÂ ein Anwender, der neu anlegt, weil er nicht ÃÂ¤ndern kann. Kandidaten, alle **Vermutung**: (1) die rechte HÃÂ¤lfte hat Breite null, weil `CFiltersWazooWnd::OnActivateWazoo` (`FiltersWazooWnd.cpp:185-186`) Spalte 0 mindestens 140 Pixel gibt und Spalte 1 `SetColumnInfo(1, 0, 0)`, wÃÂ¤hrend die Mindestbreite von 420 aus `OnGetMinMaxInfo` nur fÃÂ¼r ein frei schwebendes Fenster gilt; (2) `static BOOL bFuncEntered` (`:133`) ist **prozessweit**, nicht je Fenster Ã¢ÂÂ nach einem Neuaufbau des Wazoo-Fensters werden Teiler und Ansichten nie wieder angelegt; (3) stiller Abbruch nach der bekannten Klasse: `ASSERT(0); return;` in `:153`, `:169`, `filtersv.cpp:180` und `:967`. **Die Frage an Gregor, die entscheidet:** bleibt die rechte HÃÂ¤lfte leer, sind die Felder grau, oder wird die ÃÂnderung nicht behalten? |
-| E-66 | der Trennbalken der **rechten** Andockleiste ist sichtbar, lÃÂ¤sst sich aber nicht ziehen (unten ebenso) | **behoben in 7.2.0.36, von Gregor am 10.09.2026 bestÃÂ¤tigt** Ã¢ÂÂ *Ã¢ÂÂ1. ja / 2. ja / 3. ja"* zu: Balken lÃÂ¤sst sich ziehen, rechte HÃÂ¤lfte des Filterfensters erreichbar, ÃÂnderungen bleiben stehen. Der Weg dorthin, weil die Ursache mehrfach falsch geraten wurde: von Gregor am 09.09.2026 an 1.0.29 gemeldet: *Ã¢ÂÂrechts ist zwar ein balken sichtbar, aber nicht verschiebbar."* Links geht es seit A-4. **Ursache 1 (wirksam):** `TrennbalkenNeuAnlegen` misst den freien Streifen fÃÂ¼r `AFX_IDW_DOCKBAR_RIGHT` bei `rectLeiste.left - rect.left` (`OTShim.cpp:4165`), aber `CDockBar::CalcFixedLayout` der MFC (`Ã¢ÂÂ¦\14.38.33130\atlmfc\src\mfc\bardock.cpp:387`) setzt die Kindleiste in **jeder** Andockleiste bÃÂ¼ndig auf `(-cxBorder2, -cyBorder2)`; der Zuschlag `3*Splitter::cx = 12` bleibt darum immer am **groÃÂen** Ende liegen Ã¢ÂÂ links die Innenkante (`nFrei Ã¢ÂÂ 7`, Balken entsteht), rechts der Fensterrand (`nFrei = -2`, Bedingung `nFrei >= 2` in `:4174` scheitert, `AddSplitter` lÃÂ¤uft nie, `HitTest` liefert `NULL`). `BrauchtGreifstreifen` und die Bedingung `nVorhanden > 8` sind fÃÂ¼r links und rechts identisch Ã¢ÂÂ die Spur Ã¢ÂÂandere Bedingung fÃÂ¼r rechts" ist **widerlegt**. **Ursache 2 (belegt, heute verdeckt):** `CalcTrackingLimits` (`:3622-3623`, waagrecht `:3637-3638`) rechnet `m_nMin`/`m_nMax` fÃÂ¼r rechts/unten sinnverkehrt; fÃÂ¼r eine rechte Leiste ergibt sich `m_nMax = -10`, der zulÃÂ¤ssige Bereich liegt links vom Balken, `Splitter::Track` klemmt sofort fest. **Messung, die entscheidet, ohne Bau:** Mauszeiger ÃÂ¼ber den rechten Streifen Ã¢ÂÂ normaler Pfeil = Ursache 1, Doppelpfeil = Ursache 2. Gegenprobe: der **untere** Balken muss nach derselben Rechnung ebenfalls tot sein. Umfang: eine Datei, 30 bis 45 Zeilen **STAND 09.09.2026, abends Ã¢ÂÂ an Paket 1.0.30 GEMESSEN, WEITER OFFEN:** Gregor: *Ã¢ÂÂbalken lassen sich nicht verschieben. beim anklicken ist der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Das ist ein Fortschritt und eine EinschrÃÂ¤nkung zugleich: der **Doppelpfeil belegt, dass `HitTest` den Balken findet** Ã¢ÂÂ er existiert also, die erste Ursache ist behoben. Es scheitert **danach**, in `Splitter::Track` oder in `OnSplitterMoved`. Welches von beidem, ist von auÃÂen nicht zu sehen; zwei Vermutungen von mir sind an diesem Tag schon am Code gescheitert, deshalb kommt als NÃÂ¤chstes eine **Spurmarke** in `StartTracking` und `OnSplitterMoved`, die Leiste, Balkenlage, Grenzen, Klickpunkt, Delta und die GrÃÂ¶ÃÂe vorher/nachher in EINER Zeile schreibt. Vorbereitet in der Kladde, noch nicht eingesetzt. **STAND DAVOR, nach PRUEFER-7:** **Ursache 2 ist behoben** (7.2.0.30, Zweig `filter`) Ã¢ÂÂ die Grenzen folgen jetzt der Regel "die Seite, an der die Leiste angewachsen ist, bekommt `nMindest`; die Seite zum MDI-Bereich hin bekommt `nFreiraum`", womit auch UNTEN richtig wird. **Ursache 1 steht noch** Ã¢ÂÂ solange `nFrei = -2` ist, entsteht rechts gar kein Balken, und die berichtigten Grenzen greifen ins Leere. Die Behebung gehÃÂ¶rt in `TrennbalkenNeuAnlegen`. **Meine erste Zuordnung war falsch:** ich hatte diesen Befund als E-67 gefÃÂ¼hrt und die Ursache allein in `CalcTrackingLimits` gesehen Ã¢ÂÂ PRUEFERs Messung an `bardock.cpp:387` zeigt, dass das nur die zweite, verdeckte HÃÂ¤lfte ist. |
-| E-67 | ein Filter *Ã¢ÂÂÃÂ«Junk ScoreÃÂ» is less than N"* wird durch bloÃÂes **Anschauen** im Filterfenster zu *Ã¢ÂÂmatches regexp N"* und greift nie wieder | **offen, belegt durch Nachrechnen am Quelltext.** `filtersv.cpp:1210` und `:1222` prÃÂ¼fen `if (m_Verb0 > NumVerbsNonJunk)` mit `NumVerbsNonJunk == 14`, kodiert wird beim Speichern aber mit `m_Verb0 += 14` (`:1378`) Ã¢ÂÂ Ã¢ÂÂis less than" wird also **14**, und `14 > 14` ist falsch. Die RÃÂ¼ckrechnung unterbleibt, `DDX_CBIndex` ruft `SetCurSel(14)` auf ein Feld mit **zwei** EintrÃÂ¤gen Ã¢ÂÂ `CB_ERR`. Beim nÃÂ¤chsten `UpdateData(TRUE)` liest `DDX_CBIndex` `-1`, `:1378` macht daraus `13`, `:1413` schreibt das in den Filter (`IDS_MATCHES_REGEX`), und weil sich der Wert unterscheidet, setzt `:1404` das ÃÂnderungskennzeichen Ã¢ÂÂ der verfÃÂ¤lschte Filter wird **gespeichert**. Danach fÃÂ¤llt die Bedingung in `CFilter::MatchValue` (`filtersd.cpp:679-694`) immer durch. **Behebung: zwei Zeichen** (`>` Ã¢ÂÂ `>=`). Gegentest: Filter anlegen, Filterfenster ÃÂ¶ffnen, wegklicken, `Filters.pce` ansehen Ã¢ÂÂ dort steht dann `verb regex` statt `verb less` |
-| E-68 | **ZielpostfÃÂ¤cher verschwinden aus `Filters.pce`** Ã¢ÂÂ Schreiben und Lesen sind unsymmetrisch; dazu die **fehlende Grenze** fÃÂ¼r den AktionszÃÂ¤hler | **Grenze behoben** in **7.2.0.29** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) am 10.09.2026 auf `wt/pruefer` (noch in keinem Paket), **Unsymmetrie weiter offen** (PRÃÂFER, 10.09.2026, alles am Quelltext nachgerechnet). **(a) Die Grenze Ã¢ÂÂ echter Schreibzugriff hinter das Feld, jetzt zu.** `CFiltersDoc::Read` zÃÂ¤hlt den AktionszÃÂ¤hler `i` in **21 Zweigen** (22 `case`-Marken; `IDS_FIO_TRANSFER_TO` und `IDS_FIO_COPY_TO` teilen sich einen) hoch und prÃÂ¼fte ihn nie gegen `NUM_FILT_ACTS` (= 5, `filtersv.h:39`). Der ZÃÂ¤hler indiziert nicht nur `m_Actions[5]` (`filtersd.h:129`), sondern **elf gleich groÃÂe Nachbarfelder**, darunter die CString-Felder `m_Sound`, `m_NotifyApp`, `m_Forward`, `m_Redirect`, `m_Reply`, `m_CopyTo`, `m_Desc`. Die sechste Aktion trifft bei `m_Actions` noch `m_Label` (harmlos verbogene Zahl), bei `m_Desc[5]` dagegen `m_DoPersonality` Ã¢ÂÂ `CString::operator=` fasst ein `BOOL` als Zeichenkettenzeiger auf und schreibt durch einen erfundenen Zeiger. **Wie weit er reicht:** `CFiltersDoc::Write` ist gebunden (`for i < NUM_FILT_ACTS`, `filtersd.cpp:3439`) und schreibt je Platz hÃÂ¶chstens **eine** Zeile Ã¢ÂÂ eine `Filters.pce`, die Eudora selbst geschrieben hat, kann den ÃÂberlauf **nicht** auslÃÂ¶sen. Er braucht eine **fremde Datei**: von Hand bearbeitet, aus einem anderen Programm ÃÂ¼bernommen, oder eine `.pre`/`.pst` aus dem Filters-Verzeichnis. Die liest `LoadExtraFilters` (`filtersd.cpp:2622-2654`) ein und **geschrieben werden sie von Eudora nie** (`Write` kennt nur `m_Filters` und `m_strPathName`) Ã¢ÂÂ sie sind per Bauart Fremdeingabe. **Also: echt, aber nicht durch Bedienung auslÃÂ¶sbar.** Behoben mit `IstAktionsSchluesselwort` plus Grenze in `Read`: die ÃÂ¼berzÃÂ¤hlige Zeile wird verworfen und protokolliert (`E-68 Regel Ã¢ÂÂ¦ wird verworfen`), die ersten fÃÂ¼nf Aktionen bleiben. Schranke `tools/pruefe-filter-aktionsgrenze.pl` hÃÂ¤lt beide Listen gegeneinander. **(b) Weiter offen Ã¢ÂÂ die Unsymmetrie:** `copyInstead ` wird gelesen (`filtersd.cpp:3090-3106`) und fÃÂ¼llt dabei `m_Mailbox` statt `m_CopyTo[i]` (der Quelltext nennt es selbst *Ã¢ÂÂlegacy code that never gets executed"*), der Schreibzweig prÃÂ¼ft aber `m_CopyTo[i]` und schreibt nichts; beim Transfer steht das SchlÃÂ¼sselwort unter `if (filt->IsTransferTo())`, die **Pfadzeile** darunter nicht Ã¢ÂÂ nach einer ausgefÃÂ¼hrten Copy-Aktion entsteht eine kennungslose Zeile, die `Read` verwirft. **Zusatzfund PRÃÂFER 10.09.2026:** diese kennungslose Zeile ist nicht immer harmlos. `FindCStringArrayIndexI` (`rs.cpp:1169-1186`) vergleicht mit `strnicmp` ÃÂ¼ber die LÃÂ¤nge des **ersten Wortes der Eingabe** Ã¢ÂÂ ein Postfachpfad, dessen erstes Wort ein PrÃÂ¤fix eines SchlÃÂ¼sselworts ist (etwa ein Ordner *Ã¢ÂÂCopy of Ã¢ÂÂ¦"* Ã¢ÂÂ `copy `), wird als Aktion gelesen und zÃÂ¤hlt mit |
-| E-69 | `CFiltersDoc::FilterMsg` bricht den Filterlauf im Freigabebau **lautlos** ab und meldet Erfolg | **offen, belegt.** Drei `ASSERT(0)` Ã¢ÂÂ `filtersd.cpp:2241` (kein TOC), `:2286` (Nachrichtendokument nicht ladbar), `:2302` (Nachrichtentext leer) Ã¢ÂÂ fÃÂ¼hren alle auf `break` aus der Filterschleife; die Funktion liefert danach `FA_NORMAL` (`:2354-2358`), also dasselbe wie Ã¢ÂÂdurchgelaufen, nichts getroffen". Weder `pop.cpp:999` noch `sendmail.cpp:186` noch `TocFrame.cpp:2398` sehen einen Unterschied: keine Meldung, kein Protokolleintrag (die Debug-Zeile `:2312-2320` steht erst **hinter** dem Treffer), kein Berichtseintrag. Verwandt: `FilterReportWazooWnd.cpp:65` Ã¢ÂÂ fehlt das Wazoo-Fenster, entfÃÂ¤llt der **ganze** Filterbericht kommentarlos, und `ClearAllLists()` (`filtersd.cpp:3618`) wirft die gesammelten EintrÃÂ¤ge weg. Genau [assert-ist-im-release-nichts](Arbeitsweise/assert-ist-im-release-nichts.md) |
-| E-70 | **BESTÃÂTIGT von Gregor am 10.09.2026 an 1.0.42:** *Ã¢ÂÂfilter fenstergrÃÂ¶ÃÂe nach neustart gespeichert: PASSÃ¢ÂÂ*. Die AndockgrÃÂ¶ÃÂen der Leisten ÃÂ¼berleben einen Neustart nicht Ã¢ÂÂ zuletzt an der Breite des **Filterfensters** gemeldet | **behoben** in 7.2.0.41. Von Gregor am 10.09.2026 an 1.0.40 wiederholt: *Ã¢ÂÂspeichert aber nicht die fenster grÃÂ¶ÃÂe von filters nach dem neustart"*. **Entschieden hat es die Spurmarke aus 1.0.37**, die bis dahin nie ausgewertet worden war: im Protokoll stehen **40** Zeilen `E-70 gesichert:` und **0** Zeilen `E-70 geladen:`, und in seiner `Eudora.ini` steht `DockVertCx319=586` Ã¢ÂÂ der Wert wird also richtig geschrieben und nie gelesen. **Der Grund stand im eigenen Kommentar ÃÂ¼ber der Funktion, in die ich den Aufruf gesetzt hatte:** *Ã¢ÂÂKATEGORIE C laut PLAN.md: Eudora ruft diese Fassung nie auf"* ÃÂ¼ber `SECToolBarManager::LoadState`. Gerufen wird `QCToolBarManager::LoadState`. Dass das **Sichern** lief, hat die LÃÂ¼cke verdeckt Ã¢ÂÂ `QCToolBarManager::SaveState` ruft `SECToolBarManager::SaveState` ausdrÃÂ¼cklich auf, das GegenstÃÂ¼ck nicht. Behoben an der symmetrischen Stelle, dazu ein `RecalcLayout` am Ende von `GroessenLaden` (`AndockgroesseSetzen` schreibt nur Felder). Der Zeitpunkt stimmt: `mainfrm.cpp:951` `SetDockState`, `:952` `LoadState`. **Die ursprÃÂ¼ngliche Ursachenanalyse bleibt gÃÂ¼ltig** Ã¢ÂÂ `CDockState::SaveState` ruft `pInfo->SaveState(...)` nicht virtuell und sieht die Stingray-Felder nie; deshalb braucht es das eigene Schreiben und Lesen ÃÂ¼berhaupt |
-| E-71 | der **Filterbericht** ist nach einem Filterlauf leer | **offen Ã¢ÂÂ zurÃÂ¼ckgestellt**, von Gregor am 10.09.2026 an 1.0.42 erneut gemeldet: *Ã¢ÂÂfilter report fenster ist leer: kommt nichts an. kann aber als ToDo fÃÂ¼r die nÃÂ¤chste version aufgeschrieben werden."* **Berichtigung einer eigenen Einstufung:** ich hatte E-71 als *Ã¢ÂÂkein eigener Fehler Ã¢ÂÂ Folge von E-72"* eingeordnet, mit der BegrÃÂ¼ndung, ein Filter ohne Merkmale sei fÃÂ¼r keinen Lauf zustÃÂ¤ndig und habe darum nichts zu berichten. Diese BegrÃÂ¼ndung ist widerlegt: E-72 ist behoben, die Filter greifen (von Gregor an 1.0.42 bestÃÂ¤tigt: *Ã¢ÂÂfilter funktionieren"*), und der Bericht bleibt trotzdem leer. **Was schon belegt ist:** der Lauf findet statt und trifft Ã¢ÂÂ im Protokoll steht `E-64 Match=1` und unmittelbar danach `Filter "Ã¢ÂÂ¦" matches "Ã¢ÂÂ¦"` mit der Maske 1024, dem Protokollkanal des Berichts. Es scheitert also **nach** dem Vermerken. **Wo zu suchen ist:** `CFilterActions::EndFiltering` (`filtersd.cpp`) arbeitet `m_NotifyReportList` ab und sucht dafÃÂ¼r ÃÂ¼ber `CFilterReportView::GetFilterReportView()` das Berichtsfenster; findet es keines, verfÃÂ¤llt die Liste. Zu messen ist, ob die Liste gefÃÂ¼llt wird und ob das Fenster gefunden wird Ã¢ÂÂ zwei Werte in **einer** Zeile. Nicht von selbst aufgreifen: Gregor hat ihn ausdrÃÂ¼cklich auf die nÃÂ¤chste Fassung geschoben |
-| E-72 | **BESTÃÂTIGT von Gregor am 10.09.2026 an 1.0.42:** *Ã¢ÂÂfilter funktionierenÃ¢ÂÂ*. Die rechte HÃÂ¤lfte des Filterfensters schrieb ihren leeren Zustand in den ausgewÃÂ¤hlten Filter** Ã¢ÂÂ HÃÂ¤kchen, Werte und die **Aktionsliste**; DATENVERLUST ÃÂ¼ber E-64 und E-73 | **behoben** in 7.2.0.36. `CFiltersViewRight::DoDataExchange` schreibt beim Wegklicken vom Filterreiter alles aus den Eingabefeldern zurÃÂ¼ck; ausgelÃÂ¶st bei **jedem** Verlassen (`FiltersWazooWnd.cpp:122` Ã¢ÂÂ `CanCloseFrame` Ã¢ÂÂ `UpdateData(TRUE)`). Solange die rechte HÃÂ¤lfte unerreichbar war (**E-65**), wurden ihre Felder nie gefÃÂ¼llt Ã¢ÂÂ zurÃÂ¼ckgeschrieben wurde **Leere**. Belegt an Gregors `Filters.pce`: Regel 1 hatte noch `incoming`, `manual` und ihren Wert, Regel 2 nur noch `incoming`, ohne `manual` und ohne `transfer`. **Zwei Sperren:** zurÃÂ¼ckgeschrieben wird nur, was diese Ansicht **wirklich geladen** hat (`m_pGeladen`), und eine Bedingung mit **leerem Wert** passt nicht mehr auf alles Ã¢ÂÂ *Ã¢ÂÂenthÃÂ¤lt nichts"* war fÃÂ¼r jede Nachricht wahr und schob mit `transfer` den ganzen Posteingang |
-| E-73 | eine **Filteraktion lÃÂ¶schte Post auf dem Server**, ohne dass sie je eingestellt worden war Ã¢ÂÂ DATENVERLUST | **behoben** in 7.2.0.38, **erweitert um zwei weitere Wege** am 10.09.2026 auf `wt/pruefer` (noch in keinem Paket). `CFilter::Action` merkt die Nachricht zum LÃÂ¶schen vor, sobald `ID_FLT_SERVER_OPT` mit `SO_DELETE` im Filter steht Ã¢ÂÂ und sticht dabei `LeaveMailOnServer`. PRÃÂFER hatte am 09.09.2026 gemessen, dass genau diese Aktion **lief, obwohl sie in `Filters.pce` gar nicht steht**; sie kam aus **E-72**. Gregors Entscheidung: *Ã¢ÂÂja, 1 auf jeden fall! Filteraktion darf nicht mehr vom Server lÃÂ¶schen"*. RÃÂ¼ckschalter `FilterMayDeleteFromServer=1` in `[Settings]`, Vorgabe **0**; jeder Versuch wird protokolliert. **Die erste Fassung schloss nur EINEN von DREI Wegen** (PRÃÂFER, 10.09.2026, Gegenvermutung *Ã¢ÂÂist `CFilter::Action` wirklich die einzige Stelle?"* Ã¢ÂÂ **bestÃÂ¤tigt, sie war es nicht**): **(1) IMAP.** Ist das Postfach ein IMAP-Postfach, verzweigt `CFilter::Action` nach `ImapAction` (`filtersd.cpp:1213-1215`) und erreicht den geprÃÂ¼ften POP-Zweig gar nicht; dort steht dieselbe Aktion noch einmal und reicht sie an `CImapFilterActions::ImapSetServerOpt` weiter (`EuImap/src/ImapFiltersd.cpp:791-794`), das die UID bei `SO_DELETE` in `m_szDeletedUids` hÃÂ¤ngt Ã¢ÂÂ daraus wird ein `STORE \Deleted` auf dem Server. **(2) Die Junk-Filteraktion.** `case ID_FLT_JUNK` (`filtersd.cpp:1581-1600`) ruft `CJunkMail::DeclareJunk`, und das setzt bei `DeleteFetchedJunk=1` ein `SetServerStatus(ID_MESSAGE_SERVER_DELETE)` (`JunkMail.cpp:707-711`) Ã¢ÂÂ `CSummary::SetServerStatus` (`summary.cpp:2650-2679`) Ã¢ÂÂ `SetDeleteFlag(LMOS_DELETE_MESSAGE)`. **E-74 deckt das nicht ab:** dort wurde `DeleteFetchedJunk=0` nur in `tools/DEudora.ini` gesetzt, und das ist die Vorgabe fÃÂ¼r **neu angelegte** Konten Ã¢ÂÂ eine vorhandene `Eudora.ini` mit `DeleteFetchedJunk=1` lÃÂ¶scht weiter, ausgelÃÂ¶st durch eine **Filteraktion**. Beide Wege fragen jetzt denselben RÃÂ¼ckschalter; die Frage liegt in **einer** Funktion `FilterDarfVomServerLoeschen` (`filtersd.cpp`, vor `CFilter::Action`), und `tools/pruefe-filter-serverloeschung.pl` weist einen Commit ab, in dem ein vierter Weg dazukommt, der nicht fragt. **Manuelles Junken (`pFilt != NULL`) bleibt unberÃÂ¼hrt** Ã¢ÂÂ das ist eine bewusste Handlung des Anwenders |
-| E-74 | **`Delete fetched junk` ist im Original an** und lÃÂ¶scht als Junk eingestufte Post auf dem Server Ã¢ÂÂ DATENVERLUST, eingetreten | **behoben** in 7.2.0.39 fÃÂ¼r **neu angelegte** Konten. `CJunkMail::ProcessOne` (`JunkMail.cpp:453-457`) merkt jede Nachricht ab `MinScoreToJunk` (Vorgabe 50) zum LÃÂ¶schen auf dem Server vor; die eingebaute Vorgabe von `DeleteFetchedJunk` ist **1**. **Das hat am 10.09.2026 Gregors Postfach geleert** Ã¢ÂÂ belegt im Protokoll von 1.0.36, 09:22: dreizehn Zeilen `Old Ã¢ÂÂ¦ dD` (die Marke wechselt von *nicht lÃÂ¶schen* auf *lÃÂ¶schen*), unmittelbar gefolgt von `Begin purging messages`. Besonders heikel, weil die Junk-Bewertung auf `SpamWatch` und `SpamHeaders` angewiesen ist, die wegen **E-47** gar nicht laden kÃÂ¶nnen. `tools/DEudora.ini` setzt jetzt `DeleteFetchedJunk=0`. **Eigener Fehler im Vorgehen:** ich hatte diesen zweiten LÃÂ¶schweg am Vormittag gefunden, in 1.0.38 aber nur den Filterweg gesperrt und Gregor trotzdem zum Testen aufgefordert |
-| E-75 | **Strg+J filterte nicht, sondern verschob nach Junk** Ã¢ÂÂ und die Fortschrittsanzeige nannte es Ã¢ÂÂFilter" | **behoben** in 7.2.0.40, von Gregor am 10.09.2026 an 1.0.39 gemeldet: *Ã¢ÂÂfilter erwischt immer noch zu viele mails"*, dazu *Ã¢ÂÂich drÃÂ¼cke zum filtern ja immer noch ctrl-J"*. **Im Original geÃÂ¤ndert, nicht durch die Portierung:** vor der Junk-Funktion war Strg+J *Filter Messages*; seit Eudora 6 fragt `IDD_CTRL_J_FOR_JUNK`, ob die Taste auf *Junk* wechseln darf. **Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da sind** (`CMainFrame::InitJunkMenus`, `mainfrm.cpp:7911-7934`); sonst legt der `else`-Zweig Strg+J **stillschweigend** auf Junk und schreibt `CtrlJMapping=1` fest Ã¢ÂÂ fÃÂ¼r immer, denn der Zweig lÃÂ¤uft nur einmal. Gregor hatte mit **leerem Mailverzeichnis** angefangen und die Filter erst danach angelegt. **Belegt im Protokoll von 1.0.39:** die echten FilterlÃÂ¤ufe um 6.26 und 7.38 tragen ihre E-64-Marken und arbeiten korrekt (`Match=1` bei einer, `Match=0` bei der anderen); der Lauf um 9.07 mit **neun** Nachrichten trÃÂ¤gt **keine einzige** Ã¢ÂÂ `FilterMsg` wurde nie gerufen, `Junk.mbx` wuchs trotzdem von 174 196 auf 501 987 Bytes. **Gegenprobe am Bestand:** von zwÃÂ¶lf Nachrichten in `Junk.mbx` haben zehn keinen Filtergrund, sechs davon von `adventskalender-mails@freenet.de`, fÃÂ¼r die Gregors Filter ausdrÃÂ¼cklich **`HW_Bxo.mbx`** vorsieht Ã¢ÂÂ die Datei ist 0 Bytes. **Behebung:** ohne manuelle Filter bleibt Strg+J auf `CTRL_J_FILTER`. Wer Junk auf Strg+J will, stellt es in den Einstellungen um. **Zweite Ursache, warum es so lange wie Filtern aussah:** *Filter Messages*, *Junk/Not Junk* und *Recheck Junk* zeigten alle dieselbe Zeile `Messages left to filter` (`TocFrame.cpp:996`, `:1156`, `:2380`). Die beiden Junk-Befehle sagen jetzt `Messages left to scan for junk` bzw. `Messages left to mark`. **Von Gregor am 10.09.2026 an 1.0.40 bestaetigt**, nachdem er den Wert von Hand gesetzt hatte: *Ã¢ÂÂok, mit dem wert 2 ist das menÃÂ¼ jetzt korrekt. paÃÂtÃ¢ÂÂ*. Damit ist zugleich belegt, dass die Menue-Umbeschriftung in `InitJunkMenus` richtig arbeitet: sie zeigte vorher ehrlich *Ctrl+Shift+L* an. **Bestehende Mailverzeichnisse behebt das nicht** Ã¢ÂÂ dort steht die `1` schon in der `Eudora.ini` und muss von Hand auf `CtrlJMapping=2` |
-| E-76 | das **freischwebende Filterfenster** lÃÂ¤sst sich nur **seitlich** vergrÃÂ¶ÃÂern, nicht nach unten | **behoben** in **7.2.0.49**, **von Gregor am 11.09.2026 bestÃÂ¤tigt**: *Ã¢ÂÂe-76: paÃÂt: lÃÂ¤ÃÂt sich jetzt vergrÃÂ¶ÃÂern."*, von Gregor am 10.09.2026 an 1.0.40 gemeldet: *Ã¢ÂÂfilter fenster lÃÂ¤ÃÂt sich nicht nach unten vergrÃÂ¶ÃÂern, nur zur seiteÃ¢ÂÂ*, mit Bild des Fensters `WazooBar2`. **Vor dem Messen geprÃÂ¼ft:** die Wazoo-Leiste trÃÂ¤gt `CBRS_SIZE_DYNAMIC` (`WazooBarMgr.cpp:136`), die dynamische GrÃÂ¶ÃÂe ist also erlaubt; `FloatControlBarInMDIChild` ist im Shim **nicht** umgesetzt (`OTShim.cpp:372`), das Fenster ist demnach ein echtes schwebendes und kein MDI-Kind; und der `IsFloating`-Zweig in `SECControlBar::CalcDynamicLayout` sieht richtig aus Ã¢ÂÂ `LM_LENGTHY` setzt `cy`, sonst `cx`. Damit ist die Frage offen. **Spurmarke `E-76` seit 7.2.0.41:** sie nennt `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die MaÃÂe vorher wie nachher in **einer** Zeile und schreibt nur, solange die Leiste schwebt  Ã¢ÂÂ **Ursache am 11.09.2026 aus Gregors Protokoll gelesen:** beim abschlieÃÂenden Aufruf trÃÂ¤gt `dwMode` `LM_COMMIT`, aber **kein** `LM_LENGTHY`, und `nLength` ist dort die **Breite** (780) statt der gezogenen HÃÂ¶he (299). Der `else`-Zweig setzte deshalb die Breite neu und speicherte die alte HÃÂ¶he. Behoben mit einem Merker, der die zuletzt in Ziehrichtung gerechnete GrÃÂ¶ÃÂe ÃÂ¼ber den COMMIT rettet. **Die Spurmarke lag seit 7.2.0.41 im Bau und konnte nur von einem Menschen ausgelÃÂ¶st werden** Ã¢ÂÂ sie braucht eine physisch gedrÃÂ¼ckte Maustaste |
-| E-77 | **IMAP-Postfachnamen mit Umlauten werden roh angezeigt** Ã¢ÂÂ `Entw&APw-rfe` statt *EntwÃÂ¼rfe*, `Gel&APY-scht` statt *GelÃÂ¶scht* | **offen**, von Gregor am 10.09.2026 an 1.0.42 mit Bild gemeldet: *Ã¢ÂÂdie bezeichnung der mailboxen ist hier falsch: sollte wohl Ã¢ÂÂgelÃÂ¶schtÃ¢ÂÂ heiÃÂen?Ã¢ÂÂ* **Ursache:** IMAP kodiert Nicht-ASCII in Postfachnamen als **modifiziertes UTF-7** (RFC 3501, Abschnitt 5.1.3): `&<base64>-`. Nachgerechnet: `&APw-` ist `U+00FC` = *ÃÂ¼*, `&APY-` ist `U+00F6` = *ÃÂ¶*. Eudora dekodiert das nicht Ã¢ÂÂ in `Eudora71/` kommt **keine** UTF-7-Behandlung vor (gegrept ÃÂ¼ber alle `.cpp`/`.h` nach `UTF-7`, `UTF7`, `ModifiedUTF7`, `DecodeMailboxName`; einziger Treffer ist `Qt3.x/CIncludes/TextCommon.h`, eine fremde Kopfdatei ohne Bezug). Der Name kommt roh aus der `LIST`-Antwort und geht unverÃÂ¤ndert in `ImapMailbox::m_FriendlyName` (`EuImap/public/inc/ImapMailbox.h:487`). **Zu beachten bei der Behebung:** die Umkehrung gehÃÂ¶rt dazu Ã¢ÂÂ beim Anlegen und Umbenennen eines Postfachs muss der Name wieder kodiert werden, sonst legt Eudora auf dem Server einen Ordner mit rohen Umlauten an. Betrifft nur die **Anzeige** von IMAP-Ordnern, nicht den Abruf: IMAP selbst funktioniert (von Gregor am selben Tag bestÃÂ¤tigt) |
-| E-78 | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | **offen**, gefunden am 10.09.2026 beim Nachmessen von E-70. **Abgegrenzt gegen E-44:** jener Befund war, dass die Anordnung nach einem Neustart *gar nicht* wiederhergestellt wurde Ã¢ÂÂ behoben in 7.2.0.24 durch den Nachziehweg in `CWazooBarMgr::LoadWazooBarConfigFromIni`. Dieser hier ist, dass genau dieser Nachziehweg **immer** lÃÂ¤uft. **Belegt:** die Meldung *Ã¢ÂÂfÃÂ¼r 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)Ã¢ÂÂ* erscheint bei jedem Start, aber in der `Eudora.ini` stehen **dreizehn** solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` ausdrÃÂ¼cklich nur fÃÂ¼r eine **nicht leere** Andockleiste (`dockstat.cpp:245`) Ã¢ÂÂ der Zustand ist also da und wird nicht angewandt: `pWazooBar->m_pDockBar` bleibt `NULL`. **Folge:** die Standardanordnung ÃÂ¼berschreibt Lage, Sichtbarkeit und Breite; letzteres war die zweite HÃÂ¤lfte von **E-70**. **Zwei Spurmarken seit 7.2.0.43** in `mainfrm.cpp` Ã¢ÂÂ `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig`, je Leiste mit Kennung, Andockleiste, Sichtbarkeit und Stil. Sagt die erste *hat Andockleiste* und die zweite *keine*, geht die Zuordnung dazwischen verloren; sagt schon die erste *keine*, wirkt `SetDockState` nicht. **KÃÂ¶nnte auch den Nebenbefund erklÃÂ¤ren, dass Fenster nach einem Neustart nicht im Vollbild stehen** |
-| E-79 | die **Breite der linken Spalte im Filterfenster** ÃÂ¼berlebt keinen Neustart | **behoben durch die Einstellung, von Gregor am 11.09.2026 an 1.0.44 bestÃÂ¤tigt** Ã¢ÂÂ vier MesslÃÂ¤ufe, je zwei davon stabil: `543 -> 543` bei Elternbreite 1100 und `334 -> 334` bei 751. Kein Codeeingriff nÃÂ¶tig; `UseMyFilterWindowPosition=1` steht jetzt als Vorgabe in `tools/DEudora.ini`, im Abschnitt `[Window Position]`. UrsprÃÂ¼nglich gemeldet als von Gregor am 11.09.2026 an 1.0.43 gemeldet: *Ã¢ÂÂdie breite der linken spalte beim filter wird nicht ÃÂ¼ber den neustart gespeichert. auch wenn ich sie breiter gezogen habe."* **Zwei Ursachen, die erste ist ein Dokumentationsfehler von mir.** (1) `UseMyFilterWindowPosition` stand in `[Settings]`; Eudora ordnet jeden SchlÃÂ¼ssel allein nach seiner Nummer zu (`rs.cpp:88`, `GetSectionID`), und `10922` gehÃÂ¶rt nach `[Window Position]`. Nachgemessen mit `GetPrivateProfileIntA`: aus `[Window Position]` kommt **0**, aus `[Settings]` die **1**, die dort niemand liest. `FILTER.md` hatte behauptet, alle SchlÃÂ¼ssel stÃÂ¼nden in `[Settings]` Ã¢ÂÂ das gilt fÃÂ¼r **23 von ihnen nicht**; berichtigt, und die Tabellen nennen den Abschnitt jetzt je SchlÃÂ¼ssel. (2) **Auch im richtigen Abschnitt bleibt der Wert nicht.** Gregors Messung: er trug `312` ein, nach Start und Beenden stand `368` in der Datei; davor `237` bei einer Leistenbreite von 527, danach `368` bei 668. `SetColumnInfo` setzt nur eine **Wunschbreite** (`FiltersWazooWnd.cpp:185`), wirksam wird sie erst durch die Neuberechnung, die das nachfolgende `PostMessage(WM_SIZE, Ã¢ÂÂ¦)` auslÃÂ¶st Ã¢ÂÂ und beim SchlieÃÂen wird die **tatsÃÂ¤chliche** Breite zurÃÂ¼ckgeschrieben (`:70`), nicht die gewÃÂ¼nschte. Weicht sie ab, schaukelt sich der Wert von Lauf zu Lauf auf. **In der VM tritt es nicht auf** Ã¢ÂÂ dort ist die Leiste schmaler; dieselbe Fassung, `Version 7.2.0.43` in beiden Protokollen. **Spurmarken `E-79 geladen:` und `E-79 gesichert:` seit 7.2.0.44**, sie nennen gelesenen Wert, Schalter, Elternbreite, Viertel, gesetzten und tatsÃÂ¤chlichen Wert in einer Zeile; einschalten mit `LogLevel=58527` |
-| E-80 | der Knopf **Ã¢ÂÂBlah Blah Blah"** blendet die Kopfzeilen nicht aus Ã¢ÂÂ sie stehen immer da | **behoben in zwei Teilen, von Gregor am 11.09.2026 an 1.0.46 bestÃÂ¤tigt**: *Ã¢ÂÂja, jetzt geht es"*. **TEIL 2, gefunden erst durch seinen Test an 1.0.45** (*Ã¢ÂÂheader schaut jetzt kÃÂ¼rzer aus. aber: der bla bla button ÃÂ¤ndert nichts"*): **der Knopf schaltete seinen eigenen Zustand nie um.** Er steht als `TBBS_CHECKBOX` in der Leiste des Nachrichtenrahmens (`ReadMessageFrame.cpp:179`), sein Zustand steckt im Bit `TBBS_CHECKED` (`:981-998`) Ã¢ÂÂ und gesetzt wird das Bit **genau einmal**, beim Anlegen des Fensters und nur bei `ShowAllHeaders=1` (`:498-503`). Der Klick geht an die **Ansicht** (`ON_BN_CLICKED`, `TridentReadMessageView.cpp:161` und `PgReadMsgView.cpp:72`); `CReadMessageFrame` hat fÃÂ¼r `ID_BLAHBLAHBLAH` **keinen** Eintrag in seiner Botschaftstabelle, `CReadMessageFrame::OnBlahBlahBlah` (`:688`) ist eine **tote Funktion**. Beide Ansichten **lesen** `GetCheck` und keine setzt ihn Ã¢ÂÂ deshalb meldete die Spurmarke in jedem Lauf `Knopf=0`. **Die Zahl stand da, ich habe sie nicht zu Ende gedacht.** Im Original erledigte das die Stingray-Leiste selbst; der OTShim-Ersatz setzt `TBBS_CHECKED` nur ÃÂ¼ber `SECToolBarCmdUI::SetCheck` (`OTShim_Werkzeugleiste.cpp:2742`), also ÃÂ¼ber `ON_UPDATE_COMMAND_UI` Ã¢ÂÂ und so einen Eintrag gibt es fÃÂ¼r diesen Knopf nirgends. **Dieselbe Klasse wie E-43 und E-70.** Behoben in beiden Ansichten ÃÂ¼ber die registrierte Botschaft `umsgButtonSetCheck`, die `summary.cpp:2518-2520` fÃÂ¼r zwei andere KnÃÂ¶pfe schon so benutzt. **TEIL 1** war in 7.2.0.44: Gemeldet am 11.09.2026 an 1.0.44: *Ã¢ÂÂsowohl die einstellung ,include signature on reply', noch der bla bla button scheinen nicht zu funktionieren. erwartung: doppelklick auf mail: je nach button wird der header angezeigt oder ausgeblendet. aktuell: er wird immer angezeigt."* **Der Knopf war nie kaputt Ã¢ÂÂ die Liste war es.** Was er versteckt, sagt seine eigene Statuszeile: *Ã¢ÂÂShows/hides non-important headers"*. Welche Kopfzeilen als unwichtig gelten, steht in `TabooHeaders` (`EudoraRes.rc`, Kennung `10207`, Abschnitt `[Settings]`) Ã¢ÂÂ und diese Liste stammt aus **2006**. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`, aber nicht `DKIM-`. **Nachgerechnet an 134 echten Nachrichten aus sechs PostfÃÂ¤chern** mit `tools/taboo-rechnen.pl`: der Vergleich ist ein reiner PrÃÂ¤fixvergleich (`TridentReadMessageView.cpp:2465`, gleichlautend `ReadMessageDoc.cpp:504`), lÃÂ¤sst sich also ohne Programm ausrechnen. Mit der alten Liste blieben **ÃÂ¼ber 60 Kopfzeilenarten** stehen, darunter `DKIM-Signature` 76ÃÂ, `Authentication-Results` 70ÃÂ, `X-FN-MUUID` 62ÃÂ, `X-Scan-TS` 60ÃÂ, `X-Spam-Flag` 58ÃÂ, `Delivered-To` 56ÃÂ, `X-Mailer` 55ÃÂ, `UI-OutboundReport` 54ÃÂ Ã¢ÂÂ die beiden obersten sind genau die, die in Gregors Bildschirmfoto stehen. **16 EintrÃÂ¤ge ergÃÂ¤nzt** (`X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`); die Originalliste bleibt **unverÃÂ¤ndert** davor stehen, damit kein bisheriges Verhalten wegfallen kann. Dieselbe Rechnung mit der neuen Liste ÃÂ¼ber alle sechs PostfÃÂ¤cher lÃÂ¤sst **zehn** Namen ÃÂ¼brig: `From`, `To`, `Cc`, `CC`, `Bcc`, `Subject`, `Date`, `Reply-To`, `Sender` Ã¢ÂÂ und `Referer`, ein Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft `Referer: ` nicht. **Kein Datenverlust:** `StripTabooHeaders` arbeitet auf dem Puffer, den `GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`) Ã¢ÂÂ die `.mbx` wird nicht angefasst; wer alles sehen will, drÃÂ¼ckt den Knopf oder setzt `ShowAllHeaders=1`. **Zwei Umwege auf dem Weg dahin, beide meine.** (1) Die erste Spurmarke lag in `PgReadMsgView` Ã¢ÂÂ der Paige-Textansicht Ã¢ÂÂ und schwieg, obwohl `LogLevel` nachweislich wirkte (im selben Lauf schrieben E-78 18ÃÂ und E-34 6ÃÂ). Eudora hat **zwei** Nachrichtenansichten, ausgewÃÂ¤hlt in `ReadMessageFrame.cpp:277-281`, und beide haben eigene Taboo-Logik: Paige markiert die Kopfzeilen mit einem Stil und schaltet an ihm `hidden_text_var` um, Trident entscheidet **beim Erzeugen des HTML**, ob sie ÃÂ¼berhaupt hineingeschrieben werden. (2) Der Verdacht, der **Content Concentrator** steche den Knopf aus, stammt aus der ersten Messung: `E-80 trident: Knopf=0 konzentriert=1 ShowAllHeaders=0 -> Kopfzeilen ALLE`. Das gilt nur fÃÂ¼r den ersten Aufbau; der zweite meldet `konzentriert=0 -> Kopfzeilen gekuerzt`, und im laufenden Betrieb ist das der Zustand. Die KÃÂ¼rzung griff also die ganze Zeit Ã¢ÂÂ sie kÃÂ¼rzte nur fast nichts weg. **Spurmarke `E-80 trident:` seit 7.2.0.44** in `TridentView.cpp:1425`, sie nennt Knopf, Concentrator, `ShowAllHeaders` und das Ergebnis in einer Zeile; einschalten mit `LogLevel=58527` |
-| E-81 | bei einer Mail mit dunklem Hintergrund sind die **Kopfzeilen unsichtbar** Ã¢ÂÂ schwarz auf schwarz, sichtbar nur beim Markieren | **behoben** in 7.2.0.47, **von Gregor am 11.09.2026 an 1.0.47 bestÃÂ¤tigt**: *Ã¢ÂÂja, paÃÂt!"* Gefunden von ihm am 11.09.2026 an 1.0.46, an einer waipu.tv-Werbemail Ã¢ÂÂ erst sichtbar geworden, nachdem E-80 den Knopf wieder zum Schalten gebracht hatte. **Ursache:** Eudora schreibt die Kopfzeilen als `<SPAN CLASS=EUDORAHEADER>` in **dasselbe** HTML-Dokument, in dem danach die Mail steht (`TridentReadMessageView.cpp:2418-2455`). Das Stylesheet dieses Dokuments (`IDS_INI_READMESSAGE_STYLE_SHEET`, `EudoraRes.rc:8129`) kennt nur `BODY`, `TT` und `BLOCKQUOTE.CITE` Ã¢ÂÂ fÃÂ¼r `EUDORAHEADER` gibt es **keine einzige Regel**. Die Kopfzeilen erben also, was die Mail fÃÂ¼r ihren `<BODY>` vorgibt. **Behebung:** eine Regel fÃÂ¼r `SPAN.EUDORAHEADER`, die Vordergrund **und** Hintergrund selbst festlegt Ã¢ÂÂ nur die Schriftfarbe zu setzen wÃÂ¼rde bei einer Mail mit hellem Text auf dunklem Grund denselben Fehler spiegelverkehrt erzeugen. Erst `black` auf `white`, dann dieselben Angaben noch einmal als `windowtext`/`window`: kennt MSHTML die Systemfarben, folgen die Kopfzeilen dem Windows-Design, kennt es sie nicht, verwirft es nur diese beiden Angaben. Ein RÃÂ¼ckfall, der in keinem Fall schlechter ist als vorher. Wer eine eigene `read.css` im Eudora-Verzeichnis hat, ersetzt das Stylesheet vollstÃÂ¤ndig (`TridentView.cpp:1300-1325`) Ã¢ÂÂ fÃÂ¼r den ÃÂ¤ndert sich nichts; im Paket liegt keine |
-| E-82 | die **ZertifikatsprÃÂ¼fung nahm Zertifikate an, deren Kette sich nicht verifizieren lieÃÂ** | **behoben** in 7.2.0.48, **von Gregor am 11.09.2026 bestÃÂ¤tigt** Ã¢ÂÂ IMAP lÃÂ¤uft unverÃÂ¤ndert weiter. Kennung am 11.09.2026 von ihm vergeben. **Was war:** der Verifikations-Callback behandelte `X509_V_ERR_CERT_UNTRUSTED` (27) und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) als Erfolg Ã¢ÂÂ `iOK = 1` sagt OpenSSL wÃÂ¶rtlich *Ã¢ÂÂZertifikat in Ordnung"*, und anders als in allen benachbarten Zweigen wurde weder ein Fehlercode gesetzt noch eine Warnung angehÃÂ¤ngt. Der Anwender sah nichts. Fehler 27 stammt aus `check_trust()` und tritt im gewÃÂ¶hnlichen Kettenaufbau auf. **Jetzt** hÃÂ¤ngen beide Codes am vorhandenen, korrekt ausgefÃÂ¼hrten Zweig fÃÂ¼r `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`: `iOK` bleibt 0, die Verbindung wird abgelehnt, `IDS_CERTERR_CHAINNOTTRUSTED` erscheint. **Betriebsfolge:** Eudora lehnt Verbindungen ab, die es vorher klaglos annahm; die Einzelfreigabe ÃÂ¼ber den Zertifikatsspeicher bleibt, denn die PrÃÂ¼fung sieht dort zuerst nach. **Gemessen an Gregors Konten:** `Open 212.227.17.186:993` und `Successfully retrieved markus.bakus@gmx.de` Ã¢ÂÂ GMX' Kette hÃÂ¤lt der echten PrÃÂ¼fung stand. Der Verdacht, `rootcerts.p7b` von 2006 kÃÂ¶nne zu alt sein, ist fÃÂ¼r diese Konten widerlegt. **Weiterhin offen und davon getrennt:** die **HostnamenprÃÂ¼fung** greift nicht Ã¢ÂÂ ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` angenommen |
-| E-83 | **Eudora lÃÂ¤sst sich nicht beenden** Ã¢ÂÂ *Ã¢ÂÂYou currently have 1 task(s) running"*, und im Aufgabenfenster steht endlos *Ã¢ÂÂWaiting in the task queue to be started Ã¢ÂÂ¦"* | **behoben** in 7.2.0.53, **am laufenden Programm gemessen** (14.09.2026). **Die Anzeige log:** der Zustand war `FERTIG(5)`, die Aufgabe wartete also gar nicht Ã¢ÂÂ der Text stammt aus `Register()` und wird nie ÃÂ¼berschrieben. Das hat den Befund zwei Wochen in die falsche Richtung geschickt. **Gemessen** in Gregors Lauf mit 7.2.0.52: **15** Aufgaben fertig *mit* angeforderter Nachbearbeitung, **17** fertig *ohne*, und dieselben **17** meldete die ÃÂberwachung alle 15 Sekunden als liegengeblieben. **Ursache:** `QCTaskManager::RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn `IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()`; sonst stand dort **nichts**. Das war eine Sackgasse Ã¢ÂÂ `DoPostProcessing` arbeitet ausschlieÃÂlich `m_PostProcessList` ab, und dort hinein kommt eine Aufgabe **nur** ÃÂ¼ber `RequestPostProcessing()`. Auch der Leerlauf holt sie nicht nach; die Aufgabe blieb in `m_TaskInfoList` und zÃÂ¤hlte weiter als laufend. `m_nStartIdle` wird nur in `StartTasks()` gesetzt, also fÃÂ¼r Aufgaben aus einer `QCTaskGroup` Ã¢ÂÂ IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei. **Behoben**, indem auch dieser Zweig die Nachbearbeitung anfordert. **Vorher widerlegt:** der Verdacht auf `StartWorkerThread` mit `m_pThread == NULL` (seit 11.09.2026) Ã¢ÂÂ der Zeiger war in jeder gemessenen Zeile gesetzt; und eine der drei Ã¢ÂÂausgeschlossenen" Ursachen war **falsch ausgeschlossen** (`DelayTasks`/`StartTasks` werden sehr wohl gerufen, von `QCTaskGroup`) |
-| E-84 | die **GrÃÂ¶ÃÂe eines losgerissenen Fensters ÃÂ¼berlebt den Neustart nicht** Ã¢ÂÂ es kommt beim nÃÂ¤chsten Start wieder klein | **behoben** in 7.2.0.50, **von Gregor am 11.09.2026 bestÃÂ¤tigt** Ã¢ÂÂ belegt an beiden Enden: in der `Eudora.ini` steht `FloatCx319=751` / `FloatCy319=403`, und der erste Aufruf nach dem Neustart meldet `E-76 fest: vorher=751x403` statt der AnfangsgrÃÂ¶ÃÂe `200x100`. Von ihm am 11.09.2026 gemeldet, unmittelbar nach der BestÃÂ¤tigung von E-76: *Ã¢ÂÂdas undocked initiale fenster ist recht klein, die grÃÂ¶ÃÂe (nach der ÃÂ¤nderung) wird nach dem schlieÃÂen vom filter und eudora nicht gespeichert. beim nÃÂ¤chsten mal wieder klein."* **Der erste Anlauf saÃÂ an der falschen Stelle.** Er stand in `SECControlBarInfo::SaveState`/`LoadState` Ã¢ÂÂ reinen Weiterleitungen an MFC, und MFC kennt `m_szFloat` nicht. **Diese Funktionen werden beim Speichern aber gar nicht durchlaufen:** mit dem Einbau dort kam in der `Eudora.ini` kein einziger Eintrag an. An ihrer Stelle steht jetzt ein Kommentar, der das sagt (`OTShim.cpp:5330-5334`), damit dort niemand wieder anfÃÂ¤ngt. **Der tatsÃÂ¤chliche Weg steht seit E-70 im Baum:** `QCToolBarManager::SaveState` Ã¢ÂÂ `SECToolBarManager::SaveState` Ã¢ÂÂ `GroessenSichern` (`OTShim_Werkzeugleiste.cpp:4410`), GegenstÃÂ¼ck `GroessenLaden` (`:4470`), gerufen aus `QCToolBarManager::LoadState` (`QCToolBarManager.cpp:1199`). Dort wurden bis 7.2.0.49 nur `DockVertCx` und `DockHorzCy` geschrieben Ã¢ÂÂ die **Andock**grÃÂ¶ÃÂen; `m_szFloat` kam nirgends vor. **Behoben** an derselben Stelle mit zwei weiteren SchlÃÂ¼sseln, `FloatCx<id>` und `FloatCy<id>` im Abschnitt `[ToolBar-ToolBarManager]`, geschrieben und gelesen wie die beiden vorhandenen Ã¢ÂÂ kein neuer Weg, keine zweite Stelle zum ÃÂbersehen. Eine GrÃÂ¶ÃÂe von 0 wird gar nicht erst geschrieben, weil `GroessenLaden` sie sonst ÃÂ¼bernehmen mÃÂ¼sste. **`SECControlBarInfo::Serialize` bleibt unberÃÂ¼hrt:** der Kommentar dort begrÃÂ¼ndet zu Recht, den SEC-Anteil wegzulassen Ã¢ÂÂ *Ã¢ÂÂdas Format mÃÂ¼sste dann zum Original passen Ã¢ÂÂ¦ eine eigene Erweiterung wÃÂ¼rde eine Datei erzeugen, die ein spÃÂ¤terer echter Nachbau nicht mehr lesen kann"*. Das gilt fÃÂ¼r ein **BinÃÂ¤rformat**, in dem ein zusÃÂ¤tzliches Feld alles Nachfolgende verschiebt; in der **INI** stÃÂ¶rt ein zusÃÂ¤tzlicher SchlÃÂ¼ssel niemanden, der ihn nicht kennt |
-| E-85 | **Umlaute in per IMAP abgerufenen Nachrichten kommen falsch an** | **Alle drei MÃÂ¤ngel behoben in 7.2.0.51 Ã¢ÂÂ aber die Behebung hat eine Regression eingefÃÂ¼hrt, die noch offen ist** (unten), 13.09.2026, von Gregor am selben Tag gemeldet. **Drei MÃÂ¤ngel im IMAP-Weg, die beiden ersten in `EuImap/src/ImapDownload.cpp`, der dritte zusÃÂ¤tzlich in `Eudora/utils.cpp`.** **(0) behoben in 7.2.0.51 Ã¢ÂÂ der schwerwiegendste: `charset=utf-8` wurde gar nicht erkannt.** Die Stelle (damals Zeile 4645) suchte mit `FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9, Ã¢ÂÂ¦)` Ã¢ÂÂ der Bereich endet bei **3613**, `IDS_MIME_UTF_8` ist **3614** und liegt damit auÃÂerhalb. Der Aufruf lieferte `-1`, `if (iCharsetIdx > 1)` war falsch, und **es wurde ÃÂ¼berhaupt nicht ÃÂ¼bersetzt**; die UTF-8-Bytes gingen roh in die Mailboxdatei und wurden spÃÂ¤ter als CP1252 angezeigt. Der POP3-Weg macht es richtig: `FindMIMECharset` (`Eudora/mime.cpp:382-402`) sucht bis `IDS_MIME_UTF_8` **und** verschiebt das Ergebnis um eins (`++iCharSet`), damit Index 0 fÃÂ¼r `windows-*` frei bleibt. Genau diese Verschiebung fehlte im IMAP-Weg ebenfalls Ã¢ÂÂ die beiden Wege rechneten auf **verschiedenen Skalen**, was der bestehende Test *Ã¢ÂÂPOP: der Index wird um eins verschoben Ã¢ÂÂ anders als im IMAP-Pfad"* schon festhielt. **Jetzt ruft der IMAP-Weg dieselbe Funktion:** `iCharsetIdx = FindMIMECharset(params->value)` (`ImapDownload.cpp:4671`), und die Schwelle darunter heiÃÂt `if (iCharsetIdx > 2)` statt `> 1` (`:4688`) Ã¢ÂÂ auf der gemeinsamen Skala ist 0 `windows-*`, 1 us-ascii, 2 Latin1, 3 Latin9, 4 UTF-8, ÃÂ¼bersetzt wird ab 3 wie in `TextReader.cpp`. **(1) behoben in 7.2.0.51:** Zeile 4662 verwarf den RÃÂ¼ckgabewert von `ISOTranslate`; `outLen` behielt die LÃÂ¤nge *vor* der ÃÂbersetzung und genau die wurde geschrieben. **(2) behoben in 7.2.0.51:** die Behebung von **Z-2b** (angefangene UTF-8-Zeichen an der StÃÂ¼ckgrenze zurÃÂ¼ckhalten) stand nur in `TextReader.cpp` und damit nur im POP3-Weg; IMAP liest bei `text/html` in BlÃÂ¶cken von 8192 Bytes. Neu dafÃÂ¼r: `ISOTranslateChunk` (`Eudora/utils.cpp:1269`, deklariert in `utils.h:93`), gerufen in `ImapDownload.cpp:4705`, mit vier Tests ÃÂ¼ber alle StÃÂ¼ckgrÃÂ¶ÃÂen. **(3) neu eingefÃÂ¼hrt und in 7.2.0.51 gleich mitbehoben Ã¢ÂÂ die abschlieÃÂende Null traf die nÃÂ¤chste Zeile.** Von **PRUEFER** am 13.09.2026 belegt (`Befunde/PRUEFER-10.md`, Zweig `wt/pruefer`) und hier am Quelltext nachgemessen: `ISOTranslate` schreibt die abschlieÃÂende Null an `szBuf[lSize]` (`utils.cpp:1443`) Ã¢ÂÂ **ein Byte hinter** den ÃÂ¼bersetzten Bereich. Der POP3-Weg hÃÂ¤lt dafÃÂ¼r eigens Platz frei; der Kommentar darÃÂ¼ber sagt es wÃÂ¶rtlich (`utils.cpp:1440-1442`: *Ã¢ÂÂTextReader::ReadIt is now making sure that it leaves space at the end of its buffer for us to NULL terminate it"*). **Der IMAP-Weg hat diesen Platz nicht:** bei `text/plain` zeigt `pBuf` in den Puffer von `CChunkReader`, und das Byte hinter der Zeile ist das **erste Byte der nÃÂ¤chsten Zeile** Ã¢ÂÂ bei `charset=utf-8` ohne Decoder verliert damit jede Zeile ihr erstes Zeichen. **Vorher konnte das nicht auftreten:** `ISOTranslate` kehrt bei `iCharsetIdx <= 2` zurÃÂ¼ck, **bevor** die Nullung ausgefÃÂ¼hrt wird (`utils.cpp:1412-1415`), und der alte IMAP-Weg sah wegen der eigenen Skala nie einen hÃÂ¶heren Index. Erst die gemeinsame Skala aus (0) erreichte die Nullung. **Behoben in `ISOTranslateChunk` selbst:** das Byte hinter dem StÃÂ¼ck wird vor dem Aufruf gerettet und danach zurÃÂ¼ckgeschrieben (`utils.cpp:1308-1310` fÃÂ¼r den Nicht-UTF-8-Weg, `:1393-1395` fÃÂ¼r den UTF-8-Weg), und nur dort, wo `ISOTranslate` wirklich schreibt Ã¢ÂÂ bei `iCharsetIdx <= 2` kehrt es vor der Nullterminierung zurÃÂ¼ck. Damit bleibt der Aufrufer unangetastet und beide Wege sind gedeckt. **Die ersten drei Punkte sind am Quelltext belegt; von Gregor ist nichts davon am laufenden Programm bestÃÂ¤tigt** |
+| E-22 | Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken | **überholt durch E-28** — dieser Befund fand die Ursache nicht, lieferte aber einen Messwert, der die damalige Suchrichtung widerlegte, und sechs belegte Schwachstellen auf dem Weg (`Befunde/FENSTER.md`). Die Ursache ist `CSummary::m_FrameWnd`, siehe **E-28** |
+| E-23 | POP3 nur über Port 110, dazu der Anmeldefehler bei freenet | **Ursache belegt**, drei Löcher gestopft (`Befunde/PORT.md`); Port 995 mit TLSv1.3 ist seit 06.09.2026 gemessen |
+| E-24 | unter „Recent" stand „In" zweimal im Postfachbaum | **behoben** in **7.2.0.10** (`Befunde/POSTFACH.md`) |
+| E-25 | der Absturz beim Klick auf *Weiter*: Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile` | **behoben** in **7.2.0.10** (`Befunde/ASSISTENT.md`) — **die Hypothese hat den Test aber nicht bestanden**: 7.2.0.12 stürzt weiter ab, E-25 war also nicht die einzige Quelle |
+| E-26 | der Absturzbericht nennt die Ladeadresse jedes Moduls (`QCExceptionHandler::WriteModuleTable`) | **behoben** in **7.2.0.12** (`277d3a4`) — kein eigener Abschnitt, beschrieben in `Befunde/SPUR.md` unter *„Das Absturzprotokoll"* |
+| E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache gefunden und behoben: E-31** in **7.2.0.12** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) (`pg_time_t` acht Byte statt vier). Der Absturz war `0xC00000FD` STATUS_STACK_OVERFLOW in `Paige32.dll`; ein voller Stapel lässt keinen Platz für den Absturzbehandler, daher kein `Exception.log`. Dieser Befund hat davon die **Ursache des Schweigens** belegt: der Behandler hing nur an `SetUnhandledExceptionFilter`, und Heap-Beschädigung, `/GS`-Wächter, ungültiges Argument an die C-Laufzeit sowie `std::terminate` gehen daran vorbei — drei davon sind seit 7.2.0.13 angemeldet, dazu 15 Spurmarken. Die dort genannte „beste offene Spur" (`Paige32`/`EuMemMgr` gegen `MSVCR71`) ist durch E-31 **überholt** (`Befunde/VERFASSER.md`) |
+| E-28 | **Doppelklick öffnet keine Nachricht, Suchtreffer lassen sich nicht anklicken** | **behoben** in **7.2.0.12** (`222c0ba`): `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen. Gesetzt wird er bedingungslos in `CMessageFrame::ActivateFrame`, gelöscht wurde er nur innerhalb von `if (m_InitialSize != wp.rcNormalPosition)` — also nur, wenn das Fenster verschoben oder in der Größe geändert wurde (`Befunde/OEFFNEN.md`) |
+| E-29 | die Adressen im Absturzbericht brauchen ein Werkzeug | **behoben** in **7.2.0.12** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) (`029703c`): `tools/absturz-auswerten.pl`, 15 Selbsttests. Löst mit der Modultabelle aus E-26 jede Stapelzeile in einen Funktionsnamen auf — und sagt bei älteren Berichten ausdrücklich, dass es **nicht** geht, statt zu raten (`Befunde/SPUR.md`) |
+| E-30 | abgeschaltete Knöpfe der Werkzeugleiste zeigen kein Symbol | **behoben** und von Gregor bestätigt (Paket 1.0.14). Ursache waren die sechs **24-Bit**-Bitmaps der Hauptleiste: ohne Farbtabelle konnte `CreateMappedBitmap` das Buttongrau `192,192,192` nicht auf das heutige `COLOR_BTNFACE` (`240,240,240`) umsetzen, und die Maske erfasste das ganze Bildrechteck. Behoben in `OTShim/OTShim_Werkzeugleiste.cpp`, abgesichert durch `tools/pruefe-symbole.pl` und `Eudora71/Tests/TestSymbole.cpp` (`Befunde/SYMBOLE.md`) |
+| E-31 | `pg_time_t` war unter VS2022 **acht** Byte breit statt vier — damit war jede Paige-Struktur verschoben, und in dieser Portierung entstand nie ein Paige-Fenster | **behoben und mittelbar bestätigt** in **7.2.0.17** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) — ohne Paige-Fenster gibt es kein Verfassen-Fenster, und Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt. Der Abschnitt mit allen Feldversätzen steht in `CHANGELOG.md` unter 7.2.0.21, dazu ein Kommentar in `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` |
+| E-32 | die **modale** Meldung „An unhandled exception has occurred" beim Verfassen, nach der sich Eudora nicht mehr beenden ließ | **Ursachenbehauptung widerlegt** (P-3, `Befunde/PRUEFER-3.md`): `CHeaderView::OnKillFocusRecipient` läuft bei Strg-N gar nicht, das Herausnehmen der Behebung bringt die Meldung nicht zurück, und im Paket 1.0.18 tritt sie über denselben Weg nicht auf. Der **Code-Mangel** dort ist echt und behoben (`060a4bf`) — er war nur nie die Ursache. Aufgeklärt hat die Meldung erst **E-34** |
+| E-33 | *File → Exit*, das **Kreuz** und **Alt-F4** beenden Eudora nicht, sondern bringen die Meldung **„Encountered an improper argument"** (Kriterium 7) | **behoben** in 7.2.0.22, von Gregor am 08.09.2026 bestätigt: *„schließen klappt jetzt."* Alle drei Wege beenden. Behoben durch **E-40**, **E-41** und **E-42** nach dem Grundsatz: ein Fehler beim *Aufräumen* darf das Beenden nicht verhindern, nur eine bewusste Entscheidung des Anwenders. **Der Fehler selbst ist damit nicht verschwunden** — er steht als Protokollzeile da und ist als **E-43** weiter offen |
+| E-40 | eine Rückfrage, die sich nicht **öffnen** lässt, galt als „Abbrechen" und hielt Eudora offen | **behoben** in 7.2.0.22. `CDoc::SaveModified` (`Eudora71/Eudora/doc.cpp`) und `CMessageDoc::SaveModified` (`Eudora71/Eudora/msgdoc.cpp`) hatten im `default`-Zweig nur `ASSERT(FALSE)` und `return FALSE`. `IDCANCEL` hat einen **eigenen** Zweig darüber; in `default` fällt vor allem die **0**, die `AfxMessageBox` liefert, wenn der Dialog nicht erzeugt werden kann — dann hat niemand entschieden. Jetzt: Rückgabewert und Titel ins Protokoll, Schließen wird fortgesetzt |
+| E-41 | **Alt-F4 und das Kreuz** laufen durch ein `ENSURE_VALID`, das *File → Exit* nicht hat | **behoben** in 7.2.0.22. `CMainFrame::OnSysCommand` reichte `SC_CLOSE` ungeschützt an `CFrameWnd::OnSysCommand` weiter; dort steht in MFC 14 `GetTopLevelFrame()` plus `ENSURE_VALID(pFrameWnd)` (`winfrm.cpp:1112-1114`), und `ENSURE_VALID` wirft **auch im Release-Bau**, wo MFC 6 nur `ASSERT_VALID` hatte. Jetzt `TRY`/`CATCH_ALL` mit `WM_CLOSE` als Rückfallweg. **Gefunden hat die Stelle PRUEFER**, indem er meine Beweisführung verwarf: aus „Kreuz und Alt-F4 zeigen dasselbe wie das Menü" folgt **nicht**, dass der Wurf in `OnClose` liegt |
+| E-42 | zwölf **Aufräumschritte** beim Beenden konnten den Ablauf abbrechen und das Fenster stehen lassen | **behoben** in 7.2.0.22. Neues Makro `AUFRAEUMEN(name, anweisung)` in `Eudora71/Eudora/mainfrm.cpp`: führt den Schritt aus, meldet einen Fehlschlag mit Namen und Grund ins Protokoll, macht weiter. In `OnClose`: `CloseImapConnections`, `EmptyTrash`, `CleanSSLLibrary`, `TrayItem`, `DeleteMenuObjects`, `QCWorkbook::OnClose`. In `CloseDown`: `TrimJunk`, `RemoveBogusAdToolBars`, `SaveBarState(ToolBar)`, `SaveWazooBarConfigToIni`, `SaveCrashStateToINI`, `WriteToolBarMarkerToIni`. Die Rückfragen in `CloseDown` Stufe 1 bis 3 laufen bewusst **nicht** hierdurch |
+| E-43 | `SECControlBar` war **zweimal definiert** — dadurch lasen zwei Übersetzungseinheiten dasselbe Feld acht Byte auseinander | **behoben** in 7.2.0.24, **von Gregor am 08.09.2026 bestätigt**: *„0.24 – persona läßt sich löschen. keine messagebox“*. **Die Wurzel von E-34, E-37 und E-38 zugleich.** `OT501/Include/sbarcore.h:118` (Original) und `OTShim/OTShim.h:496` (Ersatz) definieren beide `SECControlBar`; der Ersatz hat **ein Feld mehr**, `int m_nRowExtent` (`OTShim.h:533`). `OTShim_Werkzeugleiste.h:84` band unter `#ifndef __SBARCORE_H__` das **Original** ein, und denselben Wächter setzt `OTShim.h:984`. Welche Fassung eine Übersetzungseinheit sah, hing damit allein an der Reihenfolge: `QCCustomToolBar.cpp` über `stdafx.h` → `OTShimAll.h` → `OTShim.h` zuerst (Ersatz), `OTShim_Werkzeugleiste.cpp` ohne `stdafx.h` (Original). Compilerschalter und Include-Pfade sind sonst gleich — nachgemessen aus `Eudora.tlog/CL.command.1.tlog`, einziger Unterschied `/Yu"stdafx.h"`. **Gemessen vorher:** `GetBtnCount=24/24 m_btns.GetSize=0/0 roh[0..4]=24,25,0,0,0`. **Nachher:** `GetBtnCount=24/24 m_btns.GetSize=24/24 roh[0..4]=15146180,10425560,24,25,0` — `m_nSize` und `m_nMaxSize` liegen jetzt dort, wo `CPtrArray` sie hat. **Wirkung:** die `Eudora.ini` des Testprofils enthält zum ersten Mal `[ToolBar…]`-Abschnitte, **13 statt 0**; keine `E-42`-Zeile mehr beim Beenden. Behoben durch `#include "OTShim.h"` statt `sbarcore.h`. Die Schranke dazu ist **`tools/pruefe-waechter.pl`**; die Lehre `Arbeitsweise/teilweise-ersetzte-header.md` gab es seit dem 30.08.2026 und sie hat nichts verhindert |
+| E-47 | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt der Fehlerdialog *„Directory Services unavailable during this session due to unsuccessful initialization"* | **offen, Ursache belegt, keine Behebung in Sicht.** Text in `DirectoryServices/DirectoryServicesUI/inc/DSRightViewImpl.h:44`, angezeigt in `DSRightViewImpl.cpp:255` aus `DSRightView::OnActivateWazoo` — **nur** wenn `RegisterCOMObjects()` fehlschlägt. Es schlägt fehl, weil die dort genannten `DirServ.dll`, `ISock.dll`, `Ph.dll`, `Ldap.dll` und `EudoraBk.dll` **`MFC71.DLL` und `MSVCP71.dll` brauchen**, und die hat Microsoft nie als Redistributable veröffentlicht. `tools/paket-pruefen.ps1` führt beide seit dem 31.08.2026 als hingenommene Lücke — **dass dabei ein Fehlerdialog erscheint, stand dort nicht**. Von Gregor am 08.09.2026 an 1.0.23 gesehen. **Widerlegt:** mein erster Verdacht, A-2 habe die Leiste aufgemacht. Gemessen mit `tools/leisten-messen.ps1`: Leiste 319 ist **rechts, Sichtbar = False**, und Gregors eigenes Protokoll meldet *„Kurznamen versteckt"*. Die Leiste wird also von A-2 nicht geöffnet — sie war von Hand aufgemacht worden |
+| E-48 | die **Registerkartenleiste** für die offenen Fenster fehlte (Anforderung **A-3**, Kriterium 8) | **behoben** in 7.2.0.25, von Gregor am 09.09.2026 bestätigt: der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Die Leiste war nicht abwesend, sondern **abgeschaltet**: Eudoras Code liegt vollständig im Quellbaum (`workbook.cpp`), `mainfrm.cpp:1042` schaltet sie bei jedem Start ein, INI-Vorgabe `ShowMDITaskbar\n1`. Vier Anschlüsse fehlten in der Ersatzschicht: `SetWorkbookMode` war eine Attrappe; `GetTabPts` lieferte **sechs Nullpunkte** (jede Karte an (0,0) mit Größe null); `recalcTabWidth()` **liefert** die Breite nur zurück und wurde weggeworfen; `OnDrawTabIconAndLabel` wurde von niemandem gerufen, weshalb zwei **leere** Kästen standen. Dazu eine bewusste Abweichung: der Streifen beginnt am **MDI-Bereich**, nicht bei `rectClient.left` wie in `QCGetTaskBarRect` — dort liegt bei uns die linke Wazoo-Leiste, und Karte 0 verschwand darunter |
+| E-49 | der **linke Bereich** ließ sich nicht breiter ziehen (Anforderung **A-4**) | **behoben** in 7.2.0.26, von Gregor noch nicht bestätigt. Die Splitter-Mechanik war vollständig umgesetzt (`AddSplitter`, `HitTest`, `StartTracking`, `CalcTrackingLimits`, `DrawTrackerRect`, `OnSetCursor`, `OnLButtonDown`) — nur wurde `AddSplitter` nie gerufen, `Track` war leer und `OnSplitterMoved` tat nichts. **Drei Anläufe, zwei am laufenden Programm widerlegt:** `SetBorders` ergab Andockleiste Client **176** bei Leiste **180** (der Rand verkleinert den Innenbereich statt die Leiste zu vergrößern); eine Bedingung über `m_arrBars` ergab **gar keine Wirkung**; ein Messversuch mit Zuschlag **11** ergab **187**, also **7 frei** — daraus folgt, dass der Weg über `CalcFixedLayout` stimmt und **MFC 4 Pixel des Zuschlags selbst verbraucht**. Endstand: Bedingung am Ergebnis, und `OnSizeParent` **misst** den freien Platz nach statt ihn zu raten — 8 Pixel |
+| E-50 | drei Mängel an der neuen Registerkartenleiste, von Gregor an 1.0.25 gefunden | **behoben** in 7.2.0.26, noch nicht bestätigt. Alle drei mit derselben Wurzel: **der Streifen wird nur beim Neuzeichnen gemalt, und niemand erklärt ihn für ungültig.** (1) *„die karte bleibt eingedrückt, auch wenn man im anderen fenster ist"* — `QCWorkbook::OnLButtonDown` setzt `SetSelected(TRUE)` (`workbook.cpp:1109`) und **niemand** setzt es zurück; im Original tat das die Stingray-Ebene. Die Marke wird jetzt gelöscht, sobald ein anderer Rahmen aktiv ist. (2) *„beim skalieren ist die darstellung falsch"* — `WM_SIZE` frischt auf. (3) *„die karten sind dann weg"* beim Öffnen/Schließen — `AddSheet`/`RemoveSheet` frischen auf. **Nebenbefund, NICHT hier eingeordnet:** *„nach dem neustart sind die fenster nicht im vollbild modus, wie beim beenden"* — das ist der Fensterzustand, ein eigener Weg über `SaveOpenWindows`, getrennt zu messen |
+| E-51 | meine eigene **Ziehschleife** konnte Eudora einfrieren | **behoben, bevor es ausgeliefert wurde.** in **7.2.0.27** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) `Splitter::Track` lief im ersten Entwurf mit `while(::GetMessage(...))`. Kommt kein `WM_LBUTTONUP` — Mausfang verloren, Fokus weg, Nachricht anderswo hin —, wartet die Schleife für immer und das Programm ist tot. **Zweimal an der eigenen Prüfinstanz eingetreten**, beide Male musste der Prozess abgeschossen werden. Jetzt: höchstens 100 ms warten, danach Fenster, Mausfang und die **physische** Maustaste erneut prüfen. Der Preis ist benannt: ein künstlicher Zug über Fensterbotschaften ist damit nicht mehr möglich, das Ziehen kann nur ein Mensch prüfen |
+| E-52 | nach dem Verbreitern war der **Trennbalken nicht mehr greifbar**, und die Registerkarten standen **doppelt** | **behoben** in 7.2.0.27, von Gregor noch nicht bestätigt. Von ihm an 1.0.26 gemeldet: *„nach vergrößern (verschiebung nach rechts), kann man den balken nicht mehr greifen. erst wenn ich das fenster verändere, dann geht es wieder."* und *„verschieben links / rechts vom mailverzeichnis: hier ist kein refresh drin."* — **sein zweiter Halbsatz war die Diagnose.** MFC verschiebt die Leisten mit `DeferWindowPos` (`lpLayout->hDWP`); wenn `OnSizeParent` zurückkommt, hat die Andockleiste ihre neue Größe **noch nicht**, und `GetClientRect` liefert die alte. Der Balken landete an der alten Stelle. Behoben, indem er in `OnSize` entsteht — `WM_SIZE` kommt, nachdem die Größe gesetzt ist. Die doppelten Karten kamen aus derselben Wurzel: `RecalcLayout` ordnet neu an, erklärt aber nichts für ungültig. `OnSplitterMoved` frischt jetzt mit `RDW_INVALIDATE \| RDW_ERASE \| RDW_ALLCHILDREN` auf. **Bestätigt ist der Gegenfall:** *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*, also greift die Höhenänderung samt Auffrischen |
+| E-53 | beim **Schließen** eines Fensters blieb an der Stelle der Registerkarte ein **Strich** stehen | **behoben** in 7.2.0.28, von Gregor noch nicht bestätigt. Sein Wort: *„schönheitsfehler beim schließen, da bleibt ein strich übrig."* Die Ursache war eine **Unsymmetrie in meinem eigenen Code**: `SECWorkbook::StreifenAuffrischen` erklärt den Streifen mit `InflateRect(2, 2)` für ungültig, gefüllt wurde in `OnPaint` aber nur der Streifen **ohne** diesen Rand. Die zwei Pixel ringsum blieben stehen — und genau dort liegen die Kanten, die `QCWorkbook::GetTabPts` um (+2,−2) verschiebt. Jetzt wird gefüllt, was auch für ungültig erklärt wird; beide Stellen benutzen denselben Betrag |
+| E-54 | beim Ziehen des Trennbalkens **nach rechts** war der **Ziehrahmen unsichtbar** — man zog ins Blinde | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden. `SECDockBar::StartTracking` gab **sich selbst** als Zeichenziel mit (`pSplit->Track(this, pt, this)`), und `DrawTrackerRect` rechnet in den Clientbereich dieses Fensters um. Die Andockleiste ist aber nur **188 Pixel** breit — alles rechts davon fiel aus dem sichtbaren Bereich, also genau die Richtung, in die Gregor ziehen will. Jetzt heißt `pWndClipTo == NULL` „in **Bildschirm**koordinaten auf den Bildschirm zeichnen", so wie MFC es beim Ziehen von Leisten macht (`CDockContext::InitLoop`): Fenstersperre auf dem Arbeitsflächenfenster, dann `GetDCEx` mit `DCX_WINDOW\|DCX_CACHE\|DCX_LOCKWINDOWUPDATE`. Die Sperre ist der Grund, weshalb kein Rest stehen bleibt — sie sammelt die Malbereiche der anderen Fenster und zeichnet sie beim Aufheben nach |
+| E-55 | ein **acht Pixel hoher leerer Streifen** unter der Werkzeugleiste | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden. Der Zuschlag in `SECDockBar::CalcFixedLayout`, der den Greifstreifen für A-4 schafft, galt für **alle vier** Andockleisten — auch für die obere, in der die Werkzeugleiste sitzt und wo niemand etwas ziehen will. Übrig blieb dort nur der leere Platz. Die Entscheidung steht jetzt an **einer** Stelle (`BrauchtGreifstreifen`, links/rechts/unten) und wird von `CalcFixedLayout` **und** `TrennbalkenNeuAnlegen` benutzt — vorher standen zwei Listen getrennt da, und die eine schuf Platz, den die andere nicht belegte |
+| E-56 | beim **Abschalten** von *Show MDI task bar* blieb der Registerkartenstreifen stehen | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. In `QCWorkbook::ShowMDITaskBar` (`workbook.cpp:718-736`) stehen `RecalcLayout` und `ResetTaskBar` **innerhalb** von `if (m_bWorkbookMode)` — beim Einschalten läuft beides, beim Ausschalten **nichts**. Der Rand wird auf 0 gesetzt, aber niemand ordnet neu an. Nachgeholt in `SECWorkbook::SetWorkbookMode`, nur im Ausschaltzweig (sonst liefe es doppelt), mit `RDW_ALLCHILDREN`, weil der MDI-Clientbereich selbst ein Kindfenster ist |
+| E-57 | `QCWorkbook::IsTabLabelTruncated` legte bei **jeder Mausbewegung** über dem Streifen eine `CPaintDC` an — **außerhalb** von `WM_PAINT` | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden, und es erklärt Gregors Satz *„hier ist kein refresh drin"*. `CPaintDC` ruft `BeginPaint`/`EndPaint`; das erklärt den Ungültigkeitsbereich des Fensters für **erledigt, ohne etwas zu malen**. Gerufen wird die Fassung aus `OnNotify` (`workbook.cpp:1633`, `TTN_NEEDTEXT`), also bei jeder Mausbewegung. Was gerade neu gezeichnet werden sollte, wurde damit verworfen. Zum **Messen** von Textbreiten genügt `CClientDC`, und der hat diese Nebenwirkung nicht |
+| E-58 | ein Klick in den **rechten Rand** des Registerkartenstreifens öffnete den **Browser**, ohne dass dort etwas zu sehen war | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden — eine **Rückentwicklung aus 1.0.25 bis 1.0.28**, denn `QCWorkbook::OnLButtonDown` fragt nur bei `m_bWorkbookMode` (`workbook.cpp:1132`), und der ist erst seit A-3 an. Zwei Ursachen zusammen: `CalcLogoTopLeft` prüft **nur x** (`pIntersectPoint->x >= nLeftEdge`), ein y-Vergleich fehlt ganz — getroffen war damit der gesamte rechte Fensterrand statt der 111 × 23 Pixel des Logos; und das Logo wird **überhaupt nicht gezeichnet**, weil `OnDrawBorder` in dieser Ersatzschicht von niemandem gerufen wird. Solange kein Bild da ist, gibt es keinen Treffer: die Trefferprüfung liefert `FALSE`. Der Weg über `TopLeft` bleibt unberührt, damit das Zeichnen später ohne weiteres nachgezogen werden kann |
+| E-59 | `m_cxTab` wurde **nur in `OnPaint`** gesetzt | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden. Alles, was die Kartenbreite **braucht, ohne zu malen** — `GetTabPts` und damit `QCGetTabRect`, `TabHitTest` und `CalcLogoTopLeft` —, rechnete zwischen einer Änderung und dem nächsten Malen mit dem alten Wert; ein Klick traf dann die Nachbarkarte. Die Breite wird jetzt dort bestimmt, wo die Änderung gemeldet wird (`StreifenAuffrischen`). Dabei musste eine Prüfung auf `m_pWBClient` **vor** den Aufruf: `QCWorkbook::recalcTabWidth` greift ohne eigene Prüfung darauf zu |
+| E-60 | ein Trennbalken konnte **während des Ziehens gelöscht** werden — Benutzung nach dem Freigeben | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden. `Splitter::Track` verteilt fremde Nachrichten (`TranslateMessage`/`DispatchMessage`), und eine davon kann einen Anordnungsdurchlauf auslösen. Der lief durch `TrennbalkenNeuAnlegen` → `BeginRecycleSplitters`/`EndRecycleSplitters`, und dort wurde genau das Objekt gelöscht, in dessen Methode man sich noch befand. Neu ist eine Marke `m_bTracking`: `BeginRecycleSplitters` gibt einen ziehenden Balken nicht frei, `EndRecycleSplitters` löscht ihn nicht, und `TrennbalkenNeuAnlegen` kehrt sofort zurück, solange gezogen wird |
+| E-61 | `Splitter::Track` **verschluckte `WM_QUIT`** — Eudora hätte weitergelaufen, obwohl es enden sollte | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Von PRÜFER gefunden. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange; wer sie nicht zurückstellt, hat das Beenden des Programms verschluckt. Genau die Klasse aus **Kriterium 7** (*„beenden kann ich es auch nicht"*), diesmal von mir selbst neu eingebaut. Jetzt: `::PostQuitMessage((int) msg.wParam)` und das Ziehen abbrechen |
+| E-62 | **sieben eigene Nachrichtenschleifen in Eudoras Quellen verschluckten `WM_QUIT`** — zwei davon mit echter Hängegefahr | **behoben** in 7.2.0.29, von Gregor noch nicht bestätigt. Nicht von Hand gefunden, sondern beim **ersten Lauf** der Schranke `tools/pruefe-nachrichtenschleife.pl`, die wegen E-51 und E-61 entstanden war. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange, `DispatchMessage` tut mit `WM_QUIT` **nichts** — die Aufforderung zu beenden ist weg. Betroffen: `EscapePressed` (`guiutils.cpp:1666`, wird während **langer Vorgänge** gerufen, also gerade beim Mailabruf), `SyncPlayMedia` (`:3387`), `CTocFrame::DoPreviewDisplay` (`TocFrame.cpp:3673`), `CTridentView::DoFindFirst` (zwei Schleifen) und `CTridentView::Print`. **Die zwei schwersten hängen, statt nur zu verschlucken:** `LeftClickAttachment` (`guiutils.cpp:2910`) und `CTocView::SizeColumn` (`tocview.cpp:3458`) warten in `while (1)` mit `GetMessage(&msg, hWnd, 0, 0)`. `WM_QUIT` kommt **trotz** Fensterfilter, `GetMessage` liefert dann 0 — und weil `while (1)` den Rückgabewert nicht auswertet, wartet die Schleife danach **für immer** auf eine Nachricht, die nie mehr kommt, mit gehaltenem Mausfang. Ausgelöst schon durch das Ziehen einer **Spaltenbreite** im Postfachfenster. Damit ist eine mögliche Ursache von Gregors *„beenden kann ich es auch nicht"* benannt, die **nicht** aus der Portierung stammt, sondern im Original steht |
+| E-63 | die **letzte** Registerkarte zeigt keinen Kurzhinweis, alle anderen schon | **behoben** in 7.2.0.30, von Gregor noch nicht bestätigt — der Verdacht unten hat sich beim Nachlesen bestätigt, und die Selbstheilung des Originals steht jetzt in `QCWorkbook::OnDrawTab`: sie vergleicht die Zahl der **angemeldeten Kurzhinweis-Felder** mit der Zahl der **sichtbaren Karten** und rechnet nur bei Abweichung neu. `OnDrawBorder` wiederzubeleben kam nicht in Frage, das würde auch das Werbelogo zeichnen. **Vorher:** Von Gregor am 09.09.2026 an 1.0.29 gemeldet, mit Bildschirmfoto: *„alle karten, bis auf die letzte (warum?) zeigen einen tooltip beim maus over. beim letzten (ganz rechts) nicht."* Seine Entscheidung dazu: *„den fehler notieren wir, wird im nächsten release behoben."* — **Verdacht, noch nicht am laufenden Programm belegt:** `QCWorkbook::AddSheet` ruft `ResetTaskBar` → `RecalcToolTipRects` (`workbook.cpp:1226`, `:788`, `:1709`), und dort werden nur Blätter mit `WS_VISIBLE` als Kurzhinweis-Feld angemeldet. Ist das MDI-Kindfenster in diesem Moment noch nicht sichtbar, bekommt es kein Feld. Jedes **spätere** `AddSheet` rechnet alle Felder neu und repariert die älteren — nur das **zuletzt hinzugekommene** bleibt ohne, und das ist genau die rechte Karte. Dazu passt, dass im Original eine Selbstheilung existiert: `QCWorkbook::OnDrawBorder` (`workbook.cpp:1533`) prüft `m_lastVisCount != CountVisibleTabs()` und ruft dann `ResetTaskBar` — **diese Fassung wird in der Ersatzschicht von niemandem gerufen** (dieselbe Wurzel wie **E-58**). **Vorhersage zum Gegentest:** Fenstergröße ändern ruft `QCWorkbook::OnSize` → `RecalcToolTipRects`, danach müsste der Kurzhinweis auch auf der letzten Karte erscheinen. Steht das nicht, ist der Verdacht widerlegt |
+| E-64 | **BESTÄTIGT von Gregor am 10.09.2026 an 1.0.42:** *„filter funktionieren“*. Ein Filterlauf über das ganze In-Postfach verschob **alle** Nachrichten, nicht nur die passenden — DATENVERLUST | **behoben** in 7.2.0.36, Ursache am 10.09.2026 geklärt: kein eigener Fehler, sondern die Folge von **E-72** — ein Filter, dessen Suchwert durch das Zurückschreiben geleert wurde, heißt *„enthält nichts“* und trifft damit jede Nachricht. **Gegenbeweis mit frischem Filter** (Protokoll 1.0.36, 09:10): zwei Nachrichten geprüft, `Match=1` und `Match=0`, nur die passende verschoben. Früherer Stand: Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *„filter greifen (z.b. verschieben nach spam), aber wenn man es z.b. auf die ganze in-mailbox anwendet, dann werden ALLE (!) mails verschoben."* **Der Schaden ist nachgemessen**, nicht nur berichtet: in seiner `eudora.log` (Sitzung 12:51:30) steht bei 0.12 `Junk .mbx size: MBX 0`, bei 0.01 `In .mbx size: MBX 1089243`, dann bei 4.06–4.10 ein Handfilterlauf über 22 Nachrichten (`Messages left to filter: 21 … 0`) und bei 4.11 `Junk.mbx, Size: 1089243` — **byte-genau der ganze Posteingang**. Belegt ist außerdem, dass `CFilter::Action` gelaufen ist (vier LMOS-Sätze aus `filtersd.cpp:1166`, dessen einziger Weg über `if (filt->Match(...))` in `filtersd.cpp:2323` führt) **mit einer Aktion `ID_FLT_SERVER_OPT`, die in seiner `Filters.pce` gar nicht steht** — die Filterobjekte im Speicher weichen also von der Datei ab. **Offener Widerspruch:** die Trefferzeile `Filter "%s" matches "%s"` (`filtersd.cpp:2312-2318`) fehlt im ganzen Protokoll, obwohl `DEBUG_MASK_FILTERS` (0x400) in `LogLevel 0x649F` gesetzt ist und dasselbe Verfahren für LMOS schreibt. Die entscheidende Messung (eine Zeile mit Filtername, Kopf, Verb, Wert, Aktionen und Match-Ergebnis, geschrieben mit `MISC\|TOC_CORRUPT`) steht in `Befunde/PRUEFER-7.md` |
+| E-65 | Filter lassen sich **anlegen, aber nicht bearbeiten** | **KEIN eigener Fehler — Folge von E-66.** in **7.2.0.29** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) Gregor am 09.09.2026 auf die Frage, was „nicht editieren“ genau heißt: *„hier sehe ich nur teile des namens, der inhalt steht vermutlich weiter rechts, für mich nicht erreichbar. und da der balken nicht verschiebbar ist, komme ich da nicht dran.“* Damit ist von PRUEFERs drei Kandidaten der erste bestätigt und die beiden anderen sind vom Tisch: das Filterfenster ist ein statischer Teiler mit **zwei Spalten** (`FiltersWazooWnd.cpp:149-151`), links die Regelliste, rechts die Regel selbst. Die linke Spalte bekommt `max(140, Breite/4)` (`:181-185`), die rechte den Rest — und bei einer rund 188 Pixel breiten Andockleiste bleibt davon nichts übrig. **Behebung = E-66.** **Umgehung ohne Bau, aus dem Code gelesen und NICHT am laufenden Programm geprüft:** in `Eudora.ini` `UseMyFilterWindowPosition=1` und `FiltersWindowSplitterPosition=60` setzen (Schlüsselnamen aus `EudoraRes.rc:7583` und `:7589`, Vorgaben 140 und 0); dann bleibt `nSplit` bei 60 stehen, statt auf `max(nSplit, 140, Breite/4)` hochgezogen zu werden, und die rechte Spalte bekommt den Rest | Von Gregor am 09.09.2026 an 1.0.29 gemeldet: *„filter kann man setzen, aber nicht mehr editieren."* Belegt ist das Bild dazu: seine `Filters.pce` enthält vier Regeln, davon **zwei wortgleich** — ein Anwender, der neu anlegt, weil er nicht ändern kann. Kandidaten, alle **Vermutung**: (1) die rechte Hälfte hat Breite null, weil `CFiltersWazooWnd::OnActivateWazoo` (`FiltersWazooWnd.cpp:185-186`) Spalte 0 mindestens 140 Pixel gibt und Spalte 1 `SetColumnInfo(1, 0, 0)`, während die Mindestbreite von 420 aus `OnGetMinMaxInfo` nur für ein frei schwebendes Fenster gilt; (2) `static BOOL bFuncEntered` (`:133`) ist **prozessweit**, nicht je Fenster — nach einem Neuaufbau des Wazoo-Fensters werden Teiler und Ansichten nie wieder angelegt; (3) stiller Abbruch nach der bekannten Klasse: `ASSERT(0); return;` in `:153`, `:169`, `filtersv.cpp:180` und `:967`. **Die Frage an Gregor, die entscheidet:** bleibt die rechte Hälfte leer, sind die Felder grau, oder wird die Änderung nicht behalten? |
+| E-66 | der Trennbalken der **rechten** Andockleiste ist sichtbar, lässt sich aber nicht ziehen (unten ebenso) | **behoben in 7.2.0.36, von Gregor am 10.09.2026 bestätigt** — *„1. ja / 2. ja / 3. ja"* zu: Balken lässt sich ziehen, rechte Hälfte des Filterfensters erreichbar, Änderungen bleiben stehen. Der Weg dorthin, weil die Ursache mehrfach falsch geraten wurde: von Gregor am 09.09.2026 an 1.0.29 gemeldet: *„rechts ist zwar ein balken sichtbar, aber nicht verschiebbar."* Links geht es seit A-4. **Ursache 1 (wirksam):** `TrennbalkenNeuAnlegen` misst den freien Streifen für `AFX_IDW_DOCKBAR_RIGHT` bei `rectLeiste.left - rect.left` (`OTShim.cpp:4165`), aber `CDockBar::CalcFixedLayout` der MFC (`…\14.38.33130\atlmfc\src\mfc\bardock.cpp:387`) setzt die Kindleiste in **jeder** Andockleiste bündig auf `(-cxBorder2, -cyBorder2)`; der Zuschlag `3*Splitter::cx = 12` bleibt darum immer am **großen** Ende liegen — links die Innenkante (`nFrei ≈ 7`, Balken entsteht), rechts der Fensterrand (`nFrei = -2`, Bedingung `nFrei >= 2` in `:4174` scheitert, `AddSplitter` läuft nie, `HitTest` liefert `NULL`). `BrauchtGreifstreifen` und die Bedingung `nVorhanden > 8` sind für links und rechts identisch — die Spur „andere Bedingung für rechts" ist **widerlegt**. **Ursache 2 (belegt, heute verdeckt):** `CalcTrackingLimits` (`:3622-3623`, waagrecht `:3637-3638`) rechnet `m_nMin`/`m_nMax` für rechts/unten sinnverkehrt; für eine rechte Leiste ergibt sich `m_nMax = -10`, der zulässige Bereich liegt links vom Balken, `Splitter::Track` klemmt sofort fest. **Messung, die entscheidet, ohne Bau:** Mauszeiger über den rechten Streifen — normaler Pfeil = Ursache 1, Doppelpfeil = Ursache 2. Gegenprobe: der **untere** Balken muss nach derselben Rechnung ebenfalls tot sein. Umfang: eine Datei, 30 bis 45 Zeilen **STAND 09.09.2026, abends — an Paket 1.0.30 GEMESSEN, WEITER OFFEN:** Gregor: *„balken lassen sich nicht verschieben. beim anklicken ist der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Das ist ein Fortschritt und eine Einschränkung zugleich: der **Doppelpfeil belegt, dass `HitTest` den Balken findet** — er existiert also, die erste Ursache ist behoben. Es scheitert **danach**, in `Splitter::Track` oder in `OnSplitterMoved`. Welches von beidem, ist von außen nicht zu sehen; zwei Vermutungen von mir sind an diesem Tag schon am Code gescheitert, deshalb kommt als Nächstes eine **Spurmarke** in `StartTracking` und `OnSplitterMoved`, die Leiste, Balkenlage, Grenzen, Klickpunkt, Delta und die Größe vorher/nachher in EINER Zeile schreibt. Vorbereitet in der Kladde, noch nicht eingesetzt. **STAND DAVOR, nach PRUEFER-7:** **Ursache 2 ist behoben** (7.2.0.30, Zweig `filter`) — die Grenzen folgen jetzt der Regel "die Seite, an der die Leiste angewachsen ist, bekommt `nMindest`; die Seite zum MDI-Bereich hin bekommt `nFreiraum`", womit auch UNTEN richtig wird. **Ursache 1 steht noch** — solange `nFrei = -2` ist, entsteht rechts gar kein Balken, und die berichtigten Grenzen greifen ins Leere. Die Behebung gehört in `TrennbalkenNeuAnlegen`. **Meine erste Zuordnung war falsch:** ich hatte diesen Befund als E-67 geführt und die Ursache allein in `CalcTrackingLimits` gesehen — PRUEFERs Messung an `bardock.cpp:387` zeigt, dass das nur die zweite, verdeckte Hälfte ist. |
+| E-67 | ein Filter *„«Junk Score» is less than N"* wird durch bloßes **Anschauen** im Filterfenster zu *„matches regexp N"* und greift nie wieder | **offen, belegt durch Nachrechnen am Quelltext.** `filtersv.cpp:1210` und `:1222` prüfen `if (m_Verb0 > NumVerbsNonJunk)` mit `NumVerbsNonJunk == 14`, kodiert wird beim Speichern aber mit `m_Verb0 += 14` (`:1378`) — „is less than" wird also **14**, und `14 > 14` ist falsch. Die Rückrechnung unterbleibt, `DDX_CBIndex` ruft `SetCurSel(14)` auf ein Feld mit **zwei** Einträgen → `CB_ERR`. Beim nächsten `UpdateData(TRUE)` liest `DDX_CBIndex` `-1`, `:1378` macht daraus `13`, `:1413` schreibt das in den Filter (`IDS_MATCHES_REGEX`), und weil sich der Wert unterscheidet, setzt `:1404` das Änderungskennzeichen — der verfälschte Filter wird **gespeichert**. Danach fällt die Bedingung in `CFilter::MatchValue` (`filtersd.cpp:679-694`) immer durch. **Behebung: zwei Zeichen** (`>` → `>=`). Gegentest: Filter anlegen, Filterfenster öffnen, wegklicken, `Filters.pce` ansehen — dort steht dann `verb regex` statt `verb less` |
+| E-68 | **Zielpostfächer verschwinden aus `Filters.pce`** — Schreiben und Lesen sind unsymmetrisch; dazu die **fehlende Grenze** für den Aktionszähler | **Grenze behoben** in **7.2.0.29** (aus der Git-Geschichte ermittelt, nicht aus einer Fassungsangabe) am 10.09.2026 auf `wt/pruefer` (noch in keinem Paket), **Unsymmetrie weiter offen** (PRÜFER, 10.09.2026, alles am Quelltext nachgerechnet). **(a) Die Grenze — echter Schreibzugriff hinter das Feld, jetzt zu.** `CFiltersDoc::Read` zählt den Aktionszähler `i` in **21 Zweigen** (22 `case`-Marken; `IDS_FIO_TRANSFER_TO` und `IDS_FIO_COPY_TO` teilen sich einen) hoch und prüfte ihn nie gegen `NUM_FILT_ACTS` (= 5, `filtersv.h:39`). Der Zähler indiziert nicht nur `m_Actions[5]` (`filtersd.h:129`), sondern **elf gleich große Nachbarfelder**, darunter die CString-Felder `m_Sound`, `m_NotifyApp`, `m_Forward`, `m_Redirect`, `m_Reply`, `m_CopyTo`, `m_Desc`. Die sechste Aktion trifft bei `m_Actions` noch `m_Label` (harmlos verbogene Zahl), bei `m_Desc[5]` dagegen `m_DoPersonality` — `CString::operator=` fasst ein `BOOL` als Zeichenkettenzeiger auf und schreibt durch einen erfundenen Zeiger. **Wie weit er reicht:** `CFiltersDoc::Write` ist gebunden (`for i < NUM_FILT_ACTS`, `filtersd.cpp:3439`) und schreibt je Platz höchstens **eine** Zeile — eine `Filters.pce`, die Eudora selbst geschrieben hat, kann den Überlauf **nicht** auslösen. Er braucht eine **fremde Datei**: von Hand bearbeitet, aus einem anderen Programm übernommen, oder eine `.pre`/`.pst` aus dem Filters-Verzeichnis. Die liest `LoadExtraFilters` (`filtersd.cpp:2622-2654`) ein und **geschrieben werden sie von Eudora nie** (`Write` kennt nur `m_Filters` und `m_strPathName`) — sie sind per Bauart Fremdeingabe. **Also: echt, aber nicht durch Bedienung auslösbar.** Behoben mit `IstAktionsSchluesselwort` plus Grenze in `Read`: die überzählige Zeile wird verworfen und protokolliert (`E-68 Regel … wird verworfen`), die ersten fünf Aktionen bleiben. Schranke `tools/pruefe-filter-aktionsgrenze.pl` hält beide Listen gegeneinander. **(b) Weiter offen — die Unsymmetrie:** `copyInstead ` wird gelesen (`filtersd.cpp:3090-3106`) und füllt dabei `m_Mailbox` statt `m_CopyTo[i]` (der Quelltext nennt es selbst *„legacy code that never gets executed"*), der Schreibzweig prüft aber `m_CopyTo[i]` und schreibt nichts; beim Transfer steht das Schlüsselwort unter `if (filt->IsTransferTo())`, die **Pfadzeile** darunter nicht — nach einer ausgeführten Copy-Aktion entsteht eine kennungslose Zeile, die `Read` verwirft. **Zusatzfund PRÜFER 10.09.2026:** diese kennungslose Zeile ist nicht immer harmlos. `FindCStringArrayIndexI` (`rs.cpp:1169-1186`) vergleicht mit `strnicmp` über die Länge des **ersten Wortes der Eingabe** — ein Postfachpfad, dessen erstes Wort ein Präfix eines Schlüsselworts ist (etwa ein Ordner *„Copy of …"* → `copy `), wird als Aktion gelesen und zählt mit |
+| E-69 | `CFiltersDoc::FilterMsg` bricht den Filterlauf im Freigabebau **lautlos** ab und meldet Erfolg | **offen, belegt.** Drei `ASSERT(0)` — `filtersd.cpp:2241` (kein TOC), `:2286` (Nachrichtendokument nicht ladbar), `:2302` (Nachrichtentext leer) — führen alle auf `break` aus der Filterschleife; die Funktion liefert danach `FA_NORMAL` (`:2354-2358`), also dasselbe wie „durchgelaufen, nichts getroffen". Weder `pop.cpp:999` noch `sendmail.cpp:186` noch `TocFrame.cpp:2398` sehen einen Unterschied: keine Meldung, kein Protokolleintrag (die Debug-Zeile `:2312-2320` steht erst **hinter** dem Treffer), kein Berichtseintrag. Verwandt: `FilterReportWazooWnd.cpp:65` — fehlt das Wazoo-Fenster, entfällt der **ganze** Filterbericht kommentarlos, und `ClearAllLists()` (`filtersd.cpp:3618`) wirft die gesammelten Einträge weg. Genau [assert-ist-im-release-nichts](Arbeitsweise/assert-ist-im-release-nichts.md) |
+| E-70 | **BESTÄTIGT von Gregor am 10.09.2026 an 1.0.42:** *„filter fenstergröße nach neustart gespeichert: PASS“*. Die Andockgrößen der Leisten überleben einen Neustart nicht — zuletzt an der Breite des **Filterfensters** gemeldet | **behoben** in 7.2.0.41. Von Gregor am 10.09.2026 an 1.0.40 wiederholt: *„speichert aber nicht die fenster größe von filters nach dem neustart"*. **Entschieden hat es die Spurmarke aus 1.0.37**, die bis dahin nie ausgewertet worden war: im Protokoll stehen **40** Zeilen `E-70 gesichert:` und **0** Zeilen `E-70 geladen:`, und in seiner `Eudora.ini` steht `DockVertCx319=586` — der Wert wird also richtig geschrieben und nie gelesen. **Der Grund stand im eigenen Kommentar über der Funktion, in die ich den Aufruf gesetzt hatte:** *„KATEGORIE C laut PLAN.md: Eudora ruft diese Fassung nie auf"* über `SECToolBarManager::LoadState`. Gerufen wird `QCToolBarManager::LoadState`. Dass das **Sichern** lief, hat die Lücke verdeckt — `QCToolBarManager::SaveState` ruft `SECToolBarManager::SaveState` ausdrücklich auf, das Gegenstück nicht. Behoben an der symmetrischen Stelle, dazu ein `RecalcLayout` am Ende von `GroessenLaden` (`AndockgroesseSetzen` schreibt nur Felder). Der Zeitpunkt stimmt: `mainfrm.cpp:951` `SetDockState`, `:952` `LoadState`. **Die ursprüngliche Ursachenanalyse bleibt gültig** — `CDockState::SaveState` ruft `pInfo->SaveState(...)` nicht virtuell und sieht die Stingray-Felder nie; deshalb braucht es das eigene Schreiben und Lesen überhaupt |
+| E-71 | der **Filterbericht** ist nach einem Filterlauf leer | **offen — zurückgestellt**, von Gregor am 10.09.2026 an 1.0.42 erneut gemeldet: *„filter report fenster ist leer: kommt nichts an. kann aber als ToDo für die nächste version aufgeschrieben werden."* **Berichtigung einer eigenen Einstufung:** ich hatte E-71 als *„kein eigener Fehler — Folge von E-72"* eingeordnet, mit der Begründung, ein Filter ohne Merkmale sei für keinen Lauf zuständig und habe darum nichts zu berichten. Diese Begründung ist widerlegt: E-72 ist behoben, die Filter greifen (von Gregor an 1.0.42 bestätigt: *„filter funktionieren"*), und der Bericht bleibt trotzdem leer. **Was schon belegt ist:** der Lauf findet statt und trifft — im Protokoll steht `E-64 Match=1` und unmittelbar danach `Filter "…" matches "…"` mit der Maske 1024, dem Protokollkanal des Berichts. Es scheitert also **nach** dem Vermerken. **Wo zu suchen ist:** `CFilterActions::EndFiltering` (`filtersd.cpp`) arbeitet `m_NotifyReportList` ab und sucht dafür über `CFilterReportView::GetFilterReportView()` das Berichtsfenster; findet es keines, verfällt die Liste. Zu messen ist, ob die Liste gefüllt wird und ob das Fenster gefunden wird — zwei Werte in **einer** Zeile. Nicht von selbst aufgreifen: Gregor hat ihn ausdrücklich auf die nächste Fassung geschoben |
+| E-72 | **BESTÄTIGT von Gregor am 10.09.2026 an 1.0.42:** *„filter funktionieren“*. Die rechte Hälfte des Filterfensters schrieb ihren leeren Zustand in den ausgewählten Filter** — Häkchen, Werte und die **Aktionsliste**; DATENVERLUST über E-64 und E-73 | **behoben** in 7.2.0.36. `CFiltersViewRight::DoDataExchange` schreibt beim Wegklicken vom Filterreiter alles aus den Eingabefeldern zurück; ausgelöst bei **jedem** Verlassen (`FiltersWazooWnd.cpp:122` → `CanCloseFrame` → `UpdateData(TRUE)`). Solange die rechte Hälfte unerreichbar war (**E-65**), wurden ihre Felder nie gefüllt — zurückgeschrieben wurde **Leere**. Belegt an Gregors `Filters.pce`: Regel 1 hatte noch `incoming`, `manual` und ihren Wert, Regel 2 nur noch `incoming`, ohne `manual` und ohne `transfer`. **Zwei Sperren:** zurückgeschrieben wird nur, was diese Ansicht **wirklich geladen** hat (`m_pGeladen`), und eine Bedingung mit **leerem Wert** passt nicht mehr auf alles — *„enthält nichts"* war für jede Nachricht wahr und schob mit `transfer` den ganzen Posteingang |
+| E-73 | eine **Filteraktion löschte Post auf dem Server**, ohne dass sie je eingestellt worden war — DATENVERLUST | **behoben** in 7.2.0.38, **erweitert um zwei weitere Wege** am 10.09.2026 auf `wt/pruefer` (noch in keinem Paket). `CFilter::Action` merkt die Nachricht zum Löschen vor, sobald `ID_FLT_SERVER_OPT` mit `SO_DELETE` im Filter steht — und sticht dabei `LeaveMailOnServer`. PRÜFER hatte am 09.09.2026 gemessen, dass genau diese Aktion **lief, obwohl sie in `Filters.pce` gar nicht steht**; sie kam aus **E-72**. Gregors Entscheidung: *„ja, 1 auf jeden fall! Filteraktion darf nicht mehr vom Server löschen"*. Rückschalter `FilterMayDeleteFromServer=1` in `[Settings]`, Vorgabe **0**; jeder Versuch wird protokolliert. **Die erste Fassung schloss nur EINEN von DREI Wegen** (PRÜFER, 10.09.2026, Gegenvermutung *„ist `CFilter::Action` wirklich die einzige Stelle?"* — **bestätigt, sie war es nicht**): **(1) IMAP.** Ist das Postfach ein IMAP-Postfach, verzweigt `CFilter::Action` nach `ImapAction` (`filtersd.cpp:1213-1215`) und erreicht den geprüften POP-Zweig gar nicht; dort steht dieselbe Aktion noch einmal und reicht sie an `CImapFilterActions::ImapSetServerOpt` weiter (`EuImap/src/ImapFiltersd.cpp:791-794`), das die UID bei `SO_DELETE` in `m_szDeletedUids` hängt — daraus wird ein `STORE \Deleted` auf dem Server. **(2) Die Junk-Filteraktion.** `case ID_FLT_JUNK` (`filtersd.cpp:1581-1600`) ruft `CJunkMail::DeclareJunk`, und das setzt bei `DeleteFetchedJunk=1` ein `SetServerStatus(ID_MESSAGE_SERVER_DELETE)` (`JunkMail.cpp:707-711`) → `CSummary::SetServerStatus` (`summary.cpp:2650-2679`) → `SetDeleteFlag(LMOS_DELETE_MESSAGE)`. **E-74 deckt das nicht ab:** dort wurde `DeleteFetchedJunk=0` nur in `tools/DEudora.ini` gesetzt, und das ist die Vorgabe für **neu angelegte** Konten — eine vorhandene `Eudora.ini` mit `DeleteFetchedJunk=1` löscht weiter, ausgelöst durch eine **Filteraktion**. Beide Wege fragen jetzt denselben Rückschalter; die Frage liegt in **einer** Funktion `FilterDarfVomServerLoeschen` (`filtersd.cpp`, vor `CFilter::Action`), und `tools/pruefe-filter-serverloeschung.pl` weist einen Commit ab, in dem ein vierter Weg dazukommt, der nicht fragt. **Manuelles Junken (`pFilt != NULL`) bleibt unberührt** — das ist eine bewusste Handlung des Anwenders |
+| E-74 | **`Delete fetched junk` ist im Original an** und löscht als Junk eingestufte Post auf dem Server — DATENVERLUST, eingetreten | **behoben** in 7.2.0.39 für **neu angelegte** Konten. `CJunkMail::ProcessOne` (`JunkMail.cpp:453-457`) merkt jede Nachricht ab `MinScoreToJunk` (Vorgabe 50) zum Löschen auf dem Server vor; die eingebaute Vorgabe von `DeleteFetchedJunk` ist **1**. **Das hat am 10.09.2026 Gregors Postfach geleert** — belegt im Protokoll von 1.0.36, 09:22: dreizehn Zeilen `Old … dD` (die Marke wechselt von *nicht löschen* auf *löschen*), unmittelbar gefolgt von `Begin purging messages`. Besonders heikel, weil die Junk-Bewertung auf `SpamWatch` und `SpamHeaders` angewiesen ist, die wegen **E-47** gar nicht laden können. `tools/DEudora.ini` setzt jetzt `DeleteFetchedJunk=0`. **Eigener Fehler im Vorgehen:** ich hatte diesen zweiten Löschweg am Vormittag gefunden, in 1.0.38 aber nur den Filterweg gesperrt und Gregor trotzdem zum Testen aufgefordert |
+| E-75 | **Strg+J filterte nicht, sondern verschob nach Junk** — und die Fortschrittsanzeige nannte es „Filter" | **behoben** in 7.2.0.40, von Gregor am 10.09.2026 an 1.0.39 gemeldet: *„filter erwischt immer noch zu viele mails"*, dazu *„ich drücke zum filtern ja immer noch ctrl-J"*. **Im Original geändert, nicht durch die Portierung:** vor der Junk-Funktion war Strg+J *Filter Messages*; seit Eudora 6 fragt `IDD_CTRL_J_FOR_JUNK`, ob die Taste auf *Junk* wechseln darf. **Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da sind** (`CMainFrame::InitJunkMenus`, `mainfrm.cpp:7911-7934`); sonst legt der `else`-Zweig Strg+J **stillschweigend** auf Junk und schreibt `CtrlJMapping=1` fest — für immer, denn der Zweig läuft nur einmal. Gregor hatte mit **leerem Mailverzeichnis** angefangen und die Filter erst danach angelegt. **Belegt im Protokoll von 1.0.39:** die echten Filterläufe um 6.26 und 7.38 tragen ihre E-64-Marken und arbeiten korrekt (`Match=1` bei einer, `Match=0` bei der anderen); der Lauf um 9.07 mit **neun** Nachrichten trägt **keine einzige** — `FilterMsg` wurde nie gerufen, `Junk.mbx` wuchs trotzdem von 174 196 auf 501 987 Bytes. **Gegenprobe am Bestand:** von zwölf Nachrichten in `Junk.mbx` haben zehn keinen Filtergrund, sechs davon von `adventskalender-mails@freenet.de`, für die Gregors Filter ausdrücklich **`HW_Bxo.mbx`** vorsieht — die Datei ist 0 Bytes. **Behebung:** ohne manuelle Filter bleibt Strg+J auf `CTRL_J_FILTER`. Wer Junk auf Strg+J will, stellt es in den Einstellungen um. **Zweite Ursache, warum es so lange wie Filtern aussah:** *Filter Messages*, *Junk/Not Junk* und *Recheck Junk* zeigten alle dieselbe Zeile `Messages left to filter` (`TocFrame.cpp:996`, `:1156`, `:2380`). Die beiden Junk-Befehle sagen jetzt `Messages left to scan for junk` bzw. `Messages left to mark`. **Von Gregor am 10.09.2026 an 1.0.40 bestaetigt**, nachdem er den Wert von Hand gesetzt hatte: *„ok, mit dem wert 2 ist das menü jetzt korrekt. paßt“*. Damit ist zugleich belegt, dass die Menue-Umbeschriftung in `InitJunkMenus` richtig arbeitet: sie zeigte vorher ehrlich *Ctrl+Shift+L* an. **Bestehende Mailverzeichnisse behebt das nicht** — dort steht die `1` schon in der `Eudora.ini` und muss von Hand auf `CtrlJMapping=2` |
+| E-76 | das **freischwebende Filterfenster** lässt sich nur **seitlich** vergrößern, nicht nach unten | **behoben** in **7.2.0.49**, **von Gregor am 11.09.2026 bestätigt**: *„e-76: paßt: läßt sich jetzt vergrößern."*, von Gregor am 10.09.2026 an 1.0.40 gemeldet: *„filter fenster läßt sich nicht nach unten vergrößern, nur zur seite“*, mit Bild des Fensters `WazooBar2`. **Vor dem Messen geprüft:** die Wazoo-Leiste trägt `CBRS_SIZE_DYNAMIC` (`WazooBarMgr.cpp:136`), die dynamische Größe ist also erlaubt; `FloatControlBarInMDIChild` ist im Shim **nicht** umgesetzt (`OTShim.cpp:372`), das Fenster ist demnach ein echtes schwebendes und kein MDI-Kind; und der `IsFloating`-Zweig in `SECControlBar::CalcDynamicLayout` sieht richtig aus — `LM_LENGTHY` setzt `cy`, sonst `cx`. Damit ist die Frage offen. **Spurmarke `E-76` seit 7.2.0.41:** sie nennt `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating` und die Maße vorher wie nachher in **einer** Zeile und schreibt nur, solange die Leiste schwebt  — **Ursache am 11.09.2026 aus Gregors Protokoll gelesen:** beim abschließenden Aufruf trägt `dwMode` `LM_COMMIT`, aber **kein** `LM_LENGTHY`, und `nLength` ist dort die **Breite** (780) statt der gezogenen Höhe (299). Der `else`-Zweig setzte deshalb die Breite neu und speicherte die alte Höhe. Behoben mit einem Merker, der die zuletzt in Ziehrichtung gerechnete Größe über den COMMIT rettet. **Die Spurmarke lag seit 7.2.0.41 im Bau und konnte nur von einem Menschen ausgelöst werden** — sie braucht eine physisch gedrückte Maustaste |
+| E-77 | **IMAP-Postfachnamen mit Umlauten werden roh angezeigt** — `Entw&APw-rfe` statt *Entwürfe*, `Gel&APY-scht` statt *Gelöscht* | **offen**, von Gregor am 10.09.2026 an 1.0.42 mit Bild gemeldet: *„die bezeichnung der mailboxen ist hier falsch: sollte wohl ‚gelöscht‘ heißen?“* **Ursache:** IMAP kodiert Nicht-ASCII in Postfachnamen als **modifiziertes UTF-7** (RFC 3501, Abschnitt 5.1.3): `&<base64>-`. Nachgerechnet: `&APw-` ist `U+00FC` = *ü*, `&APY-` ist `U+00F6` = *ö*. Eudora dekodiert das nicht — in `Eudora71/` kommt **keine** UTF-7-Behandlung vor (gegrept über alle `.cpp`/`.h` nach `UTF-7`, `UTF7`, `ModifiedUTF7`, `DecodeMailboxName`; einziger Treffer ist `Qt3.x/CIncludes/TextCommon.h`, eine fremde Kopfdatei ohne Bezug). Der Name kommt roh aus der `LIST`-Antwort und geht unverändert in `ImapMailbox::m_FriendlyName` (`EuImap/public/inc/ImapMailbox.h:487`). **Zu beachten bei der Behebung:** die Umkehrung gehört dazu — beim Anlegen und Umbenennen eines Postfachs muss der Name wieder kodiert werden, sonst legt Eudora auf dem Server einen Ordner mit rohen Umlauten an. Betrifft nur die **Anzeige** von IMAP-Ordnern, nicht den Abruf: IMAP selbst funktioniert (von Gregor am selben Tag bestätigt) |
+| E-78 | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | **offen**, gefunden am 10.09.2026 beim Nachmessen von E-70. **Abgegrenzt gegen E-44:** jener Befund war, dass die Anordnung nach einem Neustart *gar nicht* wiederhergestellt wurde — behoben in 7.2.0.24 durch den Nachziehweg in `CWazooBarMgr::LoadWazooBarConfigFromIni`. Dieser hier ist, dass genau dieser Nachziehweg **immer** läuft. **Belegt:** die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)“* erscheint bei jedem Start, aber in der `Eudora.ini` stehen **dreizehn** solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` ausdrücklich nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`) — der Zustand ist also da und wird nicht angewandt: `pWazooBar->m_pDockBar` bleibt `NULL`. **Folge:** die Standardanordnung überschreibt Lage, Sichtbarkeit und Breite; letzteres war die zweite Hälfte von **E-70**. **Zwei Spurmarken seit 7.2.0.43** in `mainfrm.cpp` — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig`, je Leiste mit Kennung, Andockleiste, Sichtbarkeit und Stil. Sagt die erste *hat Andockleiste* und die zweite *keine*, geht die Zuordnung dazwischen verloren; sagt schon die erste *keine*, wirkt `SetDockState` nicht. **Könnte auch den Nebenbefund erklären, dass Fenster nach einem Neustart nicht im Vollbild stehen** |
+| E-79 | die **Breite der linken Spalte im Filterfenster** überlebt keinen Neustart | **behoben durch die Einstellung, von Gregor am 11.09.2026 an 1.0.44 bestätigt** — vier Messläufe, je zwei davon stabil: `543 -> 543` bei Elternbreite 1100 und `334 -> 334` bei 751. Kein Codeeingriff nötig; `UseMyFilterWindowPosition=1` steht jetzt als Vorgabe in `tools/DEudora.ini`, im Abschnitt `[Window Position]`. Ursprünglich gemeldet als von Gregor am 11.09.2026 an 1.0.43 gemeldet: *„die breite der linken spalte beim filter wird nicht über den neustart gespeichert. auch wenn ich sie breiter gezogen habe."* **Zwei Ursachen, die erste ist ein Dokumentationsfehler von mir.** (1) `UseMyFilterWindowPosition` stand in `[Settings]`; Eudora ordnet jeden Schlüssel allein nach seiner Nummer zu (`rs.cpp:88`, `GetSectionID`), und `10922` gehört nach `[Window Position]`. Nachgemessen mit `GetPrivateProfileIntA`: aus `[Window Position]` kommt **0**, aus `[Settings]` die **1**, die dort niemand liest. `FILTER.md` hatte behauptet, alle Schlüssel stünden in `[Settings]` — das gilt für **23 von ihnen nicht**; berichtigt, und die Tabellen nennen den Abschnitt jetzt je Schlüssel. (2) **Auch im richtigen Abschnitt bleibt der Wert nicht.** Gregors Messung: er trug `312` ein, nach Start und Beenden stand `368` in der Datei; davor `237` bei einer Leistenbreite von 527, danach `368` bei 668. `SetColumnInfo` setzt nur eine **Wunschbreite** (`FiltersWazooWnd.cpp:185`), wirksam wird sie erst durch die Neuberechnung, die das nachfolgende `PostMessage(WM_SIZE, …)` auslöst — und beim Schließen wird die **tatsächliche** Breite zurückgeschrieben (`:70`), nicht die gewünschte. Weicht sie ab, schaukelt sich der Wert von Lauf zu Lauf auf. **In der VM tritt es nicht auf** — dort ist die Leiste schmaler; dieselbe Fassung, `Version 7.2.0.43` in beiden Protokollen. **Spurmarken `E-79 geladen:` und `E-79 gesichert:` seit 7.2.0.44**, sie nennen gelesenen Wert, Schalter, Elternbreite, Viertel, gesetzten und tatsächlichen Wert in einer Zeile; einschalten mit `LogLevel=58527` |
+| E-80 | der Knopf **„Blah Blah Blah"** blendet die Kopfzeilen nicht aus — sie stehen immer da | **behoben in zwei Teilen, von Gregor am 11.09.2026 an 1.0.46 bestätigt**: *„ja, jetzt geht es"*. **TEIL 2, gefunden erst durch seinen Test an 1.0.45** (*„header schaut jetzt kürzer aus. aber: der bla bla button ändert nichts"*): **der Knopf schaltete seinen eigenen Zustand nie um.** Er steht als `TBBS_CHECKBOX` in der Leiste des Nachrichtenrahmens (`ReadMessageFrame.cpp:179`), sein Zustand steckt im Bit `TBBS_CHECKED` (`:981-998`) — und gesetzt wird das Bit **genau einmal**, beim Anlegen des Fensters und nur bei `ShowAllHeaders=1` (`:498-503`). Der Klick geht an die **Ansicht** (`ON_BN_CLICKED`, `TridentReadMessageView.cpp:161` und `PgReadMsgView.cpp:72`); `CReadMessageFrame` hat für `ID_BLAHBLAHBLAH` **keinen** Eintrag in seiner Botschaftstabelle, `CReadMessageFrame::OnBlahBlahBlah` (`:688`) ist eine **tote Funktion**. Beide Ansichten **lesen** `GetCheck` und keine setzt ihn — deshalb meldete die Spurmarke in jedem Lauf `Knopf=0`. **Die Zahl stand da, ich habe sie nicht zu Ende gedacht.** Im Original erledigte das die Stingray-Leiste selbst; der OTShim-Ersatz setzt `TBBS_CHECKED` nur über `SECToolBarCmdUI::SetCheck` (`OTShim_Werkzeugleiste.cpp:2742`), also über `ON_UPDATE_COMMAND_UI` — und so einen Eintrag gibt es für diesen Knopf nirgends. **Dieselbe Klasse wie E-43 und E-70.** Behoben in beiden Ansichten über die registrierte Botschaft `umsgButtonSetCheck`, die `summary.cpp:2518-2520` für zwei andere Knöpfe schon so benutzt. **TEIL 1** war in 7.2.0.44: Gemeldet am 11.09.2026 an 1.0.44: *„sowohl die einstellung ,include signature on reply', noch der bla bla button scheinen nicht zu funktionieren. erwartung: doppelklick auf mail: je nach button wird der header angezeigt oder ausgeblendet. aktuell: er wird immer angezeigt."* **Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen als unwichtig gelten, steht in `TabooHeaders` (`EudoraRes.rc`, Kennung `10207`, Abschnitt `[Settings]`) — und diese Liste stammt aus **2006**. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`, aber nicht `DKIM-`. **Nachgerechnet an 134 echten Nachrichten aus sechs Postfächern** mit `tools/taboo-rechnen.pl`: der Vergleich ist ein reiner Präfixvergleich (`TridentReadMessageView.cpp:2465`, gleichlautend `ReadMessageDoc.cpp:504`), lässt sich also ohne Programm ausrechnen. Mit der alten Liste blieben **über 60 Kopfzeilenarten** stehen, darunter `DKIM-Signature` 76×, `Authentication-Results` 70×, `X-FN-MUUID` 62×, `X-Scan-TS` 60×, `X-Spam-Flag` 58×, `Delivered-To` 56×, `X-Mailer` 55×, `UI-OutboundReport` 54× — die beiden obersten sind genau die, die in Gregors Bildschirmfoto stehen. **16 Einträge ergänzt** (`X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `Envelope-To`, `Delivered-To`, `List-`, `Feedback-ID`, `Thread-`, `Accept-Language`, `User-Agent`, `Auto-Submitted`, `Autocrypt`, `UI-OutboundReport`, `UI-InboundReport`, `msip_`); die Originalliste bleibt **unverändert** davor stehen, damit kein bisheriges Verhalten wegfallen kann. Dieselbe Rechnung mit der neuen Liste über alle sechs Postfächer lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`, `Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`, ein Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft `Referer: ` nicht. **Kein Datenverlust:** `StripTabooHeaders` arbeitet auf dem Puffer, den `GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`) — die `.mbx` wird nicht angefasst; wer alles sehen will, drückt den Knopf oder setzt `ShowAllHeaders=1`. **Zwei Umwege auf dem Weg dahin, beide meine.** (1) Die erste Spurmarke lag in `PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel` nachweislich wirkte (im selben Lauf schrieben E-78 18× und E-34 6×). Eudora hat **zwei** Nachrichtenansichten, ausgewählt in `ReadMessageFrame.cpp:277-281`, und beide haben eigene Taboo-Logik: Paige markiert die Kopfzeilen mit einem Stil und schaltet an ihm `hidden_text_var` um, Trident entscheidet **beim Erzeugen des HTML**, ob sie überhaupt hineingeschrieben werden. (2) Der Verdacht, der **Content Concentrator** steche den Knopf aus, stammt aus der ersten Messung: `E-80 trident: Knopf=0 konzentriert=1 ShowAllHeaders=0 -> Kopfzeilen ALLE`. Das gilt nur für den ersten Aufbau; der zweite meldet `konzentriert=0 -> Kopfzeilen gekuerzt`, und im laufenden Betrieb ist das der Zustand. Die Kürzung griff also die ganze Zeit — sie kürzte nur fast nichts weg. **Spurmarke `E-80 trident:` seit 7.2.0.44** in `TridentView.cpp:1425`, sie nennt Knopf, Concentrator, `ShowAllHeaders` und das Ergebnis in einer Zeile; einschalten mit `LogLevel=58527` |
+| E-81 | bei einer Mail mit dunklem Hintergrund sind die **Kopfzeilen unsichtbar** — schwarz auf schwarz, sichtbar nur beim Markieren | **behoben** in 7.2.0.47, **von Gregor am 11.09.2026 an 1.0.47 bestätigt**: *„ja, paßt!"* Gefunden von ihm am 11.09.2026 an 1.0.46, an einer waipu.tv-Werbemail — erst sichtbar geworden, nachdem E-80 den Knopf wieder zum Schalten gebracht hatte. **Ursache:** Eudora schreibt die Kopfzeilen als `<SPAN CLASS=EUDORAHEADER>` in **dasselbe** HTML-Dokument, in dem danach die Mail steht (`TridentReadMessageView.cpp:2418-2455`). Das Stylesheet dieses Dokuments (`IDS_INI_READMESSAGE_STYLE_SHEET`, `EudoraRes.rc:8129`) kennt nur `BODY`, `TT` und `BLOCKQUOTE.CITE` — für `EUDORAHEADER` gibt es **keine einzige Regel**. Die Kopfzeilen erben also, was die Mail für ihren `<BODY>` vorgibt. **Behebung:** eine Regel für `SPAN.EUDORAHEADER`, die Vordergrund **und** Hintergrund selbst festlegt — nur die Schriftfarbe zu setzen würde bei einer Mail mit hellem Text auf dunklem Grund denselben Fehler spiegelverkehrt erzeugen. Erst `black` auf `white`, dann dieselben Angaben noch einmal als `windowtext`/`window`: kennt MSHTML die Systemfarben, folgen die Kopfzeilen dem Windows-Design, kennt es sie nicht, verwirft es nur diese beiden Angaben. Ein Rückfall, der in keinem Fall schlechter ist als vorher. Wer eine eigene `read.css` im Eudora-Verzeichnis hat, ersetzt das Stylesheet vollständig (`TridentView.cpp:1300-1325`) — für den ändert sich nichts; im Paket liegt keine |
+| E-82 | die **Zertifikatsprüfung nahm Zertifikate an, deren Kette sich nicht verifizieren ließ** | **behoben** in 7.2.0.48, **von Gregor am 11.09.2026 bestätigt** — IMAP läuft unverändert weiter. Kennung am 11.09.2026 von ihm vergeben. **Was war:** der Verifikations-Callback behandelte `X509_V_ERR_CERT_UNTRUSTED` (27) und `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) als Erfolg — `iOK = 1` sagt OpenSSL wörtlich *„Zertifikat in Ordnung"*, und anders als in allen benachbarten Zweigen wurde weder ein Fehlercode gesetzt noch eine Warnung angehängt. Der Anwender sah nichts. Fehler 27 stammt aus `check_trust()` und tritt im gewöhnlichen Kettenaufbau auf. **Jetzt** hängen beide Codes am vorhandenen, korrekt ausgeführten Zweig für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`: `iOK` bleibt 0, die Verbindung wird abgelehnt, `IDS_CERTERR_CHAINNOTTRUSTED` erscheint. **Betriebsfolge:** Eudora lehnt Verbindungen ab, die es vorher klaglos annahm; die Einzelfreigabe über den Zertifikatsspeicher bleibt, denn die Prüfung sieht dort zuerst nach. **Gemessen an Gregors Konten:** `Open 212.227.17.186:993` und `Successfully retrieved markus.bakus@gmx.de` — GMX' Kette hält der echten Prüfung stand. Der Verdacht, `rootcerts.p7b` von 2006 könne zu alt sein, ist für diese Konten widerlegt. **Weiterhin offen und davon getrennt:** die **Hostnamenprüfung** greift nicht — ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` angenommen |
+| E-83 | **Eudora lässt sich nicht beenden** — *„You currently have 1 task(s) running"*, und im Aufgabenfenster steht endlos *„Waiting in the task queue to be started …"* | **behoben** in 7.2.0.53, **am laufenden Programm gemessen** (14.09.2026). **Die Anzeige log:** der Zustand war `FERTIG(5)`, die Aufgabe wartete also gar nicht — der Text stammt aus `Register()` und wird nie überschrieben. Das hat den Befund zwei Wochen in die falsche Richtung geschickt. **Gemessen** in Gregors Lauf mit 7.2.0.52: **15** Aufgaben fertig *mit* angeforderter Nachbearbeitung, **17** fertig *ohne*, und dieselben **17** meldete die Überwachung alle 15 Sekunden als liegengeblieben. **Ursache:** `QCTaskManager::RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn `IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()`; sonst stand dort **nichts**. Das war eine Sackgasse — `DoPostProcessing` arbeitet ausschließlich `m_PostProcessList` ab, und dort hinein kommt eine Aufgabe **nur** über `RequestPostProcessing()`. Auch der Leerlauf holt sie nicht nach; die Aufgabe blieb in `m_TaskInfoList` und zählte weiter als laufend. `m_nStartIdle` wird nur in `StartTasks()` gesetzt, also für Aufgaben aus einer `QCTaskGroup` — IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei. **Behoben**, indem auch dieser Zweig die Nachbearbeitung anfordert. **Vorher widerlegt:** der Verdacht auf `StartWorkerThread` mit `m_pThread == NULL` (seit 11.09.2026) — der Zeiger war in jeder gemessenen Zeile gesetzt; und eine der drei „ausgeschlossenen" Ursachen war **falsch ausgeschlossen** (`DelayTasks`/`StartTasks` werden sehr wohl gerufen, von `QCTaskGroup`) |
+| E-84 | die **Größe eines losgerissenen Fensters überlebt den Neustart nicht** — es kommt beim nächsten Start wieder klein | **behoben** in 7.2.0.50, **von Gregor am 11.09.2026 bestätigt** — belegt an beiden Enden: in der `Eudora.ini` steht `FloatCx319=751` / `FloatCy319=403`, und der erste Aufruf nach dem Neustart meldet `E-76 fest: vorher=751x403` statt der Anfangsgröße `200x100`. Von ihm am 11.09.2026 gemeldet, unmittelbar nach der Bestätigung von E-76: *„das undocked initiale fenster ist recht klein, die größe (nach der änderung) wird nach dem schließen vom filter und eudora nicht gespeichert. beim nächsten mal wieder klein."* **Der erste Anlauf saß an der falschen Stelle.** Er stand in `SECControlBarInfo::SaveState`/`LoadState` — reinen Weiterleitungen an MFC, und MFC kennt `m_szFloat` nicht. **Diese Funktionen werden beim Speichern aber gar nicht durchlaufen:** mit dem Einbau dort kam in der `Eudora.ini` kein einziger Eintrag an. An ihrer Stelle steht jetzt ein Kommentar, der das sagt (`OTShim.cpp:5330-5334`), damit dort niemand wieder anfängt. **Der tatsächliche Weg steht seit E-70 im Baum:** `QCToolBarManager::SaveState` → `SECToolBarManager::SaveState` → `GroessenSichern` (`OTShim_Werkzeugleiste.cpp:4410`), Gegenstück `GroessenLaden` (`:4470`), gerufen aus `QCToolBarManager::LoadState` (`QCToolBarManager.cpp:1199`). Dort wurden bis 7.2.0.49 nur `DockVertCx` und `DockHorzCy` geschrieben — die **Andock**größen; `m_szFloat` kam nirgends vor. **Behoben** an derselben Stelle mit zwei weiteren Schlüsseln, `FloatCx<id>` und `FloatCy<id>` im Abschnitt `[ToolBar-ToolBarManager]`, geschrieben und gelesen wie die beiden vorhandenen — kein neuer Weg, keine zweite Stelle zum Übersehen. Eine Größe von 0 wird gar nicht erst geschrieben, weil `GroessenLaden` sie sonst übernehmen müsste. **`SECControlBarInfo::Serialize` bleibt unberührt:** der Kommentar dort begründet zu Recht, den SEC-Anteil wegzulassen — *„das Format müsste dann zum Original passen … eine eigene Erweiterung würde eine Datei erzeugen, die ein späterer echter Nachbau nicht mehr lesen kann"*. Das gilt für ein **Binärformat**, in dem ein zusätzliches Feld alles Nachfolgende verschiebt; in der **INI** stört ein zusätzlicher Schlüssel niemanden, der ihn nicht kennt |
+| E-85 | **Umlaute in per IMAP abgerufenen Nachrichten kommen falsch an** | **Alle drei Mängel behoben in 7.2.0.51 — aber die Behebung hat eine Regression eingeführt, die noch offen ist** (unten), 13.09.2026, von Gregor am selben Tag gemeldet. **Drei Mängel im IMAP-Weg, die beiden ersten in `EuImap/src/ImapDownload.cpp`, der dritte zusätzlich in `Eudora/utils.cpp`.** **(0) behoben in 7.2.0.51 — der schwerwiegendste: `charset=utf-8` wurde gar nicht erkannt.** Die Stelle (damals Zeile 4645) suchte mit `FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9, …)` — der Bereich endet bei **3613**, `IDS_MIME_UTF_8` ist **3614** und liegt damit außerhalb. Der Aufruf lieferte `-1`, `if (iCharsetIdx > 1)` war falsch, und **es wurde überhaupt nicht übersetzt**; die UTF-8-Bytes gingen roh in die Mailboxdatei und wurden später als CP1252 angezeigt. Der POP3-Weg macht es richtig: `FindMIMECharset` (`Eudora/mime.cpp:382-402`) sucht bis `IDS_MIME_UTF_8` **und** verschiebt das Ergebnis um eins (`++iCharSet`), damit Index 0 für `windows-*` frei bleibt. Genau diese Verschiebung fehlte im IMAP-Weg ebenfalls — die beiden Wege rechneten auf **verschiedenen Skalen**, was der bestehende Test *„POP: der Index wird um eins verschoben — anders als im IMAP-Pfad"* schon festhielt. **Jetzt ruft der IMAP-Weg dieselbe Funktion:** `iCharsetIdx = FindMIMECharset(params->value)` (`ImapDownload.cpp:4671`), und die Schwelle darunter heißt `if (iCharsetIdx > 2)` statt `> 1` (`:4688`) — auf der gemeinsamen Skala ist 0 `windows-*`, 1 us-ascii, 2 Latin1, 3 Latin9, 4 UTF-8, übersetzt wird ab 3 wie in `TextReader.cpp`. **(1) behoben in 7.2.0.51:** Zeile 4662 verwarf den Rückgabewert von `ISOTranslate`; `outLen` behielt die Länge *vor* der Übersetzung und genau die wurde geschrieben. **(2) behoben in 7.2.0.51:** die Behebung von **Z-2b** (angefangene UTF-8-Zeichen an der Stückgrenze zurückhalten) stand nur in `TextReader.cpp` und damit nur im POP3-Weg; IMAP liest bei `text/html` in Blöcken von 8192 Bytes. Neu dafür: `ISOTranslateChunk` (`Eudora/utils.cpp:1269`, deklariert in `utils.h:93`), gerufen in `ImapDownload.cpp:4705`, mit vier Tests über alle Stückgrößen. **(3) neu eingeführt und in 7.2.0.51 gleich mitbehoben — die abschließende Null traf die nächste Zeile.** Von **PRUEFER** am 13.09.2026 belegt (`Befunde/PRUEFER-10.md`, Zweig `wt/pruefer`) und hier am Quelltext nachgemessen: `ISOTranslate` schreibt die abschließende Null an `szBuf[lSize]` (`utils.cpp:1443`) — **ein Byte hinter** den übersetzten Bereich. Der POP3-Weg hält dafür eigens Platz frei; der Kommentar darüber sagt es wörtlich (`utils.cpp:1440-1442`: *„TextReader::ReadIt is now making sure that it leaves space at the end of its buffer for us to NULL terminate it"*). **Der IMAP-Weg hat diesen Platz nicht:** bei `text/plain` zeigt `pBuf` in den Puffer von `CChunkReader`, und das Byte hinter der Zeile ist das **erste Byte der nächsten Zeile** — bei `charset=utf-8` ohne Decoder verliert damit jede Zeile ihr erstes Zeichen. **Vorher konnte das nicht auftreten:** `ISOTranslate` kehrt bei `iCharsetIdx <= 2` zurück, **bevor** die Nullung ausgeführt wird (`utils.cpp:1412-1415`), und der alte IMAP-Weg sah wegen der eigenen Skala nie einen höheren Index. Erst die gemeinsame Skala aus (0) erreichte die Nullung. **Behoben in `ISOTranslateChunk` selbst:** das Byte hinter dem Stück wird vor dem Aufruf gerettet und danach zurückgeschrieben (`utils.cpp:1308-1310` für den Nicht-UTF-8-Weg, `:1393-1395` für den UTF-8-Weg), und nur dort, wo `ISOTranslate` wirklich schreibt — bei `iCharsetIdx <= 2` kehrt es vor der Nullterminierung zurück. Damit bleibt der Aufrufer unangetastet und beide Wege sind gedeckt. **Die ersten drei Punkte sind am Quelltext belegt; von Gregor ist nichts davon am laufenden Programm bestätigt** |
 | E-86 | eine **Newsletter-Mail steht in Eudora auf weißem Grund, das Logo in einem Kasten mit blauem Rahmen** — im Webbrowser dagegen abgerundete Kästen ohne Rahmen | **behoben** in 7.2.0.55, **am laufenden Programm gemessen**. **Zwei Verdächte wurden vorher widerlegt:** (1) Eudora lege sein eigenes `<html><head><body>` um die Nachricht und MSHTML verwerfe deren zweites — die Spurmarke meldet `BODY-Elemente=1`, es gibt kein zweites; (2) beim Zusammensetzen gehe Formatierung verloren — die gesicherte Anzeigedatei hat **36.078 Bytes, 67 Tabellen, 12 Bilder und alle 118 `border`-Angaben** der Nachricht, sogar eine mehr (Eudoras Zitatbalken). **Die wirkliche Ursache:** MSHTML rendert ohne besondere Anweisung im **Standardmodus des Internet Explorer 7 von 2006**. Die Mail enthält dreimal `border-radius`, das dieser Modus nicht kennt — abgerundete Ecken werden zu Kästen, und was im CSS einen Rahmen unterdrücken soll, greift nur teilweise. **Behoben** mit `<meta http-equiv="X-UA-Compatible" content="IE=edge">` als erster Zeile der Anzeigedatei (`TridentView.cpp`, vor dem Stylesheet — MSHTML muss den Schalter im Kopf sehen, bevor Inhalt kommt). **Gegenprobe am laufenden Programm:** vorher meldete die Spurmarke `Hintergrund=#ffffff`, nachher `Hintergrund=transparent` — der Modus hat sich nachweislich geändert. Wie es aussieht, beurteilt Gregor |
-| E-87 | **beim Weiterleiten geht die HTML-Formatierung verloren** â die Nachricht wird beim Lesen mit KÃ¤sten, Rahmen und HintergrÃ¼nden angezeigt, im Verfassenfenster steht nur noch FlieÃtext mit blauen Verweisen | **behoben** in 7.2.0.55 mit dem Schalter `KeepHTMLInResponses`, die verbliebene Layoutgrenze ist als **E-88** abgetrennt und in 7.2.0.56 behoben — urspruenglich gemeldet als: es geht wirklich so hinaus, von Gregor am 14.09.2026 an 1.0.53 mit zwei Bildschirmfotos nebeneinander gemeldet (Leseansicht gegen *Fwd:*-Fenster). **Berichtigt damit eine falsche Aussage von mir:** ich hatte am selben Tag geschrieben, der Darstellungsfehler E-86 betreffe *ânur das Lesen, nicht das Versenden â wer sie weiterleitet, verschickt sie korrekt"*. Gemessen hatte ich nur, dass der HTML-Rahmen aus `TridentView.cpp` beim Verfassen nicht gebaut wird; **daraus folgt nicht, dass der Verfassenweg die Formatierung erhÃ¤lt.** Er baut den Text neu auf, Ã¼ber `PgCompMsgView` auf Paige-Grundlage, und dabei geht das CSS verloren. **Zuerst zu klÃ¤ren, bevor irgendetwas geÃ¤ndert wird:** ob das Original von QUALCOMM sich genauso verhielt â Eudora 7.1 konnte HTML nur eingeschrÃ¤nkt bearbeiten, und dann wÃ¤re es kein Portierungsfehler, sondern eine Grenze des Programms. Zu messen an `InstallersForEudora/Eudora7.1` oder am Quelltext des Verfassenwegs | **Am 14.09.2026 nachgelegt:** Gregor hat die weitergeleitete Nachricht beim Empfänger geöffnet — sie kommt genauso an. Es ist also **kein Anzeigefehler im Verfassenfenster**, sondern die Formatierung ist beim Verschicken tatsächlich weg. Damit betrifft der Befund nicht nur Gregor, sondern jeden Empfänger einer weitergeleiteten Nachricht. **Am 14.09.2026 gemessen und zur Haelfte behoben (1.0.54):** Antworten und Weiterleiten laufen beide durch `CSummary::ComposeMessage` (`summary.cpp`). Dort verwarf `summary.cpp:1110` das Ergebnis von `IsFancy(fullMes)` wieder, sobald `MSF_XRICH`/`MSFEX_FLOWED` im Uebersichtseintrag fehlten: `IsRich` wurde `IS_ASCII`, und `QuoteText` (`msgutils.cpp:126-220`) nahm daraufhin nicht den HTML-Zweig ueber `GetBodyAsHTML`, sondern `WrapText` mit `">"`-Praefix — reiner Text. Die blauen Verweise darin stammen von `MakeAutoURLSpaghetti`, nicht aus der Nachricht. **Behoben** mit dem neuen Schalter `KeepHTMLInResponses` (Vorgabe `1`, `[Settings]`, `EudoraRes.rc:7667`), der fuer beide Wege gilt; `0` stellt das alte Verhalten her. Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitt 3. **Offen bleibt die zweite Haelfte:** verfasst wird mit Paige, und dessen HTML-Leser wertet aus `div` allein `align` aus (`PGHTMIMP.CPP:1193-1201`), kennt kein `span` und keine einzige CSS-Eigenschaft (`PGHTMDEF.C:20-48`). Was Paige nicht versteht, ist nach `PgMsgView::ExportMessage` (`PgMsgView.cpp:342-408`, `pDoc->SetText()`) endgueltig fort — und genau dieser Text geht hinaus. **CSS-Kaesten und -Hintergruende blieben deshalb auch mit dem Schalter verloren** — bis **E-88** in 7.2.0.56 das Original am Editor vorbeifuehrte; die verbleibenden Grenzen stehen in EINSTELLUNGEN.md 4.8. Eine Spurmarke in `summary.cpp` gibt `IsFancy`, `IsRich`, `IsXRich`, `IsFlowed`, `IsHTML`, den Schalter und den Antworttyp in einer Zeile aus (`LogLevel=58527` noetig, die Vorgabe `25759` enthaelt `DEBUG_MASK_MISC` nicht).
+| E-87 | **beim Weiterleiten geht die HTML-Formatierung verloren** — die Nachricht wird beim Lesen mit Kästen, Rahmen und Hintergründen angezeigt, im Verfassenfenster steht nur noch Fließtext mit blauen Verweisen | **behoben** in 7.2.0.55 mit dem Schalter `KeepHTMLInResponses`, die verbliebene Layoutgrenze ist als **E-88** abgetrennt und in 7.2.0.56 behoben — urspruenglich gemeldet als: es geht wirklich so hinaus, von Gregor am 14.09.2026 an 1.0.53 mit zwei Bildschirmfotos nebeneinander gemeldet (Leseansicht gegen *Fwd:*-Fenster). **Berichtigt damit eine falsche Aussage von mir:** ich hatte am selben Tag geschrieben, der Darstellungsfehler E-86 betreffe *„nur das Lesen, nicht das Versenden — wer sie weiterleitet, verschickt sie korrekt"*. Gemessen hatte ich nur, dass der HTML-Rahmen aus `TridentView.cpp` beim Verfassen nicht gebaut wird; **daraus folgt nicht, dass der Verfassenweg die Formatierung erhält.** Er baut den Text neu auf, über `PgCompMsgView` auf Paige-Grundlage, und dabei geht das CSS verloren. **Zuerst zu klären, bevor irgendetwas geändert wird:** ob das Original von QUALCOMM sich genauso verhielt — Eudora 7.1 konnte HTML nur eingeschränkt bearbeiten, und dann wäre es kein Portierungsfehler, sondern eine Grenze des Programms. Zu messen an `InstallersForEudora/Eudora7.1` oder am Quelltext des Verfassenwegs | **Am 14.09.2026 nachgelegt:** Gregor hat die weitergeleitete Nachricht beim Empfänger geöffnet — sie kommt genauso an. Es ist also **kein Anzeigefehler im Verfassenfenster**, sondern die Formatierung ist beim Verschicken tatsächlich weg. Damit betrifft der Befund nicht nur Gregor, sondern jeden Empfänger einer weitergeleiteten Nachricht. **Am 14.09.2026 gemessen und zur Haelfte behoben (1.0.54):** Antworten und Weiterleiten laufen beide durch `CSummary::ComposeMessage` (`summary.cpp`). Dort verwarf `summary.cpp:1110` das Ergebnis von `IsFancy(fullMes)` wieder, sobald `MSF_XRICH`/`MSFEX_FLOWED` im Uebersichtseintrag fehlten: `IsRich` wurde `IS_ASCII`, und `QuoteText` (`msgutils.cpp:126-220`) nahm daraufhin nicht den HTML-Zweig ueber `GetBodyAsHTML`, sondern `WrapText` mit `">"`-Praefix — reiner Text. Die blauen Verweise darin stammen von `MakeAutoURLSpaghetti`, nicht aus der Nachricht. **Behoben** mit dem neuen Schalter `KeepHTMLInResponses` (Vorgabe `1`, `[Settings]`, `EudoraRes.rc:7667`), der fuer beide Wege gilt; `0` stellt das alte Verhalten her. Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitt 3. **Offen bleibt die zweite Haelfte:** verfasst wird mit Paige, und dessen HTML-Leser wertet aus `div` allein `align` aus (`PGHTMIMP.CPP:1193-1201`), kennt kein `span` und keine einzige CSS-Eigenschaft (`PGHTMDEF.C:20-48`). Was Paige nicht versteht, ist nach `PgMsgView::ExportMessage` (`PgMsgView.cpp:342-408`, `pDoc->SetText()`) endgueltig fort — und genau dieser Text geht hinaus. **CSS-Kaesten und -Hintergruende blieben deshalb auch mit dem Schalter verloren** — bis **E-88** in 7.2.0.56 das Original am Editor vorbeifuehrte; die verbleibenden Grenzen stehen in EINSTELLUNGEN.md 4.8. Eine Spurmarke in `summary.cpp` gibt `IsFancy`, `IsRich`, `IsXRich`, `IsFlowed`, `IsHTML`, den Schalter und den Antworttyp in einer Zeile aus (`LogLevel=58527` noetig, die Vorgabe `25759` enthaelt `DEBUG_MASK_MISC` nicht).
 | E-88 | **die weitergeleitete Nachricht kommt beim Empfänger schlichter an, als sie gelesen wurde** — Kästen, Hintergründe und Bildgrößen fehlen, weil sie über CSS gesetzt sind. Die zweite Hälfte von **E-87**: dort wurde erreicht, dass HTML überhaupt zitiert wird; hier geht es darum, dass es den Verfassen-Editor unbeschädigt überlebt | **behoben in 7.2.0.56, Bau 0 Fehler, Tests 131/131 (zehn davon neu zu E-88, mit Gegenproben) — von Gregor noch nicht am laufenden Programm bestätigt.** **Warum es nicht anders geht (gemessen, nicht vermutet):** verfasst wird mit Paige, und dessen HTML-Leser kennt **keine einzige CSS-Eigenschaft** (`PGHTMDEF.C:20-48`), aus `div` allein `align` (`PGHTMIMP.CPP:1193-1201`). Von 1506 `<img>` in Gregors Postfach tragen 1262 die Größe als HTML-Attribut — die kann Paige (`PGHTMIMP.CPP:1897-1916`) —, **162 nur als CSS**; die erscheinen in Originalgröße und überlagern den Text. Ein zweiter, HTML-fähiger Editor existiert nicht: Trident-Ansichten gibt es nur zum Lesen, `CCompMessageFrame` erzeugt fest `PgCompMsgView`. **Der Umbau:** `CSummary::ComposeMessage` (`summary.cpp:1497`) legt den Rumpf, wie `QuoteText` ihn gebaut hat, im Verfassendokument ab (`CCompMessageDoc::m_szE88OriginalHTML`). `PgMsgView::ExportMessage` (`PgMsgView.cpp:407`) — die eine Stelle, an der die Editor-Fassung über `pDoc->SetText()` zum Rumpf der Nachricht wird und damit auf die Leitung geht (`sendmail.cpp:3368`) — setzt statt ihrer das Original ein, **sobald sich belegen lässt, dass im Zitat nichts geändert wurde**: der Klartext des Originals (Markierungen weg, Entitäten und alles über 127 zu `?`, Leerraum zusammengezogen) muss sich im Klartext der Editor-Fassung als **ein zusammenhängendes Stück** wiederfinden (`E88OriginalEinsetzen`, `msgutils.cpp`). Findet er sich nicht, bleibt alles beim alten. **Gilt für POP3 wie IMAP** und für alle drei Wege — Antworten, Weiterleiten, Umleiten —, weil `ComposeMessage` sie gemeinsam bedient. **Schalter `ForwardOriginalHTML`** (Vorgabe `1`, `[Settings]`, `EudoraRes.rc:7668`); `0` stellt 7.2.0.55 wieder her. **Die eingebetteten Bilder mussten mitgesichert werden:** `PgMsgView::SaveInfo` warf bisher jeden `cid:`-Teil weg, den der Paige-Inhalt nicht mehr nannte — das Original hätte danach auf gelöschte Teile gezeigt, und beim Empfänger hätte das Bild ohne jede Meldung gefehlt. Solange ein Original aufgehoben ist, unterbleibt dieses Aufräumen; der Preis sind höchstens ein paar unreferenzierte Teile. **Drei Spurmarken**, alle `DEBUG_MASK_MISC`: *E-88 vor dem Absenden* nennt die gewählte Fassung, beide Größen und die Länge des eigenen Zusatzes davor und dahinter; *E-88 auf der Leitung* nennt, was wirklich hinausgeht. **Drei Grenzen, die bleiben:** das Verfassenfenster sieht unverändert schlicht aus (Paige kann kein CSS, daran ändert der Schalter nichts); wer im Zitat etwas ändert, bekommt wieder die Editor-Fassung; und der eigene Zusatz geht als reiner Text hinaus, nicht mit seiner Auszeichnung. **Nicht abgedeckt:** wird das Verfassenfenster geschlossen und die Nachricht später aus *Out* erneut geöffnet, ist das Original nicht mehr im Speicher — dann gilt wieder das alte Verhalten, und die Spurmarke sagt `EDITOR (kein Original gemerkt)`. Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitte 3 und 4.8 |
 | E-89 | **das Verfassenfenster ist unbrauchbar: Bilder überlagern den Text, man kann nicht lesen, was man schreibt** | **offen**, von Gregor am 14.09.2026 an 1.0.56 gemeldet: *„1 und da ist alles durcheinander, man kann ja nichts lesen."* Auf seinem Bild liegt das Doctolib-Logo über der Überschrift und die App-Store-Kacheln über dem Absatz. **Ursache, gemessen:** Paige zeichnet Bilder in Originalgröße, wenn ihre Größe nur im CSS steht — von 1506 `<img>` in Gregors Postfach tragen 162 genau das (`style="width:…"`), und Paiges HTML-Leser kennt keine CSS-Eigenschaft (`PGHTMDEF.C:20-48`). Größen als **HTML-Attribut** wertet er dagegen aus (`PGHTMIMP.CPP:1897-1916`). **Seit E-88 ist das ein reines Anzeigeproblem:** hinaus geht das aufgehobene Original, nicht die Editorfassung — das Fenster muss also nicht schön sein, sondern **lesbar**. **Lösungsrichtung:** in der Textfassung, die in den Editor geht, jedes Bild ohne auswertbare Größe auf eine feste Höhe begrenzen oder durch einen kleinen Platzhalter ersetzen. Die Stelle ist der Weg, den E-88 ohnehin schon baut. **Zielbild, von Gregor am 14.09.2026 genannt: Thunderbird.** Sein Bild zeigt dieselbe Nachricht links im Thunderbird-Verfassenfenster: rote gestrichelte Hilfslinien um jede Tabellenzelle, also selbst nicht schoen - aber jedes Bild sitzt in seiner Zelle, nichts ueberlappt, der Text ist durchgehend lesbar. Das ist die Schwelle, an der E-89 gemessen wird. **Nicht erreichbar** ist Thunderbirds Aussehen: dort bearbeitet Gecko, eine echte HTML-Engine |
-| X-7 | **`bauen.ps1` blieb hÃÂ¤ngen, nachdem der Bau lÃÂ¤ngst fertig war** Ã¢ÂÂ zwÃÂ¶lf Minuten Stillstand ohne eine Zeile Ausgabe | **behoben** am 09.09.2026, beim Bau von 7.2.0.29 selbst aufgetreten. **Gemessen:** MSBuild war um **12:17:52** fertig Ã¢ÂÂ 0 Fehler, `Eudora.exe` gelinkt, Protokoll mit 3,7 MB vollstÃÂ¤ndig geschrieben. Danach lief `bauen.ps1` bis 12:29 weiter: **CPU flach** (6,53 s unverÃÂ¤ndert ÃÂ¼ber sechs Sekunden Messung), **kein einziger Kindprozess**, Protokoll unverÃÂ¤ndert. Der Prozess musste abgeschossen werden. **Ursache:** `Start-Process -Wait` wartet nicht auf *den* Prozess, sondern auf ihn **und seine Nachkommen** Ã¢ÂÂ dafÃÂ¼r legt PowerShell ein Auftragsobjekt an. MSBuild startet mit `/m` eigene Knoten, der Nachbearbeitungsschritt **BIND** startet weitere Programme. Bleibt eines davon hÃÂ¤ngen oder wird es umgehÃÂ¤ngt, wartet `-Wait` weiter, obwohl MSBuild selbst beendet ist. **Behebung:** kein `-Wait` mehr; gewartet wird auf den MSBuild-Prozess selbst mit `WaitForExit($ms)` und Zeitschranke (`-ZeitschrankeMinuten`, Vorgabe 45). LÃÂ¤uft er ÃÂ¼ber, wird er abgeschossen und der Lauf gilt als gescheitert. **Dieselbe Regel wie fÃÂ¼r Nachrichtenschleifen im Programm** (E-51, E-61): nie ohne Zeitschranke warten Ã¢ÂÂ ein Warten ohne Ende ist teurer als ein klarer Fehlschlag, weil es nichts anzeigt. **Die Behebung hatte einen zweiten Teil:** ohne `-Wait` liefert `$p.ExitCode` **`$null`** Ã¢ÂÂ PowerShell hÃÂ¤lt den Prozesszeiger nicht offen. Der erste Lauf nach der Umstellung war einwandfrei (1:10, 0 Fehler, `Eudora.exe` 7.2.0.29 frisch gelinkt, Versionsprobe grÃÂ¼n) und wurde trotzdem als **FEHLSCHLAG** gemeldet. Abhilfe: `$null = $p.Handle` **vor** dem Warten merkt den Zeiger vor. Gegengetestet mit `cmd /c exit 0` und `exit 3`: mit Vormerken 0 und 3 abgelesen, ohne Vormerken leer |
-| X-8 | **ein neues Werkzeug im Hauptbaum machte jeden anderen Arbeitsbaum committierunfÃÂ¤hig** | **behoben** am 09.09.2026. Die Haken liegen in `.git/hooks` und gelten damit fÃÂ¼r **alle** ArbeitsbÃÂ¤ume Ã¢ÂÂ die Werkzeuge liegen aber **je Arbeitsbaum**. Kaum war `tools/pruefe-nachrichtenschleife.pl` im Hauptbaum eingehÃÂ¤ngt, fand `perl` es in `wt/lektor` nicht, der Hook gab einen Fehler zurÃÂ¼ck, und **jeder** Commit dort wurde abgewiesen. **Gemessen an LEKTOR:** eine halbe Stunde nicht committierbar, obwohl seine Arbeit fertig und alle seine eigenen Schranken grÃÂ¼n waren Ã¢ÂÂ er hat weder die fremde Datei kopiert noch `--no-verify` benutzt, sondern gemeldet. Dieselbe Sache eine Stufe vorher mit `lehren-schranken.pl`. **Behebung:** eine Hilfsfunktion `schranke()` in beiden Haken Ã¢ÂÂ fehlt ein Werkzeug in **diesem** Arbeitsbaum, wird es ÃÂ¼bersprungen und gemeldet. Fehlt es im Hauptbaum, fÃÂ¤llt das dort auf. Gegengetestet in einem frischen `git init` ohne `tools/`: alle Schranken ÃÂ¼bersprungen, RÃÂ¼ckgabewert 0; im Hauptbaum laufen sie unverÃÂ¤ndert. **Die Lehre dahinter:** ein Werkzeug, das noch in keinem Zweig liegt, darf keine fremde Arbeit blockieren Ã¢ÂÂ [[agenten-trennen-worktrees]] |
-| Ã¢ÂÂ | **Nebenbefund, noch nicht eingeordnet:** nach einem Neustart stehen die Fenster nicht im **Vollbild**, obwohl sie beim Beenden so waren | Gregor am 09.09.2026 an 1.0.25. Das ist der **Fensterzustand**, nicht die Registerkartenleiste Ã¢ÂÂ ein eigener Weg ÃÂ¼ber `SaveOpenWindows` und den `[ToolBarÃ¢ÂÂ¦]`-Abschnitt, den es seit **E-43** ÃÂ¼berhaupt erst gibt. Getrennt zu messen, damit es nicht unter A-3 verschwindet |
-| E-44 | *Aufgabenstatus* und *Aufgabenfehler* stehen **senkrecht links** statt waagrecht unten Ã¢ÂÂ und nach dem Anlegen des ersten Kontos sieht das Fenster falsch aus (Anforderung **A-2**, Kriterium 8) | **behoben** in 7.2.0.23, **von Gregor am 08.09.2026 bestÃÂ¤tigt**: *Ã¢ÂÂjetzt ist sie unten, ja"*, gemessen mit `tools/leisten-messen.ps1` (Leiste **320**, Andockseite **unten**, sichtbar, **1712ÃÂ80**). **Zwei getrennte Ursachen, beide gemessen.** (1) Beim **frischen** Profil lag die Leiste bereits richtig Ã¢ÂÂ `tools/leisten-messen.ps1` am 08.09.2026: Andockseite **unten**, **1712ÃÂ80** Ã¢ÂÂ sie wurde nur unmittelbar danach durch `pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0)` versteckt (`WazooBarMgr.cpp`, `SetDefaultWazooBarState` Fall 2, Zweig `DST_SHOWHIDE`). Diese Zeile ist entfallen. (2) Ab dem **zweiten** Start greift der andere Zweig: existiert ein `[WazooBars]`-Abschnitt, lÃÂ¤uft `LoadWazooConfigFromIni` (`WazooBar.cpp:552`) Ã¢ÂÂ das stellt nur wieder her, **welche** Fenster in einer Leiste sitzen und wo die Reiter sitzen, **nicht** die Andockseite. Die kÃÂ¤me aus MFCs `LoadBarState` und damit aus `[ToolBar...]` Ã¢ÂÂ und den Abschnitt gibt es wegen **E-43** nicht. Alle drei Leisten blieben deshalb auf `CBRS_LEFT` aus `CreateInitialWazooBars` (`WazooBarMgr.cpp:136`). Jetzt wird die Standardanordnung nachgezogen, wenn eine Leiste an keiner Andockleiste hÃÂ¤ngt (`m_pDockBar == NULL`) Ã¢ÂÂ dieselbe PrÃÂ¼fung benutzt das Projekt schon selbst (`mainfrm.cpp:994`). Ist eine Lage gespeichert, ÃÂ¤ndert sich nichts |
-| E-45 | von den zwÃÂ¶lf Schritten aus **E-42** durfte **einer** nicht ÃÂ¼bersprungen werden: ohne `QCWorkbook::OnClose` bleibt ein **Prozess ohne Fenster** ÃÂ¼brig | **behoben** in 7.2.0.23. Gefunden von **PRUEFER** (`Befunde/PRUEFER-5.md`, Punkt 1b). `QCWorkbook::OnClose` lÃÂ¶st sich auf `CFrameWnd::OnClose` auf, und deren **letzte** Anweisung ist `DestroyWindow()` (MFC 14, `winfrm.cpp:941`); `CMainFrame::OnClose` ruft `DestroyWindow` nirgends selbst. FÃÂ¤llt der Schritt aus, gibt es kein `WM_QUIT`, kein `ExitInstance` und damit kein `IniStringCleanUp` (`eudora.cpp:2118`) Ã¢ÂÂ das Fenster hat `HideApplication` (`winfrm.cpp:885`) dann schon versteckt. **Keine Verschlechterung gegenÃÂ¼ber dem Zustand vor E-42:** dort fing `AfxCallWndProc` dieselbe Ausnahme, `DestroyWindow` lief ebenso nicht Ã¢ÂÂ nur sichtbar war es, weil eine Meldung kam. Jetzt eigener Fangzweig, der `DestroyWindow()` nachholt, wenn das Fenster noch existiert |
-| E-46 | Verdacht: `CMainFrame::OnClose` arbeitet nach `QCWorkbook::OnClose` noch **rund 230 Zeilen** weiter Ã¢ÂÂ auf einem bereits **freigegebenen** Objekt | **widerlegt** (Spurmarke in 7.2.0.23 gesetzt, in 7.2.0.24 ausgewertet): die Marke `E-46 CMainFrame::~CMainFrame betreten` erscheint erst **nach** der Stelle, nicht zwischen `vor QCWorkbook::OnClose` und `nach QCWorkbook::OnClose`. Die Ursache von **E-43** war etwas anderes Ã¢ÂÂ `SECControlBar` war zweimal definiert. Die Marke bleibt drin, weil sie die Reihenfolge belegt. Die BeweisfÃÂ¼hrung, die zum Verdacht fÃÂ¼hrte, war in sich stimmig und trotzdem falsch: `CFrameWnd::PostNcDestroy` ist wÃÂ¶rtlich `delete this` (MFC 14, `winfrm.cpp:269-275`), `CMainFrame` ÃÂ¼berschreibt es nicht (im Bestand kein einziges `PostNcDestroy`), und `CFrameWnd::OnClose` endet mit `DestroyWindow()` (`winfrm.cpp:941`), das `WM_NCDESTROY` **synchron** zustellt. Der Aufruf steht aber **mitten** im Rumpf (`mainfrm.cpp`, Schritt 6 von 12), danach folgen `TocCleanup`, `TrimJunk`, `SaveBarState("ToolBar")` und acht weitere Schritte. WÃÂ¤re der Verdacht richtig, hÃÂ¤tte **E-43** damit seine Ursache und die krummen Fensterlagen ihre ErklÃÂ¤rung. **Entschieden wird das an einer Protokollzeile:** steht `E-46 CMainFrame::~CMainFrame betreten` **zwischen** `vor QCWorkbook::OnClose` und `nach QCWorkbook::OnClose`, ist der Verdacht belegt; steht sie danach, ist er widerlegt. Die Marke greift nichts an |
-| E-34 | eine MFC-Ausnahme in `QCChildToolBar::GetButton` wickelte den **ganzen Fensterbau** ab Ã¢ÂÂ ohne Meldung, ohne Absturz, ohne Fenster. MFC 14 wirft dort `CInvalidArgException` (Ã¢ÂÂEncountered an improper argument"), wo MFC 6 nur eine Zusicherung prÃÂ¼fte; die Ausnahme lief aus `OnCreateClient` heraus, damit schlug `CWnd::OnCreate` fehl, `LoadFrame` gab FALSE und `CreateNewFrame` NULL | **behoben und von Gregor bestÃÂ¤tigt** (Paket 1.0.20/1.0.21): Index-Schranke plus `TRY`/`CATCH_ALL` in `Eudora71/Eudora/QCChildToolBar.cpp`. **Die Wurzel ist ein offener Widerspruch:** `GetBtnCount()` und `m_btns[24]` lesen **dasselbe** `m_nSize` (`afxcoll.inl:201-217`) Ã¢ÂÂ aus einem unverÃÂ¤nderten Objekt kann Ã¢ÂÂIndex 24 von 27" nicht werfen. Es bleiben ErklÃÂ¤rungen auÃÂerhalb der Indexrechnung: abgebautes oder falsch typisiertes Leistenobjekt, beschÃÂ¤digter Heap |
-| E-35 | der **zweite** Strg-N starb Ã¢ÂÂ eine Folge von E-34: `OnUserUpdateImmediateSend` dereferenzierte den RÃÂ¼ckgabewert von `GetButton` blind, und der war seit E-34 NULL statt einer Ausnahme | **behoben und von Gregor bestÃÂ¤tigt** (Paket 1.0.21), `Eudora71/Eudora/CompMessageFrame.cpp` Ã¢ÂÂ Zeiger einmal fassen und prÃÂ¼fen |
-| E-36 | zweimal dasselbe in `UpdateMoodMailButton` und `UpdateBPButton`, vier blinde Zugriffe; gefunden vom eigenen Absturzbericht, nachdem ein Verfassen-Fenster einfach offen stehen blieb | **behoben und von Gregor bestÃÂ¤tigt** (Paket 1.0.21), `Eudora71/Eudora/PgCompMsgView.cpp` |
-| E-37 | **ein gelÃÂ¶schtes Konto bleibt in der Liste stehen**, und dabei erscheint **Ã¢ÂÂEncountered an improper argument"** | **kein eigener Fehler Ã¢ÂÂ Symptom von E-43.** Am 08.09.2026 Zeile fÃÂ¼r Zeile nachverfolgt: `CPersonality::Remove` (`persona.cpp:565`) lÃÂ¶scht den INI-Abschnitt Ã¢ÂÂ deshalb ist die PersÃÂ¶nlichkeit nach einem Neustart tatsÃÂ¤chlich weg Ã¢ÂÂ und ruft **danach** `g_thePersonalityDirector.DeleteCommand` (`:571`) Ã¢ÂÂ `NotifyClients(pCommand, CA_DELETE)` Ã¢ÂÂ `QCCustomToolBar::Notify` (`QCCustomToolBar.cpp:951`; die Leiste meldet sich im Konstruktor bei genau diesem Verwalter an, `:130`). Dort steht in `:970` das E-43-Muster: Schleifengrenze aus `GetBtnCount()`, Zugriff ÃÂ¼ber `m_btns[i]`. Der Zugriff wirft, die Ausnahme fliegt aus `Remove()` heraus, und **der Anzeige-Code darunter wird nie erreicht**. Belegt durch die Abwesenheit jeder Spur: in Gregors Protokoll zu 1.0.23 steht **keine einzige** E-37-Marke. Meine zwei BehebungsanlÃÂ¤ufe (FindItem, dann GetItemText) konnten deshalb nicht wirken Ã¢ÂÂ sie lagen hinter dem Wurf. **Behoben mit E-43 in 7.2.0.24**, **von Gregor am 08.09.2026 bestÃÂ¤tigt**: *Ã¢ÂÂpersona lÃÂ¤ÃÂt sich lÃÂ¶schen. keine messageboxÃ¢ÂÂ* Ã¢ÂÂ der Eintrag verschwindet sofort und die Meldung bleibt aus. Damit ist auch die Kette selbst belegt, nicht nur am Quelltext abgelesen |
-| E-38 | **die im Kontoassistenten eingegebenen Daten fehlen unter *Konto Ã¢ÂÂ Eigenschaften*** | **kein Fehler Ã¢ÂÂ von Gregor am 08.09.2026 aufgeklÃÂ¤rt.** Sein Wort: *Ã¢ÂÂnach dem lÃÂ¶schen eines kontos, wenn das konto noch sichtbar ist, dann fehlen die daten in den eigenschaften. weil sie vermutlich bereits in der ini gelÃÂ¶scht wurden. beim neuen konto sind sie zu sehen."* Mit Bildschirmfoto belegt: bei `test5` stehen *Real Name*, *Email Address*, *User Name* und *SMTP Server* vollstÃÂ¤ndig da. Die leeren Felder gehÃÂ¶rten zu einem **Geistereintrag** Ã¢ÂÂ einer ÃÂ¼ber E-37 in der Liste stehengebliebenen PersÃÂ¶nlichkeit, deren INI-Abschnitt `Remove()` schon entfernt hatte. Ein Abschnitt, den es nicht gibt, liefert leere Werte. Damit sind die beiden alten VerdÃÂ¤chtigen hinfÃÂ¤llig: weder `GetParams` (`persona.cpp:279ff`) noch die `UpdateData(TRUE)`-Richtung in `WizardInServerPage.cpp:116-119` sind schuld. **FÃÂ¤llt mit E-37 und damit mit E-43 weg** |
-| E-39 | wird die **aktuell benutzte** PersÃÂ¶nlichkeit gelÃÂ¶scht, kann ihr INI-Abschnitt teilweise wieder entstehen | **offen, nicht am laufenden Programm bestÃÂ¤tigt.** `CPersonality::Remove` (`persona.cpp:565-566`) lÃÂ¶scht den Abschnitt, leert aber den INI-Zwischenspeicher nicht und stellt die aktuelle PersÃÂ¶nlichkeit nicht um; `SetCurrent` prÃÂ¼ft nicht, ob der Name existiert (`:179-198`, Kommentar *Ã¢ÂÂwe're trusting souls"*). `FlushINIFile` schreibt `SavePassword` und `SavePasswordText` ausdrÃÂ¼cklich in `g_Personalities.GetCurrent()` (`rs.cpp:1237-1250`) Ã¢ÂÂ der nÃÂ¤chste `SetCurrent` legt damit zwei SchlÃÂ¼ssel im gelÃÂ¶schten Abschnitt wieder an. **UnabhÃÂ¤ngig von der E-37-Behebung**, die den Zeitpunkt nur nach vorn verschiebt. Gefunden beim Nachmessen der eigenen E-37-Behebung. Naheliegend: nach erfolgreichem `Remove` auf `<Dominant>` umschalten, wenn die gelÃÂ¶schte die aktuelle war |
+| X-7 | **`bauen.ps1` blieb hängen, nachdem der Bau längst fertig war** — zwölf Minuten Stillstand ohne eine Zeile Ausgabe | **behoben** am 09.09.2026, beim Bau von 7.2.0.29 selbst aufgetreten. **Gemessen:** MSBuild war um **12:17:52** fertig — 0 Fehler, `Eudora.exe` gelinkt, Protokoll mit 3,7 MB vollständig geschrieben. Danach lief `bauen.ps1` bis 12:29 weiter: **CPU flach** (6,53 s unverändert über sechs Sekunden Messung), **kein einziger Kindprozess**, Protokoll unverändert. Der Prozess musste abgeschossen werden. **Ursache:** `Start-Process -Wait` wartet nicht auf *den* Prozess, sondern auf ihn **und seine Nachkommen** — dafür legt PowerShell ein Auftragsobjekt an. MSBuild startet mit `/m` eigene Knoten, der Nachbearbeitungsschritt **BIND** startet weitere Programme. Bleibt eines davon hängen oder wird es umgehängt, wartet `-Wait` weiter, obwohl MSBuild selbst beendet ist. **Behebung:** kein `-Wait` mehr; gewartet wird auf den MSBuild-Prozess selbst mit `WaitForExit($ms)` und Zeitschranke (`-ZeitschrankeMinuten`, Vorgabe 45). Läuft er über, wird er abgeschossen und der Lauf gilt als gescheitert. **Dieselbe Regel wie für Nachrichtenschleifen im Programm** (E-51, E-61): nie ohne Zeitschranke warten — ein Warten ohne Ende ist teurer als ein klarer Fehlschlag, weil es nichts anzeigt. **Die Behebung hatte einen zweiten Teil:** ohne `-Wait` liefert `$p.ExitCode` **`$null`** — PowerShell hält den Prozesszeiger nicht offen. Der erste Lauf nach der Umstellung war einwandfrei (1:10, 0 Fehler, `Eudora.exe` 7.2.0.29 frisch gelinkt, Versionsprobe grün) und wurde trotzdem als **FEHLSCHLAG** gemeldet. Abhilfe: `$null = $p.Handle` **vor** dem Warten merkt den Zeiger vor. Gegengetestet mit `cmd /c exit 0` und `exit 3`: mit Vormerken 0 und 3 abgelesen, ohne Vormerken leer |
+| X-8 | **ein neues Werkzeug im Hauptbaum machte jeden anderen Arbeitsbaum committierunfähig** | **behoben** am 09.09.2026. Die Haken liegen in `.git/hooks` und gelten damit für **alle** Arbeitsbäume — die Werkzeuge liegen aber **je Arbeitsbaum**. Kaum war `tools/pruefe-nachrichtenschleife.pl` im Hauptbaum eingehängt, fand `perl` es in `wt/lektor` nicht, der Hook gab einen Fehler zurück, und **jeder** Commit dort wurde abgewiesen. **Gemessen an LEKTOR:** eine halbe Stunde nicht committierbar, obwohl seine Arbeit fertig und alle seine eigenen Schranken grün waren — er hat weder die fremde Datei kopiert noch `--no-verify` benutzt, sondern gemeldet. Dieselbe Sache eine Stufe vorher mit `lehren-schranken.pl`. **Behebung:** eine Hilfsfunktion `schranke()` in beiden Haken — fehlt ein Werkzeug in **diesem** Arbeitsbaum, wird es übersprungen und gemeldet. Fehlt es im Hauptbaum, fällt das dort auf. Gegengetestet in einem frischen `git init` ohne `tools/`: alle Schranken übersprungen, Rückgabewert 0; im Hauptbaum laufen sie unverändert. **Die Lehre dahinter:** ein Werkzeug, das noch in keinem Zweig liegt, darf keine fremde Arbeit blockieren — [[agenten-trennen-worktrees]] |
+| — | **Nebenbefund, noch nicht eingeordnet:** nach einem Neustart stehen die Fenster nicht im **Vollbild**, obwohl sie beim Beenden so waren | Gregor am 09.09.2026 an 1.0.25. Das ist der **Fensterzustand**, nicht die Registerkartenleiste — ein eigener Weg über `SaveOpenWindows` und den `[ToolBar…]`-Abschnitt, den es seit **E-43** überhaupt erst gibt. Getrennt zu messen, damit es nicht unter A-3 verschwindet |
+| E-44 | *Aufgabenstatus* und *Aufgabenfehler* stehen **senkrecht links** statt waagrecht unten — und nach dem Anlegen des ersten Kontos sieht das Fenster falsch aus (Anforderung **A-2**, Kriterium 8) | **behoben** in 7.2.0.23, **von Gregor am 08.09.2026 bestätigt**: *„jetzt ist sie unten, ja"*, gemessen mit `tools/leisten-messen.ps1` (Leiste **320**, Andockseite **unten**, sichtbar, **1712×80**). **Zwei getrennte Ursachen, beide gemessen.** (1) Beim **frischen** Profil lag die Leiste bereits richtig — `tools/leisten-messen.ps1` am 08.09.2026: Andockseite **unten**, **1712×80** — sie wurde nur unmittelbar danach durch `pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0)` versteckt (`WazooBarMgr.cpp`, `SetDefaultWazooBarState` Fall 2, Zweig `DST_SHOWHIDE`). Diese Zeile ist entfallen. (2) Ab dem **zweiten** Start greift der andere Zweig: existiert ein `[WazooBars]`-Abschnitt, läuft `LoadWazooConfigFromIni` (`WazooBar.cpp:552`) — das stellt nur wieder her, **welche** Fenster in einer Leiste sitzen und wo die Reiter sitzen, **nicht** die Andockseite. Die käme aus MFCs `LoadBarState` und damit aus `[ToolBar...]` — und den Abschnitt gibt es wegen **E-43** nicht. Alle drei Leisten blieben deshalb auf `CBRS_LEFT` aus `CreateInitialWazooBars` (`WazooBarMgr.cpp:136`). Jetzt wird die Standardanordnung nachgezogen, wenn eine Leiste an keiner Andockleiste hängt (`m_pDockBar == NULL`) — dieselbe Prüfung benutzt das Projekt schon selbst (`mainfrm.cpp:994`). Ist eine Lage gespeichert, ändert sich nichts |
+| E-45 | von den zwölf Schritten aus **E-42** durfte **einer** nicht übersprungen werden: ohne `QCWorkbook::OnClose` bleibt ein **Prozess ohne Fenster** übrig | **behoben** in 7.2.0.23. Gefunden von **PRUEFER** (`Befunde/PRUEFER-5.md`, Punkt 1b). `QCWorkbook::OnClose` löst sich auf `CFrameWnd::OnClose` auf, und deren **letzte** Anweisung ist `DestroyWindow()` (MFC 14, `winfrm.cpp:941`); `CMainFrame::OnClose` ruft `DestroyWindow` nirgends selbst. Fällt der Schritt aus, gibt es kein `WM_QUIT`, kein `ExitInstance` und damit kein `IniStringCleanUp` (`eudora.cpp:2118`) — das Fenster hat `HideApplication` (`winfrm.cpp:885`) dann schon versteckt. **Keine Verschlechterung gegenüber dem Zustand vor E-42:** dort fing `AfxCallWndProc` dieselbe Ausnahme, `DestroyWindow` lief ebenso nicht — nur sichtbar war es, weil eine Meldung kam. Jetzt eigener Fangzweig, der `DestroyWindow()` nachholt, wenn das Fenster noch existiert |
+| E-46 | Verdacht: `CMainFrame::OnClose` arbeitet nach `QCWorkbook::OnClose` noch **rund 230 Zeilen** weiter — auf einem bereits **freigegebenen** Objekt | **widerlegt** (Spurmarke in 7.2.0.23 gesetzt, in 7.2.0.24 ausgewertet): die Marke `E-46 CMainFrame::~CMainFrame betreten` erscheint erst **nach** der Stelle, nicht zwischen `vor QCWorkbook::OnClose` und `nach QCWorkbook::OnClose`. Die Ursache von **E-43** war etwas anderes — `SECControlBar` war zweimal definiert. Die Marke bleibt drin, weil sie die Reihenfolge belegt. Die Beweisführung, die zum Verdacht führte, war in sich stimmig und trotzdem falsch: `CFrameWnd::PostNcDestroy` ist wörtlich `delete this` (MFC 14, `winfrm.cpp:269-275`), `CMainFrame` überschreibt es nicht (im Bestand kein einziges `PostNcDestroy`), und `CFrameWnd::OnClose` endet mit `DestroyWindow()` (`winfrm.cpp:941`), das `WM_NCDESTROY` **synchron** zustellt. Der Aufruf steht aber **mitten** im Rumpf (`mainfrm.cpp`, Schritt 6 von 12), danach folgen `TocCleanup`, `TrimJunk`, `SaveBarState("ToolBar")` und acht weitere Schritte. Wäre der Verdacht richtig, hätte **E-43** damit seine Ursache und die krummen Fensterlagen ihre Erklärung. **Entschieden wird das an einer Protokollzeile:** steht `E-46 CMainFrame::~CMainFrame betreten` **zwischen** `vor QCWorkbook::OnClose` und `nach QCWorkbook::OnClose`, ist der Verdacht belegt; steht sie danach, ist er widerlegt. Die Marke greift nichts an |
+| E-34 | eine MFC-Ausnahme in `QCChildToolBar::GetButton` wickelte den **ganzen Fensterbau** ab — ohne Meldung, ohne Absturz, ohne Fenster. MFC 14 wirft dort `CInvalidArgException` („Encountered an improper argument"), wo MFC 6 nur eine Zusicherung prüfte; die Ausnahme lief aus `OnCreateClient` heraus, damit schlug `CWnd::OnCreate` fehl, `LoadFrame` gab FALSE und `CreateNewFrame` NULL | **behoben und von Gregor bestätigt** (Paket 1.0.20/1.0.21): Index-Schranke plus `TRY`/`CATCH_ALL` in `Eudora71/Eudora/QCChildToolBar.cpp`. **Die Wurzel ist ein offener Widerspruch:** `GetBtnCount()` und `m_btns[24]` lesen **dasselbe** `m_nSize` (`afxcoll.inl:201-217`) — aus einem unveränderten Objekt kann „Index 24 von 27" nicht werfen. Es bleiben Erklärungen außerhalb der Indexrechnung: abgebautes oder falsch typisiertes Leistenobjekt, beschädigter Heap |
+| E-35 | der **zweite** Strg-N starb — eine Folge von E-34: `OnUserUpdateImmediateSend` dereferenzierte den Rückgabewert von `GetButton` blind, und der war seit E-34 NULL statt einer Ausnahme | **behoben und von Gregor bestätigt** (Paket 1.0.21), `Eudora71/Eudora/CompMessageFrame.cpp` — Zeiger einmal fassen und prüfen |
+| E-36 | zweimal dasselbe in `UpdateMoodMailButton` und `UpdateBPButton`, vier blinde Zugriffe; gefunden vom eigenen Absturzbericht, nachdem ein Verfassen-Fenster einfach offen stehen blieb | **behoben und von Gregor bestätigt** (Paket 1.0.21), `Eudora71/Eudora/PgCompMsgView.cpp` |
+| E-37 | **ein gelöschtes Konto bleibt in der Liste stehen**, und dabei erscheint **„Encountered an improper argument"** | **kein eigener Fehler — Symptom von E-43.** Am 08.09.2026 Zeile für Zeile nachverfolgt: `CPersonality::Remove` (`persona.cpp:565`) löscht den INI-Abschnitt — deshalb ist die Persönlichkeit nach einem Neustart tatsächlich weg — und ruft **danach** `g_thePersonalityDirector.DeleteCommand` (`:571`) → `NotifyClients(pCommand, CA_DELETE)` → `QCCustomToolBar::Notify` (`QCCustomToolBar.cpp:951`; die Leiste meldet sich im Konstruktor bei genau diesem Verwalter an, `:130`). Dort steht in `:970` das E-43-Muster: Schleifengrenze aus `GetBtnCount()`, Zugriff über `m_btns[i]`. Der Zugriff wirft, die Ausnahme fliegt aus `Remove()` heraus, und **der Anzeige-Code darunter wird nie erreicht**. Belegt durch die Abwesenheit jeder Spur: in Gregors Protokoll zu 1.0.23 steht **keine einzige** E-37-Marke. Meine zwei Behebungsanläufe (FindItem, dann GetItemText) konnten deshalb nicht wirken — sie lagen hinter dem Wurf. **Behoben mit E-43 in 7.2.0.24**, **von Gregor am 08.09.2026 bestätigt**: *„persona läßt sich löschen. keine messagebox“* — der Eintrag verschwindet sofort und die Meldung bleibt aus. Damit ist auch die Kette selbst belegt, nicht nur am Quelltext abgelesen |
+| E-38 | **die im Kontoassistenten eingegebenen Daten fehlen unter *Konto → Eigenschaften*** | **kein Fehler — von Gregor am 08.09.2026 aufgeklärt.** Sein Wort: *„nach dem löschen eines kontos, wenn das konto noch sichtbar ist, dann fehlen die daten in den eigenschaften. weil sie vermutlich bereits in der ini gelöscht wurden. beim neuen konto sind sie zu sehen."* Mit Bildschirmfoto belegt: bei `test5` stehen *Real Name*, *Email Address*, *User Name* und *SMTP Server* vollständig da. Die leeren Felder gehörten zu einem **Geistereintrag** — einer über E-37 in der Liste stehengebliebenen Persönlichkeit, deren INI-Abschnitt `Remove()` schon entfernt hatte. Ein Abschnitt, den es nicht gibt, liefert leere Werte. Damit sind die beiden alten Verdächtigen hinfällig: weder `GetParams` (`persona.cpp:279ff`) noch die `UpdateData(TRUE)`-Richtung in `WizardInServerPage.cpp:116-119` sind schuld. **Fällt mit E-37 und damit mit E-43 weg** |
+| E-39 | wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wieder entstehen | **offen, nicht am laufenden Programm bestätigt.** `CPersonality::Remove` (`persona.cpp:565-566`) löscht den Abschnitt, leert aber den INI-Zwischenspeicher nicht und stellt die aktuelle Persönlichkeit nicht um; `SetCurrent` prüft nicht, ob der Name existiert (`:179-198`, Kommentar *„we're trusting souls"*). `FlushINIFile` schreibt `SavePassword` und `SavePasswordText` ausdrücklich in `g_Personalities.GetCurrent()` (`rs.cpp:1237-1250`) — der nächste `SetCurrent` legt damit zwei Schlüssel im gelöschten Abschnitt wieder an. **Unabhängig von der E-37-Behebung**, die den Zeitpunkt nur nach vorn verschiebt. Gefunden beim Nachmessen der eigenen E-37-Behebung. Naheliegend: nach erfolgreichem `Remove` auf `<Dominant>` umschalten, wenn die gelöschte die aktuelle war |
 
-> **E-10 ist eine LÃÂ¼cke, E-15 und E-18 bis E-21 sind es NICHT.** Bis zum
+> **E-10 ist eine Lücke, E-15 und E-18 bis E-21 sind es NICHT.** Bis zum
 > 07.09.2026 stand hier, alle sechs Kennungen seien nie vergeben worden;
-> gesucht worden war aber nur in den `.md`-Dateien. FÃÂ¼nf davon sind in
-> **Quellkommentaren** vergeben und dort auch begrÃÂ¼ndet:
+> gesucht worden war aber nur in den `.md`-Dateien. Fünf davon sind in
+> **Quellkommentaren** vergeben und dort auch begründet:
 
 | Kennung | Worum es geht | Wo es steht | Status |
 |---|---|---|---|
-| E-15 | `ASSERT(g_TaskStatusView != NULL)` widersprach allen drei Aufrufern Ã¢ÂÂ sie fragen ausdrÃÂ¼cklich auf NULL ab | `Eudora71/Eudora/TaskStatusView.cpp`, `QCGetTaskStatusView` | **behoben** im Quelltext, kein Abschnitt hier |
-| E-18 | `pFld` ohne PrÃÂ¼fung dereferenziert; der Zweig lÃÂ¤uft nur bei mehr als einer PersÃÂ¶nlichkeit und war bis 05.09.2026 nie betreten | `Eudora71/Eudora/headervw.cpp`, PersÃÂ¶nlichkeitsmenÃÂ¼ | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
-| E-19 | `ASSERT(0)` in einem **Reparaturzweig** Ã¢ÂÂ feuert genau dann, wenn alles wie vorgesehen lÃÂ¤uft | `Eudora71/Eudora/tocdoc.cpp`, Reparatur des In-Postfachnamens | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
-| E-20 | `[nLen + 1]` statt `[nIdx + 1]`: geschrieben wird bis `pTemp[nIdx]`, und `nIdx` kann grÃÂ¶ÃÂer als `nLen` sein Ã¢ÂÂ dann schrieb die Zeile hinter das Feldende | `Eudora71/Eudora/ListCtrlEx.cpp`, `CListCtrlEx::InsertArr` und `NotifyInsertedCol` | **behoben** im Quelltext, kein Abschnitt hier |
+| E-15 | `ASSERT(g_TaskStatusView != NULL)` widersprach allen drei Aufrufern — sie fragen ausdrücklich auf NULL ab | `Eudora71/Eudora/TaskStatusView.cpp`, `QCGetTaskStatusView` | **behoben** im Quelltext, kein Abschnitt hier |
+| E-18 | `pFld` ohne Prüfung dereferenziert; der Zweig läuft nur bei mehr als einer Persönlichkeit und war bis 05.09.2026 nie betreten | `Eudora71/Eudora/headervw.cpp`, Persönlichkeitsmenü | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
+| E-19 | `ASSERT(0)` in einem **Reparaturzweig** — feuert genau dann, wenn alles wie vorgesehen läuft | `Eudora71/Eudora/tocdoc.cpp`, Reparatur des In-Postfachnamens | **behoben** im Quelltext; im `CHANGELOG.md` unter 7.2.0.10 |
+| E-20 | `[nLen + 1]` statt `[nIdx + 1]`: geschrieben wird bis `pTemp[nIdx]`, und `nIdx` kann größer als `nLen` sein — dann schrieb die Zeile hinter das Feldende | `Eudora71/Eudora/ListCtrlEx.cpp`, `CListCtrlEx::InsertArr` und `NotifyInsertedCol` | **behoben** im Quelltext, kein Abschnitt hier |
 | E-21 | `ASSERT(0)`, wo `WSAEWOULDBLOCK` (10035) die normale Antwort eines nicht blockierenden Sockets ist | `Eudora71/QCSocket/src/QCWorkerSocket.cpp` | **behoben** im Quelltext, kein Abschnitt hier |
 
-> **E-10** dagegen gibt es tatsÃÂ¤chlich nicht Ã¢ÂÂ 0 Abschnitte, bestÃÂ¤tigt in
-> `PRUEFUNG-BRANCH.md`. Eine LÃÂ¼cke in der Nummerierung, kein verlorener Befund.
+> **E-10** dagegen gibt es tatsächlich nicht — 0 Abschnitte, bestätigt in
+> `PRUEFUNG-BRANCH.md`. Eine Lücke in der Nummerierung, kein verlorener Befund.
 >
-> **Die Lehre:** wer prÃÂ¼ft, ob eine Kennung vergeben ist, muss den **Quelltext**
-> mitsuchen. `grep -rn 'E-18\b' --include=*.md` findet fÃÂ¼nf Befunde nicht, die
+> **Die Lehre:** wer prüft, ob eine Kennung vergeben ist, muss den **Quelltext**
+> mitsuchen. `grep -rn 'E-18\b' --include=*.md` findet fünf Befunde nicht, die
 > es gibt.
 
 ## Unterbefunde, die man einzeln sucht
 
 Diese Kennungen haben **keinen eigenen Abschnitt auf oberster Ebene**, sondern
-stehen als Unterpunkt in einem grÃÂ¶ÃÂeren Befund. Wer nach ihnen sucht und oben
-nichts findet, sucht hier. ErgÃÂ¤nzt am 05.09.2026, weil zum Beispiel `PR-6` und
+stehen als Unterpunkt in einem größeren Befund. Wer nach ihnen sucht und oben
+nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
 `P-3` bis dahin in keiner Zeile des Verzeichnisses vorkamen.
 
 | Kennung | steht in | Worum es geht | Status |
@@ -295,32 +295,32 @@ nichts findet, sucht hier. ErgÃÂ¤nzt am 05.09.2026, weil zum Beispiel `PR-6
 | PR-5 | `### PR-5` unter **W-1** | Zeitstempel der Kennung ist nicht der Bauzeitpunkt | **behoben** (`765c39b`) |
 | PR-6 | `### PR-6` unter **W-1** | kein `_T` um ein Makro (bricht im Unicode-Bau) | **behoben** |
 | PR-7 | `### PR-7` unter **W-1** | die Zahlen in S-7 widersprachen sich: es gilt 4616 von 5563 | **behoben** |
-| PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelÃÂ¶scht Ã¢ÂÂ fand seinen eigenen Anlass nicht; das Werkzeug liegt nicht mehr im Baum | **behoben** |
-| PR-2.0 Ã¢ÂÂ¦ PR-2.9 | `### PR-2.x` unter **PR-2** | zehn Punkte der NachprÃÂ¼fung vom 31.08. | PR-2.0 und PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
-| P-1.0 Ã¢ÂÂ¦ P-1.8 | `### P-1.x` unter **P-1** (POP-Abrufpfad) | elf Altlasten auf dem Abrufpfad | P-1.1/P-1.8 **behoben**, P-1.5bÃ¢ÂÂP-1.5j **offen** |
-| P-2.1 Ã¢ÂÂ¦ P-2.7 | `### P-2.x` unter **P-2** (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
-| P-1, P-2, P-3 (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei HÃÂ¤rtungslÃÂ¼cken beim ersten Lauf der Ersatzschicht; **P-3** ist `SECDateTimeCtrl::FixedTime`, das die Stunde auslÃÂ¤ÃÂt (Fehler im Original, bewusst ÃÂ¼bernommen) | **offen** |
+| PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelöscht — fand seinen eigenen Anlass nicht; das Werkzeug liegt nicht mehr im Baum | **behoben** |
+| PR-2.0 … PR-2.9 | `### PR-2.x` unter **PR-2** | zehn Punkte der Nachprüfung vom 31.08. | PR-2.0 und PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
+| P-1.0 … P-1.8 | `### P-1.x` unter **P-1** (POP-Abrufpfad) | elf Altlasten auf dem Abrufpfad | P-1.1/P-1.8 **behoben**, P-1.5b–P-1.5j **offen** |
+| P-2.1 … P-2.7 | `### P-2.x` unter **P-2** (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
+| P-1, P-2, P-3 (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei Härtungslücken beim ersten Lauf der Ersatzschicht; **P-3** ist `SECDateTimeCtrl::FixedTime`, das die Stunde ausläßt (Fehler im Original, bewusst übernommen) | **offen** |
 | S-3a, S-3b, S-3c | `### S-3x` unter **S-3** | erster Lauf durch einen Anwender | S-3a **behoben**, S-3b/S-3c **offen** |
-| E-9, Nachtrag | unter **E-9** | die Plugins sind es NICHT Ã¢ÂÂ gemessen | **Beleg** |
+| E-9, Nachtrag | unter **E-9** | die Plugins sind es NICHT — gemessen | **Beleg** |
 
 > ### Achtung: drei Kennungen sind doppelt vergeben
 >
-> Beim ZusammenfÃÂ¼hren mehrerer Agenten sind Kennungen zweimal vergeben worden.
-> Umbenannt wird **nicht** rÃÂ¼ckwirkend Ã¢ÂÂ zu viele Querverweise hÃÂ¤ngen daran.
+> Beim Zusammenführen mehrerer Agenten sind Kennungen zweimal vergeben worden.
+> Umbenannt wird **nicht** rückwirkend — zu viele Querverweise hängen daran.
 > Wer sucht, muss beide Fundstellen kennen:
 >
 > | Kennung | Bedeutung A | Bedeutung B |
 > |---|---|---|
-> | **P-1** | `### P-1` (PROBE): `OnActivateTab`/`ClearSelection` rufen `GetParent()` ungeprÃÂ¼ft | `## P-1`: der POP-Abrufpfad, vor dem ersten Abruf gegengelesen |
-> | **P-2** | `### P-2` (PROBE): `SECTabWndBase::InsertTab` blendet ein Fenster ungeprÃÂ¼ft aus | `## P-2`: der Absturzpunkt vor dem ersten Abruf abgesichert |
-> | **PR-2** | `PR-2` in `PRUEFBERICHT.md`: Schranke schlÃÂ¤gt bei Leerzeilen grundlos an (**behoben**) | `## PR-2` hier: NachprÃÂ¼fung der Arbeit vom 31.08. mit PR-2.0 bis PR-2.9 |
+> | **P-1** | `### P-1` (PROBE): `OnActivateTab`/`ClearSelection` rufen `GetParent()` ungeprüft | `## P-1`: der POP-Abrufpfad, vor dem ersten Abruf gegengelesen |
+> | **P-2** | `### P-2` (PROBE): `SECTabWndBase::InsertTab` blendet ein Fenster ungeprüft aus | `## P-2`: der Absturzpunkt vor dem ersten Abruf abgesichert |
+> | **PR-2** | `PR-2` in `PRUEFBERICHT.md`: Schranke schlägt bei Leerzeilen grundlos an (**behoben**) | `## PR-2` hier: Nachprüfung der Arbeit vom 31.08. mit PR-2.0 bis PR-2.9 |
 >
-> **`E-12` war der vierte Fall und ist aufgelÃÂ¶st:** Agent KONTO und Agent
-> FORTSCHRITT haben unabhÃÂ¤ngig Ã¢ÂÂdie nÃÂ¤chste freie E-Nummer" gewÃÂ¤hlt. `E-12`
-> bleibt beim Mailverzeichnis-Argument (KONTO, zuerst zusammengefÃÂ¼hrt); der
-> Fortschrittsbefund heiÃÂt seit dem 05.09.2026 **`E-13`**.
+> **`E-12` war der vierte Fall und ist aufgelöst:** Agent KONTO und Agent
+> FORTSCHRITT haben unabhängig „die nächste freie E-Nummer" gewählt. `E-12`
+> bleibt beim Mailverzeichnis-Argument (KONTO, zuerst zusammengeführt); der
+> Fortschrittsbefund heißt seit dem 05.09.2026 **`E-13`**.
 >
-> **Wer eine neue Kennung vergibt, misst zuerst ÃÂ¼ber alle Zweige:**
+> **Wer eine neue Kennung vergibt, misst zuerst über alle Zweige:**
 >
 > ```sh
 > for b in $(git branch -a --format='%(refname:short)' | grep -v HEAD); do
@@ -332,24 +332,24 @@ nichts findet, sucht hier. ErgÃÂ¤nzt am 05.09.2026, weil zum Beispiel `PR-6
 
 Diese Kennungen sind **vergeben**, ihr Befundtext steht aber noch nicht in
 `bau-und-pruefung`. Sie stehen hier, damit sie kein zweites Mal vergeben werden
-Ã¢ÂÂ genau das ist mit `E-12` passiert. Gemessen am 05.09.2026 mit dem Befehl aus
+— genau das ist mit `E-12` passiert. Gemessen am 05.09.2026 mit dem Befehl aus
 dem Kasten oben.
 
-| Kennung | Worum es geht | Zweig | zu tun beim ZusammenfÃÂ¼hren |
+| Kennung | Worum es geht | Zweig | zu tun beim Zusammenführen |
 |---|---|---|---|
-| X-5 | ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa | `wt/schranke` (`5e1187a`) | Verzeichniszeile in die Tabelle Ã¢ÂÂPrÃÂ¼fberichte ÃÂ¼ber die eigene Arbeit" nachtragen |
+| X-5 | ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa | `wt/schranke` (`5e1187a`) | Verzeichniszeile in die Tabelle „Prüfberichte über die eigene Arbeit" nachtragen |
 | X-6 | ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben | `wt/baumeister` | dito |
-| E-13 | Fortschritt beim Mailabruf ist nicht sichtbar (Abschnitt steht **hier**, der **Code** noch nicht) | Behebung in `bd3959c` auf `wt/fortschritt-arbeit` | dort die ÃÂberschrift `## E-12 Ã¢ÂÂ Der Fortschritt beim Mailabruf Ã¢ÂÂ¦` **entfernen**, sonst steht `E-12` zweimal in der Datei |
+| E-13 | Fortschritt beim Mailabruf ist nicht sichtbar (Abschnitt steht **hier**, der **Code** noch nicht) | Behebung in `bd3959c` auf `wt/fortschritt-arbeit` | dort die Überschrift `## E-12 — Der Fortschritt beim Mailabruf …` **entfernen**, sonst steht `E-12` zweimal in der Datei |
 
-**NÃÂ¤chste freie Kennungen, gemessen ÃÂ¼ber alle Zweige am 05.09.2026:**
-`E-14`, `B-4`, `X-7`, `Z-4`. (`E-10` ist eine bewusste LÃÂ¼cke, siehe oben.)
+**Nächste freie Kennungen, gemessen über alle Zweige am 05.09.2026:**
+`E-14`, `B-4`, `X-7`, `Z-4`. (`E-10` ist eine bewusste Lücke, siehe oben.)
 ## Was in dieser Datei sonst noch steht
 
 Neben den Befunden vier Sammelkapitel, die **kein** Mangel sind und deshalb oben
-nicht auftauchen: Ã¢ÂÂGeprueft und in Ordnung" (zweimal, aus der ersten PrÃÂ¼fung und
-aus NachprÃÂ¼fung 3), Ã¢ÂÂGeprueft und in Ordnung Ã¢ÂÂ Stufe 4, Bildschicht" und
-Ã¢ÂÂNachgeprueft: die beiden Meldungen des Agenten TABELLE". Sie sagen, wo eine
-spÃÂ¤tere PrÃÂ¼fung **nicht** noch einmal anfangen muss Ã¢ÂÂ dafÃÂ¼r sind sie da.
+nicht auftauchen: „Geprueft und in Ordnung" (zweimal, aus der ersten Prüfung und
+aus Nachprüfung 3), „Geprueft und in Ordnung — Stufe 4, Bildschicht" und
+„Nachgeprueft: die beiden Meldungen des Agenten TABELLE". Sie sagen, wo eine
+spätere Prüfung **nicht** noch einmal anfangen muss — dafür sind sie da.
 
 ---
 
@@ -2196,13 +2196,13 @@ ueber verwaiste Kopien in `Arbeitsweise/` berichten lassen.
 
 ## NP3-6 - `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis heraus Entwarnung
 
-> **BEHOBEN am 31.08.2026 abends.** Die Pfade hÃÂ¤ngen jetzt an
+> **BEHOBEN am 31.08.2026 abends.** Die Pfade hängen jetzt an
 > `git rev-parse --show-toplevel`, und eine fehlende Datei ist eine **Warnung**
-> mit RÃÂ¼ckgabe 1. Vorher nachgemessen und vorgefÃÂ¼hrt: aus `Eudora71/` heraus
-> dreimal Ã¢ÂÂfehlt" und danach Ã¢ÂÂPruefung und Doku sind nah am Code", `rc=0`.
+> mit Rückgabe 1. Vorher nachgemessen und vorgeführt: aus `Eudora71/` heraus
+> dreimal „fehlt" und danach „Pruefung und Doku sind nah am Code", `rc=0`.
 > Nachher liefert das Werkzeug aus `Eudora71/Eudora/` **dasselbe** wie aus der
 > Wurzel. Gegenprobe mit fehlender Datei in einem Wegwerf-Repo: Warnung,
-> `rc=1`. Siehe auch NP3-7 Ã¢ÂÂ beide in einem Zug.
+> `rc=1`. Siehe auch NP3-7 — beide in einem Zug.
 
 **Sicherheit: nachgewiesen, ausgefuehrt.**
 
@@ -2237,22 +2237,22 @@ und genau dann steht das Arbeitsverzeichnis nicht fest.
 ## NP3-7 - `pruefstand-melden.pl` nennt einen beliebigen Commit als Pruefstand
 
 > **BEHOBEN am 31.08.2026 abends, mit der hier vorgeschlagenen Marke.**
-> Jede beobachtete Datei trÃÂ¤gt oben eine Zeile
+> Jede beobachtete Datei trägt oben eine Zeile
 > `<!-- pruefstand: <commit> -->` und nennt damit den Commit, gegen den sie
 > zuletzt abgeglichen wurde. **Wo keine Marke steht, wird das gemeldet statt
-> geraten** (RÃÂ¼ckgabe 1) Ã¢ÂÂ samt der Zeile, die einzusetzen ist.
+> geraten** (Rückgabe 1) — samt der Zeile, die einzusetzen ist.
 >
-> Wie irrefÃÂ¼hrend das Raten war, zeigt die letzte Messung der alten Fassung:
-> *Ã¢ÂÂPORTIERUNG.md abgeglichen bis `567a5d8`, seither 186 Commits"* Ã¢ÂÂ `567a5d8`
+> Wie irreführend das Raten war, zeigt die letzte Messung der alten Fassung:
+> *„PORTIERUNG.md abgeglichen bis `567a5d8`, seither 186 Commits"* — `567a5d8`
 > ist der Commit mit den Originalquellen von 2006, den ein Befund nur zitiert.
 > `README.md` bekam `b4b7de5` und 170 Commits.
 >
 > **Zur Laufzeit:** die 29,5 s sind auf dieser Linux-Maschine nicht
-> reproduzierbar (dort 0,73 s) Ã¢ÂÂ Prozessstarts kosten unter Windows ein
-> Vielfaches. Die maschinenunabhÃÂ¤ngige Zahl ist die Zahl der git-Aufrufe:
+> reproduzierbar (dort 0,73 s) — Prozessstarts kosten unter Windows ein
+> Vielfaches. Die maschinenunabhängige Zahl ist die Zahl der git-Aufrufe:
 > **182 vorher** (122 Hash-Kandidaten in `BEFUNDE.md`, 41 in `PORTIERUNG.md`,
-> 19 in `README.md`, je ein `git cat-file -t`), **3 nachher** Ã¢ÂÂ je Marke ein
-> `git rev-parse --verify`. Lokal 0,73 s Ã¢ÂÂ 0,03 s.
+> 19 in `README.md`, je ein `git cat-file -t`), **3 nachher** — je Marke ein
+> `git rev-parse --verify`. Lokal 0,73 s → 0,03 s.
 >
 > `$gesamt` (berechnet und nie benutzt) ist ebenfalls weg.
 
@@ -2665,7 +2665,7 @@ Verhalten erzeugen. Eudora wertet `SetNoEdit` ohnehin nirgends aus (in
 Der Test schreibt den uebernommenen Wert fest, damit ein spaeteres
 Geradeziehen als Aenderung sichtbar wird und nicht unbemerkt einsickert.
 
-## S-1 Ã¢ÂÂ Das Auslieferungspaket 1.0.1 startet nicht (gemessen 30.08.2026)
+## S-1 — Das Auslieferungspaket 1.0.1 startet nicht (gemessen 30.08.2026)
 
 **Erster Startversuch ueberhaupt.** `Eudora.exe` startet, laeuft acht Sekunden mit
 vier Threads und 15,6 MB, oeffnet aber kein Fenster. Windows meldet:
@@ -2681,7 +2681,7 @@ EudoraBk, EuMemMgr, ISock, Ldap, Ph, Paige32d.
 
 Die Release-Varianten derselben DLLs liegen unter `Bin\Release` und brauchen nur die
 *Retail*-Laufzeit (`MSVCR71.dll`, `MFC71.DLL`, `MSVCP71.dll`). Auch die ist auf
-dieser Maschine nicht vorhanden Ã¢ÂÂ es ist keine Eudora-Installation da, aus der man
+dieser Maschine nicht vorhanden — es ist keine Eudora-Installation da, aus der man
 sie nehmen koennte.
 
 **Beim Laden zwingend** sind laut Importtabelle von `Eudora.exe` nur zwei:
@@ -2693,7 +2693,7 @@ geladen.
 | DLL | Quellen vorhanden | Weg |
 |---|---|---|
 | EuMemMgr | ja, 17.172 Zeilen unter `Eudora71/EuMemMgr` | selbst bauen mit v143 |
-| Paige32 | **nein** Ã¢ÂÂ `Eudora71/PaigeDLL` enthaelt nur Makefiles, `PAIGE.H` und die fertigen Binaerdateien | vorgebaute Release-Fassung benutzen |
+| Paige32 | **nein** — `Eudora71/PaigeDLL` enthaelt nur Makefiles, `PAIGE.H` und die fertigen Binaerdateien | vorgebaute Release-Fassung benutzen |
 
 Fuer Paige bleibt die Bindung an `MSVCR71.dll`. Gemessen braucht `Paige32.dll`
 daraus **genau 20 Funktionen**:
@@ -2702,7 +2702,7 @@ daraus **genau 20 Funktionen**:
     free  _except_handler3  __security_error_handler  time  labs  memmove
     tmpnam  _setjmp3  memset  strlen  longjmp  remove  rename
 
-Das ist wenig genug fuer eine eigene Weiterleitungs-DLL auf die heutige UCRT Ã¢ÂÂ
+Das ist wenig genug fuer eine eigene Weiterleitungs-DLL auf die heutige UCRT —
 dasselbe Vorgehen wie bei OTShim. Heikel sind nur die VC7.1-eigenen: `_setjmp3`,
 `_except_handler3`, `__security_error_handler`, `_adjust_fdiv`, `__CppXcptFilter`,
 `_initterm`, `__dllonexit`, `_onexit`.
@@ -2713,7 +2713,7 @@ Zielmaschine vorhanden. Das ist unvollstaendig: die VC7.1-Laufzeit fehlt und wir
 nicht erwaehnt. Das Paket ist damit **nicht startfaehig**; die Beschreibung muss
 richtiggestellt werden.
 
-## S-2 Ã¢ÂÂ Stapelueberlauf beim Start: die Werbeflaeche (behoben 30.08.2026)
+## S-2 — Stapelueberlauf beim Start: die Werbeflaeche (behoben 30.08.2026)
 
 **Symptom.** Nach dem Startbildschirm passierte nichts mehr, dann Absturz mit
 `EXCEPTION_STACK_OVERFLOW` (mal auch `0xC0000005`). Die letzte Meldung vor dem
@@ -2760,7 +2760,7 @@ Ersatzschicht) meldete fuenf Zyklen - **alle Fehlalarm**: es sind Ueberladungen,
 die das Werkzeug nur am Namen und an der Argumentzahl unterscheidet, nicht an
 den Typen. Die Ersatzschicht war an diesem Absturz unbeteiligt.
 
-## S-3 Ã¢ÂÂ Erster Lauf durch einen Anwender: was auffiel (30.08.2026)
+## S-3 — Erster Lauf durch einen Anwender: was auffiel (30.08.2026)
 
 Gregor hat die Fassung mit abgeschalteter Werbeflaeche selbst gestartet. Sie
 laeuft. Aufgefallen ist Folgendes.
@@ -2811,7 +2811,7 @@ die Eudora erst bei Benutzung laedt:
 Mailabruf und -versand sind davon **nicht** betroffen. Ohne die beiden Dateien
 faellt vor allem das Adressbuch aus.
 
-## S-4 Ã¢ÂÂ Zusicherung im Adressbuch-Wazoo schlaegt zu (behoben 30.08.2026)
+## S-4 — Zusicherung im Adressbuch-Wazoo schlaegt zu (behoben 30.08.2026)
 
 **Symptom.** Beim Wegklicken von der Adressbuch-Registerkarte:
 
@@ -2847,9 +2847,9 @@ Splitter gibt. Der Rumpf fasst den Splitter ohnehin nicht an, setzt aber weiter
 unten `g_Nicknames` voraus - aussteigen ist sicherer als weiterlaufen. Ohne
 Ansichten kann nichts geaendert worden sein, es gibt also auch nichts zu sichern.
 
-## S-5 Ã¢ÂÂ Menues lassen sich nicht oeffnen
+## S-5 — Menues lassen sich nicht oeffnen
 
-> **URSACHE INZWISCHEN GEFUNDEN Ã¢ÂÂ siehe Abschnitt M-1 weiter unten.**
+> **URSACHE INZWISCHEN GEFUNDEN — siehe Abschnitt M-1 weiter unten.**
 > Der Rahmen liefert immer HTERROR, weil SECToolBarManager
 > m_bMainFrameEnabled auf TRUE setzt. Was hier folgt, ist der Stand der
 > Untersuchung VOR diesem Fund und bleibt stehen, weil die
@@ -2872,7 +2872,7 @@ Gregor meldet, dass sich in Eudora keine Menues aufklappen lassen.
 Klasse `#32768` entsteht. Damit laesst sich unterscheiden, ob das Menue gar
 nicht aufgeht oder sofort wieder zufaellt.
 
-## S-6 Ã¢ÂÂ Darstellung nach dem Oeffnen mehrerer Wazoos (OFFEN)
+## S-6 — Darstellung nach dem Oeffnen mehrerer Wazoos (OFFEN)
 
 Gregor meldet, die Darstellung sei "vorher besser" gewesen und jetzt defekt. Auf
 dem Bildschirmfoto ueberlagern sich der Adressbuch-Wazoo, die Registerkarten
@@ -2886,17 +2886,17 @@ Zustand ohne Werbeleiste ist dort vorgesehen.
 **UNGEPRUEFT:** Verdacht auf die Andockrechnung der Ersatzschicht bei mehreren
 Leisten in einer Reihe. Muss reproduziert werden, bevor etwas geaendert wird.
 
-## S-7 Ã¢ÂÂ Die Wurzel aller CRLF-Probleme, endlich gefunden (behoben 30.08.2026)
+## S-7 — Die Wurzel aller CRLF-Probleme, endlich gefunden (behoben 30.08.2026)
 
 **Gemessen:** 4616 von 5563 verfolgten Quell- und Textdateien unterschieden sich
 von HEAD **ausschliesslich in den Zeilenenden**. Im Arbeitsverzeichnis standen
 sie als CRLF, im Commit als LF.
 
 > **Zu den Zahlen** (nachgezogen am 31.08.2026 abends; Befund Z-1 hatte belegt,
-> dass W-1/PR-7 dieses Nachziehen zwar meldete, aber nicht ausgefÃÂ¼hrt hatte).
-> Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und lÃÂ¤sst
-> sich nicht wiederholen Ã¢ÂÂ der Baum ist angeglichen. NachprÃÂ¼fbar ist nur die
-> Grundgesamtheit, und die wÃÂ¤chst mit jedem Commit und hÃÂ¤ngt an der
+> dass W-1/PR-7 dieses Nachziehen zwar meldete, aber nicht ausgeführt hatte).
+> Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und lässt
+> sich nicht wiederholen — der Baum ist angeglichen. Nachprüfbar ist nur die
+> Grundgesamtheit, und die wächst mit jedem Commit und hängt an der
 > Endungsliste:
 >
 > | Dateien | Stand | Liste |
@@ -2907,7 +2907,7 @@ sie als CRLF, im Commit als LF.
 > | 6385 | 31.08.2026 | neue gemeinsame Liste (`tools/dateiendungen.pl`) |
 > | 6394 | 31.08.2026 abends | dieselbe Liste, 0 Abweichungen |
 >
-> Die frÃÂ¼here Angabe Ã¢ÂÂ4426 von 5336" stammte aus einem Durchlauf mit kÃÂ¼rzerer
+> Die frühere Angabe „4426 von 5336" stammte aus einem Durchlauf mit kürzerer
 > Endungsliste und steht im Kopf des Werkzeugs seit W-1 nicht mehr.
 
 **Ursache.** Das Repo wurde seinerzeit mit `core.autocrlf=true` ausgecheckt. Git
@@ -2930,19 +2930,19 @@ Zeitpunkt der Pruefung schon `false` sagte. Die Einstellung war inzwischen
 geaendert worden; die Folgen des Auscheckens blieben.
 
 Belegt am Beispiel `Documents/Design/AdServer/Web_Words_Search_Servlet_Design.txt`
-(Beschriftung am 31.08.2026 berichtigt Ã¢ÂÂ sie war vertauscht, Befund Z-1):
+(Beschriftung am 31.08.2026 berichtigt — sie war vertauscht, Befund Z-1):
 
     HEAD-Blob 8c4fb68a:   5716 Bytes, 0 CR, 65 LF     (die committete LF-Fassung)
     Index-Eintrag:        size: 5781                  (die Groesse der CRLF-Arbeitskopie)
     Arbeitskopie:         5781 Bytes                  (CRLF, inhaltlich gleich)
 
-5716 + 65 CR = 5781 Ã¢ÂÂ die Rechnung geht auf. Der Index trug also die **Groesse
+5716 + 65 CR = 5781 — die Rechnung geht auf. Der Index trug also die **Groesse
 der CRLF-Datei** neben dem **Hash der LF-Fassung**, und genau deshalb sah git
 nicht hinein: Zeitstempel und Groesse passten zueinander.
 
-Die frÃÂ¼here Fassung dieses Beispiels beschriftete die 5716 als Arbeitskopie.
-Das trug nicht: eine Arbeitskopie mit 5716 Bytes und LF wÃÂ¤re byteidentisch zum
-Blob, und dann gÃÂ¤be es nichts anzugleichen.
+Die frühere Fassung dieses Beispiels beschriftete die 5716 als Arbeitskopie.
+Das trug nicht: eine Arbeitskopie mit 5716 Bytes und LF wäre byteidentisch zum
+Blob, und dann gäbe es nichts anzugleichen.
 
 **Behebung.** `tools/zeilenenden-angleichen.pl` schreibt jede betroffene Datei
 mit dem HEAD-Stand woertlich neu - aber nur, wenn sie sich danach nachweislich
@@ -2965,93 +2965,93 @@ schreibt, faellt weiterhin auf.
 **Das Werkzeug gehoert nach jedem frischen Klon einmal ausgefuehrt.** Steht so
 in README.md.
 
-## B-1 Ã¢ÂÂ Ersatz fÃÂ¼r die Laufzeitbibliothek von Visual C++ 7.1 (`VC71Bruecke`)
+## B-1 — Ersatz für die Laufzeitbibliothek von Visual C++ 7.1 (`VC71Bruecke`)
 
-Agent BRUECKE, 30.08.2026. AusfÃÂ¼hrliche Fassung mit allen Messungen:
+Agent BRUECKE, 30.08.2026. Ausführliche Fassung mit allen Messungen:
 [`Eudora71/VC71Bruecke/BEFUND.md`](Eudora71/VC71Bruecke/BEFUND.md). Hier nur
-das, was fÃÂ¼r andere Agenten und fÃÂ¼r Paket 1.0.3 zÃÂ¤hlt.
+das, was für andere Agenten und für Paket 1.0.3 zählt.
 
 ### Was jetzt da ist
 
 `Eudora71/VC71Bruecke` erzeugt eine eigene `msvcr71.dll`, die ihre Exporte an
-`C:\Windows\SysWOW64\msvcrt.dll` weiterleitet. Damit kÃÂ¶nnen die drei
+`C:\Windows\SysWOW64\msvcrt.dll` weiterleitet. Damit können die drei
 unsignierten Fremd-DLLs von dll-files.com (`msvcr71.dll`, `msvcr71d.dll`,
 `msvcp71d.dll`) aus dem Paket **entfallen**.
 
 Gemessen am fertigen PE:
 
-- x86, AbhÃÂ¤ngigkeiten: **nur `KERNEL32.dll`** (`dumpbin -dependents`) Ã¢ÂÂ keine
-  moderne CRT, das Problem ist also gelÃÂ¶st und nicht verschoben
+- x86, Abhängigkeiten: **nur `KERNEL32.dll`** (`dumpbin -dependents`) — keine
+  moderne CRT, das Problem ist also gelöst und nicht verschoben
 - 1430 Exporte, davon **1429 echte Forwarder** und eine eigene Funktion
   (`__security_error_handler`, die einzige der 118 gebrauchten, die
   `msvcrt.dll` nicht hat)
-- laufzeitgeprÃÂ¼ft mit einem Konsolenprogramm: **alle 1429 lÃÂ¶sen auf**,
-  `malloc`/`strlen`/`free` funktionieren ÃÂ¼ber die BrÃÂ¼cke
+- laufzeitgeprüft mit einem Konsolenprogramm: **alle 1429 lösen auf**,
+  `malloc`/`strlen`/`free` funktionieren über die Brücke
 
-Bauen (das Projekt hÃÂ¤ngt noch **nicht** in `Eudora.sln`, siehe unten):
+Bauen (das Projekt hängt noch **nicht** in `Eudora.sln`, siehe unten):
 
     MSBuild VC71Bruecke.vcxproj /p:Configuration=Release /p:Platform=Win32 /p:BuildProjectReferences=false /m /v:minimal
 
-### Drei Befunde, die ÃÂ¼ber den Auftrag hinausgehen
+### Drei Befunde, die über den Auftrag hinausgehen
 
-**B-1.1 Ã¢ÂÂ Der Kreis der betroffenen Module ist grÃÂ¶ÃÂer als sieben.** In
+**B-1.1 — Der Kreis der betroffenen Module ist größer als sieben.** In
 `Eudora71/Bin/Release/Plugins` liegen drei weitere vorgebaute Fremdmodule ohne
 Quellen: `SMIME.dll`, `SpamHeaders.dll`, `SpamWatch.dll`. Alle drei brauchen
 `MFC71.DLL`, `MSVCR71.dll` **und** `MSVCP71.dll`.
 
-**B-1.2 Ã¢ÂÂ Die BrÃÂ¼cke rettet drei von zehn Modulen, und das ist die Obergrenze.**
-VollstÃÂ¤ndig gelÃÂ¶st sind `Paige32.dll` (Textbearbeitung), `DirServ.dll` und
-`EuMemMgr.dll` Ã¢ÂÂ sie brauchen nur `MSVCR71`. Die anderen sieben scheitern
+**B-1.2 — Die Brücke rettet drei von zehn Modulen, und das ist die Obergrenze.**
+Vollständig gelöst sind `Paige32.dll` (Textbearbeitung), `DirServ.dll` und
+`EuMemMgr.dll` — sie brauchen nur `MSVCR71`. Die anderen sieben scheitern
 nicht an `MSVCR71`, sondern an `MFC71.DLL` (`EudoraBk`, `ISock`, `Ldap`,
 die drei Plugins) und `MSVCP71.dll` (`Ph`, `Ldap`, die drei Plugins).
 **Diese beiden DLLs liegen dem Paket nach Auftragsbeschreibung gar nicht bei.**
 Wenn das stimmt, sind Adressbuch, LDAP-Verzeichnisdienst, `Ph` und alle drei
-Plugins **heute schon nicht ladbar** Ã¢ÂÂ unabhÃÂ¤ngig von der `msvcr71`-Frage.
-**Das gehÃÂ¶rt am echten Paket nachgesehen**; es liegt nicht im Repository.
+Plugins **heute schon nicht ladbar** — unabhängig von der `msvcr71`-Frage.
+**Das gehört am echten Paket nachgesehen**; es liegt nicht im Repository.
 
-**B-1.3 Ã¢ÂÂ `MFC71.DLL` ist nicht Ã¢ÂÂschwierigÃ¢ÂÂ, sondern aussichtslos.** Die
-Messung Ã¢ÂÂ0 benannte Importe aus MFC71Ã¢ÂÂ bedeutet nicht, dass nichts gebraucht
+**B-1.3 — `MFC71.DLL` ist nicht „schwierig“, sondern aussichtslos.** Die
+Messung „0 benannte Importe aus MFC71“ bedeutet nicht, dass nichts gebraucht
 wird, sondern das Gegenteil: es sind **157 Importe nach Ordinal** (Debug: 173),
-also 157 Bindungen ohne Namen. Ein Ersatz mÃÂ¼sste Microsofts Ordinalvergabe von
-2003 exakt treffen; diese Zuordnung ist nicht verÃÂ¶ffentlicht und aus den
-vorliegenden Dateien nicht rekonstruierbar. FÃÂ¼r `MSVCP71.dll` gilt: technisch
-nachbaubar (17 Namen fÃÂ¼r die sieben DLLs, 173 mit den Plugins), aber
-**nutzlos**, weil sechs der sieben betroffenen Module zusÃÂ¤tzlich an `MFC71`
-hÃÂ¤ngen. ÃÂbrig bliebe nur `Ph.dll`. **Nicht bauen.**
+also 157 Bindungen ohne Namen. Ein Ersatz müsste Microsofts Ordinalvergabe von
+2003 exakt treffen; diese Zuordnung ist nicht veröffentlicht und aus den
+vorliegenden Dateien nicht rekonstruierbar. Für `MSVCP71.dll` gilt: technisch
+nachbaubar (17 Namen für die sieben DLLs, 173 mit den Plugins), aber
+**nutzlos**, weil sechs der sieben betroffenen Module zusätzlich an `MFC71`
+hängen. Übrig bliebe nur `Ph.dll`. **Nicht bauen.**
 
 ### `Paige32d.dll`: Umbenennen ist erlaubt (belegt)
 
 Die Release-`Paige32.dll` darf unter dem Namen `Paige32d.dll` in `Bin/Debug`
-liegen. Vier unabhÃÂ¤ngige Belege:
+liegen. Vier unabhängige Belege:
 
 1. Exportlisten beider DLLs: **938 Namen, Differenz leer**
 2. `Paige32.lib` und `Paige32d.lib`: **938 Symbole, Differenz leer**
-3. `PAIGE.H` hat **kein einziges** `#ifdef _DEBUG`. Paige schaltet ÃÂ¼ber ein
+3. `PAIGE.H` hat **kein einziges** `#ifdef _DEBUG`. Paige schaltet über ein
    eigenes Makro `PG_DEBUG`, das in `CPUDEFS.H:35`/`:47` auskommentiert ist und
    in keiner `.vcxproj` und keinem Quelltext gesetzt wird. Die Felder unter dem
-   Kommentar `PAIGE.H:2169` (Ã¢ÂÂused only for PG_DEBUGÃ¢ÂÂ) stehen **unbedingt** in
+   Kommentar `PAIGE.H:2169` („used only for PG_DEBUG“) stehen **unbedingt** in
    der Struktur.
-4. UnabhÃÂ¤ngig von den Kopfdateien: `pgAllocateNewRef` bekÃÂ¤me unter `PG_DEBUG`
-   zwei Parameter mehr (`PGMEMMGR.H:269-274`). Der Export heiÃÂt in **beiden**
+4. Unabhängig von den Kopfdateien: `pgAllocateNewRef` bekäme unter `PG_DEBUG`
+   zwei Parameter mehr (`PGMEMMGR.H:269-274`). Der Export heißt in **beiden**
    DLLs `_pgAllocateNewRef@20`, nicht `@28`. Beide wurden also mit derselben
    Konfiguration gebaut.
 
-Ein Startversuch ist fÃÂ¼r dieses Urteil nicht nÃÂ¶tig.
+Ein Startversuch ist für dieses Urteil nicht nötig.
 
-### `msvcr71d.dll` und `msvcp71d.dll` kÃÂ¶nnen aus dem Paket weg
+### `msvcr71d.dll` und `msvcp71d.dll` können aus dem Paket weg
 
 Gemessen: **kein einziges** Modul unter `Eudora71/Bin/Release` importiert aus
 `MSVCR71D.dll`, `MSVCP71D.dll` oder `MFC71D.DLL`. Ein Auslieferungspaket wird
 aus der Release-Ausgabe gebaut. Nebenbei: `msvcp71d.dll` war ohnehin die
-falsche BegrÃÂ¼ndung Ã¢ÂÂ `Paige32d.dll` importiert **kein** `MSVCP71D`, sondern nur
+falsche Begründung — `Paige32d.dll` importiert **kein** `MSVCP71D`, sondern nur
 `KERNEL32`, `USER32`, `GDI32` und `MSVCR71D`.
 
-### Fallstrick fÃÂ¼r alle, die an der `.def` arbeiten
+### Fallstrick für alle, die an der `.def` arbeiten
 
 Die klassische Zeile `malloc = msvcrt.malloc` **bindet mit dem Linker aus
-VS 2022 nicht**: `LNK2001: Nicht aufgelÃÂ¶stes externes Symbol "malloc"`.
-Ursache eingekreist (fÃÂ¼nf Testbindungen, siehe `BEFUND.md` 2.3): link.exe lÃÂ¶st
-den Namen auf der rechten Seite trotzdem als gewÃÂ¶hnliches externes Symbol auf.
+VS 2022 nicht**: `LNK2001: Nicht aufgelöstes externes Symbol "malloc"`.
+Ursache eingekreist (fünf Testbindungen, siehe `BEFUND.md` 2.3): link.exe löst
+den Namen auf der rechten Seite trotzdem als gewöhnliches externes Symbol auf.
 Weder `/EXPORT` auf der Befehlszeile noch `PRIVATE`, `@ordinal` oder
 `/ALTERNATENAME` helfen. Der Bauablauf erzeugt deshalb vor dem Binden mit
 `lib.exe` eine Stub-Importbibliothek; im fertigen PE steht davon nichts.
@@ -3060,15 +3060,15 @@ Weder `/EXPORT` auf der Befehlszeile noch `PRIVATE`, `@ordinal` oder
 
 `ZIEL.md`, `Releases/PAKETE.md`, `tools/zeilenenden-angleichen.pl` und
 `tools/ersetze-bereich.pl` sind im Repository nicht vorhanden. Ebenso gibt es
-in dieser `BEFUNDE.md` keine Abschnitte `S-1` bis `S-7`. Wer kÃÂ¼nftige AuftrÃÂ¤ge
+in dieser `BEFUNDE.md` keine Abschnitte `S-1` bis `S-7`. Wer künftige Aufträge
 schreibt, sollte das wissen.
 
 ### Offen
 
-- `VC71Bruecke` hÃÂ¤ngt **noch nicht** in `Eudora71/Eudora.sln` Ã¢ÂÂ bewusst nicht
+- `VC71Bruecke` hängt **noch nicht** in `Eudora71/Eudora.sln` — bewusst nicht
   eingetragen, um keinen Konflikt in einer geteilten Datei zu hinterlassen.
-  Die zwei nÃÂ¶tigen EinfÃÂ¼gungen stehen wÃÂ¶rtlich in `BEFUND.md`, Abschnitt 6.
-- Startversuch mit der BrÃÂ¼cke steht aus (Auflage: keine Fenster, kein
+  Die zwei nötigen Einfügungen stehen wörtlich in `BEFUND.md`, Abschnitt 6.
+- Startversuch mit der Brücke steht aus (Auflage: keine Fenster, kein
   Eudora-Start).
 
 ## M-1 - Menues lassen sich nicht oeffnen: der Rahmen liefert immer HTERROR
@@ -3124,32 +3124,32 @@ kommt mit `MSGF_MENU`), sowie `SECDockState::LoadState` bei leerer INI.
 dort bricht der Bau am laengst behobenen `C2572` ab. Der lebende Stand ist
 `eudora-exe-linkt`.
 
-## A-1 Ã¢ÂÂ Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026)
+## A-1 — Erscheinungsbild (S-6): Ursache von Punkt 2 gefunden, Punkt 1 eingegrenzt (30.08.2026)
 
-> **BERICHTIGUNG vom 31.08.2026.** ÃÂberschrift und Vorbemerkung galten fÃÂ¼r die
-> **erste** Sitzung. In der zweiten Sitzung sind fÃÂ¼nf Punkte umgesetzt worden
+> **BERICHTIGUNG vom 31.08.2026.** Überschrift und Vorbemerkung galten für die
+> **erste** Sitzung. In der zweiten Sitzung sind fünf Punkte umgesetzt worden
 > (`db28adb`, `1a4a6d5`): `DrawDisabled` setzt Text- und Hintergrundfarbe,
-> `PreDrawButton` prÃÂ¼ft `::SelectObject`, `TBBS_HIDDEN` ist ausgerÃÂ¤umt, die
+> `PreDrawButton` prüft `::SelectObject`, `TBBS_HIDDEN` ist ausgeräumt, die
 > Andockrechnung wertet `m_fPctWidth`, `nCol` und `nRow` aus. Die Wirkung ist
-> am 31.08. am laufenden Programm **belegt** (E-1, E-2): MenÃÂ¼s, Anordnung und
-> Werkzeugleiste stimmen. **SÃÂ¤mtliche Zeilenangaben dieses Abschnitts beziehen
-> sich auf `31810e2` und stimmen im heutigen Baum nicht mehr** Ã¢ÂÂ Befund Z-1 hat
+> am 31.08. am laufenden Programm **belegt** (E-1, E-2): Menüs, Anordnung und
+> Werkzeugleiste stimmen. **Sämtliche Zeilenangaben dieses Abschnitts beziehen
+> sich auf `31810e2` und stimmen im heutigen Baum nicht mehr** — Befund Z-1 hat
 > das nachgemessen. Offen bleiben die Splitter,
 > `FloatControlBarInMDIChild` und `SetControlBarWidthsInRow` (`OTShim.cpp:2244`,
 > leerer Rumpf), dazu PR-2.5 (`DrawChecked` hat denselben Farbfehler).
-> LEKTOR und Z-1 hatten diese Berichtigung beide gemeldet; ausgefÃÂ¼hrt wurde sie
+> LEKTOR und Z-1 hatten diese Berichtigung beide gemeldet; ausgeführt wurde sie
 > erst jetzt.
 
 Agent ANSICHT, Branch `worktree-agent-a84c76a2ea910c75d`, ausgehend von
-`31810e2`. **Kein Code geÃÂ¤ndert** (Stand der ersten Sitzung) Ã¢ÂÂ sie wurde vor
-der Umsetzung abgebrochen. VollstÃÂ¤ndige Analyse mit allen Fundstellen in
+`31810e2`. **Kein Code geändert** (Stand der ersten Sitzung) — sie wurde vor
+der Umsetzung abgebrochen. Vollständige Analyse mit allen Fundstellen in
 [`Eudora71/OTShim/BEFUND-ANSICHT.md`](Eudora71/OTShim/BEFUND-ANSICHT.md).
 
-### Die sich ÃÂ¼berlagernden Bereiche: Ursache belegt
+### Die sich überlagernden Bereiche: Ursache belegt
 
 Es ist kein Fehler, sondern eine **offene Baustelle**. Die Ersatzschicht sagt es
 an ihrer eigenen Deklaration (`OTShim.h:695-699`): die prozentualen
-Zeilenbreiten (`m_fPctWidth`) und die Splitter sind nicht umgesetzt, Ã¢ÂÂdie
+Zeilenbreiten (`m_fPctWidth`) und die Splitter sind nicht umgesetzt, „die
 Leisten liegen dadurch so, wie `CDockBar` sie anordnet".
 
 Nachgemessen in `Eudora71/OTShim/OTShim.cpp`:
@@ -3158,57 +3158,57 @@ Nachgemessen in `Eudora71/OTShim/OTShim.cpp`:
 |---|---|
 | `SECDockBar::CalcFixedLayout` Z. 2505 | reicht 1:1 an MFC durch |
 | `SECDockBar::OnSizeParent` Z. 2990 | reicht 1:1 an MFC durch |
-| `SECDockBar::NormalizeRow` Z. 2239 | zÃÂ¤hlt nur, **verteilt keine Breite** |
+| `SECDockBar::NormalizeRow` Z. 2239 | zählt nur, **verteilt keine Breite** |
 | `SECDockBar::SetControlBarWidthsInRow` Z. 2226 | leerer Rumpf |
-| `SECMDIFrameWnd::DockControlBarEx` Z. 274 | legt `fPctWidth` ab, **wertet es nicht aus**; verwirft zusÃÂ¤tzlich `nCol` und `nRow` |
+| `SECMDIFrameWnd::DockControlBarEx` Z. 274 | legt `fPctWidth` ab, **wertet es nicht aus**; verwirft zusätzlich `nCol` und `nRow` |
 
 Dazu `SECControlBar::CalcFixedLayout` (`OTShim.cpp:1606`): bei `bStretch`
 liefert sie **32767** in Zeilenrichtung. Jede Wazoo-Leiste fordert also die
 volle Zeilenbreite an, und MFCs `CDockBar` kennt keine anteilige Aufteilung
 einer Zeile. Daraus folgen unmittelbar drei der vier gemeldeten
-AuffÃÂ¤lligkeiten: Adressbuch ÃÂ¼ber Nachrichtenliste, der leere senkrechte
-Streifen, und Ã¢ÂÂTask Status/Task Errors" mitten im Fenster.
+Auffälligkeiten: Adressbuch über Nachrichtenliste, der leere senkrechte
+Streifen, und „Task Status/Task Errors" mitten im Fenster.
 
-BestÃÂ¤tigt wird der frÃÂ¼here Ausschluss: an der abgeschalteten Werbeleiste liegt
-es nicht (`DockBar.cpp:51-75`, `82-99` prÃÂ¼fen selbst auf `SWM_MODE_ADWARE`).
+Bestätigt wird der frühere Ausschluss: an der abgeschalteten Werbeleiste liegt
+es nicht (`DockBar.cpp:51-75`, `82-99` prüfen selbst auf `SWM_MODE_ADWARE`).
 
-### Die leeren Werkzeugleisten-KnÃÂ¶pfe: fÃÂ¼nf Ursachen ausgeschlossen
+### Die leeren Werkzeugleisten-Knöpfe: fünf Ursachen ausgeschlossen
 
 Gemessen (Einzelheiten in `BEFUND-ANSICHT.md`):
 
-- Vorgabe ist **groÃÂe KnÃÂ¶pfe** (`EudoraRes.rc:7648`), also `IDR_MAINFRAME32/A/B`.
+- Vorgabe ist **große Knöpfe** (`EudoraRes.rc:7648`), also `IDR_MAINFRAME32/A/B`.
 - Alle sechs Werkzeugleisten-Bitmaps sind 24 bpp; Bildzahlen 64/61/51 stimmen
-  exakt mit `Breite/HÃÂ¶he` ÃÂ¼berein; **keine `SEPARATOR`-Zeile** in den
+  exakt mit `Breite/Höhe` überein; **keine `SEPARATOR`-Zeile** in den
   Ressourcen.
-- **Alle 15 StandardknÃÂ¶pfe** (`mainfrm.cpp:684-711`) liegen mit Index 0Ã¢ÂÂ62 im
+- **Alle 15 Standardknöpfe** (`mainfrm.cpp:684-711`) liegen mit Index 0–62 im
   **ersten** Bitmap. Das Zusammensetzen der drei Ressourcen
-  (`QCToolBarManager.cpp:283-540`) ist damit als Ursache **ausgeschlossen** Ã¢ÂÂ
-  es kÃÂ¶nnte nur alle 15 gleichzeitig treffen, nicht einzelne.
-- `IDToBmpIndex` liefert bei unbekannter Kennung 0 Ã¢ÂÂ **falsches** Symbol, nie
+  (`QCToolBarManager.cpp:283-540`) ist damit als Ursache **ausgeschlossen** —
+  es könnte nur alle 15 gleichzeitig treffen, nicht einzelne.
+- `IDToBmpIndex` liefert bei unbekannter Kennung 0 → **falsches** Symbol, nie
   ein leeres Feld. Ausgeschlossen.
-- `secData` ist echt gefÃÂ¼llt (`OT501/Src/secaux.cpp:23`, im Projekt unter
+- `secData` ist echt gefüllt (`OT501/Src/secaux.cpp:23`, im Projekt unter
   `Eudora.vcxproj:217`). Ausgeschlossen.
-- `QCCustomToolBar` ÃÂ¼berschreibt das Zeichnen nicht Ã¢ÂÂ gemalt wird ausschlieÃÂlich
+- `QCCustomToolBar` überschreibt das Zeichnen nicht — gemalt wird ausschließlich
   in der Ersatzschicht.
 
-**ÃÂbrig bleibt der Zeichenweg je Knopf.** StÃÂ¤rkster Verdacht (UNGEPRÃÂFT):
-`SECStdBtn::DrawDisabled` (`OTShim_Werkzeugleiste.cpp:786-801`) lÃÂ¤sst vor dem
-EinfarbigÃ¢ÂÂFarb-`BitBlt` das Paar `SetTextColor(0)` / `SetBkColor(0xFFFFFF)`
+**Übrig bleibt der Zeichenweg je Knopf.** Stärkster Verdacht (UNGEPRÜFT):
+`SECStdBtn::DrawDisabled` (`OTShim_Werkzeugleiste.cpp:786-801`) lässt vor dem
+Einfarbig→Farb-`BitBlt` das Paar `SetTextColor(0)` / `SetBkColor(0xFFFFFF)`
 weg, das die klassische Vorlage dort zwingend setzt. Weil `CDC::FillSolidRect`
-in `DrawFace` (Z. 704) die Hintergrundfarbe auf `clrBtnFace` stehen lÃÂ¤sst,
-ÃÂ¼bersetzt GDI die Maskeneins nicht nach WeiÃÂ, sondern nach `clrBtnFace` Ã¢ÂÂ und
-die VerknÃÂ¼pfungszahl `PSDPxax` setzt WeiÃÂ/Schwarz voraus. Das passt als
-einziger Kandidat auf das Muster Ã¢ÂÂmehrere leer, andere da": auf einer frisch
-gestarteten Eudora sind gerade acht der fÃÂ¼nfzehn KnÃÂ¶pfe gesperrt, und auf
-Gregors **Vergleichsbild** ist ein Nachrichtenfenster offen, dort wÃÂ¤ren
-dieselben KnÃÂ¶pfe freigegeben.
+in `DrawFace` (Z. 704) die Hintergrundfarbe auf `clrBtnFace` stehen lässt,
+übersetzt GDI die Maskeneins nicht nach Weiß, sondern nach `clrBtnFace` — und
+die Verknüpfungszahl `PSDPxax` setzt Weiß/Schwarz voraus. Das passt als
+einziger Kandidat auf das Muster „mehrere leer, andere da": auf einer frisch
+gestarteten Eudora sind gerade acht der fünfzehn Knöpfe gesperrt, und auf
+Gregors **Vergleichsbild** ist ein Nachrichtenfenster offen, dort wären
+dieselben Knöpfe freigegeben.
 
 ### Bauzustand
 
-`Eudora.vcxproj` Debug/Win32 endet an `31810e2` **unverÃÂ¤ndert** mit
-`LNK1104: imap.lib`. Alle Quelldateien ÃÂ¼bersetzen fehlerfrei. Nebenbefund: der
-MSBuild-Aufruf aus der Arbeitsanweisung lÃÂ¤uft in der **Git-Bash nicht** (sie
-macht aus `/p:Configuration=Debug` einen Pfad) Ã¢ÂÂ er gehÃÂ¶rt in PowerShell, und
+`Eudora.vcxproj` Debug/Win32 endet an `31810e2` **unverändert** mit
+`LNK1104: imap.lib`. Alle Quelldateien übersetzen fehlerfrei. Nebenbefund: der
+MSBuild-Aufruf aus der Arbeitsanweisung läuft in der **Git-Bash nicht** (sie
+macht aus `/p:Configuration=Debug` einen Pfad) — er gehört in PowerShell, und
 Visual Studio liegt auf diesem Rechner unter **Professional**, nicht Community.
 
 ## P-1 - Der POP-Abrufpfad, vor dem ersten echten Abruf gegengelesen
@@ -3547,13 +3547,13 @@ es haengt nicht an OTShim.
 **Nicht angefasst, wie verabredet:**
 `tools/patches/zertifikatspruefung-verschaerfen.patch` bleibt liegen (P-1.6).
 
-## PR-1 Ã¢ÂÂ Die Schranke `pruefe-bytes.pl` erkennt den halben Schaden nicht (geprueft 30.08.2026)
+## PR-1 — Die Schranke `pruefe-bytes.pl` erkennt den halben Schaden nicht (geprueft 30.08.2026)
 
 Nachgepruefter Stand: 371c1e3. Vollstaendiger Bericht: `PRUEFBERICHT.md`.
 Drei Befunde an der Schranke, alle mit Gegenprobe in einem Wegwerf-Repo belegt.
 
-**1. Die Umwandlung LF Ã¢ÂÂ CRLF laeuft lautlos durch.** `tools/pruefe-bytes.pl:105-125`
-sucht nur die Richtung CRLF Ã¢ÂÂ LF (`$a->{$inhalt}[0] > 0` und `$b->{$inhalt}[0] == 0`).
+**1. Die Umwandlung LF → CRLF laeuft lautlos durch.** `tools/pruefe-bytes.pl:105-125`
+sucht nur die Richtung CRLF → LF (`$a->{$inhalt}[0] > 0` und `$b->{$inhalt}[0] == 0`).
 Schreibt ein Werkzeug eine gemischte Datei komplett mit CRLF neu und aendert
 dabei auch Inhalt, greift Regel 1 nicht mehr und Regel 2 sieht nichts:
 
@@ -3562,7 +3562,7 @@ dabei auch Inhalt, greift Regel 1 nicht mehr und Regel 2 sieht nichts:
     -> perl tools/pruefe-bytes.pl  ==>  Rueckgabe 0, keine Meldung
 
 Dieselbe Aenderung in der Gegenrichtung wird korrekt gemeldet. Die Schranke ist
-also einseitig Ã¢ÂÂ und CRLF ist unter Windows die wahrscheinlichere Richtung.
+also einseitig — und CRLF ist unter Windows die wahrscheinlichere Richtung.
 
 **2. Sie schlaegt bei Leerzeilen grundlos an.** Regel 2 vergleicht Zeilen ueber
 ihren Inhalt. Der haeufigste Inhalt in einer gemischten Datei ist die leere
@@ -3574,13 +3574,13 @@ Zeile, und die kommt mit beiden Enden vor. Ein voellig normaler Commit:
 
 Kein einziges Byte wurde umgewandelt. Die Meldung nennt als Beispiel die leere
 Zeichenkette und sagt damit nicht, wo man nachsehen soll. Das ist derselbe
-Fehlalarm-Fehler, den 371c1e3 abstellen wollte Ã¢ÂÂ er ist nur von der CR-Anzahl
+Fehlalarm-Fehler, den 371c1e3 abstellen wollte — er ist nur von der CR-Anzahl
 auf den Zeileninhalt umgezogen.
 
 **3. Ganze Dateiarten werden gar nicht geprueft.** Die Endungslisten in
 `tools/pruefe-bytes.pl:52` und `tools/zeilenenden-angleichen.pl:90` sind
 verschieden: `.def` steht nur in einem, `.vcxproj`/`.filters` nur im anderen.
-`.sln`, `.rc2`, `.bat`, `.cmd`, `.ps1`, `.pl`, `.props` stehen in keinem Ã¢ÂÂ
+`.sln`, `.rc2`, `.bat`, `.cmd`, `.ps1`, `.pl`, `.props` stehen in keinem —
 darunter die Bauwerkzeuge dieses Projekts. Eine `.def`-Datei komplett von CRLF
 auf LF umgeschrieben: Rueckgabe 0.
 
@@ -3597,24 +3597,24 @@ drehen ist schlechter, als sie so zu lassen.
 **Weitere Befunde derselben Pruefung** (Einzelheiten in `PRUEFBERICHT.md`):
 
   * PR-4: `BuildKennung.h` ist in git verfolgt. Faellt perl beim Bau aus,
-    bricht der Bau richtigerweise nicht ab Ã¢ÂÂ das Fenster zeigt dann aber die
+    bricht der Bau richtigerweise nicht ab — das Fenster zeigt dann aber die
     Kennung eines FREMDEN Baus statt gar keiner. `Eudora.vcxproj:63-72`.
   * PR-5: Der Zeitstempel in der Kennung ist nicht der Bauzeitpunkt, sondern
     der Zeitpunkt der letzten Aenderung an Commit oder Sauberkeit
     (`tools/kennung-erzeugen.pl:118-130`). Als Verhalten richtig, als
     Beschreibung falsch.
   * PR-6: `_T(EUDORA_BAU_KENNUNG)` in `mainfrm.cpp:9715` uebersetzt in einem
-    Unicode-Bau nicht Ã¢ÂÂ `__T(x)` ist `L##x`, und `##` unterbindet die
+    Unicode-Bau nicht — `__T(x)` ist `L##x`, und `##` unterbindet die
     Makroerweiterung. Im MBCS-Bau, den dieses Projekt baut, faellt es nicht auf.
   * PR-7: In S-7 widersprechen sich die Zahlen (4616/5563 hier gegen 4426/5336
     im Kopf von `tools/zeilenenden-angleichen.pl`; nachgemessen sind es 5568
     verfolgte Dateien), und das Beispiel ist falsch beschriftet: 5716 Bytes ist
     die Groesse des LF-BLOBS, nicht die der Arbeitskopie. Der Kern der
-    Erklaerung Ã¢ÂÂ git sieht nicht in die Datei, solange Zeitstempel und Groesse
-    zum Index passen Ã¢ÂÂ stimmt.
+    Erklaerung — git sieht nicht in die Datei, solange Zeitstempel und Groesse
+    zum Index passen — stimmt.
   * PR-8: `tools/rekursion-suchen.pl` bildet jede Kante mit dem Klassennamen
     der umgebenden Methode (`:74`). Klassenuebergreifende Zyklen sind damit
-    strukturell unsichtbar Ã¢ÂÂ auch der aus S-2, fuer den es gebaut wurde.
+    strukturell unsichtbar — auch der aus S-2, fuer den es gebaut wurde.
     Empfehlung: loeschen.
 
 **Ausdruecklich nachgemessen und in Ordnung:** die CONTEXT-Versaetze in
@@ -3622,10 +3622,10 @@ drehen ist schlechter, als sie so zu lassen.
 x86 richtig) und die EBP-Kette, die wegen `if ($neuEbp -le $ebp) { break }`
 streng steigen muss und deshalb nicht haengen kann; der PreBuildEvent, der den
 Bau in keinem Zweig abbricht; `OnUpdateFrameTitle`, das in keine Rekursion
-laeuft; und die Werbeleiste an `IsBoxBuild()` Ã¢ÂÂ der ganze Baum `Eudora71/`
+laeuft; und die Werbeleiste an `IsBoxBuild()` — der ganze Baum `Eudora71/`
 wurde nach Nutzern durchsucht, keiner greift ins Leere. `IsBoxBuild()` ist eine
 Uebersetzungszeit-Weiche ueber `BUILD_BOX_OR_SITE_R_VERSION`, und das Makro
-steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) Ã¢ÂÂ wer es
+steht in `Eudora.vcxproj` in BEIDEN Konfigurationen (Zeile 77 und 130) — wer es
 entfernt, holt sich den Stapelueberlauf aus S-2 zurueck.
 
 **Nichts davon haelt Paket 1.0.3 auf.**
@@ -3850,19 +3850,19 @@ Zeichen`. Richtig ist `"\xC3\x9F" "e"`. Das gilt fuer jedes `a`-`f` direkt
 hinter einer `\x`-Folge, und der Fehler ist genau bei deutschen Umlauten
 (`\x9F` + `e` in "Strasse", "Gruesse") wahrscheinlich.
 
-## B-2 Ã¢ÂÂ Die BrÃÂ¼cke hÃÂ¤ngt in der Solution, Paket 1.0.3 steht, und ein PrÃÂ¼fer davor
+## B-2 — Die Brücke hängt in der Solution, Paket 1.0.3 steht, und ein Prüfer davor
 
 Agent BRUECKE, 31.08.2026. Fortsetzung von [B-1](#b-1). Alle Zahlen hier sind
-**gemessen**; wo nicht, steht **UNGEPRÃÂFT** davor. Werkzeug war
+**gemessen**; wo nicht, steht **UNGEPRÜFT** davor. Werkzeug war
 `tools/paket-pruefen.ps1` (in diesem Commit neu) und `MSBuild` aus VS 2022.
 
-### B-2.1 Ã¢ÂÂ `VC71Bruecke` ist eingehÃÂ¤ngt, aber die GUID in B-1 war falsch
+### B-2.1 — `VC71Bruecke` ist eingehängt, aber die GUID in B-1 war falsch
 
-`Eudora71/Eudora.sln` enthÃÂ¤lt das Projekt jetzt. Byte-erhaltend eingefÃÂ¼gt mit
+`Eudora71/Eudora.sln` enthält das Projekt jetzt. Byte-erhaltend eingefügt mit
 `tools/ersetze-bereich.pl`, zwei Stellen, sechs Zeilen; CR-Zahl 0 vorher wie
 nachher, Tabulatoren erhalten.
 
-**Berichtigung zu B-1.** Der dortige Abschnitt Ã¢ÂÂOffenÃ¢ÂÂ und
+**Berichtigung zu B-1.** Der dortige Abschnitt „Offen“ und
 `Eudora71/VC71Bruecke/BEFUND.md` Abschnitt 6 nennen als einzutragende GUID
 
     {7B1E9C40-3D52-4A6E-9E1F-2C4A7150D71B}
@@ -3871,28 +3871,28 @@ Das ist **nicht** die GUID des Projekts. In `VC71Bruecke.vcxproj:32` steht
 
     <ProjectGuid>{7B1C4A20-3E5D-4F71-9A16-2C8D5E71B0C4}</ProjectGuid>
 
-Eingetragen ist die echte. Wer die aus BEFUND.md abgeschrieben hÃÂ¤tte, bekÃÂ¤me
+Eingetragen ist die echte. Wer die aus BEFUND.md abgeschrieben hätte, bekäme
 eine Solution, in der das Projekt zwar auftaucht, aber keiner Konfiguration
-zugeordnet ist Ã¢ÂÂ es wÃÂ¼rde stillschweigend nicht gebaut. Die falsche Angabe in
+zugeordnet ist — es würde stillschweigend nicht gebaut. Die falsche Angabe in
 `BEFUND.md` steht dort noch; sie ist mit diesem Abschnitt richtiggestellt.
 
 **Nachgemessen:** Gesamtbau der Solution, `Debug|x86`. `VC71Bruecke` baut mit,
 Ausgabe `Eudora71/Bin/Debug/msvcr71.dll`. Die drei bekannten Fehler aus `OT501`
-bleiben (`NMAKE U1073` zweimal, `MSB3073` einmal). ZusÃÂ¤tzlich zwei
-`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` Ã¢ÂÂ das ist **kein neuer
+bleiben (`NMAKE U1073` zweimal, `MSB3073` einmal). Zusätzlich zwei
+`LNK1104: QCUtils.lib` in `NSImport` und `OLImport` — das ist **kein neuer
 Fehler**, sondern ein Wettlauf im Parallelbau (`/m`): beide Projekte binden,
 bevor `QCUtils` fertig ist. Einzeln gebaut laufen sie durch, nachgemessen.
 Danach bindet auch `Eudora.vcxproj` wieder durch.
 
-### B-2.2 Ã¢ÂÂ Wann Eudora die MFC71-abhÃÂ¤ngigen Module lÃÂ¤dt: erst bei Benutzung
+### B-2.2 — Wann Eudora die MFC71-abhängigen Module lädt: erst bei Benutzung
 
 Die in B-1.2 offen gelassene Frage ist beantwortet, und zwar **gemessen am
 ausgelieferten Paket**, nicht am Quelltext.
 
 `tools/paket-pruefen.ps1` rechnet die **Startkette** aus: beginnend bei den
-EXE-Dateien im Wurzelverzeichnis den gewÃÂ¶hnlichen (nicht verzÃÂ¶gerten) Importen
+EXE-Dateien im Wurzelverzeichnis den gewöhnlichen (nicht verzögerten) Importen
 folgen, solange das Ziel im Paket liegt. Das ist genau das, was der Lader
-anfassen muss, bevor die erste Zeile eigener Code lÃÂ¤uft. Ergebnis fÃÂ¼r das
+anfassen muss, bevor die erste Zeile eigener Code läuft. Ergebnis für das
 Paket, **elf Module**:
 
     Eudora.exe  swEudora.exe  EuLang.dll  EuMemMgr.dll  Imap.dll
@@ -3900,50 +3900,50 @@ Paket, **elf Module**:
     QCUtils.dll
 
 `EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` und die drei Plugins sind
-**nicht darin**. Das fehlende `MFC71.DLL`/`MSVCP71.dll` hÃÂ¤lt den Start also
-nicht auf. Es gehÃÂ¶rt in einen Abschnitt Ã¢ÂÂwas nicht gehtÃ¢ÂÂ, nicht nach vorn in
-die LIESMICH.txt. Das bestÃÂ¤tigt S-1 (Ã¢ÂÂbeim Laden zwingend sind nur zweiÃ¢ÂÂ) und
+**nicht darin**. Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also
+nicht auf. Es gehört in einen Abschnitt „was nicht geht“, nicht nach vorn in
+die LIESMICH.txt. Das bestätigt S-1 („beim Laden zwingend sind nur zwei“) und
 erweitert es um die transitive Kette.
 
-### B-2.3 Ã¢ÂÂ Das echte Paket 1.0.2 nachgesehen: drei Berichtigungen zu B-1
+### B-2.3 — Das echte Paket 1.0.2 nachgesehen: drei Berichtigungen zu B-1
 
-B-1 musste den Paketinhalt aus der Auftragsbeschreibung ÃÂ¼bernehmen. Jetzt ist
+B-1 musste den Paketinhalt aus der Auftragsbeschreibung übernehmen. Jetzt ist
 er gemessen (`Releases/Eudora72-1.0.2-lauffaehig.zip`, ausgepackt, jede Datei
 durch den PE-Leser).
 
-**1. `MFC71.DLL` und `MSVCP71.dll` liegen tatsÃÂ¤chlich nicht bei.** Die
+**1. `MFC71.DLL` und `MSVCP71.dll` liegen tatsächlich nicht bei.** Die
 Vermutung aus B-1.2 stimmt. Adressbuch, LDAP, Ph und die drei Plugins waren
 also schon in 1.0.2 nicht ladbar. 1.0.3 verschlechtert daran nichts.
 
 **2. Das Paket 1.0.2 ist gemischt, nicht durchgehend Release.** `PAKETE.md`
-und die LIESMICH.txt zu 1.0.2 sagen, die sieben vorgebauten DLLs lÃÂ¤gen als
-Release-Fassungen bei. FÃÂ¼r fÃÂ¼nf stimmt das. Nicht fÃÂ¼r zwei:
+und die LIESMICH.txt zu 1.0.2 sagen, die sieben vorgebauten DLLs lägen als
+Release-Fassungen bei. Für fünf stimmt das. Nicht für zwei:
 
-| Datei im Paket 1.0.2 | GrÃÂ¶ÃÂe | entspricht | importiert |
+| Datei im Paket 1.0.2 | Größe | entspricht | importiert |
 |---|---|---|---|
 | `Paige32d.dll` | 757.760 B | `Bin/Debug/Paige32d.dll` | `MSVCR71D.dll` |
-| `Plugins/*.dll` | Ã¢ÂÂ | `Bin/Debug/Plugins/*` | `MFC71D.DLL`, `MSVCP71D.dll` |
+| `Plugins/*.dll` | — | `Bin/Debug/Plugins/*` | `MFC71D.DLL`, `MSVCP71D.dll` |
 
-**Damit ist erklÃÂ¤rt, warum die D-Dateien im Paket lagen** Ã¢ÂÂ B-1 hatte sie fÃÂ¼r
+**Damit ist erklärt, warum die D-Dateien im Paket lagen** — B-1 hatte sie für
 totes Gewicht gehalten, weil es nur `Bin/Release` gemessen hatte. Im Paket
 wurden sie sehr wohl gebraucht: `msvcr71d.dll` von der Debug-`Paige32d.dll`,
-`msvcp71d.dll` von den Debug-Plugins. Der Satz aus B-1, sie seien Ã¢ÂÂtotes
-GewichtÃ¢ÂÂ, war fÃÂ¼r das Repository richtig und fÃÂ¼r das Paket falsch.
+`msvcp71d.dll` von den Debug-Plugins. Der Satz aus B-1, sie seien „totes
+Gewicht“, war für das Repository richtig und für das Paket falsch.
 
 Der Weg, sie loszuwerden, bleibt derselbe und ist in B-1 belegt: die
 Release-`Paige32.dll` unter dem Namen `Paige32d.dll` kopieren. Danach braucht
 sie niemand mehr.
 
 **3. `EUMAPI.DLL` im Paket ist keine PE-Datei.** Der PE-Leser bekommt keinen
-gÃÂ¼ltigen Kopf. 82.944 B, unverÃÂ¤ndert aus der Freigabe von 2006 ÃÂ¼bernommen.
-**UNGEPRÃÂFT**, was es stattdessen ist Ã¢ÂÂ der Verdacht ist eine 16-Bit-NE-Datei
+gültigen Kopf. 82.944 B, unverändert aus der Freigabe von 2006 übernommen.
+**UNGEPRÜFT**, was es stattdessen ist — der Verdacht ist eine 16-Bit-NE-Datei
 aus der MAPI-Vergangenheit. Keine Paketdatei importiert sie; sie steht in
 keiner Importtabelle. Meldet sich als Warnung, nicht als Fehler.
 
-### B-2.4 Ã¢ÂÂ Paket 1.0.3 ist vorbereitet, nicht verÃÂ¶ffentlicht
+### B-2.4 — Paket 1.0.3 ist vorbereitet, nicht veröffentlicht
 
 Zusammengestellt mit `tools/paket-bauen.ps1` (neu), das den Vorgang
-reproduzierbar macht. ÃÂnderungen gegenÃÂ¼ber 1.0.2 und ihre BegrÃÂ¼ndung stehen im
+reproduzierbar macht. Änderungen gegenüber 1.0.2 und ihre Begründung stehen im
 Kopf des Skripts und in `Releases/PAKETE.md`. Kurz:
 
 1. selbst gebaute `msvcr71.dll` statt der drei Fremddateien von dll-files.com
@@ -3953,18 +3953,18 @@ Kopf des Skripts und in `Releases/PAKETE.md`. Kurz:
 5. `laufzeit-holen.ps1` und `paket-pruefen.ps1` liegen im Paket
 
 Vorgeschlagener Dateiname `Eudora72-1.0.3-vorabfassung.zip`. **Nicht
-Ã¢ÂÂlauffaehigÃ¢ÂÂ** Ã¢ÂÂ nach `ZIEL.md` ist derzeit keines der drei Kriterien erfÃÂ¼llt.
+„lauffaehig“** — nach `ZIEL.md` ist derzeit keines der drei Kriterien erfüllt.
 
 Das ZIP selbst ist **nicht** im Repository. Es besteht zu 99 % aus
-Bauergebnissen, und ob verÃÂ¶ffentlicht wird, entscheidet Gregor. Im Repository
+Bauergebnissen, und ob veröffentlicht wird, entscheidet Gregor. Im Repository
 liegen `Releases/1.0.3/LIESMICH.txt`, der Eintrag in `Releases/PAKETE.md` und
 das Skript, das es jederzeit wieder herstellt.
 
-### B-2.5 Ã¢ÂÂ Was der PaketprÃÂ¼fer findet
+### B-2.5 — Was der Paketprüfer findet
 
-`tools/paket-pruefen.ps1` liest von jeder EXE/DLL/OCX den PE-Kopf selbst Ã¢ÂÂ kein
-`dumpbin` nÃÂ¶tig, damit es auch auf einer Maschine ohne Visual Studio lÃÂ¤uft. Es
-prÃÂ¼ft Architektur, lÃÂ¶st Import- **und** VerzÃÂ¶gerungstabelle auf, sucht die vier
+`tools/paket-pruefen.ps1` liest von jeder EXE/DLL/OCX den PE-Kopf selbst — kein
+`dumpbin` nötig, damit es auch auf einer Maschine ohne Visual Studio läuft. Es
+prüft Architektur, löst Import- **und** Verzögerungstabelle auf, sucht die vier
 VS2022-Debug-Laufzeiten und eine `Eudora.ini` als Vorlage. **Es startet
 nichts.**
 
@@ -3972,11 +3972,11 @@ nichts.**
 |---|---|---|
 | Fehler | 3 | **0** |
 | Warnungen | 5 | 7 |
-| BinÃÂ¤rdateien, alle x86 | 31 | 29 |
+| Binärdateien, alle x86 | 31 | 29 |
 
 Die drei Fehler in 1.0.2 waren `MFC71.DLL`, `MFC71D.DLL`, `MSVCP71.dll`.
 `MFC71D.DLL` ist in 1.0.3 verschwunden (Release-Plugins); die beiden anderen
-sind Warnungen geworden, seit der PrÃÂ¼fer die Startkette kennt (B-2.2).
+sind Warnungen geworden, seit der Prüfer die Startkette kennt (B-2.2).
 
 **Der eigentliche Zweck ist aber ein anderer Fund.** Beide Pakete bekommen
 vier Warnungen der Form
@@ -3986,33 +3986,33 @@ vier Warnungen der Form
     scheitert der Start.
 
 Genau daran ist Gregor am Morgen des 31.08.2026 gescheitert: `0xc000007b`. Der
-PrÃÂ¼fer hÃÂ¤tte das vor der Auslieferung gesagt, und die ArchitekturprÃÂ¼fung hÃÂ¤tte
-auch den zweiten Teil gefunden Ã¢ÂÂ die ersatzweise geholten Dateien waren
+Prüfer hätte das vor der Auslieferung gesagt, und die Architekturprüfung hätte
+auch den zweiten Teil gefunden — die ersatzweise geholten Dateien waren
 64 Bit.
 
-### B-2.6 Ã¢ÂÂ Was ich NICHT getan habe
+### B-2.6 — Was ich NICHT getan habe
 
 - Kein Eudora gestartet, kein Programm mit Fenstern, kein
-  `OutputDebugString`-MithÃÂ¶rer. `paket-pruefen.ps1` und `paket-bauen.ps1`
+  `OutputDebugString`-Mithörer. `paket-pruefen.ps1` und `paket-bauen.ps1`
   lesen und kopieren Dateien, mehr nicht.
-- Nichts verÃÂ¶ffentlicht. Kein ZIP im Repository, keine PrÃÂ¼fsumme in
-  `PAKETE.md` Ã¢ÂÂ beides entsteht erst, wenn Gregor es will.
+- Nichts veröffentlicht. Kein ZIP im Repository, keine Prüfsumme in
+  `PAKETE.md` — beides entsteht erst, wenn Gregor es will.
 - `Eudora71/VC71Bruecke/BEFUND.md` nicht angefasst (falsche GUID in
-  Abschnitt 6, siehe B-2.1) Ã¢ÂÂ es ist der Bericht meines Vorlaufs; die
+  Abschnitt 6, siehe B-2.1) — es ist der Bericht meines Vorlaufs; die
   Richtigstellung steht hier.
 
-## W-1 Ã¢ÂÂ Die Werkzeuge in Ordnung gebracht (WERKZEUG, 31.08.2026)
+## W-1 — Die Werkzeuge in Ordnung gebracht (WERKZEUG, 31.08.2026)
 
 Abgearbeitet werden die Befunde PR-1 bis PR-8 aus `PRUEFBERICHT.md`. Jede
 Aussage unten ist gemessen; die Gegenproben laufen als Testsammlung mit.
 
 | Befund | Gegenstand | Stand |
 |---|---|---|
-| PR-1 | Schranke laesst LF Ã¢ÂÂ CRLF durch | **behoben** |
+| PR-1 | Schranke laesst LF → CRLF durch | **behoben** |
 | PR-2 | Schranke schlaegt bei Leerzeilen grundlos an | **behoben** |
 | PR-3 | `.def`/`.sln`/`.bat`/`.ps1` gar nicht geprueft | **behoben** |
-| PR-4 | `BuildKennung.h` verfolgt Ã¢ÂÂ fremde Kennung | **behoben** |
-| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | **behoben** (31.08. abends, `765c39b` Ã¢ÂÂ die frÃÂ¼here Angabe Ã¢ÂÂoffen" war ÃÂ¼berholt) |
+| PR-4 | `BuildKennung.h` verfolgt → fremde Kennung | **behoben** |
+| PR-5 | Zeitstempel ist nicht der Bauzeitpunkt | **behoben** (31.08. abends, `765c39b` — die frühere Angabe „offen" war überholt) |
 | PR-6 | `_T(EUDORA_BAU_KENNUNG)` bricht im Unicode-Bau | **behoben** |
 | PR-7 | Zahlen in S-7 widersprechen sich | **behoben** |
 | PR-8 | `rekursion-suchen.pl` findet den eigenen Anlass nicht | **geloescht** |
@@ -4020,7 +4020,7 @@ Aussage unten ist gemessen; die Gegenproben laufen als Testsammlung mit.
 ### Das Wichtigste: `tools/pruefe-bytes-tests.pl`
 
 Die Schranke war am 30.08.2026 schon einmal "repariert" worden und danach
-falsch. Beides Ã¢ÂÂ der Fehlalarm und das Loch Ã¢ÂÂ waere bei einem einzigen
+falsch. Beides — der Fehlalarm und das Loch — waere bei einem einzigen
 Testlauf aufgefallen. Es gab nur keinen.
 
 Jetzt gibt es einen. 23 Faelle, jeder in einem eigenen Wegwerf-Repo unter dem
@@ -4038,12 +4038,12 @@ damit PR-1, PR-2 und PR-3 aus eigener Kraft:
 | rot | Fall | was die alte Schranke tat |
 |---|---|---|
 | d | Leerzeile CRLF weg, Leerzeile LF dazu | brach den Commit ab, Beispiel `""` |
-| h1 | Umwandlung LF Ã¢ÂÂ CRLF plus Inhalt | liess durch, Rueckgabe 0 |
-| j1 | `.def` komplett CRLF Ã¢ÂÂ LF | liess durch |
-| j2 | `.sln` komplett CRLF Ã¢ÂÂ LF | liess durch |
-| j3 | `.bat` komplett CRLF Ã¢ÂÂ LF | liess durch |
-| j4 | `.ps1` komplett LF Ã¢ÂÂ CRLF | liess durch |
-| j5 | `.pl` komplett CRLF Ã¢ÂÂ LF | liess durch |
+| h1 | Umwandlung LF → CRLF plus Inhalt | liess durch, Rueckgabe 0 |
+| j1 | `.def` komplett CRLF → LF | liess durch |
+| j2 | `.sln` komplett CRLF → LF | liess durch |
+| j3 | `.bat` komplett CRLF → LF | liess durch |
+| j4 | `.ps1` komplett LF → CRLF | liess durch |
+| j5 | `.pl` komplett CRLF → LF | liess durch |
 
 **Gegen den heutigen Stand: 23 gruen, 0 rot.** Alle 23 Faelle im Einzelnen:
 
@@ -4055,11 +4055,11 @@ damit PR-1, PR-2 und PR-3 aus eigener Kraft:
 | c2 | Zeilen geloescht (gemischte Datei, 655 Zeilen) | durchlassen |
 | d | Leerzeile CRLF weg, Leerzeile LF dazu | durchlassen |
 | d2 | haeufige Zeilen (`{`, `}`, leer) verschoben | durchlassen |
-| e | Datei komplett CRLF Ã¢ÂÂ LF | anschlagen |
-| f | Datei komplett LF Ã¢ÂÂ CRLF | anschlagen |
-| g | gemischte Datei, 18 CRLF Ã¢ÂÂ LF unter 655 Zeilen | anschlagen |
-| h1 | Umwandlung LF Ã¢ÂÂ CRLF plus Inhaltsaenderung | anschlagen |
-| h2 | Umwandlung CRLF Ã¢ÂÂ LF plus Inhaltsaenderung | anschlagen |
+| e | Datei komplett CRLF → LF | anschlagen |
+| f | Datei komplett LF → CRLF | anschlagen |
+| g | gemischte Datei, 18 CRLF → LF unter 655 Zeilen | anschlagen |
+| h1 | Umwandlung LF → CRLF plus Inhaltsaenderung | anschlagen |
+| h2 | Umwandlung CRLF → LF plus Inhaltsaenderung | anschlagen |
 | h3 | Umwandlung plus hinzugefuegte Zeilen (ungleiche Anzahl) | anschlagen |
 | i | nur Inhalt geaendert, Zeilenenden gleich | durchlassen |
 | j1..j5 | `.def` `.sln` `.bat` `.ps1` `.pl` komplett umgeschrieben | anschlagen |
@@ -4080,8 +4080,8 @@ oft mit LF vorkommt, und meldete jeden Inhalt, der seine CRLF-Vorkommen
 verloren hatte. Daraus folgen beide Befunde zwangslaeufig:
 
   * Die Abfrage war einseitig formuliert (`[0] > 0` in HEAD, `[0] == 0` im
-    Index), also fiel LF Ã¢ÂÂ CRLF heraus. Das ist unter Windows die
-    **wahrscheinlichere** Schadensrichtung Ã¢ÂÂ Editoren, `Set-Content`,
+    Index), also fiel LF → CRLF heraus. Das ist unter Windows die
+    **wahrscheinlichere** Schadensrichtung — Editoren, `Set-Content`,
     `Out-File` schreiben CRLF.
   * Der Zeileninhalt taugt nicht als Schluessel. `""`, `{`, `}` und ein
     blosser Tabulator kommen in einer Datei hundertfach vor, mit beiden Enden.
@@ -4089,8 +4089,8 @@ verloren hatte. Daraus folgen beide Befunde zwangslaeufig:
     CRLF-Leerzeile plus eine ergaenzte LF-Leerzeile war deshalb von einer
     Umwandlung nicht zu unterscheiden.
 
-Die naheliegende Behebung Ã¢ÂÂ Leerzeilen ueberspringen, Zeilen mit beiden Enden
-ueberspringen Ã¢ÂÂ waere Symptombehandlung gewesen: sie haette den Fehlalarm bei
+Die naheliegende Behebung — Leerzeilen ueberspringen, Zeilen mit beiden Enden
+ueberspringen — waere Symptombehandlung gewesen: sie haette den Fehlalarm bei
 `""` beseitigt und ihn bei `\tif (nRet)` oder jeder anderen mehrfach
 vorkommenden Zeile stehen gelassen.
 
@@ -4104,14 +4104,14 @@ eigentlichen Unterschied aus:
 Eine umgewandelte Zeile erscheint darin als Paar aus einer entfernten und einer
 hinzugefuegten Zeile **im selben Block**, deren Inhalt gleich und deren
 Zeilenende verschieden ist. Eine reine Ergaenzung erzeugt einen Block ohne
-entfernte Zeilen, eine reine Loeschung einen ohne hinzugefuegte Ã¢ÂÂ dort entsteht
+entfernte Zeilen, eine reine Loeschung einen ohne hinzugefuegte — dort entsteht
 gar kein Paar. Damit ist die Zuordnung **ortsgebunden statt inhaltsgebunden**,
 und der Leerzeilen-Fehlalarm kann strukturell nicht mehr auftreten: die
 geloeschte und die ergaenzte Leerzeile stehen an verschiedenen Stellen und
 landen in verschiedenen Bloecken (Fall `d`, gemessen).
 
 Innerhalb eines Blocks werden entfernte und hinzugefuegte Zeilen der Reihe nach
-gepaart. Bei gleicher Anzahl Ã¢ÂÂ dem Normalfall einer Umwandlung Ã¢ÂÂ passt das
+gepaart. Bei gleicher Anzahl — dem Normalfall einer Umwandlung — passt das
 genau. Bei ungleicher Anzahl (Umwandlung UND ergaenzte Zeilen, Fall `h3`) fuehrt
 eine Vorausschau von 30 Zeilen die Paare nach.
 
@@ -4119,12 +4119,12 @@ eine Vorausschau von 30 Zeilen die Paare nach.
 Vergleich ausnehmen): sie verschiebt die Grenze nur. Jede Schwelle "ab wie oft
 ist eine Zeile haeufig" waere geraten, und ausgerechnet in den langen,
 gleichfoermigen Ressourcendateien dieses Projekts sind die meisten Zeilen
-haeufig Ã¢ÂÂ dort wuerde der Waechter dann blind. Der Diff kennt die Antwort
+haeufig — dort wuerde der Waechter dann blind. Der Diff kennt die Antwort
 ohnehin schon.
 
 Regel 1 (Inhalt gleich, Bytes verschieden) bleibt unveraendert daneben stehen.
 Sie arbeitet auf den rohen Blobs und ist damit unabhaengig davon, wie git den
-Unterschied darstellt Ã¢ÂÂ eine zweite, einfachere Sicherung fuer den haeufigsten
+Unterschied darstellt — eine zweite, einfachere Sicherung fuer den haeufigsten
 Fall.
 
 ### PR-3: eine Liste statt zwei
@@ -4175,7 +4175,7 @@ der Kennung eines fremden Baus.
 und `mainfrm.cpp:9715` benutzt sie ohne `_T(...)` (byte-erhaltend geaendert mit
 `tools/aendere-zeile.pl`, CR-Zahl 18 unveraendert). Damit stimmt es im
 MBCS-Bau wie im Unicode-Bau: `__T(x)` ist dort `L##x`, und `##` haette die
-Erweiterung des Makros unterbunden Ã¢ÂÂ aus `_T(EUDORA_BAU_KENNUNG)` waere der
+Erweiterung des Makros unterbunden — aus `_T(EUDORA_BAU_KENNUNG)` waere der
 Bezeichner `LEUDORA_BAU_KENNUNG` geworden.
 
 **Uebersetzt** (31.08.2026, Debug|Win32, eigener Worktree):
@@ -4183,15 +4183,15 @@ Bezeichner `LEUDORA_BAU_KENNUNG` geworden.
     MSBuild.exe Eudora71\Eudora\Eudora.vcxproj /p:Configuration=Debug
                 /p:Platform=Win32 /p:BuildProjectReferences=false /m /v:minimal
 
-Alle Quelldateien uebersetzen fehlerfrei, `mainfrm.cpp` eingeschlossen Ã¢ÂÂ die
+Alle Quelldateien uebersetzen fehlerfrei, `mainfrm.cpp` eingeschlossen — die
 neue `BuildKennung.h` mit `_T("...")` und `#include <tchar.h>` traegt also. Der
 Lauf endet in `LNK1104: imap.lib kann nicht geoeffnet werden`: der Worktree ist
 frisch und `/p:BuildProjectReferences=false` baut die abhaengigen Projekte
 nicht mit. Das hat mit diesen Aenderungen nichts zu tun. **Nicht gemessen**
-wurde damit ein vollstaendiger Binaerbau Ã¢ÂÂ nur die Uebersetzung.
+wurde damit ein vollstaendiger Binaerbau — nur die Uebersetzung.
 
-Der Rueckfallzweig des PreBuildEvent ist getrennt geprueft: Datei fehlt Ã¢ÂÂ
-Vorlage wird kopiert; Datei schon gleich der Vorlage Ã¢ÂÂ Zeitstempel bleibt
+Der Rueckfallzweig des PreBuildEvent ist getrennt geprueft: Datei fehlt →
+Vorlage wird kopiert; Datei schon gleich der Vorlage → Zeitstempel bleibt
 unveraendert, es entsteht also keine Neuuebersetzung.
 
 ### PR-7: es gilt 4616 von 5563
@@ -4202,13 +4202,13 @@ Werkzeugkopf stammten aus einem Durchlauf mit kuerzerer Endungsliste und sind
 ersatzlos weg.
 
 Die **4616** ist eine einmalige Messung des damaligen Arbeitsbaums und laesst
-sich nicht wiederholen Ã¢ÂÂ der Baum ist angeglichen. Die Grundgesamtheit dagegen
+sich nicht wiederholen — der Baum ist angeglichen. Die Grundgesamtheit dagegen
 ist keine feste Zahl: sie waechst mit jedem Commit und haengt an der
 Endungsliste (5563 / 5568 / 5589 alte Liste, 6385 neue). Statt einer Zahl steht
 in S-7 jetzt eine Tabelle mit Datum und Liste, dazu der Befehl zum Nachzaehlen.
 
 Nebenbei berichtigt: das Beispiel in S-7 war vertauscht beschriftet. Heute
-nachgemessen Ã¢ÂÂ Blob `8c4fb68a` hat 5716 Bytes, 0 CR, 65 LF; der Index trug
+nachgemessen — Blob `8c4fb68a` hat 5716 Bytes, 0 CR, 65 LF; der Index trug
 daneben 5781, die Groesse der CRLF-Arbeitskopie. 5716 + 65 CR = 5781.
 
 ### PR-8: `rekursion-suchen.pl` geloescht
@@ -4233,31 +4233,31 @@ davor. Eine Kante zwischen zwei Klassen kann also gar nicht entstehen.
 **Warum ein Werkzeug, das nur Fehlalarme liefert, schlimmer ist als keines.**
 Ein fehlendes Werkzeug kostet die Zeit, die man ohne es braucht. Ein Werkzeug,
 das nur Fehlalarme liefert, kostet dieselbe Zeit **plus** die Zeit, jeden
-Fehlalarm von Hand zu widerlegen Ã¢ÂÂ und es kostet Vertrauen: nach dem dritten
+Fehlalarm von Hand zu widerlegen — und es kostet Vertrauen: nach dem dritten
 Fehlalarm liest niemand mehr seine Ausgabe, auch nicht die eine richtige
 Meldung darin. Dazu kommt der teuerste Posten: wer eine Zyklensuche laufen
-laesst und "0 Zyklen" liest, glaubt, geprueft zu haben. Hier war das falsch Ã¢ÂÂ
+laesst und "0 Zyklen" liest, glaubt, geprueft zu haben. Hier war das falsch —
 den Zyklus aus S-2 hat `stapel-untersuchen.ps1` gefunden, nicht dieses
 Werkzeug. Eine Zusicherung, die nicht traegt, ist schaedlicher als gar keine.
 Dieselbe Ueberlegung gilt fuer die Schranke oben; deshalb die Testsammlung.
 
-### PR-5 Ã¢ÂÂ behoben am 31.08.2026 abends (Commit `765c39b`)
+### PR-5 — behoben am 31.08.2026 abends (Commit `765c39b`)
 
-> **Berichtigung vom 05.09.2026.** Diese ÃÂberschrift lautete bis dahin
-> *Ã¢ÂÂPR-5 bleibt offen"*, und an drei Stellen im Repo stand PR-5 auf Ã¢ÂÂoffen",
+> **Berichtigung vom 05.09.2026.** Diese Überschrift lautete bis dahin
+> *„PR-5 bleibt offen"*, und an drei Stellen im Repo stand PR-5 auf „offen",
 > obwohl es bereits behoben war. Der alte Wortlaut ist berichtigt, der Befund
 > selbst bleibt stehen.
 
 Der Zeitstempel in der Bau-Kennung ist **nicht** der Bauzeitpunkt, sondern der
-Zeitpunkt, zu dem sich Commit oder Sauberkeit zuletzt geÃÂ¤ndert haben: die Datei
-`BuildKennung.h` wird nur neu geschrieben, wenn sich etwas **auÃÂer** dem
-Zeitstempel geÃÂ¤ndert hat Ã¢ÂÂ sonst ÃÂ¼bersetzt jeder Bau alles neu. Baut man zehnmal
+Zeitpunkt, zu dem sich Commit oder Sauberkeit zuletzt geändert haben: die Datei
+`BuildKennung.h` wird nur neu geschrieben, wenn sich etwas **außer** dem
+Zeitstempel geändert hat — sonst übersetzt jeder Bau alles neu. Baut man zehnmal
 ohne zu committen, zeigen alle zehn Bauten dieselbe Uhrzeit.
 
-**Das Verhalten ist richtig gewÃÂ¤hlt; nur die Beschreibung war falsch.** Sie
-sagte Ã¢ÂÂdem Zeitpunkt des Baus".
+**Das Verhalten ist richtig gewählt; nur die Beschreibung war falsch.** Sie
+sagte „dem Zeitpunkt des Baus".
 
-Berichtigt an drei Stellen in `tools/kennung-erzeugen.pl` Ã¢ÂÂ im Kopfkommentar, in
+Berichtigt an drei Stellen in `tools/kennung-erzeugen.pl` — im Kopfkommentar, in
 der erzeugten `BuildKennung.h` und an der Codestelle, an der der Unterschied
 entsteht. Nachzulesen:
 
@@ -4265,13 +4265,13 @@ entsteht. Nachzulesen:
 grep -n 'Zeitpunkt' tools/kennung-erzeugen.pl
 ```
 
-**Damit ist PR-1 bis PR-8 vollstÃÂ¤ndig abgearbeitet.**
+**Damit ist PR-1 bis PR-8 vollständig abgearbeitet.**
 Frist naeher war als der Nutzen.
 
 ### Nebenbefund: `sed` verschweigt CR
 
 Beim Umbau des PreBuildEvent hat `sed -n '114,124p' | cat -A` die Zeilen ohne
-`^M` angezeigt, obwohl sie CRLF haben Ã¢ÂÂ das cygwin-`sed` in dieser Umgebung
+`^M` angezeigt, obwohl sie CRLF haben — das cygwin-`sed` in dieser Umgebung
 liest im Textmodus und wirft CR weg. Wer Zeilenenden ansehen will, darf `sed`
 dafuer **nicht** benutzen; verlaesslich ist nur ein direkter Rohvergleich:
 
@@ -4279,27 +4279,27 @@ dafuer **nicht** benutzen; verlaesslich ist nur ein direkter Rohvergleich:
              $cr=()=$d=~/\r/g;$lf=()=$d=~/\n/g;print "CR=$cr LF=$lf\n"' <datei>
 
 Gemerkt hat es `tools/ersetze-bereich.pl`, das die CR-Zahl vorher und nachher
-ausgibt: 1064 Ã¢ÂÂ 1062, obwohl der Block angeblich CR-frei war. Ohne diese
+ausgibt: 1064 → 1062, obwohl der Block angeblich CR-frei war. Ohne diese
 Ausgabe waere der Schaden in den Commit gelaufen und die Schranke haette ihn
 erst dort gemeldet.
 
 
-## F-1 Ã¢ÂÂ Der Release-Bau und die Frage nach dem statischen Binden (FREIGABE, 31.08.2026)
+## F-1 — Der Release-Bau und die Frage nach dem statischen Binden (FREIGABE, 31.08.2026)
 
-Auftrag war Kriterium 0 aus `ZIEL.md`: Ã¢ÂÂzip runterladen, entpacken, starten -
+Auftrag war Kriterium 0 aus `ZIEL.md`: „zip runterladen, entpacken, starten -
 laeuft". Der Weg dorthin sollte moeglichst das statische Binden sein.
 
 **Kurzfassung: statisch geht nicht, und der Grund ist keine Einstellung,
 sondern die Bauart des Programms.** Was geht, ist der dynamische Release-Bau,
-und der erfuellt Kriterium 0 ebenfalls Ã¢ÂÂ mit drei DLLs, die Microsoft
+und der erfuellt Kriterium 0 ebenfalls — mit drei DLLs, die Microsoft
 ausdruecklich zum Weiterverteilen freigibt.
 
 Alle Zahlen unten sind gemessen; wo nicht, steht **UNGEPRUEFT** davor.
 
-### F-1.1 Ã¢ÂÂ Statisches MFC ist ausgeschlossen: sechs MFC-Erweiterungs-DLLs
+### F-1.1 — Statisches MFC ist ausgeschlossen: sechs MFC-Erweiterungs-DLLs
 
 Eudora ist nicht ein Programm, sondern ein Programm mit sechs
-**MFC-Erweiterungs-DLLs**. Der Nachweis steht im Quelltext Ã¢ÂÂ jede von ihnen
+**MFC-Erweiterungs-DLLs**. Der Nachweis steht im Quelltext — jede von ihnen
 ruft `AfxInitExtensionModule` auf:
 
 | Modul | Fundstelle |
@@ -4317,7 +4317,7 @@ Dieselben Projekte setzen `_AFXEXT` in ihren Praeprozessordefinitionen
 `QCUtils/QCUtils.vcxproj:62`, jeweils der Release-Zweig).
 
 `AfxInitExtensionModule`, `CDynLinkLibrary` und `AFX_EXTENSION_MODULE` gibt es
-in MFC **nur**, wenn `_AFXDLL` gesetzt ist Ã¢ÂÂ also nur beim gemeinsam genutzten
+in MFC **nur**, wenn `_AFXDLL` gesetzt ist — also nur beim gemeinsam genutzten
 MFC. Eine Erweiterungs-DLL ist ihrem Wesen nach ein Modul, das sich in die
 MFC-Modulliste des Hauptprogramms einhaengt; dazu muss es dieselbe
 MFC-Instanz benutzen. Mit `<UseOfMfc>Static</UseOfMfc>` haette jede dieser
@@ -4325,14 +4325,14 @@ sechs DLLs ihre eigene MFC-Kopie, ihren eigenen Heap und ihre eigene
 Ressourcenkette.
 
 **Statisches MFC waere also nicht eine Umstellung von zwei Einstellungen,
-sondern der Umbau von sechs DLLs zu statischen Bibliotheken** Ã¢ÂÂ mit allem, was
+sondern der Umbau von sechs DLLs zu statischen Bibliotheken** — mit allem, was
 daran haengt: `EudoraRes.dll` und `EudoraOldIcons.dll` sind reine
 Ressourcen-DLLs, die zur Laufzeit ueber `CDynLinkLibrary` gesucht werden;
 `Imap.dll`, `QCSocket.dll` und `QCUtils.dll` werden ausserdem von
 `EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` und den Importern benutzt.
 Das ist kein Handgriff, das ist ein eigenes Vorhaben.
 
-### F-1.2 Ã¢ÂÂ Auch nur `/MT` allein geht nicht
+### F-1.2 — Auch nur `/MT` allein geht nicht
 
 Statische C-Laufzeit (`/MT`) bei weiterhin dynamischem MFC ist nicht
 vorgesehen: `mfc140.dll` ist selbst gegen `/MD` gebaut und gibt CRT-Objekte
@@ -4343,33 +4343,33 @@ Zusaetzlich gemessen, `dumpbin /directives` gegen `Eudora71/Lib/Release`:
 
 | Bibliothek | CRT-Direktive |
 |---|---|
-| `zlib.lib` | `-defaultlib:MSVCRT` Ã¢ÂÂ gegen die **dynamische** Laufzeit gebaut |
-| `libpng.lib` | `-defaultlib:MSVCRT` Ã¢ÂÂ dito |
+| `zlib.lib` | `-defaultlib:MSVCRT` — gegen die **dynamische** Laufzeit gebaut |
+| `libpng.lib` | `-defaultlib:MSVCRT` — dito |
 | `Paige32.lib` | keine (Importbibliothek, neutral) |
 | `EuMemMgr.lib` | keine (Importbibliothek, neutral) |
 | `Uuid.Lib` | keine (neutral) |
 | `SSCEWD32.LIB` | keine (Importbibliothek, neutral) |
 
 `zlib.lib` und `libpng.lib` waeren bei `/MT` also die naechste Huerde
-(`LNK4098`, dann `LNK2005`) Ã¢ÂÂ sie liegen nur als Binaerdatei vor, ein Neubau
+(`LNK4098`, dann `LNK2005`) — sie liegen nur als Binaerdatei vor, ein Neubau
 mit `/MT` ist ohne ihren Quelltext nicht moeglich.
 
-### F-1.3 Ã¢ÂÂ Was stattdessen liefert: der dynamische Release-Bau
+### F-1.3 — Was stattdessen liefert: der dynamische Release-Bau
 
 Er erfuellt Kriterium 0 genauso, nur mit drei Dateien mehr im ZIP:
 
 | | Debug (Paket 1.0.2/1.0.3) | Release, dynamisch |
 |---|---|---|
 | noetige Laufzeit-DLLs | `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`, `ucrtbased.dll` | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` |
-| weiterverteilbar? | **nein** Ã¢ÂÂ `debug_nonredist`, kein Redistributable | **ja** Ã¢ÂÂ Teil des Visual-C++-Redistributable, duerfen beiliegen |
+| weiterverteilbar? | **nein** — `debug_nonredist`, kein Redistributable | **ja** — Teil des Visual-C++-Redistributable, duerfen beiliegen |
 | `ucrtbase.dll` | Debug-Fassung noetig | liegt Windows 10 bei, nichts zu tun |
-| SUPERASSERT beim Start (S-3b) | ja | **nein** Ã¢ÂÂ `NDEBUG`, keine Debug-Zusicherungen |
+| SUPERASSERT beim Start (S-3b) | ja | **nein** — `NDEBUG`, keine Debug-Zusicherungen |
 
 Der zweite Gewinn ist der, den der Auftrag nebenbei nennt: im Release-Bau
 verschwinden die SUPERASSERT-Dialoge aus S-3b und saemtliche `ASSERT`- und
 `VERIFY`-Pruefungen. Das Programm startet ohne Zwischenfrage durch.
 
-### F-1.4 Ã¢ÂÂ Warum der Release-Zweig nie gebunden hat: ein Buchstabe
+### F-1.4 — Warum der Release-Zweig nie gebunden hat: ein Buchstabe
 
 Der eigentliche Fund. `Eudora71/Eudora/Eudora.vcxproj:147`, Release-Zweig:
 
@@ -4382,14 +4382,14 @@ Ergebnis seit jeher:
 
     LINK : fatal error LNK1104: Datei "ota50r.lib" kann nicht geoeffnet werden.
 
-`OTA50R.LIB` laesst sich nicht bauen Ã¢ÂÂ `NMAKE /f build50.mak ota50r` bricht mit
+`OTA50R.LIB` laesst sich nicht bauen — `NMAKE /f build50.mak ota50r` bricht mit
 `U1073` ab, weil `OT501/Src/utility/crypt/Blackbox.cpp` in der Freigabe von
 2006 fehlt. Gebraucht wird sie auch nicht: die vier Funktionen daraus liefert
 `Eudora71/OTShim/OTShim_Spur.cpp` seit B-1, und die stehen ohnehin unter
 `_DEBUG`.
 
 **Woher die Anforderung kommt, war der Umweg.** Sie steht **nicht** in
-`AdditionalDependencies` und **nicht** auf der Linker-Befehlszeile Ã¢ÂÂ im
+`AdditionalDependencies` und **nicht** auf der Linker-Befehlszeile — im
 Diagnoseprotokoll von MSBuild taucht `ota50r.lib` an keiner Stelle auf. Sie
 kommt als Standardbibliotheks-Direktive aus den Objektdateien von
 `AccountWizard` und `DirectoryServicesUI` (gemessen: Volltextsuche ueber alle
@@ -4399,16 +4399,16 @@ hilft nur `IgnoreSpecificDefaultLibraries`, und deshalb hat das Suchen in
 
 **Behoben:** `OTA50R.LIB` in `Eudora.vcxproj:147` ergaenzt. Eine Zeile.
 
-### F-1.5 Ã¢ÂÂ Der zweite Stolperstein: MakeDox.pl im Nachbereitungsschritt
+### F-1.5 — Der zweite Stolperstein: MakeDox.pl im Nachbereitungsschritt
 
-Danach band `Eudora.exe` durch Ã¢ÂÂ und der Bau endete trotzdem mit Fehler:
+Danach band `Eudora.exe` durch — und der Bau endete trotzdem mit Fehler:
 
     error MSB3073: Der Befehl "... MakeDox.pl Eudora.sln DevDox ..."
     wurde mit dem Code 9009 beendet.
 
 `Eudora.vcxproj:161-166` liess im Release-Zweig nach dem Binden
-`MakeDox.pl Eudora.sln DevDox` laufen Ã¢ÂÂ die Doxygen-Entwicklerdoku von 2006.
-Das Werkzeug ist nicht auf dem Pfad, 9009 heisst Ã¢ÂÂBefehl nicht gefunden". Der
+`MakeDox.pl Eudora.sln DevDox` laufen — die Doxygen-Entwicklerdoku von 2006.
+Das Werkzeug ist nicht auf dem Pfad, 9009 heisst „Befehl nicht gefunden". Der
 **Debug**-Zweig hat gar keinen Nachbereitungsschritt.
 
 Die zwei Doku-Zeilen entfernt. `call ..\BinTools\PostProcessRel Eudora` bleibt
@@ -4420,21 +4420,21 @@ auf und laeuft durch.
 Fremd-DLLs von 2006, die im Repository liegen. Nach einem Release-Bau meldet
 `git status` sie deshalb als geaendert. Sie gehoeren **nicht** in einen Commit.
 
-### F-1.6 Ã¢ÂÂ Gemessen: was uebrig bleibt
+### F-1.6 — Gemessen: was uebrig bleibt
 
 `Eudora71/Bin/Release/Eudora.exe`, 2.933.760 B. `dumpbin /dependents`:
 
 | Art | Eintraege |
 |---|---|
 | eigene Module | `Paige32.dll`, `Imap.dll`, `QCUtils.dll`, `EuMemMgr.dll`, `EuLang.dll`, `LIBEXPAT.dll`, `plstclnt.dll`, `QCSocket.dll` |
-| **Laufzeit von Visual C++** | **`mfc140.dll`, `MSVCP140.dll`, `VCRUNTIME140.dll`** Ã¢ÂÂ alle drei verteilbar |
-| UCRT | zwoelf `api-ms-win-crt-*` Ã¢ÂÂ Bestandteil von Windows 10, nichts beizulegen |
+| **Laufzeit von Visual C++** | **`mfc140.dll`, `MSVCP140.dll`, `VCRUNTIME140.dll`** — alle drei verteilbar |
+| UCRT | zwoelf `api-ms-win-crt-*` — Bestandteil von Windows 10, nichts beizulegen |
 | Windows | `KERNEL32`, `USER32`, `GDI32`, `COMDLG32`, `ADVAPI32`, `SHELL32`, `COMCTL32`, `ole32`, `OLEAUT32`, `urlmon`, `VERSION`, `WININET`, `MSVFW32`, `WINMM`, `gdiplus` |
 
 Kein `ucrtbased.dll`, kein `d`-Anhang. Genau die drei Dateien, an denen Gregor
-am Morgen gescheitert ist, sind weg Ã¢ÂÂ und ihre drei Nachfolger duerfen ins ZIP.
+am Morgen gescheitert ist, sind weg — und ihre drei Nachfolger duerfen ins ZIP.
 
-### F-1.7 Ã¢ÂÂ `tools/paket-bauen.ps1` kann jetzt Release
+### F-1.7 — `tools/paket-bauen.ps1` kann jetzt Release
 
 Neuer Schalter `-Bauart Debug|Release` (Vorgabe `Debug`, also keine Aenderung
 fuer bestehende Aufrufe). Bei `Release`:
@@ -4442,13 +4442,13 @@ fuer bestehende Aufrufe). Bei `Release`:
 - `-AusBauverzeichnis` nimmt aus `Eudora71\Bin\Release` statt `Bin\Debug`
 - `Paige32.dll` kommt **unter beiden Namen** ins Paket. Der Debug-Bau
   importiert `Paige32d.dll` (`Eudora.vcxproj:94`), der Release-Bau
-  `Paige32.dll` (`:144`) Ã¢ÂÂ das war der eine Fehler, den der Paketpruefer im
+  `Paige32.dll` (`:144`) — das war der eine Fehler, den der Paketpruefer im
   ersten Anlauf gemeldet hat.
 - die drei verteilbaren Laufzeit-DLLs kommen aus dem VC-Redistributable der
   oertlichen Visual-Studio-Installation ins Paket, ueber `vswhere`
-- `laufzeit-holen.ps1` faellt weg Ã¢ÂÂ es wird nichts mehr nachgeholt
+- `laufzeit-holen.ps1` faellt weg — es wird nichts mehr nachgeholt
 
-### F-1.8 Ã¢ÂÂ Was der Paketpruefer sagt
+### F-1.8 — Was der Paketpruefer sagt
 
     powershell -File tools\paket-bauen.ps1 -Ziel <verz> -Bauart Release -AusBauverzeichnis
     powershell -File tools\paket-pruefen.ps1 -Paket <verz>
@@ -4462,7 +4462,7 @@ ohne Start es belegen kann.
 
 Von den sieben Warnungen sind **vier falsch**: der Pruefer sucht in Abschnitt 3
 fest nach `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
-`ucrtbased.dll` und warnt, wenn sie fehlen Ã¢ÂÂ auch dann, wenn keine einzige
+`ucrtbased.dll` und warnt, wenn sie fehlen — auch dann, wenn keine einzige
 Datei im Paket sie importiert. Fuer ein Release-Paket ist das Unsinn.
 Nachgemessen: keine der 32 Binaerdateien importiert eine der vier. Die drei
 uebrigen Warnungen (`EUMAPI.DLL`, `MFC71.DLL`, `MSVCP71.dll`) sind
@@ -4475,12 +4475,12 @@ unveraendert die aus B-2.5 und betreffen den Start nicht.
 | | |
 |---|---|
 | Release-Bau | **baut**, `MSBuild ... /p:Configuration=Release /p:Platform=Win32 /p:BuildProjectReferences=false` endet mit Exit 0 |
-| statisch gebunden | **nein, und zwar nicht in der verbleibenden Zeit nachholbar** Ã¢ÂÂ F-1.1, sechs MFC-Erweiterungs-DLLs |
-| uebrige Laufzeit-DLLs | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` Ã¢ÂÂ alle drei verteilbar, alle drei jetzt im Paket |
+| statisch gebunden | **nein, und zwar nicht in der verbleibenden Zeit nachholbar** — F-1.1, sechs MFC-Erweiterungs-DLLs |
+| uebrige Laufzeit-DLLs | `mfc140.dll`, `msvcp140.dll`, `vcruntime140.dll` — alle drei verteilbar, alle drei jetzt im Paket |
 | Paketpruefer | **null Fehler** |
 | SUPERASSERT beim Start (S-3b) | im Release-Bau weg, ebenso alle `ASSERT`/`VERIFY` |
 
-**Das Bauverfahren, das funktioniert** Ã¢ÂÂ die Reihenfolge ist noetig, weil ein
+**Das Bauverfahren, das funktioniert** — die Reihenfolge ist noetig, weil ein
 Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
 `OT501` scheitert:
 
@@ -4492,7 +4492,7 @@ Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
                  /p:BuildProjectReferences=false
 
 `/p:Platform=Win32` gilt fuer **Projektdateien**, `/p:Platform=x86` fuer die
-**Projektmappe** Ã¢ÂÂ sonst MSB4126 (Befund P-2).
+**Projektmappe** — sonst MSB4126 (Befund P-2).
 
 **Naechster Schritt, konkret.**
 
@@ -4501,14 +4501,14 @@ Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
    betreffende DLL wirklich importiert. Der Pruefer loest die Importtabellen
    ohnehin schon auf (B-2.5), die Angabe steht also bereits zur Verfuegung.
    Solange das nicht geschieht, meldet ein fehlerfreies Release-Paket vier
-   Warnungen, die keine sind Ã¢ÂÂ und wer sie ernst nimmt, holt sich mit
+   Warnungen, die keine sind — und wer sie ernst nimmt, holt sich mit
    `laufzeit-holen.ps1` genau die vier nicht verteilbaren DLLs zurueck.
 2. **`Eudora71/Eudora/Eudora.vcxproj:144`**: der Release-Zweig fuehrt
    `QCSocket.lib` **nicht** in `AdditionalDependencies`, der Debug-Zweig
-   (`:94`) sehr wohl. Gebunden hat es trotzdem Ã¢ÂÂ offenbar ueber eine
+   (`:94`) sehr wohl. Gebunden hat es trotzdem — offenbar ueber eine
    Standardbibliotheks-Direktive. **UNGEPRUEFT**, ob das Zufall ist; nachsehen
    und im Zweifel angleichen.
-3. **`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg (Ã¢ÂÂZUERST:
+3. **`Releases/1.0.3/LIESMICH.txt`** beschreibt noch den Debug-Weg („ZUERST:
    DIE VIER LAUFZEITEN HOLEN"). Fuer ein Release-Paket ist dieser ganze
    Abschnitt hinfaellig und irrefuehrend. Neu fassen, bevor ausgeliefert wird.
 4. **Nach jedem Release-Bau**: `git status` zeigt zwoelf geaenderte DLLs unter
@@ -4516,12 +4516,12 @@ Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
    (F-1.5), kein Bauergebnis. Nicht stagen.
 
 **Nicht getan:** kein Eudora gestartet, kein Programm mit Fenstern, kein
-`OutputDebugString`-Mithoerer. Nichts veroeffentlicht Ã¢ÂÂ kein ZIP im
+`OutputDebugString`-Mithoerer. Nichts veroeffentlicht — kein ZIP im
 Repository. Ob und wie das Release-Paket ausgeliefert wird, entscheidet Gregor.
 Der Bau der Kriterien 1 bis 3 ist von dieser Arbeit unberuehrt: das Fenster ist
 weiterhin nicht bedienbar (S-5, S-6, M-1).
 
-## PR-2 Ã¢ÂÂ Nachpruefung der Arbeit vom 31.08.2026 (PRUEFER, 31.08.2026)
+## PR-2 — Nachpruefung der Arbeit vom 31.08.2026 (PRUEFER, 31.08.2026)
 
 Grundlage: `darstellung-und-menue` bei 2cf569f. Kein Programm mit Oberflaeche
 gestartet, gebaut ausschliesslich in der PowerShell. FREIGABEs Release-Bau lag
@@ -4529,9 +4529,9 @@ nicht vor.
 
 ---
 
-### PR-2.0 Ã¢ÂÂ Der Paketpruefer leitet zum Lizenzverstoss an (hoch, OFFEN)
+### PR-2.0 — Der Paketpruefer leitet zum Lizenzverstoss an (hoch, OFFEN)
 
-Von FREIGABE gemeldet, hier bestaetigt und eingeordnet Ã¢ÂÂ der wichtigste
+Von FREIGABE gemeldet, hier bestaetigt und eingeordnet — der wichtigste
 Einzelpunkt an `tools/paket-pruefen.ps1`.
 
 **Fundstelle:** `tools/paket-pruefen.ps1:360` (feste Liste), `:363-364`,
@@ -4546,13 +4546,13 @@ Pruefer gibt dort also vier falsche Warnungen.
 `tools/laufzeit-holen.ps1` und holt sich genau die nicht verteilbaren
 Debug-DLLs ins Paket. Das Werkzeug leitet damit zu dem an, was es verhindern
 soll. `README.md:73-74` sagt ausdruecklich, diese vier duerfen nicht
-mitgeliefert werden Ã¢ÂÂ und `:363-364` bewertet ihr Vorhandensein trotzdem
+mitgeliefert werden — und `:363-364` bewertet ihr Vorhandensein trotzdem
 gruen (siehe auch PR-2.3, letzter Punkt: derselbe Widerspruch von der anderen
 Seite).
 
 **Richtig waere:** die noetigen Laufzeiten aus den IMPORTEN der Paketdateien
 ableiten statt aus einer festen Liste. Die Lesefunktion dafuer hat das Skript
-schon (`:138`, `:158`) und benutzt sie an anderer Stelle korrekt Ã¢ÂÂ bei einem
+schon (`:138`, `:158`) und benutzt sie an anderer Stelle korrekt — bei einem
 Debug-Paket kaemen dann die `d`-Fassungen heraus, bei einem Release-Paket
 `mfc140.dll` / `MSVCP140.dll` / `VCRUNTIME140.dll`, und im Release-Fall gar
 keine Warnung, weil die drei schon beiliegen.
@@ -4566,7 +4566,7 @@ Pruefmaschine.
 
 ---
 
-### PR-2.1 Ã¢ÂÂ Der Absturz kommt VOR der Behebung (hoch, behoben)
+### PR-2.1 — Der Absturz kommt VOR der Behebung (hoch, behoben)
 
 **Fundstelle:** `Eudora71/QCSocket/src/QCWorkerSocket.cpp:1944` (vor der
 Behebung).
@@ -4581,7 +4581,7 @@ Die Begruendung ist richtig. Sie trifft aber dreizehn Zeilen hoeher genauso zu:
     :1944   bool bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);
 
 `g_fnQCSSLBeginSession` wird in `:373` aus demselben ungeprueften Block
-gefuellt. Ist es NULL, stuerzt Eudora **hier** ab Ã¢ÂÂ die neue Pruefung in
+gefuellt. Ist es NULL, stuerzt Eudora **hier** ab — die neue Pruefung in
 `:1957` wird nie erreicht. Der abgesicherte Abrufpfad war damit gegen genau
 den Fall wirkungslos, fuer den er gebaut wurde.
 
@@ -4602,14 +4602,14 @@ die vorbestehenden C4996-Warnungen.
 **Bewusst NICHT angefasst:** `g_fnQCSSLWrite` (`:1164`) und `g_fnQCSSLRead`
 (`:1285`) sind ebenfalls ungeprueft. Beide sind nur ueber
 `m_pSSLReference->m_pSSL` erreichbar, und das bleibt NULL, wenn
-`QCSSLBeginSession` nicht lief Ã¢ÂÂ nach der Behebung also auch bei fehlendem
+`QCSSLBeginSession` nicht lief — nach der Behebung also auch bei fehlendem
 Zeiger. Ein `&& g_fnQCSSLWrite` in die Bedingung von `:1160` zu haengen waere
 schaedlich: dann fiele der Zweig auf den Klartextpfad zurueck und Eudora
 schickte Anmeldedaten unverschluesselt.
 
 **Was an der Behebung von heute frueh stimmt:** die vier gemeldeten Stellen
 sind wirklich zu (`:1958`, `:1978`, `:1999-2010`, `:2050-2056` in der heutigen
-Zaehlung), die neue Meldung verschluckt nichts Ã¢ÂÂ der `else`-Zweig in
+Zaehlung), die neue Meldung verschluckt nichts — der `else`-Zweig in
 `:1967-1974` haengt nur Text an einen Fall an, der vorher gar keinen Text
 bekam. Eine Kleinigkeit bleibt: faellt `pConnectionInfo` im Zweig ohne
 TaskInfo weg, behaelt `m_iSSLError` seinen alten Wert, statt zurueckgesetzt zu
@@ -4617,11 +4617,11 @@ werden. Folgenlos, solange die Meldung aus `csError` kommt.
 
 ---
 
-### PR-2.2 Ã¢ÂÂ `paket-pruefen.ps1` winkt ein Paket ohne `EudoraRes.dll` durch (hoch)
+### PR-2.2 — `paket-pruefen.ps1` winkt ein Paket ohne `EudoraRes.dll` durch (hoch)
 
 **Fundstelle:** `tools/paket-pruefen.ps1:138` und `:158`.
 
-Das Werkzeug liest die Importtabellen der PE-Dateien Ã¢ÂÂ Datenverzeichnis 1 und,
+Das Werkzeug liest die Importtabellen der PE-Dateien — Datenverzeichnis 1 und,
 richtig, auch Datenverzeichnis 13 (verzoegertes Laden, 32-Byte-Deskriptoren).
 Die im Auftrag vermutete Delay-Load-Luecke gibt es **nicht**; gegen
 `dumpbin /dependents` auf `EuMemMgr.dll` gemessen, gleiche Aufteilung.
@@ -4634,7 +4634,7 @@ Was es nicht sieht, ist alles, was in keiner Importtabelle steht.
 
     ERGEBNIS: keine Fehler.        EXIT=0
 
-Kein Wort zu `EudoraRes.dll` Ã¢ÂÂ der Datei, die laut `README.md:66` die gesamte
+Kein Wort zu `EudoraRes.dll` — der Datei, die laut `README.md:66` die gesamte
 Oberflaeche traegt. Sie wird per `LoadLibrary` geholt und steht deshalb in
 keiner Importtabelle. Im Baum `Eudora71\` liegen 62 `LoadLibrary`- und 28
 `CoCreateInstance`-Stellen, die alle im toten Winkel liegen.
@@ -4646,7 +4646,7 @@ fehlt, ist eine Soll-Liste der Dateien, gegen die geprueft wird.
 
 ---
 
-### PR-2.3 Ã¢ÂÂ Der Pruefer benotet die Maschine, nicht das Paket (hoch)
+### PR-2.3 — Der Pruefer benotet die Maschine, nicht das Paket (hoch)
 
 **Fundstelle:** `tools/paket-pruefen.ps1:9` ("Warnungen allein aendern die
 Rueckgabe nicht"), `:266` (Rueckfall auf das Systemverzeichnis), `:433`.
@@ -4659,8 +4659,8 @@ Rueckgabe nicht"), `:266` (Rueckfall auf das Systemverzeichnis), `:433`.
     ERGEBNIS: keine Fehler.        EXIT=0
 
 Genau der Fall, fuer den das Werkzeug laut seinem eigenen Kopfkommentar
-(`:13-19`) gebaut wurde Ã¢ÂÂ ein Paket, das auf einer fremden Maschine nicht
-startet Ã¢ÂÂ wird mit Rueckgabe 0 durchgewunken, weil auf DIESER Maschine die
+(`:13-19`) gebaut wurde — ein Paket, das auf einer fremden Maschine nicht
+startet — wird mit Rueckgabe 0 durchgewunken, weil auf DIESER Maschine die
 Laufzeit installiert ist.
 
 Dazu drei Verschaerfungen:
@@ -4679,7 +4679,7 @@ Dazu drei Verschaerfungen:
   sich.
 
 Ausserdem ungeprueft: Exporte und Ordinale (`:149/:151` liest nur den Namen
-des Deskriptors, nie die Thunk-Tabellen Ã¢ÂÂ eine `msvcr71`-Bruecke mit fehlendem
+des Deskriptors, nie die Thunk-Tabellen — eine `msvcr71`-Bruecke mit fehlendem
 Export ergibt `0xc0000139` und bleibt unentdeckt), das eingebettete Manifest
 (`Microsoft.Windows.Common-Controls 6.0.0.0`, SxS-Fehler 14001), die
 COM-Registrierung von `EuGraph.ocx`/`EuShlExt.dll`/`capicom.dll`, und der Ort
@@ -4688,7 +4688,7 @@ der `Eudora.ini` (`:386` sucht mit `-Recurse` irgendwo im Baum, nicht dort, wo
 
 ---
 
-### PR-2.4 Ã¢ÂÂ Der groesste Eingriff des Tages hat keinen einzigen Test (hoch)
+### PR-2.4 — Der groesste Eingriff des Tages hat keinen einzigen Test (hoch)
 
 **Fundstelle:** Commit 1a4a6d5 aendert `Eudora71/OTShim/OTShim.cpp` um 334
 Zeilen; `Eudora71/Tests/` ist in demselben Commit **nicht** angefasst.
@@ -4709,8 +4709,8 @@ bleibt deshalb gruen, egal was die neue Rechnung tut.
 
 Das trifft den Zweig `m_nRowExtent == 0`. Der neue Zweig
 (`OTShim.cpp:1640-1646`, `m_nRowExtent > 0`) wird von keinem der 105 Tests
-betreten. "105 von 105 gruen" ist wahr Ã¢ÂÂ selbst gebaut und gelaufen
-(`Eudora71/Tests/RunTests.cmd`, Exit 0) Ã¢ÂÂ sagt ueber die Aenderung des Tages
+betreten. "105 von 105 gruen" ist wahr — selbst gebaut und gelaufen
+(`Eudora71/Tests/RunTests.cmd`, Exit 0) — sagt ueber die Aenderung des Tages
 aber nichts.
 
 Nach Tests ohne wirksame Zusicherung wurde gezielt gesucht: die Faelle, die
@@ -4718,11 +4718,11 @@ auf den ersten Blick leer wirken, rufen Pruefhilfen (`PruefeKopfzeile`,
 `GroesseVergleichen`), die ihrerseits `TT_Fail` aufrufen. Ein immer gruener
 Test wurde **nicht** gefunden. `SECDockBar: PredictInsertPosition und
 CalcDockingLayout sind als offen gekennzeichnet` (`:526-533`) prueft wirklich
-etwas Ã¢ÂÂ dass der Rumpf noch ein Rumpf ist. Das ist Absicht und in Ordnung.
+etwas — dass der Rumpf noch ein Rumpf ist. Das ist Absicht und in Ordnung.
 
 ---
 
-### PR-2.5 Ã¢ÂÂ `DrawChecked` hat denselben Farbfehler (mittel)
+### PR-2.5 — `DrawChecked` hat denselben Farbfehler (mittel)
 
 **Fundstelle:** `Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:851-852`.
 
@@ -4735,10 +4735,10 @@ Die Verknuepfungszahl `0x00B8074A` (PSDPxax) ist umgekehrt polnisch
 Ist `S` lauter Einsen, bleibt `D` stehen; ist `S` null, kommt der Pinsel `P`.
 Beim Kopieren von einfarbig nach farbig macht GDI aus der Maskeneins die
 Hintergrund- und aus der Maskennull die Textfarbe des Ziels. Die Rechnung geht
-also genau dann auf, wenn dort `0x00FFFFFF` und `0x00000000` stehen Ã¢ÂÂ genau
+also genau dann auf, wenn dort `0x00FFFFFF` und `0x00000000` stehen — genau
 das setzt `DrawDisabled` seit heute. **Richtig.** Auch die Ruecknahme ist
 sicher: der einzige vorzeitige `return` (`:799`, `nWidth <= 0`) liegt VOR dem
-`SetTextColor`, und die beiden `SetÃ¢ÂÂ¦`-Zeilen am Ende laufen unbedingt.
+`SetTextColor`, und die beiden `Set…`-Zeilen am Ende laufen unbedingt.
 
 Die Begruendung im Commit nennt `DrawChecked` als Vorbild ("setzt beide Farben
 laengst"). Als Vorbild dafuer, DASS man die Farben setzt, stimmt das. WELCHE
@@ -4748,17 +4748,17 @@ Farben `DrawChecked` setzt, haelt derselben Rechnung aber nicht stand:
     :852  COLORREF crOldBk   = data.m_drawDC.SetBkColor(secData.clrBtnFace);
 
 `clrBtnFace` ist ueblicherweise `0xF0F0F0`, `clrBtnHilite` `0xFFFFFF`. Damit
-ist `S` weder lauter Einsen noch null, sondern gemischt Ã¢ÂÂ das Schachbrett
+ist `S` weder lauter Einsen noch null, sondern gemischt — das Schachbrett
 erscheint nur in einem Teil der Bitebenen. Nach der Begruendung, die
 `DrawDisabled` behoben hat, ist `DrawChecked` der naechste Fall derselben
 Klasse. Betroffen sind die angekreuzten Knoepfe und ueber
 `DrawIndeterminate` (`:864-868`) die Auszeichnungsknoepfe im Verfassenfenster.
 
-UNGEPRUEFT auf dem Bildschirm Ã¢ÂÂ die Auflage verbietet den Start.
+UNGEPRUEFT auf dem Bildschirm — die Auflage verbietet den Start.
 
 ---
 
-### PR-2.6 Ã¢ÂÂ Die Suchleiste teilt sich jetzt Zeile 0 mit der Hauptleiste (mittel)
+### PR-2.6 — Die Suchleiste teilt sich jetzt Zeile 0 mit der Hauptleiste (mittel)
 
 **Fundstelle:** `Eudora71/Eudora/mainfrm.cpp:966`.
 
@@ -4769,7 +4769,7 @@ Seit 1a4a6d5 werden `nCol` und `nRow` ausgewertet. Die Suchleiste landet damit
 in derselben Zeile wie die Hauptwerkzeugleiste. `SECControlBar::m_fPctWidth`
 steht bei beiden auf dem Vorgabewert `1.0` (`OTShim.cpp:1453`); Eudora setzt
 ihn fuer die Hauptleiste nirgends. `SECDockBar::DistributeRow` normiert
-deshalb auf 0,5 zu 0,5 Ã¢ÂÂ die Hauptleiste bekommt die halbe Fensterbreite.
+deshalb auf 0,5 zu 0,5 — die Hauptleiste bekommt die halbe Fensterbreite.
 
 Bei fuenfzehn Knoepfen zu je rund 24 Bildpunkten reicht das auf einem breiten
 Fenster; auf einem schmalen nicht. Das ist eine **neue** Moeglichkeit, die
@@ -4779,7 +4779,7 @@ Zweite Stelle derselben Art: `AdWazooBar.cpp:176` und `:212` docken mit
 `nCol=5, nRow=0, fPctWidth=0.25` an, `WazooBarMgr.cpp:253` mit
 `nCol=0, nRow=0, fPctWidth=1.00` an dieselbe untere Leiste. Vorher hatte jede
 ihre eigene Zeile, jetzt teilen sie sich Zeile 0 im Verhaeltnis 0,8 zu 0,2.
-Das ist vermutlich genau das Gewollte Ã¢ÂÂ nachgewiesen ist es nicht.
+Das ist vermutlich genau das Gewollte — nachgewiesen ist es nicht.
 
 **Was an der Rechnung stimmt** (von Hand durchgerechnet, ohne Lauf):
 
@@ -4788,11 +4788,11 @@ Das ist vermutlich genau das Gewollte Ã¢ÂÂ nachgewiesen ist es nicht.
 * Negative Breiten gibt es nicht: `nExtent = nRest - nReserve` kann negativ
   werden, wird aber von `if (nExtent < nMin)` und zuletzt von
   `if (nExtent < 1) nExtent = 1` (`:2708`) aufgefangen.
-* Leere Zeile: `DistributeRow(nStart, nStart, Ã¢ÂÂ¦)` sammelt nichts und kehrt bei
+* Leere Zeile: `DistributeRow(nStart, nStart, …)` sammelt nichts und kehrt bei
   `nBars <= 0` sofort um. Die fuehrende NULL-Marke erzeugt genau diesen Fall
   im ersten Schleifendurchlauf.
 * Genau eine Leiste: sie ist die letzte, bekommt `nRest` = `nAvail`, also die
-  ganze Zeile Ã¢ÂÂ dasselbe Ergebnis wie vorher mit 32767.
+  ganze Zeile — dasselbe Ergebnis wie vorher mit 32767.
 * `MoveControlBarToPosition` von Hand durchgespielt fuer den ersten und den
   zweiten Andockvorgang: `[NULL,bar1,NULL]` bleibt `[NULL,bar1,NULL]`,
   `[NULL,bar1,NULL,bar2,NULL]` wird zu `[NULL,bar1,bar2,NULL]`. Richtig.
@@ -4806,25 +4806,25 @@ Das ist vermutlich genau das Gewollte Ã¢ÂÂ nachgewiesen ist es nicht.
   `pBar->CalcDynamicLayout(-1, LM_HORZDOCK|LM_HORZ)`. Waere dort
   `CControlBar::CalcDynamicLayout` zustaendig, kaeme `bStretch = FALSE` heraus
   und `m_nRowExtent` wuerde nie angewandt. `SECControlBar::CalcDynamicLayout`
-  (`OTShim.cpp:1654-1658`) gibt aber ausdruecklich `CalcFixedLayout(TRUE, Ã¢ÂÂ¦)`
+  (`OTShim.cpp:1654-1658`) gibt aber ausdruecklich `CalcFixedLayout(TRUE, …)`
   zurueck. Die Kette traegt.
 
 ---
 
-### PR-2.7 Ã¢ÂÂ `paket-bauen.ps1` ist kein Bau (mittel)
+### PR-2.7 — `paket-bauen.ps1` ist kein Bau (mittel)
 
 **Fundstellen:** `tools/paket-bauen.ps1:59-60`, `:103-106`, `:115`, `:161`.
 
 * `:60` nimmt als Grundlage das **alte** ZIP. Frische Binaerdateien kommen nur
   mit `-AusBauverzeichnis` und nur fuer sieben fest verdrahtete Namen
   (`:103-106`). Fehlt eine davon, bleibt die alte stehen (`:115`, gelbe
-  Zeile) Ã¢ÂÂ und das ZIP wird trotzdem geschrieben.
+  Zeile) — und das ZIP wird trotzdem geschrieben.
 * Debug oder Release ist nirgends festgelegt: `Bin\Debug` ist hartkodiert
   (`:86`), gleichzeitig werden `Bin\Release`-Dateien beigemischt (`:125`,
   `:129`, `:139`).
 * In einem frischen Klon laeuft es gar nicht: `.gitignore:6` ignoriert `Bin/`,
   `:59` erwartet aber `Eudora71\Bin\Release\msvcr71.dll`. Gemessen in diesem
-  Worktree: Abbruch mit EXIT=1 in `:74` Ã¢ÂÂ **nach** dem Auspacken in `:71`, so
+  Worktree: Abbruch mit EXIT=1 in `:74` — **nach** dem Auspacken in `:71`, so
   dass 155 Dateien einer unveraenderten 1.0.2 im Zielverzeichnis stehen
   bleiben und wie ein 1.0.3-Bauverzeichnis aussehen. Kein Aufraeumen im
   Fehlerfall.
@@ -4835,7 +4835,7 @@ Das ist vermutlich genau das Gewollte Ã¢ÂÂ nachgewiesen ist es nicht.
   `:153`) tragen die Auscheckzeit. Das `.sha256` in `:162` verspricht eine
   Reproduzierbarkeit, die es nicht gibt.
 * Vollstaendigkeit wird vor dem Schreiben nicht geprueft (`:159-161`);
-  `paket-pruefen.ps1` wird erst danach als Textzeile empfohlen (`:172`) Ã¢ÂÂ und
+  `paket-pruefen.ps1` wird erst danach als Textzeile empfohlen (`:172`) — und
   wuerde nach PR-2.2 ohnehin nichts merken.
 * Keine Versionskopplung: weder die Datei `VERSION` noch
   `tools/kennung-erzeugen.pl` kommen vor. Ein ZIP mit Namen 1.0.3 kann eine
@@ -4848,7 +4848,7 @@ Das ist vermutlich genau das Gewollte Ã¢ÂÂ nachgewiesen ist es nicht.
 `Invoke-WebRequest`, `DownloadFile`, `System.Net`, `http` in allen drei
 Skripten). Auf einem Rechner ohne Visual Studio bricht es ab, aber nicht
 sauber: mit einer Quelle, die nur drei der vier Pflichtdateien hat, kopiert es
-zwei Dateien und meldet danach EXIT=1 Ã¢ÂÂ zurueck bleibt ein halb bestuecktes
+zwei Dateien und meldet danach EXIT=1 — zurueck bleibt ein halb bestuecktes
 Verzeichnis. Ausserdem ist `:74` `C:\Windows\SysWOW64` hartkodiert, waehrend
 `paket-pruefen.ps1:196` es richtig ueber `$env:SystemRoot` macht, und
 `Architektur()` (`:44-55`) prueft weder `MZ` noch `PE\0\0` und hat kein
@@ -4856,7 +4856,7 @@ Verzeichnis. Ausserdem ist `:74` `C:\Windows\SysWOW64` hartkodiert, waehrend
 
 ---
 
-### PR-2.8 Ã¢ÂÂ `EUDORA_BUILD_MONTH` bleibt auf Juni 2006 (niedrig, kein Handlungsbedarf)
+### PR-2.8 — `EUDORA_BUILD_MONTH` bleibt auf Juni 2006 (niedrig, kein Handlungsbedarf)
 
 **Fundstelle:** `Eudora71/Version.h:19`.
 
@@ -4884,7 +4884,7 @@ Die im Commit 2cf569f genannte Nebenwirkung ist eine andere und trifft zu:
 
 ---
 
-### PR-2.9 Ã¢ÂÂ Falsche Zeilenangabe in BEFUND-ANSICHT.md (niedrig)
+### PR-2.9 — Falsche Zeilenangabe in BEFUND-ANSICHT.md (niedrig)
 
 `Eudora71/OTShim/BEFUND-ANSICHT.md:279` nennt `Splitter::cx` (= 4,
 `OTShim.cpp:2091`). Die Zeile stimmt nicht mehr:
@@ -4922,7 +4922,7 @@ ISOTranslate`, sowie die eigenen Gegenproben gegen `tools/pruefe-bytes.pl` und
 die Fehlalarmquote von `tools/suche-zeiger.pl`. FREIGABEs Release-Bau lag
 nicht vor und ist ungeprueft.
 
-## S-8 Ã¢ÂÂ Paket 1.0.2 startet mit `0xc000007b` (31.08.2026)
+## S-8 — Paket 1.0.2 startet mit `0xc000007b` (31.08.2026)
 
 Nachgetragen von LEKTOR am 31.08.2026. Der Befund war bis dahin nur im Commit
 `76efdb6`, in `README.md` und in `Releases/1.0.2/LIESMICH.txt` festgehalten, in
@@ -4958,160 +4958,160 @@ Die auf dieser Maschine vorhandene Fassung ist 14.38.33142.0 gegen Toolset
 14.38.33130.
 
 **Was damit NICHT geloest ist.** Die vier Debug-DLLs duerfen nicht
-weiterverteilt werden Ã¢ÂÂ Microsoft nimmt die Debug-Fassungen der Laufzeit
+weiterverteilt werden — Microsoft nimmt die Debug-Fassungen der Laufzeit
 ausdruecklich davon aus, bei Visual Studio liegen sie deshalb unter
 `debug_nonredist`. Ein Redistributable gibt es nicht. Solange nur der Debug-Bau
 laeuft, braucht jeder Empfaenger des Pakets ein installiertes Visual Studio
-2022. Das widerspricht Kriterium 0 (Ã¢ÂÂzip runterladen, entpacken, starten Ã¢ÂÂ
+2022. Das widerspricht Kriterium 0 („zip runterladen, entpacken, starten —
 laeuft"). Der Ausweg ist ein **Release-Bau**, vorzugsweise statisch gebunden;
-Einzelheiten und Abwaegung in `ZIEL.md`, Abschnitt Ã¢ÂÂKriterium 0". Bis dahin
+Einzelheiten und Abwaegung in `ZIEL.md`, Abschnitt „Kriterium 0". Bis dahin
 misst `tools/paket-pruefen.ps1` den Paketinhalt gegen die Startkette.
 
 **Bezug zu anderen Befunden.** S-1 (Paket 1.0.1 startete nicht) hatte eine
-andere Ursache Ã¢ÂÂ dort lagen die *falschen* Fremd-DLLs bei. S-8 ist der Fall,
+andere Ursache — dort lagen die *falschen* Fremd-DLLs bei. S-8 ist der Fall,
 dass die eigene Laufzeit ganz fehlt.
 
-## Z-1 Ã¢ÂÂ Alle Zahlen und Fundstellen des 31.08. nachgerechnet (31.08.2026)
+## Z-1 — Alle Zahlen und Fundstellen des 31.08. nachgerechnet (31.08.2026)
 
-Ein PrÃÂ¼fdurchgang hat jede Zahl und jede Zeilenangabe der heutigen Befunde
-gegen die Quelle gehalten. **Nichts wurde geÃÂ¤ndert** Ã¢ÂÂ das hier ist die Liste
+Ein Prüfdurchgang hat jede Zahl und jede Zeilenangabe der heutigen Befunde
+gegen die Quelle gehalten. **Nichts wurde geändert** — das hier ist die Liste
 der Abweichungen, damit niemand auf einer falschen Angabe aufbaut.
 
 ### Falsch
 
-| Stelle | Behauptung | tatsÃÂ¤chlich |
+| Stelle | Behauptung | tatsächlich |
 |---|---|---|
-| P-2.1, P-2.3 | Ã¢ÂÂdie **zehn** `GetProcAddress`-Ergebnisse (`:373-383`)" | es sind **elf** (373Ã¢ÂÂ¦383). Die Zahl steht zweimal falsch da. |
-| P-2.1 | Ã¢ÂÂin `Releases/1.0/` liegen **mehrere** `QCSSL.dll`-Fassungen" | es liegt **genau eine** (2.920.960 B), SHA256-identisch mit der im Paket 1.0.2. **Damit trÃÂ¤gt die BegrÃÂ¼ndung des Absturzszenarios so nicht.** |
-| P-2.2 | Ã¢ÂÂ**alle fÃÂ¼nf** echten Aufrufer ÃÂ¼bergeben die Adresse eines Elements" | es gibt einen **sechsten**: `Eudora71/Imapdll/src/Network.cpp:539` reicht in `CNetStream::SetSSLMode` einen Zeigerparameter weiter. Nicht auf dem POP-Weg, aber Ã¢ÂÂalle fÃÂ¼nf" ist falsch. |
-| P-2.2 (Quelltext) | Kommentar Ã¢ÂÂZeile **2065** unten prÃÂ¼ft ihn auch" | die PrÃÂ¼fung steht nach der eigenen ÃÂnderung bei **2070**; in 2065 steht etwas anderes. Die Korrektur hat ihre eigene Zeilenangabe veraltet gemacht. |
-| M-1 | `HTERROR` in `mainfrm.cpp:8670`, Funktion `8662-8671`, Kommentar `:8744` | durchweg **um eins daneben**: 8671, 8663Ã¢ÂÂ8672, 8745. Dieselbe Verschiebung ist in die neuen Quelltextkommentare ÃÂ¼bernommen worden (`OTShim_Werkzeugleiste.cpp:3790`, `.h:1153`). |
-| M-1 | Konstruktoren `:3480` und `:3506` | das war der **Vorzustand**. Heute `:3514` und `:3541`. Im Text nicht als Ã¢ÂÂvorher" gekennzeichnet. |
-| A-1 | Ã¢ÂÂUrsache belegt", fÃÂ¼nf Fundstellen, 32767, Verdacht `DrawDisabled` | war an `31810e2` richtig, ist **heute ÃÂ¼berholt** Ã¢ÂÂ `1a4a6d5` und `db28adb` haben genau das behoben. SÃÂ¤mtliche Zeilenangaben des Abschnitts stimmen im heutigen Baum nicht mehr. Nur `SetControlBarWidthsInRow` ist noch leerer Rumpf (`OTShim.cpp:2244`) und `OnSizeParent` reicht noch durch (`:3276`). |
-| B-2.2 | Startkette des **ausgelieferten** Pakets = **elf** Module | **zwÃÂ¶lf** Ã¢ÂÂ dazu `msvcr71d.dll`, weil die gepackte `Paige32d.dll` der Debug-Bau ist. Die Elferliste ist die von Paket **1.0.3**, nicht die des ausgelieferten. |
-| B-2.5 | Paket 1.0.2: **3 Fehler, 5 Warnungen** | heute mit dem eingecheckten PrÃÂ¼fer: **0 Fehler, 8 Warnungen**. Die Spalte stammt aus einem ÃÂ¤lteren Stand des Werkzeugs. |
-| W-1 / PR-7 | Ã¢ÂÂS-7 nachgezogen, Tabelle eingefÃÂ¼gt, Beispiel berichtigt" | **S-7 ist unverÃÂ¤ndert.** Der Kasten behauptet weiter, der Werkzeugkopf nenne Ã¢ÂÂ4426 von 5336" Ã¢ÂÂ das ist dort ersatzlos entfernt worden. Die Tabelle steht nur im Werkzeugkopf. Die Beschriftung des Beispiels ist weiterhin vertauscht. |
-| W-1 / PR-3 | Grundgesamtheit **6385** | heute **6392**. WÃÂ¤chst mit jedem Commit Ã¢ÂÂ kein Widerspruch, aber schon am Tag des Schreibens flÃÂ¼chtig. |
+| P-2.1, P-2.3 | „die **zehn** `GetProcAddress`-Ergebnisse (`:373-383`)" | es sind **elf** (373…383). Die Zahl steht zweimal falsch da. |
+| P-2.1 | „in `Releases/1.0/` liegen **mehrere** `QCSSL.dll`-Fassungen" | es liegt **genau eine** (2.920.960 B), SHA256-identisch mit der im Paket 1.0.2. **Damit trägt die Begründung des Absturzszenarios so nicht.** |
+| P-2.2 | „**alle fünf** echten Aufrufer übergeben die Adresse eines Elements" | es gibt einen **sechsten**: `Eudora71/Imapdll/src/Network.cpp:539` reicht in `CNetStream::SetSSLMode` einen Zeigerparameter weiter. Nicht auf dem POP-Weg, aber „alle fünf" ist falsch. |
+| P-2.2 (Quelltext) | Kommentar „Zeile **2065** unten prüft ihn auch" | die Prüfung steht nach der eigenen Änderung bei **2070**; in 2065 steht etwas anderes. Die Korrektur hat ihre eigene Zeilenangabe veraltet gemacht. |
+| M-1 | `HTERROR` in `mainfrm.cpp:8670`, Funktion `8662-8671`, Kommentar `:8744` | durchweg **um eins daneben**: 8671, 8663–8672, 8745. Dieselbe Verschiebung ist in die neuen Quelltextkommentare übernommen worden (`OTShim_Werkzeugleiste.cpp:3790`, `.h:1153`). |
+| M-1 | Konstruktoren `:3480` und `:3506` | das war der **Vorzustand**. Heute `:3514` und `:3541`. Im Text nicht als „vorher" gekennzeichnet. |
+| A-1 | „Ursache belegt", fünf Fundstellen, 32767, Verdacht `DrawDisabled` | war an `31810e2` richtig, ist **heute überholt** — `1a4a6d5` und `db28adb` haben genau das behoben. Sämtliche Zeilenangaben des Abschnitts stimmen im heutigen Baum nicht mehr. Nur `SetControlBarWidthsInRow` ist noch leerer Rumpf (`OTShim.cpp:2244`) und `OnSizeParent` reicht noch durch (`:3276`). |
+| B-2.2 | Startkette des **ausgelieferten** Pakets = **elf** Module | **zwölf** — dazu `msvcr71d.dll`, weil die gepackte `Paige32d.dll` der Debug-Bau ist. Die Elferliste ist die von Paket **1.0.3**, nicht die des ausgelieferten. |
+| B-2.5 | Paket 1.0.2: **3 Fehler, 5 Warnungen** | heute mit dem eingecheckten Prüfer: **0 Fehler, 8 Warnungen**. Die Spalte stammt aus einem älteren Stand des Werkzeugs. |
+| W-1 / PR-7 | „S-7 nachgezogen, Tabelle eingefügt, Beispiel berichtigt" | **S-7 ist unverändert.** Der Kasten behauptet weiter, der Werkzeugkopf nenne „4426 von 5336" — das ist dort ersatzlos entfernt worden. Die Tabelle steht nur im Werkzeugkopf. Die Beschriftung des Beispiels ist weiterhin vertauscht. |
+| W-1 / PR-3 | Grundgesamtheit **6385** | heute **6392**. Wächst mit jedem Commit — kein Widerspruch, aber schon am Tag des Schreibens flüchtig. |
 
-### BestÃÂ¤tigt
+### Bestätigt
 
 `P-2.1` alle vier Fundstellen exakt der Vorzustand, die Rechnung
-`CRString(8000 + (-1-10000))` geht auf ÃÂ· `P-2.3` acht Treffer, alle sieben
-Fehlalarm-Bewertungen stichprobenweise richtig ÃÂ· `P-2.4` `TextReader.cpp:251`
-und `utils.h:90` ÃÂ· `P-2.7` **105 Tests, 105 bestanden** selbst ausgefÃÂ¼hrt ÃÂ·
-`M-1` `tbarmgr.h:79-80`, **genau fÃÂ¼nf** Abfragestellen (2988, 8668, 8679, 8727,
-8743), `91716bb` als EinfÃÂ¼hrungscommit, `RestoreMainFrame` wird gerufen ÃÂ·
-`A-1` 15 StandardknÃÂ¶pfe, `secData`, `DockBar.cpp` prÃÂ¼ft selbst auf
-`SWM_MODE_ADWARE` ÃÂ· `B-2.1` die echte GUID steht in der Solution, die falsche
-weiter in `VC71Bruecke/BEFUND.md:462` ÃÂ· `B-2.3` `EUMAPI.DLL` ist keine PE-Datei
-Ã¢ÂÂ und der als UNGEPRÃÂFT markierte Verdacht **stimmt**: Signatur `NE`, also eine
-**16-Bit-Datei** ÃÂ· `W-1` 23 TestfÃÂ¤lle grÃÂ¼n, Blob `8c4fb68a` = 5716 B mit 65 LF,
+`CRString(8000 + (-1-10000))` geht auf · `P-2.3` acht Treffer, alle sieben
+Fehlalarm-Bewertungen stichprobenweise richtig · `P-2.4` `TextReader.cpp:251`
+und `utils.h:90` · `P-2.7` **105 Tests, 105 bestanden** selbst ausgeführt ·
+`M-1` `tbarmgr.h:79-80`, **genau fünf** Abfragestellen (2988, 8668, 8679, 8727,
+8743), `91716bb` als Einführungscommit, `RestoreMainFrame` wird gerufen ·
+`A-1` 15 Standardknöpfe, `secData`, `DockBar.cpp` prüft selbst auf
+`SWM_MODE_ADWARE` · `B-2.1` die echte GUID steht in der Solution, die falsche
+weiter in `VC71Bruecke/BEFUND.md:462` · `B-2.3` `EUMAPI.DLL` ist keine PE-Datei
+— und der als UNGEPRÜFT markierte Verdacht **stimmt**: Signatur `NE`, also eine
+**16-Bit-Datei** · `W-1` 23 Testfälle grün, Blob `8c4fb68a` = 5716 B mit 65 LF,
 5716+65 = 5781.
 
 ### Was daraus folgt
 
 **Zeilenangaben veralten, sobald jemand dieselbe Datei anfasst.** Sieben der elf
-Abweichungen sind genau das Ã¢ÂÂ nicht falsch gemessen, sondern durch spÃÂ¤tere
-Commits verschoben. Wer eine Fundstelle benutzt, prÃÂ¼ft sie nach.
+Abweichungen sind genau das — nicht falsch gemessen, sondern durch spätere
+Commits verschoben. Wer eine Fundstelle benutzt, prüft sie nach.
 
-Nicht prÃÂ¼fbar in jenem Arbeitsbaum: die GrÃÂ¶ÃÂenangaben zu `Eudora.exe` und die
-MSBuild-LÃÂ¤ufe aus P-2.4, B-2.1 und W-1.
+Nicht prüfbar in jenem Arbeitsbaum: die Größenangaben zu `Eudora.exe` und die
+MSBuild-Läufe aus P-2.4, B-2.1 und W-1.
 
-## X-1 Ã¢ÂÂ Die Werkzeuge angegriffen: neun LÃÂ¶cher in der Schranke (31.08.2026)
+## X-1 — Die Werkzeuge angegriffen: neun Löcher in der Schranke (31.08.2026)
 
 Ein Angriffsdurchgang gegen die eigenen Werkzeuge, mit 15 selbst gebauten
-FÃÂ¤llen, von denen **keiner** in `tools/pruefe-bytes-tests.pl` steht.
-**Ergebnis: 9 LÃÂ¶cher, 0 Fehlalarme.** Die Bestandssammlung lÃÂ¤uft weiter 23/23
-grÃÂ¼n Ã¢ÂÂ diese Funde kommen obendrauf.
+Fällen, von denen **keiner** in `tools/pruefe-bytes-tests.pl` steht.
+**Ergebnis: 9 Löcher, 0 Fehlalarme.** Die Bestandssammlung läuft weiter 23/23
+grün — diese Funde kommen obendrauf.
 
 ### Schwer
 
-**L1 Ã¢ÂÂ Umbenennung hebelt die Schranke vollstÃÂ¤ndig aus.** `pruefe-bytes.pl:198`
+**L1 — Umbenennung hebelt die Schranke vollständig aus.** `pruefe-bytes.pl:198`
 benutzt `--diff-filter=ACM`. Ein `git mv alt.cpp neu.cpp` erscheint als `R088`
-und landet nie in der PrÃÂ¼fliste. Wer danach die Datei neu schreibt, kann jedes
-Zeilenende und jedes Sonderzeichen zerstÃÂ¶ren Ã¢ÂÂ RÃÂ¼ckgabe 0. **`git mv` plus
+und landet nie in der Prüfliste. Wer danach die Datei neu schreibt, kann jedes
+Zeilenende und jedes Sonderzeichen zerstören — Rückgabe 0. **`git mv` plus
 Neuschreiben ist genau der Ablauf einer Portierung.**
 
-**L2 Ã¢ÂÂ Latin-1 Ã¢ÂÂ UTF-8 umkodiert bleibt unerkannt.** GezÃÂ¤hlt werden nur
-Ersatzzeichen (`EF BF BD`). Eine *saubere* Umkodierung (`0xE4` Ã¢ÂÂ `C3 A4`)
-erzeugt keines; der Inhalt ÃÂ¤ndert sich, also greift Regel 2, und dort verwirft
+**L2 — Latin-1 → UTF-8 umkodiert bleibt unerkannt.** Gezählt werden nur
+Ersatzzeichen (`EF BF BD`). Eine *saubere* Umkodierung (`0xE4` → `C3 A4`)
+erzeugt keines; der Inhalt ändert sich, also greift Regel 2, und dort verwirft
 Zeile 165 das Paar. Das ist genau der Schaden, gegen den die Regel
-Ã¢ÂÂbyte-erhaltend ÃÂ¤ndern" existiert.
+„byte-erhaltend ändern" existiert.
 
-**L3 Ã¢ÂÂ Ein neu eingefÃÂ¼gtes UTF-8-BOM** (`EF BB BF`) bleibt aus demselben Grund
+**L3 — Ein neu eingefügtes UTF-8-BOM** (`EF BB BF`) bleibt aus demselben Grund
 unerkannt.
 
 ### Mittel
 
-**L4** Ã¢ÂÂ bei Dateien mit NUL-Byte ist Regel 2 blind: `git diff -U0` liefert nur
-Ã¢ÂÂBinary files differ", kein `@@`. Derzeit latent Ã¢ÂÂ von 6392 erfassten Dateien
-enthÃÂ¤lt keine ein NUL-Byte.
+**L4** — bei Dateien mit NUL-Byte ist Regel 2 blind: `git diff -U0` liefert nur
+„Binary files differ", kein `@@`. Derzeit latent — von 6392 erfassten Dateien
+enthält keine ein NUL-Byte.
 
-**L5** Ã¢ÂÂ die Vorausschau von 30 Zeilen (`:118`) ist eine harte Grenze, exakt
-gemessen: 30 eingefÃÂ¼gte Zeilen vor der Umwandlung Ã¢ÂÂ erkannt, **31 Ã¢ÂÂ durch**.
+**L5** — die Vorausschau von 30 Zeilen (`:118`) ist eine harte Grenze, exakt
+gemessen: 30 eingefügte Zeilen vor der Umwandlung → erkannt, **31 → durch**.
 Ehrlich dazu: an echten Projektdateien wird es trotzdem erkannt, weil git
-wiederkehrende Zeilen in mehrere BlÃÂ¶cke zerlegt. Das Loch ist synthetisch
+wiederkehrende Zeilen in mehrere Blöcke zerlegt. Das Loch ist synthetisch
 belegt, an Projektmaterial nicht.
 
-**L6** Ã¢ÂÂ reine CR-Zeilenenden (Mac-Stil) Ã¢ÂÂ LF bleiben unerkannt; normalisiert
+**L6** — reine CR-Zeilenenden (Mac-Stil) → LF bleiben unerkannt; normalisiert
 wird nur `\r\n`.
 
-**L7** Ã¢ÂÂ verliert die letzte Zeile ihr CRLF, wird das bewusst durchgelassen
+**L7** — verliert die letzte Zeile ihr CRLF, wird das bewusst durchgelassen
 (`:166`). Es ist trotzdem ein echter Byteverlust.
 
 ### Leicht
 
-**L8** Ã¢ÂÂ neue Dateien werden gar nicht geprÃÂ¼ft (`:205`); eine neue Datei mit
-Ersatzzeichen lÃÂ¤uft durch. **L9** Ã¢ÂÂ eine in HEAD leere Datei gilt als Ã¢ÂÂnicht
-vorhanden" und wird ÃÂ¼bersprungen.
+**L8** — neue Dateien werden gar nicht geprüft (`:205`); eine neue Datei mit
+Ersatzzeichen läuft durch. **L9** — eine in HEAD leere Datei gilt als „nicht
+vorhanden" und wird übersprungen.
 
 ### Zusatzfund: der pre-commit-Hook wertet seinen ersten Schritt nicht aus
 
 `tools/hooks-einrichten.sh:20` ruft `lehren-spiegeln.pl` ohne `set -e` und ohne
-PrÃÂ¼fung von `$?`, danach `exec pruefe-bytes.pl`. Wenn das Spiegeln mit
-`exit 1` abbricht und Ã¢ÂÂDer Commit wurde abgebrochen" meldet, **stimmt das
-nicht** Ã¢ÂÂ der Hook gibt 0 zurÃÂ¼ck. Die gespiegelten Lehren gehen weiterhin
+Prüfung von `$?`, danach `exec pruefe-bytes.pl`. Wenn das Spiegeln mit
+`exit 1` abbricht und „Der Commit wurde abgebrochen" meldet, **stimmt das
+nicht** — der Hook gibt 0 zurück. Die gespiegelten Lehren gehen weiterhin
 lautlos aus dem Commit heraus. Das ist derselbe Befund wie NP3-4, in anderer
 Gestalt.
 
 ### `tools/suche-zeiger.pl` ist Rauschen
 
-ÃÂber 3237 Dateien: **345 Treffer**. Stichprobe von 15 zufÃÂ¤llig gezogenen:
-**15 Fehlalarme, also 100 %.** Drei strukturelle Ursachen erklÃÂ¤ren 273 der 345
-(79 %): klammerloser `if`-Rumpf (211), einzeiliger WÃÂ¤chter mit `return` (16),
-Abstand grÃÂ¶ÃÂer als das Fenster von 40 Zeilen (46). In allen 23 handgeprÃÂ¼ften
-Treffern **ein** plausibel echter: `EuImap/src/ImapMailbox.cpp:1022` prÃÂ¼ft
-`pAccount`, `:1051` dereferenziert auÃÂerhalb des Blocks.
+Über 3237 Dateien: **345 Treffer**. Stichprobe von 15 zufällig gezogenen:
+**15 Fehlalarme, also 100 %.** Drei strukturelle Ursachen erklären 273 der 345
+(79 %): klammerloser `if`-Rumpf (211), einzeiliger Wächter mit `return` (16),
+Abstand größer als das Fenster von 40 Zeilen (46). In allen 23 handgeprüften
+Treffern **ein** plausibel echter: `EuImap/src/ImapMailbox.cpp:1022` prüft
+`pAccount`, `:1051` dereferenziert außerhalb des Blocks.
 
 Urteil: etwa ein brauchbarer Treffer auf 70 Ausgabezeilen. Ohne die drei
 Filter nicht benutzbar.
 
-### `tools/zeilenenden-angleichen.pl`: zwei LÃÂ¼cken
+### `tools/zeilenenden-angleichen.pl`: zwei Lücken
 
-**Es lÃÂ¤sst Textdateien aus.** Von 9146 verfolgten Dateien erfasst das Muster
-6392; von den 2754 ÃÂ¼brigen sind **773 eindeutig Text**. Projektrelevant fehlen
+**Es lässt Textdateien aus.** Von 9146 verfolgten Dateien erfasst das Muster
+6392; von den 2754 übrigen sind **773 eindeutig Text**. Projektrelevant fehlen
 `.ih` (6 C-Header, werden mitkompiliert), `.rgs` (12 ATL-Registrar-Skripte,
 landen als Ressource im Binary), `.hh` (7 Hilfe-Header), `.mc`, `.hpj`, dazu
-139 Dateien ohne Endung. `tools/dateiendungen.pl:30` fÃÂ¼hrt `cc`, aber nicht
+139 Dateien ohne Endung. `tools/dateiendungen.pl:30` führt `cc`, aber nicht
 `hh` und `ih`.
 
-**Es dreht absichtliche Arbeit still zurÃÂ¼ck.** Die Zeilen 129-141 schreiben den
-HEAD-Stand **richtungslos**. Wer im Arbeitsbaum absichtlich LFÃ¢ÂÂCRLF korrigiert
-Ã¢ÂÂ etwa eine `.bat`, die CRLF braucht Ã¢ÂÂ, verliert das durch `--aendern`
-kommentarlos, und die Datei erscheint unter Ã¢ÂÂangeglichen" statt unter
-Ã¢ÂÂinhaltlich verschieden".
+**Es dreht absichtliche Arbeit still zurück.** Die Zeilen 129-141 schreiben den
+HEAD-Stand **richtungslos**. Wer im Arbeitsbaum absichtlich LF→CRLF korrigiert
+— etwa eine `.bat`, die CRLF braucht —, verliert das durch `--aendern`
+kommentarlos, und die Datei erscheint unter „angeglichen" statt unter
+„inhaltlich verschieden".
 
-**Entwarnung:** von den 6392 erfassten Dateien enthÃÂ¤lt **keine** ein NUL-Byte
-und **keine** ein UTF-16-BOM. Bilder, DLLs und Archive liegen alle auÃÂerhalb
-des Musters. Es fasst also keine BinÃÂ¤rdatei fÃÂ¤lschlich an.
+**Entwarnung:** von den 6392 erfassten Dateien enthält **keine** ein NUL-Byte
+und **keine** ein UTF-16-BOM. Bilder, DLLs und Archive liegen alle außerhalb
+des Musters. Es fasst also keine Binärdatei fälschlich an.
 
 ### Was daraus folgt
 
-Nichts davon ist heute akut Ã¢ÂÂ aber L1 und L2 sind die beiden SchÃÂ¤den, gegen die
-die Schranke ÃÂ¼berhaupt gebaut wurde, und gegen beide ist sie wirkungslos. Wer
+Nichts davon ist heute akut — aber L1 und L2 sind die beiden Schäden, gegen die
+die Schranke überhaupt gebaut wurde, und gegen beide ist sie wirkungslos. Wer
 sie als Sicherheit betrachtet, irrt.
 
-## E-1 Ã¢ÂÂ Der erste erfolgreiche Mailabruf (31.08.2026, 08:15)
+## E-1 — Der erste erfolgreiche Mailabruf (31.08.2026, 08:15)
 
 **Gregor hat mit dieser Fassung Mail abgerufen.** Zum ersten Mal seit Beginn der
 Portierung. Belegt durch zwei Bildschirmfotos.
@@ -5125,32 +5125,32 @@ Gebaut aus `93762c7`, Paket `C:\Users\Gregor\Eudora72-1.0.3`, Titelleiste:
 | | |
 |---|---|
 | **Mailabruf** | Fortschrittsbalken in der Statuszeile, danach **159 Nachrichten** im Eingangspostfach (`159/4319K/0K`) |
-| **Anzeige** | Absender, Datum, GrÃÂ¶ÃÂe, Betreff in der Liste; Vorschaubereich zeigt eine vollstÃÂ¤ndige Nachricht mit Kopfzeilen und Text |
-| **MenÃÂ¼s** | das *File*-MenÃÂ¼ klappt auf und ist vollstÃÂ¤ndig Ã¢ÂÂ **Befund S-5 ist behoben**, die Behebung M-1 wirkt |
-| **Anordnung** | Postfachbaum links, Nachrichtenliste rechts oben, Vorschau darunter. **Keine sich ÃÂ¼berlagernden Bereiche mehr** Ã¢ÂÂ die neue Andockrechnung aus A-1 wirkt |
-| **Umlaute** | im Vorschaubereich korrekt (Ã¢ÂÂGuten Tag", Ã¢ÂÂgÃÂ¼ltig", Ã¢ÂÂvergangen") |
+| **Anzeige** | Absender, Datum, Größe, Betreff in der Liste; Vorschaubereich zeigt eine vollständige Nachricht mit Kopfzeilen und Text |
+| **Menüs** | das *File*-Menü klappt auf und ist vollständig — **Befund S-5 ist behoben**, die Behebung M-1 wirkt |
+| **Anordnung** | Postfachbaum links, Nachrichtenliste rechts oben, Vorschau darunter. **Keine sich überlagernden Bereiche mehr** — die neue Andockrechnung aus A-1 wirkt |
+| **Umlaute** | im Vorschaubereich korrekt („Guten Tag", „gültig", „vergangen") |
 
 ### Was damit belegt ist
 
-**Kriterium 3 aus `ZIEL.md` ist erfÃÂ¼llt.** Ein Mailkonto lÃÂ¤sst sich einrichten,
+**Kriterium 3 aus `ZIEL.md` ist erfüllt.** Ein Mailkonto lässt sich einrichten,
 verbinden, und Mail wird abgerufen und lesbar dargestellt. Das war nie zuvor
-geprÃÂ¼ft.
+geprüft.
 
 Zugleich ist damit der **erste echte Servertest der neuen TLS-Schicht**
-bestanden Ã¢ÂÂ bisher lag nur ein Test mit einer *ÃÂ¤lteren* QCSSL-Fassung vor
+bestanden — bisher lag nur ein Test mit einer *älteren* QCSSL-Fassung vor
 (`AUSLIEFERUNGEN.md`).
 
-**Kriterium 1 ist erfÃÂ¼llt.** Das Fenster erscheint und ist bedienbar. Die
-Einstufung Ã¢ÂÂstrittig" vom 30.08. ist damit aufgehoben.
+**Kriterium 1 ist erfüllt.** Das Fenster erscheint und ist bedienbar. Die
+Einstufung „strittig" vom 30.08. ist damit aufgehoben.
 
 ### Was noch nicht stimmt
 
-**Die Werkzeugleiste hat weiterhin leere graue Felder** Ã¢ÂÂ auf dem ersten
+**Die Werkzeugleiste hat weiterhin leere graue Felder** — auf dem ersten
 Bildschirmfoto der erste Knopf und drei weitere in der Mitte. Die Behebung an
-`SECStdBtn::DrawDisabled` (A-1) hat also **nur einen Teil** der FÃÂ¤lle
-erwischt. Damit ist **Kriterium 2 weiterhin nicht erfÃÂ¼llt**.
+`SECStdBtn::DrawDisabled` (A-1) hat also **nur einen Teil** der Fälle
+erwischt. Damit ist **Kriterium 2 weiterhin nicht erfüllt**.
 
-NÃÂ¤chster Ansatz dafÃÂ¼r steht in `BEFUND-ANSICHT.md`: der Zeichenweg je Knopf,
+Nächster Ansatz dafür steht in `BEFUND-ANSICHT.md`: der Zeichenweg je Knopf,
 Punkte 2 und 3 (`GetDrawData`, `TBBS_HIDDEN`), und `SetControlBarWidthsInRow`
 ist noch ein leerer Rumpf (`OTShim.cpp:2244`), `OnSizeParent` reicht noch durch
 (`:3276`).
@@ -5162,69 +5162,69 @@ Warnungen. Das ist der Debug-Bau; im Release-Bau entfallen sie.
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 0 | Paket lÃÂ¤uft ohne Nachinstallieren | **nicht belegt** Ã¢ÂÂ der PaketprÃÂ¼fer trÃÂ¤gt nicht, siehe PR-2 |
-| 1 | startet und zeigt sein Hauptfenster | **erfÃÂ¼llt** |
-| 2 | die Darstellung ist korrekt | **nicht erfÃÂ¼llt** Ã¢ÂÂ leere Werkzeugleisten-KnÃÂ¶pfe |
-| 3 | Mailkonto verbinden und Mail abrufen | **erfÃÂ¼llt** |
+| 0 | Paket läuft ohne Nachinstallieren | **nicht belegt** — der Paketprüfer trägt nicht, siehe PR-2 |
+| 1 | startet und zeigt sein Hauptfenster | **erfüllt** |
+| 2 | die Darstellung ist korrekt | **nicht erfüllt** — leere Werkzeugleisten-Knöpfe |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
 
-## E-2 Ã¢ÂÂ Werkzeugleiste vollstÃÂ¤ndig, aber Umlaute in HTML-Mails zerstÃÂ¶rt (31.08.2026, 08:25)
+## E-2 — Werkzeugleiste vollständig, aber Umlaute in HTML-Mails zerstört (31.08.2026, 08:25)
 
 Zweites Bildschirmfoto aus demselben Lauf (`93762c7`, Paket 1.0.3).
 
-### Behoben: die leeren Werkzeugleisten-KnÃÂ¶pfe
+### Behoben: die leeren Werkzeugleisten-Knöpfe
 
-Auf diesem Bild ist die Werkzeugleiste **vollstÃÂ¤ndig** Ã¢ÂÂ alle Symbole
+Auf diesem Bild ist die Werkzeugleiste **vollständig** — alle Symbole
 vorhanden, kein einziges graues Feld mehr. Die Behebung an
 `SECStdBtn::DrawDisabled` (A-1, Commit `db28adb`) **wirkt also doch**.
 
 Warum das erste Bildschirmfoto welche zeigte: dort war noch kein Postfach
-geÃÂ¶ffnet und keine Nachricht ausgewÃÂ¤hlt, also waren die betroffenen KnÃÂ¶pfe
+geöffnet und keine Nachricht ausgewählt, also waren die betroffenen Knöpfe
 gesperrt. Sobald Nachrichten da sind, werden sie freigegeben und normal
-gezeichnet. Der Fall Ã¢ÂÂgesperrt und leer" ist damit behoben; der Fall Ã¢ÂÂgesperrt
-und erkennbar grau" bleibt zu prÃÂ¼fen, wenn wieder einmal KnÃÂ¶pfe gesperrt sind.
+gezeichnet. Der Fall „gesperrt und leer" ist damit behoben; der Fall „gesperrt
+und erkennbar grau" bleibt zu prüfen, wenn wieder einmal Knöpfe gesperrt sind.
 
-Auch der Aufgabenbereich unten (Ã¢ÂÂTask Status" / Ã¢ÂÂTask Errors") sitzt jetzt als
+Auch der Aufgabenbereich unten („Task Status" / „Task Errors") sitzt jetzt als
 eigener Streifen am unteren Rand, nicht mehr senkrecht mitten im Fenster.
 
 ### NEU UND OFFEN: Umlaute in HTML-Nachrichten werden zu `Ã¢ÂÂ`
 
     Video Lernkurs fÃ¢ÂÂr Excel 2019 - 2021 - GÃ¢ÂÂltig bis 23.03.2022
                      ^                      ^
-                     ÃÂ¼                      ÃÂ¼
+                     ü                      ü
 
-**Im reinen Text stimmten die Umlaute** Ã¢ÂÂ dieselbe Sitzung zeigte kurz zuvor
-Ã¢ÂÂgÃÂ¼ltig" und Ã¢ÂÂvergangen" richtig (Befund E-1). Der Fehler trifft also nur den
+**Im reinen Text stimmten die Umlaute** — dieselbe Sitzung zeigte kurz zuvor
+„gültig" und „vergangen" richtig (Befund E-1). Der Fehler trifft also nur den
 **HTML-Anzeigepfad**, nicht `ISOTranslate` im Textpfad.
 
 Das Zeichen ist ein Ersatzzeichen, kein Zeichensalat: **die Quelle wird als
 etwas anderes gelesen, als sie ist.** Wahrscheinlich ist der Zeichensatz aus
 dem `Content-Type` oder aus einem `<meta charset>` nicht ausgewertet, und der
-Text kommt als UTF-8-Bytes in einen Wandler, der Windows-1252 erwartet Ã¢ÂÂ oder
+Text kommt als UTF-8-Bytes in einen Wandler, der Windows-1252 erwartet — oder
 umgekehrt.
 
-**UNGEPRÃÂFT**, wo genau. Anzusehen wÃÂ¤ren:
+**UNGEPRÜFT**, wo genau. Anzusehen wären:
 
   - der HTML-Anzeigepfad (`TridentView.cpp`, `PgEmbeddedImage.cpp` und was
-    sonst die Vorschau mit HTML fÃÂ¼llt)
-  - ob der Zeichensatz aus dem MIME-Kopf ÃÂ¼berhaupt bis dorthin gereicht wird
+    sonst die Vorschau mit HTML füllt)
+  - ob der Zeichensatz aus dem MIME-Kopf überhaupt bis dorthin gereicht wird
   - `ISOTranslate` in `utils.cpp` wird hier offenbar **nicht** durchlaufen,
-    sonst wÃÂ¤re das Ergebnis dasselbe wie im Textpfad
+    sonst wäre das Ergebnis dasselbe wie im Textpfad
 
-Gregors EinschÃÂ¤tzung: *Ã¢ÂÂdas kann man beheben."*
+Gregors Einschätzung: *„das kann man beheben."*
 
 ### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 0 | Paket ohne Nachinstallieren | **nicht erfÃÂ¼llt** Ã¢ÂÂ Debug-Bau |
-| 1 | startet, Hauptfenster bedienbar | **erfÃÂ¼llt** |
-| 2 | Darstellung korrekt | **fast** Ã¢ÂÂ Anordnung, MenÃÂ¼s und Werkzeugleiste stimmen; **Umlaute in HTML-Mails nicht** |
-| 3 | Mailkonto verbinden und Mail abrufen | **erfÃÂ¼llt** |
+| 0 | Paket ohne Nachinstallieren | **nicht erfüllt** — Debug-Bau |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** |
+| 2 | Darstellung korrekt | **fast** — Anordnung, Menüs und Werkzeugleiste stimmen; **Umlaute in HTML-Mails nicht** |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** |
 
-## E-3 Ã¢ÂÂ TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, gegen einen echten Server (31.08.2026, 08:09:43)
+## E-3 — TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, gegen einen echten Server (31.08.2026, 08:09:43)
 
-Abgelesen in Eudoras eigenem Dialog *Tools Ã¢ÂÂ Last SSL Info*
-(Ã¢ÂÂEudora SSL Connection Information Manager"), Bildschirmfoto von Gregor.
+Abgelesen in Eudoras eigenem Dialog *Tools → Last SSL Info*
+(„Eudora SSL Connection Information Manager"), Bildschirmfoto von Gregor.
 
 | | |
 |---|---|
@@ -5238,40 +5238,40 @@ Abgelesen in Eudoras eigenem Dialog *Tools Ã¢ÂÂ Last SSL Info*
 ### Warum das wichtig ist
 
 Damit ist die offene Frage aus `Releases/1.0/AUSLIEFERUNGEN.md` beantwortet.
-Dort stand: *Ã¢ÂÂDer Mailserver-Test steht fÃÂ¼r sie aus."* Der bisherige
-erfolgreiche Abruf (29.08., `pop.gmx.net`) war mit `c875a750` gelaufen Ã¢ÂÂ der
-Fassung **ohne** den Regressionsfix H1 und **ohne** WACHEs fÃÂ¼nf Befunde.
+Dort stand: *„Der Mailserver-Test steht für sie aus."* Der bisherige
+erfolgreiche Abruf (29.08., `pop.gmx.net`) war mit `c875a750` gelaufen — der
+Fassung **ohne** den Regressionsfix H1 und **ohne** WACHEs fünf Befunde.
 
 **Jetzt ist die ausgelieferte QCSSL 1.0.1 (`ab55281a`) selbst gemessen:**
 TLS 1.3 mit einem AEAD-Verfahren, Aushandlung erfolgreich. Die strengeren
-Vorgaben aus M1 (Mindestprotokoll TLS 1.2 fÃÂ¼r alle Einstellungen) haben nichts
-verschlechtert Ã¢ÂÂ genau das war die Sorge, die in AUSLIEFERUNGEN.md formuliert
+Vorgaben aus M1 (Mindestprotokoll TLS 1.2 für alle Einstellungen) haben nichts
+verschlechtert — genau das war die Sorge, die in AUSLIEFERUNGEN.md formuliert
 war.
 
-### Port 110, nicht 995 Ã¢ÂÂ und das ist richtig so
+### Port 110, nicht 995 — und das ist richtig so
 
 `ABRUF-PRUEFEN.md` empfiehlt `SSLReceiveUse=2` mit Port 995, also **implizites
 TLS**. Gregor hat stattdessen **Port 110 mit STARTTLS** benutzt, und es
-funktioniert: die Verbindung beginnt im Klartext auf dem gewÃÂ¶hnlichen
+funktioniert: die Verbindung beginnt im Klartext auf dem gewöhnlichen
 POP3-Port und wird per `STLS` auf TLS 1.3 gehoben.
 
 Das ist kein Widerspruch, sondern der zweite gangbare Weg. `ABRUF-PRUEFEN.md`
-sollte beide nennen, statt nur einen Ã¢ÂÂ mit dem Hinweis, dass freenet auf 110
+sollte beide nennen, statt nur einen — mit dem Hinweis, dass freenet auf 110
 mit STARTTLS nachweislich arbeitet.
 
-Nebenbei beantwortet: die in `ABRUF-PRUEFEN.md` als **UNGEPRÃÂFT** markierte
-Frage, ob `mx.freenet.de` ÃÂ¼berhaupt POP3 spricht. **Ja**, auf Port 110.
+Nebenbei beantwortet: die in `ABRUF-PRUEFEN.md` als **UNGEPRÜFT** markierte
+Frage, ob `mx.freenet.de` überhaupt POP3 spricht. **Ja**, auf Port 110.
 
 ### Was damit belegt ist
 
-Die ganze Kette trÃÂ¤gt: OpenSSL 3.5.8 LTS Ã¢ÂÂ QCSSL 1.0.1 Ã¢ÂÂ `QCWorkerSocket` Ã¢ÂÂ
-POP3 ÃÂ¼ber STARTTLS Ã¢ÂÂ 159 abgerufene Nachrichten. Kein Absturz, keine
-Zertifikatswarnung Ã¢ÂÂ der mitgelieferte aktuelle Wurzelzertifikatsspeicher
-(`rootcerts.p7b`, 121 Zertifikate) trÃÂ¤gt gegen freenet.
+Die ganze Kette trägt: OpenSSL 3.5.8 LTS → QCSSL 1.0.1 → `QCWorkerSocket` →
+POP3 über STARTTLS → 159 abgerufene Nachrichten. Kein Absturz, keine
+Zertifikatswarnung — der mitgelieferte aktuelle Wurzelzertifikatsspeicher
+(`rootcerts.p7b`, 121 Zertifikate) trägt gegen freenet.
 
-## E-4 Ã¢ÂÂ Debug-Zusicherung beim Beenden: Index auÃÂerhalb von `m_arrBars` (31.08.2026 Ã¢ÂÂ BEHOBEN am 05.09.2026, ungeprÃÂ¼ft)
+## E-4 — Debug-Zusicherung beim Beenden: Index außerhalb von `m_arrBars` (31.08.2026 — BEHOBEN am 05.09.2026, ungeprüft)
 
-Beim **SchlieÃÂen** von Eudora:
+Beim **Schließen** von Eudora:
 
     Microsoft Visual C++ Runtime Library
     Debug Assertion Failed!
@@ -5279,62 +5279,62 @@ Beim **SchlieÃÂen** von Eudora:
     File:    ...\ATLMFC\Include\afxcoll.inl
     Line:    213
 
-### Was an dieser Zeile steht Ã¢ÂÂ nachgeschlagen, nicht geraten
+### Was an dieser Zeile steht — nachgeschlagen, nicht geraten
 
-`afxcoll.inl:213` ist die BereichsprÃÂ¼fung in **`CPtrArray::ElementAt`**:
+`afxcoll.inl:213` ist die Bereichsprüfung in **`CPtrArray::ElementAt`**:
 
 ```cpp
 _AFXCOLL_INLINE void*& CPtrArray::ElementAt(INT_PTR nIndex)
     { ASSERT(nIndex >= 0 && nIndex < m_nSize);      // <- Zeile 213
 ```
 
-Also ein **Index auÃÂerhalb des Arrays**. In der Ersatzschicht kommt `ElementAt`
-nicht vor Ã¢ÂÂ aber MFCs eigene `CDockBar` benutzt es auf `m_arrBars`, und genau
+Also ein **Index außerhalb des Arrays**. In der Ersatzschicht kommt `ElementAt`
+nicht vor — aber MFCs eigene `CDockBar` benutzt es auf `m_arrBars`, und genau
 daran hat die heutige Andockrechnung gearbeitet.
 
-### Wahrscheinlichste Ursache (UNGEPRÃÂFT)
+### Wahrscheinlichste Ursache (UNGEPRÜFT)
 
 `SECDockBar::MoveControlBarToPosition` (`OTShim.cpp:2718-2795`, heute neu) baut
 `m_arrBars` **von Hand** um: `RemoveAt` (bis zu zweimal), dann `InsertAt`, dann
-gegebenenfalls eine `NULL`-Endemarke anhÃÂ¤ngen.
+gegebenenfalls eine `NULL`-Endemarke anhängen.
 
-`m_arrBars` ist kein gewÃÂ¶hnliches Feld: MFC hÃÂ¤lt darin Zeiger auf Leisten,
-getrennt durch `NULL`-Marken, die die Zeilen abschlieÃÂen Ã¢ÂÂ und `CDockBar` fÃÂ¼hrt
+`m_arrBars` ist kein gewöhnliches Feld: MFC hält darin Zeiger auf Leisten,
+getrennt durch `NULL`-Marken, die die Zeilen abschließen — und `CDockBar` führt
 parallel dazu Zustand mit (`CControlBar::m_pDockBar`, die Positionsangaben, und
 `CFrameWnd::m_listControlBars`). Wer das Feld umbaut, muss diesen Zustand
 mitziehen.
 
-Der Verdacht: beim Beenden lÃÂ¤uft MFCs eigener Abbauweg ÃÂ¼ber `m_arrBars` und
+Der Verdacht: beim Beenden läuft MFCs eigener Abbauweg über `m_arrBars` und
 trifft auf eine Struktur, die zu dem nicht passt, was es sich gemerkt hat.
 
-**Nicht widerlegt, aber auch nicht belegt** Ã¢ÂÂ es fehlt der Aufrufstapel.
+**Nicht widerlegt, aber auch nicht belegt** — es fehlt der Aufrufstapel.
 
 ### Wie man es morgen in Minuten findet
 
-`tools/stapel-untersuchen.ps1` fÃÂ¤ngt die Ausnahme und lÃÂ¤uft die EBP-Kette ab.
-Damit wurde S-2 gefunden. NÃÂ¶tig: `Eudora.pdb` neben der `Eudora.exe` im Paket.
-Eine Debug-Zusicherung ist allerdings keine Ausnahme im Sinne des Debuggers Ã¢ÂÂ
+`tools/stapel-untersuchen.ps1` fängt die Ausnahme und läuft die EBP-Kette ab.
+Damit wurde S-2 gefunden. Nötig: `Eudora.pdb` neben der `Eudora.exe` im Paket.
+Eine Debug-Zusicherung ist allerdings keine Ausnahme im Sinne des Debuggers —
 sie zeigt einen Dialog. Zwei Wege:
 
-1. Im Dialog **Ã¢ÂÂWiederholen"** drÃÂ¼cken: das lÃÂ¶st einen Haltepunkt aus, den der
+1. Im Dialog **„Wiederholen"** drücken: das löst einen Haltepunkt aus, den der
    Debugger als Ausnahme sieht.
 2. Oder `_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_DEBUG)` setzen, dann geht
    die Meldung in die Debugausgabe statt in einen Dialog.
 
 ### Einordnung
 
-Es passiert **beim Beenden**, nachdem alles funktioniert hat Ã¢ÂÂ Abruf,
-Darstellung, MenÃÂ¼s. Kein Datenverlust ist zu erwarten: Eudora hat seine
-PostfÃÂ¤cher zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
-Meldung nicht**, weil `ASSERT` dort entfÃÂ¤llt Ã¢ÂÂ der zugrunde liegende
-Indexfehler bliebe aber bestehen und kÃÂ¶nnte dort still danebengreifen. Das ist
+Es passiert **beim Beenden**, nachdem alles funktioniert hat — Abruf,
+Darstellung, Menüs. Kein Datenverlust ist zu erwarten: Eudora hat seine
+Postfächer zu diesem Zeitpunkt geschrieben. Im **Release-Bau gibt es die
+Meldung nicht**, weil `ASSERT` dort entfällt — der zugrunde liegende
+Indexfehler bliebe aber bestehen und könnte dort still danebengreifen. Das ist
 der Grund, ihn nicht auf sich beruhen zu lassen.
 
-### Behoben am 05.09.2026 (Commit `1188e87`) Ã¢ÂÂ und der Verdacht oben war falsch
+### Behoben am 05.09.2026 (Commit `1188e87`) — und der Verdacht oben war falsch
 
 Gregors Debug-Bau 7.2.0.4 hat die Ursache gezeigt. Sie liegt **nicht** in
-`SECDockBar::MoveControlBarToPosition`, wie oben unter Ã¢ÂÂWahrscheinlichste
-Ursache (UNGEPRÃÂFT)" vermutet. Der Abschnitt bleibt als Beleg stehen, ist aber
+`SECDockBar::MoveControlBarToPosition`, wie oben unter „Wahrscheinlichste
+Ursache (UNGEPRÜFT)" vermutet. Der Abschnitt bleibt als Beleg stehen, ist aber
 **widerlegt**.
 
 Der Beleg ist eine Zusicherung, die schon **beim Start** kam:
@@ -5347,12 +5347,12 @@ Location   : CWazooBarMgr::SetDefaultWazooBarState, Line 409
 ### Die Kette
 
 `WazooBarMgr.cpp` schickt an zwei Stellen `ID_SEC_MDIFLOAT`, um eine angedockte
-Leiste in ein MDI-Kindfenster zu verwandeln. In dieser Fassung lÃÂ¤uft das ins
+Leiste in ein MDI-Kindfenster zu verwandeln. In dieser Fassung läuft das ins
 Leere: `SECMDIFrameWnd::FloatControlBarInMDIChild` ist bewusst ohne Wirkung
-(`OTShim.cpp:348`), weil MFC kein GegenstÃÂ¼ck dafÃÂ¼r hat.
+(`OTShim.cpp:348`), weil MFC kein Gegenstück dafür hat.
 
 Die Leiste bleibt also angedockt, und `GetParentFrame()` liefert weiterhin das
-**Hauptfenster**. Beide BlÃÂ¶cke danach casten es per C-Cast Ã¢ÂÂ der prÃÂ¼ft nichts Ã¢ÂÂ
+**Hauptfenster**. Beide Blöcke danach casten es per C-Cast — der prüft nichts —
 auf `CMDIChildWnd` beziehungsweise `QCControlBarWorksheet` und arbeiten damit.
 Die letzte dieser Zeilen ist ein **Schreibzugriff** auf einen Versatz in einem
 Objekt falschen Typs:
@@ -5362,14 +5362,14 @@ pMDIFrame->m_bFirstActivationAfterClose = TRUE;
 ```
 
 Im Debug meldete sich `ASSERT_KINDOF`; im Release ist `ASSERT` leer
-(`Eudora.vcxproj:132` `NDEBUG` Ã¢ÂÂ `stdafx.h:54` Ã¢ÂÂ `qcassert.h` Ã¢ÂÂ
-`SuperAssert.h:135`). Der Zugriff blieb und beschÃÂ¤digte **beim Start** fremden
-Speicher. Sichtbar wurde es erst beim Beenden, wenn MFC die Leisten abrÃÂ¤umt Ã¢ÂÂ
-daher die irrefÃÂ¼hrende Spur zu `afxcoll.inl:213`.
+(`Eudora.vcxproj:132` `NDEBUG` → `stdafx.h:54` → `qcassert.h` →
+`SuperAssert.h:135`). Der Zugriff blieb und beschädigte **beim Start** fremden
+Speicher. Sichtbar wurde es erst beim Beenden, wenn MFC die Leisten abräumt —
+daher die irreführende Spur zu `afxcoll.inl:213`.
 
 ### Behebung
 
-Beide BlÃÂ¶cke bekommen die Abfrage, die Eudora an vier anderen Stellen lÃÂ¤ngst
+Beide Blöcke bekommen die Abfrage, die Eudora an vier anderen Stellen längst
 benutzt (`WazooBarMgr.cpp:790`/`:821`, `WazooBar.cpp:652`/`:690`):
 
 ```cpp
@@ -5377,14 +5377,14 @@ if (pWazooBar->IsMDIChild())
 ```
 
 `IsMDIChild()` liefert in dieser Stufe immer `FALSE` (`OTShim.cpp:1565`, mit
-BegrÃÂ¼ndung im Kommentar). Die beiden BlÃÂ¶cke werden damit ÃÂ¼bersprungen Ã¢ÂÂ genau
+Begründung im Kommentar). Die beiden Blöcke werden damit übersprungen — genau
 richtig, denn sie setzen etwas voraus, das nicht stattgefunden hat. Die Stellen
 stehen jetzt in `WazooBarMgr.cpp:273` und `:421`.
 
-> **Status: behoben, ungeprÃÂ¼ft.** Dass die Meldung beim Beenden ausbleibt, hat
-> am laufenden Programm noch niemand bestÃÂ¤tigt.
+> **Status: behoben, ungeprüft.** Dass die Meldung beim Beenden ausbleibt, hat
+> am laufenden Programm noch niemand bestätigt.
 
-## Z-2 Ã¢ÂÂ Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
+## Z-2 — Umlaute in HTML-Nachrichten: der Zeichensatz wird nirgends angesagt (Ursache gefunden, 31.08.2026, ZEICHEN)
 
 Befund E-2: In HTML-Nachrichten steht statt eines Umlauts ein Ersatzzeichen
 (`f<>r` statt `fuer`), im reinen Text derselben Sitzung stimmen die Umlaute.
@@ -5396,7 +5396,7 @@ Befund E-2: In HTML-Nachrichten steht statt eines Umlauts ein Ersatzzeichen
    `WriteTempFile(theFile, ...)` (`:1496`) und danach
    `m_pSite->Load((LPTSTR)(LPCTSTR)m_szTmpFile)` (`:1546`).
 2. `CSite::Load` (`Eudora/SITE.CPP:397-465`) reicht diesen **Dateipfad** an
-   MSHTML weiter Ã¢ÂÂ ueber `CreateURLMoniker` + `IPersistMoniker::Load` (`:423-440`),
+   MSHTML weiter — ueber `CreateURLMoniker` + `IPersistMoniker::Load` (`:423-440`),
    ersatzweise `IPersistFile::Load` (`:453-460`).
 3. `CTridentView::WriteTempFile` (`Eudora/TridentView.cpp:1281-1440`) schreibt in
    diese Datei: erst das Stylesheet (aus `read.css` oder aus
@@ -5408,13 +5408,13 @@ Befund E-2: In HTML-Nachrichten steht statt eines Umlauts ein Ersatzzeichen
 kein `<meta ... charset=...>`, keine Codepage-Umwandlung. Die Volltextsuche des
 Auftrags stimmt und ist damit erklaert: die Suche nach `IPersistStreamInit`
 liefert im ganzen Baum **keinen** Treffer, weil MSHTML hier ueber eine Datei
-geladen wird. MSHTML muss den Zeichensatz also selbst raten Ã¢ÂÂ aus dem Inhalt.
+geladen wird. MSHTML muss den Zeichensatz also selbst raten — aus dem Inhalt.
 
 ### Woher das Ersatzzeichen kommt
 
 Was auf der Platte steht, ist **Windows-1252**: `TextReader::ReadIt`
 (`Eudora/TextReader.cpp:243-250`) uebersetzt jede Zeile mit
-`size = ISOTranslate(buf, size, iCharsetIdx)`, sobald `iCharsetIdx > 2` ist Ã¢ÂÂ
+`size = ISOTranslate(buf, size, iCharsetIdx)`, sobald `iCharsetIdx > 2` ist —
 und `ISOTranslate` (`Eudora/utils.cpp:1240-1283`) wandelt UTF-8 ueber
 `MultiByteToWideChar(CP_UTF8, ...)` + `WideCharToMultiByte(1252, ...)` nach
 CP1252. Das gilt fuer HTML-Teile genauso wie fuer Text, `bHtml`
@@ -5430,8 +5430,8 @@ Damit steht in der temporaeren Datei: CP1252-Bytes, dazu die Ansage "utf-8".
 MSHTML glaubt der Ansage, findet ein einzelnes Byte `0xFC`, das in UTF-8 nicht
 vorkommt, und setzt **ein** U+FFFD dafuer.
 
-Das passt genau zum Bild: **ein** Ersatzzeichen je Umlaut. Waere es umgekehrt Ã¢ÂÂ
-UTF-8-Bytes als CP1252 gelesen Ã¢ÂÂ, stuenden dort **zwei** Zeichen (`ÃÂÃÂ¼`). Der
+Das passt genau zum Bild: **ein** Ersatzzeichen je Umlaut. Waere es umgekehrt —
+UTF-8-Bytes als CP1252 gelesen —, stuenden dort **zwei** Zeichen (`Ã¼`). Der
 Textpfad hat kein `<meta>` und keinen Rater und zeigt deshalb richtig an (E-1).
 
 ### Behebung: zwei Aenderungen, beide eingesetzt
@@ -5450,7 +5450,7 @@ Textpfad hat kein `<meta>` und keinen Rater und zeigt deshalb richtig an (E-1).
    (Windows, US-ASCII, Latin-1) sind die Bytes unveraendert Latin-1/CP1252, bei
    `iCharsetIdx > 2` hat `ISOTranslate` nach CP1252 gewandelt. Vor dem
    Stylesheet und nicht in `IDS_INI_READMESSAGE_STYLE_SHEET`, weil eine
-   vorhandene `read.css` die Ressource ersetzt (`TridentView.cpp:1300-1322`) Ã¢ÂÂ
+   vorhandene `read.css` die Ressource ersetzt (`TridentView.cpp:1300-1322`) —
    in der Ressource stuende die Ansage dann nur manchmal in der Datei.
 
 2. **Die fremde Zeichensatz-Ansage entfernen**, in `GetBodyAsHTML`
@@ -5486,7 +5486,7 @@ beim **Binden** ab, an einer fremden Ursache:
     LINK : fatal error LNK1104: Datei "...\Eudora71\Importers\Lib\Debug\NSImport.lib"
     kann nicht geoeffnet werden.   [Eudora.vcxproj]
 
-`Eudora71/Importers/Lib/Debug/` gibt es in diesem Worktree gar nicht Ã¢ÂÂ die drei
+`Eudora71/Importers/Lib/Debug/` gibt es in diesem Worktree gar nicht — die drei
 Importer-Projekte sind im Solution-Bau vorher an `QCUtils.lib` gescheitert
 (siehe naechster Unterabschnitt). Es fehlt also eine Vorstufe, nicht ein
 Ergebnis dieser Aenderung.
@@ -5527,149 +5527,149 @@ Dateien. Die LNK1104-Gruppe ist eine Reihenfolge- oder Abhaengigkeitsfrage des
 Parallelbaus (`-m`): die Importer binden, bevor `QCUtils.lib` fertig ist. Ob es
 sich um denselben bekannten Effekt handelt, den README unter "in einem frischen
 Klon oder Worktree zuerst die ganze Solution bauen" beschreibt, ist
-**UNGEPRUEFT** Ã¢ÂÂ ein zweiter Lauf desselben Befehls wuerde das entscheiden.
+**UNGEPRUEFT** — ein zweiter Lauf desselben Befehls wuerde das entscheiden.
 
-## E-5 Ã¢ÂÂ Das Release startet auf einem Win11-Rechner ohne Visual Studio nicht (31.08.2026, OFFEN)
+## E-5 — Das Release startet auf einem Win11-Rechner ohne Visual Studio nicht (31.08.2026, OFFEN)
 
-Gregor hat `Eudora72-1.0.3-release.zip` aus der GitHub-VerÃÂ¶ffentlichung auf einem
-zweiten Rechner (Windows 11, **kein** Visual Studio) ausgepackt: *Ã¢ÂÂexe aus dem
+Gregor hat `Eudora72-1.0.3-release.zip` aus der GitHub-Veröffentlichung auf einem
+zweiten Rechner (Windows 11, **kein** Visual Studio) ausgepackt: *„exe aus dem
 github release ordner startet auf einem win11 pc gar nicht."*
 
 ### Was ausgeschlossen ist
 
-Streng nachgemessen, mit `dumpbin -dependents` ÃÂ¼ber alle 37 BinÃÂ¤rdateien des
-Pakets Ã¢ÂÂ und diesmal **ohne** `SysWOW64` als Fundort zu akzeptieren, weil dort
+Streng nachgemessen, mit `dumpbin -dependents` über alle 37 Binärdateien des
+Pakets — und diesmal **ohne** `SysWOW64` als Fundort zu akzeptieren, weil dort
 auf einem Rechner ohne Visual Studio nichts liegt:
 
-| fehlt | gebraucht von | hÃÂ¤lt den Start auf? |
+| fehlt | gebraucht von | hält den Start auf? |
 |---|---|---|
-| `MFC42.DLL` | `EuGraph.ocx` | **nein** Ã¢ÂÂ erst bei Benutzung geladen |
-| `MFC71.DLL` | `EudoraBk`, `ISock`, `Ldap`, drei Plugins | **nein** Ã¢ÂÂ dito |
-| `MSVCP71.dll` | `Ldap`, `Ph`, drei Plugins | **nein** Ã¢ÂÂ dito |
-| `oledlg.dll` | `mfc140.dll` | **nein** Ã¢ÂÂ Bestandteil von Windows |
+| `MFC42.DLL` | `EuGraph.ocx` | **nein** — erst bei Benutzung geladen |
+| `MFC71.DLL` | `EudoraBk`, `ISock`, `Ldap`, drei Plugins | **nein** — dito |
+| `MSVCP71.dll` | `Ldap`, `Ph`, drei Plugins | **nein** — dito |
+| `oledlg.dll` | `mfc140.dll` | **nein** — Bestandteil von Windows |
 
 Ebenfalls ausgeschlossen: eine Vermischung von Debug und Release. Jede Datei im
-Paket wurde einzeln geprÃÂ¼ft, keine braucht eine Debug-Laufzeit. Die drei
+Paket wurde einzeln geprüft, keine braucht eine Debug-Laufzeit. Die drei
 verteilbaren Laufzeiten liegen bei.
 
-### Mein Fehler bei der vorigen PrÃÂ¼fung
+### Mein Fehler bei der vorigen Prüfung
 
-Ich hatte gemeldet, alle Importe lÃÂ¶sten auf Ã¢ÂÂ dabei habe ich Ã¢ÂÂliegt in
-`SysWOW64`" als Ã¢ÂÂvorhanden" gewertet. Auf dieser VM stimmt das, weil Visual
+Ich hatte gemeldet, alle Importe lösten auf — dabei habe ich „liegt in
+`SysWOW64`" als „vorhanden" gewertet. Auf dieser VM stimmt das, weil Visual
 Studio installiert ist; auf Gregors Zielrechner nicht. **Genau der Fehler, den
-PRÃÂFER am PaketprÃÂ¼fer schon nachgewiesen hatte** (PR-2: Ã¢ÂÂprÃÂ¼ft die Maschine,
-nicht das Paket") Ã¢ÂÂ und ich habe ihn in meiner eigenen PrÃÂ¼fung wiederholt.
+PRÜFER am Paketprüfer schon nachgewiesen hatte** (PR-2: „prüft die Maschine,
+nicht das Paket") — und ich habe ihn in meiner eigenen Prüfung wiederholt.
 
-### Was jetzt zu prÃÂ¼fen ist, in dieser Reihenfolge
+### Was jetzt zu prüfen ist, in dieser Reihenfolge
 
 1. **Mark of the Web.** Dateien aus einem heruntergeladenen ZIP tragen einen
-   Zonenvermerk; Windows kann das Laden von DLLs daraus verweigern Ã¢ÂÂ ohne
+   Zonenvermerk; Windows kann das Laden von DLLs daraus verweigern — ohne
    Meldung. Gegenprobe im ausgepackten Ordner:
 
        Get-ChildItem -Recurse | Unblock-File
 
-2. **Wie Ã¢ÂÂgar nicht" genau aussieht.** Kein Fenster? Eine Meldung? Erscheint der
-   Prozess kurz im Task-Manager? Davon hÃÂ¤ngt alles Weitere ab. Ohne diese Angabe
+2. **Wie „gar nicht" genau aussieht.** Kein Fenster? Eine Meldung? Erscheint der
+   Prozess kurz im Task-Manager? Davon hängt alles Weitere ab. Ohne diese Angabe
    ist jede Vermutung wertlos.
 3. **Die Ereignisanzeige** auf dem Zielrechner, Protokoll *Anwendung*: ein
    Ladefehler steht dort mit dem Namen der fehlenden Datei.
-4. **`tools/paket-pruefen.ps1` auf dem ZIELRECHNER laufen lassen** Ã¢ÂÂ dort, wo
+4. **`tools/paket-pruefen.ps1` auf dem ZIELRECHNER laufen lassen** — dort, wo
    kein Visual Studio ist, gibt es die richtige Antwort. Das ist auch der einzige
-   belastbare Nachweis fÃÂ¼r Kriterium 0 (siehe die Berichtigung in `ZIEL.md`).
+   belastbare Nachweis für Kriterium 0 (siehe die Berichtigung in `ZIEL.md`).
 
-### Was daraus fÃÂ¼r Kriterium 0 folgt
+### Was daraus für Kriterium 0 folgt
 
-**Es bleibt unbelegt, und die Vermutung, es sei erfÃÂ¼llt, ist widerlegt.** Ein
-Release-Bau allein genÃÂ¼gt nicht; das Paket muss auf einer Maschine ohne
+**Es bleibt unbelegt, und die Vermutung, es sei erfüllt, ist widerlegt.** Ein
+Release-Bau allein genügt nicht; das Paket muss auf einer Maschine ohne
 Entwicklungsumgebung nachweislich starten.
 
-## E-6 Ã¢ÂÂ Das Release lÃÂ¤uft auf Windows 11 ohne Visual Studio Ã¢ÂÂ der Kontoassistent stÃÂ¼rzt bei *Weiter* ab (31.08.2026, TEILERFOLG)
+## E-6 — Das Release läuft auf Windows 11 ohne Visual Studio — der Kontoassistent stürzt bei *Weiter* ab (31.08.2026, TEILERFOLG)
 
 ### Berichtigung zu E-5: es startet doch
 
 Gregor hat das **hier gepackte** ZIP auf dem zweiten Rechner (Windows 11, kein
-Visual Studio) ausgepackt und ein Mailverzeichnis hinzugefÃÂ¼gt. **Eudora startet.**
-Bildschirmfoto zeigt: Hauptfenster im Windows-11-Erscheinungsbild, MenÃÂ¼leiste
-vollstÃÂ¤ndig (*File* bis *Help* Ã¢ÂÂ ohne *Debug*, wie es im Release-Bau sein soll),
+Visual Studio) ausgepackt und ein Mailverzeichnis hinzugefügt. **Eudora startet.**
+Bildschirmfoto zeigt: Hauptfenster im Windows-11-Erscheinungsbild, Menüleiste
+vollständig (*File* bis *Help* — ohne *Debug*, wie es im Release-Bau sein soll),
 Postfachbaum links mit *In/Out/Junk/Trash/Recent*, Statuszeile, und den
 **New Account Wizard**.
 
-Damit ist **Kriterium 0 im Kern erreicht**: das Paket lÃÂ¤uft ohne
-Nachinstallieren auf einer Maschine ohne Entwicklungsumgebung. EinschrÃÂ¤nkung:
-das Mailverzeichnis musste von Hand dazugelegt werden Ã¢ÂÂ der Grund dafÃÂ¼r ist
-noch nicht geklÃÂ¤rt (im Paket liegt eines, siehe Ã¢ÂÂOffene Frage" unten).
+Damit ist **Kriterium 0 im Kern erreicht**: das Paket läuft ohne
+Nachinstallieren auf einer Maschine ohne Entwicklungsumgebung. Einschränkung:
+das Mailverzeichnis musste von Hand dazugelegt werden — der Grund dafür ist
+noch nicht geklärt (im Paket liegt eines, siehe „Offene Frage" unten).
 
-Was in E-5 als Ã¢ÂÂstartet gar nicht" gemeldet war, betraf offenbar das aus der
-GitHub-VerÃÂ¶ffentlichung heruntergeladene ZIP, nicht das hier gepackte. Der
-Unterschied ist noch nicht gemessen; **UNGEPRÃÂFT**, ob es am Zonenvermerk
+Was in E-5 als „startet gar nicht" gemeldet war, betraf offenbar das aus der
+GitHub-Veröffentlichung heruntergeladene ZIP, nicht das hier gepackte. Der
+Unterschied ist noch nicht gemessen; **UNGEPRÜFT**, ob es am Zonenvermerk
 (*Mark of the Web*) lag.
 
 ### NEU: Absturz im Kontoassistenten
 
-> *Ã¢ÂÂwenn ich hier auf weiter klicke, stÃÂ¼rzt es ab!"*
+> *„wenn ich hier auf weiter klicke, stürzt es ab!"*
 
-Der Assistent zeigt die BegrÃÂ¼ÃÂungsseite (Ã¢ÂÂWelcome to Eudora!"); der Klick auf
+Der Assistent zeigt die Begrüßungsseite („Welcome to Eudora!"); der Klick auf
 **Weiter >** beendet das Programm.
 
-**Das ist ein Release-Bau Ã¢ÂÂ und genau davor war gewarnt.** FREIGABE hatte
-festgehalten: *Ã¢ÂÂim Release-Bau entfallen die SUPERASSERT-Dialoge und alle
-ASSERT/VERIFY"*. Ein Fehler, der im Debug-Bau nur eine Zusicherung ausgelÃÂ¶st
-hÃÂ¤tte, wird hier zum Absturz. Im Debug-Bau ist der Assistent nie benutzt worden
-Ã¢ÂÂ Gregor hat sein Konto von Hand ÃÂ¼ber die `Eudora.ini` eingetragen.
+**Das ist ein Release-Bau — und genau davor war gewarnt.** FREIGABE hatte
+festgehalten: *„im Release-Bau entfallen die SUPERASSERT-Dialoge und alle
+ASSERT/VERIFY"*. Ein Fehler, der im Debug-Bau nur eine Zusicherung ausgelöst
+hätte, wird hier zum Absturz. Im Debug-Bau ist der Assistent nie benutzt worden
+— Gregor hat sein Konto von Hand über die `Eudora.ini` eingetragen.
 
 **Wo zu suchen ist:** Projekt `Eudora71/AccountWizard`. Die Seitenklassen liegen
 in `Eudora71/AccountWizard/PrivateInc` (`WizardAcapPage.h`,
 `WizardClientPage.h`, `WizardConfirmpage.h`, `WizardFinishPage.h`,
-`WizardImapDirPage.h` und weitere). Der ÃÂbergang von der ersten Seite lÃÂ¤uft ÃÂ¼ber
-`OnWizardNext` der BegrÃÂ¼ÃÂungsseite.
+`WizardImapDirPage.h` und weitere). Der Übergang von der ersten Seite läuft über
+`OnWizardNext` der Begrüßungsseite.
 
-**NÃÂ¤chster Schritt:** den **Debug**-Bau nehmen und im Assistenten auf *Weiter*
+**Nächster Schritt:** den **Debug**-Bau nehmen und im Assistenten auf *Weiter*
 klicken. Dort meldet sich die Zusicherung mit Datei und Zeile, statt still
-abzustÃÂ¼rzen Ã¢ÂÂ das ist der schnellste Weg zur Fundstelle. Falls es im Debug-Bau
+abzustürzen — das ist der schnellste Weg zur Fundstelle. Falls es im Debug-Bau
 nicht auftritt, ist es ein reiner Release-Effekt (nicht initialisierte Variable
 oder ein Codepfad, der nur ohne `ASSERT` erreicht wird), und dann hilft
 `tools/stapel-untersuchen.ps1` gegen die Release-EXE mit der `Eudora.pdb`.
 
 ### Offene Frage
 
-Warum musste das Mailverzeichnis von Hand dazugelegt werden? Das Paket enthÃÂ¤lt
-`Mailverzeichnis\Eudora.ini` Ã¢ÂÂ entweder wurde es beim Auspacken nicht
+Warum musste das Mailverzeichnis von Hand dazugelegt werden? Das Paket enthält
+`Mailverzeichnis\Eudora.ini` — entweder wurde es beim Auspacken nicht
 mitgenommen, oder Eudora sucht es an anderer Stelle, wenn kein Argument
-ÃÂ¼bergeben wird. Zu klÃÂ¤ren.
+übergeben wird. Zu klären.
 
 ### Stand der vier Kriterien am 31.08.2026 (Zeitdokument)
 
 | # | Kriterium | Stand |
 |---|---|---|
-| 0 | Paket ohne Nachinstallieren | **im Kern erreicht** Ã¢ÂÂ lÃÂ¤uft auf Win11 ohne VS; Mailverzeichnis noch von Hand |
-| 1 | startet, Hauptfenster bedienbar | **erfÃÂ¼llt** |
-| 2 | Darstellung korrekt | **fast** Ã¢ÂÂ HTML-Umlaute behoben, aber ungeprÃÂ¼ft |
-| 3 | Mailkonto verbinden und Mail abrufen | **erfÃÂ¼llt** (Debug-Bau) Ã¢ÂÂ im Release blockiert der Assistent |
+| 0 | Paket ohne Nachinstallieren | **im Kern erreicht** — läuft auf Win11 ohne VS; Mailverzeichnis noch von Hand |
+| 1 | startet, Hauptfenster bedienbar | **erfüllt** |
+| 2 | Darstellung korrekt | **fast** — HTML-Umlaute behoben, aber ungeprüft |
+| 3 | Mailkonto verbinden und Mail abrufen | **erfüllt** (Debug-Bau) — im Release blockiert der Assistent |
 
-## E-7 Ã¢ÂÂ Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026 Ã¢ÂÂ BEHOBEN am 05.09.2026, ungeprÃÂ¼ft)
+## E-7 — Die Bau-Kennung fehlt im Titel, solange kein Fenster offen ist (31.08.2026 — BEHOBEN am 05.09.2026, ungeprüft)
 
-Gregor auf dem Win11-Rechner: *Ã¢ÂÂund ich sehe hier keine versionsnummer in der
+Gregor auf dem Win11-Rechner: *„und ich sehe hier keine versionsnummer in der
 titelzeile"*. Der Titel zeigt nur `Eudora`.
 
-### Es ist kein Bau-, sondern ein Anzeigeproblem Ã¢ÂÂ nachgemessen
+### Es ist kein Bau-, sondern ein Anzeigeproblem — nachgemessen
 
-| PrÃÂ¼fung | Ergebnis |
+| Prüfung | Ergebnis |
 |---|---|
 | Kennung in der Release-EXE? | **ja**, bei Versatz 2.147.104: `Eudora 7.2.0.3 / Paket 1.0.3+b1f20e0` |
-| Vorlagentext `unbekannt` in der EXE? | **nein** Ã¢ÂÂ die echte Kennung wurde erzeugt, nicht die Vorlage |
-| ÃÂberschreibung im Baum? | **ja**, `mainfrm.cpp:9686` |
+| Vorlagentext `unbekannt` in der EXE? | **nein** — die echte Kennung wurde erzeugt, nicht die Vorlage |
+| Überschreibung im Baum? | **ja**, `mainfrm.cpp:9686` |
 
 ### Die Ursache
 
-`CMainFrame::OnUpdateFrameTitle` lÃÂ¤uft **nur, wenn MFC den Rahmentitel
-auffrischt** Ã¢ÂÂ also wenn sich ein MDI-Kindfenster ÃÂ¤ndert. Beim Start ohne
-geÃÂ¶ffnetes Postfach, und wÃÂ¤hrend der modale Kontoassistent lÃÂ¤uft, ist das nie
+`CMainFrame::OnUpdateFrameTitle` läuft **nur, wenn MFC den Rahmentitel
+auffrischt** — also wenn sich ein MDI-Kindfenster ändert. Beim Start ohne
+geöffnetes Postfach, und während der modale Kontoassistent läuft, ist das nie
 der Fall. Der Titel steht dann noch so, wie er beim Erzeugen des Fensters
-gesetzt wurde, und die ErgÃÂ¤nzung war nie dran.
+gesetzt wurde, und die Ergänzung war nie dran.
 
-Auf dieser VM fiel es nicht auf, weil dort immer ein Postfach geÃÂ¶ffnet war Ã¢ÂÂ
+Auf dieser VM fiel es nicht auf, weil dort immer ein Postfach geöffnet war —
 der Titel lautete `Eudora [... ] - [In]`. Genau der Zustandsunterschied, der
-heute schon bei den Werkzeugleisten-KnÃÂ¶pfen zu einer falschen Meldung gefÃÂ¼hrt
+heute schon bei den Werkzeugleisten-Knöpfen zu einer falschen Meldung geführt
 hat (E-2).
 
 ### Behebung
@@ -5680,59 +5680,59 @@ Auffrischung. Zwei Wege:
 1. In `CMainFrame::OnCreate` bzw. direkt nach
    `FinishInitAndShowWindow` (`eudora.cpp:1510`) einmal `OnUpdateFrameTitle(TRUE)`
    aufrufen. Billig, nutzt den vorhandenen Code.
-2. Oder `m_strTitle` des Rahmens gleich mit der Kennung belegen Ã¢ÂÂ dann trÃÂ¤gt
-   MFC sie bei jeder Auffrischung von selbst mit, und die ÃÂberschreibung kÃÂ¶nnte
+2. Oder `m_strTitle` des Rahmens gleich mit der Kennung belegen — dann trägt
+   MFC sie bei jeder Auffrischung von selbst mit, und die Überschreibung könnte
    ganz entfallen. Sauberer, aber `m_strTitle` wird an mehreren Stellen
-   benutzt; **UNGEPRÃÂFT**, ob das Nebenwirkungen hat.
+   benutzt; **UNGEPRÜFT**, ob das Nebenwirkungen hat.
 
-Weg 1 ist der kleinere Eingriff und wÃÂ¤re der erste Versuch.
+Weg 1 ist der kleinere Eingriff und wäre der erste Versuch.
 
 ### Warum das mehr als Kosmetik ist
 
-Die Kennung ist dafÃÂ¼r gebaut, ein Bildschirmfoto einem Bau zuzuordnen Ã¢ÂÂ und
+Die Kennung ist dafür gebaut, ein Bildschirmfoto einem Bau zuzuordnen — und
 genau in dem Zustand, in dem Gregor jetzt Fehler findet (frischer Start,
 Assistent offen, noch kein Postfach), fehlt sie. Damit versagt sie an der
-Stelle, fÃÂ¼r die sie da ist.
+Stelle, für die sie da ist.
 
 > **Nachtrag vom 31.08.2026 abends (Befund V-1): es ist inzwischen mehr als
-> das.** Unter `v1.0.3` sind **zwei verschiedene ZIPs** verÃÂ¶ffentlicht, und beide
-> `Eudora.exe` melden dieselbe Produktversion **7.2.0.3** Ã¢ÂÂ im ÃÂber-Dialog, im
+> das.** Unter `v1.0.3` sind **zwei verschiedene ZIPs** veröffentlicht, und beide
+> `Eudora.exe` melden dieselbe Produktversion **7.2.0.3** — im Über-Dialog, im
 > Explorer und im Absturzbericht. Die Bau-Kennung ist damit das **einzige**
-> Merkmal am laufenden Programm, das die beiden auseinanderhÃÂ¤lt, weil sie den
-> Commit enthÃÂ¤lt. Und sie fehlt ausgerechnet im Zustand des Absturzes. Die
+> Merkmal am laufenden Programm, das die beiden auseinanderhält, weil sie den
+> Commit enthält. Und sie fehlt ausgerechnet im Zustand des Absturzes. Die
 > Behebung ist ein einziger Aufruf.
 
-### Behoben am 05.09.2026 Ã¢ÂÂ Weg 1, ein Aufruf (Commit `bcc59bb`)
+### Behoben am 05.09.2026 — Weg 1, ein Aufruf (Commit `bcc59bb`)
 
-Gregor zur Fassung 7.2.0.4: *Ã¢ÂÂversionsnummer fehlt in der titelzeile - warum?
-korrigeiren!"* Ã¢ÂÂ derselbe Zustand, nur eine Fassung weiter.
+Gregor zur Fassung 7.2.0.4: *„versionsnummer fehlt in der titelzeile - warum?
+korrigeiren!"* — derselbe Zustand, nur eine Fassung weiter.
 
 Umgesetzt ist **Weg 1** aus dem Abschnitt oben: am Ende von
 `CMainFrame::FinishInitAndShowWindow` (`mainfrm.cpp:1135`), also nachdem das
-Fenster steht, lÃÂ¤uft einmal
+Fenster steht, läuft einmal
 
 ```cpp
 OnUpdateFrameTitle(TRUE);
 ```
 
-Die Funktion hÃÂ¤ngt die Kennung nicht doppelt an, sie prÃÂ¼ft das selbst
+Die Funktion hängt die Kennung nicht doppelt an, sie prüft das selbst
 (`mainfrm.cpp:9728`). Weg 2 (`m_strTitle` gleich belegen) ist **nicht**
-umgesetzt und bleibt ungeprÃÂ¼ft.
+umgesetzt und bleibt ungeprüft.
 
 Release gebaut: 0 Fehler, 62 Warnungen, `Eudora.exe` mit 7.2.0.4.
 
-> **Status: behoben, ungeprÃÂ¼ft.** Dass die Kennung jetzt tatsÃÂ¤chlich im Titel
-> steht, hat am laufenden Programm noch **niemand** bestÃÂ¤tigt Ã¢ÂÂ es liegt keine
-> RÃÂ¼ckmeldung von Gregor dazu vor. Nachsehen kostet einen Blick auf die
-> Titelzeile beim nÃÂ¤chsten Start.
+> **Status: behoben, ungeprüft.** Dass die Kennung jetzt tatsächlich im Titel
+> steht, hat am laufenden Programm noch **niemand** bestätigt — es liegt keine
+> Rückmeldung von Gregor dazu vor. Nachsehen kostet einen Blick auf die
+> Titelzeile beim nächsten Start.
 
-## E-8 Ã¢ÂÂ Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
+## E-8 — Berichtigung zu E-6: der Win11-Lauf war der DEBUG-Bau (31.08.2026)
 
-Gregor: *Ã¢ÂÂich habe das verwendet: `C:\Users\Gregor\Eudora72-1.0.3`"*
+Gregor: *„ich habe das verwendet: `C:\Users\Gregor\Eudora72-1.0.3`"*
 
 Nachgemessen mit `dumpbin -dependents`:
 
-| Verzeichnis | Bauart | GrÃÂ¶ÃÂe | Laufzeiten im Ordner |
+| Verzeichnis | Bauart | Größe | Laufzeiten im Ordner |
 |---|---|---|---|
 | `Eudora72-1.0.3` | **DEBUG** | 10.208.256 B | `mfc140d`, `msvcp140d`, `vcruntime140d`, `ucrtbased`, `concrt140d`, `mfc140deu` |
 | `Eudora72-1.0.3-release` | RELEASE | 2.933.248 B | `mfc140`, `msvcp140`, `vcruntime140` |
@@ -5740,56 +5740,56 @@ Nachgemessen mit `dumpbin -dependents`:
 ### Zwei Folgerungen, beide unangenehm
 
 **1. Der Absturz im Kontoassistenten (E-6) ist KEIN Release-Effekt.** Er
-passiert im Debug-Bau. Meine ErklÃÂ¤rung in E-6 Ã¢ÂÂ Ã¢ÂÂim Release entfallen alle
-ASSERT, deshalb Absturz statt Zusicherung" Ã¢ÂÂ **trÃÂ¤gt nicht**. Es ist entweder
-ein Fehler unterhalb dessen, was `ASSERT` abfÃÂ¤ngt (Zugriff ÃÂ¼ber einen ungÃÂ¼ltigen
+passiert im Debug-Bau. Meine Erklärung in E-6 — „im Release entfallen alle
+ASSERT, deshalb Absturz statt Zusicherung" — **trägt nicht**. Es ist entweder
+ein Fehler unterhalb dessen, was `ASSERT` abfängt (Zugriff über einen ungültigen
 Zeiger), oder es kam eine Zusicherung, die als Absturz wahrgenommen wurde.
 
-Was das fÃÂ¼r die Suche bedeutet: der Debug-Bau bringt hier **keinen** zusÃÂ¤tzlichen
-Hinweis, weil er schon der Debug-Bau war. Der Weg fÃÂ¼hrt ÃÂ¼ber
+Was das für die Suche bedeutet: der Debug-Bau bringt hier **keinen** zusätzlichen
+Hinweis, weil er schon der Debug-Bau war. Der Weg führt über
 `tools/stapel-untersuchen.ps1` gegen genau dieses Verzeichnis, mit der
 `Eudora.pdb` daneben.
 
-**2. Kriterium 0 ist NICHT erreicht.** Das Verzeichnis lÃÂ¤uft auf dem
+**2. Kriterium 0 ist NICHT erreicht.** Das Verzeichnis läuft auf dem
 Win11-Rechner nur, weil die sechs **nicht verteilbaren** Debug-Laufzeiten
-physisch darin liegen Ã¢ÂÂ ich hatte sie dort mit `laufzeit-holen.ps1` hinkopiert.
+physisch darin liegen — ich hatte sie dort mit `laufzeit-holen.ps1` hinkopiert.
 Genau das darf nicht ausgeliefert werden (Microsoft nimmt die Debug-Fassungen
-ausdrÃÂ¼cklich vom Weiterverteilen aus, siehe `ZIEL.md`, Kriterium 0).
+ausdrücklich vom Weiterverteilen aus, siehe `ZIEL.md`, Kriterium 0).
 
-Meine Meldung in E-6, Kriterium 0 sei Ã¢ÂÂim Kern erreicht", ist damit **falsch**
-und hiermit zurÃÂ¼ckgezogen.
+Meine Meldung in E-6, Kriterium 0 sei „im Kern erreicht", ist damit **falsch**
+und hiermit zurückgezogen.
 
 ### Was noch offen ist
 
 Das **Release**-Paket (`Eudora72-1.0.3-release`, 2,9 MB) ist auf dem
 Win11-Rechner **nicht ausprobiert** worden. Ob es dort startet, ist weiter
-ungeprÃÂ¼ft Ã¢ÂÂ und damit auch, was E-5 ursprÃÂ¼nglich meldete.
+ungeprüft — und damit auch, was E-5 ursprünglich meldete.
 
-Ebenfalls unverÃÂ¤ndert offen: warum das Mailverzeichnis von Hand dazugelegt
+Ebenfalls unverändert offen: warum das Mailverzeichnis von Hand dazugelegt
 werden musste, obwohl beide Pakete eines enthalten.
 
 ### Die Lehre, zum dritten Mal an einem Tag
 
-Ich habe eine Aussage ÃÂ¼ber einen Zustand gemacht, ohne den Zustand zu prÃÂ¼fen Ã¢ÂÂ
+Ich habe eine Aussage über einen Zustand gemacht, ohne den Zustand zu prüfen —
 und zwar genau die Frage, um die es ging: **welches Paket lief da eigentlich?**
-Dieselbe Fehlerklasse wie bei den Werkzeugleisten-KnÃÂ¶pfen (E-2) und bei
-Ã¢ÂÂSysWOW64 gilt als vorhanden" (E-5). Siehe `Arbeitsweise/erst-pruefen-dann-anweisen.md`.
+Dieselbe Fehlerklasse wie bei den Werkzeugleisten-Knöpfen (E-2) und bei
+„SysWOW64 gilt als vorhanden" (E-5). Siehe `Arbeitsweise/erst-pruefen-dann-anweisen.md`.
 
-## E-9 Ã¢ÂÂ Absturz im Kontoassistenten bei *Weiter*: die Kette bis zur Importsuche (31.08.2026, OFFEN)
+## E-9 — Absturz im Kontoassistenten bei *Weiter*: die Kette bis zur Importsuche (31.08.2026, OFFEN)
 
 Gregor, in **beiden** Bauarten reproduziert (Debug- und Release-Paket 1.0.3):
-*Ã¢ÂÂbeim klicken auf weiter stÃÂ¼rzt es ab!"*
+*„beim klicken auf weiter stürzt es ab!"*
 
-Damit ist es **kein Release-Effekt** Ã¢ÂÂ die ErklÃÂ¤rung aus E-6 ist endgÃÂ¼ltig
+Damit ist es **kein Release-Effekt** — die Erklärung aus E-6 ist endgültig
 widerlegt.
 
 ### Die Kette, nachgelesen
 
-1. Die BegrÃÂ¼ÃÂungsseite `CWizardWelcomePage`
+1. Die Begrüßungsseite `CWizardWelcomePage`
    (`AccountWizard/Src/WizardWelcomePage.cpp`) hat **kein** `OnWizardNext`. Der
-   Klick auf *Weiter* fÃÂ¼hrt also unmittelbar zur nÃÂ¤chsten Seite.
-2. NÃÂ¤chste Seite ist `CWizardClientPage`, angehÃÂ¤ngt in
-   `WizardPropSheet.cpp:342-343` direkt nach der BegrÃÂ¼ÃÂungsseite.
+   Klick auf *Weiter* führt also unmittelbar zur nächsten Seite.
+2. Nächste Seite ist `CWizardClientPage`, angehängt in
+   `WizardPropSheet.cpp:342-343` direkt nach der Begrüßungsseite.
 3. Deren `OnSetActive` (`WizardClientPage.cpp`) tut als erstes dies:
 
    ```cpp
@@ -5815,59 +5815,59 @@ widerlegt.
    InitDllStruct(iMatchingFiles);
    ```
 
-### Zwei AuffÃÂ¤lligkeiten in `InitPluginList`
+### Zwei Auffälligkeiten in `InitPluginList`
 
 **a) Die Anzahl wird zweimal ermittelt, das Feld nur einmal bemessen.** Erst
-zÃÂ¤hlt eine Suche die Treffer, dann wird das Feld in dieser GrÃÂ¶ÃÂe angelegt, dann
-lÃÂ¤uft eine **zweite** Suche und schreibt hinein. Liefern die beiden Suchen
-verschiedene Anzahlen, wird ÃÂ¼ber das Feldende hinaus geschrieben.
+zählt eine Suche die Treffer, dann wird das Feld in dieser Größe angelegt, dann
+läuft eine **zweite** Suche und schreibt hinein. Liefern die beiden Suchen
+verschiedene Anzahlen, wird über das Feldende hinaus geschrieben.
 
-**b) Der RÃÂ¼ckgabewert von `DEBUG_NEW` wird nicht geprÃÂ¼ft**, und `InitDllStruct`
-wird fÃÂ¼r jeden Treffer gerufen Ã¢ÂÂ auch fÃÂ¼r einen, dessen DLL sich **nicht laden
-lÃÂ¤sst**. Und genau das ist belegt: die Ablaufverfolgung vom 30.08. zeigt
+**b) Der Rückgabewert von `DEBUG_NEW` wird nicht geprüft**, und `InitDllStruct`
+wird für jeden Treffer gerufen — auch für einen, dessen DLL sich **nicht laden
+lässt**. Und genau das ist belegt: die Ablaufverfolgung vom 30.08. zeigt
 
     LoadLibrary failed (...\Plugins\SMIME.dll): err = 126
     LoadLibrary failed (...\Plugins\SpamHeaders.dll): err = 126
     LoadLibrary failed (...\Plugins\SpamWatch.dll): err = 126
 
-Fehler 126 ist Ã¢ÂÂModul nicht gefunden" Ã¢ÂÂ diese drei Plugins brauchen `MFC71.DLL`
+Fehler 126 ist „Modul nicht gefunden" — diese drei Plugins brauchen `MFC71.DLL`
 und `MSVCP71.dll`, die dem Paket fehlen und nicht nachbaubar sind (B-2). Ob
-`m_szEudoraImportSearch` diese drei ÃÂ¼berhaupt trifft, ist **UNGEPRÃÂFT** Ã¢ÂÂ das
-ist die erste Frage, die morgen zu klÃÂ¤ren ist.
+`m_szEudoraImportSearch` diese drei überhaupt trifft, ist **UNGEPRÜFT** — das
+ist die erste Frage, die morgen zu klären ist.
 
 ### Wie man es entscheidet, ohne zu raten
 
 1. **`tools/stapel-untersuchen.ps1`** gegen das Paket, `Eudora.pdb` daneben.
-   Dann *Weiter* klicken. Der Debugger fÃÂ¤ngt die Zugriffsverletzung und nennt
+   Dann *Weiter* klicken. Der Debugger fängt die Zugriffsverletzung und nennt
    die Zeile. Das ist der direkte Weg und dauert Minuten.
 2. **Gegenprobe ohne Debugger:** den Ordner `Plugins` im Paket umbenennen und
-   den Assistenten erneut versuchen. StÃÂ¼rzt es dann **nicht** ab, ist die
-   Plugin-Suche die Ursache Ã¢ÂÂ und der Verdacht auf `InitDllStruct` bestÃÂ¤tigt.
+   den Assistenten erneut versuchen. Stürzt es dann **nicht** ab, ist die
+   Plugin-Suche die Ursache — und der Verdacht auf `InitDllStruct` bestätigt.
    Das kann Gregor selbst in zehn Sekunden machen.
 3. Erst danach `m_szEudoraImportSearch` und `InitDllStruct` genau lesen.
 
 ### Umgehung, die nachweislich funktioniert
 
-Das Konto **ÃÂ¼ber die `Eudora.ini` von Hand** eintragen, wie in
+Das Konto **über die `Eudora.ini` von Hand** eintragen, wie in
 `ABRUF-PRUEFEN.md` beschrieben. Auf diesem Weg hat Gregor am 31.08. um 08:09
-erfolgreich Mail abgerufen (E-1, E-3) Ã¢ÂÂ der Assistent ist fÃÂ¼r Kriterium 3 nicht
-nÃÂ¶tig.
+erfolgreich Mail abgerufen (E-1, E-3) — der Assistent ist für Kriterium 3 nicht
+nötig.
 
 ### E-9, Nachtrag: die Plugins sind es NICHT (31.08.2026, gemessen)
 
-Gegenprobe von Gregor: `Plugins` in `Plugins_aus` umbenannt Ã¢ÂÂ **der Absturz
+Gegenprobe von Gregor: `Plugins` in `Plugins_aus` umbenannt — **der Absturz
 bleibt.** Und Eudora legt einen neuen, leeren `Plugins`-Ordner an.
 
 Damit ist die Plugin-Suche als Ursache **ausgeschlossen**, und meine
-Berichtigung im Commit `6e5da17` bestÃÂ¤tigt: gesucht wird
+Berichtigung im Commit `6e5da17` bestätigt: gesucht wird
 `ExecutableDir` + `*.eif` (`MAPIImport.cpp:954-955`), also die drei Importer im
-**Programmverzeichnis**. Der `Plugins`-Ordner enthÃÂ¤lt etwas anderes
+**Programmverzeichnis**. Der `Plugins`-Ordner enthält etwas anderes
 (`SMIME.dll`, `SpamHeaders.dll`, `SpamWatch.dll`) und wird von `InitPluginList`
 gar nicht angefasst. Dass Eudora ihn neu anlegt, ist normales Verhalten beim
 Start und hat mit dem Assistenten nichts zu tun.
 
-Die HÃÂ¤rtung von `InitPluginList` (`6e5da17`) bleibt richtig Ã¢ÂÂ sie behebt zwei
-echte Strukturfehler Ã¢ÂÂ, aber sie behebt **diesen** Absturz nicht.
+Die Härtung von `InitPluginList` (`6e5da17`) bleibt richtig — sie behebt zwei
+echte Strukturfehler —, aber sie behebt **diesen** Absturz nicht.
 
 ### Wo es jetzt noch liegen kann
 
@@ -5885,26 +5885,26 @@ if (!pIM->m_newhead)
 ```
 
 `InitProviders` wird **nur** gerufen, wenn `InitPlugins` `true` liefert. Findet
-die Suche keine `*.eif`, liefert sie `false` Ã¢ÂÂ und danach wird `m_newhead`
-gelesen, das erst `InitProviders` belegt. **UNGEPRÃÂFT**, ob der Konstruktor von
+die Suche keine `*.eif`, liefert sie `false` — und danach wird `m_newhead`
+gelesen, das erst `InitProviders` belegt. **UNGEPRÜFT**, ob der Konstruktor von
 `CImportMail` `m_newhead` auf NULL setzt. Tut er es nicht, wird hier ein
-unbestimmter Zeiger geprÃÂ¼ft, und `pIM->m_newhead` weiter unten dereferenziert.
+unbestimmter Zeiger geprüft, und `pIM->m_newhead` weiter unten dereferenziert.
 
 Das passt zum Bild: im Paket liegen zwar drei `.eif`, aber ob sie gefunden
-werden, hÃÂ¤ngt an `ExecutableDir` Ã¢ÂÂ und das wird aus dem Modulpfad gebildet.
+werden, hängt an `ExecutableDir` — und das wird aus dem Modulpfad gebildet.
 
-**b) `OnInitDialog`** ruft `OnRadioNew()`, bevor `OnSetActive` gelaufen ist Ã¢ÂÂ
-also bevor `m_pImporter` ÃÂ¼berhaupt angelegt wurde. Was `OnRadioNew` anfasst,
+**b) `OnInitDialog`** ruft `OnRadioNew()`, bevor `OnSetActive` gelaufen ist —
+also bevor `m_pImporter` überhaupt angelegt wurde. Was `OnRadioNew` anfasst,
 ist noch nicht nachgelesen.
 
-### Der nÃÂ¤chste Schritt, der es entscheidet
+### Der nächste Schritt, der es entscheidet
 
 `tools/stapel-untersuchen.ps1` gegen das Release-Paket, `Eudora.pdb` daneben,
-dann *Weiter* per `BM_CLICK` an den Knopf senden Ã¢ÂÂ so wie es bei den
-SUPERASSERT-Dialogen schon gemacht wurde. Der Debugger fÃÂ¤ngt die
+dann *Weiter* per `BM_CLICK` an den Knopf senden — so wie es bei den
+SUPERASSERT-Dialogen schon gemacht wurde. Der Debugger fängt die
 Zugriffsverletzung und nennt Datei und Zeile. Ein Lauf von etwa einer Minute.
 
-## E-11 Ã¢ÂÂ Der Absturz liegt nicht im Assistenten: `ReleaseBuffer` ohne `GetBuffer` (31.08.2026, URSACHE GEFUNDEN)
+## E-11 — Der Absturz liegt nicht im Assistenten: `ReleaseBuffer` ohne `GetBuffer` (31.08.2026, URSACHE GEFUNDEN)
 
 ### Der Beleg: `eudora.log`
 
@@ -5915,8 +5915,8 @@ Stelle**, danach steht nichts mehr:
     MAIN     8: 0.01 Dialog: "Would you like it to be the default mail program?"
 
 Damit ist der Kontoassistent **entlastet**. Der Absturz passiert in der
-Registrierung als Standard-Mailprogramm Ã¢ÂÂ der Klick auf *Weiter* schlieÃÂt nur
-den Assistenten, und danach lÃÂ¤uft dieser Weg.
+Registrierung als Standard-Mailprogramm — der Klick auf *Weiter* schließt nur
+den Assistenten, und danach läuft dieser Weg.
 
 Die Meldung ist `IDS_WARN_DEFAULT_MAILTO` (`EudoraRes.rc:7909`), benutzt genau
 einmal: `eudora.cpp:3331`, in `CEudoraApp::RegisterURLSchemes` (ab `:3274`,
@@ -5937,96 +5937,96 @@ if (i >= 0)
 `RegMailto` ist ein **`CRString`** (`eudora.cpp:3287`), also ein aus einer
 Ressource geladener String.
 
-**`CString::ReleaseBuffer` ohne vorangehendes `GetBuffer` ist unzulÃÂ¤ssig.** Unter
-VC6 war das gutmÃÂ¼tig: `CString` hielt einen eigenen Puffer, und
-`ReleaseBuffer(n)` setzte einfach die LÃÂ¤nge. Bei **MFC 14** ist `CString` ein
-`CStringT` mit **ReferenzzÃÂ¤hlung**: `ReleaseBuffer` setzt voraus, dass der Puffer
+**`CString::ReleaseBuffer` ohne vorangehendes `GetBuffer` ist unzulässig.** Unter
+VC6 war das gutmütig: `CString` hielt einen eigenen Puffer, und
+`ReleaseBuffer(n)` setzte einfach die Länge. Bei **MFC 14** ist `CString` ein
+`CStringT` mit **Referenzzählung**: `ReleaseBuffer` setzt voraus, dass der Puffer
 exklusiv gesperrt ist, und schreibt in die gemeinsame Verwaltungsstruktur. Bei
-einem geteilten Puffer zerstÃÂ¶rt das fremde Daten.
+einem geteilten Puffer zerstört das fremde Daten.
 
 Das ist derselbe Klassiker wie die anderen VC6-Altlasten dieser Portierung
-(`std::auto_ptr`, Iteratoren als Zeiger, Standardargumente) Ã¢ÂÂ nur schlÃÂ¤gt er
+(`std::auto_ptr`, Iteratoren als Zeiger, Standardargumente) — nur schlägt er
 erst zur Laufzeit zu.
 
 ### Der Umfang: 142 Vorkommen im Baum
 
 `grep -rn "ReleaseBuffer(" --include=*.cpp Eudora71/` findet **142 Stellen**.
-Nicht alle sind falsch Ã¢ÂÂ richtig ist das Muster
+Nicht alle sind falsch — richtig ist das Muster
 `p = s.GetBuffer(n); ... s.ReleaseBuffer();`. Falsch sind die Stellen **ohne**
 vorangehendes `GetBuffer` auf derselben Variablen.
 
-AuffÃÂ¤llig auf den ersten Blick, weil sie eine **LÃÂ¤nge** ÃÂ¼bergeben und damit
-kÃÂ¼rzen wollen Ã¢ÂÂ also die gefÃÂ¤hrliche Form:
+Auffällig auf den ersten Blick, weil sie eine **Länge** übergeben und damit
+kürzen wollen — also die gefährliche Form:
 
-- `eudora.cpp:3371` `RegMailto.ReleaseBuffer(i)` Ã¢ÂÂ **dieser Absturz**
+- `eudora.cpp:3371` `RegMailto.ReleaseBuffer(i)` — **dieser Absturz**
 - `ConConProfile.cpp:198` `m_szElementData.ReleaseBuffer(nNewDataLength)`
 - `QCSharewareManager.cpp` (in `Load`) `RetailVersion.ReleaseBuffer(LastDot + 1)`
-  Ã¢ÂÂ lÃÂ¤uft bei **jedem Start** durch den Box-Build-Zweig
+  — läuft bei **jedem Start** durch den Box-Build-Zweig
 
 ### Die Behebung
 
-Statt `s.ReleaseBuffer(i)` gehÃÂ¶rt dort ein sauberes KÃÂ¼rzen:
+Statt `s.ReleaseBuffer(i)` gehört dort ein sauberes Kürzen:
 
 ```cpp
 RegMailto = RegMailto.Left(i);
 ```
 
-Das ist in allen FÃÂ¤llen richtig, ÃÂ¤ndert die Bedeutung nicht und kommt ohne
-Puffersperre aus. **Nicht mehr in dieser Sitzung geÃÂ¤ndert** Ã¢ÂÂ die Zeit reichte
-nicht, um es zu ÃÂ¼bersetzen und zu prÃÂ¼fen, und 142 Stellen wollen einzeln
+Das ist in allen Fällen richtig, ändert die Bedeutung nicht und kommt ohne
+Puffersperre aus. **Nicht mehr in dieser Sitzung geändert** — die Zeit reichte
+nicht, um es zu übersetzen und zu prüfen, und 142 Stellen wollen einzeln
 angesehen werden.
 
-### NÃÂ¤chster Schritt
+### Nächster Schritt
 
 1. `eudora.cpp:3371` auf `Left(i)` umstellen, bauen, Gregor probieren lassen.
    Ein Einzeiler, und er trifft genau den belegten Absturz.
 2. Danach die 142 Vorkommen durchgehen: jedes ohne vorangehendes `GetBuffer` auf
-   derselben Variablen ist ein Kandidat. Ein Werkzeug dafÃÂ¼r wÃÂ¤re lohnend Ã¢ÂÂ das
+   derselben Variablen ist ein Kandidat. Ein Werkzeug dafür wäre lohnend — das
    ist eine **Fehlerklasse**, kein Einzelfall.
-3. `QCSharewareManager.cpp` zuerst, weil dieser Weg bei jedem Start lÃÂ¤uft.
+3. `QCSharewareManager.cpp` zuerst, weil dieser Weg bei jedem Start läuft.
 
 ### Nebenbefund aus dem Protokoll
 
     Leeway 10, Out: MBX 1788158654, TOC 0
     Out .mbx size: MBX 0, TOC 1
 
-FÃÂ¼r eine **leere** `Out.mbx` (die Zeilen darÃÂ¼ber melden `Size: 0`) wird eine
-DateigrÃÂ¶ÃÂe von **1.788.158.654** gemeldet Ã¢ÂÂ 1,7 GB. Ein nicht initialisierter
-Wert. Zwei Zeilen spÃÂ¤ter steht korrekt `MBX 0`. Eigener Befund, nicht
+Für eine **leere** `Out.mbx` (die Zeilen darüber melden `Size: 0`) wird eine
+Dateigröße von **1.788.158.654** gemeldet — 1,7 GB. Ein nicht initialisierter
+Wert. Zwei Zeilen später steht korrekt `MBX 0`. Eigener Befund, nicht
 untersucht.
 
 
-## R-1 Ã¢ÂÂ Die Fehlerklasse hinter E-11 ausgezÃÂ¤hlt: 25 von 142 Vorkommen sind falsch (31.08.2026)
+## R-1 — Die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 Vorkommen sind falsch (31.08.2026)
 
 Werkzeug: **`tools/releasebuffer-pruefen.pl`** (neu). Branch
 `claude/letzter-stand-b2ytpi`, Commit `8f1c51e`, Berichtigung `26b52b8`.
-Gemessen ohne Visual Studio, ohne Agenten, reine Quelltextanalyse Ã¢ÂÂ **es ist
-keine Zeile C++ geÃÂ¤ndert worden**, und nichts davon ist ÃÂ¼bersetzt.
+Gemessen ohne Visual Studio, ohne Agenten, reine Quelltextanalyse — **es ist
+keine Zeile C++ geändert worden**, und nichts davon ist übersetzt.
 
 E-11 hat einen Absturz auf frischen Installationen auf `ReleaseBuffer` ohne
-vorangehendes `GetBuffer` zurÃÂ¼ckgefÃÂ¼hrt (`eudora.cpp:3372`) und 142 Vorkommen im
-Baum gezÃÂ¤hlt. Dieser Abschnitt stuft sie ein.
+vorangehendes `GetBuffer` zurückgeführt (`eudora.cpp:3372`) und 142 Vorkommen im
+Baum gezählt. Dieser Abschnitt stuft sie ein.
 
 ### Was das Werkzeug tut
 
-FÃÂ¼r jedes `ReleaseBuffer(` bestimmt es den EmpfÃÂ¤nger, schÃÂ¤tzt den
-Funktionsanfang (rÃÂ¼ckwÃÂ¤rts bis zur nÃÂ¤chsten schlieÃÂenden Klammer in Spalte 1 Ã¢ÂÂ
+Für jedes `ReleaseBuffer(` bestimmt es den Empfänger, schätzt den
+Funktionsanfang (rückwärts bis zur nächsten schließenden Klammer in Spalte 1 —
 VC6-Stil, in diesem Baum durchgehend) und sucht darin ein `GetBuffer` bzw.
 `GetBufferSetLength` **auf derselben Variablen**.
 
 | Einstufung | Bedeutung | Anzahl |
 |---|---|---|
-| `ok` | das richtige Paar `GetBuffer`/`ReleaseBuffer` Ã¢ÂÂ bleibt | **117** |
-| `falsch` | kein `GetBuffer`, **und ein Argument** ÃÂ¼bergeben: hier wird gekÃÂ¼rzt | **20** |
-| `lockbuffer` | davor steht `LockBuffer`, nicht `GetBuffer` Ã¢ÂÂ der richtige Partner ist `UnlockBuffer()` | **4** |
+| `ok` | das richtige Paar `GetBuffer`/`ReleaseBuffer` — bleibt | **117** |
+| `falsch` | kein `GetBuffer`, **und ein Argument** übergeben: hier wird gekürzt | **20** |
+| `lockbuffer` | davor steht `LockBuffer`, nicht `GetBuffer` — der richtige Partner ist `UnlockBuffer()` | **4** |
 | `danach` | `GetBuffer` steht erst **nach** dem `ReleaseBuffer` | **1** |
 | `verdaechtig` | kein `GetBuffer`, kein Argument | 0 |
 
-**25 Stellen sind zu ÃÂ¤ndern, 117 bleiben.** Aufruf:
-`perl tools/releasebuffer-pruefen.pl` (RÃÂ¼ckgabe 1, sobald etwas zu tun ist),
+**25 Stellen sind zu ändern, 117 bleiben.** Aufruf:
+`perl tools/releasebuffer-pruefen.pl` (Rückgabe 1, sobald etwas zu tun ist),
 `--alle` zeigt auch die richtigen.
 
-### Die Zahl 142 war zufÃÂ¤llig richtig
+### Die Zahl 142 war zufällig richtig
 
 Nachgemessen, weil eine Zahl ohne den Befehl, der sie erzeugt hat, nichts wert
 ist:
@@ -6034,76 +6034,76 @@ ist:
 | Messung | Ergebnis |
 |---|---|
 | `grep -rn "ReleaseBuffer(" --include=*.cpp` | 142 |
-| dasselbe **einschlieÃÂlich `.CPP`** in GroÃÂschreibung | 143 |
-| davon eine reine **Kommentarzeile** (`eudora.cpp:3372`, Ã¢ÂÂwar ReleaseBuffer(i) Ã¢ÂÂ¦") | Ã¢ÂÂ1 |
+| dasselbe **einschließlich `.CPP`** in Großschreibung | 143 |
+| davon eine reine **Kommentarzeile** (`eudora.cpp:3372`, „war ReleaseBuffer(i) …") | −1 |
 | in `.h`/`.inl` | 0 |
 | **echte Vorkommen** | **142** |
 | davon findet das Werkzeug | **142** |
 
-`--include=*.cpp` ist bei `grep` groÃÂ-/kleinschreibungsabhÃÂ¤ngig und ÃÂ¼bersieht
-`Eudora71/Eudora/PGHTMIMP.CPP`; dafÃÂ¼r zÃÂ¤hlt es die Kommentarzeile mit, in der
+`--include=*.cpp` ist bei `grep` groß-/kleinschreibungsabhängig und übersieht
+`Eudora71/Eudora/PGHTMIMP.CPP`; dafür zählt es die Kommentarzeile mit, in der
 die Behebung von E-11 vermerkt ist. Die beiden Fehler heben sich auf.
 
 ### Berichtigung zur Behebung von E-11
 
-`AUFGABEN.md` (A1) fÃÂ¼hrt die Behebung als `RegMailto = RegMailto.Left(i);`.
+`AUFGABEN.md` (A1) führt die Behebung als `RegMailto = RegMailto.Left(i);`.
 Im Quelltext steht **`RegMailto.Truncate(i);`** (`eudora.cpp:3372`, nachgelesen).
-Beides ist richtig; `Truncate` ist der kÃÂ¼rzere Weg und kommt ohne temporÃÂ¤res
+Beides ist richtig; `Truncate` ist der kürzere Weg und kommt ohne temporäres
 Objekt aus. Die Doku ist nachgezogen.
 
-### DRINGEND: die Behebung von E-11 ist mit hoher Wahrscheinlichkeit unvollstÃÂ¤ndig
+### DRINGEND: die Behebung von E-11 ist mit hoher Wahrscheinlichkeit unvollständig
 
 **`CEudoraApp::RegisterURLSchemes()` reicht von `eudora.cpp:3274` bis `:3417`.**
 In dieser **einen** Funktion stehen **drei** Vorkommen:
 
 | Zeile | Stand |
 |---|---|
-| 3372 | `RegMailto` Ã¢ÂÂ **behoben** (E-11), jetzt `Truncate(i)` |
-| 3403 | `RegClientsMail.ReleaseBuffer(LastSlash)` Ã¢ÂÂ **unverÃÂ¤ndert falsch** |
-| 3413 | `EudoraOption.ReleaseBuffer(SlashIndex)` Ã¢ÂÂ **unverÃÂ¤ndert falsch** |
+| 3372 | `RegMailto` — **behoben** (E-11), jetzt `Truncate(i)` |
+| 3403 | `RegClientsMail.ReleaseBuffer(LastSlash)` — **unverändert falsch** |
+| 3413 | `EudoraOption.ReleaseBuffer(SlashIndex)` — **unverändert falsch** |
 
 Was `eudora.log` belegt: die letzte Zeile vor dem Abbruch ist der Dialog
-`IDS_WARN_DEFAULT_MAILTO`, ausgegeben in **`eudora.cpp:3331`** Ã¢ÂÂ also **innerhalb
+`IDS_WARN_DEFAULT_MAILTO`, ausgegeben in **`eudora.cpp:3331`** — also **innerhalb
 dieser Funktion, vor allen drei Stellen**. Der Absturz liegt damit hinter 3331;
 dass er ausgerechnet an 3372 lag und nicht an 3403 oder 3413, ist **nicht
 belegt**. Beide sind auf dem Weg: 3403 im Zweig `if (bIsDefaultMailto)`, 3413
 ohne jede Bedingung.
 
-**Folge fÃÂ¼r den ersten Punkt der Arbeitsliste:** wenn Gregor das v1.0.3-ZIP auf
-dem Win11-Rechner probiert und es **weiterhin abstÃÂ¼rzt**, ist das kein
-Widerspruch zu E-11, sondern der Hinweis auf 3403/3413. Beide gehÃÂ¶ren vor dem
-nÃÂ¤chsten Paket behoben Ã¢ÂÂ es sind zwei Zeilen, und sie kosten einen Bau.
+**Folge für den ersten Punkt der Arbeitsliste:** wenn Gregor das v1.0.3-ZIP auf
+dem Win11-Rechner probiert und es **weiterhin abstürzt**, ist das kein
+Widerspruch zu E-11, sondern der Hinweis auf 3403/3413. Beide gehören vor dem
+nächsten Paket behoben — es sind zwei Zeilen, und sie kosten einen Bau.
 
 ### Die 20 Stellen der Einstufung `falsch`
 
 Nach Dringlichkeit, nicht nach Datei:
 
-| Stelle | EmpfÃÂ¤nger | wie oft der Weg lÃÂ¤uft |
+| Stelle | Empfänger | wie oft der Weg läuft |
 |---|---|---|
-| `eudora.cpp:3403`, `:3413` | `RegClientsMail`, `EudoraOption` | **bei jeder frischen Installation** Ã¢ÂÂ dieselbe Funktion wie der E-11-Absturz |
+| `eudora.cpp:3403`, `:3413` | `RegClientsMail`, `EudoraOption` | **bei jeder frischen Installation** — dieselbe Funktion wie der E-11-Absturz |
 | `QCSharewareManager.cpp:1318` | `RetailVersion` | **bei jedem Start** (`Load`, Box-Build-Zweig) |
-| `sendmail.cpp:1782`, `:1788`, `:1815`, `:1865` | `szLine` | **bei jeder gesendeten Klartextmail** Ã¢ÂÂ `CString szLine(pSrcLine, Ã¢ÂÂ¦)` (`:1736`), dann `SetAt`, dann `ReleaseBuffer` |
+| `sendmail.cpp:1782`, `:1788`, `:1815`, `:1865` | `szLine` | **bei jeder gesendeten Klartextmail** — `CString szLine(pSrcLine, …)` (`:1736`), dann `SetAt`, dann `ReleaseBuffer` |
 | `POPSession.cpp:1747` | `LoginName` | nur im Hesiod-Zweig (`stricmp(Server,"hesiod")`) |
-| `SMTPSession.cpp:328` | `Recipient` | beim Auswerten einer Serverantwort mit `<Ã¢ÂÂ¦>` |
+| `SMTPSession.cpp:328` | `Recipient` | beim Auswerten einer Serverantwort mit `<…>` |
 | `SMTPSession.cpp:683`, `Imapdll/src/Network.cpp:179` | `LoginName` | Anmeldung, Konto mit `@` |
-| `mime.cpp:2020` | `m_CID` | jede Nachricht mit eingebettetem Inhalt (`Content-ID` in `<Ã¢ÂÂ¦>`) |
+| `mime.cpp:2020` | `m_CID` | jede Nachricht mit eingebettetem Inhalt (`Content-ID` in `<…>`) |
 | `msgutils.cpp:2128`, `:2165`, `:2185`, `:2265` | `szPath` | Pfad- und Anhangbehandlung |
 | `fileutil.cpp:482` | `EudoraDir` | Verzeichnisbestimmung |
 | `guiutils.cpp:1605` | `File` | Dateiauswahl |
-| `PaigeEdtView.cpp:657` | `strTitle` | Fenstertitel ÃÂ¼ber 31 Zeichen |
-| `MAPI/recip.cpp:52` | `FullAddress` | MAPI-EmpfÃÂ¤nger |
+| `PaigeEdtView.cpp:657` | `strTitle` | Fenstertitel über 31 Zeichen |
+| `MAPI/recip.cpp:52` | `FullAddress` | MAPI-Empfänger |
 
-Alle wollen **kÃÂ¼rzen**. Der Ersatz ist in jedem Fall `s.Truncate(n)` (so ist
+Alle wollen **kürzen**. Der Ersatz ist in jedem Fall `s.Truncate(n)` (so ist
 E-11 behoben) oder `s = s.Left(n)`.
 
-### Die 4 Stellen `lockbuffer` Ã¢ÂÂ anderer Fehler, anderer Ersatz
+### Die 4 Stellen `lockbuffer` — anderer Fehler, anderer Ersatz
 
 `Text2Html.cpp:912`, `:939`, `:955` und `PGHTMIMP.CPP:2944` holen den Puffer mit
-**`LockBuffer()`**, schreiben hinein und geben ihn mit `ReleaseBuffer()` zurÃÂ¼ck.
+**`LockBuffer()`**, schreiben hinein und geben ihn mit `ReleaseBuffer()` zurück.
 Der Partner von `LockBuffer` ist **`UnlockBuffer`**; `ReleaseBuffer` ist es
 nicht. Gemessen im Baum: 7 `LockBuffer`, aber nur 2 `UnlockBuffer`.
 
-Das Muster ist dort ÃÂ¼berall dasselbe Ã¢ÂÂ ein abschlieÃÂendes CRLF abschneiden:
+Das Muster ist dort überall dasselbe — ein abschließendes CRLF abschneiden:
 
 ```cpp
 tempStr = szUrl.LockBuffer();
@@ -6111,7 +6111,7 @@ tempStr[strlen(tempStr)-2] = '\0';
 szUrl.ReleaseBuffer();
 ```
 
-Sauber wÃÂ¤re ohne Puffer: `if (szUrl.Right(2) == "\r\n") szUrl.Truncate(szUrl.GetLength()-2);`
+Sauber wäre ohne Puffer: `if (szUrl.Right(2) == "\r\n") szUrl.Truncate(szUrl.GetLength()-2);`
 
 ### Die eine Stelle `danach`
 
@@ -6122,71 +6122,71 @@ Message.ReleaseBuffer(0);
 Message.GetBuffer(::SafeStrlenMT(m_theMess));
 ```
 
-`ReleaseBuffer(0)` **vor** dem `GetBuffer` Ã¢ÂÂ die Absicht ist Ã¢ÂÂleeren, dann
-vorab belegen". Richtig wÃÂ¤re `Message.Empty();` gefolgt vom `GetBuffer`.
-Nebenbei: das `GetBuffer` in der Folgezeile hat selbst kein `ReleaseBuffer` Ã¢ÂÂ
-der Puffer bleibt gesperrt, solange die Funktion lÃÂ¤uft.
+`ReleaseBuffer(0)` **vor** dem `GetBuffer` — die Absicht ist „leeren, dann
+vorab belegen". Richtig wäre `Message.Empty();` gefolgt vom `GetBuffer`.
+Nebenbei: das `GetBuffer` in der Folgezeile hat selbst kein `ReleaseBuffer` —
+der Puffer bleibt gesperrt, solange die Funktion läuft.
 
 ### Was von Hand gegengelesen ist
 
 Nicht alle 142, aber jede Einstufung mindestens einmal, und die kritischen
-vollstÃÂ¤ndig: **8 der 20** `falsch` (`POPSession:1747`, `mime.cpp:2020`,
+vollständig: **8 der 20** `falsch` (`POPSession:1747`, `mime.cpp:2020`,
 `PaigeEdtView:657`, `QCSharewareManager:1318`, `SMTPSession:328`,
 `eudora.cpp:3403` und `:3413`, `sendmail.cpp:1782`), **alle 4** `lockbuffer`,
 der eine `danach`. **Kein Fehlalarm darunter.** Die Funktionsgrenzen von
-`RegisterURLSchemes` (3274Ã¢ÂÂ3417) und `SendPlain` (ab 1607) sind eigens
-nachgezÃÂ¤hlt.
+`RegisterURLSchemes` (3274–3417) und `SendPlain` (ab 1607) sind eigens
+nachgezählt.
 
-### Grenzen des Werkzeugs Ã¢ÂÂ im Kopf der Datei ausfÃÂ¼hrlich
+### Grenzen des Werkzeugs — im Kopf der Datei ausführlich
 
-Der EmpfÃÂ¤nger wird als **Text** verglichen: ein `GetBuffer` ÃÂ¼ber einen Zeiger
+Der Empfänger wird als **Text** verglichen: ein `GetBuffer` über einen Zeiger
 auf dasselbe Objekt wird nicht erkannt, `s` und `m_str.s` gelten als
-verschieden. Der Funktionsanfang ist geschÃÂ¤tzt; wo die SchÃÂ¤tzung an ihre Grenze
-lÃÂ¤uft, steht `[Funktionsanfang unsicher]` in der Ausgabe (nach dem Ausbau der
+verschieden. Der Funktionsanfang ist geschätzt; wo die Schätzung an ihre Grenze
+läuft, steht `[Funktionsanfang unsicher]` in der Ausgabe (nach dem Ausbau der
 `LockBuffer`-Erkennung kommt das im Baum nicht mehr vor). Zeichenketten werden
-nicht ausgeblendet Ã¢ÂÂ ein `"ReleaseBuffer("` im Text wÃÂ¤re ein Fehlalarm; im Baum
+nicht ausgeblendet — ein `"ReleaseBuffer("` im Text wäre ein Fehlalarm; im Baum
 gibt es keinen.
 
 ### Nachtrag: ein Fehler im Werkzeug selbst (Commit `26b52b8`)
 
 Beim Einbau der Einstufung `lockbuffer` hat `passt()` einen dritten Parameter
 bekommen, und **eine von vier Aufrufstellen** wurde nicht nachgezogen (`:151`,
-der WÃÂ¤chter in der RÃÂ¼ckwÃÂ¤rts-Suche). perl warnte bei jedem Lauf zweimal
+der Wächter in der Rückwärts-Suche). perl warnte bei jedem Lauf zweimal
 `Use of uninitialized value $ruf in regexp compilation`.
 
 **Wirkung auf das Ergebnis: keine.** Mit undefiniertem `$ruf` wurde der Ausdruck
-zu `\s*\(` und lieferte fÃÂ¼r die `ReleaseBuffer`-Zeile selbst 0 Ã¢ÂÂ genau das, was
-der WÃÂ¤chter erreichen sollte. Nachgemessen, vorher wie nachher: 117 ok,
-20 falsch, 4 lockbuffer, 1 danach, 0 verdÃÂ¤chtig = 142.
+zu `\s*\(` und lieferte für die `ReleaseBuffer`-Zeile selbst 0 — genau das, was
+der Wächter erreichen sollte. Nachgemessen, vorher wie nachher: 117 ok,
+20 falsch, 4 lockbuffer, 1 danach, 0 verdächtig = 142.
 
-Aufgefallen ist es erst bei der AbschlussprÃÂ¼fung **nach** dem Commit, nicht
-vorher. Festgehalten, weil ein Werkzeug, dessen Warnungen man gewohnheitsmÃÂ¤ÃÂig
-ÃÂ¼bersieht, dasselbe Problem hat wie eine Schranke, die grundlos anschlÃÂ¤gt.
+Aufgefallen ist es erst bei der Abschlussprüfung **nach** dem Commit, nicht
+vorher. Festgehalten, weil ein Werkzeug, dessen Warnungen man gewohnheitsmäßig
+übersieht, dasselbe Problem hat wie eine Schranke, die grundlos anschlägt.
 
-### UNGEPRÃÂFT
+### UNGEPRÜFT
 
-- **Ob `CSimpleStringT::SetAt` den Puffer exklusiv hÃÂ¤lt.** Davon hÃÂ¤ngt ab, wie
-  gefÃÂ¤hrlich die vier `sendmail`-Stellen wirklich sind. Die MFC-Quellen liegen
-  in dieser Umgebung nicht vor. UnabhÃÂ¤ngig davon ist `ReleaseBuffer` ohne
+- **Ob `CSimpleStringT::SetAt` den Puffer exklusiv hält.** Davon hängt ab, wie
+  gefährlich die vier `sendmail`-Stellen wirklich sind. Die MFC-Quellen liegen
+  in dieser Umgebung nicht vor. Unabhängig davon ist `ReleaseBuffer` ohne
   `GetBuffer` nicht der zugesagte Vertrag.
-- **Ob 3403/3413 der tatsÃÂ¤chliche Absturzpunkt sind.** Belegt ist nur, dass der
+- **Ob 3403/3413 der tatsächliche Absturzpunkt sind.** Belegt ist nur, dass der
   Absturz hinter `eudora.cpp:3331` liegt.
-- **Nichts davon ist ÃÂ¼bersetzt.** Es ist auch nichts geÃÂ¤ndert Ã¢ÂÂ dieser Abschnitt
+- **Nichts davon ist übersetzt.** Es ist auch nichts geändert — dieser Abschnitt
   ist eine Meldung, keine Behebung.
 
 
-## X-2 Ã¢ÂÂ Die neun LÃÂ¶cher der Schranke geschlossen, jedes mit eigenem Testfall (31.08.2026)
+## X-2 — Die neun Löcher der Schranke geschlossen, jedes mit eigenem Testfall (31.08.2026)
 
-Abarbeitung von **X-1** (neun LÃÂ¶cher in `tools/pruefe-bytes.pl`) und seines
+Abarbeitung von **X-1** (neun Löcher in `tools/pruefe-bytes.pl`) und seines
 Zusatzfundes zum pre-commit-Hook. Branch `claude/letzter-stand-b2ytpi`, Commit
 `1819e61`, Stand davor `8f1c51e`. Gemessen ohne Visual Studio: perl 5.38,
 git 2.43, ohne Agenten. **Keine C++-Quelldatei angefasst.**
 
 ### Die Sammlung ist der Beleg, nicht die Zusicherung
 
-`tools/pruefe-bytes-tests.pl` wÃÂ¤chst von 23 auf **35 FÃÂ¤lle**. Die zwÃÂ¶lf neuen
-sind nicht nachtrÃÂ¤glich passend geschriebene Tests: sie sind zuerst gegen die
-**alte** Schranke gelaufen. So lÃÂ¤sst sich das nachrechnen Ã¢ÂÂ die neue Sammlung
+`tools/pruefe-bytes-tests.pl` wächst von 23 auf **35 Fälle**. Die zwölf neuen
+sind nicht nachträglich passend geschriebene Tests: sie sind zuerst gegen die
+**alte** Schranke gelaufen. So lässt sich das nachrechnen — die neue Sammlung
 gegen die alte Schranke, in einem eigenen Verzeichnis:
 
 ```sh
@@ -6201,103 +6201,103 @@ perl $D/pruefe-bytes-tests.pl
 ROT: L1a, L1b, L2a, L2b, L3, L4, L5, L6, L7, L8, L9
 ```
 
-> **Der Bezugscommit gehÃÂ¶rt in den Befehl, nicht `HEAD`.** Hier stand zuerst
-> `git show HEAD:...`, und das war ab dem nÃÂ¤chsten Commit falsch: `HEAD` trÃÂ¤gt
-> die **behobene** Schranke, die Anleitung liefert dann Ã¢ÂÂ35 grÃÂ¼n" und die
-> Gegenprobe sieht erfunden aus. Beim Durchlesen der ÃÂbergabe aufgefallen und
-> berichtigt Ã¢ÂÂ dieselbe Fehlerklasse wie die veralteten Zeilenangaben aus Z-1.
+> **Der Bezugscommit gehört in den Befehl, nicht `HEAD`.** Hier stand zuerst
+> `git show HEAD:...`, und das war ab dem nächsten Commit falsch: `HEAD` trägt
+> die **behobene** Schranke, die Anleitung liefert dann „35 grün" und die
+> Gegenprobe sieht erfunden aus. Beim Durchlesen der Übergabe aufgefallen und
+> berichtigt — dieselbe Fehlerklasse wie die veralteten Zeilenangaben aus Z-1.
 
-**11 von 12 waren rot.** Der zwÃÂ¶lfte (`L1c`) ist die Gegenkontrolle Ã¢ÂÂ eine
-reine Umbenennung ohne ÃÂnderung am Inhalt muss durchlaufen, vorher wie nachher.
-Gegen die neue Schranke: **35 grÃÂ¼n, 0 rot.**
+**11 von 12 waren rot.** Der zwölfte (`L1c`) ist die Gegenkontrolle — eine
+reine Umbenennung ohne Änderung am Inhalt muss durchlaufen, vorher wie nachher.
+Gegen die neue Schranke: **35 grün, 0 rot.**
 
-### Was geÃÂ¤ndert wurde, Loch fÃÂ¼r Loch
+### Was geändert wurde, Loch für Loch
 
 | Loch | Was durchlief | Behebung | Testfall |
 |---|---|---|---|
-| **L1** | `git mv alt.cpp neu.cpp` plus Neuschreiben Ã¢ÂÂ der Ablauf einer Portierung | `--diff-filter=ACM` Ã¢ÂÂ `ACMRT` und `--name-status` statt `--name-only`: bei `R` wird der Index-Blob des **neuen** gegen den HEAD-Blob des **alten** Pfads gehalten. Die Meldung nennt beide Namen | `L1a`, `L1b`, Gegenkontrolle `L1c` |
-| **L2** | eine **saubere** Umkodierung Latin-1 Ã¢ÂÂ UTF-8 (erzeugt kein Ersatzzeichen, also sah Regel 2 nichts) | neue Regel 3: `latin1_nach_utf8($vorher) eq $jetzt` Ã¢ÂÂ byteweise, ohne Modul, exakt. Beide Richtungen | `L2a`, `L2b` |
-| **L3** | ein neu eingefÃÂ¼gtes UTF-8-BOM | neue Regel 4: BOM am Anfang des Index-Blobs, das im HEAD-Blob nicht stand | `L3` |
-| **L4** | Dateien mit NUL-Byte: `git diff` liefert nur Ã¢ÂÂBinary files differ", Regel 2 sah gar nichts | `git diff --text` erzwingt den Textvergleich. **Kein** pauschaler Alarm fÃÂ¼r NUL-Dateien Ã¢ÂÂ der hÃÂ¤tte jede berechtigte ÃÂnderung an ihnen getroffen | `L4` |
-| **L5** | die Vorausschau von 30 Zeilen war eine harte Grenze: 30 eingefÃÂ¼gte Zeilen vor der Umwandlung wurden erkannt, **31 liefen durch** | gepaart wird ÃÂ¼ber den ganzen Block. Die neue Obergrenze (`$MAX_PAARUNG = 20000`) ist nur eine Bremse gegen quadratische Laufzeit und liegt weit ÃÂ¼ber dem grÃÂ¶ÃÂten Block im Baum (655 Zeilen) | `L5` (genau 31 Zeilen) |
-| **L6** | reine CR-Zeilenenden (alter Mac-Stil) Ã¢ÂÂ LF | Regel 1 normalisiert jetzt auch ein einzelnes CR, nicht nur CRLF | `L6` |
-| **L7** | die letzte Zeile verliert ihr CRLF Ã¢ÂÂ wurde bewusst durchgelassen, ist aber echter Byteverlust | nur die **Verlustrichtung** schlÃÂ¤gt an. Einen Umbruch zu **ergÃÂ¤nzen** bleibt erlaubt, sonst wÃÂ¤re der bestehende Fall `n` rot geworden | `L7`, Gegenkontrolle `n` |
-| **L8** | neue Dateien wurden vollstÃÂ¤ndig ÃÂ¼bersprungen, auch mit Ersatzzeichen | bei `A` gibt es nichts zu vergleichen, aber die U+FFFD-PrÃÂ¼fung lÃÂ¤uft jetzt | `L8`, Gegenkontrolle `k` |
-| **L9** | eine in HEAD **leere** Datei galt als Ã¢ÂÂnicht vorhanden" und lief ungeprÃÂ¼ft durch | `vorhanden()` fragt mit `git rev-parse --verify` nach dem Eintrag, getrennt von seinem Inhalt | `L9` |
+| **L1** | `git mv alt.cpp neu.cpp` plus Neuschreiben — der Ablauf einer Portierung | `--diff-filter=ACM` → `ACMRT` und `--name-status` statt `--name-only`: bei `R` wird der Index-Blob des **neuen** gegen den HEAD-Blob des **alten** Pfads gehalten. Die Meldung nennt beide Namen | `L1a`, `L1b`, Gegenkontrolle `L1c` |
+| **L2** | eine **saubere** Umkodierung Latin-1 → UTF-8 (erzeugt kein Ersatzzeichen, also sah Regel 2 nichts) | neue Regel 3: `latin1_nach_utf8($vorher) eq $jetzt` — byteweise, ohne Modul, exakt. Beide Richtungen | `L2a`, `L2b` |
+| **L3** | ein neu eingefügtes UTF-8-BOM | neue Regel 4: BOM am Anfang des Index-Blobs, das im HEAD-Blob nicht stand | `L3` |
+| **L4** | Dateien mit NUL-Byte: `git diff` liefert nur „Binary files differ", Regel 2 sah gar nichts | `git diff --text` erzwingt den Textvergleich. **Kein** pauschaler Alarm für NUL-Dateien — der hätte jede berechtigte Änderung an ihnen getroffen | `L4` |
+| **L5** | die Vorausschau von 30 Zeilen war eine harte Grenze: 30 eingefügte Zeilen vor der Umwandlung wurden erkannt, **31 liefen durch** | gepaart wird über den ganzen Block. Die neue Obergrenze (`$MAX_PAARUNG = 20000`) ist nur eine Bremse gegen quadratische Laufzeit und liegt weit über dem größten Block im Baum (655 Zeilen) | `L5` (genau 31 Zeilen) |
+| **L6** | reine CR-Zeilenenden (alter Mac-Stil) → LF | Regel 1 normalisiert jetzt auch ein einzelnes CR, nicht nur CRLF | `L6` |
+| **L7** | die letzte Zeile verliert ihr CRLF — wurde bewusst durchgelassen, ist aber echter Byteverlust | nur die **Verlustrichtung** schlägt an. Einen Umbruch zu **ergänzen** bleibt erlaubt, sonst wäre der bestehende Fall `n` rot geworden | `L7`, Gegenkontrolle `n` |
+| **L8** | neue Dateien wurden vollständig übersprungen, auch mit Ersatzzeichen | bei `A` gibt es nichts zu vergleichen, aber die U+FFFD-Prüfung läuft jetzt | `L8`, Gegenkontrolle `k` |
+| **L9** | eine in HEAD **leere** Datei galt als „nicht vorhanden" und lief ungeprüft durch | `vorhanden()` fragt mit `git rev-parse --verify` nach dem Eintrag, getrennt von seinem Inhalt | `L9` |
 
 ### Der Zusatzfund: der Hook log
 
-`tools/hooks-einrichten.sh` schrieb einen Hook, der den RÃÂ¼ckgabewert von
-`lehren-spiegeln.pl` **nicht** auswertete. Das Werkzeug meldet Ã¢ÂÂDer Commit wurde
-abgebrochen" und endet mit 1 Ã¢ÂÂ der Hook lief weiter und gab am Ende den Wert der
-Schranke zurÃÂ¼ck. **Die Meldung war unwahr.**
+`tools/hooks-einrichten.sh` schrieb einen Hook, der den Rückgabewert von
+`lehren-spiegeln.pl` **nicht** auswertete. Das Werkzeug meldet „Der Commit wurde
+abgebrochen" und endet mit 1 — der Hook lief weiter und gab am Ende den Wert der
+Schranke zurück. **Die Meldung war unwahr.**
 
-VorgefÃÂ¼hrt in einem Wegwerf-Repo, mit einem absichtlich scheiternden ersten
+Vorgeführt in einem Wegwerf-Repo, mit einem absichtlich scheiternden ersten
 Schritt:
 
-| Hook | Ausgabe | RÃÂ¼ckgabe | Commit steht? |
+| Hook | Ausgabe | Rückgabe | Commit steht? |
 |---|---|---|---|
 | alt | `SPIEGELN MELDET ABBRUCH` | **0** | **ja** |
 | neu | `SPIEGELN MELDET ABBRUCH` | **1** | nein |
 
 Behoben mit `perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?`.
 
-**NP3-4 war bereits behoben** und ist hier nur der VollstÃÂ¤ndigkeit wegen
-erwÃÂ¤hnt: `lehren-spiegeln.pl` stagt nicht mehr selbst (das hinterlieÃÂ bei
-`git commit -- <pfad>` eine LÃÂ¶schung im echten Index), sondern bricht ab und
-lÃÂ¤sst den Menschen `git add Arbeitsweise` tun. Genau dieser Abbruch war es, den
-der Hook verschluckte Ã¢ÂÂ die beiden Befunde greifen ineinander.
+**NP3-4 war bereits behoben** und ist hier nur der Vollständigkeit wegen
+erwähnt: `lehren-spiegeln.pl` stagt nicht mehr selbst (das hinterließ bei
+`git commit -- <pfad>` eine Löschung im echten Index), sondern bricht ab und
+lässt den Menschen `git add Arbeitsweise` tun. Genau dieser Abbruch war es, den
+der Hook verschluckte — die beiden Befunde greifen ineinander.
 
 ### Dazu NP3-5: nicht mehr stumm
 
-`lehren-spiegeln.pl` endete wortlos mit 0, wenn das GedÃÂ¤chtnisverzeichnis nicht
-gefunden wurde. Ein Aufrufer konnte Ã¢ÂÂes gibt nichts zu tun" nicht von Ã¢ÂÂich habe
+`lehren-spiegeln.pl` endete wortlos mit 0, wenn das Gedächtnisverzeichnis nicht
+gefunden wurde. Ein Aufrufer konnte „es gibt nichts zu tun" nicht von „ich habe
 gar nicht erst hingesehen" unterscheiden. Es meldet den Fall jetzt auf `STDERR`
-**samt dem abgeleiteten Pfad** Ã¢ÂÂ denn wenn die Ableitung schiefgeht, sucht sonst
-niemand dort den Fehler Ã¢ÂÂ und endet im `--pruefen`-Modus mit 2.
+**samt dem abgeleiteten Pfad** — denn wenn die Ableitung schiefgeht, sucht sonst
+niemand dort den Fehler — und endet im `--pruefen`-Modus mit 2.
 
 ### Was von X-1 offen bleibt
 
 - **`tools/suche-zeiger.pl`**: 345 Treffer, Stichprobe 15 von 15 Fehlalarm.
-  Die drei strukturellen Filter (klammerloser `if`-Rumpf, einzeiliger WÃÂ¤chter
-  mit `return`, Abstand grÃÂ¶ÃÂer als das Fenster) sind **nicht** eingebaut.
+  Die drei strukturellen Filter (klammerloser `if`-Rumpf, einzeiliger Wächter
+  mit `return`, Abstand größer als das Fenster) sind **nicht** eingebaut.
 - **`tools/zeilenenden-angleichen.pl`**: die 773 ausgelassenen Textdateien
   (`.ih`, `.rgs`, `.hh`, `.mc`, `.hpj`, 139 ohne Endung) und das richtungslose
-  ZurÃÂ¼ckschreiben sind **nicht** angefasst.
+  Zurückschreiben sind **nicht** angefasst.
 
 Beides ist in `AUFGABEN.md` unter D3 und D4 beschrieben und braucht keinen
-Compiler Ã¢ÂÂ es ist nur nicht Teil dieses Auftrags gewesen.
+Compiler — es ist nur nicht Teil dieses Auftrags gewesen.
 
-### Grenzen, die bleiben Ã¢ÂÂ und bewusst als Testfall festgehalten sind
+### Grenzen, die bleiben — und bewusst als Testfall festgehalten sind
 
-- **Endungen**: was nicht in `tools/dateiendungen.pl` steht, wird nicht geprÃÂ¼ft.
-  Fall `o` (`.xyz`) hÃÂ¤lt diese Grenze fest, damit sie sichtbar bleibt.
+- **Endungen**: was nicht in `tools/dateiendungen.pl` steht, wird nicht geprüft.
+  Fall `o` (`.xyz`) hält diese Grenze fest, damit sie sichtbar bleibt.
 - **Zeichenketten** werden nicht ausgeblendet; ein `"ReleaseBuffer("` im Text
-  wÃÂ¤re fÃÂ¼r andere Werkzeuge ein Fehlalarm, fÃÂ¼r die Schranke ist es ohne Belang.
-- **Die Schranke prÃÂ¼ft den Index, nicht die Arbeitskopie.** Das ist Absicht und
-  im Kopf der Datei begrÃÂ¼ndet.
+  wäre für andere Werkzeuge ein Fehlalarm, für die Schranke ist es ohne Belang.
+- **Die Schranke prüft den Index, nicht die Arbeitskopie.** Das ist Absicht und
+  im Kopf der Datei begründet.
 - **Regel 3 kann eine Mojibake-Reparatur nicht von einer Umkodierung
-  unterscheiden.** Eine vollstÃÂ¤ndig doppelt kodierte Datei zurÃÂ¼ckzurechnen
-  (`ZIEL.md` war am 31.08.2026 genau so beschÃÂ¤digt) sieht byteweise aus wie
-  Ã¢ÂÂUTF-8 Ã¢ÂÂ Latin-1 umkodiert". Die Meldung sagt das ausdrÃÂ¼cklich und lÃÂ¤sst den
-  Menschen entscheiden; fÃÂ¼r den Fall gibt es `--no-verify`. Ein Fehlalarm ist
+  unterscheiden.** Eine vollständig doppelt kodierte Datei zurückzurechnen
+  (`ZIEL.md` war am 31.08.2026 genau so beschädigt) sieht byteweise aus wie
+  „UTF-8 → Latin-1 umkodiert". Die Meldung sagt das ausdrücklich und lässt den
+  Menschen entscheiden; für den Fall gibt es `--no-verify`. Ein Fehlalarm ist
   das nicht, sondern eine Frage, die nur ein Mensch beantworten kann.
-- `git commit --no-verify` umgeht alles. Auch das ist Absicht Ã¢ÂÂ eine Schranke
+- `git commit --no-verify` umgeht alles. Auch das ist Absicht — eine Schranke
   ohne Notausgang wird umgebaut, nicht befolgt.
 
 
-## X-3 Ã¢ÂÂ `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, davon 9 echte Kandidaten (31.08.2026)
+## X-3 — `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, davon 9 echte Kandidaten (31.08.2026)
 
-Abarbeitung von **D3** aus `AUFGABEN.md` (Befund X-1: Ã¢ÂÂ345 Treffer, Stichprobe 15
-von 15 Fehlalarm Ã¢ÂÂ ohne Filter nicht benutzbar"). Ohne Visual Studio gearbeitet,
-**keine Zeile C++ geÃÂ¤ndert**. Werkzeug: `tools/suche-zeiger.pl`.
+Abarbeitung von **D3** aus `AUFGABEN.md` (Befund X-1: „345 Treffer, Stichprobe 15
+von 15 Fehlalarm — ohne Filter nicht benutzbar"). Ohne Visual Studio gearbeitet,
+**keine Zeile C++ geändert**. Werkzeug: `tools/suche-zeiger.pl`.
 
 ### Die Messkette
 
 | Stand | Treffer |
 |---|---|
 | vorher (X-1: 345 an anderem Dateimuster) | **347** |
-| nach den drei Filtern, die X-1 vorschlÃÂ¤gt | 88 |
+| nach den drei Filtern, die X-1 vorschlägt | 88 |
 | nach drei weiteren, aus einer Stichprobe von 15 abgeleitet | 29 |
 | nach drei weiteren, aus dem Nachlesen **aller** 29 | 20 |
 | nach der Berichtigung zweier eigener Fehler | **18** |
@@ -6311,94 +6311,94 @@ find Eudora71 -name "*.cpp" -o -name "*.h" -o -name "*.c" -o -name "*.CPP" \
 perl tools/suche-zeiger.pl $(cat /tmp/dateien.txt)
 ```
 
-### Warum nicht nach BauchgefÃÂ¼hl gefiltert wurde
+### Warum nicht nach Bauchgefühl gefiltert wurde
 
-X-1 nennt drei Ursachen mit Zahlen. Die Verteilung der AbstÃÂ¤nde zwischen
-PrÃÂ¼fung und Zugriff belegt sie unmittelbar:
+X-1 nennt drei Ursachen mit Zahlen. Die Verteilung der Abstände zwischen
+Prüfung und Zugriff belegt sie unmittelbar:
 
 | Abstand | Treffer |
 |---|---|
 | **1 Zeile** | **212** |
-| 3Ã¢ÂÂ5 | 8 |
-| 6Ã¢ÂÂ10 | 24 |
-| 11Ã¢ÂÂ20 | 29 |
-| 21Ã¢ÂÂ40 | 28 |
+| 3–5 | 8 |
+| 6–10 | 24 |
+| 11–20 | 29 |
+| 21–40 | 28 |
 | **> 40** | **46** |
 
-212 mit Abstand 1 Ã¢ÂÂ das ist der klammerlose `if`-Rumpf, X-1 nennt 211.
-46 mit Abstand ÃÂ¼ber 40 Ã¢ÂÂ X-1 nennt 46.
+212 mit Abstand 1 — das ist der klammerlose `if`-Rumpf, X-1 nennt 211.
+46 mit Abstand über 40 — X-1 nennt 46.
 
 ### Die neun Filter
 
 | # | Was durchlief | Wie behoben |
 |---|---|---|
-| 1 | **der klammerlose Rumpf** (212): bei `if (p)` ohne Klammern ist die nÃÂ¤chste Anweisung der Rumpf, also der geschÃÂ¼tzte Bereich | der geschÃÂ¼tzte Bereich reicht bis zum Semikolon der folgenden Anweisung |
-| 2 | **der einzeilige WÃÂ¤chter** (16): `if (!p) return;` auf **einer** Zeile Ã¢ÂÂ danach ist `p` garantiert belegt | das `return` wird jetzt auch auf der `if`-Zeile selbst gesucht, nicht nur in den sechs Folgezeilen |
-| 3 | **die abgeschnittene Blockende-Suche** (GroÃÂteil der 46): sie lief nur 40 Zeilen weit; bei lÃÂ¤ngeren BlÃÂ¶cken landete das Ã¢ÂÂBlockende" **mitten im Block**, und der gemeldete Zugriff stand in Wahrheit noch **innerhalb** des geschÃÂ¼tzten Bereichs | keine Fenstergrenze mehr, nur eine Notbremse |
-| 4 | **der `else`-Zweig eines negierten WÃÂ¤chters**: in `if (!p) {Ã¢ÂÂ¦} else {Ã¢ÂÂ¦}` ist `p` im `else` belegt | die **ganze** `else`-Kette wird ÃÂ¼bersprungen Ã¢ÂÂ bei einem **positiven** WÃÂ¤chter dagegen nicht, dort ist `p` im `else` NULL und ein Zugriff wÃÂ¤re ein echter Fehler |
-| 5 | **Zuweisung an den Zeiger**: `if (!pCDC) { pCDC = &dc; }` | eine Zuweisung zwischen PrÃÂ¼fung und Zugriff macht die PrÃÂ¼fung gegenstandslos. Ein Schreibzugriff **durch** den Zeiger zÃÂ¤hlt nicht |
-| 6 | **erneute PrÃÂ¼fung, die der alte Ausdruck nicht sah**: `return (pWnd) ? pWnd->Ã¢ÂÂ¦` (ternÃÂ¤r) und `if ( (n>0) && pTocDoc && Ã¢ÂÂ¦ )` Ã¢ÂÂ der alte Ausdruck verlangte `[^)]*` und scheiterte an der ersten inneren Klammer | jede PrÃÂ¼fung des Namens in einer Bedingung zÃÂ¤hlt, auch nach `&&` und vor `?` |
-| 7 | **ein `else`, das zu einem ÃÂUSSEREN `if` gehÃÂ¶rt**: `app.cpp:274-277` erzeugte vier Fehlalarme in einem Rutsch | ein `else`, das **weniger tief** steht als der WÃÂ¤chter, beendet die Suche |
+| 1 | **der klammerlose Rumpf** (212): bei `if (p)` ohne Klammern ist die nächste Anweisung der Rumpf, also der geschützte Bereich | der geschützte Bereich reicht bis zum Semikolon der folgenden Anweisung |
+| 2 | **der einzeilige Wächter** (16): `if (!p) return;` auf **einer** Zeile — danach ist `p` garantiert belegt | das `return` wird jetzt auch auf der `if`-Zeile selbst gesucht, nicht nur in den sechs Folgezeilen |
+| 3 | **die abgeschnittene Blockende-Suche** (Großteil der 46): sie lief nur 40 Zeilen weit; bei längeren Blöcken landete das „Blockende" **mitten im Block**, und der gemeldete Zugriff stand in Wahrheit noch **innerhalb** des geschützten Bereichs | keine Fenstergrenze mehr, nur eine Notbremse |
+| 4 | **der `else`-Zweig eines negierten Wächters**: in `if (!p) {…} else {…}` ist `p` im `else` belegt | die **ganze** `else`-Kette wird übersprungen — bei einem **positiven** Wächter dagegen nicht, dort ist `p` im `else` NULL und ein Zugriff wäre ein echter Fehler |
+| 5 | **Zuweisung an den Zeiger**: `if (!pCDC) { pCDC = &dc; }` | eine Zuweisung zwischen Prüfung und Zugriff macht die Prüfung gegenstandslos. Ein Schreibzugriff **durch** den Zeiger zählt nicht |
+| 6 | **erneute Prüfung, die der alte Ausdruck nicht sah**: `return (pWnd) ? pWnd->…` (ternär) und `if ( (n>0) && pTocDoc && … )` — der alte Ausdruck verlangte `[^)]*` und scheiterte an der ersten inneren Klammer | jede Prüfung des Namens in einer Bedingung zählt, auch nach `&&` und vor `?` |
+| 7 | **ein `else`, das zu einem ÄUSSEREN `if` gehört**: `app.cpp:274-277` erzeugte vier Fehlalarme in einem Rutsch | ein `else`, das **weniger tief** steht als der Wächter, beendet die Suche |
 | 8 | **auskommentierter Code**: `pngerror.c:255` meldete einen Zugriff, der in einem `/* */`-Kommentar steht; `nickview.cpp:316/329` steht in einem **69 Zeilen langen** auskommentierten Block | Block- **und** Zeilenkommentare werden vor der Analyse ausgeblendet |
-| 9 | **eine Steueranweisung als Rumpf**: `if (m_pcip) for (Ã¢ÂÂ¦) { Ã¢ÂÂ¦ }` Ã¢ÂÂ der Block gehÃÂ¶rt zum `for` und ist geschÃÂ¼tzt | erkannt und wie ein Block behandelt |
+| 9 | **eine Steueranweisung als Rumpf**: `if (m_pcip) for (…) { … }` — der Block gehört zum `for` und ist geschützt | erkannt und wie ein Block behandelt |
 
-**Bewusst NICHT eingebaut** Ã¢ÂÂ ein zehnter Filter Ã¢ÂÂein `return` auf oder ÃÂ¼ber der
-Ebene des WÃÂ¤chters beendet den Weg" war fertig und ist wieder herausgeflogen: er
-entfernte **einen** Fehlalarm (`OLImportClass.cpp:2948`) und tÃÂ¶tete **einen
+**Bewusst NICHT eingebaut** — ein zehnter Filter „ein `return` auf oder über der
+Ebene des Wächters beendet den Weg" war fertig und ist wieder herausgeflogen: er
+entfernte **einen** Fehlalarm (`OLImportClass.cpp:2948`) und tötete **einen
 echten Fund** (`ImapChecker.cpp:945`, dessen `return` innerhalb des umgebenden
-Blocks steht, den man danach verlÃÂ¤sst). Ein WÃÂ¤chter, der den echten Fall
+Blocks steht, den man danach verlässt). Ein Wächter, der den echten Fall
 verliert, ist schlechter als einer, der einmal zu oft ruft. Steht so im Kopf des
-Werkzeugs, damit es niemand Ã¢ÂÂnachbessert".
+Werkzeugs, damit es niemand „nachbessert".
 
 ### Zwei Fehler, die ich selbst eingebaut habe
 
 Beide fielen **nur** beim Nachlesen aller Treffer auf, nicht bei der
-Stichprobe Ã¢ÂÂ das ist das Argument fÃÂ¼r das Nachlesen:
+Stichprobe — das ist das Argument für das Nachlesen:
 
-1. **Die Klammersuche lief in die nÃÂ¤chste Funktion.** Als die 40-Zeilen-Grenze
+1. **Die Klammersuche lief in die nächste Funktion.** Als die 40-Zeilen-Grenze
    fiel (Filter 3), scannte sie bei einem klammerlosen `if` weiter, fand die
    Klammern der **folgenden** Funktion und setzte das Blockende dorthin.
-   `ImapConnection.cpp:1916` meldete einen Zugriff **95 Zeilen spÃÂ¤ter in einer
-   anderen Funktion**. Behoben: erst entscheiden, ob der Rumpf ÃÂ¼berhaupt eine
+   `ImapConnection.cpp:1916` meldete einen Zugriff **95 Zeilen später in einer
+   anderen Funktion**. Behoben: erst entscheiden, ob der Rumpf überhaupt eine
    Klammer hat, dann scannen.
 2. **Die Zeilenkommentare wurden nicht mehr gestrichen.** Beim Umstieg auf den
    kommentarfreien Puffer ging das `s{//.*$}{}` verloren, und eine geschweifte
-   Klammer **im Kommentar** zÃÂ¤hlte als Blockende: `ImapAccount.cpp:3123` schreibt
-   `(\noselect}` in einen `//`-Kommentar, worauf der Block dort zu schlieÃÂen
+   Klammer **im Kommentar** zählte als Blockende: `ImapAccount.cpp:3123` schreibt
+   `(\noselect}` in einen `//`-Kommentar, worauf der Block dort zu schließen
    schien und zwei Zugriffe **innerhalb** des Blocks gemeldet wurden.
 
-### Was ÃÂ¼brig bleibt: 18 Treffer, alle nachgelesen
+### Was übrig bleibt: 18 Treffer, alle nachgelesen
 
-**Neun echte Kandidaten** Ã¢ÂÂ PrÃÂ¼fung vorhanden, Zugriff danach ungeschÃÂ¼tzt, und
-kein erkennbarer Grund, warum der Zeiger dort belegt sein mÃÂ¼sste:
+**Neun echte Kandidaten** — Prüfung vorhanden, Zugriff danach ungeschützt, und
+kein erkennbarer Grund, warum der Zeiger dort belegt sein müsste:
 
 | Stelle | Zeiger | Bemerkung |
 |---|---|---|
-| `EuImap/src/ImapMailbox.cpp:1637` Ã¢ÂÂ `:1659` | `pImapCommand` | `if (!pImapCommand) { ASSERT(0); Ã¢ÂÂ¦ }` **ohne `return`** Ã¢ÂÂ im Release entfÃÂ¤llt das `ASSERT` (F-1), dann lÃÂ¤uft es weiter und greift zu. Der ernsteste der neun |
-| `Eudora/POPSession.cpp:896` Ã¢ÂÂ `:905` | `pDiskHost` | auf dem **Abrufpfad** Ã¢ÂÂ Nachbar der Befunde P-1/P-2 |
-| `EuImap/src/ImapChecker.cpp:945` Ã¢ÂÂ `:953` | `m_pTaskInfo` | PrÃÂ¼fung im umgebenden Block, Zugriff danach |
-| `EuImap/src/ImapMailbox.cpp:1022` Ã¢ÂÂ `:1051` | `pAccount` | der eine Treffer, den X-1 als plausibel echt nannte |
-| `EuImap/src/imapgets.cpp:735` Ã¢ÂÂ `:743` | `m_pAccount` | Passwortpfad |
-| `Eudora/TocFrame.cpp:3968` Ã¢ÂÂ `:3973` | `pTocDoc` | `if (pTocDoc) Ã¢ÂÂ¦;` dann `if (pFBView) pTocDoc->Ã¢ÂÂ¦` Ã¢ÂÂ anderer WÃÂ¤chter |
-| `Eudora/headervw.cpp:546` Ã¢ÂÂ `:551` | `pField` | zwei Zeilen nach dem Block |
-| `Eudora/PgEmbeddedObject.cpp:276` Ã¢ÂÂ `:303` | `pView` | Block schlieÃÂt nach drei Zeilen, Zugriff 27 spÃÂ¤ter |
-| `AccountWizard/Src/WizardImportPage.cpp:379` Ã¢ÂÂ `:420` | `pChild` | Block schlieÃÂt bei 411 |
+| `EuImap/src/ImapMailbox.cpp:1637` → `:1659` | `pImapCommand` | `if (!pImapCommand) { ASSERT(0); … }` **ohne `return`** — im Release entfällt das `ASSERT` (F-1), dann läuft es weiter und greift zu. Der ernsteste der neun |
+| `Eudora/POPSession.cpp:896` → `:905` | `pDiskHost` | auf dem **Abrufpfad** — Nachbar der Befunde P-1/P-2 |
+| `EuImap/src/ImapChecker.cpp:945` → `:953` | `m_pTaskInfo` | Prüfung im umgebenden Block, Zugriff danach |
+| `EuImap/src/ImapMailbox.cpp:1022` → `:1051` | `pAccount` | der eine Treffer, den X-1 als plausibel echt nannte |
+| `EuImap/src/imapgets.cpp:735` → `:743` | `m_pAccount` | Passwortpfad |
+| `Eudora/TocFrame.cpp:3968` → `:3973` | `pTocDoc` | `if (pTocDoc) …;` dann `if (pFBView) pTocDoc->…` — anderer Wächter |
+| `Eudora/headervw.cpp:546` → `:551` | `pField` | zwei Zeilen nach dem Block |
+| `Eudora/PgEmbeddedObject.cpp:276` → `:303` | `pView` | Block schließt nach drei Zeilen, Zugriff 27 später |
+| `AccountWizard/Src/WizardImportPage.cpp:379` → `:420` | `pChild` | Block schließt bei 411 |
 
-**Drei unklar** Ã¢ÂÂ das Melden ist vertretbar, die Entscheidung braucht einen
+**Drei unklar** — das Melden ist vertretbar, die Entscheidung braucht einen
 Menschen: `ImapAccount.cpp:3152`, `CompMessageFrame.cpp:644`,
 `StatMng.cpp:2399` (jeweils ein anderer Zweig eines umgebenden `if`/`switch`).
 
-**Sechs Fehlalarm:** `TridentView.cpp:584` (abgesichert ÃÂ¼ber eine **abhÃÂ¤ngige**
-Variable Ã¢ÂÂ nicht filterbar), `Trnslate.cpp:4410`, `OLImportClass.cpp:2948`,
+**Sechs Fehlalarm:** `TridentView.cpp:584` (abgesichert über eine **abhängige**
+Variable — nicht filterbar), `Trnslate.cpp:4410`, `OLImportClass.cpp:2948`,
 `plist_cinfo.cpp:263` (Zugriff in einem Makrorumpf), und zwei in
-`OpenSSL/demos/maurice/example2.c` Ã¢ÂÂ **Fremdcode**.
+`OpenSSL/demos/maurice/example2.c` — **Fremdcode**.
 
 Quote: **6 von 18 (33 %)**, im eigenen Code ohne die OpenSSL-Beispiele
 **4 von 16 (25 %)**. Vorher: 15 von 15.
 
-### Empfehlung fÃÂ¼r den Aufruf
+### Empfehlung für den Aufruf
 
-Fremdcode ausschlieÃÂen, dann sind es 16 Treffer:
+Fremdcode ausschließen, dann sind es 16 Treffer:
 
 ```sh
 ... | grep -v "/OpenSSL/\|/PNG/\|/OT501/\|/expat/\|/Qt3.x/"
@@ -6406,26 +6406,26 @@ Fremdcode ausschlieÃÂen, dann sind es 16 Treffer:
 
 ### Was das Werkzeug nicht kann
 
-Es liest Text, nicht Semantik. Ein Zeiger, der ÃÂ¼ber einen **anderen** Namen
-abgesichert ist (`TridentView.cpp:584`), eine PrÃÂ¼fung in einer aufgerufenen
-Funktion, `ASSERT`/`VERIFY` als PrÃÂ¼fung, ein Zugriff in einem Makrorumpf Ã¢ÂÂ alles
+Es liest Text, nicht Semantik. Ein Zeiger, der über einen **anderen** Namen
+abgesichert ist (`TridentView.cpp:584`), eine Prüfung in einer aufgerufenen
+Funktion, `ASSERT`/`VERIFY` als Prüfung, ein Zugriff in einem Makrorumpf — alles
 unsichtbar. **Ein Treffer ist ein Hinweis zum Nachlesen, kein Befund.** Die
 neun oben sind nachgelesen; wer sie behebt, braucht einen Bau.
 
 
-## X-4 Ã¢ÂÂ `zeilenenden-angleichen.pl`: 49 Dateien mehr, und es dreht keine Arbeit mehr zurÃÂ¼ck (31.08.2026)
+## X-4 — `zeilenenden-angleichen.pl`: 49 Dateien mehr, und es dreht keine Arbeit mehr zurück (31.08.2026)
 
-Abarbeitung von **D4** Ã¢ÂÂ der letzte offene Punkt aus Befund X-1. Ohne Visual
-Studio gearbeitet, **keine Zeile C++ geÃÂ¤ndert**.
+Abarbeitung von **D4** — der letzte offene Punkt aus Befund X-1. Ohne Visual
+Studio gearbeitet, **keine Zeile C++ geändert**.
 
 ### Teil 1: die ausgelassenen Textdateien
 
 X-1 hat gemessen, dass das Werkzeug **773 eindeutige Textdateien** nicht erfasst.
 Nachgemessen am 31.08.2026 abends: von **9151** verfolgten Dateien erfasste das
-Muster **6395**; von den 2756 ÃÂ¼brigen sind **771** Text (kein NUL-Byte, ÃÂ¼ber 95 %
+Muster **6395**; von den 2756 übrigen sind **771** Text (kein NUL-Byte, über 95 %
 druckbare Bytes).
 
-Aufgenommen sind die, die **Quellen dieses Projekts** sind Ã¢ÂÂ sechs Arten,
+Aufgenommen sind die, die **Quellen dieses Projekts** sind — sechs Arten,
 49 Dateien:
 
 | Endung | Dateien | warum |
@@ -6437,49 +6437,49 @@ Aufgenommen sind die, die **Quellen dieses Projekts** sind Ã¢ÂÂ sechs Ar
 | `.hh` | 7 | Hilfe-Header |
 | `.hpj` | 4 | Hilfe-Projektdateien |
 
-Grundgesamtheit **6395 Ã¢ÂÂ 6444**. **Alle 49 waren byteidentisch zu HEAD** Ã¢ÂÂ
+Grundgesamtheit **6395 → 6444**. **Alle 49 waren byteidentisch zu HEAD** —
 nachgemessen, *bevor* die Liste erweitert wurde. Die Erweiterung deckt also
-keinen Schaden auf, sie schlieÃÂt eine LÃÂ¼cke fÃÂ¼r die Zukunft. Und weil die Liste
+keinen Schaden auf, sie schließt eine Lücke für die Zukunft. Und weil die Liste
 seit PR-3 **geteilt** ist, zieht die Commit-Schranke automatisch mit.
 
-**Bewusst drauÃÂen** geblieben, mit BegrÃÂ¼ndung im Kopf von
+**Bewusst draußen** geblieben, mit Begründung im Kopf von
 `tools/dateiendungen.pl`: 139 Dateien ohne Endung (eine Endungsliste kann sie
-nicht sicher von BinÃÂ¤rdateien unterscheiden, eine Namensliste wÃÂ¤re Raten),
+nicht sicher von Binärdateien unterscheiden, eine Namensliste wäre Raten),
 100 `.pem` und 20 `.cer`, 96 `.r` (Mac-Rez von QuickTime), 48 `.ssl` / 28 `.com`
 / 11 `.unix` (Makefiles des mitgelieferten OpenSSL), 37 Messwertdateien von
-OpenSSL, 42 Hilfe- und HandbuchbestÃÂ¤nde, 10 Testskripte von Visual Test. Alles
+OpenSSL, 42 Hilfe- und Handbuchbestände, 10 Testskripte von Visual Test. Alles
 Fremdbestand oder Beiwerk.
 
-### Teil 2: es dreht keine absichtliche Arbeit mehr zurÃÂ¼ck
+### Teil 2: es dreht keine absichtliche Arbeit mehr zurück
 
-X-1s zweiter Vorhalt: *Ã¢ÂÂEs dreht absichtliche Arbeit still zurÃÂ¼ck. Wer im
-Arbeitsbaum absichtlich LFÃ¢ÂÂCRLF korrigiert Ã¢ÂÂ etwa eine `.bat`, die CRLF braucht
-Ã¢ÂÂ, verliert das durch `--aendern` kommentarlos."*
+X-1s zweiter Vorhalt: *„Es dreht absichtliche Arbeit still zurück. Wer im
+Arbeitsbaum absichtlich LF→CRLF korrigiert — etwa eine `.bat`, die CRLF braucht
+—, verliert das durch `--aendern` kommentarlos."*
 
-**Der Vorhalt trifft zu, und byteweise sind die beiden FÃÂ¤lle nicht zu
+**Der Vorhalt trifft zu, und byteweise sind die beiden Fälle nicht zu
 unterscheiden:** der Schaden, gegen den das Werkzeug gebaut wurde, sieht genauso
-aus wie die absichtliche Korrektur Ã¢ÂÂ Arbeitskopie CRLF, HEAD LF. Also keine
+aus wie die absichtliche Korrektur — Arbeitskopie CRLF, HEAD LF. Also keine
 Heuristik, sondern drei Sicherungen:
 
 | # | Sicherung | Warum |
 |---|---|---|
-| 1 | **jede angefasste Datei wird namentlich genannt** (bis zu 20, dann die Zahl) | vorher stand dort nur eine Zahl Ã¢ÂÂ man konnte hinterher nicht sagen, was das Werkzeug getan hat |
-| 2 | **vorgemerkte Dateien werden nicht angefasst** | wer eine ÃÂnderung an den Zeilenenden schon `git add` gegeben hat, hat sie absichtlich gemacht. Sie zurÃÂ¼ckzuschreiben wÃÂ¼rde vorgemerkte Arbeit still verwerfen. Eigene Zeile in der Ausgabe |
-| 3 | **die Gegenrichtung hat ihre eigene Zeile** (Arbeitskopie LF, HEAD CRLF) und bleibt unangetastet | das ist **nicht** der Schaden dieses Projekts. Vorher landete sie unter Ã¢ÂÂinhaltlich verschieden" Ã¢ÂÂ eine falsche Beschriftung. Mit `--auch-umgekehrt` wird sie mitgezogen |
+| 1 | **jede angefasste Datei wird namentlich genannt** (bis zu 20, dann die Zahl) | vorher stand dort nur eine Zahl — man konnte hinterher nicht sagen, was das Werkzeug getan hat |
+| 2 | **vorgemerkte Dateien werden nicht angefasst** | wer eine Änderung an den Zeilenenden schon `git add` gegeben hat, hat sie absichtlich gemacht. Sie zurückzuschreiben würde vorgemerkte Arbeit still verwerfen. Eigene Zeile in der Ausgabe |
+| 3 | **die Gegenrichtung hat ihre eigene Zeile** (Arbeitskopie LF, HEAD CRLF) und bleibt unangetastet | das ist **nicht** der Schaden dieses Projekts. Vorher landete sie unter „inhaltlich verschieden" — eine falsche Beschriftung. Mit `--auch-umgekehrt` wird sie mitgezogen |
 
 ### Gegenprobe in einem Wegwerf-Repo
 
-Vier Dateien, vier FÃÂ¤lle, einmal `--aendern`:
+Vier Dateien, vier Fälle, einmal `--aendern`:
 
 | Datei | HEAD | Arbeitskopie | vorgemerkt | Ergebnis |
 |---|---|---|---|---|
-| `a.cpp` | LF | CRLF | nein | **angeglichen**, CR 2 Ã¢ÂÂ 0 |
+| `a.cpp` | LF | CRLF | nein | **angeglichen**, CR 2 → 0 |
 | `b.cpp` | LF | CRLF | **ja** | **unangetastet**, CR bleibt 2 |
 | `c.bat` | CRLF | LF | nein | **unangetastet** (Gegenrichtung), CR bleibt 0 |
-| `d.cpp` | LF | LF, Inhalt geÃÂ¤ndert | nein | **unangetastet** |
+| `d.cpp` | LF | LF, Inhalt geändert | nein | **unangetastet** |
 
 Und mit `--aendern --auch-umgekehrt` wird `c.bat` sehr wohl angeglichen
-(CR 0 Ã¢ÂÂ 1). Jede der vier Dateien erscheint namentlich in der Ausgabe.
+(CR 0 → 1). Jede der vier Dateien erscheint namentlich in der Ausgabe.
 
 ### Stand am Baum
 
@@ -6490,125 +6490,125 @@ Und mit `--aendern --auch-umgekehrt` wird `c.bat` sehr wohl angeglichen
     inhaltlich verschieden:              2   (die zwei Werkzeuge dieser Arbeit)
     nicht in HEAD:                       0
 
-Die Commit-Schranke bleibt bei **35 von 35 grÃÂ¼n** Ã¢ÂÂ die erweiterte Endungsliste
-bricht keinen ihrer TestfÃÂ¤lle.
+Die Commit-Schranke bleibt bei **35 von 35 grün** — die erweiterte Endungsliste
+bricht keinen ihrer Testfälle.
 
-**Damit ist Befund X-1 vollstÃÂ¤ndig abgearbeitet.**
+**Damit ist Befund X-1 vollständig abgearbeitet.**
 
 
-## V-1 Ã¢ÂÂ Zwei verschiedene ZIPs unter derselben Versionsnummer (31.08.2026)
+## V-1 — Zwei verschiedene ZIPs unter derselben Versionsnummer (31.08.2026)
 
-Gregors Feststellung, wÃÂ¶rtlich: *Ã¢ÂÂEigentlich illegal, weil die gleiche Vers.nr.
-Aber anderes zip"* Ã¢ÂÂ und dazu: **er hat die ausgetauschte Fassung nicht
-geprÃÂ¼ft.**
+Gregors Feststellung, wörtlich: *„Eigentlich illegal, weil die gleiche Vers.nr.
+Aber anderes zip"* — und dazu: **er hat die ausgetauschte Fassung nicht
+geprüft.**
 
-Beides trifft zu, und beides hat Folgen, die ÃÂ¼ber die Formalie hinausgehen.
+Beides trifft zu, und beides hat Folgen, die über die Formalie hinausgehen.
 
 ### Es ist derselbe Fehler wie bei der QCSSL.dll
 
-`Releases/1.0/AUSLIEFERUNGEN.md` hÃÂ¤lt im ersten Absatz fest, warum es diese
-Datei ÃÂ¼berhaupt gibt: *Ã¢ÂÂDie Versionskennung wurde erst spÃÂ¤t eingebaut und dann
-einmal nicht mitgezogen. Dadurch tragen **zwei verschiedene BinÃÂ¤rdateien
-dieselbe Kennung Ã¢ÂÂQCSSL 1.0.0"**. Wer sagt Ã¢ÂÂich habe 1.0.0 getestet', meint also
-mÃÂ¶glicherweise die eine oder die andere Ã¢ÂÂ und die unterscheiden sich in fÃÂ¼nf
+`Releases/1.0/AUSLIEFERUNGEN.md` hält im ersten Absatz fest, warum es diese
+Datei überhaupt gibt: *„Die Versionskennung wurde erst spät eingebaut und dann
+einmal nicht mitgezogen. Dadurch tragen **zwei verschiedene Binärdateien
+dieselbe Kennung „QCSSL 1.0.0"**. Wer sagt ‚ich habe 1.0.0 getestet', meint also
+möglicherweise die eine oder die andere — und die unterscheiden sich in fünf
 behobenen Befunden."*
 
 Am 31.08.2026 um 09:00 ist genau das mit dem **Paket** passiert: unter
-`v1.0.3` hÃÂ¤ngen zwei verschiedene ZIPs, und der einzige Unterschied zwischen
+`v1.0.3` hängen zwei verschiedene ZIPs, und der einzige Unterschied zwischen
 ihnen ist die Behebung eines Absturzes (E-11). Die Lehre war aufgeschrieben und
-hat nicht getragen Ã¢ÂÂ sie stand in der Datei ÃÂ¼ber die *DLL*, nicht in der ÃÂ¼ber
+hat nicht getragen — sie stand in der Datei über die *DLL*, nicht in der über
 die *Pakete*.
 
 ### Was dadurch nicht mehr zusammengeht
 
 | Angabe | Problem |
 |---|---|
-| Ã¢ÂÂGregor hat 1.0.3 probiert und es stÃÂ¼rzte ab" | stimmt Ã¢ÂÂ fÃÂ¼r die **erste** Fassung (`632c4066Ã¢ÂÂ¦`). Ohne PrÃÂ¼fsumme wÃÂ¤re das nicht mehr zuzuordnen |
+| „Gregor hat 1.0.3 probiert und es stürzte ab" | stimmt — für die **erste** Fassung (`632c4066…`). Ohne Prüfsumme wäre das nicht mehr zuzuordnen |
 | die beiliegende `LIESMICH.txt` | beschreibt in der ersten Fassung einen Stand, den die zweite nicht mehr hat |
-| ein Fehlerbericht von auÃÂen | Ã¢ÂÂVersion 1.0.3" identifiziert das Programm **nicht** |
+| ein Fehlerbericht von außen | „Version 1.0.3" identifiziert das Programm **nicht** |
 | die **volle** SHA256 der ersten Fassung | steht **nirgends** im Repo, nur die ersten acht Zeichen. Zum Unterscheiden reicht das, zum Nachweisen nicht |
 
-### Und der Stand wird dadurch schwÃÂ¤cher, nicht stÃÂ¤rker
+### Und der Stand wird dadurch schwächer, nicht stärker
 
-**Keine der beiden verÃÂ¶ffentlichten Fassungen ist von jemandem gestartet
+**Keine der beiden veröffentlichten Fassungen ist von jemandem gestartet
 worden:**
 
-- Die **erste** hat Gregor probiert Ã¢ÂÂ sie stÃÂ¼rzte beim Klick auf *Weiter* ab
+- Die **erste** hat Gregor probiert — sie stürzte beim Klick auf *Weiter* ab
   (E-6, Ursache E-11).
-- Die **zweite** (mit der Behebung) hat **niemand** geprÃÂ¼ft. Das ist der Stand
+- Die **zweite** (mit der Behebung) hat **niemand** geprüft. Das ist der Stand
   seit dem Austausch.
 - Der Lauf, der 159 Nachrichten abgerufen hat (E-1, E-3), war **keiner von
   beiden**: er lief aus `C:\Users\Gregor\Eudora72-1.0.3`, dem **Debug**-Bau mit
   von Hand hineinkopierten, nicht verteilbaren Laufzeit-DLLs (E-8).
 
-FÃÂ¼r die Kriterien heiÃÂt das: 1 und 3 sind auf dem **Debug**-Bau belegt, nicht auf
+Für die Kriterien heißt das: 1 und 3 sind auf dem **Debug**-Bau belegt, nicht auf
 dem ausgelieferten Paket. Kriterium 0 ist unbelegt. Das steht so in `ZIEL.md`,
-wird aber leicht ÃÂ¼berlesen, wenn man Ã¢ÂÂ1.0.3 lÃÂ¤uft" hÃÂ¶rt.
+wird aber leicht überlesen, wenn man „1.0.3 läuft" hört.
 
-### Die Zahl steckt auch in der EXE Ã¢ÂÂ und zwar dieselbe
+### Die Zahl steckt auch in der EXE — und zwar dieselbe
 
-Gregors Nachtrag: *Ã¢ÂÂSie heiÃÂt ÃÂ¼brigens 7.2.0.3"*. Das ist der Punkt, der die
-Sache verschÃÂ¤rft: nicht nur Dateiname und Paketnummer sind bei beiden ZIPs
+Gregors Nachtrag: *„Sie heißt übrigens 7.2.0.3"*. Das ist der Punkt, der die
+Sache verschärft: nicht nur Dateiname und Paketnummer sind bei beiden ZIPs
 gleich, sondern die **Produktversion im Binary**. Beide `Eudora.exe` melden
-unter *Hilfe Ã¢ÂÂ ÃÂber Eudora*, im Explorer und im Absturzbericht **7.2.0.3**.
+unter *Hilfe → Über Eudora*, im Explorer und im Absturzbericht **7.2.0.3**.
 
-Damit ist die Angabe, die ein Anwender melden wÃÂ¼rde, fÃÂ¼r beide Fassungen
-identisch. Unterscheiden kÃÂ¶nnen sie nur zwei Dinge:
+Damit ist die Angabe, die ein Anwender melden würde, für beide Fassungen
+identisch. Unterscheiden können sie nur zwei Dinge:
 
-1. die **SHA256 des ZIP** Ã¢ÂÂ und die volle PrÃÂ¼fsumme der ersten Fassung steht
+1. die **SHA256 des ZIP** — und die volle Prüfsumme der ersten Fassung steht
    nirgends im Repo (siehe oben);
-2. die **Bau-Kennung in der Titelleiste**, die den Commit enthÃÂ¤lt Ã¢ÂÂ **und die
+2. die **Bau-Kennung in der Titelleiste**, die den Commit enthält — **und die
    fehlt, solange kein Postfach offen ist** (Befund E-7). Im Zustand des
-   Absturzes, mit offenem Kontoassistenten, steht im Titel nur Ã¢ÂÂEudora".
+   Absturzes, mit offenem Kontoassistenten, steht im Titel nur „Eudora".
 
-**Das eine Merkmal, das die beiden Bauten auseinanderhÃÂ¤lt, ist genau dort nicht
+**Das eine Merkmal, das die beiden Bauten auseinanderhält, ist genau dort nicht
 sichtbar, wo der Fehler auftritt.** Damit ist E-7 nicht mehr Kosmetik, sondern
-die Voraussetzung dafÃÂ¼r, einen Fehlerbericht ÃÂ¼berhaupt einem Bau zuzuordnen Ã¢ÂÂ
+die Voraussetzung dafür, einen Fehlerbericht überhaupt einem Bau zuzuordnen —
 und die Behebung ist ein einziger Aufruf (`OnUpdateFrameTitle(TRUE)` nach
 `FinishInitAndShowWindow`).
 
-Was genau zu ÃÂ¤ndern ist, wenn die Version gehoben wird Ã¢ÂÂ **fÃÂ¼nf Zeilen in zwei
+Was genau zu ändern ist, wenn die Version gehoben wird — **fünf Zeilen in zwei
 Dateien**, und die vier Angaben in `Version.h` sind nicht voneinander abgeleitet
-Ã¢ÂÂ, steht in `Releases/PAKETE.md`, Abschnitt Ã¢ÂÂWie man die Version hebt".
+—, steht in `Releases/PAKETE.md`, Abschnitt „Wie man die Version hebt".
 
 ### Die Regel, die daraus folgt
 
-**Ein verÃÂ¶ffentlichtes Paket wird nicht ersetzt.** Muss etwas hinterher, bekommt
-es die nÃÂ¤chste Nummer Ã¢ÂÂ nach der Verabredung in `Releases/PAKETE.md` also
+**Ein veröffentlichtes Paket wird nicht ersetzt.** Muss etwas hinterher, bekommt
+es die nächste Nummer — nach der Verabredung in `Releases/PAKETE.md` also
 Paket **1.0.4** mit Produktversion **7.2.0.4**. Das kostet eine Zeile in
 `VERSION` und in `Eudora71/Version.h`; `tools/kennung-erzeugen.pl` warnt von
 selbst, wenn die beiden auseinanderlaufen.
 
-Das gilt auch dann Ã¢ÂÂ und besonders dann Ã¢ÂÂ, wenn die alte Fassung fehlerhaft ist:
-gerade dann muss man sie spÃÂ¤ter noch benennen kÃÂ¶nnen. ZurÃÂ¼ckziehen ja,
-ÃÂ¼berschreiben nein.
+Das gilt auch dann — und besonders dann —, wenn die alte Fassung fehlerhaft ist:
+gerade dann muss man sie später noch benennen können. Zurückziehen ja,
+überschreiben nein.
 
 ### Was jetzt zu tun ist
 
 1. **Die zweite Fassung auf dem Win11-Rechner starten.** Das ist ohnehin der
-   erste Punkt der Arbeitsliste; hier ist der zusÃÂ¤tzliche Grund: es ist bisher
-   nur die *erste* geprÃÂ¼ft, und die stÃÂ¼rzte ab.
-2. **Die volle SHA256 der ersten Fassung** aus der GitHub-VerÃÂ¶ffentlichung
-   nachtragen, solange sie noch abrufbar ist Ã¢ÂÂ sonst ist der einzige Beleg fÃÂ¼r
-   Ã¢ÂÂdas ist die Fassung, die abstÃÂ¼rzte" acht Zeichen lang.
-3. **Beim nÃÂ¤chsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
+   erste Punkt der Arbeitsliste; hier ist der zusätzliche Grund: es ist bisher
+   nur die *erste* geprüft, und die stürzte ab.
+2. **Die volle SHA256 der ersten Fassung** aus der GitHub-Veröffentlichung
+   nachtragen, solange sie noch abrufbar ist — sonst ist der einzige Beleg für
+   „das ist die Fassung, die abstürzte" acht Zeichen lang.
+3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
 
-## E-12 Ã¢ÂÂ der Mailverzeichnis-Parameter wurde als Ini-Dateiname gedeutet
+## E-12 — der Mailverzeichnis-Parameter wurde als Ini-Dateiname gedeutet
 
 **Gemeldet** 05.09.2026, Fassung 7.2.0.4, Agent KONTO. **Status: behoben,
-ungeprÃÂ¼ft** (gebaut, aber am laufenden Programm noch nicht nachgesehen).
+ungeprüft** (gebaut, aber am laufenden Programm noch nicht nachgesehen).
 
-Gregors Meldung: *Ã¢ÂÂaccount daten eingegeben, wurden aber weder gespeichert, noch
-ÃÂ¼bernommen. kann mails nicht abrufen."* Gestartet hatte er mit
+Gregors Meldung: *„account daten eingegeben, wurden aber weder gespeichert, noch
+übernommen. kann mails nicht abrufen."* Gestartet hatte er mit
 
 ```
 C:\Users\Gregor\Eudora72-1.0.4-release>Eudora.exe Mailverzeichnis
 ```
 
-Ein **einziger** Fehler erklÃÂ¤rt alle drei Beobachtungen.
+Ein **einziger** Fehler erklärt alle drei Beobachtungen.
 
-### Der Ablauf, Schritt fÃÂ¼r Schritt
+### Der Ablauf, Schritt für Schritt
 
 In `Eudora71/Eudora/fileutil.cpp`, Funktion `GetDirs`, stand:
 
@@ -6625,11 +6625,11 @@ else
 }
 ```
 
-FÃÂ¼r `CmdLine = "Mailverzeichnis"` gilt: kein Backslash darin, und `CmdLine[1]`
-ist `a`, nicht `:`. Die Bedingung greift also, und Eudora hÃÂ¤lt den
-Verzeichnisnamen fÃÂ¼r einen **Ini-Dateinamen**. `done` bleibt `0`.
+Für `CmdLine = "Mailverzeichnis"` gilt: kein Backslash darin, und `CmdLine[1]`
+ist `a`, nicht `:`. Die Bedingung greift also, und Eudora hält den
+Verzeichnisnamen für einen **Ini-Dateinamen**. `done` bleibt `0`.
 
-Wenige Zeilen spÃÂ¤ter:
+Wenige Zeilen später:
 
 ```c
 if (!done && EudoraDir.IsEmpty())
@@ -6639,7 +6639,7 @@ if (!done && EudoraDir.IsEmpty())
 }
 ```
 
-Dann `SetupINIFilename("Mailverzeichnis")` in `rs.cpp`: der Name enthÃÂ¤lt keinen
+Dann `SetupINIFilename("Mailverzeichnis")` in `rs.cpp`: der Name enthält keinen
 Backslash, also
 
 ```c
@@ -6654,18 +6654,18 @@ INIPath = C:\Users\Gregor\Eudora72-1.0.4-release\Mailverzeichnis
 ```
 
 **Das ist ein Verzeichnis, keine Datei.** Eudora benutzte ein Verzeichnis als
-seine Ini-Datei. `GetPrivateProfileString` liefert dann fÃÂ¼r jeden SchlÃÂ¼ssel den
-mitgegebenen Vorgabewert Ã¢ÂÂ bei den Kontofeldern die leere Zeichenkette Ã¢ÂÂ, und
+seine Ini-Datei. `GetPrivateProfileString` liefert dann für jeden Schlüssel den
+mitgegebenen Vorgabewert — bei den Kontofeldern die leere Zeichenkette —, und
 `WritePrivateProfileString` scheitert stillschweigend. Es gibt keine
 Fehlermeldung, an keiner Stelle.
 
-Damit fÃÂ¤llt alles zusammen:
+Damit fällt alles zusammen:
 
 | Beobachtung | Ursache |
 |---|---|
-| Dialog Ã¢ÂÂAccount Settings for `<Dominant>`" zeigt leere Felder | jeder Lesezugriff liefert die Vorgabe |
+| Dialog „Account Settings for `<Dominant>`" zeigt leere Felder | jeder Lesezugriff liefert die Vorgabe |
 | Eingaben werden nicht gespeichert | jeder Schreibzugriff verpufft |
-| Mail kann nicht abgerufen werden | `POPSession` liest Server und Konto ÃÂ¼ber denselben Weg |
+| Mail kann nicht abgerufen werden | `POPSession` liest Server und Konto über denselben Weg |
 
 ### Der Messbeleg
 
@@ -6673,16 +6673,16 @@ In Gregors Testverzeichnis lagen **zwei** Suchindex-Wurzeln:
 
 ```
 Eudora72-1.0.4-release\Search\db.ini                   19:24   (Start von Hand, relativ)
-Eudora72-1.0.4-release\Mailverzeichnis\Search\db.ini   19:29   (Start ÃÂ¼ber die .cmd, absolut)
+Eudora72-1.0.4-release\Mailverzeichnis\Search\db.ini   19:29   (Start über die .cmd, absolut)
 ```
 
-Der Start von Hand um 19:24 benutzte also tatsÃÂ¤chlich das **Programm**verzeichnis
+Der Start von Hand um 19:24 benutzte also tatsächlich das **Programm**verzeichnis
 als Datenwurzel. Das ist der Fingerabdruck genau dieses Fehlers.
 
-`tools/Eudora starten.cmd` ÃÂ¼bergibt `%~dp0Mailverzeichnis`, also einen absoluten
-Pfad mit Backslashes Ã¢ÂÂ deshalb ist der Fehler beim Start ÃÂ¼ber die .cmd nie
+`tools/Eudora starten.cmd` übergibt `%~dp0Mailverzeichnis`, also einen absoluten
+Pfad mit Backslashes — deshalb ist der Fehler beim Start über die .cmd nie
 aufgefallen, und deshalb lief Gregors zweiter Versuch (19:28) sauber durch, bis
-hin zu Ã¢ÂÂYou have new mail!" und einer `In.mbx` von 576 823 Bytes.
+hin zu „You have new mail!" und einer `In.mbx` von 576 823 Bytes.
 
 ### Zweiter, verdeckter Teil: laufwerksrelative Pfade
 
@@ -6696,18 +6696,18 @@ strcat(szShortEDir, dir);            // -> "C:Mailverzeichnis"
 ```
 
 `C:Mailverzeichnis` ist **nicht** absolut, sondern *laufwerksrelativ*: Windows
-lÃÂ¶st es gegen das aktuelle Verzeichnis von Laufwerk C auf. `GetLongPathName`
-macht daraus nichts Absolutes Ã¢ÂÂ nachgemessen:
+löst es gegen das aktuelle Verzeichnis von Laufwerk C auf. `GetLongPathName`
+macht daraus nichts Absolutes — nachgemessen:
 
 ```
 in='C:Mailverzeichnis'  ret=17  out='C:Mailverzeichnis'
 in='Mailverzeichnis'    ret=15  out='Mailverzeichnis'
 ```
 
-Dieselbe FehleinschÃÂ¤tzung steckt in `SetupINIFilename`: die PrÃÂ¼fung
-`INIPath[1] != ':'` hÃÂ¤lt `C:Mailverzeichnis\Eudora.ini` bereits fÃÂ¼r Ã¢ÂÂfully
-qualified". Sobald irgendetwas `SetCurrentDirectory()` aufruft Ã¢ÂÂ ein
-gewÃÂ¶hnlicher Datei-ÃÂffnen-Dialog genÃÂ¼gt Ã¢ÂÂ, zeigt so ein Pfad woandershin, und
+Dieselbe Fehleinschätzung steckt in `SetupINIFilename`: die Prüfung
+`INIPath[1] != ':'` hält `C:Mailverzeichnis\Eudora.ini` bereits für „fully
+qualified". Sobald irgendetwas `SetCurrentDirectory()` aufruft — ein
+gewöhnlicher Datei-Öffnen-Dialog genügt —, zeigt so ein Pfad woandershin, und
 Einstellungen werden ab da aus einer anderen Datei gelesen und in eine andere
 geschrieben. Lautlos.
 
@@ -6722,10 +6722,10 @@ INIPath = ...\Mailverzeichnis\Eudora.ini  ->  RealName = 'hans wurst'
 ```
 
 Der erste Pfad ist genau der, den Eudora aus `Eudora.exe Mailverzeichnis`
-errechnete. Windows liefert wortlos die Vorgabe Ã¢ÂÂ in Eudoras Fall die leere
+errechnete. Windows liefert wortlos die Vorgabe — in Eudoras Fall die leere
 Zeichenkette. Gemessen, nicht vermutet.
 
-### Was geÃÂ¤ndert wurde
+### Was geändert wurde
 
 `Eudora71/Eudora/fileutil.cpp`
 
@@ -6738,165 +6738,165 @@ Zeichenkette. Gemessen, nicht vermutet.
 
    if (!Ini && !bCmdLineIsDir && (!strchr(CmdLine, SLASH) && CmdLine[1] != ':'))
    ```
-   Der Fall Ã¢ÂÂArgument ist wirklich eine Ini-Datei" bleibt damit erhalten Ã¢ÂÂ er
+   Der Fall „Argument ist wirklich eine Ini-Datei" bleibt damit erhalten — er
    greift weiterhin, wenn der Name kein Verzeichnis benennt.
-2. **`GetDirs`, Umgebungsvariablenzweig:** dieselbe PrÃÂ¼fung, gleicher Fehler.
+2. **`GetDirs`, Umgebungsvariablenzweig:** dieselbe Prüfung, gleicher Fehler.
 3. **`CheckMailDirectory`:** der Pfad wird einmal mit `GetFullPathName` in einen
-   echten absoluten Pfad aufgelÃÂ¶st, bevor er in `EudoraDir` landet.
-4. **`CheckMailDirectory`:** `GetLongPathName` lieÃÂ `Edir` bei Misserfolg
-   *uninitialisiert* Ã¢ÂÂ anschlieÃÂend lief `strlen(Edir)` ÃÂ¼ber Zufallsbytes. `Edir`
+   echten absoluten Pfad aufgelöst, bevor er in `EudoraDir` landet.
+4. **`CheckMailDirectory`:** `GetLongPathName` ließ `Edir` bei Misserfolg
+   *uninitialisiert* — anschließend lief `strlen(Edir)` über Zufallsbytes. `Edir`
    wird jetzt vorher belegt.
 5. **`fileutil.cpp:482`** (Fundstelle aus **R-1**):
    `EudoraDir.ReleaseBuffer(Slash + 1)` ohne vorheriges `GetBuffer` ersetzt durch
    `EudoraDir = EudoraDir.Left(Slash + 1)`. Unter MFC 14 ist `ReleaseBuffer(n)`
-   ein `SetLength(n)` ohne `Fork`: bei geteiltem Puffer kÃÂ¼rzt es still eine
+   ein `SetLength(n)` ohne `Fork`: bei geteiltem Puffer kürzt es still eine
    fremde Zeichenkette mit. Die Stelle liegt mitten im Ini-Pfad.
 
 `Eudora71/Eudora/rs.cpp`
 
-6. **`SetupINIFilename`:** nach der bestehenden Ã¢ÂÂfully qualify"-PrÃÂ¼fung wird
-   `INIPath` zusÃÂ¤tzlich mit `GetFullPathName` aufgelÃÂ¶st.
+6. **`SetupINIFilename`:** nach der bestehenden „fully qualify"-Prüfung wird
+   `INIPath` zusätzlich mit `GetFullPathName` aufgelöst.
 
-Alle ÃÂnderungen byte-erhaltend eingespielt (perl `:raw`); CR-Zahl in beiden
-Dateien unverÃÂ¤ndert 18.
+Alle Änderungen byte-erhaltend eingespielt (perl `:raw`); CR-Zahl in beiden
+Dateien unverändert 18.
 
 ### Bauzustand
 
 Release **und** Debug, `x86`, jeweils 0 Fehler.
 
-### Was Gregor zum NachprÃÂ¼fen tun muss
+### Was Gregor zum Nachprüfen tun muss
 
 ```
 cd C:\Users\Gregor\Eudora72-1.0.4-release
 Eudora.exe Mailverzeichnis
 ```
 
-Ã¢ÂÂ also **genau so wie beim Fehlversuch, mit dem relativen Pfad**. Erwartung:
-Die Kontodaten stehen im Dialog, und der Mailabruf lÃÂ¤uft. Gegenprobe ohne
+— also **genau so wie beim Fehlversuch, mit dem relativen Pfad**. Erwartung:
+Die Kontodaten stehen im Dialog, und der Mailabruf läuft. Gegenprobe ohne
 Programmstart: `Mailverzeichnis\Eudora.ini` muss nach dem Beenden neuer sein als
 vorher, und im Programmverzeichnis darf **kein** `Search\db.ini` neu entstehen.
 
 ### Offener Rest
 
-Die 24 ÃÂ¼brigen `ReleaseBuffer`-Stellen aus **R-1** bleiben. Zwei davon,
+Die 24 übrigen `ReleaseBuffer`-Stellen aus **R-1** bleiben. Zwei davon,
 `POPSession.cpp:1747` und `SMTPSession.cpp:683`, stehen im POP- bzw.
-SMTP-Anmeldeweg, sind aber nur erreichbar, wenn der Server buchstÃÂ¤blich
-`hesiod` heiÃÂt Ã¢ÂÂ latent, hier nicht ursÃÂ¤chlich.
-## Z-2 (Fortschreibung, 05.09.2026, ZEICHEN) Ã¢ÂÂ der Rest von E-2: ein einziger Umlaut kaputt, alle anderen richtig
+SMTP-Anmeldeweg, sind aber nur erreichbar, wenn der Server buchstäblich
+`hesiod` heißt — latent, hier nicht ursächlich.
+## Z-2 (Fortschreibung, 05.09.2026, ZEICHEN) — der Rest von E-2: ein einziger Umlaut kaputt, alle anderen richtig
 
 Gregor am 05.09.2026, Fassung 7.2.0.4, im Vorschaufenster einer abgerufenen
-Nachricht Ã¢ÂÂ beides in **derselben Anzeige**:
+Nachricht — beides in **derselben Anzeige**:
 
-    "BestTV (U-TV) Android Player fÃÂÃÂ¼r LiveTV"      falsch
-    "Fritzbox als Werbe-Filter: So lÃÂ¤uft Blocken"   richtig
+    "BestTV (U-TV) Android Player fÃ¼r LiveTV"      falsch
+    "Fritzbox als Werbe-Filter: So läuft Blocken"   richtig
 
-Das `ÃÂ¤` stimmt, das `ÃÂ¼` nicht. `fÃÂÃÂ¼r` ist die Signatur Ã¢ÂÂUTF-8-Bytes als CP1252
+Das `ä` stimmt, das `ü` nicht. `fÃ¼r` ist die Signatur „UTF-8-Bytes als CP1252
 gelesen" (U+00FC = `C3 BC`).
 
-**Die Behebung von Z-2 ist nicht die Ursache und wird nicht zurÃÂ¼ckgenommen.**
+**Die Behebung von Z-2 ist nicht die Ursache und wird nicht zurückgenommen.**
 Die Ansage `charset=windows-1252` ist richtig. Die Ursache liegt beim **Abruf**,
 nicht bei der Anzeige, und sie ist eine andere als die von Z-2.
 
-### Der Widerspruch aufgelÃÂ¶st: es liegt an der Stelle im Bytestrom
+### Der Widerspruch aufgelöst: es liegt an der Stelle im Bytestrom
 
-Die drei im Auftrag genannten ErklÃÂ¤rungen Ã¢ÂÂ zwei Nachrichten, zwei MIME-Teile,
-zwei Kodierungen Ã¢ÂÂ sind alle **falsch**. Es ist eine Nachricht, ein Teil, ein
+Die drei im Auftrag genannten Erklärungen — zwei Nachrichten, zwei MIME-Teile,
+zwei Kodierungen — sind alle **falsch**. Es ist eine Nachricht, ein Teil, ein
 Zeichensatz. Der Unterschied ist die **Position** der beiden Bytes im Strom.
 
-**Beleg 1 Ã¢ÂÂ die Zwischendatei.** `%TEMP%\eudA.htm`, 12 602 Bytes, 05.09.2026
-19:32, geschrieben von `CTridentView::WriteTempFile`. Sie enthÃÂ¤lt 33 Bytes ÃÂ¼ber
-0x7F. **32 davon sind Windows-1252** (`E4` ÃÂ¤, `F6` ÃÂ¶, `FC` ÃÂ¼, `DF` ÃÂ, `D6` ÃÂ,
-`96` Halbgeviertstrich, `B7` Mittelpunkt) Ã¢ÂÂ und **genau eines** ist eine
-UTF-8-Folge: `C3 BC` an Offset 4240, in Ã¢ÂÂBestTV (U-TV) Android Player fÃÂ¼r
+**Beleg 1 — die Zwischendatei.** `%TEMP%\eudA.htm`, 12 602 Bytes, 05.09.2026
+19:32, geschrieben von `CTridentView::WriteTempFile`. Sie enthält 33 Bytes über
+0x7F. **32 davon sind Windows-1252** (`E4` ä, `F6` ö, `FC` ü, `DF` ß, `D6` Ö,
+`96` Halbgeviertstrich, `B7` Mittelpunkt) — und **genau eines** ist eine
+UTF-8-Folge: `C3 BC` an Offset 4240, in „BestTV (U-TV) Android Player für
 LiveTV". Davor stehen als erste Bytes der Datei:
 
     <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 
-Diese Ansage ist fÃÂ¼r 32 von 33 Zeichen richtig. Nimmt man sie weg, sind
+Diese Ansage ist für 32 von 33 Zeichen richtig. Nimmt man sie weg, sind
 schlagartig alle 32 falsch (das war der Ausgangsbefund mit den U+FFFD).
 
-**Beleg 2 Ã¢ÂÂ die rohen Bytes stehen schon im Postfach.**
+**Beleg 2 — die rohen Bytes stehen schon im Postfach.**
 `Eudora72-1.0.4-release/Mailverzeichnis/In.mbx`, Offset 568472:
 `... Android Player f<C3><BC>r LiveTV ...`. Das Postfach wird beim **Abruf**
 geschrieben. Der Fehler ist also vor der Anzeige entstanden; `TridentView.cpp`
 und `msgutils.cpp` sind unbeteiligt.
 
-**Beleg 3 Ã¢ÂÂ der SchlÃÂ¼ssel: dieselbe Zeichenkette, einmal richtig, einmal
-falsch, in derselben Nachricht.** In der Nachricht Ã¢ÂÂ10 Jahre waipu.tv" desselben
-Postfachs steht dasselbe Wort *auswÃÂ¤hlen* dreimal als `ausw<E4>hlen` (richtig)
-und einmal als `ausw<C3><A4>hlen` (roh). Und *fÃÂ¼r 8,74 Ã¢ÂÂ¬* steht einmal als
-`f<FC>r 8,74 <E2><82><AC>` und einmal als `f<C3><BC>r 8,74 <80>` Ã¢ÂÂ beide
+**Beleg 3 — der Schlüssel: dieselbe Zeichenkette, einmal richtig, einmal
+falsch, in derselben Nachricht.** In der Nachricht „10 Jahre waipu.tv" desselben
+Postfachs steht dasselbe Wort *auswählen* dreimal als `ausw<E4>hlen` (richtig)
+und einmal als `ausw<C3><A4>hlen` (roh). Und *für 8,74 €* steht einmal als
+`f<FC>r 8,74 <E2><82><AC>` und einmal als `f<C3><BC>r 8,74 <80>` — beide
 Zeichen jeweils andersherum. Ein Absender kann dieselbe Zeichenkette nicht
 zweimal verschieden kodieren, und ein MIME-Teil hat nur einen Zeichensatz. Der
 Unterschied **kann** nur an der Stelle im Strom liegen.
 
 ### Die Ursache im Quelltext
 
-`TextReader::ReadIt` (`Eudora/TextReader.cpp`) liest den Rumpf **stÃÂ¼ckweise**:
+`TextReader::ReadIt` (`Eudora/TextReader.cpp`) liest den Rumpf **stückweise**:
 
     for (size = ms->m_LineReader->ReadLine(buf, bSize); size > 0; ...)
         ...
         size = ISOTranslate(buf, size, iCharsetIdx);
 
-Der Puffer kommt aus `pop.cpp:663` (`char szBuffer[2048]`); wie groÃÂ ein StÃÂ¼ck
-wirklich wird, hÃÂ¤ngt zusÃÂ¤tzlich an der ZeilenlÃÂ¤nge und an der
-ÃÂbertragungskodierung. Ein UTF-8-Zeichen ist **2 bis 4 Byte lang und kann auf
-der StÃÂ¼ckgrenze auseinandergerissen werden.**
+Der Puffer kommt aus `pop.cpp:663` (`char szBuffer[2048]`); wie groß ein Stück
+wirklich wird, hängt zusätzlich an der Zeilenlänge und an der
+Übertragungskodierung. Ein UTF-8-Zeichen ist **2 bis 4 Byte lang und kann auf
+der Stückgrenze auseinandergerissen werden.**
 
-Dann ist keine der beiden HÃÂ¤lften gÃÂ¼ltiges UTF-8:
+Dann ist keine der beiden Hälften gültiges UTF-8:
 
 * `MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, ...)` scheitert
-  (`utils.cpp`, in `ISOTranslate`) Ã¢ÂÂ absichtlich, siehe Z-2;
-* der RÃÂ¼ckfall auf `pcXlateTable` findet ebenfalls nichts, denn die Tabelle
-  kennt nur **vollstÃÂ¤ndige** Folgen;
-* beide Bytes bleiben stehen, jedes in seinem StÃÂ¼ck.
+  (`utils.cpp`, in `ISOTranslate`) — absichtlich, siehe Z-2;
+* der Rückfall auf `pcXlateTable` findet ebenfalls nichts, denn die Tabelle
+  kennt nur **vollständige** Folgen;
+* beide Bytes bleiben stehen, jedes in seinem Stück.
 
-Ergebnis: **genau ein Umlaut ist kaputt, alle anderen stimmen** Ã¢ÂÂ Gregors Bild,
-Byte fÃÂ¼r Byte. `ISOTranslate` kann das nicht selbst beheben: es sieht immer nur
-ein StÃÂ¼ck und kann nicht wissen, dass das nÃÂ¤chste die Fortsetzung bringt.
+Ergebnis: **genau ein Umlaut ist kaputt, alle anderen stimmen** — Gregors Bild,
+Byte für Byte. `ISOTranslate` kann das nicht selbst beheben: es sieht immer nur
+ein Stück und kann nicht wissen, dass das nächste die Fortsetzung bringt.
 
-Das Verhalten von `ISOTranslate` war seit dem 31.08. sogar geprÃÂ¼ft
-(`Tests/TestIsoTranslate.cpp`, Ã¢ÂÂbei abgeschnittenem Zeichen fÃÂ¤llt die Tabelle
-ein"). ÃÂbersehen wurde, dass der **Aufrufer** daraus einen Anzeigefehler macht.
+Das Verhalten von `ISOTranslate` war seit dem 31.08. sogar geprüft
+(`Tests/TestIsoTranslate.cpp`, „bei abgeschnittenem Zeichen fällt die Tabelle
+ein"). Übersehen wurde, dass der **Aufrufer** daraus einen Anzeigefehler macht.
 
 ### Behebung
 
 Abgewogen wurden die beiden Wege aus dem Auftrag:
 
-* **(b) den Zeichensatz der Nachricht durchreichen und `utf-8` ansagen** Ã¢ÂÂ
+* **(b) den Zeichensatz der Nachricht durchreichen und `utf-8` ansagen** —
   verworfen. In der Zwischendatei stehen 32 CP1252-Bytes und 2 UTF-8-Bytes.
-  Keine einzige Ansage kann fÃÂ¼r beides richtig sein; `utf-8` wÃÂ¼rde 32 Zeichen
-  kaputtmachen, um 1 zu retten. AuÃÂerdem mÃÂ¼sste der Zeichensatz durch
+  Keine einzige Ansage kann für beides richtig sein; `utf-8` würde 32 Zeichen
+  kaputtmachen, um 1 zu retten. Außerdem müsste der Zeichensatz durch
   `GetMessageForDisplay` und den Postfach-Aufbau hindurchgereicht werden, wo er
   gar nicht mehr existiert: nach dem Abruf gibt es nur noch CP1252.
-* **(a) den Rumpf zuverlÃÂ¤ssig nach CP1252 ÃÂ¼bersetzen und CP1252 ansagen** Ã¢ÂÂ
-  gewÃÂ¤hlt. Es ist die Zusage, die `ISOTranslate` ohnehin gibt; sie wurde nur an
-  der StÃÂ¼ckgrenze gebrochen.
+* **(a) den Rumpf zuverlässig nach CP1252 übersetzen und CP1252 ansagen** —
+  gewählt. Es ist die Zusage, die `ISOTranslate` ohnehin gibt; sie wurde nur an
+  der Stückgrenze gebrochen.
 
-GeÃÂ¤ndert, drei Dateien:
+Geändert, drei Dateien:
 
-1. **`Eudora/utils.cpp`** Ã¢ÂÂ zwei neue Funktionen vor `ISOTranslate`:
-   * `BOOL ISOIsUTF8Charset(UINT iCharsetIdx)` Ã¢ÂÂ die Rechnung fÃÂ¼r den
+1. **`Eudora/utils.cpp`** — zwei neue Funktionen vor `ISOTranslate`:
+   * `BOOL ISOIsUTF8Charset(UINT iCharsetIdx)` — die Rechnung für den
      UTF-8-Index steht damit an einer Stelle statt an zweien;
-   * `LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)` Ã¢ÂÂ zÃÂ¤hlt die
+   * `LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)` — zählt die
      Bytes am Pufferende, die ein **angefangenes** UTF-8-Zeichen sind (0 bis 3).
-     Ein vollstÃÂ¤ndiges Zeichen am Ende ergibt 0, ein CP1252-Einzelbyte ergibt 0,
+     Ein vollständiges Zeichen am Ende ergibt 0, ein CP1252-Einzelbyte ergibt 0,
      ein Folgebyte ohne Kopf ergibt 0.
-   `ISOTranslate` selbst ist **unverÃÂ¤ndert**; alle bestehenden Tests gelten
+   `ISOTranslate` selbst ist **unverändert**; alle bestehenden Tests gelten
    weiter.
-2. **`Eudora/utils.h`** Ã¢ÂÂ die beiden Deklarationen.
-3. **`Eudora/TextReader.cpp`** Ã¢ÂÂ der ÃÂbertrag. Vor der Schleife wird `bSize` um
-   drei weitere Bytes verkleinert (Platz, um die zurÃÂ¼ckgehaltenen Bytes vor das
-   nÃÂ¤chste StÃÂ¼ck zu setzen). In der Schleife, vor `ISOTranslate`: das
-   ZurÃÂ¼ckgehaltene vorn wieder anfÃÂ¼gen, dann den angefangenen Rest des neuen
-   StÃÂ¼cks zurÃÂ¼ckhalten. `ISOTranslate` bekommt so nur noch ganze Zeichen zu
-   sehen. Nur bei UTF-8 Ã¢ÂÂ ein Einzelbyte-Zeichensatz hÃÂ¤lt nie etwas zurÃÂ¼ck.
+2. **`Eudora/utils.h`** — die beiden Deklarationen.
+3. **`Eudora/TextReader.cpp`** — der Übertrag. Vor der Schleife wird `bSize` um
+   drei weitere Bytes verkleinert (Platz, um die zurückgehaltenen Bytes vor das
+   nächste Stück zu setzen). In der Schleife, vor `ISOTranslate`: das
+   Zurückgehaltene vorn wieder anfügen, dann den angefangenen Rest des neuen
+   Stücks zurückhalten. `ISOTranslate` bekommt so nur noch ganze Zeichen zu
+   sehen. Nur bei UTF-8 — ein Einzelbyte-Zeichensatz hält nie etwas zurück.
 
 Endet ein MIME-Teil mitten in einem Zeichen, werden die ein bis drei
-zurÃÂ¼ckgehaltenen Bytes verworfen statt geschrieben: fÃÂ¼r sich sind sie kein
-Zeichen, und sie zu schreiben ergÃÂ¤be genau den Bytesalat, um den es geht.
+zurückgehaltenen Bytes verworfen statt geschrieben: für sich sind sie kein
+Zeichen, und sie zu schreiben ergäbe genau den Bytesalat, um den es geht.
 
-### PrÃÂ¼fung
+### Prüfung
 
 `Eudora71/Tests`: **109 Tests, 109 bestanden**, darunter vier neue:
 
@@ -6909,20 +6909,20 @@ Der dritte ist der gemeldete Fall: `f C3` | `BC r` ergibt jetzt `f FC r` statt
 `f C3 BC r`.
 
 Neues Werkzeug **`tools/postfach-zeichen-pruefen.pl`** (liest nur): sucht in
-einer `.mbx` nach vollstÃÂ¤ndigen UTF-8-Folgen und nennt Nachricht, Stelle und
+einer `.mbx` nach vollständigen UTF-8-Folgen und nennt Nachricht, Stelle und
 Umfeld. Im Postfach vom 05.09. findet es 249 Stellen in 8 Nachrichten, darunter
 die eine aus Gregors Beobachtung. Nach dem Abruf darf im Postfach **keine**
-vollstÃÂ¤ndige UTF-8-Folge mehr stehen Ã¢ÂÂ das ist die Schranke fÃÂ¼r diese
+vollständige UTF-8-Folge mehr stehen — das ist die Schranke für diese
 Fehlerklasse.
 
-### Was Gregor zum NachprÃÂ¼fen tun muss
+### Was Gregor zum Nachprüfen tun muss
 
 1. Neue Fassung bauen und einsetzen.
-2. **Neu abrufen.** Schon abgerufene Nachrichten bleiben kaputt Ã¢ÂÂ die rohen
+2. **Neu abrufen.** Schon abgerufene Nachrichten bleiben kaputt — die rohen
    Bytes stehen im Postfach, nicht in der Anzeige. Das Vorher/Nachher ist nur an
    frisch abgeholter Post zu sehen.
-3. `perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` Ã¢ÂÂ sollte
-   Ã¢ÂÂNichts gefunden" melden, jedenfalls fÃÂ¼r die Nachrichten, die mit der neuen
+3. `perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx` — sollte
+   „Nichts gefunden" melden, jedenfalls für die Nachrichten, die mit der neuen
    Fassung geholt wurden.
 
 ### Beide Bauten
@@ -6930,42 +6930,42 @@ Fehlerklasse.
 `MSBuild Eudora71/Eudora.sln -t:Build -p:Configuration=<Release|Debug> -p:Platform=x86 -m`,
 frischer Worktree, also von Grund auf:
 
-* **Release x86: grÃÂ¼n**, Exitcode 0, **0 Fehler** im Protokoll,
+* **Release x86: grün**, Exitcode 0, **0 Fehler** im Protokoll,
   `Eudora71/Bin/Release/Eudora.exe` neu geschrieben.
-* **Debug x86: grÃÂ¼n** im zweiten Lauf, Exitcode 0, **0 Fehler**,
+* **Debug x86: grün** im zweiten Lauf, Exitcode 0, **0 Fehler**,
   `Eudora71/Bin/Debug/Eudora.exe` neu geschrieben.
 
-**Nebenbefund: der erste Debug-Lauf brach ab** Ã¢ÂÂ zweimal
-`LNK1104: Datei "QCUtils.lib" kann nicht geÃÂ¶ffnet werden`, in `OEImport` und
+**Nebenbefund: der erste Debug-Lauf brach ab** — zweimal
+`LNK1104: Datei "QCUtils.lib" kann nicht geöffnet werden`, in `OEImport` und
 `NSImport`. `QCUtils.lib` entstand ausweislich der Zeitstempel **erst danach**.
-In der Projektmappe fehlt also die AbhÃÂ¤ngigkeit der beiden Importer auf
+In der Projektmappe fehlt also die Abhängigkeit der beiden Importer auf
 `QCUtils`; unter `-m` verlieren sie das Rennen. Mit der Fassung dieses Befundes
 hat das nichts zu tun (die Importer binden `utils.cpp` gar nicht ein), und der
-Release-Lauf traf es nur zufÃÂ¤llig nicht. Der zweite Lauf fand die Bibliothek
-vor und lief durch. **Zu beheben wÃÂ¤re:** die ProjektabhÃÂ¤ngigkeit in
-`Eudora.sln` nachtragen, sonst ist jeder Bau von Grund auf ein GlÃÂ¼cksspiel.
+Release-Lauf traf es nur zufällig nicht. Der zweite Lauf fand die Bibliothek
+vor und lief durch. **Zu beheben wäre:** die Projektabhängigkeit in
+`Eudora.sln` nachtragen, sonst ist jeder Bau von Grund auf ein Glücksspiel.
 
 ### Offen geblieben (belegt, nicht behoben)
 
-* **Absender mit gemischter Kodierung.** In Ã¢ÂÂ10 Jahre waipu.tv" stehen an
-  manchen Stellen rohe CP1252-Bytes (`80` fÃÂ¼r Ã¢ÂÂ¬) **mitten in einem
-  UTF-8-Teil**. Der ganze Puffer fÃÂ¤llt dann auf die Tabelle zurÃÂ¼ck, und was die
-  Tabelle nicht kennt Ã¢ÂÂ etwa `E2 80 AF` (U+202F, schmales geschÃÂ¼tztes
-  Leerzeichen) Ã¢ÂÂ bleibt roh. Das ist eine eigene Klasse und braucht eine
+* **Absender mit gemischter Kodierung.** In „10 Jahre waipu.tv" stehen an
+  manchen Stellen rohe CP1252-Bytes (`80` für €) **mitten in einem
+  UTF-8-Teil**. Der ganze Puffer fällt dann auf die Tabelle zurück, und was die
+  Tabelle nicht kennt — etwa `E2 80 AF` (U+202F, schmales geschütztes
+  Leerzeichen) — bleibt roh. Das ist eine eigene Klasse und braucht eine
   eigene Entscheidung: die Tabelle erweitern, oder `MB_ERR_INVALID_CHARS`
   gegen ein zeichenweises Verfahren tauschen, das nur die kaputten Bytes
-  stehenlÃÂ¤sst und den Rest umsetzt.
+  stehenlässt und den Rest umsetzt.
 * **Der IMAP-Pfad.** `EuImap/src/ImapDownload.cpp:4662` ruft `ISOTranslate`
-  ebenfalls stÃÂ¼ckweise auf, hat also denselben Bruch Ã¢ÂÂ und zusÃÂ¤tzlich einen um
+  ebenfalls stückweise auf, hat also denselben Bruch — und zusätzlich einen um
   eins verschobenen Zeichensatzindex: er kommt aus
   `FindRStringIndexI(IDS_MIME_US_ASCII, ...)`, `ISOTranslate` erwartet aber die
-  ZÃÂ¤hlung von `FindMIMECharset` (der Test Ã¢ÂÂPOP: der Index wird um eins
-  verschoben Ã¢ÂÂ anders als im IMAP-Pfad" hÃÂ¤lt das bereits fest). Nicht angefasst,
-  weil Gregor ÃÂ¼ber POP abruft und eine ÃÂnderung dort ungeprÃÂ¼ft bliebe.
+  Zählung von `FindMIMECharset` (der Test „POP: der Index wird um eins
+  verschoben — anders als im IMAP-Pfad" hält das bereits fest). Nicht angefasst,
+  weil Gregor über POP abruft und eine Änderung dort ungeprüft bliebe.
 * **Der Kopfzeilenpfad** (`lex822.cpp:544`) ist **nicht** betroffen: dort liegt
-  der dekodierte Text am StÃÂ¼ck vor, es gibt keine Grenze zum ZerreiÃÂen.
+  der dekodierte Text am Stück vor, es gibt keine Grenze zum Zerreißen.
 
-## B-3 Ã¢ÂÂ `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe (05.09.2026)
+## B-3 — `OT501` aus dem Bau genommen: ein frischer Klon baut ohne Kniffe (05.09.2026)
 
 Bis zum 05.09.2026 scheiterte **jeder Bau aus einem frischen Klon** am Projekt
 `OT501`. Es kapselt die **Stingray Objective Toolkit**, ein kommerzielles
@@ -6973,23 +6973,23 @@ Fremdprodukt von 1995; die Quelltextfreigabe des CHM durfte es nicht enthalten.
 Im Repo liegen nur 39 `.cpp` (fast alle die mitgelieferte JPEG-Bibliothek) und
 die Kopfdateien. `OT501` kann deshalb **nie** bauen.
 
-Der Ausweg war bisher `/p:BuildProjectReferences=false` Ã¢ÂÂ ein Kniff, der in
+Der Ausweg war bisher `/p:BuildProjectReferences=false` — ein Kniff, der in
 `README.md` stand und den jeder Neue kennen musste.
 
 ### Belegt, dass niemand `OT501` braucht
 
 | Beleg | Fundstelle |
 |---|---|
-| Kein Projekt bindet `OTA50R.lib` oder `OTA50D.lib`. Die einzige ErwÃÂ¤hnung schlieÃÂt sie ausdrÃÂ¼cklich **aus** | `Eudora.vcxproj`, `IgnoreSpecificDefaultLibraries` |
+| Kein Projekt bindet `OTA50R.lib` oder `OTA50D.lib`. Die einzige Erwähnung schließt sie ausdrücklich **aus** | `Eudora.vcxproj`, `IgnoreSpecificDefaultLibraries` |
 | Die beiden Projektverweise trugen bereits `<LinkLibraryDependencies>false</LinkLibraryDependencies>` | `Eudora.vcxproj`, `EudoraRes.vcxproj` |
-| Keine Quelldatei bindet eine Stingray-Kopfdatei ein, die eine Bibliothek verlangt | Ã¢ÂÂ |
+| Keine Quelldatei bindet eine Stingray-Kopfdatei ein, die eine Bibliothek verlangt | — |
 | Ersetzt ist das Ganze durch die eigene Schicht `Eudora71/OTShim`, rund 18.000 Zeilen | Befund S-2 und `Eudora71/OTShim/INVENTAR.md` |
 
-### Was geÃÂ¤ndert wurde (Commit `d8cc9d3`)
+### Was geändert wurde (Commit `d8cc9d3`)
 
 * die Projektverweise auf `OT501` aus `Eudora71/Eudora/Eudora.vcxproj` und
   `Eudora71/Eudora/EudoraRes.vcxproj` entfernt,
-* die beiden `.Build.0`-Zeilen fÃÂ¼r `OT501` aus `Eudora71/Eudora.sln` entfernt.
+* die beiden `.Build.0`-Zeilen für `OT501` aus `Eudora71/Eudora.sln` entfernt.
 
 Das Projekt bleibt in der Projektmappe **sichtbar**, wird aber nicht mehr
 gebaut. `..\OT501\Include` bleibt im Suchpfad: die Kopfdateien werden gebraucht,
@@ -6997,97 +6997,97 @@ nur die Bibliothek nicht.
 
 **Damit entfallen die drei Fehler**, die ein voller Solution-Bau bis dahin
 meldete (zweimal `NMAKE U1073`, einmal `MSB3073`, gemessen am 31.08.2026 in
-Befund B-2). `README.md` ist am 05.09.2026 entsprechend berichtigt Ã¢ÂÂ sowohl die
-Kurzfassung unter Ã¢ÂÂBauen" als auch der Abschnitt Ã¢ÂÂWas den Bau kaputtmacht",
+Befund B-2). `README.md` ist am 05.09.2026 entsprechend berichtigt — sowohl die
+Kurzfassung unter „Bauen" als auch der Abschnitt „Was den Bau kaputtmacht",
 Punkt 4.
 
 > **Berichtigung im selben Zug** (Commit `f468a02`): Es stand zwischenzeitlich
 > die Behauptung im Raum, ein `-t:Rebuild` habe eine vorgebaute `OTA50R.lib`
-> gelÃÂ¶scht. Das war falsch. `OTA50R.lib` hat **nie existiert** Ã¢ÂÂ weder im Repo
+> gelöscht. Das war falsch. `OTA50R.lib` hat **nie existiert** — weder im Repo
 > noch in einem Release-ZIP noch in einem Commit. Nachgemessen: die vier Dateien
-> in `Src/OTA50R/` tragen unverÃÂ¤ndert den **31.08.2026, 07:22**; ein Clean hÃÂ¤tte
-> sie gelÃÂ¶scht. Es waren zwei Objektdateien und eine PCH aus einem Bauversuch,
-> der an derselben fehlenden Quelle starb. ZerstÃÂ¶rt wurde nichts; sichtbar wurde
+> in `Src/OTA50R/` tragen unverändert den **31.08.2026, 07:22**; ein Clean hätte
+> sie gelöscht. Es waren zwei Objektdateien und eine PCH aus einem Bauversuch,
+> der an derselben fehlenden Quelle starb. Zerstört wurde nichts; sichtbar wurde
 > ein Mangel, der die ganze Zeit da war.
 
 **Wer `OT501` wieder in den Bau nimmt, bricht den Bau.**
 
-## E-13 Ã¢ÂÂ Beim Mailabruf ist kein Fortschritt sichtbar: der Abruf dauert 0,02 Sekunden (05.09.2026)
+## E-13 — Beim Mailabruf ist kein Fortschritt sichtbar: der Abruf dauert 0,02 Sekunden (05.09.2026)
 
-> **Diese Kennung hieÃÂ bis zum 05.09.2026 versehentlich `E-12`.** Zwei Agenten
-> haben unabhÃÂ¤ngig voneinander Ã¢ÂÂdie nÃÂ¤chste freie E-Nummer" gewÃÂ¤hlt. `E-12` ist
-> an den Befund ÃÂ¼ber das Mailverzeichnis-Argument vergeben (Commit `79c09d4`,
-> zuerst zusammengefÃÂ¼hrt und im Verzeichnis gefÃÂ¼hrt); dieser Befund hier bekommt
+> **Diese Kennung hieß bis zum 05.09.2026 versehentlich `E-12`.** Zwei Agenten
+> haben unabhängig voneinander „die nächste freie E-Nummer" gewählt. `E-12` ist
+> an den Befund über das Mailverzeichnis-Argument vergeben (Commit `79c09d4`,
+> zuerst zusammengeführt und im Verzeichnis geführt); dieser Befund hier bekommt
 > `E-13`. Wer unter `E-12` den Fortschrittsbefund sucht, ist hier richtig.
 
 > **Stand des Codes:** Die Behebung liegt im Commit `bd3959c` auf dem Zweig
 > **`wt/fortschritt-arbeit`** und ist in `bau-und-pruefung` **noch nicht
-> enthalten**. Der vollstÃÂ¤ndige Befundtext steht dort in `BEFUNDE.md`. Wer die
-> beiden Zweige zusammenfÃÂ¼hrt, **entfernt dort die ÃÂberschrift `## E-12 Ã¢ÂÂ Der
-> Fortschritt beim Mailabruf Ã¢ÂÂ¦` zugunsten dieses Abschnitts** Ã¢ÂÂ sonst steht
+> enthalten**. Der vollständige Befundtext steht dort in `BEFUNDE.md`. Wer die
+> beiden Zweige zusammenführt, **entfernt dort die Überschrift `## E-12 — Der
+> Fortschritt beim Mailabruf …` zugunsten dieses Abschnitts** — sonst steht
 > `E-12` wieder zweimal in der Datei.
 
 **Gregor am 05.09.2026 zur Fassung 7.2.0.4:**
 
-> Ã¢ÂÂmails lassen sich abrufen Ã¢ÂÂ¦ status wÃÂ¤hrend des abrufes nicht sichtbar. es
-> sieht so aus, als wÃÂ¼rde nichts passieren."
+> „mails lassen sich abrufen … status während des abrufes nicht sichtbar. es
+> sieht so aus, als würde nichts passieren."
 
-Am 31.08.2026 hatte er zum Debug-Bau mit 159 Nachrichten noch ausdrÃÂ¼cklich
-*Ã¢ÂÂsichtbar im progress bar im status"* gemeldet (E-1, E-3). Es sah deshalb nach
-einem RÃÂ¼ckschritt aus. **Es ist keiner.**
+Am 31.08.2026 hatte er zum Debug-Bau mit 159 Nachrichten noch ausdrücklich
+*„sichtbar im progress bar im status"* gemeldet (E-1, E-3). Es sah deshalb nach
+einem Rückschritt aus. **Es ist keiner.**
 
-### Die naheliegende ErklÃÂ¤rung war falsch Ã¢ÂÂ das ist die Lehre
+### Die naheliegende Erklärung war falsch — das ist die Lehre
 
-Alle VerdÃÂ¤chtigen, die man ohne Messung genannt hÃÂ¤tte, sind widerlegt:
+Alle Verdächtigen, die man ohne Messung genannt hätte, sind widerlegt:
 
 | Verdacht | Gegenbeleg |
 |---|---|
-| RÃÂ¼ckschritt seit dem 31.08. | `git diff 1ea176f HEAD -- Eudora71/` berÃÂ¼hrt **keine** der beteiligten Dateien |
-| Der Umbau der Andockleisten (`OTShim.cpp`, Commit `1a4a6d5`) hat die Leiste zerstÃÂ¶rt | `git merge-base --is-ancestor 1a4a6d5 1ea176f` sagt **ja** Ã¢ÂÂ der Umbau war schon in dem Bau vom 31.08. drin, in dem die Anzeige **funktionierte** |
-| Unterschied Release gegen Debug: ein nÃÂ¶tiger Aufruf steckt in einem `ASSERT` | im ganzen Pfad steht kein `ASSERT` mit Nebenwirkung. Die wirksamen Aufrufe stehen in `VERIFY`, und `VERIFY` **wertet im Release aus** |
-| Die Statusleiste lÃÂ¤uft ÃÂ¼ber die Ersatzschicht (`SetControlBarWidthsInRow` ist ein leerer Rumpf, E3) | `OTShim.h:135` macht `SECStatusBar` zu einem **`typedef` auf MFCs `CStatusBar`** Ã¢ÂÂ die Ersatzschicht ist gar nicht beteiligt |
+| Rückschritt seit dem 31.08. | `git diff 1ea176f HEAD -- Eudora71/` berührt **keine** der beteiligten Dateien |
+| Der Umbau der Andockleisten (`OTShim.cpp`, Commit `1a4a6d5`) hat die Leiste zerstört | `git merge-base --is-ancestor 1a4a6d5 1ea176f` sagt **ja** — der Umbau war schon in dem Bau vom 31.08. drin, in dem die Anzeige **funktionierte** |
+| Unterschied Release gegen Debug: ein nötiger Aufruf steckt in einem `ASSERT` | im ganzen Pfad steht kein `ASSERT` mit Nebenwirkung. Die wirksamen Aufrufe stehen in `VERIFY`, und `VERIFY` **wertet im Release aus** |
+| Die Statusleiste läuft über die Ersatzschicht (`SetControlBarWidthsInRow` ist ein leerer Rumpf, E3) | `OTShim.h:135` macht `SECStatusBar` zu einem **`typedef` auf MFCs `CStatusBar`** — die Ersatzschicht ist gar nicht beteiligt |
 
-### Was es ist Ã¢ÂÂ aus Gregors eigenem Protokoll
+### Was es ist — aus Gregors eigenem Protokoll
 
 `Mailverzeichnis\eudora.log`, Lauf vom 05.09.2026, `LogLevel 0x649F` (Bit `0x10`
 = `DEBUG_MASK_PROG` gesetzt, die Fortschrittsmeldungen stehen also mit drin):
 
 ```
-2.07 Begin fetching messages for : Ã¢ÂÂ¦@mx.freenet.de
-2.09 Done  fetching messages for : Ã¢ÂÂ¦@mx.freenet.de
+2.07 Begin fetching messages for : …@mx.freenet.de
+2.09 Done  fetching messages for : …@mx.freenet.de
 ```
 
 **Der Abruf dauerte 0,02 Sekunden**, neun Nachrichten; der ganze Postgang
-1,08 Sekunden. Am 31.08. waren es 159 Nachrichten in einem Debug-Bau Ã¢ÂÂ dort
+1,08 Sekunden. Am 31.08. waren es 159 Nachrichten in einem Debug-Bau — dort
 stand die Anzeige sekundenlang. **Der Unterschied liegt zwischen 159 Nachrichten
 und neun, nicht zwischen Debug und Release.**
 
-Beide Anzeigewege halten sich bei kurzen VorgÃÂ¤ngen absichtlich zurÃÂ¼ck:
+Beide Anzeigewege halten sich bei kurzen Vorgängen absichtlich zurück:
 
 1. **Das Fortschritts-Fenster** (`progress.cpp:238-241`) wartet erst
    `ProgressIdle` Sekunden ab. Voreinstellung `ProgressIdle 3`
-   (`EudoraRes.rc:8633`) Ã¢ÂÂ ein Postgang von 1,08 s erreicht die Schwelle nie.
-2. **Die Statusleiste** hielt fÃÂ¼r den Fortschritt nur **16 Bildpunkte** bereit
+   (`EudoraRes.rc:8633`) — ein Postgang von 1,08 s erreicht die Schwelle nie.
+2. **Die Statusleiste** hielt für den Fortschritt nur **16 Bildpunkte** bereit
    (`statbar.cpp:185`) und verbreiterte das Feld erst beim ersten Prozentwert,
    um es sofort wieder zu schrumpfen. Gezeichnet wurde nur per
-   `InvalidateRect` Ã¢ÂÂ also **angemeldet**, nicht ausgefÃÂ¼hrt.
+   `InvalidateRect` — also **angemeldet**, nicht ausgeführt.
 
 ### Behebung (auf `wt/fortschritt-arbeit`, `statbar.cpp` / `statbar.h`)
 
-FortschrittsflÃÂ¤che von Anfang an in voller Breite; 2 Sekunden Nachlauf
+Fortschrittsfläche von Anfang an in voller Breite; 2 Sekunden Nachlauf
 (`TASK_LINGER_MS`); `UpdateWindow()` statt nur `InvalidateRect`; und der
-Fortschritt zusÃÂ¤tzlich als Text im Meldungsfeld, aus vorhandenen Ressourcen
+Fortschritt zusätzlich als Text im Meldungsfeld, aus vorhandenen Ressourcen
 gebaut (ohne neue Zeichenkette).
 
 ### Die Lehre
 
-**Wer eine Fortschrittsanzeige prÃÂ¼ft, sieht zuerst nach, wie lange der Vorgang
-ÃÂ¼berhaupt dauert.** Das Protokoll des Anwenders hat hier vier Vermutungen auf
-einmal widerlegt, fÃÂ¼r die sonst Bauten und Debugger-LÃÂ¤ufe nÃÂ¶tig gewesen wÃÂ¤ren.
+**Wer eine Fortschrittsanzeige prüft, sieht zuerst nach, wie lange der Vorgang
+überhaupt dauert.** Das Protokoll des Anwenders hat hier vier Vermutungen auf
+einmal widerlegt, für die sonst Bauten und Debugger-Läufe nötig gewesen wären.
 
 ---
 
-## E-14 Ã¢ÂÂ Zusicherung beim Start: der X1-Suchindex wird neu angelegt (05.09.2026, OFFEN)
+## E-14 — Zusicherung beim Start: der X1-Suchindex wird neu angelegt (05.09.2026, OFFEN)
 
 Im Debug-Bau 7.2.0.4, beim Start, vor der E-4-Zusicherung:
 
@@ -7099,26 +7099,26 @@ Im Debug-Bau 7.2.0.4, beim Start, vor der E-4-Zusicherung:
 Suchdatenbank fehlt oder passt nicht, also wird der Index verworfen und neu
 angelegt. Auf einem frischen Mailverzeichnis ist das der normale erste Lauf.
 Festgehalten, damit es nicht als neuer Fehler durchgeht, wenn es jemand
-wiedersieht Ã¢ÂÂ und damit jemand prÃÂ¼ft, ob die Meldung auch beim **zweiten**
-Start noch kommt. Dann wÃÂ¤re sie ein echter Befund.
+wiedersieht — und damit jemand prüft, ob die Meldung auch beim **zweiten**
+Start noch kommt. Dann wäre sie ein echter Befund.
 
 > **Hinweis zur Kennung.** Dieser Befund hiess bis zum 05.09.2026
-> versehentlich `E-12`. Drei Agenten hatten unabhaengig Ã¢ÂÂdie naechste freie
-> NummerÃ¢ÂÂ gewaehlt, waehrend die anderen gleichzeitig schrieben. Kennungen
-> vergibt seitdem die Zuteilung, nicht der Agent Ã¢ÂÂ siehe [AGENTEN.md](AGENTEN.md).
+> versehentlich `E-12`. Drei Agenten hatten unabhaengig „die naechste freie
+> Nummer“ gewaehlt, waehrend die anderen gleichzeitig schrieben. Kennungen
+> vergibt seitdem die Zuteilung, nicht der Agent – siehe [AGENTEN.md](AGENTEN.md).
 ---
 
-## X-5 Ã¢ÂÂ Ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa (05.09.2026)
+## X-5 — Ein Commit drei Minuten nach dem Merge: die Regel stand nur als Prosa (05.09.2026)
 
 Gregor am 05.09.2026:
 
-> Ã¢ÂÂich kÃÂ¼ndige ja immer an, wenn ich einen branch merge und lÃÂ¶sche.
+> „ich kündige ja immer an, wenn ich einen branch merge und lösche.
 > es sollte also alles commited und gepusht sein, klar?"
 >
-> Ã¢ÂÂund fÃÂ¼r solche prÃÂ¼fungen haben wir genau extra agenten, die es feststellen
+> „und für solche prüfungen haben wir genau extra agenten, die es feststellen
 > und verhindern sollen. die arbeiten also nicht sauber!"
 
-Er hat in beiden SÃÂ¤tzen recht. Der zweite trifft den Kern: es lag nicht daran,
+Er hat in beiden Sätzen recht. Der zweite trifft den Kern: es lag nicht daran,
 dass jemand die Regel nicht kannte, sondern daran, dass sie **niemand messen
 konnte**.
 
@@ -7126,38 +7126,38 @@ konnte**.
 
 | Zeit | 31.08.2026 | Beleg |
 |---|---|---|
-| **09:03** | Gregor fÃÂ¼hrt `darstellung-und-menue` nach `main` zusammen und kÃÂ¼ndigt an, den Zweig zu lÃÂ¶schen | Merge-Commit `fa61618` |
-| 09:03Ã¢ÂÂ09:06 | der Assistent arbeitet weiter, ohne nachzusehen, wo er steht | Ã¢ÂÂ |
-| **09:06** | ein weiterer Commit landet auf `darstellung-und-menue` Ã¢ÂÂ dem bereits zusammengefÃÂ¼hrten Zweig | Ã¢ÂÂ |
-| spÃÂ¤ter | eine spÃÂ¤tere Sitzung zieht dieselbe Aussage unabhÃÂ¤ngig nach | Ã¢ÂÂ |
+| **09:03** | Gregor führt `darstellung-und-menue` nach `main` zusammen und kündigt an, den Zweig zu löschen | Merge-Commit `fa61618` |
+| 09:03–09:06 | der Assistent arbeitet weiter, ohne nachzusehen, wo er steht | — |
+| **09:06** | ein weiterer Commit landet auf `darstellung-und-menue` — dem bereits zusammengeführten Zweig | — |
+| später | eine spätere Sitzung zieht dieselbe Aussage unabhängig nach | — |
 
 **Inhaltlich ging nichts verloren.** Das ist der einzige gute Teil dieses
-Befundes, und er ist Zufall: dass ein anderer Durchgang zufÃÂ¤llig dasselbe noch
-einmal geschrieben hat, ist kein Verfahren. WÃÂ¤re der Zweig sofort gelÃÂ¶scht
-worden, wÃÂ¤re der Commit weg gewesen.
+Befundes, und er ist Zufall: dass ein anderer Durchgang zufällig dasselbe noch
+einmal geschrieben hat, ist kein Verfahren. Wäre der Zweig sofort gelöscht
+worden, wäre der Commit weg gewesen.
 
-### Die Ursache Ã¢ÂÂ nicht Vergesslichkeit, sondern der Entwurf
+### Die Ursache — nicht Vergesslichkeit, sondern der Entwurf
 
-Die Regel stand in `AUFGABEN.md` als Prosa: *Ã¢ÂÂIn kleinen Schritten committen und
+Die Regel stand in `AUFGABEN.md` als Prosa: *„In kleinen Schritten committen und
 pushen."* Ein Satz in einer 420 Zeilen langen Liste, der davon lebt, dass ein
 Agent im richtigen Moment an ihn denkt.
 
 Genau das ist die Fehlerklasse, die dieses Projekt schon zweimal getroffen hat:
 
 * **NP3-4/X-2:** der `pre-commit`-Hook rief `lehren-spiegeln.pl` auf, wertete den
-  RÃÂ¼ckgabewert aber nicht aus. Die Regel (Ã¢ÂÂdie Lehren mÃÂ¼ssen mit") stand da, die
+  Rückgabewert aber nicht aus. Die Regel („die Lehren müssen mit") stand da, die
   Durchsetzung fehlte.
-* **X-1:** die Byte-Schranke hatte neun LÃÂ¶cher. Erst als jemand sie **gegen
-  bekannte FÃÂ¤lle gemessen** hat, fielen sie auf.
+* **X-1:** die Byte-Schranke hatte neun Löcher. Erst als jemand sie **gegen
+  bekannte Fälle gemessen** hat, fielen sie auf.
 
-Die Lehre daraus heiÃÂt in `MEMORY.md` Ã¢ÂÂFehlerklassen abstellen": beim zweiten
+Die Lehre daraus heißt in `MEMORY.md` „Fehlerklassen abstellen": beim zweiten
 Auftreten baut man Werkzeug und Schranke, statt einzeln nachzubessern. Hier war
 es das dritte Mal.
 
 ### Ein Nebenbefund, der dasselbe zeigt
 
 Beim Nachsehen fiel auf: der auf diesem Rechner **eingerichtete** Hook war noch
-die Fassung *vor* X-2 Ã¢ÂÂ
+die Fassung *vor* X-2 —
 
 ```sh
 perl "$W/tools/lehren-spiegeln.pl"        # ohne || exit $?
@@ -7166,60 +7166,60 @@ perl "$W/tools/lehren-spiegeln.pl"        # ohne || exit $?
 `tools/hooks-einrichten.sh` war am 31.08. berichtigt worden, aber niemand hat das
 Skript danach noch einmal laufen lassen. Hooks liegen unter `.git/hooks` und
 werden nicht mitversioniert: **eine Behebung im Skript ist keine Behebung auf der
-Maschine.** X-2 stand fÃÂ¼nf Tage lang als Ã¢ÂÂbehoben" im Verzeichnis, wÃÂ¤hrend der
-Fehler hier weiterlief. Die Statusspalte fÃÂ¼r X-2 ist entsprechend nachgezogen.
+Maschine.** X-2 stand fünf Tage lang als „behoben" im Verzeichnis, während der
+Fehler hier weiterlief. Die Statusspalte für X-2 ist entsprechend nachgezogen.
 
-Dazu kam ein zweiter Grund, warum niemand das Skript noch einmal laufen lieÃÂ: es
+Dazu kam ein zweiter Grund, warum niemand das Skript noch einmal laufen ließ: es
 schrieb nach `"$WURZEL/.git/hooks"`. In einem **Arbeitsbaum** ist `.git` eine
-*Datei*, kein Verzeichnis Ã¢ÂÂ aus einem Worktree heraus scheiterte das Einrichten
+*Datei*, kein Verzeichnis — aus einem Worktree heraus scheiterte das Einrichten
 also, und seit dem 31.08. arbeiten hier mehrere Agenten in Worktrees.
 
 ### Die Behebung
 
-**1. Eine Schranke, die git erzwingt** Ã¢ÂÂ `tools/pruefe-branch.pl`. Sie bricht ab bei
+**1. Eine Schranke, die git erzwingt** — `tools/pruefe-branch.pl`. Sie bricht ab bei
 
 | Lage | Verhalten |
 |---|---|
-| abgelÃÂ¶ster HEAD | **Abbruch** |
+| abgelöster HEAD | **Abbruch** |
 | Zweig ist *echt* in `origin/main` enthalten (enthalten **und** dahinter) | **Abbruch** |
-| GegenstÃÂ¼ck auf dem Server gelÃÂ¶scht (`[gone]`) | **Abbruch** |
+| Gegenstück auf dem Server gelöscht (`[gone]`) | **Abbruch** |
 | Zweig steht gleichauf mit `origin/main` (frisch abgezweigt) | durchlassen |
 | auf `main` selbst | durchlassen |
 | kein `origin/main` vorhanden | durchlassen, **mit Meldung** |
-| Rebase, Cherry-Pick oder Halbierung lÃÂ¤uft (git lÃÂ¶st den HEAD selbst ab) | durchlassen |
+| Rebase, Cherry-Pick oder Halbierung läuft (git löst den HEAD selbst ab) | durchlassen |
 
-Der Ausweg steht in jeder Meldung; wer trotzdem will, nimmt `--no-verify` Ã¢ÂÂ dann
+Der Ausweg steht in jeder Meldung; wer trotzdem will, nimmt `--no-verify` — dann
 aber mit Wissen, nicht aus Versehen.
 
-**2. `tools/pruefe-branch-tests.pl`** Ã¢ÂÂ 15 FÃÂ¤lle, jeder in zwei DurchlÃÂ¤ufen
-(hart: RÃÂ¼ckgabewert; `--melden`: die BegrÃÂ¼ndung, und dort darf **nie**
-abgebrochen werden). Jeder Fall baut ein eigenes Wegwerf-Paar aus barem Ã¢ÂÂServer"
+**2. `tools/pruefe-branch-tests.pl`** — 15 Fälle, jeder in zwei Durchläufen
+(hart: Rückgabewert; `--melden`: die Begründung, und dort darf **nie**
+abgebrochen werden). Jeder Fall baut ein eigenes Wegwerf-Paar aus barem „Server"
 und Klon unter dem Temp-Verzeichnis; im Projektbaum entsteht nichts.
 
-**Gegen die erste Fassung der Schranke gemessen: 11 grÃÂ¼n, 3 rot.** Alle drei
-waren echte Fehler, keiner davon hÃÂ¤tte sich beim Lesen gezeigt:
+**Gegen die erste Fassung der Schranke gemessen: 11 grün, 3 rot.** Alle drei
+waren echte Fehler, keiner davon hätte sich beim Lesen gezeigt:
 
 | Fall | erste Fassung | Ursache |
 |---|---|---|
-| `g` frisch abgezweigter Zweig | **brach den ersten Commit ab** | Ã¢ÂÂist Vorfahr von `origin/main`" trifft auch auf jeden frischen Zweig zu Ã¢ÂÂ HEAD *ist* dort `origin/main` |
-| `k` leeres Repo, erster Commit | meldete Ã¢ÂÂabgelÃÂ¶ster HEAD" und brach ab | `rev-parse --abbrev-ref HEAD` scheitert auf einem Zweig ohne Commit; jetzt `symbolic-ref` |
-| `f` kein `origin` | lieÃÂ durch und **sagte nichts** | eine PrÃÂ¼fung, die ausgefallen ist, sah aus wie eine bestandene |
+| `g` frisch abgezweigter Zweig | **brach den ersten Commit ab** | „ist Vorfahr von `origin/main`" trifft auch auf jeden frischen Zweig zu — HEAD *ist* dort `origin/main` |
+| `k` leeres Repo, erster Commit | meldete „abgelöster HEAD" und brach ab | `rev-parse --abbrev-ref HEAD` scheitert auf einem Zweig ohne Commit; jetzt `symbolic-ref` |
+| `f` kein `origin` | ließ durch und **sagte nichts** | eine Prüfung, die ausgefallen ist, sah aus wie eine bestandene |
 
 Fall `g` ist der schwerste: eine Schranke, die den ersten Commit jedes neuen
 Zweiges abweist, wird binnen einer Stunde mit `--no-verify` umgangen und ist dann
-schlechter als keine. Das ist wÃÂ¶rtlich die Lehre aus PR-1/PR-2.
+schlechter als keine. Das ist wörtlich die Lehre aus PR-1/PR-2.
 
-Sichtbar wurde auÃÂerdem, was die Klammern in `--format=%(upstream:track)` in
+Sichtbar wurde außerdem, was die Klammern in `--format=%(upstream:track)` in
 einer Shell anrichten (Fall `j`, Zweigname `zweig(1){a}`):
 
 ```
 sh: -c: line 1: syntax error near unexpected token `('
 ```
 
-Die PrÃÂ¼fung fiel damit lautlos aus. Behoben nicht durch besseres Zitieren,
-sondern indem **die Shell entfÃÂ¤llt**: beide Werkzeuge starten `git` ÃÂ¼ber
+Die Prüfung fiel damit lautlos aus. Behoben nicht durch besseres Zitieren,
+sondern indem **die Shell entfällt**: beide Werkzeuge starten `git` über
 `fork`+`exec` wie `tools/pruefe-bytes.pl`. Damit kann kein Zweigname und kein
-Pfad mit Leerzeichen mehr etwas zerreiÃÂen.
+Pfad mit Leerzeichen mehr etwas zerreißen.
 
 **3. Im Hook, als erster Schritt.** `tools/hooks-einrichten.sh` schreibt jetzt
 nach `--git-common-dir` (funktioniert also auch aus einem Arbeitsbaum) und legt
@@ -7232,72 +7232,72 @@ diese Reihenfolge an:
 | 3 | `release-pruefen.pl` | nein, meldet nur |
 | 4 | `pruefe-bytes.pl` | ja, `exec` |
 
-Zuerst, weil die Frage *Ã¢ÂÂlandet dieser Commit ÃÂ¼berhaupt irgendwo"* vor jeder
+Zuerst, weil die Frage *„landet dieser Commit überhaupt irgendwo"* vor jeder
 Frage nach seinem Inhalt kommt.
 
 **Am laufenden Hook nachgewiesen** (Wegwerf-Repo, echter `git commit`): auf dem
-zusammengefÃÂ¼hrten und serverseitig gelÃÂ¶schten Zweig bricht er mit RÃÂ¼ckgabewert
-`1` ab, und die Schritte 2Ã¢ÂÂ4 laufen **nicht** an Ã¢ÂÂ der RÃÂ¼ckgabewert wird also
-wirklich ausgewertet. Derselbe Commit auf `main` geht durch, Schritte 2Ã¢ÂÂ4 laufen.
+zusammengeführten und serverseitig gelöschten Zweig bricht er mit Rückgabewert
+`1` ab, und die Schritte 2–4 laufen **nicht** an — der Rückgabewert wird also
+wirklich ausgewertet. Derselbe Commit auf `main` geht durch, Schritte 2–4 laufen.
 
 **4. `tools/gesichert.pl`** beantwortet in einem Aufruf, was vor einem Merge zu
 wissen ist. Auch hier zwei Fehler beim Nachmessen:
 
-* Es nannte fremde ArbeitsbÃÂ¤ume **Ã¢ÂÂsauber"**, wenn dort nur nichts *uncommittet*
-  war. Ungepushte Commits sah es nicht Ã¢ÂÂ gemessen an `wt/paket` und `wt/zeiger`.
-  Jetzt prÃÂ¼ft es je Arbeitsbaum: uncommittet, ungepusht, GegenstÃÂ¼ck gelÃÂ¶scht,
-  Zweig bereits zusammengefÃÂ¼hrt, abgelÃÂ¶ster HEAD.
-* Es las die Liste ÃÂ¼ber die `branch`-Zeile von `worktree list --porcelain`. Ein
-  Baum mit abgelÃÂ¶stem HEAD hat keine Ã¢ÂÂ er fiel aus der Liste und blieb unsichtbar.
+* Es nannte fremde Arbeitsbäume **„sauber"**, wenn dort nur nichts *uncommittet*
+  war. Ungepushte Commits sah es nicht — gemessen an `wt/paket` und `wt/zeiger`.
+  Jetzt prüft es je Arbeitsbaum: uncommittet, ungepusht, Gegenstück gelöscht,
+  Zweig bereits zusammengeführt, abgelöster HEAD.
+* Es las die Liste über die `branch`-Zeile von `worktree list --porcelain`. Ein
+  Baum mit abgelöstem HEAD hat keine — er fiel aus der Liste und blieb unsichtbar.
 
-**Darf ein PrÃÂ¼fwerkzeug den Zustand ÃÂ¤ndern?** `gesichert.pl` ruft
-`git fetch --prune`. Die Antwort ist ja, und zwar begrÃÂ¼ndet: die zentrale Frage
-Ã¢ÂÂ *gibt es das GegenstÃÂ¼ck auf dem Server noch?* Ã¢ÂÂ ist ohne frischen Serverstand
-nicht zu beantworten, und ohne `--prune` bleibt ein gelÃÂ¶schter Zweig als lebend
-stehen. Das Werkzeug gÃÂ¤be dann **genau in dem Fall Entwarnung, fÃÂ¼r den es gebaut
-wurde**. GeÃÂ¤ndert werden dabei nur die Kopien der Serverzweige unter
-`refs/remotes/origin` Ã¢ÂÂ kein Arbeitsbaum, kein lokaler Zweig, kein Index, keine
+**Darf ein Prüfwerkzeug den Zustand ändern?** `gesichert.pl` ruft
+`git fetch --prune`. Die Antwort ist ja, und zwar begründet: die zentrale Frage
+— *gibt es das Gegenstück auf dem Server noch?* — ist ohne frischen Serverstand
+nicht zu beantworten, und ohne `--prune` bleibt ein gelöschter Zweig als lebend
+stehen. Das Werkzeug gäbe dann **genau in dem Fall Entwarnung, für den es gebaut
+wurde**. Geändert werden dabei nur die Kopien der Serverzweige unter
+`refs/remotes/origin` — kein Arbeitsbaum, kein lokaler Zweig, kein Index, keine
 Datei. Wer auch das nicht will, nimmt `--ohne-holen`; der Bericht sagt dann
-ausdrÃÂ¼cklich, dass der Serverstand alt sein kann. `pruefe-branch.pl` holt
-**nichts** Ã¢ÂÂ ein Hook gehÃÂ¶rt nicht ans Netz.
+ausdrücklich, dass der Serverstand alt sein kann. `pruefe-branch.pl` holt
+**nichts** — ein Hook gehört nicht ans Netz.
 
 **Nichts darf auf eine Eingabe warten.** Beide Werkzeuge setzen
 `GIT_TERMINAL_PROMPT=0`, `GIT_ASKPASS`, `SSH_ASKPASS`, `GIT_SSH_COMMAND=ssh
--oBatchMode=yes` und `GCM_INTERACTIVE=never`; schlÃÂ¤gt das Holen fehl, wird das
-gemeldet statt verschluckt. `GIT_OPTIONAL_LOCKS=0` hÃÂ¤lt die Werkzeuge von der
+-oBatchMode=yes` und `GCM_INTERACTIVE=never`; schlägt das Holen fehl, wird das
+gemeldet statt verschluckt. `GIT_OPTIONAL_LOCKS=0` hält die Werkzeuge von der
 Index-Sperre fern, solange andere Agenten arbeiten.
 
-**5. Die Auflagen in `AUFGABEN.md`** sind um die Punkte 7 bis 10 ergÃÂ¤nzt: vor
-jedem Commit den Zweig messen; bei einer Merge-AnkÃÂ¼ndigung **sofort**
+**5. Die Auflagen in `AUFGABEN.md`** sind um die Punkte 7 bis 10 ergänzt: vor
+jedem Commit den Zweig messen; bei einer Merge-Ankündigung **sofort**
 `gesichert.pl` und melden; nach dem Merge auf `main` wechseln; und der Grundsatz,
 um den es hier geht:
 
-> Eine Auflage, die nur im Text steht, trÃÂ¤gt nicht. Wer eine neue Regel
-> aufstellt, baut die Schranke dazu Ã¢ÂÂ ein Werkzeug mit RÃÂ¼ckgabewert, im Hook, und
+> Eine Auflage, die nur im Text steht, trägt nicht. Wer eine neue Regel
+> aufstellt, baut die Schranke dazu — ein Werkzeug mit Rückgabewert, im Hook, und
 > einen Testfall, der beweist, dass sie greift *und* dass sie nicht grundlos
-> anschlÃÂ¤gt.
+> anschlägt.
 
 ### Was offen bleibt
 
 1. **Der Hook muss auf jeder Maschine eingerichtet werden.** Er liegt unter
    `.git/hooks` und wird nicht mitversioniert. Nach jedem frischen Klon:
-   `sh tools/hooks-einrichten.sh`. Es gibt bisher **keine** PrÃÂ¼fung, die meldet,
-   dass der eingerichtete Hook ÃÂ¤lter ist als das Skript Ã¢ÂÂ genau daran ist X-2
-   fÃÂ¼nf Tage lang gescheitert. Die naheliegende Schranke wÃÂ¤re ein Vergleich in
+   `sh tools/hooks-einrichten.sh`. Es gibt bisher **keine** Prüfung, die meldet,
+   dass der eingerichtete Hook älter ist als das Skript — genau daran ist X-2
+   fünf Tage lang gescheitert. Die naheliegende Schranke wäre ein Vergleich in
    `pruefstand-melden.pl`.
 2. **`pruefe-branch.pl` holt nicht vom Server.** Der Fall `[gone]` wird also nur
-   erkannt, wenn vorher jemand `git fetch --prune` gelaufen ist Ã¢ÂÂ im Regelfall
-   `gesichert.pl`. Das ist Absicht (kein Netz im Hook), aber es ist eine LÃÂ¼cke:
-   wer nie holt, sieht einen gelÃÂ¶schten Zweig nicht.
-3. **Ungepushte Zweige in fremden ArbeitsbÃÂ¤umen.** Am 05.09.2026 gemessen:
-   `wt/kette`, `wt/paket` und `wt/zeiger` standen auf `2fee8e9`, ohne GegenstÃÂ¼ck
-   auf dem Server. Der Stand steckte zufÃÂ¤llig schon ÃÂ¼ber PR #4 in `origin/main`,
-   es ging also nichts verloren Ã¢ÂÂ aber wieder nur zufÃÂ¤llig, und `gesichert.pl`
+   erkannt, wenn vorher jemand `git fetch --prune` gelaufen ist — im Regelfall
+   `gesichert.pl`. Das ist Absicht (kein Netz im Hook), aber es ist eine Lücke:
+   wer nie holt, sieht einen gelöschten Zweig nicht.
+3. **Ungepushte Zweige in fremden Arbeitsbäumen.** Am 05.09.2026 gemessen:
+   `wt/kette`, `wt/paket` und `wt/zeiger` standen auf `2fee8e9`, ohne Gegenstück
+   auf dem Server. Der Stand steckte zufällig schon über PR #4 in `origin/main`,
+   es ging also nichts verloren — aber wieder nur zufällig, und `gesichert.pl`
    meldet das jetzt.
-## X-6 Ã¢ÂÂ Ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben (05.09.2026)
+## X-6 — Ein Bau-Lauf meldete Erfolg, ohne gebaut zu haben (05.09.2026)
 
-Zwei Fehler in **einem** Lauf. Der erste war laut, der zweite war leise Ã¢ÂÂ und
-der leise hÃÂ¤tte beinahe ein falsches Paket in die Auslieferung gebracht.
+Zwei Fehler in **einem** Lauf. Der erste war laut, der zweite war leise — und
+der leise hätte beinahe ein falsches Paket in die Auslieferung gebracht.
 
 ### 1. Die Plattform wurde geraten: `MSB4126`
 
@@ -7318,25 +7318,25 @@ EndGlobalSection
 {B94694FC-1EAC-4E90-9006-E40CF1C85041}.Release|x86.ActiveCfg = Release|Win32
 ```
 
-MSBuild brach ab mit *Ã¢ÂÂDie angegebene Projektmappenkonfiguration
-`Release|Win32` ist ungÃÂ¼ltig"*. Der richtige Name stand die ganze Zeit in der
-Datei Ã¢ÂÂ er wurde nicht gelesen, sondern erraten.
+MSBuild brach ab mit *„Die angegebene Projektmappenkonfiguration
+`Release|Win32` ist ungültig"*. Der richtige Name stand die ganze Zeit in der
+Datei — er wurde nicht gelesen, sondern erraten.
 
-### 2. Der RÃÂ¼ckgabewert war 0, obwohl nichts gebaut wurde
+### 2. Der Rückgabewert war 0, obwohl nichts gebaut wurde
 
 Trotz des Abbruchs meldete der Shell-Aufruf **EXITCODE 0**. Aufgefallen ist es
-nur durch eine zusÃÂ¤tzliche HandprÃÂ¼fung: in der `Eudora.exe` stand noch
-`7.2.0.3`, wÃÂ¤hrend `Version.h` schon `7.2.0.4` sagte. Ohne diese PrÃÂ¼fung wÃÂ¤re
-ein Paket mit der **alten** EXE unter der **neuen** Nummer herausgegangen Ã¢ÂÂ
+nur durch eine zusätzliche Handprüfung: in der `Eudora.exe` stand noch
+`7.2.0.3`, während `Version.h` schon `7.2.0.4` sagte. Ohne diese Prüfung wäre
+ein Paket mit der **alten** EXE unter der **neuen** Nummer herausgegangen —
 dieselbe Fehlerklasse wie V-1 (zwei verschiedene ZIPs unter einer Nummer), nur
-eine Stufe frÃÂ¼her.
+eine Stufe früher.
 
-Die Ursache ist benennbar und wiederholbar: `$LASTEXITCODE` gehÃÂ¶rt der
+Die Ursache ist benennbar und wiederholbar: `$LASTEXITCODE` gehört der
 **Pipeline**, nicht dem Programm. Steht ein natives Programm hinter einer
 Umleitung oder in einer Pipe, meldet die Shell den Wert des letzten Glieds.
 Beim Bauen des Werkzeugs ist mir derselbe Fehler noch einmal unterlaufen: der
 Aufruf `powershell -File tools\bauen.ps1 -NurPruefen | tail -35` gefolgt von
-`echo $?` meldete **EXITCODE=0**, obwohl das Skript mit 1 endete Ã¢ÂÂ der Wert kam
+`echo $?` meldete **EXITCODE=0**, obwohl das Skript mit 1 endete — der Wert kam
 von `tail`. Deshalb steht die Warnung jetzt im Kopf von `bauen.ps1`.
 
 Ein Bau-Werkzeug, das Erfolg meldet, ohne gebaut zu haben, ist schlimmer als
@@ -7345,8 +7345,8 @@ keines: es ersetzt Unsicherheit durch falsche Sicherheit.
 ### 3. Ein dritter Fehler beim Suchen nach dem zweiten
 
 Beim Nachsehen, ob der Release-Bau eine Debug-Laufzeit zieht, wurde mit `grep`
-ÃÂ¼ber die ganzen BinÃÂ¤rdateien gesucht statt in der Importtabelle. Ergebnis waren
-BruchstÃÂ¼cke wie `s.dll` und `ts.dll` Ã¢ÂÂ Treffer, die es nicht gibt. FÃÂ¼r genau
+über die ganzen Binärdateien gesucht statt in der Importtabelle. Ergebnis waren
+Bruchstücke wie `s.dll` und `ts.dll` — Treffer, die es nicht gibt. Für genau
 das gibt es seit S-8 den PE-Leser in `tools/paket-pruefen.ps1`.
 
 ---
@@ -7354,10 +7354,10 @@ das gibt es seit S-8 den PE-Leser in `tools/paket-pruefen.ps1`.
 ### Die Abhilfe: `tools/bauen.ps1`
 
 PowerShell, weil das Werkzeug fast nur mit Windows redet: einen Prozess starten
-und dessen RÃÂ¼ckgabewert **zuverlÃÂ¤ssig** bekommen, Zeitstempel, DateigrÃÂ¶ÃÂen,
-Versionsressourcen, PE-KÃÂ¶pfe. Und weil der bewÃÂ¤hrte PE-Leser aus
-`paket-pruefen.ps1` ÃÂ¼bernommen werden konnte, statt ihn in Perl ein zweites Mal
-zu schreiben Ã¢ÂÂ ein zweiter PE-Leser wÃÂ¤re eine zweite Fehlerquelle.
+und dessen Rückgabewert **zuverlässig** bekommen, Zeitstempel, Dateigrößen,
+Versionsressourcen, PE-Köpfe. Und weil der bewährte PE-Leser aus
+`paket-pruefen.ps1` übernommen werden konnte, statt ihn in Perl ein zweites Mal
+zu schreiben — ein zweiter PE-Leser wäre eine zweite Fehlerquelle.
 
 ```
 powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
@@ -7365,63 +7365,63 @@ powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Debug -Z
 powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -NurPruefen
 ```
 
-RÃÂ¼ckgabe 0 / 1 / 2 wie bei den anderen Werkzeugen. Nichts wartet auf eine
+Rückgabe 0 / 1 / 2 wie bei den anderen Werkzeugen. Nichts wartet auf eine
 Eingabe: `/nologo /noautoresponse /nr:false`, und die Standardeingabe jedes
 MSBuild-Laufs liegt auf einer leeren Datei.
 
 **Gegen Fehler 1:** Konfiguration und Plattform kommen aus
 `GlobalSection(SolutionConfigurationPlatforms)`, die Projektzuordnung aus
-`GlobalSection(ProjectConfigurationPlatforms)`. MSBuild wird ÃÂ¼ber `vswhere.exe`
-gesucht (hier: *2022 Professional*); die feste Pfadliste ist nur RÃÂ¼ckfallebene
+`GlobalSection(ProjectConfigurationPlatforms)`. MSBuild wird über `vswhere.exe`
+gesucht (hier: *2022 Professional*); die feste Pfadliste ist nur Rückfallebene
 und wird als solche gemeldet.
 
-**Gegen Fehler 2 Ã¢ÂÂ vier voneinander unabhÃÂ¤ngige PrÃÂ¼fungen**, jede allein genÃÂ¼gt
-fÃÂ¼r einen Fehlschlag:
+**Gegen Fehler 2 — vier voneinander unabhängige Prüfungen**, jede allein genügt
+für einen Fehlschlag:
 
-| # | PrÃÂ¼fung | Warum sie nÃÂ¶tig ist |
+| # | Prüfung | Warum sie nötig ist |
 |---|---|---|
-| a | RÃÂ¼ckgabewert ÃÂ¼ber `Start-Process -PassThru`, **nicht** `$LASTEXITCODE` | genau die Stelle, an der der Wert verlorenging |
-| b | eigener `ErrorsOnly`-Dateilogger, Zeilen gezÃÂ¤hlt | MSBuild kann mit 0 zurÃÂ¼ckkommen und trotzdem Fehler gemeldet haben; ein Suchmuster auf `error` ginge an der **deutschen** Ausgabe vorbei (gemessen: Ã¢ÂÂ2815 Warnung(en) / 0 Fehler") |
+| a | Rückgabewert über `Start-Process -PassThru`, **nicht** `$LASTEXITCODE` | genau die Stelle, an der der Wert verlorenging |
+| b | eigener `ErrorsOnly`-Dateilogger, Zeilen gezählt | MSBuild kann mit 0 zurückkommen und trotzdem Fehler gemeldet haben; ein Suchmuster auf `error` ginge an der **deutschen** Ausgabe vorbei (gemessen: „2815 Warnung(en) / 0 Fehler") |
 | c | Zeitstempel der Artefakte gegen eine **Dateisystem**-Marke vom Bau-Beginn | ein Artefakt, das nicht neuer ist, ist nicht gebaut worden |
-| d | Versionsressource der `Eudora.exe` gegen `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` | die PrÃÂ¼fung, die den Vorfall aufgedeckt hat |
+| d | Versionsressource der `Eudora.exe` gegen `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` | die Prüfung, die den Vorfall aufgedeckt hat |
 
-Zu c: bei `-Ziel Rebuild` ist Ã¢ÂÂnicht neu" immer ein Fehlschlag. Bei
-`-Ziel Build` wÃÂ¤re das ein Fehlalarm, wenn sich nichts geÃÂ¤ndert hat; dort wird
-zusÃÂ¤tzlich gegen die jÃÂ¼ngste Quelldatei gemessen Ã¢ÂÂ ist eine Quelle neuer als das
-Artefakt, ist es ein Fehlschlag, sonst die ausdrÃÂ¼ckliche Meldung
-*Ã¢ÂÂunverÃÂ¤ndert"*.
+Zu c: bei `-Ziel Rebuild` ist „nicht neu" immer ein Fehlschlag. Bei
+`-Ziel Build` wäre das ein Fehlalarm, wenn sich nichts geändert hat; dort wird
+zusätzlich gegen die jüngste Quelldatei gemessen — ist eine Quelle neuer als das
+Artefakt, ist es ein Fehlschlag, sonst die ausdrückliche Meldung
+*„unverändert"*.
 
-**Gegen Fehler 3 Ã¢ÂÂ Nachkontrolle, eingebaut, nicht als zweites Werkzeug:** jede
+**Gegen Fehler 3 — Nachkontrolle, eingebaut, nicht als zweites Werkzeug:** jede
 EXE/DLL/OCX/`.eif` im Ausgabeverzeichnis muss `x86` sein; im Release-Zweig darf
 keine Datei `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll`,
-`vcruntime140_1d.dll` oder `ucrtbased.dll` importieren (F-1, S-8) Ã¢ÂÂ gelesen aus
+`vcruntime140_1d.dll` oder `ucrtbased.dll` importieren (F-1, S-8) — gelesen aus
 der **Importtabelle** des PE-Kopfes.
 
 ### Was das Werkzeug beim ersten Einsatz gefunden hat
 
 **Aus einem reinen Projektmappen-Bau kommt nie eine `Eudora.exe` heraus.**
 Gemessen, `Release|x86`, frischer Worktree, 5:33 Minuten: 3 Fehler, alle aus
-`OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`), RÃÂ¼ckgabewert 1. Sieben der
-neun ÃÂ¼berwachten Artefakte entstehen Ã¢ÂÂ `Eudora.exe` und `EudoraRes.dll` nicht.
-Beide Projekte fÃÂ¼hren `OT501.vcxproj` als **Projektverweis**, und MSBuild lÃÂ¤sst
+`OT501` (zweimal `NMAKE U1073`, einmal `MSB3073`), Rückgabewert 1. Sieben der
+neun überwachten Artefakte entstehen — `Eudora.exe` und `EudoraRes.dll` nicht.
+Beide Projekte führen `OT501.vcxproj` als **Projektverweis**, und MSBuild lässt
 ein Projekt aus, dessen Verweis gescheitert ist. Die Abhilfe stand seit Wochen
 als Handarbeit in `AUFGABEN.md` (`/p:BuildProjectReferences=false`); jetzt macht
-sie ein **zweiter Gang** von selbst Ã¢ÂÂ `EudoraRes.vcxproj` und `Eudora.vcxproj`
+sie ein **zweiter Gang** von selbst — `EudoraRes.vcxproj` und `Eudora.vcxproj`
 einzeln, mit der aus der `.sln` abgelesenen *Projekt*konfiguration
 `Release|Win32`. Ergebnis: 5:02 Minuten, 0 Fehler, `Eudora.exe` 2 933 760 Byte,
 `EudoraRes.dll` 2 447 360 Byte, alle 34 PE-Dateien x86, keine Debug-Laufzeit.
 
-### Drei Gegenproben, alle grÃÂ¼n
+### Drei Gegenproben, alle grün
 
 | Gegenprobe | Erwartet | Gemessen |
 |---|---|---|
-| `-Konfiguration Release -Plattform Win32` | sauberer Abbruch mit AufzÃÂ¤hlung | RÃÂ¼ckgabe **2**, Ã¢ÂÂUnbekannte Projektmappenkonfiguration", beide gÃÂ¼ltigen Paare aufgezÃÂ¤hlt |
-| `-Konfiguration Quatsch` | sauberer Abbruch | RÃÂ¼ckgabe **2**, Ã¢ÂÂUnbekannte Konfiguration" |
-| `-NurPruefen` gegen ein nie gebautes `Bin/Release` | Fehlschlag, nicht Erfolg | RÃÂ¼ckgabe **1**, neun fehlende Artefakte namentlich; Architektur- und Debug-LaufzeitprÃÂ¼fung liefen trotzdem durch (22 PE-Dateien, alle x86) |
+| `-Konfiguration Release -Plattform Win32` | sauberer Abbruch mit Aufzählung | Rückgabe **2**, „Unbekannte Projektmappenkonfiguration", beide gültigen Paare aufgezählt |
+| `-Konfiguration Quatsch` | sauberer Abbruch | Rückgabe **2**, „Unbekannte Konfiguration" |
+| `-NurPruefen` gegen ein nie gebautes `Bin/Release` | Fehlschlag, nicht Erfolg | Rückgabe **1**, neun fehlende Artefakte namentlich; Architektur- und Debug-Laufzeitprüfung liefen trotzdem durch (22 PE-Dateien, alle x86) |
 
-**Und eine vierte, ungeplant:** WÃÂ¤hrend der MesslÃÂ¤ufe wechselte ein anderer
+**Und eine vierte, ungeplant:** Während der Messläufe wechselte ein anderer
 Agent im geteilten Arbeitsbaum die `Version.h` von `7.2.0.3` auf `7.2.0.4`,
-wÃÂ¤hrend der Bau schon lief. Das Werkzeug meldete daraufhin von selbst:
+während der Bau schon lief. Das Werkzeug meldete daraufhin von selbst:
 
 ```
 Versionsressource der Eudora.exe ist "7.2.0.3", Version.h sagt "7.2.0.4".
@@ -7429,46 +7429,46 @@ Fester Teil der Versionsressource ist 7,2,0,3, EUDORA_BUILD_NUMBER sagt 7,2,0,4.
 ERGEBNIS: FEHLSCHLAG
 ```
 
-Das ist wÃÂ¶rtlich der Vorfall vom 05.09. Ã¢ÂÂ diesmal aufgefallen, ohne dass jemand
-von Hand nachgesehen hat. Genau dafÃÂ¼r gibt es das Werkzeug.
+Das ist wörtlich der Vorfall vom 05.09. — diesmal aufgefallen, ohne dass jemand
+von Hand nachgesehen hat. Genau dafür gibt es das Werkzeug.
 
-### Nebenbefund: jeder Bau verÃÂ¤ndert fÃÂ¼nf versionierte Dateien
+### Nebenbefund: jeder Bau verändert fünf versionierte Dateien
 
 `MIDL` schreibt bei jedem Bau `Eudora71/Eudora/EudoraExe_i.c`,
 `EudoraExe_p.c`, `GoogleDesktopSearchAPI_i.c`, `GoogleDesktopSearchAPI_p.c` und
-`dlldata.c` neu Ã¢ÂÂ **mit CRLF**, wÃÂ¤hrend sie im Repo mit LF liegen. Gemessen an
+`dlldata.c` neu — **mit CRLF**, während sie im Repo mit LF liegen. Gemessen an
 `dlldata.c`: HEAD `CR=0 LF=40`, nach dem Bau `CR=40 LF=40`, inhaltlich
-identisch (`git diff --numstat` meldet 40/40). Alle fÃÂ¼nf sind versioniert, der
+identisch (`git diff --numstat` meldet 40/40). Alle fünf sind versioniert, der
 Arbeitsbaum ist nach jedem Bau also schmutzig, und wer pauschal `git add -A`
-sagt, committet einen reinen Zeilenendenwechsel in fÃÂ¼nf Dateien. Das ist
-dieselbe Klasse lautloser DateischÃÂ¤den wie S-7 und X-4. **Nicht behoben** Ã¢ÂÂ die
+sagt, committet einen reinen Zeilenendenwechsel in fünf Dateien. Das ist
+dieselbe Klasse lautloser Dateischäden wie S-7 und X-4. **Nicht behoben** — die
 Entscheidung (Eintrag in `.gitattributes`, aus der Versionierung nehmen, oder
-nach dem Bau zurÃÂ¼cksetzen) steht aus.
+nach dem Bau zurücksetzen) steht aus.
 
-### Nebenbefund: geteilte ArbeitsbÃÂ¤ume verlieren Arbeit
+### Nebenbefund: geteilte Arbeitsbäume verlieren Arbeit
 
-WÃÂ¤hrend dieser Sitzung hat ein anderer Agent in demselben Worktree
-`git checkout` auf einen anderen Branch ausgefÃÂ¼hrt. Dabei gingen die noch nicht
-committeten ÃÂnderungen dieses Befunds verloren Ã¢ÂÂ die neue `tools/bauen.ps1`
-(unversioniert) war anschlieÃÂend weg. Wiederhergestellt wurde sie aus dem
-SitzungsgedÃÂ¤chtnis, weitergearbeitet in einem **eigenen** Worktree
-(`Eudora7.2-wt-baumeister`). Die Lehre steht schon im GedÃÂ¤chtnis (Ã¢ÂÂAgenten
+Während dieser Sitzung hat ein anderer Agent in demselben Worktree
+`git checkout` auf einen anderen Branch ausgeführt. Dabei gingen die noch nicht
+committeten Änderungen dieses Befunds verloren — die neue `tools/bauen.ps1`
+(unversioniert) war anschließend weg. Wiederhergestellt wurde sie aus dem
+Sitzungsgedächtnis, weitergearbeitet in einem **eigenen** Worktree
+(`Eudora7.2-wt-baumeister`). Die Lehre steht schon im Gedächtnis („Agenten
 trennen mit Worktrees"), gilt aber offenbar auch umgekehrt: **ein Worktree
-gehÃÂ¶rt genau einem Agenten**, und wer einen fremden Worktree umschaltet,
-lÃÂ¶scht fremde Arbeit.
+gehört genau einem Agenten**, und wer einen fremden Worktree umschaltet,
+löscht fremde Arbeit.
 
 ---
 
-## E-44/E-45/E-46 Ã¢ÂÂ Die Statusleiste, ein Prozess ohne Fenster, und ein Verdacht auf freigegebenen Speicher (08.09.2026)
+## E-44/E-45/E-46 — Die Statusleiste, ein Prozess ohne Fenster, und ein Verdacht auf freigegebenen Speicher (08.09.2026)
 
-AuslÃÂ¶ser waren zwei SÃÂ¤tze von Gregor. Der eine vom 07.09.2026: *Ã¢ÂÂÃÂ¼brigens:
-task errors und task status wÃÂ¤ren waagrecht unten besser als senkrecht Ã¢ÂÂ nach
+Auslöser waren zwei Sätze von Gregor. Der eine vom 07.09.2026: *„übrigens:
+task errors und task status wären waagrecht unten besser als senkrecht — nach
 dem exit-fix korrigieren."* Der andere vom 08.09.2026, nach dem Exit-Fix:
-*Ã¢ÂÂdann widmen wir uns als nÃÂ¤chstes dem erscheinungsbild der status leiste
-(senkrecht statt unten waagrecht)."* Dazu kam der RÃÂ¼cklauf von **PRUEFER-5**,
+*„dann widmen wir uns als nächstes dem erscheinungsbild der status leiste
+(senkrecht statt unten waagrecht)."* Dazu kam der Rücklauf von **PRUEFER-5**,
 der einen Fehler in meiner eigenen Behebung von E-42 fand.
 
-### E-44 Ã¢ÂÂ zwei Ursachen, nicht eine
+### E-44 — zwei Ursachen, nicht eine
 
 Der erste Reflex war falsch. Ich hatte vermutet, die Leiste werde links
 angedockt. Gemessen mit `tools/leisten-messen.ps1` an einem **frischen**
@@ -7476,11 +7476,11 @@ Profil in `C:\Temp\E44-layout`:
 
 | Leiste | Andockseite | Sichtbar | B | H | X | Y |
 |---|---|---|---|---|---|---|
-| Bar0 PostfÃÂ¤cher | links | **True** | 180 | 1171 | 102 | 166 |
+| Bar0 Postfächer | links | **True** | 180 | 1171 | 102 | 166 |
 | Bar1 Kurznamen | rechts | False | 180 | 1093 | 1814 | 166 |
 | Bar2 Aufgabenstatus/-fehler | **unten** | **False** | **1712** | **80** | 102 | 1339 |
 
-Die Leiste liegt also von Anfang an richtig: unten, ÃÂ¼ber die volle Breite,
+Die Leiste liegt also von Anfang an richtig: unten, über die volle Breite,
 80 Pixel hoch. Sie ist nur **versteckt**. Die eine Zeile, die das tut, steht in
 `WazooBarMgr.cpp`, `SetDefaultWazooBarState`, Fall 2, Zweig `DST_SHOWHIDE`:
 
@@ -7489,94 +7489,94 @@ Die Leiste liegt also von Anfang an richtig: unten, ÃÂ¼ber die volle Breite
 pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0);
 ```
 
-Das erklÃÂ¤rt aber **nicht**, warum Gregors Bildschirmbild die Leiste senkrecht
-links zeigt. DafÃÂ¼r gibt es eine zweite, unabhÃÂ¤ngige Ursache. Der Standardzweig
-oben lÃÂ¤uft nur, wenn `m_bUseDefaultConfig` gesetzt ist, und das ist nur der
+Das erklärt aber **nicht**, warum Gregors Bildschirmbild die Leiste senkrecht
+links zeigt. Dafür gibt es eine zweite, unabhängige Ursache. Der Standardzweig
+oben läuft nur, wenn `m_bUseDefaultConfig` gesetzt ist, und das ist nur der
 Fall, wenn die `Eudora.ini` **keinen** `[WazooBars]`-Abschnitt hat
-(`WazooBarMgr.cpp:108-120`) Ã¢ÂÂ also nur beim allerersten Start. Ab dem zweiten
-lÃÂ¤uft der andere Zweig, und der ruft ausschlieÃÂlich
+(`WazooBarMgr.cpp:108-120`) — also nur beim allerersten Start. Ab dem zweiten
+läuft der andere Zweig, und der ruft ausschließlich
 `CWazooBar::LoadWazooConfigFromIni` (`WazooBar.cpp:552`). Nachgesehen, was das
 wiederherstellt: **welche** Fenster in der Leiste sitzen und wo die Reiter
-sitzen Ã¢ÂÂ die Andockseite und die GrÃÂ¶ÃÂe **nicht**.
+sitzen — die Andockseite und die Größe **nicht**.
 
-Die kÃÂ¤men von MFCs `LoadBarState`, in diesem Projekt aus
+Die kämen von MFCs `LoadBarState`, in diesem Projekt aus
 `QCToolBarManager::LoadState(_T("ToolBar"))` in
 `CMainFrame::FinishInitAndShowWindow` (`mainfrm.cpp:936`), und damit aus dem
 INI-Abschnitt `[ToolBar...]`. Den gibt es nicht. Nachgemessen am 08.09.2026 in
-**beiden** Profilen Ã¢ÂÂ Gregors und einem frischen: `grep -icE '^\[(ToolBar|Docking)'`
+**beiden** Profilen — Gregors und einem frischen: `grep -icE '^\[(ToolBar|Docking)'`
 liefert beide Male **0**.
 
 Der Abschnitt entsteht nie, weil `SaveBarState("ToolBar")` beim Beenden jedes
-Mal abbricht Ã¢ÂÂ **das ist E-43**. E-44 ist damit eine unmittelbare Folge von
-E-43, und beide zusammen erklÃÂ¤ren, was Gregor am 08.09.2026 gemeldet hat:
-*Ã¢ÂÂerscheinungsbild nach dem ersten anlegen von konto wie im screenshot. muÃÂ
+Mal abbricht — **das ist E-43**. E-44 ist damit eine unmittelbare Folge von
+E-43, und beide zusammen erklären, was Gregor am 08.09.2026 gemeldet hat:
+*„erscheinungsbild nach dem ersten anlegen von konto wie im screenshot. muß
 korrigiert werden."* Ohne gespeicherte Lage blieben alle drei Leisten auf dem
 Stil, mit dem `CreateInitialWazooBars` sie erzeugt: `CBRS_LEFT | WS_VISIBLE |
 CBRS_SIZE_DYNAMIC` (`WazooBarMgr.cpp:136`).
 
-**Behebung, zwei Teile.** Erstens ist die `ID_SEC_HIDE`-Zeile entfallen Ã¢ÂÂ
+**Behebung, zwei Teile.** Erstens ist die `ID_SEC_HIDE`-Zeile entfallen —
 bewusst ohne Ersatz durch `ID_SEC_SHOW`, weil die Leiste seit `Create` schon
-`WS_VISIBLE` trÃÂ¤gt. Zweitens zieht der Lade-Zweig die Standardanordnung nach,
-**wenn** eine Leiste an keiner Andockleiste hÃÂ¤ngt:
+`WS_VISIBLE` trägt. Zweitens zieht der Lade-Zweig die Standardanordnung nach,
+**wenn** eine Leiste an keiner Andockleiste hängt:
 
 ```cpp
 if (pWazooBar->m_pDockBar == NULL)
     VERIFY(SetDefaultWazooBarState(pWazooBar, idx, DST_SIZE_FIXED));
 ```
 
-Zwei DurchlÃÂ¤ufe in derselben Reihenfolge wie im Standardzweig (erst
+Zwei Durchläufe in derselben Reihenfolge wie im Standardzweig (erst
 `DST_SIZE_FIXED`, dann `DST_SIZE_RELATIVE`), `DST_SHOWHIDE` absichtlich nicht.
-Die Reklameleiste wird ÃÂ¼ber `GetDlgCtrlID() == IDC_AD_WAZOO_BAR`
-ÃÂ¼bersprungen, weil deren Fall 3 sonst `LoadWazooConfigFromIni` ein zweites Mal
-aufrufen wÃÂ¼rde. Ist eine Lage gespeichert, ÃÂ¤ndert sich **nichts** Ã¢ÂÂ die
-PrÃÂ¼fung auf `m_pDockBar == NULL` ist dieselbe, die das Projekt an anderer
-Stelle selbst benutzt (`mainfrm.cpp:994`, Kommentar *Ã¢ÂÂNormally, LoadBarState()
+Die Reklameleiste wird über `GetDlgCtrlID() == IDC_AD_WAZOO_BAR`
+übersprungen, weil deren Fall 3 sonst `LoadWazooConfigFromIni` ein zweites Mal
+aufrufen würde. Ist eine Lage gespeichert, ändert sich **nichts** — die
+Prüfung auf `m_pDockBar == NULL` ist dieselbe, die das Projekt an anderer
+Stelle selbst benutzt (`mainfrm.cpp:994`, Kommentar *„Normally, LoadBarState()
 will take care of redocking"*).
 
-### E-45 Ã¢ÂÂ der eine Schritt, der nicht ÃÂ¼bersprungen werden darf
+### E-45 — der eine Schritt, der nicht übersprungen werden darf
 
 Der Befund kommt von PRUEFER (`Befunde/PRUEFER-5.md`, Punkt 1b) und ist ein
-Fehler in **meiner** E-42-Behebung. Von den zwÃÂ¶lf mit `AUFRAEUMEN` gefassten
-Schritten ist einer nicht bloÃÂ AufrÃÂ¤umen: `QCWorkbook::OnClose` lÃÂ¶st sich auf
+Fehler in **meiner** E-42-Behebung. Von den zwölf mit `AUFRAEUMEN` gefassten
+Schritten ist einer nicht bloß Aufräumen: `QCWorkbook::OnClose` löst sich auf
 `CFrameWnd::OnClose` auf, und deren **letzte** Anweisung ist `DestroyWindow()`.
 Nachgesehen in der MFC-Quelle, nicht vermutet: `CFrameWnd::PostNcDestroy` steht
 in `winfrm.cpp:269-275` und besteht aus `delete this;`, und der Rumpf von
 `CFrameWnd::OnClose` endet mit `// then destroy the window` und
 `DestroyWindow();` (`winfrm.cpp:941`).
 
-`CMainFrame::OnClose` ruft `DestroyWindow` nirgends selbst Ã¢ÂÂ geprÃÂ¼ft ÃÂ¼ber den
-ganzen Rumpf. FÃÂ¤llt der Schritt aus, gibt es also kein `WM_NCDESTROY`, kein
+`CMainFrame::OnClose` ruft `DestroyWindow` nirgends selbst — geprüft über den
+ganzen Rumpf. Fällt der Schritt aus, gibt es also kein `WM_NCDESTROY`, kein
 `WM_QUIT`, kein `ExitInstance` und damit kein `IniStringCleanUp`
-(`eudora.cpp:2118` Ã¢ÂÂ `rs.cpp:1433`), das den INI-Schreibpuffer leert. Und das
+(`eudora.cpp:2118` → `rs.cpp:1433`), das den INI-Schreibpuffer leert. Und das
 Fenster hat `HideApplication` (`winfrm.cpp:885`) zu diesem Zeitpunkt schon
-versteckt: ÃÂ¼brig bliebe ein **Prozess ohne Fenster**, den nur der
-Task-Manager beendet Ã¢ÂÂ genau der Zustand, den Gregor tagelang hatte.
+versteckt: übrig bliebe ein **Prozess ohne Fenster**, den nur der
+Task-Manager beendet — genau der Zustand, den Gregor tagelang hatte.
 
-Wichtig fÃÂ¼r die Einordnung: das ist **geerbt, nicht neu**. Vor E-42 fing
+Wichtig für die Einordnung: das ist **geerbt, nicht neu**. Vor E-42 fing
 `AfxCallWndProc` (`wincore.cpp:252-278`) dieselbe Ausnahme, `DestroyWindow`
-lief ebenso nicht. E-42 hÃÂ¤tte es nur **unsichtbar** gemacht. Behebung:
-dieser Schritt lÃÂ¤uft nicht durch `AUFRAEUMEN`, sondern durch einen eigenen
+lief ebenso nicht. E-42 hätte es nur **unsichtbar** gemacht. Behebung:
+dieser Schritt läuft nicht durch `AUFRAEUMEN`, sondern durch einen eigenen
 `TRY`/`CATCH_ALL`, der `DestroyWindow()` nachholt, wenn das Fenster noch
 existiert.
 
-### E-46 Ã¢ÂÂ der Verdacht, der E-43 erklÃÂ¤ren wÃÂ¼rde
+### E-46 — der Verdacht, der E-43 erklären würde
 
 > **Nachtrag vom 09.09.2026 (LEKTOR, L-11): dieser Verdacht ist WIDERLEGT.**
 > Die unten beschriebene Spurmarke `E-46 CMainFrame::~CMainFrame betreten`
 > erscheint erst **nach** der Stelle, nicht zwischen `vor QCWorkbook::OnClose`
 > und `nach QCWorkbook::OnClose`. Das `CMainFrame`-Objekt ist an dieser Stelle
-> also **nicht** freigegeben. Die tatsÃÂ¤chliche Ursache von **E-43** war eine
+> also **nicht** freigegeben. Die tatsächliche Ursache von **E-43** war eine
 > andere: `SECControlBar` war **zweimal definiert**, und zwei
-> ÃÂbersetzungseinheiten lasen dasselbe Feld acht Byte auseinander (siehe die
+> Übersetzungseinheiten lasen dasselbe Feld acht Byte auseinander (siehe die
 > Verzeichniszeile zu E-43 und `CHANGELOG.md` unter 7.2.0.24). **Der Abschnitt
-> darunter bleibt unverÃÂ¤ndert stehen** Ã¢ÂÂ er ist das Zeitdokument einer
-> BeweisfÃÂ¼hrung, die in sich stimmig war und trotzdem in die falsche Richtung
+> darunter bleibt unverändert stehen** — er ist das Zeitdokument einer
+> Beweisführung, die in sich stimmig war und trotzdem in die falsche Richtung
 > zeigte. Wer ihn zitiert, zitiert einen widerlegten Verdacht.
 
 
-Beim Nachlesen der MFC-Quelle fÃÂ¼r E-45 fiel eine zweite Sache auf, die
-schwerer wiegt. `CFrameWnd::PostNcDestroy` ist wÃÂ¶rtlich `delete this`.
-`CMainFrame` ÃÂ¼berschreibt es nicht Ã¢ÂÂ im ganzen Bestand steht kein einziges
+Beim Nachlesen der MFC-Quelle für E-45 fiel eine zweite Sache auf, die
+schwerer wiegt. `CFrameWnd::PostNcDestroy` ist wörtlich `delete this`.
+`CMainFrame` überschreibt es nicht — im ganzen Bestand steht kein einziges
 `PostNcDestroy` (gesucht in `mainfrm.*`, `QCWorkbook.*` und allen
 `OTShim`-Dateien; einziger Treffer ist ein Kommentar in
 `OTShim_Reiter.cpp:1555`).
@@ -7588,19 +7588,19 @@ schwerer wiegt. `CFrameWnd::PostNcDestroy` ist wÃÂ¶rtlich `delete this`.
 `SaveBarState("ToolBar")`, `SaveWazooBarConfigToIni`, `SaveCrashStateToINI`,
 `WriteToolBarMarkerToIni`.
 
-TrÃÂ¤fe der Verdacht zu, hÃÂ¤tte **E-43** damit seine Ursache: `SaveBarState`
-liefe auf einem freigegebenen Rahmen, dessen Leisten schon abgebaut sind Ã¢ÂÂ und
-`m_pToolBar` trÃÂ¤gt `m_bAutoDelete = TRUE` (`mainfrm.cpp:1718`), wird also
-tatsÃÂ¤chlich gelÃÂ¶scht. Das wÃÂ¼rde auch erklÃÂ¤ren, warum `m_btns.GetSize()` **0**
+Träfe der Verdacht zu, hätte **E-43** damit seine Ursache: `SaveBarState`
+liefe auf einem freigegebenen Rahmen, dessen Leisten schon abgebaut sind — und
+`m_pToolBar` trägt `m_bAutoDelete = TRUE` (`mainfrm.cpp:1718`), wird also
+tatsächlich gelöscht. Das würde auch erklären, warum `m_btns.GetSize()` **0**
 liefert: `CPtrArray::~CPtrArray` ruft `SetSize(0)` und nullt `m_nSize`.
 
-**Was noch nicht erklÃÂ¤rt ist:** warum `GetBtnCount()` in derselben Zeile **24**
-liefert. Beide AusdrÃÂ¼cke sind wÃÂ¶rtlich derselbe Code
+**Was noch nicht erklärt ist:** warum `GetBtnCount()` in derselben Zeile **24**
+liefert. Beide Ausdrücke sind wörtlich derselbe Code
 (`OTShim_Werkzeugleiste.h:744`), es gibt keine zweite Fassung und keine
-ÃÂberschreibung in `QCCustomToolBar`. Deshalb steht in 7.2.0.23 eine
+Überschreibung in `QCCustomToolBar`. Deshalb steht in 7.2.0.23 eine
 verfeinerte Marke, die `GetBtnCount()` und `m_btns.GetSize()` **je zweimal**
-in **einer** Ausgabe misst. Vier gleiche Zahlenpaare heiÃÂt: stabil
-verschieden, also ein ÃÂbersetzungsfehler. Flackernde Zahlen heiÃÂen: fremder
+in **einer** Ausgabe misst. Vier gleiche Zahlenpaare heißt: stabil
+verschieden, also ein Übersetzungsfehler. Flackernde Zahlen heißen: fremder
 Faden oder freigegebenes Objekt.
 
 Entschieden wird E-46 selbst an einer einzigen Protokollzeile. Im Destruktor
@@ -7609,185 +7609,185 @@ Steht sie **zwischen** `vor QCWorkbook::OnClose` und `nach
 QCWorkbook::OnClose`, ist der Verdacht belegt; steht sie danach, ist er
 widerlegt. Beide Marken greifen nichts an.
 
-### Widerlegt: Ã¢ÂÂdas Protokoll ist im Normalbetrieb stumm"
+### Widerlegt: „das Protokoll ist im Normalbetrieb stumm"
 
-PRUEFER nennt das den grÃÂ¶ÃÂten Preis der E-42-Behebung: `PutDebugLog` kehre
-sofort zurÃÂ¼ck, wenn die Maske nicht passe (`QCUtils/src/debug.cpp:140-145`),
-und `DebugMask` sei mit `0` vorbelegt (`debug.cpp:22`) Ã¢ÂÂ ohne
-`DEBUG_MASK_MISC` (0x8000) oder `DEBUG_MASK_TOC_CORRUPT` (0x80) sÃÂ¤he man bei
+PRUEFER nennt das den größten Preis der E-42-Behebung: `PutDebugLog` kehre
+sofort zurück, wenn die Maske nicht passe (`QCUtils/src/debug.cpp:140-145`),
+und `DebugMask` sei mit `0` vorbelegt (`debug.cpp:22`) — ohne
+`DEBUG_MASK_MISC` (0x8000) oder `DEBUG_MASK_TOC_CORRUPT` (0x80) sähe man bei
 einem Fehlschlag nichts.
 
 **Das ist widerlegt.** Der Vorbelegungswert `0` in `debug.cpp:22` wird nie
 benutzt: `eudora.cpp:1192` ruft
-`QCLogFileMT::InitDebug(GetIniLong(IDS_INI_DEBUG_LOG_LEVEL), Ã¢ÂÂ¦)`, und der
-Vorgabewert dieses SchlÃÂ¼ssels steht in der Ressource Ã¢ÂÂ
+`QCLogFileMT::InitDebug(GetIniLong(IDS_INI_DEBUG_LOG_LEVEL), …)`, und der
+Vorgabewert dieses Schlüssels steht in der Ressource —
 `EudoraRes.rc:8441` lautet `IDS_INI_DEBUG_LOG_LEVEL "LogLevel\n25759"`.
 
-25759 ist 0x649F, und 0x649F & 0x80 ist ungleich null Ã¢ÂÂ die Marken werden also
+25759 ist 0x649F, und 0x649F & 0x80 ist ungleich null — die Marken werden also
 **ohne jede Einstellung** geschrieben. Gegenprobe an der Wirklichkeit:
-Gregors `Eudora.ini` enthÃÂ¤lt ÃÂ¼berhaupt keine Zeile `LogLevel`, und seine
-`eudora.log` trÃÂ¤gt in jeder Sitzung die Kopfzeile `LogLevel 25759 (0x649F)`
+Gregors `Eudora.ini` enthält überhaupt keine Zeile `LogLevel`, und seine
+`eudora.log` trägt in jeder Sitzung die Kopfzeile `LogLevel 25759 (0x649F)`
 und die E-33/E-42-Marken. `DEBUG_MASK_MISC` (0x8000) fehlt in der Vorgabe
-tatsÃÂ¤chlich Ã¢ÂÂ `DEBUG_MASK_TOC_CORRUPT` (0x80) ist gesetzt, und weil die Marken
-mit `MISC | TOC_CORRUPT` schreiben, genÃÂ¼gt das. Die Maske ist also nicht
-optimal gewÃÂ¤hlt, aber wirksam.
+tatsächlich — `DEBUG_MASK_TOC_CORRUPT` (0x80) ist gesetzt, und weil die Marken
+mit `MISC | TOC_CORRUPT` schreiben, genügt das. Die Maske ist also nicht
+optimal gewählt, aber wirksam.
 
 ---
 
-## E-64 bis E-69 Ã¢ÂÂ Filter: drei Meldungen Gregors an 1.0.29 und die Bestandsaufnahme (09.09.2026, PRUEFER)
+## E-64 bis E-69 — Filter: drei Meldungen Gregors an 1.0.29 und die Bestandsaufnahme (09.09.2026, PRUEFER)
 
-Der vollstÃÂ¤ndige Bericht steht in **[Befunde/PRUEFER-7.md](Befunde/PRUEFER-7.md)**;
+Der vollständige Bericht steht in **[Befunde/PRUEFER-7.md](Befunde/PRUEFER-7.md)**;
 hier nur, was man wissen muss, um zu entscheiden.
 
-Gregors Auftrag nach dem Release: *Ã¢ÂÂhabe gleich das naechste gebiet nach dem
+Gregors Auftrag nach dem Release: *„habe gleich das naechste gebiet nach dem
 release: filter."* Dazu drei Meldungen, alle mit Bildschirmfotos belegt: der
-Trennbalken **rechts** lÃÂ¤sst sich nicht ziehen (**E-66**), Filter lassen sich
-setzen, aber nicht bearbeiten (**E-65**), und ein Filterlauf ÃÂ¼ber das ganze
+Trennbalken **rechts** lässt sich nicht ziehen (**E-66**), Filter lassen sich
+setzen, aber nicht bearbeiten (**E-65**), und ein Filterlauf über das ganze
 In-Postfach verschiebt **alle** Nachrichten (**E-64**).
 
 **Der erste Satz zuerst, weil er alles andere einordnet:** die Filterdateien
-sind **seit dem Ursprungscommit unverÃÂ¤ndert**. `git log --oneline` ÃÂ¼ber
+sind **seit dem Ursprungscommit unverändert**. `git log --oneline` über
 `filtersd.cpp`, `filtersv.cpp`, `FiltersWazooWnd.cpp`, `MakeFilter.cpp`,
 `FilterReportView.cpp`, `FilterReportWazooWnd.cpp`, `JunkMail.cpp`,
 `filtersd.h`, `filtersv.h`, `resource.h` und `EudoraRes.rc` liefert genau
 einen Commit, `567a5d8`. Die einzige angefasste Datei des ganzen Filterwegs
-ist `EuImap/src/ImapFiltersd.cpp` (`03c94fe`, zwei Zeilen, `std::auto_ptr` Ã¢ÂÂ
+ist `EuImap/src/ImapFiltersd.cpp` (`03c94fe`, zwei Zeilen, `std::auto_ptr` →
 `std::unique_ptr`). **Kein Filterbefund dieses Durchgangs ist bei der
-Portierung entstanden** Ã¢ÂÂ sie sind alle aus dem Original mitgekommen und
+Portierung entstanden** — sie sind alle aus dem Original mitgekommen und
 werden erst jetzt sichtbar, weil zum ersten Mal jemand mit Filtern arbeitet.
 
 **Und die Ersatzschicht ist unschuldig, was die Filter angeht.** Im Filterkern
 kommt **keine einzige `SEC*`-Klasse** vor; `CFiltersWazooWnd` erbt von
 `CWazooWnd`, und das ist ein schlichtes `CWnd` (`WazooWnd.h:16`). Erst der
-BehÃÂ¤lter `CWazooBar` erbt von `SECControlBar` (`WazooBar.h:60`). Auch der
-regulÃÂ¤re Ausdruck ist echt (POSIX `regcomp`/`regexec`, `filtersd.cpp:364-380`),
-kein leerer Rumpf. Die Vermutung aus dem Auftrag Ã¢ÂÂ *Ã¢ÂÂeine Vergleichsfunktion,
-die IMMER passt liefert"* Ã¢ÂÂ ist damit **widerlegt**: es gibt sie nicht.
+Behälter `CWazooBar` erbt von `SECControlBar` (`WazooBar.h:60`). Auch der
+reguläre Ausdruck ist echt (POSIX `regcomp`/`regexec`, `filtersd.cpp:364-380`),
+kein leerer Rumpf. Die Vermutung aus dem Auftrag — *„eine Vergleichsfunktion,
+die IMMER passt liefert"* — ist damit **widerlegt**: es gibt sie nicht.
 
 **Die Bestandsaufnahme in Zahlen** (Umfang aus der Quelle erhoben, nicht von
 Hand gelistet): **10** nutzbare Kopfzeilen von 15 IDs, **16** Operatoren
-(14 allgemein + 2 nur fÃÂ¼r den Junk-Score), **4** VerknÃÂ¼pfungen, **19**
-Aktionen auf **5** PlÃÂ¤tzen je Filter, **3** Filterlisten (Vor-, Haupt-,
+(14 allgemein + 2 nur für den Junk-Score), **4** Verknüpfungen, **19**
+Aktionen auf **5** Plätzen je Filter, **3** Filterlisten (Vor-, Haupt-,
 Nachfilter), **12** Stellen im Programm, an denen gefiltert wird. Davon ist
 **eine einzige** Aktion ohne eigenen Zweig (`ID_FLT_NOTIFY_USER`, wirkt nur
-zusammen mit Transfer/Copy/Junk) und **eine** Anwendungsstelle unvollstÃÂ¤ndig
-(`SearchView.cpp:3722`: *Ã¢ÂÂNicht Junk"* aus dem Suchfenster ruft `DeclareJunk`
-mit `NULL/*&filt*/` Ã¢ÂÂ auskommentiert, also **ohne** Filterlauf). Die
-Shareware-Schranke `IsRestrictedFilterAction` wÃÂ¼rde 12 der 19 Aktionen
+zusammen mit Transfer/Copy/Junk) und **eine** Anwendungsstelle unvollständig
+(`SearchView.cpp:3722`: *„Nicht Junk"* aus dem Suchfenster ruft `DeclareJunk`
+mit `NULL/*&filt*/` — auskommentiert, also **ohne** Filterlauf). Die
+Shareware-Schranke `IsRestrictedFilterAction` würde 12 der 19 Aktionen
 sperren, greift in diesem Bau aber nicht: `Eudora.vcxproj:78`/`:132` setzen
 `BUILD_BOX_OR_SITE_R_VERSION`, `DEFAULT_SWM_MODE = SWM_MODE_PRO`, und Gregors
 Protokoll schreibt in jeder Sitzung `Mode 2`.
 
 **Was an E-64 neu ist und was nicht.** Neu ist, dass der Schaden **gemessen**
-ist statt berichtet Ã¢ÂÂ Junk.mbx wÃÂ¤chst in einer Sitzung von 0 auf byte-genau
-die GrÃÂ¶ÃÂe, die In.mbx vorher hatte. Neu ist auch die Spur: `CFilter::Action`
+ist statt berichtet — Junk.mbx wächst in einer Sitzung von 0 auf byte-genau
+die Größe, die In.mbx vorher hatte. Neu ist auch die Spur: `CFilter::Action`
 lief mit einer Aktion, die in der Filterdatei **nicht steht**, die
 Filterobjekte im Speicher weichen also von der Datei ab, und der einzige Weg,
-der sie anfasst, ist `CFiltersViewRight::DoDataExchange` in Speicherrichtung Ã¢ÂÂ
-angestoÃÂen **ungefragt** bei jedem Wegklicken vom Filterreiter
-(`FiltersWazooWnd.cpp:122` Ã¢ÂÂ `filtersd.cpp:2058-2072`). Damit hÃÂ¤ngen **E-64
+der sie anfasst, ist `CFiltersViewRight::DoDataExchange` in Speicherrichtung —
+angestoßen **ungefragt** bei jedem Wegklicken vom Filterreiter
+(`FiltersWazooWnd.cpp:122` → `filtersd.cpp:2058-2072`). Damit hängen **E-64
 und E-65 am selben Faden**.
 
-**Nicht** geklÃÂ¤rt ist der Widerspruch: die Trefferzeile aus
+**Nicht** geklärt ist der Widerspruch: die Trefferzeile aus
 `filtersd.cpp:2312-2318` fehlt im ganzen Protokoll, obwohl ihre Maske gesetzt
-ist und dasselbe Verfahren nebenan (LMOS) schreibt. Deshalb ist der nÃÂ¤chste
+ist und dasselbe Verfahren nebenan (LMOS) schreibt. Deshalb ist der nächste
 Schritt zu E-64 **keine Behebung, sondern eine Messung**: eine Zeile je
 Nachricht und Filter mit Name, Kopf, Verb, Wert, Aktionen und Match-Ergebnis,
-geschrieben mit `MISC | TOC_CORRUPT` Ã¢ÂÂ **nicht** mit `DEBUG_MASK_FILTERS`,
+geschrieben mit `MISC | TOC_CORRUPT` — **nicht** mit `DEBUG_MASK_FILTERS`,
 denn genau deren Wirksamkeit steht hier in Frage
 ([messung-muss-den-weg-treffen](Arbeitsweise/messung-muss-den-weg-treffen.md),
 [zwei-werte-in-eine-ausgabe](Arbeitsweise/zwei-werte-in-eine-ausgabe.md)).
 
-**Zwei HÃÂ¤rtungen gehÃÂ¶ren unabhÃÂ¤ngig von der Ursache mit ins selbe Paket:** ein
+**Zwei Härtungen gehören unabhängig von der Ursache mit ins selbe Paket:** ein
 leerer Wert darf bei `contains`/`is`/`starts with`/`ends with` **nicht**
 treffen (`strstr(text, "")` liefert heute einen Treffer, `filtersd.cpp:712`),
 und ein Filter, der fast alle bearbeiteten Nachrichten trifft, soll den Lauf
 **abbrechen und melden** statt ihn zu Ende zu bringen. Ein Anwender bekommt
-seine Mails nicht zurÃÂ¼ck.
+seine Mails nicht zurück.
 
 **Reihenfolge der Behebung, nach Schaden:** E-64 (erst messen), dazu die beiden
-HÃÂ¤rtungen und E-69 im selben Zug, weil dieselben Dateien angefasst werden;
-dann E-67 (zwei Zeichen, `>` Ã¢ÂÂ `>=`); dann E-68; dann E-65 (erst Gregors
-Antwort auf **eine** Frage abwarten: leere HÃÂ¤lfte, graue Felder oder
-ÃÂnderung wird nicht behalten?); dann E-66 (eine Datei, 30 bis 45 Zeilen); zum
-Schluss die LÃÂ¼cke im Suchfenster Ã¢ÂÂ und die erst, wenn E-64 erledigt ist, weil
+Härtungen und E-69 im selben Zug, weil dieselben Dateien angefasst werden;
+dann E-67 (zwei Zeichen, `>` → `>=`); dann E-68; dann E-65 (erst Gregors
+Antwort auf **eine** Frage abwarten: leere Hälfte, graue Felder oder
+Änderung wird nicht behalten?); dann E-66 (eine Datei, 30 bis 45 Zeilen); zum
+Schluss die Lücke im Suchfenster — und die erst, wenn E-64 erledigt ist, weil
 sie einen weiteren Filterlauf **einschaltet**.
 
-## E-68, E-72, E-73, E-75 gegengerechnet Ã¢ÂÂ vier Gegenvermutungen, zwei bestÃÂ¤tigt (10.09.2026, PRÃÂFER)
+## E-68, E-72, E-73, E-75 gegengerechnet — vier Gegenvermutungen, zwei bestätigt (10.09.2026, PRÜFER)
 
-Gregor fragte am 10.09.2026, ob es zu den FilterÃÂ¤nderungen der letzten Tage
+Gregor fragte am 10.09.2026, ob es zu den Filteränderungen der letzten Tage
 neue Tests gebe. Die ehrliche Antwort war **nein**. Dieser Abschnitt ist die
 Nachholung: zu jeder Behebung eine Gegenvermutung, jede am Quelltext
 entschieden, mit Datei und Zeile. Nichts davon ist am laufenden Programm
-gemessen Ã¢ÂÂ es sind statische PrÃÂ¼fungen.
+gemessen — es sind statische Prüfungen.
 
-### E-73 Ã¢ÂÂ Ã¢ÂÂist `CFilter::Action` wirklich die einzige Stelle?" Ã¢ÂÂ **BESTÃÂTIGT, sie war es nicht**
+### E-73 — „ist `CFilter::Action` wirklich die einzige Stelle?" — **BESTÄTIGT, sie war es nicht**
 
-Zwei weitere Wege liefen am RÃÂ¼ckschalter vorbei. Beide sind in der Tabelle
+Zwei weitere Wege liefen am Rückschalter vorbei. Beide sind in der Tabelle
 oben mit Zeilennummern beschrieben und jetzt geschlossen:
 
-* **IMAP.** Der geprÃÂ¼fte POP-Zweig steht im `else` von `if (bIsImap)`
-  (`filtersd.cpp:1213-1216` nimmt den IMAP-Weg, der geprÃÂ¼fte POP-Weg beginnt erst im `else` bei `:1217`). Ein IMAP-Postfach erreicht ihn
-  nie. `ImapSetServerOpt` (`EuImap/src/ImapFiltersd.cpp:791-794`) hÃÂ¤ngt die UID
-  bei `SO_DELETE` in `m_szDeletedUids` Ã¢ÂÂ daraus wird ein `STORE \Deleted`.
+* **IMAP.** Der geprüfte POP-Zweig steht im `else` von `if (bIsImap)`
+  (`filtersd.cpp:1213-1216` nimmt den IMAP-Weg, der geprüfte POP-Weg beginnt erst im `else` bei `:1217`). Ein IMAP-Postfach erreicht ihn
+  nie. `ImapSetServerOpt` (`EuImap/src/ImapFiltersd.cpp:791-794`) hängt die UID
+  bei `SO_DELETE` in `m_szDeletedUids` — daraus wird ein `STORE \Deleted`.
   `IMAP4` ist in **beiden** Konfigurationen der `Eudora.vcxproj` definiert
   (Zeilen 78 und 132), der Zweig wird also wirklich gebaut.
-* **Junk-Filteraktion.** `case ID_FLT_JUNK` Ã¢ÂÂ `CJunkMail::DeclareJunk` Ã¢ÂÂ
+* **Junk-Filteraktion.** `case ID_FLT_JUNK` → `CJunkMail::DeclareJunk` →
   `SetServerStatus(ID_MESSAGE_SERVER_DELETE)` bei `DeleteFetchedJunk=1`.
   Der Kopfkommentar von `DeclareJunk` (`JunkMail.h:54-58`, Beschreibung in
-  `JunkMail.cpp:577-579`) sagt ausdrÃÂ¼cklich: `pFilt == NULL` heiÃÂt *Ã¢ÂÂcalled
+  `JunkMail.cpp:577-579`) sagt ausdrücklich: `pFilt == NULL` heißt *„called
   from a filter action"*. `CFilter::Action` ruft mit vier Argumenten, also
-  `pFilt == NULL`. Genau daran hÃÂ¤ngt jetzt die Unterscheidung.
+  `pFilt == NULL`. Genau daran hängt jetzt die Unterscheidung.
 
-**Was das ÃÂ¼ber E-74 sagt:** `DeleteFetchedJunk=0` steht nur in
+**Was das über E-74 sagt:** `DeleteFetchedJunk=0` steht nur in
 `tools/DEudora.ini`. Nach dem eigenen Kopfkommentar dieser Datei greift sie
-fÃÂ¼r **neu angelegte** Konten und rÃÂ¼hrt eine vorhandene `Eudora.ini` nicht an.
-Wer die `1` schon stehen hat Ã¢ÂÂ Gregor hatte sie Ã¢ÂÂ, lÃÂ¶scht ÃÂ¼ber eine
-Junk-Filteraktion weiter auf dem Server. Das war die schwerste offene LÃÂ¼cke.
+für **neu angelegte** Konten und rührt eine vorhandene `Eudora.ini` nicht an.
+Wer die `1` schon stehen hat — Gregor hatte sie —, löscht über eine
+Junk-Filteraktion weiter auf dem Server. Das war die schwerste offene Lücke.
 
-### E-72 Ã¢ÂÂ Ã¢ÂÂgibt es einen zweiten Weg, der die leeren Felder zurÃÂ¼ckschreibt?" Ã¢ÂÂ **WIDERLEGT**
+### E-72 — „gibt es einen zweiten Weg, der die leeren Felder zurückschreibt?" — **WIDERLEGT**
 
 Gesucht wurde jeder Schreibzugriff auf ein `CFilter`-Objekt aus
 `filtersv.cpp`. Ergebnis:
 
-* Der RÃÂ¼ckschreibzweig steht **nur** in `CFiltersViewRight::DoDataExchange`,
+* Der Rückschreibzweig steht **nur** in `CFiltersViewRight::DoDataExchange`,
   hinter der Sperre `m_pGeladen != filt` (`filtersv.cpp:1432-1437`), und er ist
-  das **Letzte** in der Funktion Ã¢ÂÂ der frÃÂ¼he `return` ÃÂ¼berspringt nichts
+  das **Letzte** in der Funktion — der frühe `return` überspringt nichts
   anderes.
 * Die einzige weitere Stelle, die die Aktionsfelder schreibt, ist
   `SaveIntoFilter` (`filtersv.cpp:1825`), und die wird **genau einmal**
   gerufen: `filtersv.cpp:1520`, innerhalb dieses Zweigs, hinter der Sperre.
 * `CFiltersViewRight::OnMailbox` (`filtersv.cpp:2191-2230`) schreibt direkt in
   `m_Mailbox`/`m_CopyTo`/`m_Desc`, aber erst nachdem `SelectMailbox()` `true`
-  geliefert hat Ã¢ÂÂ der Anwender hat dann ein Postfach ausgewÃÂ¤hlt. Ein leerer
+  geliefert hat — der Anwender hat dann ein Postfach ausgewählt. Ein leerer
   Zustand kann von hier nicht kommen; ein leerer Pfad wird durch das
   In-Postfach ersetzt (`:2216-2223`).
 
-### E-72, zweite Gegenvermutung Ã¢ÂÂ Ã¢ÂÂ`m_pGeladen` bleibt nach dem LÃÂ¶schen eines Filters als Zeiger auf freigegebenen Speicher stehen, und eine neue `CFilter` auf derselben Adresse ÃÂ¶ffnet die Sperre" Ã¢ÂÂ **WIDERLEGT, mit dem Weg**
+### E-72, zweite Gegenvermutung — „`m_pGeladen` bleibt nach dem Löschen eines Filters als Zeiger auf freigegebenen Speicher stehen, und eine neue `CFilter` auf derselben Adresse öffnet die Sperre" — **WIDERLEGT, mit dem Weg**
 
 `CFiltersViewLeft::OnRemove` (`filtersv.cpp:576-599`) macht `delete filt`
-(`:587`) und fasst `m_pGeladen` nicht an Ã¢ÂÂ der Zeiger ist an dieser Stelle
-tatsÃÂ¤chlich verwaist. Er wird aber nie **freigegeben**, sondern nur
-verglichen, und der nÃÂ¤chste Schritt rÃÂ¤umt ihn auf: `OnRemove` ruft
+(`:587`) und fasst `m_pGeladen` nicht an — der Zeiger ist an dieser Stelle
+tatsächlich verwaist. Er wird aber nie **freigegeben**, sondern nur
+verglichen, und der nächste Schritt räumt ihn auf: `OnRemove` ruft
 `doc->UpdateAllViews(this, FUT_DIRTYSEL, &hint)` mit `hint = -2` (`:594-595`).
-Das lÃÂ¤uft in `CFiltersViewRight::OnUpdate` (`filtersv.cpp:2037-2054`) in
+Das läuft in `CFiltersViewRight::OnUpdate` (`filtersv.cpp:2037-2054`) in
 `case FUT_DIRTYSEL`, setzt `m_Sel = -2` und ruft `UpdateData(FALSE)`. Mit
 `m_Sel < 0` ist `filt == NULL`, der Ladezweig nimmt den `else`-Ast
 (`filtersv.cpp:1312-1328`) und setzt `m_pGeladen = NULL` (`:1360`). Der
-verwaiste Zeiger ÃÂ¼berlebt also den Aufruf nicht, in dem er entsteht.
+verwaiste Zeiger überlebt also den Aufruf nicht, in dem er entsteht.
 Das vorangehende `UpdateData(TRUE)` schreibt ebenfalls nichts, weil `filt`
 schon `NULL` ist.
 
-### E-75 Ã¢ÂÂ Ã¢ÂÂgibt es einen zweiten Schreiber von `CtrlJMapping`?" Ã¢ÂÂ **WIDERLEGT**
+### E-75 — „gibt es einen zweiten Schreiber von `CtrlJMapping`?" — **WIDERLEGT**
 
-`SetIniShort(IDS_INI_WHO_GETS_CTRL_J, Ã¢ÂÂ¦)` steht an genau **zwei** Stellen:
+`SetIniShort(IDS_INI_WHO_GETS_CTRL_J, …)` steht an genau **zwei** Stellen:
 `CMainFrame::InitJunkMenus` (`mainfrm.cpp:7952`, der einmalige
 Erstlauf, jetzt auf `CTRL_J_FILTER`) und der Einstellungsdialog
-(`settings.cpp:924` und `:926`). Gelesen wird an fÃÂ¼nf Stellen
+(`settings.cpp:924` und `:926`). Gelesen wird an fünf Stellen
 (`mainfrm.cpp:3945`, `:3954`, `:3961`, `:7911`, `settings.cpp:2025`), alle
 ohne Seitenwirkung. Ein dritter Schreiber existiert nicht.
 
-### E-75, Restrisiko Ã¢ÂÂ ein `ASSERT(0)` im Einstellungsdialog Ã¢ÂÂ **noch offen, klein**
+### E-75, Restrisiko — ein `ASSERT(0)` im Einstellungsdialog — **noch offen, klein**
 
 `settings.cpp:2023-2033`:
 
@@ -7801,26 +7801,26 @@ ohne Seitenwirkung. Ein dritter Schreiber existiert nicht.
 
 `CTRL_J_UNKNOWN` ist `0` (`JunkMail.h:61`), also **kleiner** als
 `CTRL_J_JUNK`. Steht in der `Eudora.ini` eine `0` oder ein unsinniger Wert,
-fÃÂ¤llt der Dialog im **Freigabebau** stillschweigend auf *Junk* zurÃÂ¼ck
-(`ASSERT` ist dort nichts) und schreibt beim SchlieÃÂen ÃÂ¼ber
-`settings.cpp:921-926` eine `1` fest Ã¢ÂÂ genau der Sprung, den E-75 abstellen
+fällt der Dialog im **Freigabebau** stillschweigend auf *Junk* zurück
+(`ASSERT` ist dort nichts) und schreibt beim Schließen über
+`settings.cpp:921-926` eine `1` fest — genau der Sprung, den E-75 abstellen
 sollte. Erreichbar ist das nur, wenn `InitJunkMenus` vor dem Dialog nicht
 gelaufen ist; gerufen wird es aus `eudora.cpp:1636` beim Start, der Fall ist
-also unwahrscheinlich. Der RÃÂ¼ckfall gehÃÂ¶rte trotzdem auf `CTRL_J_FILTER`
-statt auf `CTRL_J_JUNK`. **Nicht geÃÂ¤ndert**, weil es Gregors Entscheidung ist,
+also unwahrscheinlich. Der Rückfall gehörte trotzdem auf `CTRL_J_FILTER`
+statt auf `CTRL_J_JUNK`. **Nicht geändert**, weil es Gregors Entscheidung ist,
 ob der Einstellungsdialog hier vom Original abweichen soll.
 
 ### Was daraus als Schranke geworden ist
 
-| Werkzeug | prÃÂ¼ft | Gegenprobe abweisen | Gegenprobe durchlassen |
+| Werkzeug | prüft | Gegenprobe abweisen | Gegenprobe durchlassen |
 |---|---|---|---|
-| `tools/pruefe-filter-serverloeschung.pl` | jede LÃÂ¶schstelle im Filterweg fragt `FilterDarfVomServerLoeschen`; jeder `ImapSetServerOpt`-Aufruf ebenso; die Vorgabe des RÃÂ¼ckschalters bleibt 0 | RÃÂ¼ckschalter aus allen drei Aufrufen entfernt (Stand vor der Behebung) Ã¢ÂÂ **1**, drei MÃÂ¤ngel: `filtersd.cpp:1282`, `filtersd.cpp:1781`, `JunkMail.cpp:708` | behobener Baum Ã¢ÂÂ **0**, 3 gedeckte LÃÂ¶schstellen, 2 benannte Ausnahmen |
-| `tools/pruefe-filter-aktionsgrenze.pl` | die Grenze in `CFiltersDoc::Read` ist da; die Liste `IstAktionsSchluesselwort` deckt sich mit den Zweigen, die den ZÃÂ¤hler hochzÃÂ¤hlen; `Write` bleibt an `NUM_FILT_ACTS` gebunden | Grenze entfernt **und** `IDS_FIO_FORWARD` aus der Liste gestrichen Ã¢ÂÂ **1**, beide MÃÂ¤ngel einzeln benannt | behobener Baum Ã¢ÂÂ **0**, 22 zÃÂ¤hlende Marken, 22 Marken in der Liste |
+| `tools/pruefe-filter-serverloeschung.pl` | jede Löschstelle im Filterweg fragt `FilterDarfVomServerLoeschen`; jeder `ImapSetServerOpt`-Aufruf ebenso; die Vorgabe des Rückschalters bleibt 0 | Rückschalter aus allen drei Aufrufen entfernt (Stand vor der Behebung) → **1**, drei Mängel: `filtersd.cpp:1282`, `filtersd.cpp:1781`, `JunkMail.cpp:708` | behobener Baum → **0**, 3 gedeckte Löschstellen, 2 benannte Ausnahmen |
+| `tools/pruefe-filter-aktionsgrenze.pl` | die Grenze in `CFiltersDoc::Read` ist da; die Liste `IstAktionsSchluesselwort` deckt sich mit den Zweigen, die den Zähler hochzählen; `Write` bleibt an `NUM_FILT_ACTS` gebunden | Grenze entfernt **und** `IDS_FIO_FORWARD` aus der Liste gestrichen → **1**, beide Mängel einzeln benannt | behobener Baum → **0**, 22 zählende Marken, 22 Marken in der Liste |
 
-Beide hÃÂ¤ngen im `pre-commit` (Schritte 10 und 11, `tools/hooks-einrichten.sh`)
+Beide hängen im `pre-commit` (Schritte 10 und 11, `tools/hooks-einrichten.sh`)
 und haben einen eingebauten `--selbsttest`, der beide Gegenproben in einem
-Lauf fÃÂ¤hrt. Beide werfen **Kommentare und Zeichenketten weg**, bevor sie im
-Code suchen Ã¢ÂÂ nicht vorsorglich: der Kommentar, der die Junk-LÃÂ¼cke erklÃÂ¤rt,
-enthÃÂ¤lt wÃÂ¶rtlich `SetServerStatus(ID_MESSAGE_SERVER_DELETE)` und hÃÂ¤tte die
-eigene BegrÃÂ¼ndung angeschwÃÂ¤rzt. Dieselbe Falle wie bei
+Lauf fährt. Beide werfen **Kommentare und Zeichenketten weg**, bevor sie im
+Code suchen — nicht vorsorglich: der Kommentar, der die Junk-Lücke erklärt,
+enthält wörtlich `SetServerStatus(ID_MESSAGE_SERVER_DELETE)` und hätte die
+eigene Begründung angeschwärzt. Dieselbe Falle wie bei
 `tools/pruefe-beenden.pl` und `tools/pruefe-fensterbau.pl`.
