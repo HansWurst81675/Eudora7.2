@@ -149,4 +149,23 @@ $hLine = Find-Line $l '^BOOL\s+Fix2047\s*\(' $hStart
 $hEnd = Find-Line $l '^\}\s*$' $hLine
 Write-Region $l $hStart $hEnd (Join-Path $OutDir "lex822_2047.inc") $lexPath
 
+
+# ---------------------------------------------------------------- msgutils.cpp
+# Region I: E88NurText und E88OriginalEinsetzen am Stueck (Befund E-88).
+# Das ist die Entscheidung, ob die Original-Fassung oder die Editor-Fassung
+# hinausgeht. Sie muss gepruefbar sein, ohne Eudora zu starten - eine falsche
+# Entscheidung sieht vor dem Absenden niemand.
+$msgPath = Join-Path $SrcDir "msgutils.cpp"
+$mu = Read-Lines $msgPath
+$iStart = Find-Line $mu '^static void E88NurText\s*\(' 0
+$iLine = Find-Line $mu '^bool E88OriginalEinsetzen\s*\(' $iStart
+$iEnd = Find-Line $mu '^\}\s*$' $iLine
+Write-Region $mu $iStart $iEnd (Join-Path $OutDir "msgutils_e88.inc") $msgPath
+
+# ---------------------------------------------------------------- utils.cpp (IsFancy)
+# E88OriginalEinsetzen ruft IsFancy. Wieder geschnitten statt abgeschrieben.
+$jStart = Find-Line $u '^int IsFancy\s*\(' 0
+$jEnd = Find-Line $u '^\}\s*$' $jStart
+Write-Region $u $jStart $jEnd (Join-Path $OutDir "utils_isfancy.inc") $utilsPath
+
 Write-Host "Extract.ps1: fertig."

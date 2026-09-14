@@ -133,6 +133,12 @@ anderes als das, was hinausgeht.
   die Nachricht später aus *Out* erneut geöffnet, gilt wieder das alte
   Verhalten; die Spurmarke sagt dann `EDITOR (kein Original gemerkt)`.
 
+**Testlauf: 131 Tests, 131 bestanden, 0 fehlgeschlagen** — zehn davon neu
+zu E-88 (`TestE88.cpp`), darunter fünf **Gegenproben**: im Zitat geändert,
+mitten im Zitat gelöscht, Schalter auf `0`, kein Original gemerkt, reiner
+Textrumpf. Der geprüfte Code wird von `Extract.ps1` bei jedem Bau frisch
+aus `msgutils.cpp` geschnitten, nicht abgeschrieben.
+
 ### Zum Prüfen
 
 1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Settings]`.

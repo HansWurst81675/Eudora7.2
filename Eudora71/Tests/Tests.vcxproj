@@ -87,6 +87,8 @@
     <ClCompile Include="TestOTShimAndocken.cpp" />
     <ClCompile Include="TestPopEmpfang.cpp" />
     <ClCompile Include="TestSymbole.cpp" />
+    <ClCompile Include="UnderTestE88.cpp" />
+    <ClCompile Include="TestE88.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
