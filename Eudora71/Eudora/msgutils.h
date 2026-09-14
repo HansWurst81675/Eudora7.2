@@ -52,3 +52,15 @@ bool E88OriginalEinsetzen(
 				char				cAntwortTyp,
 				CString &			out_szNeuerRumpf,
 				CString &			out_szSpur);
+
+//
+// BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
+// der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
+// Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in
+// msgutils.cpp. Rueckgabe true heisst: out_szHtml ist gefuellt und tritt
+// an die Stelle des Eingangstextes. out_szSpur gehoert ins Protokoll.
+//
+bool E89BilderMessbarMachen(
+				const char *		pszHtml,
+				CString &			out_szHtml,
+				CString &			out_szSpur);
