@@ -57,6 +57,76 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.55 — HTML bleibt beim Antworten und Weiterleiten erhalten (E-87)
+
+**Was Gregor damit tun kann:** eine HTML-Nachricht weiterleiten oder
+beantworten, ohne dass Fettung, Kursiv, Verweise, Schriftfarben und
+Tabellenhintergründe verlorengehen. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: die weitergeleitete Nachricht kam beim Empfänger als Fließtext
+mit blauen Verweisen an — *„kommt auch so an"*. Seine Entscheidung zur
+Umsetzung: *„neue INI-Einstellung machen, die für beides gilt. und HTML immer
+behält. und es aber dokumentieren."*
+
+### Ein Weg, nicht zwei
+
+Antworten und Weiterleiten laufen beide durch `CSummary::ComposeMessage`
+(`summary.cpp`, ab Zeile 899) — `ID_MESSAGE_FORWARD` und `ID_MESSAGE_REPLY`
+sind zwei `case` derselben Funktion. Ein Schalter an einer Stelle genügt.
+
+Die Stelle, die ich zuerst genannt hatte (`TocFrame.cpp:1684`), war **nicht**
+der normale Weg, sondern der Sonderfall *Antwort auf mehrere ausgewählte
+Nachrichten*.
+
+### Die Ursache
+
+`summary.cpp:1110` verwarf das Ergebnis der eigenen Messung:
+
+```c
+IsRich = IsFancy(fullMes);
+if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
+    IsRich = IS_ASCII;
+```
+
+`IsFancy` hatte den Rumpf bereits **als HTML erkannt** — herabgestuft wurde
+trotzdem, sobald die Flags `MSF_XRICH`/`MSFEX_FLOWED` im Übersichtseintrag
+fehlten. `IS_ASCII` bedeutet für `QuoteText`, dass nicht der HTML-Zweig über
+`GetBodyAsHTML` genommen wird, sondern `WrapText` mit `">"`-Präfix. Die blauen
+Verweise im Ergebnis stammten von `MakeAutoURLSpaghetti`, nicht aus der
+Nachricht.
+
+### Der Schalter
+
+| Schlüssel | Abschnitt | Vorgabe | wirkt |
+|---|---|---|---|
+| `KeepHTMLInResponses` | `[Settings]` | **1** | die Messung am Rumpf zählt mehr als die Flags |
+
+`0` stellt das alte Verhalten her. Dokumentiert in
+[EINSTELLUNGEN.md](EINSTELLUNGEN.md) — **und nur dort**: bis zum 14.09.2026
+standen dieselben Schlüssel in zwei Tabellen, im README und in
+`EINSTELLUNGEN.md`, zwölf davon in beiden. Gregors Entscheidung: *„nur in
+einstellungen, nicht in readme"*. Das README verweist jetzt.
+
+### Was der Schalter NICHT behebt
+
+Verfasst wird mit **Paige**, und dessen HTML-Leser kennt **kein `span` und
+keine einzige CSS-Eigenschaft** (`PGHTMDEF.C:20-48` — weder
+`background-color` noch `border`, `padding`, `margin`); aus `div` wertet er
+allein `align` aus. Was Paige nicht versteht, ist nach `ExportMessage`
+endgültig fort — **und genau dieser Text geht hinaus.**
+
+Es überleben also: **Fettung, Kursiv, Verweise, Schriftfarben,
+`<table bgcolor>`.** Es überleben **nicht**: CSS-Kästen und -Hintergründe
+eines modernen Newsletters. Das ist keine Stelle, die HTML wegwirft, sondern
+ein Editor, der es nicht halten kann — dafür reicht kein Schalter. Als Grenze
+dokumentiert in `EINSTELLUNGEN.md`.
+
+**Offen und Gregors Entscheidung:** ob der Original-HTML-Block am Paige-Editor
+vorbeigeführt und beim Senden wieder eingesetzt werden soll. Das ist ein
+Eingriff in den Sendeweg, kein Schalter.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
 ## 7.2.0.54 — zwei Spurmarken, die E-86 entscheiden
 
 **Was Gregor damit tun kann:** die Newsletter-Mail öffnen und danach zwei
