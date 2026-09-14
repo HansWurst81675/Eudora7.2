@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| CHRONIST | 2026-09-13 22:24 | E-83: haengende IMAP-Aufgabe, Ursache suchen |
