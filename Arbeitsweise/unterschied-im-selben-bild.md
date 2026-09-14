@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-14T05:58:46.460Z
 ---
 
-Schranke: tools/pruefe-behoben-belegt.pl (pre-commit)
+Schranke: keine - ob zwei Teile DESSELBEN Bildes verschieden bewertet wurden, entscheidet sich beim Lesen eines Bildschirmfotos, nicht am Baum
 
 # Der Befund steht im Bild, nicht im nächsten Werkzeugaufruf
 

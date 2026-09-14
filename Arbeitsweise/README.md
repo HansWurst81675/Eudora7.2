@@ -53,6 +53,7 @@ eine Datei liest, liest diese.
 | [anzeige-ist-kein-zustand](anzeige-ist-kein-zustand.md) | Ein Text aus der Oberflaeche ist eine Behauptung des Programms ueber sich selbst - E-83 suchte drei Tage ein Startproblem, das es nie gab |
 | [arbeitsbaum-braucht-eigenes-gegenstueck](arbeitsbaum-braucht-eigenes-gegenstueck.md) | Ein Arbeitsbaum-Zweig ohne eigenen Upstream hebt die Trennung auf, fuer die es Arbeitsbaeume gibt - und die fertige Ursachenerklaerung war falsch |
 | [assert-ist-im-release-nichts](assert-ist-im-release-nichts.md) | ASSERT und VERIFY sind im Release-Bau weg; bei \"es passiert nichts\" zuerst auf dem betroffenen Weg nach ASSERT(0) und VERIFY( suchen |
+| [auftrag-darf-nicht-loeschen](auftrag-darf-nicht-loeschen.md) | Ein Auftrag, der die Arbeit des Beauftragten verwirft, ist ein eigener Fehler - zwei von zwei Auftraegen trugen reset --hard |
 | [auftrag-vor-selbstbetrachtung](auftrag-vor-selbstbetrachtung.md) | Sachfrage zuerst beantworten; Selbstkritik gehoert in eine Lehre-Datei, nicht in die Antwort |
 | [ausloeser-an-den-anfang](ausloeser-an-den-anfang.md) | Eine Schranke am Ende der Arbeit beantwortet eine Frage, die am Anfang gestellt werden musste - rollen-faellig.pl hing nur am Paketbau |
 | [ausreisser-ist-der-befund](ausreisser-ist-der-befund.md) | Was in der eigenen Messausgabe steht und nicht ins Ergebnis passt, ist der Befund - nicht das Rauschen, das man wegerklaert |

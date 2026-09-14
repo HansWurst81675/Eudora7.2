@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-14T06:15:45.763Z
 ---
 
-Schranke: tools/pruefe-anzeigetext.pl (pre-commit)
+Schranke: keine - ob ein angezeigter Text den Zustand wirklich meint, zeigt erst der Lauf; im Quelltext sieht beides gleich aus
 
 # Was das Programm über sich sagt, ist kein Messwert
 
