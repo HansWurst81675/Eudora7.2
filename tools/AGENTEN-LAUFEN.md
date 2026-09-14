@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-09-14 07:20 | E-86: HTML-Nachrichten verlieren Hintergrund und Bildrahmen |

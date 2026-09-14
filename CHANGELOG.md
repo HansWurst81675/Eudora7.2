@@ -9,10 +9,11 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 13.09.2026)
+## Noch offen (Stand 14.09.2026)
 
 | Kennung | | |
 |---|---|---|
+| **E-86** | **HTML-Nachrichten werden falsch dargestellt**: Bilder in der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um verlinkte Bilder | Von Gregor am 14.09.2026 mit Bildvergleich gemeldet — dieselbe Newsletter-Mail im Webbrowser und in 7.2.0.52. **Drei Symptome, vermutlich eine Ursache:** `CTridentView` legt Eudoras eigenes `<HTML><HEAD><STYLE>…</STYLE></HEAD><BODY>` um die Nachricht und hängt sie als `<div>` hinein — die Nachricht bringt aber ihr **eigenes** vollständiges HTML mit, und MSHTML verwirft den zweiten `<head>`/`<body>`. Damit fällt weg, was dort steht: Hintergrundfarbe, `img{border:0}` und die Größenangaben für Bilder. **Gemessen ist bereits**, dass es nur das **Lesen** betrifft: der Rahmen wird ausschließlich in `TridentView.cpp` gebaut, der Verfassen-Weg (`PgCompMsgView`) fasst ihn nie an. Die Nachricht selbst bleibt unversehrt |
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
 | **E-78** | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von E-70 am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
 | **E-71** | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
@@ -20,7 +21,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
-| E-83 | **eine IMAP-Aufgabe bleibt in der Warteschlange stehen** und wird nie gestartet — *„Waiting in the task queue to be started …"* | Von Gregor am 11.09.2026 an 1.0.48 gemeldet, mit Bildschirmfoto: eine Aufgabe *Resyncing* steht in der Liste, und beim Beenden warnt Eudora *„You currently have 1 task(s) running"*. **Nicht die Zertifikatsprüfung** — im selben Lauf stand die IMAP-Verbindung und eine Mail kam an. **Drei Ursachen ausgeschlossen:** `CanScheduleTask` blockiert nur POP-Empfang derselben Persönlichkeit (`QCTaskManager.cpp:383-390`); ~~die verzögerte Einreihung scheidet aus, weil `DelayTasks` und `StartTasks` niemand aufruft~~ — **diese Ausschließung war falsch** (CHRONIST, 13.09.2026): `QCTaskGroup` ruft beide (`QCTaskManager.cpp:880-889`), und `QCTaskGroup` wird benutzt (`GetMail.cpp:136`, `sendmail.cpp:3711`, `sendmail.cpp:3770`) — die verzögerte Einreihung bleibt Kandidat; die Obergrenze `MaxConcurrentTasks` steht auf 10 und ist bei einer Aufgabe nicht erreicht. **Verdacht am 13.09.2026 von CHRONIST WIDERLEGT:** `m_pThread` wird an genau **einer** Stelle geschrieben (`QCWorkerThreadMT.cpp:43`, im Konstruktor) und im ganzen Baum **nirgends** wieder auf NULL gesetzt; jede Aufgabe aus `QueueWorkerThread` hat also einen Faden. Die einzigen `CTaskInfoMT` ohne Faden sind die `SearchManagerTaskInfo` aus `X1EmailScanner.cpp:204/741/877` — die bleiben in `TSS_CREATED` (`ScheduleTasks` fasst nur `TSS_QUEUED` an) und tragen `m_bCountTask == false` (`SearchManagerTaskInfo.cpp:48`), können die Warnung *„1 task(s) running"* also gar nicht auslösen. **Der angezeigte Text beweist nichts:** `Register` setzt *„Waiting in the task queue to be started …"* **einmal** beim Eintragen (`QCTaskManager.cpp:186`) und niemand schreibt ihn beim Start um — eine laufende oder fertige Aufgabe ohne eigenen Text sieht identisch aus. **Vier Fälle bleiben offen:** (1) `TSS_WAITING_TO_QUEUE`, (2) `TSS_QUEUED` + Regel 1 (`m_nActiveTasks == m_nMaxConcurrentTasks`), (3) `TSS_RUNNING` und im Netz hängend, (4) `TSS_COMPLETE`, nie nachbearbeitet, nie entfernt — für (4) gibt es einen belegten Weg: `RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn `IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()` (`QCTaskManager.cpp:457-462`), und `m_nStartIdle` wird **nur** in `StartTasks()` gesetzt, also nur für Aufgaben aus einer `QCTaskGroup`; IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei. Bleibt die Aufgabe liegen, wird der `CImapAction`-Destruktor nie erreicht, der `CActionQueue::ActionDone()` ruft (`ImapActionQueue.cpp:625, 3740`) — die Aktionswarteschlange bleibt für immer in `kQueueStateProcessing` und **keine weitere IMAP-Aktion läuft mehr**. **Spurmarke eingebaut** (`QCTaskManager::SpurmarkeE83`): Zustand, `m_pThread`, `m_pWinThread`, aktive Aufgaben **und** Obergrenze in **einer** Zeile, an allen Entscheidungspunkten; `SpurmarkeE83Sweep` meldet aus der Leerlaufschleife alle 15 s jede liegengebliebene Aufgabe. Einschalten mit `LogLevel=58527`. **Nächste Messung:** Gregor startet mit `LogLevel=58527`, reizt den Hänger, schickt die `E-83`-Zeilen — der Wert hinter `zustand=` entscheidet zwischen (1)–(4) |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
@@ -56,6 +56,141 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.53 — Eudora lässt sich wieder beenden (E-83)
+
+**Was Gregor damit tun kann:** Eudora beenden, ohne dass *„You currently have
+1 task(s) running"* im Weg steht. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: *„immer noch die gleiche meldung, kann deshalb eudora nicht
+beenden."* — und diesmal war die Spurmarke drin, die es entscheiden konnte.
+
+**Die Anzeige log.** Im Fenster stand *„Waiting in the task queue to be started
+…"*, im Protokoll stand:
+
+```
+E-83 liegengeblieben: uid=35 zustand=FERTIG(5) m_pThread=gesetzt
+                      aktiv=1/10 titel="Resyncing"
+```
+
+Der Zustand ist **FERTIG**. Die Aufgabe wartete nie auf ihren Start — der Text
+stammt aus `Register()` und wird nie überschrieben. Zwei Wochen lang hat dieser
+Satz die Suche in die falsche Richtung geschickt.
+
+**Die Zählung zeigt das Leck:**
+
+| | |
+|---|---|
+| fertig, Nachbearbeitung angefordert | 15 |
+| fertig, **ohne** Nachbearbeitung | **17** |
+| liegengeblieben, alle 15 s gemeldet | 17 |
+
+`QCTaskManager::RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn
+`IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()` — sonst stand dort
+**nichts**. Das war eine Sackgasse: `DoPostProcessing` arbeitet ausschließlich
+`m_PostProcessList` ab, und dort hinein kommt eine Aufgabe **nur** über
+`RequestPostProcessing()`. Auch der Leerlauf holt sie nicht nach. Sie blieb in
+`m_TaskInfoList` stehen und zählte weiter als laufend.
+
+`m_nStartIdle` wird nur in `StartTasks()` gesetzt, also für Aufgaben aus einer
+`QCTaskGroup`. IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei und
+setzen auch `IsIgnoreIdle` nicht — deshalb traf es gerade IMAP.
+
+**Zwei Vermutungen sind dabei widerlegt worden**, beide aus `BEFUNDE.md`: der
+Verdacht auf `StartWorkerThread` mit `m_pThread == NULL` (der Zeiger war in
+jeder gemessenen Zeile gesetzt), und eine der drei „ausgeschlossenen" Ursachen
+war **falsch ausgeschlossen** — `DelayTasks`/`StartTasks` werden sehr wohl
+gerufen, von `QCTaskGroup` an drei Stellen.
+
+Dass die Ursache jetzt dasteht statt einer weiteren Vermutung, liegt an einer
+Spurmarke, die Zustand, Faden, Zähler und Obergrenze in **einer** Zeile nennt.
+Zwei getrennte Zeilen hätten die Ausrede „zu anderer Zeit" offengelassen.
+
+## 7.2.0.52 — der Zeichensatz stand nie im Nachrichtenkopf (E-85, zweiter Anlauf)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen —
+auch in HTML-Newslettern, also in der Sorte Nachricht, bei der es vorher nie
+funktionierte. **Von ihm noch nicht bestätigt.**
+
+**7.2.0.51 hat den Fehler nicht behoben, und sein Test hat das gezeigt.** Seine
+Meldung: *„das ist auf jeden fall eine frische mail, ist aber falsch
+dargestellt!"* — dazu das Bild, auf dem der **Betreff richtig** und der **Rumpf
+falsch** war. Diese Kombination war der Schlüssel.
+
+### Die Ursache
+
+`CImapDownloader::Write` holte den Zeichensatz aus `m_pHd->m_TLMime`. **TL heißt
+Top Level.** Das Feld wird genau **einmal** gefüllt — beim Holen des
+Nachrichtenkopfs in `UIDFetchHeaderFull` — und beim Durchlauf durch die
+MIME-Teile nie wieder gelesen.
+
+Bei `multipart/alternative`, und das ist jeder HTML-Newsletter, steht im
+Top-Level-Header **kein `charset`**, sondern nur `boundary`. Der Zeichensatz
+steht im **einzelnen Teil**; dessen Struktur trägt ihn auch
+(`PARAMETER *parameter`, `Imapdll/public/inc/exports.h:147`) — nur hat ihn dort
+nie jemand ausgelesen.
+
+Damit hat die Behebung in 7.2.0.51 den **Suchbereich** repariert
+(`FindMIMECharset` statt einer Suche, die vor `IDS_MIME_UTF_8` endet) und
+durchsuchte weiterhin die **falsche Quelle**. Bei einer einteiligen
+`text/plain`-Nachricht steht der Zeichensatz tatsächlich im Nachrichtenkopf —
+dort war der Weg immer richtig, und **deshalb ist es nie aufgefallen**.
+
+Zwei Gegenproben, beide am Quelltext: in ganz `EuImap` gibt es **keine zweite
+Stelle**, die den Zeichensatz eines Teils liest; und die einzige weitere
+Verwendung von `charset` ist `Translate2047` im **Kopfzeilen**weg — genau
+deshalb war der Betreff richtig.
+
+### Die Behebung
+
+Neues Feld `m_szCurrentCharset`, gesetzt an denselben drei Stellen, an denen
+schon `m_CurrentBodyType` und `m_szCurrentBodySubtype` gesetzt werden, gefüllt
+aus `body->parameter`. Der Zeichensatz des Teils hat Vorrang, der
+Nachrichtenkopf bleibt Rückfall.
+
+**Dazu die Spurmarke, die von Anfang an hätte dastehen müssen.** Sie nennt
+**beide** Quellen in **einer** Zeile:
+
+```
+E-85 imap: teil-charset=… tl-charset=… idx=… uebersetzt=… typ=…/… zeilenweise=…
+```
+
+Einmal je Nachrichtenteil, nicht je Block. Ohne sie ließ sich nicht
+unterscheiden, ob der Übersetzungsweg nicht greift oder ob nur eine alte
+Nachricht angezeigt wird — und genau diese Unterscheidung hat einen ganzen
+Testdurchgang gekostet.
+
+### E-83: eine Vermutung widerlegt, eine neue Spur
+
+Der Verdacht, der seit dem 11.09.2026 in `BEFUNDE.md` stand — `StartWorkerThread`
+tue bei `m_pThread == NULL` stumm nichts — **hält nicht**. `m_pThread` wird an
+genau einer Stelle geschrieben und nirgends wieder auf NULL gesetzt.
+
+Außerdem war eine der drei „ausgeschlossenen" Ursachen **falsch
+ausgeschlossen**: die Doku behauptete, `DelayTasks`/`StartTasks` rufe niemand
+auf — tatsächlich ruft `QCTaskGroup` beide, und die wird an drei Stellen
+benutzt.
+
+Der neue, stärkste Kandidat: `RemoveWorkerThread` fordert die Nachbearbeitung
+nur unter zwei Bedingungen an, und IMAP-Aktionen aus `CActionQueue::OnIdle`
+laufen daran vorbei. Bleibt eine Aufgabe liegen, wird der Destruktor von
+`CImapAction` nie erreicht, der `ActionDone()` ruft — **die Aktionswarteschlange
+bleibt für immer in Bearbeitung und keine weitere IMAP-Aktion läuft**. Das wäre
+zugleich die Erklärung dafür, dass nichts Neues abgerufen wird. Noch **nicht**
+am laufenden Programm gemessen, deshalb nicht behoben — aber die Spurmarke
+dafür ist drin und meldet alle 15 Sekunden jede liegengebliebene Aufgabe.
+
+### Zum Prüfen
+
+**Eine schon abgerufene Nachricht bleibt kaputt.** Die Übersetzung passiert beim
+**Abruf** und landet in der Mailboxdatei; die Anzeige liest nur, was dort steht.
+Es muss also eine **neue** Nachricht sein.
+
+**Emoji werden zu `?`, und das ist richtig** — die Mailboxdatei speichert
+CP1252, darin gibt es kein Emoji. Umlaute, Anführungszeichen, Gedankenstrich und
+Eurozeichen müssen dagegen stimmen.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
 
 ## 7.2.0.51 — Umlaute in per IMAP abgerufenen Nachrichten (E-85)
 

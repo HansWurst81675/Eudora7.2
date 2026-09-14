@@ -82,6 +82,39 @@ const	unsigned long	_MAGICNUMBER4	= 98754911;
 const int	iUnsetCharsetIdx = -2;
 
 //
+// E-85, zweiter Befund: Zeichensatz aus dem Kopf EINES Teils holen.
+//
+// Der Zeichensatz einer multipart-Nachricht steht NICHT im Kopf der
+// Nachricht, sondern im Kopf des einzelnen Teils. Die Parameterliste eines
+// Teils ist einfach verkettet (Imapdll/public/inc/exports.h, PARAMETER mit
+// attribute/value/next). Der Vergleich muss ohne Ruecksicht auf Gross- und
+// Kleinschreibung erfolgen: "CHARSET", "Charset" und "charset" sind
+// dasselbe, RFC 2045 laesst alle drei zu.
+//
+static CString CharsetAusTeil (BODY * in_pBody)
+{
+	CString szCharset;
+
+	if (!in_pBody)
+		return szCharset;
+
+	CRString szName (IDS_MIME_CHARSET);
+
+	for (PARAMETER * pParam = in_pBody->parameter; pParam; pParam = pParam->next)
+	{
+		if (pParam->attribute && pParam->value &&
+			stricmp (pParam->attribute, (LPCSTR)szName) == 0)
+		{
+			szCharset = pParam->value;
+			break;
+		}
+	}
+
+	return szCharset;
+}
+
+
+//
 // Sizes of fields in an attachment stub file.
 //
 const long	AtfImapNameSize			= 256;		// Full imap name
@@ -207,6 +240,10 @@ CImapDownloader::CImapDownloader(unsigned long AccountID, CImapConnection* pImap
 	// Initialize to TYPETEXT.
 
 	m_CurrentBodyType	= TYPETEXT;
+
+	// E-85: Zeichensatz des aktuell geladenen Teils, leer wenn der Teil
+	// keinen nennt. Dann gilt der Kopf der Nachricht als Rueckfall.
+	m_szCurrentCharset.Empty();
 
 	// Until proven guilty.
 	m_bIsMhtml			= FALSE;
@@ -2797,6 +2834,7 @@ BOOL CImapDownloader::DownloadSimpleBody (IMAPUID uid, BODY *pBody, LPSTR pSecti
 	// Tell everyone what body type we're downloading.
 	m_CurrentBodyType = pBody->type;
 	m_szCurrentBodySubtype = pBody->subtype;
+	m_szCurrentCharset = CharsetAusTeil (pBody);	// E-85: Zeichensatz des Teils
 
 	// If this body has a disposition, use use that internally:
 	// Default to the "current" disposition type.
@@ -3033,6 +3071,7 @@ BOOL CImapDownloader::DownloadAllParts (IMAPUID uid, BODY *pParentBody, LPCSTR p
 		// Tell everyone what body type and subtype we're downloading.
 		m_CurrentBodyType		= body->type;
 		m_szCurrentBodySubtype	= body->subtype;
+		m_szCurrentCharset		= CharsetAusTeil (body);	// E-85
 
 		switch (body->type)
 		{
@@ -3282,6 +3321,7 @@ BOOL CImapDownloader::HandleMultipartAlternative (IMAPUID uid, BODY *pParentBody
 		// Tell everyone what body type and subtype we're downloading.
 		m_CurrentBodyType		= pBodyToDownload->type;
 		m_szCurrentBodySubtype	= pBodyToDownload->subtype;
+		m_szCurrentCharset		= CharsetAusTeil (pBodyToDownload);	// E-85
 		strcpy(section, szAltSection);
 
 		switch (pBodyToDownload->type)
@@ -4358,6 +4398,8 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 	int nReadStatus = -1;
 	BOOL bIsFirstLine = TRUE;
 	int iCharsetIdx = iUnsetCharsetIdx;
+	CString szE85TLCharset;		// E-85 Spurmarke: Zeichensatz aus dem Kopf der Nachricht
+	BOOL	bE85Gemeldet = FALSE;	// E-85 Spurmarke: nur einmal je Nachrichtenteil
 
 	// Sanity:
 	if (! (readfn && read_data) )
@@ -4668,9 +4710,7 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 							//
 							// Jetzt dieselbe Funktion wie im POP3-Weg
 							// (mime.cpp:382), damit es nur noch eine Skala gibt.
-							iCharsetIdx = FindMIMECharset(params->value);
-							if (iCharsetIdx < 0)
-								iCharsetIdx = 0;
+							szE85TLCharset = params->value;	// E-85: nur merken, Auswahl unten
 							break;
 						}
 						else
@@ -4679,6 +4719,63 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 						}
 					}
 				}
+
+				// E-85, zweiter Befund: bis hierher wurde NUR der Kopf der
+				// Nachricht durchsucht. m_TLMime ist der TOP-LEVEL-Kopf
+				// (Eudora/header.h:113), gefuellt aus UIDFetchHeaderFull
+				// (diese Datei, Zeile ~820). Bei einer multipart-Nachricht -
+				// und jeder HTML-Newsletter ist multipart/alternative - steht
+				// dort KEIN charset, sondern nur die boundary. Die Schleife
+				// oben lief ins Leere, iCharsetIdx blieb 0, es wurde nicht
+				// uebersetzt. Genau Gregors Bild: Betreff richtig (anderer
+				// Weg, Translate2047 in ImapLex822.cpp), Rumpf falsch.
+				// Der Zeichensatz des TEILS (body->parameter) hat Vorrang,
+				// der Kopf der Nachricht bleibt der Rueckfall - der traegt
+				// ihn bei einer einteiligen text/plain-Nachricht.
+				CString szGewaehlt = m_szCurrentCharset;
+
+				if (szGewaehlt.IsEmpty())
+					szGewaehlt = szE85TLCharset;
+
+				if (!szGewaehlt.IsEmpty())
+				{
+					iCharsetIdx = FindMIMECharset (szGewaehlt);
+					if (iCharsetIdx < 0)
+						iCharsetIdx = 0;
+				}
+			}
+
+			// E-85 Spurmarke: alle Werte des Uebersetzungswegs in EINER Zeile,
+			// einmal je Nachrichtenteil - nicht je Chunk, das waere bei
+			// 8192-Byte-Bloecken eine Flut. Zwei getrennte Zeilen liessen die
+			// Ausrede "zu anderer Zeit" offen, siehe
+			// Arbeitsweise/zwei-werte-in-eine-ausgabe.md.
+			// Maske: RCV wie die beiden anderen Stellen dieser Datei, dazu
+			// RCVD, damit die Marke auch bei der kleineren Protokollstufe
+			// "Log receipt of a message" erscheint.
+			if (!bE85Gemeldet)
+			{
+				static const char * const szE85Typen[] = {
+					"text", "multipart", "message", "application", "audio",
+					"image", "video", "model", "other", "bogusmulti" };
+
+				const char * szE85Typ = "typ?";
+				if (m_CurrentBodyType < (sizeof(szE85Typen) / sizeof(szE85Typen[0])))
+					szE85Typ = szE85Typen[m_CurrentBodyType];
+
+				CString szE85Zeile;
+				szE85Zeile.Format(
+					"E-85 imap: teil-charset=%s tl-charset=%s idx=%d uebersetzt=%s typ=%s/%s zeilenweise=%s",
+					m_szCurrentCharset.IsEmpty()? "(keiner)" : (LPCSTR)m_szCurrentCharset,
+					szE85TLCharset.IsEmpty()? "(keiner)" : (LPCSTR)szE85TLCharset,
+					iCharsetIdx,
+					(iCharsetIdx > 2)? "ja" : "nein",
+					szE85Typ,
+					(LPCSTR)m_szCurrentBodySubtype,
+					m_bMustReadSingleLines? "ja" : "nein");
+
+				::PutDebugLog(DEBUG_MASK_RCV | DEBUG_MASK_RCVD, szE85Zeile);
+				bE85Gemeldet = TRUE;
 			}
 
 			// E-85: seit FindMIMECharset gilt hier dieselbe Skala wie im
