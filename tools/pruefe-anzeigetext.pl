@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+# Liefert entmojibake_nur_kodierung_gefiltert().
+use FindBin;
+require "$FindBin::Bin/entmojibaken.pl";
+
 # pruefe-anzeigetext.pl - ein zitierter Oberflaechentext ist eine Behauptung
 # des Programms ueber sich selbst, kein Messwert.
 #
@@ -206,44 +210,18 @@ sub zeilen_aus_diff {
     my $cmd = defined $bereich
             ? "git show $bereich --format= --unified=0 -- $DATEI 2>&1"
             : "git diff --cached --unified=0 -- $DATEI 2>&1";
-    my @aus = `$cmd`;
-
-    # Reine Umkodierungen sind keine neuen Zeilen.
-    #
-    # Am 14.09.2026 wurde BEFUNDE.md zurueckkodiert - 1517 von 7829 Zeilen,
-    # die vorher doppelt UTF-8-kodiert waren. Fuer git ist jede davon
-    # geaendert, und diese Schranke meldete daraufhin vier Zitate ohne
-    # Herkunft, deren Text sich um kein Zeichen geaendert hatte. Ein
-    # Fehlalarm kostet dasselbe wie eine stumme Schranke
-    # (Arbeitsweise/schranke-gegentesten.md).
-    #
-    # Deshalb: eine hinzugefuegte Zeile zaehlt nur, wenn nicht dieselbe Zeile
-    # mit demselben ASCII-Geruest entfernt wurde. Dieselbe Korrektur steckt
-    # in tools/pruefe-behoben-belegt.pl, die am selben Tag aus demselben
-    # Grund 42 Fehlalarme geworfen hat.
-    my %geruest_entfernt;
-    for my $z (@aus) {
-        next unless $z =~ /^-[^-]/;
-        my $g = $z;
-        $g =~ s/^-//;
-        $g =~ s/\r?\n$//;
-        $g =~ s/[\x80-\xff]//g;
-        $geruest_entfernt{$g} = 1;
+    my (@neu, @alt);
+    for my $z (`$cmd`) {
+        if ($z =~ /^\+[^+]/) {
+            (my $t = $z) =~ s/^\+//; $t =~ s/\r?\n$//; push @neu, $t;
+        }
+        elsif ($z =~ /^-[^-]/) {
+            (my $t = $z) =~ s/^-//;  $t =~ s/\r?\n$//; push @alt, $t;
+        }
     }
-
-    my @neu;
-    for my $z (@aus) {
-        next unless $z =~ /^\+[^+]/;
-        $z =~ s/^\+//;
-        $z =~ s/\r?\n$//;
-
-        my $g = $z;
-        $g =~ s/[\x80-\xff]//g;
-        next if $geruest_entfernt{$g};
-
-        push @neu, $z;
-    }
-    return @neu;
+    # Eine rein umkodierte Zeile ist kein Zuwachs - siehe Kommentar bei
+    # entmojibake_nur_kodierung_gefiltert() in entmojibaken.pl.
+    return entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
 }
 
 sub zeilen_aus_datei {

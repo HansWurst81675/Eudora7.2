@@ -6790,7 +6790,7 @@ SMTP-Anmeldeweg, sind aber nur erreichbar, wenn der Server buchstäblich
 Gregor am 05.09.2026, Fassung 7.2.0.4, im Vorschaufenster einer abgerufenen
 Nachricht — beides in **derselben Anzeige**:
 
-    "BestTV (U-TV) Android Player für LiveTV"      falsch
+    "BestTV (U-TV) Android Player fÃ¼r LiveTV"      falsch
     "Fritzbox als Werbe-Filter: So läuft Blocken"   richtig
 
 Das `ä` stimmt, das `ü` nicht. `fÃ¼r` ist die Signatur „UTF-8-Bytes als CP1252

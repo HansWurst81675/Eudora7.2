@@ -287,7 +287,7 @@ gestartet, **keine C++-Quelldatei angefasst**. Alle Aenderungen sind Text.
 
 Der Commit `2107a85` („README.md und ZIEL.md auf den Stand vom 31.08.2026
 gebracht") hat **40 Zeilen von `ZIEL.md` doppelt UTF-8-kodiert** hinterlassen —
-aus der Ueberschrift wurde `# Was âlauffÃ¤hig" heiÃt`. `HEAD~1` war sauber, die
+aus der Ueberschrift wurde `# Was âlauffähig" heiÃt`. `HEAD~1` war sauber, die
 uebrigen 44 Dateien sind es auch (gemessen ueber alle `*.md`).
 
 Berichtigt per Latin-1-Rundlauf, aber **nur auf Zeilen mit Mojibake-Marker**:
