@@ -56,6 +56,97 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.56 — die weitergeleitete Nachricht kommt an, wie sie gelesen wurde (E-88)
+
+**Was Gregor damit tun kann:** einen Newsletter weiterleiten oder
+beantworten und darauf zählen, dass der Empfänger ihn mit Kästen,
+Hintergründen, richtigen Bildgrößen und Emoji sieht — also so, wie Gregor
+ihn beim Lesen vor sich hatte. **Von ihm noch nicht bestätigt.**
+
+Das ist die zweite Hälfte von **E-87**. Dort wurde erreicht, dass HTML
+überhaupt zitiert wird; hier geht es darum, dass es den Verfassen-Editor
+unbeschädigt überlebt. Seine Entscheidung zur Umsetzung: *„ich nehme deine
+empfehlung."*
+
+### Warum es keinen anderen Weg gab
+
+Verfasst wird mit **Paige**. Dessen HTML-Leser kennt **keine einzige
+CSS-Eigenschaft** (`PGHTMDEF.C:20-48`), aus `div` wertet er allein `align`
+aus (`PGHTMIMP.CPP:1193-1201`). Von **1506** `<img>` in Gregors Postfach
+tragen **1262** ihre Größe als HTML-Attribut — die kann Paige
+(`PGHTMIMP.CPP:1897-1916`) —, **162 nur als CSS**; die erschienen in
+Originalgröße und überlagerten den Text. Ein zweiter, HTML-fähiger Editor
+steht nicht zur Verfügung: Trident-Ansichten gibt es nur zum Lesen,
+`CCompMessageFrame` erzeugt fest `PgCompMsgView`.
+
+Den Editor HTML beibringen war also ausgeschlossen. Bleibt: den Editor
+umgehen.
+
+### Was jetzt passiert
+
+`CSummary::ComposeMessage` legt den Rumpf, wie `QuoteText` ihn gebaut hat,
+im Verfassendokument ab (`summary.cpp:1497`). `PgMsgView::ExportMessage`
+(`PgMsgView.cpp:407`) — die eine Stelle, an der die Editor-Fassung über
+`pDoc->SetText()` zum Rumpf der Nachricht wird und damit auf die Leitung
+geht (`sendmail.cpp:3368`) — setzt statt ihrer das Original ein, **sobald
+sich belegen lässt, dass im Zitat nichts geändert wurde.**
+
+Der Beleg ist ein zustandsloser Vergleich: der Klartext des Originals
+(Markierungen weg, Entitäten und alles über 127 zu `?`, Leerraum
+zusammengezogen) muss sich im Klartext der Editor-Fassung als **ein
+zusammenhängendes Stück** wiederfinden. Was davor und dahinter steht, ist
+Gregors eigener Text und wird wieder angesetzt. Findet sich das Original
+nicht — weil im Zitat etwas geändert wurde —, bleibt es bei der
+Editor-Fassung.
+
+**Warum gerade dieses Verfahren:** es braucht keinen gemerkten Vorzustand,
+keinen Änderungszähler und keine Annahme darüber, wo der Anwender tippt.
+Paiges eigener Zähler (`PaigeEdtView.h:192-193`) taugte nicht, weil jedes
+Zwischenspeichern ihn zurücksetzt (`compmsgd.cpp:1815`). Die Annahme „der
+Zusatz steht immer vorn" taugte nicht, weil eine angehängte Signatur
+dahinter steht. Und eine von Hand gebaute MIME-Nachricht mit zwei Teilen
+hätte an `sendmail.cpp` vorbei eine zweite Erzeugung aufgemacht — zu viel
+Fläche für einen Fehler, den vor dem Absenden niemand sieht.
+
+### Die beiden Sicherungen
+
+Sie sind Bedingung, nicht Zugabe — das Verfassenfenster zeigt ja etwas
+anderes als das, was hinausgeht.
+
+* **Zwei Spurmarken**, beide `DEBUG_MASK_MISC` (`LogLevel=58527`).
+  `E-88 vor dem Absenden` nennt die gewählte Fassung und den Grund, beide
+  Größen, die Länge des eigenen Zusatzes davor und dahinter und den
+  Antworttyp. `E-88 auf der Leitung` nennt, was **wirklich** hinausgeht.
+* **Der Schalter `ForwardOriginalHTML`** (Vorgabe `1`, `[Settings]`,
+  `EudoraRes.rc:7668`). Mit `0` gilt wieder das Verhalten von 7.2.0.55.
+  Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitt 3.
+
+### Was das NICHT behebt
+
+* **Das Verfassenfenster bleibt schlicht.** Paige kann weiterhin kein CSS,
+  und daran ändert der Umbau nichts — er ändert nur, was hinausgeht.
+* **Wer im zitierten Teil etwas ändert, bekommt wieder die alte Fassung.**
+  Das ist Absicht: sonst ginge die Änderung verloren.
+* **Der eigene Zusatz geht als reiner Text hinaus**, nicht mit seiner
+  Auszeichnung.
+* **Nach dem Schließen des Verfassenfensters ist das Original fort.** Wird
+  die Nachricht später aus *Out* erneut geöffnet, gilt wieder das alte
+  Verhalten; die Spurmarke sagt dann `EDITOR (kein Original gemerkt)`.
+
+### Zum Prüfen
+
+1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Settings]`.
+2. Starten, den Newsletter aus **E-86** weiterleiten — einmal ohne
+   Kommentar, einmal mit einem Satz darüber. Beide an die eigene Adresse.
+3. Im Protokoll nach `E-88` suchen. Erwartet: `Fassung=ORIGINAL
+   (unveraendert)` beim ersten, `Fassung=ORIGINAL (mit Zusatz)` beim
+   zweiten, und `E-88 auf der Leitung` mit `IsFancy=2` (HTML).
+4. Die angekommenen Nachrichten neben das Original halten.
+
+Steht dort `Fassung=EDITOR`, sagt der Klammerzusatz den Grund.
+
+---
+
 ## 7.2.0.55 — HTML bleibt erhalten, beim Lesen wie beim Weiterleiten (E-86, E-87)
 
 **Was Gregor damit tun kann:** eine HTML-Nachricht weiterleiten oder
@@ -120,9 +211,10 @@ eines modernen Newsletters. Das ist keine Stelle, die HTML wegwirft, sondern
 ein Editor, der es nicht halten kann — dafür reicht kein Schalter. Als Grenze
 dokumentiert in `EINSTELLUNGEN.md`.
 
-**Offen und Gregors Entscheidung:** ob der Original-HTML-Block am Paige-Editor
-vorbeigeführt und beim Senden wieder eingesetzt werden soll. Das ist ein
-Eingriff in den Sendeweg, kein Schalter.
+**Seit 7.2.0.56 erledigt:** der Original-HTML-Block wird am Paige-Editor
+vorbeigeführt und beim Senden wieder eingesetzt (**E-88**, Abschnitt
+darüber). CSS-Kästen und -Hintergründe kommen damit beim Empfänger an —
+im Verfassenfenster sind sie weiterhin nicht zu sehen.
 
 ### Und die Anzeige: HTML-Nachrichten sehen aus wie im Browser (E-86)
 

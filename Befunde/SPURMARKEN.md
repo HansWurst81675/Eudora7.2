@@ -77,6 +77,7 @@ Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
 | **E-73** | 1 | `filtersd.cpp` | wenn eine Filteraktion auf dem Server löschen wollte — mit Filtername, Betreff und dem Urteil `VERWEIGERT` oder `ERLAUBT` |
 | **E-80** | 3 | `TridentView.cpp`, `PgReadMsgView.cpp` | Trident (die Stelle, die zaehlt): Zustand des Knopfes, `m_bWasConcentrated`, `ShouldShowAllHeaders()` und das Ergebnis in einer Zeile. Paige: wie viele Kopfzeilen als taboo markiert wurden, wie viele Listeneintraege es gibt und was der Knopf am Stil umschaltet — diese drei schweigen bei Gregor, weil seine Nachrichten ueber Trident laufen |
 | **E-76** | 1 | `OTShim.cpp` | Größenänderung einer schwebenden Leiste: `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating`, Maße vorher und nachher |
+| **E-88** | 2 | `PgMsgView.cpp`, `sendmail.cpp` | **Die wichtigste Sicherung des HTML-Umbaus.** `E-88 vor dem Absenden` nennt in einer Zeile die gewählte Fassung (`ORIGINAL` oder `EDITOR`, mit dem Grund), den Stand des Schalters `ForwardOriginalHTML`, die Größe beider Fassungen und der neuen, die Länge des eigenen Zusatzes vor und hinter dem Zitat sowie den Antworttyp. `E-88 auf der Leitung` nennt, was **wirklich** hinausgeht: Größe, `IsFancy`, `IsXRich`, `IsHTML`, `SendPlainOnly` und den Betreff. **Warum beide:** das Verfassenfenster zeigt immer die schlichte Paige-Fassung — ohne diese zwei Zeilen merkte niemand, wenn eine kaputte Nachricht hinausginge |
 
 ### Wie man das benutzt
 
@@ -93,10 +94,11 @@ weiß, ist so nutzlos wie keine. Bis zum 10.09.2026 kannte diese Datei fünf
 von neunzehn — die übrigen vierzehn lagen im Quelltext und schrieben
 mit, ohne dass jemand sie zuordnen konnte.
 
-**Wo noch nie gemessen wurde:** Mailversand und -abruf. Dort gibt es
-Eudoras eigene Schalter (`RCVD` 2, `TRANS` 32, `RCV` 64, `LMOS` 8192), aber
-keine Marke aus dieser Portierung. Wenn dort etwas auftaucht, gehört eine
-gesetzt — nicht auf Vorrat.
+**Wo noch nie gemessen wurde:** der Mailabruf. Im **Versand** steht seit
+E-88 die Marke `E-88 auf der Leitung` (`sendmail.cpp`, in `WriteBody`).
+Für den Abruf gibt es Eudoras eigene Schalter (`RCVD` 2, `TRANS` 32,
+`RCV` 64, `LMOS` 8192), aber keine Marke aus dieser Portierung. Wenn dort
+etwas auftaucht, gehört eine gesetzt — nicht auf Vorrat.
 
 ## Prüfen
 
