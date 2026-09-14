@@ -113,13 +113,26 @@ Fläche für einen Fehler, den vor dem Absenden niemand sieht.
 Sie sind Bedingung, nicht Zugabe — das Verfassenfenster zeigt ja etwas
 anderes als das, was hinausgeht.
 
-* **Zwei Spurmarken**, beide `DEBUG_MASK_MISC` (`LogLevel=58527`).
+* **Drei Spurmarken**, alle `DEBUG_MASK_MISC` (`LogLevel=58527`).
   `E-88 vor dem Absenden` nennt die gewählte Fassung und den Grund, beide
   Größen, die Länge des eigenen Zusatzes davor und dahinter und den
   Antworttyp. `E-88 auf der Leitung` nennt, was **wirklich** hinausgeht.
+  `E-88 eingebettete Teile` meldet, wenn das Aufräumen der eingebetteten
+  Bilder übersprungen wurde — dazu der Abschnitt darunter.
 * **Der Schalter `ForwardOriginalHTML`** (Vorgabe `1`, `[Settings]`,
   `EudoraRes.rc:7668`). Mit `0` gilt wieder das Verhalten von 7.2.0.55.
   Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitt 3.
+
+### Die Bilder mussten mitgesichert werden
+
+`PgMsgView::SaveInfo` warf bisher jeden eingebetteten Teil weg, dessen
+`cid:`-Kennung im Paige-Inhalt nicht mehr vorkam. Das ist richtig, solange
+die Paige-Fassung die Nachricht ist — setzt `ExportMessage` gleich darauf
+das Original ein, zeigt dieses auf bereits gelöschte Teile, und beim
+Empfänger fehlte das Bild **ohne jede Meldung**. Solange ein Original
+aufgehoben ist, unterbleibt das Aufräumen; der Preis sind höchstens ein
+paar unreferenzierte Teile in der Nachricht — derselbe Zustand, in dem sie
+vor dieser Schleife ohnehin war.
 
 ### Was das NICHT behebt
 

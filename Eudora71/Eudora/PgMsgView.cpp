@@ -512,7 +512,44 @@ HRESULT PgMsgView::SaveInfo()
 		CString ech = "";
 		pMsg->GetEmbeddedObjectHeaders( ech );
 
-		if ( !ech.IsEmpty() ) {
+		//
+		// BEFUND E-88: das Aufraeumen darf nicht laufen, wenn gleich das
+		// Original eingesetzt werden koennte.
+		//
+		// Die Schleife darunter wirft jeden eingebetteten Teil (Bild) weg,
+		// dessen Kennung im Paige-Inhalt nicht mehr vorkommt. Das ist
+		// richtig, solange die Paige-Fassung die Nachricht ist. Setzt
+		// ExportMessage gleich darauf das Original ein, zeigt dieses noch
+		// auf "cid:"-Kennungen, deren Teile hier bereits geloescht waeren -
+		// beim Empfaenger fehlte dann das Bild, und zwar ohne jede Meldung.
+		//
+		// Der Preis, wenn am Ende doch die Editor-Fassung genommen wird:
+		// ein paar unreferenzierte Teile bleiben in der Nachricht. Das ist
+		// derselbe Zustand, in dem sie vor dieser Schleife ohnehin war -
+		// ein fehlendes Bild waere teurer als ein ueberzaehliger Teil.
+		//
+		bool	bE88OriginalMoeglich = false;
+
+		if ( pDoc->IsKindOf(RUNTIME_CLASS(CCompMessageDoc)) )
+		{
+			CCompMessageDoc *	pComp = (CCompMessageDoc *) pDoc;
+
+			bE88OriginalMoeglich =
+				!pComp->m_szE88OriginalHTML.IsEmpty() &&
+				(GetIniShort(IDS_INI_FORWARD_ORIGINAL_HTML) != 0);
+		}
+
+		if ( !ech.IsEmpty() && bE88OriginalMoeglich )
+		{
+			CString		szSpur;
+			szSpur.Format(
+				"E-88 eingebettete Teile: Aufraeumen uebersprungen, weil ein "
+				"Original aufgehoben ist - Kopfzeilen=%d Bytes",
+				ech.GetLength() );
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		}
+
+		if ( !ech.IsEmpty() && !bE88OriginalMoeglich ) {
 			char* eoList = 0;
 			EnumEmbeddedObjects( &eoList );
 
