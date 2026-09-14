@@ -292,10 +292,38 @@ my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
 sub doppelkodiert {
   my ($s) = @_;
   return 0 unless defined $s;
+
+  # AUSNAHME, eng gefasst: eine kaputte Bytefolge, die jemand ZEIGT, steht in
+  # Anfuehrung - in Backticks oder in Anfuehrungszeichen. Wer sie versehentlich
+  # erzeugt, erzeugt sie im Fliesstext.
+  #
+  # Gemessen am 14.09.2026: in BEFUNDE.md stehen drei solche Belege, alle drei
+  # angefuehrt, alle drei absichtlich:
+  #
+  #     5437   ... stuenden dort **zwei** Zeichen (`A-Tilde u`). Der ...
+  #     6793       "BestTV (U-TV) Android Player fA-Tilde-ur LiveTV"   falsch
+  #     6796   Das `ae` stimmt, das `ue` nicht. `fA-Tilde-ur` ist die Signatur ...
+  #
+  # Sie belegen, WIE der Schaden aussieht - zu E-85 und NP3-8. Wer sie
+  # repariert, nimmt dem Befund seinen Beweis. Ohne diese Ausnahme muss man
+  # die Schranke mit --no-verify umgehen, um ihre eigene Regel durchzusetzen,
+  # und eine Schranke, die man umgehen muss, ist die falsche Schranke
+  # (Arbeitsweise/schranke-gegentesten.md).
+  #
+  # Warum das nicht als Schlupfloch taugt: ein Werkzeug, das eine Datei als
+  # Latin-1 liest und als UTF-8 zurueckschreibt - der Fall, um den es hier
+  # geht (X-7, README.md am 05.09.2026: 238 Stellen) - trifft jedes Wort, nicht
+  # nur die eingerahmten. Von 1517 beschaedigten Zeilen in BEFUNDE.md waren
+  # genau diese drei angefuehrt.
+  my $t = $s;
+  $t =~ s/`[^`\n]*`//g;                                   # Backticks
+  $t =~ s/"[^"\n]*"//g;                                   # gerade Anfuehrung
+  $t =~ s/\xe2\x80\x9e[^\n]*?\xe2\x80\x9c//g;             # deutsche Anfuehrung
+
   my $n = 0;
-  $n += () = $s =~ /\xC3\x83\xC2/g;
-  $n += () = $s =~ /\xC3\xA2\xC2\x80/g;
-  $n += () = $s =~ /\xC3\x82\xC2/g;
+  $n += () = $t =~ /\xC3\x83\xC2/g;
+  $n += () = $t =~ /\xC3\xA2\xC2\x80/g;
+  $n += () = $t =~ /\xC3\x82\xC2/g;
   return $n;
 }
 
