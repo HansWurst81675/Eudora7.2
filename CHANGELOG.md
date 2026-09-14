@@ -91,6 +91,11 @@ Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt)
 
 **Tests: 150 von 150.**
 
+**Neu aufgeschrieben, nicht behoben:** die Betreffzeile wird mitten im Wort
+umbrochen (`Toner bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
+denen Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Ursache
+noch ungemessen, siehe [BEFUNDE.md](BEFUNDE.md) unter E-94.
+
 ## 7.2.0.59 — kein Inhaltsverlust mehr beim Weiterleiten (E-93), und die Fragezeichen sind weg (E-90)
 
 > **Noch nicht bestätigt.** Die Prüfanleitung steht unten.

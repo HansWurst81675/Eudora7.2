@@ -37,6 +37,7 @@ gelesen (`Arbeitsweise/lehren-anwenden-nicht-nur-schreiben.md`).
 | `e88-html-durchreichen` | 14.09.2026 | Gregor kennt den Namen und hat den Zweig gemergt (*„kann ich jetzt übernehmen?" — „gemerged"*). Vorher vereinbart war er **nicht**; er steht hier, weil er benutzt wird, nicht als Beleg für eine Absprache |
 | `qcssl-1.0.2` | 13.09.2026 | von Gregor ausdrücklich genehmigt: *„qcssl-1.0.2 ist genehmigt. aber erst bringen wir die aktuelle aufgabe zu ende."* — noch nicht angelegt |
 | `e89-zeilenhoehe` | 14.09.2026 | von Gregor bestätigt: *„e89-zeilenhoehe / paßt"*. Die Bildhöhe ging in die Zeilenhöhe nicht ein — `PGHTMIMP.CPP:2111` überschrieb sie mit einem Wert aus dem Textstil |
+| `e94-betreff-faltung` | 14.09.2026 | von Gregor bestätigt: *„e94 branch name paßt"*. Der Faltungsbefund E-94 und die Unterscheidung eingebetteter von externen Bildern (E-95) |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
