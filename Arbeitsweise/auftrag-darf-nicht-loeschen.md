@@ -89,8 +89,7 @@ Misstrauen am unwahrscheinlichsten ist.
    ([[erst-pruefen-dann-anweisen]], [[messung-muss-den-weg-treffen]]).
 
 **Gegengetestet im Wegwerf-Repo**, `tools/arbeitsbaum-angleichen-tests.sh`,
-**12 Proben**, alle grün (am 14.09.2026 gebaut und gefahren; die Lehre
-nannte zuerst 11 — gezählt wurden vier Lagen mit zusammen zwölf Pruefungen) — vier Lagen:
+**11 Proben**, alle grün — vier Lagen:
 
 | Lage | geprüft wird |
 |---|---|
