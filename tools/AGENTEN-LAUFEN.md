@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-09-14 13:04 | Alle MDs gegen den Bestand 7.2.0.56 pruefen; Versionsrueckstaende in FILTER.md, ZIEL.md, tools/RELEASES.md, tools/WERKZEUGE.md, tools/ZWEIGE.md |
