@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 13.09.2026.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.50** dazugekommen; was in ihnen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md), Abschnitt für Abschnitt. Hier fehlen sie. Ausführliche
+> **Diese Buchführung ist unvollständig — Stand 14.09.2026.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.50** dazugekommen; was in ihnen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md), Abschnitt für Abschnitt. Hier fehlen sie. Ausführliche
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**

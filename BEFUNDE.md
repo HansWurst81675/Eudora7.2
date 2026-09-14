@@ -120,8 +120,8 @@ zuerst **E-11**, **R-1** und **E-1**.
 | NP3-5 | `lehren-spiegeln.pl` war genau im Fehlerfall stumm | **behoben** (X-2) |
 | NP3-6 | `pruefstand-melden.pl` gibt aus dem falschen Verzeichnis Entwarnung | **behoben** |
 | NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** (Prüfstandsmarke) |
-| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **offen** |
-| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **teilweise** (POP behoben, IMAP offen) |
+| NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **behoben** in 7.2.0.52, am laufenden Programm belegt. **Dieser Befund stand hier, als Gregor am 13.09.2026 denselben Fehler als E-85 meldete — und wurde nicht gelesen.** Er nannte die Ursache, die Zeilennummern und die Handlungsanweisung („denselben Aufruf verwenden wie `mime.cpp:382-390`, am besten durch Aufruf von `FindMIMECharset` selbst, und die Abfrage in Zeile 4657 auf `> 2` ziehen"). Genau so wurde es behoben — nur über zwei Anläufe und eine ausgelieferte Zwischenfassung hinweg. Siehe **E-85** |
+| NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **behoben** — POP schon früher, **IMAP in 7.2.0.51** (`ImapDownload.cpp`, `inLen`/`outLen` werden nachgezogen). Auch dieser Befund stand bereits hier, als derselbe Mangel unter **E-85** neu gesucht wurde |
 | PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
 
 ## Start, Paket, Auslieferung (S)
@@ -168,7 +168,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-6 | Bau-Lauf: geratene Plattform (`MSB4126`) und Erfolgsmeldung ohne Bau; `tools/bauen.ps1` | **behoben** — das Werkzeug steht, drei Gegenproben grün |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt | **offen** — gemessen am 07.09.2026 mit `tools/releasebuffer-pruefen.pl`: **137** Vorkommen, davon 116 richtig gepaart; **21** zu ändern (16 `falsch`, 4 `lockbuffer`, 1 `danach`). Zuerst `QCSharewareManager.cpp:1318` — die Stelle läuft **bei jedem Start**. Liste in `AUFGABEN.md` unter A2, mit dem Werkzeug jederzeit neu zu erzeugen |
 | Z-3 | erster Bau von Grund auf: `OEImport`/`NSImport` linken vor `QCUtils` — fehlende Projektabhängigkeit in `Eudora.sln` | **behoben** (`57fe6a4`) — `ProjectReference` auf `QCUtils.vcxproj` steht in `NSImport`, `OEImport`, `OLImport` und `plstclnt`; am 06.09.2026 in allen vier Projektdateien nachgesehen |
-| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3` | **offen** — die Regel steht („ein veröffentlichtes Paket wird nicht ersetzt, es bekommt die nächste Nummer"), und die Prüfsummen unterscheiden die beiden (`Releases/PAKETE.md`). Der frühere Zusatz „keine der beiden ist gestartet worden" ist überholt: Gregor hat die erste Fassung gestartet (E-6). Eine **Schranke** zu der Regel gibt es nicht |
+| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3` | **Regel jetzt durchgesetzt**, 14.09.2026. Die Regel stand seit dem 31.08.2026 in der Doku und hat nicht getragen, weil **nichts sie geprüft hat** — `release-veroeffentlichen.ps1` legte ein Release an, ohne nachzusehen, ob die Marke schon existiert. Jetzt weist es ab (`gh release view <marke>`, Rückgabe 0 = vorhanden), mit dem Hinweis, die Nummer hochzuzählen. **Gegengetestet in beide Richtungen:** `v1.0.3` → vorhanden, wird abgewiesen; `v1.0.53` → frei, läuft durch. **Der Altbestand bleibt wie er ist:** unter `v1.0.3` hängt heute noch ein ZIP (9.209.393 B vom 31.08.2026), das ausgetauschte ist weg — nachträglich auseinanderhalten lassen sich die beiden nur über die Prüfsummen in `Releases/PAKETE.md`. Gefunden hat das Gregor, nicht die Werkzeugkette |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
