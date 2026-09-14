@@ -57,6 +57,53 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.54 — zwei Spurmarken, die E-86 entscheiden
+
+**Was Gregor damit tun kann:** die Newsletter-Mail öffnen und danach zwei
+Dinge liefern, die den Befund entscheiden — die Datei `E86-Anzeige.htm` im
+Eudora-Verzeichnis und die Zeile `E-86 fixup:` im Protokoll. **Behoben ist
+E-86 damit nicht.**
+
+**Der erste Verdacht ist widerlegt, und zwar gemessen.** Er lautete: Eudora
+legt sein eigenes `<html><head><body>` um die Nachricht, MSHTML verwirft
+deren zweites `<head>`/`<body>`, und damit fallen Hintergrundfarbe,
+`img{border:0}` und die Bildgrößen weg.
+
+Nachgemessen wurde mit einer **echten** Nachricht aus Gregors Postfach: der
+Weg des Programms wurde nachgebaut, beide Fassungen in MSHTML geladen und der
+**berechnete** Stil aus dem DOM gelesen. Für alle fünf geprüften Nachrichten:
+
+```
+MAIL-ALLEIN     body-Hintergrund=#000000  img-in-a-Rahmen=0px
+EUDORA-FASSUNG  body-Hintergrund=#000000  img-in-a-Rahmen=0px  Stylesheets=3
+```
+
+`Stylesheets=3` heißt: Eudoras Stylesheet **und** die beiden der Mail —
+MSHTML verwirft nichts. Das Abbild zeigt schwarzen Grund und rahmenlose
+Bilder.
+
+Dazu passt, dass das Original den Fall längst kennt: **`CTridentView::FixupSource`**
+(`TridentView.cpp:1912`) existiert ausdrücklich für das zweite `<body>`-Tag
+und kopiert dessen Attribute auf das erste.
+
+**Deshalb wurde nichts geändert.** Ein Symptom zu überdecken, dessen Ursache
+nicht belegt ist, hätte den Befund nur unsichtbar gemacht.
+
+Stattdessen zwei Spurmarken, beide nur bei eingeschaltetem Protokoll:
+
+1. `LoadMessage` legt die fertige Anzeigedatei als **`E86-Anzeige.htm`** im
+   Eudora-Verzeichnis ab. Bisher löschte der nächste Aufbau sie — sie war
+   nicht zu greifen.
+2. `FixupSource` meldet in **einer** Zeile, ob es läuft, wie viele
+   `BODY`-Elemente MSHTML angelegt hat und welchen Hintergrund es berechnet.
+
+**Auch das ist gemessen:** angezeigt wird über MSHTML, nicht über Paige —
+`UsingTrident()` hängt an `UseBidentAlways`, Vorgabe 1, und Gregors
+`Eudora.ini` setzt den Schlüssel nicht. Die zweite Ansicht scheidet als
+Erklärung aus.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
 ## 7.2.0.53 — Eudora lässt sich wieder beenden (E-83)
 
 **Was Gregor damit tun kann:** Eudora beenden, ohne dass *„You currently have
