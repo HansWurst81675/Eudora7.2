@@ -13,7 +13,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **E-86** | **HTML-Nachrichten werden falsch dargestellt**: Bilder in der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um verlinkte Bilder | Von Gregor am 14.09.2026 mit Bildvergleich gemeldet — dieselbe Newsletter-Mail im Webbrowser und in 7.2.0.52. **Drei Symptome, vermutlich eine Ursache:** `CTridentView` legt Eudoras eigenes `<HTML><HEAD><STYLE>…</STYLE></HEAD><BODY>` um die Nachricht und hängt sie als `<div>` hinein — die Nachricht bringt aber ihr **eigenes** vollständiges HTML mit, und MSHTML verwirft den zweiten `<head>`/`<body>`. Damit fällt weg, was dort steht: Hintergrundfarbe, `img{border:0}` und die Größenangaben für Bilder. **Gemessen ist bereits**, dass es nur das **Lesen** betrifft: der Rahmen wird ausschließlich in `TridentView.cpp` gebaut, der Verfassen-Weg (`PgCompMsgView`) fasst ihn nie an. Die Nachricht selbst bleibt unversehrt |
 | **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
 | **E-78** | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von E-70 am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
 | **E-71** | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
@@ -57,7 +56,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.55 — HTML bleibt beim Antworten und Weiterleiten erhalten (E-87)
+## 7.2.0.55 — HTML bleibt erhalten, beim Lesen wie beim Weiterleiten (E-86, E-87)
 
 **Was Gregor damit tun kann:** eine HTML-Nachricht weiterleiten oder
 beantworten, ohne dass Fettung, Kursiv, Verweise, Schriftfarben und
@@ -124,6 +123,50 @@ dokumentiert in `EINSTELLUNGEN.md`.
 **Offen und Gregors Entscheidung:** ob der Original-HTML-Block am Paige-Editor
 vorbeigeführt und beim Senden wieder eingesetzt werden soll. Das ist ein
 Eingriff in den Sendeweg, kein Schalter.
+
+### Und die Anzeige: HTML-Nachrichten sehen aus wie im Browser (E-86)
+
+**Was Gregor damit tun kann:** einen HTML-Newsletter öffnen und ihn so sehen,
+wie ihn ein Browser zeigt — abgerundete Kästen statt eckiger, keine blauen
+Rahmen um verlinkte Bilder. **Von ihm noch nicht bestätigt.**
+
+**Zwei Verdächte wurden vorher widerlegt, beide am laufenden Programm.** Der
+erste war meiner: Eudora lege sein eigenes `<html><head><body>` um die
+Nachricht, MSHTML verwerfe deren zweites, und damit fielen Hintergrund und
+Rahmenangaben weg. Der zweite: beim Zusammensetzen gehe etwas verloren.
+
+Gemessen mit einer Spurmarke, die die fertige Anzeigedatei sichert:
+
+```
+E-86 fixup: FixupSource laeuft  BODY-Elemente=1  Hintergrund=#ffffff
+```
+
+**`BODY-Elemente=1`** — es gibt kein zweites `<body>`. Und die gesicherte
+Datei hat **36.078 Bytes, 67 Tabellen, 12 Bilder und alle 118
+`border`-Angaben** der Nachricht, sogar eine mehr als das Original (Eudoras
+Zitatbalken). Beim Zusammensetzen geht **nichts** verloren.
+
+**Die Ursache war der Rendermodus.** MSHTML läuft ohne besondere Anweisung im
+Standardmodus des **Internet Explorer 7 von 2006**. Die Mail enthält dreimal
+`border-radius`, das dieser Modus nicht kennt — abgerundete Ecken werden zu
+Kästen, und was im CSS einen Rahmen unterdrücken soll, greift nur teilweise.
+
+Behoben mit einer Zeile, als erste im Kopf der Anzeigedatei:
+
+```html
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+```
+
+**Gegenprobe am laufenden Programm:** dieselbe Spurmarke meldet jetzt
+`Hintergrund=transparent` statt `#ffffff`. Der Modus hat nachweislich
+gewechselt.
+
+**Nebenbei gelernt:** Der erste Messlauf war ungültig. Das Werkzeug öffnete die
+erstbeste Nachricht — die weitergeleitete aus dem Out-Postfach, die durch E-87
+ohnehin formatierungslos ist (Anzeigedatei 4774 B, `<body>` ohne Attribute).
+Erst als in der `Eudora.ini` nur noch ein Postfach als offenes Fenster stand,
+wurde die richtige getroffen.
+
 
 **Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
 
