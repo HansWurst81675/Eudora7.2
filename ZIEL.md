@@ -14,7 +14,7 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **14.09.2026**. Die Urteile in dieser Tabelle sind an Fassung **7.2.0.55 / Paket 1.0.55** gemessen; gebaut ist inzwischen **7.2.0.56 / Paket 1.0.56** (E-88), von Gregor noch nicht am laufenden Programm beurteilt.
+Stand **14.09.2026**. Die Urteile in dieser Tabelle sind an Fassung **7.2.0.55 / Paket 1.0.55** gemessen; gebaut ist inzwischen **7.2.0.57 / Paket 1.0.57** (E-88, E-89), von Gregor noch nicht am laufenden Programm beurteilt.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
 Eudora *läuft*. 4 bis 6 kamen am 06.09.2026 dazu, **Kriterium 7** (sauberes
