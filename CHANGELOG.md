@@ -59,7 +59,20 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.57 — im Verfassenfenster liegen die Bilder nicht mehr über dem Text (E-89)
+## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
+
+> **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
+> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Tonerkartusche über
+> „Artikelnummer" und „Nachbestellung mit Order-No", darunter steht ein leerer
+> grauer Kasten. **Die Spurmarke aus seinem Lauf widerlegt die angenommene
+> Ursache:** `gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3 gedeckelt=0` — kein
+> einziges Bild hatte seine Größe im CSS, keines war zu breit, geändert wurden
+> 48 Bytes von 62.057. Die Bilder überlappen, **obwohl ihre Größe stimmt**.
+> Damit ist die fehlende Bildgröße als Ursache ausgeschlossen; gesucht wird ab
+> jetzt bei der **Position**, nicht der Ausdehnung. Der Stand bleibt im
+> Programm, weil er nichts verschlechtert außer der 200x90-Vorgabe — die
+> erzeugt den grauen Kasten und wird zurückgenommen. Einzelheiten in
+> [BEFUNDE.md](BEFUNDE.md) unter E-89.
 
 **Was Gregor damit tun kann:** einen Newsletter weiterleiten und dabei
 **lesen, was er schreibt**. Bisher lagen Logo und Kacheln in Originalgröße
