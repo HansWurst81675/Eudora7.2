@@ -66,15 +66,14 @@ verschickt.
   der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um
   verlinkte Bilder. Betroffen ist nur die Anzeige — die Nachricht selbst
   bleibt unversehrt.
-* **IMAP läuft, ein Darstellungsfehler bleibt.** Von Gregor am 10.09.2026
-  bestätigt — *„imap: funktioniert"*, `imap.gmx.net:993`. **Offen ist E-77:**
-  Postfachnamen mit Umlauten stehen roh da, `Entw&APw-rfe` statt *Entwürfe*.
-  Zwei weitere IMAP-Befunde sind **behoben, aber noch nicht veröffentlicht**
-  (das neueste Release ist `v1.0.50`): **E-85** — abgerufene Nachrichten kamen
-  als Zeichensalat an statt mit Umlauten, behoben im Quellstand 7.2.0.52 — und
-  **E-83** — eine Aufgabe blieb in der Warteschlange stehen, sodass Eudora
-  beim Beenden *„You currently have 1 task(s) running"* meldete, behoben im
-  Quellstand 7.2.0.53.
+* **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
+  `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
+  10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
+* **Noch nicht im Download enthalten:** zwei IMAP-Fehler sind im Quelltext
+  erledigt, aber **nicht veröffentlicht** — das neueste Release ist `v1.0.50`.
+  Im Quellstand 7.2.0.52 kommen abgerufene Nachrichten nicht mehr als
+  Zeichensalat an, im Quellstand 7.2.0.53 lässt Eudora sich wieder beenden,
+  ohne eine laufende Aufgabe zu melden. Wer das braucht, baut selbst.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
