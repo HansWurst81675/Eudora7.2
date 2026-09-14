@@ -110,23 +110,29 @@ function Messen([string] $pfad, [string] $name) {
     $ende2 = (Get-Date).AddSeconds(3)
     while ((Get-Date) -lt $ende2) { [System.Windows.Forms.Application]::DoEvents(); Start-Sleep -Milliseconds 50 }
 
-    # Ein zweites Content-Type-Meta laesst MSHTML das Dokument noch einmal
-    # laden; dann haengt man sonst an einem verwaisten Objekt. Deshalb das
-    # Dokument erst holen, wenn es einen body hat - mit Zeitschranke.
-    $doc = $null
+    # Nennt die Datei einen anderen Zeichensatz, als MSHTML zuerst annahm
+    # (die Mail sagt <meta charset="UTF-8">), dann laedt MSHTML sie ein
+    # zweites Mal und legt dabei ein NEUES Dokument an. "Document.DomDocument"
+    # zeigt danach auf das alte, tote: readyState leer, body NULL,
+    # styleSheets 0 - und man haelt eine Messung fuer misslungen, die nie
+    # stattgefunden hat. Der lebende Weg fuehrt ueber den Body des
+    # WinForms-Dokuments und von dort zurueck auf sein Dokument.
+    $body = $null
     $ende3 = (Get-Date).AddSeconds(10)
     while ((Get-Date) -lt $ende3) {
         [System.Windows.Forms.Application]::DoEvents()
-        $d = $wb.Document.DomDocument
-        if ($d -ne $null -and $d.body -ne $null -and $d.readyState -eq 'complete') { $doc = $d; break }
+        if ($wb.Document -ne $null -and $wb.Document.Body -ne $null) {
+            $body = $wb.Document.Body.DomElement
+            if ($body -ne $null) { break }
+        }
         Start-Sleep -Milliseconds 100
     }
-    if ($doc -eq $null) {
+    if ($body -eq $null) {
         Write-Output "$name : ZEITSCHRANKE - kein fertiges Dokument"
         $wb.Dispose()
         return
     }
-    $body = $doc.body
+    $doc = $body.document
 
     # Abbild der ersten Bildschirmhoehe, damit der Vergleich nicht nur aus
     # Zahlen besteht. Das Steuerelement haengt an keinem Formular - es wird
@@ -142,13 +148,17 @@ function Messen([string] $pfad, [string] $name) {
     $hg    = $body.currentStyle.backgroundColor
     $vg    = $body.currentStyle.color
     $bgcol = $body.bgColor
+    # Auch die Sammlungen ueber den lebenden Body holen, nicht ueber das
+    # Dokumentobjekt von vorhin - siehe die Erklaerung oben.
     $blaetter = $doc.styleSheets.length
+    if ($blaetter -eq 0) { $blaetter = $body.getElementsByTagName('style').length }
+    $bilderListe = $body.getElementsByTagName('img')
 
     # Der blaue Rahmen entsteht nur an einem Bild, das in einem <a> steht -
     # also genau so eins suchen, nicht einfach das erste nehmen.
-    $bildHG = '(kein Bild)'; $rahmenB = '(kein Bild)'; $rahmenF = ''; $anzBilder = $doc.images.length
-    for ($i = 0; $i -lt $doc.images.length; $i++) {
-        $img = $doc.images.item($i)
+    $bildHG = '(kein Bild)'; $rahmenB = '(kein Bild)'; $rahmenF = ''; $anzBilder = $bilderListe.length
+    for ($i = 0; $i -lt $bilderListe.length; $i++) {
+        $img = $bilderListe.item($i)
         $eltern = $img.parentElement
         if ($eltern -ne $null -and $eltern.tagName -eq 'A') {
             $rahmenB = $img.currentStyle.borderTopWidth
@@ -168,6 +178,12 @@ function Messen([string] $pfad, [string] $name) {
     $wb.Dispose()
 }
 
+# Zu den Zahlen: "Stylesheets" und "Bilder" werden fuer die Mail allein
+# ueber den Body gezaehlt (das Dokumentobjekt ist dort nach dem Neuladen
+# tot) - Stylesheets im <head> fehlen deshalb in dieser Zeile, und Bilder
+# ausserhalb des Body ebenso. Die beiden Zahlen sind also nur INNERHALB
+# einer Zeile aussagekraeftig. Was verglichen werden soll, steht in den
+# uebrigen Spalten: Hintergrund und Rahmen, beides von MSHTML berechnet.
 Write-Output "Ablage: $Ablage"
 Messen $dateiMail   'MAIL-ALLEIN'
 Messen $dateiEudora 'EUDORA-FASSUNG'
