@@ -236,11 +236,44 @@ sub zeilen_aus_diff {
         $cmd = "git show $bereich --format= --unified=0 -- $DATEI 2>&1";
     }
     my @aus = `$cmd`;
+
+    # Die entfernten Zeilen werden mitgelesen, aber nur als ASCII-GERUEST -
+    # also ohne jedes Byte ab 0x80.
+    #
+    # WARUM: am 14.09.2026 wurde BEFUNDE.md zurueckkodiert, 1517 von 7829
+    # Zeilen. Fuer git ist jede davon eine geaenderte Zeile, und diese
+    # Schranke meldete daraufhin 42 Befunde ohne Beleg - allesamt Jahre alte
+    # Eintraege, deren Text sich um kein einziges Zeichen geaendert hatte.
+    # Nur ihre Bytes waren vorher kaputt und damit fuer die Muster hier
+    # unlesbar gewesen.
+    #
+    # Das ist ein Fehlalarm, und ein Fehlalarm kostet dasselbe wie eine
+    # stumme Schranke (Arbeitsweise/schranke-gegentesten.md): wer 42 Meldungen
+    # bekommt, von denen keine eine neue Behauptung betrifft, faengt an, die
+    # Schranke zu umgehen. Geprueft werden soll, was jemand NEU behauptet -
+    # nicht, was jemand umkodiert hat.
+    my %geruest_entfernt;
+    for my $z (@aus) {
+        next unless $z =~ /^-[^-]/;
+        my $g = $z;
+        $g =~ s/^-//;
+        $g =~ s/\r?\n$//;
+        $g =~ s/[\x80-\xff]//g;
+        $geruest_entfernt{$g} = 1;
+    }
+
     my @neu;
     for my $z (@aus) {
         next unless $z =~ /^\+[^+]/;
         $z =~ s/^\+//;
         $z =~ s/\r?\n$//;
+
+        # Steht dieselbe Zeile mit demselben ASCII-Geruest auf der
+        # Entfernt-Seite, war es eine reine Umkodierung - keine neue Aussage.
+        my $g = $z;
+        $g =~ s/[\x80-\xff]//g;
+        next if $geruest_entfernt{$g};
+
         push @neu, $z;
     }
     return @neu;
