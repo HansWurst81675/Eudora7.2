@@ -602,10 +602,43 @@ void QCTaskManager::RemoveWorkerThread(QCWorkerThreadMT *pThread)
 	}
 	else
 	{
-		// BEFUND E-83: die Aufgabe ist fertig, wird aber JETZT nicht
-		// nachbearbeitet. Sie bleibt in m_TaskInfoList stehen, zaehlt
-		// weiter als "running" und behaelt den Text aus Register().
-		SpurmarkeE83("fertig-OHNE-Nachbearbeitung", pTaskInfo);
+		// E-83 BEHOBEN, 14.09.2026. Hier stand nur die Spurmarke, und die
+		// Aufgabe blieb liegen.
+		//
+		// GEMESSEN AN GREGORS LAUF MIT 7.2.0.52, waehrend das Fenster
+		// "Waiting in the task queue to be started ..." zeigte und sich
+		// Eudora nicht beenden liess:
+		//
+		//     fertig, Nachbearbeitung angefordert   15
+		//     fertig, OHNE Nachbearbeitung          17
+		//     liegengeblieben (alle 15 s gemeldet)  17
+		//
+		//     E-83 liegengeblieben: uid=35 zustand=FERTIG(5)
+		//     m_pThread=gesetzt aktiv=1/10 titel="Resyncing"
+		//
+		// Der Zustand ist FERTIG - die Aufgabe wartet also nicht, sie ist
+		// durch. Der angezeigte Text stammt aus Register() und wird nie
+		// ueberschrieben, deshalb sah es nach "wartet auf den Start" aus.
+		//
+		// WARUM SIE NIE NACHGEHOLT WURDE: DoPostProcessing arbeitet
+		// ausschliesslich m_PostProcessList ab, und in diese Liste kommt
+		// eine Aufgabe NUR ueber RequestPostProcessing(). Wer hier landet,
+		// kommt nie hinein - auch der Leerlauf holt sie nicht nach. Der
+		// else-Zweig war eine Sackgasse: die Aufgabe blieb in
+		// m_TaskInfoList, zaehlte weiter als laufend, und beim Beenden kam
+		// "You currently have 1 task(s) running".
+		//
+		// Die Bedingung oben stammt aus dem Original und bindet die
+		// Nachbearbeitung an den Leerlaufzyklus, in dem StartTasks()
+		// m_nStartIdle gesetzt hat - also an Aufgaben aus einer
+		// QCTaskGroup. IMAP-Aktionen aus CActionQueue::OnIdle laufen daran
+		// vorbei und setzen auch IsIgnoreIdle nicht.
+		//
+		// Die Spurmarke bleibt stehen: an ihrer Zahl ist abzulesen, wie oft
+		// dieser Weg genommen wird, und ein Rueckfall faellt damit sofort
+		// auf.
+		SpurmarkeE83("fertig-ausserhalb-des-Leerlaufs", pTaskInfo);
+		RequestPostProcessing(pTaskInfo);
 	}
 
 }
