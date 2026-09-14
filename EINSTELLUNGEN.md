@@ -232,8 +232,10 @@ Speichern schreibt `PgMsgView::ExportMessage` (`PgMsgView.cpp:342-408`) den
 Paige-Inhalt mit `pDoc->SetText()` über den Nachrichtentext — **und
 genau dieser Text geht hinaus.** Ein moderner Newsletter, der seine Kästen
 über `<div style="…">` baut, kommt deshalb beim Empfänger schlichter an,
-als er gelesen wurde. Wer ihn unverändert weitergeben will, leitet ihn
-nicht weiter, sondern **schickt ihn als Anhang**.
+als er gelesen wurde. Einen Befehl `Weiterleiten als Anhang` gibt es in Eudora nicht — gesucht wurde
+danach in `resource.h` und `EudoraRes.rc`, gefunden nur `ID_MESSAGE_ATTACHFILE`
+(eine **Datei** anhaengen). Wer den Newsletter unveraendert weitergeben will,
+muss ihn also erst als Datei sichern und diese anhaengen.
 
 ---
 
