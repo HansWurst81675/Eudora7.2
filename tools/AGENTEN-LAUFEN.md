@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-09-14 11:11 | E-88: Original-HTML am Editor vorbei, beim Senden zusammensetzen |
