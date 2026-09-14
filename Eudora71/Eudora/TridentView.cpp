@@ -1570,6 +1570,33 @@ BOOL CTridentView::LoadMessage()
 		ASSERT( !"Caught std::exception (not std::bad_alloc) in CTridentView::LoadMessage" );
 	}
 
+	// SPURMARKE ZU BEFUND E-86 (Gregor, 14.09.2026): eine Werbemail steht im
+	// Webbrowser auf schwarzem Grund, das Logo ohne Rahmen - in Eudora auf
+	// weissem Grund, das Logo in einem Kasten mit blauem Rahmen.
+	//
+	// Diese Datei ist genau das, was MSHTML gleich zu sehen bekommt. Sie wird
+	// beim naechsten Aufbau geloescht (unlink weiter oben) und war deshalb
+	// bisher nicht zu greifen. Bei eingeschaltetem Protokoll bleibt jetzt eine
+	// Kopie im Eudora-Verzeichnis stehen: E86-Anzeige.htm. Damit muss niemand
+	// mehr nachbauen, was zusammengesetzt wurde - man kann es lesen.
+	//
+	// Am Nachbau ist der naheliegende Verdacht bereits WIDERLEGT
+	// (tools/e86-fassung-bauen.pl, tools/e86-messen.ps1): MSHTML verwirft das
+	// <style> der Mail nicht und uebernimmt ihren Hintergrund, gemessen an
+	// allen fuenf Nachrichten aus dem WaipuTV-Postfach.
+	if ( (QCLogFileMT::DebugMask & DEBUG_MASK_MISC) != 0 )
+	{
+		CString		szKopie = EudoraDir + "E86-Anzeige.htm";
+		BOOL		bKopiert = ::CopyFile( m_szTmpFile, szKopie, FALSE );
+		char		szM[2 * _MAX_PATH + 64];
+
+		_snprintf( szM, sizeof(szM), "E-86: Anzeigedatei %s -> %s %s",
+				   (LPCTSTR) m_szTmpFile, (LPCTSTR) szKopie,
+				   bKopiert ? "gesichert" : "NICHT gesichert" );
+		szM[sizeof(szM) - 1] = 0;
+		PutDebugLog( DEBUG_MASK_MISC, szM );
+	}
+
 	if (!m_pSite)
 	{
 		// Uh oh, should have created site control by now.
@@ -1924,6 +1951,7 @@ LPARAM )
 	CBstr					cbstrType( "TYPE" );
 	CBstr					cbstrClass( "CLASS" );
 	BOOL					bAddClass;
+	INT						nBodyTags = 0;		// Spurmarke E-86: wie viele BODY-Elemente MSHTML wirklich anlegt
 	INT						iSize;
 	IHTMLBodyElement*		pFirstBody;
 	CRString				szBodyTag( IDS_HTML_BODY );
@@ -1989,6 +2017,7 @@ LPARAM )
 						if( ( hr == S_OK ) && 
 							( strTag.CompareNoCase( szBodyTag ) == 0 ) )
 						{
+							nBodyTags++;		// Spurmarke E-86
 							if( pFirstBody == NULL )
 							{
 								hr = pElement->QueryInterface( IID_IHTMLBodyElement, (void **)&pFirstBody );
@@ -2169,6 +2198,58 @@ LPARAM )
 		}
 
 		pColl->Release();
+	}
+
+	// SPURMARKE ZU BEFUND E-86 (Gregor, 14.09.2026): was hat MSHTML aus der
+	// zusammengesetzten Datei wirklich gemacht?
+	//
+	// Alle drei Werte stehen in EINER Zeile, damit kein Zweifel bleibt, ob
+	// sie zum selben Aufbau gehoeren:
+	//   * laeuft FixupSource ueberhaupt? Die Zeile erscheint nur dann.
+	//   * BODY-Elemente: legt MSHTML fuer das zweite <body> der Mail ein
+	//     eigenes Element an (dann greift die Uebernahme der Attribute
+	//     darunter) oder nicht?
+	//   * Hintergrund: die von MSHTML BERECHNETE Farbe des angezeigten
+	//     <body>. Steht hier die Farbe der Mail, kam ihr Stylesheet an;
+	//     steht dort Weiss, ist es unterwegs verlorengegangen.
+	{
+		CString					szHintergrund = "(nicht lesbar)";
+		IHTMLElement2 *			pBodyElement2 = NULL;
+
+		if ( pFirstBody &&
+			 SUCCEEDED( pFirstBody->QueryInterface( IID_IHTMLElement2, (void **) &pBodyElement2 ) ) &&
+			 pBodyElement2 )
+		{
+			IHTMLCurrentStyle *		pCurrentStyle = NULL;
+
+			if ( SUCCEEDED( pBodyElement2->get_currentStyle( &pCurrentStyle ) ) && pCurrentStyle )
+			{
+				VARIANT		varFarbe;
+
+				VariantInit( &varFarbe );
+
+				if ( SUCCEEDED( pCurrentStyle->get_backgroundColor( &varFarbe ) ) &&
+					 (varFarbe.vt == VT_BSTR) && varFarbe.bstrVal )
+				{
+					szHintergrund = W2A( varFarbe.bstrVal );
+				}
+
+				VariantClear( &varFarbe );
+				pCurrentStyle->Release();
+			}
+
+			pBodyElement2->Release();
+		}
+
+		{
+			char	szMeldung[192];
+
+			_snprintf( szMeldung, sizeof(szMeldung),
+					   "E-86 fixup: FixupSource laeuft  BODY-Elemente=%d  Hintergrund=%s",
+					   (int) nBodyTags, (LPCTSTR) szHintergrund );
+			szMeldung[sizeof(szMeldung) - 1] = 0;
+			PutDebugLog( DEBUG_MASK_MISC, szMeldung );
+		}
 	}
 
 	if( pFirstBody )
