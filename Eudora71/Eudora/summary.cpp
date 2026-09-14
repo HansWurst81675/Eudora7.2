@@ -32,6 +32,7 @@ DAMAGE. */
 #include "cursor.h"
 #include "resource.h"
 #include "rs.h"
+#include "debug.h"		// E-87: Spurmarke
 #include "fileutil.h"
 #include "utils.h"
 #include "guiutils.h"
@@ -1107,8 +1108,50 @@ BOOL CSummary::ComposeMessage
 #endif
 
 	IsRich = IsFancy(fullMes);
-	if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
-		IsRich = IS_ASCII;
+
+	//
+	// BEFUND E-87: beim Weiterleiten und beim Antworten ging die
+	// HTML-Auszeichnung verloren - die Nachricht kam beim Empfaenger als
+	// Fliesstext mit blauen Verweisen an.
+	//
+	// Die Ursache steht in den drei Zeilen darunter. IsFancy(fullMes) hat
+	// den Rumpf bereits als HTML erkannt; verworfen wurde das Ergebnis
+	// wieder, weil die Flags des Uebersichtseintrags (MSF_XRICH,
+	// MSFEX_FLOWED) es nicht bestaetigten. Diese Flags stammen aus dem
+	// Empfang bzw. aus der TOC-Datei und fehlen bei Nachrichten, deren
+	// Uebersicht aelter ist als die Kennzeichnung. IsRich = IS_ASCII
+	// bedeutet fuer QuoteText (msgutils.cpp:126-220), dass nicht der
+	// HTML-Zweig ueber GetBodyAsHTML genommen wird, sondern der reine
+	// Textzweig mit WrapText und ">"-Praefix. Was danach im Verfassen-
+	// fenster blau leuchtet, sind nicht die Verweise der Nachricht,
+	// sondern von MakeAutoURLSpaghetti erkannte nackte Adressen.
+	//
+	// Mit KeepHTMLInResponses (Vorgabe 1) zaehlt die Messung am Rumpf
+	// mehr als die Flags: erkennt IsFancy HTML oder Enriched, bleibt es
+	// dabei. Der Schalter gilt fuer beide Wege, weil diese Funktion
+	// Antworten und Weiterleiten gemeinsam bedient.
+	//
+	// KeepHTMLInResponses=0 stellt das alte Verhalten wieder her.
+	//
+	if (!GetIniShort(IDS_INI_KEEP_HTML_IN_RESPONSES) || IsRich < IS_RICH)
+	{
+		if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
+			IsRich = IS_ASCII;
+	}
+
+	//
+	// Alle Werte in EINER Zeile, damit sich spaeter nicht herausreden
+	// laesst, sie seien "zu anderer Zeit" gemessen worden.
+	//
+	{
+		CString	szSpur;
+		szSpur.Format(
+			"E-87 ComposeMessage: IsFancy=%d IsRich=%d IsXRich=%d IsFlowed=%d IsHTML=%d Schalter=%d Typ=%d",
+			::IsFancy(fullMes), (int)IsRich, (int)IsXRich(), (int)IsFlowed(),
+			(int)IsHTML(), (int)GetIniShort(IDS_INI_KEEP_HTML_IN_RESPONSES),
+			(int)ResponseType );
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
 
 	CString sAttach;
 	if (ResponseType == MS_FORWARDED || ResponseType == MS_REDIRECT)

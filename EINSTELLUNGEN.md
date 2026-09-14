@@ -149,6 +149,7 @@ ist der eingebaute Wert aus `Eudora71/Eudora/EudoraRes.rc`.
 | `TabooHeaders` | `[Settings]` | Liste, `EudoraRes.rc:9996` | `EudoraRes.rc:9996` | welche Kopfzeilen *Blah Blah Blah* versteckt. **Ein Eintrag in der `Eudora.ini` ersetzt die Liste vollständig, er ergänzt sie nicht** — wer etwas hinzufügen will, schreibt die ganze Liste hin. Was diese Portierung ergänzt hat, steht in [README.md](README.md); nachrechnen lässt es sich mit `perl tools/taboo-rechnen.pl` |
 | `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | *kein Eintrag* | `OTShim_Werkzeugleiste.cpp:4449` (schreiben), `:4495` (lesen) | **gibt es im Original nicht.** Merken sich Breite und Höhe eines **losgerissenen** Fensters, je Leisten-Kennung, damit sie den Neustart überlebt (**E-84**). Ohne Eintrag gilt die Anfangsgröße. `<id>` ist die Kennung der Leiste, dieselbe wie bei `DockVertCx` und `DockHorzCy` daneben. **Der Abschnittsname ist gemessen, nicht geraten:** `mainfrm.cpp:4456` übergibt `ToolBar`, und `SECToolBarManager::SaveState` setzt daraus `%s-ToolBarManager` (`OTShim_Werkzeugleiste.cpp:4336`) — in Gregors `Eudora.ini` steht der Eintrag unter `[ToolBar-ToolBarManager]`. **Keine Ressourcennummer** — der Schlüssel wird unmittelbar über `WriteProfileInt` geschrieben, die Nummernregel aus Abschnitt 1 gilt für ihn also nicht. Wer eine Größe loswerden will, löscht die Zeile; sie wird beim nächsten Beenden neu geschrieben |
 | `FilterMayDeleteFromServer` | `[Settings]` | `0` | `filtersd.cpp:1133` | **gibt es im Original nicht.** Erst mit `1` darf eine Filteraktion Post auf dem Server löschen (Befund **E-73**). Der Abschnitt steht hier fest im Quelltext, nicht in der Nummernregel |
+| `KeepHTMLInResponses` | `[Settings]` | `1` | `EudoraRes.rc:7667`, wirksam in `summary.cpp:1135` | **gibt es im Original nicht.** Sorgt dafür, dass **Antworten und Weiterleiten die HTML-Auszeichnung der Ursprungsnachricht behalten** (Befund **E-87**). Vorher entschied allein das `MSF_XRICH`-Flag des Übersichtseintrags darüber; fehlte es — wie bei Nachrichten, deren Eintrag älter ist als die Kennzeichnung — wurde ein erkanntermassen HTML-haltiger Rumpf als reiner Text zitiert (`QuoteText`, `msgutils.cpp:126-220`). Mit `1` zählt die Messung am Rumpf selbst (`IsFancy`, `utils.cpp:588`). **Mit `0` gilt wieder das alte Verhalten.** Was der Schalter **nicht** leistet, steht in Abschnitt 4 |
 
 Schon vollständig anderswo, deshalb hier nur der Zeiger:
 
@@ -214,6 +215,27 @@ in the task queue to be started …"*, und beim Beenden warnt Eudora dann
 ([CHANGELOG.md](CHANGELOG.md) unter *Noch offen*). `MaxConcurrentTasks` ist
 **nicht** die Ursache, aber der Schalter, der bestimmt, wie viele Aufgaben
 überhaupt gleichzeitig laufen dürfen.
+
+**4.8 Der Verfassen-Editor kann kein CSS — auch mit
+`KeepHTMLInResponses=1` nicht.** Gelesen wird eine Nachricht mit MSHTML
+(`TridentReadMessageView.cpp`), also mit einem vollwertigen Browser:
+Rahmen, Hintergründe und Abstände erscheinen so, wie der Absender sie
+gemeint hat. **Verfasst** wird dagegen mit Paige
+(`PgCompMsgView.cpp:177-179`), und dessen HTML-Leser kennt nur die
+Namensliste in `Eudora71/Eudora/PGHTMDEF.C:20-48`. `div` steht darin, aber
+ausgewertet wird davon **allein `align`** (`PGHTMIMP.CPP:1193-1201`);
+`class` dient nur dazu, einen Zeilenumbruch zu unterdrücken
+(`PGHTMIMP.CPP:1155-1190`). **Kein `span`, keine einzige CSS-Eigenschaft** —
+weder `background-color` noch `border`, `padding` oder `margin`.
+Was Paige beim Öffnen nicht versteht, ist danach endgültig fort: beim
+Speichern schreibt `PgMsgView::ExportMessage` (`PgMsgView.cpp:342-408`) den
+Paige-Inhalt mit `pDoc->SetText()` über den Nachrichtentext — **und
+genau dieser Text geht hinaus.** Ein moderner Newsletter, der seine Kästen
+über `<div style="…">` baut, kommt deshalb beim Empfänger schlichter an,
+als er gelesen wurde. Einen Befehl `Weiterleiten als Anhang` gibt es in Eudora nicht — gesucht wurde
+danach in `resource.h` und `EudoraRes.rc`, gefunden nur `ID_MESSAGE_ATTACHFILE`
+(eine **Datei** anhaengen). Wer den Newsletter unveraendert weitergeben will,
+muss ihn also erst als Datei sichern und diese anhaengen.
 
 ---
 
