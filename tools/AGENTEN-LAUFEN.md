@@ -9,5 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| CHRONIST | 2026-09-14 07:39 | Gespraechsverlauf auswerten, Lehren aktualisieren (Gregors Auftrag vom 13.09.) |
-| LEKTOR | 2026-09-14 07:39 | Doku gegen den Bestand 7.2.0.53 |
+| PRUEFER | 2026-09-14 08:35 | E-87: Formatierung geht beim Weiterleiten verloren |
