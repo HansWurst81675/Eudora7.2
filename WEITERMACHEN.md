@@ -157,7 +157,6 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
-| **E-83** | eine IMAP-Aufgabe bleibt in der Warteschlange stehen und wird nie gestartet — *„Waitin… |
 | **E-78** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… |
 | **E-77** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… |
 | **E-71** | der Filterbericht ist nach einem Filterlauf leer |

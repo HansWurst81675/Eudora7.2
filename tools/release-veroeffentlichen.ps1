@@ -202,6 +202,36 @@ if ($LASTEXITCODE -ne 0) {
 }
 Write-Host ('  Marke zeigt auf ' + $commit)
 
+# --- Schranke V-1: ein veroeffentlichtes Paket wird NICHT ersetzt ----------
+#
+# Gregor am 31.08.2026: "Eigentlich illegal, weil die gleiche Vers.nr. Aber
+# anderes zip" - unter v1.0.3 hingen zwei verschiedene ZIPs, und der einzige
+# Unterschied war die Behebung eines Absturzes (E-11). Wer sagt "ich habe
+# 1.0.3 getestet", meint dann moeglicherweise das eine oder das andere.
+#
+# Derselbe Fehler wie bei der QCSSL.dll, wo zwei Binaerdateien dieselbe
+# Kennung "QCSSL 1.0.0" tragen - nachzulesen in Releases/1.0/AUSLIEFERUNGEN.md.
+# Die Regel war aufgeschrieben und hat nicht getragen, weil sie in der Datei
+# ueber die DLL stand, nicht in der ueber die Pakete, und weil NICHTS sie
+# durchgesetzt hat.
+#
+# Gregor am 14.09.2026, auf den Befund V-1 zeigend: "was ist damit?"
+$vorhanden = & gh release view $marke --json tagName 2>$null
+if ($LASTEXITCODE -eq 0) {
+    Write-Host ''
+    Write-Host ('  KEIN RELEASE: die Marke ' + $marke + ' gibt es schon.')
+    Write-Host ''
+    Write-Host '  Ein veroeffentlichtes Paket wird nicht ersetzt - es bekommt die'
+    Write-Host '  naechste Nummer. Sonst tragen zwei verschiedene ZIPs dieselbe'
+    Write-Host '  Fassung, und "ich habe 1.0.x getestet" sagt nicht mehr, welches.'
+    Write-Host '  Genau das ist am 31.08.2026 unter v1.0.3 passiert (Befund V-1).'
+    Write-Host ''
+    Write-Host '  Also: VERSION und Eudora71/Version.h hochzaehlen, neu bauen,'
+    Write-Host '  neu packen, und unter der neuen Nummer veroeffentlichen.'
+    Write-Host ''
+    exit 1
+}
+
 $argumente = @('release', 'create', $marke,
     ($zip + '#Eudora72-' + $Fassung + '-release.zip (auspacken, Eudora starten.cmd doppelklicken)'),
     '--title', $Titel, '--latest', '--target', $commit)
