@@ -60,3 +60,4 @@
 - [Arbeitsbaum braucht eigenes Gegenstück](arbeitsbaum-braucht-eigenes-gegenstueck.md) — wt/<name> muss origin/wt/<name> verfolgen, sonst landet der Push auf fremdem Gebiet; eine Remote-Basis vererbt den Upstream, eine lokale nicht
 - [Rollenzuweisung prüfen](rollenzuweisung-pruefen.md) — die Aufgabe entscheidet, nicht der genannte Name; CHRONIST stand in AGENTEN.md kein einziges Mal
 - [Einwurf ist ein Messwert](einwurf-ist-ein-messwert.md) — 54 % von Gregors Nachrichten kamen mitten im laufenden Zug; tools/verlauf-messen.pl zählt es nach
+- [Unterschied im selben Bild](unterschied-im-selben-bild.md) — was im selben Bild richtig ist, schließt jede gemeinsame Ursache aus; Betreff richtig / Rumpf falsch stand 9h27min und 318 Werkzeugaufrufe lang ungelesen da

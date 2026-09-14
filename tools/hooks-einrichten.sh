@@ -205,7 +205,17 @@ schranke pruefe-fenster-ziehen.pl || exit $?
 #     pruefe-leistengroessen-paar-tests.pl, 17 Faelle in beide Richtungen.
 schranke pruefe-leistengroessen-paar.pl || exit $?
 
-# 15. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 15. Kein neues "behoben" ohne Beleg. Am 13.09.2026 war E-85 zweimal als
+#     behoben gemeldet, bevor die Ursache gefunden war - beide Male ohne eine
+#     Messung im Programm, die gesagt haette, ob der geaenderte Weg ueberhaupt
+#     genommen wird. Gregor um 20:29: "das ist auf jeden fall eine frische
+#     mail, ist aber falsch dargestellt!" Geprueft werden nur die in diesem
+#     Commit HINZUGEKOMMENEN Befundzeilen; der Altbestand wuerde sonst
+#     rauschen. Gegenprobe: --selbsttest, 9 Faelle, dazu der echte Stand von
+#     20f4820^ (weist ab) gegen 26718ef (laesst durch).
+schranke pruefe-behoben-belegt.pl || exit $?
+
+# 16. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
 HOOKENDE
@@ -303,6 +313,10 @@ echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selb
 echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
 echo "  tools/pruefe-rollen-doku.pl  ist jede Rolle aus rollen-faellig.pl in"
 echo "                               AGENTEN.md nachschlagbar? (pre-commit)"
+echo "  tools/pruefe-behoben-belegt.pl  kein neu geschriebenes \"behoben\" ohne Beleg"
+echo "                               dass der Weg einmal gelaufen ist (pre-commit)."
+echo "                               Aus E-85, am 13.09.2026 zweimal behoben gemeldet,"
+echo "                               bevor die Ursache gefunden war."
 echo "  tools/pruefe-testbau.pl      laesst sich EudoraTests.exe ueberhaupt bauen?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
 echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"

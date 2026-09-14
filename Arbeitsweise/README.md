@@ -95,6 +95,7 @@ eine Datei liest, liest diese.
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [tests-vor-jedem-commit-laufen-lassen](tests-vor-jedem-commit-laufen-lassen.md) | Unit- und Komponententests gehoeren zu jedem Commit - Ergebnis mitteilen, auch wenn es rot ist |
 | [text-nicht-durch-schichten-schicken](text-nicht-durch-schichten-schicken.md) | Ersetzungstext mit Backslashes oder Anfuehrungszeichen nie inline durch Bash/PowerShell nach Perl reichen; in eine Datei schreiben und ueber Zeilenanker einsetzen |
+| [unterschied-im-selben-bild](unterschied-im-selben-bild.md) | Was im selben Bild richtig ist, schliesst jede gemeinsame Ursache aus - der Unterschied ist der Befund |
 | [version-eindeutig-machen](version-eindeutig-machen.md) | Jede Fassung, die Gregor in die Hand bekommt, muss sich selbst benennen koennen - Nummer, Commit, Bauzeit, sichtbar im Programm |
 | [was-lauffaehig-heisst](was-lauffaehig-heisst.md) | Gregors drei Kriterien für „lauffähig" — und dass ein erscheinendes, aber unbedienbares Fenster keines davon erfüllt |
 | [werkzeug-vor-eigenbau](werkzeug-vor-eigenbau.md) | Vor dem eigenen Dreizeiler in tools/WERKZEUGE.md nachsehen; und ein fertiges Werkzeug, das niemand aufruft, wirkt so wenig wie eine Lehre, die nur Text ist |
