@@ -130,6 +130,20 @@ IHTMLDocument2 in TridentView:   13 Stellen
 designMode / contentEditable:     0 Stellen
 ```
 
+Die beiden unteren Zahlen sind am 15.09.2026 nachgemessen und stimmen:
+
+```bash
+grep -c IHTMLDocument2 Eudora71/Eudora/TridentView.cpp                    # 13
+grep -rl 'designMode\|contentEditable' Eudora71/Eudora/                  # leer
+```
+
+**Für die beiden oberen ist der Messbefehl nicht aufgeschrieben worden**, und
+sie lassen sich deshalb nicht nachvollziehen — je nachdem, was man zur
+„Anbindung" zählt, kommen sehr verschiedene Werte heraus (Dateien mit
+`Pg`-Präfix: 46; `.cpp`, die `paige` oder `pg_ref` nennen: 60 mit 104.606
+Zeilen). Als **Größenordnung** taugen sie, als Beleg nicht. Wer sie das nächste
+Mal braucht, schreibt den Befehl daneben.
+
 **MSHTML im Editiermodus** wäre der naheliegendste Weg: Der Motor liegt bereits
 im Programm und rendert die Leseansicht. Er kann auch editieren
 (`document.designMode = "On"`) — im Original ist das an **null** Stellen
