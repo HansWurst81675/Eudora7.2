@@ -17,7 +17,7 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 [Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
 7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression)
 und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
-7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien).
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md) und [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
@@ -25,11 +25,19 @@ und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 14.09.2026.** Der jüngste Durchgang ist **L-13** und
-> steht in `Befunde/LEKTOR-8.md`; gemessen an Quellstand **7.2.0.53** / Paket
-> **1.0.53**, über **133** MD-Dateien. Der jüngste Durchgang *in dieser Datei*
-> ist weiterhin der **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-13**
-> stehen nicht hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-8.md`.
+> **Stand dieser Datei: 15.09.2026.** Der jüngste Durchgang ist **L-15** und
+> steht in `Befunde/LEKTOR-10.md`; gemessen an Quellstand **7.2.0.63** / Paket
+> **1.0.63**, über **144** MD-Dateien. Davor **L-14** in
+> `Befunde/LEKTOR-9.md` (7.2.0.57 / 1.0.57, 14.09.2026). Der jüngste Durchgang
+> *in dieser Datei* ist weiterhin der **neunte**, ganz unten. Die Durchgänge
+> **L-6** bis **L-15** stehen nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
+> `Befunde/LEKTOR-10.md`.
+>
+> **L-15 in einem Satz:** Eine Schranke zählte offene Befunde nur, solange
+> ihr Urteil kürzer als 60 Zeichen war — sie meldete *„Die Liste deckt die
+> offenen Befunde"* und übersah zwei; dazu standen neun Stellen im Bestand
+> auf 1.0.52, 1.0.55, 1.0.56 oder 1.0.57 statt 1.0.63, zwei davon als
+> **Handlungsanweisung** für Arbeit, die längst getan ist.
 >
 > **L-13 in einem Satz:** Drei Fassungen in vierundzwanzig Stunden haben die
 > Doku an neun Stellen stehenlassen — zwei davon sagten das **Gegenteil** des
