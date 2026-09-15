@@ -3397,6 +3397,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 	int		nBilder = 0;		// <img> insgesamt
 	int		nSchonGut = 0;		// unveraendert gelassen
 	int		nAusCss = 0;		// mindestens ein Mass aus style="..." geholt
+	int		nEingebettet = 0;	// cid: oder data: - Paige kennt die Groesse
 	int		nOhneMass = 0;		// kein Mass bekannt - Bild unangetastet gelassen
 	int		nGedeckelt = 0;		// war breiter oder hoeher als der Deckel
 
@@ -3489,6 +3490,39 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		E89Attribut(pAttrs, nAttrLen, "style", szStyle, NULL, NULL);
 
 		//
+		// E-95: eingebettete Bilder bleiben unangetastet.
+		//
+		// Paige kennt ihre echte Groesse, sobald es sie geladen hat - und
+		// eingebettete Bilder (cid:, data:) LIEGEN in der Nachricht, werden
+		// also auch beim Verfassen geladen. Jede Vorgabe von uns macht es
+		// dort nur schlechter.
+		//
+		// Gregor am 14.09.2026 an 1.0.60, nachdem der Text endlich frei war:
+		// die Bilder wurden zerschnitten. Der Fund steckte in seinem Bild -
+		// der blaue Doctolib-Kreis war BLAU, nicht grau. Paige hatte ihn
+		// geladen; unser height="20" schnitt ihn ab.
+		//
+		// Bei der FairToner-Nachricht dagegen standen graue Kaesten: dort
+		// sind die Bilder EXTERN (http://), werden beim Verfassen nicht
+		// geholt, und Paige weiss nichts ueber ihre Groesse. Nur dort ist
+		// eine Vorgabe sinnvoll.
+		//
+		// E89BilderMessbarMachen hat beide Faelle gleich behandelt. Genau das
+		// erklaert das Schwanken ueber vier Fassungen: 200x90 (grauer
+		// Kasten), gar nichts (Text zugedeckt), 20x20 (Bilder zerschnitten).
+		// Es war nie eine Frage der richtigen Zahl - es waren zwei Faelle,
+		// die wie einer behandelt wurden.
+		//
+		CString		szSrc;
+		E89Attribut(pAttrs, nAttrLen, "src", szSrc, NULL, NULL);
+		szSrc.TrimLeft();
+
+		const bool	bEingebettet = ( szSrc.GetLength() >= 4 &&
+									 ( _strnicmp((LPCTSTR) szSrc, "cid:",  4) == 0 ||
+									   _strnicmp((LPCTSTR) szSrc, "data:", 5) == 0 ) );
+
+
+		//
 		// Die beiden Masse bestimmen. Reihenfolge: Attribut, dann CSS,
 		// dann Vorgabe. Was aus dem Attribut kommt, ist bereits das, was
 		// Paige sehen wuerde - es zaehlt trotzdem mit, weil der Deckel es
@@ -3563,8 +3597,38 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		// Gregors Entscheidung am 14.09.2026 zwischen kleiner Vorgabe, gar
 		// keiner und den alten 200x90: "ok, option a".
 		//
+		// E-95, 15.09.2026: die Vorgabe gilt NUR fuer externe Bilder.
+		//
+		// Ein eingebettetes Bild (cid:, data:) liegt in der Nachricht und
+		// wird auch beim Verfassen geladen - Paige kennt seine echte Groesse
+		// genau und traegt sie selbst ein. Jede Vorgabe von uns ueberschreibt
+		// sie und schneidet das Bild ab.
+		//
+		// Gregor am 14.09.2026 an 1.0.60, nachdem der Text endlich frei war:
+		// die Bilder wurden zerschnitten. Der Fund steckte in seinem Bild -
+		// der blaue Doctolib-Kreis war BLAU, nicht grau. Paige hatte ihn
+		// geladen; unser height="20" schnitt ihn ab.
+		//
+		// Bei der FairToner-Nachricht dagegen standen graue Kaesten: dort
+		// sind die Bilder EXTERN (http://), werden nicht geholt, und Paige
+		// weiss nichts ueber ihre Groesse. Nur dort hilft eine Vorgabe.
+		//
+		// WICHTIG - die Unterscheidung gehoert HIERHER und nicht weiter oben:
+		// ein eingebettetes Bild MIT Groesse (im Attribut oder im CSS) wird
+		// weiterhin umgeschrieben. Diese Groesse ist die erklaerte Absicht
+		// des Absenders; Paige wuerde stattdessen die Originalgroesse der
+		// Datei nehmen. Ein erster Entwurf hat solche Bilder pauschal
+		// uebersprungen - zwei Tests haben es sofort gemeldet.
+		//
 		if (nBreite <= 0 && nHoehe <= 0)
 		{
+			if (bEingebettet)
+			{
+				nEingebettet++;
+				i = j + 1;
+				continue;
+			}
+
 			nBreite = E89_VORGABE_KLEIN;
 			nHoehe  = E89_VORGABE_KLEIN;
 			nOhneMass++;
@@ -3691,8 +3755,8 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 	out_szSpur.Format(
 		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
-		"ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
-		nBilder, nSchonGut, nAusCss, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
+		"eingebettet=%d ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		nBilder, nSchonGut, nAusCss, nEingebettet, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
 		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
 
 	return bGeaendert;

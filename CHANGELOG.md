@@ -59,6 +59,51 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
+
+> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Die
+> Bilder müssen **vollständig** dastehen und der Text **frei** bleiben — beides
+> zugleich, zum ersten Mal.
+
+**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Doctolib-Kreis war
+**blau**, nicht grau. Paige hatte das Bild also **geladen** und kannte seine
+echte Größe genau — es ist in der Nachricht **eingebettet** (`cid:`). Unser
+`height="20"` überschrieb diese Größe und schnitt das Bild ab.
+
+Bei der FairToner-Nachricht dagegen standen graue Kästen: dort sind die Bilder
+**extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß
+nichts über ihre Größe. **Nur dort hilft eine Vorgabe.**
+
+`E89BilderMessbarMachen` hat beide Fälle gleich behandelt. Das erklärt das
+Schwanken über vier Fassungen:
+
+| Fassung | Vorgabe | Ergebnis |
+|---|---|---|
+| 7.2.0.57 | 200×90 | großer grauer Kasten im Text |
+| 7.2.0.58/59 | keine | Text wird zugedeckt |
+| 7.2.0.60 | 20×20 | Bilder zerschnitten |
+| **7.2.0.61** | **nur bei externen** | Text frei **und** Bilder ganz |
+
+Es war nie eine Frage der richtigen Zahl — es waren zwei Fälle, die wie einer
+behandelt wurden.
+
+**Drei Fälle, drei Tests:**
+
+| | |
+|---|---|
+| eingebettet **ohne** Größe | unangetastet — Paige kennt sie |
+| eingebettet **mit** Größe | wird umgeschrieben — die Größe ist die Absicht des Absenders |
+| extern ohne Größe | Vorgabe 20 Punkte, sonst bleibt die Zeile textklein |
+
+Der mittlere Fall war ein Denkfehler im ersten Entwurf: der übersprang **alle**
+`cid:`-Bilder, auch die mit CSS-Größe, wo Paige sonst die Originalgröße der
+Datei nimmt statt der gewünschten. **Zwei bestehende Tests haben es sofort
+gemeldet**, bevor eine Fassung daraus wurde.
+
+Die Spurmarke nennt jetzt `eingebettet=N`.
+
+**Tests: 153 von 153**, drei davon neu.
+
 ## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
 
 > **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Der

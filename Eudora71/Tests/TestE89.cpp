@@ -406,4 +406,67 @@ void RunE89Tests(void)
 		TT_Note("%s", (LPCTSTR) szAus);
 	}
 	TT_EndTest();
+
+	//
+	// E-95: ein eingebettetes Bild OHNE Groesse bleibt unangetastet.
+	//
+	// Paige laedt es und kennt seine echte Groesse. Jede Vorgabe von uns
+	// ueberschreibt sie und schneidet das Bild ab - auf Gregors Bild zu
+	// 1.0.60 stand vom Doctolib-Schriftzug nur ein Fragment.
+	//
+	TT_BeginTest("E-95: eingebettetes Bild ohne Groesse bleibt unangetastet");
+	{
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"cid:logo\" alt=\"Logo\"></body></html>",
+			szAus, szSpur);
+
+		TT_CHECK_MSG(!bGeaendert,
+					 "Paige kennt die Groesse - eine Vorgabe schneidet das Bild ab");
+		TT_CHECK(szSpur.Find("eingebettet=1") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=0") >= 0);
+		TT_Note("%s", (LPCTSTR) szSpur);
+	}
+	TT_EndTest();
+
+	//
+	// Die Gegenprobe, und sie ist die wichtigere: ein eingebettetes Bild MIT
+	// Groesse wird weiterhin umgeschrieben. Diese Groesse ist die erklaerte
+	// Absicht des Absenders; Paige wuerde sonst die Originalgroesse der Datei
+	// nehmen. Ein erster Entwurf hat cid: pauschal uebersprungen - genau
+	// dieser Fall fiel dabei durch.
+	//
+	TT_BeginTest("E-95 Gegenprobe: eingebettetes Bild MIT CSS-Groesse wird umgeschrieben");
+	{
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"cid:logo\" style=\"width:320px;height:80px\">"
+			"</body></html>", szAus, szSpur);
+
+		TT_CHECK_MSG(bGeaendert,
+					 "die CSS-Groesse ist die Absicht des Absenders, nicht zu ignorieren");
+		TT_CHECK(szAus.Find("width=\"320\"") >= 0);
+		TT_CHECK(szAus.Find("height=\"80\"") >= 0);
+		TT_CHECK(szSpur.Find("eingebettet=0") >= 0);
+		TT_Note("%s", (LPCTSTR) szSpur);
+	}
+	TT_EndTest();
+
+	//
+	// Und der dritte Fall: extern ohne Groesse. Dort weiss Paige nichts, also
+	// greift die Vorgabe - sonst bleibt die Zeile textklein und der Text wird
+	// zugedeckt.
+	//
+	TT_BeginTest("E-95: externes Bild ohne Groesse bekommt die Vorgabe");
+	{
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"https://example.invalid/bild.jpg\"></body></html>",
+			szAus, szSpur);
+
+		TT_CHECK_MSG(bGeaendert,
+					 "ohne Vorgabe bleibt die Zeile textklein und deckt den Text zu");
+		TT_CHECK(szAus.Find("height=\"20\"") >= 0);
+		TT_CHECK(szSpur.Find("eingebettet=0") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
+		TT_Note("%s", (LPCTSTR) szSpur);
+	}
+	TT_EndTest();
 }
