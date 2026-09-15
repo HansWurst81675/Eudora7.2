@@ -144,10 +144,13 @@ for my $zeile (split /\n/, $befunde) {
     next unless @spalten >= 4;
     my $urteilstext = $spalten[3];
 
-    # Im Urteilstext zaehlt das ERSTE Fettgedruckte.
+    # Im Urteilstext zaehlt das ERSTE Fettgedruckte - OHNE Laengengrenze.
+    # Bis zum 15.09.2026 stand hier {1,60}. Ein Urteil von 62 oder 67 Zeichen
+    # (E-90, E-92) fiel damit lautlos durch beide Werkzeuge; offene-befunde.pl
+    # traegt dieselbe Berichtigung.
     my $ist_offen = 0;
     my $ist_erledigt = 0;
-    if ($urteilstext =~ /\*\*([^*]{1,60})\*\*/) {
+    if ($urteilstext =~ /\*\*([^*]+?)\*\*/) {
         my $wort = lc $1;
         $ist_offen    = 1 if grep { index($wort, lc $_) >= 0 } @offen;
         $ist_erledigt = 1 if grep { index($wort, lc $_) >= 0 } @erledigt;
