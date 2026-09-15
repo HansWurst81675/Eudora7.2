@@ -105,7 +105,7 @@ void RunE89Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------- (3)
-	TT_BeginTest("E-89: gar keine Groessenangabe - kleine Vorgabe, damit die Zeile stimmt");
+	TT_BeginTest("E-89: gar keine Groessenangabe - das Bild bleibt unangetastet");
 	{
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"https://example.invalid/bild.jpg\" alt=\"Bild\">"
@@ -116,9 +116,8 @@ void RunE89Tests(void)
 		// mitten im Text: Platz, der weggenommen wird, ohne dass etwas zu
 		// sehen ist. Eine geratene Zahl ist schlechter als keine - Paige
 		// kennt die wirkliche Groesse, sobald es die Datei geladen hat.
-		TT_CHECK_MSG(bGeaendert,
-					 "ohne Hoehe bleibt die Zeile textklein und der Text wird zugedeckt");
-		TT_CHECK(szAus.Find("height=\"20\"") >= 0);
+		TT_CHECK_MSG(!bGeaendert,
+					 "seit E-96 traegt Paige die echte Groesse selbst nach - eine geratene Zahl quetscht das Bild nur");
 		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);
 	}
@@ -404,6 +403,68 @@ void RunE89Tests(void)
 		TT_CHECK(szAus.Find("width=\"40\"") >= 0);
 		TT_CHECK_MSG(szAus.Find("/>") >= 0, "Die Markierung hat ihr schliessendes / verloren");
 		TT_Note("%s", (LPCTSTR) szAus);
+	}
+	TT_EndTest();
+
+	//
+	// E-95: ein eingebettetes Bild OHNE Groesse bleibt unangetastet.
+	//
+	// Paige laedt es und kennt seine echte Groesse. Jede Vorgabe von uns
+	// ueberschreibt sie und schneidet das Bild ab - auf Gregors Bild zu
+	// 1.0.60 stand vom Doctolib-Schriftzug nur ein Fragment.
+	//
+	TT_BeginTest("E-95: eingebettetes Bild ohne Groesse bleibt unangetastet");
+	{
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"cid:logo\" alt=\"Logo\"></body></html>",
+			szAus, szSpur);
+
+		TT_CHECK_MSG(!bGeaendert,
+					 "Paige kennt die Groesse - eine Vorgabe schneidet das Bild ab");
+		TT_CHECK(szSpur.Find("eingebettet=1") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
+		TT_Note("%s", (LPCTSTR) szSpur);
+	}
+	TT_EndTest();
+
+	//
+	// Die Gegenprobe, und sie ist die wichtigere: ein eingebettetes Bild MIT
+	// Groesse wird weiterhin umgeschrieben. Diese Groesse ist die erklaerte
+	// Absicht des Absenders; Paige wuerde sonst die Originalgroesse der Datei
+	// nehmen. Ein erster Entwurf hat cid: pauschal uebersprungen - genau
+	// dieser Fall fiel dabei durch.
+	//
+	TT_BeginTest("E-95 Gegenprobe: eingebettetes Bild MIT CSS-Groesse wird umgeschrieben");
+	{
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"cid:logo\" style=\"width:320px;height:80px\">"
+			"</body></html>", szAus, szSpur);
+
+		TT_CHECK_MSG(bGeaendert,
+					 "die CSS-Groesse ist die Absicht des Absenders, nicht zu ignorieren");
+		TT_CHECK(szAus.Find("width=\"320\"") >= 0);
+		TT_CHECK(szAus.Find("height=\"80\"") >= 0);
+		TT_CHECK(szSpur.Find("eingebettet=0") >= 0);
+		TT_Note("%s", (LPCTSTR) szSpur);
+	}
+	TT_EndTest();
+
+	//
+	// Und der dritte Fall: extern ohne Groesse. Dort weiss Paige nichts, also
+	// greift die Vorgabe - sonst bleibt die Zeile textklein und der Text wird
+	// zugedeckt.
+	//
+	TT_BeginTest("E-95: externes Bild ohne Groesse bleibt ebenfalls unangetastet");
+	{
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"https://example.invalid/bild.jpg\"></body></html>",
+			szAus, szSpur);
+
+		TT_CHECK_MSG(!bGeaendert,
+					 "seit E-96 stimmt die Zeilenhoehe auch ohne Attribut");
+		TT_CHECK(szSpur.Find("eingebettet=0") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
+		TT_Note("%s", (LPCTSTR) szSpur);
 	}
 	TT_EndTest();
 }

@@ -3181,8 +3181,6 @@ bool E88OriginalEinsetzen(
 #define E89_MAX_BREITE		600
 #define E89_MAX_HOEHE		600
 
-#define E89_VORGABE_KLEIN	20
-
 // Vorgabemasse fuer ein Bild, dessen Groesse nirgends steht. Hier gibt es
 // nichts zu rechnen - weder Originalgroesse noch Seitenverhaeltnis sind
 // bekannt, und nachgeladen wird beim Verfassen nichts. Die Hoehe ist die
@@ -3397,6 +3395,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 	int		nBilder = 0;		// <img> insgesamt
 	int		nSchonGut = 0;		// unveraendert gelassen
 	int		nAusCss = 0;		// mindestens ein Mass aus style="..." geholt
+	int		nEingebettet = 0;	// cid: oder data: - Paige kennt die Groesse
 	int		nOhneMass = 0;		// kein Mass bekannt - Bild unangetastet gelassen
 	int		nGedeckelt = 0;		// war breiter oder hoeher als der Deckel
 
@@ -3489,6 +3488,39 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		E89Attribut(pAttrs, nAttrLen, "style", szStyle, NULL, NULL);
 
 		//
+		// E-95: eingebettete Bilder bleiben unangetastet.
+		//
+		// Paige kennt ihre echte Groesse, sobald es sie geladen hat - und
+		// eingebettete Bilder (cid:, data:) LIEGEN in der Nachricht, werden
+		// also auch beim Verfassen geladen. Jede Vorgabe von uns macht es
+		// dort nur schlechter.
+		//
+		// Gregor am 14.09.2026 an 1.0.60, nachdem der Text endlich frei war:
+		// die Bilder wurden zerschnitten. Der Fund steckte in seinem Bild -
+		// der blaue Doctolib-Kreis war BLAU, nicht grau. Paige hatte ihn
+		// geladen; unser height="20" schnitt ihn ab.
+		//
+		// Bei der FairToner-Nachricht dagegen standen graue Kaesten: dort
+		// sind die Bilder EXTERN (http://), werden beim Verfassen nicht
+		// geholt, und Paige weiss nichts ueber ihre Groesse. Nur dort ist
+		// eine Vorgabe sinnvoll.
+		//
+		// E89BilderMessbarMachen hat beide Faelle gleich behandelt. Genau das
+		// erklaert das Schwanken ueber vier Fassungen: 200x90 (grauer
+		// Kasten), gar nichts (Text zugedeckt), 20x20 (Bilder zerschnitten).
+		// Es war nie eine Frage der richtigen Zahl - es waren zwei Faelle,
+		// die wie einer behandelt wurden.
+		//
+		CString		szSrc;
+		E89Attribut(pAttrs, nAttrLen, "src", szSrc, NULL, NULL);
+		szSrc.TrimLeft();
+
+		const bool	bEingebettet = ( szSrc.GetLength() >= 4 &&
+									 ( _strnicmp((LPCTSTR) szSrc, "cid:",  4) == 0 ||
+									   _strnicmp((LPCTSTR) szSrc, "data:", 5) == 0 ) );
+
+
+		//
 		// Die beiden Masse bestimmen. Reihenfolge: Attribut, dann CSS,
 		// dann Vorgabe. Was aus dem Attribut kommt, ist bereits das, was
 		// Paige sehen wuerde - es zaehlt trotzdem mit, weil der Deckel es
@@ -3563,17 +3595,52 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		// Gregors Entscheidung am 14.09.2026 zwischen kleiner Vorgabe, gar
 		// keiner und den alten 200x90: "ok, option a".
 		//
+		// E-95/E-96, 15.09.2026: KEINE Vorgabe mehr fuer Bilder ohne Mass.
+		//
+		// Bis 7.2.0.62 bekam ein Bild ohne Groessenangabe 20x20 Punkte. Das war
+		// ein Notbehelf gegen E-96: solange die Zeilenhoehe die des ERSTEN
+		// Bildes behielt, blieb sie bei fehlendem height-Attribut textklein,
+		// und der Text wurde zugedeckt.
+		//
+		// Seit E-96 behoben ist, stimmt die Zeilenhoehe je Bild. GEMESSEN an
+		// Gregors Nachrichten mit 1.0.62:
+		//
+		//   attr=600x1   ascent=13     (Trennlinie - Zeile bleibt textbreit)
+		//   attr=175x35  ascent=35
+		//   attr=200x50  ascent=50
+		//   attr=80x80   ascent=80
+		//
+		// Damit ist der Notbehelf nicht nur ueberfluessig, sondern SCHAEDLICH:
+		// auf seinem Bild war die Tonerkartusche ein schmaler Streifen - kein
+		// abgeschnittenes Bild, sondern eines, das wir auf 20x20 gequetscht
+		// hatten. In derselben Messung steht dazu "attr=20x20".
+		//
+		// Paige kennt die wirkliche Groesse, sobald es die Datei geladen hat;
+		// die Spalte "embed=" der Spurmarke belegt es. Ohne unser Zutun traegt
+		// es sie selbst ein.
+		//
+		// Vier Fassungen lang wurde an dieser Zahl gedreht - 200x90, gar
+		// nichts, 20x20, cid-gegen-http. Keine davon war die Ursache. Die lag
+		// in ProcessEmbed, und seit sie behoben ist, braucht es hier gar
+		// nichts mehr.
 		if (nBreite <= 0 && nHoehe <= 0)
 		{
-			nBreite = E89_VORGABE_KLEIN;
-			nHoehe  = E89_VORGABE_KLEIN;
 			nOhneMass++;
+			if (bEingebettet) nEingebettet++;
+			i = j + 1;
+			continue;
 		}
 		else if (nHoehe <= 0)
 		{
-			// Breite bekannt, Hoehe nicht: die Zeilenhoehe haengt an der
-			// Hoehe, also muss sie dastehen.
-			nHoehe = E89_VORGABE_KLEIN;
+			// Breite bekannt, Hoehe nicht: auch hier NICHTS erfinden.
+			//
+			// Eine geratene Hoehe verzerrt das Bild - bei width="600" und
+			// einer Vorgabe von 20 waere es ein Streifen. Paige traegt die
+			// echte Hoehe nach, sobald es die Datei geladen hat, und seit
+			// E-96 behoben ist, stimmt die Zeilenhoehe dann auch.
+			//
+			// Die Breite bleibt stehen: sie stand im HTML und ist die
+			// erklaerte Absicht des Absenders.
 			nOhneMass++;
 		}
 
@@ -3691,8 +3758,8 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 	out_szSpur.Format(
 		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
-		"ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
-		nBilder, nSchonGut, nAusCss, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
+		"eingebettet=%d ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		nBilder, nSchonGut, nAusCss, nEingebettet, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
 		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
 
 	return bGeaendert;

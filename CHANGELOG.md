@@ -59,6 +59,141 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
+
+> **Zu prüfen:** Doctolib- und FairToner-Nachricht weiterleiten **und**
+> beantworten. Die Bilder müssen in ihrer **wirklichen** Größe dastehen und der
+> Text **frei** bleiben.
+
+**Seit E-96 behoben ist, war die Vorgabe nur noch schädlich.** Bis 7.2.0.62 bekam
+ein Bild ohne Größenangabe 20×20 Punkte — ein Notbehelf gegen E-96: solange die
+Zeilenhöhe die des *ersten* Bildes behielt, blieb sie bei fehlendem
+`height`-Attribut textklein, und der Text wurde zugedeckt.
+
+**Gemessen an Gregors Nachrichten mit 1.0.62** steht die Zeilenhöhe jetzt je
+Bild richtig:
+
+```
+attr=600x1   ascent=13     (1 Pixel hohe Trennlinie - Zeile bleibt textbreit)
+attr=175x35  ascent=35
+attr=200x50  ascent=50
+attr=80x80   ascent=80
+```
+
+In derselben Messung stand aber auch `attr=20x20` — und genau das war auf
+seinem Bild die Tonerkartusche: **kein abgeschnittenes Bild, sondern eines, das
+wir auf 20×20 gequetscht hatten.**
+
+Paige kennt die wirkliche Größe, sobald es die Datei geladen hat; die Spalte
+`embed=` der Spurmarke belegt es. Ohne unser Zutun trägt es sie selbst ein.
+Deshalb bleibt ein Bild ohne Maß jetzt **unangetastet** — auch dann, wenn nur
+die Höhe fehlt: eine geratene Höhe bei `width="600"` würde es zu einem Streifen
+verzerren.
+
+**Damit entfällt auch die Unterscheidung zwischen eingebetteten und externen
+Bildern** aus 7.2.0.61. Sie war richtig gedacht, aber sie behandelte ein
+Symptom: beide Fälle bleiben jetzt gleichermaßen unangetastet. Der Zähler
+`eingebettet=` in der Spurmarke bleibt als Information stehen.
+
+**Vier Fassungen lang wurde an dieser Zahl gedreht** — 200×90, gar nichts,
+20×20, `cid:` gegen `http:`. Keine davon war die Ursache. Die lag in
+`ProcessEmbed`, und seit sie behoben ist, braucht es an dieser Stelle gar nichts
+mehr.
+
+**Tests: 153 von 153**, drei davon umgeschrieben — sie prüfen jetzt, dass
+**nichts** geschieht.
+
+## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
+
+> **Zu prüfen:** die Doctolib-Nachricht weiterleiten. Die Bilder müssen
+> **vollständig** dastehen und der Text **frei** bleiben. Falls nicht: im
+> Protokoll steht bei `LogLevel=58527` je Bild eine Zeile
+> `E-95 Bild: attr=… embed=… ascent=… text-asc=…` — die sagt, wo es klemmt.
+
+**Die Ursache, am laufenden Programm gemessen.** `ProcessEmbed()` räumt nach
+jedem eingefügten Bild den Embed-Stil auf — `procs`, `embed_entry`,
+`embed_object` —, **aber nicht die Zeilenhöhe**. `current_style.ascent` behielt
+die Höhe des Bildes. Beim nächsten Bild las `DoDataTag` diesen Wert als
+vermeintlichen **Text**-Ascent ein, und das Maximum zog die Zeilenhöhe wieder
+auf den alten Wert hoch.
+
+Drei Fassungen an derselben Testnachricht (Bilder 600×150, 320×80, 20×20):
+
+```
+der Fehler:              ascent=150  150  150     text-asc=13  150  150
+mit def_style:           ascent=150   80   20     text-asc=13    0    0
+jetzt:                   ascent=150   80   20     text-asc=13   13   13
+```
+
+Die mittlere Fassung war der erste Entwurf. Sie stellt zwar die Bildhöhen
+richtig, setzt den Text-Ascent aber auf null — damit fällt die Schutzregel
+*„die Zeile ist mindestens so hoch wie der Text"* weg, und ein Zählpixel von
+1×1 ließe die Zeile auf einen Punkt schrumpfen. Solche Pixel stehen in
+Newslettern zu Dutzenden. Deshalb wird jetzt der echte Text-Ascent gemerkt,
+solange noch kein Bild eingefügt wurde.
+
+**Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal
+half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen
+dessen Höhe blind. Bei der Doctolib-Nachricht steht der kleine Schriftzug vor
+dem großen blauen Kreis — deshalb wurde dort abgeschnitten.
+
+**Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo
+identisch, also seit 2006 so.
+
+**Wie es gefunden wurde.** Zum ersten Mal an einem selbst gestarteten Eudora
+statt an Bildschirmfotos: eine Testnachricht mit drei Bildern bekannter Größe,
+Weiterleiten über Fensterbotschaften ausgelöst, und eine Spurmarke, die je Bild
+vier Werte in **einer** Zeile nennt. Die erste Messung schrieb nichts — das
+Testverzeichnis trug noch die alte `Eudora.exe`. Dieselbe Klasse, gegen die es
+hier eine eigene Regel gibt: *das Paket gegen den Bau messen.*
+
+**Tests: 153 von 153.**
+
+## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
+
+> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Die
+> Bilder müssen **vollständig** dastehen und der Text **frei** bleiben — beides
+> zugleich, zum ersten Mal.
+
+**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Doctolib-Kreis war
+**blau**, nicht grau. Paige hatte das Bild also **geladen** und kannte seine
+echte Größe genau — es ist in der Nachricht **eingebettet** (`cid:`). Unser
+`height="20"` überschrieb diese Größe und schnitt das Bild ab.
+
+Bei der FairToner-Nachricht dagegen standen graue Kästen: dort sind die Bilder
+**extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß
+nichts über ihre Größe. **Nur dort hilft eine Vorgabe.**
+
+`E89BilderMessbarMachen` hat beide Fälle gleich behandelt. Das erklärt das
+Schwanken über vier Fassungen:
+
+| Fassung | Vorgabe | Ergebnis |
+|---|---|---|
+| 7.2.0.57 | 200×90 | großer grauer Kasten im Text |
+| 7.2.0.58/59 | keine | Text wird zugedeckt |
+| 7.2.0.60 | 20×20 | Bilder zerschnitten |
+| **7.2.0.61** | **nur bei externen** | Text frei **und** Bilder ganz |
+
+Es war nie eine Frage der richtigen Zahl — es waren zwei Fälle, die wie einer
+behandelt wurden.
+
+**Drei Fälle, drei Tests:**
+
+| | |
+|---|---|
+| eingebettet **ohne** Größe | unangetastet — Paige kennt sie |
+| eingebettet **mit** Größe | wird umgeschrieben — die Größe ist die Absicht des Absenders |
+| extern ohne Größe | Vorgabe 20 Punkte, sonst bleibt die Zeile textklein |
+
+Der mittlere Fall war ein Denkfehler im ersten Entwurf: der übersprang **alle**
+`cid:`-Bilder, auch die mit CSS-Größe, wo Paige sonst die Originalgröße der
+Datei nimmt statt der gewünschten. **Zwei bestehende Tests haben es sofort
+gemeldet**, bevor eine Fassung daraus wurde.
+
+Die Spurmarke nennt jetzt `eingebettet=N`.
+
+**Tests: 153 von 153**, drei davon neu.
+
 ## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
 
 > **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Der
