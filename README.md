@@ -62,22 +62,89 @@ verschickt.
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
-* **HTML-Nachrichten werden falsch dargestellt** (**E-86**, offen): Bilder in
-  der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um
-  verlinkte Bilder. Betroffen ist nur die Anzeige — die Nachricht selbst
-  bleibt unversehrt.
+* **HTML-Nachrichten werden beim Lesen inzwischen richtig dargestellt**
+  (**E-86**, behoben in 7.2.0.55): MSHTML lief ohne `X-UA-Compatible` im
+  IE-7-Modus von 2006. Im **Verfassenfenster** bleibt die Darstellung schlicht
+  — siehe *Wo die Grenzen liegen* weiter unten.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Noch nicht im Download enthalten:** zwei IMAP-Fehler sind im Quelltext
-  erledigt, aber **nicht veröffentlicht** — das neueste Release ist `v1.0.50`.
-  Im Quellstand 7.2.0.52 kommen abgerufene Nachrichten nicht mehr als
-  Zeichensalat an, im Quellstand 7.2.0.53 lässt Eudora sich wieder beenden,
-  ohne eine laufende Aufgabe zu melden. Wer das braucht, baut selbst.
+* **Noch nicht im Download enthalten:** das neueste Release ist `v1.0.50`. Im
+  Quellstand sind seither behoben: Zeichensalat beim IMAP-Abruf (7.2.0.52),
+  das Beenden mit hängender Aufgabe (7.2.0.53), die HTML-Darstellung beim
+  Lesen (7.2.0.55), der Formatverlust beim Weiterleiten (7.2.0.56), sich
+  überlagernde Bilder im Verfassenfenster (7.2.0.58/60), Fragezeichen statt
+  Emoji (7.2.0.59) und **Inhaltsverlust beim Weiterleiten** einer bereits
+  weitergeleiteten Nachricht (7.2.0.59, **E-93** — es gingen 17.889 statt
+  252.921 Byte hinaus). Wer das braucht, baut selbst.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
 unter *Noch offen*.
+
+## Wo die Grenzen liegen — und warum sie bleiben
+
+Drei Dinge lassen sich an diesem Programm **nicht** durch Nachbessern beheben.
+Sie hängen an der Bauart von 2006, und wer die Fassung einsetzt, sollte sie
+kennen.
+
+### 1. Das Verfassenfenster kennt kein CSS
+
+Eudora benutzt **zwei** verschiedene Motoren für HTML:
+
+| | wofür | was er kann |
+|---|---|---|
+| **MSHTML** (Trident, der Motor des Internet Explorer) | die **Leseansicht** | vollständiges HTML von 2006 — Kästen, Hintergründe, Bildgrößen |
+| **Paige** | das **Verfassenfenster** | ein eigenes Textformat, **keine einzige CSS-Eigenschaft** |
+
+Deshalb sieht dieselbe Nachricht beim **Lesen** richtig aus und im
+**Verfassenfenster** schlicht. Paiges HTML-Leser führt in `PGHTMDEF.C:20-48`
+auf, was er versteht; CSS kommt darin nicht vor. Bildgrößen liest er nur aus
+den Attributen `width` und `height`, nicht aus `style="width:…"`.
+
+Seit der Fassung 7.2.0.56 geht beim Senden das **aufgehobene Original** hinaus
+statt der Editorfassung (Befund **E-88**). Was im Verfassenfenster fehlt, fehlt
+also nicht beim Empfänger — das Fenster ist Arbeitsfläche, nicht Vorschau.
+
+### 2. Emoji lassen sich nicht anzeigen
+
+Eudora ist durchgehend **ANSI** gebaut: Mailboxen, Kopfzeilen, die
+Nachrichtenliste. Der Zeichensatz Windows-1252 kennt 256 Zeichen und darunter
+kein einziges Emoji. Beim Umwandeln entstand früher Bytesalat, dann ein
+Fragezeichen je Emoji-Hälfte (`??`), seit 7.2.0.59 fallen sie ersatzlos weg
+(**E-90**). Kyrillisch, Griechisch und Polnisch bleiben erhalten, soweit die
+Ersetzungstabelle von Windows sie abbilden kann.
+
+### 3. Was ein Austausch des Motors kosten würde
+
+Die naheliegende Frage lautet: warum nicht eine moderne Bibliothek einsetzen,
+statt weiter nachzubessern? Gemessen am 14.09.2026:
+
+```
+Paige-Anbindung in Eudora:   13.146 Zeilen, 36 Dateien, 188 Funktionen
+MSHTML-Anbindung:             8.637 Zeilen,  9 Dateien
+IHTMLDocument2 in TridentView:   13 Stellen
+designMode / contentEditable:     0 Stellen
+```
+
+**MSHTML im Editiermodus** wäre der naheliegendste Weg: Der Motor liegt bereits
+im Programm und rendert die Leseansicht. Er kann auch editieren
+(`document.designMode = "On"`) — im Original ist das an **null** Stellen
+benutzt. Er steckt in jedem Windows, braucht keine Installation und wirft keine
+Lizenzfrage auf. Modernes CSS kann er allerdings nicht: Flexbox, Grid und
+`border-radius` sind ihm fremd; für Newsletter-HTML aus Tabellenlayout reicht er.
+Der Umbau beträfe den Editorkern — grob 4.000 bis 5.000 der 13.146 Zeilen —,
+und danach stünde die Frage an, wie Eudora Stile, Signaturen und Zitatmarken
+speichert. Realistisch: **einige Wochen**, nicht Tage.
+
+**WebView2 (Edge/Chromium)** wäre technisch das Beste: echtes modernes HTML,
+echte Emoji. Aber die Laufzeit muss auf dem Zielrechner installiert sein, rund
+100 MB — damit fiele Kriterium 0 aus [ZIEL.md](ZIEL.md) (*startet ohne
+Nachinstallation*). Chromium direkt einzubetten kostet etwa 150 MB Paketgröße.
+
+**Was kein Motorwechsel löst:** Emoji im Betreff und in der Nachrichtenliste.
+Die hängen nicht am Editor, sondern an der ANSI-Bauart der ganzen Anwendung.
+Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 
 ## Für Anwender
 
