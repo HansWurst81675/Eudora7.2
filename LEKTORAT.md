@@ -5,7 +5,8 @@ Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
 seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
 [README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
 
-Hier stehen der erste bis vierte, der sechste bis neunte Durchgang. Der
+Hier stehen der erste bis vierte, der sechste bis neunte sowie der dreizehnte
+bis fünfzehnte Durchgang. Der
 **fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
 die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
@@ -850,3 +851,35 @@ und alle **88** Werkzeuge in `tools/`.
 keine Schranke prüft eine Datei gegen sich selbst. Eine Prüfung, die zu **einer**
 Kennung zwei verschiedene Fassungsnummern in derselben Datei findet, hätte beide
 gefunden und wäre billig.
+
+# Vierzehnter Durchgang — 14.09.2026 (L-14)
+
+**Der Bericht steht vollständig in [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md).**
+Nachgetragen am 15.09.2026 — dieser Durchgang hatte hier nie einen Eintrag
+bekommen, obwohl genau das der Zweck dieses Fahrtenbuchs ist.
+
+Gemessen an Quellstand **7.2.0.57** / Paket **1.0.57**. Der schwerste Fund:
+**3217 doppelt umkodierte Stellen** in `BEFUNDE.md`, in 1517 von 7826 Zeilen —
+und die Datei war dabei durchgehend gültiges UTF-8, sah also für jede Prüfung
+normal aus, die nur auf Kodierungsfehler sieht.
+
+# Fünfzehnter Durchgang — 15.09.2026 (L-15)
+
+**Der Bericht steht vollständig in [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md).**
+
+Gemessen an Quellstand **7.2.0.63** / Paket **1.0.63**, über **144** MD-Dateien
+und alle **108** versionierten Dateien in `tools/`.
+
+| | |
+|---|---|
+| **Der schwerste Fund** | `offene-befunde.pl` und `pruefe-befundurteile.pl` lasen das Urteil nur bis **60 Zeichen** Länge. **E-90** (62 Zeichen) und **E-92** (67) fielen lautlos aus der Zählung — und das Werkzeug schrieb dazu *„Die Liste deckt die offenen Befunde."* Neun standen da, wo elf stehen. **L-13 hatte genau dieses Fenster schon als *„der stillste"* Fund benannt, ohne es zu schließen** — es ist jetzt weg, in beide Richtungen gegengetestet |
+| **Die Breite** | **neun Stellen** in sieben Dateien standen auf 1.0.52, 1.0.55, 1.0.56 oder 1.0.57 statt 1.0.63 — `WEITERMACHEN.md`, `AUFGABEN.md`, `ZIEL.md`, `Releases/PAKETE.md`, `README.md` |
+| **Die gefährlichste Sorte** | zwei Zeilen in `WEITERMACHEN.md` standen als **Handlungsanweisung** für Arbeit, die längst getan ist: *„DER NÄCHSTE SCHRITT: E-85 ist NICHT behoben"* (behoben seit 7.2.0.52, und zwei Zeilen tiefer in derselben Tabelle stand es auch so) und *„Was als Nächstes zu messen ist: der hängende Resync"* (das ist E-83, seit 7.2.0.53 behoben) |
+| **Eine Zahl war schlicht falsch** | `README.md` sagte zu **E-93** *„17.889 statt 252.921 Byte"*. Die Spurmarke selbst sagt `OrigBytes=105125`, und nur damit stimmen die 83 Prozent im Befundtitel. Der Auftrag an mich nannte ebenfalls 252921 — so wandert eine falsche Zahl weiter |
+| **`SPURMARKEN.md`** | behauptete *„23 Befunde, 158 Stellen in 20 Dateien"* und warnte **im selben Absatz** davor, dass die Zahl schon einmal nicht nachgezogen worden war. Gemessen: **29 / 168 / 26**. Vier Marken fehlten (E-83, E-86, E-87, E-95), eine stand mit falscher Datei da (E-89). Der Messbefehl steht jetzt dort |
+| **Nicht ersetzt, sondern gekennzeichnet** | die README-Zahlen zur *Paige-* und *MSHTML-Anbindung* (13.146 / 8.637 Zeilen) sind **nicht nachvollziehbar** — der Messbefehl wurde nie aufgeschrieben. Eine erfundene Reproduktion wäre schlimmer als ein ehrlicher Vermerk |
+
+**Was beim nächsten Mal zuerst drankommt:** `pruefe-stand-md.pl` hat nicht
+gemerkt, dass **L-14 in dieser Datei ganz fehlte** — sie hält Datum gegen Datum,
+nicht **Verweis gegen Bestand**. Eine Prüfung, die jeden `Befunde/LEKTOR-*.md`
+gegen die Verweise in `LEKTORAT.md` hält, hätte es sofort gesagt und wäre billig.
