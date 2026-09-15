@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 14.09.2026**, gemessen an Quellstand **7.2.0.63** / Paket **1.0.63**
+**Stand 15.09.2026**, gemessen an Quellstand **7.2.0.63** / Paket **1.0.63**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -18,10 +18,13 @@ darüber hinaus** **E-86** (HTML-Nachrichten falsch dargestellt) und **E-77**
 **2a**. Bis zum 14.09.2026 stand hier „beiden fehlt **dasselbe**", und das
 stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
 
-**Dazu warten zwei frische Behebungen auf sein Urteil:** **E-85** (Umlaute
-über IMAP, 7.2.0.52, am laufenden Programm belegt) und **E-83** (Eudora liess
-sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen). Gepackt ist
-**1.0.52**; 7.2.0.53 ist noch nicht als Paket gebaut.
+**Dazu warten fünf frische Behebungen auf sein Urteil:** **E-85** (Umlaute
+über IMAP, 7.2.0.52, am laufenden Programm belegt), **E-83** (Eudora liess
+sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), **E-93**
+(Inhaltsverlust beim Weiterleiten einer bereits weitergeleiteten Nachricht,
+7.2.0.59) sowie **E-95**/**E-96** (Bildgrößen im Verfassenfenster, 7.2.0.62
+und 7.2.0.63, an einem selbst gestarteten Eudora gemessen). **Gepackt ist
+1.0.63**; veröffentlicht ist weiterhin nur `v1.0.50`.
 
 | # | | Stand |
 |---|---|---|

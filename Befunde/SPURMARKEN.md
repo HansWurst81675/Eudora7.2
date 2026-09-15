@@ -39,14 +39,28 @@ Protokoll endlich gelesen wurde, sagte es in zwei Zeilen alles: **40** mal
 | E-86 | 1.0.54 | 1.0.55 | **Ausgewertet am 14.09.2026 in zwei Messläufen**, beide über `tools/testlauf.ps1` mit `tools/nachricht-oeffnen.ps1` — Gregors Freigabe: *„freigabe für beides"*, *„du mißt, ich warte"*. **Der erste Lauf war ungültig:** das Werkzeug öffnete die erstbeste Nachricht, und das war die weitergeleitete aus dem Out-Postfach — die ist durch E-87 ohnehin formatierungslos (Anzeigedatei 4774 B, `<body>` ohne Attribute). Erst nachdem in der `Eudora.ini` nur noch das In-Postfach als offenes Fenster stand, wurde die richtige Nachricht getroffen. **Was sie sagte:** `BODY-Elemente=1` (es gibt kein verworfenes zweites `<body>`), Anzeigedatei **36.078 B mit allen 118 `border`-Angaben** der Nachricht — beim Zusammensetzen geht nichts verloren. Damit waren beide Verdächte widerlegt und die Ursache lag im **Rendermodus**. **Nach dem Einbau von `X-UA-Compatible`:** dieselbe Marke meldet `Hintergrund=transparent` statt `#ffffff` — der Modus hat gewechselt |
 | E-80 | 1.0.45 | 1.0.45 | Ausgewertet am 11.09.2026 in drei Messläufen (`C:\Temp\E80b`). Erst schwieg sie: die Marke lag in `PgReadMsgView`, der Paige-Textansicht, Gregors Nachricht laeuft aber ueber Trident (`ReadMessageFrame.cpp:277-281`). Nach dem Umzug nach `TridentView.cpp:1425` sagte sie `Knopf=0 konzentriert=1 ShowAllHeaders=0 -> Kopfzeilen ALLE` beim ersten Aufbau und `konzentriert=0 -> Kopfzeilen gekuerzt` danach. **Damit war der Verdacht auf den Content Concentrator erledigt** — im laufenden Betrieb greift die Kuerzung. Sie kuerzte nur fast nichts weg, weil die Liste `TabooHeaders` aus 2006 stammt. Die Marke bleibt drin und nennt Knopf, Concentrator, `ShowAllHeaders` und das Ergebnis in einer Zeile |
 | E-79 | 1.0.44 | entfaellt: E-79 war durch die EINSTELLUNG behoben, nicht durch Code — `UseMyFilterWindowPosition=1`, von Gregor am 11.09.2026 an 1.0.44 bestätigt. Die Marke bleibt drin, weil sie sofort sagen würde, wenn die Breite wieder wandert | zwei Zeilen je Lauf: `geladen:` nennt den Wert aus der `Eudora.ini`, den Schalter `UseMyFilterWindowPosition`, die Breite des Elternfensters, das Viertel davon, den gesetzten und den danach tatsächlichen Wert; `gesichert:` nennt, was beim Schließen zurückgeschrieben wird. Damit ist in einem Start-und-Beenden zu sehen, an welcher Stelle die Breite sich ändert |
+| E-95 | 1.0.61 | 1.0.62 | **noch vor Gregors Rückmeldung ausgewertet, an einem selbst gestarteten Eudora** (`C:\Temp\E95-Test`, 15.09.2026, Gregors Freigabe: *„mach, was du denn brauchst, um den / die fehler zu fixen!"*). Testnachricht aus drei Bildern **bekannter** Größe — 600×150, 320×80, 20×20. Die Marke sagte `ascent=150 150 150` bei `text-asc=13 150 150`: **jedes Bild erbte die Zeilenhöhe des ersten.** Das war **E-96**, die eigentliche Ursache hinter vier Fassungen Herumprobieren — und zugleich die Widerlegung der `cid:`/`http:`-Unterscheidung aus 7.2.0.61, die daraufhin mit 7.2.0.63 wieder zurückgenommen wurde. Nach der Behebung: `ascent=150 80 20` bei `text-asc=13 13 13`. **Die Marke bleibt dauerhaft drin** |
 
 ## Alle Marken im Quelltext
 
-Gemessen am 13.09.2026 über alle `.cpp` in `Eudora71/Eudora` und
-`Eudora71/OTShim`, gezählt werden Protokolltexte, die mit `E-nn` beginnen:
-**23 Befunde, 158 Stellen in 20 Dateien.** Am 10.09.2026 waren es 19 Befunde in
-16 Dateien — die Zahl hier war seither nicht nachgezogen worden, obwohl die
-Tabelle darunter gewachsen ist.
+**Gemessen am 15.09.2026: 29 Befunde, 168 Stellen in 26 Dateien.** Am
+13.09.2026 waren es 23 Befunde, 158 Stellen in 20 Dateien, am 10.09.2026 19
+Befunde in 16 Dateien. **Die Zahl war zweimal hintereinander nicht nachgezogen
+worden** — deshalb steht der Messbefehl jetzt hier, statt dass ihn jeder neu
+erfindet (am 15.09.2026 selbst gefahren, die drei Zahlen oben sind seine
+Ausgabe):
+
+```bash
+Q="Eudora71/Eudora/*.cpp Eudora71/Eudora/*.CPP Eudora71/OTShim/*.cpp"
+git ls-files $Q | xargs grep -oh '"E-[0-9]\+[ :]' | grep -o 'E-[0-9]*' | sort -u | wc -l  # Befunde
+git ls-files $Q | xargs grep -oh '"E-[0-9]\+[ :]' | wc -l                                 # Stellen
+git ls-files $Q | xargs grep -l  '"E-[0-9]\+[ :]' | wc -l                                 # Dateien
+```
+
+Gezählt werden **Protokolltexte**, die mit `E-nn` beginnen — nicht Kommentare,
+die eine Kennung nennen. `Eudora71/Tests` und `Eudora71/EuImap` bleiben
+draußen; die Marke zu **E-85** liegt in `EuImap/src/ImapDownload.cpp` und wird
+von dieser Zählung deshalb nicht erfasst.
 
 **Alle hängen an `DEBUG_MASK_MISC` (32768) und schweigen in der Vorgabe.**
 Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
@@ -78,7 +92,11 @@ Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
 | **E-80** | 3 | `TridentView.cpp`, `PgReadMsgView.cpp` | Trident (die Stelle, die zaehlt): Zustand des Knopfes, `m_bWasConcentrated`, `ShouldShowAllHeaders()` und das Ergebnis in einer Zeile. Paige: wie viele Kopfzeilen als taboo markiert wurden, wie viele Listeneintraege es gibt und was der Knopf am Stil umschaltet — diese drei schweigen bei Gregor, weil seine Nachrichten ueber Trident laufen |
 | **E-76** | 1 | `OTShim.cpp` | Größenänderung einer schwebenden Leiste: `nLength`, `dwMode` mit ausgeschriebenen Flags, `IsFloating`, Maße vorher und nachher |
 | **E-88** | 3 | `PgMsgView.cpp` (2), `sendmail.cpp` | **Die wichtigste Sicherung des HTML-Umbaus.** `E-88 vor dem Absenden` nennt in einer Zeile die gewählte Fassung (`ORIGINAL` oder `EDITOR`, mit dem Grund), den Stand des Schalters `ForwardOriginalHTML`, die Größe beider Fassungen und der neuen, die Länge des eigenen Zusatzes vor und hinter dem Zitat sowie den Antworttyp. `E-88 auf der Leitung` nennt, was **wirklich** hinausgeht: Größe, `IsFancy`, `IsXRich`, `IsHTML`, `SendPlainOnly` und den Betreff. `E-88 eingebettete Teile` meldet, wenn das Aufräumen der eingebetteten Bilder übersprungen wurde, weil ein Original aufgehoben ist. **Warum alle drei:** das Verfassenfenster zeigt immer die schlichte Paige-Fassung — ohne diese zwei Zeilen merkte niemand, wenn eine kaputte Nachricht hinausginge |
-| **E-89** | 1 | `summary.cpp` | `E-89 Bilder im Editor` nennt in **einer** Zeile, was die Umschrift an den Bildern getan hat: wie viele `<img>` es gab, wie viele unverändert blieben, wie viele ihre Größe aus dem CSS bekamen, wie oft die Vorgabe greifen musste, wie oft gedeckelt wurde, und beide Bytelängen. Steht dort `gesamt=0`, war in der Nachricht kein Bild — dann ist E-89 nicht die Ursache. Geschrieben wird sie **nur**, wenn auch das Original aus E-88 aufgehoben wird; das ist die eine Bedingung, an der beide Befunde hängen |
+| **E-83** | 1 | `QCTaskManager.cpp:430` | `E-83 <Schritt>:` mit `uid`, Zustand samt Zahlwert, `m_pThread`, `m_pWinThread` und der Zahl der laufenden Aufgaben in **einer** Zeile. Gerufen wird sie an acht Stellen (`eingetragen`, `eingereiht`, `Regel1-Obergrenze-erreicht`, `Regel-POP-belegt` …), sodass der Weg einer Aufgabe durch die Warteschlange lückenlos dasteht. **E-83 ist seit 7.2.0.53 behoben**; die Marke bleibt, weil sie eine hängende Aufgabe sofort wieder zeigen würde |
+| **E-86** | 2 | `TridentView.cpp:1619`, `:2274` | `E-86: Anzeigedatei <a> -> <b>` nennt die zusammengesetzte Datei; `E-86 fixup: FixupSource laeuft BODY-Elemente=%d Hintergrund=%s` nennt, ob es ein zweites verworfenes `<body>` gibt und welchen Hintergrund MSHTML wirklich zeichnet. **Die zweite Zeile hat E-86 entschieden:** `BODY-Elemente=1` und die vollen 36.078 Byte schlossen beide Verdächte aus, der Rendermodus blieb übrig — nach dem Einbau von `X-UA-Compatible` meldete dieselbe Marke `Hintergrund=transparent` statt `#ffffff` |
+| **E-87** | 1 | `summary.cpp:1149` | `E-87 ComposeMessage:` nennt vor dem Aufbau des Verfassenfensters `IsFancy`, `IsRich`, `IsXRich`, `IsFlowed`, `IsHTML`, den Schalter und den Antworttyp. Damit ist in einer Zeile zu sehen, als **welche Art** Nachricht eine Weiterleitung angelegt wird — der Punkt, an dem die Formatierung verlorenging |
+| **E-95** | 1 | `PGHTMIMP.CPP:2186` | `E-95 Bild:` nennt je eingefügtem Bild `src` (die ersten 32 Zeichen — `cid:`, `data:` oder `http:`), `attr` (was im HTML stand), `embed` (was Paige nach dem Laden weiß), `ascent` (die entstandene Zeilenhöhe) sowie Text-Ascent und -Descent. **Diese eine Zeile hat E-96 entschieden:** `ascent=150 150 150` bei `text-asc=13 150 150` zeigte, dass jedes Bild die Höhe des ersten erbte. Sie ist **dauerhaft** eingebaut — vier Fassungen lang war jede Erklärung für das Schwanken der Bildgrößen plausibel und falsch, und `embed=` ist der Beleg, dass Paige die wirkliche Größe kennt, auch bei extern verlinkten Bildern |
+| **E-89** | 2 | `msgutils.cpp:3406`, `:3760` | `E-89 Bilder im Editor` nennt in **einer** Zeile, was die Umschrift an den Bildern getan hat: wie viele `<img>` es gab, wie viele unverändert blieben, wie viele ihre Größe aus dem CSS bekamen, wie oft die Vorgabe greifen musste, wie oft gedeckelt wurde, und beide Bytelängen. Steht dort `gesamt=0`, war in der Nachricht kein Bild — dann ist E-89 nicht die Ursache. Geschrieben wird sie **nur**, wenn auch das Original aus E-88 aufgehoben wird; das ist die eine Bedingung, an der beide Befunde hängen |
 
 ### Wie man das benutzt
 
@@ -100,6 +118,27 @@ E-88 die Marke `E-88 auf der Leitung` (`sendmail.cpp`, in `WriteBody`).
 Für den Abruf gibt es Eudoras eigene Schalter (`RCVD` 2, `TRANS` 32,
 `RCV` 64, `LMOS` 8192), aber keine Marke aus dieser Portierung. Wenn dort
 etwas auftaucht, gehört eine gesetzt — nicht auf Vorrat.
+
+
+## Ein bekannter Hinweis, der kein Mangel ist
+
+`spuren-auswerten.pl` meldet seit dem 15.09.2026:
+
+```
+E-95 steht in Befunde/SPURMARKEN.md, im Quelltext gibt es dazu keine Marke mehr
+```
+
+**Das ist ein Fehlalarm, und die Ursache ist eine Konvention, kein Fehler.**
+Das Werkzeug erkennt eine Marke daran, dass in einer **Kommentarzeile** das
+Wort `SPURMARKE` steht (`tools/spuren-auswerten.pl:122`). Der Kommentar über
+der E-95-Marke lautet aber `E-95-MESSUNG, 15.09.2026` — ohne dieses Wort. Die
+Marke selbst steht sehr wohl im Bau, in `PGHTMIMP.CPP:2186`, und schreibt bei
+`LogLevel=58527` je Bild ihre Zeile.
+
+**Der Fix ist ein Wort:** in `PGHTMIMP.CPP:2157` `E-95-MESSUNG` zu
+`SPURMARKE ZU BEFUND E-95` machen. Er gehört in denselben Commit wie die
+nächste ohnehin fällige Änderung an dieser Datei — der LEKTOR fasst
+`Eudora71/` nicht an.
 
 ## Prüfen
 

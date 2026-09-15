@@ -9,10 +9,11 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 14.09.2026)
+## Noch offen (Stand 15.09.2026)
 
 | Kennung | | |
 |---|---|---|
+| **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache NICHT gemessen.** Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
 | **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
 | **E-91** | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu E-89, nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
 | **E-92** | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |

@@ -73,10 +73,13 @@ verschickt.
   Quellstand sind seither behoben: Zeichensalat beim IMAP-Abruf (7.2.0.52),
   das Beenden mit hängender Aufgabe (7.2.0.53), die HTML-Darstellung beim
   Lesen (7.2.0.55), der Formatverlust beim Weiterleiten (7.2.0.56), sich
-  überlagernde Bilder im Verfassenfenster (7.2.0.58/60), Fragezeichen statt
-  Emoji (7.2.0.59) und **Inhaltsverlust beim Weiterleiten** einer bereits
+  überlagernde Bilder im Verfassenfenster (7.2.0.58), Fragezeichen statt
+  Emoji (7.2.0.59), **Inhaltsverlust beim Weiterleiten** einer bereits
   weitergeleiteten Nachricht (7.2.0.59, **E-93** — es gingen 17.889 statt
-  252.921 Byte hinaus). Wer das braucht, baut selbst.
+  105.125 Byte hinaus) und die **Bildgrößen im Verfassenfenster**: jedes Bild
+  bekam die Zeilenhöhe des ersten und wurde dadurch abgeschnitten oder
+  gequetscht (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.63 wieder
+  weg). Wer das braucht, baut selbst.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
@@ -127,6 +130,20 @@ IHTMLDocument2 in TridentView:   13 Stellen
 designMode / contentEditable:     0 Stellen
 ```
 
+Die beiden unteren Zahlen sind am 15.09.2026 nachgemessen und stimmen:
+
+```bash
+grep -c IHTMLDocument2 Eudora71/Eudora/TridentView.cpp                    # 13
+grep -rl 'designMode\|contentEditable' Eudora71/Eudora/                  # leer
+```
+
+**Für die beiden oberen ist der Messbefehl nicht aufgeschrieben worden**, und
+sie lassen sich deshalb nicht nachvollziehen — je nachdem, was man zur
+„Anbindung" zählt, kommen sehr verschiedene Werte heraus (Dateien mit
+`Pg`-Präfix: 46; `.cpp`, die `paige` oder `pg_ref` nennen: 60 mit 104.606
+Zeilen). Als **Größenordnung** taugen sie, als Beleg nicht. Wer sie das nächste
+Mal braucht, schreibt den Befehl daneben.
+
 **MSHTML im Editiermodus** wäre der naheliegendste Weg: Der Motor liegt bereits
 im Programm und rendert die Leseansicht. Er kann auch editieren
 (`document.designMode = "On"`) — im Original ist das an **null** Stellen
@@ -156,7 +173,7 @@ Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 3. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.29 / Paket 1.0.29` — diese Angabe gehört in jeden
+   `Eudora 7.2.0.63 / Paket 1.0.63` — diese Angabe gehört in jeden
    Fehlerbericht.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem

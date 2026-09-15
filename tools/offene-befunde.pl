@@ -83,7 +83,14 @@ for my $zeile (split /\n/, $befunde) {
     next unless @s >= 4;
 
     my $urteil = $s[3];
-    my ($fett) = $urteil =~ /\*\*([^*]{1,60})\*\*/;
+    # KEINE Laengengrenze. Bis zum 15.09.2026 stand hier {1,60}, und das war
+    # eine stille Luecke: E-90 ("gemessene Grenze, kein Fehler dieser Fassung
+    # - zurueckgestellt.", 62 Zeichen) und E-92 ("beobachtet, unsere Seite
+    # NICHT gemessen - Kosmetik, zurueckgestellt.", 67 Zeichen) fielen aus der
+    # Zaehlung, ohne dass irgendetwas meldete. Das Werkzeug sagte "Die Liste
+    # deckt die offenen Befunde" und meinte 9, wo 11 stehen. Gegengetestet:
+    # ohne Grenze kommen genau E-90 und E-92 dazu, kein behobener Befund.
+    my ($fett) = $urteil =~ /\*\*([^*]+?)\*\*/;
     next unless defined $fett;
     my $w = lc $fett;
 
