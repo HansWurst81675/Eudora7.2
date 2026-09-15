@@ -159,6 +159,8 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **E-95** | im Verfassenfenster werden die Bilder zerschnitten — vom Doctolib-Schriftzug stehen nur … |
+| **E-94** | die Betreffzeile wird mitten im Wort umbrochen — Toner bestel len, Wochenend e!, und in … |
 | **E-78** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… |
 | **E-77** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… |
 | **E-71** | der Filterbericht ist nach einem Filterlauf leer |
