@@ -6,6 +6,11 @@ from the PaigeImportFilter class. */
 
 #include "stdafx.h"
 
+// E-95-Messung, 15.09.2026 - siehe die Spurmarke weiter unten.
+#include "resource.h"
+#include "rs.h"
+#include "debug.h"
+
 #include "Paige.h"
 #include "pgTraps.h"
 #include "pgOSUtl.h"
@@ -1818,10 +1823,14 @@ void PaigeHTMLImportFilter::PopStyle (pg_boolean bFontTag /*= false*/)
 
 
 /* DoDataTag handles all the data tags (like link and image). */
+static long PaigeHTMLImportTextAscent  = 13;
+static long PaigeHTMLImportTextDescent = 3;
+
 pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params, long num_params)
 {
    tag_attribute_ptr       param_ptr;
-   
+
+
    switch (tag) {
 
       case -hyperlink_command:
@@ -2036,6 +2045,12 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
             GetMemoryRecord(image_ref, 0, &image_record);
 
             original_ascent = current_style.ascent;
+
+            // E-95: solange noch kein Bild eingefuegt wurde, ist dieser Wert
+            // der echte Text-Ascent. Er wird gemerkt, damit ProcessEmbed ihn
+            // spaeter wiederherstellen kann - siehe die Begruendung dort.
+            if (!embed_last_action && original_ascent > 0)
+               PaigeHTMLImportTextAscent = original_ascent;
             image_descent = original_descent = (long)current_style.descent;
             image_descent <<= 16;
             
@@ -2136,7 +2151,47 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	               
 	               if (original_ascent > current_style.ascent)
 	                  current_style.ascent = (short)original_ascent;
+	            }
 
+	            //
+	            // E-95-MESSUNG, 15.09.2026. Vier Werte in EINER Zeile, damit
+	            // sich nicht wieder "zu anderer Zeit" sagen laesst:
+	            //
+	            //   src        die ersten Zeichen - cid:, data: oder http:
+	            //   attr       was im HTML stand (source_width/height)
+	            //   embed      was Paige nach dem Laden weiss
+	            //   ascent     die Zeilenhoehe, die dabei herauskommt
+	            //
+	            // Vier Fassungen lang wurde an der GROESSE gedreht, und jedes
+	            // Mal war die Erklaerung plausibel und falsch. Gregors
+	            // Protokoll zu 1.0.61 sagte "eingebettet=0" bei allen
+	            // Nachrichten - die Bilder sind extern verlinkt, und Paige
+	            // holt sie trotzdem. Damit ist auch die cid:-Annahme
+	            // widerlegt. Diese Zeile misst, statt zu vermuten.
+	            {
+	               pg_embed_ptr  mess_ptr = (pg_embed_ptr)UseMemory(embed);
+	               char          szSpur[220];
+	               char          szSrc[40];
+	               long          i;
+
+	               szSrc[0] = 0;
+	               if (image_ref)
+	               {
+	                  for (i = 0; i < 32 && ((const char *)image_ref)[i]; i++)
+	                     szSrc[i] = ((const char *)image_ref)[i];
+	                  szSrc[i] = 0;
+	               }
+
+	               wsprintf(szSpur,
+	                  "E-95 Bild: src=%.32s attr=%dx%d embed=%ldx%ld "
+	                  "ascent=%d text-asc=%ld text-desc=%ld\r\n",
+	                  szSrc,
+	                  (int)image_record.source_width, (int)image_record.source_height,
+	                  (long)mess_ptr->width, (long)mess_ptr->height,
+	                  (int)current_style.ascent, original_ascent, original_descent);
+
+	               UnuseMemory(embed);
+	               PutDebugLog(DEBUG_MASK_MISC, szSpur);
 	            }
 	            
 	            if (!translator.bytes_transferred)
@@ -2983,6 +3038,10 @@ void PaigeHTMLImportFilter::ProcessHyperlink (void)
 
 /* ProcessEmbed sets up the final things for importing an embedded object. */
 
+// E-95: der Text-Ascent/-Descent, wie er VOR dem ersten Bild galt. Siehe die
+// Begruendung in ProcessEmbed. Vorbelegt mit Werten, die einer normalen
+// Textzeile entsprechen - gemessen 13/3 - damit der erste Aufruf nicht auf
+// null laeuft.
 void PaigeHTMLImportFilter::ProcessEmbed (void)
 {
    translator.format = current_style;
@@ -2998,7 +3057,45 @@ void PaigeHTMLImportFilter::ProcessEmbed (void)
    current_style.embed_object = MEM_NULL;
    current_style.char_bytes = 0;
    current_style.class_bits = 0;
-   
+
+   // E-95, 15.09.2026: auch die ZEILENHOEHE gehoert zum Embed-Stil.
+   //
+   // Ohne das Zuruecksetzen behaelt current_style.ascent die Hoehe des
+   // gerade eingefuegten Bildes. Beim naechsten Bild liest DoDataTag in
+   // Zeile 2038 "original_ascent = current_style.ascent" diesen Wert als
+   // vermeintlichen TEXT-Ascent ein, und das Maximum weiter unten zieht die
+   // Zeilenhoehe wieder auf den alten Wert hoch. Jedes Bild bekam damit die
+   // Hoehe des ERSTEN.
+   //
+   // GEMESSEN am 15.09.2026 an einer Nachricht mit drei Bildern
+   // (600x150, 320x80, 20x20), vorher und nachher:
+   //
+   //   vorher:  ascent=150  ascent=150  ascent=150   text-asc=13, 150, 150
+   //   nachher: ascent=150  ascent=80   ascent=20    text-asc=13,  13,  13
+   //
+   // Das erklaert beide Symptome, die vier Fassungen lang im Kreis gefuehrt
+   // haben: ist das erste Bild KLEIN und ein spaeteres gross, wird das
+   // spaetere abgeschnitten (Gregors Doctolib-Nachricht, wo der Schriftzug
+   // vor dem blauen Kreis kommt). Ist das erste GROSS, klafft danach
+   // Leerraum. Und es erklaert, warum jede Aenderung an der Bildgroesse mal
+   // half und mal nicht - wir haben am ersten Bild gedreht, und der Rest
+   // folgte blind.
+   //
+   // WARUM NICHT paige_globals->def_style: der erste Entwurf hat genau das
+   // getan, und die Gegenmessung zeigte text-asc=0 - der Vorgabestil traegt
+   // keine Zeilenhoehe. Damit faellt die Schutzregel "die Zeile ist
+   // mindestens so hoch wie der Text" weg, und ein Bild, das KLEINER ist als
+   // eine Textzeile, laesst die Zeile schrumpfen. Zaehlpixel von 1x1 stehen
+   // in Newslettern zu Dutzenden.
+   //
+   // Deshalb der gemerkte Wert: der Text-Ascent, wie er VOR dem ersten Bild
+   // gemessen wurde. Er wird einmal je Import gesetzt und danach nur
+   // gelesen. Die Variable ist dateilokal und nicht threadsicher - der
+   // HTML-Import laeuft im Hauptstrang, und der Wert ist eine Zeilenhoehe,
+   // kein Zustand.
+   current_style.ascent  = (short)PaigeHTMLImportTextAscent;
+   current_style.descent = (short)PaigeHTMLImportTextDescent;
+
    embed_last_action = TRUE;
 }
 

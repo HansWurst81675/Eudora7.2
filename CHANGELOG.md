@@ -59,6 +59,52 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
+
+> **Zu prüfen:** die Doctolib-Nachricht weiterleiten. Die Bilder müssen
+> **vollständig** dastehen und der Text **frei** bleiben. Falls nicht: im
+> Protokoll steht bei `LogLevel=58527` je Bild eine Zeile
+> `E-95 Bild: attr=… embed=… ascent=… text-asc=…` — die sagt, wo es klemmt.
+
+**Die Ursache, am laufenden Programm gemessen.** `ProcessEmbed()` räumt nach
+jedem eingefügten Bild den Embed-Stil auf — `procs`, `embed_entry`,
+`embed_object` —, **aber nicht die Zeilenhöhe**. `current_style.ascent` behielt
+die Höhe des Bildes. Beim nächsten Bild las `DoDataTag` diesen Wert als
+vermeintlichen **Text**-Ascent ein, und das Maximum zog die Zeilenhöhe wieder
+auf den alten Wert hoch.
+
+Drei Fassungen an derselben Testnachricht (Bilder 600×150, 320×80, 20×20):
+
+```
+der Fehler:              ascent=150  150  150     text-asc=13  150  150
+mit def_style:           ascent=150   80   20     text-asc=13    0    0
+jetzt:                   ascent=150   80   20     text-asc=13   13   13
+```
+
+Die mittlere Fassung war der erste Entwurf. Sie stellt zwar die Bildhöhen
+richtig, setzt den Text-Ascent aber auf null — damit fällt die Schutzregel
+*„die Zeile ist mindestens so hoch wie der Text"* weg, und ein Zählpixel von
+1×1 ließe die Zeile auf einen Punkt schrumpfen. Solche Pixel stehen in
+Newslettern zu Dutzenden. Deshalb wird jetzt der echte Text-Ascent gemerkt,
+solange noch kein Bild eingefügt wurde.
+
+**Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal
+half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen
+dessen Höhe blind. Bei der Doctolib-Nachricht steht der kleine Schriftzug vor
+dem großen blauen Kreis — deshalb wurde dort abgeschnitten.
+
+**Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo
+identisch, also seit 2006 so.
+
+**Wie es gefunden wurde.** Zum ersten Mal an einem selbst gestarteten Eudora
+statt an Bildschirmfotos: eine Testnachricht mit drei Bildern bekannter Größe,
+Weiterleiten über Fensterbotschaften ausgelöst, und eine Spurmarke, die je Bild
+vier Werte in **einer** Zeile nennt. Die erste Messung schrieb nichts — das
+Testverzeichnis trug noch die alte `Eudora.exe`. Dieselbe Klasse, gegen die es
+hier eine eigene Regel gibt: *das Paket gegen den Bau messen.*
+
+**Tests: 153 von 153.**
+
 ## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
 
 > **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Die
