@@ -38,6 +38,7 @@ DAMAGE. */
 #include "qtwrapper.h"
 
 #include "eudora.h"
+#include "debug.h"
 
 // standard Paige includes
 #include "Paige.h"
@@ -463,6 +464,27 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 
 				embed->height = pUrlImage->source_height;
 				embed->uu.pict_data.pict_frame.bot_right.v = pUrlImage->source_height;
+
+				// E-97-Messung, 15.09.2026: greift dieser Nachtrag ueberhaupt?
+				//
+				// Ein Bild ohne height-Attribut bekommt beim Import die
+				// Textzeilenhoehe 13 - gemessen an einer eigenen Testnachricht
+				// und in Gregors Doctolib-Protokoll:
+				//
+				//   E-95 Bild: attr=0x0    embed=0x0 ascent=13
+				//   E-95 Bild: attr=175x0  embed=0x0 ascent=13
+				//
+				// Hier, beim Laden, kennt Eudora die echte Groesse. Ob Paige
+				// sie auch fuer die ZEILENHOEHE uebernimmt, haengt daran, ob
+				// der Suchlauf unten das richtige Embed findet.
+				{
+					char szSpur97[160];
+					wsprintf(szSpur97,
+						"E-97 Nachtrag: quelle=%dx%d embed=%ldx%ld\r\n",
+						(int)pUrlImage->source_width, (int)pUrlImage->source_height,
+						(long)embed->width, (long)embed->height);
+					PutDebugLog(DEBUG_MASK_MISC, szSpur97);
+				}
 
 				// Search for ourselves since that seems to be the only way to get our
 				// index position (needed for pgInvalEmbedRef).

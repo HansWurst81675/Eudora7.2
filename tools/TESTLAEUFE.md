@@ -34,3 +34,14 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-09-15 08:23:44 | `C:\Temp\E95-Test` | Gregor am 15.09.2026: 'mach, was du denn brauchst' | Hauptfenster 1049658 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 30.2 s. |
 | 2026-09-15 08:29:18 | `C:\Temp\E95-Test` | Gregor am 15.09.2026: 'mach, was du denn brauchst' | Hauptfenster 656856 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 30.3 s. |
 | 2026-09-15 08:34:06 | `C:\Temp\E95-Test` | Gregor: 'mach, was du denn brauchst' | Hauptfenster 1115642 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 30.3 s. |
+| 2026-09-15 13:09:34 | `C:\Temp\E95-Test` | Gregor am 15.09.2026: 'ja, mach selbst' | Hauptfenster 787766 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+75e91ed* 2026-09-15 09:22 - E95-Test]  ABER: musste abgeschossen werden.  Schliesszeit 30.2 s. |
+| 2026-09-15 13:12:40 | `C:\Temp\E95-Test` | Gregor am 15.09.2026: 'ja, mach selbst' | Hauptfenster 394488 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+75e91ed* 2026-09-15 09:22 - E95-Test]  ABER: musste abgeschossen werden.  Schliesszeit 30.2 s. |
+| 2026-09-15 13:15:05 | `C:\Temp\E95-Test` | Gregor am 15.09.2026: 'ja, mach selbst' | Hauptfenster 459896 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+2482c27* 2026-09-15 13:11 - E95-Test]  ABER: musste abgeschossen werden.  Schliesszeit 30.2 s. |
+| 2026-09-15 13:16:57 | `C:\Temp\E95-Test` | Gregor am 15.09.2026: 'ja, mach selbst' | Hauptfenster 656536 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+2482c27* 2026-09-15 13:11 - E95-Test]  ABER: musste abgeschossen werden.  Schliesszeit 30.2 s. |
+| 2026-09-15 13:38:10 | `C:\Temp\E97-62` | E-97: Absturz beim Speichern, von Gregor an 1.0.62 und 1.0.63 gemeldet | Hauptfenster 2622624 - Eudora   [Eudora 7.2.0.62 / Paket 1.0.62+d1edf31* 2026-09-15 08:42 - E97-62] |
+| 2026-09-15 13:39:04 | `C:\Temp\E97-1050` | E-97: Absturz beim Speichern - rueckwaerts eingrenzen | Hauptfenster 1443332 - Eudora |
+| 2026-09-15 13:39:26 | `C:\Temp\E97-1049` | E-97: Absturz beim Speichern - rueckwaerts eingrenzen | Hauptfenster 1705270 - Eudora   [Eudora 7.2.0.49 / Paket 1.0.49+f6df9d9* 2026-09-11 21:36 - E97-1049] |
+| 2026-09-15 14:02:28 | `C:\Temp\E97-Stapel` | E-97: laeuft der Dialog ohne die Vorlage von 1996? | Hauptfenster 2032830 - Eudora |
+| 2026-09-15 14:04:01 | `C:\Temp\E97-Stapel` | E-97: Vorlage abgeschaltet, mit Protokoll | Hauptfenster 1639528 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+a6ed2f3* 2026-09-15 14:01 - E97-Stapel] |
+| 2026-09-15 14:32:28 | `C:\Temp\E97-Stapel` | E-97: Null-Pruefungen in OnInitDialog | Hauptfenster 2360406 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+a6ed2f3* 2026-09-15 14:01 - E97-Stapel] |
+| 2026-09-15 14:35:06 | `C:\Temp\E97-Stapel` | E-97: wird OnInitDialog erreicht? | Hauptfenster 1705218 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+a6ed2f3* 2026-09-15 14:01 - E97-Stapel] |

@@ -75,31 +75,76 @@ BOOL CSaveAsDialog::OnInitDialog()
 {
 	CFileDialog::OnInitDialog();
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-97 OnInitDialog: 1 nach CFileDialog::OnInitDialog\r\n");
+
+	//
+	// BEFUND E-97: Eudora stuerzte ab, sobald eine Nachricht gespeichert
+	// werden sollte. Gregor am 15.09.2026: "da kommt kurz eine meldung, dann
+	// ist eudora weg!"
+	//
+	// GEMESSEN in jeder vorhandenen Fassung - 1.0.63, .62, .53, .50, .49.
+	// Kein neuer Fehler, sondern einer, der nie auffiel, weil niemand eine
+	// Nachricht gespeichert hat. Auch das Release v1.0.50 ist betroffen.
+	//
+	// Der Debugger fing die Ausnahme 0xC000041D
+	// (STATUS_FATAL_USER_CALLBACK_EXCEPTION) mit COMDLG32.dll in den Rahmen
+	// 1 bis 5: der Windows-Dateidialog ruft hier zurueck, und in diesem
+	// Rueckruf entsteht der Fehler. Eine Ausnahme in einem Systemrueckruf
+	// kommt nicht ueber die Kernel-Grenze zurueck - deshalb bricht das
+	// Programm sofort ab, statt eine Meldung zu zeigen.
+	//
+	// DIE URSACHE steht drei Funktionen weiter oben: DoDataExchange bindet
+	// die drei Schalter nur an, WENN es sie gibt -
+	//
+	//     if (GetDlgItem(IDC_HEADERS))
+	//         DDX_Control(pDX, IDC_HEADERS, m_IncludeHeaders);
+	//
+	// - und das ist richtig so. Hier unten wurde dann aber ohne Pruefung
+	// zugegriffen: m_IncludeHeaders.SetCheck() schickt eine Nachricht an
+	// m_hWnd, und das ist null, wenn die Anbindung ausgefallen ist. MFC hat
+	// davor ein ASSERT(::IsWindow(m_hWnd)) - und ASSERT IST IM RELEASE
+	// WIRKUNGSLOS (Arbeitsweise/assert-ist-im-release-nichts.md, die
+	// haeufigste Ursachenklasse dieses Projekts).
+	//
+	// Dasselbe galt fuer GetParent(): 1996 war der Dateidialog ein einzelnes
+	// Fenster, heute ist er zusammengesetzt, und die Elternkette sieht anders
+	// aus.
+	//
+	// Nichts davon aendert das Aussehen, solange die Schalter da sind. Fehlen
+	// sie, arbeitet der Dialog weiter, statt das Programm mitzunehmen.
+	//
 	if (IsVersion4())
 	{
 		if (m_IsMessage)
 		{
-			CRect wRect, pRect;
-			GetWindowRect(wRect);
-			GetParent()->GetWindowRect(pRect);
-			wRect.top = pRect.bottom - wRect.Height(); 
-			wRect.bottom = pRect.bottom; 
-			MoveWindow(&wRect, TRUE);
+			CWnd*	pEltern = GetParent();
+
+			if (pEltern != NULL)
+			{
+				CRect wRect, pRect;
+				GetWindowRect(wRect);
+				pEltern->GetWindowRect(pRect);
+				wRect.top = pRect.bottom - wRect.Height(); 
+				wRect.bottom = pRect.bottom; 
+				MoveWindow(&wRect, TRUE);
+			}
 
 			m_Inc = m_Guess = FALSE;
 
 			if (GetIniShort(IDS_INI_INCLUDE_HEADERS))
 			{
-				m_IncludeHeaders.SetCheck(TRUE);
+				if (m_IncludeHeaders.GetSafeHwnd())
+					m_IncludeHeaders.SetCheck(TRUE);
 				m_Inc = TRUE;
 			}
 			
 			if (GetIniShort(IDS_INI_GUESS_PARAGRAPHS))
 			{
-				m_GuessParagraphs.SetCheck(TRUE);
+				if (m_GuessParagraphs.GetSafeHwnd())
+					m_GuessParagraphs.SetCheck(TRUE);
 				m_Guess = TRUE;
 			}
-			if (!m_IsStat && GetDlgItem(IDC_STATIONERY))
+			if (!m_IsStat && GetDlgItem(IDC_STATIONERY) && m_Stationery.GetSafeHwnd())
 				m_Stationery.ShowWindow(SW_HIDE); 
 			
 			// Use to tell whether stationery is selected
