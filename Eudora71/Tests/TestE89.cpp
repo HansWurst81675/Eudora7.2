@@ -105,7 +105,7 @@ void RunE89Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------- (3)
-	TT_BeginTest("E-89: gar keine Groessenangabe - kleine Vorgabe, damit die Zeile stimmt");
+	TT_BeginTest("E-89: gar keine Groessenangabe - das Bild bleibt unangetastet");
 	{
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"https://example.invalid/bild.jpg\" alt=\"Bild\">"
@@ -116,9 +116,8 @@ void RunE89Tests(void)
 		// mitten im Text: Platz, der weggenommen wird, ohne dass etwas zu
 		// sehen ist. Eine geratene Zahl ist schlechter als keine - Paige
 		// kennt die wirkliche Groesse, sobald es die Datei geladen hat.
-		TT_CHECK_MSG(bGeaendert,
-					 "ohne Hoehe bleibt die Zeile textklein und der Text wird zugedeckt");
-		TT_CHECK(szAus.Find("height=\"20\"") >= 0);
+		TT_CHECK_MSG(!bGeaendert,
+					 "seit E-96 traegt Paige die echte Groesse selbst nach - eine geratene Zahl quetscht das Bild nur");
 		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);
 	}
@@ -423,7 +422,7 @@ void RunE89Tests(void)
 		TT_CHECK_MSG(!bGeaendert,
 					 "Paige kennt die Groesse - eine Vorgabe schneidet das Bild ab");
 		TT_CHECK(szSpur.Find("eingebettet=1") >= 0);
-		TT_CHECK(szSpur.Find("ohne-Mass=0") >= 0);
+		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);
 	}
 	TT_EndTest();
@@ -455,15 +454,14 @@ void RunE89Tests(void)
 	// greift die Vorgabe - sonst bleibt die Zeile textklein und der Text wird
 	// zugedeckt.
 	//
-	TT_BeginTest("E-95: externes Bild ohne Groesse bekommt die Vorgabe");
+	TT_BeginTest("E-95: externes Bild ohne Groesse bleibt ebenfalls unangetastet");
 	{
 		bGeaendert = Umschreiben(
 			"<html><body><img src=\"https://example.invalid/bild.jpg\"></body></html>",
 			szAus, szSpur);
 
-		TT_CHECK_MSG(bGeaendert,
-					 "ohne Vorgabe bleibt die Zeile textklein und deckt den Text zu");
-		TT_CHECK(szAus.Find("height=\"20\"") >= 0);
+		TT_CHECK_MSG(!bGeaendert,
+					 "seit E-96 stimmt die Zeilenhoehe auch ohne Attribut");
 		TT_CHECK(szSpur.Find("eingebettet=0") >= 0);
 		TT_CHECK(szSpur.Find("ohne-Mass=1") >= 0);
 		TT_Note("%s", (LPCTSTR) szSpur);

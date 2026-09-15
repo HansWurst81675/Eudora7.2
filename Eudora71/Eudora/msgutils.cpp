@@ -3181,8 +3181,6 @@ bool E88OriginalEinsetzen(
 #define E89_MAX_BREITE		600
 #define E89_MAX_HOEHE		600
 
-#define E89_VORGABE_KLEIN	20
-
 // Vorgabemasse fuer ein Bild, dessen Groesse nirgends steht. Hier gibt es
 // nichts zu rechnen - weder Originalgroesse noch Seitenverhaeltnis sind
 // bekannt, und nachgeladen wird beim Verfassen nichts. Die Hoehe ist die
@@ -3597,47 +3595,52 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		// Gregors Entscheidung am 14.09.2026 zwischen kleiner Vorgabe, gar
 		// keiner und den alten 200x90: "ok, option a".
 		//
-		// E-95, 15.09.2026: die Vorgabe gilt NUR fuer externe Bilder.
+		// E-95/E-96, 15.09.2026: KEINE Vorgabe mehr fuer Bilder ohne Mass.
 		//
-		// Ein eingebettetes Bild (cid:, data:) liegt in der Nachricht und
-		// wird auch beim Verfassen geladen - Paige kennt seine echte Groesse
-		// genau und traegt sie selbst ein. Jede Vorgabe von uns ueberschreibt
-		// sie und schneidet das Bild ab.
+		// Bis 7.2.0.62 bekam ein Bild ohne Groessenangabe 20x20 Punkte. Das war
+		// ein Notbehelf gegen E-96: solange die Zeilenhoehe die des ERSTEN
+		// Bildes behielt, blieb sie bei fehlendem height-Attribut textklein,
+		// und der Text wurde zugedeckt.
 		//
-		// Gregor am 14.09.2026 an 1.0.60, nachdem der Text endlich frei war:
-		// die Bilder wurden zerschnitten. Der Fund steckte in seinem Bild -
-		// der blaue Doctolib-Kreis war BLAU, nicht grau. Paige hatte ihn
-		// geladen; unser height="20" schnitt ihn ab.
+		// Seit E-96 behoben ist, stimmt die Zeilenhoehe je Bild. GEMESSEN an
+		// Gregors Nachrichten mit 1.0.62:
 		//
-		// Bei der FairToner-Nachricht dagegen standen graue Kaesten: dort
-		// sind die Bilder EXTERN (http://), werden nicht geholt, und Paige
-		// weiss nichts ueber ihre Groesse. Nur dort hilft eine Vorgabe.
+		//   attr=600x1   ascent=13     (Trennlinie - Zeile bleibt textbreit)
+		//   attr=175x35  ascent=35
+		//   attr=200x50  ascent=50
+		//   attr=80x80   ascent=80
 		//
-		// WICHTIG - die Unterscheidung gehoert HIERHER und nicht weiter oben:
-		// ein eingebettetes Bild MIT Groesse (im Attribut oder im CSS) wird
-		// weiterhin umgeschrieben. Diese Groesse ist die erklaerte Absicht
-		// des Absenders; Paige wuerde stattdessen die Originalgroesse der
-		// Datei nehmen. Ein erster Entwurf hat solche Bilder pauschal
-		// uebersprungen - zwei Tests haben es sofort gemeldet.
+		// Damit ist der Notbehelf nicht nur ueberfluessig, sondern SCHAEDLICH:
+		// auf seinem Bild war die Tonerkartusche ein schmaler Streifen - kein
+		// abgeschnittenes Bild, sondern eines, das wir auf 20x20 gequetscht
+		// hatten. In derselben Messung steht dazu "attr=20x20".
 		//
+		// Paige kennt die wirkliche Groesse, sobald es die Datei geladen hat;
+		// die Spalte "embed=" der Spurmarke belegt es. Ohne unser Zutun traegt
+		// es sie selbst ein.
+		//
+		// Vier Fassungen lang wurde an dieser Zahl gedreht - 200x90, gar
+		// nichts, 20x20, cid-gegen-http. Keine davon war die Ursache. Die lag
+		// in ProcessEmbed, und seit sie behoben ist, braucht es hier gar
+		// nichts mehr.
 		if (nBreite <= 0 && nHoehe <= 0)
 		{
-			if (bEingebettet)
-			{
-				nEingebettet++;
-				i = j + 1;
-				continue;
-			}
-
-			nBreite = E89_VORGABE_KLEIN;
-			nHoehe  = E89_VORGABE_KLEIN;
 			nOhneMass++;
+			if (bEingebettet) nEingebettet++;
+			i = j + 1;
+			continue;
 		}
 		else if (nHoehe <= 0)
 		{
-			// Breite bekannt, Hoehe nicht: die Zeilenhoehe haengt an der
-			// Hoehe, also muss sie dastehen.
-			nHoehe = E89_VORGABE_KLEIN;
+			// Breite bekannt, Hoehe nicht: auch hier NICHTS erfinden.
+			//
+			// Eine geratene Hoehe verzerrt das Bild - bei width="600" und
+			// einer Vorgabe von 20 waere es ein Streifen. Paige traegt die
+			// echte Hoehe nach, sobald es die Datei geladen hat, und seit
+			// E-96 behoben ist, stimmt die Zeilenhoehe dann auch.
+			//
+			// Die Breite bleibt stehen: sie stand im HTML und ist die
+			// erklaerte Absicht des Absenders.
 			nOhneMass++;
 		}
 

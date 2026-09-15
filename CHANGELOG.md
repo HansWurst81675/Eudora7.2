@@ -59,6 +59,50 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
+
+> **Zu prüfen:** Doctolib- und FairToner-Nachricht weiterleiten **und**
+> beantworten. Die Bilder müssen in ihrer **wirklichen** Größe dastehen und der
+> Text **frei** bleiben.
+
+**Seit E-96 behoben ist, war die Vorgabe nur noch schädlich.** Bis 7.2.0.62 bekam
+ein Bild ohne Größenangabe 20×20 Punkte — ein Notbehelf gegen E-96: solange die
+Zeilenhöhe die des *ersten* Bildes behielt, blieb sie bei fehlendem
+`height`-Attribut textklein, und der Text wurde zugedeckt.
+
+**Gemessen an Gregors Nachrichten mit 1.0.62** steht die Zeilenhöhe jetzt je
+Bild richtig:
+
+```
+attr=600x1   ascent=13     (1 Pixel hohe Trennlinie - Zeile bleibt textbreit)
+attr=175x35  ascent=35
+attr=200x50  ascent=50
+attr=80x80   ascent=80
+```
+
+In derselben Messung stand aber auch `attr=20x20` — und genau das war auf
+seinem Bild die Tonerkartusche: **kein abgeschnittenes Bild, sondern eines, das
+wir auf 20×20 gequetscht hatten.**
+
+Paige kennt die wirkliche Größe, sobald es die Datei geladen hat; die Spalte
+`embed=` der Spurmarke belegt es. Ohne unser Zutun trägt es sie selbst ein.
+Deshalb bleibt ein Bild ohne Maß jetzt **unangetastet** — auch dann, wenn nur
+die Höhe fehlt: eine geratene Höhe bei `width="600"` würde es zu einem Streifen
+verzerren.
+
+**Damit entfällt auch die Unterscheidung zwischen eingebetteten und externen
+Bildern** aus 7.2.0.61. Sie war richtig gedacht, aber sie behandelte ein
+Symptom: beide Fälle bleiben jetzt gleichermaßen unangetastet. Der Zähler
+`eingebettet=` in der Spurmarke bleibt als Information stehen.
+
+**Vier Fassungen lang wurde an dieser Zahl gedreht** — 200×90, gar nichts,
+20×20, `cid:` gegen `http:`. Keine davon war die Ursache. Die lag in
+`ProcessEmbed`, und seit sie behoben ist, braucht es an dieser Stelle gar nichts
+mehr.
+
+**Tests: 153 von 153**, drei davon umgeschrieben — sie prüfen jetzt, dass
+**nichts** geschieht.
+
 ## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
 
 > **Zu prüfen:** die Doctolib-Nachricht weiterleiten. Die Bilder müssen
