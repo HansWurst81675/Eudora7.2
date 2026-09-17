@@ -61,6 +61,65 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.69 — die Spurmarke zum Speichern misst jetzt den Rumpf (P-38)
+
+> **Zu prüfen:** eine Nachricht über *File → Save As* sichern — irgendeine,
+> am besten eine weitergeleitete mit Bildern. Dann in `eudora.log` nach
+> `E-101 speichern:` suchen. **In der Zeile müssen jetzt `rumpf-vorher=`
+> und `rumpf-nachher=` stehen.** Beide Werte sollen plausibel sein;
+> `rumpf-nachher=0` wäre der Alarm. Die Datei selbst muss unverändert
+> brauchbar sein — `MIME-Version`, `Content-Type`, kein `<x-html>`. **Am
+> Verhalten von Eudora ändert sich sonst nichts**, nur die Protokollzeile
+> wird länger.
+
+**Kein neuer Befund von dir — zwei Messungen, die nichts messen konnten.**
+
+Der PRÜFER hatte in `main` einen Datenverlust gefunden (**P-28**, behoben in
+`1.0.67`): beim Entfernen des `<x-html>`-Markers verschwand die *ganze erste
+Rumpfzeile*, sobald sie auf `>` endete — stand der Text auf derselben Zeile,
+war der komplette Rumpf weg. Das ist erledigt. Offen blieb die Frage, **warum
+es niemandem aufgefallen war**, und die Antwort steht in der Spurmarke:
+
+```
+E-101 speichern: ... bytes-vorher=104 nachher=128 geaendert=1
+```
+
+104 Byte rein, 128 raus, **und null Byte Rumpf.** Die Datei wird *größer*,
+weil die drei neuen Kopfzeilen dazukommen — die Gesamtlängen können einen
+Schnitt am Rumpf gar nicht zeigen. Jetzt steht daneben:
+
+```
+... bytes-vorher=104 nachher=128 rumpf-vorher=72 rumpf-nachher=0 geaendert=1
+```
+
+**Zwei Werte in einer Ausgabe** — der Verlust ist in einer Zeile zu lesen,
+ohne zweite Messung und ohne Vergleich mit früher.
+
+**Dasselbe eine Ebene tiefer: der Prüfsatz der Tests.** Die drei Tests zu
+P-28 fragten *„enthält die Ausgabe X"*. Genau dieser Satz hat den Schnitt
+durchgelassen — die Kopfzeilen waren ja da, also blieb jede Frage nach
+`MIME-Version` grün, während der Rumpf fehlte. **Wer nur fragt, ob etwas da
+ist, erfährt nie, was fehlt.** Der neue Satz lautet: *ist jedes Byte der
+Eingabe, das nicht zum Tag gehört, noch da* — byteweise verglichen, und eine
+andere Länge zählt ebenfalls als Abweichung.
+
+**Beim Lesen des eigenen Testlaufs fiel ein zweiter Fehler auf.** Unter
+`P-21: gemischter Trenner` stand `rumpf-vorher=74 rumpf-nachher=55`. Diese
+74 Byte gehören aber zu `P-28: Marker und Text auf derselben Zeile` —
+nachgerechnet: 74 − 8 für `<x-html>` − 9 für `</x-html>` − 2 für die
+Zeilenschaltung = 55. Die Ursache: `TT_Note` druckte **sofort**, der
+Testname aber erst in `TT_EndTest`; jede Notiz stand damit unter dem Test
+*davor*. **Alle 169 Tests waren betroffen, seit es `TT_Note` gibt** — und
+genau das hätte die neuen Werte wieder unlesbar gemacht. Behoben.
+
+**Gemessen:** Bau 0 Fehler, 0 Warnungen. **169 Tests, 169 bestanden.** Die
+drei P-28-Fälle nennen jetzt ihre eigenen Werte — 74/55, 66/58, 61/21, und
+jeder geht in der Rechnung auf.
+
+**Nicht gemessen:** die Zeile ist am laufenden Eudora noch nicht gelesen
+worden. Sie entsteht nur beim Speichern über den Dateidialog, und das ist
+ein Mausweg. Deshalb steht er oben unter *Zu prüfen*.
+
 ## 7.2.0.68 — Bilder, die größer sind als angegeben (E-106)
 
 > **Zu prüfen:** `LogLevel=58527` in der `Eudora.ini` lassen, die
@@ -104,7 +163,6 @@ zugedeckter Text ist der teurere Fehler.
 **Nicht nachgewiesen, und das gehört dazu:** mein Prüfstand lädt die Bilder
 nicht — null Ladespuren, während Gregors Protokoll 27 hat. Die Behebung ist
 dort nicht messbar. **Nur sein Lauf kann sie belegen.**
-
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
 > **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)
