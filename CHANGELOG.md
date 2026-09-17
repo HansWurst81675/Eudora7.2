@@ -149,9 +149,16 @@ Tests** betroffen, seit es die Funktion gibt. Behoben.
 
 **Gemessen:** Bau 0 Fehler. **171 Tests, 171 bestanden.**
 
-**Nicht gemessen:** der zweite Teil aus Punkt 3 ist **nicht am laufenden
-Programm** belegt — nur am Messstand und an Gregors Protokollzeilen von
-`1.0.69`. Deshalb steht er oben unter *Zu prüfen*.
+**Am laufenden Programm gemessen ist der Befund.** Gregors zwei
+Protokollzeilen aus `1.0.69` belegen dreierlei live: dass die neuen Werte
+aus P-38 überhaupt erscheinen, dass **P-28 an echten Daten hält** (zweimal
+exakt 21 Byte) und dass der `Content-Type` fehlt.
+
+**Nicht gemessen ist die Behebung dazu** — sie entstand *nach* seiner
+Messung, sein `1.0.69` trug sie noch nicht. Offen ist also nur die
+Bestätigung, dass eine gespeicherte Datei jetzt **mit** `Content-Type`
+herauskommt, nicht der Nachweis, dass etwas falsch war. Deshalb steht sie
+oben unter *Zu prüfen*.
 
 ## 7.2.0.68 — Bilder, die größer sind als angegeben (E-106)
 
