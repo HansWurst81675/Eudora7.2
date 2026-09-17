@@ -142,3 +142,25 @@ woran wuerde ich es merken, wenn sie kaputt waere?*
 Siehe [[assert-ist-im-release-nichts]], [[pruefstand-kann-blind-sein]],
 [[pruefumfang-nicht-von-hand]], [[erfolg-aus-anwendersicht]] und
 [[erst-pruefen-dann-anweisen]].
+
+## Nachtrag 17.09.2026: PRUEFER hat am selben Tag den zweiten Fall gemessen
+
+`008e18a`, wenige Minuten nach der Behebung von E-97: die Dialogvorlage
+`IDD_SAVEAS_EXT` wird **nie instanziiert**. MFC 14.38 nimmt
+`bVistaStyle=TRUE` als Vorgabe, `DoModal` geht ueber `IFileDialog::Show`, und
+`ApplyOFNToShellDialog` liest `lpTemplateName` nirgends.
+
+Das heisst: **die beiden Kaestchen *Kopfzeilen einschliessen* und *Absaetze
+raten* fehlen seit der Portierung ganz.** Nicht seit der Behebung — seit dem
+Anfang. Kein Befund, keine Meldung, kein Testlauf hat das je bemerkt, aus
+demselben Grund wie beim Absturz: der Dialog wurde nie geoeffnet.
+
+**Das ist die Probe auf diese Lehre.** Ein nie benutzter Weg hatte hier
+**zwei** Maengel uebereinander — einen lauten (Absturz) und einen leisen
+(fehlende Funktion). Der laute ist aufgefallen, sobald ihn jemand betrat; der
+leise haette auch danach noch bleiben koennen, wenn PRUEFER nicht denselben
+Weg nachgerechnet haette. Punkt 4 oben (*die Nachbarschaft mitpruefen*) ist
+damit nicht mehr Vermutung, sondern gemessen.
+
+Gefunden von PRUEFER, mit seiner Messung zitierbar — nicht von mir
+nachgerechnet ([[mannschaft-fuehren]]).
