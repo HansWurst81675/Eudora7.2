@@ -65,6 +65,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `e94-betreff-faltung` | 14.09.2026 | von Gregor bestätigt: *„e94 branch name paßt"*. Der Faltungsbefund E-94 und die Unterscheidung eingebetteter von externen Bildern (E-95) |
 | `e97-speichern-absturz` | 15.09.2026 | von Gregor bestätigt: *„e97-speichern-absturz / geht klar"*. Der Absturz beim Speichern einer Nachricht |
 | `lektor-doku-1063` | 15.09.2026 | von Gregor nachträglich angenommen; der Name war von mir vorgegeben, nicht abgestimmt. Lektor-Durchgang für 1.0.63 |
+| `e101-speichern-dateiformat` | 17.09.2026 | **Eine Absprache zu diesem Namen ist hier nicht belegt** — der Zweig steht in dieser Liste, weil er **benutzt** wird (7.2.0.64 bis 7.2.0.66, E-99 bis E-101; auf `origin` gepusht), nicht als Beleg für eine Zustimmung. Vom LEKTOR am 17.09.2026 nachgetragen, nachdem `tools/pruefe-branch.pl` ihn als fehlend meldete. Zweck: die gespeicherte Datei brauchbar machen — `Content-Type` ergänzen, Eudoras internen Marker `<x-html>` entfernen. **Gregor gehört gefragt, ob der Name so bleibt** |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

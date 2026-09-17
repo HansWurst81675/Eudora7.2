@@ -18,7 +18,7 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 [Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
 7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression)
 und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
-7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien) und [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, E-97).
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien), [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, E-97) und [Befunde/LEKTOR-12.md](Befunde/LEKTOR-12.md) (**L-17**, der Stand auf 7.2.0.66 / 1.0.66, 17.09.2026, **149** MD-Dateien, E-98 bis E-101).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
@@ -26,13 +26,25 @@ und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 17.09.2026.** Der jüngste Durchgang ist **L-16** und
-> steht in `Befunde/LEKTOR-11.md`; gemessen an Quellstand **7.2.0.64** (als
-> Paket geschnürt ist zuletzt 1.0.63), über **146** MD-Dateien. Davor **L-15**
-> in `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63, 15.09.2026). Der jüngste
-> Durchgang *in dieser Datei* ist weiterhin der **neunte**, ganz unten. Die
-> Durchgänge **L-6** bis **L-16** stehen nicht hier, sondern in
-> `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-11.md`.
+> **Stand dieser Datei: 17.09.2026.** Der jüngste Durchgang ist **L-17** und
+> steht in `Befunde/LEKTOR-12.md`; gemessen an Quellstand **7.2.0.66** /
+> `VERSION` **1.0.66** (als Paket geschnürt ist zuletzt 1.0.65), über **149**
+> MD-Dateien. Davor **L-16** in `Befunde/LEKTOR-11.md` (7.2.0.64, 17.09.2026,
+> 146 Dateien) und **L-15** in `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63,
+> 15.09.2026). Der jüngste Durchgang *in dieser Datei* ist weiterhin der
+> **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-17** stehen nicht
+> hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-12.md`.
+>
+> **L-17 in einem Satz:** Dieselbe Ersetzung wie in L-16, nur andersherum —
+> **E-97** stand in `README.md`, `AUFGABEN.md` und `WEITERMACHEN.md` als
+> Fassung **7.2.0.66**, obwohl es in **7.2.0.64** behoben und von Gregor an
+> 1.0.64 **bestätigt** ist; die Prüfzeile in `WEITERMACHEN.md` hätte ihn damit
+> ein zweites Mal zur Prüfanleitung eines fremden Befunds geschickt. Dazu
+> fehlten **E-98 bis E-101** in fünf Dateien vollständig — E-98 auch im
+> offenen Teil des CHANGELOG —, drei Dateien nannten einen Paketstand 1.0.63,
+> den es so nicht mehr gibt, und `spuren-auswerten.pl` war zum **dritten Mal**
+> an derselben Stelle stumm: die neue E-101-Marke trägt das Wort `SPURMARKE`
+> nicht im Kommentar.
 >
 > **L-16 in einem Satz:** Eine Ersetzung 63 → 64 hat drei **historische**
 > Angaben mitgenommen — darunter einen Verweis, der Gregor zur Prüfanleitung

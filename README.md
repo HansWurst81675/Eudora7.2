@@ -79,14 +79,25 @@ verschickt.
   105.125 Byte hinaus) und die **Bildgrößen im Verfassenfenster**: jedes Bild
   bekam die Zeilenhöhe des ersten und wurde dadurch abgeschnitten oder
   gequetscht (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.63 wieder
-  weg). **Und der Absturz beim Speichern einer Nachricht** (7.2.0.66,
-  **E-97**) — siehe den Punkt darunter. Wer das braucht, baut selbst.
+  weg). **Und der Absturz beim Speichern einer Nachricht** (7.2.0.64,
+  **E-97**, von Gregor an 1.0.64 bestätigt) — siehe den Punkt darunter. Dazu
+  der **Datenverlust beim Senden eines gesicherten Entwurfs** (7.2.0.64,
+  **E-99**), dieselbe Absturzstelle an drei weiteren Stellen (7.2.0.65,
+  **E-100**) und die **unbrauchbare gespeicherte Datei** (7.2.0.66,
+  **E-101** — ohne `Content-Type`-Zeile und mit Eudoras internem Marker
+  `<x-html>`). Wer das braucht, baut selbst.
 * **Im Release `v1.0.50` beendet *File → Save As* Eudora sofort** (**E-97**):
   der Windows-Dateidialog ruft `CSaveAsDialog::OnTypeChange` auf, bevor der
   Dialog fertig aufgebaut ist, und ein ungeprüfter `GetParent()` liefert dort
   `NULL`. Der Fehler steckt in **jeder** Fassung von 1.0.49 bis 1.0.63.
-  Behoben im Quellstand **7.2.0.66**; wer das veröffentlichte Paket benutzt,
+  Behoben im Quellstand **7.2.0.64**; wer das veröffentlichte Paket benutzt,
   speichert Nachrichten bis dahin besser nicht.
+* **Im Dialog *Speichern unter* fehlen zwei Optionen** (**E-98**, offen):
+  *Kopfzeilen einschließen* und *Absätze raten* sind nicht wählbar. Windows 10
+  öffnet den modernen Dateidialog, und der zeigt Eudoras Dialogvorlage von 1996
+  nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
+  Rückschritt durch die Behebung von E-97** — die Kästchen fehlen seit der
+  Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)

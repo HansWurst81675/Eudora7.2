@@ -24,10 +24,27 @@ sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), **E-93**
 (Inhaltsverlust beim Weiterleiten einer bereits weitergeleiteten Nachricht,
 7.2.0.59), **E-95**/**E-96** (Bildgrößen im Verfassenfenster, 7.2.0.62
 und 7.2.0.63, an einem selbst gestarteten Eudora gemessen) sowie **E-97**
-(*File → Save As* beendete Eudora sofort, 7.2.0.66, am laufenden Programm
+(*File → Save As* beendete Eudora sofort, 7.2.0.64, am laufenden Programm
 gemessen — der Fehler steckte in **jeder** Fassung seit 1.0.49 und steckt
-auch im veröffentlichten `v1.0.50`). **Gebaut ist 7.2.0.66; als Paket
-geschnürt ist zuletzt 1.0.63**, veröffentlicht ist weiterhin nur `v1.0.50`.
+auch im veröffentlichten `v1.0.50`; **von Gregor am 17.09.2026 an 1.0.64
+bestätigt**: *„speichern test hat also funktioniert."*).
+
+**Aus der Arbeit am Speichern sind drei weitere Befunde entstanden:**
+**E-99** (Datenverlust beim Senden eines gesicherten Entwurfs, 7.2.0.64, vom
+Gregor bestätigt: *„ja, kein datenverlust!"*), **E-100** (dieselbe
+Nullzeiger-Stelle wie E-97 an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
+uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
+**E-101** (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
+Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
+7.2.0.66, am laufenden Programm geprüft, **160 Tests**). **Offen bleibt
+E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
+fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
+mehr anzeigt.
+
+**Gebaut ist 7.2.0.66; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
+17.09.2026: `Releases/Eudora72-1.0.65-release`, letztes ZIP
+`Eudora72-1.0.64-release.zip`; **zu 1.0.66 gibt es noch kein Paket**),
+veröffentlicht ist weiterhin nur `v1.0.50`.
 
 | # | | Stand |
 |---|---|---|
