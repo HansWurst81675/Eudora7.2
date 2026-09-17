@@ -39,16 +39,17 @@ Protokoll endlich gelesen wurde, sagte es in zwei Zeilen alles: **40** mal
 | E-86 | 1.0.54 | 1.0.55 | **Ausgewertet am 14.09.2026 in zwei Messläufen**, beide über `tools/testlauf.ps1` mit `tools/nachricht-oeffnen.ps1` — Gregors Freigabe: *„freigabe für beides"*, *„du mißt, ich warte"*. **Der erste Lauf war ungültig:** das Werkzeug öffnete die erstbeste Nachricht, und das war die weitergeleitete aus dem Out-Postfach — die ist durch E-87 ohnehin formatierungslos (Anzeigedatei 4774 B, `<body>` ohne Attribute). Erst nachdem in der `Eudora.ini` nur noch das In-Postfach als offenes Fenster stand, wurde die richtige Nachricht getroffen. **Was sie sagte:** `BODY-Elemente=1` (es gibt kein verworfenes zweites `<body>`), Anzeigedatei **36.078 B mit allen 118 `border`-Angaben** der Nachricht — beim Zusammensetzen geht nichts verloren. Damit waren beide Verdächte widerlegt und die Ursache lag im **Rendermodus**. **Nach dem Einbau von `X-UA-Compatible`:** dieselbe Marke meldet `Hintergrund=transparent` statt `#ffffff` — der Modus hat gewechselt |
 | E-80 | 1.0.45 | 1.0.45 | Ausgewertet am 11.09.2026 in drei Messläufen (`C:\Temp\E80b`). Erst schwieg sie: die Marke lag in `PgReadMsgView`, der Paige-Textansicht, Gregors Nachricht laeuft aber ueber Trident (`ReadMessageFrame.cpp:277-281`). Nach dem Umzug nach `TridentView.cpp:1425` sagte sie `Knopf=0 konzentriert=1 ShowAllHeaders=0 -> Kopfzeilen ALLE` beim ersten Aufbau und `konzentriert=0 -> Kopfzeilen gekuerzt` danach. **Damit war der Verdacht auf den Content Concentrator erledigt** — im laufenden Betrieb greift die Kuerzung. Sie kuerzte nur fast nichts weg, weil die Liste `TabooHeaders` aus 2006 stammt. Die Marke bleibt drin und nennt Knopf, Concentrator, `ShowAllHeaders` und das Ergebnis in einer Zeile |
 | E-79 | 1.0.44 | entfaellt: E-79 war durch die EINSTELLUNG behoben, nicht durch Code — `UseMyFilterWindowPosition=1`, von Gregor am 11.09.2026 an 1.0.44 bestätigt. Die Marke bleibt drin, weil sie sofort sagen würde, wenn die Breite wieder wandert | zwei Zeilen je Lauf: `geladen:` nennt den Wert aus der `Eudora.ini`, den Schalter `UseMyFilterWindowPosition`, die Breite des Elternfensters, das Viertel davon, den gesetzten und den danach tatsächlichen Wert; `gesichert:` nennt, was beim Schließen zurückgeschrieben wird. Damit ist in einem Start-und-Beenden zu sehen, an welcher Stelle die Breite sich ändert |
+| E-97 | 1.0.64 | 1.0.64 | **im selben Zug eingebaut und ausgewertet** (`C:\Temp\E97-Stapel`, 15.09.2026, `tools/TESTLAEUFE.md`). Ausgewertet wurde ihr **Schweigen**: `E-97 OnInitDialog: 1` kam nie, die Marke im Konstruktor kam — daraus folgte, dass der Absturz vor `OnInitDialog` passiert, und aus dem symbolisierten Stapel dann die Zeile `SaveAsDialog.cpp:425`. Die zweite Marke (`E-97 Nachtrag` in `PgEmbeddedImage.cpp`) hat nie geschrieben und bleibt bewusst stehen |
 | E-95 | 1.0.61 | 1.0.62 | **noch vor Gregors Rückmeldung ausgewertet, an einem selbst gestarteten Eudora** (`C:\Temp\E95-Test`, 15.09.2026, Gregors Freigabe: *„mach, was du denn brauchst, um den / die fehler zu fixen!"*). Testnachricht aus drei Bildern **bekannter** Größe — 600×150, 320×80, 20×20. Die Marke sagte `ascent=150 150 150` bei `text-asc=13 150 150`: **jedes Bild erbte die Zeilenhöhe des ersten.** Das war **E-96**, die eigentliche Ursache hinter vier Fassungen Herumprobieren — und zugleich die Widerlegung der `cid:`/`http:`-Unterscheidung aus 7.2.0.61, die daraufhin mit 7.2.0.63 wieder zurückgenommen wurde. Nach der Behebung: `ascent=150 80 20` bei `text-asc=13 13 13`. **Die Marke bleibt dauerhaft drin** |
 
 ## Alle Marken im Quelltext
 
-**Gemessen am 15.09.2026: 29 Befunde, 168 Stellen in 26 Dateien.** Am
-13.09.2026 waren es 23 Befunde, 158 Stellen in 20 Dateien, am 10.09.2026 19
-Befunde in 16 Dateien. **Die Zahl war zweimal hintereinander nicht nachgezogen
-worden** — deshalb steht der Messbefehl jetzt hier, statt dass ihn jeder neu
-erfindet (am 15.09.2026 selbst gefahren, die drei Zahlen oben sind seine
-Ausgabe):
+**Gemessen am 17.09.2026: 30 Befunde, 170 Stellen in 28 Dateien.** Am
+15.09.2026 waren es 29 Befunde, 168 Stellen in 26 Dateien, am 13.09.2026 23
+Befunde, 158 Stellen in 20 Dateien, am 10.09.2026 19 Befunde in 16 Dateien.
+**Die Zahl war zweimal hintereinander nicht nachgezogen worden** — deshalb
+steht der Messbefehl jetzt hier, statt dass ihn jeder neu erfindet (am
+17.09.2026 selbst gefahren, die drei Zahlen oben sind seine Ausgabe):
 
 ```bash
 Q="Eudora71/Eudora/*.cpp Eudora71/Eudora/*.CPP Eudora71/OTShim/*.cpp"
@@ -96,6 +97,7 @@ Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
 | **E-86** | 2 | `TridentView.cpp:1619`, `:2274` | `E-86: Anzeigedatei <a> -> <b>` nennt die zusammengesetzte Datei; `E-86 fixup: FixupSource laeuft BODY-Elemente=%d Hintergrund=%s` nennt, ob es ein zweites verworfenes `<body>` gibt und welchen Hintergrund MSHTML wirklich zeichnet. **Die zweite Zeile hat E-86 entschieden:** `BODY-Elemente=1` und die vollen 36.078 Byte schlossen beide Verdächte aus, der Rendermodus blieb übrig — nach dem Einbau von `X-UA-Compatible` meldete dieselbe Marke `Hintergrund=transparent` statt `#ffffff` |
 | **E-87** | 1 | `summary.cpp:1149` | `E-87 ComposeMessage:` nennt vor dem Aufbau des Verfassenfensters `IsFancy`, `IsRich`, `IsXRich`, `IsFlowed`, `IsHTML`, den Schalter und den Antworttyp. Damit ist in einer Zeile zu sehen, als **welche Art** Nachricht eine Weiterleitung angelegt wird — der Punkt, an dem die Formatierung verlorenging |
 | **E-95** | 1 | `PGHTMIMP.CPP:2186` | `E-95 Bild:` nennt je eingefügtem Bild `src` (die ersten 32 Zeichen — `cid:`, `data:` oder `http:`), `attr` (was im HTML stand), `embed` (was Paige nach dem Laden weiß), `ascent` (die entstandene Zeilenhöhe) sowie Text-Ascent und -Descent. **Diese eine Zeile hat E-96 entschieden:** `ascent=150 150 150` bei `text-asc=13 150 150` zeigte, dass jedes Bild die Höhe des ersten erbte. Sie ist **dauerhaft** eingebaut — vier Fassungen lang war jede Erklärung für das Schwanken der Bildgrößen plausibel und falsch, und `embed=` ist der Beleg, dass Paige die wirkliche Größe kennt, auch bei extern verlinkten Bildern |
+| **E-97** | 2 | `SaveAsDialog.cpp:78`, `PgEmbeddedImage.cpp:483` | `E-97 OnInitDialog: 1 nach CFileDialog::OnInitDialog` sagt, **ob `OnInitDialog` überhaupt erreicht wird**. Am 15.09.2026 ausgewertet: die Zeile kam **nicht**, während die Marke im Konstruktor kam — damit lag die Lücke zwischen beiden, im `GetSaveFileName`-Aufruf selbst, und der Rückruf `OnTypeChange` war der Täter. `E-97 Nachtrag: quelle=…x… embed=…x…` in `PgEmbeddedImage.cpp` hat in **keinem** meiner Testläufe geschrieben — der Nachtragsweg wird dort nicht erreicht; sie bleibt drin, weil sie bei Gregors echten Bildern schreiben könnte. **Eine Marke, die nichts schreibt, ist ein Messwert** — das war hier der entscheidende |
 | **E-89** | 2 | `msgutils.cpp:3406`, `:3760` | `E-89 Bilder im Editor` nennt in **einer** Zeile, was die Umschrift an den Bildern getan hat: wie viele `<img>` es gab, wie viele unverändert blieben, wie viele ihre Größe aus dem CSS bekamen, wie oft die Vorgabe greifen musste, wie oft gedeckelt wurde, und beide Bytelängen. Steht dort `gesamt=0`, war in der Nachricht kein Bild — dann ist E-89 nicht die Ursache. Geschrieben wird sie **nur**, wenn auch das Original aus E-88 aufgehoben wird; das ist die eine Bedingung, an der beide Befunde hängen |
 
 ### Wie man das benutzt
@@ -139,6 +141,26 @@ Marke selbst steht sehr wohl im Bau, in `PGHTMIMP.CPP:2186`, und schreibt bei
 `SPURMARKE ZU BEFUND E-95` machen. Er gehört in denselben Commit wie die
 nächste ohnehin fällige Änderung an dieser Datei — der LEKTOR fasst
 `Eudora71/` nicht an.
+
+### Nachtrag 17.09.2026: dieselbe Konvention, diesmal als Schweigen
+
+**E-97 hat zwei Marken im Bau** (`SaveAsDialog.cpp:78`,
+`PgEmbeddedImage.cpp:483`) — und `spuren-auswerten.pl` sagt dazu **gar
+nichts**, weder Meldung noch Fehlalarm. Beide Kommentare darüber lauten
+`BEFUND E-97` beziehungsweise `E-97-Messung`, ohne das Wort `SPURMARKE`. Das
+Werkzeug zählt deshalb weiter **8** Befunde mit Marken, während die Messung
+über den Quelltext **30** nennt.
+
+Bei E-95 fällt die Konvention als Hinweis auf, weil die Marke in dieser Datei
+steht. Bei E-97 stand sie bis heute **nicht** hier — und dann meldet das
+Werkzeug nichts, in beide Richtungen nicht. Das ist die teurere Sorte
+([prüfstand-kann-blind-sein](../Arbeitsweise/pruefstand-kann-blind-sein.md)).
+
+**Zu tun, in `Eudora71/` und deshalb nicht vom LEKTOR:** beide Kommentare auf
+`SPURMARKE ZU BEFUND E-97` bringen — und danach `spuren-auswerten.pl` gegen
+die Zahl aus dem Messbefehl oben halten, statt gegen sich selbst
+([pruefumfang-nicht-von-hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md),
+Nachtrag vom 14.09.).
 
 ## Prüfen
 
