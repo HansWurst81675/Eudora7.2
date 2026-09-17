@@ -25,3 +25,15 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-08-30 15:08:07 | v1.0.1 | nicht dokumentiert | veroeffentlicht |
 | 2026-09-09 13:25:20 | v1.0.29 | Gregor am 09.09.2026 zu Paket 1.0.29: '1-6, ok.' und 'bau mir mit dem bug ein 0.29 release auf github. den fehler notieren wir, wird im naechsten release behoben.' | veroeffentlicht |
 | 2026-09-13 13:24:37 | v1.0.50 | Gregor am 13.09.2026: 'gemerged, jetzt 0.50 releasen' - E-76 und E-84 hatte er zuvor am laufenden Programm bestaetigt | veroeffentlicht |
+| 2026-09-17 10:23:08 | v1.0.64 | Gregor am 17.09.2026 zu 1.0.64: 'gespeichert. funktioniert.' (E-97) und 'ja, kein datenverlust!' (E-99) | veroeffentlicht, auf GitHub als *Latest* markiert; Tag `1d37623` |
+
+> **Nachgetragen am 17.09.2026 vom LEKTOR (L-13.1).** Die Zeile zu `v1.0.64`
+> fehlte hier, und **vier** Dokumente behaupteten zur selben Zeit, veroeffentlicht
+> sei weiterhin nur `v1.0.50`: `WEITERMACHEN.md`, `AUFGABEN.md`,
+> `Releases/PAKETE.md` und diese Datei. Gemessen mit `gh release list` (13
+> Releases, `v1.0.64` als *Latest*, 2026-09-17T10:23:08Z) und
+> `git ls-remote --tags origin` (`refs/tags/v1.0.64`). **Warum das die
+> teuerste Sorte Unwahrheit ist:** wer diese Datei liest, glaubt, seit dem
+> 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
+> eine Fassung, in der **E-98** offen ist und **E-101** noch gar nicht gefunden
+> war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
