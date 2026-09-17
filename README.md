@@ -88,9 +88,12 @@ verschickt.
   `Content-Type` zunächst ganz), **Bilder, die über dem Text lagen**
   (7.2.0.67, **E-103**), **zusammengeklebte Kopfzeilen in der gespeicherten
   Datei** (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
-  **E-104**) und **Bilder, die größer sind als im HTML
-  angegeben und deshalb über dem Text liegen** (7.2.0.68, **E-106** — bei
-  Gregor noch nicht nachgewiesen). Wer das braucht, baut selbst.
+  **E-104**), **Bilder, die größer sind als im HTML angegeben und deshalb über
+  dem Text liegen** (7.2.0.68, **E-106** — **von Gregor am 17.09.2026 an 1.0.69
+  bestätigt**) und der **Absturz beim Antworten auf eine geöffnete Nachricht**
+  (**E-107** war die falsche Erklärung und ist widerlegt; **E-108** in 7.2.0.72
+  entfernt den Stilweg, der ihn ausgelöst hat — **bei Gregor noch nicht
+  bestätigt**). Wer das braucht, baut selbst.
   > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Bis hierher stand hier
   > *„das neueste Release ist `v1.0.50`"* und darunter eine Warnung, das
   > veröffentlichte Paket stürze beim Speichern ab. Beides war überholt:
@@ -628,7 +631,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.69` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.72` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.69** / `VERSION` **1.0.69**
+**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.72** / `VERSION` **1.0.72**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -48,8 +48,12 @@ gewinnt danach. **Von Gregor am laufenden Programm noch nicht bestätigt**,
 gespeicherten Nachricht klebten zusammen, weil `UnwrapText` über die ganze
 Nachricht lief und weil verdorbene INI-Werte aus **E-100** „Absätze raten"
 eingeschaltet hatten, 7.2.0.67 für die verfasste und 7.2.0.68 für die
-empfangene Nachricht). **E-106** ist gebaut (7.2.0.68), aber **bei Gregor noch
-nicht nachgewiesen**: Bilder, die größer sind als im HTML angegeben, liegen
+empfangene Nachricht). **E-106** (7.2.0.68) ist **von Gregor am 17.09.2026 an
+1.0.69 bestätigt**: die Überlappung ist weg, der Text steht wieder unter dem
+Bild. **E-108** (7.2.0.72) entfernt den Stilweg, der beim Antworten zum Absturz
+geführt hat — **E-107** war die falsche Erklärung und ist durch Gregors
+Protokoll widerlegt. Ursprünglich: Bilder, die größer sind als im HTML
+angegeben, liegen
 über dem Text — sein Protokoll vom 17.09.2026 zeigt, dass Bilder **ohne**
 Größenangabe nachgemessen werden und die Zeile mitwächst, Bilder **mit**
 Angabe aber nie. **Offen bleibt

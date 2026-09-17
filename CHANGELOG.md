@@ -61,6 +61,135 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.72 — der Absturz, zweiter Anlauf: der Stilweg fliegt raus (E-108)
+
+> **Zu prüfen:** dieselbe Nachricht öffnen und **antworten**. `LogLevel=58527`
+> bleibt in der `Eudora.ini`. Wenn es wieder kracht, endet `eudora.log` erneut
+> an einer `E-106`-Zeile — dann sag mir die letzte Zeile, sie entscheidet.
+
+**E-107 war die falsche Erklärung.** Ich hatte den Absturz damit begründet, dass
+mein E-106-Block auf einem *flüchtigen* Embed läuft, und ihn auf den Ladeweg
+beschränkt. **Gregors Protokoll zu 1.0.71 hat das widerlegt:** der Block läuft
+dort fünfmal, und die letzte Zeile vor dem Abbruch ist wieder seine eigene
+Spurmarke —
+
+```
+E-106 groesser als angegeben: attr=135x40 quelle=405x120 gefunden=1 pos=765
+```
+
+— dasselbe Bild, dieselbe Stelle wie an 1.0.69. Der Fehler steckt **im Block**,
+nicht darin, wer ihn aufruft.
+
+**Was der Block anders machte als der, der seit 1996 funktioniert:** er fasste
+den **Textstil** direkt an (`pgGetStyleInfo` / `pgSetStyleInfo`) an einer
+Position, die aus einer Suche über `embed->style` stammt. Der Prüfer hat dazu
+unabhängig gemeldet (P-41), dass `embed->style` ein **Zeiger** ist, den sich
+zwei Bilder gleicher Maßangabe teilen — die Suche kann also das **falsche**
+Embed liefern, und dann schreibt der Stilweg an die falsche Stelle.
+
+**Behebung:** derselbe Weg wie im QUALCOMM-Block zwanzig Zeilen darüber — die
+Maße ins **Embed** schreiben und `pgInvalEmbedRef` die Zeile neu rechnen lassen.
+Kein Zugriff mehr auf den Textstil.
+
+**Und mein E-103-Sicherungsnetz ist ersatzlos entfernt.** Es fasste denselben
+Stilweg an und hat in **keiner** Messung je ausgelöst — `nachgezogen=0`, jedes
+Mal. Totes Gewicht auf einem gefährlichen Pfad.
+
+**Bestätigt.** Gregor am 17.09.2026 an 1.0.72: *„kein crash"*. Sein Protokoll
+belegt es dreifach — der Block läuft **18 mal** statt gar nicht, er läuft **über
+die bisher tödliche Stelle hinaus** (`pos=770` hinter dem `pos=765`, an dem in
+allen drei Absturzprotokollen Schluss war), und die letzte Zeile lautet
+`Logging shutdown`. Keine `Exception.log`, nicht einmal eine leere.
+
+**Nachstellen konnte ich es trotzdem nicht — mein Prüfstand lädt zwar Bilder, aber der Block
+läuft dort nicht an. **Nur Gregors Lauf entscheidet.**
+
+## 7.2.0.71 — Absturz beim Antworten auf eine geöffnete Nachricht (E-107)
+
+> **Zu prüfen:** eine Nachricht mit Bildern öffnen und **antworten**. Eudora
+> darf nicht abstürzen. Genau das ist mit 1.0.69 passiert.
+
+**Der Fehler war meiner, eingebaut mit E-106 in derselben Nacht.**
+
+Gregor am 17.09.2026 um 21:23 mit 1.0.69:
+
+```
+EXCEPTION_ACCESS_VIOLATION in Paige32.dll
+  at UnuseMemory()+0006      ESI=FFFFFFFF
+```
+
+`ESI=FFFFFFFF` ist ein ungültiger Speicherverweis.
+
+**Die Ursache steht als Warnung im Quelltext, seit 1996:**
+
+```c
+case EMBED_PREPARE_IMAGE:
+    // Don't allow threaded fetch, because we're being called
+    // with a temporary embed_ptr
+    PgLoadUrlImage( pg, image, embed_ptr, false )
+```
+
+Der Embed ist dort **flüchtig**. Mein E-106-Block liest trotzdem `embed->height`
+und `embed->style` und durchsucht damit das ganze Dokument. Der Block davor
+(E-103) hatte dieselbe Gefahr, lief aber nur bei Bildern **ohne** Maßangabe —
+selten. Meiner lief zusätzlich bei allen **mit** Angabe, also bei fast jedem
+Bild jeder Werbemail.
+
+**Behebung:** beide Blöcke laufen nur noch, wenn `bAllowThreadedFetch` wahr ist
+— das ist genau die Unterscheidung zwischen *Vorbereiten* (flüchtig) und
+*Laden* (echter Embed).
+
+**Was nicht bewiesen ist, und das gehört hierher:** ich konnte den Absturz
+**nicht nachstellen**. Mein Prüfstand lädt keine Bilder — weder aus dem Netz
+noch eingebettet als `data:`; beides gemessen, in beiden Fällen läuft der
+verdächtige Code gar nicht an. Auch die **Gegenprobe mit der abstürzenden
+Fassung 1.0.69 blieb negativ**: sie öffnet das Antwortfenster bei mir sauber.
+
+Belegbar ist nur dies, und es ist am Quelltext ablesbar: **auf dem gefährlichen
+Weg läuft mein Code jetzt gar nicht mehr.** Das Verhalten fällt dort auf den
+Stand vor E-103 und E-106 zurück. Schlimmer kann es dadurch nicht werden.
+
+## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
+
+> **Zu prüfen:** dies ist die erste Fassung, die **alles** enthält — E-101 in
+> beiden Teilen, E-103, E-104 und E-106. Die vier Pakete davor enthalten jeweils
+> nur einen Teil.
+>
+> **Der eine Messpunkt, auf den es ankommt** (`LogLevel=58527` steht schon in
+> der `Eudora.ini`): die Kleinanzeigen-Nachricht weiterleiten, warten bis die
+> Bilder sichtbar sind, Eudora beenden. Im `eudora.log` muss stehen:
+> `E-106 groesser als angegeben: attr=200x52 quelle=…x… gefunden=1`.
+> **Bleibt die Zeile aus, ist auch diese Ursache widerlegt.**
+
+**Kein neuer Code.** Diese Fassung bündelt, was schon in `main` steht — und
+räumt zwei Dinge auf, die der Grund für ein Durcheinander waren.
+
+### Warum es zwei Fassungsnummern 1.0.68 gab
+
+Am 17.09.2026 liefen **zwei Sitzungen gleichzeitig**. Beide haben die
+Fassungsnummer hochgezogen, beide nahmen die **68** — die eine für E-106, die
+andere für den zweiten Teil von E-101. Die zweite hat es bemerkt und ist auf
+**1.0.69** ausgewichen.
+
+**Die Ursache lag in der Buchführung:** `Releases/PAKETE.md` kannte nur
+**1.0.64** und **1.0.65**. Wer die nächste Nummer daraus ableitet, greift
+zwangsläufig daneben. Die Liste führt jetzt auch **1.0.66 bis 1.0.70**.
+
+### Was in welchem Paket steckt
+
+Vier Pakete lagen zuletzt nebeneinander, und **keines war vollständig**:
+
+| Paket | Fassung | enthält | es fehlt |
+|---|---|---|---|
+| 1.0.67 | 7.2.0.67 | E-101 (erster Teil), E-103 | E-104, E-106, E-101 zweiter Teil |
+| 1.0.68 | 7.2.0.68 | dazu E-104, **E-106** | E-101 zweiter Teil |
+| 1.0.69 | 7.2.0.69 | E-101 **zweiter Teil**, P-38 | **E-106** |
+| **1.0.70** | 7.2.0.70 | **alles** | — |
+
+Das erklärt auch, warum die Spurmarke `E-101 speichern:` in 1.0.69 fehlte: der
+Protokollkanal war **nicht** abgeschaltet — `LogLevel=58527` ist `0xE49F` und
+enthält `0x8000` sehr wohl. Die Behebung war dort schlicht noch nicht drin.
+
 ## 7.2.0.69 — die Spurmarke misst den Rumpf, und sie findet gleich etwas (E-101, P-38)
 
 > **Zu prüfen:** eine Nachricht über *File → Save As* sichern und die Datei

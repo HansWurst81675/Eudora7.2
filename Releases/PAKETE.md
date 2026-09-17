@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 17.09.2026.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.65** dazugekommen (**7.2.0.66 ist gebaut, aber noch nicht als Paket geschnürt** — gemessen am 17.09.2026 unter `Releases/`: letztes Verzeichnis `Eudora72-1.0.65-release`, letztes ZIP `Eudora72-1.0.64-release.zip`); was in ihnen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md), Abschnitt für Abschnitt. Hier fehlen sie. Ausführliche
+> **Diese Buchführung ist unvollständig — Stand 17.09.2026, abends neu gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.70** dazugekommen; für **1.0.66 bis 1.0.70** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -154,6 +154,90 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.70 — gebaut am 17.09.2026, kein Release
+
+**Die erste Fassung, die alles enthält.** Die vier davor enthielten jeweils nur
+einen Teil — siehe die Tabelle im [CHANGELOG](../CHANGELOG.md), Abschnitt
+7.2.0.70. Inhaltlich kein neuer Code gegenüber `ceab98f`; diese Fassung bündelt
+**E-101** (beide Teile samt Datenverlust **P-28**), **E-103**, **E-104**,
+**E-106** und **P-38**.
+
+**Zu prüfen ist genau ein Punkt:** ob **E-106** trägt. Die Behebung ist am
+Prüfstand **nicht** nachweisbar, weil er die Bilder nicht lädt; nur Gregors Lauf
+kann sie belegen. Was im Protokoll stehen muss, steht im CHANGELOG.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.70-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `6c36638665161f80b72b69cba66e11851b64252379ddc9029eb097e5bbde4605` |
+| **Größe** | 9 356 792 Byte, 157 Dateien |
+| **Quellstand** | 7.2.0.70 (`Eudora71/Version.h`), Grundlage `ceab98f` |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im Paket** | 2 987 520 Byte, 17.09.2026 21:18 |
+| **`EudoraRes.dll` im Paket** | 2 448 384 Byte |
+| **Paketprüfung** | `paket-pruefen.ps1`: keine Fehler |
+| **Tests** | 171 von 171 |
+
+## 1.0.69 — gebaut am 17.09.2026, kein Release
+
+Aus der **zweiten Sitzung**, die parallel an **E-101** arbeitete. Enthält den
+zweiten Teil von E-101 (*„ohne Kopfzeilen fehlte der Content-Type ganz"*) und
+**P-38** (die Spurmarke misst den Rumpf), **aber nicht E-106**.
+
+Die Nummer entstand als **Ausweichnummer**: beide Sitzungen hatten
+unabhängig die **68** vergeben. Der Commit heißt wörtlich *„7.2.0.69 / 1.0.69 —
+die Nummernkollision mit E-106 aufgelöst"*.
+
+| | |
+|---|---|
+| **Paket** | nur ausgepackt bei Gregor unter `%USERPROFILE%\Eudora72-1.0.69-release`, **kein Verzeichnis unter `Releases/`, kein ZIP** |
+| **Quellstand** | 7.2.0.69 |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe`** | 2 987 008 Byte, 17.09.2026 20:24 |
+| **Achtung** | 235 Dateien statt 157 — das Mailverzeichnis liegt darin, es ist Gregors Testverzeichnis, kein reines Paket |
+
+## 1.0.68 — gebaut am 17.09.2026, kein Release
+
+Enthält **E-106** (Bilder, die größer sind als angegeben) und **E-104**, **nicht**
+aber den zweiten Teil von E-101. **Dieselbe Nummer wurde von der zweiten Sitzung
+ein zweites Mal vergeben** — daher die Kollision.
+
+Ein erster Anlauf trug in der `Eudora.exe` noch **7.2.0.67**: die Fassung war
+hochgezogen, aber nicht neu gebaut worden. Aufgefallen beim Abfragen der
+Versionsnummer aus der ausgelieferten Datei; neu gebaut und neu geschnürt.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.68-release` (Verzeichnis, **kein ZIP**) |
+| **Quellstand** | 7.2.0.68 |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im Paket** | 2 987 008 Byte, 17.09.2026 20:18 |
+| **Dateien** | 157 |
+| **Paketprüfung** | keine Fehler |
+
+## 1.0.67 — gebaut am 17.09.2026, kein Release
+
+Enthält **E-101** (erster Teil) und **E-103** (Mindestzeilenhöhe für Bilder ohne
+Größenangabe). An dieser Fassung hat Gregor belegt, dass **E-103 seinen Fall
+nicht traf** — sein Logo trägt `width=200 height=52`, also eine Angabe. Daraus
+entstand **E-106**.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.67-release` (Verzeichnis, **kein ZIP**) |
+| **Quellstand** | 7.2.0.67 |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im Paket** | 2 985 984 Byte, 17.09.2026 18:58 |
+| **Dateien** | 157 |
+| **Paketprüfung** | keine Fehler |
+
+## 1.0.66 — **nie geschnürt**
+
+Der Quellstand 7.2.0.66 hat es gegeben — er trug die erste Fassung von
+**E-101** —, aber **es wurde nie ein Paket daraus gebaut**. Weder unter
+`Releases/` noch bei Gregor liegt etwas. Der Eintrag steht hier, damit die Lücke
+in der Zählung nicht wieder für eine freie Nummer gehalten wird.
 
 ## 1.0.41 — gebaut am 10.09.2026, kein Release
 

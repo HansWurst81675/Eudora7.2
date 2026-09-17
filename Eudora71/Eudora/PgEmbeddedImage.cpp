@@ -560,76 +560,27 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					// Call pgInvalEmbedRef so that the embedded style gets updated with
 					// our updated dimensions.
 					pgInvalEmbedRef( pg->myself, pos, embed, draw_none );
-
 					//
-					// BEFUND E-103: die ZEILENHOEHE nachziehen.
+					// BEFUND E-108: hier stand ein Sicherungsnetz von mir,
+					// das den Textstil direkt anfasste (pgGetStyleInfo /
+					// pgSetStyleInfo). Es ist ersatzlos entfernt.
 					//
-					// pgInvalEmbedRef aktualisiert das EMBED. Die Hoehe der
-					// ZEILE steckt aber im Textstil an der Stelle des Bildes -
-					// dasselbe Feld, das der Import setzt
-					// (PGHTMIMP.CPP:2150, current_style.ascent) und um das es
-					// bei E-96 ging. Ohne diesen Schritt bleibt die Zeile so
-					// hoch, wie sie beim Import war.
+					// Zwei Gruende, beide gemessen:
 					//
-					// GEMESSEN an Gregors Doctolib-Nachricht, 17.09.2026,
-					// dasselbe Bild in zwei Spurmarken:
+					//  1. Es hat NIE ausgeloest. In jeder Messung stand
+					//     "nachgezogen=0" - pgInvalEmbedRef eine Zeile
+					//     darueber hatte die Zeilenhoehe schon richtig
+					//     gesetzt. Es war totes Gewicht.
 					//
-					//   PGHTMIMP  E-95 Bild: attr=0x0 embed=0x0 ascent=13
-					//   hier      E-103 Nachtrag: quelle=202x60 embed=202x60
-					//                             gefunden=1 pos=288
+					//  2. Derselbe Stilweg hat in E-106 zweimal zum Absturz
+					//     gefuehrt, an 1.0.69 und an 1.0.71. Beide Male war
+					//     die letzte Zeile in Gregors Protokoll die Marke
+					//     direkt davor.
 					//
-					// Eine Zeile von 13 Punkten, ein Bild von 60. Die 47
-					// Punkte Unterschied liegen ueber dem folgenden Text -
-					// genau das meldet Gregor seit mehreren Fassungen:
-					// "da ist alles durcheinander, man kann ja nichts lesen."
+					// Was bleibt, ist der Weg von QUALCOMM: Masse ins Embed,
+					// pgInvalEmbedRef rechnen lassen. Der steht seit 1996 da
+					// und ist in keiner Messung aufgefallen.
 					//
-					// Es wird NICHTS geraten. Die Zahl kommt aus der geladenen
-					// Bilddatei (MetafileFromImage weiter oben), nicht aus
-					// einer Vorgabe. Der Notbehelf 20x20 bis 7.2.0.62 war
-					// genau das Gegenteil und hat Bilder gequetscht.
-					//
-					// Nur VERGROESSERN, nie verkleinern: stand im HTML eine
-					// groessere Angabe oder hat ein anderes Bild in derselben
-					// Zeile mehr Hoehe, bleibt die groessere stehen.
-					//
-					if ( pUrlImage->source_height > 0 )
-					{
-						select_pair		selBild;
-						style_info		infoBild, maskeBild;
-
-						selBild.begin = pos;
-						selBild.end   = pos + 1;
-
-						pgInitStyleMask( &infoBild, 0 );
-						pgInitStyleMask( &maskeBild, 0 );
-						maskeBild.ascent = -1;
-
-						pgGetStyleInfo( pg->myself, &selBild, FALSE,
-										&infoBild, &maskeBild );
-
-						{
-							char	szSpur103[200];
-
-							wsprintf( szSpur103,
-								"E-103 Zeilenhoehe: pos=%ld ascent-vorher=%d "
-								"bildhoehe=%d nachgezogen=%d\r\n",
-								(long)pos, (int)infoBild.ascent,
-								(int)pUrlImage->source_height,
-								( infoBild.ascent < pUrlImage->source_height ) ? 1 : 0 );
-
-							PutDebugLog( DEBUG_MASK_MISC, szSpur103 );
-						}
-
-						if ( infoBild.ascent < pUrlImage->source_height )
-						{
-							pgInitStyleMask( &maskeBild, 0 );
-							maskeBild.ascent = -1;
-							infoBild.ascent  = (short) pUrlImage->source_height;
-
-							pgSetStyleInfo( pg->myself, &selBild,
-											&infoBild, &maskeBild, draw_none );
-						}
-					}
 
 					//
 					// BEFUND E-103: wird ueberhaupt neu gezeichnet?
@@ -685,7 +636,37 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 			//
 			// Nur VERGROESSERN, nie verkleinern.
 			//
-			if ( nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
+			//
+			// BEFUND E-107: NUR auf dem Weg, der einen echten Embed hat.
+			//
+			// eCallback ruft diese Funktion zweimal. Bei EMBED_PREPARE_IMAGE
+			// steht ueber dem Aufruf eine Warnung von QUALCOMM:
+			//
+			//   // Don't allow threaded fetch, because we're being called
+			//   // with a temporary embed_ptr
+			//   PgLoadUrlImage( pg, image, embed_ptr, false )
+			//
+			// Der Embed ist dort FLUECHTIG. Der Block darunter liest
+			// embed->height und embed->style und durchsucht damit das ganze
+			// Dokument - auf einem fluechtigen Objekt ist beides wertlos und
+			// gefaehrlich.
+			//
+			// GEMESSEN: Gregor am 17.09.2026, 21:23, an 1.0.69, beim
+			// Antworten auf eine geoeffnete Nachricht:
+			//
+			//   EXCEPTION_ACCESS_VIOLATION in Paige32.dll
+			//     at UnuseMemory()+0006      ESI=FFFFFFFF
+			//
+			// ESI=FFFFFFFF ist ein ungueltiger Speicherverweis. Der Block
+			// davor (E-103) hatte dieselbe Gefahr, lief aber nur bei Bildern
+			// OHNE Massangabe - selten. Meiner lief zusaetzlich bei allen MIT
+			// Angabe, also bei fast jedem Bild jeder Werbemail.
+			//
+			// bAllowThreadedFetch ist genau die Unterscheidung: false beim
+			// Vorbereiten (fluechtig), true beim Laden (echter Embed).
+			//
+			if ( bAllowThreadedFetch &&
+				 nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
 			{
 				long			posE  = 0;
 				bool			bFundE = false;
@@ -726,31 +707,54 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 
 				if (bFundE)
 				{
-					select_pair		selBild106;
-					style_info		info106, maske106;
+					//
+					// BEFUND E-108: den EMBED aendern, nicht den Textstil.
+					//
+					// Der erste Entwurf fasste hier pgGetStyleInfo und
+					// pgSetStyleInfo an. Genau dort ist Gregor abgestuerzt,
+					// zweimal, an 1.0.69 und an 1.0.71 - und beide Male ist
+					// die LETZTE Zeile seines Protokolls die Marke direkt
+					// darueber:
+					//
+					//   E-106 groesser als angegeben: attr=135x40
+					//     quelle=405x120 gefunden=1 pos=765
+					//
+					// Der Block zwanzig Zeilen weiter oben (E-103) macht
+					// dasselbe Ziel auf ANDEREM Weg: er setzt die Masse im
+					// Embed und laesst pgInvalEmbedRef die Zeile neu rechnen.
+					// Der stuerzt nicht ab - er stammt von QUALCOMM und steht
+					// seit 1996 so da.
+					//
+					// Also derselbe Weg, statt eines eigenen. Was hier
+					// geschieht, ist Zeile fuer Zeile das, was oben schon
+					// steht; nur die Quelle der Zahl ist eine andere (die
+					// gemessene Dateigroesse statt der fehlenden Angabe).
+					//
+					// WARUM DER STILWEG GEFAEHRLICH IST, soweit gemessen:
+					// posE kommt aus pgGetIndEmbed und ist eine Position im
+					// Dokument. Der PRUEFER hat dazu P-41 gemeldet - die
+					// Suche vergleicht embed->style, einen ZEIGER, den sich
+					// zwei Bilder mit gleicher Massangabe teilen. Dann trifft
+					// selBild106 die falsche Stelle. Ueber das Embed zu gehen
+					// umgeht die Frage ganz.
+					//
+					// embed ist bereits ein pg_embed_ptr - genau wie im
+					// QUALCOMM-Block oben wird direkt darauf geschrieben,
+					// ohne UseMemory. Der erste Anlauf hatte es umhuellt und
+					// liess sich nicht uebersetzen.
+					embed->uu.pict_data.pict_frame.top_left.h = 0;
+					embed->uu.pict_data.pict_frame.top_left.v = 0;
 
-					selBild106.begin = posE;
-					selBild106.end   = posE + 1;
+					embed->width = (long) nEchtBreite;
+					embed->uu.pict_data.pict_frame.bot_right.h = (long) nEchtBreite;
 
-					pgInitStyleMask( &info106, 0 );
-					pgInitStyleMask( &maske106, 0 );
-					maske106.ascent = -1;
+					embed->height = (long) nEchtHoehe;
+					embed->uu.pict_data.pict_frame.bot_right.v = (long) nEchtHoehe;
 
-					pgGetStyleInfo( pg->myself, &selBild106, FALSE,
-									&info106, &maske106 );
+					pgInvalEmbedRef( pg->myself, posE, embed, draw_none );
 
-					if ( info106.ascent < nEchtHoehe )
-					{
-						pgInitStyleMask( &maske106, 0 );
-						maske106.ascent = -1;
-						info106.ascent  = (short) nEchtHoehe;
-
-						pgSetStyleInfo( pg->myself, &selBild106,
-										&info106, &maske106, draw_none );
-
-						if (pSB && pSB->pWndOwner)
-							pSB->pWndOwner->Invalidate();
-					}
+					if (pSB && pSB->pWndOwner)
+						pSB->pWndOwner->Invalidate();
 				}
 			}
 
