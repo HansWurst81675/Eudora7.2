@@ -40,13 +40,13 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
-> Stand 17.09.2026, Quellstand **7.2.0.67**, `VERSION` **1.0.67**. Als Paket
-> geschnürt ist zuletzt **1.0.65**; zu 7.2.0.67 (**E-101**, die gespeicherte
+> Stand 17.09.2026, Quellstand **7.2.0.68**, `VERSION` **1.0.68**. Als Paket
+> geschnürt ist zuletzt **1.0.65**; zu 7.2.0.68 (**E-101**, die gespeicherte
 > Datei war für andere Programme unbrauchbar) gibt es noch keines. Seit
 > 7.2.0.64 sind dazugekommen: **E-97** (*File → Save As* stürzte ab) und
 > **E-99** (Datenverlust beim Senden eines gesicherten Entwurfs) in 7.2.0.64,
 > **E-100** (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65
-> und **E-101** in 7.2.0.67; **160/160 Tests**. **Veröffentlicht** ist bei GitHub `v1.0.50`
+> und **E-101** in 7.2.0.68; **160/160 Tests**. **Veröffentlicht** ist bei GitHub `v1.0.50`
 > (13.09.2026). Hier steht bewusst keine zweite Fassung dieser Tabelle.
 >
 > | Messung | Ergebnis |

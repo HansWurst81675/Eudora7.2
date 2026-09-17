@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.67** / `VERSION` **1.0.67**
+**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.68** / `VERSION` **1.0.68**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -36,16 +36,29 @@ Nullzeiger-Stelle wie E-97 an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
 uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
 **E-101** (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
 Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
-7.2.0.67, am laufenden Programm geprüft, **169 Tests**). **Offen bleibt
+7.2.0.68, am laufenden Programm geprüft, **169 Tests**), **E-103** (Bilder ohne
+Größenangabe lagen über dem Text. **Das Fehlerbild** hat Gregor am 17.09.2026
+an 1.0.64 belegt — auf seinem Bild liegt das *kleinanzeigen*-Logo über dem
+Text. **Gemessen und behoben** wurde an seiner Doctolib-Nachricht: der Import
+reserviert jetzt eine Mindestzeilenhöhe, die echte Höhe aus der geladenen Datei
+gewinnt danach. **Von Gregor am laufenden Programm noch nicht bestätigt**,
+7.2.0.68) und **E-104** (die Kopfzeilen der
+gespeicherten Nachricht klebten zusammen, weil `UnwrapText` über die ganze
+Nachricht lief und weil verdorbene INI-Werte aus **E-100** „Absätze raten"
+eingeschaltet hatten, 7.2.0.68). **E-106** ist gebaut, aber **bei Gregor noch
+nicht nachgewiesen**: Bilder, die größer sind als im HTML angegeben, liegen
+über dem Text — sein Protokoll vom 17.09.2026 zeigt, dass Bilder **ohne**
+Größenangabe nachgemessen werden und die Zeile mitwächst, Bilder **mit**
+Angabe aber nie. **Offen bleibt
 E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Gebaut ist 7.2.0.67; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
+**Gebaut ist 7.2.0.68; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
 17.09.2026: `Releases/Eudora72-1.0.65-release`, letztes ZIP
-`Eudora72-1.0.64-release.zip`; **zu 1.0.67 gibt es noch kein Paket**),
+`Eudora72-1.0.64-release.zip`; **zu 1.0.68 gibt es noch kein Paket**),
 **veröffentlicht ist `v1.0.64`** — am 17.09.2026 um 10:23 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.67 sind nicht
+herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.68 sind nicht
 freigegeben**.
 
 > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Hier stand *„veröffentlicht

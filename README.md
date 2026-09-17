@@ -83,9 +83,12 @@ verschickt.
   **Datenverlust beim Senden eines gesicherten Entwurfs** (7.2.0.64,
   **E-99**). **Noch nicht im Download** sind: dieselbe Absturzstelle an drei
   weiteren Stellen (7.2.0.65, **E-100**), die **unbrauchbare gespeicherte
-  Datei** (7.2.0.67, **E-101** — ohne `Content-Type`-Zeile und mit Eudoras
-  internem Marker `<x-html>`) und **Bilder, die über dem Text lagen**
-  (7.2.0.67, **E-103**). Wer das braucht, baut selbst.
+  Datei** (7.2.0.68, **E-101** — ohne `Content-Type`-Zeile und mit Eudoras
+  internem Marker `<x-html>`), **Bilder, die über dem Text lagen**
+  (7.2.0.68, **E-103**) **zusammengeklebte Kopfzeilen in der gespeicherten
+  Datei** (7.2.0.68, **E-104**) und **Bilder, die größer sind als im HTML
+  angegeben und deshalb über dem Text liegen** (7.2.0.68, **E-106** — bei
+  Gregor noch nicht nachgewiesen). Wer das braucht, baut selbst.
   > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Bis hierher stand hier
   > *„das neueste Release ist `v1.0.50`"* und darunter eine Warnung, das
   > veröffentlichte Paket stürze beim Speichern ab. Beides war überholt:
@@ -198,7 +201,7 @@ Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 3. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.67 / Paket 1.0.67` — diese Angabe gehört in jeden
+   `Eudora 7.2.0.68 / Paket 1.0.68` — diese Angabe gehört in jeden
    Fehlerbericht.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
@@ -623,7 +626,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.67` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.68` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
