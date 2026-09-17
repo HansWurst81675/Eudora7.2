@@ -5,8 +5,8 @@ Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
 seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
 [README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
 
-Hier stehen der erste bis vierte, der sechste bis neunte sowie der dreizehnte
-bis fünfzehnte Durchgang. Der
+Hier stehen der erste bis vierte, der sechste bis neunte, der dreizehnte
+bis sechzehnte sowie der neunzehnte Durchgang. Der
 **fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
 die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
@@ -26,14 +26,30 @@ und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 17.09.2026.** Der jüngste Durchgang ist **L-17** und
-> steht in `Befunde/LEKTOR-12.md`; gemessen an Quellstand **7.2.0.66** /
-> `VERSION` **1.0.66** (als Paket geschnürt ist zuletzt 1.0.65), über **149**
-> MD-Dateien. Davor **L-16** in `Befunde/LEKTOR-11.md` (7.2.0.64, 17.09.2026,
-> 146 Dateien) und **L-15** in `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63,
-> 15.09.2026). Der jüngste Durchgang *in dieser Datei* ist weiterhin der
-> **neunte**, ganz unten. Die Durchgänge **L-6** bis **L-17** stehen nicht
-> hier, sondern in `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-12.md`.
+> **Stand dieser Datei: 17.09.2026, abends.** Der jüngste Durchgang steht in
+> `Befunde/LEKTOR-14.md` (Funde **L-14.1** ff.); gemessen an Quellstand
+> **7.2.0.70** / `VERSION` **1.0.70** über **153** MD-Dateien aus
+> `git ls-files '*.md'`. Davor `Befunde/LEKTOR-13.md` (Funde **L-13.1** ff.,
+> `main` auf Unwahrheiten, 17.09.2026, 151 Dateien), **L-17** in
+> `Befunde/LEKTOR-12.md` (7.2.0.66 / 1.0.66, 149 Dateien), **L-16** in
+> `Befunde/LEKTOR-11.md` (7.2.0.64, 146 Dateien) und **L-15** in
+> `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63, 15.09.2026). Der jüngste
+> Durchgang *in dieser Datei* ist der **neunzehnte**, ganz unten. Alles ab
+> **L-6** steht nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
+> `Befunde/LEKTOR-14.md`.
+>
+> **Zwei Berichtigungen am 17.09.2026 (L-14.6).** (1) Hier stand *„Der jüngste
+> Durchgang ist **L-17**"* — `Befunde/LEKTOR-13.md` war da längst geschrieben
+> und kam in dieser Datei überhaupt nicht vor. (2) Hier stand *„Der jüngste
+> Durchgang in dieser Datei ist weiterhin der **neunte**"*, während der
+> **sechzehnte** seit dem Vormittag ganz unten stand; dieselbe Zeile weiter
+> oben nannte *„der dreizehnte bis fünfzehnte"*. `pruefe-stand-md.pl` hat
+> nichts davon gesehen: es vergleicht nur das **Datum** der letzten Überschrift
+> gegen den jüngsten Bericht der Rolle, und beide standen auf dem 17.09.2026.
+> **Zur Nummerierung:** ab `LEKTOR-13.md` tragen die Funde die Nummer ihrer
+> **Berichtsdatei** (`L-13.x`, `L-14.x`), nicht die des Durchgangs — die
+> Verweise in `README.md`, `AUFGABEN.md` und `tools/RELEASES.md` meinen
+> `Befunde/LEKTOR-13.md`, **nicht** den dreizehnten Durchgang vom 14.09.2026.
 >
 > **L-17 in einem Satz:** Dieselbe Ersetzung wie in L-16, nur andersherum —
 > **E-97** stand in `README.md`, `AUFGABEN.md` und `WEITERMACHEN.md` als
@@ -936,3 +952,48 @@ Eudora sofort, in jeder Fassung seit 1.0.49 und auch im veröffentlichten
 widersprüchliche Urteilsspalte (dort E-95, hier E-97), die nicht nachgezogenen
 Spurmarkenzahlen (29/168/26 statt 30/170/28) und Stellen auf einer älteren
 Fassung. Die Klasse ist nicht abgestellt, nur jeweils behoben.
+
+# Neunzehnter Durchgang — 17.09.2026, abends (L-19, `Befunde/LEKTOR-14.md`)
+
+**Der Bericht steht vollständig in [Befunde/LEKTOR-14.md](Befunde/LEKTOR-14.md).**
+
+Gemessen an Quellstand **7.2.0.70** / `VERSION` **1.0.70** über **153**
+MD-Dateien aus `git ls-files '*.md'`. Anlass, Gregor wörtlich: *„readme,
+changelog, befunde sind up to date? lass' mal wieder pruefer und lektor
+drueber laufen."*
+
+**Zehn Mängelgruppen, sieben berichtigt, fünf Stellen zur Übergabe** an den parallel
+laufenden Zweig `paketliste-glattziehen`.
+
+| | |
+|---|---|
+| **Der teuerste Fund (L-14.1)** | Die Tabelle im neuen CHANGELOG-Abschnitt 7.2.0.70 hat die Zeile zu **1.0.69 vertauscht**: sie sagt *„enthält E-101 zweiter Teil, es fehlt E-106"*. Gemessen an Zeitstempel und Vorfahrenschaft ist es **umgekehrt** — die `Eudora.exe` entstand 20:24:54 aus `acc8ad7`, der E-106-Merge (20:16:00) ist Vorfahr, der zweite Teil von E-101 (20:58:43) kam danach. Gregor hat **1.0.69** auf der Platte und **1.0.70 nicht** |
+| **Ein Berichtigungsvermerk, der nicht stimmte (L-14.2)** | L-13.1 erklärte die Unwahrheit *„veröffentlicht ist weiterhin `v1.0.50`"* in fünf Dokumenten für erledigt. In `WEITERMACHEN.md` stand sie **weiter**, und `PORTIERUNG.md` trug sie ebenfalls, ohne in einem der Vermerke genannt zu sein. Sechs Dokumente, zwei blieben stehen |
+| **Vier Befunde unter falscher Fassung (L-14.4)** | Alles war auf **7.2.0.68** gezogen. Richtig: **E-101** in 7.2.0.66 und 7.2.0.69, **E-103** in 7.2.0.67, **E-104** in 7.2.0.67 **und** 7.2.0.68, **E-106** in 7.2.0.68. Dieselbe Ersetzungsklasse wie in L-11, L-16 und L-17 — sie ist zum **vierten Mal** aufgetreten |
+| **E-106 (L-14.5)** | **keine einzige Stelle** behauptet, er sei nachgewiesen. Ein Nachtrag in `ZIEL.md`, sonst nichts |
+
+**Drei Schranken waren stumm**, und das ist der eigentliche Fund:
+
+- **`pruefe-befund-verbreitung.pl`**, am selben Tag gebaut, war bei ihrem
+  **ersten echten Lauf** wirkungslos: sie liest die Kennungen aus den
+  **Überschriften** des jüngsten CHANGELOG-Abschnitts, und die drei
+  Überschriften des Abschnitts 7.2.0.70 nennen keine. Die vier Befunde der
+  Fassung stehen im Fließtext. Meldung: *„nennt keinen Befund - nichts zu
+  pruefen."*
+- **`pruefe-stand-md.pl`** meldete *„LEKTORAT.md ist so neu wie der jüngste
+  Bericht des LEKTOR"*, während diese Datei `Befunde/LEKTOR-13.md` **kein
+  einziges Mal** nannte. Es vergleicht nur das **Datum** der letzten
+  Überschrift, und beide standen auf dem 17.09.2026.
+- **`pruefe-behoben-belegt.pl`** und `pruefe-befundurteile.pl` lesen das Urteil
+  als **ersten Fettdruck** der dritten Spalte, gefunden mit
+  `\*\*([^*]{1,80})\*\*`. Wird der Fettdruck **länger als 80 Zeichen**, greift
+  das Muster beim **nächsten** — aus `**behoben in …**` wurde `**Gemessen an
+  seiner Datei**`, und der behobene Befund galt als **offen**. Gefunden an der
+  eigenen Berichtigung, weil die Schranke *„geprueft 0"* meldete, wo zwei
+  geänderte Urteilszeilen im Diff standen (**L-14.10**).
+
+**Ein Nebenbefund, der eine Klasse betrifft:** `Arbeitsweise/` ist ein
+**Spiegel** des Gedächtnisverzeichnisses (`tools/lehren-spiegeln.pl`). Eine
+Berichtigung dort wird vom Vorcommit-Haken aus der Quelle **zurückgenommen** —
+gemessen an meinem eigenen Commit-Versuch. Wer eine Lehre berichtigen will,
+muss an die Quelle; das steht in `Arbeitsweise/README.md` nicht (**L-14.9**).

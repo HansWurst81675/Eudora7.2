@@ -40,14 +40,20 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
-> Stand 17.09.2026, Quellstand **7.2.0.68**, `VERSION` **1.0.68**. Als Paket
-> geschnürt ist zuletzt **1.0.65**; zu 7.2.0.68 (**E-101**, die gespeicherte
-> Datei war für andere Programme unbrauchbar) gibt es noch keines. Seit
+> Stand 17.09.2026, Quellstand **7.2.0.70**, `VERSION` **1.0.70**; als Paket
+> geschnürt und das erste, das **alles** enthält:
+> `Releases/Eudora72-1.0.70-release` samt ZIP, gemessen an Produktversion und
+> Zeitstempel der `Eudora.exe`, 21:18. Seit
 > 7.2.0.64 sind dazugekommen: **E-97** (*File → Save As* stürzte ab) und
 > **E-99** (Datenverlust beim Senden eines gesicherten Entwurfs) in 7.2.0.64,
-> **E-100** (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65
-> und **E-101** in 7.2.0.68; **160/160 Tests**. **Veröffentlicht** ist bei GitHub `v1.0.50`
-> (13.09.2026). Hier steht bewusst keine zweite Fassung dieser Tabelle.
+> **E-100** (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65,
+> **E-101** (die gespeicherte Datei war für andere Programme unbrauchbar) in
+> 7.2.0.66 und 7.2.0.69, **E-103** (Bilder über dem Text) und **E-104**
+> (zusammengeklebte Kopfzeilen) in 7.2.0.67, **E-104** zweite Hälfte und
+> **E-106** in 7.2.0.68; **171/171 Tests**. **Veröffentlicht** ist bei GitHub
+> `v1.0.64` (17.09.2026, als *Latest* markiert; **berichtigt am 17.09.2026 vom
+> LEKTOR, L-14.2 — hier stand `v1.0.50` vom 13.09.2026**).
+> Hier steht bewusst keine zweite Fassung dieser Tabelle.
 >
 > | Messung | Ergebnis |
 > |---|---|

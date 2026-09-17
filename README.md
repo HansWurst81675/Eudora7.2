@@ -83,10 +83,12 @@ verschickt.
   **Datenverlust beim Senden eines gesicherten Entwurfs** (7.2.0.64,
   **E-99**). **Noch nicht im Download** sind: dieselbe Absturzstelle an drei
   weiteren Stellen (7.2.0.65, **E-100**), die **unbrauchbare gespeicherte
-  Datei** (7.2.0.68, **E-101** — ohne `Content-Type`-Zeile und mit Eudoras
-  internem Marker `<x-html>`), **Bilder, die über dem Text lagen**
-  (7.2.0.68, **E-103**) **zusammengeklebte Kopfzeilen in der gespeicherten
-  Datei** (7.2.0.68, **E-104**) und **Bilder, die größer sind als im HTML
+  Datei** (7.2.0.66 und 7.2.0.69, **E-101** — ohne `Content-Type`-Zeile und mit
+  Eudoras internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
+  `Content-Type` zunächst ganz), **Bilder, die über dem Text lagen**
+  (7.2.0.67, **E-103**), **zusammengeklebte Kopfzeilen in der gespeicherten
+  Datei** (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
+  **E-104**) und **Bilder, die größer sind als im HTML
   angegeben und deshalb über dem Text liegen** (7.2.0.68, **E-106** — bei
   Gregor noch nicht nachgewiesen). Wer das braucht, baut selbst.
   > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Bis hierher stand hier
@@ -201,7 +203,7 @@ Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 3. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.68 / Paket 1.0.68` — diese Angabe gehört in jeden
+   `Eudora 7.2.0.70 / Paket 1.0.70` — diese Angabe gehört in jeden
    Fehlerbericht.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
