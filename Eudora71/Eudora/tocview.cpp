@@ -3095,8 +3095,8 @@ void CTocView::OnFileSaveAs()
 		return;
 
 
-	BOOL bIncludeHeaders = BOOL(::GetIniShort(IDS_INI_INCLUDE_HEADERS));	// cached for speed
-	BOOL bGuessParagraphs = BOOL(::GetIniShort(IDS_INI_GUESS_PARAGRAPHS));	// cached for speed
+	BOOL bIncludeHeaders = E104SchalterLesen(IDS_INI_INCLUDE_HEADERS);	// cached for speed
+	BOOL bGuessParagraphs = E104SchalterLesen(IDS_INI_GUESS_PARAGRAPHS);	// cached for speed
 
 	for (i = 0, j = SelCount; j && i < TotalCount; i++)
 	{

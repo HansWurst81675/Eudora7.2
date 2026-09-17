@@ -3412,7 +3412,7 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 	// build the Date: header if we need it
 	char dateMaybe[64];
 	*dateMaybe = 0;
-	if ( GetIniShort( IDS_INI_INCLUDE_HEADERS ) )
+	if ( E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ) )
 	{
 		ComposeDate( dateMaybe, m_Sum );
 		if (*dateMaybe)
@@ -3426,7 +3426,7 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 		(CRString(IDS_HTM_EXTENSION).CompareNoCase(Extension + 1) == 0 ||
 		 CRString(IDS_HTML_EXTENSION).CompareNoCase(Extension + 1) == 0 ) )
 	{
-		view->GetMessageAsHTML(msg, GetIniShort( IDS_INI_INCLUDE_HEADERS ));
+		view->GetMessageAsHTML(msg, E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ));
 		msg = Text2Html(dateMaybe, TRUE, FALSE) + msg;
 	}
 	else

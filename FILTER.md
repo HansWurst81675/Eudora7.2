@@ -1,5 +1,7 @@
 # Post automatisch einsortieren — Filter und Junk
 
+> **Stand 7.2.0.67 / Paket 1.0.67.** Geprüft gegen diesen Quellstand.
+
 Diese Datei beschreibt die Filter von Eudora aus Sicht dessen, der sie
 benutzt: wie eine Regel entsteht, wann sie läuft, was sie tun kann, wo sie
 gespeichert wird — und was es mit den Junk-Werten auf sich hat.

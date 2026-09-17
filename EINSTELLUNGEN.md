@@ -1,5 +1,7 @@
 # Einstellungen und Überraschungen
 
+> **Stand 7.2.0.67 / Paket 1.0.67.** Geprüft gegen diesen Quellstand.
+
 Diese Datei ist für den, der Eudora **einrichtet und betreibt** — nicht für
 den, der es baut. Sie beantwortet eine einzige Frage:
 
