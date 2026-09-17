@@ -173,8 +173,15 @@ den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
 > **Zu prüfen:** eine Nachricht auswählen, **File → Save As**. Der Dateidialog
 > muss aufgehen, und Eudora muss danach noch da sein.
 
-**Gebaut am 17.09.2026.** Ein Paket ist zu dieser Fassung **noch nicht
-geschnürt** — das letzte liegt als `Releases/Eudora72-1.0.63-release`.
+**Gebaut am 17.09.2026.** **Als Paket geschnürt und auf GitHub veröffentlicht
+als `v1.0.64`** (17.09.2026, 10:23 Uhr UTC, dort als *Latest*);
+`Releases/Eudora72-1.0.64-release.zip` liegt daneben.
+
+> **Berichtigt am 17.09.2026 (LEKTOR, L-13.4).** Hier stand *„Ein Paket ist zu
+> dieser Fassung noch nicht geschnürt — das letzte liegt als
+> `Releases/Eudora72-1.0.63-release`"*. Beide Hälften waren überholt: das
+> Paket zu 7.2.0.64 existiert und ist herausgegangen, und das letzte
+> Verzeichnis unter `Releases/` ist `Eudora72-1.0.65-release`.
 
 **Der Fehler war in jeder Fassung dieses Projekts** — 1.0.49 bis 1.0.63
 gemessen, auch im veröffentlichten Release `v1.0.50`. Aufgefallen ist er erst,
