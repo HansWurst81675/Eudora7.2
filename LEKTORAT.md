@@ -997,3 +997,19 @@ laufenden Zweig `paketliste-glattziehen`.
 Berichtigung dort wird vom Vorcommit-Haken aus der Quelle **zurückgenommen** —
 gemessen an meinem eigenen Commit-Versuch. Wer eine Lehre berichtigen will,
 muss an die Quelle; das steht in `Arbeitsweise/README.md` nicht (**L-14.9**).
+
+**Nachtrag desselben Abends.** Während der Bericht entstand, kam **7.2.0.71 /
+1.0.71** mit **E-107** dazu — ein Absturz beim Antworten, **mit E-106
+eingeschleppt**. Drei Folgen:
+
+- **Gregors Absturzmeldung belegt L-14.1 unabhängig.** `BEFUNDE.md` sagt zu
+  E-107: *„von Gregor am 17.09.2026 um 21:23 **an 1.0.69** gemeldet"*. Wer den
+  E-106-Fehler an 1.0.69 erlebt, hat E-106 in 1.0.69 — genau das bestreitet
+  `CHANGELOG.md:143` bis jetzt.
+- **`CHANGELOG.md:144` nennt 1.0.70 weiterhin *„alles"* und *„ein
+  vollständiger Stand zum Testen"*.** 1.0.70 trägt den Absturz aus E-107;
+  behoben ist er erst in 7.2.0.71. Keine MD sagt das.
+- **`tools/ZWEIGE.md:73`** hat den Zweig `p38-spurmarke-rumpf` an einem Abend
+  **zweimal** weitergeschoben: 7.2.0.69 → .70 → .71. Gebracht hat er
+  **7.2.0.69**. Die Ersetzungsklasse zum fünften Mal — Vorschlag für eine
+  Schranke steht im Bericht.

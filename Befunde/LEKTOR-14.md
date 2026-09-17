@@ -335,3 +335,65 @@ läuft jede Prüfanleitung, die 1.0.70 voraussetzt, ins Leere.
 * **Die vier alten Zitate ohne Herkunft** in `BEFUNDE.md` (E-16, E-33, E-34,
   E-47), die `pruefe-anzeigetext.pl` im Bestand kennt und deshalb nur im
   Zuwachs prüft.
+
+---
+
+## Nachtrag, 17.09.2026 nach dem Commit — 1.0.71 ist dazwischengekommen
+
+Während dieser Bericht entstand, hat der parallele Lauf weitergearbeitet:
+`7d555df` bringt **7.2.0.71 / 1.0.71** und **E-107** — *„Absturz beim
+Antworten auf eine geöffnete Nachricht"*. Drei Dinge folgen daraus, und das
+erste ist der wichtigste Satz dieses Berichts.
+
+### 1. Gregors Absturz belegt L-14.1 unabhängig
+
+`BEFUNDE.md` zu **E-107**: *„**Der Fehler war meiner**, eingebaut mit
+**E-106** wenige Stunden zuvor. **Von Gregor am 17.09.2026 um 21:23 an
+1.0.69 gemeldet**."*
+
+**Wenn Gregor den E-106-Absturz an 1.0.69 erlebt hat, dann ist E-106 in
+1.0.69.** Genau das habe ich aus Zeitstempel und Vorfahrenschaft gemessen —
+und genau das bestreitet die Tabelle im CHANGELOG-Abschnitt 7.2.0.70 bis
+heute (`CHANGELOG.md:143`): *„1.0.69 … **es fehlt E-106**"*. Die Zeile ist
+damit **zweifach widerlegt**: durch die Messung und durch Gregors eigenen
+Lauf. **Sie steht noch da.**
+
+### 2. „1.0.70 enthält alles" ist jetzt gefährlich, und keine MD sagt es
+
+`CHANGELOG.md:144` sagt weiterhin *„**1.0.70** | 7.2.0.70 | **alles** | —"*
+und der Abschnittskopf nennt es *„ein vollständiger Stand zum Testen"*.
+**1.0.70 enthält E-106 und damit den Absturz aus E-107.** Wer der Anleitung
+folgt — Kleinanzeigen-Nachricht öffnen, weiterleiten — ist einen Klick vom
+*Antworten* entfernt. Behoben ist es erst in **7.2.0.71**.
+
+**Zu tun:** in derselben Tabelle hinter 1.0.70 *„enthält den Absturz E-107"*,
+und die Prüfanleitung auf **1.0.71** ziehen. Bei Gregor liegt 1.0.71 bereits
+(`C:\Users\Gregor\Eudora72-1.0.71-release`, gemessen) — **1.0.70 dagegen nie**.
+
+### 3. Die Ersetzungsklasse aus L-14.4 hat innerhalb einer Stunde zugeschlagen
+
+`tools/ZWEIGE.md:73` sagt jetzt: der Zweig `p38-spurmarke-rumpf` habe
+**Quellstand 7.2.0.71, Paketnummer 1.0.71** gebracht. Beim Prüfen stand dort
+**7.2.0.70 / 1.0.70**, im Commit davor **7.2.0.69 / 1.0.69** — und **das war
+richtig**: der CHANGELOG-Abschnitt 7.2.0.69 trägt den Namen dieses Zweigs,
+`ceab98f` ist sein Merge. **Dieselbe Zeile ist an einem Abend zweimal um eine
+Fassung weitergeschoben worden**, jedes Mal von einer Ersetzung, die die
+Gegenwart meinte und die Vergangenheit traf.
+
+Das ist die Klasse, die L-11, L-13 und L-14.4 beschrieben haben, zum
+**fünften** Mal. Sie ist mit Berichtigen nicht zu erledigen. **Vorschlag für
+eine Schranke:** `tools/ZWEIGE.md` nennt zu jedem Zweig einen Quellstand —
+der lässt sich gegen `git show <merge>:Eudora71/Version.h` prüfen. Ein Zweig,
+dessen Merge eine andere Nummer trägt als die Tabelle, ist ein Mangel, und
+zwar einer, den kein Mensch von Hand findet.
+
+### Was das für diesen Bericht bedeutet
+
+Meine Berichtigungen sind an **7.2.0.70** gemessen und auf `origin/main`
+(`ceab98f`, 7.2.0.69) geschrieben. Die Zahlen **7.2.0.70 / 1.0.70** in
+`AUFGABEN.md`, `WEITERMACHEN.md`, `ZIEL.md`, `PORTIERUNG.md` und
+`tools/WERKZEUGE.md` müssen beim Zusammenführen auf **7.2.0.71 / 1.0.71**
+gehoben werden. **Die Fassungszuordnungen der Befunde ändern sich dadurch
+nicht** — E-101 bleibt 7.2.0.66 und 7.2.0.69, E-103 bleibt 7.2.0.67, E-104
+bleibt 7.2.0.67 und 7.2.0.68, E-106 bleibt 7.2.0.68. Genau das ist der
+Unterschied zwischen einer Zahl, die mitwandert, und einer, die nicht darf.
