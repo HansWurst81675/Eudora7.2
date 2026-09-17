@@ -179,3 +179,63 @@ Siehe [was-lauffaehig-heisst](was-lauffaehig-heisst.md),
 [lauffaehiges-ergebnis-liefern](lauffaehiges-ergebnis-liefern.md),
 [messung-muss-den-weg-treffen](messung-muss-den-weg-treffen.md) und
 [version-eindeutig-machen](version-eindeutig-machen.md).
+
+## Nachtrag 15./17.09.2026: „behoben" ohne Fassungsnummer kostet ihn einen Testlauf
+
+**Gregor am 15.09.2026, nachdem ich zu E-97 „behoben" gesagt hatte:**
+
+> *„ist nicht behoben, stürzt immer noch ab"*
+
+Er hatte recht — mit dem, was er in der Hand hielt. Er testete **1.0.63**.
+Die Behebung lag zu diesem Zeitpunkt nur im **Bauverzeichnis**
+(`C:\Temp\E97-Stapel`, `tools/TESTLAEUFE.md`); das Paket dazu war nicht
+gebaut. Die Fassung mit der Behebung heisst **1.0.64** und ist erst am
+17.09.2026 um 07:48 committet worden (`8b887bb`).
+
+Das Paket war seinerseits blockiert, und zwar zu Recht: `rollen-faellig.pl`
+meldete LEKTOR, PRUEFER und CHRONIST als faellig — die Schranke aus
+[[ausloeser-an-den-anfang]] hat genau das getan, wofuer sie da ist.
+
+### Was daran falsch war — und was nicht
+
+Die Behebung war richtig, die Messung war richtig (*derselbe Messlauf, der
+vorher „ABGESTUERZT beim Speichern unter" meldete, sagt jetzt „lebt noch"*),
+und dass das Paket noch nicht gebaut war, ist kein Fehler. Falsch war **ein
+Wort ohne eine Zahl daneben.**
+
+Der Nachtrag vom 07./08.09.2026 oben regelt schon die eine Haelfte:
+*„behoben" setzt einen Durchlauf voraus, keinen Bau.* Der Durchlauf war
+diesmal da. Was fehlte, ist die andere Haelfte:
+
+> **Zwischen „behoben" und „beim Anwender" liegt eine Kette** — uebersetzt,
+> gepackt, die Schranken vor dem Paket, ausgeliefert, bei ihm entpackt. „Bei
+> mir laeuft es" ist die erste Station von fuenf.
+
+Solange die Kette nicht durch ist, beschreibt „behoben" einen Zustand, den es
+**nirgends gibt, wo Gregor hinsehen kann**. Er tut dann das Einzige, was ihm
+uebrigbleibt: er testet, was er hat — und meldet einen Fehler, den ich schon
+kenne. Das kostet ihn einen Testlauf und mich das Vertrauen in die naechste
+Meldung.
+
+### How to apply
+
+- **Jede Aussage ueber einen behobenen Fehler traegt die Fassungsnummer, in
+  der sie gilt.** Nicht *„E-97 ist behoben"*, sondern *„E-97 behoben in
+  **1.0.64** — 1.0.63 hat den Fehler noch."* Der zweite Halbsatz ist der
+  wichtige: er sagt, dass sein aktueller Stand nicht gemeint ist.
+- **Gibt es die Fassung noch nicht, heisst es nicht „behoben".** Dann:
+  *„Ursache gefunden und im Bauverzeichnis gegengeprueft; im Paket ab
+  1.0.64."* Das ist keine Wortklauberei — es ist der Unterschied zwischen
+  einer Aussage ueber meinen Baum und einer ueber sein Programm.
+- **Wenn ein Paket haengt, gehoert das in dieselbe Nachricht.** *„Das Paket
+  steht noch aus, weil die drei Rollen faellig sind"* nimmt ihm die Frage
+  ab, warum nichts kommt, und macht die Schranke sichtbar statt nur
+  wirksam.
+- **Meldet Gregor „ist nicht behoben", ist die erste Frage seine
+  Fassungsnummer**, nicht die Ursache. Sie steht im Titel seines Fensters
+  ([[version-eindeutig-machen]]). Stimmt sie nicht mit der ueberein, in der
+  behoben wurde, ist sein Bericht bestaetigt und nicht widerlegt — und der
+  Fehler liegt bei meiner Meldung, nicht bei seiner.
+
+**Die Frage beim naechsten Mal:** *In welcher Fassung kann Gregor das
+nachpruefen — und hat er sie?*

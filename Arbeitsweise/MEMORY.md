@@ -67,3 +67,4 @@
 - [Bestand vor neuer Suche](bestand-vor-neuer-suche.md) — die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md; erst offene-befunde.pl, vor jedem neuen Befund befund-suchen.pl
 - [Verwerfen nur mit Zähler](verwerfen-nur-mit-zaehler.md) — ein verwerfender Befehl wirkt auf seinen Umfang, nicht auf meine Absicht; PORTIERUNG.md 1129 Zeilen auf 0
 - [Funktion bringt ihre Vorbedingung mit](funktion-bringt-ihre-vorbedingung-mit.md) — ISOTranslate nullt ein Byte hinter dem Bereich; im IMAP-Weg ist das die nächste Zeile
+- [Nie benutzt ist nicht geprüft](nie-benutzt-ist-nicht-geprueft.md) — was niemand je angeklickt hat, gilt nicht als geprüft; E-97 lag 15 Fassungen und ein Release lang im Speichern-Dialog

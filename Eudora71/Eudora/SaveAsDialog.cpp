@@ -34,6 +34,20 @@ CSaveAsDialog::CSaveAsDialog(const char* Filename, BOOL IsMessage, BOOL IsStatio
 	//For Now, Need to delete this Stationery parameter
 	m_IsStat = FALSE;
 
+	//
+	// BEFUND E-100: m_Inc und m_Guess werden nach DoModal() von allen drei
+	// Aufrufstellen UNGEPRUEFT in die INI geschrieben - tocview.cpp:3087,
+	// saveas.cpp:106, compmsgd.cpp:3374. Zugewiesen werden sie aber nur in
+	// OnInitDialog, und ob das auf der Vista-Schiene ueberhaupt laeuft, ist
+	// offen (MFC 14.38 bindet in AfxHookWindowCreate irgendein erstes
+	// Fenster an, das die Shell danach erzeugt). Ohne Vorbelegung landeten
+	// zwei uninitialisierte Werte dauerhaft in den Einstellungen des
+	// Anwenders. Die Vorbelegung ist das, was ohnehin gelten soll: der
+	// bisherige Stand aus der INI.
+	//
+	m_Inc   = GetIniShort(IDS_INI_INCLUDE_HEADERS);
+	m_Guess = GetIniShort(IDS_INI_GUESS_PARAGRAPHS);
+
 	if (IsVersion4())
 	{
 		LPCSTR DlgName;
@@ -226,6 +240,17 @@ void CSaveAsDialog::ToggleStat()
 	else
 		dlgPtr = this;
 
+	//
+	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
+	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
+	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
+	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
+	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
+	// ASSERT haette es nicht gefangen, das ist im Release nichts.
+	//
+	if (dlgPtr == NULL)
+		return;
+
 	BOOL stat = GetDlgItem(IDC_STATIONERY) ? m_Stationery.GetCheck(): FALSE;
 	
 	// Use to tell whether stationery is selected
@@ -275,6 +300,17 @@ void CSaveAsDialog::StatDir()
 		dlgPtr = GetParent();
 	else
 		dlgPtr = this;
+
+	//
+	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
+	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
+	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
+	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
+	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
+	// ASSERT haette es nicht gefangen, das ist im Release nichts.
+	//
+	if (dlgPtr == NULL)
+		return;
 	
 	CString oldName = GetPathName();
 
@@ -349,6 +385,7 @@ void CSaveAsDialog::OnOK()
 	if (!m_ChangingDir)
 	{
  		char realFileName[_MAX_PATH + 1];
+		realFileName[0] = 0;		// E-100: nie uninitialisiert weiterreichen
 		GetFileNameFromDialog(realFileName, _MAX_PATH);
 	                               
 		// Clean up the file name so it has .sta extenstion
@@ -376,11 +413,39 @@ void CSaveAsDialog::OnOK()
 void CSaveAsDialog::GetFileNameFromDialog(char *buf, int bufLen)
 {
 	CWnd *dlgPtr = NULL;
-	
+
+	//
+	// BEFUND E-100: der Puffer wird als ERSTES leer gemacht.
+	//
+	// OnOK legt ihn als  char realFileName[_MAX_PATH + 1];  auf den Stapel,
+	// also uninitialisiert, und verlaesst sich darauf, dass diese Funktion
+	// ihn fuellt. Sie tat es aber schon vorher nicht immer: wenn
+	// GetDlgItem(edt1) NULL liefert, bleibt der Puffer unberuehrt. Mit dem
+	// Waechter unten kommt ein zweiter solcher Weg dazu.
+	//
+	// Was OnOK danach damit macht, ist strstr(realFileName, ".sta") und im
+	// schlimmsten Fall strcat - auf Stapelmuell ohne Null-Byte. Ein
+	// unbrauchbarer Dateiname waere schlimmer als der Absturz, den der
+	// Waechter verhindert. Eine Zeile schliesst beide Wege.
+	//
+	if (buf != NULL && bufLen > 0)
+		buf[0] = '\0';
+
 	if (IsVersion4())
 		dlgPtr = GetParent();
 	else
 		dlgPtr = this;
+
+	//
+	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
+	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
+	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
+	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
+	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
+	// ASSERT haette es nicht gefangen, das ist im Release nichts.
+	//
+	if (dlgPtr == NULL)
+		return;
 	
 	// Navigate to the stationery directory
 	CWnd *fileNameWnd = NULL;
@@ -398,13 +463,36 @@ void CSaveAsDialog::SetFileNameInDialog(const char *buf)
 		dlgPtr = GetParent();
 	else
 		dlgPtr = this;
-	
+
 	// Navigate to the stationery directory
 	CWnd *fileNameWnd = NULL;
 	if (IsVersion4())
+	{
+		//
+		// BEFUND E-100, zweiter Anlauf: hier stand ein
+		// if (dlgPtr == NULL) return; ueber der ganzen Funktion. Das war
+		// falsch. Auf DIESEM Zweig wird dlgPtr gar nicht benutzt -
+		// SetControlText geht ueber IFileDialogCustomize, nicht ueber das
+		// Elternfenster. Der Waechter haette den Aufruf uebersprungen und
+		// damit den Dateinamen still nicht gesetzt: eine Verhaltens-
+		// aenderung, wo nur ein Absturz verhindert werden sollte.
+		// Vom PRUEFER am 17.09.2026 gefunden (PRUEFER-12.md, P-15).
+		//
 		SetControlText(edt1,buf); 
+	}
 	else
 	{
+		//
+		// BEFUND E-100: nur HIER wird dlgPtr wirklich benutzt, und nur
+		// hier muss geprueft werden. CWnd::GetDlgItem ist nicht inline;
+		// der Rumpf (winocc.cpp:86) liest m_pCtrlCont vom this-Zeiger,
+		// die Zugriffsverletzung entstuende also in mfc140.dll. Genau
+		// daran ist E-97 gestorben, und ASSERT faengt es im Release
+		// nicht.
+		//
+		if (dlgPtr == NULL)
+			return;
+
 		// enter the text for the new directory
 		fileNameWnd = dlgPtr->GetDlgItem(edt1); 
 		if (fileNameWnd)
@@ -432,9 +520,14 @@ void CSaveAsDialog::OnTypeChange()
 	// zeigen.
 	//
 	// DER DATEIDIALOG RUFT DIESE FUNKTION, WAEHREND ER SICH AUFBAUT - vor
-	// OnInitDialog. Zu diesem Zeitpunkt hat das Vorlagenfenster noch kein
-	// Elternfenster: GetParent() liefert NULL, und dlgPtr->GetDlgItem() griff
-	// ungeprueft darauf zu.
+	// OnInitDialog. Zu diesem Zeitpunkt hat dieses CWnd noch gar kein
+	// angebundenes Fenster, m_hWnd ist null; CWnd::GetParent liefert dann
+	// NULL (nicht, weil ein Kindfenster kein Elternfenster haette - das
+	// waere unmoeglich -, sondern weil es das Fenster noch nicht gibt).
+	// dlgPtr->GetDlgItem() griff ungeprueft darauf zu. Der Rumpf steht in
+	// winocc.cpp:86 und liest m_pCtrlCont vom this-Zeiger: die
+	// Zugriffsverletzung entsteht also IN mfc140.dll - genau das, was das
+	// Ereignisprotokoll meldet. Vom PRUEFER am 17.09.2026 nachgerechnet.
 	//
 	// Dieselbe Klasse wie so vieles hier: MFC hat vor GetDlgItem ein
 	// ASSERT(::IsWindow(m_hWnd)), und ASSERT ist im Release wirkungslos
@@ -451,19 +544,28 @@ void CSaveAsDialog::OnTypeChange()
 	else
 		dlgPtr = this;
 
-	// Faellt GetParent() aus, ist der Dialog noch nicht fertig aufgebaut.
-	// Dann gibt es nichts zu tun - OnInitDialog setzt den Zustand ohnehin
-	// gleich darauf.
+	// Faellt GetParent() aus, gibt es den Dialog noch nicht. Dann ist hier
+	// auch nichts auszurichten: der Schalter, den diese Funktion freigibt
+	// oder sperrt, existiert in dem Moment ebenfalls nicht.
+	//
+	// ACHTUNG, falls jemand E-98 behebt und die Kaestchen zurueckholt:
+	// OnInitDialog holt das NICHT nach - es setzt nur die Haken und ruft
+	// weder EnableWindow noch OnTypeChange(). Wer die Vorlage wieder zum
+	// Leben erweckt, muss am Ende von OnInitDialog OnTypeChange() rufen,
+	// sonst steht der Dialog mit falsch freigegebenem Kaestchen da.
+	//
 	if (dlgPtr == NULL)
 		return;
 
-	CWnd *filtCombo = dlgPtr->GetDlgItem(cmb1);
-
 	// Ohne die eigene Dialogvorlage gibt es den Schalter nicht;
 	// DoDataExchange bindet ihn dann bewusst NICHT an, und m_hWnd bleibt
-	// null. EnableWindow darauf ist derselbe Absturz noch einmal.
+	// null. EnableWindow darauf ist derselbe Absturz noch einmal. Die
+	// Pruefung gehoert VOR den GetDlgItem-Aufruf, sonst liest der naechste
+	// die Reihenfolge als Absicht (PRUEFER P-7).
 	if (m_GuessParagraphs.GetSafeHwnd() == NULL)
 		return;
+
+	CWnd *filtCombo = dlgPtr->GetDlgItem(cmb1);
 
 	if (filtCombo)
 	{

@@ -18,7 +18,7 @@ Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 [Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
 7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, E-85 und seine Regression)
 und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
-7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md) und [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien).
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien) und [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, E-97).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
 [Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
@@ -26,13 +26,21 @@ und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 15.09.2026.** Der jüngste Durchgang ist **L-15** und
-> steht in `Befunde/LEKTOR-10.md`; gemessen an Quellstand **7.2.0.63** / Paket
-> **1.0.63**, über **144** MD-Dateien. Davor **L-14** in
-> `Befunde/LEKTOR-9.md` (7.2.0.57 / 1.0.57, 14.09.2026). Der jüngste Durchgang
-> *in dieser Datei* ist weiterhin der **neunte**, ganz unten. Die Durchgänge
-> **L-6** bis **L-15** stehen nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
-> `Befunde/LEKTOR-10.md`.
+> **Stand dieser Datei: 17.09.2026.** Der jüngste Durchgang ist **L-16** und
+> steht in `Befunde/LEKTOR-11.md`; gemessen an Quellstand **7.2.0.64** (als
+> Paket geschnürt ist zuletzt 1.0.63), über **146** MD-Dateien. Davor **L-15**
+> in `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63, 15.09.2026). Der jüngste
+> Durchgang *in dieser Datei* ist weiterhin der **neunte**, ganz unten. Die
+> Durchgänge **L-6** bis **L-16** stehen nicht hier, sondern in
+> `Befunde/LEKTOR-2.md` bis `Befunde/LEKTOR-11.md`.
+>
+> **L-16 in einem Satz:** Eine Ersetzung 63 → 64 hat drei **historische**
+> Angaben mitgenommen — darunter einen Verweis, der Gregor zur Prüfanleitung
+> eines fremden Befunds geschickt hätte — und vier Stellen behaupteten ein
+> Paket 1.0.64, das es nicht gibt; dazu schwiegen **zwei Schranken**:
+> `pruefe-stand-md.pl`, weil der neue CHANGELOG-Abschnitt kein Datum trug und
+> ihr Maßstab damit zwei Tage alt blieb, und `spuren-auswerten.pl`, weil die
+> beiden E-97-Marken das Wort `SPURMARKE` nicht im Kommentar tragen.
 >
 > **L-15 in einem Satz:** Eine Schranke zählte offene Befunde nur, solange
 > ihr Urteil kürzer als 60 Zeichen war — sie meldete *„Die Liste deckt die
@@ -883,3 +891,36 @@ und alle **108** versionierten Dateien in `tools/`.
 gemerkt, dass **L-14 in dieser Datei ganz fehlte** — sie hält Datum gegen Datum,
 nicht **Verweis gegen Bestand**. Eine Prüfung, die jeden `Befunde/LEKTOR-*.md`
 gegen die Verweise in `LEKTORAT.md` hält, hätte es sofort gesagt und wäre billig.
+
+# Sechzehnter Durchgang — 17.09.2026 (L-16)
+
+**Der Bericht steht vollständig in [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md).**
+
+Gemessen an Quellstand **7.2.0.64** über **146** MD-Dateien aus
+`git ls-files '*.md'`. Anlass: **E-97** ist behoben — *File → Save As* beendete
+Eudora sofort, in jeder Fassung seit 1.0.49 und auch im veröffentlichten
+`v1.0.50`.
+
+**13 Mängel in 10 Dateien**, alle berichtigt. Die drei Gruppen:
+
+| | |
+|---|---|
+| **Eine Ersetzung 63 → 64** nahm drei Angaben über die **Vergangenheit** mit — E-95/E-96 sind in 7.2.0.63 behoben, nicht in .64. Die teuerste: `WEITERMACHEN.md`:11 schickte zur Prüfanleitung *„Abschnitt 7.2.0.64"*, und dort steht E-97 | `WEITERMACHEN.md`, `AUFGABEN.md`, `README.md` |
+| **Vier Stellen behaupteten Paket 1.0.64.** Gemessen: unter `Releases/` liegt zuletzt `Eudora72-1.0.63-release`; 7.2.0.64 ist gebaut, nicht geschnürt. Eine nannte sogar den Pfad | `WEITERMACHEN.md`, `AUFGABEN.md`, `PORTIERUNG.md`, `ZIEL.md` |
+| **E-97 kam außer in CHANGELOG und BEFUNDE nirgends vor** — auch nicht in `README.md` unter *Was es nicht kann*, obwohl das veröffentlichte `v1.0.50` betroffen ist | `README.md`, `WEITERMACHEN.md`, `AUFGABEN.md`, `ZIEL.md` |
+
+**Zwei Schranken waren dabei stumm**, und das ist der eigentliche Fund:
+
+- `pruefe-stand-md.pl` nimmt das jüngste Datum im `CHANGELOG.md` als Maßstab.
+  Der Abschnitt zu 7.2.0.64 trug **kein Datum** — der Maßstab blieb der 15.09.,
+  und fünf Stand-Köpfe auf dem 15.09. bekamen ein *„Kein Stand-Kopf hinkt
+  hinterher"*.
+- `spuren-auswerten.pl` erkennt eine Marke am Wort `SPURMARKE` im Kommentar.
+  Über beiden **E-97**-Marken steht `BEFUND E-97`. Das Werkzeug zählt 8 Befunde
+  mit Marken, der Messbefehl aus `SPURMARKEN.md` **30** — und meldet dazu
+  weder Fund noch Fehlalarm.
+
+**Drei der sieben Mängelgruppen sind wörtliche Wiederholungen aus L-15**: die
+widersprüchliche Urteilsspalte (dort E-95, hier E-97), die nicht nachgezogenen
+Spurmarkenzahlen (29/168/26 statt 30/170/28) und Stellen auf einer älteren
+Fassung. Die Klasse ist nicht abgestellt, nur jeweils behoben.

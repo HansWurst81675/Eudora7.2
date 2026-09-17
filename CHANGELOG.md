@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 15.09.2026)
+## Noch offen (Stand 17.09.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -60,10 +60,57 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.65 — dieselbe Absturzstelle an drei weiteren Stellen geschlossen (E-100)
+
+> **Zu prüfen:** *File → Save As* muss weiter gehen wie in 1.0.64. Diese
+> Fassung schließt Wege, über die noch niemand gestolpert ist — es soll sich
+> nichts ändern, außer dass es so bleibt.
+
+Vom Prüfer als Gegenvermutung zu E-97 gefunden, **bevor jemand darüber
+gestolpert ist**.
+
+**Teil 1 — dieselbe Lücke, dreimal.** `GetFileNameFromDialog`, `ToggleStat` und
+`StatDir` in `SaveAsDialog.cpp` berechnen `dlgPtr = GetParent()` genau wie
+`OnTypeChange` und greifen **ungeprüft** darauf zu. `GetFileNameFromDialog` ist
+die gefährliche: sie wird aus `OnOK()` gerufen, also **im laufenden
+Speichervorgang**, nicht nur beim Aufbau des Dialogs.
+
+**Teil 2 — zwei Werte, die in deine Einstellungen laufen.** `m_Inc` und
+`m_Guess` werden vom Konstruktor nicht gesetzt, aber von allen drei
+Aufrufstellen nach `DoModal()` ungeprüft in die INI geschrieben. Läuft
+`OnInitDialog` nicht, landen zwei uninitialisierte Werte **dauerhaft** in
+`IDS_INI_INCLUDE_HEADERS` und `IDS_INI_GUESS_PARAGRAPHS`. Jetzt werden sie im
+Konstruktor mit dem bisherigen Stand aus der INI vorbelegt.
+
+**Teil 3 — ein dritter Weg, den der Wächter selbst aufgemacht hätte.**
+`GetFileNameFromDialog` füllt einen Puffer, den `OnOK` als
+`char realFileName[_MAX_PATH + 1]` **uninitialisiert** auf den Stapel legt.
+Kehrt sie ohne Schreiben zurück, arbeitet `OnOK` mit Stapelmüll weiter —
+`strstr(realFileName, ".sta")`, im schlimmsten Fall `strcat`. Ein unbrauchbarer
+Dateiname wäre schlimmer als der Absturz, den der Wächter verhindert. Das galt
+**auch vorher schon**, wenn `GetDlgItem(edt1)` null lieferte. Jetzt steht
+`buf[0] = 0;` als erste Anweisung der Funktion.
+
+**Teil 4 — ein Wächter saß an der falschen Stelle.** In `SetFileNameInDialog`
+stand die Prüfung über der ganzen Funktion. Auf dem heute einzig gelaufenen
+Zweig wird `dlgPtr` dort aber **gar nicht benutzt**: `SetControlText` geht über
+`IFileDialogCustomize`, nicht über das Elternfenster. Der Wächter hätte den
+Aufruf übersprungen und damit den Dateinamen still nicht gesetzt — eine
+Verhaltensänderung, wo nur ein Absturz verhindert werden sollte. Die Prüfung
+steht jetzt dort, wo `dlgPtr` wirklich benutzt wird. Dazu setzt `OnOK` seinen
+Puffer selbst auf leer, bevor er ihn weitergibt.
+
+Dazu zwei falsche Begründungen im Quelltext berichtigt — und eine Warnung für
+den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
+`OnTypeChange()`, das muss dann nachgezogen werden.
+
 ## 7.2.0.64 — Speichern stürzt nicht mehr ab (E-97)
 
 > **Zu prüfen:** eine Nachricht auswählen, **File → Save As**. Der Dateidialog
 > muss aufgehen, und Eudora muss danach noch da sein.
+
+**Gebaut am 17.09.2026.** Ein Paket ist zu dieser Fassung **noch nicht
+geschnürt** — das letzte liegt als `Releases/Eudora72-1.0.63-release`.
 
 **Der Fehler war in jeder Fassung dieses Projekts** — 1.0.49 bis 1.0.63
 gemessen, auch im veröffentlichten Release `v1.0.50`. Aufgefallen ist er erst,
@@ -106,6 +153,38 @@ in `OnInitDialog`. Erst die symbolisierte Aufrufkette hat es entschieden.
 unter"* meldete, sagt jetzt *„lebt noch"*.
 
 **Tests: 153 von 153.**
+
+### E-99: Datenverlust beim Senden eines gesicherten Entwurfs — geschlossen, bevor das Paket hinausging
+
+> **Zu prüfen:** Antwort verfassen, **Entwurf sichern**, Fenster offen lassen,
+> danach **senden**. Der getippte Text muss in der gesendeten Nachricht stehen.
+
+Gefunden beim Nachrechnen der E-93-Behebung. `HasChanged()`
+(`PaigeEdtView.h:193`) beantwortet **nicht** die Frage „hat der Anwender
+getippt", sondern „hat er **seit dem letzten Sichern** getippt" — denn
+`PgMsgView::ExportMessage` ruft an seinem Ende `SaveChangeState()`
+(`PgMsgView.cpp:460`).
+
+Folge: Wer einen Entwurf sichert und ihn **danach** sendet, läuft ein zweites
+Mal durch `ExportMessage` — diesmal mit `HasChanged() == FALSE`. Das für E-88
+aufgehobene Original hätte dann seinen Text überschrieben. **Still, ohne
+Meldung** — genau der Weg, den E-93 schließen sollte.
+
+**Behebung:** ein Merker am Verfassendokument
+(`CCompMessageDoc::m_bE88AnwenderHatGetippt`), der **einrastet**: einmal
+getippt, immer getippt. Er lebt so lange wie das Verfassenfenster, genau wie
+das aufgehobene Original.
+
+### Nebenbefund E-98: die beiden Optionen im Speicherdialog fehlen
+
+Die Gegenprobe zu E-97 zählt die Steuerelemente des offenen Dialogs und meldet
+`Eigene Kaestchen gefunden: 0`. *Kopfzeilen einschließen* und *Absätze raten*
+sind nicht da — Windows 10 öffnet den modernen Dateidialog, und der zeigt die
+Dialogvorlage von 1996 (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`) nicht mehr an.
+
+**Kein Rückschritt durch diese Fassung:** die Kästchen fehlten auch vorher, es
+kam nur niemand so weit, weil Eudora vorher abbrach. Steht als **E-98** offen
+in [BEFUNDE.md](BEFUNDE.md).
 
 ## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
 

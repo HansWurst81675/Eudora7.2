@@ -126,6 +126,7 @@ CCompMessageDoc::CCompMessageDoc() :
 	m_bIsStationery = FALSE;
 	m_bDoingFccContextMenu = FALSE;
 	m_ResponseType = 0;
+	m_bE88AnwenderHatGetippt = FALSE;		// E-99
 }
 
 BOOL CCompMessageDoc::InitializeNew

@@ -113,3 +113,75 @@ Siehe [pruefen-statt-vermuten](pruefen-statt-vermuten.md),
 [fehlerklassen-abstellen](fehlerklassen-abstellen.md),
 [zwei-werte-in-eine-ausgabe](zwei-werte-in-eine-ausgabe.md) und
 [wissen-gehoert-in-dateien](wissen-gehoert-in-dateien.md).
+
+## Nachtrag 15.–17.09.2026: die Spurmarke, die **nicht** ankam, war die Messung
+
+Zu **E-97** (*Eudora stuerzt beim Speichern einer Nachricht ab*) sind drei
+Vermutungen widerlegt worden, bevor die symbolisierte Aufrufkette entschieden
+hat, wo der Fehler liegt. Die Laeufe stehen mit Uhrzeit in
+`tools/TESTLAEUFE.md`:
+
+| Zeit | Vermutung | Messung | Ergebnis |
+|---|---|---|---|
+| 15.09. 14:02 | die CSS-Grenze | Dialog ohne die Vorlage von 1996 gefahren | stuerzt weiter ab |
+| 15.09. 14:04 | die Dialogvorlage von 1996 (`IDD_SAVEAS_EXT`) | Vorlage abgeschaltet, mit Protokoll | stuerzt weiter ab |
+| 15.09. 14:32 | ungepruefte Steuerelemente in `OnInitDialog` | Null-Pruefungen eingebaut | stuerzt weiter ab |
+| 15.09. 14:35 | — | **Spurmarke: wird `OnInitDialog` ueberhaupt erreicht?** | **die Marke kam nie an** |
+| 17.09. 07:40 | — | Null-Pruefung in `OnTypeChange`, Gegenprobe | *lebt noch* |
+
+Die drei Widerlegungen sind richtig gelaufen und stehen in `BEFUNDE.md`. Das
+ist nicht der Nachtrag. Der Nachtrag ist die vierte Zeile.
+
+### Eine ausbleibende Spurmarke ist ein Messwert, kein Fehlschlag
+
+Um 14:35 wurde eine Marke in `OnInitDialog` gelegt, und sie kam **nicht** im
+Protokoll an. Das sieht aus wie eine misslungene Messung — Marke vergessen,
+Bau nicht gepackt, falsches Verzeichnis
+([[messung-muss-den-weg-treffen]] beschreibt genau diese Fehlerquellen, und
+sie sind zuerst auszuschliessen). War alles in Ordnung. Dann sagt die
+ausbleibende Marke etwas sehr Genaues:
+
+> **Die Funktion, in der sie steht, laeuft nicht.**
+
+Und daraus folgt unmittelbar, wo der Fehler sitzen muss: in einer Funktion,
+die der Dialog **vor** `OnInitDialog` aufruft. Das ist
+`CSaveAsDialog::OnTypeChange` (`SaveAsDialog.cpp:425`) — der Windows-Dateidialog
+ruft sie waehrend seines Aufbaus zurueck, und deshalb hat das Fenster dort noch
+kein Elternfenster, `GetParent()` liefert NULL. In `BEFUNDE.md` steht der Satz
+inzwischen: *„Der Dateidialog ruft diese Funktion, waehrend er sich aufbaut —
+also **vor** `OnInitDialog`; genau deshalb kam eine Spurmarke dort nie an."*
+
+Die Information lag also am 15.09. um 14:35 vor. Genutzt wurde sie erst, als
+der Debugger (`tools/stapel-untersuchen.ps1`) am 17.09. den Rahmen
+symbolisiert hat.
+
+**Why:** Die drei widerlegten Vermutungen haben je eine Moeglichkeit
+gestrichen. Die ausbleibende Marke hat **den Ort genannt** — sie war die
+wertvollste Messung des ganzen Befunds und wurde als Nullergebnis abgelegt.
+Das ist dieselbe Form wie [[ausreisser-ist-der-befund]], nur umgekehrt: dort
+passt ein Wert nicht ins Bild, hier fehlt einer, wo einer stehen muesste.
+
+### Wie anwenden, zusaetzlich zu Punkt 1
+
+- **Eine Spurmarke, die nicht ankommt, wird aufgeschrieben wie ein Wert** —
+  in derselben Zeile wie die Frage: *„Marke in `OnInitDialog`, Lauf 14:35,
+  **nicht angekommen** → die Funktion laeuft nicht."* Nicht als „Messung
+  misslungen" und nicht gar nicht.
+- **Vorher die drei banalen Ursachen ausschliessen**, sonst beweist das
+  Ausbleiben nichts: ist die Marke im gebauten Stand, ist der gepackte Stand
+  der gebaute, wurde das richtige Protokoll gelesen
+  ([[messung-muss-den-weg-treffen]], [[paket-gegen-den-bau-messen]]).
+- **„Wird X ueberhaupt erreicht?" gehoert vor „warum tut X das Falsche?"**
+  Zwei der drei Vermutungen zu E-97 (Vorlage, `OnInitDialog`) setzten
+  voraus, dass der Weg dort entlanglaeuft. Die Frage nach der Erreichbarkeit
+  ist billiger als jede von ihnen und haette beide auf einmal erledigt — das
+  ist Punkt 3 dieser Lehre (*den Versuch waehlen, der eine Klasse erledigt*),
+  angewandt auf den **Ort** statt auf den Parameter.
+- **Wenn ein Werkzeug die Zeile nennen kann, kommt es vor die Vermutung.**
+  `tools/stapel-untersuchen.ps1` liefert den symbolisierten Rahmen mit Datei
+  und Zeilennummer. Es hat E-97 in einem Lauf entschieden, nachdem drei
+  Vermutungen ueber zwei Tage je einen Bau gekostet hatten
+  ([[werkzeug-vor-eigenbau]]).
+
+**Die Frage beim naechsten Mal:** *Habe ich eine Messung, die nichts gezeigt
+hat — und was waere wahr, wenn dieses Nichts das Ergebnis ist?*

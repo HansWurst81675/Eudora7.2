@@ -183,6 +183,22 @@ public:	// so sendmail.cpp can access it
 	// bereits durch den Editor gegangen.
 	//
 	CString m_szE88OriginalHTML;
+
+	//
+	// BEFUND E-99: hat der Anwender in DIESEM Fenster je getippt?
+	//
+	// HasChanged() (PaigeEdtView.h:193) beantwortet eine ANDERE Frage:
+	// "seit dem letzten Sichern getippt?" - denn PgMsgView::ExportMessage
+	// ruft an seinem Ende SaveChangeState(). Wer einen Entwurf sichert
+	// und ihn danach sendet, hat beim zweiten Export HasChanged() ==
+	// FALSE, obwohl er sehr wohl getippt hat. Das aufgehobene Original
+	// wuerde seinen Text dann ueberschreiben: stiller Datenverlust auf
+	// genau dem Weg, den E-93 schliessen sollte.
+	//
+	// Dieser Merker rastet ein: einmal TRUE, immer TRUE. Er lebt so
+	// lange wie das Verfassenfenster, genau wie m_szE88OriginalHTML.
+	//
+	BOOL m_bE88AnwenderHatGetippt;
 	CString m_Headers[MaxHeaders];
 	BOOL m_HeadersInvalidFlag[NumHeaders];
 };

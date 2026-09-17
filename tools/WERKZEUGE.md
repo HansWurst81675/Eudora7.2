@@ -1,6 +1,6 @@
 # Die Werkzeuge in `tools/`
 
-Diese Übersicht stand bis zum 09.09.2026 in [README.md](README.md). Sie ist
+Diese Übersicht stand bis zum 09.09.2026 in [README.md](../README.md). Sie ist
 dorthin nicht zurückzuschieben: eine README beantwortet, **was** das Projekt
 ist und wie man es baut — die Innenausstattung der Werkstatt gehört daneben.
 
@@ -50,7 +50,7 @@ Verweise sind von der **Wurzel** des Arbeitsbaums aus zu lesen, nicht von
 | `tools/lehren-spiegeln.pl` | spiegelt die Lehren aus dem Gedächtnis nach `Arbeitsweise/` |
 | `tools/pruefe-fensterbau.pl` | `pre-commit`-Schranke für den Fensterbau: keine modale Meldung in `Eudora71/OTShim/*.cpp` (E-33), `GetButton` hat Indexschranke **und** Ausnahmefang (E-34), jeder `GetButton`-Aufruf prüft sein Ergebnis auf NULL (E-35, E-36). Prüft alle `Eudora71/Eudora/*.cpp` — eine feste Dateiliste hatte genau die Lücke, in der E-36 lag. **Wer sie anfasst, lässt die drei Gegenproben laufen** |
 | `tools/strg-n-pruefen.ps1` | startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob das Verfassen-Fenster aufgeht. **Öffnet ein Fenster** — nicht ohne Absprache laufen lassen |
-| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Zweigwechsel vernichten würde. Verfahren in [AGENTEN.md](AGENTEN.md) |
+| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Zweigwechsel vernichten würde. Verfahren in [AGENTEN.md](../AGENTEN.md) |
 | `tools/befunde-einsammeln.pl` | führt die Befunddateien aus `Befunde/` in `BEFUNDE.md` zusammen (`--anhaengen`) und nennt die nächste freie Kennung (`--naechste E`) |
 | `tools/doku-pruefen.pl` | hält alle MD-Dateien gegen `ZIEL.md`, `VERSION` und `Eudora71/Version.h`: Kriterienzahl und Summe der Teile, doppelte oder widersprüchliche Befundkennungen, Verweise ins Leere, genannte ZIPs, die es nicht gibt, und eine alte Paketnummer als heutiger Stand. Holt seine Dateiliste aus `git ls-files` — eine Liste von Hand prüfte genau die Dateien nicht, an die niemand gedacht hat. Auf Gregors Ansage *„ich traue dir nicht ganz, jemand soll dich immer wieder überprüfen — das bin aber nicht ich!"* |
 | `tools/pruefe-ini-abschnitte.pl` | prüft jede Behauptung der Dokumentation über den INI-**Abschnitt** eines Schlüssels gegen `GetSectionID` (`rs.cpp:89-97`), aus `resource.h` und `EudoraRes.rc` gerechnet. Gelesen werden ```ini-Blöcke, `*.ini`, Tabellenzellen und Fließtext; die Dateiliste kommt aus `git ls-files`. `--was <Name>` sagt, wohin ein einzelner Schlüssel gehört, `--tabelle` gibt die Nummernbereiche aus. Anlass: `UseMyFilterWindowPosition` in `[Settings]` (11.09.2026) und, beim Nachprüfen gefunden, `LogLevel` ebenda statt in `[Debug]` — **zweimal dieselbe Fehlerklasse** |
@@ -116,7 +116,7 @@ Absprache**) und
 (Nachprüfung der Zeigerhärtungen).
 
 Ebenfalls nicht in der Tabelle, weil keine Werkzeuge: `tools/DEudora.ini`
-(Vorgabewerte, siehe [ZIEL.md](ZIEL.md) unter A-1), `tools/Eudora starten.cmd`
+(Vorgabewerte, siehe [ZIEL.md](../ZIEL.md) unter A-1), `tools/Eudora starten.cmd`
 (Starter im Paket), `tools/Kriterium0-pruefen.wsb` (Sandkasten für Kriterium 0)
 sowie die Textdateien `tools/RELEASES.md`, `tools/TESTLAEUFE.md` und diese
 Datei.

@@ -1,16 +1,17 @@
 # Hier weitermachen
 
-**Stand 15.09.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 17.09.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.64 (`Eudora71/Version.h`) |
-| **Paketnummer** | 1.0.64 (`VERSION`) |
-| **VON GREGOR ZU PRÜFEN, 15.09.2026 — E-95/E-96** | **die Bilder behalten ihre wirkliche Größe, und jedes bekommt seine eigene Zeilenhöhe.** Gebaut in 7.2.0.64 (**153/153 Tests**, drei davon umgeschrieben), **am laufenden Programm noch nicht bestätigt.** Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.64, *Zum Prüfen*: die Doctolib- und die FairToner-Nachricht **weiterleiten und beantworten**. **Was zu sehen sein muss: kein Bild ist abgeschnitten, keines auf 20×20 gequetscht, der Text bleibt frei.** Mit `LogLevel=58527` nennt die bleibende Spurmarke `E-95 Bild:` je Bild `attr`, `embed`, `ascent` und den Text-Ascent. **Im selben Lauf muss E-88 weiter tragen:** die Zeilen `E-88 vor dem Absenden` und `E-88 auf der Leitung` müssen `Fassung=ORIGINAL` sagen |
+| **Quellstand** | 7.2.0.65 (`Eudora71/Version.h`) |
+| **Paketnummer** | 1.0.65 (`VERSION`) |
+| **VON GREGOR ZU PRÜFEN, 17.09.2026 — E-97** | ***File → Save As* beendet Eudora nicht mehr.** Gebaut in **7.2.0.65** (**153/153 Tests**), **am laufenden Programm von mir geprüft, von Gregor noch nicht bestätigt.** Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.65, *Zum Prüfen*: eine Nachricht auswählen, *File → Save As* — der Dateidialog muss aufgehen und Eudora danach noch da sein. **Der Fehler steckte in jeder Fassung seit 1.0.49, auch im veröffentlichten Release `v1.0.50`** |
+| **VON GREGOR ZU PRÜFEN, 15.09.2026 — E-95/E-96** | **die Bilder behalten ihre wirkliche Größe, und jedes bekommt seine eigene Zeilenhöhe.** Gebaut in 7.2.0.63 (**153/153 Tests**, drei davon umgeschrieben), **am laufenden Programm noch nicht bestätigt.** Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.63, *Zum Prüfen*: die Doctolib- und die FairToner-Nachricht **weiterleiten und beantworten**. **Was zu sehen sein muss: kein Bild ist abgeschnitten, keines auf 20×20 gequetscht, der Text bleibt frei.** Mit `LogLevel=58527` nennt die bleibende Spurmarke `E-95 Bild:` je Bild `attr`, `embed`, `ascent` und den Text-Ascent. **Im selben Lauf muss E-88 weiter tragen:** die Zeilen `E-88 vor dem Absenden` und `E-88 auf der Leitung` müssen `Fassung=ORIGINAL` sagen |
 | **VON GREGOR ZU PRÜFEN, 14.09.2026** | **E-88 — die weitergeleitete Nachricht kommt an, wie sie gelesen wurde.** Gebaut in 7.2.0.56 (0 Fehler, 131/131 Tests), **am laufenden Programm noch nicht bestätigt.** Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.56, *Zum Prüfen*: `LogLevel=58527`, einen Newsletter einmal ohne und einmal mit Kommentar weiterleiten, dann im Protokoll nach `E-88` suchen. **Das Verfassenfenster sieht dabei weiterhin schlicht aus — das ist kein Fehler**, Paige kann kein CSS; es zählt allein, was beim Empfänger ankommt. Abschalten mit `ForwardOriginalHTML=0` in `[Settings]` |
-| **Zuletzt gebaut und gepackt** | Paket **1.0.64** (Quellstand 7.2.0.64), unter `Releases/Eudora72-1.0.64-release`. **Auf GitHub veröffentlicht ist weiterhin `v1.0.50`**; **1.0.51 bis 1.0.64 sind nicht freigegeben**. Aus Gregors Lauf mit **1.0.58** am 14.09.2026 stammen **E-89**, **E-90** (offen), **E-91** (offen) und **E-92** (offen); **E-95** meldete er an 1.0.60, **E-96** ist am 15.09.2026 an einem selbst gestarteten Eudora mit drei Bildern bekannter Größe gemessen worden. Bei 1.0.51 zeigte sein Test den Fehler E-85 noch, ab 1.0.52 ist E-85 behoben und belegt |
+| **Zuletzt gebaut** | Quellstand **7.2.0.65** / `VERSION` **1.0.65**, gebaut am 17.09.2026 (E-97). **Ein Paket dazu ist noch nicht geschnürt** — gemessen am 17.09.2026: unter `Releases/` liegt zuletzt `Eudora72-1.0.63-release`. **Auf GitHub veröffentlicht ist weiterhin `v1.0.50`**; **1.0.51 bis 1.0.65 sind nicht freigegeben**. Aus Gregors Lauf mit **1.0.58** am 14.09.2026 stammen **E-89**, **E-90** (offen), **E-91** (offen) und **E-92** (offen); **E-95** meldete er an 1.0.60, **E-96** ist am 15.09.2026 an einem selbst gestarteten Eudora mit drei Bildern bekannter Größe gemessen worden. Bei 1.0.51 zeigte sein Test den Fehler E-85 noch, ab 1.0.52 ist E-85 behoben und belegt |
 | **Zuletzt von Gregor bestätigt** | **1.0.50 am 11.09.2026**: **E-84**, die Größe eines losgerissenen Fensters überlebt den Neustart — belegt an beiden Enden (`FloatCx319=751` in der `Eudora.ini`, `E-76 fest: vorher=751x403` beim ersten Aufruf danach). Davor an 1.0.49 **E-76** (*„e-76: paßt: läßt sich jetzt vergrößern."*), an 1.0.48 **E-82** (verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993), an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
 | **ERLEDIGT — Fassungsgeschichte, kein offener Punkt** (Stand vom 13.09.2026 abends, **berichtigt am 15.09.2026**: E-85 ist seit **7.2.0.52** behoben und am laufenden Programm belegt) | **E-85 ist NICHT behoben.** Der Fix vom Nachmittag reparierte den Suchbereich (`FindMIMECharset` statt `FindRStringIndexI` bis `IDS_MIME_ISO_LATIN9`), durchsucht aber die **falsche Quelle**: `ImapDownload.cpp` liest den Zeichensatz aus `m_pHd->m_TLMime` — **TL heißt Top Level**. Bei `multipart/alternative`, also jedem HTML-Newsletter, steht im Top-Level-Header **kein `charset`**, nur `boundary`; der Zeichensatz des Teils steckt in `BODY->parameter` (`Imapdll/public/inc/exports.h:147`) und wird nie ausgelesen. **Belegt durch Gregors frisch abgerufene Mail:** Betreff richtig (anderer Weg, `Fix2047`), Rumpf falsch. Bei `text/plain` ohne multipart wirkt der Fix, bei Newslettern nicht. **Zu tun:** den Zeichensatz aus dem aktuellen Teil nehmen — dort, wo schon `m_CurrentBodyType` und `m_szCurrentBodySubtype` gesetzt werden (`ImapDownload.cpp:2798, 3034, 3283`), den Top-Level nur als Rückfall. Dazu die Spurmarke, die **beide** Zeichensätze in **einer** Zeile nennt |
 | **Wichtig beim Prüfen von E-85** | **Eine schon abgerufene Nachricht bleibt kaputt.** Die Übersetzung passiert beim **Abruf** und landet in der Mailboxdatei; die Anzeige liest nur, was dort steht. `IsIMAPMessageBodyDownloaded()` verhindert außerdem, dass Eudora den Rumpf von selbst erneut holt. Es muss also eine **neue** Nachricht sein. Und: die Testmail aus `tools/testmail-bauen.pl` wurde von `mx.freenet.de` mit **`550 Spam message rejected`** abgelehnt — 900 fast gleiche Zeilen mit Preisangaben und Emoji sehen für jeden Spamfilter wie Werbung aus. Wer sie wieder braucht, baut sie **unauffällig**: kurzer Text, die kritischen Zeichen gezielt platziert statt in Masse |
@@ -91,8 +92,8 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 **Der nächste Schritt gehört Gregor: vierzehn gebaute Behebungen warten auf
 sein Urteil** — am 13.09.2026 über alle Urteilszeilen in `BEFUNDE.md` gezählt.
-Sie stecken alle im aktuellen Paket **1.0.50**; die Fassungsnummern unten sagen
-nur, wann sie entstanden sind. Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
+Sie stecken alle im zuletzt geschnürten Paket **1.0.63** und im Quellstand
+**7.2.0.65**; die Fassungsnummern unten sagen nur, wann sie entstanden sind. Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
 *Die Hauptarbeit*; hier die Reihenfolge in einem Satz je Punkt.
 
 1. **A-4 / E-49, E-52, E-54 und E-55 prüfen** (gebaut in 7.2.0.26 bis
@@ -159,6 +160,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **E-98** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
 | **E-94** | die Betreffzeile wird mitten im Wort umbrochen — Toner bestel len, Wochenend e!, und in … |
 | **E-92** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |
 | **E-90** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… |
