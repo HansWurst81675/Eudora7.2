@@ -3756,11 +3756,69 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		out_szHtml = szAus;
 	}
 
+	//
+	// BEFUND E-103: der Anfang des Rumpfs gehoert in die Marke.
+	//
+	// Am 17.09.2026 meldete diese Marke fuer die Doctolib-Nachricht
+	// gesamt=0 bei 9092 Byte - kein einziges <img>, obwohl das Original
+	// 23201 Byte und fuenf Bilder hat. Ohne zu sehen, WAS hier ankommt,
+	// laesst sich nicht entscheiden, ob QuoteText die Bilder verliert
+	// oder ob sie nie im Rumpf waren. Zwei Werte in eine Ausgabe -
+	// Arbeitsweise/zwei-werte-in-eine-ausgabe.md.
+	//
+	CString		szAnfang;
+	long		nCrLf   = 0;
+	long		nNurLf  = 0;
+	long		nEscImg = 0;
+	{
+		const int	nZeig = ( nLen < 160 ) ? nLen : 160;
+
+		szAnfang = CString( pszHtml, nZeig );
+
+		// Zeilenschaltungen wuerden die Protokollzeile zerreissen.
+		szAnfang.Replace( "\r", " " );
+		szAnfang.Replace( "\n", " " );
+
+		//
+		// BEFUND E-103: die Zeilenenden zaehlen.
+		//
+		// FindBody (msgutils.cpp:333) sucht "\r\n\r\n". Liegen im Postfach
+		// nackte LF, findet es die Grenze nie und liefert das Ende der
+		// Zeichenkette zurueck. Dann ist fuer jeden Aufrufer der ganze
+		// Rumpf leer - und die Nachricht wird als ein einziger Textblock
+		// behandelt. Ob das hier der Fall ist, sagt nur die Messung.
+		//
+		// Dazu: kommt "&lt;img" vor, ist das HTML als TEXT durchgereicht
+		// worden (Text2Html hat die spitzen Klammern geschuetzt) - dann
+		// sind die Bilder nicht verloren, sondern unsichtbar gemacht.
+		//
+		for ( int p = 0; p < nLen; p++ )
+		{
+			if ( pszHtml[p] == '\n' )
+			{
+				if ( p > 0 && pszHtml[p-1] == '\r' )
+					nCrLf++;
+				else
+					nNurLf++;
+			}
+		}
+
+		const char *	pSuch = pszHtml;
+
+		while ( ( pSuch = strstr( pSuch, "&lt;img" ) ) != NULL )
+		{
+			nEscImg++;
+			pSuch += 7;
+		}
+	}
+
 	out_szSpur.Format(
 		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
-		"eingebettet=%d ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		"eingebettet=%d ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d crlf=%ld nur-lf=%ld esc-img=%ld anfang=[%s]",
 		nBilder, nSchonGut, nAusCss, nEingebettet, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
-		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
+		nLen, bGeaendert ? out_szHtml.GetLength() : nLen,
+		nCrLf, nNurLf, nEscImg,
+		(LPCTSTR) szAnfang );
 
 	return bGeaendert;
 }

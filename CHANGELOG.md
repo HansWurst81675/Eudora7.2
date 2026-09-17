@@ -61,6 +61,95 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
+
+> **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)
+> **weiterleiten** und ins Verfassenfenster sehen. Liegt noch etwas über dem
+> Text? Falls ja: `eudora.log` schicken — die Antwort steht dann darin.
+
+Gregor an 1.0.56: *„da ist alles durcheinander, man kann ja nichts lesen."*
+Seither mehrfach angemahnt, nie gemessen. Jetzt an seiner **echten** Nachricht
+nachgestellt — 23.537 Byte, byte-genau aus dem Postfach gelöst, fünf Bilder.
+
+**Der Mechanismus, Schritt für Schritt belegt.** Beim Import kennt Paige nur,
+was im HTML steht:
+
+```
+attr=0x0     embed=0x0     ascent=13     ← das Doctolib-Logo
+attr=80x80   embed=80x80   ascent=80
+attr=98x35   embed=98x35   ascent=35
+attr=117x35  embed=117x35  ascent=35
+attr=80x24   embed=80x24   ascent=24
+```
+
+Vier Bilder tragen ihre Maße im HTML und bekommen die richtige Zeilenhöhe. Das
+Logo trägt keine — **Paige misst Bilder nie selbst nach** — und bekommt eine
+Textzeile von 13 Punkten, während das Bild 60 hoch ist. Das sind die 47 Punkte
+über dem Text.
+
+**Und dann kommt die Überraschung.** Drei neue Spurmarken verfolgen, was nach
+dem Import passiert:
+
+```
+E-103 Nachtrag:    quelle=202x60 embed=202x60 gefunden=1 pos=288
+E-103 Zeilenhoehe: pos=288 ascent-vorher=60 bildhoehe=60 nachgezogen=0
+E-103 Neuzeichnen: bucket=1 fenster=1
+```
+
+Eudora **lädt das Bild wirklich**, erfährt die echte Größe 202×60, trägt sie
+nach — und die Zeilenhöhe steht zu diesem Zeitpunkt **schon auf 60**. Das
+Fenster wird auch neu gezeichnet. **Im heutigen Bau heilt sich der Fall selbst,
+sobald das Bild geladen ist.** Vermutlich seit E-96 (7.2.0.63).
+
+**Der Fall, in dem das nicht reicht:** lässt sich das Bild **nicht** laden —
+kein Netz, toter Verweis, gesperrt —, erscheint keine der drei Marken, und die
+Zeile blieb bei 13 Punkten. Gegenprobe gefahren, mit dem Logo auf einen
+Rechner, den es nicht gibt: `attr=0x0 embed=0x0 ascent=13`, sonst nichts.
+
+### Was behoben wurde
+
+**Der Import reserviert jetzt eine Mindestzeilenhöhe**, sobald gar keine Größe
+bekannt ist — 48 Punkte (`E103_MINDESTHOEHE` in `PGHTMIMP.CPP`). Sobald die
+echte Höhe aus der heruntergeladenen Datei kommt, gewinnt die.
+
+Gemessen, beide Fälle, mit derselben Nachricht:
+
+| | vorher | jetzt |
+|---|---|---|
+| Bild **ladbar** | `ascent=13`, später 60 | `ascent=48` beim Import, dann **60** |
+| Bild **nicht ladbar** | `ascent=13` | `ascent=48` |
+
+**Das ist nicht der Notbehelf von früher.** Bis 7.2.0.62 wurde die
+*Bildgröße* auf 20×20 geraten — das hat Gregors Tonerkartusche zu einem
+Streifen gequetscht und wurde deshalb entfernt. Hier wird **nur die Zeile**
+hoch genug gemacht; an Breite und Höhe des Bildes ändert sich nichts, es kann
+sich nichts verzerren.
+
+Die 48 sind begründet, nicht geraten: groß genug, dass die üblichen Kopfbilder
+einer Werbemail nicht mehr in den Text ragen — das Doctolib-Logo ist 60 hoch,
+die vier anderen Bilder derselben Nachricht 24 bis 80 — und klein genug, dass
+eine Zeile mit einem kleinen Symbol keine auffällige Lücke reißt.
+
+### Was dazugekommen ist
+
+**Drei neue Spurmarken** in `PgEmbeddedImage.cpp`, die den Weg nach dem Import
+sichtbar machen — ohne sie war nicht zu entscheiden, ob die Größe nie ankommt
+oder nur zu spät:
+
+* `E-103 Nachtrag: quelle=… embed=… gefunden=… pos=… style=…`
+* `E-103 Zeilenhoehe: pos=… ascent-vorher=… bildhoehe=… nachgezogen=…`
+* `E-103 Neuzeichnen: bucket=… fenster=…`
+
+**Ein Sicherungsnetz** an derselben Stelle: ist die Zeile nach dem Laden
+niedriger als das Bild, wird sie nachgezogen. Es hat in der Messung **nicht**
+ausgelöst (`nachgezogen=0`), und die Marke sagt das auch — es steht da für den
+Fall, dass `pgInvalEmbedRef` einmal nicht durchgreift.
+
+**Die E-89-Spurmarke** nennt jetzt zusätzlich den Anfang des Rumpfes, die
+Zeilenenden und die Zahl der als Text versteckten Bilder
+(`crlf=… nur-lf=… esc-img=… anfang=[…]`). Ohne diese drei Zahlen wäre die
+Ursachensuche an dieser Stelle steckengeblieben.
+
 ## 7.2.0.66 — die gespeicherte Datei ist jetzt brauchbar (E-101)
 
 > **Zu prüfen:** Nachricht markieren, **File → Save As**, Datei speichern —

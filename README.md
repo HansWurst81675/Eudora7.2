@@ -83,7 +83,7 @@ verschickt.
   **E-97**, von Gregor an 1.0.64 bestätigt) — siehe den Punkt darunter. Dazu
   der **Datenverlust beim Senden eines gesicherten Entwurfs** (7.2.0.64,
   **E-99**), dieselbe Absturzstelle an drei weiteren Stellen (7.2.0.65,
-  **E-100**) und die **unbrauchbare gespeicherte Datei** (7.2.0.66,
+  **E-100**) und die **unbrauchbare gespeicherte Datei** (7.2.0.67,
   **E-101** — ohne `Content-Type`-Zeile und mit Eudoras internem Marker
   `<x-html>`). Wer das braucht, baut selbst.
 * **Im Release `v1.0.50` beendet *File → Save As* Eudora sofort** (**E-97**):
@@ -191,7 +191,7 @@ Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 3. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.66 / Paket 1.0.66` — diese Angabe gehört in jeden
+   `Eudora 7.2.0.67 / Paket 1.0.67` — diese Angabe gehört in jeden
    Fehlerbericht.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
@@ -616,7 +616,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.66` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.67` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

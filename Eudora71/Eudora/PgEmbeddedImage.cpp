@@ -477,14 +477,6 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 				// Hier, beim Laden, kennt Eudora die echte Groesse. Ob Paige
 				// sie auch fuer die ZEILENHOEHE uebernimmt, haengt daran, ob
 				// der Suchlauf unten das richtige Embed findet.
-				{
-					char szSpur97[160];
-					wsprintf(szSpur97,
-						"E-97 Nachtrag: quelle=%dx%d embed=%ldx%ld\r\n",
-						(int)pUrlImage->source_width, (int)pUrlImage->source_height,
-						(long)embed->width, (long)embed->height);
-					PutDebugLog(DEBUG_MASK_MISC, szSpur97);
-				}
 
 				// Search for ourselves since that seems to be the only way to get our
 				// index position (needed for pgInvalEmbedRef).
@@ -510,11 +502,130 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					}
 				}
 
+				//
+				// BEFUND E-103, Messung vom 17.09.2026.
+				//
+				// Bis hierher ist alles gut: Eudora hat das Bild geladen und
+				// kennt seine echte Groesse. Gemessen an Gregors Doctolib-
+				// Nachricht steht hier "quelle=202x60 embed=202x60".
+				//
+				// Beim IMPORT wusste niemand davon - PGHTMIMP.CPP:2186 meldet
+				// fuer dasselbe Bild "attr=0x0 embed=0x0 ascent=13". Die Zeile
+				// ist also 13 Punkte hoch, das Bild 60. Die 47 Punkte
+				// Unterschied liegen ueber dem Text, und genau das meldet
+				// Gregor seit mehreren Fassungen.
+				//
+				// Die Zeile darunter soll das heilen: pgInvalEmbedRef laesst
+				// Paige die Zeile mit der neuen Groesse neu rechnen. Sie laeuft
+				// aber NUR, wenn die Suche oben das Embed wiedergefunden hat -
+				// und die vergleicht ueber embed->style. Ob das trifft, hat
+				// noch niemand gemessen. Diese Marke misst es.
+				//
+				{
+					char szSpur97[200];
+					wsprintf(szSpur97,
+						"E-103 Nachtrag: quelle=%dx%d embed=%ldx%ld "
+						"gefunden=%d pos=%ld style=%ld\r\n",
+						(int)pUrlImage->source_width, (int)pUrlImage->source_height,
+						(long)embed->width, (long)embed->height,
+						bFound ? 1 : 0, (long)pos, (long)embed->style);
+					PutDebugLog(DEBUG_MASK_MISC, szSpur97);
+				}
+
 				if (bFound)
 				{
 					// Call pgInvalEmbedRef so that the embedded style gets updated with
 					// our updated dimensions.
 					pgInvalEmbedRef( pg->myself, pos, embed, draw_none );
+
+					//
+					// BEFUND E-103: die ZEILENHOEHE nachziehen.
+					//
+					// pgInvalEmbedRef aktualisiert das EMBED. Die Hoehe der
+					// ZEILE steckt aber im Textstil an der Stelle des Bildes -
+					// dasselbe Feld, das der Import setzt
+					// (PGHTMIMP.CPP:2150, current_style.ascent) und um das es
+					// bei E-96 ging. Ohne diesen Schritt bleibt die Zeile so
+					// hoch, wie sie beim Import war.
+					//
+					// GEMESSEN an Gregors Doctolib-Nachricht, 17.09.2026,
+					// dasselbe Bild in zwei Spurmarken:
+					//
+					//   PGHTMIMP  E-95 Bild: attr=0x0 embed=0x0 ascent=13
+					//   hier      E-103 Nachtrag: quelle=202x60 embed=202x60
+					//                             gefunden=1 pos=288
+					//
+					// Eine Zeile von 13 Punkten, ein Bild von 60. Die 47
+					// Punkte Unterschied liegen ueber dem folgenden Text -
+					// genau das meldet Gregor seit mehreren Fassungen:
+					// "da ist alles durcheinander, man kann ja nichts lesen."
+					//
+					// Es wird NICHTS geraten. Die Zahl kommt aus der geladenen
+					// Bilddatei (MetafileFromImage weiter oben), nicht aus
+					// einer Vorgabe. Der Notbehelf 20x20 bis 7.2.0.62 war
+					// genau das Gegenteil und hat Bilder gequetscht.
+					//
+					// Nur VERGROESSERN, nie verkleinern: stand im HTML eine
+					// groessere Angabe oder hat ein anderes Bild in derselben
+					// Zeile mehr Hoehe, bleibt die groessere stehen.
+					//
+					if ( pUrlImage->source_height > 0 )
+					{
+						select_pair		selBild;
+						style_info		infoBild, maskeBild;
+
+						selBild.begin = pos;
+						selBild.end   = pos + 1;
+
+						pgInitStyleMask( &infoBild, 0 );
+						pgInitStyleMask( &maskeBild, 0 );
+						maskeBild.ascent = -1;
+
+						pgGetStyleInfo( pg->myself, &selBild, FALSE,
+										&infoBild, &maskeBild );
+
+						{
+							char	szSpur103[200];
+
+							wsprintf( szSpur103,
+								"E-103 Zeilenhoehe: pos=%ld ascent-vorher=%d "
+								"bildhoehe=%d nachgezogen=%d\r\n",
+								(long)pos, (int)infoBild.ascent,
+								(int)pUrlImage->source_height,
+								( infoBild.ascent < pUrlImage->source_height ) ? 1 : 0 );
+
+							PutDebugLog( DEBUG_MASK_MISC, szSpur103 );
+						}
+
+						if ( infoBild.ascent < pUrlImage->source_height )
+						{
+							pgInitStyleMask( &maskeBild, 0 );
+							maskeBild.ascent = -1;
+							infoBild.ascent  = (short) pUrlImage->source_height;
+
+							pgSetStyleInfo( pg->myself, &selBild,
+											&infoBild, &maskeBild, draw_none );
+						}
+					}
+
+					//
+					// BEFUND E-103: wird ueberhaupt neu gezeichnet?
+					//
+					// Die Zeilenhoehe kann noch so richtig sein - solange
+					// niemand neu zeichnet, steht das alte Bild auf dem
+					// Schirm. Diese Bedingung entscheidet darueber, und ob
+					// sie zutrifft, hat noch niemand gemessen.
+					//
+					{
+						char	szSpur103b[140];
+
+						wsprintf( szSpur103b,
+							"E-103 Neuzeichnen: bucket=%d fenster=%d\r\n",
+							pSB ? 1 : 0,
+							( pSB && pSB->pWndOwner ) ? 1 : 0 );
+
+						PutDebugLog( DEBUG_MASK_MISC, szSpur103b );
+					}
 
 					// Make the window erase and redraw to handle any text that used to
 					// be drawn in the space we now occupy
