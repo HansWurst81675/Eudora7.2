@@ -36,22 +36,24 @@ Nullzeiger-Stelle wie E-97 an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
 uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
 **E-101** (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
 Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
-7.2.0.68, am laufenden Programm geprüft, **169 Tests**), **E-103** (Bilder ohne
+**7.2.0.66** (erster Teil) und **7.2.0.69** (zweiter Teil — ohne *Kopfzeilen
+einschließen* fehlte der `Content-Type` ganz), am laufenden Programm geprüft,
+**171 Tests**), **E-103** (Bilder ohne
 Größenangabe lagen über dem Text. **Das Fehlerbild** hat Gregor am 17.09.2026
 an 1.0.64 belegt — auf seinem Bild liegt das *kleinanzeigen*-Logo über dem
 Text. **Gemessen und behoben** wurde an seiner Doctolib-Nachricht: der Import
 reserviert jetzt eine Mindestzeilenhöhe, die echte Höhe aus der geladenen Datei
 gewinnt danach. **Von Gregor am laufenden Programm noch nicht bestätigt**,
-7.2.0.68) und **E-104** (die Kopfzeilen der
+7.2.0.67) und **E-104** (die Kopfzeilen der
 gespeicherten Nachricht klebten zusammen, weil `UnwrapText` über die ganze
 Nachricht lief und weil verdorbene INI-Werte aus **E-100** „Absätze raten"
-eingeschaltet hatten, 7.2.0.68). **E-108** entfernt den Stilweg, der den Absturz beim Antworten ausgelöst hat —
-**E-107** war die falsche Erklärung und ist durch Gregors Protokoll widerlegt.
-Ursprünglich hiess es,
-den **E-106 eingeschleppt hatte** — der Block lief auf einem flüchtigen Embed.
-**E-106** selbst ist **von Gregor am 17.09.2026 an 1.0.69 bestätigt**: die
-Überlappung ist weg, der Text steht wieder unter dem Bild.
-Ursprünglich: Bilder, die größer sind als im HTML angegeben, liegen
+eingeschaltet hatten, 7.2.0.67 für die verfasste und 7.2.0.68 für die
+empfangene Nachricht). **E-106** (7.2.0.68) ist **von Gregor am 17.09.2026 an
+1.0.69 bestätigt**: die Überlappung ist weg, der Text steht wieder unter dem
+Bild. **E-108** (7.2.0.72) entfernt den Stilweg, der beim Antworten zum Absturz
+geführt hat — **E-107** war die falsche Erklärung und ist durch Gregors
+Protokoll widerlegt. Ursprünglich: Bilder, die größer sind als im HTML
+angegeben, liegen
 über dem Text — sein Protokoll vom 17.09.2026 zeigt, dass Bilder **ohne**
 Größenangabe nachgemessen werden und die Zeile mitwächst, Bilder **mit**
 Angabe aber nie. **Offen bleibt
@@ -59,11 +61,13 @@ E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Gebaut ist 7.2.0.68; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
-17.09.2026: `Releases/Eudora72-1.0.65-release`, letztes ZIP
-`Eudora72-1.0.64-release.zip`; **zu 1.0.68 gibt es noch kein Paket**),
-**veröffentlicht ist `v1.0.64`** — am 17.09.2026 um 10:23 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.68 sind nicht
+**Gebaut und geschnürt ist 7.2.0.70 / 1.0.70** (17.09.2026, 21:18 — gemessen
+an der Produktversion und dem Zeitstempel der `Eudora.exe`;
+`Releases/Eudora72-1.0.70-release` und das ZIP dazu liegen da). **Es ist das erste
+Paket, das alles enthält**: E-101 in beiden Teilen, E-103, E-104, E-106.
+**Bei Gregor liegen 1.0.65, 1.0.67, 1.0.68 und 1.0.69 — 1.0.70 noch nicht.**
+**Veröffentlicht ist `v1.0.64`** — am 17.09.2026 um 10:23 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.70 sind nicht
 freigegeben**.
 
 > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Hier stand *„veröffentlicht
@@ -71,6 +75,13 @@ freigegeben**.
 > `git ls-remote --tags origin`: `v1.0.64` existiert. Dieselbe Unwahrheit
 > stand in `WEITERMACHEN.md`, `Releases/PAKETE.md`, `README.md` und
 > `tools/RELEASES.md` — fünf Dokumente, ein Irrtum.
+>
+> **Nachgemessen am 17.09.2026 (LEKTOR, L-14.2):** In `WEITERMACHEN.md` stand
+> die Unwahrheit danach **weiter** (Zeile 24, *„Auf GitHub veröffentlicht ist
+> weiterhin `v1.0.50`; 1.0.51 bis 1.0.68 sind nicht freigegeben"*), und
+> **`PORTIERUNG.md` trug sie auch** — dort war sie in keinem der beiden
+> Vermerke genannt. Es waren also **sechs** Dokumente, und zwei blieben
+> stehen. Beide sind jetzt berichtigt.
 
 | # | | Stand |
 |---|---|---|
