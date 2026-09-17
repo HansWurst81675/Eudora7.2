@@ -3431,12 +3431,46 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 	}
 	else
 	{
-		view->GetMessageAsText(msg, GetIniShort( IDS_INI_INCLUDE_HEADERS ));
+		const BOOL	bKopfzeilen = E104SchalterLesen( IDS_INI_INCLUDE_HEADERS );
+
+		view->GetMessageAsText(msg, bKopfzeilen);
 		msg = dateMaybe + msg;
-		if ( GetIniShort( IDS_INI_GUESS_PARAGRAPHS ) )
+		if ( E104SchalterLesen( IDS_INI_GUESS_PARAGRAPHS ) )
 		{
 			char* CopyText = ::SafeStrdupMT( msg );
-			if (FAILED(pFile->Put( UnwrapText( CopyText ))))
+
+			//
+			// BEFUND E-104: UnwrapText darf die KOPFZEILEN nicht anfassen.
+			//
+			// Gregor hat am 17.09.2026 mit 1.0.65 eine Nachricht aus dem
+			// geoeffneten Fenster gespeichert. In der Datei stand:
+			//
+			//   From: "markus.bakus@gmx.de" <markus.bakus@gmx.de> Subject:
+			//   Re: Fwd: Deine Anzeige 'Zu verschenken: kleine Gefaesse' Cc:
+			//
+			// Drei Kopfzeilen in einer. Im Postfach steht jede fuer sich -
+			// beide Fassungen nebeneinandergelegt und gemessen.
+			//
+			// Die Ursache ist diese Zeile: UnwrapText lief ueber die GANZE
+			// Nachricht. In tocview.cpp:3149 steht an derselben Stelle ein
+			// Schutz - "Don't unwrap the headers!" mit FindBody - hier
+			// fehlte er.
+			//
+			// Dass es ueberhaupt lief, liegt an E-100: Gregors Eudora.ini
+			// trug GuessParagraphs=7179, einen uninitialisierten
+			// Stapelwert. "Absaetze raten" galt damit als eingeschaltet,
+			// obwohl er es nie gewaehlt hat und mangels Kaestchen (E-98)
+			// gar nicht waehlen konnte. E104SchalterLesen holt solche
+			// Werte jetzt auf 0 oder 1 zurueck.
+			//
+			char*	pszRumpf = bKopfzeilen
+							 ? (char*) ::FindBody( CopyText )
+							 : CopyText;
+
+			if ( pszRumpf && *pszRumpf )
+				::UnwrapText( pszRumpf );
+
+			if (FAILED(pFile->Put( CopyText )))
 			{
 				delete [] CopyText;
 				return (FALSE);

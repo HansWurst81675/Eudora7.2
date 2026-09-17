@@ -4218,3 +4218,63 @@ bool E101SpeicherfassungAufbereiten(
 
 	return bGeaendert;
 }
+
+
+//
+// ---------------------------------------------------------------------------
+// E104SchalterLesen
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-104: einen Ja/Nein-Schalter aus der INI holen - und einen
+// verdorbenen Wert dabei geradeziehen.
+//
+// Gregors Eudora.ini am 17.09.2026, gemessen:
+//
+//   GuessParagraphs=7179
+//   IncludeHeaders=16720
+//
+// Das sind keine Schalterwerte, das sind uninitialisierte Stapelwerte. Sie
+// stammen aus Befund E-100: CSaveAsDialog::m_Inc und m_Guess wurden vom
+// Konstruktor nicht gesetzt, von allen drei Aufrufstellen aber nach DoModal()
+// ungeprueft in die INI geschrieben. E-100 hat das Loch gestopft - die schon
+// verdorbenen Werte repariert es nicht.
+//
+// Und sie richten Schaden an: jeder Wert ungleich 0 gilt als "eingeschaltet".
+// Damit lief bei Gregor "Absaetze raten", obwohl er es nie gewaehlt hat und
+// mangels Kaestchen (E-98) gar nicht waehlen konnte - und UnwrapText hat ihm
+// die Kopfzeilen der gespeicherten Nachricht zusammengeklebt.
+//
+// Diese Funktion liest den Schalter und setzt ihn zurueck, sobald er weder 0
+// noch 1 ist. Die Vorgabe beider Schluessel ist 0 (EudoraRes.rc:8217-8218);
+// zurueckgeschrieben wird sie, damit der naechste Leser den geraden Wert
+// sieht und die Reparatur nicht bei jedem Aufruf neu geschieht.
+//
+// Warum nicht einfach !!GetIniShort: weil der verdorbene Wert dann stehen
+// bliebe und in den Einstellungen des Anwenders weiter falsche Antworten
+// gaebe. Was einmal verdorben ist, wird geradegezogen, nicht nur umschifft.
+//
+BOOL E104SchalterLesen( UINT nIniSchluessel )
+{
+	const short		nWert = GetIniShort( nIniSchluessel );
+
+	if ( nWert == 0 || nWert == 1 )
+		return (BOOL)( nWert != 0 );
+
+	//
+	// Verdorben. Auf die Vorgabe zuruecksetzen und das ins Protokoll.
+	//
+	SetIniShort( nIniSchluessel, 0 );
+
+	{
+		CString		szSpur;
+
+		szSpur.Format(
+			"E-104 Schalter: id=%u wert=%d war weder 0 noch 1 - auf 0 "
+			"zurueckgesetzt (Folge von E-100)",
+			nIniSchluessel, (int)nWert );
+
+		PutDebugLog( DEBUG_MASK_MISC, szSpur );
+	}
+
+	return FALSE;
+}

@@ -79,3 +79,14 @@ bool E101SpeicherfassungAufbereiten(
 				bool				bHatKopfzeilen,
 				CString &			out_szDatei,
 				CString &			out_szSpur);
+
+//
+// BEFUND E-104: einen Ja/Nein-Schalter aus der INI holen und einen
+// verdorbenen Wert dabei geradeziehen. Gregors Eudora.ini trug
+// GuessParagraphs=7179 und IncludeHeaders=16720 - uninitialisierte
+// Stapelwerte aus Befund E-100. Jeder Wert ungleich 0 gilt als
+// "eingeschaltet"; was weder 0 noch 1 ist, wird auf die Vorgabe 0
+// zurueckgesetzt und zurueckgeschrieben. Erlaeuterung am Rumpf in
+// msgutils.cpp.
+//
+BOOL E104SchalterLesen( UINT nIniSchluessel );
