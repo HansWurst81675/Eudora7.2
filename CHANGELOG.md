@@ -60,6 +60,32 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.65 — dieselbe Absturzstelle an drei weiteren Stellen geschlossen (E-100)
+
+> **Zu prüfen:** *File → Save As* muss weiter gehen wie in 1.0.64. Diese
+> Fassung schließt Wege, über die noch niemand gestolpert ist — es soll sich
+> nichts ändern, außer dass es so bleibt.
+
+Vom Prüfer als Gegenvermutung zu E-97 gefunden, **bevor jemand darüber
+gestolpert ist**.
+
+**Teil 1 — dieselbe Lücke, dreimal.** `GetFileNameFromDialog`, `ToggleStat` und
+`StatDir` in `SaveAsDialog.cpp` berechnen `dlgPtr = GetParent()` genau wie
+`OnTypeChange` und greifen **ungeprüft** darauf zu. `GetFileNameFromDialog` ist
+die gefährliche: sie wird aus `OnOK()` gerufen, also **im laufenden
+Speichervorgang**, nicht nur beim Aufbau des Dialogs.
+
+**Teil 2 — zwei Werte, die in deine Einstellungen laufen.** `m_Inc` und
+`m_Guess` werden vom Konstruktor nicht gesetzt, aber von allen drei
+Aufrufstellen nach `DoModal()` ungeprüft in die INI geschrieben. Läuft
+`OnInitDialog` nicht, landen zwei uninitialisierte Werte **dauerhaft** in
+`IDS_INI_INCLUDE_HEADERS` und `IDS_INI_GUESS_PARAGRAPHS`. Jetzt werden sie im
+Konstruktor mit dem bisherigen Stand aus der INI vorbelegt.
+
+Dazu zwei falsche Begründungen im Quelltext berichtigt — und eine Warnung für
+den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
+`OnTypeChange()`, das muss dann nachgezogen werden.
+
 ## 7.2.0.64 — Speichern stürzt nicht mehr ab (E-97)
 
 > **Zu prüfen:** eine Nachricht auswählen, **File → Save As**. Der Dateidialog

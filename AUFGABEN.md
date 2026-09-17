@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.64** / `VERSION` **1.0.64**
+**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.65** / `VERSION` **1.0.65**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -24,9 +24,9 @@ sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), **E-93**
 (Inhaltsverlust beim Weiterleiten einer bereits weitergeleiteten Nachricht,
 7.2.0.59), **E-95**/**E-96** (Bildgrößen im Verfassenfenster, 7.2.0.62
 und 7.2.0.63, an einem selbst gestarteten Eudora gemessen) sowie **E-97**
-(*File → Save As* beendete Eudora sofort, 7.2.0.64, am laufenden Programm
+(*File → Save As* beendete Eudora sofort, 7.2.0.65, am laufenden Programm
 gemessen — der Fehler steckte in **jeder** Fassung seit 1.0.49 und steckt
-auch im veröffentlichten `v1.0.50`). **Gebaut ist 7.2.0.64; als Paket
+auch im veröffentlichten `v1.0.50`). **Gebaut ist 7.2.0.65; als Paket
 geschnürt ist zuletzt 1.0.63**, veröffentlicht ist weiterhin nur `v1.0.50`.
 
 | # | | Stand |
