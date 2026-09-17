@@ -60,6 +60,53 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.64 — Speichern stürzt nicht mehr ab (E-97)
+
+> **Zu prüfen:** eine Nachricht auswählen, **File → Save As**. Der Dateidialog
+> muss aufgehen, und Eudora muss danach noch da sein.
+
+**Der Fehler war in jeder Fassung dieses Projekts** — 1.0.49 bis 1.0.63
+gemessen, auch im veröffentlichten Release `v1.0.50`. Aufgefallen ist er erst,
+als Gregor eine Nachricht speichern sollte, um sie mir zu geben.
+
+**Die Stelle, aus dem Debugger symbolisiert:**
+
+```
+0   Eudora.exe   CSaveAsDialog::OnTypeChange + 45   SaveAsDialog.cpp:425
+1   COMDLG32.dll
+25  Eudora.exe   CTocView::OnFileSaveAs + 429       tocview.cpp:3074
+```
+
+`OnTypeChange` ist der Rückruf, mit dem der Dateidialog meldet, dass der
+Dateityp gesetzt wurde. **Er kommt, während der Dialog sich aufbaut** — vor
+`OnInitDialog`. Zu diesem Zeitpunkt hat das Vorlagenfenster noch kein
+Elternfenster:
+
+```c
+dlgPtr = GetParent();                         // liefert NULL
+CWnd *filtCombo = dlgPtr->GetDlgItem(cmb1);   // Zugriffsverletzung
+```
+
+Ein paar Zeilen weiter dieselbe Lücke: `m_GuessParagraphs.EnableWindow()` auf
+einem Schalter, den `DoDataExchange` bewusst **nicht** anbindet, wenn es ihn
+ohne Dialogvorlage nicht gibt.
+
+**Beide Zugriffe waren durch ein `ASSERT` „abgesichert", das im Release nichts
+tut.** Das ist die häufigste Ursachenklasse dieses ganzen Projekts, und hier
+hat sie eine Grundfunktion seit der ersten Fassung unbrauchbar gemacht.
+
+**Warum es so lange dauerte:** Die Ausnahme ist `0xC000041D`
+(STATUS_FATAL_USER_CALLBACK_EXCEPTION) — eine Ausnahme in einem Systemrückruf
+kommt nicht über die Kernel-Grenze zurück, deshalb bricht das Programm sofort
+ab, statt eine Meldung zu zeigen. Drei Vermutungen waren vorher zu widerlegen:
+die CSS-Grenze, die Dialogvorlage von 1996 und die ungeprüften Steuerelemente
+in `OnInitDialog`. Erst die symbolisierte Aufrufkette hat es entschieden.
+
+**Gegenprobe:** derselbe Messlauf, der vorher *„ABGESTUERZT beim Speichern
+unter"* meldete, sagt jetzt *„lebt noch"*.
+
+**Tests: 153 von 153.**
+
 ## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
 
 > **Zu prüfen:** Doctolib- und FairToner-Nachricht weiterleiten **und**

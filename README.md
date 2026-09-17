@@ -78,7 +78,7 @@ verschickt.
   weitergeleiteten Nachricht (7.2.0.59, **E-93** — es gingen 17.889 statt
   105.125 Byte hinaus) und die **Bildgrößen im Verfassenfenster**: jedes Bild
   bekam die Zeilenhöhe des ersten und wurde dadurch abgeschnitten oder
-  gequetscht (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.63 wieder
+  gequetscht (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.64 wieder
   weg). Wer das braucht, baut selbst.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
@@ -173,7 +173,7 @@ Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 3. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.63 / Paket 1.0.63` — diese Angabe gehört in jeden
+   `Eudora 7.2.0.64 / Paket 1.0.64` — diese Angabe gehört in jeden
    Fehlerbericht.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
@@ -598,7 +598,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.63` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.64` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

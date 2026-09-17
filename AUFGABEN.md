@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 15.09.2026**, gemessen an Quellstand **7.2.0.63** / Paket **1.0.63**
+**Stand 15.09.2026**, gemessen an Quellstand **7.2.0.64** / Paket **1.0.64**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -23,8 +23,8 @@ stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
 sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), **E-93**
 (Inhaltsverlust beim Weiterleiten einer bereits weitergeleiteten Nachricht,
 7.2.0.59) sowie **E-95**/**E-96** (Bildgrößen im Verfassenfenster, 7.2.0.62
-und 7.2.0.63, an einem selbst gestarteten Eudora gemessen). **Gepackt ist
-1.0.63**; veröffentlicht ist weiterhin nur `v1.0.50`.
+und 7.2.0.64, an einem selbst gestarteten Eudora gemessen). **Gepackt ist
+1.0.64**; veröffentlicht ist weiterhin nur `v1.0.50`.
 
 | # | | Stand |
 |---|---|---|

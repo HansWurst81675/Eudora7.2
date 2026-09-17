@@ -45,3 +45,4 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-09-15 14:04:01 | `C:\Temp\E97-Stapel` | E-97: Vorlage abgeschaltet, mit Protokoll | Hauptfenster 1639528 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+a6ed2f3* 2026-09-15 14:01 - E97-Stapel] |
 | 2026-09-15 14:32:28 | `C:\Temp\E97-Stapel` | E-97: Null-Pruefungen in OnInitDialog | Hauptfenster 2360406 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+a6ed2f3* 2026-09-15 14:01 - E97-Stapel] |
 | 2026-09-15 14:35:06 | `C:\Temp\E97-Stapel` | E-97: wird OnInitDialog erreicht? | Hauptfenster 1705218 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+a6ed2f3* 2026-09-15 14:01 - E97-Stapel] |
+| 2026-09-17 07:40:38 | `C:\Temp\E97-Stapel` | E-97: Null-Pruefung in OnTypeChange - Gegenprobe | Hauptfenster 132298 - Eudora   [Eudora 7.2.0.63 / Paket 1.0.63+3f25bf5* 2026-09-16 12:17 - E97-Stapel]  Schliesszeit 1 s. |
