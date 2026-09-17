@@ -85,6 +85,137 @@ static bool Hat(const CString& s, const char* p)
 	return s.Find(p) >= 0;
 }
 
+//
+// ---------------------------------------------------------------------
+// Der Pruefsatz zu PRUEFER P-28: "ist jedes Byte der Eingabe, das nicht
+// zum Tag gehoert, noch da?"
+//
+// Der Satz "enthaelt die Ausgabe X" - also Hat() - laesst genau den
+// Schnitt durch, der bei P-28 den ganzen Rumpf gekostet hat. Die drei
+// neuen Kopfzeilen kamen dazu, die Datei wurde GROESSER, jede Pruefung
+// auf "MIME-Version" oder "Content-Type" blieb gruen - und der Rumpf war
+// weg. Wer nur fragt, ob etwas DA ist, erfaehrt nie, was FEHLT.
+//
+// Gemessen wird deshalb Rumpf gegen Rumpf, byteweise. Aus dem Rumpf der
+// EINGABE werden genau die Tags herausgeschnitten, die der Aufrufer
+// nennt; dazu die Zeilenschaltung dahinter, aber nur dann, wenn hinter
+// dem Tag nichts als Leerraum auf der Zeile stand. Was uebrig bleibt,
+// MUSS Byte fuer Byte der Rumpf der Ausgabe sein - nicht "darin
+// enthalten", sondern gleich. Eine andere Laenge ist ebenfalls eine
+// Abweichung, sonst ginge ein abgeschnittener Rumpf als "der Anfang
+// stimmt ja" durch.
+// ---------------------------------------------------------------------
+//
+
+static CString RumpfVon(const CString& szDatei)
+{
+	const int	nTrenner = szDatei.Find("\r\n\r\n");
+
+	return ( nTrenner < 0 ) ? CString("") : szDatei.Mid( nTrenner + 4 );
+}
+
+static CString OhneTags(const CString& szRumpf, const char* const* ppszTags,
+						int nTags)
+{
+	CString		szRest = szRumpf;
+
+	for ( int i = 0; i < nTags; i++ )
+	{
+		const int	nAb = szRest.Find( ppszTags[i] );
+
+		if ( nAb < 0 )
+			continue;
+
+		int			nNach = nAb + (int) strlen( ppszTags[i] );
+		int			nLeer = nNach;
+
+		while ( nLeer < szRest.GetLength() &&
+				( szRest[nLeer] == ' ' || szRest[nLeer] == '\t' ) )
+			nLeer++;
+
+		if ( nLeer >= szRest.GetLength() ||
+			 szRest[nLeer] == '\r' || szRest[nLeer] == '\n' )
+		{
+			nNach = nLeer;
+
+			if ( nNach < szRest.GetLength() && szRest[nNach] == '\r' )
+				nNach++;
+			if ( nNach < szRest.GetLength() && szRest[nNach] == '\n' )
+				nNach++;
+		}
+
+		szRest = szRest.Left( nAb ) + szRest.Mid( nNach );
+	}
+
+	return szRest;
+}
+
+static void PruefeJedesByte(const char* pszEingabe, const CString& szAusgabe,
+							const char* const* ppszTags, int nTags)
+{
+	const CString	szSoll = OhneTags( RumpfVon( CString( pszEingabe ) ),
+									   ppszTags, nTags );
+	const CString	szIst  = RumpfVon( szAusgabe );
+
+	//
+	// Die andere Haelfte des Satzes: das Tag selbst MUSS weg sein. Ohne
+	// diese Frage wuerde eine Fassung bestehen, die gar nichts schneidet.
+	//
+	for ( int t = 0; t < nTags; t++ )
+	{
+		if ( szAusgabe.Find( ppszTags[t] ) >= 0 )
+			TT_Fail("das Tag \"%s\" steht noch in der Datei", ppszTags[t]);
+	}
+
+	const int	nKurz = ( szSoll.GetLength() < szIst.GetLength() )
+						  ? szSoll.GetLength() : szIst.GetLength();
+
+	for ( int i = 0; i < nKurz; i++ )
+	{
+		if ( szSoll[i] != szIst[i] )
+		{
+			TT_Fail("DATENVERLUST: der Rumpf weicht ab Byte %d ab - "
+					"soll 0x%02X, ist 0x%02X   (soll %d Byte, ist %d Byte)",
+					i, (unsigned char) szSoll[i], (unsigned char) szIst[i],
+					szSoll.GetLength(), szIst.GetLength());
+			return;
+		}
+	}
+
+	if ( szSoll.GetLength() != szIst.GetLength() )
+		TT_Fail("DATENVERLUST: der Rumpf soll %d Byte haben, hat aber %d - "
+				"ab Byte %d %s",
+				szSoll.GetLength(), szIst.GetLength(), nKurz,
+				( szIst.GetLength() < szSoll.GetLength() )
+					? "fehlt alles Weitere" : "steht Ueberschuss");
+}
+
+//
+// PRUEFER P-38: die Spurmarke muss den Schnitt am Rumpf zeigen koennen.
+// Die Gesamtlaengen reichen dafuer nicht - sie WACHSEN durch die drei
+// neuen Kopfzeilen auch dann, wenn der Rumpf ganz verschwindet. Bei P-28
+// stand "bytes-vorher=104 nachher=128 geaendert=1" im Protokoll, und der
+// Rumpf war null Byte lang.
+//
+// Geprueft werden die beiden Werte gegen die Bytes, nicht auf blosses
+// Vorhandensein: rumpf-vorher gegen den Rumpf der Eingabe, rumpf-nachher
+// gegen den der Ausgabe. Damit misst dieser Satz zugleich nach, dass die
+// Funktion den Rumpf an derselben Stelle beginnen laesst wie der Leser.
+//
+static void PruefeRumpfMass(const CString& szSpur, const char* pszEingabe,
+							const CString& szAusgabe)
+{
+	CString		szErwartet;
+
+	szErwartet.Format("rumpf-vorher=%d rumpf-nachher=%d",
+					  RumpfVon( CString( pszEingabe ) ).GetLength(),
+					  RumpfVon( szAusgabe ).GetLength());
+
+	if ( szSpur.Find( szErwartet ) < 0 )
+		TT_Fail("die Spurmarke muss \"%s\" nennen - sie sagt: %s",
+				(const char*) szErwartet, (const char*) szSpur);
+}
+
 void RunE101Tests(void)
 {
 	CString		szDatei, szSpur;
@@ -119,6 +250,19 @@ void RunE101Tests(void)
 			 "der Rumpf selbst muss erhalten bleiben");
 	TT_CHECK_MSG(Hat(szDatei, "g\xFCltig"),
 			 "die Umlaut-Bytes muessen unveraendert durchgehen");
+
+	//
+	// Gegenprobe zum Pruefsatz selbst (Arbeitsweise/schranke-gegentesten.md):
+	// er muss den Normalfall - Marker auf eigener Zeile - unbeanstandet
+	// durchlassen. Eine Schranke, die immer anschlaegt, ist so wertlos wie
+	// eine, die nie anschlaegt.
+	//
+	{
+		const char* const	kTags[] = { "<x-html>", "</x-html>" };
+
+		PruefeJedesByte(kSelbstVerfasst, szDatei, kTags, 2);
+		PruefeRumpfMass(szSpur, kSelbstVerfasst, szDatei);
+	}
 	TT_EndTest();
 
 	// ------------------------------------------------------------------
@@ -159,7 +303,27 @@ void RunE101Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------------
-	TT_BeginTest("E-101: ohne Kopfzeilen wird nur der Marker entfernt");
+	// ------------------------------------------------------------------
+	// BEFUND E-101, zweiter Teil. Dieser Test hat frueher das Gegenteil verlangt:
+	// "ohne Kopfzeilen wird auch keine erfunden". Der Grundsatz stimmt und
+	// bleibt - ERFUNDEN wird nichts. Aber er galt auch dort, wo die Datei
+	// dadurch unbrauchbar wurde.
+	//
+	// Gregor hat am 17.09.2026 mit 1.0.69 mehrere Nachrichten gespeichert.
+	// Seine Spurmarke:
+	//
+	//   kopfzeilen=0 trenner=0 content-type-vorhanden=0
+	//   bytes-vorher=102006 nachher=101985
+	//   rumpf-vorher=102006 rumpf-nachher=101985
+	//
+	// nachher == rumpf-nachher heisst: NICHTS dazugekommen. Seine Datei
+	// trug HTML ohne MIME-Version, ohne Content-Type, ohne Zeichensatz -
+	// genau der Zustand, den er als "datei gespeichert, aber unbrauchbar"
+	// gemeldet hatte. E-101 war also nur behoben, wenn "Kopfzeilen
+	// einschliessen" AN war - und laut E-98 ist das Kaestchen auf
+	// Windows 10 gar nicht anwaehlbar.
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 zweiter Teil: ohne Kopfzeilen bekommt HTML trotzdem seinen Content-Type");
 	bGeaendert = UTE101_SpeicherfassungAufbereiten(
 					"<x-html>\r\n<html><body>Hallo</body></html>\r\n</x-html>\r\n",
 					false, szDatei, szSpur);
@@ -167,8 +331,53 @@ void RunE101Tests(void)
 	TT_CHECK_MSG(bGeaendert, "der Marker muss weg");
 	TT_CHECK_MSG(!Hat(szDatei, "x-html"),
 			 "kein Marker mehr in der Datei");
+	TT_CHECK_MSG(Hat(szDatei, "Content-Type: text/html"),
+			 "ohne Content-Type zeigt jeder Leser HTML-Quelltext");
+	TT_CHECK_MSG(Hat(szDatei, "MIME-Version: 1.0"),
+			 "MIME-Version gehoert dazu");
+	TT_CHECK_MSG(Hat(szDatei, "<html><body>Hallo</body></html>"),
+			 "der Rumpf selbst bleibt vollstaendig");
+	TT_CHECK_MSG(Hat(szSpur, "mime-ergaenzt=1"),
+			 "die Spurmarke muss sagen, dass sie ergaenzt hat");
+	TT_CHECK_MSG(!Hat(szDatei, "From:"),
+			 "die Kopfzeilen der NACHRICHT bleiben draussen - das war die Bitte");
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	// Die Gegenprobe, und sie ist die wichtigere: reiner us-ascii-Text
+	// ohne Marker bekommt WEITERHIN NICHTS. Dort ist ohne Angabe nichts
+	// misszuverstehen, und wer einen Textausschnitt sichert, will genau
+	// die Zeichen und keine Kopfzeilen. Ohne diesen Test waere aus der
+	// Behebung ein "jede Datei bekommt jetzt Kopfzeilen" geworden.
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 Gegenprobe zum zweiten Teil: reiner ASCII-Text ohne Kopfzeilen bleibt unberuehrt");
+	bGeaendert = UTE101_SpeicherfassungAufbereiten(
+					"Guten Tag. Nur Text, keine Umlaute.\r\n",
+					false, szDatei, szSpur);
+	TT_Note("%s", (const char*) szSpur);
 	TT_CHECK_MSG(!Hat(szDatei, "Content-Type"),
-			 "ohne Kopfzeilen wird auch keine erfunden");
+			 "hier wird nichts erfunden - es gibt nichts zu erklaeren");
+	TT_CHECK_MSG(!Hat(szDatei, "MIME-Version"),
+			 "auch keine MIME-Version");
+	TT_CHECK_MSG(Hat(szSpur, "mime-ergaenzt=0"),
+			 "und die Spurmarke sagt es");
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	// Und der dritte Fall: KEIN HTML, aber ein Hochbyte. Ohne charset
+	// wird aus dem 0xFC je nach Leser ein anderes Zeichen.
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 zweiter Teil: Hochbyte ohne Kopfzeilen bekommt seinen Zeichensatz");
+	bGeaendert = UTE101_SpeicherfassungAufbereiten(
+					"Das ist g\xFCltig.\r\n",
+					false, szDatei, szSpur);
+	TT_Note("%s", (const char*) szSpur);
+	TT_CHECK_MSG(Hat(szDatei, "charset=\"ISO-8859-1\""),
+			 "ohne charset wird aus 0xFC Buchstabensalat");
+	TT_CHECK_MSG(Hat(szDatei, "Content-Type: text/plain"),
+			 "ohne Marker ist es text/plain");
+	TT_CHECK_MSG(Hat(szDatei, "g\xFCltig"),
+			 "das Byte selbst bleibt unveraendert");
 	TT_EndTest();
 
 	// ------------------------------------------------------------------
@@ -318,6 +527,16 @@ void RunE101Tests(void)
 					 "die HTML-Huelle muss erhalten bleiben");
 		TT_CHECK_MSG(!Hat(szDatei, "x-html"),
 					 "der interne Marker muss weg sein - beide");
+
+		//
+		// Und jetzt der Satz, der den Schnitt nicht durchlaesst.
+		//
+		{
+			const char* const	kTags[] = { "<x-html>", "</x-html>" };
+
+			PruefeJedesByte(kEineZeile, szDatei, kTags, 2);
+			PruefeRumpfMass(szSpur, kEineZeile, szDatei);
+		}
 	}
 	TT_EndTest();
 
@@ -333,6 +552,13 @@ void RunE101Tests(void)
 		TT_Note("%s", (const char*) szSpur);
 		TT_CHECK_MSG(Hat(szDatei, "Text ohne schliessenden Marker"),
 					 "DATENVERLUST: der Rumpf ist verschwunden");
+
+		{
+			const char* const	kTags[] = { "<x-html>" };
+
+			PruefeJedesByte(kOhneEnde, szDatei, kTags, 1);
+			PruefeRumpfMass(szSpur, kOhneEnde, szDatei);
+		}
 	}
 	TT_EndTest();
 
@@ -350,6 +576,14 @@ void RunE101Tests(void)
 					 "der Rumpf hinter dem Tag muss vollstaendig bleiben");
 		TT_CHECK_MSG(!Hat(szDatei, "b/\">"),
 					 "der Rest des Tags steht noch in der Datei");
+
+		{
+			const char* const	kTags[] =
+					{ "<x-html content-base=\"http://host/a>b/\">" };
+
+			PruefeJedesByte(kAttrGleicheZeile, szDatei, kTags, 1);
+			PruefeRumpfMass(szSpur, kAttrGleicheZeile, szDatei);
+		}
 	}
 	TT_EndTest();
 

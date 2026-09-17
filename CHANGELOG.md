@@ -61,6 +61,105 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.69 — die Spurmarke misst den Rumpf, und sie findet gleich etwas (E-101, P-38)
+
+> **Zu prüfen:** eine Nachricht über *File → Save As* sichern und die Datei
+> in einem anderen Programm öffnen. **Was zu sehen sein muss:**
+> `MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`,
+> **kein** `<x-html>` — und zwar **auch dann, wenn *Kopfzeilen
+> einschließen* aus ist.** Genau das ging vorher schief. Im `eudora.log`
+> steht die Zeile `E-101 speichern:` mit `rumpf-vorher=`, `rumpf-nachher=`
+> und `mime-ergaenzt=`; sie erscheint jetzt ohne besondere Einstellung.
+
+**Die Kurzfassung: eine Messung wurde scharf gemacht, und sie hat sofort
+einen Datenverlust an Brauchbarkeit gefunden, den niemand gesehen hatte.**
+
+### 1. Die Spurmarke konnte einen verschwundenen Rumpf nicht zeigen (P-38)
+
+Sie nannte nur die Gesamtlängen. Die **wachsen** durch die drei neuen
+Kopfzeilen auch dann, wenn der Rumpf ganz verschwindet:
+
+```
+bytes-vorher=104 nachher=128 geaendert=1     ← und NULL Byte Rumpf
+```
+
+Jetzt stehen `rumpf-vorher` und `rumpf-nachher` daneben.
+
+### 2. Sie stand auf einem Kanal, der in der Vorgabe AUS ist
+
+Gregor speicherte mehrere Nachrichten — im Protokoll stand **keine
+einzige** `E-101 speichern:`-Zeile. Nicht, weil nichts geschah:
+
+```
+LogLevel 25759 (0x649F)        DEBUG_MASK_MISC = 0x8000 → nicht enthalten
+```
+
+Die Zeile war seit `7.2.0.66` da und ist **nie geschrieben worden**. Damit
+war auch die Behebung von E-101 selbst nie über ihre eigene Spur belegt.
+Jetzt `DEBUG_MASK_DIALOG` (`0x08`) — in der Vorgabe **an**, und inhaltlich
+richtig, denn der Weg läuft über den Speichern-Dialog. Dasselbe stand hier
+schon einmal an: `filtersd.cpp:1147` zu **E-73**, wörtlich *„eine
+Sicherheitsmeldung darf nicht abschaltbar sein"*.
+
+### 3. Und dann zeigte sie den zweiten Teil von E-101
+
+An Gregors eigenen Speichervorgängen, nicht an einem Testfall:
+
+```
+kopfzeilen=0 trenner=0 content-type-vorhanden=0
+bytes-vorher=102006 nachher=101985 rumpf-vorher=102006 rumpf-nachher=101985
+```
+
+**`rumpf-vorher` minus `rumpf-nachher` = 21 Byte** — `<x-html>` plus CRLF
+und `</x-html>` plus CRLF. Kein Byte zuviel: **P-28 hält an echten Daten.**
+
+Aber: **`nachher` ist gleich `rumpf-nachher`.** Es kam **nichts** dazu.
+Seine Dateien trugen HTML ohne `MIME-Version`, ohne `Content-Type`, ohne
+Zeichensatz — *„datei gespeichert, aber unbrauchbar"*, unverändert. Der
+ganze Kopfzeilenblock hängt an `if ( !szKopf.IsEmpty() )`; ohne
+*Kopfzeilen einschließen* ist er leer. **E-101 war nur behoben, wenn der
+Schalter an war** — und laut **E-98** ist das Kästchen auf Windows 10 gar
+nicht anwählbar.
+
+**Behoben, aber eng:** erfunden wird weiterhin nichts. Ergänzt wird nur,
+was der Leser braucht, um die Bytes zu deuten — bei **HTML** und bei
+**Hochbytes**. Reiner `us-ascii`-Text bleibt unberührt. *„Kopfzeilen
+einschließen"* meint `From`, `To`, `Subject`, `Date`, nicht die Erklärung,
+was die Bytes darunter sind.
+
+### 4. Der Prüfsatz der Tests ließ genau diesen Schnitt durch
+
+Sie fragten `Hat()` — *„enthält die Ausgabe X"*. Neu ist der byteweise
+Vergleich. **Die Gegenprobe dazu, auf Gregors *„kommt mir suspekt vor"*:**
+ein einziges Byte am Rumpfende weggenommen —
+
+```
+[FEHL] E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt
+         DATENVERLUST: der Rumpf soll 55 Byte haben, hat aber 54
+ Ergebnis: 169 Tests, 163 bestanden, 6 fehlgeschlagen
+```
+
+**In allen vier Fällen hat das alte `Hat()` nichts gemerkt.** Danach
+zurückgebaut.
+
+### 5. Jede Notiz stand im Protokoll unter dem falschen Test
+
+`TT_Note` druckte sofort, der Testname erst in `TT_EndTest` — **alle 169
+Tests** betroffen, seit es die Funktion gibt. Behoben.
+
+**Gemessen:** Bau 0 Fehler. **171 Tests, 171 bestanden.**
+
+**Am laufenden Programm gemessen ist der Befund.** Gregors zwei
+Protokollzeilen aus `1.0.69` belegen dreierlei live: dass die neuen Werte
+aus P-38 überhaupt erscheinen, dass **P-28 an echten Daten hält** (zweimal
+exakt 21 Byte) und dass der `Content-Type` fehlt.
+
+**Nicht gemessen ist die Behebung dazu** — sie entstand *nach* seiner
+Messung, sein `1.0.69` trug sie noch nicht. Offen ist also nur die
+Bestätigung, dass eine gespeicherte Datei jetzt **mit** `Content-Type`
+herauskommt, nicht der Nachweis, dass etwas falsch war. Deshalb steht sie
+oben unter *Zu prüfen*.
+
 ## 7.2.0.68 — Bilder, die größer sind als angegeben (E-106)
 
 > **Zu prüfen:** `LogLevel=58527` in der `Eudora.ini` lassen, die
@@ -104,7 +203,6 @@ zugedeckter Text ist der teurere Fehler.
 **Nicht nachgewiesen, und das gehört dazu:** mein Prüfstand lädt die Bilder
 nicht — null Ladespuren, während Gregors Protokoll 27 hat. Die Behebung ist
 dort nicht messbar. **Nur sein Lauf kann sie belegen.**
-
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
 > **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)

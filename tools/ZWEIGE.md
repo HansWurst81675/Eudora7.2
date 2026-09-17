@@ -67,9 +67,10 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `lektor-doku-1063` | 15.09.2026 | von Gregor nachträglich angenommen; der Name war von mir vorgegeben, nicht abgestimmt. Lektor-Durchgang für 1.0.63 |
 | `e101-speichern-dateiformat` | 17.09.2026 | **Eine Absprache zu diesem Namen ist hier nicht belegt** — der Zweig steht in dieser Liste, weil er **benutzt** wird (7.2.0.64 bis 7.2.0.66, E-99 bis E-101; auf `origin` gepusht), nicht als Beleg für eine Zustimmung. Vom LEKTOR am 17.09.2026 nachgetragen, nachdem `tools/pruefe-branch.pl` ihn als fehlend meldete. Zweck: die gespeicherte Datei brauchbar machen — `Content-Type` ergänzen, Eudoras internen Marker `<x-html>` entfernen. **Gregor gehört gefragt, ob der Name so bleibt** |
 
-| `e103-darstellung-bilder` | 17.09.2026 | **Von Gregor bestätigt**, Name auf Vorschlag gewählt. Quellstand **7.2.0.68**, Paketnummer **1.0.68**. Zweck: Bilder liegen über dem Text (**E-103**), dazu der Datenverlust **P-28** aus `PRUEFER-14.md` und der Binärmüll in der Bild-Spurmarke (**P-11**) |
+| `e103-darstellung-bilder` | 17.09.2026 | **Von Gregor bestätigt**, Name auf Vorschlag gewählt. Daraus entstand Paket 1.0.67 (17.09.2026). Zweck: Bilder liegen über dem Text (**E-103**), dazu der Datenverlust **P-28** aus `PRUEFER-14.md` und der Binärmüll in der Bild-Spurmarke (**P-11**) |
 | `wt/lektor-main-pruefung` | 17.09.2026 | Arbeitszweig des LEKTOR für die Prüfung von `main` auf Unwahrheiten. Bericht `Befunde/LEKTOR-13.md` |
 | `wt/pruefer-main-pruefung` | 17.09.2026 | Arbeitszweig des PRUEFER für dieselbe Prüfung, Seite Quelltext. Bericht `Befunde/PRUEFER-14.md`, 868 Zeilen |
+| `p38-spurmarke-rumpf` | 17.09.2026 | Quellstand **7.2.0.69**, Paketnummer **1.0.69**. **Von Gregor bestätigt**, aus drei Vorschlägen gewählt, **bevor** der Zweig entstand. Zweck: **P-38** — die E-101-Spurmarke nennt jetzt `rumpf-vorher`/`rumpf-nachher`, damit ein Schnitt am Rumpf nicht länger stumm bleibt; dazu der verschärfte Prüfsatz der drei **P-28**-Tests (byteweise statt „enthält X"). **P-28 selbst war bei Arbeitsbeginn bereits in `main` behoben** (`e28875c`, PR #59) |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
