@@ -785,6 +785,46 @@ Das ist keine Vermutung über die Ursache, sondern die Feststellung, dass die
 Zahlen nicht aufgehen. Eine Marke am **Eingang** von `PgLoadUrlImage` — vor
 jeder Bedingung — trennt das in einem Lauf.
 
+### Nachtrag vom selben Tag: `8cbe440` überholt Teile von P-37 bis P-41
+
+Während dieser Prüfung hat Gregor auf `e103-darstellung-bilder` committet:
+`8cbe440 „E-103: Bilder liegen nicht mehr ueber dem Text (1.0.67)"`. Der Stand
+oben bezieht sich auf `origin/main`; damit er nicht am Tag seiner Entstehung
+veraltet ist, hier der Abgleich:
+
+* **P-37, Nummer — erledigt.** `E-97 Nachtrag` heißt jetzt `E-103 Nachtrag`.
+* **P-37, Tautologie — steht.** Die neue Marke schreibt weiterhin
+  `(long)embed->width, (long)embed->height` **hinter** den Zuweisungen bei
+  `:462/465`. Deshalb steht auch in Gregors neuer Messung
+  `quelle=202x60 embed=202x60`: die zweite Zahl ist eine Kopie der ersten, kein
+  zweiter Messwert. Die Aussage *„Eudora kennt die echte Größe"* trägt allein
+  `quelle`. Wer später `embed=` als Gegenprobe liest, liest nichts.
+* **P-39 — halb erledigt.** `pos=%ld style=%ld` steht jetzt in der Marke, damit
+  ist die Stelle sichtbar. Der Vergleich selbst ist unverändert
+  `embed->style == embed_ptr->style` und nimmt den **ersten** Treffer. Mit
+  einem Bild ohne Maße fällt das nicht auf; mit zweien, die denselben Stil
+  tragen, schon. Offen.
+* **P-40 — erledigt und gemessen.** Die neue Marke `E-103 Zeilenhoehe:
+  ascent-vorher=60 bildhoehe=60 nachgezogen=0` beantwortet genau die Frage.
+* **P-41 — erklärt.** Gregors Gegenprobe (*„Logo auf einen Rechner, den es nicht
+  gibt: keine einzige der drei E-103-Marken erscheint"*) ist die Erklärung für
+  die vier fehlenden `Nachtrag`-Zeilen im Protokoll von 1.0.65: die Bilder
+  wurden nicht geladen. Damit ist die Zahl aufgegangen.
+* **Zur Kenntnis, kein Mangel:** `E103_MINDESTHOEHE` = 48 greift im
+  `else`-Zweig von `if (image_record.source_height)`, also nur bei Bildern
+  **ohne** `height` im HTML. Ein Zählpixel mit `height="1"` ist nicht betroffen
+  (es nimmt den `if`-Zweig). Betroffen ist ein Bild ganz ohne Maßangabe: es
+  bekommt 48 Punkte Zeile, bis es geladen ist. In Gregors Doctolib-Nachricht
+  sind das zehn Bilder mit echten Höhen von 49 bis 683 — dort passt die Zahl.
+  Bei einem 16-Punkt-Symbol ohne Maßangabe entsteht bis zum Laden eine Lücke.
+  Das ist die Abwägung, die im Kommentar auch so steht; ich vermerke sie nur,
+  damit sie beim nächsten Bildbefund nicht neu entdeckt wird.
+* **P-35 bleibt und wird durch E-103 wichtiger:** `PaigeHTMLImportTextAscent`
+  ist dateilokal statisch und wird zwischen Nachrichten nicht zurückgesetzt.
+  `ProcessEmbed:3096` schreibt ihn in jeden Embed-Stil zurück. Trägt er den
+  Wert der vorigen Nachricht, verschiebt das jede Rechnung, die jetzt auf 13
+  als Ausgangswert gebaut ist.
+
 ---
 
 # Reihenfolge, in der ich das angehen würde
