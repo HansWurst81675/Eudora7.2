@@ -3948,6 +3948,21 @@ bool E101SpeicherfassungAufbereiten(
 	CString		szRumpf = szAlles.Mid( nRumpfAb );
 
 	//
+	// PRUEFER P-38: die Laenge des Rumpfs, BEVOR Schritt 2 daran schneidet.
+	//
+	// Ohne diesen Wert ist die Marke bei jedem Schnitt am Rumpf stumm. Sie
+	// nannte nur die Gesamtlaengen - und die WACHSEN durch die drei neuen
+	// Kopfzeilen auch dann, wenn der Rumpf ganz verschwindet. Bei P-28 stand
+	// woertlich "bytes-vorher=104 nachher=128 geaendert=1" im Protokoll, und
+	// der Rumpf war dabei NULL Byte lang; die Zeile las sich wie ein Erfolg.
+	//
+	// Zwei Werte in eine Ausgabe (Arbeitsweise/zwei-werte-in-eine-ausgabe.md):
+	// aus "rumpf-vorher=72 rumpf-nachher=0" ist der Verlust in einer einzigen
+	// Zeile zu lesen, ohne zweite Messung und ohne Vergleich mit frueher.
+	//
+	const int	nRumpfVorher = szRumpf.GetLength();
+
+	//
 	// 2. Den x-html-Marker entfernen.
 	//
 	// Gesucht wird ohne Ruecksicht auf Gross- und Kleinschreibung, denn
@@ -4205,7 +4220,8 @@ bool E101SpeicherfassungAufbereiten(
 
 	out_szSpur.Format(
 		"E-101 speichern: kopfzeilen=%d trenner=%d xhtml=%d content-type-vorhanden=%d "
-		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d geaendert=%d",
+		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d rumpf-vorher=%d "
+		"rumpf-nachher=%d geaendert=%d",
 		bHatKopfzeilen ? 1 : 0,
 		( nKopfEnde > 0 ) ? 1 : 0,
 		bWarHtml ? 1 : 0,
@@ -4214,6 +4230,8 @@ bool E101SpeicherfassungAufbereiten(
 		pszCharset,
 		nLen,
 		szNeu.GetLength(),
+		nRumpfVorher,
+		szRumpf.GetLength(),
 		bGeaendert ? 1 : 0 );
 
 	return bGeaendert;
