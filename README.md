@@ -78,8 +78,15 @@ verschickt.
   weitergeleiteten Nachricht (7.2.0.59, **E-93** — es gingen 17.889 statt
   105.125 Byte hinaus) und die **Bildgrößen im Verfassenfenster**: jedes Bild
   bekam die Zeilenhöhe des ersten und wurde dadurch abgeschnitten oder
-  gequetscht (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.64 wieder
-  weg). Wer das braucht, baut selbst.
+  gequetscht (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.63 wieder
+  weg). **Und der Absturz beim Speichern einer Nachricht** (7.2.0.64,
+  **E-97**) — siehe den Punkt darunter. Wer das braucht, baut selbst.
+* **Im Release `v1.0.50` beendet *File → Save As* Eudora sofort** (**E-97**):
+  der Windows-Dateidialog ruft `CSaveAsDialog::OnTypeChange` auf, bevor der
+  Dialog fertig aufgebaut ist, und ein ungeprüfter `GetParent()` liefert dort
+  `NULL`. Der Fehler steckt in **jeder** Fassung von 1.0.49 bis 1.0.63.
+  Behoben im Quellstand **7.2.0.64**; wer das veröffentlichte Paket benutzt,
+  speichert Nachrichten bis dahin besser nicht.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)

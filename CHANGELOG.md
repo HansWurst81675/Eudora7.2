@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 15.09.2026)
+## Noch offen (Stand 17.09.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -64,6 +64,9 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 > **Zu prüfen:** eine Nachricht auswählen, **File → Save As**. Der Dateidialog
 > muss aufgehen, und Eudora muss danach noch da sein.
+
+**Gebaut am 17.09.2026.** Ein Paket ist zu dieser Fassung **noch nicht
+geschnürt** — das letzte liegt als `Releases/Eudora72-1.0.63-release`.
 
 **Der Fehler war in jeder Fassung dieses Projekts** — 1.0.49 bis 1.0.63
 gemessen, auch im veröffentlichten Release `v1.0.50`. Aufgefallen ist er erst,
