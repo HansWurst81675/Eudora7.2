@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.66** / `VERSION` **1.0.66**
+**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.67** / `VERSION` **1.0.67**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -36,16 +36,16 @@ Nullzeiger-Stelle wie E-97 an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
 uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
 **E-101** (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
 Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
-7.2.0.66, am laufenden Programm geprüft, **160 Tests**). **Offen bleibt
+7.2.0.67, am laufenden Programm geprüft, **160 Tests**). **Offen bleibt
 E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Gebaut ist 7.2.0.66; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
+**Gebaut ist 7.2.0.67; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
 17.09.2026: `Releases/Eudora72-1.0.65-release`, letztes ZIP
-`Eudora72-1.0.64-release.zip`; **zu 1.0.66 gibt es noch kein Paket**),
+`Eudora72-1.0.64-release.zip`; **zu 1.0.67 gibt es noch kein Paket**),
 **veröffentlicht ist `v1.0.64`** — am 17.09.2026 um 10:23 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert; **1.0.65 und 1.0.66 sind nicht
+herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.67 sind nicht
 freigegeben**.
 
 > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Hier stand *„veröffentlicht

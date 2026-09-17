@@ -96,7 +96,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 **Der nächste Schritt gehört Gregor: vierzehn gebaute Behebungen warten auf
 sein Urteil** — am 13.09.2026 über alle Urteilszeilen in `BEFUNDE.md` gezählt.
 Sie stecken alle im zuletzt geschnürten Paket **1.0.63** und im Quellstand
-**7.2.0.66**; die Fassungsnummern unten sagen nur, wann sie entstanden sind. Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
+**7.2.0.67**; die Fassungsnummern unten sagen nur, wann sie entstanden sind. Alles Weitere steht ausführlich in [AUFGABEN.md](AUFGABEN.md) unter
 *Die Hauptarbeit*; hier die Reihenfolge in einem Satz je Punkt.
 
 1. **A-4 / E-49, E-52, E-54 und E-55 prüfen** (gebaut in 7.2.0.26 bis

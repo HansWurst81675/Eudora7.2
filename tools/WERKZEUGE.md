@@ -1,5 +1,8 @@
 # Die Werkzeuge in `tools/`
 
+> **Stand 7.2.0.67 / Paket 1.0.67.** Die Liste wird fortgeschrieben; die
+> Fassungsangabe sagt, gegen welchen Quellstand sie zuletzt geprüft wurde.
+
 Diese Übersicht stand bis zum 09.09.2026 in [README.md](../README.md). Sie ist
 dorthin nicht zurückzuschieben: eine README beantwortet, **was** das Projekt
 ist und wie man es baut — die Innenausstattung der Werkstatt gehört daneben.

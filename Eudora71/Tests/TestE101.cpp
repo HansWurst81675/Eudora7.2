@@ -292,6 +292,67 @@ void RunE101Tests(void)
 	}
 	TT_EndTest();
 
+
+	// ------------------------------------------------------------------
+	// PRUEFER P-28, DATENVERLUST in main: die ganze erste Zeile wurde
+	// entfernt, sobald sie auf > endete. Steht der Marker mit dem Text auf
+	// derselben Zeile - und Eudoras eigener Quelltext sagt, dass er das tut
+	// (msgutils.cpp:2374) -, war der komplette Rumpf weg. Die Datei wurde
+	// dabei GROESSER, weil die Kopfzeilen dazukamen; deshalb faellt es
+	// niemandem auf.
+	// ------------------------------------------------------------------
+
+	TT_BeginTest("E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt");
+	{
+		const char* const kEineZeile =
+			"From: a@example.invalid\r\n"
+			"Subject: alles auf einer Zeile\r\n"
+			"\r\n"
+			"<x-html><html><body>Der ganze Text der Nachricht.</body></html></x-html>\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kEineZeile, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "Der ganze Text der Nachricht."),
+					 "DATENVERLUST: der Rumpf ist verschwunden");
+		TT_CHECK_MSG(Hat(szDatei, "<html><body>"),
+					 "die HTML-Huelle muss erhalten bleiben");
+		TT_CHECK_MSG(!Hat(szDatei, "x-html"),
+					 "der interne Marker muss weg sein - beide");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-28: Marker ohne Gegenstueck, Text auf derselben Zeile");
+	{
+		const char* const kOhneEnde =
+			"From: a@example.invalid\r\n"
+			"\r\n"
+			"<x-html><html><body>Text ohne schliessenden Marker</body></html>\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kOhneEnde, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "Text ohne schliessenden Marker"),
+					 "DATENVERLUST: der Rumpf ist verschwunden");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-28: > im Attributwert beendet das Tag nicht");
+	{
+		const char* const kAttrGleicheZeile =
+			"From: a@example.invalid\r\n"
+			"\r\n"
+			"<x-html content-base=\"http://host/a>b/\"><html>Inhalt</html>\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kAttrGleicheZeile, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "<html>Inhalt</html>"),
+					 "der Rumpf hinter dem Tag muss vollstaendig bleiben");
+		TT_CHECK_MSG(!Hat(szDatei, "b/\">"),
+					 "der Rest des Tags steht noch in der Datei");
+	}
+	TT_EndTest();
+
 	TT_BeginTest("E-101: leere Eingabe aendert nichts und stuerzt nicht ab");
 	bGeaendert = UTE101_SpeicherfassungAufbereiten("", true, szDatei, szSpur);
 	TT_CHECK_MSG(!bGeaendert, "an nichts ist nichts zu tun");

@@ -3756,11 +3756,69 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		out_szHtml = szAus;
 	}
 
+	//
+	// BEFUND E-103: der Anfang des Rumpfs gehoert in die Marke.
+	//
+	// Am 17.09.2026 meldete diese Marke fuer die Doctolib-Nachricht
+	// gesamt=0 bei 9092 Byte - kein einziges <img>, obwohl das Original
+	// 23201 Byte und fuenf Bilder hat. Ohne zu sehen, WAS hier ankommt,
+	// laesst sich nicht entscheiden, ob QuoteText die Bilder verliert
+	// oder ob sie nie im Rumpf waren. Zwei Werte in eine Ausgabe -
+	// Arbeitsweise/zwei-werte-in-eine-ausgabe.md.
+	//
+	CString		szAnfang;
+	long		nCrLf   = 0;
+	long		nNurLf  = 0;
+	long		nEscImg = 0;
+	{
+		const int	nZeig = ( nLen < 160 ) ? nLen : 160;
+
+		szAnfang = CString( pszHtml, nZeig );
+
+		// Zeilenschaltungen wuerden die Protokollzeile zerreissen.
+		szAnfang.Replace( "\r", " " );
+		szAnfang.Replace( "\n", " " );
+
+		//
+		// BEFUND E-103: die Zeilenenden zaehlen.
+		//
+		// FindBody (msgutils.cpp:333) sucht "\r\n\r\n". Liegen im Postfach
+		// nackte LF, findet es die Grenze nie und liefert das Ende der
+		// Zeichenkette zurueck. Dann ist fuer jeden Aufrufer der ganze
+		// Rumpf leer - und die Nachricht wird als ein einziger Textblock
+		// behandelt. Ob das hier der Fall ist, sagt nur die Messung.
+		//
+		// Dazu: kommt "&lt;img" vor, ist das HTML als TEXT durchgereicht
+		// worden (Text2Html hat die spitzen Klammern geschuetzt) - dann
+		// sind die Bilder nicht verloren, sondern unsichtbar gemacht.
+		//
+		for ( int p = 0; p < nLen; p++ )
+		{
+			if ( pszHtml[p] == '\n' )
+			{
+				if ( p > 0 && pszHtml[p-1] == '\r' )
+					nCrLf++;
+				else
+					nNurLf++;
+			}
+		}
+
+		const char *	pSuch = pszHtml;
+
+		while ( ( pSuch = strstr( pSuch, "&lt;img" ) ) != NULL )
+		{
+			nEscImg++;
+			pSuch += 7;
+		}
+	}
+
 	out_szSpur.Format(
 		"E-89 Bilder im Editor: gesamt=%d unveraendert=%d aus-CSS=%d "
-		"eingebettet=%d ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d",
+		"eingebettet=%d ohne-Mass=%d gedeckelt=%d geaendert=%d Bytes vorher=%d nachher=%d crlf=%ld nur-lf=%ld esc-img=%ld anfang=[%s]",
 		nBilder, nSchonGut, nAusCss, nEingebettet, nOhneMass, nGedeckelt, bGeaendert ? 1 : 0,
-		nLen, bGeaendert ? out_szHtml.GetLength() : nLen );
+		nLen, bGeaendert ? out_szHtml.GetLength() : nLen,
+		nCrLf, nNurLf, nEscImg,
+		(LPCTSTR) szAnfang );
 
 	return bGeaendert;
 }
@@ -3920,25 +3978,78 @@ bool E101SpeicherfassungAufbereiten(
 	//
 	if ( szKlein.Left( 7 ) == "<x-html" )
 	{
-		const int	nZeile = szRumpf.Find( '\n' );
-		const int	nBis   = ( nZeile < 0 ) ? szRumpf.GetLength() : nZeile + 1;
-
-		CString		szErste = szRumpf.Left( nBis );
-
-		while ( !szErste.IsEmpty() &&
-				( szErste[szErste.GetLength()-1] == '\r' ||
-				  szErste[szErste.GetLength()-1] == '\n' ) )
-			szErste = szErste.Left( szErste.GetLength() - 1 );
-
 		//
-		// Nur wenn die GANZE Zeile der Marker ist. Ein '>' im Attributwert
-		// (<x-html content-base="http://host/a>b/">) hoert damit auf, einen
-		// Rest stehen zu lassen.
+		// PRUEFER P-28, DATENVERLUST: es wird das TAG entfernt, nicht die
+		// ZEILE.
 		//
-		if ( szErste.Right( 1 ) == ">" )
+		// Der Entwurf davor schnitt die ganze erste Zeile weg, sobald sie
+		// auf '>' endete. Steht der Marker mit dem Text auf DERSELBEN
+		// Zeile, war damit der komplette Rumpf weg. Der PRUEFER hat es am
+		// 17.09.2026 an der uebersetzten Funktion gemessen:
+		//
+		//   "<x-html><html><body>Der ganze Text...</body></html></x-html>"
+		//     104 Byte rein, 128 raus - und NULL Byte Rumpf.
+		//
+		// Die Datei wird dabei GROESSER, weil die Kopfzeilen dazukommen.
+		// Deshalb faellt der Verlust niemandem auf.
+		//
+		// Dass der Fall vorkommt, steht in Eudoras eigenem Quelltext:
+		// msgutils.cpp:2374 sagt woertlich "<x-html> And the message all
+		// comes on the same line", IDS_MIME_RICH_ON ist "<%s>" ohne
+		// Zeilenende (EudoraRes.rc:9564), und etf2html.cpp:200 schreibt
+		// den Marker ebenso. Nur der POP-Weg setzt ihn auf eine eigene
+		// Zeile.
+		//
+		// Das Ende des Tags ist das erste '>' AUSSERHALB von
+		// Anfuehrungszeichen - ein <x-html content-base="http://host/a>b/">
+		// traegt eines im Attributwert. Ueber die erste Zeile hinaus wird
+		// nicht gesucht: dort stuende in einer Klartextnachricht das
+		// Zitatzeichen (P-18).
+		//
+		int			nZu = -1;
+		bool		bInAnfuehrung = false;
+
+		for ( int q = 0; q < szRumpf.GetLength(); q++ )
+		{
+			const char	c = szRumpf[q];
+
+			if ( c == '\r' || c == '\n' )
+				break;
+
+			if ( c == '"' )
+				bInAnfuehrung = !bInAnfuehrung;
+			else if ( c == '>' && !bInAnfuehrung )
+			{
+				nZu = q;
+				break;
+			}
+		}
+
+		if ( nZu >= 0 )
 		{
 			bWarHtml = true;
-			szRumpf  = szRumpf.Mid( nBis );
+
+			int		nNach = nZu + 1;
+
+			//
+			// Steht hinter dem Tag nichts mehr auf der Zeile, faellt die
+			// Zeilenschaltung mit weg - sonst begaenne der Rumpf mit einer
+			// Leerzeile, die vorher nicht da war. Folgt Text, bleibt er
+			// stehen, und zwar vollstaendig.
+			//
+			const bool	bAlleinAufZeile =
+					( nNach >= szRumpf.GetLength() ||
+					  szRumpf[nNach] == '\r' || szRumpf[nNach] == '\n' );
+
+			if ( bAlleinAufZeile )
+			{
+				if ( nNach < szRumpf.GetLength() && szRumpf[nNach] == '\r' )
+					nNach++;
+				if ( nNach < szRumpf.GetLength() && szRumpf[nNach] == '\n' )
+					nNach++;
+			}
+
+			szRumpf = szRumpf.Mid( nNach );
 
 			// Und das Gegenstueck am Ende.
 			szKlein = szRumpf;
