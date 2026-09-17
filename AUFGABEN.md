@@ -36,7 +36,7 @@ Nullzeiger-Stelle wie E-97 an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
 uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
 **E-101** (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
 Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
-7.2.0.67, am laufenden Programm geprüft, **160 Tests**). **Offen bleibt
+7.2.0.67, am laufenden Programm geprüft, **169 Tests**). **Offen bleibt
 E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.

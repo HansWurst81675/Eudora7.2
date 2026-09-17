@@ -169,6 +169,43 @@ vier Fassungen lang offen.
 
 Jetzt: `src=https://www.doctolib.fr/email_la…`
 
+### Die Kopfzeilen der gespeicherten Nachricht kleben nicht mehr zusammen (E-104)
+
+> **Zu prüfen:** eine Nachricht aus dem **geöffneten Fenster** speichern (nicht
+> aus der Postfachliste) und die Datei aufmachen. `From:`, `Subject:` und `Cc:`
+> müssen **jede in einer eigenen Zeile** stehen.
+
+Gregor speicherte mit 1.0.65 eine Nachricht aus dem geöffneten Fenster. In der
+Datei stand:
+
+```
+From: "markus.bakus@gmx.de" <markus.bakus@gmx.de> Subject: Re: Fwd: Deine
+Anzeige 'Zu verschenken: kleine Gefäße' Cc:
+```
+
+Drei Kopfzeilen in einer. Im Postfach steht jede für sich — beide Fassungen
+nebeneinandergelegt und gemessen.
+
+**Ursache 1:** `CCompMessageDoc::SaveAsFile` schickte `UnwrapText` über die
+**ganze** Nachricht. In `tocview.cpp` steht an derselben Stelle der Schutz
+*„Don't unwrap the headers!"* — auf dem Fensterweg fehlte er.
+
+**Ursache 2, und die ist die eigentliche:** dass „Absätze raten" überhaupt lief,
+ist eine **Folge von E-100**. Gregors `Eudora.ini` trug `GuessParagraphs=7179`
+und `IncludeHeaders=16720` — uninitialisierte Stapelwerte, die E-100 dort
+hineingeschrieben hatte. Jeder Wert ungleich 0 gilt als eingeschaltet. Er hat
+es nie gewählt und konnte es mangels Kästchen (**E-98**) gar nicht wählen.
+
+**E-100 hat das Loch gestopft, die schon verdorbenen Werte aber nicht
+repariert.** Das tut jetzt `E104SchalterLesen`: was weder 0 noch 1 ist, geht auf
+die Vorgabe 0 zurück **und wird berichtigt zurückgeschrieben**. **Damit muss
+niemand ein neues Mailverzeichnis anlegen.**
+
+Zwei Punkte wurden vor dem Paketbau eigens nachgerechnet: `UnwrapText` arbeitet
+**im Puffer** und liefert denselben Zeiger zurück — es geht kein Text verloren;
+und `GetMessageHeaders` hängt am Ende eine Leerzeile an, `FindBody` findet die
+Grenze also.
+
 ### Was dazugekommen ist
 
 **Drei neue Spurmarken** in `PgEmbeddedImage.cpp`, die den Weg nach dem Import
