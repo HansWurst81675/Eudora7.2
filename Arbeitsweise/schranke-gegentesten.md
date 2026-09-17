@@ -125,3 +125,88 @@ stehenblieben — und der Ordner deshalb auch.
 Siehe [[fehlerklassen-abstellen]], [[lehren-anwenden-nicht-nur-schreiben]],
 [[schranke-liest-nur-code]], [[tests-vor-jedem-commit-laufen-lassen]] und
 [[pruefen-statt-vermuten]].
+
+## Nachtrag 17.09.2026: die Schranke hat den richtigen Satz abgewiesen — zweimal
+
+`tools/pruefe-behoben-belegt.pl` verlangt zu jedem neuen „behoben" einen
+Beleg. Beim Eintragen von **E-97** hat sie den Beleg abgewiesen, obwohl er
+dastand. Zweimal nachgebessert, zweimal aus einem anderen Grund.
+
+### Die beiden Gruende, am 17.09.2026 nachgemessen
+
+Gefahren mit `--datei` auf vier kuenstliche Zeilen, die sich nur im
+beanstandeten Stueck unterscheiden:
+
+| Fassung | Urteilstext (verkuerzt) | Ergebnis |
+|---|---|---|
+| f1 | *… waere Funktionsverlust, **kein** Fix. … am laufenden Programm **gegen**geprueft* | **abgewiesen** |
+| f2 | *… waere Funktionsverlust, **kein** Fix. … am laufenden Programm geprueft* | **abgewiesen** |
+| f3 | *… Der Dialog laeuft wieder. … am laufenden Programm geprueft* | durchgelassen |
+| f4 | wie f2, aber ein Satz mehr zwischen „kein" und dem Beleg | durchgelassen |
+
+**Grund 1 — das Muster ist enger als die Sprache.** Der Beleg lautet
+
+```perl
+qr/am\s+laufenden\s+Programm\s+(?:gemessen|belegt|best…tigt|gepr…ft)/
+```
+
+Nach dem Leerzeichen muss das Wort **mit** `gepr` anfangen. *„am laufenden
+Programm **gegen**geprueft"* ist sprachlich der **staerkere** Beleg — eine
+Gegenprobe ist mehr als eine Pruefung — und faellt durch. Zusammensetzungen
+mit Vorsilbe sind im Deutschen die Regel, nicht die Ausnahme
+(*nachgemessen*, *durchgespielt*, *gegengeprueft*); das Muster kennt keine.
+
+**Grund 2 — das Verneinungsfenster misst Abstand, nicht Sinn.** Die Schranke
+verwirft einen Beleg, wenn in den **45 Zeichen davor** ein Verneinungswort
+steht (`nicht`, `kein`, `ohne`, …). Das ist richtig gebaut und aus gutem
+Grund da: *„von Gregor ist nichts davon am laufenden Programm bestaetigt"*
+war der Wortlaut, mit dem E-85 einen Tag lang als behoben galt.
+
+Bei E-97 stand davor aber:
+
+> *„Sie einfach wegzulassen waere Funktionsverlust, **kein** Fix."*
+
+Nachgerechnet: der Treffer beginnt bei Zeichen **107**, `kein` steht bei
+**74**, Abstand **29 Zeichen** — also innerhalb des Fensters. Das „kein"
+gehoert zu einem **anderen Satz** und verneint etwas ganz anderes (naemlich
+eine verworfene Behebungsvariante). Zeile f4 beweist es: **dieselbe
+Verneinung, nur weiter weg, und die Schranke schweigt.** Was hier entschieden
+hat, war der Abstand — nicht die Aussage.
+
+### Why
+
+Diese Lehre sagt seit dem 08.09.2026: *„eine Schranke, die zweimal umsonst
+warnt, wird beim dritten Mal nicht mehr geglaubt."* Hier ist der Schaden
+genauer zu benennen, und er ist unangenehmer:
+
+**Der Fehlalarm formt den Text um, den er pruefen soll.** Ich habe nicht die
+Schranke geaendert, sondern meinen Satz — bis er durchging. Der Satz, den
+`BEFUNDE.md` jetzt traegt, ist der, den das Muster akzeptiert, nicht der, den
+ich schreiben wollte. Damit ist der Inhalt der Befunddatei am Ende eine
+Funktion des Musters. Das ist die teuerste Form des Fehlalarms, weil sie
+nichts sichtbar kaputt macht: die Schranke bleibt gruen, die Datei wird
+aermer.
+
+Und es ist derselbe Mechanismus wie in [[schranke-liest-nur-code]], eine
+Ebene hoeher: dort las eine Schranke ihre eigene Begruendung mit, hier misst
+sie **Abstand in Zeichen** und nennt es Verneinung.
+
+### Wie anwenden, zusaetzlich
+
+- **Zum Gegentest gehoert der Satz, den ich wirklich schreiben wuerde** —
+  nicht der glatteste Fall, der dem Muster entgegenkommt. Der erlaubte Fall
+  aus Punkt 2 oben ist bisher als *der Fehler knapp daneben* gedacht; er ist
+  auch *die eigene, normale Formulierung*.
+- **Ein Fenster in Zeichen ist eine Annahme ueber Satzbau.** Wo eine Schranke
+  mit einem Abstand arbeitet, gehoert ein Gegentest dazu, der **denselben
+  Inhalt in zwei Abstaenden** vorlegt (f2 gegen f4). Kommen zwei Ergebnisse
+  heraus, misst die Schranke Formatierung.
+- **Wenn ich meinen Text umschreibe, damit eine Schranke schweigt, ist das
+  ein Befund ueber die Schranke** und gehoert notiert — nicht bloss
+  weggearbeitet. Zweimal nachbessern ist das Signal; beim ersten Mal sieht es
+  noch wie ein Tippfehler aus.
+- **Die Schranke wird trotzdem nicht im Vorbeigehen gelockert.** Sie haelt
+  den Fall, fuer den sie gebaut wurde (E-85), und wer das Fenster aufweitet
+  oder die Wortliste verlaengert, faehrt vorher `--selbsttest` und die
+  echten Staende (`48c1ee2` muss weiter abgewiesen werden). Beschrieben ist
+  der Mangel hier; geaendert wurde nichts.
