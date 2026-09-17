@@ -501,3 +501,23 @@ gar keinen Puffer. Wer den Puffer behalten will, meldet ihn über `atexit` ab.
    Paket laufen. P-48 ist eine Frage an Gregor, keine Arbeit.
 
 Nichts davon außer Punkt 1 steht einem Paket im Weg.
+
+---
+
+## Nachtrag, 21:42 — Punkt 1 ist committet
+
+Während dieser Bericht geschrieben wurde, hat die andere Sitzung den Wächter
+als **`7d555df` („E-107: Absturz beim Antworten — von mir mit E-106
+eingeschleppt", 1.0.71)** committet, auf `paketliste-glattziehen`. Sie hat den
+Absturz unabhängig und schärfer belegt, als ich es konnte: die **letzte Zeile
+vor dem Abbruch** in Gregors Protokoll ist die E-106-Spurmarke selbst —
+
+    E-106 groesser als angegeben: attr=135x40 quelle=405x120 gefunden=1 pos=765
+
+— danach nichts mehr. Damit ist P-39 nicht nur hergeleitet, sondern gemessen,
+und `attr=135x40 quelle=405x120` ist zugleich der Beleg dafür, dass es die
+Bilder mit Maßangabe sind, die auf dem Vorbereiten-Weg ankommen.
+
+**P-39 ist damit erledigt**, sobald dieser Stand in `origin/main` steht.
+**P-40 bis P-49 bleiben offen** — P-40 betrifft genau diesen neuen Wächter und
+ist ohne Gregors Messung an einem eingebetteten Bild nicht zu entscheiden.
