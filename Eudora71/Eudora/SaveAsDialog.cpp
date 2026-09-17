@@ -385,6 +385,7 @@ void CSaveAsDialog::OnOK()
 	if (!m_ChangingDir)
 	{
  		char realFileName[_MAX_PATH + 1];
+		realFileName[0] = 0;		// E-100: nie uninitialisiert weiterreichen
 		GetFileNameFromDialog(realFileName, _MAX_PATH);
 	                               
 		// Clean up the file name so it has .sta extenstion
@@ -463,23 +464,35 @@ void CSaveAsDialog::SetFileNameInDialog(const char *buf)
 	else
 		dlgPtr = this;
 
-	//
-	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
-	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
-	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
-	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
-	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
-	// ASSERT haette es nicht gefangen, das ist im Release nichts.
-	//
-	if (dlgPtr == NULL)
-		return;
-	
 	// Navigate to the stationery directory
 	CWnd *fileNameWnd = NULL;
 	if (IsVersion4())
+	{
+		//
+		// BEFUND E-100, zweiter Anlauf: hier stand ein
+		// if (dlgPtr == NULL) return; ueber der ganzen Funktion. Das war
+		// falsch. Auf DIESEM Zweig wird dlgPtr gar nicht benutzt -
+		// SetControlText geht ueber IFileDialogCustomize, nicht ueber das
+		// Elternfenster. Der Waechter haette den Aufruf uebersprungen und
+		// damit den Dateinamen still nicht gesetzt: eine Verhaltens-
+		// aenderung, wo nur ein Absturz verhindert werden sollte.
+		// Vom PRUEFER am 17.09.2026 gefunden (PRUEFER-12.md, P-15).
+		//
 		SetControlText(edt1,buf); 
+	}
 	else
 	{
+		//
+		// BEFUND E-100: nur HIER wird dlgPtr wirklich benutzt, und nur
+		// hier muss geprueft werden. CWnd::GetDlgItem ist nicht inline;
+		// der Rumpf (winocc.cpp:86) liest m_pCtrlCont vom this-Zeiger,
+		// die Zugriffsverletzung entstuende also in mfc140.dll. Genau
+		// daran ist E-97 gestorben, und ASSERT faengt es im Release
+		// nicht.
+		//
+		if (dlgPtr == NULL)
+			return;
+
 		// enter the text for the new directory
 		fileNameWnd = dlgPtr->GetDlgItem(edt1); 
 		if (fileNameWnd)

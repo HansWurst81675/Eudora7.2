@@ -91,6 +91,15 @@ Dateiname wäre schlimmer als der Absturz, den der Wächter verhindert. Das galt
 **auch vorher schon**, wenn `GetDlgItem(edt1)` null lieferte. Jetzt steht
 `buf[0] = 0;` als erste Anweisung der Funktion.
 
+**Teil 4 — ein Wächter saß an der falschen Stelle.** In `SetFileNameInDialog`
+stand die Prüfung über der ganzen Funktion. Auf dem heute einzig gelaufenen
+Zweig wird `dlgPtr` dort aber **gar nicht benutzt**: `SetControlText` geht über
+`IFileDialogCustomize`, nicht über das Elternfenster. Der Wächter hätte den
+Aufruf übersprungen und damit den Dateinamen still nicht gesetzt — eine
+Verhaltensänderung, wo nur ein Absturz verhindert werden sollte. Die Prüfung
+steht jetzt dort, wo `dlgPtr` wirklich benutzt wird. Dazu setzt `OnOK` seinen
+Puffer selbst auf leer, bevor er ihn weitergibt.
+
 Dazu zwei falsche Begründungen im Quelltext berichtigt — und eine Warnung für
 den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
 `OnTypeChange()`, das muss dann nachgezogen werden.
