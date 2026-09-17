@@ -179,4 +179,14 @@ $kLine = Find-Line $mu '^bool E89BilderMessbarMachen\s*\(' $kStart
 $kEnd = Find-Line $mu '^\}\s*$' $kLine
 Write-Region $mu $kStart $kEnd (Join-Path $OutDir "msgutils_e89.inc") $msgPath
 
+
+# ---------------------------------------------------------------- msgutils.cpp (E-101)
+# Region L: E101SpeicherfassungAufbereiten (Befund E-101). Entscheidet, was in
+# der Datei steht, die der Anwender aus der Hand gibt. Reine Textverarbeitung,
+# Text rein und Text raus - ohne INI, ohne Ressourcen, ohne Fenster, also ohne
+# Eudora pruefbar. Gregor am 17.09.2026: "datei gespeichert, aber unbrauchbar".
+$lStart = Find-Line $mu '^bool E101SpeicherfassungAufbereiten\s*\(' 0
+$lEnd = Find-Line $mu '^\}\s*$' $lStart
+Write-Region $mu $lStart $lEnd (Join-Path $OutDir "msgutils_e101.inc") $msgPath
+
 Write-Host "Extract.ps1: fertig."

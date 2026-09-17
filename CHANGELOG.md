@@ -60,6 +60,45 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.66 — die gespeicherte Datei ist jetzt brauchbar (E-101)
+
+> **Zu prüfen:** Nachricht markieren, **File → Save As**, Datei speichern —
+> und die Datei dann **in Thunderbird oder einem Editor öffnen**. Kopfzeilen
+> müssen da sein, Umlaute müssen stimmen, und `<x-html>` darf nicht auftauchen.
+
+Gregor am 17.09.2026, nachdem er eine weitergeleitete Nachricht gesichert
+hatte: *„datei gespeichert, aber unbrauchbar"*.
+
+**Gemessen an seiner Datei** (5.716 Byte): vier Kopfzeilen, danach Eudoras
+**interner Marker `<x-html>`** und roher HTML-Text. Keine `Content-Type`-Zeile,
+keine `MIME-Version`, kein Zeichensatz. `.eml` und `.txt` byte-identisch.
+
+**Warum.** Bei einer selbst verfassten Nachricht entsteht die
+`Content-Type`-Zeile **erst beim Senden** — `SendContentType`
+(`sendmail.cpp:766`) baut sie aus den Merkern des Übersichtseintrags, nicht aus
+dem Rumpf. Was in `Out.mbx` liegt, ist die interne Fassung, und der
+Speicherweg schrieb sie unverändert hinaus. Die Umlaute waren korrekt als
+Latin-1 gespeichert (`0xFC`, gemessen) — aber ohne `charset=` weiß kein Leser
+das, und Thunderbird zeigt Buchstabensalat oder HTML-Quelltext.
+
+**Behebung.** Der Speicherweg entfernt den internen Marker und ergänzt
+`MIME-Version`, `Content-Type` und `Content-Transfer-Encoding`, wenn keine
+`Content-Type`-Zeile da ist. Untertyp nach dem Marker, Zeichensatz nach den
+Bytes — **aus dem Inhalt abgeleitet, nicht geraten**. Eine empfangene
+Nachricht bringt ihre echten Kopfzeilen mit; die bleiben unangetastet.
+
+**Am laufenden Programm geprüft:** selbst gespeichert, Datei wieder geöffnet —
+`MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`, kein
+`x-html`, Umlaute unverändert.
+
+**160 Tests, 160 bestanden** — sieben neue, darunter die Gegenprobe an einer
+empfangenen Nachricht und der Stolperstein „zitiertes `Content-Type:` im
+Rumpf einer Weiterleitung".
+
+**Was daraus zu lernen war:** bei E-97 hatte ich gemessen, dass der Dialog
+aufgeht, und daraus „Speichern funktioniert" gemacht. Dass nie jemand in die
+herausgekommene Datei geschaut hatte, ist derselbe Befund eine Ebene tiefer.
+
 ## 7.2.0.65 — dieselbe Absturzstelle an drei weiteren Stellen geschlossen (E-100)
 
 > **Zu prüfen:** *File → Save As* muss weiter gehen wie in 1.0.64. Diese

@@ -65,3 +65,17 @@ bool E89BilderMessbarMachen(
 				const char *		pszHtml,
 				CString &			out_szHtml,
 				CString &			out_szSpur);
+
+//
+// BEFUND E-101: was "Speichern unter" hinausschreibt, ist Eudoras interne
+// Fassung - vier Kopfzeilen, der Marker <x-html> und roher HTML-Text, ohne
+// Content-Type und ohne Zeichensatz. Kein anderes Programm kann das lesen.
+// Diese Funktion macht daraus eine gueltige RFC-822-Datei. Erlaeuterung am
+// Rumpf in msgutils.cpp. Rueckgabe true heisst: out_szDatei ist gefuellt und
+// tritt an die Stelle des Eingangstextes. out_szSpur gehoert ins Protokoll.
+//
+bool E101SpeicherfassungAufbereiten(
+				const char *		pszVoll,
+				bool				bHatKopfzeilen,
+				CString &			out_szDatei,
+				CString &			out_szSpur);
