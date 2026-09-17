@@ -3194,7 +3194,33 @@ void CTocView::OnFileSaveAs()
 					theFile.PutLine( (LPCTSTR) szGanz );
 				}
 
-				PutDebugLog( DEBUG_MASK_MISC, szSpurE101 );
+				//
+				// DEBUG_MASK_DIALOG (0x08), NICHT DEBUG_MASK_MISC.
+				//
+				// MISC (0x8000) ist in der Vorgabe 25759 (0x649F) AUS.
+				// Diese Zeile stand deshalb seit 7.2.0.66 da, ohne je
+				// geschrieben zu werden: Gregor hat am 17.09.2026 mit
+				// 1.0.69 mehrere Nachrichten gespeichert, und im
+				// Protokoll stand KEINE einzige "E-101 speichern:"-Zeile
+				// - nicht, weil nichts geschah, sondern weil man es
+				// nicht gesehen haette.
+				//
+				// Damit war auch die Behebung von E-101 selbst nie ueber
+				// ihre eigene Spur belegt, und die Werte aus P-38, die
+				// einen verschwundenen Rumpf zeigen sollen, waeren es
+				// ebensowenig gewesen
+				// (Arbeitsweise/eingebaute-messung-auslesen.md).
+				//
+				// Dasselbe stand schon einmal an: filtersd.cpp:1147 zu
+				// E-73, woertlich "eine Sicherheitsmeldung darf nicht
+				// abschaltbar sein". Eine Zeile, die einen DATENVERLUST
+				// in einer Datei anzeigt, die der Anwender aus der Hand
+				// gibt, gehoert in dieselbe Klasse.
+				//
+				// DIALOG ist in der Vorgabe AN und passt inhaltlich:
+				// dieser Weg laeuft ueber den Speichern-Dialog.
+				//
+				PutDebugLog( DEBUG_MASK_DIALOG, szSpurE101 );
 
 				delete [] pszFullMessage;
 
