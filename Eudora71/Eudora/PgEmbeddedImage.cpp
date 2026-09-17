@@ -329,6 +329,10 @@ static PG_PASCAL (long) eCallback( paige_rec_ptr pg,
 
 bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr embed,bool bAllowThreadedFetch )
 {
+    // BEFUND E-106: was die Datei WIRKLICH misst. 0 heisst: nicht gemessen.
+    long    nEchtBreite = 0;
+    long    nEchtHoehe  = 0;
+
     bool fRet = false;
 	BOOL bEudoraTempFile = FALSE;
 
@@ -422,6 +426,21 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					TransparencySysColor = COLOR_WINDOW;
                 if (MetafileFromImage( filePath, &mfi, TransparencySysColor))
                 {
+                    //
+                    // BEFUND E-106: die ECHTE Dateigroesse merken, auch wenn
+                    // im HTML schon Masse stehen.
+                    //
+                    // Die beiden Zuweisungen darunter laufen nur, wenn das
+                    // Attribut fehlt - deshalb wusste bisher niemand, wie
+                    // gross die Datei wirklich ist, sobald der Absender eine
+                    // Groesse angegeben hat. Gregors Protokoll vom
+                    // 17.09.2026 zeigt es: neun Bilder wurden nachgemessen,
+                    // das grosse Logo (attr=200x52) war nicht darunter - und
+                    // genau das liegt bei ihm ueber dem Text.
+                    //
+                    nEchtBreite = (long)mfi.width;
+                    nEchtHoehe  = (long)mfi.height;
+
                     if ( !pUrlImage->source_width )
                         pUrlImage->source_width = (short)mfi.width;
                     if ( !pUrlImage->source_height )
@@ -444,6 +463,10 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 
                 if ( hMeta )
                 {
+                    // BEFUND E-106: auch hier die echte Groesse merken.
+                    nEchtBreite = (long)cx;
+                    nEchtHoehe  = (long)cy;
+
                     pUrlImage->source_width = (short)cx;
                     pUrlImage->source_height = (short)cy;
                     pUrlImage->type_and_flags = embed_meta_file;
@@ -631,6 +654,103 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					// be drawn in the space we now occupy
 					if (pSB && pSB->pWndOwner)
 						pSB->pWndOwner->Invalidate();
+				}
+			}
+
+			//
+			// BEFUND E-106: das Bild ist groesser als angegeben.
+			//
+			// Der Block darueber laeuft nur, wenn im HTML KEINE Groesse
+			// stand. Steht dort eine, wird die Datei nie nachgemessen - und
+			// Paige skaliert nicht. Ergebnis: eine Zeile von 52 Punkten, in
+			// die ein 104 Punkte hohes Bild gezeichnet wird. Die Differenz
+			// liegt auf dem folgenden Text.
+			//
+			// GEMESSEN an Gregors Kleinanzeigen-Nachricht, 17.09.2026: neun
+			// Bilder wurden nachgemessen - alle ohne height-Attribut, und bei
+			// allen wuchs die Zeile mit (attr=140x0 -> quelle=140x134 ->
+			// ascent=134). Das grosse Logo mit attr=200x52 war NICHT
+			// darunter, und genau das liegt bei ihm ueber dem Text.
+			//
+			// Warum die Datei groesser ist als die Angabe: Absender legen
+			// Bilder in doppelter Aufloesung ab und geben im HTML die halbe
+			// Groesse an, damit sie auf feinen Bildschirmen scharf bleiben.
+			// Jeder Browser skaliert. Paige nicht.
+			//
+			// WAS HIER GESCHIEHT: die Zeile bekommt die ECHTE Hoehe, damit
+			// nichts mehr zugedeckt wird. Das Bild bleibt dabei so gross,
+			// wie Paige es zeichnet - richtig skalieren waere besser, aber
+			// das sitzt tief in Paige; zugedeckter Text ist der teurere
+			// Fehler.
+			//
+			// Nur VERGROESSERN, nie verkleinern.
+			//
+			if ( nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
+			{
+				long			posE  = 0;
+				bool			bFundE = false;
+				select_pair		selE;
+				embed_ref		erE;
+				pg_embed_ptr	embed_ptrE;
+
+				selE.begin = 0;
+				selE.end = pg->t_length;
+
+				for ( long liE = 1;
+					  !bFundE && (erE = pgGetIndEmbed( pg->myself, &selE, liE, &posE, 0 ));
+					  liE++ )
+				{
+					embed_ptrE = (pg_embed_ptr) UseMemory(erE);
+
+					if (embed_ptrE)
+					{
+						if (embed->style == embed_ptrE->style)
+							bFundE = true;
+
+						UnuseMemory( erE );
+					}
+				}
+
+				{
+					char	szSpur106[220];
+
+					wsprintf( szSpur106,
+						"E-106 groesser als angegeben: attr=%ldx%ld quelle=%ldx%ld "
+						"gefunden=%d pos=%ld\r\n",
+						(long)embed->width, (long)embed->height,
+						nEchtBreite, nEchtHoehe,
+						bFundE ? 1 : 0, posE );
+
+					PutDebugLog( DEBUG_MASK_MISC, szSpur106 );
+				}
+
+				if (bFundE)
+				{
+					select_pair		selBild106;
+					style_info		info106, maske106;
+
+					selBild106.begin = posE;
+					selBild106.end   = posE + 1;
+
+					pgInitStyleMask( &info106, 0 );
+					pgInitStyleMask( &maske106, 0 );
+					maske106.ascent = -1;
+
+					pgGetStyleInfo( pg->myself, &selBild106, FALSE,
+									&info106, &maske106 );
+
+					if ( info106.ascent < nEchtHoehe )
+					{
+						pgInitStyleMask( &maske106, 0 );
+						maske106.ascent = -1;
+						info106.ascent  = (short) nEchtHoehe;
+
+						pgSetStyleInfo( pg->myself, &selBild106,
+										&info106, &maske106, draw_none );
+
+						if (pSB && pSB->pWndOwner)
+							pSB->pWndOwner->Invalidate();
+					}
 				}
 			}
 

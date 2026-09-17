@@ -61,6 +61,50 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.68 — Bilder, die größer sind als angegeben (E-106)
+
+> **Zu prüfen:** `LogLevel=58527` in der `Eudora.ini` lassen, die
+> Kleinanzeigen-Nachricht weiterleiten, warten bis die Bilder da sind. Im
+> `eudora.log` muss stehen:
+> `E-106 groesser als angegeben: attr=200x52 quelle=…x… gefunden=1`.
+> **Bleibt die Zeile aus, ist auch diese Ursache widerlegt** — dann bitte das
+> Protokoll schicken, statt weiterzusuchen.
+
+Gregor am 17.09.2026 an 1.0.67: das grüne *kleinanzeigen*-Logo liegt weiter
+über „Deine Anzeige wird weniger gesehen".
+
+**Sein Protokoll hat es entschieden.** Neun Bilder seiner Nachricht wurden nach
+dem Laden nachgemessen, und bei allen wuchs die Zeile mit:
+
+```
+attr=140x0  →  quelle=140x134  →  ascent=134
+attr=24x0   →  quelle=24x49    →  ascent=49
+```
+
+**Das Logo war nicht darunter.** Es trägt `attr=200x52 embed=200x52 ascent=52`
+— und danach keine einzige Zeile mehr.
+
+**Die Ursache.** Der Nachtrag läuft nur, wenn im HTML **keine** Größe stand.
+Ein Bild mit beiden Angaben wird **nie nachgemessen**. Und Paige skaliert
+nicht: Absender legen Bilder in doppelter Auflösung ab und geben im HTML die
+halbe Größe an, damit sie auf feinen Bildschirmen scharf bleiben. Jeder Browser
+skaliert — Paige zeichnet die Datei in Originalgröße in eine Zeile, die nach
+der Angabe bemessen ist. Bei 200×52 angegeben und 400×104 geladen sind das
+**52 Punkte, die auf dem folgenden Text liegen**.
+
+**Warum E-103 daran vorbeiging:** E-103 behandelt Bilder **ohne**
+Größenangabe. Gregors Logo hat eine. Zwei Fassungen lang war der falsche Fall
+behoben — das ist der ehrliche Teil dieser Zeile.
+
+**Behebung:** die echte Dateigröße wird jetzt **immer** gemerkt, und ist sie
+höher als die angegebene, bekommt die Zeile die echte Höhe. Nur vergrößern, nie
+verkleinern. Richtig skalieren wäre besser, sitzt aber tief in Paige;
+zugedeckter Text ist der teurere Fehler.
+
+**Nicht nachgewiesen, und das gehört dazu:** mein Prüfstand lädt die Bilder
+nicht — null Ladespuren, während Gregors Protokoll 27 hat. Die Behebung ist
+dort nicht messbar. **Nur sein Lauf kann sie belegen.**
+
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
 > **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)
