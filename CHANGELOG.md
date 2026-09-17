@@ -61,6 +61,92 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.71 — Absturz beim Antworten auf eine geöffnete Nachricht (E-107)
+
+> **Zu prüfen:** eine Nachricht mit Bildern öffnen und **antworten**. Eudora
+> darf nicht abstürzen. Genau das ist mit 1.0.69 passiert.
+
+**Der Fehler war meiner, eingebaut mit E-106 in derselben Nacht.**
+
+Gregor am 17.09.2026 um 21:23 mit 1.0.69:
+
+```
+EXCEPTION_ACCESS_VIOLATION in Paige32.dll
+  at UnuseMemory()+0006      ESI=FFFFFFFF
+```
+
+`ESI=FFFFFFFF` ist ein ungültiger Speicherverweis.
+
+**Die Ursache steht als Warnung im Quelltext, seit 1996:**
+
+```c
+case EMBED_PREPARE_IMAGE:
+    // Don't allow threaded fetch, because we're being called
+    // with a temporary embed_ptr
+    PgLoadUrlImage( pg, image, embed_ptr, false )
+```
+
+Der Embed ist dort **flüchtig**. Mein E-106-Block liest trotzdem `embed->height`
+und `embed->style` und durchsucht damit das ganze Dokument. Der Block davor
+(E-103) hatte dieselbe Gefahr, lief aber nur bei Bildern **ohne** Maßangabe —
+selten. Meiner lief zusätzlich bei allen **mit** Angabe, also bei fast jedem
+Bild jeder Werbemail.
+
+**Behebung:** beide Blöcke laufen nur noch, wenn `bAllowThreadedFetch` wahr ist
+— das ist genau die Unterscheidung zwischen *Vorbereiten* (flüchtig) und
+*Laden* (echter Embed).
+
+**Was nicht bewiesen ist, und das gehört hierher:** ich konnte den Absturz
+**nicht nachstellen**. Mein Prüfstand lädt keine Bilder — weder aus dem Netz
+noch eingebettet als `data:`; beides gemessen, in beiden Fällen läuft der
+verdächtige Code gar nicht an. Auch die **Gegenprobe mit der abstürzenden
+Fassung 1.0.69 blieb negativ**: sie öffnet das Antwortfenster bei mir sauber.
+
+Belegbar ist nur dies, und es ist am Quelltext ablesbar: **auf dem gefährlichen
+Weg läuft mein Code jetzt gar nicht mehr.** Das Verhalten fällt dort auf den
+Stand vor E-103 und E-106 zurück. Schlimmer kann es dadurch nicht werden.
+
+## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
+
+> **Zu prüfen:** dies ist die erste Fassung, die **alles** enthält — E-101 in
+> beiden Teilen, E-103, E-104 und E-106. Die vier Pakete davor enthalten jeweils
+> nur einen Teil.
+>
+> **Der eine Messpunkt, auf den es ankommt** (`LogLevel=58527` steht schon in
+> der `Eudora.ini`): die Kleinanzeigen-Nachricht weiterleiten, warten bis die
+> Bilder sichtbar sind, Eudora beenden. Im `eudora.log` muss stehen:
+> `E-106 groesser als angegeben: attr=200x52 quelle=…x… gefunden=1`.
+> **Bleibt die Zeile aus, ist auch diese Ursache widerlegt.**
+
+**Kein neuer Code.** Diese Fassung bündelt, was schon in `main` steht — und
+räumt zwei Dinge auf, die der Grund für ein Durcheinander waren.
+
+### Warum es zwei Fassungsnummern 1.0.68 gab
+
+Am 17.09.2026 liefen **zwei Sitzungen gleichzeitig**. Beide haben die
+Fassungsnummer hochgezogen, beide nahmen die **68** — die eine für E-106, die
+andere für den zweiten Teil von E-101. Die zweite hat es bemerkt und ist auf
+**1.0.69** ausgewichen.
+
+**Die Ursache lag in der Buchführung:** `Releases/PAKETE.md` kannte nur
+**1.0.64** und **1.0.65**. Wer die nächste Nummer daraus ableitet, greift
+zwangsläufig daneben. Die Liste führt jetzt auch **1.0.66 bis 1.0.70**.
+
+### Was in welchem Paket steckt
+
+Vier Pakete lagen zuletzt nebeneinander, und **keines war vollständig**:
+
+| Paket | Fassung | enthält | es fehlt |
+|---|---|---|---|
+| 1.0.67 | 7.2.0.67 | E-101 (erster Teil), E-103 | E-104, E-106, E-101 zweiter Teil |
+| 1.0.68 | 7.2.0.68 | dazu E-104, **E-106** | E-101 zweiter Teil |
+| 1.0.69 | 7.2.0.69 | E-101 **zweiter Teil**, P-38 | **E-106** |
+| **1.0.70** | 7.2.0.70 | **alles** | — |
+
+Das erklärt auch, warum die Spurmarke `E-101 speichern:` in 1.0.69 fehlte: der
+Protokollkanal war **nicht** abgeschaltet — `LogLevel=58527` ist `0xE49F` und
+enthält `0x8000` sehr wohl. Die Behebung war dort schlicht noch nicht drin.
+
 ## 7.2.0.69 — die Spurmarke misst den Rumpf, und sie findet gleich etwas (E-101, P-38)
 
 > **Zu prüfen:** eine Nachricht über *File → Save As* sichern und die Datei

@@ -592,7 +592,15 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					// groessere Angabe oder hat ein anderes Bild in derselben
 					// Zeile mehr Hoehe, bleibt die groessere stehen.
 					//
-					if ( pUrlImage->source_height > 0 )
+					//
+					// BEFUND E-107: auch hier nur auf dem Weg mit echtem
+					// Embed. Beim Vorbereiten ist er fluechtig - siehe die
+					// Begruendung weiter unten. Der Kern dieses Blocks
+					// stammt von QUALCOMM und lief schon immer in beiden
+					// Faellen; was hier drunter steht, ist von mir und
+					// SCHREIBT ins Dokument. Das gehoert abgesichert.
+					//
+					if ( bAllowThreadedFetch && pUrlImage->source_height > 0 )
 					{
 						select_pair		selBild;
 						style_info		infoBild, maskeBild;
@@ -685,7 +693,37 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 			//
 			// Nur VERGROESSERN, nie verkleinern.
 			//
-			if ( nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
+			//
+			// BEFUND E-107: NUR auf dem Weg, der einen echten Embed hat.
+			//
+			// eCallback ruft diese Funktion zweimal. Bei EMBED_PREPARE_IMAGE
+			// steht ueber dem Aufruf eine Warnung von QUALCOMM:
+			//
+			//   // Don't allow threaded fetch, because we're being called
+			//   // with a temporary embed_ptr
+			//   PgLoadUrlImage( pg, image, embed_ptr, false )
+			//
+			// Der Embed ist dort FLUECHTIG. Der Block darunter liest
+			// embed->height und embed->style und durchsucht damit das ganze
+			// Dokument - auf einem fluechtigen Objekt ist beides wertlos und
+			// gefaehrlich.
+			//
+			// GEMESSEN: Gregor am 17.09.2026, 21:23, an 1.0.69, beim
+			// Antworten auf eine geoeffnete Nachricht:
+			//
+			//   EXCEPTION_ACCESS_VIOLATION in Paige32.dll
+			//     at UnuseMemory()+0006      ESI=FFFFFFFF
+			//
+			// ESI=FFFFFFFF ist ein ungueltiger Speicherverweis. Der Block
+			// davor (E-103) hatte dieselbe Gefahr, lief aber nur bei Bildern
+			// OHNE Massangabe - selten. Meiner lief zusaetzlich bei allen MIT
+			// Angabe, also bei fast jedem Bild jeder Werbemail.
+			//
+			// bAllowThreadedFetch ist genau die Unterscheidung: false beim
+			// Vorbereiten (fluechtig), true beim Laden (echter Embed).
+			//
+			if ( bAllowThreadedFetch &&
+				 nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
 			{
 				long			posE  = 0;
 				bool			bFundE = false;
