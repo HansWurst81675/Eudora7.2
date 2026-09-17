@@ -414,6 +414,36 @@ void CSaveAsDialog::SetFileNameInDialog(const char *buf)
 
 void CSaveAsDialog::OnTypeChange()
 {
+	//
+	// BEFUND E-97: hier stuerzte Eudora ab, sobald eine Nachricht gespeichert
+	// werden sollte. Gregor am 15.09.2026: "da kommt kurz eine meldung, dann
+	// ist eudora weg!"
+	//
+	// GEFUNDEN am 16.09.2026 mit tools/stapel-untersuchen.ps1, symbolisiert:
+	//
+	//   0  Eudora.exe  CSaveAsDialog::OnTypeChange + 45  SaveAsDialog.cpp:425
+	//   1  COMDLG32.dll
+	//   ...
+	//  25  Eudora.exe  CTocView::OnFileSaveAs + 429      tocview.cpp:3074
+	//
+	// Ausnahme 0xC000041D (STATUS_FATAL_USER_CALLBACK_EXCEPTION): eine
+	// Ausnahme in einem Systemrueckruf kommt nicht ueber die Kernel-Grenze
+	// zurueck, deshalb bricht das Programm sofort ab, statt eine Meldung zu
+	// zeigen.
+	//
+	// DER DATEIDIALOG RUFT DIESE FUNKTION, WAEHREND ER SICH AUFBAUT - vor
+	// OnInitDialog. Zu diesem Zeitpunkt hat das Vorlagenfenster noch kein
+	// Elternfenster: GetParent() liefert NULL, und dlgPtr->GetDlgItem() griff
+	// ungeprueft darauf zu.
+	//
+	// Dieselbe Klasse wie so vieles hier: MFC hat vor GetDlgItem ein
+	// ASSERT(::IsWindow(m_hWnd)), und ASSERT ist im Release wirkungslos
+	// (Arbeitsweise/assert-ist-im-release-nichts.md).
+	//
+	// In JEDER Fassung dieses Projekts vorhanden, 1.0.49 bis 1.0.63 gemessen,
+	// auch im veroeffentlichten Release v1.0.50. Aufgefallen ist es erst, als
+	// Gregor eine Nachricht speichern sollte, um sie mir zu geben.
+	//
 	CWnd *dlgPtr = NULL;
 
 	if (IsVersion4())
@@ -421,8 +451,20 @@ void CSaveAsDialog::OnTypeChange()
 	else
 		dlgPtr = this;
 
+	// Faellt GetParent() aus, ist der Dialog noch nicht fertig aufgebaut.
+	// Dann gibt es nichts zu tun - OnInitDialog setzt den Zustand ohnehin
+	// gleich darauf.
+	if (dlgPtr == NULL)
+		return;
 
 	CWnd *filtCombo = dlgPtr->GetDlgItem(cmb1);
+
+	// Ohne die eigene Dialogvorlage gibt es den Schalter nicht;
+	// DoDataExchange bindet ihn dann bewusst NICHT an, und m_hWnd bleibt
+	// null. EnableWindow darauf ist derselbe Absturz noch einmal.
+	if (m_GuessParagraphs.GetSafeHwnd() == NULL)
+		return;
+
 	if (filtCombo)
 	{
 		int iCurSel = 	((CComboBox *)filtCombo)->GetCurSel();
