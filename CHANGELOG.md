@@ -82,6 +82,15 @@ Aufrufstellen nach `DoModal()` ungeprüft in die INI geschrieben. Läuft
 `IDS_INI_INCLUDE_HEADERS` und `IDS_INI_GUESS_PARAGRAPHS`. Jetzt werden sie im
 Konstruktor mit dem bisherigen Stand aus der INI vorbelegt.
 
+**Teil 3 — ein dritter Weg, den der Wächter selbst aufgemacht hätte.**
+`GetFileNameFromDialog` füllt einen Puffer, den `OnOK` als
+`char realFileName[_MAX_PATH + 1]` **uninitialisiert** auf den Stapel legt.
+Kehrt sie ohne Schreiben zurück, arbeitet `OnOK` mit Stapelmüll weiter —
+`strstr(realFileName, ".sta")`, im schlimmsten Fall `strcat`. Ein unbrauchbarer
+Dateiname wäre schlimmer als der Absturz, den der Wächter verhindert. Das galt
+**auch vorher schon**, wenn `GetDlgItem(edt1)` null lieferte. Jetzt steht
+`buf[0] = 0;` als erste Anweisung der Funktion.
+
 Dazu zwei falsche Begründungen im Quelltext berichtigt — und eine Warnung für
 den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
 `OnTypeChange()`, das muss dann nachgezogen werden.

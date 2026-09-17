@@ -412,7 +412,24 @@ void CSaveAsDialog::OnOK()
 void CSaveAsDialog::GetFileNameFromDialog(char *buf, int bufLen)
 {
 	CWnd *dlgPtr = NULL;
-	
+
+	//
+	// BEFUND E-100: der Puffer wird als ERSTES leer gemacht.
+	//
+	// OnOK legt ihn als  char realFileName[_MAX_PATH + 1];  auf den Stapel,
+	// also uninitialisiert, und verlaesst sich darauf, dass diese Funktion
+	// ihn fuellt. Sie tat es aber schon vorher nicht immer: wenn
+	// GetDlgItem(edt1) NULL liefert, bleibt der Puffer unberuehrt. Mit dem
+	// Waechter unten kommt ein zweiter solcher Weg dazu.
+	//
+	// Was OnOK danach damit macht, ist strstr(realFileName, ".sta") und im
+	// schlimmsten Fall strcat - auf Stapelmuell ohne Null-Byte. Ein
+	// unbrauchbarer Dateiname waere schlimmer als der Absturz, den der
+	// Waechter verhindert. Eine Zeile schliesst beide Wege.
+	//
+	if (buf != NULL && bufLen > 0)
+		buf[0] = '\0';
+
 	if (IsVersion4())
 		dlgPtr = GetParent();
 	else
