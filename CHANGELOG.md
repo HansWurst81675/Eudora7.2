@@ -201,6 +201,19 @@ repariert.** Das tut jetzt `E104SchalterLesen`: was weder 0 noch 1 ist, geht auf
 die Vorgabe 0 zurück **und wird berichtigt zurückgeschrieben**. **Damit muss
 niemand ein neues Mailverzeichnis anlegen.**
 
+**Und die Behebung deckte zunächst nur die halbe Strecke.** Der Prüfer hat sie
+nachgerechnet und dabei gefunden, dass `CReadMessageDoc::SaveAs` und
+`CReadMessageDoc::SaveAsFile` denselben ungeschützten Aufruf tragen — dort war
+`FindBody` sogar **genau umgekehrt** eingesetzt: es lief, wenn die Kopfzeilen
+*nicht* mitsollten. **Wer eine empfangene Nachricht aus ihrem Fenster
+speicherte, bekam den Fehler unverändert.** Beide Stellen sind nachgezogen.
+
+Dazu lasen zwei weitere Stellen den Schalter noch roh, so dass die Datei mit
+verdorbener INI mit einer einsamen `Date:`-Zeile ohne Leerzeile begann.
+Verklebt wurde sie nur deshalb nicht, weil sie 38 Zeichen hat und die
+40-Zeichen-Regel von `UnwrapText` griff — **zwei Zeichen Abstand zum Fehler,
+Zufall statt Schutz.**
+
 Zwei Punkte wurden vor dem Paketbau eigens nachgerechnet: `UnwrapText` arbeitet
 **im Puffer** und liefert denselben Zeiger zurück — es geht kein Text verloren;
 und `GetMessageHeaders` hängt am Ende eine Leerzeile an, `FindBody` findet die
