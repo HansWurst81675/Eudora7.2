@@ -2230,13 +2230,26 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	               char          szSrc[40];
 	               long          i;
 
+	               //
+	               // PRUEFER P-11: hier stand ein Cast von image_ref auf
+	               // const char*. image_ref ist aber ein memory_ref - ein
+	               // HANDLE, keine Zeichenkette. Gelesen wurden die Bytes des
+	               // Handles selbst, und im Protokoll stand Binaermuell:
+	               //
+	               //   src=\110\001\032\001\100\001\032\001
+	               //
+	               // Zwoelf solcher Zeilen in Gregors eudora.log. Die Spalte,
+	               // die sagen sollte, ob ein Bild als cid:, data: oder http:
+	               // kommt, war damit wertlos - und genau diese Frage stand
+	               // bei E-95 vier Fassungen lang offen.
+	               //
+	               // Die Adresse liegt daneben bereit: image_record.URL, oben
+	               // in derselben Funktion gefuellt.
+	               //
 	               szSrc[0] = 0;
-	               if (image_ref)
-	               {
-	                  for (i = 0; i < 32 && ((const char *)image_ref)[i]; i++)
-	                     szSrc[i] = ((const char *)image_ref)[i];
-	                  szSrc[i] = 0;
-	               }
+	               for (i = 0; i < 32 && image_record.URL[i]; i++)
+	                  szSrc[i] = (char)image_record.URL[i];
+	               szSrc[i] = 0;
 
 	               wsprintf(szSpur,
 	                  "E-95 Bild: src=%.32s attr=%dx%d embed=%ldx%ld "

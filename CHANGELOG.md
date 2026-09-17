@@ -130,6 +130,45 @@ einer Werbemail nicht mehr in den Text ragen — das Doctolib-Logo ist 60 hoch,
 die vier anderen Bilder derselben Nachricht 24 bis 80 — und klein genug, dass
 eine Zeile mit einem kleinen Symbol keine auffällige Lücke reißt.
 
+### Datenverlust in `main` geschlossen (Prüfer P-28)
+
+Beim Nachprüfen von `main` gefunden — **nicht** durch einen Testlauf, sondern
+weil der Prüfer die Funktion aus dem Quelltext geschnitten, übersetzt und mit
+16 Eingaben gefahren hat.
+
+`E101SpeicherfassungAufbereiten` löschte die **ganze erste Rumpfzeile**, sobald
+sie auf `>` endete. Stehen `<x-html>` und der Nachrichtentext auf derselben
+Zeile, war damit der **komplette Rumpf weg**:
+
+```
+<x-html><html><body>Der ganze Text…</body></html></x-html>
+  104 Byte rein, 128 raus  —  und null Byte Rumpf
+```
+
+Die Datei wird dabei **größer**, weil die Kopfzeilen dazukommen. Deshalb fällt
+so etwas niemandem auf.
+
+**Dass der Fall vorkommt, steht in Eudoras eigenem Quelltext:**
+`msgutils.cpp:2374` sagt wörtlich *„`<x-html>` And the message all comes on the
+same line"*, `IDS_MIME_RICH_ON` ist `"<%s>"` ohne Zeilenende, und
+`etf2html.cpp:200` schreibt den Marker ebenso. Nur der POP-Weg setzt ihn auf
+eine eigene Zeile — und der war der einzige, der geprüft worden war.
+
+**Behebung:** entfernt wird jetzt das **Tag**, nicht die Zeile. Das Ende ist
+das erste `>` außerhalb von Anführungszeichen, und über die erste Zeile hinaus
+wird nicht gesucht. Folgt Text auf derselben Zeile, bleibt er vollständig
+stehen. **Drei neue Tests**, einer je gemessenem Verlustfall.
+
+### Die Spurmarke zu den Bildern zeigte Binärmüll (Prüfer P-11)
+
+Das `src=`-Feld der E-95-Marke las einen Paige-`memory_ref` — ein **Handle** —
+als Zeichenkette. Im Protokoll standen zwölf Zeilen der Form
+`src=\110\001\032\001…`. Ausgerechnet die Spalte, die sagen sollte, ob ein Bild
+als `cid:`, `data:` oder `http:` kommt — und genau diese Frage stand bei E-95
+vier Fassungen lang offen.
+
+Jetzt: `src=https://www.doctolib.fr/email_la…`
+
 ### Was dazugekommen ist
 
 **Drei neue Spurmarken** in `PgEmbeddedImage.cpp`, die den Weg nach dem Import
@@ -205,7 +244,7 @@ sagt die Spurmarke das mit `trenner=0`, statt sich wie ein Erfolg zu lesen.
 **Sechs neue Tests, einer je gemessenem Fall** — damit kein späterer Umbau sie
 wieder aufmacht.
 
-**166 Tests, 166 bestanden** — dreizehn neue, darunter die Gegenprobe an einer
+**169 Tests, 169 bestanden** — dreizehn neue, darunter die Gegenprobe an einer
 empfangenen Nachricht und der Stolperstein „zitiertes `Content-Type:` im
 Rumpf einer Weiterleitung".
 

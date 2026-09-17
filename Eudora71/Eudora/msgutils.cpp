@@ -3978,25 +3978,78 @@ bool E101SpeicherfassungAufbereiten(
 	//
 	if ( szKlein.Left( 7 ) == "<x-html" )
 	{
-		const int	nZeile = szRumpf.Find( '\n' );
-		const int	nBis   = ( nZeile < 0 ) ? szRumpf.GetLength() : nZeile + 1;
-
-		CString		szErste = szRumpf.Left( nBis );
-
-		while ( !szErste.IsEmpty() &&
-				( szErste[szErste.GetLength()-1] == '\r' ||
-				  szErste[szErste.GetLength()-1] == '\n' ) )
-			szErste = szErste.Left( szErste.GetLength() - 1 );
-
 		//
-		// Nur wenn die GANZE Zeile der Marker ist. Ein '>' im Attributwert
-		// (<x-html content-base="http://host/a>b/">) hoert damit auf, einen
-		// Rest stehen zu lassen.
+		// PRUEFER P-28, DATENVERLUST: es wird das TAG entfernt, nicht die
+		// ZEILE.
 		//
-		if ( szErste.Right( 1 ) == ">" )
+		// Der Entwurf davor schnitt die ganze erste Zeile weg, sobald sie
+		// auf '>' endete. Steht der Marker mit dem Text auf DERSELBEN
+		// Zeile, war damit der komplette Rumpf weg. Der PRUEFER hat es am
+		// 17.09.2026 an der uebersetzten Funktion gemessen:
+		//
+		//   "<x-html><html><body>Der ganze Text...</body></html></x-html>"
+		//     104 Byte rein, 128 raus - und NULL Byte Rumpf.
+		//
+		// Die Datei wird dabei GROESSER, weil die Kopfzeilen dazukommen.
+		// Deshalb faellt der Verlust niemandem auf.
+		//
+		// Dass der Fall vorkommt, steht in Eudoras eigenem Quelltext:
+		// msgutils.cpp:2374 sagt woertlich "<x-html> And the message all
+		// comes on the same line", IDS_MIME_RICH_ON ist "<%s>" ohne
+		// Zeilenende (EudoraRes.rc:9564), und etf2html.cpp:200 schreibt
+		// den Marker ebenso. Nur der POP-Weg setzt ihn auf eine eigene
+		// Zeile.
+		//
+		// Das Ende des Tags ist das erste '>' AUSSERHALB von
+		// Anfuehrungszeichen - ein <x-html content-base="http://host/a>b/">
+		// traegt eines im Attributwert. Ueber die erste Zeile hinaus wird
+		// nicht gesucht: dort stuende in einer Klartextnachricht das
+		// Zitatzeichen (P-18).
+		//
+		int			nZu = -1;
+		bool		bInAnfuehrung = false;
+
+		for ( int q = 0; q < szRumpf.GetLength(); q++ )
+		{
+			const char	c = szRumpf[q];
+
+			if ( c == '\r' || c == '\n' )
+				break;
+
+			if ( c == '"' )
+				bInAnfuehrung = !bInAnfuehrung;
+			else if ( c == '>' && !bInAnfuehrung )
+			{
+				nZu = q;
+				break;
+			}
+		}
+
+		if ( nZu >= 0 )
 		{
 			bWarHtml = true;
-			szRumpf  = szRumpf.Mid( nBis );
+
+			int		nNach = nZu + 1;
+
+			//
+			// Steht hinter dem Tag nichts mehr auf der Zeile, faellt die
+			// Zeilenschaltung mit weg - sonst begaenne der Rumpf mit einer
+			// Leerzeile, die vorher nicht da war. Folgt Text, bleibt er
+			// stehen, und zwar vollstaendig.
+			//
+			const bool	bAlleinAufZeile =
+					( nNach >= szRumpf.GetLength() ||
+					  szRumpf[nNach] == '\r' || szRumpf[nNach] == '\n' );
+
+			if ( bAlleinAufZeile )
+			{
+				if ( nNach < szRumpf.GetLength() && szRumpf[nNach] == '\r' )
+					nNach++;
+				if ( nNach < szRumpf.GetLength() && szRumpf[nNach] == '\n' )
+					nNach++;
+			}
+
+			szRumpf = szRumpf.Mid( nNach );
 
 			// Und das Gegenstueck am Ende.
 			szKlein = szRumpf;
