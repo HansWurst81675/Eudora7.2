@@ -432,8 +432,21 @@ void PgMsgView::ExportMessage( CMessageDoc* pMsgDoc /* = NULL */ )
 		CString				szNeuerRumpf;
 		CString				szSpur;
 
+		//
+		// BEFUND E-99: HasChanged() heisst "seit dem letzten Sichern
+		// getippt", nicht "je getippt" - SaveChangeState() steht am Ende
+		// dieser Funktion. Wer einen Entwurf sichert und danach sendet,
+		// kaeme beim zweiten Durchlauf mit FALSE hier an, und das
+		// aufgehobene Original wuerde seinen Text ueberschreiben. Der
+		// Merker am Dokument rastet deshalb ein.
+		//
+		if ( HasChanged() )
+			pComp->m_bE88AnwenderHatGetippt = TRUE;
+
 		if ( E88OriginalEinsetzen( (LPCTSTR) pComp->m_szE88OriginalHTML, pMem,
-								   pComp->m_ResponseType, HasChanged(), szNeuerRumpf, szSpur ) )
+								   pComp->m_ResponseType,
+								   pComp->m_bE88AnwenderHatGetippt,
+								   szNeuerRumpf, szSpur ) )
 		{
 			pDoc->SetText( (LPCTSTR) szNeuerRumpf );
 

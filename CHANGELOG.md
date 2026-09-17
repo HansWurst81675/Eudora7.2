@@ -110,6 +110,38 @@ unter"* meldete, sagt jetzt *„lebt noch"*.
 
 **Tests: 153 von 153.**
 
+### E-99: Datenverlust beim Senden eines gesicherten Entwurfs — geschlossen, bevor das Paket hinausging
+
+> **Zu prüfen:** Antwort verfassen, **Entwurf sichern**, Fenster offen lassen,
+> danach **senden**. Der getippte Text muss in der gesendeten Nachricht stehen.
+
+Gefunden beim Nachrechnen der E-93-Behebung. `HasChanged()`
+(`PaigeEdtView.h:193`) beantwortet **nicht** die Frage „hat der Anwender
+getippt", sondern „hat er **seit dem letzten Sichern** getippt" — denn
+`PgMsgView::ExportMessage` ruft an seinem Ende `SaveChangeState()`
+(`PgMsgView.cpp:460`).
+
+Folge: Wer einen Entwurf sichert und ihn **danach** sendet, läuft ein zweites
+Mal durch `ExportMessage` — diesmal mit `HasChanged() == FALSE`. Das für E-88
+aufgehobene Original hätte dann seinen Text überschrieben. **Still, ohne
+Meldung** — genau der Weg, den E-93 schließen sollte.
+
+**Behebung:** ein Merker am Verfassendokument
+(`CCompMessageDoc::m_bE88AnwenderHatGetippt`), der **einrastet**: einmal
+getippt, immer getippt. Er lebt so lange wie das Verfassenfenster, genau wie
+das aufgehobene Original.
+
+### Nebenbefund E-98: die beiden Optionen im Speicherdialog fehlen
+
+Die Gegenprobe zu E-97 zählt die Steuerelemente des offenen Dialogs und meldet
+`Eigene Kaestchen gefunden: 0`. *Kopfzeilen einschließen* und *Absätze raten*
+sind nicht da — Windows 10 öffnet den modernen Dateidialog, und der zeigt die
+Dialogvorlage von 1996 (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`) nicht mehr an.
+
+**Kein Rückschritt durch diese Fassung:** die Kästchen fehlten auch vorher, es
+kam nur niemand so weit, weil Eudora vorher abbrach. Steht als **E-98** offen
+in [BEFUNDE.md](BEFUNDE.md).
+
 ## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
 
 > **Zu prüfen:** Doctolib- und FairToner-Nachricht weiterleiten **und**

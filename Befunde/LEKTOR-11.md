@@ -126,14 +126,16 @@ OnInitDialog             wird NICHT erreicht (Spurmarke kam nicht)
 IsVersion4()             liefert 1, Windows meldet Hauptversion 6
 ```
 
-Damit war auch eine **Tatsachenbehauptung falsch**: der Eintrag sagte *„Auf
-Windows 10 ist die Hauptversion **10**"*. Gemessen meldet Windows dem Prozess
-**6** — `IsVersion4()` ist trotzdem wahr, aber aus einem anderen Grund als
-aufgeschrieben.
+Dabei steht **eine Zahl zweimal verschieden im Repo**: der Eintrag sagte *„Auf
+Windows 10 ist die Hauptversion **10**"*, die Messung vom 15.09. nennt **6**.
+Für `IsVersion4()` (`>= 4`) ist beides wahr, das Urteil ändert sich nicht —
+aber unbelegt ist es so oder so. Siehe den Nachtrag ganz unten: `PRUEFER-11.md`
+rechnet ebenfalls mit 10, und aufgelöst ist der Widerspruch damit nicht.
 
 Berichtigt: die Vorlagenpassage ist als **widerlegt** gekennzeichnet und sagt
-jetzt selbst, womit sie widerlegt wurde; die Hauptversion steht auf dem
-gemessenen Wert; aus *„Noch nicht gemessen"* ist die Messung geworden.
+jetzt selbst, womit sie widerlegt wurde; beide Angaben zur Hauptversion stehen
+nebeneinander mit dem Vermerk, dass nachzumessen ist; aus *„Noch nicht
+gemessen"* ist die Messung geworden.
 
 **Die Regel dahinter:** eine Messung, die nur in einer Commit-Nachricht steht,
 ist nicht im Bestand ([wissen-gehoert-in-dateien](../Arbeitsweise/wissen-gehoert-in-dateien.md)).
@@ -262,3 +264,40 @@ und beide Schranken waren stumm** — `pruefe-stand-md.pl`, weil ihr Maßstab an
 einem fehlenden Datum hing, und `spuren-auswerten.pl`, weil es nach einem Wort
 sucht, das an den neuen Marken nicht steht. Eine grüne Schranke ist kein
 Beleg, solange niemand gemessen hat, wie viel sie überhaupt anfasst.
+
+---
+
+## Nachtrag, noch am 17.09.2026: PRÜFER hat eine meiner Berichtigungen widerlegt
+
+Während dieses Durchgangs lief **PRÜFER** am selben Baum und hat E-97
+nachgerechnet (`008e18a`, [Befunde/PRUEFER-11.md](PRUEFER-11.md)). Zwei seiner
+Funde treffen Abschnitt 4 dieses Berichts:
+
+1. **Meine Berichtigung war selbst falsch.** Ich hatte in `BEFUNDE.md`
+   geschrieben, die beiden Kästchen *Kopfzeilen einschließen* und *Absätze
+   raten* seien *„deshalb geblieben, die Vorlage ist unangetastet"*. Sie sind
+   **weg** — nicht durch die Behebung, sondern seit der Portierung: MFC 14.38
+   nimmt `bVistaStyle = TRUE` als Vorgabe, und `ApplyOFNToShellDialog` liest
+   `lpTemplateName` nirgends, `IDD_SAVEAS_EXT` wird also nie instanziiert
+   (P-2, P-4). Berichtigt und auf `PRUEFER-11.md` verwiesen.
+
+   **Was ich falsch gemacht habe:** ich habe aus *„der Fix hat die Vorlage
+   nicht angefasst"* geschlossen, die Kästchen seien noch da. Das ist ein
+   Schluss aus dem Diff auf den Bestand — ausgerechnet die Klasse, gegen die
+   dieser ganze Durchgang geschrieben ist
+   ([review-sieht-nur-den-diff](../Arbeitsweise/review-sieht-nur-den-diff.md)).
+   Die Aussage wäre nur mit einem Blick in den laufenden Dialog belegbar
+   gewesen, und den hatte ich nicht.
+
+2. **Eine Zahl steht jetzt zweimal verschieden im Repo.** Die Messung vom
+   15.09. (`bdd12f4`) nennt für `dwMajorVersion` den Wert **6**,
+   `PRUEFER-11.md` rechnet mit **10**. Für `IsVersion4()` ist beides wahr, das
+   Urteil ändert sich nicht — aber eine Zahl mit zwei Werten im Bestand ist
+   ein Mangel. In `BEFUNDE.md` stehen jetzt beide Angaben nebeneinander mit
+   dem Vermerk, dass sie nachzumessen ist; auflösen kann das nur, wer den
+   Prozess laufen lässt.
+
+**Für die nächste Runde:** ein LEKTOR-Durchgang, der parallel zu einem
+PRÜFER-Durchgang am selben Befund läuft, sollte dessen Bericht abwarten oder
+ihn wenigstens vor dem Commit lesen. Meine Berichtigung stand elf Minuten
+früher im Baum als seine Widerlegung.

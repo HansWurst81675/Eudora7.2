@@ -160,6 +160,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **E-98** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
 | **E-94** | die Betreffzeile wird mitten im Wort umbrochen — Toner bestel len, Wochenend e!, und in … |
 | **E-92** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |
 | **E-90** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… |
