@@ -61,91 +61,97 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.69 — die Spurmarke zum Speichern misst jetzt den Rumpf (P-38)
+## 7.2.0.69 — die Spurmarke misst den Rumpf, und sie findet gleich etwas (E-101, P-38)
 
-> **Zu prüfen:** eine Nachricht über *File → Save As* sichern — irgendeine,
-> am besten eine weitergeleitete mit Bildern. Dann in `eudora.log` nach
-> `E-101 speichern:` suchen. **In der Zeile müssen jetzt `rumpf-vorher=`
-> und `rumpf-nachher=` stehen.** Beide Werte sollen plausibel sein;
-> `rumpf-nachher=0` wäre der Alarm. Die Datei selbst muss unverändert
-> brauchbar sein — `MIME-Version`, `Content-Type`, kein `<x-html>`. **Am
-> Verhalten von Eudora ändert sich sonst nichts**, nur die Protokollzeile
-> wird länger.
+> **Zu prüfen:** eine Nachricht über *File → Save As* sichern und die Datei
+> in einem anderen Programm öffnen. **Was zu sehen sein muss:**
+> `MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`,
+> **kein** `<x-html>` — und zwar **auch dann, wenn *Kopfzeilen
+> einschließen* aus ist.** Genau das ging vorher schief. Im `eudora.log`
+> steht die Zeile `E-101 speichern:` mit `rumpf-vorher=`, `rumpf-nachher=`
+> und `mime-ergaenzt=`; sie erscheint jetzt ohne besondere Einstellung.
 
-**Kein neuer Befund von dir — zwei Messungen, die nichts messen konnten.**
+**Die Kurzfassung: eine Messung wurde scharf gemacht, und sie hat sofort
+einen Datenverlust an Brauchbarkeit gefunden, den niemand gesehen hatte.**
 
-Der PRÜFER hatte in `main` einen Datenverlust gefunden (**P-28**, behoben in
-`1.0.67`): beim Entfernen des `<x-html>`-Markers verschwand die *ganze erste
-Rumpfzeile*, sobald sie auf `>` endete — stand der Text auf derselben Zeile,
-war der komplette Rumpf weg. Das ist erledigt. Offen blieb die Frage, **warum
-es niemandem aufgefallen war**, und die Antwort steht in der Spurmarke:
+### 1. Die Spurmarke konnte einen verschwundenen Rumpf nicht zeigen (P-38)
 
-```
-E-101 speichern: ... bytes-vorher=104 nachher=128 geaendert=1
-```
-
-104 Byte rein, 128 raus, **und null Byte Rumpf.** Die Datei wird *größer*,
-weil die drei neuen Kopfzeilen dazukommen — die Gesamtlängen können einen
-Schnitt am Rumpf gar nicht zeigen. Jetzt steht daneben:
+Sie nannte nur die Gesamtlängen. Die **wachsen** durch die drei neuen
+Kopfzeilen auch dann, wenn der Rumpf ganz verschwindet:
 
 ```
-... bytes-vorher=104 nachher=128 rumpf-vorher=72 rumpf-nachher=0 geaendert=1
+bytes-vorher=104 nachher=128 geaendert=1     ← und NULL Byte Rumpf
 ```
 
-**Zwei Werte in einer Ausgabe** — der Verlust ist in einer Zeile zu lesen,
-ohne zweite Messung und ohne Vergleich mit früher.
+Jetzt stehen `rumpf-vorher` und `rumpf-nachher` daneben.
 
-**Dasselbe eine Ebene tiefer: der Prüfsatz der Tests.** Die drei Tests zu
-P-28 fragten *„enthält die Ausgabe X"*. Genau dieser Satz hat den Schnitt
-durchgelassen — die Kopfzeilen waren ja da, also blieb jede Frage nach
-`MIME-Version` grün, während der Rumpf fehlte. **Wer nur fragt, ob etwas da
-ist, erfährt nie, was fehlt.** Der neue Satz lautet: *ist jedes Byte der
-Eingabe, das nicht zum Tag gehört, noch da* — byteweise verglichen, und eine
-andere Länge zählt ebenfalls als Abweichung.
+### 2. Sie stand auf einem Kanal, der in der Vorgabe AUS ist
 
-**Beim Lesen des eigenen Testlaufs fiel ein zweiter Fehler auf.** Unter
-`P-21: gemischter Trenner` stand `rumpf-vorher=74 rumpf-nachher=55`. Diese
-74 Byte gehören aber zu `P-28: Marker und Text auf derselben Zeile` —
-nachgerechnet: 74 − 8 für `<x-html>` − 9 für `</x-html>` − 2 für die
-Zeilenschaltung = 55. Die Ursache: `TT_Note` druckte **sofort**, der
-Testname aber erst in `TT_EndTest`; jede Notiz stand damit unter dem Test
-*davor*. **Alle 169 Tests waren betroffen, seit es `TT_Note` gibt** — und
-genau das hätte die neuen Werte wieder unlesbar gemacht. Behoben.
-
-**Die Gegenprobe zum Prüfsatz — auf Gregors Einwand *„kommt mir suspekt
-vor"*.** Er hatte recht: gezeigt war nur, dass der neue Satz beim *heilen*
-Fall grün bleibt. Damit war unbewiesen, dass er überhaupt je **rot** wird.
-Also der umgekehrte Weg (`Arbeitsweise/gegenprobe-umdrehen.md`): in
-`E101SpeicherfassungAufbereiten` **ein einziges Byte** am Rumpfende
-weggenommen und der Lauf gefahren.
+Gregor speicherte mehrere Nachrichten — im Protokoll stand **keine
+einzige** `E-101 speichern:`-Zeile. Nicht, weil nichts geschah:
 
 ```
-[FEHL] E-101: der interne Marker <x-html> verlaesst das Haus nicht
-         DATENVERLUST: der Rumpf soll 73 Byte haben, hat aber 72 - ab Byte 72
+LogLevel 25759 (0x649F)        DEBUG_MASK_MISC = 0x8000 → nicht enthalten
+```
+
+Die Zeile war seit `7.2.0.66` da und ist **nie geschrieben worden**. Damit
+war auch die Behebung von E-101 selbst nie über ihre eigene Spur belegt.
+Jetzt `DEBUG_MASK_DIALOG` (`0x08`) — in der Vorgabe **an**, und inhaltlich
+richtig, denn der Weg läuft über den Speichern-Dialog. Dasselbe stand hier
+schon einmal an: `filtersd.cpp:1147` zu **E-73**, wörtlich *„eine
+Sicherheitsmeldung darf nicht abschaltbar sein"*.
+
+### 3. Und dann zeigte sie den zweiten Teil von E-101
+
+An Gregors eigenen Speichervorgängen, nicht an einem Testfall:
+
+```
+kopfzeilen=0 trenner=0 content-type-vorhanden=0
+bytes-vorher=102006 nachher=101985 rumpf-vorher=102006 rumpf-nachher=101985
+```
+
+**`rumpf-vorher` minus `rumpf-nachher` = 21 Byte** — `<x-html>` plus CRLF
+und `</x-html>` plus CRLF. Kein Byte zuviel: **P-28 hält an echten Daten.**
+
+Aber: **`nachher` ist gleich `rumpf-nachher`.** Es kam **nichts** dazu.
+Seine Dateien trugen HTML ohne `MIME-Version`, ohne `Content-Type`, ohne
+Zeichensatz — *„datei gespeichert, aber unbrauchbar"*, unverändert. Der
+ganze Kopfzeilenblock hängt an `if ( !szKopf.IsEmpty() )`; ohne
+*Kopfzeilen einschließen* ist er leer. **E-101 war nur behoben, wenn der
+Schalter an war** — und laut **E-98** ist das Kästchen auf Windows 10 gar
+nicht anwählbar.
+
+**Behoben, aber eng:** erfunden wird weiterhin nichts. Ergänzt wird nur,
+was der Leser braucht, um die Bytes zu deuten — bei **HTML** und bei
+**Hochbytes**. Reiner `us-ascii`-Text bleibt unberührt. *„Kopfzeilen
+einschließen"* meint `From`, `To`, `Subject`, `Date`, nicht die Erklärung,
+was die Bytes darunter sind.
+
+### 4. Der Prüfsatz der Tests ließ genau diesen Schnitt durch
+
+Sie fragten `Hat()` — *„enthält die Ausgabe X"*. Neu ist der byteweise
+Vergleich. **Die Gegenprobe dazu, auf Gregors *„kommt mir suspekt vor"*:**
+ein einziges Byte am Rumpfende weggenommen —
+
+```
 [FEHL] E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt
-         DATENVERLUST: der Rumpf soll 55 Byte haben, hat aber 54 - ab Byte 54
-[FEHL] E-101 P-28: Marker ohne Gegenstueck, Text auf derselben Zeile
-         DATENVERLUST: der Rumpf soll 58 Byte haben, hat aber 57 - ab Byte 57
-[FEHL] E-101 P-28: > im Attributwert beendet das Tag nicht
-         DATENVERLUST: der Rumpf soll 21 Byte haben, hat aber 20 - ab Byte 20
+         DATENVERLUST: der Rumpf soll 55 Byte haben, hat aber 54
  Ergebnis: 169 Tests, 163 bestanden, 6 fehlgeschlagen
 ```
 
-**Und das ist der eigentliche Befund an dieser Stelle: in allen vier Fällen
-hat der alte Prüfsatz `Hat()` — „enthält die Ausgabe X" — von diesem
-Verlust nichts gemerkt.** Jede einzelne Abweichung kommt aus dem neuen
-byteweisen Vergleich, keine aus den vorhandenen Prüfungen. Ein Byte
-Datenverlust wäre bis eben lautlos durchgegangen.
+**In allen vier Fällen hat das alte `Hat()` nichts gemerkt.** Danach
+zurückgebaut.
 
-Danach zurückgebaut, Arbeitsbaum sauber, wieder **169 von 169**.
+### 5. Jede Notiz stand im Protokoll unter dem falschen Test
 
-**Gemessen:** Bau 0 Fehler, 0 Warnungen. **169 Tests, 169 bestanden.** Die
-drei P-28-Fälle nennen jetzt ihre eigenen Werte — 74/55, 66/58, 61/21, und
-jeder geht in der Rechnung auf.
+`TT_Note` druckte sofort, der Testname erst in `TT_EndTest` — **alle 169
+Tests** betroffen, seit es die Funktion gibt. Behoben.
 
-**Nicht gemessen:** die Zeile ist am laufenden Eudora noch nicht gelesen
-worden. Sie entsteht nur beim Speichern über den Dateidialog, und das ist
-ein Mausweg. Deshalb steht er oben unter *Zu prüfen*.
+**Gemessen:** Bau 0 Fehler. **171 Tests, 171 bestanden.**
+
+**Nicht gemessen:** der zweite Teil aus Punkt 3 ist **nicht am laufenden
+Programm** belegt — nur am Messstand und an Gregors Protokollzeilen von
+`1.0.69`. Deshalb steht er oben unter *Zu prüfen*.
 
 ## 7.2.0.68 — Bilder, die größer sind als angegeben (E-106)
 
