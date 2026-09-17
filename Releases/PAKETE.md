@@ -17,7 +17,9 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen `v1.0.50`. Die ZIPs zu **1.0.21**, **1.0.23**
+> veröffentlicht ist inzwischen **`v1.0.64`** (17.09.2026, auf GitHub als
+> *Latest*; **berichtigt am 17.09.2026 vom LEKTOR — hier stand `v1.0.50`**,
+> gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
 > und 1.0.22 liegen weiter im Repo, das ZIP daneben nicht. **Kein Verweis in
 > dieser Datei darf auf eine dieser Dateien zeigen, als läge sie im

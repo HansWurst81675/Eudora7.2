@@ -324,13 +324,20 @@ nicht angeschlossen. Nachgemessen am 09.09.2026:
 
 | Stück | wo | Zustand |
 |---|---|---|
-| Klasse `SECDockBar::Splitter` mit Lage, Art, Ausrichtung, Grenzen | `OTShim.h:724ff` | **da** |
-| `AddSplitter` | `OTShim.cpp:3038`, 17 Anweisungen | **umgesetzt** |
-| `HitTest` (findet den Balken unter dem Zeiger) | `OTShim.cpp:3159`, 7 Anweisungen | **umgesetzt** |
-| `StartTracking` (Ziehen beginnen) | `OTShim.cpp:3199`, 7 Anweisungen | **umgesetzt** |
-| `CalcTrackingLimits` (wie weit man ziehen darf) | `OTShim.cpp:3178`, 11 Anweisungen | **umgesetzt** |
-| `Splitter::DrawTrackerRect` (der Ziehbalken) | `OTShim.cpp:3255`, 14 Anweisungen | **umgesetzt** |
-| `DeleteAllSplitters` | `OTShim.cpp:3066` | **umgesetzt** |
+| Klasse `SECDockBar::Splitter` mit Lage, Art, Ausrichtung, Grenzen | `OTShim.h:753` | **da** |
+| `AddSplitter` | `OTShim.cpp:3683`, 17 Anweisungen | **umgesetzt** |
+| `HitTest` (findet den Balken unter dem Zeiger) | `OTShim.cpp:3808` (erklärt in `OTShim.h:865`), 7 Anweisungen | **umgesetzt** |
+| `StartTracking` (Ziehen beginnen) | `OTShim.cpp:3974`, 7 Anweisungen | **umgesetzt** |
+| `CalcTrackingLimits` (wie weit man ziehen darf) | `OTShim.cpp:3835`, 11 Anweisungen | **umgesetzt** |
+| `Splitter::DrawTrackerRect` (der Ziehbalken) | `OTShim.cpp:4249`, 14 Anweisungen | **umgesetzt** |
+| `DeleteAllSplitters` | `OTShim.cpp:3711` | **umgesetzt** |
+
+> **Alle sieben Zeilenangaben am 17.09.2026 vom LEKTOR neu gemessen (L-13.3).**
+> Sie waren um 500 bis 1000 Zeilen abgewandert und zeigten ins Leere:
+> `OTShim.h:724ff`, `OTShim.cpp:3038`, `:3159`, `:3199`, `:3178`, `:3255`,
+> `:3066`. An keiner dieser Stellen steht heute noch, was hier behauptet wurde.
+> **Die Sache selbst stimmt** — jede der sieben Stellen ist umgesetzt und
+> wurde einzeln nachgeschlagen; falsch war nur, wo sie zu finden sind.
 | Eudoras eigene Überschreibung `QCDockBar::CalcTrackingLimits` | `DockBar.cpp:149` | **da** — sorgt dafür, dass die Reklameleiste nicht überfahren wird |
 | Eudoras `QCDockBar::NormalizeRow` | `DockBar.cpp:223` | **da** |
 | **Der Aufruf von `AddSplitter`** | — | **fehlt** — `m_arrSplitters` bleibt leer, `HitTest` liefert immer NULL, und damit kommt es nie zum Ziehen |

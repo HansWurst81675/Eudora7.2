@@ -44,7 +44,15 @@ mehr anzeigt.
 **Gebaut ist 7.2.0.67; als Paket geschnürt ist zuletzt 1.0.65** (gemessen am
 17.09.2026: `Releases/Eudora72-1.0.65-release`, letztes ZIP
 `Eudora72-1.0.64-release.zip`; **zu 1.0.67 gibt es noch kein Paket**),
-veröffentlicht ist weiterhin nur `v1.0.50`.
+**veröffentlicht ist `v1.0.64`** — am 17.09.2026 um 10:23 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.67 sind nicht
+freigegeben**.
+
+> **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Hier stand *„veröffentlicht
+> ist weiterhin nur `v1.0.50`"*. Gemessen mit `gh release list` und
+> `git ls-remote --tags origin`: `v1.0.64` existiert. Dieselbe Unwahrheit
+> stand in `WEITERMACHEN.md`, `Releases/PAKETE.md`, `README.md` und
+> `tools/RELEASES.md` — fünf Dokumente, ein Irrtum.
 
 | # | | Stand |
 |---|---|---|
