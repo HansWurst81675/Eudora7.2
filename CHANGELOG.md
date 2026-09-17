@@ -92,7 +92,31 @@ Nachricht bringt ihre echten Kopfzeilen mit; die bleiben unangetastet.
 `MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`, kein
 `x-html`, Umlaute unverändert.
 
-**160 Tests, 160 bestanden** — sieben neue, darunter die Gegenprobe an einer
+### Was der Prüfer an dieser Behebung gefunden hat
+
+Er hat die Funktion übersetzt und mit zwölf Eingaben gefahren, Ein- und
+Ausgabe byteweise verglichen. **Vier Fälle haben Inhalt verloren.** Sein
+Urteil: so nicht ausliefern — vorher war die Datei unbrauchbar, aber
+**vollständig**; danach wäre sie brauchbar und in konstruierbaren Fällen
+**unvollständig, ohne sichtbare Lücke**.
+
+Der schlimmste Fall: der Marker wurde im ganzen Rumpf gesucht und das
+schließende `>` über Zeilengrenzen hinweg. In einer Klartextnachricht ist das
+nächste `>` das **Zitatzeichen** —
+`"Er schrieb <x-html in die Zeile. Du sagtest:\r\n> stimmt"` wurde zu
+`"Er schrieb  stimmt"`, **36 von 62 Byte weg**. Der Verlust war also nicht
+markergroß, sondern unbegrenzt, und traf auch **empfangene** Nachrichten.
+
+Alles behoben: der Marker zählt nur als **erste Zeile** des Rumpfs und nur,
+wenn die ganze Zeile aus ihm besteht; das Gegenstück nur, wenn dahinter nichts
+als Leerraum steht; die führende Leerzeile bleibt; der gemischte Zeilentrenner
+lässt kein `\r` mehr stehen; und fehlt die Leerzeile zwischen Kopf und Rumpf,
+sagt die Spurmarke das mit `trenner=0`, statt sich wie ein Erfolg zu lesen.
+
+**Sechs neue Tests, einer je gemessenem Fall** — damit kein späterer Umbau sie
+wieder aufmacht.
+
+**166 Tests, 166 bestanden** — dreizehn neue, darunter die Gegenprobe an einer
 empfangenen Nachricht und der Stolperstein „zitiertes `Content-Type:` im
 Rumpf einer Weiterleitung".
 
