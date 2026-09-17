@@ -40,6 +40,7 @@ Protokoll endlich gelesen wurde, sagte es in zwei Zeilen alles: **40** mal
 | E-80 | 1.0.45 | 1.0.45 | Ausgewertet am 11.09.2026 in drei Messläufen (`C:\Temp\E80b`). Erst schwieg sie: die Marke lag in `PgReadMsgView`, der Paige-Textansicht, Gregors Nachricht laeuft aber ueber Trident (`ReadMessageFrame.cpp:277-281`). Nach dem Umzug nach `TridentView.cpp:1425` sagte sie `Knopf=0 konzentriert=1 ShowAllHeaders=0 -> Kopfzeilen ALLE` beim ersten Aufbau und `konzentriert=0 -> Kopfzeilen gekuerzt` danach. **Damit war der Verdacht auf den Content Concentrator erledigt** — im laufenden Betrieb greift die Kuerzung. Sie kuerzte nur fast nichts weg, weil die Liste `TabooHeaders` aus 2006 stammt. Die Marke bleibt drin und nennt Knopf, Concentrator, `ShowAllHeaders` und das Ergebnis in einer Zeile |
 | E-79 | 1.0.44 | entfaellt: E-79 war durch die EINSTELLUNG behoben, nicht durch Code — `UseMyFilterWindowPosition=1`, von Gregor am 11.09.2026 an 1.0.44 bestätigt. Die Marke bleibt drin, weil sie sofort sagen würde, wenn die Breite wieder wandert | zwei Zeilen je Lauf: `geladen:` nennt den Wert aus der `Eudora.ini`, den Schalter `UseMyFilterWindowPosition`, die Breite des Elternfensters, das Viertel davon, den gesetzten und den danach tatsächlichen Wert; `gesichert:` nennt, was beim Schließen zurückgeschrieben wird. Damit ist in einem Start-und-Beenden zu sehen, an welcher Stelle die Breite sich ändert |
 | E-97 | 1.0.64 | 1.0.64 | **im selben Zug eingebaut und ausgewertet** (`C:\Temp\E97-Stapel`, 15.09.2026, `tools/TESTLAEUFE.md`). Ausgewertet wurde ihr **Schweigen**: `E-97 OnInitDialog: 1` kam nie, die Marke im Konstruktor kam — daraus folgte, dass der Absturz vor `OnInitDialog` passiert, und aus dem symbolisierten Stapel dann die Zeile `SaveAsDialog.cpp:425`. Die zweite Marke (`E-97 Nachtrag` in `PgEmbeddedImage.cpp`) hat nie geschrieben und bleibt bewusst stehen |
+| E-101 | 1.0.66 | 1.0.66 | **im selben Zug eingebaut und ausgewertet** (17.09.2026, Messlauf `C:\Temp\messen-e101.ps1` — ein Wegwerfwerkzeug außerhalb des Repos, siehe den Hinweis unten). Die Marke nennt in **einer** Zeile, was aus der Datei wurde: `kopfzeilen`, `xhtml`, `content-type-vorhanden`, den abgeleiteten Typ, den Zeichensatz und beide Bytelängen. Genau die Zusammenstellung *„`xhtml=1` und `content-type-vorhanden=0`"* ist der Befund E-101 in einer Zeile. **Achtung, die Marke ist für `spuren-auswerten.pl` unsichtbar** — der Kommentar darüber trägt das Wort `SPURMARKE` nicht (siehe *Nachtrag 17.09.2026*) |
 | E-95 | 1.0.61 | 1.0.62 | **noch vor Gregors Rückmeldung ausgewertet, an einem selbst gestarteten Eudora** (`C:\Temp\E95-Test`, 15.09.2026, Gregors Freigabe: *„mach, was du denn brauchst, um den / die fehler zu fixen!"*). Testnachricht aus drei Bildern **bekannter** Größe — 600×150, 320×80, 20×20. Die Marke sagte `ascent=150 150 150` bei `text-asc=13 150 150`: **jedes Bild erbte die Zeilenhöhe des ersten.** Das war **E-96**, die eigentliche Ursache hinter vier Fassungen Herumprobieren — und zugleich die Widerlegung der `cid:`/`http:`-Unterscheidung aus 7.2.0.61, die daraufhin mit 7.2.0.63 wieder zurückgenommen wurde. Nach der Behebung: `ascent=150 80 20` bei `text-asc=13 13 13`. **Die Marke bleibt dauerhaft drin** |
 
 ## Alle Marken im Quelltext
@@ -98,6 +99,7 @@ Einschalten mit `LogLevel=58527` in der `Eudora.ini` — siehe
 | **E-87** | 1 | `summary.cpp:1149` | `E-87 ComposeMessage:` nennt vor dem Aufbau des Verfassenfensters `IsFancy`, `IsRich`, `IsXRich`, `IsFlowed`, `IsHTML`, den Schalter und den Antworttyp. Damit ist in einer Zeile zu sehen, als **welche Art** Nachricht eine Weiterleitung angelegt wird — der Punkt, an dem die Formatierung verlorenging |
 | **E-95** | 1 | `PGHTMIMP.CPP:2186` | `E-95 Bild:` nennt je eingefügtem Bild `src` (die ersten 32 Zeichen — `cid:`, `data:` oder `http:`), `attr` (was im HTML stand), `embed` (was Paige nach dem Laden weiß), `ascent` (die entstandene Zeilenhöhe) sowie Text-Ascent und -Descent. **Diese eine Zeile hat E-96 entschieden:** `ascent=150 150 150` bei `text-asc=13 150 150` zeigte, dass jedes Bild die Höhe des ersten erbte. Sie ist **dauerhaft** eingebaut — vier Fassungen lang war jede Erklärung für das Schwanken der Bildgrößen plausibel und falsch, und `embed=` ist der Beleg, dass Paige die wirkliche Größe kennt, auch bei extern verlinkten Bildern |
 | **E-97** | 2 | `SaveAsDialog.cpp:78`, `PgEmbeddedImage.cpp:483` | `E-97 OnInitDialog: 1 nach CFileDialog::OnInitDialog` sagt, **ob `OnInitDialog` überhaupt erreicht wird**. Am 15.09.2026 ausgewertet: die Zeile kam **nicht**, während die Marke im Konstruktor kam — damit lag die Lücke zwischen beiden, im `GetSaveFileName`-Aufruf selbst, und der Rückruf `OnTypeChange` war der Täter. `E-97 Nachtrag: quelle=…x… embed=…x…` in `PgEmbeddedImage.cpp` hat in **keinem** meiner Testläufe geschrieben — der Nachtragsweg wird dort nicht erreicht; sie bleibt drin, weil sie bei Gregors echten Bildern schreiben könnte. **Eine Marke, die nichts schreibt, ist ein Messwert** — das war hier der entscheidende |
+| **E-101** | 2 | `msgutils.cpp:3840`, `:4037` | `E-101 speichern:` nennt in **einer** Zeile, was `E101SpeicherfassungAufbereiten` an der Datei getan hat: `kopfzeilen` (hatte die Fassung überhaupt welche), `xhtml` (stand Eudoras interner Marker `<x-html>` darin), `content-type-vorhanden`, den daraus abgeleiteten `typ=text/…`, den nach den Bytes bestimmten `charset` sowie `bytes-vorher`, `nachher` und `geaendert`. **Der Befund steht damit in einer Zeile:** `xhtml=1 content-type-vorhanden=0` heißt, die Datei geht als Eudoras interne Fassung hinaus und ist für jedes andere Programm unbrauchbar. Die zweite Stelle (`:3840`) meldet den leeren Eingang — *„leer, nichts zu tun"*; sie ist das Gegenstück, das sagt, dass die Funktion überhaupt gerufen wurde |
 | **E-89** | 2 | `msgutils.cpp:3406`, `:3760` | `E-89 Bilder im Editor` nennt in **einer** Zeile, was die Umschrift an den Bildern getan hat: wie viele `<img>` es gab, wie viele unverändert blieben, wie viele ihre Größe aus dem CSS bekamen, wie oft die Vorgabe greifen musste, wie oft gedeckelt wurde, und beide Bytelängen. Steht dort `gesamt=0`, war in der Nachricht kein Bild — dann ist E-89 nicht die Ursache. Geschrieben wird sie **nur**, wenn auch das Original aus E-88 aufgehoben wird; das ist die eine Bedingung, an der beide Befunde hängen |
 
 ### Wie man das benutzt
@@ -161,6 +163,33 @@ Werkzeug nichts, in beide Richtungen nicht. Das ist die teurere Sorte
 die Zahl aus dem Messbefehl oben halten, statt gegen sich selbst
 ([pruefumfang-nicht-von-hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md),
 Nachtrag vom 14.09.).
+
+### Nachtrag 17.09.2026, zweiter: dieselbe Konvention zum dritten Mal — E-101
+
+**Die Lehre ist geschrieben und hat nicht gewirkt.** Der Abschnitt darüber
+steht seit heute Vormittag hier; am Nachmittag ist mit **E-101** eine neue
+Marke dazugekommen (`msgutils.cpp:3840` und `:4037`, Text `E-101 speichern:`),
+und der Kommentar darüber lautet wieder `BEFUND E-101` — **ohne das Wort
+`SPURMARKE`**. `spuren-auswerten.pl` zählt an Fassung 1.0.66 unverändert
+**8** Befunde mit Marken und sagt zu E-101 **gar nichts**: weder „hat Marken,
+aber keine Zeile" noch „Zeile ohne Marke". Die Schranke war also **zum dritten
+Mal stumm**, an derselben Stelle und aus demselben Grund
+([lehren-anwenden-nicht-nur-schreiben](../Arbeitsweise/lehren-anwenden-nicht-nur-schreiben.md)).
+
+Die Zeile zu E-101 steht jetzt oben in beiden Tabellen. Solange der Kommentar
+im Quelltext das Schlüsselwort nicht trägt, wird sie als *verwaist* gemeldet —
+**dieser Hinweis ist ein Fehlalarm derselben Sorte wie der zu E-95**, nicht ein
+Zeichen, dass die Marke ausgebaut wäre.
+
+**Zu tun, in `Eudora71/` und deshalb nicht vom LEKTOR:** die Kommentare zu
+**E-95**, **E-97** und **E-101** in einem Zug auf `SPURMARKE ZU BEFUND E-xx`
+bringen. **Und danach die eigentliche Fehlerklasse abstellen**
+([fehlerklassen-abstellen](../Arbeitsweise/fehlerklassen-abstellen.md)): dass
+ein Schlüsselwort im Kommentar über der Ausgabezeile darüber entscheidet, ob
+eine Marke überhaupt gesehen wird, ist die Ursache aller drei Fälle. Ein
+Erkennungsmuster am **Ausgabetext** (`"E-<Zahl> <Wort>:"` im Formatstring)
+statt am Kommentar hätte alle drei gefunden — das ist ein Vorschlag, keine
+beschlossene Sache; er gehört Gregor vorgelegt.
 
 ## Prüfen
 

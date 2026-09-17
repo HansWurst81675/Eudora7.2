@@ -13,6 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
+| **E-98** | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu **E-97**: der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von E-97:** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit E-98 werden `ToggleStat` und `StatDir` wieder scharf (**E-100**). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
 | **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache NICHT gemessen.** Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
 | **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
 | **E-91** | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu E-89, nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
@@ -60,14 +61,53 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.66 — die gespeicherte Datei ist jetzt brauchbar (E-101)
+
+> **Zu prüfen:** Nachricht markieren, **File → Save As**, Datei speichern —
+> und die Datei dann **in Thunderbird oder einem Editor öffnen**. Kopfzeilen
+> müssen da sein, Umlaute müssen stimmen, und `<x-html>` darf nicht auftauchen.
+
+Gregor am 17.09.2026, nachdem er eine weitergeleitete Nachricht gesichert
+hatte: *„datei gespeichert, aber unbrauchbar"*.
+
+**Gemessen an seiner Datei** (5.716 Byte): vier Kopfzeilen, danach Eudoras
+**interner Marker `<x-html>`** und roher HTML-Text. Keine `Content-Type`-Zeile,
+keine `MIME-Version`, kein Zeichensatz. `.eml` und `.txt` byte-identisch.
+
+**Warum.** Bei einer selbst verfassten Nachricht entsteht die
+`Content-Type`-Zeile **erst beim Senden** — `SendContentType`
+(`sendmail.cpp:766`) baut sie aus den Merkern des Übersichtseintrags, nicht aus
+dem Rumpf. Was in `Out.mbx` liegt, ist die interne Fassung, und der
+Speicherweg schrieb sie unverändert hinaus. Die Umlaute waren korrekt als
+Latin-1 gespeichert (`0xFC`, gemessen) — aber ohne `charset=` weiß kein Leser
+das, und Thunderbird zeigt Buchstabensalat oder HTML-Quelltext.
+
+**Behebung.** Der Speicherweg entfernt den internen Marker und ergänzt
+`MIME-Version`, `Content-Type` und `Content-Transfer-Encoding`, wenn keine
+`Content-Type`-Zeile da ist. Untertyp nach dem Marker, Zeichensatz nach den
+Bytes — **aus dem Inhalt abgeleitet, nicht geraten**. Eine empfangene
+Nachricht bringt ihre echten Kopfzeilen mit; die bleiben unangetastet.
+
+**Am laufenden Programm geprüft:** selbst gespeichert, Datei wieder geöffnet —
+`MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`, kein
+`x-html`, Umlaute unverändert.
+
+**160 Tests, 160 bestanden** — sieben neue, darunter die Gegenprobe an einer
+empfangenen Nachricht und der Stolperstein „zitiertes `Content-Type:` im
+Rumpf einer Weiterleitung".
+
+**Was daraus zu lernen war:** bei E-97 hatte ich gemessen, dass der Dialog
+aufgeht, und daraus „Speichern funktioniert" gemacht. Dass nie jemand in die
+herausgekommene Datei geschaut hatte, ist derselbe Befund eine Ebene tiefer.
+
 ## 7.2.0.65 — dieselbe Absturzstelle an drei weiteren Stellen geschlossen (E-100)
 
 > **Zu prüfen:** *File → Save As* muss weiter gehen wie in 1.0.64. Diese
 > Fassung schließt Wege, über die noch niemand gestolpert ist — es soll sich
 > nichts ändern, außer dass es so bleibt.
 
-Vom Prüfer als Gegenvermutung zu E-97 gefunden, **bevor jemand darüber
-gestolpert ist**.
+Vom Prüfer am **17.09.2026** als Gegenvermutung zu E-97 gefunden, **bevor
+jemand darüber gestolpert ist**.
 
 **Teil 1 — dieselbe Lücke, dreimal.** `GetFileNameFromDialog`, `ToggleStat` und
 `StatDir` in `SaveAsDialog.cpp` berechnen `dlgPtr = GetParent()` genau wie

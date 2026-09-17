@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 17.09.2026.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.63** dazugekommen (7.2.0.64 ist gebaut, aber noch nicht als Paket geschnürt); was in ihnen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md), Abschnitt für Abschnitt. Hier fehlen sie. Ausführliche
+> **Diese Buchführung ist unvollständig — Stand 17.09.2026.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.65** dazugekommen (**7.2.0.66 ist gebaut, aber noch nicht als Paket geschnürt** — gemessen am 17.09.2026 unter `Releases/`: letztes Verzeichnis `Eudora72-1.0.65-release`, letztes ZIP `Eudora72-1.0.64-release.zip`); was in ihnen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md), Abschnitt für Abschnitt. Hier fehlen sie. Ausführliche
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**

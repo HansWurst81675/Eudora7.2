@@ -91,6 +91,8 @@
     <ClCompile Include="TestE88.cpp" />
     <ClCompile Include="UnderTestE89.cpp" />
     <ClCompile Include="TestE89.cpp" />
+    <ClCompile Include="UnderTestE101.cpp" />
+    <ClCompile Include="TestE101.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -101,6 +103,7 @@
     <ClInclude Include="UnderTest2047.h" />
     <ClInclude Include="UnderTestE88.h" />
     <ClInclude Include="UnderTestE89.h" />
+    <ClInclude Include="UnderTestE101.h" />
     <ClInclude Include="TestRes.h" />
   </ItemGroup>
   <ItemGroup>

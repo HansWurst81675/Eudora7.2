@@ -3764,3 +3764,346 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 	return bGeaendert;
 }
+
+
+//
+// ---------------------------------------------------------------------------
+// E101SpeicherfassungAufbereiten
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-101: was "Speichern unter" hinausschreibt, kann kein anderes
+// Programm lesen.
+//
+// Gregor am 17.09.2026, nachdem er eine weitergeleitete Nachricht gesichert
+// hatte: "datei gespeichert, aber unbrauchbar". Gemessen an seiner Datei
+// (Fw Ihr Doctolib Verifizierungscode.eml, 5716 Byte):
+//
+//   From: gregor.czempik@web.de
+//   To: markus.bakus@gmx.de
+//   Subject: Fw: Ihr Doctolib Verifizierungscode
+//   Date: Mon, 14 Sep 2026 10:52:45 +0000
+//
+//   <x-html>
+//   <html><body>...g<FC>ltig...
+//
+// Vier Kopfzeilen, danach Eudoras INTERNER Marker <x-html> und roher HTML-
+// Text. Keine Content-Type-Zeile, keine MIME-Version, kein Zeichensatz.
+//
+// WARUM DAS SO IST - und warum es kein Fehler des Speicherns allein ist:
+// bei einer selbst verfassten Nachricht entsteht die Content-Type-Zeile ERST
+// BEIM SENDEN. SendContentType (sendmail.cpp:766) baut sie aus den Merkern
+// des Uebersichtseintrags (MSF_XRICH, MSFEX_HTML), nicht aus dem Rumpf. Was
+// in Out.mbx liegt, ist die interne Fassung. GetFullMessage liefert genau
+// die, und der Speicherweg (tocview.cpp:3163) schreibt sie unveraendert
+// hinaus.
+//
+// WAS DER ANWENDER DAVON HAT: Thunderbird und jedes andere Programm zeigen
+// entweder HTML-Quelltext oder Buchstabensalat. Die Umlaute sind korrekt als
+// Latin-1 gespeichert (das Byte hinter dem g in "gueltig" ist 0xFC,
+// gemessen) - aber ohne charset= weiss kein Leser das.
+//
+// WAS DIESE FUNKTION TUT
+//
+//   1. Sie trennt Kopfzeilen und Rumpf an der ersten Leerzeile.
+//   2. Sie entfernt den <x-html>-Marker und sein Gegenstueck </x-html>.
+//      Der Marker darf Zusaetze tragen (<x-html content-base="...">),
+//      deshalb wird bis zum > gelesen.
+//   3. Fehlt eine Content-Type-Zeile, ergaenzt sie MIME-Version,
+//      Content-Type und Content-Transfer-Encoding.
+//   4. Der Untertyp folgt dem Marker: war er da, ist es text/html, sonst
+//      text/plain. Der Zeichensatz folgt den Bytes: ein Byte >= 0x80
+//      irgendwo im Rumpf heisst ISO-8859-1, sonst us-ascii.
+//
+// WAS SIE NICHT TUT: eine vorhandene Content-Type-Zeile anfassen. Eine
+// empfangene Nachricht bringt ihre echten Kopfzeilen aus dem Postfach mit;
+// die sind richtig und bleiben, wie sie sind. Gemessen wird das, nicht
+// vermutet - die Spurmarke nennt den Befund.
+//
+// Reine Textverarbeitung: Text rein, Text raus. Damit ohne Fenster und ohne
+// Postfach pruefbar, und genau so steht sie in der Testsammlung.
+//
+// Rueckgabe: true, wenn out_szDatei gefuellt ist und an die Stelle des
+// Eingangstextes tritt. out_szSpur gehoert ins Protokoll.
+//
+bool E101SpeicherfassungAufbereiten(
+		const char *		pszVoll,
+		bool				bHatKopfzeilen,
+		CString &			out_szDatei,
+		CString &			out_szSpur )
+{
+	out_szDatei.Empty();
+
+	const int	nLen = pszVoll ? (int) strlen(pszVoll) : 0;
+
+	if ( nLen == 0 )
+	{
+		out_szSpur = "E-101 speichern: leer, nichts zu tun";
+		return false;
+	}
+
+	CString		szAlles( pszVoll );
+
+	//
+	// 1. Kopfzeilen und Rumpf trennen.
+	//
+	// Die Grenze ist die erste Leerzeile. Eudora schreibt CRLF, aber eine
+	// Datei aus fremder Hand kann auch nacktes LF tragen - beide Faelle
+	// werden gesucht, und es gewinnt der fruehere Fund. Wer nur nach
+	// "\r\n\r\n" sucht, findet bei nacktem LF die Grenze erst im Rumpf und
+	// zerschneidet die Nachricht mitten im HTML.
+	//
+	int		nRumpfAb   = -1;
+	int		nKopfEnde  = -1;
+
+	if ( bHatKopfzeilen )
+	{
+		const int	nCrLf = szAlles.Find( "\r\n\r\n" );
+		const int	nLfLf = szAlles.Find( "\n\n" );
+
+		if ( nCrLf >= 0 && ( nLfLf < 0 || nCrLf <= nLfLf ) )
+		{
+			nKopfEnde = nCrLf;
+			nRumpfAb  = nCrLf + 4;
+		}
+		else if ( nLfLf >= 0 )
+		{
+			nKopfEnde = nLfLf;
+			nRumpfAb  = nLfLf + 2;
+		}
+	}
+
+	//
+	// BEFUND E-101 / PRUEFER P-20: steht die Leerzeile ganz vorn, gibt es
+	// keinen Kopf - dann ist ALLES Rumpf. Ohne diese Bedingung wird szKopf
+	// wegen ( nKopfEnde > 0 ) leer, der Zusammenbau schreibt den Trenner
+	// nicht, und die vier Byte sind ersatzlos weg. Gemessen vom PRUEFER:
+	// "\r\n\r\nErste Rumpfzeile\r\n" - 22 Byte rein, 18 raus.
+	//
+	if ( nRumpfAb < 0 || nKopfEnde <= 0 )
+	{
+		// Ohne Kopfzeilen ist alles Rumpf.
+		nKopfEnde = 0;
+		nRumpfAb  = 0;
+	}
+
+	CString		szKopf  = ( nKopfEnde > 0 ) ? szAlles.Left( nKopfEnde ) : CString("");
+	CString		szRumpf = szAlles.Mid( nRumpfAb );
+
+	//
+	// 2. Den x-html-Marker entfernen.
+	//
+	// Gesucht wird ohne Ruecksicht auf Gross- und Kleinschreibung, denn
+	// etf2html.cpp:200 schreibt "<x-html>", TocFrame.cpp:1408 baut ihn aus
+	// der Ressource IDS_MIME_XHTML zusammen, und eine Nachricht aus fremder
+	// Hand kann alles Moegliche tragen.
+	//
+	bool		bWarHtml = false;
+
+	CString		szKlein( szRumpf );
+	szKlein.MakeLower();
+
+	//
+	// PRUEFER P-18: der Marker steht, wenn ueberhaupt, als ERSTE ZEILE des
+	// Rumpfs - etf2html.cpp:200 und TocFrame.cpp:1408 schreiben ihn genau
+	// dort. Der erste Entwurf suchte ihn im ganzen Rumpf und dann das
+	// naechste '>' ueber Zeilengrenzen hinweg. In einer Klartextnachricht
+	// ist das naechste '>' das ZITATZEICHEN, und alles dazwischen fiel weg:
+	//
+	//   "Er schrieb <x-html in die Zeile. Du sagtest:\r\n> stimmt"
+	//     wurde zu "Er schrieb  stimmt"   -   36 von 62 Byte verloren.
+	//
+	// Der PRUEFER hat das am 17.09.2026 an der uebersetzten Funktion
+	// gemessen, mit zwoelf Eingaben, bevor das Paket hinausging
+	// (Befunde/PRUEFER-13.md). Die Zeilengrenze erledigt vier der
+	// gemessenen Faelle auf einmal - darunter den, dass eine EMPFANGENE
+	// Nachricht Rumpftext verlor, obwohl an ihr nichts anzutasten ist.
+	//
+	if ( szKlein.Left( 7 ) == "<x-html" )
+	{
+		const int	nZeile = szRumpf.Find( '\n' );
+		const int	nBis   = ( nZeile < 0 ) ? szRumpf.GetLength() : nZeile + 1;
+
+		CString		szErste = szRumpf.Left( nBis );
+
+		while ( !szErste.IsEmpty() &&
+				( szErste[szErste.GetLength()-1] == '\r' ||
+				  szErste[szErste.GetLength()-1] == '\n' ) )
+			szErste = szErste.Left( szErste.GetLength() - 1 );
+
+		//
+		// Nur wenn die GANZE Zeile der Marker ist. Ein '>' im Attributwert
+		// (<x-html content-base="http://host/a>b/">) hoert damit auf, einen
+		// Rest stehen zu lassen.
+		//
+		if ( szErste.Right( 1 ) == ">" )
+		{
+			bWarHtml = true;
+			szRumpf  = szRumpf.Mid( nBis );
+
+			// Und das Gegenstueck am Ende.
+			szKlein = szRumpf;
+			szKlein.MakeLower();
+
+			// CString kennt ReverseFind nur fuer EIN Zeichen, nicht fuer
+			// eine Zeichenkette. Deshalb von hinten selbst suchen.
+			int			nEnde = -1;
+			{
+				const char *	pszK  = (const char *) szKlein;
+				const int		nKLen = szKlein.GetLength();
+
+				for ( int i = nKLen - 9; i >= 0; i-- )
+				{
+					if ( memcmp( pszK + i, "</x-html>", 9 ) == 0 )
+					{
+						nEnde = i;
+						break;
+					}
+				}
+			}
+
+			if ( nEnde >= 0 )
+			{
+				//
+				// PRUEFER P-19: nur wenn hinter dem Fund nichts als Leerraum
+				// steht, ist es wirklich das Gegenstueck. Sonst ist es
+				// zitierter Text. Gemessen wurde
+				// "WICHTIGER NACHSATZ </x-html> ende" - daraus wurde
+				// "WICHTIGER NACHSATZ  ende", waehrend das ECHTE </x-html>
+				// stehen blieb: Verlust und verfehltes Ziel in einem.
+				//
+				bool	bNurLeerraum = true;
+
+				for ( int k = nEnde + 9; k < szRumpf.GetLength(); k++ )
+				{
+					const char	c = szRumpf[k];
+
+					if ( c != '\r' && c != '\n' && c != ' ' && c != '\t' )
+					{
+						bNurLeerraum = false;
+						break;
+					}
+				}
+
+				if ( bNurLeerraum )
+				{
+					int		nNachEnde = nEnde + 9;
+
+					if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\r' )
+						nNachEnde++;
+					if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\n' )
+						nNachEnde++;
+
+					szRumpf = szRumpf.Left( nEnde ) + szRumpf.Mid( nNachEnde );
+				}
+			}
+		}
+	}
+	//
+	// 3. Gibt es schon eine Content-Type-Zeile?
+	//
+	// Gesucht wird nur am ZEILENANFANG. Im Rumpf einer weitergeleiteten
+	// Nachricht steht der Text "Content-Type:" haeufig mitten drin - als
+	// zitierter Kopf der urspruenglichen Nachricht. Wer ohne Zeilenanker
+	// sucht, findet den und ergaenzt nichts.
+	//
+	bool		bHatContentType = false;
+
+	if ( !szKopf.IsEmpty() )
+	{
+		CString		szKopfKlein( szKopf );
+		szKopfKlein.MakeLower();
+
+		if ( szKopfKlein.Left( 13 ) == "content-type:" )
+		{
+			bHatContentType = true;
+		}
+		else
+		{
+			int		nSuch = szKopfKlein.Find( "\ncontent-type:" );
+			if ( nSuch >= 0 )
+				bHatContentType = true;
+		}
+	}
+
+	//
+	// 4. Zeichensatz aus den Bytes bestimmen, nicht aus einer Einstellung.
+	//
+	// Ein Byte >= 0x80 heisst: das ist nicht us-ascii. Eudora legt intern
+	// Latin-1 ab (Befund NP3-8 und E-85 handeln von genau dieser Kodierung),
+	// deshalb ist ISO-8859-1 die richtige Angabe. Sie wird aus dem Inhalt
+	// abgeleitet und nicht geraten.
+	//
+	bool		bHochbyte = false;
+
+	{
+		const int	nRLen = szRumpf.GetLength();
+
+		for ( int i = 0; i < nRLen; i++ )
+		{
+			if ( (unsigned char) szRumpf[i] >= 0x80 )
+			{
+				bHochbyte = true;
+				break;
+			}
+		}
+	}
+
+	const char *	pszUntertyp = bWarHtml  ? "html"        : "plain";
+	const char *	pszCharset  = bHochbyte ? "ISO-8859-1"  : "us-ascii";
+
+	//
+	// 5. Zusammensetzen.
+	//
+	CString		szNeu;
+
+	if ( !szKopf.IsEmpty() )
+	{
+		//
+		// PRUEFER P-21: lautet der Trenner \r\n + \n, greift der
+		// "\n\n"-Zweig, und szKopf endet auf einem einzelnen \r. In der
+		// Datei stuende dann \r\r\n - eine Kopfzeile, die kein Leser so
+		// erwartet. Kein Verlust, aber falsch.
+		//
+		while ( !szKopf.IsEmpty() &&
+				( szKopf[szKopf.GetLength()-1] == '\r' ||
+				  szKopf[szKopf.GetLength()-1] == '\n' ) )
+			szKopf = szKopf.Left( szKopf.GetLength() - 1 );
+
+		szNeu = szKopf;
+
+		if ( !bHatContentType )
+		{
+			szNeu += "\r\nMIME-Version: 1.0";
+			szNeu += "\r\nContent-Type: text/";
+			szNeu += pszUntertyp;
+			szNeu += "; charset=\"";
+			szNeu += pszCharset;
+			szNeu += "\"";
+			szNeu += "\r\nContent-Transfer-Encoding: 8bit";
+		}
+
+		szNeu += "\r\n\r\n";
+	}
+
+	szNeu += szRumpf;
+
+	const bool	bGeaendert = ( szNeu != szAlles );
+
+	if ( bGeaendert )
+		out_szDatei = szNeu;
+
+	out_szSpur.Format(
+		"E-101 speichern: kopfzeilen=%d trenner=%d xhtml=%d content-type-vorhanden=%d "
+		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d geaendert=%d",
+		bHatKopfzeilen ? 1 : 0,
+		( nKopfEnde > 0 ) ? 1 : 0,
+		bWarHtml ? 1 : 0,
+		bHatContentType ? 1 : 0,
+		pszUntertyp,
+		pszCharset,
+		nLen,
+		szNeu.GetLength(),
+		bGeaendert ? 1 : 0 );
+
+	return bGeaendert;
+}

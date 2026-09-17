@@ -3160,8 +3160,41 @@ void CTocView::OnFileSaveAs()
 					}
 				}
 
-				theFile.Put(szDateMaybe);
-				theFile.PutLine(pszMessage);
+				//
+				// BEFUND E-101: nicht die interne Fassung hinausschreiben.
+				//
+				// Was hier ankommt, ist die Nachricht so, wie sie im
+				// Postfach liegt. Bei einer selbst verfassten hat sie
+				// keine Content-Type-Zeile - die entsteht erst beim
+				// Senden (SendContentType, sendmail.cpp:766) - und der
+				// Rumpf traegt Eudoras internen Marker <x-html>. Eine
+				// so gespeicherte Datei kann kein anderes Programm
+				// lesen. Gregor am 17.09.2026: "datei gespeichert, aber
+				// unbrauchbar".
+				//
+				// E101SpeicherfassungAufbereiten macht daraus eine
+				// gueltige RFC-822-Datei. Eine bereits vorhandene
+				// Content-Type-Zeile - also der Normalfall bei einer
+				// empfangenen Nachricht - bleibt unangetastet.
+				//
+				CString		szGanz( szDateMaybe );
+				CString		szDatei;
+				CString		szSpurE101;
+
+				szGanz += pszMessage;
+
+				if ( E101SpeicherfassungAufbereiten( (LPCTSTR) szGanz,
+							bIncludeHeaders ? true : false,
+							szDatei, szSpurE101 ) )
+				{
+					theFile.PutLine( (LPCTSTR) szDatei );
+				}
+				else
+				{
+					theFile.PutLine( (LPCTSTR) szGanz );
+				}
+
+				PutDebugLog( DEBUG_MASK_MISC, szSpurE101 );
 
 				delete [] pszFullMessage;
 
