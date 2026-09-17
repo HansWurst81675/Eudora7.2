@@ -61,6 +61,44 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.72 — der Absturz, zweiter Anlauf: der Stilweg fliegt raus (E-108)
+
+> **Zu prüfen:** dieselbe Nachricht öffnen und **antworten**. `LogLevel=58527`
+> bleibt in der `Eudora.ini`. Wenn es wieder kracht, endet `eudora.log` erneut
+> an einer `E-106`-Zeile — dann sag mir die letzte Zeile, sie entscheidet.
+
+**E-107 war die falsche Erklärung.** Ich hatte den Absturz damit begründet, dass
+mein E-106-Block auf einem *flüchtigen* Embed läuft, und ihn auf den Ladeweg
+beschränkt. **Gregors Protokoll zu 1.0.71 hat das widerlegt:** der Block läuft
+dort fünfmal, und die letzte Zeile vor dem Abbruch ist wieder seine eigene
+Spurmarke —
+
+```
+E-106 groesser als angegeben: attr=135x40 quelle=405x120 gefunden=1 pos=765
+```
+
+— dasselbe Bild, dieselbe Stelle wie an 1.0.69. Der Fehler steckt **im Block**,
+nicht darin, wer ihn aufruft.
+
+**Was der Block anders machte als der, der seit 1996 funktioniert:** er fasste
+den **Textstil** direkt an (`pgGetStyleInfo` / `pgSetStyleInfo`) an einer
+Position, die aus einer Suche über `embed->style` stammt. Der Prüfer hat dazu
+unabhängig gemeldet (P-41), dass `embed->style` ein **Zeiger** ist, den sich
+zwei Bilder gleicher Maßangabe teilen — die Suche kann also das **falsche**
+Embed liefern, und dann schreibt der Stilweg an die falsche Stelle.
+
+**Behebung:** derselbe Weg wie im QUALCOMM-Block zwanzig Zeilen darüber — die
+Maße ins **Embed** schreiben und `pgInvalEmbedRef` die Zeile neu rechnen lassen.
+Kein Zugriff mehr auf den Textstil.
+
+**Und mein E-103-Sicherungsnetz ist ersatzlos entfernt.** Es fasste denselben
+Stilweg an und hat in **keiner** Messung je ausgelöst — `nachgezogen=0`, jedes
+Mal. Totes Gewicht auf einem gefährlichen Pfad.
+
+**Was damit offen bleibt:** ob der Absturz wirklich weg ist. Nachstellen kann
+ich ihn nach wie vor nicht — mein Prüfstand lädt zwar Bilder, aber der Block
+läuft dort nicht an. **Nur Gregors Lauf entscheidet.**
+
 ## 7.2.0.71 — Absturz beim Antworten auf eine geöffnete Nachricht (E-107)
 
 > **Zu prüfen:** eine Nachricht mit Bildern öffnen und **antworten**. Eudora
