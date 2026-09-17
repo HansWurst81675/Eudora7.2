@@ -18,7 +18,10 @@ void TT_EndTest(void);
 // Meldet eine Abweichung im laufenden Test. printf-Format.
 void TT_Fail(const char* szFormat, ...);
 
-// Zusatzinformation, die nur bei einem fehlgeschlagenen Test mit ausgegeben wird.
+// Zusatzinformation zum laufenden Test. printf-Format. Sie wird gesammelt und
+// zusammen mit dem Testnamen ausgegeben - nicht sofort, sonst stuende sie im
+// Protokoll unter dem Test DAVOR (gemessen am 17.09.2026 an den Rumpf-Werten
+// aus P-38).
 void TT_Note(const char* szFormat, ...);
 
 // Gesamtergebnis ausgeben, liefert die Anzahl fehlgeschlagener Tests.
