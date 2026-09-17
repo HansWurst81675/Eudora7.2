@@ -301,3 +301,32 @@ Funde treffen Abschnitt 4 dieses Berichts:
 PRÜFER-Durchgang am selben Befund läuft, sollte dessen Bericht abwarten oder
 ihn wenigstens vor dem Commit lesen. Meine Berichtigung stand elf Minuten
 früher im Baum als seine Widerlegung.
+
+## Nachtrag 2: ein fremder Commit hat meine Arbeitskopie mitgenommen
+
+Beim Committen dieser Berichtigung brach git ab:
+
+```
+fatal: cannot lock ref 'HEAD': is at 1d37623… but expected 619fdb3…
+```
+
+Nachgemessen: `git status` war danach **sauber**, und `git show --stat 1d37623`
+nennt `BEFUNDE.md` und `Befunde/LEKTOR-11.md` neben acht Dateien, die nicht
+meine sind. Ein parallel laufender Agent hat also meine **noch nicht
+committeten** Änderungen in seinen Commit *„E-99: Datenverlust beim Senden
+eines gesicherten Entwurfs geschlossen"* eingesammelt.
+
+**Verloren ist nichts** — der Inhalt steht im Baum, CR=0 in beiden Dateien.
+**Verloren ist die Begründung:** meine Commit-Nachricht, die erklärt hätte,
+*warum* die Kästchen-Aussage berichtigt wurde, existiert nicht. Wer später
+`git log -- BEFUNDE.md` liest, findet an dieser Stelle einen Commit über einen
+ganz anderen Befund.
+
+Das ist Kollisionsart 3 aus [AGENTEN.md](../AGENTEN.md): **geteilter Index**.
+Die Regel — jeder Commit mit ausdrücklicher Pfadangabe — habe ich eingehalten;
+sie schützt aber nur *meinen* Commit davor, fremde Dateien mitzunehmen, nicht
+*meine* Dateien davor, von einem fremden `-a`/`add -A` eingesammelt zu werden.
+Dagegen hilft nur ein eigener Arbeitsbaum
+([agenten-trennen-worktrees](../Arbeitsweise/agenten-trennen-worktrees.md)) —
+oder, solange der geteilt ist, **früh und klein committen**: je kürzer eine
+Änderung unversioniert im Baum liegt, desto kleiner das Fenster.
