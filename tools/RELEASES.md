@@ -25,6 +25,7 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-08-30 15:08:07 | v1.0.1 | nicht dokumentiert | veroeffentlicht |
 | 2026-09-09 13:25:20 | v1.0.29 | Gregor am 09.09.2026 zu Paket 1.0.29: '1-6, ok.' und 'bau mir mit dem bug ein 0.29 release auf github. den fehler notieren wir, wird im naechsten release behoben.' | veroeffentlicht |
 | 2026-09-13 13:24:37 | v1.0.50 | Gregor am 13.09.2026: 'gemerged, jetzt 0.50 releasen' - E-76 und E-84 hatte er zuvor am laufenden Programm bestaetigt | veroeffentlicht |
+| 2026-09-17 20:07:49 | v1.0.72 | Gregor am 17.09.2026 zu 1.0.72: „kein crash" — belegt durch sein Protokoll: der E-106-Block läuft 18 mal und über die bisher tödliche Stelle hinaus (`pos=770` hinter `pos=765`), letzte Zeile `Logging shutdown`, keine `Exception.log`. Marke auf dem Merge-Commit `8da72c8`. Enthält **E-101**, **E-103**, **E-104**, **E-106** und **E-108**. Offen bleibt **E-98** |
 | 2026-09-17 10:23:08 | v1.0.64 | Gregor am 17.09.2026 zu 1.0.64: 'gespeichert. funktioniert.' (E-97) und 'ja, kein datenverlust!' (E-99) | veroeffentlicht, auf GitHub als *Latest* markiert; Tag `1d37623` |
 
 > **Nachgetragen am 17.09.2026 vom LEKTOR (L-13.1).** Die Zeile zu `v1.0.64`

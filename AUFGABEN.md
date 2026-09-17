@@ -65,10 +65,12 @@ mehr anzeigt.
 an der Produktversion und dem Zeitstempel der `Eudora.exe`;
 `Releases/Eudora72-1.0.70-release` und das ZIP dazu liegen da). **Es ist das erste
 Paket, das alles enthält**: E-101 in beiden Teilen, E-103, E-104, E-106.
-**Bei Gregor liegen 1.0.65, 1.0.67, 1.0.68 und 1.0.69 — 1.0.70 noch nicht.**
-**Veröffentlicht ist `v1.0.64`** — am 17.09.2026 um 10:23 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.70 sind nicht
-freigegeben**.
+**Bei Gregor liegen 1.0.65 sowie 1.0.67 bis 1.0.72.**
+**Veröffentlicht ist `v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert, auf dem Merge-Commit `8da72c8`;
+Gregor hat die Fassung vorher am laufenden Programm geprüft (*„kein crash“*).
+**1.0.65 bis 1.0.71 sind nicht freigegeben** — 1.0.71 stürzt ab und ist
+ausdrücklich nicht zu benutzen.
 
 > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Hier stand *„veröffentlicht
 > ist weiterhin nur `v1.0.50`"*. Gemessen mit `gh release list` und
