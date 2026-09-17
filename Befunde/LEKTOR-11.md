@@ -20,7 +20,7 @@ PRÜFER — deshalb jeder Commit mit ausdrücklicher Pfadangabe
 | **Gefunden** | **13 Mängel** in 10 Dateien |
 | **Berichtigt** | `CHANGELOG.md`, `WEITERMACHEN.md`, `AUFGABEN.md`, `README.md`, `ZIEL.md`, `PORTIERUNG.md`, `BEFUNDE.md`, `Releases/PAKETE.md`, `Befunde/SPURMARKEN.md`, `tools/WERKZEUGE.md` |
 | **Nicht angefasst** | 6 tote Verweise, die LEKTOR-6 begründet stehen lässt (Zitate, Beispiele, der Spiegel `Arbeitsweise/`); zwei Punkte in `Eudora71/`, siehe unten |
-| **Commits** | `375f7e0`, `27da0c9` |
+| **Commits** | `375f7e0`, `27da0c9`, `619fdb3`, `b893a3d` — dazu die Berichtigung aus Nachtrag 1, die ein fremder Commit eingesammelt hat (`1d37623`, siehe Nachtrag 2) |
 
 **Alle Schranken grün nach der Arbeit:** `doku-pruefen.pl`,
 `pruefe-doku-takt.pl`, `pruefe-stand-md.pl`, `offene-befunde.pl`,
