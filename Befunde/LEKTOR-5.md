@@ -480,7 +480,7 @@ nicht dass es wirkt.
 > **Am laufenden Programm belegt.** Gregor am 08.09.2026 an Paket 1.0.22, nach
 > dem Anlegen eines neuen Kontos: *„default werte beim neuen persona konto für
 > ‚leave message on server' greifen."* Die Anforderung dahinter ist **A-1** in
-> [ZIEL.md](ZIEL.md); `tools/paket-pruefen.ps1` warnt, wenn die Datei im Paket
+> [ZIEL.md](../ZIEL.md); `tools/paket-pruefen.ps1` warnt, wenn die Datei im Paket
 > fehlt oder einen der vier Werte nicht trägt.
 
 ## L-9.11 — 18 Verweise ins Leere in `Befunde/LEKTOR-4.md` (mittel)
