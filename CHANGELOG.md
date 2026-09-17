@@ -112,6 +112,33 @@ Testname aber erst in `TT_EndTest`; jede Notiz stand damit unter dem Test
 *davor*. **Alle 169 Tests waren betroffen, seit es `TT_Note` gibt** — und
 genau das hätte die neuen Werte wieder unlesbar gemacht. Behoben.
 
+**Die Gegenprobe zum Prüfsatz — auf Gregors Einwand *„kommt mir suspekt
+vor"*.** Er hatte recht: gezeigt war nur, dass der neue Satz beim *heilen*
+Fall grün bleibt. Damit war unbewiesen, dass er überhaupt je **rot** wird.
+Also der umgekehrte Weg (`Arbeitsweise/gegenprobe-umdrehen.md`): in
+`E101SpeicherfassungAufbereiten` **ein einziges Byte** am Rumpfende
+weggenommen und der Lauf gefahren.
+
+```
+[FEHL] E-101: der interne Marker <x-html> verlaesst das Haus nicht
+         DATENVERLUST: der Rumpf soll 73 Byte haben, hat aber 72 - ab Byte 72
+[FEHL] E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt
+         DATENVERLUST: der Rumpf soll 55 Byte haben, hat aber 54 - ab Byte 54
+[FEHL] E-101 P-28: Marker ohne Gegenstueck, Text auf derselben Zeile
+         DATENVERLUST: der Rumpf soll 58 Byte haben, hat aber 57 - ab Byte 57
+[FEHL] E-101 P-28: > im Attributwert beendet das Tag nicht
+         DATENVERLUST: der Rumpf soll 21 Byte haben, hat aber 20 - ab Byte 20
+ Ergebnis: 169 Tests, 163 bestanden, 6 fehlgeschlagen
+```
+
+**Und das ist der eigentliche Befund an dieser Stelle: in allen vier Fällen
+hat der alte Prüfsatz `Hat()` — „enthält die Ausgabe X" — von diesem
+Verlust nichts gemerkt.** Jede einzelne Abweichung kommt aus dem neuen
+byteweisen Vergleich, keine aus den vorhandenen Prüfungen. Ein Byte
+Datenverlust wäre bis eben lautlos durchgegangen.
+
+Danach zurückgebaut, Arbeitsbaum sauber, wieder **169 von 169**.
+
 **Gemessen:** Bau 0 Fehler, 0 Warnungen. **169 Tests, 169 bestanden.** Die
 drei P-28-Fälle nennen jetzt ihre eigenen Werte — 74/55, 66/58, 61/21, und
 jeder geht in der Rechnung auf.
