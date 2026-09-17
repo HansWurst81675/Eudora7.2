@@ -3872,7 +3872,14 @@ bool E101SpeicherfassungAufbereiten(
 		}
 	}
 
-	if ( nRumpfAb < 0 )
+	//
+	// BEFUND E-101 / PRUEFER P-20: steht die Leerzeile ganz vorn, gibt es
+	// keinen Kopf - dann ist ALLES Rumpf. Ohne diese Bedingung wird szKopf
+	// wegen ( nKopfEnde > 0 ) leer, der Zusammenbau schreibt den Trenner
+	// nicht, und die vier Byte sind ersatzlos weg. Gemessen vom PRUEFER:
+	// "\r\n\r\nErste Rumpfzeile\r\n" - 22 Byte rein, 18 raus.
+	//
+	if ( nRumpfAb < 0 || nKopfEnde <= 0 )
 	{
 		// Ohne Kopfzeilen ist alles Rumpf.
 		nKopfEnde = 0;
@@ -3895,25 +3902,43 @@ bool E101SpeicherfassungAufbereiten(
 	CString		szKlein( szRumpf );
 	szKlein.MakeLower();
 
-	const int	nAuf = szKlein.Find( "<x-html" );
-
-	if ( nAuf >= 0 )
+	//
+	// PRUEFER P-18: der Marker steht, wenn ueberhaupt, als ERSTE ZEILE des
+	// Rumpfs - etf2html.cpp:200 und TocFrame.cpp:1408 schreiben ihn genau
+	// dort. Der erste Entwurf suchte ihn im ganzen Rumpf und dann das
+	// naechste '>' ueber Zeilengrenzen hinweg. In einer Klartextnachricht
+	// ist das naechste '>' das ZITATZEICHEN, und alles dazwischen fiel weg:
+	//
+	//   "Er schrieb <x-html in die Zeile. Du sagtest:\r\n> stimmt"
+	//     wurde zu "Er schrieb  stimmt"   -   36 von 62 Byte verloren.
+	//
+	// Der PRUEFER hat das am 17.09.2026 an der uebersetzten Funktion
+	// gemessen, mit zwoelf Eingaben, bevor das Paket hinausging
+	// (Befunde/PRUEFER-13.md). Die Zeilengrenze erledigt vier der
+	// gemessenen Faelle auf einmal - darunter den, dass eine EMPFANGENE
+	// Nachricht Rumpftext verlor, obwohl an ihr nichts anzutasten ist.
+	//
+	if ( szKlein.Left( 7 ) == "<x-html" )
 	{
-		const int	nZu = szRumpf.Find( '>', nAuf );
+		const int	nZeile = szRumpf.Find( '\n' );
+		const int	nBis   = ( nZeile < 0 ) ? szRumpf.GetLength() : nZeile + 1;
 
-		if ( nZu > nAuf )
+		CString		szErste = szRumpf.Left( nBis );
+
+		while ( !szErste.IsEmpty() &&
+				( szErste[szErste.GetLength()-1] == '\r' ||
+				  szErste[szErste.GetLength()-1] == '\n' ) )
+			szErste = szErste.Left( szErste.GetLength() - 1 );
+
+		//
+		// Nur wenn die GANZE Zeile der Marker ist. Ein '>' im Attributwert
+		// (<x-html content-base="http://host/a>b/">) hoert damit auf, einen
+		// Rest stehen zu lassen.
+		//
+		if ( szErste.Right( 1 ) == ">" )
 		{
 			bWarHtml = true;
-
-			// Den Marker herausschneiden, samt der Zeilenschaltung dahinter.
-			int		nNach = nZu + 1;
-
-			if ( nNach < szRumpf.GetLength() && szRumpf[nNach] == '\r' )
-				nNach++;
-			if ( nNach < szRumpf.GetLength() && szRumpf[nNach] == '\n' )
-				nNach++;
-
-			szRumpf = szRumpf.Left( nAuf ) + szRumpf.Mid( nNach );
+			szRumpf  = szRumpf.Mid( nBis );
 
 			// Und das Gegenstueck am Ende.
 			szKlein = szRumpf;
@@ -3938,18 +3963,41 @@ bool E101SpeicherfassungAufbereiten(
 
 			if ( nEnde >= 0 )
 			{
-				int		nNachEnde = nEnde + 9;
+				//
+				// PRUEFER P-19: nur wenn hinter dem Fund nichts als Leerraum
+				// steht, ist es wirklich das Gegenstueck. Sonst ist es
+				// zitierter Text. Gemessen wurde
+				// "WICHTIGER NACHSATZ </x-html> ende" - daraus wurde
+				// "WICHTIGER NACHSATZ  ende", waehrend das ECHTE </x-html>
+				// stehen blieb: Verlust und verfehltes Ziel in einem.
+				//
+				bool	bNurLeerraum = true;
 
-				if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\r' )
-					nNachEnde++;
-				if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\n' )
-					nNachEnde++;
+				for ( int k = nEnde + 9; k < szRumpf.GetLength(); k++ )
+				{
+					const char	c = szRumpf[k];
 
-				szRumpf = szRumpf.Left( nEnde ) + szRumpf.Mid( nNachEnde );
+					if ( c != '\r' && c != '\n' && c != ' ' && c != '\t' )
+					{
+						bNurLeerraum = false;
+						break;
+					}
+				}
+
+				if ( bNurLeerraum )
+				{
+					int		nNachEnde = nEnde + 9;
+
+					if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\r' )
+						nNachEnde++;
+					if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\n' )
+						nNachEnde++;
+
+					szRumpf = szRumpf.Left( nEnde ) + szRumpf.Mid( nNachEnde );
+				}
 			}
 		}
 	}
-
 	//
 	// 3. Gibt es schon eine Content-Type-Zeile?
 	//
@@ -4010,6 +4058,17 @@ bool E101SpeicherfassungAufbereiten(
 
 	if ( !szKopf.IsEmpty() )
 	{
+		//
+		// PRUEFER P-21: lautet der Trenner \r\n + \n, greift der
+		// "\n\n"-Zweig, und szKopf endet auf einem einzelnen \r. In der
+		// Datei stuende dann \r\r\n - eine Kopfzeile, die kein Leser so
+		// erwartet. Kein Verlust, aber falsch.
+		//
+		while ( !szKopf.IsEmpty() &&
+				( szKopf[szKopf.GetLength()-1] == '\r' ||
+				  szKopf[szKopf.GetLength()-1] == '\n' ) )
+			szKopf = szKopf.Left( szKopf.GetLength() - 1 );
+
 		szNeu = szKopf;
 
 		if ( !bHatContentType )
@@ -4034,9 +4093,10 @@ bool E101SpeicherfassungAufbereiten(
 		out_szDatei = szNeu;
 
 	out_szSpur.Format(
-		"E-101 speichern: kopfzeilen=%d xhtml=%d content-type-vorhanden=%d "
+		"E-101 speichern: kopfzeilen=%d trenner=%d xhtml=%d content-type-vorhanden=%d "
 		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d geaendert=%d",
 		bHatKopfzeilen ? 1 : 0,
+		( nKopfEnde > 0 ) ? 1 : 0,
 		bWarHtml ? 1 : 0,
 		bHatContentType ? 1 : 0,
 		pszUntertyp,

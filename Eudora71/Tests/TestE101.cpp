@@ -172,6 +172,126 @@ void RunE101Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------------
+
+	// ------------------------------------------------------------------
+	// Die Faelle, die der PRUEFER am 17.09.2026 an der uebersetzten
+	// Funktion gemessen hat (Befunde/PRUEFER-13.md). Vier davon haben
+	// Inhalt verloren. Sie stehen hier, damit kein spaeterer Umbau sie
+	// wieder aufmacht.
+	// ------------------------------------------------------------------
+
+	TT_BeginTest("E-101 P-18: <x-html mitten im Text ist kein Marker");
+	{
+		const char* const kMitten =
+			"From: a@example.invalid\r\n"
+			"Subject: Klartext\r\n"
+			"\r\n"
+			"Er schrieb <x-html in die Zeile. Du sagtest:\r\n"
+			"> stimmt\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kMitten, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		// Der Rumpf muss VOLLSTAENDIG erhalten bleiben. Gemessen wurden
+		// vorher 36 von 62 Byte Verlust.
+		TT_CHECK_MSG(Hat(szDatei, "Er schrieb <x-html in die Zeile. Du sagtest:"),
+					 "die Zeile des Anwenders wurde beschnitten");
+		TT_CHECK_MSG(Hat(szDatei, "> stimmt"),
+					 "die zitierte Zeile ist verschwunden");
+		TT_CHECK_MSG(Hat(szSpur, "xhtml=0"),
+					 "das ist kein Marker und darf nicht als einer zaehlen");
+		TT_CHECK_MSG(Hat(szDatei, "Content-Type: text/plain"),
+					 "eine Klartextnachricht ist nicht text/html");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-19: zitiertes </x-html> ist nicht das Gegenstueck");
+	{
+		const char* const kZweiEnden =
+			"From: a@example.invalid\r\n"
+			"Subject: Weiterleitung\r\n"
+			"\r\n"
+			"<x-html>\r\n"
+			"<html><body>WICHTIGER NACHSATZ </x-html> ende</body></html>\r\n"
+			"</x-html>\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kZweiEnden, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "WICHTIGER NACHSATZ"),
+					 "der Nachsatz darf nicht verschwinden");
+		TT_CHECK_MSG(Hat(szDatei, "ende"),
+					 "der Text hinter dem Zitat darf nicht verschwinden");
+		TT_CHECK_MSG(!Hat(szDatei, "\r\n</x-html>"),
+					 "das ECHTE Gegenstueck am Ende muss weg sein");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-18: > im Attributwert laesst keinen Rest stehen");
+	{
+		const char* const kAttribut =
+			"From: a@example.invalid\r\n"
+			"\r\n"
+			"<x-html content-base=\"http://host/a>b/\">\r\n"
+			"<html><body>Inhalt</body></html>\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kAttribut, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(!Hat(szDatei, "b/\">"),
+					 "der Rest des Markers steht noch in der Datei");
+		TT_CHECK_MSG(Hat(szDatei, "<html><body>Inhalt"),
+					 "der Rumpf muss erhalten bleiben");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-20: fuehrende Leerzeile geht nicht verloren");
+	{
+		const char* const kLeerVorn = "\r\n\r\nErste Rumpfzeile\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kLeerVorn, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		// 22 Byte rein. Es darf nichts fehlen - vorher kamen 18 heraus.
+		const CString szErgebnis = bGeaendert ? szDatei : CString(kLeerVorn);
+		TT_CHECK_MSG(szErgebnis.GetLength() >= 22,
+					 "es sind Bytes verschwunden");
+		TT_CHECK_MSG(Hat(szErgebnis, "Erste Rumpfzeile"),
+					 "der Rumpf fehlt");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-22: ohne Leerzeile meldet die Spurmarke trenner=0");
+	{
+		const char* const kOhneTrenner =
+			"From: a@example.invalid\r\n"
+			"Subject: kein Trenner\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kOhneTrenner, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szSpur, "trenner=0"),
+					 "die Spurmarke muss sagen, dass kein Trenner gefunden wurde");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 P-21: gemischter Trenner laesst kein \r im Kopf stehen");
+	{
+		const char* const kGemischt =
+			"From: a@example.invalid\r\n"
+			"Subject: gemischter Trenner\r\n"
+			"\n"
+			"Rumpf\r\n";
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kGemischt, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(!Hat(szDatei, "\r\r\n"),
+					 "ein doppeltes \r steht in der Datei");
+		TT_CHECK_MSG(Hat(szDatei, "Rumpf"),
+					 "der Rumpf fehlt");
+	}
+	TT_EndTest();
+
 	TT_BeginTest("E-101: leere Eingabe aendert nichts und stuerzt nicht ab");
 	bGeaendert = UTE101_SpeicherfassungAufbereiten("", true, szDatei, szSpur);
 	TT_CHECK_MSG(!bGeaendert, "an nichts ist nichts zu tun");
