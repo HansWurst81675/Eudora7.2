@@ -95,8 +95,13 @@ Kein Zugriff mehr auf den Textstil.
 Stilweg an und hat in **keiner** Messung je ausgelöst — `nachgezogen=0`, jedes
 Mal. Totes Gewicht auf einem gefährlichen Pfad.
 
-**Was damit offen bleibt:** ob der Absturz wirklich weg ist. Nachstellen kann
-ich ihn nach wie vor nicht — mein Prüfstand lädt zwar Bilder, aber der Block
+**Bestätigt.** Gregor am 17.09.2026 an 1.0.72: *„kein crash"*. Sein Protokoll
+belegt es dreifach — der Block läuft **18 mal** statt gar nicht, er läuft **über
+die bisher tödliche Stelle hinaus** (`pos=770` hinter dem `pos=765`, an dem in
+allen drei Absturzprotokollen Schluss war), und die letzte Zeile lautet
+`Logging shutdown`. Keine `Exception.log`, nicht einmal eine leere.
+
+**Nachstellen konnte ich es trotzdem nicht — mein Prüfstand lädt zwar Bilder, aber der Block
 läuft dort nicht an. **Nur Gregors Lauf entscheidet.**
 
 ## 7.2.0.71 — Absturz beim Antworten auf eine geöffnete Nachricht (E-107)
