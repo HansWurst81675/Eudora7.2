@@ -454,6 +454,36 @@ Nimm (Join-Path $PSScriptRoot 'Eudora starten.cmd') 'Eudora starten.cmd'
 # ich nicht dran denke."
 Nimm (Join-Path $PSScriptRoot 'DEudora.ini') 'DEudora.ini'
 
+#
+# BEFUND E-108: der Protokollschalter gehoert INS PAKET.
+#
+# Die Mailverzeichnis\Eudora.ini stammt aus dem Grundlagen-ZIP und kennt
+# LogLevel nicht. Gregors erstes Absturzprotokoll zu 1.0.71 war deshalb
+# leer - die Marken zu E-95, E-101, E-103 und E-106 haengen alle an
+# DEBUG_MASK_MISC (0x8000), und der ist in der Vorgabe aus. Er musste die
+# Zeile von Hand eintragen, bevor ueberhaupt etwas zu sehen war. Der
+# PRUEFER hat denselben Mangel als P-43 gemeldet.
+#
+# 58527 = 0xE49F und enthaelt 0x8000. Der Abschnitt ist [Debug], nicht
+# [Settings] - massgeblich ist GetSectionID (Eudora71\Eudora\rs.cpp:89-97),
+# und tools\pruefe-ini-abschnitte.pl hat den ersten Anlauf abgewiesen.
+#
+$paketIni = Join-Path $Ziel 'Mailverzeichnis\Eudora.ini'
+if (Test-Path -LiteralPath $paketIni) {
+  $iniText = [System.IO.File]::ReadAllText($paketIni, [System.Text.Encoding]::GetEncoding(28591))
+  if ($iniText -notmatch '(?m)^\s*LogLevel\s*=') {
+    if ($iniText -notmatch '(?m)^\[Debug\]') {
+      if ($iniText -notmatch "`r`n$") { $iniText += "`r`n" }
+      $iniText += "`r`n[Debug]`r`n"
+    }
+    $iniText = $iniText -replace '(?m)^\[Debug\]\r?\n', "[Debug]`r`nLogLevel=58527`r`n"
+    [System.IO.File]::WriteAllText($paketIni, $iniText, [System.Text.Encoding]::GetEncoding(28591))
+    Write-Host '  Eudora.ini                   LogLevel=58527 in [Debug] ergaenzt (E-108)'
+  } else {
+    Write-Host '  Eudora.ini                   LogLevel stand schon drin'
+  }
+}
+
 $liesmich = Join-Path $wurzel 'Releases\1.0.3\LIESMICH.txt'
 if (Test-Path -LiteralPath $liesmich) {
   Write-Host ''
