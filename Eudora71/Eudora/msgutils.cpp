@@ -4181,6 +4181,7 @@ bool E101SpeicherfassungAufbereiten(
 	// 5. Zusammensetzen.
 	//
 	CString		szNeu;
+	bool		bMimeErgaenzt = false;
 
 	if ( !szKopf.IsEmpty() )
 	{
@@ -4210,6 +4211,61 @@ bool E101SpeicherfassungAufbereiten(
 
 		szNeu += "\r\n\r\n";
 	}
+	else if ( !bHatContentType && ( bWarHtml || bHochbyte ) )
+	{
+		//
+		// BEFUND E-101, zweiter Teil: ohne Kopfzeilen wurde GAR NICHTS ergaenzt - und
+		// damit war E-101 im Normalfall nicht behoben.
+		//
+		// Gemessen an Gregors eigenen Speichervorgaengen vom 17.09.2026
+		// mit 1.0.69, an der Spurmarke abgelesen:
+		//
+		//   kopfzeilen=0 trenner=0 content-type-vorhanden=0
+		//   bytes-vorher=102006 nachher=101985
+		//   rumpf-vorher=102006 rumpf-nachher=101985
+		//
+		// nachher == rumpf-nachher heisst: nichts dazugekommen. Seine
+		// Datei trug HTML ohne MIME-Version, ohne Content-Type und ohne
+		// Zeichensatz - genau der Zustand, den er gemeldet hatte
+		// ("datei gespeichert, aber unbrauchbar"). Der Marker wurde
+		// entfernt, die Datei damit sogar schwerer erkennbar als vorher.
+		//
+		// Dass das keine Randlage ist, sagt E-98: die Kaestchen
+		// "Kopfzeilen einschliessen" und "Absaetze raten" sind auf
+		// Windows 10 gar nicht anwaehlbar. Es gilt, was in der
+		// Eudora.ini steht - hier stand AUS.
+		//
+		// Vorher war dieses Verhalten bewusst gesetzt und in
+		// TestE101.cpp festgeschrieben ("ohne Kopfzeilen wird auch
+		// keine erfunden"). Das ist als Grundsatz richtig und bleibt
+		// es: ERFUNDEN wird nichts. Ergaenzt wird nur, was der Leser
+		// braucht, um die Bytes ueberhaupt richtig zu deuten, und nur
+		// dann, wenn es ohne diese Angabe schiefgeht:
+		//
+		//   bWarHtml   - ohne Content-Type zeigt jedes andere Programm
+		//                HTML-Quelltext statt der Nachricht.
+		//   bHochbyte  - ohne charset wird aus 0xFC in "gueltig" je
+		//                nach Leser ein anderes Zeichen.
+		//
+		// Reiner us-ascii-Text ohne Marker bekommt weiterhin NICHTS:
+		// dort ist ohne Angabe nichts misszuverstehen, und wer einen
+		// Textausschnitt sichert, will genau die Zeichen.
+		//
+		// "Kopfzeilen einschliessen" meint die Kopfzeilen der
+		// NACHRICHT - From, To, Subject, Date. Nicht die Erklaerung,
+		// was die Bytes darunter sind.
+		//
+		bMimeErgaenzt = true;
+
+		szNeu += "MIME-Version: 1.0";
+		szNeu += "\r\nContent-Type: text/";
+		szNeu += pszUntertyp;
+		szNeu += "; charset=\"";
+		szNeu += pszCharset;
+		szNeu += "\"";
+		szNeu += "\r\nContent-Transfer-Encoding: 8bit";
+		szNeu += "\r\n\r\n";
+	}
 
 	szNeu += szRumpf;
 
@@ -4221,7 +4277,7 @@ bool E101SpeicherfassungAufbereiten(
 	out_szSpur.Format(
 		"E-101 speichern: kopfzeilen=%d trenner=%d xhtml=%d content-type-vorhanden=%d "
 		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d rumpf-vorher=%d "
-		"rumpf-nachher=%d geaendert=%d",
+		"rumpf-nachher=%d mime-ergaenzt=%d geaendert=%d",
 		bHatKopfzeilen ? 1 : 0,
 		( nKopfEnde > 0 ) ? 1 : 0,
 		bWarHtml ? 1 : 0,
@@ -4232,6 +4288,7 @@ bool E101SpeicherfassungAufbereiten(
 		szNeu.GetLength(),
 		nRumpfVorher,
 		szRumpf.GetLength(),
+		bMimeErgaenzt ? 1 : 0,
 		bGeaendert ? 1 : 0 );
 
 	return bGeaendert;

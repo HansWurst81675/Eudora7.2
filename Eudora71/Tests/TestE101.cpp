@@ -303,7 +303,27 @@ void RunE101Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------------
-	TT_BeginTest("E-101: ohne Kopfzeilen wird nur der Marker entfernt");
+	// ------------------------------------------------------------------
+	// BEFUND E-101, zweiter Teil. Dieser Test hat frueher das Gegenteil verlangt:
+	// "ohne Kopfzeilen wird auch keine erfunden". Der Grundsatz stimmt und
+	// bleibt - ERFUNDEN wird nichts. Aber er galt auch dort, wo die Datei
+	// dadurch unbrauchbar wurde.
+	//
+	// Gregor hat am 17.09.2026 mit 1.0.69 mehrere Nachrichten gespeichert.
+	// Seine Spurmarke:
+	//
+	//   kopfzeilen=0 trenner=0 content-type-vorhanden=0
+	//   bytes-vorher=102006 nachher=101985
+	//   rumpf-vorher=102006 rumpf-nachher=101985
+	//
+	// nachher == rumpf-nachher heisst: NICHTS dazugekommen. Seine Datei
+	// trug HTML ohne MIME-Version, ohne Content-Type, ohne Zeichensatz -
+	// genau der Zustand, den er als "datei gespeichert, aber unbrauchbar"
+	// gemeldet hatte. E-101 war also nur behoben, wenn "Kopfzeilen
+	// einschliessen" AN war - und laut E-98 ist das Kaestchen auf
+	// Windows 10 gar nicht anwaehlbar.
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 zweiter Teil: ohne Kopfzeilen bekommt HTML trotzdem seinen Content-Type");
 	bGeaendert = UTE101_SpeicherfassungAufbereiten(
 					"<x-html>\r\n<html><body>Hallo</body></html>\r\n</x-html>\r\n",
 					false, szDatei, szSpur);
@@ -311,8 +331,53 @@ void RunE101Tests(void)
 	TT_CHECK_MSG(bGeaendert, "der Marker muss weg");
 	TT_CHECK_MSG(!Hat(szDatei, "x-html"),
 			 "kein Marker mehr in der Datei");
+	TT_CHECK_MSG(Hat(szDatei, "Content-Type: text/html"),
+			 "ohne Content-Type zeigt jeder Leser HTML-Quelltext");
+	TT_CHECK_MSG(Hat(szDatei, "MIME-Version: 1.0"),
+			 "MIME-Version gehoert dazu");
+	TT_CHECK_MSG(Hat(szDatei, "<html><body>Hallo</body></html>"),
+			 "der Rumpf selbst bleibt vollstaendig");
+	TT_CHECK_MSG(Hat(szSpur, "mime-ergaenzt=1"),
+			 "die Spurmarke muss sagen, dass sie ergaenzt hat");
+	TT_CHECK_MSG(!Hat(szDatei, "From:"),
+			 "die Kopfzeilen der NACHRICHT bleiben draussen - das war die Bitte");
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	// Die Gegenprobe, und sie ist die wichtigere: reiner us-ascii-Text
+	// ohne Marker bekommt WEITERHIN NICHTS. Dort ist ohne Angabe nichts
+	// misszuverstehen, und wer einen Textausschnitt sichert, will genau
+	// die Zeichen und keine Kopfzeilen. Ohne diesen Test waere aus der
+	// Behebung ein "jede Datei bekommt jetzt Kopfzeilen" geworden.
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 Gegenprobe zum zweiten Teil: reiner ASCII-Text ohne Kopfzeilen bleibt unberuehrt");
+	bGeaendert = UTE101_SpeicherfassungAufbereiten(
+					"Guten Tag. Nur Text, keine Umlaute.\r\n",
+					false, szDatei, szSpur);
+	TT_Note("%s", (const char*) szSpur);
 	TT_CHECK_MSG(!Hat(szDatei, "Content-Type"),
-			 "ohne Kopfzeilen wird auch keine erfunden");
+			 "hier wird nichts erfunden - es gibt nichts zu erklaeren");
+	TT_CHECK_MSG(!Hat(szDatei, "MIME-Version"),
+			 "auch keine MIME-Version");
+	TT_CHECK_MSG(Hat(szSpur, "mime-ergaenzt=0"),
+			 "und die Spurmarke sagt es");
+	TT_EndTest();
+
+	// ------------------------------------------------------------------
+	// Und der dritte Fall: KEIN HTML, aber ein Hochbyte. Ohne charset
+	// wird aus dem 0xFC je nach Leser ein anderes Zeichen.
+	// ------------------------------------------------------------------
+	TT_BeginTest("E-101 zweiter Teil: Hochbyte ohne Kopfzeilen bekommt seinen Zeichensatz");
+	bGeaendert = UTE101_SpeicherfassungAufbereiten(
+					"Das ist g\xFCltig.\r\n",
+					false, szDatei, szSpur);
+	TT_Note("%s", (const char*) szSpur);
+	TT_CHECK_MSG(Hat(szDatei, "charset=\"ISO-8859-1\""),
+			 "ohne charset wird aus 0xFC Buchstabensalat");
+	TT_CHECK_MSG(Hat(szDatei, "Content-Type: text/plain"),
+			 "ohne Marker ist es text/plain");
+	TT_CHECK_MSG(Hat(szDatei, "g\xFCltig"),
+			 "das Byte selbst bleibt unveraendert");
 	TT_EndTest();
 
 	// ------------------------------------------------------------------
