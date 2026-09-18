@@ -80,6 +80,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `e110-prozentzeichen-in-adressen` | 18.09.2026 | Von Gregor vorgeschlagen angenommen (*„e110-prozentzeichen-in-adressen ist ok"*) — **bevor** der Zweig entstand, und erst nachdem der Vorgängerzweig gemergt war: *„dann mache erstmal eins zu ende fertig, bevor du einen neuen branch aufmachst."* Zweck: **E-110** beheben. `resolve_URL` (`HTMLUtils.cpp`) rückte im `%`-Zweig den Ausgabezeiger nicht weiter; das entschlüsselte Zeichen wurde vom nächsten überschrieben. Ein `++output;`. Dazu sieben Tests, die gegen die alte Fassung **umfallen** (vier von sieben) und gegen die neue durchlaufen |
 
+| `e112-bilder-auf-angegebene-groesse` | 18.09.2026 | Von Gregor angenommen (*„e112-bilder-auf-angegebene-groesse / paßt"*). **Der Vorschlag kam allerdings zu früh** — auf dem Vorgängerzweig lagen zu diesem Zeitpunkt noch zwei ungesicherte Nachträge (Gregors Bestätigung zu E-110 und der Befund E-112). Er hat daraufhin gemergt, und beides fehlte auf `main`. Seine Regel dazu: *„wenn du mir einen neuen branch namen vorschlägst, dann gehe ich davon aus, daß der vorherige branch komplett ist."* Festgehalten als `Arbeitsweise/zweigname-heisst-vorheriger-fertig.md`. Zweck des Zweigs: **E-112** — Bilder werden in Originalgröße gezeichnet statt in der angegebenen (`35x35` angegeben, `330x327` in der Datei), weil die E-106-Behebung die echte Größe ins Embed schreibt. Die beiden nachgetragenen Doku-Stellen sind sein erster Commit |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
