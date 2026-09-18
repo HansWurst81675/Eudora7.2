@@ -98,6 +98,39 @@ Bild läge längst auf der Platte. Zwei ganz verschiedene Behebungen.
 
 **Neu in der Zeile:** `datei=` und `intern=`.
 
+### Die Ursache von E-110 ist gemessen — `resolve_URL` wirft Prozent-Sequenzen weg
+
+Die Messfassungen 1.0.73 und 1.0.74 haben den Fehler eingegrenzt und am
+18.09.2026 endgültig bestimmt. **Die Behebung ist noch nicht drin** — dies ist
+der Befundstand, nicht der Behebungsstand.
+
+`resolve_URL` (`HTMLUtils.cpp:31-42`) schreibt im `%`-Zweig das entschlüsselte
+Zeichen nach `*output`, **rückt `output` aber nicht weiter**; der `else`-Zweig
+tut es mit `*output++ = *input++`. Das nächste Zeichen überschreibt das
+entschlüsselte — es ist nicht falsch, sondern **weg**.
+
+Nachgerechnet: `en%20aktuellen%20Verlust.png` wird zu
+`enaktuellenVerlust.png`, `SVS%20NL%20FW%20(1).jpg` zu `SVSNLFW(1).jpg`.
+Beides steht genau so in Gregors Protokoll, der Server antwortet darauf mit
+**404**, Eudora legt die Fehlerseite ab (`datei=1`), erkennt sie richtigerweise
+nicht als Bild (`intern=0`) und zeichnet einen grauen Kasten.
+
+Die Aufteilung ist lückenlos: alle **zehn** abgewiesenen Adressen tragen
+Leerzeichen, alle **vierzehn** erfolgreichen keines. Nicht die Größe — ein Bild
+mit 600×146 kommt durch, eines mit 250×96 nicht.
+
+**Der Fehler ist größer als der Bildweg** und trifft jede Prozent-Sequenz, also
+auch Umlaute in Dateinamen (`%C3%BC`) und Klammern (`%28`). Er steckt im
+Originalcode von QUALCOMM.
+
+Dazu ein zweiter, eigenständiger Mangel aus demselben Lauf: `loader_result`
+bleibt **durchgehend 0** — ein fehlgeschlagener Bildabruf wird nirgends
+vermerkt.
+
+Neu aufgenommen: **E-111** (`resolve_URL` kann bei einer Adresse von genau
+512 Zeichen ein Byte hinter das Zielfeld schreiben; Schranke prüft `>` statt
+`>=`).
+
 ### Prüfanleitung
 
 Auf dieselbe Nachricht antworten, Eudora beenden, `eudora.log` sichern. Zu
