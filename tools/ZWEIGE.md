@@ -84,6 +84,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `e112-frame-picture` | 18.09.2026 | Name von Gregor gesetzt (*„e112-frame-picture"*), nachdem der Vorgängerzweig gemergt und gelöscht war. Zweck: **E-112** beheben — `pict_frame` bekommt die **angegebene** Größe statt der echten, damit die Metadatei hineingestreckt wird statt die Zeile zu sprengen. Die Entscheidung sitzt dafür in einer eigenen, paige-freien Funktion `E112Zielrechteck`, damit der Prüfstand sie messen kann; bei **E-106** stand dieselbe Regel mitten im Ladeweg und war nur an Gregors Rechner prüfbar. Sieben neue Tests, Gegenprobe gefahren. Dazu **E-113** aufgeschrieben (Bilder, die breiter sind als das Fenster) — auf Gregors Anordnung *„erst A, dann B"* nicht mitbehoben |
 
+| `e112-nicht-behoben-berichtigt` | 18.09.2026 | Von Gregor angenommen (*„branch name OK"*), kurz vor Feierabend. Zweck: **eine Unwahrheit von `main` nehmen.** Nach dem Merge von #74 stand dort *„E-112 behoben in 7.2.0.76"* — Gregors Bildschirmfoto zu 1.0.76 widerlegt das: die Bilder sind weiterhin zu groß, **und der Text liegt jetzt wieder darauf**, weil die Zeile nur noch die angegebene Höhe hat. Damit ist 1.0.76 in einem Punkt **schlechter als 1.0.75**. Nur Berichtigung, kein Quelltext |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
