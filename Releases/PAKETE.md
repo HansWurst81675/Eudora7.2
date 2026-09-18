@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 17.09.2026, abends neu gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.70** dazugekommen; für **1.0.66 bis 1.0.70** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 18.09.2026; die Zahlen sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; für **1.0.66 bis 1.0.72** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -17,7 +17,7 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.64`** (17.09.2026, auf GitHub als
+> veröffentlicht ist inzwischen **`v1.0.72`** (17.09.2026, 20:07 UTC, auf GitHub als
 > *Latest*; **berichtigt am 17.09.2026 vom LEKTOR — hier stand `v1.0.50`**,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
@@ -155,6 +155,50 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.72 — gebaut am 17.09.2026, **von Gregor bestätigt**
+
+**Die erste Fassung ohne den Absturz beim Antworten.** Gregor an diesem Abend:
+*„kein crash"* — und sein Protokoll belegt es dreifach: der E-106-Block läuft
+**18 mal**, er läuft **über die bisher tödliche Stelle hinaus** (`pos=770`
+hinter dem `pos=765`, an dem in allen drei Absturzprotokollen Schluss war), und
+die letzte Zeile lautet `Logging shutdown`. Keine `Exception.log`, nicht einmal
+eine leere.
+
+Inhaltlich **E-108**: der direkte Zugriff auf den Textstil, den **E-106**
+eingeschleppt hatte, ist entfernt; stattdessen derselbe Weg wie im Originalcode
+von 1996 (Maße ins Embed, `pgInvalEmbedRef` rechnen lassen). Dazu bringt das
+Paket erstmals **`LogLevel=58527` in `[Debug]`** mit — Gregors erstes
+Absturzprotokoll zu 1.0.71 war leer, weil der Schalter fehlte.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.72-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `b65a3d235d7cfb7967d78723ff4fc5b249534dd097a860028e1ff13ead3c480f` |
+| **Größe** | 9 356 860 Byte, 157 Dateien |
+| **Quellstand** | 7.2.0.72 (`Eudora71/Version.h`) |
+| **`Eudora.exe` im Paket** | 2 987 008 Byte, 17.09.2026 21:56 |
+| **`EudoraRes.dll` im Paket** | 2 448 384 Byte |
+| **Paketprüfung** | keine Fehler |
+| **Tests** | 171 von 171 |
+
+## 1.0.71 — gebaut am 17.09.2026, **stürzt ab**
+
+**Nicht benutzen.** Enthielt **E-107**, das sich als die **falsche Erklärung**
+für den Absturz erwies: der E-106-Block wurde auf den Ladeweg beschränkt, lief
+dort aber weiter — Gregors Protokoll zeigt ihn fünfmal, und der Abbruch kam an
+derselben Stelle wie an 1.0.69.
+
+Diese Fassung ist der Beleg dafür, dass die Ursache **im Block** saß und nicht
+darin, wer ihn aufruft. Ohne sie wäre E-108 nicht gefunden worden.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.71-release` (Verzeichnis, **kein ZIP**) |
+| **Quellstand** | 7.2.0.71 |
+| **`Eudora.exe` im Paket** | 2 987 520 Byte, 17.09.2026 21:32 |
+| **Dateien** | 157 |
+| **Achtung** | ohne `LogLevel` in der INI — Gregors erstes Absturzprotokoll blieb deshalb leer |
+
 ## 1.0.70 — gebaut am 17.09.2026, kein Release
 
 **Die erste Fassung, die alles enthält.** Die vier davor enthielten jeweils nur
@@ -276,7 +320,8 @@ meldete beim Bau keine Fehler, Kriterium 0 **JA**.
 
 ## 1.0.29 — veröffentlicht am 09.09.2026
 
-**Die aktuelle Fassung, und die einzige, die als Paket im Repo liegt.** Sie
+**Stand 09.09.2026 die jüngste Fassung, und die einzige, die damals als Paket
+im Repo lag.** Sie
 bringt gegenüber 1.0.28 fünfzehn Behebungen: acht aus **PRÜFERs** sechstem
 Durchgang (**E-54** bis **E-61**) und sieben aus dem ersten Lauf der Schranke
 `tools/pruefe-nachrichtenschleife.pl`, die daraus entstanden ist (**E-62**).

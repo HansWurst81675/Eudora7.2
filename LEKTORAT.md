@@ -6,7 +6,7 @@ seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
 [README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
 
 Hier stehen der erste bis vierte, der sechste bis neunte, der dreizehnte
-bis sechzehnte sowie der neunzehnte Durchgang. Der
+bis sechzehnte sowie der neunzehnte und zwanzigste Durchgang. Der
 **fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
 die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
 [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
@@ -26,17 +26,19 @@ und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
 Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
 Review der Exit-Behebung — dort ist **E-45** gefunden worden).
 
-> **Stand dieser Datei: 17.09.2026, abends.** Der jüngste Durchgang steht in
-> `Befunde/LEKTOR-14.md` (Funde **L-14.1** ff.); gemessen an Quellstand
-> **7.2.0.70** / `VERSION` **1.0.70** über **153** MD-Dateien aus
-> `git ls-files '*.md'`. Davor `Befunde/LEKTOR-13.md` (Funde **L-13.1** ff.,
+> **Stand dieser Datei: 18.09.2026.** Der jüngste Durchgang steht in
+> `Befunde/LEKTOR-15.md` (Funde **L-15.1** ff.) — *„keine Lügen auf dem main"*
+> nach dem Release **`v1.0.72`**; gemessen an Quellstand **7.2.0.72** /
+> `VERSION` **1.0.72** über **155** MD-Dateien aus `git ls-files '*.md'`.
+> Davor `Befunde/LEKTOR-14.md` (Funde **L-14.1** ff., 7.2.0.70 / 1.0.70,
+> 153 Dateien), `Befunde/LEKTOR-13.md` (Funde **L-13.1** ff.,
 > `main` auf Unwahrheiten, 17.09.2026, 151 Dateien), **L-17** in
 > `Befunde/LEKTOR-12.md` (7.2.0.66 / 1.0.66, 149 Dateien), **L-16** in
 > `Befunde/LEKTOR-11.md` (7.2.0.64, 146 Dateien) und **L-15** in
 > `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63, 15.09.2026). Der jüngste
-> Durchgang *in dieser Datei* ist der **neunzehnte**, ganz unten. Alles ab
+> Durchgang *in dieser Datei* ist der **zwanzigste**, ganz unten. Alles ab
 > **L-6** steht nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
-> `Befunde/LEKTOR-14.md`.
+> `Befunde/LEKTOR-15.md`.
 >
 > **Zwei Berichtigungen am 17.09.2026 (L-14.6).** (1) Hier stand *„Der jüngste
 > Durchgang ist **L-17**"* — `Befunde/LEKTOR-13.md` war da längst geschrieben
@@ -1013,3 +1015,43 @@ eingeschleppt**. Drei Folgen:
   **zweimal** weitergeschoben: 7.2.0.69 → .70 → .71. Gebracht hat er
   **7.2.0.69**. Die Ersetzungsklasse zum fünften Mal — Vorschlag für eine
   Schranke steht im Bericht.
+
+---
+
+## Zwanzigster Durchgang — 18.09.2026 (Bericht: `Befunde/LEKTOR-15.md`)
+
+**Anlass, Gregor wörtlich:** *„es scheinen einige MDs veraltet zu sein, was
+falsch ist: **keine lügen auf dem main**."* Den ersten Fund hat er selbst
+geliefert: `README.md` sagte zu **E-108** *„bei Gregor noch nicht bestätigt"*,
+`BEFUNDE.md` in derselben Fassung *„von Gregor bestätigt"*.
+
+Gemessen an Quellstand **7.2.0.72** / `VERSION` **1.0.72** über **155**
+MD-Dateien; Maßstab war das Release **`v1.0.72`** (`gh release list`:
+*Latest*, 2026-09-17T20:07:49Z).
+
+| Fund | Kurz |
+|---|---|
+| **L-15.1** | `PORTIERUNG.md` nannte 7.2.0.70 / 1.0.70 und *„veröffentlicht ist `v1.0.64`"* — **dieselbe Zeile war schon L-14.2 und L-13.1**, samt Berichtigungsvermerk |
+| **L-15.2** | `ZIEL.md` führte 1.0.70 als geschnürtes Paket und **E-106 als *„ausdrücklich nicht nachgewiesen"*** — bestätigt an 1.0.69; vom Release stand kein Wort |
+| **L-15.3** | `AUFGABEN.md` sagte in Zeile 64 *„gebaut und geschnürt ist 7.2.0.70"*, in Zeile 3 derselben Datei **7.2.0.72** — und zählte 1.0.70 zu Gregors Paketen, das er nie hatte |
+| **L-15.4** | `BEFUNDE.md` führte **E-106** als *„bei Gregor noch nicht nachgewiesen"*, während `AUFGABEN.md` und `README.md` die Bestätigung nannten |
+| **L-15.5** | `tools/ZWEIGE.md:73` **zum dritten Mal** weitergeschoben (69 → 70 → 71 → 72) — **und der Antreiber war `doku-pruefen.pl` selbst**, siehe unten |
+| **L-15.6** | `WEITERMACHEN.md` Zeile 13: Überschrift **BESTÄTIGT**, Text darunter *„Zu prüfen: …"* — zwei Fassungen in einer Zelle. Zeile 28 nannte **1.0.64** als zuletzt bestätigt, eine Zeile über der Angabe 1.0.72 |
+| **L-15.7** | `CHANGELOG.md`, Tabelle 7.2.0.70: 1.0.69 **vertauscht**, von L-14.1 gemessen und danach unverändert stehen geblieben; 1.0.70 hieß *„alles"*, trägt aber den Absturz E-108 |
+| **L-15.8** | die Prüfanleitung im Abschnitt 7.2.0.70 schickte Gregor zu einem Paket, das er nie hatte und das abstürzt |
+| **L-15.9** | **drei Fassungen einer Aussage über den eigenen Prüfstand, eine davon falsch** — *„lädt keine Bilder"* gegen *„lädt zwar Bilder"*. Am Protokoll entschieden: er lädt **acht**, ihm fehlt ein **Testdatum** |
+| **L-15.10** | **E-105 hatte keine Zeile in `BEFUNDE.md`** — seit dem 17.09. als Aufgabe geführt, nie angelegt. Belegt und nachgetragen. **E-102 ist nie vergeben worden** |
+| **L-15.11** | `README.md` nannte unter *Wo die Grenzen liegen* nur E-98 und E-77 — **E-94 und E-105 fehlten**; ebenso im CHANGELOG-Abschnitt *Noch offen* E-105, E-109 und die LF-Weiterleitungen |
+
+**Der Befund, der über den Tag hinausgeht (L-15.5):** `tools/doku-pruefen.pl`
+löst auf das Wort *Paketnummer* aus und verlangt in den 200 Zeichen dahinter
+die **aktuelle** Nummer. In `tools/ZWEIGE.md` steht dort aber, was ein Zweig
+**gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend
+**dreimal** in die Unwahrheit getrieben — und beim vierten Mal meinen
+berichtigten Wert als *MANGEL* gemeldet. Eine Schranke, die die Unwahrheit
+erzwingt, ist teurer als eine, die schweigt
+([schranke-gegentesten.md](Arbeitsweise/schranke-gegentesten.md)). Aufgelöst
+wurde es ohne Eingriff in `tools/` — die Zeile sagt jetzt *„Daraus entstand
+Quellstand 7.2.0.69 und Paket 1.0.69"*, wie die stumme Nachbarzeile darüber;
+danach meldet die Schranke *„Kein Widerspruch gefunden"*. **Die Grenze bleibt
+und gehört zu E-109.**

@@ -223,6 +223,41 @@ for my $datei (sort keys %rolle) {
         push @gut, "$datei ist so neu wie der juengste Bericht des "
                  . $rolle{$datei}{name};
     }
+
+    # --- DAS DATUM ALLEIN REICHT NICHT ------------------------------------
+    #
+    # Berichtigt am 18.09.2026 (PRUEFER-17, Befund E-109).
+    #
+    # Bis hierher hat diese Pruefung NUR Datum gegen Datum gehalten. Am
+    # 17.09.2026 hat sie LEKTORAT.md deshalb gruen gemeldet, waehrend die
+    # Datei Befunde/LEKTOR-13.md KEIN EINZIGES MAL nannte: die juengste
+    # Durchgangsueberschrift trug dasselbe Datum wie der Commit auf den
+    # Bericht, und damit war die Datumsfrage beantwortet. Die Frage, um die
+    # es geht, war es nicht.
+    #
+    # Ein Datum ist eine Behauptung ueber Aktualitaet; die Nennung des
+    # Berichts ist der Beleg dafuer. Geprueft wird deshalb jetzt beides.
+    #
+    # Der Umfang kommt aus dem Dateibestand, nicht von Hand
+    # (Arbeitsweise/pruefumfang-nicht-von-hand.md): jeder Bericht, den es
+    # gibt, muss in der Historie vorkommen.
+    my @berichte = sort glob("$wurzel/$muster");
+    my @fehlen;
+    for my $b (@berichte) {
+        my ($name) = $b =~ m{([^/\\]+)\.md$} or next;
+        push @fehlen, $name unless index($t, $name) >= 0;
+    }
+
+    if (@fehlen) {
+        push @mangel,
+          "$datei nennt " . scalar(@fehlen) . " von " . scalar(@berichte)
+        . " Berichten des " . $rolle{$datei}{name} . " nicht: "
+        . join(', ', @fehlen)
+        . " - das Datum stimmt, der Inhalt fehlt";
+    } elsif (@berichte) {
+        push @gut, sprintf('%s nennt alle %d Berichte des %s',
+                           $datei, scalar @berichte, $rolle{$datei}{name});
+    }
 }
 
 # --- Ausgabe ---------------------------------------------------------------

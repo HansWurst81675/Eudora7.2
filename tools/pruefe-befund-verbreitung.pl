@@ -57,6 +57,46 @@ use warnings;
 #
 # Rueckgabe: 0 = vollstaendig, 1 = eine Datei schweigt, 2 = Aufrufproblem.
 
+# ---------------------------------------------------------------------------
+# WAS AM 18.09.2026 DARAN BERICHTIGT WURDE (PRUEFER-17, Befund E-109)
+# ---------------------------------------------------------------------------
+#
+# Diese Schranke war BEIM ERSTEN ECHTEN LAUF BLIND. Nachgemessen am
+# 18.09.2026 gegen die Fassung, um die es ging:
+#
+#   Der Abschnitt "## 7.2.0.70" hat genau drei Ueberschriften -
+#     "## 7.2.0.70 - ein vollstaendiger Stand zum Testen, und die Paketliste
+#      wieder geradegezogen"
+#     "### Warum es zwei Fassungsnummern 1.0.68 gab"
+#     "### Was in welchem Paket steckt"
+#   KEINE davon nennt eine Kennung. Im Fliesstext desselben Abschnitts stehen
+#   E-101, E-103, E-104 und E-106.
+#
+#   Umfang also 0 -> Ausgabe "nennt keinen Befund - nichts zu pruefen",
+#   Rueckgabe 0. Gruen, ohne eine einzige Pruefung.
+#
+# Zwei Aenderungen, beide aus E-109:
+#
+#   1. UMFANG 0 IST KEIN FREISPRUCH. Findet die Schranke keinen Befund, sagt
+#      sie das und gibt 1 zurueck. E-109, Punkt 4: "geprueft und frei" und
+#      "nichts gefunden zu pruefen" duerfen nicht gleich aussehen. Aufloesbar
+#      ist der Zustand in einem Schritt: die Befunde in die Ueberschrift des
+#      CHANGELOG-Abschnitts schreiben, wo sie ohnehin hingehoeren.
+#
+#   2. ZWEITE QUELLE FUER DEN UMFANG: BEFUNDE.md. Was dort als
+#      "behoben in 7.2.0.NN" mit der AKTUELLEN Fassungsnummer steht, gehoert
+#      in die fuehrenden Dokumente - unabhaengig davon, wie der CHANGELOG
+#      seine Ueberschriften formuliert. Die Fassungsnummer kommt aus
+#      Eudora71/Version.h, nicht von Hand
+#      (Arbeitsweise/pruefumfang-nicht-von-hand.md).
+#
+#      Der Fliesstext bleibt AUSSEN VOR - er hat am 17.09.2026 drei Fehlalarme
+#      erzeugt (Querverweise auf E-89, E-95, E-96, E-98, E-100 im .67-Abschnitt).
+#      Die zweite Quelle ist schaerfer als der Fliesstext und trifft dieselben
+#      Faelle.
+#
+# ---------------------------------------------------------------------------
+
 my $wurzel = -f 'VERSION' ? '.' : '..';
 
 # Die Dateien, die einen ausgelieferten Befund nennen muessen. Bewusst kurz:
@@ -137,6 +177,35 @@ sub kennungen_der_neuesten_fassung {
     return ($ueberschrift, sort keys %gesehen);
 }
 
+# Die Fassungsnummer, gegen die gemessen wird - aus Eudora71/Version.h, nicht
+# von Hand (Arbeitsweise/pruefumfang-nicht-von-hand.md).
+sub quellstand {
+    my ($versionh) = @_;
+    return undef unless defined $versionh;
+    return $versionh =~ /EUDORA_BUILD_VERSION\s+"(\d+\.\d+\.\d+\.\d+)"/ ? $1 : undef;
+}
+
+# Zweite Quelle fuer den Umfang: die Befunde, die BEFUNDE.md fuer GENAU diese
+# Fassung als behoben fuehrt.
+#
+# BEFUNDE.md ist eine Tabelle; die Kennung steht in der ersten Spalte, das
+# Urteil in der letzten. Gesucht wird die Zeile, deren Urteil "behoben in
+# <Fassung>" sagt - dieselbe Wendung, die pruefe-behoben-belegt.pl prueft.
+sub behoben_in_fassung {
+    my ($befunde, $fassung) = @_;
+    return () unless defined $befunde && defined $fassung;
+    my %gesehen;
+    for my $zeile (split /\n/, $befunde) {
+        next unless $zeile =~ /^\s*\|\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
+        my $kennung = $1;
+        next if $kennung =~ /^[PMLS]-\d+$/;
+        # "behoben in 7.2.0.72", auch "Behoben in", auch mit Fettdruck davor.
+        next unless $zeile =~ /behoben\s+in\s+\**\s*\Q$fassung\E\b/i;
+        $gesehen{$kennung} = 1;
+    }
+    return sort keys %gesehen;
+}
+
 # ---------------------------------------------------------------------------
 # Selbsttest: gegen den echten Fehler UND gegen den erlaubten Fall
 # (Arbeitsweise/schranke-gegentesten.md).
@@ -198,11 +267,73 @@ if (grep { $_ eq '--tests' } @ARGV) {
         $fehler++;
     }
 
+    # --- 5. DER ECHTE FALL 7.2.0.70, an dem sie blind war ------------------
+    #
+    # Woertlich nachgestellt: drei Ueberschriften ohne jede Kennung, die
+    # Befunde nur im Fliesstext.
+    my $cl70 = "## 7.2.0.70 - ein vollstaendiger Stand zum Testen, und die Paketliste wieder geradegezogen\n\n"
+             . "Enthaelt E-101 in beiden Teilen, E-103, E-104 und E-106.\n\n"
+             . "### Warum es zwei Fassungsnummern 1.0.68 gab\n\nText.\n\n"
+             . "### Was in welchem Paket steckt\n\nText.\n\n"
+             . "## 7.2.0.69 - alt\n";
+    my ($u70, @k70) = kennungen_der_neuesten_fassung($cl70);
+    unless (@k70 == 0) {
+        print "  FEHLER Selbsttest 5: erwartet 0 Kennungen aus den Ueberschriften, bekommen '"
+            . join(' ', @k70) . "'\n";
+        $fehler++;
+    }
+
+    # --- 6. Die zweite Quelle faengt, was die Ueberschrift verschweigt -----
+    my $befunde = "| Nr | Sache | Urteil |\n"
+                . "|---|---|---|\n"
+                . "| E-106 | Bilder liegen ueber dem Text | **behoben in 7.2.0.68**, von Gregor bestaetigt |\n"
+                . "| E-108 | Absturz beim Antworten | **behoben in 7.2.0.72**, von Gregor bestaetigt |\n"
+                . "| E-98 | Etwas Offenes | offen |\n"
+                . "| P-39 | Punkt aus einem Bericht | behoben in 7.2.0.72 |\n";
+    my @b72 = behoben_in_fassung($befunde, '7.2.0.72');
+    unless (join(' ', @b72) eq 'E-108') {
+        print "  FEHLER Selbsttest 6: erwartet 'E-108', bekommen '" . join(' ', @b72) . "'\n";
+        $fehler++;
+    }
+
+    # Erlaubter Fall: eine ANDERE Fassung darf nicht mitgezaehlt werden.
+    my @b68 = behoben_in_fassung($befunde, '7.2.0.68');
+    unless (join(' ', @b68) eq 'E-106') {
+        print "  FEHLER Selbsttest 7: erwartet 'E-106', bekommen '" . join(' ', @b68) . "'\n";
+        $fehler++;
+    }
+
+    # --- 8. Die Fassungsnummer kommt aus Version.h ------------------------
+    my $vh = "#define EUDORA_BUILD_DESC      \"Version 7.2.0.72\\0\"\n"
+           . "#define EUDORA_BUILD_VERSION   \"7.2.0.72\"\n";
+    unless ((quellstand($vh) // '') eq '7.2.0.72') {
+        print "  FEHLER Selbsttest 8: Quellstand nicht gelesen ("
+            . (quellstand($vh) // 'undef') . ")\n";
+        $fehler++;
+    }
+
+    # --- 9. Umfang 0 ist kein Freispruch ----------------------------------
+    #
+    # Genau das war der Zustand am 17.09.2026: keine Kennung in den
+    # Ueberschriften, keine in BEFUNDE.md fuer diese Fassung - und gruen.
+    my @umfang0 = do {
+        my %u;
+        $u{$_} = 1 for (@k70, behoben_in_fassung($befunde, '7.2.0.70'));
+        sort keys %u;
+    };
+    unless (@umfang0 == 0) {
+        print "  FEHLER Selbsttest 9: erwartet Umfang 0 fuer 7.2.0.70, bekommen '"
+            . join(' ', @umfang0) . "'\n";
+        $fehler++;
+    }
+
     if ($fehler) {
         printf "\n  %d Selbsttest(s) fehlgeschlagen.\n\n", $fehler;
         exit 1;
     }
-    print "\n  Selbsttest: 4 von 4 bestanden - darunter die beiden Fehlalarme,\n  die der erste und der zweite Entwurf geworfen haben.\n\n";
+    print "\n  Selbsttest: 9 von 9 bestanden - darunter die beiden Fehlalarme,\n"
+        . "  die der erste und der zweite Entwurf geworfen haben, und der echte\n"
+        . "  Fall 7.2.0.70, an dem diese Schranke am 17.09.2026 blind war.\n\n";
     exit 0;
 }
 
@@ -214,19 +345,57 @@ unless (defined $changelog) {
     exit 2;
 }
 
-my ($ueberschrift, @kennungen) = kennungen_der_neuesten_fassung($changelog);
+my ($ueberschrift, @aus_ueberschrift) = kennungen_der_neuesten_fassung($changelog);
+
+# Zweite Quelle: BEFUNDE.md, gegen die Fassung aus Version.h.
+my $fassung = quellstand(lies("$wurzel/Eudora71/Version.h"));
+my @aus_befunden = behoben_in_fassung(lies("$wurzel/BEFUNDE.md"), $fassung);
+
+my @kennungen = do {
+    my %u;
+    $u{$_} = 1 for (@aus_ueberschrift, @aus_befunden);
+    sort keys %u;
+};
 
 printf "\n  %s\n  Befunde der neuesten Fassung in allen fuehrenden Dokumenten\n  %s\n",
     '-' x 60, '-' x 60;
 printf "    Abschnitt                      %s\n", $ueberschrift;
-printf "    Befunde darin                  %s\n",
-    @kennungen ? join(', ', @kennungen) : '(keine)';
+printf "    Fassung (Version.h)            %s\n", $fassung // '(nicht gelesen)';
+printf "    aus den Ueberschriften         %s\n",
+    @aus_ueberschrift ? join(', ', @aus_ueberschrift) : '(keine)';
+printf "    aus BEFUNDE.md (behoben in %s)  %s\n", $fassung // '?',
+    @aus_befunden ? join(', ', @aus_befunden) : '(keine)';
 printf "    Geprueft in                    %d Datei(en)\n", scalar @PFLICHT;
 
+# UMFANG 0 IST KEIN FREISPRUCH (E-109, Punkt 4).
+#
+# Genau hier war die Schranke am 17.09.2026 blind: der Abschnitt 7.2.0.70
+# nannte seine vier Befunde nur im Fliesstext, die Ueberschriften keinen -
+# Umfang 0, Meldung "nichts zu pruefen", Rueckgabe 0.
 unless (@kennungen) {
-    print "\n  Der neueste CHANGELOG-Abschnitt nennt keinen Befund - nichts zu\n";
-    print "  pruefen.\n\n";
-    exit 0;
+    print <<"ENDE";
+
+  NICHTS GEPRUEFT - das ist kein gruenes Ergebnis.
+
+  Weder eine Ueberschrift des Abschnitts noch BEFUNDE.md nennt einen Befund
+  fuer diese Fassung. Damit hat diese Schranke NICHTS angesehen, und das darf
+  nicht aussehen wie "alles in Ordnung" (E-109, Punkt 4).
+
+  Genau dieser Zustand lag am 17.09.2026 bei 7.2.0.70 vor: die Befunde E-101,
+  E-103, E-104 und E-106 standen im Fliesstext des Abschnitts, in keiner
+  Ueberschrift - und die Schranke meldete gruen.
+
+  Aufzuloesen in einem Schritt: die Kennungen in die Ueberschrift des
+  CHANGELOG-Abschnitts schreiben, z. B.
+
+      ## $fassung - ... (E-101, E-103, E-104, E-106)
+
+  Dort gehoeren sie ohnehin hin; in der Ueberschrift steht, worum es geht.
+  Bringt die Fassung wirklich keinen Befund mit, gehoert das ebenso in die
+  Ueberschrift - dann ist es eine Aussage und keine Luecke.
+
+ENDE
+    exit 1;
 }
 
 my @mangel;

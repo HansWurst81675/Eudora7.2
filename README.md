@@ -69,31 +69,35 @@ verschickt.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Noch nicht im Download enthalten:** das neueste Release ist **`v1.0.64`**
-  (veröffentlicht am 17.09.2026, auf GitHub als *Latest*). **Darin enthalten**
-  sind: Zeichensalat beim IMAP-Abruf (7.2.0.52), das Beenden mit hängender
-  Aufgabe (7.2.0.53), die HTML-Darstellung beim Lesen (7.2.0.55), der
-  Formatverlust beim Weiterleiten (7.2.0.56), sich überlagernde Bilder im
-  Verfassenfenster (7.2.0.58), Fragezeichen statt Emoji (7.2.0.59),
-  **Inhaltsverlust beim Weiterleiten** einer bereits weitergeleiteten
-  Nachricht (7.2.0.59, **E-93** — es gingen 17.889 statt 105.125 Byte hinaus),
-  die **Bildgrößen im Verfassenfenster** (7.2.0.62, **E-96**; der Notbehelf
-  davor ist mit 7.2.0.63 wieder weg), der **Absturz beim Speichern einer
-  Nachricht** (7.2.0.64, **E-97**, von Gregor an 1.0.64 bestätigt) und der
-  **Datenverlust beim Senden eines gesicherten Entwurfs** (7.2.0.64,
-  **E-99**). **Noch nicht im Download** sind: dieselbe Absturzstelle an drei
-  weiteren Stellen (7.2.0.65, **E-100**), die **unbrauchbare gespeicherte
-  Datei** (7.2.0.66 und 7.2.0.69, **E-101** — ohne `Content-Type`-Zeile und mit
-  Eudoras internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
-  `Content-Type` zunächst ganz), **Bilder, die über dem Text lagen**
-  (7.2.0.67, **E-103**), **zusammengeklebte Kopfzeilen in der gespeicherten
-  Datei** (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
+* **Das neueste Release ist `v1.0.72`** (veröffentlicht am 17.09.2026 um 20:07
+  Uhr UTC, auf GitHub als *Latest*) — **von Gregor vorher am laufenden Programm
+  geprüft**: *„kein crash"*. **Im Download enthalten** sind damit: Zeichensalat
+  beim IMAP-Abruf (7.2.0.52), das Beenden mit hängender Aufgabe (7.2.0.53), die
+  HTML-Darstellung beim Lesen (7.2.0.55), der Formatverlust beim Weiterleiten
+  (7.2.0.56), sich überlagernde Bilder im Verfassenfenster (7.2.0.58),
+  Fragezeichen statt Emoji (7.2.0.59), **Inhaltsverlust beim Weiterleiten**
+  einer bereits weitergeleiteten Nachricht (7.2.0.59, **E-93** — es gingen
+  17.889 statt 105.125 Byte hinaus), die **Bildgrößen im Verfassenfenster**
+  (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.63 wieder weg), der
+  **Absturz beim Speichern einer Nachricht** (7.2.0.64, **E-97**, von Gregor an
+  1.0.64 bestätigt), der **Datenverlust beim Senden eines gesicherten
+  Entwurfs** (7.2.0.64, **E-99**), dieselbe Absturzstelle an drei weiteren
+  Stellen (7.2.0.65, **E-100**), die **unbrauchbare gespeicherte Datei**
+  (7.2.0.66 und 7.2.0.69, **E-101** — ohne `Content-Type`-Zeile und mit Eudoras
+  internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
+  `Content-Type` zunächst ganz), **Bilder, die über dem Text lagen** (7.2.0.67,
+  **E-103**), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
+  (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
   **E-104**), **Bilder, die größer sind als im HTML angegeben und deshalb über
   dem Text liegen** (7.2.0.68, **E-106** — **von Gregor am 17.09.2026 an 1.0.69
   bestätigt**) und der **Absturz beim Antworten auf eine geöffnete Nachricht**
   (**E-107** war die falsche Erklärung und ist widerlegt; **E-108** in 7.2.0.72
-  entfernt den Stilweg, der ihn ausgelöst hat — **bei Gregor noch nicht
-  bestätigt**). Wer das braucht, baut selbst.
+  entfernt den Stilweg, der ihn ausgelöst hat — **von Gregor am 17.09.2026 an
+  1.0.72 bestätigt**: *„kein crash"*, und sein Protokoll läuft über die bisher
+  tödliche Stelle hinaus bis `Logging shutdown`, ohne `Exception.log`).
+  **`1.0.71` darf nicht benutzt werden**: diese Fassung stürzt beim Antworten
+  ab, ist nie veröffentlicht worden und liegt nur noch als Paket in Gregors
+  Testverzeichnis.
   > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Bis hierher stand hier
   > *„das neueste Release ist `v1.0.50`"* und darunter eine Warnung, das
   > veröffentlichte Paket stürze beim Speichern ab. Beides war überholt:
@@ -113,6 +117,22 @@ verschickt.
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
   Rückschritt durch die Behebung von E-97** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
+* **Beim Antworten und Weiterleiten fehlen Bilder im Verfassenfenster**
+  (**E-110**, offen): ein Teil der Bilder steht dort als grauer Kasten, während
+  im Lesefenster derselben Nachricht alle da sind. Die Kästen haben die
+  richtige Größe und decken keinen Text zu — das Bild ist schlicht nicht
+  geladen. Ursache noch nicht gemessen. Von Gregor am 18.09.2026 an 1.0.72
+  gemeldet.
+* **Die Betreffzeile wird mitten im Wort umbrochen** (**E-94**, offen): beim
+  Versenden entstehen Betreffs wie `Toner bestel len` oder `Wochenend e!` —
+  der Empfänger sieht das, nicht der Absender. Ursache noch nicht gemessen;
+  Verdacht auf `Encode2047` (`sendmail.cpp:1188`), das die kodierte Länge
+  gegen die Klartextlänge verrechnen könnte. **Kein Datenverlust.**
+* **Versteckter Vorschautext wird mitgelesen** (**E-105**, offen): In manchen
+  Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
+  füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
+  Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
+  Bereich deshalb an. Nur Darstellung, kein Datenverlust.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
@@ -206,7 +226,7 @@ Dafür bräuchte es eine Unicode-Umstellung — ein eigenes Vorhaben.
 2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 3. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.70 / Paket 1.0.70` — diese Angabe gehört in jeden
+   `Eudora 7.2.0.72 / Paket 1.0.72` — diese Angabe gehört in jeden
    Fehlerbericht.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
