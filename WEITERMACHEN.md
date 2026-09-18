@@ -195,6 +195,29 @@ Wofür jeder steht und was als Nächstes zu messen ist, steht in
 [BEFUNDE.md](BEFUNDE.md) und in [CHANGELOG.md](CHANGELOG.md) unter
 *Noch offen*.
 
+## Offene Arbeiten ohne Befundnummer
+
+Stand 18.09.2026. Das sind keine Fehler des Programms, sondern Arbeiten am
+Werkzeug und am Nachweis — bis hierher standen sie nur im Gesprächsverlauf,
+und Gregor hat am 18.09.2026 ausdrücklich verlangt, sie nachzuziehen:
+*„ziehe auch die offenen arbeiten ohne befunde nach."* Ein Gesprächsverlauf
+überlebt kein Abschalten ([Arbeitsweise/wissen-gehoert-in-dateien.md](Arbeitsweise/wissen-gehoert-in-dateien.md)).
+
+Die Reihenfolge ist von Gregor am 18.09.2026 angenommen: erst **A** und **B**
+(das sind Unwahrheiten bzw. fehlende Festlegungen auf `main`), dann **D vor C** —
+ohne brauchbare Spurmarke würde der Regressionstest zu **E-110** auf Verdacht
+gebaut.
+
+| | Was | Warum es offen ist |
+|---|---|---|
+| **A** | `Testdaten/README.md` behauptete an zwei Stellen *„der Pruefstand laedt keine Bilder"* | **In diesem Zweig erledigt.** Die Datei kam am 18.09.2026 damit auf `main`, geschrieben bevor **L-15.9** die Aussage widerlegt hatte |
+| **B** | Gregors Entscheidung zur Laufzeit des `pre-commit` | **In diesem Zweig erledigt.** *„pre commit mit 22sek ist akzeptabel"* — schließt den offenen Punkt aus [Befunde/PRUEFER-17.md](Befunde/PRUEFER-17.md) |
+| **C** | **Regressionstests für die Absturz- und Darstellungsfälle** | Gregor am 17.09.2026: *„für all diese szenarien brauchen wir regression tests!"*. Erst seit **L-15.9** machbar: der Prüfstand lädt Bilder, ihm fehlte nur eine Nachricht mit einem Bild, das größer ist als angegeben — die liegt seit dem 18.09.2026 als `Testdaten/e106-bild-groesser-als-angegeben.eml` da. Steht als Punkt (9) unter **E-109** |
+| **D** | **Die Spurmarke taugt für E-110 nicht** | Sie kürzt an **zwei** Stellen auf 32 Zeichen — `PGHTMIMP.CPP:2250` (`for (i = 0; i < 32 …)`) und `:2255` (`%.32s`) —, sodass bei diesen Adressen nicht einmal der Dateiname sichtbar wird. Und sie gibt **zweimal Maße** aus (`source_width/height` gegen `mess_ptr->width/height`, `:2258-2259`), nie aber, **ob Bilddaten dahinterliegen**. Gebraucht wird `image_data` in derselben Zeile ([Arbeitsweise/zwei-werte-in-eine-ausgabe.md](Arbeitsweise/zwei-werte-in-eine-ausgabe.md)) |
+| **E** | **Neun Messskripte liegen nur unter `C:\Temp`** | `messen-antwort.ps1`, `messen-antwort-kern.ps1`, `messen-antwort-vorher.ps1`, `messen-darstellung.ps1`, `messen-e101.ps1`, `messen-e95.ps1`, `messen-kopfzeilen.ps1`, `messen-saveas.ps1`, `messen-saveas2.ps1`. Genau dasselbe Risiko wie bei den Testdaten vor dem 18.09.2026: ein Aufräumen, und jede dieser Messungen ist unwiederholbar |
+| **F** | **`pruefe-befundurteile.pl` trägt dasselbe `{1,80}`-Muster**, das in `pruefe-behoben-belegt.pl` behoben ist | Bewusst **nicht** mitgeändert: das Werkzeug hängt in keinem Haken, und eine Änderung ohne Gegentest an seiner Testsammlung wäre genau der Fehler, den [Befunde/PRUEFER-17.md](Befunde/PRUEFER-17.md) anderswo benennt |
+| **G** | **Nicht gemessen: ob Eudora die gebaute `Probe.mbx` anzeigt** | Die Anleitung in [Testdaten/README.md](Testdaten/README.md) ist bis zur fertigen Datei nachgefahren und liefert byte-genau die dort genannten Werte (167.399 Byte, 2315 CRLF, 353 nackte LF, drei Trennzeilen). Der letzte Schritt braucht ein laufendes Programm und damit Gregors Zustimmung — *„ich kann nicht testen, wenn dauernd etwas startet"* |
+
 ## Ebenfalls offen
 
 - **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse **R-1**, **16** Stellen

@@ -8,8 +8,10 @@ dieses Material ausschliesslich unter `C:\Temp` und in Gregors Testverzeichnisse
 `C:\Users\Gregor\Eudora72-1.0.65-release` bis `-1.0.71-release`. Mit dem
 Aufraeumen dieser Verzeichnisse waere jeder dieser Fehler unreproduzierbar
 geworden — **jeder einzelne Nachweis an dieser Ecke ist von Gregors Rechner
-gekommen, keiner vom Pruefstand** (`WEITERMACHEN.md`, Eintrag vom 17.09.2026:
-*„der Pruefstand laedt keine Bilder"*).
+gekommen, keiner vom Pruefstand.** Der Grund dafuer ist nicht, dass der
+Pruefstand keine Bilder laedt — **er laedt sie.** Ihm fehlte genau das, was
+jetzt hier liegt: eine Nachricht mit einem Bild, das *groesser* ist als
+angegeben (LEKTOR, **L-15.9**, 18.09.2026).
 
 ---
 
@@ -40,9 +42,19 @@ gekommen, keiner vom Pruefstand** (`WEITERMACHEN.md`, Eintrag vom 17.09.2026:
   `<x-html>`-Marker als erste Rumpfzeile samt Gegenstueck, Hochbytes im Rumpf
   (Zeichensatzerkennung) und einen Kopf mit gefalteten Zeilen (E-104). Die
   fehlerhafte Ausgabe entsteht erst durch das Speichern.
-* **Kein Ersatz fuer Gregors Lauf.** Der Pruefstand laedt keine Bilder; die
-  Bloecke zu E-106 und E-108 laufen dort gar nicht erst an. Diese Dateien machen
-  den Fall **wiederholbar**, sie machen ihn nicht **automatisch messbar**.
+* **Kein Ersatz fuer Gregors Lauf — aber der fehlende Baustein.** Der Pruefstand
+  **laedt Bilder**; was ihm fehlte, war ein Bild, das *groesser* ist als
+  angegeben, und genau daran haengt der verdaechtige Code: bei Gregors Lauf
+  greift der E-106-Block **32-mal**, im Pruefstand **null-mal**. Diese Dateien
+  machen den Fall zunaechst **wiederholbar**; sie **automatisch messbar** zu
+  machen ist der naechste Schritt und steht als offener Punkt bei **E-109**.
+
+  > **Berichtigt am 18.09.2026 (LEKTOR, L-15.9).** Hier stand bis dahin *„Der
+  > Pruefstand laedt keine Bilder; die Bloecke zu E-106 und E-108 laufen dort gar
+  > nicht erst an."* Der zweite Halbsatz stimmt, der erste nicht — und der erste
+  > war die Begruendung. Dieselbe Aussage stand als **erster Punkt der
+  > Nacharbeit**: wer ihr gefolgt waere, haette eine Bildladefunktion gebaut und
+  > den Fehler trotzdem nicht gefunden.
 
 ---
 
