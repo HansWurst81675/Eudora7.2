@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-09-18 09:49 | E-110-Spurmarke in PGHTMIMP.CPP nachrechnen: Puffergrenzen, wsprintf-Groesse, Feldbedeutung von image_data/type_and_flags |
