@@ -163,9 +163,27 @@ my @faelle = (
       return $klon;
   } },
 
-{ schl => 'd', erwartet => 0,
-  name => 'auf main selbst',
-  muster => qr/auf main - in Ordnung/,
+# BERICHTIGT AM 18.09.2026 (PRUEFER-17): DER TEST WAR FALSCH, NICHT DIE
+# SCHRANKE.
+#
+# Dieser Fall erwartete bis dahin "auf main - in Ordnung" und Rueckgabe 0.
+# Das war der Stand vor dem 05.09.2026. An dem Tag hat Gregor gesagt:
+#
+#     "keine direkten aenderungen am main branch. ich werde ihn sperren,
+#      damit du das nicht dauernd machen kannst."
+#
+# pruefe-branch.pl weist seither JEDEN direkten Commit auf main ab - richtig
+# so. Der Testfall ist dabei stehengeblieben und war rot. Nachgemessen am
+# 18.09.2026: er ist auch mit der Fassung aus HEAD rot, also nicht durch eine
+# neue Aenderung entstanden.
+#
+# Ein dauerhaft roter Pruefstand meldet dasselbe wie ein kaputter, naemlich
+# nichts (Arbeitsweise/pruefstand-kann-blind-sein.md) - und
+# Arbeitsweise/schranke-gegentesten.md, Punkt 5: "Ein falscher Test wird als
+# solcher benannt", nicht als stumme Schranke.
+{ schl => 'd', erwartet => 1,
+  name => 'auf main selbst - muss abgewiesen werden (seit 05.09.2026)',
+  muster => qr/'main' nimmt keine direkten Commits/,
   bauen => sub {
       my ($server, $klon) = @_;
       chdir $klon;

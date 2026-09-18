@@ -117,7 +117,23 @@ sub beurteile {
 
     # Das Urteil steht im ERSTEN Fettdruck der dritten Spalte - dieselbe
     # Regel wie in pruefe-befundurteile.pl. Ohne Fettdruck: der Anfang.
-    my $kopf = ($urteilstext =~ /\*\*([^*]{1,80})\*\*/)
+    #
+    # BERICHTIGT AM 18.09.2026 (PRUEFER-17, Befund E-109): hier stand
+    #
+    #     /\*\*([^*]{1,80})\*\*/
+    #
+    # Die Laengengrenze macht das Muster nicht enger, sondern VERSCHIEBT es.
+    # Ist der erste Fettdruck laenger als 80 Zeichen, passt er nicht - und
+    # der Regexmotor sucht weiter, bis er IRGENDEINEN kuerzeren findet.
+    # Gelesen wird dann ein ganz anderes Stueck Text, meistens weiter hinten
+    # und ohne das Urteilswort. Folge: ein behobener Befund gilt als offen
+    # und wird gar nicht mehr auf seinen Beleg geprueft - und die Schranke
+    # meldet trotzdem gruen, weil sie ihn nur in der anderen Spalte zaehlt.
+    # Gemessen an E-108, dessen Urteilskopf 96 Zeichen hat.
+    #
+    # Jetzt: der erste Fettdruck, wie lang er auch ist. Wo keiner steht,
+    # weiterhin der Anfang der Spalte.
+    my $kopf = ($urteilstext =~ /\*\*([^*]+)\*\*/)
              ? $1
              : substr($urteilstext, 0, 80);
 
@@ -206,6 +222,26 @@ sub selbsttest {
         ['behoben, dazu `charset=utf-8` im Fliesstext - KEIN Messwert',
          '| E-85 | Umlaute | **behoben in 7.2.0.51** - die Stelle erkannte `charset=utf-8` gar nicht; am Quelltext belegt |',
          'erledigt', 0],
+
+        # DER FEHLER, DER AM 18.09.2026 GEMESSEN WURDE (E-109, PRUEFER-17).
+        #
+        # Der erste Fettdruck ist 104 Zeichen lang. Das alte Muster
+        # \*\*([^*]{1,80})\*\* passte darauf nicht und sprang zum NAECHSTEN
+        # Fettdruck weiter - hier "**Bilder**". Der gelesene Urteilskopf war
+        # damit "Bilder", das Wort "behoben" kam darin nicht vor, und der
+        # Befund galt als OFFEN. Ein behobener Befund wurde also nie auf
+        # seinen Beleg geprueft, und die Schranke meldete gruen.
+        ['Urteilskopf laenger als 80 Zeichen, danach ein kurzer Fettdruck',
+         '| E-108 | Absturz | **behoben in 7.2.0.72, von Gregor am laufenden Programm best'
+         . "\xc3\xa4" . 'tigt am 17.09.2026 um 21:40 Uhr** - siehe **Bilder** im Anhang |',
+         'erledigt', 1],
+
+        # Gegenrichtung: ein langer erster Fettdruck, der OFFEN sagt, darf
+        # nicht ploetzlich als erledigt gelten, nur weil weiter hinten ein
+        # kurzer Fettdruck mit "behoben" steht.
+        ['langer Urteilskopf sagt OFFEN, spaeter steht **behoben**',
+         '| E-98 | Etwas | **offen, und zwar seit dem 12.09.2026 - die Ursache liegt nicht dort, wo sie zuerst vermutet wurde** - anders als **behoben** |',
+         'offen', 0],
     );
 
     my $fehler = 0;
@@ -285,17 +321,60 @@ my @zeilen = $modus eq 'datei'  ? zeilen_aus_datei($wert)
            :                      zeilen_aus_diff(undef);
 
 my (@ohne_beleg, @mit_beleg);
+my $befundzeilen = 0;
 for my $z (@zeilen) {
     my ($kennung, $urteil, $beleg) = beurteile($z);
+    $befundzeilen++ if $urteil ne 'keins';
     next unless $urteil eq 'erledigt';
     if (defined $beleg) { push @mit_beleg,  [$kennung, $beleg]; }
     else                { push @ohne_beleg, [$kennung, $z];     }
 }
 
+# DER PRUEFUMFANG GEHOERT IN DIE AUSGABE (E-109, Punkt 4).
+#
+# Bis zum 18.09.2026 stand hier nur "geprueft (neu oder geaendert)", und das
+# zaehlte NICHT den Umfang, sondern nur die Teilmenge der erledigt-Urteile.
+# Ein Lauf ueber 0 Zeilen und ein Lauf ueber 7800 Zeilen ohne Fund sahen
+# identisch aus - beide meldeten "Jedes neue behoben nennt seinen Beleg."
 printf "\n  %s\n  behoben-Urteile mit Beleg\n  %s\n", '-' x 60, '-' x 60;
-printf "    geprueft (neu oder geaendert)  %d\n", scalar(@mit_beleg) + scalar(@ohne_beleg);
+printf "    Betriebsart                    %s\n", $modus;
+printf "    angesehene Zeilen              %d\n", scalar @zeilen;
+printf "    davon Befundzeilen             %d\n", $befundzeilen;
+printf "    mit Urteil \"behoben\"           %d\n", scalar(@mit_beleg) + scalar(@ohne_beleg);
 printf "    mit Beleg                      %d\n", scalar @mit_beleg;
 printf "    ohne Beleg                     %d\n", scalar @ohne_beleg;
+
+# UMFANG 0 - und was das je nach Betriebsart bedeutet.
+#
+# Im Diff-Betrieb ist 0 der NORMALFALL: die meisten Commits fassen BEFUNDE.md
+# nicht an. Das darf nicht abweisen, sonst ist jeder Commit blockiert. Es darf
+# aber auch nicht wie ein bestandenes Urteil klingen - deshalb ein eigener
+# Satz statt des Erfolgssatzes.
+#
+# Im Bestandsbetrieb (--datei) ist 0 ein FEHLER: dort wird die ganze Datei
+# vorgelegt. Findet die Schranke darin keine einzige Befundzeile, dann passt
+# ihr Muster nicht mehr zum Format der Datei - sie ist blind, und genau das
+# beschreibt E-109, Punkt (4): ein Freispruch ueber die leere Menge.
+if ($modus eq 'datei' && $befundzeilen == 0) {
+    printf <<"ENDE", scalar @zeilen;
+\n  NICHTS GEPRUEFT - das ist kein gruenes Ergebnis.
+
+  Vorgelegt wurden %d Zeile(n), und keine einzige davon hat die Schranke als
+  Befundzeile erkannt. Entweder ist die Datei leer, oder das Format hat sich
+  geaendert und das Muster in beurteile() trifft es nicht mehr.
+
+  E-109, Punkt 4: "geprueft und frei" und "nichts gefunden zu pruefen"
+  duerfen nicht gleich aussehen.
+
+ENDE
+    exit 1;
+}
+
+if (!@zeilen) {
+    print "\n  Nichts zu pruefen: dieser Zuwachs enthaelt keine Zeile aus\n";
+    print "  BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
+    exit 0;
+}
 
 for my $m (@mit_beleg) {
     printf "      %-8s %s\n", $m->[0], $m->[1];

@@ -40,19 +40,29 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
-> Stand 17.09.2026, Quellstand **7.2.0.70**, `VERSION` **1.0.70**; als Paket
-> geschnürt und das erste, das **alles** enthält:
-> `Releases/Eudora72-1.0.70-release` samt ZIP, gemessen an Produktversion und
-> Zeitstempel der `Eudora.exe`, 21:18. Seit
+> Stand 18.09.2026, Quellstand **7.2.0.72**, `VERSION` **1.0.72**; als Paket
+> geschnürt und **auf GitHub als `v1.0.72` veröffentlicht** — 17.09.2026,
+> 20:07:49 UTC, dort als *Latest*, Marke auf dem Merge-Commit `8da72c8`.
+> Seit
 > 7.2.0.64 sind dazugekommen: **E-97** (*File → Save As* stürzte ab) und
 > **E-99** (Datenverlust beim Senden eines gesicherten Entwurfs) in 7.2.0.64,
 > **E-100** (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65,
 > **E-101** (die gespeicherte Datei war für andere Programme unbrauchbar) in
 > 7.2.0.66 und 7.2.0.69, **E-103** (Bilder über dem Text) und **E-104**
 > (zusammengeklebte Kopfzeilen) in 7.2.0.67, **E-104** zweite Hälfte und
-> **E-106** in 7.2.0.68; **171/171 Tests**. **Veröffentlicht** ist bei GitHub
-> `v1.0.64` (17.09.2026, als *Latest* markiert; **berichtigt am 17.09.2026 vom
-> LEKTOR, L-14.2 — hier stand `v1.0.50` vom 13.09.2026**).
+> **E-106** in 7.2.0.68, **E-108** (Absturz beim Antworten auf eine geöffnete
+> Nachricht) in 7.2.0.72; **171/171 Tests**. **1.0.70 ist nie zu Gregor
+> gelangt; 1.0.71 stürzt beim Antworten ab, ist nie veröffentlicht worden und
+> liegt nur noch als Paket in seinem Testverzeichnis** — bei ihm liegen
+> 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72.
+>
+> **Berichtigt am 18.09.2026 (LEKTOR, L-15.1).** Hier stand *„Quellstand
+> **7.2.0.70** / `VERSION` **1.0.70** … **Veröffentlicht** ist bei GitHub
+> `v1.0.64`"*. Gemessen mit `gh release list`: **`v1.0.72`**, als *Latest*
+> markiert, 2026-09-17T20:07:49Z. **Dieselbe Zeile war schon L-14.2 und davor
+> L-13.1** — sie trug den Vermerk der vorigen Berichtigung und war trotzdem
+> wieder falsch, weil das Veröffentlichen selbst kein Anlass ist, der die
+> Dokumente nachzieht.
 > Hier steht bewusst keine zweite Fassung dieser Tabelle.
 >
 > | Messung | Ergebnis |

@@ -88,11 +88,34 @@ fi
 #    lautlos aus dem Commit heraus (Befund X-1, Zusatzfund; NP3-4).
 schranke lehren-spiegeln.pl || exit $?
 
-# 3. Release gegen den Quellstand pruefen. Meldet nur, weist NICHT ab - deshalb
-#    steht hier bewusst kein "|| exit". Erst still laufen lassen; nur wenn etwas
-#    nicht stimmt, ein zweites Mal laut.
-perl "$WURZEL/tools/release-pruefen.pl" >/dev/null 2>&1 || \
-  perl "$WURZEL/tools/release-pruefen.pl" || true
+# 3. Release gegen den Quellstand pruefen. WEIST SEIT DEM 18.09.2026 AB.
+#
+#    Hier stand bis dahin:
+#
+#        perl release-pruefen.pl >/dev/null 2>&1 || perl release-pruefen.pl || true
+#
+#    Das "|| true" hat die Schranke vollstaendig entwaffnet: sie konnte auch
+#    ein echtes Missverhaeltnis nicht mehr abweisen. Gregor am 18.09.2026:
+#    "repariere deine schranken, so dass VOR dem commit und merge alles auf
+#    github vorhanden ist."
+#
+#    Warum das "|| true" ueberhaupt dastand, ist nachvollziehbar und war der
+#    eigentliche Mangel: das Werkzeug gab auch fuer einen blossen HINWEIS
+#    (QCSSL-Quellen neuer als die ausgelieferte DLL) den Wert 1 zurueck und war
+#    deshalb dauernd rot. Eine Schranke, die zu oft umsonst warnt, wird
+#    abgeschaltet - genau das ist hier im Haken passiert
+#    (Arbeitsweise/schranke-gegentesten.md).
+#
+#    Behoben wurde deshalb die URSACHE, nicht der Haken: release-pruefen.pl
+#    trennt seit dem 18.09.2026 die Rueckgabewerte.
+#      0 = stimmt          1 = MISSVERHAELTNIS, weist ab      3 = nur Hinweis
+#    Gegenprobe am 18.09.2026 gemessen: der jetzige Baum liefert 3 (Hinweis,
+#    laeuft durch); mit kuenstlich falscher Pruefsumme liefert er 1 (abgewiesen).
+if [ -f "$WURZEL/tools/release-pruefen.pl" ]; then
+  perl "$WURZEL/tools/release-pruefen.pl"
+  rc=$?
+  if [ "$rc" != 0 ] && [ "$rc" != 3 ]; then exit $rc; fi
+fi
 
 # 4. Doku gegen sich selbst pruefen. Laeuft IMMER und weist IMMER ab.
 #
@@ -229,6 +252,101 @@ schranke pruefe-behoben-belegt.pl || exit $?
 #      gemessenen Fehlalarme (deutsches Zitat, Quelltextkommentar).
 schranke pruefe-anzeigetext.pl || exit $?
 
+# ---------------------------------------------------------------------------
+# 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
+#
+#     Gregor am 18.09.2026:
+#
+#       "dein commit gestern fuer 0.72 war unvollstaendig. nachdem ich gemerged
+#        habe, wolltest du noch daten nachschieben. [...] repariere deine
+#        schranken, so dass VOR dem commit und merge alles auf github vorhanden
+#        ist."
+#
+#     Der Anlassfall, nachgemessen: v1.0.72 war am 17.09.2026 um 20:07 UTC
+#     drauSSen (Merge 8da72c8). Danach nannten FUENF fuehrende Dokumente
+#     weiterhin v1.0.64 als neuestes Release, und der berichtigende Commit kam
+#     ERST NACH dem Merge. Auf main stand eine Luege.
+#
+#     WARUM KEINE SCHRANKE DAS FING - gemessen am 18.09.2026 (PRUEFER-17):
+#     die fuenf Werkzeuge, die es haetten fangen koennen, standen in KEINEM
+#     der beiden Haken. Sie liefen nur, wenn jemand daran dachte. Das ist
+#     derselbe Fehler, den tools/lehren-schranken.pl am 09.09.2026 schon
+#     einmal bei pruefe-fensterbau.pl gefunden hat: ein Werkzeug ohne
+#     Aufrufstelle ist Text (Arbeitsweise/werkzeug-vor-eigenbau.md).
+#
+#     Laufzeiten am 18.09.2026 gemessen, damit der Haken nicht laestig wird
+#     (eine laestige Schranke wird umgangen): 352 ms, 233 ms, 134 ms, 513 ms.
+#     Zusammen unter 1,3 Sekunden - das gehoert in den pre-commit.
+# ---------------------------------------------------------------------------
+
+# 16. Was die Dokumente ueber das neueste Release sagen, gegen den Tag-Bestand.
+#     Die eine Frage, die von auSSen kommt: WAS IST WIRKLICH VEROEFFENTLICHT?
+#     doku-pruefen.pl haelt die Dokumente gegeneinander - als alle fuenf
+#     einhellig v1.0.64 sagten, war das widerspruchsfrei und falsch. Einigkeit
+#     ist kein Wahrheitsbeweis.
+#     Gegenprobe: --tests, 19 Faelle; dazu am echten Stand 8da72c8 gefahren
+#     (weist mit 7 Maengeln ab) und am Arbeitsbaum vom 18.09.2026.
+schranke pruefe-release-buchfuehrung.pl || exit $?
+
+# 17. Steht jeder Befund der neuesten Fassung in allen fuehrenden Dokumenten?
+#     Diese Schranke war beim ersten echten Lauf BLIND (E-109): sie holte
+#     ihren Umfang nur aus den UEBERSCHRIFTEN des CHANGELOG-Abschnitts, und
+#     7.2.0.70 nennt seine vier Befunde nur im Fliesstext - Umfang 0, Meldung
+#     "nichts zu pruefen", Rueckgabe 0. Seit dem 18.09.2026 kommt der Umfang
+#     zusaetzlich aus BEFUNDE.md, und Umfang 0 weist ab statt gruen zu melden.
+schranke pruefe-befund-verbreitung.pl || exit $?
+
+# 18. Ist die Fassung ueberhaupt beschrieben - CHANGELOG-Abschnitt, "Noch
+#     offen", VERSION und Version.h im Takt?
+schranke pruefe-doku-takt.pl || exit $?
+
+# 19. Hinkt ein Stand-Kopf hinterher, und nennt jede Rollenhistorie ihre
+#     Berichte? Die zweite Frage ist seit dem 18.09.2026 dabei: bis dahin
+#     verglich die Schranke NUR Datum gegen Datum und meldete LEKTORAT.md
+#     gruen, waehrend die Datei Befunde/LEKTOR-13.md kein einziges Mal nannte.
+schranke pruefe-stand-md.pl || exit $?
+
+# 19c. Vergibt niemand eine Fassungsnummer zweimal? VERSION, Version.h,
+#      Releases/PAKETE.md und der Tag-Bestand gegeneinander. Zwei gleichzeitig
+#      laufende Sitzungen koennen dieselbe naechste Nummer vergeben - der
+#      CHANGELOG fuehrt den Fall unter "Warum es zwei Fassungsnummern 1.0.68
+#      gab", und es gab dafuer keine Schranke. Eine Luecke in der Nummernfolge
+#      ist dabei ausdruecklich ERLAUBT (1.0.70 und 1.0.71 wurden gebaut und
+#      nie veroeffentlicht); geprueft wird auf Doppelvergabe, nicht auf
+#      Lueckenlosigkeit. Gegenprobe: --tests, 11 Faelle. Gemessen 361 ms.
+schranke pruefe-fassungsnummer.pl || exit $?
+
+# 19d. Steckt das, was als behoben UND als von Gregor bestaetigt dasteht,
+#      wirklich in einem Paket? Gemessen an der Versionsressource der
+#      ausgelieferten Eudora.exe, NICHT an VERSION - VERSION ist eine
+#      Absichtserklaerung. Der Anlass: "behoben" gemeldet, waehrend die
+#      Behebung nur in Eudora71/Bin/Release/ lag; Gregor startete 1.0.63, es
+#      stuerzte wieder ab, seine Antwort war "idiot!".
+#      Gegenprobe: --tests, 11 Faelle, darunter "Paket 1.0.68, Eudora.exe
+#      7.2.0.67". Gemessen 237 ms (liest nur das letzte Megabyte je EXE;
+#      die entfernteste Fundstelle aller 21 Pakete liegt 285.036 Byte vor
+#      dem Dateiende).
+schranke pruefe-behoben-ausgeliefert.pl || exit $?
+
+# 19b. Den Bestand an offenen Befunden MELDEN - nicht abweisen, deshalb steht
+#      hier kein "|| exit". CLAUDE.md verlangt diesen Blick zu Sitzungsbeginn;
+#      der erste Commit eines Arbeitsblocks ist der zweite gute Zeitpunkt
+#      (Arbeitsweise/ausloeser-an-den-anfang.md).
+if [ -f "$WURZEL/tools/offene-befunde.pl" ]; then
+  perl "$WURZEL/tools/offene-befunde.pl" 2>/dev/null | grep -E "offen|OFFEN" | head -5
+fi
+
+# 15b. Keine persoenlichen Daten in Testdaten/. Gregor am 18.09.2026, als er
+#      das Verzeichnis angeordnet hat: "aber: keine persoenlichen inhalte
+#      (mail adresse oder namen)." Die Testnachrichten stammen aus seinem
+#      eigenen Postfach; anonymisiert wurden 38 Adressen, eine Heim-IP, zwei
+#      Impressen, Kunden- und Artikelnummern. Eine spaeter hinzugefuegte
+#      Datei geht diesen Weg nicht von selbst - deshalb eine Schranke und
+#      keine Regel. Sie meldet bei NULL geprueften Dateien ausdruecklich ROT
+#      (Rueckgabe 2): ein Freispruch ueber die leere Menge ist in diesem
+#      Projekt schon zweimal vorgekommen (Befund E-109).
+schranke pruefe-testdaten-anonym.pl || exit $?
+
 # 15. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
@@ -260,11 +378,83 @@ schranke() {
   perl "$WURZEL/tools/$1"
 }
 
+# Ist der Zweigname mit Gregor abgestimmt? Beim COMMIT meldet pruefe-branch.pl
+# das nur; HIER weist es ab (--streng, neu am 18.09.2026, PRUEFER-17).
+#
+# Warum erst hier: der Hinweis beim Commit war da und hat nichts bewirkt.
+# Gemessen am 18.09.2026 steht der Zweig, auf dem diese Zeile entsteht, selbst
+# nicht in tools/ZWEIGE.md - die Meldung lief bei jedem Commit mit. In
+# derselben Sitzungsreihe sind VIER Zweignamen an der Regel vorbeigegangen;
+# den letzten hat Gregor geloescht und "illegal" genannt.
+#
+# Ein Zweig, der auf den Server geht, soll gemergt werden. Lokales Arbeiten
+# bleibt frei, abgewiesen wird der Schritt, der andere betrifft. Aufzuloesen
+# mit einer Zeile in tools/ZWEIGE.md.
+echo "pre-push: ist der Zweigname mit Gregor abgestimmt?"
+if [ -f "$WURZEL/tools/pruefe-branch.pl" ]; then
+  perl "$WURZEL/tools/pruefe-branch.pl" --streng || exit $?
+fi
+
 echo "pre-push: Doku gegen sich selbst pruefen (alle MD-Dateien)"
 schranke doku-pruefen.pl || exit $?
 
 echo "pre-push: Zeilenenden und Kodierung"
+# 15b. Keine persoenlichen Daten in Testdaten/. Gregor am 18.09.2026, als er
+#      das Verzeichnis angeordnet hat: "aber: keine persoenlichen inhalte
+#      (mail adresse oder namen)." Die Testnachrichten stammen aus seinem
+#      eigenen Postfach; anonymisiert wurden 38 Adressen, eine Heim-IP, zwei
+#      Impressen, Kunden- und Artikelnummern. Eine spaeter hinzugefuegte
+#      Datei geht diesen Weg nicht von selbst - deshalb eine Schranke und
+#      keine Regel. Sie meldet bei NULL geprueften Dateien ausdruecklich ROT
+#      (Rueckgabe 2): ein Freispruch ueber die leere Menge ist in diesem
+#      Projekt schon zweimal vorgekommen (Befund E-109).
+schranke pruefe-testdaten-anonym.pl || exit $?
+
 schranke pruefe-bytes.pl || exit $?
+
+# ---------------------------------------------------------------------------
+# DIE BUCHFUEHRUNG UEBER DAS RELEASE - hier ein zweites Mal, gegen den
+# FERTIGEN ZWEIG.
+#
+# Warum beides, obwohl dieselben Werkzeuge schon im pre-commit haengen:
+# gemergt wird ein ZWEIG, nicht ein Commit. Ein Zweig kann aus lauter gruenen
+# Commits bestehen und am Ende trotzdem veraltet sein, wenn zwischendurch ein
+# Tag gesetzt oder VERSION weitergezogen wurde - und genau das ist am
+# 17.09.2026 passiert: das Tag v1.0.72 entstand NACH den Commits, die die
+# Dokumente geschrieben haben.
+#
+# Gregor am 07.09.2026: "waere vor dem mergen wichtig, dass keine luegen im
+# main stehen!" - und am 18.09.2026: "so dass VOR dem commit und merge alles
+# auf github vorhanden ist." Der Push ist der letzte Punkt, an dem das noch
+# in meiner Hand liegt; danach merged er.
+# ---------------------------------------------------------------------------
+
+echo "pre-push: Release-Buchfuehrung gegen den Tag-Bestand"
+schranke pruefe-release-buchfuehrung.pl || exit $?
+
+echo "pre-push: stehen die Befunde dieser Fassung in allen fuehrenden Dokumenten?"
+schranke pruefe-befund-verbreitung.pl || exit $?
+
+echo "pre-push: ist die Fassung beschrieben?"
+schranke pruefe-doku-takt.pl || exit $?
+
+echo "pre-push: hinkt ein Stand-Kopf hinterher?"
+schranke pruefe-stand-md.pl || exit $?
+
+echo "pre-push: ist eine Fassungsnummer zweimal vergeben?"
+schranke pruefe-fassungsnummer.pl || exit $?
+
+echo "pre-push: steckt jedes bestaetigte 'behoben' in einem Paket?"
+schranke pruefe-behoben-ausgeliefert.pl || exit $?
+
+# Auch hier abweisend, anders als im pre-commit: siehe die Begruendung dort.
+# 0 = stimmt, 1 = Missverhaeltnis, 3 = nur ein Hinweis.
+echo "pre-push: Release gegen den Quellstand"
+if [ -f "$WURZEL/tools/release-pruefen.pl" ]; then
+  perl "$WURZEL/tools/release-pruefen.pl"
+  rc=$?
+  if [ "$rc" != 0 ] && [ "$rc" != 3 ]; then exit $rc; fi
+fi
 
 # Laesst sich die Testsammlung ueberhaupt noch bauen? Vom 10.09.2026 bis zum
 # 13.09.2026 nicht - und drei Tage lang hat es niemand gemerkt. Die Spurmarke

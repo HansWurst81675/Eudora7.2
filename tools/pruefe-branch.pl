@@ -361,10 +361,28 @@ if ($branch =~ m{^wt/(.+)$}) {
 # ziel-kriterium-2. Dass eine aufgeschriebene Regel dreimal an einem Tag
 # gebrochen wird, belegt den fehlenden Ausloeser, nicht die fehlende Einsicht.
 #
-# Bewusst nur MELDEND: eine Schranke, die jeden Commit auf einem neuen Zweig
-# blockiert, wird umgangen - und faengt dann auch die Faelle nicht mehr, fuer
-# die es sie gibt (Arbeitsweise/pruefstand-kann-blind-sein.md). Der erste
-# Commit kommt frueh genug, um noch umzubenennen.
+# Beim COMMIT bewusst nur MELDEND: eine Schranke, die jeden Commit auf einem
+# neuen Zweig blockiert, wird umgangen - und faengt dann auch die Faelle nicht
+# mehr, fuer die es sie gibt (Arbeitsweise/pruefstand-kann-blind-sein.md). Der
+# erste Commit kommt frueh genug, um noch umzubenennen.
+#
+# BEIM PUSH WEIST SIE AB - neu am 18.09.2026 (PRUEFER-17), ueber --streng.
+#
+# Warum der Push der richtige Punkt ist: der Hinweis war da und hat gewirkt
+# wie kein Hinweis. Gemessen am 18.09.2026: der jetzige Zweig
+# 'schranken-vor-dem-commit' steht NICHT in tools/ZWEIGE.md, die Meldung lief
+# bei jedem Commit - und eingetragen wurde er trotzdem nicht. In derselben
+# Sitzungsreihe sind VIER Zweignamen an der Regel vorbeigegangen
+# (pruefung-main, e106-bilder-groesser, paketliste-glattziehen teilweise,
+# release-1072-nachtrag); den letzten hat Gregor geloescht und "illegal"
+# genannt.
+#
+# Ein Zweig, der auf den Server geht, ist ein Zweig, der gemergt werden soll.
+# Spaetestens da muss der Name vereinbart sein - Gregor am 18.09.2026: "so
+# dass VOR dem commit und merge alles auf github vorhanden ist." Lokales
+# Arbeiten bleibt dabei frei; abgewiesen wird erst der Schritt, der andere
+# betrifft. Aufloesbar in einer Zeile in tools/ZWEIGE.md.
+my $streng = grep { $_ eq '--streng' } @ARGV;
 {
     my $wurzel = git('rev-parse', '--show-toplevel');
     $wurzel =~ s/\Q${\ chr(92)}\E/\//g if length $wurzel;
@@ -374,7 +392,8 @@ if ($branch =~ m{^wt/(.+)$}) {
         if (open(my $h, "<:raw", $liste)) { local $/; $inhalt = <$h>; close $h; }
         unless ($inhalt =~ /`\Q$branch\E`/) {
             print "\n";
-            print "  HINWEIS: '$branch' steht nicht in tools/ZWEIGE.md.\n";
+            printf "  %s: '%s' steht nicht in tools/ZWEIGE.md.\n",
+                   ($streng ? 'ABGEWIESEN' : 'HINWEIS'), $branch;
             print "\n";
             print "  Ein Zweig wird erst angelegt, wenn Gregor den NAMEN bestaetigt hat\n";
             print "  (07.09.2026: \"den haben wir gar nicht vereinbart\"). Am 13.09.2026\n";
@@ -384,6 +403,13 @@ if ($branch =~ m{^wt/(.+)$}) {
             print "  Ist er es nicht? Dann jetzt fragen - der erste Commit ist frueh\n";
             print "  genug zum Umbenennen.\n";
             print "\n";
+            if ($streng) {
+                print "  Dieser Lauf ist --streng (pre-push): ein Zweig, der auf den\n";
+                print "  Server geht, soll gemergt werden. Spaetestens hier muss der\n";
+                print "  Name vereinbart sein. Eine Zeile in tools/ZWEIGE.md loest es.\n";
+                print "\n";
+                exit 1;
+            }
         }
     }
 }

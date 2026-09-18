@@ -246,16 +246,54 @@ my @zeilen = $modus eq 'datei'  ? zeilen_aus_datei($wert)
            :                      zeilen_aus_diff(undef);
 
 my (@mangel, %gesehen);
+my ($befundzeilen, $zitatzeilen) = (0, 0);
 for my $z (@zeilen) {
+    $befundzeilen++ if $z =~ /^\|\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
+    $zitatzeilen++  if zitate($z);
     my @m = beurteile($z);
     next unless @m;
     next if $gesehen{$m[0]}++;
     push @mangel, \@m;
 }
 
+# DER PRUEFUMFANG GEHOERT IN DIE AUSGABE (E-109, Punkt 4).
+#
+# Bis zum 18.09.2026 stand hier nur "gepruefte Zeilen 0 / Zitate ohne
+# Herkunftsangabe 0" und darunter der Erfolgssatz "Jeder zitierte
+# Oberflaechentext nennt seine Herkunft." Ein Lauf, der NICHTS angesehen hat,
+# sah damit genauso aus wie einer, der alles geprueft und nichts gefunden hat.
 printf "\n  %s\n  Zitierte Oberflaechentexte mit Herkunft\n  %s\n", '-' x 60, '-' x 60;
-printf "    gepruefte Zeilen               %d\n", scalar @zeilen;
+printf "    Betriebsart                    %s\n", $modus;
+printf "    angesehene Zeilen              %d\n", scalar @zeilen;
+printf "    davon Befundzeilen             %d\n", $befundzeilen;
+printf "    davon mit einem Zitat          %d\n", $zitatzeilen;
 printf "    Zitate ohne Herkunftsangabe    %d\n", scalar @mangel;
+
+# Im Bestandsbetrieb (--datei) wird die ganze Datei vorgelegt. Findet die
+# Schranke darin keine einzige Befundzeile, passt ihr Muster nicht mehr zum
+# Format - sie ist blind. Im Diff-Betrieb ist 0 dagegen der Normalfall und
+# darf nicht abweisen; er bekommt nur einen eigenen Satz statt des
+# Erfolgssatzes.
+if ($modus eq 'datei' && $befundzeilen == 0) {
+    printf <<"ENDE", scalar @zeilen;
+\n  NICHTS GEPRUEFT - das ist kein gruenes Ergebnis.
+
+  Vorgelegt wurden %d Zeile(n), und keine einzige davon hat die Schranke als
+  Befundzeile erkannt. Entweder ist die Datei leer, oder das Format hat sich
+  geaendert und das Muster in beurteile() trifft es nicht mehr.
+
+  E-109, Punkt 4: "geprueft und frei" und "nichts gefunden zu pruefen"
+  duerfen nicht gleich aussehen.
+
+ENDE
+    exit 1;
+}
+
+if (!@zeilen) {
+    print "\n  Nichts zu pruefen: dieser Zuwachs enthaelt keine Zeile aus\n";
+    print "  BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
+    exit 0;
+}
 
 if (@mangel) {
     print "\n  MANGEL:\n\n";

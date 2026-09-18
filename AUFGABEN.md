@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 17.09.2026**, gemessen an Quellstand **7.2.0.72** / `VERSION` **1.0.72**
+**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.72** / `VERSION` **1.0.72**
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -61,11 +61,21 @@ E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Gebaut und geschnürt ist 7.2.0.70 / 1.0.70** (17.09.2026, 21:18 — gemessen
-an der Produktversion und dem Zeitstempel der `Eudora.exe`;
-`Releases/Eudora72-1.0.70-release` und das ZIP dazu liegen da). **Es ist das erste
-Paket, das alles enthält**: E-101 in beiden Teilen, E-103, E-104, E-106.
-**Bei Gregor liegen 1.0.65 sowie 1.0.67 bis 1.0.72.**
+**Gebaut, geschnürt und veröffentlicht ist 7.2.0.72 / 1.0.72** (17.09.2026 —
+gemessen an `Eudora71/Version.h`, `VERSION` und `gh release list`). **Es ist
+der erste Stand, der alles enthält und zugleich draußen ist**: E-93, E-96,
+E-97, E-99, E-100, E-101 in beiden Teilen, E-103, E-104, E-106 und E-108.
+**Bei Gregor liegen 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72** —
+**1.0.70 nie**, es ist nie zu ihm gelangt.
+
+> **Berichtigt am 18.09.2026 (LEKTOR, L-15.3).** Hier stand *„Gebaut und
+> geschnürt ist **7.2.0.70 / 1.0.70** … **Es ist das erste Paket, das alles
+> enthält** … Bei Gregor liegen 1.0.65 sowie **1.0.67 bis 1.0.72**"*. Drei
+> Fehler in fünf Zeilen: der Stand ist 7.2.0.72 (`Version.h`, `VERSION`,
+> und die Zeile 3 **derselben Datei** sagt es bereits), 1.0.72 ist der
+> vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
+> `ls C:\Users\Gregor\Eudora72-*`.
+
 **Veröffentlicht ist `v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC auf GitHub
 herausgegangen und dort als *Latest* markiert, auf dem Merge-Commit `8da72c8`;
 Gregor hat die Fassung vorher am laufenden Programm geprüft (*„kein crash“*).

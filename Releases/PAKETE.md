@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 17.09.2026, abends neu gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; für **1.0.66 bis 1.0.72** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 18.09.2026; die Zahlen sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; für **1.0.66 bis 1.0.72** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -320,7 +320,8 @@ meldete beim Bau keine Fehler, Kriterium 0 **JA**.
 
 ## 1.0.29 — veröffentlicht am 09.09.2026
 
-**Die aktuelle Fassung, und die einzige, die als Paket im Repo liegt.** Sie
+**Stand 09.09.2026 die jüngste Fassung, und die einzige, die damals als Paket
+im Repo lag.** Sie
 bringt gegenüber 1.0.28 fünfzehn Behebungen: acht aus **PRÜFERs** sechstem
 Durchgang (**E-54** bis **E-61**) und sieben aus dem ersten Lauf der Schranke
 `tools/pruefe-nachrichtenschleife.pl`, die daraus entstanden ist (**E-62**).

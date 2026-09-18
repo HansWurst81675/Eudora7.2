@@ -9,10 +9,14 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 17.09.2026)
+## Noch offen (Stand 18.09.2026)
 
 | Kennung | | |
 |---|---|---|
+| **E-110** | **beim Antworten und Weiterleiten kommen nicht alle Bilder ins Verfassenfenster** — ein Teil steht als **grauer Kasten** da | **Offen, Ursache NICHT gemessen.** Von Gregor am 18.09.2026 an **1.0.72** gemeldet: *„beim weiterleiten und antworten werden nicht alle bilder so übernommen."* Im **Lesefenster** derselben Nachricht sind alle Bilder da. **Kein Rückschritt:** die grauen Kästen haben die **richtige Größe** und der Text liegt nicht mehr darüber — **E-103 und E-106 arbeiten**, dies ist eine andere Schicht. Ein grauer Kasten in richtiger Größe heißt: das Bild wurde **nicht geladen** (der Abschnitt 7.2.0.58 unten sagt das bereits über Paige). **Verdacht, ungemessen:** die Gabelung in `PgEmbeddedImage.cpp:362-415` zwischen dem MIME-Speicher der Nachricht (`GetPartAsFile`, `:382`) und dem Netzabruf (`fetch_url_schmookie`, `:401`, nur bei `bAllowThreadedFetch`). **Zu messen:** Gregors `eudora.log` — je Bild eine `E-95 Bild`-Zeile; daran ist abzulesen, ob der Abruf ausbleibt oder scheitert. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) unter **E-110** |
+| **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
+| **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
+| — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
 | **E-98** | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu **E-97**: der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von E-97:** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit E-98 werden `ToggleStat` und `StatDir` wieder scharf (**E-100**). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
 | **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache NICHT gemessen.** Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
 | **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
@@ -101,8 +105,8 @@ die bisher tödliche Stelle hinaus** (`pos=770` hinter dem `pos=765`, an dem in
 allen drei Absturzprotokollen Schluss war), und die letzte Zeile lautet
 `Logging shutdown`. Keine `Exception.log`, nicht einmal eine leere.
 
-**Nachstellen konnte ich es trotzdem nicht — mein Prüfstand lädt zwar Bilder, aber der Block
-läuft dort nicht an. **Nur Gregors Lauf entscheidet.**
+**Nachstellen konnte ich es trotzdem nicht:** mein Prüfstand lädt zwar Bilder,
+aber der Block läuft dort nicht an. **Nur Gregors Lauf entscheidet.**
 
 ## 7.2.0.71 — Absturz beim Antworten auf eine geöffnete Nachricht (E-107)
 
@@ -140,9 +144,9 @@ Bild jeder Werbemail.
 *Laden* (echter Embed).
 
 **Was nicht bewiesen ist, und das gehört hierher:** ich konnte den Absturz
-**nicht nachstellen**. Mein Prüfstand lädt keine Bilder — weder aus dem Netz
-noch eingebettet als `data:`; beides gemessen, in beiden Fällen läuft der
-verdächtige Code gar nicht an. Auch die **Gegenprobe mit der abstürzenden
+**nicht nachstellen**. Mein Prüfstand lädt zwar Bilder, aber keines, das
+größer ist als angegeben; der verdächtige Code läuft dort deshalb gar nicht
+an. Auch die **Gegenprobe mit der abstürzenden
 Fassung 1.0.69 blieb negativ**: sie öffnet das Antwortfenster bei mir sauber.
 
 Belegbar ist nur dies, und es ist am Quelltext ablesbar: **auf dem gefährlichen
@@ -151,11 +155,15 @@ Stand vor E-103 und E-106 zurück. Schlimmer kann es dadurch nicht werden.
 
 ## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
 
-> **Zu prüfen:** dies ist die erste Fassung, die **alles** enthält — E-101 in
-> beiden Teilen, E-103, E-104 und E-106. Die vier Pakete davor enthalten jeweils
-> nur einen Teil.
+> **Nicht mehr zu prüfen, und 1.0.70 nicht mehr zu benutzen** (Nachtrag LEKTOR,
+> 18.09.2026, L-15.8): diese Fassung war die erste, die E-101 in beiden Teilen,
+> E-103, E-104 und E-106 zusammen trug — sie trägt aber auch den **Absturz beim
+> Antworten** (E-107/E-108), der erst in **7.2.0.72** behoben ist, und sie ist
+> nie zu Gregor gelangt. Der Messpunkt unten ist durch **seinen Lauf an 1.0.69**
+> erledigt: **E-106 ist bestätigt**, die Überlappung ist weg. Wer heute prüft,
+> nimmt das Release **`v1.0.72`**.
 >
-> **Der eine Messpunkt, auf den es ankommt** (`LogLevel=58527` steht schon in
+> **Der Messpunkt, wie er damals lautete** (`LogLevel=58527` steht schon in
 > der `Eudora.ini`): die Kleinanzeigen-Nachricht weiterleiten, warten bis die
 > Bilder sichtbar sind, Eudora beenden. Im `eudora.log` muss stehen:
 > `E-106 groesser als angegeben: attr=200x52 quelle=…x… gefunden=1`.
@@ -177,14 +185,27 @@ zwangsläufig daneben. Die Liste führt jetzt auch **1.0.66 bis 1.0.70**.
 
 ### Was in welchem Paket steckt
 
-Vier Pakete lagen zuletzt nebeneinander, und **keines war vollständig**:
+Die Pakete dieses Abends nebeneinander — **erst 1.0.72 ist vollständig**:
 
 | Paket | Fassung | enthält | es fehlt |
 |---|---|---|---|
 | 1.0.67 | 7.2.0.67 | E-101 (erster Teil), E-103 | E-104, E-106, E-101 zweiter Teil |
 | 1.0.68 | 7.2.0.68 | dazu E-104, **E-106** | E-101 zweiter Teil |
-| 1.0.69 | 7.2.0.69 | E-101 **zweiter Teil**, P-38 | **E-106** |
-| **1.0.70** | 7.2.0.70 | **alles** | — |
+| 1.0.69 | 7.2.0.69 | **E-106** (aus 1.0.68), dazu die P-38-Spurmarke | E-101 **zweiter Teil** |
+| 1.0.70 | 7.2.0.70 | E-101 zweiter Teil, P-38 — **alles bis hierher** | **trägt den Absturz E-108**; nie zu Gregor gelangt |
+| 1.0.71 | 7.2.0.71 | dasselbe, E-107 als falsche Erklärung | **stürzt beim Antworten ab**, nie veröffentlicht |
+| **1.0.72** | 7.2.0.72 | **alles, einschließlich E-108** | — — **das ist das Release `v1.0.72`**, von Gregor bestätigt |
+
+> **Berichtigt am 18.09.2026 (LEKTOR, L-15.7).** Hier stand *„1.0.69 | 7.2.0.69
+> | E-101 **zweiter Teil**, P-38 | **E-106**"* und *„**1.0.70** | 7.2.0.70 |
+> **alles** | —"*. Die Zeile zu 1.0.69 war **vertauscht** und **zweifach**
+> widerlegt: der E-106-Merge `0334a6c` (20:16:00) ist Vorfahr des Standes
+> `acc8ad7`, aus dem die `Eudora.exe` von 1.0.69 um 20:24:54 entstand, während
+> der zweite Teil von E-101 (`e27ccf1`) erst um 20:58:43 kam — und Gregor hat
+> den **E-106-Absturz an 1.0.69 erlebt**, was ohne E-106 nicht möglich wäre.
+> **LEKTOR-14 hat beides am 17.09.2026 gemessen; die Zeile stand danach
+> unverändert weiter.** Dazu hieß 1.0.70 *„alles"*, obwohl es den Absturz aus
+> E-107/E-108 trägt und bei Gregor nie angekommen ist.
 
 Das erklärt auch, warum die Spurmarke `E-101 speichern:` in 1.0.69 fehlte: der
 Protokollkanal war **nicht** abgeschaltet — `LogLevel=58527` ist `0xE49F` und
@@ -329,9 +350,19 @@ höher als die angegebene, bekommt die Zeile die echte Höhe. Nur vergrößern, 
 verkleinern. Richtig skalieren wäre besser, sitzt aber tief in Paige;
 zugedeckter Text ist der teurere Fehler.
 
-**Nicht nachgewiesen, und das gehört dazu:** mein Prüfstand lädt die Bilder
-nicht — null Ladespuren, während Gregors Protokoll 27 hat. Die Behebung ist
+**Nicht nachgewiesen, und das gehört dazu:** mein Prüfstand lädt zwar Bilder
+— acht `E-95 Bild`-Zeilen und `E-103 Nachtrag: quelle=79x64`, also geholt und
+vermessen —, aber keines davon ist größer als angegeben; `E-106 groesser`
+bleibt bei null. Die Behebung ist
 dort nicht messbar. **Nur sein Lauf kann sie belegen.**
+
+> **Berichtigt am 18.09.2026 (LEKTOR, L-15.9).** Hier stand *„mein Prüfstand
+> lädt die Bilder nicht — null Ladespuren"*. Am Protokoll gemessen
+> (`C:\Temp\E107-vorher\…\eudora.log`, 17.09.2026 21:28) sind es **acht**
+> Ladespuren; null ist allein der Zähler `E-106 groesser`. Zwei verschiedene
+> Zähler waren verwechselt, und die falsche Diagnose zeigte drei Fassungen
+> lang in die falsche Richtung.
+
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
 > **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)
