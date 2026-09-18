@@ -327,6 +327,72 @@ static PG_PASCAL (long) eCallback( paige_rec_ptr pg,
 }
 
 
+//
+// BEFUND E-112: welches Rechteck bekommt das Bild?
+//
+// Eigene Funktion, damit die Entscheidung ohne Paige, ohne Fenster und ohne
+// ein einziges Bild pruefbar ist. Bei E-106 fehlte genau das: die Regel stand
+// mitten im Ladeweg, war nur an Gregors Rechner messbar, und dass sie falsch
+// herum war, kam erst heraus, als E-110 die Bilder ueberhaupt ankommen liess.
+//
+// DIE REGEL
+//
+//   Angabe vollstaendig  -> die ANGEGEBENE Groesse gewinnt.
+//   keine Angabe         -> die ECHTE Dateigroesse gilt  (Befund E-103).
+//   nichts bekannt       -> 0/0, der Aufrufer laesst alles, wie es ist.
+//
+// WARUM DIE ANGEGEBENE GEWINNT. Absender legen Bilder in doppelter bis
+// dreifacher Aufloesung ab und geben im HTML die Anzeigegroesse an, damit sie
+// auf feinen Bildschirmen scharf bleiben. Gemessen an Gregors Nachricht vom
+// 18.09.2026: angegeben 35x35, Datei 330x327; angegeben 540x240, Datei
+// 1294x575. Jeder Browser skaliert herunter - und Eudoras eigenes Lesefenster
+// tut es auch.
+//
+// WARUM E-106 ES ANDERSHERUM GEMACHT HAT. Das Symptom damals war "Bild liegt
+// ueber dem Text": Paige zeichnete in Originalgroesse, waehrend die Zeile nach
+// der Angabe bemessen war. Ich habe daraufhin die ZEILE VERGROESSERT statt das
+// BILD ZU VERKLEINERN. Das beseitigte das Symptom, solange kaum ein Bild lud.
+// Als E-110 behoben war, luden sie - und das WhatsApp-Symbol fuellte das halbe
+// Fenster.
+//
+// WIE DAS VERKLEINERN GEHT, OHNE DASS PAIGE SKALIEREN KANN. MetafileFromImage
+// liefert eine METADATEI, und eine Metadatei wird auf ihr Zielrechteck
+// gestreckt - pict_frame ist dieses Rechteck. Paige muss dafuer nichts
+// koennen; es reicht, das Rechteck richtig zu setzen.
+//
+// DER AUFRUFER SETZT BEIDES auf denselben Wert: embed->width/height (danach
+// rechnet der Zeilenumbruch) und pict_frame (danach wird gezeichnet). Laufen
+// die beiden auseinander, deckt das Bild wieder Text zu oder haengt in der
+// Luft - das war E-106.
+//
+void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
+                       long nEchtBreite, long nEchtHoehe,
+                       long* pnRahmenBreite, long* pnRahmenHoehe )
+{
+	if ( !pnRahmenBreite || !pnRahmenHoehe )
+		return;
+
+	*pnRahmenBreite = 0;
+	*pnRahmenHoehe  = 0;
+
+	if ( nAttrBreite > 0 && nAttrHoehe > 0 )
+	{
+		// Vollstaendige Angabe - sie gewinnt, das Bild wird hineingestreckt.
+		*pnRahmenBreite = nAttrBreite;
+		*pnRahmenHoehe  = nAttrHoehe;
+	}
+	else if ( nEchtBreite > 0 && nEchtHoehe > 0 )
+	{
+		// Keine oder halbe Angabe: die Datei entscheidet. Das ist E-103 -
+		// eine Zeile von 13 Punkten fuer ein Bild von 60, und der Text lag
+		// darunter. Eine halbe Angabe wird hier bewusst wie keine behandelt:
+		// was eine Seitenverhaeltnis-Rechnung daraus machen soll, ist NICHT
+		// gemessen, und Raten hat bei E-106 schon einmal gereicht.
+		*pnRahmenBreite = nEchtBreite;
+		*pnRahmenHoehe  = nEchtHoehe;
+	}
+}
+
 bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr embed,bool bAllowThreadedFetch )
 {
     // BEFUND E-106: was die Datei WIRKLICH misst. 0 heisst: nicht gemessen.
@@ -766,19 +832,49 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					// QUALCOMM-Block oben wird direkt darauf geschrieben,
 					// ohne UseMemory. Der erste Anlauf hatte es umhuellt und
 					// liess sich nicht uebersetzen.
-					embed->uu.pict_data.pict_frame.top_left.h = 0;
-					embed->uu.pict_data.pict_frame.top_left.v = 0;
+					//
+					// BEFUND E-112 (18.09.2026): das Rechteck bekommt die
+					// ANGEGEBENE Groesse, nicht die echte.
+					//
+					// Hier stand bis dahin nEchtBreite/nEchtHoehe in BEIDEN
+					// Feldern - also wurde die Zeile vergroessert statt das
+					// Bild verkleinert. Solange E-110 offen war, luden kaum
+					// Bilder und es fiel nicht auf; danach fuellte das
+					// WhatsApp-Symbol (angegeben 35x35, Datei 330x327) das
+					// halbe Fenster. Gregor: "warum ist die reply ansicht so
+					// gross?"
+					//
+					// pict_frame ist das ZIELRECHTECK der Metadatei - sie
+					// wird hineingestreckt. Damit skaliert das Bild, ohne
+					// dass Paige selbst skalieren koennen muss.
+					//
+					// embed->width/height und pict_frame bekommen denselben
+					// Wert: nach dem ersten rechnet der Zeilenumbruch, nach
+					// dem zweiten wird gezeichnet. Laufen sie auseinander,
+					// deckt das Bild wieder Text zu - das war E-106.
+					//
+					long nRahmenBreite = 0, nRahmenHoehe = 0;
 
-					embed->width = (long) nEchtBreite;
-					embed->uu.pict_data.pict_frame.bot_right.h = (long) nEchtBreite;
+					E112Zielrechteck( (long) embed->width, (long) embed->height,
+									  nEchtBreite, nEchtHoehe,
+									  &nRahmenBreite, &nRahmenHoehe );
 
-					embed->height = (long) nEchtHoehe;
-					embed->uu.pict_data.pict_frame.bot_right.v = (long) nEchtHoehe;
+					if ( nRahmenBreite > 0 && nRahmenHoehe > 0 )
+					{
+						embed->uu.pict_data.pict_frame.top_left.h = 0;
+						embed->uu.pict_data.pict_frame.top_left.v = 0;
 
-					pgInvalEmbedRef( pg->myself, posE, embed, draw_none );
+						embed->width = nRahmenBreite;
+						embed->uu.pict_data.pict_frame.bot_right.h = nRahmenBreite;
 
-					if (pSB && pSB->pWndOwner)
-						pSB->pWndOwner->Invalidate();
+						embed->height = nRahmenHoehe;
+						embed->uu.pict_data.pict_frame.bot_right.v = nRahmenHoehe;
+
+						pgInvalEmbedRef( pg->myself, posE, embed, draw_none );
+
+						if (pSB && pSB->pWndOwner)
+							pSB->pWndOwner->Invalidate();
+					}
 				}
 			}
 

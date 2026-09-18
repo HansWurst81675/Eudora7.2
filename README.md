@@ -117,12 +117,16 @@ verschickt.
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
   Rückschritt durch die Behebung von E-97** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
-* **Beim Antworten und Weiterleiten fehlen Bilder im Verfassenfenster**
-  (**E-110**, offen): ein Teil der Bilder steht dort als grauer Kasten, während
-  im Lesefenster derselben Nachricht alle da sind. Die Kästen haben die
-  richtige Größe und decken keinen Text zu — das Bild ist schlicht nicht
-  geladen. Ursache noch nicht gemessen. Von Gregor am 18.09.2026 an 1.0.72
-  gemeldet.
+* **Beim Antworten und Weiterleiten fehlten Bilder im Verfassenfenster**
+  (**E-110**, behoben in 7.2.0.75, von Gregor bestätigt): `resolve_URL` warf
+  jede Prozent-Sequenz weg, statt sie zu entschlüsseln — aus
+  `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+  antwortete 404, und Eudora zeichnete einen grauen Kasten. Zehn von zwanzig
+  Bildern. **Dabei wurde E-112 sichtbar** (behoben in 7.2.0.76, noch nicht
+  bestätigt): die Bilder erschienen danach in Originalgröße statt in der
+  angegebenen — eine Regression der E-106-Behebung. **Weiter offen ist
+  E-113:** ein Bild, dessen angegebene Breite größer ist als das Fenster,
+  läuft rechts hinaus.
 * **Die Betreffzeile wird mitten im Wort umbrochen** (**E-94**, offen): beim
   Versenden entstehen Betreffs wie `Toner bestel len` oder `Wochenend e!` —
   der Empfänger sieht das, nicht der Absender. Ursache noch nicht gemessen;
@@ -651,7 +655,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.75` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.76` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

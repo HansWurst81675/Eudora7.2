@@ -82,6 +82,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `e112-bilder-auf-angegebene-groesse` | 18.09.2026 | Von Gregor angenommen (*„e112-bilder-auf-angegebene-groesse / paßt"*). **Der Vorschlag kam allerdings zu früh** — auf dem Vorgängerzweig lagen zu diesem Zeitpunkt noch zwei ungesicherte Nachträge (Gregors Bestätigung zu E-110 und der Befund E-112). Er hat daraufhin gemergt, und beides fehlte auf `main`. Seine Regel dazu: *„wenn du mir einen neuen branch namen vorschlägst, dann gehe ich davon aus, daß der vorherige branch komplett ist."* Festgehalten als `Arbeitsweise/zweigname-heisst-vorheriger-fertig.md`. Zweck des Zweigs: **E-112** — Bilder werden in Originalgröße gezeichnet statt in der angegebenen (`35x35` angegeben, `330x327` in der Datei), weil die E-106-Behebung die echte Größe ins Embed schreibt. Die beiden nachgetragenen Doku-Stellen sind sein erster Commit |
 
+| `e112-frame-picture` | 18.09.2026 | Name von Gregor gesetzt (*„e112-frame-picture"*), nachdem der Vorgängerzweig gemergt und gelöscht war. Zweck: **E-112** beheben — `pict_frame` bekommt die **angegebene** Größe statt der echten, damit die Metadatei hineingestreckt wird statt die Zeile zu sprengen. Die Entscheidung sitzt dafür in einer eigenen, paige-freien Funktion `E112Zielrechteck`, damit der Prüfstand sie messen kann; bei **E-106** stand dieselbe Regel mitten im Ladeweg und war nur an Gregors Rechner prüfbar. Sieben neue Tests, Gegenprobe gefahren. Dazu **E-113** aufgeschrieben (Bilder, die breiter sind als das Fenster) — auf Gregors Anordnung *„erst A, dann B"* nicht mitbehoben |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
