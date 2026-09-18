@@ -65,6 +65,51 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.74 — `datei=` und `intern=` trennen die letzte Alternative (E-110, **Messfassung**)
+
+**Behebt nichts.** 1.0.74 ist wie 1.0.73 eine Messfassung; veröffentlicht ist
+weiterhin `v1.0.72`.
+
+**Was 1.0.73 an Gregors Lauf gemessen hat.** Zehn Bilder, 31 Rufe. **Fünf**
+werden geladen (`daten` gesetzt, `art=9`, jeweils beim **zweiten** Ruf),
+**fünf** geben auf (`ok=0 daten=0`, nach zwei bis fünf Versuchen). Die fünf
+Aufgebenden sind nachweislich die grauen Kästen: der Kasten unmittelbar über
+*„Sven von Storch"* ist `SvSunterschriftbeschnitten.jpg` (250×96), der nach
+*„Jetzt hier spenden"* ist `SpendenbannerFW2019neu.jpeg` (540×240).
+
+**Drei meiner Erklärungen sind damit widerlegt:**
+
+* Der Wiederholungsmechanismus **funktioniert** — die Erfolgreichen bekommen
+  ihre Daten beim zweiten Ruf. Das von QUALCOMM versprochene *„später"* tritt
+  also sehr wohl ein.
+* `faden=1` durchgehend: der Abruf ist **erlaubt**, nicht gesperrt.
+* `fehler=0` durchgehend: `loader_result` wird **nirgends** gesetzt — Eudora
+  vermerkt das Scheitern nicht einmal.
+
+Die Größe allein erklärt es nicht: ein Bild mit 600×146 kommt durch, eines mit
+250×96 nicht.
+
+**Was 1.0.73 nicht trennen konnte.** `ok=0` zusammen mit `daten=0` hat im
+Quelltext **zwei** mögliche Ursachen: entweder liefert `fetch_url_schmookie`
+den Wert `-1` und der Abruf kommt gar nicht zustande, oder die Datei **ist
+da** und weder `MetafileFromImage` noch QuickTime können sie umwandeln. Im
+ersten Fall liegt der Fehler im Abrufweg, im zweiten im Bilddecoder — und das
+Bild läge längst auf der Platte. Zwei ganz verschiedene Behebungen.
+
+**Neu in der Zeile:** `datei=` und `intern=`.
+
+### Prüfanleitung
+
+Auf dieselbe Nachricht antworten, Eudora beenden, `eudora.log` sichern. Zu
+lesen ist:
+
+| Zeile | Bedeutung |
+|---|---|
+| `datei=0` | die Bilddatei ist nie angekommen → der Fehler sitzt im **Abrufweg** |
+| `datei=1 intern=0` | geholt, aber nicht als Bild **erkannt** |
+| `datei=1 intern=1 daten=0` | erkannt und trotzdem nicht **umgewandelt** |
+| `datei=-1` | der Block wurde nie betreten (keine Adresse) |
+
 ## 7.2.0.73 — die Spurmarke sagt jetzt, ob hinter einem Bild Daten liegen (E-110, **Messfassung**)
 
 > **Das ist kein Release und behebt nichts.** Gregor bekommt diese Fassung, um

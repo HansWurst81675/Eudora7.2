@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.73** / `VERSION` **1.0.73** (Messfassung; veröffentlicht ist `v1.0.72`)
+**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.74** / `VERSION` **1.0.74** (Messfassung; veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`

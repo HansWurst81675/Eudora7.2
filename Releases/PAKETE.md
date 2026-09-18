@@ -155,6 +155,36 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.74 — gebaut am 18.09.2026, **Messfassung, kein Release**
+
+**Behebt nichts, trennt aber die letzte offene Alternative zu E-110.** Die
+Messfassung 1.0.73 hat gezeigt: von zehn Bildern werden fünf geladen
+(`daten` gesetzt, `art=9`, jeweils beim **zweiten** Ruf) und fünf geben auf
+(`ok=0 daten=0`). Damit ist belegt, dass der Wiederholungsmechanismus
+funktioniert und der Abruf nicht gesperrt ist (`faden=1`, `fehler=0`).
+
+**Was 1.0.73 nicht trennen konnte:** `ok=0` zusammen mit `daten=0` hat im
+Quelltext **zwei** mögliche Ursachen —
+
+1. `fetch_url_schmookie` liefert `-1`, der Abruf kommt gar nicht zustande;
+2. die Datei **ist da**, aber weder `MetafileFromImage` noch QuickTime können
+   sie umwandeln.
+
+Das sind zwei ganz verschiedene Behebungen. Im ersten Fall liegt der Fehler im
+Abrufweg, im zweiten im Bilddecoder — und das Bild läge längst auf der Platte.
+
+**Neu in der Zeile:** `datei=` (0 = keine Datei, 1 = Datei vorhanden, −1 = der
+Block wurde nie betreten) und `intern=` (hat `CanHandleImageInternally`
+zugestimmt?). `filePath` liegt in einem inneren Block und ist an der Messstelle
+nicht mehr sichtbar; beide Werte werden deshalb dort gemerkt, wo sie entstehen.
+
+**Wozu Gregor es braucht:** dieselbe Nachricht, antworten, `eudora.log`
+sichern. `datei=1 intern=0` heißt: geholt, aber nicht als Bild erkannt.
+`datei=1 intern=1 daten=0` heißt: erkannt und trotzdem nicht umgewandelt.
+`datei=0` heißt: nie angekommen.
+
+**Nicht als Release herausgeben.**
+
 ## 1.0.73 — gebaut am 18.09.2026, **Messfassung, kein Release**
 
 **Dieses Paket behebt nichts.** Es enthält gegenüber 1.0.72 genau eine
