@@ -24,6 +24,7 @@ void RunSymboleTests(void);
 void RunE88Tests(void);
 void RunE89Tests(void);
 void RunE101Tests(void);
+void RunResolveURLTests(void);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -106,6 +107,7 @@ int main(int argc, char* argv[])
 	RunE88Tests();
 	RunE89Tests();
 	RunE101Tests();
+	RunResolveURLTests();
 
 	iFailed = TT_Summary();
 	return iFailed;

@@ -189,4 +189,29 @@ $lStart = Find-Line $mu '^bool E101SpeicherfassungAufbereiten\s*\(' 0
 $lEnd = Find-Line $mu '^\}\s*$' $lStart
 Write-Region $mu $lStart $lEnd (Join-Path $OutDir "msgutils_e101.inc") $msgPath
 
+
+# ---------------------------------------------------------------- HTMLUtils.cpp (E-110)
+# Region M: resolve_URL und translate_hex (Befund E-110). resolve_URL baut aus
+# dem src-Attribut eines <img> die Adresse, unter der Eudora das Bild holt.
+# Bis zum 18.09.2026 warf es jede Prozent-Sequenz weg, statt sie zu
+# entschluesseln - "en%20aktuellen%20Verlust.png" wurde zu
+# "enaktuellenVerlust.png", der Server antwortete mit 404, und der Anwender sah
+# einen grauen Kasten. Zehn von zwanzig Bildern in Gregors Nachricht.
+#
+# Reine Zeichenkettenarbeit, Adresse rein und Adresse raus - ohne Paige, ohne
+# Netz, ohne ein einziges Bild pruefbar. Genau deshalb faellt dieser Befund in
+# die Zustaendigkeit des Pruefstands und nicht in Gregors Lauf.
+#
+# Die Region umfasst ALLE VIER Funktionen der Datei: resolve_URL ruft
+# translate_hex, unescape_url ruft x2c. unescape_url loest DIESELBE Aufgabe wie
+# resolve_URL - und loeste sie schon immer richtig. Sie ist damit die beste
+# Gegenprobe, die es gibt: zwei Funktionen desselben Autors in derselben Datei,
+# zwanzig Zeilen auseinander, und nur eine war kaputt.
+$htmlPath = Join-Path $SrcDir "HTMLUtils.cpp"
+$hu = Read-Lines $htmlPath
+$mStart = Find-Line $hu '^void resolve_URL\s*\(' 0
+$mX2c = Find-Line $hu '^char x2c\s*\(' $mStart
+$mEnd = Find-Line $hu '^\}\s*$' $mX2c
+Write-Region $hu $mStart $mEnd (Join-Path $OutDir "htmlutils_resolveurl.inc") $htmlPath
+
 Write-Host "Extract.ps1: fertig."

@@ -155,6 +155,36 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.75 — gebaut am 18.09.2026, **E-110 behoben**
+
+**Bilder mit Leerzeichen im Namen kommen wieder an.** `resolve_URL`
+(`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg, statt sie zu entschlüsseln:
+im `%`-Zweig wurde das entschlüsselte Zeichen nach `*output` geschrieben, der
+Zeiger aber nicht weitergerückt — das nächste Zeichen überschrieb es. Aus
+`en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+antwortete mit **404**, Eudora legte die Fehlerseite ab und zeichnete einen
+grauen Kasten. Zehn von zwanzig Bildern in Gregors Nachricht.
+
+Die Behebung ist ein `++output;`. Betroffen war **jede** Prozent-Sequenz, also
+auch Umlaute in Dateinamen (`%C3%BC`), Klammern (`%28`) und Schrägstriche
+(`%2F`) — der Fehler steckt im Originalcode von QUALCOMM, nicht in der
+Portierung.
+
+**178 Tests, 178 bestanden** (sieben neue). Die Gegenprobe ist gefahren: ohne
+die Behebung fallen **vier** der sieben um, und zwar mit genau den
+Zeichenketten aus Gregors Protokoll; die drei anderen prüfen den *erlaubten*
+Fall (Adresse ohne Prozentzeichen, die Ränder, die Längenschranke) und bleiben
+in beiden Richtungen grün.
+
+**Was Gregor prüft:** dieselbe Nachricht öffnen und **antworten**. Die grauen
+Kästen müssen verschwunden sein. Im Protokoll steht dann bei diesen Bildern
+`datei=1 intern=1` und ein `daten=` ungleich 0.
+
+**Nicht behoben, weiter offen:** `loader_result` bleibt auch jetzt `0` —
+schlägt ein Bildabruf aus einem anderen Grund fehl, meldet Eudora es weiterhin
+nirgends (in **E-110** vermerkt). Und **E-111**: `resolve_URL` kann bei einer
+Adresse von genau 512 Zeichen ein Byte hinter das Zielfeld schreiben.
+
 ## 1.0.74 — gebaut am 18.09.2026, **Messfassung, kein Release**
 
 **Behebt nichts, trennt aber die letzte offene Alternative zu E-110.** Die

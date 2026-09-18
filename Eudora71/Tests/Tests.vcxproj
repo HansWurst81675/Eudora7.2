@@ -93,6 +93,8 @@
     <ClCompile Include="TestE89.cpp" />
     <ClCompile Include="UnderTestE101.cpp" />
     <ClCompile Include="TestE101.cpp" />
+    <ClCompile Include="UnderTestResolveURL.cpp" />
+    <ClCompile Include="TestResolveURL.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
