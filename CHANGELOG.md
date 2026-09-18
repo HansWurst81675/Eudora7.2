@@ -65,6 +65,49 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.73 — die Spurmarke sagt jetzt, ob hinter einem Bild Daten liegen (E-110, **Messfassung**)
+
+> **Das ist kein Release und behebt nichts.** Gregor bekommt diese Fassung, um
+> **E-110** überhaupt messbar zu machen. Veröffentlicht bleibt **`v1.0.72`**.
+>
+> **Zu prüfen:** auf dieselbe Nachricht antworten, in der Bilder grau bleiben,
+> `LogLevel=58527` drin lassen, danach die `eudora.log` sichern. Entschieden
+> wird an einem Wert: **`daten=0` bei einem Bild, das im Lesefenster sichtbar
+> ist**, heißt — Eudora **holt es auf dem Antwortweg nicht**. **`daten` gesetzt
+> und trotzdem grau** heißt — es **holt es und zeichnet es nicht**. Zwei
+> verschiedene Ursachen, zwei verschiedene Behebungen.
+
+**Warum diese Fassung nötig wurde.** Gregors Protokoll vom 18.09.2026 zu 1.0.72
+hat die Frage zu E-110 **nicht beantworten können**, obwohl es 128 Zeilen
+`E-95 Bild` enthält. Der Grund steht in der Spurmarke selbst: ausgegeben wurden
+zweimal **Maße** — `source_width/height` aus dem HTML gegen
+`mess_ptr->width/height` aus dem Embed (`PGHTMIMP.CPP:2258-2259`) — und **nie
+der Datenbestand**. Nachgezählt wurde immerhin dies: 76 der 128 Zeilen tragen
+gleiche Maße, **52 haben `embed=0x0`** bei bekannter Breite. Dass der Platz
+stimmt und die Bildpunkte fehlen, ist damit belegt; **welches** Bild betroffen
+ist und **warum**, nicht.
+
+**Dazu kam eine falsche Spur, die einen halben Vormittag gekostet hätte.** Im
+Protokoll war **jede** der 128 Adressen exakt 32 Zeichen lang — das sieht
+zwingend nach einem abgeschnittenen URL-Feld und damit nach der Ursache aus.
+Es war die Spurmarke: sie kürzte **zweimal**, in der Kopierschleife
+(`PGHTMIMP.CPP:2250`, `for (i = 0; i < 32 …)`) und noch einmal im Format
+(`:2255`, `%.32s`).
+
+**Was die Zeile jetzt zusätzlich nennt:**
+
+- **`daten=`** aus `image_data` — den Metadatei-Griff setzt `PgLoadUrlImage`,
+  sobald die Datei wirklich da ist. Bleibt er `0`, hat Paige nichts zu zeichnen.
+  Das ist der Wert, der Datenbestand von Platzhalter trennt, und er steht in
+  **derselben** Zeile wie die Maße.
+- **`art=`** aus `type_and_flags`.
+- **die ungekürzte Adresse.** Ist sie zu lang, fällt die **Mitte** weg, nicht
+  das Ende — bei **E-106** hing alles am Dateinamen (`_3x` heißt dreifache
+  Auflösung), und genau der stand vorher nie da.
+
+**Kein Quelltext außerhalb der Spurmarke angefasst.** E-110 ist damit nicht
+behoben, sondern erst messbar.
+
 ## 7.2.0.72 — der Absturz, zweiter Anlauf: der Stilweg fliegt raus (E-108)
 
 > **Zu prüfen:** dieselbe Nachricht öffnen und **antworten**. `LogLevel=58527`

@@ -1,5 +1,13 @@
 # Testdaten
 
+> **Diese Dateien haengen an keiner Programmfassung.** Sie sind Probenachrichten
+> und Aufrufstapel; was sie ausloesen, haengt am Absender, nicht an Eudora.
+> Zuletzt benutzt wurden sie mit **Paket 1.0.72**. Die Messfassung **1.0.73 /
+> Quellstand 7.2.0.73** gibt zu denselben Dateien zusaetzlich `daten=` aus und
+> macht damit **E-110** messbar — siehe `CHANGELOG.md`, Abschnitt 7.2.0.73.
+> **Die Fassungsangaben in der Tabelle unten nennen, worin ein Befund behoben
+> ist, nicht den heutigen Stand** (LEKTOR, L-15.15).
+
 Probenachrichten und Aufrufstapel, mit denen sich die Befunde **E-97**,
 **E-101**, **E-103**, **E-104**, **E-106** und **E-108** nachstellen lassen.
 

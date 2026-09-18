@@ -68,3 +68,5 @@
 - [Verwerfen nur mit Zähler](verwerfen-nur-mit-zaehler.md) — ein verwerfender Befehl wirkt auf seinen Umfang, nicht auf meine Absicht; PORTIERUNG.md 1129 Zeilen auf 0
 - [Funktion bringt ihre Vorbedingung mit](funktion-bringt-ihre-vorbedingung-mit.md) — ISOTranslate nullt ein Byte hinter dem Bereich; im IMAP-Weg ist das die nächste Zeile
 - [Nie benutzt ist nicht geprüft](nie-benutzt-ist-nicht-geprueft.md) — was niemand je angeklickt hat, gilt nicht als geprüft; E-97 lag 15 Fassungen und ein Release lang im Speichern-Dialog
+- [Schranke gehört in den Haken](schranke-gehoert-in-den-haken.md) — eine Prüfung, die nur läuft wenn ich daran denke, ist keine Schranke; Hinweise dürfen nicht abweisen
+- [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)

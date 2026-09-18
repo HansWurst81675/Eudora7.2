@@ -155,6 +155,33 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.73 — gebaut am 18.09.2026, **Messfassung, kein Release**
+
+**Dieses Paket behebt nichts.** Es enthält gegenüber 1.0.72 genau eine
+Änderung: die E-95-Spurmarke sagt jetzt, ob hinter einem Bild überhaupt Daten
+liegen. Gebaut, weil Gregors Protokoll vom 18.09.2026 die Frage zu **E-110**
+nicht beantworten konnte — 128 Zeilen `E-95 Bild`, und keine unterscheidet ein
+geladenes Bild von einem grauen Platzhalter. Ausgegeben wurden zweimal **Maße**
+(`source_width/height` aus dem HTML gegen `mess_ptr->width/height` aus dem
+Embed), nie der Datenbestand.
+
+Neu in der Zeile: **`daten=`** aus `image_data` — den Metadatei-Griff setzt
+`PgLoadUrlImage`, sobald die Datei wirklich da ist; bleibt er `0`, hat Paige
+nichts zu zeichnen. Dazu **`art=`** aus `type_and_flags` und die **ungekürzte
+Adresse**: die war zweifach beschnitten (Kopierschleife auf 32 Zeichen *und*
+`%.32s` im Format), weshalb alle 128 Bilder im Protokoll gleich aussahen. Bei
+zu langer Adresse fällt jetzt die **Mitte** weg, nicht das Ende — bei **E-106**
+hing alles am Dateinamen, `_3x` heißt dreifache Auflösung.
+
+**Wozu Gregor es braucht:** auf dieselbe Nachricht antworten, in der Bilder grau
+bleiben, und die `eudora.log` sichern. `daten=0` bei einem Bild, das im
+Lesefenster sichtbar ist, heißt: Eudora **holt es auf dem Antwortweg nicht**.
+`daten` gesetzt und trotzdem grau heißt: es **holt es und zeichnet es nicht**.
+Zwei verschiedene Ursachen, zwei verschiedene Behebungen.
+
+**Nicht als Release herausgeben.** Eine Messfassung ist kein Fortschritt für
+den Anwender; E-110 ist damit nicht behoben, sondern erst messbar.
+
 ## 1.0.72 — gebaut am 17.09.2026, **von Gregor bestätigt**
 
 **Die erste Fassung ohne den Absturz beim Antworten.** Gregor an diesem Abend:

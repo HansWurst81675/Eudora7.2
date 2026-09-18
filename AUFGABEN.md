@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.72** / `VERSION` **1.0.72**
+**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.73** / `VERSION` **1.0.73** (Messfassung; veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -60,6 +60,16 @@ Angabe aber nie. **Offen bleibt
 E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
+
+**Neu offen seit dem 18.09.2026: E-110** — beim **Antworten und Weiterleiten**
+kommen nicht alle Bilder ins Verfassenfenster, ein Teil steht als grauer Kasten
+da; im Lesefenster derselben Nachricht sind alle da. **Kein Rückschritt:** die
+Kästen haben die richtige Größe und decken keinen Text zu, **E-103 und E-106
+arbeiten**. Gemessen an Gregors Protokoll zu 1.0.72: von 128 `E-95 Bild`-Zeilen
+tragen **52** ein `embed=0x0` — der Platz stimmt, die Bildpunkte fehlen.
+**Ursache nicht gemessen;** dafür ist die Messfassung **1.0.73** gebaut, deren
+Spurmarke `daten=` ausgibt. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) unter
+**E-110**, Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.73.
 
 **Gebaut, geschnürt und veröffentlicht ist 7.2.0.72 / 1.0.72** (17.09.2026 —
 gemessen an `Eudora71/Version.h`, `VERSION` und `gh release list`). **Es ist

@@ -379,3 +379,108 @@ neben dem Maß, in **derselben** Zeile
 
 **Die Ursache bleibt offen.** Gregor: *„aber erstmal das andere zu ende führen,
 sonst kommst du durcheinander."* Kein Quelltext angefasst, keine Behebung.
+
+---
+
+## Nachtrag, 18.09.2026 — der Stand auf 7.2.0.73 / 1.0.73 (L-15.14 bis L-15.16)
+
+Zweig `e110-spurmarke-bilddaten`, Grundlage `dca1d8f`. **1.0.73 ist eine
+Messfassung, kein Release** — sie behebt nichts und macht nur **E-110**
+messbar. Veröffentlicht bleibt **`v1.0.72`**. Genau diese Unterscheidung ist der
+Maßstab für jede Zeile unten: **Quellstand**-Angaben gehen auf 7.2.0.73,
+**Release**-Angaben bleiben bei v1.0.72.
+
+### Zuerst nachgemessen, was die Schranke wirklich sagt
+
+Der Auftrag nannte acht Dateien, die den Commit angeblich abweisen. **Gemessen
+ist das nicht so**, und die Unterscheidung entscheidet, was zu tun ist:
+
+| | |
+|---|---|
+| **MANGEL** (weist ab) | `README.md:654`, `WEITERMACHEN.md:10` — **zwei**, nicht acht |
+| **Zur Kenntnis** (weist **nicht** ab) | die acht genannten Dateien |
+| **Was sonst noch abwies** | `pruefe-doku-takt` (CHANGELOG-Abschnitt 7.2.0.73 fehlte), `pruefe-stand-md` (`AUFGABEN.md`), später `pruefe-befund-verbreitung` (E-110 fehlte in `AUFGABEN.md`) |
+
+**Warum das wichtig ist:** hätte ich die acht als Abweisung behandelt, hätte ich
+in acht Dateien eine Fassungsnummer geschrieben, die dort nicht hingehört —
+**genau L-15.5**. Die Trennung von *MANGEL* und *Zur Kenntnis* ist die Schranke,
+die richtig arbeitet; der Fehler lag in ihrer Lesung.
+
+### L-15.14 — `EINSTELLUNGEN.md` und `FILTER.md`: die Sachfrage, nicht die Nummer
+
+Der Auftrag verlangte zu prüfen, ob **E-104** den Text falsch gemacht hat.
+`E104SchalterLesen` berührt `IncludeHeaders` und `GuessParagraphs`.
+
+**Gemessen:** `grep -i` über beide Dateien — **null Treffer** für beide
+Schlüssel. Der Text ist also **nicht falsch geworden, nur älter.** Deshalb steht
+in beiden jetzt, was wahr ist, statt einer neuen Nummer:
+
+> *„Geprüft gegen Quellstand 7.2.0.68 / Paket 1.0.68. Der Quellstand ist
+> inzwischen 7.2.0.73 / 1.0.73; **gegen ihn ist diese Datei nicht erneut
+> geprüft.**"* — dazu, was nachgesehen wurde und mit welchem Ergebnis.
+
+**Und dabei fiel ein echter Mangel auf, der nichts mit der Fassungsnummer zu
+tun hat:** `FILTER.md` beschreibt die Filteraktion *Notify Application*, nennt
+aber **M-3** nicht — und M-3 sitzt genau dort. `filtersd.cpp:2048` sichert
+`IDS_INI_INCLUDE_HEADERS` **roh** (`GetIniShort` statt `E104SchalterLesen`) und
+`:2083` schreibt den gesicherten Wert zurück; ein verdorbener Wert überlebt
+damit die Reparatur aus E-104. Am Quelltext nachgeschlagen, von PRUEFER
+gefunden (`Befunde/PRUEFER-16.md`, M-3), **offen**. In `FILTER.md` nachgetragen.
+
+### L-15.15 — `Testdaten/README.md`: derselbe Grenzfall wie `ZWEIGE.md`
+
+**Die Schranke hätte hier eine Unwahrheit erzwungen.** Die Datei nennt
+`7.2.0.72` an genau einer Stelle: *„E-108 (behoben in 7.2.0.72, von Gregor
+bestaetigt)"* — eine Angabe darüber, **worin ein Befund behoben ist**, kein
+Stand. Hätte ich dort `7.2.0.73` hingeschrieben, wäre es schlicht falsch: E-108
+ist in 7.2.0.72 behoben.
+
+Stattdessen eine eigene, wahre Kopfzeile: die Dateien hängen an **keiner**
+Programmfassung, zuletzt benutzt mit **1.0.72**, und die Messfassung **1.0.73**
+gibt zu denselben Dateien `daten=` aus. Dazu der Satz, der die Schranke beim
+nächsten Mal entschärft: *„Die Fassungsangaben in der Tabelle unten nennen,
+worin ein Befund behoben ist, nicht den heutigen Stand."* **ASCII-Umschrift
+beibehalten** — kein Umlaut eingeführt, gegengeprüft.
+
+### L-15.16 — was sonst geändert wurde
+
+| Datei | Änderung |
+|---|---|
+| `WEITERMACHEN.md:9-10` | Kopftabelle auf 7.2.0.73 / 1.0.73, **mit dem Zusatz „Messfassung, kein Release; veröffentlicht ist weiterhin `v1.0.72`"** |
+| `AUFGABEN.md:3` | Stand-Zeile ebenso; dazu **E-110 nachgetragen** (`pruefe-befund-verbreitung` hatte es zu Recht gemeldet) |
+| `README.md:654` | Beispielnummer `1.0.72` → `1.0.73` (Erklärtabelle, welche Datei welche Nummer führt) |
+| `CHANGELOG.md` | **Abschnitt 7.2.0.73 neu** — mit Prüfanleitung: `daten=0` bei sichtbarem Bild heißt *holt es nicht*, `daten` gesetzt und grau heißt *holt es und zeichnet es nicht*. Zwei Ursachen, zwei Behebungen |
+| `ZIEL.md:17`, `PORTIERUNG.md:43` | Quellstand 7.2.0.73, **ausdrücklich als Messfassung**, letzter inhaltlicher Stand bleibt 7.2.0.72 |
+| `tools/ZWEIGE.md:79` | *„Daraus entstand Quellstand 7.2.0.73 und Paket 1.0.73 — Messfassung, kein Release"* — dieselbe Wendung wie bei L-15.5, die stumm durchläuft und wahr ist |
+| `tools/WERKZEUGE.md:3` | *„Zuletzt geprüft gegen 7.2.0.70; der Quellstand ist inzwischen 7.2.0.73"* — die Liste ist nicht gegen 7.2.0.73 geprüft, und das steht jetzt da |
+
+### Der Stand der Schranken
+
+| Schranke | Exit |
+|---|---|
+| `doku-pruefen` | **0** — *„Kein Widerspruch gefunden"*, keine *Zur-Kenntnis*-Meldung mehr |
+| `pruefe-doku-takt`, `pruefe-stand-md`, `offene-befunde`, `pruefe-befundurteile`, `pruefe-befund-verbreitung` | **0** |
+| `lehren-schranken` | **1** — **und das ist nicht von mir zu beheben** |
+
+**`lehren-schranken.pl` weist ab**, weil `Arbeitsweise/schranke-gehoert-in-den-haken.md`
+keine `Schranke:`-Zeile trägt. Die Datei ist heute im **Gedächtnisverzeichnis**
+entstanden (`…/memory/`, 09:35) und noch nicht versioniert; `Arbeitsweise/` ist
+nur ihr **Spiegel**. Nach **L-14.9** wird jede Berichtigung im Spiegel vom
+Vorcommit-Haken aus der Quelle zurückgenommen, und das Gedächtnisverzeichnis
+gehört Gregor, nicht diesem Zweig. **Ich habe sie nicht angefasst.** Wer sie
+schließt, setzt die Zeile in der **Quelle**.
+
+**Zeilenenden:** CR = 0 in allen zehn berührten Dateien, nach jedem
+Schreibzugriff einzeln gemessen. `Testdaten/README.md` zusätzlich auf neu
+eingeführte Umlaute geprüft — **keine**.
+
+### Ein Nachtrag zu E-109
+
+Der Grenzfall aus L-15.15 gehört zu derselben Klasse wie L-15.5 und ist dort
+mitzuführen: **eine Schranke, die auf eine Fassungsnummer auslöst, kann eine
+historische Angabe nicht von einer Standzusage unterscheiden.** Bei
+`tools/ZWEIGE.md` hat sie deshalb dreimal eine Unwahrheit erzwungen, bei
+`Testdaten/README.md` hätte sie es beinahe ein viertes Mal. Beide Male war die
+Lösung dieselbe: die Zeile so formulieren, dass sie sagt, **worüber** sie
+spricht. Das ist eine Umgehung, keine Behebung — **die Grenze der Schranke
+besteht weiter** (`BEFUNDE.md`, E-109, Punkt 8).
