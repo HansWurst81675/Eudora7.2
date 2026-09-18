@@ -2299,7 +2299,7 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 
 	               wsprintf(szSpur,
 	                  "E-95 Bild: src=%s attr=%dx%d embed=%ldx%ld "
-	                  "daten=%ld art=%ld "
+	                  "daten-import=%ld art=%ld "
 	                  "ascent=%d text-asc=%ld text-desc=%ld\r\n",
 	                  szSrc,
 	                  (int)image_record.source_width, (int)image_record.source_height,

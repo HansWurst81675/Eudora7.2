@@ -774,6 +774,71 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
         }
     }
 
+    //
+    // BEFUND E-110, 18.09.2026: HIER wird wirklich geladen - deshalb steht
+    // die Messung hier und nicht nur beim Import.
+    //
+    // Der erste Anlauf hatte sie allein in PGHTMIMP.CPP stehen. Der PRUEFER
+    // hat das an Gregors Protokoll widerlegt (Befunde/PRUEFER-18.md): dort
+    // sitzt sie im IMPORT, und der Ladezweig laeuft von dort nur ueber
+    // EMBED_PREPARE_IMAGE - und der wiederum nur, wenn im HTML KEINE Groesse
+    // steht (:257, "if ( !(image->source_width && image->source_height) )").
+    // Von Gregors 128 Bildern tragen 76 ein vollstaendiges attr=BxH; fuer die
+    // laeuft er gar nicht erst an. Und genau die sind die E-110-Faelle - der
+    // Platz stimmt ja, es fehlen nur die Bildpunkte. Die Messung war also
+    // blind an der Stelle, an der der Befund sitzt.
+    //
+    // Was diese Zeile unterscheidet:
+    //
+    //   faden=0  Vorbereitung (EMBED_PREPARE_IMAGE), Nachladen GESPERRT
+    //   faden=1  Zeichnen, Nachladen erlaubt
+    //   ok=      Rueckgabewert: 1 heisst "nochmal versuchen", 0 heisst fertig
+    //   daten=   image_data - der Metadatei-Griff. 0 heisst: Paige hat nichts
+    //            zu zeichnen, und der Anwender sieht einen grauen Kasten.
+    //   fehler=  loader_result (0xFFFF setzt der Vorbereitungszweig)
+    //
+    // Erst aus faden, ok und daten zusammen ist ablesbar, ob Eudora das Bild
+    // gar nicht erst holt oder es holt und nicht zeichnet - zwei ganz
+    // verschiedene Ursachen (Arbeitsweise/zwei-werte-in-eine-ausgabe.md).
+    //
+    if ( pUrlImage )
+    {
+        char szSpur110[512];
+        char szUrl110[200];
+
+        {
+            const char* p110 = (const char*)pUrlImage->URL;
+            const long  nL110 = (long)strlen(p110);
+            const long  nM110 = (long)sizeof(szUrl110) - 1;
+
+            if (nL110 <= nM110)
+                strcpy(szUrl110, p110);
+            else
+            {
+                const long nK110 = 40;
+                const long nF110 = nM110 - nK110 - 2;
+                memcpy(szUrl110, p110, nK110);
+                szUrl110[nK110]     = '.';
+                szUrl110[nK110 + 1] = '.';
+                memcpy(szUrl110 + nK110 + 2, p110 + nL110 - nF110, nF110);
+                szUrl110[nK110 + 2 + nF110] = 0;
+            }
+        }
+
+        wsprintf(szSpur110,
+            "E-110 Laden: src=%s faden=%d ok=%d daten=%ld art=%ld "
+            "fehler=%ld quelle=%dx%d\r\n",
+            szUrl110,
+            (int)(bAllowThreadedFetch ? 1 : 0),
+            (int)(fRet ? 1 : 0),
+            (long)pUrlImage->image_data,
+            (long)pUrlImage->type_and_flags,
+            (long)pUrlImage->loader_result,
+            (int)pUrlImage->source_width, (int)pUrlImage->source_height);
+
+        PutDebugLog(DEBUG_MASK_MISC, szSpur110);
+    }
+
     return fRet;
 }
 
