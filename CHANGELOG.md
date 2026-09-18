@@ -13,6 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
+| **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — das WhatsApp-Symbol füllt das halbe Fenster | **Offen, Ursache am Quelltext belegt — Regression der eigenen E-106-Behebung.** Von Gregor am 18.09.2026 an **1.0.75** gemeldet. **Sichtbar geworden durch E-110:** bis dahin luden fast keine Bilder. Gemessen: angegeben `35x35`, Datei **`330x327`**; angegeben `540x240`, Datei **`1294x575`**. Die E-106-Behebung schreibt die **echte** Dateigröße ins Embed, damit die Zeile hoch genug wird — sie vergrößert also die Zeile, statt das Bild zu verkleinern. Richtig ist die andere Richtung: die angegebene Größe gewinnt, das Bild wird hineinskaliert, wie es das **Lesefenster** bereits tut. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
 | **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
 | — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
@@ -86,6 +87,20 @@ die Behebung fallen **vier** der sieben um, mit genau den Zeichenketten aus dem
 Protokoll; die drei anderen prüfen den *erlaubten* Fall und bleiben in beiden
 Richtungen grün. Der Maßstab kommt aus dem Programm selbst — ein Test hält
 `resolve_URL` gegen `unescape_url`.
+
+### Von Gregor bestätigt — und was dabei sofort sichtbar wurde
+
+**Am 18.09.2026 an 1.0.75 am laufenden Programm bestätigt:** die grauen Kästen
+sind weg. Sein Protokoll belegt es in Zahlen — **49 × `datei=1 intern=1`, kein
+einziges `intern=0` mehr** (vorher zehn abgewiesene Adressen).
+
+**Im selben Lauf ist E-112 sichtbar geworden:** die Bilder erscheinen jetzt in
+**Originalgröße** statt in der angegebenen — das WhatsApp-Symbol ist als
+`35x35` ausgezeichnet und die Datei hat `330x327`. Das ist **kein Rückfall von
+E-110**, sondern eine Regression der **E-106**-Behebung: sie schreibt die echte
+Dateigröße ins Embed, damit die Zeile hoch genug wird, und bis jetzt luden
+schlicht zu wenige Bilder, als dass es aufgefallen wäre. Siehe *Noch offen*,
+**E-112**.
 
 ### Prüfanleitung
 

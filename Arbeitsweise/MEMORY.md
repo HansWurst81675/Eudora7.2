@@ -70,3 +70,4 @@
 - [Nie benutzt ist nicht geprüft](nie-benutzt-ist-nicht-geprueft.md) — was niemand je angeklickt hat, gilt nicht als geprüft; E-97 lag 15 Fassungen und ein Release lang im Speichern-Dialog
 - [Schranke gehört in den Haken](schranke-gehoert-in-den-haken.md) — eine Prüfung, die nur läuft wenn ich daran denke, ist keine Schranke; Hinweise dürfen nicht abweisen
 - [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)
+- [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht

@@ -114,6 +114,7 @@ eine Datei liest, liest diese.
 | [zurueckgestellte-befunde](zurueckgestellte-befunde.md) | Gefundene, belegte Maengel, die Gregor bewusst spaeter angehen will - nicht von selbst anfassen |
 | [zwei-werte-in-eine-ausgabe](zwei-werte-in-eine-ausgabe.md) | Zwei Werte, deren Widerspruch geklaert werden soll, gehoeren in denselben Aufruf - zwei Protokollzeilen lassen die Erklaerung 'zu verschiedenen Zeitpunkten' immer offen |
 | [zweig-vorher-abstimmen](zweig-vorher-abstimmen.md) | Einen Zweig erst anlegen, wenn Gregor den Namen bestaetigt hat; ein nicht vereinbarter Zweig wird geloescht |
+| [zweigname-heisst-vorheriger-fertig](zweigname-heisst-vorheriger-fertig.md) | Einen neuen Zweignamen vorzuschlagen ist die Behauptung, der vorherige sei vollständig — erst git status leer und gepusht |
 
 `MEMORY.md` ist das Inhaltsverzeichnis, das der Assistent zu Sitzungsbeginn lädt.
 

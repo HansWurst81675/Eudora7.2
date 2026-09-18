@@ -173,6 +173,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **E-112** | Bilder werden in Originalgröße gezeichnet statt in der angegebenen — das WhatsApp-Symb… |
 | **E-111** | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
 | **E-109** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
 | **E-105** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |

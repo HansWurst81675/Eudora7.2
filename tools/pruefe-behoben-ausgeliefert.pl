@@ -279,6 +279,40 @@ for my $verz (glob("$wurzel/Releases/Eudora72-1.0.*-release")) {
     $pakete{$nr} = [ fassungen_der_exe(lies_ende($exe)) ];
 }
 
+#
+# Seit dem 18.09.2026 zaehlen auch die ZIP-Pakete.
+#
+# Bis dahin sah diese Schleife nur nach ENTPACKTEN Verzeichnissen unter
+# Releases/. Das Projekt packt seit 1.0.73 aber in Gregors Testverzeichnis und
+# legt unter Releases/ nur das ZIP ab - die Schranke sah deshalb als hoechstes
+# Paket 7.2.0.72 und wies jede spaetere Bestaetigung ab, mit der an sich
+# richtigen Frage "an welchem Stand soll er das bestaetigt haben?".
+#
+# Die Frage bleibt, der Suchbereich wird vollstaendig: aus dem ZIP wird die
+# Eudora.exe herausgeholt und ihre Versionsressource gelesen. Das ist kein
+# Nachlassen der Schranke, sondern dieselbe Messung an einer zweiten Ablage -
+# gemessen wird weiterhin die AUSGELIEFERTE Datei, nicht VERSION.
+#
+# Die ZIPs sind in .gitignore. Im frischen Klon liegt also keines - dann greift
+# weiter unten "NICHTS GEPRUEFT ist kein gruenes Ergebnis" (E-109, Punkt 4).
+#
+for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip")) {
+    next unless -f $zip;
+    my ($nr) = $zip =~ /(1\.0\.\d+)/ or next;
+    next if $pakete{$nr};                 # entpackt vorhanden, das zaehlt zuerst
+
+    my $tmp = "$wurzel/Releases/.pruefe-behoben-$nr";
+    mkdir $tmp;
+    system("unzip -o -j -q \"$zip\" \"*/Eudora.exe\" \"Eudora.exe\" -d \"$tmp\" 2>/dev/null");
+
+    my $exe = "$tmp/Eudora.exe";
+    if (-f $exe) {
+        $pakete{$nr} = [ fassungen_der_exe(lies_ende($exe)) ];
+        unlink $exe;
+    }
+    rmdir $tmp;
+}
+
 my @u = urteile(lies("$wurzel/BEFUNDE.md"));
 my ($mangel, $hinweis, $geprueft) = pruefe(\%pakete, \@u);
 
