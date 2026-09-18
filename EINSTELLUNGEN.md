@@ -1,6 +1,13 @@
 # Einstellungen und Überraschungen
 
-> **Stand 7.2.0.68 / Paket 1.0.68.** Geprüft gegen diesen Quellstand.
+> **Geprüft gegen Quellstand 7.2.0.68 / Paket 1.0.68.** Der Quellstand ist
+> inzwischen **7.2.0.73 / 1.0.73**; **gegen ihn ist diese Datei nicht erneut
+> geprüft.** Nachgesehen wurde am 18.09.2026 nur, ob die Änderungen seither sie
+> falsch gemacht haben: **E-104** hat das Lesen der INI-Schalter umgebaut
+> (`E104SchalterLesen` zieht verdorbene Werte auf 0 zurück und schreibt sie
+> weg), betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen
+> in dieser Datei nicht vor**, gemessen. Der Text ist also nicht falsch
+> geworden, nur älter (LEKTOR, L-15.14).
 
 Diese Datei ist für den, der Eudora **einrichtet und betreibt** — nicht für
 den, der es baut. Sie beantwortet eine einzige Frage:

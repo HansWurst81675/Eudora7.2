@@ -334,6 +334,22 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
     long    nEchtHoehe  = 0;
 
     bool fRet = false;
+
+    //
+    // BEFUND E-110, Merker fuer die Spurmarke am Ende der Funktion.
+    //
+    // ok=0 zusammen mit daten=0 hat ZWEI moegliche Ursachen, und die
+    // Messfassung 1.0.73 konnte sie nicht trennen:
+    //   (a) fetch_url_schmookie liefert -1, der Abruf kommt nicht zustande
+    //   (b) die Datei IST da, aber weder MetafileFromImage noch QuickTime
+    //       koennen sie umwandeln
+    // Das sind zwei ganz verschiedene Behebungen.
+    //
+    //   -1  der Block wurde nie betreten (keine URL)
+    //    0  keine Datei     1  Datei vorhanden
+    //
+    int nE110Datei  = -1;
+    int nE110Intern = -1;
 	BOOL bEudoraTempFile = FALSE;
 
     // The Way It Is:
@@ -414,11 +430,19 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 			}
         }
 
+        //
+        // BEFUND E-110: HIER entscheidet sich, ob die Datei da ist.
+        // filePath liegt in diesem Block und ist an der Messstelle vor
+        // return fRet nicht mehr sichtbar - deshalb der Merker.
+        //
+        nE110Datei = (*filePath) ? 1 : 0;
+
         if ( *filePath )
         {
 			fRet = false;
 
-            if (CanHandleImageInternally(filePath, FALSE))
+            nE110Intern = CanHandleImageInternally(filePath, FALSE) ? 1 : 0;
+            if (nE110Intern)
             {
                 QCMetaFileInfo mfi;
 				int TransparencySysColor = COLOR_3DFACE;
@@ -772,6 +796,72 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					::DeleteFile(filePath);
 			}
         }
+    }
+
+    //
+    // BEFUND E-110, 18.09.2026: HIER wird wirklich geladen - deshalb steht
+    // die Messung hier und nicht nur beim Import.
+    //
+    // Der erste Anlauf hatte sie allein in PGHTMIMP.CPP stehen. Der PRUEFER
+    // hat das an Gregors Protokoll widerlegt (Befunde/PRUEFER-18.md): dort
+    // sitzt sie im IMPORT, und der Ladezweig laeuft von dort nur ueber
+    // EMBED_PREPARE_IMAGE - und der wiederum nur, wenn im HTML KEINE Groesse
+    // steht (:257, "if ( !(image->source_width && image->source_height) )").
+    // Von Gregors 128 Bildern tragen 76 ein vollstaendiges attr=BxH; fuer die
+    // laeuft er gar nicht erst an. Und genau die sind die E-110-Faelle - der
+    // Platz stimmt ja, es fehlen nur die Bildpunkte. Die Messung war also
+    // blind an der Stelle, an der der Befund sitzt.
+    //
+    // Was diese Zeile unterscheidet:
+    //
+    //   faden=0  Vorbereitung (EMBED_PREPARE_IMAGE), Nachladen GESPERRT
+    //   faden=1  Zeichnen, Nachladen erlaubt
+    //   ok=      Rueckgabewert: 1 heisst "nochmal versuchen", 0 heisst fertig
+    //   daten=   image_data - der Metadatei-Griff. 0 heisst: Paige hat nichts
+    //            zu zeichnen, und der Anwender sieht einen grauen Kasten.
+    //   fehler=  loader_result (0xFFFF setzt der Vorbereitungszweig)
+    //
+    // Erst aus faden, ok und daten zusammen ist ablesbar, ob Eudora das Bild
+    // gar nicht erst holt oder es holt und nicht zeichnet - zwei ganz
+    // verschiedene Ursachen (Arbeitsweise/zwei-werte-in-eine-ausgabe.md).
+    //
+    if ( pUrlImage )
+    {
+        char szSpur110[512];
+        char szUrl110[200];
+
+        {
+            const char* p110 = (const char*)pUrlImage->URL;
+            const long  nL110 = (long)strlen(p110);
+            const long  nM110 = (long)sizeof(szUrl110) - 1;
+
+            if (nL110 <= nM110)
+                strcpy(szUrl110, p110);
+            else
+            {
+                const long nK110 = 40;
+                const long nF110 = nM110 - nK110 - 2;
+                memcpy(szUrl110, p110, nK110);
+                szUrl110[nK110]     = '.';
+                szUrl110[nK110 + 1] = '.';
+                memcpy(szUrl110 + nK110 + 2, p110 + nL110 - nF110, nF110);
+                szUrl110[nK110 + 2 + nF110] = 0;
+            }
+        }
+
+        wsprintf(szSpur110,
+            "E-110 Laden: src=%s faden=%d ok=%d daten=%ld art=%ld "
+            "datei=%d intern=%d fehler=%ld quelle=%dx%d\r\n",
+            szUrl110,
+            (int)(bAllowThreadedFetch ? 1 : 0),
+            (int)(fRet ? 1 : 0),
+            (long)pUrlImage->image_data,
+            (long)pUrlImage->type_and_flags,
+            nE110Datei, nE110Intern,
+            (long)pUrlImage->loader_result,
+            (int)pUrlImage->source_width, (int)pUrlImage->source_height);
+
+        PutDebugLog(DEBUG_MASK_MISC, szSpur110);
     }
 
     return fRet;

@@ -40,7 +40,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
-> Stand 18.09.2026, Quellstand **7.2.0.72**, `VERSION` **1.0.72**; als Paket
+> Stand 18.09.2026, Quellstand **7.2.0.73**, `VERSION` **1.0.73** — eine **Messfassung** zu E-110, die nichts behebt. Der letzte inhaltliche Stand ist **7.2.0.72 / 1.0.72**; er ist als Paket
 > geschnürt und **auf GitHub als `v1.0.72` veröffentlicht** — 17.09.2026,
 > 20:07:49 UTC, dort als *Latest*, Marke auf dem Merge-Commit `8da72c8`.
 > Seit

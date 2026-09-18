@@ -1,6 +1,17 @@
 # Post automatisch einsortieren — Filter und Junk
 
-> **Stand 7.2.0.68 / Paket 1.0.68.** Geprüft gegen diesen Quellstand.
+> **Geprüft gegen Quellstand 7.2.0.68 / Paket 1.0.68.** Der Quellstand ist
+> inzwischen **7.2.0.73 / 1.0.73**; **gegen ihn ist diese Datei nicht erneut
+> geprüft.** Nachgesehen wurde am 18.09.2026 nur, ob die Änderungen seither sie
+> falsch gemacht haben: **E-104** hat das Lesen der INI-Schalter umgebaut,
+> betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen in
+> dieser Datei nicht vor**, gemessen. **Ein offener Punkt aus derselben Ecke
+> gehört aber hierher und stand bisher nirgends in dieser Datei: M-3.** Die
+> Filteraktion *Notify Application* sichert `IDS_INI_INCLUDE_HEADERS` **roh**
+> (`filtersd.cpp:2048`, `GetIniShort` statt `E104SchalterLesen`) und schreibt
+> den gesicherten Wert zurück (`:2083`) — ein verdorbener Wert überlebt damit
+> die Reparatur aus E-104. Offen, gefunden von PRUEFER
+> (`Befunde/PRUEFER-16.md`, M-3). Nachgetragen vom LEKTOR, L-15.14.
 
 Diese Datei beschreibt die Filter von Eudora aus Sicht dessen, der sie
 benutzt: wie eine Regel entsteht, wann sie läuft, was sie tun kann, wo sie

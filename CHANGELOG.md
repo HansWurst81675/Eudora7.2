@@ -65,6 +65,127 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.74 — `datei=` und `intern=` trennen die letzte Alternative (E-110, **Messfassung**)
+
+**Behebt nichts.** 1.0.74 ist wie 1.0.73 eine Messfassung; veröffentlicht ist
+weiterhin `v1.0.72`.
+
+**Was 1.0.73 an Gregors Lauf gemessen hat.** Zehn Bilder, 31 Rufe. **Fünf**
+werden geladen (`daten` gesetzt, `art=9`, jeweils beim **zweiten** Ruf),
+**fünf** geben auf (`ok=0 daten=0`, nach zwei bis fünf Versuchen). Die fünf
+Aufgebenden sind nachweislich die grauen Kästen: der Kasten unmittelbar über
+*„Sven von Storch"* ist `SvSunterschriftbeschnitten.jpg` (250×96), der nach
+*„Jetzt hier spenden"* ist `SpendenbannerFW2019neu.jpeg` (540×240).
+
+**Drei meiner Erklärungen sind damit widerlegt:**
+
+* Der Wiederholungsmechanismus **funktioniert** — die Erfolgreichen bekommen
+  ihre Daten beim zweiten Ruf. Das von QUALCOMM versprochene *„später"* tritt
+  also sehr wohl ein.
+* `faden=1` durchgehend: der Abruf ist **erlaubt**, nicht gesperrt.
+* `fehler=0` durchgehend: `loader_result` wird **nirgends** gesetzt — Eudora
+  vermerkt das Scheitern nicht einmal.
+
+Die Größe allein erklärt es nicht: ein Bild mit 600×146 kommt durch, eines mit
+250×96 nicht.
+
+**Was 1.0.73 nicht trennen konnte.** `ok=0` zusammen mit `daten=0` hat im
+Quelltext **zwei** mögliche Ursachen: entweder liefert `fetch_url_schmookie`
+den Wert `-1` und der Abruf kommt gar nicht zustande, oder die Datei **ist
+da** und weder `MetafileFromImage` noch QuickTime können sie umwandeln. Im
+ersten Fall liegt der Fehler im Abrufweg, im zweiten im Bilddecoder — und das
+Bild läge längst auf der Platte. Zwei ganz verschiedene Behebungen.
+
+**Neu in der Zeile:** `datei=` und `intern=`.
+
+### Die Ursache von E-110 ist gemessen — `resolve_URL` wirft Prozent-Sequenzen weg
+
+Die Messfassungen 1.0.73 und 1.0.74 haben den Fehler eingegrenzt und am
+18.09.2026 endgültig bestimmt. **Die Behebung ist noch nicht drin** — dies ist
+der Befundstand, nicht der Behebungsstand.
+
+`resolve_URL` (`HTMLUtils.cpp:31-42`) schreibt im `%`-Zweig das entschlüsselte
+Zeichen nach `*output`, **rückt `output` aber nicht weiter**; der `else`-Zweig
+tut es mit `*output++ = *input++`. Das nächste Zeichen überschreibt das
+entschlüsselte — es ist nicht falsch, sondern **weg**.
+
+Nachgerechnet: `en%20aktuellen%20Verlust.png` wird zu
+`enaktuellenVerlust.png`, `SVS%20NL%20FW%20(1).jpg` zu `SVSNLFW(1).jpg`.
+Beides steht genau so in Gregors Protokoll, der Server antwortet darauf mit
+**404**, Eudora legt die Fehlerseite ab (`datei=1`), erkennt sie richtigerweise
+nicht als Bild (`intern=0`) und zeichnet einen grauen Kasten.
+
+Die Aufteilung ist lückenlos: alle **zehn** abgewiesenen Adressen tragen
+Leerzeichen, alle **vierzehn** erfolgreichen keines. Nicht die Größe — ein Bild
+mit 600×146 kommt durch, eines mit 250×96 nicht.
+
+**Der Fehler ist größer als der Bildweg** und trifft jede Prozent-Sequenz, also
+auch Umlaute in Dateinamen (`%C3%BC`) und Klammern (`%28`). Er steckt im
+Originalcode von QUALCOMM.
+
+Dazu ein zweiter, eigenständiger Mangel aus demselben Lauf: `loader_result`
+bleibt **durchgehend 0** — ein fehlgeschlagener Bildabruf wird nirgends
+vermerkt.
+
+Neu aufgenommen: **E-111** (`resolve_URL` kann bei einer Adresse von genau
+512 Zeichen ein Byte hinter das Zielfeld schreiben; Schranke prüft `>` statt
+`>=`).
+
+### Prüfanleitung
+
+Auf dieselbe Nachricht antworten, Eudora beenden, `eudora.log` sichern. Zu
+lesen ist:
+
+| Zeile | Bedeutung |
+|---|---|
+| `datei=0` | die Bilddatei ist nie angekommen → der Fehler sitzt im **Abrufweg** |
+| `datei=1 intern=0` | geholt, aber nicht als Bild **erkannt** |
+| `datei=1 intern=1 daten=0` | erkannt und trotzdem nicht **umgewandelt** |
+| `datei=-1` | der Block wurde nie betreten (keine Adresse) |
+
+## 7.2.0.73 — die Spurmarke sagt jetzt, ob hinter einem Bild Daten liegen (E-110, **Messfassung**)
+
+> **Das ist kein Release und behebt nichts.** Gregor bekommt diese Fassung, um
+> **E-110** überhaupt messbar zu machen. Veröffentlicht bleibt **`v1.0.72`**.
+>
+> **Zu prüfen:** auf dieselbe Nachricht antworten, in der Bilder grau bleiben,
+> `LogLevel=58527` drin lassen, danach die `eudora.log` sichern. Entschieden
+> wird an einem Wert: **`daten=0` bei einem Bild, das im Lesefenster sichtbar
+> ist**, heißt — Eudora **holt es auf dem Antwortweg nicht**. **`daten` gesetzt
+> und trotzdem grau** heißt — es **holt es und zeichnet es nicht**. Zwei
+> verschiedene Ursachen, zwei verschiedene Behebungen.
+
+**Warum diese Fassung nötig wurde.** Gregors Protokoll vom 18.09.2026 zu 1.0.72
+hat die Frage zu E-110 **nicht beantworten können**, obwohl es 128 Zeilen
+`E-95 Bild` enthält. Der Grund steht in der Spurmarke selbst: ausgegeben wurden
+zweimal **Maße** — `source_width/height` aus dem HTML gegen
+`mess_ptr->width/height` aus dem Embed (`PGHTMIMP.CPP:2258-2259`) — und **nie
+der Datenbestand**. Nachgezählt wurde immerhin dies: 76 der 128 Zeilen tragen
+gleiche Maße, **52 haben `embed=0x0`** bei bekannter Breite. Dass der Platz
+stimmt und die Bildpunkte fehlen, ist damit belegt; **welches** Bild betroffen
+ist und **warum**, nicht.
+
+**Dazu kam eine falsche Spur, die einen halben Vormittag gekostet hätte.** Im
+Protokoll war **jede** der 128 Adressen exakt 32 Zeichen lang — das sieht
+zwingend nach einem abgeschnittenen URL-Feld und damit nach der Ursache aus.
+Es war die Spurmarke: sie kürzte **zweimal**, in der Kopierschleife
+(`PGHTMIMP.CPP:2250`, `for (i = 0; i < 32 …)`) und noch einmal im Format
+(`:2255`, `%.32s`).
+
+**Was die Zeile jetzt zusätzlich nennt:**
+
+- **`daten=`** aus `image_data` — den Metadatei-Griff setzt `PgLoadUrlImage`,
+  sobald die Datei wirklich da ist. Bleibt er `0`, hat Paige nichts zu zeichnen.
+  Das ist der Wert, der Datenbestand von Platzhalter trennt, und er steht in
+  **derselben** Zeile wie die Maße.
+- **`art=`** aus `type_and_flags`.
+- **die ungekürzte Adresse.** Ist sie zu lang, fällt die **Mitte** weg, nicht
+  das Ende — bei **E-106** hing alles am Dateinamen (`_3x` heißt dreifache
+  Auflösung), und genau der stand vorher nie da.
+
+**Kein Quelltext außerhalb der Spurmarke angefasst.** E-110 ist damit nicht
+behoben, sondern erst messbar.
+
 ## 7.2.0.72 — der Absturz, zweiter Anlauf: der Stilweg fliegt raus (E-108)
 
 > **Zu prüfen:** dieselbe Nachricht öffnen und **antworten**. `LogLevel=58527`

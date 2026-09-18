@@ -1,6 +1,6 @@
 # Die Werkzeuge in `tools/`
 
-> **Stand 7.2.0.70 / Paket 1.0.70.** Die Liste wird fortgeschrieben; die
+> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.73.** Die Liste wird fortgeschrieben; die
 > Fassungsangabe sagt, gegen welchen Quellstand sie zuletzt geprüft wurde.
 
 Diese Übersicht stand bis zum 09.09.2026 in [README.md](../README.md). Sie ist

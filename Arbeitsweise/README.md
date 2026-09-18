@@ -65,6 +65,7 @@ eine Datei liest, liest diese.
 | [dummy-statt-weglassen](dummy-statt-weglassen.md) | Nicht benutzte Funktionen, Methoden und Klassen als Dummy implementieren, statt sie auszubauen |
 | [eigene-schleife-verschluckt-nichts](eigene-schleife-verschluckt-nichts.md) | Eine eigene Nachrichtenschleife darf WM_QUIT nicht entnehmen, ohne sie zurückzustellen — und nicht ohne Zeitschranke warten |
 | [eingebaute-messung-auslesen](eingebaute-messung-auslesen.md) | Eine Spurmarke, die niemand ausliest, ist keine Messung - der Moment des Auslesens gehoert an das naechste Paket |
+| [einigkeit-ist-kein-beweis](einigkeit-ist-kein-beweis.md) | Dokumente gegeneinander zu prüfen findet nur Widersprüche; der Maßstab muss von außen kommen |
 | [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
@@ -96,6 +97,7 @@ eine Datei liest, liest diese.
 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) | Ein Diff-Review kann eine veraltete unveraenderte Datei nicht sehen; vor dem Merge wird der Bestand geprueft, nicht die Aenderung |
 | [rollenzuweisung-pruefen](rollenzuweisung-pruefen.md) | Einer falschen Rollenzuweisung im Auftrag folgen, statt sie zu benennen - und die Rolle stand in keiner nachschlagbaren Quelle |
 | [schranke-gegentesten](schranke-gegentesten.md) | Jede neue Schranke gegen den echten Fehler fahren und gegen den erlaubten Fall; eine stumme Pruefung und ein Fehlalarm sind derselbe Schaden |
+| [schranke-gehoert-in-den-haken](schranke-gehoert-in-den-haken.md) | Eine Schranke, die nur läuft wenn ich daran denke, ist keine Schranke; und eine, die zu oft umsonst warnt, wird entwaffnet |
 | [schranke-liest-nur-code](schranke-liest-nur-code.md) | Eine Schranke, die Quelltext mit Regex prueft, muss Kommentare und Protokolltexte vorher wegwerfen und ihren Bereich am Rumpfende abschliessen - sonst liest sie ihre eigene Begruendung |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |

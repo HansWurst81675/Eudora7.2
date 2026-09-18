@@ -2226,9 +2226,8 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	            // widerlegt. Diese Zeile misst, statt zu vermuten.
 	            {
 	               pg_embed_ptr  mess_ptr = (pg_embed_ptr)UseMemory(embed);
-	               char          szSpur[220];
-	               char          szSrc[40];
-	               long          i;
+	               char          szSpur[512];
+	               char          szSrc[200];
 
 	               //
 	               // PRUEFER P-11: hier stand ein Cast von image_ref auf
@@ -2246,17 +2245,66 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	               // Die Adresse liegt daneben bereit: image_record.URL, oben
 	               // in derselben Funktion gefuellt.
 	               //
-	               szSrc[0] = 0;
-	               for (i = 0; i < 32 && image_record.URL[i]; i++)
-	                  szSrc[i] = (char)image_record.URL[i];
-	               szSrc[i] = 0;
+	               //
+	               // BEFUND E-110, 18.09.2026: diese Zeile konnte die Frage
+	               // nicht beantworten, um die es geht.
+	               //
+	               // Gregors Protokoll vom 18.09.2026 enthaelt 128 solcher
+	               // Zeilen, und an keiner ist abzulesen, ob hinter dem Bild
+	               // ueberhaupt DATEN liegen: ausgegeben wurden zweimal
+	               // MASSE - source_width/height aus dem HTML und
+	               // mess_ptr->width/height aus dem Embed. Ein geladenes Bild
+	               // und ein grauer Platzhalter sehen darin identisch aus.
+	               // Genau das ist E-110: beim Antworten bleibt ein Teil der
+	               // Bilder grau, und der Platz stimmt trotzdem.
+	               //
+	               // image_data entscheidet es. PgLoadUrlImage setzt den Wert
+	               // auf den Metadatei-Griff, sobald die Datei wirklich da ist
+	               // (PgEmbeddedImage.cpp:453, und ebenso der QuickTime-Zweig
+	               // darunter). Bleibt er 0, hat Paige nichts zu zeichnen.
+	               //
+	               // Dazu die ADRESSE ungekuerzt. Sie war zweifach beschnitten
+	               // - hier beim Kopieren auf 32 Zeichen und noch einmal im
+	               // Format mit %.32s -, und 32 Zeichen reichen bei diesen
+	               // Adressen nicht bis zum Dateinamen. Im Protokoll sahen
+	               // deshalb ALLE Bilder gleich aus
+	               // ("https://004.frnl.de/admin/images"), was wie ein auf 32
+	               // Byte abgeschnittenes URL-Feld aussieht - also wie die
+	               // Ursache. Es war die Messung selbst
+	               // (Arbeitsweise/anzeige-ist-kein-zustand.md).
+	               //
+	               // Ist die Adresse laenger als der Puffer, wird die MITTE
+	               // ausgelassen, nicht das Ende: bei E-106 hing alles am
+	               // Dateinamen, "_3x" heisst dreifache Aufloesung. Wer nur
+	               // den Anfang sieht, kann das nicht erkennen.
+	               //
+	               {
+	                  const char* pURL  = (const char*)image_record.URL;
+	                  const long  nLang = (long)strlen(pURL);
+	                  const long  nMax  = (long)sizeof(szSrc) - 1;
+
+	                  if (nLang <= nMax)
+	                     strcpy(szSrc, pURL);
+	                  else
+	                  {
+	                     const long nKopf = 40;
+	                     const long nFuss = nMax - nKopf - 2;
+	                     memcpy(szSrc, pURL, nKopf);
+	                     szSrc[nKopf]     = '.';
+	                     szSrc[nKopf + 1] = '.';
+	                     memcpy(szSrc + nKopf + 2, pURL + nLang - nFuss, nFuss);
+	                     szSrc[nKopf + 2 + nFuss] = 0;
+	                  }
+	               }
 
 	               wsprintf(szSpur,
-	                  "E-95 Bild: src=%.32s attr=%dx%d embed=%ldx%ld "
+	                  "E-95 Bild: src=%s attr=%dx%d embed=%ldx%ld "
+	                  "daten-import=%ld art=%ld "
 	                  "ascent=%d text-asc=%ld text-desc=%ld\r\n",
 	                  szSrc,
 	                  (int)image_record.source_width, (int)image_record.source_height,
 	                  (long)mess_ptr->width, (long)mess_ptr->height,
+	                  (long)image_record.image_data, (long)image_record.type_and_flags,
 	                  (int)current_style.ascent, original_ascent, original_descent);
 
 	               UnuseMemory(embed);
