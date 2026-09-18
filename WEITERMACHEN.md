@@ -103,6 +103,40 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
+> **Stand 18.09.2026, Feierabend.** Hier ansetzen, in dieser Reihenfolge.
+>
+> **1. [PR #75](https://github.com/HansWurst81675/Eudora7.2/pull/75) mergen.**
+> Er nimmt eine Unwahrheit von `main`: dort stand *„E-112 behoben in
+> 7.2.0.76"*, und Gregors Bildschirmfoto widerlegt es. Nur Dokumentation.
+>
+> **2. E-112 messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
+> `draw_meta_file` (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur,
+> wenn `pict_data.mapping_mode` **nicht** `MM_TEXT` ist — bei aus dem Netz
+> geladenen Bildern ist er `0`. Die Richtung wäre, `mapping_mode` zusammen mit
+> `pict_frame` zu setzen (bisher nur auf dem RTF-Weg, `PGRTFIMP.CPP:900`).
+> **Ungemessen ist:** der `else`-Zweig setzt nur die *Viewport*-Ausdehnung,
+> nicht die *Window*-Ausdehnung. Ob korrekt skaliert wird, hängt daran, ob die
+> von `MetafileFromImage` erzeugte Metadatei ihre eigene Ausdehnung mitbringt.
+> **Das ist am Quelltext zu klären, nicht durch ein Paket.** Genau diese
+> Annahme ungeprüft zu lassen hat heute 1.0.76 gekostet.
+>
+> **3. Der Zustand beim Anwender.** 1.0.75 zeigt Bilder zu groß, aber der Text
+> steht darunter; **1.0.76 deckt den Text zu** und ist damit schlechter. Wer
+> Gregor vor der Behebung ein Paket gibt, muss das wissen.
+>
+> **4. Danach E-113** (Bilder breiter als das Fenster) — von Gregor
+> angeordnet: *„ok, erst A, dann B"*.
+>
+> **5. Unbeantwortet von Gregor:** sollen **rote Tests** den Push blockieren?
+> `pruefe-testbau.pl` weist bisher nur beim **Baufehler** ab. Ein
+> Regressionstest, der nicht blockieren kann, ist nur eine Anzeige.
+>
+> **Was heute fertig wurde:** E-110 behoben und von Gregor bestätigt
+> (`resolve_URL` warf seit 1996 jede Prozent-Sequenz weg); E-105, E-111,
+> E-112, E-113 aufgeschrieben; die Doku-Schranken in **beide** Haken
+> verdrahtet (vier hingen in keinem); vier neue Schranken; 171 → **185**
+> Tests; `Testdaten/` angelegt.
+
 **Der nächste Schritt gehört Gregor: vierzehn gebaute Behebungen warten auf
 sein Urteil** — am 13.09.2026 über alle Urteilszeilen in `BEFUNDE.md` gezählt.
 Sie stecken alle im zuletzt geschnürten Paket **1.0.63** und im Quellstand
