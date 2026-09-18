@@ -13,7 +13,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **E-110** | **beim Antworten und Weiterleiten kommen nicht alle Bilder ins Verfassenfenster** — ein Teil steht als **grauer Kasten** da | **Offen, Ursache NICHT gemessen.** Von Gregor am 18.09.2026 an **1.0.72** gemeldet: *„beim weiterleiten und antworten werden nicht alle bilder so übernommen."* Im **Lesefenster** derselben Nachricht sind alle Bilder da. **Kein Rückschritt:** die grauen Kästen haben die **richtige Größe** und der Text liegt nicht mehr darüber — **E-103 und E-106 arbeiten**, dies ist eine andere Schicht. Ein grauer Kasten in richtiger Größe heißt: das Bild wurde **nicht geladen** (der Abschnitt 7.2.0.58 unten sagt das bereits über Paige). **Verdacht, ungemessen:** die Gabelung in `PgEmbeddedImage.cpp:362-415` zwischen dem MIME-Speicher der Nachricht (`GetPartAsFile`, `:382`) und dem Netzabruf (`fetch_url_schmookie`, `:401`, nur bei `bAllowThreadedFetch`). **Zu messen:** Gregors `eudora.log` — je Bild eine `E-95 Bild`-Zeile; daran ist abzulesen, ob der Abruf ausbleibt oder scheitert. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) unter **E-110** |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
 | **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
 | — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
@@ -64,6 +63,42 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.75 — Bilder mit Leerzeichen im Namen kommen wieder an (E-110 **behoben**)
+
+`resolve_URL` (`HTMLUtils.cpp`) warf **jede** Prozent-Sequenz weg, statt sie zu
+entschlüsseln: im `%`-Zweig wurde das entschlüsselte Zeichen nach `*output`
+geschrieben, der Zeiger aber nicht weitergerückt — das nächste Zeichen
+überschrieb es. Das Zeichen war nicht falsch, sondern **weg**.
+
+Aus `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+antwortete mit **404**, Eudora legte die Fehlerseite ab, erkannte sie
+richtigerweise nicht als Bild und zeichnete einen grauen Kasten. **Zehn von
+zwanzig Bildern** in Gregors Nachricht.
+
+Die Behebung ist ein `++output;`. Betroffen war jede Sequenz, also auch
+Umlaute in Dateinamen (`%C3%BC`), Klammern (`%28`) und Schrägstriche (`%2F`) —
+der Fehler steckt im Originalcode von QUALCOMM. Zwanzig Zeilen darunter steht
+`unescape_url`, das dasselbe tut und es seit jeher richtig tut.
+
+**178 Tests, 178 bestanden** (sieben neue). Die Gegenprobe ist gefahren: ohne
+die Behebung fallen **vier** der sieben um, mit genau den Zeichenketten aus dem
+Protokoll; die drei anderen prüfen den *erlaubten* Fall und bleiben in beiden
+Richtungen grün. Der Maßstab kommt aus dem Programm selbst — ein Test hält
+`resolve_URL` gegen `unescape_url`.
+
+### Prüfanleitung
+
+Dieselbe Nachricht öffnen und **antworten**. Die grauen Kästen müssen weg sein.
+Im Protokoll steht bei diesen Bildern dann `datei=1 intern=1` und ein `daten=`
+ungleich 0.
+
+### Was das *nicht* behebt
+
+`loader_result` bleibt weiterhin `0`: schlägt ein Bildabruf aus einem anderen
+Grund fehl, meldet Eudora es nirgends und stellt wortlos einen grauen Kasten
+hin. In **E-110** vermerkt. Dazu **E-111** — `resolve_URL` kann bei einer
+Adresse von genau 512 Zeichen ein Byte hinter das Zielfeld schreiben.
 
 ## 7.2.0.74 — `datei=` und `intern=` trennen die letzte Alternative (E-110, **Messfassung**)
 
