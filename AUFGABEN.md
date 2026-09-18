@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.75** / `VERSION` **1.0.75** (veröffentlicht ist `v1.0.72`)
+**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.76** / `VERSION` **1.0.76** (veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -61,15 +61,26 @@ E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Neu offen seit dem 18.09.2026: E-110** — beim **Antworten und Weiterleiten**
-kommen nicht alle Bilder ins Verfassenfenster, ein Teil steht als grauer Kasten
-da; im Lesefenster derselben Nachricht sind alle da. **Kein Rückschritt:** die
-Kästen haben die richtige Größe und decken keinen Text zu, **E-103 und E-106
-arbeiten**. Gemessen an Gregors Protokoll zu 1.0.72: von 128 `E-95 Bild`-Zeilen
-tragen **52** ein `embed=0x0` — der Platz stimmt, die Bildpunkte fehlen.
-**Ursache nicht gemessen;** dafür ist die Messfassung **1.0.73** gebaut, deren
-Spurmarke `daten=` ausgibt. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) unter
-**E-110**, Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.73.
+**Am 18.09.2026 behoben: E-110 und E-112.** Beim **Antworten und Weiterleiten**
+kamen nicht alle Bilder ins Verfassenfenster, ein Teil stand als grauer Kasten
+da. **Ursache:** `resolve_URL` (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg,
+statt sie zu entschlüsseln — aus `en%20aktuellen%20Verlust.png` wurde
+`enaktuellenVerlust.png`, der Server antwortete **404**, Eudora legte die
+Fehlerseite ab und zeichnete einen grauen Kasten. Zehn von zwanzig Bildern.
+**Behoben in 7.2.0.75** mit einem `++output;`, **von Gregor bestätigt** (49 ×
+`datei=1 intern=1`, kein `intern=0` mehr).
+
+**Dabei wurde E-112 sichtbar:** die Bilder erschienen danach in **Originalgröße**
+statt in der angegebenen — das WhatsApp-Symbol ist als `35x35` ausgezeichnet und
+die Datei hat `330x327`. Das war eine Regression der **E-106**-Behebung, die die
+Zeile vergrößerte statt das Bild zu verkleinern. **Behoben in 7.2.0.76**, noch
+nicht von Gregor bestätigt.
+
+**Weiter offen: E-113** — ein Bild, dessen **angegebene** Breite größer ist als
+das Fenster, läuft rechts hinaus (`max-width:100%` kennt Paige nicht). Auf
+Gregors Anordnung *„erst A, dann B"* getrennt gehalten. Einzelheiten in
+[BEFUNDE.md](BEFUNDE.md), Prüfanleitungen in [CHANGELOG.md](CHANGELOG.md),
+Abschnitte 7.2.0.75 und 7.2.0.76.
 
 **Gebaut, geschnürt und veröffentlicht ist 7.2.0.72 / 1.0.72** (17.09.2026 —
 gemessen an `Eudora71/Version.h`, `VERSION` und `gh release list`). **Es ist

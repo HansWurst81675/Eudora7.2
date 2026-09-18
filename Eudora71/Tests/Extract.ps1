@@ -214,4 +214,20 @@ $mX2c = Find-Line $hu '^char x2c\s*\(' $mStart
 $mEnd = Find-Line $hu '^\}\s*$' $mX2c
 Write-Region $hu $mStart $mEnd (Join-Path $OutDir "htmlutils_resolveurl.inc") $htmlPath
 
+
+# ------------------------------------------------- PgEmbeddedImage.cpp (E-112)
+# Region N: E112Zielrechteck - welches Rechteck bekommt ein Bild? Die Regel
+# steht bewusst in einer eigenen Funktion, damit sie OHNE Paige, ohne Fenster
+# und ohne ein einziges Bild pruefbar ist.
+#
+# Bei E-106 fehlte genau das: die Regel stand mitten im Ladeweg, war nur an
+# Gregors Rechner messbar - und dass sie falsch herum war (Zeile vergroessern
+# statt Bild verkleinern), kam erst heraus, als E-110 die Bilder ueberhaupt
+# ankommen liess. Das WhatsApp-Symbol fuellte danach das halbe Fenster.
+$embPath = Join-Path $SrcDir "PgEmbeddedImage.cpp"
+$em = Read-Lines $embPath
+$nStart = Find-Line $em '^void E112Zielrechteck\s*\(' 0
+$nEnd = Find-Line $em '^\}\s*$' $nStart
+Write-Region $em $nStart $nEnd (Join-Path $OutDir "pgembedded_e112.inc") $embPath
+
 Write-Host "Extract.ps1: fertig."

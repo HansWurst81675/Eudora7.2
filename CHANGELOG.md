@@ -13,7 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — das WhatsApp-Symbol füllt das halbe Fenster | **Offen, Ursache am Quelltext belegt — Regression der eigenen E-106-Behebung.** Von Gregor am 18.09.2026 an **1.0.75** gemeldet. **Sichtbar geworden durch E-110:** bis dahin luden fast keine Bilder. Gemessen: angegeben `35x35`, Datei **`330x327`**; angegeben `540x240`, Datei **`1294x575`**. Die E-106-Behebung schreibt die **echte** Dateigröße ins Embed, damit die Zeile hoch genug wird — sie vergrößert also die Zeile, statt das Bild zu verkleinern. Richtig ist die andere Richtung: die angegebene Größe gewinnt, das Bild wird hineinskaliert, wie es das **Lesefenster** bereits tut. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
+| **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
 | **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
 | — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
@@ -64,6 +64,44 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.76 — Bilder wieder in der angegebenen Größe (E-112 **behoben**)
+
+`pict_frame` — das Zielrechteck, in das Paige eine Metadatei streckt — bekam
+bis dahin die **echte Dateigröße**. Das WhatsApp-Symbol wurde deshalb mit
+330×327 gezeichnet, obwohl es als 35×35 ausgezeichnet ist.
+
+Das war eine Regression der **E-106**-Behebung: sie vergrößerte die **Zeile**,
+statt das **Bild** zu verkleinern. Solange **E-110** offen war, lud kaum ein
+Bild und es fiel nicht auf.
+
+**Die Regel steht jetzt in einer eigenen Funktion `E112Zielrechteck`**, die ohne
+Paige, ohne Fenster und ohne ein einziges Bild prüfbar ist — genau das fehlte
+bei E-106, wo dieselbe Entscheidung mitten im Ladeweg stand und nur an Gregors
+Rechner messbar war:
+
+| Fall | was gilt |
+|---|---|
+| vollständige Angabe im HTML | **die Angabe** — das Bild wird hineingestreckt |
+| keine oder halbe Angabe | **die Datei** — das ist **E-103** |
+| nichts bekannt | nichts wird geändert |
+
+**185 Tests, 185 bestanden** (sieben neue). Die Gegenprobe ist gefahren: mit der
+alten Regel fallen **drei** davon um, während die E-103-Fälle, die halbe Angabe
+und die Ränder in **beiden** Richtungen grün bleiben.
+
+### Prüfanleitung
+
+Dieselbe Nachricht öffnen und **antworten**. Die Bilder müssen so groß sein wie
+im Lesefenster — kein Symbol, das das halbe Fenster füllt, und kein Text, der
+von einem Bild zugedeckt wird.
+
+### Was das nicht behebt
+
+**E-113** — ein Bild, dessen **angegebene** Breite größer ist als das Fenster,
+läuft weiterhin rechts hinaus. Das ist die Regel, die Newsletter mit
+`max-width:100%` meinen; Paige kennt kein CSS. Auf Gregors Anordnung *„erst A,
+dann B"* bewusst nicht mitbehoben.
 
 ## 7.2.0.75 — Bilder mit Leerzeichen im Namen kommen wieder an (E-110 **behoben**)
 

@@ -155,6 +155,35 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.76 — gebaut am 18.09.2026, **E-112 behoben**
+
+**Bilder erscheinen wieder in der Größe, die im HTML steht.** `pict_frame` — das
+Zielrechteck, in das Paige eine Metadatei streckt — bekam bis dahin die **echte
+Dateigröße**. Damit wurde das WhatsApp-Symbol mit 330×327 gezeichnet, obwohl es
+als 35×35 ausgezeichnet ist.
+
+Das war eine Regression der **E-106**-Behebung: sie vergrößerte die **Zeile**,
+statt das **Bild** zu verkleinern. Solange **E-110** offen war, lud kaum ein
+Bild und es fiel nicht auf; kaum luden sie, füllte eines das halbe Fenster.
+
+Die Entscheidung sitzt jetzt in einer eigenen Funktion `E112Zielrechteck`, die
+ohne Paige, ohne Fenster und ohne ein einziges Bild prüfbar ist — genau das
+fehlte bei E-106. Die Regel: **vollständige Angabe gewinnt; ohne Angabe gilt
+die Datei** (das ist E-103); ist nichts bekannt, wird nichts geändert.
+
+**185 Tests, 185 bestanden** (sieben neue). Die Gegenprobe ist gefahren: mit der
+alten Regel fallen **drei** davon um, während die E-103-Fälle und die Ränder in
+beiden Richtungen grün bleiben.
+
+**Was Gregor prüft:** dieselbe Nachricht öffnen und **antworten**. Die Bilder
+müssen so groß sein wie im Lesefenster — kein Symbol, das das halbe Fenster
+füllt, und kein Text, der von einem Bild zugedeckt wird.
+
+**Nicht behoben, als E-113 aufgeschrieben:** ein Bild, dessen **angegebene**
+Breite größer ist als das Fenster, läuft weiterhin rechts hinaus. Das ist die
+Regel, die Newsletter mit `max-width:100%` meinen — auf Gregors Anordnung
+*„erst A, dann B"* nicht mitbehoben.
+
 ## 1.0.75 — gebaut am 18.09.2026, **E-110 behoben**
 
 **Bilder mit Leerzeichen im Namen kommen wieder an.** `resolve_URL`
