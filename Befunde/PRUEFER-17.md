@@ -176,7 +176,7 @@ belegte Löcher in den Schranken selbst und **eine Lüge, die noch heute auf
 | **Ort** | `.git/hooks/pre-commit` |
 | **Gemessen** | Die vier neu eingehängten Doku-Schranken machen davon **1,2 s** aus (352 + 233 + 134 + 513 ms), die beiden ganz neuen weitere 0,6 s. Die teuersten Posten sind vorher da: `doku-pruefen.pl` 2534 ms, `pruefe-branch.pl` 1049 ms, `release-pruefen.pl` 988 ms, `rollen-faellig.pl` 928 ms, `pruefe-behoben-belegt.pl` 1149 ms, dazu rund zwanzig Perl-Starts. |
 | **Bewertung** | Kein Fund über meine Arbeit, aber der wichtigste Risikoposten für alles, was hier gebaut wurde: *„eine lästige Schranke wird umgangen"* steht im Haken selbst als Begründung dafür, `pruefe-testbau.pl` in den `pre-push` zu legen. 22 s je Commit ist die Schwelle, ab der `--no-verify` attraktiv wird. |
-| **Behebung** | **Nicht behoben** — siehe „Was offen bleibt". |
+| **Behebung** | **Entschieden von Gregor am 18.09.2026:** *„pre commit mit 22sek ist akzeptabel."* Damit bleibt der Haken, wie er ist — **der naheliegende Schnitt unterbleibt ausdrücklich.** Er hätte die Quelltext-Schranken an eine Bedingung gehängt (*nur wenn der Commit etwas unter `Eudora71/` anfasst*), und genau dieses `if` ist am 07.09.2026 bewusst **entfernt** worden: eine veraltete Datei, die niemand anfasst, steht in keinem Diff und wurde deshalb nie geprüft ([Arbeitsweise/review-sieht-nur-den-diff.md](../Arbeitsweise/review-sieht-nur-den-diff.md)). Wer die Laufzeit künftig senken will, muss an den Kosten ansetzen — rund zwanzig Perl-Starts —, nicht am Prüfumfang. |
 
 ---
 
@@ -234,6 +234,11 @@ an denen LEKTOR parallel arbeitet, und der vierte braucht Gregors Wortlaut.
 ---
 
 ## Was offen bleibt, und warum
+
+> **Punkt 1 ist am 18.09.2026 entschieden und damit nicht mehr offen.** Gregor,
+> nachdem ihm die Messung vorlag: *„pre commit mit 22sek ist akzeptabel."* Der
+> unten beschriebene Schnitt **unterbleibt**. Der Absatz steht unverändert
+> stehen, weil er die Abwägung trägt — nicht als offener Punkt.
 
 1. **Die Laufzeit des `pre-commit` (22 s)** ist nicht angefasst. Sie war vorher
    schon bei rund 21 s; meine sechs Schranken kosten 1,8 s. Der richtige
