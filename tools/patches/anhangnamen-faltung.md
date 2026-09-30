@@ -17,6 +17,12 @@ Compiler zur Verfügung stand (Android, kein Windows, kein MSVC)
 > Nicht gemessen: das übersetzte Programm. Es ist **nichts mit MSVC gebaut und
 > nichts gestartet worden**. Was `g++ -fsyntax-only` über die vier eingefügten
 > Blöcke sagen kann, ist geprüft (fehlerfrei, ohne Warnung) — mehr nicht.
+>
+> **Es gibt keine Beispielnachricht**, und es wird keine geben. Der Fehler ist
+> im Betrieb aufgefallen („immer wieder Dateien im Attachment, bei denen die
+> Endung fehlt und der Dateiname nicht vollständig ist"). Dieser Patch ist aus
+> dem Quelltext heraus begründet und am Zerleger gemessen; er braucht kein
+> Beweisstück, und auf eines zu warten hieße, den Fehler liegen zu lassen.
 
 ---
 

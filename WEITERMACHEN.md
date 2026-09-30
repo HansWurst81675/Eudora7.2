@@ -49,9 +49,14 @@
 > Fall wird schlechter. Herleitung mit allen Messungen in **BEFUNDE.md, AN-1**;
 > Arbeitsschritte in **AUFGABEN.md, B5**.
 >
-> **Was fehlt: eine Beispielnachricht.** Welche der drei Ursachen Gregor
-> getroffen hat, ist offen — eine `.eml` mit einem betroffenen Anhang klärt das
-> in einem Zug.
+> **Auf eine Beispielnachricht ist nicht zu warten** — es gibt keine, und
+> Gregor kann keine liefern. Er hat es im Betrieb gesehen: *„immer wieder
+> Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der
+> Dateiname ist nicht vollständig."* Die Behebung hängt nicht daran.
+>
+> **Warum es behoben wird:** *„weil es unschön ist und weil es im freigegebenen
+> Release schlecht aussieht."* Dass es ein Originalfehler aus 7.1 ist, ist
+> ausdrücklich kein Grund, es liegen zu lassen.
 >
 > ### Vorab: die veröffentlichte Fassung hat noch niemand gestartet
 >

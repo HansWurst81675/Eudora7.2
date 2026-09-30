@@ -6486,6 +6486,15 @@ MIME-Typ nachtragen. Es tut es in der Praxis oft nicht, aus drei Gründen:
 
 ### Der Fehler ist nicht durch die Portierung entstanden
 
+> **Und das ändert an der Dringlichkeit nichts.** Gregor am 30.09.: *„ob der
+> Fehler schon drin war oder nicht, weiß ich nicht. Wahrscheinlich ja, ist mir
+> aber egal. Ich möchte das fixen, weil es unschön ist und weil es im
+> freigegebenen Release schlecht aussieht."* Die Herkunft steht hier nur
+> deshalb, weil sie sagt, **wo** zu suchen ist (in beiden Zweigen, nicht in den
+> Portierungsänderungen) — **nicht**, um den Punkt kleiner zu machen. Wer diesen
+> Abschnitt liest und daraus „also nicht unsere Schuld, also später" macht,
+> liest ihn falsch.
+
 Gegen den mitgeführten Altbestand geprüft:
 
 ```
@@ -6612,10 +6621,15 @@ geänderte `WriteHeaderToken` nach.
 
 ### Was ausdrücklich **nicht** geprüft ist
 
-- Ob der Anwender den Namen genau so gemeldet hat: es liegt **keine
-  Beispielnachricht** vor. Die vier Ursachen erklären das Bild, welche davon
-  Gregor getroffen hat, ist offen. **Eine `.eml` mit einem betroffenen Anhang
-  würde das in einem Zug klären** — sie gehört zum nächsten Schritt.
+- Welche der vier Ursachen im Betrieb zuschlägt. Es liegt **keine
+  Beispielnachricht vor, und es wird auch keine geben** — Gregor am 30.09.:
+  *„Ich kann dir jetzt keine Beispielnachricht geben. Mir ist es nur
+  aufgefallen, dass … immer wieder Dateien im Attachment gespeichert werden,
+  bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht
+  vollständig."* **Darauf ist nicht zu warten.** Eine `.eml` würde es in einem
+  Zug klären, wenn sie einmal auftaucht; bis dahin ist die Beobachtung selbst
+  die Grundlage, und sie deckt sich mit allen vier gemessenen Ursachen. Die
+  Behebung hängt nicht daran: B5.1 bis B5.4 sind in sich begründet.
 - Der Sendeweg. `sendmail.cpp:2392` schreibt `filename="…"` in **eine** Zeile,
   ohne Faltung; Eudoras eigene Nachrichten lösen den Fehler beim Empfänger also
   nicht aus (bei sehr langen Namen verletzt das dafür die Zeilenlänge aus

@@ -265,9 +265,22 @@ Baum, ersetzt nur die zwei Stellen, die ans Netz gehen, übersetzt mit `g++`
 (oder `cl`) und vergleicht mit dem verzeichneten Stand — Dateiname, `grokked`
 **und** was `WriteHeaderToken` in die Mailbox schreiben würde.
 
-**Was fehlt:** eine **Beispielnachricht**. Welche der vier Ursachen Gregor
-getroffen hat, ist offen — eine `.eml` mit einem betroffenen Anhang klärt das in
-einem Zug. Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
+#### Warum das behoben wird — und worauf **nicht** zu warten ist
+
+Gregors Begründung vom 30.09., wörtlich: *„Ich möchte das fixen, weil es unschön
+ist und weil es im freigegebenen Release schlecht aussieht."* Dass es sich um
+einen Originalfehler aus Eudora 7.1 handelt, ist ihm ausdrücklich **egal** —
+die Herkunft steht in AN-1 nur, weil sie sagt, wo zu suchen ist.
+
+**Eine Beispielnachricht gibt es nicht und wird es nicht geben.** Gregor hat den
+Fehler im Betrieb gesehen — *„immer wieder Dateien im Attachment …, bei denen
+zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* —,
+kann aber keine Nachricht liefern. **Darauf ist nicht zu warten.** B5.1 bis
+B5.4 sind aus dem Quelltext heraus begründet und gemessen; sie brauchen kein
+Beweisstück. Taucht später doch eine `.eml` auf, klärt sie in einem Zug, welche
+der vier Ursachen im Betrieb überwiegt — mehr nicht.
+
+Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
 
 ---
 
