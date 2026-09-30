@@ -13,7 +13,8 @@ gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
 > ohne VM. Die Aufteilung steht in `WEITERMACHEN.md`, Abschnitt „Was ohne Visual
 > Studio geht". Kurz: **A2, C1, D1–D4 und jede Zählung gehen ohne Compiler**;
 > alles unter „Ganz zuerst", B1–B4, C2, C3 und E1–E3 brauchen einen Bau oder
-> einen Start.
+> einen Start. **B5 ist geteilt:** die Untersuchung ist ohne Compiler fertig
+> (`tools/kopfzeile-pruefen.pl`), die Behebung braucht einen Bau.
 
 ---
 
@@ -194,6 +195,44 @@ drücken — dann wird aus der Meldung ein Haltepunkt, den der Debugger sieht.
 `DrawDisabled` ist behoben (E-2), aber geprüft ist nur der Zustand, in dem die
 Knöpfe **freigegeben** sind. Nachsehen, ob gesperrte Knöpfe erkennbar grau
 erscheinen statt leer.
+
+### B5 · NEU: Anhänge — Dateiname abgeschnitten, Endung weg (**AN-1**)
+
+Gregors Meldung vom 30.09.2026. **Untersucht und belegt, nicht behoben** — die
+Änderung sitzt im Zerleger des Empfangspfads und lässt sich ohne Bau weder
+übersetzen noch am Programm prüfen.
+
+**Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
+solange er in *einer* Zeile steht. Drei getrennte Ursachen erzeugen dasselbe
+Bild, alle drei sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im
+Baum (POP in `lex822.*`, IMAP in `EuImap/src/ImapLex822.*`):
+
+| | Ursache | Fundstelle (POP / IMAP) |
+|---|---|---|
+| 1 | eine **Faltung** beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, aber das CR kommt zuerst | `lex822.cpp:303` / `ImapLex822.cpp:318`, Regel bei `:213` / `:228` |
+| 2 | die Marke ist **256 Byte** groß, ab 254 Zeichen wird gekappt | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` |
+| 3 | **RFC 2231** (`filename*0=`) kennt der Baum nicht — dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** (`subj[32]`, 31 Zeichen) | nirgends |
+
+**Nachprüfen ohne Visual Studio:**
+
+```
+perl tools/kopfzeile-pruefen.pl          # 5 Faelle, rc=0 solange AN-1 offen
+perl tools/kopfzeile-pruefen.pl --lang   # dazu jede einzelne Marke
+```
+
+Das Werkzeug holt `Lex822()` bei jedem Lauf wörtlich aus dem Baum, übersetzt es
+mit `g++` (oder `cl`) und vergleicht mit dem verzeichneten Stand. **Wer etwas
+behebt, ändert die Spalte `stand` im Werkzeug mit** — sonst meldet es die eigene
+Behebung als Abweichung.
+
+**Reihenfolge, wenn ein Bau da ist:** erst 1 (behebt den gemeldeten Fall), dann
+2, dann 4 (`DeMacifyName32`, `mime.cpp:948` — schreibt bei 255 Zeichen ein Byte
+hinter den Puffer, dieselbe Stelle noch einmal in `EuImap/src/imapmime.cpp:82`).
+RFC 2231 ist ein eigener Punkt, nicht in einem Zug mit 1 und 2.
+
+**Was fehlt:** eine **Beispielnachricht**. Welche der drei Ursachen Gregor
+getroffen hat, ist offen — eine `.eml` mit einem betroffenen Anhang klärt das in
+einem Zug. Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
 
 ---
 

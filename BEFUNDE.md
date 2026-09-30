@@ -1,12 +1,12 @@
 # BEFUNDE — Verzeichnis
 
-<!-- pruefstand: d826a3f -->
+<!-- pruefstand: 2fee8e9 -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen und
-inzwischen rund **5900 Zeilen** lang (nachzählen: `grep -c '^## ' BEFUNDE.md`,
+inzwischen rund **6550 Zeilen** lang (nachzählen: `wc -l < BEFUNDE.md` —
 dieses Verzeichnis zählt mit). Jeder Agent schreibt seinen Abschnitt ans
 **Ende**, die Reihenfolge ist also zeitlich, nicht sachlich. Ohne dieses
 Verzeichnis findet niemand, was er sucht — und schlimmer: er findet einen
@@ -119,6 +119,12 @@ zuerst **E-11**, **R-1** und **E-1**.
 | X-4 | `zeilenenden-angleichen.pl`: 49 Dateien mehr, dreht keine absichtliche Arbeit mehr zurück | **behoben** |
 | R-1 | die Fehlerklasse hinter E-11 ausgezählt: 25 von 142 | **offen** — 25 Stellen zu ändern, **`eudora.cpp:3403`/`:3413` zuerst** |
 | V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |
+
+## Empfang und Anhänge (AN)
+
+| Kennung | Worum es geht | Status |
+|---|---|---|
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **drei** Ursachen, alle drei Originalfehler, POP **und** IMAP | **offen** — nachprüfbar mit `tools/kopfzeile-pruefen.pl`, Behebung beschrieben, braucht einen Bau |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -6292,3 +6298,252 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
    „das ist die Fassung, die abstürzte" acht Zeichen lang.
 3. **Beim nächsten Mal 1.0.4.** Wenn die Behebungen aus R-1 (`eudora.cpp:3403`
    und `:3413`) hineinkommen, ist das ohnehin ein neues Paket.
+
+---
+
+## AN-1 — Anhänge: lange Dateinamen werden abgeschnitten, die Endung fehlt
+
+**Gemeldet von Gregor am 30.09.2026:** *„Prüfe, warum lange Dateinamen beim
+Attachment abgeschnitten werden und die Endung z.B. pdf ganz fehlt."*
+
+**Status: offen.** Kein Portierungsschaden — der Fehler steckt unverändert schon
+im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP
+gleichermaßen**, weil beide Zweige dieselbe Zerlegung in zwei Abschriften haben.
+
+### Kurz: es liegt nicht an der Länge
+
+Der naheliegende Verdacht ist falsch. Ein Dateiname mit 76 Zeichen kommt
+**vollständig** an, solange er in **einer** Zeile steht. Abgeschnitten wird er,
+sobald der Absender die Kopfzeile **faltet** — und das tun Absender genau dann,
+wenn der Name lang ist. Deshalb sieht es nach einer Längengrenze aus.
+
+Das ist mit `tools/kopfzeile-pruefen.pl` nachprüfbar, ohne Visual Studio:
+
+```
+$ perl tools/kopfzeile-pruefen.pl
+uebernommen: 43 Zeilen Aufzaehlungen, 117 Zeilen Tabellen, 245 Zeilen Lex822()
+...
+5 Faelle, 0 Abweichung(en) vom verzeichneten Stand
+```
+
+Das Werkzeug holt die Aufzählungen aus `lex822.h` und die Tabellen samt
+`Lex822()` aus `lex822.cpp` **wörtlich** aus dem Baum, ersetzt nur `LexFill()`
+(liest aus einer Zeichenkette statt aus dem Netz) und `WriteHeaderToken()`
+(schreibt nichts), hängt einen Treiber an, der die Zustände aus
+`HeaderDesc::Read` nachbildet, übersetzt das mit `g++` (oder `cl`) und lässt es
+laufen. Es kann also nicht veralten: wer `Lex822()` ändert, sieht die Wirkung
+sofort.
+
+### Der Weg, den ein Anhangname nimmt
+
+| Schritt | Fundstelle | was dort passiert |
+|---|---|---|
+| 1 | `Lex822State::Lex822` — `lex822.cpp:153` | zerlegt die Kopfzeile in Marken |
+| 2 | `HeaderDesc::Read` — `header.cpp:77` | Zustandsautomat, legt `filename` als `AttributeElement` ab |
+| 3 | `GenericReader::ReadIt` — `mime.cpp:1634` | holt `filename`, ersatzweise `name` |
+| 4 | `MIMEMap::SetExtension` — `MIMEMap.cpp:388` | hängt eine Endung aus `[Mappings]` an |
+| 5 | `OpenAttachFile` → `DeMacifyName32` — `mime.cpp:1275` / `:948` | macht daraus einen Windows-Dateinamen |
+| 6 | `CheckName` — `mime.cpp:992` | sucht einen freien Namen, hält die Endung |
+
+Schritt 6 ist sauber: `CheckName` kürzt ausdrücklich so, dass die Endung erhalten
+bleibt. Der Schaden entsteht davor.
+
+### Erste Ursache: eine Faltung beendet die Zeichenkette (die eigentliche)
+
+`Lex822()` behandelt einen gefalteten Zeilenumbruch — `lex822.cpp:213`:
+
+```c
+// Is this a folded CRLF?
+if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822))
+    charClass = SPACE822;   // treat it like a space
+```
+
+Geprüft wird das **LF**. Im Datenstrom kommt aber zuerst das **CR** — und in
+`CollectQText` steht bei `lex822.cpp:303`:
+
+```c
+case CR822:
+    returnToken = QText;
+    State = CollectLine;
+    break;
+```
+
+Damit endet eine Zeichenkette in Anführungszeichen **am CR**, bevor die
+Faltungsregel überhaupt greifen kann. Nach RFC 5322 2.2.3 gehört alles nach
+`CRLF` + Leerzeichen/Tabulator noch zu derselben Kopfzeile; genau so falten
+Exchange, Zimbra, JavaMail und die meisten PHP-Versandskripte lange
+`filename=`-Parameter. Für Eudora ist der Name an dieser Stelle zu Ende.
+
+Was danach kommt, ist nicht etwa der Rest des Namens, sondern Müll: der
+Zustandsautomat steht auf `ExpectSem`, bekommt statt `;` ein Atom, setzt
+`grokked = FALSE` und wirft den Rest der Kopfzeile als unstrukturierten Text
+weg. Die Endung ist damit nicht „abgeschnitten", sondern **nie angekommen**.
+
+Gemessen, Fall 2 des Werkzeugs:
+
+```
+Content-Disposition: attachment;
+	filename="Angebot Nr 4711 fuer die Stadtwerke Musterstadt
+ Abrechnungszeitraum 2025.pdf"
+
+  soll   "Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf"  (76 Zeichen)
+  ist    "Angebot Nr 4711 fuer die Stadtwerke Musterstadt"  (47 Zeichen), Endung FEHLT, grokked=FALSE
+```
+
+Und die Gegenprobe, Fall 3 — **derselbe Name, nur ungefaltet**:
+
+```
+  ist    "Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf"  (76 Zeichen), Endung .pdf, grokked=TRUE
+```
+
+### Zweite Ursache: die Marke ist 256 Byte groß
+
+`lex822.h:70`: `BYTE Token[256];  // tokens over 255 characters will be shot`.
+Bei `lex822.cpp:206` bricht der Zerleger ab, sobald `TokenSpot > sizeof(Token)-3`
+ist, gibt die Marke wie sie ist heraus und fängt eine neue an. Ein ungefalteter
+Name über **254 Zeichen** wird also bei 254 gekappt; der Rest kommt als zweite
+`QText`-Marke im Zustand `ExpectSem` an und wird verworfen (Fall 4 des
+Werkzeugs). Das ist der seltenere Fall, aber er sieht genauso aus.
+
+### Dritte Ursache: RFC 2231 kennt dieser Baum nicht
+
+Für lange und für nicht-ASCII-Dateinamen ist RFC 2231 der heute übliche Weg:
+
+```
+Content-Disposition: attachment;
+	filename*0="Angebot Nr 4711 fuer die Stadtwerke";
+	filename*1=" Musterstadt 2025.pdf"
+```
+
+`grep -rn "2231\|filename\*" Eudora71/Eudora Eudora71/EuImap Eudora71/QCUtils`
+liefert **nichts**. `HeaderDesc::GetAttribute` (`header.cpp:502`) vergleicht den
+Attributnamen vollständig, `filename*0` ist also nicht `filename`. Ergebnis: es
+gibt **gar kein** `filename`-Attribut (Fall 5 des Werkzeugs, `ist ""`). Dann
+greift `mime.cpp:1640`:
+
+```c
+if (!*fName)
+    strncpy(fName, ((MIMEState*)MimeStates[0])->m_hd->subj, _MAX_PATH - 1);
+```
+
+— der Anhang bekommt den **Betreff** als Namen, und `subj` ist
+`char subj[32]` (`header.h:101`), also **31 Zeichen**. Auch das sieht für den
+Anwender nach „abgeschnitten, Endung weg" aus, hat aber eine andere Ursache.
+Wer den Fehler nachstellt, muss die drei Fälle auseinanderhalten.
+
+### Warum das Sicherheitsnetz nicht greift
+
+`MIMEMap::SetExtension` (`MIMEMap.cpp:388`) **könnte** die Endung aus dem
+MIME-Typ nachtragen. Es tut es in der Praxis oft nicht, aus drei Gründen:
+
+1. **Die Zuordnung muss in `[Mappings]` stehen.** Für `application/pdf` steht sie
+   da (`both=pdf,,,application,pdf` in `deudora.ini:21`). Für
+   **`application/octet-stream` steht sie nicht da** — `grep -n octet` auf
+   `InstallersForEudora/Eudora7.1/Data/INIfiles/deudora.ini` liefert nichts.
+   Und genau diesen Typ setzen viele Webanwendungen und Scanner für PDFs.
+2. **Die Regel bei `MIMEMap.cpp:397`:** stehen hinter dem letzten Punkt 1 bis 3
+   Zeichen, bleibt die vorhandene „Endung" stehen. Ein abgeschnittener Name wie
+   `Rechnung Nr. 4711 vom 12.03` endet auf `.03` — für `SetExtension` ist das
+   eine Endung, es tut nichts mehr.
+3. `MIMEMap::Find` (`MIMEMap.cpp:64`) steigt sofort aus, wenn `isMIME` falsch ist.
+
+### Der Fehler ist nicht durch die Portierung entstanden
+
+Gegen den mitgeführten Altbestand geprüft:
+
+```
+$ diff <(sed -n '/^Token822Enum Lex822State::Lex822()/,/^}/p' Sandbox/Eudora/lex822.cpp  | tr -d '\r') \
+       <(sed -n '/^Token822Enum Lex822State::Lex822()/,/^}/p' Eudora71/Eudora/lex822.cpp | tr -d '\r')
+Lex822() identisch (245 Zeilen)
+
+$ diff <(sed -n '/^void DeMacifyName32/,/^}/p' Sandbox/Eudora/mime.cpp  | tr -d '\r') \
+       <(sed -n '/^void DeMacifyName32/,/^}/p' Eudora71/Eudora/mime.cpp | tr -d '\r')
+DeMacifyName32 identisch
+```
+
+Die Unterschiede zwischen `Sandbox/Eudora/lex822.cpp` und
+`Eudora71/Eudora/lex822.cpp` betreffen ausschließlich `WriteHeaderToken` und die
+Konstruktoren. **Originalfehler**, wie M4, M5 und NP3-8 — er ist mit Eudora 7.1
+ausgeliefert worden.
+
+### IMAP hat dieselbe Stelle noch einmal
+
+`Eudora71/EuImap/src/ImapLex822.cpp` ist eine Abschrift desselben Zerlegers:
+
+| Eudora (POP) | IMAP | betrifft |
+|---|---|---|
+| `lex822.cpp:303` | `ImapLex822.cpp:318` | `case CR822:` in `CollectQText` |
+| `lex822.cpp:213` | `ImapLex822.cpp:228` | die Faltungsregel prüft das LF |
+| `lex822.cpp:206` | `ImapLex822.cpp:221` | Abbruch bei `sizeof(Token)-3` |
+| `lex822.h:70` | `ImapLex822.h:29` | `BYTE Token[256]` |
+
+**Wer die eine Stelle ändert, muss die andere mitändern** — sonst ist der Fehler
+je nach Kontenart einmal da und einmal weg, und das ist schlimmer als der Fehler
+selbst.
+
+### Nebenbei gefunden: ein Byte über den Rand in `DeMacifyName32`
+
+`mime.cpp:948`:
+
+```c
+char pcname[255];
+int len = 255;
+for (d = pcname, s = Name; *s && len; s++)
+{
+    if (... unerlaubtes Zeichen ...) continue;
+    *d++ = *s;
+    len--;
+}
+*d = 0;                 // <- bei 255 kopierten Zeichen ist das pcname[255]
+```
+
+`len` zählt nur die **übernommenen** Zeichen. Werden 255 übernommen, steht `d`
+auf `pcname + 255`, und `*d = 0` schreibt **ein Byte hinter den Puffer** — auf
+den Stapel, neben `Name`, `s` und `d`. Das ist unabhängig von AN-1 und
+unabhängig von der Portierung (der Altbestand hat denselben Code), tritt aber
+genau bei den Namen auf, um die es hier geht. Die Behebung ist `char pcname[256]`
+oder `int len = 254`. **Nicht angefasst**, weil hier nicht gebaut werden kann.
+
+### Was zu ändern wäre
+
+Nicht umgesetzt — die Änderung sitzt im Herzstück des Empfangspfads und lässt
+sich ohne Visual Studio weder übersetzen noch am laufenden Programm prüfen. Der
+Vorschlag, in der Reihenfolge des Nutzens:
+
+1. **Faltung in `CollectQText` überleben** (`lex822.cpp:303`, `ImapLex822.cpp:318`).
+   Beim `CR822` nachsehen, ob `CRLF` + Leerzeichen/Tabulator folgt; wenn ja, das
+   CR und das LF überspringen und nach RFC 5322 3.2.2 **ein** Leerzeichen
+   aufnehmen, statt die Marke zu beenden. Nur im Zustand `CollectQText`, nur
+   innerhalb der Anführungszeichen (`InStructure`) — `CollectAtom` und
+   `CollectLine` müssen weiterhin am Umbruch enden, sonst verschmelzen Kopfzeilen.
+   Das allein behebt den gemeldeten Fall.
+2. **Die Marke vergrößern.** `Token[256]` ist die RFC-822-Atomgrenze, für einen
+   Dateinamen ist sie zu klein. `_MAX_PATH`-nah wäre richtig; wer nicht so weit
+   gehen will, muss wenigstens `CheckName` die Endung retten lassen, statt am
+   Ende zu kappen.
+3. **RFC 2231.** Deutlich mehr Arbeit (Teilstücke sammeln und in der richtigen
+   Reihenfolge zusammensetzen, `*`-Form mit Zeichensatz und Prozentzeichen
+   auflösen). Eigener Punkt, nicht in einem Zug mit 1 und 2.
+4. **`DeMacifyName32`** (`mime.cpp:948`, und die Abschrift
+   `LOCAL_DeMacifyName32` in `EuImap/src/imapmime.cpp:82`): `pcname` auf 256, oder
+   `len` auf 254.
+
+Nach jeder dieser Änderungen: `perl tools/kopfzeile-pruefen.pl`. Die Spalte
+`stand` in dem Werkzeug ist dann **mit** zu ändern — sonst meldet es die eigene
+Behebung als Abweichung.
+
+### Was ausdrücklich **nicht** geprüft ist
+
+- Ob der Anwender den Namen genau so gemeldet hat: es liegt **keine
+  Beispielnachricht** vor. Die drei Ursachen erklären das Bild, welche davon
+  Gregor getroffen hat, ist offen. **Eine `.eml` mit einem betroffenen Anhang
+  würde das in einem Zug klären** — sie gehört zum nächsten Schritt.
+- Der Sendeweg. `sendmail.cpp:2392` schreibt `filename="…"` in **eine** Zeile,
+  ohne Faltung; Eudoras eigene Nachrichten lösen den Fehler beim Empfänger also
+  nicht aus (bei sehr langen Namen verletzt das dafür die Zeilenlänge aus
+  RFC 5322 2.1.1 — nicht gemessen).
+- `Fix2047` läuft im Prüfstand bewusst nicht mit. Ein RFC-2047-Wort, das über
+  eine Faltung geht, wird von `Fix2047` (zeilenweise, `lex822.cpp:554`) ohnehin
+  nicht zusammengesetzt — das ist derselbe Fehler noch einmal, aber nicht
+  gemessen.
+- Nichts davon ist am laufenden Programm nachgesehen. Es gibt keinen Bau.

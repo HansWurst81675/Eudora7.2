@@ -13,6 +13,31 @@
 > C++ geändert** worden und **nichts gebaut**. Geändert wurden Dokumentation und
 > Werkzeuge; beides ist hier nachprüfbar und wurde nachgeprüft.
 >
+> ### Nachtrag 30.09.2026 — Anhänge: abgeschnittene Dateinamen (**AN-1**)
+>
+> Gregors Meldung: *„Prüfe, warum lange Dateinamen beim Attachment abgeschnitten
+> werden und die Endung z.B. pdf ganz fehlt."* **Untersucht, belegt,
+> dokumentiert — nicht behoben**, denn die Änderung sitzt im Zerleger des
+> Empfangspfads und lässt sich ohne Bau nicht prüfen.
+>
+> **Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
+> solange er in *einer* Zeile steht; abgeschnitten wird er, sobald der Absender
+> die Kopfzeile **faltet** — und das tut er genau bei langen Namen. Dazu zwei
+> weitere Ursachen mit demselben Erscheinungsbild (Marke `Token[256]`; RFC 2231
+> wird gar nicht erkannt, dann bekommt der Anhang den **Betreff** als Namen).
+> Alle drei sind **Originalfehler aus Eudora 7.1** — gegen `Sandbox/` geprüft,
+> `Lex822()` ist dort Zeile für Zeile dasselbe — und alle drei stecken
+> **doppelt** im Baum, einmal für POP und einmal für IMAP.
+>
+> Nachprüfbar ohne Visual Studio: `perl tools/kopfzeile-pruefen.pl`. Das
+> Werkzeug holt `Lex822()` bei jedem Lauf frisch aus dem Quelltext, kann also
+> nicht veralten. Herleitung mit allen Messungen in **BEFUNDE.md, AN-1**;
+> Arbeitsschritte in **AUFGABEN.md, B5**.
+>
+> **Was fehlt: eine Beispielnachricht.** Welche der drei Ursachen Gregor
+> getroffen hat, ist offen — eine `.eml` mit einem betroffenen Anhang klärt das
+> in einem Zug.
+>
 > ### Vorab: die veröffentlichte Fassung hat noch niemand gestartet
 >
 > Gregor am 31.08. abends: *„Ich habe die neue Version nicht geprüft. Eigentlich
@@ -473,6 +498,7 @@ Nachgemessen in einer Linux-Umgebung mit perl 5.38, git 2.43, python 3.11:
 | Quelltextanalyse über den ganzen Baum | `tools/releasebuffer-pruefen.pl` ist so entstanden. Fundstellen, Einstufungen, Funktionsgrenzen: alles Text. |
 | Der Paketprüfer (`paket-pruefen.ps1`, PR-2.0) | im Klon liegen **101 PE-Dateien**, darunter `Bin/Release`. Ein Import-Leser lässt sich also gegen echte x86-Binärdateien entwickeln und messen. Nur die `.ps1` selbst läuft ohne PowerShell nicht. |
 | Doku und Nachrechnen | grep-Arbeit. Befund Z-1 hat gezeigt, dass 11 von rund 40 geprüften Angaben falsch waren — das ist keine Fleißarbeit. |
+| **Einzelne C++-Teile außerhalb des Programms fahren** | `tools/kopfzeile-pruefen.pl` holt `Lex822()` samt Tabellen **wörtlich** aus `lex822.cpp`, ersetzt nur die zwei Stellen, die ans Netz gehen, und übersetzt das mit `g++`. So ist Befund **AN-1** gemessen worden — ohne MFC, ohne MSBuild. Das geht überall dort, wo ein Stück Logik keine MFC-Klasse braucht. |
 
 **Braucht zwingend Windows mit Visual Studio 2022:**
 

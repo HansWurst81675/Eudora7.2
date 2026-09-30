@@ -56,3 +56,6 @@ Eudora71/OpenSSL/out32/
 # Eudora71/Eudora/BuildKennung-vorlage.h mit "unbekannt"; der PreBuildEvent
 # kopiert sie, wenn perl fehlt. Befund PR-4/W-1.
 Eudora71/Eudora/BuildKennung.h
+
+# Prüfstand von tools/kopfzeile-pruefen.pl (nur bei --behalten)
+tools/.kopfzeile/
