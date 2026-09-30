@@ -213,6 +213,7 @@ Bild, alle sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im Baum
 
 | Schritt | Was | Fundstelle (POP / IMAP) | Stand |
 |---|---|---|---|
+| **B5.0** | **Debug-Marken einspielen** — acht Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` in `eudora.ini` | `debug.h`, `debug.cpp`, `lex822.cpp`, `header.cpp`, `mime.cpp` / `ImapLex822.cpp`, `ImapHeader.cpp` | **Patch liegt bereit**, stört B5.1 nicht |
 | **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | `lex822.cpp:303`, `:433`, `header.cpp:476` / `ImapLex822.cpp:318`, `:454`, `ImapHeader.cpp:489` | **Patch liegt bereit und ist gemessen** |
 | **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wird `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** Marke trägt | `lex822.cpp:201` / `ImapLex822.cpp:216` | offen, **eine Zeile je Zweig** |
 | **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappt ab 254 Zeichen. `Buffer[2048]` begrenzt mit | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` | offen |
@@ -242,15 +243,53 @@ und nichts gestartet worden.
 
 #### So geht es weiter, sobald Visual Studio da ist
 
-1. `git apply tools/patches/anhangnamen-faltung.patch`
-2. `perl tools/kopfzeile-pruefen.pl` — meldet jetzt **6 Abweichungen**: das sind
+1. `git apply tools/patches/anhangnamen-debugmarken.patch`, bauen,
+   `LogLevel=91295` setzen, die Prüfdaten abrufen, `grep ANHANG eudora.log` —
+   **damit ist die Diagnose am laufenden Programm belegt**, bevor irgendetwas
+   geändert wird.
+2. `git apply tools/patches/anhangnamen-faltung.patch`
+3. `perl tools/kopfzeile-pruefen.pl` — meldet jetzt **6 Abweichungen**: das sind
    die behobenen Fälle. **Dann die Spalte `stand` im Werkzeug nachziehen**,
    sonst meldet es die eigene Behebung für immer als Schaden.
-3. Bauen. Eine echte Nachricht mit gefaltetem `filename=` abrufen und nachsehen,
+4. Bauen. Denselben Abruf wiederholen und den Log vergleichen. Eine echte Nachricht mit gefaltetem `filename=` abrufen und nachsehen,
    wie die Datei im Anhangverzeichnis heißt.
-4. Einen Testfall in `Eudora71/Tests/TestPopEmpfang.cpp` nachziehen — dort liegt
+5. Einen Testfall in `Eudora71/Tests/TestPopEmpfang.cpp` nachziehen — dort liegt
    das Gerüst für den Empfangspfad schon.
-5. Dann B5.2 bis B5.4; das sind zusammen vier Zeilen und zwei Zahlen.
+6. Dann B5.2 bis B5.4; das sind zusammen vier Zeilen und zwei Zahlen.
+
+#### B5.0 · **Zuerst die Debug-Marken einspielen** — dann sieht man beim Abrufen zu
+
+Gregor: *„nicht vergessen, Debug-Marken einzufügen, wenn da was schief läuft,
+dass man das auf die Schnelle rausfindet … damit man beim Mail abrufen oder beim
+Benutzen sieht, was passiert und was nicht hinhaut."*
+
+| | |
+|---|---|
+| Patch | `tools/patches/anhangnamen-debugmarken.patch` — 336 Zeilen, sieben Dateien |
+| Beschreibung | `tools/patches/anhangnamen-debugmarken.md` — alle acht Marken, was sie sagen |
+| Stand | **nicht angewandt**, `git apply --check` läuft sauber |
+| stört B5.1? | **Nein.** Beide greifen einzeln, und die Behebung greift auch noch, wenn die Marken schon drin sind — nachgewiesen |
+
+**Einschalten** (kein Neubau nötig, nur ein Neustart): in `eudora.ini`, Gruppe
+`[Settings]`, `LogLevel=91295` — das ist die Voreinstellung 25759 **plus 65536**
+(`DEBUG_MASK_ATTACH = 0x10000`). Geschrieben wird nach `eudora.log` im
+Eudora-Verzeichnis. Auslesen:
+
+```
+grep ANHANG eudora.log
+```
+
+Acht Marken auf dem Weg des Namens: wo der Zerleger abbricht, was `AddAttribute`
+ablegt, woher der Name kommt (`filename` / `name` / **Betreff**), ob `MIMEMap`
+die Endung nachträgt, was `DeMacifyName32` daraus macht, und **wie die Datei am
+Ende wirklich heißt**. Steuerzeichen werden sichtbar gemacht — eine Faltung
+erscheint im Log als `<CR><LF>` und ist nicht mit einem echten Zeilenumbruch zu
+verwechseln.
+
+**Reihenfolge:** B5.0 zuerst, dann einmal die Prüfdaten abrufen und den Log
+ansehen — damit ist die Diagnose am laufenden Programm belegt. Erst danach
+B5.1 einspielen und denselben Abruf wiederholen; dann muss aus
+„Umbruch IN der Zeichenkette" nichts mehr werden und der Name vollständig sein.
 
 #### Prüfdaten liegen bereit — sechs Nachrichten, ein POP3-Server
 

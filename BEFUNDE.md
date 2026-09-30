@@ -124,7 +124,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **vier** Ursachen, alle Originalfehler, POP **und** IMAP | **teilweise** — Teil 1 liegt als geprüfter Patch bereit (`tools/patches/anhangnamen-faltung.patch`, **nicht angewandt**), Teile 2 bis 5 offen; alles nachprüfbar mit `tools/kopfzeile-pruefen.pl` |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **vier** Ursachen, alle Originalfehler, POP **und** IMAP | **teilweise** — **zwei** Patches liegen bereit und **nicht angewandt**: `anhangnamen-debugmarken.patch` (acht Marken auf dem Weg) und `anhangnamen-faltung.patch` (Behebung von Teil 1); Teile 2 bis 5 offen. Prüfdaten samt POP3-Server in `tools/pruefdaten/`, Messung mit `tools/kopfzeile-pruefen.pl` |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -6671,6 +6671,54 @@ Nach jeder dieser Änderungen: `perl tools/kopfzeile-pruefen.pl`. **Die Spalte
 Behebung für immer als Schaden. Das Werkzeug erkennt am Markierungssatz des
 Patches selbst, ob die Behebung schon im Baum steht, und bildet dann auch das
 geänderte `WriteHeaderToken` nach.
+
+### Beim Abrufen zusehen: Debug-Marken auf dem ganzen Weg
+
+**Nachtrag 30.09.2026, dritter Durchgang.** Gregor: *„nicht vergessen,
+Debug-Marken einzufügen, wenn da was schief läuft, dass man das auf die Schnelle
+rausfindet … damit man beim Mail abrufen oder beim Benutzen sieht, was passiert
+und was nicht hinhaut."*
+
+Eudora hat die Logdatei schon — `QCLogFileMT`, gesteuert über eine **Bitmaske**
+in `eudora.ini`, geschrieben nach `eudora.log`. Es fehlte nur ein Bit für diesen
+Weg. `tools/patches/anhangnamen-debugmarken.patch` legt es an
+(`DEBUG_MASK_ATTACH = 0x10000`, `debug.h`) und setzt **acht Marken**:
+
+| # | Wo | Was sie sagt |
+|---|---|---|
+| 1 | `Lex822()`, Marke voll (`lex822.cpp:206`) | Kappung bei 254 Zeichen — AN-1, zweiter Teil |
+| 2 | `Lex822()`, vor dem `switch` (`lex822.cpp:213`) | **Umbruch mitten in der Zeichenkette** — AN-1, erster Teil |
+| 3 | `AddAttribute` (`header.cpp:476`) | der Wert, wie er abgelegt wird |
+| 4 | `GenericReader::ReadIt` (`mime.cpp:1634`) | woher der Name kommt — `filename`/`name` oder **Betreff** |
+| 5 | dieselbe Stelle, nach `MIMEMap` | ob die Endung nachgetragen wurde, oder der Typ unbekannt ist |
+| 6 | `OpenAttachFile` (`mime.cpp:1275`) | vor und nach `DeMacifyName32` |
+| 7 | dieselbe Stelle, nach `CheckName` | **wie die Datei am Ende wirklich heißt** |
+| 8 | `CheckName` (`mime.cpp:1127`) | dass hier gekürzt wurde — mit erhaltener Endung |
+
+Marken 1 bis 3 gibt es doppelt, einmal für IMAP. **Einschalten:** in
+`eudora.ini`, `[Settings]`, `LogLevel=91295` (Voreinstellung 25759 + 65536),
+dann `grep ANHANG eudora.log`.
+
+**Steuerzeichen werden sichtbar gemacht** — dafür bringt der Patch
+`PutDebugLogSichtbar()` mit (`debug.cpp`): `CR` wird `<CR>`, `LF` wird `<LF>`,
+Tabulator `<TAB>`, alles andere unter 32 `<XX>`. Ohne das wäre der Log hier
+wertlos, weil eine Faltung im Dateinamen genauso aussähe wie ein Zeilenumbruch
+im Log. Die Funktion ist als einzige wirklich gebaut und ausgeführt worden
+(`g++`, gegen einen Stellvertreter):
+
+```
+ANHANG Lex822: Umbruch IN der Zeichenkette [Angebot ... Musterstadt<CR><LF> Abrechnungszeitraum 2025.pdf] (76)
+```
+
+**Die beiden Patches stören sich nicht.** Die Marke im Zerleger sitzt bewusst
+**vor** dem `switch` statt im `case CR822:`, den `anhangnamen-faltung.patch`
+umschreibt. Nachgewiesen mit `git apply --check`: beide greifen einzeln auf den
+unveränderten Baum, und die Behebung greift auch noch, wenn die Marken schon
+drin sind.
+
+**Reihenfolge:** erst die Marken, dann einmal die Prüfdaten abrufen und den Log
+ansehen — damit ist die Diagnose am **laufenden Programm** belegt, was sie
+bisher nicht ist. Erst danach die Behebung und derselbe Abruf noch einmal.
 
 ### Nachstellen ohne echte Post — und ohne Visual Studio zum Erzeugen
 

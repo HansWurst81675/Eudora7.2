@@ -15,6 +15,15 @@
 >
 > ### Nachtrag 30.09.2026 — Anhänge: abgeschnittene Dateinamen (**AN-1**)
 >
+> > **Auf dem Branch `claude/an-1-anhangnamen` liegen ZWEI Patches bereit,
+> > beide nicht angewandt.** Erst `anhangnamen-debugmarken.patch` einspielen
+> > (acht Marken auf dem Weg des Anhangnamens, einschalten mit
+> > `LogLevel=91295` in `eudora.ini`, auslesen mit `grep ANHANG eudora.log`),
+> > damit beim Abrufen sichtbar wird, wo der Name kaputtgeht — **dann** ist die
+> > Diagnose am laufenden Programm belegt. Danach `anhangnamen-faltung.patch`
+> > (die Behebung). Die beiden stören sich nicht, das ist nachgewiesen. Die
+> > Reihenfolge steht als **B5.0 bis B5.5** in `AUFGABEN.md`.
+> >
 > > **Zweiter Durchgang, eigener Branch `claude/an-1-anhangnamen`.** Für die
 > > eigentliche Ursache liegt jetzt ein **ausgearbeiteter und gemessener
 > > Patch** bereit: `tools/patches/anhangnamen-faltung.patch`. Er ist

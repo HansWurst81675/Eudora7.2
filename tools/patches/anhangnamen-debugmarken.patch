@@ -1,0 +1,336 @@
+diff --git a/Eudora71/EuImap/src/ImapHeader.cpp b/Eudora71/EuImap/src/ImapHeader.cpp
+index a3bd287..f071953 100644
+--- a/Eudora71/EuImap/src/ImapHeader.cpp
++++ b/Eudora71/EuImap/src/ImapHeader.cpp
+@@ -505,6 +505,20 @@ int ImapHeaderDesc::AddAttribute(const char* Value)
+ 		m_TLMime->AddParam(m_attributeName, Value);
+ 
+ 
++	//	ANHANG-Marke 3 (IMAP): der Wert, wie er abgelegt wird - also nach
++	//	allem, was Zerleger und AddAttribute damit gemacht haben. Wer nur
++	//	eine Zeile aus dem Log braucht, um den Dateinamen zu sehen, nimmt
++	//	die hier (Befund AN-1).
++	if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
++	{
++		char	szWo[160];
++		_snprintf(szWo, sizeof(szWo) - 1, "ANHANG Kopfzeile (IMAP): %s =",
++			(LPCTSTR)AE->m_Name);
++		szWo[sizeof(szWo) - 1] = 0;
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH, szWo, (LPCTSTR)AE->m_Value,
++			(long)AE->m_Value.GetLength());
++	}
++
+ 	if (Attributes.AddTail(AE))
+ 		return (TRUE);
+ 	else
+diff --git a/Eudora71/EuImap/src/ImapLex822.cpp b/Eudora71/EuImap/src/ImapLex822.cpp
+index d0631d5..7e0965a 100644
+--- a/Eudora71/EuImap/src/ImapLex822.cpp
++++ b/Eudora71/EuImap/src/ImapLex822.cpp
+@@ -220,6 +220,10 @@ Token822Enum ImapLex822State::Lex822()
+ 		// are we going to overrun the token buffer?
+ 		if (m_TokenSpot > sizeof(m_Token)-3)
+ 		{
++			//	ANHANG-Marke 1 (IMAP): hier wird gekappt, siehe lex822.cpp.
++			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++				"ANHANG ImapLex822: Marke voll, wird gekappt",
++				(char*)m_Token, m_TokenSpot);
+ 			m_ReinitToken = TRUE;
+ 			returnToken = (Token822Enum)State2Token[m_State];
+ 			break;
+@@ -228,6 +232,21 @@ Token822Enum ImapLex822State::Lex822()
+ 		// Is this a folded CRLF?
+ 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822))
+ 			charClass = SPACE822;   // treat it like a space
++
++		//	ANHANG-Marke 2 (IMAP): DIE Stelle aus Befund AN-1. Ein Umbruch
++		//	mitten in einer Zeichenkette in Anfuehrungszeichen beendet sie -
++		//	auch dann, wenn er nur eine Faltung ist. Alles dahinter geht
++		//	verloren, bei einem Dateinamen also die Endung.
++		//	Bewusst HIER und nicht im case CR822 darunter: so bleibt diese
++		//	Marke unabhaengig von tools/patches/anhangnamen-faltung.patch,
++		//	der genau jenen case umschreibt.
++		if (charClass == CR822 && m_State == CollectQText && m_InStructure &&
++			QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
++		{
++			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++				"ANHANG ImapLex822: Umbruch IN der Zeichenkette - Rest geht verloren",
++				(char*)m_Token, m_TokenSpot);
++		}
+ 		
+ 		// ok, process the character
+ 		switch (m_State)
+diff --git a/Eudora71/Eudora/header.cpp b/Eudora71/Eudora/header.cpp
+index bb9477c..9405cb1 100644
+--- a/Eudora71/Eudora/header.cpp
++++ b/Eudora71/Eudora/header.cpp
+@@ -493,6 +493,20 @@ int HeaderDesc::AddAttribute(const char* Value)
+ 		m_TLMime->AddParam(attributeName, Value);
+ 
+ 
++	//	ANHANG-Marke 3: der Wert, wie er abgelegt wird - also nach
++	//	allem, was Zerleger und AddAttribute damit gemacht haben. Wer nur
++	//	eine Zeile aus dem Log braucht, um den Dateinamen zu sehen, nimmt
++	//	die hier (Befund AN-1).
++	if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
++	{
++		char	szWo[160];
++		_snprintf(szWo, sizeof(szWo) - 1, "ANHANG Kopfzeile: %s =",
++			(LPCTSTR)AE->m_Name);
++		szWo[sizeof(szWo) - 1] = 0;
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH, szWo, (LPCTSTR)AE->m_Value,
++			(long)AE->m_Value.GetLength());
++	}
++
+ 	if (Attributes.AddTail(AE))
+ 		return (TRUE);
+ 	else
+diff --git a/Eudora71/Eudora/lex822.cpp b/Eudora71/Eudora/lex822.cpp
+index 60dc2d1..f657507 100644
+--- a/Eudora71/Eudora/lex822.cpp
++++ b/Eudora71/Eudora/lex822.cpp
+@@ -205,6 +205,10 @@ Token822Enum Lex822State::Lex822()
+ 		// are we going to overrun the token buffer?
+ 		if (TokenSpot > sizeof(Token)-3)
+ 		{
++			//	ANHANG-Marke 1: hier wird gekappt. Ein Dateiname ueber 254
++			//	Zeichen verliert hier seine Endung (Befund AN-1, zweiter Teil).
++			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++				"ANHANG Lex822: Marke voll, wird gekappt", (char*)Token, TokenSpot);
+ 			ReinitToken = TRUE;
+ 			returnToken = (Token822Enum)State2Token[State];
+ 			break;
+@@ -213,6 +217,21 @@ Token822Enum Lex822State::Lex822()
+ 		// Is this a folded CRLF?
+ 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822))
+ 			charClass = SPACE822;   // treat it like a space
++
++		//	ANHANG-Marke 2: DIE Stelle aus Befund AN-1. Ein Umbruch
++		//	mitten in einer Zeichenkette in Anfuehrungszeichen beendet sie -
++		//	auch dann, wenn er nur eine Faltung ist. Alles dahinter geht
++		//	verloren, bei einem Dateinamen also die Endung.
++		//	Bewusst HIER und nicht im case CR822 darunter: so bleibt diese
++		//	Marke unabhaengig von tools/patches/anhangnamen-faltung.patch,
++		//	der genau jenen case umschreibt.
++		if (charClass == CR822 && State == CollectQText && InStructure &&
++			QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
++		{
++			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++				"ANHANG Lex822: Umbruch IN der Zeichenkette - Rest geht verloren",
++				(char*)Token, TokenSpot);
++		}
+ 		
+ 		// ok, process the character
+ 		switch (State)
+diff --git a/Eudora71/Eudora/mime.cpp b/Eudora71/Eudora/mime.cpp
+index bd35129..3ba0e87 100644
+--- a/Eudora71/Eudora/mime.cpp
++++ b/Eudora71/Eudora/mime.cpp
+@@ -1125,7 +1125,15 @@ BOOL CheckName(const char* Dir, const char* FName, char* FinalFname, BOOL bLongF
+ 
+ 	//	If the file name (by itself without any directories) is too long, then truncate it
+ 	if ( nBaseLen < sBaseName.GetLength() )
++	{
++		//	ANHANG-Marke 8: hier kuerzt CheckName den Namen - die Endung
++		//	bleibt dabei erhalten. Das ist der eine Ort auf dem ganzen Weg,
++		//	der es richtig macht.
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			"ANHANG CheckName: Name zu lang, wird gekuerzt auf",
++			(LPCTSTR)sBaseName, (long)nBaseLen);
+ 		sBaseName.GetBufferSetLength(nBaseLen);
++	}
+ 
+ 	//	nFullPathLengthWithoutExtension is the length of the full path
+ 	//	except for the length of the file extension
+@@ -1313,6 +1321,12 @@ JJFile* OpenAttachFile(LPTSTR Name, BOOL bAllowRead /*= FALSE*/)
+ 	}
+ 
+ 
++	//	ANHANG-Marke 6: der Name, wie er bei der Datei ankommt - vor und
++	//	nach der Zeichenbereinigung. DeMacifyName32 kappt bei 255 Zeichen,
++	//	DeMacifyName sogar auf 8+8 (Befund AN-1).
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		"ANHANG Datei: Name vor DeMacify", Name, (long)strlen(Name));
++
+ 	// Turn the macintosh name into something more useful
+ 	BOOL bLongFileNameSupport = ::LongFileSupportMT(DirName);
+ 	if (bLongFileNameSupport)
+@@ -1320,12 +1334,22 @@ JJFile* OpenAttachFile(LPTSTR Name, BOOL bAllowRead /*= FALSE*/)
+ 	else
+ 		DeMacifyName(Name);
+ 
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		bLongFileNameSupport ? "ANHANG Datei: nach DeMacifyName32"
++			: "ANHANG Datei: nach DeMacifyName (8+3!)",
++		Name, (long)strlen(Name));
++
+ 	if (CheckName(DirName, Name, FinalFname, bLongFileNameSupport))
+ 	{
+ 		FileName = strrchr(FinalFname, SLASH) + 1;
+ 		wsprintf(buf, "%s%s%s", DirName,
+ 		((DirName[strlen(DirName) - 1] == SLASH)? "" : SLASHSTR), FileName);
+ 
++		//	ANHANG-Marke 7: so heisst die Datei am Ende wirklich. Wer nur
++		//	eine Zeile aus dem Log braucht, nimmt diese.
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			"ANHANG Datei: WIRD GESCHRIEBEN ALS", buf, (long)strlen(FileName));
++
+ 		// Let's get the file
+ 		ATFile = DEBUG_NEW_NOTHROW JJFile;
+ 		if (ATFile)
+@@ -1375,6 +1399,12 @@ JJFile* OpenEmbeddedFile(char* Name)
+ 	FindClose(findHandle);
+ 
+ 
++	//	ANHANG-Marke 6: der Name, wie er bei der Datei ankommt - vor und
++	//	nach der Zeichenbereinigung. DeMacifyName32 kappt bei 255 Zeichen,
++	//	DeMacifyName sogar auf 8+8 (Befund AN-1).
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		"ANHANG Datei: Name vor DeMacify", Name, (long)strlen(Name));
++
+ 	// Turn the macintosh name into something more useful
+ 	BOOL bLongFileNameSupport = ::LongFileSupportMT(DirName);
+ 	if (bLongFileNameSupport)
+@@ -1382,12 +1412,22 @@ JJFile* OpenEmbeddedFile(char* Name)
+ 	else
+ 		DeMacifyName(Name);
+ 
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		bLongFileNameSupport ? "ANHANG Datei: nach DeMacifyName32"
++			: "ANHANG Datei: nach DeMacifyName (8+3!)",
++		Name, (long)strlen(Name));
++
+ 	if (CheckName(DirName, Name, FinalFname, bLongFileNameSupport))
+ 	{
+ 		FileName = strrchr(FinalFname, SLASH) + 1;
+ 		wsprintf(buf, "%s%s%s", DirName,
+ 		((DirName[strlen(DirName) - 1] == SLASH)? "" : SLASHSTR), FileName);
+ 
++		//	ANHANG-Marke 7: so heisst die Datei am Ende wirklich. Wer nur
++		//	eine Zeile aus dem Log braucht, nimmt diese.
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			"ANHANG Datei: WIRD GESCHRIEBEN ALS", buf, (long)strlen(FileName));
++
+ 		// Let's get the file
+ 		EBFile = DEBUG_NEW_NOTHROW JJFile;
+ 		if (!EBFile || EBFile->Open(buf, O_CREAT | O_WRONLY) < 0)
+@@ -1641,12 +1681,34 @@ BoundaryType GenericReader::ReadIt(CObArray& MimeStates, char* buf, LONG bSize)
+ 		if (!*fName)
+ 			strncpy(fName, CRString(IDS_UNTITLED), _MAX_PATH - 1);
+ 	
++		//	ANHANG-Marke 4: woher der Name kommt. Steht hier "aus dem
++		//	Betreff", dann hatte die Nachricht gar kein filename - typisch
++		//	fuer RFC 2231 (Befund AN-1, dritter Teil). Der Betreff ist
++		//	nur subj[32], also 31 Zeichen.
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			AE ? "ANHANG Name: aus filename/name"
++				: "ANHANG Name: KEIN filename - aus dem Betreff oder Untitled",
++			fName, (long)strlen(fName));
++	
+ 		if (mm.Find(ms))
+ 		{
+ 			mm.SetExtension(fName);
++			//	ANHANG-Marke 5: das Sicherheitsnetz. Traegt MIMEMap die Endung
++			//	nach oder nicht? Es tut es NICHT, wenn der MIME-Typ nicht in
++			//	[Mappings] steht (application/octet-stream steht dort nicht)
++			//	oder hinter dem letzten Punkt 1 bis 3 Zeichen stehen.
++			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++				"ANHANG Name: nach MIMEMap::SetExtension", fName,
++				(long)strlen(fName));
+ 			if (mm.m_bDelete)
+ 				bDeleteAttachment = TRUE;
+ 		}
++		else
++		{
++			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++				"ANHANG Name: MIMEMap kennt den Typ NICHT, keine Endung nachgetragen",
++				fName, (long)strlen(fName));
++		}
+ 	
+ 		if (GetIniShort(IDS_INI_AUTO_ATTACHED_DELETE_VCF))
+ 		{
+diff --git a/Eudora71/QCUtils/public/inc/debug.h b/Eudora71/QCUtils/public/inc/debug.h
+index 78ff3e6..8b9608c 100644
+--- a/Eudora71/QCUtils/public/inc/debug.h
++++ b/Eudora71/QCUtils/public/inc/debug.h
+@@ -36,6 +36,13 @@ const DebugMaskType DEBUG_MASK_SEARCH		= 0x4000;	// Searching and search indexin
+ const DebugMaskType DEBUG_MASK_MISC			= 0x8000;	// Miscellaneous .. This can be used in cases, where the developer does not 
+ 														// want/need to create new log levels. Baically if you need to log information once or so. 
+ 
++//	Anhaenge: der Weg eines Dateinamens vom Kopf der Nachricht bis zur Datei
++//	auf der Platte (Befund AN-1). Einschalten mit LogLevel += 65536 in der
++//	[Settings]-Gruppe von eudora.ini; die Voreinstellung 25759 wird damit
++//	zu 91295. Alles, was darueber in eudora.log landet, faengt mit "ANHANG"
++//	an - "grep ANHANG eudora.log" zeigt den ganzen Weg.
++const DebugMaskType DEBUG_MASK_ATTACH		= 0x10000;
++
+ class JJFileMT;
+ 
+ class AFX_EXT_CLASS QCLogFileMT
+@@ -97,4 +104,13 @@ inline __declspec( dllexport )  void PutDebugLog(DebugMaskType ID, LPCTSTR Buffe
+ #endif
+ 
+ 
++//	Schreibt eine Zeile in den Log und macht dabei Steuerzeichen SICHTBAR:
++//	CR wird zu <CR>, LF zu <LF>, Tabulator zu <TAB>, alles andere unter 32
++//	zu <XX> in hexadezimal. Genau darauf kommt es bei Befund AN-1 an - ohne
++//	das saehe eine Faltung im Dateinamen im Log wie ein Zeilenumbruch aus.
++//	lZahl wird angehaengt, wenn sie nicht -1 ist (zum Beispiel die Laenge).
++__declspec( dllexport )  void PutDebugLogSichtbar(DebugMaskType ID, LPCTSTR pWo,
++												  LPCTSTR pWas, long lZahl = -1);
++
++
+ #endif // _EUDORA_DEBUG_H_
+diff --git a/Eudora71/QCUtils/src/debug.cpp b/Eudora71/QCUtils/src/debug.cpp
+index a944bdc..cdbf22f 100644
+--- a/Eudora71/QCUtils/src/debug.cpp
++++ b/Eudora71/QCUtils/src/debug.cpp
+@@ -147,6 +147,48 @@ void PutDebugLog(DebugMaskType ID, LPCTSTR Buffer, int Length /* = -1*/)
+ #endif
+ 
+ 
++//	Schreibt eine Zeile in den Log und macht Steuerzeichen sichtbar.
++//	Siehe debug.h. Absichtlich mit festem Puffer und ohne CString: diese
++//	Funktion laeuft mitten im Empfangsweg und darf nichts anfassen, was
++//	dort schiefgehen koennte.
++void PutDebugLogSichtbar(DebugMaskType ID, LPCTSTR pWo, LPCTSTR pWas,
++						 long lZahl /* = -1 */)
++{
++	char			szZeile[1024];
++	char *			d = szZeile;
++	char *			e = szZeile + sizeof(szZeile) - 8;
++	const char *	s;
++
++	if ((QCLogFileMT::DebugMask & ID) == 0 || !QCLogFileMT::s_pLogFile)
++		return;
++
++	for (s = pWo ? pWo : ""; *s && d < e; ++s)
++		*d++ = *s;
++
++	if (pWas)
++	{
++		if (d < e) *d++ = ' ';
++		if (d < e) *d++ = '[';
++		for (s = pWas; *s && d < e; ++s)
++		{
++			unsigned char c = (unsigned char)*s;
++			if      (c == 13) { d += sprintf(d, "<CR>");  }
++			else if (c == 10) { d += sprintf(d, "<LF>");  }
++			else if (c ==  9) { d += sprintf(d, "<TAB>"); }
++			else if (c <  32) { d += sprintf(d, "<%02X>", c); }
++			else              { *d++ = (char)c; }
++		}
++		if (d < e) *d++ = ']';
++	}
++
++	if (lZahl != -1 && d < e)
++		d += sprintf(d, " (%ld)", lZahl);
++
++	*d = 0;
++	QCLogFileMT::WriteDebugLog(ID, szZeile);
++}
++
++
+ BOOL QCLogFileMT::DebugMaskSet(DebugMaskType Mask)
+ { 
+ 	return ((DebugMask & Mask) != 0); 
