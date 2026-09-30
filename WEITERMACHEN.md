@@ -49,7 +49,14 @@
 > Fall wird schlechter. Herleitung mit allen Messungen in **BEFUNDE.md, AN-1**;
 > Arbeitsschritte in **AUFGABEN.md, B5**.
 >
-> **Auf eine Beispielnachricht ist nicht zu warten** — es gibt keine, und
+> **Prüfdaten liegen bereit.** `perl tools/anhang-pruefdaten.pl --pop` liefert
+> sechs Nachrichten mit einem PDF im Anhang auf `127.0.0.1:11110` aus, eine je
+> Ursache — Konto in Eudora: Server `127.0.0.1`, Port `11110`, Benutzer `pruef`,
+> SSL aus. Eine `.eml` in eine `.mbx` zu kopieren reicht **nicht**: der Fehler
+> sitzt im Empfangsweg, die Nachricht muss abgerufen werden. Ist Fall 00 heil
+> und sind 01 bis 05 kaputt, ist AN-1 am laufenden Programm bestätigt.
+>
+> **Auf eine echte Beispielnachricht ist nicht zu warten** — es gibt keine, und
 > Gregor kann keine liefern. Er hat es im Betrieb gesehen: *„immer wieder
 > Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der
 > Dateiname ist nicht vollständig."* Die Behebung hängt nicht daran.

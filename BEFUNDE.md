@@ -6317,6 +6317,59 @@ gleichermaßen**, weil beide Zweige dieselbe Zerlegung in zwei Abschriften haben
 > und was nicht, steht im Abschnitt „Was zu ändern wäre" weiter unten und in
 > `tools/patches/anhangnamen-faltung.md`.
 
+### Vorab, weil danach gefragt wurde: was „Faltung" ist und wo der Umbruch sitzt
+
+Eine Kopfzeile einer E-Mail ist `Name: Wert` und endet mit `CRLF`. Weil sie nach
+RFC 5322 2.1.1 nicht beliebig lang werden soll, darf der Absender sie **falten**:
+er setzt ein `CRLF` ein und lässt die nächste Zeile mit einem **Leerzeichen oder
+Tabulator** beginnen. Genau dieses führende Leerzeichen ist das Zeichen dafür,
+dass die Zeile noch zur vorigen gehört. Der Empfänger macht es rückgängig
+(„unfolding"): `CRLF` weg, das Weiß behalten — fertig ist der ursprüngliche Wert.
+
+Ungefaltet:
+
+```
+Content-Disposition: attachment; filename="Rechnung.pdf"
+```
+
+Gefaltet — **dieselbe** Kopfzeile, nur auf zwei Zeilen:
+
+```
+Content-Disposition: attachment;
+ filename="Rechnung.pdf"
+```
+
+Das kann Eudora seit jeher; der Umbruch sitzt hier **zwischen** zwei Teilen,
+außerhalb der Anführungszeichen.
+
+**Der Fehler tritt auf, wenn der Umbruch *im Dateinamen selbst* landet** — und
+das passiert, sobald der Name so lang ist, dass er allein die Zeile sprengt.
+Dann faltet der Absender an einem Leerzeichen **innerhalb** der
+Anführungszeichen:
+
+```
+Content-Disposition: attachment;
+ filename="Angebot Nr 4711 fuer die Stadtwerke Musterstadt
+ Abrechnungszeitraum 2025.pdf"
+                   ^
+                   hier steht das CRLF, mitten im Dateinamen
+```
+
+Der Name ist `Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum
+2025.pdf` — ein einziger Name, nur über zwei Zeilen geschrieben. Eudora hört am
+CR auf zu lesen und behält `Angebot Nr 4711 fuer die Stadtwerke Musterstadt`.
+Alles hinter dem Umbruch, **also auch das `.pdf`**, wird weggeworfen.
+
+Deshalb wirkt es wie eine Längengrenze, ist aber keine: **nicht die Länge
+schneidet ab, sondern der Umbruch** — und lang ist nur der Grund, warum der
+Absender überhaupt umbricht.
+
+> **Das betrifft nur den Empfang, und nur Anhänge sind das Sichtbare daran.**
+> Der Umbruch steht im Kopf der Nachricht, nicht im Anhang selbst; die Datei
+> kommt vollständig an. Verloren geht nur ihr Name. Eudoras eigener Versand
+> faltet nicht (`sendmail.cpp:2392`), löst den Fehler beim Empfänger also nicht
+> aus.
+
 ### Kurz: es liegt nicht an der Länge
 
 Der naheliegende Verdacht ist falsch. Ein Dateiname mit 76 Zeichen kommt
@@ -6619,17 +6672,67 @@ Behebung für immer als Schaden. Das Werkzeug erkennt am Markierungssatz des
 Patches selbst, ob die Behebung schon im Baum steht, und bildet dann auch das
 geänderte `WriteHeaderToken` nach.
 
+### Nachstellen ohne echte Post — und ohne Visual Studio zum Erzeugen
+
+**Eine `.eml` in eine `.mbx` zu kopieren reicht nicht.** Der Fehler sitzt im
+*Empfangs*weg (`CPOP::WriteMessageToMBX_` → `HeaderDesc::Read` → `Lex822`).
+Liegt die Nachricht schon in der Mailbox, läuft dieser Weg nie, und der Anhang
+wird gar nicht erst geschrieben. Die Nachricht muss **abgerufen** werden.
+
+Deshalb bringt `tools/anhang-pruefdaten.pl` beides mit: die sechs Nachrichten
+**und** einen winzigen POP3-Server, der sie ausliefert — kein Netz, keine
+Zugangsdaten, alles auf `127.0.0.1`.
+
+```
+perl tools/anhang-pruefdaten.pl              # zeigt die sechs Faelle
+perl tools/anhang-pruefdaten.pl --erzeugen   # schreibt die .eml-Dateien
+perl tools/anhang-pruefdaten.pl --pop        # liefert sie auf 127.0.0.1:11110
+```
+
+Konto in Eudora: Server `127.0.0.1`, Port `11110`, Benutzer `pruef`, Kennwort
+beliebig, **SSL aus**. Abrufen, dann ins Anhangverzeichnis sehen. Der Server
+löscht nie etwas — man kann beliebig oft abrufen.
+
+| | |
+|---|---|
+| **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
+| **alle sechs heil** | `anhangnamen-faltung.patch` und B5.2 bis B5.5 sind durch |
+| **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+
+Der POP3-Server ist in perl geschrieben und läuft ohne Compiler. Was er **nicht**
+kann: er ersetzt keinen Bau. Er stellt den Fehler nach, er behebt ihn nicht.
+
+### Der Fingerabdruck in der Mailbox-Datei
+
+Wer den Fehler in **echter** Post nachweisen will, braucht das Original nicht.
+Eudora schreibt die Kopfzeile in die `.mbx` zurück (`WriteHeaderToken`,
+`lex822.cpp:402`) — und setzt dabei im Fehlerfall **ein Anführungszeichen an die
+falsche Stelle**. Gemessen, Fall 2 des Prüfstands:
+
+```
+auf der Leitung:                      in der .mbx:
+ filename="Angebot ... Musterstadt     filename="Angebot ... Musterstadt"
+ Abrechnungszeitraum 2025.pdf"         Abrechnungszeitraum 2025.pdf"
+```
+
+Zwei schließende Anführungszeichen: eines am Zeilenende **vor** einer Zeile, die
+mit Leerzeichen oder Tabulator beginnt, und das ursprüngliche am Ende. Ein Byte
+mehr als auf der Leitung (129 statt 128). **Danach lässt sich in einer `.mbx`
+suchen** — das findet die betroffenen Nachrichten, ohne dass jemand die
+Originale aufheben musste.
+
 ### Was ausdrücklich **nicht** geprüft ist
 
-- Welche der vier Ursachen im Betrieb zuschlägt. Es liegt **keine
-  Beispielnachricht vor, und es wird auch keine geben** — Gregor am 30.09.:
-  *„Ich kann dir jetzt keine Beispielnachricht geben. Mir ist es nur
-  aufgefallen, dass … immer wieder Dateien im Attachment gespeichert werden,
-  bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht
-  vollständig."* **Darauf ist nicht zu warten.** Eine `.eml` würde es in einem
-  Zug klären, wenn sie einmal auftaucht; bis dahin ist die Beobachtung selbst
-  die Grundlage, und sie deckt sich mit allen vier gemessenen Ursachen. Die
-  Behebung hängt nicht daran: B5.1 bis B5.4 sind in sich begründet.
+- Welche der vier Ursachen im Betrieb zuschlägt. Es liegt **keine echte
+  Beispielnachricht vor**. Gregor am 30.09.: *„Ich kann dir jetzt keine
+  Beispielnachricht geben. Mir ist es nur aufgefallen, dass … immer wieder
+  Dateien im Attachment gespeichert werden, bei denen zum Beispiel PDF oder Doc
+  … fehlt und der Dateiname ist nicht vollständig."* **Darauf ist nicht zu
+  warten**, und es ist auch nicht mehr nötig: seit dem 30.09. liegen **sechs
+  erzeugte Nachrichten** bereit, eine je Ursache, mit einem gültigen PDF im
+  Anhang — `tools/pruefdaten/anhang-faltung/`, erzeugt und ausgeliefert von
+  `tools/anhang-pruefdaten.pl`. Taucht später doch echte Post auf, klärt sie
+  nur noch, welche Ursache im Betrieb überwiegt.
 - Der Sendeweg. `sendmail.cpp:2392` schreibt `filename="…"` in **eine** Zeile,
   ohne Faltung; Eudoras eigene Nachrichten lösen den Fehler beim Empfänger also
   nicht aus (bei sehr langen Namen verletzt das dafür die Zeilenlänge aus

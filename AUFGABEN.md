@@ -252,6 +252,40 @@ und nichts gestartet worden.
    das Gerüst für den Empfangspfad schon.
 5. Dann B5.2 bis B5.4; das sind zusammen vier Zeilen und zwei Zahlen.
 
+#### Prüfdaten liegen bereit — sechs Nachrichten, ein POP3-Server
+
+Gregor hat angeboten, auf dem Windows-Rechner Beispiele herauszusuchen oder
+Testdaten zu erzeugen. **Das ist erledigt**, es braucht keine echte Post mehr:
+
+```
+perl tools/anhang-pruefdaten.pl              # zeigt die sechs Faelle
+perl tools/anhang-pruefdaten.pl --erzeugen   # schreibt die .eml-Dateien
+perl tools/anhang-pruefdaten.pl --pop        # liefert sie auf 127.0.0.1:11110
+```
+
+Sechs Nachrichten mit einem gültigen einseitigen PDF im Anhang, eine je Ursache,
+in `tools/pruefdaten/anhang-faltung/`. **Eine `.eml` in eine `.mbx` zu kopieren
+reicht nicht** — der Fehler sitzt im Empfangsweg, die Nachricht muss wirklich
+abgerufen werden. Dafür der mitgelieferte POP3-Server: kein Netz, keine
+Zugangsdaten, alles auf `127.0.0.1`.
+
+Konto in Eudora: Server `127.0.0.1`, Port `11110`, Benutzer `pruef`, Kennwort
+beliebig, **SSL aus**. Abrufen, dann ins Anhangverzeichnis sehen.
+
+| | |
+|---|---|
+| **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
+| **alle sechs heil** | B5.1 bis B5.5 sind durch |
+| **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+
+Der Server löscht nie etwas — beliebig oft abrufbar. Einzelheiten:
+`tools/pruefdaten/LIESMICH.md`.
+
+**In echter Post erkennt man es am doppelten Anführungszeichen** in der
+`.mbx`-Datei: eines am Zeilenende vor einer Zeile, die mit Leerzeichen oder
+Tabulator beginnt, und das ursprüngliche am Ende. Eudora setzt es im Fehlerfall
+dorthin. Siehe BEFUNDE.md AN-1, „Der Fingerabdruck in der Mailbox-Datei".
+
 #### Nachprüfen ohne Visual Studio
 
 ```
