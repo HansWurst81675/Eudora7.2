@@ -3,9 +3,10 @@ use strict; use warnings;
 # Faehrt Lex822State::Lex822() ausserhalb von Eudora und zeigt, was beim
 # Empfang aus einem Dateinamen im Anhang wird - ohne Visual Studio, ohne MFC.
 #
-#   perl tools/kopfzeile-pruefen.pl            # alle Faelle, Kurzfassung
-#   perl tools/kopfzeile-pruefen.pl --lang     # zusaetzlich jede einzelne Marke
-#   perl tools/kopfzeile-pruefen.pl --behalten # den erzeugten Quelltext liegen lassen
+#   perl tools/kopfzeile-pruefen.pl             # alle Faelle, Kurzfassung
+#   perl tools/kopfzeile-pruefen.pl --lang      # zusaetzlich jede einzelne Marke
+#   perl tools/kopfzeile-pruefen.pl --vorschlag # mit der vorgeschlagenen Behebung
+#   perl tools/kopfzeile-pruefen.pl --behalten  # den erzeugten Quelltext liegen lassen
 #
 # WARUM ES DIESES WERKZEUG GIBT
 #
@@ -35,6 +36,24 @@ use strict; use warnings;
 # Weil der Quelltext bei jedem Lauf frisch aus dem Baum geholt wird, kann er
 # nicht veralten: wer Lex822() aendert, prueft hier sofort die Wirkung.
 #
+# DER VORSCHLAG (--vorschlag)
+#
+# Mit --vorschlag wird die Behebung aus tools/patches/anhangnamen-faltung.md
+# VOR dem Uebersetzen in den ausgelesenen Text eingesetzt - der Baum selbst
+# bleibt unberuehrt. So laesst sich die Wirkung messen, bevor jemand mit
+# Visual Studio sie uebersetzt. Passt der Suchtext nicht mehr, bricht das
+# Werkzeug ab statt still das Alte zu messen; das ist der Fall, sobald die
+# Behebung wirklich im Baum steht - dann ist --vorschlag ueberfluessig.
+#
+# MITGEMESSEN WIRD DER RUECKSCHRIEB
+#
+# WriteHeaderToken (lex822.cpp:402) schreibt jede Marke in die Mailbox-Datei,
+# eine QText-Marke dabei in Anfuehrungszeichen. Eine Aenderung am Zerleger
+# aendert also nicht nur den Dateinamen, sondern auch, was in der Mailbox
+# landet. Das Werkzeug bildet diesen Rueckschrieb nach und vergleicht ihn mit
+# dem, was auf der Leitung ankam. "Rueckschrieb byteidentisch" heisst: die
+# Aenderung fasst die gespeicherte Nachricht nicht an.
+#
 # GRENZEN, damit niemand die Ausgabe fuer mehr nimmt als sie ist
 #   * Geprueft wird der Weg bis zum Attributwert. Was OpenAttachFile,
 #     DeMacifyName32 und MIMEMap::SetExtension danach noch tun, steht hier
@@ -51,11 +70,12 @@ use strict; use warnings;
 #
 # Bewusst ohne Escape-Sequenzen fuer Steuerzeichen geschrieben.
 
-my ($lang, $behalten);
+my ($lang, $behalten, $vorschlag);
 for my $a (@ARGV) {
-  if    ($a eq '--lang')     { $lang = 1 }
-  elsif ($a eq '--behalten') { $behalten = 1 }
-  else                       { die "unbekannte Option: $a\n" }
+  if    ($a eq '--lang')      { $lang = 1 }
+  elsif ($a eq '--behalten')  { $behalten = 1 }
+  elsif ($a eq '--vorschlag') { $vorschlag = 1 }
+  else                        { die "unbekannte Option: $a\n" }
 }
 
 my $wurzel = `git rev-parse --show-toplevel`;
@@ -86,6 +106,71 @@ printf "uebernommen: %d Zeilen Aufzaehlungen, %d Zeilen Tabellen, %d Zeilen Lex8
        ($enums =~ tr/\n//), ($tabellen =~ tr/\n//), ($lexer =~ tr/\n//);
 
 # ---------------------------------------------------------------------------
+# Der Vorschlag. Suchtext und Ersatztext stehen hier im Klartext, damit
+# tools/patches/anhangnamen-faltung.patch und dieses Werkzeug nicht
+# auseinanderlaufen koennen: passt der Suchtext nicht mehr, bricht es ab.
+# ---------------------------------------------------------------------------
+my $SUCHE = <<'ALT';
+						case CR822:
+							returnToken = QText;
+							State = CollectLine;
+							break;
+						
+						default:
+							ADD(*Spot++);
+							break;
+					}
+				break;
+ALT
+
+my $ERSATZ = <<'NEU';
+						case CR822:
+							//	Eine Faltung beendet die Zeichenkette NICHT: nach RFC 5322
+							//	2.2.3 gehoert CRLF gefolgt von Leerzeichen oder Tabulator
+							//	noch zur selben Kopfzeile. Ob eine folgt, ist am CR noch
+							//	nicht zu sehen - das dritte Zeichen liegt erst nach dem
+							//	naechsten LexFill im Puffer. Also wird das CR mitgenommen
+							//	(so haelt es CollectText seit jeher) und am LF entschieden.
+							//	Die Pruefung auf CR822 ist noetig, weil QUOTE822 hierher
+							//	durchfaellt.
+							if (charClass == CR822 && InStructure && nextClass == LF822)
+							{
+								ADD(*Spot++);
+								break;
+							}
+							returnToken = QText;
+							State = CollectLine;
+							break;
+						
+						case LF822:
+							//	Hierher kommt nur ein Umbruch, den die Faltungsregel
+							//	oben NICHT zu SPACE822 gemacht hat: die Zeichenkette ist
+							//	unbeendet (kaputte Kopfzeile). Abbrechen wie bisher.
+							//	Das CR von oben bleibt in der Marke stehen;
+							//	WriteHeaderToken setzt es hinter das schliessende
+							//	Anfuehrungszeichen, und AddAttribute schneidet es vom
+							//	Wert ab. So bleibt der Rueckschrieb byteidentisch.
+							returnToken = QText;
+							State = CollectLine;
+							break;
+						
+						default:
+							ADD(*Spot++);
+							break;
+					}
+				break;
+NEU
+
+if ($vorschlag) {
+  my $n = ($lexer =~ s/\Q$SUCHE\E/$ERSATZ/);
+  die "--vorschlag: der Suchtext passt nicht mehr auf lex822.cpp.\n"
+    . "Entweder steht die Behebung schon im Baum (dann ist --vorschlag ueberfluessig),\n"
+    . "oder CollectQText ist anders geaendert worden. Nachsehen, nicht raten.\n"
+    unless $n == 1;
+  print "VORSCHLAG eingesetzt (tools/patches/anhangnamen-faltung.patch)\n";
+}
+
+# ---------------------------------------------------------------------------
 # Faelle. soll = der Name, den der Absender gemeint hat.
 #        stand = was dieser Baum heute daraus macht ("" heisst: kein Attribut).
 # ---------------------------------------------------------------------------
@@ -95,7 +180,9 @@ my @faelle = (
     kopf => qq{Content-Disposition: attachment; filename="Rechnung.pdf"\r\n\r\n},
     soll  => 'Rechnung.pdf',
     stand => 'Rechnung.pdf',
-    wort  => 'so verschickt Eudora selbst, sendmail.cpp:2392' },
+    wort  => 'so verschickt Eudora selbst, sendmail.cpp:2392',
+    gr    => 'TRUE',
+    rs    => 'gleich' },
 
   { name => 'gefaltet innerhalb der Anfuehrungszeichen',
     kopf => qq{Content-Disposition: attachment;\r\n}
@@ -103,20 +190,26 @@ my @faelle = (
           . qq{ Abrechnungszeitraum 2025.pdf"\r\n\r\n},
     soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf',
     stand => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt',
-    wort  => 'Befund AN-1, erster Teil: CR beendet die Zeichenkette' },
+    wort  => 'Befund AN-1, erster Teil: CR beendet die Zeichenkette',
+    gr    => 'FALSE',
+    rs    => 'anders' },
 
   { name => 'derselbe Name, ungefaltet',
     kopf => qq{Content-Disposition: attachment;\r\n}
           . qq{\tfilename="Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf"\r\n\r\n},
     soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf',
     stand => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf',
-    wort  => 'Gegenprobe: an der Laenge liegt es nicht' },
+    wort  => 'Gegenprobe: an der Laenge liegt es nicht',
+    gr    => 'TRUE',
+    rs    => 'gleich' },
 
   { name => '300 Zeichen, ungefaltet',
     kopf => qq{Content-Disposition: attachment; filename="$LANG.pdf"\r\n\r\n},
     soll  => "$LANG.pdf",
     stand => 'A' x 254,
-    wort  => 'Befund AN-1, zweiter Teil: Token[256] laeuft voll' },
+    wort  => 'Befund AN-1, zweiter Teil: Token[256] laeuft voll',
+    gr    => 'FALSE',
+    rs    => 'anders' },
 
   { name => 'RFC 2231, auf zwei Teile verteilt',
     kopf => qq{Content-Disposition: attachment;\r\n}
@@ -124,7 +217,50 @@ my @faelle = (
           . qq{\tfilename*1=" Musterstadt 2025.pdf"\r\n\r\n},
     soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf',
     stand => '',
-    wort  => 'Befund AN-1, dritter Teil: RFC 2231 kennt der Baum nicht' },
+    wort  => 'Befund AN-1, dritter Teil: RFC 2231 kennt der Baum nicht',
+    gr    => 'TRUE',
+    rs    => 'gleich' },
+
+  # --- Rueckfallproben: was durch eine Aenderung an CollectQText kaputtgehen
+  #     koennte. Sie tragen kein filename, geprueft werden grokked und der
+  #     Rueckschrieb. Wer die Behebung einbaut, muss diese fuenf gruen halten.
+
+  { name => 'R1 Anfuehrungszeichen, danach eine weitere Kopfzeile',
+    kopf => qq{Content-Type: text/plain; charset="iso-8859-1"\r\n}
+          . qq{Content-Transfer-Encoding: base64\r\n\r\n},
+    soll => '', stand => '', gr => 'FALSE',
+    wort => 'die naechste Kopfzeile darf nicht verschluckt werden (grokked FALSE, weil der Treiber nur Content-Disposition kennt)',
+    rs    => 'gleich' },
+
+  { name => 'R2 unbeendete Zeichenkette',
+    kopf => qq{Content-Disposition: attachment; filename="ohne Ende\r\n}
+          . qq{Content-Transfer-Encoding: base64\r\n\r\n},
+    soll => 'ohne Ende', stand => 'ohne Ende', gr => 'TRUE',
+    wort => 'kaputte Eingabe: der Umbruch MUSS die Zeichenkette beenden, sonst frisst sie die naechste Kopfzeile',
+    rs    => 'anders' },
+
+  { name => 'R3 Faltung AUSSERHALB der Anfuehrungszeichen',
+    kopf => qq{Content-Disposition: attachment;\r\n}
+          . qq{ filename="Rechnung.pdf"\r\n\r\n},
+    soll => 'Rechnung.pdf', stand => 'Rechnung.pdf', gr => 'TRUE',
+    wort => 'die gewoehnliche Faltung - ging schon immer und muss weiter gehen',
+    rs    => 'gleich' },
+
+  { name => 'R4 Faltung mit Tabulator statt Leerzeichen',
+    kopf => qq{Content-Disposition: attachment;\r\n}
+          . qq{\tfilename="Angebot Nr 4711 fuer die Stadtwerke\r\n}
+          . qq{\tMusterstadt 2025.pdf"\r\n\r\n},
+    soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf',
+    stand => 'Angebot Nr 4711 fuer die Stadtwerke',
+    gr    => 'FALSE',
+    wort  => 'derselbe Fehler, gefaltet mit Tabulator - RFC 5322 erlaubt beides',
+    rs    => 'anders' },
+
+  { name => 'R5 leeres Anfuehrungszeichenpaar',
+    kopf => qq{Content-Disposition: attachment; filename=""\r\n\r\n},
+    soll => '', stand => '=', gr => 'TRUE',
+    wort => 'Befund AN-1, vierter Teil: die leere Marke traegt das Byte der VORIGEN Marke - filename="" wird zu =',
+    rs    => 'gleich' },
 );
 
 # ---------------------------------------------------------------------------
@@ -138,9 +274,10 @@ sub cstring {
 }
 
 my $faelle_c = join "\n", map {
-  sprintf qq{\tLauf(%s, %s, %s, %s, %s);},
+  sprintf qq{\tLauf(%s, %s, %s, %s, %s, %s, %s);},
           cstring($_->{name}), cstring($_->{kopf}),
-          cstring($_->{soll}), cstring($_->{stand}), cstring($_->{wort})
+          cstring($_->{soll}), cstring($_->{stand}),
+          cstring($_->{wort}), cstring($_->{gr}), cstring($_->{rs})
 } @faelle;
 
 my $treiber = <<'TREIBER';
@@ -174,8 +311,76 @@ static void Kurz(const char* s)
 	printf("\"%.30s\"...%d Zeichen...\"%s\"", s, n, s + n - 12);
 }
 
+// Bildet WriteHeaderToken (lex822.cpp:402) nach: was landet in der
+// Mailbox-Datei? Eine QText-Marke wird dort in Anfuehrungszeichen geschrieben.
+static char g_zurueck[8192];
+static int  g_zlen;
+
+static void Zurueck(const char* p, int n)
+{
+	int i;
+	for (i = 0; i < n && g_zlen < (int)sizeof(g_zurueck) - 1; ++i)
+		g_zurueck[g_zlen++] = p[i];
+	g_zurueck[g_zlen] = 0;
+}
+
+static void Rueckschrieb(Token822Enum t, const char* pToken, int nLen)
+{
+	switch (t)
+	{
+	case EndOfMessage:  Zurueck("\r\n\r\n", 4); break;
+	case EndOfHeader:
+		//	Lex822 hat die Marke selbst schon ueber WriteHeaderToken(Special)
+		//	geschrieben (lex822.cpp:346), danach kommt noch ein CRLF dazu -
+		//	daher beides.
+		Zurueck(pToken, nLen); Zurueck("\r\n", 2); break;
+	case ErrorToken:                               break;
+	case QText:
+#ifdef VORSCHLAG
+		//	Zweiter Teil des Vorschlags, lex822.cpp:432: ein CR am Ende der
+		//	Marke stammt aus einer unbeendeten Zeichenkette und gehoert
+		//	HINTER das schliessende Anfuehrungszeichen.
+		if (nLen && pToken[nLen - 1] == '\r')
+		{
+			Zurueck("\"", 1); Zurueck(pToken, nLen - 1); Zurueck("\"", 1);
+			Zurueck("\r", 1);
+			break;
+		}
+#endif
+		Zurueck("\"", 1); Zurueck(pToken, nLen); Zurueck("\"", 1); break;
+	default:            Zurueck(pToken, nLen);     break;
+	}
+}
+
+// Zweiter Teil des Vorschlags: HeaderDesc::AddAttribute (header.cpp:477) macht
+// aus einer Faltung im Attributwert ein einzelnes Leerzeichen (RFC 5322 3.2.2).
+// Der Rueckschrieb ist da schon passiert - die Mailbox-Datei bleibt unberuehrt.
+static void Entfalten(char* s)
+{
+	char* d = s;
+	{
+		//	Dritter Teil des Vorschlags: ein CR am Ende stammt aus einer
+		//	unbeendeten Zeichenkette und gehoert nicht in den Wert.
+		int n = (int)strlen(s);
+		if (n && s[n - 1] == '\r') s[n - 1] = 0;
+	}
+	while (*s)
+	{
+		if (s[0] == '\r' && s[1] == '\n' && (s[2] == ' ' || s[2] == '\t'))
+		{
+			s += 2;
+			while (*s == ' ' || *s == '\t') ++s;
+			*d++ = ' ';
+			continue;
+		}
+		*d++ = *s++;
+	}
+	*d = 0;
+}
+
 static void Lauf(const char* szWas, const char* szKopf,
-				 const char* szSoll, const char* szStand, const char* szWort)
+				 const char* szSoll, const char* szStand, const char* szWort,
+				 const char* szGrokked, const char* szRueck)
 {
 	Lex822State l(szKopf);
 	char attributeName[32];
@@ -186,6 +391,8 @@ static void Lauf(const char* szWas, const char* szKopf,
 
 	attributeName[0] = 0;
 	filename[0] = 0;
+	g_zurueck[0] = 0;
+	g_zlen = 0;
 
 	if (g_lang)
 	{
@@ -196,6 +403,7 @@ static void Lauf(const char* szWas, const char* szKopf,
 	for (i = 0; i < 4000; ++i)
 	{
 		Token822Enum t = l.Lex822();
+		Rueckschrieb(t, (char*)l.Token, l.TokenSpot);
 		t = l.WriteHeaderToken(t);
 		if (t == Comment) t = LinearWhite;
 		if (t == EndOfHeader || t == EndOfMessage || t == ErrorToken) break;
@@ -273,8 +481,12 @@ static void Lauf(const char* szWas, const char* szKopf,
 		}
 	}
 
+	Entfalten(filename);
+
 	{
 		const char* punkt = strrchr(filename, '.');
+		int nKopf = (int)strlen(szKopf);
+		int gleich = (g_zlen == nKopf && memcmp(g_zurueck, szKopf, (size_t)nKopf) == 0);
 		int wie_stand = (strcmp(filename, szStand) == 0);
 		int heil      = (strcmp(filename, szSoll)  == 0);
 
@@ -282,6 +494,31 @@ static void Lauf(const char* szWas, const char* szKopf,
 		printf("  soll   "); Kurz(szSoll);   printf("  (%d Zeichen)\n", (int)strlen(szSoll));
 		printf("  ist    "); Kurz(filename); printf("  (%d Zeichen), Endung %s, grokked=%s\n",
 			   (int)strlen(filename), punkt ? punkt : "FEHLT", grokked ? "TRUE" : "FALSE");
+
+		if (strcmp(grokked ? "TRUE" : "FALSE", szGrokked) != 0)
+		{
+			printf("  -> ABWEICHUNG bei grokked: verzeichnet war %s\n", szGrokked);
+			g_abweichungen++;
+		}
+		if (!gleich && g_lang)
+		{
+			int i;
+			printf("  zurueck  ist: ");
+			for (i = 0; i < g_zlen; ++i)
+				putchar(g_zurueck[i] >= 32 ? g_zurueck[i] : '.');
+			printf("\n  zurueck soll: ");
+			for (i = 0; i < nKopf; ++i)
+				putchar(szKopf[i] >= 32 ? szKopf[i] : '.');
+			printf("\n");
+		}
+		printf("  zurueck %s (%d von %d Byte)%s\n",
+			   gleich ? "byteidentisch" : "abweichend", g_zlen, nKopf,
+			   gleich ? "" : "  <- so ist es heute");
+		if (strcmp(gleich ? "gleich" : "anders", szRueck) != 0)
+		{
+			printf("  -> ABWEICHUNG beim Rueckschrieb: verzeichnet war %s\n", szRueck);
+			g_abweichungen++;
+		}
 
 		if (heil)            printf("  -> heil\n");
 		else if (wie_stand)  printf("  -> kaputt, wie verzeichnet\n");
@@ -311,6 +548,15 @@ TREIBER
 $treiber =~ s/^FAELLE$/$faelle_c/m;
 $treiber =~ s/ANZAHL/scalar(@faelle)/e;
 
+# Steht die Behebung schon im Baum, muss auch das Rueckschrieb-Modell die
+# geaenderte Fassung nachbilden - sonst misst das Werkzeug gegen ein
+# WriteHeaderToken, das es so nicht mehr gibt. Erkannt am Markierungssatz aus
+# dem Patch; er steht in lex822.cpp und in ImapLex822.cpp.
+my $schon_drin = ($lexer =~ /Eine Faltung beendet die Zeichenkette NICHT/);
+print "Die Behebung steht bereits im Baum - das Rueckschrieb-Modell folgt ihr.\n"
+  if $schon_drin && !$vorschlag;
+my $schalter = ($vorschlag || $schon_drin) ? "#define VORSCHLAG 1"
+                                           : "// (ohne --vorschlag)";
 my $quelle = <<'KOPF' . $enums . "\n\n" . $tabellen . "\n" . <<'KLASSE' . $lexer . "\n" . $treiber;
 // ERZEUGT von tools/kopfzeile-pruefen.pl - nicht von Hand aendern.
 //
@@ -324,6 +570,7 @@ typedef unsigned char BYTE;
 typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
+SCHALTER
 
 KOPF
 
@@ -384,6 +631,8 @@ KLASSE
 my $dir = "$wurzel/tools/.kopfzeile";
 mkdir $dir unless -d $dir;
 my $cpp = "$dir/kopfzeile.cpp";
+$quelle =~ s/^SCHALTER$/$schalter/m;
+
 open my $fh, '>', $cpp or die "$cpp: $!\n";
 print $fh $quelle;
 close $fh;

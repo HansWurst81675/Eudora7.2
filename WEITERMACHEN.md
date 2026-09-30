@@ -15,6 +15,13 @@
 >
 > ### Nachtrag 30.09.2026 — Anhänge: abgeschnittene Dateinamen (**AN-1**)
 >
+> > **Zweiter Durchgang, eigener Branch `claude/an-1-anhangnamen`.** Für die
+> > eigentliche Ursache liegt jetzt ein **ausgearbeiteter und gemessener
+> > Patch** bereit: `tools/patches/anhangnamen-faltung.patch`. Er ist
+> > **nicht angewandt** — die Sitzung lief auf Android, ohne Windows und ohne
+> > Compiler. `git apply --check` läuft sauber gegen den unveränderten Baum.
+> > Die Arbeitsschritte stehen als **B5.1 bis B5.5** in `AUFGABEN.md`.
+>
 > Gregors Meldung: *„Prüfe, warum lange Dateinamen beim Attachment abgeschnitten
 > werden und die Endung z.B. pdf ganz fehlt."* **Untersucht, belegt,
 > dokumentiert — nicht behoben**, denn die Änderung sitzt im Zerleger des
@@ -29,9 +36,17 @@
 > `Lex822()` ist dort Zeile für Zeile dasselbe — und alle drei stecken
 > **doppelt** im Baum, einmal für POP und einmal für IMAP.
 >
-> Nachprüfbar ohne Visual Studio: `perl tools/kopfzeile-pruefen.pl`. Das
-> Werkzeug holt `Lex822()` bei jedem Lauf frisch aus dem Quelltext, kann also
-> nicht veralten. Herleitung mit allen Messungen in **BEFUNDE.md, AN-1**;
+> Dazu eine vierte Ursache, die erst beim Messen auffiel: die Marke wird beim
+> Neuanfang nicht geleert, deshalb wird `filename=""` zum Wert `=` — der Anhang
+> landet als Datei namens `=`. Eine Zeile je Zweig.
+>
+> Nachprüfbar ohne Visual Studio: `perl tools/kopfzeile-pruefen.pl`, zehn Fälle,
+> mit `--vorschlag` derselbe Lauf mit eingesetzter Behebung. Das Werkzeug holt
+> `Lex822()` bei jedem Lauf frisch aus dem Quelltext, kann also nicht veralten,
+> und vergleicht nicht nur den Dateinamen, sondern auch, was `WriteHeaderToken`
+> in die Mailbox-Datei schreiben würde. Gemessen: der gemeldete Fall geht von
+> **47 Zeichen ohne Endung** auf **76 Zeichen mit `.pdf`**, und kein anderer
+> Fall wird schlechter. Herleitung mit allen Messungen in **BEFUNDE.md, AN-1**;
 > Arbeitsschritte in **AUFGABEN.md, B5**.
 >
 > **Was fehlt: eine Beispielnachricht.** Welche der drei Ursachen Gregor
@@ -499,6 +514,7 @@ Nachgemessen in einer Linux-Umgebung mit perl 5.38, git 2.43, python 3.11:
 | Der Paketprüfer (`paket-pruefen.ps1`, PR-2.0) | im Klon liegen **101 PE-Dateien**, darunter `Bin/Release`. Ein Import-Leser lässt sich also gegen echte x86-Binärdateien entwickeln und messen. Nur die `.ps1` selbst läuft ohne PowerShell nicht. |
 | Doku und Nachrechnen | grep-Arbeit. Befund Z-1 hat gezeigt, dass 11 von rund 40 geprüften Angaben falsch waren — das ist keine Fleißarbeit. |
 | **Einzelne C++-Teile außerhalb des Programms fahren** | `tools/kopfzeile-pruefen.pl` holt `Lex822()` samt Tabellen **wörtlich** aus `lex822.cpp`, ersetzt nur die zwei Stellen, die ans Netz gehen, und übersetzt das mit `g++`. So ist Befund **AN-1** gemessen worden — ohne MFC, ohne MSBuild. Das geht überall dort, wo ein Stück Logik keine MFC-Klasse braucht. |
+| **Eine Behebung ausarbeiten und messen, ohne sie einzuspielen** | Derselbe Prüfstand kennt `--vorschlag`: er setzt den Patch vor dem Übersetzen in den ausgelesenen Text ein, der Baum bleibt unberührt. So entstand `tools/patches/anhangnamen-faltung.patch` — mit Soll/Ist über zehn Fälle und mit dem Rückschrieb in die Mailbox-Datei als zweitem Maßstab. Was bleibt: **übersetzt und gestartet ist nichts.** |
 
 **Braucht zwingend Windows mit Visual Studio 2022:**
 

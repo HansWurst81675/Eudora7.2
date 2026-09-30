@@ -124,7 +124,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **drei** Ursachen, alle drei Originalfehler, POP **und** IMAP | **offen** — nachprüfbar mit `tools/kopfzeile-pruefen.pl`, Behebung beschrieben, braucht einen Bau |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **vier** Ursachen, alle Originalfehler, POP **und** IMAP | **teilweise** — Teil 1 liegt als geprüfter Patch bereit (`tools/patches/anhangnamen-faltung.patch`, **nicht angewandt**), Teile 2 bis 5 offen; alles nachprüfbar mit `tools/kopfzeile-pruefen.pl` |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -6306,9 +6306,16 @@ gerade dann muss man sie später noch benennen können. Zurückziehen ja,
 **Gemeldet von Gregor am 30.09.2026:** *„Prüfe, warum lange Dateinamen beim
 Attachment abgeschnitten werden und die Endung z.B. pdf ganz fehlt."*
 
-**Status: offen.** Kein Portierungsschaden — der Fehler steckt unverändert schon
-im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP
+**Status: teilweise.** Kein Portierungsschaden — der Fehler steckt unverändert
+schon im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP
 gleichermaßen**, weil beide Zweige dieselbe Zerlegung in zwei Abschriften haben.
+
+> **Stand 30.09.2026, zweiter Durchgang.** Für die **eigentliche** Ursache (die
+> Faltung) liegt ein ausgearbeiteter und gemessener Patch bereit:
+> `tools/patches/anhangnamen-faltung.patch`. **Er ist nicht angewandt** — diese
+> Sitzung lief auf Android, ohne Windows und ohne Compiler. Was gemessen ist
+> und was nicht, steht im Abschnitt „Was zu ändern wäre" weiter unten und in
+> `tools/patches/anhangnamen-faltung.md`.
 
 ### Kurz: es liegt nicht an der Länge
 
@@ -6431,6 +6438,36 @@ if (!*fName)
 Anwender nach „abgeschnitten, Endung weg" aus, hat aber eine andere Ursache.
 Wer den Fehler nachstellt, muss die drei Fälle auseinanderhalten.
 
+### Vierte Ursache (neu am 30.09., beim Messen gefunden): `filename=""` wird zu `=`
+
+Die Marke wird beim Neuanfang **nicht geleert**. `ReinitToken` setzt nur
+`TokenSpot = 0` (`lex822.cpp:201`), `Token[0]` behält das erste Byte der
+**vorigen** Marke. Solange danach `ADD()` läuft, fällt das nicht auf, weil
+`ADD` die Null selbst nachzieht. Bei einer **leeren** Zeichenkette läuft `ADD`
+nie:
+
+```
+Content-Disposition: attachment; filename=""
+```
+
+```
+    Atom         [66 69 6C 65 6E 61 6D 65 ] "filename"
+    Special      [3D ]                      "="
+    QText        [3D ]                      "="        <- der Wert
+```
+
+`HeaderDesc::Read` liest `l822s.Token` als Zeichenkette, bekommt also `=` und
+legt das als Dateinamen ab. Der Anhang landet als Datei namens `=`. Dieselbe
+Ursache macht die Prüfung `if (Token[TokenSpot] == '\\')` am Anfang von
+`CollectQText`, `CollectComment` und `CollectDL` (`lex822.cpp:256`, `:289`,
+`:316`) wirkungslos bis irreführend: nach jedem `ADD` ist `Token[TokenSpot]`
+null, am Markenanfang steht dort ein fremdes Byte. Maskierte Anführungszeichen
+in einem Dateinamen (`\\"`) werden damit nicht behandelt.
+
+**Behebung:** ein `Token[0] = 0;` dort, wo `ReinitToken` ausgewertet wird
+(`lex822.cpp:201`), und dieselbe Zeile in `ImapLex822.cpp:216`. Eine Zeile je
+Zweig. **Nicht angefasst** — kein Compiler.
+
 ### Warum das Sicherheitsnetz nicht greift
 
 `MIMEMap::SetExtension` (`MIMEMap.cpp:388`) **könnte** die Endung aus dem
@@ -6504,38 +6541,79 @@ unabhängig von der Portierung (der Altbestand hat denselben Code), tritt aber
 genau bei den Namen auf, um die es hier geht. Die Behebung ist `char pcname[256]`
 oder `int len = 254`. **Nicht angefasst**, weil hier nicht gebaut werden kann.
 
-### Was zu ändern wäre
+### Was zu ändern wäre — Teil 1 liegt fertig bereit
 
-Nicht umgesetzt — die Änderung sitzt im Herzstück des Empfangspfads und lässt
-sich ohne Visual Studio weder übersetzen noch am laufenden Programm prüfen. Der
-Vorschlag, in der Reihenfolge des Nutzens:
+**Nachtrag 30.09.2026, zweiter Durchgang.** Der erste Teil ist nicht mehr nur
+beschrieben, sondern **ausgearbeitet und gemessen**:
 
-1. **Faltung in `CollectQText` überleben** (`lex822.cpp:303`, `ImapLex822.cpp:318`).
-   Beim `CR822` nachsehen, ob `CRLF` + Leerzeichen/Tabulator folgt; wenn ja, das
-   CR und das LF überspringen und nach RFC 5322 3.2.2 **ein** Leerzeichen
-   aufnehmen, statt die Marke zu beenden. Nur im Zustand `CollectQText`, nur
-   innerhalb der Anführungszeichen (`InStructure`) — `CollectAtom` und
-   `CollectLine` müssen weiterhin am Umbruch enden, sonst verschmelzen Kopfzeilen.
-   Das allein behebt den gemeldeten Fall.
+| | |
+|---|---|
+| Patch | `tools/patches/anhangnamen-faltung.patch` — 212 Zeilen, vier Dateien, POP **und** IMAP |
+| Beschreibung | `tools/patches/anhangnamen-faltung.md` |
+| Stand | **nicht angewandt.** `git apply --check` läuft sauber gegen den unveränderten Baum |
+| gemessen mit | `perl tools/kopfzeile-pruefen.pl --vorschlag` (zehn Fälle) |
+
+Der Patch besteht aus drei Stücken, und die Aufteilung ist nicht willkürlich —
+sie folgt aus zwei Dingen, die beim Messen herauskamen:
+
+- **Am CR ist noch nicht zu erkennen, ob eine Faltung folgt.** `ReadLine`
+  liefert die Zeile samt CRLF; steht `Spot` auf dem CR, ist das LF das letzte
+  Byte im Puffer, das Zeichen danach ist noch nicht gelesen. Erst wenn `Spot`
+  auf dem LF steht, füllt `LexFill()` nach und hebt dabei genau ein Byte auf.
+  **Deshalb steht die Faltungsregel am LF.** Der Patch nimmt das CR in die
+  Marke auf — so hält es `CollectText` seit jeher — und entscheidet am LF.
+- **`WriteHeaderToken` schreibt jede Marke in die Mailbox-Datei**
+  (`lex822.cpp:402`). Was der Zerleger verschluckt, fehlt in der gespeicherten
+  Nachricht. Weil CR und LF in der Marke stehen, ist der Rückschrieb
+  **byteidentisch** — gemessen, 128 von 128 Byte. Genau deshalb darf der Wert
+  **nicht** im Zerleger entfaltet werden: das würde mitgeschrieben. Die
+  Entfaltung gehört eine Ebene höher, in `HeaderDesc::AddAttribute`
+  (`header.cpp:476`).
+
+| Fall | ohne Patch | mit Patch |
+|---|---|---|
+| **gefaltet (der gemeldete Fehler)** | 47 Zeichen, Endung fehlt, `grokked=FALSE` | **76 Zeichen, `.pdf` da, `grokked=TRUE`, Rückschrieb byteidentisch** |
+| **R4 gefaltet mit Tabulator** | 35 Zeichen, Endung fehlt | **56 Zeichen, vollständig** |
+| R1 Anführungszeichen, dann weitere Kopfzeile | byteidentisch | unverändert |
+| R2 unbeendete Zeichenkette | Rückschrieb 92/91 Byte | **unverändert 92/91** |
+| R3 Faltung außerhalb der Anführungszeichen | heil | unverändert |
+| die übrigen vier | — | unverändert |
+
+**Kein Fall wird schlechter**, und im behobenen Fall wird der Rückschrieb sogar
+besser: heute schreibt die kaputte Zerlegung ein Anführungszeichen zu viel in
+die Mailbox (129 statt 128 Byte).
+
+Geprüft ist damit der Zerleger, **nicht das Programm**. Es ist nichts mit MSVC
+gebaut und nichts gestartet worden; `g++ -fsyntax-only` über die vier
+eingefügten Blöcke ist fehler- und warnungsfrei, mehr sagt das nicht.
+
+### Was noch offen ist
+
 2. **Die Marke vergrößern.** `Token[256]` ist die RFC-822-Atomgrenze, für einen
    Dateinamen ist sie zu klein. `_MAX_PATH`-nah wäre richtig; wer nicht so weit
    gehen will, muss wenigstens `CheckName` die Endung retten lassen, statt am
-   Ende zu kappen.
+   Ende zu kappen. Achtung: `Token` steckt in `lex822.h:70` **und**
+   `ImapLex822.h:29`, und `Buffer[2048]` begrenzt mit.
 3. **RFC 2231.** Deutlich mehr Arbeit (Teilstücke sammeln und in der richtigen
    Reihenfolge zusammensetzen, `*`-Form mit Zeichensatz und Prozentzeichen
    auflösen). Eigener Punkt, nicht in einem Zug mit 1 und 2.
-4. **`DeMacifyName32`** (`mime.cpp:948`, und die Abschrift
-   `LOCAL_DeMacifyName32` in `EuImap/src/imapmime.cpp:82`): `pcname` auf 256, oder
-   `len` auf 254.
+4. **Die Marke beim Neuanfang leeren** — `Token[0] = 0;` bei `lex822.cpp:201`
+   und `ImapLex822.cpp:216`. Eine Zeile je Zweig, behebt `filename=""` → `=`
+   (vierte Ursache oben). Klein genug, um mit Teil 1 zusammen zu gehen.
+5. **`DeMacifyName32`** (`mime.cpp:948`, und die Abschrift
+   `LOCAL_DeMacifyName32` in `EuImap/src/imapmime.cpp:82`): `pcname` auf 256,
+   oder `len` auf 254.
 
-Nach jeder dieser Änderungen: `perl tools/kopfzeile-pruefen.pl`. Die Spalte
-`stand` in dem Werkzeug ist dann **mit** zu ändern — sonst meldet es die eigene
-Behebung als Abweichung.
+Nach jeder dieser Änderungen: `perl tools/kopfzeile-pruefen.pl`. **Die Spalte
+`stand` in dem Werkzeug ist dann mit zu ändern** — sonst meldet es die eigene
+Behebung für immer als Schaden. Das Werkzeug erkennt am Markierungssatz des
+Patches selbst, ob die Behebung schon im Baum steht, und bildet dann auch das
+geänderte `WriteHeaderToken` nach.
 
 ### Was ausdrücklich **nicht** geprüft ist
 
 - Ob der Anwender den Namen genau so gemeldet hat: es liegt **keine
-  Beispielnachricht** vor. Die drei Ursachen erklären das Bild, welche davon
+  Beispielnachricht** vor. Die vier Ursachen erklären das Bild, welche davon
   Gregor getroffen hat, ist offen. **Eine `.eml` mit einem betroffenen Anhang
   würde das in einem Zug klären** — sie gehört zum nächsten Schritt.
 - Der Sendeweg. `sendmail.cpp:2392` schreibt `filename="…"` in **eine** Zeile,

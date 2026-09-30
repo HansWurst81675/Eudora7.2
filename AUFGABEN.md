@@ -13,8 +13,10 @@ gilt, sagt das **Verzeichnis am Anfang von [BEFUNDE.md](BEFUNDE.md)**.
 > ohne VM. Die Aufteilung steht in `WEITERMACHEN.md`, Abschnitt „Was ohne Visual
 > Studio geht". Kurz: **A2, C1, D1–D4 und jede Zählung gehen ohne Compiler**;
 > alles unter „Ganz zuerst", B1–B4, C2, C3 und E1–E3 brauchen einen Bau oder
-> einen Start. **B5 ist geteilt:** die Untersuchung ist ohne Compiler fertig
-> (`tools/kopfzeile-pruefen.pl`), die Behebung braucht einen Bau.
+> einen Start. **B5 ist geteilt:** Untersuchung und Behebung sind ohne Compiler
+> ausgearbeitet und gemessen (`tools/kopfzeile-pruefen.pl`,
+> `tools/patches/anhangnamen-faltung.patch`); **einspielen, bauen und prüfen**
+> braucht Visual Studio.
 
 ---
 
@@ -196,41 +198,74 @@ drücken — dann wird aus der Meldung ein Haltepunkt, den der Debugger sieht.
 Knöpfe **freigegeben** sind. Nachsehen, ob gesperrte Knöpfe erkennbar grau
 erscheinen statt leer.
 
-### B5 · NEU: Anhänge — Dateiname abgeschnitten, Endung weg (**AN-1**)
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **Bugfix, Teil 1 liegt bereit**
 
-Gregors Meldung vom 30.09.2026. **Untersucht und belegt, nicht behoben** — die
-Änderung sitzt im Zerleger des Empfangspfads und lässt sich ohne Bau weder
-übersetzen noch am Programm prüfen.
+Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben.
+**Nicht eingespielt** — beide Sitzungen dazu liefen ohne Windows und ohne
+Compiler (die zweite auf Android).
 
 **Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
-solange er in *einer* Zeile steht. Drei getrennte Ursachen erzeugen dasselbe
-Bild, alle drei sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im
-Baum (POP in `lex822.*`, IMAP in `EuImap/src/ImapLex822.*`):
+solange er in *einer* Zeile steht. Vier getrennte Ursachen erzeugen dasselbe
+Bild, alle sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im Baum
+(POP in `lex822.*`/`header.cpp`, IMAP in `EuImap/src/ImapLex822.*`/`ImapHeader.cpp`).
 
-| | Ursache | Fundstelle (POP / IMAP) |
-|---|---|---|
-| 1 | eine **Faltung** beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, aber das CR kommt zuerst | `lex822.cpp:303` / `ImapLex822.cpp:318`, Regel bei `:213` / `:228` |
-| 2 | die Marke ist **256 Byte** groß, ab 254 Zeichen wird gekappt | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` |
-| 3 | **RFC 2231** (`filename*0=`) kennt der Baum nicht — dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** (`subj[32]`, 31 Zeichen) | nirgends |
+#### Was zu tun ist, in dieser Reihenfolge
 
-**Nachprüfen ohne Visual Studio:**
+| Schritt | Was | Fundstelle (POP / IMAP) | Stand |
+|---|---|---|---|
+| **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | `lex822.cpp:303`, `:433`, `header.cpp:476` / `ImapLex822.cpp:318`, `:454`, `ImapHeader.cpp:489` | **Patch liegt bereit und ist gemessen** |
+| **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wird `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** Marke trägt | `lex822.cpp:201` / `ImapLex822.cpp:216` | offen, **eine Zeile je Zweig** |
+| **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappt ab 254 Zeichen. `Buffer[2048]` begrenzt mit | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` | offen |
+| **B5.4** | **`DeMacifyName32`**: schreibt bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]`. `pcname` auf 256 **oder** `len` auf 254 | `mime.cpp:948` / `EuImap/src/imapmime.cpp:82` | offen, eine Zahl je Zweig |
+| **B5.5** | **RFC 2231** (`filename*0=`) kennt der Baum nicht. Dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** — `subj[32]`, also 31 Zeichen | nirgends im Baum | offen, **eigener Punkt**, deutlich größer als B5.1 bis B5.4 |
+
+**Wer nur einen der beiden Zweige ändert, baut sich einen Fehler, der von der
+Kontenart abhängt.** Das ist schlimmer als der Fehler selbst.
+
+#### B5.1 — der bereitliegende Patch
+
+| | |
+|---|---|
+| Patch | `tools/patches/anhangnamen-faltung.patch` — 212 Zeilen, vier Dateien |
+| Beschreibung | `tools/patches/anhangnamen-faltung.md` — warum es drei Stücke braucht |
+| Prüfung | `git apply --check tools/patches/anhangnamen-faltung.patch` läuft sauber |
+| gemessen | `perl tools/kopfzeile-pruefen.pl --vorschlag`, zehn Fälle |
+
+Ergebnis der Messung: der gemeldete Fall geht von **47 Zeichen ohne Endung** auf
+**76 Zeichen mit `.pdf`**, `grokked` von `FALSE` auf `TRUE`, und der Rückschrieb
+in die Mailbox-Datei wird byteidentisch (heute schreibt die kaputte Zerlegung
+ein Anführungszeichen zu viel hinein). **Kein Fall wird schlechter** — die fünf
+Rückfallproben R1 bis R5 bleiben, wie sie sind.
+
+**Gemessen ist der Zerleger, nicht das Programm.** Es ist nichts mit MSVC gebaut
+und nichts gestartet worden.
+
+#### So geht es weiter, sobald Visual Studio da ist
+
+1. `git apply tools/patches/anhangnamen-faltung.patch`
+2. `perl tools/kopfzeile-pruefen.pl` — meldet jetzt **6 Abweichungen**: das sind
+   die behobenen Fälle. **Dann die Spalte `stand` im Werkzeug nachziehen**,
+   sonst meldet es die eigene Behebung für immer als Schaden.
+3. Bauen. Eine echte Nachricht mit gefaltetem `filename=` abrufen und nachsehen,
+   wie die Datei im Anhangverzeichnis heißt.
+4. Einen Testfall in `Eudora71/Tests/TestPopEmpfang.cpp` nachziehen — dort liegt
+   das Gerüst für den Empfangspfad schon.
+5. Dann B5.2 bis B5.4; das sind zusammen vier Zeilen und zwei Zahlen.
+
+#### Nachprüfen ohne Visual Studio
 
 ```
-perl tools/kopfzeile-pruefen.pl          # 5 Faelle, rc=0 solange AN-1 offen
-perl tools/kopfzeile-pruefen.pl --lang   # dazu jede einzelne Marke
+perl tools/kopfzeile-pruefen.pl             # 10 Faelle, rc=0 solange AN-1 offen
+perl tools/kopfzeile-pruefen.pl --vorschlag # mit B5.1, zum Vergleich
+perl tools/kopfzeile-pruefen.pl --lang      # dazu jede einzelne Marke
 ```
 
-Das Werkzeug holt `Lex822()` bei jedem Lauf wörtlich aus dem Baum, übersetzt es
-mit `g++` (oder `cl`) und vergleicht mit dem verzeichneten Stand. **Wer etwas
-behebt, ändert die Spalte `stand` im Werkzeug mit** — sonst meldet es die eigene
-Behebung als Abweichung.
+Das Werkzeug holt `Lex822()` samt Tabellen bei **jedem** Lauf wörtlich aus dem
+Baum, ersetzt nur die zwei Stellen, die ans Netz gehen, übersetzt mit `g++`
+(oder `cl`) und vergleicht mit dem verzeichneten Stand — Dateiname, `grokked`
+**und** was `WriteHeaderToken` in die Mailbox schreiben würde.
 
-**Reihenfolge, wenn ein Bau da ist:** erst 1 (behebt den gemeldeten Fall), dann
-2, dann 4 (`DeMacifyName32`, `mime.cpp:948` — schreibt bei 255 Zeichen ein Byte
-hinter den Puffer, dieselbe Stelle noch einmal in `EuImap/src/imapmime.cpp:82`).
-RFC 2231 ist ein eigener Punkt, nicht in einem Zug mit 1 und 2.
-
-**Was fehlt:** eine **Beispielnachricht**. Welche der drei Ursachen Gregor
+**Was fehlt:** eine **Beispielnachricht**. Welche der vier Ursachen Gregor
 getroffen hat, ist offen — eine `.eml` mit einem betroffenen Anhang klärt das in
 einem Zug. Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
 
