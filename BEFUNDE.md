@@ -6370,6 +6370,48 @@ Absender überhaupt umbricht.
 > faltet nicht (`sendmail.cpp:2392`), löst den Fehler beim Empfänger also nicht
 > aus.
 
+### „Ich hänge doch nur eine Datei an und mache keine Umbrüche"
+
+Gregors Einwand vom 30.09., und er ist berechtigt. Die Auflösung in einem Satz:
+
+> **Du faltest nichts. Das Programm des Absenders tut es — und der Fehler
+> trifft dich beim EMPFANGEN, nicht beim Anhängen.**
+
+Der Reihe nach:
+
+**Beim Anhängen passiert nichts Schlimmes.** Du wählst im Explorer eine Datei,
+sie hat einen Namen und eine Endung, Eudora hängt sie an. Eudora schreibt den
+Namen dabei in **eine** Zeile, ohne Faltung (`sendmail.cpp:2392`). Deine
+gesendeten Nachrichten lösen diesen Fehler beim Empfänger also **nicht** aus.
+
+**Der Fehler trifft Anhänge, die du BEKOMMST.** Die Zeile mit dem Dateinamen
+schreibt das Programm des *Absenders* — Outlook, Exchange, Zimbra, ein
+Scanner, ein Rechnungsportal, ein PHP-Skript. Und die falten, wenn der Name
+lang ist, weil das Mailformat lange Zeilen nicht vorsieht. **Das macht dort
+niemand von Hand**, das Programm tut es von selbst und zeigt es auch niemandem.
+Es ist erlaubt und völlig normal (RFC 5322 2.2.3).
+
+**Die Datei selbst wird dabei nicht angefasst.** Der Umbruch steht in der
+*Kopfzeile*, die den Namen trägt — nicht in den Daten. Die PDF kommt
+vollständig und unversehrt an. Verloren geht nur ihr **Name**, genauer: alles
+hinter dem Umbruch, und da steht die Endung.
+
+Deshalb sieht es aus wie „Eudora verschluckt die Endung": aus Sicht des
+Anwenders ist die Datei da, aber sie heißt falsch und lässt sich nicht mehr per
+Doppelklick öffnen.
+
+> **Welche der vier Ursachen es im Betrieb ist, steht weiter unten und ist
+> nicht entschieden.** Die Faltung ist die häufigste und am besten belegte,
+> aber RFC 2231 (dritte Ursache) erzeugt dasselbe Bild und kommt bei genau
+> denselben Absendern vor. Das klärt der erste Abruf mit eingeschalteten
+> Debug-Marken (B5.0) — nicht früher.
+
+**Ein Fall bleibt offen und ist ausdrücklich nicht gemessen:** Eudora schreibt
+beim *Senden* sehr lange Dateinamen in eine einzige Zeile, ohne zu falten. Das
+verletzt die Zeilenlänge aus RFC 5322 2.1.1. Was ein Server oder das Programm
+des Empfängers damit macht, weiß hier niemand. Es ist die Spiegelseite desselben
+Themas und steht unter „Was ausdrücklich nicht geprüft ist".
+
 ### Kurz: es liegt nicht an der Länge
 
 Der naheliegende Verdacht ist falsch. Ein Dateiname mit 76 Zeichen kommt

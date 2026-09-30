@@ -70,6 +70,14 @@
 > Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der
 > Dateiname ist nicht vollständig."* Die Behebung hängt nicht daran.
 >
+> **Und zur naheliegenden Rückfrage** („ich hänge doch nur eine Datei an und
+> mache keine Umbrüche"): richtig — **du faltest nichts.** Das Programm des
+> *Absenders* tut es, von selbst, weil das Mailformat lange Zeilen nicht
+> vorsieht. Der Fehler trifft Anhänge, die du **bekommst**; Eudoras eigener
+> Versand faltet nicht. Und die Datei selbst wird nicht angefasst — der Umbruch
+> steht in der Kopfzeile, die den Namen trägt. Verloren geht nur der Name.
+> Ausführlich in BEFUNDE.md, AN-1, erster Abschnitt.
+>
 > **Warum es behoben wird:** *„weil es unschön ist und weil es im freigegebenen
 > Release schlecht aussieht."* Dass es ein Originalfehler aus 7.1 ist, ist
 > ausdrücklich kein Grund, es liegen zu lassen.
