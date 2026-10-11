@@ -440,10 +440,40 @@ dem nächsten Bau, ohne dass es jemand merkt.
 
 ## Selbst bauen
 
+### Welche Eingabeaufforderung gemeint ist
+
+Dieses Projekt läuft auf Windows, und drei Eingabeaufforderungen sind im
+Umlauf. Sie können nicht dasselbe:
+
+| | `cat` | `grep` | `ls` | `sh` | `powershell -File …` |
+|---|---|---|---|---|---|
+| **PowerShell** | ja (Alias für `Get-Content`) | **nein** | ja (Alias für `Get-ChildItem`) | nur mit vollem Pfad | ja |
+| **Git Bash** | ja | ja | ja | ja | ja |
+| **cmd.exe** | nein | nein | nein | nein | ja |
+
+Die Blöcke unten sind deshalb doppelt, wo es einen Unterschied macht: einmal
+` ```sh ` für die Git-Bash, einmal ` ```powershell `. Wo nur ein Block steht,
+tut es jede der drei.
+
+> **Die PowerShell-Fassungen sind nicht auf einem Windows-Rechner
+> nachgemessen** — sie sind aufgeschrieben, nicht geprüft. Wer die erste davon
+> laufen lässt und eine Abweichung findet, berichtigt sie hier. (Aufgeschrieben
+> am 11.10.2026, nachdem Gregor fragte: *„gilt es auch unter windows?"* — und
+> der Abschnitt bis dahin `grep` verlangte, das es in der PowerShell nicht
+> gibt.)
+
 ### Nach einem frischen Klon: ein Schritt
 
 ```bash
 sh tools/hooks-einrichten.sh
+```
+
+In der **PowerShell** gibt es `sh` nur, wenn das `bin`-Verzeichnis von Git für
+Windows im Suchpfad liegt — in der Standardinstallation tut es das nicht. Dann
+mit vollem Pfad:
+
+```powershell
+& "$env:ProgramFiles\Git\bin\sh.exe" tools/hooks-einrichten.sh
 ```
 
 Das war es. Der Hook liegt unter `.git/hooks` und wird von git nicht
@@ -481,6 +511,14 @@ hebt"*. Nachsehen, was gerade gilt:
 cat VERSION
 grep -n "EUDORA_VERSION4\|EUDORA_BUILD_" Eudora71/Version.h
 ```
+
+```powershell
+Get-Content VERSION
+Select-String "EUDORA_VERSION4|EUDORA_BUILD_" Eudora71\Version.h
+```
+
+`Select-String` nimmt .NET-Reguläre: das `|` steht dort **ohne** Rückstrich,
+anders als im `grep`-Aufruf darüber.
 
 Alle fünf Zeilen durchgehen: `EUDORA_BUILD_NUMBER` ist beim Heben schon
 **zweimal** stehengeblieben, und kein Werkzeug hat es damals gemeldet.
@@ -556,6 +594,13 @@ Nachzählen, ohne etwas zu bauen:
 ls Eudora71/Lib/Release/*.exp                       # die Importbibliotheken
 git ls-files Eudora71/Lib/                          # die mitgelieferten Fremdlibs
 grep -l StaticLibrary Eudora71/*/*.vcxproj Eudora71/*/*/*.vcxproj
+```
+
+```powershell
+Get-ChildItem Eudora71\Lib\Release\*.exp            # die Importbibliotheken
+git ls-files Eudora71/Lib/                          # die mitgelieferten Fremdlibs
+Select-String StaticLibrary Eudora71\*\*.vcxproj, Eudora71\*\*\*.vcxproj |
+    Select-Object -ExpandProperty Path -Unique
 ```
 
 Die mitgelieferten Fremdbibliotheken heißen in **Release** `EuMemMgr.lib`,
