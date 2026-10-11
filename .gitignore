@@ -71,3 +71,5 @@ Eudora71/Bin/Release/dbghelp.dll
 Releases/Eudora72-*-release.zip
 !Releases/Eudora72-1.0.2-lauffaehig.zip
 Releases/Eudora72-*-release/
+# Prüfstand von tools/kopfzeile-pruefen.pl (nur bei --behalten)
+tools/.kopfzeile/
