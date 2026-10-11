@@ -943,8 +943,15 @@ Arbeitsbaum sucht.
 hier `Eudora72-1.0.27-release.zip` und dazu *„die veröffentlichte Fassung"* —
 beides falsch: das ZIP im Repo ist 1.0.30, und veröffentlicht ist bei GitHub
 `v1.0.48` (`gh release list`).
-Die ZIPs zu **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt; von
-1.0.21 und 1.0.22 liegt nur noch die `.sha256`-Datei da, ohne ZIP daneben.
+Die ZIPs zu **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt. Die
+beiden verwaisten Prüfsummendateien zu **1.0.21** und **1.0.22** — ohne ZIP
+daneben, ohne einen einzigen Verweis — sind am **11.10.2026** ebenfalls
+entfernt worden, auf Gregors Anweisung (*„waisen entfernen, 1.0.30
+behalten"*). **Es geht dabei kein Beleg verloren:** beide Prüfsummen stehen in
+dieser Datei, in den Abschnitten 1.0.21 und 1.0.22. Das ZIP zu **1.0.30**
+bleibt bewusst liegen — es ist das einzige mitversionierte Release-ZIP und
+damit das einzige, an dem `tools/pruefe-behoben-ausgeliefert.pl` in einem
+frischen Klon überhaupt etwas **messen** kann.
 
 > **Abrufbar ist als Paket nur noch `v1.0.27`.** Gregor hat am 09.09.2026 die
 > **Veröffentlichungen** zu `v1.0.18`, `v1.0.21`, `v1.0.23` und `v1.0.24`
