@@ -13,6 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
+| **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
 | **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
@@ -65,7 +66,27 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.76 — Bilder wieder in der angegebenen Größe (E-112 **behoben**)
+## 7.2.0.76 — Versuch zu E-112: wirkt NICHT
+
+> **Berichtigt am 18.09.2026, noch am selben Tag.** Dieser Abschnitt hat
+> *„E-112 behoben"* behauptet. **Der Versuch wirkt nicht** — von Gregor am
+> laufenden Programm widerlegt, mit Bildschirmfoto: die Bilder sind weiterhin
+> zu groß, **und der Text liegt jetzt wieder darauf**, weil die Zeile nur noch
+> die angegebene Höhe hat. **1.0.76 ist damit in einem Punkt schlechter als
+> 1.0.75.**
+>
+> **Warum, am Quelltext gemessen:** `draw_meta_file`
+> (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur, wenn
+> `pict_data.mapping_mode` **nicht** `MM_TEXT` ist. Bei jedem aus dem Netz
+> geladenen Bild ist er `0` und wird auf `MM_TEXT` gesetzt — dann bestimmt das
+> Zielrechteck allein die **Position**, nicht die **Größe**. Meine Annahme
+> *„eine Metadatei wird auf ihr Zielrechteck gestreckt"* gilt nur für andere
+> Abbildungsarten.
+>
+> **Was bleibt und richtig ist:** `E112Zielrechteck` liefert das richtige
+> Rechteck — sieben Tests, Gegenprobe gefahren. Nur der Zeichenweg setzt es
+> nicht um. **E-112 steht wieder unter *Noch offen*.**
+
 
 `pict_frame` — das Zielrechteck, in das Paige eine Metadatei streckt — bekam
 bis dahin die **echte Dateigröße**. Das WhatsApp-Symbol wurde deshalb mit
