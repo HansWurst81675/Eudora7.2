@@ -259,9 +259,9 @@ index 78ff3e6..8b9608c 100644
  
 +//	Anhaenge: der Weg eines Dateinamens vom Kopf der Nachricht bis zur Datei
 +//	auf der Platte (Befund AN-1). Einschalten mit LogLevel += 65536 in der
-+//	[Settings]-Gruppe von eudora.ini; die Voreinstellung 25759 wird damit
-+//	zu 91295. Alles, was darueber in eudora.log landet, faengt mit "ANHANG"
-+//	an - "grep ANHANG eudora.log" zeigt den ganzen Weg.
++//	[Debug]-Gruppe von eudora.ini - NICHT [Settings]: GetSectionID in
++//	rs.cpp:89 ordnet die 10802 nach [Debug]. Aus der Voreinstellung 25759
++//	wird so 91295; alles davon in eudora.log faengt mit "ANHANG" an.
 +const DebugMaskType DEBUG_MASK_ATTACH		= 0x10000;
 +
  class JJFileMT;

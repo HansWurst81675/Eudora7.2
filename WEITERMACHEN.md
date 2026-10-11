@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 18.09.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 11.10.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
@@ -103,11 +103,15 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-> **Stand 18.09.2026, Feierabend.** Hier ansetzen, in dieser Reihenfolge.
+> **Stand 11.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
-> **1. [PR #75](https://github.com/HansWurst81675/Eudora7.2/pull/75) mergen.**
-> Er nimmt eine Unwahrheit von `main`: dort stand *„E-112 behoben in
-> 7.2.0.76"*, und Gregors Bildschirmfoto widerlegt es. Nur Dokumentation.
+> **1. Den Anhang-Bug prüfen — das ist Gregors eigenes Vorhaben.** Er will
+> `git apply` fahren, der Anleitung folgen, bauen und messen, dass der Fehler
+> weg ist. Der ganze Durchlauf steht in [AUFGABEN.md](AUFGABEN.md) unter
+> **B5.0 bis B5.5**; der Bau selbst in [README.md](README.md), *Selbst bauen*.
+> Zwei Patches liegen bereit und sind **nicht angewandt**. **Vor jedem der
+> beiden Bauten die Version heben** — sonst tragen zwei verschiedene
+> `Eudora.exe` dieselbe Nummer (Befund **V-1**).
 >
 > **2. E-112 messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
 > `draw_meta_file` (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur,
@@ -118,7 +122,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > nicht die *Window*-Ausdehnung. Ob korrekt skaliert wird, hängt daran, ob die
 > von `MetafileFromImage` erzeugte Metadatei ihre eigene Ausdehnung mitbringt.
 > **Das ist am Quelltext zu klären, nicht durch ein Paket.** Genau diese
-> Annahme ungeprüft zu lassen hat heute 1.0.76 gekostet.
+> Annahme ungeprüft zu lassen hat am 18.09.2026 1.0.76 gekostet.
 >
 > **3. Der Zustand beim Anwender.** 1.0.75 zeigt Bilder zu groß, aber der Text
 > steht darunter; **1.0.76 deckt den Text zu** und ist damit schlechter. Wer
@@ -232,7 +236,7 @@ Wofür jeder steht und was als Nächstes zu messen ist, steht in
 
 ## Offene Arbeiten ohne Befundnummer
 
-Stand 18.09.2026. Das sind keine Fehler des Programms, sondern Arbeiten am
+Stand 11.10.2026. Das sind keine Fehler des Programms, sondern Arbeiten am
 Werkzeug und am Nachweis — bis hierher standen sie nur im Gesprächsverlauf,
 und Gregor hat am 18.09.2026 ausdrücklich verlangt, sie nachzuziehen:
 *„ziehe auch die offenen arbeiten ohne befunde nach."* Ein Gesprächsverlauf

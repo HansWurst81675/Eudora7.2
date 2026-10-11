@@ -33,9 +33,14 @@ in `eudora.ini`. Der Patch legt ein neues Bit an:
 const DebugMaskType DEBUG_MASK_ATTACH = 0x10000;
 ```
 
-In `eudora.ini`, Gruppe `[Settings]`:
+In `eudora.ini` gehört `LogLevel` in die Gruppe **`[Debug]`** — nicht nach
+`[Settings]`. Eudora ordnet jeden Schlüssel allein nach seiner Nummer zu
+(`rs.cpp:89`, `GetSectionID`), und `IDS_INI_DEBUG_LOG_LEVEL` ist `10802`:
+größer als `IDS_INISN_DEBUG` (10800), kleiner als `IDS_INISN_WINDOW_POSITION`
+(10900). Nachzusehen mit `perl tools/pruefe-ini-abschnitte.pl --was LogLevel`.
 
-```
+```ini
+[Debug]
 LogLevel=91295
 ```
 

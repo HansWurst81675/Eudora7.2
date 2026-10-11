@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 18.09.2026; die Zahlen sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; für **1.0.66 bis 1.0.72** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 11.10.2026; die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -398,6 +398,86 @@ Der Quellstand 7.2.0.66 hat es gegeben — er trug die erste Fassung von
 **E-101** —, aber **es wurde nie ein Paket daraus gebaut**. Weder unter
 `Releases/` noch bei Gregor liegt etwas. Der Eintrag steht hier, damit die Lücke
 in der Zählung nicht wieder für eine freie Nummer gehalten wird.
+
+## 1.0.64 — veröffentlicht am 17.09.2026
+
+**Speichern stürzt nicht mehr ab** (**E-97**). Titel der Veröffentlichung:
+*„7.2.0.64 / Paket 1.0.64 - Speichern stuerzt nicht mehr ab"*.
+
+**Am 11.10.2026 nachgetragen.** Dieser Abschnitt hat gefehlt: `v1.0.64` liegt
+seit 17.09.2026 auf GitHub, in dieser Buchführung stand es nicht. Aufgefallen ist
+es, weil `tools/doku-pruefen.pl` die Zeile `CHANGELOG.md:888` abwies — sie nennt
+`Eudora72-1.0.64-release.zip`, und die Schranke verlangt dann, dass das ZIP
+entweder in `Releases/` liegt oder **hier** geführt wird. Solange das fehlte,
+wies der Haken **jeden** Push auf `main` ab.
+
+Die Angaben unten stammen aus der GitHub-API (`gh api
+repos/HansWurst81675/Eudora7.2/releases/tags/v1.0.64`), **nicht** aus einem
+eigenen Lauf. Was dort nicht steht, steht hier auch nicht — Dateizahl im ZIP,
+Größe der `Eudora.exe`, Paketprüfung und Testzahlen sind für diese Fassung
+**nicht belegt** und werden hier nicht erfunden.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.64-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `7d8982432cecc5ce298bec1763143c86597c529558e1bee09fa0c25e564d4bf0` |
+| **Größe** | 9 354 875 Byte |
+| **Quellstand** | 7.2.0.64 |
+| **Netzadresse** | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.64 |
+| **Dateizahl, `Eudora.exe`, Paketprüfung, Tests** | nicht belegt |
+
+## 1.0.47 — veröffentlicht am 11.09.2026
+
+**Der Blah-Blah-Blah-Knopf blendet Kopfzeilen wieder aus** (**E-80**).
+Titel der Veröffentlichung: *„7.2.0.47 / Paket 1.0.47 — der Blah-Blah-Blah-Knopf
+blendet Kopfzeilen wieder aus"*.
+
+**Am 11.10.2026 nachgetragen.** Dieser Abschnitt hat gefehlt: `v1.0.47` liegt
+seit 11.09.2026 auf GitHub, in dieser Buchführung stand es nicht. Aufgefallen ist
+es, weil `tools/doku-pruefen.pl` beim Nachrechnen am 11.10.2026 auffiel: von **14**
+Veröffentlichungen auf GitHub fehlten **drei** in dieser Datei. Gemeldet hat
+das kein Werkzeug — `pruefe-release-buchfuehrung.pl` prüft nur die **neueste**
+Marke, nicht die Vollständigkeit.
+
+Die Angaben unten stammen aus der GitHub-API (`gh api
+repos/HansWurst81675/Eudora7.2/releases/tags/v1.0.47`), **nicht** aus einem
+eigenen Lauf. Was dort nicht steht, steht hier auch nicht — Dateizahl im ZIP,
+Größe der `Eudora.exe`, Paketprüfung und Testzahlen sind für diese Fassung
+**nicht belegt** und werden hier nicht erfunden.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.47-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `df299585655080ad6d533409a1d8f03ba6d51dd1fed74c98afde8b45dd22fd97` |
+| **Größe** | 9 355 896 Byte |
+| **Quellstand** | 7.2.0.47 |
+| **Netzadresse** | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.47 |
+| **Dateizahl, `Eudora.exe`, Paketprüfung, Tests** | nicht belegt |
+
+## 1.0.43 — veröffentlicht am 10.09.2026
+
+**Filter löschen nichts mehr auf dem Server, Fenstergrößen bleiben.**
+Titel der Veröffentlichung: *„7.2.0.43 / Paket 1.0.43 — Filter loeschen nichts
+mehr auf dem Server, Fenstergroessen bleiben"*.
+
+**Am 11.10.2026 nachgetragen.** Dieser Abschnitt hat gefehlt: `v1.0.43` liegt
+seit 10.09.2026 auf GitHub, in dieser Buchführung stand es nicht. Aufgefallen ist
+es, weil `tools/doku-pruefen.pl` beim Nachrechnen am 11.10.2026 auffiel — siehe 1.0.47.
+
+Die Angaben unten stammen aus der GitHub-API (`gh api
+repos/HansWurst81675/Eudora7.2/releases/tags/v1.0.43`), **nicht** aus einem
+eigenen Lauf. Was dort nicht steht, steht hier auch nicht — Dateizahl im ZIP,
+Größe der `Eudora.exe`, Paketprüfung und Testzahlen sind für diese Fassung
+**nicht belegt** und werden hier nicht erfunden.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.43-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `e68d8a8a579c6644a99043d915eae3d001f607dc1021a5dbb15c3fde476d669d` |
+| **Größe** | 9 347 153 Byte |
+| **Quellstand** | 7.2.0.43 |
+| **Netzadresse** | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.43 |
+| **Dateizahl, `Eudora.exe`, Paketprüfung, Tests** | nicht belegt |
 
 ## 1.0.41 — gebaut am 10.09.2026, kein Release
 

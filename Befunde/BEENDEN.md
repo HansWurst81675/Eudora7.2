@@ -470,7 +470,7 @@ Die vierzehn Marken des ersten Durchgangs bleiben alle stehen; dazu kommen
 diese vierzehn. **Die letzte geschriebene E-33-Zeile nennt jetzt den Aufruf,
 nicht nur die Stufe.**
 
-> **Ohne `LogLevel=32896` unter `[Settings]` in der `Eudora.ini` schreibt keine
+> **Ohne `LogLevel=32896` unter `[Debug]` in der `Eudora.ini` schreibt keine
 > einzige dieser Marken.** `PutDebugLog` prüft die Maske und kehrt sonst sofort
 > zurück (`QCUtils/src/debug.cpp:138-143`). 32896 = 0x8080 =
 > `DEBUG_MASK_MISC` (0x8000) `|` `DEBUG_MASK_TOC_CORRUPT` (0x80).

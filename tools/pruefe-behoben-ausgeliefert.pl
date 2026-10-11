@@ -154,7 +154,10 @@ sub urteile {
 }
 
 sub pruefe {
-    my ($pakete, $urteile) = @_;   # { 1.0.NN => [Fassungen der EXE] }, [Urteile]
+    my ($pakete, $urteile, $dokumentiert) = @_;
+    # $pakete       { 1.0.NN => [Fassungen der EXE] } - hier VORHANDENE Pakete
+    # $urteile      [Urteile aus BEFUNDE.md]
+    # $dokumentiert hoechste Paketnummer, die Releases/PAKETE.md fuehrt
     my (@mangel, @hinweis);
     my $geprueft = 0;
 
@@ -185,14 +188,51 @@ sub pruefe {
         return (\@mangel, \@hinweis, $geprueft);
     }
 
+    #   WAS HIER AM 11.10.2026 BERICHTIGT WURDE
+    #
+    #   Bis dahin hiess es: "die hoechste Fassung, die je als Paket vorliegt,
+    #   ist aber 7.2.0.$hoechste". Das war falsch formuliert UND falsch
+    #   gerechnet. $hoechste ist die hoechste Fassung, die HIER liegt - im
+    #   frischen Klon ist das genau eine, weil Releases/Eudora72-1.0.30-
+    #   release.zip als einziges Paket mitversioniert ist. Alle anderen sind
+    #   in .gitignore.
+    #
+    #   Damit hat die Schranke auf main SIEBEN WAHRE Aussagen angeklagt:
+    #   E-66, E-85, E-89, E-97, E-106, E-108, E-110 - darunter drei, die
+    #   Gregor an 1.0.64, 1.0.69 und 1.0.72 selbst bestaetigt hat, alle drei
+    #   als Veroeffentlichung auf GitHub nachweisbar. Gregor am 11.10.2026:
+    #   "es gilt immer noch: keine luegen auf main!" Eine Schranke, die Wahres
+    #   anklagt, ist dieselbe Sorte Unwahrheit wie eine falsche Doku - und sie
+    #   ist schlimmer, weil man ihr glaubt.
+    #
+    #   Richtig ist die Unterscheidung zwischen
+    #     * WIDERLEGT  - es gibt ueberhaupt kein Paket dieser Fassung, auch
+    #                    nicht in der Buchfuehrung. Das bleibt ein MANGEL.
+    #     * NICHT HIER PRUEFBAR - das Paket existiert laut Releases/PAKETE.md,
+    #                    liegt hier aber nicht. Das ist ein HINWEIS, kein
+    #                    Mangel; gemessen ist dann nichts, und genau das wird
+    #                    gesagt (E-109, Punkt 4: nichts geprueft ist kein
+    #                    gruenes Ergebnis).
     for my $u (@$urteile) {
         next unless $u->{bestaetigt};
         $geprueft++;
         next if $u->{fassung} <= $hoechste;
+
+        if ($u->{fassung} <= $dokumentiert) {
+            push @hinweis, "$u->{kennung} (behoben in 7.2.0.$u->{fassung}, "
+                         . "bestaetigt) ist HIER nicht pruefbar - das Paket "
+                         . "liegt nicht vor. Releases/PAKETE.md fuehrt Pakete "
+                         . "bis 1.0.$dokumentiert, die Fassung liegt also "
+                         . "darunter; GEMESSEN ist damit nichts";
+            $geprueft--;
+            next;
+        }
+
         push @mangel, "$u->{kennung} gilt als behoben in 7.2.0.$u->{fassung} UND "
-                    . "als von Gregor bestaetigt - die hoechste Fassung, die je "
-                    . "als Paket vorliegt, ist aber 7.2.0.$hoechste. An welchem "
-                    . "Stand soll er das bestaetigt haben?";
+                    . "als von Gregor bestaetigt - ein Paket dieser Fassung gibt "
+                    . "es aber nirgends: hier liegt hoechstens 7.2.0.$hoechste, "
+                    . "und Releases/PAKETE.md fuehrt hoechstens 1.0.$dokumentiert. "
+                    . "An welchem Stand soll er das bestaetigt haben?";
     }
 
     return (\@mangel, \@hinweis, $geprueft);
@@ -222,14 +262,14 @@ if (grep { $_ eq '--tests' } @ARGV) {
              join(',', fassungen_der_exe("irgendwo steht 7.2.0.72 als ASCII")), '');
 
     # --- A: DER GEMESSENE FALL "Paket .68, EXE .67" -----------------------
-    my ($m_a) = pruefe({ '1.0.68' => ['7.2.0.67'] }, []);
+    my ($m_a) = pruefe({ '1.0.68' => ['7.2.0.67'] }, [], 0);
     $pruef->('Paket .68 mit EXE .67 wird abgewiesen',
              (grep { /heisst 1\.0\.68, seine Eudora\.exe meldet aber 7\.2\.0\.67/ } @$m_a)
              ? 'ja' : 'nein (' . join('|', @$m_a) . ')', 'ja');
 
     # --- A, erlaubter Fall ------------------------------------------------
     my ($m_ok, undef, $g_ok) = pruefe({ '1.0.70' => ['7.2.0.70'],
-                                        '1.0.72' => ['7.2.0.72'] }, []);
+                                        '1.0.72' => ['7.2.0.72'] }, [], 0);
     $pruef->('stimmige Pakete laufen durch', join('|', @$m_ok), '');
     $pruef->('und es wurde etwas geprueft', $g_ok >= 2 ? 'ja' : "nein ($g_ok)", 'ja');
 
@@ -249,13 +289,31 @@ if (grep { $_ eq '--tests' } @ARGV) {
              (grep { $_->{kennung} eq 'E-98' && $_->{bestaetigt} } @u) ? 'ja' : 'nein', 'nein');
 
     # --- B: bestaetigt an einem Stand, den es als Paket nie gab -----------
-    my ($m_b) = pruefe({ '1.0.72' => ['7.2.0.72'] }, \@u);
+    #   $dokumentiert = 72: die Buchfuehrung kennt nichts ueber 1.0.72.
+    my ($m_b) = pruefe({ '1.0.72' => ['7.2.0.72'] }, \@u, 72);
     $pruef->('Bestaetigung an einer nie gepackten Fassung wird abgewiesen',
              (grep { /^E-99 gilt als behoben in 7\.2\.0\.80 UND/ } @$m_b) ? 'ja' : 'nein', 'ja');
     $pruef->('E-108 (im Paket) loest keinen Fehlalarm aus',
              (grep { /^E-108/ } @$m_b) ? 'ja' : 'nein', 'nein');
     $pruef->('E-98 (nicht bestaetigt) loest keinen Fehlalarm aus',
              (grep { /^E-98/ } @$m_b) ? 'ja' : 'nein', 'nein');
+
+    # --- B, am 11.10.2026 nachgetragen: Paket DOKUMENTIERT, aber nicht hier
+    #   Der Fall, der auf main sieben wahre Aussagen angeklagt hat. Hier liegt
+    #   nur 1.0.30, die Buchfuehrung fuehrt aber bis 1.0.80. E-99 (behoben in
+    #   7.2.0.80, bestaetigt) ist dann NICHT widerlegt, sondern nicht pruefbar.
+    my ($m_c, $h_c, $g_c) = pruefe({ '1.0.30' => ['7.2.0.30'] }, \@u, 80);
+    $pruef->('dokumentiertes, aber nicht vorliegendes Paket ist KEIN Mangel',
+             (grep { /^E-99/ } @$m_c) ? 'ja' : 'nein', 'nein');
+    $pruef->('... sondern ein Hinweis, der sagt, dass nichts gemessen wurde',
+             (grep { /^E-99 .*HIER nicht pruefbar/ } @$h_c) ? 'ja' : 'nein', 'ja');
+    $pruef->('... und er wird nicht als geprueft gezaehlt',
+             $g_c, 1);
+
+    # --- B: ueber ALLEM, was es gibt - bleibt ein Mangel -------------------
+    my ($m_d) = pruefe({ '1.0.30' => ['7.2.0.30'] }, \@u, 79);
+    $pruef->('Bestaetigung ueber der Buchfuehrung bleibt ein Mangel',
+             (grep { /^E-99 gilt als behoben in 7\.2\.0\.80 UND/ } @$m_d) ? 'ja' : 'nein', 'ja');
 
     if ($fehler) {
         printf "\n  %d von %d Selbsttests fehlgeschlagen.\n\n", $fehler, $nr;
@@ -314,7 +372,18 @@ for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip")) {
 }
 
 my @u = urteile(lies("$wurzel/BEFUNDE.md"));
-my ($mangel, $hinweis, $geprueft) = pruefe(\%pakete, \@u);
+
+# Die hoechste Paketnummer, die Releases/PAKETE.md FUEHRT. Sie sagt, was es je
+# als Paket gab - auch dann, wenn das Paket hier nicht liegt (die ZIPs sind in
+# .gitignore). Ohne sie klagt Pruefung B jede Bestaetigung an, die juenger ist
+# als das einzige mitversionierte Paket; siehe den Kasten bei Pruefung B.
+my $dokumentiert = 0;
+for my $z (split /\n/, (lies("$wurzel/Releases/PAKETE.md") || '')) {
+    next unless $z =~ /^##\s+1\.0\.(\d+)\b/;
+    $dokumentiert = $1 if $1 > $dokumentiert;
+}
+
+my ($mangel, $hinweis, $geprueft) = pruefe(\%pakete, \@u, $dokumentiert);
 
 printf "\n  %s\n  behoben gegen die ausgelieferte Eudora.exe\n  %s\n", '-' x 60, '-' x 60;
 printf "    Paketverzeichnisse             %d\n", scalar keys %pakete;

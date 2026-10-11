@@ -108,7 +108,7 @@ Tritt ein Fehler in einem dieser Bereiche auf, ist die Messung schon
 eingebaut. Es braucht **keinen neuen Bau**:
 
 1. Eudora beenden, `eudora.log` löschen.
-2. `LogLevel=58527` in `[Settings]` der `Eudora.ini`.
+2. `LogLevel=58527` in `[Debug]` der `Eudora.ini`.
 3. Starten, genau die eine Sache tun, beenden.
 4. Im Protokoll nach der Befundnummer suchen.
 

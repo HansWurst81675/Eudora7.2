@@ -468,11 +468,35 @@ absichtlich gemischten Zeilenenden aus den Neunzigern kommen unversehrt an.
 > Arbeitsbaum, der aus jener Zeit stammt —, aber ein heutiger Klon braucht es
 > nicht.
 
+### Vor dem Bau: die Version heben
+
+**Wer etwas geändert hat, hebt vorher die Nummer** — sonst tragen zwei
+verschiedene `Eudora.exe` dieselbe Produktversion, und ein Fehlerbericht lässt
+sich keinem Bau mehr zuordnen (Befund **V-1**). Es sind **fünf Zeilen in zwei
+Dateien**; die Tabelle dazu steht in
+[Releases/PAKETE.md](Releases/PAKETE.md), Abschnitt *„Wie man die Version
+hebt"*. Nachsehen, was gerade gilt:
+
+```sh
+cat VERSION
+grep -n "EUDORA_VERSION4\|EUDORA_BUILD_" Eudora71/Version.h
+```
+
+Alle fünf Zeilen durchgehen: `EUDORA_BUILD_NUMBER` ist beim Heben schon
+**zweimal** stehengeblieben, und kein Werkzeug hat es damals gemeldet.
+`tools/doku-pruefen.pl` meldet es heute.
+
 ### Der Bau
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -Konfiguration Release
 ```
+
+**`bauen.ps1` weist ab, solange ungesicherte Quelldateien im Baum liegen** —
+nach einem `git apply` ist das der Normalfall. Entweder vorher committen und
+pushen, oder, wenn es wirklich ein Wegwerfbau ist, `-Ungesichert` anhängen.
+Ändert der Eingriff einen Header einer DLL (etwa
+`Eudora71/QCUtils/public/inc/debug.h`), dann `-Ziel Rebuild` nehmen.
 
 `tools/bauen.ps1` liest Konfiguration und Plattform aus `Eudora71/Eudora.sln`
 und sucht MSBuild über `vswhere.exe`; geraten wird nichts. Erfolg meldet es
