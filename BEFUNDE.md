@@ -6,8 +6,8 @@
      Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 11.10.2026: **8103 Zeilen**, **127** Abschnitte auf zweiter und
-**221** auf dritter Ebene. Nachzählen:
+Gemessen am 11.10.2026: **8388 Zeilen**, **127** Abschnitte auf zweiter und
+**227** auf dritter Ebene. Nachzählen:
 
 ```sh
 wc -l < BEFUNDE.md                  # Zeilen
@@ -174,7 +174,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **drei** Ursachen, alle drei Originalfehler, POP **und** IMAP | **offen** — nachprüfbar mit `tools/kopfzeile-pruefen.pl`, Behebung beschrieben, braucht einen Bau |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **vier** Ursachen, alle Originalfehler, POP **und** IMAP | **teilweise** — **zwei** Patches liegen bereit und **nicht angewandt**: `anhangnamen-debugmarken.patch` (acht Marken auf dem Weg) und `anhangnamen-faltung.patch` (Behebung von Teil 1); Teile 2 bis 5 offen. Prüfdaten samt POP3-Server in `tools/pruefdaten/`, Messung mit `tools/kopfzeile-pruefen.pl` |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -7860,9 +7860,111 @@ eigene Begründung angeschwärzt. Dieselbe Falle wie bei
 **Gemeldet von Gregor am 30.09.2026:** *„Prüfe, warum lange Dateinamen beim
 Attachment abgeschnitten werden und die Endung z.B. pdf ganz fehlt."*
 
-**Status: offen.** Kein Portierungsschaden — der Fehler steckt unverändert schon
-im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP
+**Status: teilweise.** Kein Portierungsschaden — der Fehler steckt unverändert
+schon im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP
 gleichermaßen**, weil beide Zweige dieselbe Zerlegung in zwei Abschriften haben.
+
+> **Stand 30.09.2026, zweiter Durchgang.** Für die **eigentliche** Ursache (die
+> Faltung) liegt ein ausgearbeiteter und gemessener Patch bereit:
+> `tools/patches/anhangnamen-faltung.patch`. **Er ist nicht angewandt** — diese
+> Sitzung lief auf Android, ohne Windows und ohne Compiler. Was gemessen ist
+> und was nicht, steht im Abschnitt „Was zu ändern wäre" weiter unten und in
+> `tools/patches/anhangnamen-faltung.md`.
+
+### Vorab, weil danach gefragt wurde: was „Faltung" ist und wo der Umbruch sitzt
+
+Eine Kopfzeile einer E-Mail ist `Name: Wert` und endet mit `CRLF`. Weil sie nach
+RFC 5322 2.1.1 nicht beliebig lang werden soll, darf der Absender sie **falten**:
+er setzt ein `CRLF` ein und lässt die nächste Zeile mit einem **Leerzeichen oder
+Tabulator** beginnen. Genau dieses führende Leerzeichen ist das Zeichen dafür,
+dass die Zeile noch zur vorigen gehört. Der Empfänger macht es rückgängig
+(„unfolding"): `CRLF` weg, das Weiß behalten — fertig ist der ursprüngliche Wert.
+
+Ungefaltet:
+
+```
+Content-Disposition: attachment; filename="Rechnung.pdf"
+```
+
+Gefaltet — **dieselbe** Kopfzeile, nur auf zwei Zeilen:
+
+```
+Content-Disposition: attachment;
+ filename="Rechnung.pdf"
+```
+
+Das kann Eudora seit jeher; der Umbruch sitzt hier **zwischen** zwei Teilen,
+außerhalb der Anführungszeichen.
+
+**Der Fehler tritt auf, wenn der Umbruch *im Dateinamen selbst* landet** — und
+das passiert, sobald der Name so lang ist, dass er allein die Zeile sprengt.
+Dann faltet der Absender an einem Leerzeichen **innerhalb** der
+Anführungszeichen:
+
+```
+Content-Disposition: attachment;
+ filename="Angebot Nr 4711 fuer die Stadtwerke Musterstadt
+ Abrechnungszeitraum 2025.pdf"
+                   ^
+                   hier steht das CRLF, mitten im Dateinamen
+```
+
+Der Name ist `Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum
+2025.pdf` — ein einziger Name, nur über zwei Zeilen geschrieben. Eudora hört am
+CR auf zu lesen und behält `Angebot Nr 4711 fuer die Stadtwerke Musterstadt`.
+Alles hinter dem Umbruch, **also auch das `.pdf`**, wird weggeworfen.
+
+Deshalb wirkt es wie eine Längengrenze, ist aber keine: **nicht die Länge
+schneidet ab, sondern der Umbruch** — und lang ist nur der Grund, warum der
+Absender überhaupt umbricht.
+
+> **Das betrifft nur den Empfang, und nur Anhänge sind das Sichtbare daran.**
+> Der Umbruch steht im Kopf der Nachricht, nicht im Anhang selbst; die Datei
+> kommt vollständig an. Verloren geht nur ihr Name. Eudoras eigener Versand
+> faltet nicht (`sendmail.cpp:2392`), löst den Fehler beim Empfänger also nicht
+> aus.
+
+### „Ich hänge doch nur eine Datei an und mache keine Umbrüche"
+
+Gregors Einwand vom 30.09., und er ist berechtigt. Die Auflösung in einem Satz:
+
+> **Du faltest nichts. Das Programm des Absenders tut es — und der Fehler
+> trifft dich beim EMPFANGEN, nicht beim Anhängen.**
+
+Der Reihe nach:
+
+**Beim Anhängen passiert nichts Schlimmes.** Du wählst im Explorer eine Datei,
+sie hat einen Namen und eine Endung, Eudora hängt sie an. Eudora schreibt den
+Namen dabei in **eine** Zeile, ohne Faltung (`sendmail.cpp:2392`). Deine
+gesendeten Nachrichten lösen diesen Fehler beim Empfänger also **nicht** aus.
+
+**Der Fehler trifft Anhänge, die du BEKOMMST.** Die Zeile mit dem Dateinamen
+schreibt das Programm des *Absenders* — Outlook, Exchange, Zimbra, ein
+Scanner, ein Rechnungsportal, ein PHP-Skript. Und die falten, wenn der Name
+lang ist, weil das Mailformat lange Zeilen nicht vorsieht. **Das macht dort
+niemand von Hand**, das Programm tut es von selbst und zeigt es auch niemandem.
+Es ist erlaubt und völlig normal (RFC 5322 2.2.3).
+
+**Die Datei selbst wird dabei nicht angefasst.** Der Umbruch steht in der
+*Kopfzeile*, die den Namen trägt — nicht in den Daten. Die PDF kommt
+vollständig und unversehrt an. Verloren geht nur ihr **Name**, genauer: alles
+hinter dem Umbruch, und da steht die Endung.
+
+Deshalb sieht es aus wie „Eudora verschluckt die Endung": aus Sicht des
+Anwenders ist die Datei da, aber sie heißt falsch und lässt sich nicht mehr per
+Doppelklick öffnen.
+
+> **Welche der vier Ursachen es im Betrieb ist, steht weiter unten und ist
+> nicht entschieden.** Die Faltung ist die häufigste und am besten belegte,
+> aber RFC 2231 (dritte Ursache) erzeugt dasselbe Bild und kommt bei genau
+> denselben Absendern vor. Das klärt der erste Abruf mit eingeschalteten
+> Debug-Marken (B5.0) — nicht früher.
+
+**Ein Fall bleibt offen und ist ausdrücklich nicht gemessen:** Eudora schreibt
+beim *Senden* sehr lange Dateinamen in eine einzige Zeile, ohne zu falten. Das
+verletzt die Zeilenlänge aus RFC 5322 2.1.1. Was ein Server oder das Programm
+des Empfängers damit macht, weiß hier niemand. Es ist die Spiegelseite desselben
+Themas und steht unter „Was ausdrücklich nicht geprüft ist".
 
 ### Kurz: es liegt nicht an der Länge
 
@@ -7985,6 +8087,36 @@ if (!*fName)
 Anwender nach „abgeschnitten, Endung weg" aus, hat aber eine andere Ursache.
 Wer den Fehler nachstellt, muss die drei Fälle auseinanderhalten.
 
+### Vierte Ursache (neu am 30.09., beim Messen gefunden): `filename=""` wird zu `=`
+
+Die Marke wird beim Neuanfang **nicht geleert**. `ReinitToken` setzt nur
+`TokenSpot = 0` (`lex822.cpp:201`), `Token[0]` behält das erste Byte der
+**vorigen** Marke. Solange danach `ADD()` läuft, fällt das nicht auf, weil
+`ADD` die Null selbst nachzieht. Bei einer **leeren** Zeichenkette läuft `ADD`
+nie:
+
+```
+Content-Disposition: attachment; filename=""
+```
+
+```
+    Atom         [66 69 6C 65 6E 61 6D 65 ] "filename"
+    Special      [3D ]                      "="
+    QText        [3D ]                      "="        <- der Wert
+```
+
+`HeaderDesc::Read` liest `l822s.Token` als Zeichenkette, bekommt also `=` und
+legt das als Dateinamen ab. Der Anhang landet als Datei namens `=`. Dieselbe
+Ursache macht die Prüfung `if (Token[TokenSpot] == '\\')` am Anfang von
+`CollectQText`, `CollectComment` und `CollectDL` (`lex822.cpp:256`, `:289`,
+`:316`) wirkungslos bis irreführend: nach jedem `ADD` ist `Token[TokenSpot]`
+null, am Markenanfang steht dort ein fremdes Byte. Maskierte Anführungszeichen
+in einem Dateinamen (`\\"`) werden damit nicht behandelt.
+
+**Behebung:** ein `Token[0] = 0;` dort, wo `ReinitToken` ausgewertet wird
+(`lex822.cpp:201`), und dieselbe Zeile in `ImapLex822.cpp:216`. Eine Zeile je
+Zweig. **Nicht angefasst** — kein Compiler.
+
 ### Warum das Sicherheitsnetz nicht greift
 
 `MIMEMap::SetExtension` (`MIMEMap.cpp:388`) **könnte** die Endung aus dem
@@ -8002,6 +8134,15 @@ MIME-Typ nachtragen. Es tut es in der Praxis oft nicht, aus drei Gründen:
 3. `MIMEMap::Find` (`MIMEMap.cpp:64`) steigt sofort aus, wenn `isMIME` falsch ist.
 
 ### Der Fehler ist nicht durch die Portierung entstanden
+
+> **Und das ändert an der Dringlichkeit nichts.** Gregor am 30.09.: *„ob der
+> Fehler schon drin war oder nicht, weiß ich nicht. Wahrscheinlich ja, ist mir
+> aber egal. Ich möchte das fixen, weil es unschön ist und weil es im
+> freigegebenen Release schlecht aussieht."* Die Herkunft steht hier nur
+> deshalb, weil sie sagt, **wo** zu suchen ist (in beiden Zweigen, nicht in den
+> Portierungsänderungen) — **nicht**, um den Punkt kleiner zu machen. Wer diesen
+> Abschnitt liest und daraus „also nicht unsere Schuld, also später" macht,
+> liest ihn falsch.
 
 Gegen den mitgeführten Altbestand geprüft:
 
@@ -8058,40 +8199,184 @@ unabhängig von der Portierung (der Altbestand hat denselben Code), tritt aber
 genau bei den Namen auf, um die es hier geht. Die Behebung ist `char pcname[256]`
 oder `int len = 254`. **Nicht angefasst**, weil hier nicht gebaut werden kann.
 
-### Was zu ändern wäre
+### Was zu ändern wäre — Teil 1 liegt fertig bereit
 
-Nicht umgesetzt — die Änderung sitzt im Herzstück des Empfangspfads und lässt
-sich ohne Visual Studio weder übersetzen noch am laufenden Programm prüfen. Der
-Vorschlag, in der Reihenfolge des Nutzens:
+**Nachtrag 30.09.2026, zweiter Durchgang.** Der erste Teil ist nicht mehr nur
+beschrieben, sondern **ausgearbeitet und gemessen**:
 
-1. **Faltung in `CollectQText` überleben** (`lex822.cpp:303`, `ImapLex822.cpp:318`).
-   Beim `CR822` nachsehen, ob `CRLF` + Leerzeichen/Tabulator folgt; wenn ja, das
-   CR und das LF überspringen und nach RFC 5322 3.2.2 **ein** Leerzeichen
-   aufnehmen, statt die Marke zu beenden. Nur im Zustand `CollectQText`, nur
-   innerhalb der Anführungszeichen (`InStructure`) — `CollectAtom` und
-   `CollectLine` müssen weiterhin am Umbruch enden, sonst verschmelzen Kopfzeilen.
-   Das allein behebt den gemeldeten Fall.
+| | |
+|---|---|
+| Patch | `tools/patches/anhangnamen-faltung.patch` — 212 Zeilen, vier Dateien, POP **und** IMAP |
+| Beschreibung | `tools/patches/anhangnamen-faltung.md` |
+| Stand | **nicht angewandt.** `git apply --check` läuft sauber gegen den unveränderten Baum |
+| gemessen mit | `perl tools/kopfzeile-pruefen.pl --vorschlag` (zehn Fälle) |
+
+Der Patch besteht aus drei Stücken, und die Aufteilung ist nicht willkürlich —
+sie folgt aus zwei Dingen, die beim Messen herauskamen:
+
+- **Am CR ist noch nicht zu erkennen, ob eine Faltung folgt.** `ReadLine`
+  liefert die Zeile samt CRLF; steht `Spot` auf dem CR, ist das LF das letzte
+  Byte im Puffer, das Zeichen danach ist noch nicht gelesen. Erst wenn `Spot`
+  auf dem LF steht, füllt `LexFill()` nach und hebt dabei genau ein Byte auf.
+  **Deshalb steht die Faltungsregel am LF.** Der Patch nimmt das CR in die
+  Marke auf — so hält es `CollectText` seit jeher — und entscheidet am LF.
+- **`WriteHeaderToken` schreibt jede Marke in die Mailbox-Datei**
+  (`lex822.cpp:402`). Was der Zerleger verschluckt, fehlt in der gespeicherten
+  Nachricht. Weil CR und LF in der Marke stehen, ist der Rückschrieb
+  **byteidentisch** — gemessen, 128 von 128 Byte. Genau deshalb darf der Wert
+  **nicht** im Zerleger entfaltet werden: das würde mitgeschrieben. Die
+  Entfaltung gehört eine Ebene höher, in `HeaderDesc::AddAttribute`
+  (`header.cpp:476`).
+
+| Fall | ohne Patch | mit Patch |
+|---|---|---|
+| **gefaltet (der gemeldete Fehler)** | 47 Zeichen, Endung fehlt, `grokked=FALSE` | **76 Zeichen, `.pdf` da, `grokked=TRUE`, Rückschrieb byteidentisch** |
+| **R4 gefaltet mit Tabulator** | 35 Zeichen, Endung fehlt | **56 Zeichen, vollständig** |
+| R1 Anführungszeichen, dann weitere Kopfzeile | byteidentisch | unverändert |
+| R2 unbeendete Zeichenkette | Rückschrieb 92/91 Byte | **unverändert 92/91** |
+| R3 Faltung außerhalb der Anführungszeichen | heil | unverändert |
+| die übrigen vier | — | unverändert |
+
+**Kein Fall wird schlechter**, und im behobenen Fall wird der Rückschrieb sogar
+besser: heute schreibt die kaputte Zerlegung ein Anführungszeichen zu viel in
+die Mailbox (129 statt 128 Byte).
+
+Geprüft ist damit der Zerleger, **nicht das Programm**. Es ist nichts mit MSVC
+gebaut und nichts gestartet worden; `g++ -fsyntax-only` über die vier
+eingefügten Blöcke ist fehler- und warnungsfrei, mehr sagt das nicht.
+
+### Was noch offen ist
+
 2. **Die Marke vergrößern.** `Token[256]` ist die RFC-822-Atomgrenze, für einen
    Dateinamen ist sie zu klein. `_MAX_PATH`-nah wäre richtig; wer nicht so weit
    gehen will, muss wenigstens `CheckName` die Endung retten lassen, statt am
-   Ende zu kappen.
+   Ende zu kappen. Achtung: `Token` steckt in `lex822.h:70` **und**
+   `ImapLex822.h:29`, und `Buffer[2048]` begrenzt mit.
 3. **RFC 2231.** Deutlich mehr Arbeit (Teilstücke sammeln und in der richtigen
    Reihenfolge zusammensetzen, `*`-Form mit Zeichensatz und Prozentzeichen
    auflösen). Eigener Punkt, nicht in einem Zug mit 1 und 2.
-4. **`DeMacifyName32`** (`mime.cpp:948`, und die Abschrift
-   `LOCAL_DeMacifyName32` in `EuImap/src/imapmime.cpp:82`): `pcname` auf 256, oder
-   `len` auf 254.
+4. **Die Marke beim Neuanfang leeren** — `Token[0] = 0;` bei `lex822.cpp:201`
+   und `ImapLex822.cpp:216`. Eine Zeile je Zweig, behebt `filename=""` → `=`
+   (vierte Ursache oben). Klein genug, um mit Teil 1 zusammen zu gehen.
+5. **`DeMacifyName32`** (`mime.cpp:948`, und die Abschrift
+   `LOCAL_DeMacifyName32` in `EuImap/src/imapmime.cpp:82`): `pcname` auf 256,
+   oder `len` auf 254.
 
-Nach jeder dieser Änderungen: `perl tools/kopfzeile-pruefen.pl`. Die Spalte
-`stand` in dem Werkzeug ist dann **mit** zu ändern — sonst meldet es die eigene
-Behebung als Abweichung.
+Nach jeder dieser Änderungen: `perl tools/kopfzeile-pruefen.pl`. **Die Spalte
+`stand` in dem Werkzeug ist dann mit zu ändern** — sonst meldet es die eigene
+Behebung für immer als Schaden. Das Werkzeug erkennt am Markierungssatz des
+Patches selbst, ob die Behebung schon im Baum steht, und bildet dann auch das
+geänderte `WriteHeaderToken` nach.
+
+### Beim Abrufen zusehen: Debug-Marken auf dem ganzen Weg
+
+**Nachtrag 30.09.2026, dritter Durchgang.** Gregor: *„nicht vergessen,
+Debug-Marken einzufügen, wenn da was schief läuft, dass man das auf die Schnelle
+rausfindet … damit man beim Mail abrufen oder beim Benutzen sieht, was passiert
+und was nicht hinhaut."*
+
+Eudora hat die Logdatei schon — `QCLogFileMT`, gesteuert über eine **Bitmaske**
+in `eudora.ini`, geschrieben nach `eudora.log`. Es fehlte nur ein Bit für diesen
+Weg. `tools/patches/anhangnamen-debugmarken.patch` legt es an
+(`DEBUG_MASK_ATTACH = 0x10000`, `debug.h`) und setzt **acht Marken**:
+
+| # | Wo | Was sie sagt |
+|---|---|---|
+| 1 | `Lex822()`, Marke voll (`lex822.cpp:206`) | Kappung bei 254 Zeichen — AN-1, zweiter Teil |
+| 2 | `Lex822()`, vor dem `switch` (`lex822.cpp:213`) | **Umbruch mitten in der Zeichenkette** — AN-1, erster Teil |
+| 3 | `AddAttribute` (`header.cpp:476`) | der Wert, wie er abgelegt wird |
+| 4 | `GenericReader::ReadIt` (`mime.cpp:1634`) | woher der Name kommt — `filename`/`name` oder **Betreff** |
+| 5 | dieselbe Stelle, nach `MIMEMap` | ob die Endung nachgetragen wurde, oder der Typ unbekannt ist |
+| 6 | `OpenAttachFile` (`mime.cpp:1275`) | vor und nach `DeMacifyName32` |
+| 7 | dieselbe Stelle, nach `CheckName` | **wie die Datei am Ende wirklich heißt** |
+| 8 | `CheckName` (`mime.cpp:1127`) | dass hier gekürzt wurde — mit erhaltener Endung |
+
+Marken 1 bis 3 gibt es doppelt, einmal für IMAP. **Einschalten:** in
+`eudora.ini`, `[Settings]`, `LogLevel=91295` (Voreinstellung 25759 + 65536),
+dann `grep ANHANG eudora.log`.
+
+**Steuerzeichen werden sichtbar gemacht** — dafür bringt der Patch
+`PutDebugLogSichtbar()` mit (`debug.cpp`): `CR` wird `<CR>`, `LF` wird `<LF>`,
+Tabulator `<TAB>`, alles andere unter 32 `<XX>`. Ohne das wäre der Log hier
+wertlos, weil eine Faltung im Dateinamen genauso aussähe wie ein Zeilenumbruch
+im Log. Die Funktion ist als einzige wirklich gebaut und ausgeführt worden
+(`g++`, gegen einen Stellvertreter):
+
+```
+ANHANG Lex822: Umbruch IN der Zeichenkette [Angebot ... Musterstadt<CR><LF> Abrechnungszeitraum 2025.pdf] (76)
+```
+
+**Die beiden Patches stören sich nicht.** Die Marke im Zerleger sitzt bewusst
+**vor** dem `switch` statt im `case CR822:`, den `anhangnamen-faltung.patch`
+umschreibt. Nachgewiesen mit `git apply --check`: beide greifen einzeln auf den
+unveränderten Baum, und die Behebung greift auch noch, wenn die Marken schon
+drin sind.
+
+**Reihenfolge:** erst die Marken, dann einmal die Prüfdaten abrufen und den Log
+ansehen — damit ist die Diagnose am **laufenden Programm** belegt, was sie
+bisher nicht ist. Erst danach die Behebung und derselbe Abruf noch einmal.
+
+### Nachstellen ohne echte Post — und ohne Visual Studio zum Erzeugen
+
+**Eine `.eml` in eine `.mbx` zu kopieren reicht nicht.** Der Fehler sitzt im
+*Empfangs*weg (`CPOP::WriteMessageToMBX_` → `HeaderDesc::Read` → `Lex822`).
+Liegt die Nachricht schon in der Mailbox, läuft dieser Weg nie, und der Anhang
+wird gar nicht erst geschrieben. Die Nachricht muss **abgerufen** werden.
+
+Deshalb bringt `tools/anhang-pruefdaten.pl` beides mit: die sechs Nachrichten
+**und** einen winzigen POP3-Server, der sie ausliefert — kein Netz, keine
+Zugangsdaten, alles auf `127.0.0.1`.
+
+```
+perl tools/anhang-pruefdaten.pl              # zeigt die sechs Faelle
+perl tools/anhang-pruefdaten.pl --erzeugen   # schreibt die .eml-Dateien
+perl tools/anhang-pruefdaten.pl --pop        # liefert sie auf 127.0.0.1:11110
+```
+
+Konto in Eudora: Server `127.0.0.1`, Port `11110`, Benutzer `pruef`, Kennwort
+beliebig, **SSL aus**. Abrufen, dann ins Anhangverzeichnis sehen. Der Server
+löscht nie etwas — man kann beliebig oft abrufen.
+
+| | |
+|---|---|
+| **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
+| **alle sechs heil** | `anhangnamen-faltung.patch` und B5.2 bis B5.5 sind durch |
+| **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+
+Der POP3-Server ist in perl geschrieben und läuft ohne Compiler. Was er **nicht**
+kann: er ersetzt keinen Bau. Er stellt den Fehler nach, er behebt ihn nicht.
+
+### Der Fingerabdruck in der Mailbox-Datei
+
+Wer den Fehler in **echter** Post nachweisen will, braucht das Original nicht.
+Eudora schreibt die Kopfzeile in die `.mbx` zurück (`WriteHeaderToken`,
+`lex822.cpp:402`) — und setzt dabei im Fehlerfall **ein Anführungszeichen an die
+falsche Stelle**. Gemessen, Fall 2 des Prüfstands:
+
+```
+auf der Leitung:                      in der .mbx:
+ filename="Angebot ... Musterstadt     filename="Angebot ... Musterstadt"
+ Abrechnungszeitraum 2025.pdf"         Abrechnungszeitraum 2025.pdf"
+```
+
+Zwei schließende Anführungszeichen: eines am Zeilenende **vor** einer Zeile, die
+mit Leerzeichen oder Tabulator beginnt, und das ursprüngliche am Ende. Ein Byte
+mehr als auf der Leitung (129 statt 128). **Danach lässt sich in einer `.mbx`
+suchen** — das findet die betroffenen Nachrichten, ohne dass jemand die
+Originale aufheben musste.
 
 ### Was ausdrücklich **nicht** geprüft ist
 
-- Ob der Anwender den Namen genau so gemeldet hat: es liegt **keine
-  Beispielnachricht** vor. Die drei Ursachen erklären das Bild, welche davon
-  Gregor getroffen hat, ist offen. **Eine `.eml` mit einem betroffenen Anhang
-  würde das in einem Zug klären** — sie gehört zum nächsten Schritt.
+- Welche der vier Ursachen im Betrieb zuschlägt. Es liegt **keine echte
+  Beispielnachricht vor**. Gregor am 30.09.: *„Ich kann dir jetzt keine
+  Beispielnachricht geben. Mir ist es nur aufgefallen, dass … immer wieder
+  Dateien im Attachment gespeichert werden, bei denen zum Beispiel PDF oder Doc
+  … fehlt und der Dateiname ist nicht vollständig."* **Darauf ist nicht zu
+  warten**, und es ist auch nicht mehr nötig: seit dem 30.09. liegen **sechs
+  erzeugte Nachrichten** bereit, eine je Ursache, mit einem gültigen PDF im
+  Anhang — `tools/pruefdaten/anhang-faltung/`, erzeugt und ausgeliefert von
+  `tools/anhang-pruefdaten.pl`. Taucht später doch echte Post auf, klärt sie
+  nur noch, welche Ursache im Betrieb überwiegt.
 - Der Sendeweg. `sendmail.cpp:2392` schreibt `filename="…"` in **eine** Zeile,
   ohne Faltung; Eudoras eigene Nachrichten lösen den Fehler beim Empfänger also
   nicht aus (bei sehr langen Namen verletzt das dafür die Zeilenlänge aus

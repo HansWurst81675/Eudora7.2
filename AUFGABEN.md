@@ -447,43 +447,162 @@ perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 
 Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**)
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **Bugfix, Teil 1 liegt bereit**
 
-Gregors Meldung vom 30.09.2026. **Untersucht und belegt, nicht behoben** — die
-Änderung sitzt im Zerleger des Empfangspfads und lässt sich ohne Bau weder
-übersetzen noch am Programm prüfen.
+Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben.
+**Nicht eingespielt** — beide Sitzungen dazu liefen ohne Windows und ohne
+Compiler (die zweite auf Android).
 
 **Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
-solange er in *einer* Zeile steht. Drei getrennte Ursachen erzeugen dasselbe
-Bild, alle drei sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im
-Baum (POP in `lex822.*`, IMAP in `EuImap/src/ImapLex822.*`):
+solange er in *einer* Zeile steht. Vier getrennte Ursachen erzeugen dasselbe
+Bild, alle sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im Baum
+(POP in `lex822.*`/`header.cpp`, IMAP in `EuImap/src/ImapLex822.*`/`ImapHeader.cpp`).
 
-| | Ursache | Fundstelle (POP / IMAP) |
-|---|---|---|
-| 1 | eine **Faltung** beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, aber das CR kommt zuerst | `lex822.cpp:303` / `ImapLex822.cpp:318`, Regel bei `:213` / `:228` |
-| 2 | die Marke ist **256 Byte** groß, ab 254 Zeichen wird gekappt | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` |
-| 3 | **RFC 2231** (`filename*0=`) kennt der Baum nicht — dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** (`subj[32]`, 31 Zeichen) | nirgends |
+#### Was zu tun ist, in dieser Reihenfolge
 
-**Nachprüfen ohne Visual Studio:**
+| Schritt | Was | Fundstelle (POP / IMAP) | Stand |
+|---|---|---|---|
+| **B5.0** | **Debug-Marken einspielen** — acht Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` in `eudora.ini` | `debug.h`, `debug.cpp`, `lex822.cpp`, `header.cpp`, `mime.cpp` / `ImapLex822.cpp`, `ImapHeader.cpp` | **Patch liegt bereit**, stört B5.1 nicht |
+| **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | `lex822.cpp:303`, `:433`, `header.cpp:476` / `ImapLex822.cpp:318`, `:454`, `ImapHeader.cpp:489` | **Patch liegt bereit und ist gemessen** |
+| **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wird `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** Marke trägt | `lex822.cpp:201` / `ImapLex822.cpp:216` | offen, **eine Zeile je Zweig** |
+| **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappt ab 254 Zeichen. `Buffer[2048]` begrenzt mit | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` | offen |
+| **B5.4** | **`DeMacifyName32`**: schreibt bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]`. `pcname` auf 256 **oder** `len` auf 254 | `mime.cpp:948` / `EuImap/src/imapmime.cpp:82` | offen, eine Zahl je Zweig |
+| **B5.5** | **RFC 2231** (`filename*0=`) kennt der Baum nicht. Dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** — `subj[32]`, also 31 Zeichen | nirgends im Baum | offen, **eigener Punkt**, deutlich größer als B5.1 bis B5.4 |
+
+**Wer nur einen der beiden Zweige ändert, baut sich einen Fehler, der von der
+Kontenart abhängt.** Das ist schlimmer als der Fehler selbst.
+
+#### B5.1 — der bereitliegende Patch
+
+| | |
+|---|---|
+| Patch | `tools/patches/anhangnamen-faltung.patch` — 212 Zeilen, vier Dateien |
+| Beschreibung | `tools/patches/anhangnamen-faltung.md` — warum es drei Stücke braucht |
+| Prüfung | `git apply --check tools/patches/anhangnamen-faltung.patch` läuft sauber |
+| gemessen | `perl tools/kopfzeile-pruefen.pl --vorschlag`, zehn Fälle |
+
+Ergebnis der Messung: der gemeldete Fall geht von **47 Zeichen ohne Endung** auf
+**76 Zeichen mit `.pdf`**, `grokked` von `FALSE` auf `TRUE`, und der Rückschrieb
+in die Mailbox-Datei wird byteidentisch (heute schreibt die kaputte Zerlegung
+ein Anführungszeichen zu viel hinein). **Kein Fall wird schlechter** — die fünf
+Rückfallproben R1 bis R5 bleiben, wie sie sind.
+
+**Gemessen ist der Zerleger, nicht das Programm.** Es ist nichts mit MSVC gebaut
+und nichts gestartet worden.
+
+#### So geht es weiter, sobald Visual Studio da ist
+
+1. `git apply tools/patches/anhangnamen-debugmarken.patch`, bauen,
+   `LogLevel=91295` setzen, die Prüfdaten abrufen, `grep ANHANG eudora.log` —
+   **damit ist die Diagnose am laufenden Programm belegt**, bevor irgendetwas
+   geändert wird.
+2. `git apply tools/patches/anhangnamen-faltung.patch`
+3. `perl tools/kopfzeile-pruefen.pl` — meldet jetzt **6 Abweichungen**: das sind
+   die behobenen Fälle. **Dann die Spalte `stand` im Werkzeug nachziehen**,
+   sonst meldet es die eigene Behebung für immer als Schaden.
+4. Bauen. Denselben Abruf wiederholen und den Log vergleichen. Eine echte Nachricht mit gefaltetem `filename=` abrufen und nachsehen,
+   wie die Datei im Anhangverzeichnis heißt.
+5. Einen Testfall in `Eudora71/Tests/TestPopEmpfang.cpp` nachziehen — dort liegt
+   das Gerüst für den Empfangspfad schon.
+6. Dann B5.2 bis B5.4; das sind zusammen vier Zeilen und zwei Zahlen.
+
+#### B5.0 · **Zuerst die Debug-Marken einspielen** — dann sieht man beim Abrufen zu
+
+Gregor: *„nicht vergessen, Debug-Marken einzufügen, wenn da was schief läuft,
+dass man das auf die Schnelle rausfindet … damit man beim Mail abrufen oder beim
+Benutzen sieht, was passiert und was nicht hinhaut."*
+
+| | |
+|---|---|
+| Patch | `tools/patches/anhangnamen-debugmarken.patch` — 336 Zeilen, sieben Dateien |
+| Beschreibung | `tools/patches/anhangnamen-debugmarken.md` — alle acht Marken, was sie sagen |
+| Stand | **nicht angewandt**, `git apply --check` läuft sauber |
+| stört B5.1? | **Nein.** Beide greifen einzeln, und die Behebung greift auch noch, wenn die Marken schon drin sind — nachgewiesen |
+
+**Einschalten** (kein Neubau nötig, nur ein Neustart): in `eudora.ini`, Gruppe
+`[Settings]`, `LogLevel=91295` — das ist die Voreinstellung 25759 **plus 65536**
+(`DEBUG_MASK_ATTACH = 0x10000`). Geschrieben wird nach `eudora.log` im
+Eudora-Verzeichnis. Auslesen:
 
 ```
-perl tools/kopfzeile-pruefen.pl          # 5 Faelle, rc=0 solange AN-1 offen
-perl tools/kopfzeile-pruefen.pl --lang   # dazu jede einzelne Marke
+grep ANHANG eudora.log
 ```
 
-Das Werkzeug holt `Lex822()` bei jedem Lauf wörtlich aus dem Baum, übersetzt es
-mit `g++` (oder `cl`) und vergleicht mit dem verzeichneten Stand. **Wer etwas
-behebt, ändert die Spalte `stand` im Werkzeug mit** — sonst meldet es die eigene
-Behebung als Abweichung.
+Acht Marken auf dem Weg des Namens: wo der Zerleger abbricht, was `AddAttribute`
+ablegt, woher der Name kommt (`filename` / `name` / **Betreff**), ob `MIMEMap`
+die Endung nachträgt, was `DeMacifyName32` daraus macht, und **wie die Datei am
+Ende wirklich heißt**. Steuerzeichen werden sichtbar gemacht — eine Faltung
+erscheint im Log als `<CR><LF>` und ist nicht mit einem echten Zeilenumbruch zu
+verwechseln.
 
-**Reihenfolge, wenn ein Bau da ist:** erst 1 (behebt den gemeldeten Fall), dann
-2, dann 4 (`DeMacifyName32`, `mime.cpp:948` — schreibt bei 255 Zeichen ein Byte
-hinter den Puffer, dieselbe Stelle noch einmal in `EuImap/src/imapmime.cpp:82`).
-RFC 2231 ist ein eigener Punkt, nicht in einem Zug mit 1 und 2.
+**Reihenfolge:** B5.0 zuerst, dann einmal die Prüfdaten abrufen und den Log
+ansehen — damit ist die Diagnose am laufenden Programm belegt. Erst danach
+B5.1 einspielen und denselben Abruf wiederholen; dann muss aus
+„Umbruch IN der Zeichenkette" nichts mehr werden und der Name vollständig sein.
 
-**Was fehlt:** eine **Beispielnachricht**. Welche der drei Ursachen Gregor
-getroffen hat, ist offen — eine `.eml` mit einem betroffenen Anhang klärt das in
-einem Zug. Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
+#### Prüfdaten liegen bereit — sechs Nachrichten, ein POP3-Server
+
+Gregor hat angeboten, auf dem Windows-Rechner Beispiele herauszusuchen oder
+Testdaten zu erzeugen. **Das ist erledigt**, es braucht keine echte Post mehr:
+
+```
+perl tools/anhang-pruefdaten.pl              # zeigt die sechs Faelle
+perl tools/anhang-pruefdaten.pl --erzeugen   # schreibt die .eml-Dateien
+perl tools/anhang-pruefdaten.pl --pop        # liefert sie auf 127.0.0.1:11110
+```
+
+Sechs Nachrichten mit einem gültigen einseitigen PDF im Anhang, eine je Ursache,
+in `tools/pruefdaten/anhang-faltung/`. **Eine `.eml` in eine `.mbx` zu kopieren
+reicht nicht** — der Fehler sitzt im Empfangsweg, die Nachricht muss wirklich
+abgerufen werden. Dafür der mitgelieferte POP3-Server: kein Netz, keine
+Zugangsdaten, alles auf `127.0.0.1`.
+
+Konto in Eudora: Server `127.0.0.1`, Port `11110`, Benutzer `pruef`, Kennwort
+beliebig, **SSL aus**. Abrufen, dann ins Anhangverzeichnis sehen.
+
+| | |
+|---|---|
+| **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
+| **alle sechs heil** | B5.1 bis B5.5 sind durch |
+| **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+
+Der Server löscht nie etwas — beliebig oft abrufbar. Einzelheiten:
+`tools/pruefdaten/LIESMICH.md`.
+
+**In echter Post erkennt man es am doppelten Anführungszeichen** in der
+`.mbx`-Datei: eines am Zeilenende vor einer Zeile, die mit Leerzeichen oder
+Tabulator beginnt, und das ursprüngliche am Ende. Eudora setzt es im Fehlerfall
+dorthin. Siehe BEFUNDE.md AN-1, „Der Fingerabdruck in der Mailbox-Datei".
+
+#### Nachprüfen ohne Visual Studio
+
+```
+perl tools/kopfzeile-pruefen.pl             # 10 Faelle, rc=0 solange AN-1 offen
+perl tools/kopfzeile-pruefen.pl --vorschlag # mit B5.1, zum Vergleich
+perl tools/kopfzeile-pruefen.pl --lang      # dazu jede einzelne Marke
+```
+
+Das Werkzeug holt `Lex822()` samt Tabellen bei **jedem** Lauf wörtlich aus dem
+Baum, ersetzt nur die zwei Stellen, die ans Netz gehen, übersetzt mit `g++`
+(oder `cl`) und vergleicht mit dem verzeichneten Stand — Dateiname, `grokked`
+**und** was `WriteHeaderToken` in die Mailbox schreiben würde.
+
+#### Warum das behoben wird — und worauf **nicht** zu warten ist
+
+Gregors Begründung vom 30.09., wörtlich: *„Ich möchte das fixen, weil es unschön
+ist und weil es im freigegebenen Release schlecht aussieht."* Dass es sich um
+einen Originalfehler aus Eudora 7.1 handelt, ist ihm ausdrücklich **egal** —
+die Herkunft steht in AN-1 nur, weil sie sagt, wo zu suchen ist.
+
+**Eine Beispielnachricht gibt es nicht und wird es nicht geben.** Gregor hat den
+Fehler im Betrieb gesehen — *„immer wieder Dateien im Attachment …, bei denen
+zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* —,
+kann aber keine Nachricht liefern. **Darauf ist nicht zu warten.** B5.1 bis
+B5.4 sind aus dem Quelltext heraus begründet und gemessen; sie brauchen kein
+Beweisstück. Taucht später doch eine `.eml` auf, klärt sie in einem Zug, welche
+der vier Ursachen im Betrieb überwiegt — mehr nicht.
+
+Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
 
 ---
 

@@ -1,0 +1,48 @@
+Return-Path: <pruefstand@localhost>
+Received: from pruefstand (127.0.0.1) by localhost;
+ Tue, 30 Sep 2026 12:00:00 +0200
+Date: Tue, 30 Sep 2026 12:00:00 +0200
+From: Pruefstand AN-1 <pruefstand@localhost>
+To: Eudora <pruef@localhost>
+Subject: Pruefung AN-1: Dateiname an einem Leerzeichen gefaltet
+Message-ID: <an1-01-gefaltet-leerzeichen@localhost>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----EUDORA-AN1-01-gefaltet-leerzeichen"
+
+Diese Nachricht hat mehrere Teile im MIME-Format.
+
+------EUDORA-AN1-01-gefaltet-leerzeichen
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+
+Pruefnachricht fuer Befund AN-1, Fall 01-gefaltet-leerzeichen.
+
+Erwartet wird der Anhang
+  Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf
+
+Heute macht Eudora daraus
+  Angebot Nr 4711 fuer die Stadtwerke Musterstadt
+
+Siehe BEFUNDE.md, Befund AN-1.
+------EUDORA-AN1-01-gefaltet-leerzeichen
+Content-Type: application/pdf;
+ name="Angebot Nr 4711 fuer die Stadtwerke Musterstadt
+ Abrechnungszeitraum 2025.pdf"
+Content-Disposition: attachment;
+ filename="Angebot Nr 4711 fuer die Stadtwerke Musterstadt
+ Abrechnungszeitraum 2025.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2Jq
+CjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2Jq
+CjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCAzMDAg
+MTIwXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA1IDAgUiA+PiA+PiAvQ29udGVudHMgNCAw
+IFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCA5NSA+PgpzdHJlYW0KQlQgL0YxIDE0IFRm
+IDIwIDcwIFRkIChFdWRvcmEgNy4yIC0gUHJ1ZWZhbmhhbmcgQU4tMSkgVGogMCAtMjQgVGQgKERh
+dGVpbmFtZSBtaXQgRmFsdHVuZykgVGogRVQKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjw8IC9U
+eXBlIC9Gb250IC9TdWJ0eXBlIC9UeXBlMSAvQmFzZUZvbnQgL0hlbHZldGljYSA+PgplbmRvYmoK
+eHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAw
+NTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjQxIDAwMDAwIG4gCjAwMDAw
+MDAzODYgMDAwMDAgbiAKdHJhaWxlcgo8PCAvU2l6ZSA2IC9Sb290IDEgMCBSID4+CnN0YXJ0eHJl
+Zgo0NTYKJSVFT0YK
+------EUDORA-AN1-01-gefaltet-leerzeichen--
