@@ -9,10 +9,11 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 18.09.2026)
+## Noch offen (Stand 11.10.2026)
 
 | Kennung | | |
 |---|---|---|
+| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Offen, vier Ursachen am Zerleger gemessen, keine am laufenden Programm.** Von Gregor am 30.09.2026 gemeldet. **Es liegt nicht an der Länge:** ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile steht — abgeschnitten wird er, sobald der Absender die Kopfzeile faltet. Alle vier Ursachen sind **Originalfehler aus Eudora 7.1** und stecken **doppelt** im Baum (POP und IMAP). **Zwei Patches liegen bereit und sind nicht angewandt:** `tools/patches/anhangnamen-debugmarken.patch` (acht Marken auf dem Weg des Namens) und `anhangnamen-faltung.patch` (Behebung der Faltung). Prüfdaten samt POP3-Prüfstand in `tools/pruefdaten/`. Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5.0 bis B5.5**; Herleitung in [BEFUNDE.md](BEFUNDE.md) |
 | **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
@@ -884,8 +885,12 @@ den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
 > muss aufgehen, und Eudora muss danach noch da sein.
 
 **Gebaut am 17.09.2026.** **Als Paket geschnürt und auf GitHub veröffentlicht
-als `v1.0.64`** (17.09.2026, 10:23 Uhr UTC, dort als *Latest*);
-`Releases/Eudora72-1.0.64-release.zip` liegt daneben.
+als `v1.0.64`** (17.09.2026, 10:23 Uhr UTC). `Eudora72-1.0.64-release.zip`
+liegt **nicht** im Repo — `Releases/Eudora72-*-release.zip` ist von
+`.gitignore` erfasst; es hängt an der Veröffentlichung. Prüfsumme und
+Netzadresse stehen in [Releases/PAKETE.md](Releases/PAKETE.md), Abschnitt
+1.0.64. *(Berichtigt am 11.10.2026: hier stand „liegt daneben", und das war in
+jedem frischen Klon falsch.)*
 
 > **Berichtigt am 17.09.2026 (LEKTOR, L-13.4).** Hier stand *„Ein Paket ist zu
 > dieser Fassung noch nicht geschnürt — das letzte liegt als
@@ -1469,7 +1474,7 @@ aus `msgutils.cpp` geschnitten, nicht abgeschrieben.
 
 ### Zum Prüfen
 
-1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Settings]`.
+1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Debug]`.
 2. Starten, den Newsletter aus **E-86** weiterleiten — einmal ohne
    Kommentar, einmal mit einem Satz darüber. Beide an die eigene Adresse.
 3. Im Protokoll nach `E-88` suchen. Erwartet: `Fassung=ORIGINAL
@@ -3841,7 +3846,7 @@ Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
 
 - **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
   noch erreicht wurde. 15 Spurmarken liegen auf dem Weg. Sie schreiben **nur**,
-  wenn in `Eudora.ini` unter `[Settings]` `LogLevel=32896` steht —
+  wenn in `Eudora.ini` unter `[Debug]` `LogLevel=32896` steht —
   `PutDebugLog` prüft die Maske und kehrt sonst sofort zurück
   (`QCUtils/src/debug.cpp:140`).
 - **`Exception.log`** — enthält seit 7.2.0.13 die Modultabelle. Damit:
@@ -4298,7 +4303,7 @@ powershell -ExecutionPolicy Bypass -File tools\strg-n-pruefen.ps1 -Verzeichnis <
 
 Das Werkzeug startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob
 das Fenster aufgeht. Für das Protokoll braucht es `LogLevel=32896` unter
-`[Settings]` in der `Eudora.ini` — `PutDebugLog` prüft die Maske und kehrt
+`[Debug]` in der `Eudora.ini` — `PutDebugLog` prüft die Maske und kehrt
 sonst sofort zurück (`QCUtils/src/debug.cpp:140`).
 
 **Unter dem Debugger**, 32-Bit-PowerShell:

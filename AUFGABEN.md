@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 18.09.2026**, gemessen an Quellstand **7.2.0.76** / `VERSION` **1.0.76** (veröffentlicht ist `v1.0.72`)
+**Stand 11.10.2026**, gemessen an Quellstand **7.2.0.76** / `VERSION` **1.0.76** (veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -492,7 +492,12 @@ und nichts gestartet worden.
 
 #### So geht es weiter, sobald Visual Studio da ist
 
-1. `git apply tools/patches/anhangnamen-debugmarken.patch`, bauen,
+0. **Version heben** — [README.md, *Selbst bauen*](README.md#selbst-bauen).
+   In diesem Punkt wird **zweimal** gebaut (Schritt 1 und 4), also auch zweimal
+   gehoben; sonst tragen beide `Eudora.exe` dieselbe Nummer und das Urteil
+   lässt sich keinem von beiden zuordnen (Befund **V-1**).
+1. `git apply tools/patches/anhangnamen-debugmarken.patch`, bauen (mit
+   `-Ziel Rebuild` — der Patch ändert einen öffentlichen DLL-Header),
    `LogLevel=91295` setzen, die Prüfdaten abrufen, `grep ANHANG eudora.log` —
    **damit ist die Diagnose am laufenden Programm belegt**, bevor irgendetwas
    geändert wird.
@@ -519,8 +524,9 @@ Benutzen sieht, was passiert und was nicht hinhaut."*
 | Stand | **nicht angewandt**, `git apply --check` läuft sauber |
 | stört B5.1? | **Nein.** Beide greifen einzeln, und die Behebung greift auch noch, wenn die Marken schon drin sind — nachgewiesen |
 
-**Einschalten** (kein Neubau nötig, nur ein Neustart): in `eudora.ini`, Gruppe
-`[Settings]`, `LogLevel=91295` — das ist die Voreinstellung 25759 **plus 65536**
+**Einschalten** (kein Neubau nötig, nur ein Neustart): in `eudora.ini` gehört
+`LogLevel` in die Gruppe `[Debug]` — `LogLevel=91295`, das ist die
+Voreinstellung 25759 **plus 65536**
 (`DEBUG_MASK_ATTACH = 0x10000`). Geschrieben wird nach `eudora.log` im
 Eudora-Verzeichnis. Auslesen:
 

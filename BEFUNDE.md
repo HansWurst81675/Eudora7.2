@@ -8291,9 +8291,9 @@ Weg. `tools/patches/anhangnamen-debugmarken.patch` legt es an
 | 7 | dieselbe Stelle, nach `CheckName` | **wie die Datei am Ende wirklich heißt** |
 | 8 | `CheckName` (`mime.cpp:1127`) | dass hier gekürzt wurde — mit erhaltener Endung |
 
-Marken 1 bis 3 gibt es doppelt, einmal für IMAP. **Einschalten:** in
-`eudora.ini`, `[Settings]`, `LogLevel=91295` (Voreinstellung 25759 + 65536),
-dann `grep ANHANG eudora.log`.
+Marken 1 bis 3 gibt es doppelt, einmal für IMAP. **Einschalten:** `LogLevel`
+steht in `eudora.ini` im Abschnitt `[Debug]` — `LogLevel=91295`
+(Voreinstellung 25759 + 65536), dann `grep ANHANG eudora.log`.
 
 **Steuerzeichen werden sichtbar gemacht** — dafür bringt der Patch
 `PutDebugLogSichtbar()` mit (`debug.cpp`): `CR` wird `<CR>`, `LF` wird `<LF>`,

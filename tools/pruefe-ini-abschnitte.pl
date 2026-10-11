@@ -253,7 +253,7 @@ for my $datei (@dateien)
 			next;
 		}
 
-		# Fliesstext: "`Schluessel` ... Abschnitt `[Settings]`"
+		# Fliesstext, Form 1: "`Schluessel` ... Abschnitt `[Settings]`"
 		if ($z =~ /Abschnitt\s+`\[([^\]]+)\]`/)
 		{
 			my $sect = $1;
@@ -261,7 +261,99 @@ for my $datei (@dateien)
 			while ($z =~ /`([A-Za-z][\w]*)`/g) { push @keys, $1 }
 			pruefe_behauptung($datei, $nr, $_, $sect, 'Fliesstext') for @keys;
 		}
+
+		# Fliesstext, Form 2: Abschnitt und Schluessel in BELIEBIGER Reihenfolge,
+		# ueber ZWEI Zeilen hinweg, und ohne das Wort "Abschnitt".
+		#
+		# WARUM ES DIESE ZWEITE FORM GIBT
+		#
+		# Form 1 verlangt das Wort "Abschnitt" vor dem Abschnittsnamen und findet
+		# den Schluessel irgendwo daneben. Am 11.10.2026 ist genau daran eine
+		# falsche Angabe vorbeigelaufen - in AUFGABEN.md und BEFUNDE.md stand
+		#
+		#     in `eudora.ini`, Gruppe
+		#     `[Settings]`, `LogLevel=91295`
+		#
+		# also Abschnitt ZUERST, Schluessel danach, das Wort "Gruppe" statt
+		# "Abschnitt", und der Umbruch mittendrin. Die Schranke meldete gruen,
+		# obwohl LogLevel nach [Debug] gehoert - dieselbe Fehlerklasse, wegen der
+		# dieses Werkzeug ueberhaupt gebaut wurde. Gregor am 11.10.2026: "immer,
+		# wenn ich was pruefe, stelle ich fest, dass du nicht sauber arbeitest."
+		#
+		# Damit es nicht beim naechsten Satzbau wieder durchrutscht, loest Form 2
+		# auf das aus, was eine Behauptung AUSMACHT, nicht auf ihre Formulierung:
+		# ein Abschnittsname in Anfuehrungsstrichen und eine Zuweisung
+		# `Schluessel=Wert` oder das Wort Gruppe/Abschnitt, im Fenster aus dieser
+		# und der vorigen Zeile.
+		#
+		# Falschmeldungen sind dabei nicht zu befuerchten: pruefe_behauptung
+		# kehrt sofort zurueck, wenn der Name kein bekannter INI-Schluessel oder
+		# der Abschnitt kein vergebener ist.
+		{
+			my $fenster = ($i > 0 ? $zeilen[$i - 1] : '');
+			$fenster =~ s/\r?\n\z//;
+			$fenster .= ' ' . $z;
+
+			# Ein BERICHT ueber einen falschen Eintrag ist keine Behauptung.
+			# Dieselbe Regel wie in doku-pruefen.pl:771 ("Ein Zitat ist keine
+			# Behauptung"). Ohne sie meldet Form 2 genau die Stellen, die den
+			# Fehler ERKLAEREN - FILTER.md:548 beschreibt, dass
+			# UseMyFilterWindowPosition faelschlich in [Settings] stand, und
+			# tools/ZWEIGE.md:91 beschreibt denselben Fall fuer LogLevel.
+			# GRENZE, damit sie niemand uebersieht: eine wirklich falsche
+			# Angabe, in deren Naehe eines dieser Woerter steht, faellt mit
+			# heraus. Vergangenheitsformen sind dafuer bewusst gewaehlt -
+			# "steht in [Settings]" wird weiterhin geprueft, "stand in
+			# [Settings]" nicht.
+			my $bericht = ($fenster =~ /\bstand\b|\bstanden\b|\bstatt\b|schuld|
+								 ignoriert|berichtigt|behauptet|Behauptung|
+								 damals|frueher|ueberholt|\bwar\b|\bwaren\b/xi);
+
+			if (!$bericht && $fenster =~ /`\[([^\]]+)\]`/)
+			{
+				my $sect = $1;
+				my @keys;
+
+				# a) jede Zuweisung in Anfuehrungsstrichen: `LogLevel=91295`
+				while ($fenster =~ /`([A-Za-z][\w]*)\s*=[^`]*`/g) { push @keys, $1 }
+
+				# b) sonst, wenn Gruppe oder Abschnitt dabeisteht: jeder Name
+				if ($fenster =~ /\b(?:Gruppe|Abschnitt)\b/)
+				{
+					while ($fenster =~ /`([A-Za-z][\w]*)`/g) { push @keys, $1 }
+				}
+
+				pruefe_behauptung($datei, $nr, $_, $sect, 'Fliesstext2') for @keys;
+			}
+		}
 	}
+}
+
+# Einmal melden reicht. Zwei Faelle gibt es:
+#   1. Form 1 und Form 2 treffen dieselbe Zeile.
+#   2. Form 2 sieht dieselbe Behauptung zweimal, weil ihr Fenster zwei Zeilen
+#      breit ist - einmal von der Zeile selbst, einmal von der darunter.
+# Also wird nach Datei, Schluessel und behauptetem Abschnitt zusammengefasst
+# und nur die KLEINSTE Zeilennummer einer Fundstelle gemeldet; eine weitere
+# Fundstelle derselben Art gilt als neu, sobald mehr als eine Zeile dazwischen
+# liegt.
+{
+	my (%gesehen, @behalten, %letzte);
+	for my $m (@mangel)
+	{
+		next if $gesehen{$m}++;
+		my ($datei, $nr, $rest) = $m =~ /^\s*(\S+):(\d+)\s+(.*)$/;
+		unless (defined $nr) { push @behalten, $m; next }
+		my $art = "$datei|$rest";
+		if (defined $letzte{$art} && $nr - $letzte{$art} <= 1)
+		{
+			$letzte{$art} = $nr;   # Fortsetzung derselben Stelle
+			next;
+		}
+		$letzte{$art} = $nr;
+		push @behalten, $m;
+	}
+	@mangel = @behalten;
 }
 
 if (@mangel)

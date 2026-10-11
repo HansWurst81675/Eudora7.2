@@ -54,6 +54,19 @@ my @faelle = (
 	[ 'Fliesstext: falscher Abschnitt',
 	  "Der Schluessel `LogLevel` steht im Abschnitt `[Settings]` der Eudora.ini.\n", 1 ],
 
+	# --- Form 2, am 11.10.2026 nachgetragen -----------------------------
+	# Die sechs Faelle darunter sind genau die, an denen Form 1 vorbeilief.
+	# Der erste ist der Wortlaut, der am 11.10.2026 in AUFGABEN.md stand und
+	# gruen durchging, obwohl LogLevel nach [Debug] gehoert.
+	[ 'Form 2: Abschnitt zuerst, Schluessel danach, ueber zwei Zeilen',
+	  "Einschalten: in `eudora.ini`, Gruppe\n`[Settings]`, `LogLevel=91295` - das ist 25759 plus 65536.\n", 1 ],
+	[ 'Form 2: Abschnitt zuerst, Schluessel danach, eine Zeile',
+	  "In `eudora.ini`, `[Settings]`, `LogLevel=91295` eintragen.\n", 1 ],
+	[ 'Form 2: Zuweisung ohne die Woerter Gruppe oder Abschnitt',
+	  "Fuer das Protokoll braucht es `LogLevel=32896` unter `[Settings]`.\n", 1 ],
+	[ 'Form 2: das Wort Gruppe statt Abschnitt',
+	  "Der Schluessel `LogLevel` steht in der Gruppe `[Settings]`.\n", 1 ],
+
 	# --- muss STILL bleiben (Rueckgabe 0) -------------------------------
 	[ 'INI-Block: LogLevel unter [Debug]',
 	  "```ini\n[Debug]\nLogLevel=58527\n```\n", 0 ],
@@ -75,6 +88,16 @@ my @faelle = (
 	  "```\n[Settings]\nLogLevel=25759\n```\n", 0 ],
 	[ 'Tabelle ohne Abschnittszelle bleibt unbeachtet',
 	  "| Schluessel | was er tut |\n|---|---|\n| `LogLevel` | steuert das Protokoll |\n", 0 ],
+
+	# --- Form 2 darf NICHT ausloesen ------------------------------------
+	[ 'Form 2: richtiger Abschnitt, Abschnitt zuerst',
+	  "In `eudora.ini`, Gruppe `[Debug]`, `LogLevel=91295` eintragen.\n", 0 ],
+	[ 'Form 2: ein BERICHT ueber einen falschen Eintrag ist keine Behauptung',
+	  "Am 11.09.2026 stand `UseMyFilterWindowPosition=1` in `[Settings]`,\nEudora las aus `[Window Position]` die Vorgabe `0`.\n", 0 ],
+	[ 'Form 2: Bericht mit dem Wort statt',
+	  "`LogLevel` stand unter `[Settings]` statt `[Debug]`.\n", 0 ],
+	[ 'Form 2: Abschnitt ohne jeden Schluessel in der Naehe',
+	  "Die Gruppe `[Settings]` ist die groesste in der Eudora.ini.\n", 0 ],
 );
 
 my $tmp = tempdir(CLEANUP => 1);
