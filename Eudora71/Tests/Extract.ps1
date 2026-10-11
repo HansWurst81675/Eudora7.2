@@ -61,10 +61,23 @@ $tabLine = Find-Line $u '^\s*unsigned char\s+pcXlateTable\b' $aStart
 $aEnd = Find-Line $u '^\};\s*$' $tabLine
 Write-Region $u $aStart $aEnd (Join-Path $OutDir "utils_table.inc") $utilsPath
 
+# Region A2: die beiden UTF-8-Helfer, die vor ISOTranslate stehen
+$a2Start = Find-Line $u '^\s*BOOL\s+ISOIsUTF8Charset\s*\(' 0
+$a2Line = Find-Line $u '^\s*LONG\s+ISOIncompleteUTF8Tail\s*\(' $a2Start
+$a2End = Find-Line $u '^\}\s*$' $a2Line
+Write-Region $u $a2Start $a2End (Join-Path $OutDir "utils_utf8tail.inc") $utilsPath
+
 # Region B: die Funktion ISOTranslate
 $bStart = Find-Line $u '^\s*LONG\s+ISOTranslate\s*\(' 0
 $bEnd = Find-Line $u '^\}\s*$' $bStart
 Write-Region $u $bStart $bEnd (Join-Path $OutDir "utils_isotranslate.inc") $utilsPath
+
+# Region B2: ISOTranslateChunk - der Uebertrag ueber die Stueckgrenze (E-85).
+# Steht in utils.cpp zwischen ISOIncompleteUTF8Tail und ISOTranslate, faellt
+# also weder in Region A2 noch in Region B.
+$b2Start = Find-Line $u '^\s*LONG\s+ISOTranslateChunk\s*\(' 0
+$b2End = Find-Line $u '^\}\s*$' $b2Start
+Write-Region $u $b2Start $b2End (Join-Path $OutDir "utils_chunk.inc") $utilsPath
 
 # ---------------------------------------------------------------- hexbin.cpp
 $hexPath = Join-Path $SrcDir "hexbin.cpp"
@@ -135,5 +148,86 @@ $hStart = Find-Line $l '^void\s+PseudoQP\s*\(' 0
 $hLine = Find-Line $l '^BOOL\s+Fix2047\s*\(' $hStart
 $hEnd = Find-Line $l '^\}\s*$' $hLine
 Write-Region $l $hStart $hEnd (Join-Path $OutDir "lex822_2047.inc") $lexPath
+
+
+# ---------------------------------------------------------------- msgutils.cpp
+# Region I: E88NurText und E88OriginalEinsetzen am Stueck (Befund E-88).
+# Das ist die Entscheidung, ob die Original-Fassung oder die Editor-Fassung
+# hinausgeht. Sie muss gepruefbar sein, ohne Eudora zu starten - eine falsche
+# Entscheidung sieht vor dem Absenden niemand.
+$msgPath = Join-Path $SrcDir "msgutils.cpp"
+$mu = Read-Lines $msgPath
+$iStart = Find-Line $mu '^static void E88NurText\s*\(' 0
+$iLine = Find-Line $mu '^bool E88OriginalEinsetzen\s*\(' $iStart
+$iEnd = Find-Line $mu '^\}\s*$' $iLine
+Write-Region $mu $iStart $iEnd (Join-Path $OutDir "msgutils_e88.inc") $msgPath
+
+# ---------------------------------------------------------------- utils.cpp (IsFancy)
+# E88OriginalEinsetzen ruft IsFancy. Wieder geschnitten statt abgeschrieben.
+$jStart = Find-Line $u '^int IsFancy\s*\(' 0
+$jEnd = Find-Line $u '^\}\s*$' $jStart
+Write-Region $u $jStart $jEnd (Join-Path $OutDir "utils_isfancy.inc") $utilsPath
+
+# ---------------------------------------------------------------- msgutils.cpp (E-89)
+# Region K: die vier Funktionen, die aus einem <img> ohne auswertbare Groesse
+# eines mit Groesse machen (Befund E-89). Reine Textverarbeitung, HTML rein und
+# HTML raus - genau die Sorte Code, die sich ohne Fenster und ohne Paige pruefen
+# laesst. Die Region beginnt bei den Deckel-Konstanten, weil der geschnittene
+# Code sie braucht.
+$kStart = Find-Line $mu '^#define\s+E89_MAX_BREITE\b' 0
+$kLine = Find-Line $mu '^bool E89BilderMessbarMachen\s*\(' $kStart
+$kEnd = Find-Line $mu '^\}\s*$' $kLine
+Write-Region $mu $kStart $kEnd (Join-Path $OutDir "msgutils_e89.inc") $msgPath
+
+
+# ---------------------------------------------------------------- msgutils.cpp (E-101)
+# Region L: E101SpeicherfassungAufbereiten (Befund E-101). Entscheidet, was in
+# der Datei steht, die der Anwender aus der Hand gibt. Reine Textverarbeitung,
+# Text rein und Text raus - ohne INI, ohne Ressourcen, ohne Fenster, also ohne
+# Eudora pruefbar. Gregor am 17.09.2026: "datei gespeichert, aber unbrauchbar".
+$lStart = Find-Line $mu '^bool E101SpeicherfassungAufbereiten\s*\(' 0
+$lEnd = Find-Line $mu '^\}\s*$' $lStart
+Write-Region $mu $lStart $lEnd (Join-Path $OutDir "msgutils_e101.inc") $msgPath
+
+
+# ---------------------------------------------------------------- HTMLUtils.cpp (E-110)
+# Region M: resolve_URL und translate_hex (Befund E-110). resolve_URL baut aus
+# dem src-Attribut eines <img> die Adresse, unter der Eudora das Bild holt.
+# Bis zum 18.09.2026 warf es jede Prozent-Sequenz weg, statt sie zu
+# entschluesseln - "en%20aktuellen%20Verlust.png" wurde zu
+# "enaktuellenVerlust.png", der Server antwortete mit 404, und der Anwender sah
+# einen grauen Kasten. Zehn von zwanzig Bildern in Gregors Nachricht.
+#
+# Reine Zeichenkettenarbeit, Adresse rein und Adresse raus - ohne Paige, ohne
+# Netz, ohne ein einziges Bild pruefbar. Genau deshalb faellt dieser Befund in
+# die Zustaendigkeit des Pruefstands und nicht in Gregors Lauf.
+#
+# Die Region umfasst ALLE VIER Funktionen der Datei: resolve_URL ruft
+# translate_hex, unescape_url ruft x2c. unescape_url loest DIESELBE Aufgabe wie
+# resolve_URL - und loeste sie schon immer richtig. Sie ist damit die beste
+# Gegenprobe, die es gibt: zwei Funktionen desselben Autors in derselben Datei,
+# zwanzig Zeilen auseinander, und nur eine war kaputt.
+$htmlPath = Join-Path $SrcDir "HTMLUtils.cpp"
+$hu = Read-Lines $htmlPath
+$mStart = Find-Line $hu '^void resolve_URL\s*\(' 0
+$mX2c = Find-Line $hu '^char x2c\s*\(' $mStart
+$mEnd = Find-Line $hu '^\}\s*$' $mX2c
+Write-Region $hu $mStart $mEnd (Join-Path $OutDir "htmlutils_resolveurl.inc") $htmlPath
+
+
+# ------------------------------------------------- PgEmbeddedImage.cpp (E-112)
+# Region N: E112Zielrechteck - welches Rechteck bekommt ein Bild? Die Regel
+# steht bewusst in einer eigenen Funktion, damit sie OHNE Paige, ohne Fenster
+# und ohne ein einziges Bild pruefbar ist.
+#
+# Bei E-106 fehlte genau das: die Regel stand mitten im Ladeweg, war nur an
+# Gregors Rechner messbar - und dass sie falsch herum war (Zeile vergroessern
+# statt Bild verkleinern), kam erst heraus, als E-110 die Bilder ueberhaupt
+# ankommen liess. Das WhatsApp-Symbol fuellte danach das halbe Fenster.
+$embPath = Join-Path $SrcDir "PgEmbeddedImage.cpp"
+$em = Read-Lines $embPath
+$nStart = Find-Line $em '^void E112Zielrechteck\s*\(' 0
+$nEnd = Find-Line $em '^\}\s*$' $nStart
+Write-Region $em $nStart $nEnd (Join-Path $OutDir "pgembedded_e112.inc") $embPath
 
 Write-Host "Extract.ps1: fertig."

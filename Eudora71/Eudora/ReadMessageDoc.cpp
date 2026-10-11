@@ -531,8 +531,18 @@ void CReadMessageDoc::StripTabooHeaders( char* szMessage )
 BOOL CReadMessageDoc::SaveAs(CSaveAs& SA)
 {
 	const char* Text = GetText();
-	
-	if (!GetIniShort(IDS_INI_INCLUDE_HEADERS) || m_Sum->IsSubPart())
+
+	//
+	// BEFUND E-104, PRUEFER M-1: E104SchalterLesen statt GetIniShort.
+	//
+	// Gregors Eudora.ini trug GuessParagraphs=7179 und
+	// IncludeHeaders=16720 - uninitialisierte Stapelwerte aus Befund
+	// E-100. Jeder Wert ungleich 0 gilt als eingeschaltet, also lief
+	// "Absaetze raten", ohne dass er es gewaehlt hatte.
+	//
+	const BOOL	bKopfzeilen = E104SchalterLesen( IDS_INI_INCLUDE_HEADERS );
+
+	if (!bKopfzeilen || m_Sum->IsSubPart())
 		Text = FindBody(Text);
 
 	if( Text == NULL )
@@ -540,7 +550,7 @@ BOOL CReadMessageDoc::SaveAs(CSaveAs& SA)
 		return FALSE;
 	}
 
-	if (GetIniShort(IDS_INI_GUESS_PARAGRAPHS))
+	if (E104SchalterLesen(IDS_INI_GUESS_PARAGRAPHS))
 	{
 		char* CopyText = ::SafeStrdupMT(Text);
 
@@ -549,7 +559,29 @@ BOOL CReadMessageDoc::SaveAs(CSaveAs& SA)
 			return FALSE;
 		}
 
-		BOOL Status = SA.PutText(UnwrapText(CopyText));
+		//
+		// BEFUND E-104, PRUEFER M-1: UnwrapText darf die KOPFZEILEN nicht
+		// anfassen.
+		//
+		// Hier war FindBody sogar GENAU UMGEKEHRT eingesetzt: es lief,
+		// wenn die Kopfzeilen NICHT mitsollten. Sollten sie mit, ging
+		// UnwrapText ueber alles - und klebte From:, Subject: und Cc: in
+		// eine Zeile. Genau das, was Gregor am 17.09.2026 in seiner
+		// gespeicherten Datei fand, nur auf dem Weg fuer EMPFANGENE
+		// Nachrichten statt fuer selbst verfasste.
+		//
+		// Vom PRUEFER gefunden (Befunde/PRUEFER-15.md, M-1), nachdem die
+		// Behebung in compmsgd.cpp schon stand: "die Haelfte des Befunds
+		// ist offen".
+		//
+		char*	pszRumpf = bKopfzeilen
+						 ? (char*) ::FindBody( CopyText )
+						 : CopyText;
+
+		if ( pszRumpf && *pszRumpf )
+			::UnwrapText( pszRumpf );
+
+		BOOL Status = SA.PutText(CopyText);
 		delete [] CopyText;
 		return (Status);
 	}
@@ -591,7 +623,7 @@ BOOL CReadMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 		(CRString(IDS_HTM_EXTENSION).CompareNoCase(Extension + 1) == 0 ||
 		 CRString(IDS_HTML_EXTENSION).CompareNoCase(Extension + 1) == 0 ) )
 	{
-		view->GetMessageAsHTML(msg, GetIniShort( IDS_INI_INCLUDE_HEADERS ));
+		view->GetMessageAsHTML(msg, E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ));
 		if ( pFile->Put( msg ) != S_OK )
 		{
 			ASSERT( 0 );
@@ -600,12 +632,26 @@ BOOL CReadMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 	}
 	else
 	{
-		view->GetMessageAsText(msg, GetIniShort( IDS_INI_INCLUDE_HEADERS ));
+		const BOOL	bKopf2 = E104SchalterLesen( IDS_INI_INCLUDE_HEADERS );
 
-		if ( GetIniShort( IDS_INI_GUESS_PARAGRAPHS ) )
+		view->GetMessageAsText(msg, bKopf2);
+
+		if ( E104SchalterLesen( IDS_INI_GUESS_PARAGRAPHS ) )
 		{
 			char *CopyText = ::SafeStrdupMT( msg );
-			if ( pFile->Put( UnwrapText( CopyText ) ) != S_OK )
+
+			//
+			// BEFUND E-104, PRUEFER M-1: wie oben - UnwrapText nur ueber
+			// den Rumpf, sonst kleben die Kopfzeilen zusammen.
+			//
+			char*	pszRumpf2 = bKopf2
+							  ? (char*) ::FindBody( CopyText )
+							  : CopyText;
+
+			if ( pszRumpf2 && *pszRumpf2 )
+				::UnwrapText( pszRumpf2 );
+
+			if ( pFile->Put( CopyText ) != S_OK )
 			{
 				delete CopyText;
 				return (FALSE);

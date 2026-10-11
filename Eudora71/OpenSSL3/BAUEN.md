@@ -1,21 +1,31 @@
 # OpenSSL 3.5 fuer QCSSL bauen
 
-Dieses Verzeichnis enthaelt die Header und — auf einem gewachsenen Arbeitsbaum —
-die statischen Bibliotheken, gegen die `QCSSL` gebaut wird (`QCSSL.vcxproj`
-verweist auf `OpenSSL3/include` und `OpenSSL3/lib`).
+Dieses Verzeichnis enthaelt die Header **und die statischen Bibliotheken**,
+gegen die `QCSSL` gebaut wird (`QCSSL.vcxproj` verweist auf `OpenSSL3/include`
+und `OpenSSL3/lib`).
 
-> **Achtung: die beiden `.lib` sind NICHT versioniert.** `.gitignore:7` (`Lib/`)
-> erfasst auch dieses Verzeichnis; gemessen liefert
-> `git ls-files Eudora71/OpenSSL3/lib` **null Treffer**. Versioniert sind allein
-> die Header unter `include/`.
+> **Ein frischer Klon braucht diese Anleitung NICHT.** Beide `.lib` liegen im
+> Repo:
 >
-> **Nach einem frischen Klon fehlen sie deshalb**, und `QCSSL` endet mit
-> `LNK1104: libssl.lib kann nicht geoeffnet werden` (nachgemessen in einem
-> frisch ausgecheckten Arbeitsbaum). Wer neu klont, muss sie nach der Anleitung
-> unten erzeugen oder aus einem vorhandenen Baum hineinkopieren.
+> ```sh
+> git ls-files Eudora71/OpenSSL3/lib
+> # Eudora71/OpenSSL3/lib/libcrypto.lib
+> # Eudora71/OpenSSL3/lib/libssl.lib
+> ```
+>
+> Am Ende von `.gitignore` steht dafuer die Ausnahme
+> `!Eudora71/OpenSSL3/lib/*.lib`, die das allgemeine Muster `Lib/` aufhebt.
+> `QCSSL` bindet nach dem Klonen ohne Zutun.
+>
+> **Berichtigung (06.09.2026).** Hier stand: *„die beiden `.lib` sind NICHT
+> versioniert … Nach einem frischen Klon fehlen sie deshalb, und `QCSSL` endet
+> mit `LNK1104: libssl.lib`"*, mit der Aufforderung, sie nach der Anleitung
+> unten zu erzeugen. Wer dem folgte, baute 25 Minuten OpenSSL ohne Not. Die
+> Anleitung unten bleibt stehen — sie wird gebraucht, wenn OpenSSL einmal
+> gehoben wird.
 
-Was auf einem eingerichteten Baum unter `lib/` liegen muss — Stand 30.08.2026,
-Groesse und Pruefsumme nachgemessen:
+Was unter `lib/` liegt — Groesse und Pruefsumme am 06.09.2026 nachgemessen
+und unveraendert gegenueber dem 30.08.2026:
 
 | Datei | Groesse | SHA256 |
 |---|---|---|

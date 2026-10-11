@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:56:08.761Z
 ---
 
+Schranke: keine - Leerlauf ist eine Eigenschaft des Gesprächsverlaufs; im Repo ist eine Pause nicht von Arbeit zu unterscheiden
+
 Stillstand kostet in diesem Projekt mehr als jeder fachliche Irrtum. Drei Regeln,
 die ohne Erinnerung wirken müssen:
 

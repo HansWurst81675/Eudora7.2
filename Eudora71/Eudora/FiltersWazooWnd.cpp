@@ -4,6 +4,7 @@
 // Specific implementation of a CWazooWnd.
 
 #include "stdafx.h"
+#include "debug.h"
 
 #include "rs.h"
 #include "doc.h"
@@ -68,6 +69,15 @@ BOOL CFiltersWazooWnd::DestroyWindow()
 			// the window has been made visible at least once.
 			//
 			SetIniLong(IDS_INI_FILTERS_WINDOW_SPLITER, cxCur);
+
+			// SPURMARKE ZU E-79, Gegenstueck zum Laden. Hier steht, welcher
+			// Wert wirklich in die Eudora.ini geht.
+			char szM[160];
+			_snprintf(szM, sizeof(szM),
+				"E-79 gesichert: ist=%d min=%d -> INI=%d",
+				cxCur, cxMin, cxCur);
+			szM[sizeof(szM) - 1] = 0;
+			PutDebugLog(DEBUG_MASK_MISC, szM);
 		}
 	}
 		
@@ -184,6 +194,34 @@ void CFiltersWazooWnd::OnActivateWazoo()
 
 			m_wndSplitter.SetColumnInfo(0, nSplit, 0);
 			m_wndSplitter.SetColumnInfo(1, 0, 0);
+
+			// SPURMARKE ZU BEFUND E-79 (Gregor, 11.09.2026): die Breite der
+			// linken Spalte ueberlebt keinen Neustart. Gemessen an seiner
+			// Eudora.ini: eingetragen 312, danach steht 368 darin.
+			//
+			// SetColumnInfo setzt nur eine WUNSCHbreite; wirksam wird sie
+			// erst durch die Neuberechnung, die das WM_SIZE weiter unten
+			// ausloest. Beim Schliessen wird die TATSAECHLICHE Breite
+			// zurueckgeschrieben - weicht sie ab, schaukelt sich der Wert
+			// von Lauf zu Lauf auf.
+			//
+			// Alles in EINER Zeile, damit kein Zweifel bleibt, welche Werte
+			// zusammengehoeren. Sie haengt an DEBUG_MASK_MISC und schweigt
+			// in der Vorgabe; einschalten mit LogLevel=58527.
+			{
+				int cxIst = -1, cxMin = -1;
+				m_wndSplitter.GetColumnInfo(0, cxIst, cxMin);
+				char szM[224];
+				_snprintf(szM, sizeof(szM),
+					"E-79 geladen: INI=%d Schalter=%d Elternbreite=%d Viertel=%d "
+					"-> gesetzt=%d, danach ist=%d min=%d",
+					(int) GetIniShort(IDS_INI_FILTERS_WINDOW_SPLITER),
+					(int) GetIniShort(IDS_INI_USE_MY_FILTERS_WINDOW_POSITION),
+					(int) rectClient.Width(), (int) nDynamicallyAssignedWidth,
+					(int) nSplit, cxIst, cxMin);
+				szM[sizeof(szM) - 1] = 0;
+				PutDebugLog(DEBUG_MASK_MISC, szM);
+			}
 
 			// Need to notify the child wazoos to perform their OnInitialUpdate() sequence.			
 			SendMessageToDescendants(WM_INITIALUPDATE, 0, 0, TRUE, TRUE);

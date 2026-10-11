@@ -1374,6 +1374,26 @@ void CTridentReadMessageView::OnBlahBlahBlah()
 {
 	CMessageDoc* pDoc = GetDocument();
 	ASSERT_KINDOF(CMessageDoc, pDoc);
+
+	// BEHEBUNG ZU BEFUND E-80 (Gregor, 11.09.2026): "der bla bla button
+	// aendert nichts". Niemand schaltet den Knopfzustand um - GetCheck
+	// liest TBBS_CHECKED, und gesetzt wird das nur beim Anlegen des
+	// Fensters (ReadMessageFrame.cpp:498-503). Im Original erledigte das
+	// die Stingray-Leiste beim Klick selbst; der OTShim-Ersatz setzt
+	// TBBS_CHECKED nur ueber ON_UPDATE_COMMAND_UI, und so einen Eintrag
+	// gibt es fuer ID_BLAHBLAHBLAH nicht. Also schaltet die Ansicht
+	// selbst um - ueber denselben Weg, den summary.cpp:2518-2520 fuer
+	// zwei andere Knoepfe schon benutzt.
+	{
+		extern UINT umsgButtonSetCheck;
+		if (m_pParentFrame)
+		{
+			BOOL bVorherE80 = m_pParentFrame->GetCheck(ID_BLAHBLAHBLAH);
+			m_pParentFrame->SendMessage(umsgButtonSetCheck, ID_BLAHBLAHBLAH,
+				bVorherE80 ? FALSE : TRUE);
+		}
+	}
+
 	bool	bIsBlahBlahBlah = (m_pParentFrame->GetCheck(ID_BLAHBLAHBLAH) != 0);
 	bool	bIsRO = !m_pParentFrame->GetCheck(ID_EDIT_MESSAGE);
 	bool	bShouldConcentrate = ( !bIsBlahBlahBlah && bIsRO && m_bCanConcentrate &&

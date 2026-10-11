@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-29T19:56:50.708Z
 ---
 
+Schranke: tools/paket-pruefen.ps1 (vor jeder Übergabe an Gregor)
+
 Gregor baut nicht mit, er **benutzt** Eudora. Sein Massstab ist eine Version, die
 er produktiv einsetzen kann — nicht die Zahl der baubaren Projekte.
 

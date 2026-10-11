@@ -1,0 +1,26 @@
+	// SPURMARKE ZU BEFUND E-66, zweiter Teil. Siehe StartTracking.
+	//
+	// Drei Dinge koennen hier schiefgehen, und von aussen sehen alle drei
+	// gleich aus - "der Balken greift nicht":
+	//   1. GetDockedControlBar(m_nPos) liefert NULL, weil m_nPos nicht mehr
+	//      auf die Leiste zeigt, die gemeint war.
+	//   2. Die Leiste ist keine SECControlBar, dann liefert DYNAMIC_DOWNCAST
+	//      NULL und diese Fassung kehrt wortlos zurueck.
+	//   3. Beides geht gut, aber SetBarInfo bleibt ohne Wirkung, weil
+	//      CalcFixedLayout die geaenderte Andockgroesse nicht auswertet.
+	// Deshalb wird JEDER dieser Faelle gemeldet, nicht nur der Erfolg.
+	CControlBar* pRoh = GetDockedControlBar(pSplitter->m_nPos);
+	SECControlBar* pBar = DYNAMIC_DOWNCAST(SECControlBar, pRoh);
+	if (pBar == NULL)
+	{
+		char szMarke[256];
+		_snprintf(szMarke, sizeof(szMarke),
+			"E-66 Anwenden ABGEBROCHEN: Leiste=%u Lage=%d roh=%s Klasse=%s Delta=%d",
+			(unsigned) GetDlgCtrlID(), (int) pSplitter->m_nPos,
+			(pRoh == NULL) ? "NULL" : "da",
+			(pRoh == NULL) ? "-" : (LPCSTR) pRoh->GetRuntimeClass()->m_lpszClassName,
+			(int) nDelta);
+		szMarke[sizeof(szMarke) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT, szMarke);
+		return;
+	}

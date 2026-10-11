@@ -1,0 +1,124 @@
+// Tests.rc - Ressourcen des Testprogramms
+//
+// Fuer Befund E-30 (leere graue Flaechen statt gesperrter Symbole) wird der
+// PRODUKTIVE Ladeweg geprueft: SECLoadToolBarResource holt zu einer
+// RT_TOOLBAR-Ressource die gleichnamige Bitmap. Beides muss also im
+// Testprogramm als Ressource liegen.
+//
+// Absichtlich werden die ECHTEN Bitmaps aus Eudora71\Eudora\res\icons
+// eingebunden und keine nachgebauten - geprueft werden soll das Verhalten
+// gegen die tatsaechliche Bildvorlage:
+//
+//   tbar16.bmp  1024x16, 24 Bit, ohne Farbtabelle  -> 64 Bilder
+//   RTB1.bmp     510x17,  8 Bit, mit Farbtabelle   -> 30 Bilder
+//
+// Die Knopfkennungen sind Platzhalter (5000 aufwaerts); geprueft wird nur
+// die Bitmap, nicht die Befehlszuordnung.
+
+#include "TestRes.h"
+
+IDR_TESTLEISTE24  BITMAP  "../Eudora/res/icons/tbar16.bmp"
+IDR_TESTLEISTE8   BITMAP  "../Eudora/res/icons/RTB1.bmp"
+
+IDR_TESTLEISTE24 TOOLBAR 16, 16
+BEGIN
+    BUTTON      5000
+    BUTTON      5001
+    BUTTON      5002
+    BUTTON      5003
+    BUTTON      5004
+    BUTTON      5005
+    BUTTON      5006
+    BUTTON      5007
+    BUTTON      5008
+    BUTTON      5009
+    BUTTON      5010
+    BUTTON      5011
+    BUTTON      5012
+    BUTTON      5013
+    BUTTON      5014
+    BUTTON      5015
+    BUTTON      5016
+    BUTTON      5017
+    BUTTON      5018
+    BUTTON      5019
+    BUTTON      5020
+    BUTTON      5021
+    BUTTON      5022
+    BUTTON      5023
+    BUTTON      5024
+    BUTTON      5025
+    BUTTON      5026
+    BUTTON      5027
+    BUTTON      5028
+    BUTTON      5029
+    BUTTON      5030
+    BUTTON      5031
+    BUTTON      5032
+    BUTTON      5033
+    BUTTON      5034
+    BUTTON      5035
+    BUTTON      5036
+    BUTTON      5037
+    BUTTON      5038
+    BUTTON      5039
+    BUTTON      5040
+    BUTTON      5041
+    BUTTON      5042
+    BUTTON      5043
+    BUTTON      5044
+    BUTTON      5045
+    BUTTON      5046
+    BUTTON      5047
+    BUTTON      5048
+    BUTTON      5049
+    BUTTON      5050
+    BUTTON      5051
+    BUTTON      5052
+    BUTTON      5053
+    BUTTON      5054
+    BUTTON      5055
+    BUTTON      5056
+    BUTTON      5057
+    BUTTON      5058
+    BUTTON      5059
+    BUTTON      5060
+    BUTTON      5061
+    BUTTON      5062
+    BUTTON      5063
+END
+
+IDR_TESTLEISTE8 TOOLBAR 17, 17
+BEGIN
+    BUTTON      5100
+    BUTTON      5101
+    BUTTON      5102
+    BUTTON      5103
+    BUTTON      5104
+    BUTTON      5105
+    BUTTON      5106
+    BUTTON      5107
+    BUTTON      5108
+    BUTTON      5109
+    BUTTON      5110
+    BUTTON      5111
+    BUTTON      5112
+    BUTTON      5113
+    BUTTON      5114
+    BUTTON      5115
+    BUTTON      5116
+    BUTTON      5117
+    BUTTON      5118
+    BUTTON      5119
+    BUTTON      5120
+    BUTTON      5121
+    BUTTON      5122
+    BUTTON      5123
+    BUTTON      5124
+    BUTTON      5125
+    BUTTON      5126
+    BUTTON      5127
+    BUTTON      5128
+    BUTTON      5129
+END
+

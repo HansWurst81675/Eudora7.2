@@ -34,6 +34,20 @@ CSaveAsDialog::CSaveAsDialog(const char* Filename, BOOL IsMessage, BOOL IsStatio
 	//For Now, Need to delete this Stationery parameter
 	m_IsStat = FALSE;
 
+	//
+	// BEFUND E-100: m_Inc und m_Guess werden nach DoModal() von allen drei
+	// Aufrufstellen UNGEPRUEFT in die INI geschrieben - tocview.cpp:3087,
+	// saveas.cpp:106, compmsgd.cpp:3374. Zugewiesen werden sie aber nur in
+	// OnInitDialog, und ob das auf der Vista-Schiene ueberhaupt laeuft, ist
+	// offen (MFC 14.38 bindet in AfxHookWindowCreate irgendein erstes
+	// Fenster an, das die Shell danach erzeugt). Ohne Vorbelegung landeten
+	// zwei uninitialisierte Werte dauerhaft in den Einstellungen des
+	// Anwenders. Die Vorbelegung ist das, was ohnehin gelten soll: der
+	// bisherige Stand aus der INI.
+	//
+	m_Inc   = GetIniShort(IDS_INI_INCLUDE_HEADERS);
+	m_Guess = GetIniShort(IDS_INI_GUESS_PARAGRAPHS);
+
 	if (IsVersion4())
 	{
 		LPCSTR DlgName;
@@ -75,31 +89,76 @@ BOOL CSaveAsDialog::OnInitDialog()
 {
 	CFileDialog::OnInitDialog();
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-97 OnInitDialog: 1 nach CFileDialog::OnInitDialog\r\n");
+
+	//
+	// BEFUND E-97: Eudora stuerzte ab, sobald eine Nachricht gespeichert
+	// werden sollte. Gregor am 15.09.2026: "da kommt kurz eine meldung, dann
+	// ist eudora weg!"
+	//
+	// GEMESSEN in jeder vorhandenen Fassung - 1.0.63, .62, .53, .50, .49.
+	// Kein neuer Fehler, sondern einer, der nie auffiel, weil niemand eine
+	// Nachricht gespeichert hat. Auch das Release v1.0.50 ist betroffen.
+	//
+	// Der Debugger fing die Ausnahme 0xC000041D
+	// (STATUS_FATAL_USER_CALLBACK_EXCEPTION) mit COMDLG32.dll in den Rahmen
+	// 1 bis 5: der Windows-Dateidialog ruft hier zurueck, und in diesem
+	// Rueckruf entsteht der Fehler. Eine Ausnahme in einem Systemrueckruf
+	// kommt nicht ueber die Kernel-Grenze zurueck - deshalb bricht das
+	// Programm sofort ab, statt eine Meldung zu zeigen.
+	//
+	// DIE URSACHE steht drei Funktionen weiter oben: DoDataExchange bindet
+	// die drei Schalter nur an, WENN es sie gibt -
+	//
+	//     if (GetDlgItem(IDC_HEADERS))
+	//         DDX_Control(pDX, IDC_HEADERS, m_IncludeHeaders);
+	//
+	// - und das ist richtig so. Hier unten wurde dann aber ohne Pruefung
+	// zugegriffen: m_IncludeHeaders.SetCheck() schickt eine Nachricht an
+	// m_hWnd, und das ist null, wenn die Anbindung ausgefallen ist. MFC hat
+	// davor ein ASSERT(::IsWindow(m_hWnd)) - und ASSERT IST IM RELEASE
+	// WIRKUNGSLOS (Arbeitsweise/assert-ist-im-release-nichts.md, die
+	// haeufigste Ursachenklasse dieses Projekts).
+	//
+	// Dasselbe galt fuer GetParent(): 1996 war der Dateidialog ein einzelnes
+	// Fenster, heute ist er zusammengesetzt, und die Elternkette sieht anders
+	// aus.
+	//
+	// Nichts davon aendert das Aussehen, solange die Schalter da sind. Fehlen
+	// sie, arbeitet der Dialog weiter, statt das Programm mitzunehmen.
+	//
 	if (IsVersion4())
 	{
 		if (m_IsMessage)
 		{
-			CRect wRect, pRect;
-			GetWindowRect(wRect);
-			GetParent()->GetWindowRect(pRect);
-			wRect.top = pRect.bottom - wRect.Height(); 
-			wRect.bottom = pRect.bottom; 
-			MoveWindow(&wRect, TRUE);
+			CWnd*	pEltern = GetParent();
+
+			if (pEltern != NULL)
+			{
+				CRect wRect, pRect;
+				GetWindowRect(wRect);
+				pEltern->GetWindowRect(pRect);
+				wRect.top = pRect.bottom - wRect.Height(); 
+				wRect.bottom = pRect.bottom; 
+				MoveWindow(&wRect, TRUE);
+			}
 
 			m_Inc = m_Guess = FALSE;
 
 			if (GetIniShort(IDS_INI_INCLUDE_HEADERS))
 			{
-				m_IncludeHeaders.SetCheck(TRUE);
+				if (m_IncludeHeaders.GetSafeHwnd())
+					m_IncludeHeaders.SetCheck(TRUE);
 				m_Inc = TRUE;
 			}
 			
 			if (GetIniShort(IDS_INI_GUESS_PARAGRAPHS))
 			{
-				m_GuessParagraphs.SetCheck(TRUE);
+				if (m_GuessParagraphs.GetSafeHwnd())
+					m_GuessParagraphs.SetCheck(TRUE);
 				m_Guess = TRUE;
 			}
-			if (!m_IsStat && GetDlgItem(IDC_STATIONERY))
+			if (!m_IsStat && GetDlgItem(IDC_STATIONERY) && m_Stationery.GetSafeHwnd())
 				m_Stationery.ShowWindow(SW_HIDE); 
 			
 			// Use to tell whether stationery is selected
@@ -181,6 +240,17 @@ void CSaveAsDialog::ToggleStat()
 	else
 		dlgPtr = this;
 
+	//
+	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
+	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
+	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
+	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
+	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
+	// ASSERT haette es nicht gefangen, das ist im Release nichts.
+	//
+	if (dlgPtr == NULL)
+		return;
+
 	BOOL stat = GetDlgItem(IDC_STATIONERY) ? m_Stationery.GetCheck(): FALSE;
 	
 	// Use to tell whether stationery is selected
@@ -230,6 +300,17 @@ void CSaveAsDialog::StatDir()
 		dlgPtr = GetParent();
 	else
 		dlgPtr = this;
+
+	//
+	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
+	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
+	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
+	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
+	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
+	// ASSERT haette es nicht gefangen, das ist im Release nichts.
+	//
+	if (dlgPtr == NULL)
+		return;
 	
 	CString oldName = GetPathName();
 
@@ -304,6 +385,7 @@ void CSaveAsDialog::OnOK()
 	if (!m_ChangingDir)
 	{
  		char realFileName[_MAX_PATH + 1];
+		realFileName[0] = 0;		// E-100: nie uninitialisiert weiterreichen
 		GetFileNameFromDialog(realFileName, _MAX_PATH);
 	                               
 		// Clean up the file name so it has .sta extenstion
@@ -331,11 +413,39 @@ void CSaveAsDialog::OnOK()
 void CSaveAsDialog::GetFileNameFromDialog(char *buf, int bufLen)
 {
 	CWnd *dlgPtr = NULL;
-	
+
+	//
+	// BEFUND E-100: der Puffer wird als ERSTES leer gemacht.
+	//
+	// OnOK legt ihn als  char realFileName[_MAX_PATH + 1];  auf den Stapel,
+	// also uninitialisiert, und verlaesst sich darauf, dass diese Funktion
+	// ihn fuellt. Sie tat es aber schon vorher nicht immer: wenn
+	// GetDlgItem(edt1) NULL liefert, bleibt der Puffer unberuehrt. Mit dem
+	// Waechter unten kommt ein zweiter solcher Weg dazu.
+	//
+	// Was OnOK danach damit macht, ist strstr(realFileName, ".sta") und im
+	// schlimmsten Fall strcat - auf Stapelmuell ohne Null-Byte. Ein
+	// unbrauchbarer Dateiname waere schlimmer als der Absturz, den der
+	// Waechter verhindert. Eine Zeile schliesst beide Wege.
+	//
+	if (buf != NULL && bufLen > 0)
+		buf[0] = '\0';
+
 	if (IsVersion4())
 		dlgPtr = GetParent();
 	else
 		dlgPtr = this;
+
+	//
+	// BEFUND E-100: dlgPtr kann NULL sein. GetParent() liefert NULL,
+	// solange der Dateidialog kein angebundenes Fenster hat - und jeder
+	// Aufruf DURCH diesen Zeiger geht dann in mfc140.dll gegen die Wand:
+	// CWnd::GetDlgItem ist nicht inline, der Rumpf in winocc.cpp:86 liest
+	// zuerst m_pCtrlCont vom this-Zeiger. Genau daran ist E-97 gestorben.
+	// ASSERT haette es nicht gefangen, das ist im Release nichts.
+	//
+	if (dlgPtr == NULL)
+		return;
 	
 	// Navigate to the stationery directory
 	CWnd *fileNameWnd = NULL;
@@ -353,13 +463,36 @@ void CSaveAsDialog::SetFileNameInDialog(const char *buf)
 		dlgPtr = GetParent();
 	else
 		dlgPtr = this;
-	
+
 	// Navigate to the stationery directory
 	CWnd *fileNameWnd = NULL;
 	if (IsVersion4())
+	{
+		//
+		// BEFUND E-100, zweiter Anlauf: hier stand ein
+		// if (dlgPtr == NULL) return; ueber der ganzen Funktion. Das war
+		// falsch. Auf DIESEM Zweig wird dlgPtr gar nicht benutzt -
+		// SetControlText geht ueber IFileDialogCustomize, nicht ueber das
+		// Elternfenster. Der Waechter haette den Aufruf uebersprungen und
+		// damit den Dateinamen still nicht gesetzt: eine Verhaltens-
+		// aenderung, wo nur ein Absturz verhindert werden sollte.
+		// Vom PRUEFER am 17.09.2026 gefunden (PRUEFER-12.md, P-15).
+		//
 		SetControlText(edt1,buf); 
+	}
 	else
 	{
+		//
+		// BEFUND E-100: nur HIER wird dlgPtr wirklich benutzt, und nur
+		// hier muss geprueft werden. CWnd::GetDlgItem ist nicht inline;
+		// der Rumpf (winocc.cpp:86) liest m_pCtrlCont vom this-Zeiger,
+		// die Zugriffsverletzung entstuende also in mfc140.dll. Genau
+		// daran ist E-97 gestorben, und ASSERT faengt es im Release
+		// nicht.
+		//
+		if (dlgPtr == NULL)
+			return;
+
 		// enter the text for the new directory
 		fileNameWnd = dlgPtr->GetDlgItem(edt1); 
 		if (fileNameWnd)
@@ -369,6 +502,41 @@ void CSaveAsDialog::SetFileNameInDialog(const char *buf)
 
 void CSaveAsDialog::OnTypeChange()
 {
+	//
+	// BEFUND E-97: hier stuerzte Eudora ab, sobald eine Nachricht gespeichert
+	// werden sollte. Gregor am 15.09.2026: "da kommt kurz eine meldung, dann
+	// ist eudora weg!"
+	//
+	// GEFUNDEN am 16.09.2026 mit tools/stapel-untersuchen.ps1, symbolisiert:
+	//
+	//   0  Eudora.exe  CSaveAsDialog::OnTypeChange + 45  SaveAsDialog.cpp:425
+	//   1  COMDLG32.dll
+	//   ...
+	//  25  Eudora.exe  CTocView::OnFileSaveAs + 429      tocview.cpp:3074
+	//
+	// Ausnahme 0xC000041D (STATUS_FATAL_USER_CALLBACK_EXCEPTION): eine
+	// Ausnahme in einem Systemrueckruf kommt nicht ueber die Kernel-Grenze
+	// zurueck, deshalb bricht das Programm sofort ab, statt eine Meldung zu
+	// zeigen.
+	//
+	// DER DATEIDIALOG RUFT DIESE FUNKTION, WAEHREND ER SICH AUFBAUT - vor
+	// OnInitDialog. Zu diesem Zeitpunkt hat dieses CWnd noch gar kein
+	// angebundenes Fenster, m_hWnd ist null; CWnd::GetParent liefert dann
+	// NULL (nicht, weil ein Kindfenster kein Elternfenster haette - das
+	// waere unmoeglich -, sondern weil es das Fenster noch nicht gibt).
+	// dlgPtr->GetDlgItem() griff ungeprueft darauf zu. Der Rumpf steht in
+	// winocc.cpp:86 und liest m_pCtrlCont vom this-Zeiger: die
+	// Zugriffsverletzung entsteht also IN mfc140.dll - genau das, was das
+	// Ereignisprotokoll meldet. Vom PRUEFER am 17.09.2026 nachgerechnet.
+	//
+	// Dieselbe Klasse wie so vieles hier: MFC hat vor GetDlgItem ein
+	// ASSERT(::IsWindow(m_hWnd)), und ASSERT ist im Release wirkungslos
+	// (Arbeitsweise/assert-ist-im-release-nichts.md).
+	//
+	// In JEDER Fassung dieses Projekts vorhanden, 1.0.49 bis 1.0.63 gemessen,
+	// auch im veroeffentlichten Release v1.0.50. Aufgefallen ist es erst, als
+	// Gregor eine Nachricht speichern sollte, um sie mir zu geben.
+	//
 	CWnd *dlgPtr = NULL;
 
 	if (IsVersion4())
@@ -376,8 +544,29 @@ void CSaveAsDialog::OnTypeChange()
 	else
 		dlgPtr = this;
 
+	// Faellt GetParent() aus, gibt es den Dialog noch nicht. Dann ist hier
+	// auch nichts auszurichten: der Schalter, den diese Funktion freigibt
+	// oder sperrt, existiert in dem Moment ebenfalls nicht.
+	//
+	// ACHTUNG, falls jemand E-98 behebt und die Kaestchen zurueckholt:
+	// OnInitDialog holt das NICHT nach - es setzt nur die Haken und ruft
+	// weder EnableWindow noch OnTypeChange(). Wer die Vorlage wieder zum
+	// Leben erweckt, muss am Ende von OnInitDialog OnTypeChange() rufen,
+	// sonst steht der Dialog mit falsch freigegebenem Kaestchen da.
+	//
+	if (dlgPtr == NULL)
+		return;
+
+	// Ohne die eigene Dialogvorlage gibt es den Schalter nicht;
+	// DoDataExchange bindet ihn dann bewusst NICHT an, und m_hWnd bleibt
+	// null. EnableWindow darauf ist derselbe Absturz noch einmal. Die
+	// Pruefung gehoert VOR den GetDlgItem-Aufruf, sonst liest der naechste
+	// die Reihenfolge als Absicht (PRUEFER P-7).
+	if (m_GuessParagraphs.GetSafeHwnd() == NULL)
+		return;
 
 	CWnd *filtCombo = dlgPtr->GetDlgItem(cmb1);
+
 	if (filtCombo)
 	{
 		int iCurSel = 	((CComboBox *)filtCombo)->GetCurSel();

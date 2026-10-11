@@ -793,6 +793,22 @@ CMainFrame::CMainFrame() :
 
 CMainFrame::~CMainFrame()
 {
+	// BEFUND E-46, Spurmarke (08.09.2026): Diese Zeile klaert eine Frage, die
+	// seit E-33/E-34 offen ist. CFrameWnd::PostNcDestroy ist genau
+	// "delete this" (MFC 14, winfrm.cpp:269-275), und CFrameWnd::OnClose
+	// endet mit DestroyWindow() (winfrm.cpp:941). CMainFrame::OnClose ruft
+	// QCWorkbook::OnClose aber MITTEN in seinem Rumpf auf und arbeitet danach
+	// noch rund 230 Zeilen weiter - unter anderem SaveBarState("ToolBar"),
+	// aus dem E-33 stammt.
+	//
+	// Steht diese Marke im Protokoll ZWISCHEN "vor QCWorkbook::OnClose" und
+	// "nach QCWorkbook::OnClose", dann laufen alle folgenden Schritte auf
+	// einem bereits freigegebenen CMainFrame - und E-33 (GetBtnCount=24 bei
+	// m_btns.GetSize=0) haette damit seine Ursache. Steht sie danach, ist der
+	// Verdacht widerlegt. Die Marke selbst greift nichts an.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-46 CMainFrame::~CMainFrame betreten");
+
 	// DRW - Moved here from CAdView now that ads are served here.
 	MGR_Shutdown(m_ldb);
 
@@ -821,6 +837,39 @@ bool CMainFrame::FinishInitAndShowWindow(
 	int			nWindowState,
 	CWnd *		pAboutDlg)
 {
+	// SPURMARKE ZU E-78 (fruehere Arbeitskennung E-44; E-44 selbst ist behoben). Nur fuer die Messung; faellt mit dem Befund weg.
+	// Sie nennt zu einem Zeitpunkt fuer JEDE Leiste, ob sie an einer
+	// Andockleiste haengt - und zwar Kennung und Andockleiste in
+	// derselben Zeile, damit man zwei Zeitpunkte nebeneinanderlegen kann.
+	struct E78 {
+		static void Marke(CFrameWnd* pRahmen, LPCTSTR pszWann)
+		{
+			if (pRahmen == NULL)
+				return;
+			POSITION pos = pRahmen->m_listControlBars.GetHeadPosition();
+			while (pos != NULL)
+			{
+				CControlBar* pBar = (CControlBar*) pRahmen->m_listControlBars.GetNext(pos);
+				if (pBar == NULL)
+					continue;
+				const UINT nId = (UINT) pBar->GetDlgCtrlID();
+				// Nur die Wazoo-Leisten und die Reklameleiste, sonst wird
+				// das Protokoll unlesbar.
+				if (nId != 316 && nId != 318 && nId != 319 && nId != 320)
+					continue;
+				char szM[192];
+				_snprintf(szM, sizeof(szM),
+					"E-78 %s: Leiste=%u DockBar=%u sichtbar=%d Stil=0x%08lx",
+					(LPCSTR) pszWann, nId,
+					(pBar->m_pDockBar != NULL) ? (UINT) pBar->m_pDockBar->GetDlgCtrlID() : 0,
+					(int) pBar->IsWindowVisible(),
+					(unsigned long) pBar->m_dwStyle);
+				szM[sizeof(szM) - 1] = '\0';
+				PutDebugLog(DEBUG_MASK_MISC, szM);
+			}
+		}
+	};
+
 	QCToolBarManager *		pMgr = reinterpret_cast<QCToolBarManager *>(m_pControlBarManager);
 
 	if (!pMgr)
@@ -933,6 +982,7 @@ bool CMainFrame::FinishInitAndShowWindow(
 	//	This completes the work previously done by CMainFrame::LoadBarState (or more
 	//	accurately SECMDIFrameWnd::LoadBarState).
 	SetDockState(state);
+	E78::Marke(this, _T("nach SetDockState"));
 	pMgr->LoadState(_T("ToolBar"));
 
 	//	Detemine if we're currently using large toolbar buttons.
@@ -989,7 +1039,32 @@ bool CMainFrame::FinishInitAndShowWindow(
 	// (Or equivalently, CMainFrame::SetDockState now that we're doing
 	// the work of CMainFrame::LoadBarState in two steps).
 	//
+	E78::Marke(this, _T("vor LoadWazooBarConfig"));
 	m_WazooBarMgr.LoadWazooBarConfigFromIni();
+	E78::Marke(this, _T("nach LoadWazooBarConfig"));
+
+	// BEFUND E-70, ZWEITER TEIL (gemessen am 10.09.2026 an 1.0.41).
+	//
+	// Das Laden der Andockgroessen in QCToolBarManager::LoadState oben
+	// funktioniert - im Protokoll steht "E-70 geladen: Leiste=319
+	// cx=437 -> jetzt cx=437". Gemessen wurde die Leiste danach am
+	// Fenster: 180 Pixel breit. Dazwischen liegt genau dieser Aufruf.
+	//
+	// LoadWazooBarConfigFromIni dockt jede Leiste, fuer die keine Lage
+	// wiederhergestellt werden konnte, mit einer FEST VERDRAHTETEN
+	// Breite von 180 an (WazooBarMgr.cpp:409, :418, :493). Dass dieser
+	// Nachziehweg ueberhaupt laeuft, gehoert zu BEFUND E-44 und ist hier
+	// nicht angetastet.
+	//
+	// Deshalb werden die Groessen nach dem Anordnen noch einmal geladen.
+	// GroessenLaden loest selbst ein RecalcLayout aus, wenn es etwas
+	// gesetzt hat.
+	if (pMgr)
+	{
+		CString szMgrSection;
+		szMgrSection.Format(_T("%s-ToolBarManager"), _T("ToolBar"));
+		pMgr->GroessenLaden(szMgrSection);
+	}
 
 //FORNOW	if (NULL == m_wndWazooBar.m_pDockBar)
 //FORNOW	{
@@ -1125,6 +1200,14 @@ bool CMainFrame::FinishInitAndShowWindow(
 	// Initialize the playlist manager
 	m_ldb = MGR_Init( "Eudora", EudoraDir, "EudPriv\\Ads\\", (long)this, PlaylistCallback,
 		GetSharewareMode(), GetAdFailure() );
+
+	// Bau-Kennung einmal in die Titelzeile schreiben - Befund E-7.
+	// OnUpdateFrameTitle laeuft sonst erst, wenn MFC den Titel wegen eines
+	// Dokument- oder Fensterwechsels auffrischt. Solange kein Postfach offen
+	// ist, geschieht das nie, und im Titel steht nur "Eudora" - ausgerechnet
+	// beim frischen Start, also genau in dem Zustand, in dem Gregor Fehler
+	// meldet und ein Bildschirmfoto einem Bau zugeordnet werden muss.
+	OnUpdateFrameTitle(TRUE);
 
 	return true;
 }
@@ -2469,8 +2552,33 @@ BOOL CMainFrame::SaveOpenWindows(BOOL Close)
 			ASSERT_KINDOF(SECWorksheet, Win);
 			continue;
 		}
+		// BEFUND E-33: hier bricht SaveOpenWindows ab. Danach ist Win nicht
+		// NULL, die Funktion liefert FALSE, CloseDown liefert FALSE und
+		// CMainFrame::OnClose kehrt ohne ein Wort zurueck - Eudora laeuft
+		// weiter. Das ist der einzige lautlose Abbruch auf dem Beenden-Weg,
+		// deshalb nennt diese Marke das Fenster, das das Schliessen
+		// verweigert. Verweigert wird auch dann, wenn eine der
+		// SaveModified-Fassungen ihre Rueckfrage NICHT anzeigen konnte:
+		// AfxMessageBox liefert dann 0, und der default-Zweig in
+		// doc.cpp und msgdoc.cpp gibt FALSE zurueck.
 		if (Close && !doc->CanCloseFrame(Win))
+		{
+			char szE33[256];
+			CString strTitel;
+			if (::IsWindow(Win->GetSafeHwnd()))
+				Win->GetWindowText(strTitel);
+			// wsprintf kennt keine Puffergrenze - Titel vorher kuerzen.
+			if (strTitel.GetLength() > 80)
+				strTitel = strTitel.Left(80);
+			wsprintf(szE33,
+				"E-33 SaveOpenWindows: Fenster titel='%s' Typ=%u Dokument=%s "
+				"verweigert das Schliessen - Beenden bricht ab",
+				(const char*)strTitel,
+				WindowType,
+				doc->GetRuntimeClass() ? doc->GetRuntimeClass()->m_lpszClassName : "?");
+			PutDebugLog(DEBUG_MASK_MISC, szE33);
 			break;
+		}
 		if (WindowType == IDR_TOC)
 			Toc = (CTocDoc*)doc;
 		else if (WindowType == IDR_READMESS || WindowType == IDR_COMPMESS)
@@ -4061,14 +4169,17 @@ CCompMessageDoc* CMainFrame::HuntForTopmostCompMessage(CWazooWnd* pWazooWnd)
 
 void CMainFrame::OnMessageNewMessage()
 {
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnMessageNewMessage: Anfang");
 	// Create A New Message
 	CCompMessageDoc* CompDoc = NULL;
 	CompDoc = NewCompDocument();
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnMessageNewMessage: NewCompDocument zurueck");
 	if ( CompDoc )
 	{
 		ASSERT_VALID(CompDoc);
 		NewChildFrame(CompMessageTemplate, CompDoc);
 	}
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnMessageNewMessage: fertig");
 }
 
 void CMainFrame::OnMessageReplyCtrlR()
@@ -5040,6 +5151,38 @@ BOOL CMainFrame::OnQueryEndSession()
 	return (QCWorkbook::OnQueryEndSession());
 }
 
+// E-42: Ein Fehler beim AUFRAEUMEN darf das Beenden nicht verhindern.
+//
+// Der Weg von WM_CLOSE bis ExitInstance besteht zum groessten Teil aus
+// Aufraeumschritten: Fensterlagen sichern, Leistenzustand schreiben, IMAP
+// trennen, Papierkorb leeren, Menueobjekte freigeben. Wirft einer davon,
+// faengt AfxCallWndProc die Ausnahme, CWinApp::ProcessWndProcException zeigt
+// sie und liefert 0 - WM_CLOSE gilt als beantwortet, und das Fenster bleibt
+// stehen. Der Anwender kann Eudora dann nur noch abschiessen.
+//
+// AUFRAEUMEN(name, anweisung) fuehrt einen solchen Schritt aus, meldet einen
+// Fehlschlag mit Namen und Grund ins Protokoll und macht weiter. Bewusste
+// Entscheidungen des Anwenders - die Rueckfragen in CloseDown - laufen
+// bewusst NICHT hierdurch: wer "Abbrechen" drueckt, will nicht beenden.
+#define AUFRAEUMEN(name, anweisung)                                           \
+	do {                                                                      \
+		TRY { anweisung; }                                                    \
+		CATCH_ALL(e)                                                          \
+		{                                                                     \
+			TCHAR szGrund[256];                                               \
+			szGrund[0] = _T('\0');                                            \
+			if (e != NULL) e->GetErrorMessage(szGrund, 256);                  \
+			CString strMeldung;                                               \
+			strMeldung.Format(                                                \
+				_T("E-42 Beenden: Schritt '%s' hat eine Ausnahme ausgeloest ") \
+				_T("- Grund: %s. Das Beenden wird fortgesetzt."),              \
+				_T(name),                                                     \
+				(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));      \
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung); \
+		}                                                                     \
+		END_CATCH_ALL                                                         \
+	} while (0)
+
 void CMainFrame::OnClose()
 {
 	// This code is required for handling the close of the print preview window.
@@ -5047,22 +5190,54 @@ void CMainFrame::OnClose()
 	// So when one closes the print preview by clicking on the 'X' this is where it will land
 	// The next 2 lines of code make sure that the close is indeed for close of app & not the 
 	// close of print preview. If it is for close of print preview, then just bail out
+	// BEFUND E-33: das Beenden hat begonnen. Diese Marke wird sowohl von
+	// File -> Exit (ueber CEudoraApp::OnAppExit -> CWinApp::OnAppExit ->
+	// SendMessage(WM_CLOSE)) als auch vom Kreuz im Fensterrahmen erreicht.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 OnClose: WM_CLOSE angekommen");
+
 	if (m_lpfnCloseProc != NULL && !(*m_lpfnCloseProc)(this))
 		return;
 
-	if (!CloseDown()) return;
+	if (!CloseDown())
+	{
+		// BEFUND E-33: hier endet das Beenden ohne jede Meldung, und Eudora
+		// laeuft weiter - das ist Gregors Symptom "beenden geht nicht".
+		// Welche Stufe abgelehnt hat, sagt die letzte E-33-Zeile davor.
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-33 OnClose: ABBRUCH - CloseDown hat FALSE geliefert, Eudora laeuft weiter");
+		return;
+	}
+
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 OnClose: CloseDown hat TRUE geliefert");
+
+	// BEFUND E-33, zweiter Durchgang: auch dieser Abschnitt bekommt Marken je
+	// Aufruf. Er liegt VOR CFrameWnd::OnClose und damit vor
+	// pApp->HideApplication() (MFC 14, winfrm.cpp:885) - und genau das ist
+	// entscheidend: Gregors Hauptfenster steht nach der Meldung noch da und
+	// nimmt weiter Alt-F4 an. Die Ausnahme muss also VOR HideApplication
+	// fallen, sonst waere das Fenster verschwunden und nur der Prozess uebrig.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 6a vor CloseImapConnections");
 
 #ifdef IMAP4
 	// Do any IMAP cleanup required:
-	CImapMailMgr::CloseImapConnections ();
+	AUFRAEUMEN("CloseImapConnections", CImapMailMgr::CloseImapConnections());
 #endif
+
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 6b nach CloseImapConnections, vor EmptyTrash");
 
 	if (GetIniShort(IDS_INI_EMPTY_TRASH_ON_QUIT))
 	{
 		// we're going down regardless of whether the user confirms
 		// the Empty Trash warning or not...
-		EmptyTrash();
+		AUFRAEUMEN("EmptyTrash", EmptyTrash());
 	}
+
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 6c nach EmptyTrash");
 
 	SetIcon(FALSE);
 
@@ -5078,7 +5253,7 @@ void CMainFrame::OnClose()
 	g_RecipientList.Write();
 #endif
 
-	Network::CleanSSLLibrary();
+	AUFRAEUMEN("CleanSSLLibrary", Network::CleanSSLLibrary());
 	// Winsock and Dialup must shutdown before the app can.
 	if (NetConnection)
 	{
@@ -5086,13 +5261,74 @@ void CMainFrame::OnClose()
 		NetConnection = NULL;
 	}
 
-	TrayItem(IDR_MAINFRAME,NIM_DELETE); // SHAREWARE. Pro: IDR_MAINFRAME, Light: IDR_MAINFRAME_LIGHT
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 6d nach CleanSSLLibrary, vor TrayItem");
+
+	AUFRAEUMEN("TrayItem", TrayItem(IDR_MAINFRAME, NIM_DELETE));	// SHAREWARE. Pro: IDR_MAINFRAME, Light: IDR_MAINFRAME_LIGHT
+
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 6e nach TrayItem, vor DeleteMenuObjects");
 
 	// Get rid of any dynamic menu C++ objects.  Don't need to delete the menu
 	// items because that will be taken care of when the window is destoyed.
-	CDynamicMenu::DeleteMenuObjects(GetMenu(), FALSE);
+	AUFRAEUMEN("DeleteMenuObjects", CDynamicMenu::DeleteMenuObjects(GetMenu(), FALSE));
 
-	QCWorkbook::OnClose();
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 6f nach DeleteMenuObjects");
+
+	// BEFUND E-33: QCWorkbook::OnClose loest sich auf CFrameWnd::OnClose auf -
+	// SECWorkbook hat keinen eigenen Behandler (OTShim/OTShim.h:1431ff.). Dort
+	// laufen CanCloseFrame des aktiven Dokuments, SaveAllModified,
+	// HideApplication, CloseAllDocuments und schliesslich DestroyWindow
+	// (MFC 14, winfrm.cpp:843-935). Das ist der Abschnitt, in dem eine
+	// MFC-Ausnahme am meisten anrichtet: HideApplication hat das Hauptfenster
+	// dann schon versteckt.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 OnClose: vor QCWorkbook::OnClose (= CFrameWnd::OnClose)");
+
+	// BEFUND E-45 (PRUEFER-5, 08.09.2026): Dieser eine Schritt darf NICHT
+	// stillschweigend uebersprungen werden, alle anderen elf duerfen es.
+	//
+	// QCWorkbook::OnClose loest sich auf CFrameWnd::OnClose auf, und deren
+	// LETZTE Anweisung ist DestroyWindow() (MFC 14, winfrm.cpp:941).
+	// CMainFrame::OnClose ruft DestroyWindow nirgends selbst. Faellt der
+	// Schritt aus, gibt es also kein WM_NCDESTROY, kein WM_QUIT, kein
+	// ExitInstance - und damit auch kein IniStringCleanUp (eudora.cpp:2118),
+	// das den INI-Schreibpuffer leert. Das Fenster hat HideApplication
+	// (winfrm.cpp:885) zu diesem Zeitpunkt schon versteckt: Ergebnis waere
+	// ein Prozess ohne Fenster, den nur der Task-Manager beendet.
+	//
+	// Deshalb hier kein AUFRAEUMEN, sondern ein eigener Fangzweig, der das
+	// Zerstoeren des Fensters nachholt. Das ist keine Verschlechterung
+	// gegenueber dem Zustand vor E-42: dort fing AfxCallWndProc
+	// (wincore.cpp:252-278) dieselbe Ausnahme, und DestroyWindow lief
+	// ebenso nicht - nur sichtbar war es damals, weil eine Meldung kam.
+	TRY
+	{
+		QCWorkbook::OnClose();
+	}
+	CATCH_ALL(e)
+	{
+		TCHAR szGrund[256];
+		szGrund[0] = _T('\0');
+		if (e != NULL)
+			e->GetErrorMessage(szGrund, 256);
+
+		CString strMeldung;
+		strMeldung.Format(
+			_T("E-45 Beenden: Schritt 'QCWorkbook::OnClose' hat eine Ausnahme ")
+			_T("ausgeloest - Grund: %s. Das Fenster wird jetzt selbst zerstoert, ")
+			_T("damit WM_QUIT, ExitInstance und IniStringCleanUp noch laufen."),
+			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+		PutDebugLog(DEBUG_MASK_MISC, strMeldung);
+
+		if (::IsWindow(m_hWnd))
+			DestroyWindow();
+	}
+	END_CATCH_ALL
+
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 OnClose: nach QCWorkbook::OnClose");
 
 	// Get rid of TOCs still in memory
 	TocCleanup();
@@ -5112,10 +5348,25 @@ void CMainFrame::OnClose()
 	{
 		pSWM->UnRegister(this);
 	}
+
+	// BEFUND E-33: OnClose ist vollstaendig durchgelaufen. Fehlt danach die
+	// Marke aus CEudoraApp::ExitInstance, dann ist das Hauptfenster trotz
+	// allem nicht zerstoert worden.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 OnClose: durchgelaufen");
 }
 
 BOOL CMainFrame::CloseDown()
 { 
+	// BEFUND E-33: CloseDown ist die Weiche des Beendens. Sechs Stellen liefern
+	// hier FALSE, und CMainFrame::OnClose kehrt danach ohne ein Wort zurueck -
+	// Eudora laeuft weiter. Deshalb bekommt jede Stufe eine Marke: die LETZTE
+	// geschriebene E-33-Zeile sagt, wie weit das Beenden gekommen ist.
+	// Stufe 1 fasst zusammen, was ohne Zutun des Anwenders laeuft:
+	// Aufgabenzaehler, IMAP-Warteschlangen, RAS und MAPI.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 CloseDown: Stufe 1 - Aufgaben, IMAP, RAS und MAPI beginnen");
+
 	int nTaskCount = QCGetTaskManager()->GetTaskCount();
 	if (nTaskCount > 0)
 	{
@@ -5156,6 +5407,12 @@ BOOL CMainFrame::CloseDown()
 	// never returns FALSE, so the user won't get a
 	// chance to cancel the main app shutdown.
 	//
+	// BEFUND E-33: Stufe 2 - Filter und Rufnamen. Beide Aufrufe koennen FALSE
+	// liefern; g_Nicknames wird nur durch ein ASSERT geprueft, das im
+	// Release-Bau nichts tut.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 CloseDown: Stufe 2 - Filter und Rufnamen beginnen");
+
 	if (!CanCloseFiltersFrame())
 		return FALSE;
 
@@ -5169,13 +5426,54 @@ BOOL CMainFrame::CloseDown()
 	if (! g_Nicknames->CanCloseFrame(NULL))
 		return FALSE;
 
+	// BEFUND E-33: Stufe 3 - die Warteschlange. QuerySendQueuedMessages liefert
+	// auch dann FALSE, wenn der Anwender im Dialog "Senden" waehlt: dann laeuft
+	// SendQueuedMessagesAndQuit im Hintergrund und ExitAfterSend
+	// (sendmail.cpp:3741) schickt WM_CLOSE NUR nach, wenn kein Sendefehler
+	// aufgetreten ist. Genau dann beendet sich Eudora nie.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 CloseDown: Stufe 3 - QuerySendQueuedMessages beginnt");
 	if (! QuerySendQueuedMessages()) 
 		return FALSE; 
+
+	// BEFUND E-33: Stufe 4 - SaveOpenWindows. Das ist die einzige Stufe, die
+	// OHNE jede Meldung FALSE liefern kann (mainfrm.cpp, "return (Win? FALSE :
+	// TRUE)"): sie bricht ab, sobald ein offenes Fenster das Schliessen
+	// verweigert. Bleibt diese Zeile die letzte im Protokoll, liegt der Fehler
+	// dort - die Marke in SaveOpenWindows nennt dann das Fenster.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 CloseDown: Stufe 4 - SaveOpenWindows beginnt");
 	if (! SaveOpenWindows(TRUE)) 
 		return FALSE;
 
+	// BEFUND E-33: Stufe 5 - ab hier kein Veto des Anwenders mehr.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 CloseDown: Stufe 5 - TrimJunk und Leisten beginnen");
+
+	// BEFUND E-33, zweiter Durchgang: von hier bis WriteToolBarMarkerToIni
+	// bekommt JEDER Aufruf eine eigene Marke davor und danach.
+	//
+	// Grund: Gregor hat am 07.09.2026 gemessen, dass Kreuz und Alt-F4 dasselbe
+	// tun wie File -> Exit, und dass dabei der Meldungsdialog "Encountered an
+	// improper argument" erscheint. Das ist MFCs Text fuer
+	// CInvalidArgException (AFX_IDS_INVALID_ARG_EXCEPTION, 0xF025). Der Abbruch ist also
+	// KEINE stille FALSE-Rueckgabe, sondern eine geworfene Ausnahme;
+	// AfxCallWndProc faengt sie (wincore.cpp:270-277),
+	// CWinApp::ProcessWndProcException zeigt die Meldung und liefert 0
+	// (appcore.cpp:1009-1039), WM_CLOSE gilt als beantwortet, das Fenster
+	// bleibt stehen.
+	//
+	// Eine Ausnahme faellt immer zwischen zwei Marken. Die letzte geschriebene
+	// E-33-Zeile nennt damit den Aufruf, der geworfen hat - das ist der Beleg,
+	// den eine Stufenmarke allein nicht liefern kann.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 5a vor TrimJunk");
+
 	// Trim the junk mailbox.  For now trim on every quit, eventually be more clever.
-	TrimJunk();
+	AUFRAEUMEN("TrimJunk", TrimJunk());
+
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 5b nach TrimJunk");
 
 	if (!m_bFlushBars)
 	{
@@ -5199,27 +5497,70 @@ BOOL CMainFrame::CloseDown()
 				iDocking = (short)(dwStyle & (CBRS_ALIGN_LEFT | CBRS_ALIGN_TOP | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM));
 				iDocking = (short)((iDocking>>12) & 0x0F);
 			}
+
+			// BEFUND E-33: RemoveAdToolBarFromItsDockBar landet fuer eine
+			// Andockleiste, die KEIN SECDockBar ist, in
+			// CDockBar::RemoveControlBar (MFC 14, bardock.cpp:302-308) - und
+			// dort steht ENSURE(nPos > 0), das im Release-Bau genau diese
+			// Meldung wirft. Die Schranke aus BEFUND E-4 sitzt nur in
+			// SECDockBar::RemoveControlBar (OTShim.cpp:2541), also nur im
+			// IsKindOf-Zweig von mainfrm.cpp:6179.
+			PutDebugLog(DEBUG_MASK_MISC,
+				"E-33 5c vor RemoveControlBar(m_pToolBarAd)");
+
 			RemoveControlBar(m_pToolBarAd);
 
 			RemoveAdToolBarFromItsDockBar(m_pToolBarAd);
+
+			PutDebugLog(DEBUG_MASK_MISC,
+				"E-33 5d nach RemoveAdToolBarFromItsDockBar(m_pToolBarAd)");
 		}
 		SetIniWindowPos(IDS_INI_AD_TOOLBAR_WIN_POS, rectAdToolBar);
 		SetIniShort(IDS_INI_AD_TOOLBAR_FLOATING, iFloating);
 		SetIniShort(IDS_INI_AD_TOOLBAR_DOCKING, iDocking);
 
-		RemoveBogusAdToolBars();
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-33 5e vor RemoveBogusAdToolBars");
 
-		SaveBarState(_T("ToolBar"));
+		AUFRAEUMEN("RemoveBogusAdToolBars", RemoveBogusAdToolBars());
 
-		m_WazooBarMgr.SaveWazooBarConfigToIni(); // saves docked and floating window *sizes*
+		// BEFUND E-33, Verdacht Platz 1: SaveBarState fuehrt ueber
+		// CMainFrame::SaveBarState (mainfrm.cpp:2570) und
+		// QCToolBarManager::SaveState (QCToolBarManager.cpp:1202) nach
+		// QCCustomToolBar::SaveCustomInfo (QCCustomToolBar.cpp:378). Dort
+		// laeuft eine Schleife ueber GetBtnCount() und greift mit
+		// m_btns[iCurrentButton] zu - dieselbe Form wie bei E-34, wo genau
+		// dieses Paar auseinanderlief und CPtrArray::ElementAt
+		// (afxcoll.inl:212-217) auch im Release-Bau warf. SaveCustomInfo
+		// laeuft im normalen Betrieb NUR beim Beenden.
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-33 5f vor SaveBarState(ToolBar)");
+
+		AUFRAEUMEN("SaveBarState(ToolBar)", SaveBarState(_T("ToolBar")));
+
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-33 5g nach SaveBarState(ToolBar), vor SaveWazooBarConfigToIni");
+
+		AUFRAEUMEN("SaveWazooBarConfigToIni", m_WazooBarMgr.SaveWazooBarConfigToIni());	// docked and floating window *sizes*
+
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-33 5h nach SaveWazooBarConfigToIni");
 	}
 
 	// If we got this far without crashing, remember that.
 	// (Used for future crash detection). Do before
 	// WriteToolBarMarkerToIni, because it flushes the INI file.
-	g_QCExceptionHandler.SaveCrashStateToINI();
+	AUFRAEUMEN("SaveCrashStateToINI", g_QCExceptionHandler.SaveCrashStateToINI());
 
-	WriteToolBarMarkerToIni();
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 5i nach SaveCrashStateToINI, vor WriteToolBarMarkerToIni");
+
+	AUFRAEUMEN("WriteToolBarMarkerToIni", WriteToolBarMarkerToIni());
+
+	// BEFUND E-33: Stufe 5 bestanden. Ab hier kann CloseDown nicht mehr FALSE
+	// liefern; was jetzt noch schiefgeht, ist eine Ausnahme (Leisten, Wazoo).
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 CloseDown: Stufe 6 - TrimJunk und Leisten sind durch, liefere TRUE");
 
 	return TRUE;
 }
@@ -5229,10 +5570,62 @@ VOID CMainFrame::OnSysCommand(UINT nID, LPARAM lParam)
 	if (nID == ID_SYSTEM_MENU_CHECKMAIL)
 	{
 		g_pApp->OnCheckMail();
-	} else 
-		CFrameWnd::OnSysCommand(nID,lParam);
+		return;
+	}
 
-	return;
+	// E-41: Alt-F4 und das Kreuz oben rechts kommen als SC_CLOSE hier an und
+	// gehen dann durch CFrameWnd::OnSysCommand. Dort steht in MFC 14
+	//     CFrameWnd* pFrameWnd = GetTopLevelFrame();
+	//     ENSURE_VALID(pFrameWnd);
+	// (winfrm.cpp:1112-1114). ENSURE_VALID wirft AUCH IM RELEASE-BAU eine
+	// CInvalidArgException - MFC 6 hatte dort nur ASSERT_VALID, das im
+	// Release verschwindet. Faellt der Wurf, faengt ihn AfxCallWndProc, und
+	// CWinApp::ProcessWndProcException zeigt "Encountered an improper
+	// argument" und liefert 0: WM_SYSCOMMAND gilt als beantwortet, und das
+	// Fenster bleibt stehen. Genau das meldet Gregor am 07.09.2026: "weder
+	// alt+F4, noch x rechts oben funktionieren. da kommt wieder die meldung".
+	//
+	// Ein Fehler auf DIESEM Weg darf das Beenden nicht verhindern. Deshalb
+	// wird SC_CLOSE abgesichert und, wenn die Systembehandlung scheitert,
+	// direkt an OnClose weitergereicht - der Weg, den auch File -> Exit
+	// nimmt und der ohne dieses ENSURE_VALID auskommt.
+	if ((nID & 0xFFF0) == SC_CLOSE)
+	{
+		BOOL bSystemwegOk = TRUE;
+		TRY
+		{
+			CFrameWnd::OnSysCommand(nID, lParam);
+		}
+		CATCH_ALL(e)
+		{
+			TCHAR szGrund[256];
+			szGrund[0] = _T('\0');
+			if (e != NULL)
+				e->GetErrorMessage(szGrund, 256);
+
+			CString strMeldung;
+			strMeldung.Format(
+				_T("E-41 CMainFrame::OnSysCommand: SC_CLOSE hat in MFC eine Ausnahme ")
+				_T("ausgeloest - Grund: %s. Das Beenden wird ueber WM_CLOSE fortgesetzt."),
+				(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung);
+
+			bSystemwegOk = FALSE;
+		}
+		END_CATCH_ALL
+
+		// Steht das Fenster nach der Ausnahme noch, dann ist das Beenden
+		// nicht angelaufen: WM_CLOSE selbst nachschicken.
+		if (!bSystemwegOk && ::IsWindow(m_hWnd))
+		{
+			PutDebugLog(DEBUG_MASK_MISC,
+				"E-41 OnSysCommand: schicke WM_CLOSE nach");
+			PostMessage(WM_CLOSE, 0, 0);
+		}
+		return;
+	}
+
+	CFrameWnd::OnSysCommand(nID, lParam);
 }
 
 void CMainFrame::OnHelp()
@@ -7593,8 +7986,26 @@ void CMainFrame::InitJunkMenus()
 		}
 		else
 		{
-			// User has no manual filters: map Ctrl-J to Junk.
-			sCtrlJ = CTRL_J_JUNK;
+			// BEFUND E-75 (Gregor, 10.09.2026): hier stand CTRL_J_JUNK.
+			//
+			// Wer mit leerem Mailverzeichnis anfaengt, hat beim ersten
+			// Start noch keine Filter. Dann legte das Original Strg+J
+			// STILLSCHWEIGEND auf "Junk" - ohne die Frage aus
+			// IDD_CTRL_J_FOR_JUNK, die es sonst stellt. Die spaeter
+			// angelegten Filter aendern daran nichts mehr, denn dieser
+			// Zweig wird nur einmal durchlaufen.
+			//
+			// Gregor filterte mit Strg+J, wie er es seit jeher tat, und
+			// junkte in Wahrheit neun Nachrichten nach Junk.mbx - sechs
+			// davon gegen seinen eigenen Filter, der HW_Bxo.mbx als Ziel
+			// hatte. Im Protokoll fehlt zu diesem Lauf jede E-64-Marke:
+			// FilterMsg wurde nie gerufen.
+			//
+			// Strg+J bleibt daher auf "Filter Messages" - so, wie es vor
+			// der Junk-Funktion war und wie IDR_MAINFRAME es beschriftet.
+			// Wer Junk auf Strg+J will, stellt es in den Einstellungen um
+			// (settings.cpp), und InitJunkMenus beschriftet das Menue um.
+			sCtrlJ = CTRL_J_FILTER;
 		}
 	}
 	SetIniShort(IDS_INI_WHO_GETS_CTRL_J, sCtrlJ);

@@ -20,7 +20,8 @@
 use strict;
 use warnings;
 
-my $fehler = 0;
+my $fehler  = 0;   # echtes Missverhaeltnis - weist ab (Rueckgabe 1)
+my $hinweis = 0;   # nur ein Hinweis          - weist NICHT ab (Rueckgabe 3)
 
 # --- 1. Kennung in der Quelle und in der ausgelieferten DLL vergleichen ---------
 
@@ -94,13 +95,38 @@ if ($dll_commit) {
         print  "  ausgelieferte DLL zuletzt eingecheckt wurde. Wenn eine Aenderung\n";
         print  "  das Verhalten betrifft: neu bauen, Version hochzaehlen, Pruefsumme\n";
         print  "  erneuern, und in Releases/1.0/README.md vermerken.\n\n";
-        $fehler = 1;
+        # HINWEIS, NICHT MANGEL - und deshalb seit dem 18.09.2026 ein eigener
+        # Rueckgabewert (PRUEFER-17).
+        #
+        # Bis dahin setzte dieser Zweig dasselbe $fehler wie die beiden echten
+        # Missverhaeltnisse darueber. Die Folge stand im pre-commit:
+        #
+        #     perl release-pruefen.pl >/dev/null || perl release-pruefen.pl || true
+        #
+        # Das "|| true" war die Antwort darauf, dass diese Schranke wegen eines
+        # blossen Hinweises dauernd rot war - und es hat sie vollstaendig
+        # entwaffnet: seit dem konnte sie auch ein echtes Missverhaeltnis nicht
+        # mehr abweisen. Eine Schranke, die zu oft umsonst warnt, wird
+        # abgeschaltet (Arbeitsweise/schranke-gegentesten.md); hier ist genau
+        # das passiert, und zwar im Haken selbst.
+        #
+        # Getrennte Werte statt eines abgeschalteten Hakens:
+        #   0 = stimmt
+        #   1 = MISSVERHAELTNIS (Fassung oder Pruefsumme) - weist ab
+        #   3 = HINWEIS (Quellen neuer als die DLL) - meldet nur
+        $hinweis = 1;
     }
 }
 
 if ($fehler) {
     print "Release und Quellstand stimmen nicht ueberein.\n";
     exit 1;
+}
+
+if ($hinweis) {
+    print "Release stimmt zum Quellstand (QCSSL $version_quelle) - mit dem\n";
+    print "Hinweis oben. Der weist nicht ab.\n";
+    exit 3;
 }
 
 print "Release stimmt zum Quellstand (QCSSL $version_quelle).\n";

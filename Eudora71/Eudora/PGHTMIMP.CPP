@@ -6,6 +6,11 @@ from the PaigeImportFilter class. */
 
 #include "stdafx.h"
 
+// E-95-Messung, 15.09.2026 - siehe die Spurmarke weiter unten.
+#include "resource.h"
+#include "rs.h"
+#include "debug.h"
+
 #include "Paige.h"
 #include "pgTraps.h"
 #include "pgOSUtl.h"
@@ -1818,10 +1823,28 @@ void PaigeHTMLImportFilter::PopStyle (pg_boolean bFontTag /*= false*/)
 
 
 /* DoDataTag handles all the data tags (like link and image). */
+//
+// BEFUND E-103: Mindestzeilenhoehe fuer ein Bild ohne jede Groessenangabe.
+//
+// 48 Punkte, und die Zahl ist begruendet, nicht geraten: sie ist gross genug,
+// dass die ueblichen Kopfbilder einer Werbemail nicht mehr in den Text
+// hineinragen - Gregors Doctolib-Logo ist 60 hoch, die vier anderen Bilder
+// derselben Nachricht 24 bis 80 - und klein genug, dass eine Zeile mit einem
+// kleinen Symbol keine auffaellige Luecke reisst.
+//
+// Sie gilt NUR, solange niemand die echte Hoehe kennt. Sobald das Bild geladen
+// ist, setzt PgEmbeddedImage.cpp die wirkliche Hoehe, und die gewinnt.
+//
+#define E103_MINDESTHOEHE	48
+
+static long PaigeHTMLImportTextAscent  = 13;
+static long PaigeHTMLImportTextDescent = 3;
+
 pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params, long num_params)
 {
    tag_attribute_ptr       param_ptr;
-   
+
+
    switch (tag) {
 
       case -hyperlink_command:
@@ -2036,6 +2059,12 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
             GetMemoryRecord(image_ref, 0, &image_record);
 
             original_ascent = current_style.ascent;
+
+            // E-95: solange noch kein Bild eingefuegt wurde, ist dieser Wert
+            // der echte Text-Ascent. Er wird gemerkt, damit ProcessEmbed ihn
+            // spaeter wiederherstellen kann - siehe die Begruendung dort.
+            if (!embed_last_action && original_ascent > 0)
+               PaigeHTMLImportTextAscent = original_ascent;
             image_descent = original_descent = (long)current_style.descent;
             image_descent <<= 16;
             
@@ -2108,11 +2137,178 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 
 	            if (image_record.source_height) {
 	               
-	               current_style.ascent = image_record.source_height;
-	               current_style.ascent = (short)original_descent;
+	               // E-89: die Bildhoehe muss in die Zeilenhoehe eingehen.
+	               //
+	               // Hier stand bis zum 14.09.2026 eine Zeile, die die gerade
+	               // gesetzte Bildhoehe sofort wieder wegwarf:
+	               //
+	               //     current_style.ascent = image_record.source_height;
+	               //     current_style.ascent = (short)original_descent;   <- weg
+	               //
+	               // original_descent stammt aus dem TEXTSTIL (Zeile 2039,
+	               // aufgenommen bevor das Bild bekannt war). Uebrig blieb
+	               // ascent = max(Text-Ascent, Text-Descent), also etwa 3 bis
+	               // 12 Bildpunkte - unabhaengig davon, wie hoch das Bild ist.
+	               // Ein 150 Punkt hohes Bild sass damit in einer textkleinen
+	               // Zeile und deckte zu, was darueber stand.
+	               //
+	               // Dass current_style wirklich der Stil ist, der ins Embed
+	               // geht, ist gemessen: ProcessEmbed (Zeile 2962) setzt
+	               // translator.format = current_style, und der Aufruf steht
+	               // zwanzig Zeilen weiter unten.
+	               //
+	               // Gregor am 14.09.2026 an 1.0.57, nachdem eine Behebung
+	               // ueber die Bildabmessungen nichts gebracht hatte: "findest
+	               // du, es ist leserlich? ich nicht!" Seine Spurmarke sagte
+	               // aus-CSS=0 gedeckelt=0 - die Groesse war nie das Problem.
+	               current_style.ascent = (short)image_record.source_height;
 	               
 	               if (original_ascent > current_style.ascent)
 	                  current_style.ascent = (short)original_ascent;
+	            }
+	            else
+	            {
+	               //
+	               // BEFUND E-103: ein Bild, dessen Groesse NIEMAND kennt.
+	               //
+	               // Hierher kommt, was im HTML kein height traegt. Die Zeile
+	               // behaelt dann die Texthoehe von 13 Punkten, waehrend das
+	               // Bild sehr wohl gezeichnet wird. Gemessen am 17.09.2026 an
+	               // Gregors Doctolib-Nachricht, dasselbe Bild zweimal:
+	               //
+	               //   E-95 Bild:      attr=0x0 embed=0x0 ascent=13
+	               //   E-103 Nachtrag: quelle=202x60
+	               //
+	               // 13 Punkte Zeile, 60 Punkte Bild - die Differenz liegt
+	               // ueber dem folgenden Text. Genau das meldet Gregor seit
+	               // 1.0.56: "da ist alles durcheinander, man kann ja nichts
+	               // lesen."
+	               //
+	               // LAEDT das Bild, holt PgLoadUrlImage die echte Groesse aus
+	               // der heruntergeladenen Datei nach, und pgInvalEmbedRef
+	               // zieht die Zeile hoch - gemessen, "ascent-vorher=60".
+	               // Laedt es NICHT - kein Netz, toter Verweis, gesperrt -,
+	               // kommt dieser Nachtrag nie, und die Zeile bleibt bei 13.
+	               // Gegenprobe gefahren mit dem Logo auf einen Rechner, den
+	               // es nicht gibt: keine einzige der drei E-103-Marken
+	               // erscheint.
+	               //
+	               // Deshalb wird hier eine MINDESTZEILENHOEHE reserviert.
+	               //
+	               // WAS DAS NICHT IST: der Notbehelf 20x20 bis 7.2.0.62. Der
+	               // hat die BILDGROESSE geraten und Gregors Tonerkartusche zu
+	               // einem Streifen gequetscht. Hier wird nur die ZEILE hoch
+	               // genug gemacht; an Breite und Hoehe des Bildes aendert
+	               // sich nichts, es kann sich nichts verzerren.
+	               //
+	               // Und es steht dem Nachtrag nicht im Weg: der setzt die
+	               // Zeile auf die echte Hoehe, sobald er sie kennt, und die
+	               // ist groesser als die Reserve.
+	               //
+	               if (current_style.ascent < E103_MINDESTHOEHE)
+	                  current_style.ascent = (short)E103_MINDESTHOEHE;
+	            }
+
+	            //
+	            // E-95-MESSUNG, 15.09.2026. Vier Werte in EINER Zeile, damit
+	            // sich nicht wieder "zu anderer Zeit" sagen laesst:
+	            //
+	            //   src        die ersten Zeichen - cid:, data: oder http:
+	            //   attr       was im HTML stand (source_width/height)
+	            //   embed      was Paige nach dem Laden weiss
+	            //   ascent     die Zeilenhoehe, die dabei herauskommt
+	            //
+	            // Vier Fassungen lang wurde an der GROESSE gedreht, und jedes
+	            // Mal war die Erklaerung plausibel und falsch. Gregors
+	            // Protokoll zu 1.0.61 sagte "eingebettet=0" bei allen
+	            // Nachrichten - die Bilder sind extern verlinkt, und Paige
+	            // holt sie trotzdem. Damit ist auch die cid:-Annahme
+	            // widerlegt. Diese Zeile misst, statt zu vermuten.
+	            {
+	               pg_embed_ptr  mess_ptr = (pg_embed_ptr)UseMemory(embed);
+	               char          szSpur[512];
+	               char          szSrc[200];
+
+	               //
+	               // PRUEFER P-11: hier stand ein Cast von image_ref auf
+	               // const char*. image_ref ist aber ein memory_ref - ein
+	               // HANDLE, keine Zeichenkette. Gelesen wurden die Bytes des
+	               // Handles selbst, und im Protokoll stand Binaermuell:
+	               //
+	               //   src=\110\001\032\001\100\001\032\001
+	               //
+	               // Zwoelf solcher Zeilen in Gregors eudora.log. Die Spalte,
+	               // die sagen sollte, ob ein Bild als cid:, data: oder http:
+	               // kommt, war damit wertlos - und genau diese Frage stand
+	               // bei E-95 vier Fassungen lang offen.
+	               //
+	               // Die Adresse liegt daneben bereit: image_record.URL, oben
+	               // in derselben Funktion gefuellt.
+	               //
+	               //
+	               // BEFUND E-110, 18.09.2026: diese Zeile konnte die Frage
+	               // nicht beantworten, um die es geht.
+	               //
+	               // Gregors Protokoll vom 18.09.2026 enthaelt 128 solcher
+	               // Zeilen, und an keiner ist abzulesen, ob hinter dem Bild
+	               // ueberhaupt DATEN liegen: ausgegeben wurden zweimal
+	               // MASSE - source_width/height aus dem HTML und
+	               // mess_ptr->width/height aus dem Embed. Ein geladenes Bild
+	               // und ein grauer Platzhalter sehen darin identisch aus.
+	               // Genau das ist E-110: beim Antworten bleibt ein Teil der
+	               // Bilder grau, und der Platz stimmt trotzdem.
+	               //
+	               // image_data entscheidet es. PgLoadUrlImage setzt den Wert
+	               // auf den Metadatei-Griff, sobald die Datei wirklich da ist
+	               // (PgEmbeddedImage.cpp:453, und ebenso der QuickTime-Zweig
+	               // darunter). Bleibt er 0, hat Paige nichts zu zeichnen.
+	               //
+	               // Dazu die ADRESSE ungekuerzt. Sie war zweifach beschnitten
+	               // - hier beim Kopieren auf 32 Zeichen und noch einmal im
+	               // Format mit %.32s -, und 32 Zeichen reichen bei diesen
+	               // Adressen nicht bis zum Dateinamen. Im Protokoll sahen
+	               // deshalb ALLE Bilder gleich aus
+	               // ("https://004.frnl.de/admin/images"), was wie ein auf 32
+	               // Byte abgeschnittenes URL-Feld aussieht - also wie die
+	               // Ursache. Es war die Messung selbst
+	               // (Arbeitsweise/anzeige-ist-kein-zustand.md).
+	               //
+	               // Ist die Adresse laenger als der Puffer, wird die MITTE
+	               // ausgelassen, nicht das Ende: bei E-106 hing alles am
+	               // Dateinamen, "_3x" heisst dreifache Aufloesung. Wer nur
+	               // den Anfang sieht, kann das nicht erkennen.
+	               //
+	               {
+	                  const char* pURL  = (const char*)image_record.URL;
+	                  const long  nLang = (long)strlen(pURL);
+	                  const long  nMax  = (long)sizeof(szSrc) - 1;
+
+	                  if (nLang <= nMax)
+	                     strcpy(szSrc, pURL);
+	                  else
+	                  {
+	                     const long nKopf = 40;
+	                     const long nFuss = nMax - nKopf - 2;
+	                     memcpy(szSrc, pURL, nKopf);
+	                     szSrc[nKopf]     = '.';
+	                     szSrc[nKopf + 1] = '.';
+	                     memcpy(szSrc + nKopf + 2, pURL + nLang - nFuss, nFuss);
+	                     szSrc[nKopf + 2 + nFuss] = 0;
+	                  }
+	               }
+
+	               wsprintf(szSpur,
+	                  "E-95 Bild: src=%s attr=%dx%d embed=%ldx%ld "
+	                  "daten-import=%ld art=%ld "
+	                  "ascent=%d text-asc=%ld text-desc=%ld\r\n",
+	                  szSrc,
+	                  (int)image_record.source_width, (int)image_record.source_height,
+	                  (long)mess_ptr->width, (long)mess_ptr->height,
+	                  (long)image_record.image_data, (long)image_record.type_and_flags,
+	                  (int)current_style.ascent, original_ascent, original_descent);
+
+	               UnuseMemory(embed);
+	               PutDebugLog(DEBUG_MASK_MISC, szSpur);
 	            }
 	            
 	            if (!translator.bytes_transferred)
@@ -2959,6 +3155,10 @@ void PaigeHTMLImportFilter::ProcessHyperlink (void)
 
 /* ProcessEmbed sets up the final things for importing an embedded object. */
 
+// E-95: der Text-Ascent/-Descent, wie er VOR dem ersten Bild galt. Siehe die
+// Begruendung in ProcessEmbed. Vorbelegt mit Werten, die einer normalen
+// Textzeile entsprechen - gemessen 13/3 - damit der erste Aufruf nicht auf
+// null laeuft.
 void PaigeHTMLImportFilter::ProcessEmbed (void)
 {
    translator.format = current_style;
@@ -2974,7 +3174,45 @@ void PaigeHTMLImportFilter::ProcessEmbed (void)
    current_style.embed_object = MEM_NULL;
    current_style.char_bytes = 0;
    current_style.class_bits = 0;
-   
+
+   // E-95, 15.09.2026: auch die ZEILENHOEHE gehoert zum Embed-Stil.
+   //
+   // Ohne das Zuruecksetzen behaelt current_style.ascent die Hoehe des
+   // gerade eingefuegten Bildes. Beim naechsten Bild liest DoDataTag in
+   // Zeile 2038 "original_ascent = current_style.ascent" diesen Wert als
+   // vermeintlichen TEXT-Ascent ein, und das Maximum weiter unten zieht die
+   // Zeilenhoehe wieder auf den alten Wert hoch. Jedes Bild bekam damit die
+   // Hoehe des ERSTEN.
+   //
+   // GEMESSEN am 15.09.2026 an einer Nachricht mit drei Bildern
+   // (600x150, 320x80, 20x20), vorher und nachher:
+   //
+   //   vorher:  ascent=150  ascent=150  ascent=150   text-asc=13, 150, 150
+   //   nachher: ascent=150  ascent=80   ascent=20    text-asc=13,  13,  13
+   //
+   // Das erklaert beide Symptome, die vier Fassungen lang im Kreis gefuehrt
+   // haben: ist das erste Bild KLEIN und ein spaeteres gross, wird das
+   // spaetere abgeschnitten (Gregors Doctolib-Nachricht, wo der Schriftzug
+   // vor dem blauen Kreis kommt). Ist das erste GROSS, klafft danach
+   // Leerraum. Und es erklaert, warum jede Aenderung an der Bildgroesse mal
+   // half und mal nicht - wir haben am ersten Bild gedreht, und der Rest
+   // folgte blind.
+   //
+   // WARUM NICHT paige_globals->def_style: der erste Entwurf hat genau das
+   // getan, und die Gegenmessung zeigte text-asc=0 - der Vorgabestil traegt
+   // keine Zeilenhoehe. Damit faellt die Schutzregel "die Zeile ist
+   // mindestens so hoch wie der Text" weg, und ein Bild, das KLEINER ist als
+   // eine Textzeile, laesst die Zeile schrumpfen. Zaehlpixel von 1x1 stehen
+   // in Newslettern zu Dutzenden.
+   //
+   // Deshalb der gemerkte Wert: der Text-Ascent, wie er VOR dem ersten Bild
+   // gemessen wurde. Er wird einmal je Import gesetzt und danach nur
+   // gelesen. Die Variable ist dateilokal und nicht threadsicher - der
+   // HTML-Import laeuft im Hauptstrang, und der Wert ist eine Zeilenhoehe,
+   // kein Zustand.
+   current_style.ascent  = (short)PaigeHTMLImportTextAscent;
+   current_style.descent = (short)PaigeHTMLImportTextDescent;
+
    embed_last_action = TRUE;
 }
 

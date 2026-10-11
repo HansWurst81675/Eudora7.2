@@ -185,7 +185,12 @@ bool NSImportClass::LoadNSAccounts()
 {
 	
 
-	char tempbuffer[128];
+	//	GROESSE ANGEHOBEN: hier stand char tempbuffer[128]. Gefuellt wird der
+	//	Puffer unten mit strcpy(tempbuffer, szPrefsFileName) - und
+	//	szPrefsFileName ist _MAX_PATH + _MAX_FNAME + _MAX_EXT gross und traegt
+	//	den vollen Pfad zur prefs.js. Ein Pfad ueber 127 Zeichen schrieb ueber
+	//	das Feldende hinaus (Befund E-25).
+	char tempbuffer[_MAX_PATH + _MAX_FNAME + _MAX_EXT];
 
 	// Changes were made to make sure we support NS versions 4.*. The reason why sometimes
 	// the import failed before these changes was because the path to prefs.js file was not found,
@@ -206,7 +211,9 @@ bool NSImportClass::LoadNSAccounts()
 	{
 		if(pWalker->lpszItem)
 		{
-			char strName[_MAX_PATH];
+			//	GROESSE ANGEHOBEN, siehe tempbuffer oben: der Eintrag ist ein
+			//	vollstaendiger Pfad und wird gleich nach szPrefsFileName kopiert.
+			char strName[_MAX_PATH + _MAX_FNAME + _MAX_EXT];
 			strcpy(strName, pWalker->lpszItem);
 			strcpy(szPrefsFileName,strName);
 		
@@ -835,10 +842,36 @@ BOOL NSImportClass::LocateNetscapePrefsFile(CCharArrList *FileList)
 	char strName[_MAX_PATH];
 	CCharArrList *pListWalker = csPrefsFileList;
 
-	DeleteCharListTree(&FileList);
-	FileList = NULL;
-	FileList = DEBUG_NEW CCharArrList;
+	//	Den Kopfknoten des Aufrufers WIEDERVERWENDEN, nicht freigeben.
+	//
+	//	WARUM UMGEBAUT: hier stand
+	//
+	//		DeleteCharListTree(&FileList);
+	//		FileList = NULL;
+	//		FileList = DEBUG_NEW CCharArrList;
+	//
+	//	FileList ist ein Zeiger NACH WERT. DeleteCharListTree gibt den Knoten
+	//	frei, den der Aufrufer angelegt hat, und setzt nur die OERTLICHE Kopie
+	//	auf NULL. Der frisch angelegte Knoten bleibt in dieser Funktion haengen.
+	//	Beim Aufrufer LoadNSAccounts (oben, Zeile 196-241) zeigt csPrefsFileList
+	//	danach auf freigegebenen Speicher: die Schleife liest ihn (use after
+	//	free), und DeleteCharListTree(&csPrefsFileList) gibt ihn ein ZWEITES Mal
+	//	frei.
+	//
+	//	Unter Windows 10 meldet der Heap die Doppelfreigabe sofort mit
+	//	STATUS_HEAP_CORRUPTION (0xC0000374) und beendet den Prozess. Das ist der
+	//	Absturz im Kontoassistenten beim Klick auf "Weiter" (Befund E-25):
+	//	CWizardClientPage::OnSetActive laedt ueber CImportMail::InitDllStruct als
+	//	erstes NSImport.eif; dessen DllMain ruft LoadNSProvider ->
+	//	LoadNSAccounts -> hierher. Belegt durch den WER-Bericht vom 05.09.2026
+	//	22:43 (Ausnahme 0xC0000374, letztes geladenes Modul NSImport.eif).
+	//
+	//	Der Knoten des Aufrufers wird jetzt nur GELEERT und weiterbenutzt.
+	if (!FileList)
+		return bRet;
 
+	DeleteCharListTree(&(FileList->pNext));
+	delete [] FileList->lpszItem;
 	FileList->lpszItem = NULL;
 	FileList->pNext = NULL;
 

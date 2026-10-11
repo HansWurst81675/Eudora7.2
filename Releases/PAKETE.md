@@ -3,11 +3,50 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
+> **Diese Buchführung ist unvollständig — Stand 18.09.2026; die Zahlen sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; für **1.0.66 bis 1.0.72** stehen unten eigene Abschnitte, für **1.0.30 bis 1.0.65** nicht. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
+> **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
+> 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
+> haben hier keinen eigenen Eintrag, obwohl sie gebaut und teilweise
+> veröffentlicht wurden. Der Mangel ist als **M-4** in
+> [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
+>
+> **Versioniert im Repo sind nur noch zwei ZIPs** — **am 14.09.2026 neu
+> gemessen mit `git ls-files Releases/`, und die frühere Angabe stimmte
+> nicht mehr**: **1.0.2** (`Eudora72-1.0.2-lauffaehig.zip`, Baugrundlage für
+> `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
+> (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
+> veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
+> veröffentlicht ist inzwischen **`v1.0.72`** (17.09.2026, 20:07 UTC, auf GitHub als
+> *Latest*; **berichtigt am 17.09.2026 vom LEKTOR — hier stand `v1.0.50`**,
+> gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
+> und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
+> und 1.0.22 liegen weiter im Repo, das ZIP daneben nicht. **Kein Verweis in
+> dieser Datei darf auf eine dieser Dateien zeigen, als läge sie im
+> Arbeitsbaum.**
+>
+> **Zu 1.0.30 fehlt die `.sha256`-Datei** — `git ls-files Releases/` führt
+> `Eudora72-1.0.30-release.zip` ohne Begleitdatei (gemessen am 14.09.2026).
+> Dasselbe galt zuvor für 1.0.27, dessen ZIP es nicht mehr gibt.
+>
+> **Als Marke veröffentlicht** sind `v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.10`,
+> `v1.0.14`, `v1.0.15`, `v1.0.18`, `v1.0.21`, `v1.0.23`, `v1.0.24` und
+> `v1.0.27` (`git ls-remote --tags origin`, gemessen am 09.09.2026).
+> **`v1.0.22`, `v1.0.25` und `v1.0.26` gibt es nicht.** Und: die
+> **Veröffentlichungen** (Releases mit Dateien) zu `v1.0.18`, `v1.0.21`,
+> `v1.0.23` und `v1.0.24` hat Gregor am 09.09.2026 **gelöscht** — die
+> **Marken** bestehen weiter, die ZIPs hängen aber nicht mehr daran. Wer einem
+> Verweis auf eine dieser Marken folgt, findet den Quellstand, **nicht** das
+> Paket. Abrufbar ist als Paket nur noch **v1.0.27**.
+>
+> Wer wissen will, was in einem der nicht verzeichneten Pakete steckt, liest
+> `CHANGELOG.md`, `git log` und `BEFUNDE.md`, nicht diese Datei.
+
 ## Drei Zählungen, und wie sie zusammenhängen
 
 | Zählung | wo sie steht | wo man sie sieht |
 |---|---|---|
-| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` | Splash und *Hilfe → Über Eudora*, dazu die Dateiversion der `Eudora.exe` |
+| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` (`EUDORA_BUILD_DESC` → String `IDS_VERSION`) | *Hilfe → Über Eudora*, Startbildschirm, und der `X-Mailer`-Kopf jeder gesendeten Mail. **Nicht** in den Dateieigenschaften: `Eudora.exe` hat gar keinen `VS_VERSION_INFO`-Block (nachgesehen am 07.09.2026 in `Eudora71/Eudora/*.rc`) |
 | **Paketversion** `1.0.x` | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
 | **QCSSL-Version** `1.0.x` | `qcssl.rc` | Versionsressource der `QCSSL.dll` |
 
@@ -20,18 +59,43 @@ Die QCSSL-Zählung läuft bewusst eigenständig: sie folgt den Quellen der
 TLS-Schicht, nicht dem Paket. Paket 1.0.3 enthält QCSSL 1.0.1, weil sich
 dort seit 1.0.1 nichts geändert hat.
 
-### Wie man die Version hebt — vollständig, nachgemessen am 31.08.2026
+### Wie man die Version hebt — nachgemessen am 07.09.2026
 
-Für Paket **1.0.4** mit Produktversion **7.2.0.4** sind es **fünf Zeilen in zwei
-Dateien**:
+Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
+**1.0.18 / 7.2.0.18** auf **1.0.19 / 7.2.0.19**.
 
 | Datei | Zeile | von | auf |
 |---|---|---|---|
-| `VERSION` | 1 | `1.0.3` | `1.0.4` |
-| `Eudora71/Version.h` | `EUDORA_VERSION4` | `3` | `4` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,3` | `7,2,0,4` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.3\0"` | `…7.2.0.4\0` |
-| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.3"` | `"7.2.0.4"` |
+| `VERSION` | 1 | `1.0.18` | `1.0.19` |
+| `Eudora71/Version.h` | `EUDORA_VERSION4` | `18` | `19` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,18` | `7,2,0,19` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.18\0"` | `…7.2.0.19\0` |
+| `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.18"` | `"7.2.0.19"` |
+
+> **`EUDORA_BUILD_NUMBER` ist seit 7.2.0.13 nicht mitgezogen worden** und steht
+> am 07.09.2026 auf `7,2,0,12`, während die drei anderen Angaben auf `18`
+> stehen. Kein Werkzeug hat das gemeldet: `tools/ausliefern.pl --pruefen` und
+> `tools/kennung-erzeugen.pl` vergleichen nur `EUDORA_BUILD_VERSION` gegen
+> `VERSION`. Folgenlos ist es nur, weil das Makro derzeit **nirgends benutzt**
+> wird (`grep -rn EUDORA_BUILD_NUMBER Eudora71/` — ein Treffer, die Definition
+> selbst); wer es je in eine `VERSIONINFO`-Ressource einsetzt, bekommt eine
+> `Eudora.exe`, deren Dateiversion nicht zu ihrer Produktversion passt.
+> **`tools/doku-pruefen.pl` meldet den Fall seit dem 07.09.2026.**
+>
+> **Und er ist am 08.09.2026 gleich wieder aufgetreten:** beim Heben auf
+> 7.2.0.23 blieb `EUDORA_BUILD_NUMBER` auf `7,2,0,22` stehen, während die
+> anderen vier Angaben auf `23` gingen — vier von fünf Zeilen. Gemeldet hat es
+> `tools/doku-pruefen.pl` unter *Zu tun am Quellstand*, berichtigt am
+> 08.09.2026. **Wer die Version hebt, geht die Tabelle oben Zeile für Zeile
+> durch; „ich weiß, welche es sind" hat jetzt zweimal nicht gereicht.**
+
+Den aktuellen Ausgangswert liest man nicht ab, sondern misst ihn:
+
+```sh
+cat VERSION                                          # Paketnummer
+grep EUDORA_BUILD_VERSION Eudora71/Version.h         # Produktversion
+perl tools/ausliefern.pl --pruefen                   # beides gegeneinander
+```
 
 **Die vier Angaben in `Version.h` sind NICHT voneinander abgeleitet** — jede
 steht für sich. Wer nur `EUDORA_VERSION4` ändert, hebt die Version an keiner
@@ -69,11 +133,12 @@ haben.
 
 > ### Ein veröffentlichtes Paket wird nicht ersetzt (Befund V-1)
 >
-> Muss etwas hinterher, bekommt es die **nächste Nummer** — Paket 1.0.4 mit
-> Produktversion 7.2.0.4. Am 31.08.2026 ist das **verletzt** worden: unter
-> `v1.0.3` hängen zwei verschiedene ZIPs, sie unterscheiden sich in der Behebung
-> von E-11. Damit identifiziert die Angabe „Version 1.0.3" das Programm nicht
-> mehr, und ein Fehlerbericht von außen ist keinem Bau zuzuordnen.
+> Muss etwas hinterher, bekommt es die **nächste Nummer**. Am 31.08.2026 ist das
+> **verletzt** worden: unter `v1.0.3` hängen zwei verschiedene ZIPs. Damit
+> identifiziert die Angabe „Version 1.0.3" das Programm nicht mehr, und ein
+> Fehlerbericht von außen ist keinem Bau zuzuordnen. (Womit sich die beiden
+> unterscheiden, stand hier als *„die Behebung von E-11"* — E-11 ist
+> zurückgenommen, siehe den Kasten weiter unten.)
 >
 > **Das ist derselbe Fehler, den diese Datei bei der `QCSSL.dll` schon
 > dokumentiert** (zwei Binärdateien unter „QCSSL 1.0.0", siehe
@@ -90,6 +155,521 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.76 — gebaut am 18.09.2026, **E-112 behoben**
+
+**Bilder erscheinen wieder in der Größe, die im HTML steht.** `pict_frame` — das
+Zielrechteck, in das Paige eine Metadatei streckt — bekam bis dahin die **echte
+Dateigröße**. Damit wurde das WhatsApp-Symbol mit 330×327 gezeichnet, obwohl es
+als 35×35 ausgezeichnet ist.
+
+Das war eine Regression der **E-106**-Behebung: sie vergrößerte die **Zeile**,
+statt das **Bild** zu verkleinern. Solange **E-110** offen war, lud kaum ein
+Bild und es fiel nicht auf; kaum luden sie, füllte eines das halbe Fenster.
+
+Die Entscheidung sitzt jetzt in einer eigenen Funktion `E112Zielrechteck`, die
+ohne Paige, ohne Fenster und ohne ein einziges Bild prüfbar ist — genau das
+fehlte bei E-106. Die Regel: **vollständige Angabe gewinnt; ohne Angabe gilt
+die Datei** (das ist E-103); ist nichts bekannt, wird nichts geändert.
+
+**185 Tests, 185 bestanden** (sieben neue). Die Gegenprobe ist gefahren: mit der
+alten Regel fallen **drei** davon um, während die E-103-Fälle und die Ränder in
+beiden Richtungen grün bleiben.
+
+**Was Gregor prüft:** dieselbe Nachricht öffnen und **antworten**. Die Bilder
+müssen so groß sein wie im Lesefenster — kein Symbol, das das halbe Fenster
+füllt, und kein Text, der von einem Bild zugedeckt wird.
+
+**Nicht behoben, als E-113 aufgeschrieben:** ein Bild, dessen **angegebene**
+Breite größer ist als das Fenster, läuft weiterhin rechts hinaus. Das ist die
+Regel, die Newsletter mit `max-width:100%` meinen — auf Gregors Anordnung
+*„erst A, dann B"* nicht mitbehoben.
+
+## 1.0.75 — gebaut am 18.09.2026, **E-110 behoben**
+
+**Bilder mit Leerzeichen im Namen kommen wieder an.** `resolve_URL`
+(`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg, statt sie zu entschlüsseln:
+im `%`-Zweig wurde das entschlüsselte Zeichen nach `*output` geschrieben, der
+Zeiger aber nicht weitergerückt — das nächste Zeichen überschrieb es. Aus
+`en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+antwortete mit **404**, Eudora legte die Fehlerseite ab und zeichnete einen
+grauen Kasten. Zehn von zwanzig Bildern in Gregors Nachricht.
+
+Die Behebung ist ein `++output;`. Betroffen war **jede** Prozent-Sequenz, also
+auch Umlaute in Dateinamen (`%C3%BC`), Klammern (`%28`) und Schrägstriche
+(`%2F`) — der Fehler steckt im Originalcode von QUALCOMM, nicht in der
+Portierung.
+
+**178 Tests, 178 bestanden** (sieben neue). Die Gegenprobe ist gefahren: ohne
+die Behebung fallen **vier** der sieben um, und zwar mit genau den
+Zeichenketten aus Gregors Protokoll; die drei anderen prüfen den *erlaubten*
+Fall (Adresse ohne Prozentzeichen, die Ränder, die Längenschranke) und bleiben
+in beiden Richtungen grün.
+
+**Was Gregor prüft:** dieselbe Nachricht öffnen und **antworten**. Die grauen
+Kästen müssen verschwunden sein. Im Protokoll steht dann bei diesen Bildern
+`datei=1 intern=1` und ein `daten=` ungleich 0.
+
+**Nicht behoben, weiter offen:** `loader_result` bleibt auch jetzt `0` —
+schlägt ein Bildabruf aus einem anderen Grund fehl, meldet Eudora es weiterhin
+nirgends (in **E-110** vermerkt). Und **E-111**: `resolve_URL` kann bei einer
+Adresse von genau 512 Zeichen ein Byte hinter das Zielfeld schreiben.
+
+## 1.0.74 — gebaut am 18.09.2026, **Messfassung, kein Release**
+
+**Behebt nichts, trennt aber die letzte offene Alternative zu E-110.** Die
+Messfassung 1.0.73 hat gezeigt: von zehn Bildern werden fünf geladen
+(`daten` gesetzt, `art=9`, jeweils beim **zweiten** Ruf) und fünf geben auf
+(`ok=0 daten=0`). Damit ist belegt, dass der Wiederholungsmechanismus
+funktioniert und der Abruf nicht gesperrt ist (`faden=1`, `fehler=0`).
+
+**Was 1.0.73 nicht trennen konnte:** `ok=0` zusammen mit `daten=0` hat im
+Quelltext **zwei** mögliche Ursachen —
+
+1. `fetch_url_schmookie` liefert `-1`, der Abruf kommt gar nicht zustande;
+2. die Datei **ist da**, aber weder `MetafileFromImage` noch QuickTime können
+   sie umwandeln.
+
+Das sind zwei ganz verschiedene Behebungen. Im ersten Fall liegt der Fehler im
+Abrufweg, im zweiten im Bilddecoder — und das Bild läge längst auf der Platte.
+
+**Neu in der Zeile:** `datei=` (0 = keine Datei, 1 = Datei vorhanden, −1 = der
+Block wurde nie betreten) und `intern=` (hat `CanHandleImageInternally`
+zugestimmt?). `filePath` liegt in einem inneren Block und ist an der Messstelle
+nicht mehr sichtbar; beide Werte werden deshalb dort gemerkt, wo sie entstehen.
+
+**Wozu Gregor es braucht:** dieselbe Nachricht, antworten, `eudora.log`
+sichern. `datei=1 intern=0` heißt: geholt, aber nicht als Bild erkannt.
+`datei=1 intern=1 daten=0` heißt: erkannt und trotzdem nicht umgewandelt.
+`datei=0` heißt: nie angekommen.
+
+**Nicht als Release herausgeben.**
+
+## 1.0.73 — gebaut am 18.09.2026, **Messfassung, kein Release**
+
+**Dieses Paket behebt nichts.** Es enthält gegenüber 1.0.72 genau eine
+Änderung: die E-95-Spurmarke sagt jetzt, ob hinter einem Bild überhaupt Daten
+liegen. Gebaut, weil Gregors Protokoll vom 18.09.2026 die Frage zu **E-110**
+nicht beantworten konnte — 128 Zeilen `E-95 Bild`, und keine unterscheidet ein
+geladenes Bild von einem grauen Platzhalter. Ausgegeben wurden zweimal **Maße**
+(`source_width/height` aus dem HTML gegen `mess_ptr->width/height` aus dem
+Embed), nie der Datenbestand.
+
+Neu in der Zeile: **`daten=`** aus `image_data` — den Metadatei-Griff setzt
+`PgLoadUrlImage`, sobald die Datei wirklich da ist; bleibt er `0`, hat Paige
+nichts zu zeichnen. Dazu **`art=`** aus `type_and_flags` und die **ungekürzte
+Adresse**: die war zweifach beschnitten (Kopierschleife auf 32 Zeichen *und*
+`%.32s` im Format), weshalb alle 128 Bilder im Protokoll gleich aussahen. Bei
+zu langer Adresse fällt jetzt die **Mitte** weg, nicht das Ende — bei **E-106**
+hing alles am Dateinamen, `_3x` heißt dreifache Auflösung.
+
+**Wozu Gregor es braucht:** auf dieselbe Nachricht antworten, in der Bilder grau
+bleiben, und die `eudora.log` sichern. `daten=0` bei einem Bild, das im
+Lesefenster sichtbar ist, heißt: Eudora **holt es auf dem Antwortweg nicht**.
+`daten` gesetzt und trotzdem grau heißt: es **holt es und zeichnet es nicht**.
+Zwei verschiedene Ursachen, zwei verschiedene Behebungen.
+
+**Nicht als Release herausgeben.** Eine Messfassung ist kein Fortschritt für
+den Anwender; E-110 ist damit nicht behoben, sondern erst messbar.
+
+## 1.0.72 — gebaut am 17.09.2026, **von Gregor bestätigt**
+
+**Die erste Fassung ohne den Absturz beim Antworten.** Gregor an diesem Abend:
+*„kein crash"* — und sein Protokoll belegt es dreifach: der E-106-Block läuft
+**18 mal**, er läuft **über die bisher tödliche Stelle hinaus** (`pos=770`
+hinter dem `pos=765`, an dem in allen drei Absturzprotokollen Schluss war), und
+die letzte Zeile lautet `Logging shutdown`. Keine `Exception.log`, nicht einmal
+eine leere.
+
+Inhaltlich **E-108**: der direkte Zugriff auf den Textstil, den **E-106**
+eingeschleppt hatte, ist entfernt; stattdessen derselbe Weg wie im Originalcode
+von 1996 (Maße ins Embed, `pgInvalEmbedRef` rechnen lassen). Dazu bringt das
+Paket erstmals **`LogLevel=58527` in `[Debug]`** mit — Gregors erstes
+Absturzprotokoll zu 1.0.71 war leer, weil der Schalter fehlte.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.72-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `b65a3d235d7cfb7967d78723ff4fc5b249534dd097a860028e1ff13ead3c480f` |
+| **Größe** | 9 356 860 Byte, 157 Dateien |
+| **Quellstand** | 7.2.0.72 (`Eudora71/Version.h`) |
+| **`Eudora.exe` im Paket** | 2 987 008 Byte, 17.09.2026 21:56 |
+| **`EudoraRes.dll` im Paket** | 2 448 384 Byte |
+| **Paketprüfung** | keine Fehler |
+| **Tests** | 171 von 171 |
+
+## 1.0.71 — gebaut am 17.09.2026, **stürzt ab**
+
+**Nicht benutzen.** Enthielt **E-107**, das sich als die **falsche Erklärung**
+für den Absturz erwies: der E-106-Block wurde auf den Ladeweg beschränkt, lief
+dort aber weiter — Gregors Protokoll zeigt ihn fünfmal, und der Abbruch kam an
+derselben Stelle wie an 1.0.69.
+
+Diese Fassung ist der Beleg dafür, dass die Ursache **im Block** saß und nicht
+darin, wer ihn aufruft. Ohne sie wäre E-108 nicht gefunden worden.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.71-release` (Verzeichnis, **kein ZIP**) |
+| **Quellstand** | 7.2.0.71 |
+| **`Eudora.exe` im Paket** | 2 987 520 Byte, 17.09.2026 21:32 |
+| **Dateien** | 157 |
+| **Achtung** | ohne `LogLevel` in der INI — Gregors erstes Absturzprotokoll blieb deshalb leer |
+
+## 1.0.70 — gebaut am 17.09.2026, kein Release
+
+**Die erste Fassung, die alles enthält.** Die vier davor enthielten jeweils nur
+einen Teil — siehe die Tabelle im [CHANGELOG](../CHANGELOG.md), Abschnitt
+7.2.0.70. Inhaltlich kein neuer Code gegenüber `ceab98f`; diese Fassung bündelt
+**E-101** (beide Teile samt Datenverlust **P-28**), **E-103**, **E-104**,
+**E-106** und **P-38**.
+
+**Zu prüfen ist genau ein Punkt:** ob **E-106** trägt. Die Behebung ist am
+Prüfstand **nicht** nachweisbar, weil er die Bilder nicht lädt; nur Gregors Lauf
+kann sie belegen. Was im Protokoll stehen muss, steht im CHANGELOG.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.70-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `6c36638665161f80b72b69cba66e11851b64252379ddc9029eb097e5bbde4605` |
+| **Größe** | 9 356 792 Byte, 157 Dateien |
+| **Quellstand** | 7.2.0.70 (`Eudora71/Version.h`), Grundlage `ceab98f` |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im Paket** | 2 987 520 Byte, 17.09.2026 21:18 |
+| **`EudoraRes.dll` im Paket** | 2 448 384 Byte |
+| **Paketprüfung** | `paket-pruefen.ps1`: keine Fehler |
+| **Tests** | 171 von 171 |
+
+## 1.0.69 — gebaut am 17.09.2026, kein Release
+
+Aus der **zweiten Sitzung**, die parallel an **E-101** arbeitete. Enthält den
+zweiten Teil von E-101 (*„ohne Kopfzeilen fehlte der Content-Type ganz"*) und
+**P-38** (die Spurmarke misst den Rumpf), **aber nicht E-106**.
+
+Die Nummer entstand als **Ausweichnummer**: beide Sitzungen hatten
+unabhängig die **68** vergeben. Der Commit heißt wörtlich *„7.2.0.69 / 1.0.69 —
+die Nummernkollision mit E-106 aufgelöst"*.
+
+| | |
+|---|---|
+| **Paket** | nur ausgepackt bei Gregor unter `%USERPROFILE%\Eudora72-1.0.69-release`, **kein Verzeichnis unter `Releases/`, kein ZIP** |
+| **Quellstand** | 7.2.0.69 |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe`** | 2 987 008 Byte, 17.09.2026 20:24 |
+| **Achtung** | 235 Dateien statt 157 — das Mailverzeichnis liegt darin, es ist Gregors Testverzeichnis, kein reines Paket |
+
+## 1.0.68 — gebaut am 17.09.2026, kein Release
+
+Enthält **E-106** (Bilder, die größer sind als angegeben) und **E-104**, **nicht**
+aber den zweiten Teil von E-101. **Dieselbe Nummer wurde von der zweiten Sitzung
+ein zweites Mal vergeben** — daher die Kollision.
+
+Ein erster Anlauf trug in der `Eudora.exe` noch **7.2.0.67**: die Fassung war
+hochgezogen, aber nicht neu gebaut worden. Aufgefallen beim Abfragen der
+Versionsnummer aus der ausgelieferten Datei; neu gebaut und neu geschnürt.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.68-release` (Verzeichnis, **kein ZIP**) |
+| **Quellstand** | 7.2.0.68 |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im Paket** | 2 987 008 Byte, 17.09.2026 20:18 |
+| **Dateien** | 157 |
+| **Paketprüfung** | keine Fehler |
+
+## 1.0.67 — gebaut am 17.09.2026, kein Release
+
+Enthält **E-101** (erster Teil) und **E-103** (Mindestzeilenhöhe für Bilder ohne
+Größenangabe). An dieser Fassung hat Gregor belegt, dass **E-103 seinen Fall
+nicht traf** — sein Logo trägt `width=200 height=52`, also eine Angabe. Daraus
+entstand **E-106**.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.67-release` (Verzeichnis, **kein ZIP**) |
+| **Quellstand** | 7.2.0.67 |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im Paket** | 2 985 984 Byte, 17.09.2026 18:58 |
+| **Dateien** | 157 |
+| **Paketprüfung** | keine Fehler |
+
+## 1.0.66 — **nie geschnürt**
+
+Der Quellstand 7.2.0.66 hat es gegeben — er trug die erste Fassung von
+**E-101** —, aber **es wurde nie ein Paket daraus gebaut**. Weder unter
+`Releases/` noch bei Gregor liegt etwas. Der Eintrag steht hier, damit die Lücke
+in der Zählung nicht wieder für eine freie Nummer gehalten wird.
+
+## 1.0.41 — gebaut am 10.09.2026, kein Release
+
+**Nicht veröffentlicht.** Gregor hat die Fassung noch nicht beurteilt; ein
+Release entsteht erst danach (Lehre `release-erst-nach-gregors-test`). Das ZIP
+liegt **nicht** im Repo, sondern nur im Arbeitsbaum unter
+`Releases/Eudora72-1.0.41-release.zip` und ausgepackt bei Gregor unter
+`%USERPROFILE%\Eudora72-1.0.41-release`.
+
+Inhaltlich bringt sie **E-70** (die Andockgrößen überleben einen Neustart —
+der Aufruf saß in `SECToolBarManager::LoadState`, die Eudora nie aufruft) und
+die Bestätigung von **E-64** als Fehlalarm. Neu eingebaut ist die Spurmarke zu
+**E-76**.
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.41-release.zip` (**nicht im Repo versioniert**) |
+| **SHA256** | `22949297c77c6f55c6f1e27d5a03646ccecb2fd3b538f7ecdf9909d8014d15ce` |
+| **Größe** | 9 346 106 Byte, 157 Einträge |
+| **Quellstand** | 7.2.0.41 (`Eudora71/Version.h`) |
+| **Marke** | keine — kein Release |
+| **`Eudora.exe` im ZIP** | 2 966 016 Byte, 10.09.2026 13:12 |
+| **`EudoraRes.dll` im ZIP** | 2 447 360 Byte, 10.09.2026 13:10 |
+| **`.sha256` daneben** | fehlt |
+
+Alle Zahlen am 10.09.2026 nachgemessen: `Get-FileHash`, `Length` und die
+Einträge im ZIP über `System.IO.Compression.ZipFile`. `paket-pruefen.ps1`
+meldete beim Bau keine Fehler, Kriterium 0 **JA**.
+
+> **Das ZIP hat keine eigene Wurzelebene.** Alle 157 Einträge liegen auf der
+> obersten Ebene. Es darf deshalb nur in ein **eigenes, leeres** Verzeichnis
+> ausgepackt werden — am 10.09.2026 ist es einmal direkt nach
+> `C:\Users\Gregor` gegangen und hat dort eine `Eudora.ini` des Anwenders
+> überschrieben (Lehre `anwenderdatei-nicht-erschlagen`,
+> `tools/home-aufraeumen.ps1`).
+
+## 1.0.29 — veröffentlicht am 09.09.2026
+
+**Stand 09.09.2026 die jüngste Fassung, und die einzige, die damals als Paket
+im Repo lag.** Sie
+bringt gegenüber 1.0.28 fünfzehn Behebungen: acht aus **PRÜFERs** sechstem
+Durchgang (**E-54** bis **E-61**) und sieben aus dem ersten Lauf der Schranke
+`tools/pruefe-nachrichtenschleife.pl`, die daraus entstanden ist (**E-62**).
+**Von Gregor am 09.09.2026 beurteilt:** *„1-6, ok"* — mit einem Restfehler,
+den er selbst zurückgestellt hat (**E-63**, die letzte Registerkarte zeigt
+keinen Kurzhinweis).
+
+| | |
+|---|---|
+| **Paket** | `Releases/Eudora72-1.0.29-release.zip` (**im Repo versioniert**) |
+| **SHA256** | `cf60bb3a806204ea4ae85af5cbaccc46f432f22f699b5063ae1d36a2a998158c` |
+| **Größe** | 9 342 274 Byte |
+| **Quellstand** | 7.2.0.29 — alle drei Makros in `Eudora71/Version.h` stimmen überein (`EUDORA_VERSION4 29`, `EUDORA_BUILD_NUMBER 7,2,0,29`, `EUDORA_BUILD_VERSION "7.2.0.29"`) |
+| **Marke** | [v1.0.29](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.29) — zeigt auf Commit `15a7cb8`, den Stand, aus dem dieses Paket gebaut ist |
+| **`Eudora.exe` im ZIP** | 2 961 408 Byte, 09.09.2026 12:37 |
+| **`EudoraRes.dll` im ZIP** | 2 447 360 Byte, 09.09.2026 12:17 |
+| **`.sha256` daneben** | **fehlt** (siehe Kopfkasten) |
+
+Alle Zahlen am 09.09.2026 nachgemessen: `Get-FileHash`, `Length`, und die
+Einträge im ZIP über `System.IO.Compression.ZipFile`.
+
+> **Paket gegen den Bau gemessen** (Lehre `paket-gegen-den-bau-messen`).
+> `Eudora.exe` und `EudoraRes.dll` im ZIP sind byte- und zeitgleich mit
+> `Eudora71/Bin/Release/` im Hauptbaum, und **beide tragen dieselbe
+> Produktversion 7.2.0.29**. Das ist nicht selbstverständlich: an 1.0.22/1.0.23
+> hat genau dieser Unterschied den Dialog *„Eudora has loaded a Resource DLL
+> that does not match this version of Eudora"* erzeugt. `tools/testlauf.ps1`
+> prüft es seitdem vor jedem Start, `tools/paket-pruefen.ps1` nach jedem
+> Packen.
+
+`tools/paket-pruefen.ps1`: **keine Fehler**, Kriterium 0 erfüllt. 35
+Binärdateien, 13 in der Startkette, in der Startkette fehlt nichts, keine
+Debug-Laufzeit, keine `.pdb`. Vier Warnungen, alle bekannt und hingenommen:
+`EUMAPI.DLL` und `ifsmon.vxd` sind 16-Bit-Altlast, die niemand importiert,
+`MFC71.DLL` und `MSVCP71.dll` fehlen (**E-47**).
+
+| Befund | was | Stand |
+|---|---|---|
+| **E-54** | der Ziehrahmen war beim Ziehen nach **rechts** unsichtbar — gezeichnet wurde auf die 188 Pixel breite Andockleiste. Jetzt auf den **Bildschirm**, mit Fenstersperre, wie `CDockContext::InitLoop` es macht | **behoben, von Gregor bestätigt** |
+| **E-55** | ein acht Pixel hoher leerer Streifen unter der Werkzeugleiste — der Zuschlag für den Greifstreifen galt für alle vier Andockleisten | **behoben, von Gregor bestätigt** |
+| **E-56** | *Show MDI task bar* abschalten ließ den Kartenstreifen stehen — `RecalcLayout` und `ResetTaskBar` stehen im Original innerhalb von `if (m_bWorkbookMode)` | **behoben, von Gregor bestätigt** |
+| **E-57** | `IsTabLabelTruncated` legte bei jeder Mausbewegung eine `CPaintDC` außerhalb von `WM_PAINT` an und verwarf damit den Malbereich | **behoben, von Gregor bestätigt** |
+| **E-58** | ein Klick in den rechten Rand des Streifens öffnete den **Browser** — `CalcLogoTopLeft` prüft nur x, und das Logo wird gar nicht gezeichnet. Rückentwicklung aus 1.0.25 bis 1.0.28 | **behoben, von Gregor bestätigt** |
+| **E-59** | `m_cxTab` wurde nur in `OnPaint` gesetzt; Treffprüfungen rechneten mit dem alten Wert | **behoben** |
+| **E-60** | ein Trennbalken konnte **während des Ziehens** gelöscht werden — `Track` verteilt Nachrichten, eine davon löst einen Anordnungsdurchlauf aus | **behoben** |
+| **E-61** | `Track` verschluckte `WM_QUIT` — Kriterium 7 wäre lautlos wieder offen gewesen | **behoben, von Gregor bestätigt** (*File → Exit* geprüft) |
+| **E-62** | **sieben** eigene Nachrichtenschleifen in Eudoras Quellen verschluckten `WM_QUIT`; zwei davon (`LeftClickAttachment`, `CTocView::SizeColumn`) **hängen** danach für immer, mit gehaltenem Mausfang — bei `SizeColumn` genügt das Ziehen einer Spaltenbreite | **behoben** |
+| **E-63** | die **letzte** Registerkarte zeigt keinen Kurzhinweis | **offen, von Gregor zurückgestellt** |
+| **E-49**, **E-52** | linken Bereich breiter ziehen und Balken danach greifbar (**A-4**) — aus 1.0.26/1.0.27 übernommen | **behoben, das seitliche Ziehen noch nicht beurteilt** |
+
+## 1.0.27 — veröffentlicht am 09.09.2026
+
+**Von 1.0.29 abgeloest; das ZIP ist aus dem Repo genommen, die Marke und die
+Veroeffentlichung bestehen.** Sie bringt
+gegenüber 1.0.26 zwei Nachbesserungen am Trennbalken links (**E-52**): der
+Balken bleibt nach dem Verbreitern greifbar, und die Registerkarten stehen
+danach nicht doppelt. **Von Gregor noch nicht beurteilt** — bestätigt ist nur
+der Gegenfall, die Höhe: *„verschieben rauf / runter — bug gefixt, die anzeige
+ist korrekt."*
+
+| | |
+|---|---|
+| **Paket** | `Eudora72-1.0.27-release.zip` — **nicht mehr im Repo**, haengt an der Marke v1.0.27 |
+| **SHA256** | `69595d4b380204eb5ac6d327ce8ded65080b356594090a2465394ced07f81b3a` |
+| **Größe** | 9 342 224 Byte |
+| **Quellstand** | 7.2.0.27 — alle drei Makros in `Eudora71/Version.h` stimmen überein (`EUDORA_VERSION4 27`, `EUDORA_BUILD_NUMBER 7,2,0,27`, `EUDORA_BUILD_VERSION "7.2.0.27"`) |
+| **Marke** | [v1.0.27](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.27) — **die einzige Veröffentlichung, an der noch Dateien hängen** |
+| **`Eudora.exe` im ZIP** | 2 960 896 Byte, 09.09.2026 11:02 (`unzip -l`) |
+| **`EudoraRes.dll` im ZIP** | 2 447 360 Byte, 09.09.2026 11:02 |
+| **`QCSSL.dll`** | 1.0.1 — dieselbe Datei wie seit 1.0.1 (2 920 960 Byte, 30.08.2026 17:57) |
+| **`DEudora.ini`** | 6 960 Byte, 07.09.2026 15:15 — die Vorgaben für ein neu angelegtes Konto (**A-1**) |
+| **`.sha256` daneben** | **fehlt** (siehe Kopfkasten) |
+
+Alle Zahlen am 09.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
+
+> **Paket gegen den Bau gemessen.** `Eudora.exe` im ZIP ist 2 960 896 Byte
+> groß; `Eudora71/Bin/Release/Eudora.exe` im Hauptbaum hat **dieselbe Größe**,
+> trägt aber den Zeitstempel 09.09.2026 11:35 gegen 11:02 im ZIP. Größe und
+> Quellstand stimmen also, der Bau im Arbeitsbaum ist nach dem Packen noch
+> einmal gelaufen. Das Bauverzeichnis dieses Arbeitsbaums
+> (`Eudora7.2-wt-lektor`) enthält **keine** `Eudora.exe` — hier wird nicht
+> gebaut.
+
+| Befund | was | Stand |
+|---|---|---|
+| **E-52** | nach dem Verbreitern war der Trennbalken nicht mehr greifbar, und die Registerkarten standen doppelt — MFC verschiebt die Leisten mit `DeferWindowPos`, in `OnSizeParent` ist die neue Größe noch nicht gesetzt. Der Balken entsteht jetzt in `OnSize`, und `OnSplitterMoved` frischt mit `RDW_INVALIDATE \| RDW_ERASE \| RDW_ALLCHILDREN` auf | **behoben, nicht bestätigt** |
+| **E-49** | der linke Bereich lässt sich breiter ziehen (Anforderung **A-4**) — aus 1.0.26 übernommen, Endstand 188 Pixel Andockleiste bei 180 Pixel Leiste, 8 Pixel freier Streifen | **behoben, nicht bestätigt** |
+| **E-50** | drei Mängel an der Registerkartenleiste — aus 1.0.26 übernommen | **behoben, nicht bestätigt** |
+| **E-51** | die eigene Ziehschleife konnte Eudora einfrieren; jetzt höchstens 100 ms Wartezeit, danach Fenster, Mausfang und **physische** Maustaste erneut geprüft | **behoben, bevor es ausgeliefert wurde** |
+| **E-48** | die Registerkartenleiste für die offenen Fenster (Anforderung **A-3**) — aus 1.0.25 übernommen | **behoben, von Gregor am 09.09.2026 bestätigt** |
+| **E-43** | `SECControlBar` war zweimal definiert — aus 1.0.24 übernommen; mit ihm fielen **E-37** und **E-38** weg | **behoben, von Gregor am 08.09.2026 bestätigt** |
+
+**Was in dieser Fassung nicht geht:** nach einem Neustart stehen die Fenster
+nicht im Vollbild, obwohl sie beim Beenden so waren (Nebenbefund **ohne
+Kennung**, von Gregor an 1.0.25 gemeldet); beim Öffnen der
+Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog **E-47**
+(`MFC71.DLL` und `MSVCP71.dll` fehlen, keine Behebung in Sicht); die Meldung
+„Encountered an improper argument" beim **Anzeigen** mancher Nachrichten ist
+**seit E-43 neu zu messen**; und **E-39** ist offen. Die Prüfanleitung steht
+im [CHANGELOG.md](../CHANGELOG.md) unter *Was an 1.0.27 zu prüfen ist*.
+
+## 1.0.23 — gebaut am 08.09.2026, Marke v1.0.23 gesetzt, Paket nicht mehr abrufbar
+
+**Die Fassung, mit der Anforderung A-2 erfüllt ist:** *Task Status* und *Task
+Errors* liegen waagrecht am unteren Fensterrand. Von Gregor am 08.09.2026
+bestätigt: *„jetzt ist sie unten, ja"*.
+
+| | |
+|---|---|
+| **Paket** | `Eudora72-1.0.23-release.zip` — **nicht mehr im Repo und nicht mehr abrufbar**; die Veröffentlichung zu `v1.0.23` ist am 09.09.2026 gelöscht worden, die Marke besteht |
+| **SHA256** | `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045` |
+| **Größe** | 9 340 228 Byte |
+| **Quellstand** | 7.2.0.23 (`Eudora71/Version.h`) |
+| **Marke** | `v1.0.23` — gesetzt, aber ohne Dateien daran |
+| **Eudora.exe im ZIP** | 2 957 312 Byte, 08.09.2026 10:51 (`unzip -l`, gemessen am 08.09.2026, solange das ZIP noch da war) |
+| **QCSSL** | 1.0.1 — dieselbe Datei wie in 1.0.21 und 1.0.22 (2 920 960 Byte, 30.08.2026 17:57) |
+
+Alle Zahlen am 08.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
+**Das ZIP liegt heute nicht mehr im Repo** — es ist am 09.09.2026 durch das zu
+1.0.27 ersetzt worden (`git status`: Umbenennung
+`Eudora72-1.0.23-release.zip` → `Eudora72-1.0.27-release.zip`). Die Prüfsumme
+oben ist alles, was von dieser Fassung bleibt.
+
+| Befund | was | Stand |
+|---|---|---|
+| **E-44** | *Task Status* und *Task Errors* waagrecht unten statt senkrecht links — zwei Ursachen, beide gemessen (`ID_SEC_HIDE` beim frischen Profil; keine Andockseite in `LoadWazooConfigFromIni` ab dem zweiten Start) | **behoben, von Gregor bestätigt** |
+| **E-45** | `QCWorkbook::OnClose` darf **nicht** übersprungen werden, sonst bleibt ein Prozess ohne Fenster übrig; eigener Fangzweig holt `DestroyWindow()` nach | **behoben** (von PRUEFER gefunden, `Befunde/PRUEFER-5.md`) |
+| **E-46** | Verdacht, `CMainFrame::OnClose` arbeite auf einem freigegebenen Objekt weiter — Spurmarke im Destruktor | **widerlegt**: die Marke erscheint erst *nach* der Stelle |
+| **E-43** | `SaveCustomInfo` wirft weiter; die verfeinerte Marke misst vier Werte in einer Zeile und schließt „flackernder Wert" und „freigegebenes Objekt" aus | **offen, Ursache eingegrenzt** |
+| **E-37** | zweiter Anlauf für das Löschen eines Kontos — Suche über `GetItemText` statt `FindItem`, ohne `PopulateView()` | **gebaut, von Gregor nicht bestätigt** |
+
+**Was in dieser Fassung noch nicht geht:** ein gelöschtes Konto verschwindet
+möglicherweise weiter erst nach einem Neustart aus der Liste (**E-37**, nicht
+bestätigt), die im Kontoassistenten eingegebenen Daten fehlen unter
+*Konto → Eigenschaften* (**E-38**, jetzt erstmals messbar), und die Leiste am
+unteren Rand zeigt *Task Status* und *Task Errors*, nicht die Reiter für die
+offenen Fenster (Kriterium 8, halb). Die Einzelheiten stehen im
+[CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.23.
+
+## 1.0.22 — gebaut am 08.09.2026, nicht als Marke veröffentlicht
+
+**Die Fassung, mit der Kriterium 7 erfüllt ist:** Eudora beendet sich über
+*File → Exit*, über **Alt-F4** und über das **Kreuz**. Von Gregor am 08.09.2026
+bestätigt: *„schließen klappt jetzt."* Ebenfalls von ihm bestätigt ist
+Anforderung **A-1**: *„default werte beim neuen persona konto für ‚leave
+message on server' greifen."*
+
+| | |
+|---|---|
+| **Paket** | `Eudora72-1.0.22-release.zip` — **nicht mehr im Repo**; nur die `.sha256`-Datei liegt noch in `Releases/`. Es gibt keine Marke `v1.0.22` und keine Veröffentlichung |
+| **SHA256** | `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c` |
+| **Größe** | 9 339 516 Byte |
+| **Quellstand** | 7.2.0.22 (`Eudora71/Version.h`) |
+| **Marke** | **keine** — nicht veröffentlicht |
+| **Eudora.exe im ZIP** | 2 956 288 Byte, 08.09.2026 08:58 (`unzip -l`) |
+| **QCSSL** | 1.0.1 (unverändert seit 1.0.1) |
+
+Alle Zahlen am 08.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
+
+| Befund | was | wo |
+|---|---|---|
+| **E-40** | eine Rückfrage, die sich nicht öffnen lässt, galt als „Abbrechen" | `Eudora71/Eudora/doc.cpp`, `msgdoc.cpp` (`SaveModified`) |
+| **E-41** | Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`, das *File → Exit* nicht hat | `Eudora71/Eudora/mainfrm.cpp` (`OnSysCommand`) |
+| **E-42** | zwölf Aufräumschritte konnten das Beenden abbrechen — neues Makro `AUFRAEUMEN` | `Eudora71/Eudora/mainfrm.cpp` (`OnClose`, `CloseDown`) |
+| **A-1** | Vorgaben für ein **neu angelegtes** Konto greifen | `tools/DEudora.ini`, Anforderung in [ZIEL.md](../ZIEL.md) |
+
+**Was in dieser Fassung noch nicht geht:** *Task Status* und *Task Errors*
+liegen senkrecht links (Anforderung **A-2**, erst in 1.0.23 behoben), der erste
+E-37-Anlauf war eine **Regression** und zeigte beim Löschen einer Persönlichkeit
+„Encountered an improper argument", und `SaveCustomInfo` wirft beim Beenden
+weiter (**E-43**, abgefangen). Die Prüfanleitung steht im
+[CHANGELOG.md](../CHANGELOG.md) unter *Was an 1.0.22 zu prüfen ist*.
+
+## 1.0.21 — veröffentlicht am 07.09.2026
+
+**Die erste Fassung, mit der eine Mail geschrieben, abgeschickt und die Antwort
+empfangen wurde.** Von Gregor am 07.09.2026 bestätigt: *„mail können jetzt
+abgeschickt werden."* und *„weiterleitung funktioniert übrigens."* Damit sind
+die Kriterien 5 und 6 aus [ZIEL.md](../ZIEL.md) belegt.
+
+| | |
+|---|---|
+| **Paket** | `Eudora72-1.0.21-release.zip` — **nicht mehr im Repo**; nur die `.sha256`-Datei liegt noch in `Releases/` |
+| **SHA256** | `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` |
+| **Größe** | 9 331 078 Byte |
+| **Quellstand** | 7.2.0.21 (`Eudora71/Version.h`) |
+| **Marke** | `v1.0.21` — die Marke besteht, die **Veröffentlichung** ist am 09.09.2026 gelöscht; das ZIP hängt nicht mehr daran |
+| **Eudora.exe gebaut** | 07.09.2026, 09:48 |
+| **QCSSL** | 1.0.1 (unverändert seit 1.0.1) |
+
+**Was in dieser Fassung behoben ist** — die Kette, die das Verfassen-Fenster
+freigelegt hat, mit Messwerten im [CHANGELOG.md](../CHANGELOG.md) unter
+7.2.0.21:
+
+| Befund | was | wo |
+|---|---|---|
+| **E-31** | `pg_time_t` war acht Byte breit statt vier — jede Paige-Struktur verschoben | `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H:695` |
+| **E-34** | eine MFC-Ausnahme in `GetButton` wickelte den ganzen Fensterbau ab, ohne Meldung und ohne Absturz | `Eudora71/Eudora/QCChildToolBar.cpp` |
+| **E-35** | blinder Zeigerzugriff, den E-34 erst sichtbar machte | `Eudora71/Eudora/CompMessageFrame.cpp` |
+| **E-36** | zweimal dasselbe, vom eigenen Absturzbericht gefunden | `Eudora71/Eudora/PgCompMsgView.cpp` |
+
+**Was in dieser Fassung noch nicht geht:** *File → Exit* beendet Eudora nicht
+(Kriterium 7, *„beenden geht nicht"*), und die untere Statuszeile mit Reitern
+für die offenen Fenster fehlt (Kriterium 8, halb — das Menü *Window* listet
+sie). Die Prüfanleitung steht im [CHANGELOG.md](../CHANGELOG.md) unter
+*Was an 1.0.21 zu prüfen ist*.
+
+## 1.0.18 — veröffentlicht am 06.09.2026
+
+Die Fassung mit der Behebung von **E-31** (`pg_time_t`) — die erste, in der in
+dieser Portierung überhaupt ein Paige-Fenster entsteht. **Aus Anwendersicht
+bringt sie nichts:** Gregors Urteil lautet *„es crasht nicht, aber es passiert
+auch nichts. beenden kann ich es auch nicht. nichts statt crash ist auch keine
+verbesserung!"* Der Grund ist **E-32**, behoben erst am 07.09.2026 und damit
+**nicht** in diesem Paket.
+
+| | |
+|---|---|
+| Veröffentlichung | **am 09.09.2026 gelöscht.** Die Marke `v1.0.18` besteht weiter, das ZIP hängt nicht mehr daran |
+| Marke | `v1.0.18` auf Commit `e881164` (`git ls-remote --tags origin`) |
+| ZIP | `Eudora72-1.0.18-release.zip`, 9.330.115 B |
+| SHA256 | `809e005f31eb72dbe349175b97b6838e7341c25c872fc4625f682657200b7e72` |
+| Eudora.exe | 2.943.488 B, `Release\|Win32` |
+| Quellstand | 7.2.0.18 (`Eudora71/Version.h`) |
+
+Alle Zahlen am 07.09.2026 nachgemessen: `stat -c%s`, `sha256sum` gegen die
+beiliegende `.sha256`, `unzip -l` für die `Eudora.exe`.
+
+> **1.0.4 bis 1.0.17 haben weiter keinen Eintrag** (Mangel **M-4**). Für
+> 1.0.14 und 1.0.15 liegen die ZIPs im Repo, für die übrigen nicht — erfunden
+> wird hier nichts.
+
 ## 1.0.3 — veröffentlicht am 31.08.2026, ZIP einmal ausgetauscht
 
 **Release-Bau.** Erste Fassung, die ohne die vier nicht verteilbaren
@@ -97,21 +677,27 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 [ZIEL.md](../ZIEL.md) — hier bewusst keine zweite Fassung dieser Tabelle.
 
 > **Achtung, zwei ZIPs unter derselben Kennung.** Das Paket ist am 31.08.2026
-> um 09:00 **ausgetauscht** worden. Nur die zweite Fassung enthält die Behebung
-> von Befund **E-11** (`eudora.cpp:3372`, `Left(i)` statt `ReleaseBuffer(i)`) —
-> mit der ersten stürzte Eudora auf einer frischen Installation beim Klick auf
-> *Weiter* im Kontoassistenten ab. Das ist genau der Fall, gegen den diese
-> Datei geschrieben wurde: **die Prüfsumme entscheidet, nicht der Name.**
+> um 09:00 **ausgetauscht** worden. Die beiden Fassungen unterscheiden sich in
+> einer Änderung an `eudora.cpp:3372` (`Left(i)` statt `ReleaseBuffer(i)`). Das
+> ist genau der Fall, gegen den diese Datei geschrieben wurde: **die Prüfsumme
+> entscheidet, nicht der Name.**
+>
+> **Berichtigung (06.09.2026).** Hier stand, nur die zweite Fassung enthalte
+> „die Behebung von Befund **E-11**". **E-11 ist zurückgenommen** — die
+> Änderung behebt den Absturz im Kontoassistenten nicht. Die belegte Ursache
+> ist **E-25** (`Befunde/ASSISTENT.md`), und auch die war nicht die einzige:
+> 7.2.0.12 stürzt weiter ab. Die Unterscheidung der beiden ZIPs bleibt richtig,
+> ihre Begründung trägt nicht mehr.
 
 | | |
 |---|---|
 | Veröffentlichung | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3 |
-| ZIP | `Eudora72-1.0.3-release.zip`, `Eudora.exe` 2 933 248 B, `Release\|Win32` |
+| ZIP | `Eudora72-1.0.3-release.zip`, 9.209.393 B; darin `Eudora.exe` **2.933.760 B**, `Release\|Win32`. Nachgezählt am 07.09.2026 mit `unzip -l Releases/Eudora72-1.0.3-release.zip` — hier stand bis dahin 2 933 248 B, das sind 512 Byte zu wenig. **Das ZIP liegt heute nicht mehr im Arbeitsbaum**, der Befehl ist die Messung von damals |
 | SHA256 (gültig) | `d471904776d5c93a0d7c5e11ea90c756d02fe0c422aa82e396c1eabd4e89cfcc` |
 | SHA256 (erste Fassung, stürzt ab) | `632c4066…` — nicht benutzen |
 | Zusammenstellen | `powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel "<verz>" -Bauart Release -AusBauverzeichnis` |
-| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — **taugt nicht als Freigabekriterium**, siehe PR-2.0 |
-| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — beschreibt noch den Debug-Weg, für ein Release-Paket hinfällig (F-1, nächster Schritt 3) |
+| Prüfen | `powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket "<verz>"` — rechnet die Startkette aus den PE-Importtabellen aus, `SysWOW64` zählt nicht (PR-2.0 behoben am 06.09.2026). Ersetzt keinen Startversuch auf einem fremden Rechner |
+| LIESMICH | [`Releases/1.0.3/LIESMICH.txt`](1.0.3/LIESMICH.txt) — am 31.08.2026 abends auf den Release-Weg umgeschrieben; die alte Debug-Fassung ist dort im Kasten benannt |
 | QCSSL | 1.0.1 (`ab55281a`), unverändert seit Paket 1.0.1 |
 
 **Was sich gegenüber 1.0.2 ändert.**
@@ -130,9 +716,15 @@ Debug-Laufzeiten auskommt (Befund F-1). Der Stand der Kriterien steht in
 3. **Die drei Plugins als Release-Fassungen, ohne PDB.** 1.0.2 lieferte die
    Debug-Fassungen samt 12 MB Symboldateien. Ladbar sind beide nicht.
 4. **`laufzeit-holen.ps1` und `paket-pruefen.ps1` liegen im Paket**, mit
-   Hinweis ganz vorn in der LIESMICH.txt. Ohne die vier VS2022-Debug-Laufzeiten
-   scheitert der Start mit `0xc000007b` — genau das ist am 31.08.2026
-   passiert.
+   Hinweis ganz vorn in der LIESMICH.txt.
+
+   > **Berichtigung (06.09.2026).** Hier stand: *„Ohne die vier
+   > VS2022-Debug-Laufzeiten scheitert der Start mit `0xc000007b`."* Das ist im
+   > Abschnitt über ein **Release**-Paket falsch und widerspricht der eigenen
+   > Überschrift: 1.0.3 ist die erste Fassung, die **ohne** diese vier DLLs
+   > auskommt (Befund F-1). Sie dürfen auch gar nicht weitergegeben werden.
+   > `laufzeit-holen.ps1` liegt nur für den Fall bei, dass jemand einen
+   > **Debug**-Bau daneben ausprobiert.
 
 **Was der Paketprüfer sagt.** Zusammengestellt und geprüft am 31.08.2026:
 
@@ -161,18 +753,29 @@ Das fehlende `MFC71.DLL`/`MSVCP71.dll` hält den Start also nicht auf; es fällt
 erst bei Benutzung auf (Adressbuch, LDAP, Ph, S/MIME, Spamfilter). Das galt
 für 1.0.2 genauso — es war nur nicht gemessen.
 
-**Stand nach ZIEL.md** (31.08.2026, abends). Hier ist genau zu unterscheiden,
-welcher Bau gemeint ist — **keine der beiden veröffentlichten Fassungen ist von
-jemandem gestartet worden** (Befund V-1):
+**Stand nach ZIEL.md** (31.08.2026, abends — der damalige Stand, hier als
+Zeitdokument):
 
 | Bau | Stand |
 |---|---|
 | **Debug**-Bau `Eudora72-1.0.3` (nicht veröffentlicht, nicht veröffentlichbar) | darauf sind Kriterium 1 und 3 belegt — 159 Nachrichten, TLSv1.3 (E-1, E-3). Er lief nur, weil die vier **nicht verteilbaren** Laufzeit-DLLs von Hand daneben lagen (E-8) |
-| **Release**-ZIP, erste Fassung (`632c4066…`) | von Gregor probiert: **Absturz** beim Klick auf *Weiter* im Kontoassistenten (E-6, Ursache E-11) |
-| **Release**-ZIP, zweite Fassung (`d4719047…`) | **von niemandem geprüft** — sie trägt die Behebung von E-11, aber es hat sie noch keiner gestartet |
+| **Release**-ZIP, erste Fassung (`632c4066…`) | von Gregor probiert: **Absturz** beim Klick auf *Weiter* im Kontoassistenten (E-6) |
+| **Release**-ZIP, zweite Fassung (`d4719047…`) | war am 31.08.2026 von niemandem gestartet |
 
-Kriterium 0 ist damit unbelegt, und die Behebung von E-11 unerprobt — zumal in
-derselben Funktion zwei weitere Vorkommen derselben Art stehen (R-1).
+> **Nachtrag (06.09.2026).** Zwei Dinge daran sind überholt. Erstens ist
+> **E-11 zurückgenommen** — die zweite 1.0.3-Fassung trug also nicht „die
+> Behebung des Absturzes", sondern eine Änderung an einer Stelle, die den
+> Absturz nicht verursacht hat; die richtige Erklärung ist **E-25**
+> (Doppelfreigabe in `NSImport.eif`), und selbst die reichte nicht: 7.2.0.12
+> stürzt weiter ab. Zweitens ist der Satz *„keine der beiden veröffentlichten
+> Fassungen ist von jemandem gestartet worden"* längst überholt — seither sind
+> 1.0.4 bis 1.0.10 gebaut und benutzt worden.
+>
+> **Nachtrag (07.09.2026): Kriterium 0 ist erfüllt.** Der Satz „Kriterium 0
+> bleibt trotzdem offen: kein Paket ist auf einem Rechner **ohne** Visual Studio
+> ausgepackt und gestartet worden" stand hier bis heute. Er ist seit dem
+> 06.09.2026 überholt: Gregor hat `Eudora72-1.0.10-release.zip` genau so
+> gestartet — *„test bestanden: eudora läuft ohne VS2022 installiert."*
 
 ## 1.0.2 — 30.08.2026
 
@@ -194,8 +797,10 @@ derselben Funktion zwei weitere Vorkommen derselben Art stehen (R-1).
 1. Die sieben vorgebauten Fremd-DLLs von 2006 lagen als **Debug**-Fassungen bei
    und verlangten die nicht verteilbare VS2003-Debug-Laufzeit. Jetzt die
    Release-Fassungen (Befund S-1).
-2. Ohne vorhandene `Eudora.ini` bricht Eudora in `eudora.cpp:3542` ab. Eine
+2. Ohne vorhandene `Eudora.ini` lief Eudora nicht sinnvoll an. Eine
    vorbereitete liegt jetzt im Unterverzeichnis `Mailverzeichnis` (S-1).
+   *(Die frühere Formulierung „bricht in `eudora.cpp:3542` ab" ist falsch —
+   siehe README, Abschnitt „Starten".)*
 3. Der Stillstand nach dem Startbildschirm war die **Werbefläche**:
    `CAdWazooWnd::OnCreate` legt sie mit 0 × 0 Bildpunkten an, Paige verheddert
    sich in einer Endlosrekursion. Die Leiste wurde bedingungslos angelegt; sie
@@ -244,3 +849,64 @@ certutil -hashfile Eudora72-1.0.2-lauffaehig.zip SHA256
 ```
 
 Die Prüfsumme in der Tabelle oben sagt eindeutig, welche Fassung vorliegt.
+
+## Wo die Pakete liegen (Stand 13.09.2026)
+
+Die ZIPs sind am 07.09.2026 aus `Releases/` **entfernt** worden — sie lagen
+dort 104 MB und waren doppelt: veroeffentlicht bei GitHub und im git-Verlauf.
+Diese Tabelle nennt jede Fassung mit Pruefsumme, damit niemand sie im
+Arbeitsbaum sucht.
+
+**Im Repo liegen genau zwei ZIPs** (`git ls-files Releases/`, gemessen am
+13.09.2026): `Eudora72-1.0.2-lauffaehig.zip` (Baugrundlage, mit `.sha256`) und
+`Eudora72-1.0.30-release.zip` (**ohne** `.sha256`). Bis zum 13.09.2026 stand
+hier `Eudora72-1.0.27-release.zip` und dazu *„die veröffentlichte Fassung"* —
+beides falsch: das ZIP im Repo ist 1.0.30, und veröffentlicht ist bei GitHub
+`v1.0.48` (`gh release list`).
+Die ZIPs zu **1.0.21**, **1.0.23** und **1.0.24** sind wieder entfernt; von
+1.0.21 und 1.0.22 liegt nur noch die `.sha256`-Datei da, ohne ZIP daneben.
+
+> **Abrufbar ist als Paket nur noch `v1.0.27`.** Gregor hat am 09.09.2026 die
+> **Veröffentlichungen** zu `v1.0.18`, `v1.0.21`, `v1.0.23` und `v1.0.24`
+> gelöscht. Die **Marken** bestehen weiter — wer einem Verweis darauf folgt,
+> findet den Quellstand, aber **kein ZIP**. Die Prüfsummen unten bleiben
+> trotzdem stehen: sie sagen eindeutig, welche Fassung jemand in der Hand hat,
+> der eines dieser Pakete früher heruntergeladen hat.
+
+| Fassung | SHA256 | wo |
+|---|---|---|
+| `Eudora72-1.0.41-release.zip` | `22949297c77c6f55c6f1e27d5a03646ccecb2fd3b538f7ecdf9909d8014d15ce` | **nicht im Repo** — liegt im Hauptarbeitsbaum unter `Releases/`, 9 346 106 B, gebaut am 10.09.2026, `paket-pruefen.ps1` ohne Fehler, Kriterium 0 **JA**. Keine Marke, nie veröffentlicht — Gregor hat es noch nicht beurteilt. Eingetragen von PRÜFER am 10.09.2026, weil `WEITERMACHEN.md:11` es nennt und `doku-pruefen.pl` sonst jeden Commit abweist |
+| `Eudora72-1.0.27-release.zip` | `69595d4b380204eb5ac6d327ce8ded65080b356594090a2465394ced07f81b3a` | **im Repo** und [GitHub v1.0.27](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.27) — die einzige Veröffentlichung mit Dateien |
+| `Eudora72-1.0.24-release.zip` | siehe [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.24 | Marke `v1.0.24` gesetzt, **Veröffentlichung am 09.09.2026 gelöscht**; nur im git-Verlauf |
+| `Eudora72-1.0.23-release.zip` | `3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045` | Marke `v1.0.23` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf |
+| `Eudora72-1.0.22-release.zip` | `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c` | **keine Marke**, nie veröffentlicht; nur im git-Verlauf, `.sha256` in `Releases/` |
+| `Eudora72-1.0.21-release.zip` | `0a699fcb03c3f0b60a0142837fc2128f3baf19884cd6b96a4f388339165b667c` | Marke `v1.0.21` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf, `.sha256` in `Releases/` |
+| `Eudora72-1.0.18-release.zip` | `809e005f31eb72db…` | Marke `v1.0.18` gesetzt, **Veröffentlichung gelöscht**; nur im git-Verlauf |
+| `Eudora72-1.0.19-release.zip` | `27976d451c88a9ed…` | nur im git-Verlauf |
+| `Eudora72-1.0.15-release.zip` | `2a0c49b09f25c1d2…` | [GitHub v1.0.15](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.15) |
+| `Eudora72-1.0.14-release.zip` | `23cb17e45f85a7a7…` | [GitHub v1.0.14](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.14) |
+| `Eudora72-1.0.10-release.zip` | `68c8af8836e30343…` | [GitHub v1.0.10](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.10) |
+| `Eudora72-1.0.4-release.zip` | `a3eb72e5f0beccb4…` | nur im git-Verlauf |
+| `Eudora72-1.0.3-release.zip` | `d471904776d5c93a…` | [GitHub v1.0.3](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.3) |
+| `Eudora72-1.0.2-lauffaehig.zip` | `5236be5015c0dd01…` | **im Repo** und [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) — **bleibt im Repo**, `paket-bauen.ps1` braucht es als Grundlage |
+| `Eudora72-1.0.2-symbole.zip` | `2d98967911b1afd2…` | [GitHub v1.0.2](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.2) |
+| `Eudora72-1.0.1-lauffaehig.zip` | `d277cb0b2f3e02e4…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
+| `Eudora72-QCSSL-1.0.1.zip` | `9339fb2edecfbf8b…` | [GitHub v1.0.1](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.1) |
+
+> **Zu 1.0.25 und 1.0.26 ist hier keine Prüfsumme verzeichnet.** Beide Pakete
+> hat Gregor geprüft (A-3 an 1.0.25, die Meldung zu E-52 an 1.0.26), aber keine
+> Marke dafür gesetzt und kein ZIP im Repo hinterlassen. Was drinsteckte, steht
+> im [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.25 und 7.2.0.26. Das ist Teil
+> des Mangels **M-4** aus dem Kopfkasten.
+
+Ebenfalls entfernt: `Releases/1.0.2/` und die drei Fremd-DLLs
+`msvcr71.dll`, `msvcr71d.dll`, `msvcp71d.dll` — null Verweise im ganzen Repo.
+Die beiden `d`-Fassungen stammten von dll-files.com und durften ohnehin nicht
+weitergegeben werden; `msvcr71.dll` wird seit Befund B-1 selbst gebaut
+(`Eudora71/VC71Bruecke`).
+
+> **Nicht loeschen:** `Eudora72-1.0.2-lauffaehig.zip` sieht nach dem aeltesten
+> und nutzlosesten aus, ist aber die **Grundlage jedes neuen Pakets**
+> (`tools/paket-bauen.ps1`, Schalter `-Grundlage`). Dazu `Releases/1.0/`
+> (fuenf Werkzeugstellen) und `Releases/1.0.3/LIESMICH.txt` (kommt in jedes
+> Paket).

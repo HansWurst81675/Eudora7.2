@@ -10,3 +10,13 @@
 # Wer eine Datei aendert, muss sie weiterhin byte-erhaltend anfassen
 # (tools/aendere-zeile.pl); der pre-commit-Hook prueft das.
 * -text
+
+# Testdaten/ - Probenachrichten, an denen Befunde nachgestellt werden.
+# Hier haengt der Testfall an den Bytes: e108-absturz-und-versteckter-
+# vorschautext.eml traegt im Rumpf 353 NACKTE LF und im Kopf 283 CRLF -
+# eine Datei, die git beim Auschecken normalisiert, ist als Testfall
+# zerstoert. Die Regel steht ausdruecklich hier, obwohl "* -text" darueber
+# schon alles erfasst: wer die Zeile darueber einmal einschraenkt, sieht
+# an dieser, dass Testdaten/ nicht mitgehen darf.
+# Nachpruefen: git check-attr text eol -- Testdaten/<datei>
+Testdaten/** -text

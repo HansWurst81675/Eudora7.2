@@ -52,25 +52,29 @@ verschlüsselt aufgebaut (`POPSession.cpp:602-605`), noch bevor irgendein Passwo
 
 ### Welcher Servername? — beantwortet
 
-> **Erledigt am 31.08.2026 (Befund E-3): `mx.freenet.de` spricht POP3**, und
-> zwar auf **Port 110 mit STARTTLS**. Gregor hat darüber 159 Nachrichten
-> abgerufen, `TLSv1.3` / `TLS_AES_256_GCM_SHA384`, abgelesen in
-> *Tools → Last SSL Info*. Der Verdacht, es sei nur ein MX-Eintrag für die
+> **Erledigt: `mx.freenet.de` spricht POP3.** Zuletzt gemessen am **06.09.2026**
+> im selbst gebauten Eudora 7.2.0.12: **Port 995**, *Tools → Last SSL Info*
+> meldet `Negotiation Status: Succeeded`, **TLSv1.3**,
+> `TLS_AES_256_GCM_SHA384`. Die zugehörige Einstellung ist *Secure Sockets when
+> Receiving* → **„Required, Alternate Port"**, in der `Eudora.ini`
+> `SSLReceiveUse=2`. **Der empfohlene Weg dieser Anleitung ist damit der
+> gemessene.**
+>
+> Der erste Beleg überhaupt stammt vom 31.08.2026 (Befund E-3): 159 Nachrichten
+> über **Port 110 mit STARTTLS**, ebenfalls `TLSv1.3`. Beide Wege
+> funktionieren. Der Verdacht, `mx.freenet.de` sei nur ein MX-Eintrag für die
 > Zustellung, war unbegründet.
 >
-> **Das ist nicht der Weg, den diese Anleitung unten empfiehlt** (Port 995,
-> implizites TLS). Beide funktionieren. Belegt ist **Port 110 mit STARTTLS** —
-> das entspricht `SSLReceiveUse=1` oder `=3`; **welchen der beiden Werte Gregor
-> gesetzt hatte, ist nicht festgehalten** und lässt sich nachträglich nur aus
-> seiner `Eudora.ini` ablesen. Die Tabelle darunter bleibt stehen, weil sie den
-> zweiten Weg und die Fehlersuche beschreibt.
+> **Berichtigung (06.09.2026).** Hier stand: *„Belegt ist Port 110 mit
+> STARTTLS … das ist **nicht** der Weg, den diese Anleitung unten empfiehlt."*
+> Seit dem 06.09.2026 ist Port 995 gemessen.
 
-Es gibt genau zwei Möglichkeiten. **Woran du merkst, welche zutrifft:**
+Falls doch nichts zustande kommt — **woran du merkst, woran es liegt:**
 
 | Was passiert | Welcher Fall | Was tun |
 |---|---|---|
-| Eudora fragt nach dem Passwort, danach kommt eine Antwort vom Server — egal ob Erfolg oder `-ERR` | **`mx.freenet.de` ist auch der POP-Server.** Es horcht auf 995. | Nichts. Weiter bei Schritt 4. |
-| Es kommt gar nichts: Zeitüberschreitung, „connection refused", oder Eudora hängt in „Connecting…" und bricht dann ab. **Kein** Passwortdialog, **kein** Zertifikatsdialog, „Last SSL Info" bleibt leer | **Falscher Name oder falscher Port.** Auf 995 horcht dort nichts. | Zweiter Versuch mit `pop.freenet.de`, siehe unten. |
+| Eudora fragt nach dem Passwort, danach kommt eine Antwort vom Server — egal ob Erfolg oder `-ERR` | **`mx.freenet.de` ist auch der POP-Server.** Es horcht auf 995. Das ist der gemessene Normalfall. | Nichts. Weiter bei Schritt 4. |
+| Es kommt gar nichts: Zeitüberschreitung, „connection refused", oder Eudora hängt in „Connecting…" und bricht dann ab. **Kein** Passwortdialog, **kein** Zertifikatsdialog, „Last SSL Info" bleibt leer | Falscher Name, falscher Port oder eine Firewall dazwischen. | Zweiter Versuch mit `pop.freenet.de`, siehe unten. |
 
 Das unterscheidende Merkmal ist der **Passwortdialog**. Er kommt erst, nachdem die
 TCP-Verbindung steht und (bei `SSLReceiveUse=2`) TLS ausgehandelt ist
@@ -122,7 +126,7 @@ nachdem TLS steht.
 **a) Die Statuszeile** zählt die Nachrichten durch und endet ohne Fehlerdialog.
 
 **b) Der Postfacheintrag** erscheint in `In`. Betreff und Absender müssen lesbar
-sein — **keine** Zeichenketten der Form `=?UTF-8?B?…?=` und keine Folgen wie `Ã¼`
+sein — **keine** Zeichenketten der Form `=?UTF-8?B?…?=` und keine Folgen wie `ü`
 statt `ü`. Die Nachricht öffnen: Umlaute im Text müssen richtig stehen, und am
 Zeilenende darf kein Rest hängen.
 
@@ -159,13 +163,26 @@ für Kriterium 3.
 | Eudora verschwindet beim Abruf kommentarlos, ohne Dialog | War bis 31.08. der wahrscheinlichste Absturz: ein NULL-Zeiger nach gescheiterter SSL-Aushandlung (`QCWorkerSocket.cpp:1969`, Befund P-1.5a) | **Behoben** (Befund P-2.1). Stürzt es trotzdem ab, ist es *nicht* diese Stelle — dann bitte melden, mit dem Zeitpunkt. |
 | „Server does not support SSL" (`IDS_SSL_NOSUPPORT`, `POPSession.cpp:2144`) | `SSLReceiveUse=3` gesetzt, aber der Server bietet in `CAPA` kein `STLS` an | Auf `SSLReceiveUse=2` und Port 995 umstellen. |
 | `-ERR` mit `[AUTH]` oder „authentication failed" | Benutzername oder Passwort falsch (`POPSession.cpp:1818-1878`) | `POPAccount` prüfen: muss `benutzer@server` sein, nicht die Mailadresse. Bei freenet ist der Anmeldename oft die vollständige Mailadresse — dann lautet `POPAccount` `name@freenet.de@mx.freenet.de`. |
-| Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe UNGEPRÜFT-Hinweis unter Schritt 1. |
+| Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe *„Welcher Servername? — beantwortet"* unter Schritt 2. |
 | Nachricht kommt an, aber Umlaute sind kaputt | Zeichensatzpfad | Genau festhalten, was dasteht (siehe unten) — daran lässt sich die Stelle bestimmen. |
 
-Der Zertifikatsdialog ist **nicht** notwendigerweise ein Fehler: die Prüfung ist in
-dieser Fassung bewusst nachsichtig (`tools/patches/zertifikatspruefung-verschaerfen.patch`
-ist absichtlich **nicht** eingespielt). Sie lässt mehr durch, als streng richtig
-wäre — der Abruf wird daran also eher nicht scheitern.
+Der Zertifikatsdialog ist **nicht** notwendigerweise ein Fehler: er kommt immer
+dann, wenn Eudora die Kette nicht bis zu einer bekannten Wurzel zurückverfolgen
+konnte — mit dem Wurzelspeicher `rootcerts.p7b` von 2004 ist das häufig.
+
+**Seit 7.2.0.48 ist die Prüfung aber nicht mehr nachsichtig** (Befund
+**E-82**, von Gregor am 11.09.2026 bestätigt). Bis dahin nahm der
+Verifikations-Callback die Fehler `X509_V_ERR_CERT_UNTRUSTED` (27) und
+`X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) ausdrücklich als *Erfolg* an,
+ohne dem Anwender etwas zu zeigen. Jetzt hängen beide am Zweig für
+`X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`
+(`Eudora71/QCSSL/src/qccertificate.cpp:82-90`): die Verbindung wird abgelehnt,
+und der Dialog erscheint. **Wer also seit 1.0.48 einen Dialog sieht, den er
+vorher nicht sah, sieht kein neues Problem, sondern ein bisher verschwiegenes.**
+
+**Nicht verschärft ist die Hostnamensprüfung** — Eudora vergleicht nur den `CN`,
+nicht die `subjectAltName`-Einträge, und sendet kein SNI. Das ist
+zurückgestellt, siehe [AUFGABEN.md](AUFGABEN.md).
 
 ## 5a. „SSL negotiation failed" — im Einzelnen
 

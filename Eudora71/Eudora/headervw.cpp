@@ -87,6 +87,11 @@ extern QCCommandStack		g_theCommandStack;
 
 #include "DebugNewHelpers.h"
 
+// Befund E-27: Spurmarken auf dem Weg von Strg-N. Der Absturz beim Verfassen
+// beendet Eudora ohne jede Meldung; die letzte geschriebene Marke in
+// eudora.log sagt, wie weit der Weg gekommen ist.
+#include "debug.h"
+
 
 // our own unique little windows message for scrolling stuff
 UINT wmScrollToShowCaret = RegisterWindowMessage( "wmScrollToShowCaret" );
@@ -238,7 +243,15 @@ void CHeaderView::OnFromPooter()
 	if (pMenu)
 	{
 		CRect theRect;
+		// Befund E-18: pFld wurde ohne jede Pruefung dereferenziert. Dieser
+		// ganze Zweig laeuft NUR bei mehr als einer Persoenlichkeit (Zeile 233),
+		// war also bis zum 05.09.2026 nie betreten worden - Gregor hatte immer
+		// nur die dominante. Seit der Kontoassistent eine zweite anlegt, laeuft
+		// er, und GetHeaderCtrl kann NULL liefern.
 		CHeaderField* pFld = GetHeaderCtrl(HEADER_FROM);
+		if (pFld == NULL)
+			return;
+
 		pFld->GetLabelWindowRect(&theRect);
 
 		pMenu->TrackPopupMenu(TPM_LEFTALIGN, theRect.left - 1, theRect.bottom + 1, AfxGetMainWnd());
@@ -276,6 +289,26 @@ void CHeaderView::OnKillFocusRecipient(UINT nID)
 	if (pField && pField->m_ACListBox)
 		pField->m_ACListBox->KillACListBox();
 
+
+	// BEFUND E-32: pField wurde hier ungeprueft dereferenziert, obwohl die
+	// Abfrage drei Zeilen darueber ausdruecklich mit NULL rechnet
+	// ("if (pField && ...)"). GetDlgItem liefert NULL, solange das
+	// Kopfzeilenfeld noch nicht existiert - und genau das ist beim Aufbau des
+	// Verfassen-Fensters der Fall: OnKillFocusTo laeuft waehrend LoadFrame,
+	// bevor die Felder da sind.
+	//
+	// Weil der Zugriff INNERHALB einer Fensterprozedur passiert, meldet
+	// Windows nicht den ueblichen Zugriffsfehler, sondern 0xC000041D
+	// (STATUS_FATAL_USER_CALLBACK_EXCEPTION). Eudora zeigt dann seine modale
+	// Meldung "An unhandled exception has occurred", das Verfassen-Fenster
+	// erscheint nie, und weil die Meldung modal ist, laesst sich das Programm
+	// danach auch nicht mehr beenden. Gemessen am 06.09.2026 an 7.2.0.18:
+	// die Spur laeuft bis "OnMessageNewMessage: fertig" durch, die Ausnahme
+	// kommt erst beim Anzeigen.
+	//
+	// Ohne Feld gibt es nichts zu erweitern; die Funktion ist dann fertig.
+	if (!pField)
+		return;
 
 	if (GetIniShort(IDS_INI_AUTO_EXPAND_NICKNAMES) &&
 		pField->IsKindOf(RUNTIME_CLASS(CHeaderField)))
@@ -522,6 +555,7 @@ void CHeaderView::OnInitialUpdate()
 	LONG	lYIncrement;
 	LONG	lTopSpace;
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CHeaderView::OnInitialUpdate: Anfang");
 	theDC.CreateCompatibleDC( NULL );
 
 	// subclass all of the static/edit pairs in our header form. this code
@@ -557,6 +591,7 @@ void CHeaderView::OnInitialUpdate()
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: Kopffelder untergeklinkt");
 	// reset the font
 	theDC.SelectObject( pOldFont );
 
@@ -657,8 +692,10 @@ void CHeaderView::OnInitialUpdate()
 
 	SetScrollSizes( MM_TEXT, m_docSize, m_pageSize, m_lineSize );
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: Bildlaufgroessen gesetzt, jetzt SetHeaderFromDoc");
 	// get the header
 	SetHeaderFromDoc();
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: SetHeaderFromDoc zurueck");
 
 	// if the message has been addressed and the subject is null,
 	// move the focus to the subject line
@@ -772,6 +809,7 @@ void CHeaderView::OnInitialUpdate()
 		SetTimer( AUTO_HEADER_BP_MAIL_TIMER, BP_INTERVAL, NULL );
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnInitialUpdate: Autovervollstaendigung eingerichtet");
 	CCompMessageFrame * pFrame = DYNAMIC_DOWNCAST( CCompMessageFrame, GetParentFrame() );
 
 	if (pFrame)
@@ -3686,6 +3724,7 @@ void CHeaderView::OnUpdateEditPasteAsQuote( CCmdUI* pCmdUI )
 
 int CHeaderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CHeaderView::OnCreate: Anfang");
     if (CFormView::OnCreate(lpCreateStruct) == -1)
         return -1;
 	
@@ -3718,6 +3757,7 @@ int CHeaderView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		
 	++s_nObjectCount;
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CHeaderView::OnCreate: fertig");
 	return 0;
 }
 

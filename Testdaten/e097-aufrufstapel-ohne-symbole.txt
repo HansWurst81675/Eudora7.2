@@ -1,0 +1,89 @@
+Gestartet als Debuggee, PID 11992.
+
+AUSNAHME 0xC000041D in Thread 3020 (erste Gelegenheit: 0)
+EIP 0x70A20544  mfc140.dll     ?
+ESP 0x013AD3F0   EBP 0x013AD3F4
+
+77 Rahmen abgelaufen.
+
+Stapelabtastung (Rueckspruenge im Speicher, haeufigste zuerst):
+  Stapel nicht lesbar.
+
+Aufrufstapel:
+     0  0x0104E36B  Eudora.exe     ?
+     1  0x76E4C077  COMDLG32.dll   DllGetClassObject + 2823
+     2  0x705A3918  COMCTL32.dll   DPA_EnumCallback + 56
+     3  0x76E3D50A  COMDLG32.dll   ?
+     4  0x76E265B1  COMDLG32.dll   ?
+     5  0x76E3620E  COMDLG32.dll   ?
+     6  0x75C81C0B  USER32.dll     AddClipboardFormatListener + 75
+     7  0x75C7517E  USER32.dll     EnumChildWindows + 3294
+     8  0x75C74870  USER32.dll     EnumChildWindows + 976
+     9  0x75C69555  USER32.dll     wvsprintfA + 725
+    10  0x75C81C0B  USER32.dll     AddClipboardFormatListener + 75
+    11  0x75C782CA  USER32.dll     GetClassLongW + 2106
+    12  0x75C779F6  USER32.dll     GetSystemMetricsForDpi + 3142
+    13  0x75C64BCB  USER32.dll     CallWindowProcA + 27
+    14  0x70A08134  mfc140.dll     ?
+    15  0x75C81C0B  USER32.dll     AddClipboardFormatListener + 75
+    16  0x75C782CA  USER32.dll     GetClassLongW + 2106
+    17  0x75C791F9  USER32.dll     GetParent + 2361
+    18  0x75C6FBE6  USER32.dll     RegisterClassExW + 2966
+    19  0x75C652B1  USER32.dll     DialogBoxIndirectParamAorW + 257
+    20  0x75C651E2  USER32.dll     DialogBoxIndirectParamAorW + 50
+    21  0x75C6519B  USER32.dll     DialogBoxIndirectParamW + 27
+    22  0x76E534FC  COMDLG32.dll   DllCanUnloadNow + 24972
+    23  0x76E21ED8  COMDLG32.dll   ?
+    24  0x709A0B24  mfc140.dll     ?
+    25  0x01096621  Eudora.exe     ?
+    26  0x7096F83E  mfc140.dll     ?
+    27  0x709F806F  mfc140.dll     ?
+    28  0x70A17707  mfc140.dll     ?
+    29  0x0108D24B  Eudora.exe     ?
+    30  0x70A0A619  mfc140.dll     ?
+    31  0x70A169FD  mfc140.dll     ?
+    32  0x70A09BE9  mfc140.dll     ?
+    33  0x70A09B6D  mfc140.dll     ?
+    34  0x70A07E24  mfc140.dll     ?
+    35  0x70A1DFD7  mfc140.dll     ?
+    36  0x00FB8464  Eudora.exe     ?
+    37  0x70A09BE9  mfc140.dll     ?
+    38  0x70A09B6D  mfc140.dll     ?
+    39  0x010B70EF  Eudora.exe     ?
+    40  0x70A07E24  mfc140.dll     ?
+    41  0x70A08074  mfc140.dll     ?
+    42  0x708E7334  mfc140.dll     ?
+    43  0x75C81C0B  USER32.dll     AddClipboardFormatListener + 75
+    44  0x75C782CA  USER32.dll     GetClassLongW + 2106
+    45  0x75C77EE0  USER32.dll     GetClassLongW + 1104
+    46  0x75C7C3AF  USER32.dll     CallNextHookEx + 415
+    47  0x77E256CD  ntdll.dll      KiUserCallbackDispatcher + 77
+    48  0x709F4D48  mfc140.dll     ?
+    49  0x709A9F23  mfc140.dll     ?
+    50  0x010F1D7C  Eudora.exe     ?
+    51  0x00FB9978  Eudora.exe     ?
+    52  0x7096F83E  mfc140.dll     ?
+    53  0x70A1771E  mfc140.dll     ?
+    54  0x70A1E0A2  mfc140.dll     ?
+    55  0x00FB8526  Eudora.exe     ?
+    56  0x70A0A619  mfc140.dll     ?
+    57  0x70A169FD  mfc140.dll     ?
+    58  0x70A1DFE6  mfc140.dll     ?
+    59  0x00FB8464  Eudora.exe     ?
+    60  0x70A09BE9  mfc140.dll     ?
+    61  0x70A09B6D  mfc140.dll     ?
+    62  0x010B70EF  Eudora.exe     ?
+    63  0x70A07E24  mfc140.dll     ?
+    64  0x70A08074  mfc140.dll     ?
+    65  0x708E7334  mfc140.dll     ?
+    66  0x75C81C0B  USER32.dll     AddClipboardFormatListener + 75
+    67  0x75C782CA  USER32.dll     GetClassLongW + 2106
+    68  0x75C76B70  USER32.dll     DispatchMessageW + 1248
+    69  0x75C688F0  USER32.dll     DispatchMessageA + 16
+    70  0x709F4D6E  mfc140.dll     ?
+    71  0x00F7DF53  Eudora.exe     ?
+    72  0x70A1DF14  mfc140.dll     ?
+    73  0x010FA6B5  Eudora.exe     ?
+    74  0x7652FCC9  KERNEL32.DLL   BaseThreadInitThunk + 25
+    75  0x77E182AE  ntdll.dll      RtlGetAppContainerNamedObjectPath + 286
+    76  0x77E1827E  ntdll.dll      RtlGetAppContainerNamedObjectPath + 238

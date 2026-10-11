@@ -32,6 +32,7 @@ DAMAGE. */
 #include "cursor.h"
 #include "resource.h"
 #include "rs.h"
+#include "debug.h"		// E-87: Spurmarke
 #include "fileutil.h"
 #include "utils.h"
 #include "guiutils.h"
@@ -793,6 +794,23 @@ BOOL CSummary::NukeMessageDocIfUnused(CSummary * pSum, CMessageDoc * pMessageDoc
 //
 BOOL CSummary::Display()
 {
+	//
+	// BEFUND E-28: m_FrameWnd wird von CMessageFrame::ActivateFrame gesetzt
+	// und war bis zu diesem Befund nur unter einer Bedingung wieder
+	// geloescht worden (msgframe.cpp, OnDestroy). Ein stehengebliebener
+	// Zeiger fuehrte hier zu einem virtuellen Aufruf ueber eine
+	// freigegebene vtable - im Release-Bau entweder wirkungslos (das
+	// Fenster geht nicht auf, "es passiert nichts") oder ein Sprung an eine
+	// Adresse ausserhalb jedes Moduls.
+	//
+	// Die Ursache ist in msgframe.cpp abgestellt. Diese Abfrage bleibt als
+	// zweite Schranke: ist der eingetragene Rahmen kein Fenster (mehr),
+	// wird der Eintrag verworfen und ein neues Fenster gebaut, statt auf
+	// einem toten Rahmen zu arbeiten.
+	//
+	if (m_FrameWnd && !::IsWindow(m_FrameWnd->GetSafeHwnd()))
+		m_FrameWnd = NULL;
+
 	if (m_FrameWnd)
 	{
 		//
@@ -1090,8 +1108,50 @@ BOOL CSummary::ComposeMessage
 #endif
 
 	IsRich = IsFancy(fullMes);
-	if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
-		IsRich = IS_ASCII;
+
+	//
+	// BEFUND E-87: beim Weiterleiten und beim Antworten ging die
+	// HTML-Auszeichnung verloren - die Nachricht kam beim Empfaenger als
+	// Fliesstext mit blauen Verweisen an.
+	//
+	// Die Ursache steht in den drei Zeilen darunter. IsFancy(fullMes) hat
+	// den Rumpf bereits als HTML erkannt; verworfen wurde das Ergebnis
+	// wieder, weil die Flags des Uebersichtseintrags (MSF_XRICH,
+	// MSFEX_FLOWED) es nicht bestaetigten. Diese Flags stammen aus dem
+	// Empfang bzw. aus der TOC-Datei und fehlen bei Nachrichten, deren
+	// Uebersicht aelter ist als die Kennzeichnung. IsRich = IS_ASCII
+	// bedeutet fuer QuoteText (msgutils.cpp:126-220), dass nicht der
+	// HTML-Zweig ueber GetBodyAsHTML genommen wird, sondern der reine
+	// Textzweig mit WrapText und ">"-Praefix. Was danach im Verfassen-
+	// fenster blau leuchtet, sind nicht die Verweise der Nachricht,
+	// sondern von MakeAutoURLSpaghetti erkannte nackte Adressen.
+	//
+	// Mit KeepHTMLInResponses (Vorgabe 1) zaehlt die Messung am Rumpf
+	// mehr als die Flags: erkennt IsFancy HTML oder Enriched, bleibt es
+	// dabei. Der Schalter gilt fuer beide Wege, weil diese Funktion
+	// Antworten und Weiterleiten gemeinsam bedient.
+	//
+	// KeepHTMLInResponses=0 stellt das alte Verhalten wieder her.
+	//
+	if (!GetIniShort(IDS_INI_KEEP_HTML_IN_RESPONSES) || IsRich < IS_RICH)
+	{
+		if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
+			IsRich = IS_ASCII;
+	}
+
+	//
+	// Alle Werte in EINER Zeile, damit sich spaeter nicht herausreden
+	// laesst, sie seien "zu anderer Zeit" gemessen worden.
+	//
+	{
+		CString	szSpur;
+		szSpur.Format(
+			"E-87 ComposeMessage: IsFancy=%d IsRich=%d IsXRich=%d IsFlowed=%d IsHTML=%d Schalter=%d Typ=%d",
+			::IsFancy(fullMes), (int)IsRich, (int)IsXRich(), (int)IsFlowed(),
+			(int)IsHTML(), (int)GetIniShort(IDS_INI_KEEP_HTML_IN_RESPONSES),
+			(int)ResponseType );
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
 
 	CString sAttach;
 	if (ResponseType == MS_FORWARDED || ResponseType == MS_REDIRECT)
@@ -1428,13 +1488,68 @@ BOOL CSummary::ComposeMessage
 		bTurbo = NewTo && *NewTo && (TR != ShiftDown());
 	}
 
+	//
+	// BEFUND E-88: das Original aufheben, bevor es durch Paige geht.
+	//
+	// "Body" ist genau der Rumpf, den QuoteText gebaut hat - beim
+	// Weiterleiten das Zitat, beim Antworten Anrede und Zitat, beim
+	// Umleiten die Nachricht selbst. Er enthaelt noch alles: Kaesten,
+	// Hintergruende, per CSS gesetzte Bildgroessen. Nach dem Weg durch
+	// den Editor ist davon nichts mehr uebrig, und zwar auch in dem
+	// Text nicht, der spaeter per SMTP hinausgeht.
+	//
+	// Nicht gemerkt wird bei Briefpapier: dann baut das Verfassen-
+	// dokument seinen Rumpf aus zwei Quellen, und welche davon der
+	// Anwender meint, ist hier nicht zu entscheiden.
+	//
+	const bool	bE88Merken = ( !pszStationery && Body &&
+							   GetIniShort(IDS_INI_FORWARD_ORIGINAL_HTML) &&
+							   (::IsFancy(Body) == IS_HTML) );
+
+	//
+	// BEFUND E-89: das Verfassenfenster lesbar machen.
+	//
+	// Hier trennen sich die beiden Fassungen, und nur hier. "Body" bleibt
+	// von jetzt an unangetastet und wird weiter unten als Original
+	// gemerkt; "EditorBody" ist die Arbeitsfassung fuer Paige, in der
+	// jedes <img> eine Groesse traegt, die Paiges HTML-Leser auswerten
+	// kann (Begruendung am Rumpf von E89BilderMessbarMachen in
+	// msgutils.cpp). Ohne das liegen Logos und Kacheln in Originalgroesse
+	// ueber dem Text - Gregor an 1.0.56: "da ist alles durcheinander, man
+	// kann ja nichts lesen."
+	//
+	// Die Umschrift laeuft NUR, wenn das Original auch wirklich aufgehoben
+	// wird (bE88Merken). Ist der Schalter ForwardOriginalHTML aus, geht
+	// die Editorfassung selbst hinaus - dann darf an ihr nichts geaendert
+	// werden, was der Empfaenger zu sehen bekaeme. Beides haengt deshalb
+	// an derselben Bedingung, damit es nicht auseinanderlaufen kann.
+	//
+	CString			szE89Editor;
+	CString			szE89Spur;
+	const char *	EditorBody = Body;
+
+	if ( bE88Merken && E89BilderMessbarMachen(Body, szE89Editor, szE89Spur) )
+		EditorBody = (LPCTSTR) szE89Editor;
+
+	if ( bE88Merken )
+		PutDebugLog(DEBUG_MASK_MISC, szE89Spur);
+
 	CCompMessageDoc *	comp = ComposeMessage( m_TheToc, false, NewTo, Sub, NewCc, sAttach,
-											   Body, pszStationery, csPersona, ResponseType,
+											   EditorBody, pszStationery, csPersona, ResponseType,
 											   fullMes, m_Precedence, IsRich, nPriority,
 											   kDontDisplayOrQueue );
 	if (comp)
 	{
 		bSuccess = TRUE;
+
+		//
+		// Das Original - "Body", nicht "EditorBody". Die eine Zeile, an der
+		// haengt, dass E-89 dem Befund E-88 nichts wegnimmt.
+		//
+		if ( bE88Merken )
+		{
+			comp->m_szE88OriginalHTML = Body;
+		}
 
 		// Change status of non-comp messages, saving a pointer to the orginal message
 		// and original state so that it can be undone if the response is cancelled

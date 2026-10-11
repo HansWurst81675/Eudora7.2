@@ -39,6 +39,11 @@ protected:
 	bool m_bTaskError;
 
 	UINT m_RunningTimerID, m_WaitingTimerID, m_ErrorTimerID;
+
+	// Nachlauf: haelt den letzten Aufgabenstand nach dem Ende der letzten
+	// Aufgabe noch TASK_LINGER_MS lang sichtbar (Befund E-12).
+	UINT m_LingerTimerID;
+	CTaskStatus m_PendingTaskStatus;
 	unsigned int m_RunningImageIdx, m_WaitingImageIdx, m_ErrorImageIdx; // Cycle for animation
 
 	QCImageList *m_TaskImageList;		// c_dalew 9/30/99 - Changed CImageList to QCImageList.
@@ -50,6 +55,9 @@ protected:
 	void OnChangeRunningStatus();
 	void OnChangeWaitingStatus();
 	void OnChangeErrorStatus();
+
+	void ApplyTaskStatus(const CTaskStatus &NewStatus);
+	void UpdateTaskPaneText();
 
 	bool HandleLeftClick(UINT nFlags, CPoint point);
 	bool HandleRightClick(UINT nFlags, CPoint point);

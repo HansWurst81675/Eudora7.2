@@ -95,7 +95,7 @@ exit /b 0</Command>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\Debug;..\Qt3.x\Libraries;..\SpeechSDK\Lib;..\expat\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;OTA50D.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation><GenerateMapFile>true</GenerateMapFile><MapExports>true</MapExports>
       <SubSystem>Windows</SubSystem><ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
@@ -145,7 +145,7 @@ exit /b 0</Command>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\Lib\Release;..\Qt3.x\Libraries;..\SpeechSDK\Lib;..\expat\Libs;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;OTA50D.LIB;OTA50R.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>true</GenerateDebugInformation><GenerateMapFile>true</GenerateMapFile><MapExports>true</MapExports>
       <SubSystem>Windows</SubSystem><ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -1029,10 +1029,6 @@ exit /b 0</Command>
     <ProjectReference Include="..\Importers\OLImport\OLImport.vcxproj">
       <Project>{63f4f8f8-dad9-4356-951c-4b8c929fef74}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\OT501\Src\OT501.vcxproj">
-      <Project>{36eb689a-7c2c-4c2e-8f1c-744fdd4ddfa2}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly><LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
     <ProjectReference Include="..\PlaylistClient\plstclnt_dll\plstclnt.vcxproj">
       <Project>{5039d1cb-8a81-4d6d-b131-06d88a24cbf5}</Project>

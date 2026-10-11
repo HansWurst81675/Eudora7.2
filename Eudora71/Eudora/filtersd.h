@@ -89,6 +89,24 @@ private:
 	CDWordArray		 m_dwaHashArray;
 };
 
+// BEFUND E-73 (PRUEFER, 10.09.2026). Der Rueckschalter, den JEDE Stelle
+// fragen muss, die aus einem Filterlauf heraus Post auf dem SERVER zum
+// Loeschen vormerkt. Definiert in filtersd.cpp; auch JunkMail.cpp braucht
+// ihn, weil die Filteraktion "Junk" ueber CJunkMail::DeclareJunk laeuft.
+//
+//   szFilter   Name der Regel, fuer das Protokoll
+//   szBetreff  Betreff der Nachricht, fuer das Protokoll
+//   szWeg      welcher der drei Wege fragt ("POP", "IMAP", "Junk-Filteraktion")
+//
+// Liefert TRUE nur, wenn in der Eudora.ini unter [Settings]
+// FilterMayDeleteFromServer=1 steht. Vorgabe ist 0. Jede Frage wird
+// protokolliert, auch die erlaubte - sonst laesst sich hinterher nicht
+// nachweisen, welcher Weg gelaufen ist.
+//
+// tools/pruefe-filter-serverloeschung.pl weist einen Commit ab, in dem eine
+// Loeschstelle im Filterweg diese Funktion nicht fragt.
+BOOL FilterDarfVomServerLoeschen(const char* szFilter, const char* szBetreff, const char* szWeg);
+
 class CFilter : public CObject
 {
 public:

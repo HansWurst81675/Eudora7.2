@@ -114,7 +114,64 @@ void QCChildToolBar::EnableDocking(DWORD dwDockStyle)
 void* QCChildToolBar::GetButton(
 INT iIndex )
 {
-	return ( void* )( m_btns[ iIndex ] );
+	// BEFUND E-16. Ohne Schranke greift m_btns[ iIndex ] daneben, sobald der
+	// Aufrufer -1 uebergibt - und genau das liefert CommandToIndex, wenn der
+	// gesuchte Knopf nicht auf der Leiste liegt.
+	if ( iIndex < 0 || iIndex >= GetBtnCount() )
+		return NULL;
+
+	// BEFUND E-34: Hier scheiterte das Verfassen-Fenster still, obwohl die
+	// Schranke oben greift.
+	//
+	// Gemessen am 07.09.2026 mit einer Marke je Anweisung in
+	// CCompMessageFrame::OnCreateClient: die letzte Marke, die noch feuert,
+	// ist "nach CommandToIndex(ID_EDIT_INSERT)"; die naechste, "nach
+	// GetButton", nicht mehr. Hier entsteht also eine MFC-Ausnahme.
+	//
+	// Was sie anrichtet: sie wickelt OnCreateClient ab, MFC laesst
+	// CWnd::OnCreate fehlschlagen, LoadFrame gibt FALSE,
+	// CMultiDocTemplate::CreateNewFrame gibt NULL - und der Anwender sieht
+	// KEIN Verfassen-Fenster, ohne Meldung und ohne Absturz. Belegt durch
+	// "E-34 NewChildFrame: CreateNewFrame hat NULL geliefert".
+	//
+	// Gregors Befund: "ich moechte eine neue mail erstellen, dazu druecke ich
+	// ctrl-n ... ich erwarte ein neues fenster, in dem ich meine mail
+	// verfassen und abschicken kann."
+	//
+	// Warum hier eingefasst wird und nicht am Aufrufer: GetButton wird an
+	// sechs Stellen gerufen (CompMessageFrame, ReadMessageFrame,
+	// PgDocumentFrame), und alle sechs pruefen den Rueckgabewert schon auf
+	// NULL. Ein NULL ist fuer jeden Aufrufer verkraftbar - eine Ausnahme
+	// mitten im Fensterbau ist es nicht.
+	//
+	// Der Grund der Ausnahme wird protokolliert, damit die eigentliche
+	// Ursache nicht unbemerkt bleibt.
+	void* pKnopf = NULL;
+
+	TRY
+	{
+		pKnopf = ( void* )( m_btns[ iIndex ] );
+	}
+	CATCH_ALL(e)
+	{
+		TCHAR szGrund[256];
+		szGrund[0] = _T('\0');
+		if (e != NULL)
+			e->GetErrorMessage(szGrund, 256);
+
+		CString strMeldung;
+		strMeldung.Format(
+			_T("E-34 QCChildToolBar::GetButton: Ausnahme bei Index %d von %d ")
+			_T("- NULL zurueckgegeben. Grund: %s"),
+			(int)iIndex, (int)GetBtnCount(),
+			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+		PutDebugLog(DEBUG_MASK_MISC, strMeldung);
+
+		pKnopf = NULL;
+	}
+	END_CATCH_ALL
+
+	return pKnopf;
 }
 
 
@@ -188,12 +245,29 @@ void QCChildToolBar::AddTranslatorButtons(int &startPos)
 	
 			// Separator between groups
 		if ((lastModID != 0)&&(modID != lastModID))
+		{
+			if (startPos > GetBtnCount())
+				startPos = GetBtnCount();
 			AddButton( startPos++, 0, TRUE, TRUE );
+		}
+
+		// BEFUND E-16: SECCustomToolBar::AddButton begrenzt die Einfuegestelle
+		// still auf [0, GetBtnCount()] und legt gar keinen Knopf an, wenn die
+		// Erzeugung fehlschlaegt. Die Zeilen darunter rechneten mit dem
+		// UNBEGRENZTEN Wert weiter - ein Griff neben m_btns, also
+		// CPtrArray::ElementAt (afxcoll.inl:213).
+		if (startPos < 0)
+			startPos = 0;
+		if (startPos > GetBtnCount())
+			startPos = GetBtnCount();
 
 		AddButton( startPos, uCommandID, FALSE, TRUE );
 		SetButtonStyle( startPos, TBBS_CHECKBOX );
 
-		m_btns[ startPos++ ]->m_ulData = lType;
+		if (startPos < GetBtnCount())
+			m_btns[ startPos ]->m_ulData = lType;
+
+		startPos++;
 		
 		lastModID = modID;
 	}

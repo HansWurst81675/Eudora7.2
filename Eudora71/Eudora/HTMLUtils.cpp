@@ -44,6 +44,31 @@ void resolve_URL (pg_char_ptr source_URL, pg_char_ptr target_URL, size_t nMaxLen
             break;
 
          *output |= translate_hex(*input++);
+
+         //
+         // BEFUND E-110 (18.09.2026): HIER fehlte das Weiterruecken.
+         //
+         // Der else-Zweig darunter schreibt UND rueckt vor
+         // ("*output++ = *input++"). Dieser Zweig schrieb nur - das
+         // entschluesselte Zeichen landete an der richtigen Stelle und wurde
+         // vom naechsten Zeichen sofort ueberschrieben. Es war also nicht
+         // falsch, sondern WEG.
+         //
+         // Gemessen an Gregors Nachricht vom 18.09.2026:
+         //   en%20aktuellen%20Verlust.png  ->  enaktuellenVerlust.png
+         //   SVS%20NL%20FW%20(1).jpg       ->  SVSNLFW(1).jpg
+         // Der Server antwortet darauf mit 404, Eudora legt die Fehlerseite
+         // ab, erkennt sie richtigerweise nicht als Bild - und zeichnet einen
+         // grauen Kasten. Zehn von zwanzig Bildern seiner Nachricht.
+         //
+         // Betroffen ist JEDE Prozent-Sequenz, nicht nur %20: auch Umlaute in
+         // Dateinamen (%C3%BC), Klammern (%28), Schraegstriche (%2F).
+         //
+         // output_size++ unten zaehlt fuer beide Zweige richtig - nur der
+         // Zeiger fehlte. Zwanzig Zeilen weiter unten steht uebrigens
+         // unescape_url, das dasselbe tut und es richtig macht.
+         //
+         ++output;
       }
       else
          *output++ = *input++;

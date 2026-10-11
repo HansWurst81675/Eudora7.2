@@ -1,0 +1,1732 @@
+Return-Path: <absender@beispiel.invalid>
+Authentication-Results: empfaengerdienst.invalid; dkim=pass header.i=absender@beispiel.invalid
+ header.s=s31663417; spf=pass smtp.mailfrom=absender@beispiel.invalid; dmarc=pass
+ header.from=absenderdienst.invalid policy.dmarc=quarantine; iprev=pass
+ policy.iprev=192.0.2.19
+Received: from mout.absenderdienst.invalid ([192.0.2.19]) by mx-ha.empfaengerdienst.invalid (mxgmx108
+ [192.0.2.151]) with ESMTPS (Nemesis) id XXXXXX-XXXXXXXXXXX-XXXXXX for
+ <empfaenger@beispiel.invalid>; Wed, 16 Sep 2026 22:17:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=absenderdienst.invalid;
+	s=s31663417; t=1789589860; x=1790194660; i=absender@beispiel.invalid;
+	bh=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX=;
+	h=X-UI-Sender-Class:Content-Type:Message-ID:Date:MIME-Version:
+	 Subject:References:To:From:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+	 N2MlEGRCG0/qa359RQ==
+X-UI-Sender-Class: 00000000-0000-4000-8000-000000000000
+Received: from client.hidden.invalid by mail.absenderdienst.invalid (mrgmx004
+ [192.0.2.190]) with ESMTPSA (Nemesis) id XXXXXX-XXXXXXXXXXX-XXXXXX for
+ <empfaenger@beispiel.invalid>; Wed, 16 Sep 2026 22:17:40 +0200
+Content-Type: multipart/alternative;
+ boundary="------------P0b4XmdD0DmWACHk683F3Vk2"
+Message-ID: <nachricht-001@beispiel.invalid>
+Date: Wed, 16 Sep 2026 22:17:39 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Fwd: Deine Anzeige 'Zu verschenken: alte F
+ äßchen'
+References: <nachricht-002@versand.invalid>
+Content-Language: en-US
+To: empfaenger@beispiel.invalid
+From: Absender Beispiel <absender@beispiel.invalid>
+In-Reply-To: <nachricht-002@versand.invalid>
+X-Forwarded-Message-Id: <nachricht-002@versand.invalid>
+X-Provags-ID: V03:K1:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ Rm/sCNwlaRp5TGuJNrJTw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:F1BcEpJF5F8=;7u2eDSv8IMT/fLfKUzYnTVAOd6M
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ 41yffu265bs7d1N9YexFDACTEaA==
+Envelope-To: <empfaenger@beispiel.invalid>
+X-Spam-Flag: NO
+UI-InboundReport: notjunk:1;M01:P0:8trZgYhmWuA=;NqfHEjOw9cCUo9tvc+SrDUEAckST
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ cc793IMIC1Q+EKfZIdF8D4pCEF2zjOmw==
+X-UID: 1
+
+<x-html>
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body style="">
+    <p><br>
+    </p>
+    <div class="moz-forward-container"><br>
+      <br>
+      -------- Weitergeleitete Nachricht --------
+      <table cellpadding="0" cellspacing="0" border="0"
+        class="moz-email-headers-table">
+        <tbody>
+          <tr>
+            <th valign="BASELINE" align="RIGHT" nowrap="nowrap">Betreff:
+            </th>
+            <td>Deine Anzeige 'Zu verschenken: alte Fäßchen'</td>
+          </tr>
+          <tr>
+            <th valign="BASELINE" align="RIGHT" nowrap="nowrap">Datum: </th>
+            <td>Wed, 16 Sep 2026 17:00:47 +0000 (UTC)</td>
+          </tr>
+          <tr>
+            <th valign="BASELINE" align="RIGHT" nowrap="nowrap">Von: </th>
+            <td>Kleinanzeigen <a class="moz-txt-link-rfc2396E" href="mailto:noreply@kleinanzeigen.invalid">&lt;noreply@kleinanzeigen.invalid&gt;</a></td>
+          </tr>
+          <tr>
+            <th valign="BASELINE" align="RIGHT" nowrap="nowrap">An: </th>
+            <td><a class="moz-txt-link-abbreviated" href="mailto:absender@beispiel.invalid">absender@beispiel.invalid</a></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <!--[if mso]>
+  <xml xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
+       xmlns:o="urn:schemas-microsoft-com:office:office">
+    <o:OfficeDocumentSettings>
+      <o:AllowPNG/>
+      <o:PixelsPerInch>96</o:PixelsPerInch>
+    </o:OfficeDocumentSettings>
+  </xml>
+  <![endif]-->
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <link
+href="https://fonts.googleapis.com/css?family=Nunito+Sans%7CNunito+Sans:700"
+        rel="stylesheet">
+      <title>Kleinanzeigen | Anzeigen gratis inserieren mit
+        Kleinanzeigen</title>
+      <style>@scope { span.MsoHyperlink {
+      mso-style-priority: 1;
+      color: inherit;
+    }span.MsoHyperlinkFollowed {
+      mso-style-priority: 1;
+      color: inherit;
+    }body {
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      padding: 0;
+      color: #000000;
+      margin: 0 auto;
+    }td {
+      line-height: 100%
+    }img {
+      outline: 0;
+      text-decoration: none;
+    }a img {
+      border: none;
+    }u + * img + div {
+      display: none;
+    }table td {
+      border-collapse: collapse;
+      mso-line-height-rule: exactly;
+    }table {
+      border-collapse: collapse;
+      mso-table-lspace: 0;
+      mso-table-rspace: 0;
+    }table * {
+      box-sizing: content-box;
+    }table {
+      box-sizing: border-box;
+    }a {
+      color: inherit;
+      text-decoration: none;
+      mso-line-height-rule: exactly;
+    }.appleLinks, .appleLinksWhite {
+      text-decoration: none !important;
+    }a[x-apple-data-detectors] {
+      color: inherit !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+    }table[class^="ox"] sup {
+      font-size: .7em;
+      vertical-align: baseline;
+    }sup {
+      font-size: 0.8em;
+      vertical-align: text-top;
+      line-height: 1;
+      height: 0;
+      mso-text-raise: 24%;
+    }div > u + * table {
+      zoom: 100%;
+    }.ms-outlook-linkify {
+      color: inherit !important;
+    }:not(#outlook).nunitosans {
+      font-family: "Nunito Sans", Arial, Helvetica, sans-serif !important;
+    }:not(#outlook).nunitosans {
+      font-family: "Nunito Sans", Arial, Helvetica, sans-serif !important;
+    }.h342px {
+      height: 342px !important;
+    }.bgiurlimagesdiv3dpng {
+      background-image: url("images/3.png") !important;
+    }.bgurlimagesdiv3dpngnominrepeatcentertop100p100 {
+      background: url("images/3.png") no-repeat center top/100% 100% !important;
+    }.bgsz100p100 {
+      background-size: 100% 100% !important;
+    }.bgpcentertop {
+      background-position: center top !important;
+    }#converted-body .d_center {
+      float: none;
+      margin: auto;
+    }#converted-body .d_left {
+      float: left;
+    }#converted-body .d_right {
+      float: right;
+    }a:focus-visible {
+      transition: box-shadow .3s ease;
+      outline: 0;
+      box-shadow: 0 0 0 2px hsla(288, 100%, 50%, .8);
+    } }</style>
+      <table cellpadding="0" cellspacing="0" border="0" width="100%"
+        style="width:100%;margin-top:-1px" role="none">
+        <tbody>
+          <tr class="t_dnone m_dnone" aria-hidden="true">
+            <td height="1"
+style="height:1px;max-height:1px;font-size:1px;line-height:1px"> <span
+                style="display:block;width:640px;min-width:640px"> </span>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color:#FFFFFF;" role="main">
+              <table cellpadding="0" cellspacing="0" border="0"
+                width="640" align="center" style="margin:auto"
+                class="d_center t_w100p m_w100p" role="none">
+                <tbody>
+                  <tr>
+                    <td valign="top" width="100%"
+                      class="t_w100p m_w100p"
+                      style="border-top: 5px solid #B5E941;">
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="95%" align="right"
+                        class="d_right t_w95p m_w95p" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="bottom"
+                              style="height:74px;padding-bottom:24px;"
+                              class="t_h120px">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="bottom" width="100%"
+style="height:74px;vertical-align:bottom"
+class="t_w100p t_vabottom m_w100p m_vabottom" height="80">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="200" align="left"
+                                        class="d_left t_w200px m_mauto"
+                                        role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td>
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                align="left"
+                                                class="d_left"
+                                                role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td
+style="text-align:left;vertical-align:bottom" class=""> <a
+href="https://www.kleinanzeigen.de?utm_source=email&amp;utm_medium=system_email&amp;utm_campaign=FeatureUpsellOnDay7&amp;utm_content=Logo"
+style="color:#0C0C0B;outline:0;border:none;margin:auto;display:block"
+title="kleinanzeigen | Große Wirkung" moz-do-not-send="true">
+                                                        <!--[if mso]>&zwnj;<![endif]-->
+                                                        <img
+src="https://static.kleinanzeigen.de/img/mail/logo-kleinanzeigen-boxed.png"
+alt="kleinanzeigen | Große Wirkung" width="200" height="52"
+style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:16px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center"
+                        style="margin:auto;clear:both"
+                        class="d_center t_w100p m_w90p"
+                        aria-hidden="true">
+                        <tbody>
+                          <tr>
+                            <td
+style="height:32px;font-size:8px;vertical-align:bottom">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                class="d_center"
+                                style="width:100%;clear:both">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="border-top:1px solid #DDDBD5;height:32px;font-size:24px;line-height:24px">
+                                       </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto"
+                                class="d_center t_mauto" role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#000000;text-align:left;font-size:22px;padding-bottom:24px;vertical-align:middle;line-height:130%"
+                                      class="t_pr16px t_pl16px m_pt16px"
+                                      role="heading" aria-level="1">
+                                      Deine Anzeige wird weniger gesehen
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto" class="d_center"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#000000;text-align:left;font-size:16px;padding-bottom:24px;vertical-align:top; line-height:130%;"
+                                      class="t_pr16px t_pl16px">Hallo
+                                      ,<br role="none">
+                                      <br role="none">
+                                      Deine Anzeige ist nun seit 7 Tagen
+                                      online und hatte bisher 100
+                                      Besucher. </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="75%"
+                              class="t_w70p m_w67p"
+                              style="padding-bottom:24px">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto" class="d_center"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="top" width="100%"
+                                      class="t_w100p m_w100p">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:8px;vertical-align:middle;font-weight:700">
+                                              Zu verschenken: alte
+                                              Fäßchen </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;color:#77756F;text-align:left;font-size:16px;padding-bottom:8px;vertical-align:middle"
+                                              class="m_pb12px"> <span>Besucher:
+                                                100</span> </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;color:#77756F;text-align:left;font-size:16px;padding-bottom:8px;vertical-align:middle"
+                                              class="m_pb12px"> <span>Status:
+                                                Noch nicht verkauft</span>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto"
+                                class="d_center t_mauto" role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:24px;vertical-align:top;line-height:130%"
+                                      class="t_pr16px t_pl16px"> Aber:
+                                      Mit jedem Tag rutscht sie weiter
+                                      nach hinten in den Suchergebnissen
+                                      – denn täglich kommen tausende
+                                      neue Anzeigen dazu. Dadurch wird
+                                      deine Anzeige schwerer gefunden. </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center"
+                        style="margin:auto;clear:both"
+                        class="d_center t_w100p m_w90p"
+                        aria-hidden="true">
+                        <tbody>
+                          <tr>
+                            <td
+style="height:32px;font-size:8px;vertical-align:bottom">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                class="d_center"
+                                style="width:100%;clear:both">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="border-top:1px solid #DDDBD5;height:32px;font-size:24px;line-height:24px">
+                                       </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto"
+                                class="d_center t_mauto" role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#000000;text-align:left;font-size:22px;padding-bottom:24px;vertical-align:middle;line-height:130%"
+                                      class="t_pr16px t_pl16px m_pt16px"
+                                      role="heading" aria-level="2">
+                                      Bring sie jetzt wieder nach vorne
+                                      – so geht’s: </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center t_w90p m_w90p" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="49%"
+                              class="t_w49p m_w100p m_flright"
+                              style="padding-bottom:32px;">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto"
+                                class="d_center t_w96p m_w100p"
+                                role="none" aria-hidden="true">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        class="d_center" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="text-align:center;vertical-align:middle" class="m_pb0px"> <img
+src="https://static.kleinanzeigen.de/img/mail/featureupsell/img-top-ad.png"
+                                                alt="" width="282"
+style="display:block;border:none;border-radius:4px;"
+                                                class="t_w100p m_w100p"
+                                                moz-do-not-send="true">
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                            <td valign="top" width="2%"
+                              class="t_w2p m_dnone" aria-hidden="true">
+                              <span></span></td>
+                            <td valign="top" width="49%"
+                              class="t_w49p m_w100p m_flright"
+                              style="padding-bottom:32px;">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="90%" align="center"
+                                style="margin:auto"
+                                class="d_center t_w100p m_w100p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="top" width="100%"
+                                      class="t_w100p m_w100p">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center t_w100p m_w100p"
+                                        role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:8px;vertical-align:middle;line-height:130%;font-weight:700"
+                                              role="heading"
+                                              aria-level="2">
+                                              Top-Anzeige </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center t_w100p m_w100p"
+                                        role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:16px;vertical-align:middle;line-height:130%"
+                                              class="t_pb16px">
+                                              <ul
+style="margin:0;padding-left:20px;padding-bottom:16px;line-height:130%">
+                                                <li>7 Tage an der Spitze
+                                                  der Ergebnisliste</li>
+                                                <li>Bis zu 5x mehr
+                                                  Anfragen als reguläre
+                                                  Anzeigen</li>
+                                              </ul>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;text-align:left;font-size:16px;padding-bottom:16px;vertical-align:middle"
+                                              class="m_pb12px"> <span
+                                                style="font-weight:700">11,99
+                                                € inkl. MwSt.</span> </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="222" align="left"
+                                        style="border-collapse:separate"
+class="d_left t_flnone t_mauto t_w200px m_flleft m_mauto" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td>
+                                              <div
+style="overflow:hidden;border-radius:24px;border:none;mso-border-alt: none;">
+                                                <table cellpadding="0"
+                                                  cellspacing="0"
+                                                  border="0"
+                                                  width="100%"
+                                                  role="none">
+                                                  <tbody>
+                                                    <tr>
+                                                      <td
+style="font-family:Helvetica,Arial,sans-serif;color:#1D4B00;text-align:center;font-size:14px;background-color:#B5E941;vertical-align:middle;height:44px;font-weight:700;mso-border-right-alt:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-bottom-alt:none"
+class="t_c0c0c0b t_bgcb5e841 t_pt0px t_pb0px m_h44px" height="44"> <a
+href="https://www.kleinanzeigen.de/m-bestellung-aufnehmen.html?articles=3508164895:73&amp;utm_source=email&amp;utm_medium=system_email&amp;utm_campaign=email-FeatureUpsellOnDay7&amp;utm_content=AD_TOP_AD"
+style="color:#1D4B00;line-height:130%;display:block;text-decoration:none;outline:0"
+class="t_c0c0c0b" title="Zur Buchung" moz-do-not-send="true">Zur Buchung</a>
+                                                      </td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center t_w90p m_w90p" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="50%" align="right"
+                                class="d_right t_w48p m_w100p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="top" width="100%"
+                                      style="padding-bottom:32px;"
+                                      class="t_w100p m_w100p">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+class="d_center t_flright t_w100p m_w100p" role="none"
+                                        aria-hidden="true">
+                                        <tbody>
+                                          <tr>
+                                            <td>
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                align="center"
+                                                class="d_center"
+                                                role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td
+style="text-align:center;vertical-align:middle" class="m_pb0px"> <img
+src="https://static.kleinanzeigen.de/img/mail/featureupsell/img-bump-up.png"
+                                                        alt=""
+                                                        width="288"
+style="display:block;border:none;border-radius:4px;"
+class="t_w100p m_w100p" moz-do-not-send="true"> </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="46%" align="left"
+                                class="d_left t_w48p m_w100p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="top" width="100%"
+                                      class="t_w100p m_w100p">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+class="d_center t_flleft t_w100p m_w100p" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td valign="top"
+                                              width="100%"
+                                              class="t_w100p m_w100p"
+style="padding-bottom:32px;">
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                align="center"
+                                                style="margin:auto"
+class="d_center t_w90p m_w100p" role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;vertical-align:middle;line-height:130%;font-weight:700;padding-bottom:8px"
+                                                      role="heading"
+                                                      aria-level="2">
+                                                      Hochschieben </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                align="center"
+                                                style="margin:auto"
+class="d_center t_w90p m_w100p" role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:16px;vertical-align:middle;line-height:22px">
+                                                      <ul
+style="margin:0;padding-left:20px;padding-bottom:16px;line-height:130%">
+                                                        <li>Bring deine
+                                                          Anzeige wieder
+                                                          nach vorne</li>
+                                                        <li>Einmalig
+                                                          oder bequem 7
+                                                          Tage in Folge
+                                                          buchbar</li>
+                                                      </ul>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                align="center"
+                                                style="margin:auto"
+                                                class="d_center"
+                                                role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td
+style="font-family:Helvetica,Arial,sans-serif;text-align:left;font-size:16px;padding-bottom:16px;vertical-align:middle"
+                                                      class="m_pb12px">
+                                                      <span
+style="font-weight:700">2,99 € inkl. MwSt.</span> </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="222"
+                                                align="left"
+style="border-collapse:separate"
+class="d_left t_flnone t_mauto t_w200px m_flleft m_mauto" role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td>
+                                                      <div
+style="overflow:hidden;border-radius:24px;border:none;mso-border-alt: none;">
+                                                        <table
+cellpadding="0" cellspacing="0" border="0" width="100%" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="font-family:Helvetica,Arial,sans-serif;color:#1D4B00;text-align:center;font-size:14px;background-color:#B5E941;vertical-align:middle;height:44px;font-weight:700;mso-border-right-alt:none;mso-border-left-alt:none;mso-border-top-alt:none;mso-border-bottom-alt:none"
+class="t_c0c0c0b t_bgcb5e841 t_pt0px t_pb0px m_h44px" height="44"> <a
+href="https://www.kleinanzeigen.de/m-bestellung-aufnehmen.html?articles=3508164895:357&amp;utm_source=email&amp;utm_medium=system_email&amp;utm_campaign=email-FeatureUpsellOnDay7&amp;utm_content=AD_BUMP_UP"
+style="color:#1D4B00;line-height:130%;display:block;text-decoration:none;outline:0"
+class="t_c0c0c0b" title="Zur Buchung" moz-do-not-send="true">Zur Buchung</a>
+                                                          </td>
+                                                          </tr>
+                                                          </tbody>
+                                                        </table>
+                                                      </div>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center"
+                        style="margin:auto;clear:both"
+                        class="d_center t_w100p m_w90p"
+                        aria-hidden="true">
+                        <tbody>
+                          <tr>
+                            <td
+style="height:32px;font-size:8px;vertical-align:bottom">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                class="d_center"
+                                style="width:100%;clear:both">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="border-top:1px solid #DDDBD5;height:32px;font-size:24px;line-height:24px">
+                                       </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto" class="d_center"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#000000;text-align:left;font-size:16px;padding-bottom:24px;vertical-align:top; line-height:130%;"
+                                      class="t_pr16px t_pl16px">Falls du
+                                      in der Zwischenzeit erfolgreich
+                                      warst, kannst du auch deine <a
+href="https://www.kleinanzeigen.de/m-meine-anzeigen.html?utm_source=email&amp;utm_medium=system_email&amp;utm_campaign=email-FeatureUpsellOnDay7&amp;utm_content=DeleteAd"
+                                        title="Anzeige löschen"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+style="text-decoration: underline; color: #326916;"
+                                        moz-do-not-send="true">Anzeige
+                                        löschen</a> </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="90%" align="center" style="margin:auto"
+                        class="d_center" role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto"
+                                class="d_center t_mauto" role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:24px;vertical-align:top;line-height:130%"
+                                      class="t_pr16px t_pl16px"> Viele
+                                      Grüße </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto"
+                                class="d_center t_mauto" role="none">
+                                <tbody>
+                                  <tr>
+                                    <td
+style="font-family:Helvetica,Arial,sans-serif;color:#0C0C0B;text-align:left;font-size:16px;padding-bottom:24px;vertical-align:top;line-height:130%"
+                                      class="t_pr16px t_pl16px"> Dein
+                                      Kleinanzeigen-Team  </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <!-- footer -->
+                      <table cellpadding="0" cellspacing="0" border="0"
+                        width="640" align="center"
+                        style="margin:auto;background-color:#33322E"
+                        class="d_center t_mauto t_w100p m_mauto m_w100p"
+                        role="none">
+                        <tbody>
+                          <tr>
+                            <td valign="top" width="100%"
+                              class="t_w100p m_w100p">
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="88%" align="center"
+                                style="margin:auto"
+                                class="d_center t_w92p m_w90p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <div
+style="border-bottom:1px solid #F4F6F7;mso-border-alt:none">
+                                        <table cellpadding="0"
+                                          cellspacing="0" border="0"
+                                          width="100%"
+style="border-collapse:separate;mso-border-bottom-alt:1px solid #F4F6F7"
+                                          role="none">
+                                          <tbody>
+                                            <tr>
+                                              <td valign="top"
+                                                width="100%"
+                                                class="t_w100p m_w100p">
+                                                <table cellpadding="0"
+                                                  cellspacing="0"
+                                                  border="0" width="156"
+                                                  align="left"
+class="d_left t_w156px m_w156px" role="none">
+                                                  <tbody>
+                                                    <tr>
+                                                      <td>
+                                                        <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+                                                          width="156"
+style="padding-top:40px;padding-bottom:24px;text-align:center;vertical-align:middle">
+                                                          <a
+target="_blank" rel="noopener noreferrer"
+href="https://www.kleinanzeigen.de/"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="kleinanzeigen" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/logo_ka_light.png"
+alt="kleinanzeigen" height="26" width="156"
+style="height:26px;line-height:16px;display:block;border:none"
+class="t_w100p t_h26px m_w100p m_h26px" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                        </table>
+                                                      </td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto;clear:both"
+                                class="d_center t_w100p m_w100p"
+                                aria-hidden="true">
+                                <tbody>
+                                  <tr>
+                                    <td height="32"
+                                      style="height:32px;font-size:8px"
+                                      class="t_h24px m_h16px">  </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="88%" align="center"
+                                style="margin:auto"
+                                class="d_center t_w90p m_w90p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="top" width="62%"
+                                      class="t_w46p m_w100p m_flright">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="left"
+class="d_left t_w100p m_flright m_w100p" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td valign="middle"
+                                              height="40"
+                                              style="height:40px"
+                                              class="t_h40px m_h40px">
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td valign="middle"
+                                                      width="16.66%"
+style="height:40px" class="t_w16d66p t_vamiddle m_w16d66p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="32"
+                                                        align="left"
+class="d_left m_flnone m_mauto m_w40px" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-right:8px;text-align:center" class="m_pl9px"> <a
+href="https://www.facebook.com/Kleinanzeigen/" target="_blank"
+rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="Facebook" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/icon-facebook.png"
+                                                          alt="Facebook"
+                                                          width="24"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td valign="middle"
+                                                      width="16.66%"
+style="height:40px" class="t_w16d66p t_vamiddle m_w16d66p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="32"
+                                                        align="left"
+class="d_left m_flnone m_mauto" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-right:8px;text-align:center"> <a
+href="https://www.instagram.com/kleinanzeigen_official/" target="_blank"
+rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="Instagram" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/icon-instagram.png"
+alt="Instagram" width="24"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td valign="middle"
+                                                      width="16.67%"
+style="height:40px" class="t_w16d67p t_vamiddle m_w16d67p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="32"
+                                                        align="left"
+class="d_left m_flnone m_mauto" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-right:8px;text-align:center"> <a
+href="https://www.youtube.com/@KleinanzeigenWG" target="_blank"
+rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="YouTube" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/icon-youtube.png"
+                                                          alt="YouTube"
+                                                          width="24"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td valign="middle"
+                                                      width="16.67%"
+style="height:40px" class="t_w16d67p t_vamiddle m_w16d67p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="32"
+                                                        align="left"
+class="d_left m_flnone m_mauto" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-right:8px;text-align:center"> <a
+href="https://www.tiktok.com/@kleinanzeigen" target="_blank"
+rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+                                                          title="TikTok"
+moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/icon-tiktok.png"
+                                                          alt="TikTok"
+                                                          width="24"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td valign="middle"
+                                                      width="16.67%"
+style="height:40px" class="t_w16d67p t_vamiddle m_w16d67p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="32"
+                                                        align="left"
+class="d_left m_flnone m_mauto" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-right:8px;text-align:center"> <a
+href="https://www.threads.net/@kleinanzeigen_official?hl=de"
+target="_blank" rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="Threads" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/icon-threads.png"
+                                                          alt="Threads"
+                                                          width="24"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td valign="middle"
+                                                      width="16.67%"
+style="height:40px" class="t_w16d67p t_vamiddle m_w16d67p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="32"
+                                                        align="left"
+class="d_left m_flnone m_mauto" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-right:8px;text-align:center"> <a
+href="https://www.pinterest.de/kleinanzeigen/" target="_blank"
+rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="Pinterest" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/icon-pinterest.png"
+alt="Pinterest" width="24"
+style="#FFFFFFline-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                    <td valign="top" width="38%"
+                                      class="t_w54p m_w100p m_flright">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="left"
+class="d_left t_w100p m_flnone m_mauto m_w100p" role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td valign="middle"
+                                              height="40"
+                                              style="height:40px"
+                                              class="t_h40px m_h56px">
+                                              <table cellpadding="0"
+                                                cellspacing="0"
+                                                border="0" width="100%"
+                                                role="none">
+                                                <tbody>
+                                                  <tr>
+                                                    <td valign="middle"
+                                                      width="50%"
+style="height:40px" class="t_w50p t_vamiddle m_h56px m_w50p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="122"
+                                                        align="right"
+class="d_right m_flnone m_mauto" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="text-align:center"> <a
+href="https://apps.apple.com/de/app/kleinanzeigen-jetzt-ohne-ebay/id382596778"
+target="_blank" rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="App Store" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/logo-app-store.png"
+alt="App Store" width="122"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                    <td valign="middle"
+                                                      width="50%"
+style="height:40px" class="t_w50p t_vamiddle m_h56px m_w50p m_vamiddle"
+                                                      height="40">
+                                                      <table
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        border="0"
+                                                        width="141"
+                                                        align="right"
+class="d_right t_w143px m_flnone m_mauto m_w125px" role="none">
+                                                        <tbody>
+                                                          <tr>
+                                                          <td>
+                                                          <table
+cellpadding="0" cellspacing="0" border="0" width="100%" align="center"
+class="d_center" role="none">
+                                                          <tbody>
+                                                          <tr>
+                                                          <td
+style="padding-left:16px;text-align:center" class="t_pl8px m_pl0px"> <a
+href="https://play.google.com/store/apps/details?id=com.ebay.kleinanzeigen"
+target="_blank" rel="noopener noreferrer"
+style="color:#FFFFFF;outline:0;border:none;margin:auto;display:block"
+title="Google Play" moz-do-not-send="true"> <img
+src="https://static.kleinanzeigen.de/img/mail/footer/logo-google-play.png"
+alt="Google Play" width="125"
+style="line-height:13px;display:block;border:none"
+class="t_w100p m_w100p" moz-do-not-send="true"></a> </td>
+                                                          </tr>
+                                                          </tbody>
+                                                          </table>
+                                                          </td>
+                                                          </tr>
+                                                        </tbody>
+                                                      </table>
+                                                    </td>
+                                                  </tr>
+                                                </tbody>
+                                              </table>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="88%" align="center"
+                                style="margin:auto"
+                                class="d_center t_w90p m_w90p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      <div
+style="border-bottom:1px solid #F4F6F7;mso-border-alt:none">
+                                        <table cellpadding="0"
+                                          cellspacing="0" border="0"
+                                          width="100%"
+style="border-collapse:separate;mso-border-bottom-alt:1px solid #F4F6F7"
+                                          role="none">
+                                          <tbody>
+                                            <tr>
+                                              <td valign="middle"
+                                                height="31"
+                                                style="height:31px"
+                                                class="t_h23px m_h15px">
+                                                <table cellpadding="0"
+                                                  cellspacing="0"
+                                                  border="0"
+                                                  width="100%"
+                                                  role="none">
+                                                  <tbody>
+                                                    <tr>
+                                                      <td valign="top"
+                                                        width="50%"
+style="height:31px" class="t_h23px t_w46p m_h15px m_w50p" height="31"
+aria-hidden="true"> <span></span></td>
+                                                      <td valign="top"
+                                                        width="50%"
+style="height:31px" class="t_h23px t_w54p m_h15px m_w50p" height="31"
+aria-hidden="true"> <span></span> </td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto;clear:both"
+                                class="d_center t_w100p m_w100p"
+                                aria-hidden="true">
+                                <tbody>
+                                  <tr>
+                                    <td height="32"
+                                      style="height:32px;font-size:8px">
+                                      </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="88%" align="center"
+                                style="margin:auto"
+                                class="d_center t_w90p m_w90p"
+                                role="none">
+                                <tbody>
+                                  <tr>
+                                    <td valign="top" width="100%"
+                                      class="t_w100p m_w100p">
+                                      <table cellpadding="0"
+                                        cellspacing="0" border="0"
+                                        width="100%" align="center"
+                                        style="margin:auto"
+                                        class="d_center t_w100p m_w100p"
+                                        role="none">
+                                        <tbody>
+                                          <tr>
+                                            <td
+style="font-family:Helvetica,Arial,sans-serif;color:#FFFFFF;text-align:left;text-transform:none;font-size:16px;vertical-align:middle;line-height:24px">
+                                              Bitte antworte nicht auf
+                                              diese E-Mail. <br
+                                                role="none">
+                                              Wenn du Fragen hast,
+                                              schaue bitte in unseren <a
+href="https://hilfe.kleinanzeigen.de/hc/de"
+style="color:#FFFFFF;text-decoration:underline" moz-do-not-send="true">Hilfebereich</a>.
+                                              <br role="none">
+                                              <br role="none">
+                                              Beispiel GmbH, <span
+style="white-space: nowrap;">Musterweg 1, 12345 Musterstadt</span>,
+                                              Deutschland<br role="none">
+                                              Geschäftsführer: Max
+                                              Mustermann, <span
+style="white-space: nowrap;">HRB-Nr.: 000000 B</span>,<br role="none">
+                                              Registergericht
+                                              Musterstadt, Sitz der
+                                              Gesellschaft: Musterstadt <br
+                                                role="none">
+                                              <br role="none">
+                                              <a
+href="https://themen.kleinanzeigen.de/nutzungsbedingungen/"
+style="color:#FFFFFF;text-decoration:underline" moz-do-not-send="true">Allgemeine
+                                                Nutzungsbedingungen</a> | <a
+href="https://themen.kleinanzeigen.de/datenschutzerklaerung/"
+style="color:#FFFFFF;text-decoration:underline" moz-do-not-send="true">Datenschutzerklärung</a> | <a
+href="https://www.kleinanzeigen.de/impressum.html?utm_source=email&amp;utm_medium=system_email&amp;utm_campaign=FeatureUpsellOnDay7&amp;utm_content=Other"
+style="color:#FFFFFF;text-decoration:underline" moz-do-not-send="true">Impressum</a>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <table cellpadding="0" cellspacing="0"
+                                border="0" width="100%" align="center"
+                                style="margin:auto;clear:both"
+                                class="d_center t_w100p m_w100p"
+                                aria-hidden="true">
+                                <tbody>
+                                  <tr>
+                                    <td height="32"
+                                      style="height:32px;font-size:8px">
+                                      </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <img
+src="https://zaehlpixel.beispiel.invalid/open.png"
+        alt="" width="1" height="1" border="0"
+style="height:1px !important;width:1px !important;border-width:0 !important;margin-top:0 !important;margin-bottom:0 !important;margin-right:0 !important;margin-left:0 !important;padding-top:0 !important;padding-bottom:0 !important;padding-right:0 !important;padding-left:0 !important;"
+        moz-do-not-send="true"> </div>
+  </body>
+</html>
+</x-html>
+

@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-30T13:21:35.141Z
 ---
 
+Schranke: tools/arbeitsbaum-frei.pl (vor jedem Agentenstart)
+
 Mehrere gleichzeitig laufende Agenten teilen sich **dasselbe Arbeitsverzeichnis und
 denselben git-Index**. Das führt zu zwei Schäden:
 

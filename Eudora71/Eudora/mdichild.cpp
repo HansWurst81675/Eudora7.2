@@ -92,7 +92,15 @@ void CMDIChild::ActivateFrame(int nCmdShow /*= -1*/)
 	//	(for now - we may want to change this in the future because MoveWindow is
 	//	often superfluous for maximized windows, but if the window isn't active
 	//	it's not harmful).
-	if ( (Win->GetSafeHwnd() != this->GetSafeHwnd()) ||
+	//
+	// BEFUND E-22: MDIGetActive liefert NULL, solange kein MDI-Kindfenster
+	// offen ist - genau der Fall, wenn Eudora frisch gestartet ist und das
+	// erste Fenster entsteht. CWnd::GetSafeHwnd faengt einen Nullzeiger nur
+	// ueber "this == NULL" ab (afxwin2.inl:24); das ist nicht definiert und
+	// haengt am Uebersetzer. Zwoelf Zeilen weiter unten prueft dieselbe
+	// Funktion Win schon selbst auf NULL.
+	if ( (Win == NULL) ||
+		 (Win->GetSafeHwnd() != this->GetSafeHwnd()) ||
 		 (bGetWindowPlacedSuceeded && (wp.showCmd != SW_SHOWMAXIMIZED)) )
 	{
 		CRect MainRect;

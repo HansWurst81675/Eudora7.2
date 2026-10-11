@@ -429,7 +429,7 @@ Zwei Aenderungen in `Eudora.vcxproj` loesen die Bindung an sie:
   `#pragma comment(lib, _SECAUTOLIBNAME)` daran; ohne die Definition traegt
   jede Objektdatei die Anforderung `ota50d.lib` in sich.
 - `<LinkLibraryDependencies>false</LinkLibraryDependencies>` beim
-  Projektverweis auf `OT501` (Zeile 1015). `ReferenceOutputAssembly` allein
+  Projektverweis auf `OT501`. `ReferenceOutputAssembly` allein
   genuegt **nicht**: MSBuild reicht die Ausgabe des verwiesenen Projekts
   trotzdem als Bindeeingabe weiter. Gemessen: mit `ReferenceOutputAssembly`
   allein steht `Lib\Debug\OTA50D.LIB` in der Eingabeliste des Linkers, und
@@ -437,7 +437,18 @@ Zwei Aenderungen in `Eudora.vcxproj` loesen die Bindung an sie:
 
 `OTA50D.LIB` ist damit weder noetig noch vorhanden.
 
-### Was beim ersten Startversuch zu erwarten ist
+> **Nachtrag (06.09.2026).** Der Projektverweis auf `OT501` ist inzwischen ganz
+> aus `Eudora.vcxproj` verschwunden (Befund **B-3**), die frueher genannte
+> Zeile 1015 gibt es so nicht mehr. `_SECNOMSG` steht weiter in den
+> Praeprozessordefinitionen. **`Lib/Debug/OTA50D.LIB` darf nicht wieder
+> angelegt werden** — sonst linkt Eudora gegen eine leere Bibliothek.
+
+### Was beim ersten Startversuch zu erwarten war
+
+> **Überholt (06.09.2026).** Eudora startet, ist bedienbar und ruft Mail über
+> TLS ab; `EudoraRes.dll` entsteht beim gewöhnlichen Projektmappen-Bau in
+> `Eudora71/Bin/<Konfiguration>` und fehlt nicht mehr. Der Abschnitt bleibt als
+> Zeitdokument stehen. Der aktuelle Stand steht in `README.md`.
 
 `dumpbin /dependents` auf `Bin/Debug/Eudora.exe` nennt 27 Abhaengigkeiten.
 Geprueft gegen `Bin/Debug`: **alle vorhanden** - `Paige32d.dll`, `Imap.dll`,
@@ -445,9 +456,9 @@ Geprueft gegen `Bin/Debug`: **alle vorhanden** - `Paige32d.dll`, `Imap.dll`,
 `plstclnt.dll` sowie die Systemteile bis hin zu `mfc140d.dll`, `gdiplus.dll`,
 `ucrtbased.dll`.
 
-**`EudoraRes.dll` steht nicht in dieser Liste** - sie wird zur Laufzeit
-nachgeladen, nicht gebunden, und fehlt in `Bin/Debug`. Sie traegt Dialoge,
-Zeichenketten und Symbole. Der Startversuch scheitert daran voraussichtlich vor
+**`EudoraRes.dll` stand damals nicht in dieser Liste** - sie wird zur Laufzeit
+nachgeladen, nicht gebunden, und fehlte in `Bin/Debug`. Sie traegt Dialoge,
+Zeichenketten und Symbole. Der Startversuch scheitere daran voraussichtlich vor
 allem anderen; Einzelheiten in `STARTUMGEBUNG.md`.
 
 Weiter ist zu erwarten, dass die Ersatzschicht beim Start durch Code laeuft, den
