@@ -150,13 +150,18 @@ static void Test_FindMIMECharset(void)
 
 static void Test_PopHatDieVerschiebungUmEins(void)
 {
-	TT_BeginTest("POP: der Index wird um eins verschoben - anders als im IMAP-Pfad");
+	TT_BeginTest("POP und IMAP: der Index wird um eins verschoben - sonst greift die falsche Tabelle");
 
-	// Belegstelle fuer den bekannten IMAP-Fehler:
-	//   EuImap/src/ImapDownload.cpp:4644 ruft FindRStringIndexI unmittelbar auf und
-	//   gibt das Ergebnis ohne die Verschiebung an ISOTranslate weiter.
-	// Der POP-Pfad geht ueber FindMIMECharset (mime.cpp:382), das den Wert um eins
-	// hochzaehlt. Dieser Test haelt den Unterschied fest.
+	// NACHGEZOGEN AM 13.09.2026 (PRUEFER-10). Bis E-85 war dieser Test die
+	// Belegstelle fuer einen offenen IMAP-Fehler: ImapDownload.cpp rief
+	// FindRStringIndexI unmittelbar auf und gab das Ergebnis OHNE die
+	// Verschiebung an ISOTranslate weiter. Seit E-85 geht auch der IMAP-Weg
+	// ueber FindMIMECharset (mime.cpp), es gibt nur noch eine Skala.
+	//
+	// Der Test bleibt - aus der Belegstelle fuer den Fehler wird die
+	// Begruendung dafuer, WARUM die Verschiebung noetig ist: unten steht
+	// gemessen, was der rohe Wert anrichtet. Wer die Verschiebung wieder
+	// herausnimmt, sieht hier sofort, was er dafuer eintauscht.
 	const int iRohUtf8   = UT_FindRStringIndexI(3611, 3614, "utf-8");
 	const int iRohLatin9 = UT_FindRStringIndexI(3611, 3614, "iso-8859-15");
 
@@ -166,7 +171,8 @@ static void Test_PopHatDieVerschiebungUmEins(void)
 	TT_CHECK(UT_FindMIMECharset("utf-8")       == iRohUtf8 + 1);
 	TT_CHECK(UT_FindMIMECharset("iso-8859-15") == iRohLatin9 + 1);
 
-	// Was der rohe Wert anrichtet, wenn man ihn wie im IMAP-Pfad durchreicht:
+	// Was der rohe Wert anrichtet, wenn man ihn ohne die Verschiebung durchreicht
+	// - so, wie der IMAP-Weg es bis E-85 tat:
 	//
 	//  - 2 fuer iso-8859-15 ist "<= 2". ISOTranslate steigt sofort aus, der Text
 	//    bleibt unuebersetzt.
@@ -188,7 +194,7 @@ static void Test_PopHatDieVerschiebungUmEins(void)
 		lRichtig = UT_ISOTranslate(szRichtig, (long)strlen(szRichtig), (unsigned)IDX_UTF_8);
 
 		// Mit dem rohen Index greift die ISO-8859-15-Tabelle ins UTF-8: BC -> 8C.
-		PruefeBytes("roher Index (wie IMAP)", szRoh, (int)lRoh,
+		PruefeBytes("roher Index (wie IMAP bis E-85)", szRoh, (int)lRoh,
 					"Gr\xC3\x8C\xC3\x9F" "e", 7);
 
 		// Mit dem Index aus FindMIMECharset wird richtig uebersetzt.

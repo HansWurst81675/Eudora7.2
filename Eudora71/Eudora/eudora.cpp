@@ -805,6 +805,17 @@ void CEudoraApp::OnCheckMail()
 
 void CEudoraApp::OnAppExit()
 {
+	// BEFUND E-33: erste Spurmarke des Beenden-Weges. Sie unterscheidet die
+	// beiden Moeglichkeiten: kommt der Menuebefehl ID_APP_EXIT ueberhaupt an,
+	// oder beginnt das Beenden gar nicht?  Steht diese Zeile im Protokoll,
+	// ist die Befehlszustellung in Ordnung und der Fehler liegt dahinter.
+	// ACHTUNG: PutDebugLog prueft die Maske und kehrt sonst sofort zurueck
+	// (QCUtils/src/debug.cpp:140). Die Marken schreiben nur bei
+	// LogLevel=32896 unter [Settings] in der Eudora.ini (0x8000 | 0x80).
+	PutDebugLog(DEBUG_MASK_MISC,
+		ShiftDown() ? "E-33 OnAppExit: Befehl angekommen, Shift gedrueckt - nur Fensterlage sichern"
+		            : "E-33 OnAppExit: Befehl angekommen, jetzt CWinApp::OnAppExit (WM_CLOSE)");
+
 	// If Shift was held down while doing a File->Exit, then just save the
 	// positions of the currently open windows, but don't quit
 	if (ShiftDown())
@@ -834,6 +845,45 @@ BOOL
 CEudoraApp::InitApplication()
 {
 	return CWinApp::InitApplication();
+}
+
+//	=========================================================================================
+//	AnyPersonalityHasAccount
+//
+//	The dominant personality lives in the [Settings] section of Eudora.ini, every named
+//	personality in a section of its own ([Persona-<name>]).  GetReturnAddress() only ever
+//	looks at the current personality, which is the dominant one at startup.  A user whose
+//	only account sits in a named personality was therefore greeted by the account wizard
+//	on every single start (E-17).  This helper answers the question the startup check
+//	really wants to ask: is there any account at all?
+//
+static BOOL AnyPersonalityHasAccount()
+{
+	const CString strReturnAddr = CPersonality::GetIniKeyName(IDS_INI_PERSONA_RETURN_ADDR);
+	const CString strPopAccount = CPersonality::GetIniKeyName(IDS_INI_PERSONA_POP_ACCOUNT);
+
+	for (LPSTR pszName = g_Personalities.List(); pszName && *pszName;
+		 pszName += strlen(pszName) + 1)
+	{
+		if (g_Personalities.IsDominant(pszName))
+			continue;			// already covered by GetReturnAddress()
+
+		char szValue[256];
+
+		szValue[0] = '\0';
+		g_Personalities.GetProfileString(pszName, strReturnAddr, "", szValue, sizeof(szValue));
+		::TrimWhitespaceMT(szValue);
+		if (szValue[0])
+			return TRUE;
+
+		szValue[0] = '\0';
+		g_Personalities.GetProfileString(pszName, strPopAccount, "", szValue, sizeof(szValue));
+		::TrimWhitespaceMT(szValue);
+		if (szValue[0])
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 //	=========================================================================================
@@ -1615,9 +1665,12 @@ BOOL CEudoraApp::InitInstance()
 	// Check RegCode.dat after we're all started up
 	::PostMessage(pMainFrame->GetSafeHwnd(), WM_COMMAND, ID_CHECK_REG_CODE_FILE, 0);
 
-	// Put up New Account Wizard if no return address specified
+	// Put up New Account Wizard only if no account is set up at all.  GetReturnAddress()
+	// sees the dominant personality ([Settings]) only, so an account that lives in a
+	// named personality has to be asked for separately (E-17).
 	const char* ra = GetReturnAddress();
-	if (!ra || !*ra)
+	BOOL bHaveAccount = (ra && *ra) ? TRUE : AnyPersonalityHasAccount();
+	if (!bHaveAccount)
 	{
 		SetIniShort(IDS_INI_LAST_SETTINGS_CATEGORY, 0);
 		pMainFrame->PostMessage(WM_COMMAND, ID_SPECIAL_NEWACCOUNT);
@@ -1625,7 +1678,7 @@ BOOL CEudoraApp::InitInstance()
 
 	InitJunkFeature();
 
-	if (ra && *ra)
+	if (bHaveAccount)
 	{
 		// Show the tip-o-day only if the Wizard is not shown.
 		if (::GetIniShort(IDS_INI_SHOW_TIP_OF_THE_DAY))
@@ -1966,6 +2019,13 @@ void CEudoraApp::SaveStdProfileSettings()
 
 int CEudoraApp::ExitInstance()
 {
+	// BEFUND E-33: letzte Spurmarke des Beenden-Weges. ExitInstance wird erst
+	// erreicht, wenn das Hauptfenster wirklich zerstoert ist (CWnd::OnNcDestroy
+	// setzt WM_QUIT ab, danach kehrt CWinThread::Run zurueck). Steht diese
+	// Zeile im Protokoll, ist das Beenden angekommen; fehlt sie, ist es unterwegs
+	// abgebrochen - dann sagt die letzte E-33-Zeile davor, wo.
+	PutDebugLog(DEBUG_MASK_MISC,
+		"E-33 ExitInstance: erreicht - das Hauptfenster ist zerstoert");
 
 	// Clean up the directors/managers
 	VERIFY(QCLabelDirector::Destroy());
@@ -2140,12 +2200,63 @@ CDocument* CEudoraApp::NewChildDocument(CDocTemplate* templ)
 CFrameWnd* CEudoraApp::NewChildFrame(CDocTemplate* templ, CDocument* pDoc, BOOL bDoIntialUpdate /* TRUE */)
 {
 	CFrameWnd* frame = templ->CreateNewFrame(pDoc, NULL);
-	
+
 	ASSERT_VALID(frame);
-	
+
+	// BEFUND E-34: Gregor sieht nach Strg-N kein brauchbares Fenster. Der
+	// Fensterbau laeuft durch (OnMessageNewMessage: fertig), es haengt auch
+	// ein sichtbares AfxMDIFrame140 im MDI-Bereich - aber ohne Titel. Hier
+	// wird protokolliert, was aus dem Rahmen wirklich geworden ist: ob er
+	// existiert, ob er sichtbar ist, wie gross er ist und wie er heisst.
+	if (frame)
+	{
+		char szNCF[256];
+		CRect rc(0, 0, 0, 0);
+		if (::IsWindow(frame->GetSafeHwnd()))
+			frame->GetWindowRect(&rc);
+		CString strTitel;
+		if (::IsWindow(frame->GetSafeHwnd()))
+			frame->GetWindowText(strTitel);
+		wsprintf(szNCF,
+			"E-34 NewChildFrame: nach CreateNewFrame  hwnd=%p sichtbar=%d "
+			"rect=%d,%d,%d,%d titel='%s'",
+			frame->GetSafeHwnd(),
+			(int)(::IsWindow(frame->GetSafeHwnd()) ? frame->IsWindowVisible() : 0),
+			rc.left, rc.top, rc.right, rc.bottom,
+			(LPCTSTR)strTitel);
+		PutDebugLog(DEBUG_MASK_MISC, szNCF);
+	}
+	else
+	{
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-34 NewChildFrame: CreateNewFrame hat NULL geliefert");
+	}
+
 	if (frame)
 		templ->InitialUpdateFrame(frame, pDoc, bDoIntialUpdate);
-		
+
+	if (frame && ::IsWindow(frame->GetSafeHwnd()))
+	{
+		char szNCF2[256];
+		CRect rc2(0, 0, 0, 0);
+		frame->GetWindowRect(&rc2);
+		CString strTitel2;
+		frame->GetWindowText(strTitel2);
+		wsprintf(szNCF2,
+			"E-34 NewChildFrame: nach InitialUpdateFrame  sichtbar=%d "
+			"rect=%d,%d,%d,%d (%dx%d) titel='%s' update=%d",
+			(int)frame->IsWindowVisible(),
+			rc2.left, rc2.top, rc2.right, rc2.bottom,
+			rc2.Width(), rc2.Height(),
+			(LPCTSTR)strTitel2, (int)bDoIntialUpdate);
+		PutDebugLog(DEBUG_MASK_MISC, szNCF2);
+	}
+	else if (frame)
+	{
+		PutDebugLog(DEBUG_MASK_MISC,
+			"E-34 NewChildFrame: nach InitialUpdateFrame ist das Fenster WEG");
+	}
+
 	return (frame);
 }
 
@@ -2479,6 +2590,12 @@ BOOL CEudoraApp::IdleSendMail()
 BOOL CEudoraApp::IdleTaskManagerPostProcessing()
 {
 	BOOL	bDidSomething = FALSE;
+
+	// BEFUND E-83: solange eine Aufgabe in der Liste liegt, schreibt die
+	// Spurmarke alle 15 Sekunden EINE Zeile mit Zustand, m_pThread und
+	// aktiven Aufgaben gegen die Obergrenze. Sie haengt an
+	// DEBUG_MASK_MISC und schweigt in der Vorgabe (LogLevel=58527).
+	QCGetTaskManager()->SpurmarkeE83Sweep();
 	
 	if ( QCGetTaskManager()->IsPostProcessingRequested() )
 	{
@@ -3323,7 +3440,28 @@ BOOL CEudoraApp::RegisterURLSchemes()
 
 	const BOOL overWrite = GetIniShort(IDS_INI_DEFAULT_MAILTO_OVERWRITE);
 
-	if (defMailto[0] && !strstr(defMailto, appName)) 
+	// Eudora traegt sich NICHT mehr als Standard-Mailprogramm ein - Befund E-12.
+	//
+	// Gregor am 05.09.2026: "ich will nicht mein default mail programm aendern,
+	// die meldung kann also weg. und auch die pruefung."
+	//
+	// Das Eintragen unter HKEY_CLASSES_ROOT\mailto verlangt Administratorrechte.
+	// Ohne sie schlaegt AddToRegistry fehl, und der Anwender bekam die Meldung
+	// IDS_REG_MAILTO_ERR ("Eudora was unable to update the system registry") -
+	// fuer etwas, das er gar nicht wollte. Dazu kam vorher noch die Rueckfrage,
+	// ob Eudora das Standardprogramm werden soll.
+	//
+	// Beides ist hier abgeschaltet: keine Rueckfrage, kein Schreibversuch, keine
+	// Fehlermeldung. Wer Eudora zum Standardprogramm machen will, macht das in
+	// den Windows-Einstellungen unter "Standard-Apps" - dort gehoert es hin, und
+	// nur dort funktioniert es unter Windows 10 und 11 ueberhaupt noch
+	// zuverlaessig.
+	//
+	// Die Registrierung des Schemas x-eudora-option: weiter unten bleibt: sie ist
+	// Eudoras eigenes Schema, sie fragt nichts und meldet nichts.
+	const BOOL bStandardMailProgrammEintragen = FALSE;
+
+	if (bStandardMailProgrammEintragen && defMailto[0] && !strstr(defMailto, appName)) 
 	{
 		if (!gbAutomationRunning)
 		{
@@ -3335,7 +3473,7 @@ BOOL CEudoraApp::RegisterURLSchemes()
 			}
 		}
 	}
-	else if (stricmp(defMailto, cmd))
+	else if (bStandardMailProgrammEintragen && stricmp(defMailto, cmd))
 	{
 		// We are the default program, but if we are a new version, register this new path in place of the old one..
 		bSetDefaultMailto = TRUE;

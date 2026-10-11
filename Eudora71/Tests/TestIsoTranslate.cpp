@@ -354,21 +354,26 @@ static void Test_EmojiWirdZuFragezeichen(void)
 	// blieben alle vier Bytes stehen und wurden als vier CP1252-Zeichen
 	// angezeigt: der Zeichensalat.
 	//
-	// Gemessen: der Wandler liefert ZWEI Fragezeichen, nicht eines. Ein Zeichen
+	// Bis zum 14.09.2026 wurden daraus ZWEI Fragezeichen - ein Zeichen
 	// ausserhalb der BMP ist in UTF-16 ein Ersatzzeichenpaar, und
-	// WideCharToMultiByte setzt fuer jede der beiden Haelften ein Ersatzzeichen.
-	// Zwei Fragezeichen statt vier Salatzeichen - das ist der Gewinn.
-	static const unsigned char szExpected[] = { '?', '?' };
+	// WideCharToMultiByte setzt fuer jede Haelfte eines. Auf Gregors Bild zu
+	// 1.0.58 stand daraufhin eine Reihe von vierzig "??" quer ueber den Text:
+	// "das mit den vielen fragezeichen gefaellt mir immer noch nicht".
+	//
+	// Seither wird das Zeichen GESTRICHEN. Ein Emoji, das sich nicht
+	// darstellen laesst, traegt keine Information, die ein Fragezeichen
+	// rettet - es war Schmuck. Vierzig Fragezeichen sehen dagegen nach Fehler
+	// aus. Gregors Entscheidung: "versuchen wir dann B".
 	unsigned char szOut[32];
 	long lRet;
 
-	TT_BeginTest("ISOTranslate: ein Emoji (vier Byte) wird zu Fragezeichen statt zu Bytesalat");
+	TT_BeginTest("ISOTranslate: ein Emoji (vier Byte) faellt ersatzlos weg");
 
 	lRet = TranslateCp(0x1F600, szOut, sizeof(szOut));
 
-	if (lRet != (long)sizeof(szExpected) || memcmp(szOut, szExpected, sizeof(szExpected)) != 0)
-		TT_Fail("U+1F600 (F0 9F 98 80) -> erwartet %s, erhalten %ld Bytes: %s",
-				Hex(szExpected, (long)sizeof(szExpected)), lRet, Hex(szOut, lRet > 0 ? lRet : 0));
+	if (lRet != 0)
+		TT_Fail("U+1F600 (F0 9F 98 80) -> erwartet 0 Bytes, erhalten %ld: %s",
+				lRet, Hex(szOut, lRet > 0 ? lRet : 0));
 
 	TT_EndTest();
 }
@@ -469,6 +474,16 @@ static void Test_JedesZeichenWirdZuGenauEinemByte(void)
 		long lRet;
 
 		if (lCp >= 0xD800 && lCp <= 0xDFFF) continue;	// Ersatzzeichenbereich
+
+		// Seit dem 14.09.2026 werden unsichtbare Zeichen GESTRICHEN statt
+		// zu Fragezeichen gemacht - sie sind unsichtbar gemeint, und in
+		// Newslettern stehen sie zu Dutzenden zwischen den Buchstaben
+		// (eine verbreitete Technik gegen Spamfilter). Fuer sie gilt die
+		// Regel "genau ein Byte" also nicht mehr; sie werden zu null Bytes.
+		if (lCp >= 0x200B && lCp <= 0x200F) continue;	// Zero Width, Richtungsmarken
+		if (lCp >= 0x2060 && lCp <= 0x2064) continue;	// Word Joiner und Nachbarn
+		if (lCp >= 0xFE00 && lCp <= 0xFE0F) continue;	// Variationswaehler
+		if (lCp == 0xFEFF)                  continue;	// Byte Order Mark
 		if (lCp >= 0xFDD0 && lCp <= 0xFDEF) continue;	// Nichtzeichen
 		if ((lCp & 0xFFFE) == 0xFFFE)       continue;	// Nichtzeichen
 
@@ -507,7 +522,7 @@ static void Test_NewsletterMitEmoji(void)
 	{
 		0x84,'A','n','g','e','b','o','t',0x93,' ',0x96,' ',
 		'j','e','t','z','t',' ','f',0xFC,'r',' ','9',',','9','9',' ',0x80,
-		' ', '?','?', ' ','G','r',0xFC,0xDF,'e',0x92
+		' ', ' ','G','r',0xFC,0xDF,'e',0x92
 	};
 	unsigned char szIn[128];
 	unsigned char szOut[128];
@@ -633,6 +648,383 @@ static void Test_Latin9BehaeltCp1252Bytes(void)
 	TT_EndTest();
 }
 
+// ---------------------------------------------------------------------------
+// ISOIncompleteUTF8Tail - der Uebergang zwischen zwei Lesestuecken
+//
+// TextReader::ReadIt uebersetzt den Nachrichtenrumpf stueckweise. Faellt eine
+// Stueckgrenze mitten in ein UTF-8-Zeichen, ist keine der beiden Haelften
+// gueltiges UTF-8; ISOTranslate laesst beide stehen und im Postfach landen die
+// rohen Bytes. Genau ein Umlaut ist dann kaputt, alle anderen stimmen. Diese
+// Funktion sagt dem Aufrufer, wie viele Bytes er zurueckhalten muss.
+
+static void Test_AngefangenesZeichenWirdGezaehlt(void)
+{
+	// Jedes Mal wird ein Zeichen genau eine Stelle zu frueh abgeschnitten.
+	static const unsigned char szEin2[]  = { 'f', 0xC3 };					// u-Umlaut, 1 von 2
+	static const unsigned char szEin3a[] = { 'x', 0xE2 };					// Euro, 1 von 3
+	static const unsigned char szEin3b[] = { 'x', 0xE2, 0x82 };				// Euro, 2 von 3
+	static const unsigned char szEin4a[] = { 'x', 0xF0 };					// Emoji, 1 von 4
+	static const unsigned char szEin4c[] = { 'x', 0xF0, 0x9F, 0x98 };		// Emoji, 3 von 4
+
+	TT_BeginTest("ISOIncompleteUTF8Tail: angefangenes Zeichen wird gezaehlt");
+
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin2, (long)sizeof(szEin2)) != 1)
+		TT_Fail("C3 am Ende: erwartet 1, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin2, (long)sizeof(szEin2)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin3a, (long)sizeof(szEin3a)) != 1)
+		TT_Fail("E2 am Ende: erwartet 1, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin3a, (long)sizeof(szEin3a)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin3b, (long)sizeof(szEin3b)) != 2)
+		TT_Fail("E2 82 am Ende: erwartet 2, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin3b, (long)sizeof(szEin3b)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin4a, (long)sizeof(szEin4a)) != 1)
+		TT_Fail("F0 am Ende: erwartet 1, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin4a, (long)sizeof(szEin4a)));
+	if (UT_ISOIncompleteUTF8Tail((const char*)szEin4c, (long)sizeof(szEin4c)) != 3)
+		TT_Fail("F0 9F 98 am Ende: erwartet 3, erhalten %ld",
+				UT_ISOIncompleteUTF8Tail((const char*)szEin4c, (long)sizeof(szEin4c)));
+
+	TT_EndTest();
+}
+
+static void Test_VollstaendigesZeichenWirdNichtZurueckgehalten(void)
+{
+	// Ein ganzes Zeichen am Pufferende darf nicht aufgehalten werden, sonst
+	// wandert bei jedem Stueck Text ins naechste und die Reihenfolge leidet.
+	static const unsigned char szAscii[] = { 'a', 'b', 'c' };
+	static const unsigned char sz2[]     = { 'f', 0xC3, 0xBC };				// u-Umlaut komplett
+	static const unsigned char sz3[]     = { 'x', 0xE2, 0x82, 0xAC };		// Euro komplett
+	static const unsigned char sz4[]     = { 'x', 0xF0, 0x9F, 0x98, 0x80 };	// Emoji komplett
+	static const unsigned char szCp[]    = { 'f', 0xFC, 'r' };				// CP1252, kein UTF-8
+	static const unsigned char szMuell[] = { 'a', 0x80 };					// Folgebyte ohne Kopf
+
+	TT_BeginTest("ISOIncompleteUTF8Tail: vollstaendiges Zeichen wird nicht zurueckgehalten");
+
+	if (UT_ISOIncompleteUTF8Tail((const char*)szAscii, (long)sizeof(szAscii)) != 0)
+		TT_Fail("reines ASCII: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)sz2, (long)sizeof(sz2)) != 0)
+		TT_Fail("C3 BC komplett: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)sz3, (long)sizeof(sz3)) != 0)
+		TT_Fail("E2 82 AC komplett: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)sz4, (long)sizeof(sz4)) != 0)
+		TT_Fail("F0 9F 98 80 komplett: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)szCp, (long)sizeof(szCp)) != 0)
+		TT_Fail("CP1252-Byte FC: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)szMuell, (long)sizeof(szMuell)) != 0)
+		TT_Fail("Folgebyte 80 ohne Kopf: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail((const char*)szAscii, 0) != 0)
+		TT_Fail("leerer Puffer: erwartet 0");
+	if (UT_ISOIncompleteUTF8Tail(0, 5) != 0)
+		TT_Fail("kein Puffer: erwartet 0");
+
+	TT_EndTest();
+}
+
+static void Test_ZusammensetzenErgibtDenRichtigenText(void)
+{
+	// Der gemeldete Fall: "fuer" wird zwischen C3 und BC getrennt. Ohne
+	// Zurueckhalten bleiben beide Bytes roh stehen ("f C3 BC r"), mit
+	// Zurueckhalten kommt genau ein CP1252-Byte heraus ("f FC r").
+	static const unsigned char szStueck1[] = { 'f', 0xC3 };
+	static const unsigned char szStueck2[] = { 0xBC, 'r' };
+	static const unsigned char szErwartet[] = { 'f', 0xFC, 'r' };
+	unsigned char szPuffer[64];
+	long lHalt, lLen, lRet;
+
+	TT_BeginTest("ISOIncompleteUTF8Tail: getrenntes Zeichen wird ueber die Stueckgrenze heil");
+
+	// Stueck 1: was uebrig bleibt, wird zurueckgehalten und uebersetzt.
+	lHalt = UT_ISOIncompleteUTF8Tail((const char*)szStueck1, (long)sizeof(szStueck1));
+	lLen  = (long)sizeof(szStueck1) - lHalt;
+	memset(szPuffer, 0, sizeof(szPuffer));
+	memcpy(szPuffer, szStueck1, (size_t)lLen);
+	lRet = UT_ISOTranslate((char*)szPuffer, lLen, IDX_UTF8);
+
+	// Stueck 2: das zurueckgehaltene Byte kommt vorne wieder dran.
+	{
+		unsigned char szNaechstes[64];
+		long lNaechstesLen = lHalt + (long)sizeof(szStueck2);
+		long lRet2;
+
+		memset(szNaechstes, 0, sizeof(szNaechstes));
+		memcpy(szNaechstes, szStueck1 + lLen, (size_t)lHalt);
+		memcpy(szNaechstes + lHalt, szStueck2, sizeof(szStueck2));
+		lRet2 = UT_ISOTranslate((char*)szNaechstes, lNaechstesLen, IDX_UTF8);
+
+		memcpy(szPuffer + lRet, szNaechstes, (size_t)lRet2);
+		lRet += lRet2;
+	}
+
+	if (lRet != (long)sizeof(szErwartet) || memcmp(szPuffer, szErwartet, sizeof(szErwartet)) != 0)
+		TT_Fail("erwartet %s, erhalten %s",
+				Hex(szErwartet, (long)sizeof(szErwartet)), Hex(szPuffer, lRet > 0 ? lRet : 0));
+
+	TT_EndTest();
+}
+
+static void Test_UTF8IndexWirdErkannt(void)
+{
+	// TextReader haengt das Zurueckhalten an ISOIsUTF8Charset auf. Ein
+	// Einzelbyte-Zeichensatz darf nie zurueckhalten.
+	TT_BeginTest("ISOIsUTF8Charset: erkennt genau den UTF-8-Index");
+
+	if (!UT_ISOIsUTF8Charset(IDX_UTF8))
+		TT_Fail("Index %d ist UTF-8, wurde aber nicht erkannt", IDX_UTF8);
+	if (UT_ISOIsUTF8Charset(IDX_WINDOWS) || UT_ISOIsUTF8Charset(IDX_US_ASCII) ||
+		UT_ISOIsUTF8Charset(IDX_LATIN1)  || UT_ISOIsUTF8Charset(IDX_LATIN9))
+		TT_Fail("ein Index ausser %d wurde faelschlich als UTF-8 erkannt", IDX_UTF8);
+
+	TT_EndTest();
+}
+
+// ---------------------------------------------------------------------------
+// ISOTranslateChunk - der Uebertrag im IMAP-Weg (E-85)
+//
+// Der POP3-Weg schiebt den Uebertrag VOR das Stueck. Das geht im IMAP-Weg
+// nicht, weil der Zeiger aus CChunkReader::GetNextChunk in fremden Speicher
+// zeigt. ISOTranslateChunk setzt das Zeichen deshalb HINTER seine eigenen,
+// verbrauchten Bytes und versetzt den Anfang nach rechts. Geprueft wird hier
+// genau das: dass am Ende derselbe Text herauskommt wie ohne Stueckelung.
+// ---------------------------------------------------------------------------
+
+// Uebersetzt einen Text in Stuecken fester Laenge und haengt die Ergebnisse
+// aneinander - so, wie CImapDownloader::Write es tut.
+static long ChunkLauf(const unsigned char* pEin, long lEin, long lStueck,
+					  unsigned int uIdx, char* pAus, long lAusMax)
+{
+	char	szArbeit[512];
+	char	szUebertrag[4];
+	long	lUebertrag = 0;
+	long	lGelesen = 0;
+	long	lGeschrieben = 0;
+
+	while (lGelesen < lEin)
+	{
+		long	lDies = lEin - lGelesen;
+		char*	pBuf = szArbeit;
+		long	lRaus;
+
+		if (lDies > lStueck)
+			lDies = lStueck;
+
+		// Der Chunkreader gibt einen Zeiger auf seinen eigenen Puffer; wir
+		// bilden das nach, damit ISOTranslateChunk denselben Spielraum hat.
+		memcpy(szArbeit, pEin + lGelesen, (size_t)lDies);
+		szArbeit[lDies] = 0;
+
+		lRaus = UT_ISOTranslateChunk(&pBuf, lDies, uIdx, szUebertrag, &lUebertrag);
+
+		if (lRaus > 0 && lGeschrieben + lRaus <= lAusMax)
+		{
+			memcpy(pAus + lGeschrieben, pBuf, (size_t)lRaus);
+			lGeschrieben += lRaus;
+		}
+
+		lGelesen += lDies;
+	}
+
+	return lGeschrieben;
+}
+
+static void Test_ChunkGrenzeMittenImZeichen(void)
+{
+	// "fuer" mit u-Umlaut als UTF-8: 66 C3 BC 72. Bei Stueckgroesse 2 faellt
+	// die Grenze genau zwischen C3 und BC - der Fall, der vor E-85 zu
+	// Bytesalat wurde.
+	static const unsigned char szEin[] = { 'f', 0xC3, 0xBC, 'r' };
+	static const unsigned char szSoll[] = { 'f', 0xFC, 'r' };	// CP1252
+	char	szAus[64];
+	long	lAus;
+	long	lStueck;
+
+	TT_BeginTest("ISOTranslateChunk: Grenze mitten im Zeichen");
+
+	// Jede Stueckgroesse muss dasselbe ergeben - das ist der eigentliche Punkt.
+	for (lStueck = 1; lStueck <= 5; lStueck++)
+	{
+		lAus = ChunkLauf(szEin, (long)sizeof(szEin), lStueck, IDX_UTF8,
+						 szAus, (long)sizeof(szAus));
+
+		if (lAus != (long)sizeof(szSoll))
+		{
+			TT_Fail("Stueckgroesse %ld: Laenge erwartet %ld, erhalten %ld",
+					lStueck, (long)sizeof(szSoll), lAus);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+		}
+		else if (memcmp(szAus, szSoll, sizeof(szSoll)) != 0)
+		{
+			TT_Fail("Stueckgroesse %ld: falscher Inhalt", lStueck);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+			TT_Note("  erwartet: %s", Hex(szSoll, (long)sizeof(szSoll)));
+		}
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkDreibyteUndVierbyte(void)
+{
+	// Euro (E2 82 AC) und Emoji (F0 9F 98 80) koennen an drei bzw. vier
+	// Stellen zerrissen werden. Das Emoji hat kein CP1252-Gegenstueck und
+	// wird zum Fragezeichen - auch das muss ueber die Grenze hinweg stimmen.
+	static const unsigned char szEuro[]  = { 'a', 0xE2, 0x82, 0xAC, 'b' };
+	static const unsigned char szEuroS[] = { 'a', 0x80, 'b' };			// CP1252-Euro
+	static const unsigned char szEmo[]   = { 'a', 0xF0, 0x9F, 0x98, 0x80, 'b' };
+	char	szAus[64];
+	long	lAus;
+	long	lStueck;
+
+	TT_BeginTest("ISOTranslateChunk: Drei- und Vierbytezeichen ueber die Grenze");
+
+	for (lStueck = 1; lStueck <= 6; lStueck++)
+	{
+		lAus = ChunkLauf(szEuro, (long)sizeof(szEuro), lStueck, IDX_UTF8,
+						 szAus, (long)sizeof(szAus));
+		if (lAus != (long)sizeof(szEuroS) || memcmp(szAus, szEuroS, sizeof(szEuroS)) != 0)
+		{
+			TT_Fail("Euro, Stueckgroesse %ld", lStueck);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+			TT_Note("  erwartet: %s", Hex(szEuroS, (long)sizeof(szEuroS)));
+		}
+
+		// Das Emoji U+1F600 faellt seit dem 14.09.2026 ersatzlos weg (E-90),
+		// auch ueber eine Stueckgrenze hinweg. Uebrig bleiben 'a' und 'b'
+		// unmittelbar nebeneinander. Falsch waere, wenn 'a' oder 'b' litten
+		// oder rohe UTF-8-Bytes stehenblieben.
+		lAus = ChunkLauf(szEmo, (long)sizeof(szEmo), lStueck, IDX_UTF8,
+						 szAus, (long)sizeof(szAus));
+		if (lAus != 2 || szAus[0] != 'a' || szAus[1] != 'b')
+		{
+			TT_Fail("Emoji, Stueckgroesse %ld: erwartet 61 62", lStueck);
+			TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+		}
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkLaesstNichtUtf8InRuhe(void)
+{
+	// Latin-9 und CP1252 gehen den kurzen Weg durch ISOTranslate. Ein
+	// Uebertrag darf dabei gar nicht erst entstehen, sonst verschwaende die
+	// Funktion Bytes an Zeichensaetzen, die sie nicht betrifft.
+	static const unsigned char szEin[]  = { 'f', 0xFC, 'r' };	// CP1252 direkt
+	char	szAus[64];
+	long	lAus;
+
+	TT_BeginTest("ISOTranslateChunk: Nicht-UTF-8 bleibt unangetastet");
+
+	lAus = ChunkLauf(szEin, (long)sizeof(szEin), 2, IDX_WINDOWS,
+					 szAus, (long)sizeof(szAus));
+
+	if (lAus != (long)sizeof(szEin) || memcmp(szAus, szEin, sizeof(szEin)) != 0)
+	{
+		TT_Fail("CP1252: erwartet unveraendert, Laenge %ld erhalten %ld",
+				(long)sizeof(szEin), lAus);
+		TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkRestMuellFaelltNichtDurch(void)
+{
+	// Endet die Nachricht mitten in einem Zeichen, bleiben ein bis drei
+	// Bytes im Uebertrag liegen. Sie duerfen nicht geschrieben werden - auf
+	// sich gestellt sind sie kein Zeichen, und genau daraus entstand der
+	// Bytesalat, gegen den das hier gebaut ist.
+	static const unsigned char szEin[] = { 'a', 'b', 0xC3 };	// C3 ohne Folgebyte
+	static const unsigned char szSoll[] = { 'a', 'b' };
+	char	szAus[64];
+	long	lAus;
+
+	TT_BeginTest("ISOTranslateChunk: angefangenes Zeichen am Ende faellt weg");
+
+	lAus = ChunkLauf(szEin, (long)sizeof(szEin), 2, IDX_UTF8,
+					 szAus, (long)sizeof(szAus));
+
+	if (lAus != (long)sizeof(szSoll) || memcmp(szAus, szSoll, sizeof(szSoll)) != 0)
+	{
+		TT_Fail("erwartet 'ab' (%ld Bytes), erhalten %ld",
+				(long)sizeof(szSoll), lAus);
+		TT_Note("  erhalten: %s", Hex((const unsigned char*)szAus, lAus > 0 ? lAus : 0));
+	}
+
+	TT_EndTest();
+}
+
+static void Test_ChunkLaesstDasByteDahinterInRuhe(void)
+{
+	// DIE SCHRANKE ZU PRUEFER-10 (13.09.2026).
+	//
+	// ISOTranslate schreibt eine Null an szBuf[lSize] - ein Byte HINTER den
+	// uebergebenen Bereich. Der POP3-Weg haelt dafuer Platz frei; der
+	// IMAP-Weg kann das nicht: CChunkReader gibt bei text/plain eine ZEILE
+	// aus der Mitte seines eigenen Puffers heraus (imapgets.cpp,
+	// *pBuf = m_pStart), und das Byte dahinter ist das ERSTE BYTE DER
+	// NAECHSTEN ZEILE. Ohne die Rettung in ISOTranslateChunk verliert jede
+	// Zeile einer utf-8-Nachricht ihr erstes Zeichen, und ein NUL-Byte
+	// landet in der Mailboxdatei.
+	//
+	// Nachgestellt wird genau das: ein Puffer mit zwei Zeilen, uebersetzt
+	// wird nur die erste. Die zweite muss unversehrt bleiben.
+	//
+	// GEGENPROBE in Gregors Richtung: geprueft wird nicht, ob das Ergebnis
+	// stimmt, sondern ob der falsche Wert durchkommt - das Waechterbyte
+	// steht auf 'X' und muss 'X' bleiben. Ohne die Rettung steht dort 0x00.
+	static const unsigned char aIdx[] = { IDX_UTF8, IDX_LATIN9 };
+	unsigned int	u;
+
+	TT_BeginTest("ISOTranslateChunk: das Byte hinter dem Stueck bleibt unangetastet");
+
+	for (u = 0; u < sizeof(aIdx) / sizeof(aIdx[0]); ++u)
+	{
+		// Erste Zeile: "fuer\r\n" mit u-Umlaut als UTF-8 bzw. als Latin-9.
+		// Danach beginnt die zweite Zeile mit dem Waechter 'X'.
+		char	szPuffer[32];
+		char*	pBuf = szPuffer;
+		char	szUebertrag[4];
+		long	lUebertrag = 0;
+		long	lZeile;
+		long	lRaus;
+
+		memset(szPuffer, 'Z', sizeof(szPuffer));
+
+		if (aIdx[u] == IDX_UTF8)
+		{
+			szPuffer[0] = 'f';
+			szPuffer[1] = (char)0xC3;
+			szPuffer[2] = (char)0xBC;
+			szPuffer[3] = 'r';
+			szPuffer[4] = '\r';
+			szPuffer[5] = '\n';
+			lZeile = 6;
+		}
+		else
+		{
+			szPuffer[0] = 'f';
+			szPuffer[1] = (char)0xFC;
+			szPuffer[2] = 'r';
+			szPuffer[3] = '\r';
+			szPuffer[4] = '\n';
+			lZeile = 5;
+		}
+
+		szPuffer[lZeile] = 'X';
+
+		lRaus = UT_ISOTranslateChunk(&pBuf, lZeile, (unsigned int)aIdx[u],
+									 szUebertrag, &lUebertrag);
+		(void)lRaus;
+
+		if (szPuffer[lZeile] != 'X')
+			TT_Fail("Index %u: das erste Byte der naechsten Zeile wurde auf "
+					"0x%02X gesetzt, erwartet 'X' (0x58)",
+					(unsigned)aIdx[u], (unsigned char)szPuffer[lZeile]);
+	}
+
+	TT_EndTest();
+}
+
 void RunIsoTranslateTests(void)
 {
 	TT_Suite("utils.cpp - Verhalten von ISOTranslate()");
@@ -660,4 +1052,17 @@ void RunIsoTranslateTests(void)
 	Test_AbgeschnittenesZeichenAmZeilenende();
 	Test_ErgebnisNieLaengerAlsEingabe();
 	Test_Latin9BehaeltCp1252Bytes();
+
+	// Der Uebergang zwischen zwei Lesestuecken
+	Test_AngefangenesZeichenWirdGezaehlt();
+	Test_VollstaendigesZeichenWirdNichtZurueckgehalten();
+	Test_ZusammensetzenErgibtDenRichtigenText();
+	Test_UTF8IndexWirdErkannt();
+
+	// Der Uebertrag im IMAP-Weg (E-85)
+	Test_ChunkGrenzeMittenImZeichen();
+	Test_ChunkDreibyteUndVierbyte();
+	Test_ChunkLaesstNichtUtf8InRuhe();
+	Test_ChunkRestMuellFaelltNichtDurch();
+	Test_ChunkLaesstDasByteDahinterInRuhe();
 }

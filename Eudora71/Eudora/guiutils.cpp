@@ -1670,6 +1670,17 @@ int EscapePressed(int Repost /*= FALSE*/)
 
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
+		// BEFUND E-62 (09.09.2026): WM_QUIT nicht verschlucken. Diese
+		// Fassung wird waehrend langer Vorgaenge oft gerufen (Mailabruf),
+		// also genau dann, wenn ein Beenden ankommen kann. PM_REMOVE nimmt
+		// die Nachricht heraus, DispatchMessage tut mit WM_QUIT nichts -
+		// die Aufforderung zu beenden war damit weg (Kriterium 7).
+		if (msg.message == WM_QUIT)
+		{
+			::PostQuitMessage((int) msg.wParam);
+			return (FALSE);
+		}
+
 		TranslateMessage(&msg);
 		// If Esc key was hit, restore mailbox and quit out
 		if (msg.message == WM_CHAR && msg.wParam == VK_ESCAPE)
@@ -2921,6 +2932,17 @@ void LeftClickAttachment(CWnd* pWnd, CPoint pt, LPCTSTR Attach)
 		MSG msg;
 		GetMessage(&msg, pWnd->GetSafeHwnd(), 0, 0);
 
+		// BEFUND E-62 (09.09.2026): hier drohte ein HAENGER, nicht nur eine
+		// verschluckte Nachricht. WM_QUIT kommt TROTZ Fensterfilter, der
+		// Rueckgabewert von GetMessage wird 0 - und weil while (1) ihn nicht
+		// auswertet, wartet die Schleife danach fuer immer auf eine
+		// Nachricht, die nie mehr kommt, mit gehaltenem Mausfang.
+		if (msg.message == WM_QUIT)
+		{
+			::PostQuitMessage((int) msg.wParam);
+			break;
+		}
+
 		// Normal launch is left mouse down and up within restricted distance
 		if (msg.message == WM_LBUTTONUP)
 		{
@@ -3403,6 +3425,17 @@ BOOL SyncPlayMedia(LPCTSTR pFilename, BOOL bDisableMainWindow /*= FALSE*/)
 		while (bMediaPlaying && GetMessage(&msg, NULL, 0, 0))
 		{
 			TranslateMessage(&msg);
+
+			// BEFUND E-62 (09.09.2026): WM_QUIT beendet das Warten wie ESC,
+			// wird aber zurueckgestellt - GetMessage hat sie hier bereits
+			// entnommen und mit 0 quittiert.
+			if (msg.message == WM_QUIT)
+			{
+				::PostQuitMessage((int) msg.wParam);
+				bNotCancelled = FALSE;
+				break;
+			}
+
 			if (msg.message == WM_CHAR && msg.wParam == VK_ESCAPE)
 			{
 				bNotCancelled = FALSE;

@@ -81,6 +81,18 @@ function Modul($a) {
 $si = New-Object Dbg+STARTUPINFO
 $si.cb = [Runtime.InteropServices.Marshal]::SizeOf($si)
 $pi = New-Object Dbg+PROCESS_INFORMATION
+# BEFUND E-27: In der 32-Bit-PowerShell ist IntPtr 32 Bit breit. Sowohl
+# [IntPtr][int]$a als auch [IntPtr]::new([long]$a) werfen, sobald die
+# Adresse ueber 0x7FFFFFFF liegt - und Stapeladressen tun das regelmaessig
+# ("Der Wert 3901161318 kann nicht in den Typ System.Int32 konvertiert
+# werden", gemessen am 06.09.2026). Die Bits sind gueltig, nur das
+# Vorzeichen stoert. Deshalb wird das Bitmuster umgedeutet statt
+# umgerechnet.
+function Als-Zeiger {
+  param([uint32]$Adresse)
+  return [IntPtr]([BitConverter]::ToInt32([BitConverter]::GetBytes($Adresse),0))
+}
+
 if ($Argumente) { $cmd = '"' + $Exe + '" ' + $Argumente } else { $cmd = '"' + $Exe + '"' }
 if (-not [Dbg]::CreateProcess($Exe,$cmd,[IntPtr]::Zero,[IntPtr]::Zero,$false,$DEBUG_ONLY_THIS_PROCESS,[IntPtr]::Zero,(Split-Path $Exe),[ref]$si,[ref]$pi)) {
   Write-Error ("CreateProcess fehlgeschlagen: " + [Runtime.InteropServices.Marshal]::GetLastWin32Error())
@@ -171,7 +183,12 @@ while ((Get-Date) -lt $ende) {
         $wort = New-Object byte[] 8
         for ($f = 0; $f -lt 40000 -and $ebp -gt 4096; $f++) {
           $gl = 0
-          if (-not [Dbg]::ReadProcessMemory($pi.hProcess,[IntPtr][int]$ebp,$wort,8,[ref]$gl)) { break }
+        # BEFUND E-27: [int] laeuft bei Adressen ueber 0x7FFFFFFF ueber -
+        # "Der Wert 3901161318 kann nicht in den Typ System.Int32 konvertiert
+        # werden". Genau das passierte am 06.09.2026 beim Stapelueberlauf in
+        # Paige32.dll: die Adresse war gueltig, das Werkzeug konnte sie nur
+        # nicht darstellen. [long] deckt den ganzen 32-Bit-Bereich ab.
+          if (-not [Dbg]::ReadProcessMemory($pi.hProcess,(Als-Zeiger $ebp),$wort,8,[ref]$gl)) { break }
           $neuEbp = [BitConverter]::ToUInt32($wort,0)
           $rueck  = [BitConverter]::ToUInt32($wort,4)
           if ($rueck -eq 0) { break }
@@ -181,6 +198,49 @@ while ((Get-Date) -lt $ende) {
         }
         Write-Host ""
         Write-Host ("" + $rahmen.Count + " Rahmen abgelaufen.")
+
+        # BEFUND E-27: Die EBP-Kette taugt bei Paige32.dll nichts - die
+        # Bibliothek ist ohne Rahmenzeiger uebersetzt (FPO), EBP zeigt also
+        # nicht auf den naechsten Rahmen. Am 06.09.2026 lieferte sie genau
+        # zwei Rahmen, beide unbrauchbar.
+        #
+        # Deshalb zusaetzlich abtasten: den Stapelbereich Wort fuer Wort
+        # durchgehen und jeden Wert nehmen, der in den Codebereich eines
+        # geladenen Moduls faellt. Das liefert mehr, als wirklich Rahmen
+        # sind (auch alte Reste), aber bei einer Endlosrekursion sticht der
+        # Zyklus sofort heraus - und die seltenen Treffer nennen den Weg
+        # dorthin.
+        Write-Host ""
+        Write-Host "Stapelabtastung (Rueckspruenge im Speicher, haeufigste zuerst):"
+        $abtastGroesse = 0x60000
+        $puffer = New-Object byte[] $abtastGroesse
+        $gelesen = 0
+        if ([Dbg]::ReadProcessMemory($pi.hProcess,(Als-Zeiger $esp),$puffer,$abtastGroesse,[ref]$gelesen)) {
+          $treffer = New-Object Collections.ArrayList
+          for ($o = 0; $o -lt ($gelesen - 4); $o += 4) {
+            $wert = [BitConverter]::ToUInt32($puffer,$o)
+            foreach ($m in $script:module) {
+              if ($wert -ge $m.Basis -and $wert -lt ($m.Basis + $m.Groesse)) {
+                [void]$treffer.Add($wert); break
+              }
+            }
+          }
+          Write-Host ("  {0} Bytes abgetastet, {1} Treffer in geladenen Modulen." -f $gelesen,$treffer.Count)
+          $gruppen = $treffer | Group-Object | Sort-Object Count -Descending
+          Write-Host ""
+          Write-Host "  Der Zyklus:"
+          foreach ($g in ($gruppen | Select-Object -First 8)) {
+            Write-Host ("    {0,7} x  0x{1:X8}  {2}" -f $g.Count,[uint32]$g.Name,(Beschreibe ([uint32]$g.Name)))
+          }
+          Write-Host ""
+          Write-Host "  Seltene Treffer - hier steht der Weg in den Zyklus:"
+          $selten = $gruppen | Where-Object { $_.Count -le 3 } | Select-Object -First 25
+          foreach ($g in $selten) {
+            Write-Host ("    {0,7} x  0x{1:X8}  {2}" -f $g.Count,[uint32]$g.Name,(Beschreibe ([uint32]$g.Name)))
+          }
+        } else {
+          Write-Host "  Stapel nicht lesbar."
+        }
 
         if ($rahmen.Count -gt 100) {
           $gr = $rahmen | Group-Object | Sort-Object Count -Descending

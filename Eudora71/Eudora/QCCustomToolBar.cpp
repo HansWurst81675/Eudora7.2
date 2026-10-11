@@ -298,9 +298,17 @@ void QCCustomToolBar::DropButton(CRect& dropRect, SECStdBtn* pDragBtn, BOOL bAdd
 	}
 
 	// Add the button at the calculated location - and give it the config focus.
+	// BEFUND E-16: AddButton begrenzt nIndex still auf [0, GetBtnCount()];
+	// der Zugriff darunter muss mit demselben Wert rechnen.
+	if (nIndex < 0)
+		nIndex = 0;
+	if (nIndex > GetBtnCount())
+		nIndex = GetBtnCount();
+
 	AddButton(nIndex, nID);
 	
-	m_btns[nIndex]->m_ulData = ulData;
+	if (nIndex < GetBtnCount())
+		m_btns[nIndex]->m_ulData = ulData;
 
 	if(!m_bAltDrag)
 		// Note that when perform an "ALT" drag operation, when the operation
@@ -379,8 +387,106 @@ LPCSTR	szSection )
 	CString				szEntry;
 	CWinApp*			pApp = AfxGetApp();
 
+	// BEFUND E-33, Verdacht Platz 1: diese Schleife hat genau die Form von
+	// E-34 - Grenze aus GetBtnCount(), Zugriff mit m_btns[...]. Bei E-34 lief
+	// dieses Paar auseinander (protokolliert: "Ausnahme bei Index 24 von 27"),
+	// und CPtrArray::ElementAt wirft dort auch im Release-Bau
+	// CInvalidArgException - MFCs Text ist "Encountered an improper argument",
+	// genau die Meldung, die Gregor am 07.09.2026 beim Beenden gesehen hat.
+	//
+	// Warum HIER: SaveCustomInfo laeuft im normalen Betrieb NUR beim Beenden.
+	// Der Weg ist CloseDown Stufe 5 -> SaveBarState("ToolBar")
+	// (mainfrm.cpp) -> CMainFrame::SaveBarState (mainfrm.cpp:2570) ->
+	// QCToolBarManager::SaveState (QCToolBarManager.cpp:1202) -> hierher. Die
+	// beiden anderen Aufrufer sind ConvertOldStuff() (mainfrm.cpp:974, laeuft
+	// nur bei einer alten INI) und der Anpassen-Dialog
+	// (QCToolBarManager.cpp:1109).
+	//
+	// Die Einfassung faengt NICHT ab: sie protokolliert Platz, Anzahl und
+	// Grund und wirft mit THROW_LAST weiter. Damit bleibt das Verhalten
+	// unveraendert - dies ist eine Spurmarke, keine Behebung.
+	{
+		CString strAnfang;
+		// BEFUND E-43, dritte Marke (08.09.2026). Die zweite Marke hat den
+		// Fall entschieden: gemessen wurde
+		//
+		//   this=0125D888  m_btns@0125DA70  GetBtnCount=24/24  m_btns.GetSize=0/0
+		//
+		// Vier Messungen, zwei stabile Werte, dasselbe Objekt, dieselbe
+		// Adresse. Damit ist ein Wettlauf und ein gerade freigegebenes
+		// Objekt AUSGESCHLOSSEN (letzteres auch unabhaengig davon: die
+		// Marke E-46 im Destruktor erscheint erst NACH diesem Punkt).
+		//
+		// Bleibt: der uebersetzte Code liest an zwei verschiedenen
+		// Adressen, obwohl GetBtnCount() woertlich "return
+		// (int)m_btns.GetSize()" ist (OTShim_Werkzeugleiste.h:744). Diese
+		// Marke sagt, WELCHE Adressen. CPtrArray erbt von CObject; die
+		// Aufteilung auf 32 Bit ist
+		//
+		//   +0  vptr        +4  m_pData     +8  m_nSize
+		//   +12 m_nMaxSize  +16 m_nGrowBy
+		//
+		// Steht die 24 in einem dieser Woerter, ist die Aufteilung
+		// verschoben und die Differenz sagt um wieviel. Steht sie in
+		// keinem, kommt sie nicht aus m_btns - dann ist GetBtnCount() im
+		// uebersetzten Code etwas anderes als die Kopfdatei behauptet.
+		const int nZaehler1 = (int)GetBtnCount();
+		const int nGroesse1 = (int)m_btns.GetSize();
+		const int nZaehler2 = (int)GetBtnCount();
+		const int nGroesse2 = (int)m_btns.GetSize();
+		const int * const pRoh = (const int *) (const void *) &m_btns;
+		strAnfang.Format(
+			_T("E-43 SaveCustomInfo: Abschnitt=%s  this=%p  m_btns@%p  ")
+			_T("Versatz=%d  GetBtnCount=%d/%d  m_btns.GetSize=%d/%d  ")
+			_T("roh[0..4]=%d,%d,%d,%d,%d"),
+			(szSection != NULL) ? szSection : "(NULL)",
+			(void*)this,
+			(void*)&m_btns,
+			(int)((const char*)(const void*)&m_btns - (const char*)(const void*)this),
+			nZaehler1, nZaehler2,
+			nGroesse1, nGroesse2,
+			pRoh[0], pRoh[1], pRoh[2], pRoh[3], pRoh[4]);
+		PutDebugLog(DEBUG_MASK_MISC, strAnfang);
+	}
+
+	iCurrentButton = 0;
+
+	TRY
+	{
 	for( iCurrentButton = 0; iCurrentButton < GetBtnCount(); iCurrentButton ++ )
 	{	
+		// E-33, feinere Spurmarke: die Einfassung um die ganze Schleife sagt
+		// nur "Ausnahme im Durchlauf N", nicht WO. Hier wird der reine
+		// Feldzugriff vom Rumpf getrennt: wirft schon m_btns[i], dann ist das
+		// Feld selbst nicht das, wofuer der Code es haelt; wirft erst der
+		// Rumpf, liegt es an Lookup/Format/WriteProfileString.
+		SECStdBtn* pKnopf = NULL;
+		TRY
+		{
+			pKnopf = m_btns[ iCurrentButton ];
+		}
+		CATCH_ALL(eZugriff)
+		{
+			TCHAR szG[256]; szG[0] = _T('\0');
+			if (eZugriff != NULL) eZugriff->GetErrorMessage(szG, 256);
+			CString strM;
+			strM.Format(
+				_T("E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[%d] wirft (GetSize=%d) - Grund: %s"),
+				(int)iCurrentButton, (int)m_btns.GetSize(),
+				(szG[0] != _T('\0')) ? szG : _T("(ohne Text)"));
+			PutDebugLog(DEBUG_MASK_MISC, strM);
+			THROW_LAST();
+		}
+		END_CATCH_ALL
+
+		if (iCurrentButton == 0)
+		{
+			CString strM;
+			strM.Format(_T("E-33 SaveCustomInfo: m_btns[0] = %p, Feldzugriff hat NICHT geworfen"),
+				(void*)pKnopf);
+			PutDebugLog(DEBUG_MASK_MISC, strM);
+		}
+
 		if( ( m_btns[ iCurrentButton ]->m_ulData != 0 ) &&
 			( m_btns[ iCurrentButton ]->m_nID != m_btns[ iCurrentButton ]->m_ulData ) )
 		{
@@ -471,6 +577,27 @@ LPCSTR	szSection )
 			pApp->WriteProfileString(szSection, szEntry, szValue);
 		}	
 	}
+	}
+	CATCH_ALL(e)
+	{
+		// BEFUND E-33: nicht abfangen, nur benennen. GetErrorMessage liefert
+		// denselben Text, den Gregor im Meldungsfenster sieht; THROW_LAST
+		// wirft unveraendert weiter, damit sich am Ablauf nichts aendert.
+		TCHAR szGrund[256];
+		szGrund[0] = _T('\0');
+		if (e != NULL)
+			e->GetErrorMessage(szGrund, 256);
+
+		CString strMeldung;
+		strMeldung.Format(
+			_T("E-33 SaveCustomInfo: Ausnahme bei Index %d von %d - Grund: %s"),
+			(int)iCurrentButton, (int)GetBtnCount(),
+			(szGrund[0] != _T('\0')) ? szGrund : _T("(ohne Text)"));
+		PutDebugLog(DEBUG_MASK_MISC, strMeldung);
+
+		THROW_LAST();
+	}
+	END_CATCH_ALL
 	
 	szEntry.Format( "btn%u", iCurrentButton );
 	pApp->WriteProfileString(szSection, szEntry, NULL);
@@ -692,8 +819,17 @@ LPCSTR	szSection )
 		// copy the image
 		( ( QCToolBarManager* ) m_pManager )->CopyButtonImage( uSrcIndex, uCommandID );
 		
+		// BEFUND E-16: iPosition kommt aus der Ini und wurde davor um nFailed
+		// verkleinert - der Wert kann negativ oder zu gross sein. AddButton
+		// begrenzt still, der Zugriff darunter tat es nicht.
+		if( iPosition < 0 )
+			iPosition = 0;
+		if( iPosition > GetBtnCount() )
+			iPosition = GetBtnCount();
+
 		AddButton( iPosition, uCommandID );
-		m_btns[ iPosition ]->m_ulData = lOrigCmdID;
+		if( iPosition < GetBtnCount() )
+			m_btns[ iPosition ]->m_ulData = lOrigCmdID;
 	}
 
 	if (GetIniShort(IDS_INI_ALLOW_IN_YOUR_FACE))
@@ -773,11 +909,24 @@ void QCCustomToolBar::LoadInYourFacePlugins()
 				{
 					//Add separators between plugin groups
 					if (modID != lastModID)
+					{
+						if (startPos > GetBtnCount())
+							startPos = GetBtnCount();
 						AddButton( startPos++, 0, TRUE, TRUE );
+					}
 
 					( ( QCToolBarManager* ) m_pManager )->CopyButtonImage( uSrcIndex, uCommandID );
+
+					// BEFUND E-16, dieselbe Rechnung wie oben.
+					if (startPos < 0)
+						startPos = 0;
+					if (startPos > GetBtnCount())
+						startPos = GetBtnCount();
+
 					AddButton( startPos, uCommandID );
-					m_btns[ startPos++ ]->m_ulData = lType;
+					if (startPos < GetBtnCount())
+						m_btns[ startPos ]->m_ulData = lType;
+					startPos++;
 				}
 
 				if ( szNewPlugins.Find(modStr) < 0)
@@ -1202,8 +1351,16 @@ BOOL QCCustomToolBar::ConvertOldStuff()
 
 		( ( QCToolBarManager* ) m_pManager )->CopyButtonImage( iSrcIndex, wCommand );
 		
+		// BEFUND E-16, dieselbe Rechnung wie in LoadCustomInfo.
+		if( iPosition < 0 )
+			iPosition = 0;
+		if( iPosition > GetBtnCount() )
+			iPosition = GetBtnCount();
+
 		AddButton( iPosition, wCommand );
-		m_btns[ iPosition++ ]->m_ulData = m_pBmpItems[ iSrcIndex ];
+		if( iPosition < GetBtnCount() )
+			m_btns[ iPosition ]->m_ulData = m_pBmpItems[ iSrcIndex ];
+		iPosition++;
 	}
 
 	if( idx > 0 )

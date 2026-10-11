@@ -1,0 +1,4390 @@
+# Was sich geändert hat
+
+Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **Quellstand
+`7.2.0.x`** steht in `Eudora71/Version.h`, **Paketnummer `1.0.x`** in `VERSION`.
+Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
+
+> **Wer hier neu einsteigt:** [ZIEL.md](ZIEL.md) sagt, woran „fertig" gemessen
+> wird, [README.md](README.md) wie man baut und startet, [BEFUNDE.md](BEFUNDE.md)
+> was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
+> ganz unten nennt die offenen Enden mit Fundstelle.
+
+## Noch offen (Stand 18.09.2026)
+
+| Kennung | | |
+|---|---|---|
+| **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
+| **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
+| **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
+| **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
+| — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
+| **E-98** | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu **E-97**: der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von E-97:** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit E-98 werden `ToggleStat` und `StatDir` wieder scharf (**E-100**). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
+| **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache NICHT gemessen.** Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
+| **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
+| **E-91** | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu E-89, nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
+| **E-92** | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |
+| **E-47** | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
+| **E-78** | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von E-70 am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
+| **E-71** | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
+| **E-77** | **IMAP-Postfachnamen mit Umlauten** werden roh angezeigt: `Entw&APw-rfe` statt *Entwürfe* | Von Gregor am 10.09.2026 an 1.0.42 gemeldet. Modifiziertes UTF-7 (RFC 3501, 5.1.3), das Eudora nicht dekodiert — in `Eudora71/` kommt keine UTF-7-Behandlung vor. Bei der Behebung gehört die Gegenrichtung dazu: beim Anlegen und Umbenennen muss der Name wieder kodiert werden |
+| **E-67** | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
+| **E-68**, halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
+| **E-69** | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
+| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
+| — | **Gebaut, aber von Gregor nicht beurteilt:** **E-49** (linken Bereich breiter **ziehen**, Anforderung **A-4**) und **E-52** (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
+| — | **E-39**: wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
+| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie E-34, andere Aufrufstelle. **Neu zu messen**, seit E-43 behoben ist — gut möglich, dass sie mit verschwindet |
+| — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** **R-1** (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), **V-1** (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und **E-14** (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
+| — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit **E-33** nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu E-76** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
+
+## Erreicht
+
+| | |
+|---|---|
+| **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
+| **Kriterium 2** (Darstellung) | *fast* — offen ist die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten. **Neu zu messen** seit 7.2.0.24: sie stammt aus derselben Quelle wie E-34/E-43 |
+| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen), das Beenden läuft sauber (Kriterium 7), und die Fehlerklasse hinter E-34/E-37/E-43 ist seit 7.2.0.24 an der Wurzel weg |
+| **Kriterien 5 und 6** (Mail schreiben, senden, weiterleiten) | **erfüllt** — von Gregor am 07.09.2026 bestätigt: *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."*, mit Bildschirmfoto |
+| **Kriterium 8** (Fensterliste) | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf, und die Registerkartenleiste am unteren Rand ist da; der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü (**A-3** / **E-48**) |
+| **Kriterium 7** (Beenden) | **erfüllt** — von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt: *„schließen klappt jetzt."* Alle drei Wege beenden: *File → Exit*, Alt-F4 und das Kreuz (E-40, E-41, E-42, ergänzt um E-45) |
+| **A-1** (Vorgaben für ein neu angelegtes Konto) | **erfüllt** — *„default werte beim neuen persona konto für 'leave message on server' greifen."* |
+| **A-2** (*Task Status* und *Task Errors* waagrecht unten) | **erfüllt** — *„leiste unten paßt."* |
+| **A-3** (offene Fenster als Registerkarten direkt auswählen) | **erfüllt** — von Gregor am 09.09.2026 bestätigt (**E-48**, umgesetzt in 7.2.0.25). Damit ist Kriterium 8 ganz erfüllt |
+| **A-4** (den linken Bereich breiter ziehen) | **gebaut, nicht bestätigt** — **E-49** in 7.2.0.26, in 7.2.0.27 durch **E-52** und in 7.2.0.29 durch **E-54** (der Ziehrahmen war nach rechts unsichtbar) und **E-55** (acht Pixel leerer Streifen unter der Werkzeugleiste) nachgebessert. Bestätigt ist nur die Höhenänderung des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* |
+
+> **07.09.2026, Gregor zu Paket 1.0.21:** *„mail können jetzt abgeschickt
+> werden."* und *„weiterleitung funktioniert übrigens."* Damit ist der Kreis
+> zum ersten Mal geschlossen — schreiben, senden, Antwort empfangen.
+>
+> **Sein Einwand steht daneben und gilt:** *„beenden geht nicht."* Und: *„kann
+> man die untere zeile (status) immer anzeigen lassen?"*
+>
+> Sein Maßstab von Paket 1.0.18 bleibt der Maßstab für alles Weitere: *„es
+> crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
+> nichts statt crash ist auch keine verbesserung!"* — kein Absturz ist kein
+> Fortschritt, solange der Anwender nichts damit tun kann.
+
+---
+
+## 7.2.0.76 — Versuch zu E-112: wirkt NICHT
+
+> **Berichtigt am 18.09.2026, noch am selben Tag.** Dieser Abschnitt hat
+> *„E-112 behoben"* behauptet. **Der Versuch wirkt nicht** — von Gregor am
+> laufenden Programm widerlegt, mit Bildschirmfoto: die Bilder sind weiterhin
+> zu groß, **und der Text liegt jetzt wieder darauf**, weil die Zeile nur noch
+> die angegebene Höhe hat. **1.0.76 ist damit in einem Punkt schlechter als
+> 1.0.75.**
+>
+> **Warum, am Quelltext gemessen:** `draw_meta_file`
+> (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur, wenn
+> `pict_data.mapping_mode` **nicht** `MM_TEXT` ist. Bei jedem aus dem Netz
+> geladenen Bild ist er `0` und wird auf `MM_TEXT` gesetzt — dann bestimmt das
+> Zielrechteck allein die **Position**, nicht die **Größe**. Meine Annahme
+> *„eine Metadatei wird auf ihr Zielrechteck gestreckt"* gilt nur für andere
+> Abbildungsarten.
+>
+> **Was bleibt und richtig ist:** `E112Zielrechteck` liefert das richtige
+> Rechteck — sieben Tests, Gegenprobe gefahren. Nur der Zeichenweg setzt es
+> nicht um. **E-112 steht wieder unter *Noch offen*.**
+
+
+`pict_frame` — das Zielrechteck, in das Paige eine Metadatei streckt — bekam
+bis dahin die **echte Dateigröße**. Das WhatsApp-Symbol wurde deshalb mit
+330×327 gezeichnet, obwohl es als 35×35 ausgezeichnet ist.
+
+Das war eine Regression der **E-106**-Behebung: sie vergrößerte die **Zeile**,
+statt das **Bild** zu verkleinern. Solange **E-110** offen war, lud kaum ein
+Bild und es fiel nicht auf.
+
+**Die Regel steht jetzt in einer eigenen Funktion `E112Zielrechteck`**, die ohne
+Paige, ohne Fenster und ohne ein einziges Bild prüfbar ist — genau das fehlte
+bei E-106, wo dieselbe Entscheidung mitten im Ladeweg stand und nur an Gregors
+Rechner messbar war:
+
+| Fall | was gilt |
+|---|---|
+| vollständige Angabe im HTML | **die Angabe** — das Bild wird hineingestreckt |
+| keine oder halbe Angabe | **die Datei** — das ist **E-103** |
+| nichts bekannt | nichts wird geändert |
+
+**185 Tests, 185 bestanden** (sieben neue). Die Gegenprobe ist gefahren: mit der
+alten Regel fallen **drei** davon um, während die E-103-Fälle, die halbe Angabe
+und die Ränder in **beiden** Richtungen grün bleiben.
+
+### Prüfanleitung
+
+Dieselbe Nachricht öffnen und **antworten**. Die Bilder müssen so groß sein wie
+im Lesefenster — kein Symbol, das das halbe Fenster füllt, und kein Text, der
+von einem Bild zugedeckt wird.
+
+### Was das nicht behebt
+
+**E-113** — ein Bild, dessen **angegebene** Breite größer ist als das Fenster,
+läuft weiterhin rechts hinaus. Das ist die Regel, die Newsletter mit
+`max-width:100%` meinen; Paige kennt kein CSS. Auf Gregors Anordnung *„erst A,
+dann B"* bewusst nicht mitbehoben.
+
+## 7.2.0.75 — Bilder mit Leerzeichen im Namen kommen wieder an (E-110 **behoben**)
+
+`resolve_URL` (`HTMLUtils.cpp`) warf **jede** Prozent-Sequenz weg, statt sie zu
+entschlüsseln: im `%`-Zweig wurde das entschlüsselte Zeichen nach `*output`
+geschrieben, der Zeiger aber nicht weitergerückt — das nächste Zeichen
+überschrieb es. Das Zeichen war nicht falsch, sondern **weg**.
+
+Aus `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+antwortete mit **404**, Eudora legte die Fehlerseite ab, erkannte sie
+richtigerweise nicht als Bild und zeichnete einen grauen Kasten. **Zehn von
+zwanzig Bildern** in Gregors Nachricht.
+
+Die Behebung ist ein `++output;`. Betroffen war jede Sequenz, also auch
+Umlaute in Dateinamen (`%C3%BC`), Klammern (`%28`) und Schrägstriche (`%2F`) —
+der Fehler steckt im Originalcode von QUALCOMM. Zwanzig Zeilen darunter steht
+`unescape_url`, das dasselbe tut und es seit jeher richtig tut.
+
+**178 Tests, 178 bestanden** (sieben neue). Die Gegenprobe ist gefahren: ohne
+die Behebung fallen **vier** der sieben um, mit genau den Zeichenketten aus dem
+Protokoll; die drei anderen prüfen den *erlaubten* Fall und bleiben in beiden
+Richtungen grün. Der Maßstab kommt aus dem Programm selbst — ein Test hält
+`resolve_URL` gegen `unescape_url`.
+
+### Von Gregor bestätigt — und was dabei sofort sichtbar wurde
+
+**Am 18.09.2026 an 1.0.75 am laufenden Programm bestätigt:** die grauen Kästen
+sind weg. Sein Protokoll belegt es in Zahlen — **49 × `datei=1 intern=1`, kein
+einziges `intern=0` mehr** (vorher zehn abgewiesene Adressen).
+
+**Im selben Lauf ist E-112 sichtbar geworden:** die Bilder erscheinen jetzt in
+**Originalgröße** statt in der angegebenen — das WhatsApp-Symbol ist als
+`35x35` ausgezeichnet und die Datei hat `330x327`. Das ist **kein Rückfall von
+E-110**, sondern eine Regression der **E-106**-Behebung: sie schreibt die echte
+Dateigröße ins Embed, damit die Zeile hoch genug wird, und bis jetzt luden
+schlicht zu wenige Bilder, als dass es aufgefallen wäre. Siehe *Noch offen*,
+**E-112**.
+
+### Prüfanleitung
+
+Dieselbe Nachricht öffnen und **antworten**. Die grauen Kästen müssen weg sein.
+Im Protokoll steht bei diesen Bildern dann `datei=1 intern=1` und ein `daten=`
+ungleich 0.
+
+### Was das *nicht* behebt
+
+`loader_result` bleibt weiterhin `0`: schlägt ein Bildabruf aus einem anderen
+Grund fehl, meldet Eudora es nirgends und stellt wortlos einen grauen Kasten
+hin. In **E-110** vermerkt. Dazu **E-111** — `resolve_URL` kann bei einer
+Adresse von genau 512 Zeichen ein Byte hinter das Zielfeld schreiben.
+
+## 7.2.0.74 — `datei=` und `intern=` trennen die letzte Alternative (E-110, **Messfassung**)
+
+**Behebt nichts.** 1.0.74 ist wie 1.0.73 eine Messfassung; veröffentlicht ist
+weiterhin `v1.0.72`.
+
+**Was 1.0.73 an Gregors Lauf gemessen hat.** Zehn Bilder, 31 Rufe. **Fünf**
+werden geladen (`daten` gesetzt, `art=9`, jeweils beim **zweiten** Ruf),
+**fünf** geben auf (`ok=0 daten=0`, nach zwei bis fünf Versuchen). Die fünf
+Aufgebenden sind nachweislich die grauen Kästen: der Kasten unmittelbar über
+*„Sven von Storch"* ist `SvSunterschriftbeschnitten.jpg` (250×96), der nach
+*„Jetzt hier spenden"* ist `SpendenbannerFW2019neu.jpeg` (540×240).
+
+**Drei meiner Erklärungen sind damit widerlegt:**
+
+* Der Wiederholungsmechanismus **funktioniert** — die Erfolgreichen bekommen
+  ihre Daten beim zweiten Ruf. Das von QUALCOMM versprochene *„später"* tritt
+  also sehr wohl ein.
+* `faden=1` durchgehend: der Abruf ist **erlaubt**, nicht gesperrt.
+* `fehler=0` durchgehend: `loader_result` wird **nirgends** gesetzt — Eudora
+  vermerkt das Scheitern nicht einmal.
+
+Die Größe allein erklärt es nicht: ein Bild mit 600×146 kommt durch, eines mit
+250×96 nicht.
+
+**Was 1.0.73 nicht trennen konnte.** `ok=0` zusammen mit `daten=0` hat im
+Quelltext **zwei** mögliche Ursachen: entweder liefert `fetch_url_schmookie`
+den Wert `-1` und der Abruf kommt gar nicht zustande, oder die Datei **ist
+da** und weder `MetafileFromImage` noch QuickTime können sie umwandeln. Im
+ersten Fall liegt der Fehler im Abrufweg, im zweiten im Bilddecoder — und das
+Bild läge längst auf der Platte. Zwei ganz verschiedene Behebungen.
+
+**Neu in der Zeile:** `datei=` und `intern=`.
+
+### Die Ursache von E-110 ist gemessen — `resolve_URL` wirft Prozent-Sequenzen weg
+
+Die Messfassungen 1.0.73 und 1.0.74 haben den Fehler eingegrenzt und am
+18.09.2026 endgültig bestimmt. **Die Behebung ist noch nicht drin** — dies ist
+der Befundstand, nicht der Behebungsstand.
+
+`resolve_URL` (`HTMLUtils.cpp:31-42`) schreibt im `%`-Zweig das entschlüsselte
+Zeichen nach `*output`, **rückt `output` aber nicht weiter**; der `else`-Zweig
+tut es mit `*output++ = *input++`. Das nächste Zeichen überschreibt das
+entschlüsselte — es ist nicht falsch, sondern **weg**.
+
+Nachgerechnet: `en%20aktuellen%20Verlust.png` wird zu
+`enaktuellenVerlust.png`, `SVS%20NL%20FW%20(1).jpg` zu `SVSNLFW(1).jpg`.
+Beides steht genau so in Gregors Protokoll, der Server antwortet darauf mit
+**404**, Eudora legt die Fehlerseite ab (`datei=1`), erkennt sie richtigerweise
+nicht als Bild (`intern=0`) und zeichnet einen grauen Kasten.
+
+Die Aufteilung ist lückenlos: alle **zehn** abgewiesenen Adressen tragen
+Leerzeichen, alle **vierzehn** erfolgreichen keines. Nicht die Größe — ein Bild
+mit 600×146 kommt durch, eines mit 250×96 nicht.
+
+**Der Fehler ist größer als der Bildweg** und trifft jede Prozent-Sequenz, also
+auch Umlaute in Dateinamen (`%C3%BC`) und Klammern (`%28`). Er steckt im
+Originalcode von QUALCOMM.
+
+Dazu ein zweiter, eigenständiger Mangel aus demselben Lauf: `loader_result`
+bleibt **durchgehend 0** — ein fehlgeschlagener Bildabruf wird nirgends
+vermerkt.
+
+Neu aufgenommen: **E-111** (`resolve_URL` kann bei einer Adresse von genau
+512 Zeichen ein Byte hinter das Zielfeld schreiben; Schranke prüft `>` statt
+`>=`).
+
+### Prüfanleitung
+
+Auf dieselbe Nachricht antworten, Eudora beenden, `eudora.log` sichern. Zu
+lesen ist:
+
+| Zeile | Bedeutung |
+|---|---|
+| `datei=0` | die Bilddatei ist nie angekommen → der Fehler sitzt im **Abrufweg** |
+| `datei=1 intern=0` | geholt, aber nicht als Bild **erkannt** |
+| `datei=1 intern=1 daten=0` | erkannt und trotzdem nicht **umgewandelt** |
+| `datei=-1` | der Block wurde nie betreten (keine Adresse) |
+
+## 7.2.0.73 — die Spurmarke sagt jetzt, ob hinter einem Bild Daten liegen (E-110, **Messfassung**)
+
+> **Das ist kein Release und behebt nichts.** Gregor bekommt diese Fassung, um
+> **E-110** überhaupt messbar zu machen. Veröffentlicht bleibt **`v1.0.72`**.
+>
+> **Zu prüfen:** auf dieselbe Nachricht antworten, in der Bilder grau bleiben,
+> `LogLevel=58527` drin lassen, danach die `eudora.log` sichern. Entschieden
+> wird an einem Wert: **`daten=0` bei einem Bild, das im Lesefenster sichtbar
+> ist**, heißt — Eudora **holt es auf dem Antwortweg nicht**. **`daten` gesetzt
+> und trotzdem grau** heißt — es **holt es und zeichnet es nicht**. Zwei
+> verschiedene Ursachen, zwei verschiedene Behebungen.
+
+**Warum diese Fassung nötig wurde.** Gregors Protokoll vom 18.09.2026 zu 1.0.72
+hat die Frage zu E-110 **nicht beantworten können**, obwohl es 128 Zeilen
+`E-95 Bild` enthält. Der Grund steht in der Spurmarke selbst: ausgegeben wurden
+zweimal **Maße** — `source_width/height` aus dem HTML gegen
+`mess_ptr->width/height` aus dem Embed (`PGHTMIMP.CPP:2258-2259`) — und **nie
+der Datenbestand**. Nachgezählt wurde immerhin dies: 76 der 128 Zeilen tragen
+gleiche Maße, **52 haben `embed=0x0`** bei bekannter Breite. Dass der Platz
+stimmt und die Bildpunkte fehlen, ist damit belegt; **welches** Bild betroffen
+ist und **warum**, nicht.
+
+**Dazu kam eine falsche Spur, die einen halben Vormittag gekostet hätte.** Im
+Protokoll war **jede** der 128 Adressen exakt 32 Zeichen lang — das sieht
+zwingend nach einem abgeschnittenen URL-Feld und damit nach der Ursache aus.
+Es war die Spurmarke: sie kürzte **zweimal**, in der Kopierschleife
+(`PGHTMIMP.CPP:2250`, `for (i = 0; i < 32 …)`) und noch einmal im Format
+(`:2255`, `%.32s`).
+
+**Was die Zeile jetzt zusätzlich nennt:**
+
+- **`daten=`** aus `image_data` — den Metadatei-Griff setzt `PgLoadUrlImage`,
+  sobald die Datei wirklich da ist. Bleibt er `0`, hat Paige nichts zu zeichnen.
+  Das ist der Wert, der Datenbestand von Platzhalter trennt, und er steht in
+  **derselben** Zeile wie die Maße.
+- **`art=`** aus `type_and_flags`.
+- **die ungekürzte Adresse.** Ist sie zu lang, fällt die **Mitte** weg, nicht
+  das Ende — bei **E-106** hing alles am Dateinamen (`_3x` heißt dreifache
+  Auflösung), und genau der stand vorher nie da.
+
+**Kein Quelltext außerhalb der Spurmarke angefasst.** E-110 ist damit nicht
+behoben, sondern erst messbar.
+
+## 7.2.0.72 — der Absturz, zweiter Anlauf: der Stilweg fliegt raus (E-108)
+
+> **Zu prüfen:** dieselbe Nachricht öffnen und **antworten**. `LogLevel=58527`
+> bleibt in der `Eudora.ini`. Wenn es wieder kracht, endet `eudora.log` erneut
+> an einer `E-106`-Zeile — dann sag mir die letzte Zeile, sie entscheidet.
+
+**E-107 war die falsche Erklärung.** Ich hatte den Absturz damit begründet, dass
+mein E-106-Block auf einem *flüchtigen* Embed läuft, und ihn auf den Ladeweg
+beschränkt. **Gregors Protokoll zu 1.0.71 hat das widerlegt:** der Block läuft
+dort fünfmal, und die letzte Zeile vor dem Abbruch ist wieder seine eigene
+Spurmarke —
+
+```
+E-106 groesser als angegeben: attr=135x40 quelle=405x120 gefunden=1 pos=765
+```
+
+— dasselbe Bild, dieselbe Stelle wie an 1.0.69. Der Fehler steckt **im Block**,
+nicht darin, wer ihn aufruft.
+
+**Was der Block anders machte als der, der seit 1996 funktioniert:** er fasste
+den **Textstil** direkt an (`pgGetStyleInfo` / `pgSetStyleInfo`) an einer
+Position, die aus einer Suche über `embed->style` stammt. Der Prüfer hat dazu
+unabhängig gemeldet (P-41), dass `embed->style` ein **Zeiger** ist, den sich
+zwei Bilder gleicher Maßangabe teilen — die Suche kann also das **falsche**
+Embed liefern, und dann schreibt der Stilweg an die falsche Stelle.
+
+**Behebung:** derselbe Weg wie im QUALCOMM-Block zwanzig Zeilen darüber — die
+Maße ins **Embed** schreiben und `pgInvalEmbedRef` die Zeile neu rechnen lassen.
+Kein Zugriff mehr auf den Textstil.
+
+**Und mein E-103-Sicherungsnetz ist ersatzlos entfernt.** Es fasste denselben
+Stilweg an und hat in **keiner** Messung je ausgelöst — `nachgezogen=0`, jedes
+Mal. Totes Gewicht auf einem gefährlichen Pfad.
+
+**Bestätigt.** Gregor am 17.09.2026 an 1.0.72: *„kein crash"*. Sein Protokoll
+belegt es dreifach — der Block läuft **18 mal** statt gar nicht, er läuft **über
+die bisher tödliche Stelle hinaus** (`pos=770` hinter dem `pos=765`, an dem in
+allen drei Absturzprotokollen Schluss war), und die letzte Zeile lautet
+`Logging shutdown`. Keine `Exception.log`, nicht einmal eine leere.
+
+**Nachstellen konnte ich es trotzdem nicht:** mein Prüfstand lädt zwar Bilder,
+aber der Block läuft dort nicht an. **Nur Gregors Lauf entscheidet.**
+
+## 7.2.0.71 — Absturz beim Antworten auf eine geöffnete Nachricht (E-107)
+
+> **Zu prüfen:** eine Nachricht mit Bildern öffnen und **antworten**. Eudora
+> darf nicht abstürzen. Genau das ist mit 1.0.69 passiert.
+
+**Der Fehler war meiner, eingebaut mit E-106 in derselben Nacht.**
+
+Gregor am 17.09.2026 um 21:23 mit 1.0.69:
+
+```
+EXCEPTION_ACCESS_VIOLATION in Paige32.dll
+  at UnuseMemory()+0006      ESI=FFFFFFFF
+```
+
+`ESI=FFFFFFFF` ist ein ungültiger Speicherverweis.
+
+**Die Ursache steht als Warnung im Quelltext, seit 1996:**
+
+```c
+case EMBED_PREPARE_IMAGE:
+    // Don't allow threaded fetch, because we're being called
+    // with a temporary embed_ptr
+    PgLoadUrlImage( pg, image, embed_ptr, false )
+```
+
+Der Embed ist dort **flüchtig**. Mein E-106-Block liest trotzdem `embed->height`
+und `embed->style` und durchsucht damit das ganze Dokument. Der Block davor
+(E-103) hatte dieselbe Gefahr, lief aber nur bei Bildern **ohne** Maßangabe —
+selten. Meiner lief zusätzlich bei allen **mit** Angabe, also bei fast jedem
+Bild jeder Werbemail.
+
+**Behebung:** beide Blöcke laufen nur noch, wenn `bAllowThreadedFetch` wahr ist
+— das ist genau die Unterscheidung zwischen *Vorbereiten* (flüchtig) und
+*Laden* (echter Embed).
+
+**Was nicht bewiesen ist, und das gehört hierher:** ich konnte den Absturz
+**nicht nachstellen**. Mein Prüfstand lädt zwar Bilder, aber keines, das
+größer ist als angegeben; der verdächtige Code läuft dort deshalb gar nicht
+an. Auch die **Gegenprobe mit der abstürzenden
+Fassung 1.0.69 blieb negativ**: sie öffnet das Antwortfenster bei mir sauber.
+
+Belegbar ist nur dies, und es ist am Quelltext ablesbar: **auf dem gefährlichen
+Weg läuft mein Code jetzt gar nicht mehr.** Das Verhalten fällt dort auf den
+Stand vor E-103 und E-106 zurück. Schlimmer kann es dadurch nicht werden.
+
+## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
+
+> **Nicht mehr zu prüfen, und 1.0.70 nicht mehr zu benutzen** (Nachtrag LEKTOR,
+> 18.09.2026, L-15.8): diese Fassung war die erste, die E-101 in beiden Teilen,
+> E-103, E-104 und E-106 zusammen trug — sie trägt aber auch den **Absturz beim
+> Antworten** (E-107/E-108), der erst in **7.2.0.72** behoben ist, und sie ist
+> nie zu Gregor gelangt. Der Messpunkt unten ist durch **seinen Lauf an 1.0.69**
+> erledigt: **E-106 ist bestätigt**, die Überlappung ist weg. Wer heute prüft,
+> nimmt das Release **`v1.0.72`**.
+>
+> **Der Messpunkt, wie er damals lautete** (`LogLevel=58527` steht schon in
+> der `Eudora.ini`): die Kleinanzeigen-Nachricht weiterleiten, warten bis die
+> Bilder sichtbar sind, Eudora beenden. Im `eudora.log` muss stehen:
+> `E-106 groesser als angegeben: attr=200x52 quelle=…x… gefunden=1`.
+> **Bleibt die Zeile aus, ist auch diese Ursache widerlegt.**
+
+**Kein neuer Code.** Diese Fassung bündelt, was schon in `main` steht — und
+räumt zwei Dinge auf, die der Grund für ein Durcheinander waren.
+
+### Warum es zwei Fassungsnummern 1.0.68 gab
+
+Am 17.09.2026 liefen **zwei Sitzungen gleichzeitig**. Beide haben die
+Fassungsnummer hochgezogen, beide nahmen die **68** — die eine für E-106, die
+andere für den zweiten Teil von E-101. Die zweite hat es bemerkt und ist auf
+**1.0.69** ausgewichen.
+
+**Die Ursache lag in der Buchführung:** `Releases/PAKETE.md` kannte nur
+**1.0.64** und **1.0.65**. Wer die nächste Nummer daraus ableitet, greift
+zwangsläufig daneben. Die Liste führt jetzt auch **1.0.66 bis 1.0.70**.
+
+### Was in welchem Paket steckt
+
+Die Pakete dieses Abends nebeneinander — **erst 1.0.72 ist vollständig**:
+
+| Paket | Fassung | enthält | es fehlt |
+|---|---|---|---|
+| 1.0.67 | 7.2.0.67 | E-101 (erster Teil), E-103 | E-104, E-106, E-101 zweiter Teil |
+| 1.0.68 | 7.2.0.68 | dazu E-104, **E-106** | E-101 zweiter Teil |
+| 1.0.69 | 7.2.0.69 | **E-106** (aus 1.0.68), dazu die P-38-Spurmarke | E-101 **zweiter Teil** |
+| 1.0.70 | 7.2.0.70 | E-101 zweiter Teil, P-38 — **alles bis hierher** | **trägt den Absturz E-108**; nie zu Gregor gelangt |
+| 1.0.71 | 7.2.0.71 | dasselbe, E-107 als falsche Erklärung | **stürzt beim Antworten ab**, nie veröffentlicht |
+| **1.0.72** | 7.2.0.72 | **alles, einschließlich E-108** | — — **das ist das Release `v1.0.72`**, von Gregor bestätigt |
+
+> **Berichtigt am 18.09.2026 (LEKTOR, L-15.7).** Hier stand *„1.0.69 | 7.2.0.69
+> | E-101 **zweiter Teil**, P-38 | **E-106**"* und *„**1.0.70** | 7.2.0.70 |
+> **alles** | —"*. Die Zeile zu 1.0.69 war **vertauscht** und **zweifach**
+> widerlegt: der E-106-Merge `0334a6c` (20:16:00) ist Vorfahr des Standes
+> `acc8ad7`, aus dem die `Eudora.exe` von 1.0.69 um 20:24:54 entstand, während
+> der zweite Teil von E-101 (`e27ccf1`) erst um 20:58:43 kam — und Gregor hat
+> den **E-106-Absturz an 1.0.69 erlebt**, was ohne E-106 nicht möglich wäre.
+> **LEKTOR-14 hat beides am 17.09.2026 gemessen; die Zeile stand danach
+> unverändert weiter.** Dazu hieß 1.0.70 *„alles"*, obwohl es den Absturz aus
+> E-107/E-108 trägt und bei Gregor nie angekommen ist.
+
+Das erklärt auch, warum die Spurmarke `E-101 speichern:` in 1.0.69 fehlte: der
+Protokollkanal war **nicht** abgeschaltet — `LogLevel=58527` ist `0xE49F` und
+enthält `0x8000` sehr wohl. Die Behebung war dort schlicht noch nicht drin.
+
+## 7.2.0.69 — die Spurmarke misst den Rumpf, und sie findet gleich etwas (E-101, P-38)
+
+> **Zu prüfen:** eine Nachricht über *File → Save As* sichern und die Datei
+> in einem anderen Programm öffnen. **Was zu sehen sein muss:**
+> `MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`,
+> **kein** `<x-html>` — und zwar **auch dann, wenn *Kopfzeilen
+> einschließen* aus ist.** Genau das ging vorher schief. Im `eudora.log`
+> steht die Zeile `E-101 speichern:` mit `rumpf-vorher=`, `rumpf-nachher=`
+> und `mime-ergaenzt=`; sie erscheint jetzt ohne besondere Einstellung.
+
+**Die Kurzfassung: eine Messung wurde scharf gemacht, und sie hat sofort
+einen Datenverlust an Brauchbarkeit gefunden, den niemand gesehen hatte.**
+
+### 1. Die Spurmarke konnte einen verschwundenen Rumpf nicht zeigen (P-38)
+
+Sie nannte nur die Gesamtlängen. Die **wachsen** durch die drei neuen
+Kopfzeilen auch dann, wenn der Rumpf ganz verschwindet:
+
+```
+bytes-vorher=104 nachher=128 geaendert=1     ← und NULL Byte Rumpf
+```
+
+Jetzt stehen `rumpf-vorher` und `rumpf-nachher` daneben.
+
+### 2. Sie stand auf einem Kanal, der in der Vorgabe AUS ist
+
+Gregor speicherte mehrere Nachrichten — im Protokoll stand **keine
+einzige** `E-101 speichern:`-Zeile. Nicht, weil nichts geschah:
+
+```
+LogLevel 25759 (0x649F)        DEBUG_MASK_MISC = 0x8000 → nicht enthalten
+```
+
+Die Zeile war seit `7.2.0.66` da und ist **nie geschrieben worden**. Damit
+war auch die Behebung von E-101 selbst nie über ihre eigene Spur belegt.
+Jetzt `DEBUG_MASK_DIALOG` (`0x08`) — in der Vorgabe **an**, und inhaltlich
+richtig, denn der Weg läuft über den Speichern-Dialog. Dasselbe stand hier
+schon einmal an: `filtersd.cpp:1147` zu **E-73**, wörtlich *„eine
+Sicherheitsmeldung darf nicht abschaltbar sein"*.
+
+### 3. Und dann zeigte sie den zweiten Teil von E-101
+
+An Gregors eigenen Speichervorgängen, nicht an einem Testfall:
+
+```
+kopfzeilen=0 trenner=0 content-type-vorhanden=0
+bytes-vorher=102006 nachher=101985 rumpf-vorher=102006 rumpf-nachher=101985
+```
+
+**`rumpf-vorher` minus `rumpf-nachher` = 21 Byte** — `<x-html>` plus CRLF
+und `</x-html>` plus CRLF. Kein Byte zuviel: **P-28 hält an echten Daten.**
+
+Aber: **`nachher` ist gleich `rumpf-nachher`.** Es kam **nichts** dazu.
+Seine Dateien trugen HTML ohne `MIME-Version`, ohne `Content-Type`, ohne
+Zeichensatz — *„datei gespeichert, aber unbrauchbar"*, unverändert. Der
+ganze Kopfzeilenblock hängt an `if ( !szKopf.IsEmpty() )`; ohne
+*Kopfzeilen einschließen* ist er leer. **E-101 war nur behoben, wenn der
+Schalter an war** — und laut **E-98** ist das Kästchen auf Windows 10 gar
+nicht anwählbar.
+
+**Behoben, aber eng:** erfunden wird weiterhin nichts. Ergänzt wird nur,
+was der Leser braucht, um die Bytes zu deuten — bei **HTML** und bei
+**Hochbytes**. Reiner `us-ascii`-Text bleibt unberührt. *„Kopfzeilen
+einschließen"* meint `From`, `To`, `Subject`, `Date`, nicht die Erklärung,
+was die Bytes darunter sind.
+
+### 4. Der Prüfsatz der Tests ließ genau diesen Schnitt durch
+
+Sie fragten `Hat()` — *„enthält die Ausgabe X"*. Neu ist der byteweise
+Vergleich. **Die Gegenprobe dazu, auf Gregors *„kommt mir suspekt vor"*:**
+ein einziges Byte am Rumpfende weggenommen —
+
+```
+[FEHL] E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt
+         DATENVERLUST: der Rumpf soll 55 Byte haben, hat aber 54
+ Ergebnis: 169 Tests, 163 bestanden, 6 fehlgeschlagen
+```
+
+**In allen vier Fällen hat das alte `Hat()` nichts gemerkt.** Danach
+zurückgebaut.
+
+### 5. Jede Notiz stand im Protokoll unter dem falschen Test
+
+`TT_Note` druckte sofort, der Testname erst in `TT_EndTest` — **alle 169
+Tests** betroffen, seit es die Funktion gibt. Behoben.
+
+**Gemessen:** Bau 0 Fehler. **171 Tests, 171 bestanden.**
+
+**Am laufenden Programm gemessen ist der Befund.** Gregors zwei
+Protokollzeilen aus `1.0.69` belegen dreierlei live: dass die neuen Werte
+aus P-38 überhaupt erscheinen, dass **P-28 an echten Daten hält** (zweimal
+exakt 21 Byte) und dass der `Content-Type` fehlt.
+
+**Nicht gemessen ist die Behebung dazu** — sie entstand *nach* seiner
+Messung, sein `1.0.69` trug sie noch nicht. Offen ist also nur die
+Bestätigung, dass eine gespeicherte Datei jetzt **mit** `Content-Type`
+herauskommt, nicht der Nachweis, dass etwas falsch war. Deshalb steht sie
+oben unter *Zu prüfen*.
+
+## 7.2.0.68 — Bilder, die größer sind als angegeben (E-106)
+
+> **Zu prüfen:** `LogLevel=58527` in der `Eudora.ini` lassen, die
+> Kleinanzeigen-Nachricht weiterleiten, warten bis die Bilder da sind. Im
+> `eudora.log` muss stehen:
+> `E-106 groesser als angegeben: attr=200x52 quelle=…x… gefunden=1`.
+> **Bleibt die Zeile aus, ist auch diese Ursache widerlegt** — dann bitte das
+> Protokoll schicken, statt weiterzusuchen.
+
+Gregor am 17.09.2026 an 1.0.67: das grüne *kleinanzeigen*-Logo liegt weiter
+über „Deine Anzeige wird weniger gesehen".
+
+**Sein Protokoll hat es entschieden.** Neun Bilder seiner Nachricht wurden nach
+dem Laden nachgemessen, und bei allen wuchs die Zeile mit:
+
+```
+attr=140x0  →  quelle=140x134  →  ascent=134
+attr=24x0   →  quelle=24x49    →  ascent=49
+```
+
+**Das Logo war nicht darunter.** Es trägt `attr=200x52 embed=200x52 ascent=52`
+— und danach keine einzige Zeile mehr.
+
+**Die Ursache.** Der Nachtrag läuft nur, wenn im HTML **keine** Größe stand.
+Ein Bild mit beiden Angaben wird **nie nachgemessen**. Und Paige skaliert
+nicht: Absender legen Bilder in doppelter Auflösung ab und geben im HTML die
+halbe Größe an, damit sie auf feinen Bildschirmen scharf bleiben. Jeder Browser
+skaliert — Paige zeichnet die Datei in Originalgröße in eine Zeile, die nach
+der Angabe bemessen ist. Bei 200×52 angegeben und 400×104 geladen sind das
+**52 Punkte, die auf dem folgenden Text liegen**.
+
+**Warum E-103 daran vorbeiging:** E-103 behandelt Bilder **ohne**
+Größenangabe. Gregors Logo hat eine. Zwei Fassungen lang war der falsche Fall
+behoben — das ist der ehrliche Teil dieser Zeile.
+
+**Behebung:** die echte Dateigröße wird jetzt **immer** gemerkt, und ist sie
+höher als die angegebene, bekommt die Zeile die echte Höhe. Nur vergrößern, nie
+verkleinern. Richtig skalieren wäre besser, sitzt aber tief in Paige;
+zugedeckter Text ist der teurere Fehler.
+
+**Nicht nachgewiesen, und das gehört dazu:** mein Prüfstand lädt zwar Bilder
+— acht `E-95 Bild`-Zeilen und `E-103 Nachtrag: quelle=79x64`, also geholt und
+vermessen —, aber keines davon ist größer als angegeben; `E-106 groesser`
+bleibt bei null. Die Behebung ist
+dort nicht messbar. **Nur sein Lauf kann sie belegen.**
+
+> **Berichtigt am 18.09.2026 (LEKTOR, L-15.9).** Hier stand *„mein Prüfstand
+> lädt die Bilder nicht — null Ladespuren"*. Am Protokoll gemessen
+> (`C:\Temp\E107-vorher\…\eudora.log`, 17.09.2026 21:28) sind es **acht**
+> Ladespuren; null ist allein der Zähler `E-106 groesser`. Zwei verschiedene
+> Zähler waren verwechselt, und die falsche Diagnose zeigte drei Fassungen
+> lang in die falsche Richtung.
+
+## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
+
+> **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)
+> **weiterleiten** und ins Verfassenfenster sehen. Liegt noch etwas über dem
+> Text? Falls ja: `eudora.log` schicken — die Antwort steht dann darin.
+
+Gregor an 1.0.56: *„da ist alles durcheinander, man kann ja nichts lesen."*
+Seither mehrfach angemahnt, nie gemessen. Jetzt an seiner **echten** Nachricht
+nachgestellt — 23.537 Byte, byte-genau aus dem Postfach gelöst, fünf Bilder.
+
+**Der Mechanismus, Schritt für Schritt belegt.** Beim Import kennt Paige nur,
+was im HTML steht:
+
+```
+attr=0x0     embed=0x0     ascent=13     ← das Doctolib-Logo
+attr=80x80   embed=80x80   ascent=80
+attr=98x35   embed=98x35   ascent=35
+attr=117x35  embed=117x35  ascent=35
+attr=80x24   embed=80x24   ascent=24
+```
+
+Vier Bilder tragen ihre Maße im HTML und bekommen die richtige Zeilenhöhe. Das
+Logo trägt keine — **Paige misst Bilder nie selbst nach** — und bekommt eine
+Textzeile von 13 Punkten, während das Bild 60 hoch ist. Das sind die 47 Punkte
+über dem Text.
+
+**Und dann kommt die Überraschung.** Drei neue Spurmarken verfolgen, was nach
+dem Import passiert:
+
+```
+E-103 Nachtrag:    quelle=202x60 embed=202x60 gefunden=1 pos=288
+E-103 Zeilenhoehe: pos=288 ascent-vorher=60 bildhoehe=60 nachgezogen=0
+E-103 Neuzeichnen: bucket=1 fenster=1
+```
+
+Eudora **lädt das Bild wirklich**, erfährt die echte Größe 202×60, trägt sie
+nach — und die Zeilenhöhe steht zu diesem Zeitpunkt **schon auf 60**. Das
+Fenster wird auch neu gezeichnet. **Im heutigen Bau heilt sich der Fall selbst,
+sobald das Bild geladen ist.** Vermutlich seit E-96 (7.2.0.63).
+
+**Der Fall, in dem das nicht reicht:** lässt sich das Bild **nicht** laden —
+kein Netz, toter Verweis, gesperrt —, erscheint keine der drei Marken, und die
+Zeile blieb bei 13 Punkten. Gegenprobe gefahren, mit dem Logo auf einen
+Rechner, den es nicht gibt: `attr=0x0 embed=0x0 ascent=13`, sonst nichts.
+
+### Was behoben wurde
+
+**Der Import reserviert jetzt eine Mindestzeilenhöhe**, sobald gar keine Größe
+bekannt ist — 48 Punkte (`E103_MINDESTHOEHE` in `PGHTMIMP.CPP`). Sobald die
+echte Höhe aus der heruntergeladenen Datei kommt, gewinnt die.
+
+Gemessen, beide Fälle, mit derselben Nachricht:
+
+| | vorher | jetzt |
+|---|---|---|
+| Bild **ladbar** | `ascent=13`, später 60 | `ascent=48` beim Import, dann **60** |
+| Bild **nicht ladbar** | `ascent=13` | `ascent=48` |
+
+**Das ist nicht der Notbehelf von früher.** Bis 7.2.0.62 wurde die
+*Bildgröße* auf 20×20 geraten — das hat Gregors Tonerkartusche zu einem
+Streifen gequetscht und wurde deshalb entfernt. Hier wird **nur die Zeile**
+hoch genug gemacht; an Breite und Höhe des Bildes ändert sich nichts, es kann
+sich nichts verzerren.
+
+Die 48 sind begründet, nicht geraten: groß genug, dass die üblichen Kopfbilder
+einer Werbemail nicht mehr in den Text ragen — das Doctolib-Logo ist 60 hoch,
+die vier anderen Bilder derselben Nachricht 24 bis 80 — und klein genug, dass
+eine Zeile mit einem kleinen Symbol keine auffällige Lücke reißt.
+
+### Datenverlust in `main` geschlossen (Prüfer P-28)
+
+Beim Nachprüfen von `main` gefunden — **nicht** durch einen Testlauf, sondern
+weil der Prüfer die Funktion aus dem Quelltext geschnitten, übersetzt und mit
+16 Eingaben gefahren hat.
+
+`E101SpeicherfassungAufbereiten` löschte die **ganze erste Rumpfzeile**, sobald
+sie auf `>` endete. Stehen `<x-html>` und der Nachrichtentext auf derselben
+Zeile, war damit der **komplette Rumpf weg**:
+
+```
+<x-html><html><body>Der ganze Text…</body></html></x-html>
+  104 Byte rein, 128 raus  —  und null Byte Rumpf
+```
+
+Die Datei wird dabei **größer**, weil die Kopfzeilen dazukommen. Deshalb fällt
+so etwas niemandem auf.
+
+**Dass der Fall vorkommt, steht in Eudoras eigenem Quelltext:**
+`msgutils.cpp:2374` sagt wörtlich *„`<x-html>` And the message all comes on the
+same line"*, `IDS_MIME_RICH_ON` ist `"<%s>"` ohne Zeilenende, und
+`etf2html.cpp:200` schreibt den Marker ebenso. Nur der POP-Weg setzt ihn auf
+eine eigene Zeile — und der war der einzige, der geprüft worden war.
+
+**Behebung:** entfernt wird jetzt das **Tag**, nicht die Zeile. Das Ende ist
+das erste `>` außerhalb von Anführungszeichen, und über die erste Zeile hinaus
+wird nicht gesucht. Folgt Text auf derselben Zeile, bleibt er vollständig
+stehen. **Drei neue Tests**, einer je gemessenem Verlustfall.
+
+### Die Spurmarke zu den Bildern zeigte Binärmüll (Prüfer P-11)
+
+Das `src=`-Feld der E-95-Marke las einen Paige-`memory_ref` — ein **Handle** —
+als Zeichenkette. Im Protokoll standen zwölf Zeilen der Form
+`src=\110\001\032\001…`. Ausgerechnet die Spalte, die sagen sollte, ob ein Bild
+als `cid:`, `data:` oder `http:` kommt — und genau diese Frage stand bei E-95
+vier Fassungen lang offen.
+
+Jetzt: `src=https://www.doctolib.fr/email_la…`
+
+### Die Kopfzeilen der gespeicherten Nachricht kleben nicht mehr zusammen (E-104)
+
+> **Zu prüfen:** eine Nachricht aus dem **geöffneten Fenster** speichern (nicht
+> aus der Postfachliste) und die Datei aufmachen. `From:`, `Subject:` und `Cc:`
+> müssen **jede in einer eigenen Zeile** stehen.
+
+Gregor speicherte mit 1.0.65 eine Nachricht aus dem geöffneten Fenster. In der
+Datei stand:
+
+```
+From: "markus.bakus@gmx.de" <markus.bakus@gmx.de> Subject: Re: Fwd: Deine
+Anzeige 'Zu verschenken: kleine Gefäße' Cc:
+```
+
+Drei Kopfzeilen in einer. Im Postfach steht jede für sich — beide Fassungen
+nebeneinandergelegt und gemessen.
+
+**Ursache 1:** `CCompMessageDoc::SaveAsFile` schickte `UnwrapText` über die
+**ganze** Nachricht. In `tocview.cpp` steht an derselben Stelle der Schutz
+*„Don't unwrap the headers!"* — auf dem Fensterweg fehlte er.
+
+**Ursache 2, und die ist die eigentliche:** dass „Absätze raten" überhaupt lief,
+ist eine **Folge von E-100**. Gregors `Eudora.ini` trug `GuessParagraphs=7179`
+und `IncludeHeaders=16720` — uninitialisierte Stapelwerte, die E-100 dort
+hineingeschrieben hatte. Jeder Wert ungleich 0 gilt als eingeschaltet. Er hat
+es nie gewählt und konnte es mangels Kästchen (**E-98**) gar nicht wählen.
+
+**E-100 hat das Loch gestopft, die schon verdorbenen Werte aber nicht
+repariert.** Das tut jetzt `E104SchalterLesen`: was weder 0 noch 1 ist, geht auf
+die Vorgabe 0 zurück **und wird berichtigt zurückgeschrieben**. **Damit muss
+niemand ein neues Mailverzeichnis anlegen.**
+
+**Und die Behebung deckte zunächst nur die halbe Strecke.** Der Prüfer hat sie
+nachgerechnet und dabei gefunden, dass `CReadMessageDoc::SaveAs` und
+`CReadMessageDoc::SaveAsFile` denselben ungeschützten Aufruf tragen — dort war
+`FindBody` sogar **genau umgekehrt** eingesetzt: es lief, wenn die Kopfzeilen
+*nicht* mitsollten. **Wer eine empfangene Nachricht aus ihrem Fenster
+speicherte, bekam den Fehler unverändert.** Beide Stellen sind nachgezogen.
+
+Dazu lasen zwei weitere Stellen den Schalter noch roh, so dass die Datei mit
+verdorbener INI mit einer einsamen `Date:`-Zeile ohne Leerzeile begann.
+Verklebt wurde sie nur deshalb nicht, weil sie 38 Zeichen hat und die
+40-Zeichen-Regel von `UnwrapText` griff — **zwei Zeichen Abstand zum Fehler,
+Zufall statt Schutz.**
+
+Zwei Punkte wurden vor dem Paketbau eigens nachgerechnet: `UnwrapText` arbeitet
+**im Puffer** und liefert denselben Zeiger zurück — es geht kein Text verloren;
+und `GetMessageHeaders` hängt am Ende eine Leerzeile an, `FindBody` findet die
+Grenze also.
+
+### Was dazugekommen ist
+
+**Drei neue Spurmarken** in `PgEmbeddedImage.cpp`, die den Weg nach dem Import
+sichtbar machen — ohne sie war nicht zu entscheiden, ob die Größe nie ankommt
+oder nur zu spät:
+
+* `E-103 Nachtrag: quelle=… embed=… gefunden=… pos=… style=…`
+* `E-103 Zeilenhoehe: pos=… ascent-vorher=… bildhoehe=… nachgezogen=…`
+* `E-103 Neuzeichnen: bucket=… fenster=…`
+
+**Ein Sicherungsnetz** an derselben Stelle: ist die Zeile nach dem Laden
+niedriger als das Bild, wird sie nachgezogen. Es hat in der Messung **nicht**
+ausgelöst (`nachgezogen=0`), und die Marke sagt das auch — es steht da für den
+Fall, dass `pgInvalEmbedRef` einmal nicht durchgreift.
+
+**Die E-89-Spurmarke** nennt jetzt zusätzlich den Anfang des Rumpfes, die
+Zeilenenden und die Zahl der als Text versteckten Bilder
+(`crlf=… nur-lf=… esc-img=… anfang=[…]`). Ohne diese drei Zahlen wäre die
+Ursachensuche an dieser Stelle steckengeblieben.
+
+## 7.2.0.66 — die gespeicherte Datei ist jetzt brauchbar (E-101)
+
+> **Zu prüfen:** Nachricht markieren, **File → Save As**, Datei speichern —
+> und die Datei dann **in Thunderbird oder einem Editor öffnen**. Kopfzeilen
+> müssen da sein, Umlaute müssen stimmen, und `<x-html>` darf nicht auftauchen.
+
+Gregor am 17.09.2026, nachdem er eine weitergeleitete Nachricht gesichert
+hatte: *„datei gespeichert, aber unbrauchbar"*.
+
+**Gemessen an seiner Datei** (5.716 Byte): vier Kopfzeilen, danach Eudoras
+**interner Marker `<x-html>`** und roher HTML-Text. Keine `Content-Type`-Zeile,
+keine `MIME-Version`, kein Zeichensatz. `.eml` und `.txt` byte-identisch.
+
+**Warum.** Bei einer selbst verfassten Nachricht entsteht die
+`Content-Type`-Zeile **erst beim Senden** — `SendContentType`
+(`sendmail.cpp:766`) baut sie aus den Merkern des Übersichtseintrags, nicht aus
+dem Rumpf. Was in `Out.mbx` liegt, ist die interne Fassung, und der
+Speicherweg schrieb sie unverändert hinaus. Die Umlaute waren korrekt als
+Latin-1 gespeichert (`0xFC`, gemessen) — aber ohne `charset=` weiß kein Leser
+das, und Thunderbird zeigt Buchstabensalat oder HTML-Quelltext.
+
+**Behebung.** Der Speicherweg entfernt den internen Marker und ergänzt
+`MIME-Version`, `Content-Type` und `Content-Transfer-Encoding`, wenn keine
+`Content-Type`-Zeile da ist. Untertyp nach dem Marker, Zeichensatz nach den
+Bytes — **aus dem Inhalt abgeleitet, nicht geraten**. Eine empfangene
+Nachricht bringt ihre echten Kopfzeilen mit; die bleiben unangetastet.
+
+**Am laufenden Programm geprüft:** selbst gespeichert, Datei wieder geöffnet —
+`MIME-Version: 1.0`, `Content-Type: text/html; charset="ISO-8859-1"`, kein
+`x-html`, Umlaute unverändert.
+
+### Was der Prüfer an dieser Behebung gefunden hat
+
+Er hat die Funktion übersetzt und mit zwölf Eingaben gefahren, Ein- und
+Ausgabe byteweise verglichen. **Vier Fälle haben Inhalt verloren.** Sein
+Urteil: so nicht ausliefern — vorher war die Datei unbrauchbar, aber
+**vollständig**; danach wäre sie brauchbar und in konstruierbaren Fällen
+**unvollständig, ohne sichtbare Lücke**.
+
+Der schlimmste Fall: der Marker wurde im ganzen Rumpf gesucht und das
+schließende `>` über Zeilengrenzen hinweg. In einer Klartextnachricht ist das
+nächste `>` das **Zitatzeichen** —
+`"Er schrieb <x-html in die Zeile. Du sagtest:\r\n> stimmt"` wurde zu
+`"Er schrieb  stimmt"`, **36 von 62 Byte weg**. Der Verlust war also nicht
+markergroß, sondern unbegrenzt, und traf auch **empfangene** Nachrichten.
+
+Alles behoben: der Marker zählt nur als **erste Zeile** des Rumpfs und nur,
+wenn die ganze Zeile aus ihm besteht; das Gegenstück nur, wenn dahinter nichts
+als Leerraum steht; die führende Leerzeile bleibt; der gemischte Zeilentrenner
+lässt kein `\r` mehr stehen; und fehlt die Leerzeile zwischen Kopf und Rumpf,
+sagt die Spurmarke das mit `trenner=0`, statt sich wie ein Erfolg zu lesen.
+
+**Sechs neue Tests, einer je gemessenem Fall** — damit kein späterer Umbau sie
+wieder aufmacht.
+
+**169 Tests, 169 bestanden** — dreizehn neue, darunter die Gegenprobe an einer
+empfangenen Nachricht und der Stolperstein „zitiertes `Content-Type:` im
+Rumpf einer Weiterleitung".
+
+**Was daraus zu lernen war:** bei E-97 hatte ich gemessen, dass der Dialog
+aufgeht, und daraus „Speichern funktioniert" gemacht. Dass nie jemand in die
+herausgekommene Datei geschaut hatte, ist derselbe Befund eine Ebene tiefer.
+
+## 7.2.0.65 — dieselbe Absturzstelle an drei weiteren Stellen geschlossen (E-100)
+
+> **Zu prüfen:** *File → Save As* muss weiter gehen wie in 1.0.64. Diese
+> Fassung schließt Wege, über die noch niemand gestolpert ist — es soll sich
+> nichts ändern, außer dass es so bleibt.
+
+Vom Prüfer am **17.09.2026** als Gegenvermutung zu E-97 gefunden, **bevor
+jemand darüber gestolpert ist**.
+
+**Teil 1 — dieselbe Lücke, dreimal.** `GetFileNameFromDialog`, `ToggleStat` und
+`StatDir` in `SaveAsDialog.cpp` berechnen `dlgPtr = GetParent()` genau wie
+`OnTypeChange` und greifen **ungeprüft** darauf zu. `GetFileNameFromDialog` ist
+die gefährliche: sie wird aus `OnOK()` gerufen, also **im laufenden
+Speichervorgang**, nicht nur beim Aufbau des Dialogs.
+
+**Teil 2 — zwei Werte, die in deine Einstellungen laufen.** `m_Inc` und
+`m_Guess` werden vom Konstruktor nicht gesetzt, aber von allen drei
+Aufrufstellen nach `DoModal()` ungeprüft in die INI geschrieben. Läuft
+`OnInitDialog` nicht, landen zwei uninitialisierte Werte **dauerhaft** in
+`IDS_INI_INCLUDE_HEADERS` und `IDS_INI_GUESS_PARAGRAPHS`. Jetzt werden sie im
+Konstruktor mit dem bisherigen Stand aus der INI vorbelegt.
+
+**Teil 3 — ein dritter Weg, den der Wächter selbst aufgemacht hätte.**
+`GetFileNameFromDialog` füllt einen Puffer, den `OnOK` als
+`char realFileName[_MAX_PATH + 1]` **uninitialisiert** auf den Stapel legt.
+Kehrt sie ohne Schreiben zurück, arbeitet `OnOK` mit Stapelmüll weiter —
+`strstr(realFileName, ".sta")`, im schlimmsten Fall `strcat`. Ein unbrauchbarer
+Dateiname wäre schlimmer als der Absturz, den der Wächter verhindert. Das galt
+**auch vorher schon**, wenn `GetDlgItem(edt1)` null lieferte. Jetzt steht
+`buf[0] = 0;` als erste Anweisung der Funktion.
+
+**Teil 4 — ein Wächter saß an der falschen Stelle.** In `SetFileNameInDialog`
+stand die Prüfung über der ganzen Funktion. Auf dem heute einzig gelaufenen
+Zweig wird `dlgPtr` dort aber **gar nicht benutzt**: `SetControlText` geht über
+`IFileDialogCustomize`, nicht über das Elternfenster. Der Wächter hätte den
+Aufruf übersprungen und damit den Dateinamen still nicht gesetzt — eine
+Verhaltensänderung, wo nur ein Absturz verhindert werden sollte. Die Prüfung
+steht jetzt dort, wo `dlgPtr` wirklich benutzt wird. Dazu setzt `OnOK` seinen
+Puffer selbst auf leer, bevor er ihn weitergibt.
+
+Dazu zwei falsche Begründungen im Quelltext berichtigt — und eine Warnung für
+den, der einmal **E-98** behebt: `OnInitDialog` ruft weder `EnableWindow` noch
+`OnTypeChange()`, das muss dann nachgezogen werden.
+
+## 7.2.0.64 — Speichern stürzt nicht mehr ab (E-97)
+
+> **Zu prüfen:** eine Nachricht auswählen, **File → Save As**. Der Dateidialog
+> muss aufgehen, und Eudora muss danach noch da sein.
+
+**Gebaut am 17.09.2026.** **Als Paket geschnürt und auf GitHub veröffentlicht
+als `v1.0.64`** (17.09.2026, 10:23 Uhr UTC, dort als *Latest*);
+`Releases/Eudora72-1.0.64-release.zip` liegt daneben.
+
+> **Berichtigt am 17.09.2026 (LEKTOR, L-13.4).** Hier stand *„Ein Paket ist zu
+> dieser Fassung noch nicht geschnürt — das letzte liegt als
+> `Releases/Eudora72-1.0.63-release`"*. Beide Hälften waren überholt: das
+> Paket zu 7.2.0.64 existiert und ist herausgegangen, und das letzte
+> Verzeichnis unter `Releases/` ist `Eudora72-1.0.65-release`.
+
+**Der Fehler war in jeder Fassung dieses Projekts** — 1.0.49 bis 1.0.63
+gemessen, auch im veröffentlichten Release `v1.0.50`. Aufgefallen ist er erst,
+als Gregor eine Nachricht speichern sollte, um sie mir zu geben.
+
+**Die Stelle, aus dem Debugger symbolisiert:**
+
+```
+0   Eudora.exe   CSaveAsDialog::OnTypeChange + 45   SaveAsDialog.cpp:425
+1   COMDLG32.dll
+25  Eudora.exe   CTocView::OnFileSaveAs + 429       tocview.cpp:3074
+```
+
+`OnTypeChange` ist der Rückruf, mit dem der Dateidialog meldet, dass der
+Dateityp gesetzt wurde. **Er kommt, während der Dialog sich aufbaut** — vor
+`OnInitDialog`. Zu diesem Zeitpunkt hat das Vorlagenfenster noch kein
+Elternfenster:
+
+```c
+dlgPtr = GetParent();                         // liefert NULL
+CWnd *filtCombo = dlgPtr->GetDlgItem(cmb1);   // Zugriffsverletzung
+```
+
+Ein paar Zeilen weiter dieselbe Lücke: `m_GuessParagraphs.EnableWindow()` auf
+einem Schalter, den `DoDataExchange` bewusst **nicht** anbindet, wenn es ihn
+ohne Dialogvorlage nicht gibt.
+
+**Beide Zugriffe waren durch ein `ASSERT` „abgesichert", das im Release nichts
+tut.** Das ist die häufigste Ursachenklasse dieses ganzen Projekts, und hier
+hat sie eine Grundfunktion seit der ersten Fassung unbrauchbar gemacht.
+
+**Warum es so lange dauerte:** Die Ausnahme ist `0xC000041D`
+(STATUS_FATAL_USER_CALLBACK_EXCEPTION) — eine Ausnahme in einem Systemrückruf
+kommt nicht über die Kernel-Grenze zurück, deshalb bricht das Programm sofort
+ab, statt eine Meldung zu zeigen. Drei Vermutungen waren vorher zu widerlegen:
+die CSS-Grenze, die Dialogvorlage von 1996 und die ungeprüften Steuerelemente
+in `OnInitDialog`. Erst die symbolisierte Aufrufkette hat es entschieden.
+
+**Gegenprobe:** derselbe Messlauf, der vorher *„ABGESTUERZT beim Speichern
+unter"* meldete, sagt jetzt *„lebt noch"*.
+
+**Tests: 153 von 153.**
+
+### E-99: Datenverlust beim Senden eines gesicherten Entwurfs — geschlossen, bevor das Paket hinausging
+
+> **Zu prüfen:** Antwort verfassen, **Entwurf sichern**, Fenster offen lassen,
+> danach **senden**. Der getippte Text muss in der gesendeten Nachricht stehen.
+
+Gefunden beim Nachrechnen der E-93-Behebung. `HasChanged()`
+(`PaigeEdtView.h:193`) beantwortet **nicht** die Frage „hat der Anwender
+getippt", sondern „hat er **seit dem letzten Sichern** getippt" — denn
+`PgMsgView::ExportMessage` ruft an seinem Ende `SaveChangeState()`
+(`PgMsgView.cpp:460`).
+
+Folge: Wer einen Entwurf sichert und ihn **danach** sendet, läuft ein zweites
+Mal durch `ExportMessage` — diesmal mit `HasChanged() == FALSE`. Das für E-88
+aufgehobene Original hätte dann seinen Text überschrieben. **Still, ohne
+Meldung** — genau der Weg, den E-93 schließen sollte.
+
+**Behebung:** ein Merker am Verfassendokument
+(`CCompMessageDoc::m_bE88AnwenderHatGetippt`), der **einrastet**: einmal
+getippt, immer getippt. Er lebt so lange wie das Verfassenfenster, genau wie
+das aufgehobene Original.
+
+### Nebenbefund E-98: die beiden Optionen im Speicherdialog fehlen
+
+Die Gegenprobe zu E-97 zählt die Steuerelemente des offenen Dialogs und meldet
+`Eigene Kaestchen gefunden: 0`. *Kopfzeilen einschließen* und *Absätze raten*
+sind nicht da — Windows 10 öffnet den modernen Dateidialog, und der zeigt die
+Dialogvorlage von 1996 (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`) nicht mehr an.
+
+**Kein Rückschritt durch diese Fassung:** die Kästchen fehlten auch vorher, es
+kam nur niemand so weit, weil Eudora vorher abbrach. Steht als **E-98** offen
+in [BEFUNDE.md](BEFUNDE.md).
+
+## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
+
+> **Zu prüfen:** Doctolib- und FairToner-Nachricht weiterleiten **und**
+> beantworten. Die Bilder müssen in ihrer **wirklichen** Größe dastehen und der
+> Text **frei** bleiben.
+
+**Seit E-96 behoben ist, war die Vorgabe nur noch schädlich.** Bis 7.2.0.62 bekam
+ein Bild ohne Größenangabe 20×20 Punkte — ein Notbehelf gegen E-96: solange die
+Zeilenhöhe die des *ersten* Bildes behielt, blieb sie bei fehlendem
+`height`-Attribut textklein, und der Text wurde zugedeckt.
+
+**Gemessen an Gregors Nachrichten mit 1.0.62** steht die Zeilenhöhe jetzt je
+Bild richtig:
+
+```
+attr=600x1   ascent=13     (1 Pixel hohe Trennlinie - Zeile bleibt textbreit)
+attr=175x35  ascent=35
+attr=200x50  ascent=50
+attr=80x80   ascent=80
+```
+
+In derselben Messung stand aber auch `attr=20x20` — und genau das war auf
+seinem Bild die Tonerkartusche: **kein abgeschnittenes Bild, sondern eines, das
+wir auf 20×20 gequetscht hatten.**
+
+Paige kennt die wirkliche Größe, sobald es die Datei geladen hat; die Spalte
+`embed=` der Spurmarke belegt es. Ohne unser Zutun trägt es sie selbst ein.
+Deshalb bleibt ein Bild ohne Maß jetzt **unangetastet** — auch dann, wenn nur
+die Höhe fehlt: eine geratene Höhe bei `width="600"` würde es zu einem Streifen
+verzerren.
+
+**Damit entfällt auch die Unterscheidung zwischen eingebetteten und externen
+Bildern** aus 7.2.0.61. Sie war richtig gedacht, aber sie behandelte ein
+Symptom: beide Fälle bleiben jetzt gleichermaßen unangetastet. Der Zähler
+`eingebettet=` in der Spurmarke bleibt als Information stehen.
+
+**Vier Fassungen lang wurde an dieser Zahl gedreht** — 200×90, gar nichts,
+20×20, `cid:` gegen `http:`. Keine davon war die Ursache. Die lag in
+`ProcessEmbed`, und seit sie behoben ist, braucht es an dieser Stelle gar nichts
+mehr.
+
+**Tests: 153 von 153**, drei davon umgeschrieben — sie prüfen jetzt, dass
+**nichts** geschieht.
+
+## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
+
+> **Zu prüfen:** die Doctolib-Nachricht weiterleiten. Die Bilder müssen
+> **vollständig** dastehen und der Text **frei** bleiben. Falls nicht: im
+> Protokoll steht bei `LogLevel=58527` je Bild eine Zeile
+> `E-95 Bild: attr=… embed=… ascent=… text-asc=…` — die sagt, wo es klemmt.
+
+**Die Ursache, am laufenden Programm gemessen.** `ProcessEmbed()` räumt nach
+jedem eingefügten Bild den Embed-Stil auf — `procs`, `embed_entry`,
+`embed_object` —, **aber nicht die Zeilenhöhe**. `current_style.ascent` behielt
+die Höhe des Bildes. Beim nächsten Bild las `DoDataTag` diesen Wert als
+vermeintlichen **Text**-Ascent ein, und das Maximum zog die Zeilenhöhe wieder
+auf den alten Wert hoch.
+
+Drei Fassungen an derselben Testnachricht (Bilder 600×150, 320×80, 20×20):
+
+```
+der Fehler:              ascent=150  150  150     text-asc=13  150  150
+mit def_style:           ascent=150   80   20     text-asc=13    0    0
+jetzt:                   ascent=150   80   20     text-asc=13   13   13
+```
+
+Die mittlere Fassung war der erste Entwurf. Sie stellt zwar die Bildhöhen
+richtig, setzt den Text-Ascent aber auf null — damit fällt die Schutzregel
+*„die Zeile ist mindestens so hoch wie der Text"* weg, und ein Zählpixel von
+1×1 ließe die Zeile auf einen Punkt schrumpfen. Solche Pixel stehen in
+Newslettern zu Dutzenden. Deshalb wird jetzt der echte Text-Ascent gemerkt,
+solange noch kein Bild eingefügt wurde.
+
+**Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal
+half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen
+dessen Höhe blind. Bei der Doctolib-Nachricht steht der kleine Schriftzug vor
+dem großen blauen Kreis — deshalb wurde dort abgeschnitten.
+
+**Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo
+identisch, also seit 2006 so.
+
+**Wie es gefunden wurde.** Zum ersten Mal an einem selbst gestarteten Eudora
+statt an Bildschirmfotos: eine Testnachricht mit drei Bildern bekannter Größe,
+Weiterleiten über Fensterbotschaften ausgelöst, und eine Spurmarke, die je Bild
+vier Werte in **einer** Zeile nennt. Die erste Messung schrieb nichts — das
+Testverzeichnis trug noch die alte `Eudora.exe`. Dieselbe Klasse, gegen die es
+hier eine eigene Regel gibt: *das Paket gegen den Bau messen.*
+
+**Tests: 153 von 153.**
+
+## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
+
+> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Die
+> Bilder müssen **vollständig** dastehen und der Text **frei** bleiben — beides
+> zugleich, zum ersten Mal.
+
+**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Doctolib-Kreis war
+**blau**, nicht grau. Paige hatte das Bild also **geladen** und kannte seine
+echte Größe genau — es ist in der Nachricht **eingebettet** (`cid:`). Unser
+`height="20"` überschrieb diese Größe und schnitt das Bild ab.
+
+Bei der FairToner-Nachricht dagegen standen graue Kästen: dort sind die Bilder
+**extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß
+nichts über ihre Größe. **Nur dort hilft eine Vorgabe.**
+
+`E89BilderMessbarMachen` hat beide Fälle gleich behandelt. Das erklärt das
+Schwanken über vier Fassungen:
+
+| Fassung | Vorgabe | Ergebnis |
+|---|---|---|
+| 7.2.0.57 | 200×90 | großer grauer Kasten im Text |
+| 7.2.0.58/59 | keine | Text wird zugedeckt |
+| 7.2.0.60 | 20×20 | Bilder zerschnitten |
+| **7.2.0.61** | **nur bei externen** | Text frei **und** Bilder ganz |
+
+Es war nie eine Frage der richtigen Zahl — es waren zwei Fälle, die wie einer
+behandelt wurden.
+
+**Drei Fälle, drei Tests:**
+
+| | |
+|---|---|
+| eingebettet **ohne** Größe | unangetastet — Paige kennt sie |
+| eingebettet **mit** Größe | wird umgeschrieben — die Größe ist die Absicht des Absenders |
+| extern ohne Größe | Vorgabe 20 Punkte, sonst bleibt die Zeile textklein |
+
+Der mittlere Fall war ein Denkfehler im ersten Entwurf: der übersprang **alle**
+`cid:`-Bilder, auch die mit CSS-Größe, wo Paige sonst die Originalgröße der
+Datei nimmt statt der gewünschten. **Zwei bestehende Tests haben es sofort
+gemeldet**, bevor eine Fassung daraus wurde.
+
+Die Spurmarke nennt jetzt `eingebettet=N`.
+
+**Tests: 153 von 153**, drei davon neu.
+
+## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
+
+> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Der
+> blaue Kreis darf den Verifizierungscode nicht mehr zudecken.
+
+**Warum es einen dritten Anlauf braucht — wir haben uns selbst im Weg
+gestanden.** Die Zeilenhöhe hängt an `image_record.source_height`, und der Wert
+kommt aus dem **`height`-Attribut** der Nachricht (`PGHTMIMP.CPP:2022`), nicht
+aus der Bilddatei. Fehlt das Attribut, ist er null, der ganze Block wird
+übersprungen, und die Zeile bleibt textklein. Genau dann deckt das Bild den Text
+zu.
+
+Die 200×90-Vorgabe, die in 7.2.0.58 **entfernt** wurde, war das, was diesen Wert
+bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+
+```
+E-89 Bilder im Editor: gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0
+```
+
+Ein Bild ohne Maß — und der blaue Kreis lag über dem Code.
+
+**Jetzt ein kleines Maß**, gerade so hoch wie eine Textzeile (20 Punkte). Die
+Zeile wird so hoch, dass nichts zugedeckt wird, und der Platzhalter fällt kaum
+auf. Den grauen Kasten selbst gibt es ohnehin: Paige zeichnet ihn für jedes
+Bild, das es nicht geladen hat — auf Gregors Bildern stehen welche in **echten**
+Bildmaßen. Die Frage war nur, wie groß er ist.
+
+Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt),
+20×20. Gregors Entscheidung: *„ok, option a"*.
+
+**Von Gregor an 1.0.60 gemessen — der Text ist frei, aber die Bilder werden
+zerschnitten (E-95).** Auf seinem Bild ist der blaue Doctolib-Kreis **blau**,
+nicht grau: Paige hat das Bild geladen und kennt seine echte Größe. Es ist
+**eingebettet** (`cid:`), und unser `height="20"` schneidet es ab. Bei externen
+Bildern (`http:`) ist die Vorgabe dagegen richtig — dort weiß Paige nichts. Die
+Unterscheidung fehlt und kommt in 7.2.0.61.
+
+**Tests: 150 von 150.**
+
+**Neu aufgeschrieben, nicht behoben:** die Betreffzeile wird mitten im Wort
+umbrochen (`Toner bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
+denen Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Ursache
+noch ungemessen, siehe [BEFUNDE.md](BEFUNDE.md) unter E-94.
+
+## 7.2.0.59 — kein Inhaltsverlust mehr beim Weiterleiten (E-93), und die Fragezeichen sind weg (E-90)
+
+> **Noch nicht bestätigt.** Die Prüfanleitung steht unten.
+
+### E-93: beim Weiterleiten gingen 83 Prozent des Inhalts verloren
+
+Gefunden am 14.09.2026 beim Vergleich zweier Bilder: dieselbe Nachricht, einmal
+über Thunderbird weitergeleitet, einmal über Eudora. Die Eudora-Fassung zeigte
+ein zu einem Streifen gequetschtes Logo. **Die eingebaute Spurmarke nannte die
+Ursache in einer Zeile:**
+
+```
+Fassung=EDITOR (Anwender hat im Zitat geaendert)
+OrigBytes=105125  EditorBytes=17889  Fundstelle=-1
+```
+
+Hinaus gingen **17.889 statt 105.125 Byte**, obwohl niemand etwas angefasst
+hatte. E-88 prüft, ob der Klartext des Originals als ein zusammenhängendes
+Stück in der Editorfassung steckt. Bei einer Weiterleitung **einer bereits
+weitergeleiteten** Nachricht (`Fw: Fw:`) baut Paige den verschachtelten Text so
+um, dass der Vergleich ins Leere greift — und der Fehlschlag wurde als „der
+Anwender hat im Zitat geändert" gedeutet.
+
+**Jetzt wird zuerst gefragt, ob überhaupt getippt wurde.** Paige führt darüber
+Buch (`CPaigeEdtView::HasChanged`). Hat der Anwender nichts angefasst, gibt es
+nichts zu schützen, und das Original geht hinaus. Die Regel greift
+ausschließlich in diesem Fall; im Zweifel bleibt alles beim Alten.
+
+### E-90: nicht darstellbare Zeichen fallen weg statt zu Fragezeichen zu werden
+
+Ein Emoji ergab **zwei** Fragezeichen, weil es außerhalb der Grundebene liegt
+und Windows jede Hälfte des Surrogatpaars einzeln ersetzt. Unsichtbare Zeichen
+(Zero-Width-Space und Verwandte, in Newslettern zu Dutzenden zwischen den
+Buchstaben) wurden ebenfalls zu Fragezeichen. Beides fällt jetzt ersatzlos weg.
+Kyrillisch, Griechisch und Polnisch bleiben unangetastet.
+
+## Zum Prüfen
+
+| | |
+|---|---|
+| **1. Der Inhaltsverlust** | Die verschachtelte Weiterleitung (`Fw: Fw:`) noch einmal weiterleiten, **ohne etwas dazuzuschreiben**. Die angekommene Nachricht muss so vollständig aussehen wie die Thunderbird-Fassung |
+| **2. Die Gegenprobe** | Dasselbe noch einmal, aber **etwas dazuschreiben**. Der eigene Text muss ankommen |
+| **3. Im Protokoll** | `LogLevel=58527`. Bei 1 muss `Fassung=ORIGINAL` und `getippt=0` stehen, bei 2 `Fassung=EDITOR` und `getippt=1` |
+| **4. Die Fragezeichen** | Eine Nachricht mit Emoji ansehen. Statt `?? ?? ??` steht dort jetzt nichts |
+
+**Tests: 150 von 150**, zwei davon neu — der zweite ist die Gegenprobe, ohne
+die die neue Regel den eigenen Text verschlucken könnte.
+
+## 7.2.0.58 — die Bildhöhe zählt wieder für die Zeilenhöhe (E-89)
+
+> **Von Gregor am 14.09.2026 an 1.0.58 bestätigt.** Auf seinem Bild steht die
+> Tonerkartusche sauber über ihrem Text, „Artikelnummer" und „Nachbestellung
+> mit Order No" sind frei und lesbar. Auf die Rückfrage, wo noch etwas
+> überlappe: *„keine überlappung."*
+
+**Die Ursache war eine einzige tote Zeile.** In `PGHTMIMP.CPP:2110-2111` stand:
+
+```c
+current_style.ascent = image_record.source_height;   // Bildhöhe gesetzt
+current_style.ascent = (short)original_descent;      // … sofort überschrieben
+```
+
+`original_descent` stammt aus dem **Textstil**, aufgenommen bevor das Bild
+überhaupt bekannt war. Übrig blieb `ascent = max(Text-Ascent, Text-Descent)` —
+drei bis zwölf Bildpunkte, **unabhängig davon, wie hoch das Bild ist**. Ein
+150 Punkt hohes Bild saß in einer textkleinen Zeile und deckte zu, was darüber
+stand. Die zweite Zeile ist gestrichen; damit wirkt die erste wie beabsichtigt.
+
+**Dass diese Stelle zählt, ist gemessen:** `ProcessEmbed` (`:2962`) setzt
+`translator.format = current_style`, und der Aufruf steht zwanzig Zeilen
+darunter.
+
+**Der Umweg aus 7.2.0.57 ist zurückgenommen.** Die Vorgabe 200×90 für Bilder
+ohne bekanntes Maß erschien auf Gregors Bild als leerer grauer Kasten: Platz,
+der weggenommen wird, ohne dass etwas zu sehen ist. Ein Bild ohne Maß bleibt
+jetzt unangetastet — Paige kennt die wirkliche Größe, sobald es die Datei
+geladen hat. Dabei fiel ein zweiter Fehler auf: die Vorgabe traf auch Bilder,
+von denen **nur die Breite** bekannt war; die bekommen jetzt ihre Breite und
+keine erfundene Höhe. Der Deckel gegen zu breite Bilder bleibt.
+
+**Wie 7.2.0.57 sich widerlegt hat:** die eingebaute Spurmarke nannte in
+Gregors Lauf `gesamt=25 unveraendert=22 aus-CSS=0 gedeckelt=0` — kein einziges
+Bild hatte seine Größe im CSS, keines war zu breit, geändert wurden 48 Bytes
+von 62.057. Die Bilder überlappten, **obwohl ihre Größe stimmte**. Damit war
+die Größe als Ursache ausgeschlossen und die Suche auf die **Position**
+gelenkt.
+
+**Tests: 148 von 148.** Vier davon umgeschrieben, weil sie die Vorgabe
+festhielten; sie prüfen jetzt das Gegenteil.
+
+## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
+
+> **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
+> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Tonerkartusche über
+> „Artikelnummer" und „Nachbestellung mit Order-No", darunter steht ein leerer
+> grauer Kasten. **Die Spurmarke aus seinem Lauf widerlegt die angenommene
+> Ursache:** `gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3 gedeckelt=0` — kein
+> einziges Bild hatte seine Größe im CSS, keines war zu breit, geändert wurden
+> 48 Bytes von 62.057. Die Bilder überlappen, **obwohl ihre Größe stimmt**.
+> Damit ist die fehlende Bildgröße als Ursache ausgeschlossen; gesucht wird ab
+> jetzt bei der **Position**, nicht der Ausdehnung. Der Stand bleibt im
+> Programm, weil er nichts verschlechtert außer der 200x90-Vorgabe — die
+> erzeugt den grauen Kasten und wird zurückgenommen. Einzelheiten in
+> [BEFUNDE.md](BEFUNDE.md) unter E-89.
+
+**Was Gregor damit tun kann:** einen Newsletter weiterleiten und dabei
+**lesen, was er schreibt**. Bisher lagen Logo und Kacheln in Originalgröße
+über der Überschrift und über den Absätzen — *„1 und da ist alles
+durcheinander, man kann ja nichts lesen."* (14.09.2026, an 1.0.56). **Von
+ihm noch nicht bestätigt.**
+
+**Der Maßstab ist Thunderbird — aber nur seine Schwelle, nicht sein
+Aussehen.** Gregor hat sein Thunderbird-Verfassenfenster mit derselben
+Nachricht gezeigt: auch dort ist es nicht schön, rote Hilfslinien um jede
+Tabellenzelle. Aber jedes Bild sitzt in seiner Zelle, und der Text daneben
+ist vollständig lesbar. Thunderbird rechnet mit Gecko, also mit einer
+echten HTML-Maschine; Paige übersetzt HTML in ein eigenes Format und kennt
+keine einzige CSS-Eigenschaft (`PGHTMDEF.C:20-48`). **Das Bild links ist
+nicht erreichbar. Die Lesbarkeit ist es.**
+
+### Warum das Verfassenfenster überhaupt geändert werden darf
+
+Seit **E-88** (7.2.0.56) geht beim Senden das aufgehobene Original hinaus,
+nicht die Editorfassung. Das Verfassenfenster ist damit nur noch
+Arbeitsfläche: es muss dem Original nicht gleichen, es muss lesbar sein.
+Ohne E-88 wäre dieselbe Änderung ein Eingriff in die versandte Nachricht
+gewesen.
+
+### Zwei Ursachen, beide gemessen
+
+**(1) Keine auswertbare Größe.** Paiges HTML-Leser holt die Bildgröße
+**ausschließlich** aus den Attributen `width` und `height`
+(`PGHTMIMP.CPP:2019-2022`). Steht sie nur im CSS — `style="width:16px"` —,
+bleiben `source_width` und `source_height` auf `0`. Nachgetragen werden sie
+erst beim **Laden** des Bildes, aus der Datei, also in **Originalgröße**
+(`PgEmbeddedImage.cpp:424-427`) — da war der Absatz längst umbrochen. Der
+Nachtrag sucht seine Stelle dann über `embed->style == embed_ptr->style`
+(`PgEmbeddedImage.cpp:458-507`) und bleibt beim **ersten** Bild gleichen
+Stils stehen; bei mehreren Bildern trifft er die falsche. Genau das ist das
+Übereinanderliegen.
+
+**(2) Auswertbar, aber zu breit.** Ein zweites Thunderbird-Bild
+(freenet/audibene-Rundbrief) zeigt dasselbe Kopflogo im schmalen
+Verfassenfenster schmal und in der breiteren Leseansicht breiter —
+proportional auf die verfügbare Spaltenbreite gerechnet. Ein `<img>` mit
+`width="1200"` sprengt die Zeile auch dann, wenn Paige die Zahl lesen kann.
+
+**Gemessen an Gregors gesicherten Postfächern** (alle `.mbx` unter
+`C:\Users\Gregor\Eudora72-Postfaecher-gesichert`): **2884** `<img>`, davon
+**2601** mit Attribut, **122** nur mit CSS-Größe, **161** ganz ohne
+Größenangabe.
+
+### Was jetzt passiert
+
+`E89BilderMessbarMachen` (`msgutils.cpp`) schreibt die Fassung um, die in
+den Editor geht:
+
+* aus `style="width:16px"` wird zusätzlich `width="16"`; das `style` bleibt
+  stehen, Paige sieht ohnehin darüber hinweg
+* aus `style="width:100%"` wird `width="100%"` — `decimal_value_percent`
+  rechnet Prozent gegen die Seitenbreite (`PGHTMIMP.CPP:2020`). Für die
+  **Höhe** geht das nicht: dort liest `numeric_value` nur die Zahl, aus
+  `50%` würden 50 Bildpunkte. Also lieber die Vorgabe
+* wo gar nichts steht, greift **200x90**. Hier ist nichts zu rechnen —
+  weder Originalgröße noch Seitenverhältnis sind bekannt, und nachgeladen
+  wird beim Verfassen nichts
+* **kein Bild wird breiter oder höher als 600 Bildpunkte**; das jeweils
+  andere Maß geht im selben Verhältnis mit, damit nichts verzerrt
+
+Ein Bild, das `width` und `height` bereits als Attribut trägt und unter dem
+Deckel bleibt, wird **Zeichen für Zeichen** nicht angefasst — das sind die
+meisten. `src` bleibt in jedem Fall unberührt, damit eingebettete
+`cid:`-Teile weiter gefunden werden.
+
+**Gemessen statt vermutet, dass die echte Fensterbreite nicht zu haben
+ist:** der Aufruf in `CSummary::ComposeMessage` geht mit
+`kDontDisplayOrQueue` hinein (`summary.h:142`), und beide Zweige, die ein
+Fenster erzeugen könnten, hängen an dieser Bedingung
+(`summary.cpp:1818-1837`). Zur Umschreibzeit gibt es kein
+Verfassenfenster, und ein gespeichertes Maß auch nicht. Deshalb ein fester
+Deckel.
+
+### Warum nicht der Platzhalter
+
+Das Bild durch `[Bild]` zu ersetzen wäre radikaler und sicherer lesbar —
+und würde **E-88 zerstören**. `E88OriginalEinsetzen` verlangt, dass der
+Klartext des Originals in der Editorfassung als **ein** zusammenhängendes
+Stück steckt. `E88NurText` wirft Markierungen weg, ein zusätzliches
+`width=` ist für den Vergleich also unsichtbar; ein eingefügtes `[Bild]`
+mitten im Zitat zerreißt ihn, und das Original ginge nie wieder hinaus. Ein
+Test fährt genau diese Gegenprobe, damit die Begründung nicht nur behauptet
+ist.
+
+### Wie sichergestellt ist, dass das Original unberührt bleibt
+
+Die beiden Fassungen trennen sich an **einer** Stelle in `summary.cpp`:
+`ComposeMessage` bekommt `EditorBody`, gemerkt wird `Body`. Beides hängt an
+derselben Bedingung `bE88Merken` — ist `ForwardOriginalHTML` auf `0`, geht
+die Editorfassung selbst hinaus, und dann unterbleibt auch die Umschrift.
+Jeder Testaufruf misst zusätzlich nach, dass der Eingangstext danach Byte
+für Byte derselbe ist.
+
+### Zum Prüfen
+
+`LogLevel=58527` in die `Eudora.ini` (die Vorgabe `25759` enthält
+`DEBUG_MASK_MISC` nicht), dann einen Newsletter mit Bildern weiterleiten.
+Im Verfassenfenster: **nichts liegt übereinander, jeder Satz ist lesbar.**
+Im Protokoll steht eine Zeile
+
+```
+E-89 Bilder im Editor: gesamt=… unveraendert=… aus-CSS=… Vorgabe=… gedeckelt=… geaendert=… Bytes vorher=… nachher=…
+```
+
+und unmittelbar danach beim Absenden die beiden E-88-Zeilen, die weiterhin
+`Fassung=ORIGINAL` sagen müssen. Sagen sie das nicht mehr, hat E-89 dem
+Befund E-88 etwas weggenommen — dann ist es ein Fehler, kein Fortschritt.
+
+**Grenzen, die bleiben:** Kästen, Rahmen und Hintergründe erscheinen im
+Verfassenfenster weiterhin nicht; die Tabellenaufteilung wird nicht
+nachgebaut; und wo keine Größe bekannt ist, ist 200x90 geraten und kann
+verzerren. Beim Empfänger ändert sich davon nichts.
+
+**Gebaut:** 0 Fehler. **Tests:** 148 von 148 bestanden — 131 alte, 17 neue
+zu E-89, davon sieben Gegenproben.
+
+## 7.2.0.56 — die weitergeleitete Nachricht kommt an, wie sie gelesen wurde (E-88)
+
+**Was Gregor damit tun kann:** einen Newsletter weiterleiten oder
+beantworten und darauf zählen, dass der Empfänger ihn mit Kästen,
+Hintergründen, richtigen Bildgrößen und Emoji sieht — also so, wie Gregor
+ihn beim Lesen vor sich hatte. **Von ihm noch nicht bestätigt.**
+
+Das ist die zweite Hälfte von **E-87**. Dort wurde erreicht, dass HTML
+überhaupt zitiert wird; hier geht es darum, dass es den Verfassen-Editor
+unbeschädigt überlebt. Seine Entscheidung zur Umsetzung: *„ich nehme deine
+empfehlung."*
+
+### Warum es keinen anderen Weg gab
+
+Verfasst wird mit **Paige**. Dessen HTML-Leser kennt **keine einzige
+CSS-Eigenschaft** (`PGHTMDEF.C:20-48`), aus `div` wertet er allein `align`
+aus (`PGHTMIMP.CPP:1193-1201`). Von **1506** `<img>` in Gregors Postfach
+tragen **1262** ihre Größe als HTML-Attribut — die kann Paige
+(`PGHTMIMP.CPP:1897-1916`) —, **162 nur als CSS**; die erschienen in
+Originalgröße und überlagerten den Text. Ein zweiter, HTML-fähiger Editor
+steht nicht zur Verfügung: Trident-Ansichten gibt es nur zum Lesen,
+`CCompMessageFrame` erzeugt fest `PgCompMsgView`.
+
+Den Editor HTML beibringen war also ausgeschlossen. Bleibt: den Editor
+umgehen.
+
+### Was jetzt passiert
+
+`CSummary::ComposeMessage` legt den Rumpf, wie `QuoteText` ihn gebaut hat,
+im Verfassendokument ab (`summary.cpp:1497`). `PgMsgView::ExportMessage`
+(`PgMsgView.cpp:407`) — die eine Stelle, an der die Editor-Fassung über
+`pDoc->SetText()` zum Rumpf der Nachricht wird und damit auf die Leitung
+geht (`sendmail.cpp:3368`) — setzt statt ihrer das Original ein, **sobald
+sich belegen lässt, dass im Zitat nichts geändert wurde.**
+
+Der Beleg ist ein zustandsloser Vergleich: der Klartext des Originals
+(Markierungen weg, Entitäten und alles über 127 zu `?`, Leerraum
+zusammengezogen) muss sich im Klartext der Editor-Fassung als **ein
+zusammenhängendes Stück** wiederfinden. Was davor und dahinter steht, ist
+Gregors eigener Text und wird wieder angesetzt. Findet sich das Original
+nicht — weil im Zitat etwas geändert wurde —, bleibt es bei der
+Editor-Fassung.
+
+**Warum gerade dieses Verfahren:** es braucht keinen gemerkten Vorzustand,
+keinen Änderungszähler und keine Annahme darüber, wo der Anwender tippt.
+Paiges eigener Zähler (`PaigeEdtView.h:192-193`) taugte nicht, weil jedes
+Zwischenspeichern ihn zurücksetzt (`compmsgd.cpp:1815`). Die Annahme „der
+Zusatz steht immer vorn" taugte nicht, weil eine angehängte Signatur
+dahinter steht. Und eine von Hand gebaute MIME-Nachricht mit zwei Teilen
+hätte an `sendmail.cpp` vorbei eine zweite Erzeugung aufgemacht — zu viel
+Fläche für einen Fehler, den vor dem Absenden niemand sieht.
+
+### Die beiden Sicherungen
+
+Sie sind Bedingung, nicht Zugabe — das Verfassenfenster zeigt ja etwas
+anderes als das, was hinausgeht.
+
+* **Drei Spurmarken**, alle `DEBUG_MASK_MISC` (`LogLevel=58527`).
+  `E-88 vor dem Absenden` nennt die gewählte Fassung und den Grund, beide
+  Größen, die Länge des eigenen Zusatzes davor und dahinter und den
+  Antworttyp. `E-88 auf der Leitung` nennt, was **wirklich** hinausgeht.
+  `E-88 eingebettete Teile` meldet, wenn das Aufräumen der eingebetteten
+  Bilder übersprungen wurde — dazu der Abschnitt darunter.
+* **Der Schalter `ForwardOriginalHTML`** (Vorgabe `1`, `[Settings]`,
+  `EudoraRes.rc:7668`). Mit `0` gilt wieder das Verhalten von 7.2.0.55.
+  Dokumentiert in [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Abschnitt 3.
+
+### Die Bilder mussten mitgesichert werden
+
+`PgMsgView::SaveInfo` warf bisher jeden eingebetteten Teil weg, dessen
+`cid:`-Kennung im Paige-Inhalt nicht mehr vorkam. Das ist richtig, solange
+die Paige-Fassung die Nachricht ist — setzt `ExportMessage` gleich darauf
+das Original ein, zeigt dieses auf bereits gelöschte Teile, und beim
+Empfänger fehlte das Bild **ohne jede Meldung**. Solange ein Original
+aufgehoben ist, unterbleibt das Aufräumen; der Preis sind höchstens ein
+paar unreferenzierte Teile in der Nachricht — derselbe Zustand, in dem sie
+vor dieser Schleife ohnehin war.
+
+### Was das NICHT behebt
+
+* **Das Verfassenfenster bleibt schlicht.** Paige kann weiterhin kein CSS,
+  und daran ändert der Umbau nichts — er ändert nur, was hinausgeht.
+* **Wer im zitierten Teil etwas ändert, bekommt wieder die alte Fassung.**
+  Das ist Absicht: sonst ginge die Änderung verloren.
+* **Der eigene Zusatz geht als reiner Text hinaus**, nicht mit seiner
+  Auszeichnung.
+* **Nach dem Schließen des Verfassenfensters ist das Original fort.** Wird
+  die Nachricht später aus *Out* erneut geöffnet, gilt wieder das alte
+  Verhalten; die Spurmarke sagt dann `EDITOR (kein Original gemerkt)`.
+
+**Testlauf: 131 Tests, 131 bestanden, 0 fehlgeschlagen** — zehn davon neu
+zu E-88 (`TestE88.cpp`), darunter fünf **Gegenproben**: im Zitat geändert,
+mitten im Zitat gelöscht, Schalter auf `0`, kein Original gemerkt, reiner
+Textrumpf. Der geprüfte Code wird von `Extract.ps1` bei jedem Bau frisch
+aus `msgutils.cpp` geschnitten, nicht abgeschrieben.
+
+### Zum Prüfen
+
+1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Settings]`.
+2. Starten, den Newsletter aus **E-86** weiterleiten — einmal ohne
+   Kommentar, einmal mit einem Satz darüber. Beide an die eigene Adresse.
+3. Im Protokoll nach `E-88` suchen. Erwartet: `Fassung=ORIGINAL
+   (unveraendert)` beim ersten, `Fassung=ORIGINAL (mit Zusatz)` beim
+   zweiten, und `E-88 auf der Leitung` mit `IsFancy=2` (HTML).
+4. Die angekommenen Nachrichten neben das Original halten.
+
+Steht dort `Fassung=EDITOR`, sagt der Klammerzusatz den Grund.
+
+---
+
+## 7.2.0.55 — HTML bleibt erhalten, beim Lesen wie beim Weiterleiten (E-86, E-87)
+
+**Was Gregor damit tun kann:** eine HTML-Nachricht weiterleiten oder
+beantworten, ohne dass Fettung, Kursiv, Verweise, Schriftfarben und
+Tabellenhintergründe verlorengehen. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: die weitergeleitete Nachricht kam beim Empfänger als Fließtext
+mit blauen Verweisen an — *„kommt auch so an"*. Seine Entscheidung zur
+Umsetzung: *„neue INI-Einstellung machen, die für beides gilt. und HTML immer
+behält. und es aber dokumentieren."*
+
+### Ein Weg, nicht zwei
+
+Antworten und Weiterleiten laufen beide durch `CSummary::ComposeMessage`
+(`summary.cpp`, ab Zeile 899) — `ID_MESSAGE_FORWARD` und `ID_MESSAGE_REPLY`
+sind zwei `case` derselben Funktion. Ein Schalter an einer Stelle genügt.
+
+Die Stelle, die ich zuerst genannt hatte (`TocFrame.cpp:1684`), war **nicht**
+der normale Weg, sondern der Sonderfall *Antwort auf mehrere ausgewählte
+Nachrichten*.
+
+### Die Ursache
+
+`summary.cpp:1110` verwarf das Ergebnis der eigenen Messung:
+
+```c
+IsRich = IsFancy(fullMes);
+if (!IsFlowed() && !IsXRich() && IsRich != IS_FLOWED)
+    IsRich = IS_ASCII;
+```
+
+`IsFancy` hatte den Rumpf bereits **als HTML erkannt** — herabgestuft wurde
+trotzdem, sobald die Flags `MSF_XRICH`/`MSFEX_FLOWED` im Übersichtseintrag
+fehlten. `IS_ASCII` bedeutet für `QuoteText`, dass nicht der HTML-Zweig über
+`GetBodyAsHTML` genommen wird, sondern `WrapText` mit `">"`-Präfix. Die blauen
+Verweise im Ergebnis stammten von `MakeAutoURLSpaghetti`, nicht aus der
+Nachricht.
+
+### Der Schalter
+
+| Schlüssel | Abschnitt | Vorgabe | wirkt |
+|---|---|---|---|
+| `KeepHTMLInResponses` | `[Settings]` | **1** | die Messung am Rumpf zählt mehr als die Flags |
+
+`0` stellt das alte Verhalten her. Dokumentiert in
+[EINSTELLUNGEN.md](EINSTELLUNGEN.md) — **und nur dort**: bis zum 14.09.2026
+standen dieselben Schlüssel in zwei Tabellen, im README und in
+`EINSTELLUNGEN.md`, zwölf davon in beiden. Gregors Entscheidung: *„nur in
+einstellungen, nicht in readme"*. Das README verweist jetzt.
+
+### Was der Schalter NICHT behebt
+
+Verfasst wird mit **Paige**, und dessen HTML-Leser kennt **kein `span` und
+keine einzige CSS-Eigenschaft** (`PGHTMDEF.C:20-48` — weder
+`background-color` noch `border`, `padding`, `margin`); aus `div` wertet er
+allein `align` aus. Was Paige nicht versteht, ist nach `ExportMessage`
+endgültig fort — **und genau dieser Text geht hinaus.**
+
+Es überleben also: **Fettung, Kursiv, Verweise, Schriftfarben,
+`<table bgcolor>`.** Es überleben **nicht**: CSS-Kästen und -Hintergründe
+eines modernen Newsletters. Das ist keine Stelle, die HTML wegwirft, sondern
+ein Editor, der es nicht halten kann — dafür reicht kein Schalter. Als Grenze
+dokumentiert in `EINSTELLUNGEN.md`.
+
+**Seit 7.2.0.56 erledigt:** der Original-HTML-Block wird am Paige-Editor
+vorbeigeführt und beim Senden wieder eingesetzt (**E-88**, Abschnitt
+darüber). CSS-Kästen und -Hintergründe kommen damit beim Empfänger an —
+im Verfassenfenster sind sie weiterhin nicht zu sehen.
+
+### Und die Anzeige: HTML-Nachrichten sehen aus wie im Browser (E-86)
+
+**Was Gregor damit tun kann:** einen HTML-Newsletter öffnen und ihn so sehen,
+wie ihn ein Browser zeigt — abgerundete Kästen statt eckiger, keine blauen
+Rahmen um verlinkte Bilder. **Von ihm noch nicht bestätigt.**
+
+**Zwei Verdächte wurden vorher widerlegt, beide am laufenden Programm.** Der
+erste war meiner: Eudora lege sein eigenes `<html><head><body>` um die
+Nachricht, MSHTML verwerfe deren zweites, und damit fielen Hintergrund und
+Rahmenangaben weg. Der zweite: beim Zusammensetzen gehe etwas verloren.
+
+Gemessen mit einer Spurmarke, die die fertige Anzeigedatei sichert:
+
+```
+E-86 fixup: FixupSource laeuft  BODY-Elemente=1  Hintergrund=#ffffff
+```
+
+**`BODY-Elemente=1`** — es gibt kein zweites `<body>`. Und die gesicherte
+Datei hat **36.078 Bytes, 67 Tabellen, 12 Bilder und alle 118
+`border`-Angaben** der Nachricht, sogar eine mehr als das Original (Eudoras
+Zitatbalken). Beim Zusammensetzen geht **nichts** verloren.
+
+**Die Ursache war der Rendermodus.** MSHTML läuft ohne besondere Anweisung im
+Standardmodus des **Internet Explorer 7 von 2006**. Die Mail enthält dreimal
+`border-radius`, das dieser Modus nicht kennt — abgerundete Ecken werden zu
+Kästen, und was im CSS einen Rahmen unterdrücken soll, greift nur teilweise.
+
+Behoben mit einer Zeile, als erste im Kopf der Anzeigedatei:
+
+```html
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+```
+
+**Gegenprobe am laufenden Programm:** dieselbe Spurmarke meldet jetzt
+`Hintergrund=transparent` statt `#ffffff`. Der Modus hat nachweislich
+gewechselt.
+
+**Nebenbei gelernt:** Der erste Messlauf war ungültig. Das Werkzeug öffnete die
+erstbeste Nachricht — die weitergeleitete aus dem Out-Postfach, die durch E-87
+ohnehin formatierungslos ist (Anzeigedatei 4774 B, `<body>` ohne Attribute).
+Erst als in der `Eudora.ini` nur noch ein Postfach als offenes Fenster stand,
+wurde die richtige getroffen.
+
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+## 7.2.0.54 — zwei Spurmarken, die E-86 entscheiden
+
+**Was Gregor damit tun kann:** die Newsletter-Mail öffnen und danach zwei
+Dinge liefern, die den Befund entscheiden — die Datei `E86-Anzeige.htm` im
+Eudora-Verzeichnis und die Zeile `E-86 fixup:` im Protokoll. **Behoben ist
+E-86 damit nicht.**
+
+**Der erste Verdacht ist widerlegt, und zwar gemessen.** Er lautete: Eudora
+legt sein eigenes `<html><head><body>` um die Nachricht, MSHTML verwirft
+deren zweites `<head>`/`<body>`, und damit fallen Hintergrundfarbe,
+`img{border:0}` und die Bildgrößen weg.
+
+Nachgemessen wurde mit einer **echten** Nachricht aus Gregors Postfach: der
+Weg des Programms wurde nachgebaut, beide Fassungen in MSHTML geladen und der
+**berechnete** Stil aus dem DOM gelesen. Für alle fünf geprüften Nachrichten:
+
+```
+MAIL-ALLEIN     body-Hintergrund=#000000  img-in-a-Rahmen=0px
+EUDORA-FASSUNG  body-Hintergrund=#000000  img-in-a-Rahmen=0px  Stylesheets=3
+```
+
+`Stylesheets=3` heißt: Eudoras Stylesheet **und** die beiden der Mail —
+MSHTML verwirft nichts. Das Abbild zeigt schwarzen Grund und rahmenlose
+Bilder.
+
+Dazu passt, dass das Original den Fall längst kennt: **`CTridentView::FixupSource`**
+(`TridentView.cpp:1912`) existiert ausdrücklich für das zweite `<body>`-Tag
+und kopiert dessen Attribute auf das erste.
+
+**Deshalb wurde nichts geändert.** Ein Symptom zu überdecken, dessen Ursache
+nicht belegt ist, hätte den Befund nur unsichtbar gemacht.
+
+Stattdessen zwei Spurmarken, beide nur bei eingeschaltetem Protokoll:
+
+1. `LoadMessage` legt die fertige Anzeigedatei als **`E86-Anzeige.htm`** im
+   Eudora-Verzeichnis ab. Bisher löschte der nächste Aufbau sie — sie war
+   nicht zu greifen.
+2. `FixupSource` meldet in **einer** Zeile, ob es läuft, wie viele
+   `BODY`-Elemente MSHTML angelegt hat und welchen Hintergrund es berechnet.
+
+**Auch das ist gemessen:** angezeigt wird über MSHTML, nicht über Paige —
+`UsingTrident()` hängt an `UseBidentAlways`, Vorgabe 1, und Gregors
+`Eudora.ini` setzt den Schlüssel nicht. Die zweite Ansicht scheidet als
+Erklärung aus.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+## 7.2.0.53 — Eudora lässt sich wieder beenden (E-83)
+
+**Was Gregor damit tun kann:** Eudora beenden, ohne dass *„You currently have
+1 task(s) running"* im Weg steht. **Von ihm noch nicht bestätigt.**
+
+Sein Befund: *„immer noch die gleiche meldung, kann deshalb eudora nicht
+beenden."* — und diesmal war die Spurmarke drin, die es entscheiden konnte.
+
+**Die Anzeige log.** Im Fenster stand *„Waiting in the task queue to be started
+…"*, im Protokoll stand:
+
+```
+E-83 liegengeblieben: uid=35 zustand=FERTIG(5) m_pThread=gesetzt
+                      aktiv=1/10 titel="Resyncing"
+```
+
+Der Zustand ist **FERTIG**. Die Aufgabe wartete nie auf ihren Start — der Text
+stammt aus `Register()` und wird nie überschrieben. Zwei Wochen lang hat dieser
+Satz die Suche in die falsche Richtung geschickt.
+
+**Die Zählung zeigt das Leck:**
+
+| | |
+|---|---|
+| fertig, Nachbearbeitung angefordert | 15 |
+| fertig, **ohne** Nachbearbeitung | **17** |
+| liegengeblieben, alle 15 s gemeldet | 17 |
+
+`QCTaskManager::RemoveWorkerThread` fordert die Nachbearbeitung nur an, wenn
+`IsIgnoreIdleSet()` oder `m_nStartIdle == GetStartIdle()` — sonst stand dort
+**nichts**. Das war eine Sackgasse: `DoPostProcessing` arbeitet ausschließlich
+`m_PostProcessList` ab, und dort hinein kommt eine Aufgabe **nur** über
+`RequestPostProcessing()`. Auch der Leerlauf holt sie nicht nach. Sie blieb in
+`m_TaskInfoList` stehen und zählte weiter als laufend.
+
+`m_nStartIdle` wird nur in `StartTasks()` gesetzt, also für Aufgaben aus einer
+`QCTaskGroup`. IMAP-Aktionen aus `CActionQueue::OnIdle` laufen daran vorbei und
+setzen auch `IsIgnoreIdle` nicht — deshalb traf es gerade IMAP.
+
+**Zwei Vermutungen sind dabei widerlegt worden**, beide aus `BEFUNDE.md`: der
+Verdacht auf `StartWorkerThread` mit `m_pThread == NULL` (der Zeiger war in
+jeder gemessenen Zeile gesetzt), und eine der drei „ausgeschlossenen" Ursachen
+war **falsch ausgeschlossen** — `DelayTasks`/`StartTasks` werden sehr wohl
+gerufen, von `QCTaskGroup` an drei Stellen.
+
+Dass die Ursache jetzt dasteht statt einer weiteren Vermutung, liegt an einer
+Spurmarke, die Zustand, Faden, Zähler und Obergrenze in **einer** Zeile nennt.
+Zwei getrennte Zeilen hätten die Ausrede „zu anderer Zeit" offengelassen.
+
+## 7.2.0.52 — der Zeichensatz stand nie im Nachrichtenkopf (E-85, zweiter Anlauf)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen —
+auch in HTML-Newslettern, also in der Sorte Nachricht, bei der es vorher nie
+funktionierte. **Von ihm noch nicht bestätigt.**
+
+**7.2.0.51 hat den Fehler nicht behoben, und sein Test hat das gezeigt.** Seine
+Meldung: *„das ist auf jeden fall eine frische mail, ist aber falsch
+dargestellt!"* — dazu das Bild, auf dem der **Betreff richtig** und der **Rumpf
+falsch** war. Diese Kombination war der Schlüssel.
+
+### Die Ursache
+
+`CImapDownloader::Write` holte den Zeichensatz aus `m_pHd->m_TLMime`. **TL heißt
+Top Level.** Das Feld wird genau **einmal** gefüllt — beim Holen des
+Nachrichtenkopfs in `UIDFetchHeaderFull` — und beim Durchlauf durch die
+MIME-Teile nie wieder gelesen.
+
+Bei `multipart/alternative`, und das ist jeder HTML-Newsletter, steht im
+Top-Level-Header **kein `charset`**, sondern nur `boundary`. Der Zeichensatz
+steht im **einzelnen Teil**; dessen Struktur trägt ihn auch
+(`PARAMETER *parameter`, `Imapdll/public/inc/exports.h:147`) — nur hat ihn dort
+nie jemand ausgelesen.
+
+Damit hat die Behebung in 7.2.0.51 den **Suchbereich** repariert
+(`FindMIMECharset` statt einer Suche, die vor `IDS_MIME_UTF_8` endet) und
+durchsuchte weiterhin die **falsche Quelle**. Bei einer einteiligen
+`text/plain`-Nachricht steht der Zeichensatz tatsächlich im Nachrichtenkopf —
+dort war der Weg immer richtig, und **deshalb ist es nie aufgefallen**.
+
+Zwei Gegenproben, beide am Quelltext: in ganz `EuImap` gibt es **keine zweite
+Stelle**, die den Zeichensatz eines Teils liest; und die einzige weitere
+Verwendung von `charset` ist `Translate2047` im **Kopfzeilen**weg — genau
+deshalb war der Betreff richtig.
+
+### Die Behebung
+
+Neues Feld `m_szCurrentCharset`, gesetzt an denselben drei Stellen, an denen
+schon `m_CurrentBodyType` und `m_szCurrentBodySubtype` gesetzt werden, gefüllt
+aus `body->parameter`. Der Zeichensatz des Teils hat Vorrang, der
+Nachrichtenkopf bleibt Rückfall.
+
+**Dazu die Spurmarke, die von Anfang an hätte dastehen müssen.** Sie nennt
+**beide** Quellen in **einer** Zeile:
+
+```
+E-85 imap: teil-charset=… tl-charset=… idx=… uebersetzt=… typ=…/… zeilenweise=…
+```
+
+Einmal je Nachrichtenteil, nicht je Block. Ohne sie ließ sich nicht
+unterscheiden, ob der Übersetzungsweg nicht greift oder ob nur eine alte
+Nachricht angezeigt wird — und genau diese Unterscheidung hat einen ganzen
+Testdurchgang gekostet.
+
+### E-83: eine Vermutung widerlegt, eine neue Spur
+
+Der Verdacht, der seit dem 11.09.2026 in `BEFUNDE.md` stand — `StartWorkerThread`
+tue bei `m_pThread == NULL` stumm nichts — **hält nicht**. `m_pThread` wird an
+genau einer Stelle geschrieben und nirgends wieder auf NULL gesetzt.
+
+Außerdem war eine der drei „ausgeschlossenen" Ursachen **falsch
+ausgeschlossen**: die Doku behauptete, `DelayTasks`/`StartTasks` rufe niemand
+auf — tatsächlich ruft `QCTaskGroup` beide, und die wird an drei Stellen
+benutzt.
+
+Der neue, stärkste Kandidat: `RemoveWorkerThread` fordert die Nachbearbeitung
+nur unter zwei Bedingungen an, und IMAP-Aktionen aus `CActionQueue::OnIdle`
+laufen daran vorbei. Bleibt eine Aufgabe liegen, wird der Destruktor von
+`CImapAction` nie erreicht, der `ActionDone()` ruft — **die Aktionswarteschlange
+bleibt für immer in Bearbeitung und keine weitere IMAP-Aktion läuft**. Das wäre
+zugleich die Erklärung dafür, dass nichts Neues abgerufen wird. Noch **nicht**
+am laufenden Programm gemessen, deshalb nicht behoben — aber die Spurmarke
+dafür ist drin und meldet alle 15 Sekunden jede liegengebliebene Aufgabe.
+
+### Zum Prüfen
+
+**Eine schon abgerufene Nachricht bleibt kaputt.** Die Übersetzung passiert beim
+**Abruf** und landet in der Mailboxdatei; die Anzeige liest nur, was dort steht.
+Es muss also eine **neue** Nachricht sein.
+
+**Emoji werden zu `?`, und das ist richtig** — die Mailboxdatei speichert
+CP1252, darin gibt es kein Emoji. Umlaute, Anführungszeichen, Gedankenstrich und
+Eurozeichen müssen dagegen stimmen.
+
+**Testlauf: 121 Tests, 121 bestanden, 0 fehlgeschlagen.**
+
+## 7.2.0.51 — Umlaute in per IMAP abgerufenen Nachrichten (E-85)
+
+**Was Gregor damit tun kann:** Mail über IMAP abrufen und die Umlaute lesen,
+statt Zeichensalat zu sehen: in *für* steht das `ü` als UTF-8 `C3 BC`, und
+wer diese zwei Bytes als CP1252 liest, bekommt zwei Zeichen statt einem.
+**Von Gregor noch nicht bestätigt.**
+
+Sein Hinweis war der Schlüssel: *„das hatten wir ja bereits gefixt, soweit ich
+mich erinnern kann?"* — **Z-2b** war am 05.09.2026 genau dieser Fehler, behoben
+in `utils.cpp`, `utils.h` und `TextReader.cpp`. `TextReader` wird von acht
+Dateien benutzt, und **keine davon gehört zum IMAP-Weg**.
+
+Gefunden wurden **drei** Mängel, alle in `EuImap/src/ImapDownload.cpp`:
+
+**Der schwerwiegendste: `charset=utf-8` wurde gar nicht erkannt.** Zeile 4645
+suchte den Zeichensatz mit
+
+```c
+FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9, params->value, -1)
+```
+
+Der Bereich endet bei `IDS_MIME_ISO_LATIN9` = **3613**; `IDS_MIME_UTF_8` ist
+**3614** und liegt damit **dahinter**. Der Aufruf lieferte `-1`, die Bedingung
+darunter war falsch, und es wurde **überhaupt nicht übersetzt** — die
+UTF-8-Bytes gingen roh in die Mailboxdatei und wurden später als CP1252
+angezeigt. Der POP3-Weg macht es seit jeher richtig (`mime.cpp:382`,
+`FindMIMECharset`): er sucht bis `IDS_MIME_UTF_8` **und** verschiebt das
+Ergebnis um eins, damit Index 0 für `windows-*` frei bleibt. Genau diese
+Verschiebung fehlte ebenfalls — beide Wege rechneten auf **verschiedenen
+Skalen**, während `ISOTranslate` nur eine davon kennt. Jetzt benutzt IMAP
+dieselbe Funktion.
+
+**Der zweite: der Rückgabewert von `ISOTranslate` wurde verworfen.** Die
+Funktion liefert die Länge **nach** der Übersetzung; UTF-8 wird auf dem Weg
+nach CP1252 kürzer. `outLen` behielt die alte Länge bis zum `m_mbxFile.Put()`,
+also wurden die überzähligen Altbytes mitgeschrieben.
+
+**Der dritte: der Übertrag über die Stückgrenze fehlte.** Die Behebung von
+Z-2b hält angefangene UTF-8-Zeichen am Ende eines Lesestücks zurück — nur im
+POP3-Weg. IMAP liest bei `text/plain` zeilenweise, bei **`text/html` aber in
+Blöcken von 8192 Bytes**, und hielt nichts zurück. Neu dafür ist
+`ISOTranslateChunk` in `utils.cpp`. Der POP3-Weg schiebt den Übertrag *vor*
+das Stück; das geht hier nicht, weil der Zeiger aus
+`CChunkReader::GetNextChunk` in fremden Speicher zeigt. Deshalb umgekehrt: das
+Zeichen wird **hinter** seine eigenen, verbrauchten Bytes geschrieben.
+
+**Vier Tests** in `TestIsoTranslate.cpp`, jeder über **alle** Stückgrößen von 1
+bis über die Textlänge hinaus. Einer davon hat einen Fehler in meinem eigenen
+Entwurf gefunden: ein Zeichen, dessen Übersetzung **länger** ist als die
+verbrauchten Bytes, wurde verworfen. Das trifft Zeichen außerhalb der BMP —
+U+1F600 ist in UTF-16 ein Surrogatpaar und wird zu **zwei** Fragezeichen. Jetzt
+wird gekürzt statt verworfen.
+
+**Nebenbefund: die Testsuite ließ sich seit dem 10.09.2026 nicht mehr bauen.**
+`OTShim.cpp` ruft seit der Spurmarke zu E-76 `PutDebugLog`, das in QCUtils
+liegt und nicht zum Testprojekt gehört — Linkerfehler, zwei Tage lang
+unbemerkt. Damit sind auch **PRÜFERs Schranken vom 13.09.2026 nie gelaufen**.
+Eine Attrappe in `OTShimProbe.cpp` schließt das.
+
+**Testlauf: 120 Tests, 118 bestanden, 2 fehlgeschlagen.** Beide roten sind
+**vorbestehend** und nicht von dieser Änderung: `SECImage: FlipHorz meldet
+sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit **E-33** nur
+noch `OutputDebugString` benutzt — ein veralteter Test; und
+`SECControlBar::CalcDynamicLayout`, PRÜFERs E-76-Schranke, die nie laufen
+konnte. Beide sind offen.
+
+## 7.2.0.50 — losgerissene Fenster behalten ihre Größe (E-84)
+
+**Was Gregor damit tun kann:** ein losgerissenes Fenster einmal auf die
+gewünschte Größe ziehen und es beim nächsten Start so wiederfinden. **Von ihm
+am 11.09.2026 bestätigt** — belegt an beiden Enden: in seiner `Eudora.ini`
+stehen `FloatCx319=751` und `FloatCy319=403`, und der erste Aufruf nach dem
+Neustart meldet `E-76 fest: vorher=751x403` statt der Anfangsgröße `200x100`.
+
+Gemeldet am 11.09.2026, unmittelbar nach der Bestätigung von E-76: *„das
+undocked initiale fenster ist recht klein, die größe (nach der änderung) wird
+nach dem schließen vom filter und eudora nicht gespeichert. beim nächsten mal
+wieder klein."*
+
+### Die Größe kam nie in die INI
+
+`SECControlBar::GetBarInfo` überträgt `m_szFloat` brav in die Info
+(`OTShim.cpp:2304`), `SetBarInfo` holt es zurück (`:2362`). Dazwischen liegt
+das Speichern — und dort ging es verloren:
+
+```c
+BOOL SECControlBarInfo::SaveState(LPCTSTR lpszProfileName, int nIndex)
+{
+    return CControlBarInfo::SaveState(lpszProfileName, nIndex);
+}
+```
+
+Eine reine Weiterleitung an MFC, und **MFC kennt `m_szFloat` nicht**. Die
+Stingray-Felder wurden in die Info geschrieben und beim nächsten Start nie
+gelesen.
+
+### Warum das so gebaut war — und warum es hier trotzdem geändert wird
+
+Der Kommentar in `SECControlBarInfo::Serialize` begründet, den SEC-Anteil
+wegzulassen: *„das Format müsste dann zum Original passen … eine eigene
+Erweiterung würde eine Datei erzeugen, die ein späterer echter Nachbau nicht
+mehr lesen kann."*
+
+**Das Argument gilt — für `Serialize`.** Die Funktion schreibt ein
+**Binärformat**, in dem ein zusätzliches Feld alles Nachfolgende verschiebt.
+`SaveState` und `LoadState` schreiben dagegen in die **INI**: ein zusätzlicher
+Schlüssel stört niemanden, der ihn nicht kennt, und fehlt er, gilt der
+bisherige Wert. `Serialize` bleibt deshalb unberührt.
+
+**Der erste Anlauf saß an der falschen Stelle.** Er stand in
+`SECControlBarInfo::SaveState` — und in der `Eudora.ini` kam kein einziger
+Eintrag an. Die Funktion wird beim Speichern gar nicht durchlaufen. Der
+tatsächliche Weg steht seit **E-70** im Baum: `QCToolBarManager::SaveState` →
+`SECToolBarManager::SaveState` → `GroessenSichern`, und dort wurden bis jetzt
+nur `DockVertCx` und `DockHorzCy` geschrieben — die **Andock**größen. Die
+schwebende Größe kam nirgends vor.
+
+Die Behebung hängt sich an denselben Mechanismus: zwei weitere Schlüssel,
+`FloatCx<id>` und `FloatCy<id>`, geschrieben und gelesen wie die beiden
+vorhandenen. Kein neuer Weg, keine zweite Stelle, die jemand übersehen kann.
+Eine Größe von `0` wird gar nicht erst geschrieben — sie wäre schlimmer als
+kein Eintrag, weil `GroessenLaden` sie übernehmen müsste.
+
+Die beiden Schlüssel stehen im Abschnitt `[ToolBar-ToolBarManager]`; Vorgabe,
+Fundstelle und die Regel dazu in [EINSTELLUNGEN.md](EINSTELLUNGEN.md).
+
+## 7.2.0.49 — das schwebende Filterfenster lässt sich nach unten ziehen (E-76)
+
+**Was Gregor damit tun kann:** ein freischwebendes Filterfenster nicht nur
+seitlich, sondern auch nach unten größer ziehen. **Von ihm am 11.09.2026
+bestätigt:** *„e-76: paßt: läßt sich jetzt vergrößern."*
+
+Gemeldet am 10.09.2026 an 1.0.40 und am 11.09.2026 als **noch vorhanden**
+wiederholt: *„e-76: nein, immer noch bug."* Dazu der Satz, der die Sache
+gelöst hat: *„könnte gerade
+was im log stehen, falls trace eingeschaltet."*
+
+### Die Spurmarke hat nach sieben Fassungen geliefert
+
+Sie lag seit 7.2.0.41 im Bau und schrieb nur, solange die Leiste schwebt —
+auslösen ließ sie sich nicht, weil dafür eine **physisch gedrückte Maustaste**
+nötig ist. Gregor hat gezogen, und damit stand alles im Protokoll:
+
+```
+dynamisch: nLength=105 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x105
+dynamisch: nLength=172 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x172
+dynamisch: nLength=234 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x234
+dynamisch: nLength=299 dwMode=0x0022 LENGTHY HORZ -> ergebnis=780x299
+dynamisch: nLength=780 dwMode=0x0042 COMMIT  HORZ -> ergebnis=780x100
+```
+
+Das Ziehen rechnet richtig: 105, 172, 234, 299. Der **letzte** Aufruf, der das
+Ergebnis übernehmen soll, trägt `dwMode=0x0042` — `LM_COMMIT | LM_HORZ`, aber
+**kein `LM_LENGTHY`**. Damit läuft er in den `else`-Zweig:
+
+```c
+if (dwMode & LM_LENGTHY) size.cy = max(nLength, 20);
+else                     size.cx = max(nLength, 20);
+```
+
+und setzt die **Breite** auf 780 — denn das ist, was `nLength` beim COMMIT
+trägt. Die Höhe bleibt der alte Wert. Danach speichert
+`if (dwMode & LM_COMMIT) m_szFloat = size;` genau diese Rückfall-Größe. Die
+gezogenen 299 sind weg. Beim Verkleinern spiegelbildlich dasselbe: 99, 94,
+70, 47 werden korrekt gerechnet, der COMMIT macht daraus wieder 100.
+
+### Die Behebung
+
+Ein Merker hält die zuletzt in Ziehrichtung gerechnete Größe fest; beim
+COMMIT wird er genommen, statt aus einem `nLength` zu rechnen, das dort etwas
+anderes bedeutet. Wurde nie gezogen, steht der Merker auf `(0,0)` und es
+bleibt beim Bisherigen.
+
+**Nicht gemacht:** beim COMMIT die Höhe aus `nLength` lesen und `LM_HORZ` als
+Richtungsangabe deuten — das baut denselben Fehler nur anders herum ein.
+
+**Beim Bauen gefangen:** mein erstes Skript hat den Merker auch in
+`SECControlBarInfo` initialisiert, einer Klasse, die ihn gar nicht hat. Zwei
+`C2065`, sofort gemeldet. Genau dafür baut man, bevor man ausliefert.
+
+### Außerdem: 16 fehlende Behebungsfassungen nachgetragen
+
+Gregor: *„die tabelle sollte auch enthalten, in welchem build welcher befund
+behoben wurde."* Gemessen: 38 der behobenen Befunde nannten ihre Fassung, 16
+nicht. Nachgetragen aus der Git-Geschichte — und dort, wo der gefundene
+Commit den Befund möglicherweise nur **anlegte** statt ihn zu beheben, steht
+das ausdrücklich dabei. Eine geratene Zahl, die sicher aussieht, ist
+schlimmer als eine, die ihre Herkunft nennt.
+
+## 7.2.0.48 — die Zertifikatsprüfung nimmt nicht mehr alles an (E-82)
+
+**Was Gregor damit tun kann:** darauf vertrauen, dass eine TLS-Verbindung
+abgelehnt wird, deren Zertifikatskette Eudora nicht verifizieren konnte.
+**Von ihm am 11.09.2026 bestätigt** — IMAP läuft damit unverändert weiter.
+
+Bisher behandelte der Verifikations-Callback zwei OpenSSL-Prüffehler als
+Erfolg:
+
+```c
+case X509_V_ERR_CERT_UNTRUSTED:                  /* 27 */
+case X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE: /* 21 */
+    iOK = 1;
+    break;
+```
+
+`iOK` ist der Rückgabewert des Callbacks. `iOK = 1` sagt OpenSSL ausdrücklich
+**„Zertifikat in Ordnung"** — der Fehler wurde also nicht übergangen, sondern
+ins Gegenteil verkehrt. Anders als in allen benachbarten Zweigen wurde weder
+ein Fehlercode gesetzt noch eine Warnung angehängt; der Anwender bekam nichts
+zu sehen. Fehler 27 stammt aus `check_trust()` und tritt im gewöhnlichen
+Kettenaufbau auf, nicht nur in Randfällen.
+
+Jetzt hängen beide Codes am bereits vorhandenen, korrekt ausgeführten Zweig
+für `X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY`. `iOK` bleibt 0, die
+Verbindung wird abgelehnt, und der Anwender sieht
+`IDS_CERTERR_CHAINNOTTRUSTED`.
+
+**Der Ausweg bleibt:** der `switch` wird nur erreicht, wenn das Zertifikat
+nicht schon im vom Anwender bestätigten Speicher liegt. Die Einzelfreigabe
+geht weiter, weg fällt die pauschale Annahme.
+
+**Gemessen an Gregors Konten:** `Open 212.227.17.186:993` und
+`Successfully retrieved markus.bakus@gmx.de` — GMX' Kette hält der echten
+Prüfung stand. Die pauschale Annahme war also nicht nötig, um seine Konten zu
+erreichen. Der Verdacht, Eudoras `rootcerts.p7b` von 2006 könnte zu alt sein,
+ist damit für diese beiden Konten widerlegt.
+
+### Eine DLL, die im Paket fehlte
+
+Beim Bereitstellen fiel auf: der Bau erzeugte eine frische `QCSSL.dll`, im
+fertigen Paket lag aber die alte aus der Grundlage. Der Patch ändert genau
+diese eine DLL — Gregor hätte die unveränderte Prüfung getestet und nichts
+bemerkt. Aufgefallen ist es nur am **Zeitstempel**; `paket-pruefen.ps1` kennt
+die Datei nicht.
+
+Die Begründung im Bauskript stimmte, aber nur für den **Debug**-Bau: dort ist
+die DLL 4.645.376 B gegen 2.920.960 B in der Grundlage, also eine andere
+Bauart. Im **Release**-Bau sind es 2.921.472 B — dieselbe Bauart. `QCSSL.dll`
+kommt deshalb ab jetzt bei `-Bauart Release` mit.
+
+## 7.2.0.47 — Kopfzeilen bleiben lesbar, auch auf schwarzem Grund (E-81)
+
+**Was Gregor damit tun kann:** die Kopfzeilen auch bei Werbemails lesen, die
+sich einen dunklen Hintergrund setzen.
+
+Gemeldet am 11.09.2026 an 1.0.46: *„schönheitsfehler: schwarzer text auf dem
+schwarzen hintergrund ist nicht sichtbar. nur beim markieren erscheint er."*
+
+Eudora schreibt die Kopfzeilen als `<SPAN CLASS=EUDORAHEADER>` in **dasselbe**
+HTML-Dokument, in dem danach die Mail steht. Das Stylesheet dieses Dokuments
+kennt `BODY`, `TT` und `BLOCKQUOTE.CITE` — für `EUDORAHEADER` gibt es **keine
+einzige Regel**. Die Kopfzeilen erben deshalb, was die Mail für ihren `<BODY>`
+vorgibt.
+
+Jetzt gibt es eine Regel, die Vordergrund **und** Hintergrund festlegt. Beides
+muss sein: nur die Schriftfarbe zu setzen würde bei einer Mail mit hellem Text
+auf dunklem Grund denselben Fehler spiegelverkehrt erzeugen.
+
+Wer eine eigene `read.css` im Eudora-Verzeichnis hat, ersetzt das Stylesheet
+vollständig — für den ändert sich nichts.
+
+## 7.2.0.46 — der „Blah Blah Blah"-Knopf schaltet wieder (E-80, Teil 2)
+
+**Was Gregor damit tun kann:** die technischen Kopfzeilen ein- und ausblenden,
+statt sie nur dauerhaft gekürzt zu sehen. **Von ihm bestätigt:** *„ja, jetzt
+geht es"*.
+
+Gemeldet am 11.09.2026 an 1.0.45: *„header schaut jetzt kürzer aus. aber: der
+bla bla button ändert nichts."* Teil 1 stimmte also — nur umschalten ließ sich
+nichts.
+
+**Der Knopf schaltete seinen eigenen Zustand nie um.** Die Kette:
+
+| Schritt | Stelle | was dort passiert |
+|---|---|---|
+| 1 | `ReadMessageFrame.cpp:179` | der Knopf steht als `TBBS_CHECKBOX` in der Leiste |
+| 2 | `:981-998` | `GetCheck` liest das Bit `TBBS_CHECKED` |
+| 3 | `:949-977` | `OnButtonSetCheck` setzt es — läuft **genau einmal**, beim Anlegen des Fensters |
+| 4 | `TridentReadMessageView.cpp:161` | der Klick geht an die **Ansicht**, nicht an den Rahmen |
+| 5 | `ReadMessageFrame.cpp:688` | `CReadMessageFrame::OnBlahBlahBlah` steht in keiner Botschaftstabelle — **tote Funktion** |
+
+Beide Ansichten **lesen** den Zustand, keine setzt ihn. Deshalb meldete die
+Spurmarke in jedem einzelnen Lauf `Knopf=0` — die Zahl stand da, und ich habe
+sie nicht zu Ende gedacht.
+
+**Woher die Lücke kommt:** im Original schaltete die Stingray-Leiste einen
+Checkbox-Knopf beim Klick selbst um. Der OTShim-Ersatz setzt `TBBS_CHECKED` nur
+über `ON_UPDATE_COMMAND_UI`, und so einen Eintrag gibt es für diesen Knopf
+nirgends. Dieselbe Klasse wie **E-43** und **E-70**: Verhalten, das beim Ersatz
+des Toolkits weggefallen ist und erst auffällt, wenn jemand den Knopf drückt.
+
+Behoben in **beiden** Ansichten über die registrierte Botschaft
+`umsgButtonSetCheck` — der Weg, den `summary.cpp:2518-2520` für zwei andere
+Knöpfe schon benutzt.
+
+## 7.2.0.45 — der Knopf „Blah Blah Blah" versteckt wieder etwas (E-80, Teil 1)
+
+Gemeldet am 11.09.2026: *„der bla bla button scheint nicht zu funktionieren.
+erwartung: doppelklick auf mail: je nach button wird der header angezeigt
+oder ausgeblendet. aktuell: er wird immer angezeigt."*
+
+**Der Knopf war nie kaputt — die Liste war es.** Was er versteckt, sagt seine
+eigene Statuszeile: *„Shows/hides non-important headers"*. Welche Kopfzeilen
+als unwichtig gelten, steht in `TabooHeaders` — und diese Liste stammt aus
+2006. Sie kennt `X-UID` und `X-UIDL`, aber nicht `X-`; sie kennt `Received`,
+aber nicht `DKIM-`.
+
+Nachgerechnet an **134 echten Nachrichten aus sechs Postfächern**
+(`tools/taboo-rechnen.pl`; der Vergleich ist ein reiner Präfixvergleich und
+lässt sich deshalb ohne Programm ausrechnen). Mit der alten Liste blieben
+**über 60 Kopfzeilenarten** stehen:
+
+| Kopfzeile | kam vor | Kopfzeile | kam vor |
+|---|---|---|---|
+| `DKIM-Signature` | 76× | `Delivered-To` | 56× |
+| `Authentication-Results` | 70× | `X-Mailer` | 55× |
+| `X-FN-MUUID` | 62× | `UI-OutboundReport` | 54× |
+| `X-Scan-TS` | 60× | `X-Provags-ID` | 54× |
+| `X-Spam-Flag` | 58× | `X-UI-Sender-Class` | 54× |
+
+Die beiden obersten sind genau die aus Gregors Bildschirmfoto.
+
+**16 Einträge ergänzt**, die Originalliste bleibt unverändert davor stehen —
+damit kann kein bisheriges Verhalten wegfallen. Dieselbe Rechnung mit der
+neuen Liste lässt **zehn** Namen übrig: `From`, `To`, `Cc`, `CC`, `Bcc`,
+`Subject`, `Date`, `Reply-To`, `Sender` — und `Referer`. Das letzte ist ein
+Restbefund: der Listeneintrag `References` ist zehn Zeichen lang und trifft
+`Referer: ` deshalb nicht. Ein Einzeiler in der `.rc` würde ihn schließen.
+
+**Am laufenden Programm belegt**, nicht nur gerechnet: Trident baut die
+Anzeige als temporäre `eud*.htm` auf. Aus einem Messlauf am 11.09.2026
+abgegriffen, stehen darin noch vier Kopfzeilen — `Date`, `To`, `From`,
+`Subject` — und keine einzige technische.
+
+**Kein Datenverlust:** die Kürzung arbeitet auf dem Puffer, den
+`GetFullMessage` frisch anlegt (`msgdoc.cpp:374-389`). Die `.mbx` wird nicht
+angefasst. Wer alles sehen will, drückt den Knopf oder setzt
+`ShowAllHeaders=1`.
+
+**Zwei Umwege dahin, beide meine.** Die erste Spurmarke lag in
+`PgReadMsgView` — der Paige-Textansicht — und schwieg, obwohl `LogLevel`
+nachweislich wirkte. Eudora hat **zwei** Nachrichtenansichten
+(`ReadMessageFrame.cpp:277-281`), und beide haben eigene Taboo-Logik. Danach
+sah es so aus, als steche der Content Concentrator den Knopf aus
+(`konzentriert=1 -> Kopfzeilen ALLE`); das gilt aber nur für den ersten
+Aufbau. Im laufenden Betrieb meldet die Marke `konzentriert=0 -> gekuerzt`.
+Die Kürzung griff die ganze Zeit — sie kürzte nur fast nichts weg.
+
+## 7.2.0.44 — Messfassung für die Spaltenbreite im Filterfenster
+
+**Was Gregor damit tun kann:** die Ursache dafür messen, dass die linke
+Spalte im Filterfenster nach einem Neustart anders breit ist — ohne dass
+etwas geraten wird.
+
+Gemeldet am 11.09.2026 an 1.0.43: *„die breite der linken spalte beim filter
+wird nicht über den neustart gespeichert. auch wenn ich sie breiter gezogen
+habe."*
+
+### Zwei Ursachen, die erste davon meine
+
+**Der Schalter stand im falschen Abschnitt.** Eudora ordnet jeden INI-Schlüssel
+**automatisch** einem Abschnitt zu, allein nach seiner internen Nummer
+(`rs.cpp:88`):
+
+| Nummernbereich | Abschnitt |
+|---|---|
+| 10900 … 11100 | `[Window Position]` |
+| alles andere | `[Settings]` |
+
+`UseMyFilterWindowPosition` hat die Nummer **10922**. Gregor hatte ihn nach
+`[Settings]` geschrieben — weil `FILTER.md` behauptete, dort gehörten *alle*
+Schlüssel hin. Nachgemessen mit derselben Windows-Funktion, die Eudora
+benutzt:
+
+```
+[Window Position]  UseMyFilterWindowPosition = 0    ← das liest Eudora
+[Settings]         UseMyFilterWindowPosition = 1    ← das steht da
+```
+
+Ein Eintrag im falschen Abschnitt wird **stillschweigend ignoriert**. Für
+**23 der 38** dokumentierten Schlüssel war die Angabe falsch;
+[FILTER.md](FILTER.md) nennt den Abschnitt jetzt in jeder Tabellenzeile, und
+die Zuordnung wird aus `resource.h` und `EudoraRes.rc` gelesen statt von Hand
+gepflegt.
+
+**Und auch im richtigen Abschnitt bleibt der Wert nicht.** Gregors Messung:
+
+| | 08:08 | 08:18 |
+|---|---|---|
+| eingetragen | — | **312** |
+| danach in der Datei | 237 | **368** |
+| Breite der Filterleiste | 527 | 668 |
+
+`SetColumnInfo` setzt nur eine **Wunschbreite** (`FiltersWazooWnd.cpp:185`);
+wirksam wird sie erst durch die Neuberechnung, die das nachfolgende
+`PostMessage(WM_SIZE, …)` auslöst. Beim Schließen schreibt Eudora die
+**tatsächliche** Breite zurück (`:70`), nicht die gewünschte — weicht sie ab,
+schaukelt sich der Wert von Lauf zu Lauf auf.
+
+**In der VM tritt es nicht auf**, weil die Leiste dort schmaler ist. Es ist
+dieselbe Fassung: in beiden Protokollen steht `Version 7.2.0.43`.
+
+### Was diese Fassung dazu beiträgt
+
+Zwei Spurmarken, die die ganze Kette in je einer Zeile nennen:
+
+```
+E-79 geladen:   INI=312 Schalter=1 Elternbreite=668 Viertel=167
+                -> gesetzt=312, danach ist=368 min=0
+E-79 gesichert: ist=368 min=0 -> INI=368
+```
+
+Damit ist in einem einzigen Start-und-Beenden zu sehen, an welcher Stelle der
+Wert sich ändert. Sie hängen wie alle anderen an `DEBUG_MASK_MISC` und
+schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
+[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+
+**Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
+dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
+gescheitert.
+
+## 7.2.0.43 — Filter löschen auch über IMAP nichts mehr auf dem Server
+
+**Was Gregor damit tun kann, was vorher gefährlich war:** über IMAP abrufen
+und filtern, ohne dass Post auf dem Server verschwindet. Dazu: das Protokoll
+gezielt aufdrehen, ohne dass jemand den Code ändert.
+
+### Zwei Löschwege, die E-73 offengelassen hatte
+
+E-73 galt seit 7.2.0.38 als behoben — eine Filteraktion sollte nichts mehr
+auf dem Server löschen. PRÜFER hat die Behebung gegen den Quelltext
+nachgerechnet und **zwei Wege gefunden, die daran vorbeiliefen**:
+
+| Weg | warum er vorbeilief |
+|---|---|
+| **IMAP** | Bei einem IMAP-Postfach verzweigt `CFilter::Action` nach `ImapAction` (`filtersd.cpp:1213-1216`) und erreicht den geprüften POP-Zweig nie. Von dort geht es über `ImapSetServerOpt` (`EuImap/src/ImapFiltersd.cpp:791-794`) in ein `STORE \Deleted`. `IMAP4` ist in **beiden** Konfigurationen gebaut |
+| **Junk-Filteraktion** | `ID_FLT_JUNK` (`filtersd.cpp:1581-1600`) → `CJunkMail::DeclareJunk` → bei `DeleteFetchedJunk=1` ein `SetServerStatus(…SERVER_DELETE)` (`JunkMail.cpp:707-711`) |
+
+**Der zweite ist besonders heikel**, weil **E-74** ihn nicht abdeckte: dort
+war `DeleteFetchedJunk=0` nur in `tools/DEudora.ini` gesetzt worden, und das
+gilt ausschließlich für **neu angelegte** Konten. Wer die `1` schon in seiner
+`Eudora.ini` stehen hatte, löschte weiter — ausgelöst durch eine
+Filteraktion.
+
+Beide fragen jetzt dieselbe Funktion `FilterDarfVomServerLoeschen`. Manuelles
+Junken bleibt unverändert. Die Schranke
+`tools/pruefe-filter-serverloeschung.pl` hält das fest und hat beim ersten
+Lauf genau diese zwei Lücken gefunden — in einer Behebung, die als fertig
+galt.
+
+### E-68: der Überlauf beim Lesen von `Filters.pce`, halb behoben
+
+`NUM_FILT_ACTS` ist 5, `CFiltersDoc::Read` zählte den Aktionszähler aber in
+**21 Zweigen** hoch, ohne je gegen diese Grenze zu prüfen. Nachgerechnet ist
+der Schaden größer als beschrieben: derselbe Zähler indiziert **elf weitere
+Felder**, darunter `CString`-Felder. `m_Desc[5]` trifft `m_DoPersonality`,
+und `CString::operator=` fasst das als Zeichenkettenzeiger auf — kein
+Zahlenschaden, sondern Speicherzerstörung.
+
+Auslösen lässt sich das **nicht durch Bedienung**: `CFiltersDoc::Write` ist
+gebunden und schreibt nie mehr als fünf. Es braucht eine fremde
+`Filters.pce` — von Hand bearbeitet, aus einem anderen Programm übernommen,
+oder eine `.pre`/`.pst`-Datei, die Eudora liest und nie schreibt.
+
+Die Grenze ist eingebaut; überzählige Zeilen werden verworfen und
+protokolliert. Die zweite Hälfte von E-68 — `copyInstead` wird anders
+geschrieben als gelesen — bleibt **offen**.
+
+### Das Protokoll lässt sich jetzt aufdrehen, ohne den Code anzufassen
+
+Gregors Hinweis: *„in der ini ein debuglevel setzen, dann kommt mehr oder
+weniger ins log raus. damit kann man im bedarfsfall mehr logs zu debug
+zwecken rausschreiben, ohne den code zu ändern."*
+
+Das gibt es in Eudora seit jeher — `LogLevel` in der `Eudora.ini` — und diese
+Portierung hat es bis heute umgangen. Die Spurmarken riefen `PutDebugLog` mit
+`DEBUG_MASK_MISC | DEBUG_MASK_TOC_CORRUPT`. Das **ODER** machte die
+Abschaltbarkeit zunichte: `MISC` ist in der Vorgabe aus, `TOC_CORRUPT` an,
+also schrieb jede Marke immer.
+
+**146 Stellen in 16 Dateien** hängen jetzt an `MISC` allein:
+
+```ini
+LogLevel=25759   ; Vorgabe — die Spurmarken schweigen
+LogLevel=58527   ; 25759 + 32768 — sie schreiben
+```
+
+Damit dürfen die Marken im Code bleiben. Die vollständige Tabelle aller
+sechzehn Schalter steht in [README.md](README.md), Abschnitt *Mehr ins
+Protokoll schreiben lassen*.
+
+### Neu: E-77, und was die Filterdoku jetzt sagt
+
+**E-77** — IMAP-Postfachnamen mit Umlauten werden roh angezeigt:
+`Entw&APw-rfe` statt *Entwürfe*. Das ist modifiziertes UTF-7 (RFC 3501,
+5.1.3), und Eudora dekodiert es nicht; in `Eudora71/` kommt keine
+UTF-7-Behandlung vor. Offen.
+
+**[FILTER.md](FILTER.md)** ist neu — 666 Zeilen zu Filtern und Junk, mit
+allen 38 INI-Schlüsseln samt eingebauter Vorgabe und Fundstelle. Gregors
+Frage nach den Junk-Werten ist dort beantwortet: die **100** ist
+`ManualJunkScore`, die Punktzahl beim Junken von Hand; die automatische
+Schwelle ist `MinScoreToJunk` mit Vorgabe **50**. Praktisch bleibt jede
+Nachricht bei 0, weil die Bewertung von `SpamWatch` und `SpamHeaders` kommt
+und beide wegen **E-47** nicht laden.
+
+### Was aus dem Protokoll bestätigt wurde
+
+Von Gregor an 1.0.42 gemessen: *„filter fenstergröße nach neustart
+gespeichert: PASS"* (**E-70**), *„filter funktionieren"* (**E-64**, **E-72**,
+**E-75**), *„imap: funktioniert"* — `imap.gmx.net:993`, TLSv1.3,
+`TLS_AES_256_GCM_SHA384`. **Kriterium 3** in [ZIEL.md](ZIEL.md) nennt jetzt
+beides, POP3 und IMAP.
+
+**E-71** ist dagegen **neu eingestuft**: der Filterbericht bleibt leer, auch
+nachdem die Filter greifen. Die frühere Einordnung *„kein eigener Fehler,
+Folge von E-72"* ist damit widerlegt. Auf Gregors Wunsch zurückgestellt.
+
+## 7.2.0.42 — Die Breite der Seitenleisten überlebt einen Neustart wirklich
+
+**Was Gregor damit tun kann, was in 1.0.41 noch nicht ging:** eine Leiste
+breiter ziehen und sie beim nächsten Start genauso breit wiederfinden.
+
+1.0.41 hatte den halben Weg gebracht: das Laden lief, aber die Breite kam
+beim Anwender nicht an. Gregors Urteil dazu: *„0.41 speichert nicht die
+fenstergröße korrekt, nach dem neustart immer noch falsch!"*
+
+### Was die Messung am laufenden Programm zeigte
+
+Mit Gregors Freigabe (*„du kannst ja jetzt lokal ausführen, ich greife nicht
+rein"*) ließ sich das zum ersten Mal selbst durchspielen: `DockVertCx319=437`
+in die `Eudora.ini` geschrieben, gestartet, die Leiste am Fenster
+ausgemessen.
+
+| | |
+|---|---|
+| `Eudora.ini` vorher | `DockVertCx319=437` |
+| Protokoll beim Start | `E-70 geladen: Leiste=319 cx=437 -> jetzt cx=437` |
+| unmittelbar danach | `E-44 WazooBars: für 3 Leiste(n) war keine Lage gespeichert — die Standardanordnung wurde nachgezogen` |
+| **Fenster gemessen** | **Leiste 319: 180 Pixel breit** |
+| Protokoll beim Beenden | `E-70 gesichert: Leiste=319 cx=180` |
+| `Eudora.ini` danach | `DockVertCx319=180` |
+
+Der geladene Wert kommt an und wird eine Zeile später überschrieben.
+`CWazooBarMgr::LoadWazooBarConfigFromIni` läuft **nach** dem Laden und dockt
+jede Leiste, für die keine Lage wiederhergestellt werden konnte, mit einer
+**fest verdrahteten Breite von 180** an (`WazooBarMgr.cpp:409`, `:418`,
+`:493`).
+
+**Das war ohne die Freigabe nicht zu finden.** Die Spurmarke allein sagte
+*„geladen: cx=437"* und hätte wie ein Erfolg ausgesehen. Erst die Messung am
+Fenster daneben zeigte die 180.
+
+### Behoben
+
+Die Größen werden nach dem Anordnen **noch einmal** geladen — an der Stelle,
+an der die Anordnung nachweislich fertig ist. Das wirkt unabhängig davon, ob
+der Nachziehweg lief.
+
+**Nachgemessen, an einer sichtbaren Leiste:** mit `DockVertCx318=512` in der
+`Eudora.ini` startet die linke Leiste jetzt **512 Pixel breit** statt 180.
+
+### Was dabei offen bleibt
+
+Dass der Nachziehweg überhaupt läuft, gehört zu **E-44**:
+`SetDockState` stellt die Andockung nicht wieder her — `m_pDockBar` bleibt
+`NULL` —, obwohl dreizehn `[ToolBar-*]`-Abschnitte in der `Eudora.ini`
+stehen. Das ist hier **nicht** angetastet: es wäre ein zweiter Eingriff in
+einen Bereich, der gerade funktioniert, und der Zusammenhang gehört erst
+gemessen.
+
+Eine **versteckte** Leiste behält im Fenster ihre Erzeugungsgröße, weil sie
+gar nicht angeordnet wird. Ihr gespeicherter Wert bleibt trotzdem erhalten —
+im Protokoll steht `gesichert: Leiste=319 cx=512`. Sobald sie sichtbar wird,
+gilt die gespeicherte Breite.
+
+## 7.2.0.41 — Die Breite des Filterfensters überlebt einen Neustart
+
+**Was Gregor damit tun kann, was vorher nicht ging:** das Filterfenster
+breiter ziehen und es beim nächsten Start genauso wiederfinden.
+
+Gemeldet am 10.09.2026 an 1.0.40: *„speichert aber nicht die fenster größe
+von filters nach dem neustart"* — dieselbe Sache, die er schon an 1.0.34
+angesprochen hatte.
+
+### Die Spurmarke aus 1.0.37 hat es entschieden
+
+Seit 7.2.0.37 schrieben `E-70 gesichert:` und `E-70 geladen:` bei jedem
+Sichern und Laden eine Zeile ins Protokoll. Ausgewertet worden waren sie nie.
+Gregors Protokoll von 1.0.40 sagt:
+
+```
+E-70 gesichert:  40 Zeilen
+E-70 geladen:     0 Zeilen
+```
+
+Und in seiner `Eudora.ini` steht `DockVertCx319=586` — genau die Breite, die
+er eingestellt hatte. **Der Wert wird richtig geschrieben und nie gelesen.**
+
+Zwei Zahlen in einer Ausgabe, und die Frage war beantwortet. Ohne die zweite
+hätte man weiter über das Schreiben nachgedacht.
+
+### Der Grund stand im eigenen Kommentar
+
+```cpp
+// KATEGORIE C laut PLAN.md: Eudora ruft diese Fassung nie auf.
+void SECToolBarManager::LoadState(LPCTSTR lpszProfileName)
+```
+
+Genau dort war der Aufruf von `GroessenLaden` eingebaut. Gerufen wird
+stattdessen `QCToolBarManager::LoadState`.
+
+Dass das **Sichern** funktionierte, hat die Lücke verdeckt:
+`QCToolBarManager::SaveState` ruft `SECToolBarManager::SaveState`
+ausdrücklich auf — das Gegenstück `LoadState` tut das nicht. Eine Asymmetrie,
+die man nur sieht, wenn man beide Seiten nebeneinanderlegt.
+
+**Behoben** an der symmetrischen Stelle: `QCToolBarManager::LoadState` ruft
+jetzt `GroessenLaden`. Der Zeitpunkt stimmt — `mainfrm.cpp` ruft erst
+`SetDockState` (Zeile 951), dann `LoadState` (952); die Größen werden also
+nach dem MFC-Zustand gesetzt und nicht wieder überschrieben.
+
+Dazu ein `RecalcLayout` am Ende von `GroessenLaden`: `AndockgroesseSetzen`
+schreibt nur Felder. Ohne Neuberechnung wirkt der geladene Wert erst beim
+nächsten Umbau des Rahmens — beim Anwender also gar nicht, weil er dann
+schon die Vorgabe gesehen hat.
+
+### Nebenbei bestätigt: der Filterlauf arbeitet richtig
+
+Gregor hatte drei Nachrichten markiert und gefiltert, ohne dass sich etwas
+bewegte. Das Protokoll zeigt, dass jede Nachricht gegen **alle drei** Filter
+geprüft wurde:
+
+```
+E-64 FilterMsg: Liste=1 Filter=3 verlangt WhenToApply=4 vorhandene Masken=[5,5,5]
+E-64 Match=0 Filter="From:angebot@email.waipu.tv" … Betreff="Hans, unsere TV-Empfehlungen der Woche"
+```
+
+`Match=0` war korrekt: die Nachricht kommt von `neues@mail.waipu.tv`, der
+Filter sucht `angebot@email.waipu.tv`. Gregors eigenes Urteil dazu:
+*„fehlalarm: die mail adresse war im filter eine andere"*. Damit ist **E-64**
+an einem Fall mit drei Filtern und mehreren Nachrichten bestätigt.
+
+### Und noch eines bestätigt: die Menübeschriftung stimmt
+
+Nach dem Wechsel auf 1.0.40 stand unter *Special* „Filter Messages
+Ctrl+Shift+L" statt „Ctrl+J". Das war **kein Fehler**, sondern die richtige
+Auskunft über einen falschen Zustand: das mitgebrachte Mailverzeichnis trug
+noch `CtrlJMapping=1`. Nach dem Umstellen auf `2` — *„ok, mit dem wert 2 ist
+das menü jetzt korrekt. paßt"*. `CMainFrame::InitJunkMenus` beschriftet das
+Menü also zuverlässig um.
+
+## 7.2.0.40 — Strg+J filtert wieder, statt in den Junk-Ordner zu schieben
+
+**Was Gregor damit tun kann, was vorher nicht ging:** mit Strg+J filtern, so
+wie er es seit jeher tut, ohne dass die ausgewählten Nachrichten stattdessen
+im Junk-Ordner landen.
+
+Gemeldet am 10.09.2026 an 1.0.39: *„filter erwischt immer noch zu viele
+mails"* — und der entscheidende Satz kam kurz darauf: *„ich drücke zum
+filtern ja immer noch ctrl-J"*.
+
+### Der Filter war nicht schuld
+
+Das Protokoll von 1.0.39 zeigt zwei völlig verschiedene Läufe unter derselben
+Fortschrittsanzeige:
+
+```
+6.26  E-64 FilterMsg: Liste=1 Filter=1 verlangt WhenToApply=4 … Masken=[5]
+7.38  E-64 Match=1 Filter="From:newsletter@service.freenet.de" … "Coole Comics | …"
+7.38  E-64 Match=0 Filter="From:newsletter@service.freenet.de" … "Fwd: Neue Anmeldung …"
+```
+
+Das ist der echte Filterlauf, und er arbeitet **richtig**: eine Nachricht
+trifft, eine nicht, nur die treffende wird verschoben.
+
+```
+9.07  Messages left to filter: 9
+9.07  … acht weitere Zeilen, keine einzige E-64-Marke …
+9.08  Messages left to filter: 0
+```
+
+Hier wurde `CFiltersDoc::FilterMsg` **überhaupt nicht aufgerufen**. `Junk.mbx`
+wuchs trotzdem von 174 196 auf 501 987 Bytes.
+
+**Gegenprobe am Bestand:** von zwölf Nachrichten in `Junk.mbx` haben zehn
+keinen Filtergrund. Sechs davon kommen von `adventskalender-mails@freenet.de`
+— für die sieht Gregors zweiter Filter ausdrücklich `HW_Bxo.mbx` als Ziel
+vor. Diese Datei ist 0 Bytes groß.
+
+### E-75 — Strg+J war auf „Junk" umgelegt worden
+
+Vor der Junk-Funktion war Strg+J in Eudora *Filter Messages*. Seit Eudora 6
+möchte das Programm die Taste für *Junk* haben und fragt vorher — der Dialog
+dafür steht bis heute in den Ressourcen (`IDD_CTRL_J_FOR_JUNK`):
+
+> *The Ctrl-J key combination is currently associated with the „Filter
+> Messages" menu item. Would you like to switch it to be associated with the
+> „Junk" menu item?*
+
+**Gefragt wird aber nur, wenn beim ersten Start schon manuelle Filter da
+sind.** Andernfalls greift in `CMainFrame::InitJunkMenus`
+(`mainfrm.cpp:7911-7934`) der `else`-Zweig und legt Strg+J **stillschweigend**
+auf Junk — festgeschrieben als `CtrlJMapping=1` in der `Eudora.ini`. Der
+Zweig läuft nur ein einziges Mal; später angelegte Filter ändern nichts mehr
+daran.
+
+Gregor hatte mit einem **leeren Mailverzeichnis** angefangen. Beim ersten
+Start gab es keine Filter, also wurde umgelegt, ohne zu fragen. Die Filter
+kamen danach.
+
+**Behebung:** sind beim ersten Start keine manuellen Filter vorhanden, bleibt
+Strg+J auf `CTRL_J_FILTER` — so, wie es vor der Junk-Funktion war und wie das
+Menü `IDR_MAINFRAME` es unverändert beschriftet. Wer Junk auf Strg+J will,
+stellt es in den Einstellungen um; `InitJunkMenus` beschriftet das Menü dann
+entsprechend um.
+
+### Warum es so lange wie ein Filterlauf aussah
+
+Drei verschiedene Befehle zeigten dieselbe Zeile `Messages left to filter`:
+
+| Befehl | Fundstelle | zeigt jetzt |
+|---|---|---|
+| *Filter Messages* | `TocFrame.cpp:2380` | `Messages left to filter` (unverändert) |
+| *Junk* / *Not Junk* | `TocFrame.cpp:1156` | `Messages left to mark` |
+| *Recheck Junk* | `TocFrame.cpp:996` | `Messages left to scan for junk` |
+
+Die Zeichenkette `IDS_JUNK_MESSAGES_LEFT` gab es bereits, sie wurde nur beim
+Abruf benutzt; für das Markieren ist `IDS_JUNK_MESSAGES_MARK` neu.
+
+### Für ein bestehendes Mailverzeichnis
+
+Diese Änderung wirkt nur dort, wo `CtrlJMapping` noch nicht festgeschrieben
+ist. Steht die `1` schon in der `Eudora.ini`, hilft nur der Handgriff bei
+geschlossenem Eudora:
+
+```
+CtrlJMapping=2
+```
+
+## 7.2.0.39 — Kein Filter und kein Junk-Fang löscht mehr auf dem Server
+
+**Was Gregor damit tun kann, was vorher gefährlich war:** filtern und Mail
+abrufen, ohne dass Post auf dem Server verschwindet.
+
+Am 10.09.2026 war sein freenet-Postfach leer. Seine eigene Vermutung — *„evtl.
+war leave on server nicht aktiviert"* — war naheliegend und **falsch**: in
+seiner `Eudora.ini` steht für **beide** Konten `LeaveMailOnServer=1`.
+
+### Eudora kennt drei Wege, Post auf dem Server zu löschen
+
+Sie sind voneinander unabhängig, und zwei davon sind im Original **an**:
+
+| Weg | eingebaute Vorgabe | wer ihn auslöst |
+|---|---|---|
+| kein `Leave mail on server` | **löschen** (`LeaveMailOnServer\n0`) | POP3 nach dem Abholen |
+| `Delete fetched junk` | **an** (`DeleteFetchedJunk\n1`) | die Junk-Einstufung ab `MinScoreToJunk` (50) |
+| Filteraktion **„Server Options"** mit *Delete* | — | eine Filterregel; sticht im Original sogar `Leave mail on server` |
+
+### E-73 — die Filteraktion, die niemand eingestellt hatte
+
+`CFilter::Action` (`filtersd.cpp:1156-1178`) merkt die Nachricht auf dem
+Server zum Löschen vor, sobald die Aktion `ID_FLT_SERVER_OPT` mit `SO_DELETE`
+im Filter steht. **PRÜFER hatte am 09.09.2026 gemessen, dass genau diese
+Aktion lief, obwohl sie in Gregors `Filters.pce` gar nicht steht.** Damals
+sah das nach einer Randnotiz aus; es war der Kern.
+
+Sie kam aus **E-72**: die unerreichbare rechte Hälfte des Filterfensters
+schrieb beim Wegklicken ihren uninitialisierten Zustand in den ausgewählten
+Filter — Häkchen, Werte **und die Aktionsliste**. Zusammen mit dem dabei
+geleerten Suchwert (*„enthält nichts"* trifft jede Nachricht) wurde damit der
+ganze Posteingang verschoben **und zum Löschen auf dem Server vorgemerkt**.
+
+**Behebung, Gregors Entscheidung wörtlich:** *„ja, 1 auf jeden fall!
+Filteraktion darf nicht mehr vom Server löschen"*. Eine Filteraktion löscht
+jetzt nichts mehr auf dem Server. Der Versuch wird **protokolliert**, auch
+wenn er abgelehnt wird:
+
+```
+E-73 Filter "…" wollte die Nachricht "…" auf dem Server loeschen - VERWEIGERT
+```
+
+Damit sieht man, ob eine Regel die Aktion noch trägt, ohne dass sie Schaden
+anrichtet. Rückschalter: `FilterMayDeleteFromServer=1` in `[Settings]`,
+Vorgabe **0**.
+
+### E-74 — `Delete fetched junk` ist im Original an
+
+Der zweite Weg, unabhängig von Filtern: `CJunkMail::ProcessOne`
+(`JunkMail.cpp:453-457`) merkt jede als Junk eingestufte Nachricht zum
+Löschen auf dem Server vor. Die eingebaute Vorgabe ist **1**.
+
+Das ist hier besonders heikel, weil die Junk-Bewertung auf die Zusatzmodule
+*SpamWatch* und *SpamHeaders* angewiesen ist — und die sind in dieser
+Portierung **gar nicht ladbar**, weil ihnen `MFC71.DLL` und `MSVCP71.dll`
+fehlen (**E-47**). Einer Einstufung, der man nicht trauen kann, darf man
+keine Löschentscheidung überlassen.
+
+`tools/DEudora.ini` setzt deshalb `DeleteFetchedJunk=0` für **neu angelegte**
+Konten. Bestehende Konten ändert das nicht — dort steht der Wert in der
+`Eudora.ini` des Mailverzeichnisses.
+
+### Beide Abweichungen sind dokumentiert
+
+Neu in der README: **Einstellungen, die es nur hier gibt** — eine Tabelle mit
+Schlüssel, Wert hier, Wert im Original und Begründung, dazu die drei
+Löschwege im Zusammenhang. Gregor: *„sowas gehört dann in die doku oder in
+readme"*.
+
+### Was an 1.0.39 zu prüfen ist
+
+Gregor testet mit einem **leeren Mailverzeichnis** — damit greifen die
+Vorgaben aus `DEudora.ini`.
+
+1. Neue Persönlichkeit anlegen: steht **Leave mail on server** an?
+2. *Tools → Options → Junk Mail*: steht **Delete fetched junk** aus?
+3. Mail abrufen, filtern — bleibt auf dem Server alles liegen?
+4. Steht eine `E-73`-Zeile im Protokoll? Dann trägt eine Regel die
+   Serveroption noch; schaden kann sie nicht mehr.
+
+## 7.2.0.35 — Die Breite wird gesetzt, nicht der ganze Zustand wiederhergestellt
+
+Gregor an 1.0.34: *„der rechte balken läßt sich aber nicht beliebig weit nach
+links schieben. er wird dann auf eine bestimmte breite vom linken fenster (wo
+die filter namen stehen) zurückgesetzt."*
+
+**Der Griff sitzt also richtig** — E-66 ist an der Stelle erledigt, an der er
+bis 1.0.33 gar nicht zu fassen war. Was bleibt, ist das **Anwenden**.
+
+### Warum das Protokoll zu 1.0.34 nichts sagen konnte
+
+Ein Fehler von mir, und er gehört benannt: **alle Spurmarken saßen im
+stillgelegten Weg** über die Andockleiste. Der neue Weg über `ZiehenAmRand`
+war unbeobachtet. Die Zeilen, die im Protokoll standen, stammten aus dem
+**mitkopierten** `Mailverzeichnis` der Vorfassung — sie sahen aus wie eine
+Messung und waren eine Erinnerung.
+
+### Was geändert ist
+
+Das Anwenden lief über `GetBarInfo` → Feld ändern → `SetBarInfo`. Und
+`SECControlBar::SetBarInfo` ruft am Ende `CControlBar::SetBarInfo` — **MFCs
+vollständige Zustandswiederherstellung**: Sichtbarkeit, Andockzustand und
+Lage werden aus der Aufzeichnung neu gesetzt. Für das Laden einer
+gespeicherten Anordnung ist das richtig. Für das Ändern **einer Zahl**
+während des Betriebs ist es zu viel: alles andere in der Aufzeichnung ist der
+Stand von **vor** dem Zug.
+
+Jetzt wird nur noch die eine Zahl gesetzt, unmittelbar an der Leiste
+(`AndockgroesseHolen` / `AndockgroesseSetzen`). Dass es dafür zwei eigene
+Fassungen braucht, liegt daran, dass `m_szDockVert` und `m_szDockHorz` zu
+`CControlBar` gehören und von außen nicht erreichbar sind.
+
+**Das ist ein Verdacht, keine Gewissheit** — deshalb misst dieselbe Fassung
+gleich mit.
+
+### Die Marke am neuen Weg
+
+`E-66 Anwenden:` schreibt bei jedem Zug eine Zeile: Andockleiste, Stelle der
+Leiste, Delta, die Grenzen `Min`/`Max`, die Andockgröße **vorher → nachher**
+und die Fensterbreite, die dabei herausgekommen ist.
+
+Damit ist beim nächsten Mal unterscheidbar, ob
+
+* die Grenzen den Zug abschneiden (`Delta` kleiner als gezogen),
+* die Zahl gesetzt wird, aber nicht wirkt (`Andock 188 → 400`, Fenster
+  trotzdem 188),
+* oder etwas sie danach wieder zurücksetzt (Fenster erst breit, beim
+  nächsten Anordnungsdurchlauf wieder 188).
+
+### Was an 1.0.35 zu prüfen ist
+
+Rechte Leiste weit nach links ziehen — so weit, dass sie zurückspringt. Dann
+die `eudora.log`. **Wichtig:** wenn Du das `Mailverzeichnis` aus einer
+Vorfassung mitkopierst, lösche vorher die `eudora.log` darin, sonst stehen
+alte Zeilen darin, die wie eine frische Messung aussehen.
+
+## 7.2.0.34 — Der Trennbalken sitzt jetzt in der Leiste, nicht in der Andockleiste
+
+**Was Gregor damit tun kann, was seit A-4 nie ging:** die **rechte** Leiste
+mit der Maus breiter ziehen — und damit das **Filterfenster** benutzen, dessen
+rechte Hälfte bisher außerhalb der 188 Pixel lag. Die linke und die untere
+Leiste gehen auf demselben Weg.
+
+Das ist **keine Nachbesserung mehr, sondern ein anderer Ort** für denselben
+Zweck. Der Grund steht in den Messungen.
+
+### Was die drei Messfassungen ergeben haben
+
+| Fassung | Marke | Ergebnis |
+|---|---|---|
+| 1.0.31 | `E-66 Zug:` | **0 Zeilen** — die Ziehschleife wird nie betreten, obwohl beide Balken entstehen |
+| 1.0.32 | `E-66 Bewegung`, `E-66 Klick` | **je 0 Zeilen** — die Andockleiste bekommt weder Mausbewegung noch Klick |
+| 1.0.33 | `E-66 Zeiger:` | Empfänger **`CWazooBar`**, **`CFiltersViewLeft`**, **`QC3DTabWnd`** — **nie** die Andockleiste |
+
+Dazu die Lage, die alles erklärt:
+
+```
+E-66 Streifen: Leiste=59421 Client=0..188 Bar=-2..178 nFrei=8 nSchub=10 Balken=0..8
+```
+
+Die Leiste liegt bei **−2..178**, der freie Platz also bei **178..188** — der
+Trennbalken lag bei **0..8**, mitten **unter** der Leiste. Der Doppelpfeil
+erschien trotzdem, weil `WM_SETCURSOR` zum Elternfenster **aufsteigt**;
+Maustasten tun das nicht.
+
+### Warum der bisherige Ort grundsätzlich falsch war
+
+`CDockBar::CalcFixedLayout` ordnet die Leisten **immer am Anfang** an:
+
+```cpp
+CPoint pt(-afxData.cxBorder2, -afxData.cyBorder2);   // bardock.cpp:387
+```
+
+Links landet der Zuschlag dadurch an der Innenkante — deshalb sah es dort
+zeitweise nach Erfolg aus. Rechts landet er am **Fensterrand**, und dort
+sucht ihn niemand. Mein Gegenmittel, die Leisten ans Ende zu rücken, hält
+nicht: MFC ordnet bei jedem Durchlauf neu an, `nSchub` war in **jeder** Zeile
+wieder 10.
+
+### Der neue Ort
+
+Der Greifstreifen liegt in **`SECControlBar::CalcInsideRect`**, also in der
+Leiste selbst. Dort ist er von keinem Kindfenster verdeckt — `CWazooBar::OnSize`
+legt sein Registerfenster nach `GetInsideRect` (`WazooBar.cpp:1244-1249`),
+also genau nach dieser Fassung. Was dort abgezogen wird, gehört der Leiste,
+und die Mausnachrichten kommen bei ihr an.
+
+Er sitzt automatisch an der richtigen Kante: bei einer links angedockten
+Leiste rechts, bei einer rechts angedockten links, bei einer unten
+angedockten oben — jeweils zum Nachrichtenbereich hin, dort, wo ein Anwender
+ihn sucht. Oben bleibt ausgenommen (**E-55**).
+
+**Was bleibt, ist die Ziehschleife.** `SECDockBar::ZiehenAmRand` benutzt
+weiterhin `Splitter::Track` und `OnSplitterMoved` — dort stecken die teuer
+erkauften Sicherungen: höchstens 100 ms warten und die physische Maustaste
+prüfen (**E-51**), auf den Bildschirm zeichnen (**E-54**), `WM_QUIT`
+zurückstellen (**E-61**). Zwei Ziehschleifen wären eine zu viel. Der Splitter
+ist dabei ein **Stapelobjekt** und lebt genau so lange wie der Zug — damit
+kann **E-60** an dieser Stelle nicht auftreten.
+
+**Entfallen:** der Zuschlag in `SECDockBar::CalcFixedLayout` (er hätte jetzt
+einen leeren Streifen am Fensterrand hinterlassen) und 197 Zeilen
+`TrennbalkenNeuAnlegen`. Die Fassung bleibt mit leerem Rumpf stehen, weil sie
+an `ON_WM_SIZE` hängt.
+
+### Was an 1.0.34 zu prüfen ist
+
+1. **Rechte Leiste breiter ziehen** — Zeiger an die linke Kante der rechten
+   Leiste, dort wird er zum Doppelpfeil, ziehen.
+2. Dann **Filterfenster** öffnen: ist die rechte Hälfte erreichbar, lässt
+   sich eine Regel bearbeiten? Das ist **E-65**, und es sollte damit von
+   selbst erledigt sein.
+3. **Linke Leiste**, gleicher Handgriff an ihrer rechten Kante.
+4. **Untere Leiste**, an ihrer Oberkante — auch kleiner ziehen, nicht nur
+   größer.
+5. Überlebt die Breite einen **Neustart**?
+6. **Friert nichts ein?** Falls doch, sofort sagen.
+
+## 7.2.0.33 — Messfassung III: wem gehört der Streifen?
+
+**Das Protokoll von 1.0.32 hat den Fall entschieden** — jedenfalls zur
+Hälfte. Gregor ist über beide Balken gefahren und hat geklickt:
+
+| Marke | Anzahl |
+|---|---|
+| `E-66 Streifen:` | 26 |
+| `E-66 Bewegung UEBER dem Streifen:` | **0** |
+| `E-66 Klick:` | **0** |
+
+**Weder Mausbewegungen noch Klicks erreichen die Andockleiste.** `WM_SETCURSOR`
+steigt vom Kindfenster zum Elternfenster auf, `WM_MOUSEMOVE` tut das
+**nicht** — also steht der Zeiger über einem **Kind** der Andockleiste, nicht
+über ihr selbst. Der Streifen, den die Rechnung für frei hält, ist von der
+Leiste **verdeckt**. Der Doppelpfeil ist nur der aufsteigende
+Zeigersetz-Aufruf.
+
+Damit sind zwei der drei möglichen Ursachen vom Tisch: es liegt weder an der
+Trefferprüfung noch an der Maustaste allein.
+
+**Was noch fehlt, um es zu beheben:** *wo* der Zeiger steht und *wem* dieser
+Punkt gehört. Bisher wurde nur die **Breite** der Leiste gemessen, nie ihre
+**Lage** — und ohne die ist nicht zu entscheiden, ob der freie Streifen vor
+oder hinter ihr liegt.
+
+Zwei Erweiterungen:
+
+| Marke | neu darin |
+|---|---|
+| `E-66 Streifen:` | `Bar=links..rechts`, die **Lage** der Leiste, und `Balken=…`, wohin der Trennbalken gelegt wird |
+| `E-66 Zeiger:` | Punkt, Balkenlage, **Empfänger** der Nachricht mit Klassennamen, und der Trefferkennwert von Windows — höchstens eine Zeile je Sekunde |
+
+Steht im Empfänger etwas anderes als *die Andockleiste selbst*, ist der Fall
+vollständig entschieden, und der Klassenname sagt zugleich, wo die Behandlung
+hingehört.
+
+### Was an 1.0.33 zu prüfen ist
+
+Wie bei 1.0.32: über beide Balken fahren, je einmal klicken und ziehen, dann
+die `eudora.log`. Nichts weiter.
+
+## 7.2.0.32 — Messfassung II: kommt der Klick überhaupt an?
+
+**Was das Protokoll von 1.0.31 ergeben hat** — und warum diese Fassung nötig
+ist. 13 Zeilen `E-66 Streifen:`, **keine einzige** `E-66 Zug:`. Die
+Ziehschleife wird also nie betreten. Die Geometrie stimmt dagegen:
+
+| Andockleiste | Clientbereich | `nPos` | `nFrei` | `nSchub` |
+|---|---|---|---|---|
+| links (59420) | 0,0..188,703 | 1 | **8** | 0 |
+| rechts (59421) | 0,0..188,703 | 1 | **8** | 10 |
+
+Beide Balken entstehen, acht Pixel breit, an der richtigen Kante. Es
+scheitert am **Klick**, nicht an der Rechnung — und `ON_WM_LBUTTONDOWN` steht
+in der Nachrichtentabelle.
+
+**Der Verdacht, der zu allen Beobachtungen passt:** `WM_SETCURSOR` steigt vom
+Kindfenster zum Elternfenster **auf**, Maustasten tun das **nicht**. Die
+Andockleiste bekäme dann den Zeiger zu setzen — daher der Doppelpfeil, den
+Gregor sieht — während der Klick bei einem Kindfenster landet, das den
+Streifen verdeckt.
+
+**Die Messung, die das entscheidet:** Mausbewegungen steigen ebenfalls
+**nicht** auf. Zwei neue Marken:
+
+| Marke | wann | was sie beweist |
+|---|---|---|
+| `E-66 Bewegung UEBER dem Streifen:` | Maus über dem Streifen | erscheint sie, gehört der Andockleiste dieser Pixel wirklich |
+| `E-66 Klick:` | jeder Klick in die Andockleiste | kommt der Klick an, und trifft er? Mit Punkt und Treffer ja/nein |
+
+Drei Ausgänge, drei verschiedene Ursachen:
+
+* **Beide Marken bleiben aus** → ein Kindfenster verdeckt den Streifen. Der
+  Zeiger stimmt nur, weil `WM_SETCURSOR` aufsteigt.
+* **Bewegung ja, Klick nein** → die Maustaste geht woanders hin, obwohl die
+  Bewegung ankommt.
+* **Klick ja, `Treffer=NEIN`** → die Trefferprüfung rechnet beim Klick anders
+  als beim Zeigersetzen.
+
+### Was an 1.0.32 zu prüfen ist
+
+Nur eines: **mit dem Zeiger über den linken und den rechten Trennbalken
+fahren und jeweils einmal klicken und ziehen.** Danach die `eudora.log`.
+Mehr nicht — diese Fassung soll messen, nicht gefallen.
+
+## 7.2.0.31 — Messfassung: warum der Trennbalken nicht greift
+
+**Was Gregor damit tun kann:** dieselbe Fassung wie 1.0.30, plus **drei
+Spurmarken**, die beim Ziehen des Trennbalkens ins Protokoll schreiben, was
+wirklich passiert. Einmal ziehen, `eudora.log` schicken — danach ist **E-66**
+entschieden, statt weiter geraten zu werden.
+
+**Dazu behoben: die dritte Ursache von E-66.**
+
+### E-66, dritte Ursache — meine eigene Messung zerstörte ihr Ergebnis
+
+Gregor an 1.0.30: *„balken lassen sich nicht verschieben. beim anklicken ist
+der maus cursor als zwei pfeile zu sehen, aber er greift nicht."* Und:
+*„in der 0.30 version ist das filter fenster noch nicht skalierbar bzw. der
+fenster rand nicht verschiebbar."*
+
+Der Doppelpfeil war der entscheidende Hinweis: `HitTest` **findet** den
+Balken, er existiert also. Beim Einsetzen der Spurmarke kam der Grund durch
+Lesen heraus — und es ist die Behebung vom Vortag selbst:
+
+Der freie Streifen wurde als **Abstand** zwischen Leistenkante und
+Andockleistenkante gemessen. Für rechts und unten wird die Leiste
+unmittelbar danach **genau dorthin gerückt** — also ist der Abstand beim
+nächsten Anordnungsdurchlauf null, die Bedingung `nFrei >= 2` scheitert, und
+der Balken wird **nicht mehr angelegt**. Eine Messung, die ihr eigenes
+Ergebnis zerstört.
+
+Dass der Doppelpfeil trotzdem erscheint, passt genau dazu: der Balken
+entsteht im ersten Durchlauf und verschwindet im nächsten — je nachdem, wann
+man hinsieht, ist er da oder nicht.
+
+Getrennt wird das jetzt in **zwei Größen mit verschiedener Bedeutung**:
+
+| | woraus | Verhalten nach dem Rücken |
+|---|---|---|
+| `nFrei` — wie **breit** der Streifen ist | Differenz der **Größen** | unverändert, die Größen ändern sich beim Rücken nicht |
+| `nSchub` — wie **weit** noch zu rücken ist | Differenz der **Lagen** | wird von selbst null, es passiert nichts mehr |
+
+Damit hält sich die Sache selbst an, statt zwischen zwei Zuständen zu
+pendeln.
+
+### Die drei Spurmarken
+
+Jede schreibt **eine** Zeile, alle mit `MISC | TOC_CORRUPT` — also ohne dass
+etwas eingestellt werden muss:
+
+| Marke | wann | beantwortet |
+|---|---|---|
+| `E-66 Streifen:` | bei jedem Anordnungsdurchlauf | entsteht überhaupt ein Balken? Mit Andockleiste, Clientbereich, `nFrei`, `nSchub` |
+| `E-66 Zug:` | bei jedem Ziehversuch | liefert die Ziehschleife etwas? Mit Balkenlage, Grenzen, Klickpunkt, Delta |
+| `E-66 Anwenden ABGEBROCHEN:` | wenn das Anwenden scheitert | **welcher** der drei möglichen Gründe — Leiste nicht gefunden, falsche Klasse (mit echtem Klassennamen), oder Größe unverändert |
+
+Drei Fehlerfälle, die von außen alle gleich aussehen — *„der Balken greift
+nicht"* —, sind damit unterscheidbar.
+
+**Warum Marken und nicht die nächste Vermutung:** am 09.09.2026 sind **vier**
+Vermutungen am Code gescheitert — zwei zu E-64 (eine Attrappe, die immer
+`TRUE` liefert; ein `default`-Zweig in `MatchValue`) und zwei zu E-66
+(`BrauchtGreifstreifen` lasse rechts nicht zu; es liege allein an
+`CalcTrackingLimits`). Was sich lesen lässt, wird gelesen; was nicht, soll
+das Programm selbst sagen.
+
+**Die Marken gehören wieder heraus, sobald E-66 steht** — ebenso die Marke
+`E-64 Match=` aus 7.2.0.30, die je Nachricht **und** Filter eine Zeile
+schreibt.
+
+### Was an 1.0.31 zu prüfen ist
+
+1. **Trennbalken rechts** greifen und ziehen — mehrfach, auch nach einer
+   Größenänderung des Hauptfensters.
+2. **Trennbalken links** desselbe — er ging in 1.0.29; falls er jetzt nicht
+   mehr geht, hat eine der drei Behebungen ihn beschädigt, und das steht in
+   der Marke `E-66 Streifen:`.
+3. Danach die **`eudora.log`** schicken, ganz gleich ob es geht oder nicht.
+   Geht es, steht dort warum; geht es nicht, steht dort auch warum.
+
+## Nach 1.0.29 — es wird an 7.2.0.30 gearbeitet
+
+Im Repo liegen **Änderungen, die in keinem Paket stecken**: die zweite Ursache
+von **E-66** (Trennbalken rechts) und **E-63** (Kurzhinweis der letzten Karte),
+beide gebaut und
+fehlerfrei übersetzt, aber **nicht ausgeliefert**. Dazu die Arbeit an den
+**Filtern**, Gregors nächstem Gebiet.
+
+`Eudora71/Version.h` und `VERSION` stehen deshalb schon auf **7.2.0.30 /
+1.0.30**, obwohl es dieses Paket noch nicht gibt. Der Grund steht im
+Abschnitt 7.2.0.30: der Bau vom 09.09.2026 trug **7.2.0.29** — dieselbe Nummer
+wie das veröffentlichte Paket, aber anderen Code. Wer daraus ein Paket
+geschnürt hätte, hätte zwei verschiedene Bauten unter derselben Kennung
+ausgeliefert (Befund **V-1**, Gregors Regel dazu: *„version muß eindeutig
+sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
+
+> **In `Version.h` stehen drei Makros, nicht eines.** `EUDORA_VERSION4`,
+> `EUDORA_BUILD_VERSION` **und** `EUDORA_BUILD_NUMBER` — das letzte im
+> Komma-Format, heute `7,2,0,29`. Beim Sprung auf 7.2.0.23 hat meine Ersetzung es
+> übersehen, und `tools/doku-pruefen.pl` hat den Commit abgewiesen. Benutzt
+> wird es im ganzen Bestand nirgends (0 Treffer außerhalb von `Version.h`),
+> es gehört aber trotzdem mit hochgesetzt.
+
+> **Berichtigt am 09.09.2026 (LEKTOR, L-11).** Hier stand bis dahin eine
+> Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
+> darunter *„E-37: nur die ANZEIGE behoben"* und *„32 Spurmarken für E-33"*.
+> **Beides ist überholt und widersprach schon der Überschrift dieses
+> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von **E-43**,
+> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
+> liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
+> die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
+> ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
+> was nicht in seinem Paket steckt — die Werkzeuge der letzten Bauten stehen
+> in den Abschnitten zu
+> 7.2.0.24 (`tools/testlauf.ps1`, `tools/pruefe-waechter.pl`) und 7.2.0.25.
+
+> **Hier stand bis zum 07.09.2026 ein Abschnitt „Nach 7.2.0.18".** Er nannte
+> `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
+> **E-32** als Behebung der modalen Meldung. Beides war falsch: die
+> E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
+> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
+> (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
+> wichtig, daß keine lügen im main stehen!"*
+
+---
+
+
+
+## 7.2.0.30 — Trennbalken rechts, Kurzhinweis der letzten Karte (in Arbeit)
+
+**Noch nicht gebaut, nicht gepackt, nicht ausgeliefert.** Dieser Abschnitt
+wächst, während an den Filtern gearbeitet wird — Gregors nächstes Gebiet.
+
+**Was Gregor damit tun können wird, was in 1.0.29 nicht ging:** den
+Trennbalken **rechts** ziehen (**E-66**, siehe die Einschränkung unten), und der
+Kurzhinweis erscheint auch
+auf der **letzten** Registerkarte (**E-63**).
+
+### E-66 — rechts spiegelverkehrt gerechnet (zweite von zwei Ursachen)
+
+Gregor an 1.0.29: *„rechts ist zwar ein balken sichtbar, aber nicht
+verschiebbar"*.
+
+`SECDockBar::CalcTrackingLimits` rechnete für **beide** senkrechten
+Andockleisten dieselben Grenzen:
+
+```
+min = Rahmen links  + nMindest
+max = Rahmen rechts - nFreiraum
+```
+
+Für **links** stimmt das. Für **rechts** ist es spiegelverkehrt, und zwar so,
+dass gar nichts mehr geht: der Balken sitzt dort an der **linken** Kante der
+Andockleiste. In deren Koordinaten ist `rectRahmen.left` stark negativ und
+`rectRahmen.right` liegt bei etwa **188** — damit wird `max = 188 − 200 =
+−12`, also **kleiner als der Ort des Balkens**. Eine Notbremse zieht `max` auf
+`min + nMindest` hoch, und zwischen zwei Grenzen, die 16 Pixel
+auseinanderliegen und beide weit links vom Balken stehen, lässt sich nichts
+ziehen. Der Balken nimmt den Mausfang und bewegt sich nicht.
+
+Die Regel, die für alle vier Seiten stimmt und jetzt dasteht:
+
+| Leiste | angewachsen an | zum MDI-Bereich hin |
+|---|---|---|
+| **links** | `min = links + nMindest` | `max = rechts − nFreiraum` |
+| **rechts** | `max = rechts − nMindest` | `min = links + nFreiraum` |
+| **oben** | `min = oben + nMindest` | `max = unten − nFreiraum` |
+| **unten** | `max = unten − nMindest` | `min = oben + nFreiraum` |
+
+**Nebenbei mitgefunden: unten war ebenso falsch, nur unauffällig.** Die alte
+Rechnung war nach oben zu großzügig (der MDI-Bereich ließ sich auf 16 Pixel
+zusammenschieben) und nach unten zu streng (die Leiste ließ sich nicht unter
+200 Pixel Höhe verkleinern). Gregor hatte am 09.09.2026 nur die eine Richtung
+geprüft — *„verschieben rauf / runter — bug gefixt"* —, deshalb hat es
+niemand gemerkt. Genau der Fall aus der Lehre *Gegenprobe umdrehen*: geprüft
+wurde, ob der gewünschte Zustand eintritt, nicht ob der unerwünschte
+durchkommt.
+
+> **Das behebt nur die HÄLFTE, und das gehört gesagt.** PRÜFER hat am
+> 09.09.2026 die **erste** Ursache nachgewiesen, und sie sitzt woanders:
+> `TrennbalkenNeuAnlegen` misst den freien Streifen für die rechte
+> Andockleiste bei `rectLeiste.left - rect.left`, aber
+> `CDockBar::CalcFixedLayout` der MFC (`bardock.cpp:387`) setzt die Kindleiste
+> in **jeder** Andockleiste bündig auf `(-cxBorder2, -cyBorder2)`. Der
+> Zuschlag von zwölf Pixeln bleibt darum immer am **großen** Ende liegen:
+> links an der Innenkante (`nFrei ≈ 7`, der Balken entsteht), rechts am
+> **Fensterrand** (`nFrei = −2`, die Bedingung `nFrei >= 2` scheitert,
+> `AddSplitter` läuft nie, `HitTest` liefert `NULL`).
+>
+> Solange das so ist, entsteht rechts **gar kein** Balken, und die hier
+> berichtigten Grenzen greifen ins Leere. Meine erste Zuordnung — es liege
+> allein an den Grenzen — war unvollständig: sie stimmt, sie reicht nur nicht.
+> Auch **widerlegt** ist meine Spur „`BrauchtGreifstreifen` lässt rechts nicht
+> zu": die Bedingung ist für links und rechts identisch.
+
+### E-63 — die letzte Karte bekam nie ein Kurzhinweis-Feld
+
+Gregor an 1.0.29: *„alle karten, bis auf die letzte (warum?) zeigen einen
+tooltip beim maus over."*
+
+`RecalcToolTipRects` (`workbook.cpp:1709`) meldet nur Blätter mit `WS_VISIBLE`
+als Feld an. Gerufen wird es unter anderem aus `AddSheet` über `ResetTaskBar`
+— und dort ist das eben angelegte MDI-Kindfenster **noch nicht sichtbar**. Es
+bekommt kein Feld. Jedes **spätere** `AddSheet` rechnet alle Felder neu und
+repariert die älteren; nur die zuletzt hinzugekommene Karte bleibt ohne, und
+das ist die rechte.
+
+Im Original gibt es dagegen eine Selbstheilung, und sie steht in
+`QCWorkbook::OnDrawBorder` (`workbook.cpp:1533`) — *„This is as good a place
+as any to figure out if somebody has done something behind our backs"*.
+`OnDrawBorder` wird in dieser Portierung **von niemandem gerufen**; im
+Original tat das `SECWorkbook::OnPaint` der Stingray-Ebene. **Dieselbe Wurzel
+wie E-58**, der Browser-Klick ins Leere.
+
+`OnDrawBorder` wiederzubeleben kam nicht in Frage — das würde auch das
+Werbelogo zeichnen. Die Selbstheilung steht deshalb jetzt beim Zeichnen der
+Karten und vergleicht die Zahl der **angemeldeten Felder** mit der Zahl der
+**sichtbaren Karten**. Das ist die Messung selbst und nicht ihr Ergebnis:
+stimmen die Zahlen, passiert nichts; stimmen sie nicht, wird einmal neu
+gerechnet, danach stimmen sie.
+
+### Warum die Nummer schon hochgesetzt ist
+
+Der Bau vom 09.09.2026, 13:0x trug **7.2.0.29** — dieselbe Nummer wie das
+veröffentlichte Paket, aber anderen Code. Das ist **Befund V-1** in Reinform
+(*„version muß eindeutig sein"*): wer daraus ein Paket geschnürt hätte, hätte
+zwei verschiedene Bauten unter derselben Kennung ausgeliefert. Die Nummern
+stehen deshalb **sofort** auf 7.2.0.30 / 1.0.30, lange vor dem nächsten Paket.
+
+## 7.2.0.29 — Acht Befunde des Prüfers und sieben aus der neuen Schranke
+
+**Was Gregor damit tun kann, was vorher nicht ging:** den Trennbalken ziehen
+und dabei **sehen**, wohin (E-54); den Registerkartenstreifen in den
+Einstellungen wieder **abschalten** (E-56); rechts im Streifen klicken, ohne
+dass sich ein **Browser** öffnet (E-58). Dazu drei Fehler, die noch nicht
+aufgefallen sind, aber Schaden anrichten konnten (E-57, E-60, E-61), und der
+leere Streifen unter der Werkzeugleiste ist weg (E-55).
+
+**Von Gregor am 09.09.2026 an Paket 1.0.29 bestätigt** — die sechs Prüfpunkte
+unten hat er einzeln durchgegangen: *„1-6, ok."* Dazu ungefragt: *„rechtklick
+zeigt ja einen liste der offenen fenster: sehr gut."*
+
+**Ein Restfehler steht, bewusst zurückgestellt (E-63):** *„alle karten, bis
+auf die letzte (warum?) zeigen einen tooltip beim maus over. beim letzten
+(ganz rechts) nicht."* Seine Entscheidung: *„bau mir mit dem bug ein 0.29
+release auf github. den fehler notieren wir, wird im nächsten release
+behoben."* Der Verdacht dazu steht in [BEFUNDE.md](BEFUNDE.md) unter **E-63**,
+samt der Messung, die ihn widerlegen würde.
+
+Acht davon kommen aus **PRÜFERs sechstem Durchgang** über die A-3/A-4-Arbeit,
+sieben weitere aus dem ersten Lauf der Schranke, die daraus entstanden ist
+(**E-62**, unten).
+Sie wurden bewusst in **einem** Bau zusammengefasst: ein Bau kostet rund zwölf
+Minuten, weil `OTShim.h` über `stdafx.h` im vorkompilierten Kopf liegt und
+jede Änderung daran alle 364 Quellen neu übersetzt (siehe *Warum das Bauen so
+lange dauert* unten).
+
+### Was Gregor sieht
+
+| Befund | Vorher | Jetzt |
+|---|---|---|
+| **E-54** | der Ziehrahmen war beim Ziehen **nach rechts unsichtbar** — man zog ins Blinde | er wird auf dem **Bildschirm** gezeichnet, wie MFC es beim Ziehen von Leisten macht, und ist über die ganze Strecke zu sehen |
+| **E-55** | ein **acht Pixel hoher leerer Streifen** unter der Werkzeugleiste | weg — der Greifstreifen entsteht nur noch links, rechts und unten |
+| **E-56** | *Show MDI task bar* **abschalten** ließ den Kartenstreifen stehen | er verschwindet |
+| **E-58** | ein Klick in den **rechten Rand** des Streifens öffnete den **Browser**, ohne dass dort etwas zu sehen war | kein Treffer, solange das Logo nicht gezeichnet wird |
+
+### Was er nicht sieht, was aber wichtiger ist
+
+| Befund | Was passieren konnte |
+|---|---|
+| **E-57** | `IsTabLabelTruncated` legte bei **jeder Mausbewegung** über dem Streifen eine `CPaintDC` an — außerhalb von `WM_PAINT`. `BeginPaint` erklärt den Ungültigkeitsbereich für erledigt, **ohne zu malen**: was gerade neu gezeichnet werden sollte, wurde verworfen. Das ist Gregors Satz *„hier ist kein refresh drin"*, und er galt weiter, obwohl E-52 behoben war |
+| **E-60** | ein Trennbalken konnte **während des Ziehens gelöscht** werden. `Track` verteilt fremde Nachrichten, eine davon löst einen Anordnungsdurchlauf aus — und der lief durch `EndRecycleSplitters`, das genau das Objekt löschte, in dessen Methode man noch stand. Neu ist die Marke `m_bTracking`, die Freigabe **und** Löschen fernhält |
+| **E-61** | `Track` **verschluckte `WM_QUIT`**. `PeekMessage` mit `PM_REMOVE` nimmt die Nachricht aus der Schlange; wer sie nicht zurückstellt, hat das Beenden des Programms verschluckt — **genau die Fehlerklasse aus Kriterium 7**, diesmal von mir selbst neu eingebaut. Jetzt wird sie mit `::PostQuitMessage` zurückgestellt und das Ziehen abgebrochen |
+| **E-59** | `m_cxTab` wurde nur in `OnPaint` gesetzt. Alles, was die Kartenbreite braucht, **ohne zu malen** — `TabHitTest`, `QCGetTabRect`, `CalcLogoTopLeft` —, rechnete zwischen einer Änderung und dem nächsten Malen mit dem alten Wert, und ein Klick traf die Nachbarkarte |
+
+### E-58 war eine Rückentwicklung, die ich selbst eingebaut habe
+
+`CalcLogoTopLeft` prüft die Trefferlage **nur über x**:
+
+```cpp
+if (nLeftEdge > 0 && (!pIntersectPoint || pIntersectPoint->x >= nLeftEdge))
+```
+
+Ein y-Vergleich fehlt ganz. Getroffen war damit der **gesamte rechte
+Fensterrand**, nicht die 111 × 23 Pixel des Logos. Und das Logo wird
+überhaupt nicht gezeichnet, weil `OnDrawBorder` in dieser Ersatzschicht von
+niemandem gerufen wird — im Original tat das `SECWorkbook::OnPaint`.
+
+Das war jahrelang harmlos, weil `QCWorkbook::OnLButtonDown` die Frage **nur
+bei `m_bWorkbookMode`** stellt (`workbook.cpp:1132`) — und der Schalter ist
+erst seit **A-3** an. Also eine Rückentwicklung aus 1.0.25 bis 1.0.28, die
+niemand gemeldet hat, weil ein Browserfenster nach einem Klick ins Leere nicht
+wie ein Programmfehler aussieht.
+
+Die Trefferprüfung liefert jetzt `FALSE`, solange nichts gezeichnet wird. Der
+Weg über `TopLeft` bleibt unberührt: wer `OnDrawBorder` wieder ruft, bekommt
+die Stelle nach wie vor — dann, und erst dann, gehört dort eine vollständige
+Prüfung gegen das Rechteck hin, samt y.
+
+### E-62 — die neue Schranke fand beim ersten Lauf sieben weitere Stellen
+
+Aus E-51 und E-61 ist `tools/pruefe-nachrichtenschleife.pl` entstanden: eine
+eigene Nachrichtenschleife muss `WM_QUIT` zurückstellen und darf nicht ohne
+Zeitschranke warten. Beim **ersten Lauf über den ganzen Baum** hat sie
+**sieben weitere Stellen** gemeldet — alle in **Eudoras eigenem Code**, keine
+aus der Portierung.
+
+| Stelle | Was passierte |
+|---|---|
+| `EscapePressed` (`guiutils.cpp:1666`) | wird während **langer Vorgänge** gerufen, also gerade beim Mailabruf — und nahm dabei `WM_QUIT` heraus, ohne sie zurückzustellen |
+| `LeftClickAttachment` (`guiutils.cpp:2910`) | **hängt**, siehe unten |
+| `SyncPlayMedia` (`guiutils.cpp:3387`) | verschluckte das Beenden, während ein Anhang abgespielt wird |
+| `CTocView::SizeColumn` (`tocview.cpp:3458`) | **hängt**, siehe unten |
+| `CTocFrame::DoPreviewDisplay` (`TocFrame.cpp:3673`) | verschluckte das Beenden beim Warten auf die Vorschau |
+| `CTridentView::DoFindFirst`, zwei Schleifen | dasselbe beim Suchen |
+| `CTridentView::Print` | dasselbe beim Drucken, dazu bliebe `SetRedraw(FALSE)` stehen |
+
+**Zwei davon hängen, statt nur zu verschlucken.** `LeftClickAttachment` und
+`CTocView::SizeColumn` warten so:
+
+```cpp
+while (1)
+{
+    MSG msg;
+    GetMessage(&msg, m_hWnd, 0, 0);   // Rueckgabewert wird nicht ausgewertet
+    ...
+}
+```
+
+`WM_QUIT` kommt **trotz** Fensterfilter — so ist `GetMessage` dokumentiert.
+Der Rückgabewert wird dann 0, aber `while (1)` fragt ihn nicht, und die
+Nachricht ist verbraucht. Die Schleife wartet danach **für immer** auf eine
+Nachricht, die nie mehr kommt, und hält dabei den Mausfang. Bei `SizeColumn`
+genügt dafür das Ziehen einer **Spaltenbreite** im Postfachfenster.
+
+Damit ist eine mögliche Ursache von Gregors *„beenden kann ich es auch nicht"*
+benannt, die **nicht** aus der Portierung stammt, sondern im Original steht —
+und die man von Hand kaum findet, weil sie nur in einem bestimmten Moment
+zuschlägt.
+
+### Warum das Bauen so lange dauert
+
+Gregor am 09.09.2026: *„schau nach, warum das bauen so lange dauert"*. Die
+Antwort ist eine Include-Kette:
+
+`Eudora71/Eudora/stdafx.h:52` → `OTShimAll.h` → `OTShim.h`
+
+Damit liegt die **Ersatzschicht im vorkompilierten Kopf** aller 364 Quellen
+des Eudora-Projekts. Jede Änderung an `OTShim.h` macht ihn ungültig, und alle
+364 werden neu übersetzt — gemessen 357 von 371 Objektdateien. Es genügt
+sogar ein `git switch`, das nur den Zeitstempel der Datei anfasst.
+
+| Abschnitt | Dauer |
+|---|---|
+| Neuübersetzen nach einer Änderung an `OTShim.h` | ~7 min |
+| zweiter Durchlauf für `EudoraRes` und `Eudora` mit `/p:BuildProjectReferences=false` (nötig, weil `OT501` als Projektverweis scheitert) | ~5 min |
+| Paket schnüren und prüfen | ~3 min |
+
+Deshalb wurden diese acht Befunde in **einem** Bau zusammengefasst statt
+einzeln geliefert.
+
+### Was an 1.0.29 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.29 / Paket 1.0.29`.
+
+1. **Trennbalken links, nach rechts ziehen** — ist der Ziehrahmen die ganze
+   Strecke über **zu sehen** (E-54)? Wird der linke Bereich breiter?
+2. Nach links ziehen — wird er wieder schmaler? **Friert nichts ein?**
+3. **Unter der Werkzeugleiste** — ist dort ein leerer Streifen (E-55)? Sollte
+   weg sein.
+4. *Tools → Options → Interface*, **Show MDI task bar abschalten** — ist der
+   Kartenstreifen weg (E-56)? Wieder einschalten — ist er wieder da?
+5. **Rechts im Kartenstreifen klicken**, hinter der letzten Karte — öffnet
+   sich ein **Browser** (E-58)? Sollte nicht.
+6. Maus über eine Karte mit langem Titel halten — kommt der Kurzhinweis, und
+   bleibt die Anzeige daneben **richtig** (E-57)?
+7. *File → Exit* während nichts gezogen wird — beendet es sauber (E-61 darf
+   Kriterium 7 nicht beschädigt haben)?
+
+## 7.2.0.28 — Beim Schließen bleibt kein Strich stehen
+
+**Was Gregor damit tun kann, was in 1.0.27 nicht ging:** ein Fenster schließen,
+ohne dass an der Stelle der verschwundenen Registerkarte eine Linie
+zurückbleibt.
+
+**Von Gregor noch nicht bestätigt.**
+
+### E-53 — eine Unsymmetrie in meinem eigenen Code
+
+> *„schönheitsfehler beim schließen, da bleibt ein strich übrig."*
+
+`StreifenAuffrischen` erklärt den Registerkartenstreifen mit
+`InflateRect(2, 2)` für ungültig — gefüllt wurde in `OnPaint` aber nur der
+Streifen **ohne** diesen Rand. Die zwei Pixel ringsum blieben also stehen, und
+genau dort liegen die Kanten, die `QCWorkbook::GetTabPts` um (+2,−2)
+verschiebt. Jetzt wird gefüllt, was auch für ungültig erklärt wird; beide
+Stellen benutzen denselben Betrag.
+
+### Zwei Schranken gegen Fehler in meiner Arbeitsweise
+
+Diese Fassung bringt keinen weiteren Programmcode, aber zwei Werkzeuge, die
+zwei Fehler von mir künftig verhindern:
+
+**`tools/release-veroeffentlichen.ps1`** — der einzige erlaubte Weg zu einem
+Release. Ich hatte v1.0.27 veröffentlicht, **bevor** Gregor es geprüft hatte;
+sein Befund E-53 kam danach, und die Fassung war released und fehlerhaft
+zugleich. Seine Anweisung: *„erst teste ich hier lokal, wenn ich es für gut
+befunden habe, kannst du ein github release bauen."* Das Werkzeug verlangt
+seine Freigabe im Klartext und eine Bestätigung im CHANGELOG-Abschnitt der
+Fassung; steht dort „noch nicht bestätigt", weist es ab.
+
+**`tools/bauen.ps1` weist ungesicherte Quelldateien ab.** Während ein Bau
+lief, hat Gregor gemergt und danach `git checkout main --force` gefahren —
+drei Änderungen von mir waren weg, darunter die E-53-Behebung selbst.
+Rekonstruierbar nur, weil die Vorlagen zufällig noch im Kladdenordner lagen.
+Der Auslöser ist immer derselbe: ein Bau dauert Minuten, in denen ich nichts
+tue und er weiterarbeitet. Wegwerfbauten gehen weiter mit `-Ungesichert`.
+
+### Was an 1.0.28 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`**. Titel: `Eudora 7.2.0.28 / Paket 1.0.28`.
+
+1. Mehrere Fenster öffnen, dann eines **schließen** — bleibt ein Strich?
+2. Und weiter offen aus 1.0.27: bleibt der Trennbalken nach dem Verbreitern
+   greifbar, stehen die Karten einfach statt doppelt, überlebt die Breite
+   einen Neustart, und **friert nirgends etwas ein**?
+
+## 7.2.0.27 — Der Trennbalken bleibt greifbar, die Karten stehen nicht doppelt
+
+**Was Gregor damit tun kann, was in 1.0.26 nicht ging:** den linken Bereich
+verbreitern und **gleich weiterziehen** — der Balken bleibt an der Kante
+greifbar, ohne dass man erst das Fenster verändern muss. Und die
+Registerkarten stehen danach nicht mehr doppelt.
+
+**Das seitliche Ziehen hat Gregor noch nicht beurteilt.** Bestätigt ist der
+Gegenfall, die Höhe: *„verschieben rauf / runter — bug gefixt, die anzeige ist
+korrekt."*
+
+### Seine Meldung war die Diagnose
+
+> *„verschieben links / rechts vom mailverzeichnis: hier ist kein refresh
+> drin. nach vergrößern (verschiebung nach rechts), kann man den balken nicht
+> mehr greifen. erst wenn ich das fenster verändere, dann geht es wieder."*
+
+Der letzte Halbsatz nennt die Ursache: MFC verschiebt die Leisten mit
+`DeferWindowPos` (`lpLayout->hDWP`). Wenn `OnSizeParent` zurückkommt, hat die
+Andockleiste ihre neue Größe **noch nicht** — `GetClientRect` liefert dort die
+**alte**. Der Balken landete an der alten Stelle, und erst der nächste
+Anordnungsdurchlauf zog es gerade. Das war „das Fenster verändern".
+
+Behoben, indem der Balken in **`OnSize`** entsteht statt in `OnSizeParent`:
+`WM_SIZE` kommt, nachdem das Fenster seine Größe hat.
+
+Die doppelten Karten in seinem Bildschirmfoto — *„In"* und *„markus bakus,
+10:02"* je zweimal — kamen aus derselben Wurzel: `RecalcLayout` ordnet neu an,
+erklärt aber nichts für ungültig, was an der alten Stelle stand.
+`OnSplitterMoved` frischt jetzt mit
+`RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN` auf.
+
+**Bestätigt ist der Gegenfall**, und er stützt die Deutung: *„verschieben rauf
+/ runter — bug gefixt, die anzeige ist korrekt."* Bei der Höhe greift dasselbe
+Auffrischen schon seit 1.0.26.
+
+### Was an 1.0.27 zu prüfen ist
+
+Auspacken, **`Eudora starten.cmd`**. Titel: `Eudora 7.2.0.27 / Paket 1.0.27`.
+
+1. Linken Bereich nach rechts ziehen — und **gleich noch einmal** ziehen,
+   ohne etwas anderes anzufassen. Bleibt der Balken greifbar?
+2. Stehen die Registerkarten danach **einfach** da, nicht doppelt?
+3. Beenden und neu starten — ist die Breite noch da?
+4. Und weiter der wichtigste Punkt: **friert irgendwo etwas ein?**
+
+## 7.2.0.26 — Der linke Bereich lässt sich breiter ziehen, und die Karten frischen auf
+
+**Was Gregor damit tun kann, was vorher nicht ging:** den Trennbalken zwischen
+Postfachbereich und Nachrichtenliste mit der Maus nach rechts ziehen und so
+links mehr sehen (Anforderung **A-4**). Dazu drei Nachbesserungen an der
+Registerkartenleiste, die er selbst gefunden hat (**E-50**).
+
+**Beides von Gregor noch nicht bestätigt.** Beim Ziehen kann ich es
+grundsätzlich nicht selbst messen — dazu braucht es eine **physisch**
+gedrückte Maustaste; siehe unten, warum das so sein muss.
+
+### A-4 — drei Anläufe, zwei davon am laufenden Programm widerlegt
+
+Die Splitter-Mechanik lag vollständig in der Ersatzschicht — `AddSplitter`,
+`HitTest`, `StartTracking`, `CalcTrackingLimits`, `DrawTrackerRect`, dazu
+`OnSetCursor` und `OnLButtonDown`. Nur wurde `AddSplitter` nie aufgerufen,
+`Track` war leer und `OnSplitterMoved` tat nichts. Und ein Balken braucht
+Platz **im Clientbereich der Andockleiste** — liegt er unter dem Kindfenster,
+gehen die Mausereignisse dorthin.
+
+| Anlauf | Messung | Urteil |
+|---|---|---|
+| 1. über `SetBorders` | Andockleiste Client **176**, Leiste 318 **180** | verworfen: der Rand verkleinert den Innenbereich und vergrößert die Andockleiste **nicht**; die Leiste ragte über |
+| 2. Zuschlag in `CalcFixedLayout`, abhängig von einer eigenen Prüfung über `m_arrBars` | Andockleiste blieb **180** | verworfen: keine Wirkung — die Bedingung griff nicht |
+| Messversuch: Zuschlag **11**, bedingungslos | Andockleiste **187**, freier Streifen **7** | belegt: der Weg stimmt, und **MFC verbraucht 4 Pixel des Zuschlags selbst** |
+| 3. Bedingung am Ergebnis, Balken nach dem **nachgemessenen** Platz | Andockleiste **188**, freier Streifen **8** | steht |
+
+Aus dem Messversuch folgt die eigentliche Lehre: eine feste Pixelzahl wäre
+hier immer geraten gewesen. `OnSizeParent` misst deshalb den Unterschied
+zwischen Andockleiste und Leiste darin und legt den Balken genau dorthin.
+Bleiben weniger als zwei Pixel, gibt es lieber **keinen** Balken als einen,
+den niemand trifft.
+
+`OnSplitterMoved` ändert die Andockgröße über `GetBarInfo`/`SetBarInfo` —
+genau die Felder, die `SECControlBar::CalcFixedLayout` auswertet. Damit
+überlebt die neue Breite einen Neustart, denn den `[ToolBar…]`-Abschnitt in
+der `Eudora.ini` gibt es seit der Behebung von **E-43** überhaupt erst.
+
+### Die Ziehschleife hätte Eudora einfrieren können
+
+Der erste Entwurf von `Splitter::Track` lief mit `while(::GetMessage(...))`.
+Zweimal hat das die Prüfinstanz zum **Hängen** gebracht: kommt kein
+`WM_LBUTTONUP` — weil der Mausfang verlorengeht, das Fenster den Fokus
+verliert oder die Nachricht auf anderem Weg verschwindet —, wartet die
+Schleife für immer, und das Programm ist tot. Genau die Fehlerklasse, die
+Gregor tagelang gekostet hat (*„beenden kann ich es auch nicht"*).
+
+Jetzt: höchstens 100 ms warten, danach Fenster, Mausfang und die **physische**
+Maustaste erneut prüfen. Ist sie los, ist das Ziehen vorbei, ganz gleich
+welche Nachricht kam. Der Preis ist ehrlich zu nennen: ein künstlicher Zug
+über Fensterbotschaften lässt sich damit nicht mehr fahren, das Ziehen kann
+nur ein Mensch prüfen. Eine Schleife, die sich bequem testen lässt, aber das
+Programm einfrieren kann, wäre der schlechtere Tausch.
+
+### E-50 — drei Nachbesserungen an der Registerkartenleiste
+
+Alle drei von Gregor am 09.09.2026 an 1.0.25 gefunden, alle mit derselben
+Wurzel: **der Streifen wird nur beim Neuzeichnen gemalt, und niemand erklärt
+ihn für ungültig, wenn sich etwas ändert.**
+
+| Beobachtung | Ursache | Behebung |
+|---|---|---|
+| *„der button bzw. die karte bleibt eingedrückt, auch wenn man im anderen fenster ist"* | `QCWorkbook::OnLButtonDown` setzt `SetSelected(TRUE)` (`workbook.cpp:1109`) — und **niemand** setzt es je zurück; im Original tat das die Stingray-Ebene | die Marke wird gelöscht, sobald ein anderer Rahmen aktiv ist. Sie bedeutet laut eigenem Feldkommentar nur *„Karte gewählt, Rahmen noch nicht aktiv"* |
+| *„beim skalieren (kleiner machen) ist die darstellung falsch"* | die Kartenbreite hängt an der Fensterbreite (`recalcTabWidth` teilt die Fläche auf) | `WM_SIZE` frischt den Streifen auf |
+| *„die karten sind dann weg"* beim Öffnen/Schließen | dieselbe Sache: die Breite ändert sich mit der Kartenzahl | `AddSheet`/`RemoveSheet` frischen auf |
+
+### Was an 1.0.26 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.26 / Paket 1.0.26`.
+
+**A-4, der Trennbalken:**
+
+1. Maus auf die Kante zwischen Postfachbereich und Nachrichtenliste — wird
+   der Zeiger zum **Größenzeiger** (Doppelpfeil)?
+2. Nach **rechts ziehen** — wird der linke Bereich breiter? Über 180 Pixel
+   hinaus?
+3. Nach links ziehen — wird er wieder schmaler?
+4. Eudora beenden und neu starten — ist die Breite noch da?
+5. **Und das Wichtigste: friert dabei nichts ein.** Falls doch, sofort sagen —
+   dann fliegt A-4 wieder heraus.
+
+**A-3, die Registerkarten:**
+
+6. Bleibt die Karte des **aktiven** Fensters eingedrückt und lösen sich die
+   anderen?
+7. Fenster kleiner ziehen — bleiben die Karten richtig?
+8. Fenster öffnen und schließen — bleiben die Karten sichtbar?
+
+## 7.2.0.25 — Die offenen Fenster stehen als Registerkarten unten
+
+**Was Gregor damit tun kann, was vorher nicht ging:** unten am Fenster steht
+für jedes offene Fenster eine Registerkarte, wie die Reiter in einem Browser —
+statt nur der Liste im Menü *Window*. Das ist Anforderung **A-3** und der
+fehlende Teil von **Kriterium 8**.
+
+**Von Gregor noch nicht bestätigt.** Gemessen und fotografiert habe ich es
+(zwei offene Fenster → zwei beschriftete Karten, `In` und
+`No Recipient, No S…`, die aktive hervorgehoben). Was ich von außen kaum
+messen kann, ist der **Klick**: holt eine Karte ihr Fenster nach vorn?
+
+### Die Leiste war nicht weg — sie war abgeschaltet
+
+Das Hauptfenster heißt nicht zufällig `QCWorkbook`: Stingrays *Workbook* ist
+genau so eine Reiterleiste. Eudoras Code dafür liegt vollständig im
+Quellbaum — Zeichnen, Geometrie, Treffertest, Kurzhinweise, Kontextmenü, der
+Ein-/Ausschalter in den Einstellungen und der INI-Schlüssel `ShowMDITaskbar`
+mit der Vorgabe **1**. `mainfrm.cpp:1042` schaltet die Leiste bei **jedem**
+Start ein. Nur nahm die Ersatzschicht den Schalter nicht an.
+
+### Vier Ursachen, jede einzeln gemessen
+
+| | war | ist |
+|---|---|---|
+| `SECWorkbook::SetWorkbookMode` | Attrappe: meldete „nicht umgesetzt" und setzte `m_bWorkbookMode` **absichtlich nicht** | setzt den Betrieb und reserviert den Streifen |
+| `SECWorkbook::GetTabPts` | lieferte **sechs Nullpunkte** — Eudora zeichnete jede Karte an Punkt (0,0) mit Größe null | echte Kartenform aus sechs Punkten; gezählt werden nur **sichtbare** Blätter |
+| `recalcTabWidth()` | **liefert** die Breite nur zurück und setzt `m_cxTab` nicht; ich hatte den Rückgabewert weggeworfen | `m_cxTab = recalcTabWidth()` |
+| Streifenlage | begann bei `rectClient.left` = 0 — dort liegt die **linke Leiste** (Client-x 6…186). Karte 0 verschwand darunter, sichtbar war nur der Rand von Karte 1 bei x 182…262 | beginnt und endet am **MDI-Bereich** |
+| Beschriftung | `OnDrawTab` zeichnet nur den **Rahmen** | `OnDrawTabIconAndLabel` wird mitgerufen — virtuell, von Eudora überschrieben, von niemandem aufgerufen |
+
+Die dritte Zeile ist die lehrreichste: die Streifenlage stammt aus Eudoras
+eigener Rechnung (`QCGetTaskBarRect`, `workbook.cpp:930`), die dort ebenfalls
+`rectClient.left` nimmt. Im Original hat das gepasst; bei uns reicht die
+linke Wazoo-Leiste bis ganz nach unten. Das ist eine **bewusste Abweichung
+vom Original**, und sie steht als solche im Quelltext.
+
+### Am Werkzeug
+
+`tools/leisten-messen.ps1` misst jetzt auch den Streifen — Unterkante des
+MDI-Bereichs gegen den Rahmen — zählt die offenen MDI-Fenster und kann mit
+`-Abbild` ein Bild des Fensters speichern. Das Bild entsteht über
+**`PrintWindow`**, nachdem der erste Versuch mit einem Bildschirmabzug ein
+fremdes Dialogfenster mitfotografiert hatte und die Messung damit wertlos
+war, ohne dass es auffiel.
+
+### Was an 1.0.25 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Titelzeile:
+`Eudora 7.2.0.25 / Paket 1.0.25`.
+
+1. Steht unten je offenem Fenster eine **Registerkarte**?
+2. **Holt ein Klick auf eine Karte ihr Fenster nach vorn?** — der wichtigste
+   Punkt.
+3. Ändert sich der Streifen beim Öffnen und Schließen eines Fensters?
+4. Sind die Beschriftungen dieselben wie im Menü *Window*?
+5. Schaltet *Show MDI task bar* in den Einstellungen die Leiste aus und wieder
+   ein, und überlebt das einen Neustart?
+
+## 7.2.0.24 — Eine Ursache, vier Befunde: das Konto-Löschen geht wieder
+
+**Was Gregor damit tun kann, was vorher nicht ging:** ein Konto löschen, ohne
+dass „Encountered an improper argument" erscheint und der Eintrag links stehen
+bleibt. Und die Fenstergrößen und Leistenlagen überleben jetzt einen Neustart —
+sie wurden bisher **nie** gespeichert.
+
+**Von Gregor am 08.09.2026 bestätigt:** *„0.24 – persona läßt sich löschen. keine messagebox“*. Damit
+ist die ganze Kette belegt – nicht nur am Quelltext abgelesen, sondern am
+laufenden Programm.
+
+### Die eine Ursache: `SECControlBar` war zweimal definiert
+
+Zwei Definitionen derselben Klasse, und der Ersatz hat ein Feld mehr:
+
+| | |
+|---|---|
+| `OT501/Include/sbarcore.h:118` | Original-`SECControlBar` |
+| `OTShim/OTShim.h:496` | Ersatz-`SECControlBar`, **ein Feld mehr**: `int m_nRowExtent` (`:533`) |
+| `OTShim/OTShim.h:984` | setzt `__SBARCORE_H__` |
+| `OTShim_Werkzeugleiste.h:84` | band unter `#ifndef __SBARCORE_H__` das **Original** ein |
+
+Welche Fassung eine Übersetzungseinheit zu sehen bekam, hing damit allein an
+der Einbindereihenfolge: `QCCustomToolBar.cpp` sieht über `stdafx.h` →
+`OTShimAll.h` → `OTShim.h` den **Ersatz**, `OTShim_Werkzeugleiste.cpp` bindet
+nur den eigenen Header ein und sah das **Original**. Compilerschalter und
+Include-Pfade sind sonst gleich — nachgemessen aus dem echten Compileraufruf
+in `Eudora.tlog/CL.command.1.tlog`, einziger Unterschied `/Yu"stdafx.h"`.
+
+Folge: das Knopffeld `m_btns` lag in beiden Übersetzungseinheiten **acht Byte
+auseinander**. Der Binder nimmt eine Fassung, der übrige Code liest daneben.
+
+**Gemessen, vorher:**
+```
+Versatz=488  GetBtnCount=24/24  m_btns.GetSize=0/0  roh[0..4]=24,25,0,0,0
+```
+**Nachher:**
+```
+Versatz=488  GetBtnCount=24/24  m_btns.GetSize=24/24  roh[0..4]=15146180,10425560,24,25,0
+```
+`24` und `25` sind Anzahl und Kapazität des Knopffeldes; sie liegen jetzt dort,
+wo `CPtrArray` sie hat, statt acht Byte davor.
+
+Behoben, indem `OTShim_Werkzeugleiste.h` die **Ersatzschicht** einbindet
+(`#include "OTShim.h"`) statt des Originals.
+
+### Was alles daran hing
+
+| Befund | Wie er zusammenhängt |
+|---|---|
+| **E-43** | `SaveCustomInfo` warf bei **jedem** Beenden → der Leistenzustand wurde **nie** gespeichert. Jetzt: **13** `[ToolBar…]`-Abschnitte in der `Eudora.ini` statt **0**, und keine `E-42`-Zeile mehr |
+| **E-37** | `CPersonality::Remove` löscht den INI-Abschnitt und ruft dann `DeleteCommand` → `NotifyClients(CA_DELETE)` → `QCCustomToolBar::Notify` (`:951`), wo in `:970` dasselbe Muster steht. Der Wurf fliegt aus `Remove()` heraus, der Anzeige-Code darunter wird nie erreicht. Belegt durch die Abwesenheit jeder Spur: **keine einzige E-37-Marke** in Gregors Protokoll |
+| **E-38** | war **gar kein Fehler**. Gregor am 08.09.2026: *„nach dem löschen eines kontos, wenn das konto noch sichtbar ist, dann fehlen die daten in den eigenschaften … beim neuen konto sind sie zu sehen."* Die leeren Felder gehörten zu einem Geistereintrag, den E-37 in der Liste stehen ließ |
+| **E-34** | dasselbe Muster an einer dritten Stelle (`QCChildToolBar::GetButton`) — die dortige Umgehung bleibt, die Wurzel ist jetzt weg |
+
+### Die Schranke dazu
+
+`tools/pruefe-waechter.pl`: bindet ein Header der Ersatzschicht ein
+OT501-Original ein, dessen Wächter **irgendeine** Ersatzdatei setzt, muss
+sichergestellt sein, dass der Wächter dann immer schon steht. Sie fand genau
+einen Verstoß — den echten — und ließ den legitimen Fall durch
+(`OTShim.h:1052`, Wächter steht ab `:985`).
+
+Die zugehörige Lehre `Arbeitsweise/teilweise-ersetzte-header.md` gibt es seit
+dem **30.08.2026**. Sie hat neun Tage lang nichts verhindert. Das ist der
+Grund, warum aus Lehren jetzt Schranken werden.
+
+### Neu: `tools/testlauf.ps1`
+
+Nachdem ich am 08.09.2026 **viermal unangekündigt** eine Eudora-Instanz
+gestartet hatte — Gregor: *„hast du was gestartet?"*, *„absprache?"* — ist das
+Starten zum Messen an ein Werkzeug gebunden, das erzwingt: eine **Freigabe** im
+Klartext, Verzeichnis nur unter `C:\Temp`, **gleiche Dateiversion** von
+`Eudora.exe` und `EudoraRes.dll`, Beenden per Fensterbotschaft an ein
+**gemessenes** Handle, Aufräumen immer nach Pfad gefiltert, und jeder Lauf mit
+Freigabetext in `tools/TESTLAEUFE.md`.
+
+Die Versionsprüfung stammt aus einem eigenen Fehler desselben Tages: ich hatte
+nur die `Eudora.exe` ins Testverzeichnis kopiert, nicht die `EudoraRes.dll`.
+Eudora brachte darauf *„Eudora has loaded a Resource DLL that does not match
+this version of Eudora"* auf Gregors Bildschirm, und meine Messung war wertlos,
+ohne dass ich es merkte.
+
+### Was an 1.0.24 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken; von Hand wäre es
+`Eudora.exe "<Pfad>\Mailverzeichnis"`. Die Titelzeile muss
+`Eudora 7.2.0.24 / Paket 1.0.24` nennen.
+
+1. **Ein Konto löschen** (E-37): verschwindet der Eintrag links **sofort**,
+   ohne Neustart? Kommt noch „Encountered an improper argument"?
+2. **Fenster verschieben, beenden, neu starten** (E-43): steht die
+   Werkzeugleiste wieder da, wo sie war? In der `Eudora.ini` müssen jetzt
+   `[ToolBar…]`-Abschnitte stehen.
+3. **Beenden** über alle drei Wege: *File → Exit*, Alt-F4, das Kreuz.
+4. **Eine Nachricht anzeigen**, bei der bisher „Encountered an improper
+   argument" kam — gut möglich, dass sie mit weg ist.
+
+## 7.2.0.23 — Die Statusleiste liegt unten, und ein Prozess ohne Fenster kann nicht mehr entstehen
+
+**Was Gregor damit tun kann, was vorher nicht ging:** *Task Status* und *Task
+Errors* liegen jetzt **waagrecht am unteren Fensterrand**, über die ganze
+Breite, und bleiben dort — statt als schmale senkrechte Spalte links neben dem
+Postfach zu stehen. Von Gregor am 08.09.2026 an der Prüfinstanz bestätigt:
+*„jetzt ist sie unten, ja"*. Damit ist Anforderung **A-2** aus
+[ZIEL.md](ZIEL.md) umgesetzt.
+
+### A-2/E-44 — zwei Ursachen, nicht eine
+
+Der erste Verdacht war falsch: die Leiste wird **nicht** links angedockt. An
+einem frischen Profil gemessen (`tools/leisten-messen.ps1`, neu in diesem
+Stand) lag sie von Anfang an richtig — **unten, 1712×80** — und wurde nur
+unmittelbar danach durch `ID_SEC_HIDE` wieder **versteckt**
+(`WazooBarMgr.cpp`, `SetDefaultWazooBarState`, Fall 2). Diese Zeile ist weg.
+
+Das erklärte aber nicht Gregors Bildschirmbild. Dafür gab es eine zweite,
+unabhängige Ursache: der Standardzweig läuft **nur beim allerersten Start**.
+Ab dem zweiten greift `LoadWazooConfigFromIni` — und das stellt nur wieder
+her, *welche* Fenster in einer Leiste sitzen, **nicht die Andockseite**. Die
+käme aus MFCs `LoadBarState` und damit aus dem INI-Abschnitt `[ToolBar...]`,
+den es nicht gibt, weil `SaveBarState` beim Beenden jedes Mal abbricht
+(**E-43**). Nachgemessen: weder Gregors `Eudora.ini` noch die eines frischen
+Profils enthält einen solchen Abschnitt — **null Treffer** in beiden. Alle drei
+Leisten blieben deshalb auf `CBRS_LEFT` aus `CreateInitialWazooBars` stehen.
+
+Jetzt zieht der Lade-Zweig die Standardanordnung nach, **wenn** eine Leiste an
+keiner Andockleiste hängt (`m_pDockBar == NULL`) — dieselbe Prüfung, die das
+Projekt an anderer Stelle selbst benutzt. Ist eine Lage gespeichert, ändert
+sich nichts. Ergebnis: Postfächer links sichtbar, Kurznamen versteckt,
+Aufgabenstatus waagrecht unten sichtbar.
+
+> **Nachgebessert nach Gregors Bildschirmfoto:** im ersten Anlauf blieb die
+> **Kurznamen-Leiste** als 180 Pixel breite Spalte rechts dauerhaft offen. Die
+> Sichtbarkeit einer Wazoo-Leiste wird nirgends gespeichert (nachgesehen in
+> `SaveWazooConfigToIni`) — was ohne Zutun sichtbar bleibt, ist also keine
+> Entscheidung des Anwenders, sondern nur das `WS_VISIBLE` aus `Create`.
+> Deshalb läuft die Sichtbarkeitsstufe jetzt mit.
+
+### E-45 — der eine Aufräumschritt, der nicht übersprungen werden darf
+
+Gefunden von **PRUEFER** ([Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md)) als
+Fehler in **meiner** E-42-Behebung. Von den zwölf mit `AUFRAEUMEN` gefassten
+Schritten ist einer nicht bloß Aufräumen: `QCWorkbook::OnClose` löst sich auf
+`CFrameWnd::OnClose` auf, und deren **letzte** Anweisung ist `DestroyWindow()`
+(MFC 14, `winfrm.cpp:941`); `CMainFrame::OnClose` ruft es nirgends selbst.
+Fiele der Schritt aus, gäbe es kein `WM_QUIT`, kein `ExitInstance` und kein
+`IniStringCleanUp` — und das Fenster ist von `HideApplication` schon
+versteckt: übrig bliebe ein **Prozess ohne Fenster**, genau der Zustand, den
+Gregor tagelang hatte. Dieser Schritt hat jetzt einen eigenen Fangzweig, der
+`DestroyWindow()` nachholt.
+
+### E-46 — ein Verdacht aufgestellt und in derselben Sitzung widerlegt
+
+`CFrameWnd::PostNcDestroy` ist wörtlich `delete this`, `CMainFrame`
+überschreibt es nicht, und `DestroyWindow()` stellt `WM_NCDESTROY` synchron
+zu — der Aufruf steht aber **mitten** in `CMainFrame::OnClose`, danach laufen
+noch rund 230 Zeilen. Wäre der Verdacht richtig, hätte **E-43** damit seine
+Ursache gehabt. Entschieden an einer Marke im Destruktor: sie erscheint im
+Protokoll **nach** `nach QCWorkbook::OnClose`, nicht dazwischen. **Widerlegt.**
+Die Marke bleibt drin, weil sie die Reihenfolge dauerhaft belegt.
+
+### E-43 — der Widerspruch ist jetzt eingegrenzt statt bloß benannt
+
+Die verfeinerte Marke misst `GetBtnCount()` und `m_btns.GetSize()` **je
+zweimal in einer Ausgabe**. Gemessen: `GetBtnCount=24/24
+m_btns.GetSize=0/0`, gleiches `this`, gleiche Adresse. Damit sind ein Wettlauf
+und ein freigegebenes Objekt **beide ausgeschlossen** — es bleibt, dass der
+übersetzte Code an zwei Adressen liest, obwohl beide Ausdrücke wörtlich
+derselbe Code sind (`OTShim_Werkzeugleiste.h:744`). Eine dritte Marke gibt
+jetzt Versatz und Rohwörter des Feldes aus.
+
+**Widerlegt, ebenfalls in dieser Sitzung:** PRUEFERs Befund, das Protokoll sei
+im Normalbetrieb stumm. `DebugMask` ist zwar mit `0` vorbelegt, wird aber
+sofort aus der INI gesetzt, und der Vorgabewert steht in der Ressource
+(`EudoraRes.rc:8441`: `LogLevel\n25759`). 25759 ist 0x649F und enthält 0x80 —
+die Marken werden **ohne jede Einstellung** geschrieben. Gegenprobe: Gregors
+`Eudora.ini` hat keine Zeile `LogLevel`, und seine `eudora.log` enthält alle
+Marken.
+
+### Was an 1.0.23 zu prüfen ist
+
+Paket: 9 340 228 Byte, SHA256
+`3f58a93c85c8fbf9f206ccc319a4798bb40236f3b60821a3de6df17710139045`.
+**Das ZIP liegt nicht mehr im Repo** — am 09.09.2026 entfernt, wie die der
+übrigen überholten Fassungen, damit das Repo nicht weiter wächst. Neu zu bauen
+aus dem Commit dieses Abschnitts mit
+`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`; die Prüfsumme
+oben ist der Nachweis. Die Marke [v1.0.23](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.23)
+bleibt bestehen.
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
+aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
+Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
+`Eudora.exe` **ohne** Parameter beim ersten Start: dann sucht Eudora die Ini im
+Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
+**E-6**). Die Titelzeile muss
+`Eudora 7.2.0.23 / Paket 1.0.23` nennen.
+
+1. **Die untere Leiste** — *Task Status* und *Task Errors* liegen waagrecht am
+   unteren Fensterrand, über die ganze Breite. **Von Gregor am 08.09.2026
+   bestätigt:** *„leiste unten paßt."* Rechts darf **keine** Kurznamen-Spalte
+   dauerhaft offenstehen.
+2. **E-37, gelöschtes Konto** (steckt seit 1.0.22 drin, noch unbestätigt):
+   eine Persönlichkeit anlegen und wieder löschen. Verschwindet der Eintrag
+   links **sofort**, ohne Neustart? Kommt noch „Encountered an improper
+   argument"?
+3. **E-38, Assistentendaten** — jetzt erstmals messbar, weil der Blocker E-33
+   weg ist: Konto über den Assistenten anlegen, Eudora **normal** beenden, neu
+   starten, *Konto → Eigenschaften* ansehen. Stehen Name, Mailadresse und
+   Server da?
+4. **Das Beenden** über alle drei Wege: *File → Exit*, **Alt-F4**, das
+   **Kreuz**.
+5. **E-43** braucht nur einen normalen Beendigungsvorgang. Danach steht in
+   `Mailverzeichnis\eudora.log` eine Zeile `E-43 SaveCustomInfo: … Versatz=…
+   roh[0..4]=…` — die entscheidet, warum der Leistenzustand nie gespeichert
+   wird.
+
+### Neu im Werkzeugkasten
+
+- `tools/leisten-messen.ps1` — misst Andockseite, Sichtbarkeit, Größe und Lage
+  jeder Wazoo-Leiste eines laufenden Eudora und schreibt das Urteil zu A-2
+  ausdrücklich hin. Der `-Pfadfilter` ist Absicht: auf Gregors Rechner läuft
+  sein eigenes Eudora, gemessen werden soll die Prüfinstanz. Das Skript
+  schickt keine Nachricht und beendet nichts.
+
+## 7.2.0.22 / Paket 1.0.22 — 08.09.2026 · das Beenden funktioniert
+
+**Gregors Urteil: *„schließen klappt jetzt."*** Alle drei Wege beenden Eudora —
+*File → Exit*, **Alt-F4** und das **Kreuz** oben rechts. Damit ist
+**Kriterium 7** aus [ZIEL.md](ZIEL.md) erfüllt, das letzte offene der zweiten
+Stufe.
+
+Ebenfalls von ihm bestätigt: *„default werte beim neuen persona konto für
+'leave message on server' greifen."* — **Anforderung A-1** ist damit am
+laufenden Programm belegt, nicht mehr nur am Codeweg.
+
+Paket: 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
+**Das ZIP liegt nicht mehr im Repo** — Gregor am 08.09.2026: *„0.22 brauche ich
+nicht, wenn es ein 0.23 gibt"*. Anders als bei den übrigen entfernten Paketen
+gibt es für 1.0.22 **keine Marke**; wer es wiederhaben will, baut es aus Commit
+`d003d46` neu (`tools/paket-bauen.ps1 -AusBauverzeichnis -Bauart Release`) und
+prüft die Prüfsumme oben nach.
+
+### Der Grundsatz hinter der Behebung
+
+**Ein Fehler beim Aufräumen darf das Beenden nicht verhindern.** Nur eine
+bewusste Entscheidung des Anwenders — „Abbrechen" in einer Rückfrage — darf
+das. Vorher reichte eine geworfene Ausnahme oder ein Dialog, der sich nicht
+öffnen ließ: `AfxCallWndProc` fängt den Wurf, `CWinApp::ProcessWndProcException`
+(`appcore.cpp:1009-1039`) zeigt „Encountered an improper argument" und liefert
+**0** — damit gilt `WM_CLOSE` als beantwortet, und das Fenster bleibt stehen.
+
+### E-40 — eine Rückfrage, die sich nicht stellen lässt, galt als „Abbrechen"
+
+`CDoc::SaveModified` (`Eudora71/Eudora/doc.cpp`) und `CMessageDoc::SaveModified`
+(`Eudora71/Eudora/msgdoc.cpp`) hatten im `default`-Zweig nur `ASSERT(FALSE)` und
+`return FALSE`. **`IDCANCEL` hat einen eigenen Zweig darüber** — in `default`
+fällt vor allem die **0**, die `AfxMessageBox` liefert, wenn der Dialog gar
+nicht erzeugt werden kann. Dann hat niemand etwas entschieden, und Eudora bleibt
+offen, ohne dass der Anwender erfährt warum. Jetzt gehen Rückgabewert und Titel
+ins Protokoll, und das Schließen wird **fortgesetzt**.
+
+### E-41 — Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`, das das Menü nicht hat
+
+`CMainFrame::OnSysCommand` reichte `SC_CLOSE` ungeschützt an
+`CFrameWnd::OnSysCommand` weiter. Dort steht in MFC 14 `GetTopLevelFrame()`
+plus `ENSURE_VALID(pFrameWnd)` (`winfrm.cpp:1112-1114`) — und `ENSURE_VALID`
+wirft **auch im Release-Bau**, wo MFC 6 nur `ASSERT_VALID` hatte. Jetzt läuft
+`SC_CLOSE` in `TRY`/`CATCH_ALL`; scheitert die Systembehandlung, geht der Grund
+ins Protokoll und `WM_CLOSE` wird nachgeschickt — der Weg, den auch
+*File → Exit* nimmt.
+
+> **Diese Stelle hat PRUEFER gefunden, indem er meine Beweisführung verwarf.**
+> Ich hatte geschlossen: weil Kreuz und Alt-F4 dasselbe Symptom zeigen wie
+> *File → Exit*, liegt der Wurf in `OnClose`. Das trägt nicht — beide teilen
+> **zusätzlich** diesen Weg. Es folgt nur, dass der `WM_COMMAND`-Behandler
+> ausgeschlossen ist.
+
+### E-42 — zwölf Aufräumschritte konnten das Beenden abbrechen
+
+Neues Makro `AUFRAEUMEN(name, anweisung)` in `Eudora71/Eudora/mainfrm.cpp`:
+führt einen Schritt aus, meldet einen Fehlschlag mit Namen und Grund ins
+Protokoll und macht weiter. Abgesichert sind
+
+| in | Schritte |
+|---|---|
+| `OnClose` | `CloseImapConnections`, `EmptyTrash`, `CleanSSLLibrary`, `TrayItem`, `DeleteMenuObjects`, `QCWorkbook::OnClose` |
+| `CloseDown` | `TrimJunk`, `RemoveBogusAdToolBars`, `SaveBarState(ToolBar)`, `SaveWazooBarConfigToIni`, `SaveCrashStateToINI`, `WriteToolBarMarkerToIni` |
+
+Die Rückfragen in `CloseDown` Stufe 1 bis 3 laufen bewusst **nicht** hierdurch:
+wer „Abbrechen" drückt, will nicht beenden.
+
+### E-43 — der Fehler dahinter besteht weiter
+
+**Das Beenden läuft nur, weil E-42 den Fehler abfängt.** Er ist nicht
+verschwunden, er steht jetzt als Protokollzeile da:
+
+    E-33 SaveCustomInfo: Abschnitt=ToolBar-BarID59392  this=06283F80  GetBtnCount=24  m_btns.GetSize=0
+    E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[0] wirft (GetSize=0)
+    E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgeloest - Das Beenden wird fortgesetzt.
+
+**Damit ist der Widerspruch aufgelöst, der seit E-34 offen stand.**
+`GetBtnCount()` ist in `OTShim_Werkzeugleiste.h:744` nichts anderes als
+`m_btns.GetSize()`. Dass beide **in einem einzigen `Format`-Aufruf**
+verschiedene Werte liefern — 24 und 0 —, heißt: das Feld ändert sich
+**zwischen zwei Lesevorgängen**. Das ist kein Indexfehler, sondern ein Wettlauf
+oder ein bereits abgebautes Leistenobjekt.
+
+**Folge für den Anwender:** der Werkzeugleisten-Zustand wird **nie** gespeichert;
+über mehrere Starts entstehen dadurch krumme Fensterlayouts.
+
+Meine ODR-Vermutung dazu ist **widerlegt**: `class SECCustomToolBar` steht zwar
+in `OT501/Include/tbarcust.h:73` **und** in `OTShim_Werkzeugleiste.h:693`, aber
+`stdafx.h:52` zieht `OTShimAll.h` zuerst, und die Ersatzschicht setzt
+`__TBARCUST_H__` — damit ist `tbarcust.h` in **jeder** Übersetzungseinheit
+wirkungslos.
+
+### E-37 — der erste Anlauf war eine Regression
+
+**Nicht behoben.** Gregor am 08.09.2026: *„die meldung kommt, wenn ich eine
+persona gelöscht habe"* und *„sie verschwindet links nicht, bis ich eudora
+geschlossen habe"*. Mein `PopulateView()`-Aufruf hat geworfen, die Ausnahme lief
+aus dem Befehlsbehandler heraus, und der Anwender sah „Encountered an improper
+argument". Ein zweiter Anlauf sucht den Eintrag über den angezeigten Text und
+ruft `PopulateView()` nicht mehr — **von Gregor noch nicht bestätigt**.
+
+### Was an 1.0.22 zu prüfen ist
+
+Auspacken und **`Eudora starten.cmd`** doppelklicken; von Hand wäre es
+`Eudora.exe "<Pfad>\Mailverzeichnis"`. `Eudora.exe` **ohne** Parameter legt beim
+ersten Start eine leere Einrichtung an (Befund **E-6**).
+
+| Prüfen | erwartet |
+|---|---|
+| ***File → Exit*** | beendet |
+| **Alt-F4** | beendet |
+| **Kreuz** oben rechts | beendet |
+| **Neues Konto anlegen** | trägt *Leave mail on server* und *Required, Alternate Port* |
+| **Konto löschen** | verschwindet **sofort** aus der Liste, **ohne** Meldung |
+
+## 7.2.0.21 / Paket 1.0.21 — 07.09.2026 · fünf Verfassen-Fenster, kein Absturz
+
+Selbst nachgemessen, bevor es ausgeliefert wurde:
+
+```
+Strg-N #1: 2 Fenster   #2: 3   #3: 4   #4: 5   #5: 6
+danach 20 Sekunden offen stehen gelassen: Eudora lebt, kein Exception.log
+Titel: ... - [No Recipient, No Subject]
+```
+
+Drei Fehler lagen hintereinander. Der erste verhinderte das Fenster, der zweite
+tötete den zweiten Versuch, der dritte schlug zu, wenn man das Fenster einfach
+stehen ließ.
+
+
+### Von Gregor bestätigt: Mail schreiben, senden, empfangen
+
+Am 07.09.2026 mit dieser Fassung: *„mail können jetzt abgeschickt werden."*
+Sein Bildschirmfoto zeigt den vollen Kreis — im Postfach *Out* die gesendete
+Nachricht „test von freenet nach GMX" um 10:01, im Postfach *In* die Antwort
+darauf um 10:02: „Re: test von freenet nach GMX — ja, ist da." Mit Zitat der
+eigenen Zeile.
+
+**Damit sind Kriterium 5 und 6 aus [ZIEL.md](ZIEL.md) erfüllt.** Von den neun
+Kriterien sind fünf belegt, drei fast oder halb, und **eines nicht: das
+Beenden**.
+
+Ebenfalls nachgesehen: das Menü *Window* listet die offenen Fenster auf („1 In",
+„2 Out"). Kriterium 8 ist damit zur Hälfte erfüllt; was fehlt, ist die
+Registerkartenleiste am unteren Fensterrand, die die Ersatzschicht nicht
+nachbildet.
+
+**Offen bleibt:** *„beenden geht nicht"* (Kriterium 7) und Gregors Frage
+*„kann man die untere zeile (status) immer anzeigen lassen?"*
+
+### Was an 1.0.22 zu prüfen ist
+
+Paket (SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`)
+liegt **nicht mehr im Repo** und hat keine Marke — neu zu bauen aus `d003d46`.
+Wer heute prueft, nimmt 1.0.23; die Anleitung dazu steht weiter oben.
+Auspacken und **`Eudora starten.cmd`** doppelklicken. Wer lieber selbst
+aufruft, nimmt `Eudora.exe "<Pfad>\Mailverzeichnis"` — das ist genau, was der
+Starter tut, und von Gregor am 08.09.2026 nachgemessen. Was **nicht** geht, ist
+`Eudora.exe` **ohne** Parameter beim ersten Start: dann sucht Eudora die Ini im
+Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
+**E-6**).
+
+| Prüfen | erwartet | wenn nicht |
+|---|---|---|
+| **Strg-N** | ein Verfassen-Fenster, das man benutzen kann | E-31/E-34/E-35/E-36 greifen nicht |
+| **Mail abschicken** | landet in *Out*, kommt beim Empfänger an | Kriterium 5 wieder offen |
+| **Weiterleiten** (Strg-Umschalt-F) | Verfassen-Fenster mit dem Text darin | Kriterium 6 wieder offen |
+| **Doppelklick** auf eine Nachricht | öffnet sie | E-28 greift nicht |
+| **Suchtreffer anklicken** | öffnet die Nachricht | dito |
+| **Werkzeugleiste** im Suchfenster | abgeschaltete Knöpfe zeigen ihr Symbol | E-30 greift nicht |
+| ***File → Exit*** | beendet sauber | **bekannt: tut es nicht** (Kriterium 7) |
+| **Menü *Window*** | listet die offenen Fenster | E-34-Kette greift nicht |
+
+Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
+
+- **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
+  noch erreicht wurde. 15 Spurmarken liegen auf dem Weg. Sie schreiben **nur**,
+  wenn in `Eudora.ini` unter `[Settings]` `LogLevel=32896` steht —
+  `PutDebugLog` prüft die Maske und kehrt sonst sofort zurück
+  (`QCUtils/src/debug.cpp:140`).
+- **`Exception.log`** — enthält seit 7.2.0.13 die Modultabelle. Damit:
+
+```bash
+perl tools/absturz-auswerten.pl
+```
+
+Das Werkzeug findet Bericht und Karte selbst und macht aus jeder Zeile des
+Aufrufstapels einen Funktionsnamen. **Bleibt `Exception.log` leer**, war es
+Heap-Beschädigung — dann hilft nur Page Heap (siehe `Befunde/SPUR.md`, Abschnitt 8).
+
+### E-34 — eine MFC-Ausnahme wickelte den ganzen Fensterbau ab
+
+Siehe 7.2.0.20. `QCChildToolBar::GetButton` fängt sie jetzt und gibt NULL
+zurück.
+
+### E-35 — der zweite Strg-N, und er war eine Folge von E-34
+
+`CCompMessageFrame::OnUserUpdateImmediateSend` dereferenzierte das Ergebnis von
+`GetButton` **zweimal blind**:
+
+```cpp
+if(((TBarSendButton*)pToolBar->GetButton(nIndex))->IsBPWarning() != m_bBPWarning)
+     ((TBarSendButton*)pToolBar->GetButton(nIndex))->SetBPWarning(m_bBPWarning);
+```
+
+Die Abfrage `nIndex != -1` darüber schützt nicht: **seit E-34 gibt `GetButton`
+auch bei gültigem Index NULL zurück.** Aus einer Ausnahme wurde ein NULL, und
+diese Stelle rechnete nicht damit. Beim ersten Strg-N kommt sie nicht dran, beim
+zweiten schon.
+
+Gefunden hat es **`tools/pruefe-fensterbau.pl`**, die Schranke, die zu diesem
+Zweck entstand.
+
+### E-36 — dasselbe zweimal in `PgCompMsgView`, gefunden vom eigenen Absturzbericht
+
+Aufgelöst mit `tools/absturz-auswerten.pl` — der Werkzeugkette aus E-26 und
+E-29, die genau dafür gebaut wurde:
+
+```
+#01  CMoodMailStatic::GetScore
+#02  PgCompMsgView::UpdateMoodMailButton + 0x51
+#03  PgCompMsgView::OnTimer + 0xD3
+```
+
+Ein Zeitgeber im offenen Verfassen-Fenster lief in einen Nullzeiger. Für
+`ID_MOOD_MAIL` gibt es überdies **keinen Befehlsbehandler** — der Knopf liegt
+gar nicht auf der Leiste, `CommandToIndex` liefert einen Index, den `GetButton`
+mit NULL beantwortet.
+
+**Die eigentliche Lehre steckt in der Schranke, nicht im Fehler:**
+`pruefe-fensterbau.pl` hatte eine **feste Dateiliste** — `CompMessageFrame`,
+`ReadMessageFrame`, `PgDocumentFrame`. `PgCompMsgView.cpp` fehlte darin, und
+genau dort lagen die vier blinden Zugriffe. Eine Schranke mit handgepflegter
+Liste hat immer genau die Lücke, die man nicht bedacht hat. Sie prüft jetzt alle
+`Eudora71/Eudora/*.cpp`: **10 Aufrufstellen statt 8**, Gegenprobe mit der
+Fassung von vor der Behebung rot.
+
+### Neu: `tools/pruefe-fensterbau.pl`
+
+Drei Schranken, drei Gegenproben, alle drei rot, echter Baum grün:
+
+| | |
+|---|---|
+| E-33 | keine modale Meldung in `Eudora71/OTShim/*.cpp` |
+| E-34 | `GetButton` hat Indexschranke **und** Ausnahmefang |
+| E-34 | jeder `GetButton`-Aufruf prüft sein Ergebnis auf NULL |
+
+Die Gegenproben haben **zwei Fehler in der Schranke selbst** gefunden. Der
+schlimmere: `OTShim.cpp:99` trägt im *Zeilen*kommentar den Text
+`dlg.Create in Eudora/*.cpp` — das `/*` darin öffnete beim Entfernen der
+Blockkommentare einen Scheinkommentar und fraß 1600 Zeichen. **Die Gegenprobe zu
+E-33 blieb dadurch grün, obwohl die modale Meldung wieder eingebaut war.** Eine
+Schranke, die eine Regression verschweigt, ist schlimmer als keine. Jetzt werden
+Zeilenkommentare zuerst entfernt.
+
+### Neues Kriterium 8
+
+Von Gregor am 07.09.2026 gesetzt: *„die offenen fenster (nibox, outbox, neue
+mail, ...) sollten irgendwie sichtbar und auswählbar sein. entweder über window
+menü oder über reiter in der statuszeile oder ähnlich."*
+
+Der Bezug ist unmittelbar: die modale Meldung, die mit E-33 abgeschaltet wurde,
+sagte wörtlich *„Die Leiste am unteren Fensterrand, die alle offenen Fenster als
+Registerkarten zeigt … Sie brauchen sie nicht: alle offenen Fenster stehen im
+Menü Window."* Die Ersatzschicht bildet diese Leiste nicht nach. Dass das Menü
+*Window* die Fenster tatsächlich auflistet, hat Gregor am 07.09.2026
+nachgesehen („1 In", „2 Out") — damit ist Kriterium 8 zur Hälfte erfüllt, und
+der erste Schritt ist die **Leiste**, nicht das Menü.
+
+## 7.2.0.20 / Paket 1.0.20 — 07.09.2026 · das Verfassen-Fenster erscheint
+
+**Gregor hat es selbst gesehen:** *„ich habe kurz eine neue mail gesehen."* Zum
+ersten Mal in dieser Portierung entsteht nach Strg-N ein Verfassen-Fenster mit
+Titel.
+
+### E-34 — eine MFC-Ausnahme im Fensterbau, ohne Meldung und ohne Absturz
+
+Gemessen am 07.09.2026 mit einer Marke **je Anweisung** in
+`CCompMessageFrame::OnCreateClient`: die letzte Marke, die noch feuerte, war
+`nach CommandToIndex(ID_EDIT_INSERT)`, die nächste nicht mehr. In
+`QCChildToolBar::GetButton` entstand eine MFC-Ausnahme. Sie wickelte
+`OnCreateClient` ab, MFC ließ `CWnd::OnCreate` fehlschlagen, `LoadFrame` gab
+FALSE, `CMultiDocTemplate::CreateNewFrame` gab **NULL** — kein Fenster, keine
+Meldung, kein Absturz. Genau Gregors *„es passiert nichts"*.
+
+Der Grund steht jetzt im Protokoll, und es ist **wörtlich** die Meldung, die
+Gregor seit Tagen sieht:
+
+```
+E-34 QCChildToolBar::GetButton: Ausnahme bei Index 24 von 27
+     - NULL zurueckgegeben. Grund: Encountered an improper argument.
+```
+
+Der Index liegt **innerhalb** der von `GetBtnCount()` gemeldeten Zahl — die
+Schranke aus E-16 greift also, und `m_btns[24]` wirft trotzdem. MFC 14 prüft in
+den Sammlungen mit `ENSURE` statt `ASSERT`, und **`ENSURE` wirft auch im
+Release-Bau**. `GetBtnCount()` und das tatsächlich indizierte Feld laufen
+auseinander; warum, ist noch offen.
+
+`GetButton` fängt die Ausnahme jetzt, protokolliert Index, Größe und Grund und
+gibt NULL zurück. Alle sechs Aufrufstellen prüfen den Rückgabewert bereits auf
+NULL — ein NULL ist verkraftbar, eine Ausnahme mitten im Fensterbau nicht.
+
+**Nachgemessen:**
+
+```
+nach InitialUpdateFrame:  sichtbar=1, 1552x1214, titel='No Recipient, No Subject'
+Haupttitel:               ... - [No Recipient, No Subject]
+```
+
+### Was noch nicht geht
+
+- **Der zweite Strg-N stürzt ab.** Selbst gemessen: `#1` liefert zwei
+  MDI-Fenster mit Titel, `#2` beendet Eudora. Ein Fenster reicht nicht
+- Ob man in dem Fenster **schreiben und abschicken** kann, ist nicht geprüft
+- ***File → Exit*** bringt weiter eine Meldung (E-33 der Zählung in ZIEL.md)
+
+### E-32 — meine Ursachenbehauptung ist widerlegt
+
+Der Prüfer hat sie dreifach gemessen und **verworfen**:
+`CHeaderView::OnKillFocusRecipient` läuft bei Strg-N überhaupt nicht (eine
+Messspur darin liefert null Zeilen, während die E-27-Marken derselben Sitzung
+alle durchlaufen); das Herausnehmen der Behebung bringt die Meldung nicht
+zurück; und im ausgelieferten Paket 1.0.18 tritt sie über denselben Testweg auch
+nicht auf. Der Code-Mangel dort ist echt — `pField` wird dereferenziert, obwohl
+drei Zeilen darüber auf NULL geprüft wird —, aber er war **nie gegen das Symptom
+geprüft**. Am Quelltext scheitert die Begründung zusätzlich: `EN_KILLFOCUS` kann
+nur ankommen, wenn das Feld existiert, dann liefert `GetDlgItem` nie NULL.
+
+Gefährlicher ist dort etwas anderes, das er gefunden hat: vor `SubclassDlgItem`
+(`headervw.cpp:2590`) liefert `GetDlgItem` ein **temporäres `CWnd`**, und der
+Zugriff auf `pField->m_ACListBox` liest hinter dessen Ende.
+
+### E-31 — viel stärker bestätigt als behauptet
+
+Der Prüfer hat eine bessere Messquelle gefunden als der Befund selbst hatte:
+`Eudora71/Bin/Release/Paige32.pdb` gehört zur ausgelieferten DLL von 2005
+(CodeView-GUID und Alter stimmen, PE-Zeitstempel 14.10.2005). Damit ist der
+Feldaufbau der DLL **messbar statt vermutbar**.
+
+Es waren nicht vier verschobene Felder, sondern **755 von 1922** und zehn zu
+große Strukturen (`paige_rec` +24, `pg_translator` +44). Nach der Behebung:
+**0 von 1922.** Und die offene Nebenbehauptung ist jetzt belegt: `time_t` war
+tatsächlich der einzige Typ — 91 von 92 gemeinsamen Strukturen sind feldweise
+identisch, die zwei Ausnahmen kommen in keiner der 56 Kopfdateien vor.
+
+## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · die Ursache gefunden
+
+**E-31 — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile im
+Windows-Zweig von `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H` (`grep -n pg_time_t`):
+
+```c
+typedef time_t   pg_time_t;      /* vorher */
+typedef long     pg_time_t;      /* nachher */
+```
+
+`time_t` war unter VC6/VC7.1 **vier** Byte breit, unter VS2022 ist es **acht**.
+`Paige32.dll` stammt von 2005 und rechnet mit vier. `pg_time_t` steckt in
+`style_info` und fünfmal in `pg_doc_info` — und damit in `pg_globals` und in
+`paige_rec`. **Jede** Struktur, die Eudora an Paige reichte, war verschoben.
+
+Gemessen mit einem 32-Bit-Programm, das die ausgelieferte DLL lädt,
+`pgMemStartup`/`pgInit` auf einen genullten Puffer ruft und darin die Adressen
+der exportierten Standardprozeduren sucht:
+
+| Feld in `pg_globals` | die DLL sagt | VS2022 rechnete | nachher |
+|---|---|---|---|
+| `def_style.procs.init` | 524 | **536** | 524 |
+| `def_par.procs.line_proc` | 1300 | **1316** | 1300 |
+| `def_hooks` | 1360 | **1376** | 1360 |
+| `sizeof(style_info)` | 292 | **304** | 292 |
+
+Alle 30 Zeiger in `def_hooks` und alle 17 in `def_style.procs` lösen sich danach
+lückenlos auf. Kein `/Zp`, kein `#pragma pack` im Spiel — `time_t` ist der
+einzige Typ in `PGHEADER`, dessen Breite sich geändert hat.
+
+**Damit erklärt sich, warum die sieben Vermutungen aus 7.2.0.17 nichts
+brachten:** `PgGlobals::InitFonts` schrieb mit `memcpy(&def_style, &styleInfo,
+304)` zwölf Byte über die Struktur hinaus — bei jedem Start. Und
+`pPg->user_refcon = (long)pSB` landete 20 Byte neben dem echten Feld. Beides
+passiert, **bevor** der verdächtigte `pgNewNamedStyle` überhaupt gerufen wird.
+
+**Zwei Annahmen der Vorarbeit waren falsch.** Es *gibt* Paige-Quellen:
+`Eudora71/PaigeDLL/PGSOURCE`, **37** `.C`-Dateien (nachgezählt am 07.09.2026 —
+`git ls-files Eudora71/PaigeDLL/PGSOURCE` liefert 38 Einträge, davon einer
+`.SBT`). Der Rekursionszyklus ist dort nachzulesen — `pgInstallFont` →
+`pgStyleSuperImpose` → `target_style->procs.init(...)` (`PGDEFSTL.C:1640`).
+
+### Die Probe
+
+| | vorher | nachher |
+|---|---|---|
+| Strg-N | `ABGESTUERZT, Code 0xC0000005`, letzte Marke `NPO: vor CreateHTMLStyles` | `OnMessageNewMessage: fertig`, **Fenster steht**, Eudora läuft weiter |
+| Vollständiges `CPaigeEdtView::OnCreate` im Protokoll | **kein einziges** | ja |
+| *Weiterleiten* | beendet Eudora | beendet Eudora nicht mehr |
+
+**In dieser Portierung entstand bis dahin nie ein Paige-Fenster.**
+
+### Was danach noch offen war
+
+> **Nachtrag 07.09.2026: E-32 ist behoben.** Der unten festgehaltene Verdacht
+> traf den Ort, aber nicht die Ursache. Es war nicht
+> `AutoCompleterListBox::KillACListBox` selbst, sondern der **ungeprüfte
+> Zeiger auf dem Weg dorthin**: `CHeaderView::OnKillFocusRecipient` in
+> `Eudora71/Eudora/headervw.cpp` dereferenzierte `pField`, obwohl die Abfrage
+> drei Zeilen darüber ausdrücklich mit NULL rechnet. `GetDlgItem` liefert NULL,
+> solange das Kopfzeilenfeld nicht existiert — und `OnKillFocusTo` läuft
+> während `LoadFrame`, also bevor die Felder da sind. Dieselbe Fehlerklasse wie
+> E-18 und E-22. **Von Gregor nicht nachgemessen.**
+
+- **E-32 — die Meldung „An unhandled exception has occurred" beim Verfassen.**
+  Das ist der letzte Schritt bis Kriterium 5. **Gemessen am 06.09.2026 nach der
+  Behebung von E-31:** die Spur läuft jetzt **vollständig** durch —
+  `OnCreateClient: vor GetSubMenu 11` → **`OnMessageNewMessage: fertig`**. Der
+  Fensterbau ist also fertig; die Ausnahme kommt **danach**, beim Anzeigen.
+
+  Der Verdacht am 06.09.2026: `AutoCompleterListBox::KillACListBox`
+  (`AutoCompleteSearcher.cpp:548`), gerufen aus `CHeaderView::OnKillFocusTo`.
+  Der Agent sah dort unter dem Debugger `0xC000041D`
+  (STATUS_FATAL_USER_CALLBACK_EXCEPTION — eine Ausnahme innerhalb einer
+  Fensterprozedur) und hielt es für fokusabhängig und selten. **Das stimmte
+  nicht:** Gregor bekam die Meldung bei jedem Versuch, und sie war modal —
+  deshalb ließ sich Eudora danach auch nicht mehr beenden.
+
+- Unter dem Debugger trat dieselbe Ausnahme als scheinbar zweiter,
+  **fokusabhängiger** Fehler zutage: `0xC000041D` in
+  `AutoCompleterListBox::KillACListBox+5` (`AutoCompleteSearcher.cpp:551`),
+  gerufen aus `CHeaderView::OnKillFocusTo`. In vier Läufen ohne Debugger nicht
+  ausgelöst — das war irreführend, es ist E-32
+- **Der eigentliche Schlussstein wäre ein Neubau von `Paige32.dll` mit VS2022** —
+  Quellen (`PGSOURCE`, 37 `.C`-Dateien) und `PAIGE32/Paige32.vcproj` liegen
+  vor. Dann kann keine Kopfdatei mehr von der Binärdatei abweichen
+
+### Neue Werkzeuge
+
+`tools/strg-n-pruefen.ps1` startet Eudora, klickt Meldungen weg, schickt Strg-N
+und sagt, ob das Fenster aufgeht — ohne dass jemand danebensitzt.
+`tools/befehl-schicken.ps1` schickt einen beliebigen Menübefehl. Beide beenden
+nur Eudora-Prozesse aus dem angegebenen Testverzeichnis.
+
+## 7.2.0.17 / Paket 1.0.17 — 06.09.2026 · nicht ausgeliefert
+
+Reine Messfassung. Zweck war, E-27 einzukreisen. **Das ist gelungen, die
+Behebung nicht.**
+
+### Der Absturz ist gemessen, nicht mehr vermutet
+
+Eudora unter `tools/stapel-untersuchen.ps1` gestartet, Strg-N per `WM_COMMAND`
+geschickt:
+
+```
+AUSNAHME 0xC00000FD   (STATUS_STACK_OVERFLOW)
+EIP  Paige32.dll  pgInstallFont
+
+Zyklus aus der Stapelabtastung:
+    527 x  Eudora.exe   PgSharedAccess::pgGlobals
+    526 x  Paige32.dll  pgInstallFont + 77
+    525 x  pgDeleteTextProc / pgCopyTextProc / pgDeleteStyleProc /
+           pgAlterStyleProc / pgSaveStyleProc / pgBytesToUnicode
+Weg hinein:  pgLocateStyleSheet -> pgStyleSuperImpose -> pgInstallFont
+```
+
+Eine **Endlosrekursion rund 525 Windungen tief**, in der Fremdbibliothek
+`Paige32.dll` (Binärdatei von 2005, keine Quellen im Repo). Jede Windung
+schiebt eine Kopie von Eudoras Paige-Globals auf den Stapel.
+
+Damit ist auch erklärt, **warum nie ein `Exception.log` entstand**: ein voller
+Stapel lässt keinen Platz mehr, den Absturzbehandler auszuführen. Dieselbe
+Fehlerklasse wie Befund S-2 vom 30.08.2026, wo Paige an einer Fläche der Größe
+null in dieselbe Falle lief.
+
+### Sieben Vermutungen, alle durch Versuch widerlegt
+
+Jede einzeln gebaut, gestartet, gemessen — **keine** hat den Absturz beseitigt:
+
+| Vermutung | Messung |
+|---|---|
+| Umgestülptes Client-Rechteck | gemessen `Rect=8,2,2,598`, Breite **minus 6**; begradigt, stürzt weiter ab |
+| Zu kleine Anfangsgröße der Ansicht | mit `CSize(400,600)` gesundes `8,2,375,598`, stürzt weiter ab |
+| `parInfo`/`parMask` nicht vorbelegt | genullt, stürzt weiter ab |
+| Reihenfolge der beiden `CreateView` | getauscht, stürzt weiter ab |
+| Veralteter `styleInfo.font_index` | auf 0 gesetzt, stürzt weiter ab |
+| **`pgNewNamedStyle` selbst** | **ganz übersprungen, stürzt weiter ab** |
+| Eine bestimmte Einstellung | frische `Eudora.ini` aus dem Paket, stürzt weiter ab |
+
+Der vorletzte Punkt wiegt am schwersten: es liegt **nicht an diesem einen
+Aufruf**, sondern am Anlegen benannter Stile überhaupt — `CreateHTMLStyles` tut
+über `make_style` dasselbe und stirbt genauso.
+
+### Eine Annahme, die sich als falsch erwies
+
+Die HTML-Nachricht im Vorschaufenster wird von **Internet Explorer** gezeichnet
+(Fensterklasse `Internet Explorer_Hidden`), nicht von Paige. Dass sie korrekt
+erscheint, beweist also **nicht**, dass Paige funktioniert. Möglich ist, dass in
+dieser Portierung noch nie ein Paige-Fenster erfolgreich entstanden ist — das
+ist die nächste zu klärende Frage.
+
+### Behalten, weil unabhängig davon richtig
+
+- `PaigeEdtView.cpp`: umgestülptes Rechteck wird begradigt, `parInfo` und
+  `parMask` werden vorbelegt. Die Datei hält sich an zwei anderen Stellen selbst
+  an diese Regel — nur hier fehlte es
+- `tools/stapel-untersuchen.ps1`: `[IntPtr][int]` lief bei Stapeladressen über
+  `0x7FFFFFFF` über und brach die Auswertung ab. Neu dazu eine
+  **Stapelabtastung**, weil die EBP-Kette bei Paige nichts taugt — die DLL ist
+  ohne Rahmenzeiger übersetzt und lieferte genau zwei Rahmen
+- `tools/bauen.ps1`: die Artefaktprüfung verglich jede Datei mit der jüngsten
+  Quelle im **ganzen** Baum und meldete `EuLang.dll` und `msvcr71.dll` deshalb
+  fälschlich als veraltet. Jetzt projektbezogen
+
+## 7.2.0.16 / Paket 1.0.16 — 06.09.2026 · zurückgezogen
+
+**Fror beim Start ein.** Eigenes Versehen: das Einsetzmuster für die Spurmarken
+traf `UnuseMemory( m_paigeRef );`, und diese Zeile kommt **17-mal** in
+`PaigeEdtView.cpp` vor, auch in den Zeichenroutinen. Jede Bildwiederholung
+schrieb ins Protokoll.
+
+> **Lehre:** Ein Einsetzmuster mit mehr Treffern als erwartet wird gezählt,
+> bevor es angewandt wird. 29 statt 12 hätte auffallen müssen.
+
+## 7.2.0.15 / Paket 1.0.15 — 06.09.2026
+
+Messfassung mit feineren Spurmarken um beide `CreateView` im Verfassen-Fenster.
+Ergebnis: `CHeaderView` läuft sauber durch, der Absturz liegt im Anlegen der
+Paige-Ansicht.
+
+**Wichtig für eigene Messungen:** Die Spurmarken schreiben nur, wenn in
+`Mailverzeichnis\Eudora.ini` unter `[Settings]` steht:
+
+```
+LogLevel=32896
+```
+
+`PutDebugLog` prüft diese Maske und kehrt sonst sofort zurück
+(`QCUtils/src/debug.cpp:140`). 32896 = `DEBUG_MASK_MISC` (0x8000) +
+`DEBUG_MASK_TOC_CORRUPT` (0x80).
+
+## 7.2.0.14 / Paket 1.0.14 — 06.09.2026
+
+Erste Fassung, in der Gregor mehrere Behebungen bestätigt hat.
+
+- **E-30 — Symbole der Werkzeugleiste.** Gesperrte Knöpfe zeigten eine leere
+  graue Fläche. Ursache: die sechs Bitmaps der Hauptleiste sind **24 Bit** und
+  haben damit keine Farbtabelle, die `CreateMappedBitmap` umsetzen könnte. Das
+  Buttongrau `192,192,192` blieb stehen, während `COLOR_BTNFACE` heute
+  `240,240,240` ist; die Maske erfasste dadurch das ganze Bildrechteck. Die
+  8-Bit-Bitmaps der Nachrichtenfenster waren nie betroffen — das erklärt, warum
+  nicht *alle* Symbole fehlten. Unter VC6 war die Systemfarbe selbst
+  `192,192,192`, deshalb fiel es nie auf. Behoben in
+  `OTShim/OTShim_Werkzeugleiste.cpp`, dazu `tools/pruefe-symbole.pl` und
+  `Eudora71/Tests/TestSymbole.cpp`
+- **E-28 — Doppelklick und Suchtreffer öffneten nichts.**
+  `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen:
+  `CMessageFrame::ActivateFrame` setzt ihn bedingungslos, `OnDestroy` löschte
+  ihn nur **innerhalb** von `if (m_InitialSize != wp.rcNormalPosition)` — also
+  nur, wenn das Fenster verschoben oder in der Größe geändert wurde
+- **`dbghelp.dll` von 2005 entfernt.** Sie lag seit dem ersten Commit in
+  `Eudora71/Bin/Release` und verdeckte die aktuelle aus `SysWOW64`. Am
+  05.09.2026 stürzte der Absturzbehandler **in ihr** ab — genau dann, wenn er
+  gebraucht wird. Wiederherstellbar aus `567a5d8`
+- `paket-bauen.ps1` legt `Eudora starten.cmd` jetzt selbst ins Paket. Im ersten
+  Anlauf fehlte sie; `paket-pruefen.ps1` hat es gemeldet
+
+## 7.2.0.13 / Paket 1.0.13 — 06.09.2026 · übersprungen
+
+Gebaut und geprüft, aber nie ausgeliefert — E-30 kam dazwischen. Die Nummer
+bleibt verbrannt, damit keine zwei Bauten dieselbe tragen.
+
+- **E-26 — der Absturzbericht nennt die Ladeadresse jedes Moduls.** Ohne sie war
+  keine Zeile des Aufrufstapels einem Funktionsnamen zuzuordnen: Windows lädt
+  `Eudora.exe` verschoben (ASLR), und `Exception.log` schrieb die tatsächliche
+  Basis nicht mit. Ein Versuch, gegen die vorgesehene `0x00400000` zu rechnen,
+  lieferte prompt einen Namen aus dem Ressourcenbereich
+- **E-29 — `tools/absturz-auswerten.pl`**, 15 Selbsttests. Macht aus
+  `Exception.log` Funktionsnamen und sagt bei älteren Berichten ausdrücklich,
+  dass es **nicht** geht, statt zu raten
+- **E-27, erster Teil** — die drei stillen Fehlerklassen werden protokolliert:
+  `_set_invalid_parameter_handler`, `_set_purecall_handler`, `set_terminate`.
+  Der Absturzbehandler hing nur an `SetUnhandledExceptionFilter`, und vier Wege
+  gehen daran vorbei
+- `Eudora.vcxproj` erzeugt bei jedem Bau `Eudora71/Bin/Release/Eudora.map`
+
+## 7.2.0.10 / Paket 1.0.10 — 05.09.2026
+
+Die Fassung, mit der **Kriterium 0** belegt wurde: von Gregor am 06.09.2026 auf
+einem Rechner ohne Visual Studio ausgepackt und gestartet.
+
+- **E-23** — POP3 fiel nicht mehr still auf Port 110 zurück; TLS-Fehler werden
+  gemeldet statt verschluckt. Damit lief erstmals Port 995 mit TLS 1.3
+- **E-24** — „In" stand zweimal unter *Recent*
+- **E-22** — ungeprüfte Zeiger im Aufbau des Nachrichtenfensters
+- **E-18, E-19** — zwei Fehler, die erst mit einer zweiten Persönlichkeit
+  auftreten
+
+## 7.2.0.3 / Paket 1.0.3 — 31.08.2026
+
+Erster Release-Bau, der Mail abruft: 159 Nachrichten über POP3 Port 110 mit
+STARTTLS.
+
+## Paket 1.0.2 — 30.08.2026
+
+Eudora startet und zeigt sein Hauptfenster — erstmals seit Beginn der
+Portierung. Möglich wurde das durch **S-2**: die Werbefläche wurde mit
+`CRect(0,0,0,0)` angelegt, Paige bekam eine Umbruchbreite von null und
+verhedderte sich in einer Endlosrekursion.
+
+## Paket 1.0.1 — 30.08.2026
+
+Erstes Paket überhaupt. Die Dateinamen `…-lauffaehig.zip` von 1.0.1 und 1.0.2
+behaupten mehr, als die Fassungen konnten; sie bleiben stehen, weil die Pakete
+unter diesen Namen samt Prüfsumme veröffentlicht sind.
+
+---
+
+## Wo man weitermachen kann
+
+Die offenen Enden mit Fundstelle — für jemanden, der das Repo frisch klont.
+**Stand 09.09.2026.**
+
+### 1. Erledigt: das Verfassen-Fenster ist da
+
+**Kriterium 5 und 6 sind erfüllt** — von Gregor am 07.09.2026 bestätigt:
+*„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert
+übrigens."* Sein Bildschirmfoto zeigt *Out* 10:01 und die Antwort in *In*
+10:02. Behoben sind E-31, E-34, E-35 und E-36.
+
+**So misst man es nach**, ohne dass jemand danebensitzt:
+
+```
+powershell -ExecutionPolicy Bypass -File tools\strg-n-pruefen.ps1 -Verzeichnis <Paket>
+```
+
+Das Werkzeug startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob
+das Fenster aufgeht. Für das Protokoll braucht es `LogLevel=32896` unter
+`[Settings]` in der `Eudora.ini` — `PutDebugLog` prüft die Maske und kehrt
+sonst sofort zurück (`QCUtils/src/debug.cpp:140`).
+
+**Unter dem Debugger**, 32-Bit-PowerShell:
+
+```
+C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -File tools\stapel-untersuchen.ps1 -Exe <Paket>\Eudora.exe -Argumente "<Mailverzeichnis>"
+```
+
+Eudora lässt sich dabei von außen steuern, ohne dass jemand klicken muss:
+Meldungsfenster mit `WM_COMMAND`/`IDOK` schließen, dann `WM_COMMAND` mit
+`ID_MESSAGE_NEWMESSAGE` (32797) an die Fensterklasse `EudoraMainWindow`.
+
+**Der Schlussstein wäre ein Neubau von `Paige32.dll` mit VS2022** — dann kann
+keine Kopfdatei mehr von der Binärdatei abweichen, und genau diese Abweichung
+war E-31. `Eudora71/PaigeDLL` enthält **doch** Quellen: `PGSOURCE` mit 37
+`.C`-Dateien, dazu `PAIGE32/Paige32.vcproj` und die alten Makefiles. Bis zum
+06.09.2026 stand an dieser Stelle das Gegenteil, und das hat die Suche nach
+E-31 unnötig lange aufgehalten. Der Rekursionszyklus ist dort nachzulesen
+(`PGDEFSTL.C:1640`).
+
+**Noch nicht versucht:** Page Heap (`gflags /p /enable Eudora.exe /full`, als
+Administrator).
+
+### 2. Erledigt: Kriterium 7 — Eudora beendet sich sauber
+
+**Von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt:** *„schließen klappt
+jetzt."* Alle drei Wege beenden — *File → Exit*, **Alt-F4** und das **Kreuz**.
+Behoben durch **E-40**, **E-41** und **E-42**, ergänzt um **E-45**. Der Weg
+dorthin steht in [Befunde/BEENDEN.md](Befunde/BEENDEN.md), das Review in
+[Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md), die Schranke ist
+`tools/pruefe-beenden.pl` (elf eingefasste Aufräumschritte; der zwölfte,
+`QCWorkbook::OnClose`, darf ausdrücklich **nicht** durch `AUFRAEUMEN` laufen).
+**Nicht wieder von vorn aufrollen.**
+
+### 3. Erledigt: Kriterium 8 — die offenen Fenster als Registerkarten
+
+**Von Gregor am 09.09.2026 an Paket 1.0.25 bestätigt:** der Klick auf eine
+Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü
+*Window*. Die Leiste war nicht abwesend, sondern **abgeschaltet** — Eudoras
+Code liegt vollständig in `workbook.cpp`, der Einschalter in `mainfrm.cpp`, die
+INI-Vorgabe `ShowMDITaskbar\n1` in `EudoraRes.rc`. Es fehlten vier Anschlüsse
+in der Ersatzschicht `OTShim` (**E-48**, umgesetzt in 7.2.0.25). Drei Mängel,
+die Gregor dabei gemeldet hat, sind als **E-50** in 7.2.0.26 behoben und
+**noch nicht** von ihm beurteilt.
+
+### 4. Die Meldung „Encountered an improper argument"
+
+MFCs Text für `CInvalidArgException`, kommt also aus MFC, nicht aus Eudora.
+Zwei Quellen sind bekannt und behoben: `QCChildToolBar::GetButton` mit Index
+minus eins (**E-16**) und dieselbe Funktion mit einem Index innerhalb der
+gemeldeten Anzahl (**E-34**, abgefangen).
+
+**Die Ursache dahinter ist seit 7.2.0.24 gefunden und behoben: E-43.**
+`SECControlBar` war **zweimal definiert** — `OT501/Include/sbarcore.h`
+(Original) und `OTShim/OTShim.h` (Ersatz, mit einem Feld mehr) —, und deshalb
+lasen zwei Übersetzungseinheiten dasselbe Feld acht Byte auseinander. Genau
+das war die Antwort auf die Frage, warum `GetBtnCount()` und `m_btns.GetSize()`
+verschiedene Werte melden, obwohl das eine wörtlich das andere zurückgibt.
+Gemessen vorher `GetBtnCount=24/24 m_btns.GetSize=0/0`, nachher `24/24` gegen
+`24/24`.
+
+**Was bleibt:** die Meldung beim **Anzeigen** mancher Nachrichten ist damit
+**neu zu messen** — gut möglich, dass sie mit verschwunden ist. Reproduzierbar
+war sie über *Find Messages* mit einem Treffer. **Erst messen, dann suchen.**
+Sie ist der einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt*
+heißen.
+
+### 5. Die Altlast, die niemand bauen kann
+
+- **`EuMemMgr.dll`** ist gar kein Projekt der Projektmappe — eine vorgebaute
+  Binärdatei von 2005 (Version 7.0.0.9). Ausgerechnet sie löst den Aufrufstapel
+  im Absturzbericht auf. Sie holt `malloc`/`free` aus `MSVCR71`, hat damit eine
+  **eigene Halde** neben der UCRT von `Eudora.exe`, und Speicher, der über diese
+  Grenze gereicht wird, ergibt `0xC0000374`. Für `Paige32.dll` gilt dasselbe —
+  dort liegen aber Quellen vor (siehe 1.)
+
+### 6. Was beim Mitarbeiten hilft
+
+- `AGENTEN.md` — wie parallele Arbeit koordiniert wird, aus fünf gemessenen
+  Kollisionen
+- `Arbeitsweise/` — die Lehren aus diesem Projekt, eine Datei je Lehre
+- `tools/pruefe-bytes.pl` — die Quellen sind Latin-1 mit gemischten
+  Zeilenenden; ein Werkzeug, das das zerstört, fällt erst Wochen später auf
+- `tools/paket-pruefen.ps1` — prüft ein Paket über die PE-Importtabellen gegen
+  Kriterium 0 und wertet einen Treffer in `SysWOW64` ausdrücklich **nicht** als
+  erfüllt
+- `tools/bauen.ps1` — baut und meldet Erfolg nur, wenn vier unabhängige
+  Prüfungen zustimmen. MSBuild kann 0 zurückgeben und trotzdem nichts gebaut
+  haben

@@ -17,4 +17,57 @@
 - [Agenten trennen mit Worktrees](agenten-trennen-worktrees.md) — geteilter Index beschädigt fremde Commits; sonst mit Pfadangabe committen
 - [Teilweise ersetzte Header](teilweise-ersetzte-header.md) — Include-Wächter sind alles-oder-nichts; bei Teilersatz nicht setzen
 - [Nichts auf Gregors Bildschirm starten](nichts-auf-gregors-bildschirm-starten.md) — kein Fenster ohne Absprache; Prozesse immer nach Pfad filtern
-- [Was „lauffähig" heißt](was-lauffaehig-heisst.md) — Gregors Kriterien; seit 31.08.2026 sind es vier (Kriterium 0: Paket ohne Nachinstallieren), alle müssen erfüllt sein, sonst anders benennen
+- [Keine Tastendruecke verschicken](keine-tastendruecke-verschicken.md) - SendKeys trifft das Fenster im Vordergrund, nicht mein Ziel; nur Fensterbotschaften an ein gemessenes Handle
+- [Was „lauffähig" heißt](was-lauffaehig-heisst.md) — Gregors drei Kriterien; alle drei müssen erfüllt sein, sonst anders benennen
+- [main muss immer baubar sein](main-muss-immer-baubar-sein.md) — Maßstab ist der frische Klon, nicht der eigene Arbeitsbaum
+- [Agenten koordinieren](agenten-koordinieren.md) — ein Arbeitsbaum je Agent; vor dem Start prüfen, nach dem Rücklauf messen
+- [Nie direkt auf main](nie-direkt-auf-main.md) — jede Änderung über einen eigenen Zweig; Gregor merged, nicht ich
+- [Erlaubnis nicht hineinlesen](erlaubnis-nicht-hineinlesen.md) - eine Aussage ueber Gregors Vorgehen ist keine Erlaubnis fuer mein Vorgehen; keine Regel selbst lockern
+- [Mannschaft fuehren](mannschaft-fuehren.md) — Auftrag ohne Symptom liefert nichts; jeden Ruecklauf selbst nachmessen, nicht weitergeben
+- [Text nicht durch Schichten schicken](text-nicht-durch-schichten-schicken.md) — Ersetzungstext in eine Datei, ueber Zeilenanker einsetzen; danach perl -c bzw. ScriptBlock::Create
+- [Abschalten ist ein Termin](abschalten-ist-ein-termin.md) — „ich schalte ab" ist eine Frist; genannte Zeit minus 20 Minuten ist das Ende der inhaltlichen Arbeit
+- [Erst prüfen, dann anweisen](erst-pruefen-dann-anweisen.md) — keine Handlungsanweisung an Gregor, die ich nicht selbst durchgeführt und gemessen habe
+- [Lehren anwenden, nicht nur schreiben](lehren-anwenden-nicht-nur-schreiben.md) — eine Lehre ohne Auslöser und Werkzeug wirkt nicht; sie braucht einen Moment, in dem sie geprüft wird
+- [Version eindeutig machen](version-eindeutig-machen.md) — Titelzeile, Dateiversion und Verzeichnisname nennen denselben Stand, sichtbar im Programm
+- [Zweignamen vorher abstimmen](zweig-vorher-abstimmen.md) — kein `git checkout -b` ohne Gregors Ja zum Namen; nicht vereinbarte Zweige werden gelöscht
+- [Doku parallel berichtigen](doku-parallel-nicht-hinterher.md) — ein Wert, der mehrfach vorkommt, wird im selben Arbeitsschritt überall berichtigt; `tools/doku-pruefen.pl` hält die MDs gegeneinander
+- [Erfolg aus Anwendersicht](erfolg-aus-anwendersicht.md) — die Überschrift nennt, was Gregor jetzt tun kann; kein Crash ist keine Verbesserung, Regressionen benennen
+- [Auftrag vor Selbstbetrachtung](auftrag-vor-selbstbetrachtung.md) — Sachfrage zuerst, Fehlereingeständnis in einem Satz, Selbstkritik in eine Lehre-Datei
+- [Widerlegte Vermutungen aufschreiben](widerlegte-vermutungen-aufschreiben.md) — jede Widerlegung mit ihrer Messung; den Versuch wählen, der eine Klasse erledigt
+- [Prüfumfang nicht von Hand](pruefumfang-nicht-von-hand.md) — Prüflisten und Agentenaufträge holen ihren Umfang aus der Quelle; „alle" heißt alle, gemessen 16 von 47 MDs nie geprüft
+- [Review sieht nur den Diff](review-sieht-nur-den-diff.md) — die veraltete unveränderte Datei steht in keinem Diff; vor dem Merge den Bestand prüfen, nicht die Änderung
+- [Schranke gegentesten](schranke-gegentesten.md) — jede neue Prüfung gegen den echten Fehler und gegen den erlaubten Fall fahren; stumm und Fehlalarm kosten dasselbe
+- [Daueraufgaben brauchen einen Takt](daueraufgaben-brauchen-einen-takt.md) — Lektor, Prüfer, Chronist laufen nach einem Ereignis; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet
+- [Messung muss den Weg treffen](messung-muss-den-weg-treffen.md) — ein Gegentest im falschen Betriebsmodus beweist nichts; `-NurPruefen` ließ die geprüfte Prüfung gar nicht laufen
+- [Gegenprobe umdrehen](gegenprobe-umdrehen.md) — nicht prüfen, ob der gewünschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt (Gregors Technik)
+- [Anwenderdatei nicht erschlagen](anwenderdatei-nicht-erschlagen.md) — was es beim Anwender oder im Original schon gibt, wird gelesen und ergänzt; 124 Dateizuordnungen wären verloren gewesen
+- [Anforderung gehört in den Maßstab](anforderung-gehoert-in-den-massstab.md) — ein Requirement, das nur in der Umsetzung steht, ist keins; nach `ZIEL.md` plus Schranke gegen das Gebaute
+- [ASSERT ist im Release nichts](assert-ist-im-release-nichts.md) — häufigste Ursachenklasse des Projekts; bei „es passiert nichts" zuerst nach `ASSERT(0)` und `VERIFY(` suchen
+- [Paket gegen den Bau messen](paket-gegen-den-bau-messen.md) — im Paket lag eine Debug-`Eudora.exe` vom 30.08.; nach jedem Paketbau `paket-pruefen.ps1`, Zeitstempel und Größe gegen das Bauverzeichnis
+- [Zwei Werte in eine Ausgabe](zwei-werte-in-eine-ausgabe.md) — `GetBtnCount=24` und `m_btns.GetSize=0` in derselben Zeile schlossen den zwei Tage offenen Widerspruch; getrennte Protokollzeilen lassen „zu anderer Zeit" immer offen
+- [Kein Paket mit offenem Datenverlust](kein-paket-mit-offenem-datenverlust.md) — ein Paket ist eine Aufforderung zu handeln; erst den Weg schliessen, dann ausliefern
+- [Eigene Schleife verschluckt nichts](eigene-schleife-verschluckt-nichts.md) — WM_QUIT zurückstellen und nie ohne Zeitschranke warten; die Schranke fand sieben weitere Stellen im Original
+- [Schranke liest nur Code](schranke-liest-nur-code.md) — Kommentare und Protokolltexte vor dem Suchen wegwerfen, Bereich am Rumpfende schließen; `pruefe-beenden.pl` hat sonst die eigene Begründung angeschwärzt
+- [Release erst nach Gregors Test](release-erst-nach-gregors-test.md) — ein Release ist eine Aussage nach außen; erst prüft er lokal, dann wird veröffentlicht
+- [Eingebaute Messung auslesen](eingebaute-messung-auslesen.md) — die Spurmarke zu E-70 lag drei Pakete lang ungelesen im Bau; der Einbau ist noch keine Messung
+- [Ausreißer ist der Befund](ausreisser-ist-der-befund.md) — was in der eigenen Messausgabe nicht ins Ergebnis passt, ist der Befund; „3x Referer“ machte aus acht Kopfzeilen zehn
+- [Werkzeug vor Eigenbau](werkzeug-vor-eigenbau.md) — erst in tools/WERKZEUGE.md nachsehen; ein fertiges Werkzeug ohne Aufrufstelle wirkt wie eine Lehre, die nur Text ist
+- [Fertig heißt fertig](fertig-heisst-fertig.md) — mergen, löschen, Release, Doku aktuell; kommt etwas nach, war es kein "fertig"
+- [Agent vor dem Ende nicht starten](agent-vor-dem-ende-nicht-starten.md) — ein Subagent, der beim Sitzungsende laeuft, verliert alles; im Auftrag frueh committen lassen
+- [Erfolgsmeldung aus dem Ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) — nach dem Schreiben die Datei messen, nicht den eigenen Kontrollfluss; „eingefuegt" stand unter dem Abbruch
+- [Prüfstand kann blind sein](pruefstand-kann-blind-sein.md) — ein kaputter und ein grüner Prüfstand melden beide nichts; die Testsuite war drei Tage nicht baubar
+- [Auslöser an den Anfang](ausloeser-an-den-anfang.md) — eine Schranke am Ende beantwortet eine Frage, die am Anfang gestellt werden musste; die Rollenschranke lief acht Minuten nach Gregors Frage
+- [Arbeitsbaum braucht eigenes Gegenstück](arbeitsbaum-braucht-eigenes-gegenstueck.md) — wt/<name> muss origin/wt/<name> verfolgen, sonst landet der Push auf fremdem Gebiet; eine Remote-Basis vererbt den Upstream, eine lokale nicht
+- [Rollenzuweisung prüfen](rollenzuweisung-pruefen.md) — die Aufgabe entscheidet, nicht der genannte Name; CHRONIST stand in AGENTEN.md kein einziges Mal
+- [Einwurf ist ein Messwert](einwurf-ist-ein-messwert.md) — 54 % von Gregors Nachrichten kamen mitten im laufenden Zug; tools/verlauf-messen.pl zählt es nach
+- [Unterschied im selben Bild](unterschied-im-selben-bild.md) — was im selben Bild richtig ist, schließt jede gemeinsame Ursache aus; Betreff richtig / Rumpf falsch stand 9h27min und 318 Werkzeugaufrufe lang ungelesen da
+- [Anzeige ist kein Zustand](anzeige-ist-kein-zustand.md) — ein Oberflächentext ist eine Behauptung des Programms über sich selbst; E-83 suchte drei Tage ein Startproblem, das es nie gab
+- [Auftrag darf nicht löschen](auftrag-darf-nicht-loeschen.md) — zwei von zwei Agentenaufträgen trugen reset --hard; der Nachfolger merge --ff-only scheiterte genau in der Lage, für die er geschrieben war
+- [Testdaten müssen durchkommen](testdaten-muessen-durchkommen.md) — die Testmail traf den Fehler und scheiterte am Spamfilter (550); der echte Fall aus Gregors Postfach hatte den Prüfweg schon überlebt
+- [Bestand vor neuer Suche](bestand-vor-neuer-suche.md) — die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md; erst offene-befunde.pl, vor jedem neuen Befund befund-suchen.pl
+- [Verwerfen nur mit Zähler](verwerfen-nur-mit-zaehler.md) — ein verwerfender Befehl wirkt auf seinen Umfang, nicht auf meine Absicht; PORTIERUNG.md 1129 Zeilen auf 0
+- [Funktion bringt ihre Vorbedingung mit](funktion-bringt-ihre-vorbedingung-mit.md) — ISOTranslate nullt ein Byte hinter dem Bereich; im IMAP-Weg ist das die nächste Zeile
+- [Nie benutzt ist nicht geprüft](nie-benutzt-ist-nicht-geprueft.md) — was niemand je angeklickt hat, gilt nicht als geprüft; E-97 lag 15 Fassungen und ein Release lang im Speichern-Dialog
+- [Schranke gehört in den Haken](schranke-gehoert-in-den-haken.md) — eine Prüfung, die nur läuft wenn ich daran denke, ist keine Schranke; Hinweise dürfen nicht abweisen
+- [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)
+- [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht

@@ -8,6 +8,8 @@ metadata:
   modified: 2026-08-30T13:22:58.634Z
 ---
 
+Schranke: tools/pruefe-waechter.pl (pre-commit)
+
 Die OT501-Ersatzschicht ersetzt bei manchen Stingray-Headern **nicht den ganzen
 Inhalt**. Ein Include-Wächter (`__SECBTNS_H__` und Geschwister) ist aber
 **alles-oder-nichts**: er schaltet die Originaldatei komplett ab. Man kann dem

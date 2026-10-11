@@ -2965,16 +2965,37 @@ BOOL CSearchView::OpenMsg(CMsgResult *pMR)
 		{
 			//search engine doesnt support case-sensitive searches, now; may change later
 			// Get the view so we can search in it		
+			//
+			// BEFUND E-28: Der Block hebt nur den Suchbegriff hervor. Er lief
+			// bisher ueber vier ungepruefte Zeiger, obwohl jedes ASSERT
+			// daneben belegt, dass der Verfasser NULL fuer moeglich hielt -
+			// im Release-Bau sind die ASSERTs leer.
+			//
+			// Vor allem: GetFirstViewPosition liefert NULL, wenn Display()
+			// kein Fenster aufbauen konnte, und CDocument::GetNextView liest
+			// dann im Release ueber einen Nullknoten. Und
+			// QCProtocol::QueryProtocol gibt fuer jede nicht aufgefuehrte
+			// Kombination aus Klasse und Kennung ausdruecklich NULL zurueck
+			// (QCProtocol.cpp:187) - der Aufruf view->DoFindFirst war ein
+			// virtueller Aufruf ueber diesen Zeiger.
+			//
+			// Fehlschlaege brechen jetzt nur die Hervorhebung ab. Das
+			// Nachrichtenfenster ist zu diesem Zeitpunkt bereits geoeffnet.
+			//
 			POSITION poss = pDoc->GetFirstViewPosition();
+			if (poss == NULL)
+				break;
 
 			CView * pView = pDoc->GetNextView(poss);
 			ASSERT(pView);
+			if (pView == NULL)
+				break;
 
 			QCProtocol*	view = QCProtocol::QueryProtocol( QCP_FIND, ( CObject* )pView );
 			ASSERT(view);
 
 	
-			if(view->DoFindFirst(strSearch, false, bWholeWord, TRUE))
+			if(view != NULL && view->DoFindFirst(strSearch, false, bWholeWord, TRUE))
 			{
 				QCFindMgr *pFindMgr = QCFindMgr::GetFindMgr();
 				ASSERT(pFindMgr);
@@ -3001,6 +3022,8 @@ BOOL CSearchView::OpenMsg(CMsgResult *pMR)
 
 				QCProtocol*	bodyview = QCProtocol::QueryProtocol( QCP_FIND, ( CObject* )p_compVw);
 				ASSERT(bodyview);
+				if(bodyview == NULL)
+					break;
 
 				if(bodyview->DoFindFirst(strSearch, false, bWholeWord, TRUE))
 				{

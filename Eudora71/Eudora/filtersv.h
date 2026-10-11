@@ -495,6 +495,10 @@ protected:
 protected:
 	int m_Sel;
 	CFilter* m_CurFilter;
+	// BEFUND E-72 (Gregor, 10.09.2026): welchen Filter diese Ansicht
+	// WIRKLICH geladen hat. Nur der darf zurueckgeschrieben werden - siehe
+	// die Begruendung in DoDataExchange.
+	CFilter* m_pGeladen;
 	int m_ActionIndex;
 	UINT m_ActionCommands[NUM_FILT_ACTS];
 	CBitmap m_priorBM[5];

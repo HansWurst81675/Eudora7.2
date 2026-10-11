@@ -71,7 +71,22 @@ END_MESSAGE_MAP()
 
 CTaskStatusView* QCGetTaskStatusView()
 {
-	ASSERT(g_TaskStatusView != NULL);
+	// KEIN ASSERT hier - Befund E-15.
+	//
+	// Im Original stand an dieser Stelle
+	//     ASSERT(g_TaskStatusView != NULL);
+	// und das widerspricht jedem Aufrufer. Alle drei fragen ausdruecklich auf
+	// NULL ab - persona.cpp:265 und :576, settings.cpp:1492 - benutzen die
+	// Funktion also als "gib mir die Ansicht ODER NULL". Die Zusicherung
+	// behauptet das Gegenteil und feuert auf genau dem Weg, fuer den die
+	// Aufrufer sie gebaut haben.
+	//
+	// Gregor am 05.09.2026 im Debug-Bau 7.2.0.5, gleich nach dem Start:
+	//     Expression : g_TaskStatusView != 0
+	//     Location   : QCGetTaskStatusView, Line 74 in TaskStatusView.cpp
+	//
+	// Im Release ist ASSERT leer, dort fiel es nie auf. Die Zeile steht seit
+	// dem ersten Commit im Baum, stammt also aus dem Original von QUALCOMM.
 	return g_TaskStatusView;
 }
 

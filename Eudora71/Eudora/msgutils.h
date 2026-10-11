@@ -40,3 +40,53 @@ BOOL FindAttachment(CString &csAttachment);
 int		GetAttachments(
 				const char *		in_szMessage,
 				CString &			out_szAttachments);
+
+//
+// BEFUND E-88: Original-HTML beim Antworten und Weiterleiten unangetastet
+// aufheben und beim Senden wieder einsetzen. Erlaeuterung am Rumpf in
+// msgutils.cpp. out_szSpur wird immer gefuellt und gehoert ins Protokoll.
+//
+bool E88OriginalEinsetzen(
+				const char *		pszOriginalHtml,
+				const char *		pszEditorText,
+				char				cAntwortTyp,
+				bool				bAnwenderHatGetippt,
+				CString &			out_szNeuerRumpf,
+				CString &			out_szSpur);
+
+//
+// BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
+// der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
+// Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in
+// msgutils.cpp. Rueckgabe true heisst: out_szHtml ist gefuellt und tritt
+// an die Stelle des Eingangstextes. out_szSpur gehoert ins Protokoll.
+//
+bool E89BilderMessbarMachen(
+				const char *		pszHtml,
+				CString &			out_szHtml,
+				CString &			out_szSpur);
+
+//
+// BEFUND E-101: was "Speichern unter" hinausschreibt, ist Eudoras interne
+// Fassung - vier Kopfzeilen, der Marker <x-html> und roher HTML-Text, ohne
+// Content-Type und ohne Zeichensatz. Kein anderes Programm kann das lesen.
+// Diese Funktion macht daraus eine gueltige RFC-822-Datei. Erlaeuterung am
+// Rumpf in msgutils.cpp. Rueckgabe true heisst: out_szDatei ist gefuellt und
+// tritt an die Stelle des Eingangstextes. out_szSpur gehoert ins Protokoll.
+//
+bool E101SpeicherfassungAufbereiten(
+				const char *		pszVoll,
+				bool				bHatKopfzeilen,
+				CString &			out_szDatei,
+				CString &			out_szSpur);
+
+//
+// BEFUND E-104: einen Ja/Nein-Schalter aus der INI holen und einen
+// verdorbenen Wert dabei geradeziehen. Gregors Eudora.ini trug
+// GuessParagraphs=7179 und IncludeHeaders=16720 - uninitialisierte
+// Stapelwerte aus Befund E-100. Jeder Wert ungleich 0 gilt als
+// "eingeschaltet"; was weder 0 noch 1 ist, wird auf die Vorgabe 0
+// zurueckgesetzt und zurueckgeschrieben. Erlaeuterung am Rumpf in
+// msgutils.cpp.
+//
+BOOL E104SchalterLesen( UINT nIniSchluessel );

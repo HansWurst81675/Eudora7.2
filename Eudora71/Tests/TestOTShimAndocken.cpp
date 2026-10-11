@@ -259,9 +259,45 @@ static void Test_CalcDynamicLayout_Schwebend(void)
 	GroesseVergleichen(leiste.CalcDynamicLayout(5, LM_LENGTHY), 250, 20,
 					   "auf 5 gezogen, Untergrenze 20 (senkrecht)");
 
-	// Mit LM_COMMIT wird das Mass uebernommen.
-	GroesseVergleichen(leiste.CalcDynamicLayout(320, LM_COMMIT), 320, 150, "mit LM_COMMIT");
-	GroesseVergleichen(leiste.m_szFloat, 320, 150, "m_szFloat nach LM_COMMIT");
+	// Mit LM_COMMIT wird das Mass uebernommen - aber NICHT nLength.
+	//
+	// BERICHTIGT AM 13.09.2026 (PRUEFER-10). Diese Schranke wurde gegen die
+	// ERWARTUNG geschrieben, nicht gegen das gemessene Verhalten, und konnte
+	// bis heute nicht laufen, weil EudoraTests.exe nicht linkte. Sie
+	// erwartete 320x150 - also genau das, was BEFUND E-76 WAR.
+	//
+	// Gemessen hat es die Spurmarke in OTShim.cpp (E76Marke): der
+	// abschliessende Aufruf traegt dwMode = LM_COMMIT|LM_HORZ OHNE
+	// LM_LENGTHY, und nLength ist dort die BREITE, nicht die gezogene Hoehe.
+	// Wer beim COMMIT nLength als Breite uebernimmt und die Hoehe stehen
+	// laesst, speichert genau den Fehler, den Gregor gemeldet hat: "filter
+	// fenster laesst sich nicht nach unten vergroessern, nur zur seite".
+	// Deshalb ignoriert die Behebung nLength beim COMMIT und nimmt
+	// m_szZuletztGezogen. E-76 ist am laufenden Programm bestaetigt.
+	//
+	// Der letzte Ziehvorgang oben war (5, LM_LENGTHY) und hat 250x20
+	// gemerkt. Genau das muss beim COMMIT herauskommen.
+	GroesseVergleichen(leiste.CalcDynamicLayout(320, LM_COMMIT), 250, 20,
+					   "mit LM_COMMIT gilt die zuletzt gezogene Groesse");
+	GroesseVergleichen(leiste.m_szFloat, 250, 20, "m_szFloat nach LM_COMMIT");
+
+	// GEGENPROBE ZU E-76, in Gregors Richtung: nicht pruefen, ob der
+	// gewuenschte Wert erscheint, sondern ob der falsche durchkommt. Der
+	// gemessene Ablauf ist mehrfaches Ziehen in der Hoehe
+	// (LM_LENGTHY|LM_HORZ, nLength = 105, 172, 234, 299) und dann ein
+	// COMMIT|LM_HORZ, dessen nLength die Breite 780 traegt. Die gezogene
+	// Hoehe muss den COMMIT ueberleben.
+	leiste.m_szFloat = CSize(780, 100);
+	leiste.CalcDynamicLayout(105, LM_LENGTHY | LM_HORZ);
+	leiste.CalcDynamicLayout(172, LM_LENGTHY | LM_HORZ);
+	leiste.CalcDynamicLayout(234, LM_LENGTHY | LM_HORZ);
+	leiste.CalcDynamicLayout(299, LM_LENGTHY | LM_HORZ);
+	GroesseVergleichen(leiste.CalcDynamicLayout(780, LM_COMMIT | LM_HORZ), 780, 299,
+					   "E-76: der COMMIT nach dem Ziehen in der Hoehe");
+	if (leiste.m_szFloat.cy == 100)
+		TT_Fail("E-76 ist zurueck: die gezogene Hoehe 299 wurde beim COMMIT "
+				"wieder auf den alten Wert 100 zurueckgesetzt");
+	GroesseVergleichen(leiste.m_szFloat, 780, 299, "E-76: m_szFloat nach dem COMMIT");
 
 	// nLength 0 oder kleiner nimmt den Schwebe-Zweig gar nicht erst - es
 	// gilt wieder CalcFixedLayout.
@@ -270,10 +306,10 @@ static void Test_CalcDynamicLayout_Schwebend(void)
 	// an, dann kaeme m_szDockHorz heraus. Es kommt aber weiterhin m_szFloat
 	// - denn CalcFixedLayout fragt SELBST als erstes IsFloating() ab und
 	// nimmt dann das Schwebemass. Das ist richtig so: eine schwebende Leiste
-	// hat kein Andockmass, solange sie schwebt. Nach dem LM_COMMIT oben
-	// steht in m_szFloat 320x150.
+	// hat kein Andockmass, solange sie schwebt. Nach der Gegenprobe oben
+	// steht in m_szFloat 780x299.
 	leiste.m_szDockHorz = CSize(300, 40);
-	GroesseVergleichen(leiste.CalcDynamicLayout(0, LM_HORZ), 320, 150,
+	GroesseVergleichen(leiste.CalcDynamicLayout(0, LM_HORZ), 780, 299,
 					   "nLength 0, schwebend: CalcFixedLayout nimmt weiterhin m_szFloat");
 
 	// Die Andockleiste wieder abhaengen, damit ihr Zerstoerer nichts von der

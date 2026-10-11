@@ -259,6 +259,10 @@ private:
 	unsigned int m_CurrentBodyType;
 	CString		 m_szCurrentBodySubtype;
 
+	// E-85: Zeichensatz des Teils, den wir gerade laden. Bei multipart steht
+	// er NUR hier, nicht im Kopf der Nachricht (m_pHd->m_TLMime).
+	CString		 m_szCurrentCharset;
+
 	// Set to TRUE is writer found HTML.
 	BOOL	m_bIsMhtml;
 

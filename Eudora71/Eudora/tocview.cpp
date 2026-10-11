@@ -3095,8 +3095,8 @@ void CTocView::OnFileSaveAs()
 		return;
 
 
-	BOOL bIncludeHeaders = BOOL(::GetIniShort(IDS_INI_INCLUDE_HEADERS));	// cached for speed
-	BOOL bGuessParagraphs = BOOL(::GetIniShort(IDS_INI_GUESS_PARAGRAPHS));	// cached for speed
+	BOOL bIncludeHeaders = E104SchalterLesen(IDS_INI_INCLUDE_HEADERS);	// cached for speed
+	BOOL bGuessParagraphs = E104SchalterLesen(IDS_INI_GUESS_PARAGRAPHS);	// cached for speed
 
 	for (i = 0, j = SelCount; j && i < TotalCount; i++)
 	{
@@ -3160,8 +3160,67 @@ void CTocView::OnFileSaveAs()
 					}
 				}
 
-				theFile.Put(szDateMaybe);
-				theFile.PutLine(pszMessage);
+				//
+				// BEFUND E-101: nicht die interne Fassung hinausschreiben.
+				//
+				// Was hier ankommt, ist die Nachricht so, wie sie im
+				// Postfach liegt. Bei einer selbst verfassten hat sie
+				// keine Content-Type-Zeile - die entsteht erst beim
+				// Senden (SendContentType, sendmail.cpp:766) - und der
+				// Rumpf traegt Eudoras internen Marker <x-html>. Eine
+				// so gespeicherte Datei kann kein anderes Programm
+				// lesen. Gregor am 17.09.2026: "datei gespeichert, aber
+				// unbrauchbar".
+				//
+				// E101SpeicherfassungAufbereiten macht daraus eine
+				// gueltige RFC-822-Datei. Eine bereits vorhandene
+				// Content-Type-Zeile - also der Normalfall bei einer
+				// empfangenen Nachricht - bleibt unangetastet.
+				//
+				CString		szGanz( szDateMaybe );
+				CString		szDatei;
+				CString		szSpurE101;
+
+				szGanz += pszMessage;
+
+				if ( E101SpeicherfassungAufbereiten( (LPCTSTR) szGanz,
+							bIncludeHeaders ? true : false,
+							szDatei, szSpurE101 ) )
+				{
+					theFile.PutLine( (LPCTSTR) szDatei );
+				}
+				else
+				{
+					theFile.PutLine( (LPCTSTR) szGanz );
+				}
+
+				//
+				// DEBUG_MASK_DIALOG (0x08), NICHT DEBUG_MASK_MISC.
+				//
+				// MISC (0x8000) ist in der Vorgabe 25759 (0x649F) AUS.
+				// Diese Zeile stand deshalb seit 7.2.0.66 da, ohne je
+				// geschrieben zu werden: Gregor hat am 17.09.2026 mit
+				// 1.0.69 mehrere Nachrichten gespeichert, und im
+				// Protokoll stand KEINE einzige "E-101 speichern:"-Zeile
+				// - nicht, weil nichts geschah, sondern weil man es
+				// nicht gesehen haette.
+				//
+				// Damit war auch die Behebung von E-101 selbst nie ueber
+				// ihre eigene Spur belegt, und die Werte aus P-38, die
+				// einen verschwundenen Rumpf zeigen sollen, waeren es
+				// ebensowenig gewesen
+				// (Arbeitsweise/eingebaute-messung-auslesen.md).
+				//
+				// Dasselbe stand schon einmal an: filtersd.cpp:1147 zu
+				// E-73, woertlich "eine Sicherheitsmeldung darf nicht
+				// abschaltbar sein". Eine Zeile, die einen DATENVERLUST
+				// in einer Datei anzeigt, die der Anwender aus der Hand
+				// gibt, gehoert in dieselbe Klasse.
+				//
+				// DIALOG ist in der Vorgabe AN und passt inhaltlich:
+				// dieser Weg laeuft ueber den Speichern-Dialog.
+				//
+				PutDebugLog( DEBUG_MASK_DIALOG, szSpurE101 );
 
 				delete [] pszFullMessage;
 
@@ -3478,6 +3537,17 @@ void CTocView::SizeColumn(int FieldNum)
 		MSG msg;
 		GetMessage(&msg, m_hWnd, 0, 0);
 		message = msg.message;
+
+		// BEFUND E-62 (09.09.2026): hier drohte ein HAENGER. WM_QUIT kommt
+		// trotz Fensterfilter, GetMessage liefert 0, und while (1) wertet
+		// das nicht aus - die Schleife wartete danach fuer immer, mit
+		// gehaltenem Mausfang und einem invertierten Strich auf dem Schirm.
+		// Ausgeloest schon durch das Ziehen einer Spaltenbreite.
+		if (message == WM_QUIT)
+		{
+			::PostQuitMessage((int) msg.wParam);
+			break;
+		}
 
 		if (message == WM_LBUTTONUP || (message >= WM_KEYFIRST && message <= WM_KEYLAST &&
 			msg.wParam == VK_ESCAPE))

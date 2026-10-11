@@ -1144,6 +1144,280 @@ void ReadPlatform(CString& sPlatform, CString& sVer, CString* sMachineType /*= N
 
 
 //
+//	ISOIsUTF8Charset
+//
+//	Tells whether a charset index - the kind FindMIMECharset() returns - is the
+//	one for UTF-8.  The arithmetic behind that index lives in this file and
+//	nowhere else, so callers ask instead of working it out again.
+//
+//	Parameters:
+//		iCharsetIdx[in] - Index of the charset, as for ISOTranslate().
+//
+//	Return:
+//		TRUE if the index is the UTF-8 one.
+//
+BOOL ISOIsUTF8Charset(UINT iCharsetIdx)
+{
+	return (iCharsetIdx == (UINT)(IDS_MIME_UTF_8 - IDS_MIME_ISO_LATIN9 + 3));
+}
+
+
+//
+//	ISOIncompleteUTF8Tail
+//
+//	Counts the bytes at the END of a buffer that begin a UTF-8 character whose
+//	continuation bytes have not arrived yet.
+//
+//	Why this exists:  a message body is translated one read chunk at a time (see
+//	TextReader::ReadIt), and a chunk boundary can fall between the two bytes of a
+//	character.  Neither half is valid UTF-8 on its own, so ISOTranslate leaves
+//	both halves exactly as they were and the raw UTF-8 bytes reach the mailbox:
+//	one single "fuer" arrives as byte salad while every other umlaut in the very
+//	same message is correct.  The caller uses this count to hold the head bytes
+//	back and to put them in front of the next chunk.
+//
+//	Parameters:
+//		szBuf[in] - Buffer to look at.  Not modified.
+//		lSize[in] - Number of bytes in szBuf.
+//
+//	Return:
+//		0 to 3 - how many trailing bytes the caller should hold back.  Zero
+//		whenever the buffer ends on a character boundary, or on something that is
+//		not the start of a UTF-8 character at all: then there is nothing to wait
+//		for and everything stays as it was before.
+//
+LONG ISOIncompleteUTF8Tail(const char* szBuf, LONG lSize)
+{
+	const unsigned char*	pBytes = (const unsigned char*)szBuf;
+	LONG					lTail;
+
+	if (!szBuf || lSize <= 0)
+	{
+		return 0;
+	}
+
+	// A character is at most four bytes long, so at most three of them can be
+	// missing.  Walk backwards over the continuation bytes 10xxxxxx until the
+	// lead byte turns up, then see how long that character was supposed to be.
+	for (lTail = 1; lTail <= 3 && lTail <= lSize; ++lTail)
+	{
+		unsigned char	cLead = pBytes[lSize - lTail];
+		LONG			lNeeded;
+
+		if ((cLead & 0xC0) == 0x80)
+		{
+			// Still a continuation byte - keep walking.
+			continue;
+		}
+
+		if ((cLead & 0xE0) == 0xC0)
+			lNeeded = 2;
+		else if ((cLead & 0xF0) == 0xE0)
+			lNeeded = 3;
+		else if ((cLead & 0xF8) == 0xF0)
+			lNeeded = 4;
+		else
+			return 0;	// Plain ASCII, or a byte that starts no character at all.
+
+		// Hold the bytes back only if the character really was cut short.  A
+		// complete character at the end of the buffer must not be delayed.
+		return (lTail < lNeeded) ? lTail : 0;
+	}
+
+	// Nothing but continuation bytes at the end, or the buffer is too short to
+	// tell.  That is not a character anybody can complete, so leave it alone.
+	return 0;
+}
+
+
+//
+//	ISOTranslateChunk
+//
+//	Wie ISOTranslate, aber ueber eine Stueckgrenze hinweg: die Bytes eines
+//	UTF-8-Zeichens, das am Ende eines Lesestuecks angefangen hat, werden
+//	zurueckgehalten und beim naechsten Aufruf mit seinem Anfang vereinigt.
+//
+//	WARUM ES DIESE FUNKTION GIBT (E-85, 13.09.2026)
+//
+//	Der Uebertrag stand bisher nur in TextReader::ReadIt, also im POP3-Weg
+//	(Behebung von Z-2b, 05.09.2026). Der IMAP-Weg liest mit CChunkReader
+//	ebenfalls stueckweise - bei text/plain zeilenweise, bei text/html aber in
+//	Bloecken von BUFLEN Bytes - und hielt nichts zurueck. Ein Umlaut auf der
+//	Blockgrenze wurde dadurch zu Bytesalat, genau wie vor Z-2b.
+//
+//	Der POP3-Weg schiebt den Uebertrag VOR das Stueck; dafuer hat sein Puffer
+//	drei Bytes Vorlauf. Hier geht das nicht: der Zeiger kommt von
+//	CChunkReader::GetNextChunk und zeigt in fremden Speicher, vor dem kein
+//	Platz reserviert ist. Deshalb wird umgekehrt vorgegangen - das aus dem
+//	Uebertrag entstandene Zeichen wird HINTER seine verbrauchten Bytes
+//	geschrieben, und der Anfang des Stuecks wandert entsprechend nach rechts.
+//	Geschrieben wird dabei nur in Bytes, die zu diesem Stueck gehoeren und
+//	bereits verbraucht sind.
+//
+//	ppBuf        [in/out] Zeiger auf das Stueck; wird nach rechts versetzt,
+//	                      wenn ein Uebertrag eingearbeitet wurde
+//	lSize        [in]     Laenge des Stuecks
+//	iCharsetIdx  [in]     Zeichensatz-Index wie bei ISOTranslate
+//	szUebertrag  [in/out] Puffer von mindestens 4 Bytes fuer die
+//	                      zurueckgehaltenen Bytes
+//	plUebertrag  [in/out] wie viele davon belegt sind; zu Beginn 0
+//
+//	Rueckgabe: die Laenge ab *ppBuf, die geschrieben werden darf. 0 heisst,
+//	dass dieses Stueck vollstaendig im Uebertrag steckt - dann ist nichts zu
+//	schreiben und der naechste Aufruf setzt fort.
+//
+LONG ISOTranslateChunk(char** ppBuf, LONG lSize, UINT iCharsetIdx,
+					   char* szUebertrag, LONG* plUebertrag)
+{
+	char*			pBuf;
+	unsigned char	cLead;
+	LONG			lNoetig;
+	LONG			lHolen;
+	LONG			lErgebnis = 0;
+	LONG			lTail;
+	LONG			lNeu;
+	char			szVereint[8];
+	char			cHinterher;
+
+	if (!ppBuf || !*ppBuf || !szUebertrag || !plUebertrag)
+		return lSize;
+
+	pBuf = *ppBuf;
+
+	// Nur UTF-8 wird laenger als ein Byte je Zeichen; alles andere kann ein
+	// Stueck nicht in der Mitte eines Zeichens verlassen.
+	//
+	// DAS BYTE HINTER DEM STUECK WIRD GERETTET (PRUEFER-10, 13.09.2026).
+	// ISOTranslate schreibt eine Null an szBuf[lSize] - EIN BYTE HINTER den
+	// uebergebenen Bereich. Im POP3-Weg ist dafuer Platz: TextReader::ReadIt
+	// laesst ihn ausdruecklich frei (TextReader.cpp: "It's safer to make
+	// ourselves leave space for ISOTranslate than to change ISOTranslate").
+	// Hier gibt es diesen Platz nicht. CChunkReader liefert bei text/plain
+	// eine ZEILE aus der Mitte seines eigenen Puffers (imapgets.cpp,
+	// *pBuf = m_pStart), und das Byte dahinter ist das ERSTE BYTE DER
+	// NAECHSTEN ZEILE. Ohne diese Rettung verliert jede Zeile einer
+	// utf-8-Nachricht ihr erstes Zeichen, und ein NUL-Byte landet in der
+	// Mailboxdatei.
+	//
+	// Gerettet wird nur, wo ISOTranslate wirklich schreibt: bei
+	// iCharsetIdx <= 2 kehrt es vor der Nullterminierung zurueck.
+	if (!ISOIsUTF8Charset(iCharsetIdx))
+	{
+		if (iCharsetIdx > 2 && lSize >= 0)
+		{
+			cHinterher = pBuf[lSize];
+			lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+			pBuf[lSize] = cHinterher;
+			return lNeu;
+		}
+
+		return ISOTranslate(pBuf, lSize, iCharsetIdx);
+	}
+
+	// --- 1. Den Uebertrag des vorigen Stuecks vervollstaendigen --------------
+	if (*plUebertrag > 0)
+	{
+		cLead = (unsigned char)szUebertrag[0];
+
+		if ((cLead & 0xE0) == 0xC0)
+			lNoetig = 2;
+		else if ((cLead & 0xF0) == 0xE0)
+			lNoetig = 3;
+		else if ((cLead & 0xF8) == 0xF0)
+			lNoetig = 4;
+		else
+			lNoetig = 0;		// Kein Kopfbyte - der Uebertrag ist wertlos.
+
+		if (lNoetig == 0)
+		{
+			*plUebertrag = 0;
+		}
+		else
+		{
+			lHolen = lNoetig - *plUebertrag;
+
+			if (lHolen > lSize)
+			{
+				// Auch dieses Stueck reicht nicht. Anhaengen, soweit der
+				// Uebertragspuffer es fasst, und nichts schreiben.
+				if (*plUebertrag + lSize <= 4)
+				{
+					memcpy(szUebertrag + *plUebertrag, pBuf, (size_t)lSize);
+					*plUebertrag += lSize;
+				}
+				else
+				{
+					*plUebertrag = 0;	// laenger als jedes Zeichen - verwerfen
+				}
+				return 0;
+			}
+
+			memcpy(szVereint, szUebertrag, (size_t)*plUebertrag);
+			memcpy(szVereint + *plUebertrag, pBuf, (size_t)lHolen);
+			szVereint[lNoetig] = 0;
+
+			lErgebnis = ISOTranslate(szVereint, lNoetig, iCharsetIdx);
+
+			// Das Ergebnis muss in den Platz passen, den die verbrauchten
+			// Bytes dieses Stuecks hergeben - davor liegt fremder Speicher.
+			//
+			// Laenger als ein Byte wird es nur bei Zeichen ausserhalb der
+			// BMP: U+1F600 etwa ist in UTF-16 ein Surrogatpaar und wird zu
+			// ZWEI Fragezeichen. Passen sie nicht beide, wird gekuerzt statt
+			// verworfen - ein Fragezeichen sagt dasselbe wie zwei, ein
+			// verschwundenes Zeichen dagegen faellt beim Lesen auf.
+			if (lErgebnis < 0)
+				lErgebnis = 0;
+			else if (lErgebnis > lHolen)
+				lErgebnis = lHolen;
+
+			*plUebertrag = 0;
+			pBuf  += lHolen;
+			lSize -= lHolen;
+		}
+	}
+
+	// --- 2. Das angefangene Zeichen am Ende zurueckhalten -------------------
+	lTail = ISOIncompleteUTF8Tail(pBuf, lSize);
+	if (lTail > 0 && lTail <= 4)
+	{
+		memcpy(szUebertrag, pBuf + lSize - lTail, (size_t)lTail);
+		*plUebertrag = lTail;
+		lSize -= lTail;
+	}
+
+	// --- 3. Der Rest ist jetzt lauter ganze Zeichen -------------------------
+	// Auch hier das Byte hinter dem Stueck retten - Begruendung siehe oben.
+	if (lSize >= 0)
+	{
+		cHinterher = pBuf[lSize];
+		lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+		pBuf[lSize] = cHinterher;
+	}
+	else
+	{
+		lNeu = ISOTranslate(pBuf, lSize, iCharsetIdx);
+	}
+
+	if (lNeu < 0 || lNeu > lSize)
+		lNeu = lSize;
+
+	// --- 4. Das Zeichen aus dem Uebertrag davorsetzen -----------------------
+	// Es wird hinter seine eigenen, verbrauchten Bytes geschrieben, damit es
+	// unmittelbar vor dem uebersetzten Rest steht.
+	if (lErgebnis > 0)
+	{
+		memcpy(pBuf - lErgebnis, szVereint, (size_t)lErgebnis);
+		pBuf  -= lErgebnis;
+		lNeu  += lErgebnis;
+	}
+
+	*ppBuf = pBuf;
+	return lNeu;
+}
+
+
+//
 //	ISOTranslate
 //
 //	Translates the specified buffer from the specified charset to CP1252.
@@ -1257,12 +1531,95 @@ LONG ISOTranslate(LPTSTR szBuf, LONG lSize, UINT iCharsetIdx)
 			iWide = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS,
 										szBuf, (int)lSize, pwWide, (int)lSize);
 
+			// E-90: was CP1252 nicht darstellen kann, wird GESTRICHEN statt
+			// durch ein Fragezeichen ersetzt.
+			//
+			// Gregor am 14.09.2026 an 1.0.58, zu einem Newsletter, dessen
+			// Betreff und Text mit Emoji gespickt waren: "das mit den vielen
+			// fragezeichen gefaellt mir immer noch nicht". Auf seinem Bild
+			// stand eine Reihe von vierzig "??" quer ueber den Text.
+			//
+			// GEMESSEN am 14.09.2026, was WideCharToMultiByte(1252, 0, ...)
+			// mit diesen Zeichen tut:
+			//
+			//     ZERO WIDTH SPACE      U+200B  ->  '?'
+			//     ZERO WIDTH JOINER     U+200D  ->  '?'
+			//     VARIATION SELECTOR-16 U+FE0F  ->  '?'
+			//     WORD JOINER           U+2060  ->  '?'
+			//     Feuer-Emoji           U+1F525 ->  '??'  (ZWEI, nicht eines)
+			//
+			// Das Emoji ergibt zwei Fragezeichen, weil es ausserhalb der
+			// Grundebene liegt und intern aus einem Surrogatpaar besteht -
+			// Windows ersetzt jede Haelfte einzeln. Die Fragezeichenwueste
+			// ist also doppelt so lang wie die Zahl der Emoji.
+			//
+			// Unsichtbare Zeichen stehen in Newslettern zu Dutzenden zwischen
+			// den Buchstaben, eine verbreitete Technik gegen Spamfilter. Sie
+			// sind unsichtbar gemeint und gehoeren ersatzlos weg.
+			//
+			// Ein Emoji, das sich nicht darstellen laesst, traegt keine
+			// Information, die ein Fragezeichen rettet: es war Schmuck. Vierzig
+			// Fragezeichen sehen dagegen nach Fehler aus. Gregors Entscheidung
+			// zwischen "ein Fragezeichen statt zwei" und "ganz weg": "versuchen
+			// wir dann B".
+			//
+			// BEWUSST ENG: gestrichen wird NUR, was ohnehin unsichtbar ist,
+			// und was ausserhalb der Grundebene liegt (Surrogate). Kyrillisch,
+			// Griechisch, Polnisch bleiben unangetastet - sie tragen Text, und
+			// die Best-Fit-Tabelle holt davon heraus, was sie kann.
+			bool	bGanzGefiltert = false;
+
+			if (iWide > 0)
+			{
+				int		iVon, iNach = 0;
+
+				for (iVon = 0; iVon < iWide; iVon++)
+				{
+					const WCHAR	w = pwWide[iVon];
+
+					// Surrogate: alles ausserhalb der Grundebene, also jedes
+					// Emoji und jedes seltene Schriftzeichen.
+					if (w >= 0xD800 && w <= 0xDFFF)
+						continue;
+
+					// Unsichtbare Steuer- und Formatzeichen.
+					if (w == 0x200B || w == 0x200C || w == 0x200D ||	// Zero Width Space/NJ/J
+						w == 0x200E || w == 0x200F ||					// Links-rechts-Marken
+						(w >= 0x2060 && w <= 0x2064) ||					// Word Joiner und Nachbarn
+						(w >= 0xFE00 && w <= 0xFE0F) ||					// Variationswaehler
+						w == 0xFEFF)									// Byte Order Mark
+						continue;
+
+					pwWide[iNach++] = w;
+				}
+
+				// Merker: hier stand Text, und der Filter hat ihn restlos
+				// weggenommen. Das ist etwas ANDERES als ein gescheitertes
+				// MultiByteToWideChar, das ebenfalls 0 liefert - dort muss
+				// der Tabellenweg einspringen, hier nicht.
+				bGanzGefiltert = (iNach == 0);
+				iWide = iNach;
+			}
+
 			if (iWide > 0)
 			{
 				// A single byte code page never produces more than one byte per
 				// wide character, so the output buffer always fits as well.
 				iOut = WideCharToMultiByte(1252, 0, pwWide, iWide,
 										   pOut, (int)lSize, "?", NULL);
+			}
+
+			// Sind ALLE Zeichen gestrichen worden - ein Text, der nur aus
+			// Emoji bestand -, dann ist das Ergebnis LEER und nicht etwa
+			// unveraendert. Ohne diesen Zweig faellt der Aufruf durch auf den
+			// Tabellenweg, und die rohen UTF-8-Bytes stehen als Bytesalat da:
+			// gemessen am 14.09.2026, "F0 9F 98 80" kam unveraendert durch.
+			if (bGanzGefiltert)
+			{
+				free(pScratch);
+				lSize = 0;
+				szBuf[0] = 0;
+				return 0;
 			}
 
 			if (iOut > 0 && iOut <= lSize)

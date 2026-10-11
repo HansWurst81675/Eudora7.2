@@ -932,6 +932,7 @@ void CPersonalityView::OnCmdDeletePersonality()
 		LV_FINDINFO lvFindInfo;
 		lvFindInfo.flags = LVFI_STRING;
 		lvFindInfo.lParam = NULL;
+
 		while (! strListPersonalities.IsEmpty())
 		{
 			CString strName = strListPersonalities.RemoveHead();
@@ -956,23 +957,85 @@ void CPersonalityView::OnCmdDeletePersonality()
 				//
 				if (g_Personalities.Remove(strName))
 				{
-					//
 					// Then, if successful, fixup the UI.
 					//
-					lvFindInfo.psz = strName;
-					int nIndex = theCtrl.FindItem(&lvFindInfo);
-					ASSERT(nIndex != -1);
-					theCtrl.DeleteItem(nIndex);
+					// E-37: Gregor hat am 07.09.2026 gemessen, dass das
+					// Loeschen WIRKT - "ja, sie verschwinden nach neustart" -,
+					// die Liste im Fenster aber stehen bleibt. FindItem
+					// liefert hier offenbar -1, und DeleteItem(-1) tut dann
+					// nichts. Abgesichert war das nur mit ASSERT, und ASSERT
+					// ist im Release-Bau weggelassen: der Anwender sieht,
+					// dass nichts passiert, und haelt das Loeschen fuer
+					// kaputt.
+					//
+					// E-37, zweiter Anlauf. Der erste hat NICHT gewirkt:
+					// Gregor am 08.09.2026 - "die meldung kommt, wenn ich eine
+					// persona geloescht habe" und "sie verschwindet links
+					// nicht, bis ich eudora geschlossen habe". Mein
+					// PopulateView() hat geworfen; die Ausnahme lief aus dem
+					// Befehlsbehandler heraus, CWinApp::ProcessWndProcException
+					// zeigte "Encountered an improper argument", und die Liste
+					// blieb unveraendert. Eine Behebung, die dem Anwender eine
+					// Meldung einbringt, ist keine.
+					//
+					// Jetzt ohne FindItem und ohne PopulateView: der Eintrag
+					// wird ueber den angezeigten Text gesucht. Spalte 0 traegt
+					// den rohen Namen (PopulateView, PersonalityView.cpp:222-232
+					// setzt theItem.pszText auf den Namen aus
+					// g_Personalities.List()), und dieselbe Zeichenkette war
+					// bei Remove erfolgreich. Damit stellt sich die Frage, warum
+					// FindItem -1 liefert, gar nicht mehr.
+					int nIndex = -1;
+					const int nAnzahl = theCtrl.GetItemCount();
+					for (int iZeile = 0; iZeile < nAnzahl; iZeile++)
+					{
+						if (theCtrl.GetItemText(iZeile, 0) == strName)
+						{
+							nIndex = iZeile;
+							break;
+						}
+					}
+
+					if (nIndex >= 0)
+					{
+						theCtrl.DeleteItem(nIndex);
+					}
+					else
+					{
+						CString strMeldung;
+						strMeldung.Format(
+							_T("E-37 OnCmdDeletePersonality: '%s' steht nicht in ")
+							_T("der Liste (%d Eintraege) - Anzeige nicht ")
+							_T("aktualisiert, die Persoenlichkeit ist aber entfernt"),
+							(const char *) strName, nAnzahl);
+						PutDebugLog(DEBUG_MASK_MISC, strMeldung);
+					}
 				}
 				else
 				{
+					// E-37: hier stand nur ASSERT(0), im Release-Bau also
+					// nichts. Remove() hat drei Ausgaenge mit FALSE, und nur
+					// einer davon meldet sich selbst (laufende Aufgaben).
+					CString strMeldung;
+					strMeldung.Format(
+						_T("E-37 OnCmdDeletePersonality: Remove('%s') hat FALSE ")
+						_T("geliefert - Eintrag nicht in [Personality] der ")
+						_T("Eudora.ini gefunden, oder laufende Aufgaben"),
+						(const char *) strName);
+					PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 					ASSERT(0);
 				}
 			}
 		}
+
 	}
 	else
 	{
+		// E-37: auch hier stand nur ASSERT(0). Nichts markiert ist kein
+		// Fehler, aber es gehoert ins Protokoll - sonst ist von aussen nicht
+		// zu unterscheiden, ob nichts markiert war oder das Loeschen scheiterte.
+		PutDebugLog(DEBUG_MASK_MISC,
+			_T("E-37 OnCmdDeletePersonality: keine Persoenlichkeit markiert"));
 		ASSERT(0);
 	}
 }

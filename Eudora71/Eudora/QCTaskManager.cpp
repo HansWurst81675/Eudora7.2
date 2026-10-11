@@ -189,6 +189,8 @@ void QCTaskManager::Register(CTaskInfoMT *pTaskInfo)
 	//Tell that the task is waiting to be run
 	//pTaskInfo->SetMainText("Waiting in the task queue to be started ...");
 	pTaskInfo->SetMainText(CRString(IDS_TASK_WAITING_TO_START));
+
+	SpurmarkeE83("eingetragen", pTaskInfo);	// BEFUND E-83
 }
 
 void QCTaskManager::Register(CTaskErrorMT *pTaskError)
@@ -243,6 +245,8 @@ bool QCTaskManager::QueueWorkerThread(QCWorkerThreadMT *pThread)
 	}
 	else
 		pTaskInfo->SetState( TSS_QUEUED );
+
+	SpurmarkeE83("eingereiht", pTaskInfo);	// BEFUND E-83
 	
 	//StartWorkerThread(pTaskInfo);
 	if(CanScheduleTask(pTaskInfo) == false)
@@ -354,6 +358,123 @@ bool QCTaskManager::LookupTask(int ScheduleBits)
 
 
 
+// ---------------------------------------------------------------------------
+// BEFUND E-83 (Gregor, 11.09.2026 an 1.0.48, wieder gesehen an 1.0.51).
+//
+// SYMPTOM. Im Fenster "Task Status" steht eine IMAP-Aufgabe
+// (Task "Updating status", Persona "... (IMAP)") mit dem Status
+// "Waiting in the task queue to be started ..." und leerem Fortschritt.
+// Beim Beenden warnt Eudora "You currently have 1 task(s) running".
+//
+// WARUM DER ANGEZEIGTE TEXT NICHTS BEWEIST. Register() setzt diesen Text
+// GENAU EINMAL beim Eintragen der Aufgabe. Weder StartWorkerThread noch
+// SetState schreiben ihn um. Eine Aufgabe, die laengst laeuft oder schon
+// fertig ist, aber nie eigenen Text gesetzt hat, sieht im Fenster GENAUSO
+// aus wie eine, die nie gestartet wurde. Der Text trennt die Faelle nicht.
+//
+// WAS AM QUELLTEXT AUSGESCHLOSSEN IST. Der bisherige Verdacht
+// "pTaskInfo->m_pThread ist NULL, StartWorkerThread tut still nichts"
+// traegt nicht: m_pThread wird an genau EINER Stelle geschrieben
+// (QCWorkerThreadMT::QCWorkerThreadMT, QCWorkerThreadMT.cpp:43) und im
+// gesamten Baum NIRGENDS wieder auf NULL gesetzt. Jede Aufgabe, die durch
+// QueueWorkerThread kommt, gehoert zu einem QCWorkerThreadMT und hat damit
+// m_pThread != NULL. Die einzigen CTaskInfoMT ohne Faden sind die
+// SearchManagerTaskInfo-Objekte aus X1EmailScanner; die werden direkt
+// registriert, bleiben in TSS_CREATED (ScheduleTasks fasst sie also nie an)
+// und tragen m_bCountTask == false, koennen also auch die Warnung
+// "1 task(s) running" nicht ausloesen.
+//
+// WAS DIE MARKE ENTSCHEIDEN MUSS. Genau eine von vier Moeglichkeiten:
+//   (1) TSS_WAITING_TO_QUEUE - die verzoegerte Einreihung (QCTaskGroup /
+//       DelayTasks) wurde nie mit StartTasks aufgeloest,
+//   (2) TSS_QUEUED und ScheduleTasks bricht an Regel 1 ab, weil
+//       m_nActiveTasks die Obergrenze erreicht hat und nie wieder faellt,
+//   (3) TSS_RUNNING - die Aufgabe laeuft und haengt im Netz, der Text ist
+//       nur der alte,
+//   (4) TSS_COMPLETE - die Aufgabe ist fertig, wurde aber nie nachbearbeitet
+//       und nie aus der Liste entfernt.
+// Alle vier sehen im Fenster gleich aus. Deshalb steht hier ALLES in EINER
+// Zeile: Zustand, m_pThread, m_pWinThread, aktive Aufgaben UND Obergrenze.
+// Zwei getrennte Zeilen liessen immer die Ausrede "zu anderer Zeit" offen.
+//
+// Die Marke haengt an DEBUG_MASK_MISC und schweigt in der Vorgabe;
+// einschalten mit LogLevel=58527.
+// ---------------------------------------------------------------------------
+static const char *E83Zustand(TaskStatusState ts)
+{
+	switch (ts)
+	{
+		case TSS_UNKNOWN:			return "UNBEKANNT";
+		case TSS_CREATED:			return "ERZEUGT";
+		case TSS_WAITING_TO_QUEUE:	return "WARTET-AUF-EINREIHUNG";
+		case TSS_QUEUED:			return "EINGEREIHT";
+		case TSS_RUNNING:			return "LAEUFT";
+		case TSS_COMPLETE:			return "FERTIG";
+	}
+
+	return "?";
+}
+
+void QCTaskManager::SpurmarkeE83(const char *szWo, CTaskInfoMT *pTaskInfo)
+{
+	if (!pTaskInfo)
+		return;
+
+	CString				strTitel	= pTaskInfo->GetTitle();
+	CString				strPersona	= pTaskInfo->GetPersona();
+	CString				strText		= pTaskInfo->GetMainText();
+	TaskStatusState		ts			= pTaskInfo->GetState();
+
+	char	szM[512];
+	_snprintf(szM, sizeof(szM),
+		"E-83 %s: uid=%lu zustand=%s(%d) m_pThread=%s m_pWinThread=%s "
+		"aktiv=%d/%d dialup=%d/%d verzoegert=%d gruppe=%d sched=0x%02x "
+		"typ=%d zaehlt=%d post=%d titel=\"%s\" persona=\"%s\" text=\"%s\"",
+		szWo ? szWo : "?",
+		pTaskInfo->GetUID(),
+		E83Zustand(ts), (int) ts,
+		pTaskInfo->m_pThread ? "gesetzt" : "NULL",
+		pTaskInfo->m_pWinThread ? "gesetzt" : "NULL",
+		m_nActiveTasks, m_nMaxConcurrentTasks,
+		m_nActiveDialupTasks, m_nMaxConcurrentDialupTasks,
+		m_bDelayQueuing ? 1 : 0,
+		pTaskInfo->GetGroupID(),
+		pTaskInfo->GetScheduleTypes(),
+		(int) pTaskInfo->GetTaskType(),
+		pTaskInfo->m_bCountTask ? 1 : 0,
+		(int) pTaskInfo->GetPostState(),
+		(const char *) strTitel,
+		(const char *) strPersona,
+		(const char *) strText);
+	szM[sizeof(szM) - 1] = 0;
+
+	PutDebugLog(DEBUG_MASK_MISC, szM);
+}
+
+// Aus der Leerlaufschleife gerufen (CEudoraApp::IdleTaskManagerPostProcessing).
+// Solange eine Aufgabe in der Liste liegt, schreibt sie alle 15 Sekunden ihre
+// Zeile. Damit erscheint die Marke WAEHREND des Stillstands - und nicht nur in
+// dem Augenblick, in dem ohnehin etwas passiert.
+void QCTaskManager::SpurmarkeE83Sweep()
+{
+	static DWORD	s_dwLetzteMeldung = 0;
+
+	DWORD	dwJetzt = ::GetTickCount();
+
+	if ( (s_dwLetzteMeldung != 0) && ((dwJetzt - s_dwLetzteMeldung) < 15000) )
+		return;
+
+	CSingleLock lock(&m_Guard_TaskInfoList, TRUE);
+
+	s_dwLetzteMeldung = dwJetzt;
+
+	if (m_TaskInfoList.empty())
+		return;
+
+	for(TaskIterator ti=m_TaskInfoList.begin(); ti != m_TaskInfoList.end(); ++ti)
+		SpurmarkeE83("liegengeblieben", *ti);
+}
+
 bool QCTaskManager::ScheduleTasks()
 {
 
@@ -374,13 +495,19 @@ bool QCTaskManager::ScheduleTasks()
 		
 		// Did we reach the max limit (where 0 means no limit)?
 		if ( (m_nMaxConcurrentTasks != 0) && (m_nActiveTasks == m_nMaxConcurrentTasks) )
-			break;		
+		{
+			SpurmarkeE83("Regel1-Obergrenze-erreicht", pTaskInfo);	// BEFUND E-83
+			break;
+		}
 
 		//Rule Don't allow more than one POP connection per persona concurrently
 		if( nScheduler & TT_USES_POP )
 		{
 			if( IsTaskRunning(pTaskInfo->GetPersona(), TT_USES_POP) )
+			{
+				SpurmarkeE83("Regel-POP-belegt", pTaskInfo);	// BEFUND E-83
 				continue;
+			}
 		}
 		
 		//Rule 2 Allow only one dilaup task at any time
@@ -388,11 +515,15 @@ bool QCTaskManager::ScheduleTasks()
 		{
 			//if reached max allowed connections on a dialup, stop here
 			if ( (m_nMaxConcurrentDialupTasks != 0) && (m_nActiveDialupTasks == m_nMaxConcurrentDialupTasks) )
+			{
+				SpurmarkeE83("Regel-Dialup-belegt", pTaskInfo);	// BEFUND E-83
 				continue;
+			}
 		}
 		
 
 		//TRACE("Starting the task by tid %d\n", GetCurrentThreadId());
+		SpurmarkeE83("Start-wird-versucht", pTaskInfo);	// BEFUND E-83
 		StartWorkerThread(pTaskInfo);
 	}
 
@@ -423,10 +554,18 @@ bool QCTaskManager::StartWorkerThread(CTaskInfoMT *pTaskInfo)
 				if (pTaskInfo->NeedsDialup())
 					m_nActiveDialupTasks++;
 
+				SpurmarkeE83("gestartet", pTaskInfo);	// BEFUND E-83
+
 				//WaitForSingleObject(pThreadID->m_hThread, INFINITE);
 				return true;
 			}
 		}
+
+		// BEFUND E-83: hierher kommt die Aufgabe, wenn m_pThread NULL war
+		// oder AfxBeginThread nichts geliefert hat. Ohne diese Zeile
+		// geschieht das lautlos - das darueberstehende ASSERT(0) ist im
+		// Freigabebau nichts.
+		SpurmarkeE83("KEIN-START", pTaskInfo);
 
 		// Make sure we clean up this task when something bad happened
 		pTaskInfo->SetState(TSS_COMPLETE);
@@ -458,6 +597,47 @@ void QCTaskManager::RemoveWorkerThread(QCWorkerThreadMT *pThread)
 	
 	if( pTaskInfo->IsIgnoreIdleSet() || (m_nStartIdle == IdleTime) )
 	{
+		SpurmarkeE83("fertig-Nachbearbeitung-angefordert", pTaskInfo);	// BEFUND E-83
+		RequestPostProcessing(pTaskInfo);
+	}
+	else
+	{
+		// E-83 BEHOBEN, 14.09.2026. Hier stand nur die Spurmarke, und die
+		// Aufgabe blieb liegen.
+		//
+		// GEMESSEN AN GREGORS LAUF MIT 7.2.0.52, waehrend das Fenster
+		// "Waiting in the task queue to be started ..." zeigte und sich
+		// Eudora nicht beenden liess:
+		//
+		//     fertig, Nachbearbeitung angefordert   15
+		//     fertig, OHNE Nachbearbeitung          17
+		//     liegengeblieben (alle 15 s gemeldet)  17
+		//
+		//     E-83 liegengeblieben: uid=35 zustand=FERTIG(5)
+		//     m_pThread=gesetzt aktiv=1/10 titel="Resyncing"
+		//
+		// Der Zustand ist FERTIG - die Aufgabe wartet also nicht, sie ist
+		// durch. Der angezeigte Text stammt aus Register() und wird nie
+		// ueberschrieben, deshalb sah es nach "wartet auf den Start" aus.
+		//
+		// WARUM SIE NIE NACHGEHOLT WURDE: DoPostProcessing arbeitet
+		// ausschliesslich m_PostProcessList ab, und in diese Liste kommt
+		// eine Aufgabe NUR ueber RequestPostProcessing(). Wer hier landet,
+		// kommt nie hinein - auch der Leerlauf holt sie nicht nach. Der
+		// else-Zweig war eine Sackgasse: die Aufgabe blieb in
+		// m_TaskInfoList, zaehlte weiter als laufend, und beim Beenden kam
+		// "You currently have 1 task(s) running".
+		//
+		// Die Bedingung oben stammt aus dem Original und bindet die
+		// Nachbearbeitung an den Leerlaufzyklus, in dem StartTasks()
+		// m_nStartIdle gesetzt hat - also an Aufgaben aus einer
+		// QCTaskGroup. IMAP-Aktionen aus CActionQueue::OnIdle laufen daran
+		// vorbei und setzen auch IsIgnoreIdle nicht.
+		//
+		// Die Spurmarke bleibt stehen: an ihrer Zahl ist abzulesen, wie oft
+		// dieser Weg genommen wird, und ein Rueckfall faellt damit sofort
+		// auf.
+		SpurmarkeE83("fertig-ausserhalb-des-Leerlaufs", pTaskInfo);
 		RequestPostProcessing(pTaskInfo);
 	}
 

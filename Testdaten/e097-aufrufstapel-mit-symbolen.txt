@@ -1,0 +1,89 @@
+Gestartet als Debuggee, PID 7708.
+
+AUSNAHME 0xC000041D in Thread 7744 (erste Gelegenheit: 0)
+EIP 0x71F60544  mfc140.dll     ?
+ESP 0x0133D688   EBP 0x0133D68C
+
+77 Rahmen abgelaufen.
+
+Stapelabtastung (Rueckspruenge im Speicher, haeufigste zuerst):
+  Stapel nicht lesbar.
+
+Aufrufstapel:
+     0  0x001FE3FF  Eudora.exe     CSaveAsDialog::OnTypeChange + 45   SaveAsDialog.cpp:425
+     1  0x766BC077  COMDLG32.dll   DllGetClassObject + 2823
+     2  0x71B03918  COMCTL32.dll   DPA_EnumCallback + 56
+     3  0x766AD50A  COMDLG32.dll   ?
+     4  0x766965B1  COMDLG32.dll   ?
+     5  0x766A620E  COMDLG32.dll   ?
+     6  0x777B1C0B  USER32.dll     AddClipboardFormatListener + 75
+     7  0x777A517E  USER32.dll     EnumChildWindows + 3294
+     8  0x777A4870  USER32.dll     EnumChildWindows + 976
+     9  0x77799555  USER32.dll     wvsprintfA + 725
+    10  0x777B1C0B  USER32.dll     AddClipboardFormatListener + 75
+    11  0x777A82CA  USER32.dll     GetClassLongW + 2106
+    12  0x777A79F6  USER32.dll     GetSystemMetricsForDpi + 3142
+    13  0x77794BCB  USER32.dll     CallWindowProcA + 27
+    14  0x71F48134  mfc140.dll     ?
+    15  0x777B1C0B  USER32.dll     AddClipboardFormatListener + 75
+    16  0x777A82CA  USER32.dll     GetClassLongW + 2106
+    17  0x777A91F9  USER32.dll     GetParent + 2361
+    18  0x7779FBE6  USER32.dll     RegisterClassExW + 2966
+    19  0x777952B1  USER32.dll     DialogBoxIndirectParamAorW + 257
+    20  0x777951E2  USER32.dll     DialogBoxIndirectParamAorW + 50
+    21  0x7779519B  USER32.dll     DialogBoxIndirectParamW + 27
+    22  0x766C34FC  COMDLG32.dll   DllCanUnloadNow + 24972
+    23  0x76691ED8  COMDLG32.dll   ?
+    24  0x71EE0B24  mfc140.dll     ?
+    25  0x002466C0  Eudora.exe     CTocView::OnFileSaveAs + 429   tocview.cpp:3074
+    26  0x71EAF83E  mfc140.dll     ?
+    27  0x71F3806F  mfc140.dll     ?
+    28  0x71F57707  mfc140.dll     ?
+    29  0x0023D2EA  Eudora.exe     CTocFrame::OnCmdMsg + 86   TocFrame.cpp:345
+    30  0x71F4A619  mfc140.dll     ?
+    31  0x71F569FD  mfc140.dll     ?
+    32  0x71F49BE9  mfc140.dll     ?
+    33  0x71F49B6D  mfc140.dll     ?
+    34  0x71F47E24  mfc140.dll     ?
+    35  0x71F5DFD7  mfc140.dll     ?
+    36  0x00168464  Eudora.exe     CMainFrame::OnCommand + 175   mainfrm.cpp:3187
+    37  0x71F49BE9  mfc140.dll     ?
+    38  0x71F49B6D  mfc140.dll     ?
+    39  0x0026718F  Eudora.exe     QCWorkbook::WindowProc + 115   workbook.cpp:1085
+    40  0x71F47E24  mfc140.dll     ?
+    41  0x71F48074  mfc140.dll     ?
+    42  0x71E27334  mfc140.dll     ?
+    43  0x777B1C0B  USER32.dll     AddClipboardFormatListener + 75
+    44  0x777A82CA  USER32.dll     GetClassLongW + 2106
+    45  0x777A7EE0  USER32.dll     GetClassLongW + 1104
+    46  0x777AC3AF  USER32.dll     CallNextHookEx + 415
+    47  0x77A256CD  ntdll.dll      KiUserCallbackDispatcher + 77
+    48  0x71F34D48  mfc140.dll     ?
+    49  0x71EE9F23  mfc140.dll     ?
+    50  0x002A1E1A  Eudora.exe     CWizardPropSheet::StartWizard + 35   WizardPropSheet.cpp:139
+    51  0x00169978  Eudora.exe     CMainFrame::OnSpecialNewAccount + 56   mainfrm.cpp:4395
+    52  0x71EAF83E  mfc140.dll     ?
+    53  0x71F5771E  mfc140.dll     ?
+    54  0x71F5E0A2  mfc140.dll     ?
+    55  0x00168526  Eudora.exe     CMainFrame::OnCmdMsg + 187   mainfrm.cpp:3244
+    56  0x71F4A619  mfc140.dll     ?
+    57  0x71F569FD  mfc140.dll     ?
+    58  0x71F5DFE6  mfc140.dll     ?
+    59  0x00168464  Eudora.exe     CMainFrame::OnCommand + 175   mainfrm.cpp:3187
+    60  0x71F49BE9  mfc140.dll     ?
+    61  0x71F49B6D  mfc140.dll     ?
+    62  0x0026718F  Eudora.exe     QCWorkbook::WindowProc + 115   workbook.cpp:1085
+    63  0x71F47E24  mfc140.dll     ?
+    64  0x71F48074  mfc140.dll     ?
+    65  0x71E27334  mfc140.dll     ?
+    66  0x777B1C0B  USER32.dll     AddClipboardFormatListener + 75
+    67  0x777A82CA  USER32.dll     GetClassLongW + 2106
+    68  0x777A6B70  USER32.dll     DispatchMessageW + 1248
+    69  0x777988F0  USER32.dll     DispatchMessageA + 16
+    70  0x71F34D6E  mfc140.dll     ?
+    71  0x0012DF53  Eudora.exe     CEudoraApp::Run + 26   eudora.cpp:1993
+    72  0x71F5DF14  mfc140.dll     ?
+    73  0x002AA756  Eudora.exe     __scrt_common_main_seh + 248   exe_common.inl:288
+    74  0x76A2FCC9  KERNEL32.DLL   BaseThreadInitThunk + 25
+    75  0x77A182AE  ntdll.dll      RtlGetAppContainerNamedObjectPath + 286
+    76  0x77A1827E  ntdll.dll      RtlGetAppContainerNamedObjectPath + 238

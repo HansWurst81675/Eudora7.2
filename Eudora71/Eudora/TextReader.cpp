@@ -179,6 +179,27 @@ BoundaryType TextReader::ReadIt(CObArray& MimeStates, char* buf, LONG bSize)
 	// to change ISOTranslate.
 	bSize--;
 
+	// A UTF-8 character is up to four bytes long, and a chunk boundary can fall
+	// right in the middle of one.  ISOTranslate never sees more than one chunk,
+	// so neither half is valid UTF-8, both halves survive as raw bytes and a
+	// single umlaut in an otherwise correct message turns into byte salad.  The
+	// head bytes are held back below and put in front of the next chunk, which
+	// needs three spare bytes on top of the one for the NULL terminator.
+	BOOL	bUTF8Body = ISOIsUTF8Charset((UINT)iCharsetIdx);
+	char	szUTF8Carry[4];
+	LONG	lUTF8Carry = 0;
+
+	if (bUTF8Body)
+	{
+		// The three bytes come off the read size, they do not come out of thin
+		// air.  A buffer too small to spare them keeps the old behaviour rather
+		// than running over its end.
+		if (bSize > 8)
+			bSize -= 3;
+		else
+			bUTF8Body = FALSE;
+	}
+
 	for (size = ms->m_LineReader->ReadLine(buf, bSize); size > 0; size = ms->m_LineReader->ReadLine(buf, bSize))
 	{
 		if (parentMS && (boundaryType = parentMS->IsBoundaryLine(buf)))
@@ -245,6 +266,34 @@ BoundaryType TextReader::ReadIt(CObArray& MimeStates, char* buf, LONG bSize)
 		// not translated so only translate if the index is greater than 2.
 		if (iCharsetIdx > 2)
 		{
+			if (bUTF8Body)
+			{
+				// Put back the head of the character the previous chunk was cut
+				// in the middle of, then hold back the head of the character this
+				// chunk is cut in the middle of.  Everything ISOTranslate gets to
+				// see this way consists of whole characters.
+				if (lUTF8Carry > 0)
+				{
+					memmove(buf + lUTF8Carry, buf, (size_t)size);
+					memcpy(buf, szUTF8Carry, (size_t)lUTF8Carry);
+					size += lUTF8Carry;
+					lUTF8Carry = 0;
+				}
+
+				lUTF8Carry = ISOIncompleteUTF8Tail(buf, size);
+				if (lUTF8Carry > 0)
+				{
+					memcpy(szUTF8Carry, buf + size - lUTF8Carry, (size_t)lUTF8Carry);
+					size -= lUTF8Carry;
+				}
+
+				// If the part ends while bytes are still held back, the message
+				// itself was cut in the middle of a character.  Those one to three
+				// bytes are dropped rather than written out: on their own they are
+				// no character, and writing them would produce exactly the byte
+				// salad this is meant to remove.
+			}
+
 			// As a first pass at handling other charsets we pass the text
 			// through a translator function.  A more elegant solution would
 			// be to create a decoder for other charsets.

@@ -5,6 +5,8 @@ metadata:
   type: feedback
 ---
 
+Schranke: tools/doku-pruefen.pl (pre-commit, pre-push)
+
 Wenn in diesem Repo ein Arbeitspaket fertig ist, gehoert die Dokumentation in
 **denselben Commit** wie der Code. Konkret bei jedem Commit pruefen:
 

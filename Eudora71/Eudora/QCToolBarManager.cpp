@@ -1180,6 +1180,24 @@ void QCToolBarManager::LoadState(LPCTSTR lpszProfileName)
 	// for why I do this.
 	QCLoadState( lpszProfileName );
 
+	// BEFUND E-70 (Gregor, 10.09.2026): die Andockgroessen ueberlebten
+	// keinen Neustart. SECToolBarManager::GroessenSichern lief - im
+	// Protokoll von 1.0.40 stehen 40 Zeilen "E-70 gesichert", und in
+	// der Eudora.ini steht DockVertCx319=586. GroessenLaden lief NIE:
+	// null Zeilen. Der Grund stand im eigenen Kommentar ueber
+	// SECToolBarManager::LoadState - "Eudora ruft diese Fassung nie
+	// auf". Genau dort hatte ich den Aufruf eingebaut.
+	//
+	// Hier ist die symmetrische Stelle: SaveState unten ruft
+	// SECToolBarManager::SaveState, und dort steckt GroessenSichern.
+	//
+	// Der Zeitpunkt stimmt: mainfrm.cpp ruft erst SetDockState (:951)
+	// und dann LoadState (:952). Die Groessen werden also nach dem
+	// MFC-Zustand gesetzt und nicht wieder ueberschrieben.
+	CString szMgrSection;
+	szMgrSection.Format(_T("%s-ToolBarManager"), lpszProfileName);
+	GroessenLaden(szMgrSection);
+
 	if (GetSharewareMode() != SWM_MODE_LIGHT)
 	{
 		pos = m_pFrameWnd->m_listControlBars.GetHeadPosition();

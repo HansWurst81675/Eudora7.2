@@ -1,0 +1,81 @@
+<Configuration>
+  <!--
+    Kriterium 0 nachweisen, ohne einen zweiten Rechner.
+
+    Doppelklick auf diese Datei oeffnet die Windows Sandbox: ein frisches,
+    leeres Windows, das nach dem Schliessen restlos verschwindet. Darin ist
+    KEIN Visual Studio, KEINE Laufzeitbibliothek nachinstalliert, nichts.
+    Genau die Umgebung, die Kriterium 0 aus ZIEL.md verlangt:
+
+        "zip runterladen, entpacken, starten - laeuft. keine fehlenden DLLs,
+         keine fehlermeldungen, dass etwas nicht gefunden werden kann oder
+         nachinstalliert werden muss."
+
+    WARUM ES DIESE DATEI GIBT
+
+    Am 06.09.2026 hat Gregor die Fassung 7.2.0.10 aus dem Repo geladen,
+    ausgepackt und gestartet - auf zwei verschiedenen Rechnern. Auf beiden ist
+    Visual Studio 2022 installiert. Seine Worte: "aber hier ist auch VS2022
+    installiert. ich muss es noch woanders pruefen, da hast du recht."
+
+    Er hat recht: auf so einem Rechner liegen mfc140.dll und die anderen
+    Laufzeiten ohnehin in SysWOW64. Ein Start dort beweist nichts. Genau
+    deshalb steht Kriterium 0 seit dem 30.08.2026 als einziges der vier noch
+    offen - nicht, weil das Paket schlecht waere, sondern weil niemand eine
+    saubere Maschine hatte.
+
+    Die Sandbox ist diese Maschine. Sie gehoert zu Windows 10 Pro und muss nur
+    einmal eingeschaltet werden.
+
+    EINMALIG EINSCHALTEN (als Administrator, danach neu starten):
+
+        Dism /online /Enable-Feature /FeatureName:"Containers-DisposableClientVM" -All
+
+    oder: Systemsteuerung -> Programme -> Windows-Features aktivieren
+          -> Haken bei "Windows-Sandbox"
+
+    SO WIRD GEPRUEFT
+
+    1. Doppelklick auf diese Datei. Die Sandbox startet.
+    2. Auf dem Desktop der Sandbox liegt der Ordner "Eudora" - das ist das
+       Auslieferungspaket, schreibgeschuetzt eingehaengt.
+    3. Darin "Eudora starten.cmd" doppelklicken.
+
+    BESTANDEN, wenn Eudora startet und KEINE Meldung ueber eine fehlende DLL
+    kommt. Durchgefallen, wenn 0xc000007b erscheint oder eine DLL vermisst
+    wird - dann fehlt sie im Paket, und der Name steht in der Meldung.
+
+    Die Sandbox vergisst beim Schliessen alles. Es bleibt nichts zurueck, und
+    das Paket selbst kann nicht veraendert werden (ReadOnly).
+
+    HINWEIS: In einer VM laeuft die Sandbox nur, wenn verschachtelte
+    Virtualisierung eingeschaltet ist. Auf einem echten Rechner ist das kein
+    Thema.
+
+    Der Pfad unten zeigt auf die Fassung, die zuletzt gebaut wurde. Wer eine
+    andere pruefen will, aendert ihn - oder legt sich eine Kopie dieser Datei
+    daneben.
+  -->
+  <MappedFolders>
+    <MappedFolder>
+      <HostFolder>C:\Users\Gregor\Eudora72-1.0.12-release</HostFolder>
+      <SandboxFolder>C:\Users\WDAGUtilityAccount\Desktop\Eudora</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+  </MappedFolders>
+
+  <!-- Netz bleibt an: sonst laesst sich der Mailabruf nicht mitpruefen. -->
+  <Networking>Enable</Networking>
+
+  <!-- Kein Zugriff auf Grafikbeschleunigung noetig, spart Aerger in einer VM. -->
+  <VGpu>Disable</VGpu>
+
+  <!--
+    Beim Start eine Uebersicht zeigen: welche Laufzeiten liegen im Paket, und
+    welche fehlen in dieser sauberen Umgebung. Das beantwortet Kriterium 0
+    schon, bevor Eudora ueberhaupt laeuft.
+  -->
+  <LogonCommand>
+    <Command>cmd.exe /c "echo. &amp; echo === Kriterium 0: saubere Maschine, nichts nachinstalliert === &amp; echo. &amp; echo Im Paket liegen diese Laufzeiten: &amp; dir /b C:\Users\WDAGUtilityAccount\Desktop\Eudora\*140*.dll 2^&gt;nul &amp; echo. &amp; echo Auf DIESEM Windows vorhanden (sollte leer sein): &amp; dir /b C:\Windows\SysWOW64\mfc140.dll C:\Windows\SysWOW64\msvcp140.dll 2^&gt;nul &amp; echo. &amp; echo Jetzt \"Eudora starten.cmd\" auf dem Desktop doppelklicken. &amp; echo. &amp; pause"</Command>
+  </LogonCommand>
+</Configuration>

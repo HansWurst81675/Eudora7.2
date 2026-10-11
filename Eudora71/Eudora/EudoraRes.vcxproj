@@ -348,10 +348,6 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OT501\Src\OT501.vcxproj">
-      <Project>{36eb689a-7c2c-4c2e-8f1c-744fdd4ddfa2}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly><LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
     <ProjectReference Include="..\QCUtils\QCUtils.vcxproj">
       <Project>{8153db1a-f996-48a8-a1a6-b183c086a94d}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

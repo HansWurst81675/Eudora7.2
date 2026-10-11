@@ -1399,6 +1399,17 @@ int SetupINIFilename(const char* Filename /*= NULL*/)
 		INIPath = tmp;
 	}
 
+	// E-12: the test above only looks for a drive letter, so a drive-relative
+	// path like "C:Mailverzeichnis\Eudora.ini" passes as "fully qualified"
+	// while still following the current directory around. Resolve it for real.
+	{
+		char szAbsIni[_MAX_PATH + 1];
+		char* pszAbsFilePart = NULL;
+		DWORD dwAbsLen = ::GetFullPathName(INIPath, sizeof(szAbsIni), szAbsIni, &pszAbsFilePart);
+		if (dwAbsLen > 0 && dwAbsLen < sizeof(szAbsIni))
+			INIPath = szAbsIni;
+	}
+
 	// Convert from old .INI format with [Configurations], [Switches], and [Miscellaneous]
 	// to new format with [Settings]
 	// If there's already a [Settings] section, then a conversion has already been done

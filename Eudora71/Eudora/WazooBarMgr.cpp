@@ -253,6 +253,25 @@ CWazooBar* CWazooBarMgr::CreateNewWazooBar(CMDIFrameWnd* pFrameWnd)
 	pMainFrame->DockControlBarEx(pWazooBar, AFX_IDW_DOCKBAR_BOTTOM, 0, 0, (float)1.00, 180);
 	pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0);
 
+	// NUR wenn die Leiste wirklich ein MDI-Kindfenster geworden ist -
+	// Befund E-4. ID_SEC_MDIFLOAT oben laeuft in dieser Fassung ins Leere:
+	// SECMDIFrameWnd::FloatControlBarInMDIChild ist bewusst ohne Wirkung
+	// (OTShim.cpp:348), weil MFC kein Gegenstueck dafuer hat. Die Leiste
+	// bleibt angedockt, und GetParentFrame() liefert weiterhin das
+	// HAUPTFENSTER statt eines MDI-Kindfensters.
+	//
+	// Ohne diese Abfrage schrieb der Block darunter durch einen C-Cast, der
+	// nichts prueft, in ein Objekt des falschen Typs. Im Debug meldete sich
+	// ASSERT_KINDOF; im Release ist ASSERT leer (Eudora.vcxproj:132 NDEBUG
+	// -> stdafx.h:54 -> qcassert.h -> SuperAssert.h:135), der Zugriff blieb
+	// und beschaedigte fremden Speicher. Sichtbar wurde es erst beim
+	// BEENDEN als CPtrArray::ElementAt ausserhalb des Arrays (afxcoll.inl:213).
+	//
+	// IsMDIChild() liefert in dieser Stufe immer FALSE (OTShim.cpp:1565).
+	// Eudora fragt an vier weiteren Stellen genauso ab - WazooBarMgr.cpp:790
+	// und :821, WazooBar.cpp:652 und :690. Diese beiden hier fehlten.
+	if (pWazooBar->IsMDIChild())
+
 	//
 	// Set the initial size of the window to be 80% of the
 	// current MDI client area.
@@ -266,9 +285,22 @@ CWazooBar* CWazooBarMgr::CreateNewWazooBar(CMDIFrameWnd* pFrameWnd)
 		CWnd* pMDIClient = CWnd::FromHandle(pMainFrame->m_hWndMDIClient);
 		pMDIClient->GetWindowRect(rectMDIClient);
 
-		CMDIChildWnd* pMDIFrame = (CMDIChildWnd *) pWazooBar->GetParentFrame();
-		ASSERT_KINDOF(CMDIChildWnd, pMDIFrame);
-		pMDIFrame->SetWindowPos(NULL, 0, 0, (rectMDIClient.Width() * 4) / 5, (rectMDIClient.Height() * 4) / 5, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		//	BEFUND E-4. Die Zeile darueber schickt ID_SEC_MDIFLOAT, aber in
+		//	dieser Fassung bleibt die Leiste ANGEDOCKT:
+		//	SECMDIFrameWnd::FloatControlBarInMDIChild ist Stufe 2 und tut
+		//	nichts (OTShim.cpp). GetParentFrame liefert dann das
+		//	HAUPTFENSTER, nicht das MDI-Kindfenster.
+		//
+		//	Der C-Cast prueft nichts, und ASSERT_KINDOF ist im Release-Bau
+		//	leer. Deshalb hier eine echte Laufzeitpruefung: ist es kein
+		//	MDI-Kindfenster, bleibt die Groesse so, wie DockControlBarEx sie
+		//	gesetzt hat.
+		CMDIChildWnd* pMDIFrame =
+			DYNAMIC_DOWNCAST(CMDIChildWnd, pWazooBar->GetParentFrame());
+		if (pMDIFrame != NULL)
+		{
+			pMDIFrame->SetWindowPos(NULL, 0, 0, (rectMDIClient.Width() * 4) / 5, (rectMDIClient.Height() * 4) / 5, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
+		}
 	}
 
 	//
@@ -392,6 +424,15 @@ bool CWazooBarMgr::SetDefaultWazooBarState(CWazooBar *pWazooBar, int nIndex, Def
 				pWazooBar->SendMessage(WM_COMMAND, ID_SEC_MDIFLOAT, 0);
 				pMainFrame->RecalcLayout(FALSE);	// make sure MDI client area size is up to date
 
+				// Dieselbe Verriegelung wie oben in CreateWazooBar - Befund E-4.
+				// ID_SEC_MDIFLOAT eine Zeile darueber laeuft ins Leere, die Leiste
+				// bleibt angedockt, und GetParentFrame() liefert das Hauptfenster.
+				// Der Block darunter castet es per C-Cast auf QCControlBarWorksheet
+				// und SCHREIBT dann m_bFirstActivationAfterClose - im Release ohne
+				// jede Pruefung, also mitten in ein fremdes Objekt. Das war die
+				// Speicherbeschaedigung hinter dem Absturz beim Beenden.
+				if (pWazooBar->IsMDIChild())
+
 				//
 				// Set the initial size of the window to be 80% of the
 				// current MDI client area.
@@ -405,17 +446,33 @@ bool CWazooBarMgr::SetDefaultWazooBarState(CWazooBar *pWazooBar, int nIndex, Def
 					CWnd* pMDIClient = CWnd::FromHandle(pMainFrame->m_hWndMDIClient);
 					pMDIClient->GetClientRect(rectMDIClient);
 
-					QCControlBarWorksheet* pMDIFrame = (QCControlBarWorksheet *) pWazooBar->GetParentFrame();
-					ASSERT_KINDOF(QCControlBarWorksheet, pMDIFrame);
-						
-					pMDIFrame->MoveWindow(rectMDIClient.left, rectMDIClient.top,rectMDIClient.Width(),__max(rectMDIClient.Height(),355));
+					//	BEFUND E-4 - HIER STAND DIE URSACHE.
+					//
+					//	GetParentFrame liefert das HAUPTFENSTER, weil
+					//	SECMDIFrameWnd::FloatControlBarInMDIChild (Stufe 2)
+					//	nichts tut und die Leiste angedockt bleibt. Der
+					//	C-Cast prueft nichts, ASSERT_KINDOF ist im
+					//	Release-Bau leer - und dann schrieb
+					//	    pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+					//	vier Byte an den Versatz dieses Feldes MITTEN IN DAS
+					//	CMainFrame-Objekt. Stille Speicherbeschaedigung
+					//	beim Start; der Absturz beim Beenden war die Folge.
+					//
+					//	Im Debug-Bau meldete sich das als Zusicherung
+					//	WazooBarMgr.cpp:409 - beobachtet am 05.09.2026.
+					QCControlBarWorksheet* pMDIFrame =
+						DYNAMIC_DOWNCAST(QCControlBarWorksheet, pWazooBar->GetParentFrame());
+					if (pMDIFrame != NULL)
+					{
+						pMDIFrame->MoveWindow(rectMDIClient.left, rectMDIClient.top,rectMDIClient.Width(),__max(rectMDIClient.Height(),355));
 
-					//
-					// Hack workaround for the problem where the
-					// initial MDI wazoo doesn't restore properly
-					// when MDI is in maximized window mode.
-					//
-					pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+						//
+						// Hack workaround for the problem where the
+						// initial MDI wazoo doesn't restore properly
+						// when MDI is in maximized window mode.
+						//
+						pMDIFrame->m_bFirstActivationAfterClose = TRUE;
+					}
 				}
 			}
 
@@ -449,8 +506,23 @@ bool CWazooBarMgr::SetDefaultWazooBarState(CWazooBar *pWazooBar, int nIndex, Def
 
 			if ((DST_SHOWHIDE == tWhichType) || (DST_ALL == tWhichType))
 			{
-				// Hide the Task Status/Task Error window
-				pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0);
+				// ANFORDERUNG A-2 (BEFUND E-44, 08.09.2026): Hier stand
+				//
+				//     // Hide the Task Status/Task Error window
+				//     pWazooBar->SendMessage(WM_COMMAND, ID_SEC_HIDE, 0);
+				//
+				// Das war die ganze Ursache. Die Leiste liegt zu diesem
+				// Zeitpunkt schon richtig: unten, ueber die volle Breite,
+				// 80 Pixel hoch (gemessen am 08.09.2026 mit
+				// tools/leisten-messen.ps1 an einem frischen Profil:
+				// Andockseite unten, 1712x80) - sie wurde nur unmittelbar
+				// danach wieder versteckt. Aufgabenstatus und
+				// Aufgabenfehler bleiben jetzt sichtbar, waagrecht unten.
+				//
+				// Das ist bewusst KEIN ID_SEC_SHOW: die Leiste ist seit
+				// CreateInitialWazooBars mit WS_VISIBLE erzeugt
+				// (WazooBarMgr.cpp:136), es genuegt, das Verstecken zu
+				// lassen.
 			}
 		}
 		break;
@@ -534,6 +606,102 @@ BOOL CWazooBarMgr::LoadWazooBarConfigFromIni()
 			ASSERT_KINDOF(CWazooBar, pWazooBar);
 
 			VERIFY(pWazooBar->LoadWazooConfigFromIni());
+		}
+
+		// ANFORDERUNG A-2 (BEFUND E-44, 08.09.2026): Hier fehlte die
+		// Anordnung vollstaendig.
+		//
+		// LoadWazooConfigFromIni (WazooBar.cpp:552) stellt NUR wieder her,
+		// WELCHE Fenster in einer Leiste sitzen, und wo die Reiter sitzen -
+		// die Andockseite und die Groesse holt es nicht. Die kommt sonst
+		// aus MFCs LoadBarState, also aus dem INI-Abschnitt
+		// [ToolBar-...], den QCToolBarManager::LoadState in
+		// CMainFrame::FinishInitAndShowWindow (mainfrm.cpp:936) einliest.
+		//
+		// Genau dieser Abschnitt fehlt aber, denn SaveBarState("ToolBar")
+		// bricht beim Beenden jedes Mal ab (BEFUND E-43). Gemessen am
+		// 08.09.2026: weder Gregors Eudora.ini noch die eines frischen
+		// Profils enthaelt ueberhaupt einen [ToolBar...]-Abschnitt.
+		//
+		// Folge: sobald ein [WazooBars]-Abschnitt existiert - also ab dem
+		// zweiten Start - blieben alle drei Leisten auf dem Stil, mit dem
+		// CreateInitialWazooBars sie erzeugt hat, und das ist CBRS_LEFT
+		// (WazooBarMgr.cpp:136). Deshalb standen Aufgabenstatus und
+		// Aufgabenfehler senkrecht links statt waagrecht unten.
+		//
+		// Behebung: konnte die Lage nicht wiederhergestellt werden -
+		// erkennbar daran, dass die Leiste an keiner Andockleiste haengt -
+		// dann wird die Standardanordnung nachgezogen. Dieselbe Pruefung
+		// benutzt das Projekt schon selbst (mainfrm.cpp:994: "Normally,
+		// LoadBarState() will take care of redocking"). Ist eine Lage
+		// gespeichert, aendert sich nichts.
+		//
+		// Zwei Durchlaeufe in derselben Reihenfolge wie im Standardzweig
+		// oben: erst die festen Lagen, dann die verhaeltnismaessigen.
+		// DST_SHOWHIDE wird ABSICHTLICH nicht aufgerufen - was sichtbar
+		// ist, soll die gespeicherte Einstellung bestimmen.
+		// Erst sammeln, dann anordnen. Die Pruefung auf m_pDockBar muss VOR
+		// dem ersten Andocken laufen, denn danach ist das Feld gesetzt.
+		CPtrArray arrOhneLage;
+
+		pos = m_WazooBarList.GetHeadPosition();
+		for (int idx = 0; pos; idx++)
+		{
+			CWazooBar* pWazooBar = (CWazooBar *) m_WazooBarList.GetNext(pos);
+			ASSERT_KINDOF(CWazooBar, pWazooBar);
+
+			// Die Reklameleiste hat ihre eigene Behandlung (Fall 3) und
+			// wuerde LoadWazooConfigFromIni ein zweites Mal aufrufen.
+			if (pWazooBar->GetDlgCtrlID() == IDC_AD_WAZOO_BAR)
+				continue;
+
+			if (pWazooBar->m_pDockBar == NULL)
+			{
+				arrOhneLage.Add((void*) pWazooBar);
+				arrOhneLage.Add((void*) (INT_PTR) idx);
+			}
+		}
+
+		// Drei Durchlaeufe in derselben Reihenfolge wie im Standardzweig:
+		// feste Lagen, verhaeltnismaessige Lagen, dann sichtbar/versteckt.
+		//
+		// DST_SHOWHIDE laeuft hier MIT - anders als zuerst gebaut. Grund:
+		// die Sichtbarkeit einer Wazoo-Leiste wird nirgends gespeichert
+		// (nachgesehen in SaveWazooConfigToIni, WazooBar.cpp:776 - dort
+		// stehen nur Reiterlage und Klassennamen). Was ohne DST_SHOWHIDE
+		// sichtbar bliebe, waere also keine Entscheidung des Anwenders,
+		// sondern nur das WS_VISIBLE aus CreateInitialWazooBars - und das
+		// liess die Kurznamen-Leiste als 180 Pixel breite Spalte
+		// dauerhaft offenstehen (gemessen am 08.09.2026: Kennung 319,
+		// rechts, sichtbar, 180x1093). Mit DST_SHOWHIDE ergibt sich die
+		// vom Programm vorgesehene Anordnung: Postfaecher links sichtbar,
+		// Kurznamen versteckt, Aufgabenstatus waagrecht unten sichtbar
+		// (letzteres, weil Fall 2 die Leiste seit A-2 nicht mehr
+		// versteckt).
+		const DefaultStateType tStufen[3] = { DST_SIZE_FIXED, DST_SIZE_RELATIVE, DST_SHOWHIDE };
+
+		for (int iStufe = 0; iStufe < 3; iStufe++)
+		{
+			for (int iEintrag = 0; iEintrag + 1 < arrOhneLage.GetSize(); iEintrag += 2)
+			{
+				CWazooBar* pWazooBar = (CWazooBar *) arrOhneLage[iEintrag];
+				const int idx = (int) (INT_PTR) arrOhneLage[iEintrag + 1];
+
+				VERIFY(SetDefaultWazooBarState(pWazooBar, idx, tStufen[iStufe]));
+			}
+		}
+
+		if (arrOhneLage.GetSize() > 0)
+		{
+			CString strMeldung;
+			strMeldung.Format(
+				_T("E-44 WazooBars: fuer %d Leiste(n) war keine Lage ")
+				_T("gespeichert (kein [ToolBar...]-Abschnitt, siehe E-43) - ")
+				_T("die Standardanordnung wurde nachgezogen: Postfaecher ")
+				_T("links, Kurznamen versteckt, Aufgabenstatus waagrecht ")
+				_T("unten."),
+				(int) (arrOhneLage.GetSize() / 2));
+			PutDebugLog(DEBUG_MASK_MISC, strMeldung);
 		}
 	}
 		

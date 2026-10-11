@@ -38,6 +38,7 @@ DAMAGE. */
 #include "qtwrapper.h"
 
 #include "eudora.h"
+#include "debug.h"
 
 // standard Paige includes
 #include "Paige.h"
@@ -326,9 +327,95 @@ static PG_PASCAL (long) eCallback( paige_rec_ptr pg,
 }
 
 
+//
+// BEFUND E-112: welches Rechteck bekommt das Bild?
+//
+// Eigene Funktion, damit die Entscheidung ohne Paige, ohne Fenster und ohne
+// ein einziges Bild pruefbar ist. Bei E-106 fehlte genau das: die Regel stand
+// mitten im Ladeweg, war nur an Gregors Rechner messbar, und dass sie falsch
+// herum war, kam erst heraus, als E-110 die Bilder ueberhaupt ankommen liess.
+//
+// DIE REGEL
+//
+//   Angabe vollstaendig  -> die ANGEGEBENE Groesse gewinnt.
+//   keine Angabe         -> die ECHTE Dateigroesse gilt  (Befund E-103).
+//   nichts bekannt       -> 0/0, der Aufrufer laesst alles, wie es ist.
+//
+// WARUM DIE ANGEGEBENE GEWINNT. Absender legen Bilder in doppelter bis
+// dreifacher Aufloesung ab und geben im HTML die Anzeigegroesse an, damit sie
+// auf feinen Bildschirmen scharf bleiben. Gemessen an Gregors Nachricht vom
+// 18.09.2026: angegeben 35x35, Datei 330x327; angegeben 540x240, Datei
+// 1294x575. Jeder Browser skaliert herunter - und Eudoras eigenes Lesefenster
+// tut es auch.
+//
+// WARUM E-106 ES ANDERSHERUM GEMACHT HAT. Das Symptom damals war "Bild liegt
+// ueber dem Text": Paige zeichnete in Originalgroesse, waehrend die Zeile nach
+// der Angabe bemessen war. Ich habe daraufhin die ZEILE VERGROESSERT statt das
+// BILD ZU VERKLEINERN. Das beseitigte das Symptom, solange kaum ein Bild lud.
+// Als E-110 behoben war, luden sie - und das WhatsApp-Symbol fuellte das halbe
+// Fenster.
+//
+// WIE DAS VERKLEINERN GEHT, OHNE DASS PAIGE SKALIEREN KANN. MetafileFromImage
+// liefert eine METADATEI, und eine Metadatei wird auf ihr Zielrechteck
+// gestreckt - pict_frame ist dieses Rechteck. Paige muss dafuer nichts
+// koennen; es reicht, das Rechteck richtig zu setzen.
+//
+// DER AUFRUFER SETZT BEIDES auf denselben Wert: embed->width/height (danach
+// rechnet der Zeilenumbruch) und pict_frame (danach wird gezeichnet). Laufen
+// die beiden auseinander, deckt das Bild wieder Text zu oder haengt in der
+// Luft - das war E-106.
+//
+void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
+                       long nEchtBreite, long nEchtHoehe,
+                       long* pnRahmenBreite, long* pnRahmenHoehe )
+{
+	if ( !pnRahmenBreite || !pnRahmenHoehe )
+		return;
+
+	*pnRahmenBreite = 0;
+	*pnRahmenHoehe  = 0;
+
+	if ( nAttrBreite > 0 && nAttrHoehe > 0 )
+	{
+		// Vollstaendige Angabe - sie gewinnt, das Bild wird hineingestreckt.
+		*pnRahmenBreite = nAttrBreite;
+		*pnRahmenHoehe  = nAttrHoehe;
+	}
+	else if ( nEchtBreite > 0 && nEchtHoehe > 0 )
+	{
+		// Keine oder halbe Angabe: die Datei entscheidet. Das ist E-103 -
+		// eine Zeile von 13 Punkten fuer ein Bild von 60, und der Text lag
+		// darunter. Eine halbe Angabe wird hier bewusst wie keine behandelt:
+		// was eine Seitenverhaeltnis-Rechnung daraus machen soll, ist NICHT
+		// gemessen, und Raten hat bei E-106 schon einmal gereicht.
+		*pnRahmenBreite = nEchtBreite;
+		*pnRahmenHoehe  = nEchtHoehe;
+	}
+}
+
 bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr embed,bool bAllowThreadedFetch )
 {
+    // BEFUND E-106: was die Datei WIRKLICH misst. 0 heisst: nicht gemessen.
+    long    nEchtBreite = 0;
+    long    nEchtHoehe  = 0;
+
     bool fRet = false;
+
+    //
+    // BEFUND E-110, Merker fuer die Spurmarke am Ende der Funktion.
+    //
+    // ok=0 zusammen mit daten=0 hat ZWEI moegliche Ursachen, und die
+    // Messfassung 1.0.73 konnte sie nicht trennen:
+    //   (a) fetch_url_schmookie liefert -1, der Abruf kommt nicht zustande
+    //   (b) die Datei IST da, aber weder MetafileFromImage noch QuickTime
+    //       koennen sie umwandeln
+    // Das sind zwei ganz verschiedene Behebungen.
+    //
+    //   -1  der Block wurde nie betreten (keine URL)
+    //    0  keine Datei     1  Datei vorhanden
+    //
+    int nE110Datei  = -1;
+    int nE110Intern = -1;
 	BOOL bEudoraTempFile = FALSE;
 
     // The Way It Is:
@@ -409,11 +496,19 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 			}
         }
 
+        //
+        // BEFUND E-110: HIER entscheidet sich, ob die Datei da ist.
+        // filePath liegt in diesem Block und ist an der Messstelle vor
+        // return fRet nicht mehr sichtbar - deshalb der Merker.
+        //
+        nE110Datei = (*filePath) ? 1 : 0;
+
         if ( *filePath )
         {
 			fRet = false;
 
-            if (CanHandleImageInternally(filePath, FALSE))
+            nE110Intern = CanHandleImageInternally(filePath, FALSE) ? 1 : 0;
+            if (nE110Intern)
             {
                 QCMetaFileInfo mfi;
 				int TransparencySysColor = COLOR_3DFACE;
@@ -421,6 +516,21 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					TransparencySysColor = COLOR_WINDOW;
                 if (MetafileFromImage( filePath, &mfi, TransparencySysColor))
                 {
+                    //
+                    // BEFUND E-106: die ECHTE Dateigroesse merken, auch wenn
+                    // im HTML schon Masse stehen.
+                    //
+                    // Die beiden Zuweisungen darunter laufen nur, wenn das
+                    // Attribut fehlt - deshalb wusste bisher niemand, wie
+                    // gross die Datei wirklich ist, sobald der Absender eine
+                    // Groesse angegeben hat. Gregors Protokoll vom
+                    // 17.09.2026 zeigt es: neun Bilder wurden nachgemessen,
+                    // das grosse Logo (attr=200x52) war nicht darunter - und
+                    // genau das liegt bei ihm ueber dem Text.
+                    //
+                    nEchtBreite = (long)mfi.width;
+                    nEchtHoehe  = (long)mfi.height;
+
                     if ( !pUrlImage->source_width )
                         pUrlImage->source_width = (short)mfi.width;
                     if ( !pUrlImage->source_height )
@@ -443,6 +553,10 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 
                 if ( hMeta )
                 {
+                    // BEFUND E-106: auch hier die echte Groesse merken.
+                    nEchtBreite = (long)cx;
+                    nEchtHoehe  = (long)cy;
+
                     pUrlImage->source_width = (short)cx;
                     pUrlImage->source_height = (short)cy;
                     pUrlImage->type_and_flags = embed_meta_file;
@@ -463,6 +577,19 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 
 				embed->height = pUrlImage->source_height;
 				embed->uu.pict_data.pict_frame.bot_right.v = pUrlImage->source_height;
+
+				// E-97-Messung, 15.09.2026: greift dieser Nachtrag ueberhaupt?
+				//
+				// Ein Bild ohne height-Attribut bekommt beim Import die
+				// Textzeilenhoehe 13 - gemessen an einer eigenen Testnachricht
+				// und in Gregors Doctolib-Protokoll:
+				//
+				//   E-95 Bild: attr=0x0    embed=0x0 ascent=13
+				//   E-95 Bild: attr=175x0  embed=0x0 ascent=13
+				//
+				// Hier, beim Laden, kennt Eudora die echte Groesse. Ob Paige
+				// sie auch fuer die ZEILENHOEHE uebernimmt, haengt daran, ob
+				// der Suchlauf unten das richtige Embed findet.
 
 				// Search for ourselves since that seems to be the only way to get our
 				// index position (needed for pgInvalEmbedRef).
@@ -488,16 +615,266 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					}
 				}
 
+				//
+				// BEFUND E-103, Messung vom 17.09.2026.
+				//
+				// Bis hierher ist alles gut: Eudora hat das Bild geladen und
+				// kennt seine echte Groesse. Gemessen an Gregors Doctolib-
+				// Nachricht steht hier "quelle=202x60 embed=202x60".
+				//
+				// Beim IMPORT wusste niemand davon - PGHTMIMP.CPP:2186 meldet
+				// fuer dasselbe Bild "attr=0x0 embed=0x0 ascent=13". Die Zeile
+				// ist also 13 Punkte hoch, das Bild 60. Die 47 Punkte
+				// Unterschied liegen ueber dem Text, und genau das meldet
+				// Gregor seit mehreren Fassungen.
+				//
+				// Die Zeile darunter soll das heilen: pgInvalEmbedRef laesst
+				// Paige die Zeile mit der neuen Groesse neu rechnen. Sie laeuft
+				// aber NUR, wenn die Suche oben das Embed wiedergefunden hat -
+				// und die vergleicht ueber embed->style. Ob das trifft, hat
+				// noch niemand gemessen. Diese Marke misst es.
+				//
+				{
+					char szSpur97[200];
+					wsprintf(szSpur97,
+						"E-103 Nachtrag: quelle=%dx%d embed=%ldx%ld "
+						"gefunden=%d pos=%ld style=%ld\r\n",
+						(int)pUrlImage->source_width, (int)pUrlImage->source_height,
+						(long)embed->width, (long)embed->height,
+						bFound ? 1 : 0, (long)pos, (long)embed->style);
+					PutDebugLog(DEBUG_MASK_MISC, szSpur97);
+				}
+
 				if (bFound)
 				{
 					// Call pgInvalEmbedRef so that the embedded style gets updated with
 					// our updated dimensions.
 					pgInvalEmbedRef( pg->myself, pos, embed, draw_none );
+					//
+					// BEFUND E-108: hier stand ein Sicherungsnetz von mir,
+					// das den Textstil direkt anfasste (pgGetStyleInfo /
+					// pgSetStyleInfo). Es ist ersatzlos entfernt.
+					//
+					// Zwei Gruende, beide gemessen:
+					//
+					//  1. Es hat NIE ausgeloest. In jeder Messung stand
+					//     "nachgezogen=0" - pgInvalEmbedRef eine Zeile
+					//     darueber hatte die Zeilenhoehe schon richtig
+					//     gesetzt. Es war totes Gewicht.
+					//
+					//  2. Derselbe Stilweg hat in E-106 zweimal zum Absturz
+					//     gefuehrt, an 1.0.69 und an 1.0.71. Beide Male war
+					//     die letzte Zeile in Gregors Protokoll die Marke
+					//     direkt davor.
+					//
+					// Was bleibt, ist der Weg von QUALCOMM: Masse ins Embed,
+					// pgInvalEmbedRef rechnen lassen. Der steht seit 1996 da
+					// und ist in keiner Messung aufgefallen.
+					//
+
+					//
+					// BEFUND E-103: wird ueberhaupt neu gezeichnet?
+					//
+					// Die Zeilenhoehe kann noch so richtig sein - solange
+					// niemand neu zeichnet, steht das alte Bild auf dem
+					// Schirm. Diese Bedingung entscheidet darueber, und ob
+					// sie zutrifft, hat noch niemand gemessen.
+					//
+					{
+						char	szSpur103b[140];
+
+						wsprintf( szSpur103b,
+							"E-103 Neuzeichnen: bucket=%d fenster=%d\r\n",
+							pSB ? 1 : 0,
+							( pSB && pSB->pWndOwner ) ? 1 : 0 );
+
+						PutDebugLog( DEBUG_MASK_MISC, szSpur103b );
+					}
 
 					// Make the window erase and redraw to handle any text that used to
 					// be drawn in the space we now occupy
 					if (pSB && pSB->pWndOwner)
 						pSB->pWndOwner->Invalidate();
+				}
+			}
+
+			//
+			// BEFUND E-106: das Bild ist groesser als angegeben.
+			//
+			// Der Block darueber laeuft nur, wenn im HTML KEINE Groesse
+			// stand. Steht dort eine, wird die Datei nie nachgemessen - und
+			// Paige skaliert nicht. Ergebnis: eine Zeile von 52 Punkten, in
+			// die ein 104 Punkte hohes Bild gezeichnet wird. Die Differenz
+			// liegt auf dem folgenden Text.
+			//
+			// GEMESSEN an Gregors Kleinanzeigen-Nachricht, 17.09.2026: neun
+			// Bilder wurden nachgemessen - alle ohne height-Attribut, und bei
+			// allen wuchs die Zeile mit (attr=140x0 -> quelle=140x134 ->
+			// ascent=134). Das grosse Logo mit attr=200x52 war NICHT
+			// darunter, und genau das liegt bei ihm ueber dem Text.
+			//
+			// Warum die Datei groesser ist als die Angabe: Absender legen
+			// Bilder in doppelter Aufloesung ab und geben im HTML die halbe
+			// Groesse an, damit sie auf feinen Bildschirmen scharf bleiben.
+			// Jeder Browser skaliert. Paige nicht.
+			//
+			// WAS HIER GESCHIEHT: die Zeile bekommt die ECHTE Hoehe, damit
+			// nichts mehr zugedeckt wird. Das Bild bleibt dabei so gross,
+			// wie Paige es zeichnet - richtig skalieren waere besser, aber
+			// das sitzt tief in Paige; zugedeckter Text ist der teurere
+			// Fehler.
+			//
+			// Nur VERGROESSERN, nie verkleinern.
+			//
+			//
+			// BEFUND E-107: NUR auf dem Weg, der einen echten Embed hat.
+			//
+			// eCallback ruft diese Funktion zweimal. Bei EMBED_PREPARE_IMAGE
+			// steht ueber dem Aufruf eine Warnung von QUALCOMM:
+			//
+			//   // Don't allow threaded fetch, because we're being called
+			//   // with a temporary embed_ptr
+			//   PgLoadUrlImage( pg, image, embed_ptr, false )
+			//
+			// Der Embed ist dort FLUECHTIG. Der Block darunter liest
+			// embed->height und embed->style und durchsucht damit das ganze
+			// Dokument - auf einem fluechtigen Objekt ist beides wertlos und
+			// gefaehrlich.
+			//
+			// GEMESSEN: Gregor am 17.09.2026, 21:23, an 1.0.69, beim
+			// Antworten auf eine geoeffnete Nachricht:
+			//
+			//   EXCEPTION_ACCESS_VIOLATION in Paige32.dll
+			//     at UnuseMemory()+0006      ESI=FFFFFFFF
+			//
+			// ESI=FFFFFFFF ist ein ungueltiger Speicherverweis. Der Block
+			// davor (E-103) hatte dieselbe Gefahr, lief aber nur bei Bildern
+			// OHNE Massangabe - selten. Meiner lief zusaetzlich bei allen MIT
+			// Angabe, also bei fast jedem Bild jeder Werbemail.
+			//
+			// bAllowThreadedFetch ist genau die Unterscheidung: false beim
+			// Vorbereiten (fluechtig), true beim Laden (echter Embed).
+			//
+			if ( bAllowThreadedFetch &&
+				 nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
+			{
+				long			posE  = 0;
+				bool			bFundE = false;
+				select_pair		selE;
+				embed_ref		erE;
+				pg_embed_ptr	embed_ptrE;
+
+				selE.begin = 0;
+				selE.end = pg->t_length;
+
+				for ( long liE = 1;
+					  !bFundE && (erE = pgGetIndEmbed( pg->myself, &selE, liE, &posE, 0 ));
+					  liE++ )
+				{
+					embed_ptrE = (pg_embed_ptr) UseMemory(erE);
+
+					if (embed_ptrE)
+					{
+						if (embed->style == embed_ptrE->style)
+							bFundE = true;
+
+						UnuseMemory( erE );
+					}
+				}
+
+				{
+					char	szSpur106[220];
+
+					wsprintf( szSpur106,
+						"E-106 groesser als angegeben: attr=%ldx%ld quelle=%ldx%ld "
+						"gefunden=%d pos=%ld\r\n",
+						(long)embed->width, (long)embed->height,
+						nEchtBreite, nEchtHoehe,
+						bFundE ? 1 : 0, posE );
+
+					PutDebugLog( DEBUG_MASK_MISC, szSpur106 );
+				}
+
+				if (bFundE)
+				{
+					//
+					// BEFUND E-108: den EMBED aendern, nicht den Textstil.
+					//
+					// Der erste Entwurf fasste hier pgGetStyleInfo und
+					// pgSetStyleInfo an. Genau dort ist Gregor abgestuerzt,
+					// zweimal, an 1.0.69 und an 1.0.71 - und beide Male ist
+					// die LETZTE Zeile seines Protokolls die Marke direkt
+					// darueber:
+					//
+					//   E-106 groesser als angegeben: attr=135x40
+					//     quelle=405x120 gefunden=1 pos=765
+					//
+					// Der Block zwanzig Zeilen weiter oben (E-103) macht
+					// dasselbe Ziel auf ANDEREM Weg: er setzt die Masse im
+					// Embed und laesst pgInvalEmbedRef die Zeile neu rechnen.
+					// Der stuerzt nicht ab - er stammt von QUALCOMM und steht
+					// seit 1996 so da.
+					//
+					// Also derselbe Weg, statt eines eigenen. Was hier
+					// geschieht, ist Zeile fuer Zeile das, was oben schon
+					// steht; nur die Quelle der Zahl ist eine andere (die
+					// gemessene Dateigroesse statt der fehlenden Angabe).
+					//
+					// WARUM DER STILWEG GEFAEHRLICH IST, soweit gemessen:
+					// posE kommt aus pgGetIndEmbed und ist eine Position im
+					// Dokument. Der PRUEFER hat dazu P-41 gemeldet - die
+					// Suche vergleicht embed->style, einen ZEIGER, den sich
+					// zwei Bilder mit gleicher Massangabe teilen. Dann trifft
+					// selBild106 die falsche Stelle. Ueber das Embed zu gehen
+					// umgeht die Frage ganz.
+					//
+					// embed ist bereits ein pg_embed_ptr - genau wie im
+					// QUALCOMM-Block oben wird direkt darauf geschrieben,
+					// ohne UseMemory. Der erste Anlauf hatte es umhuellt und
+					// liess sich nicht uebersetzen.
+					//
+					// BEFUND E-112 (18.09.2026): das Rechteck bekommt die
+					// ANGEGEBENE Groesse, nicht die echte.
+					//
+					// Hier stand bis dahin nEchtBreite/nEchtHoehe in BEIDEN
+					// Feldern - also wurde die Zeile vergroessert statt das
+					// Bild verkleinert. Solange E-110 offen war, luden kaum
+					// Bilder und es fiel nicht auf; danach fuellte das
+					// WhatsApp-Symbol (angegeben 35x35, Datei 330x327) das
+					// halbe Fenster. Gregor: "warum ist die reply ansicht so
+					// gross?"
+					//
+					// pict_frame ist das ZIELRECHTECK der Metadatei - sie
+					// wird hineingestreckt. Damit skaliert das Bild, ohne
+					// dass Paige selbst skalieren koennen muss.
+					//
+					// embed->width/height und pict_frame bekommen denselben
+					// Wert: nach dem ersten rechnet der Zeilenumbruch, nach
+					// dem zweiten wird gezeichnet. Laufen sie auseinander,
+					// deckt das Bild wieder Text zu - das war E-106.
+					//
+					long nRahmenBreite = 0, nRahmenHoehe = 0;
+
+					E112Zielrechteck( (long) embed->width, (long) embed->height,
+									  nEchtBreite, nEchtHoehe,
+									  &nRahmenBreite, &nRahmenHoehe );
+
+					if ( nRahmenBreite > 0 && nRahmenHoehe > 0 )
+					{
+						embed->uu.pict_data.pict_frame.top_left.h = 0;
+						embed->uu.pict_data.pict_frame.top_left.v = 0;
+
+						embed->width = nRahmenBreite;
+						embed->uu.pict_data.pict_frame.bot_right.h = nRahmenBreite;
+
+						embed->height = nRahmenHoehe;
+						embed->uu.pict_data.pict_frame.bot_right.v = nRahmenHoehe;
+
+						pgInvalEmbedRef( pg->myself, posE, embed, draw_none );
+
+						if (pSB && pSB->pWndOwner)
+							pSB->pWndOwner->Invalidate();
+					}
 				}
 			}
 
@@ -515,6 +892,72 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					::DeleteFile(filePath);
 			}
         }
+    }
+
+    //
+    // BEFUND E-110, 18.09.2026: HIER wird wirklich geladen - deshalb steht
+    // die Messung hier und nicht nur beim Import.
+    //
+    // Der erste Anlauf hatte sie allein in PGHTMIMP.CPP stehen. Der PRUEFER
+    // hat das an Gregors Protokoll widerlegt (Befunde/PRUEFER-18.md): dort
+    // sitzt sie im IMPORT, und der Ladezweig laeuft von dort nur ueber
+    // EMBED_PREPARE_IMAGE - und der wiederum nur, wenn im HTML KEINE Groesse
+    // steht (:257, "if ( !(image->source_width && image->source_height) )").
+    // Von Gregors 128 Bildern tragen 76 ein vollstaendiges attr=BxH; fuer die
+    // laeuft er gar nicht erst an. Und genau die sind die E-110-Faelle - der
+    // Platz stimmt ja, es fehlen nur die Bildpunkte. Die Messung war also
+    // blind an der Stelle, an der der Befund sitzt.
+    //
+    // Was diese Zeile unterscheidet:
+    //
+    //   faden=0  Vorbereitung (EMBED_PREPARE_IMAGE), Nachladen GESPERRT
+    //   faden=1  Zeichnen, Nachladen erlaubt
+    //   ok=      Rueckgabewert: 1 heisst "nochmal versuchen", 0 heisst fertig
+    //   daten=   image_data - der Metadatei-Griff. 0 heisst: Paige hat nichts
+    //            zu zeichnen, und der Anwender sieht einen grauen Kasten.
+    //   fehler=  loader_result (0xFFFF setzt der Vorbereitungszweig)
+    //
+    // Erst aus faden, ok und daten zusammen ist ablesbar, ob Eudora das Bild
+    // gar nicht erst holt oder es holt und nicht zeichnet - zwei ganz
+    // verschiedene Ursachen (Arbeitsweise/zwei-werte-in-eine-ausgabe.md).
+    //
+    if ( pUrlImage )
+    {
+        char szSpur110[512];
+        char szUrl110[200];
+
+        {
+            const char* p110 = (const char*)pUrlImage->URL;
+            const long  nL110 = (long)strlen(p110);
+            const long  nM110 = (long)sizeof(szUrl110) - 1;
+
+            if (nL110 <= nM110)
+                strcpy(szUrl110, p110);
+            else
+            {
+                const long nK110 = 40;
+                const long nF110 = nM110 - nK110 - 2;
+                memcpy(szUrl110, p110, nK110);
+                szUrl110[nK110]     = '.';
+                szUrl110[nK110 + 1] = '.';
+                memcpy(szUrl110 + nK110 + 2, p110 + nL110 - nF110, nF110);
+                szUrl110[nK110 + 2 + nF110] = 0;
+            }
+        }
+
+        wsprintf(szSpur110,
+            "E-110 Laden: src=%s faden=%d ok=%d daten=%ld art=%ld "
+            "datei=%d intern=%d fehler=%ld quelle=%dx%d\r\n",
+            szUrl110,
+            (int)(bAllowThreadedFetch ? 1 : 0),
+            (int)(fRet ? 1 : 0),
+            (long)pUrlImage->image_data,
+            (long)pUrlImage->type_and_flags,
+            nE110Datei, nE110Intern,
+            (long)pUrlImage->loader_result,
+            (int)pUrlImage->source_width, (int)pUrlImage->source_height);
+
+        PutDebugLog(DEBUG_MASK_MISC, szSpur110);
     }
 
     return fRet;

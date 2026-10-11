@@ -82,6 +82,39 @@ const	unsigned long	_MAGICNUMBER4	= 98754911;
 const int	iUnsetCharsetIdx = -2;
 
 //
+// E-85, zweiter Befund: Zeichensatz aus dem Kopf EINES Teils holen.
+//
+// Der Zeichensatz einer multipart-Nachricht steht NICHT im Kopf der
+// Nachricht, sondern im Kopf des einzelnen Teils. Die Parameterliste eines
+// Teils ist einfach verkettet (Imapdll/public/inc/exports.h, PARAMETER mit
+// attribute/value/next). Der Vergleich muss ohne Ruecksicht auf Gross- und
+// Kleinschreibung erfolgen: "CHARSET", "Charset" und "charset" sind
+// dasselbe, RFC 2045 laesst alle drei zu.
+//
+static CString CharsetAusTeil (BODY * in_pBody)
+{
+	CString szCharset;
+
+	if (!in_pBody)
+		return szCharset;
+
+	CRString szName (IDS_MIME_CHARSET);
+
+	for (PARAMETER * pParam = in_pBody->parameter; pParam; pParam = pParam->next)
+	{
+		if (pParam->attribute && pParam->value &&
+			stricmp (pParam->attribute, (LPCSTR)szName) == 0)
+		{
+			szCharset = pParam->value;
+			break;
+		}
+	}
+
+	return szCharset;
+}
+
+
+//
 // Sizes of fields in an attachment stub file.
 //
 const long	AtfImapNameSize			= 256;		// Full imap name
@@ -207,6 +240,10 @@ CImapDownloader::CImapDownloader(unsigned long AccountID, CImapConnection* pImap
 	// Initialize to TYPETEXT.
 
 	m_CurrentBodyType	= TYPETEXT;
+
+	// E-85: Zeichensatz des aktuell geladenen Teils, leer wenn der Teil
+	// keinen nennt. Dann gilt der Kopf der Nachricht als Rueckfall.
+	m_szCurrentCharset.Empty();
 
 	// Until proven guilty.
 	m_bIsMhtml			= FALSE;
@@ -2797,6 +2834,7 @@ BOOL CImapDownloader::DownloadSimpleBody (IMAPUID uid, BODY *pBody, LPSTR pSecti
 	// Tell everyone what body type we're downloading.
 	m_CurrentBodyType = pBody->type;
 	m_szCurrentBodySubtype = pBody->subtype;
+	m_szCurrentCharset = CharsetAusTeil (pBody);	// E-85: Zeichensatz des Teils
 
 	// If this body has a disposition, use use that internally:
 	// Default to the "current" disposition type.
@@ -3033,6 +3071,7 @@ BOOL CImapDownloader::DownloadAllParts (IMAPUID uid, BODY *pParentBody, LPCSTR p
 		// Tell everyone what body type and subtype we're downloading.
 		m_CurrentBodyType		= body->type;
 		m_szCurrentBodySubtype	= body->subtype;
+		m_szCurrentCharset		= CharsetAusTeil (body);	// E-85
 
 		switch (body->type)
 		{
@@ -3282,6 +3321,7 @@ BOOL CImapDownloader::HandleMultipartAlternative (IMAPUID uid, BODY *pParentBody
 		// Tell everyone what body type and subtype we're downloading.
 		m_CurrentBodyType		= pBodyToDownload->type;
 		m_szCurrentBodySubtype	= pBodyToDownload->subtype;
+		m_szCurrentCharset		= CharsetAusTeil (pBodyToDownload);	// E-85
 		strcpy(section, szAltSection);
 
 		switch (pBodyToDownload->type)
@@ -4358,6 +4398,8 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 	int nReadStatus = -1;
 	BOOL bIsFirstLine = TRUE;
 	int iCharsetIdx = iUnsetCharsetIdx;
+	CString szE85TLCharset;		// E-85 Spurmarke: Zeichensatz aus dem Kopf der Nachricht
+	BOOL	bE85Gemeldet = FALSE;	// E-85 Spurmarke: nur einmal je Nachrichtenteil
 
 	// Sanity:
 	if (! (readfn && read_data) )
@@ -4462,6 +4504,11 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 		long inLen;
 		long nBytesHandled = 0;
 		LPSTR pBuf = NULL;
+
+		// E-85: Bytes eines UTF-8-Zeichens, das auf der Stueckgrenze
+		// angefangen hat und erst im naechsten Stueck zu Ende geht.
+		char szUTF8Uebertrag[4];
+		long lUTF8Uebertrag = 0;
 
 		// Call IsFancy () on the first line of the text.
 		bIsFirstLine = TRUE;
@@ -4641,8 +4688,29 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 					{
 						if (strcmp(params->name, CRString(IDS_MIME_CHARSET)) == 0)
 						{
-							iCharsetIdx = FindRStringIndexI(IDS_MIME_US_ASCII, IDS_MIME_ISO_LATIN9,
-															params->value, -1);
+							// E-85: hier stand
+							//
+							//   FindRStringIndexI(IDS_MIME_US_ASCII,
+							//                     IDS_MIME_ISO_LATIN9, ...)
+							//
+							// Der Bereich endet bei IDS_MIME_ISO_LATIN9 = 3613,
+							// IDS_MIME_UTF_8 ist 3614 und liegt damit DAHINTER:
+							// "charset=utf-8" wurde nie gefunden, der Aufruf gab
+							// -1 zurueck, die Bedingung unten war falsch und es
+							// wurde GAR NICHT uebersetzt. Die UTF-8-Bytes gingen
+							// roh in die Mailboxdatei und wurden spaeter als
+							// CP1252 angezeigt: aus 66 C3 BC 72 wird die bekannte
+							// Bytefolge mit dem A-Tilde davor, statt "fuer".
+							//
+							// Ausserdem fehlte das Verschieben um eins, mit dem
+							// FindMIMECharset den Index 0 fuer "windows-*"
+							// freihaelt. IMAP und POP3 rechneten dadurch auf
+							// zwei verschiedenen Skalen, waehrend ISOTranslate
+							// und ISOIsUTF8Charset nur eine davon kennen.
+							//
+							// Jetzt dieselbe Funktion wie im POP3-Weg
+							// (mime.cpp:382), damit es nur noch eine Skala gibt.
+							szE85TLCharset = params->value;	// E-85: nur merken, Auswahl unten
 							break;
 						}
 						else
@@ -4651,15 +4719,93 @@ BOOL CImapDownloader::Write (readfn_t readfn, void * read_data, unsigned long si
 						}
 					}
 				}
+
+				// E-85, zweiter Befund: bis hierher wurde NUR der Kopf der
+				// Nachricht durchsucht. m_TLMime ist der TOP-LEVEL-Kopf
+				// (Eudora/header.h:113), gefuellt aus UIDFetchHeaderFull
+				// (diese Datei, Zeile ~820). Bei einer multipart-Nachricht -
+				// und jeder HTML-Newsletter ist multipart/alternative - steht
+				// dort KEIN charset, sondern nur die boundary. Die Schleife
+				// oben lief ins Leere, iCharsetIdx blieb 0, es wurde nicht
+				// uebersetzt. Genau Gregors Bild: Betreff richtig (anderer
+				// Weg, Translate2047 in ImapLex822.cpp), Rumpf falsch.
+				// Der Zeichensatz des TEILS (body->parameter) hat Vorrang,
+				// der Kopf der Nachricht bleibt der Rueckfall - der traegt
+				// ihn bei einer einteiligen text/plain-Nachricht.
+				CString szGewaehlt = m_szCurrentCharset;
+
+				if (szGewaehlt.IsEmpty())
+					szGewaehlt = szE85TLCharset;
+
+				if (!szGewaehlt.IsEmpty())
+				{
+					iCharsetIdx = FindMIMECharset (szGewaehlt);
+					if (iCharsetIdx < 0)
+						iCharsetIdx = 0;
+				}
 			}
 
-			// iCharsetIdx = 0 is US ASCII and 1 is Latin1 which are not translated.
-			if (iCharsetIdx > 1)
+			// E-85 Spurmarke: alle Werte des Uebersetzungswegs in EINER Zeile,
+			// einmal je Nachrichtenteil - nicht je Chunk, das waere bei
+			// 8192-Byte-Bloecken eine Flut. Zwei getrennte Zeilen liessen die
+			// Ausrede "zu anderer Zeit" offen, siehe
+			// Arbeitsweise/zwei-werte-in-eine-ausgabe.md.
+			// Maske: RCV wie die beiden anderen Stellen dieser Datei, dazu
+			// RCVD, damit die Marke auch bei der kleineren Protokollstufe
+			// "Log receipt of a message" erscheint.
+			if (!bE85Gemeldet)
+			{
+				static const char * const szE85Typen[] = {
+					"text", "multipart", "message", "application", "audio",
+					"image", "video", "model", "other", "bogusmulti" };
+
+				const char * szE85Typ = "typ?";
+				if (m_CurrentBodyType < (sizeof(szE85Typen) / sizeof(szE85Typen[0])))
+					szE85Typ = szE85Typen[m_CurrentBodyType];
+
+				CString szE85Zeile;
+				szE85Zeile.Format(
+					"E-85 imap: teil-charset=%s tl-charset=%s idx=%d uebersetzt=%s typ=%s/%s zeilenweise=%s",
+					m_szCurrentCharset.IsEmpty()? "(keiner)" : (LPCSTR)m_szCurrentCharset,
+					szE85TLCharset.IsEmpty()? "(keiner)" : (LPCSTR)szE85TLCharset,
+					iCharsetIdx,
+					(iCharsetIdx > 2)? "ja" : "nein",
+					szE85Typ,
+					(LPCSTR)m_szCurrentBodySubtype,
+					m_bMustReadSingleLines? "ja" : "nein");
+
+				::PutDebugLog(DEBUG_MASK_RCV | DEBUG_MASK_RCVD, szE85Zeile);
+				bE85Gemeldet = TRUE;
+			}
+
+			// E-85: seit FindMIMECharset gilt hier dieselbe Skala wie im
+			// POP3-Weg - 0 ist "windows-*", 1 us-ascii, 2 Latin1, 3 Latin9,
+			// 4 UTF-8. Uebersetzt wird ab 3, so wie TextReader.cpp es tut;
+			// vorher stand hier > 1, gemuenzt auf die alte, eigene Skala.
+			if (iCharsetIdx > 2)
 			{
 				// As a first pass at handling other charsets we pass the text
 				// through a translator function.  A more elegant solution would
 				// be to create a decoder for other charsets.
-				ISOTranslate(pBuf, inLen, iCharsetIdx);
+				// E-85: ISOTranslate liefert die Laenge NACH der Uebersetzung.
+				// Ein UTF-8-Zeichen wird auf dem Weg nach CP1252 kuerzer, also
+				// schrumpft der Inhalt - der Rueckgabewert wurde hier aber
+				// verworfen. outLen trug weiter die Laenge VOR der Uebersetzung
+				// bis zum m_mbxFile.Put() weiter unten, und die ueberzaehligen
+				// Altbytes landeten mit in der Mailboxdatei. Der POP3-Weg macht
+				// es richtig: Eudora/TextReader.cpp, "size = ISOTranslate(...)".
+				// E-85, zweiter Teil: ueber die Stueckgrenze hinweg. Bei
+				// text/html liest der ChunkReader in Bloecken, nicht in
+				// Zeilen - ein Umlaut auf der Blockgrenze wurde dadurch zu
+				// Bytesalat. ISOTranslateChunk haelt die angefangenen Bytes
+				// zurueck und versetzt pBuf, wenn es sie eingearbeitet hat.
+				LONG lUebersetzt = ISOTranslateChunk(&pBuf, inLen, iCharsetIdx,
+													 szUTF8Uebertrag, &lUTF8Uebertrag);
+				if (lUebersetzt >= 0)
+				{
+					inLen  = lUebersetzt;
+					outLen = lUebersetzt;
+				}
 			}
 
 			// If we'er uuing or hexing, those decoders write out the decoded contents

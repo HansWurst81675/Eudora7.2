@@ -268,8 +268,12 @@ Binärdatei zum eingecheckten Code passt und nicht zum Patch.
 
 **Beim Anwenden zu beachten**
 
-Der Patch entfernt vier Zeilen und fügt zwei hinzu; CR und LF sinken gemeinsam von
-372 auf 370. `tools/pruefe-bytes.pl` wird den Commit deshalb abweisen — ein
-Fehlalarm, denn der Hook kann eine beabsichtigte Zeilenlöschung nicht von einem
-Werkzeugschaden unterscheiden. Die begleitende `.md` neben dem Patch beschreibt, wie
-man das nachmisst, bevor man `--no-verify` benutzt.
+> **Überholt (06.09.2026).** Die Schranke `tools/pruefe-bytes.pl` rechnet seit
+> dem 31.08.2026 den eigentlichen Unterschied aus (`git diff --cached -U0`) und
+> paart entfernte mit hinzugefügten Zeilen. Eine beabsichtigte Zeilenlöschung
+> läuft damit **durch**; `--no-verify` ist dafür **nicht** nötig. Gegenprobe:
+> `perl tools/pruefe-bytes-tests.pl`, Fälle `c1`/`c2`.
+
+Der frühere Wortlaut: *„Der Patch entfernt vier Zeilen und fügt zwei hinzu; CR
+und LF sinken gemeinsam von 372 auf 370. `tools/pruefe-bytes.pl` wird den Commit
+deshalb abweisen — ein Fehlalarm … bevor man `--no-verify` benutzt."*

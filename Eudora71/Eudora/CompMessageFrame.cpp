@@ -62,6 +62,11 @@ DAMAGE. */
 
 #include "DebugNewHelpers.h"
 
+// Befund E-27: Spurmarken auf dem Weg von Strg-N. Der Absturz beim Verfassen
+// beendet Eudora ohne jede Meldung; die letzte geschriebene Marke in
+// eudora.log sagt, wie weit der Weg gekommen ist.
+#include "debug.h"
+
 
 extern QCCommandStack		g_theCommandStack;
 extern QCPluginDirector		g_thePluginDirector;
@@ -367,9 +372,12 @@ CCreateContext* pContext)
 							ID_MESSAGE_SENDIMMEDIATELY
 						};
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 CCompMessageFrame::OnCreateClient: Anfang");
 	fRet = m_wndSplitter.CreateStatic( this, 2, 1, WS_CHILD | WS_VISIBLE );
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Teiler angelegt");
 
 	if ( fRet ) {
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView CHeaderView");
 		fRet = m_wndSplitter.CreateView( 0, 0, RUNTIME_CLASS(CHeaderView),
 					CSize( 315, 88 ), pContext );
 	}
@@ -378,17 +386,38 @@ CCreateContext* pContext)
 	{
 		if(GetIniShort(IDS_INI_WORD_WRAP_ON_SCREEN) && GetIniShort(IDS_INI_WORD_WRAP))
 		{
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView PgFixedCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgFixedCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 		else
 		{
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView PgCompMsgView");
 			fRet = m_wndSplitter.CreateView( 1, 0, RUNTIME_CLASS(PgCompMsgView),
 					CSize( 10, 600 ), pContext );
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: beide Ansichten angelegt");
+	{
+		char szF[128];
+		wsprintf(szF, "E-34 OnCreateClient: fRet nach den Ansichten = %d", (int)fRet);
+		PutDebugLog(DEBUG_MASK_MISC, szF);
+	}
 	pDoc = ( CCompMessageDoc* ) ( pContext->m_pCurrentDoc );
+
+	// BEFUND E-22: pDoc und pDoc->m_Sum wurden hier ungeprueft benutzt
+	// (pDoc->GetText() unmittelbar darunter, pSummary in der ganzen
+	// restlichen Funktion), obwohl die Funktion 20 Zeilen weiter fuer die
+	// Werkzeugleisten sehr wohl auf NULL prueft und mit FALSE aufgibt.
+	// Ohne Zusammenfassung ist ein Verfassen-Fenster ohnehin nicht
+	// aufzubauen; FALSE bricht die Erzeugung geordnet ab, statt still
+	// ueber einen Nullzeiger zu schreiben.
+	if ( pDoc == NULL || pDoc->m_Sum == NULL )
+	{
+		ASSERT( 0 );
+		return FALSE;
+	}
 
 	// force the read
 	pDoc->GetText();
@@ -409,6 +438,7 @@ CCreateContext* pContext)
 
 	pSummary = pDoc->m_Sum;
 	
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Text gelesen, baue das Uebersetzermenue");
 	// build the translators menu
 	m_theTranslatorMenu.CreatePopupMenu();
 
@@ -442,6 +472,7 @@ CCreateContext* pContext)
 	m_pFormattingToolBar->SetManager( m_pToolBarManager );
 	m_pFormattingToolBar->m_bAutoDelete = TRUE;
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Leisten erzeugt, lade die Leistenressource");
 	m_pToolBarManager->LoadToolBarResource( MAKEINTRESOURCE( IDR_COMPMESS ), MAKEINTRESOURCE( IDR_COMPMESS ) );
 	m_pToolBarManager->SetButtonMap( theCompMessageButtonMap );
 
@@ -477,8 +508,10 @@ CCreateContext* pContext)
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
 	m_pToolBar->EnableDocking(CBRS_ALIGN_TOP);
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor SetButtons der Nachrichtenleiste");
 	nButtons = DIM( theCompMessageButtons );
 	m_pToolBar->SetButtons( theCompMessageButtons,  nButtons );
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: nach SetButtons der Nachrichtenleiste");
 
 	int transCount = m_theTranslatorMenu.GetMenuItemCount();
 	
@@ -544,77 +577,98 @@ CCreateContext* pContext)
 
 	DockControlBar( m_pFormattingToolBar );
 	
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Leisten angedockt, jetzt die Auswahlfelder");
 	// initialize the priority combo
+	//
+	// BEFUND E-22: GetDlgItem liefert NULL, sobald der Knopf nicht auf der
+	// Leiste liegt oder sein Kindfenster nicht entstanden ist. Der Zugriff
+	// darauf ist ein Zugriff ueber einen Nullzeiger - im Release-Bau ein
+	// stiller Abgang ohne Meldung, mitten in WM_CREATE des
+	// Nachrichtenfensters, also genau das Bild "Strg-N: Absturz ohne
+	// Dialog". Ein paar Zeilen weiter unten prueft dieselbe Funktion
+	// pMainFrame und pEditTextMenu bereits; die vier Kombinationsfelder
+	// hatten die Abfrage nicht.
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_PRIORITY_COMBO ) );
-	
-	for (i = IDB_PRIOR_HIGHEST; i <= IDB_PRIOR_LOWEST; i++)
-		pBitmapCombo->Add(new CBitmapComboItem(i, i - IDB_PRIOR_HIGHEST + IDS_PRIORITY_HIGHEST));
 
-	pBitmapCombo->SetCurSel( pSummary->m_Priority - 1 );
+	if ( pBitmapCombo )
+	{
+		for (i = IDB_PRIOR_HIGHEST; i <= IDB_PRIOR_LOWEST; i++)
+			pBitmapCombo->Add(new CBitmapComboItem(i, i - IDB_PRIOR_HIGHEST + IDS_PRIORITY_HIGHEST));
+
+		pBitmapCombo->SetCurSel( pSummary->m_Priority - 1 );
+	}
 
 	// initialize the signature combo
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_SIGNATURE_COMBO ) );
-	pBitmapCombo->SetEditWidth( 100 );
-
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem( 0, IDS_SIGNATURE_NONE, 0 ) );
-
-	pos = g_theSignatureDirector.GetFirstSignaturePosition();
-
-	if ( pSummary->UseSignature() == MSF_USE_SIGNATURE )
+	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
+	if ( pBitmapCombo )
 	{
-		// look for the standard signature file
-		szCurrentSig = CRString( IDS_STANDARD_SIGNATURE );
-	}
-	else if ( pSummary->UseSignature() ==  MSF_ALT_SIGNATURE )
-	{
-		// user defined signature
-		szCurrentSig = (const char *)pSummary->m_SigSelected;
-	}
-	else if( pSummary->UseSignature() )
-	{
-		// look for the alternate signature file
-		szCurrentSig = CRString( IDS_ALTERNATE_SIGNATURE32  );
-	}
+		pBitmapCombo->SetEditWidth( 100 );
 
-	while( pos != NULL )
-	{
-		pSignatureCommand = g_theSignatureDirector.GetNext( pos );
-					
-		pBitmapComboItem = DEBUG_NEW_NOTHROW CBitmapComboItem( 0, pSignatureCommand->GetName(), 0);
-		
-		if ( pBitmapComboItem )
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem( 0, IDS_SIGNATURE_NONE, 0 ) );
+
+		pos = g_theSignatureDirector.GetFirstSignaturePosition();
+
+		if ( pSummary->UseSignature() == MSF_USE_SIGNATURE )
 		{
-			i = pBitmapCombo->Add( pBitmapComboItem );
+			// look for the standard signature file
+			szCurrentSig = CRString( IDS_STANDARD_SIGNATURE );
+		}
+		else if ( pSummary->UseSignature() ==  MSF_ALT_SIGNATURE )
+		{
+			// user defined signature
+			szCurrentSig = (const char *)pSummary->m_SigSelected;
+		}
+		else if( pSummary->UseSignature() )
+		{
+			// look for the alternate signature file
+			szCurrentSig = CRString( IDS_ALTERNATE_SIGNATURE32  );
+		}
 
-			if( ( i != CB_ERR ) && ( szCurrentSig.CompareNoCase( pBitmapComboItem->m_Text ) == 0 ) )
+		while( pos != NULL )
+		{
+			pSignatureCommand = g_theSignatureDirector.GetNext( pos );
+
+			pBitmapComboItem = DEBUG_NEW_NOTHROW CBitmapComboItem( 0, pSignatureCommand->GetName(), 0);
+
+			if ( pBitmapComboItem )
 			{
-				pBitmapCombo->SetCurSel( i );
+				i = pBitmapCombo->Add( pBitmapComboItem );
+
+				if( ( i != CB_ERR ) && ( szCurrentSig.CompareNoCase( pBitmapComboItem->m_Text ) == 0 ) )
+				{
+					pBitmapCombo->SetCurSel( i );
+				}
 			}
 		}
-	}
-	
-	if( pBitmapCombo->GetCurSel() == CB_ERR )
-	{
-		pBitmapCombo->SetCurSel( 0 );
+
+		if( pBitmapCombo->GetCurSel() == CB_ERR )
+		{
+			pBitmapCombo->SetCurSel( 0 );
+		}
 	}
 
 	// initialize the encoding combo
 	pBitmapCombo = ( CBitmapCombo* ) ( m_pToolBar->GetDlgItem( IDC_ENCODING_COMBO ) );
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_MIME, IDS_ENCODING_MIME, MSF_MIME));
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_BINHEX, IDS_ENCODING_BINHEX, MSF_BINHEX));
-	pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_UUENCODE, IDS_ENCODING_UUENCODE, MSF_UUENCODE));
+	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
+	if ( pBitmapCombo )
+	{
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_MIME, IDS_ENCODING_MIME, MSF_MIME));
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_BINHEX, IDS_ENCODING_BINHEX, MSF_BINHEX));
+		pBitmapCombo->Add( DEBUG_NEW CBitmapComboItem(IDB_ENCODING_UUENCODE, IDS_ENCODING_UUENCODE, MSF_UUENCODE));
 
-	if( pSummary->Encoding() == MSF_BINHEX )
-	{
-		pBitmapCombo->SetCurSel( 1 );
-	}
-	else if( pSummary->Encoding() == MSF_UUENCODE )
-	{
-		pBitmapCombo->SetCurSel( 2 );
-	}
-	else
-	{
-		pBitmapCombo->SetCurSel( 0 );
+		if( pSummary->Encoding() == MSF_BINHEX )
+		{
+			pBitmapCombo->SetCurSel( 1 );
+		}
+		else if( pSummary->Encoding() == MSF_UUENCODE )
+		{
+			pBitmapCombo->SetCurSel( 2 );
+		}
+		else
+		{
+			pBitmapCombo->SetCurSel( 0 );
+		}
 	}
 
 
@@ -622,23 +676,39 @@ CCreateContext* pContext)
 	{
 		if (GetIniShort(IDS_INI_COMP_COMPACT_TRANSLTORS))
 		{
-			VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pToolBar->GetButton(13)));	//change 13 when a new button is added before ID_TRANSLATORS_QUEUE
-			pMenuButton->SetHMenu( m_theTranslatorMenu.GetSafeHmenu() );
+			// BEFUND E-16: die feste 13 war schon im Original eine Wette auf die
+			// Reihenfolge von theCompMessageButtons ("change 13 when a new button
+			// is added before ID_TRANSLATORS_QUEUE"). Die Liste wird ein paar
+			// Zeilen weiter oben zur Laufzeit umgebaut. Der Platz wird deshalb
+			// gesucht statt geraten; CommandToIndex liefert -1, wenn es den Knopf
+			// nicht gibt, und GetButton beantwortet das mit NULL.
+			pMenuButton = ( CTBarMenuButton* ) ( m_pToolBar->GetButton(
+					m_pToolBar->CommandToIndex( ID_TRANSLATORS_QUEUE ) ) );
+			ASSERT( pMenuButton != NULL );
+			if ( pMenuButton )
+				pMenuButton->SetHMenu( m_theTranslatorMenu.GetSafeHmenu() );
 		}
 		SelectTranslators( pSummary->GetTranslators() );
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: Auswahlfelder gefuellt, jetzt die Schriftnamen");
 	// get the face names
 	EnumFontFaces( theArray );
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: nach EnumFontFaces");
 	pCombo = ( CComboBox* ) ( m_pFormattingToolBar->GetDlgItem( IDC_FONT_COMBO ) );
 
-	for( i = 0; i < theArray.GetSize(); i ++ )
+	// BEFUND E-22: siehe Kommentar bei der Prioritaetsauswahl weiter oben.
+	if ( pCombo )
 	{
-		pCombo->AddString( theArray[i] );
+		for( i = 0; i < theArray.GetSize(); i ++ )
+		{
+			pCombo->AddString( theArray[i] );
+		}
 	}
 
 	// get the main frame window
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Schriftnamen eingefuellt");
 	pMainFrame = ( CMainFrame* ) AfxGetApp()->m_pMainWnd;
 	
 	if (pMainFrame)
@@ -649,30 +719,39 @@ CCreateContext* pContext)
 		i = ( bMaximized ? 1 : 0 );
 		
 		// get the main window
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Hauptfenster geholt");
 		VERIFY( pEditTextMenu = pMainFrame->GetMenu() );
 		
 		if (pEditTextMenu)
 		{
 			// get the edit menu
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Menue geholt");
 			VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 1 + i ) );
 			
 			if (pEditTextMenu)
 			{
 				// Shareware: In reduced feature mode, you get a less-capable format toolbar
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: Untermenue 1+i geholt");
 				if (UsingFullFeatureSet())
 				{
 					// FULL FEATURE mode
 					
 					// get the insert menu
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OCC: vor GetSubMenu 11");
 					VERIFY( pMenu = pEditTextMenu->GetSubMenu( 11 ) );	
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach GetSubMenu(11)");
 					i = m_pFormattingToolBar->CommandToIndex( ID_EDIT_INSERT );
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach CommandToIndex(ID_EDIT_INSERT)");
 					VERIFY( pMenuButton = ( CTBarMenuButton* ) ( m_pFormattingToolBar->GetButton( i ) ) );
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach GetButton");
 
 					if (pMenu && pMenuButton)
 						pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
+	PutDebugLog(DEBUG_MASK_MISC, "E-35 nach SetHMenu");
 				}
 				
 				// get the text menu
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetSubMenu 10");
 				VERIFY( pEditTextMenu = pEditTextMenu->GetSubMenu( 10 ) );
 				
 				if (pEditTextMenu)
@@ -686,13 +765,16 @@ CCreateContext* pContext)
 						pMenuButton->SetHMenu( pMenu->GetSafeHmenu() );
 					
 					// force the toolbar to recalculate the button sizes
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor SetToolBarInfo");
 					m_pToolBarManager->SetToolBarInfo( m_pToolBar );
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor RecalcLayout");
 					RecalcLayout();
 				}
 			}
 		}
 	}
 
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor den SetCheck");
 	SetCheck( ID_QUOTED_PRINTABLE, pSummary->UseQP() );
 	SetCheck( ID_TEXT_AS_DOCUMENT, pSummary->TextAsDoc() );
 	SetCheck( ID_WORD_WRAP, pSummary->WordWrap() );
@@ -707,6 +789,7 @@ CCreateContext* pContext)
 	// provide an "accessor" routine to the view (perhaps ;-)
 //	m_ToolBar->SelectTranslators(Sum->GetTranslators());
 	
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor CantEdit");
 	if (pSummary->CantEdit()) {
 //		m_ToolBar->GetDlgItem(IDC_SIGNATURE_COMBO)->EnableWindow(FALSE);
 //		m_ToolBar->GetDlgItem(IDC_ENCODING_COMBO)->EnableWindow(FALSE);
@@ -721,13 +804,16 @@ CCreateContext* pContext)
 		DragAcceptFiles();
 
 	// force the toolbar to recalculate the button sizes
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor SetToolBarInfo");
 	m_pToolBarManager->SetToolBarInfo( m_pToolBar );
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor RecalcLayout");
 	RecalcLayout();
 
 	// Size parent window
 	CRect MainWindowRect;
 	pMainFrame->GetRealClientRect(&MainWindowRect);
  
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetSavedPos");
 	if (pSummary->GetSavedPos().IsRectEmpty() == FALSE) {
 		// Window has been sized before, so use it
 		m_InitialSize = pSummary->GetSavedPos();
@@ -744,6 +830,7 @@ CCreateContext* pContext)
 			MessageCascadeSpot;
 		
 		// Start with toolbar size
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetClientRect der Leiste");
 		m_pToolBar->GetClientRect(&m_InitialSize);
 		
 		// Add height of caption and top and bottom window borders
@@ -753,6 +840,7 @@ CCreateContext* pContext)
 		// Use Message Width setting plus left and right window borders plus scrollbar width.
 		// Make sure window is at least as wide as the toolbars
 		CRect FTBRect;
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor GetClientRect der Formatleiste");
 		m_pFormattingToolBar->GetClientRect(&FTBRect);
 		int MW = GetIniShort(IDS_INI_MESSAGE_WIDTH) * CW + GetSystemMetrics(SM_CXVSCROLL);
 		if (m_InitialSize.right < MW)
@@ -783,10 +871,16 @@ CCreateContext* pContext)
 	}
 	
 	// place the window
+	PutDebugLog(DEBUG_MASK_MISC, "E-34 OCC: vor MoveWindow");
 	MoveWindow(&m_InitialSize, FALSE);
 
 	// *guarantee* this is off initially
 	pDoc->SetModifiedFlag(FALSE);
+	{
+		char szF2[128];
+		wsprintf(szF2, "E-34 OnCreateClient: Rueckgabe = %d", (int)fRet);
+		PutDebugLog(DEBUG_MASK_MISC, szF2);
+	}
 	return fRet;
 }
 
@@ -829,6 +923,7 @@ CHeaderView* CCompMessageFrame::GetHeaderView()
 {
 	CHeaderView* pHV = (CHeaderView*) m_wndSplitter.GetPane( 0, 0 );
 	VERIFY( pHV );
+	PutDebugLog(DEBUG_MASK_MISC, "E-27 OnCreateClient: vor CreateView CHeaderView");
 	ASSERT( pHV->IsKindOf(RUNTIME_CLASS(CHeaderView)) );
 	return pHV;
 }
@@ -1615,9 +1710,31 @@ LRESULT CCompMessageFrame::OnUserUpdateImmediateSend(WPARAM, LPARAM)
 		int nIndex = pToolBar->CommandToIndex(ID_MESSAGE_SENDIMMEDIATELY);
 		if (nIndex != -1)
 		{
-			//to avoid flickering of toolbar do not paint if it is in the same state
-			if(((TBarSendButton*)pToolBar->GetButton(nIndex))->IsBPWarning() != m_bBPWarning)
-				((TBarSendButton*)pToolBar->GetButton(nIndex))->SetBPWarning(m_bBPWarning);
+			// BEFUND E-35: GetButton kann NULL liefern, auch wenn nIndex im
+			// Bereich liegt. Seit E-34 faengt GetButton die MFC-Ausnahme aus
+			// m_btns[] ab und gibt dann NULL zurueck - die Abfrage
+			// "nIndex != -1" darueber schuetzt davor NICHT.
+			//
+			// Hier wurde der Rueckgabewert zweimal blind dereferenziert. Das
+			// ist der Absturz beim ZWEITEN Strg-N, gemessen am 07.09.2026:
+			// der erste Aufruf liefert ein Fenster, beim zweiten kommt
+			// OnUserUpdateImmediateSend dazwischen und greift auf NULL zu.
+			//
+			// Gefunden hat es tools/pruefe-fensterbau.pl, die Schranke, die
+			// genau nach diesem Muster sucht.
+			//
+			// Nebenbei: GetButton wurde zweimal gerufen, um denselben Knopf
+			// zu holen. Einmal genuegt.
+			TBarSendButton* pSendeKnopf =
+				(TBarSendButton*) pToolBar->GetButton(nIndex);
+
+			if (pSendeKnopf)
+			{
+				//to avoid flickering of toolbar do not paint if it is in the same state
+				if (pSendeKnopf->IsBPWarning() != m_bBPWarning)
+					pSendeKnopf->SetBPWarning(m_bBPWarning);
+			}
+
 			pToolBar->Invalidate(nIndex);
 		}
 	}

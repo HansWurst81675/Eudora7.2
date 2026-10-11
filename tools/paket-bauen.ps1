@@ -51,8 +51,285 @@ param(
   [string]$Zip,
   [string]$Grundlage,
   [switch]$AusBauverzeichnis,
-  [ValidateSet('Debug','Release')][string]$Bauart = 'Debug'
+  [ValidateSet('Debug','Release')][string]$Bauart = 'Debug',
+  # Baut auch, wenn ein bekannter Datenverlustweg offen ist. Braucht eine
+  # Begruendung, die ins Protokoll geht. Siehe die Schranke unten.
+  [string]$TrotzDatenverlust = '',
+  # Baut auch, wenn rollen-faellig.pl eine Rolle als ueberfaellig meldet.
+  # Braucht ebenfalls eine Begruendung. Der Fall, fuer den es gedacht ist:
+  # alle drei Rollen sind gelaufen und melden sich nur deshalb wieder
+  # faellig, weil die COMMITS DER ANDEREN in ihren Bereich fallen. Aus
+  # dieser Schleife gibt es sonst keinen Ausgang.
+    [string]$RollenSindGelaufen = '',
+    # Baut auch, wenn ein Agentenauftrag noch offen steht. Braucht eine
+    # Begruendung, die ins Protokoll geht. Gedacht fuer den Fall, dass ein
+    # Agent ABSICHTLICH weiterlaeuft und seine Arbeit nicht in dieses Paket
+    # gehoert - am 14.09.2026 hat Gregor den Bau ausdruecklich angewiesen
+    # ("bau 1.0.53"), waehrend PRUEFER an einem anderen Befund arbeitete.
+    [string]$AgentLaeuftAbsichtlich = ''
 )
+
+# --- Schranke: kein Paket bei offenem Datenverlustweg ----------------------
+#
+# Am 10.09.2026 ist Gregors Postfach auf dem Server geleert worden. Ich hatte
+# den Weg dorthin am selben Vormittag gefunden und beschrieben - und dann ein
+# Paket ausgeliefert, das nur EINEN von zwei Wegen sperrt, mit der
+# Aufforderung zu testen. Das Testen hat den Verlust ausgeloest.
+#
+# Der Fehler war nicht die Analyse, sondern die Auslieferung.
+$pruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-datenverlust.pl'
+if (Test-Path -LiteralPath $pruefer) {
+
+  # perl wird GESUCHT, nicht vorausgesetzt. Beim ersten Lauf am 10.09.2026
+  # stand es im Kindprozess nicht im Suchpfad; der Aufruf schlug fehl, und
+  # die Schranke wies ab - richtig herum, aber aus dem falschen Grund. Eine
+  # Schranke, die aus Versehen abweist, wird abgeschaltet.
+  $perl = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perl) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perl = $k; break }
+    }
+  }
+
+  if (-not $perl) {
+    # FAIL CLOSED: ohne Pruefung kein Paket. Der ganze Zweck ist, nicht
+    # blind auszuliefern - "Werkzeug fehlt" ist kein Freibrief.
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Datenverlust-Pruefung'
+    Write-Host '  konnte nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perl $pruefer
+  if ($LASTEXITCODE -ne 0) {
+    if ($TrotzDatenverlust.Trim().Length -lt 10) {
+      Write-Host ''
+      Write-Host '  KEIN PAKET. Erst den Weg schliessen, dann ausliefern.'
+      Write-Host '  Wer es trotzdem muss:  -TrotzDatenverlust "<Begruendung>"'
+      Write-Host ''
+      exit 1
+    }
+    Write-Host ('  TROTZDEM GEBAUT, Begruendung: ' + $TrotzDatenverlust)
+  }
+}
+
+# --- Schranke: kein Paket mit einer nie ausgewerteten Spurmarke ------------
+#
+# Die Spurmarken zu E-70 lagen seit Paket 1.0.37 im Bau. Ausgewertet wurden
+# sie zum ersten Mal an 1.0.40 - dazwischen sind 1.0.38, 1.0.39 und 1.0.40
+# gebaut und ausgeliefert worden, jedes mit der Bitte an Gregor, etwas
+# ANDERES zu pruefen. Als das Protokoll endlich gelesen wurde, sagte es in
+# zwei Zeilen alles: 40 mal "E-70 gesichert", 0 mal "E-70 geladen".
+#
+# Eine eingebaute Messung, die niemand ausliest, ist keine Messung. Der
+# Moment, an dem sie ausgelesen gehoert, ist das naechste Paket - also hier.
+$spurpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'spuren-auswerten.pl'
+if (Test-Path -LiteralPath $spurpruefer) {
+
+  # perl wird auch hier GESUCHT, nicht vorausgesetzt - und wenn es fehlt,
+  # wird nicht gebaut. Dieselbe Begruendung wie bei der Schranke darueber:
+  # "Werkzeug fehlt" ist kein Freibrief.
+  $perlS = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlS) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlS = $k; break }
+    }
+  }
+
+  if (-not $perlS) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Spurmarken-Pruefung'
+    Write-Host '  konnte nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlS $spurpruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Erst das Protokoll der letzten Fassung auf diese'
+    Write-Host '  Marke hin lesen und das Ergebnis in Befunde\SPURMARKEN.md'
+    Write-Host '  eintragen - oder die Marke ausbauen. Soll sie bewusst ohne'
+    Write-Host '  Auswertung weiterlaufen, gehoert in die Spalte "ausgewertet":'
+    Write-Host '      entfaellt: <Begruendung>'
+    Write-Host ''
+    exit 1
+  }
+}
+
+# --- Schranke: kein Paket ohne beschriebene Fassung ------------------------
+#
+# Gregor am 11.09.2026, nachdem Release v1.0.47 gebaut, gemergt und
+# veroeffentlicht war und er DANACH nach dem Lektor fragen musste:
+#
+#   "nein, lektor sollte vor dem commit und merge fertig sein, nicht
+#    hinterher laufen - vor allem nicht auf meine nachfrage!"
+#
+# und kurz darauf: "jedes mal das gleiche chaos bei dir."
+#
+# Die Ursache ist ein fehlender AUSLOESER, keine Nachlaessigkeit im
+# Einzelfall. Lektor, Pruefer und Chronist liefen, weil Gregor fragte. Der
+# Moment, an dem die Doku stehen muss, ist das Paket - also hier, an
+# derselben Stelle wie die Spurmarken-Schranke darueber.
+$dokupruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-doku-takt.pl'
+if (Test-Path -LiteralPath $dokupruefer) {
+
+  $perlD = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlD) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlD = $k; break }
+    }
+  }
+
+  if (-not $perlD) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Doku-Pruefung konnte'
+    Write-Host '  nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlD $dokupruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Erst den CHANGELOG-Abschnitt fuer diese Fassung'
+    Write-Host '  schreiben und den Abschnitt "Noch offen" nachziehen -'
+    Write-Host '  VOR dem Paket, nicht auf Nachfrage danach.'
+    Write-Host ''
+    exit 1
+  }
+
+  # --- Schranke: kein Paket, solange eine Rolle ueberfaellig ist ----------
+  #
+  # rollen-faellig.pl gibt es seit dem 08.09.2026 und es meldet richtig -
+  # es war nur nie angeschlossen. In der Lehre stand dazu "noch nicht
+  # verdrahtet, weil sie heute abweist - Entscheidung liegt bei Gregor".
+  # Am 11.09.2026 hat er entschieden: "du behaeltst den ueberblick, nicht
+  # ich." Eine fertige Schranke, die nicht angeschlossen ist, wirkt so
+  # wenig wie eine Lehre, die nur Text ist.
+  #
+  # Wer eine Rolle gerade beauftragt hat, meldet das mit
+  #   perl tools/rollen-faellig.pl --laufend LEKTOR
+  $rollenpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'rollen-faellig.pl'
+  if (Test-Path -LiteralPath $rollenpruefer) {
+    & $perlD $rollenpruefer
+    if (($LASTEXITCODE -ne 0) -and ($RollenSindGelaufen.Trim().Length -ge 10)) {
+      Write-Host ''
+      Write-Host '  Die Rollen-Schranke ist bewusst uebergangen worden:'
+      Write-Host ("    " + $RollenSindGelaufen.Trim())
+      Write-Host ''
+    }
+    elseif ($LASTEXITCODE -ne 0) {
+      Write-Host ''
+      Write-Host '  KEIN PAKET, solange eine Rolle ueberfaellig ist. Lektor,'
+      Write-Host '  Pruefer und Chronist gehoeren VOR die Auslieferung -'
+      Write-Host '  nicht auf Gregors Nachfrage danach.'
+      Write-Host ''
+      Write-Host '  Laeuft eine Rolle schon? Dann melden mit:'
+      Write-Host '      perl tools/rollen-faellig.pl --laufend LEKTOR'
+      Write-Host ''
+      exit 1
+    }
+  }
+}
+
+
+# --- Schranke: keine Datei, die einen Stand behauptet, den sie nicht hat --
+#
+# Gregor am 11.09.2026, auf LEKTORAT.md zeigend: "ich fragte, ob alles
+# aktualisiert ist, du sagst, ja. war es der letzte 'Siebter Durchgang -
+# 07.09.2026'? danach nichts mehr?" - Meine Antwort war falsch: gemessen
+# hatte ich 21 von 47 MDs.
+$standpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-stand-md.pl'
+if (Test-Path -LiteralPath $standpruefer) {
+
+  $perlM = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlM) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlM = $k; break }
+    }
+  }
+
+  if (-not $perlM) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Stand-Pruefung konnte'
+    Write-Host '  nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlM $standpruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Erst die Standangaben nachziehen und die'
+    Write-Host '  Rollenhistorien fortschreiben - VOR dem Merge, nicht'
+    Write-Host '  auf Nachfrage danach.'
+    Write-Host ''
+    exit 1
+  }
+}
+
+
+# --- Schranke: kein Paket, solange ein Agentenauftrag offen ist -----------
+#
+# Gregor am 13.09.2026, mit der Auswertung von 474 Nachrichten: Platz 1 der
+# Fehlerliste ist "Zwischenstand nicht gesichert, Wissen geht verloren" mit
+# 45 Fundstellen. Sein Satz: "das habe ich mir als deine aussage notiert,
+# aber 1 passiert trotzdem!"
+#
+# Am 11.09.2026 sind zwei Agentenauftraege restlos verlorengegangen: beide
+# liefen noch, als die Sitzung endete, und hatten nichts committet. Ein
+# Agent ist ein Prozess OHNE SPUR IM REPO, bis er selbst schreibt.
+$agentenpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'agenten-laufen.pl'
+if (Test-Path -LiteralPath $agentenpruefer) {
+
+  $perlA = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlA) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlA = $k; break }
+    }
+  }
+
+  if ($perlA) {
+    & $perlA $agentenpruefer
+      if (($LASTEXITCODE -ne 0) -and ($AgentLaeuftAbsichtlich.Trim().Length -ge 10)) {
+        Write-Host ''
+        Write-Host '  Die Agenten-Schranke ist bewusst uebergangen worden:'
+        Write-Host ("    " + $AgentLaeuftAbsichtlich.Trim())
+        Write-Host ''
+        $global:LASTEXITCODE = 0
+      }
+      if ($LASTEXITCODE -ne 0) {
+        Write-Host ''
+        Write-Host '  KEIN PAKET, solange ein Agentenauftrag offen ist.'
+        Write-Host '  Hat er geliefert, austragen mit:'
+        Write-Host '      perl tools/agenten-laufen.pl --fertig <ROLLE>'
+        Write-Host ''
+        Write-Host '  Laeuft er ABSICHTLICH weiter und gehoert seine Arbeit nicht in'
+        Write-Host '  dieses Paket, dann mit Begruendung:'
+        Write-Host '      -AgentLaeuftAbsichtlich "<warum>"'
+        Write-Host '  Die Begruendung geht ins Protokoll.'
+        Write-Host ''
+        exit 1
+      }
+  }
+}
 
 $ErrorActionPreference = 'Stop'
 
@@ -98,13 +375,21 @@ if ($AusBauverzeichnis) {
   # gescheitert ist (Befund S-1). Gemessen: paket-pruefen.ps1 meldet dann
   # "MSVCR71D.dll fehlt und wird beim Start gebraucht - von: EuMemMgr.dll".
   #
-  # QCSSL.dll steht bewusst NICHT in der Liste: die Fassung in der Grundlage
-  # ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind verschiedene
-  # Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  # QCSSL.dll steht im DEBUG-Bau bewusst NICHT in der Liste: die Fassung in
+  # der Grundlage ist 2.920.960 B, die aus Bin\Debug 4.645.376 B. Das sind
+  # verschiedene Bauarten, und welche ausgeliefert gehoert, ist UNGEPRUEFT.
+  #
+  # Im RELEASE-Bau gilt das nicht: dort ist die DLL 2.921.472 B, also 512
+  # Byte groesser als die Grundlage - dieselbe Bauart. Sie MUSS dann mit,
+  # sonst geht jede Aenderung an QCSSL ins Leere. Gemessen am 11.09.2026:
+  # der Zertifikats-Patch aendert ausschliesslich qccertificate.cpp, der Bau
+  # erzeugte eine frische QCSSL.dll - und im Paket lag die alte vom 30.08.
+  # Aufgefallen nur am Zeitstempel; paket-pruefen.ps1 kennt die Datei nicht.
   $eigene = @(
     'Eudora.exe', 'EudoraRes.dll', 'EuLang.dll', 'Imap.dll',
     'QCSocket.dll', 'QCUtils.dll', 'plstclnt.dll'
   )
+  if ($Bauart -eq 'Release') { $eigene += 'QCSSL.dll' }
   $n = 0
   foreach ($d in $eigene) {
     $q = Join-Path $binBau $d
@@ -152,6 +437,52 @@ Write-Host ''
 Write-Host '5. Werkzeuge ins Paket'
 Nimm (Join-Path $PSScriptRoot 'laufzeit-holen.ps1') 'laufzeit-holen.ps1'
 Nimm (Join-Path $PSScriptRoot 'paket-pruefen.ps1')  'paket-pruefen.ps1'
+# Der Starter MUSS mit. Ohne ihn bekommt Eudora beim ersten Start das
+# Mailverzeichnis nicht uebergeben und legt eine leere Einrichtung an
+# (Befund E-6). Im Paket 1.0.13 hat er zuerst gefehlt, weil das
+# Grundlagen-ZIP ihn nicht enthaelt und hier niemand ihn nachgereicht hat -
+# paket-pruefen.ps1 hat es gemeldet und damit seinen Zweck erfuellt. Damit es
+# nicht wiederkommt, kommt er jetzt aus tools\ statt aus der Grundlage.
+Nimm (Join-Path $PSScriptRoot 'Eudora starten.cmd') 'Eudora starten.cmd'
+# Vorgaben fuer NEUE Konten. Eudora liest DEudora.ini aus dem Verzeichnis der
+# EXE (SetupINIFilename, Eudora71\Eudora\rs.cpp:1359-1368) und nimmt die Werte
+# dort VOR den eingebauten Vorgaben aus EudoraRes.rc (GetDefaultIniSetting,
+# rs.cpp:357-385). Ohne diese Datei legt der Kontoassistent jedes Konto mit
+# "If Available, STARTTLS" an und OHNE "Leave mail on server" - dann loescht
+# Eudora die abgeholten Nachrichten auf dem Server. Gregor am 07.09.2026: "zum
+# testen ist es wichtig, sonst werden die mails abgerufen und geloescht, wenn
+# ich nicht dran denke."
+Nimm (Join-Path $PSScriptRoot 'DEudora.ini') 'DEudora.ini'
+
+#
+# BEFUND E-108: der Protokollschalter gehoert INS PAKET.
+#
+# Die Mailverzeichnis\Eudora.ini stammt aus dem Grundlagen-ZIP und kennt
+# LogLevel nicht. Gregors erstes Absturzprotokoll zu 1.0.71 war deshalb
+# leer - die Marken zu E-95, E-101, E-103 und E-106 haengen alle an
+# DEBUG_MASK_MISC (0x8000), und der ist in der Vorgabe aus. Er musste die
+# Zeile von Hand eintragen, bevor ueberhaupt etwas zu sehen war. Der
+# PRUEFER hat denselben Mangel als P-43 gemeldet.
+#
+# 58527 = 0xE49F und enthaelt 0x8000. Der Abschnitt ist [Debug], nicht
+# [Settings] - massgeblich ist GetSectionID (Eudora71\Eudora\rs.cpp:89-97),
+# und tools\pruefe-ini-abschnitte.pl hat den ersten Anlauf abgewiesen.
+#
+$paketIni = Join-Path $Ziel 'Mailverzeichnis\Eudora.ini'
+if (Test-Path -LiteralPath $paketIni) {
+  $iniText = [System.IO.File]::ReadAllText($paketIni, [System.Text.Encoding]::GetEncoding(28591))
+  if ($iniText -notmatch '(?m)^\s*LogLevel\s*=') {
+    if ($iniText -notmatch '(?m)^\[Debug\]') {
+      if ($iniText -notmatch "`r`n$") { $iniText += "`r`n" }
+      $iniText += "`r`n[Debug]`r`n"
+    }
+    $iniText = $iniText -replace '(?m)^\[Debug\]\r?\n', "[Debug]`r`nLogLevel=58527`r`n"
+    [System.IO.File]::WriteAllText($paketIni, $iniText, [System.Text.Encoding]::GetEncoding(28591))
+    Write-Host '  Eudora.ini                   LogLevel=58527 in [Debug] ergaenzt (E-108)'
+  } else {
+    Write-Host '  Eudora.ini                   LogLevel stand schon drin'
+  }
+}
 
 $liesmich = Join-Path $wurzel 'Releases\1.0.3\LIESMICH.txt'
 if (Test-Path -LiteralPath $liesmich) {
