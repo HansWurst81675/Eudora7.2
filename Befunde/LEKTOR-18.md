@@ -1,4 +1,4 @@
-# LEKTOR-18 — Kurzlauf zu `d292850` (Messstand 7.2.0.83)
+# <a id="lektor-18"></a>LEKTOR-18 — Kurzlauf zu `d292850` (Messstand 7.2.0.83)
 
 Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Beide Mängel sind im selben Commit wie dieser Bericht behoben.**
 

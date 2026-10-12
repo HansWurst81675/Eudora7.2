@@ -2,7 +2,7 @@
 
 Agent VERFASSER, 06.09.2026. Zweig `wt/verfasser`.
 
-> **Nachtrag 07.09.2026: die Ursache ist gefunden.** Es war **E-31** —
+> **Nachtrag 07.09.2026: die Ursache ist gefunden.** Es war **[E-31](../BEFUNDE.md#e-31)** —
 > `pg_time_t` war unter VS2022 acht Byte breit statt vier, damit war jede
 > Struktur verschoben, die Eudora an Paige reichte (`CHANGELOG.md` unter
 > 7.2.0.21, Gegenmessung gegen `Paige32.pdb` unter 7.2.0.20). Was unten steht,
@@ -125,7 +125,7 @@ Treffer.
 > lassen.
 
 *Einschränkung:* die benutzte `Eudora.map` stammt vom Bau um 12:12 desselben
-Tages, die abgestürzte `Eudora.exe` vom Bau um 00:15 (1024 Byte kleiner, E-26
+Tages, die abgestürzte `Eudora.exe` vom Bau um 00:15 (1024 Byte kleiner, [E-26](../BEFUNDE.md#e-26)
 kam dazwischen). Verschöbe sich der Code, lägen die drei Gegenproben oben nicht
 so sauber. Beweisend ist das nicht, aber tragfähig.
 
@@ -194,7 +194,7 @@ Alle drei laufen in `ReportSilentFailure` zusammen. Das schreibt zuerst eine
 Klartextzeile ans Ende von `Exception.log` — sie sagt, **welche** Fehlerklasse
 zugeschlagen hat, und das steht in keinem Registersatz — und erhebt danach eine
 richtige strukturierte Ausnahme, damit der vorhandene `QCCrashHandler` Zeit,
-Fassung, Modultabelle (E-26), Register und Aufrufstapel darunterhängt.
+Fassung, Modultabelle ([E-26](../BEFUNDE.md#e-26)), Register und Aufrufstapel darunterhängt.
 
 Aus einem Abgang ohne jede Spur wird damit ein vollständiger Bericht. Was das
 **nicht** einfängt, steht als Kommentar an derselben Stelle im Quelltext:
@@ -267,8 +267,8 @@ Alles hier ist **gemessen**, nicht vermutet.
 | `SECStdBtn`-Knöpfe werden über einen versetzten Zeiger freigegeben (Mehrfachvererbung `CTBarBitmapComboBtn : CBitmapCombo, SECWndBtn`) | `OTShim_Werkzeugleiste.h:297`: `virtual ~SECStdBtn();` — der Destruktor ist virtuell, `delete m_btns[i]` ist damit wohldefiniert |
 | Doppelfreigabe der Werkzeugleisten-Knöpfe über `PostNcDestroy` | `bmpcombo.cpp:250-257`: `CBitmapCombo::PostNcDestroy` löscht nichts, nur der Leistendestruktor löscht |
 | `new BYTE[]` gegen `delete` in der Zustandsablage der Leisten | `OTShim_Werkzeugleiste.cpp:3249-3254`: `delete [] m_pExtraInfo` — richtig gepaart |
-| Ungeprüfter `CPtrArray::ElementAt` (Fehlerklasse aus E-16) | E-16 hat alle Stellen abgesichert; die Gegenprobe am Objektcode dort war vollständig |
-| `SearchManager::NotifySumAddition` hält einen Zeiger auf eine temporäre `CString` (Fehlerklasse E-24) | `tocdoc.h:124`: `const CString& GetMBFileName() const { return m_MBFileName; }` — Referenz auf ein Feld, keine Kopie |
+| Ungeprüfter `CPtrArray::ElementAt` (Fehlerklasse aus [E-16](../BEFUNDE.md#e-16)) | [E-16](../BEFUNDE.md#e-16) hat alle Stellen abgesichert; die Gegenprobe am Objektcode dort war vollständig |
+| `SearchManager::NotifySumAddition` hält einen Zeiger auf eine temporäre `CString` (Fehlerklasse [E-24](../BEFUNDE.md#e-24)) | `tocdoc.h:124`: `const CString& GetMBFileName() const { return m_MBFileName; }` — Referenz auf ein Feld, keine Kopie |
 | `strncpy`-Überläufe in `InitializeNew`, `ApplyPersona`, `OnKillFocusHeader` | jede Stelle nachgelesen: Zielgröße wird durchgereicht, Abschluss-Null wird gesetzt |
 | `CSummary::GetSubject` schreibt nach `m_Subject + 1` | `summary.h:403`: `char m_Subject[64]`, `IDS_NO_SUBJECT` ist `"No Subject"` — 11 Bytes, kein Überlauf |
 
@@ -307,7 +307,7 @@ auch nicht.** Wer hier weitersucht, sucht an der wahrscheinlichsten Stelle.
 2. **Strg-N** drücken.
 3. Wenn Eudora verschwindet, zwei Dateien ansehen — beide im Mailverzeichnis:
 
-   * **`eudora.log`**, letzte Zeile, die mit `E-27` beginnt.
+   * **`eudora.log`**, letzte Zeile, die mit [`E-27`](../BEFUNDE.md#e-27) beginnt.
      Sie nennt den letzten Abschnitt, der noch durchlaufen wurde. Beispiel:
 
      ```
@@ -317,7 +317,7 @@ auch nicht.** Wer hier weitersucht, sucht an der wahrscheinlichsten Stelle.
      Dann liegt der Fehler in `SetButtons` oder unmittelbar danach.
 
    * **`Exception.log`**. Steht dort jetzt ein Block
-     „*Stiller Abbruch der Laufzeitbibliothek (Befund E-27)*", war es ein
+     „*Stiller Abbruch der Laufzeitbibliothek (Befund [E-27](../BEFUNDE.md#e-27))*", war es ein
      ungültiges Argument an die C-Laufzeit, ein pure-virtual-call oder eine
      nicht abgefangene C++-Ausnahme — und der Aufrufstapel darunter nennt die
      Stelle. Bleibt die Datei leer, war es Heap-Beschädigung oder /GS; dann

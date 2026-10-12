@@ -12,11 +12,11 @@
 > gilt, steht in [ZIEL.md](ZIEL.md), [README.md](README.md) und
 > [CHANGELOG.md](CHANGELOG.md). Gregor hat am 07.09.2026 gefragt *„ist es intern
 > für dich? oder für einen agenten?"* — die Antwort stand bis dahin nirgends
-> (Befund **W-31**, `Befunde/LEKTOR-4.md`).
+> (Befund **[W-31](Befunde/LEKTOR-4.md#w-31)**, `Befunde/LEKTOR-4.md`).
 
 Stand: 2026-09-07 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
 OT501*, *Umgebung*, *[E-11](BEFUNDE.md#e-11)*, *OpenSSL3* und *Nächster Schritt* sind gegen den
-Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, L-6, und
+Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, [L-6](Befunde/LEKTOR.md#l-6), und
 `Befunde/LEKTOR-3.md`, L-7). Ältere Messwerte im Rest der Datei nennen ihren
 eigenen Bezugscommit — meist `a807b93` vom 31.08.2026.
 
@@ -46,7 +46,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > und IMAP gemessen, von Gregor bestätigt. Davor Quellstand **7.2.0.83**, gebaut
 > (Rebuild 0 Fehler, Testsuite 185/185). Neu darin: [**AN-1**](BEFUNDE.md#an-1) (Anhangnamen
 > abgeschnitten, Endung fehlt) — über POP am laufenden Programm gemessen und
-> heil, über IMAP von Gregor mit 1.0.83 getestet und bestätigt, offen nur B5.7;
+> heil, über IMAP von Gregor mit 1.0.83 getestet und bestätigt, offen nur [B5.7](AUFGABEN.md#b5.7);
 > [**AN-2**](BEFUNDE.md#an-2) (Quelltext einer Webseite im Werbefenster) — seit 7.2.0.82 übersetzt,
 > am laufenden Programm nicht gemessen. **Veröffentlicht als `v1.0.83`** am
 > 12.10.2026 (davor `v1.0.72`), danach `v1.0.84`. Einzelheiten in
@@ -62,18 +62,18 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > [**E-100**](BEFUNDE.md#e-100) (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65,
 > [**E-101**](BEFUNDE.md#e-101) (die gespeicherte Datei war für andere Programme unbrauchbar) in
 > 7.2.0.66 und 7.2.0.69, [**E-103**](BEFUNDE.md#e-103) (Bilder über dem Text) und [**E-104**](BEFUNDE.md#e-104)
-> (zusammengeklebte Kopfzeilen) in 7.2.0.67, **E-104** zweite Hälfte und
+> (zusammengeklebte Kopfzeilen) in 7.2.0.67, **[E-104](BEFUNDE.md#e-104)** zweite Hälfte und
 > [**E-106**](BEFUNDE.md#e-106) in 7.2.0.68, [**E-108**](BEFUNDE.md#e-108) (Absturz beim Antworten auf eine geöffnete
 > Nachricht) in 7.2.0.72; **171/171 Tests**. **1.0.70 ist nie zu Gregor
 > gelangt; 1.0.71 stürzt beim Antworten ab, ist nie veröffentlicht worden und
 > liegt nur noch als Paket in seinem Testverzeichnis** — bei ihm liegen
 > 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72.
 >
-> **Berichtigt am 18.09.2026 (LEKTOR, L-15.1).** Hier stand *„Quellstand
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.1](Befunde/LEKTOR-15.md#l-15.1)).** Hier stand *„Quellstand
 > **7.2.0.70** / `VERSION` **1.0.70** … **Veröffentlicht** ist bei GitHub
 > `v1.0.64`"*. Gemessen mit `gh release list`: **`v1.0.72`**, als *Latest*
-> markiert, 2026-09-17T20:07:49Z. **Dieselbe Zeile war schon L-14.2 und davor
-> L-13.1** — sie trug den Vermerk der vorigen Berichtigung und war trotzdem
+> markiert, 2026-09-17T20:07:49Z. **Dieselbe Zeile war schon [L-14.2](Befunde/LEKTOR-14.md#l-14.2) und davor
+> [L-13.1](Befunde/LEKTOR-13.md#l-13.1)** — sie trug den Vermerk der vorigen Berichtigung und war trotzdem
 > wieder falsch, weil das Veröffentlichen selbst kein Anlass ist, der die
 > Dokumente nachzieht.
 > Hier steht bewusst keine zweite Fassung dieser Tabelle.
@@ -558,7 +558,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    `Eudora72-1.0.10-release.zip` auf einem Rechner **ohne** Visual Studio
    ausgepackt und gestartet — *„test bestanden: eudora läuft ohne VS2022
    installiert."* Das bleibt der belastbare Nachweis ([E-8](BEFUNDE.md#e-8));
-   `tools/paket-pruefen.ps1` sagt seit der Behebung von PR-2.0 (06.09.2026,
+   `tools/paket-pruefen.ps1` sagt seit der Behebung von [PR-2.0](Befunde/PAKET.md#pr-2.0) (06.09.2026,
    `dfc8b40`) das Richtige voraus, ersetzt aber keinen Startversuch auf einem
    fremden Rechner.
 2. **Die Darstellung, zweite Runde.** [M-1](BEFUNDE.md#m-1) und [A-1](BEFUNDE.md#a-1) wirken ([E-1](BEFUNDE.md#e-1), [E-2](BEFUNDE.md#e-2)), offen
@@ -811,7 +811,7 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   Arbeitsverzeichnis als CRLF, während im Commit LF stand — und galten für git
   trotzdem als sauber, weil git bei passendem Zeitstempel und passender Größe gar
   nicht erst hineinsieht. Das ist die Wurzel aller CRLF-Vorfälle dieses Projekts
-  (**Befund S-7**). Behoben mit `tools/zeilenenden-angleichen.pl`; nach jedem
+  (**Befund [S-7](BEFUNDE.md#s-7)**). Behoben mit `tools/zeilenenden-angleichen.pl`; nach jedem
   frischen Klon einmal auszuführen, siehe `README.md`.
 - **`sed` unter Git Bash**: nur mit `-b` (binary) benutzen. Ohne `-b` verschluckt es
   die CR aus CRLF-Zeilen und erzeugt dieselbe Diff-Flut.
@@ -896,7 +896,7 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   statt vier (`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`), womit jede an
   `Paige32.dll` gereichte Struktur verschoben war. Messung mit allen
   Feldversätzen: [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21, Herleitung in
-  `Befunde/PAIGE.md`. Die Härtung aus E-25 ist unabhängig davon richtig und
+  `Befunde/PAIGE.md`. Die Härtung aus [E-25](BEFUNDE.md#e-25) ist unabhängig davon richtig und
   bleibt drin.
   **Was daran richtig war:** `afxcoll.inl:213` und „Encountered an improper
   argument" sind **Folge, nicht Ursache**. Eine beschädigte `CPtrArray` trägt
@@ -1064,7 +1064,7 @@ Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
 > (`m_pHd->m_TLMime`), in dem bei `multipart/alternative` gar kein `charset`
 > steht. Erst **7.2.0.52** nimmt den Zeichensatz aus dem MIME-Teil
 > (`m_szCurrentCharset`, `ImapDownload.cpp:2837, 3074, 3324`). **Am laufenden
-> Programm belegt** — Einzelheiten unter **E-85** in `BEFUNDE.md`.
+> Programm belegt** — Einzelheiten unter **[E-85](BEFUNDE.md#e-85)** in `BEFUNDE.md`.
 
 ### Nebenbefund 2: zwei Aufrufer werten die neue Länge nicht aus
 

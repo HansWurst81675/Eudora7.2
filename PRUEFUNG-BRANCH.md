@@ -24,9 +24,9 @@ beheben — das geschieht nach dem Zusammenführen auf einem neuen Branch.
 | **D3a** (neun Zeigerstellen) | 9 echte Kandidaten | **trägt nicht** — nur 4 halten stand |
 | [**PR-2**](BEFUNDE.md#pr-2) (`paket-pruefen.ps1`) | prüft die Maschine statt das Paket | **trägt**, und schwerer als behauptet |
 | [**V-1**](BEFUNDE.md#v-1) (zwei ZIPs, eine Nummer) | zwei ZIPs unter 1.0.3 | **trägt**, es sind **drei** |
-| **S-8/E-8** (Paket 1.0.2) | Debug-Bau, nicht verteilbare DLLs | **trägt** — das ist Gregors Fehlschlag |
+| **[S-8](BEFUNDE.md#s-8)/[E-8](BEFUNDE.md#e-8)** (Paket 1.0.2) | Debug-Bau, nicht verteilbare DLLs | **trägt** — das ist Gregors Fehlschlag |
 | [**X-2**](BEFUNDE.md#x-2) (Schranke, 35 Fälle) | 35 von 35 grün | **trägt** — nachgemessen |
-| **NP3-6/7** (`pruefstand-melden.pl`) | rc=0, drei Marken | **trägt** — nachgemessen |
+| **[NP3-6](BEFUNDE.md#np3-6)/[NP3-7](BEFUNDE.md#np3-7)** (`pruefstand-melden.pl`) | rc=0, drei Marken | **trägt** — nachgemessen |
 | [**X-4**](BEFUNDE.md#x-4) („0 Abweichungen") | 0 Abweichungen in allen Richtungen | **trägt hier NICHT** — 801 Dateien weichen ab |
 | Verzeichnis in `BEFUNDE.md` | Status je Befund gepflegt | **drei Fehler** gefunden |
 
@@ -103,7 +103,7 @@ Diese Auflage ist im selben Branch dreimal verletzt.
 | `BEFUNDE.md:105` | `W-1 … **behoben** (PR-5 offen)` |
 | `BEFUNDE.md:3811` | `PR-5 … offen (nur Beschreibung)` |
 | `BEFUNDE.md:4040` | Überschrift `### PR-5 bleibt offen` |
-| `WEITERMACHEN.md:71` | „an drei Stellen berichtigt. Damit ist **PR-1 bis [PR-8](BEFUNDE.md#pr-8) vollständig**" |
+| `WEITERMACHEN.md:71` | „an drei Stellen berichtigt. Damit ist **[PR-1](BEFUNDE.md#pr-1) bis [PR-8](BEFUNDE.md#pr-8) vollständig**" |
 | `WEITERMACHEN.md:521` | „~~[PR-5](BEFUNDE.md#pr-5)~~ — **erledigt** am 31.08.2026 abends" |
 
 Der Commit `765c39b` („[PR-5](BEFUNDE.md#pr-5) und die LIESMICH des ausgelieferten Pakets") hat
@@ -111,12 +111,12 @@ Der Commit `765c39b` („[PR-5](BEFUNDE.md#pr-5) und die LIESMICH des ausgeliefe
 stehen. Wer das Verzeichnis liest — und dafür ist es da — bekommt den falschen
 Stand.
 
-**b) `P-3` hat einen Abschnitt (`BEFUNDE.md:2437`), steht aber in keinem
+**b) [`P-3`](Befunde/PRUEFER-11.md#p-3) hat einen Abschnitt (`BEFUNDE.md:2437`), steht aber in keinem
 Verzeichniseintrag.** Gemessen: 55 Abschnitte im Text, 64 Kennungen im
-Verzeichnis, `P-3` fehlt.
+Verzeichnis, [`P-3`](Befunde/PRUEFER-11.md#p-3) fehlt.
 
-**c) `PR-3` bis `PR-8` sind nur gesammelt über die Zeile `W-1` erfasst.** Wer
-nach `PR-6` sucht, findet im Verzeichnis nichts. Kleiner Mangel, aber er
+**c) [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8) sind nur gesammelt über die Zeile [`W-1`](BEFUNDE.md#w-1) erfasst.** Wer
+nach [`PR-6`](BEFUNDE.md#pr-6) sucht, findet im Verzeichnis nichts. Kleiner Mangel, aber er
 untergräbt den Zweck.
 
 ### 1.3 Was sich sauber reproduzieren ließ
@@ -174,13 +174,13 @@ das andere zu — alle drei Indizes liegen deutlich unter der Länge, und
 > Paket baut, sollte nicht damit rechnen, dass der Absturz weg ist. Die
 > Gegenhypothese „`pMainFrame` ist NULL" wurde geprüft und widerlegt.
 >
-> > **Nachtrag (06.09.2026): dieser Verdacht hat sich bestätigt.** **E-11 ist
+> > **Nachtrag (06.09.2026): dieser Verdacht hat sich bestätigt.** **[E-11](BEFUNDE.md#e-11) ist
 > > zurückgenommen.** Die belegte Ursache ist [**E-25**](BEFUNDE.md#e-25) — eine Doppelfreigabe in
 > > `NSImportClass.cpp` (`Befunde/ASSISTENT.md`), gefunden über das
 > > Windows-Ereignisprotokoll (`0xc0000374 STATUS_HEAP_CORRUPTION`). Auch die
 > > reicht nicht aus: 7.2.0.12 stürzt weiter ab.
 
-**R-1 priorisiert außerdem falsch.** Als dringend geführt sind die vier
+**[R-1](BEFUNDE.md#r-1) priorisiert außerdem falsch.** Als dringend geführt sind die vier
 `sendmail`-Stellen — die sind harmlos (eigener Puffer, Argument innerhalb der
 Länge). Wirklich schädlich sind zwei, die [R-1](BEFUNDE.md#r-1) weiter unten führt:
 
@@ -237,7 +237,7 @@ Das Paket, an dem er auf dem Laptop gescheitert ist, war **1.0.2**, und das ist
 ein **reiner Debug-Bau**: `Eudora.exe` importiert nachweislich `mfc140d.dll`,
 `msvcp140d.dll`, `vcruntime140d.dll`, `ucrtbased.dll`. Diese vier sind **nicht
 weiterverteilbar** und liegen nur auf Rechnern mit VS2022. Ohne sie
-`0xc000007b`. **S-8/[E-8](BEFUNDE.md#e-8) ist damit belegt.**
+`0xc000007b`. **[S-8](BEFUNDE.md#s-8)/[E-8](BEFUNDE.md#e-8) ist damit belegt.**
 
 **Paket 1.0.3 ist dagegen bereits in Ordnung.** Gemessen: reines Release, null
 Debug-Importe, null PDBs, alle 36 PE-Dateien x86, `mfc140`/`msvcp140`/
@@ -254,12 +254,12 @@ des „d" ein **Release**-Bau, und `msvcr71.dll` (35 KB) ist nicht Microsofts
 Datei, sondern die eigene VC71-Brücke auf `msvcrt.dll` — Gegenprobe: alle 118
 benötigten Symbole vorhanden, Fehlmenge 0.
 
-**E-6 ist gelöst.** `Mailverzeichnis\Eudora.ini` **ist** im Paket, schon in
+**[E-6](BEFUNDE.md#e-6) ist gelöst.** `Mailverzeichnis\Eudora.ini` **ist** im Paket, schon in
 1.0.2. Die Hürde ist der Startpfad: Eudora braucht das Verzeichnis als
 Argument, und im Paket liegt **keine `.bat`, `.cmd` oder `.lnk`**. Beim
 Doppelklick sucht es die INI im Programmverzeichnis und findet keine.
 
-**PR-2 trägt, und Teil 1 wiegt schwerer als behauptet.** `Finde-DLL`
+**[PR-2](BEFUNDE.md#pr-2) trägt, und Teil 1 wiegt schwerer als behauptet.** `Finde-DLL`
 (`:260-272`) akzeptiert `SysWOW64`/`System32` kommentarlos; Prüfung 3 (`:360`)
 sichert nur die vier *Debug*-Laufzeiten ab. Gegenprobe: aus einer Kopie
 `mfc140`/`msvcp140`/`vcruntime140` gelöscht → *„ERGEBNIS: keine Fehler,
@@ -267,7 +267,7 @@ EXITCODE=0"*. **Das Werkzeug winkt genau den 1.0.2-Fehler durch.** Auf einer
 Maschine ohne VS2022 werden aus den vier Falschwarnungen vier **Fehler** mit
 Exit 1 — dann verwirft es das korrekte Paket.
 
-**V-1 trägt und ist stärker: es sind drei ZIPs**, nicht zwei. Blobs
+**[V-1](BEFUNDE.md#v-1) trägt und ist stärker: es sind drei ZIPs**, nicht zwei. Blobs
 `c06b2e6c` / `7ead246e` / `69e19f41`, Prüfsummen `632c4066` / `89f9fe0b` /
 `d4719047`, identische Dateilisten, dieselbe Versionsnummer, die
 Prüfsummendatei jedes Mal überschrieben.
@@ -287,7 +287,7 @@ Code — sie richten keinen Schaden an, solange sie berichtigt werden.
    am 05./06.09.2026.** Die Ursache ist [**E-25**](BEFUNDE.md#e-25) (`Befunde/ASSISTENT.md`): eine
    Doppelfreigabe in `NSImportClass.cpp`, `LocateNetscapePrefsFile`, belegt am
    Windows-Ereignisprotokoll (`STATUS_HEAP_CORRUPTION`). Sie ist behoben — und
-   war **nicht die einzige Quelle**: 7.2.0.12 stürzt weiter ab. **E-11 ist
+   war **nicht die einzige Quelle**: 7.2.0.12 stürzt weiter ab. **[E-11](BEFUNDE.md#e-11) ist
    zurückgenommen**, die Fehlerklasse [R-1](BEFUNDE.md#r-1) bleibt.
 2. **Die 801 CRLF-Dateien angleichen**, bevor jemand eine davon anfasst.
 3. **`paket-pruefen.ps1`** auf Release-Laufzeiten umstellen und den
@@ -297,7 +297,7 @@ Code — sie richten keinen Schaden an, solange sie berichtigt werden.
    Argument) — das ist [E-6](BEFUNDE.md#e-6).
 5. **Paket 1.0.2 zurückziehen**; 1.0.3 auf dem VS-freien Laptop erproben,
    Prüfsumme `d4719047…` mitgeben.
-6. **Statusspalten berichtigen**: [PR-5](BEFUNDE.md#pr-5), `P-3`, `PR-3` bis `PR-8`.
+6. **Statusspalten berichtigen**: [PR-5](BEFUNDE.md#pr-5), [`P-3`](Befunde/PRUEFER-11.md#p-3), [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8).
 7. Erst dann die 26 `ReleaseBuffer`-Stellen — beginnend mit
    `SMTPSession.cpp:683` und `PaigeEdtView.cpp:657`, **nicht** mit `sendmail`.
 

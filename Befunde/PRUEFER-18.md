@@ -14,7 +14,7 @@ Hauptverdacht gegen ihn (`image_record.URL` nicht nullterminiert) ist
 widerlegt. Aber die Messung misst nicht, was sie behauptet: `daten=` wird in
 Gregors Bestand in allen 128 Zeilen `0` ausgeben, auch bei Bildern, die
 nachweislich geladen werden.** Als Paket gebaut kostet es eine Testrunde und
-beantwortet E-110 nicht.
+beantwortet [E-110](../BEFUNDE.md#e-110) nicht.
 
 ---
 
@@ -43,8 +43,8 @@ beantwortet E-110 nicht.
 | **Fund** | `image_record` ist an der Spurmarke zwar **dasselbe Abbild** wie das, was `pgNewImageRecord` hinterlassen hat — aber eingefroren auf den Stand **vor** dem eigentlichen Laden. Der Griff, den `PgLoadUrlImage` setzt, entsteht in Gregors Bestand ausnahmslos **später**, in einem anderen Aufruf, und erreicht diese Kopie nie. |
 | **Ort** | `Eudora71/Eudora/PGHTMIMP.CPP:2059` (`GetMemoryRecord`) gegen `:2306`; `Eudora71/Eudora/PgEmbeddedImage.cpp:257-263` (`EMBED_PREPARE_IMAGE`) und `:453` |
 | **Gemessen** | (a) `image_record` wird in Zeile 2059 aus `image_ref` **frisch herausgeholt** — bis dahin ist die Kopie also aktuell; zwischen 2059 und 2306 wird sie nirgends mehr beschrieben (`awk`-Lauf über 2059–2232: genau eine Fundstelle, die Zeile 2059 selbst). Der Verdacht „Kopie von vor dem Laden" trifft also **nicht** über die Kopiermechanik. (b) Er trifft über den **Zeitpunkt**: Daten kann nur `EMBED_PREPARE_IMAGE` aus `pgNewImageRecord` (`PGEMBED.C:1871`) eingetragen haben, und dieser Zweig läuft laut `PgEmbeddedImage.cpp:257` nur, `if ( !(image->source_width && image->source_height) )`. (c) In `eudora.log`: **128** Zeilen `E-95 Bild`, davon **76** mit vollständigem `attr=BxH` → für diese 76 wird `EMBED_PREPARE_IMAGE` gar nicht erst tätig. (d) Die übrigen **52** tragen alle `attr=…x0` **und** `embed=0x0`. Da `attr` aus derselben frisch geholten Kopie stammt, hätte ein geglückter Ladeversuch dort `source_height` gefüllt (`PgEmbeddedImage.cpp:447-449`) — er ist also bei allen 52 fehlgeschlagen. **Ergebnis: `image_data` ist an dieser Stelle in allen 128 Fällen 0.** (e) Geladen wird trotzdem, nur später: dieselbe Protokolldatei enthält **22 ×** `E-103 Nachtrag` und **32 ×** `E-106 groesser als angegeben`, beides aus `PgLoadUrlImage` mit `bAllowThreadedFetch=true`, also aus `EMBED_LOAD_IMAGE` beim Zeichnen — lange nachdem `DoDataTag` zurückgekehrt ist. |
-| **Bewertung** | Die Spalte behauptet *„Paige hat Bilddaten"* und misst *„das Bild wurde schon während des Imports synchron geladen"* — und das ist in Gregors Bestand nie der Fall. Schlimmer: die Auslassung ist **deckungsgleich mit der E-110-Bevölkerung**. E-110 heißt *„ein Teil der Bilder bleibt grau, und der Platz stimmt trotzdem"*; „der Platz stimmt" heißt `attr=BxH` vollständig, und das sind die 76, bei denen der Ladezweig per `if` übersprungen wird. Die Messung ist gerade dort blind, wo der Befund sitzt. Das ist derselbe Mechanismus, den der Commit selbst bei der Adresse benennt (`Arbeitsweise/anzeige-ist-kein-zustand.md`): die Ausgabe ist eine Behauptung des Programms über sich selbst, hier über einen Zeitpunkt, den niemand geprüft hat. |
-| **Behebung** | **Kleinster ehrlicher Eingriff (A):** Spalte umbenennen und um ihren Gegenwert ergänzen — `daten-import=%ld ladeergebnis=%ld` aus `image_data` und `loader_result`. Dann sagt die Zeile, was sie misst, und `0/0` ist als *„beim Import nicht einmal versucht"* lesbar. **Die Messung, die E-110 beantwortet (B):** eine Zeile in `Eudora71/Eudora/PgEmbeddedImage.cpp` unmittelbar vor `return fRet;` (Zeile **777**), im Rumpf von `PgLoadUrlImage`, mit `if (pUrlImage)` davor (der Eintritt bei `:356` lässt `pUrlImage == NULL` durch): `"E-110 Laden: src=%s faden=%d ok=%d daten=%ld art=%ld fehler=%ld quelle=%dx%d"` aus `pUrlImage->URL` (gekürzt wie in `PGHTMIMP.CPP`), `bAllowThreadedFetch`, `fRet`, `image_data`, `type_and_flags`, `loader_result`, `source_width/height`. Das ist die Stelle, an der die Antwort entsteht — `Arbeitsweise/zwei-werte-in-eine-ausgabe.md`: Erfolg und Griff gehören in dieselbe Zeile. **A ohne B lohnt kein Paket.** |
+| **Bewertung** | Die Spalte behauptet *„Paige hat Bilddaten"* und misst *„das Bild wurde schon während des Imports synchron geladen"* — und das ist in Gregors Bestand nie der Fall. Schlimmer: die Auslassung ist **deckungsgleich mit der E-110-Bevölkerung**. [E-110](../BEFUNDE.md#e-110) heißt *„ein Teil der Bilder bleibt grau, und der Platz stimmt trotzdem"*; „der Platz stimmt" heißt `attr=BxH` vollständig, und das sind die 76, bei denen der Ladezweig per `if` übersprungen wird. Die Messung ist gerade dort blind, wo der Befund sitzt. Das ist derselbe Mechanismus, den der Commit selbst bei der Adresse benennt (`Arbeitsweise/anzeige-ist-kein-zustand.md`): die Ausgabe ist eine Behauptung des Programms über sich selbst, hier über einen Zeitpunkt, den niemand geprüft hat. |
+| **Behebung** | **Kleinster ehrlicher Eingriff (A):** Spalte umbenennen und um ihren Gegenwert ergänzen — `daten-import=%ld ladeergebnis=%ld` aus `image_data` und `loader_result`. Dann sagt die Zeile, was sie misst, und `0/0` ist als *„beim Import nicht einmal versucht"* lesbar. **Die Messung, die [E-110](../BEFUNDE.md#e-110) beantwortet (B):** eine Zeile in `Eudora71/Eudora/PgEmbeddedImage.cpp` unmittelbar vor `return fRet;` (Zeile **777**), im Rumpf von `PgLoadUrlImage`, mit `if (pUrlImage)` davor (der Eintritt bei `:356` lässt `pUrlImage == NULL` durch): `"E-110 Laden: src=%s faden=%d ok=%d daten=%ld art=%ld fehler=%ld quelle=%dx%d"` aus `pUrlImage->URL` (gekürzt wie in `PGHTMIMP.CPP`), `bAllowThreadedFetch`, `fRet`, `image_data`, `type_and_flags`, `loader_result`, `source_width/height`. Das ist die Stelle, an der die Antwort entsteht — `Arbeitsweise/zwei-werte-in-eine-ausgabe.md`: Erfolg und Griff gehören in dieselbe Zeile. **A ohne B lohnt kein Paket.** |
 
 ---
 
@@ -124,7 +124,7 @@ die Spalte zwischen zwei Bildern vergleichbar.
 Die **Adresse ungekürzt** ist die eigentliche Verbesserung dieses Commits, und
 sie trägt. In `eudora.log` sind heute alle 128 Zeilen auf 32 Zeichen
 abgeschnitten — `src=https://secureir.ebaystatic.com/` steht für mehrere
-verschiedene Bilder. Die Mitte auszulassen statt des Endes ist nach E-106
+verschiedene Bilder. Die Mitte auszulassen statt des Endes ist nach [E-106](../BEFUNDE.md#e-106)
 (`_3x` im Dateinamen) die richtige Entscheidung, und sie ist, siehe Fund 3,
 sauber gerechnet. `art=` aus `type_and_flags` ist harmlos und nützlich.
 
@@ -136,12 +136,12 @@ sauber gerechnet. `art=` aus `type_and_flags` ist harmlos und nützlich.
 |---|---|
 | Schreibt der Code über einen Puffer hinaus? | **Nein.** Compiliert und über 1001 Längen gemessen. |
 | Ist `strlen` auf `image_record.URL` zulässig? | **Ja.** Terminierung in Zeile 2037 belegt. |
-| Beantwortet `daten=` die Frage von E-110? | **Nein.** Der Wert ist in Gregors Bestand in allen 128 Fällen 0. |
+| Beantwortet `daten=` die Frage von [E-110](../BEFUNDE.md#e-110)? | **Nein.** Der Wert ist in Gregors Bestand in allen 128 Fällen 0. |
 | Darf das Paket **so** gebaut werden? | **Sicherheitstechnisch ja — als Messfassung nein.** |
 
 Die Empfehlung ist nicht „aufhalten", sondern **eine Zeile mitnehmen**:
 Fund 1, Variante B in `PgEmbeddedImage.cpp:777`. Ohne sie liefert 1.0.73
-128 Zeilen `daten=0`, und E-110 steht danach genau da, wo es jetzt steht —
+128 Zeilen `daten=0`, und [E-110](../BEFUNDE.md#e-110) steht danach genau da, wo es jetzt steht —
 `Arbeitsweise/eingebaute-messung-auslesen.md`: der Einbau ist noch keine
 Messung, und eine Messung an der falschen Stelle ist keine.
 

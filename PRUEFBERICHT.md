@@ -334,7 +334,7 @@ Geprueft wurde der GANZE Baum `Eudora71/` nach `CAdWazooBar`, `AdWazooBar`,
 Makro steht in `Eudora.vcxproj:77` (Debug|Win32) UND `:130` (Release|Win32).
 Die Werbeleiste entfaellt also in beiden ausgelieferten Konfigurationen — die
 Behebung von [S-2](BEFUNDE.md#s-2) greift. Wer das Makro entfernt, holt sich den Stapelueberlauf
-zurueck; das gehoert in `BEFUNDE.md` zu S-2 dazu.
+zurueck; das gehoert in `BEFUNDE.md` zu [S-2](BEFUNDE.md#s-2) dazu.
 
 **UNGEPRUEFT geblieben:** eine `Eudora.ini` aus einem AELTEREN Bau kann in
 `WazooBarIds` noch die Kennung der Werbeleiste tragen. Ob `LoadBarState` damit
@@ -397,12 +397,12 @@ heute, [S-7](BEFUNDE.md#s-7).
    danach zurueck (`tools/zeilenenden-angleichen.pl:112-118`), Inhalt kann es
    also gar nicht veraendern. Das ersetzt die Messung nicht.
 2. **BEFUNDE.md [S-1](BEFUNDE.md#s-1) bis [S-6](BEFUNDE.md#s-6).** Nur [S-7](BEFUNDE.md#s-7) wurde geprueft. Jede Zahl und jede
-   Fundstelle in S-1..S-6 ist noch offen.
+   Fundstelle in [S-1](BEFUNDE.md#s-1)..[S-6](BEFUNDE.md#s-6) ist noch offen.
 3. **`Eudora71/Tests`, 91 Testfaelle.** Weder gebaut noch gelaufen. Ob die
    Sammlung ueberhaupt noch uebersetzt, ist unbekannt.
 4. **`utils.cpp ISOTranslate`, Grenzfaelle der Zeichensatzwandlung.** Nicht
    angesehen. Dazu gehoeren die in Punkt 3 gewuenschten neuen Testfaelle.
-5. **Die drei kleinen Behebungen aus [PR-1](BEFUNDE.md#pr-1) bis PR-3** in `pruefe-bytes.pl`. Sie
+5. **Die drei kleinen Behebungen aus [PR-1](BEFUNDE.md#pr-1) bis [PR-3](BEFUNDE.md#pr-3)** in `pruefe-bytes.pl`. Sie
    sind klein und beschrieben, aber nicht ausgefuehrt — die Schranke laeuft
    vor jedem Commit, an ihr ohne Zeit fuer eine Gegenprobe zu drehen waere
    schlechter als sie so zu lassen.

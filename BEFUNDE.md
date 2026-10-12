@@ -6,8 +6,8 @@
      Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](#np3-7)). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 11.10.2026: **8388 Zeilen**, **127** Abschnitte auf zweiter und
-**227** auf dritter Ebene. Nachzählen:
+Gemessen am 12.10.2026: **8614 Zeilen**, **128** Abschnitte auf zweiter und
+**233** auf dritter Ebene. Nachzählen:
 
 ```sh
 wc -l < BEFUNDE.md                  # Zeilen
@@ -43,10 +43,10 @@ nach der Stelle).
 > `grep -rn "E-53" --include=*.md .`, `git grep` gegen
 > `origin/lessons_learned` und `git log --all -S"E-53"` — dreimal null Treffer.
 > Sie hat nur nicht gefunden, was auf dem Zweig **`karten-und-trennbalken`**
-> lag und noch nicht bei `origin` war: **E-53** (ein Strich bleibt beim
+> lag und noch nicht bei `origin` war: **[E-53](#e-53)** (ein Strich bleibt beim
 > Schließen eines Fensters stehen, behoben in 7.2.0.28, von Gregor noch nicht
 > bestätigt) und danach [**E-54**](#e-54) bis [**E-62**](#e-62). Die höchste vergebene Kennung
-> ist damit **E-62**, nicht E-52. **Nachtrag 09.09.2026 (PRUEFER, Filter):** seither sind [**E-63**](#e-63) bis [**E-69**](#e-69) vergeben, die höchste ist damit **E-69**.
+> ist damit **[E-62](#e-62)**, nicht [E-52](#e-52). **Nachtrag 09.09.2026 (PRUEFER, Filter):** seither sind [**E-63**](#e-63) bis [**E-69**](#e-69) vergeben, die höchste ist damit **[E-69](#e-69)**.
 >
 > **Die Lehre daraus ist nicht „besser greppen", sondern:** ein Kennungsraum
 > lässt sich nicht aus einem einzelnen Arbeitsbaum messen. `git log --all`
@@ -62,7 +62,7 @@ Nachgezogen am 07.09.2026 (Agent LEKTOR, Befund `Befunde/LEKTOR-3.md`, L-7):
 [**E-31**](#e-31), [**E-32**](#e-32) und [**E-33**](#e-33) fehlten ganz und sind eingetragen; [**R-1**](#r-1) nannte
 25 von 142 Stellen, gemessen sind 21 von 137; und der Kasten, der [**E-15**](#e-15) und
 [**E-18**](#e-18) bis [**E-21**](#e-21) für nie vergeben erklärte, war falsch — alle fünf stehen
-in Quellkommentaren. Nachgezogen am 06.09.2026 (L-6): [**Z-3**](#z-3) stand auf „offen",
+in Quellkommentaren. Nachgezogen am 06.09.2026 ([L-6](Befunde/LEKTOR.md#l-6)): [**Z-3**](#z-3) stand auf „offen",
 ist aber seit `57fe6a4` behoben; [**E-14**](#e-14), [**E-16**](#e-16), [**E-17**](#e-17), [**E-22**](#e-22),
 [**E-23**](#e-23), [**E-24**](#e-24), [**E-25**](#e-25) und [**E-26**](#e-26) fehlten im Verzeichnis ganz und sind
 eingetragen. Am 05.09.2026 nachgezogen: [**E-4**](#e-4) und [**E-7**](#e-7) standen auf „offen",
@@ -90,21 +90,21 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| H1 | ungültige Protokollversion brach die TLS-Verbindung nicht mehr ab | **behoben** |
-| H2 | Zeichentabelle: sieben falsche Zuordnungen, Doppelersetzung | **behoben** |
-| M1 | Untergrenze TLS 1.0 galt ausgerechnet für die Voreinstellung | **behoben** |
-| M2 | `BIO_s_workersocket()` war für sich genommen nicht threadsicher | **behoben** |
-| M3 | `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht | **überholt** (Absicht, im Code vermerkt) |
-| M4 | Empfangsrichtung las die **Sende**einstellung (Originalfehler) | **behoben** |
-| M5 | `CSumList::GetTail()` lieferte den Kopf (Originalfehler) | **behoben** |
-| N1 | Zeigerschmuggel durch `BIO_set_fd` hält nur unter Win32 | **behoben** (x64-Rest im Befund) |
-| N2 | `static` bei `get_entry_info` verlorengegangen | **behoben** |
-| N3 | zwei Rückgabewerte wurden nicht ausgewertet | **behoben** |
-| N4 | `#undef` auf einen SDK-Wächter in `ExceptionHandler.cpp` | **behoben** |
-| N5 | `atlimage.h`: Laufzeitprüfung durch `TRUE` ersetzt | **behoben** (Änderung war nötig, bleibt) |
-| N6 | OTShim war in keinem Projekt eingehängt | **überholt** |
-| N7 | zwei kleine Stellen in OTShim, beide heute wirkungslos | **offen** |
-| N8 | `const_cast` mit anschließendem Schreibzugriff, 7 echte Fälle | **geprüft**, kein Handlungsbedarf |
+| [H1](#h1) | ungültige Protokollversion brach die TLS-Verbindung nicht mehr ab | **behoben** |
+| [H2](#h2) | Zeichentabelle: sieben falsche Zuordnungen, Doppelersetzung | **behoben** |
+| [M1](#m1) | Untergrenze TLS 1.0 galt ausgerechnet für die Voreinstellung | **behoben** |
+| [M2](#m2) | `BIO_s_workersocket()` war für sich genommen nicht threadsicher | **behoben** |
+| [M3](#m3) | `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht | **überholt** (Absicht, im Code vermerkt) |
+| [M4](#m4) | Empfangsrichtung las die **Sende**einstellung (Originalfehler) | **behoben** |
+| [M5](#m5) | `CSumList::GetTail()` lieferte den Kopf (Originalfehler) | **behoben** |
+| [N1](#n1) | Zeigerschmuggel durch `BIO_set_fd` hält nur unter Win32 | **behoben** (x64-Rest im Befund) |
+| [N2](#n2) | `static` bei `get_entry_info` verlorengegangen | **behoben** |
+| [N3](#n3) | zwei Rückgabewerte wurden nicht ausgewertet | **behoben** |
+| [N4](#n4) | `#undef` auf einen SDK-Wächter in `ExceptionHandler.cpp` | **behoben** |
+| [N5](#n5) | `atlimage.h`: Laufzeitprüfung durch `TRUE` ersetzt | **behoben** (Änderung war nötig, bleibt) |
+| [N6](#n6) | OTShim war in keinem Projekt eingehängt | **überholt** |
+| [N7](#n7) | zwei kleine Stellen in OTShim, beide heute wirkungslos | **offen** |
+| [N8](#n8) | `const_cast` mit anschließendem Schreibzugriff, 7 echte Fälle | **geprüft**, kein Handlungsbedarf |
 
 ## Nachprüfungen 2 und 3 (PRUEFER, 29./30.08.2026)
 
@@ -122,7 +122,7 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 | <a id="np3-7"></a>NP3-7 | `pruefstand-melden.pl` nennt einen beliebigen Commit, und braucht 29,5 s | **behoben** am 31.08.2026 - Spurmarke `<!-- pruefstand: <commit> -->` in jeder beobachteten Datei nennt den Commit, gegen den sie zuletzt abgeglichen wurde; fehlt sie, meldet das Werkzeug es statt zu raten |
 | <a id="np3-8"></a>NP3-8 | der IMAP-Empfang übersetzt **keinen** Zeichensatz (Originalfehler) | **behoben** in 7.2.0.52, am laufenden Programm belegt. **Dieser Befund stand hier, als Gregor am 13.09.2026 denselben Fehler als E-85 meldete — und wurde nicht gelesen.** Er nannte die Ursache, die Zeilennummern und die Handlungsanweisung („denselben Aufruf verwenden wie `mime.cpp:382-390`, am besten durch Aufruf von `FindMIMECharset` selbst, und die Abfrage in Zeile 4657 auf `> 2` ziehen"). Genau so wurde es behoben — nur über zwei Anläufe und eine ausgelieferte Zwischenfassung hinweg. Siehe **E-85** |
 | <a id="np3-9"></a>NP3-9 | Rückgabewert von `ISOTranslate` an zwei Stellen verworfen | **behoben**, von Gregor an 1.0.51 bestätigt (die Umlaute kamen richtig an, siehe E-85) — POP schon früher, **IMAP in 7.2.0.51** (`ImapDownload.cpp`, `inLen`/`outLen` werden nachgezogen). Auch dieser Befund stand bereits hier, als derselbe Mangel unter **E-85** neu gesucht wurde |
-| PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis `P-3`) | **offen** (Härtungslücken) |
+| PROBE | drei Funde beim ersten Ausführen der Ersatzschicht (`### P-1` bis [`P-3`](Befunde/PRUEFER-11.md#p-3)) | **offen** (Härtungslücken) |
 
 ## Start, Paket, Auslieferung (S)
 
@@ -315,8 +315,8 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 
 Diese Kennungen haben **keinen eigenen Abschnitt auf oberster Ebene**, sondern
 stehen als Unterpunkt in einem größeren Befund. Wer nach ihnen sucht und oben
-nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
-`P-3` bis dahin in keiner Zeile des Verzeichnisses vorkamen.
+nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel [`PR-6`](#pr-6) und
+[`P-3`](Befunde/PRUEFER-11.md#p-3) bis dahin in keiner Zeile des Verzeichnisses vorkamen.
 
 | Kennung | steht in | Worum es geht | Status |
 |---|---|---|---|
@@ -326,12 +326,12 @@ nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
 | <a id="pr-6"></a>PR-6 | `### PR-6` unter **W-1** | kein `_T` um ein Makro (bricht im Unicode-Bau) | **behoben** |
 | <a id="pr-7"></a>PR-7 | `### PR-7` unter **W-1** | die Zahlen in S-7 widersprachen sich: es gilt 4616 von 5563 | **behoben** |
 | <a id="pr-8"></a>PR-8 | `### PR-8` unter **W-1** | `rekursion-suchen.pl` gelöscht — fand seinen eigenen Anlass nicht; das Werkzeug liegt nicht mehr im Baum | **behoben** |
-| PR-2.0 … PR-2.9 | `### PR-2.x` unter [**PR-2**](#pr-2) | zehn Punkte der Nachprüfung vom 31.08. | PR-2.0 und PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
+| [PR-2.0](Befunde/PAKET.md#pr-2.0) … PR-2.9 | `### PR-2.x` unter [**PR-2**](#pr-2) | zehn Punkte der Nachprüfung vom 31.08. | [PR-2.0](Befunde/PAKET.md#pr-2.0) und PR-2.1 **behoben**, PR-2.8 kein Handlungsbedarf, Rest **offen** |
 | P-1.0 … P-1.8 | `### P-1.x` unter [**P-1**](#p-1) (POP-Abrufpfad) | elf Altlasten auf dem Abrufpfad | P-1.1/P-1.8 **behoben**, P-1.5b–P-1.5j **offen** |
-| P-2.1 … P-2.7 | `### P-2.x` unter [**P-2**](#p-2) (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
-| [P-1](#p-1), [P-2](#p-2), P-3 (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei Härtungslücken beim ersten Lauf der Ersatzschicht; **P-3** ist `SECDateTimeCtrl::FixedTime`, das die Stunde ausläßt (Fehler im Original, bewusst übernommen) | **offen** |
+| [P-2.1](#p-2.1) … P-2.7 | `### P-2.x` unter [**P-2**](#p-2) (Absturzpunkt) | Absicherung vor dem ersten Abruf | **behoben** |
+| [P-1](#p-1), [P-2](#p-2), [P-3](Befunde/PRUEFER-11.md#p-3) (PROBE) | `### P-1`/`### P-2`/`### P-3` unter **PROBE** | drei Härtungslücken beim ersten Lauf der Ersatzschicht; **[P-3](Befunde/PRUEFER-11.md#p-3)** ist `SECDateTimeCtrl::FixedTime`, das die Stunde ausläßt (Fehler im Original, bewusst übernommen) | **offen** |
 | S-3a, S-3b, S-3c | `### S-3x` unter [**S-3**](#s-3) | erster Lauf durch einen Anwender | S-3a **behoben**, S-3b/S-3c **offen** |
-| [E-9](#e-9), Nachtrag | unter **E-9** | die Plugins sind es NICHT — gemessen | **Beleg** |
+| [E-9](#e-9), Nachtrag | unter **[E-9](#e-9)** | die Plugins sind es NICHT — gemessen | **Beleg** |
 
 > ### Achtung: drei Kennungen sind doppelt vergeben
 >
@@ -343,12 +343,12 @@ nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
 > |---|---|---|
 > | [**P-1**](#p-1) | `### P-1` (PROBE): `OnActivateTab`/`ClearSelection` rufen `GetParent()` ungeprüft | `## P-1`: der POP-Abrufpfad, vor dem ersten Abruf gegengelesen |
 > | [**P-2**](#p-2) | `### P-2` (PROBE): `SECTabWndBase::InsertTab` blendet ein Fenster ungeprüft aus | `## P-2`: der Absturzpunkt vor dem ersten Abruf abgesichert |
-> | [**PR-2**](#pr-2) | `PR-2` in `PRUEFBERICHT.md`: Schranke schlägt bei Leerzeilen grundlos an (**behoben**) | `## PR-2` hier: Nachprüfung der Arbeit vom 31.08. mit PR-2.0 bis PR-2.9 |
+> | [**PR-2**](#pr-2) | [`PR-2`](#pr-2) in `PRUEFBERICHT.md`: Schranke schlägt bei Leerzeilen grundlos an (**behoben**) | `## PR-2` hier: Nachprüfung der Arbeit vom 31.08. mit [PR-2.0](Befunde/PAKET.md#pr-2.0) bis PR-2.9 |
 >
-> **`E-12` war der vierte Fall und ist aufgelöst:** Agent KONTO und Agent
-> FORTSCHRITT haben unabhängig „die nächste freie E-Nummer" gewählt. `E-12`
+> **[`E-12`](#e-12) war der vierte Fall und ist aufgelöst:** Agent KONTO und Agent
+> FORTSCHRITT haben unabhängig „die nächste freie E-Nummer" gewählt. [`E-12`](#e-12)
 > bleibt beim Mailverzeichnis-Argument (KONTO, zuerst zusammengeführt); der
-> Fortschrittsbefund heißt seit dem 05.09.2026 **`E-13`**.
+> Fortschrittsbefund heißt seit dem 05.09.2026 **[`E-13`](#e-13)**.
 >
 > **Wer eine neue Kennung vergibt, misst zuerst über alle Zweige:**
 >
@@ -362,7 +362,7 @@ nichts findet, sucht hier. Ergänzt am 05.09.2026, weil zum Beispiel `PR-6` und
 
 Diese Kennungen sind **vergeben**, ihr Befundtext steht aber noch nicht in
 `bau-und-pruefung`. Sie stehen hier, damit sie kein zweites Mal vergeben werden
-— genau das ist mit `E-12` passiert. Gemessen am 05.09.2026 mit dem Befehl aus
+— genau das ist mit [`E-12`](#e-12) passiert. Gemessen am 05.09.2026 mit dem Befehl aus
 dem Kasten oben.
 
 | Kennung | Worum es geht | Zweig | zu tun beim Zusammenführen |
@@ -372,7 +372,7 @@ dem Kasten oben.
 | E-13 | Fortschritt beim Mailabruf ist nicht sichtbar (Abschnitt steht **hier**, der **Code** noch nicht) | Behebung in `bd3959c` auf `wt/fortschritt-arbeit` | dort die Überschrift `## E-12 — Der Fortschritt beim Mailabruf …` **entfernen**, sonst steht `E-12` zweimal in der Datei |
 
 **Nächste freie Kennungen, gemessen über alle Zweige am 05.09.2026:**
-`E-14`, `B-4`, `X-7`, `Z-4`. (`E-10` ist eine bewusste Lücke, siehe oben.)
+[`E-14`](#e-14), `B-4`, [`X-7`](#x-7), `Z-4`. (`E-10` ist eine bewusste Lücke, siehe oben.)
 ## Was in dieser Datei sonst noch steht
 
 Neben den Befunden vier Sammelkapitel, die **kein** Mangel sind und deshalb oben
@@ -419,7 +419,7 @@ dieser Reihenfolge:
 - `Eudora71/Tests/**` - das Pruefgeruest selbst (nicht der Prueflingscode).
 - Die `.vcxproj`-Dateien (QCSSL, QCSocket, QCUtils; zusammen rund 1.200
   geaenderte Zeilen). Einzig `<Platform>Win32</Platform>` wurde nachgesehen,
-  weil Befund N1 davon abhaengt.
+  weil Befund [N1](#n1) davon abhaengt.
 - `Releases/1.0/QCSSL.dll` - Binaerdatei.
 - Zeilenenden und Kodierung der beruehrten Dateien.
 - Die Rumpfteile von `TBarBmpCombo.cpp`, `TBarStatic.cpp`, `TBarEdit.cpp`
@@ -431,7 +431,7 @@ dieser Reihenfolge:
 
 # Befunde
 
-## H1 - QCSSL: ungueltige Protokollversion bricht die Verbindung nicht mehr ab
+## <a id="h1"></a>H1 - QCSSL: ungueltige Protokollversion bricht die Verbindung nicht mehr ab
 
 **Sicherheit: nachgewiesen**
 
@@ -471,7 +471,7 @@ Merkervariable setzen und vor `SSL_CTX_new()` abfragen.
 
 ---
 
-## H2 - Zeichentabelle: bereits behoben, Korrektur nachgeprueft
+## <a id="h2"></a>H2 - Zeichentabelle: bereits behoben, Korrektur nachgeprueft
 
 **Sicherheit: nachgewiesen (Befund und Behebung)**
 
@@ -501,7 +501,7 @@ dass die Stelle geprueft ist.
 
 ---
 
-## M1 - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
+## <a id="m1"></a>M1 - QCSSL: aus "genau TLS 1.0" wurde "mindestens TLS 1.0, nach oben offen"
 
 **Sicherheit: nachgewiesen (Code); Auswirkung: Verdacht**
 
@@ -529,7 +529,7 @@ Fall 0/1/4/6/7. Wenn nicht: ebenfalls auf `TLS1_2_VERSION` legen. Wenn doch:
 
 ---
 
-## M2 - QCSSL: `BIO_s_workersocket()` ist fuer sich genommen nicht threadsicher
+## <a id="m2"></a>M2 - QCSSL: `BIO_s_workersocket()` ist fuer sich genommen nicht threadsicher
 
 **Sicherheit: nachgewiesen (Code); in der Praxis derzeit entschaerft**
 
@@ -572,7 +572,7 @@ kostet nichts und macht die Funktion unabhaengig von `g_Mutex`.
 
 ---
 
-## M3 - OTShim: `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht
+## <a id="m3"></a>M3 - OTShim: `SetWorkbookMode()` setzt `m_bWorkbookMode` nicht
 
 **Sicherheit: nachgewiesen**
 
@@ -596,7 +596,7 @@ aber nirgends. Falls Absicht: als Kommentar hinschreiben. Falls nicht:
 
 ---
 
-## M4 - `QCWorkerSocket`: Empfangsrichtung liest die Sendeeinstellung
+## <a id="m4"></a>M4 - `QCWorkerSocket`: Empfangsrichtung liest die Sendeeinstellung
 
 **Sicherheit: nachgewiesen. Nicht aus der Portierung - Originalfehler.**
 
@@ -616,7 +616,7 @@ nirgends benutzt.
 
 **Folge:** Die Protokollversion fuer POP/IMAP kommt aus der SMTP-Einstellung.
 Bisher war das folgenlos, weil alle Faelle auf `SSLv23_method()` hinausliefen.
-**Seit der Portierung steuert dieser Wert die TLS-Untergrenze** (siehe M1), die
+**Seit der Portierung steuert dieser Wert die TLS-Untergrenze** (siehe [M1](#m1)), die
 Verwechslung wird also erstmals wirksam.
 
 Die Datei ist von der Portierung nur an einer Stelle beruehrt worden
@@ -627,7 +627,7 @@ umbau, weil es eine echte Verhaltensaenderung ist.
 
 ---
 
-## M5 - `CSumList::GetTail()` liefert den Kopf
+## <a id="m5"></a>M5 - `CSumList::GetTail()` liefert den Kopf
 
 **Sicherheit: nachgewiesen. Nicht aus der Portierung - Originalfehler,
 in die neue const-Ueberladung uebernommen.**
@@ -652,7 +652,7 @@ ob sich Code auf das falsche Verhalten stuetzt.
 
 ---
 
-## N1 - QCSSL: der Zeigerschmuggel durch `BIO_set_fd` haelt nur unter Win32
+## <a id="n1"></a>N1 - QCSSL: der Zeigerschmuggel durch `BIO_set_fd` haelt nur unter Win32
 
 **Sicherheit: nachgewiesen. Heute kein Fehler.**
 
@@ -688,7 +688,7 @@ x64-Portierung vormerken.
 
 ---
 
-## N2 - `plist_mgr.cpp`: `static` bei `get_entry_info` verlorengegangen
+## <a id="n2"></a>N2 - `plist_mgr.cpp`: `static` bei `get_entry_info` verlorengegangen
 
 **Sicherheit: nachgewiesen**
 
@@ -714,7 +714,7 @@ nicht noetig.
 
 ---
 
-## N3 - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
+## <a id="n3"></a>N3 - QCSSL: zwei Rueckgabewerte werden nicht mehr ausgewertet
 
 **Sicherheit: nachgewiesen; geringe Auswirkung**
 
@@ -728,11 +728,11 @@ nicht noetig.
   `BeginQCSSLSession()` verworfen, insofern keine Aenderung im Ablauf.
 
 **Zu tun:** Beim ersten Punkt den Rueckgabewert pruefen und im Fehlerfall wie
-in H1 abbrechen.
+in [H1](#h1) abbrechen.
 
 ---
 
-## N4 - `ExceptionHandler.cpp`: `#undef` auf einen SDK-Waechter
+## <a id="n4"></a>N4 - `ExceptionHandler.cpp`: `#undef` auf einen SDK-Waechter
 
 **Sicherheit: nachgewiesen; heute wirkungslos, aber zerbrechlich**
 
@@ -758,7 +758,7 @@ die SDK-Typen ohne verstaendliche Fehlermeldung.
 
 ---
 
-## N5 - `atlimage.h`: Laufzeitpruefung durch `TRUE` ersetzt
+## <a id="n5"></a>N5 - `atlimage.h`: Laufzeitpruefung durch `TRUE` ersetzt
 
 **Sicherheit: nachgewiesen; Ergebnis sachlich richtig**
 
@@ -780,7 +780,7 @@ nicht geschehen.
 
 ---
 
-## N6 - OTShim ist in keinem Projekt
+## <a id="n6"></a>N6 - OTShim ist in keinem Projekt
 
 > **Ueberholt seit `7dcac81`** (nachgetragen von LEKTOR, gemessen an `e7e6f3c`).
 > `Eudora/stdafx.h:52` zieht jetzt `OTShimAll.h` statt `secall.h`, und
@@ -808,7 +808,7 @@ uebersetzt, es bindet nicht, und im Build steckt es noch gar nicht.
 
 ---
 
-## N7 - OTShim: zwei kleinere Stellen
+## <a id="n7"></a>N7 - OTShim: zwei kleinere Stellen
 
 **Sicherheit: Verdacht; beide heute wirkungslos**
 
@@ -828,7 +828,7 @@ uebersetzt, es bindet nicht, und im Build steckt es noch gar nicht.
 
 ---
 
-## N8 - `const_cast` mit anschliessendem Schreibzugriff
+## <a id="n8"></a>N8 - `const_cast` mit anschliessendem Schreibzugriff
 
 **Sicherheit: nachgewiesen (das Muster); Bewertung: originalgetreu**
 
@@ -878,7 +878,7 @@ Spaetere Pruefungen muessen hier nicht noch einmal anfangen.
   Der Endzustand nach `BIO_new_ws(..., BIO_NOCLOSE)` ist in beiden Fassungen
   derselbe.
 - **Datenslot-Rundlauf** setzen/lesen/zurueckgeben - konsistent (Einzelheiten
-  unter N1).
+  unter [N1](#n1)).
 - **`qccertificate.cpp`.** `X509_STORE_CTX_get0_store(ctx)` liefert dasselbe
   Objekt wie frueher `pX509StoreCtx->ctx`; `X509_STORE_CTX_get_current_cert()`
   und `X509_STORE_CTX_get_error()` sind wortgleiche Ersetzungen. Die
@@ -911,7 +911,7 @@ das alte `reinterpret_cast<const CSummary*&>(...)` band also eine Referenz an
 ein temporaeres Objekt. Die Ueberladungen kaemen ausserdem nur ueber einen
 Uebersetzungsfehler zum Vorschein, wenn ein Aufrufer das Ergebnis wirklich als
 Referenz binden wollte - das tut keiner. (Der eigentliche Fehler an dieser
-Stelle ist M5.)
+Stelle ist [M5](#m5).)
 
 ## Schleifenzaehler, die vorgezogen wurden
 
@@ -1039,14 +1039,14 @@ abgefangen.
 Waehrend die Pruefung lief, haben andere Agenten weitergearbeitet. Gegen
 `ba617a8` nachgesehen:
 
-- **M3 ist ueberholt.** `OTShim.cpp:1104` haelt inzwischen ausdruecklich fest
+- **[M3](#m3) ist ueberholt.** `OTShim.cpp:1104` haelt inzwischen ausdruecklich fest
   "Bewusst keine Zuweisung an `m_bWorkbookMode`", `OTShim.h:970` nennt es eine
   Grundentscheidung. Damit ist genau die Luecke geschlossen, die der Befund
   bemaengelt hat: es war Absicht, sie stand nur nirgends. Kein Handlungsbedarf
   mehr.
-- **N6 gilt weiter.** Auch nach `e81adb0` ("Stufe 4: Bildklassen ueber GDI+")
+- **[N6](#n6) gilt weiter.** Auch nach `e81adb0` ("Stufe 4: Bildklassen ueber GDI+")
   taucht `OTShim` in keiner `.vcxproj` auf.
-- **H1, M1, M2, M4, M5 und N1 bis N5, N7, N8 gelten unveraendert.**
+- **[H1](#h1), [M1](#m1), [M2](#m2), [M4](#m4), [M5](#m5) und [N1](#n1) bis [N5](#n5), [N7](#n7), [N8](#n8) gelten unveraendert.**
   `SetSSLVersion()` steht in `ba617a8` Zeile fuer Zeile so da wie beschrieben.
 - Nicht als Befund aufgenommen, weil waehrend der Pruefung behoben:
   `X509_STORE_CTX_set_ex_data(pX509StoreCtx, 0, ...)` in
@@ -1058,11 +1058,11 @@ Waehrend die Pruefung lief, haben andere Agenten weitergearbeitet. Gegen
 
 # Zusammenfassung
 
-- 1 Befund hoher Schwere (H1) - eine echte Regression aus der Portierung.
-- 5 Befunde mittlerer Schwere; davon zwei (M4, M5) **Originalfehler**, die die
+- 1 Befund hoher Schwere ([H1](#h1)) - eine echte Regression aus der Portierung.
+- 5 Befunde mittlerer Schwere; davon zwei ([M4](#m4), [M5](#m5)) **Originalfehler**, die die
   Portierung nicht verursacht, aber auch nicht bemerkt hat.
 - 8 Befunde niedriger Schwere, ueberwiegend vorsorglicher Natur.
-- H2 (Zeichentabelle) war bei Pruefungsbeginn offen und ist waehrend der
+- [H2](#h2) (Zeichentabelle) war bei Pruefungsbeginn offen und ist waehrend der
   Pruefung mit `b4b7de5` behoben worden; die Behebung wurde nachgeprueft und
   ist richtig.
 
@@ -1104,13 +1104,13 @@ Rund 11.200 eingefuegte Zeilen, davon 6.083 allein in
 
 ## Erledigt: geprueft und in Ordnung
 
-- **`QCSSLContext.cpp`, Behebung von H1** (`7d94c3d`-Reihe): `break;` wurde
+- **`QCSSLContext.cpp`, Behebung von [H1](#h1)** (`7d94c3d`-Reihe): `break;` wurde
   durch `return NULL;` ersetzt. Das stellt das alte Verhalten **wirklich
   wieder her** und verschiebt es nicht: `SetSSLVersion()` liefert wie frueher
   `NULL`, und `BeginQCSSLSession()` faengt das in Z. 750 mit
   `if (!pSSLCtx) { ASSERT(0); g_Mutex.Unlock(); return false; }` ab. Zu
   diesem Zeitpunkt ist noch kein `SSL_CTX` angelegt, es leckt also nichts.
-  **H1 ist damit erledigt.**
+  **[H1](#h1) ist damit erledigt.**
 - **`mapicmc.cpp` (`bc94cf0`)**: `current_line = CString(pszData, (int)(pszNewline - pszData));`
   ersetzt das Setzen und Zuruecksetzen des NUL-Bytes. Bei `WM_COPYDATA` liegt
   der Puffer im fremden Prozess; der Schreibzugriff faellt jetzt weg. Der
@@ -1161,7 +1161,7 @@ ist **vor** `91716bb` passiert und danach nicht nachgezogen worden. Folge:
    das Setzen des Waechters ohne Einbinden von `OTShim_Werkzeugleiste.h` die
    Knopfklassen ersatzlos verschwinden lassen.
 
-Das ist derselbe Befundtyp wie N6 aus der ersten Runde, nur eine Stufe
+Das ist derselbe Befundtyp wie [N6](#n6) aus der ersten Runde, nur eine Stufe
 weiter: Der Code ist da, er ist nur an nichts angeschlossen. Solange das so
 ist, sagt "uebersetzt" ueber Stufe 3 gar nichts aus - auch der
 Uebersetzungsfehler waere noch nicht gefunden.
@@ -1201,7 +1201,7 @@ Weiterhin ausgenommen: die **Hostnamenpruefung** in QCSSL.
 
 ## Stand der alten Befunde
 
-Nicht erneut nachgesehen; sie beziehen sich auf `ba617a8`. Ausnahme: **H1 ist
+Nicht erneut nachgesehen; sie beziehen sich auf `ba617a8`. Ausnahme: **[H1](#h1) ist
 behoben** (siehe oben). `M3` war schon im Nachtrag als ueberholt vermerkt.
 
 ---
@@ -1335,8 +1335,8 @@ nicht.
 
 ## Gesamtzahl nach der Nachpruefung
 
-- Teil 1 (`ba617a8`): 1 hoch (**H1 inzwischen behoben**), 5 mittel (davon M3
-  ueberholt, M4 und M5 Originalfehler), 8 niedrig.
+- Teil 1 (`ba617a8`): 1 hoch (**[H1](#h1) inzwischen behoben**), 5 mittel (davon [M3](#m3)
+  ueberholt, [M4](#m4) und [M5](#m5) Originalfehler), 8 niedrig.
 - Teil 2 (`ba617a8..8dd6b2a`, unvollstaendig): 3 Befunde - [NP2-1](#np2-1) (Stufe 3
   haengt in keinem Projekt), [NP2-2](#np2-2) und [NP2-3](#np2-3) (beide klein, in Stufe 3).
 
@@ -1399,7 +1399,7 @@ Tests: `Eudora71/Tests/RunTests.cmd` - 23 Tests, 23 bestanden, 0 fehlgeschlagen.
 
 - `SSL_CTX_set_min_proto_version()`: schlaegt der Aufruf fehl, wird der Kontext
   freigegeben und `NULL` zurueckgegeben. `BeginQCSSLSession()` bricht bei `NULL`
-  ab - denselben Weg nimmt seit H1 auch die ungueltige Version. Die eingestellte
+  ab - denselben Weg nimmt seit [H1](#h1) auch die ungueltige Version. Die eingestellte
   Untergrenze kann damit nicht mehr stillschweigend durch die Voreinstellung von
   OpenSSL ersetzt werden.
 - `SetCipherSuites()`: Rueckgabewert wird in `BeginQCSSLSession()` geprueft und
@@ -1460,7 +1460,7 @@ Einstellung absichtlich nutzen koennten. Geprueft, und sie tun es nicht:
   SMTP-Zweig gelesen. Eine Absicht, die Empfangsrichtung an die Sendeeinstellung
   zu koppeln, ist an keiner Stelle formuliert.
 
-**Einschraenkung, damit sie nicht ueberschaetzt wird:** seit M1 laufen alle acht
+**Einschraenkung, damit sie nicht ueberschaetzt wird:** seit [M1](#m1) laufen alle acht
 gueltigen Faelle auf dieselbe Untergrenze TLS 1.2 hinaus. Die im Befund
 beschriebene Wirkung - die Empfangsrichtung erbt den TLS-Boden der Sendeseite -
 kann also derzeit ohnehin nicht mehr auftreten. Uebrig bleibt der Unterschied im
@@ -1496,7 +1496,7 @@ ihr einziger Erzeuger, und `BIO_get_fd()` ruft im ganzen Baum niemand auf. Weder
 `BIO_new_ws` noch `BIO_s_workersocket` stehen in einer Kopfdatei oder in
 `qcssl.def`; ausserhalb dieser Datei ist nichts betroffen.
 
-**Was fuer x64 trotzdem offen bleibt** (nicht Teil von N1, hier nur vermerkt, damit
+**Was fuer x64 trotzdem offen bleibt** (nicht Teil von [N1](#n1), hier nur vermerkt, damit
 es nicht als erledigt gilt): `ws_read()` Z. 154 und `ws_write()` Z. 202 reichen den
 `QCSSLReference*` als `(long)` an `m_fnQCSSLReadCallback`/`m_fnQCSSLWriteCallback`
 weiter. Das ist die Signatur der Rueckruffunktionen in der oeffentlichen
@@ -1527,24 +1527,24 @@ Nicht selbst geaendert - dort arbeitet LEKTOR. Nur als Hinweis:
 
 - Z. 204-210: "Als Mindestprotokoll setzt `QCSSLContext.cpp:561-583` bei sieben der
   acht Werte ... `TLS1_2_VERSION`. Der achte, `m_ProtocolVersion == 3` ..., setzt
-  `TLS1_VERSION`, also TLS 1.0." Das gilt seit M1 nicht mehr: alle acht Werte setzen
+  `TLS1_VERSION`, also TLS 1.0." Das gilt seit [M1](#m1) nicht mehr: alle acht Werte setzen
   `TLS1_2_VERSION`.
 - Derselbe Absatz: "Ein ungueltiger Wert landet im `default`-Zweig, meldet
   `IDS_ERR_VERSIONINVALID` und bleibt beim Startwert `TLS1_2_VERSION`." Das war schon
-  durch H1 ueberholt - der Zweig gibt jetzt `NULL` zurueck, die Verbindung kommt
+  durch [H1](#h1) ueberholt - der Zweig gibt jetzt `NULL` zurueck, die Verbindung kommt
   nicht zustande.
 - Die Zeile "Eine Obergrenze wird nirgends gesetzt" stimmt weiterhin und soll auch
   so bleiben.
 - Tabelle Z. 196: der Eintrag zu `BIO_s_workersocket` koennte ergaenzen, dass die
-  Struktur seit M2 erst nach dem Fuellen unteilbar veroeffentlicht wird.
-- Nicht erwaehnt, aber jetzt anders: `BIO_set_fd()` wird nicht mehr benutzt (N1).
+  Struktur seit [M2](#m2) erst nach dem Fuellen unteilbar veroeffentlicht wird.
+- Nicht erwaehnt, aber jetzt anders: `BIO_set_fd()` wird nicht mehr benutzt ([N1](#n1)).
 
 ---
 
 # Erledigt durch SUMME (30.08.2026, Branch `eudora-exe-linkt`)
 
 Bearbeitet wurden die verstreuten Befunde ausserhalb von QCSSL und der
-Ersatzschicht: M5, N2, N4, N5, N8. Die bestehenden Befundabschnitte oben sind
+Ersatzschicht: [M5](#m5), [N2](#n2), [N4](#n4), [N5](#n5), [N8](#n8). Die bestehenden Befundabschnitte oben sind
 unveraendert geblieben; dieser Abschnitt verweist nur auf sie. Hinweis zur Herkunft: die vier Quelldateien und dieser Abschnitt sind versehentlich in den Commit 63f81dc eines parallel laufenden Agenten geraten, dessen Nachricht von ISOTranslate spricht. Die Begruendung zu jeder Aenderung steht deshalb nur hier, nicht in einer Commit-Nachricht.
 
 **Bau:** `Eudora.vcxproj` Debug/x86 uebersetzt vollstaendig durch - kein einziger
@@ -1694,7 +1694,7 @@ Zeilenzahl unveraendert.
 `ATL::CImage::s_initGDIPlus` und `ATL::CImage::s_cache`, stammen aus genau
 diesem `atlimage.h` (angezogen ueber `QCGraphics.obj`). Die mitgelieferte Kopie
 deklariert die beiden statischen Elemente, aber keine Uebersetzungseinheit
-definiert sie. Das ist ein eigenstaendiger Punkt, nicht Teil von N5.
+definiert sie. Das ist ein eigenstaendiger Punkt, nicht Teil von [N5](#n5).
 
 ---
 
@@ -1833,7 +1833,7 @@ steht; hier ist es nicht nachgezogen worden.
 
 **Folge:** keine, solange Win32 gilt. Bei einem x64-Bau waere es C2555
 (Ueberschreibung mit abweichendem Rueckgabetyp) - immerhin ein lauter Fehler,
-kein stiller. Derselbe Sperrgrund wie Befund N1.
+kein stiller. Derselbe Sperrgrund wie Befund [N1](#n1).
 
 **Zu tun:** auf `INT_PTR` ziehen, wie an den beiden anderen Stellen.
 
@@ -3090,7 +3090,7 @@ Weder `/EXPORT` auf der Befehlszeile noch `PRIVATE`, `@ordinal` oder
 
 `ZIEL.md`, `Releases/PAKETE.md`, `tools/zeilenenden-angleichen.pl` und
 `tools/ersetze-bereich.pl` sind im Repository nicht vorhanden. Ebenso gibt es
-in dieser `BEFUNDE.md` keine Abschnitte `S-1` bis `S-7`. Wer künftige Aufträge
+in dieser `BEFUNDE.md` keine Abschnitte [`S-1`](#s-1) bis [`S-7`](#s-7). Wer künftige Aufträge
 schreibt, sollte das wissen.
 
 ### Offen
@@ -3167,7 +3167,7 @@ dort bricht der Bau am laengst behobenen `C2572` ab. Der lebende Stand ist
 > das nachgemessen. Offen bleiben die Splitter,
 > `FloatControlBarInMDIChild` und `SetControlBarWidthsInRow` (`OTShim.cpp:2244`,
 > leerer Rumpf), dazu PR-2.5 (`DrawChecked` hat denselben Farbfehler).
-> LEKTOR und Z-1 hatten diese Berichtigung beide gemeldet; ausgeführt wurde sie
+> LEKTOR und [Z-1](#z-1) hatten diese Berichtigung beide gemeldet; ausgeführt wurde sie
 > erst jetzt.
 
 Agent ANSICHT, Branch `worktree-agent-a84c76a2ea910c75d`, ausgehend von
@@ -3761,7 +3761,7 @@ Acht Treffer, einzeln nachgelesen:
 
 | Fundstelle | Bewertung |
 |---|---|
-| `QCWorkerSocket.cpp:2050` | **echter Fund** - P-2.2, behoben |
+| `QCWorkerSocket.cpp:2050` | **echter Fund** - [P-2.2](#p-2.2), behoben |
 | `QCWorkerSocket.cpp:453` | Fehlalarm: einzeiliges `if` ohne Block, der Aufruf ist der Rumpf |
 | `QCWorkerSocket.cpp:2042` | Fehlalarm: `if(!m_pSSLReference) m_pSSLReference = DEBUG_NEW ...`; `new` wirft bei MFC, liefert nicht NULL |
 | `POPSession.cpp:501`, `:896`, `:3228` | Fehlalarme: einzeiliges `if`, Zugriff im Rumpf |
@@ -3957,7 +3957,7 @@ Release-Fassungen bei. Für fünf stimmt das. Nicht für zwei:
 **Damit ist erklärt, warum die D-Dateien im Paket lagen** — [B-1](#b-1) hatte sie für
 totes Gewicht gehalten, weil es nur `Bin/Release` gemessen hatte. Im Paket
 wurden sie sehr wohl gebraucht: `msvcr71d.dll` von der Debug-`Paige32d.dll`,
-`msvcp71d.dll` von den Debug-Plugins. Der Satz aus B-1, sie seien „totes
+`msvcp71d.dll` von den Debug-Plugins. Der Satz aus [B-1](#b-1), sie seien „totes
 Gewicht“, war für das Repository richtig und für das Paket falsch.
 
 Der Weg, sie loszuwerden, bleibt derselbe und ist in [B-1](#b-1) belegt: die
@@ -4006,7 +4006,7 @@ nichts.**
 
 Die drei Fehler in 1.0.2 waren `MFC71.DLL`, `MFC71D.DLL`, `MSVCP71.dll`.
 `MFC71D.DLL` ist in 1.0.3 verschwunden (Release-Plugins); die beiden anderen
-sind Warnungen geworden, seit der Prüfer die Startkette kennt (B-2.2).
+sind Warnungen geworden, seit der Prüfer die Startkette kennt ([B-2.2](#b-2.2)).
 
 **Der eigentliche Zweck ist aber ein anderer Fund.** Beide Pakete bekommen
 vier Warnungen der Form
@@ -4274,7 +4274,7 @@ Dieselbe Ueberlegung gilt fuer die Schranke oben; deshalb die Testsammlung.
 ### PR-5 — behoben am 31.08.2026 abends (Commit `765c39b`)
 
 > **Berichtigung vom 05.09.2026.** Diese Überschrift lautete bis dahin
-> *„[PR-5](#pr-5) bleibt offen"*, und an drei Stellen im Repo stand PR-5 auf „offen",
+> *„[PR-5](#pr-5) bleibt offen"*, und an drei Stellen im Repo stand [PR-5](#pr-5) auf „offen",
 > obwohl es bereits behoben war. Der alte Wortlaut ist berichtigt, der Befund
 > selbst bleibt stehen.
 
@@ -4496,7 +4496,7 @@ fest nach `mfc140d.dll`, `msvcp140d.dll`, `vcruntime140d.dll` und
 Datei im Paket sie importiert. Fuer ein Release-Paket ist das Unsinn.
 Nachgemessen: keine der 32 Binaerdateien importiert eine der vier. Die drei
 uebrigen Warnungen (`EUMAPI.DLL`, `MFC71.DLL`, `MSVCP71.dll`) sind
-unveraendert die aus B-2.5 und betreffen den Start nicht.
+unveraendert die aus [B-2.5](#b-2.5) und betreffen den Start nicht.
 
 ## Stand und naechster Schritt (FREIGABE, 31.08.2026)
 
@@ -4529,7 +4529,7 @@ Bau ohne Projektverweise die `.lib`-Dateien nicht hat und ein Bau mit ihnen an
 1. **`tools/paket-pruefen.ps1`, Abschnitt 3** (die Liste der vier
    VS2022-Debug-Laufzeiten): nur noch warnen, wenn eine Paketdatei die
    betreffende DLL wirklich importiert. Der Pruefer loest die Importtabellen
-   ohnehin schon auf (B-2.5), die Angabe steht also bereits zur Verfuegung.
+   ohnehin schon auf ([B-2.5](#b-2.5)), die Angabe steht also bereits zur Verfuegung.
    Solange das nicht geschieht, meldet ein fehlerfreies Release-Paket vier
    Warnungen, die keine sind — und wer sie ernst nimmt, holt sich mit
    `laufzeit-holen.ps1` genau die vier nicht verteilbaren DLLs zurueck.
@@ -5011,31 +5011,31 @@ der Abweichungen, damit niemand auf einer falschen Angabe aufbaut.
 
 | Stelle | Behauptung | tatsächlich |
 |---|---|---|
-| P-2.1, P-2.3 | „die **zehn** `GetProcAddress`-Ergebnisse (`:373-383`)" | es sind **elf** (373…383). Die Zahl steht zweimal falsch da. |
-| P-2.1 | „in `Releases/1.0/` liegen **mehrere** `QCSSL.dll`-Fassungen" | es liegt **genau eine** (2.920.960 B), SHA256-identisch mit der im Paket 1.0.2. **Damit trägt die Begründung des Absturzszenarios so nicht.** |
-| P-2.2 | „**alle fünf** echten Aufrufer übergeben die Adresse eines Elements" | es gibt einen **sechsten**: `Eudora71/Imapdll/src/Network.cpp:539` reicht in `CNetStream::SetSSLMode` einen Zeigerparameter weiter. Nicht auf dem POP-Weg, aber „alle fünf" ist falsch. |
-| P-2.2 (Quelltext) | Kommentar „Zeile **2065** unten prüft ihn auch" | die Prüfung steht nach der eigenen Änderung bei **2070**; in 2065 steht etwas anderes. Die Korrektur hat ihre eigene Zeilenangabe veraltet gemacht. |
+| [P-2.1](#p-2.1), P-2.3 | „die **zehn** `GetProcAddress`-Ergebnisse (`:373-383`)" | es sind **elf** (373…383). Die Zahl steht zweimal falsch da. |
+| <a id="p-2.1"></a>P-2.1 | „in `Releases/1.0/` liegen **mehrere** `QCSSL.dll`-Fassungen" | es liegt **genau eine** (2.920.960 B), SHA256-identisch mit der im Paket 1.0.2. **Damit trägt die Begründung des Absturzszenarios so nicht.** |
+| <a id="p-2.2"></a>P-2.2 | „**alle fünf** echten Aufrufer übergeben die Adresse eines Elements" | es gibt einen **sechsten**: `Eudora71/Imapdll/src/Network.cpp:539` reicht in `CNetStream::SetSSLMode` einen Zeigerparameter weiter. Nicht auf dem POP-Weg, aber „alle fünf" ist falsch. |
+| [P-2.2](#p-2.2) (Quelltext) | Kommentar „Zeile **2065** unten prüft ihn auch" | die Prüfung steht nach der eigenen Änderung bei **2070**; in 2065 steht etwas anderes. Die Korrektur hat ihre eigene Zeilenangabe veraltet gemacht. |
 | M-1 | `HTERROR` in `mainfrm.cpp:8670`, Funktion `8662-8671`, Kommentar `:8744` | durchweg **um eins daneben**: 8671, 8663–8672, 8745. Dieselbe Verschiebung ist in die neuen Quelltextkommentare übernommen worden (`OTShim_Werkzeugleiste.cpp:3790`, `.h:1153`). |
 | M-1 | Konstruktoren `:3480` und `:3506` | das war der **Vorzustand**. Heute `:3514` und `:3541`. Im Text nicht als „vorher" gekennzeichnet. |
 | A-1 | „Ursache belegt", fünf Fundstellen, 32767, Verdacht `DrawDisabled` | war an `31810e2` richtig, ist **heute überholt** — `1a4a6d5` und `db28adb` haben genau das behoben. Sämtliche Zeilenangaben des Abschnitts stimmen im heutigen Baum nicht mehr. Nur `SetControlBarWidthsInRow` ist noch leerer Rumpf (`OTShim.cpp:2244`) und `OnSizeParent` reicht noch durch (`:3276`). |
-| B-2.2 | Startkette des **ausgelieferten** Pakets = **elf** Module | **zwölf** — dazu `msvcr71d.dll`, weil die gepackte `Paige32d.dll` der Debug-Bau ist. Die Elferliste ist die von Paket **1.0.3**, nicht die des ausgelieferten. |
-| B-2.5 | Paket 1.0.2: **3 Fehler, 5 Warnungen** | heute mit dem eingecheckten Prüfer: **0 Fehler, 8 Warnungen**. Die Spalte stammt aus einem älteren Stand des Werkzeugs. |
-| [W-1](#w-1) / [PR-7](#pr-7) | „[S-7](#s-7) nachgezogen, Tabelle eingefügt, Beispiel berichtigt" | **S-7 ist unverändert.** Der Kasten behauptet weiter, der Werkzeugkopf nenne „4426 von 5336" — das ist dort ersatzlos entfernt worden. Die Tabelle steht nur im Werkzeugkopf. Die Beschriftung des Beispiels ist weiterhin vertauscht. |
+| <a id="b-2.2"></a>B-2.2 | Startkette des **ausgelieferten** Pakets = **elf** Module | **zwölf** — dazu `msvcr71d.dll`, weil die gepackte `Paige32d.dll` der Debug-Bau ist. Die Elferliste ist die von Paket **1.0.3**, nicht die des ausgelieferten. |
+| <a id="b-2.5"></a>B-2.5 | Paket 1.0.2: **3 Fehler, 5 Warnungen** | heute mit dem eingecheckten Prüfer: **0 Fehler, 8 Warnungen**. Die Spalte stammt aus einem älteren Stand des Werkzeugs. |
+| [W-1](#w-1) / [PR-7](#pr-7) | „[S-7](#s-7) nachgezogen, Tabelle eingefügt, Beispiel berichtigt" | **[S-7](#s-7) ist unverändert.** Der Kasten behauptet weiter, der Werkzeugkopf nenne „4426 von 5336" — das ist dort ersatzlos entfernt worden. Die Tabelle steht nur im Werkzeugkopf. Die Beschriftung des Beispiels ist weiterhin vertauscht. |
 | [W-1](#w-1) / [PR-3](#pr-3) | Grundgesamtheit **6385** | heute **6392**. Wächst mit jedem Commit — kein Widerspruch, aber schon am Tag des Schreibens flüchtig. |
 
 ### Bestätigt
 
-`P-2.1` alle vier Fundstellen exakt der Vorzustand, die Rechnung
+[`P-2.1`](#p-2.1) alle vier Fundstellen exakt der Vorzustand, die Rechnung
 `CRString(8000 + (-1-10000))` geht auf · `P-2.3` acht Treffer, alle sieben
 Fehlalarm-Bewertungen stichprobenweise richtig · `P-2.4` `TextReader.cpp:251`
 und `utils.h:90` · `P-2.7` **105 Tests, 105 bestanden** selbst ausgeführt ·
-`M-1` `tbarmgr.h:79-80`, **genau fünf** Abfragestellen (2988, 8668, 8679, 8727,
+[`M-1`](#m-1) `tbarmgr.h:79-80`, **genau fünf** Abfragestellen (2988, 8668, 8679, 8727,
 8743), `91716bb` als Einführungscommit, `RestoreMainFrame` wird gerufen ·
-`A-1` 15 Standardknöpfe, `secData`, `DockBar.cpp` prüft selbst auf
+[`A-1`](#a-1) 15 Standardknöpfe, `secData`, `DockBar.cpp` prüft selbst auf
 `SWM_MODE_ADWARE` · `B-2.1` die echte GUID steht in der Solution, die falsche
 weiter in `VC71Bruecke/BEFUND.md:462` · `B-2.3` `EUMAPI.DLL` ist keine PE-Datei
 — und der als UNGEPRÜFT markierte Verdacht **stimmt**: Signatur `NE`, also eine
-**16-Bit-Datei** · `W-1` 23 Testfälle grün, Blob `8c4fb68a` = 5716 B mit 65 LF,
+**16-Bit-Datei** · [`W-1`](#w-1) 23 Testfälle grün, Blob `8c4fb68a` = 5716 B mit 65 LF,
 5716+65 = 5781.
 
 ### Was daraus folgt
@@ -5270,11 +5270,11 @@ Abgelesen in Eudoras eigenem Dialog *Tools → Last SSL Info*
 Damit ist die offene Frage aus `Releases/1.0/AUSLIEFERUNGEN.md` beantwortet.
 Dort stand: *„Der Mailserver-Test steht für sie aus."* Der bisherige
 erfolgreiche Abruf (29.08., `pop.gmx.net`) war mit `c875a750` gelaufen — der
-Fassung **ohne** den Regressionsfix H1 und **ohne** WACHEs fünf Befunde.
+Fassung **ohne** den Regressionsfix [H1](#h1) und **ohne** WACHEs fünf Befunde.
 
 **Jetzt ist die ausgelieferte QCSSL 1.0.1 (`ab55281a`) selbst gemessen:**
 TLS 1.3 mit einem AEAD-Verfahren, Aushandlung erfolgreich. Die strengeren
-Vorgaben aus M1 (Mindestprotokoll TLS 1.2 für alle Einstellungen) haben nichts
+Vorgaben aus [M1](#m1) (Mindestprotokoll TLS 1.2 für alle Einstellungen) haben nichts
 verschlechtert — genau das war die Sorge, die in AUSLIEFERUNGEN.md formuliert
 war.
 
@@ -5770,7 +5770,7 @@ Nachgemessen mit `dumpbin -dependents`:
 ### Zwei Folgerungen, beide unangenehm
 
 **1. Der Absturz im Kontoassistenten ([E-6](#e-6)) ist KEIN Release-Effekt.** Er
-passiert im Debug-Bau. Meine Erklärung in E-6 — „im Release entfallen alle
+passiert im Debug-Bau. Meine Erklärung in [E-6](#e-6) — „im Release entfallen alle
 ASSERT, deshalb Absturz statt Zusicherung" — **trägt nicht**. Es ist entweder
 ein Fehler unterhalb dessen, was `ASSERT` abfängt (Zugriff über einen ungültigen
 Zeiger), oder es kam eine Zusicherung, die als Absturz wahrgenommen wurde.
@@ -6272,7 +6272,7 @@ Schritt:
 
 Behoben mit `perl "$WURZEL/tools/lehren-spiegeln.pl" || exit $?`.
 
-**NP3-4 war bereits behoben** und ist hier nur der Vollständigkeit wegen
+**[NP3-4](#np3-4) war bereits behoben** und ist hier nur der Vollständigkeit wegen
 erwähnt: `lehren-spiegeln.pl` stagt nicht mehr selbst (das hinterließ bei
 `git commit -- <pfad>` eine Löschung im echten Index), sondern bricht ab und
 lässt den Menschen `git add Arbeitsweise` tun. Genau dieser Abbruch war es, den
@@ -6356,7 +6356,7 @@ Prüfung und Zugriff belegt sie unmittelbar:
 | **> 40** | **46** |
 
 212 mit Abstand 1 — das ist der klammerlose `if`-Rumpf, [X-1](#x-1) nennt 211.
-46 mit Abstand über 40 — X-1 nennt 46.
+46 mit Abstand über 40 — [X-1](#x-1) nennt 46.
 
 ### Die neun Filter
 
@@ -6825,7 +6825,7 @@ gelesen" (U+00FC = `C3 BC`).
 
 **Die Behebung von [Z-2](#z-2) ist nicht die Ursache und wird nicht zurückgenommen.**
 Die Ansage `charset=windows-1252` ist richtig. Die Ursache liegt beim **Abruf**,
-nicht bei der Anzeige, und sie ist eine andere als die von Z-2.
+nicht bei der Anzeige, und sie ist eine andere als die von [Z-2](#z-2).
 
 ### Der Widerspruch aufgelöst: es liegt an der Stelle im Bytestrom
 
@@ -7044,18 +7044,18 @@ Punkt 4.
 
 ## E-13 — Beim Mailabruf ist kein Fortschritt sichtbar: der Abruf dauert 0,02 Sekunden (05.09.2026)
 
-> **Diese Kennung hieß bis zum 05.09.2026 versehentlich `E-12`.** Zwei Agenten
-> haben unabhängig voneinander „die nächste freie E-Nummer" gewählt. `E-12` ist
+> **Diese Kennung hieß bis zum 05.09.2026 versehentlich [`E-12`](#e-12).** Zwei Agenten
+> haben unabhängig voneinander „die nächste freie E-Nummer" gewählt. [`E-12`](#e-12) ist
 > an den Befund über das Mailverzeichnis-Argument vergeben (Commit `79c09d4`,
 > zuerst zusammengeführt und im Verzeichnis geführt); dieser Befund hier bekommt
-> `E-13`. Wer unter `E-12` den Fortschrittsbefund sucht, ist hier richtig.
+> [`E-13`](#e-13). Wer unter [`E-12`](#e-12) den Fortschrittsbefund sucht, ist hier richtig.
 
 > **Stand des Codes:** Die Behebung liegt im Commit `bd3959c` auf dem Zweig
 > **`wt/fortschritt-arbeit`** und ist in `bau-und-pruefung` **noch nicht
 > enthalten**. Der vollständige Befundtext steht dort in `BEFUNDE.md`. Wer die
 > beiden Zweige zusammenführt, **entfernt dort die Überschrift `## [E-12](#e-12) — Der
 > Fortschritt beim Mailabruf …` zugunsten dieses Abschnitts** — sonst steht
-> `E-12` wieder zweimal in der Datei.
+> [`E-12`](#e-12) wieder zweimal in der Datei.
 
 **Gregor am 05.09.2026 zur Fassung 7.2.0.4:**
 
@@ -7133,7 +7133,7 @@ wiedersieht — und damit jemand prüft, ob die Meldung auch beim **zweiten**
 Start noch kommt. Dann wäre sie ein echter Befund.
 
 > **Hinweis zur Kennung.** Dieser Befund hiess bis zum 05.09.2026
-> versehentlich `E-12`. Drei Agenten hatten unabhaengig „die naechste freie
+> versehentlich [`E-12`](#e-12). Drei Agenten hatten unabhaengig „die naechste freie
 > Nummer“ gewaehlt, waehrend die anderen gleichzeitig schrieben. Kennungen
 > vergibt seitdem die Zuteilung, nicht der Agent – siehe [AGENTEN.md](AGENTEN.md).
 ---
@@ -7174,10 +7174,10 @@ Agent im richtigen Moment an ihn denkt.
 
 Genau das ist die Fehlerklasse, die dieses Projekt schon zweimal getroffen hat:
 
-* **NP3-4/[X-2](#x-2):** der `pre-commit`-Hook rief `lehren-spiegeln.pl` auf, wertete den
+* **[NP3-4](#np3-4)/[X-2](#x-2):** der `pre-commit`-Hook rief `lehren-spiegeln.pl` auf, wertete den
   Rückgabewert aber nicht aus. Die Regel („die Lehren müssen mit") stand da, die
   Durchsetzung fehlte.
-* **X-1:** die Byte-Schranke hatte neun Löcher. Erst als jemand sie **gegen
+* **[X-1](#x-1):** die Byte-Schranke hatte neun Löcher. Erst als jemand sie **gegen
   bekannte Fälle gemessen** hat, fielen sie auf.
 
 Die Lehre daraus heißt in `MEMORY.md` „Fehlerklassen abstellen": beim zweiten
@@ -7197,7 +7197,7 @@ perl "$W/tools/lehren-spiegeln.pl"        # ohne || exit $?
 Skript danach noch einmal laufen lassen. Hooks liegen unter `.git/hooks` und
 werden nicht mitversioniert: **eine Behebung im Skript ist keine Behebung auf der
 Maschine.** [X-2](#x-2) stand fünf Tage lang als „behoben" im Verzeichnis, während der
-Fehler hier weiterlief. Die Statusspalte für X-2 ist entsprechend nachgezogen.
+Fehler hier weiterlief. Die Statusspalte für [X-2](#x-2) ist entsprechend nachgezogen.
 
 Dazu kam ein zweiter Grund, warum niemand das Skript noch einmal laufen ließ: es
 schrieb nach `"$WURZEL/.git/hooks"`. In einem **Arbeitsbaum** ist `.git` eine
@@ -7495,7 +7495,7 @@ Auslöser waren zwei Sätze von Gregor. Der eine vom 07.09.2026: *„übrigens:
 task errors und task status wären waagrecht unten besser als senkrecht — nach
 dem exit-fix korrigieren."* Der andere vom 08.09.2026, nach dem Exit-Fix:
 *„dann widmen wir uns als nächstes dem erscheinungsbild der status leiste
-(senkrecht statt unten waagrecht)."* Dazu kam der Rücklauf von **PRUEFER-5**,
+(senkrecht statt unten waagrecht)."* Dazu kam der Rücklauf von **[PRUEFER-5](Befunde/PRUEFER-5.md#pruefer-5)**,
 der einen Fehler in meiner eigenen Behebung von [E-42](#e-42) fand.
 
 ### E-44 — zwei Ursachen, nicht eine
@@ -7537,7 +7537,7 @@ INI-Abschnitt `[ToolBar...]`. Den gibt es nicht. Nachgemessen am 08.09.2026 in
 liefert beide Male **0**.
 
 Der Abschnitt entsteht nie, weil `SaveBarState("ToolBar")` beim Beenden jedes
-Mal abbricht — **das ist E-43**. [E-44](#e-44) ist damit eine unmittelbare Folge von
+Mal abbricht — **das ist [E-43](#e-43)**. [E-44](#e-44) ist damit eine unmittelbare Folge von
 [E-43](#e-43), und beide zusammen erklären, was Gregor am 08.09.2026 gemeldet hat:
 *„erscheinungsbild nach dem ersten anlegen von konto wie im screenshot. muß
 korrigiert werden."* Ohne gespeicherte Lage blieben alle drei Leisten auf dem
@@ -7584,7 +7584,7 @@ Task-Manager beendet — genau der Zustand, den Gregor tagelang hatte.
 
 Wichtig für die Einordnung: das ist **geerbt, nicht neu**. Vor [E-42](#e-42) fing
 `AfxCallWndProc` (`wincore.cpp:252-278`) dieselbe Ausnahme, `DestroyWindow`
-lief ebenso nicht. E-42 hätte es nur **unsichtbar** gemacht. Behebung:
+lief ebenso nicht. [E-42](#e-42) hätte es nur **unsichtbar** gemacht. Behebung:
 dieser Schritt läuft nicht durch `AUFRAEUMEN`, sondern durch einen eigenen
 `TRY`/`CATCH_ALL`, der `DestroyWindow()` nachholt, wenn das Fenster noch
 existiert.
@@ -7598,7 +7598,7 @@ existiert.
 > also **nicht** freigegeben. Die tatsächliche Ursache von [**E-43**](#e-43) war eine
 > andere: `SECControlBar` war **zweimal definiert**, und zwei
 > Übersetzungseinheiten lasen dasselbe Feld acht Byte auseinander (siehe die
-> Verzeichniszeile zu E-43 und `CHANGELOG.md` unter 7.2.0.24). **Der Abschnitt
+> Verzeichniszeile zu [E-43](#e-43) und `CHANGELOG.md` unter 7.2.0.24). **Der Abschnitt
 > darunter bleibt unverändert stehen** — er ist das Zeitdokument einer
 > Beweisführung, die in sich stimmig war und trotzdem in die falsche Richtung
 > zeigte. Wer ihn zitiert, zitiert einen widerlegten Verdacht.
@@ -7715,7 +7715,7 @@ lief mit einer Aktion, die in der Filterdatei **nicht steht**, die
 Filterobjekte im Speicher weichen also von der Datei ab, und der einzige Weg,
 der sie anfasst, ist `CFiltersViewRight::DoDataExchange` in Speicherrichtung —
 angestoßen **ungefragt** bei jedem Wegklicken vom Filterreiter
-(`FiltersWazooWnd.cpp:122` → `filtersd.cpp:2058-2072`). Damit hängen **E-64
+(`FiltersWazooWnd.cpp:122` → `filtersd.cpp:2058-2072`). Damit hängen **[E-64](#e-64)
 und [E-65](#e-65) am selben Faden**.
 
 **Nicht** geklärt ist der Widerspruch: die Trefferzeile aus
@@ -7740,7 +7740,7 @@ Härtungen und [E-69](#e-69) im selben Zug, weil dieselben Dateien angefasst wer
 dann [E-67](#e-67) (zwei Zeichen, `>` → `>=`); dann [E-68](#e-68); dann [E-65](#e-65) (erst Gregors
 Antwort auf **eine** Frage abwarten: leere Hälfte, graue Felder oder
 Änderung wird nicht behalten?); dann [E-66](#e-66) (eine Datei, 30 bis 45 Zeilen); zum
-Schluss die Lücke im Suchfenster — und die erst, wenn E-64 erledigt ist, weil
+Schluss die Lücke im Suchfenster — und die erst, wenn [E-64](#e-64) erledigt ist, weil
 sie einen weiteren Filterlauf **einschaltet**.
 
 ## E-68, E-72, E-73, E-75 gegengerechnet — vier Gegenvermutungen, zwei bestätigt (10.09.2026, PRÜFER)
@@ -7901,7 +7901,7 @@ Abschnitt „IMAP hat dieselbe Stelle noch einmal".
 >
 > **IMAP:** von Gregor mit Paket 1.0.83 an seinem Postfach getestet (CHANGELOG
 > 7.2.0.83): drei Anhänge, alle mit Endung, einer auf 175 Zeichen gekürzt
-> (voller Pfad 258). **Noch offen:** B5.7 (IMAP ohne `SetExtension`); die
+> (voller Pfad 258). **Noch offen:** [B5.7](AUFGABEN.md#b5.7) (IMAP ohne `SetExtension`); die
 > Prüfdaten selbst laufen nur über POP. Ab hier unten folgt der ältere Stand.
 
 > **Stand vor dem ersten Bau (12.10.2026, morgens).** Die Teile 1 bis 6 sind **im Quelltext**, Fassung
@@ -8025,7 +8025,7 @@ Doppelklick öffnen.
 > nicht entschieden.** Die Faltung ist die häufigste und am besten belegte,
 > aber RFC 2231 (dritte Ursache) erzeugt dasselbe Bild und kommt bei genau
 > denselben Absendern vor. Das klärt der erste Abruf mit eingeschalteten
-> Debug-Marken (B5.0) — nicht früher.
+> Debug-Marken ([B5.0](AUFGABEN.md#b5.0)) — nicht früher.
 
 **Ein Fall bleibt offen und ist ausdrücklich nicht gemessen:** Eudora schreibt
 beim *Senden* sehr lange Dateinamen in eine einzige Zeile, ohne zu falten. Das
@@ -8230,7 +8230,7 @@ DeMacifyName32 identisch
 
 Die Unterschiede zwischen `Sandbox/Eudora/lex822.cpp` und
 `Eudora71/Eudora/lex822.cpp` betreffen ausschließlich `WriteHeaderToken` und die
-Konstruktoren. **Originalfehler**, wie M4, M5 und [NP3-8](#np3-8) — er ist mit Eudora 7.1
+Konstruktoren. **Originalfehler**, wie [M4](#m4), [M5](#m5) und [NP3-8](#np3-8) — er ist mit Eudora 7.1
 ausgeliefert worden.
 
 ### IMAP hat dieselbe Stelle noch einmal
@@ -8277,7 +8277,7 @@ selbst.
 >   ruft `MIMEMap` nur, um über das Löschen zu entscheiden
 >   (`ImapDownload.cpp:3536`). Das Sicherheitsnetz fehlt dort ganz.
 >
-> Beides steht als **B5.6** und **B5.7** in `AUFGABEN.md`. Beides ist aus dem
+> Beides steht als **B5.6** und **[B5.7](AUFGABEN.md#b5.7)** in `AUFGABEN.md`. Beides ist aus dem
 > Quelltext gelesen und **nicht am laufenden Programm gemessen**.
 
 ### Nebenbei gefunden: ein Byte über den Rand in `DeMacifyName32`
@@ -8354,7 +8354,7 @@ eingefügten Blöcke ist fehler- und warnungsfrei, mehr sagt das nicht.
 
 > *Stand 12.10.2026: alle vier Punkte unten sind erledigt — 2 als B5.3, 3 als
 > B5.5, 4 als B5.2, 5 als B5.4 (alle in 7.2.0.79). Offen ist von [AN-1](#an-1) nur noch
-> B5.7. Die Liste bleibt als Stand vom 30.09.2026 stehen.*
+> [B5.7](AUFGABEN.md#b5.7). Die Liste bleibt als Stand vom 30.09.2026 stehen.*
 
 2. **Die Marke vergrößern.** `Token[256]` ist die RFC-822-Atomgrenze, für einen
    Dateinamen ist sie zu klein. `_MAX_PATH`-nah wäre richtig; wer nicht so weit
@@ -8460,7 +8460,7 @@ löscht nie etwas — man kann beliebig oft abrufen.
 | | |
 |---|---|
 | **00 heil, 01 bis 05 kaputt** | [AN-1](#an-1) ist am laufenden Programm bestätigt |
-| **alle sechs heil** | die Teile des POP-Wegs wirken am laufenden Programm (B5.1, B5.2, B5.3 mit B5.8, B5.5, B5.9) — B5.6 und B5.7 betreffen nur IMAP und sind so nicht zu zeigen |
+| **alle sechs heil** | die Teile des POP-Wegs wirken am laufenden Programm (B5.1, B5.2, B5.3 mit B5.8, B5.5, B5.9) — B5.6 und [B5.7](AUFGABEN.md#b5.7) betreffen nur IMAP und sind so nicht zu zeigen |
 | **00 kaputt** | etwas anderes ist schiefgegangen, nicht [AN-1](#an-1) |
 | **gemischt** | die Liste der kaputten Fälle zeigt auf den Teil — so war es an 7.2.0.79 (4 von 6) und 7.2.0.80-an1 (5 von 6) |
 
@@ -8540,7 +8540,7 @@ Ergebnis: der unbekannte Tag wird übersprungen, **sein Inhalt aber
 durchgeschrieben** — jede Zeile JavaScript und jede Zeile CSS landet als Text im
 Fenster.
 
-**Das ist dieselbe Fehlerklasse wie E-105** (versteckter Vorschautext, weil
+**Das ist dieselbe Fehlerklasse wie [E-105](#e-105)** (versteckter Vorschautext, weil
 Paige `display:none` nicht kennt). Nur deutlich auffälliger — und es trifft
 nicht nur Werbung, sondern **jede HTML-Nachricht mit eingebettetem `<style>`**,
 also die meisten Newsletter.

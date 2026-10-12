@@ -1,7 +1,7 @@
 # PRÜFER-13 — E-101 nachgerechnet: die Aufbereitung nimmt Text weg, der dem Anwender gehört
 
 Stand: 17.09.2026, Zweig `e101-speichern-dateiformat`, geprüfter Commit
-`a5cbf3c` („E-101: die gespeicherte Datei ist jetzt brauchbar (1.0.66)").
+`a5cbf3c` („[E-101](../BEFUNDE.md#e-101): die gespeicherte Datei ist jetzt brauchbar (1.0.66)").
 
 Gelesen wurden nicht nur der Diff, sondern ganz:
 `E101SpeicherfassungAufbereiten` (`msgutils.cpp:3828-4049`),
@@ -34,8 +34,8 @@ Datei. Jetzt ist sie brauchbar und in konstruierbaren Fällen **unvollständig**
 Das ist derselbe Tausch, den `Arbeitsweise/kein-paket-mit-offenem-datenverlust.md`
 verbietet.
 
-Die Behebung ist klein: die drei Stellen unten (P-18, P-19, P-21) sind
-zusammen rund 25 Zeilen. Der Nutzen von E-101 bleibt dabei vollständig
+Die Behebung ist klein: die drei Stellen unten ([P-18](#p-18), [P-19](#p-19), [P-21](#p-21)) sind
+zusammen rund 25 Zeilen. Der Nutzen von [E-101](../BEFUNDE.md#e-101) bleibt dabei vollständig
 erhalten — der Normalfall (Fall 10) läuft unverändert durch.
 
 ### Wie gemessen wurde
@@ -91,7 +91,7 @@ im Rumpf so aussieht, ist Text des Anwenders. Gleiches am Ende: nur wenn hinter
 
 ## Die Mängel im Einzelnen
 
-### P-18 — DATENVERLUST: der Marker wird im ganzen Rumpf gesucht (`msgutils.cpp:3898-3916`)
+### <a id="p-18"></a>P-18 — DATENVERLUST: der Marker wird im ganzen Rumpf gesucht (`msgutils.cpp:3898-3916`)
 
 ```c
 	const int	nAuf = szKlein.Find( "<x-html" );
@@ -140,7 +140,7 @@ Fall 2, Fall 6 und Fall 11 in einem:
 	}
 ```
 
-### P-19 — DATENVERLUST: das Gegenstück wird als *letzter* Treffer gesucht (`msgutils.cpp:3920-3948`)
+### <a id="p-19"></a>P-19 — DATENVERLUST: das Gegenstück wird als *letzter* Treffer gesucht (`msgutils.cpp:3920-3948`)
 
 Die Rückwärtssuche nimmt das **letzte** `</x-html>` im Rumpf. Steht danach
 noch Text (Fall 5), wird das zitierte entfernt und das echte bleibt stehen —
@@ -174,7 +174,7 @@ den Fund nur annehmen, wenn dahinter nichts als Leerraum steht.
 			}
 ```
 
-### P-20 — DATENVERLUST: die führende Leerzeile verschwindet (`msgutils.cpp:3875-3883` und `4011-4028`)
+### <a id="p-20"></a>P-20 — DATENVERLUST: die führende Leerzeile verschwindet (`msgutils.cpp:3875-3883` und `4011-4028`)
 
 Beginnt der Text mit `\r\n\r\n`, ist `nKopfEnde == 0` und `nRumpfAb == 4`.
 `szKopf` wird wegen `( nKopfEnde > 0 )` **leer**, und weil der Zusammenbau den
@@ -194,7 +194,7 @@ Gemessen: Fall 7b, 22 → 18 Byte.
 	}
 ```
 
-### P-21 — verirrtes `\r` in der letzten Kopfzeile bei gemischtem Trenner (`msgutils.cpp:3868-3871`)
+### <a id="p-21"></a>P-21 — verirrtes `\r` in der letzten Kopfzeile bei gemischtem Trenner (`msgutils.cpp:3868-3871`)
 
 Lautet der Trenner `\r\n` + `\n`, greift der `"\n\n"`-Zweig und `szKopf` endet
 auf einem einzelnen `\r`. Gemessen (Fall 4b): `Subject: gemischter
@@ -210,7 +210,7 @@ kein Leser so erwartet. Abhilfe beim Zusammenbau:
 		szKopf = szKopf.Left( szKopf.GetLength() - 1 );
 ```
 
-### P-22 — ohne Leerzeile zwischen Kopf und Rumpf greift die Behebung gar nicht, und die Spurmarke verschweigt es (`msgutils.cpp:3875-3879`, `4030-4046`)
+### <a id="p-22"></a>P-22 — ohne Leerzeile zwischen Kopf und Rumpf greift die Behebung gar nicht, und die Spurmarke verschweigt es (`msgutils.cpp:3875-3879`, `4030-4046`)
 
 Fall 3: kein Trenner gefunden → alles gilt als Rumpf → `szKopf` leer → keine
 Kopfzeilen ergänzt. Die Datei bleibt unbrauchbar, die Spurmarke meldet aber
@@ -227,7 +227,7 @@ Sauberer wäre, das Kopfende in diesem Fall an der ersten Zeile zu suchen, die
 nicht `Feldname:` oder Fortsetzung ist. Das ist mehr Arbeit und darf warten —
 aber **stumm** darf es nicht bleiben.
 
-### P-23 — die Gegenprobe im Test misst einen Weg, den es auf diesem Pfad nicht gibt (`TestE101.cpp:42-52`, `tocview.cpp:3138`, `EudoraRes.rc:9998`)
+### <a id="p-23"></a>P-23 — die Gegenprobe im Test misst einen Weg, den es auf diesem Pfad nicht gibt (`TestE101.cpp:42-52`, `tocview.cpp:3138`, `EudoraRes.rc:9998`)
 
 `kEmpfangen` bringt `Content-Type: text/html; charset=UTF-8` mit, und der Test
 belegt, dass daran nichts geändert wird. Im **echten** Ablauf kommt eine
@@ -245,7 +245,7 @@ Commit-Nachricht behaupten etwas, das auf diesem Weg nicht eintritt. Der Test
 gehört um den echten Fall ergänzt: **empfangene Nachricht nach dem
 Taboo-Schnitt**, also ohne `Content-Type`.
 
-### P-24 — fünf Kopien der Nachricht im Speicher (x86) (`tocview.cpp:3180-3195`, `msgutils.cpp` ganz)
+### <a id="p-24"></a>P-24 — fünf Kopien der Nachricht im Speicher (x86) (`tocview.cpp:3180-3195`, `msgutils.cpp` ganz)
 
 Der alte Weg schrieb den `char*` unmittelbar in die Datei. Jetzt entstehen
 nacheinander `szGanz`, `szAlles`, `szKopf`+`szRumpf`, `szKlein`, `szNeu` und
@@ -255,7 +255,7 @@ Bedarfs, und `CString` wirft bei Fehlschlag `CMemoryException` — in
 `OnFileSaveAs` fängt sie niemand. Kein akuter Mangel, aber ein Punkt für den
 Fall, dass jemand eine 40-MB-Nachricht sichert.
 
-### P-25 — mehrere markierte Nachrichten ergeben jetzt **eine** scheinbar gültige Nachricht (`tocview.cpp:3094`, `3101`)
+### <a id="p-25"></a>P-25 — mehrere markierte Nachrichten ergeben jetzt **eine** scheinbar gültige Nachricht (`tocview.cpp:3094`, `3101`)
 
 Kein Verlust (siehe Frage 2b), aber: bisher war die Sammeldatei erkennbar eine
 Aneinanderreihung. Jetzt trägt jeder Abschnitt einen eigenen
@@ -264,7 +264,7 @@ alles Folgende für den Rumpf **einer** Nachricht. Wer das sauber will, braucht
 je Nachricht eine `From `-Trennzeile (mbox) — das ist eine eigene Aufgabe, hier
 nur vermerkt.
 
-### P-26 — Fälle aus Frage 1 fehlen in `TestE101.cpp`
+### <a id="p-26"></a>P-26 — Fälle aus Frage 1 fehlen in `TestE101.cpp`
 
 Die sieben vorhandenen Tests sind gut gebaut (jeder in beide Richtungen), aber
 **keiner** von ihnen fährt einen der vier Verlustfälle. Es fehlen: zitiertes
@@ -288,7 +288,7 @@ Ausgaben. `szDateMaybe` bringt sein `\r\n` schon selbst mit
 **(b) Schleife und `O_TRUNC`: unbedenklich.** Die Datei wird **einmal vor**
 der Schleife geöffnet (`tocview.cpp:3094`); `O_TRUNC` wirkt nur beim Öffnen.
 Die Schleife (ab `3101`) schreibt fortlaufend an, wie vorher. Kein Verlust,
-keine Änderung gegenüber dem alten Stand — siehe aber P-25.
+keine Änderung gegenüber dem alten Stand — siehe aber [P-25](#p-25).
 
 **(c) Null-Bytes in `CString`: kein neues Risiko.**
 `CMessageDoc::GetFullMessage` entfernt Null-Bytes schon beim Lesen
@@ -302,7 +302,7 @@ genauso begrenzt.
 
 ## Frage 3 — die beiden anderen Speicherwege
 
-**Sie haben den Marker-Teil von E-101 nicht, den Zeichensatz-Teil aber sehr
+**Sie haben den Marker-Teil von [E-101](../BEFUNDE.md#e-101) nicht, den Zeichensatz-Teil aber sehr
 wohl.**
 
 `CReadMessageDoc::SaveAsFile` (`ReadMessageDoc.cpp:573`) und
@@ -317,11 +317,11 @@ Was dort **trotzdem** fehlt:
 
 * Beide schreiben mit `pFile->Put(msg)` — **ohne** `MIME-Version`,
   `Content-Type` und Zeichensatz. Speichert der Anwender unter `.eml`, hat er
-  dasselbe Leiden wie bei E-101, nur ohne den auffälligen Marker.
+  dasselbe Leiden wie bei [E-101](../BEFUNDE.md#e-101), nur ohne den auffälligen Marker.
 * Der HTML-Zweig (`.htm`/`.html`, `compmsgd.cpp:3424`,
   `ReadMessageDoc.cpp:585`) schreibt Latin-1-Bytes in eine HTML-Datei **ohne
   `<meta charset>`**. Jeder heutige Browser nimmt UTF-8 an — die Umlaute sind
-  im Browser kaputt. Das ist E-101 in anderer Kleidung und **nachweisbar
+  im Browser kaputt. Das ist [E-101](../BEFUNDE.md#e-101) in anderer Kleidung und **nachweisbar
   offen**; gemessen habe ich es nicht (kein Fenster gestartet), der fehlende
   `charset` steht aber im Quelltext.
 
@@ -334,7 +334,7 @@ das Richtige:
 * HTML-Zweig: ein `<meta http-equiv="Content-Type" content="text/html;
   charset=ISO-8859-1">` in den `<head>`, nichts weiter.
 
-Das ist ein eigener Befund, kein Teil von E-101. Ich habe ihn nicht angelegt
+Das ist ein eigener Befund, kein Teil von [E-101](../BEFUNDE.md#e-101). Ich habe ihn nicht angelegt
 (`befund-suchen.pl` zuerst).
 
 ---
@@ -345,10 +345,10 @@ Das ist ein eigener Befund, kein Teil von E-101. Ich habe ihn nicht angelegt
 Postfach geschrieben wird, ist bereits umgesetzt. `mime.cpp:149/217/248/256`
 hängt einen `TextReader` in den Empfangsweg, und `TextReader::ReadIt` ruft
 `ISOTranslate(buf, size, iCharsetIdx)` (`TextReader.cpp:300`). Was in `In.mbx`
-liegt, ist also Latin-1/CP1252 — genau die Kodierung, von der NP3-8 und E-85
+liegt, ist also Latin-1/CP1252 — genau die Kodierung, von der [NP3-8](../BEFUNDE.md#np3-8) und [E-85](../BEFUNDE.md#e-85)
 handeln. Die Ableitung aus den Bytes ist damit **nicht** geraten.
 
-**Und sie ist sogar richtiger als die Alternative.** Wegen P-23 ist die
+**Und sie ist sogar richtiger als die Alternative.** Wegen [P-23](#p-23) ist die
 ursprüngliche `Content-Type`-Zeile beim Speichern ohnehin fort; hätte man sie
 stehen lassen, stünde `charset=UTF-8` über einem Rumpf, der längst Latin-1
 ist — die Umlaute wären kaputt. Wer diesen Zweig je „repariert", indem er die
@@ -383,25 +383,25 @@ ein Vorschlag, kein Mangel — wer ihn einbaut, prüft ihn in beide Richtungen.
 ## Frage 5 — P-8 bis P-12 (`PGHTMIMP.CPP`)
 
 **Alle fünf unverändert offen.** `git log` weist seit `008e18a` (PRÜFER-11)
-**keinen einzigen Commit** auf `Eudora71/Eudora/PGHTMIMP.CPP` aus. P-11 (die
+**keinen einzigen Commit** auf `Eudora71/Eudora/PGHTMIMP.CPP` aus. [P-11](PRUEFER-11.md#p-11) (die
 E-95-Spurmarke liest einen Paige-Handle als Zeichenkette) misst weiterhin
-nichts; P-10 (Gegenvermutung zur festen 13/3) ist ungemessen.
+nichts; [P-10](PRUEFER-11.md#p-10) (Gegenvermutung zur festen 13/3) ist ungemessen.
 
 ---
 
 ## Was zu tun ist, in dieser Reihenfolge
 
-1. **P-18, P-19, P-20** — der Datenverlust. Zusammen rund 25 Zeilen, Vorschläge
+1. **[P-18](#p-18), [P-19](#p-19), [P-20](#p-20)** — der Datenverlust. Zusammen rund 25 Zeilen, Vorschläge
    oben. Ohne sie kein Paket 1.0.66.
-2. **P-26** — die vier Verlustfälle als Tests, mit dem Prüfsatz „kein Byte
+2. **[P-26](#p-26)** — die vier Verlustfälle als Tests, mit dem Prüfsatz „kein Byte
    außer dem Marker fehlt". Sonst kommt der nächste Schnitt stumm zurück.
-3. **P-23** — den echten Weg (Taboo-Schnitt vor der Aufbereitung) im Test
+3. **[P-23](#p-23)** — den echten Weg (Taboo-Schnitt vor der Aufbereitung) im Test
    abbilden und den Kommentar berichtigen.
-4. **P-21, P-22** — gemischter Trenner und die stumme Spurmarke.
+4. **[P-21](#p-21), [P-22](#p-22)** — gemischter Trenner und die stumme Spurmarke.
 5. **Frage 3** — eigener Befund für die beiden anderen Speicherwege
    (`.html` ohne `<meta charset>` ist der handfeste Teil).
-6. **P-24, P-25** — vermerkt, nicht dringend.
-7. **P-8 bis P-12** — unverändert wie in PRÜFER-11 beschrieben.
+6. **[P-24](#p-24), [P-25](#p-25)** — vermerkt, nicht dringend.
+7. **[P-8](PRUEFER-11.md#p-8) bis [P-12](PRUEFER-11.md#p-12)** — unverändert wie in PRÜFER-11 beschrieben.
 
 ## Was ich nicht prüfen konnte
 

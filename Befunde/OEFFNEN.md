@@ -215,9 +215,9 @@ CR-Zahl und Zahl der Bytes ≥ 0x80 vorher/nachher identisch
 
 * Dass genau dieser hängende Zeiger *die* Ursache des protokollierten
   Absturzes ist. Die Adressen im Exception.log sind mangels Ladeadresse
-  (ASLR, siehe E-26) keinem Funktionsnamen zuzuordnen; der Stapel belegt nur
+  (ASLR, siehe [E-26](../BEFUNDE.md#e-26)) keinem Funktionsnamen zuzuordnen; der Stapel belegt nur
   den Weg, nicht die Zeile. Erst ein Absturzprotokoll aus einem Bau **mit**
-  E-26 (Modultabelle) und der zugehörigen `Eudora.map` nennt die Funktion.
+  [E-26](../BEFUNDE.md#e-26) (Modultabelle) und der zugehörigen `Eudora.map` nennt die Funktion.
 * Ob damit *alle* Fälle behoben sind. Bleibt der Doppelklick nach dieser
   Änderung wirkungslos, liegt der nächste Verdacht bei
   `CReadMessageFrame::OnCreateClient` (`ReadMessageFrame.cpp:216`): die
@@ -239,4 +239,4 @@ CR-Zahl und Zahl der Bytes ≥ 0x80 vorher/nachher identisch
 * `Eudora71/Eudora/eudora.cpp:2182` `NewChildFrame`: `ASSERT_VALID(frame)` vor
   `if (frame)`. Im Debug-Bau bricht das ab, sobald ein Fenster nicht entsteht
   — im Release läuft es still weiter. Gehört zur Klasse „ASSERT an Stellen,
-  die im Betrieb vorkommen" (E-15/E-19/E-21).
+  die im Betrieb vorkommen" ([E-15](../BEFUNDE.md#e-15)/[E-19](../BEFUNDE.md#e-19)/[E-21](../BEFUNDE.md#e-21)).

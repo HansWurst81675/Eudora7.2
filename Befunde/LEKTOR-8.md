@@ -1,4 +1,4 @@
-# LEKTOR-8 — L-13, der Stand auf 7.2.0.53 / 1.0.53
+# <a id="lektor-8"></a>LEKTOR-8 — L-13, der Stand auf 7.2.0.53 / 1.0.53
 
 Gemessen an Quellstand **7.2.0.53** / Paket **1.0.53**, am **14.09.2026**,
 Zweig `wt/lektor`. Umfang: **133 MD-Dateien** (`git ls-files "*.md"`), dazu
@@ -12,10 +12,10 @@ alle **88** Werkzeuge in `tools/`.
 
 ## Der schwerste Fund: ZIEL.md widersprach sich selbst
 
-Zeile 31 sagte richtig, E-85 sei *„seit 7.2.0.52 in Ordnung"* und **am
+Zeile 31 sagte richtig, [E-85](../BEFUNDE.md#e-85) sei *„seit 7.2.0.52 in Ordnung"* und **am
 laufenden Programm belegt**. Zwölf Zeilen darunter stand:
 
-> die Umlaute in per IMAP abgerufenen Nachrichten sind mit **E-85** in 7.2.0.51
+> die Umlaute in per IMAP abgerufenen Nachrichten sind mit **[E-85](../BEFUNDE.md#e-85)** in 7.2.0.51
 > behoben, aber noch nicht von Gregor am laufenden Programm bestätigt.
 
 Falsche Fassung, falscher Belegstand, **in derselben Datei**. Wer von oben
@@ -27,7 +27,7 @@ Dieselbe Aussage stand in **vier** weiteren Dateien, jeweils mit 7.2.0.51:
 
 ## Der zweite: BEFUNDE.md widersprach sich in einer einzigen Zeile
 
-Das Urteil zu E-85 begann mit
+Das Urteil zu [E-85](../BEFUNDE.md#e-85) begann mit
 
 > **Alle drei Mängel behoben in 7.2.0.51 — aber die Behebung hat eine
 > Regression eingeführt, die noch offen ist**
@@ -47,13 +47,13 @@ erst in **7.2.0.52** behoben, und die Regression ist geschlossen.
 
 | Befund | erster Fettdruck | Folge |
 |---|---|---|
-| **E-85** | *„Alle drei Mängel behoben in 7.2.0.51 — aber die Behebung hat …"* | **106 Zeichen** — kein Treffer, Befund **nicht klassifiziert** |
-| **E-86** | *„Verdacht am Quelltext, nicht bewiesen"* | enthält weder *offen* noch *behoben* — **nicht klassifiziert** |
+| **[E-85](../BEFUNDE.md#e-85)** | *„Alle drei Mängel behoben in 7.2.0.51 — aber die Behebung hat …"* | **106 Zeichen** — kein Treffer, Befund **nicht klassifiziert** |
+| **[E-86](../BEFUNDE.md#e-86)** | *„Verdacht am Quelltext, nicht bewiesen"* | enthält weder *offen* noch *behoben* — **nicht klassifiziert** |
 
 Beide gingen also durch jede Gegenprüfung hindurch, ohne je gewogen zu werden.
 Nach der Berichtigung: **65** Kennungen statt 63, **9** offen statt 8, **56**
 behoben statt 55. Erst dadurch konnte `tools/offene-befunde.pl` überhaupt
-merken, dass E-86 in `WEITERMACHEN.md` fehlte und E-83 dort zu viel war.
+merken, dass [E-86](../BEFUNDE.md#e-86) in `WEITERMACHEN.md` fehlte und [E-83](../BEFUNDE.md#e-83) dort zu viel war.
 
 **Das ist der eigentliche Befund an diesem Tag:** eine Schranke, die ein
 Zeichenlimit als Urteilsgrenze benutzt, schweigt bei genau den Zeilen, die zu
@@ -74,7 +74,7 @@ Sätze** — gefunden nur, weil ich die Zeile ganz gelesen habe.
 
 ## Zeilenangaben: acht von sechzehn waren falsch
 
-Jede Angabe zu E-85, E-83 und E-86 ist gegen den Quelltext nachgemessen worden.
+Jede Angabe zu [E-85](../BEFUNDE.md#e-85), [E-83](../BEFUNDE.md#e-83) und [E-86](../BEFUNDE.md#e-86) ist gegen den Quelltext nachgemessen worden.
 
 | Datei | stand da | gemessen |
 |---|---|---|
@@ -86,8 +86,8 @@ Jede Angabe zu E-85, E-83 und E-86 ist gegen den Quelltext nachgemessen worden.
 | `utils.cpp` `szBuf[lSize] = 0` | 1443 | **1480** |
 | `utils.cpp` Kommentar *TextReader::ReadIt* | 1440-1442 | **1474-1479** |
 | `utils.cpp` Rückkehr bei `iCharsetIdx <= 2` | 1412-1415 | **1449-1452** |
-| `WazooBar.cpp` `Create(...)` (NP3-1) | 1003 | **1004** |
-| `OTShim_Bild.h` Kommentar (NP3-3) | 326-328 | **326-330** |
+| `WazooBar.cpp` `Create(...)` ([NP3-1](../BEFUNDE.md#np3-1)) | 1003 | **1004** |
+| `OTShim_Bild.h` Kommentar ([NP3-3](../BEFUNDE.md#np3-3)) | 326-328 | **326-330** |
 
 **Gestimmt haben:** `utils.cpp:1269`, `:1308-1310`, `:1393-1395`, `utils.h:93`,
 `mime.cpp:382`, `exports.h:147`, `TridentView.cpp:1325-1352`,
@@ -101,7 +101,7 @@ Zeilenangabe altert mit der Datei, nicht mit dem Befund.
 
 Kein Dokument führte den alten `m_pThread`-Verdacht noch als offen oder als
 Ursache — `CHANGELOG.md` hatte ihn bereits als widerlegt eingetragen.
-`README.md` und der erzeugte Block in `WEITERMACHEN.md` führten E-83 dagegen
+`README.md` und der erzeugte Block in `WEITERMACHEN.md` führten [E-83](../BEFUNDE.md#e-83) dagegen
 noch als **offenen** Befund, und `WEITERMACHEN.md` nannte
 `StartWorkerThread` mit `m_pThread == NULL` ausdrücklich als *„den offenen
 Verdacht"*. Beides berichtigt.
@@ -120,7 +120,7 @@ Die Aufteilung passt, und **„neun Kriterien" bleibt richtig** — 2a ist als
 offener Teil von Kriterium 2 ausgewiesen, kein zehntes Kriterium;
 `doku-pruefen.pl` zählt weiter 9. **Nicht** mitgezogen war der Rest: drei
 Dateien sagten weiterhin, den Kriterien 2 und 4 fehle *„dasselbe"*, und nannten
-nur die Meldung *„Encountered an improper argument"* — E-86 fehlte überall.
+nur die Meldung *„Encountered an improper argument"* — [E-86](../BEFUNDE.md#e-86) fehlte überall.
 Berichtigt in `ZIEL.md`, `PORTIERUNG.md` und `AUFGABEN.md`.
 
 ## Die zwölf offenen Befunde, einzeln nachgemessen
@@ -131,18 +131,18 @@ jeder Zeile.
 
 | Befund | nachgemessen am 14.09.2026 |
 |---|---|
-| NP2-2 | `OnSysColorChange` an drei Stellen unverändert |
-| NP2-3 | `CPaletteDC::BitBltTransparent`, `OTShim_Werkzeugleiste.cpp:239` |
-| NP3-1 | unverändert; **Fundstelle berichtigt** (`WazooBar.cpp:1004`) |
-| NP3-2 | `OnToolHitTest` an **allen** zehn Stellen weiterhin `int` |
-| NP3-3 | der falsche Kommentar unverändert, jetzt `:326-330` |
-| R-1 | **neu ausgezählt**: 137 / 116 ok / 21 zu ändern — identisch mit dem 07.09.2026 |
-| E-39 | alle drei Fundstellen stimmen, am laufenden Programm weiterhin unbestätigt |
-| E-67 | Junk-Score-Verbenumrechnung in `filtersv.cpp` unverändert |
-| E-71 | `filtersd.cpp:3857`, gerufen aus `msgdoc.cpp:796` — **bleibt zurückgestellt** |
-| E-77 | in ganz `Eudora71/` **eine** UTF-7-Fundstelle, und die dekodiert nichts |
-| E-78 | die zwei Spurmarken liegen unverändert in `mainfrm.cpp` und sind **noch nie ausgelesen** worden |
-| **E-14** | **nicht entscheidbar** — nur am *zweiten* Start messbar. Steht jetzt als *„Stand ungeprüft seit dem 05.09.2026"* mit Messanleitung |
+| [NP2-2](../BEFUNDE.md#np2-2) | `OnSysColorChange` an drei Stellen unverändert |
+| [NP2-3](../BEFUNDE.md#np2-3) | `CPaletteDC::BitBltTransparent`, `OTShim_Werkzeugleiste.cpp:239` |
+| [NP3-1](../BEFUNDE.md#np3-1) | unverändert; **Fundstelle berichtigt** (`WazooBar.cpp:1004`) |
+| [NP3-2](../BEFUNDE.md#np3-2) | `OnToolHitTest` an **allen** zehn Stellen weiterhin `int` |
+| [NP3-3](../BEFUNDE.md#np3-3) | der falsche Kommentar unverändert, jetzt `:326-330` |
+| [R-1](../BEFUNDE.md#r-1) | **neu ausgezählt**: 137 / 116 ok / 21 zu ändern — identisch mit dem 07.09.2026 |
+| [E-39](../BEFUNDE.md#e-39) | alle drei Fundstellen stimmen, am laufenden Programm weiterhin unbestätigt |
+| [E-67](../BEFUNDE.md#e-67) | Junk-Score-Verbenumrechnung in `filtersv.cpp` unverändert |
+| [E-71](../BEFUNDE.md#e-71) | `filtersd.cpp:3857`, gerufen aus `msgdoc.cpp:796` — **bleibt zurückgestellt** |
+| [E-77](../BEFUNDE.md#e-77) | in ganz `Eudora71/` **eine** UTF-7-Fundstelle, und die dekodiert nichts |
+| [E-78](../BEFUNDE.md#e-78) | die zwei Spurmarken liegen unverändert in `mainfrm.cpp` und sind **noch nie ausgelesen** worden |
+| **[E-14](../BEFUNDE.md#e-14)** | **nicht entscheidbar** — nur am *zweiten* Start messbar. Steht jetzt als *„Stand ungeprüft seit dem 05.09.2026"* mit Messanleitung |
 
 ## Drei neue Schranken
 
@@ -176,10 +176,10 @@ Selbsttest allein nicht zeigte:
   `SetMainText` steht in `QCTaskManager.cpp:191` — `:186` ist die Sperre).
   **Berichtigt werden muss die Quelle, nicht der Spiegel** — das gehört
   CHRONIST. Die Zahlen in `tools/WERKZEUGE.md` sind die gemessenen.
-- **Vier Zitate ohne Herkunftsangabe bleiben im Bestand:** E-16, E-33, E-34
-  (dreimal *„Encountered an improper argument"*) und E-47. Deshalb prüft
+- **Vier Zitate ohne Herkunftsangabe bleiben im Bestand:** [E-16](../BEFUNDE.md#e-16), [E-33](../BEFUNDE.md#e-33), [E-34](../BEFUNDE.md#e-34)
+  (dreimal *„Encountered an improper argument"*) und [E-47](../BEFUNDE.md#e-47). Deshalb prüft
   `pruefe-anzeigetext.pl` nur den **Zuwachs**.
-- **E-86** ist als offen eingetragen und um das ergänzt, was `CHANGELOG.md`
+- **[E-86](../BEFUNDE.md#e-86)** ist als offen eingetragen und um das ergänzt, was `CHANGELOG.md`
   schon gemessen hatte (nur das **Lesen** ist betroffen — selbst nachgemessen:
   `IDS_INI_READMESSAGE_STYLE_SHEET` kommt im ganzen Baum nur in
   `TridentView.cpp` vor). **Zu PRÜFERs laufender Arbeit steht nichts drin.**

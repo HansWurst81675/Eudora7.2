@@ -70,7 +70,7 @@ verschickt.
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
 * **Das neueste Release ist `v1.0.84`** (veröffentlicht am 12.10.2026 um 12:59
-  Uhr UTC, auf GitHub als *Latest*) — **E-94 behoben**: Betreffs werden nicht
+  Uhr UTC, auf GitHub als *Latest*) — **[E-94](BEFUNDE.md#e-94) behoben**: Betreffs werden nicht
   mehr mitten im Wort umbrochen; von Gregor vorher an seinem Postfach geprüft
   (Bildschirmfoto). Sonst wie `v1.0.83`:
 * **`v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18 Uhr UTC) — **von Gregor
@@ -106,7 +106,7 @@ verschickt.
   **`1.0.71` darf nicht benutzt werden**: diese Fassung stürzt beim Antworten
   ab, ist nie veröffentlicht worden und liegt nur noch als Paket in Gregors
   Testverzeichnis.
-  > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Bis hierher stand hier
+  > **Berichtigt am 17.09.2026 (LEKTOR, [L-13.1](Befunde/LEKTOR-13.md#l-13.1)).** Bis hierher stand hier
   > *„das neueste Release ist `v1.0.50`"* und darunter eine Warnung, das
   > veröffentlichte Paket stürze beim Speichern ab. Beides war überholt:
   > `gh release list` nennt `v1.0.64` als *Latest*, und genau dort ist [E-97](BEFUNDE.md#e-97)
@@ -123,7 +123,7 @@ verschickt.
   *Kopfzeilen einschließen* und *Absätze raten* sind nicht wählbar. Windows 10
   öffnet den modernen Dateidialog, und der zeigt Eudoras Dialogvorlage von 1996
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
-  Rückschritt durch die Behebung von E-97** — die Kästchen fehlen seit der
+  Rückschritt durch die Behebung von [E-97](BEFUNDE.md#e-97)** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
 * **Beim Antworten und Weiterleiten fehlten Bilder im Verfassenfenster**
   ([**E-110**](BEFUNDE.md#e-110), behoben in 7.2.0.75, von Gregor bestätigt): `resolve_URL` warf
@@ -164,7 +164,7 @@ verschickt.
   Registry-Eintrag ganz. **Behoben bis auf einen Teil:** über POP am laufenden
   Programm gemessen, alle sechs Prüffälle heil seit 7.2.0.81 (auch an 7.2.0.82
   und 7.2.0.83, Testsuite 185/185); über IMAP von Gregor mit Paket 1.0.83 an
-  seinem Postfach getestet und bestätigt. **Offen bleibt B5.7:** über IMAP
+  seinem Postfach getestet und bestätigt. **Offen bleibt [B5.7](AUFGABEN.md#b5.7):** über IMAP
   wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
   Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**.
 * **Beim Start erschien der Quelltext einer Webseite in einem Fenster**
@@ -752,6 +752,7 @@ Eudora7.2/
 | Welche Schalter gibt es ohne Menüpunkt, und was überrascht beim Betrieb? | [EINSTELLUNGEN.md](EINSTELLUNGEN.md) |
 | Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](BEFUNDE.md), Einzelbefunde in `Befunde/` |
 | Was ist als Nächstes zu tun? | [AUFGABEN.md](AUFGABEN.md), Einstieg in [WEITERMACHEN.md](WEITERMACHEN.md) |
+| Wie teste ich, was auf mein Urteil wartet? | [TESTPLAN.md](TESTPLAN.md) — die vierzehn, die frischen Behebungen, und was im Protokoll zu sehen sein muss |
 | Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](PORTIERUNG.md) |
 | Welche Werkzeuge gibt es in `tools/`? | [tools/WERKZEUGE.md](tools/WERKZEUGE.md) |
 | Was muss neben `Eudora.exe` liegen, damit sie startet? | [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |

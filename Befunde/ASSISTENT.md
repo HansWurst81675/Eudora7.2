@@ -9,8 +9,8 @@ Gregor am 05.09.2026, zu seinem **selbst gebauten** Stand
 (`C:\Users\Gregor\Documents\github\selbst_bauen\Eudora7.2`, Bau grün,
 18 Projekte): *„crash nach weiter (selbst compiliert)"*.
 
-Das ist derselbe Absturz wie **E-9** vom 31.08.2026. Er ist nie behoben worden —
-**E-11** hat ihn nur falsch erklärt (siehe unten).
+Das ist derselbe Absturz wie **[E-9](../BEFUNDE.md#e-9)** vom 31.08.2026. Er ist nie behoben worden —
+**[E-11](../BEFUNDE.md#e-11)** hat ihn nur falsch erklärt (siehe unten).
 
 ### Der Beleg: der Fehlerbericht von Windows
 
@@ -151,7 +151,7 @@ der nächste gewesen.
 
 | Verdacht | Warum ausgeschlossen |
 |---|---|
-| `AnyPersonalityHasAccount` (E-17, `eudora.cpp:849`) | entscheidet **nur**, ob der Assistent überhaupt gestartet wird (`:1661-1666`). Sie liest, schreibt nicht, und keine Seite des Assistenten fragt sie ab. Der Assistent baut nirgends auf „leere Konfiguration": `AddPages` verzweigt allein an `bDominant`, und `bDominant` kommt aus dem Aufruf, nicht aus der `Eudora.ini`. |
+| `AnyPersonalityHasAccount` ([E-17](../BEFUNDE.md#e-17), `eudora.cpp:849`) | entscheidet **nur**, ob der Assistent überhaupt gestartet wird (`:1661-1666`). Sie liest, schreibt nicht, und keine Seite des Assistenten fragt sie ab. Der Assistent baut nirgends auf „leere Konfiguration": `AddPages` verzweigt allein an `bDominant`, und `bDominant` kommt aus dem Aufruf, nicht aus der `Eudora.ini`. |
 | `WizardImportPage.cpp:379 → :420` (Liste des Agenten ZEIGER) | echter Mangel — `pChild` wird bei `:420` ohne Prüfung dereferenziert, obwohl `SetupControls():265` denselben Wert ausdrücklich als NULL behandelt. Aber: das wäre eine Nullzeiger-Dereferenzierung (`0xC0000005`), gemessen wurde `0xC0000374`; und `CopySettings` läuft erst, wenn der Benutzer *Importieren* gewählt und auf der **Importseite** *Weiter* gedrückt hat. Ein anderer Fehler also - **in dieser Sitzung trotzdem mitbehoben**, siehe unten. |
 | Ein Index über die Persönlichkeiten | Der Assistent fragt vor dem Anlegen des Kontos keine Persönlichkeitsliste ab. `UpdateWazoo()` und `g_Personalities.Add` laufen erst **nach** *Fertigstellen*. |
 
@@ -182,10 +182,10 @@ worden, weil der Absturz oben davor lag.
 
 ### Berichtigung: warum E-11 die falsche Erklärung war
 
-**E-11 gilt in `BEFUNDE.md` als „behoben" und als „URSACHE GEFUNDEN". Beides ist
+**[E-11](../BEFUNDE.md#e-11) gilt in `BEFUNDE.md` als „behoben" und als „URSACHE GEFUNDEN". Beides ist
 falsch.**
 
-E-11 stützte sich auf ein einziges Indiz: `eudora.log` bricht nach
+[E-11](../BEFUNDE.md#e-11) stützte sich auf ein einziges Indiz: `eudora.log` bricht nach
 
     Dialog: "Eudora is not currently the default mail program..."
 
@@ -212,8 +212,8 @@ Der Schluss trägt nicht, aus drei unabhängigen Gründen:
    mit einer Kennung (`0xC0000374`), die eine `CString`-Pufferverwaltung gar nicht
    erzeugen kann.
 
-**E-11 ist damit zurückzunehmen: der Absturz beim Klick auf *Weiter* lag nie in
-`RegisterURLSchemes`.** Was bleibt, ist R-1: `ReleaseBuffer` ohne `GetBuffer` ist
+**[E-11](../BEFUNDE.md#e-11) ist damit zurückzunehmen: der Absturz beim Klick auf *Weiter* lag nie in
+`RegisterURLSchemes`.** Was bleibt, ist [R-1](../BEFUNDE.md#r-1): `ReleaseBuffer` ohne `GetBuffer` ist
 eine echte Fehlerklasse mit 25 belegten Stellen, und sie gehört abgestellt. Sie
 ist nur **nicht dieser Absturz**.
 

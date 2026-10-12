@@ -13,15 +13,15 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| [**AN-1**](BEFUNDE.md#an-1) | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt; sein Urteil: *„gekürzt mit endung reicht"*. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist B5.7** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
+| [**AN-1**](BEFUNDE.md#an-1) | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt; sein Urteil: *„gekürzt mit endung reicht"*. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist [B5.7](AUFGABEN.md#b5.7)** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
 | [**AN-2**](BEFUNDE.md#an-2) | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80; seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | [**E-112**](BEFUNDE.md#e-112) | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | [**E-113**](BEFUNDE.md#e-113) | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie [E-112](BEFUNDE.md#e-112): dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
-| [**E-109**](BEFUNDE.md#e-109) | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
-| [**E-105**](BEFUNDE.md#e-105) | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei [E-90](BEFUNDE.md#e-90) |
+| [**E-111**](BEFUNDE.md#e-111) | **`resolve_URL` kann ein Byte hinter das Zielfeld schreiben** | **Offen, am Quelltext belegt, nicht ausgelöst gesehen.** Vom PRUEFER am 18.09.2026 beim Nachrechnen der [E-110](BEFUNDE.md#e-110)-Spurmarke gefunden ([`Befunde/PRUEFER-18.md`](Befunde/PRUEFER-18.md)). `PGHTMIMP.CPP:2025-2033`. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
+| [**E-109**](BEFUNDE.md#e-109) | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter [E-109](BEFUNDE.md#e-109). **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, [L-15.5](Befunde/LEKTOR-15.md#l-15.5)): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
+| [**E-105**](BEFUNDE.md#e-105) | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben ([L-15.10](Befunde/LEKTOR-15.md#l-15.10)), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei [E-90](BEFUNDE.md#e-90) |
 | — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
-| [**E-98**](BEFUNDE.md#e-98) | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu [**E-97**](BEFUNDE.md#e-97): der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von E-97:** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit E-98 werden `ToggleStat` und `StatDir` wieder scharf ([**E-100**](BEFUNDE.md#e-100)). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
-| [**E-94**](BEFUNDE.md#e-94) | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Behoben in 7.2.0.84, am laufenden Programm gemessen über POP (Prüfnachricht 06) und über IMAP an Gregors Postfach (die Toner-Nachricht neu abgerufen, Betreff in einer Zeile). Von Gregor bestätigt am 12.10.2026, belegt durch sein Bildschirmfoto von 1.0.84.** Vorher galt: Ursache am Quelltext belegt. Zwischen zwei kodierten Wörtern, die über eine **Faltung** getrennt sind, bleibt der Leerraum stehen (`lex822.cpp:685`, `ImapLex822.cpp:719`; RFC 2047, 6.2 verlangt, dass er wegfällt). Gregors Toner-Nachricht hat der web.de-Webmailer erzeugt, nicht Eudora; in seiner 1.0.75-`INBOX.mbx` steht der Betreff schon dekodiert, mit Faltungen bei `& 1|5` und `Nur b|is`. **Die ältere Vermutung unten (`Encode2047` beim Senden) ist damit zurückgestellt.** Nächster Schritt, von Gregor angeordnet: erst drei Tests rot, dann die Behebung (Zweig `e94-betreff-faltung`). — Ursprünglicher Eintrag: Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht korrekt zusammen — die Messung dazu steht bei [**E-90**](BEFUNDE.md#e-90) (**offen**, als Grenze eingestuft und zurückgestellt, nicht behoben). Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
+| [**E-98**](BEFUNDE.md#e-98) | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu [**E-97**](BEFUNDE.md#e-97): der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von [E-97](BEFUNDE.md#e-97):** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit [E-98](BEFUNDE.md#e-98) werden `ToggleStat` und `StatDir` wieder scharf ([**E-100**](BEFUNDE.md#e-100)). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
 | [**E-90**](BEFUNDE.md#e-90) | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
 | [**E-91**](BEFUNDE.md#e-91) | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu [E-89](BEFUNDE.md#e-89), nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
 | [**E-92**](BEFUNDE.md#e-92) | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |
@@ -32,12 +32,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-67**](BEFUNDE.md#e-67) | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | [**E-68**](BEFUNDE.md#e-68), halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
-| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit E-78**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
-| — | **Gebaut, aber von Gregor nicht beurteilt:** [**E-49**](BEFUNDE.md#e-49) (linken Bereich breiter **ziehen**, Anforderung **A-4**) und [**E-52**](BEFUNDE.md#e-52) (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei E-52 nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
+| — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit [E-78](BEFUNDE.md#e-78)**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
+| — | **Gebaut, aber von Gregor nicht beurteilt:** [**E-49**](BEFUNDE.md#e-49) (linken Bereich breiter **ziehen**, Anforderung **A-4**) und [**E-52**](BEFUNDE.md#e-52) (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei [E-52](BEFUNDE.md#e-52) nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | [**E-39**](BEFUNDE.md#e-39): wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet |
 | — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** [**R-1**](BEFUNDE.md#r-1) (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), [**V-1**](BEFUNDE.md#v-1) (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und [**E-14**](BEFUNDE.md#e-14) (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
-| — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit [**E-33**](BEFUNDE.md#e-33) nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu E-76** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
+| — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit [**E-33**](BEFUNDE.md#e-33) nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu [E-76](BEFUNDE.md#e-76)** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
 
 ## Erreicht
 
@@ -208,7 +208,7 @@ als `application/msword` hinaus — **nicht gemessen**.
 Gregor hat am 12.10.2026 um 09:40 UTC PR #83 ([**AN-2**](BEFUNDE.md#an-2), Zweig
 `fix_startup_page`, Quellstand 7.2.0.80) nach `main` gemergt, während auf
 `an1-endungen` schon 7.2.0.80-an1 und 7.2.0.81 gebaut und gemessen waren. Dieser
-Stand führt beide zusammen und nimmt die nächste freie Nummer. AN-2 wird damit
+Stand führt beide zusammen und nimmt die nächste freie Nummer. [AN-2](BEFUNDE.md#an-2) wird damit
 zum ersten Mal übersetzt.
 
 **Gebaut und gemessen am 12.10.2026:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
@@ -216,7 +216,7 @@ zum ersten Mal übersetzt.
 bestanden** (`Eudora71/Tests/RunTests.cmd`). Abruf der sechs Prüfnachrichten in
 `C:\Temp\AN4`: **alle sechs mit vollem Namen und `.pdf`**, dieselben Namen wie
 unter 7.2.0.81, kein „kennt den Typ NICHT", keine `Exception.log`.
-**AN-2 ist am laufenden Programm nicht gemessen** — der Werbefensterfall lässt
+**[AN-2](BEFUNDE.md#an-2) ist am laufenden Programm nicht gemessen** — der Werbefensterfall lässt
 sich mit dem Prüfstand nicht auslösen.
 
 ## 7.2.0.81 — Endungen aus dem MIME-Typ wirken wieder (AN-1, neunter und zehnter Teil) — **gebaut und gemessen: alle sechs heil**
@@ -373,7 +373,7 @@ beiden Dateien sind entfernt.
 | **B5.4** | **Zwei Puffer über den Rand.** `DeMacifyName32` schrieb ein Byte hinter `pcname[255]`. **Neu gefunden:** `DeMacifyName` (8+3) schrieb bis zu **drei** Byte über — `pcname[15]`, und 8 + Punkt + 8 + Null sind 18; der zweite Zähler stand auf 8 statt 3 | nein — aus dem Quelltext gerechnet |
 | **B5.5** | **RFC 2231.** `filename*0*=UTF-8''…` kannte der Baum nicht. Dann gab es **gar kein** `filename`, und `mime.cpp` nahm den **Betreff** aus `subj[32]` — 31 Zeichen ohne Endung. Neu: `QCUtils/src/rfc2231.cpp`, benutzt von POP **und** IMAP, inklusive UTF-8 nach ANSI | ja — `rfc2231-pruefen.pl`: **20 von 20** Fällen |
 | **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`**, beschrieben mit bis zu 256 Byte. Trifft jeden Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Nur IMAP — das POP-Gegenstück ist auf `CString` umgebaut | nein — aus dem Quelltext gerechnet |
-| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`** — das Sicherheitsnetz für eine fehlende Endung fehlt dort ganz | **offen.** Es hängt an einer Bindefrage, nicht an der Logik: siehe AUFGABEN.md, B5.7 |
+| **[B5.7](AUFGABEN.md#b5.7)** | **Über IMAP gibt es kein `MIMEMap::SetExtension`** — das Sicherheitsnetz für eine fehlende Endung fehlt dort ganz | **offen.** Es hängt an einer Bindefrage, nicht an der Logik: siehe AUFGABEN.md, [B5.7](AUFGABEN.md#b5.7) |
 
 **Zehn Debug-Marken** auf dem Weg des Namens (*seit 7.2.0.80-an1 elf, mit Marke 11 in
 `MIMEMap::Find`*), Bit `DEBUG_MASK_ATTACH = 0x10000`,
@@ -462,14 +462,14 @@ beide stehen berichtigt in [BEFUNDE.md](BEFUNDE.md).
 >
 > **Was bleibt und richtig ist:** `E112Zielrechteck` liefert das richtige
 > Rechteck — sieben Tests, Gegenprobe gefahren. Nur der Zeichenweg setzt es
-> nicht um. **E-112 steht wieder unter *Noch offen*.**
+> nicht um. **[E-112](BEFUNDE.md#e-112) steht wieder unter *Noch offen*.**
 
 
 `pict_frame` — das Zielrechteck, in das Paige eine Metadatei streckt — bekam
 bis dahin die **echte Dateigröße**. Das WhatsApp-Symbol wurde deshalb mit
 330×327 gezeichnet, obwohl es als 35×35 ausgezeichnet ist.
 
-Das war eine Regression der **E-106**-Behebung: sie vergrößerte die **Zeile**,
+Das war eine Regression der **[E-106](BEFUNDE.md#e-106)**-Behebung: sie vergrößerte die **Zeile**,
 statt das **Bild** zu verkleinern. Solange [**E-110**](BEFUNDE.md#e-110) offen war, lud kaum ein
 Bild und es fiel nicht auf.
 
@@ -533,7 +533,7 @@ einziges `intern=0` mehr** (vorher zehn abgewiesene Adressen).
 **Im selben Lauf ist [E-112](BEFUNDE.md#e-112) sichtbar geworden:** die Bilder erscheinen jetzt in
 **Originalgröße** statt in der angegebenen — das WhatsApp-Symbol ist als
 `35x35` ausgezeichnet und die Datei hat `330x327`. Das ist **kein Rückfall von
-E-110**, sondern eine Regression der **E-106**-Behebung: sie schreibt die echte
+[E-110](BEFUNDE.md#e-110)**, sondern eine Regression der **[E-106](BEFUNDE.md#e-106)**-Behebung: sie schreibt die echte
 Dateigröße ins Embed, damit die Zeile hoch genug wird, und bis jetzt luden
 schlicht zu wenige Bilder, als dass es aufgefallen wäre. Siehe *Noch offen*,
 [**E-112**](BEFUNDE.md#e-112).
@@ -676,9 +676,9 @@ behoben, sondern erst messbar.
 
 > **Zu prüfen:** dieselbe Nachricht öffnen und **antworten**. `LogLevel=58527`
 > bleibt in der `Eudora.ini`. Wenn es wieder kracht, endet `eudora.log` erneut
-> an einer `E-106`-Zeile — dann sag mir die letzte Zeile, sie entscheidet.
+> an einer [`E-106`](BEFUNDE.md#e-106)-Zeile — dann sag mir die letzte Zeile, sie entscheidet.
 
-**E-107 war die falsche Erklärung.** Ich hatte den Absturz damit begründet, dass
+**[E-107](BEFUNDE.md#e-107) war die falsche Erklärung.** Ich hatte den Absturz damit begründet, dass
 mein E-106-Block auf einem *flüchtigen* Embed läuft, und ihn auf den Ladeweg
 beschränkt. **Gregors Protokoll zu 1.0.71 hat das widerlegt:** der Block läuft
 dort fünfmal, und die letzte Zeile vor dem Abbruch ist wieder seine eigene
@@ -694,7 +694,7 @@ nicht darin, wer ihn aufruft.
 **Was der Block anders machte als der, der seit 1996 funktioniert:** er fasste
 den **Textstil** direkt an (`pgGetStyleInfo` / `pgSetStyleInfo`) an einer
 Position, die aus einer Suche über `embed->style` stammt. Der Prüfer hat dazu
-unabhängig gemeldet (P-41), dass `embed->style` ein **Zeiger** ist, den sich
+unabhängig gemeldet ([P-41](Befunde/PRUEFER-14.md#p-41)), dass `embed->style` ein **Zeiger** ist, den sich
 zwei Bilder gleicher Maßangabe teilen — die Suche kann also das **falsche**
 Embed liefern, und dann schreibt der Stilweg an die falsche Stelle.
 
@@ -763,11 +763,11 @@ Stand vor [E-103](BEFUNDE.md#e-103) und [E-106](BEFUNDE.md#e-106) zurück. Schli
 ## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
 
 > **Nicht mehr zu prüfen, und 1.0.70 nicht mehr zu benutzen** (Nachtrag LEKTOR,
-> 18.09.2026, L-15.8): diese Fassung war die erste, die [E-101](BEFUNDE.md#e-101) in beiden Teilen,
+> 18.09.2026, [L-15.8](Befunde/LEKTOR-15.md#l-15.8)): diese Fassung war die erste, die [E-101](BEFUNDE.md#e-101) in beiden Teilen,
 > [E-103](BEFUNDE.md#e-103), [E-104](BEFUNDE.md#e-104) und [E-106](BEFUNDE.md#e-106) zusammen trug — sie trägt aber auch den **Absturz beim
 > Antworten** ([E-107](BEFUNDE.md#e-107)/[E-108](BEFUNDE.md#e-108)), der erst in **7.2.0.72** behoben ist, und sie ist
 > nie zu Gregor gelangt. Der Messpunkt unten ist durch **seinen Lauf an 1.0.69**
-> erledigt: **E-106 ist bestätigt**, die Überlappung ist weg. Wer heute prüft,
+> erledigt: **[E-106](BEFUNDE.md#e-106) ist bestätigt**, die Überlappung ist weg. Wer heute prüft,
 > nimmt das Release **`v1.0.72`**.
 >
 > **Der Messpunkt, wie er damals lautete** (`LogLevel=58527` steht schon in
@@ -796,21 +796,21 @@ Die Pakete dieses Abends nebeneinander — **erst 1.0.72 ist vollständig**:
 
 | Paket | Fassung | enthält | es fehlt |
 |---|---|---|---|
-| 1.0.67 | 7.2.0.67 | [E-101](BEFUNDE.md#e-101) (erster Teil), [E-103](BEFUNDE.md#e-103) | [E-104](BEFUNDE.md#e-104), [E-106](BEFUNDE.md#e-106), E-101 zweiter Teil |
+| 1.0.67 | 7.2.0.67 | [E-101](BEFUNDE.md#e-101) (erster Teil), [E-103](BEFUNDE.md#e-103) | [E-104](BEFUNDE.md#e-104), [E-106](BEFUNDE.md#e-106), [E-101](BEFUNDE.md#e-101) zweiter Teil |
 | 1.0.68 | 7.2.0.68 | dazu [E-104](BEFUNDE.md#e-104), [**E-106**](BEFUNDE.md#e-106) | [E-101](BEFUNDE.md#e-101) zweiter Teil |
 | 1.0.69 | 7.2.0.69 | [**E-106**](BEFUNDE.md#e-106) (aus 1.0.68), dazu die P-38-Spurmarke | [E-101](BEFUNDE.md#e-101) **zweiter Teil** |
-| 1.0.70 | 7.2.0.70 | [E-101](BEFUNDE.md#e-101) zweiter Teil, P-38 — **alles bis hierher** | **trägt den Absturz E-108**; nie zu Gregor gelangt |
+| 1.0.70 | 7.2.0.70 | [E-101](BEFUNDE.md#e-101) zweiter Teil, [P-38](Befunde/PRUEFER-14.md#p-38) — **alles bis hierher** | **trägt den Absturz [E-108](BEFUNDE.md#e-108)**; nie zu Gregor gelangt |
 | 1.0.71 | 7.2.0.71 | dasselbe, [E-107](BEFUNDE.md#e-107) als falsche Erklärung | **stürzt beim Antworten ab**, nie veröffentlicht |
-| **1.0.72** | 7.2.0.72 | **alles, einschließlich E-108** | — — **das ist das Release `v1.0.72`**, von Gregor bestätigt |
+| **1.0.72** | 7.2.0.72 | **alles, einschließlich [E-108](BEFUNDE.md#e-108)** | — — **das ist das Release `v1.0.72`**, von Gregor bestätigt |
 
-> **Berichtigt am 18.09.2026 (LEKTOR, L-15.7).** Hier stand *„1.0.69 | 7.2.0.69
-> | [E-101](BEFUNDE.md#e-101) **zweiter Teil**, P-38 | [**E-106**](BEFUNDE.md#e-106)"* und *„**1.0.70** | 7.2.0.70 |
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.7](Befunde/LEKTOR-15.md#l-15.7)).** Hier stand *„1.0.69 | 7.2.0.69
+> | [E-101](BEFUNDE.md#e-101) **zweiter Teil**, [P-38](Befunde/PRUEFER-14.md#p-38) | [**E-106**](BEFUNDE.md#e-106)"* und *„**1.0.70** | 7.2.0.70 |
 > **alles** | —"*. Die Zeile zu 1.0.69 war **vertauscht** und **zweifach**
 > widerlegt: der E-106-Merge `0334a6c` (20:16:00) ist Vorfahr des Standes
 > `acc8ad7`, aus dem die `Eudora.exe` von 1.0.69 um 20:24:54 entstand, während
-> der zweite Teil von E-101 (`e27ccf1`) erst um 20:58:43 kam — und Gregor hat
-> den **E-106-Absturz an 1.0.69 erlebt**, was ohne E-106 nicht möglich wäre.
-> **LEKTOR-14 hat beides am 17.09.2026 gemessen; die Zeile stand danach
+> der zweite Teil von [E-101](BEFUNDE.md#e-101) (`e27ccf1`) erst um 20:58:43 kam — und Gregor hat
+> den **E-106-Absturz an 1.0.69 erlebt**, was ohne [E-106](BEFUNDE.md#e-106) nicht möglich wäre.
+> **[LEKTOR-14](Befunde/LEKTOR-14.md#lektor-14) hat beides am 17.09.2026 gemessen; die Zeile stand danach
 > unverändert weiter.** Dazu hieß 1.0.70 *„alles"*, obwohl es den Absturz aus
 > [E-107](BEFUNDE.md#e-107)/[E-108](BEFUNDE.md#e-108) trägt und bei Gregor nie angekommen ist.
 
@@ -868,13 +868,13 @@ bytes-vorher=102006 nachher=101985 rumpf-vorher=102006 rumpf-nachher=101985
 ```
 
 **`rumpf-vorher` minus `rumpf-nachher` = 21 Byte** — `<x-html>` plus CRLF
-und `</x-html>` plus CRLF. Kein Byte zuviel: **P-28 hält an echten Daten.**
+und `</x-html>` plus CRLF. Kein Byte zuviel: **[P-28](Befunde/PRUEFER-14.md#p-28) hält an echten Daten.**
 
 Aber: **`nachher` ist gleich `rumpf-nachher`.** Es kam **nichts** dazu.
 Seine Dateien trugen HTML ohne `MIME-Version`, ohne `Content-Type`, ohne
 Zeichensatz — *„datei gespeichert, aber unbrauchbar"*, unverändert. Der
 ganze Kopfzeilenblock hängt an `if ( !szKopf.IsEmpty() )`; ohne
-*Kopfzeilen einschließen* ist er leer. **E-101 war nur behoben, wenn der
+*Kopfzeilen einschließen* ist er leer. **[E-101](BEFUNDE.md#e-101) war nur behoben, wenn der
 Schalter an war** — und laut [**E-98**](BEFUNDE.md#e-98) ist das Kästchen auf Windows 10 gar
 nicht anwählbar.
 
@@ -908,7 +908,7 @@ Tests** betroffen, seit es die Funktion gibt. Behoben.
 
 **Am laufenden Programm gemessen ist der Befund.** Gregors zwei
 Protokollzeilen aus `1.0.69` belegen dreierlei live: dass die neuen Werte
-aus P-38 überhaupt erscheinen, dass **P-28 an echten Daten hält** (zweimal
+aus [P-38](Befunde/PRUEFER-14.md#p-38) überhaupt erscheinen, dass **[P-28](Befunde/PRUEFER-14.md#p-28) an echten Daten hält** (zweimal
 exakt 21 Byte) und dass der `Content-Type` fehlt.
 
 **Nicht gemessen ist die Behebung dazu** — sie entstand *nach* seiner
@@ -948,7 +948,7 @@ skaliert — Paige zeichnet die Datei in Originalgröße in eine Zeile, die nach
 der Angabe bemessen ist. Bei 200×52 angegeben und 400×104 geladen sind das
 **52 Punkte, die auf dem folgenden Text liegen**.
 
-**Warum [E-103](BEFUNDE.md#e-103) daran vorbeiging:** E-103 behandelt Bilder **ohne**
+**Warum [E-103](BEFUNDE.md#e-103) daran vorbeiging:** [E-103](BEFUNDE.md#e-103) behandelt Bilder **ohne**
 Größenangabe. Gregors Logo hat eine. Zwei Fassungen lang war der falsche Fall
 behoben — das ist der ehrliche Teil dieser Zeile.
 
@@ -963,7 +963,7 @@ vermessen —, aber keines davon ist größer als angegeben; `E-106 groesser`
 bleibt bei null. Die Behebung ist
 dort nicht messbar. **Nur sein Lauf kann sie belegen.**
 
-> **Berichtigt am 18.09.2026 (LEKTOR, L-15.9).** Hier stand *„mein Prüfstand
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.9](Befunde/LEKTOR-15.md#l-15.9)).** Hier stand *„mein Prüfstand
 > lädt die Bilder nicht — null Ladespuren"*. Am Protokoll gemessen
 > (`C:\Temp\E107-vorher\…\eudora.log`, 17.09.2026 21:28) sind es **acht**
 > Ladespuren; null ist allein der Zähler `E-106 groesser`. Zwei verschiedene
@@ -1100,12 +1100,12 @@ nebeneinandergelegt und gemessen.
 *„Don't unwrap the headers!"* — auf dem Fensterweg fehlte er.
 
 **Ursache 2, und die ist die eigentliche:** dass „Absätze raten" überhaupt lief,
-ist eine **Folge von E-100**. Gregors `Eudora.ini` trug `GuessParagraphs=7179`
+ist eine **Folge von [E-100](BEFUNDE.md#e-100)**. Gregors `Eudora.ini` trug `GuessParagraphs=7179`
 und `IncludeHeaders=16720` — uninitialisierte Stapelwerte, die [E-100](BEFUNDE.md#e-100) dort
 hineingeschrieben hatte. Jeder Wert ungleich 0 gilt als eingeschaltet. Er hat
 es nie gewählt und konnte es mangels Kästchen ([**E-98**](BEFUNDE.md#e-98)) gar nicht wählen.
 
-**E-100 hat das Loch gestopft, die schon verdorbenen Werte aber nicht
+**[E-100](BEFUNDE.md#e-100) hat das Loch gestopft, die schon verdorbenen Werte aber nicht
 repariert.** Das tut jetzt `E104SchalterLesen`: was weder 0 noch 1 ist, geht auf
 die Vorgabe 0 zurück **und wird berichtigt zurückgeschrieben**. **Damit muss
 niemand ein neues Mailverzeichnis anlegen.**
@@ -1268,7 +1268,7 @@ Netzadresse stehen in [Releases/PAKETE.md](Releases/PAKETE.md), Abschnitt
 1.0.64. *(Berichtigt am 11.10.2026: hier stand „liegt daneben", und das war in
 jedem frischen Klon falsch.)*
 
-> **Berichtigt am 17.09.2026 (LEKTOR, L-13.4).** Hier stand *„Ein Paket ist zu
+> **Berichtigt am 17.09.2026 (LEKTOR, [L-13.4](Befunde/LEKTOR-13.md#l-13.4)).** Hier stand *„Ein Paket ist zu
 > dieser Fassung noch nicht geschnürt — das letzte liegt als
 > `Releases/Eudora72-1.0.63-release`"*. Beide Hälften waren überholt: das
 > Paket zu 7.2.0.64 existiert und ist herausgegangen, und das letzte
@@ -1355,7 +1355,7 @@ in [BEFUNDE.md](BEFUNDE.md).
 > Text **frei** bleiben.
 
 **Seit [E-96](BEFUNDE.md#e-96) behoben ist, war die Vorgabe nur noch schädlich.** Bis 7.2.0.62 bekam
-ein Bild ohne Größenangabe 20×20 Punkte — ein Notbehelf gegen E-96: solange die
+ein Bild ohne Größenangabe 20×20 Punkte — ein Notbehelf gegen [E-96](BEFUNDE.md#e-96): solange die
 Zeilenhöhe die des *ersten* Bildes behielt, blieb sie bei fehlendem
 `height`-Attribut textklein, und der Text wurde zugedeckt.
 
@@ -1652,7 +1652,7 @@ nicht erreichbar. Die Lesbarkeit ist es.**
 Seit [**E-88**](BEFUNDE.md#e-88) (7.2.0.56) geht beim Senden das aufgehobene Original hinaus,
 nicht die Editorfassung. Das Verfassenfenster ist damit nur noch
 Arbeitsfläche: es muss dem Original nicht gleichen, es muss lesbar sein.
-Ohne E-88 wäre dieselbe Änderung ein Eingriff in die versandte Nachricht
+Ohne [E-88](BEFUNDE.md#e-88) wäre dieselbe Änderung ein Eingriff in die versandte Nachricht
 gewesen.
 
 ### Zwei Ursachen, beide gemessen
@@ -1712,7 +1712,7 @@ Deckel.
 ### Warum nicht der Platzhalter
 
 Das Bild durch `[Bild]` zu ersetzen wäre radikaler und sicherer lesbar —
-und würde **E-88 zerstören**. `E88OriginalEinsetzen` verlangt, dass der
+und würde **[E-88](BEFUNDE.md#e-88) zerstören**. `E88OriginalEinsetzen` verlangt, dass der
 Klartext des Originals in der Editorfassung als **ein** zusammenhängendes
 Stück steckt. `E88NurText` wirft Markierungen weg, ein zusätzliches
 `width=` ist für den Vergleich also unsichtbar; ein eingefügtes `[Bild]`
@@ -1853,7 +1853,7 @@ aus `msgutils.cpp` geschnitten, nicht abgeschrieben.
 1. Eudora beenden, `eudora.log` löschen, `LogLevel=58527` in `[Debug]`.
 2. Starten, den Newsletter aus [**E-86**](BEFUNDE.md#e-86) weiterleiten — einmal ohne
    Kommentar, einmal mit einem Satz darüber. Beide an die eigene Adresse.
-3. Im Protokoll nach `E-88` suchen. Erwartet: `Fassung=ORIGINAL
+3. Im Protokoll nach [`E-88`](BEFUNDE.md#e-88) suchen. Erwartet: `Fassung=ORIGINAL
    (unveraendert)` beim ersten, `Fassung=ORIGINAL (mit Zusatz)` beim
    zweiten, und `E-88 auf der Leitung` mit `IsFancy=2` (HTML).
 4. Die angekommenen Nachrichten neben das Original halten.
@@ -2976,7 +2976,7 @@ Vorgaben aus `DEudora.ini`.
 1. Neue Persönlichkeit anlegen: steht **Leave mail on server** an?
 2. *Tools → Options → Junk Mail*: steht **Delete fetched junk** aus?
 3. Mail abrufen, filtern — bleibt auf dem Server alles liegen?
-4. Steht eine `E-73`-Zeile im Protokoll? Dann trägt eine Regel die
+4. Steht eine [`E-73`](BEFUNDE.md#e-73)-Zeile im Protokoll? Dann trägt eine Regel die
    Serveroption noch; schaden kann sie nicht mehr.
 
 ## 7.2.0.35 — Die Breite wird gesetzt, nicht der ganze Zustand wiederhergestellt
@@ -3306,8 +3306,8 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 > Aufzählung von fünf Punkten, die als *„noch nicht gepackt"* geführt wurden —
 > darunter *„[E-37](BEFUNDE.md#e-37): nur die ANZEIGE behoben"* und *„32 Spurmarken für [E-33](BEFUNDE.md#e-33)"*.
 > **Beides ist überholt und widersprach schon der Überschrift dieses
-> Abschnitts.** E-37 ist kein eigener Fehler, sondern ein Symptom von [**E-43**](BEFUNDE.md#e-43),
-> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu E-33
+> Abschnitts.** [E-37](BEFUNDE.md#e-37) ist kein eigener Fehler, sondern ein Symptom von [**E-43**](BEFUNDE.md#e-43),
+> mit ihm in 7.2.0.24 behoben und von Gregor bestätigt; die Spurmarken zu [E-33](BEFUNDE.md#e-33)
 > liegen seit 1.0.22 in jedem Paket. `tools/DEudora.ini`, `tools/bauen.ps1` und
 > die Prüfungen 8 bis 11 in `tools/doku-pruefen.pl` sind ebenfalls längst
 > ausgeliefert. Seit 1.0.29 ist **nichts** an **Behebungen** dazugekommen,
@@ -3319,7 +3319,7 @@ sein"*). Die Nummern gehen also **vor** dem Paket hoch, nicht mit ihm.
 > `VERSION` mit 1.0.18, während die Datei drei Fassungen weiter war, und führte
 > [**E-32**](BEFUNDE.md#e-32) als Behebung der modalen Meldung. Beides war falsch: die
 > E-32-Ursachenbehauptung hat PRUEFER dreifach gemessen und **verworfen**
-> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **W-3** und **W-5**
+> (siehe 7.2.0.20). Gefunden hat den Widerspruch LEKTOR als **[W-3](Befunde/LEKTOR-4.md#w-3)** und **[W-5](Befunde/LEKTOR-4.md#w-5)**
 > (`Befunde/LEKTOR-4.md`), nachdem Gregor gesagt hatte: *„wäre vor dem mergen
 > wichtig, daß keine lügen im main stehen!"*
 
@@ -3411,7 +3411,7 @@ Im Original gibt es dagegen eine Selbstheilung, und sie steht in
 as any to figure out if somebody has done something behind our backs"*.
 `OnDrawBorder` wird in dieser Portierung **von niemandem gerufen**; im
 Original tat das `SECWorkbook::OnPaint` der Stingray-Ebene. **Dieselbe Wurzel
-wie E-58**, der Browser-Klick ins Leere.
+wie [E-58](BEFUNDE.md#e-58)**, der Browser-Klick ins Leere.
 
 `OnDrawBorder` wiederzubeleben kam nicht in Frage — das würde auch das
 Werbelogo zeichnen. Die Selbstheilung steht deshalb jetzt beim Zeichnen der
@@ -3423,7 +3423,7 @@ gerechnet, danach stimmen sie.
 ### Warum die Nummer schon hochgesetzt ist
 
 Der Bau vom 09.09.2026, 13:0x trug **7.2.0.29** — dieselbe Nummer wie das
-veröffentlichte Paket, aber anderen Code. Das ist **Befund V-1** in Reinform
+veröffentlichte Paket, aber anderen Code. Das ist **Befund [V-1](BEFUNDE.md#v-1)** in Reinform
 (*„version muß eindeutig sein"*): wer daraus ein Paket geschnürt hätte, hätte
 zwei verschiedene Bauten unter derselben Kennung ausgeliefert. Die Nummern
 stehen deshalb **sofort** auf 7.2.0.30 / 1.0.30, lange vor dem nächsten Paket.
@@ -3445,7 +3445,7 @@ zeigt ja einen liste der offenen fenster: sehr gut."*
 auf die letzte (warum?) zeigen einen tooltip beim maus over. beim letzten
 (ganz rechts) nicht."* Seine Entscheidung: *„bau mir mit dem bug ein 0.29
 release auf github. den fehler notieren wir, wird im nächsten release
-behoben."* Der Verdacht dazu steht in [BEFUNDE.md](BEFUNDE.md) unter **E-63**,
+behoben."* Der Verdacht dazu steht in [BEFUNDE.md](BEFUNDE.md) unter **[E-63](BEFUNDE.md#e-63)**,
 samt der Messung, die ihn widerlegen würde.
 
 Acht davon kommen aus **PRÜFERs sechstem Durchgang** über die A-3/A-4-Arbeit,
@@ -3871,7 +3871,7 @@ Behoben, indem `OTShim_Werkzeugleiste.h` die **Ersatzschicht** einbindet
 
 | Befund | Wie er zusammenhängt |
 |---|---|
-| [**E-43**](BEFUNDE.md#e-43) | `SaveCustomInfo` warf bei **jedem** Beenden → der Leistenzustand wurde **nie** gespeichert. Jetzt: **13** `[ToolBar…]`-Abschnitte in der `Eudora.ini` statt **0**, und keine `E-42`-Zeile mehr |
+| [**E-43**](BEFUNDE.md#e-43) | `SaveCustomInfo` warf bei **jedem** Beenden → der Leistenzustand wurde **nie** gespeichert. Jetzt: **13** `[ToolBar…]`-Abschnitte in der `Eudora.ini` statt **0**, und keine [`E-42`](BEFUNDE.md#e-42)-Zeile mehr |
 | [**E-37**](BEFUNDE.md#e-37) | `CPersonality::Remove` löscht den INI-Abschnitt und ruft dann `DeleteCommand` → `NotifyClients(CA_DELETE)` → `QCCustomToolBar::Notify` (`:951`), wo in `:970` dasselbe Muster steht. Der Wurf fliegt aus `Remove()` heraus, der Anzeige-Code darunter wird nie erreicht. Belegt durch die Abwesenheit jeder Spur: **keine einzige E-37-Marke** in Gregors Protokoll |
 | [**E-38**](BEFUNDE.md#e-38) | war **gar kein Fehler**. Gregor am 08.09.2026: *„nach dem löschen eines kontos, wenn das konto noch sichtbar ist, dann fehlen die daten in den eigenschaften … beim neuen konto sind sie zu sehen."* Die leeren Felder gehörten zu einem Geistereintrag, den [E-37](BEFUNDE.md#e-37) in der Liste stehen ließ |
 | [**E-34**](BEFUNDE.md#e-34) | dasselbe Muster an einer dritten Stelle (`QCChildToolBar::GetButton`) — die dortige Umgehung bleibt, die Wurzel ist jetzt weg |
@@ -4022,18 +4022,18 @@ Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
    unteren Fensterrand, über die ganze Breite. **Von Gregor am 08.09.2026
    bestätigt:** *„leiste unten paßt."* Rechts darf **keine** Kurznamen-Spalte
    dauerhaft offenstehen.
-2. **E-37, gelöschtes Konto** (steckt seit 1.0.22 drin, noch unbestätigt):
+2. **[E-37](BEFUNDE.md#e-37), gelöschtes Konto** (steckt seit 1.0.22 drin, noch unbestätigt):
    eine Persönlichkeit anlegen und wieder löschen. Verschwindet der Eintrag
    links **sofort**, ohne Neustart? Kommt noch „Encountered an improper
    argument"?
-3. **E-38, Assistentendaten** — jetzt erstmals messbar, weil der Blocker [E-33](BEFUNDE.md#e-33)
+3. **[E-38](BEFUNDE.md#e-38), Assistentendaten** — jetzt erstmals messbar, weil der Blocker [E-33](BEFUNDE.md#e-33)
    weg ist: Konto über den Assistenten anlegen, Eudora **normal** beenden, neu
    starten, *Konto → Eigenschaften* ansehen. Stehen Name, Mailadresse und
    Server da?
 4. **Das Beenden** über alle drei Wege: *File → Exit*, **Alt-F4**, das
    **Kreuz**.
 5. [**E-43**](BEFUNDE.md#e-43) braucht nur einen normalen Beendigungsvorgang. Danach steht in
-   `Mailverzeichnis\eudora.log` eine Zeile `E-43 SaveCustomInfo: … Versatz=…
+   `Mailverzeichnis\eudora.log` eine Zeile `[E-43](BEFUNDE.md#e-43) SaveCustomInfo: … Versatz=…
    roh[0..4]=…` — die entscheidet, warum der Leistenzustand nie gespeichert
    wird.
 
@@ -4053,7 +4053,7 @@ Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
 Stufe.
 
 Ebenfalls von ihm bestätigt: *„default werte beim neuen persona konto für
-'leave message on server' greifen."* — **Anforderung A-1** ist damit am
+'leave message on server' greifen."* — **Anforderung [A-1](BEFUNDE.md#a-1)** ist damit am
 laufenden Programm belegt, nicht mehr nur am Codeweg.
 
 Paket: 9 339 516 Byte, SHA256 `7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`.
@@ -4118,7 +4118,7 @@ wer „Abbrechen" drückt, will nicht beenden.
 verschwunden, er steht jetzt als Protokollzeile da:
 
     [E-33](BEFUNDE.md#e-33) SaveCustomInfo: Abschnitt=ToolBar-BarID59392  this=06283F80  GetBtnCount=24  m_btns.GetSize=0
-    E-33 SaveCustomInfo: der FELDZUGRIFF m_btns[0] wirft (GetSize=0)
+    [E-33](BEFUNDE.md#e-33) SaveCustomInfo: der FELDZUGRIFF m_btns[0] wirft (GetSize=0)
     [E-42](BEFUNDE.md#e-42) Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgeloest - Das Beenden wird fortgesetzt.
 
 **Damit ist der Widerspruch aufgelöst, der seit [E-34](BEFUNDE.md#e-34) offen stand.**
@@ -4220,7 +4220,7 @@ Programmverzeichnis, findet keine und legt eine leere Einrichtung an (Befund
 
 Nach einem Absturz **zwei Dateien** im Mailverzeichnis ansehen:
 
-- **`eudora.log`** — die letzte Zeile mit `E-27` nennt die letzte Station, die
+- **`eudora.log`** — die letzte Zeile mit [`E-27`](BEFUNDE.md#e-27) nennt die letzte Station, die
   noch erreicht wurde. 15 Spurmarken liegen auf dem Weg. Sie schreiben **nur**,
   wenn in `Eudora.ini` unter `[Debug]` `LogLevel=32896` steht —
   `PutDebugLog` prüft die Maske und kehrt sonst sofort zurück
@@ -4393,7 +4393,7 @@ identisch, die zwei Ausnahmen kommen in keiner der 56 Kopfdateien vor.
 
 ## 7.2.0.18 / Paket 1.0.18 — 06.09.2026 · die Ursache gefunden
 
-**E-31 — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile im
+**[E-31](BEFUNDE.md#e-31) — `pg_time_t` war acht Byte breit statt vier.** Eine Zeile im
 Windows-Zweig von `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H` (`grep -n pg_time_t`):
 
 ```c
@@ -4455,7 +4455,7 @@ passiert, **bevor** der verdächtigte `pgNewNamedStyle` überhaupt gerufen wird.
 > während `LoadFrame`, also bevor die Felder da sind. Dieselbe Fehlerklasse wie
 > [E-18](BEFUNDE.md#e-18) und [E-22](BEFUNDE.md#e-22). **Von Gregor nicht nachgemessen.**
 
-- **E-32 — die Meldung „An unhandled exception has occurred" beim Verfassen.**
+- **[E-32](BEFUNDE.md#e-32) — die Meldung „An unhandled exception has occurred" beim Verfassen.**
   Das ist der letzte Schritt bis Kriterium 5. **Gemessen am 06.09.2026 nach der
   Behebung von [E-31](BEFUNDE.md#e-31):** die Spur läuft jetzt **vollständig** durch —
   `OnCreateClient: vor GetSubMenu 11` → **`OnMessageNewMessage: fertig`**. Der
@@ -4586,7 +4586,7 @@ LogLevel=32896
 
 Erste Fassung, in der Gregor mehrere Behebungen bestätigt hat.
 
-- **E-30 — Symbole der Werkzeugleiste.** Gesperrte Knöpfe zeigten eine leere
+- **[E-30](BEFUNDE.md#e-30) — Symbole der Werkzeugleiste.** Gesperrte Knöpfe zeigten eine leere
   graue Fläche. Ursache: die sechs Bitmaps der Hauptleiste sind **24 Bit** und
   haben damit keine Farbtabelle, die `CreateMappedBitmap` umsetzen könnte. Das
   Buttongrau `192,192,192` blieb stehen, während `COLOR_BTNFACE` heute
@@ -4596,7 +4596,7 @@ Erste Fassung, in der Gregor mehrere Behebungen bestätigt hat.
   `192,192,192`, deshalb fiel es nie auf. Behoben in
   `OTShim/OTShim_Werkzeugleiste.cpp`, dazu `tools/pruefe-symbole.pl` und
   `Eudora71/Tests/TestSymbole.cpp`
-- **E-28 — Doppelklick und Suchtreffer öffneten nichts.**
+- **[E-28](BEFUNDE.md#e-28) — Doppelklick und Suchtreffer öffneten nichts.**
   `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen:
   `CMessageFrame::ActivateFrame` setzt ihn bedingungslos, `OnDestroy` löschte
   ihn nur **innerhalb** von `if (m_InitialSize != wp.rcNormalPosition)` — also
@@ -4613,15 +4613,15 @@ Erste Fassung, in der Gregor mehrere Behebungen bestätigt hat.
 Gebaut und geprüft, aber nie ausgeliefert — [E-30](BEFUNDE.md#e-30) kam dazwischen. Die Nummer
 bleibt verbrannt, damit keine zwei Bauten dieselbe tragen.
 
-- **E-26 — der Absturzbericht nennt die Ladeadresse jedes Moduls.** Ohne sie war
+- **[E-26](BEFUNDE.md#e-26) — der Absturzbericht nennt die Ladeadresse jedes Moduls.** Ohne sie war
   keine Zeile des Aufrufstapels einem Funktionsnamen zuzuordnen: Windows lädt
   `Eudora.exe` verschoben (ASLR), und `Exception.log` schrieb die tatsächliche
   Basis nicht mit. Ein Versuch, gegen die vorgesehene `0x00400000` zu rechnen,
   lieferte prompt einen Namen aus dem Ressourcenbereich
-- **E-29 — `tools/absturz-auswerten.pl`**, 15 Selbsttests. Macht aus
+- **[E-29](BEFUNDE.md#e-29) — `tools/absturz-auswerten.pl`**, 15 Selbsttests. Macht aus
   `Exception.log` Funktionsnamen und sagt bei älteren Berichten ausdrücklich,
   dass es **nicht** geht, statt zu raten
-- **E-27, erster Teil** — die drei stillen Fehlerklassen werden protokolliert:
+- **[E-27](BEFUNDE.md#e-27), erster Teil** — die drei stillen Fehlerklassen werden protokolliert:
   `_set_invalid_parameter_handler`, `_set_purecall_handler`, `set_terminate`.
   Der Absturzbehandler hing nur an `SetUnhandledExceptionFilter`, und vier Wege
   gehen daran vorbei
@@ -4636,7 +4636,7 @@ einem Rechner ohne Visual Studio ausgepackt und gestartet.
   gemeldet statt verschluckt. Damit lief erstmals Port 995 mit TLS 1.3
 - [**E-24**](BEFUNDE.md#e-24) — „In" stand zweimal unter *Recent*
 - [**E-22**](BEFUNDE.md#e-22) — ungeprüfte Zeiger im Aufbau des Nachrichtenfensters
-- **E-18, E-19** — zwei Fehler, die erst mit einer zweiten Persönlichkeit
+- **[E-18](BEFUNDE.md#e-18), [E-19](BEFUNDE.md#e-19)** — zwei Fehler, die erst mit einer zweiten Persönlichkeit
   auftreten
 
 ## 7.2.0.3 / Paket 1.0.3 — 31.08.2026

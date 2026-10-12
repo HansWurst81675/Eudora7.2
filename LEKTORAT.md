@@ -8,40 +8,40 @@ seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
 Hier stehen der erste bis vierte, der sechste bis neunte, der dreizehnte
 bis sechzehnte sowie der neunzehnte und zwanzigste Durchgang. Der
 **fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
-die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) (L-6),
+die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) ([L-6](Befunde/LEKTOR.md#l-6)),
 [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
 [Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md) (L-8, alle 47 MD-Dateien),
 [Befunde/LEKTOR-5.md](Befunde/LEKTOR-5.md) (L-9, 41 Befunde am 08.09.2026) und
 [Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md) — dort stehen **L-10** (das
 Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`) und
-[Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**L-12**, der Stand auf
+[Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**[L-12](Befunde/LEKTOR-6.md#l-12)**, der Stand auf
 7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, [E-85](BEFUNDE.md#e-85) und seine Regression)
 und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
-7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien), [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, [E-97](BEFUNDE.md#e-97)) und [Befunde/LEKTOR-12.md](Befunde/LEKTOR-12.md) (**L-17**, der Stand auf 7.2.0.66 / 1.0.66, 17.09.2026, **149** MD-Dateien, [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101)).
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien), [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, [E-97](BEFUNDE.md#e-97)) und [Befunde/LEKTOR-12.md](Befunde/LEKTOR-12.md) (**[L-17](Befunde/LEKTOR-12.md#l-17)**, der Stand auf 7.2.0.66 / 1.0.66, 17.09.2026, **149** MD-Dateien, [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101)).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
-[Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) (P-3),
-[Befunde/PRUEFER-4.md](Befunde/PRUEFER-4.md) (P-4, [E-37](BEFUNDE.md#e-37) und die
-Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) (P-5, das
+[Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) ([P-3](Befunde/PRUEFER-11.md#p-3)),
+[Befunde/PRUEFER-4.md](Befunde/PRUEFER-4.md) ([P-4](Befunde/PRUEFER-11.md#p-4), [E-37](BEFUNDE.md#e-37) und die
+Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) ([P-5](Befunde/PRUEFER-11.md#p-5), das
 Review der Exit-Behebung — dort ist [**E-45**](BEFUNDE.md#e-45) gefunden worden).
 
 > **Stand dieser Datei: 18.09.2026.** Der jüngste Durchgang steht in
-> `Befunde/LEKTOR-15.md` (Funde **L-15.1** ff.) — *„keine Lügen auf dem main"*
+> `Befunde/LEKTOR-15.md` (Funde **[L-15.1](Befunde/LEKTOR-15.md#l-15.1)** ff.) — *„keine Lügen auf dem main"*
 > nach dem Release **`v1.0.72`**; gemessen an Quellstand **7.2.0.72** /
 > `VERSION` **1.0.72** über **155** MD-Dateien aus `git ls-files '*.md'`.
-> Davor `Befunde/LEKTOR-14.md` (Funde **L-14.1** ff., 7.2.0.70 / 1.0.70,
-> 153 Dateien), `Befunde/LEKTOR-13.md` (Funde **L-13.1** ff.,
-> `main` auf Unwahrheiten, 17.09.2026, 151 Dateien), **L-17** in
+> Davor `Befunde/LEKTOR-14.md` (Funde **[L-14.1](Befunde/LEKTOR-14.md#l-14.1)** ff., 7.2.0.70 / 1.0.70,
+> 153 Dateien), `Befunde/LEKTOR-13.md` (Funde **[L-13.1](Befunde/LEKTOR-13.md#l-13.1)** ff.,
+> `main` auf Unwahrheiten, 17.09.2026, 151 Dateien), **[L-17](Befunde/LEKTOR-12.md#l-17)** in
 > `Befunde/LEKTOR-12.md` (7.2.0.66 / 1.0.66, 149 Dateien), **L-16** in
 > `Befunde/LEKTOR-11.md` (7.2.0.64, 146 Dateien) und **L-15** in
 > `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63, 15.09.2026). Der jüngste
 > Durchgang *in dieser Datei* ist der **zwanzigste**, ganz unten. Alles ab
-> **L-6** steht nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
+> **[L-6](Befunde/LEKTOR.md#l-6)** steht nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
 > `Befunde/LEKTOR-15.md`.
 >
-> **Zwei Berichtigungen am 17.09.2026 (L-14.6).** (1) Hier stand *„Der jüngste
-> Durchgang ist **L-17**"* — `Befunde/LEKTOR-13.md` war da längst geschrieben
+> **Zwei Berichtigungen am 17.09.2026 ([L-14.6](Befunde/LEKTOR-14.md#l-14.6)).** (1) Hier stand *„Der jüngste
+> Durchgang ist **[L-17](Befunde/LEKTOR-12.md#l-17)**"* — `Befunde/LEKTOR-13.md` war da längst geschrieben
 > und kam in dieser Datei überhaupt nicht vor. (2) Hier stand *„Der jüngste
 > Durchgang in dieser Datei ist weiterhin der **neunte**"*, während der
 > **sechzehnte** seit dem Vormittag ganz unten stand; dieselbe Zeile weiter
@@ -53,12 +53,12 @@ Review der Exit-Behebung — dort ist [**E-45**](BEFUNDE.md#e-45) gefunden worde
 > Verweise in `README.md`, `AUFGABEN.md` und `tools/RELEASES.md` meinen
 > `Befunde/LEKTOR-13.md`, **nicht** den dreizehnten Durchgang vom 14.09.2026.
 >
-> **L-17 in einem Satz:** Dieselbe Ersetzung wie in L-16, nur andersherum —
+> **[L-17](Befunde/LEKTOR-12.md#l-17) in einem Satz:** Dieselbe Ersetzung wie in L-16, nur andersherum —
 > [**E-97**](BEFUNDE.md#e-97) stand in `README.md`, `AUFGABEN.md` und `WEITERMACHEN.md` als
 > Fassung **7.2.0.66**, obwohl es in **7.2.0.64** behoben und von Gregor an
 > 1.0.64 **bestätigt** ist; die Prüfzeile in `WEITERMACHEN.md` hätte ihn damit
 > ein zweites Mal zur Prüfanleitung eines fremden Befunds geschickt. Dazu
-> fehlten **E-98 bis E-101** in fünf Dateien vollständig — [E-98](BEFUNDE.md#e-98) auch im
+> fehlten **[E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101)** in fünf Dateien vollständig — [E-98](BEFUNDE.md#e-98) auch im
 > offenen Teil des CHANGELOG —, drei Dateien nannten einen Paketstand 1.0.63,
 > den es so nicht mehr gibt, und `spuren-auswerten.pl` war zum **dritten Mal**
 > an derselben Stelle stumm: die neue E-101-Marke trägt das Wort `SPURMARKE`
@@ -81,11 +81,11 @@ Review der Exit-Behebung — dort ist [**E-45**](BEFUNDE.md#e-45) gefunden worde
 > **L-13 in einem Satz:** Drei Fassungen in vierundzwanzig Stunden haben die
 > Doku an neun Stellen stehenlassen — zwei davon sagten das **Gegenteil** des
 > Bestands, und eine davon widersprach sich **innerhalb derselben Datei**
-> (`ZIEL.md` Zeile 31 gegen Zeile 43). Dazu waren **E-85 und [E-86](BEFUNDE.md#e-86) für
+> (`ZIEL.md` Zeile 31 gegen Zeile 43). Dazu waren **[E-85](BEFUNDE.md#e-85) und [E-86](BEFUNDE.md#e-86) für
 > `pruefe-befundurteile.pl` unsichtbar**: das eine Urteil war länger als das
 > 60-Zeichen-Fenster, das andere enthielt weder „offen" noch „behoben".
 >
-> **L-12 in einem Satz:** [E-85](BEFUNDE.md#e-85) (Umlaute über IMAP) war behoben, während vier
+> **[L-12](Befunde/LEKTOR-6.md#l-12) in einem Satz:** [E-85](BEFUNDE.md#e-85) (Umlaute über IMAP) war behoben, während vier
 > Dokumente ihn noch als offen führten — und dreimal an diesem Tag stand die
 > Doku still, während der Zweig weiterlief, zweimal davon mit einer Aussage,
 > die ich selbst eine Stunde zuvor geschrieben hatte.
@@ -248,7 +248,7 @@ Fremd-DLLs bei, hier fehlte die eigene Laufzeit ganz) und mit dem, was er
 | `ZIEL.md` | „keines der **drei** Kriterien" | „keines der Kriterien" — es sind vier |
 | `ZIEL.md` | der Kasten zu Kriterium 1 nannte [S-5](BEFUNDE.md#s-5) und [S-6](BEFUNDE.md#s-6) als offen | Nachtrag: Ursachen belegt und **im Quelltext behoben** ([M-1](BEFUNDE.md#m-1), [A-1](BEFUNDE.md#a-1)), **das ändert am Stand nichts**, solange niemand das laufende Programm gesehen hat |
 | `README.md` | Stand-Kasten ohne Kriterium 0 | Tabelle 0 bis 3, ausdrücklich „derzeit ist kein Kriterium erfüllt" |
-| `README.md` | „Befunde [S-1](BEFUNDE.md#s-1) bis [S-7](BEFUNDE.md#s-7)" | S-1 bis [S-8](BEFUNDE.md#s-8) samt [B-1](BEFUNDE.md#b-1)/[B-2](BEFUNDE.md#b-2), [M-1](BEFUNDE.md#m-1), [A-1](BEFUNDE.md#a-1), [P-1](BEFUNDE.md#p-1)/[P-2](BEFUNDE.md#p-2), [W-1](BEFUNDE.md#w-1) |
+| `README.md` | „Befunde [S-1](BEFUNDE.md#s-1) bis [S-7](BEFUNDE.md#s-7)" | [S-1](BEFUNDE.md#s-1) bis [S-8](BEFUNDE.md#s-8) samt [B-1](BEFUNDE.md#b-1)/[B-2](BEFUNDE.md#b-2), [M-1](BEFUNDE.md#m-1), [A-1](BEFUNDE.md#a-1), [P-1](BEFUNDE.md#p-1)/[P-2](BEFUNDE.md#p-2), [W-1](BEFUNDE.md#w-1) |
 | `README.md`, „Offene Themen" | **„Erster Start von `Eudora.exe` — offen und ungeprüft, ob das Programm läuft"** — dieselbe überholte Behauptung, die im ersten Durchgang schon an zwei anderen Stellen berichtigt wurde; hier war sie stehen geblieben | erledigt seit [S-2](BEFUNDE.md#s-2), mit Verweis auf [S-8](BEFUNDE.md#s-8) für den Fall fehlender Laufzeiten |
 | `README.md`, „Offene Themen" | „QCSSL gegen echten Mailserver prüfen — **erledigt**, Abruf und Versand laufen" | präzisiert: der Abruf lief mit einer **älteren** QCSSL in einer bestehenden 7.1-Installation, nicht mit dem selbst gebauten `Eudora.exe`; Kriterium 3 ist **nicht** erfüllt. Das war die offene Frage 2 aus dem ersten Durchgang |
 | `README.md`, „Offene Themen" | „Release-Konfiguration: für QCSSL gebaut" | dazu die Berichtigung aus [B-2](BEFUNDE.md#b-2): Paket 1.0.2 ist **gemischt**, nicht durchgehend Release |
@@ -477,9 +477,9 @@ Stellen.
 | `README.md` | „in 5900 Zeilen nichts wieder" | **6960**, nachgemessen |
 | `ZIEL.md` | die maßgebliche Kriterientabelle war vom 31.08. | Stand vom 05.09. mit Berichtigungskasten. Kriterium 1 und 3 sind jetzt an **7.2.0.4** belegt; Kriterium 2 hat einen neuen offenen Punkt (kein Fortschritt beim Abruf) und einen weggefallenen ([E-7](BEFUNDE.md#e-7)); Kriterium 0 hat sich nicht bewegt |
 | `BEFUNDE.md` | [**E-4**](BEFUNDE.md#e-4) und [**E-7**](BEFUNDE.md#e-7) standen auf „offen", sind aber behoben | beide auf „behoben, ungeprüft", je mit Fortschreibungsabschnitt und Commit |
-| `BEFUNDE.md` | [**PR-5**](BEFUNDE.md#pr-5) stand an drei Stellen auf „offen", war aber in `765c39b` behoben | überall berichtigt; die Überschrift „PR-5 bleibt offen" heißt jetzt „PR-5 — behoben am 31.08.2026 abends" mit Berichtigungskasten |
+| `BEFUNDE.md` | [**PR-5**](BEFUNDE.md#pr-5) stand an drei Stellen auf „offen", war aber in `765c39b` behoben | überall berichtigt; die Überschrift „[PR-5](BEFUNDE.md#pr-5) bleibt offen" heißt jetzt „[PR-5](BEFUNDE.md#pr-5) — behoben am 31.08.2026 abends" mit Berichtigungskasten |
 | `BEFUNDE.md` | für den OT501-Ausbau gab es keinen Befund | neuer Abschnitt [**B-3**](BEFUNDE.md#b-3) mit den vier Belegen, dass niemand `OT501` braucht |
-| `BEFUNDE.md` | `PR-3` bis `PR-8` und `P-3` kamen im Verzeichnis nicht vor | neuer Abschnitt „Unterbefunde, die man einzeln sucht" mit 13 Zeilen |
+| `BEFUNDE.md` | [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8) und [`P-3`](Befunde/PRUEFER-11.md#p-3) kamen im Verzeichnis nicht vor | neuer Abschnitt „Unterbefunde, die man einzeln sucht" mit 13 Zeilen |
 | `AUFGABEN.md` | erster Schritt war „das Release auf dem zweiten PC probieren" (31.08.) | Stand vom 05.09.; erster Schritt ist Produktversion hochzählen, bauen, packen, durchsehen. Was heute erledigt wurde, steht in einer eigenen Tabelle |
 | `AUFGABEN.md` | Auflage 4 verlangte `/p:BuildProjectReferences=false` | berichtigt: ganze Projektmappe bauen, Schalter nicht mehr benutzen |
 | `WEITERMACHEN.md` | Einstieg war vom 31.08. abends | neuer Kasten für den 05.09. ganz oben; die beiden alten Kästen sind als **ÜBERHOLT** gekennzeichnet, nicht gelöscht |
@@ -487,29 +487,29 @@ Stellen.
 
 ## Aufgelöst: eine doppelt vergebene Kennung
 
-`E-12` war **zweimal** vergeben — Agent KONTO (Mailverzeichnis-Argument,
+[`E-12`](BEFUNDE.md#e-12) war **zweimal** vergeben — Agent KONTO (Mailverzeichnis-Argument,
 `79c09d4`) und Agent FORTSCHRITT (Fortschritt beim Mailabruf, `bd3959c` auf
 `wt/fortschritt-arbeit`). Beide hatten unabhängig „die nächste freie E-Nummer"
 gewählt.
 
-**Auflösung:** `E-12` bleibt bei KONTO (zuerst zusammengeführt, steht im
-Verzeichnis); FORTSCHRITTs Befund heißt jetzt **`E-13`** und trägt eine Zeile,
-dass er vorher `E-12` hieß.
+**Auflösung:** [`E-12`](BEFUNDE.md#e-12) bleibt bei KONTO (zuerst zusammengeführt, steht im
+Verzeichnis); FORTSCHRITTs Befund heißt jetzt **[`E-13`](BEFUNDE.md#e-13)** und trägt eine Zeile,
+dass er vorher [`E-12`](BEFUNDE.md#e-12) hieß.
 
 Beim Nachmessen kamen **drei weitere Dopplungen** heraus, die niemand gemeldet
-hatte: `P-1`, `P-2` und `PR-2` bezeichnen je zwei verschiedene Dinge. Sie werden
+hatte: [`P-1`](BEFUNDE.md#p-1), [`P-2`](BEFUNDE.md#p-2) und [`PR-2`](BEFUNDE.md#pr-2) bezeichnen je zwei verschiedene Dinge. Sie werden
 **nicht** rückwirkend umbenannt — zu viele Querverweise hängen daran —, stehen
 aber jetzt im Verzeichnis als Dopplung ausgewiesen.
 
 **Damit das nicht wieder passiert**, steht im Verzeichnis der Befehl, der die
 vergebenen Kennungen über **alle** Zweige misst, dazu eine Tabelle der
-Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt (`X-5`, `X-6`,
-`E-13`) und die nächsten freien Kennungen.
+Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt ([`X-5`](BEFUNDE.md#x-5), [`X-6`](BEFUNDE.md#x-6),
+[`E-13`](BEFUNDE.md#e-13)) und die nächsten freien Kennungen.
 
 ## Was ich bewusst nicht getan habe
 
 * **Keine Zeile Quelltext geändert, nichts gebaut.**
-* **Die Abschnitte zu `X-5` und `X-6` nicht hierher kopiert.** Sie liegen auf
+* **Die Abschnitte zu [`X-5`](BEFUNDE.md#x-5) und [`X-6`](BEFUNDE.md#x-6) nicht hierher kopiert.** Sie liegen auf
   `wt/schranke` und `wt/baumeister` und kommen mit dem Zusammenführen. Ein
   Verzeichniseintrag ohne Abschnitt wäre genau der Fehler, gegen den das
   Verzeichnis geschrieben ist; die Kennungen sind stattdessen **reserviert**.
@@ -523,7 +523,7 @@ Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt (`X-5`, `X-6`,
 Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor` aus
 `9512108`. **Keine Zeile Quelltext geändert, nichts gebaut, Eudora nicht
 gestartet.** Der fünfte Durchgang ist der Vormittag desselben Tages
-(`Befunde/LEKTOR.md`, L-1 bis L-6): er hat `README.md`, `AUFGABEN.md`,
+(`Befunde/LEKTOR.md`, [L-1](Befunde/LEKTOR.md#l-1) bis [L-6](Befunde/LEKTOR.md#l-6)): er hat `README.md`, `AUFGABEN.md`,
 `WEITERMACHEN.md` und `ZIEL.md` von Grabungsbericht auf Anleitung umgestellt
 und die Liste der übrigen Mängel aufgeschrieben. Dieser Durchgang arbeitet
 diese Liste ab.
@@ -558,10 +558,10 @@ ganz anderes zeigten. Alle sechs sind berichtigt.
 | Datei | Was falsch war |
 |---|---|
 | `README.md` | `eudora.cpp:3542` als Abbruchstelle bei fehlender `Eudora.ini`; der Absatz über die `.lib`; `cat VERSION` als Beleg für die Quellversion; `mainfrm.cpp:1025`; Stingray-Header 30 statt 28; „121 Zertifikate"; `msvcr71.dll` fehlte in der Ergebnisliste |
-| `BEFUNDE.md` | `Z-3` stand auf „offen" (behoben mit `57fe6a4`); **E-14, [E-16](BEFUNDE.md#e-16), [E-17](BEFUNDE.md#e-17), [E-22](BEFUNDE.md#e-22), [E-23](BEFUNDE.md#e-23), [E-24](BEFUNDE.md#e-24), [E-25](BEFUNDE.md#e-25), E-26** fehlten im Verzeichnis ganz |
+| `BEFUNDE.md` | [`Z-3`](BEFUNDE.md#z-3) stand auf „offen" (behoben mit `57fe6a4`); **[E-14](BEFUNDE.md#e-14), [E-16](BEFUNDE.md#e-16), [E-17](BEFUNDE.md#e-17), [E-22](BEFUNDE.md#e-22), [E-23](BEFUNDE.md#e-23), [E-24](BEFUNDE.md#e-24), [E-25](BEFUNDE.md#e-25), [E-26](BEFUNDE.md#e-26)** fehlten im Verzeichnis ganz |
 | `PORTIERUNG.md` | der Kasten „gemessen 05.09.2026" war der Stand **vor** [B-3](BEFUNDE.md#b-3); „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; die OpenSSL3-Libs lägen nicht im Repo; [E-11](BEFUNDE.md#e-11); Port 110 als einziger Beleg |
-| `STARTUMGEBUNG.md` | Checkliste Punkt 1 verlangte die nicht verteilbaren Debug-Laufzeiten von jedem Paketanwender (L-3); `EudoraRes` hänge an OT501; die `Eudora.ini`-Fundstelle; die alte Bau-Kennung; „ob Eudora startet, sagt diese Datei nicht" |
-| `Releases/PAKETE.md` | die Buchführung endet sieben Pakete vor dem Stand; die Versionsanleitung war für 1.0.3→1.0.4 durchgerechnet; [E-11](BEFUNDE.md#e-11) als Begründung der beiden 1.0.3-ZIPs; Debug-Laufzeiten im Release-Abschnitt (L-3) |
+| `STARTUMGEBUNG.md` | Checkliste Punkt 1 verlangte die nicht verteilbaren Debug-Laufzeiten von jedem Paketanwender ([L-3](Befunde/LEKTOR.md#l-3)); `EudoraRes` hänge an OT501; die `Eudora.ini`-Fundstelle; die alte Bau-Kennung; „ob Eudora startet, sagt diese Datei nicht" |
+| `Releases/PAKETE.md` | die Buchführung endet sieben Pakete vor dem Stand; die Versionsanleitung war für 1.0.3→1.0.4 durchgerechnet; [E-11](BEFUNDE.md#e-11) als Begründung der beiden 1.0.3-ZIPs; Debug-Laufzeiten im Release-Abschnitt ([L-3](Befunde/LEKTOR.md#l-3)) |
 | `ABRUF-PRUEFEN.md` | „Belegt ist Port 110 … das ist **nicht** der Weg, den diese Anleitung empfiehlt" — seit 06.09.2026 ist Port 995 gemessen |
 | `Eudora71/OpenSSL3/BAUEN.md` | Aufforderung ganz oben, OpenSSL selbst zu bauen, weil die `.lib` fehlten — sie liegen im Repo |
 | `PRUEFUNG-BAU.md`, `PRUEFUNG-BRANCH.md`, `PRUEFUNG-CODE.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | überholte Schlussfolgerungen ([E-11](BEFUNDE.md#e-11), „Ursache wieder offen", M-11, roher MSBuild-Aufruf) als solche gekennzeichnet |
@@ -575,7 +575,7 @@ ganz anderes zeigten. Alle sechs sind berichtigt.
   mit einem Nachtragskasten gekennzeichnet, nicht ersetzt.
 * **`Releases/PAKETE.md` nicht um 1.0.4 bis 1.0.10 ergänzt.** Dafür bräuchte es
   Messwerte an den ZIPs, die ich ohne Bau nicht erheben kann. Der Mangel steht
-  jetzt als Kasten am Anfang der Datei und als **M-4** im Verzeichnis.
+  jetzt als Kasten am Anfang der Datei und als **[M-4](Befunde/PRUEFER-15.md#m-4)** im Verzeichnis.
 * **Kein Edit-Werkzeug.** Alle Änderungen über `tools/ersetze-bereich.pl` mit
   `:raw`, nach jeder Änderung CR-Zahl und Doppelkodierung gegen `HEAD`
   gemessen.
@@ -598,7 +598,7 @@ Anlass war Gregors Ansage:
 **Vier Behauptungen waren nicht veraltet, sondern falsch**, und jede hätte
 jemanden in die Irre geführt, der danach gearbeitet hätte:
 
-1. `BEFUNDE.md` erklärte **E-15 und [E-18](BEFUNDE.md#e-18) bis [E-21](BEFUNDE.md#e-21) für nie vergeben** — *„gesucht
+1. `BEFUNDE.md` erklärte **[E-15](BEFUNDE.md#e-15) und [E-18](BEFUNDE.md#e-18) bis [E-21](BEFUNDE.md#e-21) für nie vergeben** — *„gesucht
    im ganzen Repo"*. Gesucht worden war nur in `*.md`; alle fünf sind in
    Quellkommentaren vergeben und dort begründet, zwei davon stehen sogar im
    `CHANGELOG`.
@@ -672,7 +672,7 @@ berichtigten Dateien noch nicht. Nach dem Merge einmal
 * **Prüfberichte nicht umgeschrieben** — Zeitdokumente. Überholte
   Schlussfolgerungen bekommen einen datierten Nachtrag.
 * **`Releases/PAKETE.md` nicht um 1.0.4 bis 1.0.17 ergänzt.** Für die meisten
-  liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **M-4** bleibt
+  liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **[M-4](Befunde/PRUEFER-15.md#m-4)** bleibt
   offen. Für 1.0.18 ist der Abschnitt da, weil dort alles messbar war.
 * **„30 Stellen, 22 Stingray-Klassen, 77 Methoden" in `README.md`** weiter
   zurückgestellt — die Zählweise ist nicht dokumentiert, Raten wäre schlimmer.
@@ -681,7 +681,7 @@ berichtigten Dateien noch nicht. Nach dem Merge einmal
 
 Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`. **Keine
 Zeile Quelltext geändert, nichts gebaut, Eudora nicht gestartet.**
-Ausführliche Berichte: `Befunde/LEKTOR-6.md` (L-12) und die Commits
+Ausführliche Berichte: `Befunde/LEKTOR-6.md` ([L-12](Befunde/LEKTOR-6.md#l-12)) und die Commits
 `a660b1b`, `77b9aa1`, `be5a9cb`, `a788753`.
 
 Nachgetragen am 11.09.2026, nachdem Gregor gefragt hat:
@@ -766,8 +766,8 @@ Der Auftrag sprach von 47 Dateien; das war die Zahl aus dem achten Durchgang
 Abschnitt 1 führte [**E-49**](BEFUNDE.md#e-49), [**E-50**](BEFUNDE.md#e-50) und [**E-52**](BEFUNDE.md#e-52) als *„bestätigt"* und berief
 sich dabei ausdrücklich auf `BEFUNDE.md`. Dort steht bei allen dreien *„von
 Gregor noch nicht bestätigt"* (`BEFUNDE.md:210`, `:211`, `:213`). Nachgezählt
-über alle Urteilszeilen: **vierzehn** behobene Befunde sind unbestätigt — E-49,
-E-50, E-52 bis [E-63](BEFUNDE.md#e-63) —, nicht einer. Die Überschrift *„vier gebaute Behebungen
+über alle Urteilszeilen: **vierzehn** behobene Befunde sind unbestätigt — [E-49](BEFUNDE.md#e-49),
+[E-50](BEFUNDE.md#e-50), [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63) —, nicht einer. Die Überschrift *„vier gebaute Behebungen
 warten auf Gregors Urteil"* stand wortgleich in `AUFGABEN.md` und
 `WEITERMACHEN.md`.
 
@@ -808,7 +808,7 @@ unter **`[ToolBar-ToolBarManager]`**. Dazu `WriteProfileString` statt
 **5. Die Spurmarke zu [E-76](BEFUNDE.md#e-76) stand als `entfaellt`, obwohl sie geliefert hatte.**
 `Befunde/SPURMARKEN.md` sagte *„wartet auf den nächsten Bericht von Gregor"*.
 Der Bericht kam am 11.09.2026: er hat an 1.0.48 gezogen, und die Marke schrieb
-die fünf Zeilen, die E-76 entschieden haben — und an 1.0.50 ein zweites Mal,
+die fünf Zeilen, die [E-76](BEFUNDE.md#e-76) entschieden haben — und an 1.0.50 ein zweites Mal,
 `E-76 fest: vorher=751x403`, der Beleg für [E-84](BEFUNDE.md#e-84). Dieselbe Klasse wie bei [E-70](BEFUNDE.md#e-70)
 ([eingebaute-messung-auslesen](Arbeitsweise/eingebaute-messung-auslesen.md)),
 nur andersherum: dort war die Marke ungelesen, hier war sie gelesen und die
@@ -877,7 +877,7 @@ und alle **88** Werkzeuge in `tools/`.
 |---|---|
 | **Der schwerste Fund** | `ZIEL.md` widersprach **sich selbst**: Zeile 31 sagte richtig *„seit 7.2.0.52 in Ordnung, am laufenden Programm belegt"*, zwölf Zeilen darunter stand *„mit [E-85](BEFUNDE.md#e-85) in 7.2.0.51 behoben, aber noch nicht bestätigt"* |
 | **Der zweitschwerste** | `BEFUNDE.md` widersprach sich **in einer einzigen Zeile**: *„Alle drei Mängel behoben in 7.2.0.51 — Regression noch offen"* gegen *„(3) in 7.2.0.51 gleich mitbehoben"* im selben Absatz |
-| **Der stillste** | **E-85 und [E-86](BEFUNDE.md#e-86) waren für `pruefe-befundurteile.pl` unsichtbar** — das eine Urteil war länger als das 60-Zeichen-Fenster, das andere enthielt weder *offen* noch *behoben*. Beide gingen durch jede Gegenprüfung, ohne gewogen zu werden |
+| **Der stillste** | **[E-85](BEFUNDE.md#e-85) und [E-86](BEFUNDE.md#e-86) waren für `pruefe-befundurteile.pl` unsichtbar** — das eine Urteil war länger als das 60-Zeichen-Fenster, das andere enthielt weder *offen* noch *behoben*. Beide gingen durch jede Gegenprüfung, ohne gewogen zu werden |
 | **Zeilenangaben** | 16 nachgemessen, **8 falsch**, alle berichtigt. Das Muster: berichtigt wurde, was *vor* der letzten Änderung derselben Datei gemessen war |
 | **Ein abgebrochener Satz** | `PORTIERUNG.md` endete seit einem früheren Umbau mit *„Hier steht bewusst keine"* — ohne Objekt, direkt vor einer Tabelle. Kein Werkzeug prüft darauf |
 | **Zwölf offene Befunde** | einzeln am Quelltext nachgemessen, alle weiterhin offen, jeder jetzt mit Datum und Fundstelle. [**E-14**](BEFUNDE.md#e-14) steht ausdrücklich als *nicht entscheidbar* da |
@@ -937,7 +937,7 @@ Eudora sofort, in jeder Fassung seit 1.0.49 und auch im veröffentlichten
 |---|---|
 | **Eine Ersetzung 63 → 64** nahm drei Angaben über die **Vergangenheit** mit — [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) sind in 7.2.0.63 behoben, nicht in .64. Die teuerste: `WEITERMACHEN.md`:11 schickte zur Prüfanleitung *„Abschnitt 7.2.0.64"*, und dort steht [E-97](BEFUNDE.md#e-97) | `WEITERMACHEN.md`, `AUFGABEN.md`, `README.md` |
 | **Vier Stellen behaupteten Paket 1.0.64.** Gemessen: unter `Releases/` liegt zuletzt `Eudora72-1.0.63-release`; 7.2.0.64 ist gebaut, nicht geschnürt. Eine nannte sogar den Pfad | `WEITERMACHEN.md`, `AUFGABEN.md`, `PORTIERUNG.md`, `ZIEL.md` |
-| **E-97 kam außer in CHANGELOG und BEFUNDE nirgends vor** — auch nicht in `README.md` unter *Was es nicht kann*, obwohl das veröffentlichte `v1.0.50` betroffen ist | `README.md`, `WEITERMACHEN.md`, `AUFGABEN.md`, `ZIEL.md` |
+| **[E-97](BEFUNDE.md#e-97) kam außer in CHANGELOG und BEFUNDE nirgends vor** — auch nicht in `README.md` unter *Was es nicht kann*, obwohl das veröffentlichte `v1.0.50` betroffen ist | `README.md`, `WEITERMACHEN.md`, `AUFGABEN.md`, `ZIEL.md` |
 
 **Zwei Schranken waren dabei stumm**, und das ist der eigentliche Fund:
 
@@ -946,7 +946,7 @@ Eudora sofort, in jeder Fassung seit 1.0.49 und auch im veröffentlichten
   und fünf Stand-Köpfe auf dem 15.09. bekamen ein *„Kein Stand-Kopf hinkt
   hinterher"*.
 - `spuren-auswerten.pl` erkennt eine Marke am Wort `SPURMARKE` im Kommentar.
-  Über beiden **E-97**-Marken steht `BEFUND E-97`. Das Werkzeug zählt 8 Befunde
+  Über beiden **[E-97](BEFUNDE.md#e-97)**-Marken steht `BEFUND E-97`. Das Werkzeug zählt 8 Befunde
   mit Marken, der Messbefehl aus `SPURMARKEN.md` **30** — und meldet dazu
   weder Fund noch Fehlalarm.
 
@@ -969,10 +969,10 @@ laufenden Zweig `paketliste-glattziehen`.
 
 | | |
 |---|---|
-| **Der teuerste Fund (L-14.1)** | Die Tabelle im neuen CHANGELOG-Abschnitt 7.2.0.70 hat die Zeile zu **1.0.69 vertauscht**: sie sagt *„enthält [E-101](BEFUNDE.md#e-101) zweiter Teil, es fehlt [E-106](BEFUNDE.md#e-106)"*. Gemessen an Zeitstempel und Vorfahrenschaft ist es **umgekehrt** — die `Eudora.exe` entstand 20:24:54 aus `acc8ad7`, der E-106-Merge (20:16:00) ist Vorfahr, der zweite Teil von E-101 (20:58:43) kam danach. Gregor hat **1.0.69** auf der Platte und **1.0.70 nicht** |
-| **Ein Berichtigungsvermerk, der nicht stimmte (L-14.2)** | L-13.1 erklärte die Unwahrheit *„veröffentlicht ist weiterhin `v1.0.50`"* in fünf Dokumenten für erledigt. In `WEITERMACHEN.md` stand sie **weiter**, und `PORTIERUNG.md` trug sie ebenfalls, ohne in einem der Vermerke genannt zu sein. Sechs Dokumente, zwei blieben stehen |
-| **Vier Befunde unter falscher Fassung (L-14.4)** | Alles war auf **7.2.0.68** gezogen. Richtig: [**E-101**](BEFUNDE.md#e-101) in 7.2.0.66 und 7.2.0.69, [**E-103**](BEFUNDE.md#e-103) in 7.2.0.67, [**E-104**](BEFUNDE.md#e-104) in 7.2.0.67 **und** 7.2.0.68, [**E-106**](BEFUNDE.md#e-106) in 7.2.0.68. Dieselbe Ersetzungsklasse wie in L-11, L-16 und L-17 — sie ist zum **vierten Mal** aufgetreten |
-| **E-106 (L-14.5)** | **keine einzige Stelle** behauptet, er sei nachgewiesen. Ein Nachtrag in `ZIEL.md`, sonst nichts |
+| **Der teuerste Fund ([L-14.1](Befunde/LEKTOR-14.md#l-14.1))** | Die Tabelle im neuen CHANGELOG-Abschnitt 7.2.0.70 hat die Zeile zu **1.0.69 vertauscht**: sie sagt *„enthält [E-101](BEFUNDE.md#e-101) zweiter Teil, es fehlt [E-106](BEFUNDE.md#e-106)"*. Gemessen an Zeitstempel und Vorfahrenschaft ist es **umgekehrt** — die `Eudora.exe` entstand 20:24:54 aus `acc8ad7`, der E-106-Merge (20:16:00) ist Vorfahr, der zweite Teil von [E-101](BEFUNDE.md#e-101) (20:58:43) kam danach. Gregor hat **1.0.69** auf der Platte und **1.0.70 nicht** |
+| **Ein Berichtigungsvermerk, der nicht stimmte ([L-14.2](Befunde/LEKTOR-14.md#l-14.2))** | [L-13.1](Befunde/LEKTOR-13.md#l-13.1) erklärte die Unwahrheit *„veröffentlicht ist weiterhin `v1.0.50`"* in fünf Dokumenten für erledigt. In `WEITERMACHEN.md` stand sie **weiter**, und `PORTIERUNG.md` trug sie ebenfalls, ohne in einem der Vermerke genannt zu sein. Sechs Dokumente, zwei blieben stehen |
+| **Vier Befunde unter falscher Fassung ([L-14.4](Befunde/LEKTOR-14.md#l-14.4))** | Alles war auf **7.2.0.68** gezogen. Richtig: [**E-101**](BEFUNDE.md#e-101) in 7.2.0.66 und 7.2.0.69, [**E-103**](BEFUNDE.md#e-103) in 7.2.0.67, [**E-104**](BEFUNDE.md#e-104) in 7.2.0.67 **und** 7.2.0.68, [**E-106**](BEFUNDE.md#e-106) in 7.2.0.68. Dieselbe Ersetzungsklasse wie in L-11, L-16 und [L-17](Befunde/LEKTOR-12.md#l-17) — sie ist zum **vierten Mal** aufgetreten |
+| **[E-106](BEFUNDE.md#e-106) ([L-14.5](Befunde/LEKTOR-14.md#l-14.5))** | **keine einzige Stelle** behauptet, er sei nachgewiesen. Ein Nachtrag in `ZIEL.md`, sonst nichts |
 
 **Drei Schranken waren stumm**, und das ist der eigentliche Fund:
 
@@ -992,19 +992,19 @@ laufenden Zweig `paketliste-glattziehen`.
   das Muster beim **nächsten** — aus `**behoben in …**` wurde `**Gemessen an
   seiner Datei**`, und der behobene Befund galt als **offen**. Gefunden an der
   eigenen Berichtigung, weil die Schranke *„geprueft 0"* meldete, wo zwei
-  geänderte Urteilszeilen im Diff standen (**L-14.10**).
+  geänderte Urteilszeilen im Diff standen (**[L-14.10](Befunde/LEKTOR-14.md#l-14.10)**).
 
 **Ein Nebenbefund, der eine Klasse betrifft:** `Arbeitsweise/` ist ein
 **Spiegel** des Gedächtnisverzeichnisses (`tools/lehren-spiegeln.pl`). Eine
 Berichtigung dort wird vom Vorcommit-Haken aus der Quelle **zurückgenommen** —
 gemessen an meinem eigenen Commit-Versuch. Wer eine Lehre berichtigen will,
-muss an die Quelle; das steht in `Arbeitsweise/README.md` nicht (**L-14.9**).
+muss an die Quelle; das steht in `Arbeitsweise/README.md` nicht (**[L-14.9](Befunde/LEKTOR-14.md#l-14.9)**).
 
 **Nachtrag desselben Abends.** Während der Bericht entstand, kam **7.2.0.71 /
 1.0.71** mit [**E-107**](BEFUNDE.md#e-107) dazu — ein Absturz beim Antworten, **mit [E-106](BEFUNDE.md#e-106)
 eingeschleppt**. Drei Folgen:
 
-- **Gregors Absturzmeldung belegt L-14.1 unabhängig.** `BEFUNDE.md` sagt zu
+- **Gregors Absturzmeldung belegt [L-14.1](Befunde/LEKTOR-14.md#l-14.1) unabhängig.** `BEFUNDE.md` sagt zu
   [E-107](BEFUNDE.md#e-107): *„von Gregor am 17.09.2026 um 21:23 **an 1.0.69** gemeldet"*. Wer den
   E-106-Fehler an 1.0.69 erlebt, hat [E-106](BEFUNDE.md#e-106) in 1.0.69 — genau das bestreitet
   `CHANGELOG.md:143` bis jetzt.
@@ -1031,19 +1031,19 @@ MD-Dateien; Maßstab war das Release **`v1.0.72`** (`gh release list`:
 
 | Fund | Kurz |
 |---|---|
-| **L-15.1** | `PORTIERUNG.md` nannte 7.2.0.70 / 1.0.70 und *„veröffentlicht ist `v1.0.64`"* — **dieselbe Zeile war schon L-14.2 und L-13.1**, samt Berichtigungsvermerk |
-| **L-15.2** | `ZIEL.md` führte 1.0.70 als geschnürtes Paket und **E-106 als *„ausdrücklich nicht nachgewiesen"*** — bestätigt an 1.0.69; vom Release stand kein Wort |
-| **L-15.3** | `AUFGABEN.md` sagte in Zeile 64 *„gebaut und geschnürt ist 7.2.0.70"*, in Zeile 3 derselben Datei **7.2.0.72** — und zählte 1.0.70 zu Gregors Paketen, das er nie hatte |
-| **L-15.4** | `BEFUNDE.md` führte [**E-106**](BEFUNDE.md#e-106) als *„bei Gregor noch nicht nachgewiesen"*, während `AUFGABEN.md` und `README.md` die Bestätigung nannten |
-| **L-15.5** | `tools/ZWEIGE.md:73` **zum dritten Mal** weitergeschoben (69 → 70 → 71 → 72) — **und der Antreiber war `doku-pruefen.pl` selbst**, siehe unten |
-| **L-15.6** | `WEITERMACHEN.md` Zeile 13: Überschrift **BESTÄTIGT**, Text darunter *„Zu prüfen: …"* — zwei Fassungen in einer Zelle. Zeile 28 nannte **1.0.64** als zuletzt bestätigt, eine Zeile über der Angabe 1.0.72 |
-| **L-15.7** | `CHANGELOG.md`, Tabelle 7.2.0.70: 1.0.69 **vertauscht**, von L-14.1 gemessen und danach unverändert stehen geblieben; 1.0.70 hieß *„alles"*, trägt aber den Absturz [E-108](BEFUNDE.md#e-108) |
-| **L-15.8** | die Prüfanleitung im Abschnitt 7.2.0.70 schickte Gregor zu einem Paket, das er nie hatte und das abstürzt |
-| **L-15.9** | **drei Fassungen einer Aussage über den eigenen Prüfstand, eine davon falsch** — *„lädt keine Bilder"* gegen *„lädt zwar Bilder"*. Am Protokoll entschieden: er lädt **acht**, ihm fehlt ein **Testdatum** |
-| **L-15.10** | **E-105 hatte keine Zeile in `BEFUNDE.md`** — seit dem 17.09. als Aufgabe geführt, nie angelegt. Belegt und nachgetragen. **E-102 ist nie vergeben worden** |
-| **L-15.11** | `README.md` nannte unter *Wo die Grenzen liegen* nur [E-98](BEFUNDE.md#e-98) und [E-77](BEFUNDE.md#e-77) — **E-94 und [E-105](BEFUNDE.md#e-105) fehlten**; ebenso im CHANGELOG-Abschnitt *Noch offen* E-105, [E-109](BEFUNDE.md#e-109) und die LF-Weiterleitungen |
+| **[L-15.1](Befunde/LEKTOR-15.md#l-15.1)** | `PORTIERUNG.md` nannte 7.2.0.70 / 1.0.70 und *„veröffentlicht ist `v1.0.64`"* — **dieselbe Zeile war schon [L-14.2](Befunde/LEKTOR-14.md#l-14.2) und [L-13.1](Befunde/LEKTOR-13.md#l-13.1)**, samt Berichtigungsvermerk |
+| **[L-15.2](Befunde/LEKTOR-15.md#l-15.2)** | `ZIEL.md` führte 1.0.70 als geschnürtes Paket und **[E-106](BEFUNDE.md#e-106) als *„ausdrücklich nicht nachgewiesen"*** — bestätigt an 1.0.69; vom Release stand kein Wort |
+| **[L-15.3](Befunde/LEKTOR-15.md#l-15.3)** | `AUFGABEN.md` sagte in Zeile 64 *„gebaut und geschnürt ist 7.2.0.70"*, in Zeile 3 derselben Datei **7.2.0.72** — und zählte 1.0.70 zu Gregors Paketen, das er nie hatte |
+| **[L-15.4](Befunde/LEKTOR-15.md#l-15.4)** | `BEFUNDE.md` führte [**E-106**](BEFUNDE.md#e-106) als *„bei Gregor noch nicht nachgewiesen"*, während `AUFGABEN.md` und `README.md` die Bestätigung nannten |
+| **[L-15.5](Befunde/LEKTOR-15.md#l-15.5)** | `tools/ZWEIGE.md:73` **zum dritten Mal** weitergeschoben (69 → 70 → 71 → 72) — **und der Antreiber war `doku-pruefen.pl` selbst**, siehe unten |
+| **[L-15.6](Befunde/LEKTOR-15.md#l-15.6)** | `WEITERMACHEN.md` Zeile 13: Überschrift **BESTÄTIGT**, Text darunter *„Zu prüfen: …"* — zwei Fassungen in einer Zelle. Zeile 28 nannte **1.0.64** als zuletzt bestätigt, eine Zeile über der Angabe 1.0.72 |
+| **[L-15.7](Befunde/LEKTOR-15.md#l-15.7)** | `CHANGELOG.md`, Tabelle 7.2.0.70: 1.0.69 **vertauscht**, von [L-14.1](Befunde/LEKTOR-14.md#l-14.1) gemessen und danach unverändert stehen geblieben; 1.0.70 hieß *„alles"*, trägt aber den Absturz [E-108](BEFUNDE.md#e-108) |
+| **[L-15.8](Befunde/LEKTOR-15.md#l-15.8)** | die Prüfanleitung im Abschnitt 7.2.0.70 schickte Gregor zu einem Paket, das er nie hatte und das abstürzt |
+| **[L-15.9](Befunde/LEKTOR-15.md#l-15.9)** | **drei Fassungen einer Aussage über den eigenen Prüfstand, eine davon falsch** — *„lädt keine Bilder"* gegen *„lädt zwar Bilder"*. Am Protokoll entschieden: er lädt **acht**, ihm fehlt ein **Testdatum** |
+| **[L-15.10](Befunde/LEKTOR-15.md#l-15.10)** | **[E-105](BEFUNDE.md#e-105) hatte keine Zeile in `BEFUNDE.md`** — seit dem 17.09. als Aufgabe geführt, nie angelegt. Belegt und nachgetragen. **E-102 ist nie vergeben worden** |
+| **[L-15.11](Befunde/LEKTOR-15.md#l-15.11)** | `README.md` nannte unter *Wo die Grenzen liegen* nur [E-98](BEFUNDE.md#e-98) und [E-77](BEFUNDE.md#e-77) — **[E-94](BEFUNDE.md#e-94) und [E-105](BEFUNDE.md#e-105) fehlten**; ebenso im CHANGELOG-Abschnitt *Noch offen* [E-105](BEFUNDE.md#e-105), [E-109](BEFUNDE.md#e-109) und die LF-Weiterleitungen |
 
-**Der Befund, der über den Tag hinausgeht (L-15.5):** `tools/doku-pruefen.pl`
+**Der Befund, der über den Tag hinausgeht ([L-15.5](Befunde/LEKTOR-15.md#l-15.5)):** `tools/doku-pruefen.pl`
 löst auf das Wort *Paketnummer* aus und verlangt in den 200 Zeichen dahinter
 die **aktuelle** Nummer. In `tools/ZWEIGE.md` steht dort aber, was ein Zweig
 **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend
@@ -1060,22 +1060,22 @@ und gehört zu [E-109](BEFUNDE.md#e-109).**
 
 **Anlass:** [AN-1](BEFUNDE.md#an-1) wurde am 12.10.2026 zum ersten Mal gebaut und am laufenden
 Programm gemessen (7.2.0.79: 4 von 6 Prüffällen heil). Der Lauf ging nur lesend
-über die MDs seit `c0f946c`, Schwerpunkt B5/AN-1, gemessen an `ca8da5a`.
+über die MDs seit `c0f946c`, Schwerpunkt B5/[AN-1](BEFUNDE.md#an-1), gemessen an `ca8da5a`.
 
 | Fund | Kurz |
 |---|---|
-| **L-16.1** | `tools/offene-befunde.pl` liest nur Kennungen der Form `E-\d+` — **AN-1 sieht es nicht**, und [E-112](BEFUNDE.md#e-112) fällt heraus, weil *„widerlegt"* als erledigt zählt. Die Schranke aus CLAUDE.md Schritt 1 ist damit an zwei Stellen blind |
-| **L-16.2** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): der Messstand vom 12.10. fehlt, mehrere Stellen sagen *„nicht übersetzt"* |
-| **L-16.3** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): rund 20 zitierte Zeilennummern stimmen nicht mehr |
-| **L-16.4** | `AUFGABEN.md` B5: der Kasten oben ist neu, der Rest des Abschnitts steht noch auf *„nicht gebaut"* |
-| **L-16.5** | `CHANGELOG.md`: 7.2.0.79 trägt noch *„nicht übersetzt"* |
-| **L-16.6** | `Releases/PAKETE.md`: zwei Antworten im selben Abschnitt |
-| **L-16.7** | `tools/pruefdaten/LIESMICH.md`: *„was Eudora heute daraus macht"* beschreibt 7.2.0.76 |
-| **L-16.8** | `WEITERMACHEN.md`: *„Der nächste Schritt"* trägt das Datum 12.10., der Inhalt ist vom 18.09. und 30.09. |
-| **L-16.9** | Zweig `patch_20261012` nirgends verzeichnet — **erledigt**: umbenannt in `an1-endungen`, von Gregor bestätigt, eingetragen in `tools/ZWEIGE.md` |
-| **L-16.10** | `ZIEL.md:17` und `README.md:149`: *„nicht übersetzt"* |
+| **[L-16.1](Befunde/LEKTOR-16.md#l-16.1)** | `tools/offene-befunde.pl` liest nur Kennungen der Form `E-\d+` — **[AN-1](BEFUNDE.md#an-1) sieht es nicht**, und [E-112](BEFUNDE.md#e-112) fällt heraus, weil *„widerlegt"* als erledigt zählt. Die Schranke aus CLAUDE.md Schritt 1 ist damit an zwei Stellen blind |
+| **[L-16.2](Befunde/LEKTOR-16.md#l-16.2)** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): der Messstand vom 12.10. fehlt, mehrere Stellen sagen *„nicht übersetzt"* |
+| **[L-16.3](Befunde/LEKTOR-16.md#l-16.3)** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): rund 20 zitierte Zeilennummern stimmen nicht mehr |
+| **[L-16.4](Befunde/LEKTOR-16.md#l-16.4)** | `AUFGABEN.md` B5: der Kasten oben ist neu, der Rest des Abschnitts steht noch auf *„nicht gebaut"* |
+| **[L-16.5](Befunde/LEKTOR-16.md#l-16.5)** | `CHANGELOG.md`: 7.2.0.79 trägt noch *„nicht übersetzt"* |
+| **[L-16.6](Befunde/LEKTOR-16.md#l-16.6)** | `Releases/PAKETE.md`: zwei Antworten im selben Abschnitt |
+| **[L-16.7](Befunde/LEKTOR-16.md#l-16.7)** | `tools/pruefdaten/LIESMICH.md`: *„was Eudora heute daraus macht"* beschreibt 7.2.0.76 |
+| **[L-16.8](Befunde/LEKTOR-16.md#l-16.8)** | `WEITERMACHEN.md`: *„Der nächste Schritt"* trägt das Datum 12.10., der Inhalt ist vom 18.09. und 30.09. |
+| **[L-16.9](Befunde/LEKTOR-16.md#l-16.9)** | Zweig `patch_20261012` nirgends verzeichnet — **erledigt**: umbenannt in `an1-endungen`, von Gregor bestätigt, eingetragen in `tools/ZWEIGE.md` |
+| **[L-16.10](Befunde/LEKTOR-16.md#l-16.10)** | `ZIEL.md:17` und `README.md:149`: *„nicht übersetzt"* |
 
-**Eingearbeitet ist bisher nur L-16.9** und die `CheckName`-Formulierung im
+**Eingearbeitet ist bisher nur [L-16.9](Befunde/LEKTOR-16.md#l-16.9)** und die `CheckName`-Formulierung im
 CHANGELOG. Der Rest ist offen; er gehört vor einen Merge von `an1-endungen`.
 
 ## Zweiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-17.md`)
@@ -1085,17 +1085,17 @@ lesend über die MDs seit `4ec9dd1`.
 
 | Fund | Kurz |
 |---|---|
-| **L-17.1** | [AN-2](BEFUNDE.md#an-2) an sieben Stellen nur „nicht übersetzt", ohne den Stand 7.2.0.82 |
-| **L-17.2** | AN-1-Inhalte heißen an sieben Stellen „7.2.0.80" statt „7.2.0.80-an1"; zwei Verweise zeigen dadurch auf den AN-2-Abschnitt |
-| **L-17.3** | alter Stand in `ZIEL.md:17`, `README.md:149`, `PORTIERUNG.md:43`, `tools/ZWEIGE.md:93`; 1.0.82 in PAKETE noch „in Arbeit" — **letzteres erledigt** |
-| **L-17.4** | AUFGABEN B5: Überschrift mit kaputter Fettschrift — **erledigt**; Tabelle kennt B5.8 bis B5.10 nicht |
-| **L-17.5** | Zahl der Ursachen schwankt zwischen sechs, sieben und zehn |
-| **L-17.6** | CHANGELOG-Kopf sagte zu [AN-1](BEFUNDE.md#an-1) „nichts davon ist übersetzt" — **erledigt** |
-| **L-17.7** | BEFUNDE [AN-1](BEFUNDE.md#an-1): unter dem neuen Kasten stehen alte Aussagen |
-| **L-17.8** | `offene-befunde.pl` meldet 16/16 gedeckt und sieht [AN-1](BEFUNDE.md#an-1), [AN-2](BEFUNDE.md#an-2), [E-112](BEFUNDE.md#e-112) nicht (= L-16.1) |
+| **[L-17.1](Befunde/LEKTOR-17.md#l-17.1)** | [AN-2](BEFUNDE.md#an-2) an sieben Stellen nur „nicht übersetzt", ohne den Stand 7.2.0.82 |
+| **[L-17.2](Befunde/LEKTOR-17.md#l-17.2)** | AN-1-Inhalte heißen an sieben Stellen „7.2.0.80" statt „7.2.0.80-an1"; zwei Verweise zeigen dadurch auf den AN-2-Abschnitt |
+| **[L-17.3](Befunde/LEKTOR-17.md#l-17.3)** | alter Stand in `ZIEL.md:17`, `README.md:149`, `PORTIERUNG.md:43`, `tools/ZWEIGE.md:93`; 1.0.82 in PAKETE noch „in Arbeit" — **letzteres erledigt** |
+| **[L-17.4](Befunde/LEKTOR-17.md#l-17.4)** | AUFGABEN B5: Überschrift mit kaputter Fettschrift — **erledigt**; Tabelle kennt B5.8 bis B5.10 nicht |
+| **[L-17.5](Befunde/LEKTOR-17.md#l-17.5)** | Zahl der Ursachen schwankt zwischen sechs, sieben und zehn |
+| **[L-17.6](Befunde/LEKTOR-17.md#l-17.6)** | CHANGELOG-Kopf sagte zu [AN-1](BEFUNDE.md#an-1) „nichts davon ist übersetzt" — **erledigt** |
+| **[L-17.7](Befunde/LEKTOR-17.md#l-17.7)** | BEFUNDE [AN-1](BEFUNDE.md#an-1): unter dem neuen Kasten stehen alte Aussagen |
+| **[L-17.8](Befunde/LEKTOR-17.md#l-17.8)** | `offene-befunde.pl` meldet 16/16 gedeckt und sieht [AN-1](BEFUNDE.md#an-1), [AN-2](BEFUNDE.md#an-2), [E-112](BEFUNDE.md#e-112) nicht (= [L-16.1](Befunde/LEKTOR-16.md#l-16.1)) |
 
 **Berichtigung zu Durchgang 21:** dort stand „eingearbeitet ist bisher nur
-L-16.9" — tatsächlich waren es zu dem Zeitpunkt auch L-16.7 und Teile von L-16.2.
+[L-16.9](Befunde/LEKTOR-16.md#l-16.9)" — tatsächlich waren es zu dem Zeitpunkt auch [L-16.7](Befunde/LEKTOR-16.md#l-16.7) und Teile von [L-16.2](Befunde/LEKTOR-16.md#l-16.2).
 
 ## Dreiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-18.md`)
 
@@ -1113,22 +1113,22 @@ Hinweis (umbenannte Datei) — **alle eingearbeitet** im selben Commit.
 
 **Anlass:** Merge von PR #84; Gregor: *„keine lügen auf main!"* Diesmal
 **schreibend**, auf `wt/lektor` über `18f71e5`. Abgearbeitet sind die offenen
-Funde aus LEKTOR-16 und LEKTOR-17, ausgenommen das Werkzeug (L-16.1/L-17.8).
+Funde aus [LEKTOR-16](Befunde/LEKTOR-16.md#lektor-16) und [LEKTOR-17](Befunde/LEKTOR-17.md#lektor-17), ausgenommen das Werkzeug ([L-16.1](Befunde/LEKTOR-16.md#l-16.1)/[L-17.8](Befunde/LEKTOR-17.md#l-17.8)).
 
 | Fund | Kurz |
 |---|---|
-| **L-16.1** | Werkzeug nicht angefasst; Übersichtszeilen [AN-1](BEFUNDE.md#an-1)/[AN-2](BEFUNDE.md#an-2) in BEFUNDE.md beginnen jetzt mit dem Urteilswort |
-| **L-16.2 / L-17.7** | BEFUNDE [AN-1](BEFUNDE.md#an-1): Kasten um 7.2.0.82/83, Teil 11 und IMAP; Altstellen mit Nachtrag — **erledigt** |
-| **L-16.3** | Markentabelle auf 7.2.0.83, Marken 9–11 ergänzt; Weg-Tabelle nur als „Stand 7.2.0.76" gekennzeichnet |
-| **L-16.4 / L-17.4** | AUFGABEN B5: Tabelle um B5.8–B5.11, Altsätze als erledigt — **erledigt** |
-| **L-16.5 / L-17.6** | CHANGELOG: „Noch offen", Nachträge in 7.2.0.80-an1, 7.2.0.80, 7.2.0.79 — **erledigt**; Stern in der Bau-Kennung offen |
-| **L-16.6** | PAKETE 1.0.79 Nachtrag, 1.0.83 „angewiesen, nicht veröffentlicht" — **erledigt** |
-| **L-16.8** | WEITERMACHEN „Der nächste Schritt" — **erledigt**; Zeile `:27` nicht trennbar, zwei Schranken weisen gegenläufig ab |
-| **L-16.10 / L-17.3** | ZIEL, README (mit LogLevel 65536), PORTIERUNG, ZWEIGE — **erledigt** |
-| **L-17.1** | [AN-2](BEFUNDE.md#an-2) überall „seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen" — **erledigt** |
-| **L-17.2** | „-an1" nachgezogen, beide falschen Verweise berichtigt — **erledigt** |
-| **L-17.5** | Zählung festgelegt: **elf Teile B5.1–B5.11, zehn behoben, B5.7 offen** |
-| **L-19.3** (nachgeholt) | Langpfad-Präfix im CHANGELOG 7.2.0.83 jetzt `\\?\` (Bytes `5C 5C 3F 5C`) |
+| **[L-16.1](Befunde/LEKTOR-16.md#l-16.1)** | Werkzeug nicht angefasst; Übersichtszeilen [AN-1](BEFUNDE.md#an-1)/[AN-2](BEFUNDE.md#an-2) in BEFUNDE.md beginnen jetzt mit dem Urteilswort |
+| **[L-16.2](Befunde/LEKTOR-16.md#l-16.2) / [L-17.7](Befunde/LEKTOR-17.md#l-17.7)** | BEFUNDE [AN-1](BEFUNDE.md#an-1): Kasten um 7.2.0.82/83, Teil 11 und IMAP; Altstellen mit Nachtrag — **erledigt** |
+| **[L-16.3](Befunde/LEKTOR-16.md#l-16.3)** | Markentabelle auf 7.2.0.83, Marken 9–11 ergänzt; Weg-Tabelle nur als „Stand 7.2.0.76" gekennzeichnet |
+| **[L-16.4](Befunde/LEKTOR-16.md#l-16.4) / [L-17.4](Befunde/LEKTOR-17.md#l-17.4)** | AUFGABEN B5: Tabelle um B5.8–B5.11, Altsätze als erledigt — **erledigt** |
+| **[L-16.5](Befunde/LEKTOR-16.md#l-16.5) / [L-17.6](Befunde/LEKTOR-17.md#l-17.6)** | CHANGELOG: „Noch offen", Nachträge in 7.2.0.80-an1, 7.2.0.80, 7.2.0.79 — **erledigt**; Stern in der Bau-Kennung offen |
+| **[L-16.6](Befunde/LEKTOR-16.md#l-16.6)** | PAKETE 1.0.79 Nachtrag, 1.0.83 „angewiesen, nicht veröffentlicht" — **erledigt** |
+| **[L-16.8](Befunde/LEKTOR-16.md#l-16.8)** | WEITERMACHEN „Der nächste Schritt" — **erledigt**; Zeile `:27` nicht trennbar, zwei Schranken weisen gegenläufig ab |
+| **[L-16.10](Befunde/LEKTOR-16.md#l-16.10) / [L-17.3](Befunde/LEKTOR-17.md#l-17.3)** | ZIEL, README (mit LogLevel 65536), PORTIERUNG, ZWEIGE — **erledigt** |
+| **[L-17.1](Befunde/LEKTOR-17.md#l-17.1)** | [AN-2](BEFUNDE.md#an-2) überall „seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen" — **erledigt** |
+| **[L-17.2](Befunde/LEKTOR-17.md#l-17.2)** | „-an1" nachgezogen, beide falschen Verweise berichtigt — **erledigt** |
+| **[L-17.5](Befunde/LEKTOR-17.md#l-17.5)** | Zählung festgelegt: **elf Teile B5.1–B5.11, zehn behoben, [B5.7](AUFGABEN.md#b5.7) offen** |
+| **[L-19.3](Befunde/LEKTOR-20.md#l-19.3)** (nachgeholt) | Langpfad-Präfix im CHANGELOG 7.2.0.83 jetzt `\\?\` (Bytes `5C 5C 3F 5C`) |
 
 **Werkzeuge nach dem Durchgang** (nur lesend): `perl tools/doku-pruefen.pl` —
 *„Kein Widerspruch gefunden"*, zur Kenntnis nur noch `Testdaten/README.md` und
@@ -1168,3 +1168,27 @@ Nach dem Release v1.0.84: GitHub nachgemessen, stimmt. Vier Widersprüche, entst
 beim Nachziehen (neue Sätze neben Resten der alten Fassung in WEITERMACHEN und ZIEL,
 zwei ZIP-Zeilen in PAKETE 1.0.84, v1.0.83 ohne Zeitbezug als *Latest*) — **alle
 behoben** im selben Commit.
+
+## Einunddreißigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-26.md`)
+
+Nach dem Verlinken (PR #90), angestoßen von Gregor: *„mach lektor"*. Zehn Mängel,
+**alle behoben** im selben Commit. Zehn Doku-Schranken liefen grün — **gefunden
+hat keine davon einen einzigen der zehn.**
+
+Zwei Werkzeuge standen in keiner Zeile von `WERKZEUGE.md` (`verweise-filtern.pl`
+am selben Tag gebaut, `pruefe-testdaten-anonym.pl` seit Langem in jedem Commit);
+`README.md` führte nicht zu `TESTPLAN.md`; `CHANGELOG.md` listete das bestätigte
+[E-94](BEFUNDE.md#e-94) unter *„Noch offen"* und kannte das offene [E-111](BEFUNDE.md#e-111) dort nicht;
+`TESTPLAN.md` ließ die fünfzehnte wartende Behebung aus ([E-101](BEFUNDE.md#e-101), Datenverlustklasse);
+`WEITERMACHEN.md` behauptete eine Abweisung von `release-pruefen.pl`, die das
+Werkzeug ausdrücklich nicht ausspricht; `BEFUNDE.md` vermaß sich selbst falsch
+(8388/127/227 statt 8614/128/233, direkt über den Befehlen zum Nachzählen);
+`CLAUDE.md` nannte *„über 7800 Zeilen"* und *„über 80 Werkzeuge"* (8614 und 106);
+`PRUEFUNG-BRANCH.md` schrieb `NP3-6/7` statt beider Kennungen.
+
+**Der teuerste Punkt ist [L-18.10](Befunde/LEKTOR-26.md#l-18.10):** die Verlinkung von PR #90 hatte vier Lücken,
+und alle vier hat **Gregor** gefunden, nicht ich und nicht die Schranke, die ich
+dazu gebaut hatte. Sie lief grün, während [E-85](BEFUNDE.md#e-85), [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101), [L-17](Befunde/LEKTOR-12.md#l-17) und [B5.7](AUFGABEN.md#b5.7)
+unverlinkt dastanden — weil sie nur prüfte, was das Werkzeug selbst für
+verlinkbar hielt. Eine Schranke, die ihren Umfang aus derselben Annahme nimmt
+wie das Werkzeug, das sie prüfen soll, prüft nichts ([E-109](BEFUNDE.md#e-109)).

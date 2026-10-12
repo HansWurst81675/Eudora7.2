@@ -41,7 +41,7 @@ perl tools/befund-suchen.pl <Datei oder Funktion>
 ```
 
 Gesucht wird nach dem **Ort im Quelltext**, nicht nach der Beschreibung.
-`BEFUNDE.md` hat über 7800 Zeilen und mehrere Nummernkreise (`E-`, `NP-`, `PR-`,
+`BEFUNDE.md` hat über 8600 Zeilen und mehrere Nummernkreise (`E-`, `NP-`, `PR-`,
 `P-`, `X-`, `Z-`, `R-`, `V-`). Wer einen Fehler mit **seinen** Worten sucht —
 „Umlaute kommen falsch an" — findet keinen Eintrag, der „übersetzt keinen
 Zeichensatz" heißt. Nur der Ort ist in beiden Formulierungen derselbe.
@@ -58,7 +58,7 @@ perl tools/gesichert.pl        # ist alles committet und gepusht?
 ```
 
 `tools/WERKZEUGE.md` führt den vollständigen Bestand — **dort nachsehen, bevor
-etwas Neues gebaut wird.** Es gibt über 80 Werkzeuge, und mehr als eines davon
+etwas Neues gebaut wird.** Es gibt über 100 Werkzeuge, und mehr als eines davon
 wurde schon ein zweites Mal erfunden.
 
 ## 4. Was ohne Rückfrage nicht geschieht
