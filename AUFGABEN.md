@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.83** / `VERSION` **1.0.83** (veröffentlicht ist `v1.0.72`)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.83** / `VERSION` **1.0.83** (veröffentlicht als `v1.0.83`, 12.10.2026)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -97,9 +97,12 @@ E-97, E-99, E-100, E-101 in beiden Teilen, E-103, E-104, E-106 und E-108.
 > vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
 > `ls C:\Users\Gregor\Eudora72-*`.
 
-**Veröffentlicht ist `v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert, auf dem Merge-Commit `8da72c8`;
-Gregor hat die Fassung vorher am laufenden Programm geprüft (*„kein crash“*).
+**Veröffentlicht ist `v1.0.83`** — am 12.10.2026 um 11:18 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert, Marke auf `ec9f11d`; Gregor hat
+die Fassung vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung
+reicht“*). Davor **`v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC, auf dem
+Merge-Commit `8da72c8`; Gregor hat sie vorher am laufenden Programm geprüft
+(*„kein crash“*).
 **1.0.65 bis 1.0.71 sind nicht freigegeben** — 1.0.71 stürzt ab und ist
 ausdrücklich nicht zu benutzen.
 

@@ -69,9 +69,14 @@ verschickt.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.72`** (veröffentlicht am 17.09.2026 um 20:07
+* **Das neueste Release ist `v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18
   Uhr UTC, auf GitHub als *Latest*) — **von Gregor vorher am laufenden Programm
-  geprüft**: *„kein crash"*. **Im Download enthalten** sind damit: Zeichensalat
+  geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
+  darin: **Anhänge behalten Endung und Namen** (AN-1, über POP und IMAP gemessen)
+  und, übersetzt, aber am Programm nicht gemessen, **AN-2** (kein Quelltext einer
+  Webseite mehr im Werbefenster). Das Release davor war **`v1.0.72`** (17.09.2026,
+  von Gregor geprüft: *„kein crash"*). **Seit `v1.0.72` im Download enthalten**
+  sind damit: Zeichensalat
   beim IMAP-Abruf (7.2.0.52), das Beenden mit hängender Aufgabe (7.2.0.53), die
   HTML-Darstellung beim Lesen (7.2.0.55), der Formatverlust beim Weiterleiten
   (7.2.0.56), sich überlagernde Bilder im Verfassenfenster (7.2.0.58),

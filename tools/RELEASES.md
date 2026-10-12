@@ -38,3 +38,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
 > eine Fassung, in der **E-98** offen ist und **E-101** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
+| 2026-10-12 13:18:20 | v1.0.83 | Gregor am 12.10.2026 nach seinem IMAP-Test mit 1.0.83: 'gekuerzt mit endung reicht, mach PR fuer an1-endungen'; nach dem Merge von PR #84: 'erstelle ein release auf github' | veroeffentlicht |

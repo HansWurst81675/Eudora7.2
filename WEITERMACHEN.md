@@ -6,7 +6,7 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.83 (`Eudora71/Version.h`) — **AN-1 und AN-2 zusammengeführt**; veröffentlicht ist weiterhin `v1.0.72`. **7.2.0.80 ist doppelt vergeben:** einmal AN-2 auf `main` (PR #83), einmal meine AN-1-Messfassung `7.2.0.80-an1` in `C:\Temp\AN2` — siehe [CHANGELOG.md](CHANGELOG.md) |
+| **Quellstand** | 7.2.0.83 (`Eudora71/Version.h`) — **AN-1 und AN-2 zusammengeführt**; **veröffentlicht als `v1.0.83`** am 12.10.2026. **7.2.0.80 ist doppelt vergeben:** einmal AN-2 auf `main` (PR #83), einmal meine AN-1-Messfassung `7.2.0.80-an1` in `C:\Temp\AN2` — siehe [CHANGELOG.md](CHANGELOG.md) |
 | **Paketnummer** | 1.0.83 (`VERSION`) — **AN-1 über POP am laufenden Programm gemessen: alle sechs Prüfanhänge mit vollem Namen und `.pdf`** (7.2.0.81 in `C:\Temp\AN3`, 7.2.0.82 in `C:\Temp\AN4`, 7.2.0.83 in `C:\Temp\AN5`, Testsuite 185/185). 7.2.0.83 gibt `SetExtension` die Puffergröße mit (PRUEFER-20: Überlauf in `uudecode.cpp`/`hexbin.cpp`, durch die `GetMaps`-Behebung erreichbar geworden) und **ersetzt keine vorhandene Endung mehr** (`.docx` bleibt `.docx`). **AN-2** (PR #83): seit 7.2.0.82 übersetzt, am laufenden Programm **nicht** gemessen. Durchlauf in [AUFGABEN.md](AUFGABEN.md), B5 und B6 |
 | **VON GREGOR ZU PRÜFEN, 17.09.2026 — E-108** | **Der Absturz beim Antworten, zweiter Anlauf.** **E-107 war die falsche Erklärung** — Gregors Protokoll zu 1.0.71 zeigt den E-106-Block fünfmal laufen und den Abbruch an derselben Stelle wie an 1.0.69. Der Fehler steckt **im Block**: er fasste den **Textstil** an, an einer Position aus einer Suche über `embed->style` — einen **Zeiger**, den sich zwei Bilder gleicher Maßangabe teilen (PRUEFER **P-41**). **Behoben in 7.2.0.72:** Maße ins Embed, `pgInvalEmbedRef` rechnen lassen, kein Stilzugriff mehr; das E-103-Sicherungsnetz ersatzlos entfernt. **Zu prüfen:** dieselbe Nachricht öffnen und antworten, `LogLevel=58527` drin lassen. Kracht es wieder, endet `eudora.log` erneut an einer `E-106`-Zeile — **die letzte Zeile entscheidet** |
 | **WIDERLEGT, 17.09.2026 — E-107** | **Absturz beim Antworten auf eine geöffnete Nachricht.** `EXCEPTION_ACCESS_VIOLATION in Paige32.dll at UnuseMemory()+0006`, `ESI=FFFFFFFF`, von Gregor um 21:23 an 1.0.69 gemeldet. **Der Fehler war meiner** — mit **E-106** wenige Stunden zuvor eingebaut: der Block lief auch beim *Vorbereiten*, wo der Embed **flüchtig** ist (QUALCOMMs eigener Kommentar warnt davor). Behoben in **7.2.0.72**: beide Blöcke laufen nur noch bei `bAllowThreadedFetch`. **Nicht nachgestellt** — der Prüfstand lädt zwar Bilder, aber keines, das größer ist als angegeben (L-15.9); auch die Gegenprobe mit 1.0.69 blieb negativ. Am Quelltext ablesbar bleibt: auf dem gefährlichen Weg läuft der neue Code gar nicht mehr. **Zu prüfen:** eine Nachricht mit Bildern öffnen und **antworten** — Eudora darf nicht abstürzen |
@@ -24,7 +24,7 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 | **OFFEN, 17.09.2026 — E-98** | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* und *Absätze raten* sind nicht wählbar, weil Windows 10 den modernen Dateidialog öffnet und Eudoras Dialogvorlage von 1996 (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`) nicht mehr anzeigt. Es gilt, was zuletzt in der `Eudora.ini` stand. **Kein Rückschritt durch E-97** — die Kästchen fehlen seit der Portierung. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — `ToggleStat` und `StatDir` werden mit E-98 wieder scharf |
 | **VON GREGOR ZU PRÜFEN, 15.09.2026 — E-95/E-96** | **die Bilder behalten ihre wirkliche Größe, und jedes bekommt seine eigene Zeilenhöhe.** Gebaut in 7.2.0.63 (**153/153 Tests**, drei davon umgeschrieben), **am laufenden Programm noch nicht bestätigt.** Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.63, *Zum Prüfen*: die Doctolib- und die FairToner-Nachricht **weiterleiten und beantworten**. **Was zu sehen sein muss: kein Bild ist abgeschnitten, keines auf 20×20 gequetscht, der Text bleibt frei.** Mit `LogLevel=58527` nennt die bleibende Spurmarke `E-95 Bild:` je Bild `attr`, `embed`, `ascent` und den Text-Ascent. **Im selben Lauf muss E-88 weiter tragen:** die Zeilen `E-88 vor dem Absenden` und `E-88 auf der Leitung` müssen `Fassung=ORIGINAL` sagen |
 | **VON GREGOR ZU PRÜFEN, 14.09.2026** | **E-88 — die weitergeleitete Nachricht kommt an, wie sie gelesen wurde.** Gebaut in 7.2.0.56 (0 Fehler, 131/131 Tests), **am laufenden Programm noch nicht bestätigt.** Prüfanleitung in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.56, *Zum Prüfen*: `LogLevel=58527`, einen Newsletter einmal ohne und einmal mit Kommentar weiterleiten, dann im Protokoll nach `E-88` suchen. **Das Verfassenfenster sieht dabei weiterhin schlicht aus — das ist kein Fehler**, Paige kann kein CSS; es zählt allein, was beim Empfänger ankommt. Abschalten mit `ForwardOriginalHTML=0` in `[Settings]` |
-| **Zuletzt gebaut und veröffentlicht** | Quellstand **7.2.0.72** / `VERSION` **1.0.72**, gebaut am 17.09.2026 um 21:56 (**171/171 Tests**) und noch am selben Abend als **`v1.0.72`** auf GitHub veröffentlicht (20:07:49 UTC, Marke auf dem Merge-Commit `8da72c8`, ZIP als Anhang, SHA-256 `b65a3d23…`). **Gregor hat die Fassung vorher am laufenden Programm geprüft:** *„kein crash."* **Sie enthält** E-101 in beiden Teilen, E-103, E-104, E-106 und **E-108**. **Bei Gregor liegen** 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72 — **1.0.70 nie**. **1.0.71 stürzt ab und ist nicht zu benutzen**; sie ist nur als Beleg wertvoll, weil sie gezeigt hat, dass die Ursache im Block saß und nicht im Aufrufweg. Gemessen an der `Eudora.exe` jedes Pakets (Produktversion und Zeitstempel) |
+| **Zuletzt gebaut und veröffentlicht** | Quellstand **7.2.0.83** / `VERSION` **1.0.83**, gebaut am 12.10.2026 um 12:02 (Rebuild 0 Fehler, **185/185 Tests**) und am selben Tag als **`v1.0.83`** auf GitHub veröffentlicht (11:18:20 UTC, *Latest*, Marke auf `ec9f11d`, ZIP als Anhang, SHA-256 `7cef4852…f3eb`, nachgerechnet an der von GitHub geladenen Datei). **Gregor hat die Fassung vorher über IMAP an seinem Postfach geprüft:** *„gekürzt mit endung reicht"*. **Sie enthält** AN-1 (Teile 1–6 und 8–11) und, übersetzt, aber am Programm nicht gemessen, AN-2. **Davor veröffentlicht: `v1.0.72`** vom 17.09.2026 (E-101, E-103, E-104, E-106, E-108; von Gregor geprüft: *„kein crash."*). **Bei Gregor liegen** am 12.10.2026 die Verzeichnisse 1.0.72, 1.0.73, 1.0.74, 1.0.75, 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und 1.0.57 — gemessen mit `ls C:\Users\Gregor\Eudora72-*`, jede `Eudora.exe` trägt die passende Produktversion. **1.0.71 stürzt ab** und liegt nicht mehr bei ihm |
 | **Zuletzt von Gregor bestätigt** | **1.0.72 am 17.09.2026**: **E-108** (*„kein crash."* — der Absturz beim Antworten ist weg; sein Protokoll läuft 18 mal durch den Block, über die bisher tödliche Stelle `pos=765` hinaus bis `Logging shutdown`, und es gibt keine `Exception.log`). Davor **1.0.69**: **E-106** — die Bilder liegen nicht mehr über dem Text, belegt durch sein Bildschirmfoto. Davor **1.0.64 am 17.09.2026**: **E-97** (*„gespeichert. funktioniert."*) und **E-99** (*„ja, kein datenverlust!"* — der getippte Text überlebt jetzt das Sichern eines Entwurfs und das spätere Senden). Davor **1.0.50 am 11.09.2026**: **E-84**, die Größe eines losgerissenen Fensters überlebt den Neustart — belegt an beiden Enden (`FloatCx319=751` in der `Eudora.ini`, `E-76 fest: vorher=751x403` beim ersten Aufruf danach). Davor an 1.0.49 **E-76** (*„e-76: paßt: läßt sich jetzt vergrößern."*), an 1.0.48 **E-82** (verschärfte Zertifikatsprüfung — IMAP läuft unverändert, `Successfully retrieved markus.bakus@gmx.de` über Port 993), an 1.0.47 **E-81** (*„ja, paßt!"*, Kopfzeilen auf dunklem Grund lesbar), an 1.0.46 **E-80** (*„ja, jetzt geht es"*, der Knopf *Blah Blah Blah* schaltet wieder) und an 1.0.44 **E-79** (Spaltenbreite im Filterfenster) |
 | **ERLEDIGT — Fassungsgeschichte, kein offener Punkt** (Stand vom 13.09.2026 abends, **berichtigt am 15.09.2026**: E-85 ist seit **7.2.0.52** behoben und am laufenden Programm belegt) | **E-85 ist NICHT behoben.** Der Fix vom Nachmittag reparierte den Suchbereich (`FindMIMECharset` statt `FindRStringIndexI` bis `IDS_MIME_ISO_LATIN9`), durchsucht aber die **falsche Quelle**: `ImapDownload.cpp` liest den Zeichensatz aus `m_pHd->m_TLMime` — **TL heißt Top Level**. Bei `multipart/alternative`, also jedem HTML-Newsletter, steht im Top-Level-Header **kein `charset`**, nur `boundary`; der Zeichensatz des Teils steckt in `BODY->parameter` (`Imapdll/public/inc/exports.h:147`) und wird nie ausgelesen. **Belegt durch Gregors frisch abgerufene Mail:** Betreff richtig (anderer Weg, `Fix2047`), Rumpf falsch. Bei `text/plain` ohne multipart wirkt der Fix, bei Newslettern nicht. **Zu tun:** den Zeichensatz aus dem aktuellen Teil nehmen — dort, wo schon `m_CurrentBodyType` und `m_szCurrentBodySubtype` gesetzt werden (`ImapDownload.cpp:2798, 3034, 3283`), den Top-Level nur als Rückfall. Dazu die Spurmarke, die **beide** Zeichensätze in **einer** Zeile nennt |
 | **Wichtig beim Prüfen von E-85** | **Eine schon abgerufene Nachricht bleibt kaputt.** Die Übersetzung passiert beim **Abruf** und landet in der Mailboxdatei; die Anzeige liest nur, was dort steht. `IsIMAPMessageBodyDownloaded()` verhindert außerdem, dass Eudora den Rumpf von selbst erneut holt. Es muss also eine **neue** Nachricht sein. Und: die Testmail aus `tools/testmail-bauen.pl` wurde von `mx.freenet.de` mit **`550 Spam message rejected`** abgelehnt — 900 fast gleiche Zeilen mit Preisangaben und Emoji sehen für jeden Spamfilter wie Werbung aus. Wer sie wieder braucht, baut sie **unauffällig**: kurzer Text, die kritischen Zeichen gezielt platziert statt in Masse |
@@ -105,20 +105,32 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 > **Stand 12.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
-> **Gregors Reihenfolge vom 12.10.2026:** *„danach die reihenfolge aus deinem
-> vorschlag: E112, E-113, E-94, E-77"* — vorher das Release v1.0.83.
+> **Gregors Reihenfolge vom 12.10.2026:** zuerst *„danach die reihenfolge aus
+> deinem vorschlag: E112, E-113, E-94, E-77"*, dann auf den Vorschlag dreier
+> Teststufen zu E-94 *„zu diesem fall brauchen wir einen weiteren test"* und
+> gewählt **„Jetzt, vor E-112"**. Gilt also: **E-94, E-112, E-113, E-77.**
 >
-> **1. Release v1.0.83 abschließen.** AN-1 ist über POP am laufenden Programm
-> heil (7.2.0.81 bis 7.2.0.83, `C:\Temp\AN3` bis `AN5`, Testsuite 185/185) und
-> über IMAP von Gregor mit Paket 1.0.83 getestet und bestätigt (*„gekürzt mit
-> endung reicht"*); PR #84 ist gemergt. Gregor hat das Release **angewiesen**
-> (*„erstelle ein release auf github"*), **veröffentlicht ist es noch nicht** —
-> veröffentlicht ist weiterhin `v1.0.72`. Offen bleibt von AN-1 **B5.7** (IMAP
-> ohne `SetExtension`), von AN-2 die Produktfrage (AUFGABEN.md, B6). *(Bis zum
-> 12.10.2026 stand hier, Gregor wolle zwei Patches mit `git apply` einspielen;
-> sie sind eingespielt und entfernt.)*
+> **1. Release v1.0.83 — erledigt.** Veröffentlicht am 12.10.2026 um 11:18 UTC
+> als *Latest*, ZIP-SHA-256 `7cef4852…f3eb` an der von GitHub geladenen Datei
+> nachgerechnet. AN-1 ist über POP am laufenden Programm heil (7.2.0.81 bis
+> 7.2.0.83, `C:\Temp\AN3` bis `AN5`, Testsuite 185/185) und über IMAP von Gregor
+> mit Paket 1.0.83 getestet und bestätigt (*„gekürzt mit endung reicht"*). Offen
+> bleibt von AN-1 **B5.7** (IMAP ohne `SetExtension`), von AN-2 die Produktfrage
+> (AUFGABEN.md, B6). *(Bis zum 12.10.2026 stand hier, Gregor wolle zwei Patches
+> mit `git apply` einspielen; sie sind eingespielt und entfernt.)*
 >
-> **2. E-112 messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
+> **2. E-94 — erst die Tests rot, dann die Behebung.** Zweig **`e94-betreff-faltung`**,
+> Name von Gregor bestätigt, anzulegen erst nach dem Merge von `release-v1.0.83`.
+> Ursache am Quelltext belegt, **nicht gemessen**: zwischen zwei kodierten Wörtern,
+> die über eine **Faltung** getrennt sind, bleibt der Leerraum stehen
+> (`lex822.cpp:685`, `ImapLex822.cpp:719`, RFC 2047 6.2). Gregors Toner-Nachricht
+> (web.de-Webmail, in seiner 1.0.75-`INBOX.mbx`) zeigt das Bild: dort steht der
+> Betreff schon dekodiert, mit Faltungen bei `& 1|5` und `Nur b|is`. Drei Tests:
+> `Fix2047` und `ImapFix2047` (per `Extract.ps1`) mit gefalteten kodierten Wörtern,
+> und Prüfnachricht 06 im POP-Prüfstand. Noch nicht gemessen ist die Rohform vom
+> Server (GMX-Webmailer „Quelltext anzeigen").
+>
+> **3. E-112 messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
 > `draw_meta_file` (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur,
 > wenn `pict_data.mapping_mode` **nicht** `MM_TEXT` ist — bei aus dem Netz
 > geladenen Bildern ist er `0`. Die Richtung wäre, `mapping_mode` zusammen mit
@@ -129,15 +141,18 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > **Das ist am Quelltext zu klären, nicht durch ein Paket.** Genau diese
 > Annahme ungeprüft zu lassen hat am 18.09.2026 1.0.76 gekostet.
 >
-> **3. Der Zustand beim Anwender.** 1.0.75 zeigt Bilder zu groß, aber der Text
-> steht darunter; **1.0.76 deckt den Text zu** und ist damit schlechter. Wer
-> Gregor vor der Behebung ein Paket gibt, muss das wissen.
+> **4. Der Zustand beim Anwender.** 1.0.75 zeigt Bilder zu groß, aber der Text
+> steht darunter; **1.0.76 deckt den Text zu** und ist damit schlechter — und
+> **v1.0.83 enthält dieselbe E-112-Lage wie 1.0.76**: seit 7.2.0.76 (`324db1c`)
+> hat nur AN-2 (`804c91e`) den Paige-/HTML-Weg angefasst, und dessen Diff an
+> `PGHTMIMP.CPP` enthält keine Zeile zu `embed`, `pict`, `width` oder `height`
+> (gemessen am 12.10.2026). Wer Gregor vor der Behebung ein Paket gibt, muss das wissen.
 >
-> **4. Danach E-113** (Bilder breiter als das Fenster) — von Gregor
-> angeordnet: *„ok, erst A, dann B"*. Dann **E-94** (Betreff mitten im Wort
-> umbrochen) und **E-77** (IMAP-Ordnernamen in modifiziertem UTF-7).
+> **5. Danach E-113** (Bilder breiter als das Fenster) — von Gregor
+> angeordnet: *„ok, erst A, dann B"*. Dann **E-77** (IMAP-Ordnernamen in
+> modifiziertem UTF-7).
 >
-> **5. Unbeantwortet von Gregor:** sollen **rote Tests** den Push blockieren?
+> **6. Unbeantwortet von Gregor:** sollen **rote Tests** den Push blockieren?
 > `pruefe-testbau.pl` weist bisher nur beim **Baufehler** ab. Ein
 > Regressionstest, der nicht blockieren kann, ist nur eine Anzeige.
 >

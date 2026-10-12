@@ -79,8 +79,12 @@ Typ NICHT", keine `Exception.log`.
 **Von Gregor bestätigt, 12.10.2026.** Er hat Paket 1.0.83 selbst über IMAP
 getestet (Auswertung unten) und danach geschrieben: *„gekürzt mit endung
 reicht, mach PR für an1-endungen"*. PR #84 hat er um 10:51 UTC gemergt und
-dann angewiesen: *„erstelle ein release auf github"*. Zu veröffentlichen als
-**v1.0.83** — sobald das geschehen ist, steht hier Marke und Prüfsumme.
+dann angewiesen: *„erstelle ein release auf github"*. **Veröffentlicht als
+`v1.0.83`** am 12.10.2026 um 11:18:20 UTC, auf GitHub als *Latest*; Marke auf
+`ec9f11d`, ZIP `Eudora72-1.0.83-release.zip` mit 9 361 416 Byte, SHA-256
+`7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — von GitHub
+heruntergeladen und nachgerechnet. Die 34 EXE-, DLL- und OCX-Dateien darin sind
+byteidentisch mit dem Paket, das Gregor getestet hat.
 
 **Von Gregor über IMAP getestet, 12.10.2026, Paket 1.0.83** (sein `eudora.log`,
 vier Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
