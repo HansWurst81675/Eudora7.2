@@ -216,8 +216,18 @@ Write-Host ('  Marke zeigt auf ' + $commit)
 # durchgesetzt hat.
 #
 # Gregor am 14.09.2026, auf den Befund V-1 zeigend: "was ist damit?"
-$vorhanden = & gh release view $marke --json tagName 2>$null
-if ($LASTEXITCODE -eq 0) {
+# Am 12.10.2026 brach genau diese Zeile das Release v1.0.83 ab: gh meldet
+# "release not found" auf stderr, und Windows PowerShell 5.1 macht daraus
+# unter ErrorActionPreference=Stop einen Abbruch - trotz 2>$null. Damit
+# scheiterte ausgerechnet der Normalfall, ein NEUES Release. Deshalb hier
+# kurz auf Continue, und entschieden wird allein am Rueckgabewert.
+# Gegengetestet: v1.0.72 -> rc=0 "gibt es schon", v1.0.83 -> rc=1 "frei".
+$altePraeferenz = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+try { $vorhanden = & gh release view $marke --json tagName 2>$null } catch { }
+$ghRc = $LASTEXITCODE
+$ErrorActionPreference = $altePraeferenz
+if ($ghRc -eq 0) {
     Write-Host ''
     Write-Host ('  KEIN RELEASE: die Marke ' + $marke + ' gibt es schon.')
     Write-Host ''
