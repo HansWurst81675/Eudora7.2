@@ -82,12 +82,15 @@ Gregors Anordnung *„erst A, dann B"* getrennt gehalten. Einzelheiten in
 [BEFUNDE.md](BEFUNDE.md), Prüfanleitungen in [CHANGELOG.md](CHANGELOG.md),
 Abschnitte 7.2.0.75 und 7.2.0.76.
 
-**Gebaut, geschnürt und veröffentlicht ist 7.2.0.72 / 1.0.72** (17.09.2026 —
-gemessen an `Eudora71/Version.h`, `VERSION` und `gh release list`). **Es ist
-der erste Stand, der alles enthält und zugleich draußen ist**: E-93, E-96,
-E-97, E-99, E-100, E-101 in beiden Teilen, E-103, E-104, E-106 und E-108.
-**Bei Gregor liegen 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72** —
-**1.0.70 nie**, es ist nie zu ihm gelangt.
+**Stand 17.09.2026, seit dem 12.10.2026 überholt** — veröffentlicht ist jetzt
+`v1.0.83`, siehe unten. **Gebaut, geschnürt und veröffentlicht war damals
+7.2.0.72 / 1.0.72** (gemessen an `Eudora71/Version.h`, `VERSION` und
+`gh release list`). **Es war der erste Stand, der alles enthielt und zugleich
+draußen war**: E-93, E-96, E-97, E-99, E-100, E-101 in beiden Teilen, E-103,
+E-104, E-106 und E-108. **Bei Gregor lagen damals 1.0.65, 1.0.67, 1.0.68,
+1.0.69, 1.0.71 und 1.0.72** — **1.0.70 nie**. Am 12.10.2026 liegen dort die
+Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
+1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
 
 > **Berichtigt am 18.09.2026 (LEKTOR, L-15.3).** Hier stand *„Gebaut und
 > geschnürt ist **7.2.0.70 / 1.0.70** … **Es ist das erste Paket, das alles

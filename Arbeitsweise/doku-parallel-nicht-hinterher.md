@@ -166,3 +166,36 @@ nach der Veröffentlichung**, und nur weil PRÜFER nachgezählt hat, ist er
 - **Eine Zahl, die nach außen geht, bekommt vorher denselben Befehl daneben wie
   jede andere.** Genau die Werte, die in eine Veröffentlichung wandern, schreibe
   ich am ehesten aus dem Kopf ab.
+
+## Nachtrag 12.10.2026: ein Release macht Doku-Aussagen auf einen Schlag falsch
+
+**Was geschah:** Bis 13:18:20 stimmte der Satz „veröffentlicht ist weiterhin
+`v1.0.72`" an mehreren Stellen. Mit `gh release create` wurde er überall
+gleichzeitig falsch, ohne dass eine Zeile im Repo geändert worden war. Das
+ist ein anderer Fall als die bisherigen Rückfälle in dieser Datei. Dort hatte
+ich einen Wert an einer Stelle geändert und die anderen Stellen vergessen.
+Hier hat ein **Ereignis außerhalb des Repos** den Wert geändert.
+
+Gefunden hat die Stellen um 13:18:48 eine eigens geschriebene breite Suche
+(`grep -rn --include=*.md -E "weiterhin .?v1\.0\.72|veröffentlicht ist .?v1\.0\.72|v1\.0\.83 … nicht veröffentlicht …"`).
+Sie lieferte sieben Treffer. Danach habe ich zur Sicherheit noch jede Zeile mit
+`v1.0.72` oder `v1.0.83` in den Stand-Dateien gelistet. Nachgezogen wurden
+README, WEITERMACHEN, AUFGABEN, ZIEL, PORTIERUNG, Releases/PAKETE und
+CHANGELOG (`f49a0d0`). Keine der Schranken, die vorher grün waren, hat das
+gemeldet. Die Release-Schranke meldete später sogar das Gegenteil, weil die
+Marke lokal fehlte (siehe [[nie-benutzt-ist-nicht-geprueft]], Nachtrag vom
+selben Tag).
+
+**Regel:** Ein Release gehört zu den Handgriffen, die einen Wert ändern, der
+mehrfach vorkommt. Deshalb gilt Punkt 1 der Regel auch hier: im selben
+Arbeitsschritt **alle** Fundstellen, und zwar sofort nach der Veröffentlichung
+und vor jedem anderen Commit.
+
+**Vorschlag, nicht gebaut:** Die Suche von 13:18:48 nicht jedes Mal neu
+schreiben, sondern als Schritt in `release-veroeffentlichen.ps1` aufnehmen.
+Nach erfolgreichem `gh release create` und `git fetch --tags` listet das
+Werkzeug jede Zeile in `git ls-files '*.md'`, die die **vorige** Marke als
+veröffentlicht oder die neue als unveröffentlicht nennt. Es endet mit
+„N Stellen nachzuziehen". Gegentest: Bei einem Lauf auf dem Stand `ec9f11d`
+muss die Liste die sieben Stellen von heute nennen, bei einem Lauf auf
+`f49a0d0` muss sie 0 nennen.

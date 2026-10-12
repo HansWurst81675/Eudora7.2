@@ -1142,3 +1142,11 @@ Kurzlauf vor dem Release v1.0.83 über die Liste der offenen Befunde (29) und di
 Nachträge des CHRONISTEN. Ein Mangel (eine Lehre nannte das Langpfad-Präfix als
 noch offen) und ein Nebenbefund im Kommentar von `tools/offene-befunde.pl` —
 **beide behoben** im selben Commit.
+
+## Siebenundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-22.md`)
+
+Nach dem Release v1.0.83: Release, ZIP-Prüfsumme und drei Stichproben gegen
+Gregors Verzeichnis nachgemessen — stimmen. Vier Mängel (veraltete Liste „Bei
+Gregor liegen" in `ZIEL.md` und `AUFGABEN.md`, E-94 im CHANGELOG im Widerspruch
+zu WEITERMACHEN, die v1.0.83-Zeile in `tools/RELEASES.md` außerhalb der Tabelle
+und in Ortszeit) — **alle behoben** im selben Commit.

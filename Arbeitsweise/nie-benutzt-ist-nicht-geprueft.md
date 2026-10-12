@@ -232,3 +232,41 @@ zum ersten Mal eine laufende Funktion.
 - **Auch die Absichten des toten Codes gegen `ZIEL.md` lesen.** Jede
   Regel, die jetzt greift (ersetzen, kürzen, umbenennen), wird gegen Gregors
   Ziel gehalten, nicht nur gegen den Speicher.
+
+## Nachtrag 12.10.2026: das Release-Werkzeug scheiterte am Normalfall, und danach meldete die Schranke einen falschen Stand
+
+**Was geschah:** `tools/release-veroeffentlichen.ps1` prüft, bevor es
+veröffentlicht, ob es die Marke schon gibt (`gh release view <marke>`). Wenn
+die Marke frei ist, also im Normalfall „neues Release", schreibt `gh`
+„release not found" auf stderr. Windows PowerShell 5.1 bricht darauf unter
+`$ErrorActionPreference = 'Stop'` ab, auch mit `2>$null`. Um 13:07 hat das
+Werkzeug deshalb v1.0.83 abgewiesen. Geprüft war bis dahin nur der Fall, dass
+die Marke schon vergeben ist. Behoben wurde das in `ec9f11d` (13:17): Für
+diesen einen Aufruf gilt `Continue`, entschieden wird am Rückgabewert.
+Gegengetestet in beide Richtungen: v1.0.72 meldet „gibt es schon", v1.0.83
+meldet „frei". Veröffentlicht war um 13:18:20.
+
+**Die zweite Lücke im selben Ablauf:** `gh release create` legt die Marke auf
+GitHub an, aber **nicht im lokalen Klon**. Um 13:22:13 wies der pre-commit-Haken
+(`pruefe-release-buchfuehrung.pl`) den Doku-Commit ab:
+
+    README.md:72 gibt 1.0.83 als aktuellen Stand aus, veroeffentlicht ist 1.0.72
+    WEITERMACHEN.md:27 gibt 1.0.83 als aktuellen Stand aus, veroeffentlicht ist 1.0.72
+
+Der Text war richtig, das Bild der Schranke aber veraltet. Erst
+`git fetch --tags` (13:22:48) hat das behoben. Die Schranke ist dabei nicht
+kaputt. Sie hat genau das gemessen, was lokal lag, und lokal fehlte die
+Marke, die das Werkzeug gerade selbst angelegt hatte.
+
+**Regel:** Bei einem Werkzeug, das selten läuft, wird vor dem Einsatz **der
+Weg getestet, für den es da ist**, nicht nur die Abweisung. Hier hieß das: eine
+freie Marke. Und ein Werkzeug, das einen Zustand außerhalb des Klons ändert,
+bringt den Klon selbst auf denselben Stand, bevor die nächste Schranke ihn
+liest.
+
+**Vorschlag, nicht gebaut:** In `release-veroeffentlichen.ps1` direkt nach
+`$rc = $LASTEXITCODE` und nur bei `$rc -eq 0`:
+`git fetch --tags origin` aufrufen und danach `git tag -l $marke` messen.
+Steht die Marke dann nicht da, wird laut abgebrochen. Gegentest: Den Lauf
+gegen ein Testrepo fahren und vorher prüfen, dass `git tag -l v<neu>` leer ist
+und nachher genau eine Zeile liefert.
