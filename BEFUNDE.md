@@ -175,6 +175,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **sieben** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **im Quelltext geändert, Stand 7.2.0.79 — nicht übersetzt und von Gregor nicht geprüft.** Sechs der sieben Teile sind geändert (B5.1 bis B5.6), **B5.7 ist offen**; dazu zehn Debug-Marken. Gemessen ohne MSVC, zwei Testläufe mit Zahlen: `tools/kopfzeile-pruefen.pl` **10 Fälle, 0 Abweichungen** und `tools/rfc2231-pruefen.pl` **20 Fälle, 0 Abweichungen**. Das Urteil **behoben** steht noch aus — es braucht einen Bau und einen Abruf der Prüfdaten aus `tools/pruefdaten/`. Durchlauf in AUFGABEN.md, B5 |
+| AN-2 | Beim Start zeigt ein Fenster in Eudora den **Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache am Quelltext belegt, Behebung eingespielt, nicht übersetzt.** Paige kennt kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung. Jetzt beides über `inside_script` unterdrückt. Gemessen mit `tools/html-tags-pruefen.pl`: **30 Fälle, 0 Abweichungen**, Gegenprobe gefahren. **Offen bleibt die eigentliche Frage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -8447,3 +8448,104 @@ Originale aufheben musste.
   nicht zusammengesetzt — das ist derselbe Fehler noch einmal, aber nicht
   gemessen.
 - Nichts davon ist am laufenden Programm nachgesehen. Es gibt keinen Bau.
+
+---
+
+## AN-2 — Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite
+
+**Gemeldet von Gregor am 12.10.2026:** *„nachdem eudora gestartet wurde, ist es
+innerhalb eines Fensters darin angezeigt worden. ohne daß ich etwas gemacht
+habe."* Was er eingefügt hat, war kein Text, sondern das **Innenleben** einer
+Webseite: der New-Relic-Ladeteil (`(window.NREUM||(NREUM={}))…`), Google Tag
+Manager, Microsoft Clarity, AddToAny, Disqus, der `schema.org`-Block,
+`wp.i18n.setLocaleData`, `var wpcf7 = {…}` — und darunter der Artikel des
+Computer History Museum über die Freigabe des Eudora-Quelltexts.
+
+**Status: Ursache am Quelltext belegt, Behebung eingespielt, nicht übersetzt.**
+
+### Der Weg, Stück für Stück
+
+| | |
+|---|---|
+| 1 | **Eudora startet in der Werbe-Betriebsart.** `GetModeFromIni` (`QCSharewareManager.h:56`) liest `[Settings] Mode` (`IDS_INI_MODE` = 10620, `EudoraRes.rc:7743`, Voreinstellung `-1`). Bei `-1` greift `DEFAULT_SWM_MODE`, und das ist **0 = `SWM_MODE_ADWARE`**, weil `BUILD_BOX_OR_SITE_R_VERSION` in `Eudora.vcxproj` nicht gesetzt ist. **Eine frische `Eudora.ini` bedeutet also: Werbung.** |
+| 2 | Der Playlist-Client (`plstclnt.dll`) holt die Werbung. Der voreingestellte Server steht in `PlaylistClient/plstclnt_dll/plist_mgr.cpp:213`: `//adserver.eudora.com/adjoin/playlists`. Überschreibbar über `[Debug] PlayListServer` (`IDS_INI_DEBUG_PLAYLIST_SERVER` = 10805, `EudoraRes.rc:8446`) |
+| 3 | **`eudora.com` gehört seit 2018 dem Computer History Museum.** Das steht in dessen eigener Ankündigung zur Quelltextfreigabe: *„transfer ownership of the code, the Eudora trademarks, the copyrights, and the Eudora domain names to the Computer History Museum"*. Was dieser Rechner heute antwortet, ist eine WordPress-Seite |
+| 4 | `CAdView::loadEntry` (`AdView.cpp`): ist der MIME-Typ des Eintrags `text/html`, wird die geholte Datei geöffnet und an `PgDataTranslator::ImportData(…, kFmtHtml)` gegeben |
+| 5 | **`class CAdView : public CPaigeEdtView`** (`AdView.cpp:60`). Das Werbefenster ist kein Browser, sondern **Paige** |
+| 6 | **Paige kennt kein Element, dessen Inhalt kein Text ist.** `control_commands` (`PGHTMDEF.C:28`) führte `script` überhaupt nicht; `style` stand darin, hatte aber **keinen `case`** in `PGHTMIMP.CPP`. Behandelt war genau **ein** solcher Fall: `<title>`, über `inside_title` (`PGTXRCPP.H:394`), gesetzt bei `title_command`, gelöscht bei `-title_command`, abgefragt an **vier** Ausgabestellen |
+
+Ergebnis: der unbekannte Tag wird übersprungen, **sein Inhalt aber
+durchgeschrieben** — jede Zeile JavaScript und jede Zeile CSS landet als Text im
+Fenster.
+
+**Das ist dieselbe Fehlerklasse wie E-105** (versteckter Vorschautext, weil
+Paige `display:none` nicht kennt). Nur deutlich auffälliger — und es trifft
+nicht nur Werbung, sondern **jede HTML-Nachricht mit eingebettetem `<style>`**,
+also die meisten Newsletter.
+
+### Was geändert wurde
+
+| Datei | Was |
+|---|---|
+| `PGHTMDEF.C:28` | `script` in `control_commands` aufgenommen — **zwischen `p` und `style`** |
+| `PGHTMDEF.H:66` | `script_command` an derselben Stelle in die Aufzählung |
+| `PGTXRCPP.H:395` | neuer Merker `inside_script` |
+| `PGHTMIMP.CPP` | `inside_script` auf FALSE beim Anlegen (:106), gesetzt bei `script_command`/`style_command` (:1224), gelöscht bei den Ende-Tags (:892), abgefragt an allen vier Ausgabestellen (:427, :446, :480, :500) |
+
+**Die Stelle in der Liste ist keine Kosmetik.** `table_command`
+(`PGHTMIMP.CPP:3469`) läuft die Zeichenkette durch und gibt die **Position** des
+Treffers zurück — diese Position *ist* der Befehlswert, und die Aufzählung in
+`PGHTMDEF.H` vergibt dieselben Werte ein zweites Mal, von Hand. Dazu bricht die
+Suche ab, sobald der erste Buchstabe eines Eintrags **größer** ist als der
+gesuchte (`:3502`). Daraus folgen zwei stumme Fallen:
+
+1. Verschiebt sich die Liste gegen die Aufzählung, heißt `<title>` plötzlich
+   `<ul>`. Kein Übersetzer meldet das.
+2. Ein hinten angehängter Tag wird **nie gefunden** — ebenfalls ohne Meldung.
+
+### Gemessen
+
+`tools/html-tags-pruefen.pl` zieht `table_command` wörtlich aus `PGHTMIMP.CPP`,
+die Tabelle aus `PGHTMDEF.C` und die Aufzählung aus `PGHTMDEF.H`, übersetzt das
+mit `g++` und prüft **jedes** Paar gegen eine von Hand geschriebene Sollliste:
+
+```
+22 Tags, jeder trifft den Wert seines Namens; 8 Tags, die hier nicht
+gefunden werden dürfen. 30 Faelle, 0 Abweichung(en).
+```
+
+**Gegenprobe gefahren.** Hängt man `script` stattdessen hinten an, meldet das
+Werkzeug **sieben** Abweichungen: `script` wird gar nicht gefunden (0 statt 16),
+und `style`, `title`, `ul`, `wbr`, `x-tab`, `x-sigsep` rutschen um eins. Genau
+die beiden Fallen von oben, beide gefangen.
+
+### Was **nicht** gemessen ist
+
+- **Nichts ist übersetzt.** Die Sitzung lief ohne Windows und ohne Compiler.
+- Dass die Behebung im Werbefenster wirkt, ist damit **nicht** belegt — nur,
+  dass der Zerleger `<script>` und `<style>` jetzt als solche erkennt.
+- Ob die Seite, die Gregor gesehen hat, wirklich über den Werbeweg kam, ist
+  **aus dem Quelltext erschlossen**, nicht am Protokoll abgelesen. Nachzusehen
+  wäre es mit `LogLevel` und Bit `DEBUG_MASK_PLIST` (`0x1000`, `debug.h`), das
+  den Playlist-Client mitschreibt.
+
+### Was dieser Befund **nicht** behebt
+
+Der Abruf selbst bleibt. Eudora holt beim Start weiterhin Werbung von einem
+Rechner, der seit 2018 jemand anderem gehört, und zeigt dessen Antwort in einem
+Fenster. **Das ist die eigentliche Frage, und sie ist keine Programmierfrage:**
+soll diese Fassung überhaupt noch Werbung abrufen?
+
+Ohne Neubau abschaltbar ist es über die `Eudora.ini`:
+
+```ini
+[Settings]
+Mode=1
+```
+
+`1` ist `SWM_MODE_LIGHT` — keine Werbung, dafür schaltet `UsingFullFeatureSet()`
+einige Funktionen ab. `2` wäre `SWM_MODE_PRO` ohne Werbung und mit allen
+Funktionen, verlangt aber einen Registriercode und führt sonst zu
+`WasBadProRegCodeAtStartup`. **Beides ist nicht nachgemessen.** Den Werbeserver
+stattdessen auf einen toten Rechner zu zeigen, hilft nicht: nach vier Tagen
+meldet sich `CAdFailureNagTask` (`nDaysUntilAdFailure = 4`).

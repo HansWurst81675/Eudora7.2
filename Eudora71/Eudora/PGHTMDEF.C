@@ -20,7 +20,12 @@ tags and tag attribute keywords that we support (in some fashion) for HTML. */
 
 // Added support for the <div> tag
 pg_char PG_FAR control_commands[] = {
-	"base basefont body br dir div dl head hr html li listing menu ol p style title ul wbr x-tab x-sigsep \0"
+// AN-2: script dazu. Die Reihenfolge ist NICHT Kosmetik - table_command
+// (PGHTMIMP.CPP:3502) bricht ab, sobald der erste Buchstabe eines Eintrags
+// groesser ist als der gesuchte. Ein angehaengtes "script" nach "x-sigsep"
+// wuerde nie gefunden. Und die Reihenfolge MUSS zur Aufzaehlung in
+// PGHTMDEF.H passen: der Index in dieser Liste IST der Befehlswert.
+	"base basefont body br dir div dl head hr html li listing menu ol p script style title ul wbr x-tab x-sigsep \0"
 //	"base basefont body br dir dl head hr html li listing menu ol p title ul wbr \0"
 };
 // END QUALCOMM

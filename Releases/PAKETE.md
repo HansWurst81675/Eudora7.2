@@ -155,31 +155,63 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.81 — **in Arbeit**, Quellstand 7.2.0.81 (AN-1, neunter und zehnter Teil)
+## 1.0.82 — **in Arbeit**, Quellstand 7.2.0.82 (AN-1 und AN-2 zusammengeführt)
 
 | | |
 |---|---|
 | ZIP | **existiert noch nicht** |
 | SHA256 | **nicht belegt** |
 | URL | **nicht belegt** — nicht veröffentlicht |
-| Quellstand | 7.2.0.81 (`Eudora71/Version.h`), Zweig `patch_20261012` |
+| Quellstand | 7.2.0.82 (`Eudora71/Version.h`), Zweig `an1-endungen` nach Merge von `main` (PR #83) |
+
+Vergeben am 12.10.2026. Was drinsteckt, steht in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitte 7.2.0.82, 7.2.0.81, 7.2.0.80-an1 und
+7.2.0.80.
+
+## 1.0.81 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.81 (AN-1, neunter und zehnter Teil)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN3` |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.81 (`Eudora71/Version.h`), Zweig `an1-endungen` (bis 12.10.2026 `patch_20261012`) |
 
 Vergeben am 12.10.2026, weil 7.2.0.80 an diesem Tag gebaut und gemessen wurde
 und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
 [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
 
-## 1.0.80 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.80 (AN-1, achter Teil)
+## Messfassung 1.0.80-an1 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.80 (AN-1, achter Teil) — **Nummer doppelt vergeben**
+
+> Dieselbe Nummer trägt auch 1.0.80 (AN-2) weiter unten. Beide entstanden am
+> 12.10.2026 auf getrennten Zweigen; diese hier gab es nur als Prüfbau.
 
 | | |
 |---|---|
 | ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN2` |
 | SHA256 | **nicht belegt** |
 | URL | **nicht belegt** — nicht veröffentlicht |
-| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), Commit `ca8da5a` auf `patch_20261012` |
+| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), Commit `ca8da5a` auf `an1-endungen` |
 
 Gebaut am 12.10.2026 (Rebuild, 0 Fehler) und am laufenden Programm gemessen:
 Fall 03 heil, Fall 05 ohne Endung. Einzelheiten in
 [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
+## 1.0.80 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.80 (AN-2)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** |
+| SHA256 | **nicht belegt** — es gibt keine Datei |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), am 12.10.2026 |
+
+Nummer vergeben, damit sie nicht zweimal vergeben wird. **Inhalt:** Befund
+**AN-2** — Paige zeigte den Inhalt von `<script>` und `<style>` als Text, was
+beim Start im Werbefenster den Quelltext einer Webseite sichtbar machte.
+Gemessen mit `tools/html-tags-pruefen.pl` (30 Fälle, 0 Abweichungen, Gegenprobe
+gefahren); **übersetzt ist nichts**.
+
+Durchlauf: [AUFGABEN.md](../AUFGABEN.md), **B6**.
 
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
 

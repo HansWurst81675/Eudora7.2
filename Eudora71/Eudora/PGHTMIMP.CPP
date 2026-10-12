@@ -103,6 +103,7 @@ PaigeHTMLImportFilter::PaigeHTMLImportFilter ()
    target_link_style = 0;
    //title_ptr = NULL;
    inside_title = FALSE;
+   inside_script = FALSE;
    //QUALCOMM Begin - Kusuma (mimic v3.14) added style-stack-ref
    param_ref = attribute_ref = anchor_ref = table_text = tables_ref = style_stack_ref = MEM_NULL;
    linebreak_char = 0x0D;
@@ -423,7 +424,7 @@ pg_boolean PaigeHTMLImportFilter::pgReadNextBlock (void)
 			 // If & did not precede one of the special chars like nbsp etc.
 			 // then include it as part of the text.
 			 //if (!title_ptr)
-			 if (!inside_title)
+			 if (!inside_title && !inside_script)	// AN-2
 				OutputCharacter('&');
 			 // QUALCOMM End == Kusuma
 
@@ -442,7 +443,7 @@ pg_boolean PaigeHTMLImportFilter::pgReadNextBlock (void)
 			    //	*title_ptr = translation[out_index];
 	         	//}
 	         	//else
-				if (!inside_title)
+				if (!inside_title && !inside_script)	// AN-2
 	            	OutputCharacter(translation[out_index]);
 	         }
          }
@@ -476,7 +477,7 @@ pg_boolean PaigeHTMLImportFilter::pgReadNextBlock (void)
 			 //   *title_ptr = next_char;
 	         //}
 	         //else
-			 if (!inside_title)
+			 if (!inside_title && !inside_script)	// AN-2
 	            OutputCharacter(next_char);
 	     }
       }
@@ -496,7 +497,7 @@ pg_boolean PaigeHTMLImportFilter::pgReadNextBlock (void)
          // }
          //else
          //if (next_char >= ' ' || cr_enable) {
-         if ( !inside_title && (next_char >= ' ' || cr_enable) ) {
+         if ( !inside_title && !inside_script && (next_char >= ' ' || cr_enable) ) {	// AN-2
             
             if (doing_table && !doing_row)
                next_char = 0;
@@ -881,6 +882,16 @@ pg_boolean PaigeHTMLImportFilter::DoControlTag (short tag, tag_attribute_ptr par
 	  case -x_tab_command:
 		  break;
 	  //QUALCOMM End == Kusuma
+      //	AN-2: der INHALT von <script> und <style> ist kein Text und darf
+      //	nicht angezeigt werden. Ohne das erscheint bei einer Werbeseite
+      //	oder einem Newsletter der ganze JavaScript- und CSS-Block im
+      //	Fenster. Dasselbe Muster wie inside_title eine Zeile tiefer -
+      //	fuer <title> hat QUALCOMM es schon gebraucht.
+      case -script_command:
+      case -style_command:
+         inside_script = FALSE;
+         break;
+
       case -title_command:
 		 // Don't read in title, because we don't use the information and for certain
 		 // invalid messages the title tags caused Paige to fail a memory allocation
@@ -1205,6 +1216,12 @@ pg_boolean PaigeHTMLImportFilter::DoControlTag (short tag, tag_attribute_ptr par
                ApplyInputParagraph(&current_par, -1, FALSE);
          }
 
+         break;
+
+      //	AN-2, siehe case -script_command weiter oben.
+      case script_command:
+      case style_command:
+         inside_script = TRUE;
          break;
 
       case title_command:

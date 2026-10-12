@@ -14,6 +14,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | Kennung | | |
 |---|---|---|
 | **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Sechs von sieben Ursachen geändert in 7.2.0.79 — nichts davon ist übersetzt oder am laufenden Programm bestätigt.** Von Gregor am 30.09.2026 gemeldet. **Es liegt nicht an der Länge:** ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile steht. **Offen ist B5.7** (über IMAP fehlt `MIMEMap::SetExtension`) und der Bau: `-Ziel Rebuild`, dann die Prüfdaten aus `tools/pruefdaten/` über den POP3-Prüfstand abrufen. Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**; Herleitung in [BEFUNDE.md](BEFUNDE.md) |
+| **AN-2** | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80, nicht übersetzt.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
@@ -67,9 +68,33 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.81 — Endungen aus dem MIME-Typ wirken wieder (AN-1, neunter und zehnter Teil) — **in Arbeit**
+## 7.2.0.82 — AN-1 und AN-2 zusammengeführt
 
-**7.2.0.80 gebaut und gemessen am 12.10.2026** (Rebuild 0 Fehler, `C:\Temp\AN2`,
+Gregor hat am 12.10.2026 um 09:40 UTC PR #83 (**AN-2**, Zweig
+`fix_startup_page`, Quellstand 7.2.0.80) nach `main` gemergt, während auf
+`an1-endungen` schon 7.2.0.80-an1 und 7.2.0.81 gebaut und gemessen waren. Dieser
+Stand führt beide zusammen und nimmt die nächste freie Nummer. AN-2 wird damit
+zum ersten Mal übersetzt.
+
+## 7.2.0.81 — Endungen aus dem MIME-Typ wirken wieder (AN-1, neunter und zehnter Teil) — **gebaut und gemessen: alle sechs heil**
+
+**Gemessen am 12.10.2026** (Rebuild, 0 Fehler, `C:\Temp\AN3`, ein Abruf über
+`tools/anhang-pruefdaten.pl --pop`):
+
+| Fall | gespeichert |
+|---|---|
+| 00 | `Rechnung.pdf` |
+| 01 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf` (76) |
+| 02 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf` (56) |
+| 03 | `<220×A>.pdf` (224 — der volle Pfad bleibt unter 260; die Endung bleibt) |
+| 04 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 20251.pdf` (57 — gleicher Name wie 02, Eudora hängt `1` an) |
+| 05 | `Pruefung AN-1 leerer Dateiname.pdf` (34 — Betreff, **jetzt mit Endung** aus `MIMEMap`) |
+
+Alle sechs Dateien beginnen mit `%PDF-`, keine `Exception.log`. Im Log steht bei
+jedem Anhang `ANHANG Name: nach MIMEMap::SetExtension`, kein „kennt den Typ NICHT"
+mehr.
+
+**7.2.0.80-an1 gebaut und gemessen am 12.10.2026** (Rebuild 0 Fehler, `C:\Temp\AN2`,
 ein Abruf): **Fall 03 heil** — `<220×A>.pdf`, 224 Zeichen mit Endung. Marke 2
 meldet keine Faltung mehr. **Fall 05 weiter ohne Endung.** ANHANG-Marke 11 nannte
 den Grund bei **jedem** Anhang: `GetMaps scheitert … (342)`.
@@ -90,7 +115,12 @@ int-Überlauf rückwärts durch den Speicher. Verdeckt nur, weil `Find` nie gela
 mit Teil 9 wäre es bei einem Namen ab 255 Zeichen ein Absturz geworden. Behoben:
 der Stamm wird vor der neuen Endung gekürzt.
 
-## 7.2.0.80 — Anhangnamen: lange Namen behalten die Endung (AN-1, achter Teil) — **gebaut und gemessen**
+## Messfassung 7.2.0.80-an1 — Anhangnamen: lange Namen behalten die Endung (AN-1, achter Teil) — **gebaut und gemessen, Nummer doppelt vergeben**
+
+> Diese Fassung trug in `Version.h` **7.2.0.80** — dieselbe Nummer wie AN-2 auf
+> `main` (PR #83, Abschnitt weiter unten). Beide entstanden am 12.10.2026 auf
+> getrennten Zweigen. Diese hier gab es nur als Prüfbau in `C:\Temp\AN2`; sie ist
+> nie ausgeliefert worden. Zur Unterscheidung heißt sie hier `7.2.0.80-an1`.
 
 **7.2.0.79 ist am 12.10.2026 zum ersten Mal übersetzt und am laufenden Programm
 gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
@@ -123,6 +153,53 @@ jeden Ausstieg.
 
 **Marke 2 berichtigt** (beide Zerleger): sie fragte nach dem CR und meldete seit
 B5.1 jede heil durchgekommene Faltung als Abbruch. Sie fragt jetzt nach dem LF.
+## 7.2.0.80 — JavaScript und CSS verschwinden aus der Anzeige (AN-2), **nicht übersetzt**
+
+> **Hier ist nichts gebaut und nichts gestartet.**
+
+Gregor am 12.10.2026: *„nachdem eudora gestartet wurde, ist es innerhalb eines
+Fensters darin angezeigt worden. ohne daß ich etwas gemacht habe."* Eingefügt
+hatte er kein Text, sondern das Innenleben einer Webseite — New Relic, Google
+Tag Manager, Microsoft Clarity, Disqus, `schema.org`, `var wpcf7 = {…}`.
+
+**Der Weg dahin, ganz aus dem Quelltext:**
+
+1. Eine frische `Eudora.ini` hat kein `[Settings] Mode`, also greift
+   `DEFAULT_SWM_MODE` — und das ist **0 = Werbe-Betriebsart**
+   (`QCSharewareManager.h`, `BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt).
+2. Der Playlist-Client holt Werbung von `//adserver.eudora.com/adjoin/playlists`
+   (`plist_mgr.cpp:213`). **Diese Adresse gehört seit 2018 dem Computer History
+   Museum** — nachzulesen in dessen eigener Ankündigung zur Quelltextfreigabe.
+3. `CAdView::loadEntry` gibt eine `text/html`-Antwort an Paige, denn
+   `class CAdView : public CPaigeEdtView` — das Werbefenster ist kein Browser.
+4. **Paige kannte kein Element, dessen Inhalt kein Text ist.** `script` fehlte in
+   `control_commands` (`PGHTMDEF.C`), `style` stand darin **ohne Behandlung**.
+   Behandelt war genau einer: `<title>`, über `inside_title`.
+
+**Geändert:** neuer Merker `inside_script` nach genau diesem Muster — gesetzt bei
+`<script>` und `<style>`, abgefragt an allen vier Ausgabestellen. Vier Dateien.
+
+**Gemessen:** neu `tools/html-tags-pruefen.pl` — **30 Fälle, 0 Abweichungen**.
+Das Werkzeug zieht `table_command`, die Tag-Tabelle und die Aufzählung wörtlich
+aus dem Baum und prüft jedes Paar gegen eine von Hand geschriebene Sollliste.
+**Gegenprobe gefahren:** hängt man `script` hinten an die Tabelle statt an die
+richtige Stelle, meldet es **sieben** Abweichungen.
+
+> **Warum dafür ein eigenes Werkzeug nötig war.** `table_command`
+> (`PGHTMIMP.CPP:3469`) gibt die **Position** eines Tags in der Zeichenkette
+> zurück, und diese Position *ist* der Befehlswert — den die Aufzählung in
+> `PGHTMDEF.H` ein zweites Mal von Hand vergibt. Dazu bricht die Suche ab,
+> sobald der erste Buchstabe eines Eintrags größer ist als der gesuchte
+> (`:3502`). Verschiebt sich eines gegen das andere, heißt `<title>` plötzlich
+> `<ul>`; ein hinten angehängter Tag wird nie gefunden. **Beides meldet kein
+> Übersetzer.**
+
+**Nicht behoben, und das ist die eigentliche Frage:** Eudora holt beim Start
+weiterhin Werbung von einem Rechner, der jemand anderem gehört. Ob das so
+bleiben soll, ist eine Entscheidung über das Produkt — die drei Wege stehen in
+[AUFGABEN.md](AUFGABEN.md), **B6**.
+
+---
 
 ## 7.2.0.79 — Anhangnamen: sechs von sieben Ursachen geändert (AN-1), **nicht übersetzt**
 
