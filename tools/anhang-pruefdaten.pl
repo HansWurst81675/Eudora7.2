@@ -41,6 +41,7 @@ use strict; use warnings;
 #   03-ueber-254-zeichen      254 Buchstaben                    <- OHNE .pdf
 #   04-rfc2231                der BETREFF, auf 31 Zeichen       <- OHNE .pdf
 #   05-leerer-dateiname       eine Datei namens "="
+#   06-betreff-gefaltet       Anhang heil, BETREFF mit Luecken mitten im Wort (E-94)
 #
 # Ist 00 heil und sind 01 bis 05 kaputt, ist AN-1 bestaetigt. Sind hinterher
 # ALLE sechs heil, wirken die Behebungen B5.1 bis B5.6 (siehe AUFGABEN.md)
@@ -164,6 +165,23 @@ my @faelle = (
     soll  => '(leer - Eudora darf sich einen Namen ausdenken)',
     heute => 'eine Datei namens "="',
     wort  => 'die leere Marke traegt das erste Byte der VORIGEN Marke' },
+
+  # Befund E-94 (12.10.2026): nicht der Anhang, sondern der BETREFF. So faltet
+  # der web.de-Webmailer einen langen Betreff - in mehrere kodierte Woerter
+  # zerlegt, und die Grenzen liegen mitten im Wort. RFC 2047, 6.2: der
+  # Leerraum zwischen zwei kodierten Woertern faellt weg, auch eine Faltung.
+  # Der Anhang ist absichtlich heil, damit dieser Fall nur E-94 misst.
+  { nr     => '06-betreff-gefaltet',
+    befund => 'E-94',
+    betr   => '=?utf-8?Q?Pruefung_E-94:_Toner_bestel?=' . $CRLF
+            . ' =?utf-8?Q?len_und_1?=' . $CRLF
+            . ' =?utf-8?Q?5_Prozent_sparen_bis_zum_Wochenend?=' . $CRLF
+            . ' =?utf-8?Q?e!?=',
+    kopf   => 'Content-Type: application/pdf; name="Rechnung-E94.pdf"' . $CRLF
+            . 'Content-Disposition: attachment; filename="Rechnung-E94.pdf"' . $CRLF,
+    soll   => 'Betreff "Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wochenende!", Anhang Rechnung-E94.pdf',
+    heute  => 'Betreff mit Luecken mitten im Wort ("bestel len", "1 5", "Wochenend e!")',
+    wort   => 'E-94: kodierte Woerter ueber eine Faltung hinweg (lex822.cpp:685)' },
 );
 
 # ---------------------------------------------------------------------------
@@ -173,7 +191,8 @@ sub nachricht {
   my $f = shift;
   my $grenze = '----EUDORA-AN1-' . $f->{nr};
 
-  my $text = "Pruefnachricht fuer Befund AN-1, Fall " . $f->{nr} . "." . $CRLF
+  my $befund = $f->{befund} || 'AN-1';
+  my $text = "Pruefnachricht fuer Befund $befund, Fall " . $f->{nr} . "." . $CRLF
            . $CRLF
            . "Erwartet wird der Anhang" . $CRLF
            . "  " . $f->{soll} . $CRLF
@@ -181,7 +200,7 @@ sub nachricht {
            . "Heute macht Eudora daraus" . $CRLF
            . "  " . $f->{heute} . $CRLF
            . $CRLF
-           . "Siehe BEFUNDE.md, Befund AN-1." . $CRLF;
+           . "Siehe BEFUNDE.md, Befund $befund." . $CRLF;
 
   my $anhang = $PDF_B64;
   $anhang =~ s/(.{1,76})/$1$CRLF/g;
@@ -216,7 +235,7 @@ sub nachricht {
 # Uebersicht
 # ---------------------------------------------------------------------------
 unless ($erzeugen || $pop) {
-  print "Pruefdaten fuer Befund AN-1 - sechs Nachrichten mit einem PDF im Anhang.\n\n";
+  print "Pruefdaten fuer AN-1 (00-05) und E-94 (06) - " . scalar(@faelle) . " Nachrichten mit einem PDF im Anhang.\n\n";
   printf "  %-24s %s\n", 'Fall', 'was Eudora heute daraus macht';
   printf "  %-24s %s\n", '-' x 24, '-' x 45;
   for my $f (@faelle) {

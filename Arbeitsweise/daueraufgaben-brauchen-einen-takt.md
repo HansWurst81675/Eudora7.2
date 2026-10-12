@@ -177,3 +177,23 @@ die Commits mit `+0000`), in denen kein einziger Rollenbericht entstand
 **Offen:** Die Verlegung in `CLAUDE.md` Punkt 1 ist vorgeschlagen, nicht
 gemacht. Solange sie fehlt, wirkt dieser Nachtrag nur, wenn ihn jemand liest
 ([[lehren-anwenden-nicht-nur-schreiben]]).
+
+## Nachtrag 12.10.2026, nachmittags: die Schranke drehte sich im Kreis
+
+Vor Paket 1.0.84 waren LEKTOR, PRUEFER und CHRONIST gelaufen und ausgetragen —
+und `rollen-faellig.pl` meldete den LEKTOR trotzdem fällig, Grund:
+`tools/AGENTEN-LAUFEN.md`. Diese Datei schreibt `agenten-laufen.pl` beim **Aus**tragen
+selbst. Das Austragen des CHRONISTEN machte also den LEKTOR fällig, dessen
+Austragen wieder den CHRONISTEN; dasselbe mit `tools/TESTLAEUFE.md`, das
+`testlauf.ps1` bei jedem Start schreibt. Heute führte das zu drei Rollenläufen,
+die nur eine Protokollzeile zu lesen hatten.
+
+**Behoben:** beide Protokolle sind aus den Bereichen von LEKTOR und CHRONIST
+genommen. Gegenprobe in beide Richtungen: die Protokollzeile allein macht den
+LEKTOR nicht mehr fällig; gegen `dc5c498` (neun echte MD-Änderungen) bleibt er
+fällig. `tools/RELEASES.md` zählt weiter — dort hat der LEKTOR echte Mängel
+gefunden (LEKTOR-22).
+
+**How to apply:** Eine Datei, die ein Werkzeug als Nebenwirkung schreibt, gehört
+nicht in den Bereich einer Rolle. Wer einen neuen Protokollschreiber baut, trägt
+ihn in `ausser` ein.

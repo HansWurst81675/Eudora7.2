@@ -1150,3 +1150,14 @@ Gregors Verzeichnis nachgemessen — stimmen. Vier Mängel (veraltete Liste „B
 Gregor liegen" in `ZIEL.md` und `AUFGABEN.md`, E-94 im CHANGELOG im Widerspruch
 zu WEITERMACHEN, die v1.0.83-Zeile in `tools/RELEASES.md` außerhalb der Tabelle
 und in Ortszeit) — **alle behoben** im selben Commit.
+
+## Achtundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-23.md`)
+
+E-94 / 7.2.0.84 gegen `C:\Temp\E94-vorher` und `E94-nachher`. Die Messung stimmt;
+drei Mängel (ein Rest „noch nicht gebaut“ im CHANGELOG, Fall 03 mit 224 statt der
+gemessenen 217/216, `ZIEL.md` mit Quellstand 7.2.0.83) — **alle behoben** im selben
+Commit.
+
+## Neunundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-24.md`)
+
+E-94-Bestätigung gegen Gregors Bildschirmfoto: vier Mängel (WEITERMACHEN, ZIEL, AUFGABEN B7 ohne IMAP und Bestätigung; Listenzitat nicht wörtlich) — **alle behoben** im selben Commit.

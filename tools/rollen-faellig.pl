@@ -102,7 +102,13 @@ my @rollen = (
         muster  => qr{\.md$},
         # Die eigenen Berichte zaehlen NICHT als Aenderung, sonst ist die Rolle
         # nach ihrem eigenen Bericht sofort wieder faellig.
-        ausser  => qr{^(?:Befunde/(?:LEKTOR|PRUEFER)-\d+\.md|Arbeitsweise/)},
+        # Ebenso NICHT die beiden Protokolle, die Werkzeuge selbst schreiben:
+        # tools/AGENTEN-LAUFEN.md (agenten-laufen.pl, bei jedem Ein- und
+        # Austragen einer Rolle) und tools/TESTLAEUFE.md (testlauf.ps1, bei
+        # jedem Start). Am 12.10.2026 machte das Austragen des CHRONISTEN den
+        # LEKTOR wieder faellig, und dessen Austragen danach den CHRONISTEN -
+        # die Schranke drehte sich im Kreis, ohne dass es etwas zu lesen gab.
+        ausser  => qr{^(?:Befunde/(?:LEKTOR|PRUEFER)-\d+\.md|Arbeitsweise/|tools/(?:AGENTEN-LAUFEN|TESTLAEUFE)\.md$)},
         bericht => 'Befunde/LEKTOR-*.md',
         auftrag => 'Alle MDs gegen den Bestand pruefen, nicht gegen den Diff.',
     },
@@ -118,7 +124,8 @@ my @rollen = (
         name    => 'CHRONIST',
         was     => 'die Lehren aus dem Verlauf',
         muster  => qr{^(?:Eudora71/|tools/)},
-        ausser  => undef,
+        # Die Protokolle der Werkzeuge nicht - siehe LEKTOR oben.
+        ausser  => qr{^tools/(?:AGENTEN-LAUFEN|TESTLAEUFE)\.md$},
         bericht => 'Arbeitsweise/*.md',
         auftrag => 'Den Chat seit dem letzten Lauf auswerten, Lehren anlegen und ergaenzen.',
     },

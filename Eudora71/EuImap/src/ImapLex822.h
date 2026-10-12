@@ -41,6 +41,13 @@ private:
 	BOOL	m_UhOh;				// we tawt we taw a putty tat
 	BOOL	m_Has2047;			// RFC 2047 parsing for 8bit chars in headers
 
+	//	E-94: wie in Lex822State (lex822.h) - eine Faltung zwischen zwei
+	//	kodierten Woertern muss wegfallen. Ueber IMAP schreibt DIESER Zerleger
+	//	die Kopfzeile zeilenweise in die Mailbox; ImapFix2047 sieht dabei je
+	//	Aufruf nur eine Zeile. Gemessen an Gregors INBOX.mbx (Toner-Nachricht).
+	BOOL	m_ZeileEndetKodiert;
+	int		m_FaltungLeerraum;	// > 0: die naechste Faltung verschlucken
+
 	// This reads from the netword and also writer to the MBX file.
 	CImapDownloader *m_pRW;	// make this a member because we can have different inputs
 };

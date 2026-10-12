@@ -241,3 +241,50 @@ einer Teilmessung:
 *„nichts gemessen — nur gestartet und geschlossen"*, und der Kopf sollte
 `-Sekunden` als Frist bis zum Hauptfenster beschreiben. Nicht geändert —
 Werkzeuge sind nicht Sache des CHRONIST.
+
+## Fall 8, 12.10.2026: die Funktion war grün, der Zerleger davor nicht
+
+**Was geschah (E-94):** Der Kern `6b4b14c` (13:43) hat `Fix2047` und
+`ImapFix2047` berichtigt. Die zwei neuen Tests gingen von rot auf grün,
+Testsuite 188/188. Um 13:44:20 habe ich Gregor gefragt: *„Der IMAP-Weg (dein
+Fall) ist mit dem Kern behoben und per Test grün. Wie soll ich mit dem
+POP-Weg weitermachen?“* Gemessen hatten die Tests aber nur die **Funktion**,
+und zwar ihre wörtliche Abschrift. Sie bekommt dort die ganze Kopfzeile auf
+einmal. Wer ihr die Zeilen im Programm zuführt, haben die Tests nicht
+geprüft.
+
+**Gefunden hat es das laufende Programm.** Prüfnachricht 06 lief um 13:41 an
+7.2.0.83, also **vor** der Behebung. Ergebnis: In `In.mbx` stand der Betreff
+mit Faltungen mitten im Wort, und die Postfachliste zeigte nur *„Pruefung
+E-94: Toner bestel“*. Die Liste liest nur die erste Zeile einer gefalteten
+Kopfzeile (`summary.cpp`). Die Commit-Nachricht des Kerns sagt bereits:
+*„dort greift dieser Kern allein NICHT“*. `f1793e1` (13:55) hält dann fest:
+*„LexFill holt die Kopfzeile zeilenweise, Fix2047 sieht also nie beide Wörter
+zugleich – der Kern aus 6b4b14c heilt allein nur die Felder aus der ganzen
+Kopfzeile (ImapDownload.cpp:2276).“* Die Behebung musste deshalb in
+**beide** Zerleger, `lex822.*` **und** `ImapLex822.*`. Die Aussage „IMAP
+behoben“ reichte also weiter als die Messung. Sie war richtig für die Felder,
+die über `ImapDownload.cpp:2276` laufen, und unbelegt für das, was der
+IMAP-Zerleger in die Mailbox schreibt. Auch nach `a013f08` gilt: Die
+Testsuite prüft die Zerleger nicht (*„die Zerleger selbst prüft sie nicht –
+das tut Prüfnachricht 06 am laufenden Programm“*). Gemessen ist der Weg über
+den Prüfstand. Ein eigener IMAP-Abruf an 7.2.0.84 steht in keinem Commit.
+
+**Verwandt mit Fall 5:** Es ist dieselbe Frage, *wie weit die Messung
+reicht*. Hier liegt die Grenze aber nicht zwischen Lesen und Versenden,
+sondern zwischen einer Funktion und ihrem Aufrufer.
+
+**Wie anwenden, zusätzlich:**
+
+- **Ein grüner Funktionstest sagt „die Funktion tut es“, nicht „der Weg tut
+  es“.** Vor „behoben“ wird aufgezählt, wer die Funktion womit aufruft: ganze
+  Kopfzeile oder Zeile für Zeile, Mailbox, Inhaltsverzeichnis, Postfachliste.
+  Zu jedem Glied gehört eine Messung oder ein ausdrückliches *„nicht
+  geprüft“*.
+- **Die Messung am alten Stand gehört vor die Behebung.** Prüfnachricht 06 an
+  7.2.0.83 hat in einem Lauf zwei Dinge gezeigt, die kein Test gesehen hatte:
+  den zeilenweisen Zerleger und die abgeschnittene Liste. Danach war „ein
+  Paket für POP und IMAP“ eine belegte Entscheidung (Gregor, 13:49).
+- **In einer Frage an Gregor steht nur, was gemessen ist.** „Per Test grün“
+  ist wahr. „Dein Fall ist behoben“ wäre erst mit seiner Nachricht am
+  laufenden Programm wahr ([[erfolg-aus-anwendersicht]]).

@@ -32,3 +32,7 @@ Gregor auf meinen Vorschlag dreier Teststufen (Unit-Test POP-`Fix2047`, Unit-Tes
 **Neue Reihenfolge:** Release v1.0.83 → **E-94 (erst die Tests rot, dann Behebung, dann grün)** → E-112 → E-113 → E-77.
 
 **Zweigname für E-94 von Gregor bestätigt** (12.10.2026, *„ja, branch name ist ok"*): `e94-betreff-faltung`. Anlegen erst, wenn `release-v1.0.83` gemergt und gelöscht ist; dann in `tools/ZWEIGE.md` eintragen.
+
+**Stand 12.10.2026, 13:35:** Release v1.0.83 veröffentlicht (11:18 UTC), PR #85 gemergt, `release-v1.0.83` gelöscht. **`e94-betreff-faltung` angelegt** auf `e4c87fb`, verfolgt `origin/e94-betreff-faltung`. Begonnen mit Stufe 1 (rote Tests).
+
+**Stand 12.10.2026, Sitzungsende:** E-94 behoben in 7.2.0.84, von Gregor per Bildschirmfoto bestätigt; 1.0.84 liegt in `C:\Users\Gregor\Eudora72-1.0.84-release`; **PR #86** (`e94-betreff-faltung`) offen, alles gepusht (`f21ff31`). **Nächste Sitzung zuerst:** nach Gregors Merge von #86 das Release **v1.0.84** (Gregor hat es angewiesen: „dann ein github release“) — ZIP mit `paket-bauen.ps1 -Zip`, gegen das bereitgestellte Verzeichnis per Prüfsumme halten, `release-veroeffentlichen.ps1`, danach alle Stand-Aussagen auf „veröffentlicht“ ziehen und LEKTOR. Dann E-112. Offen: Steuerzeichen-Schranke für MD (Rückstrich dreimal verloren), POP-Prüfserver auf 11110 läuft noch (PID 12680).

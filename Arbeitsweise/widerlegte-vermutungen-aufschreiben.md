@@ -185,3 +185,44 @@ passt ein Wert nicht ins Bild, hier fehlt einer, wo einer stehen muesste.
 
 **Die Frage beim naechsten Mal:** *Habe ich eine Messung, die nichts gezeigt
 hat — und was waere wahr, wenn dieses Nichts das Ergebnis ist?*
+
+## Nachtrag 12.10.2026: widerlegt an einer Datei, die hinter dem Fehler liegt
+
+**Was geschah (E-94):** Um 13:03 habe ich mit Gregors Erlaubnis die
+Kopfzeilen der Toner-Nachricht aus seiner 1.0.75-`INBOX.mbx` gelesen. Dort
+stand der Betreff **dekodiert**, mit Faltungen mitten im Wort:
+`Toner  bestellen & 1<CR><LF> 5 % sparen … Nur b<CR><LF> is`. Weil darin kein
+`=?UTF-8?…?=` vorkam, habe ich meine Vermutung für widerlegt erklärt. Die
+Vermutung war: Eudora lässt die Faltung zwischen zwei kodierten Wörtern
+stehen (`lex822.cpp:685`, `ImapLex822.cpp:719`). Um 13:04:13 habe ich das
+zurückgenommen: *„Das war falsch: Eudora dekodiert die Kopfzeilen beim
+IMAP-Abruf, bevor es sie ablegt.“* Die `.mbx` ist also das **Ergebnis** des
+verdächtigen Schritts, nicht seine Eingabe. Dass dort keine kodierten Wörter
+stehen, ist genau das, was die Vermutung vorhersagt.
+
+**Was entschieden hat:** Gregor sagte um 13:04:37 *„zu diesem fall brauchen
+wir einen weiteren test.“* Ich hatte ihn gebeten, die Rohform im
+GMX-Webmailer per „Quelltext anzeigen“ zu holen. Bis 14:10 kam sie nicht,
+und sie war auch nicht mehr nötig. Der rote Test `a329258` (13:39) hat die
+Ursache am ausgelieferten Code gemessen: *„ist 'bestel' 0D 0A 20 'len', soll
+'bestellen'“*, in POP und IMAP gleich. Vier Minuten später war der Kern
+behoben (`6b4b14c`, 188/188).
+
+**Wie anwenden, zusätzlich:**
+
+- **Vor „widerlegt“ steht die Frage: Vor oder hinter welchem Schritt liegt
+  das Gelesene?** Eine Mailbox, ein Inhaltsverzeichnis oder ein Protokoll ist
+  ein abgeleiteter Stand. Was dort **fehlt**, kann der verdächtige Schritt
+  entfernt haben. Eine Widerlegung braucht eine Messung **vor** dem Schritt,
+  also die Rohform vom Server oder eine Eingabe, die man selbst wählt.
+- **Ein Test mit selbst gebauter Eingabe ist diese Messung.** Er wartet
+  nicht auf fremdes Material. Er stellt genau die Eingabe her, an der die
+  Vermutung hängt (zwei kodierte Wörter über einer Faltung), und liest das
+  Byte nach dem Schritt. Wo ein Test möglich ist, kommt er vor die Bitte um
+  Belegmaterial.
+- **Eine Rücknahme gehört in dieselbe Zeile wie die Widerlegung**, mit dem
+  Grund. Hier hat das geklappt: Die Rücknahme ging zwei Minuten später an
+  Gregor und steht in `reihenfolge-nach-1083.md`.
+
+**Die Frage beim nächsten Mal:** *Hat der Schritt, den ich verdächtige, das
+Gelesene schon verarbeitet?*

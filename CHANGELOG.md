@@ -21,7 +21,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
 | — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
 | **E-98** | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu **E-97**: der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von E-97:** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit E-98 werden `ToggleStat` und `StatDir` wieder scharf (**E-100**). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
-| **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache am Quelltext belegt, NICHT gemessen (Stand 12.10.2026).** Zwischen zwei kodierten Wörtern, die über eine **Faltung** getrennt sind, bleibt der Leerraum stehen (`lex822.cpp:685`, `ImapLex822.cpp:719`; RFC 2047, 6.2 verlangt, dass er wegfällt). Gregors Toner-Nachricht hat der web.de-Webmailer erzeugt, nicht Eudora; in seiner 1.0.75-`INBOX.mbx` steht der Betreff schon dekodiert, mit Faltungen bei `& 1|5` und `Nur b|is`. **Die ältere Vermutung unten (`Encode2047` beim Senden) ist damit zurückgestellt.** Nächster Schritt, von Gregor angeordnet: erst drei Tests rot, dann die Behebung (Zweig `e94-betreff-faltung`). — Ursprünglicher Eintrag: Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
+| **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Behoben in 7.2.0.84, am laufenden Programm gemessen über POP (Prüfnachricht 06) und über IMAP an Gregors Postfach (die Toner-Nachricht neu abgerufen, Betreff in einer Zeile). Von Gregor bestätigt am 12.10.2026, belegt durch sein Bildschirmfoto von 1.0.84.** Vorher galt: Ursache am Quelltext belegt. Zwischen zwei kodierten Wörtern, die über eine **Faltung** getrennt sind, bleibt der Leerraum stehen (`lex822.cpp:685`, `ImapLex822.cpp:719`; RFC 2047, 6.2 verlangt, dass er wegfällt). Gregors Toner-Nachricht hat der web.de-Webmailer erzeugt, nicht Eudora; in seiner 1.0.75-`INBOX.mbx` steht der Betreff schon dekodiert, mit Faltungen bei `& 1|5` und `Nur b|is`. **Die ältere Vermutung unten (`Encode2047` beim Senden) ist damit zurückgestellt.** Nächster Schritt, von Gregor angeordnet: erst drei Tests rot, dann die Behebung (Zweig `e94-betreff-faltung`). — Ursprünglicher Eintrag: Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
 | **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
 | **E-91** | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu E-89, nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
 | **E-92** | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |
@@ -67,6 +67,69 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.84 — Betreff nicht mehr mitten im Wort umbrochen (E-94) — **gebaut und gemessen**
+
+**Gemessen am 12.10.2026** (Rebuild auf `05bbaba`, 0 Fehler, `bauen-Release.log.fehler`
+ohne Fehlerzeile; **Testsuite 188/188**; Abruf der sieben Prüfnachrichten über
+`tools/anhang-pruefdaten.pl --pop` in `C:\Temp\E94-nachher`):
+
+| | 7.2.0.83 (`C:\Temp\E94-vorher`) | 7.2.0.84 (`C:\Temp\E94-nachher`) |
+|---|---|---|
+| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wochenende!` |
+| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Toner bestel` | `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
+| Fälle 00–05, Anhänge | alle mit vollem Namen und `.pdf` | **unverändert** heil; Fall 03 hat 216 Zeichen (vorher 217), weil `C:\Temp\E94-nachher\…` einen Buchstaben länger ist als `E94-vorher`; mit Pfad je 259 |
+
+Keine `Exception.log`. **PRUEFER-21:** *kann ausgeliefert werden*; sein niedriger
+Befund (einzelnes CR, wenn die Kappung bei `LEX822_TOKEN_MAX` genau auf das CR
+fällt) ist in `05bbaba` behoben.
+
+**Über IMAP an Gregors Postfach gemessen, 12.10.2026:** Gregor hat mit Paket
+1.0.84 neu abgerufen; ausgewertet von mir, mit seiner Erlaubnis nur gelesen
+(`Imap\Dominant\INBOX\INBOX.mbx`, nur die `Subject:`-Zeilen). Darunter ist
+**die Toner-Nachricht selbst** (web.de-Webmailer). Ihr Betreff steht jetzt in
+**einer** Zeile: `Fw:  [Letzte Chance] Toner  bestellen & 15 % sparen … Nur bis
+zum Wochenende! ?` — in seiner 1.0.75-`INBOX.mbx` war dieselbe Nachricht bei
+`& 1|5` und `Nur b|is` gefaltet. Von zwei abgerufenen Nachrichten ist keine mehr
+gefaltet. Das doppelte Leerzeichen in `Toner  bestellen` stand schon in 1.0.75 so
+da (Absender); das Emoji davor erscheint weiter als Fragezeichen bzw. Ersatzzeichen — das ist **E-90**,
+nicht E-94.
+
+**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Toner  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht E-94:** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit E-90, nicht untersucht.
+
+**Gregors Fall:** *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
+— der web.de-Webmailer zerlegt einen langen Betreff in mehrere kodierte Wörter
+(`=?UTF-8?Q?…?=`) und faltet dazwischen, die Grenzen mitten im Wort. Das darf er.
+RFC 2047, 6.2: der Leerraum zwischen zwei benachbarten kodierten Wörtern wird
+ignoriert — **auch eine Faltung**. Eudora ließ sie stehen
+(`;//lastEqual += 2; // toast a trailing return`), und beim Anzeigen wurde sie zum
+Leerzeichen.
+
+**Gemessen, bevor geändert wurde:**
+
+| | Ergebnis vor der Behebung |
+|---|---|
+| Testsuite, neu: `Test_GefalteteKodierteWoerter` (POP) und `…Imap` | **rot**: ist `bestel` 0D 0A 20 `len`, soll `bestellen` |
+| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Toner bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Toner bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
+
+**Behoben an zwei Stellen, je in POP und IMAP:**
+
+1. **`Fix2047` / `ImapFix2047`:** zwischen zwei kodierten Wörtern fällt jetzt
+   auch eine Faltung weg. Ein CRLF **ohne** folgenden Leerraum (Ende der
+   Kopfzeile) bleibt wie bisher. Damit sind die Felder geheilt, die
+   `ImapDownload.cpp:2276` aus der ganzen Kopfzeile liest.
+2. **`Lex822` / `ImapLex822`:** beide Zerleger holen die Kopfzeile **zeilenweise**
+   (`LexFill`), `Fix2047` sieht also nie beide Wörter zugleich. `LexFill` hält an
+   der **rohen** Zeile fest, ob sie mit einem kodierten Wort endet und die nächste
+   mit Leerraum und `=?` beginnt; die Faltungsregel verschluckt dann CR, LF und
+   genau diesen Leerraum — nur im unstrukturierten Text (`CollectText`: Betreff,
+   Kommentare). Die Mailbox bekommt den Betreff in einem Stück, und damit auch die
+   Postfachliste.
+
+**Gegenprobe:** eine Faltung vor **Klartext** bleibt Leerraum (eigener Test).
+**Testsuite 188/188**, `tools/kopfzeile-pruefen.pl` **10 Fälle, 0 Abweichungen**
+(die Anhangnamen bleiben heil). *(Stand vor dem Bau; gebaut und gemessen siehe
+oben.)*
 
 ## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil) — **gebaut und gemessen**
 
