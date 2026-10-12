@@ -8059,6 +8059,10 @@ sofort.
 
 ### Der Weg, den ein Anhangname nimmt
 
+*Zeilennummern in diesem und den folgenden Abschnitten: Stand 7.2.0.76, vor der
+Behebung. Seither verschoben — der Funktionsname ist der Anker; die heutigen
+Zeilen der Marken stehen in der Markentabelle weiter unten.*
+
 | Schritt | Fundstelle | was dort passiert |
 |---|---|---|
 | 1 | `Lex822State::Lex822` — `lex822.cpp:153` | zerlegt die Kopfzeile in Marken |
