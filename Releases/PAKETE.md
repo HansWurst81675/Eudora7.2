@@ -155,11 +155,23 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.82 — **in Arbeit**, Quellstand 7.2.0.82 (AN-1 und AN-2 zusammengeführt)
+## 1.0.83 — **in Arbeit**, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
 
 | | |
 |---|---|
 | ZIP | **existiert noch nicht** |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
+
+Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
+abweicht (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.83.
+
+## 1.0.82 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.82 (AN-1 und AN-2 zusammengeführt)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN4` |
 | SHA256 | **nicht belegt** |
 | URL | **nicht belegt** — nicht veröffentlicht |
 | Quellstand | 7.2.0.82 (`Eudora71/Version.h`), Zweig `an1-endungen` nach Merge von `main` (PR #83) |

@@ -371,7 +371,7 @@ void ImapDecodeBH::HexBinDataChar(short d)
 				else
 					m_Translate = TRUE;
 				if (mm.Find(m_BxHead.m_Author, m_BxHead.m_Type))
-					mm.SetExtension(m_Name);
+					mm.SetExtension(m_Name, sizeof(m_Name));
 
 				// If we're writing to an output file, create it now:
 				//

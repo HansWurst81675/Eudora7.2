@@ -309,9 +309,9 @@ void DecodeBH::HexBinDataChar(short d)
 					m_Translate = TRUE;
 				if (mm.Find(m_BxHead.m_Author, m_BxHead.m_Type))
 				{
-					mm.SetExtension(m_Name);
+					mm.SetExtension(m_Name, sizeof(m_Name));
 					if (*m_AltFilename)
-						mm.SetExtension(m_AltFilename);
+						mm.SetExtension(m_AltFilename, sizeof(m_AltFilename));
 				}
 				if (!(m_ATFile = OpenAttachFile(*m_AltFilename? m_AltFilename : m_Name + 1)))
 					AbortHexBin();

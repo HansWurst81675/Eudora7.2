@@ -85,7 +85,7 @@ BOOL DecodeUU::IsAbLine(const char* text, LONG size)
 		MIMEMap mm;
 
 		if (mm.Find(m_ms))
-			mm.SetExtension(m_Name);
+			mm.SetExtension(m_Name, sizeof(m_Name));
 	}
 
 	return (TRUE);

@@ -430,43 +430,59 @@ BOOL MIMEMap::GetMaps()
 	return (TRUE);
 }
 
-BOOL MIMEMap::SetExtension(LPTSTR Filename)
+BOOL MIMEMap::SetExtension(LPTSTR Filename, size_t nPuffer /*= _MAX_PATH + 1*/)
 {
-	if (!*m_Suffix)
+	if (!*m_Suffix || !Filename || nPuffer < 2)
 		return (FALSE);
 
+	//	AN-1, elfter Teil (Gregors Ziel vom 12.10.2026: "anhaenge werden
+	//	korrekt gespeichert - mit erweiterung, komplette dateiname").
+	//	QUALCOMMs Regel war: 1 bis 3 Zeichen hinter dem letzten Punkt
+	//	bleiben, 0 oder 4 werden ERSETZT, ab 5 wird angehaengt. Das machte
+	//	aus .docx ein .doc, aus .jpeg ein .jpg - und aus "Rechnung vom
+	//	12.03.2025" ein "Rechnung vom 12.03.pdf". Gelebt hat die Regel bis
+	//	7.2.0.80 nie, weil GetMaps immer scheiterte (Teil 9).
+	//	Jetzt wird NIE ersetzt: eine vorhandene Endung (1 bis 5 Zeichen,
+	//	mindestens ein Buchstabe, kein Leerzeichen) bleibt; sonst wird die
+	//	Endung aus dem MIME-Typ angehaengt. Ein Punkt am Ende ("Name.")
+	//	bekommt nur noch das Suffix dahinter.
 	LPTSTR ExtensionPeriod = strrchr(Filename, '.');
-
-	// Here's what we do when we find various numbers of
-	// characters after the last period in the filename:
-	//   1, 2, or 3:    leave existing extension
-	//   0 or 4:        replace existing extension with new extension
-	//   5 or greater:  append new extension
 	if (ExtensionPeriod)
 	{
-		int ExtensionLength = strlen(ExtensionPeriod + 1);
-		if (1 <= ExtensionLength && ExtensionLength <= 3)
+		LPCTSTR p = ExtensionPeriod + 1;
+		size_t ExtensionLength = strlen(p);
+		BOOL bBuchstabe = FALSE, bLeer = FALSE;
+		for (; *p; p++)
+		{
+			if (isalpha((unsigned char)*p))
+				bBuchstabe = TRUE;
+			if (*p == ' ')
+				bLeer = TRUE;
+		}
+		if (1 <= ExtensionLength && ExtensionLength <= 5 && bBuchstabe && !bLeer)
 			return (FALSE);
-		if (ExtensionLength >= 5)
+		if (ExtensionLength != 0)
 			ExtensionPeriod = NULL;
 	}
 
-	// If the name with the extension tacked on is too long we're in trouble
-	//
-	//	AN-1, zehnter Teil (PRUEFER, 12.10.2026): hier stand
+	//	AN-1, zehnter und elfter Teil (PRUEFER-19, PRUEFER-20): hier stand
 	//	  int Difference = _MAX_PATH - (strlen(m_Suffix) + strlen(Filename) + 2);
 	//	  while (Difference--) floater--;
 	//	Im Zweig ist die Summe GROESSER als _MAX_PATH, Difference also negativ,
-	//	und while (Difference--) laeuft bis zum Ueberlauf von int - floater
-	//	wandert rueckwaerts durch den Speicher. Verdeckt war das nur, weil
-	//	GetMaps bis 7.2.0.80 immer scheiterte und SetExtension nie lief (Teil 9).
-	//	Jetzt wird der Stamm VOR der neuen Endung gekuerzt; wird eine
-	//	vorhandene Endung ersetzt, zaehlt sie nicht mit.
+	//	und die Schleife lief weit ueber den Puffer. Verdeckt war das nur,
+	//	weil GetMaps bis 7.2.0.80 immer scheiterte. Und gekuerzt wurde auf
+	//	_MAX_PATH, nicht auf den Puffer des Aufrufers - uudecode.cpp hat
+	//	m_Name[255], hexbin.cpp m_Name[40]. Deshalb jetzt nPuffer.
+	size_t nGrenze = nPuffer - 1;				// Zeichen ohne die Null
+	if (nGrenze > _MAX_PATH - 2)
+		nGrenze = _MAX_PATH - 2;				// wie bisher: Luft fuer den Pfad
 	size_t nSuffix = strlen(m_Suffix);
+	if (nSuffix + 2 > nGrenze)
+		return (FALSE);							// passt gar nicht: Name lassen
 	size_t nStamm = ExtensionPeriod ? (size_t)(ExtensionPeriod - Filename) : strlen(Filename);
-	if (nStamm + nSuffix + 2 > _MAX_PATH)
+	if (nStamm + 1 + nSuffix > nGrenze)
 	{
-		nStamm = (_MAX_PATH > nSuffix + 2) ? _MAX_PATH - nSuffix - 2 : 0;
+		nStamm = nGrenze - 1 - nSuffix;
 		Filename[nStamm] = 0;
 		ExtensionPeriod = NULL;
 	}

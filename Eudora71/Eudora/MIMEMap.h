@@ -27,7 +27,8 @@ public:
 	BOOL Find(LPCTSTR Creator, LPCTSTR Type);
 	BOOL Find(LPCTSTR Extension);
 
-	BOOL SetExtension(LPTSTR Filename);
+	//	nPuffer: Groesse des Puffers hinter Filename, samt Null (AN-1, Teil 11).
+	BOOL SetExtension(LPTSTR Filename, size_t nPuffer = _MAX_PATH + 1);
 
 	TCHAR m_Suffix[8];
 	TCHAR m_Mimetype[32];

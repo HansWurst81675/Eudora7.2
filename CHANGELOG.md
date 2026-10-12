@@ -68,7 +68,40 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.82 — AN-1 und AN-2 zusammengeführt
+## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil)
+
+**Anlass: PRUEFER-20**, die Nachrechnung von 7.2.0.81. Seit Teil 9 läuft
+`MIMEMap::SetExtension` zum ersten Mal überhaupt — und damit auch an Stellen,
+deren Puffer kleiner sind als `_MAX_PATH`, auf das es kürzte:
+
+| Aufrufer | Puffer | was passiert wäre |
+|---|---|---|
+| `Eudora/uudecode.cpp:88` | `m_Name[255]` | uuencodierter Teil mit Namen ab 251 Zeichen: bis zu 5 Byte über den Stapel |
+| `Eudora/hexbin.cpp:312`, `EuImap/src/ImHexbin.cpp:374` | `m_Name[40]` | BinHex-Name mit 35 bis 38 Zeichen: 1 bis 4 Byte in den Dekodierzustand |
+
+**Behoben:** `SetExtension(Filename, nPuffer)` kürzt auf den Puffer des
+Aufrufers; die drei Aufrufer geben `sizeof` mit, alle anderen haben
+`_MAX_PATH + 1` und nehmen die Vorgabe.
+
+**Zweitens, eine Regel, die Gregors Ziel widersprach:** QUALCOMM **ersetzte**
+eine vierstellige Endung durch die aus der Zuordnung — `.docx` wurde `.doc`,
+`.jpeg` wurde `.jpg`, und aus *Rechnung vom 12.03.2025* wurde
+*Rechnung vom 12.03.pdf*. Gelebt hat das bis 7.2.0.80 nie. Jetzt wird **nie
+ersetzt**: eine vorhandene Endung (1 bis 5 Zeichen, mindestens ein Buchstabe,
+kein Leerzeichen) bleibt, sonst wird angehängt.
+
+**Gemessen außerhalb von Eudora** (der Rumpf wörtlich aus `MIMEMap.cpp`, mit
+`cl` übersetzt): zehn Fälle, darunter alle drei Puffergrößen — kein Byte hinter
+dem Puffer beschrieben, `.docx`/`.jpeg` bleiben, *…12.03.2025* wird
+*…12.03.2025.pdf*.
+
+**Noch offen aus PRUEFER-20:** `hexbin.cpp:276` und `ImHexbin.cpp:333` schreiben
+den BinHex-Namen **ohne jede Grenze** in `m_Name[40]` — das war schon vorher
+erreichbar und ist hier nicht behoben. Beim **Versand** kommt der Content-Type
+jetzt aus der Zuordnung; weil nur drei Zeichen verglichen werden, geht `.docx`
+als `application/msword` hinaus — **nicht gemessen**.
+
+## 7.2.0.82 — AN-1 und AN-2 zusammengeführt — **gebaut und gemessen**
 
 Gregor hat am 12.10.2026 um 09:40 UTC PR #83 (**AN-2**, Zweig
 `fix_startup_page`, Quellstand 7.2.0.80) nach `main` gemergt, während auf
