@@ -722,7 +722,7 @@ mit **E-105** (versteckter Vorschautext, weil Paige `display:none` nicht kennt).
 
 ---
 
-### B7 · Betreff mitten im Wort umbrochen (**E-94**) — **Ursache gemessen, Behebung in 7.2.0.84, noch nicht gebaut**
+### B7 · Betreff mitten im Wort umbrochen (**E-94**) — **behoben in 7.2.0.84, am laufenden Programm gemessen (POP)**
 
 Gregors Fall: *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*.
 Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
@@ -733,7 +733,7 @@ Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
 | Tests `Fix2047` und `ImapFix2047` mit gefalteten kodierten Wörtern (`Eudora71/Tests/TestPopEmpfang.cpp`, `UnderTestImap2047.cpp`) | **rot** an 7.2.0.83 (`bestel` 0D 0A 20 `len`), **grün** nach der Behebung — 188/188 |
 | Prüfnachricht **06** im POP-Prüfstand (`tools/anhang-pruefdaten.pl --pop`) | an 7.2.0.83 gemessen: Faltungen in `In.mbx`, Postfachliste nur `Pruefung E-94: Toner bestel` |
 | Behebung `Fix2047`/`ImapFix2047` und beide Zerleger (`LexFill`, Faltungsregel) | im Quelltext, 7.2.0.84 |
-| Bau, Prüfnachrichten 00–06 am laufenden Programm, PRÜFER | **offen** |
+| Bau, Prüfnachrichten 00–06 am laufenden Programm, PRÜFER | **erledigt**: 06 heil, 00–05 unverändert, PRUEFER-21 „kann ausgeliefert werden" |
 
 Einzelheiten: [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.84; BEFUNDE.md, E-94.
 

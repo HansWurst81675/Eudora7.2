@@ -132,11 +132,14 @@ verschickt.
   angegebenen — eine Regression der E-106-Behebung. **Weiter offen ist
   E-113:** ein Bild, dessen angegebene Breite größer ist als das Fenster,
   läuft rechts hinaus.
-* **Die Betreffzeile wird mitten im Wort umbrochen** (**E-94**, offen): beim
-  Versenden entstehen Betreffs wie `Toner bestel len` oder `Wochenend e!` —
-  der Empfänger sieht das, nicht der Absender. Ursache noch nicht gemessen;
-  Verdacht auf `Encode2047` (`sendmail.cpp:1188`), das die kodierte Länge
-  gegen die Klartextlänge verrechnen könnte. **Kein Datenverlust.**
+* **Die Betreffzeile wird mitten im Wort umbrochen** (**E-94**, in `v1.0.83`
+  noch enthalten, **behoben in 7.2.0.84**): beim **Empfang** werden Betreffs
+  wie `Toner bestel len` oder `Wochenend e!` angezeigt, wenn der Absender
+  (etwa der web.de-Webmailer) einen langen Betreff in mehrere kodierte Wörter
+  zerlegt und dazwischen faltet. Eudora ließ die Faltung stehen, statt sie
+  nach RFC 2047 wegzulassen; über POP zeigte die Postfachliste sogar nur die
+  erste Zeile. Der frühere Verdacht auf `Encode2047` beim Senden ist widerlegt
+  — Eudora hatte diese Nachrichten gar nicht gesendet. **Kein Datenverlust.**
 * **Versteckter Vorschautext wird mitgelesen** (**E-105**, offen): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
