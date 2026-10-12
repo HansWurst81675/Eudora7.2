@@ -76,6 +76,12 @@ Abruf der sechs Prüfnachrichten in `C:\Temp\AN5`: **alle sechs mit vollem Namen
 und `.pdf`**, dieselben Namen wie unter 7.2.0.81 und 7.2.0.82, kein „kennt den
 Typ NICHT", keine `Exception.log`.
 
+**Von Gregor bestätigt, 12.10.2026.** Er hat Paket 1.0.83 selbst über IMAP
+getestet (Auswertung unten) und danach geschrieben: *„gekürzt mit endung
+reicht, mach PR für an1-endungen"*. PR #84 hat er um 10:51 UTC gemergt und
+dann angewiesen: *„erstelle ein release auf github"*. Veröffentlicht als
+**v1.0.83**.
+
 **Von Gregor über IMAP getestet, 12.10.2026, Paket 1.0.83** (sein `eudora.log`,
 drei Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
 
