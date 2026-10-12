@@ -68,7 +68,13 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil)
+## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil) — **gebaut und gemessen**
+
+**Gebaut und gemessen am 12.10.2026:** Rebuild, Rückgabewert 0,
+`bauen-Release.log.fehler` ohne eine Fehlerzeile; **Testsuite 185 von 185**;
+Abruf der sechs Prüfnachrichten in `C:\Temp\AN5`: **alle sechs mit vollem Namen
+und `.pdf`**, dieselben Namen wie unter 7.2.0.81 und 7.2.0.82, kein „kennt den
+Typ NICHT", keine `Exception.log`.
 
 **Anlass: PRUEFER-20**, die Nachrechnung von 7.2.0.81. Seit Teil 9 läuft
 `MIMEMap::SetExtension` zum ersten Mal überhaupt — und damit auch an Stellen,
