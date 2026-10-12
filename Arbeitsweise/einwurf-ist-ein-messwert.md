@@ -114,3 +114,29 @@ Zwei Dinge, die ohne Gegenprobe durchgegangen wären:
    `immernoch`. Es fand 3 statt 7 Stellen. Aufgefallen ist es nur, weil eine
    unabhängige `grep`-Zählung 7 ergeben hatte
    ([[gegenprobe-umdrehen]], [[ausreisser-ist-der-befund]]).
+
+## Nachtrag 12.10.2026: die Quote fiel auf 25 %, und die Nachfrage kam trotzdem als regulärer Zug
+
+Gemessen mit `perl tools/verlauf-messen.pl 7cea137a-….jsonl 2026-10-12T09:40`:
+
+| Zeitraum (Ortszeit) | Gregor | Einwurf |
+|---|---:|---:|
+| 12.10., 11:03–11:26 | 9 | 6 (66 %) |
+| 12.10., 11:40–12:05 | 4 | **1 (25 %)** |
+
+Der eine Einwurf (11:40:47, *„achtung: …/pull/83 reingemerged"*) war eine
+**Sachmeldung**. Gregor wartete nicht, er teilte eine Änderung der Lage mit.
+Ungeduld war das nicht. Zwischen 11:40 und 12:05 gab es 23 Zwischenmeldungen
+auf 83 Werkzeugaufrufe.
+
+Trotzdem gab es um 11:55:36 *„ich sehe noch keine 0.82 version"*. Das
+Werkzeug zählt diese Nachricht als **regulär**, weil der Zug um 11:51:26
+beendet war. Inhaltlich ist sie eine Nachfrage: Der Stand, den ich
+gemeldet hatte, beantwortete Gregors Frage nicht (siehe
+[[fertige-fassung-bereitstellen]], Nachtrag 12.10.2026).
+
+**How to apply:** Die Einwurfquote misst, *wann* Gregor schreibt, aber
+nicht, *warum*. Eine reguläre Nachricht, die einen Zustand erfragt („ich
+sehe noch kein …", „wo liegt …", „läuft … schon?"), gehört in dieselbe
+Spalte wie ein Einwurf. `verlauf-messen.pl` sollte solche Nachfragen
+gesondert zählen (Vorschlag unten im CHRONIST-Bericht).

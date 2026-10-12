@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| CHRONIST | 2026-10-12 12:05 | Verlauf seit c4988b3 auswerten, nur lesend, Bericht in den Notizordner |

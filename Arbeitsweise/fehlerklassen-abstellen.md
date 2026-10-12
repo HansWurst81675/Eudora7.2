@@ -47,3 +47,52 @@ jeden Wert nachmisst ([[doku-bei-jedem-commit-mitziehen]]).
 
 Siehe auch [[quelldateien-nur-byte-erhaltend-aendern]] und
 [[tests-vor-jedem-commit-laufen-lassen]].
+
+## Nachtrag 12.10.2026: ein bekannter Nebenbefund, der seit 34 Tagen jeden zweiten Bau abweist
+
+**Was geschah:** `tools/bauen.ps1` weist den Bau ab, solange ungesicherte
+Quelldateien im Baum liegen. Am 12.10. hat es dreimal einen Zustand
+abgewiesen bzw. vorgefunden, den **der vorige Bau selbst erzeugt hatte**:
+
+| Zeit | Was | Behandlung |
+|---|---|---|
+| 11:20:28 | `BAU ABGEWIESEN`, darunter fünf MIDL-Ausgaben | 11:20:52 von Hand `git checkout --` |
+| 11:35:37 | wieder abgewiesen, dieselben fünf | 11:35:43 von Hand `git checkout --` |
+| 11:41:25 | `git merge origin/main` startet mit denselben fünf als ` M` im Baum | 11:43:14 von Hand `git checkout --`, eingeschoben in den Merge-Commit-Befehl |
+
+Die fünf Dateien sind `Eudora71/Eudora/EudoraExe_i.c`, `EudoraExe_p.c`,
+`GoogleDesktopSearchAPI_i.c`, `GoogleDesktopSearchAPI_p.c` und `dlldata.c`.
+MIDL schreibt sie bei jedem Bau neu, **mit CRLF**. Im Repo liegen sie mit LF,
+inhaltlich gleich. Um 11:35:43 heißt es im Denken *„das halte ich als Befund
+fest"*. Der Befund **steht aber schon da**: `BEFUNDE.md`, Abschnitt
+„Nebenbefund: jeder Bau verändert fünf versionierte Dateien" (um Zeile 7465,
+vom 07./08.09.2026), mit Messung (`dlldata.c` HEAD `CR=0 LF=40`, nach dem
+Bau `CR=40 LF=40`). Die drei Lösungen sind dort aufgezählt, mit dem Satz
+*„Nicht behoben — die Entscheidung steht aus."* Der Kommentar in
+`bauen.ps1` (Zeile 219 f.) begründet die Ausnahme für `Bin/` und `Build/`
+wörtlich mit *„sonst wäre die Prüfung nach jedem Bau selbst rot"*. Genau
+das geschieht hier, nur mit fünf Dateien außerhalb von `Bin/`.
+
+### Why
+
+Ein Nebenbefund ohne Eigentümer wird nicht behoben, sondern umgangen. Das
+Umgehen kostet jedes Mal wenig, deshalb wird es nie zum Anlass. Die
+Schranke war richtig gebaut, aber ihr Ausnahmeverzeichnis war unvollständig.
+Eine Schranke, die ihren eigenen Normalfall abweist, erzieht dazu, sie per
+Hand zu übergehen. `-Ungesichert` steht im Abweisungstext gleich darunter.
+Der Schritt zu „ich setze schnell zurück, ohne hinzusehen" ist kurz.
+
+### How to apply
+
+- **Zweites Auftreten = Werkzeug.** Hier war es das dritte an einem
+  Vormittag. Die Frage, die zu Gregor geht, ist eine Entscheidung zwischen
+  drei Lösungen, keine Meldung:
+  (a) die CRLF-Fassung einmal committen, dann ist der Baum nach jedem Bau
+  sauber (vorher an `EudoraExe_p.c` messen, ob wirklich nur die Zeilenenden
+  abweichen; `--numstat` zeigte 8108 geänderte Zeilen); (b) die fünf Pfade in
+  die Ausnahmeliste von `bauen.ps1`; (c) am Ende von `bauen.ps1` automatisch
+  zurücksetzen, nur bei reinem Zeilenendenwechsel.
+- **Vor „das halte ich als Befund fest" läuft `perl tools/befund-suchen.pl
+  <datei>`** (CLAUDE.md, Punkt 2). Mit `dlldata.c` hätte es den Eintrag vom
+  September gefunden. Die Entscheidung, die dort aussteht, ist dann die
+  Aufgabe, und ein neuer Eintrag entfällt.
