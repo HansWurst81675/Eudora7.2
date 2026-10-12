@@ -71,6 +71,7 @@ DAMAGE. */
 #include "statmng.h"
 
 #include "DebugNewHelpers.h"
+#include "rfc2231.h"	// AN-1, fuenfter Teil
 
 // Internal magic number constants. These are arbitrary.
 const	unsigned long	_MAGICNUMBER1	= 98754908;	
@@ -3723,6 +3724,12 @@ BOOL CImapDownloader::BreakoutBodyToEmbeddedFile (IMAPUID uid, BODY *pParentBody
 	if (!*fName)
 		strcpy(fName, CRString(IDS_UNTITLED));
 
+	//	ANHANG-Marke 5 (IMAP, eingebettet): derselbe Punkt fuer eingebettete
+	//	Teile. Auch hier kein MIMEMap::SetExtension.
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		"ANHANG Name (IMAP): geht als eingebettet zur Datei (ohne SetExtension)",
+		fName, (long)strlen(fName));
+
 	// Create
 	JJFileMT* pEmbFile = OpenEmbeddedFile(fName);
 
@@ -4106,6 +4113,14 @@ BOOL CImapDownloader::CreateAttachFile (BODY *pBody, CString &Pathname)
 
 	if (!*tmp)
 		strcpy(tmp, CRString(IDS_UNTITLED));
+
+	//	ANHANG-Marke 5 (IMAP): der Name, der gleich zur Datei geht.
+	//	Anders als der POP-Weg (mime.cpp) ruft der IMAP-Weg hier KEIN
+	//	MIMEMap::SetExtension auf - das Sicherheitsnetz, das eine fehlende
+	//	Endung aus dem MIME-Typ nachtraegt, gibt es ueber IMAP gar nicht.
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		"ANHANG Name (IMAP): geht als Anhang zur Datei (ohne SetExtension)",
+		tmp, (long)strlen(tmp));
 
 	// Get the directory housing the MBX file so we can access it's Attach subdirectory.
 	CString szMailboxDir;
@@ -5961,6 +5976,28 @@ BOOL IsImapDownloaded (LPCSTR Filename)
 // and if found, return that. If not, search in the Content-Type 
 // parameter list.
 //
+//	Der Sucher fuer RFC2231Zusammensetzen: die PARAMETER-Liste des c-client.
+//	AN-1, fuenfter Teil. Dieselbe Fassung des Zerlegers wie auf dem
+//	POP-Weg - sie steht in QCUtils/src/rfc2231.cpp, damit AN-1 nicht noch
+//	eine Abschrift bekommt.
+static const char* RFC2231AusParametern(void* pZusatz, const char* pName)
+{
+	PARAMETER* pParam = (PARAMETER*)pZusatz;
+
+	while (pParam)
+	{
+		if (pParam->attribute && pParam->value &&
+			stricmp(pParam->attribute, pName) == 0)
+		{
+			return (pParam->value);
+		}
+
+		pParam = pParam->next;
+	}
+
+	return (NULL);
+}
+
 void GetFilenameParameter (BODY *pBody, CString& szFilename)
 {
 	CRString szMimeName (IDS_MIME_NAME);
@@ -6015,12 +6052,56 @@ void GetFilenameParameter (BODY *pBody, CString& szFilename)
 		}
 	}
 
+	//	AN-1, fuenfter Teil: RFC 2231. Der Name kann auf filename*0*,
+	//	filename*1*, ... verteilt und prozentkodiert sein - dann hiess kein
+	//	Parameter "filename", und oben blieb alles leer. Vorher landete in
+	//	diesem Fall der Betreff als Dateiname.
+	//	Dieselbe Rangfolge wie oben: erst Content-Disposition, dann
+	//	Content-Type.
+	if (szFilename.IsEmpty())
+	{
+		char	szWert[1024];
+		char	szZeichensatz[32];
+		int		nLaenge = -1;
+
+		if (pBody->disposition.parameter)
+		{
+			nLaenge = RFC2231Zusammensetzen(szMimeFilename, RFC2231AusParametern,
+						pBody->disposition.parameter, szWert, sizeof(szWert),
+						szZeichensatz, sizeof(szZeichensatz));
+		}
+
+		if (nLaenge <= 0 && pBody->parameter)
+		{
+			nLaenge = RFC2231Zusammensetzen(szMimeName, RFC2231AusParametern,
+						pBody->parameter, szWert, sizeof(szWert),
+						szZeichensatz, sizeof(szZeichensatz));
+		}
+
+		if (nLaenge > 0)
+		{
+			RFC2231ZeichensatzUmsetzen(szZeichensatz, szWert, sizeof(szWert));
+			szFilename = szWert;
+		}
+	}
+
 	// 
 	if (!szFilename.IsEmpty())
 	{
 		szFilename.TrimRight();
 		szFilename.TrimLeft();
 	}
+
+	//	ANHANG-Marke 4 (IMAP): woher der Name kommt. ACHTUNG - ueber IMAP
+	//	stammt er NICHT aus Lex822, sondern aus der BODYSTRUCTURE-Antwort
+	//	des Servers (c-client-Struktur BODY/PARAMETER). Die Faltung hat der
+	//	Server also schon aufgeloest; AN-1 Teil 1 kann hier nicht zuschlagen.
+	//	Was hier leer bleibt, ist ein fehlendes filename/name - zum Beispiel
+	//	bei RFC 2231 (AN-1 Teil 5).
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		szFilename.IsEmpty() ? "ANHANG Name (IMAP): KEIN filename/name in der BODYSTRUCTURE"
+			: "ANHANG Name (IMAP): aus der BODYSTRUCTURE",
+		(LPCTSTR)szFilename, (long)szFilename.GetLength());
 }
 
 

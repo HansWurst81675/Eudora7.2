@@ -5,8 +5,14 @@ use strict; use warnings;
 #
 #   perl tools/kopfzeile-pruefen.pl             # alle Faelle, Kurzfassung
 #   perl tools/kopfzeile-pruefen.pl --lang      # zusaetzlich jede einzelne Marke
-#   perl tools/kopfzeile-pruefen.pl --vorschlag # mit der vorgeschlagenen Behebung
+#   perl tools/kopfzeile-pruefen.pl --vorschlag # VERBRAUCHT, siehe unten
 #   perl tools/kopfzeile-pruefen.pl --behalten  # den erzeugten Quelltext liegen lassen
+#
+# --vorschlag ist VERBRAUCHT. Der Schalter setzte die Behebung B5.1 vor dem
+# Uebersetzen in den ausgelesenen Text ein, solange sie noch nicht im Baum
+# stand. Seit 7.2.0.79 steht sie drin; der Suchtext passt damit nicht mehr,
+# und der Schalter bricht mit einer Meldung ab statt still das Alte zu messen.
+# Er bleibt stehen, weil die Meldung die richtige Auskunft gibt.
 #
 # WARUM ES DIESES WERKZEUG GIBT
 #
@@ -38,7 +44,7 @@ use strict; use warnings;
 #
 # DER VORSCHLAG (--vorschlag)
 #
-# Mit --vorschlag wird die Behebung aus tools/patches/anhangnamen-faltung.md
+# Mit --vorschlag wird die Behebung aus AUFGABEN.md B5.1
 # VOR dem Uebersetzen in den ausgelesenen Text eingesetzt - der Baum selbst
 # bleibt unberuehrt. So laesst sich die Wirkung messen, bevor jemand mit
 # Visual Studio sie uebersetzt. Passt der Suchtext nicht mehr, bricht das
@@ -65,7 +71,7 @@ use strict; use warnings;
 #
 # Jeder Fall traegt zwei Angaben: was richtig waere (soll), und was der
 # Baum HEUTE liefert (stand). Rueckgabe 1, sobald ein Fall anders ausgeht als
-# unter "stand" verzeichnet - das meldet eine Behebung genauso wie einen
+# unter "stand" verzeichnet - das meldet einen Rueckfall genauso wie einen
 # neuen Schaden. Solange AN-1 offen ist, ist rc=0 der erwartete Ausgang.
 #
 # Bewusst ohne Escape-Sequenzen fuer Steuerzeichen geschrieben.
@@ -107,7 +113,7 @@ printf "uebernommen: %d Zeilen Aufzaehlungen, %d Zeilen Tabellen, %d Zeilen Lex8
 
 # ---------------------------------------------------------------------------
 # Der Vorschlag. Suchtext und Ersatztext stehen hier im Klartext, damit
-# tools/patches/anhangnamen-faltung.patch und dieses Werkzeug nicht
+# der Quelltext und dieses Werkzeug nicht
 # auseinanderlaufen koennen: passt der Suchtext nicht mehr, bricht es ab.
 # ---------------------------------------------------------------------------
 my $SUCHE = <<'ALT';
@@ -167,13 +173,24 @@ if ($vorschlag) {
     . "Entweder steht die Behebung schon im Baum (dann ist --vorschlag ueberfluessig),\n"
     . "oder CollectQText ist anders geaendert worden. Nachsehen, nicht raten.\n"
     unless $n == 1;
-  print "VORSCHLAG eingesetzt (tools/patches/anhangnamen-faltung.patch)\n";
+  print "VORSCHLAG eingesetzt (die Behebung B5.1, siehe AUFGABEN.md)\n";
 }
 
 # ---------------------------------------------------------------------------
-# Faelle. soll = der Name, den der Absender gemeint hat.
-#        stand = was dieser Baum heute daraus macht ("" heisst: kein Attribut).
+# Faelle. soll  = der Name, den der Absender gemeint hat.
+#         stand = was dieser Baum heute daraus macht ("" heisst: kein
+#                 Attribut). Am 12.10.2026 nachgezogen, nachdem B5.1 bis
+#                 B5.3 im Quelltext stehen - vorher hielt diese Spalte den
+#                 kaputten Stand fest. Der alte Wert steht je Fall dabei,
+#                 damit der Vergleichspunkt nicht verlorengeht.
 # ---------------------------------------------------------------------------
+# Die Marke ist so gross wie im Baum - sonst messen wir eine andere
+# Groesse als die ausgelieferte (B5.3). Die Zahl kommt deshalb aus
+# lex822.h und nicht von hier.
+my ($tokenmax) = $htext =~ /^#define\s+LEX822_TOKEN_MAX\s+(\d+)\s*$/m;
+die "LEX822_TOKEN_MAX nicht in lex822.h gefunden\n" unless $tokenmax;
+print "Marke: LEX822_TOKEN_MAX = $tokenmax (aus lex822.h)\n";
+
 my $LANG = 'A' x 300;
 my @faelle = (
   { name => 'ungefaltet, kurz',
@@ -189,10 +206,11 @@ my @faelle = (
           . qq{\tfilename="Angebot Nr 4711 fuer die Stadtwerke Musterstadt\r\n}
           . qq{ Abrechnungszeitraum 2025.pdf"\r\n\r\n},
     soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf',
-    stand => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt',
-    wort  => 'Befund AN-1, erster Teil: CR beendet die Zeichenkette',
-    gr    => 'FALSE',
-    rs    => 'anders' },
+    stand => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf',
+    wort  => 'Befund AN-1, erster Teil (B5.1, behoben): vor 7.2.0.79 kam hier '
+           . '"Angebot Nr 4711 fuer die Stadtwerke Musterstadt" heraus, 47 Zeichen ohne Endung',
+    gr    => 'TRUE',
+    rs    => 'gleich' },
 
   { name => 'derselbe Name, ungefaltet',
     kopf => qq{Content-Disposition: attachment;\r\n}
@@ -206,10 +224,11 @@ my @faelle = (
   { name => '300 Zeichen, ungefaltet',
     kopf => qq{Content-Disposition: attachment; filename="$LANG.pdf"\r\n\r\n},
     soll  => "$LANG.pdf",
-    stand => 'A' x 254,
-    wort  => 'Befund AN-1, zweiter Teil: Token[256] laeuft voll',
-    gr    => 'FALSE',
-    rs    => 'anders' },
+    stand => "$LANG.pdf",
+    wort  => 'Befund AN-1, zweiter Teil (B5.3, behoben): vor 7.2.0.79 kappte '
+           . 'Token[256] bei 254 Zeichen, und die Endung fiel weg',
+    gr    => 'TRUE',
+    rs    => 'gleich' },
 
   { name => 'RFC 2231, auf zwei Teile verteilt',
     kopf => qq{Content-Disposition: attachment;\r\n}
@@ -217,7 +236,9 @@ my @faelle = (
           . qq{\tfilename*1=" Musterstadt 2025.pdf"\r\n\r\n},
     soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf',
     stand => '',
-    wort  => 'Befund AN-1, dritter Teil: RFC 2231 kennt der Baum nicht',
+    wort  => 'Befund AN-1, fuenfter Teil (B5.5): behoben, aber NICHT hier zu sehen - '
+           . 'das Zusammensetzen sitzt in HeaderDesc::GetAttribute und QCUtils/src/rfc2231.cpp, '
+           . 'nicht in Lex822(). Gemessen wird es von tools/rfc2231-pruefen.pl',
     gr    => 'TRUE',
     rs    => 'gleich' },
 
@@ -251,15 +272,16 @@ my @faelle = (
           . qq{\tfilename="Angebot Nr 4711 fuer die Stadtwerke\r\n}
           . qq{\tMusterstadt 2025.pdf"\r\n\r\n},
     soll  => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf',
-    stand => 'Angebot Nr 4711 fuer die Stadtwerke',
-    gr    => 'FALSE',
-    wort  => 'derselbe Fehler, gefaltet mit Tabulator - RFC 5322 erlaubt beides',
-    rs    => 'anders' },
+    stand => 'Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf',
+    gr    => 'TRUE',
+    wort  => 'derselbe Fehler, gefaltet mit Tabulator (B5.1, behoben) - RFC 5322 '
+           . 'erlaubt beides; vor 7.2.0.79 kamen 35 Zeichen ohne Endung heraus',
+    rs    => 'gleich' },
 
   { name => 'R5 leeres Anfuehrungszeichenpaar',
     kopf => qq{Content-Disposition: attachment; filename=""\r\n\r\n},
-    soll => '', stand => '=', gr => 'TRUE',
-    wort => 'Befund AN-1, vierter Teil: die leere Marke traegt das Byte der VORIGEN Marke - filename="" wird zu =',
+    soll => '', stand => '', gr => 'TRUE',
+    wort => 'Befund AN-1, vierter Teil (B5.2, behoben): vor 7.2.0.79 trug die leere Marke das Byte der VORIGEN - filename="" wurde zum Wert =',
     rs    => 'gleich' },
 );
 
@@ -572,7 +594,7 @@ typedef int BOOL;
 #define FALSE 0
 
 // Attrappen fuer die ANHANG-Marken aus
-// tools/patches/anhangnamen-debugmarken.patch. Sie stehen hier, damit dieser
+// den ANHANG-Debug-Marken im Quelltext. Sie stehen hier, damit dieser
 // Pruefstand auch dann noch uebersetzt, wenn der Marken-Patch angewandt ist -
 // ohne sie war er nach Schritt B5.0 unbenutzbar, also genau dann, wenn er
 // gebraucht wird (Arbeitsweise/pruefstand-kann-blind-sein.md). Gemessen am
@@ -610,7 +632,7 @@ public:
 	Token822Enum WriteHeaderToken(Token822Enum t) { return t; }
 	Char822Enum LexFill();
 	State822Enum State;
-	BYTE Token[256];
+	BYTE Token[TOKENMAX];
 	void ADD(BYTE c) { Token[TokenSpot++] = c; Token[TokenSpot] = 0; }
 	int TokenSpot;
 	BYTE Buffer[2048];
@@ -660,6 +682,8 @@ my $dir = "$wurzel/tools/.kopfzeile";
 mkdir $dir unless -d $dir;
 my $cpp = "$dir/kopfzeile.cpp";
 $quelle =~ s/^SCHALTER$/$schalter/m;
+$quelle =~ s/\bTOKENMAX\b/$tokenmax/g
+  or die "TOKENMAX-Platzhalter verschwunden\n";
 
 open my $fh, '>', $cpp or die "$cpp: $!\n";
 print $fh $quelle;

@@ -19,6 +19,7 @@
 #include "resource.h"
 #include "rs.h"
 #include "address.h"
+#include "rfc2231.h"	// AN-1, fuenfter Teil
 
 #include "DebugNewHelpers.h"
 
@@ -475,6 +476,40 @@ out:
 
 int HeaderDesc::AddAttribute(const char* Value)
 {
+	//	Eine Faltung im Wert (CRLF + Leerzeichen oder Tabulator) wird nach
+	//	RFC 5322 3.2.2 zu einem einzelnen Leerzeichen; ein CR am Ende stammt
+	//	aus einer unbeendeten Zeichenkette und faellt weg. CollectQText nimmt
+	//	beides mit, damit WriteHeaderToken die Kopfzeile unveraendert in die
+	//	Mailbox schreiben kann - hier, und nur hier, wird es entfernt.
+	//	szWert ist so gross wie Lex822State::Token; laenger kann ein Wert
+	//	nicht sein, weil der Zerleger bei sizeof(Token)-3 abbricht. Die Zahl
+	//	kommt aus lex822.h, damit beide nicht auseinanderlaufen koennen.
+	char	szWert[LEX822_TOKEN_MAX];
+	if (strchr(Value, '\r'))
+	{
+		const char *	s = Value;
+		char *			d = szWert;
+		char *			e = szWert + sizeof(szWert) - 1;
+		while (*s && d < e)
+		{
+			if (s[0] == '\r' && s[1] == '\n' && (s[2] == ' ' || s[2] == '\t'))
+			{
+				s += 2;
+				while (*s == ' ' || *s == '\t')
+					++s;
+				*d++ = ' ';
+				continue;
+			}
+			if (s[0] == '\r' && s[1] == '\0')
+			{
+				++s;
+				continue;
+			}
+			*d++ = *s++;
+		}
+		*d = 0;
+		Value = szWert;
+	}
 
 	AttributeElement* AE = DEBUG_NEW_MFCOBJ_NOTHROW AttributeElement(attributeName, Value);
 	if (!AE)
@@ -493,10 +528,41 @@ int HeaderDesc::AddAttribute(const char* Value)
 		m_TLMime->AddParam(attributeName, Value);
 
 
+	//	ANHANG-Marke 3: der Wert, wie er abgelegt wird - also nach
+	//	allem, was Zerleger und AddAttribute damit gemacht haben. Wer nur
+	//	eine Zeile aus dem Log braucht, um den Dateinamen zu sehen, nimmt
+	//	die hier (Befund AN-1).
+	if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
+	{
+		char	szWo[160];
+		_snprintf(szWo, sizeof(szWo) - 1, "ANHANG Kopfzeile: %s =",
+			(LPCTSTR)AE->m_Name);
+		szWo[sizeof(szWo) - 1] = 0;
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH, szWo, (LPCTSTR)AE->m_Value,
+			(long)AE->m_Value.GetLength());
+	}
+
 	if (Attributes.AddTail(AE))
 		return (TRUE);
 	else
 		return (FALSE);
+}
+
+//	Der Sucher fuer RFC2231Zusammensetzen: Eudoras Attributliste.
+//	AN-1, fuenfter Teil.
+static const char* RFC2231AusListe(void* pZusatz, const char* pName)
+{
+	CObList* pListe = (CObList*)pZusatz;
+
+	POSITION pos = pListe->GetHeadPosition();
+	while (pos)
+	{
+		AttributeElement* AE = (AttributeElement*)pListe->GetNext(pos);
+		if (AE->m_Name.CompareNoCase(pName) == 0)
+			return ((LPCTSTR)AE->m_Value);
+	}
+
+	return (NULL);
 }
 
 AttributeElement* HeaderDesc::GetAttribute(const char* Name)
@@ -515,6 +581,49 @@ AttributeElement* HeaderDesc::GetAttribute(const char* Name)
 			return (AE);
 	}
 
-	return (NULL);
+	//	AN-1, fuenfter Teil: unter dem schlichten Namen steht nichts - dann
+	//	darf der Wert noch nach RFC 2231 zerlegt und kodiert dastehen
+	//	(filename*0*=UTF-8''...). Erst hier nachsehen und nicht beim
+	//	Einlesen: beim Einlesen steht noch nicht fest, ob alle Stuecke da
+	//	sind.
+	char	szWert[LEX822_TOKEN_MAX];
+	char	szZeichensatz[32];
+
+	if (RFC2231Zusammensetzen(Name, RFC2231AusListe, &Attributes,
+							  szWert, sizeof(szWert),
+							  szZeichensatz, sizeof(szZeichensatz)) <= 0)
+	{
+		return (NULL);
+	}
+
+	RFC2231ZeichensatzUmsetzen(szZeichensatz, szWert, sizeof(szWert));
+
+	//	ANHANG-Marke 10: hier war vorher gar kein Wert. Steht diese Zeile im
+	//	Log, dann hat die Nachricht den Namen nach RFC 2231 geschickt - und
+	//	vor der Behebung von AN-1 Teil 5 waere stattdessen der Betreff als
+	//	Dateiname gelandet.
+	if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
+	{
+		char	szWo[160];
+		_snprintf(szWo, sizeof(szWo) - 1,
+			"ANHANG Kopfzeile: %s nach RFC 2231 zusammengesetzt (%s) =",
+			Name, *szZeichensatz? szZeichensatz : "ohne Zeichensatz");
+		szWo[sizeof(szWo) - 1] = 0;
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH, szWo, szWert, (long)strlen(szWert));
+	}
+
+	//	Unter dem schlichten Namen ablegen. Dann findet der naechste Aufruf
+	//	es sofort, und MIMEMap::Find sieht denselben Wert wie mime.cpp.
+	AttributeElement* Neu = DEBUG_NEW_MFCOBJ_NOTHROW AttributeElement(Name, szWert);
+	if (!Neu)
+		return (NULL);
+
+	if (!Attributes.AddTail(Neu))
+	{
+		delete Neu;
+		return (NULL);
+	}
+
+	return (Neu);
 }
 

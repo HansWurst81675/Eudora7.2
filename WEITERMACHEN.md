@@ -1,13 +1,13 @@
 # Hier weitermachen
 
-**Stand 11.10.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 12.10.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
 | | |
 |---|---|
-| **Quellstand** | 7.2.0.73 (`Eudora71/Version.h`) — **Messfassung, kein Release**; veröffentlicht ist weiterhin `v1.0.72` |
-| **Paketnummer** | 1.0.76 (`VERSION`) — **E-112 behoben**: `pict_frame` bekommt die angegebene Größe, das Bild wird hineingestreckt statt die Zeile zu sprengen. 185 Tests, 185 bestanden; die Gegenprobe mit der alten Regel lässt drei davon umfallen |
+| **Quellstand** | 7.2.0.79 (`Eudora71/Version.h`) — **nicht übersetzt**; veröffentlicht ist weiterhin `v1.0.72` |
+| **Paketnummer** | 1.0.79 (`VERSION`) — **AN-1: sechs von sieben Ursachen behoben**, abgeschnittene Anhangnamen und fehlende Endungen. **Kein Bau, keine Bestätigung am laufenden Programm.** Gemessen ohne MSVC: `tools/kopfzeile-pruefen.pl` (10 Fälle) und `tools/rfc2231-pruefen.pl` (20 Fälle). **Das Nächste: `-Ziel Rebuild` bauen**, `LogLevel=91295` in `[Debug]`, die sechs Prüfnachrichten über `tools/anhang-pruefdaten.pl --pop` abrufen und nachsehen, wie die Dateien heißen. Durchlauf in [AUFGABEN.md](AUFGABEN.md), B5 |
 | **VON GREGOR ZU PRÜFEN, 17.09.2026 — E-108** | **Der Absturz beim Antworten, zweiter Anlauf.** **E-107 war die falsche Erklärung** — Gregors Protokoll zu 1.0.71 zeigt den E-106-Block fünfmal laufen und den Abbruch an derselben Stelle wie an 1.0.69. Der Fehler steckt **im Block**: er fasste den **Textstil** an, an einer Position aus einer Suche über `embed->style` — einen **Zeiger**, den sich zwei Bilder gleicher Maßangabe teilen (PRUEFER **P-41**). **Behoben in 7.2.0.72:** Maße ins Embed, `pgInvalEmbedRef` rechnen lassen, kein Stilzugriff mehr; das E-103-Sicherungsnetz ersatzlos entfernt. **Zu prüfen:** dieselbe Nachricht öffnen und antworten, `LogLevel=58527` drin lassen. Kracht es wieder, endet `eudora.log` erneut an einer `E-106`-Zeile — **die letzte Zeile entscheidet** |
 | **WIDERLEGT, 17.09.2026 — E-107** | **Absturz beim Antworten auf eine geöffnete Nachricht.** `EXCEPTION_ACCESS_VIOLATION in Paige32.dll at UnuseMemory()+0006`, `ESI=FFFFFFFF`, von Gregor um 21:23 an 1.0.69 gemeldet. **Der Fehler war meiner** — mit **E-106** wenige Stunden zuvor eingebaut: der Block lief auch beim *Vorbereiten*, wo der Embed **flüchtig** ist (QUALCOMMs eigener Kommentar warnt davor). Behoben in **7.2.0.72**: beide Blöcke laufen nur noch bei `bAllowThreadedFetch`. **Nicht nachgestellt** — der Prüfstand lädt zwar Bilder, aber keines, das größer ist als angegeben (L-15.9); auch die Gegenprobe mit 1.0.69 blieb negativ. Am Quelltext ablesbar bleibt: auf dem gefährlichen Weg läuft der neue Code gar nicht mehr. **Zu prüfen:** eine Nachricht mit Bildern öffnen und **antworten** — Eudora darf nicht abstürzen |
 | **BESTÄTIGT, 17.09.2026 — E-106** | **Bilder, die größer sind als im HTML angegeben, liegen über dem Text.** Gebaut in **7.2.0.68**, **Von Gregor am 17.09.2026 an 1.0.69 bestätigt** — sein Bildschirmfoto zeigt die Überlappung weg, der Text steht wieder unter dem *kleinanzeigen*-Logo. **Bei mir war es nicht nachweisbar:** mein Prüfstand lädt zwar Bilder, aber keines, das größer ist als angegeben — null ist allein der Zähler `E-106 groesser`, nicht das Laden (L-15.9) — der Nachweis kam allein von ihm. **Nichts mehr zu prüfen.** **Was aber nachkam:** genau dieser Block hat den Absturz beim Antworten eingeschleppt (E-107 falsch erklärt, als **E-108** in 7.2.0.72 behoben). **Berichtigt am 18.09.2026 (LEKTOR, L-15.6):** die Überschrift dieser Zelle sagte bereits **BESTÄTIGT**, der Text darunter *„bei mir nicht nachweisbar … Zu prüfen: …"* — zwei Satzhälften aus zwei Fassungen in einer Zelle |
@@ -103,7 +103,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-> **Stand 11.10.2026.** Hier ansetzen, in dieser Reihenfolge.
+> **Stand 12.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
 > **1. Den Anhang-Bug prüfen — das ist Gregors eigenes Vorhaben.** Er will
 > `git apply` fahren, der Anleitung folgen, bauen und messen, dass der Fehler
@@ -236,7 +236,7 @@ Wofür jeder steht und was als Nächstes zu messen ist, steht in
 
 ## Offene Arbeiten ohne Befundnummer
 
-Stand 11.10.2026. Das sind keine Fehler des Programms, sondern Arbeiten am
+Stand 12.10.2026. Das sind keine Fehler des Programms, sondern Arbeiten am
 Werkzeug und am Nachweis — bis hierher standen sie nur im Gesprächsverlauf,
 und Gregor hat am 18.09.2026 ausdrücklich verlangt, sie nachzuziehen:
 *„ziehe auch die offenen arbeiten ohne befunde nach."* Ein Gesprächsverlauf

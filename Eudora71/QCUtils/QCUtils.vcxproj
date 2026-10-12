@@ -171,6 +171,7 @@
     <ClCompile Include="src\DebugNewHelpers.cpp" />
     <ClCompile Include="src\gssapi.cpp" />
     <ClCompile Include="src\jjfile.cpp" />
+    <ClCompile Include="src\rfc2231.cpp" />
     <ClCompile Include="src\qcsecfail.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -200,6 +201,7 @@
     <ClInclude Include="inc\StdAfx.h" />
     <ClInclude Include="public\inc\AutoSerializedRegionIface.h" />
     <ClInclude Include="public\inc\debug.h" />
+    <ClInclude Include="public\inc\rfc2231.h" />
     <ClInclude Include="public\inc\gssapi.h" />
     <ClInclude Include="public\inc\gssapi_generic.h" />
     <ClInclude Include="public\inc\gssapi_krb5.h" />

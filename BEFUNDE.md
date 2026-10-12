@@ -174,7 +174,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **sechs** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **teilweise** — **zwei** Patches liegen bereit und **nicht angewandt**: `anhangnamen-debugmarken.patch` (neun Marken, davon POP 1–8 und IMAP 1–3 am laufenden Programm gemessen am 12.10.2026) und `anhangnamen-faltung.patch` (Behebung von Teil 1); Teile 2 bis 7 offen. Prüfdaten samt POP3-Server in `tools/pruefdaten/`, Messung mit `tools/kopfzeile-pruefen.pl` |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **sieben** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **im Quelltext geändert, Stand 7.2.0.79 — nicht übersetzt und von Gregor nicht geprüft.** Sechs der sieben Teile sind geändert (B5.1 bis B5.6), **B5.7 ist offen**; dazu zehn Debug-Marken. Gemessen ohne MSVC, zwei Testläufe mit Zahlen: `tools/kopfzeile-pruefen.pl` **10 Fälle, 0 Abweichungen** und `tools/rfc2231-pruefen.pl` **20 Fälle, 0 Abweichungen**. Das Urteil **behoben** steht noch aus — es braucht einen Bau und einen Abruf der Prüfdaten aus `tools/pruefdaten/`. Durchlauf in AUFGABEN.md, B5 |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -7865,16 +7865,16 @@ schon im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP**,
 aber **nicht auf demselben Weg**: siehe die Berichtigung vom 12.10.2026 im
 Abschnitt „IMAP hat dieselbe Stelle noch einmal".
 
-> **Stand 30.09.2026, zweiter Durchgang.** Für die **eigentliche** Ursache (die
-> Faltung) liegt ein ausgearbeiteter und gemessener Patch bereit:
-> `tools/patches/anhangnamen-faltung.patch`. **Er ist nicht angewandt** — diese
-> Sitzung lief auf Android, ohne Windows und ohne Compiler. Was gemessen ist
-> und was nicht, steht im Abschnitt „Was zu ändern wäre" weiter unten und in
-> `tools/patches/anhangnamen-faltung.md`.
+> **Stand 12.10.2026.** Die Teile 1 bis 6 sind **im Quelltext**, Fassung
+> **7.2.0.79**. Bis dahin lagen sie als zwei Patchdateien neben dem Code; die
+> sind damit Geschichte und entfernt. **Übersetzt ist nichts** — alle drei
+> Sitzungen dazu liefen ohne Windows und ohne Compiler. Was gemessen ist und
+> was nicht, steht im Abschnitt „Was geändert wurde" weiter unten und in
+> AUFGABEN.md, B5.
 
 ### Gemessen am laufenden Programm, 12.10.2026
 
-Gregor hat den Marken-Patch (`anhangnamen-debugmarken.patch`) übersetzt —
+Gregor hat die Debug-Marken übersetzt —
 **7.2.0.77, Release, Rebuild, 0 Fehler** — und Mail abgerufen. Sein
 `eudora.log` ist die erste Messung dieses Befunds außerhalb des Prüfstands.
 
@@ -8259,16 +8259,15 @@ unabhängig von der Portierung (der Altbestand hat denselben Code), tritt aber
 genau bei den Namen auf, um die es hier geht. Die Behebung ist `char pcname[256]`
 oder `int len = 254`. **Nicht angefasst**, weil hier nicht gebaut werden kann.
 
-### Was zu ändern wäre — Teil 1 liegt fertig bereit
+### Was geändert wurde — Teil 1, die Faltung
 
-**Nachtrag 30.09.2026, zweiter Durchgang.** Der erste Teil ist nicht mehr nur
-beschrieben, sondern **ausgearbeitet und gemessen**:
+**Nachtrag 12.10.2026.** Eingespielt. Davor, am 30.09.2026, war dieser Teil
+ausgearbeitet und gemessen, lag aber nur als Patchdatei daneben:
 
 | | |
 |---|---|
-| Patch | `tools/patches/anhangnamen-faltung.patch` — 212 Zeilen, vier Dateien, POP **und** IMAP |
-| Beschreibung | `tools/patches/anhangnamen-faltung.md` |
-| Stand | **nicht angewandt.** `git apply --check` läuft sauber gegen den unveränderten Baum |
+| Wo | `lex822.cpp`, `header.cpp` (POP) und `ImapLex822.cpp`, `ImapHeader.cpp` (IMAP) |
+| Stand | **im Quelltext seit 7.2.0.79.** Nicht übersetzt |
 | gemessen mit | `perl tools/kopfzeile-pruefen.pl --vorschlag` (zehn Fälle) |
 
 Der Patch besteht aus drei Stücken, und die Aufteilung ist nicht willkürlich —
@@ -8337,8 +8336,8 @@ und was nicht hinhaut."*
 
 Eudora hat die Logdatei schon — `QCLogFileMT`, gesteuert über eine **Bitmaske**
 in `eudora.ini`, geschrieben nach `eudora.log`. Es fehlte nur ein Bit für diesen
-Weg. `tools/patches/anhangnamen-debugmarken.patch` legt es an
-(`DEBUG_MASK_ATTACH = 0x10000`, `debug.h`) und setzt **acht Marken**:
+Weg. Dieses Bit heißt `DEBUG_MASK_ATTACH = 0x10000` (`debug.h`), und daran hängen
+**zehn Marken**:
 
 | # | Wo | Was sie sagt |
 |---|---|---|
@@ -8366,11 +8365,13 @@ im Log. Die Funktion ist als einzige wirklich gebaut und ausgeführt worden
 ANHANG Lex822: Umbruch IN der Zeichenkette [Angebot ... Musterstadt<CR><LF> Abrechnungszeitraum 2025.pdf] (76)
 ```
 
-**Die beiden Patches stören sich nicht.** Die Marke im Zerleger sitzt bewusst
-**vor** dem `switch` statt im `case CR822:`, den `anhangnamen-faltung.patch`
-umschreibt. Nachgewiesen mit `git apply --check`: beide greifen einzeln auf den
-unveränderten Baum, und die Behebung greift auch noch, wenn die Marken schon
-drin sind.
+**Die Marke im Zerleger sitzt bewusst vor dem `switch`** und nicht im
+`case CR822:`, den die Behebung umschreibt. Solange beides noch als zwei
+getrennte Patchdateien danebenlag, war das die Bedingung dafür, dass sie sich
+nicht stören — nachgewiesen mit `git apply --check`, einzeln und nacheinander.
+Seit 7.2.0.79 steht beides im Quelltext; die Trennung bleibt, weil sie die
+Marke dort hält, wo sie auch nach einer weiteren Änderung am `case` noch
+feuert.
 
 **Reihenfolge:** erst die Marken, dann einmal die Prüfdaten abrufen und den Log
 ansehen — damit ist die Diagnose am **laufenden Programm** belegt, was sie
@@ -8400,7 +8401,7 @@ löscht nie etwas — man kann beliebig oft abrufen.
 | | |
 |---|---|
 | **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
-| **alle sechs heil** | `anhangnamen-faltung.patch` und B5.2 bis B5.5 sind durch |
+| **alle sechs heil** | B5.1 bis B5.6 wirken am laufenden Programm |
 | **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
 
 Der POP3-Server ist in perl geschrieben und läuft ohne Compiler. Was er **nicht**

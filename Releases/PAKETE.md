@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 11.10.2026; die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 12.10.2026; die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -154,6 +154,29 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** |
+| SHA256 | **nicht belegt** — es gibt keine Datei |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.79 (`Eudora71/Version.h`), am 12.10.2026 auf `main` |
+
+Die Nummer ist am 12.10.2026 **vergeben**, damit sie nicht zweimal vergeben
+wird — nicht, weil ein Paket existiert. **77** und **78** sind übersprungen,
+weil Gregor sie am selben Tag auf seinem Rechner lokal gebaut hat; zwei
+verschiedene `Eudora.exe` dürfen nicht dieselbe Nummer tragen (**V-1**). Was in
+den beiden steckte, steht in [CHANGELOG.md](../CHANGELOG.md).
+
+**Inhalt des Quellstands:** sechs der sieben Ursachen von **AN-1** sind geändert
+— abgeschnittene Anhangnamen und fehlende Endungen —, dazu zehn Debug-Marken auf
+dem Weg des Namens. **Übersetzt ist nichts**, und von Gregor ist nichts geprüft.
+Gemessen ohne MSVC: `tools/kopfzeile-pruefen.pl` (10 Fälle, 0 Abweichungen) und
+`tools/rfc2231-pruefen.pl` (20 Fälle, 0 Abweichungen). Offen bleibt **B5.7**.
+
+Durchlauf zum Bauen und Prüfen: [AUFGABEN.md](../AUFGABEN.md), **B5**.
 
 ## 1.0.76 — gebaut am 18.09.2026, **E-112 behoben**
 

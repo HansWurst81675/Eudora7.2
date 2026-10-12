@@ -147,6 +147,48 @@ void PutDebugLog(DebugMaskType ID, LPCTSTR Buffer, int Length /* = -1*/)
 #endif
 
 
+//	Schreibt eine Zeile in den Log und macht Steuerzeichen sichtbar.
+//	Siehe debug.h. Absichtlich mit festem Puffer und ohne CString: diese
+//	Funktion laeuft mitten im Empfangsweg und darf nichts anfassen, was
+//	dort schiefgehen koennte.
+void PutDebugLogSichtbar(DebugMaskType ID, LPCTSTR pWo, LPCTSTR pWas,
+						 long lZahl /* = -1 */)
+{
+	char			szZeile[1024];
+	char *			d = szZeile;
+	char *			e = szZeile + sizeof(szZeile) - 8;
+	const char *	s;
+
+	if ((QCLogFileMT::DebugMask & ID) == 0 || !QCLogFileMT::s_pLogFile)
+		return;
+
+	for (s = pWo ? pWo : ""; *s && d < e; ++s)
+		*d++ = *s;
+
+	if (pWas)
+	{
+		if (d < e) *d++ = ' ';
+		if (d < e) *d++ = '[';
+		for (s = pWas; *s && d < e; ++s)
+		{
+			unsigned char c = (unsigned char)*s;
+			if      (c == 13) { d += sprintf(d, "<CR>");  }
+			else if (c == 10) { d += sprintf(d, "<LF>");  }
+			else if (c ==  9) { d += sprintf(d, "<TAB>"); }
+			else if (c <  32) { d += sprintf(d, "<%02X>", c); }
+			else              { *d++ = (char)c; }
+		}
+		if (d < e) *d++ = ']';
+	}
+
+	if (lZahl != -1 && d < e)
+		d += sprintf(d, " (%ld)", lZahl);
+
+	*d = 0;
+	QCLogFileMT::WriteDebugLog(ID, szZeile);
+}
+
+
 BOOL QCLogFileMT::DebugMaskSet(DebugMaskType Mask)
 { 
 	return ((DebugMask & Mask) != 0); 
