@@ -95,6 +95,27 @@ static void PruefeKopfzeile(const char* szWas, const char* szEingabe, const char
 	}
 }
 
+// Dasselbe gegen die IMAP-Abschrift ImapFix2047 (EuImap/src/ImapLex822.cpp).
+static void PruefeKopfzeileImap(const char* szWas, const char* szEingabe, const char* szErwartet)
+{
+	char	szPuffer[2048];
+	int		iLen = (int)strlen(szEingabe);
+
+	memset(szPuffer, 0, sizeof(szPuffer));
+	memcpy(szPuffer, szEingabe, (size_t)iLen);
+
+	UT_ImapFix2047(szPuffer, &iLen);
+
+	PruefeBytes(szWas, szPuffer, (int)strlen(szPuffer),
+				szErwartet, (int)strlen(szErwartet));
+
+	if (iLen != (int)strlen(szPuffer))
+	{
+		TT_Fail("%s: ImapFix2047 meldet len=%d, strlen sagt %d",
+				szWas, iLen, (int)strlen(szPuffer));
+	}
+}
+
 // Liest eine Datei vollstaendig ein. Der Aufrufer gibt den Puffer frei.
 static char* DateiLesen(const char* szPfad, long* plSize)
 {
@@ -293,6 +314,60 @@ static void Test_ZweiKodierteWoerter(void)
 	PruefeKopfzeile("zwei kodierte Woerter",
 					"=?utf-8?Q?Gr=C3=BC=C3=9Fe?= =?utf-8?Q?_und_Dank?=",
 					"Gr\xFC\xDF" "e und Dank");
+
+	TT_EndTest();
+}
+
+// E-94: Ein Absender (hier: web.de-Webmail) zerlegt einen langen Betreff in
+// mehrere kodierte Woerter und FALTET dazwischen - CRLF plus Leerzeichen. Das
+// darf er, und ein kodiertes Wort darf an jeder Zeichengrenze enden, also auch
+// mitten in einem Wort. RFC 2047, 6.2: Leerraum zwischen zwei benachbarten
+// kodierten Woertern faellt weg - das gilt auch, wenn er eine Faltung ist.
+// Bleibt er stehen, wird aus "bestel" + "len" das "bestel len" aus Gregors
+// Toner-Nachricht.
+//
+// Die Eingabe ist die ganze Kopfzeile mit Faltung, so wie ImapFix2047 sie
+// ueber IMAP bekommt (ImapDownload.cpp:2276). Fix2047 im POP-Weg bekommt sie
+// zeilenweise (LexFill); dort pruefen diese Faelle die Funktion selbst, nicht
+// den Weg dorthin - den Weg prueft Pruefnachricht 06 im POP-Pruefstand.
+static const char* const kGefaltetZwei   = "=?utf-8?Q?Toner_bestel?=\r\n =?utf-8?Q?len?=";
+static const char* const kGefaltetTab    = "=?utf-8?Q?Nur_b?=\r\n\t=?utf-8?Q?is_zum_Wochenende!?=";
+static const char* const kGefaltetDrei   = "=?utf-8?Q?Wochenend?=\r\n =?utf-8?Q?e?=\r\n =?utf-8?Q?!?=";
+// Gegenprobe: eine Faltung zwischen einem kodierten Wort und KLARTEXT ist
+// echter Leerraum und bleibt - RFC 2047 nimmt nur Leerraum zwischen ZWEI
+// kodierten Woertern heraus.
+static const char* const kGefaltetKlar   = "=?utf-8?Q?Toner?=\r\n bestellen";
+
+static void Test_GefalteteKodierteWoerter(void)
+{
+	TT_BeginTest("POP: kodierte Woerter ueber eine Faltung hinweg (E-94)");
+
+	PruefeKopfzeile("Faltung zwischen zwei kodierten Woertern", kGefaltetZwei, "Toner bestellen");
+	PruefeKopfzeile("Faltung mit Tabulator", kGefaltetTab, "Nur bis zum Wochenende!");
+	PruefeKopfzeile("zwei Faltungen hintereinander", kGefaltetDrei, "Wochenende!");
+
+	TT_EndTest();
+}
+
+static void Test_GefalteteKodierteWoerterImap(void)
+{
+	TT_BeginTest("IMAP: kodierte Woerter ueber eine Faltung hinweg (E-94)");
+
+	PruefeKopfzeileImap("Faltung zwischen zwei kodierten Woertern", kGefaltetZwei, "Toner bestellen");
+	PruefeKopfzeileImap("Faltung mit Tabulator", kGefaltetTab, "Nur bis zum Wochenende!");
+	PruefeKopfzeileImap("zwei Faltungen hintereinander", kGefaltetDrei, "Wochenende!");
+
+	TT_EndTest();
+}
+
+static void Test_FaltungVorKlartextBleibt(void)
+{
+	TT_BeginTest("POP und IMAP: Faltung vor Klartext bleibt Leerraum (Gegenprobe zu E-94)");
+
+	// Was genau stehen bleibt, ist heute die Faltung selbst; entscheidend ist,
+	// dass zwischen "Toner" und "bestellen" weiter Leerraum steht.
+	PruefeKopfzeile("POP: Faltung vor Klartext", kGefaltetKlar, "Toner\r\n bestellen");
+	PruefeKopfzeileImap("IMAP: Faltung vor Klartext", kGefaltetKlar, "Toner\r\n bestellen");
 
 	TT_EndTest();
 }
@@ -551,6 +626,9 @@ void RunPopEmpfangTests(const char* szEudoraDir)
 	Test_BetreffLatin1();
 	Test_BetreffMitKlartextDrumherum();
 	Test_ZweiKodierteWoerter();
+	Test_GefalteteKodierteWoerter();
+	Test_GefalteteKodierteWoerterImap();
+	Test_FaltungVorKlartextBleibt();
 	Test_AbsendernameWirdWieDerBetreffBehandelt();
 	Test_KaputteKodierteWoerter();
 	Test_NachrichtentextUtf8();

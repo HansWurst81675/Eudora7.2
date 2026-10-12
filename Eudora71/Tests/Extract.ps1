@@ -149,6 +149,23 @@ $hLine = Find-Line $l '^BOOL\s+Fix2047\s*\(' $hStart
 $hEnd = Find-Line $l '^\}\s*$' $hLine
 Write-Region $l $hStart $hEnd (Join-Path $OutDir "lex822_2047.inc") $lexPath
 
+# ------------------------------------------------- EuImap/src/ImapLex822.cpp
+# Region H2: dieselbe Kette in der IMAP-Abschrift (Befund E-94). ImapFix2047
+# bekommt ueber IMAP die GANZE Kopfzeile mit allen Faltungen
+# (ImapDownload.cpp:2276), POP dagegen zeilenweise - deshalb wird die
+# IMAP-Fassung eigens geprueft und nicht stellvertretend durch Fix2047.
+# Translate2047, PseudoQP und DecodeB64String sind dort static und heissen wie
+# im POP-Weg; darum eine eigene Uebersetzungseinheit (UnderTestImap2047.cpp).
+# Gesucht wird die DEFINITION (Zeile ohne Semikolon), nicht die Vorab-
+# Deklaration am Dateianfang.
+$imapLexPath = Join-Path (Split-Path -Parent $SrcDir) "EuImap\src\ImapLex822.cpp"
+$il = Read-Lines $imapLexPath
+$h2Start = Find-Line $il '^static BOOL Translate2047\s*\([^;]*$' 0
+$h2Line  = Find-Line $il '^static int DecodeB64String\s*\([^;]*$' $h2Start
+$h2End   = Find-Line $il '^\}\s*$' $h2Line
+$null    = Find-Line $il '^BOOL ImapFix2047\s*\(' $h2Start   # muss im Bereich liegen
+Write-Region $il $h2Start $h2End (Join-Path $OutDir "imaplex822_2047.inc") $imapLexPath
+
 
 # ---------------------------------------------------------------- msgutils.cpp
 # Region I: E88NurText und E88OriginalEinsetzen am Stueck (Befund E-88).

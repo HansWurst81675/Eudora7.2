@@ -27,6 +27,12 @@ int UT_Translate2047(char* pText, const char* szCharset, char chEncoding);
 // piLen ist Ein- und Ausgabe. Liefert 1, wenn mindestens ein Wort ersetzt wurde.
 int UT_Fix2047(char* pChars, int* piLen);
 
+// --- aus EuImap/src/ImapLex822.cpp (UnderTestImap2047.cpp) ---------------
+
+// Die IMAP-Abschrift von Fix2047. Ueber IMAP bekommt sie die GANZE Kopfzeile
+// samt Faltungen (ImapDownload.cpp:2276) - Befund E-94.
+int UT_ImapFix2047(char* pChars, int* piLen);
+
 // Die beiden Dekodierer, die Translate2047 benutzt.
 void UT_PseudoQP(char* pText);		// Q-Kodierung, an Ort und Stelle
 int  UT_DecodeB64String(char* pText);	// B-Kodierung, an Ort und Stelle; 0 = fehlerfrei

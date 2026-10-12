@@ -71,6 +71,7 @@
     <ClCompile Include="Spec.cpp" />
     <ClCompile Include="UnderTest.cpp" />
     <ClCompile Include="UnderTest2047.cpp" />
+    <ClCompile Include="UnderTestImap2047.cpp" />
     <ClCompile Include="TestXlateTable.cpp" />
     <ClCompile Include="TestIsoTranslate.cpp" />
     <ClCompile Include="TestHexBinTable.cpp" />
