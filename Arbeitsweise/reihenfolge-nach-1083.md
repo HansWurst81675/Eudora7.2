@@ -20,3 +20,8 @@ Gregor am 12.10.2026, nach meinem Vorschlag: *„danach die reihenfolge aus dein
 **How to apply:** Nach jedem Punkt erst fertig (gemergt, gelöscht), dann den nächsten Zweignamen vorschlagen ([[zweigname-heisst-vorheriger-fertig]]). Diese Datei nachziehen, sobald ein Punkt erledigt ist.
 
 Schranke: keine - eine Reihenfolge ist eine Absprache, kein Zustand des Codes; sie steht zusätzlich in WEITERMACHEN.md, sobald der LEKTOR-Zweig zusammengeführt ist
+
+## Nachtrag E-94, 12.10.2026 nachmittags (gemessen an Gregors 1.0.75-INBOX.mbx, mit seiner Erlaubnis nur gelesen)
+
+Die Nachricht hat **web.de-Webmail** erzeugt (Received `trinity-msg-rest-webde … via HTTP`, Gregor hat dort von web.de an gmx weitergeleitet), **nicht** Eudora. In der `.mbx` steht der Betreff schon **dekodiert**, mit 8-Bit-Bytes und Faltungen mitten im Wort: `… bestellen & 1<CR><LF> 5 % sparen … Nur b<CR><LF> is zum Wochenende!`. Das passt zur Ursache „Faltung zwischen zwei kodierten Wörtern bleibt stehen“ (`ImapLex822.cpp:719`), denn Eudora dekodiert vor dem Ablegen (`ImapDownload.cpp:2276`). **Noch nicht gemessen:** die Rohform vom Server — Gregor soll sie im GMX-Webmailer per „Quelltext anzeigen“ holen. Erwartet: mehrere `=?UTF-8?…?=` mit Grenzen bei `& 1|5` und `Nur b|is`.
+Ich hatte die Ursache zuerst vorschnell für widerlegt erklärt, weil keine kodierten Wörter in der `.mbx` standen — dabei legt Eudora sie gar nicht ab.
