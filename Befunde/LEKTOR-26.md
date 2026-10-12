@@ -109,6 +109,32 @@ Nachrichten hintereinander:
 2. Rückstrichstücke mit mehr als einer Kennung bleiben unangetastet:
    `` `grep "E-78\|E-70" eudora.log` `` ist ein Befehl zum Kopieren, kein Verweis.
 
+### <a id="l-18.11"></a>L-18.11 — drei weitere Schranken wurden vom Verlinken blind, und zwei meldeten trotzdem grün
+
+Nachgemessen gegen einen Arbeitsbaum auf `97f50c8`, Werkzeug für Werkzeug:
+
+| Schranke | vorher | nach dem Verlinken |
+|---|---|---|
+| `spuren-auswerten.pl` | frei | **weist ab** — meldet vier vorhandene Zeilen in `Befunde/SPURMARKEN.md` als fehlend |
+| `pruefe-behoben-ausgeliefert.pl` | 17 Urteile geprüft, 8 bestätigt | **0 Urteile, 0 bestätigt — und Rückgabewert 0** |
+| `pruefe-befund-verbreitung.pl` | Umfang [`E-94`](../BEFUNDE.md#e-94) | Umfang `(keine)` — und Rückgabewert 0 |
+
+Alle drei lesen die **erste Zelle** der Urteilstabelle und kamen mit dem Anker
+davor nicht zurecht. Die lautere der drei weist wenigstens ab; die beiden
+anderen prüfen nichts und sagen *grün* — genau der Zustand, den [E-109](../BEFUNDE.md#e-109) Punkt (4)
+beschreibt: *„ein Freispruch über eine leere Menge"*.
+
+Alle drei überspringen den Anker jetzt. Belegt: jede der neunzehn `pruefe-*`-
+Schranken liefert gegen den Arbeitsbaum auf `97f50c8` dieselbe Ausgabe wie
+vorher, bis auf drei erklärbare Unterschiede (ein Pfadname, der abgelöste HEAD
+des Vergleichsbaums, und `pruefe-stand-md.pl`, das diesen Bericht mitzählt).
+
+**Damit sind es an einem Tag zwölf Werkzeuge, die dieselbe Zeile falsch gelesen
+haben** — sieben beim ersten Lauf, drei hier, dazu `pruefe-anzeigetext.pl` und
+`pruefe-behoben-belegt.pl` über den Zuwachs. Die Lehre steht schon in [E-109](../BEFUNDE.md#e-109):
+wer den Umfang aus derselben Annahme nimmt wie das Werkzeug, das er prüfen
+soll, prüft nichts.
+
 ## Was offen bleibt
 
 * **CHRONIST ist fällig** (`rollen-faellig.pl`), seit seinem Bericht `1be7554`

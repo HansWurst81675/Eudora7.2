@@ -2,6 +2,12 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer und
+# meldet trotzdem gruen (LEKTOR, L-18.11).
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # pruefe-behoben-ausgeliefert.pl - steckt das, was als behoben gilt, wirklich
 # in dem Paket, das Gregor bekommt?
 #
@@ -134,7 +140,7 @@ sub urteile {
     my @u;
     return @u unless defined $befunde;
     for my $z (split /\n/, $befunde) {
-        next unless $z =~ /^\s*\|\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
+        next unless $z =~ /^\s*\|\s*$ANKER\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
         my $kennung = $1;
         next unless $z =~ /behoben\s+in\s+\**\s*7\.2\.0\.(\d+)\b/i;
         my $fassung = $1;

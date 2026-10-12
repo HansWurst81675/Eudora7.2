@@ -2,6 +2,12 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer und
+# meldet trotzdem gruen (LEKTOR, L-18.11).
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # pruefe-befund-verbreitung.pl - steht jeder Befund der neuesten Fassung
 # ueberall, wo er hingehoert?
 #
@@ -196,7 +202,7 @@ sub behoben_in_fassung {
     return () unless defined $befunde && defined $fassung;
     my %gesehen;
     for my $zeile (split /\n/, $befunde) {
-        next unless $zeile =~ /^\s*\|\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
+        next unless $zeile =~ /^\s*\|\s*$ANKER\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
         my $kennung = $1;
         next if $kennung =~ /^[PMLS]-\d+$/;
         # "behoben in 7.2.0.72", auch "Behoben in", auch mit Fettdruck davor.

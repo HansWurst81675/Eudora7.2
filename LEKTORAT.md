@@ -1192,3 +1192,11 @@ dazu gebaut hatte. Sie lief grün, während [E-85](BEFUNDE.md#e-85), [E-98](BEFU
 unverlinkt dastanden — weil sie nur prüfte, was das Werkzeug selbst für
 verlinkbar hielt. Eine Schranke, die ihren Umfang aus derselben Annahme nimmt
 wie das Werkzeug, das sie prüfen soll, prüft nichts ([E-109](BEFUNDE.md#e-109)).
+
+**Und der Nachschlag, [L-18.11](Befunde/LEKTOR-26.md#l-18.11):** das Verlinken hat an einem Tag **zwölf**
+Werkzeuge blind gemacht, die alle dieselbe Zeile lesen — die erste Zelle der
+Urteilstabelle. `pruefe-behoben-ausgeliefert.pl` ging von 17 geprüften Urteilen
+auf **0** und meldete weiter grün; `pruefe-befund-verbreitung.pl` ebenso.
+Nachgemessen Werkzeug für Werkzeug gegen einen Arbeitsbaum auf `97f50c8`:
+jede der neunzehn `pruefe-*`-Schranken liefert wieder dieselbe Ausgabe wie vor
+dem Verlinken.
