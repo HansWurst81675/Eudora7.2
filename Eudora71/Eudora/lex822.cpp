@@ -682,19 +682,31 @@ BOOL Fix2047(char* chars, int& len)
 			// move new chars into place
 			strcpy(equal, text);
 			// check for stuff we should or should not remove
-			if (lastEqual[1] == '\r' && lastEqual[2] == '\n') ;//lastEqual += 2; // toast a trailing return
-			else
-			{	// if the next thing is an encoded word, toast intervening
-				for (nextEqual = lastEqual + 1; nextEqual < end; nextEqual++)
+			//
+			//	E-94 (12.10.2026): if the next thing is an encoded word, toast
+			//	the intervening white space - and that includes a FOLD (CRLF
+			//	followed by space or tab). RFC 2047, 6.2: white space between
+			//	two adjacent encoded words is ignored. Here stood
+			//	  if (lastEqual[1] == '\r' && lastEqual[2] == '\n') ;//lastEqual += 2;
+			//	so a fold between two encoded words stayed - and a sender may
+			//	end an encoded word anywhere, even inside a word: web.de splits
+			//	"bestellen" into "bestel" | "len", and the subject showed
+			//	"bestel len". A CRLF NOT followed by white space ends the
+			//	header and is left alone, as before.
+			for (nextEqual = lastEqual + 1; nextEqual < end; )
+			{
+				if (end - nextEqual >= 2 && nextEqual[0] == '=' && nextEqual[1] == '?')
 				{
-					if (nextEqual[0] == '=' && nextEqual[1] == '?')
-					{
-						lastEqual = nextEqual - 1;
-						break;
-					}
-					else if (*nextEqual != ' ' && *nextEqual != '\t')
-						break;
+					lastEqual = nextEqual - 1;
+					break;
 				}
+				if (*nextEqual == ' ' || *nextEqual == '\t')
+					nextEqual++;
+				else if (end - nextEqual >= 3 && nextEqual[0] == '\r' && nextEqual[1] == '\n' &&
+						 (nextEqual[2] == ' ' || nextEqual[2] == '\t'))
+					nextEqual += 3;
+				else
+					break;
 			}
 			// move chars from after encoded text to after decoded text
 			// lastEqual points to the original buffer, which is not necessarily
