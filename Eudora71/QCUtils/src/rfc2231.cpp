@@ -237,3 +237,35 @@ void RFC2231ZeichensatzUmsetzen(const char* pZeichensatz, char* pName, int nName
 	strncpy(pName, szEng, (size_t)nName - 1);
 	pName[nName - 1] = 0;
 }
+
+void AnhangNameKuerzen(char* pZiel, int nMax, const char* pQuelle)
+{
+	if (!pZiel || nMax < 0)
+		return;
+	if (!pQuelle)
+	{
+		*pZiel = 0;
+		return;
+	}
+
+	int nLaenge = (int)strlen(pQuelle);
+	if (nLaenge <= nMax)
+	{
+		memmove(pZiel, pQuelle, (size_t)nLaenge + 1);
+		return;
+	}
+
+	const char* pPunkt = strrchr(pQuelle, '.');
+	int nEndung = pPunkt ? (int)strlen(pPunkt) : 0;
+	if (nEndung < 2 || nEndung > 16 || nEndung >= nMax)
+		nEndung = 0;
+
+	//	Erst der Stamm, dann die Endung dahinter. Bei pZiel == pQuelle
+	//	liegt die Endung immer HINTER der Stelle, an die sie kommt -
+	//	memmove deckt beides.
+	int nStamm = nMax - nEndung;
+	memmove(pZiel, pQuelle, (size_t)nStamm);
+	if (nEndung)
+		memmove(pZiel + nStamm, pPunkt, (size_t)nEndung);
+	pZiel[nMax] = 0;
+}

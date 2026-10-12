@@ -73,6 +73,7 @@ eine Datei liest, liest diese.
 | [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) | Keine Handlungsanweisung an Gregor geben, ohne sie vorher selbst durchgeführt und gemessen zu haben |
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
+| [fertige-fassung-bereitstellen](fertige-fassung-bereitstellen.md) | Ist eine neue Fassung fertig, erst eigene Tests, dann als Verzeichnis neben Gregors letztem Release-Verzeichnis bereitstellen |
 | [funktion-bringt-ihre-vorbedingung-mit](funktion-bringt-ihre-vorbedingung-mit.md) | Wer eine bewaehrte Funktion in einen neuen Weg einbaut, uebernimmt ihre Vorbedingungen und Nebenwirkungen - ISOTranslate nullt ein Byte hinter dem Bereich |
 | [gegenprobe-umdrehen](gegenprobe-umdrehen.md) | Nicht pruefen, ob der gewuenschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt; Gregors Technik vom 07.09.2026 |
 | [gemeinsame-dateien-gegen-alles-messen](gemeinsame-dateien-gegen-alles-messen.md) | Änderungen an gemeinsam benutzten Dateien gegen die ganze Solution messen, nicht nur gegen das eigene Projekt |

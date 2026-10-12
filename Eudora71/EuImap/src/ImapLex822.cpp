@@ -238,17 +238,19 @@ Token822Enum ImapLex822State::Lex822()
 			charClass = SPACE822;   // treat it like a space
 
 		//	ANHANG-Marke 2 (IMAP): DIE Stelle aus Befund AN-1. Ein Umbruch
-		//	mitten in einer Zeichenkette in Anfuehrungszeichen beendet sie -
-		//	auch dann, wenn er nur eine Faltung ist. Alles dahinter geht
-		//	verloren, bei einem Dateinamen also die Endung.
-		//	Bewusst HIER und nicht im case CR822 darunter: so bleibt diese
-		//	Marke unabhaengig von tools/patches/anhangnamen-faltung.patch,
-		//	der genau jenen case umschreibt.
-		if (charClass == CR822 && m_State == CollectQText && m_InStructure &&
+		//	mitten in einer Zeichenkette in Anfuehrungszeichen beendet sie;
+		//	alles dahinter geht verloren, bei einem Dateinamen also die Endung.
+		//	Seit B5.1 nimmt CollectQText das CR einer Faltung mit, und die
+		//	Faltungsregel direkt darueber hat ein gefaltetes LF schon zu
+		//	SPACE822 gemacht. Ein LF822, das HIER noch ankommt, ist also
+		//	wirklich ein Abbruch. Bis 7.2.0.79 fragte die Marke nach dem CR
+		//	und meldete damit auch jede Faltung, die heil durchkam
+		//	(Messung vom 12.10.2026, Faelle 01 und 02).
+		if (charClass == LF822 && m_State == CollectQText && m_InStructure &&
 			QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
 		{
 			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
-				"ANHANG ImapLex822: Umbruch IN der Zeichenkette - Rest geht verloren",
+				"ANHANG ImapLex822: Umbruch IN der Zeichenkette (keine Faltung) - Rest geht verloren",
 				(char*)m_Token, m_TokenSpot);
 		}
 		

@@ -174,7 +174,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **sieben** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **im Quelltext geändert, Stand 7.2.0.79 — nicht übersetzt und von Gregor nicht geprüft.** Sechs der sieben Teile sind geändert (B5.1 bis B5.6), **B5.7 ist offen**; dazu zehn Debug-Marken. Gemessen ohne MSVC, zwei Testläufe mit Zahlen: `tools/kopfzeile-pruefen.pl` **10 Fälle, 0 Abweichungen** und `tools/rfc2231-pruefen.pl` **20 Fälle, 0 Abweichungen**. Das Urteil **behoben** steht noch aus — es braucht einen Bau und einen Abruf der Prüfdaten aus `tools/pruefdaten/`. Durchlauf in AUFGABEN.md, B5 |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **zehn** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **POP-Weg am laufenden Programm heil an 7.2.0.81** (12.10.2026, `C:\Temp\AN3`): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, abgelesen im Anhangverzeichnis und in `eudora.log`. Teile 1 bis 6 und 8 bis 10 sind behoben, **B5.7 ist offen**, und der **IMAP-Weg ist nicht gemessen**. Elf Debug-Marken (`LogLevel=91295`). **Von Gregor noch nicht geprüft.** Durchlauf in AUFGABEN.md, B5 |
 | AN-2 | Beim Start zeigt ein Fenster in Eudora den **Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache am Quelltext belegt, Behebung eingespielt, nicht übersetzt.** Paige kennt kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung. Jetzt beides über `inside_script` unterdrückt. Gemessen mit `tools/html-tags-pruefen.pl`: **30 Fälle, 0 Abweichungen**, Gegenprobe gefahren. **Offen bleibt die eigentliche Frage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
@@ -7866,6 +7866,35 @@ schon im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP**,
 aber **nicht auf demselben Weg**: siehe die Berichtigung vom 12.10.2026 im
 Abschnitt „IMAP hat dieselbe Stelle noch einmal".
 
+> **Am laufenden Programm gemessen, 12.10.2026 — POP-Weg heil an 7.2.0.81.**
+> Prüfnachrichten aus `tools/anhang-pruefdaten.pl --pop`, je ein Abruf über
+> `tools/testlauf.ps1`, `LogLevel=91295`, abgelesen im Anhangverzeichnis und in
+> `eudora.log`:
+>
+> | Fassung | heil | was fehlte |
+> |---|---|---|
+> | 7.2.0.79 (`C:\Temp\AN1`) | 00, 01, 02, 04 | 03: 224 × `A` **ohne** `.pdf`; 05: Betreff **ohne** Endung |
+> | 7.2.0.80-an1 (`C:\Temp\AN2`) | 00 bis 04 | 05: Betreff ohne Endung |
+> | **7.2.0.81** (`C:\Temp\AN3`) | **alle sechs**, voller Name **und** `.pdf` | — |
+>
+> Dabei kamen drei weitere Teile heraus, alle im POP-Weg und alle Originalfehler:
+>
+> * **Teil 8** — drei Kappungen von hinten: `strncpy(fName, …, _MAX_PATH - 1)`
+>   in `mime.cpp` (ohne abschließende Null) und `DeMacifyName32` auf 255, in
+>   beiden Abschriften. Behoben mit `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`),
+>   das die Endung behält.
+> * **Teil 9** — `MIMEMap::GetMaps` gab `FALSE` zurück, sobald ein Typ unter
+>   `HKCR\Mime\Database\Content Type` keinen Schrägstrich hat (gemessen:
+>   `pkcs10` als 96. Typ; 342 = 123 + 124 + 95 Einträge). Damit verwarf es die
+>   **ganze** Tabelle samt `[Mappings]`, und `SetExtension` trug **bei keinem
+>   Anhang** je eine Endung nach. Behoben: der Schlüssel wird übersprungen.
+> * **Teil 10** (PRUEFER-19) — `SetExtension` kürzte mit negativem
+>   `Difference`; `while (Difference--)` lief rückwärts durch den Speicher. Erst
+>   durch Teil 9 erreichbar. Behoben.
+>
+> **Noch offen:** der IMAP-Weg ist mit diesen Prüfdaten **nicht** gemessen
+> (B5.6, B5.7). Ab hier unten folgt der ältere Stand.
+
 > **Stand 12.10.2026.** Die Teile 1 bis 6 sind **im Quelltext**, Fassung
 > **7.2.0.79**. Bis dahin lagen sie als zwei Patchdateien neben dem Code; die
 > sind damit Geschichte und entfernt. **Übersetzt ist nichts** — alle drei
@@ -8338,7 +8367,8 @@ und was nicht hinhaut."*
 Eudora hat die Logdatei schon — `QCLogFileMT`, gesteuert über eine **Bitmaske**
 in `eudora.ini`, geschrieben nach `eudora.log`. Es fehlte nur ein Bit für diesen
 Weg. Dieses Bit heißt `DEBUG_MASK_ATTACH = 0x10000` (`debug.h`), und daran hängen
-**zehn Marken**:
+**zehn Marken** — seit 7.2.0.80-an1 **elf**: Marke 11 sitzt in `MIMEMap::Find`
+und nennt, warum keine Endung nachgetragen wird (dort fand sich Teil 9):
 
 | # | Wo | Was sie sagt |
 |---|---|---|

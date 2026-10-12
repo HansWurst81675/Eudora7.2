@@ -51,6 +51,7 @@ DAMAGE. */
 #include "LineReader.h"
 #include "MIMEmap.h"
 #include "mime.h"
+#include "rfc2231.h"	// AN-1, achter Teil: AnhangNameKuerzen
 
 
 #include "DebugNewHelpers.h"
@@ -963,23 +964,25 @@ void DeMacifyName32(char* Name)
 	//	und das *d = 0 danach schreibt pcname[255] - ein Byte hinter den
 	//	Puffer. 255 ist richtig (so lang darf ein Dateiname unter Windows
 	//	sein), der Puffer braucht nur ein Byte mehr fuer die Null.
-	char pcname[256];
-	int len = 255;
+	//	AN-1, achter Teil: die Schleife nahm nur die ersten 255 Zeichen auf
+	//	und schnitt damit bei jedem laengeren Namen die Endung ab. Jetzt wird
+	//	an Ort und Stelle bereinigt - das Ergebnis ist nie laenger als Name -
+	//	und erst danach mit AnhangNameKuerzen auf 255 gebracht, das die
+	//	Endung behaelt.
 	char *s, *d;
 	
 	if (s = strpbrk(Name, "\r\n"))
 		*s = 0;
 
-	for (d = pcname, s = Name; *s  && len; s++)
+	for (d = Name, s = Name; *s; s++)
 	{
 		if (/*(*s & 0x80) ||*/ ((unsigned char)*s < 32) || strchr((LPCSTR)Illegal, *s))
 			continue;
 		*d++ = *s;
-		len--;
 	}
 	*d = 0;
 
-	strcpy(Name, pcname);
+	AnhangNameKuerzen(Name, 255, Name);
 }
 
 
@@ -1685,20 +1688,26 @@ BoundaryType GenericReader::ReadIt(CObArray& MimeStates, char* buf, LONG bSize)
 	{
 		// figure out the suggested filename
 		*fName = 0;
+		//	AN-1, achter Teil: ein LEERES filename="" verdeckte bisher ein
+		//	vorhandenes name=; und strncpy kappte einen Namen ueber 259
+		//	Zeichen von hinten - samt Endung - und liess ihn obendrein ohne
+		//	abschliessende Null stehen. AnhangNameKuerzen behaelt die Endung.
 		AttributeElement *AE = hd->GetAttribute(CRString(IDS_MIME_CONTENT_DISP_FILENAME));
-		if (!AE)
+		if (!AE || !*AE->m_Value)
 			AE = hd->GetAttribute(CRString(IDS_MIME_NAME));
+		if (AE && !*AE->m_Value)
+			AE = NULL;
 		if (AE)
-			strncpy(fName, AE->m_Value, _MAX_PATH - 1);
+			AnhangNameKuerzen(fName, _MAX_PATH - 1, AE->m_Value);
 		if (!*fName)
-			strncpy(fName, ((MIMEState*)MimeStates[0])->m_hd->subj, _MAX_PATH - 1);
+			AnhangNameKuerzen(fName, _MAX_PATH - 1, ((MIMEState*)MimeStates[0])->m_hd->subj);
 		if (!*fName)
-			strncpy(fName, CRString(IDS_UNTITLED), _MAX_PATH - 1);
+			AnhangNameKuerzen(fName, _MAX_PATH - 1, CRString(IDS_UNTITLED));
 	
 		//	ANHANG-Marke 4: woher der Name kommt. Steht hier "aus dem
 		//	Betreff", dann hatte die Nachricht gar kein filename - typisch
-		//	fuer RFC 2231 (Befund AN-1, dritter Teil). Der Betreff ist
-		//	nur subj[32], also 31 Zeichen.
+		//	fuer RFC 2231 (Befund AN-1, dritter Teil) oder filename="".
+		//	Der Betreff ist nur subj[32], also 31 Zeichen.
 		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
 			AE ? "ANHANG Name: aus filename/name"
 				: "ANHANG Name: KEIN filename - aus dem Betreff oder Untitled",

@@ -70,8 +70,26 @@ BOOL MIMEMap::Find(MIMEState* ms)
 	HeaderDesc* hd = ms->m_hd;
 	LPTSTR dot;
 
-	if (!ms || !ms->m_hd->isMIME || !GetMaps())
+	//	ANHANG-Marke 11: WARUM Find scheitert. Am 12.10.2026 meldete Marke 5
+	//	(mime.cpp) bei allen sechs Pruefnachrichten "MIMEMap kennt den Typ
+	//	NICHT" - auch fuer application/pdf, das in [Mappings] steht. Drei
+	//	Ausstiege sind moeglich; jeder nennt sich jetzt selbst.
+	if (!ms || !ms->m_hd)
 		return (FALSE);
+	if (!ms->m_hd->isMIME)
+	{
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG MIMEMap::Find: Teil ist nicht als MIME markiert (isMIME)",
+			ms->m_hd->contentType, -1);
+		return (FALSE);
+	}
+	if (!GetMaps())
+	{
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG MIMEMap::Find: GetMaps scheitert - [Mappings] nicht gelesen, INIPath",
+			INIPath, (long)m_Maps.GetSize());
+		return (FALSE);
+	}
 
 	strcpy(m_Mimetype, hd->contentType);
 	strcpy(m_Subtype, hd->contentSubType);
@@ -123,7 +141,17 @@ BOOL MIMEMap::Find(MIMEState* ms)
 	}
 
 	if (!bestMIME && !bestMac)
+	{
+		if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
+		{
+			CString sTyp;
+			sTyp.Format("%s/%s", m_Mimetype, m_Subtype);
+			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+				"ANHANG MIMEMap::Find: kein Eintrag passt zu Typ/Untertyp, Eintraege",
+				sTyp, (long)m_Maps.GetSize());
+		}
 		return (FALSE);
+	}
 
 	best = bestMac;
 	if (!bestMac ||
@@ -335,8 +363,25 @@ BOOL MIMEMap::GetMaps()
 					strncpy(map->m_Suffix, floater, sizeof(m_Suffix) - 1);
 
 					floater = strchr(NameOfKey, '/');
-					if (!floater) 
-						return (FALSE);
+					if (!floater)
+					{
+						//	AN-1, neunter Teil: hier stand return (FALSE). Windows 10
+						//	fuehrt unter Mime\Database\Content Type auch Schluessel
+						//	OHNE Schraegstrich - gemessen am 12.10.2026: "pkcs10",
+						//	"pkcs7-mime", "x-pkcs12" und neun weitere. Am ersten davon
+						//	verwarf GetMaps die GANZE Tabelle, samt aller [Mappings]
+						//	aus der Eudora.ini. Weil jeder Anhang ein neues MIMEMap
+						//	anlegt, scheiterte Find damit bei JEDEM Anhang, und
+						//	SetExtension trug nie eine Endung nach (ANHANG-Marke 11:
+						//	"GetMaps scheitert", 342 Eintraege = 123 + 124 + 95).
+						//	Einen solchen Schluessel ueberspringen, wie die Schleife
+						//	es fuer einen ohne Extension-Wert auch tut.
+						delete map;
+						bufLength = (sizeof(m_Mimetype) + sizeof(m_Subtype) + 1);
+						sizeofExtension = 32;
+						RegCloseKey(Extension);
+						continue;
+					}
 
 					*floater = 0;
 					floater++;
@@ -385,39 +430,61 @@ BOOL MIMEMap::GetMaps()
 	return (TRUE);
 }
 
-BOOL MIMEMap::SetExtension(LPTSTR Filename)
+BOOL MIMEMap::SetExtension(LPTSTR Filename, size_t nPuffer /*= _MAX_PATH + 1*/)
 {
-	if (!*m_Suffix)
+	if (!*m_Suffix || !Filename || nPuffer < 2)
 		return (FALSE);
 
+	//	AN-1, elfter Teil (Gregors Ziel vom 12.10.2026: "anhaenge werden
+	//	korrekt gespeichert - mit erweiterung, komplette dateiname").
+	//	QUALCOMMs Regel war: 1 bis 3 Zeichen hinter dem letzten Punkt
+	//	bleiben, 0 oder 4 werden ERSETZT, ab 5 wird angehaengt. Das machte
+	//	aus .docx ein .doc, aus .jpeg ein .jpg - und aus "Rechnung vom
+	//	12.03.2025" ein "Rechnung vom 12.03.pdf". Gelebt hat die Regel bis
+	//	7.2.0.80 nie, weil GetMaps immer scheiterte (Teil 9).
+	//	Jetzt wird NIE ersetzt: eine vorhandene Endung (1 bis 5 Zeichen,
+	//	mindestens ein Buchstabe, kein Leerzeichen) bleibt; sonst wird die
+	//	Endung aus dem MIME-Typ angehaengt. Ein Punkt am Ende ("Name.")
+	//	bekommt nur noch das Suffix dahinter.
 	LPTSTR ExtensionPeriod = strrchr(Filename, '.');
-
-	// Here's what we do when we find various numbers of
-	// characters after the last period in the filename:
-	//   1, 2, or 3:    leave existing extension
-	//   0 or 4:        replace existing extension with new extension
-	//   5 or greater:  append new extension
 	if (ExtensionPeriod)
 	{
-		int ExtensionLength = strlen(ExtensionPeriod + 1);
-		if (1 <= ExtensionLength && ExtensionLength <= 3)
+		LPCTSTR p = ExtensionPeriod + 1;
+		size_t ExtensionLength = strlen(p);
+		BOOL bBuchstabe = FALSE, bLeer = FALSE;
+		for (; *p; p++)
+		{
+			if (isalpha((unsigned char)*p))
+				bBuchstabe = TRUE;
+			if (*p == ' ')
+				bLeer = TRUE;
+		}
+		if (1 <= ExtensionLength && ExtensionLength <= 5 && bBuchstabe && !bLeer)
 			return (FALSE);
-		if (ExtensionLength >= 5)
+		if (ExtensionLength != 0)
 			ExtensionPeriod = NULL;
 	}
 
-	// If the name with the extension tacked on is too long we're in trouble
-	if ((strlen(m_Suffix) + strlen(Filename) + 2) > _MAX_PATH)
+	//	AN-1, zehnter und elfter Teil (PRUEFER-19, PRUEFER-20): hier stand
+	//	  int Difference = _MAX_PATH - (strlen(m_Suffix) + strlen(Filename) + 2);
+	//	  while (Difference--) floater--;
+	//	Im Zweig ist die Summe GROESSER als _MAX_PATH, Difference also negativ,
+	//	und die Schleife lief weit ueber den Puffer. Verdeckt war das nur,
+	//	weil GetMaps bis 7.2.0.80 immer scheiterte. Und gekuerzt wurde auf
+	//	_MAX_PATH, nicht auf den Puffer des Aufrufers - uudecode.cpp hat
+	//	m_Name[255], hexbin.cpp m_Name[40]. Deshalb jetzt nPuffer.
+	size_t nGrenze = nPuffer - 1;				// Zeichen ohne die Null
+	if (nGrenze > _MAX_PATH - 2)
+		nGrenze = _MAX_PATH - 2;				// wie bisher: Luft fuer den Pfad
+	size_t nSuffix = strlen(m_Suffix);
+	if (nSuffix + 2 > nGrenze)
+		return (FALSE);							// passt gar nicht: Name lassen
+	size_t nStamm = ExtensionPeriod ? (size_t)(ExtensionPeriod - Filename) : strlen(Filename);
+	if (nStamm + 1 + nSuffix > nGrenze)
 	{
-		int Difference = _MAX_PATH - (strlen(m_Suffix) + strlen(Filename) +2);
-		LPTSTR floater = Filename;
-		while (*floater != 0)
-			floater++;
-		while (Difference--)
-		{
-			floater--;
-		}
-		*floater = 0;
+		nStamm = nGrenze - 1 - nSuffix;
+		Filename[nStamm] = 0;
+		ExtensionPeriod = NULL;
 	}
 
 	if (ExtensionPeriod)

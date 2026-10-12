@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.80** / `VERSION` **1.0.80** (veröffentlicht ist `v1.0.72`)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.83** / `VERSION` **1.0.83** (veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -447,7 +447,19 @@ perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 
 Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **geändert in 7.2.0.79, nicht übersetzt**
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **über POP heil seit 7.2.0.81** (7.2.0.79: 4 von 6, 7.2.0.80-an1: 5 von 6, 7.2.0.81 und 7.2.0.82: alle sechs)
+
+> **Am laufenden Programm gemessen, 12.10.2026** (7.2.0.79, Rebuild 0 Fehler,
+> `C:\Temp\AN1`, Prüfnachrichten über `--pop`): **00, 01, 02, 04 heil** —
+> B5.1, B5.2 und B5.5 wirken. **03** kam als 224 × `A` **ohne `.pdf`**: die
+> Kopfzeile hatte alle 304 Zeichen, dann kappten `strncpy` (259) und
+> `DeMacifyName32` (255) **von hinten** — das ist **B5.8**, behoben in 7.2.0.80
+> mit `AnhangNameKuerzen`. **05** (`filename=""`) bekam den Betreff **ohne
+> Endung**, weil `MIMEMap::Find` bei **allen sechs** scheiterte, sogar für
+> `application/pdf` — **B5.9, gemessen an 7.2.0.80:** `GetMaps` verwarf die
+> ganze Tabelle am Registry-Typ `pkcs10` (ohne `/`); behoben in 7.2.0.81, dazu
+> **B5.10**, der Vorzeichenfehler in `SetExtension` (vom PRUEFER gefunden).
+> Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.80.
 
 Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben — und am
 12.10.2026 **in den Quelltext eingespielt**. Die beiden Patchdateien, die hier
@@ -480,7 +492,7 @@ Bild, alle sind Originalfehler aus Eudora 7.1.
 
 | Schritt | Was | Stand |
 |---|---|---|
-| **B5.0** | **Debug-Marken**, zehn Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` | **im Quelltext.** POP-Marken 1–8 und IMAP 1–3 sind am laufenden Programm gemessen (12.10.2026, 7.2.0.77, 285 `ANHANG`-Zeilen); IMAP 4–9 und Marke 10 sind **nicht übersetzt** |
+| **B5.0** | **Debug-Marken**, elf Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` | **im Quelltext.** POP-Marken 1–8 und IMAP 1–3 sind am laufenden Programm gemessen (12.10.2026, 7.2.0.77, 285 `ANHANG`-Zeilen); POP-Marken 10 und 11 am 12.10.2026 an 7.2.0.80-an1 und 7.2.0.81 gemessen; IMAP 4–9 übersetzt, aber **nicht gemessen** (kein IMAP-Abruf) |
 | **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendete die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | **behoben**, POP und IMAP. Gemessen mit `tools/kopfzeile-pruefen.pl --vorschlag` |
 | **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wurde `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** trug | **behoben**, POP und IMAP |
 | **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappte ab 254 Zeichen; ein Dateiname nach `_MAX_PATH` (260) passte nicht hinein | **behoben**: `LEX822_TOKEN_MAX` = 1024 in `lex822.h`, benutzt von beiden Zerlegern **und** von `szWert` in beiden `AddAttribute` — die Zahl steht nur noch an einer Stelle |
@@ -563,7 +575,7 @@ wird nach `eudora.log` im Eudora-Verzeichnis. Auslesen:
 grep ANHANG eudora.log
 ```
 
-Zehn Marken auf dem Weg des Namens: wo der Zerleger abbricht, was `AddAttribute`
+Elf Marken auf dem Weg des Namens: wo der Zerleger abbricht, was `AddAttribute`
 ablegt, ob ein Name erst nach RFC 2231 zusammengesetzt werden musste, woher er
 kommt (`filename` / `name` / **Betreff**), ob `MIMEMap` die Endung nachträgt,
 was `DeMacifyName32` daraus macht, und **wie die Datei am Ende wirklich heißt**.

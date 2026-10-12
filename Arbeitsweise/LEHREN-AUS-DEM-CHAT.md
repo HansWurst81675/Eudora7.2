@@ -182,3 +182,24 @@ Zuordnung zu Themen ist mein Urteil, die Zahlen sind maschinell gezaehlt.
 Fundstellenzahlen, nicht selbst eine Lehre. Jede der sieben Fehlerklassen hat
 eine eigene Lehre-Datei mit eigener Schranke; dass keine davon ohne Schranke
 bleibt, prueft `tools/lehren-schranken.pl` vor jedem Commit.
+
+## Lauf vom 12.10.2026 (CHRONIST)
+
+Ausgewertet: der Rest von `75d9adec-…jsonl` nach `4e89347` (18.09.2026,
+16 Nachrichten, **10 Einwürfe = 62 %**) und `7cea137a-…jsonl` (12.10.2026,
+9 Nachrichten, **6 Einwürfe = 66 %**). Am 13.09. waren es 54 %. Für 30.09.,
+11.10. und 12.10. früh gibt es kein Transkript, nur Commits.
+
+| Muster | Beleg | Lehre (Nachtrag) |
+|---|---|---|
+| Rollen erst nach Gregors Frage, obwohl der Haken sie 61 s vorher meldete | 12.10., 11:21:56 / 11:22:57 | [daueraufgaben-brauchen-einen-takt](daueraufgaben-brauchen-einen-takt.md) |
+| „behoben" im Titel, nie am Programm gelaufen, gemergt, am selben Tag widerlegt — **zweimal** | E-112 (`324db1c` → `d3dfbf0`), AN-1 (`acb9e06` → `ca8da5a`) | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) |
+| Messlauf ohne Messgröße; Prüfmodell für den ganzen Weg ausgegeben | `testlauf.ps1` ohne `-MessenSkript`; `kopfzeile-pruefen.pl` | [messung-muss-den-weg-treffen](messung-muss-den-weg-treffen.md), Fall 6 und 7 |
+| eigene Debug-Marke meldete nach der Behebung weiter den alten Fehler | Marke 2, `eudora.log` 12.10. | [anzeige-ist-kein-zustand](anzeige-ist-kein-zustand.md) |
+| Abschalten: angekündigt 13:55, fertig 14:15, dazwischen *„gertig?"* und *„jetzt?"*; um 14:00 *„diesmal wirklich"* gesichert, danach noch zwei Runden | 18.09. | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) — kein Nachtrag, die Lehre deckt es |
+| CHRONIST-Nachträge vom pre-commit gelöscht, weil der Auftrag das Gedächtnis verbot | 12.10., dieser Lauf | Bericht `CHRONIST-2026-10-12.md` |
+
+**Was gut lief:** Am 12.10. wurde vor dem Bau gesichert (`git diff --binary`,
+451 655 Byte, rückwärts geprüft), `offene-befunde.pl` lief zuerst, der
+Testlauf ging nur über `testlauf.ps1` mit Gregors wörtlicher Freigabe, und
+der Widerspruch der Marke 2 wurde in derselben Ausgabe erkannt.

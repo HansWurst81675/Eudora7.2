@@ -189,3 +189,55 @@ einen von vier Faellen deckt ([[verwerfen-nur-mit-zaehler]]).
 - **Die billigste Messung des Versandwegs ist der Empfaenger.** Gregor hat sie
   in einem Satz geliefert, nachdem ich sie zwei Antworten lang nicht gefahren
   hatte ([[erst-pruefen-dann-anweisen]]).
+
+## Fall 6, 12.10.2026: der Lauf war erfolgreich und hat nichts gemessen
+
+Erster Messlauf an 7.2.0.79 (Transkript `7cea137a-…jsonl`, 11:10:47):
+
+    testlauf.ps1 -Verzeichnis C:\Temp\AN1 -Freigabe "…" -Sekunden 60
+
+Beschrieben als *„Eudora im Testverzeichnis 60 Sekunden laufen lassen"*.
+`-Sekunden` ist aber die **Frist, in der das Hauptfenster erscheinen muss**
+(`testlauf.ps1:215`), nicht die Laufzeit. Ohne `-MessenSkript` schickt das
+Skript `WM_CLOSE`, sobald das Fenster steht. Ausgabe: *„Zeit vom WM_CLOSE bis
+zum Ende: 1 s — Beendet: True"*. Sechs Sekunden nach dem Aufruf war alles
+vorbei, `In.mbx` leer, der POP-Server ohne Zugriff. Der zweite Lauf
+(11:11:52) mit einem `-MessenSkript`, das `ID_FILE_CHECKMAIL` schickt, rief
+ab.
+
+Gekostet hat es nur eine Minute, weil die Messgröße (`In.mbx`) sofort gelesen
+wurde. Aber die Ausgabe des ersten Laufs sah aus wie Erfolg — und der Kopf
+von `testlauf.ps1` sagt selbst *„Der Lauf hat eine Hoechstdauer"*, was die
+falsche Lesart nahelegt.
+
+## Fall 7, 18.09. und 12.10.2026: das Modell hat bestanden, das Programm nicht
+
+Zweimal derselbe Griff wie in Fall 5, diesmal mit einem **Prüfmodell** statt
+einer Teilmessung:
+
+- **AN-1, B5.3:** `kopfzeile-pruefen.pl` meldete *„304 Zeichen mit .pdf statt
+  254 ohne"*. Am Programm kam derselbe Fall als 224 × `A` **ohne** `.pdf` an.
+  Das Modell bildet den Zerleger (`Lex822`) nach; gekappt wurde **dahinter** —
+  `strncpy` auf 259 in `mime.cpp` und `DeMacifyName32` auf 255
+  (`ca8da5a`). Der gemessene Abschnitt war heil, der Weg nicht.
+- **E-112:** 185 Tests grün, die Gegenprobe fiel richtig um — und am
+  Programm war es schlechter als vorher. Getestet war die Regel, nach der
+  `pict_frame` gesetzt wird; ob Paige das Rechteck zum Skalieren benutzt,
+  stand in `draw_meta_file` (`PGEMBED.C:4085-4125`) und war **nein** bei
+  `MM_TEXT`.
+
+**Wie anwenden, zusätzlich:**
+
+- **Ein Lauf ohne Messgröße ist kein Messlauf.** Vor dem Start steht fest,
+  welcher Wert danach gelesen wird (hier: `In.mbx`, `attach\`, `ANHANG`-Zeilen
+  im Log). `testlauf.ps1` ohne `-MessenSkript` startet und schließt — mehr
+  nicht.
+- **Ein Prüfmodell sagt, wie weit es reicht.** Neben *„gemessen mit
+  kopfzeile-pruefen.pl"* steht, **welche Funktion** es nachbildet, und der
+  Rest des Weges als *„nicht geprüft"* — Zerlegen, Namensbildung, Bereinigen,
+  Schreiben sind vier Abschnitte, das Modell traf einen.
+
+**Offen:** `testlauf.ps1` sollte ohne `-MessenSkript` ausdrücklich melden
+*„nichts gemessen — nur gestartet und geschlossen"*, und der Kopf sollte
+`-Sekunden` als Frist bis zum Hauptfenster beschreiben. Nicht geändert —
+Werkzeuge sind nicht Sache des CHRONIST.

@@ -124,3 +124,36 @@ Siehe [[erfolg-aus-anwendersicht]] — dieselbe Stelle von der anderen Seite:
 dort geht es darum, wie der Befund für Gregor heissen muss, hier darum,
 woraus seine Überschrift gebildet werden darf. Ausserdem
 [[pruefen-statt-vermuten]] und [[eingebaute-messung-auslesen]].
+
+## Nachtrag 12.10.2026: auch eine eigene Debug-Marke behauptet nur
+
+Im ersten Abruf von 7.2.0.79 stand im `eudora.log` — **in zwei aufeinander
+folgenden Zeilen**:
+
+    ANHANG Lex822: Umbruch IN der Zeichenkette - Rest geht verloren [Angebot Nr 4711 fuer die Stadtwerke Musterstadt] (47)
+    ANHANG Kopfzeile: name = [Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf] (76)
+
+Die Marke 2 war für den **Fehler** geschrieben worden: sie löste beim CR in
+einer Zeichenkette aus und sagte, was damals daraus folgte. B5.1 (`acb9e06`)
+hat genau diesen Weg geändert — die Faltung beendet die Zeichenkette nicht
+mehr, entschieden wird erst am LF. Die Marke blieb, wie sie war, und meldete
+seitdem **jede heil durchgekommene Faltung als Abbruch**. Berichtigt in
+`ca8da5a`: sie fragt jetzt nach dem LF, das nicht als Faltung erkannt wurde.
+
+Diesmal hat es nicht geschadet: die nächste Zeile zeigte den vollen Namen,
+und der Widerspruch im selben Bild war sofort lesbar
+([[unterschied-im-selben-bild]], [[zwei-werte-in-eine-ausgabe]]).
+
+**Ein zweiter Fall derselben Art ist noch offen.** Marke 5 meldete für
+`Rechnung.pdf` *„MIMEMap kennt den Typ NICHT, keine Endung nachgetragen"* —
+und die Datei kam richtig als `Rechnung.pdf` an. Ob `MIMEMap::Find` wirklich
+scheitert oder die Marke falsch fragt, misst erst Marke 11 (`ca8da5a`).
+
+**How to apply, zusätzlich:**
+
+- **Eine Marke nennt die Beobachtung, nicht die Folgerung.** *„CR in
+  Zeichenkette, kein Weißraum danach"* bleibt nach jeder Behebung wahr;
+  *„Rest geht verloren"* war nur wahr, solange der Fehler da war.
+- **Wer den Weg ändert, den eine Marke beschreibt, ändert die Marke im
+  selben Commit.** Eine Behebung, nach der die eigene Messstelle weiter den
+  alten Fehler meldet, wird beim nächsten Mal für eine Regression gehalten.

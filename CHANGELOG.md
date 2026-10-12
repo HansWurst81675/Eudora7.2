@@ -13,8 +13,8 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Sechs von sieben Ursachen geändert in 7.2.0.79 — nichts davon ist übersetzt oder am laufenden Programm bestätigt.** Von Gregor am 30.09.2026 gemeldet. **Es liegt nicht an der Länge:** ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile steht. **Offen ist B5.7** (über IMAP fehlt `MIMEMap::SetExtension`) und der Bau: `-Ziel Rebuild`, dann die Prüfdaten aus `tools/pruefdaten/` über den POP3-Prüfstand abrufen. Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**; Herleitung in [BEFUNDE.md](BEFUNDE.md) |
-| **AN-2** | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80, nicht übersetzt.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
+| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, auch an 7.2.0.82 (Testsuite 185/185). Zehn Ursachen behoben, dazu in 7.2.0.83 der Pufferschutz in `SetExtension`. **Offen:** B5.7 (IMAP ohne `SetExtension`), der IMAP-Weg ist nicht gemessen, und **Gregor hat noch nicht geprüft** |
+| **AN-2** | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80; seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
@@ -68,6 +68,154 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil) — **gebaut und gemessen**
+
+**Gebaut und gemessen am 12.10.2026:** Rebuild, Rückgabewert 0,
+`bauen-Release.log.fehler` ohne eine Fehlerzeile; **Testsuite 185 von 185**;
+Abruf der sechs Prüfnachrichten in `C:\Temp\AN5`: **alle sechs mit vollem Namen
+und `.pdf`**, dieselben Namen wie unter 7.2.0.81 und 7.2.0.82, kein „kennt den
+Typ NICHT", keine `Exception.log`.
+
+**Von Gregor über IMAP getestet, 12.10.2026, Paket 1.0.83** (sein `eudora.log`,
+drei Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
+
+| vom Server (BODYSTRUCTURE) | gespeichert als |
+|---|---|
+| `5G-SA-NSA-Analyse_asn1Viewer_20260910.docx` (42) | unverändert, Inhalt `PK` |
+| `5G-SA-NSA-Analyse_asn1Viewer_20260910.pdf` (41) | unverändert, Inhalt `%PDF` |
+| `x_Releases_SIC-25.1.4-ZITiS_…_Archiv_20260918_Sina.tar.zip` (229) | auf 175 gekürzt **mit `.zip`**, voller Pfad 258 — die Windows-Grenze von 260; Inhalt `PK`, 351 502 Byte |
+
+Der IMAP-Weg verliert also keine Endung. Was bei einem sehr langen Namen
+wegfällt, ist das Ende des **Stamms** (hier `…_DBAutoUpdate-…Sina.tar`), weil
+der volle Pfad sonst über 260 Zeichen ginge — vollständig ginge das nur mit
+Langpfaden (`\?\`). **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
+Anhangverzeichnis von 08:44/08:45 (vor 1.0.83, laut Log 7.2.0.77/78), je
+1 204 Byte, beginnen **nicht** mit `%PDF` — Ursache nicht untersucht.
+
+**Anlass: PRUEFER-20**, die Nachrechnung von 7.2.0.81. Seit Teil 9 läuft
+`MIMEMap::SetExtension` zum ersten Mal überhaupt — und damit auch an Stellen,
+deren Puffer kleiner sind als `_MAX_PATH`, auf das es kürzte:
+
+| Aufrufer | Puffer | was passiert wäre |
+|---|---|---|
+| `Eudora/uudecode.cpp:88` | `m_Name[255]` | uuencodierter Teil mit Namen ab 251 Zeichen: bis zu 5 Byte über den Stapel |
+| `Eudora/hexbin.cpp:312`, `EuImap/src/ImHexbin.cpp:374` | `m_Name[40]` | BinHex-Name mit 35 bis 38 Zeichen: 1 bis 4 Byte in den Dekodierzustand |
+
+**Behoben:** `SetExtension(Filename, nPuffer)` kürzt auf den Puffer des
+Aufrufers; die drei Aufrufer geben `sizeof` mit, alle anderen haben
+`_MAX_PATH + 1` und nehmen die Vorgabe.
+
+**Zweitens, eine Regel, die Gregors Ziel widersprach:** QUALCOMM **ersetzte**
+eine vierstellige Endung durch die aus der Zuordnung — `.docx` wurde `.doc`,
+`.jpeg` wurde `.jpg`, und aus *Rechnung vom 12.03.2025* wurde
+*Rechnung vom 12.03.pdf*. Gelebt hat das bis 7.2.0.80 nie. Jetzt wird **nie
+ersetzt**: eine vorhandene Endung (1 bis 5 Zeichen, mindestens ein Buchstabe,
+kein Leerzeichen) bleibt, sonst wird angehängt.
+
+**Gemessen außerhalb von Eudora** (der Rumpf wörtlich aus `MIMEMap.cpp`, mit
+`cl` übersetzt): zehn Fälle, darunter alle drei Puffergrößen — kein Byte hinter
+dem Puffer beschrieben, `.docx`/`.jpeg` bleiben, *…12.03.2025* wird
+*…12.03.2025.pdf*.
+
+**Noch offen aus PRUEFER-20:** `hexbin.cpp:276` und `ImHexbin.cpp:333` schreiben
+den BinHex-Namen **ohne jede Grenze** in `m_Name[40]` — das war schon vorher
+erreichbar und ist hier nicht behoben. Beim **Versand** kommt der Content-Type
+jetzt aus der Zuordnung; weil nur drei Zeichen verglichen werden, geht `.docx`
+als `application/msword` hinaus — **nicht gemessen**.
+
+## 7.2.0.82 — AN-1 und AN-2 zusammengeführt — **gebaut und gemessen**
+
+Gregor hat am 12.10.2026 um 09:40 UTC PR #83 (**AN-2**, Zweig
+`fix_startup_page`, Quellstand 7.2.0.80) nach `main` gemergt, während auf
+`an1-endungen` schon 7.2.0.80-an1 und 7.2.0.81 gebaut und gemessen waren. Dieser
+Stand führt beide zusammen und nimmt die nächste freie Nummer. AN-2 wird damit
+zum ersten Mal übersetzt.
+
+**Gebaut und gemessen am 12.10.2026:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
+`bauen-Release.log.fehler` ohne eine Fehlerzeile. **Testsuite 185 von 185
+bestanden** (`Eudora71/Tests/RunTests.cmd`). Abruf der sechs Prüfnachrichten in
+`C:\Temp\AN4`: **alle sechs mit vollem Namen und `.pdf`**, dieselben Namen wie
+unter 7.2.0.81, kein „kennt den Typ NICHT", keine `Exception.log`.
+**AN-2 ist am laufenden Programm nicht gemessen** — der Werbefensterfall lässt
+sich mit dem Prüfstand nicht auslösen.
+
+## 7.2.0.81 — Endungen aus dem MIME-Typ wirken wieder (AN-1, neunter und zehnter Teil) — **gebaut und gemessen: alle sechs heil**
+
+**Gemessen am 12.10.2026** (Rebuild, 0 Fehler, `C:\Temp\AN3`, ein Abruf über
+`tools/anhang-pruefdaten.pl --pop`):
+
+| Fall | gespeichert |
+|---|---|
+| 00 | `Rechnung.pdf` |
+| 01 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf` (76) |
+| 02 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf` (56) |
+| 03 | `<220×A>.pdf` (224 — der volle Pfad bleibt unter 260; die Endung bleibt) |
+| 04 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 20251.pdf` (57 — gleicher Name wie 02, Eudora hängt `1` an) |
+| 05 | `Pruefung AN-1 leerer Dateiname.pdf` (34 — Betreff, **jetzt mit Endung** aus `MIMEMap`) |
+
+Alle sechs Dateien beginnen mit `%PDF-`, keine `Exception.log`. Im Log steht bei
+jedem Anhang `ANHANG Name: nach MIMEMap::SetExtension`, kein „kennt den Typ NICHT"
+mehr.
+
+**7.2.0.80-an1 gebaut und gemessen am 12.10.2026** (Rebuild 0 Fehler, `C:\Temp\AN2`,
+ein Abruf): **Fall 03 heil** — `<220×A>.pdf`, 224 Zeichen mit Endung. Marke 2
+meldet keine Faltung mehr. **Fall 05 weiter ohne Endung.** ANHANG-Marke 11 nannte
+den Grund bei **jedem** Anhang: `GetMaps scheitert … (342)`.
+
+**Neunter Teil, gemessen:** 342 = 123 Zuordnungen aus `Eudora.ini` + 124 aus
+`DEudora.ini` + **95** aus der Registry. Der 96. Typ mit Endung unter
+`HKCR\Mime\Database\Content Type` heißt **`pkcs10`** — **ohne Schrägstrich**
+(auf diesem Rechner zwölf solche, alle aus der Zertifikatsfamilie). Daran stieg
+`GetMaps` mit `return (FALSE)` aus und verwarf die **ganze** Tabelle samt
+`[Mappings]`. Weil jeder Anhang ein neues `MIMEMap` anlegt, scheiterte `Find`
+bei **jedem** Anhang, und `SetExtension` trug über POP **nie** eine Endung nach —
+auch in echter Post, nicht nur im Prüffall. Behoben: solch ein Schlüssel wird
+übersprungen.
+
+**Zehnter Teil (PRUEFER):** `SetExtension` hatte beim Kürzen das falsche
+Vorzeichen — `Difference` negativ, `while (Difference--)` lief bis zum
+int-Überlauf rückwärts durch den Speicher. Verdeckt nur, weil `Find` nie gelang;
+mit Teil 9 wäre es bei einem Namen ab 255 Zeichen ein Absturz geworden. Behoben:
+der Stamm wird vor der neuen Endung gekürzt.
+
+## Messfassung 7.2.0.80-an1 — Anhangnamen: lange Namen behalten die Endung (AN-1, achter Teil) — **gebaut und gemessen, Nummer doppelt vergeben**
+
+> Diese Fassung trug in `Version.h` **7.2.0.80** — dieselbe Nummer wie AN-2 auf
+> `main` (PR #83, Abschnitt weiter unten). Beide entstanden am 12.10.2026 auf
+> getrennten Zweigen. Diese hier gab es nur als Prüfbau in `C:\Temp\AN2`; sie ist
+> nie ausgeliefert worden. Zur Unterscheidung heißt sie hier `7.2.0.80-an1`.
+
+**7.2.0.79 ist am 12.10.2026 zum ersten Mal übersetzt und am laufenden Programm
+gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
+`bauen-Release.log.fehler` leer (0 Zeilen). Prüfverzeichnis `C:\Temp\AN1`,
+`LogLevel=91295` in `[Debug]`, die sechs Prüfnachrichten über
+`perl tools/anhang-pruefdaten.pl --pop` abgerufen.
+
+| Fall | gespeichert unter 7.2.0.79 | Urteil |
+|---|---|---|
+| 00 Gutfall | `Rechnung.pdf` | heil |
+| 01 gefaltet, Leerzeichen | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf` (76) | **B5.1 wirkt** |
+| 02 gefaltet, Tabulator | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf` (56) | **B5.1 wirkt** |
+| 03 304 Zeichen | 224 × `A`, **ohne `.pdf`** | **kaputt** |
+| 04 RFC 2231 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf` (56) | **B5.5 wirkt** |
+| 05 `filename=""` | `Pruefung AN-1 leerer Dateiname` — **ohne Endung** | kein `=` mehr (B5.2), aber keine Endung |
+
+**Fall 03, Ursache aus dem Log:** die Kopfzeile lieferte alle 304 Zeichen
+(B5.3 wirkt). Dann kappten zwei Stellen **von hinten**: `strncpy` auf 259 in
+`mime.cpp` (dazu ohne abschließende Null) und `DeMacifyName32` auf 255. Danach
+kürzte `CheckName` den Pfad auf 224 — **mit** Endung, aber die war da schon weg.
+
+**Behoben in 7.2.0.80:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
+und behält die Endung; `mime.cpp` und beide `DeMacifyName32` (POP und IMAP)
+benutzen es. Ein leeres `filename=""` verdeckt ein vorhandenes `name=` nicht mehr.
+
+**Fall 05 und alle anderen:** Marke 5 meldete bei **allen sechs** „MIMEMap kennt
+den Typ NICHT" — auch für `application/pdf`, das in `[Mappings]` steht. Die
+Ursache ist **nicht** geklärt; **ANHANG-Marke 11** in `MIMEMap::Find` nennt jetzt
+jeden Ausstieg.
+
+**Marke 2 berichtigt** (beide Zerleger): sie fragte nach dem CR und meldete seit
+B5.1 jede heil durchgekommene Faltung als Abbruch. Sie fragt jetzt nach dem LF.
 ## 7.2.0.80 — JavaScript und CSS verschwinden aus der Anzeige (AN-2), **nicht übersetzt**
 
 > **Hier ist nichts gebaut und nichts gestartet.**

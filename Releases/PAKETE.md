@@ -155,6 +155,59 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.83 — **gebaut und gemessen**, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
+
+| | |
+|---|---|
+| ZIP | **kein ZIP** — als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
+
+Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
+abweicht (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.83.
+
+## 1.0.82 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.82 (AN-1 und AN-2 zusammengeführt)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN4` |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.82 (`Eudora71/Version.h`), Zweig `an1-endungen` nach Merge von `main` (PR #83) |
+
+Vergeben am 12.10.2026. Was drinsteckt, steht in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitte 7.2.0.82, 7.2.0.81, 7.2.0.80-an1 und
+7.2.0.80.
+
+## 1.0.81 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.81 (AN-1, neunter und zehnter Teil)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN3` |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.81 (`Eudora71/Version.h`), Zweig `an1-endungen` (bis 12.10.2026 `patch_20261012`) |
+
+Vergeben am 12.10.2026, weil 7.2.0.80 an diesem Tag gebaut und gemessen wurde
+und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
+
+## Messfassung 1.0.80-an1 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.80 (AN-1, achter Teil) — **Nummer doppelt vergeben**
+
+> Dieselbe Nummer trägt auch 1.0.80 (AN-2) weiter unten. Beide entstanden am
+> 12.10.2026 auf getrennten Zweigen; diese hier gab es nur als Prüfbau.
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN2` |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), Commit `ca8da5a` auf `an1-endungen` |
+
+Gebaut am 12.10.2026 (Rebuild, 0 Fehler) und am laufenden Programm gemessen:
+Fall 03 heil, Fall 05 ohne Endung. Einzelheiten in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
 ## 1.0.80 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.80 (AN-2)
 
 | | |

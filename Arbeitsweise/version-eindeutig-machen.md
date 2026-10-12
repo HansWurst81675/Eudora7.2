@@ -113,3 +113,46 @@ sondern geprüft.**
 - **Nach dem Hochsetzen wird neu gebaut, nicht nachgebessert.** Eine berichtigte
   `Version.h` über einem alten Bau ergibt eine EXE, die immer noch die alte
   Nummer trägt ([[messung-muss-den-weg-treffen]]).
+
+## Nachtrag 12.10.2026: zwei Zweige, eine Nummer — 7.2.0.80 doppelt vergeben
+
+**Was geschah:** Beide Zweige gingen von `main` mit 7.2.0.79 aus. Beide
+nahmen „VERSION + 1":
+
+| Zweig | Commit | Zeit | Nummer |
+|---|---|---|---|
+| `patch_20261012` → `an1-endungen` (diese Sitzung) | `ca8da5a` AN-1 achter Teil | 11:23:23 | **7.2.0.80** |
+| `fix_startup_page` (parallele Sitzung, als PR #83) | `804c91e` AN-2 | 11:26:40 | **7.2.0.80** |
+
+Zwischen den beiden Commits lagen drei Minuten. Keine der beiden Sitzungen
+konnte die andere sehen. Um 11:40 hat Gregor PR #83 gemergt. Damit gab es
+zwei verschiedene `Eudora.exe`, die sich im Programm beide als
+„Version 7.2.0.80" ausweisen. Genau das schließt die Regel oben aus. Ausgeliefert
+wurde 7.2.0.80-an1 nie, deshalb ist kein Schaden entstanden. Gelöst wurde
+das so: Der gemeinsame Stand wurde auf 7.2.0.82 gehoben (`9113007`). Im
+CHANGELOG und in PAKETE.md heißt die AN-1-Fassung jetzt
+**„Messfassung 7.2.0.80-an1"**, mit dem Vermerk *„Nummer doppelt vergeben"*.
+Den Anstoß gab `pruefe-doku-takt.pl`, das auf absteigende Überschriften
+besteht.
+
+### Why
+
+Die Regel oben macht eine Fassung *in sich* eindeutig: Titelzeile,
+Dateiversion und Verzeichnis nennen dieselbe Nummer. Sie sagt nichts
+darüber, **wer** eine Nummer vergeben darf. Solange nur ein Zweig lebte, war
+„VERSION + 1" eindeutig. Mit zwei Sitzungen nebeneinander ist es das nicht
+mehr. Jede liest dieselbe Ausgangszahl und zählt für sich hoch.
+
+### How to apply
+
+- **Vor dem Hochzählen messen, was vergeben ist, nicht nur `main`:**
+  `git fetch && git for-each-ref --format='%(refname:short)' refs/remotes/origin | xargs -I{} git show {}:VERSION 2>/dev/null | sort -V | tail -1`.
+  Die neue Nummer liegt über dem Höchsten, was auf irgendeinem Zweig
+  vorkommt.
+- **Eine Messfassung auf einem Zweig trägt ein Kürzel im Text**
+  (`EUDORA_BUILD_DESC "Version 7.2.0.80-an1"`). Die blanke Nummer bekommt
+  erst, was zu Gregor geht. So sind auch zwei Zweige, die gleichzeitig
+  hochzählen, im Programm unterscheidbar.
+- Ein Merge von `main` in den Zweig ist ein Anlass für `git show
+  origin/main:VERSION`, bevor der eigene Stand weiter hochgezählt wird. So
+  wurde es am 12.10. gemacht, und es ging schnell.

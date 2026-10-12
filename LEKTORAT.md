@@ -1055,3 +1055,50 @@ wurde es ohne Eingriff in `tools/` — die Zeile sagt jetzt *„Daraus entstand
 Quellstand 7.2.0.69 und Paket 1.0.69"*, wie die stumme Nachbarzeile darüber;
 danach meldet die Schranke *„Kein Widerspruch gefunden"*. **Die Grenze bleibt
 und gehört zu E-109.**
+
+## Einundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-16.md`)
+
+**Anlass:** AN-1 wurde am 12.10.2026 zum ersten Mal gebaut und am laufenden
+Programm gemessen (7.2.0.79: 4 von 6 Prüffällen heil). Der Lauf ging nur lesend
+über die MDs seit `c0f946c`, Schwerpunkt B5/AN-1, gemessen an `ca8da5a`.
+
+| Fund | Kurz |
+|---|---|
+| **L-16.1** | `tools/offene-befunde.pl` liest nur Kennungen der Form `E-\d+` — **AN-1 sieht es nicht**, und E-112 fällt heraus, weil *„widerlegt"* als erledigt zählt. Die Schranke aus CLAUDE.md Schritt 1 ist damit an zwei Stellen blind |
+| **L-16.2** | `BEFUNDE.md` AN-1: der Messstand vom 12.10. fehlt, mehrere Stellen sagen *„nicht übersetzt"* |
+| **L-16.3** | `BEFUNDE.md` AN-1: rund 20 zitierte Zeilennummern stimmen nicht mehr |
+| **L-16.4** | `AUFGABEN.md` B5: der Kasten oben ist neu, der Rest des Abschnitts steht noch auf *„nicht gebaut"* |
+| **L-16.5** | `CHANGELOG.md`: 7.2.0.79 trägt noch *„nicht übersetzt"* |
+| **L-16.6** | `Releases/PAKETE.md`: zwei Antworten im selben Abschnitt |
+| **L-16.7** | `tools/pruefdaten/LIESMICH.md`: *„was Eudora heute daraus macht"* beschreibt 7.2.0.76 |
+| **L-16.8** | `WEITERMACHEN.md`: *„Der nächste Schritt"* trägt das Datum 12.10., der Inhalt ist vom 18.09. und 30.09. |
+| **L-16.9** | Zweig `patch_20261012` nirgends verzeichnet — **erledigt**: umbenannt in `an1-endungen`, von Gregor bestätigt, eingetragen in `tools/ZWEIGE.md` |
+| **L-16.10** | `ZIEL.md:17` und `README.md:149`: *„nicht übersetzt"* |
+
+**Eingearbeitet ist bisher nur L-16.9** und die `CheckName`-Formulierung im
+CHANGELOG. Der Rest ist offen; er gehört vor einen Merge von `an1-endungen`.
+
+## Zweiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-17.md`)
+
+**Anlass:** Merge von PR #83 (AN-2) in `an1-endungen`, Stand 7.2.0.82. Nur
+lesend über die MDs seit `4ec9dd1`.
+
+| Fund | Kurz |
+|---|---|
+| **L-17.1** | AN-2 an sieben Stellen nur „nicht übersetzt", ohne den Stand 7.2.0.82 |
+| **L-17.2** | AN-1-Inhalte heißen an sieben Stellen „7.2.0.80" statt „7.2.0.80-an1"; zwei Verweise zeigen dadurch auf den AN-2-Abschnitt |
+| **L-17.3** | alter Stand in `ZIEL.md:17`, `README.md:149`, `PORTIERUNG.md:43`, `tools/ZWEIGE.md:93`; 1.0.82 in PAKETE noch „in Arbeit" — **letzteres erledigt** |
+| **L-17.4** | AUFGABEN B5: Überschrift mit kaputter Fettschrift — **erledigt**; Tabelle kennt B5.8 bis B5.10 nicht |
+| **L-17.5** | Zahl der Ursachen schwankt zwischen sechs, sieben und zehn |
+| **L-17.6** | CHANGELOG-Kopf sagte zu AN-1 „nichts davon ist übersetzt" — **erledigt** |
+| **L-17.7** | BEFUNDE AN-1: unter dem neuen Kasten stehen alte Aussagen |
+| **L-17.8** | `offene-befunde.pl` meldet 16/16 gedeckt und sieht AN-1, AN-2, E-112 nicht (= L-16.1) |
+
+**Berichtigung zu Durchgang 21:** dort stand „eingearbeitet ist bisher nur
+L-16.9" — tatsächlich waren es zu dem Zeitpunkt auch L-16.7 und Teile von L-16.2.
+
+## Dreiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-18.md`)
+
+Kurzlauf vor dem Paket 1.0.83 über `d292850`. Die Aussagen zu 7.2.0.83 sind
+belegt. Zwei Mängel (`Releases/PAKETE.md:158` noch „in Arbeit", `WEITERMACHEN.md:10`
+ohne AN5), **beide behoben** im selben Commit.

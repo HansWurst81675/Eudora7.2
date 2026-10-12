@@ -164,3 +164,71 @@ damit nicht mehr Vermutung, sondern gemessen.
 
 Gefunden von PRUEFER, mit seiner Messung zitierbar — nicht von mir
 nachgerechnet ([[mannschaft-fuehren]]).
+
+## Nachtrag 12.10.2026: eine Behebung, die toten Code erreichbar macht, ist dessen erster Einsatz
+
+**Was geschah (Zweig `an1-endungen`):** `123b218` (11:35, 7.2.0.81) behob
+`MIMEMap::GetMaps`. Vorher verwarf die Funktion die ganze Zuordnungstabelle
+am Registry-Typ `pkcs10` (ohne `/`). Deshalb lief `MIMEMap::SetExtension`
+auf diesem Rechner **nie**, und zwar seit QUALCOMM. Mit der Behebung lief
+die Funktion zum ersten Mal, und mit ihr alles, was in ihr und in ihren
+Aufrufern steckte:
+
+| Was lebendig wurde | gefunden von | wann |
+|---|---|---|
+| Schleife mit negativem Zähler beim Kürzen in `SetExtension` | PRÜFER-19 | vor 11:38 (`4ec9dd1`) |
+| Überlauf bis 5 Byte über den Stapel: `uudecode.cpp:88`, `m_Name[255]` | **PRÜFER-20** | 11:56:21 |
+| Überlauf 1–4 Byte in `m_Name[40]`: `hexbin.cpp:312`, `ImHexbin.cpp:374`; trifft den Zustand der Dekodierung | PRÜFER-20 | 11:56:21 |
+| QUALCOMMs Regel „vierstellige Endung **ersetzen**": `.docx` → `.doc`, `.jpeg` → `.jpg`, nur über POP, nicht über IMAP | PRÜFER-20 | 11:56:21 |
+| Versand: `.docx` geht als `application/msword` hinaus (Vergleich nur über 3 Zeichen) | PRÜFER-20 | 11:56:21 |
+
+Um 11:51:26 hatte ich *„7.2.0.82 ist bei mir grün"* gemeldet, mit Bau,
+185/185 Tests und 6/6 Prüfanhängen. Das stimmte. Gemessen hatte ich damit
+aber nur den Weg, für den die Behebung gebaut war: PDF über POP. Die
+Aufrufer mit eigenen kleinen Puffern (UUencode, BinHex) und die
+Ersetzungsregel liegen auf Wegen, die keiner meiner Prüfanhänge berührt. Den
+Verdacht hatte ich selbst. Der PRÜFER-Auftrag um 11:49 nannte `m_Name[40]`
+und `attributeName[32]`. Der zweite Puffer steht allerdings in `#if 0`.
+Den schwersten Fall, `uudecode.cpp` mit 255 Byte, hatte ich **nicht**
+genannt. Er war nicht klein genug, um mir verdächtig vorzukommen.
+
+Die Ersetzungsregel ist kein Fehler im Code. Sie widerspricht Gregors Ziel
+vom 12.10. (*„anhänge werden korrekt gespeichert - mit erweiterung,
+komplette dat[einame]"*). Sie war 20 Jahre lang Absicht und ebenso lange tot.
+Dass sie mit derselben Behebung auflebte, hätte ich mit keinem Test
+gefunden, denn sie *funktionierte*.
+
+Behoben in `c8064b4` (11:58, 7.2.0.83): `SetExtension` bekommt die
+Puffergröße mit und ersetzt nie.
+
+### Why
+
+Code, der nie lief, ist **ungeprüft**, nicht bewährt. Das gilt auch dann,
+wenn er 20 Jahre alt ist und von QUALCOMM stammt. Die Behebung, die ihn
+erreichbar macht, ist sein erster Einsatz. In ihm wird beides auf einmal
+lebendig: die **Fehler** (Überläufe) und die **Absichten** (Ersetzungsregel).
+Die Absichten sind schwerer zu finden, weil sie fehlerfrei laufen.
+
+Die Klasse ist dieselbe wie bei
+[[funktion-bringt-ihre-vorbedingung-mit]], nur umgekehrt. Dort bekam eine
+bewährte Funktion einen neuen Aufrufer. Hier bekamen bestehende Aufrufer
+zum ersten Mal eine laufende Funktion.
+
+### How to apply
+
+- **Woran man es erkennt:** Eine Behebung hebt eine Bedingung auf, die
+  bisher *immer* scheiterte (`return FALSE`, leere Tabelle, `#if 0`,
+  abgefangene Ausnahme, Schalter ohne Wert). Dann stellt sich die Frage:
+  Was lag dahinter, und wer ruft es auf?
+- **Den Umfang holt ein Befehl, nicht das Gedächtnis**
+  ([[pruefumfang-nicht-von-hand]]). Gesucht wird jeder Aufrufer der jetzt
+  erreichbaren Funktion, mit `grep -rn "SetExtension(" Eudora71/`. Für
+  jeden Aufrufer werden Puffergröße und Weg (POP, IMAP, Versand) in eine
+  Tabelle eingetragen. Was in der Tabelle keinen Prüfanhang hat, ist
+  ungeprüft und wird auch so gemeldet.
+- **Der PRÜFER startet mit dem Commit, nicht nach dem grünen Bau.**
+  `123b218` lag um 11:35 vor, der PRÜFER startete um 11:49, nach Merge, Bau
+  und Messung. Die 14 Minuten dazwischen hätte er schon rechnen können.
+- **Auch die Absichten des toten Codes gegen `ZIEL.md` lesen.** Jede
+  Regel, die jetzt greift (ersetzen, kürzen, umbenennen), wird gegen Gregors
+  Ziel gehalten, nicht nur gegen den Speicher.

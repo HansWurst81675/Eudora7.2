@@ -117,3 +117,63 @@ dem Werkzeug steht, das den Moment ohnehin durchläuft
 Siehe [[mannschaft-fuehren]], [[lehren-anwenden-nicht-nur-schreiben]],
 [[tests-vor-jedem-commit-laufen-lassen]], [[nie-stillstehen]] und
 [[anweisungen-abarbeiten]].
+
+## Nachtrag 12.10.2026: die Meldung stand da, 61 Sekunden vor der Frage
+
+**Gregor am 12.10.2026 um 11:22:57:**
+
+> *„du arbeitest schon parallel mit anderen agenten wie prüfer und lektor im
+> hintergrund?"*
+
+und 48 Sekunden später, weil die Rollen noch nicht einmal einen Ort hatten:
+
+> *„wt/ kannst du anlegen für die agenten, z.b. wt/prüufer und wt/lektor usw"*
+
+### Die Messung (Transkript `7cea137a-…jsonl`)
+
+| Zeit | Was geschah |
+|---|---|
+| 11:03:12 | Sitzungsbeginn. `offene-befunde.pl` läuft nach sechs Sekunden — es steht in `CLAUDE.md` unter **1.** |
+| 11:03–11:21 | Rebuild, Testlauf, Messung, Änderung an sechs Quelldateien — **keine Rolle gestartet, `rollen-faellig.pl` nicht gefahren**. Es steht in `CLAUDE.md` unter **3.**, „Der Stand in einem Blick" |
+| **11:21:56** | erster Commit-Versuch. Der Haken meldet **alle drei** als fällig: LEKTOR seit `c0f946c` (12 Dateien), PRÜFER seit `89b61fc` (23 Dateien), CHRONIST seit `4e89347` (37 Dateien). **Im selben Block** ein `MANGEL:` — kein CHANGELOG-Abschnitt für 7.2.0.80 |
+| 11:22:00 | ich behebe den MANGEL. Die drei Fälligkeiten bleiben unbeantwortet |
+| **11:22:57** | **Gregor fragt** — 61 Sekunden nach der Meldung |
+| 11:23:40 | PRÜFER und LEKTOR gestartet, CHRONIST um 11:26 — **43 Sekunden bis drei Minuten nach der Frage** |
+
+Alle drei Rollen waren seit dem **18.09.2026** fällig, 24 Tage. Dazwischen
+lagen drei Arbeitstage in Sitzungen ohne Windows (30.09., 11.10., 12.10. früh;
+die Commits mit `+0000`), in denen kein einziger Rollenbericht entstand
+(`git log 4e89347..` auf `Befunde/LEKTOR-*`, `Befunde/PRUEFER-*`,
+`Arbeitsweise/`: leer).
+
+### Why — die Schranke wirkte und änderte trotzdem nichts
+
+1. **Die meldende Zeile stand neben einer abweisenden.** Der Haken gab beides
+   in einem Block aus; abgewiesen hat nur der `MANGEL`. Behoben wurde, was
+   abweist — gelesen, aber nicht behandelt, was nur meldet. Eine meldende
+   Schranke ist so viel wert wie die Zeile, die neben ihr steht.
+   [[ausloeser-an-den-anfang]] hat „meldend, nicht abweisend" bewusst gewählt;
+   dass die Meldung im Schatten eines Mangels untergeht, war dort nicht bedacht.
+2. **Was unter 1. steht, läuft; was unter 3. steht, nicht.** `CLAUDE.md`
+   nennt `offene-befunde.pl` als Pflicht *„bevor irgendetwas neu gesucht
+   wird"* — gefahren nach 6 Sekunden. `rollen-faellig.pl` steht zwei
+   Abschnitte tiefer als Übersicht — gefahren nach 20 Minuten, und erst nach
+   der Frage. Dieselbe Sitzung, derselbe Leser: der Unterschied ist allein die
+   Überschrift.
+
+### How to apply, zusätzlich
+
+- **`perl tools/rollen-faellig.pl --nur-melden` gehört in den ersten Schritt
+  der Sitzung**, neben `offene-befunde.pl`. Wer eine Sitzung mit einem
+  Bauauftrag beginnt, startet die fälligen Rollen **vor** dem Bau — ein
+  Rebuild dauert lange genug für drei Agenten.
+- **Steht in einer Hakenausgabe „ist faellig", ist das die nächste
+  Handlung**, vor dem `MANGEL` daneben. Der Mangel ist in einer Minute
+  behoben; die Rolle braucht genau diese Zeit, um anzulaufen.
+- **Eine Sitzung ohne Haken (ohne Windows, frischer Klon) fährt die Schranke
+  von Hand** und schreibt das Ergebnis in die erste Commit-Nachricht. Sonst
+  sind Arbeitstage ohne Rolle unsichtbar, wie vom 18.09. bis 12.10.2026.
+
+**Offen:** Die Verlegung in `CLAUDE.md` Punkt 1 ist vorgeschlagen, nicht
+gemacht. Solange sie fehlt, wirkt dieser Nachtrag nur, wenn ihn jemand liest
+([[lehren-anwenden-nicht-nur-schreiben]]).
