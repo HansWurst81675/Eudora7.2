@@ -68,7 +68,14 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.84 — Betreff nicht mehr mitten im Wort umbrochen (E-94) — **gebaut und gemessen**
+## 7.2.0.84 — Betreff nicht mehr mitten im Wort umbrochen (E-94) — **veröffentlicht als `v1.0.84`**
+
+**Veröffentlicht am 12.10.2026 um 12:59:15 UTC** als `v1.0.84`, auf GitHub als
+*Latest*; Marke auf `eb54752`, ZIP `Eudora72-1.0.84-release.zip` mit 9 361 952 Byte,
+SHA-256 `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — von
+GitHub heruntergeladen und nachgerechnet; die 34 EXE-, DLL- und OCX-Dateien darin
+sind byteidentisch mit dem Paket, das Gregor getestet hat. Freigabe: *„dann ein
+github release“*, *„ja, beides jetzt“*.
 
 **Gemessen am 12.10.2026** (Rebuild auf `05bbaba`, 0 Fehler, `bauen-Release.log.fehler`
 ohne Fehlerzeile; **Testsuite 188/188**; Abruf der sieben Prüfnachrichten über
@@ -143,7 +150,7 @@ Typ NICHT", keine `Exception.log`.
 getestet (Auswertung unten) und danach geschrieben: *„gekürzt mit endung
 reicht, mach PR für an1-endungen"*. PR #84 hat er um 10:51 UTC gemergt und
 dann angewiesen: *„erstelle ein release auf github"*. **Veröffentlicht als
-`v1.0.83`** am 12.10.2026 um 11:18:20 UTC, auf GitHub als *Latest*; Marke auf
+`v1.0.83`** am 12.10.2026 um 11:18:20 UTC, auf GitHub damals als *Latest* (abgelöst durch `v1.0.84`); Marke auf
 `ec9f11d`, ZIP `Eudora72-1.0.83-release.zip` mit 9 361 416 Byte, SHA-256
 `7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — von GitHub
 heruntergeladen und nachgerechnet. Die 34 EXE-, DLL- und OCX-Dateien darin sind

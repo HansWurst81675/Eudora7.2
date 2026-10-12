@@ -41,13 +41,15 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
 > (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
 >
-> **Stand 12.10.2026:** Quellstand **7.2.0.83**, `VERSION` **1.0.83**, gebaut
+> **Stand 12.10.2026:** Quellstand **7.2.0.84**, `VERSION` **1.0.84**, veröffentlicht
+> als **`v1.0.84`** — behebt **E-94** (Betreff mitten im Wort umbrochen), über POP
+> und IMAP gemessen, von Gregor bestätigt. Davor Quellstand **7.2.0.83**, gebaut
 > (Rebuild 0 Fehler, Testsuite 185/185). Neu darin: **AN-1** (Anhangnamen
 > abgeschnitten, Endung fehlt) — über POP am laufenden Programm gemessen und
 > heil, über IMAP von Gregor mit 1.0.83 getestet und bestätigt, offen nur B5.7;
 > **AN-2** (Quelltext einer Webseite im Werbefenster) — seit 7.2.0.82 übersetzt,
 > am laufenden Programm nicht gemessen. **Veröffentlicht als `v1.0.83`** am
-> 12.10.2026 (davor `v1.0.72`). Einzelheiten in
+> 12.10.2026 (davor `v1.0.72`), danach `v1.0.84`. Einzelheiten in
 > [CHANGELOG.md](CHANGELOG.md), 7.2.0.79 bis 7.2.0.83. Der Absatz darunter ist
 > der Stand vom 18.09.2026.
 >
