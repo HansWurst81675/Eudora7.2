@@ -1055,3 +1055,25 @@ wurde es ohne Eingriff in `tools/` — die Zeile sagt jetzt *„Daraus entstand
 Quellstand 7.2.0.69 und Paket 1.0.69"*, wie die stumme Nachbarzeile darüber;
 danach meldet die Schranke *„Kein Widerspruch gefunden"*. **Die Grenze bleibt
 und gehört zu E-109.**
+
+## Einundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-16.md`)
+
+**Anlass:** AN-1 wurde am 12.10.2026 zum ersten Mal gebaut und am laufenden
+Programm gemessen (7.2.0.79: 4 von 6 Prüffällen heil). Der Lauf ging nur lesend
+über die MDs seit `c0f946c`, Schwerpunkt B5/AN-1, gemessen an `ca8da5a`.
+
+| Fund | Kurz |
+|---|---|
+| **L-16.1** | `tools/offene-befunde.pl` liest nur Kennungen der Form `E-\d+` — **AN-1 sieht es nicht**, und E-112 fällt heraus, weil *„widerlegt"* als erledigt zählt. Die Schranke aus CLAUDE.md Schritt 1 ist damit an zwei Stellen blind |
+| **L-16.2** | `BEFUNDE.md` AN-1: der Messstand vom 12.10. fehlt, mehrere Stellen sagen *„nicht übersetzt"* |
+| **L-16.3** | `BEFUNDE.md` AN-1: rund 20 zitierte Zeilennummern stimmen nicht mehr |
+| **L-16.4** | `AUFGABEN.md` B5: der Kasten oben ist neu, der Rest des Abschnitts steht noch auf *„nicht gebaut"* |
+| **L-16.5** | `CHANGELOG.md`: 7.2.0.79 trägt noch *„nicht übersetzt"* |
+| **L-16.6** | `Releases/PAKETE.md`: zwei Antworten im selben Abschnitt |
+| **L-16.7** | `tools/pruefdaten/LIESMICH.md`: *„was Eudora heute daraus macht"* beschreibt 7.2.0.76 |
+| **L-16.8** | `WEITERMACHEN.md`: *„Der nächste Schritt"* trägt das Datum 12.10., der Inhalt ist vom 18.09. und 30.09. |
+| **L-16.9** | Zweig `patch_20261012` nirgends verzeichnet — **erledigt**: umbenannt in `an1-endungen`, von Gregor bestätigt, eingetragen in `tools/ZWEIGE.md` |
+| **L-16.10** | `ZIEL.md:17` und `README.md:149`: *„nicht übersetzt"* |
+
+**Eingearbeitet ist bisher nur L-16.9** und die `CheckName`-Formulierung im
+CHANGELOG. Der Rest ist offen; er gehört vor einen Merge von `an1-endungen`.
