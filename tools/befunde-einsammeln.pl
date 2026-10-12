@@ -61,14 +61,14 @@ sub belegte_kennungen {
     my %k;
     my $d = roh($ZIEL);
     if (defined $d) {
-        $k{$1} = 1 while $d =~ /^#+\s+([A-Z]+[0-9]*-\d+)\b/gm;
+        $k{$1} = 1 while $d =~ /^#+\s+$ANKER\s*([A-Z]+[0-9]*-\d+)\b/gm;
         $k{$1} = 1 while $d =~ /^\|\s*$ANKER\s*([A-Z]+[0-9]*-\d+)\s*\|/gm;
     }
     if (opendir(my $dh, $ORDNER)) {
         for my $n (grep { /\.md$/ } readdir $dh) {
             my $t = roh("$ORDNER/$n");
             next unless defined $t;
-            $k{$1} = 1 while $t =~ /^#+\s+([A-Z]+[0-9]*-\d+)\b/gm;
+            $k{$1} = 1 while $t =~ /^#+\s+$ANKER\s*([A-Z]+[0-9]*-\d+)\b/gm;
         }
         closedir $dh;
     }
@@ -138,7 +138,7 @@ for my $n (@dateien) {
     my $d = roh("$ORDNER/$n");
     next unless defined $d;
     my @k;
-    push @k, $1 while $d =~ /^#+\s+([A-Z]+[0-9]*-\d+)\b/gm;
+    push @k, $1 while $d =~ /^#+\s+$ANKER\s*([A-Z]+[0-9]*-\d+)\b/gm;
     my $zeilen = () = $d =~ /\n/g;
     printf("    %-24s %5d Zeilen   %s\n", $n, $zeilen,
            (@k ? join(', ', @k) : 'KEINE Kennung gefunden'));
@@ -156,7 +156,7 @@ my %in_ziel;
 {
     my $d = roh($ZIEL);
     if (defined $d) {
-        $in_ziel{$1} = 1 while $d =~ /^#+\s+([A-Z]+[0-9]*-\d+)\b/gm;
+        $in_ziel{$1} = 1 while $d =~ /^#+\s+$ANKER\s*([A-Z]+[0-9]*-\d+)\b/gm;
     }
 }
 my @schon_drin = sort grep { $in_ziel{$_} } @kennungen_gesamt;
