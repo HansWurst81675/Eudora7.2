@@ -95,7 +95,7 @@ gefaltet. Das doppelte Leerzeichen in `Toner  bestellen` stand schon in 1.0.75 s
 da (Absender); das Emoji davor erscheint weiter als Fragezeichen bzw. Ersatzzeichen — das ist **E-90**,
 nicht E-94.
 
-**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw: [Letzte Chance] Toner bestellen & 15 % sparen – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht E-94:** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit E-90, nicht untersucht.
+**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Toner  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht E-94:** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit E-90, nicht untersucht.
 
 **Gregors Fall:** *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
 — der web.de-Webmailer zerlegt einen langen Betreff in mehrere kodierte Wörter
