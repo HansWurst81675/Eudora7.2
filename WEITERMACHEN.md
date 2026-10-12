@@ -105,13 +105,18 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 > **Stand 12.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
-> **1. Den Anhang-Bug prüfen — das ist Gregors eigenes Vorhaben.** Er will
-> `git apply` fahren, der Anleitung folgen, bauen und messen, dass der Fehler
-> weg ist. Der ganze Durchlauf steht in [AUFGABEN.md](AUFGABEN.md) unter
-> **B5.0 bis B5.5**; der Bau selbst in [README.md](README.md), *Selbst bauen*.
-> Zwei Patches liegen bereit und sind **nicht angewandt**. **Vor jedem der
-> beiden Bauten die Version heben** — sonst tragen zwei verschiedene
-> `Eudora.exe` dieselbe Nummer (Befund **V-1**).
+> **Gregors Reihenfolge vom 12.10.2026:** *„danach die reihenfolge aus deinem
+> vorschlag: E112, E-113, E-94, E-77"* — vorher das Release v1.0.83.
+>
+> **1. Release v1.0.83 abschließen.** AN-1 ist über POP am laufenden Programm
+> heil (7.2.0.81 bis 7.2.0.83, `C:\Temp\AN3` bis `AN5`, Testsuite 185/185) und
+> über IMAP von Gregor mit Paket 1.0.83 getestet und bestätigt (*„gekürzt mit
+> endung reicht"*); PR #84 ist gemergt. Gregor hat das Release **angewiesen**
+> (*„erstelle ein release auf github"*), **veröffentlicht ist es noch nicht** —
+> veröffentlicht ist weiterhin `v1.0.72`. Offen bleibt von AN-1 **B5.7** (IMAP
+> ohne `SetExtension`), von AN-2 die Produktfrage (AUFGABEN.md, B6). *(Bis zum
+> 12.10.2026 stand hier, Gregor wolle zwei Patches mit `git apply` einspielen;
+> sie sind eingespielt und entfernt.)*
 >
 > **2. E-112 messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
 > `draw_meta_file` (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur,
@@ -129,13 +134,19 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > Gregor vor der Behebung ein Paket gibt, muss das wissen.
 >
 > **4. Danach E-113** (Bilder breiter als das Fenster) — von Gregor
-> angeordnet: *„ok, erst A, dann B"*.
+> angeordnet: *„ok, erst A, dann B"*. Dann **E-94** (Betreff mitten im Wort
+> umbrochen) und **E-77** (IMAP-Ordnernamen in modifiziertem UTF-7).
 >
 > **5. Unbeantwortet von Gregor:** sollen **rote Tests** den Push blockieren?
 > `pruefe-testbau.pl` weist bisher nur beim **Baufehler** ab. Ein
 > Regressionstest, der nicht blockieren kann, ist nur eine Anzeige.
 >
-> **Was heute fertig wurde:** E-110 behoben und von Gregor bestätigt
+> **Was am 12.10.2026 fertig wurde:** AN-1 eingespielt, in fünf Fassungen
+> gebaut und gemessen (7.2.0.79 bis 7.2.0.83), über POP alle sechs Prüffälle
+> heil, über IMAP von Gregor bestätigt; AN-2 (PR #83) gemergt und mit 7.2.0.82
+> übersetzt.
+>
+> **Was am 18.09.2026 fertig wurde:** E-110 behoben und von Gregor bestätigt
 > (`resolve_URL` warf seit 1996 jede Prozent-Sequenz weg); E-105, E-111,
 > E-112, E-113 aufgeschrieben; die Doku-Schranken in **beide** Haken
 > verdrahtet (vier hingen in keinem); vier neue Schranken; 171 → **185**
