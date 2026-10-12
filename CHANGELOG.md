@@ -13,7 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, auch an 7.2.0.82 (Testsuite 185/185). Zehn Ursachen behoben, dazu in 7.2.0.83 der Pufferschutz in `SetExtension`. **Offen:** B5.7 (IMAP ohne `SetExtension`), der IMAP-Weg ist nicht gemessen, und **Gregor hat noch nicht geprüft** |
+| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist B5.7** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
 | **AN-2** | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80; seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
@@ -211,20 +211,26 @@ gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
 `mime.cpp` (dazu ohne abschließende Null) und `DeMacifyName32` auf 255. Danach
 kürzte `CheckName` den Pfad auf 224 — **mit** Endung, aber die war da schon weg.
 
-**Behoben in 7.2.0.80:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
+**Behoben in 7.2.0.80-an1:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
 und behält die Endung; `mime.cpp` und beide `DeMacifyName32` (POP und IMAP)
 benutzen es. Ein leeres `filename=""` verdeckt ein vorhandenes `name=` nicht mehr.
 
 **Fall 05 und alle anderen:** Marke 5 meldete bei **allen sechs** „MIMEMap kennt
 den Typ NICHT" — auch für `application/pdf`, das in `[Mappings]` steht. Die
 Ursache ist **nicht** geklärt; **ANHANG-Marke 11** in `MIMEMap::Find` nennt jetzt
-jeden Ausstieg.
+jeden Ausstieg. *Stand 12.10.2026: geklärt in 7.2.0.81 (Registry-Typ `pkcs10`,
+neunter Teil). Marke 11 nennt jeden Ausstieg außer dem ersten,
+`if (!ms || !ms->m_hd)` — der bleibt stumm.*
 
 **Marke 2 berichtigt** (beide Zerleger): sie fragte nach dem CR und meldete seit
 B5.1 jede heil durchgekommene Faltung als Abbruch. Sie fragt jetzt nach dem LF.
 ## 7.2.0.80 — JavaScript und CSS verschwinden aus der Anzeige (AN-2), **nicht übersetzt**
 
 > **Hier ist nichts gebaut und nichts gestartet.**
+>
+> *Stand 12.10.2026: übersetzt erst als Teil von 7.2.0.82 (Rebuild 0 Fehler,
+> Testsuite 185/185); am laufenden Programm **nicht gemessen** — der
+> Werbefensterfall lässt sich mit dem Prüfstand nicht auslösen.*
 
 Gregor am 12.10.2026: *„nachdem eudora gestartet wurde, ist es innerhalb eines
 Fensters darin angezeigt worden. ohne daß ich etwas gemacht habe."* Eingefügt
@@ -275,6 +281,10 @@ bleiben soll, ist eine Entscheidung über das Produkt — die drei Wege stehen i
 > **Hier ist nichts gebaut und nichts gestartet.** Die Sitzung lief ohne Windows
 > und ohne Compiler. Was gemessen ist, steht in der Tabelle; alles andere ist
 > aus dem Quelltext begründet und wartet auf einen Bau.
+>
+> *Stand 12.10.2026: 7.2.0.79 ist am selben Tag übersetzt und gemessen worden —
+> 4 von 6 Prüffällen heil, siehe Messfassung 7.2.0.80-an1. Aus den sieben Teilen
+> wurden elf (B5.8 bis B5.11 in 7.2.0.80-an1, 7.2.0.81 und 7.2.0.83).*
 
 Gregors Ziel vom 12.10.2026: *„anhänge werden korrekt gespeichert - mit
 erweiterung, komplette dateiname"*. Bis zu dieser Fassung lag die Arbeit zu
@@ -291,7 +301,8 @@ beiden Dateien sind entfernt.
 | **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`**, beschrieben mit bis zu 256 Byte. Trifft jeden Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Nur IMAP — das POP-Gegenstück ist auf `CString` umgebaut | nein — aus dem Quelltext gerechnet |
 | **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`** — das Sicherheitsnetz für eine fehlende Endung fehlt dort ganz | **offen.** Es hängt an einer Bindefrage, nicht an der Logik: siehe AUFGABEN.md, B5.7 |
 
-**Zehn Debug-Marken** auf dem Weg des Namens, Bit `DEBUG_MASK_ATTACH = 0x10000`,
+**Zehn Debug-Marken** auf dem Weg des Namens (*seit 7.2.0.80-an1 elf, mit Marke 11 in
+`MIMEMap::Find`*), Bit `DEBUG_MASK_ATTACH = 0x10000`,
 einzuschalten mit `LogLevel=91295` in der Gruppe **`[Debug]`** der `eudora.ini`.
 Alles, was sie schreiben, beginnt mit `ANHANG`. Die POP-Marken 1 bis 8 und die
 IMAP-Marken 1 bis 3 sind **am laufenden Programm gemessen** — Gregors
