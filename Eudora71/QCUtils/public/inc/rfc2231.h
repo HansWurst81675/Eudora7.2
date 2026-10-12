@@ -56,4 +56,17 @@ __declspec( dllexport ) int RFC2231Zusammensetzen(const char* pName,
 __declspec( dllexport ) void RFC2231ZeichensatzUmsetzen(const char* pZeichensatz,
 														char* pName, int nName);
 
+//	Kuerzt einen Anhangnamen auf hoechstens nMax Zeichen und BEHAELT dabei
+//	die Endung. Befund AN-1, achter Teil: ein Name ueber 259 Zeichen wurde
+//	an drei Stellen stumpf von hinten gekappt - erst auf 259, dann auf 255 -,
+//	und mit dem Ende fiel genau das, was die Datei oeffnbar macht.
+//
+//	Als Endung gilt alles ab dem letzten Punkt, wenn das 2 bis 16 Zeichen
+//	sind (Punkt eingeschlossen) und vor ihr noch mindestens ein Zeichen
+//	stehen bleibt. Sonst wird einfach abgeschnitten.
+//
+//	pZiel muss nMax + 1 Zeichen fassen. pZiel und pQuelle duerfen gleich
+//	sein - so kuerzt man an Ort und Stelle.
+__declspec( dllexport ) void AnhangNameKuerzen(char* pZiel, int nMax, const char* pQuelle);
+
 #endif // _EUDORA_RFC2231_H_

@@ -70,8 +70,26 @@ BOOL MIMEMap::Find(MIMEState* ms)
 	HeaderDesc* hd = ms->m_hd;
 	LPTSTR dot;
 
-	if (!ms || !ms->m_hd->isMIME || !GetMaps())
+	//	ANHANG-Marke 11: WARUM Find scheitert. Am 12.10.2026 meldete Marke 5
+	//	(mime.cpp) bei allen sechs Pruefnachrichten "MIMEMap kennt den Typ
+	//	NICHT" - auch fuer application/pdf, das in [Mappings] steht. Drei
+	//	Ausstiege sind moeglich; jeder nennt sich jetzt selbst.
+	if (!ms || !ms->m_hd)
 		return (FALSE);
+	if (!ms->m_hd->isMIME)
+	{
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG MIMEMap::Find: Teil ist nicht als MIME markiert (isMIME)",
+			ms->m_hd->contentType, -1);
+		return (FALSE);
+	}
+	if (!GetMaps())
+	{
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG MIMEMap::Find: GetMaps scheitert - [Mappings] nicht gelesen, INIPath",
+			INIPath, (long)m_Maps.GetSize());
+		return (FALSE);
+	}
 
 	strcpy(m_Mimetype, hd->contentType);
 	strcpy(m_Subtype, hd->contentSubType);
@@ -123,7 +141,17 @@ BOOL MIMEMap::Find(MIMEState* ms)
 	}
 
 	if (!bestMIME && !bestMac)
+	{
+		if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
+		{
+			CString sTyp;
+			sTyp.Format("%s/%s", m_Mimetype, m_Subtype);
+			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+				"ANHANG MIMEMap::Find: kein Eintrag passt zu Typ/Untertyp, Eintraege",
+				sTyp, (long)m_Maps.GetSize());
+		}
 		return (FALSE);
+	}
 
 	best = bestMac;
 	if (!bestMac ||

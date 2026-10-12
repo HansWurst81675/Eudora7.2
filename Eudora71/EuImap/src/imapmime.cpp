@@ -24,6 +24,7 @@
 
 #include "ImapExports.h"
 #include "ImapMime.h"
+#include "rfc2231.h"	// AN-1, achter Teil: AnhangNameKuerzen
 
 #include "DebugNewHelpers.h"
 
@@ -97,23 +98,25 @@ static void LOCAL_DeMacifyName32(char* Name)
 	//	und das *d = 0 danach schreibt pcname[255] - ein Byte hinter den
 	//	Puffer. 255 ist richtig (so lang darf ein Dateiname unter Windows
 	//	sein), der Puffer braucht nur ein Byte mehr fuer die Null.
-	char pcname[256];
-	int len = 255;
+	//	AN-1, achter Teil: die Schleife nahm nur die ersten 255 Zeichen auf
+	//	und schnitt damit bei jedem laengeren Namen die Endung ab. Jetzt wird
+	//	an Ort und Stelle bereinigt - das Ergebnis ist nie laenger als Name -
+	//	und erst danach mit AnhangNameKuerzen auf 255 gebracht, das die
+	//	Endung behaelt.
 	char *s, *d;
 	
 	if (s = strpbrk(Name, "\r\n"))
 		*s = 0;
 
-	for (d = pcname, s = Name; *s  && len; s++)
+	for (d = Name, s = Name; *s; s++)
 	{
 		if (/*(*s & 0x80) ||*/ ((unsigned char)*s < 32) || strchr((LPCSTR)Illegal, *s))
 			continue;
 		*d++ = *s;
-		len--;
 	}
 	*d = 0;
 
-	strcpy(Name, pcname);
+	AnhangNameKuerzen(Name, 255, Name);
 }
 
 

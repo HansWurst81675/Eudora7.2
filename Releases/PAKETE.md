@@ -155,6 +155,19 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.80 — **in Arbeit**, Quellstand 7.2.0.80 (AN-1, achter Teil)
+
+| | |
+|---|---|
+| ZIP | **existiert noch nicht** |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), Zweig `patch_20261012` |
+
+Vergeben am 12.10.2026, weil 7.2.0.79 an diesem Tag gebaut und gemessen wurde
+und 7.2.0.80 davon abweicht (**V-1**). Was drinsteckt, steht in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.80.
+
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
 
 | | |

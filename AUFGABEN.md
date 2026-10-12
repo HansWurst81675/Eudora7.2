@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.79** / `VERSION` **1.0.79** (veröffentlicht ist `v1.0.72`)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.80** / `VERSION` **1.0.80** (veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -447,7 +447,17 @@ perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 
 Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **geändert in 7.2.0.79, nicht übersetzt**
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **7.2.0.79 gemessen: 4 von 6 heil; 7.2.0.80 in Arbeit**
+
+> **Am laufenden Programm gemessen, 12.10.2026** (7.2.0.79, Rebuild 0 Fehler,
+> `C:\Temp\AN1`, Prüfnachrichten über `--pop`): **00, 01, 02, 04 heil** —
+> B5.1, B5.2 und B5.5 wirken. **03** kam als 224 × `A` **ohne `.pdf`**: die
+> Kopfzeile hatte alle 304 Zeichen, dann kappten `strncpy` (259) und
+> `DeMacifyName32` (255) **von hinten** — das ist **B5.8**, behoben in 7.2.0.80
+> mit `AnhangNameKuerzen`. **05** (`filename=""`) bekam den Betreff **ohne
+> Endung**, weil `MIMEMap::Find` bei **allen sechs** scheiterte, sogar für
+> `application/pdf` — **B5.9, Ursache offen**, ANHANG-Marke 11 misst es.
+> Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.80.
 
 Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben — und am
 12.10.2026 **in den Quelltext eingespielt**. Die beiden Patchdateien, die hier

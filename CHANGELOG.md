@@ -67,6 +67,40 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.80 — Anhangnamen: lange Namen behalten die Endung (AN-1, achter Teil) — **in Arbeit**
+
+**7.2.0.79 ist am 12.10.2026 zum ersten Mal übersetzt und am laufenden Programm
+gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
+`bauen-Release.log.fehler` leer (0 Zeilen). Prüfverzeichnis `C:\Temp\AN1`,
+`LogLevel=91295` in `[Debug]`, die sechs Prüfnachrichten über
+`perl tools/anhang-pruefdaten.pl --pop` abgerufen.
+
+| Fall | gespeichert unter 7.2.0.79 | Urteil |
+|---|---|---|
+| 00 Gutfall | `Rechnung.pdf` | heil |
+| 01 gefaltet, Leerzeichen | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt Abrechnungszeitraum 2025.pdf` (76) | **B5.1 wirkt** |
+| 02 gefaltet, Tabulator | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf` (56) | **B5.1 wirkt** |
+| 03 304 Zeichen | 224 × `A`, **ohne `.pdf`** | **kaputt** |
+| 04 RFC 2231 | `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf` (56) | **B5.5 wirkt** |
+| 05 `filename=""` | `Pruefung AN-1 leerer Dateiname` — **ohne Endung** | kein `=` mehr (B5.2), aber keine Endung |
+
+**Fall 03, Ursache aus dem Log:** die Kopfzeile lieferte alle 304 Zeichen
+(B5.3 wirkt). Dann kappten drei Stellen **von hinten**: `strncpy` auf 259 in
+`mime.cpp` (dazu ohne abschließende Null), `DeMacifyName32` auf 255, und der
+Pfad auf 224. `CheckName` hätte die Endung behalten — sie war da schon weg.
+
+**Behoben in 7.2.0.80:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
+und behält die Endung; `mime.cpp` und beide `DeMacifyName32` (POP und IMAP)
+benutzen es. Ein leeres `filename=""` verdeckt ein vorhandenes `name=` nicht mehr.
+
+**Fall 05 und alle anderen:** Marke 5 meldete bei **allen sechs** „MIMEMap kennt
+den Typ NICHT" — auch für `application/pdf`, das in `[Mappings]` steht. Die
+Ursache ist **nicht** geklärt; **ANHANG-Marke 11** in `MIMEMap::Find` nennt jetzt
+jeden Ausstieg.
+
+**Marke 2 berichtigt** (beide Zerleger): sie fragte nach dem CR und meldete seit
+B5.1 jede heil durchgekommene Faltung als Abbruch. Sie fragt jetzt nach dem LF.
+
 ## 7.2.0.79 — Anhangnamen: sechs von sieben Ursachen geändert (AN-1), **nicht übersetzt**
 
 > **Hier ist nichts gebaut und nichts gestartet.** Die Sitzung lief ohne Windows
