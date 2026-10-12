@@ -642,6 +642,14 @@ public:
 	short ReinitToken;
 	BOOL UhOh;
 	BOOL Has2047;
+	// E-94 (12.10.2026): Lex822() setzt beide am Kopfanfang zurueck. Gesetzt
+	// werden sie nur von LexFill - der Stellvertreter unten tut das nicht,
+	// weil er auch Fix2047 nicht faehrt. m_FaltungLeerraum bleibt hier also 0,
+	// und der Zerleger behandelt jede Faltung wie bisher; gemessen werden
+	// weiter die Anhangnamen (AN-1), nicht E-94. E-94 prueft die Testsuite
+	// (TestPopEmpfang.cpp) und Pruefnachricht 06 am laufenden Programm.
+	BOOL m_ZeileEndetKodiert;
+	int  m_FaltungLeerraum;
 	const char* m_Text;
 	int m_Pos;
 };

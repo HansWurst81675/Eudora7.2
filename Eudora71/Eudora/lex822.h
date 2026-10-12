@@ -100,6 +100,16 @@ private:
 	BOOL UhOh;				// we tawt we taw a putty tat
 	BOOL Has2047;			// RFC 2047 parsing for 8bit chars in headers
 
+	//	E-94: eine Faltung zwischen zwei kodierten Woertern muss wegfallen
+	//	(RFC 2047, 6.2). Fix2047 sieht immer nur EINE Zeile - LexFill holt
+	//	sie einzeln -, die Faltung liegt also genau zwischen zwei Aufrufen.
+	//	LexFill haelt an der ROHEN Zeile fest, ob sie mit einem kodierten
+	//	Wort endet, und - wenn ja und die naechste mit Leerraum und "=?"
+	//	beginnt - wie viel Leerraum davor steht. Die Faltungsregel in
+	//	Lex822() verschluckt dann CR, LF und genau diesen Leerraum.
+	BOOL m_ZeileEndetKodiert;
+	int  m_FaltungLeerraum;		// > 0: die naechste Faltung verschlucken
+
 	LineReader* m_LR;		// make this a member because we can have different inputs
 	bool		m_ShouldOutputToFile;	// true if WriteHeaderToken should actually write
 	JJFile*		m_OutputFile;			// File WriteHeaderToken writes to, or NULL if

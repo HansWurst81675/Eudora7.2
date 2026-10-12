@@ -164,6 +164,8 @@ Token822Enum Lex822State::Lex822()
 		Spot = End = Buffer;
 		InStructure = 0;
 		UhOh = Has2047 = FALSE;
+		m_ZeileEndetKodiert = FALSE;	// E-94
+		m_FaltungLeerraum = 0;
 	}
 	ReinitToken = TRUE;
 	
@@ -219,6 +221,25 @@ Token822Enum Lex822State::Lex822()
 		}
 		
 		// Is this a folded CRLF?
+		//
+		//	E-94: zwischen zwei kodierten Woertern faellt die Faltung WEG statt
+		//	zum Leerzeichen zu werden (RFC 2047, 6.2). Ob es eine solche ist, hat
+		//	LexFill an den rohen Zeilen festgestellt (m_FaltungLeerraum). Nur im
+		//	unstrukturierten Text (CollectText: Betreff, Kommentare): dort steht
+		//	das CR davor schon in der Marke, und die Marke wird so, wie sie ist,
+		//	in die Mailbox geschrieben - Betreff und Postfachliste (summary.cpp
+		//	liest nur die ERSTE Zeile einer gefalteten Kopfzeile) bekommen den
+		//	Text dann in einem Stueck.
+		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822) &&
+			m_FaltungLeerraum > 0 && State == CollectText &&
+			End - Spot > m_FaltungLeerraum)
+		{
+			if (TokenSpot > 0 && Token[TokenSpot - 1] == '\r')
+				Token[--TokenSpot] = 0;
+			Spot += 1 + m_FaltungLeerraum;		// LF und der Leerraum davor
+			m_FaltungLeerraum = 0;
+			continue;
+		}
 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822))
 			charClass = SPACE822;   // treat it like a space
 
@@ -848,6 +869,39 @@ Char822Enum Lex822State::LexFill()
 	// This isn't strictly kosher, but we're going to do it here anyway,
 	// because I can't imagine how to do this the "right" way, which is
 	// to integrate it with the lexing & grammar.  So shoot me.
+	//	E-94: an der ROHEN Zeile, bevor Fix2047 sie dekodiert. Beginnt sie mit
+	//	Leerraum und "=?" und endete die vorige mit einem kodierten Wort, dann
+	//	ist die Faltung davor eine zwischen zwei kodierten Woertern. Der
+	//	Leerraum vor dem ersten "=?" bleibt durch Fix2047 unberuehrt - genau
+	//	so viele Zeichen verschluckt die Faltungsregel, und nicht mehr: ein
+	//	Leerzeichen, das erst die Dekodierung erzeugt ("=?...?Q?_len?="), ist
+	//	echter Text.
+	{
+		int nLeer = 0;
+		while (nLeer < size && (readHere[nLeer] == ' ' || readHere[nLeer] == '\t'))
+			nLeer++;
+		BOOL bBeginntKodiert = (nLeer > 0 && nLeer + 1 < size &&
+								readHere[nLeer] == '=' && readHere[nLeer + 1] == '?');
+		m_FaltungLeerraum = (m_ZeileEndetKodiert && bBeginntKodiert) ? nLeer : 0;
+
+		int nEnde = size;
+		if (nEnde >= 2 && readHere[nEnde - 2] == '\r' && readHere[nEnde - 1] == '\n')
+			nEnde -= 2;
+		//	Nur innerhalb von size suchen - ob ReadLine mit einer Null
+		//	abschliesst, ist hier nicht zugesichert.
+		BOOL bOeffnet = FALSE;
+		for (int i = 0; i + 1 < nEnde - 2; i++)
+		{
+			if (readHere[i] == '=' && readHere[i + 1] == '?')
+			{
+				bOeffnet = TRUE;
+				break;
+			}
+		}
+		m_ZeileEndetKodiert = (bOeffnet && nEnde >= 4 &&
+							   readHere[nEnde - 2] == '?' && readHere[nEnde - 1] == '=');
+	}
+
 	Has2047 = Fix2047((char*)readHere, size) || Has2047;
 	
 	End = readHere + size;

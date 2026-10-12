@@ -68,6 +68,41 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.84 — Betreff nicht mehr mitten im Wort umbrochen (E-94) — **in Arbeit**
+
+**Gregors Fall:** *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
+— der web.de-Webmailer zerlegt einen langen Betreff in mehrere kodierte Wörter
+(`=?UTF-8?Q?…?=`) und faltet dazwischen, die Grenzen mitten im Wort. Das darf er.
+RFC 2047, 6.2: der Leerraum zwischen zwei benachbarten kodierten Wörtern wird
+ignoriert — **auch eine Faltung**. Eudora ließ sie stehen
+(`;//lastEqual += 2; // toast a trailing return`), und beim Anzeigen wurde sie zum
+Leerzeichen.
+
+**Gemessen, bevor geändert wurde:**
+
+| | Ergebnis vor der Behebung |
+|---|---|
+| Testsuite, neu: `Test_GefalteteKodierteWoerter` (POP) und `…Imap` | **rot**: ist `bestel` 0D 0A 20 `len`, soll `bestellen` |
+| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Toner bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Toner bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
+
+**Behoben an zwei Stellen, je in POP und IMAP:**
+
+1. **`Fix2047` / `ImapFix2047`:** zwischen zwei kodierten Wörtern fällt jetzt
+   auch eine Faltung weg. Ein CRLF **ohne** folgenden Leerraum (Ende der
+   Kopfzeile) bleibt wie bisher. Damit sind die Felder geheilt, die
+   `ImapDownload.cpp:2276` aus der ganzen Kopfzeile liest.
+2. **`Lex822` / `ImapLex822`:** beide Zerleger holen die Kopfzeile **zeilenweise**
+   (`LexFill`), `Fix2047` sieht also nie beide Wörter zugleich. `LexFill` hält an
+   der **rohen** Zeile fest, ob sie mit einem kodierten Wort endet und die nächste
+   mit Leerraum und `=?` beginnt; die Faltungsregel verschluckt dann CR, LF und
+   genau diesen Leerraum — nur im unstrukturierten Text (`CollectText`: Betreff,
+   Kommentare). Die Mailbox bekommt den Betreff in einem Stück, und damit auch die
+   Postfachliste.
+
+**Gegenprobe:** eine Faltung vor **Klartext** bleibt Leerraum (eigener Test).
+**Testsuite 188/188**, `tools/kopfzeile-pruefen.pl` **10 Fälle, 0 Abweichungen**
+(die Anhangnamen bleiben heil). **Noch nicht gebaut, nicht am Programm gemessen.**
+
 ## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil) — **gebaut und gemessen**
 
 **Gebaut und gemessen am 12.10.2026:** Rebuild, Rückgabewert 0,

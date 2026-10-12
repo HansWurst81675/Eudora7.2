@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.83** / `VERSION` **1.0.83** (veröffentlicht als `v1.0.83`, 12.10.2026)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.83`, 12.10.2026)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -721,6 +721,21 @@ nicht passierte; es sah aus wie wirrer Text am Anfang der Nachricht. Verwandt
 mit **E-105** (versteckter Vorschautext, weil Paige `display:none` nicht kennt).
 
 ---
+
+### B7 · Betreff mitten im Wort umbrochen (**E-94**) — **Ursache gemessen, Behebung in 7.2.0.84, noch nicht gebaut**
+
+Gregors Fall: *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*.
+Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
+**„Jetzt, vor E-112"** gilt: erst die Tests rot, dann die Behebung.
+
+| Schritt | Stand |
+|---|---|
+| Tests `Fix2047` und `ImapFix2047` mit gefalteten kodierten Wörtern (`Eudora71/Tests/TestPopEmpfang.cpp`, `UnderTestImap2047.cpp`) | **rot** an 7.2.0.83 (`bestel` 0D 0A 20 `len`), **grün** nach der Behebung — 188/188 |
+| Prüfnachricht **06** im POP-Prüfstand (`tools/anhang-pruefdaten.pl --pop`) | an 7.2.0.83 gemessen: Faltungen in `In.mbx`, Postfachliste nur `Pruefung E-94: Toner bestel` |
+| Behebung `Fix2047`/`ImapFix2047` und beide Zerleger (`LexFill`, Faltungsregel) | im Quelltext, 7.2.0.84 |
+| Bau, Prüfnachrichten 00–06 am laufenden Programm, PRÜFER | **offen** |
+
+Einzelheiten: [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.84; BEFUNDE.md, E-94.
 
 ## C — Das Auslieferungspaket
 

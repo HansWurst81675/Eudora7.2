@@ -179,6 +179,8 @@ Token822Enum ImapLex822State::Lex822()
 		m_pSpot		= m_pEnd = m_Buffer;
 		m_InStructure = 0;
 		m_UhOh		= m_Has2047 = FALSE;
+		m_ZeileEndetKodiert = FALSE;	// E-94
+		m_FaltungLeerraum = 0;
 	}
 	m_ReinitToken = TRUE;
 	
@@ -234,6 +236,23 @@ Token822Enum ImapLex822State::Lex822()
 		}
 		
 		// Is this a folded CRLF?
+		//
+		//	E-94: zwischen zwei kodierten Woertern faellt die Faltung WEG statt
+		//	zum Leerzeichen zu werden (RFC 2047, 6.2) - wie in lex822.cpp. Ob es
+		//	eine solche ist, hat LexFill an den rohen Zeilen festgestellt
+		//	(m_FaltungLeerraum). Nur im unstrukturierten Text (CollectText:
+		//	Betreff, Kommentare): dort steht das CR davor schon in der Marke,
+		//	und die Marke wird so in die Mailbox geschrieben.
+		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822) &&
+			m_FaltungLeerraum > 0 && m_State == CollectText &&
+			m_pEnd - m_pSpot > m_FaltungLeerraum)
+		{
+			if (m_TokenSpot > 0 && m_Token[m_TokenSpot - 1] == '\r')
+				m_Token[--m_TokenSpot] = 0;
+			m_pSpot += 1 + m_FaltungLeerraum;	// LF und der Leerraum davor
+			m_FaltungLeerraum = 0;
+			continue;
+		}
 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822))
 			charClass = SPACE822;   // treat it like a space
 
@@ -587,6 +606,39 @@ Char822Enum ImapLex822State::LexFill()
 	// This isn't strictly kosher, but we're going to do it here anyway,
 	// because I can't imagine how to do this the "right" way, which is
 	// to integrate it with the lexing & grammar.  So shoot me.
+	//	E-94: an der ROHEN Zeile, bevor ImapFix2047 sie dekodiert. Beginnt sie mit
+	//	Leerraum und "=?" und endete die vorige mit einem kodierten Wort, dann
+	//	ist die Faltung davor eine zwischen zwei kodierten Woertern. Der
+	//	Leerraum vor dem ersten "=?" bleibt durch ImapFix2047 unberuehrt - genau
+	//	so viele Zeichen verschluckt die Faltungsregel, und nicht mehr: ein
+	//	Leerzeichen, das erst die Dekodierung erzeugt ("=?...?Q?_len?="), ist
+	//	echter Text.
+	{
+		int nLeer = 0;
+		while (nLeer < size && (readHere[nLeer] == ' ' || readHere[nLeer] == '\t'))
+			nLeer++;
+		BOOL bBeginntKodiert = (nLeer > 0 && nLeer + 1 < size &&
+								readHere[nLeer] == '=' && readHere[nLeer + 1] == '?');
+		m_FaltungLeerraum = (m_ZeileEndetKodiert && bBeginntKodiert) ? nLeer : 0;
+
+		int nEnde = size;
+		if (nEnde >= 2 && readHere[nEnde - 2] == '\r' && readHere[nEnde - 1] == '\n')
+			nEnde -= 2;
+		//	Nur innerhalb von size suchen - ob ReadLine mit einer Null
+		//	abschliesst, ist hier nicht zugesichert.
+		BOOL bOeffnet = FALSE;
+		for (int i = 0; i + 1 < nEnde - 2; i++)
+		{
+			if (readHere[i] == '=' && readHere[i + 1] == '?')
+			{
+				bOeffnet = TRUE;
+				break;
+			}
+		}
+		m_ZeileEndetKodiert = (bOeffnet && nEnde >= 4 &&
+							   readHere[nEnde - 2] == '?' && readHere[nEnde - 1] == '=');
+	}
+
 	m_Has2047 = ImapFix2047((char*)readHere, size) || m_Has2047;
 	
 	m_pEnd = readHere + size;

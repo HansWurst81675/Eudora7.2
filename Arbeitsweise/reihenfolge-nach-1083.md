@@ -32,3 +32,5 @@ Gregor auf meinen Vorschlag dreier Teststufen (Unit-Test POP-`Fix2047`, Unit-Tes
 **Neue Reihenfolge:** Release v1.0.83 → **E-94 (erst die Tests rot, dann Behebung, dann grün)** → E-112 → E-113 → E-77.
 
 **Zweigname für E-94 von Gregor bestätigt** (12.10.2026, *„ja, branch name ist ok"*): `e94-betreff-faltung`. Anlegen erst, wenn `release-v1.0.83` gemergt und gelöscht ist; dann in `tools/ZWEIGE.md` eintragen.
+
+**Stand 12.10.2026, 13:35:** Release v1.0.83 veröffentlicht (11:18 UTC), PR #85 gemergt, `release-v1.0.83` gelöscht. **`e94-betreff-faltung` angelegt** auf `e4c87fb`, verfolgt `origin/e94-betreff-faltung`. Begonnen mit Stufe 1 (rote Tests).

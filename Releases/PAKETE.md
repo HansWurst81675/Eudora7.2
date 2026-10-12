@@ -156,6 +156,18 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.84 — **in Arbeit**, Quellstand 7.2.0.84 (E-94)
+
+| | |
+|---|---|
+| ZIP | **existiert noch nicht** |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.84 (`Eudora71/Version.h`), Zweig `e94-betreff-faltung` |
+
+Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlichten
+7.2.0.83 ändert (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.84.
+
 ## 1.0.83 — **veröffentlicht als `v1.0.83`** am 12.10.2026, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
 
 | | |
