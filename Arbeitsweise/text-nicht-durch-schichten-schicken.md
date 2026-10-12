@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:56:55.649Z
+  modified: 2026-10-12T11:15:41.665Z
 ---
 
 Schranke: tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
@@ -278,7 +278,9 @@ eines einzigen Befehls.
 - **`od -c` auf die Ersatzdatei, bevor sie eingesetzt wird.** Um 12:11:57
   stand das im Befehl und hat die Richtigkeit gezeigt. Um 12:54:33 fehlte es.
 
-**Folge, noch offen:** `CHANGELOG.md:97` hat auch nach `643ad27` noch
-``(`\?\`)``. Der LEKTOR-19-Mangel „Langpfad-Präfix" ist also **nicht
-behoben**, obwohl `Befunde/LEKTOR-19.md` und `LEKTORAT.md` „alle
-eingearbeitet" melden.
+**Folge:** `CHANGELOG.md:97` hatte auch nach `643ad27` noch nur einen
+Rückstrich vor dem Fragezeichen. Der LEKTOR-19-Mangel „Langpfad-Präfix" war
+also **nicht behoben**, obwohl `Befunde/LEKTOR-19.md` und `LEKTORAT.md`
+„alle eingearbeitet" meldeten. **Behoben in `bb01b74`** (LEKTOR-20, L-19.3)
+mit dem Edit-Werkzeug; nachgezählt über `\x5c`: zwei Rückstriche, Fragezeichen,
+ein Rückstrich (LEKTOR-21 hat diesen Absatz als veraltet gemeldet).

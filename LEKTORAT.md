@@ -1135,3 +1135,10 @@ Funde aus LEKTOR-16 und LEKTOR-17, ausgenommen das Werkzeug (L-16.1/L-17.8).
 `tools/WERKZEUGE.md` (höchste genannte Fassung 7.2.0.73); `ZIEL.md`,
 `PORTIERUNG.md` und `tools/pruefdaten/LIESMICH.md` sind aus der Liste
 verschwunden. `perl tools/pruefe-stand-md.pl` — siehe Bericht.
+
+## Sechsundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-21.md`)
+
+Kurzlauf vor dem Release v1.0.83 über die Liste der offenen Befunde (29) und die
+Nachträge des CHRONISTEN. Ein Mangel (eine Lehre nannte das Langpfad-Präfix als
+noch offen) und ein Nebenbefund im Kommentar von `tools/offene-befunde.pl` —
+**beide behoben** im selben Commit.

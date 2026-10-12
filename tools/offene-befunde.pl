@@ -92,9 +92,13 @@ for my $zeile (split /\n/, $befunde) {
     next unless @s >= 4;
 
     # Erste Zeile gewinnt - und zwar die erste Zeile UEBERHAUPT. Bis zum
-    # 12.10.2026 galt das nur fuer schon angenommene Zeilen: A-1 steht oben
-    # mit "heute ueberholt" und weiter unten in einer Teiltabelle mit
-    # "teilweise"; die zweite haette die erste ueberstimmt.
+    # 12.10.2026 galt das nur fuer schon angenommene Zeilen: eine erste
+    # Zeile OHNE Urteilswort liess die naechste Zeile derselben Kennung
+    # zum Zug kommen, und die steht meist in einer Teiltabelle weit unten.
+    # A-1 zum Beispiel steht oben in der Uebersicht mit "teilweise"
+    # (BEFUNDE.md:147) und unten mit "heute ueberholt" (:5020) - gelten
+    # soll die Uebersicht. (LEKTOR-21 hat den ersten Wortlaut dieses
+    # Kommentars berichtigt: er hatte oben und unten vertauscht.)
     next if $gesehen{$k}++;
 
     my $urteil = $s[3];
