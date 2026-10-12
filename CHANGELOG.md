@@ -94,7 +94,7 @@ vier Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
 Der IMAP-Weg verliert also keine Endung. Was bei einem sehr langen Namen
 wegfällt, ist das Ende des **Stamms** (hier `…_DBAutoUpdate-…Sina.tar`), weil
 der volle Pfad sonst über 260 Zeichen ginge — vollständig ginge das nur mit
-Langpfaden (`\?\`). Unter dem gekürzten Namen liegt die Datei inzwischen nicht mehr; im Verzeichnis stehen zwei gleich große Kopien (351 502 Byte, 12:32) unter anderen Namen — vermutlich von Gregor umbenannt, nicht nachgefragt. **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
+Langpfaden (`\\?\`). Unter dem gekürzten Namen liegt die Datei inzwischen nicht mehr; im Verzeichnis stehen zwei gleich große Kopien (351 502 Byte, 12:32) unter anderen Namen — vermutlich von Gregor umbenannt, nicht nachgefragt. **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
 Anhangverzeichnis von 08:44/08:45 (vor 1.0.83, laut Log 7.2.0.77), je
 1 204 Byte, beginnen **nicht** mit `%PDF` — Ursache nicht untersucht.
 
