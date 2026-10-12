@@ -72,3 +72,4 @@
 - [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)
 - [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht
 - [Fertige Fassung bereitstellen](fertige-fassung-bereitstellen.md) — erst eigene Tests, dann als neues Verzeichnis neben Gregors letztem Eudora72-*-release; das alte nicht anfassen
+- [Reihenfolge nach 1.0.83](reihenfolge-nach-1083.md) — Gregor: Release, dann E-112, E-113, E-94, E-77; E-94-Ursache am Quelltext belegt

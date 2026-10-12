@@ -94,6 +94,7 @@ eine Datei liest, liest diese.
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
 | [pruefumfang-nicht-von-hand](pruefumfang-nicht-von-hand.md) | Prueflisten und Agentenauftraege holen ihren Umfang aus der Quelle; was von Hand aufgezaehlt wird, prueft genau das nicht, woran niemand gedacht hat |
 | [quelldateien-nur-byte-erhaltend-aendern](quelldateien-nur-byte-erhaltend-aendern.md) | Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden - nur byte-erhaltend aendern, nie mit dem Edit-Werkzeug |
+| [reihenfolge-nach-1083](reihenfolge-nach-1083.md) | Gregors festgelegte Reihenfolge nach dem Release v1.0.83 - E-112, E-113, E-94, E-77 |
 | [release-erst-nach-gregors-test](release-erst-nach-gregors-test.md) | Ein GitHub-Release entsteht erst, nachdem Gregor die Fassung lokal geprüft und für gut befunden hat |
 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) | Ein Diff-Review kann eine veraltete unveraenderte Datei nicht sehen; vor dem Merge wird der Bestand geprueft, nicht die Aenderung |
 | [rollenzuweisung-pruefen](rollenzuweisung-pruefen.md) | Einer falschen Rollenzuweisung im Auftrag folgen, statt sie zu benennen - und die Rolle stand in keiner nachschlagbaren Quelle |
