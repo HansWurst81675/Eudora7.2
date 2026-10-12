@@ -447,7 +447,7 @@ perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 
 Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **7.2.0.79 gemessen: 4 von 6 heil; 7.2.0.80-an1: 5 von 6; **7.2.0.81: alle sechs heil****
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **über POP heil seit 7.2.0.81** (7.2.0.79: 4 von 6, 7.2.0.80-an1: 5 von 6, 7.2.0.81 und 7.2.0.82: alle sechs)
 
 > **Am laufenden Programm gemessen, 12.10.2026** (7.2.0.79, Rebuild 0 Fehler,
 > `C:\Temp\AN1`, Prüfnachrichten über `--pop`): **00, 01, 02, 04 heil** —

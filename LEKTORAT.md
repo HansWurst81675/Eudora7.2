@@ -1077,3 +1077,22 @@ Programm gemessen (7.2.0.79: 4 von 6 Prüffällen heil). Der Lauf ging nur lesen
 
 **Eingearbeitet ist bisher nur L-16.9** und die `CheckName`-Formulierung im
 CHANGELOG. Der Rest ist offen; er gehört vor einen Merge von `an1-endungen`.
+
+## Zweiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-17.md`)
+
+**Anlass:** Merge von PR #83 (AN-2) in `an1-endungen`, Stand 7.2.0.82. Nur
+lesend über die MDs seit `4ec9dd1`.
+
+| Fund | Kurz |
+|---|---|
+| **L-17.1** | AN-2 an sieben Stellen nur „nicht übersetzt", ohne den Stand 7.2.0.82 |
+| **L-17.2** | AN-1-Inhalte heißen an sieben Stellen „7.2.0.80" statt „7.2.0.80-an1"; zwei Verweise zeigen dadurch auf den AN-2-Abschnitt |
+| **L-17.3** | alter Stand in `ZIEL.md:17`, `README.md:149`, `PORTIERUNG.md:43`, `tools/ZWEIGE.md:93`; 1.0.82 in PAKETE noch „in Arbeit" — **letzteres erledigt** |
+| **L-17.4** | AUFGABEN B5: Überschrift mit kaputter Fettschrift — **erledigt**; Tabelle kennt B5.8 bis B5.10 nicht |
+| **L-17.5** | Zahl der Ursachen schwankt zwischen sechs, sieben und zehn |
+| **L-17.6** | CHANGELOG-Kopf sagte zu AN-1 „nichts davon ist übersetzt" — **erledigt** |
+| **L-17.7** | BEFUNDE AN-1: unter dem neuen Kasten stehen alte Aussagen |
+| **L-17.8** | `offene-befunde.pl` meldet 16/16 gedeckt und sieht AN-1, AN-2, E-112 nicht (= L-16.1) |
+
+**Berichtigung zu Durchgang 21:** dort stand „eingearbeitet ist bisher nur
+L-16.9" — tatsächlich waren es zu dem Zeitpunkt auch L-16.7 und Teile von L-16.2.
