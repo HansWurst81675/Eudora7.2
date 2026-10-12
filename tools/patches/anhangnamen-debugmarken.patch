@@ -1,3 +1,53 @@
+diff --git a/Eudora71/EuImap/src/ImapDownload.cpp b/Eudora71/EuImap/src/ImapDownload.cpp
+index e2f8c90..ef45fab 100644
+--- a/Eudora71/EuImap/src/ImapDownload.cpp
++++ b/Eudora71/EuImap/src/ImapDownload.cpp
+@@ -3723,6 +3723,12 @@ BOOL CImapDownloader::BreakoutBodyToEmbeddedFile (IMAPUID uid, BODY *pParentBody
+ 	if (!*fName)
+ 		strcpy(fName, CRString(IDS_UNTITLED));
+ 
++	//	ANHANG-Marke 5 (IMAP, eingebettet): derselbe Punkt fuer eingebettete
++	//	Teile. Auch hier kein MIMEMap::SetExtension.
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		"ANHANG Name (IMAP): geht als eingebettet zur Datei (ohne SetExtension)",
++		fName, (long)strlen(fName));
++
+ 	// Create
+ 	JJFileMT* pEmbFile = OpenEmbeddedFile(fName);
+ 
+@@ -4107,6 +4113,14 @@ BOOL CImapDownloader::CreateAttachFile (BODY *pBody, CString &Pathname)
+ 	if (!*tmp)
+ 		strcpy(tmp, CRString(IDS_UNTITLED));
+ 
++	//	ANHANG-Marke 5 (IMAP): der Name, der gleich zur Datei geht.
++	//	Anders als der POP-Weg (mime.cpp) ruft der IMAP-Weg hier KEIN
++	//	MIMEMap::SetExtension auf - das Sicherheitsnetz, das eine fehlende
++	//	Endung aus dem MIME-Typ nachtraegt, gibt es ueber IMAP gar nicht.
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		"ANHANG Name (IMAP): geht als Anhang zur Datei (ohne SetExtension)",
++		tmp, (long)strlen(tmp));
++
+ 	// Get the directory housing the MBX file so we can access it's Attach subdirectory.
+ 	CString szMailboxDir;
+ 	MbxFilePathToMailboxDir (GetMbxPathname (), szMailboxDir);
+@@ -6021,6 +6035,17 @@ void GetFilenameParameter (BODY *pBody, CString& szFilename)
+ 		szFilename.TrimRight();
+ 		szFilename.TrimLeft();
+ 	}
++
++	//	ANHANG-Marke 4 (IMAP): woher der Name kommt. ACHTUNG - ueber IMAP
++	//	stammt er NICHT aus Lex822, sondern aus der BODYSTRUCTURE-Antwort
++	//	des Servers (c-client-Struktur BODY/PARAMETER). Die Faltung hat der
++	//	Server also schon aufgeloest; AN-1 Teil 1 kann hier nicht zuschlagen.
++	//	Was hier leer bleibt, ist ein fehlendes filename/name - zum Beispiel
++	//	bei RFC 2231 (AN-1 Teil 5).
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		szFilename.IsEmpty() ? "ANHANG Name (IMAP): KEIN filename/name in der BODYSTRUCTURE"
++			: "ANHANG Name (IMAP): aus der BODYSTRUCTURE",
++		(LPCTSTR)szFilename, (long)szFilename.GetLength());
+ }
+ 
+ 
 diff --git a/Eudora71/EuImap/src/ImapHeader.cpp b/Eudora71/EuImap/src/ImapHeader.cpp
 index a3bd287..f071953 100644
 --- a/Eudora71/EuImap/src/ImapHeader.cpp
@@ -60,6 +110,77 @@ index d0631d5..7e0965a 100644
  		
  		// ok, process the character
  		switch (m_State)
+diff --git a/Eudora71/EuImap/src/imapmime.cpp b/Eudora71/EuImap/src/imapmime.cpp
+index e6aa1f9..a941e5e 100644
+--- a/Eudora71/EuImap/src/imapmime.cpp
++++ b/Eudora71/EuImap/src/imapmime.cpp
+@@ -124,6 +124,15 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
+ 
+ 	if ((strlen(DirName) + strlen(FName)) > _MAX_PATH-2)	// The file is too big to create...
+ 	{
++		//	ANHANG-Marke 8 (IMAP): hier kuerzt LOCAL_CheckName, weil Pfad und
++		//	Name zusammen ueber _MAX_PATH-2 gehen. Die Endung wird dabei
++		//	erhalten - das ist der eine Ort auf dem IMAP-Weg, der es richtig
++		//	macht. Ein Name OHNE Punkt verliert hier einfach sein Ende.
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			strchr(FName, '.') ? "ANHANG CheckName (IMAP): zu lang, kuerzt mit Endung"
++				: "ANHANG CheckName (IMAP): zu lang, KEIN Punkt - Ende faellt weg",
++			FName, (long)strlen(FName));
++
+ 		strncpy(FinalFname, DirName, strlen(DirName)+1);
+ 		int endofFname = strlen(FinalFname);
+ 		FinalFname[endofFname] = SLASH;
+@@ -162,6 +171,14 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
+ 	//store in tmp the file name without the extension
+ 	DOSptr = const_cast<char *>(strchr(FName, '.'));
+ 	len = (DOSptr? DOSptr - FName : strlen(FName));
++	//	ANHANG-Marke 9 (IMAP): tmp ist char[255]. Ist len 255 oder groesser,
++	//	schreibt das tmp[len] = 0 darunter HINTER den Puffer, auf den Stapel.
++	//	Das trifft jeden Anhangnamen ab 255 Zeichen ohne Punkt - und der Name
++	//	kommt vom Server. Nur gemeldet, nicht behoben: diese Datei traegt
++	//	Marken, keine Behebung (Befund AN-1).
++	if (len >= (int)sizeof(tmp))
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			"ANHANG CheckName (IMAP): ACHTUNG tmp[255] laeuft ueber", FName, (long)len);
+ 	strncpy(tmp, FName, len);
+ 	tmp[len] = 0;
+ 
+@@ -286,6 +303,13 @@ JJFileMT* OpenLocalAttachFile(char *pParentDir, char* Name, BOOL bCreateStub)
+ 	}
+ 
+ 
++	//	ANHANG-Marke 6 (IMAP): der Name, wie er bei der Datei ankommt - vor
++	//	und nach der Zeichenbereinigung. LOCAL_DeMacifyName32 schreibt bei
++	//	255 uebernommenen Zeichen ein Byte hinter pcname[255] (AN-1 Teil 4,
++	//	gleicher Fehler wie mime.cpp:948), LOCAL_DeMacifyName kappt auf 8+3.
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		"ANHANG Datei (IMAP): Name vor DeMacify", Name, (long)strlen(Name));
++
+ 	// Turn the macintosh name into something more useful
+ 	BOOL bLongFileNameSupport = ::LongFileSupportMT(DirName);
+ 	if (bLongFileNameSupport)
+@@ -293,11 +317,21 @@ JJFileMT* OpenLocalAttachFile(char *pParentDir, char* Name, BOOL bCreateStub)
+ 	else
+ 		LOCAL_DeMacifyName(Name);
+ 
++	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++		bLongFileNameSupport ? "ANHANG Datei (IMAP): nach LOCAL_DeMacifyName32"
++			: "ANHANG Datei (IMAP): nach LOCAL_DeMacifyName (8+3!)",
++		Name, (long)strlen(Name));
++
+ 	if (LOCAL_CheckName(DirName, Name, FinalFname, bLongFileNameSupport))
+ 	{
+ 		FileName = strrchr(FinalFname, SLASH) + 1;
+ 		wsprintf(buf, "%s%s%s", DirName,
+ 		((DirName[strlen(DirName) - 1] == SLASH)? "" : SLASHSTR), FileName);
++
++		//	ANHANG-Marke 7 (IMAP): so heisst die Datei am Ende wirklich. Wer
++		//	nur eine Zeile aus dem Log braucht, nimmt diese.
++		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
++			"ANHANG Datei (IMAP): WIRD GESCHRIEBEN ALS", buf, (long)strlen(FileName));
+ 	}
+ 
+ 	// Let's get the file
 diff --git a/Eudora71/Eudora/header.cpp b/Eudora71/Eudora/header.cpp
 index bb9477c..9405cb1 100644
 --- a/Eudora71/Eudora/header.cpp
@@ -250,7 +371,7 @@ index bd35129..3ba0e87 100644
  		if (GetIniShort(IDS_INI_AUTO_ATTACHED_DELETE_VCF))
  		{
 diff --git a/Eudora71/QCUtils/public/inc/debug.h b/Eudora71/QCUtils/public/inc/debug.h
-index 78ff3e6..8b9608c 100644
+index 78ff3e6..71276db 100644
 --- a/Eudora71/QCUtils/public/inc/debug.h
 +++ b/Eudora71/QCUtils/public/inc/debug.h
 @@ -36,6 +36,13 @@ const DebugMaskType DEBUG_MASK_SEARCH		= 0x4000;	// Searching and search indexin

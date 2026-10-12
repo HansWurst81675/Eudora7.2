@@ -1,28 +1,35 @@
 # Patch: Debug-Marken auf dem Weg eines Anhangnamens
 
 **Datei:** `anhangnamen-debugmarken.patch`
-**Betrifft:** sieben Dateien —
+**Betrifft:** neun Dateien —
 `QCUtils/public/inc/debug.h`, `QCUtils/src/debug.cpp`,
 `Eudora/lex822.cpp`, `Eudora/header.cpp`, `Eudora/mime.cpp` (POP),
-`EuImap/src/ImapLex822.cpp`, `EuImap/src/ImapHeader.cpp` (IMAP)
+`EuImap/src/ImapLex822.cpp`, `EuImap/src/ImapHeader.cpp`,
+`EuImap/src/ImapDownload.cpp`, `EuImap/src/imapmime.cpp` (IMAP)
 **Befund:** **AN-1**
-**Stand:** **nicht angewandt** — bereitgelegt, weil in dieser Sitzung kein
-Compiler zur Verfügung stand
+**Stand:** **nicht angewandt** — er liegt bereit und wird mit `git apply`
+eingespielt.
 
 > **Dieser Patch und `anhangnamen-faltung.patch` stören sich nicht.** Beide
 > greifen einzeln auf den unveränderten Baum, und die Behebung greift auch noch,
-> wenn die Marken schon drin sind (mit `git apply --check` nachgewiesen). Die
-> Marke im Zerleger sitzt deshalb **vor** dem `switch` und nicht im
-> `case CR822:`, den der Behebungspatch umschreibt.
+> wenn die Marken schon drin sind (mit `git apply --check` nachgewiesen, zuletzt
+> am 12.10.2026 gegen `d5669e2`). Die Marke im Zerleger sitzt deshalb **vor**
+> dem `switch` und nicht im `case CR822:`, den der Behebungspatch umschreibt.
 
 ---
+
+## Was daran gemessen ist und was nicht
+
+| | |
+|---|---|
+| **Marken 1 bis 8 (POP) und 1 bis 3 (IMAP)** | **am laufenden Programm gemessen.** Gregor hat die vorige Fassung dieses Patches am 12.10.2026 übersetzt (7.2.0.77, Release, 0 Fehler) und Mail abgerufen. Sein `eudora.log` enthält **285 `ANHANG`-Zeilen**. Der Schalter `[Debug] LogLevel=91295` steht als `LogLevel 91295 (0x1649F)` im Logkopf — die Angabe unten ist damit nachgemessen, nicht behauptet |
+| **Marken 4 bis 9 der IMAP-Seite** | **nicht übersetzt.** Sie sind am 12.10.2026 dazugekommen, nachdem dieses Log gezeigt hatte, dass der IMAP-Weg keine davon hatte. Geprüft ist: `g++ -fsyntax-only -Wall -Wextra` über alle eingefügten Blöcke, fehler- und warnungsfrei |
 
 ## Wozu
 
 Wenn beim Mailabruf ein Anhang unter einem falschen Namen landet, soll man in
 **einer Logdatei** sehen können, **wo** auf dem Weg der Name kaputtgeht — ohne
-Debugger, ohne Haltepunkte, ohne Neubau. Der Weg hat sieben Stationen, und an
-jeder kann etwas verlorengehen.
+Debugger, ohne Haltepunkte, ohne Neubau.
 
 ## Einschalten
 
@@ -54,7 +61,7 @@ Alles, was dieser Patch schreibt, beginnt mit `ANHANG`:
 grep ANHANG eudora.log
 ```
 
-## Die acht Marken
+## Die Marken des POP-Wegs
 
 | # | Wo | Was sie sagt |
 |---|---|---|
@@ -67,9 +74,31 @@ grep ANHANG eudora.log
 | 7 | dieselbe Stelle, nach `CheckName` | **Wie die Datei am Ende wirklich heißt**, mit vollem Pfad |
 | 8 | `CheckName` (`mime.cpp:1127`) | Dass hier gekürzt wurde — das ist der eine Ort auf dem ganzen Weg, der die Endung dabei richtig erhält |
 
-Die Marken 1, 2 und 3 gibt es **zweimal**: einmal für POP (`lex822.cpp`,
-`header.cpp`) und einmal für IMAP (`ImapLex822.cpp`, `ImapHeader.cpp`). Sie sind
-im Log an `ANHANG ImapLex822:` bzw. `ANHANG ImapKopfzeile:` zu erkennen.
+## Die Marken des IMAP-Wegs
+
+**Der IMAP-Weg ist nicht dieselbe Strecke mit anderen Dateinamen, sondern eine
+andere Strecke.** Das ist die wichtigste Berichtigung, die aus Gregors Log vom
+12.10.2026 folgt:
+
+> Über IMAP kommt der Anhangname **nicht** aus `Lex822`, sondern aus der
+> **BODYSTRUCTURE**-Antwort des Servers — `GetFilenameParameter`
+> (`ImapDownload.cpp:5964`) liest ihn aus den c-client-Strukturen
+> `BODY`/`PARAMETER`. Eine Faltung hat der Server da längst aufgelöst.
+> **AN-1, erster Teil, kann über IMAP also gar nicht zuschlagen.**
+
+`ImapLex822`/`ImapHeader` zerlegen den Kopf trotzdem — aber für die
+Mailbox-Datei, nicht für den Dateinamen. Die Marken 1 bis 3 der IMAP-Seite
+sitzen dort und sind deshalb für AN-1 **nebensächlich**; nützlich sind sie
+trotzdem, siehe „Was das Log sonst noch zeigte".
+
+| # | Wo | Was sie sagt |
+|---|---|---|
+| 4 | `GetFilenameParameter` (`ImapDownload.cpp:5964`) | Welchen Namen die BODYSTRUCTURE geliefert hat — **oder dass sie keinen hatte**. Letzteres ist über IMAP der Fingerabdruck von RFC 2231 (AN-1, fünfter Teil) |
+| 5 | `CreateAttachFile` (`ImapDownload.cpp:4108`) und `BreakoutBodyToEmbeddedFile` (`:3723`) | Der Name, der zur Datei geht. **Hier ruft der IMAP-Weg kein `MIMEMap::SetExtension` auf** — das Sicherheitsnetz des POP-Wegs, das eine fehlende Endung aus dem MIME-Typ nachträgt, gibt es über IMAP überhaupt nicht |
+| 6 | `OpenLocalAttachFile` (`imapmime.cpp:292`) | Der Name **vor und nach** `LOCAL_DeMacifyName32` bzw. `LOCAL_DeMacifyName` (8+3) |
+| 7 | dieselbe Stelle, nach `LOCAL_CheckName` | **Wie die Datei am Ende wirklich heißt**, mit vollem Pfad |
+| 8 | `LOCAL_CheckName` (`imapmime.cpp:125`) | Dass gekürzt wurde — und ob der Name überhaupt einen Punkt hat. Hat er keinen, fällt sein Ende ersatzlos weg |
+| 9 | `LOCAL_CheckName` (`imapmime.cpp:173`) | **`tmp` ist `char[255]`.** Ist der Name ohne Punkt 255 Zeichen oder länger, schreibt das `tmp[len] = 0;` zwei Zeilen weiter **hinter den Puffer, auf den Stapel** — und der Name kommt vom Server. Die Marke meldet das, behebt es nicht |
 
 ## Steuerzeichen werden sichtbar
 
@@ -79,20 +108,31 @@ Tabulator durch `<TAB>` und alles andere unter 32 durch `<XX>` in hexadezimal.
 
 **Ohne das wäre der Log für diesen Befund wertlos** — eine Faltung im
 Dateinamen sähe aus wie ein Zeilenumbruch im Log und wäre nicht von einem
-echten zu unterscheiden. Erprobt (mit `g++` gegen einen Stellvertreter gefahren):
+echten zu unterscheiden. So sieht es in Gregors Log vom 12.10.2026 wirklich
+aus, gekürzt:
 
 ```
-ANHANG Lex822: Umbruch IN der Zeichenkette [Angebot Nr 4711 fuer die Stadtwerke
-Musterstadt<CR><LF> Abrechnungszeitraum 2025.pdf] (76)
+ANHANG ImapLex822: Marke voll, wird gekappt [ v=1; a=rsa-sha256; c=relaxed/relaxed;
+d=web.de;<CR><LF><TAB>s=s29768273; t=1789902988; … ] (254)
 ```
 
 Die Funktion arbeitet mit einem festen Puffer und ohne `CString` — sie läuft
 mitten im Empfangsweg und darf dort nichts anfassen, was schiefgehen könnte.
 
+## Was das Log sonst noch zeigte
+
+In **vier** abgerufenen Nachrichten schlug die 254-Zeichen-Kappung
+**281 Mal** zu. Getroffen wurden `DKIM-Signature` und `X-UI-Filterresults`;
+dort ist es folgenlos, weil der Kopfzeilentext stückweise durchgeschrieben
+wird. Aber damit ist **B5.3** — `BYTE Token[256]`, im Quelltext kommentiert mit
+*„tokens over 255 characters will be shot"* — kein Randfall, sondern der
+Normalfall des gewöhnlichen Mailverkehrs.
+
 ## So liest man das Ergebnis
 
 Ein Abruf des Prüffalls `01-gefaltet-leerzeichen` aus
-`tools/pruefdaten/anhang-faltung/` **müsste** ungefähr das hier liefern:
+`tools/pruefdaten/anhang-faltung/` **über den POP-Prüfstand** müsste ungefähr
+das hier liefern:
 
 ```
 ANHANG Lex822: Umbruch IN der Zeichenkette - Rest geht verloren [Angebot ... Musterstadt] (47)
@@ -109,9 +149,10 @@ sie übriggelassen hat. Ob `MIMEMap` in Zeile 4 rettet, hängt vom MIME-Typ ab �
 bei `application/octet-stream` steht dort stattdessen „kennt den Typ NICHT", und
 dann fehlt die Endung bis zum Schluss.
 
-> **Das ist eine Erwartung, keine Messung.** Übersetzt und ausgeführt ist
-> nichts. Weicht der wirkliche Log davon ab, ist die Abweichung selbst der
-> nächste Befund — dann bitte den Log-Ausschnitt an AN-1 anhängen.
+> **Das ist eine Erwartung, keine Messung.** Über POP ist dieser Durchlauf noch
+> nicht gefahren worden — Gregors Log vom 12.10.2026 kam über IMAP und enthält
+> keine einzige POP-Zeile. Weicht der wirkliche Log davon ab, ist die Abweichung
+> selbst der nächste Befund.
 
 ## Kosten
 
@@ -120,13 +161,20 @@ Bei ausgeschaltetem Log sind das ein Vergleich und ein Funktionsaufruf je Marke.
 Die beiden Marken im Zerleger sitzen in der innersten Schleife — deshalb prüfen
 sie **vor** dem Aufruf mit `QCLogFileMT::DebugMaskSet()` und nicht erst darin.
 
+## Der Prüfstand läuft mit
+
+`tools/kopfzeile-pruefen.pl` zieht `Lex822()` wörtlich aus `lex822.cpp`. Bis zum
+12.10.2026 hieß das: **sobald dieser Patch angewandt war, übersetzte der
+Prüfstand nicht mehr** — fünf Fehler, weil ihm `DEBUG_MASK_ATTACH`,
+`PutDebugLogSichtbar` und `QCLogFileMT` fehlten. Er wäre also genau in dem
+Moment blind geworden, in dem er gebraucht wird (B5.0 kommt vor B5.1).
+
+Er bringt diese drei jetzt als Attrappen mit. Mit `--lang` gibt er die Marken
+sogar aus. Gegengeprobe am 12.10.2026: mit Patch **10 Fälle, 0 Abweichungen**,
+mit `--vorschlag` erwartungsgemäß 6 Abweichungen.
+
 ## Was dieser Patch **nicht** tut
 
-- Er behebt nichts. Er macht nur sichtbar.
-- Er ist **nicht übersetzt**. Geprüft ist: `g++ -fsyntax-only` über alle
-  eingefügten Blöcke (fehler- und warnungsfrei) und `PutDebugLogSichtbar()`
-  einmal wirklich gebaut und ausgeführt.
-- Die IMAP-Seite bekommt nur die Marken 1 bis 3. Für die Marken 4 bis 8 fehlt
-  dort das Gegenstück in dieser Fassung — `EuImap/src/imapmime.cpp` hat eigene
-  Abschriften von `OpenAttachFile` und `CheckName`, die noch nicht mit
-  aufgenommen sind. Nachziehen, sobald IMAP dran ist.
+- Er behebt nichts. Er macht nur sichtbar — auch die Marken 8 und 9 der
+  IMAP-Seite melden nur.
+- Die IMAP-Marken 4 bis 9 sind **nicht übersetzt**, siehe die Tabelle ganz oben.
