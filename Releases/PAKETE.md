@@ -17,8 +17,8 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.83`** (12.10.2026, 11:18 UTC, auf GitHub als
-> *Latest*; davor `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
+> veröffentlicht ist inzwischen **`v1.0.84`** (12.10.2026, 12:59 UTC, auf GitHub als
+> *Latest*; davor `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
 > hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
@@ -156,14 +156,15 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.84 — **bereitgestellt, nicht veröffentlicht**, Quellstand 7.2.0.84 (E-94)
+## 1.0.84 — **veröffentlicht als `v1.0.84`** am 12.10.2026, Quellstand 7.2.0.84 (E-94)
 
 | | |
 |---|---|
 | ZIP | **kein ZIP** — als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.84-release` (Prüfstand: `C:\Temp\E94-nachher`, die 8 Kerndateien byteidentisch) |
-| SHA256 | **nicht belegt** |
-| URL | **nicht belegt** — nicht veröffentlicht |
-| Quellstand | 7.2.0.84 (`Eudora71/Version.h`), Zweig `e94-betreff-faltung` |
+| ZIP (Release) | `Releases/Eudora72-1.0.84-release.zip`, 9 361 952 Byte (nicht versioniert); die 34 EXE/DLL/OCX darin byteidentisch mit Gregors getestetem Verzeichnis |
+| SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, *Latest*, Marke auf `eb54752` |
+| Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
 
 Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlichten
 7.2.0.83 ändert (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.84.

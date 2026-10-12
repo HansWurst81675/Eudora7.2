@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.83`, 12.10.2026)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.84`, 12.10.2026)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -100,8 +100,10 @@ Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 > vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
 > `ls C:\Users\Gregor\Eudora72-*`.
 
-**Veröffentlicht ist `v1.0.83`** — am 12.10.2026 um 11:18 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert, Marke auf `ec9f11d`; Gregor hat
+**Veröffentlicht ist `v1.0.84`** — am 12.10.2026 um 12:59 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert, Marke auf `eb54752`, mit E-94;
+Gregor hat sie vorher an seinem Postfach geprüft (Bildschirmfoto). Davor
+**`v1.0.83`** — am 12.10.2026 um 11:18 Uhr UTC, Marke auf `ec9f11d`; Gregor hat
 die Fassung vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung
 reicht“*). Davor **`v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC, auf dem
 Merge-Commit `8da72c8`; Gregor hat sie vorher am laufenden Programm geprüft

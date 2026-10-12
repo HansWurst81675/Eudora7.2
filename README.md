@@ -69,9 +69,12 @@ verschickt.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18
-  Uhr UTC, auf GitHub als *Latest*) — **von Gregor vorher am laufenden Programm
-  geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
+* **Das neueste Release ist `v1.0.84`** (veröffentlicht am 12.10.2026 um 12:59
+  Uhr UTC, auf GitHub als *Latest*) — **E-94 behoben**: Betreffs werden nicht
+  mehr mitten im Wort umbrochen; von Gregor vorher an seinem Postfach geprüft
+  (Bildschirmfoto). Sonst wie `v1.0.83`:
+* **`v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18 Uhr UTC) — **von Gregor
+  vorher am laufenden Programm geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
   darin: **Anhänge behalten Endung und Namen** (AN-1, über POP und IMAP gemessen)
   und, übersetzt, aber am Programm nicht gemessen, **AN-2** (kein Quelltext einer
   Webseite mehr im Werbefenster). Das Release davor war **`v1.0.72`** (17.09.2026,
