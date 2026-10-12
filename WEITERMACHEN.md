@@ -69,6 +69,13 @@ Konto), **A-2** (*Task Status* und *Task Errors* waagrecht unten) und **A-3**
 bestätigt**; **A-4** (den linken Bereich breiter ziehen) ist **gebaut und
 nicht bestätigt**.
 
+> **Dafür gibt es jetzt [TESTPLAN.md](TESTPLAN.md)** — die vierzehn gebauten,
+> aber unbeurteilten Behebungen als Hakenliste mit Handgriff und Sollzustand,
+> dazu die Protokollschalter und die frischen Behebungen (AN-1, AN-2, E-83,
+> E-85, E-93, E-95, E-96). **A-4 ist das einzige Kriterium, das sich hier nicht
+> selbst messen lässt** — das seitliche Ziehen braucht eine physisch gedrückte
+> Maustaste.
+
 ## Was seit dem 06.09.2026 anders ist
 
 **E-31 ist behoben — das war die Wurzel.** Strg-N und *Weiterleiten* beendeten

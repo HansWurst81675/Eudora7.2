@@ -147,16 +147,50 @@ deshalb nicht mehr in dieser Datei als Aufgabe.**
 Gregor nicht bestätigt*, alle aus 7.2.0.26 bis 7.2.0.30 und alle rund um
 Registerkartenleiste und Trennbalken.
 
-| Befund | Fassung | merkt ein Anwender das? |
-|---|---|---|
-| **E-49** (Anforderung **A-4**) | 7.2.0.26 | ja — den linken Bereich breiter ziehen |
-| **E-50** | 7.2.0.26 | ja — drei Mängel an der Registerkartenleiste |
-| **E-52** | 7.2.0.27 | ja — Trennbalken nicht mehr greifbar, Karten doppelt |
-| **E-53** | 7.2.0.28 | ja — beim Schließen blieb ein Strich stehen |
-| **E-54**, **E-55** | 7.2.0.29 | ja — unsichtbarer Ziehrahmen; acht Pixel leerer Streifen |
-| **E-58** | 7.2.0.29 | ja — ein Klick in den rechten Rand öffnete den Browser |
-| **E-63** | 7.2.0.30 | ja — die letzte Registerkarte zeigt keinen Kurzhinweis |
-| **E-56**, **E-57**, **E-59**, **E-60**, **E-61**, **E-62** | 7.2.0.29 | nein — von PRÜFER gefundene Robustheitsmängel im selben Code: Benutzung nach dem Freigeben, verschlucktes `WM_QUIT`, Ressourcen je Mausbewegung |
+> **Zum Durchtesten gibt es [TESTPLAN.md](TESTPLAN.md)** — dieselben vierzehn
+> als Hakenliste mit Handgriff und Sollzustand, dazu die Schalter für das
+> Protokoll und die frischen Behebungen. **Für E-49 bis E-63 gibt es keine
+> Spurmarken**; nachgezählt über alle `E-nn`-Protokolltexte im Quelltext. Das
+> ist Augenprüfung, und sie braucht deshalb eine Anleitung.
+
+| Befund | Was kaputt war | Fassung | merkst du das? |
+|---|---|---|---|
+| **E-49** (Anforderung **A-4**) | der **linke Bereich** ließ sich nicht breiter ziehen | 7.2.0.26 | ja |
+| **E-50** | **drei Mängel an der Registerkartenleiste**, von Gregor an 1.0.25 gemeldet — siehe darunter | 7.2.0.26 | ja |
+| **E-52** | nach dem Verbreitern war der **Trennbalken nicht mehr greifbar**, und die Karten standen **doppelt** | 7.2.0.27 | ja |
+| **E-53** | beim **Schließen** eines Fensters blieb an der Stelle der Karte ein **Strich** stehen | 7.2.0.28 | ja |
+| **E-54** | beim Ziehen **nach rechts** war der **Ziehrahmen unsichtbar** — man zog ins Blinde | 7.2.0.29 | ja |
+| **E-55** | ein **acht Pixel hoher leerer Streifen** unter der Werkzeugleiste | 7.2.0.29 | ja |
+| **E-58** | ein Klick in den **rechten Rand** des Kartenstreifens öffnete den **Browser**, ohne dass dort etwas zu sehen war | 7.2.0.29 | ja |
+| **E-63** | die **letzte** Registerkarte zeigt keinen Kurzhinweis, alle anderen schon | 7.2.0.30 | ja |
+| **E-56** | beim **Abschalten** von *Show MDI task bar* blieb der Kartenstreifen stehen | 7.2.0.29 | eher nicht |
+| **E-57** | `QCWorkbook::IsTabLabelTruncated` legte bei **jeder Mausbewegung** eine `CPaintDC` an — außerhalb von `WM_PAINT` | 7.2.0.29 | nein |
+| **E-59** | `m_cxTab` wurde **nur in `OnPaint`** gesetzt | 7.2.0.29 | nein |
+| **E-60** | ein Trennbalken konnte **während des Ziehens gelöscht** werden — Benutzung nach dem Freigeben | 7.2.0.29 | nein, bis es kracht |
+| **E-61** | `Splitter::Track` **verschluckte `WM_QUIT`** — Eudora wäre weitergelaufen, obwohl es enden sollte | 7.2.0.29 | nein, bis es hängt |
+| **E-62** | **sieben eigene Nachrichtenschleifen** verschluckten `WM_QUIT`, zwei davon mit echter Hängegefahr | 7.2.0.29 | nein, bis es hängt |
+
+**Die drei Mängel von E-50**, in Gregors eigenen Worten von damals — alle drei
+mit **einer** Wurzel: der Streifen wird nur beim Neuzeichnen gemalt, und
+niemand erklärt ihn für ungültig.
+
+1. *„die karte bleibt eingedrückt, auch wenn man im anderen fenster ist"* —
+   `QCWorkbook::OnLButtonDown` setzte `SetSelected(TRUE)` (`workbook.cpp:1109`),
+   und **niemand** setzte es zurück; im Original tat das die Stingray-Ebene.
+2. *„beim skalieren ist die darstellung falsch"* — `WM_SIZE` frischt jetzt auf.
+3. *„die karten sind dann weg"* beim Öffnen und Schließen — `AddSheet` und
+   `RemoveSheet` frischen jetzt auf.
+
+**Nicht dazugezählt:** *„nach dem neustart sind die fenster nicht im
+vollbildmodus, wie beim beenden"* — das ist der Fensterzustand, ein eigener
+Weg über `SaveOpenWindows`, getrennt zu messen.
+
+**Warum hier bis zum 12.10.2026 nur die Nummern standen.** Die Tabelle nannte
+Kennung, Fassung und ein Stichwort — **nicht, was der Fehler war**. Wer sie
+benutzen wollte, musste jede Nummer in `BEFUNDE.md` nachschlagen, und das sind
+8500 Zeilen. Gregor am 12.10.2026: *„in den aufgaben sehe ich nicht mal, was
+z.b. e-50 für ein fehler ist."* Die Beschreibungen stammen aus den
+Urteilszeilen von `BEFUNDE.md`, Wort für Wort übernommen.
 
 **E-51 steht nicht in dieser Liste**, weil es behoben wurde, bevor es
 ausgeliefert war. Prüfbar wäre es ohnehin nicht, nicht von Gregor und nicht von
