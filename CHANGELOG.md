@@ -78,7 +78,7 @@ ohne Fehlerzeile; **Testsuite 188/188**; Abruf der sieben Prüfnachrichten über
 |---|---|---|
 | Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wochenende!` |
 | Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Toner bestel` | `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
-| Fälle 00–05, Anhänge | alle mit vollem Namen und `.pdf` | **unverändert** heil; Fall 03 hat 216 statt 224 Zeichen, weil der Pfad `C:\Temp\E94-nachher\…` acht Zeichen länger ist (wieder 259 mit Pfad) |
+| Fälle 00–05, Anhänge | alle mit vollem Namen und `.pdf` | **unverändert** heil; Fall 03 hat 216 Zeichen (vorher 217), weil `C:\Temp\E94-nachher\…` einen Buchstaben länger ist als `E94-vorher`; mit Pfad je 259 |
 
 Keine `Exception.log`. **PRUEFER-21:** *kann ausgeliefert werden*; sein niedriger
 Befund (einzelnes CR, wenn die Kappung bei `LEX822_TOKEN_MAX` genau auf das CR
@@ -116,7 +116,8 @@ Leerzeichen.
 
 **Gegenprobe:** eine Faltung vor **Klartext** bleibt Leerraum (eigener Test).
 **Testsuite 188/188**, `tools/kopfzeile-pruefen.pl` **10 Fälle, 0 Abweichungen**
-(die Anhangnamen bleiben heil). **Noch nicht gebaut, nicht am Programm gemessen.**
+(die Anhangnamen bleiben heil). *(Stand vor dem Bau; gebaut und gemessen siehe
+oben.)*
 
 ## 7.2.0.83 — `SetExtension` schreibt nicht mehr über kleine Puffer und ersetzt keine Endung (AN-1, elfter Teil) — **gebaut und gemessen**
 

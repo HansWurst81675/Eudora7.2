@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| CHRONIST | 2026-10-12 14:07 | E-94-Verlauf, nur lesend |
