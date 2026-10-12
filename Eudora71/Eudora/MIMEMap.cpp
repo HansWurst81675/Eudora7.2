@@ -363,8 +363,25 @@ BOOL MIMEMap::GetMaps()
 					strncpy(map->m_Suffix, floater, sizeof(m_Suffix) - 1);
 
 					floater = strchr(NameOfKey, '/');
-					if (!floater) 
-						return (FALSE);
+					if (!floater)
+					{
+						//	AN-1, neunter Teil: hier stand return (FALSE). Windows 10
+						//	fuehrt unter Mime\Database\Content Type auch Schluessel
+						//	OHNE Schraegstrich - gemessen am 12.10.2026: "pkcs10",
+						//	"pkcs7-mime", "x-pkcs12" und neun weitere. Am ersten davon
+						//	verwarf GetMaps die GANZE Tabelle, samt aller [Mappings]
+						//	aus der Eudora.ini. Weil jeder Anhang ein neues MIMEMap
+						//	anlegt, scheiterte Find damit bei JEDEM Anhang, und
+						//	SetExtension trug nie eine Endung nach (ANHANG-Marke 11:
+						//	"GetMaps scheitert", 342 Eintraege = 123 + 124 + 95).
+						//	Einen solchen Schluessel ueberspringen, wie die Schleife
+						//	es fuer einen ohne Extension-Wert auch tut.
+						delete map;
+						bufLength = (sizeof(m_Mimetype) + sizeof(m_Subtype) + 1);
+						sizeofExtension = 32;
+						RegCloseKey(Extension);
+						continue;
+					}
 
 					*floater = 0;
 					floater++;
@@ -435,17 +452,23 @@ BOOL MIMEMap::SetExtension(LPTSTR Filename)
 	}
 
 	// If the name with the extension tacked on is too long we're in trouble
-	if ((strlen(m_Suffix) + strlen(Filename) + 2) > _MAX_PATH)
+	//
+	//	AN-1, zehnter Teil (PRUEFER, 12.10.2026): hier stand
+	//	  int Difference = _MAX_PATH - (strlen(m_Suffix) + strlen(Filename) + 2);
+	//	  while (Difference--) floater--;
+	//	Im Zweig ist die Summe GROESSER als _MAX_PATH, Difference also negativ,
+	//	und while (Difference--) laeuft bis zum Ueberlauf von int - floater
+	//	wandert rueckwaerts durch den Speicher. Verdeckt war das nur, weil
+	//	GetMaps bis 7.2.0.80 immer scheiterte und SetExtension nie lief (Teil 9).
+	//	Jetzt wird der Stamm VOR der neuen Endung gekuerzt; wird eine
+	//	vorhandene Endung ersetzt, zaehlt sie nicht mit.
+	size_t nSuffix = strlen(m_Suffix);
+	size_t nStamm = ExtensionPeriod ? (size_t)(ExtensionPeriod - Filename) : strlen(Filename);
+	if (nStamm + nSuffix + 2 > _MAX_PATH)
 	{
-		int Difference = _MAX_PATH - (strlen(m_Suffix) + strlen(Filename) +2);
-		LPTSTR floater = Filename;
-		while (*floater != 0)
-			floater++;
-		while (Difference--)
-		{
-			floater--;
-		}
-		*floater = 0;
+		nStamm = (_MAX_PATH > nSuffix + 2) ? _MAX_PATH - nSuffix - 2 : 0;
+		Filename[nStamm] = 0;
+		ExtensionPeriod = NULL;
 	}
 
 	if (ExtensionPeriod)

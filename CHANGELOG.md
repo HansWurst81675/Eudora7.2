@@ -67,7 +67,30 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.80 — Anhangnamen: lange Namen behalten die Endung (AN-1, achter Teil) — **in Arbeit**
+## 7.2.0.81 — Endungen aus dem MIME-Typ wirken wieder (AN-1, neunter und zehnter Teil) — **in Arbeit**
+
+**7.2.0.80 gebaut und gemessen am 12.10.2026** (Rebuild 0 Fehler, `C:\Temp\AN2`,
+ein Abruf): **Fall 03 heil** — `<220×A>.pdf`, 224 Zeichen mit Endung. Marke 2
+meldet keine Faltung mehr. **Fall 05 weiter ohne Endung.** ANHANG-Marke 11 nannte
+den Grund bei **jedem** Anhang: `GetMaps scheitert … (342)`.
+
+**Neunter Teil, gemessen:** 342 = 123 Zuordnungen aus `Eudora.ini` + 124 aus
+`DEudora.ini` + **95** aus der Registry. Der 96. Typ mit Endung unter
+`HKCR\Mime\Database\Content Type` heißt **`pkcs10`** — **ohne Schrägstrich**
+(auf diesem Rechner zwölf solche, alle aus der Zertifikatsfamilie). Daran stieg
+`GetMaps` mit `return (FALSE)` aus und verwarf die **ganze** Tabelle samt
+`[Mappings]`. Weil jeder Anhang ein neues `MIMEMap` anlegt, scheiterte `Find`
+bei **jedem** Anhang, und `SetExtension` trug über POP **nie** eine Endung nach —
+auch in echter Post, nicht nur im Prüffall. Behoben: solch ein Schlüssel wird
+übersprungen.
+
+**Zehnter Teil (PRUEFER):** `SetExtension` hatte beim Kürzen das falsche
+Vorzeichen — `Difference` negativ, `while (Difference--)` lief bis zum
+int-Überlauf rückwärts durch den Speicher. Verdeckt nur, weil `Find` nie gelang;
+mit Teil 9 wäre es bei einem Namen ab 255 Zeichen ein Absturz geworden. Behoben:
+der Stamm wird vor der neuen Endung gekürzt.
+
+## 7.2.0.80 — Anhangnamen: lange Namen behalten die Endung (AN-1, achter Teil) — **gebaut und gemessen**
 
 **7.2.0.79 ist am 12.10.2026 zum ersten Mal übersetzt und am laufenden Programm
 gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
@@ -85,9 +108,9 @@ gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
 | 05 `filename=""` | `Pruefung AN-1 leerer Dateiname` — **ohne Endung** | kein `=` mehr (B5.2), aber keine Endung |
 
 **Fall 03, Ursache aus dem Log:** die Kopfzeile lieferte alle 304 Zeichen
-(B5.3 wirkt). Dann kappten drei Stellen **von hinten**: `strncpy` auf 259 in
-`mime.cpp` (dazu ohne abschließende Null), `DeMacifyName32` auf 255, und der
-Pfad auf 224. `CheckName` hätte die Endung behalten — sie war da schon weg.
+(B5.3 wirkt). Dann kappten zwei Stellen **von hinten**: `strncpy` auf 259 in
+`mime.cpp` (dazu ohne abschließende Null) und `DeMacifyName32` auf 255. Danach
+kürzte `CheckName` den Pfad auf 224 — **mit** Endung, aber die war da schon weg.
 
 **Behoben in 7.2.0.80:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
 und behält die Endung; `mime.cpp` und beide `DeMacifyName32` (POP und IMAP)

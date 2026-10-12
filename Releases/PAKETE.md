@@ -155,18 +155,31 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.80 — **in Arbeit**, Quellstand 7.2.0.80 (AN-1, achter Teil)
+## 1.0.81 — **in Arbeit**, Quellstand 7.2.0.81 (AN-1, neunter und zehnter Teil)
 
 | | |
 |---|---|
 | ZIP | **existiert noch nicht** |
 | SHA256 | **nicht belegt** |
 | URL | **nicht belegt** — nicht veröffentlicht |
-| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), Zweig `patch_20261012` |
+| Quellstand | 7.2.0.81 (`Eudora71/Version.h`), Zweig `patch_20261012` |
 
-Vergeben am 12.10.2026, weil 7.2.0.79 an diesem Tag gebaut und gemessen wurde
-und 7.2.0.80 davon abweicht (**V-1**). Was drinsteckt, steht in
-[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.80.
+Vergeben am 12.10.2026, weil 7.2.0.80 an diesem Tag gebaut und gemessen wurde
+und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
+
+## 1.0.80 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.80 (AN-1, achter Teil)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** — nur das Prüfverzeichnis `C:\Temp\AN2` |
+| SHA256 | **nicht belegt** |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), Commit `ca8da5a` auf `patch_20261012` |
+
+Gebaut am 12.10.2026 (Rebuild, 0 Fehler) und am laufenden Programm gemessen:
+Fall 03 heil, Fall 05 ohne Endung. Einzelheiten in
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
 
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
 

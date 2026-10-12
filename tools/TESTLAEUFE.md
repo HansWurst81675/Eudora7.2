@@ -83,3 +83,4 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-09-17 21:45:26 | `C:\Temp\E100` | Gregor am 17.09.2026: ok, ich mache nichts, du kannst es testen | Hauptfenster 2032794 - Eudora  Schliesszeit 1 s. |
 | 2026-10-12 11:10:53 | `C:\Temp\AN1` | Gregor am 12.10.2026: 'ok, ich mache nichts, du kannst es testen' | Hauptfenster 264178 - Eudora   [Eudora 7.2.0.79 / Paket 1.0.79+f4d1439* 2026-10-12 11:07 - AN1]  Schliesszeit 1 s. |
 | 2026-10-12 11:12:37 | `C:\Temp\AN1` | Gregor am 12.10.2026: 'ok, ich mache nichts, du kannst es testen' | Hauptfenster 329676 - Eudora   [Eudora 7.2.0.79 / Paket 1.0.79+f4d1439* 2026-10-12 11:07 - AN1]  Schliesszeit 1 s. |
+| 2026-10-12 11:30:39 | `C:\Temp\AN2` | Gregor am 12.10.2026: 'ok, ich mache nichts, du kannst es testen' | Hauptfenster 1837028 - Eudora   [Eudora 7.2.0.80 / Paket 1.0.80+ca8da5a* 2026-10-12 11:27 - AN2]  Schliesszeit 1 s. |
