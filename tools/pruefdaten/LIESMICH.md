@@ -10,14 +10,14 @@ Sechs Nachrichten mit einem PDF im Anhang. Sie unterscheiden sich nur in einem
 Punkt: **wo im Kopf des Anhangs der Zeilenumbruch sitzt** und wie der Dateiname
 angegeben ist.
 
-| Datei | Dateiname im Kopf | was Eudora heute daraus macht |
-|---|---|---|
-| `00-gutfall.eml` | `"Rechnung.pdf"`, eine Zeile | `Rechnung.pdf` — **muss heil sein** |
-| `01-gefaltet-leerzeichen.eml` | gefaltet an einem Leerzeichen **innerhalb** der Anführungszeichen | abgeschnitten, **ohne `.pdf`** |
-| `02-gefaltet-tabulator.eml` | dasselbe, mit Tabulator | abgeschnitten, **ohne `.pdf`** |
-| `03-ueber-254-zeichen.eml` | 304 Zeichen, ungefaltet | bei 254 gekappt, ohne `.pdf` |
-| `04-rfc2231.eml` | `filename*0=` / `filename*1=` (RFC 2231) | der **Betreff**, auf 31 Zeichen |
-| `05-leerer-dateiname.eml` | `filename=""` | eine Datei namens `=` |
+| Datei | Dateiname im Kopf | bis 7.2.0.78 | ab 7.2.0.81 (gemessen 12.10.2026, `C:\Temp\AN3`) |
+|---|---|---|---|
+| `00-gutfall.eml` | `"Rechnung.pdf"`, eine Zeile | `Rechnung.pdf` — **muss heil sein** | `Rechnung.pdf` |
+| `01-gefaltet-leerzeichen.eml` | gefaltet an einem Leerzeichen **innerhalb** der Anführungszeichen | abgeschnitten, **ohne `.pdf`** | voller Name, 76 Zeichen, `.pdf` |
+| `02-gefaltet-tabulator.eml` | dasselbe, mit Tabulator | abgeschnitten, **ohne `.pdf`** | voller Name, 56 Zeichen, `.pdf` |
+| `03-ueber-254-zeichen.eml` | 304 Zeichen, ungefaltet | bei 254 gekappt, ohne `.pdf` | auf 224 gekürzt (Pfad unter 260), **mit `.pdf`** |
+| `04-rfc2231.eml` | `filename*0=` / `filename*1=` (RFC 2231) | der **Betreff**, auf 31 Zeichen | voller Name, `.pdf` |
+| `05-leerer-dateiname.eml` | `filename=""` | eine Datei namens `=` | der Betreff **mit `.pdf`** (aus `MIMEMap`) |
 
 **Erzeugt und ausgeliefert von `tools/anhang-pruefdaten.pl`.** Das Werkzeug ist
 die Quelle, diese Dateien sind sein Ergebnis — `--erzeugen` schreibt sie neu.
@@ -41,8 +41,11 @@ Dann in Eudora ein Konto anlegen: Server `127.0.0.1`, Port `11110`, Benutzer
 sehen (Eudora-Verzeichnis, Unterordner `attach`).
 
 Ist **00 heil und sind 01 bis 05 kaputt**, ist AN-1 bestätigt. Sind hinterher
-**alle sechs heil**, wirken die Behebungen **B5.1 bis B5.6** aus `AUFGABEN.md`
-am laufenden Programm.
+**alle sechs heil**, wirken die Behebungen aus `AUFGABEN.md` B5 auf dem
+**POP**-Weg am laufenden Programm — B5.6 betrifft nur IMAP und wird hiermit
+nicht gemessen. **Gemischtes Bild** (so an 7.2.0.79: 00, 01, 02, 04 heil):
+dann zeigt `grep ANHANG eudora.log` mit `LogLevel=91295`, an welcher Station
+der Name kürzer wird oder die Endung fehlt.
 
 Der Server löscht nie etwas: nach `QUIT` liegen alle sechs Nachrichten wieder
 da, man kann also beliebig oft abrufen.

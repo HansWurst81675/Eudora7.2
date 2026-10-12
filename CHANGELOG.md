@@ -76,6 +76,14 @@ Gregor hat am 12.10.2026 um 09:40 UTC PR #83 (**AN-2**, Zweig
 Stand führt beide zusammen und nimmt die nächste freie Nummer. AN-2 wird damit
 zum ersten Mal übersetzt.
 
+**Gebaut und gemessen am 12.10.2026:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
+`bauen-Release.log.fehler` ohne eine Fehlerzeile. **Testsuite 185 von 185
+bestanden** (`Eudora71/Tests/RunTests.cmd`). Abruf der sechs Prüfnachrichten in
+`C:\Temp\AN4`: **alle sechs mit vollem Namen und `.pdf`**, dieselben Namen wie
+unter 7.2.0.81, kein „kennt den Typ NICHT", keine `Exception.log`.
+**AN-2 ist am laufenden Programm nicht gemessen** — der Werbefensterfall lässt
+sich mit dem Prüfstand nicht auslösen.
+
 ## 7.2.0.81 — Endungen aus dem MIME-Typ wirken wieder (AN-1, neunter und zehnter Teil) — **gebaut und gemessen: alle sechs heil**
 
 **Gemessen am 12.10.2026** (Rebuild, 0 Fehler, `C:\Temp\AN3`, ein Abruf über

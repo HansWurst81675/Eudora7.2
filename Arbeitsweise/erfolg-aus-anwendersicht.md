@@ -239,3 +239,41 @@ Meldung.
 
 **Die Frage beim naechsten Mal:** *In welcher Fassung kann Gregor das
 nachpruefen — und hat er sie?*
+
+## Nachtrag 18.09./12.10.2026: „behoben" im Titel, „nicht übersetzt" im Kleingedruckten
+
+Zweimal in diesem Zeitraum dieselbe Folge, beide Male bis auf `main`:
+
+| | E-112 (18.09.2026) | AN-1 (12.10.2026) |
+|---|---|---|
+| Titel | `324db1c` *„E-112 behoben: pict_frame bekommt die angegebene Groesse"* | `acb9e06` *„AN-1 behoben: sechs von sieben Ursachen, Quellstand 7.2.0.79"* |
+| gemessen an | 185 Tests, Gegenprobe gefahren | `kopfzeile-pruefen.pl` (10 Fälle), `rfc2231-pruefen.pl` (20 Fälle) — Perl, **kein MSVC** |
+| im Text stand | *„zu messen, nicht zu glauben"* (im Befund) | *„HIER IST NICHTS UEBERSETZT"* (im Commit), *„nicht übersetzt"* (CHANGELOG) |
+| gemergt | #74, 14:03 | #82, 10:50 |
+| am Programm | 14:08 Gregors Bildschirmfoto: *„schaut nicht so gut aus."* — **schlechter als 1.0.75**, der Text liegt wieder auf den Bildern | 11:12, erster Abruf von 7.2.0.79: **4 von 6 heil**, 03 (304 Zeichen) als 224 × `A` **ohne** `.pdf`, 05 (`filename=""`) als Betreff ohne Endung |
+| widerrufen | `d3dfbf0` *„E-112 ist NICHT behoben"*, 14:13 | `ca8da5a` (7.2.0.80), 11:23 |
+
+Beide Male war die Einschränkung **ehrlich hingeschrieben** — und beide Male
+stand vorne „behoben". Was Gregor beim Mergen liest, ist die Überschrift des
+PR. Die Lehre stand seit dem 07.09. oben (*„„Behoben" setzt einen Durchlauf
+voraus, keinen Bau"*) — hier gab es nicht einmal den Bau.
+
+**Warum die Schranke schwieg:** `tools/pruefe-behoben-belegt.pl --commit
+acb9e06` meldet *„mit Urteil behoben: 0"*, Rückgabe 0. Sie prüft nur
+**Befundzeilen**. Commit-Titel, PR-Titel und `WEITERMACHEN.md`
+(*„AN-1: sechs von sieben Ursachen behoben"*) sieht sie nicht. Dazu liefen
+die Sitzungen vom 30.09. und 11./12.10. ohne Haken.
+
+**How to apply:**
+
+- **Ein Titel, der „behoben" sagt, braucht den Durchlauf am Programm.** Ohne
+  ihn heißt er: *„AN-1: sechs Ursachen geändert, nicht übersetzt"*. Das ist
+  der Wortlaut, den der CHANGELOG schon hatte — er gehört in die erste Zeile.
+- **Ein Stand, der nie übersetzt wurde, geht nicht als Merge-Vorschlag an
+  Gregor**, sondern als Zwischenstand mit dem Satz, was fehlt. Gemergt
+  hat er beide Male, weil vorne „behoben" stand
+  ([[zweigname-heisst-vorheriger-fertig]]: ein Merge-Vorschlag ist eine
+  Fertigmeldung).
+- **Zweites Auftreten derselben Klasse = Werkzeug** ([[fehlerklassen-abstellen]]):
+  `pruefe-behoben-belegt.pl` gehört zusätzlich in einen `commit-msg`-Haken,
+  der die **erste Zeile** prüft. Noch nicht gebaut.

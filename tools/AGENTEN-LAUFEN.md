@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-12 11:49 | 123b218 (GetMaps/SetExtension) nachrechnen, nur lesend |

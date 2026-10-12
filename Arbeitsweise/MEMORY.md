@@ -71,3 +71,4 @@
 - [Schranke gehört in den Haken](schranke-gehoert-in-den-haken.md) — eine Prüfung, die nur läuft wenn ich daran denke, ist keine Schranke; Hinweise dürfen nicht abweisen
 - [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)
 - [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht
+- [Fertige Fassung bereitstellen](fertige-fassung-bereitstellen.md) — erst eigene Tests, dann als neues Verzeichnis neben Gregors letztem Eudora72-*-release; das alte nicht anfassen
