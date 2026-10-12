@@ -155,11 +155,11 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.83 — **in Arbeit**, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
+## 1.0.83 — **gebaut und gemessen**, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
 
 | | |
 |---|---|
-| ZIP | **existiert noch nicht** |
+| ZIP | **kein ZIP** — als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
 | SHA256 | **nicht belegt** |
 | URL | **nicht belegt** — nicht veröffentlicht |
 | Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |

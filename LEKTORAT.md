@@ -1096,3 +1096,9 @@ lesend über die MDs seit `4ec9dd1`.
 
 **Berichtigung zu Durchgang 21:** dort stand „eingearbeitet ist bisher nur
 L-16.9" — tatsächlich waren es zu dem Zeitpunkt auch L-16.7 und Teile von L-16.2.
+
+## Dreiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-18.md`)
+
+Kurzlauf vor dem Paket 1.0.83 über `d292850`. Die Aussagen zu 7.2.0.83 sind
+belegt. Zwei Mängel (`Releases/PAKETE.md:158` noch „in Arbeit", `WEITERMACHEN.md:10`
+ohne AN5), **beide behoben** im selben Commit.
