@@ -155,6 +155,23 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.80 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.80 (AN-2)
+
+| | |
+|---|---|
+| ZIP | **existiert nicht** |
+| SHA256 | **nicht belegt** — es gibt keine Datei |
+| URL | **nicht belegt** — nicht veröffentlicht |
+| Quellstand | 7.2.0.80 (`Eudora71/Version.h`), am 12.10.2026 |
+
+Nummer vergeben, damit sie nicht zweimal vergeben wird. **Inhalt:** Befund
+**AN-2** — Paige zeigte den Inhalt von `<script>` und `<style>` als Text, was
+beim Start im Werbefenster den Quelltext einer Webseite sichtbar machte.
+Gemessen mit `tools/html-tags-pruefen.pl` (30 Fälle, 0 Abweichungen, Gegenprobe
+gefahren); **übersetzt ist nichts**.
+
+Durchlauf: [AUFGABEN.md](../AUFGABEN.md), **B6**.
+
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
 
 | | |

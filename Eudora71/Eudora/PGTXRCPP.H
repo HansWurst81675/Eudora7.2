@@ -392,6 +392,7 @@ class PaigeHTMLImportFilter : public PaigeImportFilter {
 		memory_ref			tables_ref;			// The table offset(s) just imported
 		//pg_char_ptr			title_ptr;			// Non-null if title enabled
 		pg_boolean			inside_title;		// TRUE if currently processing title tag
+		pg_boolean			inside_script;		// AN-2: TRUE innerhalb <script> oder <style>
 		long				table_unique_id;	// Next unique ID for tables
 		long				page_width;			// Max width for page
 		long				span_flag;			// Column span if non-zero

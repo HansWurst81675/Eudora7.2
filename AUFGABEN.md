@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.79** / `VERSION` **1.0.79** (veröffentlicht ist `v1.0.72`)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.80** / `VERSION` **1.0.80** (veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -626,6 +626,54 @@ behobenen Teile sind aus dem Quelltext heraus begründet und, soweit ohne MSVC
 möglich, gemessen.
 
 Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
+### B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, nicht übersetzt**
+
+Gregors Meldung vom 12.10.2026, wörtlich: *„nachdem eudora gestartet wurde, ist
+es innerhalb eines Fensters darin angezeigt worden. ohne daß ich etwas gemacht
+habe."*
+
+Vollständige Herleitung in **BEFUNDE.md, AN-2**. Kurz:
+
+| | |
+|---|---|
+| **Was** | Eudora startet mit einer frischen `Eudora.ini` in der **Werbe-Betriebsart** (`[Settings] Mode` fehlt → `DEFAULT_SWM_MODE` = 0), holt Werbung von `//adserver.eudora.com/adjoin/playlists` — und diese Adresse gehört seit 2018 dem Computer History Museum. Die Antwort ist eine Webseite |
+| **Warum sie als Text erscheint** | Das Werbefenster ist `class CAdView : public CPaigeEdtView` — kein Browser, sondern Paige. Und Paige kannte kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung |
+| **Geändert** | neuer Merker `inside_script`, nach dem Muster des vorhandenen `inside_title`. Vier Dateien, 29 Zeilen |
+| **Gemessen** | `perl tools/html-tags-pruefen.pl` — 30 Fälle, 0 Abweichungen, Gegenprobe gefahren |
+| **Nicht gemessen** | nichts ist übersetzt. Dass es im Werbefenster wirkt, ist damit nicht belegt |
+
+#### Was offen bleibt — und zwar als Frage an Gregor
+
+**Soll diese Fassung überhaupt noch Werbung abrufen?** Das ist keine
+Programmierfrage. Der Abruf ist Absicht aus dem Jahr 2000; heute holt er eine
+beliebige Seite von einem fremden Rechner und zeigt sie an. Drei Wege:
+
+1. **Nichts tun.** Die Behebung reicht, damit es nicht mehr nach Chaos aussieht
+   — die Seite steht dann lesbar im Fenster.
+2. **Über die `Eudora.ini` abschalten**, ohne Neubau: `[Settings] Mode=1`
+   (`SWM_MODE_LIGHT`, keine Werbung, dafür schaltet `UsingFullFeatureSet()`
+   Funktionen ab) oder `Mode=2` (`SWM_MODE_PRO`, alle Funktionen, verlangt aber
+   einen Registriercode). **Beides nicht nachgemessen.**
+3. **Im Quelltext abschalten** — `DEFAULT_SWM_MODE` auf 2, oder den Abruf
+   überhaupt nicht mehr starten. Das ist eine Entscheidung über das Produkt,
+   nicht über einen Fehler, und gehört deshalb Gregor.
+
+**Den Werbeserver auf einen toten Rechner zu zeigen, ist kein Weg:** nach vier
+Tagen meldet sich `CAdFailureNagTask` (`nDaysUntilAdFailure = 4`).
+
+#### Was beim Nachsehen aufgefallen ist und nicht behoben wurde
+
+**Der Werbeweg schreibt in den Log, wenn man ihn lässt** — Bit
+`DEBUG_MASK_PLIST` (`0x1000`, `debug.h`). Damit wäre am Protokoll ablesbar, ob
+die Seite wirklich über diesen Weg kam; bisher ist das aus dem Quelltext
+erschlossen. Wer es messen will: `LogLevel` um 4096 erhöhen.
+
+**`<style>` trifft nicht nur Werbung.** Jede HTML-Nachricht mit eingebettetem
+`<style>`-Block — also die meisten Newsletter — hat ihr CSS bisher als Text
+angezeigt. Dass das nie als eigener Befund auftauchte, heißt nicht, dass es
+nicht passierte; es sah aus wie wirrer Text am Anfang der Nachricht. Verwandt
+mit **E-105** (versteckter Vorschautext, weil Paige `display:none` nicht kennt).
+
 ---
 
 ## C — Das Auslieferungspaket

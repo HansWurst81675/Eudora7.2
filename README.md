@@ -150,6 +150,17 @@ verschickt.
   und von Gregor nicht geprüft; offen bleibt, dass über IMAP keine Endung aus
   dem MIME-Typ nachgetragen wird. Durchlauf in
   [AUFGABEN.md](AUFGABEN.md), **B5**.
+* **Beim Start erschien der Quelltext einer Webseite in einem Fenster**
+  (**AN-2**): JavaScript, CSS und JSON als Text, ohne dass man etwas getan
+  hatte. Eudora startet ohne Eintrag `[Settings] Mode` in der
+  **Werbe-Betriebsart** und holt Werbung von `adserver.eudora.com` — diese
+  Adresse gehört seit 2018 dem Computer History Museum, und was von dort
+  kommt, ist eine gewöhnliche Webseite. Angezeigt wird sie von **Paige**,
+  nicht von einem Browser, und Paige kannte kein Element, dessen Inhalt kein
+  Text ist: `<script>` war unbekannt, `<style>` bekannt aber unbehandelt.
+  **Die Anzeige ist in 7.2.0.80 geändert, aber nicht übersetzt.** Dass
+  Eudora überhaupt noch Werbung abruft, ist offen — drei Wege in
+  [AUFGABEN.md](AUFGABEN.md), **B6**.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
@@ -737,7 +748,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.79` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.80` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
