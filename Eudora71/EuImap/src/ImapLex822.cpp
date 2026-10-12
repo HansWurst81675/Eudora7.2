@@ -245,10 +245,13 @@ Token822Enum ImapLex822State::Lex822()
 		//	und die Marke wird so in die Mailbox geschrieben.
 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822) &&
 			m_FaltungLeerraum > 0 && m_State == CollectText &&
-			m_pEnd - m_pSpot > m_FaltungLeerraum)
+			m_pEnd - m_pSpot > m_FaltungLeerraum &&
+			m_TokenSpot > 0 && m_Token[m_TokenSpot - 1] == '\r')
 		{
-			if (m_TokenSpot > 0 && m_Token[m_TokenSpot - 1] == '\r')
-				m_Token[--m_TokenSpot] = 0;
+			//	PRUEFER-21: nur, wenn das CR noch IN der Marke steht. Hat die
+			//	Kappung bei LEX822_TOKEN_MAX die Marke samt CR schon geschrieben,
+			//	gilt die Faltung wie bisher - sonst bliebe ein einzelnes CR stehen.
+			m_Token[--m_TokenSpot] = 0;
 			m_pSpot += 1 + m_FaltungLeerraum;	// LF und der Leerraum davor
 			m_FaltungLeerraum = 0;
 			continue;

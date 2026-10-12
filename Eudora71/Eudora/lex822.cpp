@@ -232,10 +232,13 @@ Token822Enum Lex822State::Lex822()
 		//	Text dann in einem Stueck.
 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822) &&
 			m_FaltungLeerraum > 0 && State == CollectText &&
-			End - Spot > m_FaltungLeerraum)
+			End - Spot > m_FaltungLeerraum &&
+			TokenSpot > 0 && Token[TokenSpot - 1] == '\r')
 		{
-			if (TokenSpot > 0 && Token[TokenSpot - 1] == '\r')
-				Token[--TokenSpot] = 0;
+			//	PRUEFER-21: nur, wenn das CR noch IN der Marke steht. Hat die
+			//	Kappung bei LEX822_TOKEN_MAX die Marke samt CR schon geschrieben,
+			//	gilt die Faltung wie bisher - sonst bliebe ein einzelnes CR stehen.
+			Token[--TokenSpot] = 0;
 			Spot += 1 + m_FaltungLeerraum;		// LF und der Leerraum davor
 			m_FaltungLeerraum = 0;
 			continue;
