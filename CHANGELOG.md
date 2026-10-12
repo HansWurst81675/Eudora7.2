@@ -76,6 +76,22 @@ Abruf der sechs Prüfnachrichten in `C:\Temp\AN5`: **alle sechs mit vollem Namen
 und `.pdf`**, dieselben Namen wie unter 7.2.0.81 und 7.2.0.82, kein „kennt den
 Typ NICHT", keine `Exception.log`.
 
+**Von Gregor über IMAP getestet, 12.10.2026, Paket 1.0.83** (sein `eudora.log`,
+drei Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
+
+| vom Server (BODYSTRUCTURE) | gespeichert als |
+|---|---|
+| `5G-SA-NSA-Analyse_asn1Viewer_20260910.docx` (42) | unverändert, Inhalt `PK` |
+| `5G-SA-NSA-Analyse_asn1Viewer_20260910.pdf` (41) | unverändert, Inhalt `%PDF` |
+| `x_Releases_SIC-25.1.4-ZITiS_…_Archiv_20260918_Sina.tar.zip` (229) | auf 175 gekürzt **mit `.zip`**, voller Pfad 258 — die Windows-Grenze von 260; Inhalt `PK`, 351 502 Byte |
+
+Der IMAP-Weg verliert also keine Endung. Was bei einem sehr langen Namen
+wegfällt, ist das Ende des **Stamms** (hier `…_DBAutoUpdate-…Sina.tar`), weil
+der volle Pfad sonst über 260 Zeichen ginge — vollständig ginge das nur mit
+Langpfaden (`\?\`). **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
+Anhangverzeichnis von 08:44/08:45 (vor 1.0.83, laut Log 7.2.0.77/78), je
+1 204 Byte, beginnen **nicht** mit `%PDF` — Ursache nicht untersucht.
+
 **Anlass: PRUEFER-20**, die Nachrechnung von 7.2.0.81. Seit Teil 9 läuft
 `MIMEMap::SetExtension` zum ersten Mal überhaupt — und damit auch an Stellen,
 deren Puffer kleiner sind als `_MAX_PATH`, auf das es kürzte:
