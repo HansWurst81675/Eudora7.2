@@ -309,6 +309,7 @@ schranke pruefe-stand-md.pl || exit $?
 # Text darf einen Befund fuer erledigt erklaeren, den BEFUNDE.md offen
 # fuehrt. Hing bis zum 12.10.2026 in KEINEM Haken und war auf main rot.
 schranke pruefe-befundurteile.pl || exit $?
+schranke befunde-verlinken.pl || exit $?
 
 # 19c. Vergibt niemand eine Fassungsnummer zweimal? VERSION, Version.h,
 #      Releases/PAKETE.md und der Tag-Bestand gegeneinander. Zwei gleichzeitig
@@ -448,6 +449,7 @@ schranke pruefe-stand-md.pl || exit $?
 # Text darf einen Befund fuer erledigt erklaeren, den BEFUNDE.md offen
 # fuehrt. Hing bis zum 12.10.2026 in KEINEM Haken und war auf main rot.
 schranke pruefe-befundurteile.pl || exit $?
+schranke befunde-verlinken.pl || exit $?
 
 echo "pre-push: ist eine Fassungsnummer zweimal vergeben?"
 schranke pruefe-fassungsnummer.pl || exit $?

@@ -1,7 +1,7 @@
 # Wie Agenten zusammenarbeiten, ohne sich zu behindern
 
 Am 05.09.2026 liefen bis zu acht Agenten gleichzeitig an diesem Baum. Sie haben
-viel geschafft — E-4, E-12, Z-2b, die Statusleiste, zwei Prüfberichte an einem
+viel geschafft — [E-4](BEFUNDE.md#e-4), [E-12](BEFUNDE.md#e-12), [Z-2b](BEFUNDE.md#z-2b), die Statusleiste, zwei Prüfberichte an einem
 Abend. Sie haben sich dabei aber **fünfmal gegenseitig behindert**, und jedes
 Mal auf eine andere Weise.
 
@@ -22,7 +22,7 @@ existiert, feuert nicht.**
 | 2 | **Zeit** | Sechs Agenten bauten gleichzeitig: 28 MSBuild-Prozesse. Ein Debug-Bau stieg von 2 auf 14 Minuten. |
 | 3 | **Zusammenführung** | Alle hängten ihre Befunde ans Ende von `BEFUNDE.md`. Jede einzelne Zusammenführung endete im Konflikt — viermal derselbe Handgriff. |
 | 4 | **Namensraum** | KONTO und FORTSCHRITT wählten unabhängig „die nächste freie E-Nummer" und nahmen beide `E-12`. |
-| 5 | **Doppelarbeit** | BEENDEN und ich haben E-4 unabhängig voneinander behoben. Beide Fassungen waren richtig, eine war überflüssig. |
+| 5 | **Doppelarbeit** | BEENDEN und ich haben [E-4](BEFUNDE.md#e-4) unabhängig voneinander behoben. Beide Fassungen waren richtig, eine war überflüssig. |
 
 Keine davon ist ein Fehler der Agenten. Alle fünf sind Fehler der **Zuteilung**
 — und die liegt bei mir.
@@ -138,7 +138,7 @@ C:/.../Eudora7.2-wt-konto    KONTO    Kontodialog zeigt leere Felder (E-12)
 Und die Regel für mich selbst: **wenn ein Agent an einer Sache sitzt, arbeite
 ich nicht daran mit.** Was ich finde, geht per Nachricht an ihn — das ist
 schneller als eine zweite Behebung und kollidiert nicht. Heute hat genau das
-funktioniert: Gregors Bildschirmfoto hat die Ursache von E-4 gezeigt, ich habe
+funktioniert: Gregors Bildschirmfoto hat die Ursache von [E-4](BEFUNDE.md#e-4) gezeigt, ich habe
 sie an BEENDEN geschickt, und er hat sie gründlicher behoben, als ich es getan
 hatte.
 

@@ -3,7 +3,7 @@
 > **Dies ist ein abgeschlossener Bericht vom 30.08.2026 — nicht der aktuelle
 > Stand.** PRÜFER berichtet seither in `Befunde/PRUEFER-*.md`; der jüngste ist
 > [Befunde/PRUEFER-8.md](Befunde/PRUEFER-8.md) vom 11.09.2026 (vier Schranken
-> zu E-80, E-81 und der Zertifikatsprüfung, 55 Gegenproben). Was hier steht,
+> zu [E-80](BEFUNDE.md#e-80), [E-81](BEFUNDE.md#e-81) und der Zertifikatsprüfung, 55 Gegenproben). Was hier steht,
 > gilt für den Stand `371c1e3` und wird nicht fortgeschrieben.
 
 Geprueft von PRUEFER am 30.08.2026, Branch `pruefung-a8fcd110`, abgezweigt von
@@ -21,14 +21,14 @@ Abschnitt "Stand und naechster Schritt" sagt, wo es weitergeht.
 
 | Nr.  | Gegenstand | Schwere | Zustand |
 |------|-----------|---------|---------|
-| PR-1 | `pruefe-bytes.pl` laesst LF→CRLF durch | **hoch** | belegt |
-| PR-2 | `pruefe-bytes.pl` schlaegt bei Leerzeilen grundlos an | **hoch** | belegt |
-| PR-3 | `pruefe-bytes.pl` prueft `.def`/`.sln`/`.bat` gar nicht | mittel | belegt |
-| PR-4 | Bau ohne perl zeigt eine FREMDE Kennung an | mittel | belegt |
-| PR-5 | Zeitstempel der Kennung ist nicht der Bauzeitpunkt | mittel | belegt |
-| PR-6 | `_T(EUDORA_BAU_KENNUNG)` bricht in einem Unicode-Bau | mittel | belegt |
-| PR-7 | S-7: Zahlen und Beispiel widersprechen sich | mittel | belegt |
-| PR-8 | `rekursion-suchen.pl` kann S-2 gar nicht finden | niedrig | belegt |
+| [PR-1](BEFUNDE.md#pr-1) | `pruefe-bytes.pl` laesst LF→CRLF durch | **hoch** | belegt |
+| [PR-2](BEFUNDE.md#pr-2) | `pruefe-bytes.pl` schlaegt bei Leerzeilen grundlos an | **hoch** | belegt |
+| [PR-3](BEFUNDE.md#pr-3) | `pruefe-bytes.pl` prueft `.def`/`.sln`/`.bat` gar nicht | mittel | belegt |
+| [PR-4](BEFUNDE.md#pr-4) | Bau ohne perl zeigt eine FREMDE Kennung an | mittel | belegt |
+| [PR-5](BEFUNDE.md#pr-5) | Zeitstempel der Kennung ist nicht der Bauzeitpunkt | mittel | belegt |
+| [PR-6](BEFUNDE.md#pr-6) | `_T(EUDORA_BAU_KENNUNG)` bricht in einem Unicode-Bau | mittel | belegt |
+| [PR-7](BEFUNDE.md#pr-7) | [S-7](BEFUNDE.md#s-7): Zahlen und Beispiel widersprechen sich | mittel | belegt |
+| [PR-8](BEFUNDE.md#pr-8) | `rekursion-suchen.pl` kann [S-2](BEFUNDE.md#s-2) gar nicht finden | niedrig | belegt |
 | —    | `stapel-untersuchen.ps1`: Versaetze und Schleife | — | **stimmt** |
 | —    | Werbeleiste an `IsBoxBuild()`: keine Stelle greift ins Leere | — | **stimmt** |
 | —    | `OnUpdateFrameTitle`: keine Rekursion | — | **stimmt** |
@@ -75,7 +75,7 @@ wahrscheinlichere Richtung, denn Windows-Werkzeuge (Editoren, `Set-Content`,
 
 **Behebung (klein).** Regel 2 symmetrisch aufziehen: dieselbe Pruefung noch
 einmal mit vertauschten Feldern 0 und 1 und der Meldung "(LF -> CRLF)".
-Nicht ausgefuehrt — siehe PR-2, beide gehoeren in einen Zug.
+Nicht ausgefuehrt — siehe [PR-2](BEFUNDE.md#pr-2), beide gehoeren in einen Zug.
 
 ## PR-2 — `pruefe-bytes.pl` schlaegt bei Leerzeilen grundlos an (hoch)
 
@@ -233,7 +233,7 @@ gehoert es notiert.
 
    Nebenbefund aus derselben Messung: nach dem Angleichen ist der Baum
    tatsaechlich vollstaendig byteidentisch zu HEAD (0 abweichende Dateien). Die
-   Behebung von S-7 hat also gewirkt.
+   Behebung von [S-7](BEFUNDE.md#s-7) hat also gewirkt.
 
 2. **Das Beispiel belegt das Gegenteil der Behauptung.** Oben steht: "Im
    Arbeitsverzeichnis standen sie als CRLF, im Commit als LF". Das Beispiel
@@ -274,7 +274,7 @@ Jede Kante wird mit dem Klassennamen der UMGEBENDEN Methode gebildet:
 
 `$klasse` ist immer die Klasse, in deren Rumpf der Aufruf steht. Damit bleibt
 jede Kante innerhalb EINER Klasse; klassenuebergreifende Zyklen sind
-strukturell unsichtbar. Der Anlass — Befund S-2, ein Wechselspiel zwischen zwei
+strukturell unsichtbar. Der Anlass — Befund [S-2](BEFUNDE.md#s-2), ein Wechselspiel zwischen zwei
 Paige-Rahmen und `CAdView` — ist genau so ein Zyklus. Das Werkzeug haette ihn
 nicht finden koennen, gefunden hat ihn `stapel-untersuchen.ps1`.
 
@@ -333,7 +333,7 @@ Geprueft wurde der GANZE Baum `Eudora71/` nach `CAdWazooBar`, `AdWazooBar`,
 `BUILD_BOX_OR_SITE_R_VERSION` gesetzt (`QCSharewareManager.h:54-60`), und das
 Makro steht in `Eudora.vcxproj:77` (Debug|Win32) UND `:130` (Release|Win32).
 Die Werbeleiste entfaellt also in beiden ausgelieferten Konfigurationen — die
-Behebung von S-2 greift. Wer das Makro entfernt, holt sich den Stapelueberlauf
+Behebung von [S-2](BEFUNDE.md#s-2) greift. Wer das Makro entfernt, holt sich den Stapelueberlauf
 zurueck; das gehoert in `BEFUNDE.md` zu S-2 dazu.
 
 **UNGEPRUEFT geblieben:** eine `Eudora.ini` aus einem AELTEREN Bau kann in
@@ -369,7 +369,7 @@ Neuzeichnen der Titelleiste.
 
 Fehlt perl (`errorlevel` 9009) oder bricht das Skript mit `die` ab, greift das
 `&&` nicht, und der naechste Versuch laeuft. Am Ende steht immer `exit /b 0`.
-**Verhaelt sich wie zugesagt.** Die Folge davon ist allerdings PR-4.
+**Verhaelt sich wie zugesagt.** Die Folge davon ist allerdings [PR-4](BEFUNDE.md#pr-4).
 
 ### `tools/kennung-erzeugen.pl` — Kennung ist stabil
 
@@ -377,7 +377,7 @@ Sie pendelt NICHT zwischen zwei Bauten: `BuildKennung.h` ist per
 `!/BuildKennung\.h$/` aus der Schmutzpruefung ausgenommen
 (`tools/kennung-erzeugen.pl:70-73`), und die Datei wird nur neu geschrieben,
 wenn sich etwas ausser dem Zeitstempel aendert. Frischer Klon ohne git →
-`ohne-git`; ohne `VERSION` → `unbekannt`; ohne perl → siehe PR-4.
+`ohne-git`; ohne `VERSION` → `unbekannt`; ohne perl → siehe [PR-4](BEFUNDE.md#pr-4).
 
 ---
 
@@ -386,7 +386,7 @@ wenn sich etwas ausser dem Zeitstempel aendert. Frischer Klon ohne git →
 Abgebrochen nach etwa einem Drittel der Pruefliste. **Erledigt:**
 `pruefe-bytes.pl` (drei belegte Befunde), `kennung-erzeugen.pl`,
 `rekursion-suchen.pl`, `stapel-untersuchen.ps1`, alle vier Codeaenderungen von
-heute, S-7.
+heute, [S-7](BEFUNDE.md#s-7).
 
 **Offen — hier geht es weiter, in dieser Reihenfolge:**
 
@@ -396,13 +396,13 @@ heute, S-7.
    des Codes unauffaellig: es schreibt woertlich den HEAD-Blob und liest
    danach zurueck (`tools/zeilenenden-angleichen.pl:112-118`), Inhalt kann es
    also gar nicht veraendern. Das ersetzt die Messung nicht.
-2. **BEFUNDE.md S-1 bis S-6.** Nur S-7 wurde geprueft. Jede Zahl und jede
+2. **BEFUNDE.md [S-1](BEFUNDE.md#s-1) bis [S-6](BEFUNDE.md#s-6).** Nur [S-7](BEFUNDE.md#s-7) wurde geprueft. Jede Zahl und jede
    Fundstelle in S-1..S-6 ist noch offen.
 3. **`Eudora71/Tests`, 91 Testfaelle.** Weder gebaut noch gelaufen. Ob die
    Sammlung ueberhaupt noch uebersetzt, ist unbekannt.
 4. **`utils.cpp ISOTranslate`, Grenzfaelle der Zeichensatzwandlung.** Nicht
    angesehen. Dazu gehoeren die in Punkt 3 gewuenschten neuen Testfaelle.
-5. **Die drei kleinen Behebungen aus PR-1 bis PR-3** in `pruefe-bytes.pl`. Sie
+5. **Die drei kleinen Behebungen aus [PR-1](BEFUNDE.md#pr-1) bis PR-3** in `pruefe-bytes.pl`. Sie
    sind klein und beschrieben, aber nicht ausgefuehrt — die Schranke laeuft
    vor jedem Commit, an ihr ohne Zeit fuer eine Gegenprobe zu drehen waere
    schlechter als sie so zu lassen.
@@ -450,4 +450,4 @@ PR-2.6 sind der Grund, warum die Andockrechnung vor der Auslieferung von einem
 Menschen auf dem Bildschirm angesehen werden muss.
 
 Die Einzelheiten mit Fundstellen und Gegenproben stehen in BEFUNDE.md,
-Abschnitt "PR-2".
+Abschnitt "[PR-2](BEFUNDE.md#pr-2)".

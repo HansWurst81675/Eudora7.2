@@ -20,10 +20,10 @@ gleicht ihn gegen [WEITERMACHEN.md](WEITERMACHEN.md) ab.
 > dinge aufschreiben und du sie vergißt und dann neu ausarbeitest, das ist sehr
 > schlecht!"*
 
-Der Anlass war **E-85**: Gregor meldete, dass Umlaute über IMAP falsch ankommen.
+Der Anlass war [**E-85**](BEFUNDE.md#e-85): Gregor meldete, dass Umlaute über IMAP falsch ankommen.
 Ich habe daraus einen neuen Befund gemacht und die Ursache über zwei Tage, zwei
 Fehlfassungen und eine ausgelieferte Zwischenfassung hinweg gesucht — während
-**NP3-8** in derselben Datei stand, mit dem Vermerk *„Sicherheit: nachgewiesen.
+[**NP3-8**](BEFUNDE.md#np3-8) in derselben Datei stand, mit dem Vermerk *„Sicherheit: nachgewiesen.
 Originalfehler von QUALCOMM"*, einer Tabelle beider Zählweisen, den
 Zeilennummern und der fertigen Handlungsanweisung:
 
