@@ -48,6 +48,11 @@
 
 use strict;
 use warnings;
+
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 use File::Spec;
 
 my $leise = grep { $_ eq '--leise' } @ARGV;
@@ -464,7 +469,7 @@ if (defined $befunde) {
     for my $i (0 .. $#zeilen) {
         my $z = $zeilen[$i];
         # Verzeichniszeile: die Kennung steht ALLEIN in der ersten Spalte
-        if ($z =~ /^\|\s*\*{0,2}(E-\d+)\*{0,2}\s*\|/) {
+        if ($z =~ /^\|\s*$ANKER\s*\*{0,2}(E-\d+)\*{0,2}\s*\|/) {
             my $kennung = $1;
             push @{ $verzeichnis{$kennung} },
                  { zeile => $i + 1, status => status_aus_zeile($z) };
@@ -508,7 +513,7 @@ if (defined $changelog && defined $befunde) {
         my $z = $zeilen[$i];
         if ($z =~ /^##\s/) { $im_abschnitt = ($z =~ /Noch\s+offen/i) ? 1 : 0; next }
         next unless $im_abschnitt;
-        next unless $z =~ /^\|\s*\*{0,2}(E-\d+)\*{0,2}\s*\|/;
+        next unless $z =~ /^\|\s*$ANKER\s*\*{0,2}(E-\d+)\*{0,2}\s*\|/;
         my $k = $1;
         if (!exists $verzeichnis{$k}) {
             push @mangel, sprintf("%s steht in CHANGELOG.md:%d unter 'Noch offen', fehlt aber im Verzeichnis von BEFUNDE.md",

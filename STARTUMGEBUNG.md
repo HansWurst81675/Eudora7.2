@@ -8,7 +8,7 @@ Gegengelesen und in sechs Punkten berichtigt am **06.09.2026** (Agent LEKTOR,
 > als `Eudora.exe` noch nicht linkte. Inzwischen linkt sie (`a807b93`), **Eudora
 > startet**, ist bedienbar und ruft Mail über TLS ab (zuletzt 06.09.2026,
 > 7.2.0.12, Port 995). Was hier als „ungeprüft" steht, ist teils
-> beantwortet — die Antworten stehen in `BEFUNDE.md` unter S-1 bis S-3 und in
+> beantwortet — die Antworten stehen in `BEFUNDE.md` unter [S-1](BEFUNDE.md#s-1) bis [S-3](BEFUNDE.md#s-3) und in
 > `Releases/PAKETE.md`. Die Liste der Laufzeitdateien selbst gilt unverändert.
 >
 > Wesentlich hinzugekommen: die sieben vorgebauten Fremd-DLLs von 2006 brauchen die
@@ -78,7 +78,7 @@ die Oberfläche. Sie entsteht beim ganz gewöhnlichen Projektmappen-Bau in
 > **Berichtigung (06.09.2026).** Hier stand, `EudoraRes` hänge *„über einen
 > Projektverweis an OT501 und wird beim Solution-Bau übersprungen"*.
 > Nachgesehen: `EudoraRes.vcxproj` hat **keinen** `ProjectReference` auf
-> `OT501`, nur den Include-Pfad `..\OT501\Include`; seit Befund **B-3** wird
+> `OT501`, nur den Include-Pfad `..\OT501\Include`; seit Befund [**B-3**](BEFUNDE.md#b-3) wird
 > `OT501` selbst gar nicht mehr gebaut.
 
 ## Checkliste für den ersten Startversuch
@@ -101,7 +101,7 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
 
    **Der Release-Bau braucht davon nichts.** Er bringt `mfc140.dll`,
    `msvcp140.dll` und `vcruntime140.dll` selbst mit; die drei gehören zum
-   Visual-C++-Redistributable und dürfen beiliegen (Befund F-1). Die vier
+   Visual-C++-Redistributable und dürfen beiliegen (Befund [F-1](BEFUNDE.md#f-1)). Die vier
    Debug-Laufzeiten dürfen das **nicht** — sie kommen nur mit einer
    Visual-Studio-Installation.
 
@@ -114,7 +114,7 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
    Zwingend beim Laden sind laut Importtabelle nur `EuMemMgr.dll` und
    `Paige32d.dll`, beide brauchen `MSVCR71.dll`. Dafür gibt es inzwischen einen
    eigenen Nachbau unter `Eudora71/VC71Bruecke` — 1429 Weiterleitungen auf die
-   von Windows mitgelieferte `msvcrt.dll`, siehe Befund B-1.
+   von Windows mitgelieferte `msvcrt.dll`, siehe Befund [B-1](BEFUNDE.md#b-1).
 
    `MFC71.DLL` und `MSVCP71.dll` fehlen weiterhin und sind nicht nachbaubar
    (`MFC71` wird über 157 Ordinale importiert). Dadurch fallen **Adressbuch,
@@ -144,7 +144,7 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
 
 5. **Nur im Debug-Bau: die drei bis vier SUPERASSERT-Dialoge wegklicken**
    (*Ignore Once*). Das sind Debug-Zusicherungen, keine Fehler — eine meldet
-   nur, dass der Suchindex neu angelegt wird (Befund E-14). Im Release-Bau
+   nur, dass der Suchindex neu angelegt wird (Befund [E-14](BEFUNDE.md#e-14)). Im Release-Bau
    entfallen sie samt allen `ASSERT`/`VERIFY`.
 
 6. **Den Fenstertitel ablesen.** Er trägt die Bau-Kennung. Sie wird vor jedem

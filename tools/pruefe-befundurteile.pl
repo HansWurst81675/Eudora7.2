@@ -2,6 +2,17 @@
 use strict;
 use warnings;
 
+# Liefert verweise_text() - macht eine verlinkte Zeile wieder zu der
+# Zeile, die vor dem Verlinken dastand.
+use FindBin;
+require "$FindBin::Bin/verweise-filtern.pl";
+
+
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # pruefe-befundurteile.pl - kein Dokument darf einen Befund fuer erledigt
 # erklaeren, den BEFUNDE.md offen fuehrt.
 #
@@ -123,6 +134,20 @@ sub ohne_code {
     for my $z (@zeilen) {
         if ($z =~ /^\s*```/) { $drin = !$drin; $z = ''; next; }
         $z = '' if $drin;
+
+        # Seit dem 12.10.2026 ist jede Kennung ein Link (befunde-verlinken.pl).
+        # Das Linkziel traegt die Kennung ein zweites Mal - und zwar als
+        # #e-112 mitten im Text. Diese Schranke liest ein Umfeld von 40
+        # Zeichen um jede Kennung; ohne das Folgende meldet sie
+        # "README.md nennt E-112 als behoben", weil vierzig Zeichen weiter
+        # ein ganz anderer Befund als behoben bezeichnet wird. Gemessen:
+        # fuenf solche Fehlalarme. Der Linktext bleibt stehen, nur das
+        # Ziel faellt weg - die Zeilenzahl aendert sich dadurch nicht.
+        # Auch die eckigen Klammern fallen weg: bleiben sie stehen, ist die
+        # Zeile zwei Zeichen laenger als vor dem Verlinken, das Umfeld
+        # verschiebt sich um zwei Zeichen - und zwei weitere Fehlalarme
+        # standen da. Gemessen: 5 -> 2 -> 0.
+        $z = verweise_text($z);
     }
     return join("\n", @zeilen);
 }
@@ -136,7 +161,7 @@ unless (defined $befunde) {
 
 my %urteil;      # Kennung -> 'offen' | 'erledigt'
 for my $zeile (split /\n/, $befunde) {
-    next unless $zeile =~ /^\|\s*(E-\d+)\s*\|/;
+    next unless $zeile =~ /^\|\s*$ANKER\s*(E-\d+)\s*\|/;
     my $kennung = $1;
     next if exists $urteil{$kennung};    # erste Zeile gewinnt
 

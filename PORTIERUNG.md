@@ -3,7 +3,7 @@
 <!-- pruefstand: eceeecf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
-     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+     Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](BEFUNDE.md#np3-7)). -->
 
 > **Für wen diese Datei ist.** Für jemanden, der **am Quelltext arbeitet** —
 > Mensch oder Agent. Sie ist das **Begründungsarchiv** der Portierung: welcher
@@ -15,7 +15,7 @@
 > (Befund **W-31**, `Befunde/LEKTOR-4.md`).
 
 Stand: 2026-09-07 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
-OT501*, *Umgebung*, *E-11*, *OpenSSL3* und *Nächster Schritt* sind gegen den
+OT501*, *Umgebung*, *[E-11](BEFUNDE.md#e-11)*, *OpenSSL3* und *Nächster Schritt* sind gegen den
 Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, L-6, und
 `Befunde/LEKTOR-3.md`, L-7). Ältere Messwerte im Rest der Datei nennen ihren
 eigenen Bezugscommit — meist `a807b93` vom 31.08.2026.
@@ -30,40 +30,40 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > *Tools → Last SSL Info* meldet `Negotiation Status: Succeeded`, **TLSv1.3**,
 > `TLS_AES_256_GCM_SHA384`. Die richtige Einstellung dafür ist *Secure Sockets
 > when Receiving* → **„Required, Alternate Port"**. Der erste Abruf überhaupt
-> war am 31.08.2026 (Befunde E-1 und E-3): 159 Nachrichten, damals über
-> Port 110 mit STARTTLS. Die Menüs gehen auf (M-1 wirkt), die Bereiche
-> überlagern sich nicht mehr (A-1 wirkt).
+> war am 31.08.2026 (Befunde [E-1](BEFUNDE.md#e-1) und [E-3](BEFUNDE.md#e-3)): 159 Nachrichten, damals über
+> Port 110 mit STARTTLS. Die Menüs gehen auf ([M-1](BEFUNDE.md#m-1) wirkt), die Bereiche
+> überlagern sich nicht mehr ([A-1](BEFUNDE.md#a-1) wirkt).
 >
 > **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
 > **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
 > sind fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
-> darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: **E-86**
-> (HTML-Nachrichten falsch dargestellt) und **E-77** (IMAP-Postfachnamen roh).
+> darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: [**E-86**](BEFUNDE.md#e-86)
+> (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77) (IMAP-Postfachnamen roh).
 >
 > **Stand 12.10.2026:** Quellstand **7.2.0.84**, `VERSION` **1.0.84**, veröffentlicht
-> als **`v1.0.84`** — behebt **E-94** (Betreff mitten im Wort umbrochen), über POP
+> als **`v1.0.84`** — behebt [**E-94**](BEFUNDE.md#e-94) (Betreff mitten im Wort umbrochen), über POP
 > und IMAP gemessen, von Gregor bestätigt. Davor Quellstand **7.2.0.83**, gebaut
-> (Rebuild 0 Fehler, Testsuite 185/185). Neu darin: **AN-1** (Anhangnamen
+> (Rebuild 0 Fehler, Testsuite 185/185). Neu darin: [**AN-1**](BEFUNDE.md#an-1) (Anhangnamen
 > abgeschnitten, Endung fehlt) — über POP am laufenden Programm gemessen und
 > heil, über IMAP von Gregor mit 1.0.83 getestet und bestätigt, offen nur B5.7;
-> **AN-2** (Quelltext einer Webseite im Werbefenster) — seit 7.2.0.82 übersetzt,
+> [**AN-2**](BEFUNDE.md#an-2) (Quelltext einer Webseite im Werbefenster) — seit 7.2.0.82 übersetzt,
 > am laufenden Programm nicht gemessen. **Veröffentlicht als `v1.0.83`** am
 > 12.10.2026 (davor `v1.0.72`), danach `v1.0.84`. Einzelheiten in
 > [CHANGELOG.md](CHANGELOG.md), 7.2.0.79 bis 7.2.0.83. Der Absatz darunter ist
 > der Stand vom 18.09.2026.
 >
-> Stand 18.09.2026, Quellstand **7.2.0.73**, `VERSION` **1.0.73** — eine **Messfassung** zu E-110, die nichts behebt. Der letzte inhaltliche Stand ist **7.2.0.72 / 1.0.72**; er ist als Paket
+> Stand 18.09.2026, Quellstand **7.2.0.73**, `VERSION` **1.0.73** — eine **Messfassung** zu [E-110](BEFUNDE.md#e-110), die nichts behebt. Der letzte inhaltliche Stand ist **7.2.0.72 / 1.0.72**; er ist als Paket
 > geschnürt und **auf GitHub als `v1.0.72` veröffentlicht** — 17.09.2026,
 > 20:07:49 UTC, dort als *Latest*, Marke auf dem Merge-Commit `8da72c8`.
 > Seit
-> 7.2.0.64 sind dazugekommen: **E-97** (*File → Save As* stürzte ab) und
-> **E-99** (Datenverlust beim Senden eines gesicherten Entwurfs) in 7.2.0.64,
-> **E-100** (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65,
-> **E-101** (die gespeicherte Datei war für andere Programme unbrauchbar) in
-> 7.2.0.66 und 7.2.0.69, **E-103** (Bilder über dem Text) und **E-104**
+> 7.2.0.64 sind dazugekommen: [**E-97**](BEFUNDE.md#e-97) (*File → Save As* stürzte ab) und
+> [**E-99**](BEFUNDE.md#e-99) (Datenverlust beim Senden eines gesicherten Entwurfs) in 7.2.0.64,
+> [**E-100**](BEFUNDE.md#e-100) (dieselbe Nullzeiger-Stelle an drei weiteren Stellen) in 7.2.0.65,
+> [**E-101**](BEFUNDE.md#e-101) (die gespeicherte Datei war für andere Programme unbrauchbar) in
+> 7.2.0.66 und 7.2.0.69, [**E-103**](BEFUNDE.md#e-103) (Bilder über dem Text) und [**E-104**](BEFUNDE.md#e-104)
 > (zusammengeklebte Kopfzeilen) in 7.2.0.67, **E-104** zweite Hälfte und
-> **E-106** in 7.2.0.68, **E-108** (Absturz beim Antworten auf eine geöffnete
+> [**E-106**](BEFUNDE.md#e-106) in 7.2.0.68, [**E-108**](BEFUNDE.md#e-108) (Absturz beim Antworten auf eine geöffnete
 > Nachricht) in 7.2.0.72; **171/171 Tests**. **1.0.70 ist nie zu Gregor
 > gelangt; 1.0.71 stürzt beim Antworten ab, ist nie veröffentlicht worden und
 > liegt nur noch als Paket in seinem Testverzeichnis** — bei ihm liegen
@@ -86,7 +86,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > | `Eudora71/Tests/RunTests.cmd` | 33 Tests, 33 bestanden |
 >
 > > **Diese Bauzahlen sind vom 30.08.2026 und überholt.** Seit dem 05.09.2026
-> > ist `OT501` aus dem Bau genommen (Befund **B-3**, Commit `d8cc9d3`): die
+> > ist `OT501` aus dem Bau genommen (Befund [**B-3**](BEFUNDE.md#b-3), Commit `d8cc9d3`): die
 > > „3 Fehler aus `OT501`" entfallen, und `/p:BuildProjectReferences=false` ist
 > > nicht mehr nötig. Die Messung bleibt als Beleg stehen. Die aktuelle Bauzahl
 > > steht in `README.md` unter *Stand*: **18 erfolgreich, 0 Fehler, 1
@@ -104,11 +104,11 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > ohnehin schon, dass die Zeilenangabe nicht stimmt.)
 >
 > Dass Eudora überhaupt startet, war der Schritt vom 30.08.2026 (Paket 1.0.2):
-> der Absturz beim Start war die Werbefläche — Befund S-2. `EudoraRes.dll` wird
+> der Absturz beim Start war die Werbefläche — Befund [S-2](BEFUNDE.md#s-2). `EudoraRes.dll` wird
 > zur Laufzeit nachgeladen, nicht gebunden — siehe `STARTUMGEBUNG.md`.
 
 **18 der 19 Projekte werden fertig.** Nicht gebaut wird nur `OT501` (Stingray
-Objective Toolkit): die Quellen sind nicht freigegeben, und seit Befund **B-3**
+Objective Toolkit): die Quellen sind nicht freigegeben, und seit Befund [**B-3**](BEFUNDE.md#b-3)
 (`d8cc9d3`, 05.09.2026) hat das Projekt in `Eudora71/Eudora.sln` kein `Build.0`
 mehr — die Projektmappe überspringt es, statt an ihm zu scheitern. Gebraucht
 wird es nicht mehr; an seine Stelle ist `Eudora71/OTShim/` getreten.
@@ -171,7 +171,7 @@ powershell -ExecutionPolicy Bypass -File tools\bauen.ps1 -NurPruefen
   **Die Plattform heißt auf Projektmappenebene `x86`, nicht `Win32`.** `Win32`
   steht eine Ebene tiefer in den Projekten; `Eudora.sln` bildet `x86` darauf ab
   (`GlobalSection(ProjectConfigurationPlatforms)`). Wer `-p:Platform=Win32`
-  übergibt, bekommt `MSB4126` (Befund X-6). `bauen.ps1` liest die gültigen
+  übergibt, bekommt `MSB4126` (Befund [X-6](BEFUNDE.md#x-6)). `bauen.ps1` liest die gültigen
   Paare aus der `.sln`, sucht MSBuild über `vswhere.exe` und meldet Erfolg erst,
   wenn Rückgabewert, Fehlerprotokoll, Zeitstempel der Artefakte und die
   Versionsressource der `Eudora.exe` zusammenpassen — am 05.09.2026 hat ein
@@ -221,7 +221,7 @@ Projekt und Pfad können entfallen.
 > 0 Fehler, 1 übersprungen** (Gregor, 06.09.2026, IDE).
 >
 > > **Berichtigung.** Hier stand bis zum 06.09.2026 der Stand **vor** Befund
-> > **B-3** (Commit `d8cc9d3`, 05.09.2026): `OT501` scheitere mit drei Fehlern,
+> > [**B-3**](BEFUNDE.md#b-3) (Commit `d8cc9d3`, 05.09.2026): `OT501` scheitere mit drei Fehlern,
 > > `Eudora.vcxproj` und `EudoraRes.vcxproj` führten es als Projektverweis,
 > > *„aus einem reinen Projektmappen-Bau kommt deshalb **nie** eine
 > > `Eudora.exe`"*, und `tools/bauen.ps1` brauche einen **zweiten Gang** mit
@@ -320,7 +320,7 @@ Registerkarten sind deshalb als eigener Teil der Ersatzschicht ausgeführt
 
 > **Achtung, veraltete Aussage im Umlauf.** Bis zum 09.09.2026 stand in
 > `README.md`, `SECWorkbook` halte `m_bWorkbookMode` „dauerhaft auf `FALSE`".
-> Das galt bis **E-48** / Anforderung **A-3**. Seither schaltet
+> Das galt bis [**E-48**](BEFUNDE.md#e-48) / Anforderung **A-3**. Seither schaltet
 > `SECWorkbook::SetWorkbookMode` (`OTShim.cpp:1319`) den Wert um, und
 > `Befunde/PRUEFER-6.md` führt vier Regressionen auf, die erst dadurch
 > entstanden sind, dass er jetzt `TRUE` ist. Der Kommentar in
@@ -329,7 +329,7 @@ Registerkarten sind deshalb als eigener Teil der Ersatzschicht ausgeführt
 
 Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
 
-> **Nachgetragen am 06.09.2026 (Befund E-30).** Der Ladeweg der
+> **Nachgetragen am 06.09.2026 (Befund [E-30](BEFUNDE.md#e-30)).** Der Ladeweg der
 > Werkzeugleistenbitmaps geht nicht mehr unmittelbar über
 > `CBitmap::LoadMappedBitmap`, sondern über das neue
 > `SECLadeWerkzeugleistenBitmap` in `OTShim_Werkzeugleiste.cpp`. Grund:
@@ -540,7 +540,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    Fassung erledigt: am 29.08.2026 gegen `pop.gmx.net:995`. **Und am 31.08.2026
    mit der ausgelieferten QCSSL 1.0.1 selbst** (`ab55281a`): `mx.freenet.de`,
    Port 110 mit STARTTLS, `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status
-   *Succeeded* (Befund E-3). Einzelheiten in
+   *Succeeded* (Befund [E-3](BEFUNDE.md#e-3)). Einzelheiten in
    [Releases/1.0/AUSLIEFERUNGEN.md](Releases/1.0/AUSLIEFERUNGEN.md).
 2. ~~Aktuellen `rootcerts.p7b` erzeugen~~ — erledigt mit `75b60e1`.
 3. ~~OT501-Ersatzschicht implementieren~~ — erledigt (`e50a89c`), 0 ungelöste
@@ -548,7 +548,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
 4. ~~`EudoraRes.dll` beschaffen~~ — **erledigt.** Sie wird gebaut und liegt in
    `Bin/Debug`.
 5. ~~Ersten Start herrichten~~ — **erledigt.** Eudora startet. Die drei Hürden
-   dorthin sind als Befunde S-1 und S-2 festgehalten; die eigentliche war die
+   dorthin sind als Befunde [S-1](BEFUNDE.md#s-1) und [S-2](BEFUNDE.md#s-2) festgehalten; die eigentliche war die
    Werbefläche, die mit `CRect(0,0,0,0)` angelegt wurde und Paige in eine
    Endlosrekursion trieb.
 
@@ -557,31 +557,31 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
 1. ~~**Kriterium 0 nachweisen.**~~ **Erledigt am 06.09.2026:** Gregor hat
    `Eudora72-1.0.10-release.zip` auf einem Rechner **ohne** Visual Studio
    ausgepackt und gestartet — *„test bestanden: eudora läuft ohne VS2022
-   installiert."* Das bleibt der belastbare Nachweis (E-8);
+   installiert."* Das bleibt der belastbare Nachweis ([E-8](BEFUNDE.md#e-8));
    `tools/paket-pruefen.ps1` sagt seit der Behebung von PR-2.0 (06.09.2026,
    `dfc8b40`) das Richtige voraus, ersetzt aber keinen Startversuch auf einem
    fremden Rechner.
-2. **Die Darstellung, zweite Runde.** M-1 und A-1 wirken (E-1, E-2), offen
+2. **Die Darstellung, zweite Runde.** [M-1](BEFUNDE.md#m-1) und [A-1](BEFUNDE.md#a-1) wirken ([E-1](BEFUNDE.md#e-1), [E-2](BEFUNDE.md#e-2)), offen
    bleiben die Splitter (`SECDockBar::AddSplitter` wird nie gerufen),
    `SECMDIFrameWnd::FloatControlBarInMDIChild` (leerer Rumpf, größter
    verbliebener Einzelposten) und `SetControlBarWidthsInRow`. Dazu PR-2.5:
    `DrawChecked` hat denselben Farbfehler, der in `DrawDisabled` behoben wurde.
    Einzelheiten in [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
-3. **`ReleaseBuffer` ohne `GetBuffer`** — **Befund E-11 ist zurückgenommen.** Er
+3. **`ReleaseBuffer` ohne `GetBuffer`** — **Befund [E-11](BEFUNDE.md#e-11) ist zurückgenommen.** Er
    erklärte den Absturz auf frischen Installationen mit einem `ReleaseBuffer` in
    `CEudoraApp::RegisterURLSchemes` (damals `eudora.cpp:3372`); die richtige
-   Erklärung steht in **E-25** (`Befunde/ASSISTENT.md`). Die **Fehlerklasse**
+   Erklärung steht in [**E-25**](BEFUNDE.md#e-25) (`Befunde/ASSISTENT.md`). Die **Fehlerklasse**
    bleibt richtig und offen: gemessen am 07.09.2026 mit
    `tools/releasebuffer-pruefen.pl` — **137** Vorkommen im Baum, davon **116**
    richtig gepaart, **16** falsch, **4** mit `LockBuffer` davor und **1** mit
-   `GetBuffer` erst danach; zu ändern sind also **21** (Befund **R-1**). Die
+   `GetBuffer` erst danach; zu ändern sind also **21** (Befund [**R-1**](BEFUNDE.md#r-1)). Die
    Einzelliste steht in `AUFGABEN.md` unter A2 und ist mit dem Werkzeug jederzeit
    neu zu erzeugen.
 4. **`MFC71.DLL` und `MSVCP71.dll`.** Nicht nachbaubar — `MFC71` wird über 157
    Ordinale importiert. Dadurch fallen **Adressbuch, LDAP und Ph** aus. Die
    `MSVCR71.dll` dagegen ist als eigener Nachbau vorhanden
    (`Eudora71/VC71Bruecke`, 1429 Weiterleitungen auf Windows' `msvcrt.dll`).
-5. ~~**Release-Bau.**~~ **Erledigt** seit Befund F-1 (31.08.2026): der
+5. ~~**Release-Bau.**~~ **Erledigt** seit Befund [F-1](BEFUNDE.md#f-1) (31.08.2026): der
    Release-Zweig scheiterte an `OTA50D.LIB` statt `OTA50R.LIB` in
    `Eudora.vcxproj:147` und an `MakeDox.pl` im Nachbereitungsschritt. Er bindet
    jetzt, hat keine SUPERASSERT-Dialoge und braucht nur die drei verteilbaren
@@ -703,7 +703,7 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
   Weiterleitungen). Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die
   übrigen) brauchen diese Laufzeit. `MFC71.DLL` und `MSVCP71.dll` sind dagegen
   **nicht** nachbaubar — 157 Importe nach Ordinal, kein einziger nach Namen
-  (Befund **B-1**); Adressbuch, LDAP, Ph und S/MIME fallen deshalb dauerhaft aus.
+  (Befund [**B-1**](BEFUNDE.md#b-1)); Adressbuch, LDAP, Ph und S/MIME fallen deshalb dauerhaft aus.
   Alle Messungen: [Eudora71/VC71Bruecke/BEFUND.md](Eudora71/VC71Bruecke/BEFUND.md).
 
 ## Zwei Fehler in der Zeichentabelle - gefunden und behoben
@@ -881,18 +881,18 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   `ASSERT` weggelassen und `VERIFY(f)` zu `((void)(f))` verkürzt — der Ausdruck
   wird berechnet, das Ergebnis aber **nicht** geprüft. Wo QUALCOMM einen
   Fehlschlag so „behandelt" hat, passiert im ausgelieferten Programm lautlos gar
-  nichts: bei **E-37** an vier Stellen, bei **E-38** an zwei, bei **E-33**
-  verwandt — und beim Beenden waren es zwölf Schritte (**E-42**). Wer auf einem
+  nichts: bei [**E-37**](BEFUNDE.md#e-37) an vier Stellen, bei [**E-38**](BEFUNDE.md#e-38) an zwei, bei [**E-33**](BEFUNDE.md#e-33)
+  verwandt — und beim Beenden waren es zwölf Schritte ([**E-42**](BEFUNDE.md#e-42)). Wer auf einem
   Weg sucht, auf dem „gar nichts passiert", sucht dort **zuerst** nach
   `ASSERT(0)` und `VERIFY(`. Die Lehre dazu:
   [Arbeitsweise/assert-ist-im-release-nichts.md](Arbeitsweise/assert-ist-im-release-nichts.md).
   Dieser Absatz stand bis zum 09.09.2026 in `README.md`.
 - **Die Wurzel der Abstürze ist gefunden — nicht noch einmal durchprobieren.**
-  Bis zum 06.09.2026 galt die Doppelfreigabe **E-25** in
+  Bis zum 06.09.2026 galt die Doppelfreigabe [**E-25**](BEFUNDE.md#e-25) in
   `Eudora71/Importers/NSImport/NSImportClass.cpp` (`LocateNetscapePrefsFile`) als
   die Ursache; die Fassung danach stürzte damit weiter ab. Dazu sieben weitere
   Vermutungen, jede gebaut, gestartet und gemessen, jede widerlegt. Die
-  tatsächliche Ursache war **E-31**: `pg_time_t` war unter VS2022 acht Byte breit
+  tatsächliche Ursache war [**E-31**](BEFUNDE.md#e-31): `pg_time_t` war unter VS2022 acht Byte breit
   statt vier (`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`), womit jede an
   `Paige32.dll` gereichte Struktur verschoben war. Messung mit allen
   Feldversätzen: [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21, Herleitung in
@@ -1056,7 +1056,7 @@ Nachrichtenrumpf). Wer den Fehler auch über IMAP behoben haben will, muss
 `ImapDownload.cpp` auf `FindMIMECharset()` umstellen; das ist eine eigene
 Änderung mit eigenen Tests.
 
-> **Erledigt am 13./14.09.2026 als E-85.** Genau diese Umstellung ist in
+> **Erledigt am 13./14.09.2026 als [E-85](BEFUNDE.md#e-85).** Genau diese Umstellung ist in
 > 7.2.0.51 gebaut: `ImapDownload.cpp:4742` ruft jetzt `FindMIMECharset()`, die
 > Wächterbedingung darunter heißt `if (iCharsetIdx > 2)` (`:4785`) statt `> 1`,
 > und damit rechnen POP3 und IMAP auf **derselben** Skala. **Das allein hat den
@@ -1088,7 +1088,7 @@ werden zu einem Fragezeichen), wird der Rest **sichtbarer** als bisher. Das ist
 ein Grund, diesen Befund bald anzugehen — er liegt aber in `TextReader.cpp` und
 `ImapDownload.cpp`, nicht in `utils.cpp`.
 
-> **Erledigt am 13.09.2026 als E-85, Teil (1).** `ImapDownload.cpp` wertet den
+> **Erledigt am 13.09.2026 als [E-85](BEFUNDE.md#e-85), Teil (1).** `ImapDownload.cpp` wertet den
 > Rückgabewert jetzt aus: `LONG lUebersetzt = ISOTranslateChunk(...)`, und bei
 > `lUebersetzt >= 0` gehen `inLen` **und** `outLen` auf den neuen Wert
 > (`:4802-4808`). `TextReader.cpp` hatte es schon richtig.
@@ -1123,7 +1123,7 @@ stehen**. Im Postfach landet `C3 BC` statt `FC`, und die Anzeige — die zu Rech
 `windows-1252` ansagt — macht daraus `ü`.
 
 Das Bild ist verräterisch: **genau ein Umlaut einer Nachricht ist kaputt, alle
-anderen stimmen.** Belegt am 05.09.2026 an einer echten Nachricht (Befund Z-2,
+anderen stimmen.** Belegt am 05.09.2026 an einer echten Nachricht (Befund [Z-2](BEFUNDE.md#z-2),
 Fortschreibung): in einem Postfach steht dasselbe Wort *auswählen* dreimal
 richtig und einmal roh — dieselbe Zeichenkette, dieselbe Nachricht, derselbe
 MIME-Teil.
@@ -1154,7 +1154,7 @@ weiter das Verhalten von `ISOTranslate` selbst.
 Stück) und ist nicht mitgeändert, weil dort ohnehin der Index um eins verschoben
 ist (Nebenbefund 1 oben) und eine Änderung ungeprüft bliebe.
 
-> **Erledigt am 13.09.2026 als E-85, Teil (2).** Der Übertrag steckt jetzt in
+> **Erledigt am 13.09.2026 als [E-85](BEFUNDE.md#e-85), Teil (2).** Der Übertrag steckt jetzt in
 > einer eigenen Funktion, `ISOTranslateChunk` (`Eudora/utils.cpp:1269`,
 > deklariert in `utils.h:93`), statt im Aufrufer — `TextReader::ReadIt` und
 > `ImapDownload.cpp:4802` benutzen dieselbe. Sie hält die angefangenen Bytes

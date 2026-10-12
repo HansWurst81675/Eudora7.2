@@ -31,6 +31,11 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 my $anhaengen = grep { $_ eq '--anhaengen' } @ARGV;
 my $naechste;
 for my $i (0 .. $#ARGV) { $naechste = $ARGV[$i+1] if $ARGV[$i] eq '--naechste' }
@@ -57,7 +62,7 @@ sub belegte_kennungen {
     my $d = roh($ZIEL);
     if (defined $d) {
         $k{$1} = 1 while $d =~ /^#+\s+([A-Z]+[0-9]*-\d+)\b/gm;
-        $k{$1} = 1 while $d =~ /^\|\s*([A-Z]+[0-9]*-\d+)\s*\|/gm;
+        $k{$1} = 1 while $d =~ /^\|\s*$ANKER\s*([A-Z]+[0-9]*-\d+)\s*\|/gm;
     }
     if (opendir(my $dh, $ORDNER)) {
         for my $n (grep { /\.md$/ } readdir $dh) {

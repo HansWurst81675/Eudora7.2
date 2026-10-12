@@ -2,6 +2,11 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # offene-befunde.pl - die Liste der offenen Befunde aus BEFUNDE.md erzeugen
 # und in WEITERMACHEN.md setzen.
 #
@@ -85,7 +90,7 @@ my $befunde = lies($quelle);
 my (@offene, %beschreibung, %gesehen);
 
 for my $zeile (split /\n/, $befunde) {
-    next unless $zeile =~ /^\|\s*\**\s*($kennung)\s*\**\s*\|/;
+    next unless $zeile =~ /^\|\s*$ANKER\s*\**\s*($kennung)\s*\**\s*\|/;
     my $k = $1;
 
     my @s = split /\|/, $zeile, -1;

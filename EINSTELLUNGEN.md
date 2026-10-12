@@ -3,7 +3,7 @@
 > **Geprüft gegen Quellstand 7.2.0.68 / Paket 1.0.68.** Der Quellstand ist
 > inzwischen **7.2.0.73 / 1.0.73**; **gegen ihn ist diese Datei nicht erneut
 > geprüft.** Nachgesehen wurde am 18.09.2026 nur, ob die Änderungen seither sie
-> falsch gemacht haben: **E-104** hat das Lesen der INI-Schalter umgebaut
+> falsch gemacht haben: [**E-104**](BEFUNDE.md#e-104) hat das Lesen der INI-Schalter umgebaut
 > (`E104SchalterLesen` zieht verdorbene Werte auf 0 zurück und schreibt sie
 > weg), betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen
 > in dieser Datei nicht vor**, gemessen. Der Text ist also nicht falsch
@@ -156,10 +156,10 @@ ist der eingebaute Wert aus `Eudora71/Eudora/EudoraRes.rc`.
 | `MaxConcurrentTasks` | `[Settings]` | `10` | `EudoraRes.rc:8634` | wie viele Aufgaben gleichzeitig laufen dürfen (`QCTaskManager.cpp:93`). Sind so viele aktiv, wartet die nächste in der Warteschlange (`:376`); `0` heißt *ohne Grenze* |
 | `MessageStyleSheet` | `[Settings]` | siehe `EudoraRes.rc:8130` | `EudoraRes.rc:8130` | Stylesheet der Nachrichtenansicht. **Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig** (`TridentView.cpp:1300`, Rückfall auf die INI erst `:1323`) — die hier ergänzte Regel für die Kopfzeilen entfällt dann, siehe [README.md](README.md) |
 | `TabooHeaders` | `[Settings]` | Liste, `EudoraRes.rc:9996` | `EudoraRes.rc:9996` | welche Kopfzeilen *Blah Blah Blah* versteckt. **Ein Eintrag in der `Eudora.ini` ersetzt die Liste vollständig, er ergänzt sie nicht** — wer etwas hinzufügen will, schreibt die ganze Liste hin. Was diese Portierung ergänzt hat, steht in [README.md](README.md); nachrechnen lässt es sich mit `perl tools/taboo-rechnen.pl` |
-| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | *kein Eintrag* | `OTShim_Werkzeugleiste.cpp:4449` (schreiben), `:4495` (lesen) | **gibt es im Original nicht.** Merken sich Breite und Höhe eines **losgerissenen** Fensters, je Leisten-Kennung, damit sie den Neustart überlebt (**E-84**). Ohne Eintrag gilt die Anfangsgröße. `<id>` ist die Kennung der Leiste, dieselbe wie bei `DockVertCx` und `DockHorzCy` daneben. **Der Abschnittsname ist gemessen, nicht geraten:** `mainfrm.cpp:4456` übergibt `ToolBar`, und `SECToolBarManager::SaveState` setzt daraus `%s-ToolBarManager` (`OTShim_Werkzeugleiste.cpp:4336`) — in Gregors `Eudora.ini` steht der Eintrag unter `[ToolBar-ToolBarManager]`. **Keine Ressourcennummer** — der Schlüssel wird unmittelbar über `WriteProfileInt` geschrieben, die Nummernregel aus Abschnitt 1 gilt für ihn also nicht. Wer eine Größe loswerden will, löscht die Zeile; sie wird beim nächsten Beenden neu geschrieben |
-| `FilterMayDeleteFromServer` | `[Settings]` | `0` | `filtersd.cpp:1133` | **gibt es im Original nicht.** Erst mit `1` darf eine Filteraktion Post auf dem Server löschen (Befund **E-73**). Der Abschnitt steht hier fest im Quelltext, nicht in der Nummernregel |
-| `KeepHTMLInResponses` | `[Settings]` | `1` | `EudoraRes.rc:7667`, wirksam in `summary.cpp:1135` | **gibt es im Original nicht.** Sorgt dafür, dass **Antworten und Weiterleiten die HTML-Auszeichnung der Ursprungsnachricht behalten** (Befund **E-87**). Vorher entschied allein das `MSF_XRICH`-Flag des Übersichtseintrags darüber; fehlte es — wie bei Nachrichten, deren Eintrag älter ist als die Kennzeichnung — wurde ein erkanntermassen HTML-haltiger Rumpf als reiner Text zitiert (`QuoteText`, `msgutils.cpp:126-220`). Mit `1` zählt die Messung am Rumpf selbst (`IsFancy`, `utils.cpp:588`). **Mit `0` gilt wieder das alte Verhalten.** Was der Schalter **nicht** leistet, steht in Abschnitt 4 |
-| `ForwardOriginalHTML` | `[Settings]` | `1` | `EudoraRes.rc:7668`, wirksam in `PgMsgView.cpp:407` | **gibt es im Original nicht.** Hebt beim **Antworten, Weiterleiten und Umleiten** den Rumpf, wie er war, auf und setzt ihn beim Senden wieder ein — der Empfänger bekommt dann Kästen, Hintergründe und Bildgrößen, die der Verfassen-Editor nicht kennt (Befund **E-88**). **Das Verfassenfenster wird dadurch nicht schöner** — es zeigt weiterhin die schlichte Paige-Fassung; nur die versandte Nachricht ändert sich. Seit 7.2.0.57 bekommen dort allerdings die Bilder eine brauchbare Größe, damit sie nicht mehr über dem Text liegen (Befund **E-89**, Abschnitt 4.8); das betrifft **nur die Anzeige**. Eingesetzt wird nur, wenn sich belegen lässt, dass im Zitat nichts geändert wurde — sonst gilt weiter die Editor-Fassung. Was der Schalter **nicht** leistet, steht in Abschnitt 4.8. **Mit `0` gilt wieder das Verhalten von 7.2.0.55.** Jede Entscheidung steht im Protokoll, siehe [Befunde/SPURMARKEN.md](Befunde/SPURMARKEN.md) |
+| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | *kein Eintrag* | `OTShim_Werkzeugleiste.cpp:4449` (schreiben), `:4495` (lesen) | **gibt es im Original nicht.** Merken sich Breite und Höhe eines **losgerissenen** Fensters, je Leisten-Kennung, damit sie den Neustart überlebt ([**E-84**](BEFUNDE.md#e-84)). Ohne Eintrag gilt die Anfangsgröße. `<id>` ist die Kennung der Leiste, dieselbe wie bei `DockVertCx` und `DockHorzCy` daneben. **Der Abschnittsname ist gemessen, nicht geraten:** `mainfrm.cpp:4456` übergibt `ToolBar`, und `SECToolBarManager::SaveState` setzt daraus `%s-ToolBarManager` (`OTShim_Werkzeugleiste.cpp:4336`) — in Gregors `Eudora.ini` steht der Eintrag unter `[ToolBar-ToolBarManager]`. **Keine Ressourcennummer** — der Schlüssel wird unmittelbar über `WriteProfileInt` geschrieben, die Nummernregel aus Abschnitt 1 gilt für ihn also nicht. Wer eine Größe loswerden will, löscht die Zeile; sie wird beim nächsten Beenden neu geschrieben |
+| `FilterMayDeleteFromServer` | `[Settings]` | `0` | `filtersd.cpp:1133` | **gibt es im Original nicht.** Erst mit `1` darf eine Filteraktion Post auf dem Server löschen (Befund [**E-73**](BEFUNDE.md#e-73)). Der Abschnitt steht hier fest im Quelltext, nicht in der Nummernregel |
+| `KeepHTMLInResponses` | `[Settings]` | `1` | `EudoraRes.rc:7667`, wirksam in `summary.cpp:1135` | **gibt es im Original nicht.** Sorgt dafür, dass **Antworten und Weiterleiten die HTML-Auszeichnung der Ursprungsnachricht behalten** (Befund [**E-87**](BEFUNDE.md#e-87)). Vorher entschied allein das `MSF_XRICH`-Flag des Übersichtseintrags darüber; fehlte es — wie bei Nachrichten, deren Eintrag älter ist als die Kennzeichnung — wurde ein erkanntermassen HTML-haltiger Rumpf als reiner Text zitiert (`QuoteText`, `msgutils.cpp:126-220`). Mit `1` zählt die Messung am Rumpf selbst (`IsFancy`, `utils.cpp:588`). **Mit `0` gilt wieder das alte Verhalten.** Was der Schalter **nicht** leistet, steht in Abschnitt 4 |
+| `ForwardOriginalHTML` | `[Settings]` | `1` | `EudoraRes.rc:7668`, wirksam in `PgMsgView.cpp:407` | **gibt es im Original nicht.** Hebt beim **Antworten, Weiterleiten und Umleiten** den Rumpf, wie er war, auf und setzt ihn beim Senden wieder ein — der Empfänger bekommt dann Kästen, Hintergründe und Bildgrößen, die der Verfassen-Editor nicht kennt (Befund [**E-88**](BEFUNDE.md#e-88)). **Das Verfassenfenster wird dadurch nicht schöner** — es zeigt weiterhin die schlichte Paige-Fassung; nur die versandte Nachricht ändert sich. Seit 7.2.0.57 bekommen dort allerdings die Bilder eine brauchbare Größe, damit sie nicht mehr über dem Text liegen (Befund [**E-89**](BEFUNDE.md#e-89), Abschnitt 4.8); das betrifft **nur die Anzeige**. Eingesetzt wird nur, wenn sich belegen lässt, dass im Zitat nichts geändert wurde — sonst gilt weiter die Editor-Fassung. Was der Schalter **nicht** leistet, steht in Abschnitt 4.8. **Mit `0` gilt wieder das Verhalten von 7.2.0.55.** Jede Entscheidung steht im Protokoll, siehe [Befunde/SPURMARKEN.md](Befunde/SPURMARKEN.md) |
 
 Schon vollständig anderswo, deshalb hier nur der Zeiger:
 
@@ -190,7 +190,7 @@ davon übrig ist*.
 
 **4.2 Vor dem Stöbern im Filterfenster `Filters.pce` sichern.** Eine Regel
 *„Junk Score is less than N"* wird durch **bloßes Ansehen** unbrauchbar und
-verwandelt sich in *„matches regexp N"* (Befund **E-67**, offen, belegt an
+verwandelt sich in *„matches regexp N"* (Befund [**E-67**](BEFUNDE.md#e-67), offen, belegt an
 `filtersv.cpp:1210` und `:1222`). Die Datei liegt im Mailverzeichnis.
 
 **4.3 Beim Start wird nach dem IMAP-Kennwort gefragt**, wenn beim Beenden ein
@@ -210,12 +210,12 @@ der Autor hat die Stelle selbst als unfertig gekennzeichnet
 Fehler** — *„Directory Services unavailable during this session due to
 unsuccessful initialization"*. Ursache ist keine Einstellung: die fünf
 Fremd-DLLs brauchen `MFC71.DLL` und `MSVCP71.dll`, die Microsoft nie als
-Redistributable veröffentlicht hat (Befund **E-47**, offen). Die Leiste bleibt
+Redistributable veröffentlicht hat (Befund [**E-47**](BEFUNDE.md#e-47), offen). Die Leiste bleibt
 damit unbenutzbar; alles andere läuft weiter.
 
 **4.6 IMAP-Postfachnamen mit Umlauten werden roh angezeigt** — `Entw&APw-rfe`
 statt *Entwürfe*. Modifiziertes UTF-7 nach RFC 3501, 5.1.3, das Eudora nicht
-dekodiert (Befund **E-77**, offen, [CHANGELOG.md](CHANGELOG.md) unter *Noch
+dekodiert (Befund [**E-77**](BEFUNDE.md#e-77), offen, [CHANGELOG.md](CHANGELOG.md) unter *Noch
 offen*).
 
 **4.7 Eine IMAP-Aufgabe kann in der Warteschlange stehenbleiben** — *„Waiting
@@ -246,7 +246,7 @@ sondern das, was hinausgeht.** Bis 7.2.0.55 schrieb
 hinaus** (`sendmail.cpp:3368`) — ein moderner Newsletter kam beim
 Empfänger also schlichter an, als er gelesen wurde. Seit 7.2.0.56 hebt
 Eudora beim Antworten, Weiterleiten und Umleiten den Rumpf, wie er war,
-auf und setzt ihn an dieser Stelle wieder ein (Befund **E-88**).
+auf und setzt ihn an dieser Stelle wieder ein (Befund [**E-88**](BEFUNDE.md#e-88)).
 
 **Drei Dinge, die dieser Schalter nicht leistet:**
 
@@ -264,7 +264,7 @@ auf und setzt ihn an dieser Stelle wieder ein (Befund **E-88**).
   weitergeleiteten Newsletter kommt also unformatiert an.
 
 **Was sich mit 7.2.0.57 im Verfassenfenster ändert: die Bilder liegen
-nicht mehr übereinander (Befund E-89).** Gemeldet hat es Gregor an
+nicht mehr übereinander (Befund [E-89](BEFUNDE.md#e-89)).** Gemeldet hat es Gregor an
 1.0.56 — *„1 und da ist alles durcheinander, man kann ja nichts lesen."*
 Auf seinem Bildschirmfoto lag das Logo über der Überschrift. Der Grund:
 Paiges HTML-Leser holt die Bildgröße **nur** aus den Attributen `width`

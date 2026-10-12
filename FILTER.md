@@ -3,7 +3,7 @@
 > **Geprüft gegen Quellstand 7.2.0.68 / Paket 1.0.68.** Der Quellstand ist
 > inzwischen **7.2.0.73 / 1.0.73**; **gegen ihn ist diese Datei nicht erneut
 > geprüft.** Nachgesehen wurde am 18.09.2026 nur, ob die Änderungen seither sie
-> falsch gemacht haben: **E-104** hat das Lesen der INI-Schalter umgebaut,
+> falsch gemacht haben: [**E-104**](BEFUNDE.md#e-104) hat das Lesen der INI-Schalter umgebaut,
 > betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen in
 > dieser Datei nicht vor**, gemessen. **Ein offener Punkt aus derselben Ecke
 > gehört aber hierher und stand bisher nirgends in dieser Datei: M-3.** Die
@@ -37,7 +37,7 @@ Portierung; [BEFUNDE.md](BEFUNDE.md) — die vollständigen Befunde;
 > beschädigt.
 
 > **Ein Filterlauf kann Post auf dem Server löschen.** In dieser Portierung
-> ist der Weg gesperrt (**E-73**), aber nur, solange
+> ist der Weg gesperrt ([**E-73**](BEFUNDE.md#e-73)), aber nur, solange
 > `FilterMayDeleteFromServer` auf `0` steht — im Abschnitt `[Settings]` der
 > **`Eudora.ini` in Ihrem Mailverzeichnis**. Steht der Schlüssel dort gar
 > nicht, gilt `0`, und die Sperre greift. Siehe
@@ -160,7 +160,7 @@ setzt Eudora **beim ersten Start selbst**, in
 Filter da, fragt es nach (`IDD_CTRL_J_FOR_JUNK`, `EudoraRes.rc:4717-4726`);
 sind keine da, entscheidet es stillschweigend. **Diese Portierung entscheidet
 in diesem Fall für *Filter Messages*, das Original für *Junk*** (Befund
-**E-75**, `mainfrm.cpp:7937-7949`).
+[**E-75**](BEFUNDE.md#e-75), `mainfrm.cpp:7937-7949`).
 
 Welche Belegung gerade gilt, sehen Sie im Menü: `InitJunkMenus` schreibt das
 Kürzel neben *Filter Messages* und neben *Junk*
@@ -270,7 +270,7 @@ E-73 Filter "<Name>" wollte die Nachricht "<Betreff>" auf dem Server
 loeschen - VERWEIGERT
 ```
 
-Grund ist Befund **E-73**: die Aktion war am 10.09.2026 durch einen Fehler in
+Grund ist Befund [**E-73**](BEFUNDE.md#e-73): die Aktion war am 10.09.2026 durch einen Fehler in
 ein Filterobjekt geraten, ohne je eingestellt worden zu sein, und hat ein
 ganzes Postfach auf dem Server geleert. *Fetch* ist unberührt — es vernichtet
 nichts.
@@ -325,7 +325,7 @@ danach in einem anderen Postfach liegt.
 
 *Tools → Filter Report* (`EudoraRes.rc:5790`).
 
-> **Der Filterbericht bleibt in dieser Fassung leer — Befund E-71, offen.**
+> **Der Filterbericht bleibt in dieser Fassung leer — Befund [E-71](BEFUNDE.md#e-71), offen.**
 > Am 10.09.2026 an Paket 1.0.42 gemessen, nachdem die Filter nachweislich
 > griffen: *„filter report fenster ist leer: kommt nichts an."* Der Rest
 > dieses Abschnitts beschreibt, was **vorgesehen** ist, nicht, was Sie
@@ -357,7 +357,7 @@ gedruckt oder nur weitergeleitet haben. Die Bedingung `bDidMoveAction`
 verlangt ein Verschieben oder Kopieren (`filtersd.cpp:1584`).
 
 **Berichtigung einer früheren Einstufung.** Hier stand, ein leerer Bericht
-sei *„kein eigener Fehler, sondern Folge von E-72"* — ein Filter ohne
+sei *„kein eigener Fehler, sondern Folge von [E-72](BEFUNDE.md#e-72)"* — ein Filter ohne
 Merkmale sei für keinen Lauf zuständig und habe darum nichts zu berichten.
 Diese Begründung ist widerlegt: E-72 ist behoben, die Filter greifen (von
 Gregor an 1.0.42 bestätigt), und der Bericht bleibt trotzdem leer. **E-71 ist
@@ -493,7 +493,7 @@ Die beiden mitgelieferten Module **`SpamWatch.dll`** und
 `MFC71.DLL`, `MSVCP71.dll` und `MSVCR71.dll` — nachgemessen an den
 Importtabellen der beiden Dateien. Diese drei Bibliotheken von 2003 hat
 Microsoft nie zur Weitergabe freigegeben; sie liegen nicht im Paket. Das ist
-Befund **E-47**.
+Befund [**E-47**](BEFUNDE.md#e-47).
 
 `LoadLibrary` schlägt in diesem Fall fehl, und `Trnslate.cpp:3150-3157`
 überspringt das Modul **ohne sichtbare Meldung** — die einzige Ausgabe ist
@@ -515,13 +515,13 @@ ein `TRACE`, das es im Freigabebau nicht gibt.
   ganzes Postfach.
 
 Aus demselben Grund steht `DeleteFetchedJunk` in dieser Portierung auf **0**,
-abweichend von der eingebauten Vorgabe **1** (Befund **E-74**,
+abweichend von der eingebauten Vorgabe **1** (Befund [**E-74**](BEFUNDE.md#e-74),
 `tools/DEudora.ini`). Einer Einstufung, die auf einem nicht geladenen Modul
 beruht, darf man keine Post zum Löschen anvertrauen.
 
 > **Achtung bei der Regel `«Junk Score» is less than N`.** Sie wird durch
 > bloßes Anschauen im Filterfenster unbrauchbar und verwandelt sich in
-> `matches regexp N` (Befund **E-67**, offen).
+> `matches regexp N` (Befund [**E-67**](BEFUNDE.md#e-67), offen).
 
 ---
 
@@ -669,8 +669,8 @@ ganze Postfach. Diese Portierung fängt es an zwei Stellen ab: ein leerer
 Wert trifft nie (`filtersd.cpp:711-713`), und das Filterfenster schreibt nur
 noch den Filter zurück, den es auch wirklich geladen hat
 (`filtersv.cpp:1430-1435`) — vorher schrieb es beim Wegklicken den leeren
-Zustand seiner unerreichbaren rechten Hälfte in die Regel (**E-72**). Im
-Original war das der Weg zu Befund **E-64**.
+Zustand seiner unerreichbaren rechten Hälfte in die Regel ([**E-72**](BEFUNDE.md#e-72)). Im
+Original war das der Weg zu Befund [**E-64**](BEFUNDE.md#e-64).
 
 **Die fünf Aktionen laufen nicht in der Reihenfolge, in der sie dastehen.**
 Siehe [Innerhalb einer Regel](#innerhalb-einer-regel). *Make Status* läuft
@@ -715,15 +715,15 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 
 | Befund | was passiert |
 |---|---|
-| **E-67** | eine Regel `«Junk Score» is less than N` wird durch bloßes Anschauen im Filterfenster zu `matches regexp N` |
-| **E-68**, halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
-| **E-69** | `CFiltersDoc::FilterMsg` kann den Lauf im Freigabebau lautlos abbrechen und trotzdem Erfolg melden |
-| **E-71** | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
-| **E-76** | das freischwebende Filterfenster lässt sich nicht nach unten vergrößern |
-| **E-47** | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
+| [**E-67**](BEFUNDE.md#e-67) | eine Regel `«Junk Score» is less than N` wird durch bloßes Anschauen im Filterfenster zu `matches regexp N` |
+| [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
+| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann den Lauf im Freigabebau lautlos abbrechen und trotzdem Erfolg melden |
+| [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
+| [**E-76**](BEFUNDE.md#e-76) | das freischwebende Filterfenster lässt sich nicht nach unten vergrößern |
+| [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
 
 Behoben, aber gut zu wissen, weil sie erklären, warum ältere `Filters.pce`
-beschädigt sein können: **E-64**, **E-72**, **E-73**, **E-74**, **E-75**.
+beschädigt sein können: [**E-64**](BEFUNDE.md#e-64), [**E-72**](BEFUNDE.md#e-72), [**E-73**](BEFUNDE.md#e-73), [**E-74**](BEFUNDE.md#e-74), [**E-75**](BEFUNDE.md#e-75).
 
 ---
 
