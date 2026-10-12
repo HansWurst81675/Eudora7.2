@@ -146,3 +146,43 @@ Allgemeiner, und das ist der Teil, der ueber die Zeilenenden hinausgeht: eine
 Schranke prueft eine **Erhaltungsgroesse**, keine **Konstante**. Wer die
 Konstante nimmt, weil sie leichter zu schreiben ist, baut einen Fehlalarm ein,
 der die Schranke am Ende kostet.
+
+## Nachtrag 12.10.2026 — Perl mischt Bytes und Zeichen lautlos
+
+Zwei Zeilen in `tools/WERKZEUGE.md` und `tools/ZWEIGE.md` waren nach einer
+Ergaenzung **doppelt kodiert**, 10 und 7 Stellen. Gefangen hat es die Schranke
+im `pre-commit`:
+
+```
+COMMIT ABGEBROCHEN - lautloser Schaden erkannt:
+  * tools/WERKZEUGE.md: doppelt kodiert - 10 Stellen, vorher 0
+```
+
+Der Aufruf, der es verursacht hat:
+
+```sh
+perl -i -pe 'BEGIN{ open my $f,"<:encoding(UTF-8)","neu.txt"; local $/; $n=<$f> }
+             $_ .= $n if /^\| `tools\/befund-suchen.pl`/' tools/WERKZEUGE.md
+```
+
+`$_` kommt als **Bytefolge** aus der Datei (kein `-CSD`, keine Eingabeschicht),
+`$n` ist eine **Zeichenfolge** (`:encoding(UTF-8)` beim Lesen). Beim `.=`
+hebt Perl `$_` auf Zeichen an und liest die Bytes dabei als **Latin-1** — aus
+`ö` (C3 B6) werden zwei Zeichen, und beim Schreiben zwei mal zwei Bytes. Der
+**angehaengte** Text ist dabei richtig; verdorben ist die Zeile, an die
+angehaengt wurde. Genau deshalb sieht man es im Diff nicht: die neue Zeile
+stimmt.
+
+Die einzige Warnung war ein `Wide character in print at -e line 1` — eine
+Meldung, die ich dreimal gelesen und dreimal fuer harmlos gehalten habe.
+
+**Die Regel:** in einem Aufruf, der eine Datei aendert, wird **nicht gemischt**.
+Entweder alles Bytes (`<:raw`, `>:raw`, kein `:encoding`) oder alles Zeichen
+(`-CSD` bzw. Ein- und Ausgabeschicht auf beiden Seiten). `Wide character` ist
+**kein** Hinweis, sondern der Befund: an dieser Stelle treffen beide Welten
+aufeinander, und eine von beiden verliert.
+
+Fuer Einfuegungen in eine UTF-8-Datei ist der sichere Weg ein Lauf, der Quelle
+und Ziel mit **derselben** Angabe oeffnet und schreibt — und danach die
+Messung aus diesem Dokument, mit der Byte-Zahl **gegen `git show HEAD:<datei>`
+gehalten**, nicht gegen das Gefuehl.
