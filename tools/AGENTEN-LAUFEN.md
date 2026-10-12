@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| CHRONIST | 2026-10-12 12:55 | Kurzlauf 352d3ae..HEAD, nur lesend |

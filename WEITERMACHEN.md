@@ -223,6 +223,7 @@ nicht selbst messen kann*.
 | Kennung | worum es geht |
 |---|---|
 | **E-113** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
+| **E-112** | Bilder werden in Originalgröße gezeichnet statt in der angegebenen — das WhatsApp-Symb… |
 | **E-111** | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
 | **E-109** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
 | **E-105** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |
@@ -238,6 +239,18 @@ nicht selbst messen kann*.
 | **E-47** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … |
 | **E-39** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… |
 | **E-14** | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) |
+| **S-6** | Bereiche überlagern sich |
+| **NP2-3** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben |
+| **NP3-3** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch |
+| **S-3** | erster Lauf durch Gregor: drei Beobachtungen |
+| **AN-2** | Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite — JavaScript, CSS un… |
+| **NP2-2** | SysColorChange() tut nicht, was daneben steht |
+| **NP3-2** | OnToolHitTest als int statt INT_PTR — x64-Sperre |
+| **A-1** | Erscheinungsbild: fünf Punkte umgesetzt |
+| **AN-1** | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — elf Ursachen (Teile B5.1 bis B5… |
+| **NP3-1** | ZeigeInhaltsfenster läuft, bevor Eudora das Fenster umhängt |
+| **P-1** | der POP-Abrufpfad gegengelesen, elf Altlasten benannt |
+| **R-1** | die Fehlerklasse hinter E-11 ausgezählt |
 
 <!-- offene-befunde: Ende -->
 
