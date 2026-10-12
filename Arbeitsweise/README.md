@@ -59,6 +59,7 @@ eine Datei liest, liest diese.
 | [ausreisser-ist-der-befund](ausreisser-ist-der-befund.md) | Was in der eigenen Messausgabe steht und nicht ins Ergebnis passt, ist der Befund - nicht das Rauschen, das man wegerklaert |
 | [bestand-vor-neuer-suche](bestand-vor-neuer-suche.md) | Bevor etwas neu gesucht wird, wird der Bestand gelesen - die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md, mit Zeilennummern und Handlungsanweisung |
 | [commit-auf-extra-branch-und-pushen](commit-auf-extra-branch-und-pushen.md) | Zwischenstaende regelmaessig auf einem eigenen Branch committen und pushen, nicht erst am Ende |
+| [datenformat-aendern-heisst-alle-leser-messen](datenformat-aendern-heisst-alle-leser-messen.md) | Wer das Format einer gemeinsam gelesenen Datei aendert, misst JEDEN Leser dagegen - sonst melden die blind gewordenen weiter gruen |
 | [daueraufgaben-brauchen-einen-takt](daueraufgaben-brauchen-einen-takt.md) | Lektor, Pruefer und Chronist laufen nach einem festen Auslaeser; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet |
 | [doku-bei-jedem-commit-mitziehen](doku-bei-jedem-commit-mitziehen.md) | README.md und PORTIERUNG.md gehoeren in denselben Commit wie die Aenderung, nicht nachtraeglich auf Zuruf |
 | [doku-parallel-nicht-hinterher](doku-parallel-nicht-hinterher.md) | Ein Wert, der in mehreren MDs steht, wird im selben Arbeitsschritt ueberall berichtigt; doku-pruefen.pl haelt sie gegeneinander |
@@ -94,17 +95,19 @@ eine Datei liest, liest diese.
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
 | [pruefumfang-nicht-von-hand](pruefumfang-nicht-von-hand.md) | Prueflisten und Agentenauftraege holen ihren Umfang aus der Quelle; was von Hand aufgezaehlt wird, prueft genau das nicht, woran niemand gedacht hat |
 | [quelldateien-nur-byte-erhaltend-aendern](quelldateien-nur-byte-erhaltend-aendern.md) | Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden - nur byte-erhaltend aendern, nie mit dem Edit-Werkzeug |
-| [reihenfolge-nach-1083](reihenfolge-nach-1083.md) | Gregors festgelegte Reihenfolge nach dem Release v1.0.83 - E-112, E-113, E-94, E-77 |
+| [reihenfolge-nach-1083](reihenfolge-nach-1083.md) | Gregors Reihenfolge nach dem Release v1.0.83 - E-94 (Test zuerst), dann E-112, E-113, E-77 |
 | [release-erst-nach-gregors-test](release-erst-nach-gregors-test.md) | Ein GitHub-Release entsteht erst, nachdem Gregor die Fassung lokal geprüft und für gut befunden hat |
 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) | Ein Diff-Review kann eine veraltete unveraenderte Datei nicht sehen; vor dem Merge wird der Bestand geprueft, nicht die Aenderung |
 | [rollenzuweisung-pruefen](rollenzuweisung-pruefen.md) | Einer falschen Rollenzuweisung im Auftrag folgen, statt sie zu benennen - und die Rolle stand in keiner nachschlagbaren Quelle |
 | [schranke-gegentesten](schranke-gegentesten.md) | Jede neue Schranke gegen den echten Fehler fahren und gegen den erlaubten Fall; eine stumme Pruefung und ein Fehlalarm sind derselbe Schaden |
 | [schranke-gehoert-in-den-haken](schranke-gehoert-in-den-haken.md) | Eine Schranke, die nur läuft wenn ich daran denke, ist keine Schranke; und eine, die zu oft umsonst warnt, wird entwaffnet |
 | [schranke-liest-nur-code](schranke-liest-nur-code.md) | Eine Schranke, die Quelltext mit Regex prueft, muss Kommentare und Protokolltexte vorher wegwerfen und ihren Bereich am Rumpfende abschliessen - sonst liest sie ihre eigene Begruendung |
+| [schranke-teilt-nicht-die-annahme](schranke-teilt-nicht-die-annahme.md) | Eine Schranke, die ihren Umfang aus derselben Annahme nimmt wie das Werkzeug, das sie pruefen soll, prueft nichts |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |
 | [tests-vor-jedem-commit-laufen-lassen](tests-vor-jedem-commit-laufen-lassen.md) | Unit- und Komponententests gehoeren zu jedem Commit - Ergebnis mitteilen, auch wenn es rot ist |
 | [text-nicht-durch-schichten-schicken](text-nicht-durch-schichten-schicken.md) | Ersetzungstext mit Backslashes oder Anfuehrungszeichen nie inline durch Bash/PowerShell nach Perl reichen; in eine Datei schreiben und ueber Zeilenanker einsetzen |
+| [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) | Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern |
 | [unterschied-im-selben-bild](unterschied-im-selben-bild.md) | Was im selben Bild richtig ist, schliesst jede gemeinsame Ursache aus - der Unterschied ist der Befund |
 | [version-eindeutig-machen](version-eindeutig-machen.md) | Jede Fassung, die Gregor in die Hand bekommt, muss sich selbst benennen koennen - Nummer, Commit, Bauzeit, sichtbar im Programm |
 | [verwerfen-nur-mit-zaehler](verwerfen-nur-mit-zaehler.md) | Ein verwerfender Befehl wirkt auf seinen ganzen Umfang, nicht auf das gemeinte Ziel - vier Selbstverschuldungen in einer Stunde, jede mit einem Wert vorher oder nachher zu fangen |
