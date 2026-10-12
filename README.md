@@ -130,9 +130,11 @@ verschickt.
   jede Prozent-Sequenz weg, statt sie zu entschlüsseln — aus
   `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
   antwortete 404, und Eudora zeichnete einen grauen Kasten. Zehn von zwanzig
-  Bildern. **Dabei wurde E-112 sichtbar** (behoben in 7.2.0.76, noch nicht
-  bestätigt): die Bilder erschienen danach in Originalgröße statt in der
-  angegebenen — eine Regression der E-106-Behebung. **Weiter offen ist
+  Bildern. **Dabei wurde E-112 sichtbar** (**wieder offen**): die Bilder erscheinen
+  in Originalgröße statt in der angegebenen — eine Regression der
+  E-106-Behebung. **Der Versuch in 7.2.0.76 wirkt nicht** — von Gregor am
+  18.09.2026 am laufenden Programm widerlegt, mit Bildschirmfoto; seither
+  liegt der Text sogar wieder auf den Bildern. **Weiter offen ist
   E-113:** ein Bild, dessen angegebene Breite größer ist als das Fenster,
   läuft rechts hinaus.
 * **Die Betreffzeile wird mitten im Wort umbrochen** (**E-94**, in `v1.0.83`
