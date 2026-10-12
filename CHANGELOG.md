@@ -13,7 +13,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
-| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, auch an 7.2.0.82 (Testsuite 185/185). Zehn Ursachen behoben, dazu in 7.2.0.83 der Pufferschutz in `SetExtension`. **Offen:** B5.7 (IMAP ohne `SetExtension`), der IMAP-Weg ist nicht gemessen, und **Gregor hat noch nicht geprüft** |
+| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt; sein Urteil: *„gekürzt mit endung reicht"*. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist B5.7** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
 | **AN-2** | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80; seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
@@ -21,7 +21,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | **E-105** | **ein versteckter Vorschautext wird mitgelesen** — über dem Inhalt mancher Werbemails steht eine lange Reihe `? ? ? ?` | **Offen, Ursache am Quelltext belegt, kein Datenverlust.** Am 18.09.2026 vom LEKTOR aufgeschrieben (L-15.10), gemeldet hatte es Gregor am 17.09.2026. Belegt an `C:\Temp\probe-ebay.eml`: vier `display:none`-Bereiche, darin 96 Wiederholungen von `?&nbsp;` — ein Füllmuster für die Vorschauzeile im Posteingang. **Paige kennt `display` nicht** (`PGHTMDEF.C:29/38/49`, die drei Attributlisten; `grep -ci display` = 0), zeigt den Bereich also an. **Die Fragezeichen sind kein Zeichensatzfehler** — sie stehen wörtlich so in der Quelle, anders als bei E-90 |
 | — | **Sieben Weiterleitungen mit nackten LF im Rumpf** — noch **ohne Befundnummer** | Gemessen an Gregors `INBOX.mbx`: 7 von 46 Nachrichten tragen nackte LF, **alle sieben sind Weiterleitungen** (`FW:`) aus einem Samsung-Android-Mailprogramm (`boundary="--_com.samsung.android.email_…"`); der Kopf ist sauber CRLF, der Rumpf hat 353 nackte LF. **Noch nicht entschieden, ob das ein Fehler von Eudora ist** — dieselbe Mailquelle kann sie mitgebracht haben. Zu messen, bevor eine Nummer vergeben wird. Steht ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md) |
 | **E-98** | **die beiden Optionen im Speicherdialog fehlen** — *Kopfzeilen einschließen* (`Include Headers`) und *Absätze raten* (`Guess Paragraphs`) sind in *Speichern unter* nicht wählbar | **Offen, Ursache gemessen an 7.2.0.64.** Aufgefallen bei der Gegenprobe zu **E-97**: der Messlauf zählt die Steuerelemente des offenen Dialogs und meldet `Eigene Kaestchen gefunden: 0`, während *Speichern* und *Abbrechen* da sind. **Warum:** `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dateidialog eine **Dialogvorlage von 1996** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`); Windows 10 öffnet den modernen Dateidialog, und der zeigt eine solche Vorlage nicht mehr an — `ApplyOFNToShellDialog` liest `lpTemplateName` nirgends. **Kein Rückschritt durch die Behebung von E-97:** die Kästchen fehlen seit der Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach. **Folge für den Anwender:** beim Speichern gilt, was zuletzt in der `Eudora.ini` stand. **Noch nicht gemessen:** ob `IFileDialogCustomize` sie nachrüsten kann. Wer das angeht, liest zuerst die Warnung in `SaveAsDialog.cpp:551` — mit E-98 werden `ToggleStat` und `StatDir` wieder scharf (**E-100**). Von Gregor am 17.09.2026 in die Fehlerliste aufgenommen: *„ja, in die bug liste aufnehmen."* |
-| **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache NICHT gemessen.** Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
+| **E-94** | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!` | **Offen, Ursache am Quelltext belegt, NICHT gemessen (Stand 12.10.2026).** Zwischen zwei kodierten Wörtern, die über eine **Faltung** getrennt sind, bleibt der Leerraum stehen (`lex822.cpp:685`, `ImapLex822.cpp:719`; RFC 2047, 6.2 verlangt, dass er wegfällt). Gregors Toner-Nachricht hat der web.de-Webmailer erzeugt, nicht Eudora; in seiner 1.0.75-`INBOX.mbx` steht der Betreff schon dekodiert, mit Faltungen bei `& 1|5` und `Nur b|is`. **Die ältere Vermutung unten (`Encode2047` beim Senden) ist damit zurückgestellt.** Nächster Schritt, von Gregor angeordnet: erst drei Tests rot, dann die Behebung (Zweig `e94-betreff-faltung`). — Ursprünglicher Eintrag: Gefunden am 14.09.2026 im Protokoll zu 1.0.59 beim Weiterleiten. **Was gemessen ist:** die Lücken stehen *nicht* dort, wo Emoji entfernt wurden — `15 %` steht seit E-90 korrekt zusammen. Es waren zwei Ursachen, und diese hier bleibt. **Zu messen:** ob `Encode2047` (`sendmail.cpp:1188`) die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet und deshalb zu früh trennt — und ob überhaupt Eudora faltet oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. Kein Datenverlust |
 | **E-90** | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
 | **E-91** | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu E-89, nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
 | **E-92** | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |
@@ -76,8 +76,18 @@ Abruf der sechs Prüfnachrichten in `C:\Temp\AN5`: **alle sechs mit vollem Namen
 und `.pdf`**, dieselben Namen wie unter 7.2.0.81 und 7.2.0.82, kein „kennt den
 Typ NICHT", keine `Exception.log`.
 
+**Von Gregor bestätigt, 12.10.2026.** Er hat Paket 1.0.83 selbst über IMAP
+getestet (Auswertung unten) und danach geschrieben: *„gekürzt mit endung
+reicht, mach PR für an1-endungen"*. PR #84 hat er um 10:51 UTC gemergt und
+dann angewiesen: *„erstelle ein release auf github"*. **Veröffentlicht als
+`v1.0.83`** am 12.10.2026 um 11:18:20 UTC, auf GitHub als *Latest*; Marke auf
+`ec9f11d`, ZIP `Eudora72-1.0.83-release.zip` mit 9 361 416 Byte, SHA-256
+`7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — von GitHub
+heruntergeladen und nachgerechnet. Die 34 EXE-, DLL- und OCX-Dateien darin sind
+byteidentisch mit dem Paket, das Gregor getestet hat.
+
 **Von Gregor über IMAP getestet, 12.10.2026, Paket 1.0.83** (sein `eudora.log`,
-drei Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
+vier Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
 
 | vom Server (BODYSTRUCTURE) | gespeichert als |
 |---|---|
@@ -88,8 +98,8 @@ drei Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
 Der IMAP-Weg verliert also keine Endung. Was bei einem sehr langen Namen
 wegfällt, ist das Ende des **Stamms** (hier `…_DBAutoUpdate-…Sina.tar`), weil
 der volle Pfad sonst über 260 Zeichen ginge — vollständig ginge das nur mit
-Langpfaden (`\?\`). **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
-Anhangverzeichnis von 08:44/08:45 (vor 1.0.83, laut Log 7.2.0.77/78), je
+Langpfaden (`\\?\`). Unter dem gekürzten Namen liegt die Datei inzwischen nicht mehr; im Verzeichnis stehen zwei gleich große Kopien (351 502 Byte, 12:32) unter anderen Namen — vermutlich von Gregor umbenannt, nicht nachgefragt. **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
+Anhangverzeichnis von 08:44/08:45 (vor 1.0.83, laut Log 7.2.0.77), je
 1 204 Byte, beginnen **nicht** mit `%PDF` — Ursache nicht untersucht.
 
 **Anlass: PRUEFER-20**, die Nachrechnung von 7.2.0.81. Seit Teil 9 läuft
@@ -205,20 +215,26 @@ gemessen worden:** `bauen.ps1 -Ziel Rebuild`, Rückgabewert 0,
 `mime.cpp` (dazu ohne abschließende Null) und `DeMacifyName32` auf 255. Danach
 kürzte `CheckName` den Pfad auf 224 — **mit** Endung, aber die war da schon weg.
 
-**Behoben in 7.2.0.80:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
+**Behoben in 7.2.0.80-an1:** `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`) kürzt
 und behält die Endung; `mime.cpp` und beide `DeMacifyName32` (POP und IMAP)
 benutzen es. Ein leeres `filename=""` verdeckt ein vorhandenes `name=` nicht mehr.
 
 **Fall 05 und alle anderen:** Marke 5 meldete bei **allen sechs** „MIMEMap kennt
 den Typ NICHT" — auch für `application/pdf`, das in `[Mappings]` steht. Die
 Ursache ist **nicht** geklärt; **ANHANG-Marke 11** in `MIMEMap::Find` nennt jetzt
-jeden Ausstieg.
+jeden Ausstieg. *Stand 12.10.2026: geklärt in 7.2.0.81 (Registry-Typ `pkcs10`,
+neunter Teil). Marke 11 nennt jeden Ausstieg außer dem ersten,
+`if (!ms || !ms->m_hd)` — der bleibt stumm.*
 
 **Marke 2 berichtigt** (beide Zerleger): sie fragte nach dem CR und meldete seit
 B5.1 jede heil durchgekommene Faltung als Abbruch. Sie fragt jetzt nach dem LF.
 ## 7.2.0.80 — JavaScript und CSS verschwinden aus der Anzeige (AN-2), **nicht übersetzt**
 
 > **Hier ist nichts gebaut und nichts gestartet.**
+>
+> *Stand 12.10.2026: übersetzt erst als Teil von 7.2.0.82 (Rebuild 0 Fehler,
+> Testsuite 185/185); am laufenden Programm **nicht gemessen** — der
+> Werbefensterfall lässt sich mit dem Prüfstand nicht auslösen.*
 
 Gregor am 12.10.2026: *„nachdem eudora gestartet wurde, ist es innerhalb eines
 Fensters darin angezeigt worden. ohne daß ich etwas gemacht habe."* Eingefügt
@@ -269,6 +285,10 @@ bleiben soll, ist eine Entscheidung über das Produkt — die drei Wege stehen i
 > **Hier ist nichts gebaut und nichts gestartet.** Die Sitzung lief ohne Windows
 > und ohne Compiler. Was gemessen ist, steht in der Tabelle; alles andere ist
 > aus dem Quelltext begründet und wartet auf einen Bau.
+>
+> *Stand 12.10.2026: 7.2.0.79 ist am selben Tag übersetzt und gemessen worden —
+> 4 von 6 Prüffällen heil, siehe Messfassung 7.2.0.80-an1. Aus den sieben Teilen
+> wurden elf (B5.8 bis B5.11 in 7.2.0.80-an1, 7.2.0.81 und 7.2.0.83).*
 
 Gregors Ziel vom 12.10.2026: *„anhänge werden korrekt gespeichert - mit
 erweiterung, komplette dateiname"*. Bis zu dieser Fassung lag die Arbeit zu
@@ -285,7 +305,8 @@ beiden Dateien sind entfernt.
 | **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`**, beschrieben mit bis zu 256 Byte. Trifft jeden Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Nur IMAP — das POP-Gegenstück ist auf `CString` umgebaut | nein — aus dem Quelltext gerechnet |
 | **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`** — das Sicherheitsnetz für eine fehlende Endung fehlt dort ganz | **offen.** Es hängt an einer Bindefrage, nicht an der Logik: siehe AUFGABEN.md, B5.7 |
 
-**Zehn Debug-Marken** auf dem Weg des Namens, Bit `DEBUG_MASK_ATTACH = 0x10000`,
+**Zehn Debug-Marken** auf dem Weg des Namens (*seit 7.2.0.80-an1 elf, mit Marke 11 in
+`MIMEMap::Find`*), Bit `DEBUG_MASK_ATTACH = 0x10000`,
 einzuschalten mit `LogLevel=91295` in der Gruppe **`[Debug]`** der `eudora.ini`.
 Alles, was sie schreiben, beginnt mit `ANHANG`. Die POP-Marken 1 bis 8 und die
 IMAP-Marken 1 bis 3 sind **am laufenden Programm gemessen** — Gregors

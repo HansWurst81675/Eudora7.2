@@ -17,8 +17,9 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.72`** (17.09.2026, 20:07 UTC, auf GitHub als
-> *Latest*; **berichtigt am 17.09.2026 vom LEKTOR — hier stand `v1.0.50`**,
+> veröffentlicht ist inzwischen **`v1.0.83`** (12.10.2026, 11:18 UTC, auf GitHub als
+> *Latest*; davor `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
+> hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
 > und 1.0.22 liegen weiter im Repo, das ZIP daneben nicht. **Kein Verweis in
@@ -155,17 +156,22 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.83 — **gebaut und gemessen**, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
+## 1.0.83 — **veröffentlicht als `v1.0.83`** am 12.10.2026, Quellstand 7.2.0.83 (AN-1 elfter Teil, mit AN-2)
 
 | | |
 |---|---|
-| ZIP | **kein ZIP** — als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
-| SHA256 | **nicht belegt** |
-| URL | **nicht belegt** — nicht veröffentlicht |
+| ZIP | `Releases/Eudora72-1.0.83-release.zip`, 9 361 416 Byte (nicht versioniert); dazu als Verzeichnis bei Gregor, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
+| SHA256 | `7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — gemessen am von GitHub heruntergeladenen ZIP |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, *Latest*, Marke auf `ec9f11d` |
 | Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
 
 Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
 abweicht (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.83.
+
+Von Gregor über IMAP an seinem Postfach getestet und am 12.10.2026 bestätigt
+(*„gekürzt mit endung reicht"*) und danach angewiesen: *„erstelle ein release
+auf github"*. Die 34 EXE-, DLL- und OCX-Dateien im ZIP sind byteidentisch mit
+seinem getesteten Verzeichnis; kein Mailverzeichnis-Inhalt im ZIP.
 
 ## 1.0.82 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.82 (AN-1 und AN-2 zusammengeführt)
 
@@ -189,7 +195,7 @@ Vergeben am 12.10.2026. Was drinsteckt, steht in
 | URL | **nicht belegt** — nicht veröffentlicht |
 | Quellstand | 7.2.0.81 (`Eudora71/Version.h`), Zweig `an1-endungen` (bis 12.10.2026 `patch_20261012`) |
 
-Vergeben am 12.10.2026, weil 7.2.0.80 an diesem Tag gebaut und gemessen wurde
+Vergeben am 12.10.2026, weil 7.2.0.80-an1 an diesem Tag gebaut und gemessen wurde
 und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
 [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
 
@@ -207,7 +213,8 @@ und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
 
 Gebaut am 12.10.2026 (Rebuild, 0 Fehler) und am laufenden Programm gemessen:
 Fall 03 heil, Fall 05 ohne Endung. Einzelheiten in
-[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt Messfassung 7.2.0.80-an1.
+
 ## 1.0.80 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.80 (AN-2)
 
 | | |
@@ -221,11 +228,17 @@ Nummer vergeben, damit sie nicht zweimal vergeben wird. **Inhalt:** Befund
 **AN-2** — Paige zeigte den Inhalt von `<script>` und `<style>` als Text, was
 beim Start im Werbefenster den Quelltext einer Webseite sichtbar machte.
 Gemessen mit `tools/html-tags-pruefen.pl` (30 Fälle, 0 Abweichungen, Gegenprobe
-gefahren); **übersetzt ist nichts**.
+gefahren); **übersetzt ist nichts**. *Stand 12.10.2026: übersetzt erst als Teil
+von 7.2.0.82 (siehe 1.0.82), am laufenden Programm nicht gemessen.*
 
 Durchlauf: [AUFGABEN.md](../AUFGABEN.md), **B6**.
 
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
+
+> *Stand 12.10.2026: 7.2.0.79 ist am selben Tag doch gebaut und gemessen worden
+> (Rebuild 0 Fehler, Prüfverzeichnis `C:\Temp\AN1`, 4 von 6 Prüffällen heil); **geschnürt
+> wurde es nicht**. Der Abschnitt unten beschreibt den Stand beim Vergeben der
+> Nummer. Aus den sieben Teilen wurden elf, aus den zehn Marken elf.*
 
 | | |
 |---|---|

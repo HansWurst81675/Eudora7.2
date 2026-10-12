@@ -1102,3 +1102,51 @@ L-16.9" — tatsächlich waren es zu dem Zeitpunkt auch L-16.7 und Teile von L-1
 Kurzlauf vor dem Paket 1.0.83 über `d292850`. Die Aussagen zu 7.2.0.83 sind
 belegt. Zwei Mängel (`Releases/PAKETE.md:158` noch „in Arbeit", `WEITERMACHEN.md:10`
 ohne AN5), **beide behoben** im selben Commit.
+
+## Vierundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-19.md`)
+
+Kurzlauf vor dem Release v1.0.83 über Gregors IMAP-Test im CHANGELOG. Drei
+Mängel (Versionsangabe 7.2.0.77/78, Zahl der Sitzungen, Langpfad-Präfix) und ein
+Hinweis (umbenannte Datei) — **alle eingearbeitet** im selben Commit.
+
+## Fünfundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-20.md`)
+
+**Anlass:** Merge von PR #84; Gregor: *„keine lügen auf main!"* Diesmal
+**schreibend**, auf `wt/lektor` über `18f71e5`. Abgearbeitet sind die offenen
+Funde aus LEKTOR-16 und LEKTOR-17, ausgenommen das Werkzeug (L-16.1/L-17.8).
+
+| Fund | Kurz |
+|---|---|
+| **L-16.1** | Werkzeug nicht angefasst; Übersichtszeilen AN-1/AN-2 in BEFUNDE.md beginnen jetzt mit dem Urteilswort |
+| **L-16.2 / L-17.7** | BEFUNDE AN-1: Kasten um 7.2.0.82/83, Teil 11 und IMAP; Altstellen mit Nachtrag — **erledigt** |
+| **L-16.3** | Markentabelle auf 7.2.0.83, Marken 9–11 ergänzt; Weg-Tabelle nur als „Stand 7.2.0.76" gekennzeichnet |
+| **L-16.4 / L-17.4** | AUFGABEN B5: Tabelle um B5.8–B5.11, Altsätze als erledigt — **erledigt** |
+| **L-16.5 / L-17.6** | CHANGELOG: „Noch offen", Nachträge in 7.2.0.80-an1, 7.2.0.80, 7.2.0.79 — **erledigt**; Stern in der Bau-Kennung offen |
+| **L-16.6** | PAKETE 1.0.79 Nachtrag, 1.0.83 „angewiesen, nicht veröffentlicht" — **erledigt** |
+| **L-16.8** | WEITERMACHEN „Der nächste Schritt" — **erledigt**; Zeile `:27` nicht trennbar, zwei Schranken weisen gegenläufig ab |
+| **L-16.10 / L-17.3** | ZIEL, README (mit LogLevel 65536), PORTIERUNG, ZWEIGE — **erledigt** |
+| **L-17.1** | AN-2 überall „seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen" — **erledigt** |
+| **L-17.2** | „-an1" nachgezogen, beide falschen Verweise berichtigt — **erledigt** |
+| **L-17.5** | Zählung festgelegt: **elf Teile B5.1–B5.11, zehn behoben, B5.7 offen** |
+| **L-19.3** (nachgeholt) | Langpfad-Präfix im CHANGELOG 7.2.0.83 jetzt `\\?\` (Bytes `5C 5C 3F 5C`) |
+
+**Werkzeuge nach dem Durchgang** (nur lesend): `perl tools/doku-pruefen.pl` —
+*„Kein Widerspruch gefunden"*, zur Kenntnis nur noch `Testdaten/README.md` und
+`tools/WERKZEUGE.md` (höchste genannte Fassung 7.2.0.73); `ZIEL.md`,
+`PORTIERUNG.md` und `tools/pruefdaten/LIESMICH.md` sind aus der Liste
+verschwunden. `perl tools/pruefe-stand-md.pl` — siehe Bericht.
+
+## Sechsundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-21.md`)
+
+Kurzlauf vor dem Release v1.0.83 über die Liste der offenen Befunde (29) und die
+Nachträge des CHRONISTEN. Ein Mangel (eine Lehre nannte das Langpfad-Präfix als
+noch offen) und ein Nebenbefund im Kommentar von `tools/offene-befunde.pl` —
+**beide behoben** im selben Commit.
+
+## Siebenundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-22.md`)
+
+Nach dem Release v1.0.83: Release, ZIP-Prüfsumme und drei Stichproben gegen
+Gregors Verzeichnis nachgemessen — stimmen. Vier Mängel (veraltete Liste „Bei
+Gregor liegen" in `ZIEL.md` und `AUFGABEN.md`, E-94 im CHANGELOG im Widerspruch
+zu WEITERMACHEN, die v1.0.83-Zeile in `tools/RELEASES.md` außerhalb der Tabelle
+und in Ortszeit) — **alle behoben** im selben Commit.

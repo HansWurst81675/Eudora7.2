@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.83** / `VERSION` **1.0.83** (veröffentlicht ist `v1.0.72`)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.83** / `VERSION` **1.0.83** (veröffentlicht als `v1.0.83`, 12.10.2026)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -82,12 +82,15 @@ Gregors Anordnung *„erst A, dann B"* getrennt gehalten. Einzelheiten in
 [BEFUNDE.md](BEFUNDE.md), Prüfanleitungen in [CHANGELOG.md](CHANGELOG.md),
 Abschnitte 7.2.0.75 und 7.2.0.76.
 
-**Gebaut, geschnürt und veröffentlicht ist 7.2.0.72 / 1.0.72** (17.09.2026 —
-gemessen an `Eudora71/Version.h`, `VERSION` und `gh release list`). **Es ist
-der erste Stand, der alles enthält und zugleich draußen ist**: E-93, E-96,
-E-97, E-99, E-100, E-101 in beiden Teilen, E-103, E-104, E-106 und E-108.
-**Bei Gregor liegen 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72** —
-**1.0.70 nie**, es ist nie zu ihm gelangt.
+**Stand 17.09.2026, seit dem 12.10.2026 überholt** — veröffentlicht ist jetzt
+`v1.0.83`, siehe unten. **Gebaut, geschnürt und veröffentlicht war damals
+7.2.0.72 / 1.0.72** (gemessen an `Eudora71/Version.h`, `VERSION` und
+`gh release list`). **Es war der erste Stand, der alles enthielt und zugleich
+draußen war**: E-93, E-96, E-97, E-99, E-100, E-101 in beiden Teilen, E-103,
+E-104, E-106 und E-108. **Bei Gregor lagen damals 1.0.65, 1.0.67, 1.0.68,
+1.0.69, 1.0.71 und 1.0.72** — **1.0.70 nie**. Am 12.10.2026 liegen dort die
+Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
+1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
 
 > **Berichtigt am 18.09.2026 (LEKTOR, L-15.3).** Hier stand *„Gebaut und
 > geschnürt ist **7.2.0.70 / 1.0.70** … **Es ist das erste Paket, das alles
@@ -97,9 +100,12 @@ E-97, E-99, E-100, E-101 in beiden Teilen, E-103, E-104, E-106 und E-108.
 > vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
 > `ls C:\Users\Gregor\Eudora72-*`.
 
-**Veröffentlicht ist `v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert, auf dem Merge-Commit `8da72c8`;
-Gregor hat die Fassung vorher am laufenden Programm geprüft (*„kein crash“*).
+**Veröffentlicht ist `v1.0.83`** — am 12.10.2026 um 11:18 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert, Marke auf `ec9f11d`; Gregor hat
+die Fassung vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung
+reicht“*). Davor **`v1.0.72`** — am 17.09.2026 um 20:07 Uhr UTC, auf dem
+Merge-Commit `8da72c8`; Gregor hat sie vorher am laufenden Programm geprüft
+(*„kein crash“*).
 **1.0.65 bis 1.0.71 sind nicht freigegeben** — 1.0.71 stürzt ab und ist
 ausdrücklich nicht zu benutzen.
 
@@ -447,31 +453,38 @@ perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 
 Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **über POP heil seit 7.2.0.81** (7.2.0.79: 4 von 6, 7.2.0.80-an1: 5 von 6, 7.2.0.81 und 7.2.0.82: alle sechs)
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **über POP heil seit 7.2.0.81, über IMAP von Gregor mit 1.0.83 getestet; B5.7 offen** (7.2.0.79: 4 von 6, 7.2.0.80-an1: 5 von 6, 7.2.0.81 bis 7.2.0.83: alle sechs)
 
 > **Am laufenden Programm gemessen, 12.10.2026** (7.2.0.79, Rebuild 0 Fehler,
 > `C:\Temp\AN1`, Prüfnachrichten über `--pop`): **00, 01, 02, 04 heil** —
 > B5.1, B5.2 und B5.5 wirken. **03** kam als 224 × `A` **ohne `.pdf`**: die
 > Kopfzeile hatte alle 304 Zeichen, dann kappten `strncpy` (259) und
-> `DeMacifyName32` (255) **von hinten** — das ist **B5.8**, behoben in 7.2.0.80
+> `DeMacifyName32` (255) **von hinten** — das ist **B5.8**, behoben in 7.2.0.80-an1
 > mit `AnhangNameKuerzen`. **05** (`filename=""`) bekam den Betreff **ohne
 > Endung**, weil `MIMEMap::Find` bei **allen sechs** scheiterte, sogar für
-> `application/pdf` — **B5.9, gemessen an 7.2.0.80:** `GetMaps` verwarf die
+> `application/pdf` — **B5.9, gemessen an 7.2.0.80-an1:** `GetMaps` verwarf die
 > ganze Tabelle am Registry-Typ `pkcs10` (ohne `/`); behoben in 7.2.0.81, dazu
 > **B5.10**, der Vorzeichenfehler in `SetExtension` (vom PRUEFER gefunden).
-> Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.80.
+> **7.2.0.81, 7.2.0.82 und 7.2.0.83: alle sechs heil** (`C:\Temp\AN3`, `AN4`,
+> `AN5`; Testsuite 185/185 an 7.2.0.82 und 7.2.0.83). **B5.11** kam mit 7.2.0.83
+> dazu (Pufferschutz in `SetExtension`, keine Endung wird mehr ersetzt).
+> **Über IMAP** hat Gregor Paket 1.0.83 an seinem Postfach getestet: drei
+> Anhänge, alle mit Endung; sein Urteil *„gekürzt mit endung reicht"*.
+> Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitte Messfassung
+> 7.2.0.80-an1, 7.2.0.81 und 7.2.0.83.
 
 Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben — und am
 12.10.2026 **in den Quelltext eingespielt**. Die beiden Patchdateien, die hier
 seit dem 30.09. nur danebenlagen, sind damit Geschichte und entfernt.
 
-> **Es ist nichts mit MSVC gebaut.** Alle drei Sitzungen dazu liefen ohne
-> Windows und ohne Compiler. Was gemessen ist, steht unten Zeile für Zeile;
-> was nicht gemessen ist, steht auch da.
+> ~~**Es ist nichts mit MSVC gebaut.**~~ *Erledigt am 12.10.2026: gebaut und
+> gemessen sind seither 7.2.0.79, 7.2.0.80-an1, 7.2.0.81, 7.2.0.82 und 7.2.0.83,
+> jeweils Rebuild mit 0 Fehlern (`tools/TESTLAEUFE.md`).* Bis dahin liefen alle
+> drei Sitzungen dazu ohne Windows und ohne Compiler.
 
 **Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
-solange er in *einer* Zeile steht. Sechs getrennte Ursachen erzeugen dasselbe
-Bild, alle sind Originalfehler aus Eudora 7.1.
+solange er in *einer* Zeile steht. Elf getrennte Ursachen (B5.1 bis B5.11)
+erzeugen dasselbe Bild, alle sind Originalfehler aus Eudora 7.1.
 
 > **Berichtigt am 12.10.2026, aus Gregors `eudora.log` zu 7.2.0.77.** Hier stand
 > bis dahin, alle Ursachen steckten **doppelt** im Baum — POP in
@@ -488,18 +501,22 @@ Bild, alle sind Originalfehler aus Eudora 7.1.
 > nötig; sie betrifft nur nicht den Dateinamen. Umgekehrt hat der IMAP-Weg
 > **eigene** Fehler, die der POP-Weg nicht hat: B5.6 und B5.7.
 
-#### Stand der sieben Teile
+#### Stand der elf Teile
 
 | Schritt | Was | Stand |
 |---|---|---|
 | **B5.0** | **Debug-Marken**, elf Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` | **im Quelltext.** POP-Marken 1–8 und IMAP 1–3 sind am laufenden Programm gemessen (12.10.2026, 7.2.0.77, 285 `ANHANG`-Zeilen); POP-Marken 10 und 11 am 12.10.2026 an 7.2.0.80-an1 und 7.2.0.81 gemessen; IMAP 4–9 übersetzt, aber **nicht gemessen** (kein IMAP-Abruf) |
-| **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendete die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | **behoben**, POP und IMAP. Gemessen mit `tools/kopfzeile-pruefen.pl --vorschlag` |
+| **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendete die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | **behoben**, geändert in POP und IMAP; für den Dateinamen wirkt es nur über POP (siehe unten). Gemessen mit `tools/kopfzeile-pruefen.pl --vorschlag` und am laufenden Programm (Fall 01, 02 heil seit 7.2.0.79) |
 | **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wurde `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** trug | **behoben**, POP und IMAP |
-| **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappte ab 254 Zeichen; ein Dateiname nach `_MAX_PATH` (260) passte nicht hinein | **behoben**: `LEX822_TOKEN_MAX` = 1024 in `lex822.h`, benutzt von beiden Zerlegern **und** von `szWert` in beiden `AddAttribute` — die Zahl steht nur noch an einer Stelle |
+| **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappte ab 254 Zeichen; ein Dateiname nach `_MAX_PATH` (260) passte nicht hinein | **behoben**: `LEX822_TOKEN_MAX` = 1024 in `lex822.h`, benutzt von beiden Zerlegern **und** von `szWert` in beiden `AddAttribute` — die Zahl steht nur noch an einer Stelle. Die Kopfzeile kommt seit 7.2.0.79 ganz an (304 Zeichen gemessen); **im Dateinamen wirksam erst mit B5.8** |
 | **B5.4** | **`DeMacifyName32`** schrieb bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]` | **behoben**, beide Abschriften. **Dabei neu gefunden:** `DeMacifyName` (die 8+3-Fassung) schrieb bis zu **drei** Byte über — `pcname[15]`, und 8 + Punkt + 8 + Null sind 18. Der zweite Zähler stand auf 8 statt 3 |
 | **B5.5** | **RFC 2231** (`filename*0*=UTF-8''…`) kannte der Baum nicht. Dann gab es **gar kein** `filename`, und `mime.cpp` nahm den **Betreff** — `subj[32]`, also 31 Zeichen ohne Endung | **behoben**: neu `QCUtils/src/rfc2231.cpp`, benutzt von POP (`HeaderDesc::GetAttribute`) **und** IMAP (`GetFilenameParameter`). **20 von 20 Prüffällen grün**, gemessen mit `tools/rfc2231-pruefen.pl` |
 | **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`.** `tmp[len] = 0;` mit `len` bis 255 schrieb auf den Stapel — bei jedem Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server | **behoben** (`_MAX_PATH + 1`), nur IMAP. Das POP-Gegenstück ist auf `CString` umgebaut und hatte es nicht |
-| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach; der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden | **offen.** Siehe unten — es ist eine Binde-, keine Logikfrage |
+| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach; der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden | **offen.** Siehe unten — es ist eine Binde-, keine Logikfrage. In Gregors IMAP-Test mit 1.0.83 fiel es nicht auf: alle drei Namen trugen schon eine Endung |
+| **B5.8** | **Kappung von hinten.** `strncpy(fName, …, _MAX_PATH - 1)` in `mime.cpp` (259, ohne abschließende Null) und `DeMacifyName32` (255, beide Abschriften) schnitten das Ende ab — mit der Endung | **behoben in 7.2.0.80-an1** mit `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`), das die Endung behält. Am laufenden Programm gemessen: Fall 03 kommt als `<220×A>.pdf` (224) |
+| **B5.9** | **`MIMEMap::GetMaps` verwarf die ganze Tabelle**, sobald ein Registry-Typ unter `HKCR\Mime\Database\Content Type` keinen Schrägstrich hat (`pkcs10`). Damit trug `SetExtension` **nie** eine Endung nach, auch in echter Post | **behoben in 7.2.0.81**: solch ein Schlüssel wird übersprungen. Am laufenden Programm gemessen: Fall 05 bekommt `.pdf`, sechsmal „nach MIMEMap::SetExtension“, keinmal „kennt den Typ NICHT“ |
+| **B5.10** | **Vorzeichenfehler in `SetExtension`** (PRUEFER-19): beim Kürzen war `Difference` negativ, `while (Difference--)` lief rückwärts durch den Speicher. Erst durch B5.9 erreichbar | **behoben in 7.2.0.81**. Mit den Prüfdaten nicht auslösbar, aus dem Quelltext begründet |
+| **B5.11** | **`SetExtension` kürzte auf `_MAX_PATH`, auch in kleineren Puffern** (`uudecode.cpp` `m_Name[255]`, `hexbin.cpp`/`ImHexbin.cpp` `m_Name[40]`, PRUEFER-20), und **ersetzte** vierstellige Endungen (`.docx` → `.doc`) | **behoben in 7.2.0.83**: Puffergröße vom Aufrufer, eine vorhandene Endung bleibt. Außerhalb von Eudora mit `cl` an zehn Fällen gemessen; am laufenden Programm alle sechs Prüffälle heil (`C:\Temp\AN5`). Offen aus PRUEFER-20: `hexbin.cpp:276`/`ImHexbin.cpp:333` schreiben den BinHex-Namen ohne Grenze |
 
 **Wer B5.2 oder B5.3 nur in einem der beiden Zweige ändert, baut sich einen
 Fehler, der von der Kontenart abhängt.** Für den Anhangnamen gilt das nicht,
@@ -520,7 +537,10 @@ nicht zu sehen — `EXPORT` ist im Eudora-Zweig als **leer** definiert
 (`MAPI/include/MAPI.h:35`), eine `.def` mit Klassennamen gibt es nicht, und
 `EuImap.vcxproj` nennt als Verweis nur `Imapdll`. Eine **neue** Methode könnte
 deshalb beim Binden fehlen — und das sähe genau aus wie die drei
-Übersetzungsfehler, die am 12.10.2026 ungeklärt blieben.
+Übersetzungsfehler, die am 12.10.2026 ungeklärt blieben. *(Nachtrag 12.10.2026:
+die folgenden fünf Rebuilds, 7.2.0.79 bis 7.2.0.83, liefen mit 0 Fehlern; was
+die drei Fehler waren, ist nirgends aufgeschrieben und nicht nachgemessen. Die
+Bindefrage für eine neue `MIMEMap`-Methode ist damit weiter offen.)*
 
 Das klärt ein Blick auf den Linkerlauf an Gregors Rechner in einer Minute.
 Vorher wird hier nicht geraten.
@@ -538,11 +558,18 @@ per Textanker, nicht per Zeilennummer — und übersetzen ihn mit `g++` (oder
 `cl`). Gemessen wird der ausgelieferte Code, keine Abschrift. Fehlt ein Anker,
 brechen sie ab, statt stumm durchzulaufen.
 
-**Nicht gemessen:** nichts davon ist mit MSVC gebaut, nichts ist gestartet.
-`RFC2231ZeichensatzUmsetzen` ruft `MultiByteToWideChar` und ist hier gar nicht
-prüfbar.
+**Mit den Werkzeugen nicht messbar:** `RFC2231ZeichensatzUmsetzen` ruft
+`MultiByteToWideChar` und ist mit `g++` nicht prüfbar. *Stand 12.10.2026: am
+laufenden Programm ist der Weg seither gemessen — mit MSVC gebaut und gestartet
+(7.2.0.79 bis 7.2.0.83, `tools/TESTLAEUFE.md`); Fall 04 (RFC 2231) kommt
+heil an.* Bis dahin stand hier: „nichts davon ist mit MSVC gebaut, nichts ist
+gestartet“.
 
 #### Der nächste Schritt an einem Windows-Rechner
+
+> *Stand 12.10.2026: Schritte 1 bis 4 sind erledigt, an 7.2.0.79 bis 7.2.0.83.
+> **Offen ist Schritt 5** — in `TestPopEmpfang.cpp` steht noch kein Fall zu
+> AN-1 — und B5.7.*
 
 1. **Bauen**, mit `-Ziel Rebuild`: `QCUtils/public/inc/debug.h` und
    `rfc2231.h` sind öffentliche DLL-Header, und `QCUtils` hat mit
@@ -559,6 +586,10 @@ prüfbar.
 > dem behobenen Zerleger meldet das Werkzeug deshalb Abweichungen. Das ist
 > gewollt, solange niemand bestätigt hat, dass die Behebung am laufenden
 > Programm wirkt — wer die Spalte vorher nachzieht, löscht den Vergleichspunkt.
+>
+> *Stand 12.10.2026: die Bedingung ist erfüllt — B5.1 und B5.2 sind am
+> laufenden Programm gemessen (Fall 01, 02, 05), und Gregor hat AN-1 nach seinem
+> Test mit 1.0.83 bestätigt. Die Spalte ist trotzdem noch nicht nachgezogen.*
 
 #### B5.0 · Die Debug-Marken — beim Abrufen zusehen
 
@@ -608,9 +639,10 @@ auf 110.
 
 | | |
 |---|---|
-| **alle sechs heil** | B5.1 bis B5.6 wirken am laufenden Programm |
+| **alle sechs heil** | die Teile des POP-Wegs wirken am laufenden Programm (B5.1, B5.2, B5.3 mit B5.8, B5.5, B5.9) — B5.6 und B5.7 betreffen nur IMAP und lassen sich so nicht zeigen. **So ist es seit 7.2.0.81** |
 | **00 heil, 01 bis 05 kaputt** | die Behebung ist nicht im Bau gelandet |
 | **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+| **gemischt** | die Liste der kaputten Fälle zeigt auf den Teil — so war es an 7.2.0.79 (4 von 6) und 7.2.0.80-an1 (5 von 6) |
 
 Der Server löscht nie etwas — beliebig oft abrufbar. Einzelheiten:
 `tools/pruefdaten/LIESMICH.md`.
@@ -633,12 +665,14 @@ komplette dateiname"*.
 **Eine Beispielnachricht gibt es nicht und wird es nicht geben.** Gregor hat den
 Fehler im Betrieb gesehen — *„immer wieder Dateien im Attachment …, bei denen
 zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* —,
-kann aber keine Nachricht liefern. **Darauf war nicht zu warten.** Alle sechs
-behobenen Teile sind aus dem Quelltext heraus begründet und, soweit ohne MSVC
-möglich, gemessen.
+kann aber keine Nachricht liefern. **Darauf war nicht zu warten.** Alle zehn
+behobenen Teile sind aus dem Quelltext heraus begründet; seit dem 12.10.2026
+sind sie mit MSVC gebaut und über POP am laufenden Programm gemessen, über IMAP
+von Gregor an seinem Postfach getestet (B5.4, B5.6, B5.10 und B5.11 lassen sich mit den
+Prüfdaten nicht auslösen).
 
 Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
-### B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, nicht übersetzt**
+### B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, übersetzt in 7.2.0.82, am laufenden Programm nicht gemessen**
 
 Gregors Meldung vom 12.10.2026, wörtlich: *„nachdem eudora gestartet wurde, ist
 es innerhalb eines Fensters darin angezeigt worden. ohne daß ich etwas gemacht
@@ -652,7 +686,7 @@ Vollständige Herleitung in **BEFUNDE.md, AN-2**. Kurz:
 | **Warum sie als Text erscheint** | Das Werbefenster ist `class CAdView : public CPaigeEdtView` — kein Browser, sondern Paige. Und Paige kannte kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung |
 | **Geändert** | neuer Merker `inside_script`, nach dem Muster des vorhandenen `inside_title`. Vier Dateien, 29 Zeilen |
 | **Gemessen** | `perl tools/html-tags-pruefen.pl` — 30 Fälle, 0 Abweichungen, Gegenprobe gefahren |
-| **Nicht gemessen** | nichts ist übersetzt. Dass es im Werbefenster wirkt, ist damit nicht belegt |
+| **Nicht gemessen** | übersetzt ist es seit 7.2.0.82 (Rebuild 0 Fehler, Testsuite 185/185, ebenso in 7.2.0.83). Dass es im Werbefenster wirkt, ist nicht belegt — der Prüfstand löst den Fall nicht aus |
 
 #### Was offen bleibt — und zwar als Frage an Gregor
 

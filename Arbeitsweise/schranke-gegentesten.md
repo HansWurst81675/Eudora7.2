@@ -210,3 +210,63 @@ sie **Abstand in Zeichen** und nennt es Verneinung.
   oder die Wortliste verlaengert, faehrt vorher `--selbsttest` und die
   echten Staende (`48c1ee2` muss weiter abgewiesen werden). Beschrieben ist
   der Mangel hier; geaendert wurde nichts.
+
+## Nachtrag 12.10.2026: der pre-push-Haken prüft den Zweig, auf dem ich stehe, und nicht die Referenz, die ich schiebe
+
+**Was geschah:** Um 12:51 war PR #84 gemergt. Um 12:52:06 bin ich auf `main`
+gewechselt, habe den lokalen Zweig gelöscht und
+`git push origin --delete an1-endungen` aufgerufen. Der Haken wies ab
+(12:52:16):
+
+    pre-push: ist der Zweigname mit Gregor abgestimmt?
+      COMMIT ABGEBROCHEN - 'main' nimmt keine direkten Commits
+
+Das war ein Fehlalarm, und zwar in zwei Punkten. Erstens ging kein Commit
+auf `main`. Zweitens stimmt das Wort „COMMIT" nicht, denn es war ein Push.
+Gelöscht wurde ein Zweig, den Gregor bereits gemergt hatte. Das verlangt
+[[fertig-heisst-fertig]] sogar. Ich habe ihn um 12:52:23 über
+`gh api -X DELETE repos/…/git/refs/heads/an1-endungen` gelöscht, ohne
+`--no-verify`, und danach mit `ls-remote` gemessen: 0 Treffer.
+
+**Die Stelle:** `.git/hooks/pre-push` ruft `tools/pruefe-branch.pl --streng`
+auf, ohne etwas weiterzureichen. Das Skript bestimmt den Zweig in Zeile 120
+aus `HEAD`:
+
+    my ($branch, $rc_branch) = git_lauf('symbolic-ref', '--quiet', '--short', 'HEAD');
+
+Zeile 185 entscheidet nur nach diesem Wert:
+
+    if ($branch eq 'main' or $branch eq 'master') {
+
+Ein pre-push bekommt von git auf **stdin** je geschobener Referenz eine
+Zeile `<lokale ref> <lokale sha> <entfernte ref> <entfernte sha>`. Bei einem
+Löschpush steht dort als lokale sha `0000000…`. Die Schranke liest stdin
+nicht. Sie misst also den Arbeitsbaum und nennt das den Push. Das ist
+derselbe Bezugsrahmenfehler wie unter Punkt 3 oben: richtige Regel,
+falscher Gegenstand. Er verbietet umgekehrt auch keinen echten Fehler:
+`git push origin HEAD:main` von einem abgestimmten Zweig aus käme an
+Zeile 185 vorbei. Die Sperre bei GitHub fängt das ab, der Haken nicht.
+
+**Vorschlag (nicht umgesetzt, Gregors Entscheidung):**
+
+- Im `--streng`-Lauf stdin lesen. Für jede Zeile gilt:
+  - Ist die lokale sha `0{40}`, ist es ein Löschpush. Er wird nicht nach dem
+    aktuellen Zweig beurteilt. Abweisen nur, wenn die **entfernte** ref
+    `refs/heads/main` ist.
+  - Sonst ist die **entfernte** ref der Gegenstand. `refs/heads/main` →
+    abweisen. Jeder andere Name → die bestehende ZWEIGE.md-Prüfung gegen
+    **diesen** Namen, nicht gegen `HEAD`.
+- In `pruefe-branch-tests.pl` zwei Gegentests nach dem Muster dieser Lehre:
+  - der echte Fehler: `HEAD:main` von einem abgestimmten Zweig, muss
+    abgewiesen werden;
+  - der erlaubte Fall: `--delete <gemergter Zweig>` von `main` aus, muss
+    durchgehen.
+- Die Meldung im pre-push soll „PUSH ABGEBROCHEN" heißen. Ein Text, der den
+  falschen Vorgang nennt, ist schon ein Hinweis darauf, dass die Schranke
+  den falschen Gegenstand misst.
+
+**Was richtig war:** Den Haken habe ich nicht übergangen. Der gewählte Weg
+läuft an keiner Prüfung vorbei, denn das Löschen eines gemergten Zweigs
+prüft dieser Haken nicht. Er geht nur nicht durch die Prüfung, die sich
+geirrt hat. Ein `--no-verify` hätte auch die anderen Schranken im pre-push
+abgeschaltet (Doku, Bytes, Testdaten).

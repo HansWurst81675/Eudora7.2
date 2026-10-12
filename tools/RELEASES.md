@@ -27,6 +27,7 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-09-13 13:24:37 | v1.0.50 | Gregor am 13.09.2026: 'gemerged, jetzt 0.50 releasen' - E-76 und E-84 hatte er zuvor am laufenden Programm bestaetigt | veroeffentlicht |
 | 2026-09-17 20:07:49 | v1.0.72 | Gregor am 17.09.2026 zu 1.0.72: „kein crash" — belegt durch sein Protokoll: der E-106-Block läuft 18 mal und über die bisher tödliche Stelle hinaus (`pos=770` hinter `pos=765`), letzte Zeile `Logging shutdown`, keine `Exception.log`. Marke auf dem Merge-Commit `8da72c8`. Enthält **E-101**, **E-103**, **E-104**, **E-106** und **E-108**. Offen bleibt **E-98** |
 | 2026-09-17 10:23:08 | v1.0.64 | Gregor am 17.09.2026 zu 1.0.64: 'gespeichert. funktioniert.' (E-97) und 'ja, kein datenverlust!' (E-99) | veroeffentlicht, auf GitHub als *Latest* markiert; Tag `1d37623` |
+| 2026-10-12 11:18:20 | v1.0.83 | Gregor am 12.10.2026 nach seinem IMAP-Test mit 1.0.83: 'gekuerzt mit endung reicht, mach PR fuer an1-endungen'; nach dem Merge von PR #84: 'erstelle ein release auf github' | veroeffentlicht |
 
 > **Nachgetragen am 17.09.2026 vom LEKTOR (L-13.1).** Die Zeile zu `v1.0.64`
 > fehlte hier, und **vier** Dokumente behaupteten zur selben Zeit, veroeffentlicht

@@ -68,19 +68,38 @@ sub lies {
 # --- Die Urteile aus BEFUNDE.md -------------------------------------------
 # Dieselbe Regel wie pruefe-befundurteile.pl: dritte Spalte, erstes
 # Fettgedrucktes. Wer sie hier anders liest, bekommt zwei Wahrheiten.
-my @offen_wort = ('offen', 'in arbeit', 'zurueckgestellt', "zur\xc3\xbcckgestellt");
-my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr auf', 'widerlegt');
+my @offen_wort = ('offen', 'in arbeit', 'zurueckgestellt', "zur\xc3\xbcckgestellt", 'teilweise');
+my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr auf', 'widerlegt',
+                     'ueberholt', "\xc3\xbcberholt");
+
+# KENNUNGEN ALLER FAMILIEN (LEKTOR-16, L-16.1, 12.10.2026). Bis dahin stand
+# hier E-\d+. BEFUNDE.md fuehrt aber auch AN-, NP-, P-, A-, R- ... - das
+# Werkzeug meldete "16 offen, Liste deckt" und sah AN-1 und AN-2 gar nicht,
+# ausgerechnet die beiden Befunde, an denen an dem Tag gearbeitet wurde.
+# Die Schranke aus CLAUDE.md Schritt 1 war damit fuer jeden Nicht-E-Befund
+# blind. Unterkennungen wie B-2.2 bleiben aussen vor: das sind Zeilen in
+# Messtabellen, keine Befunde.
+my $kennung = qr/[A-Z]{1,3}\d?-\d+[a-z]?/;
 
 my $befunde = lies($quelle);
-my (@offene, %beschreibung);
+my (@offene, %beschreibung, %gesehen);
 
 for my $zeile (split /\n/, $befunde) {
-    next unless $zeile =~ /^\|\s*\**\s*(E-\d+)\s*\**\s*\|/;
+    next unless $zeile =~ /^\|\s*\**\s*($kennung)\s*\**\s*\|/;
     my $k = $1;
-    next if exists $beschreibung{$k};      # erste Zeile gewinnt
 
     my @s = split /\|/, $zeile, -1;
     next unless @s >= 4;
+
+    # Erste Zeile gewinnt - und zwar die erste Zeile UEBERHAUPT. Bis zum
+    # 12.10.2026 galt das nur fuer schon angenommene Zeilen: eine erste
+    # Zeile OHNE Urteilswort liess die naechste Zeile derselben Kennung
+    # zum Zug kommen, und die steht meist in einer Teiltabelle weit unten.
+    # A-1 zum Beispiel steht oben in der Uebersicht mit "teilweise"
+    # (BEFUNDE.md:147) und unten mit "heute ueberholt" (:5020) - gelten
+    # soll die Uebersicht. (LEKTOR-21 hat den ersten Wortlaut dieses
+    # Kommentars berichtigt: er hatte oben und unten vertauscht.)
+    next if $gesehen{$k}++;
 
     my $urteil = $s[3];
     # KEINE Laengengrenze. Bis zum 15.09.2026 stand hier {1,60}, und das war
@@ -95,8 +114,14 @@ for my $zeile (split /\n/, $befunde) {
     my $w = lc $fett;
 
     # "behoben" schlaegt "offen" - eine Zeile "behoben ... war offen"
-    # beschreibt einen erledigten Befund.
-    next if grep { index($w, $_) >= 0 } @erledigt_wort;
+    # beschreibt einen erledigten Befund. AUSSER "wieder offen": E-112 steht
+    # als "WIEDER OFFEN. ... widerlegt" da, und bis zum 12.10.2026 fiel er
+    # deshalb aus der Liste (LEKTOR-16, L-16.1).
+    # Ebenso "teilweise": AN-1 steht als "teilweise behoben - ... B5.7 offen"
+    # da, und "behoben" haette ihn hinausgeworfen. Teilweise erledigt ist
+    # nicht erledigt.
+    my $wieder = index($w, 'wieder offen') >= 0 || index($w, 'teilweise') >= 0;
+    next if !$wieder and grep { index($w, $_) >= 0 } @erledigt_wort;
     next unless grep { index($w, $_) >= 0 } @offen_wort;
 
     # Die Kurzbeschreibung ist die zweite Spalte, ohne Auszeichnung.
@@ -118,7 +143,8 @@ unless (@offene) {
 
 # Nach Nummer sortieren, die juengsten zuerst - was zuletzt gefunden wurde,
 # ist meist das, was als Naechstes drankommt.
-@offene = sort { my ($x) = $a =~ /(\d+)/; my ($y) = $b =~ /(\d+)/; $y <=> $x } @offene;
+# Die laufende Nummer ist die LETZTE Zahl: bei NP3-1 ist es die 1, nicht die 3.
+@offene = sort { my ($x) = $a =~ /(\d+)[a-z]?$/; my ($y) = $b =~ /(\d+)[a-z]?$/; $y <=> $x or $a cmp $b } @offene;
 
 my $soll = '';
 for my $k (@offene) {
@@ -144,7 +170,7 @@ unless ($t =~ /\Q$anfang\E(.*?)\Q$ende\E/s) {
 
 my $ist = $1;
 my %im_ist;
-while ($ist =~ /\*\*(E-\d+)\*\*/g) { $im_ist{$1} = 1; }
+while ($ist =~ /\*\*($kennung)\*\*/g) { $im_ist{$1} = 1; }
 
 my @fehlen = grep { not $im_ist{$_} } @offene;
 my @zuviel = grep { my $n = $_; not grep { $_ eq $n } @offene } sort keys %im_ist;

@@ -69,9 +69,14 @@ verschickt.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.72`** (veröffentlicht am 17.09.2026 um 20:07
+* **Das neueste Release ist `v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18
   Uhr UTC, auf GitHub als *Latest*) — **von Gregor vorher am laufenden Programm
-  geprüft**: *„kein crash"*. **Im Download enthalten** sind damit: Zeichensalat
+  geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
+  darin: **Anhänge behalten Endung und Namen** (AN-1, über POP und IMAP gemessen)
+  und, übersetzt, aber am Programm nicht gemessen, **AN-2** (kein Quelltext einer
+  Webseite mehr im Werbefenster). Das Release davor war **`v1.0.72`** (17.09.2026,
+  von Gregor geprüft: *„kein crash"*). **Seit `v1.0.72` im Download enthalten**
+  sind damit: Zeichensalat
   beim IMAP-Abruf (7.2.0.52), das Beenden mit hängender Aufgabe (7.2.0.53), die
   HTML-Darstellung beim Lesen (7.2.0.55), der Formatverlust beim Weiterleiten
   (7.2.0.56), sich überlagernde Bilder im Verfassenfenster (7.2.0.58),
@@ -141,15 +146,19 @@ verschickt.
   (**AN-1**): aus `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf`
   wird `Angebot Nr 4711 fuer die Stadtwerke`. **Es liegt nicht an der Länge** —
   ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile
-  steht. Sieben getrennte Ursachen, alle aus Eudora 7.1: eine Faltung beendete
-  die Zeichenkette in Anführungszeichen, die Marke des Zerlegers war 256 Byte
-  groß, zwei Puffer liefen über, `filename=""` wurde zum Wert `=`, und
-  **RFC 2231** — die Form, in der lange Namen heute übertragen werden — kannte
-  der Baum gar nicht; dann nahm Eudora ersatzweise den **Betreff**, 31 Zeichen
-  ohne Endung. **Sechs davon sind in 7.2.0.79 geändert, aber nicht übersetzt**
-  und von Gregor nicht geprüft; offen bleibt, dass über IMAP keine Endung aus
-  dem MIME-Typ nachgetragen wird. Durchlauf in
-  [AUFGABEN.md](AUFGABEN.md), **B5**.
+  steht. Elf getrennte Ursachen (B5.1 bis B5.11), alle aus Eudora 7.1: eine
+  Faltung beendete die Zeichenkette in Anführungszeichen, die Marke des
+  Zerlegers war 256 Byte groß, zwei Puffer liefen über, `filename=""` wurde zum
+  Wert `=`, **RFC 2231** — die Form, in der lange Namen heute übertragen
+  werden — kannte der Baum gar nicht (dann nahm Eudora ersatzweise den
+  **Betreff**, 31 Zeichen ohne Endung), lange Namen wurden von hinten gekappt,
+  und die Zuordnung MIME-Typ → Endung scheiterte an einem einzigen
+  Registry-Eintrag ganz. **Behoben bis auf einen Teil:** über POP am laufenden
+  Programm gemessen, alle sechs Prüffälle heil seit 7.2.0.81 (auch an 7.2.0.82
+  und 7.2.0.83, Testsuite 185/185); über IMAP von Gregor mit Paket 1.0.83 an
+  seinem Postfach getestet und bestätigt. **Offen bleibt B5.7:** über IMAP
+  wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
+  Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**.
 * **Beim Start erschien der Quelltext einer Webseite in einem Fenster**
   (**AN-2**): JavaScript, CSS und JSON als Text, ohne dass man etwas getan
   hatte. Eudora startet ohne Eintrag `[Settings] Mode` in der
@@ -158,7 +167,8 @@ verschickt.
   kommt, ist eine gewöhnliche Webseite. Angezeigt wird sie von **Paige**,
   nicht von einem Browser, und Paige kannte kein Element, dessen Inhalt kein
   Text ist: `<script>` war unbekannt, `<style>` bekannt aber unbehandelt.
-  **Die Anzeige ist in 7.2.0.80 geändert, aber nicht übersetzt.** Dass
+  **Die Anzeige ist in 7.2.0.80 geändert und seit 7.2.0.82 übersetzt, am
+  laufenden Programm aber noch nicht gesehen.** Dass
   Eudora überhaupt noch Werbung abruft, ist offen — drei Wege in
   [AUFGABEN.md](AUFGABEN.md), **B6**.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
@@ -397,8 +407,9 @@ Bereiche.
 | 8192 | *Leave mail on server* | an |
 | 16384 | Suche und Suchindex | an |
 | 32768 | **Spurmarken dieser Portierung** | **aus** |
+| 65536 | **Anhangnamen** (Zeilen `ANHANG`, Befund AN-1) | **aus** |
 
-Belegt in `Eudora71/QCUtils/public/inc/debug.h:15-32`; gelesen wird der
+Belegt in `Eudora71/QCUtils/public/inc/debug.h:14-44`; gelesen wird der
 Schlüssel in `eudora.cpp:1192`, ausgewertet in `debug.cpp:140-146`.
 
 ### Die Spurmarken einschalten

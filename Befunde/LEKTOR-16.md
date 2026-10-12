@@ -1,6 +1,6 @@
 # LEKTOR-16 — Dokumentation gegen den Bestand nach AN-1 (bis Commit `ca8da5a`)
 
-Lauf am 12.10.2026, nur lesend, Bericht aus dem Notizordner übernommen. **Die Funde sind noch nicht eingearbeitet** — ausgenommen die Formulierung zu `CheckName` im CHANGELOG (L-16 „Kleinere Lücken"), berichtigt in 7.2.0.81.
+Lauf am 12.10.2026, nur lesend, Bericht aus dem Notizordner übernommen. ~~Die Funde sind noch nicht eingearbeitet~~ — **Stand 12.10.2026: eingearbeitet in [LEKTOR-20](LEKTOR-20.md)**, bis auf L-16.1 (Werkzeug, Sache des Hauptagenten) und die dort als offen genannten Reste.
 
 
 **Stand 12.10.2026**, HEAD `ca8da5a` auf Zweig `patch_20261012`, seit dem

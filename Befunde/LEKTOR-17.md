@@ -1,6 +1,6 @@
 # LEKTOR-17 — Dokumentation nach dem Merge von AN-2 (bis `c4988b3`)
 
-Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Eingearbeitet** in `an1-endungen`: L-17.6 (CHANGELOG-Kopf AN-1/AN-2), die B5-Überschrift aus L-17.4, 1.0.82 in PAKETE als gebaut (L-17.3). **Offen:** der Rest von L-17.1 bis L-17.8 und die offenen L-16-Funde.
+Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Eingearbeitet** in `an1-endungen`: L-17.6 (CHANGELOG-Kopf AN-1/AN-2), die B5-Überschrift aus L-17.4, 1.0.82 in PAKETE als gebaut (L-17.3). ~~**Offen:** der Rest von L-17.1 bis L-17.8 und die offenen L-16-Funde.~~ **Stand 12.10.2026: eingearbeitet in [LEKTOR-20](LEKTOR-20.md)**, bis auf L-17.8 (Werkzeug) und die dort als offen genannten Reste.
 
 
 Lauf am 12.10.2026, nur lesend. Ich habe keine Datei im Repo geändert, keinen git-Befehl mit Schreibwirkung abgesetzt, nichts gebaut und nichts gestartet.

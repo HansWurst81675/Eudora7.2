@@ -174,8 +174,8 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **zehn** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **POP-Weg am laufenden Programm heil an 7.2.0.81** (12.10.2026, `C:\Temp\AN3`): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, abgelesen im Anhangverzeichnis und in `eudora.log`. Teile 1 bis 6 und 8 bis 10 sind behoben, **B5.7 ist offen**, und der **IMAP-Weg ist nicht gemessen**. Elf Debug-Marken (`LogLevel=91295`). **Von Gregor noch nicht geprüft.** Durchlauf in AUFGABEN.md, B5 |
-| AN-2 | Beim Start zeigt ein Fenster in Eudora den **Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache am Quelltext belegt, Behebung eingespielt, nicht übersetzt.** Paige kennt kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung. Jetzt beides über `inside_script` unterdrückt. Gemessen mit `tools/html-tags-pruefen.pl`: **30 Fälle, 0 Abweichungen**, Gegenprobe gefahren. **Offen bleibt die eigentliche Frage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **elf** Ursachen (Teile B5.1 bis B5.11), alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **teilweise behoben — über POP am laufenden Programm gemessen, heil seit 7.2.0.81; über IMAP von Gregor mit 1.0.83 getestet und am 12.10.2026 bestätigt; B5.7 offen.** POP: alle sechs Prüfanhänge mit vollem Namen und `.pdf` an 7.2.0.81 (`C:\Temp\AN3`), 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), abgelesen im Anhangverzeichnis und in `eudora.log`; Testsuite 185/185 an 7.2.0.82 und 7.2.0.83. IMAP: drei Anhänge aus Gregors Postfach, alle mit Endung (CHANGELOG 7.2.0.83); sein Urteil *„gekürzt mit endung reicht"*. Teile 1 bis 6 und 8 bis 11 sind behoben, **B5.7 ist offen** (IMAP ohne `SetExtension`). Elf Debug-Marken (`LogLevel=91295`). Durchlauf in AUFGABEN.md, B5 |
+| AN-2 | Beim Start zeigt ein Fenster in Eudora den **Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **offen — Anzeige geändert in 7.2.0.80, seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Ursache am Quelltext belegt. Paige kennt kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung. Jetzt beides über `inside_script` unterdrückt. Gemessen mit `tools/html-tags-pruefen.pl`: **30 Fälle, 0 Abweichungen**, Gegenprobe gefahren. **Offen bleibt die eigentliche Frage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -259,7 +259,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 | E-91 | **zitierte Bereiche stehen bündig im Text, ohne Randbalken und Einrückung** — auf Gregors Thunderbird-Vergleich vom 14.09.2026 hat der zitierte Teil links einen senkrechten Balken und ist eingerückt, bei uns steht er bündig mitten im übrigen Text | **beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Vergleich zu E-89, nicht eigens untersucht. Was bekannt ist: Eudora kennt einen Zitatstil (`blockquote_style` in `PaigeEdtView.cpp:7738`, `Paige_io.cpp:916`), und beim Antworten wird `<blockquote type=cite>` erzeugt (`etf2html.cpp:123`, `msgutils.cpp:182`). Beim **Lesen** einer HTML-Nachricht zeichnet dagegen MSHTML, das `blockquote` von Haus aus einrückt. Offen und ungemessen ist deshalb, **welcher der beiden Fälle** auf Gregors Bild zu sehen war und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. **Erst messen, dann urteilen** — dieser Eintrag hält die Beobachtung fest, nicht eine Ursache. Kosmetik; keine Fehlfunktion |
 | E-92 | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** — auf Gregors zweitem Bild vom 14.09.2026 stehen `Betreff:`, `Datum:`, `Von:`, `An:` fett und rechtsbündig, die Werte linksbündig daneben | **beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Festgehalten, damit die Beobachtung nicht verlorengeht; ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. **Wo schon gesucht wurde, damit der nächste Anlauf nicht dort anfängt:** `ConConMessage.cpp:1150-1200` und die Ressourcen `IDS_CON_CON_FORWARD_ON_1/_2`, `IDS_CON_CON_QUOTE_ON_1` (`EudoraRes.rc:11642-11650`) sind die **Erkennung** eines fremden Weiterleitungskopfs beim Lesen, nicht die **Erzeugung** des eigenen. Die Erzeugungsstelle ist noch nicht gefunden |
 | E-93 | **beim Weiterleiten einer bereits weitergeleiteten Nachricht gingen 83 Prozent des Inhalts verloren** — ohne dass es jemand merkte | **behoben in 7.2.0.59 — von Gregor noch nicht am laufenden Programm bestätigt.** Gefunden am 14.09.2026 beim Vergleich zweier Bilder: dieselbe Nachricht, einmal über Thunderbird weitergeleitet, einmal über Eudora. Die Eudora-Fassung zeigte ein zu einem Streifen gequetschtes Logo und ein schlechteres Layout. **Die eingebaute Spurmarke nannte die Ursache in einer Zeile:** `Fassung=EDITOR (Anwender hat im Zitat geaendert) OrigBytes=105125 EditorBytes=17889 Fundstelle=-1`. Hinaus gingen **17.889 statt 105.125 Byte**, obwohl Gregor nichts angefasst hatte. **Warum:** E-88 prüft, ob der Klartext des Originals **als ein zusammenhängendes Stück** in der Editorfassung steckt (`msgutils.cpp`, `szEditorText.Find(szOrigText)`). Bei einer Weiterleitung **einer bereits weitergeleiteten** Nachricht (`Fw: Fw:`) baut Paige den verschachtelten Text so um, dass der Vergleich ins Leere greift — und der Fehlschlag wurde als *„der Anwender hat im Zitat geändert"* gedeutet. **Die Behebung fragt zuerst, ob überhaupt getippt wurde:** Paige führt darüber Buch (`CPaigeEdtView::HasChanged`, `PaigeEdtView.h:193`, `m_ccLastSaved != m_chngCount`), und `PgMsgView` erbt davon. Hat der Anwender nichts angefasst, gibt es nichts zu schützen, und das Original geht hinaus. **Die Regel kann nur helfen, nie schaden:** sie greift ausschließlich, wenn nachweislich nicht getippt wurde; im Zweifel bleibt es bei der bisherigen Entscheidung. Die Spurmarke nennt jetzt `getippt=0` bzw. `getippt=1`. **Zwei neue Tests**, davon einer die Gegenprobe — **mit** Tastendruck muss die Editorfassung bleiben, sonst verschluckt die neue Regel genau das, was der Anwender geschrieben hat. Tests 150 von 150 |
-| E-94 | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!`, und in einer früheren Fassung `1 5 %` und `b is` | **offen, Ursache NICHT gemessen.** Gefunden am 14.09.2026 im Protokoll zu 1.0.59, beim Weiterleiten: `Betreff=Fwd: Fw:  [Letzte Chance] Toner bestel len & 15 % sparen  \022 Nur bis zum Wochenend e! ?`. **Was gemessen ist:** die Lücken stehen nicht dort, wo Emoji entfernt wurden — `15 %` steht in derselben Zeile korrekt zusammen, seit E-90 die unsichtbaren Zeichen streicht. Es sind also zwei verschiedene Ursachen gewesen, und diese hier bleibt. **Was zu prüfen ist:** eine Kopfzeile muss laut RFC 2822 umbrochen werden, wenn sie zu lang wird, und der Umbruch gehört an ein Leerzeichen. `Encode2047` (`sendmail.cpp:1188`) nimmt dafür einen `lineLimit` und trennt an den Zeichen aus `dl2047`. Zu messen ist, ob die Längenrechnung die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet — dann bräche sie zu früh und mitten im Wort. **Nicht gemessen ist auch, wer faltet:** Eudora beim Senden, oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. **Kein Datenverlust**, aber die Betreffzeile sieht nach Tippfehlern des Absenders aus |
+| E-94 | **die Betreffzeile wird mitten im Wort umbrochen** — `Toner bestel len`, `Wochenend e!`, und in einer früheren Fassung `1 5 %` und `b is` | **offen, Ursache am Quelltext belegt, NICHT gemessen (Stand 12.10.2026).** Zwischen zwei kodierten Wörtern, die über eine **Faltung** getrennt sind, bleibt der Leerraum stehen: `Fix2047` (`lex822.cpp:685`) und `ImapFix2047` (`ImapLex822.cpp:719`) lassen ihn mit `;//lastEqual += 2; // toast a trailing return` ausdrücklich stehen; RFC 2047, 6.2 verlangt, dass er wegfällt. Über IMAP bekommt `ImapFix2047` die ganze Kopfzeile (`ImapDownload.cpp:2276`), über POP holt `LexFill` sie zeilenweise. **Gregors Toner-Nachricht** (mit seiner Erlaubnis nur gelesen, 1.0.75-`INBOX.mbx`) hat der **web.de-Webmailer** erzeugt (`Received: … trinity-msg-rest-webde … via HTTP`), nicht Eudora; der Betreff steht dort schon dekodiert, mit Faltungen bei `& 1<CR><LF> 5 %` und `Nur b<CR><LF> is`. **Nicht gemessen:** die Rohform vom Server, also ob die Grenzen wirklich zwischen zwei `=?UTF-8?…?=` liegen. **Die ältere Vermutung unten (`Encode2047` beim Senden) ist damit zurückgestellt**, denn Eudora hat die Nachricht nicht gesendet. Nächster Schritt, von Gregor angeordnet: drei Tests rot (`Fix2047`, `ImapFix2047`, Prüfnachricht 06), dann die Behebung. — Ursprünglicher Eintrag: Gefunden am 14.09.2026 im Protokoll zu 1.0.59, beim Weiterleiten: `Betreff=Fwd: Fw:  [Letzte Chance] Toner bestel len & 15 % sparen  \022 Nur bis zum Wochenend e! ?`. **Was gemessen ist:** die Lücken stehen nicht dort, wo Emoji entfernt wurden — `15 %` steht in derselben Zeile korrekt zusammen, seit E-90 die unsichtbaren Zeichen streicht. Es sind also zwei verschiedene Ursachen gewesen, und diese hier bleibt. **Was zu prüfen ist:** eine Kopfzeile muss laut RFC 2822 umbrochen werden, wenn sie zu lang wird, und der Umbruch gehört an ein Leerzeichen. `Encode2047` (`sendmail.cpp:1188`) nimmt dafür einen `lineLimit` und trennt an den Zeichen aus `dl2047`. Zu messen ist, ob die Längenrechnung die **kodierte** Länge (`=?UTF-8?Q?…?=`) gegen die **Klartext**-Länge verrechnet — dann bräche sie zu früh und mitten im Wort. **Nicht gemessen ist auch, wer faltet:** Eudora beim Senden, oder der Server auf dem Weg. Dazu gehören die Rohbytes der Kopfzeile aus `Out.mbx` und aus der angekommenen Nachricht nebeneinander. **Kein Datenverlust**, aber die Betreffzeile sieht nach Tippfehlern des Absenders aus |
 | E-95 | **im Verfassenfenster werden die Bilder zerschnitten** — vom Doctolib-Schriftzug stehen nur Fragmente da, vom blauen Kreis die Oberkante | **behoben — aber NICHT so, wie 7.2.0.61 es versuchte. Die Behebung von 7.2.0.61 ist mit 7.2.0.63 wieder zurückgenommen; was trägt, ist E-96 aus 7.2.0.62. Tests 153/153, von Gregor noch nicht am laufenden Programm bestätigt.** Von Gregor am 14.09.2026 an 1.0.60 gemeldet, nachdem E-89 im dritten Anlauf den Text endlich freigelegt hatte. **Der Fund steckt in seinem Bild:** der blaue Kreis ist **blau**, nicht grau — Paige hat das Bild also **geladen** und kennt seine echte Größe genau. Es ist in der Nachricht **eingebettet** (`cid:`), nicht extern verlinkt. Unser `height="20"` überschreibt diese Größe, und die 20 Punkte schneiden das Bild ab. **Bei der FairToner-Nachricht dagegen** stehen graue Kästen: dort sind die Bilder **extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß nichts über ihre Größe — nur dort ist eine Vorgabe überhaupt sinnvoll. **`E89BilderMessbarMachen` (`msgutils.cpp`) behandelt beide Fälle gleich.** Genau das erklärt das Schwanken über vier Fassungen: 200×90 (grauer Kasten), gar nichts (Text zugedeckt), 20×20 (Bilder zerschnitten). **Zu tun:** am `src`-Attribut unterscheiden — beginnt es mit `cid:`, bleibt das Bild **unangetastet**; nur bei `http:`/`https:` greift die Vorgabe. Das ist eine Abfrage in `E89Attribut(pAttrs, nAttrLen, "src", …)`. **Nicht gemessen ist**, ob Paige auch `data:`-URIs lädt — die gehören dann zur selben Gruppe wie `cid:` **Nachtrag 7.2.0.63:** seit E-96 behoben ist, war die Vorgabe nur noch schädlich — auf Gregors Bild zu 1.0.62 war die Tonerkartusche kein abgeschnittenes, sondern ein **auf 20×20 gequetschtes** Bild (`attr=20x20` in derselben Messung). Ein Bild ohne Maß bleibt jetzt unangetastet; Paige trägt die echte Größe selbst nach. Damit entfällt auch die `cid:`/`http:`-Unterscheidung: sie war richtig gedacht, behandelte aber ein Symptom |
 | E-96 | **jedes Bild bekam die Zeilenhöhe des ersten** — dadurch wurden spätere Bilder abgeschnitten oder es klaffte Leerraum | **behoben in 7.2.0.62, am laufenden Programm gemessen** (eigener Testlauf am 15.09.2026, drei Bilder 600×150, 320×80, 20×20). **Die Ursache:** `ProcessEmbed()` (`PGHTMIMP.CPP`) räumt nach jedem eingefügten Bild den Embed-Stil auf — `procs`, `embed_entry`, `embed_object` —, **aber nicht die Zeilenhöhe**. `current_style.ascent` behielt die Höhe des Bildes. Beim nächsten Bild las `DoDataTag` in Zeile 2038 `original_ascent = current_style.ascent` diesen Wert als vermeintlichen **Text**-Ascent ein, und das Maximum weiter unten zog die Zeilenhöhe wieder auf den alten Wert hoch. **Gemessen, drei Fassungen nebeneinander:** vorher `ascent=150 150 150` bei `text-asc=13 150 150`; mit `paige_globals->def_style` `ascent=150 80 20` bei `text-asc=13 0 0` — dort fällt die Schutzregel *„die Zeile ist mindestens so hoch wie der Text"* weg, und Zählpixel von 1×1 ließen die Zeile schrumpfen; jetzt `ascent=150 80 20` bei `text-asc=13 13 13`. **Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen dessen Höhe blind. Bei Gregors Doctolib-Nachricht steht der kleine Schriftzug vor dem großen blauen Kreis — deshalb wurde dort abgeschnitten. **Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo identisch. **Eine bleibende Spurmarke** (`DEBUG_MASK_MISC`) nennt je Bild `attr`, `embed`, `ascent` und den Text-Ascent |
 | E-97 | **Eudora stürzt ab, sobald eine Nachricht gespeichert werden soll** — *„da kommt kurz eine meldung, dann ist eudora weg!"* | **behoben in 7.2.0.64.** Von Gregor am 15.09.2026 an 1.0.63 gemeldet, als er auf meine Bitte hin eine Nachricht über *File → Save As* sichern wollte. **In jeder vorhandenen Fassung reproduziert** — 1.0.63, 1.0.62, 1.0.53 (von Gregor), 1.0.50 und 1.0.49 (von mir, eigene Testläufe). Also **kein neuer Fehler**, sondern einer, der die ganze Zeit dalag und nie auffiel, weil niemand eine Nachricht gespeichert hat. Auch das veröffentlichte Release **v1.0.50 ist betroffen**. **Windows-Ereignisprotokoll:** `Eudora.exe 7.2.0.63`, fehlerhaftes Modul `mfc140.dll`, Ausnahme `0xc0000005`, Offset `0x002a0544`. **Aufrufkette, unter dem Debugger gefangen** (`tools/stapel-untersuchen.ps1`): Ausnahme **`0xC000041D` = STATUS_FATAL_USER_CALLBACK_EXCEPTION**, Rahmen 0 `Eudora.exe`, Rahmen 1–5 **`COMDLG32.dll`** und `COMCTL32.dll` — der Windows-Dateidialog ruft in Eudoras eigenen Code zurück, und dort entsteht die Ausnahme. Eine Ausnahme in einem Systemrückruf kommt nicht über die Kernel-Grenze zurück; deshalb bricht das Programm sofort ab, statt eine Meldung zu zeigen. **WIDERLEGTE Vermutung zur Ursache — sie steht hier als Ausschluss, nicht als Handlungsanweisung** (die wirkliche Ursache und die Behebung stehen weiter unten): `CSaveAsDialog` (`SaveAsDialog.cpp:36-45`) hängt dem Dialog eine **eigene Dialogvorlage** an (`OFN_ENABLETEMPLATE`, `IDD_SAVEAS_EXT`), um die Kästchen *Kopfzeilen einschließen* und *Absätze raten* unterzubringen — aber nur `if (IsVersion4())`. Und `IsVersion4()` (`eudora.h:311`) lautet `return dwMajorVersion >= 4`. Die Abfrage ist damit **immer wahr** — gemessen am 15.09.2026: `IsVersion4()` liefert **1**. (Zur gemeldeten Hauptversion gibt es zwei Angaben: die Messung vom 15.09. nennt **6**, `Befunde/PRUEFER-11.md` rechnet mit **10**. Beide liegen über 4, das Urteil ändert sich dadurch nicht; wer die Zahl braucht, misst sie nach.) Gemeint war 1996 „Shell-Version 4 oder neuer", also Windows 95 aufwärts; heute trifft das auf jedes Windows zu. Die Vorlage von 1996 wird damit **immer** an einen modernen Dateidialog gehängt. **Gemessen am 15.09.2026** an einem selbst gestarteten Eudora (`tools/TESTLAEUFE.md`, `C:\Temp\E97-Stapel`, *„E-97: laeuft der Dialog ohne die Vorlage von 1996?"*, Commit `bdd12f4`): Vorlage **abgeschaltet — stürzt weiter ab**; `QCFindResourceHandle` liefert ein **gültiges** Handle (`71D40000`); der Konstruktor läuft durch, `OnInitDialog` wird **nicht** erreicht. Damit ist die Vorlage als Ursache vom Tisch, und die Lücke liegt zwischen Konstruktor und `OnInitDialog`. **Die Behebung hat die Vorlage nicht angetastet — die beiden Kästchen sind trotzdem weg, und zwar seit der Portierung.** Von PRUEFER am 17.09.2026 am Quelltext belegt (`Befunde/PRUEFER-11.md`, P-2 und P-4): `CFileDialog` in MFC 14.38 hat `bVistaStyle = TRUE` als Vorgabe (`afxdlgs.h:144`), `CSaveAsDialog` übergibt kein `FALSE` (`SaveAsDialog.cpp:23-25`), und `ApplyOFNToShellDialog` liest `lpTemplateName` **nirgends** — `IDD_SAVEAS_EXT` wird also **nie** instanziiert. *Kopfzeilen einschließen* und *Absätze raten* kann der Anwender seit der Portierung nicht mehr wählen; gespeichert wird nach dem, was in der `Eudora.ini` steht. **Das ist ein eigener, noch offener Mangel, nicht E-97** — Wege dazu in `PRUEFER-11.md`, P-4. **behoben in 7.2.0.64, am laufenden Programm geprüft.** **Die Stelle, symbolisiert aus dem Debugger:** `CSaveAsDialog::OnTypeChange + 45`, **`SaveAsDialog.cpp:425`** — darunter `COMDLG32.dll`, darüber `CTocView::OnFileSaveAs` (`tocview.cpp:3074`). **Der Dateidialog ruft diese Funktion, während er sich aufbaut** — also **vor** `OnInitDialog`; genau deshalb kam eine Spurmarke dort nie an. Zu diesem Zeitpunkt hat das Vorlagenfenster noch kein Elternfenster: `GetParent()` liefert **NULL**, und `dlgPtr->GetDlgItem(cmb1)` griff ungeprüft darauf zu. Ein paar Zeilen weiter dieselbe Lücke: `m_GuessParagraphs.EnableWindow()` auf einem Schalter, den `DoDataExchange` bewusst **nicht** anbindet, wenn es ihn ohne Vorlage nicht gibt. **Beide Zugriffe waren durch ein `ASSERT` „abgesichert", das im Release nichts tut** — die häufigste Ursachenklasse dieses Projekts. **Behebung:** fällt `GetParent()` aus, ist der Dialog noch nicht fertig — dann gibt es nichts zu tun, `OnInitDialog` setzt den Zustand gleich darauf. **Gegenprobe:** derselbe Messlauf, der vorher *„ABGESTUERZT beim Speichern unter"* meldete, sagt jetzt *„lebt noch"*. **Von Gregor am 17.09.2026 an 1.0.64 bestätigt:** *„gespeichert. funktioniert."* und *„speichern test hat also funktioniert."* **Drei Vermutungen von mir waren vorher widerlegt worden:** die CSS-Grenze, die Dialogvorlage von 1996 und die ungeprüften Steuerelemente in `OnInitDialog`. **153 Tests, 153 bestanden.** |
@@ -7876,12 +7876,14 @@ Abschnitt „IMAP hat dieselbe Stelle noch einmal".
 > | 7.2.0.79 (`C:\Temp\AN1`) | 00, 01, 02, 04 | 03: 224 × `A` **ohne** `.pdf`; 05: Betreff **ohne** Endung |
 > | 7.2.0.80-an1 (`C:\Temp\AN2`) | 00 bis 04 | 05: Betreff ohne Endung |
 > | **7.2.0.81** (`C:\Temp\AN3`) | **alle sechs**, voller Name **und** `.pdf` | — |
+> | 7.2.0.82 (`C:\Temp\AN4`) | alle sechs, dieselben Namen; Testsuite 185/185 | — |
+> | 7.2.0.83 (`C:\Temp\AN5`) | alle sechs, dieselben Namen; Testsuite 185/185 | — |
 >
-> Dabei kamen drei weitere Teile heraus, alle im POP-Weg und alle Originalfehler:
+> Dabei kamen vier weitere Teile heraus, alle Originalfehler:
 >
-> * **Teil 8** — drei Kappungen von hinten: `strncpy(fName, …, _MAX_PATH - 1)`
+> * **Teil 8** — Kappungen von hinten an drei Stellen: `strncpy(fName, …, _MAX_PATH - 1)`
 >   in `mime.cpp` (ohne abschließende Null) und `DeMacifyName32` auf 255, in
->   beiden Abschriften. Behoben mit `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`),
+>   beiden Abschriften (POP und IMAP; im POP-Lauf wirkten davon zwei). Behoben mit `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`),
 >   das die Endung behält.
 > * **Teil 9** — `MIMEMap::GetMaps` gab `FALSE` zurück, sobald ein Typ unter
 >   `HKCR\Mime\Database\Content Type` keinen Schrägstrich hat (gemessen:
@@ -7891,11 +7893,18 @@ Abschnitt „IMAP hat dieselbe Stelle noch einmal".
 > * **Teil 10** (PRUEFER-19) — `SetExtension` kürzte mit negativem
 >   `Difference`; `while (Difference--)` lief rückwärts durch den Speicher. Erst
 >   durch Teil 9 erreichbar. Behoben.
+> * **Teil 11** (PRUEFER-20, 7.2.0.83) — `SetExtension` kürzte auf `_MAX_PATH`,
+>   auch in kleineren Puffern (`uudecode.cpp` `m_Name[255]`, `hexbin.cpp` und
+>   `ImHexbin.cpp` `m_Name[40]`), und **ersetzte** eine vierstellige Endung
+>   (`.docx` → `.doc`). Behoben: Puffergröße vom Aufrufer, eine vorhandene
+>   Endung bleibt immer.
 >
-> **Noch offen:** der IMAP-Weg ist mit diesen Prüfdaten **nicht** gemessen
-> (B5.6, B5.7). Ab hier unten folgt der ältere Stand.
+> **IMAP:** von Gregor mit Paket 1.0.83 an seinem Postfach getestet (CHANGELOG
+> 7.2.0.83): drei Anhänge, alle mit Endung, einer auf 175 Zeichen gekürzt
+> (voller Pfad 258). **Noch offen:** B5.7 (IMAP ohne `SetExtension`); die
+> Prüfdaten selbst laufen nur über POP. Ab hier unten folgt der ältere Stand.
 
-> **Stand 12.10.2026.** Die Teile 1 bis 6 sind **im Quelltext**, Fassung
+> **Stand vor dem ersten Bau (12.10.2026, morgens).** Die Teile 1 bis 6 sind **im Quelltext**, Fassung
 > **7.2.0.79**. Bis dahin lagen sie als zwei Patchdateien neben dem Code; die
 > sind damit Geschichte und entfernt. **Übersetzt ist nichts** — alle drei
 > Sitzungen dazu liefen ohne Windows und ohne Compiler. Was gemessen ist und
@@ -8050,6 +8059,10 @@ sofort.
 
 ### Der Weg, den ein Anhangname nimmt
 
+*Zeilennummern in diesem und den folgenden Abschnitten: Stand 7.2.0.76, vor der
+Behebung. Seither verschoben — der Funktionsname ist der Anker; die heutigen
+Zeilen der Marken stehen in der Markentabelle weiter unten.*
+
 | Schritt | Fundstelle | was dort passiert |
 |---|---|---|
 | 1 | `Lex822State::Lex822` — `lex822.cpp:153` | zerlegt die Kopfzeile in Marken |
@@ -8173,7 +8186,8 @@ in einem Dateinamen (`\\"`) werden damit nicht behandelt.
 
 **Behebung:** ein `Token[0] = 0;` dort, wo `ReinitToken` ausgewertet wird
 (`lex822.cpp:201`), und dieselbe Zeile in `ImapLex822.cpp:216`. Eine Zeile je
-Zweig. **Nicht angefasst** — kein Compiler.
+Zweig. **Nicht angefasst** — kein Compiler. *Stand 12.10.2026: seit 7.2.0.79 drin
+(B5.2), heute `lex822.cpp:205` und `ImapLex822.cpp:220`.*
 
 ### Warum das Sicherheitsnetz nicht greift
 
@@ -8288,6 +8302,8 @@ den Stapel, neben `Name`, `s` und `d`. Das ist unabhängig von AN-1 und
 unabhängig von der Portierung (der Altbestand hat denselben Code), tritt aber
 genau bei den Namen auf, um die es hier geht. Die Behebung ist `char pcname[256]`
 oder `int len = 254`. **Nicht angefasst**, weil hier nicht gebaut werden kann.
+*Stand 12.10.2026: behoben in 7.2.0.79 (B5.4), seit 7.2.0.80-an1 zusätzlich mit
+`AnhangNameKuerzen` (B5.8).*
 
 ### Was geändert wurde — Teil 1, die Faltung
 
@@ -8297,7 +8313,7 @@ ausgearbeitet und gemessen, lag aber nur als Patchdatei daneben:
 | | |
 |---|---|
 | Wo | `lex822.cpp`, `header.cpp` (POP) und `ImapLex822.cpp`, `ImapHeader.cpp` (IMAP) |
-| Stand | **im Quelltext seit 7.2.0.79.** Nicht übersetzt |
+| Stand | **im Quelltext seit 7.2.0.79**, übersetzt und am laufenden Programm gemessen (12.10.2026: Fall 01 und 02 heil) |
 | gemessen mit | `perl tools/kopfzeile-pruefen.pl --vorschlag` (zehn Fälle) |
 
 Der Patch besteht aus drei Stücken, und die Aufteilung ist nicht willkürlich —
@@ -8336,6 +8352,10 @@ eingefügten Blöcke ist fehler- und warnungsfrei, mehr sagt das nicht.
 
 ### Was noch offen ist
 
+> *Stand 12.10.2026: alle vier Punkte unten sind erledigt — 2 als B5.3, 3 als
+> B5.5, 4 als B5.2, 5 als B5.4 (alle in 7.2.0.79). Offen ist von AN-1 nur noch
+> B5.7. Die Liste bleibt als Stand vom 30.09.2026 stehen.*
+
 2. **Die Marke vergrößern.** `Token[256]` ist die RFC-822-Atomgrenze, für einen
    Dateinamen ist sie zu klein. `_MAX_PATH`-nah wäre richtig; wer nicht so weit
    gehen will, muss wenigstens `CheckName` die Endung retten lassen, statt am
@@ -8370,18 +8390,26 @@ Weg. Dieses Bit heißt `DEBUG_MASK_ATTACH = 0x10000` (`debug.h`), und daran hän
 **zehn Marken** — seit 7.2.0.80-an1 **elf**: Marke 11 sitzt in `MIMEMap::Find`
 und nennt, warum keine Endung nachgetragen wird (dort fand sich Teil 9):
 
+*Zeilen Stand 7.2.0.83 (die Kommentarzeile über der Marke); die Funktionsnamen sind der
+verlässliche Anker.*
+
 | # | Wo | Was sie sagt |
 |---|---|---|
-| 1 | `Lex822()`, Marke voll (`lex822.cpp:206`) | Kappung bei 254 Zeichen — AN-1, zweiter Teil |
-| 2 | `Lex822()`, vor dem `switch` (`lex822.cpp:213`) | **Umbruch mitten in der Zeichenkette** — AN-1, erster Teil |
-| 3 | `AddAttribute` (`header.cpp:476`) | der Wert, wie er abgelegt wird |
-| 4 | `GenericReader::ReadIt` (`mime.cpp:1634`) | woher der Name kommt — `filename`/`name` oder **Betreff** |
-| 5 | dieselbe Stelle, nach `MIMEMap` | ob die Endung nachgetragen wurde, oder der Typ unbekannt ist |
-| 6 | `OpenAttachFile` (`mime.cpp:1275`) | vor und nach `DeMacifyName32` |
-| 7 | dieselbe Stelle, nach `CheckName` | **wie die Datei am Ende wirklich heißt** |
-| 8 | `CheckName` (`mime.cpp:1127`) | dass hier gekürzt wurde — mit erhaltener Endung |
+| 1 | `Lex822()`, Marke voll (`lex822.cpp:212`) | Kappung bei 254 Zeichen — AN-1, zweiter Teil |
+| 2 | `Lex822()`, vor dem `switch` (`lex822.cpp:225`) | **Umbruch mitten in der Zeichenkette** — AN-1, erster Teil |
+| 3 | `AddAttribute` (`header.cpp:531`) | der Wert, wie er abgelegt wird |
+| 4 | `GenericReader::ReadIt` (`mime.cpp:1707`) | woher der Name kommt — `filename`/`name` oder **Betreff** |
+| 5 | dieselbe Stelle, nach `MIMEMap` (`mime.cpp:1719`) | ob die Endung nachgetragen wurde, oder der Typ unbekannt ist |
+| 6 | `OpenAttachFile` (`mime.cpp:1341`, `:1419`) | vor und nach `DeMacifyName32` |
+| 7 | dieselbe Stelle, nach `CheckName` (`mime.cpp:1365`, `:1443`) | **wie die Datei am Ende wirklich heißt** |
+| 8 | `CheckName` (`mime.cpp:1146`) | dass hier gekürzt wurde — mit erhaltener Endung |
+| 9 | nur IMAP: vor `LOCAL_CheckName` (`imapmime.cpp:202`) | der Name ist länger als 255 Zeichen, gekürzt wird dahinter |
+| 10 | `HeaderDesc::GetAttribute` (`header.cpp:601`) | der Name kam nach RFC 2231 (vor B5.5 wäre der Betreff gelandet) |
+| 11 | `MIMEMap::Find` (`MIMEMap.cpp:73`) | **warum** `Find` scheitert — jeder Ausstieg außer dem ersten (`!ms \|\| !ms->m_hd`) |
 
-Marken 1 bis 3 gibt es doppelt, einmal für IMAP. **Einschalten:** `LogLevel`
+Die Marken 1 bis 9 gibt es auch für IMAP (`ImapLex822.cpp`, `ImapHeader.cpp`,
+`ImapDownload.cpp`, `imapmime.cpp`; Marke 5 dort zweimal), 9 gibt es **nur** dort,
+10 und 11 nur im POP-Weg bzw. in `MIMEMap`. **Einschalten:** `LogLevel`
 steht in `eudora.ini` im Abschnitt `[Debug]` — `LogLevel=91295`
 (Voreinstellung 25759 + 65536), dann `grep ANHANG eudora.log`.
 
@@ -8432,8 +8460,9 @@ löscht nie etwas — man kann beliebig oft abrufen.
 | | |
 |---|---|
 | **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
-| **alle sechs heil** | B5.1 bis B5.6 wirken am laufenden Programm |
+| **alle sechs heil** | die Teile des POP-Wegs wirken am laufenden Programm (B5.1, B5.2, B5.3 mit B5.8, B5.5, B5.9) — B5.6 und B5.7 betreffen nur IMAP und sind so nicht zu zeigen |
 | **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+| **gemischt** | die Liste der kaputten Fälle zeigt auf den Teil — so war es an 7.2.0.79 (4 von 6) und 7.2.0.80-an1 (5 von 6) |
 
 Der POP3-Server ist in perl geschrieben und läuft ohne Compiler. Was er **nicht**
 kann: er ersetzt keinen Bau. Er stellt den Fehler nach, er behebt ihn nicht.
@@ -8477,7 +8506,8 @@ Originale aufheben musste.
   eine Faltung geht, wird von `Fix2047` (zeilenweise, `lex822.cpp:554`) ohnehin
   nicht zusammengesetzt — das ist derselbe Fehler noch einmal, aber nicht
   gemessen.
-- Nichts davon ist am laufenden Programm nachgesehen. Es gibt keinen Bau.
+- Nichts davon ist am laufenden Programm nachgesehen. Es gibt keinen Bau. *(Stand 30.09.2026; seit
+  12.10.2026 gebaut und gemessen, siehe den Kasten am Anfang von AN-1.)*
 
 ---
 
@@ -8491,7 +8521,9 @@ Manager, Microsoft Clarity, AddToAny, Disqus, der `schema.org`-Block,
 `wp.i18n.setLocaleData`, `var wpcf7 = {…}` — und darunter der Artikel des
 Computer History Museum über die Freigabe des Eudora-Quelltexts.
 
-**Status: Ursache am Quelltext belegt, Behebung eingespielt, nicht übersetzt.**
+**Status: offen — Ursache am Quelltext belegt, Anzeige behoben in 7.2.0.80, seit
+7.2.0.82 übersetzt (Rebuild 0 Fehler, Testsuite 185/185), am laufenden Programm
+nicht gemessen.** Offen ist außerdem die Produktfrage (AUFGABEN.md, B6).
 
 ### Der Weg, Stück für Stück
 
@@ -8552,6 +8584,7 @@ die beiden Fallen von oben, beide gefangen.
 ### Was **nicht** gemessen ist
 
 - **Nichts ist übersetzt.** Die Sitzung lief ohne Windows und ohne Compiler.
+  *Stand 7.2.0.80. Übersetzt ist es seit 7.2.0.82; der folgende Punkt gilt weiter.*
 - Dass die Behebung im Werbefenster wirkt, ist damit **nicht** belegt — nur,
   dass der Zerleger `<script>` und `<style>` jetzt als solche erkennt.
 - Ob die Seite, die Gregor gesehen hat, wirklich über den Werbeweg kam, ist

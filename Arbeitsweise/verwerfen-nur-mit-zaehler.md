@@ -136,3 +136,17 @@ Siehe [[auftrag-darf-nicht-loeschen]] — dieselbe Klasse, aber in einem
 am 14.09.2026 noch nicht. Ausserdem [[bestand-vor-neuer-suche]] (an diesem Tag
 zweimal dieselbe Form: das Richtige lag bereit und wurde nicht aufgerufen) und
 [[einwurf-ist-ein-messwert]] — Gregors Satz kam mitten in den laufenden Zug.
+
+## Nachtrag 12.10.2026: `perl -i -e 'my @z=<>; … print @z'` schreibt auf den Bildschirm, nicht in die Datei
+
+Um 13:30 sollte eine Zeile in `tools/RELEASES.md` verschoben werden. `perl -i`
+leitet `print` nur innerhalb der eingebauten `<>`-Schleife (`-n`/`-p`) in die
+Datei um; wer `<>` selbst im **Listenkontext** liest, schreibt nach STDOUT —
+und `-i` hat die Datei da schon geleert. Ergebnis: **0 Byte statt 3 801**.
+Aufgefallen ist es nur, weil die ganze Datei auf dem Bildschirm stand (ein
+Ausreißer, [[ausreisser-ist-der-befund]]); wiederhergestellt aus `HEAD`.
+
+**How to apply:** Für Umbauten an einer Datei ein Skript mit ausdrücklichem
+`open '<:raw'` / `open '>:raw'`, Trefferzahl und Zeilenzahl vorher/nachher als
+Abbruchbedingung, danach `wc -c` gegen `git show HEAD:<datei> | wc -c`.
+Nie `perl -i` mit selbst gelesenem `<>`.

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:56:55.649Z
+  modified: 2026-10-12T11:15:41.665Z
 ---
 
 Schranke: tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
@@ -224,3 +224,63 @@ if ($e -and $e.Count) { Write-Error ("Parserfehler: " + $e[0].Message); exit 1 }
 ungleich 0. Der Unterschied zwischen beiden ist nicht offensichtlich; er ist
 gemessen worden, nicht vermutet ([[pruefen-statt-vermuten]]). Die ganze
 Geschichte steht in [[erfolgsmeldung-aus-dem-ergebnis]].
+
+## Elfter und zwölfter Fall, 12.10.2026: die Werkzeugschale macht aus `\\` ein `\`, auch in einfachen Anführungszeichen
+
+Neu gegenüber den ersten zehn Fällen ist, **wo** der Rückstrich verloren
+geht. Das ist jetzt gemessen und nicht mehr vermutet. Probe vom 12.10.2026
+im Bash-Werkzeug:
+
+    printf '%s' 'a\\b|c\d' | od -c      ->   a \ b | c \ d
+
+Bash und `printf '%s'` deuten in `'…'` nichts. Trotzdem kommt `\\` als **ein**
+Rückstrich an, während ein **einzelner** `\` unverändert bleibt. Die
+Halbierung geschieht also **vor** der Schale, beim Übergeben des Befehls.
+Was danach folgt (Perl, Regex), halbiert ein zweites Mal.
+
+| Zeit | Absicht | Weg | Ergebnis |
+|---|---|---|---|
+| 12:11:04 | `C:\Temp\AN5` in `WEITERMACHEN.md` | `perl -0777 -i -pe 's/…C:\\Temp…/…/'` | „kein Treffer" |
+| 12:11:29 | dasselbe | `perl -pe 's/…/…/'` | „IMMER NOCH KEIN TREFFER" |
+| 12:11:39 | dasselbe | `index()`, Ersatz als Perl-String mit `C:\\Temp\\AN5` | **`C:TempAN5`** im Commit (amend) |
+| 12:11:57 | dasselbe | `printf '%s'` mit **einzelnen** `\` in eine Datei, `ankertausch.pl` | richtig; `od -c` zeigt `\` |
+| 12:54:33 | `\?\` → `\\?\` (LEKTOR-19) | `printf '%s'` mit `\\?\` in eine Datei | Datei enthält `\?\`, **Änderung ohne Wirkung**, `643ad27` |
+| 12:54:33 | Nachprüfung | `grep -c` mit Rückstrichen im Muster | „Trailing backslash", Prüfung ausgefallen |
+| 12:55:02 | Nachprüfung | `grep -c -F` mit dem Zieltext | **1**, falsch grün: das Muster war ebenso halbiert |
+
+**Why:** Um 12:11:57 hat `printf '%s'` geholfen, weil dort nur **einzelne**
+Rückstriche standen. Daraus habe ich „printf '%s' schützt" gemacht. Um
+12:54:33 stand im Text ein **doppelter**, und printf hat ihn nicht
+geschützt. Die Datei, die als Zwischenlager „nichts deutet", war schon
+falsch, als sie geschrieben wurde. Das Hier-Dokument mit `<<'ENDE'` kommt
+durch dieselbe Übergabe. Die Regel oben („in eine Datei schreiben") gilt
+also nur, wenn die Datei **nicht über die Befehlszeile** entsteht.
+
+Schlimmer ist die Nachprüfung. Sie stand im selben Befehlstext wie der
+Fehler und wurde mit ihm halbiert. Dann sucht sie nach dem kaputten Text,
+findet ihn und meldet 1. Das ist [[pruefstand-kann-blind-sein]] innerhalb
+eines einzigen Befehls.
+
+**How to apply, zusätzlich zur Regel oben:**
+
+- **Ein Text mit `\\` geht nie über die Befehlszeile**, auch nicht als
+  `printf '%s'` oder Hier-Dokument. Er gehört mit dem **Write-Werkzeug** in
+  eine Datei. Das Write-Werkzeug geht durch keine Schale. Der CHRONIST-3-Bericht
+  selbst ist so entstanden, nachdem sein Hier-Dokument in Bash abgebrochen war.
+- **Ist eine Zeile unvermeidbar, dann mit `chr(92)`** aus dieser Lehre. Im
+  Befehl steht dann kein einziger Rückstrich, den eine Schicht halbieren
+  könnte.
+- **Die Nachprüfung zählt Rückstriche, sie sucht nicht nach dem Text**:
+  `perl -ne 'print scalar(()=/\x5c/g),"\n" if /Langpfaden/' DATEI`. Der Wert
+  muss 3 sein (`\\?\`). Der Rückstrich steht dort als `\x5c` und kann nicht
+  halbiert werden. Ein `grep -F` mit dem Zieltext in der Befehlszeile misst
+  nur, ob beide Seiten gleich verstümmelt wurden.
+- **`od -c` auf die Ersatzdatei, bevor sie eingesetzt wird.** Um 12:11:57
+  stand das im Befehl und hat die Richtigkeit gezeigt. Um 12:54:33 fehlte es.
+
+**Folge:** `CHANGELOG.md:97` hatte auch nach `643ad27` noch nur einen
+Rückstrich vor dem Fragezeichen. Der LEKTOR-19-Mangel „Langpfad-Präfix" war
+also **nicht behoben**, obwohl `Befunde/LEKTOR-19.md` und `LEKTORAT.md`
+„alle eingearbeitet" meldeten. **Behoben in `bb01b74`** (LEKTOR-20, L-19.3)
+mit dem Edit-Werkzeug; nachgezählt über `\x5c`: zwei Rückstriche, Fragezeichen,
+ein Rückstrich (LEKTOR-21 hat diesen Absatz als veraltet gemeldet).
