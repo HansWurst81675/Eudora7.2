@@ -63,6 +63,7 @@ enum {
 	menu_command,
 	ordered_list_command,
 	parbreak_command,
+	script_command,	// AN-2 - Stelle muss zu PGHTMDEF.C passen
 	style_command,
 	title_command,
 	unordered_list_command,
