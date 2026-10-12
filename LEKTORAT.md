@@ -1161,3 +1161,10 @@ Commit.
 ## Neunundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-24.md`)
 
 E-94-Bestätigung gegen Gregors Bildschirmfoto: vier Mängel (WEITERMACHEN, ZIEL, AUFGABEN B7 ohne IMAP und Bestätigung; Listenzitat nicht wörtlich) — **alle behoben** im selben Commit.
+
+## Dreißigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-25.md`)
+
+Nach dem Release v1.0.84: GitHub nachgemessen, stimmt. Vier Widersprüche, entstanden
+beim Nachziehen (neue Sätze neben Resten der alten Fassung in WEITERMACHEN und ZIEL,
+zwei ZIP-Zeilen in PAKETE 1.0.84, v1.0.83 ohne Zeitbezug als *Latest*) — **alle
+behoben** im selben Commit.
