@@ -1102,3 +1102,9 @@ L-16.9" — tatsächlich waren es zu dem Zeitpunkt auch L-16.7 und Teile von L-1
 Kurzlauf vor dem Paket 1.0.83 über `d292850`. Die Aussagen zu 7.2.0.83 sind
 belegt. Zwei Mängel (`Releases/PAKETE.md:158` noch „in Arbeit", `WEITERMACHEN.md:10`
 ohne AN5), **beide behoben** im selben Commit.
+
+## Vierundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-19.md`)
+
+Kurzlauf vor dem Release v1.0.83 über Gregors IMAP-Test im CHANGELOG. Drei
+Mängel (Versionsangabe 7.2.0.77/78, Zahl der Sitzungen, Langpfad-Präfix) und ein
+Hinweis (umbenannte Datei) — **alle eingearbeitet** im selben Commit.
