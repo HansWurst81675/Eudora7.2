@@ -174,7 +174,7 @@ zuerst **E-11**, **R-1** und **E-1**.
 
 | Kennung | Worum es geht | Status |
 |---|---|---|
-| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **vier** Ursachen, alle Originalfehler, POP **und** IMAP | **teilweise** — **zwei** Patches liegen bereit und **nicht angewandt**: `anhangnamen-debugmarken.patch` (acht Marken auf dem Weg) und `anhangnamen-faltung.patch` (Behebung von Teil 1); Teile 2 bis 5 offen. Prüfdaten samt POP3-Server in `tools/pruefdaten/`, Messung mit `tools/kopfzeile-pruefen.pl` |
+| AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **sechs** Ursachen, alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **teilweise** — **zwei** Patches liegen bereit und **nicht angewandt**: `anhangnamen-debugmarken.patch` (neun Marken, davon POP 1–8 und IMAP 1–3 am laufenden Programm gemessen am 12.10.2026) und `anhangnamen-faltung.patch` (Behebung von Teil 1); Teile 2 bis 7 offen. Prüfdaten samt POP3-Server in `tools/pruefdaten/`, Messung mit `tools/kopfzeile-pruefen.pl` |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -7861,8 +7861,9 @@ eigene Begründung angeschwärzt. Dieselbe Falle wie bei
 Attachment abgeschnitten werden und die Endung z.B. pdf ganz fehlt."*
 
 **Status: teilweise.** Kein Portierungsschaden — der Fehler steckt unverändert
-schon im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP
-gleichermaßen**, weil beide Zweige dieselbe Zerlegung in zwei Abschriften haben.
+schon im Altbestand (nachgewiesen, siehe unten). Er trifft **POP und IMAP**,
+aber **nicht auf demselben Weg**: siehe die Berichtigung vom 12.10.2026 im
+Abschnitt „IMAP hat dieselbe Stelle noch einmal".
 
 > **Stand 30.09.2026, zweiter Durchgang.** Für die **eigentliche** Ursache (die
 > Faltung) liegt ein ausgearbeiteter und gemessener Patch bereit:
@@ -7870,6 +7871,33 @@ gleichermaßen**, weil beide Zweige dieselbe Zerlegung in zwei Abschriften haben
 > Sitzung lief auf Android, ohne Windows und ohne Compiler. Was gemessen ist
 > und was nicht, steht im Abschnitt „Was zu ändern wäre" weiter unten und in
 > `tools/patches/anhangnamen-faltung.md`.
+
+### Gemessen am laufenden Programm, 12.10.2026
+
+Gregor hat den Marken-Patch (`anhangnamen-debugmarken.patch`) übersetzt —
+**7.2.0.77, Release, Rebuild, 0 Fehler** — und Mail abgerufen. Sein
+`eudora.log` ist die erste Messung dieses Befunds außerhalb des Prüfstands.
+
+| Was | Ergebnis |
+|---|---|
+| Der Schalter | `LogLevel 91295 (0x1649F)` steht im Logkopf. Die Angabe `[Debug] LogLevel=91295` ist damit **nachgemessen**, nicht behauptet |
+| Die Marken | **285 `ANHANG`-Zeilen.** Sie werden geschrieben, und `PutDebugLogSichtbar` macht Steuerzeichen als `<CR><LF><TAB>` sichtbar, wie vorgesehen |
+| Der Befund selbst | **nicht getroffen.** Der Abruf lief über IMAP, die vier Nachrichten hatten keine Anhänge, und der IMAP-Weg hatte zu diesem Zeitpunkt gar keine Marken für den Dateinamen |
+
+**Was dabei herauskam, war etwas anderes.** In vier Nachrichten schlug die
+254-Zeichen-Kappung **281 Mal** zu — auf `DKIM-Signature` und
+`X-UI-Filterresults`. Dort ist es folgenlos, weil der Kopfzeilentext stückweise
+durchgeschrieben wird. Aber die **zweite Ursache** (`BYTE Token[256]`, im
+Quelltext kommentiert mit *„tokens over 255 characters will be shot"*) ist damit
+kein Randfall mehr, sondern der Normalfall gewöhnlicher Post:
+
+```
+ANHANG ImapLex822: Marke voll, wird gekappt [ v=1; a=rsa-sha256; c=relaxed/relaxed;
+d=web.de;<CR><LF><TAB>s=s29768273; t=1789902988; … ] (254)
+```
+
+**Und die Messung hat eine Angabe dieses Befunds widerlegt** — die, dass jede
+Ursache doppelt im Baum steckt. Siehe unten.
 
 ### Vorab, weil danach gefragt wurde: was „Faltung" ist und wo der Umbruch sitzt
 
@@ -8175,6 +8203,38 @@ ausgeliefert worden.
 **Wer die eine Stelle ändert, muss die andere mitändern** — sonst ist der Fehler
 je nach Kontenart einmal da und einmal weg, und das ist schlimmer als der Fehler
 selbst.
+
+> **Berichtigt am 12.10.2026: die Überschrift stimmt, der Schluss daraus nicht.**
+> Die vier Zeilen der Tabelle sind nachgeprüft und richtig — der Zerleger steht
+> wirklich zweimal im Baum. **Nur geht der Anhangname über IMAP gar nicht durch
+> ihn hindurch.** `GetFilenameParameter` (`ImapDownload.cpp:5964`) holt ihn aus
+> den c-client-Strukturen `BODY`/`PARAMETER`, also aus der
+> **BODYSTRUCTURE**-Antwort des Servers; der hat die Faltung längst aufgelöst.
+> `ImapLex822`/`ImapHeader` zerlegen den Kopf für die **Mailbox-Datei**, nicht
+> für den Dateinamen.
+>
+> | Ursache | über IMAP |
+> |---|---|
+> | 1 — Faltung beendet die Zeichenkette | **trifft den Dateinamen nicht.** Die IMAP-Hälfte des Behebungspatches bleibt trotzdem richtig: sie betrifft den Rückschrieb in die Mailbox-Datei |
+> | 2 — Marke ist 256 Byte groß | trifft zu, aber ebenfalls nur die Mailbox-Datei. **281 Mal in vier Nachrichten gemessen** |
+> | 3 — RFC 2231 | trifft zu. Über IMAP daran zu erkennen, dass die BODYSTRUCTURE **gar keinen** Namen liefert |
+> | 4 — `filename=""` wird zu `=` | trifft den Dateinamen nicht, aus demselben Grund wie 1 |
+>
+> **Dafür hat der IMAP-Weg zwei eigene Fehler, die der POP-Weg nicht hat:**
+>
+> * `LOCAL_CheckName` (`EuImap/src/imapmime.cpp:116`) hält den Namen in
+>   `char tmp[255]` und schreibt `tmp[len] = 0;` (`:166`) mit `len` bis 255 —
+>   ein Byte **hinter den Puffer, auf den Stapel**. Trifft jeden Anhangnamen ab
+>   255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Die zweite
+>   Schreibstelle (`:220`) ist harmlos, dort deckelt `min(len, BaseLen)` auf 254.
+>   Das POP-Gegenstück `CheckName` hat das nicht — es ist auf `CString` umgebaut.
+> * **`MIMEMap::SetExtension` wird über IMAP nie gerufen.** Der POP-Weg trägt
+>   eine fehlende Endung aus dem MIME-Typ nach (`mime.cpp:1646`); der IMAP-Weg
+>   ruft `MIMEMap` nur, um über das Löschen zu entscheiden
+>   (`ImapDownload.cpp:3536`). Das Sicherheitsnetz fehlt dort ganz.
+>
+> Beides steht als **B5.6** und **B5.7** in `AUFGABEN.md`. Beides ist aus dem
+> Quelltext gelesen und **nicht am laufenden Programm gemessen**.
 
 ### Nebenbei gefunden: ein Byte über den Rand in `DeMacifyName32`
 

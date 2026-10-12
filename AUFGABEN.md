@@ -455,22 +455,40 @@ Compiler (die zweite auf Android).
 
 **Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
 solange er in *einer* Zeile steht. Vier getrennte Ursachen erzeugen dasselbe
-Bild, alle sind Originalfehler aus Eudora 7.1 und stecken **doppelt** im Baum
-(POP in `lex822.*`/`header.cpp`, IMAP in `EuImap/src/ImapLex822.*`/`ImapHeader.cpp`).
+Bild, alle sind Originalfehler aus Eudora 7.1.
+
+> **Berichtigt am 12.10.2026, aus Gregors `eudora.log` zu 7.2.0.77.** Hier stand
+> bis dahin, alle vier Ursachen steckten **doppelt** im Baum — POP in
+> `lex822.*`/`header.cpp`, IMAP in `EuImap/src/ImapLex822.*`/`ImapHeader.cpp` —
+> und wer nur einen Zweig ändere, baue sich einen Fehler, der von der Kontenart
+> abhängt. **Für den Anhangnamen stimmt das nicht.** Über IMAP kommt er aus der
+> **BODYSTRUCTURE**-Antwort des Servers: `GetFilenameParameter`
+> (`ImapDownload.cpp:5964`) liest ihn aus den c-client-Strukturen
+> `BODY`/`PARAMETER`, nicht aus `Lex822`. Eine Faltung hat der Server da längst
+> aufgelöst, **B5.1 kann über IMAP also gar nicht zuschlagen**.
+>
+> `ImapLex822`/`ImapHeader` zerlegen den Kopf sehr wohl — aber für die
+> Mailbox-Datei. Die IMAP-Hälfte von B5.1 bis B5.3 gehört dorthin und bleibt
+> nötig; sie betrifft nur nicht den Dateinamen. Umgekehrt hat der IMAP-Weg
+> **eigene** Fehler, die der POP-Weg nicht hat: B5.6 und B5.7.
 
 #### Was zu tun ist, in dieser Reihenfolge
 
 | Schritt | Was | Fundstelle (POP / IMAP) | Stand |
 |---|---|---|---|
-| **B5.0** | **Debug-Marken einspielen** — acht Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` in `eudora.ini` | `debug.h`, `debug.cpp`, `lex822.cpp`, `header.cpp`, `mime.cpp` / `ImapLex822.cpp`, `ImapHeader.cpp` | **Patch liegt bereit**, stört B5.1 nicht |
+| **B5.0** | **Debug-Marken einspielen** — neun Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` in `eudora.ini` | `debug.h`, `debug.cpp`, `lex822.cpp`, `header.cpp`, `mime.cpp` / `ImapLex822.cpp`, `ImapHeader.cpp`, `ImapDownload.cpp`, `imapmime.cpp` | **Patch liegt bereit**, stört B5.1 nicht. POP-Marken 1–8 und IMAP 1–3 sind **am laufenden Programm gemessen** (12.10.2026, 7.2.0.77); IMAP 4–9 kamen danach dazu und sind **nicht übersetzt** |
 | **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | `lex822.cpp:303`, `:433`, `header.cpp:476` / `ImapLex822.cpp:318`, `:454`, `ImapHeader.cpp:489` | **Patch liegt bereit und ist gemessen** |
 | **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wird `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** Marke trägt | `lex822.cpp:201` / `ImapLex822.cpp:216` | offen, **eine Zeile je Zweig** |
 | **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappt ab 254 Zeichen. `Buffer[2048]` begrenzt mit | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` | offen |
 | **B5.4** | **`DeMacifyName32`**: schreibt bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]`. `pcname` auf 256 **oder** `len` auf 254 | `mime.cpp:948` / `EuImap/src/imapmime.cpp:82` | offen, eine Zahl je Zweig |
 | **B5.5** | **RFC 2231** (`filename*0=`) kennt der Baum nicht. Dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** — `subj[32]`, also 31 Zeichen | nirgends im Baum | offen, **eigener Punkt**, deutlich größer als B5.1 bis B5.4 |
+| **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`.** `strncpy(tmp, FName, len); tmp[len] = 0;` mit `len` bis 255 schreibt **hinter den Puffer, auf den Stapel** — bei jedem Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Die zweite Stelle (`:220`) ist harmlos, dort deckelt `min(len, BaseLen)` auf 254. Das POP-Gegenstück `CheckName` hat das nicht: es ist auf `CString` umgebaut | nur `EuImap/src/imapmime.cpp:116`, `:166` | offen, **nur IMAP**, eine Zahl |
+| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach (`mime.cpp:1646`); der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden (`ImapDownload.cpp:3536`). Das Sicherheitsnetz fehlt dort also ganz | nur `EuImap/src/ImapDownload.cpp:4108` | offen, **nur IMAP** |
 
-**Wer nur einen der beiden Zweige ändert, baut sich einen Fehler, der von der
-Kontenart abhängt.** Das ist schlimmer als der Fehler selbst.
+**Wer B5.2 oder B5.3 nur in einem der beiden Zweige ändert, baut sich einen
+Fehler, der von der Kontenart abhängt.** Für den Anhangnamen gilt das nicht,
+siehe die Berichtigung oben: B5.1 wirkt nur auf dem POP-Weg, B5.6 und B5.7 nur
+auf dem IMAP-Weg.
 
 #### B5.1 — der bereitliegende Patch
 

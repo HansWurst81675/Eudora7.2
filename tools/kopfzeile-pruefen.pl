@@ -535,7 +535,7 @@ int main(int argc, char** argv)
 {
 	int i;
 	for (i = 1; i < argc; ++i)
-		if (strcmp(argv[i], "--lang") == 0) g_lang = 1;
+		if (strcmp(argv[i], "--lang") == 0) g_lang = g_marken = 1;
 
 FAELLE
 
@@ -570,6 +570,34 @@ typedef unsigned char BYTE;
 typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
+
+// Attrappen fuer die ANHANG-Marken aus
+// tools/patches/anhangnamen-debugmarken.patch. Sie stehen hier, damit dieser
+// Pruefstand auch dann noch uebersetzt, wenn der Marken-Patch angewandt ist -
+// ohne sie war er nach Schritt B5.0 unbenutzbar, also genau dann, wenn er
+// gebraucht wird (Arbeitsweise/pruefstand-kann-blind-sein.md). Gemessen am
+// 12.10.2026: ohne diese Zeilen bricht g++ mit fuenf Fehlern ab.
+typedef unsigned long DebugMaskType;
+typedef const char* LPCTSTR;
+static const DebugMaskType DEBUG_MASK_ATTACH = 0x10000;
+static int g_marken = 0;
+struct QCLogFileMT { static BOOL DebugMaskSet(DebugMaskType) { return TRUE; } };
+static void PutDebugLogSichtbar(DebugMaskType, LPCTSTR pWo, LPCTSTR pWas,
+								long lZahl = -1)
+{
+	if (!g_marken) return;
+	printf("    MARKE %s [", pWo ? pWo : "");
+	for (const char* s = pWas ? pWas : ""; *s; ++s)
+	{
+		unsigned char c = (unsigned char)*s;
+		if      (c == 13) printf("<CR>");
+		else if (c == 10) printf("<LF>");
+		else if (c ==  9) printf("<TAB>");
+		else if (c <  32) printf("<%02X>", c);
+		else              putchar((char)c);
+	}
+	printf("] (%ld)\n", lZahl);
+}
 SCHALTER
 
 KOPF
