@@ -6,12 +6,12 @@
 > falsch gemacht haben: [**E-104**](BEFUNDE.md#e-104) hat das Lesen der INI-Schalter umgebaut,
 > betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen in
 > dieser Datei nicht vor**, gemessen. **Ein offener Punkt aus derselben Ecke
-> gehört aber hierher und stand bisher nirgends in dieser Datei: M-3.** Die
+> gehört aber hierher und stand bisher nirgends in dieser Datei: [M-3](Befunde/PRUEFER-15.md#m-3).** Die
 > Filteraktion *Notify Application* sichert `IDS_INI_INCLUDE_HEADERS` **roh**
 > (`filtersd.cpp:2048`, `GetIniShort` statt `E104SchalterLesen`) und schreibt
 > den gesicherten Wert zurück (`:2083`) — ein verdorbener Wert überlebt damit
-> die Reparatur aus E-104. Offen, gefunden von PRUEFER
-> (`Befunde/PRUEFER-16.md`, M-3). Nachgetragen vom LEKTOR, L-15.14.
+> die Reparatur aus [E-104](BEFUNDE.md#e-104). Offen, gefunden von PRUEFER
+> (`Befunde/PRUEFER-16.md`, [M-3](Befunde/PRUEFER-15.md#m-3)). Nachgetragen vom LEKTOR, [L-15.14](Befunde/LEKTOR-15.md#l-15.14).
 
 Diese Datei beschreibt die Filter von Eudora aus Sicht dessen, der sie
 benutzt: wie eine Regel entsteht, wann sie läuft, was sie tun kann, wo sie
@@ -359,8 +359,8 @@ verlangt ein Verschieben oder Kopieren (`filtersd.cpp:1584`).
 **Berichtigung einer früheren Einstufung.** Hier stand, ein leerer Bericht
 sei *„kein eigener Fehler, sondern Folge von [E-72](BEFUNDE.md#e-72)"* — ein Filter ohne
 Merkmale sei für keinen Lauf zuständig und habe darum nichts zu berichten.
-Diese Begründung ist widerlegt: E-72 ist behoben, die Filter greifen (von
-Gregor an 1.0.42 bestätigt), und der Bericht bleibt trotzdem leer. **E-71 ist
+Diese Begründung ist widerlegt: [E-72](BEFUNDE.md#e-72) ist behoben, die Filter greifen (von
+Gregor an 1.0.42 bestätigt), und der Bericht bleibt trotzdem leer. **[E-71](BEFUNDE.md#e-71) ist
 ein eigener, offener Befund.**
 
 ---

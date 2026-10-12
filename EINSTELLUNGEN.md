@@ -7,7 +7,7 @@
 > (`E104SchalterLesen` zieht verdorbene Werte auf 0 zurück und schreibt sie
 > weg), betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen
 > in dieser Datei nicht vor**, gemessen. Der Text ist also nicht falsch
-> geworden, nur älter (LEKTOR, L-15.14).
+> geworden, nur älter (LEKTOR, [L-15.14](Befunde/LEKTOR-15.md#l-15.14)).
 
 Diese Datei ist für den, der Eudora **einrichtet und betreibt** — nicht für
 den, der es baut. Sie beantwortet eine einzige Frage:

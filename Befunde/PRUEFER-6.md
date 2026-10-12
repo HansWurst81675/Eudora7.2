@@ -1,11 +1,11 @@
-# PRUEFER-6 — Review von A-3 (Registerkarten) und A-4 (Trennbalken links)
+# <a id="pruefer-6"></a>PRUEFER-6 — Review von A-3 (Registerkarten) und A-4 (Trennbalken links)
 
 | | |
 |---|---|
 | Datum | 09.09.2026 |
 | Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer` |
-| Prüfstand | gelesen auf `40ec935` („A-4 umgesetzt, A-3 nachgebessert"); **alle Zeilenangaben auf `d751d23`** („E-53 behoben") umgerechnet und einzeln nachgeschlagen. `d751d23` aendert an `OTShim.cpp` nur die Fuellflaeche in `OnPaint` (E-53) und beruehrt keinen Befund dieses Reviews |
+| Prüfstand | gelesen auf `40ec935` („A-4 umgesetzt, A-3 nachgebessert"); **alle Zeilenangaben auf `d751d23`** („[E-53](../BEFUNDE.md#e-53) behoben") umgerechnet und einzeln nachgeschlagen. `d751d23` aendert an `OTShim.cpp` nur die Fuellflaeche in `OnPaint` ([E-53](../BEFUNDE.md#e-53)) und beruehrt keinen Befund dieses Reviews |
 | Geprüfte Dateien | `Eudora71/OTShim/OTShim.cpp`, `OTShim.h`, `Eudora71/Eudora/workbook.cpp`, `DockBar.cpp`, `mainfrm.cpp`, `settings.cpp`, `AdWazooBar.cpp`, `WazooBarMgr.cpp` |
 | MFC-Quellen | `C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\atlmfc` |
 | Nicht getan | nicht gebaut, kein Programm gestartet, kein `git push`; geschrieben wurde nur diese Datei |
@@ -15,7 +15,7 @@
 aber sie kann Schlimmeres). Der schwerste neue Befund ist **kein Hänger**,
 sondern eine **Benutzung nach dem Freigeben** in derselben Schleife
 (Abschnitt 7c). Dazu kommen vier Regressionen, die erst dadurch entstanden
-sind, dass `m_bWorkbookMode` jetzt `TRUE` ist (Abschnitte N-1 bis N-4).
+sind, dass `m_bWorkbookMode` jetzt `TRUE` ist (Abschnitte [N-1](#n-1) bis [N-4](#n-4)).
 
 ---
 
@@ -118,7 +118,7 @@ Jede der sechs verlangten Stellen einzeln durchgerechnet:
 | `GetIconAndTextPositions` (aus `OnDrawTabIconAndLabel`, `:1569-1597`) | 0,2,3,4 | Symbol bei `(links+7, oben+2)`; Text `(links+26, oben-1, rechts-2, unten-1)`, Höhe 20 | **passt** |
 | `TabHitTest` (`:1739-1775`) | über `QCGetTabRect` | dieselbe Geometrie wie das Zeichnen | **passt** |
 | `RecalcToolTipRects` (`:1671-1729`) | über `QCGetTabRect` | dieselbe Geometrie | **passt** |
-| `IsTabLabelTruncated` (`:1528-1559`) | über `GetIconAndTextPositions` | dieselbe Geometrie | **passt** (aber siehe **N-1**) |
+| `IsTabLabelTruncated` (`:1528-1559`) | über `GetIconAndTextPositions` | dieselbe Geometrie | **passt** (aber siehe **[N-1](#n-1)**) |
 
 **Zwei Löcher, beide klein, beide belegt:**
 
@@ -160,7 +160,7 @@ ganzen Baum `Eudora71/Eudora`, nicht geschätzt): **zwei**.
    **nur `rectTaskBar.top`**, und `top` ist in beiden Fassungen identisch
    (`rectMDIClient.bottom + 2`). Links und rechts holt sie sich selbst aus
    `m_pWBClient->GetWindowRect()`. **Die Abweichung wirkt sich hier nicht
-   aus.** Aber siehe **N-2** — `CalcLogoTopLeft` hat ein anderes Problem.
+   aus.** Aber siehe **[N-2](#n-2)** — `CalcLogoTopLeft` hat ein anderes Problem.
 
 **Laufen Zeichnen und Treffertest auseinander?** Nein. Beide Wege enden in
 `GetTabPts` → `OTShimStreifenRect` (`OTShim.cpp:1058-1092`):
@@ -309,7 +309,7 @@ Trennbalken gebraucht wird. Folge, aus dem Code abgeleitet:
   Höhe verziehen, obwohl ihre Höhe von der Knopfgröße kommt.
 
 Gregor hat „verschieben rauf / runter — bug gefixt, die anzeige ist korrekt"
-gemeldet (E-52); das war also vermutlich genau dieser unbeabsichtigte obere
+gemeldet ([E-52](../BEFUNDE.md#e-52)); das war also vermutlich genau dieser unbeabsichtigte obere
 oder untere Balken. **Vorschlag:** Zuschlag und Balken auf die Andockleisten
 beschränken, in denen mindestens eine Leiste mit `CBRS_SIZE_DYNAMIC` bzw.
 eine `CWazooBar` steht — oder schlicht auf LINKS und RECHTS.
@@ -325,7 +325,7 @@ Zwei Fragen, zwei verschiedene Antworten.
 
 ### (a) Kommt `WM_SIZE` nach jeder Größenänderung, auch bei `DeferWindowPos`? — **Ja, und die Reihenfolge stimmt sogar**
 
-Das ist der Punkt, an dem ich die Behebung von E-52 gegen die MFC-Quelle
+Das ist der Punkt, an dem ich die Behebung von [E-52](../BEFUNDE.md#e-52) gegen die MFC-Quelle
 prüfen konnte, statt sie zu glauben. Belegt:
 
 * `CDockBar::CalcFixedLayout` eröffnet ein **eigenes**
@@ -386,7 +386,7 @@ Der Rumpf steht in `OTShim.cpp:3737-3836`.
 
 Die äußere Schleife bricht bei drei Bedingungen ab (`:3777-3785`): Fenster
 weg, Mausfang weg, Taste los. Die Wartezeit ist auf 100 ms gedeckelt
-(`:3787`). Das ist dicht **gegen den Fehler von E-51**.
+(`:3787`). Das ist dicht **gegen den Fehler von [E-51](../BEFUNDE.md#e-51)**.
 
 **Zwei Gegenvermutungen, die ich prüfen musste:**
 
@@ -492,7 +492,7 @@ Gregor ziehen will. MFC macht es deshalb anders:
 `DCX_WINDOW|DCX_CACHE|DCX_LOCKWINDOWUPDATE`. **Empfehlung: auf den
 Andockrahmen zeichnen, nicht auf die Andockleiste.**
 
-**Urteil 7: Behauptung „kann nicht mehr hängen" hält für den Weg von E-51,
+**Urteil 7: Behauptung „kann nicht mehr hängen" hält für den Weg von [E-51](../BEFUNDE.md#e-51),
 aber nicht allgemein. Vier neue Befunde: (a) innere Schleife ohne Abbruch,
 (b) `WM_QUIT` verschluckt, (c) Benutzung nach Freigabe, (d) unsichtbarer
 Ziehbalken.**
@@ -552,7 +552,7 @@ Aufrufweg.**
 
 # Neue Befunde, die nicht in den acht Behauptungen standen
 
-## N-1 — `IsTabLabelTruncated` legt eine `CPaintDC` **außerhalb** von `WM_PAINT` an
+## <a id="n-1"></a>N-1 — `IsTabLabelTruncated` legt eine `CPaintDC` **außerhalb** von `WM_PAINT` an
 
 `workbook.cpp:1528-1530`:
 
@@ -588,7 +588,7 @@ und passt exakt auf Gregors Klasse von Meldungen („hier ist kein refresh
 drin"). Fix: `CClientDC` statt `CPaintDC` — eine Zeile, und die Funktion
 braucht ohnehin nur die Schriftmetrik.
 
-## N-2 — Ein unsichtbares Logo startet den Webbrowser
+## <a id="n-2"></a>N-2 — Ein unsichtbares Logo startet den Webbrowser
 
 `SECWorkbook::OnPaint` ruft `OnDrawBorder` **nicht** auf. Damit wird das
 QUALCOMM-Logo nie gezeichnet (`QCWorkbook::OnDrawBorder`, `workbook.cpp:1505-1520`;
@@ -623,7 +623,7 @@ Dieselbe fehlende y-Prüfung macht übrigens auch `QCWorkbook::OnSetCursor`
 schon vor A-3, weil `OnSetCursor` **nicht** durch `m_bWorkbookMode` gedeckt
 ist.
 
-## N-3 — Das Ankreuzfeld „Show MDI task bar" schaltet den Streifen nicht sauber ab
+## <a id="n-3"></a>N-3 — Das Ankreuzfeld „Show MDI task bar" schaltet den Streifen nicht sauber ab
 
 A-3-Prüfpunkt 5 aus `ZIEL.md` verlangt: „Das Ankreuzfeld schaltet ihn aus und
 wieder ein."
@@ -646,7 +646,7 @@ Fix: in `SetWorkbookMode` `Invalidate(TRUE)` statt `FALSE`, und in
 wäre allerdings eine Änderung an Eudoras eigenem Code; die saubere Stelle ist
 `SetWorkbookMode` selbst.
 
-## N-4 — Neun Kommentarblöcke behaupten das Gegenteil des Codes
+## <a id="n-4"></a>N-4 — Neun Kommentarblöcke behaupten das Gegenteil des Codes
 
 Nicht kosmetisch: das sind die Sätze, die der nächste Leser als Bestandsaufnahme
 nimmt, und keiner davon steht in irgendeinem Diff (Lehre
@@ -662,7 +662,7 @@ nimmt, und keiner davon steht in irgendeinem Diff (Lehre
 | `OTShim.cpp:806-808` | „VORGABE: Registerkartenbetrieb bleibt aus. Ohne ihn läuft der gesamte Zeichencode nie an" | nur noch der Ausgangswert des Konstruktors |
 | `OTShim.cpp:884-888` | Zeichenwerkzeuge „werden in dieser Stufe nie benutzt" | werden bei jedem Neuzeichnen benutzt |
 | `OTShim.cpp:1205-1206` | `GetTabRgn` „liefert also derzeit ein leeres Gebiet" | liefert jetzt ein echtes |
-| `OTShim.cpp:739-745` | `SetMargins`: „Alle drei Aufrufstellen rufen danach selbst `RecalcLayout`" | der Abschaltweg nicht, siehe **N-3** |
+| `OTShim.cpp:739-745` | `SetMargins`: „Alle drei Aufrufstellen rufen danach selbst `RecalcLayout`" | der Abschaltweg nicht, siehe **[N-3](#n-3)** |
 
 Dazu zweimal derselbe Kommentarblock hintereinander in `CalcFixedLayout`
 (`OTShim.cpp:2922-2931` und `:2941-2953`, beide beginnen „A-4: Platz fuer den
@@ -672,11 +672,11 @@ toter Rest der verworfenen `rectClient.left`-Fassung.
 
 ---
 
-## N-5 — E-53 steht in keiner Befundtabelle
+## <a id="n-5"></a>N-5 — E-53 steht in keiner Befundtabelle
 
-`d751d23` behebt E-53 („schoenheitsfehler beim schliessen, da bleibt ein strich
+`d751d23` behebt [E-53](../BEFUNDE.md#e-53) („schoenheitsfehler beim schliessen, da bleibt ein strich
 uebrig") im Quelltext und beschreibt es ausführlich in der **Commit-Nachricht**.
-Nachgezählt in `BEFUNDE.md` auf demselben Stand: **`E-53` kommt dort nicht ein
+Nachgezählt in `BEFUNDE.md` auf demselben Stand: **[`E-53`](../BEFUNDE.md#e-53) kommt dort nicht ein
 einziges Mal vor** (`grep -c E-53 BEFUNDE.md` → 0), und `tools/doku-pruefen.pl`
 zählt 51 Kennungen im Verzeichnis, also unverändert. Damit steht die Ursache
 nur in der Versionsgeschichte, nicht dort, wo der nächste Leser sie sucht —
@@ -703,17 +703,17 @@ Verzeichniszeile in `BEFUNDE.md` und der Vermerk in `ZIEL.md` bei A-3.
 | 5d | Zuschlag trifft alle vier Andockleisten | **neues Loch** — 8 Pixel leerer Streifen oben und unten, Balken an der Werkzeugleiste |
 | 6a | `WM_SIZE` kommt trotz `DeferWindowPos` | **bestätigt und belegt** — `CDockBar::CalcFixedLayout` schließt sein eigenes `hDWP` (`bardock.cpp:385/537`) vor dem des Rahmens |
 | 6b | `OnSize` auch bei Änderung nur der Leiste | **widerlegt** — `AfxRepositionWindow` kehrt bei `EqualRect` zurück (`wincore.cpp:3292`) |
-| 7a | Ziehschleife kann nicht mehr hängen | **halb** — Weg von E-51 zu, aber die innere `PeekMessage`-Schleife hat **keine** Abbruchprüfung |
+| 7a | Ziehschleife kann nicht mehr hängen | **halb** — Weg von [E-51](../BEFUNDE.md#e-51) zu, aber die innere `PeekMessage`-Schleife hat **keine** Abbruchprüfung |
 | 7a' | `GetKeyState` liefert die physische Tastenlage | **widerlegt** — synchronisierte Lage; Kommentar `:3784` falsch, praktisch folgenlos |
 | 7b | Schleife kann Nachrichten verschlucken | **bestätigt** — **`WM_QUIT` geht verloren** (Eudora ließe sich nicht mehr beenden); `PreTranslateMessage` umgangen; `msg.hwnd` ungeprüft |
 | 7c | — (nicht behauptet) | **schwerster Befund: Benutzung nach dem Freigeben.** `TrennbalkenNeuAnlegen` kann den laufenden `Splitter` während `Track` recyceln oder `delete`n |
 | 7d | — (nicht behauptet) | Ziehbalken ist jenseits der Andockleistenbreite **unsichtbar** — genau in Gregors Zugrichtung |
 | 8 | `SetBarInfo` richtig; kein An-/Abdocken, kein Sichtbarkeitsverlust | **bestätigt** — einzige Nebenwirkung `SetWindowPos` auf dieselbe Stelle (`dockstat.cpp:613`); `CalcDynamicLayout(0, LM_HORZ\|…)` ist bei `SECControlBar` eine reine Abfrage |
-| N-1 | — | **Regression aus A-3:** `IsTabLabelTruncated` legt `CPaintDC` außerhalb `WM_PAINT` an und verschluckt Auffrischungen |
-| N-2 | — | **Regression aus A-3:** unsichtbares 111x23-Logo startet bei jedem Klick in die rechten 114 Pixel den Webbrowser |
-| N-3 | — | **A-3-Prüfpunkt 5 nicht erfüllt:** Abschalten über die Einstellungen zieht keinen Anordnungsdurchlauf nach |
-| N-4 | — | neun Kommentarblöcke behaupten das Gegenteil des Codes; ein Block doppelt; `rectClient` tot |
-| N-5 | — | `E-53` ist im Quelltext behoben, steht aber **in keiner Befundtabelle** (`grep -c E-53 BEFUNDE.md` → 0) |
+| [N-1](#n-1) | — | **Regression aus A-3:** `IsTabLabelTruncated` legt `CPaintDC` außerhalb `WM_PAINT` an und verschluckt Auffrischungen |
+| [N-2](#n-2) | — | **Regression aus A-3:** unsichtbares 111x23-Logo startet bei jedem Klick in die rechten 114 Pixel den Webbrowser |
+| [N-3](#n-3) | — | **A-3-Prüfpunkt 5 nicht erfüllt:** Abschalten über die Einstellungen zieht keinen Anordnungsdurchlauf nach |
+| [N-4](#n-4) | — | neun Kommentarblöcke behaupten das Gegenteil des Codes; ein Block doppelt; `rectClient` tot |
+| [N-5](#n-5) | — | [`E-53`](../BEFUNDE.md#e-53) ist im Quelltext behoben, steht aber **in keiner Befundtabelle** (`grep -c E-53 BEFUNDE.md` → 0) |
 
 **Rangfolge der Behebungen, nach Gewicht:**
 
@@ -721,23 +721,23 @@ Verzeichniszeile in `BEFUNDE.md` und der Vermerk in `ZIEL.md` bei A-3.
    laufende Objekt nicht freigibt. Ohne das ist A-4 ein Absturzkandidat.
 2. **7b** — `WM_QUIT` wiedereinstellen. Eine Zeile, verhindert einen
    nicht beendbaren Prozess.
-3. **N-2** — Logoklick stilllegen oder `OnDrawBorder` aufnehmen. Der Anwender
+3. **[N-2](#n-2)** — Logoklick stilllegen oder `OnDrawBorder` aufnehmen. Der Anwender
    bekommt heute ungefragt einen Browser.
-4. **N-1** — `CClientDC` statt `CPaintDC` in `IsTabLabelTruncated`. Eine Zeile,
+4. **[N-1](#n-1)** — `CClientDC` statt `CPaintDC` in `IsTabLabelTruncated`. Eine Zeile,
    und eine ganze Klasse von „kein refresh"-Meldungen fällt weg.
 5. **7a** — Abbruchprüfungen in die innere Schleife.
 6. **5d** — Zuschlag und Balken auf LINKS/RECHTS beschränken.
-7. **N-3** — `Invalidate(TRUE)` und Anordnungsdurchlauf beim Abschalten.
+7. **[N-3](#n-3)** — `Invalidate(TRUE)` und Anordnungsdurchlauf beim Abschalten.
 8. **7d** — Ziehbalken auf den Rahmen zeichnen statt auf die Andockleiste.
 9. **6b/5b** — `TrennbalkenNeuAnlegen` auch bei `OnBarHideShow`; `nFrei` deckeln.
 10. **2b** — `m_cxTab` in `GetTabPts` nachziehen.
-11. **N-4** — die neun Kommentarblöcke berichtigen.
+11. **[N-4](#n-4)** — die neun Kommentarblöcke berichtigen.
 
 ---
 
 # Was ich nicht entscheiden konnte
 
-1. **Die „4 Pixel, die MFC selbst verbraucht"** (E-49, `ZIEL.md`). Aus der
+1. **Die „4 Pixel, die MFC selbst verbraucht"** ([E-49](../BEFUNDE.md#e-49), `ZIEL.md`). Aus der
    MFC-Quelle nicht nachvollziehbar: `CDockBar` setzt seine vier Randbreiten im
    Konstruktor auf 0 (`bardock.cpp:41`), und wo genau die vier Pixel bleiben,
    habe ich nicht gefunden. **Es ist aber gleichgültig**, weil

@@ -18,10 +18,10 @@ und zwar an genau der Stelle, an der er entstand.
 
 **Durch die Null-Prüfung geht kein Zustand verloren** — weil es den Zustand
 nicht gibt. Die beiden Kästchen existieren in diesem Dialog überhaupt nicht,
-und zwar schon lange vor E-97.
+und zwar schon lange vor [E-97](../BEFUNDE.md#e-97).
 
 Aber: **die Begründung im Quelltext und in `BEFUNDE.md` ist in zwei Punkten
-falsch**, und der wichtigere Mangel liegt neben E-97 — siehe P-4 und P-5.
+falsch**, und der wichtigere Mangel liegt neben [E-97](../BEFUNDE.md#e-97) — siehe [P-4](#p-4) und [P-5](#p-5).
 
 ---
 
@@ -111,13 +111,13 @@ belegen. Und ausgelesen wurde sie auch nicht: unter `C:\Temp\E97-Stapel` liegt
 keine `eudora.log`, die diese Zeile enthält (vgl.
 `Arbeitsweise/eingebaute-messung-auslesen.md`).
 
-### P-3 — Geht Zustand verloren? Nein. Aber die Begründung dafür ist falsch
+### <a id="p-3"></a>P-3 — Geht Zustand verloren? Nein. Aber die Begründung dafür ist falsch
 
 Die Antwort auf die wichtigste Frage des Auftrags: **nein, es geht nichts
 verloren.**
 
 Der Grund ist aber nicht der, der im Quelltext steht. Weil die Vorlage
-`IDD_SAVEAS_EXT` nie instanziiert wird (P-2), scheitern in `DoDataExchange`
+`IDD_SAVEAS_EXT` nie instanziiert wird ([P-2](../BEFUNDE.md#p-2)), scheitern in `DoDataExchange`
 (`SaveAsDialog.cpp:52-57`) **alle drei** `if (GetDlgItem(...))`-Abfragen.
 `m_IncludeHeaders`, `m_GuessParagraphs` und `m_Stationery` bleiben dauerhaft
 unangebunden, `m_hWnd == NULL`. `m_GuessParagraphs.EnableWindow()` in
@@ -148,26 +148,26 @@ liefert `NULL`, und die zweite Prüfung (`m_GuessParagraphs.GetSafeHwnd()`)
 greift. Kein Absturz, kein Verhalten. Der Weg „mit gültigem Parent" bleibt also
 offen — er führt nur nirgendwohin, und das tat er vorher auch schon.
 
-### P-4 — Der eigentliche Mangel: die beiden Kästchen sind weg, und zwar seit langem
+### <a id="p-4"></a>P-4 — Der eigentliche Mangel: die beiden Kästchen sind weg, und zwar seit langem
 
-`BEFUNDE.md` hält bei E-97 ausdrücklich fest:
+`BEFUNDE.md` hält bei [E-97](../BEFUNDE.md#e-97) ausdrücklich fest:
 
 > *„Bei der Behebung dürfen die beiden Kästchen nicht verlorengehen — sie
 > einfach wegzulassen wäre Funktionsverlust statt Behebung."*
 
 Sie **sind** verloren — nicht durch die Behebung, sondern durch MFC 14.38: der
-Vista-Dateidialog kennt `OFN_ENABLETEMPLATE` nicht (P-2). Beim Speichern einer
+Vista-Dateidialog kennt `OFN_ENABLETEMPLATE` nicht ([P-2](../BEFUNDE.md#p-2)). Beim Speichern einer
 Nachricht kann der Anwender *Kopfzeilen einschließen* und *Absätze raten* seit
 der Portierung nicht mehr wählen. Gespeichert wird stets nach dem, was in der
 INI steht.
 
-Das ist ein eigener Befund, kein E-97. Wer ihn beheben will, hat zwei Wege:
+Das ist ein eigener Befund, kein [E-97](../BEFUNDE.md#e-97). Wer ihn beheben will, hat zwei Wege:
 `bVistaStyle = FALSE` an den Basiskonstruktor (dann läuft die Vorlage von 1996
 wieder, mit dem alten Erscheinungsbild), oder `IFileDialogCustomize`
 (`m_pIFileDialogCustomize` liegt in MFC bereit) mit zwei
 `AddCheckButton`-Aufrufen. Der zweite Weg ist der saubere.
 
-### P-5 — `m_Inc` und `m_Guess` sind nirgends vorbelegt (Verdacht auf INI-Verderb)
+### <a id="p-5"></a>P-5 — `m_Inc` und `m_Guess` sind nirgends vorbelegt (Verdacht auf INI-Verderb)
 
 `SaveAsDialog.h:44` deklariert `BOOL m_Inc, m_Guess;`. Der Konstruktor
 (`SaveAsDialog.cpp:21-46`) setzt sie **nicht**. Die einzige Zuweisung steht in
@@ -194,12 +194,12 @@ Dialog.
 2. Ohne Protokoll, rein optisch: `OnInitDialog:124-129` schiebt den Dialog mit
    `MoveWindow` an die **Unterkante des Hauptfensters**. Erscheint das
    Speichern-Fenster normal mittig, ist `OnInitDialog` nicht gelaufen — dann
-   ist P-5 scharf.
+   ist [P-5](#p-5) scharf.
 
 Bis das gemessen ist, sollten `m_Inc` und `m_Guess` im Konstruktor auf
 `GetIniShort(...)` vorbelegt werden. Das kostet nichts und schließt den Weg.
 
-### P-6 — Dieselbe Lücke, dreimal unbehoben (Gegenvermutung des Auftrags)
+### <a id="p-6"></a>P-6 — Dieselbe Lücke, dreimal unbehoben (Gegenvermutung des Auftrags)
 
 Der Auftrag fragt nach `OnFileNameChange`, `OnFolderChange`,
 `OnShareViolation`, `OnLBSelChangedNotify`: **`CSaveAsDialog` überschreibt
@@ -216,8 +216,8 @@ Dieselbe Klasse findet sich aber **in derselben Datei**, dreimal, unverändert:
 `GetFileNameFromDialog` ist die gefährliche: sie wird aus `OnOK()` gerufen
 (Zeile 352), also **im laufenden Speichervorgang**, nicht nur beim Aufbau.
 `ToggleStat` und `StatDir` hängen an `ON_BN_CLICKED(IDC_STATIONERY)` — der
-Schalter existiert nicht (P-4), also feuern sie heute nicht; sie werden
-scharf, sobald P-4 behoben wird.
+Schalter existiert nicht ([P-4](#p-4)), also feuern sie heute nicht; sie werden
+scharf, sobald [P-4](#p-4) behoben wird.
 
 `SetFileNameInDialog` (393) berechnet `dlgPtr` und benutzt es auf dem
 `IsVersion4()`-Zweig gar nicht — tote Berechnung, kein Fehler.
@@ -225,9 +225,9 @@ scharf, sobald P-4 behoben wird.
 Angemerkt: `OnOK():345-346` schreibt `m_IncludeHeaders.GetCheck()` in die INI.
 An einem unangebundenen Schalter ist das 0. Wird `OnOK` je erreicht, löscht es
 die Einstellung des Anwenders still — die Aufrufstelle überschreibt sie danach
-zwar wieder mit `m_Inc`, aber nur, wenn `m_Inc` gültig ist (P-5).
+zwar wieder mit `m_Inc`, aber nur, wenn `m_Inc` gültig ist ([P-5](#p-5)).
 
-### P-7 — Kleinigkeiten
+### <a id="p-7"></a>P-7 — Kleinigkeiten
 
 * `OnTypeChange:460/465`: die Prüfung auf `m_GuessParagraphs` steht **hinter**
   dem `GetDlgItem`-Aufruf. Harmlos, gehört aber davor — sonst liest der nächste
@@ -239,7 +239,7 @@ zwar wieder mit `m_Inc`, aber nur, wenn `m_Inc` gültig ist (P-5).
 
 ## E-96 (`PGHTMIMP.CPP`)
 
-### P-8 — `PaigeHTMLImportTextDescent` wird nie beschrieben
+### <a id="p-8"></a>P-8 — `PaigeHTMLImportTextDescent` wird nie beschrieben
 
 `PGHTMIMP.CPP:1827` legt die Variable mit 3 an. Zugewiesen wird sie
 **nirgends** — nur der Ascent wird gemerkt (Zeile 2053). `ProcessEmbed:3097`
@@ -248,7 +248,7 @@ Text der Nachricht wirklich hat. Der Kommentar bei 3041 (*„der Text-Ascent/
 -Descent, wie er VOR dem ersten Bild galt"*) beschreibt etwas, das der Code für
 den Descent nicht tut.
 
-### P-9 — Der Kommentar beschreibt die Bedingung falsch
+### <a id="p-9"></a>P-9 — Der Kommentar beschreibt die Bedingung falsch
 
 *„Er wird einmal je Import gesetzt"* — die Bedingung lautet
 `if (!embed_last_action && original_ascent > 0)`. `embed_last_action` wird an
@@ -259,13 +259,13 @@ Beschreibung ist falsch. Zudem sind beide Variablen **dateilokal statisch** —
 sie überleben den Import und die Nachricht; der Kommentar spricht von „je
 Import".
 
-### P-10 — Gegenvermutung: 13/3 ist für Text nach einem Bild zu wenig
+### <a id="p-10"></a>P-10 — Gegenvermutung: 13/3 ist für Text nach einem Bild zu wenig
 
 `ProcessEmbed:3096-3097` klemmt `current_style.ascent/descent` auf 13/3 fest.
 `current_style` ist der Stil, der auch für den **folgenden Text** gilt, bis ein
 Stil-Tag ihn ändert. Bei einer Nachricht mit großer Schrift (etwa 20 pt) bekommt
 die Textzeile nach einem Bild damit einen 13/3-Zeilenkasten statt der
-Schriftmetrik — dasselbe Schadensbild wie E-89, nur an Text statt an Bildern.
+Schriftmetrik — dasselbe Schadensbild wie [E-89](../BEFUNDE.md#e-89), nur an Text statt an Bildern.
 
 Der im Kommentar verworfene Gegenentwurf (`paige_globals->def_style`, gemessen
 `text-asc=0`) misst den **Vorgabestil**, nicht das, was Paige mit `ascent == 0`
@@ -273,9 +273,9 @@ an einem Textlauf tut — in Paige heißt 0 üblicherweise *aus der Schrift
 ableiten*. Die Widerlegung trägt die Schlussfolgerung nicht.
 
 **Messung:** eine HTML-Nachricht mit 20-pt-Text hinter einem Bild importieren
-und die Spurmarke lesen. Ist der Text danach beschnitten, ist P-10 scharf.
+und die Spurmarke lesen. Ist der Text danach beschnitten, ist [P-10](#p-10) scharf.
 
-### P-11 — Die E-95-Spurmarke liest einen Paige-Handle als Zeichenkette
+### <a id="p-11"></a>P-11 — Die E-95-Spurmarke liest einen Paige-Handle als Zeichenkette
 
 `PGHTMIMP.CPP:2178-2182`:
 
@@ -299,18 +299,18 @@ Objekts begrenzt, sondern nur durch das erste Nullbyte.
 
 Auch diese Marke ist in 1.0.64 ausgeliefert.
 
-### P-12 — Falsche Befundnummer im Quelltext
+### <a id="p-12"></a>P-12 — Falsche Befundnummer im Quelltext
 
-Sämtliche Kommentare zur `ProcessEmbed`-Behebung sind mit **E-95** ausgezeichnet
+Sämtliche Kommentare zur `ProcessEmbed`-Behebung sind mit **[E-95](../BEFUNDE.md#e-95)** ausgezeichnet
 (Zeilen 9, 2049, 2156, 3038, 3062). `BEFUNDE.md:257` führt genau diese Behebung
-als **E-96**; E-95 ist das Symptom, dessen 7.2.0.61-Behebung zurückgenommen
-wurde (`BEFUNDE.md:256`). Wer künftig E-96 im Quelltext sucht, findet nichts.
+als **[E-96](../BEFUNDE.md#e-96)**; [E-95](../BEFUNDE.md#e-95) ist das Symptom, dessen 7.2.0.61-Behebung zurückgenommen
+wurde (`BEFUNDE.md:256`). Wer künftig [E-96](../BEFUNDE.md#e-96) im Quelltext sucht, findet nichts.
 
 ---
 
 ## E-88 / E-93 (`PgMsgView.cpp`, `msgutils.cpp`)
 
-### P-13 — Möglicher Inhaltsverlust: `HasChanged()` heißt nicht „hat getippt"
+### <a id="p-13"></a>P-13 — Möglicher Inhaltsverlust: `HasChanged()` heißt nicht „hat getippt"
 
 `PgMsgView.cpp:436` übergibt `HasChanged()` als `bAnwenderHatGetippt` an
 `E88OriginalEinsetzen`. In `msgutils.cpp` entscheidet dieser Wert im Zweig
@@ -361,9 +361,9 @@ Vgl. `Arbeitsweise/kein-paket-mit-offenem-datenverlust.md`.
 
 ## Was ich nicht prüfen konnte
 
-* Ob `OnInitDialog` in der Vista-Schiene erreicht wird (P-5) — das ist eine
+* Ob `OnInitDialog` in der Vista-Schiene erreicht wird ([P-5](#p-5)) — das ist eine
   Messung am laufenden Programm, keine Quelltextfrage.
-* Die Reihenfolge `OnTypeChange` vor `OnInitDialog` (P-2) ist erschlossen, nicht
+* Die Reihenfolge `OnTypeChange` vor `OnInitDialog` ([P-2](../BEFUNDE.md#p-2)) ist erschlossen, nicht
   gemessen; es fehlt eine zweite Spurmarke in `OnTypeChange`.
 * `QCTaskManager.cpp`, `TridentView.cpp`, `summary.cpp`, `utils.cpp`,
   `ImapDownload.cpp` und die neuen Tests lagen außerhalb des Auftrags.
@@ -372,15 +372,15 @@ Vgl. `Arbeitsweise/kein-paket-mit-offenem-datenverlust.md`.
 
 ## Reihenfolge, in der ich das angehen würde
 
-1. **P-13** — möglicher Inhaltsverlust beim Senden, Messung ist billig.
-2. **P-5** — `m_Inc`/`m_Guess` vorbelegen; zwei Zeilen, schließt einen Weg in
+1. **[P-13](#p-13)** — möglicher Inhaltsverlust beim Senden, Messung ist billig.
+2. **[P-5](#p-5)** — `m_Inc`/`m_Guess` vorbelegen; zwei Zeilen, schließt einen Weg in
    die INI des Anwenders.
-3. **P-11** — die Spurmarke liest den falschen Zeiger; sie beantwortet gerade
+3. **[P-11](#p-11)** — die Spurmarke liest den falschen Zeiger; sie beantwortet gerade
    gar nichts.
-4. **P-4** — die beiden Kästchen zurückholen (`IFileDialogCustomize`).
-5. **P-6** — die drei verbliebenen `dlgPtr->GetDlgItem`-Stellen absichern.
-6. **P-2, P-3, P-9, P-12** — Text berichtigen: falsches Vorlagenfenster,
+4. **[P-4](#p-4)** — die beiden Kästchen zurückholen (`IFileDialogCustomize`).
+5. **[P-6](#p-6)** — die drei verbliebenen `dlgPtr->GetDlgItem`-Stellen absichern.
+6. **[P-2](../BEFUNDE.md#p-2), [P-3](#p-3), [P-9](#p-9), [P-12](#p-12)** — Text berichtigen: falsches Vorlagenfenster,
    „`OnInitDialog` setzt den Zustand ohnehin", falsche Bedingung, falsche
    Befundnummer.
-7. **P-10** — Gegenvermutung zur festen 13/3 messen.
-8. **P-7, P-8** — Kleinigkeiten.
+7. **[P-10](#p-10)** — Gegenvermutung zur festen 13/3 messen.
+8. **[P-7](#p-7), [P-8](#p-8)** — Kleinigkeiten.

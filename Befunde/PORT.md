@@ -109,7 +109,7 @@ Zeile für Zeile abgegangen:
    (`SSLSettings.cpp:95`) ist nur für `SSLUseAlways` und `SSLUseIfAvailable`
    wahr, nicht für `SSLUseAlternatePort`. Auch richtig.
 
-Der Umbau der SSL-Schicht (H-1, M-1, N-1) hat hier **nichts verloren**. Die
+Der Umbau der SSL-Schicht (H-1, [M-1](../BEFUNDE.md#m-1), [N-1](PRUEFER-6.md#n-1)) hat hier **nichts verloren**. Die
 Versionswahl in `QCSSL/src/QCSSLContext.cpp:540-592` benutzt
 `TLS_client_method()` mit `SSL_CTX_set_min_proto_version(TLS1_2_VERSION)`;
 `QCSSL.vcxproj` bindet `..\OpenSSL3` **statisch** ein (in Gregors
@@ -170,7 +170,7 @@ Daraus folgt zweierlei:
 
 - Was Gregor im Assistenten eingerichtet hat, ist **nie in die Ini gelangt**.
   Der Startbefehl übergibt den richtigen Pfad (`Eudora starten.cmd`, letzte
-  Zeile: `start "" "%HIER%Eudora.exe" "%DATEN%"`), und E-12 hat den Fall
+  Zeile: `start "" "%HIER%Eudora.exe" "%DATEN%"`), und [E-12](../BEFUNDE.md#e-12) hat den Fall
   „Pfad zeigt auf ein Verzeichnis" bereits geradegezogen
   (`fileutil.cpp:451-470`). Warum trotzdem nichts geschrieben wird, ist **hier
   nicht geklärt** — es gehört nicht zu Port, SSL oder Anmeldung.
@@ -246,10 +246,10 @@ if (!stricmp(Server, "hesiod") && SUCCEEDED(QCHesiodLibMT::LoadHesiodLibrary()))
 ```
 
 Der Block wird nur betreten, wenn der Server **wörtlich `hesiod`** heißt. Bei
-`mx.freenet.de` niemals. Der Fehler der Klasse R-1 (`ReleaseBuffer` ohne
+`mx.freenet.de` niemals. Der Fehler der Klasse [R-1](../BEFUNDE.md#r-1) (`ReleaseBuffer` ohne
 `GetBuffer`, bei MFC 14 unzulässig) steht dort aber trotzdem, ebenso in
 `SMTPSession.cpp:683`. **Beide auf `Left(At)` umgestellt** — zwei von den 25
-Stellen aus R-1 sind damit erledigt.
+Stellen aus [R-1](../BEFUNDE.md#r-1) sind damit erledigt.
 
 #### Was dann?
 
@@ -280,8 +280,8 @@ etwas anderes, als über die Leitung geht.
 | Datei | Zeile | was |
 |---|---|---|
 | `Eudora71/Eudora/POPSession.cpp` | 1736-1741 | Port 0 bei „Alternate Port" fällt nicht mehr stillschweigend auf 110 zurück |
-| `Eudora71/Eudora/POPSession.cpp` | 1753 | `ReleaseBuffer(At)` → `Left(At)` (R-1) |
-| `Eudora71/Eudora/SMTPSession.cpp` | 683 | `ReleaseBuffer(At)` → `Left(At)` (R-1) |
+| `Eudora71/Eudora/POPSession.cpp` | 1753 | `ReleaseBuffer(At)` → `Left(At)` ([R-1](../BEFUNDE.md#r-1)) |
+| `Eudora71/Eudora/SMTPSession.cpp` | 683 | `ReleaseBuffer(At)` → `Left(At)` ([R-1](../BEFUNDE.md#r-1)) |
 | `Eudora71/Eudora/SMTPSession.cpp` | 702-705 | Port 0 bei „Alternate Port" fällt nicht mehr auf 25 zurück |
 | `Eudora71/QCSocket/src/QCWorkerSocket.cpp` | 370-380 | fehlendes `qcssl.dll` wird gemeldet, statt still im Klartext weiterzureden |
 

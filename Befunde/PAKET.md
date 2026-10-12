@@ -1,9 +1,9 @@
-## PR-2.0 — Der Paketprüfer prüfte die Maschine statt das Paket (behoben)
+## <a id="pr-2.0"></a>PR-2.0 — Der Paketprüfer prüfte die Maschine statt das Paket (behoben)
 
 **Agent:** PAKET · **Zweig:** `wt/paket-3` · **Datum:** 06.09.2026 ·
 **Fassung:** 7.2.0.12 · **Status:** behoben, mit drei Gegenproben belegt
 
-Fortschreibung des Befundes PR-2.0 (`BEFUNDE.md` ab Zeile 4400). Geändert wurde
+Fortschreibung des Befundes [PR-2.0](#pr-2.0) (`BEFUNDE.md` ab Zeile 4400). Geändert wurde
 ausschließlich `tools/paket-pruefen.ps1`. Nichts gebaut, nichts gestartet.
 
 ---
@@ -66,8 +66,8 @@ nachinstalliert ist?**
 | Abhängigkeiten | Import- **und** Verzögerungstabelle aus dem PE-Kopf, transitiv weiterverfolgt: eine importierte DLL, die im Paket liegt, hat selbst wieder Importe |
 | Einsortierung | jeder Name in genau einen von drei Töpfen: **(a)** liegt im Paket, **(b)** bringt Windows mit, **(c)** fehlt. Topf (c) ist die Antwort |
 | Systemverzeichnisse | ein Treffer in `SysWOW64`/`System32` zählt **nicht** als vorhanden. Er wird nur als erklärender Nebensatz ausgegeben („liegt zwar in SysWOW64 dieser Maschine — zählt nicht") |
-| Debug-Laufzeiten | ein Import auf `mfc140d`, `msvcp140d`, `vcruntime140d`, `vcruntime140_1d`, `ucrtbased`, `concrt140d` ist ein **Fehler** (Befund S-8/E-8). Abhilfe ist ein Release-Bau, nicht das Mitliefern |
-| Pakethygiene | keine `.pdb` im Release-Paket, `Mailverzeichnis\Eudora.ini` (Befund S-1), `Eudora starten.cmd` (Befund E-6) |
+| Debug-Laufzeiten | ein Import auf `mfc140d`, `msvcp140d`, `vcruntime140d`, `vcruntime140_1d`, `ucrtbased`, `concrt140d` ist ein **Fehler** (Befund [S-8](../BEFUNDE.md#s-8)/[E-8](../BEFUNDE.md#e-8)). Abhilfe ist ein Release-Bau, nicht das Mitliefern |
+| Pakethygiene | keine `.pdb` im Release-Paket, `Mailverzeichnis\Eudora.ini` (Befund [S-1](../BEFUNDE.md#s-1)), `Eudora starten.cmd` (Befund [E-6](../BEFUNDE.md#e-6)) |
 
 Gelesen wird der **PE-Kopf**, nicht der Dateiinhalt. Ein `grep` über die Datei
 liefert Bruchstücke wie `s.dll` und `ts.dll`, weil in der Zeichenkettentabelle
@@ -132,7 +132,7 @@ zugemauert.
 
 **Ja — Paket 1.0.12-release ist aus sich heraus startfähig.**
 
-35 Binärdateien, davon 33 x86 (zu den zwei anderen siehe X-8.1). 13 Module in
+35 Binärdateien, davon 33 x86 (zu den zwei anderen siehe [X-8.1](#x-8.1)). 13 Module in
 der Startkette: `Eudora.exe`, `EuLang.dll`, `EuMemMgr.dll`, `Imap.dll`,
 `libexpat.dll`, `mfc140.dll`, `msvcp140.dll`, `msvcr71.dll`, `Paige32.dll`,
 `plstclnt.dll`, `QCSocket.dll`, `QCUtils.dll`, `vcruntime140.dll`. Alle liegen
@@ -141,7 +141,7 @@ Paketdateien. In der Startkette fehlt **nichts**.
 
 Das ist ein Nachweis über den PE-Kopf, kein Startversuch. Er sagt: der Lader
 findet alles, was er vor dem ersten Befehl braucht. Er sagt nicht, dass das
-Fenster danach bedienbar ist — dafür stehen S-5, S-6 und M-1 weiter offen.
+Fenster danach bedienbar ist — dafür stehen [S-5](../BEFUNDE.md#s-5), [S-6](../BEFUNDE.md#s-6) und [M-1](../BEFUNDE.md#m-1) weiter offen.
 
 **Bekannte, erwartete Lücken** — kein Fehlschlag von Kriterium 0:
 
@@ -157,7 +157,7 @@ hochstufen.
 
 ---
 
-## X-8.1 — Zwei 16-Bit-Altlasten im Paket (niedrig, offen)
+## <a id="x-8.1"></a>X-8.1 — Zwei 16-Bit-Altlasten im Paket (niedrig, offen)
 
 `EUMAPI.DLL` (82 944 Byte) trägt an `e_lfanew` die Signatur **`NE`** — ein
 16-Bit-New-Executable aus der Zeit vor Win32. `ifsmon.vxd` (4 811 Byte) trägt
@@ -173,7 +173,7 @@ hochstufen, sobald sie doch jemand importiert.
 
 ---
 
-## X-8.2 — Das Debug-Paket 1.0.12 mischt einen Release-Bau hinein (mittel, offen)
+## <a id="x-8.2"></a>X-8.2 — Das Debug-Paket 1.0.12 mischt einen Release-Bau hinein (mittel, offen)
 
 Beim Lauf gegen `Eudora72-1.0.12-debug` fiel auf: `QCSSL.dll` importiert
 `mfc140.dll` und `VCRUNTIME140.dll` — die **Release**-Laufzeiten — während jede
@@ -190,7 +190,7 @@ Nicht verfolgt — hier wurde nur ein PowerShell-Werkzeug geändert, nicht gebau
 
 ---
 
-## X-8.3 — Aussagen über den Prüfer sind jetzt überholt (niedrig, offen)
+## <a id="x-8.3"></a>X-8.3 — Aussagen über den Prüfer sind jetzt überholt (niedrig, offen)
 
 Mehrere Dateien sagen, `paket-pruefen.ps1` tauge nicht als Freigabekriterium.
 Das galt für die alte Fassung und stimmt nicht mehr:

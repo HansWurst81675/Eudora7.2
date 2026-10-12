@@ -1,4 +1,4 @@
-# LEKTOR-19 — Gregors IMAP-Test im CHANGELOG 7.2.0.83 (`76ec870`)
+# <a id="lektor-19"></a>LEKTOR-19 — Gregors IMAP-Test im CHANGELOG 7.2.0.83 (`76ec870`)
 
 Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Alle drei Mängel und der Hinweis sind im selben Commit wie dieser Bericht eingearbeitet.**
 

@@ -1,4 +1,4 @@
-# LEKTOR-3 — Falsche und veraltete Werte in der Doku, gemessen statt gelesen
+# <a id="lektor-3"></a>LEKTOR-3 — Falsche und veraltete Werte in der Doku, gemessen statt gelesen
 
 **Agent:** LEKTOR · **Kennung:** `L-7` · **Zweig:** `wt/lektor` ·
 **Arbeitsbaum:** `Eudora7.2-wt-lektor` · **Datum:** 07.09.2026 ·
@@ -23,11 +23,11 @@ dafür sorgen, dass er solche Fehler nicht mehr findet.
 **Vier Behauptungen waren nicht nur veraltet, sondern falsch, und alle vier
 hätten jemanden in die Irre geführt, der danach gearbeitet hätte.**
 
-### L-7.1 — „E-15 und E-18 bis E-21 gibt es nicht" — fünf Befunde für nie vergeben erklärt
+### <a id="l-7.1"></a>L-7.1 — „E-15 und E-18 bis E-21 gibt es nicht" — fünf Befunde für nie vergeben erklärt
 
 `BEFUNDE.md` führte einen Kasten:
 
-> *„**E-10, E-15, E-18 bis E-21 gibt es nicht.** Gesucht am 06.09.2026 im ganzen
+> *„**E-10, [E-15](../BEFUNDE.md#e-15), [E-18](../BEFUNDE.md#e-18) bis [E-21](../BEFUNDE.md#e-21) gibt es nicht.** Gesucht am 06.09.2026 im ganzen
 > Repo: diese Kennungen sind nie vergeben worden. Lücken in der Nummerierung,
 > keine verlorenen Befunde — wer sie sucht, sucht umsonst."*
 
@@ -40,13 +40,13 @@ grep -rn "Befund E-18" --include=*.cpp --include=*.h Eudora71/
 
 | Kennung | Quelle | Worum es geht |
 |---|---|---|
-| E-15 | `Eudora71/Eudora/TaskStatusView.cpp`, `QCGetTaskStatusView` | `ASSERT(g_TaskStatusView != NULL)` widersprach allen drei Aufrufern (`persona.cpp:265` und `:576`, `settings.cpp:1492`) — die fragen ausdrücklich auf NULL ab |
-| E-18 | `Eudora71/Eudora/headervw.cpp`, Persönlichkeitsmenü | `pFld` ungeprüft dereferenziert; der Zweig läuft nur bei **mehr als einer** Persönlichkeit und war bis 05.09.2026 nie betreten |
-| E-19 | `Eudora71/Eudora/tocdoc.cpp` | `ASSERT(0)` in einem **Reparaturzweig** — feuert genau dann, wenn alles wie vorgesehen läuft |
-| E-20 | `Eudora71/Eudora/ListCtrlEx.cpp`, `CListCtrlEx::InsertArr` und `NotifyInsertedCol` | `[nLen + 1]` statt `[nIdx + 1]`; geschrieben wird bis `pTemp[nIdx]`, und `nIdx` kann größer als `nLen` sein |
-| E-21 | `Eudora71/QCSocket/src/QCWorkerSocket.cpp` | `ASSERT(0)`, wo `WSAEWOULDBLOCK` (10035) die normale Antwort eines nicht blockierenden Sockets ist |
+| [E-15](../BEFUNDE.md#e-15) | `Eudora71/Eudora/TaskStatusView.cpp`, `QCGetTaskStatusView` | `ASSERT(g_TaskStatusView != NULL)` widersprach allen drei Aufrufern (`persona.cpp:265` und `:576`, `settings.cpp:1492`) — die fragen ausdrücklich auf NULL ab |
+| [E-18](../BEFUNDE.md#e-18) | `Eudora71/Eudora/headervw.cpp`, Persönlichkeitsmenü | `pFld` ungeprüft dereferenziert; der Zweig läuft nur bei **mehr als einer** Persönlichkeit und war bis 05.09.2026 nie betreten |
+| [E-19](../BEFUNDE.md#e-19) | `Eudora71/Eudora/tocdoc.cpp` | `ASSERT(0)` in einem **Reparaturzweig** — feuert genau dann, wenn alles wie vorgesehen läuft |
+| [E-20](../BEFUNDE.md#e-20) | `Eudora71/Eudora/ListCtrlEx.cpp`, `CListCtrlEx::InsertArr` und `NotifyInsertedCol` | `[nLen + 1]` statt `[nIdx + 1]`; geschrieben wird bis `pTemp[nIdx]`, und `nIdx` kann größer als `nLen` sein |
+| [E-21](../BEFUNDE.md#e-21) | `Eudora71/QCSocket/src/QCWorkerSocket.cpp` | `ASSERT(0)`, wo `WSAEWOULDBLOCK` (10035) die normale Antwort eines nicht blockierenden Sockets ist |
 
-E-18 und E-19 stehen sogar im `CHANGELOG.md` unter 7.2.0.10 (*„zwei Fehler, die
+[E-18](../BEFUNDE.md#e-18) und [E-19](../BEFUNDE.md#e-19) stehen sogar im `CHANGELOG.md` unter 7.2.0.10 (*„zwei Fehler, die
 erst mit einer zweiten Persönlichkeit auftreten"*) — die Datei widersprach also
 einer anderen Datei, die zwei Bildschirmseiten weiter oben verlinkt ist.
 
@@ -57,7 +57,7 @@ unabhängig belegt.
 Lehre steht dabei: **wer prüft, ob eine Kennung vergeben ist, muss den
 Quelltext mitsuchen.**
 
-### L-7.2 — „der ernsteste der neun" war ein Fehlalarm des eigenen Werkzeugs
+### <a id="l-7.2"></a>L-7.2 — „der ernsteste der neun" war ein Fehlalarm des eigenen Werkzeugs
 
 `AUFGABEN.md`, D3a, Nummer 1:
 
@@ -74,7 +74,7 @@ Der Treffer ist ein **Fehlalarm von `tools/suche-zeiger.pl`**: bei einem
 **negativen** Wächter (`if (!p)`) sucht das Werkzeug das `return` nur in den
 nächsten sechs Zeilen — hier steht es fünfzehn Zeilen weiter, weil zwischen
 `ASSERT(0)` und `return E_FAIL` noch aufgeräumt wird. Das ist eine **vierte
-Fehlerklasse** neben den drei, die X-1 an diesem Werkzeug schon abgestellt hat.
+Fehlerklasse** neben den drei, die [X-1](../BEFUNDE.md#x-1) an diesem Werkzeug schon abgestellt hat.
 
 **Sie gehört ins Werkzeug, nicht in die Aufgabenliste** — und ist deshalb hier
 als offene Aufgabe benannt, nicht behoben: `suche-zeiger.pl` hat keine
@@ -87,7 +87,7 @@ mehr, `ImapAccount.cpp:3152` ist ein gewöhnlicher positiver Wächter. Die Liste
 in D3a ist vollständig neu gemessen und trägt jetzt **Funktionsnamen** —
 `headervw.cpp` allein war um 34 Zeilen verrutscht.
 
-### L-7.3 — `WazooBarMgr.cpp:377-400` ist auskommentierter Code
+### <a id="l-7.3"></a>L-7.3 — `WazooBarMgr.cpp:377-400` ist auskommentierter Code
 
 `AUFGABEN.md`, E1, beschrieb den größten verbliebenen Darstellungsmangel an
 `WazooBarMgr.cpp:377-400`. **Jede Zeile dieses Bereichs beginnt mit
@@ -99,10 +99,10 @@ sed -n '370,400p' Eudora71/Eudora/WazooBarMgr.cpp
 
 Die **lebenden** Stellen sind `CWazooBarMgr::CreateNewWazooBar` (heute
 Zeile 254) und `CWazooBarMgr::SetDefaultWazooBarState` (heute Zeile 424); beide
-schicken `ID_SEC_MDIFLOAT` und sind seit Befund **E-4** im Quelltext
+schicken `ID_SEC_MDIFLOAT` und sind seit Befund **[E-4](../BEFUNDE.md#e-4)** im Quelltext
 ausdrücklich abgesichert. Berichtigt, mit Funktionsnamen.
 
-### L-7.4 — `LinkLibraryDependencies` kommt in `Eudora.vcxproj` nicht vor
+### <a id="l-7.4"></a>L-7.4 — `LinkLibraryDependencies` kommt in `Eudora.vcxproj` nicht vor
 
 `PORTIERUNG.md` begründete, warum die Attrappe `OTA50D.LIB` nicht mehr gebraucht
 wird, mit *„`_SECNOMSG` und `LinkLibraryDependencies` auf `false`,
@@ -128,7 +128,7 @@ stimmt — sie widersprach sich also selbst.
 | `README.md`, `WEITERMACHEN.md`, `PORTIERUNG.md` | dieselbe Aussage, dreimal wiederholt | dito | dito |
 | `README.md`, `ZIEL.md`, `WEITERMACHEN.md` | „sieben Kriterien" | die Tabelle führt **acht** (0 bis 7) | `perl tools/doku-pruefen.pl` |
 | `AUFGABEN.md` A2 | „24 Stellen sind zu ändern", 19 `falsch` | **21** zu ändern: 16 `falsch`, 4 `lockbuffer`, 1 `danach`, dazu 116 `ok` | `perl tools/releasebuffer-pruefen.pl --alle` |
-| `BEFUNDE.md`, R-1 | „25 von 142" | **21 von 137** | dito |
+| `BEFUNDE.md`, [R-1](../BEFUNDE.md#r-1) | „25 von 142" | **21 von 137** | dito |
 | `PORTIERUNG.md` | „142 Vorkommen im Baum, 25 davon falsch" | dito | dito |
 | `CHANGELOG.md` | „`PGSOURCE`, 38 C-Dateien" | **37** `.C` — `git ls-files` liefert 38 Einträge, davon einer `.SBT` | `git ls-files Eudora71/PaigeDLL/PGSOURCE` |
 | `BEFUNDE.md`, Kopf | „7349 Zeilen" | **7373** | `wc -l < BEFUNDE.md` |
@@ -152,7 +152,7 @@ und `:569`, `qccertificate.cpp:101`/`110`/`157`, `secbtns.h:340`,
 ## Zustandsaussagen, die überholt waren
 
 Der schlimmste Fall war der Abschnitt *Wo man weitermachen kann* am Ende von
-`CHANGELOG.md`. Punkt 1 hieß **„E-27: die Rekursion in Paige (der große
+`CHANGELOG.md`. Punkt 1 hieß **„[E-27](../BEFUNDE.md#e-27): die Rekursion in Paige (der große
 Brocken)"** und fragte, ob in dieser Portierung überhaupt jemals ein
 Paige-Fenster entsteht — beantwortet und behoben am 06.09.2026. Darin stand:
 
@@ -162,7 +162,7 @@ Paige-Fenster entsteht — beantwortet und behoben am 06.09.2026. Darin stand:
 Das widersprach dem eigenen Abschnitt 7.2.0.18 derselben Datei (*„Es gibt Paige-
 Quellen"*). Und unter **„Noch nicht versucht"** stand *„ein Vergleich der
 Strukturgrößen `style_info`/`font_info`/`par_info` zwischen `PAIGE.H` und dem,
-was die DLL von 2005 erwartet"* — genau die Messung, die E-31 gelöst hat, drei
+was die DLL von 2005 erwartet"* — genau die Messung, die [E-31](../BEFUNDE.md#e-31) gelöst hat, drei
 Bildschirmseiten weiter oben ausführlich beschrieben.
 
 Die übrigen:
@@ -170,21 +170,21 @@ Die übrigen:
 | Datei | Behauptung | Wirklichkeit |
 |---|---|---|
 | `README.md` | Quellstand 7.2.0.14, Paket 1.0.14, ZIP `1.0.14` | 7.2.0.18 / 1.0.18, Marke `v1.0.18` auf `e881164` (`git ls-remote --tags origin`) |
-| `README.md` | *„Die Suche nach der Wurzel der Abstürze … Die Beschädigung selbst ist gefunden (**E-25**)"* | die Wurzel ist **E-31**; E-25 hat den Test nicht bestanden, das stand schon als Nachtrag darunter |
-| `README.md` | *„**Strg-N** beendet Eudora; die schuldige Zeile ist **nicht** gefunden"*, *„**Beenden** bricht ab"*, *„E-30, in Arbeit"* | E-31 und E-32 behoben, E-30 behoben und von Gregor bestätigt |
+| `README.md` | *„Die Suche nach der Wurzel der Abstürze … Die Beschädigung selbst ist gefunden (**[E-25](../BEFUNDE.md#e-25)**)"* | die Wurzel ist **[E-31](../BEFUNDE.md#e-31)**; [E-25](../BEFUNDE.md#e-25) hat den Test nicht bestanden, das stand schon als Nachtrag darunter |
+| `README.md` | *„**Strg-N** beendet Eudora; die schuldige Zeile ist **nicht** gefunden"*, *„**Beenden** bricht ab"*, *„[E-30](../BEFUNDE.md#e-30), in Arbeit"* | [E-31](../BEFUNDE.md#e-31) und [E-32](../BEFUNDE.md#e-32) behoben, [E-30](../BEFUNDE.md#e-30) behoben und von Gregor bestätigt |
 | `WEITERMACHEN.md` | Quellstand 7.2.0.17, zuletzt veröffentlicht v1.0.15, Arbeitszweig `strg-n-diagnose` | 7.2.0.18 / v1.0.18; der Zweig ist mit PR #9 (`95298b1`) zusammengeführt |
-| `WEITERMACHEN.md` | *„Alle drei hängen an einem einzigen Fehler: E-27"*, *„Die nächste Frage: Entsteht überhaupt jemals ein Paige-Fenster?"* | beantwortet und behoben |
-| `AUFGABEN.md` | *„Alle drei hängen an E-27"*; B2 (gesperrte Knöpfe) als Aufgabe; C2 (Kriterium 0 nachweisen) als Aufgabe; C1 *„Solange das offen ist, ist Kriterium 0 nicht nachweisbar"* | E-30 und Kriterium 0 sind von Gregor bestätigt |
+| `WEITERMACHEN.md` | *„Alle drei hängen an einem einzigen Fehler: [E-27](../BEFUNDE.md#e-27)"*, *„Die nächste Frage: Entsteht überhaupt jemals ein Paige-Fenster?"* | beantwortet und behoben |
+| `AUFGABEN.md` | *„Alle drei hängen an [E-27](../BEFUNDE.md#e-27)"*; B2 (gesperrte Knöpfe) als Aufgabe; C2 (Kriterium 0 nachweisen) als Aufgabe; C1 *„Solange das offen ist, ist Kriterium 0 nicht nachweisbar"* | [E-30](../BEFUNDE.md#e-30) und Kriterium 0 sind von Gregor bestätigt |
 | `AUFGABEN.md` B1 | verwies auf einen Abschnitt *„Ganz zuerst"* | den gibt es in der Datei nicht |
 | `ZIEL.md` | *„Für das Release-Paket ist dieser Lauf noch nicht gemacht worden"* | Gregor hat `1.0.10-release.zip` am 06.09.2026 ohne VS gestartet — steht in derselben Datei zwei Tabellenzeilen höher |
 | `ZIEL.md` | *„Kriterium 0 steht vor den anderen dreien"* | es sind sieben andere |
-| `CHANGELOG.md`, `README.md`, `WEITERMACHEN.md` | E-32 als **offen**, Verdacht auf `AutoCompleterListBox::KillACListBox` | seit `060a4bf` behoben; die Ursache war der **ungeprüfte Zeiger auf dem Weg dorthin** (`CHeaderView::OnKillFocusRecipient`) |
+| `CHANGELOG.md`, `README.md`, `WEITERMACHEN.md` | [E-32](../BEFUNDE.md#e-32) als **offen**, Verdacht auf `AutoCompleterListBox::KillACListBox` | seit `060a4bf` behoben; die Ursache war der **ungeprüfte Zeiger auf dem Weg dorthin** (`CHeaderView::OnKillFocusRecipient`) |
 | `CHANGELOG.md`, Abschnitt 7.2.0.18 | ein Punkt behauptete, die Spur ende bei *„Auswahlfelder gefüllt"* | drei Absätze darüber steht, sie laufe bis `OnMessageNewMessage: fertig` durch — der Punkt gehörte zu 7.2.0.17 und ist entfallen |
 | `PORTIERUNG.md` | *„die Prüfstandsmarke oben steht deshalb weiter auf `d826a3f`"* | oben stand `9512108` |
 | `Releases/PAKETE.md` | *„Kriterium 0 bleibt trotzdem offen: kein Paket ist auf einem Rechner ohne Visual Studio ausgepackt und gestartet worden"* | erfüllt seit 06.09.2026 |
 | `Releases/PAKETE.md` | *„Produktversion … dazu die Dateiversion der `Eudora.exe`"* | `Eudora.exe` hat **gar keinen** `VS_VERSION_INFO`-Block; die Version steckt über `EUDORA_BUILD_DESC` im String `IDS_VERSION` |
 
-## L-7.5 — `EUDORA_BUILD_NUMBER` hinkt seit 7.2.0.13 hinterher
+## <a id="l-7.5"></a>L-7.5 — `EUDORA_BUILD_NUMBER` hinkt seit 7.2.0.13 hinterher
 
 `Releases/PAKETE.md` nennt für eine neue Nummer **fünf Zeilen in zwei Dateien**.
 Eine davon ist seit sechs Fassungen nicht mitgezogen worden:
@@ -225,8 +225,8 @@ der **Anwender** hat. Umgeschrieben:
   Fenster sieht, entscheidet sein Rechner, nicht diese Datei.
 * `README.md`: Gregors Urteil war **verkürzt zitiert**, *„beenden kann ich es
   auch nicht"* fehlte. Vollständig eingesetzt.
-* Überall, wo E-31 oder E-32 vorkommen, steht jetzt dazu, dass **niemand es auf
-  Gregors Rechner nachgemessen hat** und dass E-32 **nicht in Paket 1.0.18**
+* Überall, wo [E-31](../BEFUNDE.md#e-31) oder [E-32](../BEFUNDE.md#e-32) vorkommen, steht jetzt dazu, dass **niemand es auf
+  Gregors Rechner nachgemessen hat** und dass [E-32](../BEFUNDE.md#e-32) **nicht in Paket 1.0.18**
   steckt.
 * Nach den Wörtern „Durchbruch", „endlich", „Meilenstein", „geschafft" gesucht:
   in den sieben Stand-Dateien kein Treffer mehr.
@@ -240,14 +240,14 @@ Status der Kennung.
 
 | Meldung | Warum sie falsch war |
 |---|---|
-| E-7 behoben **und** offen | die Verzeichniszeile lautet *„die Bau-Kennung fehlt im Titel, solange kein Postfach **offen** ist"* — gemeint ist ein aufgeklapptes Postfach |
-| E-11 behoben **und** offen | die Zeile ist `\| R-1 \| die Fehlerklasse hinter E-11 ausgezählt \| **offen** …` — der Status gehört **R-1** |
-| E-14, E-16 behoben **und** offen | *„**Z-3** stand auf „offen", ist aber behoben; **E-14**, **E-16**, … fehlten im Verzeichnis"* — der Status gehört **Z-3** |
+| [E-7](../BEFUNDE.md#e-7) behoben **und** offen | die Verzeichniszeile lautet *„die Bau-Kennung fehlt im Titel, solange kein Postfach **offen** ist"* — gemeint ist ein aufgeklapptes Postfach |
+| [E-11](../BEFUNDE.md#e-11) behoben **und** offen | die Zeile ist `\| R-1 \| die Fehlerklasse hinter E-11 ausgezählt \| **offen** …` — der Status gehört **[R-1](../BEFUNDE.md#r-1)** |
+| [E-14](../BEFUNDE.md#e-14), [E-16](../BEFUNDE.md#e-16) behoben **und** offen | *„**[Z-3](../BEFUNDE.md#z-3)** stand auf „offen", ist aber behoben; **[E-14](../BEFUNDE.md#e-14)**, **[E-16](../BEFUNDE.md#e-16)**, … fehlten im Verzeichnis"* — der Status gehört **[Z-3](../BEFUNDE.md#z-3)** |
 
 Nach der Berichtigung von `ZIEL.md` kamen zwei weitere derselben Art dazu
-(E-31 und E-32 in der Kriterienzeile, wo „nicht erfüllt … bleibt das Kriterium
+([E-31](../BEFUNDE.md#e-31) und [E-32](../BEFUNDE.md#e-32) in der Kriterienzeile, wo „nicht erfüllt … bleibt das Kriterium
 offen" und „behoben" in einer Zeile stehen). **Eine Schranke, die umsonst
-warnt, wird ignoriert** (X-1) — deshalb umgebaut.
+warnt, wird ignoriert** ([X-1](../BEFUNDE.md#x-1)) — deshalb umgebaut.
 
 **Jetzt gilt:** ein Status zählt nur, wo die Kennung ihn **besitzt** — allein in
 der **ersten Spalte** einer Verzeichniszeile, und der Status **fett**.
@@ -258,10 +258,10 @@ Dafür sind drei scharfe Prüfungen dazugekommen:
 
 | Prüfung | Was sie findet |
 |---|---|
-| 4a | eine Kennung mit **zwei Abschnitten** in `BEFUNDE.md` — Gregors dritter Widerspruch war genau das (E-31 zweimal vergeben) |
+| 4a | eine Kennung mit **zwei Abschnitten** in `BEFUNDE.md` — Gregors dritter Widerspruch war genau das ([E-31](../BEFUNDE.md#e-31) zweimal vergeben) |
 | 4b | zwei Verzeichniszeilen zur selben Kennung mit **verschiedenem** Status |
-| 4c | was im `CHANGELOG` unter *Noch offen* steht, muss im Verzeichnis stehen und darf dort **nicht behoben** sein. **Diese Prüfung hätte das heutige Problem gefunden:** E-32 stand als offen im `CHANGELOG` und war behoben |
-| 7 | `Eudora71/Version.h` gegen sich selbst und gegen `VERSION` — daran ist L-7.5 aufgefallen |
+| 4c | was im `CHANGELOG` unter *Noch offen* steht, muss im Verzeichnis stehen und darf dort **nicht behoben** sein. **Diese Prüfung hätte das heutige Problem gefunden:** [E-32](../BEFUNDE.md#e-32) stand als offen im `CHANGELOG` und war behoben |
+| 7 | `Eudora71/Version.h` gegen sich selbst und gegen `VERSION` — daran ist [L-7.5](#l-7.5) aufgefallen |
 
 Prüfung 6 (Fassungsstand) hat `AUFGABEN.md` zu Unrecht angeschwärzt, weil die
 Datei `7.2.0.17` als **Fundstelle** nennt (*„die sieben Vermutungen stehen unter
@@ -281,7 +281,7 @@ Gegenprobe ein Eingriff.
 | | Eingriff | Erwartet | Ergebnis |
 |---|---|---|---|
 | A | „Sieben Kriterien" in `ZIEL.md` | Meldung | `ZIEL.md:19 nennt 7 Kriterien, ZIEL.md fuehrt 8` |
-| B | E-33 im Verzeichnis auf `**behoben**` | Meldung (4c) | `E-33 steht in CHANGELOG.md:16 unter 'Noch offen', im Verzeichnis aber als behoben` |
+| B | [E-33](../BEFUNDE.md#e-33) im Verzeichnis auf `**behoben**` | Meldung (4c) | `E-33 steht in CHANGELOG.md:16 unter 'Noch offen', im Verzeichnis aber als behoben` |
 | C | zweite Überschrift `## E-7 — …` | Meldung (4a) | `E-7 hat in BEFUNDE.md zwei Abschnitte` |
 | D | E-33-Zeile aus dem Verzeichnis entfernt | Meldung (4c) | `… fehlt aber im Verzeichnis von BEFUNDE.md` |
 | E | unverändert, mit der E-7-Prosa | **stumm** | stumm — kein Fehlalarm |
@@ -304,30 +304,30 @@ Arbeit blockieren. **Nach dem Merge einmal `sh tools/hooks-einrichten.sh`.**
 |---|---|
 | **Alle Messwerte in den Prüfberichten** (`PRUEFUNG-*.md`, `Pruefung/*.md`, `Befunde/*.md`) | Ein Bericht ist ein Zeitdokument. Überholt ist nur die *Schlussfolgerung*, und die wird mit einem datierten Nachtrag gekennzeichnet, nicht ersetzt |
 | **Die Überschriften in `BEFUNDE.md` mit `(31.08.2026, OFFEN)`** | dito — sie sagen, was an jenem Tag galt. Das Verzeichnis oben ist die einzige Quelle für den heutigen Status, und `doku-pruefen.pl` liest deshalb nur dieses |
-| **`EUDORA_BUILD_NUMBER` auf `7,2,0,12`** | Quelltext. Siehe L-7.5 — eine Zeile, wenn Gregor sie freigibt |
-| **Der Fehlalarm in `tools/suche-zeiger.pl`** (negativer Wächter, `return` weiter als sechs Zeilen entfernt) | Ein Filter ohne Testfall ist der Fehler, den Auflage 10 verbietet, und `suche-zeiger.pl` hat keine Testsammlung. Als Aufgabe benannt, siehe L-7.2 |
+| **`EUDORA_BUILD_NUMBER` auf `7,2,0,12`** | Quelltext. Siehe [L-7.5](#l-7.5) — eine Zeile, wenn Gregor sie freigibt |
+| **Der Fehlalarm in `tools/suche-zeiger.pl`** (negativer Wächter, `return` weiter als sechs Zeilen entfernt) | Ein Filter ohne Testfall ist der Fehler, den Auflage 10 verbietet, und `suche-zeiger.pl` hat keine Testsammlung. Als Aufgabe benannt, siehe [L-7.2](#l-7.2) |
 | **`README.md`: „`Eudora.map`, 51.075 Einträge" und „18 erfolgreich, 0 Fehler, 1 übersprungen, 2:37 min"** | beides entsteht erst beim Bau, und ich baue nicht. Gregors eigene Messung vom 06.09.2026 |
-| **`README.md`: „30 Stellen, 22 Stingray-Klassen, 77 Methoden"** | Die Zählweise ist nicht dokumentiert, und mir ist keine Rekonstruktion gelungen, die genau diese drei Zahlen ergibt. Raten wäre schlimmer als stehen lassen. **Weiter zurückgestellt** (schon aus L-6) |
-| **`Releases/PAKETE.md` ohne Abschnitte für 1.0.4 bis 1.0.17** | Für die meisten liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **M-4** bleibt offen und steht dort benannt. Für 1.0.18 ist der Abschnitt jetzt da, weil dafür alles messbar war |
+| **`README.md`: „30 Stellen, 22 Stingray-Klassen, 77 Methoden"** | Die Zählweise ist nicht dokumentiert, und mir ist keine Rekonstruktion gelungen, die genau diese drei Zahlen ergibt. Raten wäre schlimmer als stehen lassen. **Weiter zurückgestellt** (schon aus [L-6](LEKTOR.md#l-6)) |
+| **`Releases/PAKETE.md` ohne Abschnitte für 1.0.4 bis 1.0.17** | Für die meisten liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **[M-4](PRUEFER-15.md#m-4)** bleibt offen und steht dort benannt. Für 1.0.18 ist der Abschnitt jetzt da, weil dafür alles messbar war |
 | **`Eudora71/Eudora/mainfrm.cpp`, alte Bau-Kennung im Kommentar (M-9)** | Quelltext |
 
-## L-7.6 — Zwei Fehlerklassen, nicht viele Einzelfehler
+## <a id="l-7.6"></a>L-7.6 — Zwei Fehlerklassen, nicht viele Einzelfehler
 
 1. **Eine Datei, die „was jetzt gilt" behauptet, sammelt Vergangenheit an.**
    `README.md` und `CHANGELOG.md` trugen ganze Abschnitte über eine Suche, die
-   längst beendet ist — Heap-Beschädigung, E-25, „die schuldige Zeile ist nicht
+   längst beendet ist — Heap-Beschädigung, [E-25](../BEFUNDE.md#e-25), „die schuldige Zeile ist nicht
    gefunden". Niemand löscht so etwas, weil darin Arbeit steckt.
    **Schranke:** widerlegte Vermutungen gehören ins `CHANGELOG` unter die
    Fassung, in der sie widerlegt wurden, und werden dort **als widerlegt**
    benannt. In der Stand-Datei steht ein Satz und ein Verweis.
 2. **Eine Prüfung, die nur die halbe Menge durchsucht, erzeugt eine falsche
-   Gewissheit.** „E-15 und E-18 bis E-21 gibt es nicht — gesucht im ganzen Repo"
+   Gewissheit.** „[E-15](../BEFUNDE.md#e-15) und [E-18](../BEFUNDE.md#e-18) bis [E-21](../BEFUNDE.md#e-21) gibt es nicht — gesucht im ganzen Repo"
    war eine Suche in `*.md`. Das Ergebnis war nicht nur falsch, es war als
    **geprüft** gekennzeichnet, und das ist schlimmer als eine offene Frage.
    **Schranke:** wer „im ganzen Repo gesucht" schreibt, schreibt den **Befehl**
    dazu. Steht er da, sieht der nächste Leser die Lücke.
 
-## L-7.7 — Arbeitsweise und Byte-Messung
+## <a id="l-7.7"></a>L-7.7 — Arbeitsweise und Byte-Messung
 
 **Kein Edit-Werkzeug an Markdown.** Alle Änderungen über
 `tools/ersetze-bereich.pl`, das mit `:raw` liest und schreibt und Kopf und Rumpf
@@ -347,7 +347,7 @@ perl -e 'open(my $h,"<:raw",$ARGV[0]);local $/;my $d=<$h>;
 | `BEFUNDE.md` | 0 | 3 | 3 |
 
 Die vier Doppelkodierungstreffer sind die bekannten **zitierten** Beispiele in
-den Umlautbefunden (Z-2, Z-2b) und gehören dort hin.
+den Umlautbefunden ([Z-2](../BEFUNDE.md#z-2), [Z-2b](../BEFUNDE.md#z-2b)) und gehören dort hin.
 
 **Ein Fund für den nächsten Durchgang:** ein Ersetzungstext mit `\\` durch die
 Befehlszeile zu reichen frisst eine Ebene — aus `s{\\}{/}g` wurde `s{\}{/}g`,

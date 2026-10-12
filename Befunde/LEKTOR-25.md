@@ -1,4 +1,4 @@
-# LEKTOR-25 — Release v1.0.84 gegen GitHub (`c01ca07..1654a52`)
+# <a id="lektor-25"></a>LEKTOR-25 — Release v1.0.84 gegen GitHub (`c01ca07..1654a52`)
 
 Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. GitHub stimmt (Latest, `eb54752`, SHA-256 nachgerechnet). **Alle vier Mängel sind im selben Commit wie dieser Bericht behoben.**
 

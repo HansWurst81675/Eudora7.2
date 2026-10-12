@@ -1,4 +1,4 @@
-# PRUEFER-7 — Filter: Ursachen der drei Befunde an 1.0.29 und Bestandsaufnahme
+# <a id="pruefer-7"></a>PRUEFER-7 — Filter: Ursachen der drei Befunde an 1.0.29 und Bestandsaufnahme
 
 | | |
 |---|---|
@@ -136,7 +136,7 @@ vom Filterreiter schreibt also den **Zustand der Steuerelemente** in den
 Filter zurück: `filt->m_Verb[0] = m_Verb0`, `filt->m_Value[0] = m_Value0` und
 `SaveIntoFilter(filt, m_ActionCommands[i], i)` (`filtersv.cpp:1425-1437`).
 Stimmen die Steuerelemente nicht mit dem Filter überein, ist der Filter danach
-falsch. Das verbindet **E-64 mit E-65**: derselbe Weg, ein Symptom in der
+falsch. Das verbindet **[E-64](../BEFUNDE.md#e-64) mit [E-65](../BEFUNDE.md#e-65)**: derselbe Weg, ein Symptom in der
 Anzeige, eins in den Daten.
 
 #### Der offene Widerspruch — und die Ausgabe, die ihn entscheidet
@@ -270,7 +270,7 @@ Das ist ein **funktionslokales `static`, also prozessweit** — nicht je Fenster
 Wird das Filter-Wazoo einmal zerstört und neu erzeugt, ist `bFuncEntered`
 immer noch `TRUE`, der Teiler und beide Ansichten werden **nicht** neu
 angelegt, und der Reiter zeigt eine leere Fläche. Dazu passt, dass Wazoo-Fenster
-in dieser Portierung nachweislich zerstört und neu aufgebaut werden (E-53).
+in dieser Portierung nachweislich zerstört und neu aufgebaut werden ([E-53](../BEFUNDE.md#e-53)).
 
 **Kandidat 3 (VERMUTUNG): stiller Abbruch nach der bekannten Fehlerklasse.**
 Scheitert eine der drei Erzeugungen, lautet die ganze Fehlerbehandlung
@@ -300,7 +300,7 @@ Mindestbreite geben.
 ### E-66 — der Trennbalken der **rechten** Leiste ist sichtbar, lässt sich aber nicht ziehen
 
 Gregors Wortlaut: *„rechts ist zwar ein balken sichtbar, aber nicht
-verschiebbar."* Links geht es seit A-4 (E-49, E-52, E-54, E-55).
+verschiebbar."* Links geht es seit A-4 ([E-49](../BEFUNDE.md#e-49), [E-52](../BEFUNDE.md#e-52), [E-54](../BEFUNDE.md#e-54), [E-55](../BEFUNDE.md#e-55)).
 
 **Ursache 1 (BELEGT, wirksam): rechts entsteht überhaupt kein
 Trennbalken-Objekt.** `TrennbalkenNeuAnlegen` in
@@ -418,7 +418,7 @@ Ausgangspunkt waren `filtersd.cpp/.h`, `filtersv.cpp/.h`, `FiltersWazooWnd.cpp`,
 `MatchesRegex` benutzt POSIX-`regcomp`/`regexec` aus `hsregex`
 (`filtersd.cpp:364-380`), kein leerer Rumpf. **Durch die Ersatzschicht ist an
 den Filtern nichts verlorengegangen** — mit einer Ausnahme, die kein
-Filterproblem ist, sondern das Rahmenfenster betrifft (E-65, E-66).
+Filterproblem ist, sondern das Rahmenfenster betrifft ([E-65](../BEFUNDE.md#e-65), [E-66](../BEFUNDE.md#e-66)).
 
 **Die Shareware-Schranke greift in diesem Bau nicht.**
 `CFilter::IsRestrictedFilterAction` (`filtersd.cpp:1032-1076`) würde im
@@ -477,7 +477,7 @@ das `CFiltersDoc::FilterMsg` dreimal ruft: Vorfilter, Hauptfilter, Nachfilter.
 | eingehend, POP | `pop.cpp:919` / `:950` / `:999` / `:1018` | ja |
 | ausgehend, SMTP | `sendmail.cpp:113` / `:186` / `:317` | ja |
 | ausgehend, Vorabfrage | `SMTPSession.cpp:114` (nur „gibt es Ausgangsfilter?") | ja |
-| **manuell, Postfachfenster** | `TocFrame.cpp:2351` / `:2377` / `:2398` / `:2417` | ja — **das ist Gregors Weg (E-64)** |
+| **manuell, Postfachfenster** | `TocFrame.cpp:2351` / `:2377` / `:2398` / `:2417` | ja — **das ist Gregors Weg ([E-64](../BEFUNDE.md#e-64))** |
 | manuell, einzelne Nachricht | `msgdoc.cpp:783` / `:792` / `:796` | ja |
 | Junk neu bewerten (Nachricht / Auswahl) | `msgdoc.cpp:816`, `TocFrame.cpp:991` → `JunkMail.cpp:535` | ja |
 | Junk-Status ändern (Nachricht / Auswahl) | `msgdoc.cpp:894`, `TocFrame.cpp:1151` → `JunkMail.cpp:742` | ja |
@@ -517,7 +517,7 @@ Einbahnstraßen, einzeln bewertet:
   Richtungen.** Kein Datenverlust, nur zwei nutzlose `CRString`-Ladungen je
   `Write`-Aufruf (`:3047`, `:3061`).
 * `copyInstead ` (`IDS_FIO_COPY_TO`) und die Pfadzeile hinter `transfer ` —
-  **echter Datenverlust.** Siehe **E-68** unten.
+  **echter Datenverlust.** Siehe **[E-68](../BEFUNDE.md#e-68)** unten.
 
 **`Write()` speichert nur `m_Filters`** (`:3084`). `m_PreFilters` und
 `m_PostFilters` werden nie geschrieben — und in `filtersv.cpp` kommen sie
@@ -550,7 +550,7 @@ Operator, keine zweite Bedingung, keine Verknüpfung. `OnOK` und `OnDetails`
 rufen `CreateFilterItem` (`filtersd.cpp:2181-2192`), das sofort schreibt. Der
 Weg ist vollständig — die Beschränkung auf 3 von 19 Aktionen ist Absicht des
 Originals und genau der Grund, warum man **danach** ins Filterfenster muss
-(E-65).
+([E-65](../BEFUNDE.md#e-65)).
 
 ### B.6 Junk-Mail
 
@@ -563,7 +563,7 @@ Weißliste über dieselben Adressbuch-Streuwerte wie die
 
 ### B.7 Die drei größten Lücken der Bestandsaufnahme
 
-1. **E-67 — der Junk-Score-Operator „is less than" wird beim bloßen Anschauen
+1. **[E-67](../BEFUNDE.md#e-67) — der Junk-Score-Operator „is less than" wird beim bloßen Anschauen
    zu „matches regexp".** Belegt durch Nachrechnen: `filtersv.cpp:1210` und
    `:1222` prüfen `if (m_Verb0 > NumVerbsNonJunk)` mit `NumVerbsNonJunk == 14`,
    kodiert wird beim Speichern aber mit `m_Verb0 += 14` (`:1378`), also
@@ -576,7 +576,7 @@ Weißliste über dieselben Adressbuch-Streuwerte wie die
    greift er nie wieder (`MatchValue` verlangt für Junk-Score-Köpfe
    `IDS_LESS_THAN`/`IDS_MORE_THAN`, `filtersd.cpp:679-694`). Behebung: zwei
    Zeichen, `>` → `>=` an zwei Stellen.
-2. **E-68 — Zielpostfächer verschwinden beim Speichern.** Zwei Wege:
+2. **[E-68](../BEFUNDE.md#e-68) — Zielpostfächer verschwinden beim Speichern.** Zwei Wege:
    `copyInstead ` wird gelesen (`filtersd.cpp:2746`, füllt aber `m_Mailbox`
    statt `m_CopyTo[i]`; der Quelltext nennt das selbst „legacy code that never
    gets executed"), und der Schreibzweig prüft `m_CopyTo[i]` (`:3120`) — also
@@ -590,7 +590,7 @@ Weißliste über dieselben Adressbuch-Streuwerte wie die
    kommt die Konstante nicht vor. Eine von Hand oder von einer Erweiterung
    erzeugte `.pre`-Datei mit sechs Aktionen schreibt über `m_Actions[5]`
    hinaus.
-3. **E-69 — drei `ASSERT(0)` in `CFiltersDoc::FilterMsg` brechen den
+3. **[E-69](../BEFUNDE.md#e-69) — drei `ASSERT(0)` in `CFiltersDoc::FilterMsg` brechen den
    Filterlauf im Freigabebau lautlos ab.** `:2241` (kein TOC), `:2286`
    (Nachrichtendokument nicht ladbar), `:2302` (Nachrichtentext leer) führen
    alle auf `break` aus der Filterschleife, und die Funktion liefert danach
@@ -620,21 +620,21 @@ Original.
 
 | # | Befund | Schaden | Größe | Warum in dieser Reihenfolge |
 |---|---|---|---|---|
-| 1 | **E-64** — Filterlauf verschiebt alle Nachrichten | **Datenverlust beim Anwender**, am Protokoll nachgemessen | **erst messen (klein), dann beheben (unbekannt)** | Der einzige Befund, der Gregors Postfach zerstört. Er ist noch **nicht** ursachenreif: zuerst die eine Spurmarke aus Teil A einbauen, ein Paket schnüren, Gregor einmal filtern lassen. Marke einbauen ≈ 15 Zeilen in `filtersd.cpp`; die Behebung danach hängt am Messergebnis |
-| 1b | **Härtung zu E-64** | verhindert den Schaden unabhängig von der Ursache | **klein**, ~15 Zeilen | Zusammen mit der Marke ausliefern: leerer Wert bei `contains`/`is`/`starts with`/`ends with` darf **nicht** treffen (`filtersd.cpp:712-740`), und eine Schranke in `CTocFrame::OnFilterMessages`, die abbricht, wenn ein Filter fast alles trifft |
-| 2 | **E-67** — Junk-Score-Filter wird beim Anschauen verfälscht | stiller, dauerhafter Datenverlust am Filter | **winzig**, zwei Zeichen (`>` → `>=`, `filtersv.cpp:1210` und `:1222`) | Belegt, eindeutig, kostet nichts. Gegentest: einen Filter „«Junk Score» is less than 50" anlegen, Filterfenster öffnen, wegklicken, `Filters.pce` ansehen — vorher steht dort `verb regex`, nachher `verb less` |
-| 3 | **E-68** — Zielpostfächer verschwinden beim Speichern | Datenverlust am Filter | **mittel**, ~25 Zeilen in `filtersd.cpp` (`:2746`, `:3120`, `:3132`) plus eine Grenzprüfung auf `NUM_FILT_ACTS` in `Read` | Zweiter Datenverlust; die Grenzprüfung schließt zusätzlich einen Pufferüberlauf |
-| 4 | **E-65** — Filter lassen sich nicht bearbeiten | Funktion fehlt; Gregor kann Filter nur anlegen, nie ändern | **erst fragen (nichts), dann klein bis mittel** | Vor jeder Änderung Gregors Antwort auf **eine** Frage: bleibt die rechte Hälfte leer, sind die Felder grau, oder wird die Änderung nicht behalten? Danach: Mindestbreite für Spalte 1 (~3 Zeilen), `bFuncEntered` zum Fensterfeld machen (~5 Zeilen), vier `ASSERT(0)` durch Spurmarken ersetzen (~20 Zeilen) |
-| 5 | **E-66** — Trennbalken rechts (und unten) | Bedienung fehlt, kein Datenverlust | **mittel**, 30 bis 45 Zeilen in **einer** Datei (`OTShim.cpp`, `CalcTrackingLimits` und `TrennbalkenNeuAnlegen`) | Ursache belegt, Umfang bekannt, kein Risiko für Daten. Vor dem Anfassen die Fünf-Sekunden-Messung aus Teil A machen — sie entscheidet, ob eine oder beide Stellen zu ändern sind |
-| 6 | **E-69** — `FilterMsg` bricht stumm ab | ungefilterte Post, ohne Hinweis | **klein**, drei Spurmarken (`filtersd.cpp:2241`, `:2286`, `:2302`) | Kein Sofortschaden, aber es nimmt jeder künftigen Filterstörung die Unsichtbarkeit. Sinnvoll **zusammen mit** Schritt 1, weil dieselbe Datei angefasst wird |
-| 7 | Lücke im Suchfenster (`SearchView.cpp:3722`) | „Nicht Junk" aus der Suche filtert nicht | **winzig**, eine Zeile entkommentieren — **aber erst nach E-64** | Solange E-64 offen ist, wäre das Einschalten eines weiteren Filterlaufs ein Risiko |
+| 1 | **[E-64](../BEFUNDE.md#e-64)** — Filterlauf verschiebt alle Nachrichten | **Datenverlust beim Anwender**, am Protokoll nachgemessen | **erst messen (klein), dann beheben (unbekannt)** | Der einzige Befund, der Gregors Postfach zerstört. Er ist noch **nicht** ursachenreif: zuerst die eine Spurmarke aus Teil A einbauen, ein Paket schnüren, Gregor einmal filtern lassen. Marke einbauen ≈ 15 Zeilen in `filtersd.cpp`; die Behebung danach hängt am Messergebnis |
+| 1b | **Härtung zu [E-64](../BEFUNDE.md#e-64)** | verhindert den Schaden unabhängig von der Ursache | **klein**, ~15 Zeilen | Zusammen mit der Marke ausliefern: leerer Wert bei `contains`/`is`/`starts with`/`ends with` darf **nicht** treffen (`filtersd.cpp:712-740`), und eine Schranke in `CTocFrame::OnFilterMessages`, die abbricht, wenn ein Filter fast alles trifft |
+| 2 | **[E-67](../BEFUNDE.md#e-67)** — Junk-Score-Filter wird beim Anschauen verfälscht | stiller, dauerhafter Datenverlust am Filter | **winzig**, zwei Zeichen (`>` → `>=`, `filtersv.cpp:1210` und `:1222`) | Belegt, eindeutig, kostet nichts. Gegentest: einen Filter „«Junk Score» is less than 50" anlegen, Filterfenster öffnen, wegklicken, `Filters.pce` ansehen — vorher steht dort `verb regex`, nachher `verb less` |
+| 3 | **[E-68](../BEFUNDE.md#e-68)** — Zielpostfächer verschwinden beim Speichern | Datenverlust am Filter | **mittel**, ~25 Zeilen in `filtersd.cpp` (`:2746`, `:3120`, `:3132`) plus eine Grenzprüfung auf `NUM_FILT_ACTS` in `Read` | Zweiter Datenverlust; die Grenzprüfung schließt zusätzlich einen Pufferüberlauf |
+| 4 | **[E-65](../BEFUNDE.md#e-65)** — Filter lassen sich nicht bearbeiten | Funktion fehlt; Gregor kann Filter nur anlegen, nie ändern | **erst fragen (nichts), dann klein bis mittel** | Vor jeder Änderung Gregors Antwort auf **eine** Frage: bleibt die rechte Hälfte leer, sind die Felder grau, oder wird die Änderung nicht behalten? Danach: Mindestbreite für Spalte 1 (~3 Zeilen), `bFuncEntered` zum Fensterfeld machen (~5 Zeilen), vier `ASSERT(0)` durch Spurmarken ersetzen (~20 Zeilen) |
+| 5 | **[E-66](../BEFUNDE.md#e-66)** — Trennbalken rechts (und unten) | Bedienung fehlt, kein Datenverlust | **mittel**, 30 bis 45 Zeilen in **einer** Datei (`OTShim.cpp`, `CalcTrackingLimits` und `TrennbalkenNeuAnlegen`) | Ursache belegt, Umfang bekannt, kein Risiko für Daten. Vor dem Anfassen die Fünf-Sekunden-Messung aus Teil A machen — sie entscheidet, ob eine oder beide Stellen zu ändern sind |
+| 6 | **[E-69](../BEFUNDE.md#e-69)** — `FilterMsg` bricht stumm ab | ungefilterte Post, ohne Hinweis | **klein**, drei Spurmarken (`filtersd.cpp:2241`, `:2286`, `:2302`) | Kein Sofortschaden, aber es nimmt jeder künftigen Filterstörung die Unsichtbarkeit. Sinnvoll **zusammen mit** Schritt 1, weil dieselbe Datei angefasst wird |
+| 7 | Lücke im Suchfenster (`SearchView.cpp:3722`) | „Nicht Junk" aus der Suche filtert nicht | **winzig**, eine Zeile entkommentieren — **aber erst nach [E-64](../BEFUNDE.md#e-64)** | Solange [E-64](../BEFUNDE.md#e-64) offen ist, wäre das Einschalten eines weiteren Filterlaufs ein Risiko |
 
 **Klein** heißt hier: eine Datei, unter 30 Zeilen, kein Bau von Kopfdateien.
-**Mittel:** eine bis zwei Dateien, unter 60 Zeilen. Nur **E-64** ist heute
+**Mittel:** eine bis zwei Dateien, unter 60 Zeilen. Nur **[E-64](../BEFUNDE.md#e-64)** ist heute
 nicht schätzbar — und genau deshalb steht die Messung davor und nicht die
 Behebung.
 
 **Was zusammen in ein Paket gehört:** Schritt 1 (Marke), 1b (Härtung), 2, 3
 und 6 fassen alle `filtersd.cpp`/`filtersv.cpp` an, brauchen keinen
-Kopfdateibau und lassen sich in einem Zug prüfen. E-65 und E-66 sind
+Kopfdateibau und lassen sich in einem Zug prüfen. [E-65](../BEFUNDE.md#e-65) und [E-66](../BEFUNDE.md#e-66) sind
 Fenstersachen und gehören in ein zweites Paket.

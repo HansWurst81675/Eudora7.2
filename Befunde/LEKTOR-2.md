@@ -1,6 +1,6 @@
-# LEKTOR-2 — Ist die README auf dem Stand? Gemessen, nicht gelesen
+# <a id="lektor-2"></a>LEKTOR-2 — Ist die README auf dem Stand? Gemessen, nicht gelesen
 
-**Agent:** LEKTOR · **Kennung:** `L-6` · **Zweig:** `wt/lektor` ·
+**Agent:** LEKTOR · **Kennung:** [`L-6`](LEKTOR.md#l-6) · **Zweig:** `wt/lektor` ·
 **Arbeitsbaum:** `Eudora7.2-wt-lektor` · **Datum:** 06.09.2026 ·
 **Bezugscommit:** `9512108`
 
@@ -16,11 +16,11 @@ gemessen; jeder Messbefehl steht dabei, damit sie nachprüfbar sind.
 auf etwas ganz anderes, ein ganzer Absatz zählte Bibliotheken, die es so nicht
 gibt, und ein Beleg (`cat VERSION`) liefert eine andere Zahl als die, für die er
 angeführt wird. **Alle sechs sind berichtigt.** Was stimmte, ist ebenfalls
-nachgemessen und steht unter L-6.8.
+nachgemessen und steht unter [L-6.8](#l-6.8).
 
 ---
 
-## L-6.1 — `eudora.cpp:3542` zeigt auf etwas ganz anderes
+## <a id="l-6.1"></a>L-6.1 — `eudora.cpp:3542` zeigt auf etwas ganz anderes
 
 **Behauptung** (README, Abschnitt „Starten"; ebenso `STARTUMGEBUNG.md:106` und
 `Releases/PAKETE.md:197`):
@@ -66,7 +66,7 @@ Empfehlung, eine `Eudora.ini` beizulegen, plus ein Berichtigungskasten mit dem
 alten Wortlaut und der Fundstelle als **Funktionsname**. Kein Zeilenverweis
 mehr — Funktionsnamen verschieben sich nicht.
 
-## L-6.2 — Der Absatz über die Bibliotheken nannte vier Zahlen, drei davon falsch
+## <a id="l-6.2"></a>L-6.2 — Der Absatz über die Bibliotheken nannte vier Zahlen, drei davon falsch
 
 **Behauptung** (README, „Was fertig gebaut wird"): elf `.lib`, davon sieben
 Importbibliotheken, vier statische, dazu sechs vorgefertigte Fremdbibliotheken
@@ -103,7 +103,7 @@ Bibliothek hat keine und wird beim Bau neu geschrieben; Fremdbibliothek hat
 keine und steht in `git ls-files`. Dazu drei Befehle zum Nachzählen. Das
 veraltet nicht, wenn ein Projekt dazukommt.
 
-## L-6.3 — `cat VERSION` belegt nicht, was es belegen soll
+## <a id="l-6.3"></a>L-6.3 — `cat VERSION` belegt nicht, was es belegen soll
 
 **Behauptung** (README, Kopf): „**Quellstand ist 7.2.0.12** (`cat VERSION`,
 `Eudora71/Version.h`)".
@@ -118,7 +118,7 @@ eigenen Belegklammer. `tools/ausliefern.pl:70-73` liest beide getrennt ein.
 Nebenbefund: `VERSION` steht bereits auf `1.0.12`, obwohl es kein Paket 1.0.12
 gibt — die Nummer ist vorgezogen. Das ist so gewollt, steht jetzt aber auch da.
 
-## L-6.4 — `mainfrm.cpp:1025` ist eine Kommentarzeile
+## <a id="l-6.4"></a>L-6.4 — `mainfrm.cpp:1025` ist eine Kommentarzeile
 
 **Behauptung** (README, Kasten zur Registerkartenleiste): „Abschaltbar ist nur
 der MDI-Streifen hinter `m_bWorkbookMode` (`mainfrm.cpp:1025`)."
@@ -132,7 +132,7 @@ Ersatzschicht (`OTShim.cpp:788`, Konstruktor), und `SECWorkbook::SetWorkbookMode
 
 **Was jetzt dasteht:** Funktionsnamen statt Zeilennummern.
 
-## L-6.5 — Stingray-Header: 30 behauptet, 28 gemessen
+## <a id="l-6.5"></a>L-6.5 — Stingray-Header: 30 behauptet, 28 gemessen
 
 **Behauptung:** „**42** Quelldateien und 30 Header unter `Eudora71/Eudora`
 nennen mindestens einen Stingray-Bezeichner."
@@ -160,7 +160,7 @@ Die übrigen OT501-Zahlen stimmen und sind nachgemessen: **127 Header** unter
 `SECRES.APS` und der Ordner `RES`), **67** vorhandene Quelldateien von den 186,
 die `otlib50.mak` erwartet.
 
-## L-6.6 — „121 Zertifikate" ist keine Eigenschaft des Repos
+## <a id="l-6.6"></a>L-6.6 — „121 Zertifikate" ist keine Eigenschaft des Repos
 
 `Releases/1.0/rootcerts-erzeugen.ps1` liest den **Windows-Wurzelspeicher der
 Maschine** und wirft abgelaufene und noch nicht gültige Zertifikate weg. Die
@@ -168,14 +168,14 @@ Zahl hängt damit am Zertifikatstand des Rechners und am Tag. Das Skript nennt
 sie am Ende selbst (*„Gegenprobe (wieder eingelesen): N Zertifikate"*); eine 121
 steht nirgends darin. Zahl entfernt, Messweg hingeschrieben.
 
-## L-6.7 — `msvcr71.dll` fehlte in der Liste der Bauergebnisse
+## <a id="l-6.7"></a>L-6.7 — `msvcr71.dll` fehlte in der Liste der Bauergebnisse
 
 Die Tabelle „Was fertig gebaut wird" nannte `Eudora.exe`, `EudoraRes.dll`, sechs
 DLLs, drei `.eif`, ein `.epi` — aber nicht die `msvcr71.dll` aus dem Projekt
 `VC71Bruecke`, obwohl sie nach `Eudora71/Bin/<Konfiguration>` geht und ohne sie
 `EuMemMgr.dll` und `Paige32d.dll` nicht laden. Ergänzt.
 
-## L-6.8 — Was in der README nachgemessen wurde und stimmt
+## <a id="l-6.8"></a>L-6.8 — Was in der README nachgemessen wurde und stimmt
 
 Damit der Bericht nicht nur die Fehler zeigt. Alles Folgende ist am 06.09.2026
 geprüft und **richtig**:
@@ -199,27 +199,27 @@ geprüft und **richtig**:
 
 ---
 
-## L-6.9 — Die Liste aus dem fünften Durchgang (L-4), abgearbeitet
+## <a id="l-6.9"></a>L-6.9 — Die Liste aus dem fünften Durchgang (L-4), abgearbeitet
 
-`Befunde/LEKTOR.md`, Abschnitt L-4, führte rund 37 überholte Aussagen in
+`Befunde/LEKTOR.md`, Abschnitt [L-4](LEKTOR.md#l-4), führte rund 37 überholte Aussagen in
 anderen `.md`. Stand nach diesem Durchgang:
 
 ### Behoben
 
 | Datei | Was |
 |---|---|
-| `PORTIERUNG.md` | Kasten „gemessen 05.09.2026" (Stand vor B-3); „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; OpenSSL3-Libs „nicht im Repo"; E-11; „im Release-Zweig ungetestet"; Kopf, Zweig, Prüfstandsmarke; Port 995 ergänzt |
-| `STARTUMGEBUNG.md` | Debug-Laufzeiten als Punkt 1 für jeden Paketanwender (L-3); `EudoraRes` hänge an OT501; `eudora.cpp:3542`; SUPERASSERT „nur Debug-Bau"; alte Bau-Kennung (M-9); „ob Eudora startet, sagt diese Datei nicht" |
-| `Releases/PAKETE.md` | Kasten über die Lücke 1.0.4–1.0.10; Versionsanleitung; E-11 an zwei Stellen; Debug-Laufzeiten im Release-Abschnitt (L-3); LIESMICH „beschreibt noch den Debug-Weg"; Tabelle „Stand nach ZIEL.md"; `eudora.cpp:3542` |
+| `PORTIERUNG.md` | Kasten „gemessen 05.09.2026" (Stand vor [B-3](../BEFUNDE.md#b-3)); „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; OpenSSL3-Libs „nicht im Repo"; [E-11](../BEFUNDE.md#e-11); „im Release-Zweig ungetestet"; Kopf, Zweig, Prüfstandsmarke; Port 995 ergänzt |
+| `STARTUMGEBUNG.md` | Debug-Laufzeiten als Punkt 1 für jeden Paketanwender ([L-3](LEKTOR.md#l-3)); `EudoraRes` hänge an OT501; `eudora.cpp:3542`; SUPERASSERT „nur Debug-Bau"; alte Bau-Kennung (M-9); „ob Eudora startet, sagt diese Datei nicht" |
+| `Releases/PAKETE.md` | Kasten über die Lücke 1.0.4–1.0.10; Versionsanleitung; [E-11](../BEFUNDE.md#e-11) an zwei Stellen; Debug-Laufzeiten im Release-Abschnitt ([L-3](LEKTOR.md#l-3)); LIESMICH „beschreibt noch den Debug-Weg"; Tabelle „Stand nach ZIEL.md"; `eudora.cpp:3542` |
 | `ABRUF-PRUEFEN.md` | „Belegt ist Port 110"; Entscheidungsbaum „auf 995 horcht dort nichts"; Verweis auf einen UNGEPRÜFT-Hinweis, den es nicht mehr gibt |
 | `Eudora71/OpenSSL3/BAUEN.md` | die Aufforderung ganz oben, OpenSSL selbst zu bauen |
-| `BEFUNDE.md` | `Z-3` auf „offen"; **E-14, E-16, E-17, E-22, E-23, E-24, E-25, E-26** fehlten im Verzeichnis; Kopfzahlen; Prüfstandsmarke |
-| `PRUEFUNG-BRANCH.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | „Ursache wieder offen" / „weiterhin unerklärt" / E-11 — Nachtragskästen mit E-25 und E-26 |
-| `PRUEFUNG-BAU.md` | `Version.h` sage 7.2.0.3; roher `MSBuild.exe`-Aufruf statt `tools/bauen.ps1` (X-6) |
+| `BEFUNDE.md` | [`Z-3`](../BEFUNDE.md#z-3) auf „offen"; **[E-14](../BEFUNDE.md#e-14), [E-16](../BEFUNDE.md#e-16), [E-17](../BEFUNDE.md#e-17), [E-22](../BEFUNDE.md#e-22), [E-23](../BEFUNDE.md#e-23), [E-24](../BEFUNDE.md#e-24), [E-25](../BEFUNDE.md#e-25), [E-26](../BEFUNDE.md#e-26)** fehlten im Verzeichnis; Kopfzahlen; Prüfstandsmarke |
+| `PRUEFUNG-BRANCH.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | „Ursache wieder offen" / „weiterhin unerklärt" / [E-11](../BEFUNDE.md#e-11) — Nachtragskästen mit [E-25](../BEFUNDE.md#e-25) und [E-26](../BEFUNDE.md#e-26) |
+| `PRUEFUNG-BAU.md` | `Version.h` sage 7.2.0.3; roher `MSBuild.exe`-Aufruf statt `tools/bauen.ps1` ([X-6](../BEFUNDE.md#x-6)) |
 | `PRUEFUNG-CODE.md` | M-11 stand an drei Stellen als offen, ist mit `57fe6a4` behoben; M-8 abgearbeitet |
 | `Releases/1.0/README.md`, `Releases/1.0/AUSLIEFERUNGEN.md` | rootcerts „nicht getestet"; Servertest nur über Port 110 |
 | `Eudora71/VC71Bruecke/BEFUND.md` | alle vier „nächsten Schritte" erledigt; die drei Fremd-DLLs liegen inzwischen im Repo |
-| `Eudora71/OTShim/PLAN.md`, `BEFUND-ANSICHT.md`, `BEFUND-MENUE.md` | `LNK1104: imap.lib`; „zu prüfen, ob ein Solution-Bau die Datei erzeugt"; „EudoraRes.dll fehlt, der Startversuch scheitert daran"; Projektverweis Zeile 1015; eine Vorhersage, die E-1 entschieden hat |
+| `Eudora71/OTShim/PLAN.md`, `BEFUND-ANSICHT.md`, `BEFUND-MENUE.md` | `LNK1104: imap.lib`; „zu prüfen, ob ein Solution-Bau die Datei erzeugt"; „EudoraRes.dll fehlt, der Startversuch scheitert daran"; Projektverweis Zeile 1015; eine Vorhersage, die [E-1](../BEFUNDE.md#e-1) entschieden hat |
 | `BEFUNDE-ALTBESTAND.md`, `tools/patches/zertifikatspruefung-verschaerfen.md` | die alte CR-Anzahl-Regel und „`--no-verify` gerechtfertigt" |
 | `LEKTORAT.md` | der fünfte Durchgang war der letzte Eintrag; dieser hier ist als **sechster** nachgetragen |
 
@@ -228,15 +228,15 @@ anderen `.md`. Stand nach diesem Durchgang:
 | Was | Warum |
 |---|---|
 | **Die Messwerte in allen Prüfberichten** (`PRUEFUNG-*.md`, `Pruefung/*.md`, `Befunde/*.md`) | Ein Bericht ist ein Zeitdokument. Seine Zahlen bleiben, weil sie belegen, was an jenem Tag galt. Überholt ist nur die *Schlussfolgerung* — die ist mit einem Nachtragskasten gekennzeichnet, nicht ersetzt. Wer sie löscht, kann später nicht mehr zeigen, warum jemand etwas geglaubt hat |
-| **`Releases/PAKETE.md` ohne Abschnitte für 1.0.4 bis 1.0.10** | Dafür bräuchte es Messwerte an den ZIPs — Dateigrößen, Prüfsummen, Kennung der enthaltenen `Eudora.exe`. Zwei der sieben ZIPs liegen gar nicht im Repo. Erfinden kommt nicht in Frage; ein Kasten am Anfang benennt die Lücke, **M-4** bleibt offen |
+| **`Releases/PAKETE.md` ohne Abschnitte für 1.0.4 bis 1.0.10** | Dafür bräuchte es Messwerte an den ZIPs — Dateigrößen, Prüfsummen, Kennung der enthaltenen `Eudora.exe`. Zwei der sieben ZIPs liegen gar nicht im Repo. Erfinden kommt nicht in Frage; ein Kasten am Anfang benennt die Lücke, **[M-4](PRUEFER-15.md#m-4)** bleibt offen |
 | **`README.md:34` „18 erfolgreich, 0 Fehler, 1 übersprungen, 2:37 min"** | Gregors eigene Messung vom 06.09.2026 in der IDE. Ich baue nicht, kann sie also nicht nachmessen — nur die Randbedingung prüfen (19 Projekte, `OT501` ohne `Build.0`), und die stimmt |
 | **`README.md:132` „`Eudora.map`, 51.075 Einträge"** | `Eudora71/Bin/Release/` ist von `.gitignore` erfasst, die Datei entsteht erst beim Bau. Nachgemessen ist, dass sie bei jedem Bau **entsteht** (`<GenerateMapFile>true</GenerateMapFile>`); die Zahl selbst konnte ich ohne Bau nicht prüfen und habe sie deshalb nicht angefasst |
 | **`README.md` „30 Stellen, 22 Stingray-Klassen, 77 Methoden"** | Die Zählweise ist nicht dokumentiert, und anders als bei den 42 Quelldateien ist mir keine Rekonstruktion gelungen, die genau diese drei Zahlen ergibt. Raten wäre schlimmer als stehen lassen. **Zurückgestellt** |
 | **`Eudora71/Eudora/mainfrm.cpp:9684`** | Der Kommentar zeigt die alte Bau-Kennung `[1.0.3+31810e2 - Eudora72-1.0.3]`; heute lautet sie `Eudora <Produkt> / Paket <Nummer>+<Commit><Marke> <Zeit>`. Das ist **Quelltext**, nicht Dokumentation — LEKTOR fasst keinen Quelltext an. Als **M-9** bekannt, in `STARTUMGEBUNG.md` jetzt ausdrücklich benannt |
 | **`Eudora71/Tests/QCSSL/README.md`, `Eudora71/OTShim/INVENTAR.md`** | Schon im fünften Durchgang ohne Befund; erneut durchgesehen, weiter ohne Befund |
-| **`BEFUNDE.md`: E-27, E-28, E-29** | Laufen gerade bei anderen Agenten. Ein Verzeichniseintrag ohne Abschnitt wäre genau der Fehler, gegen den das Verzeichnis geschrieben ist |
+| **`BEFUNDE.md`: [E-27](../BEFUNDE.md#e-27), [E-28](../BEFUNDE.md#e-28), [E-29](../BEFUNDE.md#e-29)** | Laufen gerade bei anderen Agenten. Ein Verzeichniseintrag ohne Abschnitt wäre genau der Fehler, gegen den das Verzeichnis geschrieben ist |
 
-## L-6.10 — Zwei Fehlerklassen, nicht zwei Einzelfehler
+## <a id="l-6.10"></a>L-6.10 — Zwei Fehlerklassen, nicht zwei Einzelfehler
 
 Beide Fundstellenfehler dieses Durchgangs sind vom selben Typ, und der ist
 vermeidbar:
@@ -254,7 +254,7 @@ vermeidbar:
    („Importbibliothek = hat eine `.exp` daneben"), plus den Befehl zum
    Nachzählen. Dann steht in der Datei nichts, was veralten kann.
 
-## L-6.11 — Arbeitsweise und Byte-Messung
+## <a id="l-6.11"></a>L-6.11 — Arbeitsweise und Byte-Messung
 
 **Kein Edit-Werkzeug.** Alle Änderungen über `tools/ersetze-bereich.pl`, das mit
 `:raw` liest und schreibt und Kopf und Rumpf byteweise durchreicht. Nach jeder
@@ -275,7 +275,7 @@ Dateien sind CR-Zahl und Doppelkodierungszahl unverändert.**
   meldet 3, `PORTIERUNG.md` 1, `ABRUF-PRUEFEN.md` 1, `LEKTORAT.md` 1 — alle
   vorher wie nachher, und alle sind **absichtlich** dort: es sind zitierte
   Beispiele für genau diesen Schaden, in den Befunden zur Umlautdarstellung
-  (Z-2, Z-2b). Nicht der absolute Wert zählt, sondern der **Vergleich mit
+  ([Z-2](../BEFUNDE.md#z-2), [Z-2b](../BEFUNDE.md#z-2b)). Nicht der absolute Wert zählt, sondern der **Vergleich mit
   `HEAD`**.
 * **`Pruefung/PRUEFUNG-ZEIGER.md` hat CRLF** (193 CR). Ein Ersatzblock mit
   LF-Enden senkt die CR-Zahl lautlos — beim ersten Versuch genau so passiert und
@@ -293,4 +293,4 @@ Dateien sind CR-Zahl und Doppelkodierungszahl unverändert.**
 * **`README.md`, Abschnitte „Nach einem frischen Klon" und „Das
   Absturzprotokoll" nicht angefasst** — die hat der auftraggebende Agent vorher
   selbst geprüft und berichtigt.
-* **Keinen Befund E-27 bis E-29 eingetragen** — die laufen bei anderen Agenten.
+* **Keinen Befund [E-27](../BEFUNDE.md#e-27) bis [E-29](../BEFUNDE.md#e-29) eingetragen** — die laufen bei anderen Agenten.

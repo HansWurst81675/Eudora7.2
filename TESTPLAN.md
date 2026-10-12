@@ -4,7 +4,7 @@ Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
 (`git ls-files … | grep '"E-nn'`), die Urteilszeilen aus `BEFUNDE.md`.
 
-**Wichtig vorweg:** für **E-49 bis E-63** gibt es **keine** Spurmarken im
+**Wichtig vorweg:** für **[E-49](BEFUNDE.md#e-49) bis [E-63](BEFUNDE.md#e-63)** gibt es **keine** Spurmarken im
 Protokoll. Nachgezählt: Marken existieren zu [E-27](BEFUNDE.md#e-27), [E-33](BEFUNDE.md#e-33), [E-34](BEFUNDE.md#e-34), [E-35](BEFUNDE.md#e-35), [E-37](BEFUNDE.md#e-37),
 [E-40](BEFUNDE.md#e-40) bis [E-46](BEFUNDE.md#e-46), [E-64](BEFUNDE.md#e-64), [E-66](BEFUNDE.md#e-66), [E-68](BEFUNDE.md#e-68) bis [E-70](BEFUNDE.md#e-70), [E-72](BEFUNDE.md#e-72), [E-73](BEFUNDE.md#e-73), [E-76](BEFUNDE.md#e-76), [E-78](BEFUNDE.md#e-78) bis [E-80](BEFUNDE.md#e-80),
 [E-83](BEFUNDE.md#e-83), [E-86](BEFUNDE.md#e-86) bis [E-89](BEFUNDE.md#e-89), [E-95](BEFUNDE.md#e-95), [E-97](BEFUNDE.md#e-97), [E-101](BEFUNDE.md#e-101), [E-103](BEFUNDE.md#e-103), [E-104](BEFUNDE.md#e-104), [E-106](BEFUNDE.md#e-106), [E-110](BEFUNDE.md#e-110) — **zu
@@ -106,12 +106,12 @@ grep "E-78\|E-70\|E-66\|E-76\|E-44\|E-43" eudora.log
 
 | Marke | sagt |
 |---|---|
-| `E-78` | je Leiste Kennung, Andockseite, Sichtbarkeit und Stil — **vor und nach** `SetDockState` |
-| `E-70` | `gesichert:` und `geladen:` je Leiste mit `cx`/`cy` **vorher und nachher**. Damit ist nachweisbar, ob deine gezogene Breite wirklich in die INI geht und zurückkommt |
-| `E-44` | *„für N Leiste(n) war keine Lage gespeichert"* — erscheint, wenn der `[ToolBar…]`-Abschnitt fehlt |
-| `E-43` | `SaveCustomInfo` mit dem INI-Abschnitt, in den geschrieben wird |
-| `E-66` | Ziehen am Greifrand: Zeigerwechsel, Streifenlage, Bewegung, `Anwenden` mit Maßen |
-| `E-76` | Größenänderung einer schwebenden Leiste mit Maßen vorher/nachher |
+| [`E-78`](BEFUNDE.md#e-78) | je Leiste Kennung, Andockseite, Sichtbarkeit und Stil — **vor und nach** `SetDockState` |
+| [`E-70`](BEFUNDE.md#e-70) | `gesichert:` und `geladen:` je Leiste mit `cx`/`cy` **vorher und nachher**. Damit ist nachweisbar, ob deine gezogene Breite wirklich in die INI geht und zurückkommt |
+| [`E-44`](BEFUNDE.md#e-44) | *„für N Leiste(n) war keine Lage gespeichert"* — erscheint, wenn der `[ToolBar…]`-Abschnitt fehlt |
+| [`E-43`](BEFUNDE.md#e-43) | `SaveCustomInfo` mit dem INI-Abschnitt, in den geschrieben wird |
+| [`E-66`](BEFUNDE.md#e-66) | Ziehen am Greifrand: Zeigerwechsel, Streifenlage, Bewegung, `Anwenden` mit Maßen |
+| [`E-76`](BEFUNDE.md#e-76) | Größenänderung einer schwebenden Leiste mit Maßen vorher/nachher |
 
 **Zahlen statt Augenmaß** für die Breite aus Schritt 3:
 
@@ -159,17 +159,23 @@ das Werbefenster wieder erscheint.
 
 Mit `LogLevel=128159` zeigt `grep "PLIST\|E-7" eudora.log` dazu den Werbeweg.
 
-### C3 · Die fünf, die auf dein Urteil warten
+### C3 · Die sechs, die auf dein Urteil warten
+
+**Berichtigt am 12.10.2026 (LEKTOR, [L-18.5](Befunde/LEKTOR-26.md#l-18.5)):** hier standen *fünf*. `BEFUNDE.md` führt
+**fünfzehn** Behebungen als „von Gregor noch nicht bestätigt" — vierzehn davon
+in Teil A, und eine, die in keinem Teil dieses Plans vorkam: [**E-101**](BEFUNDE.md#e-101), die
+unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 
 | | Befund | Handgriff |
 |---|---|---|
+| ☐ | [**E-101**](BEFUNDE.md#e-101) | eine **weitergeleitete** Nachricht über *File → Save As* sichern und die `.eml` in einem anderen Programm öffnen — sie muss lesbar sein (`Content-Type`, `MIME-Version`, kein `<x-html>`) |
 | ☐ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
 | ☐ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
 | ☐ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
 | ☐ | [**E-95**](BEFUNDE.md#e-95) | antworten/weiterleiten mit Bildern — Bilder in der **angegebenen** Größe |
 | ☐ | [**E-96**](BEFUNDE.md#e-96) | dasselbe mit mehreren Bildern hintereinander |
 
-**E-97 und [E-99](BEFUNDE.md#e-99) gehören nicht hierher** — die hast du am 17.09.2026 schon
+**[E-97](BEFUNDE.md#e-97) und [E-99](BEFUNDE.md#e-99) gehören nicht hierher** — die hast du am 17.09.2026 schon
 bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
 
 ---
@@ -179,7 +185,7 @@ bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
 Ein Urteil zählt nur mit **Paketnummer**. Ohne sie ist es wertlos — das ist
 die Lehre aus [**E-85**](BEFUNDE.md#e-85): dort stand „behoben" einen Tag lang da, während das
 damals ausgelieferte Paket den Fehler noch hatte. Welches das war, steht in
-`BEFUNDE.md` unter E-85; hier steht die Nummer bewusst nicht, damit dieser
+`BEFUNDE.md` unter [E-85](BEFUNDE.md#e-85); hier steht die Nummer bewusst nicht, damit dieser
 Satz nicht eines Tages als Standangabe gelesen wird.
 
 Es genügt eine Zeile je Befund, etwa:

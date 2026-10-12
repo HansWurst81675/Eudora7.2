@@ -1,7 +1,7 @@
 # PRÜFER-12 — die Umsetzung der eigenen Funde nachgerechnet
 
 Stand: 17.09.2026, Zweig `e97-speichern-absturz`. Geprüft wurden `220c0de`
-(E-100, setzt P-5/P-6/P-7 um) und `1d37623` (E-99, setzt P-13 um).
+([E-100](../BEFUNDE.md#e-100), setzt [P-5](PRUEFER-11.md#p-5)/[P-6](PRUEFER-11.md#p-6)/[P-7](PRUEFER-11.md#p-7) um) und `1d37623` ([E-99](../BEFUNDE.md#e-99), setzt [P-13](PRUEFER-11.md#p-13) um).
 
 Gelesen wurden nicht nur die Diffs, sondern `SaveAsDialog.cpp` ganz,
 `PgMsgView.cpp` `ExportMessage`/`SaveInfo` ganz, `CPaigeEdtView::PrepareUndo`,
@@ -26,7 +26,7 @@ ausreichend:
    ihn auf FALSE (Zeile 35, mit dem Vermerk *„For Now"*), `OnInitDialog` setzt
    ihn am Ende beider Zweige wieder auf FALSE (161/165 und 228), und die einzige
    Stelle, die ihn TRUE setzen könnte, ist `ToggleStat:257` — die hängt an
-   `ON_BN_CLICKED(IDC_STATIONERY)`, und diesen Schalter gibt es nicht (E-98).
+   `ON_BN_CLICKED(IDC_STATIONERY)`, und diesen Schalter gibt es nicht ([E-98](../BEFUNDE.md#e-98)).
 2. Der **Dateiname, mit dem Eudora wirklich arbeitet**, kommt nirgends aus
    diesem Puffer, sondern aus `theDlg.GetPathName()` — `tocview.cpp:3091`,
    `saveas.cpp:107`, `compmsgd.cpp:3379`. `realFileName` ist eine lokale
@@ -37,7 +37,7 @@ ausreichend:
    Genau das sagen die drei „Hack alert!"-Kommentare von 1996 an den
    Aufrufstellen auch schon.
 
-**Trotzdem ist es ein Mangel, und er gehört behoben** — siehe P-14. Er ist
+**Trotzdem ist es ein Mangel, und er gehört behoben** — siehe [P-14](#p-14). Er ist
 allerdings **nicht durch `220c0de` entstanden**: schon vorher verließ die
 Funktion den Puffer unbeschrieben, wenn `dlgPtr->GetDlgItem(edt1)` NULL lieferte
 (`if (fileNameWnd)`, Zeile 436). Der neue Wächter hat einen zweiten Weg zu einem
@@ -47,7 +47,7 @@ Loch hinzugefügt, das seit 1996 offen ist.
 
 ## Frage 1 — die vier Wächter
 
-### P-14 — `GetFileNameFromDialog` verletzt ihren eigenen Vertrag
+### <a id="p-14"></a>P-14 — `GetFileNameFromDialog` verletzt ihren eigenen Vertrag
 
 `SaveAsDialog.cpp:412-438`. Die Funktion heißt „hol den Dateinamen" und
 verspricht damit, `buf` zu beschreiben. Sie tut es auf **zwei** Wegen nicht:
@@ -84,10 +84,10 @@ Was ohne das im Ernstfall geschähe, ist kein hübsches Bild: `strstr` und
 `strrchr` liefen über nicht gesetzten Stapelspeicher bis zum ersten Nullbyte,
 danach hinge `strcat(realFileName, ".sta")` einen Text an eine Zeichenkette
 unbekannter Länge — ein Überlauf. Scharf wird das in dem Moment, in dem jemand
-E-98 behebt und `m_IsStat` wieder TRUE werden kann. Wer E-98 anfasst, muss P-14
+[E-98](../BEFUNDE.md#e-98) behebt und `m_IsStat` wieder TRUE werden kann. Wer [E-98](../BEFUNDE.md#e-98) anfasst, muss [P-14](#p-14)
 vorher erledigen.
 
-### P-15 — der Wächter in `SetFileNameInDialog` und `StatDir` sitzt an der falschen Prüfung
+### <a id="p-15"></a>P-15 — der Wächter in `SetFileNameInDialog` und `StatDir` sitzt an der falschen Prüfung
 
 `SetFileNameInDialog:440-471` und `StatDir:289-364`. Beide berechnen `dlgPtr`,
 und beide **benutzen es auf dem `IsVersion4()`-Zweig gar nicht**: dort steht
@@ -108,8 +108,8 @@ ENSURE(SUCCEEDED(hr));
 — es wirft, auch im Release.
 
 Heute unerreichbar (beide Funktionen hängen an `m_IsStat` bzw. am fehlenden
-Stationery-Schalter). Aber die Commit-Nachricht zu E-100 sagt, sie würden
-*„scharf, sobald E-98 behoben wird"* — und dann trägt der Wächter nicht. Er
+Stationery-Schalter). Aber die Commit-Nachricht zu [E-100](../BEFUNDE.md#e-100) sagt, sie würden
+*„scharf, sobald [E-98](../BEFUNDE.md#e-98) behoben wird"* — und dann trägt der Wächter nicht. Er
 sollte nicht das Gefühl erzeugen, die Funktionen seien jetzt sicher. Richtig
 wäre, ihn dorthin zu ziehen, wo er wirkt, und den Vista-Zweig getrennt zu
 behandeln:
@@ -139,10 +139,10 @@ greifen; er ist reine Vorsorge und nimmt niemandem etwas weg.
 
 ### `GetFileNameFromDialog` — Wächter selbst ist richtig
 
-Der Zugriff `dlgPtr->GetDlgItem(edt1)` (435) ist derselbe Absturz wie E-97, und
+Der Zugriff `dlgPtr->GetDlgItem(edt1)` (435) ist derselbe Absturz wie [E-97](../BEFUNDE.md#e-97), und
 er steht — anders als bei `ToggleStat`/`StatDir` — auf einem Weg, der aus
 `OnOK()` kommt. Der Wächter gehört dorthin. Nur muss er `buf` hinterlassen wie
-versprochen (P-14).
+versprochen ([P-14](#p-14)).
 
 ---
 
@@ -206,13 +206,13 @@ gleich mit. Eine Schleife ohne Wirkung — und ohne Schaden. Genau richtig so.
 `saveas.cpp:104-107` schreibt sie aber **ohne** Prüfung auf `m_IsMessage` in die
 INI. Beim Speichern von etwas, das keine Nachricht ist, gingen also auch auf der
 alten Schiene zwei uninitialisierte Werte in die Einstellungen. Die Vorbelegung
-im Konstruktor schließt auch diesen Weg — er war in P-5 nicht benannt.
+im Konstruktor schließt auch diesen Weg — er war in [P-5](PRUEFER-11.md#p-5) nicht benannt.
 
 ---
 
 ## Frage 3 — E-99, der einrastende Merker
 
-### P-16 — Gibt es einen Weg zu einem zu frühen TRUE? Gemessen: nein.
+### <a id="p-16"></a>P-16 — Gibt es einen Weg zu einem zu frühen TRUE? Gemessen: nein.
 
 `m_bE88AnwenderHatGetippt` wird an genau einer Stelle gesetzt
 (`PgMsgView.cpp:443-444`), aus `HasChanged()`. `HasChanged()` ist
@@ -249,7 +249,7 @@ bevor exportiert wird? Nachgesehen, Weg für Weg:
   Paige-Inhalt. Ihr Rumpf (`PaigeEdtView.cpp:8087` bis rund 8520) enthält
   **kein** `PrepareUndo` — der nächste steht erst in `OnBlkfmtFixedwidth`
   (8558). Zählt **nicht**. Hätte sie gezählt, wäre der Merker bei **jedem**
-  Export sofort TRUE gewesen und E-88 vollständig zurückgefallen.
+  Export sofort TRUE gewesen und [E-88](../BEFUNDE.md#e-88) vollständig zurückgefallen.
 
 Übrig bleiben als Zähler: Tippen, Einfügen, Ziehen und Ablegen,
 Auszeichnungsänderungen (`undo_format`), Emoticons und angenommene
@@ -267,13 +267,13 @@ erste Tastendruck nach jedem Export kommt also garantiert an. Und `OnEditUndo`
 zählt symmetrisch je Eintrag herunter, die Lösch-Hilfsstapel bleiben auf beiden
 Seiten ungezählt — der Zähler kann nicht davonlaufen.
 
-### P-17 — Geht noch irgendwo getippter Text verloren? Nicht auf einem Weg, den ich finden konnte.
+### <a id="p-17"></a>P-17 — Geht noch irgendwo getippter Text verloren? Nicht auf einem Weg, den ich finden konnte.
 
 Der Merker sitzt auf dem **Dokument** und rastet ein; `E88OriginalEinsetzen`
 verwirft den Editortext nur im Zweig `nFund < 0` **und** bei
 `bAnwenderHatGetippt == false` (`msgutils.cpp:2996-3002`). Geprüfte Wege:
 
-* **Sichern, dann senden** — der Weg, der E-99 ausgelöst hat: erster Export
+* **Sichern, dann senden** — der Weg, der [E-99](../BEFUNDE.md#e-99) ausgelöst hat: erster Export
   setzt den Merker, zweiter liest ihn. Geschlossen.
 * **Entwurf schließen und aus Out wieder öffnen.** Neues `CCompMessageDoc`, der
   Merker ist wieder FALSE — aber `m_szE88OriginalHTML` ebenfalls leer: gesetzt
@@ -312,34 +312,34 @@ oben ersetzt die Messung nicht, sie sagt nur, wo zu messen wäre
 
 | Punkt | Stand | Nachgesehen |
 |---|---|---|
-| P-8 `PaigeHTMLImportTextDescent` wird nie beschrieben | **offen** | 1827 legt mit 3 an, einzige Zuweisung ist der Ascent in 2053 |
-| P-9 Kommentar beschreibt die Bedingung falsch | **offen** | unverändert |
-| P-10 13/3 für Text nach einem Bild zu wenig | **offen**, ungemessen | 3096-3097 unverändert |
-| P-11 Spurmarke liest `memory_ref` als `const char*` | **offen** | 2178-2182 unverändert, weiter in 1.0.65 ausgeliefert |
-| P-12 Kommentare mit E-95 statt E-96 ausgezeichnet | **offen** | Zeilen 9, 2049, 2157, 3041, 3061 |
+| [P-8](PRUEFER-11.md#p-8) `PaigeHTMLImportTextDescent` wird nie beschrieben | **offen** | 1827 legt mit 3 an, einzige Zuweisung ist der Ascent in 2053 |
+| [P-9](PRUEFER-11.md#p-9) Kommentar beschreibt die Bedingung falsch | **offen** | unverändert |
+| [P-10](PRUEFER-11.md#p-10) 13/3 für Text nach einem Bild zu wenig | **offen**, ungemessen | 3096-3097 unverändert |
+| [P-11](PRUEFER-11.md#p-11) Spurmarke liest `memory_ref` als `const char*` | **offen** | 2178-2182 unverändert, weiter in 1.0.65 ausgeliefert |
+| [P-12](PRUEFER-11.md#p-12) Kommentare mit [E-95](../BEFUNDE.md#e-95) statt [E-96](../BEFUNDE.md#e-96) ausgezeichnet | **offen** | Zeilen 9, 2049, 2157, 3041, 3061 |
 
-P-1 bis P-3 sind mit `220c0de` im Quelltext berichtigt worden (Kommentartexte),
-P-7 ebenfalls (`OnTypeChange:535` steht jetzt vor 538). P-4 läuft als E-98
-weiter, P-5/P-6 als E-100 umgesetzt, P-13 als E-99.
+[P-1](../BEFUNDE.md#p-1) bis [P-3](PRUEFER-11.md#p-3) sind mit `220c0de` im Quelltext berichtigt worden (Kommentartexte),
+[P-7](PRUEFER-11.md#p-7) ebenfalls (`OnTypeChange:535` steht jetzt vor 538). [P-4](PRUEFER-11.md#p-4) läuft als [E-98](../BEFUNDE.md#e-98)
+weiter, [P-5](PRUEFER-11.md#p-5)/[P-6](PRUEFER-11.md#p-6) als [E-100](../BEFUNDE.md#e-100) umgesetzt, [P-13](PRUEFER-11.md#p-13) als [E-99](../BEFUNDE.md#e-99).
 
 ---
 
 ## Was noch zu tun ist, in dieser Reihenfolge
 
-1. **P-14** — `buf[0] = 0;` in `GetFileNameFromDialog`, zwei Zeilen. Ohne das
-   darf E-98 nicht angefasst werden.
-2. **P-15** — den Wächter in `StatDir`/`SetFileNameInDialog` dorthin ziehen, wo
+1. **[P-14](#p-14)** — `buf[0] = 0;` in `GetFileNameFromDialog`, zwei Zeilen. Ohne das
+   darf [E-98](../BEFUNDE.md#e-98) nicht angefasst werden.
+2. **[P-15](#p-15)** — den Wächter in `StatDir`/`SetFileNameInDialog` dorthin ziehen, wo
    er wirkt, und die `SetControlText`-Falle (`ENSURE` wirft im Release) im
-   Quelltext benennen. Ebenfalls Voraussetzung für E-98.
-3. **P-11** — die Spurmarke misst nach wie vor nichts.
-4. **P-8 bis P-10, P-12** — unverändert wie in PRÜFER-11 beschrieben.
+   Quelltext benennen. Ebenfalls Voraussetzung für [E-98](../BEFUNDE.md#e-98).
+3. **[P-11](PRUEFER-11.md#p-11)** — die Spurmarke misst nach wie vor nichts.
+4. **[P-8](PRUEFER-11.md#p-8) bis [P-10](PRUEFER-11.md#p-10), [P-12](PRUEFER-11.md#p-12)** — unverändert wie in PRÜFER-11 beschrieben.
 
 ## Was ich nicht prüfen konnte
 
-* Ob `OnInitDialog` auf der Vista-Schiene erreicht wird. Nach P-16 ist das für
+* Ob `OnInitDialog` auf der Vista-Schiene erreicht wird. Nach [P-16](#p-16) ist das für
   `m_Inc`/`m_Guess` jetzt **gleichgültig** — beide Wege führen zum selben Wert.
   Die Frage ist damit nicht beantwortet, aber entschärft.
-* Der Ablauf *tippen → Entwurf sichern → senden* am laufenden Programm (P-17).
+* Der Ablauf *tippen → Entwurf sichern → senden* am laufenden Programm ([P-17](#p-17)).
 * Ob `OnOK` auf der Vista-Schiene wirklich nie erreicht wird. Aus `dlgfile.cpp`
-  erschlossen (`OnFileOk` → `OnFileNameOK`), nicht gemessen. Für P-14 ist das
+  erschlossen (`OnFileOk` → `OnFileNameOK`), nicht gemessen. Für [P-14](#p-14) ist das
   nur einer von drei Gründen, warum heute kein Schaden entsteht.

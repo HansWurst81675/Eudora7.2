@@ -1,4 +1,4 @@
-# LEKTOR-4 — alle 47 MD gegen ZIEL.md gemessen
+# <a id="lektor-4"></a>LEKTOR-4 — alle 47 MD gegen ZIEL.md gemessen
 
 **Agent:** LEKTOR · **Kennung:** `L-8` · **Zweig:** `doku-und-strg-n` ·
 **Datum:** 07.09.2026 · **Bezugscommit:** `4f27a38` ·
@@ -41,7 +41,7 @@ geöffnet. **15 Dateien** tragen eine Fundstelle, **32** nicht.
 > worden, HEAD ist von `41ad5df` auf `4f27a38` gewandert. **Alle Zitate und
 > Zeilennummern unten sind um 10:36 Uhr gegengelesen.** Vier Fundstellen, die
 > ich um 09:55 noch gemessen hatte, sind in dieser Zeit behoben worden und
-> stehen deshalb nur noch als **W-0** unten, nicht als offener Mangel. Wer die
+> stehen deshalb nur noch als **[W-0](#w-0)** unten, nicht als offener Mangel. Wer die
 > Vorschläge einsetzt, prüft jede Zeilennummer nach.
 
 ---
@@ -55,17 +55,17 @@ und **was in ihr gilt** — Stand, Status, und ob sie ein Zeitdokument ist.
 |---|---|---|---|
 | `ABRUF-PRUEFEN.md` | ja | nein | — |
 | `AGENTEN.md` | ja | nein | — |
-| `AUFGABEN.md` | ja | ja — W-2, W-13, W-14, W-16 | **hoch** |
+| `AUFGABEN.md` | ja | ja — [W-2](#w-2), [W-13](#w-13), [W-14](#w-14), [W-16](#w-16) | **hoch** |
 | `BEFUNDE-ALTBESTAND.md` | ja | nein | — |
-| `BEFUNDE.md` | ja | ja — W-5, W-8, W-9, W-10, W-11, W-12, W-18, W-24, W-25, W-27 | **hoch** |
+| `BEFUNDE.md` | ja | ja — [W-5](#w-5), [W-8](#w-8), [W-9](#w-9), [W-10](#w-10), [W-11](#w-11), [W-12](#w-12), [W-18](#w-18), [W-24](#w-24), [W-25](#w-25), [W-27](#w-27) | **hoch** |
 | `Befunde/ASSISTENT.md` | ja | nein | — |
-| `Befunde/FENSTER.md` | teils — Agent und Datum, kein Status | ja — W-28 | gering |
+| `Befunde/FENSTER.md` | teils — Agent und Datum, kein Status | ja — [W-28](#w-28) | gering |
 | `Befunde/LEKTOR-2.md` | ja | nein | — |
 | `Befunde/LEKTOR-3.md` | ja | nein | — |
 | `Befunde/LEKTOR.md` | ja | nein | — |
 | `Befunde/OEFFNEN.md` | ja | nein | — |
 | `Befunde/PAIGE.md` | **nein** — kein Agent, kein Datum, kein Status | nein | gering |
-| `Befunde/PAKET.md` | ja | nein — diese Datei ist der **Gegenbeleg** zu W-2 | — |
+| `Befunde/PAKET.md` | ja | nein — diese Datei ist der **Gegenbeleg** zu [W-2](#w-2) | — |
 | `Befunde/PERSONA.md` | ja | nein | — |
 | `Befunde/PORT.md` | ja | nein | — |
 | `Befunde/POSTFACH.md` | ja | nein | — |
@@ -74,8 +74,8 @@ und **was in ihr gilt** — Stand, Status, und ob sie ein Zeitdokument ist.
 | `Befunde/SYMBOLE-VORARBEIT.md` | ja | nein | — |
 | `Befunde/SYMBOLE.md` | teils — kein Status | nein | — |
 | `Befunde/VERFASSEN.md` | teils — kein Status | nein | — |
-| `Befunde/VERFASSER.md` | ja | ja — W-28 | gering |
-| `CHANGELOG.md` | ja | ja — W-3, W-4, W-5, W-7, W-29 | **hoch** |
+| `Befunde/VERFASSER.md` | ja | ja — [W-28](#w-28) | gering |
+| `CHANGELOG.md` | ja | ja — [W-3](#w-3), [W-4](#w-4), [W-5](#w-5), [W-7](#w-7), [W-29](#w-29) | **hoch** |
 | `Eudora71/OTShim/BEFUND-ANSICHT.md` | ja | nein | — |
 | `Eudora71/OTShim/BEFUND-MENUE.md` | ja | nein | — |
 | `Eudora71/OTShim/INVENTAR.md` | ja — nennt sich selbst fehlerhaft | nein | — |
@@ -83,27 +83,27 @@ und **was in ihr gilt** — Stand, Status, und ob sie ein Zeitdokument ist.
 | `Eudora71/OpenSSL3/BAUEN.md` | ja | nein | — |
 | `Eudora71/Tests/QCSSL/README.md` | ja | nein | — |
 | `Eudora71/VC71Bruecke/BEFUND.md` | ja | nein | — |
-| `LEKTORAT.md` | **nein** — der Kopf gilt nur für den ersten von sieben Durchgängen | ja — W-20, W-22 | mittel |
-| `PORTIERUNG.md` | **nein** — sagt nicht, für wen sie ist | ja — W-2, W-18, W-31 | **hoch** |
+| `LEKTORAT.md` | **nein** — der Kopf gilt nur für den ersten von sieben Durchgängen | ja — [W-20](#w-20), [W-22](#w-22) | mittel |
+| `PORTIERUNG.md` | **nein** — sagt nicht, für wen sie ist | ja — [W-2](#w-2), [W-18](#w-18), [W-31](#w-31) | **hoch** |
 | `PRUEFBERICHT.md` | ja | nein — Zeitdokument vom 30.08. | — |
-| `PRUEFUNG-BAU.md` | teils — Auftrag ja, Stand nein | ja — W-17 | mittel |
+| `PRUEFUNG-BAU.md` | teils — Auftrag ja, Stand nein | ja — [W-17](#w-17) | mittel |
 | `PRUEFUNG-BRANCH.md` | ja | nein — Zeitdokument | — |
 | `PRUEFUNG-CODE.md` | ja | nein — Zeitdokument | — |
 | `Pruefung/PRUEFUNG-KETTE.md` | ja | nein | — |
 | `Pruefung/PRUEFUNG-PAKET.md` | ja | nein — Zeitdokument | — |
 | `Pruefung/PRUEFUNG-ZEIGER.md` | ja | nein | — |
-| `README.md` | ja | ja — W-2, W-18, W-19, W-23 | **hoch** |
+| `README.md` | ja | ja — [W-2](#w-2), [W-18](#w-18), [W-19](#w-19), [W-23](#w-23) | **hoch** |
 | `Releases/1.0/AUSLIEFERUNGEN.md` | ja | nein | — |
-| `Releases/1.0/README.md` | ja | ja — W-26 | gering |
-| `Releases/PAKETE.md` | ja | ja — W-2, W-6a bis W-6d | mittel |
-| `STARTUMGEBUNG.md` | ja | ja — W-2 | mittel |
-| `WEITERMACHEN.md` | ja | ja — W-5, W-15 | **hoch** |
-| `ZIEL.md` | ja | ja — W-2 | **hoch** |
+| `Releases/1.0/README.md` | ja | ja — [W-26](#w-26) | gering |
+| `Releases/PAKETE.md` | ja | ja — [W-2](#w-2), [W-6a](#w-6a) bis [W-6d](#w-6d) | mittel |
+| `STARTUMGEBUNG.md` | ja | ja — [W-2](#w-2) | mittel |
+| `WEITERMACHEN.md` | ja | ja — [W-5](#w-5), [W-15](#w-15) | **hoch** |
+| `ZIEL.md` | ja | ja — [W-2](#w-2) | **hoch** |
 | `tools/patches/zertifikatspruefung-verschaerfen.md` | ja | nein | — |
 
 ---
 
-## W-0 — vier Fundstellen sind während des Durchgangs behoben worden
+## <a id="w-0"></a>W-0 — vier Fundstellen sind während des Durchgangs behoben worden
 
 Kein Mangel mehr; hier festgehalten, damit niemand sie noch einmal sucht, und
 weil eine davon eine **Fehlerklasse** zeigt.
@@ -117,11 +117,11 @@ weil eine davon eine **Fehlerklasse** zeigt.
 
 **Die Fehlerklasse dahinter:** eine Marke, ein Paket oder eine
 Veröffentlichung wurde in der Doku angekündigt, **bevor** sie existierte. Das
-lässt sich mechanisch abstellen — siehe W-21, Vorschlag 1.
+lässt sich mechanisch abstellen — siehe [W-21](#w-21), Vorschlag 1.
 
 ---
 
-## W-2 (hoch) — sechs Dateien nennen `paket-pruefen.ps1` unbrauchbar; PR-2.0 ist behoben
+## <a id="w-2"></a>W-2 (hoch) — sechs Dateien nennen `paket-pruefen.ps1` unbrauchbar; PR-2.0 ist behoben
 
 Der schwerste Befund dieses Durchgangs, weil er seit dem 06.09.2026
 **schriftlich benannt** ist und niemand ihn angefasst hat.
@@ -130,7 +130,7 @@ Der schwerste Befund dieses Durchgangs, weil er seit dem 06.09.2026
 
 > `## PR-2.0 — Der Paketprüfer prüfte die Maschine statt das Paket (behoben)`
 
-`Befunde/PAKET.md:193-209` listet unter *X-8.3 — Aussagen über den Prüfer sind
+`Befunde/PAKET.md:193-209` listet unter *[X-8.3](PAKET.md#x-8.3) — Aussagen über den Prüfer sind
 jetzt überholt* die Dateien auf, die die alte Aussage noch tragen:
 
 > `Mehrere Dateien sagen, `paket-pruefen.ps1` tauge nicht als Freigabekriterium.`
@@ -141,12 +141,12 @@ um 10:36 nachgesehen:**
 
 | Datei | Zeile | Zitat |
 |---|---|---|
-| `README.md` | 415 | „**Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch (PR-2.0 bis PR-2.3)" |
-| `ZIEL.md` | 91, 99 | „**`tools/paket-pruefen.ps1` ist NICHT dieser Nachweis.**" … „Bis das behoben ist (PR-2.0 bis PR-2.3), ist es kein Freigabekriterium." |
-| `AUFGABEN.md` | 174 | „### C1 · `paket-pruefen.ps1` ist unbrauchbar als Freigabekriterium (**PR-2**)" |
-| `PORTIERUNG.md` | 500-501 | „`tools/paket-pruefen.ps1` taugt dafür weiter nicht (PR-2.0 bis PR-2.3) und ist deshalb **kein** Freigabekriterium." |
-| `STARTUMGEBUNG.md` | 169-170 | „**Kein Freigabekriterium** — es prüft die Maschine mit, nicht nur das Paket (PR-2.0 bis PR-2.3)." |
-| `Releases/PAKETE.md` | 221 | „**taugt nicht als Freigabekriterium**, siehe PR-2.0" |
+| `README.md` | 415 | „**Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3)" |
+| `ZIEL.md` | 91, 99 | „**`tools/paket-pruefen.ps1` ist NICHT dieser Nachweis.**" … „Bis das behoben ist ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3), ist es kein Freigabekriterium." |
+| `AUFGABEN.md` | 174 | „### C1 · `paket-pruefen.ps1` ist unbrauchbar als Freigabekriterium (**[PR-2](../BEFUNDE.md#pr-2)**)" |
+| `PORTIERUNG.md` | 500-501 | „`tools/paket-pruefen.ps1` taugt dafür weiter nicht ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3) und ist deshalb **kein** Freigabekriterium." |
+| `STARTUMGEBUNG.md` | 169-170 | „**Kein Freigabekriterium** — es prüft die Maschine mit, nicht nur das Paket ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3)." |
+| `Releases/PAKETE.md` | 221 | „**taugt nicht als Freigabekriterium**, siehe [PR-2.0](PAKET.md#pr-2.0)" |
 
 `PRUEFBERICHT.md:440`, `PRUEFUNG-BRANCH.md:25` und
 `Pruefung/PRUEFUNG-PAKET.md:235-238` sagen dasselbe, sind aber datierte
@@ -210,12 +210,12 @@ schon das Richtige —
 `AUFGABEN.md:191-193` („Das hindert **Kriterium 0** nicht mehr") bleibt, der
 Vorwurf davor entfällt.
 
-**Und im Verzeichnis (W-24):** `BEFUNDE.md:135` und `:214` führen PR-2.0
+**Und im Verzeichnis ([W-24](#w-24)):** `BEFUNDE.md:135` und `:214` führen [PR-2.0](PAKET.md#pr-2.0)
 weiter als **offen**.
 
 ---
 
-## W-3 (hoch) — `CHANGELOG.md` behauptet, `VERSION` stehe auf 1.0.18
+## <a id="w-3"></a>W-3 (hoch) — `CHANGELOG.md` behauptet, `VERSION` stehe auf 1.0.18
 
 **`CHANGELOG.md:40-45`** — der **erste** Fassungsabschnitt der Datei:
 
@@ -232,8 +232,8 @@ weiter als **offen**.
 7.2.0.20 (`:220`) und 7.2.0.18 (`:297`). Wer die Datei von oben liest — und das
 ist ihr Zweck, „Neueste Fassung zuerst" (`:3`) —, hält 1.0.18 für den Stand.
 
-Die drei Punkte darunter (`:47-67`) stecken alle in 1.0.19 bis 1.0.21: E-32
-(siehe W-5), `tools/doku-pruefen.pl` und der Doku-Durchgang L-7.
+Die drei Punkte darunter (`:47-67`) stecken alle in 1.0.19 bis 1.0.21: [E-32](../BEFUNDE.md#e-32)
+(siehe [W-5](#w-5)), `tools/doku-pruefen.pl` und der Doku-Durchgang L-7.
 
 **Vorschlag:** Abschnitt `:40-69` **streichen**, einschließlich des Trenners.
 Was daran trägt, steht in den Abschnitten 7.2.0.20 und 7.2.0.21. Falls wieder
@@ -250,7 +250,7 @@ setzt beide Nummern vorher hoch, sonst tragen zwei Bauten dieselbe Kennung.
 
 ---
 
-## W-4 (hoch) — `CHANGELOG.md` sagt, Kriterium 5 und 6 seien nicht gemessen
+## <a id="w-4"></a>W-4 (hoch) — `CHANGELOG.md` sagt, Kriterium 5 und 6 seien nicht gemessen
 
 **`CHANGELOG.md:565-574`:**
 
@@ -301,7 +301,7 @@ Administrator).
 
 ---
 
-## W-5 (hoch) — E-32 steht in vier Dateien als „behoben, nur ungeprüft"; die Ursachenbehauptung ist widerlegt
+## <a id="w-5"></a>W-5 (hoch) — E-32 steht in vier Dateien als „behoben, nur ungeprüft"; die Ursachenbehauptung ist widerlegt
 
 **Was gilt** — `CHANGELOG.md:268-278`, Abschnitt 7.2.0.20:
 
@@ -318,10 +318,10 @@ Gleichlautend `Befunde/PRUEFER-3.md:9`, `:15` und `:126`.
 
 | Datei | Zeile | Zitat |
 |---|---|---|
-| `BEFUNDE.md` | 176 | „E-32 … **behoben, ungeprüft** (07.09.2026, `060a4bf`): `CHeaderView::OnKillFocusRecipient` dereferenzierte `pField` ungeprüft" |
-| `WEITERMACHEN.md` | 57 | „**E-32 ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war die modale Meldung …" |
-| `CHANGELOG.md` | 47-56 | „**E-32 behoben — die modale Meldung „An unhandled exception has occurred" beim Verfassen.** … **Von Gregor nicht nachgemessen**" |
-| `AUFGABEN.md` | 74-75 | „Gemessen, aber von Gregor **noch nicht** nachgesehen: **E-31** und **E-32**." |
+| `BEFUNDE.md` | 176 | „[E-32](../BEFUNDE.md#e-32) … **behoben, ungeprüft** (07.09.2026, `060a4bf`): `CHeaderView::OnKillFocusRecipient` dereferenzierte `pField` ungeprüft" |
+| `WEITERMACHEN.md` | 57 | „**[E-32](../BEFUNDE.md#e-32) ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war die modale Meldung …" |
+| `CHANGELOG.md` | 47-56 | „**[E-32](../BEFUNDE.md#e-32) behoben — die modale Meldung „An unhandled exception has occurred" beim Verfassen.** … **Von Gregor nicht nachgemessen**" |
+| `AUFGABEN.md` | 74-75 | „Gemessen, aber von Gregor **noch nicht** nachgesehen: **[E-31](../BEFUNDE.md#e-31)** und **[E-32](../BEFUNDE.md#e-32)**." |
 
 `AUFGABEN.md:58-60` sagt es 16 Zeilen darüber richtig — *„Meine
 E-32-Ursachenbehauptung ist von PRUEFER widerlegt"* —, `:74-75` widerspricht
@@ -331,7 +331,7 @@ dem in derselben Datei. In `BEFUNDE.md` ist „ungeprüft" außerdem definiert
 
 Der Unterschied ist nicht kosmetisch. Wer „behoben, ungeprüft" liest, hält die
 modale Meldung für weg. Gemessen ist nur der **Code-Mangel** an `pField` weg;
-was die Meldung wirklich war, hat erst **E-34** aufgeklärt.
+was die Meldung wirklich war, hat erst **[E-34](../BEFUNDE.md#e-34)** aufgeklärt.
 
 **Vorschlag `BEFUNDE.md:176`:**
 
@@ -363,20 +363,20 @@ geschrieben und abgeschickt. Zu **E-32** siehe oben: Ursachenbehauptung
 widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 ```
 
-`CHANGELOG.md:47-56` entfällt mit W-3. Die zweite Stelle dort,
-`CHANGELOG.md:351-359` („Nachtrag 07.09.2026: E-32 ist behoben … **Von Gregor
+`CHANGELOG.md:47-56` entfällt mit [W-3](#w-3). Die zweite Stelle dort,
+`CHANGELOG.md:351-359` („Nachtrag 07.09.2026: [E-32](../BEFUNDE.md#e-32) ist behoben … **Von Gregor
 nicht nachgemessen.**"), steht im Abschnitt **7.2.0.18** und ist als Nachtrag
 zu einem Zeitdokument vertretbar — sie sollte aber auf den Abschnitt 7.2.0.20
 verweisen, sonst liest sie sich wie der letzte Stand.
 
 ---
 
-## W-6 (mittel) — vier Reste in `Releases/PAKETE.md`
+## <a id="w-6"></a>W-6 (mittel) — vier Reste in `Releases/PAKETE.md`
 
-Der Kopfkasten und der Abschnitt 1.0.21 sind seit 10:20 Uhr richtig (W-0).
+Der Kopfkasten und der Abschnitt 1.0.21 sind seit 10:20 Uhr richtig ([W-0](#w-0)).
 Vier Stellen sind es nicht.
 
-### W-6a — der `EUDORA_BUILD_NUMBER`-Kasten ist überholt
+### <a id="w-6a"></a>W-6a — der `EUDORA_BUILD_NUMBER`-Kasten ist überholt
 
 **`Releases/PAKETE.md:60-69`:**
 
@@ -413,7 +413,7 @@ meldet; der Lauf ist grün.
 > den Fall, wenn er wiederkommt.
 ```
 
-### W-6b — das Beispiel „Wie man die Version hebt" ist drei Nummern alt
+### <a id="w-6b"></a>W-6b — das Beispiel „Wie man die Version hebt" ist drei Nummern alt
 
 **`Releases/PAKETE.md:47-58`:**
 
@@ -445,7 +445,7 @@ von heute, `<neu>` die nächste:
 | `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.<alt>"` | `"7.2.0.<neu>"` |
 ```
 
-### W-6c — die Tabelle „Wo die Pakete liegen" kennt 1.0.20 und 1.0.21 nicht
+### <a id="w-6c"></a>W-6c — die Tabelle „Wo die Pakete liegen" kennt 1.0.20 und 1.0.21 nicht
 
 `Releases/PAKETE.md:383-395` führt elf Fassungen, darunter 1.0.4 und 1.0.19
 („nur im git-Verlauf"). **1.0.20 fehlt ganz, und 1.0.21 fehlt, obwohl es im Repo
@@ -459,7 +459,7 @@ liegt** — genau die Frage, die die Tabelle beantworten soll.
 | `Eudora72-1.0.21-release.zip` | `0a699fcb03c3f0b6…` | **liegt im Repo** · [GitHub v1.0.21](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.21) |
 ```
 
-### W-6d — eine Restzeile aus der Bearbeitung
+### <a id="w-6d"></a>W-6d — eine Restzeile aus der Bearbeitung
 
 `Releases/PAKETE.md:28` ist eine Waise: nach dem Satz *„…, nicht diese Datei."*
 steht eine Zeile
@@ -473,7 +473,7 @@ Sie ist der Rest des alten Satzes *„… und weiterhin offen."*.
 
 ---
 
-## W-7 (hoch) — „Ob das Menü *Window* die Fenster auflistet, ist ungeprüft" — es ist geprüft
+## <a id="w-7"></a>W-7 (hoch) — „Ob das Menü *Window* die Fenster auflistet, ist ungeprüft" — es ist geprüft
 
 **`CHANGELOG.md:16`:**
 
@@ -509,7 +509,7 @@ die Leiste, nicht das Menü.
 
 ---
 
-## W-8 (hoch) — E-34, E-35 und E-36 fehlen im Verzeichnis von `BEFUNDE.md`
+## <a id="w-8"></a>W-8 (hoch) — E-34, E-35 und E-36 fehlen im Verzeichnis von `BEFUNDE.md`
 
 **Gemessen:**
 
@@ -531,11 +531,11 @@ Sie stehen ausführlich in `CHANGELOG.md:142-187` und `:226-259`, in
 > `> **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**`
 > `> Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines`
 
-Dieselbe Lücke wurde am 07.09.2026 schon einmal geschlossen (`:36`: *„**E-31**,
-**E-32** und **E-33** fehlten ganz und sind eingetragen"*) — drei Kennungen
+Dieselbe Lücke wurde am 07.09.2026 schon einmal geschlossen (`:36`: *„**[E-31](../BEFUNDE.md#e-31)**,
+**[E-32](../BEFUNDE.md#e-32)** und **[E-33](../BEFUNDE.md#e-33)** fehlten ganz und sind eingetragen"*) — drei Kennungen
 später ist sie wieder da. Das ist eine **Fehlerklasse**, keine Nachlässigkeit:
 Kennungen entstehen im `CHANGELOG`, und niemand trägt sie zurück. Die Schranke
-dazu steht in W-21, Vorschlag 4.
+dazu steht in [W-21](#w-21), Vorschlag 4.
 
 **Vorschlag** — drei Zeilen nach `BEFUNDE.md:177`:
 
@@ -547,17 +547,17 @@ dazu steht in W-21, Vorschlag 4.
 
 ---
 
-## W-9 (hoch) — E-27 steht im Verzeichnis mit einer widerlegten „besten offenen Spur"
+## <a id="w-9"></a>W-9 (hoch) — E-27 steht im Verzeichnis mit einer widerlegten „besten offenen Spur"
 
 **`BEFUNDE.md:171`:**
 
 > `| E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache des Schweigens belegt, der Absturz selbst nicht**: … Beste offene Spur: `Paige32.dll`/`EuMemMgr.dll` gegen `MSVCR71` — zwei getrennte Halden (`Befunde/VERFASSER.md`) |`
 
-**Was stattdessen gilt.** Die Ursache ist gefunden und behoben: **E-31**,
+**Was stattdessen gilt.** Die Ursache ist gefunden und behoben: **[E-31](../BEFUNDE.md#e-31)**,
 `pg_time_t` acht Byte statt vier (`ZIEL.md:33`, `CHANGELOG.md:297-330`,
 `WEITERMACHEN.md:39-50`). Strg-N stürzt nicht mehr ab, fünfmal an 7.2.0.21
 nachgemessen. Die als „beste offene Spur" empfohlene Richtung ist genau die,
-die E-31 abgelöst hat — wer dem Verzeichnis folgt, läuft in eine
+die [E-31](../BEFUNDE.md#e-31) abgelöst hat — wer dem Verzeichnis folgt, läuft in eine
 Sackgasse, die schon durchsucht ist.
 
 **Vorschlag `BEFUNDE.md:171`:**
@@ -568,22 +568,22 @@ Sackgasse, die schon durchsucht ist.
 
 ---
 
-## W-10 (mittel) — E-16 steht im Verzeichnis als „offen", in drei Dateien als „behoben"
+## <a id="w-10"></a>W-10 (mittel) — E-16 steht im Verzeichnis als „offen", in drei Dateien als „behoben"
 
 **`BEFUNDE.md:164`:**
 
 > `| E-16 | Absturz beim Verfassen (Strg-N) und „Encountered an improper argument", `afxcoll.inl:213` | **offen** — sechs Stellen in `Befunde/VERFASSEN.md` gehärtet, die Ursache ist damit **nicht** gefunden |`
 
 Dagegen `README.md:81-82`, `CHANGELOG.md:614-615` und `WEITERMACHEN.md:83-84`,
-je *„(E-16, behoben)"*. Die Ursache, die E-16 nicht fand, ist inzwischen
-**E-34** — `CHANGELOG.md:244-248`:
+je *„([E-16](../BEFUNDE.md#e-16), behoben)"*. Die Ursache, die [E-16](../BEFUNDE.md#e-16) nicht fand, ist inzwischen
+**[E-34](../BEFUNDE.md#e-34)** — `CHANGELOG.md:244-248`:
 
 > `Der Index liegt **innerhalb** der von `GetBtnCount()` gemeldeten Zahl — die`
 > `Schranke aus E-16 greift also, und `m_btns[24]` wirft trotzdem.`
 
 Diesen Widerspruch hat PRUEFER am 07.09.2026 schon gemeldet
-(`Befunde/PRUEFER-3.md:265-268`: *„E-7, E-11, E-14 und E-16 stehen in
-`BEFUNDE.md` gleichzeitig als behoben und als offen"*). Für E-16 steht er noch.
+(`Befunde/PRUEFER-3.md:265-268`: *„[E-7](../BEFUNDE.md#e-7), [E-11](../BEFUNDE.md#e-11), [E-14](../BEFUNDE.md#e-14) und [E-16](../BEFUNDE.md#e-16) stehen in
+`BEFUNDE.md` gleichzeitig als behoben und als offen"*). Für [E-16](../BEFUNDE.md#e-16) steht er noch.
 
 **Vorschlag `BEFUNDE.md:164`:**
 
@@ -593,7 +593,7 @@ Diesen Widerspruch hat PRUEFER am 07.09.2026 schon gemeldet
 
 ---
 
-## W-11 (mittel) — E-22 „offen" und E-28 „behoben" beschreiben dasselbe Symptom
+## <a id="w-11"></a>W-11 (mittel) — E-22 „offen" und E-28 „behoben" beschreiben dasselbe Symptom
 
 **`BEFUNDE.md:166`:**
 
@@ -615,7 +615,7 @@ Gregor bestätigt.
 
 ---
 
-## W-12 (mittel) — E-31 steht als „ungeprüft", ist aber zweifach bestätigt
+## <a id="w-12"></a>W-12 (mittel) — E-31 steht als „ungeprüft", ist aber zweifach bestätigt
 
 **`BEFUNDE.md:175`:**
 
@@ -638,7 +638,7 @@ Messung nicht; sie steht unter 7.2.0.20.
 
 ---
 
-## W-13 (hoch) — `AUFGABEN.md` B1 führt Verfassen und Weiterleiten als offen
+## <a id="w-13"></a>W-13 (hoch) — `AUFGABEN.md` B1 führt Verfassen und Weiterleiten als offen
 
 **`AUFGABEN.md:144-148`:**
 
@@ -668,13 +668,13 @@ ein Punkt unter vielen.
 
 ---
 
-## W-14 (mittel) — `AUFGABEN.md:74-75` gegen `AUFGABEN.md:18-19` und `:58`
+## <a id="w-14"></a>W-14 (mittel) — `AUFGABEN.md:74-75` gegen `AUFGABEN.md:18-19` und `:58`
 
-Siehe W-5, dritter Vorschlag.
+Siehe [W-5](#w-5), dritter Vorschlag.
 
 ---
 
-## W-15 (hoch) — `WEITERMACHEN.md` „Der nächste Schritt" ist überholt
+## <a id="w-15"></a>W-15 (hoch) — `WEITERMACHEN.md` „Der nächste Schritt" ist überholt
 
 **`WEITERMACHEN.md:68-74`:**
 
@@ -719,7 +719,7 @@ nach. Dort liegt der Ansatz, nicht in Eudora selbst.
 
 ---
 
-## W-16 (mittel) — `AUFGABEN.md:304-305` zählt die Lücke in `PAKETE.md` falsch
+## <a id="w-16"></a>W-16 (mittel) — `AUFGABEN.md:304-305` zählt die Lücke in `PAKETE.md` falsch
 
 > `- **`Releases/PAKETE.md` hinkt hinterher** — geführt sind dort 1.0.1, 1.0.2,`
 > `  1.0.3 und 1.0.18; **1.0.4 bis 1.0.17 fehlen** (Mangel **M-4**).`
@@ -743,7 +743,7 @@ der Aufzählung hier. Umgekehrt fehlen **1.0.19 und 1.0.20**, und in der Tabelle
 
 ---
 
-## W-17 (mittel) — `PRUEFUNG-BAU.md:92-94` nennt einen alten Quellstand als heutigen
+## <a id="w-17"></a>W-17 (mittel) — `PRUEFUNG-BAU.md:92-94` nennt einen alten Quellstand als heutigen
 
 > `> **Nicht als heutigen Stand lesen.** Der Quellstand ist seit dem 06.09.2026`
 > `> **7.2.0.12** (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`). Die Zahlen in`
@@ -765,7 +765,7 @@ veraltet:
 
 ---
 
-## W-18 (mittel) — die drei Prüfstandsmarken sind 36 Commits alt
+## <a id="w-18"></a>W-18 (mittel) — die drei Prüfstandsmarken sind 36 Commits alt
 
 Gemessen mit dem Werkzeug, das genau dafür gebaut wurde:
 
@@ -777,7 +777,7 @@ Stand HEAD: 4f27a38
   PORTIERUNG.md      abgeglichen bis 060a4bf, seither 36 Commit(s)  <== faellig
 ```
 
-`060a4bf` ist der Commit *„E-32 behoben"*; in den 36 Commits danach liegen
+`060a4bf` ist der Commit *„[E-32](../BEFUNDE.md#e-32) behoben"*; in den 36 Commits danach liegen
 7.2.0.19, 7.2.0.20 und 7.2.0.21. Alle drei Dateien sind seither mehrfach
 geändert worden, ohne die Marke mitzuziehen — obwohl der Kommentar direkt
 darunter das verlangt (`README.md:4-6`, `BEFUNDE.md:4-6`, `PORTIERUNG.md:4-6`):
@@ -790,7 +790,7 @@ eine alte Marke.
 
 ---
 
-## W-19 (mittel) — `README.md:54` ist eine Dublette von `:49`
+## <a id="w-19"></a>W-19 (mittel) — `README.md:54` ist eine Dublette von `:49`
 
 ```
 49  Was offen ist, steht vollständig in [CHANGELOG.md](../CHANGELOG.md); was als
@@ -805,7 +805,7 @@ eine alte Marke.
 
 ---
 
-## W-20 (mittel) — der Kopf von `LEKTORAT.md` gilt nur für den ersten von sieben Durchgängen
+## <a id="w-20"></a>W-20 (mittel) — der Kopf von `LEKTORAT.md` gilt nur für den ersten von sieben Durchgängen
 
 `LEKTORAT.md:1-8`:
 
@@ -851,7 +851,7 @@ abgeschaltet), ist also **unvollständig** — was noch aussteht, steht unten.
 
 ---
 
-## W-21 (mittel) — die Schranke deckt 18 von 47 MD ab und findet keinen dieser Widersprüche
+## <a id="w-21"></a>W-21 (mittel) — die Schranke deckt 18 von 47 MD ab und findet keinen dieser Widersprüche
 
 ```
 $ perl tools/doku-pruefen.pl
@@ -870,11 +870,11 @@ Die Ausnahmeregel steht in `tools/doku-pruefen.pl:99`:
 my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$)};
 ```
 
-Damit sind **29 von 47** Dateien ausgenommen — darunter `BEFUNDE.md` (W-5, W-8
-bis W-12, W-24, W-25), `Releases/PAKETE.md` (W-6) und `PRUEFUNG-BAU.md` (W-17).
+Damit sind **29 von 47** Dateien ausgenommen — darunter `BEFUNDE.md` ([W-5](#w-5), [W-8](#w-8)
+bis [W-12](#w-12), [W-24](#w-24), [W-25](#w-25)), `Releases/PAKETE.md` ([W-6](#w-6)) und `PRUEFUNG-BAU.md` ([W-17](#w-17)).
 Die verbleibenden 18 werden auf Kriterienzahl, Befundstatus und Verweise
-geprüft, nicht auf **Selbstwidersprüche** (W-3, W-4, W-7, W-13, W-15) und nicht
-gegen die Wirklichkeit außerhalb der `.md` (W-0, W-2, W-6a).
+geprüft, nicht auf **Selbstwidersprüche** ([W-3](#w-3), [W-4](#w-4), [W-7](#w-7), [W-13](#w-13), [W-15](#w-15)) und nicht
+gegen die Wirklichkeit außerhalb der `.md` ([W-0](#w-0), [W-2](#w-2), [W-6a](#w-6a)).
 
 Das ist kein Vorwurf an das Werkzeug — es hat die Fälle abgestellt, für die es
 gebaut wurde. Es ist die Antwort auf die Frage, warum 29 Befunde in einem Baum
@@ -885,17 +885,17 @@ einer, die grün bleibt (Auflage 10 in `AUFGABEN.md`):
 
 1. **Marken prüfen.** Jede Adresse `releases/tag/vX.Y.Z` in einer `.md` gegen
    `git ls-remote --tags origin`, mit `git tag` als Rückfall ohne Netz. Fängt
-   die Klasse aus W-0: eine Veröffentlichung ankündigen, bevor sie existiert.
+   die Klasse aus [W-0](#w-0): eine Veröffentlichung ankündigen, bevor sie existiert.
 2. **ZIP-Aussagen prüfen.** Jede Aufzählung, die mit ``ls Releases/*.zip``
-   begründet ist, gegen das Verzeichnis. Fängt W-0 und W-6c.
+   begründet ist, gegen das Verzeichnis. Fängt [W-0](#w-0) und [W-6c](#w-6c).
 3. **`Version.h` gegen jede Datei, die eine Nummer als *heutigen* Stand nennt** —
    auch in den Zeitdokumenten, aber nur dort, wo „Stand", „ist seit", „steht
-   auf" oder „stehen weiter auf" davorsteht. Fängt W-3, W-6a und W-17.
+   auf" oder „stehen weiter auf" davorsteht. Fängt [W-3](#w-3), [W-6a](#w-6a) und [W-17](#w-17).
 4. **Kennungen quer, in beide Richtungen.** Jede `E-nn`/`PR-n`/`X-n`, die in
    irgendeiner `.md` als „behoben" auftaucht, muss im Verzeichnis von
    `BEFUNDE.md` stehen und darf dort nicht „offen" heißen — und jede Kennung mit
    einem eigenen Abschnitt im `CHANGELOG` muss im Verzeichnis vorkommen. Fängt
-   W-8, W-10, W-11 und W-24. Das ist die Prüfung, die PRUEFER am 07.09.2026
+   [W-8](#w-8), [W-10](#w-10), [W-11](#w-11) und [W-24](#w-24). Das ist die Prüfung, die PRUEFER am 07.09.2026
    schon gefordert hat (`Befunde/PRUEFER-3.md:266-268`).
 
 Für 3 und 4 muss die Zeitdokument-Ausnahme fallen — sonst bleibt `BEFUNDE.md`,
@@ -903,7 +903,7 @@ die Datei mit den meisten Fundstellen dieses Durchgangs, ungeprüft.
 
 ---
 
-## W-22 (mittel) — 16 von 47 MD kommen in `LEKTORAT.md` nie vor
+## <a id="w-22"></a>W-22 (mittel) — 16 von 47 MD kommen in `LEKTORAT.md` nie vor
 
 Gemessen (Basisname jeder Datei gegen `LEKTORAT.md` gesucht):
 
@@ -918,8 +918,8 @@ Befunde/PAKET.md
 
 **In diesen 16 Dateien selbst habe ich fast keinen Widerspruch gefunden** — sie
 sind sauber. Die Lücke ist im Verfahren, und sie erklärt drei der schwersten
-Befunde oben: `Befunde/PAKET.md` (PR-2.0 behoben → W-2),
-`Befunde/VERFASSER.md` (E-27 → W-9) und `Befunde/FENSTER.md` (E-22 → W-11) sind
+Befunde oben: `Befunde/PAKET.md` ([PR-2.0](PAKET.md#pr-2.0) behoben → [W-2](#w-2)),
+`Befunde/VERFASSER.md` ([E-27](../BEFUNDE.md#e-27) → [W-9](#w-9)) und `Befunde/FENSTER.md` ([E-22](../BEFUNDE.md#e-22) → [W-11](#w-11)) sind
 in keinem Lektorat aufgeschlagen worden, und genau ihre Ergebnisse fehlen in den
 Dateien, die sagen, was jetzt gilt. `Befunde/PAKET.md:193-209` hat die
 Fundstellen sogar aufgeschrieben, damit sie niemand suchen muss.
@@ -939,7 +939,7 @@ Fundstellen sogar aufgeschrieben, damit sie niemand suchen muss.
 
 ---
 
-## W-23 (gering) — die Werkzeugtabelle in `README.md` kennt sieben Werkzeuge nicht
+## <a id="w-23"></a>W-23 (gering) — die Werkzeugtabelle in `README.md` kennt sieben Werkzeuge nicht
 
 Gemessen: von den Dateien in `tools/` fehlen in `README.md:388-419`
 
@@ -950,7 +950,7 @@ tools/befunde-einsammeln.pl
 ```
 
 Die ersten vier sind nicht harmlos: `pruefe-fensterbau.pl` ist die Schranke, mit
-der E-35 und E-36 gefunden wurden (`CHANGELOG.md:162`, `:189-205`);
+der [E-35](../BEFUNDE.md#e-35) und [E-36](../BEFUNDE.md#e-36) gefunden wurden (`CHANGELOG.md:162`, `:189-205`);
 `strg-n-pruefen.ps1` ist das Werkzeug, auf das `CHANGELOG.md:581` verweist, um
 Kriterium 5 ohne Zuschauer zu messen; `arbeitsbaum-frei.pl` und
 `befunde-einsammeln.pl` sind das Verfahren aus `AGENTEN.md:37`, `:97-98`, `:118`.
@@ -971,26 +971,26 @@ auf.
 
 ---
 
-## W-24 (gering) — `BEFUNDE.md:135` und `:214` führen PR-2.0 als offen
+## <a id="w-24"></a>W-24 (gering) — `BEFUNDE.md:135` und `:214` führen PR-2.0 als offen
 
-Siehe W-2. **Vorschlag `BEFUNDE.md:135`:**
+Siehe [W-2](#w-2). **Vorschlag `BEFUNDE.md:135`:**
 
 ```
 | PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; **PR-2.0** und PR-2.1 behoben (PR-2.0 am 06.09.2026, `Befunde/PAKET.md`, drei Gegenproben), PR-2.8 kein Handlungsbedarf, **PR-2.2 bis PR-2.7 offen** |
 ```
 
-`:214` entsprechend: *„PR-2.0 und PR-2.1 **behoben**, PR-2.8 kein
+`:214` entsprechend: *„[PR-2.0](PAKET.md#pr-2.0) und PR-2.1 **behoben**, PR-2.8 kein
 Handlungsbedarf, Rest **offen**"*.
 
 ---
 
-## W-25 (gering) — `BEFUNDE.md:145` sagt, keines der beiden 1.0.3-ZIPs sei gestartet worden
+## <a id="w-25"></a>W-25 (gering) — `BEFUNDE.md:145` sagt, keines der beiden 1.0.3-ZIPs sei gestartet worden
 
 > `| V-1 | zwei verschiedene ZIPs unter derselben Versionsnummer `v1.0.3`; **keine der beiden ist gestartet worden** | **offen** — Regel festgehalten, das nächste Paket heißt 1.0.4 |`
 
 `Releases/PAKETE.md:249-251` nennt genau diesen Satz *„längst überholt — seither
 sind 1.0.4 bis 1.0.10 gebaut und benutzt worden"*, und `:241` hält fest, dass
-Gregor die erste Fassung gestartet hat (Absturz im Kontoassistenten, E-6). Der
+Gregor die erste Fassung gestartet hat (Absturz im Kontoassistenten, [E-6](../BEFUNDE.md#e-6)). Der
 Zusatz „das nächste Paket heißt 1.0.4" ist siebzehn Nummern alt.
 
 **Vorschlag:**
@@ -1001,7 +1001,7 @@ Zusatz „das nächste Paket heißt 1.0.4" ist siebzehn Nummern alt.
 
 ---
 
-## W-26 (gering) — fünf Verweise in `Releases/1.0/README.md` führen ins Leere
+## <a id="w-26"></a>W-26 (gering) — fünf Verweise in `Releases/1.0/README.md` führen ins Leere
 
 Die Ziele tragen eine Zeilennummer im Pfad und lösen deshalb nicht auf:
 
@@ -1020,7 +1020,7 @@ in den Verweistext holen —
 
 ---
 
-## W-27 (gering) — zwei genannte Dateien gibt es nicht mehr
+## <a id="w-27"></a>W-27 (gering) — zwei genannte Dateien gibt es nicht mehr
 
 | Datei | genannt in |
 |---|---|
@@ -1034,7 +1034,7 @@ zum Nachvollziehen steht, den Halbsatz *„— liegt nicht mehr im Baum"* anfüg
 
 ---
 
-## W-28 (gering) — zwei Befunddateien haben keinen Nachtrag zur später gefundenen Ursache
+## <a id="w-28"></a>W-28 (gering) — zwei Befunddateien haben keinen Nachtrag zur später gefundenen Ursache
 
 `Befunde/VERFASSER.md:16`: *„**Nicht gefunden** — Die eine Zeile im
 Verfassen-Weg, die den Speicher beschädigt. Ich habe sie nicht."*
@@ -1042,7 +1042,7 @@ Verfassen-Weg, die den Speicher beschädigt. Ich habe sie nicht."*
 
 Für ihren Tag ist beides richtig. Wer nur eine dieser Dateien öffnet — und
 `BEFUNDE.md:171` bzw. `:166` verweisen genau dorthin —, erfährt nicht, dass die
-Ursache inzwischen E-31 bzw. E-28 heißt.
+Ursache inzwischen [E-31](../BEFUNDE.md#e-31) bzw. [E-28](../BEFUNDE.md#e-28) heißt.
 
 **Vorschlag** — je ein Kasten unter die Kopfzeile, nach dem Muster, das
 `Eudora71/OTShim/BEFUND-ANSICHT.md:6-10` schon benutzt. Für
@@ -1058,11 +1058,11 @@ Ursache inzwischen E-31 bzw. E-28 heißt.
 > `MSVCR71`) ist damit überholt.
 ```
 
-Für `Befunde/FENSTER.md` entsprechend mit **E-28** (`CSummary::m_FrameWnd`).
+Für `Befunde/FENSTER.md` entsprechend mit **[E-28](../BEFUNDE.md#e-28)** (`CSummary::m_FrameWnd`).
 
 ---
 
-## W-29 (gering) — `CHANGELOG.md:35-36` zitiert Gregor gekürzt
+## <a id="w-29"></a>W-29 (gering) — `CHANGELOG.md:35-36` zitiert Gregor gekürzt
 
 > `> Sein Maßstab von 1.0.18 gilt weiter: *„es crasht nicht, aber es passiert auch`
 > `> nichts. nichts statt crash ist auch keine verbesserung!"*`
@@ -1076,7 +1076,7 @@ der Halbsatz, aus dem Kriterium 7 entstanden ist.
 
 ---
 
-## W-31 (mittel) — `PORTIERUNG.md` sagt nicht, für wen sie ist
+## <a id="w-31"></a>W-31 (mittel) — `PORTIERUNG.md` sagt nicht, für wen sie ist
 
 Gregors Frage dazu lautete wörtlich *„ist es intern für dich? oder für einen
 agenten?"*.
@@ -1132,7 +1132,7 @@ Befunde/PAIGE.md` nachmessen — ich habe sie nicht belegt.
    GitHub-Schnittstelle; ins Netz habe ich nicht gesehen. **Vermutung:** ja, weil
    die Marke frisch gesetzt wurde und `Releases/PAKETE.md:136` „veröffentlicht am
    07.09.2026" sagt. **Nicht belegt.**
-2. **Die Prüfsumme von `Eudora72-1.0.20-release.zip`.** Für W-6c fehlt sie. Sie
+2. **Die Prüfsumme von `Eudora72-1.0.20-release.zip`.** Für [W-6c](#w-6c) fehlt sie. Sie
    steckt im git-Verlauf; sie herauszuholen heißt, ein 9-MB-Blob aus einem alten
    Commit zu holen — das habe ich als Nur-Lesen-Auftrag nicht getan. **Bitte
    nachmessen, nicht schätzen.** Ebenso, ob es 1.0.20 überhaupt als ZIP gab oder
@@ -1161,7 +1161,7 @@ Befunde/PAIGE.md` nachmessen — ich habe sie nicht belegt.
    worden (Zeitstempel 10:14 bis 10:33 Uhr), HEAD ist von `41ad5df` auf
    `4f27a38` gewandert, und die Marke `v1.0.21` ist um 10:34 entstanden. Meine
    Zitate sind um **10:36 Uhr** gegengelesen; vier Fundstellen sind in dieser
-   Zeit behoben worden und stehen als **W-0**. Es kann weitere geben, die
+   Zeit behoben worden und stehen als **[W-0](#w-0)**. Es kann weitere geben, die
    danach entstanden oder verschwunden sind. **Jede Zeilennummer vor dem
    Einsetzen nachprüfen.**
 7. **Zeilenenden.** Der Auftrag sagte CRLF *„wie die anderen MDs"*. **Gemessen

@@ -63,7 +63,12 @@ $wurzel = '.' if $wurzel eq $0 || $wurzel eq '';
 # festhaelt. Gesucht wird die FORM; ob die Kennung existiert, entscheidet
 # allein die Urteilstabelle in BEFUNDE.md.
 my $PRAEFIX = qr/[A-Z][A-Za-z0-9]{0,8}/;
-my $KENNUNG = qr/$PRAEFIX-\d+[a-z]?/;
+my $KENNUNG = qr/$PRAEFIX-\d+(?:\.\d+)?[a-z]?/;
+# Dritte Form, ohne Bindestrich: B5, B5.7, C1 - die Abschnittskennungen der
+# Arbeitspakete in AUFGABEN.md und TESTPLAN.md. Gregor am 12.10.2026:
+# "Offen bleibt B5.7: ... link fehlt". 44 Nennungen allein fuer B5.7.
+my $KURZ    = qr/[A-Z]\d+(?:\.\d+)?/;
+my $JEDE    = qr/(?:$KENNUNG|$KURZ)/;
 
 sub lies {
   my $p = shift;
@@ -89,9 +94,75 @@ for my $i (0 .. $#bz) {
 }
 my @kennungen = sort keys %zeile_von;
 my %ankerda = map { lc($_) => 1 } @kennungen;
+our %ankerda2;
 printf "BEFUNDE.md: %d Kennungen in der Urteilstabelle\n", scalar @kennungen;
 
-sub ankername { my $k = lc shift; return $k }
+sub ankername { my $k = lc shift; $k =~ s/[^a-z0-9.-]//g; return $k }
+
+# ---------------------------------------------------------------------------
+# 1b. Das zweite Verzeichnis: die Agentenbefunde unter Befunde/
+# ---------------------------------------------------------------------------
+# Gregor am 12.10.2026, mit LEKTORAT.md vor sich: "L-17 usw. - links fehlen!".
+# Richtig: L-17.1, LEKTOR-20, P-42, W-2 stehen NICHT in der Urteilstabelle
+# von BEFUNDE.md, sondern haben ihre eigene Ueberschrift in einem Bericht
+# unter Befunde/. Die erste Fassung kannte nur ein Verzeichnis und ging an
+# 603 Nennungen vorbei.
+my %bericht_zeilen;   # Datei -> [Zeilen]
+my %bericht_anker;    # Kennung -> [Datei, Zeilenindex]
+for my $f (sort glob("$wurzel/Befunde/*.md")) {
+  (my $kurz = $f) =~ s{^\Q$wurzel\E/}{};
+  my @z = split /\n/, lies($f), -1;
+  $bericht_zeilen{$kurz} = \@z;
+  for my $i (0 .. $#z) {
+    next unless $z[$i] =~ /^\#+\s+(?:<a\s+id="[^"]*"><\/a>)?\s*\*{0,2}\s*($KENNUNG)(?![\w.-])/;
+    my $k = $1;
+    next if exists $zeile_von{$k};          # BEFUNDE.md hat Vorrang
+    next if exists $bericht_anker{$k};      # die erste Nennung gewinnt
+    $bericht_anker{$k} = [$kurz, $i];
+  }
+}
+printf "Befunde/*.md: %d Kennungen mit eigener Ueberschrift\n",
+       scalar keys %bericht_anker;
+%ankerda2 = map { ankername($_) => 1 } keys %bericht_anker;
+
+# ---------------------------------------------------------------------------
+# 1c. Das dritte Verzeichnis: Abschnittskennungen in den Dokumenten selbst
+# ---------------------------------------------------------------------------
+# B5, B5.7, C1 stehen weder in BEFUNDE.md noch unter Befunde/, sondern sind
+# Ueberschriften in AUFGABEN.md und TESTPLAN.md.
+my %doku_zeilen;
+my %doku_anker;
+for my $f (sort (glob("$wurzel/*.md"), glob("$wurzel/tools/*.md"))) {
+  (my $kurz = $f) =~ s{^\Q$wurzel\E/}{};
+  my @z = split /\n/, lies($f), -1;
+  $doku_zeilen{$kurz} = \@z;
+  for my $i (0 .. $#z) {
+    next unless $z[$i] =~ /^\#+\s+(?:<a\s+id="[^"]*"><\/a>)?\s*\*{0,2}\s*($KURZ)(?![\w.-])/;
+    my $k = $1;
+    next if exists $zeile_von{$k} || exists $bericht_anker{$k} || exists $doku_anker{$k};
+    $doku_anker{$k} = [$kurz, $i];
+  }
+}
+printf "Dokumente: %d Abschnittskennungen (B5, B5.7, C1 ...)\n", scalar keys %doku_anker;
+%ankerda2 = (%ankerda2, map { ankername($_) => 1 } keys %doku_anker);
+
+# Wohin zeigt eine Kennung? Datei und Anker, beides relativ zur Wurzel.
+my %ziel_von;
+$ziel_von{$_} = ['BEFUNDE.md', ankername($_)] for @kennungen;
+$ziel_von{$_} = [$bericht_anker{$_}[0], ankername($_)] for keys %bericht_anker;
+$ziel_von{$_} = [$doku_anker{$_}[0],    ankername($_)] for keys %doku_anker;
+
+# Ein Link aus tools/WERKZEUGE.md nach Befunde/LEKTOR-17.md heisst
+# ../Befunde/LEKTOR-17.md - der Pfad muss vom LESENDEN Dokument aus gelten.
+sub verweis {
+  my ($von, $k) = @_;
+  my ($datei, $id) = @{ $ziel_von{$k} };
+  return "#$id" if $datei eq $von;
+  my @v = split m{/}, $von; pop @v;            # Verzeichnis des Lesers
+  my @n = split m{/}, $datei;
+  shift(@v), shift(@n) while @v && @n > 1 && $v[0] eq $n[0];
+  return join('/', ('..') x scalar(@v), @n) . "#$id";
+}
 
 # ---------------------------------------------------------------------------
 # 2. Anker setzen
@@ -104,19 +175,53 @@ for my $k (@kennungen) {
   $neu_anker++;
   $bz[$i] =~ s/^\|\s*/| <a id="$id"><\/a>/;
 }
-if ($neu_anker) {
-  if ($anker) { schreib($bef, join("\n", @bz)); print "Anker gesetzt: $neu_anker\n" }
-  else        { print "Anker fehlen: $neu_anker (mit --anker setzen)\n" }
+my $neu_anker_b = 0;
+for my $k (sort keys %bericht_anker) {
+  my ($datei, $i) = @{ $bericht_anker{$k} };
+  my $id = ankername($k);
+  next if $bericht_zeilen{$datei}[$i] =~ /<a\s+id="\Q$id\E"><\/a>/;
+  $neu_anker_b++;
+  $bericht_zeilen{$datei}[$i] =~ s/^(\#+\s+)/$1<a id="$id"><\/a>/;
 }
-else { print "Anker: alle $,".scalar(@kennungen)." vorhanden\n" if 0; print "Anker: vollstaendig\n" }
+my $neu_anker_c = 0;
+my %doku_zu;
+for my $k (sort keys %doku_anker) {
+  my ($datei, $i) = @{ $doku_anker{$k} };
+  my $id = ankername($k);
+  next if $doku_zeilen{$datei}[$i] =~ /<a\s+id="\Q$id\E"><\/a>/;
+  $neu_anker_c++; $doku_zu{$datei} = 1;
+  $doku_zeilen{$datei}[$i] =~ s/^(\#+\s+)/$1<a id="$id"><\/a>/;
+}
+if ($neu_anker_c && $anker) {
+  schreib("$wurzel/$_", join("\n", @{ $doku_zeilen{$_} })) for sort keys %doku_zu;
+}
+$neu_anker_b += $neu_anker_c;
+if ($neu_anker || $neu_anker_b) {
+  if ($anker) {
+    schreib($bef, join("\n", @bz)) if $neu_anker;
+    if ($neu_anker_b) {
+      my %zu;
+      $zu{ $bericht_anker{$_}[0] } = 1 for keys %bericht_anker;
+      schreib("$wurzel/$_", join("\n", @{ $bericht_zeilen{$_} })) for sort keys %zu;
+    }
+    print "Anker gesetzt: $neu_anker in BEFUNDE.md, $neu_anker_b unter Befunde/\n";
+  }
+  else {
+    print "Anker fehlen: $neu_anker in BEFUNDE.md, $neu_anker_b unter Befunde/ (mit --anker setzen)\n";
+  }
+}
+else { print "Anker: vollstaendig\n" }
 
 # ---------------------------------------------------------------------------
 # 3. Verlinken
 # ---------------------------------------------------------------------------
 # Keine feste Liste: Gregor sagte "ueberall". Genommen wird jede .md im
-# Wurzelverzeichnis - ein neues Dokument ist damit von selbst dabei, und
-# niemand muss daran denken.
-my @dateien = sort map { s{^\Q$wurzel\E/}{}r } glob("$wurzel/*.md");
+# Wurzelverzeichnis, in tools/ und unter Befunde/ - ein neues Dokument ist
+# damit von selbst dabei, und niemand muss daran denken. Arbeitsweise/
+# bleibt aussen vor, wie beim Lektorat auch.
+my @dateien = sort map { s{^\Q$wurzel\E/}{}r }
+              (glob("$wurzel/*.md"), glob("$wurzel/tools/*.md"),
+               glob("$wurzel/Befunde/*.md"));
 
 my $offen = 0;
 my $gesetzt = 0;
@@ -128,20 +233,10 @@ for my $d (@dateien) {
   my $in_block = 0;
   my $geaendert = 0;
   my $hier = 0;
-  my %schon;     # Kennung -> im laufenden Absatz bereits verlinkt
 
   for my $i (0 .. $#z) {
     my $z = $z[$i];
 
-    # Ein neuer Absatz faengt bei einer Leerzeile, einer Ueberschrift, einer
-    # Tabellenzeile oder einem Aufzaehlungspunkt an. Dort wird wieder
-    # verlinkt; INNERHALB eines Absatzes nur die erste Nennung.
-    #
-    # Warum nicht jede: Gregor am 12.10.2026 - "mein anliegen ist, dass man
-    # sich schneller zurecht findet, nicht die uebersicht verliert". 1473
-    # blaue Stellen sind keine Uebersicht, sondern eine zweite Sorte Laerm.
-    %schon = () if $z =~ /^\s*$/ || $z =~ /^\s*#/ || $z =~ /^\s*[|*+-]/
-                 || $z =~ /^\s*\d+\./ || $z =~ /^\s*>\s*$/;
 
     if ($z =~ /^\s*```/) { $in_block = !$in_block; next }
     next if $in_block;
@@ -158,28 +253,39 @@ for my $d (@dateien) {
     my @safe;
     $z =~ s{(`[^`]*`|\[[^\]]*\]\([^)]*\))}{
       my $s = $1;
-      # Ein FERTIGER Befundlink zaehlt als die Nennung dieses Absatzes -
-      # sonst verlinkt der naechste Lauf die zweite Nennung und der
-      # uebernaechste die dritte, bis der Absatz durchgehend blau ist.
-      $schon{$1} = 1 while $s =~ /\[\*{0,2}($KENNUNG)\*{0,2}\]\([^)]*#/g;
+      # Ein Rueckstrichstueck, das NUR aus einer Kennung besteht, ist eine
+      # Beschriftung, kein Befehl - das wird verlinkt. Gregor am 12.10.2026
+      # zur Markentabelle in TESTPLAN.md: "links in der tabelle fehlen".
+      # `grep "E-78\|E-70" eudora.log` bleibt unangetastet: wer das kopiert,
+      # soll einen Befehl bekommen und keinen Link. Nur die Form MIT
+      # Bindestrich: `B7` ist in BEFUNDE.md:6839 das Byte 0xB7, nicht der
+      # Abschnitt B7.
+      if ($s =~ /^`($KENNUNG)`$/ && exists $ziel_von{$1}) {
+        my $k = $1;
+        $hier++;
+        $s = "[`$k`](" . verweis($d, $k) . ")";
+      }
       push @safe, $s; "\x00" . $#safe . "\x00"
     }ge;
 
-    my $ziel = ($d eq 'BEFUNDE.md') ? '' : 'BEFUNDE.md';
-
-    # (?!\.[0-9a-z]) haelt Unterkennungen zusammen: ohne das wird aus
-    # P-1.5b ein [P-1](#p-1).5b - ein Link auf den Oberbefund mit einem
-    # abgeschnittenen Rest dahinter. Ein Satzpunkt (Punkt + Leerzeichen)
-    # bleibt erlaubt.
-    $z =~ s{(?<![A-Za-z0-9])(\*\*)?($KENNUNG)(\*\*)?(?![\d\w-])(?!\.[0-9a-z])}{
-      my ($f1, $k, $f2) = ($1 // '', $2, $3 // '');
-      if (exists $zeile_von{$k} && !$schon{$k} && (($f1 eq '') == ($f2 eq ''))) {
-        $hier++;
-        $schon{$k} = 1;
-        "[$f1$k$f2]($ziel#" . ankername($k) . ")";
-      } else {
-        "$f1$k$f2";
+    $z =~ s{(?<![A-Za-z0-9])($JEDE)(?![\w-])(?!\.[0-9a-z])}{
+      # Der Fettdruck wird NICHT mitgenommen. Die erste Fassung fasste
+      # **E-98** als Einheit und verlangte das Sternchenpaar auf beiden
+      # Seiten - in "**E-98 bis E-101**" steht es aber nur aussen, also
+      # blieben beide Kennungen unverlinkt. Gregor am 12.10.2026:
+      # "Dazu fehlten E-98 bis E-101 - hier auch!". Jetzt wird nur die
+      # Kennung selbst zum Link, der Fettdruck bleibt, wo er stand.
+      my $k = $1;
+      # Eine Abschnittskennung OHNE Punkt gilt nur in ihrer eigenen Datei.
+      # B1 und E1 heissen in Befunde/LEKTOR-6.md etwas anderes als in
+      # TESTPLAN.md, und `B7` ist anderswo das Byte 0xB7. Ein falscher Link
+      # ist schlimmer als ein fehlender. Mit Punkt - B5.7 - ist die Kennung
+      # eindeutig und zaehlt ueberall.
+      my $nur_hier = ($k =~ /^$KURZ$/ && $k !~ /\./);
+      if (exists $ziel_von{$k} && (!$nur_hier || $ziel_von{$k}[0] eq $d)) {
+        $hier++; "[$k](" . verweis($d, $k) . ")";
       }
+      else { $k }
     }ge;
 
     $z =~ s{\x00(\d+)\x00}{$safe[$1]}g;
@@ -200,18 +306,11 @@ for my $d (@dateien) {
 my @tot;
 for my $d (@dateien) {
   my $text = lies("$wurzel/$d");
-  # NICHT $KENNUNG einsetzen: ein mit qr// uebersetztes Muster traegt seine
-  # eigenen Schalter, das /i von aussen wirkt darin nicht. Genau daran war
-  # diese Pruefung blind - die Gegenprobe mit #e-999 lief am 12.10.2026
-  # gruen durch, weil das Muster [A-Z] verlangte und der Anker klein ist.
-  while ($text =~ m{\]\((?:BEFUNDE\.md)?#([A-Za-z][A-Za-z0-9]{0,8}-\d+[a-z]?)\)}g) {
-    # Verglichen wird gegen den ANKERNAMEN, nicht gegen die Kennung in
-    # Grossschreibung: uc("z-2b") ist "Z-2B", die Kennung heisst aber
-    # "Z-2b" - vier echte Verweise galten dadurch als tot.
-    push @tot, "$d -> #$1" unless exists $ankerda{lc $1};
+  while ($text =~ m{\]\(([^()\s]*)#([A-Za-z][A-Za-z0-9]{0,8}-\d+(?:\.\d+)?[a-z]?)\)}g) {
+    my ($wohin, $id) = ($1, lc $2);
+    push @tot, "$d -> #$id" unless $ankerda{$id} || $ankerda2{$id};
   }
 }
-
 print "\n";
 if (@tot) {
   print "  MANGEL - Verweise ins Leere:\n";

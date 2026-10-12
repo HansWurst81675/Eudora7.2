@@ -1,6 +1,6 @@
 # PRÜFER-15 — E-104 auf Datenverlust: **nein, es geht kein Text verloren**
 
-Stand: 17.09.2026. Geprüfter Commit: `eed2e4e` („E-104: Kopfzeilen kleben nicht
+Stand: 17.09.2026. Geprüfter Commit: `eed2e4e` („[E-104](../BEFUNDE.md#e-104): Kopfzeilen kleben nicht
 mehr zusammen, verdorbene INI-Werte repariert"), enthalten in `origin/main`
 (`5cf45b7`); `compmsgd.cpp` und `msgutils.cpp` sind seit `eed2e4e` unverändert
 (`git diff --stat eed2e4e origin/main` meldet nichts).
@@ -21,7 +21,7 @@ den es bekommen hat. `pFile->Put( CopyText )` schreibt damit byteweise
 dasselbe, was `pFile->Put( UnwrapText( CopyText ) )` geschrieben hätte.
 
 **Das Paket kann in dieser Hinsicht raus.** Es bleiben vier Mängel, davon einer
-gewichtig (M-1: derselbe Fehler steht im Lesefenster-Weg unverändert offen).
+gewichtig ([M-1](../BEFUNDE.md#m-1): derselbe Fehler steht im Lesefenster-Weg unverändert offen).
 
 ---
 
@@ -200,7 +200,7 @@ abgeschnitten) und auch kein Verkleben: `pszRumpf` ist in diesem Fall
 %02d:%02d:%02d" plus `" %4"`-Zonenanhang) 37 Zeichen lang, mit dem `\r` davor
 `End - Beg == 38`. Regel 3 in `UnwrapText` (`msgutils.cpp:480`,
 `End - Beg < 40` → „this line is short") lässt sie stehen. **Der Abstand zum
-Verkleben beträgt zwei Zeichen.** Das ist Zufall, kein Schutz — siehe M-2.
+Verkleben beträgt zwei Zeichen.** Das ist Zufall, kein Schutz — siehe [M-2](#m-2).
 
 ---
 
@@ -290,7 +290,7 @@ wenigstens nachgesehen werden, welche der beiden Klassen sein Fenster
 tatsächlich bedient hat. Kein Datenverlust, aber der Befund ist nur zur Hälfte
 geschlossen.
 
-### M-2 (mittel) — zwei rohe Leser neben dem geprüften
+### <a id="m-2"></a>M-2 (mittel) — zwei rohe Leser neben dem geprüften
 
 `Eudora71/Eudora/compmsgd.cpp:3415` und `:3429`. Richtig wäre, den Schalter
 **einmal** oben zu lesen und überall denselben Wert zu verwenden:
@@ -309,7 +309,7 @@ und in Zeile 3429 `GetMessageAsHTML(msg, bKopfzeilen)`. Dann verschwindet auch
 der einsame `Date:`-Kopf aus Frage 4, und der HTML-Zweig repariert die INI
 genauso wie der Textzweig (derzeit gar nicht).
 
-### M-3 (klein) — `filtersd.cpp` schreibt einen verdorbenen Wert wieder zurück
+### <a id="m-3"></a>M-3 (klein) — `filtersd.cpp` schreibt einen verdorbenen Wert wieder zurück
 
 `Eudora71/Eudora/filtersd.cpp:2048` liest `short ih = GetIniShort(...)` roh und
 stellt ihn in Zeile 2083 mit `SetIniShort(IDS_INI_INCLUDE_HEADERS, ih)` wieder
@@ -318,7 +318,7 @@ gespeichert wird, trägt die INI danach den verdorbenen Wert erneut. Die
 Reparatur ist dadurch nicht dauerhaft, nur vertagt. Richtig:
 `short ih = E104SchalterLesen(IDS_INI_INCLUDE_HEADERS);` in Zeile 2048.
 
-### M-4 (klein) — `tocview.cpp` repariert nicht mit
+### <a id="m-4"></a>M-4 (klein) — `tocview.cpp` repariert nicht mit
 
 `Eudora71/Eudora/tocview.cpp:3098-3099` liest beide Schlüssel roh
 (`BOOL(::GetIniShort(...))`). Der **Schutz** gegen das Verkleben ist dort
@@ -371,6 +371,6 @@ Ganz gelesen: `UnwrapText` (`msgutils.cpp:448-512`), `FindBody`
 `IDS_INI_INCLUDE_HEADERS`, `IDS_INI_GUESS_PARAGRAPHS` — alle Fundstellen oben
 abgehandelt.
 
-**Nicht geprüft** (außerhalb des Auftrags): der Bau, die Doku zu E-104, die
+**Nicht geprüft** (außerhalb des Auftrags): der Bau, die Doku zu [E-104](../BEFUNDE.md#e-104), die
 Frage, was `PgDataTranslator::kFmtText` für Zeilenenden liefert, und alles
 außerhalb von `eed2e4e`.
