@@ -305,6 +305,10 @@ schranke pruefe-doku-takt.pl || exit $?
 #     verglich die Schranke NUR Datum gegen Datum und meldete LEKTORAT.md
 #     gruen, waehrend die Datei Befunde/LEKTOR-13.md kein einziges Mal nannte.
 schranke pruefe-stand-md.pl || exit $?
+# Haelt jedes Dokument gegen die Urteilszeilen in BEFUNDE.md - kein
+# Text darf einen Befund fuer erledigt erklaeren, den BEFUNDE.md offen
+# fuehrt. Hing bis zum 12.10.2026 in KEINEM Haken und war auf main rot.
+schranke pruefe-befundurteile.pl || exit $?
 
 # 19c. Vergibt niemand eine Fassungsnummer zweimal? VERSION, Version.h,
 #      Releases/PAKETE.md und der Tag-Bestand gegeneinander. Zwei gleichzeitig
@@ -440,6 +444,10 @@ schranke pruefe-doku-takt.pl || exit $?
 
 echo "pre-push: hinkt ein Stand-Kopf hinterher?"
 schranke pruefe-stand-md.pl || exit $?
+# Haelt jedes Dokument gegen die Urteilszeilen in BEFUNDE.md - kein
+# Text darf einen Befund fuer erledigt erklaeren, den BEFUNDE.md offen
+# fuehrt. Hing bis zum 12.10.2026 in KEINEM Haken und war auf main rot.
+schranke pruefe-befundurteile.pl || exit $?
 
 echo "pre-push: ist eine Fassungsnummer zweimal vergeben?"
 schranke pruefe-fassungsnummer.pl || exit $?

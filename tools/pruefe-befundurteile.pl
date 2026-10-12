@@ -87,6 +87,12 @@ my @offen = (
     'in Arbeit',
     'zurueckgestellt',
     "zur\xc3\xbcckgestellt",     # UTF-8, zurückgestellt
+    # Am 12.10.2026 dazu: "aufgeschrieben" heisst in diesem Projekt, dass ein
+    # Befund ERFASST ist - nicht, dass er behoben waere. WEITERMACHEN.md und
+    # ZIEL.md sagen "E-105, E-111, E-112, E-113 aufgeschrieben" in demselben
+    # Satz, in dem E-110 als behoben steht; ohne dieses Wort schlug die
+    # Schranke dort viermal an, obwohl der Text richtig ist.
+    'aufgeschrieben',
 );
 
 # --- Absaetze, die eine Berichtigung beschreiben, duerfen zitieren -------
@@ -272,7 +278,14 @@ for my $datei (@dateien) {
                 # Dieselbe Grenze wie oben: steht hinter der Kennung eine
                 # Ziffer, ist es eine andere (E-7 in E-71).
                 if (substr($text, $i + length($k), 1) =~ /\d/) { $pos = $i + 1; next; }
-                my $umfeld = lc substr($text, $i, length($k) + 40);
+                # Das Umfeld reicht nach BEIDEN Seiten. Bis zum 12.10.2026
+                # sah es nur nach vorn - damit schlug "Weiter offen ist
+                # E-113" an, obwohl die Kennung dort richtig eingestuft ist.
+                # Vier der elf Beanstandungen an jenem Tag waren von dieser
+                # Sorte; sie haben die Schranke unglaubwuerdig gemacht und
+                # damit die sieben echten mit begraben.
+                my $von = $i - 40; $von = 0 if $von < 0;
+                my $umfeld = lc substr($text, $von, ($i - $von) + length($k) + 40);
                 $nahe = 1 if grep { index($umfeld, lc $_) >= 0 } @offen;
                 $pos = $i + 1;
             }
@@ -297,8 +310,22 @@ for my $datei (@dateien) {
     # der erste Anlauf produziert: die Tabelle der offenen Befunde in
     # FILTER.md nennt bei E-68 zu Recht, dass die andere Haelfte behoben
     # ist - und wurde deshalb fuer E-47, E-67 und E-69 angeschwaerzt.
+    # Am 12.10.2026 dazu: dasselbe gilt INNERHALB eines Zitatblocks. Der
+    # Abschnitt "Der naechste Schritt" in WEITERMACHEN.md ist ein einziger
+    # Block aus "> "-Zeilen und zaehlt darin numerierte Schritte auf. Ein
+    # "- erledigt." in Schritt 1 schlug damit gegen jede Kennung in Schritt
+    # 2 bis 5 an: fuenf Fehlalarme aus einem einzigen Absatz. Ein Schritt
+    # ist eine Aufzaehlung, auch wenn ein "> " davor steht.
+    my $zitat_punkt = qr/^\s*>\s*(?:\*\*)?\d+\./;
+
     for my $z (@zeilen) {
         $nr++;
+        if ($z =~ $zitat_punkt) {
+            $pruefe->(join(' ', @absatz), $start) if @absatz;
+            @absatz = ($z);              # der Schritt beginnt hier
+            $start = $nr;
+            next;
+        }
         if ($z =~ /^\s*[|*+-]|^\s*\d+\./) {
             $pruefe->(join(' ', @absatz), $start) if @absatz;
             @absatz = ();
@@ -306,7 +333,11 @@ for my $datei (@dateien) {
             $start = $nr + 1;
             next;
         }
-        if ($z =~ /^\s*$/) {
+        # Eine Zeile aus nichts als "> " ist der Absatzwechsel INNERHALB
+        # eines Zitatblocks - genauso trennend wie eine Leerzeile. Ohne das
+        # lag in WEITERMACHEN.md "E-110 behoben" im selben Topf wie
+        # "E-105, E-111, E-112, E-113 aufgeschrieben", vier Zeilen weiter.
+        if ($z =~ /^\s*$/ || $z =~ /^\s*>\s*$/) {
             $pruefe->(join(' ', @absatz), $start);
             @absatz = ();
             $start = $nr + 1;
