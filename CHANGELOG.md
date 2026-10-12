@@ -79,8 +79,8 @@ Typ NICHT", keine `Exception.log`.
 **Von Gregor bestätigt, 12.10.2026.** Er hat Paket 1.0.83 selbst über IMAP
 getestet (Auswertung unten) und danach geschrieben: *„gekürzt mit endung
 reicht, mach PR für an1-endungen"*. PR #84 hat er um 10:51 UTC gemergt und
-dann angewiesen: *„erstelle ein release auf github"*. Veröffentlicht als
-**v1.0.83**.
+dann angewiesen: *„erstelle ein release auf github"*. Zu veröffentlichen als
+**v1.0.83** — sobald das geschehen ist, steht hier Marke und Prüfsumme.
 
 **Von Gregor über IMAP getestet, 12.10.2026, Paket 1.0.83** (sein `eudora.log`,
 vier Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
