@@ -43,8 +43,8 @@ use strict; use warnings;
 #   05-leerer-dateiname       eine Datei namens "="
 #
 # Ist 00 heil und sind 01 bis 05 kaputt, ist AN-1 bestaetigt. Sind hinterher
-# ALLE sechs heil, ist der Patch tools/patches/anhangnamen-faltung.patch
-# zusammen mit B5.2 bis B5.5 durch.
+# ALLE sechs heil, wirken die Behebungen B5.1 bis B5.6 (siehe AUFGABEN.md)
+# am laufenden Programm.
 #
 # WORAN MAN ES AUCH IN ECHTER POST ERKENNT
 #

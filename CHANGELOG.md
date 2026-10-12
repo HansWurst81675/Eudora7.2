@@ -9,11 +9,11 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 11.10.2026)
+## Noch offen (Stand 12.10.2026)
 
 | Kennung | | |
 |---|---|---|
-| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Offen, vier Ursachen am Zerleger gemessen, keine am laufenden Programm.** Von Gregor am 30.09.2026 gemeldet. **Es liegt nicht an der Länge:** ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile steht — abgeschnitten wird er, sobald der Absender die Kopfzeile faltet. Alle vier Ursachen sind **Originalfehler aus Eudora 7.1** und stecken **doppelt** im Baum (POP und IMAP). **Zwei Patches liegen bereit und sind nicht angewandt:** `tools/patches/anhangnamen-debugmarken.patch` (acht Marken auf dem Weg des Namens) und `anhangnamen-faltung.patch` (Behebung der Faltung). Prüfdaten samt POP3-Prüfstand in `tools/pruefdaten/`. Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5.0 bis B5.5**; Herleitung in [BEFUNDE.md](BEFUNDE.md) |
+| **AN-1** | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Sechs von sieben Ursachen geändert in 7.2.0.79 — nichts davon ist übersetzt oder am laufenden Programm bestätigt.** Von Gregor am 30.09.2026 gemeldet. **Es liegt nicht an der Länge:** ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile steht. **Offen ist B5.7** (über IMAP fehlt `MIMEMap::SetExtension`) und der Bau: `-Ziel Rebuild`, dann die Prüfdaten aus `tools/pruefdaten/` über den POP3-Prüfstand abrufen. Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**; Herleitung in [BEFUNDE.md](BEFUNDE.md) |
 | **E-112** | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-113** | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie E-112: dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | **E-109** | **die Schranken waren da und haben nicht gehalten** — *„es gibt viele schranken, die genau das verhindern sollen!"* | **Offen, an einem Tag belegt.** Sieben Schranken haben am 17.09.2026 durchgelassen, was sie fangen sollten; die vollständige Aufstellung steht in [BEFUNDE.md](BEFUNDE.md) unter E-109. **Das Muster:** jede wurde **nach** einem Schaden gebaut und gegen **genau den Fall** geprüft, der gerade passiert war — nicht gegen die nächste Spielart. Und mehrere melden grün, wenn sie nichts zu prüfen fanden, statt zu sagen, dass sie nichts geprüft haben. **Am 18.09.2026 ist eine achte dazugekommen** (LEKTOR, L-15.5): `doku-pruefen.pl` löst auf das Wort *Paketnummer* aus und verlangt dahinter die **aktuelle** Nummer — in `tools/ZWEIGE.md` steht dort aber, was ein Zweig **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend **dreimal** in die Unwahrheit getrieben |
@@ -64,6 +64,94 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
 > nichts statt crash ist auch keine verbesserung!"* — kein Absturz ist kein
 > Fortschritt, solange der Anwender nichts damit tun kann.
+
+---
+
+## 7.2.0.79 — Anhangnamen: sechs von sieben Ursachen geändert (AN-1), **nicht übersetzt**
+
+> **Hier ist nichts gebaut und nichts gestartet.** Die Sitzung lief ohne Windows
+> und ohne Compiler. Was gemessen ist, steht in der Tabelle; alles andere ist
+> aus dem Quelltext begründet und wartet auf einen Bau.
+
+Gregors Ziel vom 12.10.2026: *„anhänge werden korrekt gespeichert - mit
+erweiterung, komplette dateiname"*. Bis zu dieser Fassung lag die Arbeit zu
+**AN-1** als zwei Patchdateien **neben** dem Code. Jetzt steht sie drin, und die
+beiden Dateien sind entfernt.
+
+| Teil | Was | Gemessen |
+|---|---|---|
+| **B5.1** | **Eine Faltung beendet die Zeichenkette nicht mehr.** `CollectQText` nimmt das CR in die Marke, wenn ein LF folgt, und entscheidet erst am LF; `WriteHeaderToken` setzt es hinter das schließende Anführungszeichen; `AddAttribute` löst `CRLF`+Weiß zu einem Leerzeichen auf | ja — `kopfzeile-pruefen.pl`: 76 Zeichen **mit** `.pdf` statt 47 ohne, Rückschrieb byteidentisch |
+| **B5.2** | **`Token[0] = 0;` beim Neuanfang.** `filename=""` wurde zum Wert `=`, weil die leere Marke noch das erste Byte der vorigen trug | ja — `""` statt `"="` |
+| **B5.3** | **Marke von 256 auf 1024.** Ein Name nach `_MAX_PATH` (260) passte nicht in `BYTE Token[256]` und verlor bei 254 Zeichen seine Endung. Die Zahl heißt jetzt `LEX822_TOKEN_MAX` und steht **einmal** — beide Zerleger und beide `AddAttribute` holen sie von dort | ja — 304 Zeichen **mit** `.pdf` statt 254 ohne |
+| **B5.4** | **Zwei Puffer über den Rand.** `DeMacifyName32` schrieb ein Byte hinter `pcname[255]`. **Neu gefunden:** `DeMacifyName` (8+3) schrieb bis zu **drei** Byte über — `pcname[15]`, und 8 + Punkt + 8 + Null sind 18; der zweite Zähler stand auf 8 statt 3 | nein — aus dem Quelltext gerechnet |
+| **B5.5** | **RFC 2231.** `filename*0*=UTF-8''…` kannte der Baum nicht. Dann gab es **gar kein** `filename`, und `mime.cpp` nahm den **Betreff** aus `subj[32]` — 31 Zeichen ohne Endung. Neu: `QCUtils/src/rfc2231.cpp`, benutzt von POP **und** IMAP, inklusive UTF-8 nach ANSI | ja — `rfc2231-pruefen.pl`: **20 von 20** Fällen |
+| **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`**, beschrieben mit bis zu 256 Byte. Trifft jeden Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Nur IMAP — das POP-Gegenstück ist auf `CString` umgebaut | nein — aus dem Quelltext gerechnet |
+| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`** — das Sicherheitsnetz für eine fehlende Endung fehlt dort ganz | **offen.** Es hängt an einer Bindefrage, nicht an der Logik: siehe AUFGABEN.md, B5.7 |
+
+**Zehn Debug-Marken** auf dem Weg des Namens, Bit `DEBUG_MASK_ATTACH = 0x10000`,
+einzuschalten mit `LogLevel=91295` in der Gruppe **`[Debug]`** der `eudora.ini`.
+Alles, was sie schreiben, beginnt mit `ANHANG`. Die POP-Marken 1 bis 8 und die
+IMAP-Marken 1 bis 3 sind **am laufenden Programm gemessen** — Gregors
+`eudora.log` zu 7.2.0.77 enthält 285 solche Zeilen, und der Schalter steht dort
+als `LogLevel 91295 (0x1649F)` im Logkopf.
+
+**Zwei Angaben von AN-1 sind dabei widerlegt worden**, beide aus demselben Log:
+
+1. Es stand dort, jede Ursache stecke **doppelt** im Baum. Für den Anhangnamen
+   stimmt das nicht — über IMAP kommt er aus der **BODYSTRUCTURE**-Antwort des
+   Servers (`GetFilenameParameter`), nicht aus `Lex822`. Die Faltung hat der
+   Server da längst aufgelöst.
+2. Der IMAP-Weg hatte **keine einzige** Marke für den Dateinamen: die Marken 4
+   bis 8 lagen in `Eudora/mime.cpp`, also im POP-Weg.
+
+**Nebenbefund, gemessen:** die 254-Zeichen-Kappung schlug in **vier** Nachrichten
+**281 Mal** zu — auf `DKIM-Signature` und `X-UI-Filterresults`. Dort folgenlos,
+aber B5.3 war damit kein Randfall, sondern der Normalfall gewöhnlicher Post.
+
+**Werkzeuge:** neu `tools/rfc2231-pruefen.pl` (20 Fälle). `tools/kopfzeile-pruefen.pl`
+reparierte zwei eigene Lücken: es übersetzte nicht mehr, sobald die Debug-Marken
+im Baum standen, und es hielt die Markengröße mit einer **eigenen** 256 fest,
+statt sie aus `lex822.h` zu holen — damit hätte es B5.3 nie gesehen.
+
+---
+
+## 7.2.0.78 — Gregors Bau von `main`, **ohne jede Änderung an den Anhängen**
+
+**Keine Fassung dieses Zweigs.** Gregor hat am 12.10.2026 `main` gebaut und die
+Nummer dabei lokal gehoben; auf `main` stand und steht dieser Stand nicht
+(`Version.h` sprang dort von 76 auf 79).
+
+Er fragte: *„was habe ich jetzt in der version 078 gebaut?"* Die Antwort war
+**nichts, was die Anhänge betrifft**. Der damals gemergte PR #81 hat keine
+einzige Datei unter `Eudora71/` angefasst — nur `AUFGABEN.md`, `BEFUNDE.md`,
+`tools/ZWEIGE.md`, `tools/kopfzeile-pruefen.pl` und die beiden Patchdateien.
+Die Behebung lag als Patch **neben** dem Code. Genau das ist mit 7.2.0.79
+abgestellt.
+
+Festgehalten, weil eine Nummer ohne Abschnitt eine Blackbox ist — auch dann,
+wenn sie nur auf einem Rechner existiert.
+
+---
+
+## 7.2.0.77 — Gregors Messbau mit den Debug-Marken (AN-1)
+
+**Keine Fassung dieses Zweigs**, sondern ein Bau von `main` **plus**
+`git apply` der damaligen Markendatei, am 12.10.2026 um 08:37, Release,
+Rebuild, 0 Fehler. Die Bau-Kennung trug deshalb ein `*`: ungesicherte
+Änderungen im Baum, der Bau also absichtlich nicht reproduzierbar.
+
+**Das war die erste Messung von AN-1 außerhalb des Prüfstands**, und sie hat
+drei Dinge belegt:
+
+| | |
+|---|---|
+| Der Schalter | `LogLevel 91295 (0x1649F)` steht im Logkopf. Die Angabe `[Debug] LogLevel=91295` ist damit nachgemessen |
+| Die Marken | **285 `ANHANG`-Zeilen**; `PutDebugLogSichtbar` macht Steuerzeichen als `<CR><LF><TAB>` sichtbar, wie vorgesehen |
+| Der Befund selbst | **nicht getroffen** — der Abruf lief über IMAP, die vier Nachrichten hatten keine Anhänge, und der IMAP-Weg hatte damals keine Marke für den Dateinamen |
+
+Herausgekommen ist stattdessen ein Nebenbefund: die 254-Zeichen-Kappung schlug
+in vier Nachrichten **281 Mal** zu. Und zwei Angaben von AN-1 waren widerlegt —
+beide stehen berichtigt in [BEFUNDE.md](BEFUNDE.md).
 
 ---
 

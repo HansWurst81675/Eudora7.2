@@ -911,7 +911,14 @@ char * GetMessageSeparatorLine()
 void DeMacifyName(char* Name)
 {
 	static const char Illegal[] = " \t\r\n\".*+,/:;<=>?[\\]|";
-	char pcname[15];
+	//	AN-1, vierter Teil: hier stand char pcname[15] - und len = 8 auch
+	//	fuer die Endung. Geschrieben werden konnten 8 Zeichen, der Punkt,
+	//	bis zu 8 Zeichen Endung und die abschliessende Null: 18 Byte in
+	//	einen 15-Byte-Puffer, also drei Byte auf den Stapel. Der Kopf dieser
+	//	Funktion verspricht "8 plus an extention"; dafuer reichen
+	//	8 + 1 + 3 + 1 = 13 Byte, und die Endungsschleife unten zaehlt
+	//	deshalb jetzt 3 statt 8.
+	char pcname[16];
 	int len = 8;
 	char *s, *d, *ext;
 	
@@ -930,7 +937,9 @@ void DeMacifyName(char* Name)
 
 	if (ext)
 	{
-		len = 8;
+		//	AN-1, vierter Teil: hier stand 8. Mit 8 passte 8+1+8+1 nicht in
+		//	pcname - siehe oben. 3 ist, was "8 plus an extention" meint.
+		len = 3;
 		*d++ = *ext++;
 		for (s = ext; *s && len; s++)
 		{
@@ -949,7 +958,12 @@ void DeMacifyName32(char* Name)
 {
 	static const char Illegal[] = "\t\r\n\"\\/:*?<>|";
 
-	char pcname[255];
+	//	AN-1, vierter Teil: hier stand char pcname[255] bei len = 255. Die
+	//	Schleife nimmt bis zu 255 Zeichen auf, pcname[0] bis pcname[254],
+	//	und das *d = 0 danach schreibt pcname[255] - ein Byte hinter den
+	//	Puffer. 255 ist richtig (so lang darf ein Dateiname unter Windows
+	//	sein), der Puffer braucht nur ein Byte mehr fuer die Null.
+	char pcname[256];
 	int len = 255;
 	char *s, *d;
 	
@@ -1125,7 +1139,15 @@ BOOL CheckName(const char* Dir, const char* FName, char* FinalFname, BOOL bLongF
 
 	//	If the file name (by itself without any directories) is too long, then truncate it
 	if ( nBaseLen < sBaseName.GetLength() )
+	{
+		//	ANHANG-Marke 8: hier kuerzt CheckName den Namen - die Endung
+		//	bleibt dabei erhalten. Das ist der eine Ort auf dem ganzen Weg,
+		//	der es richtig macht.
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG CheckName: Name zu lang, wird gekuerzt auf",
+			(LPCTSTR)sBaseName, (long)nBaseLen);
 		sBaseName.GetBufferSetLength(nBaseLen);
+	}
 
 	//	nFullPathLengthWithoutExtension is the length of the full path
 	//	except for the length of the file extension
@@ -1313,6 +1335,12 @@ JJFile* OpenAttachFile(LPTSTR Name, BOOL bAllowRead /*= FALSE*/)
 	}
 
 
+	//	ANHANG-Marke 6: der Name, wie er bei der Datei ankommt - vor und
+	//	nach der Zeichenbereinigung. DeMacifyName32 kappt bei 255 Zeichen,
+	//	DeMacifyName sogar auf 8+8 (Befund AN-1).
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		"ANHANG Datei: Name vor DeMacify", Name, (long)strlen(Name));
+
 	// Turn the macintosh name into something more useful
 	BOOL bLongFileNameSupport = ::LongFileSupportMT(DirName);
 	if (bLongFileNameSupport)
@@ -1320,11 +1348,21 @@ JJFile* OpenAttachFile(LPTSTR Name, BOOL bAllowRead /*= FALSE*/)
 	else
 		DeMacifyName(Name);
 
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		bLongFileNameSupport ? "ANHANG Datei: nach DeMacifyName32"
+			: "ANHANG Datei: nach DeMacifyName (8+3!)",
+		Name, (long)strlen(Name));
+
 	if (CheckName(DirName, Name, FinalFname, bLongFileNameSupport))
 	{
 		FileName = strrchr(FinalFname, SLASH) + 1;
 		wsprintf(buf, "%s%s%s", DirName,
 		((DirName[strlen(DirName) - 1] == SLASH)? "" : SLASHSTR), FileName);
+
+		//	ANHANG-Marke 7: so heisst die Datei am Ende wirklich. Wer nur
+		//	eine Zeile aus dem Log braucht, nimmt diese.
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG Datei: WIRD GESCHRIEBEN ALS", buf, (long)strlen(FileName));
 
 		// Let's get the file
 		ATFile = DEBUG_NEW_NOTHROW JJFile;
@@ -1375,6 +1413,12 @@ JJFile* OpenEmbeddedFile(char* Name)
 	FindClose(findHandle);
 
 
+	//	ANHANG-Marke 6: der Name, wie er bei der Datei ankommt - vor und
+	//	nach der Zeichenbereinigung. DeMacifyName32 kappt bei 255 Zeichen,
+	//	DeMacifyName sogar auf 8+8 (Befund AN-1).
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		"ANHANG Datei: Name vor DeMacify", Name, (long)strlen(Name));
+
 	// Turn the macintosh name into something more useful
 	BOOL bLongFileNameSupport = ::LongFileSupportMT(DirName);
 	if (bLongFileNameSupport)
@@ -1382,11 +1426,21 @@ JJFile* OpenEmbeddedFile(char* Name)
 	else
 		DeMacifyName(Name);
 
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		bLongFileNameSupport ? "ANHANG Datei: nach DeMacifyName32"
+			: "ANHANG Datei: nach DeMacifyName (8+3!)",
+		Name, (long)strlen(Name));
+
 	if (CheckName(DirName, Name, FinalFname, bLongFileNameSupport))
 	{
 		FileName = strrchr(FinalFname, SLASH) + 1;
 		wsprintf(buf, "%s%s%s", DirName,
 		((DirName[strlen(DirName) - 1] == SLASH)? "" : SLASHSTR), FileName);
+
+		//	ANHANG-Marke 7: so heisst die Datei am Ende wirklich. Wer nur
+		//	eine Zeile aus dem Log braucht, nimmt diese.
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG Datei: WIRD GESCHRIEBEN ALS", buf, (long)strlen(FileName));
 
 		// Let's get the file
 		EBFile = DEBUG_NEW_NOTHROW JJFile;
@@ -1641,11 +1695,33 @@ BoundaryType GenericReader::ReadIt(CObArray& MimeStates, char* buf, LONG bSize)
 		if (!*fName)
 			strncpy(fName, CRString(IDS_UNTITLED), _MAX_PATH - 1);
 	
+		//	ANHANG-Marke 4: woher der Name kommt. Steht hier "aus dem
+		//	Betreff", dann hatte die Nachricht gar kein filename - typisch
+		//	fuer RFC 2231 (Befund AN-1, dritter Teil). Der Betreff ist
+		//	nur subj[32], also 31 Zeichen.
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			AE ? "ANHANG Name: aus filename/name"
+				: "ANHANG Name: KEIN filename - aus dem Betreff oder Untitled",
+			fName, (long)strlen(fName));
+	
 		if (mm.Find(ms))
 		{
 			mm.SetExtension(fName);
+			//	ANHANG-Marke 5: das Sicherheitsnetz. Traegt MIMEMap die Endung
+			//	nach oder nicht? Es tut es NICHT, wenn der MIME-Typ nicht in
+			//	[Mappings] steht (application/octet-stream steht dort nicht)
+			//	oder hinter dem letzten Punkt 1 bis 3 Zeichen stehen.
+			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+				"ANHANG Name: nach MIMEMap::SetExtension", fName,
+				(long)strlen(fName));
 			if (mm.m_bDelete)
 				bDeleteAttachment = TRUE;
+		}
+		else
+		{
+			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+				"ANHANG Name: MIMEMap kennt den Typ NICHT, keine Endung nachgetragen",
+				fName, (long)strlen(fName));
 		}
 	
 		if (GetIniShort(IDS_INI_AUTO_ATTACHED_DELETE_VCF))

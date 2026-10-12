@@ -26,7 +26,7 @@ public:
 // Public attributes
 public:
 	State822Enum m_State;
-	BYTE		 m_Token[256];		// tokens over 255 characters will be shot
+	BYTE		 m_Token[LEX822_TOKEN_MAX];	// Groesse und Begruendung in lex822.h
 
 private:
 	Char822Enum LexFill();

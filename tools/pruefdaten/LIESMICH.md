@@ -41,8 +41,8 @@ Dann in Eudora ein Konto anlegen: Server `127.0.0.1`, Port `11110`, Benutzer
 sehen (Eudora-Verzeichnis, Unterordner `attach`).
 
 Ist **00 heil und sind 01 bis 05 kaputt**, ist AN-1 bestätigt. Sind hinterher
-**alle sechs heil**, sind `tools/patches/anhangnamen-faltung.patch` und die
-Punkte B5.2 bis B5.5 aus `AUFGABEN.md` durch.
+**alle sechs heil**, wirken die Behebungen **B5.1 bis B5.6** aus `AUFGABEN.md`
+am laufenden Programm.
 
 Der Server löscht nie etwas: nach `QUIT` liegen alle sechs Nachrichten wieder
 da, man kann also beliebig oft abrufen.

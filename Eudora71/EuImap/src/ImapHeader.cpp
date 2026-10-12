@@ -488,6 +488,40 @@ out:
 
 int ImapHeaderDesc::AddAttribute(const char* Value)
 {
+	//	Eine Faltung im Wert (CRLF + Leerzeichen oder Tabulator) wird nach
+	//	RFC 5322 3.2.2 zu einem einzelnen Leerzeichen; ein CR am Ende stammt
+	//	aus einer unbeendeten Zeichenkette und faellt weg. CollectQText nimmt
+	//	beides mit, damit WriteHeaderToken die Kopfzeile unveraendert in die
+	//	Mailbox schreiben kann - hier, und nur hier, wird es entfernt.
+	//	szWert ist so gross wie ImapLex822State::m_Token; laenger kann ein Wert
+	//	nicht sein, weil der Zerleger bei sizeof(Token)-3 abbricht. Die Zahl
+	//	kommt aus lex822.h, damit beide nicht auseinanderlaufen koennen.
+	char	szWert[LEX822_TOKEN_MAX];
+	if (strchr(Value, '\r'))
+	{
+		const char *	s = Value;
+		char *			d = szWert;
+		char *			e = szWert + sizeof(szWert) - 1;
+		while (*s && d < e)
+		{
+			if (s[0] == '\r' && s[1] == '\n' && (s[2] == ' ' || s[2] == '\t'))
+			{
+				s += 2;
+				while (*s == ' ' || *s == '\t')
+					++s;
+				*d++ = ' ';
+				continue;
+			}
+			if (s[0] == '\r' && s[1] == '\0')
+			{
+				++s;
+				continue;
+			}
+			*d++ = *s++;
+		}
+		*d = 0;
+		Value = szWert;
+	}
 
 	AttributeElement* AE = DEBUG_NEW_MFCOBJ_NOTHROW AttributeElement(m_attributeName, Value);
 	if (!AE)
@@ -504,6 +538,20 @@ int ImapHeaderDesc::AddAttribute(const char* Value)
 	else
 		m_TLMime->AddParam(m_attributeName, Value);
 
+
+	//	ANHANG-Marke 3 (IMAP): der Wert, wie er abgelegt wird - also nach
+	//	allem, was Zerleger und AddAttribute damit gemacht haben. Wer nur
+	//	eine Zeile aus dem Log braucht, um den Dateinamen zu sehen, nimmt
+	//	die hier (Befund AN-1).
+	if (QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
+	{
+		char	szWo[160];
+		_snprintf(szWo, sizeof(szWo) - 1, "ANHANG Kopfzeile (IMAP): %s =",
+			(LPCTSTR)AE->m_Name);
+		szWo[sizeof(szWo) - 1] = 0;
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH, szWo, (LPCTSTR)AE->m_Value,
+			(long)AE->m_Value.GetLength());
+	}
 
 	if (Attributes.AddTail(AE))
 		return (TRUE);

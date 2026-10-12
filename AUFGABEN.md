@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 11.10.2026**, gemessen an Quellstand **7.2.0.76** / `VERSION` **1.0.76** (veröffentlicht ist `v1.0.72`)
+**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.79** / `VERSION` **1.0.79** (veröffentlicht ist `v1.0.72`)
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -447,122 +447,128 @@ perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 
 Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **Bugfix, Teil 1 liegt bereit**
+### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **geändert in 7.2.0.79, nicht übersetzt**
 
-Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben.
-**Nicht eingespielt** — beide Sitzungen dazu liefen ohne Windows und ohne
-Compiler (die zweite auf Android).
+Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben — und am
+12.10.2026 **in den Quelltext eingespielt**. Die beiden Patchdateien, die hier
+seit dem 30.09. nur danebenlagen, sind damit Geschichte und entfernt.
+
+> **Es ist nichts mit MSVC gebaut.** Alle drei Sitzungen dazu liefen ohne
+> Windows und ohne Compiler. Was gemessen ist, steht unten Zeile für Zeile;
+> was nicht gemessen ist, steht auch da.
 
 **Es liegt nicht an der Länge.** Ein Name mit 76 Zeichen kommt vollständig an,
-solange er in *einer* Zeile steht. Vier getrennte Ursachen erzeugen dasselbe
+solange er in *einer* Zeile steht. Sechs getrennte Ursachen erzeugen dasselbe
 Bild, alle sind Originalfehler aus Eudora 7.1.
 
 > **Berichtigt am 12.10.2026, aus Gregors `eudora.log` zu 7.2.0.77.** Hier stand
-> bis dahin, alle vier Ursachen steckten **doppelt** im Baum — POP in
+> bis dahin, alle Ursachen steckten **doppelt** im Baum — POP in
 > `lex822.*`/`header.cpp`, IMAP in `EuImap/src/ImapLex822.*`/`ImapHeader.cpp` —
 > und wer nur einen Zweig ändere, baue sich einen Fehler, der von der Kontenart
 > abhängt. **Für den Anhangnamen stimmt das nicht.** Über IMAP kommt er aus der
 > **BODYSTRUCTURE**-Antwort des Servers: `GetFilenameParameter`
-> (`ImapDownload.cpp:5964`) liest ihn aus den c-client-Strukturen
-> `BODY`/`PARAMETER`, nicht aus `Lex822`. Eine Faltung hat der Server da längst
-> aufgelöst, **B5.1 kann über IMAP also gar nicht zuschlagen**.
+> (`ImapDownload.cpp`) liest ihn aus den c-client-Strukturen `BODY`/`PARAMETER`,
+> nicht aus `Lex822`. Eine Faltung hat der Server da längst aufgelöst,
+> **B5.1 kann über IMAP also gar nicht zuschlagen**.
 >
 > `ImapLex822`/`ImapHeader` zerlegen den Kopf sehr wohl — aber für die
 > Mailbox-Datei. Die IMAP-Hälfte von B5.1 bis B5.3 gehört dorthin und bleibt
 > nötig; sie betrifft nur nicht den Dateinamen. Umgekehrt hat der IMAP-Weg
 > **eigene** Fehler, die der POP-Weg nicht hat: B5.6 und B5.7.
 
-#### Was zu tun ist, in dieser Reihenfolge
+#### Stand der sieben Teile
 
-| Schritt | Was | Fundstelle (POP / IMAP) | Stand |
-|---|---|---|---|
-| **B5.0** | **Debug-Marken einspielen** — neun Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` in `eudora.ini` | `debug.h`, `debug.cpp`, `lex822.cpp`, `header.cpp`, `mime.cpp` / `ImapLex822.cpp`, `ImapHeader.cpp`, `ImapDownload.cpp`, `imapmime.cpp` | **Patch liegt bereit**, stört B5.1 nicht. POP-Marken 1–8 und IMAP 1–3 sind **am laufenden Programm gemessen** (12.10.2026, 7.2.0.77); IMAP 4–9 kamen danach dazu und sind **nicht übersetzt** |
-| **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendet die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | `lex822.cpp:303`, `:433`, `header.cpp:476` / `ImapLex822.cpp:318`, `:454`, `ImapHeader.cpp:489` | **Patch liegt bereit und ist gemessen** |
-| **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wird `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** Marke trägt | `lex822.cpp:201` / `ImapLex822.cpp:216` | offen, **eine Zeile je Zweig** |
-| **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappt ab 254 Zeichen. `Buffer[2048]` begrenzt mit | `lex822.h:70` / `ImapLex822.h:29`, Abbruch bei `lex822.cpp:206` / `:221` | offen |
-| **B5.4** | **`DeMacifyName32`**: schreibt bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]`. `pcname` auf 256 **oder** `len` auf 254 | `mime.cpp:948` / `EuImap/src/imapmime.cpp:82` | offen, eine Zahl je Zweig |
-| **B5.5** | **RFC 2231** (`filename*0=`) kennt der Baum nicht. Dann gibt es gar kein `filename`, und `mime.cpp:1640` nimmt den **Betreff** — `subj[32]`, also 31 Zeichen | nirgends im Baum | offen, **eigener Punkt**, deutlich größer als B5.1 bis B5.4 |
-| **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`.** `strncpy(tmp, FName, len); tmp[len] = 0;` mit `len` bis 255 schreibt **hinter den Puffer, auf den Stapel** — bei jedem Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server. Die zweite Stelle (`:220`) ist harmlos, dort deckelt `min(len, BaseLen)` auf 254. Das POP-Gegenstück `CheckName` hat das nicht: es ist auf `CString` umgebaut | nur `EuImap/src/imapmime.cpp:116`, `:166` | offen, **nur IMAP**, eine Zahl |
-| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach (`mime.cpp:1646`); der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden (`ImapDownload.cpp:3536`). Das Sicherheitsnetz fehlt dort also ganz | nur `EuImap/src/ImapDownload.cpp:4108` | offen, **nur IMAP** |
+| Schritt | Was | Stand |
+|---|---|---|
+| **B5.0** | **Debug-Marken**, zehn Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` | **im Quelltext.** POP-Marken 1–8 und IMAP 1–3 sind am laufenden Programm gemessen (12.10.2026, 7.2.0.77, 285 `ANHANG`-Zeilen); IMAP 4–9 und Marke 10 sind **nicht übersetzt** |
+| **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendete die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | **behoben**, POP und IMAP. Gemessen mit `tools/kopfzeile-pruefen.pl --vorschlag` |
+| **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wurde `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** trug | **behoben**, POP und IMAP |
+| **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappte ab 254 Zeichen; ein Dateiname nach `_MAX_PATH` (260) passte nicht hinein | **behoben**: `LEX822_TOKEN_MAX` = 1024 in `lex822.h`, benutzt von beiden Zerlegern **und** von `szWert` in beiden `AddAttribute` — die Zahl steht nur noch an einer Stelle |
+| **B5.4** | **`DeMacifyName32`** schrieb bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]` | **behoben**, beide Abschriften. **Dabei neu gefunden:** `DeMacifyName` (die 8+3-Fassung) schrieb bis zu **drei** Byte über — `pcname[15]`, und 8 + Punkt + 8 + Null sind 18. Der zweite Zähler stand auf 8 statt 3 |
+| **B5.5** | **RFC 2231** (`filename*0*=UTF-8''…`) kannte der Baum nicht. Dann gab es **gar kein** `filename`, und `mime.cpp` nahm den **Betreff** — `subj[32]`, also 31 Zeichen ohne Endung | **behoben**: neu `QCUtils/src/rfc2231.cpp`, benutzt von POP (`HeaderDesc::GetAttribute`) **und** IMAP (`GetFilenameParameter`). **20 von 20 Prüffällen grün**, gemessen mit `tools/rfc2231-pruefen.pl` |
+| **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`.** `tmp[len] = 0;` mit `len` bis 255 schrieb auf den Stapel — bei jedem Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server | **behoben** (`_MAX_PATH + 1`), nur IMAP. Das POP-Gegenstück ist auf `CString` umgebaut und hatte es nicht |
+| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach; der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden | **offen.** Siehe unten — es ist eine Binde-, keine Logikfrage |
 
 **Wer B5.2 oder B5.3 nur in einem der beiden Zweige ändert, baut sich einen
 Fehler, der von der Kontenart abhängt.** Für den Anhangnamen gilt das nicht,
 siehe die Berichtigung oben: B5.1 wirkt nur auf dem POP-Weg, B5.6 und B5.7 nur
 auf dem IMAP-Weg.
 
-#### B5.1 — der bereitliegende Patch
+#### B5.7 — warum es offen bleibt
 
-| | |
-|---|---|
-| Patch | `tools/patches/anhangnamen-faltung.patch` — 212 Zeilen, vier Dateien |
-| Beschreibung | `tools/patches/anhangnamen-faltung.md` — warum es drei Stücke braucht |
-| Prüfung | `git apply --check tools/patches/anhangnamen-faltung.patch` läuft sauber |
-| gemessen | `perl tools/kopfzeile-pruefen.pl --vorschlag`, zehn Fälle |
+`MIMEMap` braucht dafür eine Fassung von `Find`, die Typ und Untertyp direkt
+nimmt statt eines `MIMEState`, den es über IMAP nicht gibt. Die Suche selbst
+wäre ein Dreizeiler — herausgezogen aus `Find(MIMEState*)`, damit keine zweite
+Abschrift entsteht.
 
-Ergebnis der Messung: der gemeldete Fall geht von **47 Zeichen ohne Endung** auf
-**76 Zeichen mit `.pdf`**, `grokked` von `FALSE` auf `TRUE`, und der Rückschrieb
-in die Mailbox-Datei wird byteidentisch (heute schreibt die kaputte Zerlegung
-ein Anführungszeichen zu viel hinein). **Kein Fall wird schlechter** — die fünf
-Rückfallproben R1 bis R5 bleiben, wie sie sind.
+**Woran es hängt:** `MIMEMap.cpp` wird nur im Eudora-Projekt übersetzt, und
+`EuImap` ruft die Methoden trotzdem auf (`ImHexbin.cpp`, `ImSingle.cpp`,
+`ImapDownload.cpp`). Wie diese Bindung zustande kommt, ist aus den Projektdateien
+nicht zu sehen — `EXPORT` ist im Eudora-Zweig als **leer** definiert
+(`MAPI/include/MAPI.h:35`), eine `.def` mit Klassennamen gibt es nicht, und
+`EuImap.vcxproj` nennt als Verweis nur `Imapdll`. Eine **neue** Methode könnte
+deshalb beim Binden fehlen — und das sähe genau aus wie die drei
+Übersetzungsfehler, die am 12.10.2026 ungeklärt blieben.
 
-**Gemessen ist der Zerleger, nicht das Programm.** Es ist nichts mit MSVC gebaut
-und nichts gestartet worden.
+Das klärt ein Blick auf den Linkerlauf an Gregors Rechner in einer Minute.
+Vorher wird hier nicht geraten.
 
-#### So geht es weiter, sobald Visual Studio da ist
+#### Was gemessen ist
 
-0. **Version heben** — [README.md, *Selbst bauen*](README.md#selbst-bauen).
-   In diesem Punkt wird **zweimal** gebaut (Schritt 1 und 4), also auch zweimal
-   gehoben; sonst tragen beide `Eudora.exe` dieselbe Nummer und das Urteil
-   lässt sich keinem von beiden zuordnen (Befund **V-1**).
-1. `git apply tools/patches/anhangnamen-debugmarken.patch`, bauen (mit
-   `-Ziel Rebuild` — der Patch ändert einen öffentlichen DLL-Header),
-   `LogLevel=91295` setzen, die Prüfdaten abrufen, `grep ANHANG eudora.log` —
-   **damit ist die Diagnose am laufenden Programm belegt**, bevor irgendetwas
-   geändert wird.
-2. `git apply tools/patches/anhangnamen-faltung.patch`
-3. `perl tools/kopfzeile-pruefen.pl` — meldet jetzt **6 Abweichungen**: das sind
-   die behobenen Fälle. **Dann die Spalte `stand` im Werkzeug nachziehen**,
-   sonst meldet es die eigene Behebung für immer als Schaden.
-4. Bauen. Denselben Abruf wiederholen und den Log vergleichen. Eine echte Nachricht mit gefaltetem `filename=` abrufen und nachsehen,
-   wie die Datei im Anhangverzeichnis heißt.
+```
+perl tools/kopfzeile-pruefen.pl             # 10 Faelle, Zerleger aus lex822.cpp
+perl tools/kopfzeile-pruefen.pl --lang      # dazu jede einzelne Marke
+perl tools/rfc2231-pruefen.pl               # 20 Faelle, Zerleger aus rfc2231.cpp
+```
+
+Beide Werkzeuge holen den Quelltext bei **jedem** Lauf wörtlich aus dem Baum —
+per Textanker, nicht per Zeilennummer — und übersetzen ihn mit `g++` (oder
+`cl`). Gemessen wird der ausgelieferte Code, keine Abschrift. Fehlt ein Anker,
+brechen sie ab, statt stumm durchzulaufen.
+
+**Nicht gemessen:** nichts davon ist mit MSVC gebaut, nichts ist gestartet.
+`RFC2231ZeichensatzUmsetzen` ruft `MultiByteToWideChar` und ist hier gar nicht
+prüfbar.
+
+#### Der nächste Schritt an einem Windows-Rechner
+
+1. **Bauen**, mit `-Ziel Rebuild`: `QCUtils/public/inc/debug.h` und
+   `rfc2231.h` sind öffentliche DLL-Header, und `QCUtils` hat mit
+   `src/rfc2231.cpp` eine neue Übersetzungseinheit bekommen.
+2. `LogLevel=91295` in die Gruppe **`[Debug]`** der `eudora.ini` — nicht nach
+   `[Settings]`. `rs.cpp:89` ordnet jeden Schlüssel allein nach seiner Nummer zu.
+3. `perl tools/anhang-pruefdaten.pl --pop`, Konto eintragen, abrufen.
+4. `grep ANHANG eudora.log` und ins Anhangverzeichnis sehen.
 5. Einen Testfall in `Eudora71/Tests/TestPopEmpfang.cpp` nachziehen — dort liegt
    das Gerüst für den Empfangspfad schon.
-6. Dann B5.2 bis B5.4; das sind zusammen vier Zeilen und zwei Zahlen.
 
-#### B5.0 · **Zuerst die Debug-Marken einspielen** — dann sieht man beim Abrufen zu
+> **Die Spalte `stand` in `tools/kopfzeile-pruefen.pl` ist noch nicht
+> nachgezogen.** Sie hält den **kaputten** Stand von vor der Behebung fest; mit
+> dem behobenen Zerleger meldet das Werkzeug deshalb Abweichungen. Das ist
+> gewollt, solange niemand bestätigt hat, dass die Behebung am laufenden
+> Programm wirkt — wer die Spalte vorher nachzieht, löscht den Vergleichspunkt.
+
+#### B5.0 · Die Debug-Marken — beim Abrufen zusehen
 
 Gregor: *„nicht vergessen, Debug-Marken einzufügen, wenn da was schief läuft,
 dass man das auf die Schnelle rausfindet … damit man beim Mail abrufen oder beim
 Benutzen sieht, was passiert und was nicht hinhaut."*
 
-| | |
-|---|---|
-| Patch | `tools/patches/anhangnamen-debugmarken.patch` — 336 Zeilen, sieben Dateien |
-| Beschreibung | `tools/patches/anhangnamen-debugmarken.md` — alle acht Marken, was sie sagen |
-| Stand | **nicht angewandt**, `git apply --check` läuft sauber |
-| stört B5.1? | **Nein.** Beide greifen einzeln, und die Behebung greift auch noch, wenn die Marken schon drin sind — nachgewiesen |
-
 **Einschalten** (kein Neubau nötig, nur ein Neustart): in `eudora.ini` gehört
 `LogLevel` in die Gruppe `[Debug]` — `LogLevel=91295`, das ist die
-Voreinstellung 25759 **plus 65536**
-(`DEBUG_MASK_ATTACH = 0x10000`). Geschrieben wird nach `eudora.log` im
-Eudora-Verzeichnis. Auslesen:
+Voreinstellung 25759 **plus 65536** (`DEBUG_MASK_ATTACH = 0x10000`). Geschrieben
+wird nach `eudora.log` im Eudora-Verzeichnis. Auslesen:
 
 ```
 grep ANHANG eudora.log
 ```
 
-Acht Marken auf dem Weg des Namens: wo der Zerleger abbricht, was `AddAttribute`
-ablegt, woher der Name kommt (`filename` / `name` / **Betreff**), ob `MIMEMap`
-die Endung nachträgt, was `DeMacifyName32` daraus macht, und **wie die Datei am
-Ende wirklich heißt**. Steuerzeichen werden sichtbar gemacht — eine Faltung
-erscheint im Log als `<CR><LF>` und ist nicht mit einem echten Zeilenumbruch zu
-verwechseln.
-
-**Reihenfolge:** B5.0 zuerst, dann einmal die Prüfdaten abrufen und den Log
-ansehen — damit ist die Diagnose am laufenden Programm belegt. Erst danach
-B5.1 einspielen und denselben Abruf wiederholen; dann muss aus
-„Umbruch IN der Zeichenkette" nichts mehr werden und der Name vollständig sein.
+Zehn Marken auf dem Weg des Namens: wo der Zerleger abbricht, was `AddAttribute`
+ablegt, ob ein Name erst nach RFC 2231 zusammengesetzt werden musste, woher er
+kommt (`filename` / `name` / **Betreff**), ob `MIMEMap` die Endung nachträgt,
+was `DeMacifyName32` daraus macht, und **wie die Datei am Ende wirklich heißt**.
+Steuerzeichen werden sichtbar gemacht — eine Faltung erscheint im Log als
+`<CR><LF>` und ist nicht mit einem echten Zeilenumbruch zu verwechseln.
 
 #### Prüfdaten liegen bereit — sechs Nachrichten, ein POP3-Server
 
@@ -581,53 +587,45 @@ reicht nicht** — der Fehler sitzt im Empfangsweg, die Nachricht muss wirklich
 abgerufen werden. Dafür der mitgelieferte POP3-Server: kein Netz, keine
 Zugangsdaten, alles auf `127.0.0.1`.
 
-Konto in Eudora: Server `127.0.0.1`, Port `11110`, Benutzer `pruef`, Kennwort
-beliebig, **SSL aus**. Abrufen, dann ins Anhangverzeichnis sehen.
+Konto in Eudora, in der Gruppe `[Settings]` der `eudora.ini`:
+`POPAccount=pruef@127.0.0.1`, `LoginName=pruef`, `POPPort=11110`,
+`SSLReceiveUse=0`, Kennwort beliebig. Alle vier liegen unter 10800 und gehören
+damit nach `GetSectionID` (`rs.cpp:89`) in `[Settings]`. **`POPPort` muss
+wirklich dastehen** — fehlt er, landet Eudora laut Befund **E-23** stillschweigend
+auf 110.
 
 | | |
 |---|---|
-| **00 heil, 01 bis 05 kaputt** | AN-1 ist am laufenden Programm bestätigt |
-| **alle sechs heil** | B5.1 bis B5.5 sind durch |
+| **alle sechs heil** | B5.1 bis B5.6 wirken am laufenden Programm |
+| **00 heil, 01 bis 05 kaputt** | die Behebung ist nicht im Bau gelandet |
 | **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
 
 Der Server löscht nie etwas — beliebig oft abrufbar. Einzelheiten:
 `tools/pruefdaten/LIESMICH.md`.
 
-**In echter Post erkennt man es am doppelten Anführungszeichen** in der
+**In echter Post erkannte man es am doppelten Anführungszeichen** in der
 `.mbx`-Datei: eines am Zeilenende vor einer Zeile, die mit Leerzeichen oder
-Tabulator beginnt, und das ursprüngliche am Ende. Eudora setzt es im Fehlerfall
+Tabulator beginnt, und das ursprüngliche am Ende. Eudora setzte es im Fehlerfall
 dorthin. Siehe BEFUNDE.md AN-1, „Der Fingerabdruck in der Mailbox-Datei".
 
-#### Nachprüfen ohne Visual Studio
-
-```
-perl tools/kopfzeile-pruefen.pl             # 10 Faelle, rc=0 solange AN-1 offen
-perl tools/kopfzeile-pruefen.pl --vorschlag # mit B5.1, zum Vergleich
-perl tools/kopfzeile-pruefen.pl --lang      # dazu jede einzelne Marke
-```
-
-Das Werkzeug holt `Lex822()` samt Tabellen bei **jedem** Lauf wörtlich aus dem
-Baum, ersetzt nur die zwei Stellen, die ans Netz gehen, übersetzt mit `g++`
-(oder `cl`) und vergleicht mit dem verzeichneten Stand — Dateiname, `grokked`
-**und** was `WriteHeaderToken` in die Mailbox schreiben würde.
-
-#### Warum das behoben wird — und worauf **nicht** zu warten ist
+#### Warum das behoben wurde — und worauf **nicht** zu warten war
 
 Gregors Begründung vom 30.09., wörtlich: *„Ich möchte das fixen, weil es unschön
 ist und weil es im freigegebenen Release schlecht aussieht."* Dass es sich um
 einen Originalfehler aus Eudora 7.1 handelt, ist ihm ausdrücklich **egal** —
 die Herkunft steht in AN-1 nur, weil sie sagt, wo zu suchen ist.
 
+Sein Ziel vom 12.10.2026: *„anhänge werden korrekt gespeichert - mit erweiterung,
+komplette dateiname"*.
+
 **Eine Beispielnachricht gibt es nicht und wird es nicht geben.** Gregor hat den
 Fehler im Betrieb gesehen — *„immer wieder Dateien im Attachment …, bei denen
 zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* —,
-kann aber keine Nachricht liefern. **Darauf ist nicht zu warten.** B5.1 bis
-B5.4 sind aus dem Quelltext heraus begründet und gemessen; sie brauchen kein
-Beweisstück. Taucht später doch eine `.eml` auf, klärt sie in einem Zug, welche
-der vier Ursachen im Betrieb überwiegt — mehr nicht.
+kann aber keine Nachricht liefern. **Darauf war nicht zu warten.** Alle sechs
+behobenen Teile sind aus dem Quelltext heraus begründet und, soweit ohne MSVC
+möglich, gemessen.
 
 Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
-
 ---
 
 ## C — Das Auslieferungspaket

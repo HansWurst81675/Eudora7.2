@@ -199,12 +199,20 @@ Token822Enum Lex822State::Lex822()
 		{
 			InStructure = 0;
 			TokenSpot = 0;
+			//	AN-1, vierter Teil: ohne dies traegt die leere Marke noch das
+			//	erste Byte der VORIGEN Marke, und filename="" wird zum Wert =.
+			//	ADD() schreibt die abschliessende Null erst beim ersten Zeichen.
+			Token[0] = 0;
 			ReinitToken = FALSE;
 		}
 		
 		// are we going to overrun the token buffer?
 		if (TokenSpot > sizeof(Token)-3)
 		{
+			//	ANHANG-Marke 1: hier wird gekappt. Ein Dateiname ueber 254
+			//	Zeichen verliert hier seine Endung (Befund AN-1, zweiter Teil).
+			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+				"ANHANG Lex822: Marke voll, wird gekappt", (char*)Token, TokenSpot);
 			ReinitToken = TRUE;
 			returnToken = (Token822Enum)State2Token[State];
 			break;
@@ -213,6 +221,21 @@ Token822Enum Lex822State::Lex822()
 		// Is this a folded CRLF?
 		if (charClass == LF822 && (nextClass == SPACE822 || nextClass == HTAB822))
 			charClass = SPACE822;   // treat it like a space
+
+		//	ANHANG-Marke 2: DIE Stelle aus Befund AN-1. Ein Umbruch
+		//	mitten in einer Zeichenkette in Anfuehrungszeichen beendet sie -
+		//	auch dann, wenn er nur eine Faltung ist. Alles dahinter geht
+		//	verloren, bei einem Dateinamen also die Endung.
+		//	Bewusst HIER und nicht im case CR822 darunter: so bleibt diese
+		//	Marke unabhaengig von tools/patches/anhangnamen-faltung.patch,
+		//	der genau jenen case umschreibt.
+		if (charClass == CR822 && State == CollectQText && InStructure &&
+			QCLogFileMT::DebugMaskSet(DEBUG_MASK_ATTACH))
+		{
+			PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+				"ANHANG Lex822: Umbruch IN der Zeichenkette - Rest geht verloren",
+				(char*)Token, TokenSpot);
+		}
 		
 		// ok, process the character
 		switch (State)
@@ -301,6 +324,31 @@ Token822Enum Lex822State::Lex822()
 							// quote has ended; fall-through is deliberate
 							
 						case CR822:
+							//	Eine Faltung beendet die Zeichenkette NICHT: nach RFC 5322
+							//	2.2.3 gehoert CRLF gefolgt von Leerzeichen oder Tabulator
+							//	noch zur selben Kopfzeile. Ob eine folgt, ist am CR noch
+							//	nicht zu sehen - das dritte Zeichen liegt erst nach dem
+							//	naechsten LexFill im Puffer. Also wird das CR mitgenommen
+							//	(so haelt es CollectText seit jeher) und am LF entschieden.
+							//	Die Pruefung auf CR822 ist noetig, weil QUOTE822 hierher
+							//	durchfaellt.
+							if (charClass == CR822 && InStructure && nextClass == LF822)
+							{
+								ADD(*Spot++);
+								break;
+							}
+							returnToken = QText;
+							State = CollectLine;
+							break;
+						
+						case LF822:
+							//	Hierher kommt nur ein Umbruch, den die Faltungsregel oben
+							//	NICHT zu SPACE822 gemacht hat: die Zeichenkette ist
+							//	unbeendet (kaputte Kopfzeile). Abbrechen wie bisher. Das CR
+							//	von oben bleibt in der Marke stehen; WriteHeaderToken setzt
+							//	es hinter das schliessende Anfuehrungszeichen, AddAttribute
+							//	schneidet es vom Wert ab. So bleibt der Rueckschrieb in die
+							//	Mailbox byteidentisch.
 							returnToken = QText;
 							State = CollectLine;
 							break;
@@ -431,12 +479,24 @@ Token822Enum Lex822State::WriteHeaderToken(Token822Enum tokenType)
 				break;
 			
 			case QText:
+			{
+				//	Ein CR am Ende der Marke stammt aus einer unbeendeten
+				//	Zeichenkette: CollectQText nimmt es auf, bevor feststeht, ob
+				//	eine Faltung folgt. Es gehoert HINTER das schliessende
+				//	Anfuehrungszeichen, sonst verschiebt sich der Zeilenumbruch
+				//	in der Mailbox-Datei.
+				int		nLen = TokenSpot;
+				BOOL	bCR = (nLen > 0 && Token[nLen - 1] == '\r');
+				if (bCR)
+					--nLen;
 				if (FAILED(pOutputFile->Put('"')) ||
-					FAILED(pOutputFile->Put((char*)Token, TokenSpot)) ||
-					FAILED(pOutputFile->Put('"')))
+					FAILED(pOutputFile->Put((char*)Token, nLen)) ||
+					FAILED(pOutputFile->Put('"')) ||
+					(bCR && FAILED(pOutputFile->Put('\r'))))
 				{
 					err = -1;
 				}
+			}
 				break;
 			
 			// write out the token

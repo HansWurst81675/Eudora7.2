@@ -45,7 +45,14 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
 static void LOCAL_DeMacifyName(char* Name)
 {
 	static const char Illegal[] = " \t\r\n\".*+,/:;<=>?[\\]|";
-	char pcname[15];
+	//	AN-1, vierter Teil: hier stand char pcname[15] - und len = 8 auch
+	//	fuer die Endung. Geschrieben werden konnten 8 Zeichen, der Punkt,
+	//	bis zu 8 Zeichen Endung und die abschliessende Null: 18 Byte in
+	//	einen 15-Byte-Puffer, also drei Byte auf den Stapel. Der Kopf dieser
+	//	Funktion verspricht "8 plus an extention"; dafuer reichen
+	//	8 + 1 + 3 + 1 = 13 Byte, und die Endungsschleife unten zaehlt
+	//	deshalb jetzt 3 statt 8.
+	char pcname[16];
 	int len = 8;
 	char *s, *d, *ext;
 	
@@ -64,7 +71,9 @@ static void LOCAL_DeMacifyName(char* Name)
 
 	if (ext)
 	{
-		len = 8;
+		//	AN-1, vierter Teil: hier stand 8. Mit 8 passte 8+1+8+1 nicht in
+		//	pcname - siehe oben. 3 ist, was "8 plus an extention" meint.
+		len = 3;
 		*d++ = *ext++;
 		for (s = ext; *s && len; s++)
 		{
@@ -83,7 +92,12 @@ static void LOCAL_DeMacifyName32(char* Name)
 {
 	static const char Illegal[] = "\t\r\n\"\\/:*?<>|";
 
-	char pcname[255];
+	//	AN-1, vierter Teil: hier stand char pcname[255] bei len = 255. Die
+	//	Schleife nimmt bis zu 255 Zeichen auf, pcname[0] bis pcname[254],
+	//	und das *d = 0 danach schreibt pcname[255] - ein Byte hinter den
+	//	Puffer. 255 ist richtig (so lang darf ein Dateiname unter Windows
+	//	sein), der Puffer braucht nur ein Byte mehr fuer die Null.
+	char pcname[256];
 	int len = 255;
 	char *s, *d;
 	
@@ -113,7 +127,18 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
 		DirName[strlen(DirName) - 1] = NULL;
 
 	int TryNum = 1, len;
-	char tmp[255], *ptr, *dot;
+	//	AN-1, sechster Teil: hier stand char tmp[255]. Zwei Schreibvorgaenge
+	//	passen da nicht hinein:
+	//	  * strncpy(tmp, FName, len); tmp[len] = 0;  mit len bis 255 - ein
+	//	    Byte hinter den Puffer, auf den Stapel. Das trifft jeden
+	//	    Anhangnamen ab 255 Zeichen OHNE Punkt, und der Name kommt vom
+	//	    Server.
+	//	  * wsprintf(tmp, "%s%d", tmp, TryNum) weiter unten haengt bis zu
+	//	    vier Ziffern an einen bereits 254 Zeichen langen Namen.
+	//	_MAX_PATH+1 deckt beides; mehr als einen Pfad kann hier nichts werden.
+	//	Das POP-Gegenstueck CheckName (mime.cpp) hat das nicht - es ist auf
+	//	CString umgebaut.
+	char tmp[_MAX_PATH + 1], *ptr, *dot;
 	int BaseLen;
 	
 	//gets the string of DOS reserved device names
@@ -124,6 +149,15 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
 
 	if ((strlen(DirName) + strlen(FName)) > _MAX_PATH-2)	// The file is too big to create...
 	{
+		//	ANHANG-Marke 8 (IMAP): hier kuerzt LOCAL_CheckName, weil Pfad und
+		//	Name zusammen ueber _MAX_PATH-2 gehen. Die Endung wird dabei
+		//	erhalten - das ist der eine Ort auf dem IMAP-Weg, der es richtig
+		//	macht. Ein Name OHNE Punkt verliert hier einfach sein Ende.
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			strchr(FName, '.') ? "ANHANG CheckName (IMAP): zu lang, kuerzt mit Endung"
+				: "ANHANG CheckName (IMAP): zu lang, KEIN Punkt - Ende faellt weg",
+			FName, (long)strlen(FName));
+
 		strncpy(FinalFname, DirName, strlen(DirName)+1);
 		int endofFname = strlen(FinalFname);
 		FinalFname[endofFname] = SLASH;
@@ -162,6 +196,16 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
 	//store in tmp the file name without the extension
 	DOSptr = const_cast<char *>(strchr(FName, '.'));
 	len = (DOSptr? DOSptr - FName : strlen(FName));
+	//	ANHANG-Marke 9 (IMAP): der Name ist laenger, als Windows einen
+	//	einzelnen Namensteil zulaesst (255). Irgendwo dahinter wird gekuerzt -
+	//	LOCAL_DeMacifyName32 tut es. Die Marke sagt, dass es hier schon zu
+	//	spaet ist, den vollen Namen zu erwarten.
+	//	Bis zur Behebung von AN-1 Teil 6 war das zusaetzlich ein Ueberlauf:
+	//	tmp war char[255], und das tmp[len] = 0 zwei Zeilen weiter schrieb
+	//	bei len = 255 hinter den Puffer. tmp ist jetzt _MAX_PATH+1 gross.
+	if (len > 255)
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG CheckName (IMAP): Name laenger als 255 - wird gekuerzt", FName, (long)len);
 	strncpy(tmp, FName, len);
 	tmp[len] = 0;
 
@@ -219,7 +263,8 @@ static int LOCAL_CheckName(const char* Dir, const char* FName, char* FinalFname,
 		strncpy(tmp, FName, len);
 		tmp[len] = 0;
 
-		char tmp2[255];
+		//	So gross wie tmp: tmp2 bekommt mit strcpy einen Zeiger in tmp.
+		char tmp2[_MAX_PATH + 1];
 		// do the following to add the number to the reserved name and the following
 		// dot seperated section of the name.  THIS IS A CRUCIAL IF statement;
 		// IF DELETED IT WILL INFINITLY LOOP 
@@ -286,6 +331,13 @@ JJFileMT* OpenLocalAttachFile(char *pParentDir, char* Name, BOOL bCreateStub)
 	}
 
 
+	//	ANHANG-Marke 6 (IMAP): der Name, wie er bei der Datei ankommt - vor
+	//	und nach der Zeichenbereinigung. LOCAL_DeMacifyName32 schreibt bei
+	//	255 uebernommenen Zeichen ein Byte hinter pcname[255] (AN-1 Teil 4,
+	//	gleicher Fehler wie mime.cpp:948), LOCAL_DeMacifyName kappt auf 8+3.
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		"ANHANG Datei (IMAP): Name vor DeMacify", Name, (long)strlen(Name));
+
 	// Turn the macintosh name into something more useful
 	BOOL bLongFileNameSupport = ::LongFileSupportMT(DirName);
 	if (bLongFileNameSupport)
@@ -293,11 +345,21 @@ JJFileMT* OpenLocalAttachFile(char *pParentDir, char* Name, BOOL bCreateStub)
 	else
 		LOCAL_DeMacifyName(Name);
 
+	PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+		bLongFileNameSupport ? "ANHANG Datei (IMAP): nach LOCAL_DeMacifyName32"
+			: "ANHANG Datei (IMAP): nach LOCAL_DeMacifyName (8+3!)",
+		Name, (long)strlen(Name));
+
 	if (LOCAL_CheckName(DirName, Name, FinalFname, bLongFileNameSupport))
 	{
 		FileName = strrchr(FinalFname, SLASH) + 1;
 		wsprintf(buf, "%s%s%s", DirName,
 		((DirName[strlen(DirName) - 1] == SLASH)? "" : SLASHSTR), FileName);
+
+		//	ANHANG-Marke 7 (IMAP): so heisst die Datei am Ende wirklich. Wer
+		//	nur eine Zeile aus dem Log braucht, nimmt diese.
+		PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+			"ANHANG Datei (IMAP): WIRD GESCHRIEBEN ALS", buf, (long)strlen(FileName));
 	}
 
 	// Let's get the file

@@ -53,6 +53,24 @@ typedef enum
 	CHARTYPE_LIMIT
 } Char822Enum;
 
+//	Die groesste Marke, die Lex822() liefern kann - AN-1, zweiter Teil.
+//	Hier stand 256, und der Abbruch in Lex822() greift bei sizeof-3, also
+//	bei 254 Zeichen. Ein Dateiname nach _MAX_PATH (260) passte damit nicht
+//	hinein und verlor genau dort seine Endung.
+//
+//	WER DIESE ZAHL AENDERT, muss zwei Puffer mitaendern, die sich auf sie
+//	berufen: szWert in HeaderDesc::AddAttribute (header.cpp) und in
+//	ImapHeaderDesc::AddAttribute (ImapHeader.cpp). Dort wird dieselbe Marke
+//	entfaltet, und ein kleinerer Puffer wuerde den Namen wieder abschneiden.
+//	Beide holen die Zahl deshalb von hier.
+//
+//	NICHT das Ziel: eine ganze DKIM-Signature aufnehmen. Die ist oft ueber
+//	1500 Zeichen lang und wird weiter stueckweise geliefert - gemessen am
+//	12.10.2026 (281 Kappungen in vier Nachrichten) und dort folgenlos, weil
+//	Kopfzeilentext nur durchgeschrieben wird. Es geht um Werte in
+//	Anfuehrungszeichen, und der laengste davon ist ein Dateiname.
+#define LEX822_TOKEN_MAX 1024
+
 // Forward Declarations
 class JJFile;
 class LineReader;
@@ -67,7 +85,7 @@ public:
 	Token822Enum WriteHeaderToken(Token822Enum tokenType);
 
 	State822Enum State;
-	BYTE Token[256];		// tokens over 255 characters will be shot
+	BYTE Token[LEX822_TOKEN_MAX];	// Groesse und Begruendung oben
 
 private:
 	Char822Enum LexFill();

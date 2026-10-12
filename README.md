@@ -137,6 +137,19 @@ verschickt.
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
   Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
   Bereich deshalb an. Nur Darstellung, kein Datenverlust.
+* **Anhänge werden unter abgeschnittenem Namen gespeichert, die Endung fehlt**
+  (**AN-1**): aus `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf`
+  wird `Angebot Nr 4711 fuer die Stadtwerke`. **Es liegt nicht an der Länge** —
+  ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile
+  steht. Sieben getrennte Ursachen, alle aus Eudora 7.1: eine Faltung beendete
+  die Zeichenkette in Anführungszeichen, die Marke des Zerlegers war 256 Byte
+  groß, zwei Puffer liefen über, `filename=""` wurde zum Wert `=`, und
+  **RFC 2231** — die Form, in der lange Namen heute übertragen werden — kannte
+  der Baum gar nicht; dann nahm Eudora ersatzweise den **Betreff**, 31 Zeichen
+  ohne Endung. **Sechs davon sind in 7.2.0.79 geändert, aber nicht übersetzt**
+  und von Gregor nicht geprüft; offen bleibt, dass über IMAP keine Endung aus
+  dem MIME-Typ nachgetragen wird. Durchlauf in
+  [AUFGABEN.md](AUFGABEN.md), **B5**.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
@@ -724,7 +737,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.76` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.79` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
