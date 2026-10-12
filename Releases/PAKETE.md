@@ -167,6 +167,10 @@ haben.
 Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
 abweicht (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.83.
 
+Von Gregor über IMAP an seinem Postfach getestet und am 12.10.2026 bestätigt
+(*„gekürzt mit endung reicht"*). Das Release **v1.0.83** hat er angewiesen;
+**veröffentlicht ist es noch nicht** — veröffentlicht ist weiterhin `v1.0.72`.
+
 ## 1.0.82 — **gebaut und gemessen, nicht geschnürt**, Quellstand 7.2.0.82 (AN-1 und AN-2 zusammengeführt)
 
 | | |
@@ -189,7 +193,7 @@ Vergeben am 12.10.2026. Was drinsteckt, steht in
 | URL | **nicht belegt** — nicht veröffentlicht |
 | Quellstand | 7.2.0.81 (`Eudora71/Version.h`), Zweig `an1-endungen` (bis 12.10.2026 `patch_20261012`) |
 
-Vergeben am 12.10.2026, weil 7.2.0.80 an diesem Tag gebaut und gemessen wurde
+Vergeben am 12.10.2026, weil 7.2.0.80-an1 an diesem Tag gebaut und gemessen wurde
 und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
 [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
 
@@ -207,7 +211,8 @@ und 7.2.0.81 davon abweicht (**V-1**). Was drinsteckt, steht in
 
 Gebaut am 12.10.2026 (Rebuild, 0 Fehler) und am laufenden Programm gemessen:
 Fall 03 heil, Fall 05 ohne Endung. Einzelheiten in
-[CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.81.
+[CHANGELOG.md](../CHANGELOG.md), Abschnitt Messfassung 7.2.0.80-an1.
+
 ## 1.0.80 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.80 (AN-2)
 
 | | |
@@ -221,11 +226,17 @@ Nummer vergeben, damit sie nicht zweimal vergeben wird. **Inhalt:** Befund
 **AN-2** — Paige zeigte den Inhalt von `<script>` und `<style>` als Text, was
 beim Start im Werbefenster den Quelltext einer Webseite sichtbar machte.
 Gemessen mit `tools/html-tags-pruefen.pl` (30 Fälle, 0 Abweichungen, Gegenprobe
-gefahren); **übersetzt ist nichts**.
+gefahren); **übersetzt ist nichts**. *Stand 12.10.2026: übersetzt erst als Teil
+von 7.2.0.82 (siehe 1.0.82), am laufenden Programm nicht gemessen.*
 
 Durchlauf: [AUFGABEN.md](../AUFGABEN.md), **B6**.
 
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
+
+> *Stand 12.10.2026: 7.2.0.79 ist am selben Tag doch gebaut und gemessen worden
+> (Rebuild 0 Fehler, Prüfverzeichnis `C:\Temp\AN1`, 4 von 6 Prüffällen heil); **geschnürt
+> wurde es nicht**. Der Abschnitt unten beschreibt den Stand beim Vergeben der
+> Nummer. Aus den sieben Teilen wurden elf, aus den zehn Marken elf.*
 
 | | |
 |---|---|

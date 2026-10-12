@@ -10,13 +10,13 @@ Sechs Nachrichten mit einem PDF im Anhang. Sie unterscheiden sich nur in einem
 Punkt: **wo im Kopf des Anhangs der Zeilenumbruch sitzt** und wie der Dateiname
 angegeben ist.
 
-| Datei | Dateiname im Kopf | bis 7.2.0.78 | ab 7.2.0.81 (gemessen 12.10.2026, `C:\Temp\AN3`) |
+| Datei | Dateiname im Kopf | bis 7.2.0.78 | ab 7.2.0.81 (gemessen 12.10.2026, `C:\Temp\AN3`; ebenso 7.2.0.82 in `C:\Temp\AN4` und 7.2.0.83 in `C:\Temp\AN5`) |
 |---|---|---|---|
 | `00-gutfall.eml` | `"Rechnung.pdf"`, eine Zeile | `Rechnung.pdf` — **muss heil sein** | `Rechnung.pdf` |
 | `01-gefaltet-leerzeichen.eml` | gefaltet an einem Leerzeichen **innerhalb** der Anführungszeichen | abgeschnitten, **ohne `.pdf`** | voller Name, 76 Zeichen, `.pdf` |
 | `02-gefaltet-tabulator.eml` | dasselbe, mit Tabulator | abgeschnitten, **ohne `.pdf`** | voller Name, 56 Zeichen, `.pdf` |
 | `03-ueber-254-zeichen.eml` | 304 Zeichen, ungefaltet | bei 254 gekappt, ohne `.pdf` | auf 224 gekürzt (Pfad unter 260), **mit `.pdf`** |
-| `04-rfc2231.eml` | `filename*0=` / `filename*1=` (RFC 2231) | der **Betreff**, auf 31 Zeichen | voller Name, `.pdf` |
+| `04-rfc2231.eml` | `filename*0=` / `filename*1=` (RFC 2231) | der **Betreff**, auf 31 Zeichen | voller Name, `.pdf` — gespeichert als `…Musterstadt 20251.pdf`, weil der Name aus Fall 02 schon belegt ist |
 | `05-leerer-dateiname.eml` | `filename=""` | eine Datei namens `=` | der Betreff **mit `.pdf`** (aus `MIMEMap`) |
 
 **Erzeugt und ausgeliefert von `tools/anhang-pruefdaten.pl`.** Das Werkzeug ist
