@@ -75,6 +75,7 @@ eine Datei liest, liest diese.
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
 | [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) | Keine Handlungsanweisung an Gregor geben, ohne sie vorher selbst durchgeführt und gemessen zu haben |
+| [fehlerbild-ist-ein-messfenster](fehlerbild-ist-ein-messfenster.md) | Solange Gregors Fehlermeldung offen steht, ist der Fehlerzustand messbar - erst messen (Log, Stapel des laufenden Prozesses), dann schließen lassen |
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
 | [fertige-fassung-bereitstellen](fertige-fassung-bereitstellen.md) | Ist eine neue Fassung fertig, erst eigene Tests, dann als Verzeichnis neben Gregors letztem Release-Verzeichnis bereitstellen |

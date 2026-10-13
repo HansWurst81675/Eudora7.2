@@ -78,3 +78,4 @@
 - [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) — Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern
 - [Chat knapp halten](chat-knapp-halten.md) — Urteil, nächster Handgriff, höchstens eine Frage; Herleitung gehört in BEFUNDE.md
 - [CHRONIST 13.10.2026](CHRONIST-2026-10-13.md) — Laufbericht: acht Nachträge (Freigabe-Umfang, Rückstrich Fall 13–15, INI vor Probe, lmos.dat, Testplan-Stand, Orientierungsfragen, offene LEKTOR-Funde beim Merge)
+- [Fehlerbild ist ein Messfenster](fehlerbild-ist-ein-messfenster.md) — offene Fehlermeldung erst messen (Log, Stapel mit Freigabe), dann schließen lassen
