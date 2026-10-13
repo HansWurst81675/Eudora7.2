@@ -1223,3 +1223,21 @@ eine falsche Probenzahl in `tools/WERKZEUGE.md`.
 Nebenbei gemessen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13)): der `pre-commit` spiegelt nach jedem CHRONIST-Lauf
 dessen Lehren in den Baum, in dem gerade committet wird, und weist dort ab, bis
 die Übersicht nachgezogen ist.
+
+## Dreiunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-28.md`)
+
+Zum Quellstand 7.2.0.85 auf `e-112-skalierung`, vor einem Paket 1.0.85. 193 MDs,
+105 außerhalb von `Arbeitsweise/`, gegen den Bestand. Zehn Mängel, **acht
+berichtigt**, zwei nur gemeldet ([L-28.9](Befunde/LEKTOR-28.md#l-28.9) Fehlalarm in `doku-pruefen.pl`,
+[L-28.10](Befunde/LEKTOR-28.md#l-28.10) die Spiegelung blockierte wieder den Commit). Alle fünf Doku-Schranken
+liefen vorher **grün**.
+
+Der Kern: [E-112](BEFUNDE.md#e-112) war behoben und am laufenden Programm gemessen, aber
+`CHANGELOG.md`, `WEITERMACHEN.md` und `Releases/PAKETE.md` sagten *noch nicht
+gemessen* oder *wieder offen*, `WEITERMACHEN.md` und `ZIEL.md` nannten 7.2.0.84
+als Quellstand, `ZIEL.md` [E-103](BEFUNDE.md#e-103) *noch nicht beurteilt*, obwohl Gregor es widerlegt
+hatte. Umgekehrt stand nirgends, dass die Messung **vor** PRÜFER-22 F1 und F2
+lief ([L-28.6](Befunde/LEKTOR-28.md#l-28.6)) — und F1 war als Änderung an `PGEMBED.C` beschrieben, die
+wirkungslos ist, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird
+([L-28.7](Befunde/LEKTOR-28.md#l-28.7), nach `ac8f030`). [E-116](BEFUNDE.md#e-116) fehlte unter *Noch offen*, die
+E-112-Prüfnachricht in `Testdaten/README.md`.
