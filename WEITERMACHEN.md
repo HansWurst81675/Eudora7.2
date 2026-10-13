@@ -251,6 +251,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **[E-116](BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… |
 | **[E-115](BEFUNDE.md#e-115)** | Ctrl+F (*Find Messages*) bringt „Encountered an improper argument“, und im Reiter *Mai… |
 | **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… |
 | **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
