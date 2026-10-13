@@ -250,6 +250,7 @@ nicht selbst messen kann*.
 | **[E-111](BEFUNDE.md#e-111)** | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
 | **[E-109](BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
 | **[E-105](BEFUNDE.md#e-105)** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |
+| **[E-101](BEFUNDE.md#e-101)** | Die gespeicherte Datei ist für jedes andere Programm unbrauchbar — *„datei gespeicher… |
 | **[E-98](BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
 | **[E-92](BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |
 | **[E-90](BEFUNDE.md#e-90)** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… |
