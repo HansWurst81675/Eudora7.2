@@ -1204,8 +1204,9 @@ dem Verlinken.
 ## Zweiunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-27.md`)
 
 Nach Gregors Test an Paket 1.0.84, vor dem Merge von `e-112_e-113_fix`. 103 MDs
-gegen den Bestand. Dreizehn Mängel: **zwölf berichtigt**, einer liegt im Haken
-und ist nur umgangen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13)); zwei Nebenfunde nur gemeldet.
+gegen den Bestand. Fünfzehn Mängel: **dreizehn berichtigt**; zwei liegen an den
+Haken und sind nur gemeldet bzw. umgangen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13), [L-27.15](Befunde/LEKTOR-27.md#l-27.15): der eingerichtete
+`pre-commit` ist vom 18.09.2026 und ruft `pruefe-befundurteile.pl` nicht auf).
 `doku-pruefen.pl` und `pruefe-stand-md.pl` liefen grün; `offene-befunde.pl`
 meldete *„30 fehlen“* bei deckender Liste — es war seit dem Verlinken der Tabelle
 blind ([L-27.1](Befunde/LEKTOR-27.md#l-27.1), Werkzeug berichtigt, Gegenprobe gefahren).

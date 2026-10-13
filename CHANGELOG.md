@@ -36,7 +36,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit [E-78](BEFUNDE.md#e-78)**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | [**E-39**](BEFUNDE.md#e-39): wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
-| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet. **Dieselbe Meldung beim Suchen (Ctrl+F) ist ein eigener Befund, [E-115](BEFUNDE.md#e-115)**, gemeldet am 13.10.2026 an 1.0.84 |
+| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet. **Dieselbe Meldung beim Suchen (Ctrl+F) ist ein eigener, offener Befund, [E-115](BEFUNDE.md#e-115)**, gemeldet am 13.10.2026 an 1.0.84 |
 | — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** [**R-1**](BEFUNDE.md#r-1) (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), [**V-1**](BEFUNDE.md#v-1) (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und [**E-14**](BEFUNDE.md#e-14) (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
 | — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit [**E-33**](BEFUNDE.md#e-33) nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu [E-76](BEFUNDE.md#e-76)** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
 
@@ -773,7 +773,7 @@ Stand vor [E-103](BEFUNDE.md#e-103) und [E-106](BEFUNDE.md#e-106) zurück. Schli
 ## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
 
 > **Nicht mehr zu prüfen, und 1.0.70 nicht mehr zu benutzen** (Nachtrag LEKTOR,
-> 18.09.2026, [L-15.8](Befunde/LEKTOR-15.md#l-15.8)): diese Fassung war die erste, die [E-101](BEFUNDE.md#e-101) in beiden Teilen,
+> 18.09.2026, [L-15.8](Befunde/LEKTOR-15.md#l-15.8)): diese Fassung war die erste, die [E-101](BEFUNDE.md#e-101) (seit 13.10.2026 wieder offen) in beiden Teilen,
 > [E-103](BEFUNDE.md#e-103), [E-104](BEFUNDE.md#e-104) und [E-106](BEFUNDE.md#e-106) zusammen trug — sie trägt aber auch den **Absturz beim
 > Antworten** ([E-107](BEFUNDE.md#e-107)/[E-108](BEFUNDE.md#e-108)), der erst in **7.2.0.72** behoben ist, und sie ist
 > nie zu Gregor gelangt. Der Messpunkt unten ist durch **seinen Lauf an 1.0.69**
@@ -884,7 +884,7 @@ Aber: **`nachher` ist gleich `rumpf-nachher`.** Es kam **nichts** dazu.
 Seine Dateien trugen HTML ohne `MIME-Version`, ohne `Content-Type`, ohne
 Zeichensatz — *„datei gespeichert, aber unbrauchbar"*, unverändert. Der
 ganze Kopfzeilenblock hängt an `if ( !szKopf.IsEmpty() )`; ohne
-*Kopfzeilen einschließen* ist er leer. **[E-101](BEFUNDE.md#e-101) war nur behoben, wenn der
+*Kopfzeilen einschließen* ist er leer. **[E-101](BEFUNDE.md#e-101)** *(wieder offen seit 13.10.2026, aus anderem Grund: Zeichensatz)* **war nur behoben, wenn der
 Schalter an war** — und laut [**E-98**](BEFUNDE.md#e-98) ist das Kästchen auf Windows 10 gar
 nicht anwählbar.
 

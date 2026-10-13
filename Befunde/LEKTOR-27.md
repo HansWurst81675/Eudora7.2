@@ -14,8 +14,10 @@ Maßstab sind die Urteilszeilen in `BEFUNDE.md` von heute: Testplan Teil A
 *„frische INI startet in der Werbe-Betriebsart“* widerlegt.
 
 Mechanisch zuerst: `doku-pruefen.pl` und `pruefe-stand-md.pl` **grün**,
-`offene-befunde.pl` **rot** — und das zu Unrecht ([L-27.1](#l-27.1)). **Alle anderen
-Mängel unten hat keine Schranke gefunden.**
+`offene-befunde.pl` **rot** — und das zu Unrecht ([L-27.1](#l-27.1)). `pruefe-befundurteile.pl`
+habe ich erst am Ende laufen lassen; es war **rot** ([L-27.14](#l-27.14)), und der
+eingerichtete Haken ruft es gar nicht auf ([L-27.15](#l-27.15)). **Die übrigen Mängel hat
+keine Schranke gefunden.**
 
 ## Mängel
 
@@ -193,6 +195,29 @@ dem Merge von `wt/chronist` regulär an. **Folge für jeden Arbeitsbaum:** nach
 jedem CHRONIST-Lauf weist der erste Commit dort ab, bis die Übersicht
 nachgezogen ist — und wer dann `git merge` macht, stößt auf ungestagte
 Änderungen an denselben Dateien.
+
+### <a id="l-27.14"></a>L-27.14 — `pruefe-befundurteile.pl` war rot, und kein Haken hat es gesagt
+
+Erst am Ende dieses Laufs gestartet — das hätte am Anfang stehen müssen. Fünf
+Beanstandungen: vier Nennungen von [E-101](../BEFUNDE.md#e-101) mit *„behoben“* im Umfeld (CHANGELOG
+Nachtrag zu 1.0.70 und Abschnitt 7.2.0.69, WEITERMACHEN Zeilen *Was ich am
+17.09.2026 falsch gemacht habe* und *BESTÄTIGT — [E-97](../BEFUNDE.md#e-97)*), seit `6d4022f` rot,
+weil [E-101](../BEFUNDE.md#e-101) heute wieder offen ist; und **eine von mir**: mein Verweis auf
+[E-115](../BEFUNDE.md#e-115) in der Zeile *„Encountered an improper argument“*, in der *„seit [E-43](../BEFUNDE.md#e-43)
+behoben“* steht. Alle fünf mit *wieder offen* / *offener* an der Kennung
+versehen; danach Rückgabe 0.
+
+### <a id="l-27.15"></a>L-27.15 — der eingerichtete `pre-commit` ist vom 18.09.2026
+
+`.git/hooks/pre-commit` (gemeinsam für alle Arbeitsbäume) trägt den Zeitstempel
+**18.09.2026 08:33**; `tools/hooks-einrichten.sh` wurde zuletzt am
+**12.10.2026** geändert (`4da8408`, Zweig `befundurteile-einhaengen`). Gemessen
+durch Vergleich der aufgerufenen Werkzeuge: im Installer, **nicht** im
+eingerichteten Haken stehen `pruefe-befundurteile.pl` und
+`befunde-verlinken.pl`. Deshalb liefen alle Commits dieses Tages durch, obwohl
+[L-27.14](#l-27.14) rot war. **Nicht behoben:** `hooks-einrichten.sh` schreibt in das
+gemeinsame `.git/hooks` des Hauptbaums; das neu einzurichten ist Gregors
+Entscheidung, nicht die eines Arbeitsbaums.
 
 ## Was nicht berichtigt ist
 
