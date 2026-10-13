@@ -70,6 +70,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.86 — Ctrl+F wirft nicht mehr, wenn ein IMAP-Postfach aktiv ist (E-115) — **in Arbeit, nicht ausgeliefert**
+
+**[E-115](BEFUNDE.md#e-115):** Ursache an Gregors laufendem 1.0.85 gemessen, während die Meldung offen stand: Stapel des Meldungsthreads ohne Debugger gelesen — `CMBoxTreeCtrlCheck::FindCheck` (`MBoxTreeCtrlCheck.cpp:938`) übersprang den Ordner Recent mit `GetNextSiblingItem`; Recent ist der letzte Eintrag, also NULL, und `GetItemData(NULL)` warf *„Encountered an improper argument“* (der Text stammt aus MFC). Erreicht wird das nur, wenn *Find Messages* ein Postfach hinter Recent vorwählt — ein IMAP-Postfach. Jetzt: Recent samt Inhalt überspringen (`GetNextTraversalItem(hItem, false)`), bei NULL Ende. **Nicht gemessen:** dass die Meldung danach ausbleibt.
+
 ## 7.2.0.85 — Bilder in der angegebenen Größe gezeichnet (E-112) — **in Arbeit, nicht ausgeliefert**
 
 **[E-112](BEFUNDE.md#e-112):** Paige spielt die Metadatei eines Bildes als `MM_TEXT` ab, und die Metadatei setzt beim Abspielen selbst `MM_TEXT` (`QCGraphics.cpp`, `MetafileFromImage`). Das Zielrechteck aus 7.2.0.76 bestimmte deshalb nur die **Lage**; gezeichnet wurde in Dateigröße, und der Text lag darauf. Jetzt schreibt `E112MetadateiAusDIB` die Metadatei gleich in der Größe aus `E112Zielrechteck` (angegeben gewinnt, ohne Angabe gilt die Datei – [E-103](BEFUNDE.md#e-103)). Spurmarke im Ladeweg: `E-112 Metadatei: angegeben=… Datei=… gemalt=…` (`LogLevel` mit 32768).

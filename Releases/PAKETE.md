@@ -156,6 +156,13 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.86 — **in Arbeit, kein Paket**, Quellstand 7.2.0.86 (E-115)
+
+| | |
+|---|---|
+| Inhalt | wie 1.0.85, dazu [E-115](../BEFUNDE.md#e-115): `FindCheck` überspringt Recent nicht mehr ins Leere |
+| Nicht gemessen | die Wirkung am laufenden Programm; kein Paket |
+
 ## 1.0.85 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.85 (E-112)
 
 | | |

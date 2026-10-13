@@ -934,8 +934,20 @@ HTREEITEM CMBoxTreeCtrlCheck::FindCheck(QCMailboxCommand *pMbxCmd, bool bClearCh
 	for ( hItem = GetRootItem(); hItem; hItem = GetNextTraversalItem(hItem) )
 	{
 		// Don't find the mailbox in the Recent mailboxes folder
+		//
+		// BEFUND E-115 (13.10.2026, Wurfstelle am laufenden 1.0.85 aus dem
+		// Stapel gelesen): hier stand hItem = GetNextSiblingItem(hItem). Recent
+		// ist der LETZTE Eintrag unter dem Mailverzeichnis - einen naechsten
+		// Geschwisterknoten gibt es nicht, hItem wurde NULL und GetItemData(NULL)
+		// warf "Encountered an improper argument". Bis hierher kommt die Suche
+		// nur, wenn das gesuchte Postfach DAHINTER liegt - ein IMAP-Postfach.
+		// Jetzt: Recent samt Inhalt ueberspringen, weiter beim naechsten Ordner.
 		if (hItem == m_hRecentFolderItem)
-			hItem = GetNextSiblingItem(hItem);
+		{
+			hItem = GetNextTraversalItem(hItem, false);
+			if (!hItem)
+				break;
+		}
 
 		CMboxTreeItemData *pItemData = (CMboxTreeItemData *) GetItemData(hItem);
 		ASSERT(pItemData);

@@ -37,7 +37,7 @@ Stehen geblieben waren:
 ### <a id="l-28.2"></a>L-28.2 — der Quellstand hieß an drei Stellen noch 7.2.0.84
 
 `WEITERMACHEN.md`, Zeile *Quellstand*: *„7.2.0.84 (`Eudora71/Version.h`)“* —
-`Version.h` sagt 7.2.0.85, die Zeile *Paketnummer* direkt darunter 1.0.85.
+Damals, zum Zeitpunkt dieses Berichts, stand `Version.h` auf 7.2.0.85 und die Zeile *Paketnummer* direkt darunter auf 1.0.85.
 `ZIEL.md`, Stand-Kopf: *„**Quellstand ist jetzt 7.2.0.84 / Paket 1.0.84**“*.
 `PORTIERUNG.md`: der jüngste Stand-Kasten war vom 12.10.2026 (7.2.0.84).
 **Geändert (3 Stellen):** 7.2.0.85 in Arbeit vorangestellt, 7.2.0.84 als zuletzt
