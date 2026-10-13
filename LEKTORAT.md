@@ -1269,3 +1269,18 @@ als gemessen nachgezogen, die Stand-Köpfe in `AUFGABEN.md`, `ZIEL.md`,
 *„N1 noch nicht gemessen“* und *„194/194“* ([L-30.1](Befunde/LEKTOR-30.md#l-30.1)). In `Releases/PAKETE.md`
 standen die Messwerte unter *Nicht gemessen* ([L-30.2](Befunde/LEKTOR-30.md#l-30.2)), `Testdaten/README.md`
 zählte sechs statt sieben `<img>` ([L-30.3](Befunde/LEKTOR-30.md#l-30.3)).
+
+## Sechsunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-31.md`)
+
+Lauf nach [LEKTOR-30](Befunde/LEKTOR-30.md#lektor-30), zum Stand `2d7c922` auf `e-112-skalierung` (Quellstand
+7.2.0.87) plus [PRÜFER-25](Befunde/PRUEFER-25.md); in allen 202 MDs gesucht. Sechs Mängel, **alle
+berichtigt**; `commit-bereit.pl` war vorher grün.
+
+Der Kern: Gregors Urteile an 1.0.86 ([E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) bestätigt) standen nur in
+`BEFUNDE.md` und im Plan in `WEITERMACHEN.md`; die Stand-Köpfe sagten weiter
+*„von Gregor noch nicht bestätigt“*, *„ungemessen“* und `WEITERMACHEN.md` sogar
+*„Quellstand 7.2.0.85“* ([L-31.1](Befunde/LEKTOR-31.md#l-31.1)). `CHANGELOG.md` führte [E-115](BEFUNDE.md#e-115) als offen und
+ungemessen ([L-31.2](Befunde/LEKTOR-31.md#l-31.2)), [E-118](BEFUNDE.md#e-118)/[E-119](BEFUNDE.md#e-119) standen außer dort nirgends ([L-31.3](Befunde/LEKTOR-31.md#l-31.3)), der
+Testplan hatte keinen Schritt für 1.0.85–1.0.87 ([L-31.4](Befunde/LEKTOR-31.md#l-31.4)), die neue Prüfnachricht
+fehlte in `Testdaten/README.md` ([L-31.5](Befunde/LEKTOR-31.md#l-31.5)). Aus [PRÜFER-25](Befunde/PRUEFER-25.md): die Ursachenstelle von
+[E-118](BEFUNDE.md#e-118) war falsch, der Behebungsort von [E-119](BEFUNDE.md#e-119) zu spät ([L-31.6](Befunde/LEKTOR-31.md#l-31.6)).

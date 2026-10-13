@@ -169,8 +169,8 @@ verschickt.
   von Gregor am 13.10.2026 an 1.0.86 gemeldet).
 * **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als
   HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), offen, am Quelltext belegt): beim Hochladen
-  schreibt Eudora als Inhaltstyp nur `text/plain` oder `text/enriched`, nie
-  `text/html`. Originalfehler von QUALCOMM.
+  verwirft Eudora die `Content-*`-Köpfe und schreibt keinen oder nur
+  `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
