@@ -1200,3 +1200,26 @@ auf **0** und meldete weiter grün; `pruefe-befund-verbreitung.pl` ebenso.
 Nachgemessen Werkzeug für Werkzeug gegen einen Arbeitsbaum auf `97f50c8`:
 jede der neunzehn `pruefe-*`-Schranken liefert wieder dieselbe Ausgabe wie vor
 dem Verlinken.
+
+## Zweiunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-27.md`)
+
+Nach Gregors Test an Paket 1.0.84, vor dem Merge von `e-112_e-113_fix`. 103 MDs
+gegen den Bestand. Fünfzehn Mängel: **dreizehn berichtigt**; zwei liegen an den
+Haken und sind nur gemeldet bzw. umgangen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13), [L-27.15](Befunde/LEKTOR-27.md#l-27.15): der eingerichtete
+`pre-commit` ist vom 18.09.2026 und ruft `pruefe-befundurteile.pl` nicht auf).
+`doku-pruefen.pl` und `pruefe-stand-md.pl` liefen grün; `offene-befunde.pl`
+meldete *„30 fehlen“* bei deckender Liste — es war seit dem Verlinken der Tabelle
+blind ([L-27.1](Befunde/LEKTOR-27.md#l-27.1), Werkzeug berichtigt, Gegenprobe gefahren).
+
+Der Kern: die Bestätigungen des Tages standen in `BEFUNDE.md`, aber
+`AUFGABEN.md`, `TESTPLAN.md`, `WEITERMACHEN.md`, `ZIEL.md` und `CHANGELOG.md`
+ließen die vierzehn aus Teil A weiter *warten*, [E-101](BEFUNDE.md#e-101) als erledigt stehen und
+[E-115](BEFUNDE.md#e-115) unter *Noch offen* weg. Die widerlegte Werbe-Betriebsart stand in **neun**
+Dateien weiter als Tatsache ([L-27.4](Befunde/LEKTOR-27.md#l-27.4)). Älter und ausgerechnet zum Namensgeber des
+Zweigs: `AUFGABEN.md` nannte [E-112](BEFUNDE.md#e-112) seit vier Wochen *„behoben in 7.2.0.76“*
+([L-27.3](Befunde/LEKTOR-27.md#l-27.3)). Dazu drei byteidentisch doppelte Zeilen in `tools/ZWEIGE.md` und
+eine falsche Probenzahl in `tools/WERKZEUGE.md`.
+
+Nebenbei gemessen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13)): der `pre-commit` spiegelt nach jedem CHRONIST-Lauf
+dessen Lehren in den Baum, in dem gerade committet wird, und weist dort ab, bis
+die Übersicht nachgezogen ist.

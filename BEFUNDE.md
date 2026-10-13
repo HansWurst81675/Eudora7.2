@@ -6,7 +6,7 @@
      Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](#np3-7)). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 12.10.2026: **8614 Zeilen**, **128** Abschnitte auf zweiter und
+Gemessen am 13.10.2026: **8630 Zeilen**, **128** Abschnitte auf zweiter und
 **233** auf dritter Ebene. Nachzählen:
 
 ```sh
@@ -175,7 +175,7 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | <a id="an-1"></a>AN-1 | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — **elf** Ursachen (Teile B5.1 bis B5.11), alle Originalfehler; POP und IMAP, aber **nicht auf demselben Weg** (über IMAP kommt der Name aus der BODYSTRUCTURE, nicht aus `Lex822`) | **teilweise behoben — über POP am laufenden Programm gemessen, heil seit 7.2.0.81; über IMAP von Gregor mit 1.0.83 getestet und am 12.10.2026 bestätigt; B5.7 offen.** POP: alle sechs Prüfanhänge mit vollem Namen und `.pdf` an 7.2.0.81 (`C:\Temp\AN3`), 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), abgelesen im Anhangverzeichnis und in `eudora.log`; Testsuite 185/185 an 7.2.0.82 und 7.2.0.83. IMAP: drei Anhänge aus Gregors Postfach, alle mit Endung (CHANGELOG 7.2.0.83); sein Urteil *„gekürzt mit endung reicht"*. Teile 1 bis 6 und 8 bis 11 sind behoben, **B5.7 ist offen** (IMAP ohne `SetExtension`). Elf Debug-Marken (`LogLevel=91295`). Durchlauf in AUFGABEN.md, B5 |
-| <a id="an-2"></a>AN-2 | Beim Start zeigt ein Fenster in Eudora den **Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **behoben, von Gregor an 1.0.84 bestätigt am 13.10.2026** (*„HTML newsletter (weiter geleitet) wird korrekt dargestellt.“*; die Werbeansicht entfällt nach seiner Entscheidung, siehe unten). Vorher: **Anzeige geändert in 7.2.0.80, seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** **WIDERLEGT am 13.10.2026, gemessen an 1.0.84:** *„eine frische `Eudora.ini` startet in der Werbe-Betriebsart“* (so in CHANGELOG 7.2.0.80 und AUFGABEN.md, mit der Begründung *„`BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt“*). **Er ist gesetzt**, in Debug und Release (`Eudora71/Eudora/Eudora.vcxproj:78` und `:132`, eingeführt in `bf14e14` am 30.08.2026 mit S-2) — damit ist `DEFAULT_SWM_MODE` = 2 (`QCSharewareManager.h:54-58`), also **Pro, ohne Werbung**. **Messung:** Lauf über `tools/testlauf.ps1` in `C:\Temp\AN2-1084` mit einer INI aus nur `[Settings]` und `LogLevel=128159` (Freigabe Gregor: *„ja“*): Fenster `New Account Wizard` und Hauptfenster, **kein Werbeabruf** — das Protokoll nennt nur `Server: //adserver.eudora.com/adjoin/playlists` und `Next playlist update: 56y9mo28d6h54m`; nach dem Beenden steht `Mode=2` in der INI (geschrieben von `QCSharewareManager.cpp:1403`). **Folge für den Test:** die Werbeansicht entsteht in diesem Bau nur, wenn die INI ausdrücklich `Mode=0` trägt — so muss Gregors INI ausgesehen haben, als er AN-2 meldete (nicht gemessen). **Auch mit `Mode=0` nicht auslösbar (13.10.2026, Freigabe Gregor *„ok, mach“*):** leeres Mailverzeichnis, INI nur `Mode=0` und `LogLevel=128159`, 40 s Lauf: der Werbeweg legt `EudPriv\Ads` an, meldet aber wieder `Next playlist update: 56y…` und holt **nichts**; sichtbar nur `New Account Wizard` und Hauptfenster; nach dem Beenden steht wieder `Mode=2` in der INI. **Damit ist AN-2 an diesem Bau von außen nicht prüfbar** — welcher Weg `Mode` auf 2 zieht, ist nicht gemessen. **Entscheidung Gregors am 13.10.2026** (*„brauchen wir mode=0 überhaupt?“* — *„ja, einverstanden“*): die Werbe-Betriebsart wird nicht weiter verfolgt; AN-2 beschränkt sich auf den zweiten Teil, **kein CSS/JavaScript als Text in HTML-Nachrichten**, zu prüfen an einem Newsletter im normalen Betrieb. Ursache am Quelltext belegt. Paige kennt kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung. Jetzt beides über `inside_script` unterdrückt. Gemessen mit `tools/html-tags-pruefen.pl`: **30 Fälle, 0 Abweichungen**, Gegenprobe gefahren. **Offen bleibt die eigentliche Frage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum |
+| <a id="an-2"></a>AN-2 | Beim Start zeigt ein Fenster in Eudora den **Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **behoben, von Gregor an 1.0.84 bestätigt am 13.10.2026** (*„HTML newsletter (weiter geleitet) wird korrekt dargestellt.“*; die Werbeansicht entfällt nach seiner Entscheidung, siehe unten). Vorher: **Anzeige geändert in 7.2.0.80, seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** **WIDERLEGT am 13.10.2026, gemessen an 1.0.84:** *„eine frische `Eudora.ini` startet in der Werbe-Betriebsart“* (so in CHANGELOG 7.2.0.80 und AUFGABEN.md, mit der Begründung *„`BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt“*). **Er ist gesetzt**, in Debug und Release (`Eudora71/Eudora/Eudora.vcxproj:78` und `:132`, eingeführt in `bf14e14` am 30.08.2026 mit S-2) — damit ist `DEFAULT_SWM_MODE` = 2 (`QCSharewareManager.h:54-58`), also **Pro, ohne Werbung**. **Messung:** Lauf über `tools/testlauf.ps1` in `C:\Temp\AN2-1084` mit einer INI aus nur `[Settings]` und `LogLevel=128159` (Freigabe Gregor: *„ja“*): Fenster `New Account Wizard` und Hauptfenster, **kein Werbeabruf** — das Protokoll nennt nur `Server: //adserver.eudora.com/adjoin/playlists` und `Next playlist update: 56y9mo28d6h54m`; nach dem Beenden steht `Mode=2` in der INI (geschrieben von `QCSharewareManager.cpp:1403`). **Folge für den Test:** die Werbeansicht entsteht in diesem Bau nur, wenn die INI ausdrücklich `Mode=0` trägt — so muss Gregors INI ausgesehen haben, als er AN-2 meldete (nicht gemessen). **Auch mit `Mode=0` nicht auslösbar (13.10.2026, Freigabe Gregor *„ok, mach“*):** leeres Mailverzeichnis, INI nur `Mode=0` und `LogLevel=128159`, 40 s Lauf: der Werbeweg legt `EudPriv\Ads` an, meldet aber wieder `Next playlist update: 56y…` und holt **nichts**; sichtbar nur `New Account Wizard` und Hauptfenster; nach dem Beenden steht wieder `Mode=2` in der INI. **Damit ist AN-2 an diesem Bau von außen nicht prüfbar** — welcher Weg `Mode` auf 2 zieht, ist nicht gemessen. **Entscheidung Gregors am 13.10.2026** (*„brauchen wir mode=0 überhaupt?“* — *„ja, einverstanden“*): die Werbe-Betriebsart wird nicht weiter verfolgt; AN-2 beschränkt sich auf den zweiten Teil, **kein CSS/JavaScript als Text in HTML-Nachrichten**, zu prüfen an einem Newsletter im normalen Betrieb. Ursache am Quelltext belegt. Paige kennt kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung. Jetzt beides über `inside_script` unterdrückt. Gemessen mit `tools/html-tags-pruefen.pl`: **30 Fälle, 0 Abweichungen**, Gegenprobe gefahren. **Offen bleibt die eigentliche Frage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. **[Überholt 13.10.2026, [L-27.4](Befunde/LEKTOR-27.md#l-27.4): an 1.0.84 holt Eudora keine Werbung, weder mit frischer INI noch mit `Mode=0` (Messungen oben); die Frage hat Gregor entschieden — nicht weiter verfolgen.]** |
 
 ## Betrieb: was Gregor am 31.08.2026 gesehen hat (E)
 
@@ -8523,15 +8523,23 @@ Manager, Microsoft Clarity, AddToAny, Disqus, der `schema.org`-Block,
 `wp.i18n.setLocaleData`, `var wpcf7 = {…}` — und darunter der Artikel des
 Computer History Museum über die Freigabe des Eudora-Quelltexts.
 
-**Status: offen — Ursache am Quelltext belegt, Anzeige behoben in 7.2.0.80, seit
-7.2.0.82 übersetzt (Rebuild 0 Fehler, Testsuite 185/185), am laufenden Programm
-nicht gemessen.** Offen ist außerdem die Produktfrage (AUFGABEN.md, B6).
+**Status: behoben, von Gregor an 1.0.84 bestätigt am 13.10.2026** (*„HTML
+newsletter (weiter geleitet) wird korrekt dargestellt.“*). Die Produktfrage
+(AUFGABEN.md, B6) hat Gregor am selben Tag entschieden: die Werbe-Betriebsart
+wird nicht weiter verfolgt. **Der Weg unten ist ab Punkt 1 widerlegt** — dieser
+Bau startet mit `Mode=2`, nicht in der Werbe-Betriebsart, und auch mit `Mode=0`
+kam an 1.0.84 kein Abruf (Messungen in der Urteilszeile oben,
+[L-27.4](Befunde/LEKTOR-27.md#l-27.4)). Was folgt, ist der Stand vom 12.10.2026.
+
+*Bis zum 13.10.2026 stand hier:* offen — Ursache am Quelltext belegt, Anzeige
+behoben in 7.2.0.80, seit 7.2.0.82 übersetzt (Rebuild 0 Fehler, Testsuite
+185/185), am laufenden Programm nicht gemessen.
 
 ### Der Weg, Stück für Stück
 
 | | |
 |---|---|
-| 1 | **Eudora startet in der Werbe-Betriebsart.** `GetModeFromIni` (`QCSharewareManager.h:56`) liest `[Settings] Mode` (`IDS_INI_MODE` = 10620, `EudoraRes.rc:7743`, Voreinstellung `-1`). Bei `-1` greift `DEFAULT_SWM_MODE`, und das ist **0 = `SWM_MODE_ADWARE`**, weil `BUILD_BOX_OR_SITE_R_VERSION` in `Eudora.vcxproj` nicht gesetzt ist. **Eine frische `Eudora.ini` bedeutet also: Werbung.** |
+| 1 | **Eudora startet in der Werbe-Betriebsart.** `GetModeFromIni` (`QCSharewareManager.h:56`) liest `[Settings] Mode` (`IDS_INI_MODE` = 10620, `EudoraRes.rc:7743`, Voreinstellung `-1`). Bei `-1` greift `DEFAULT_SWM_MODE`, und das ist **0 = `SWM_MODE_ADWARE`**, weil `BUILD_BOX_OR_SITE_R_VERSION` in `Eudora.vcxproj` nicht gesetzt ist. **Eine frische `Eudora.ini` bedeutet also: Werbung.** **[Widerlegt 13.10.2026: `BUILD_BOX_OR_SITE_R_VERSION` ist seit `bf14e14` gesetzt, `DEFAULT_SWM_MODE` = 2 (Pro); an 1.0.84 gemessen, siehe Urteilszeile.]** |
 | 2 | Der Playlist-Client (`plstclnt.dll`) holt die Werbung. Der voreingestellte Server steht in `PlaylistClient/plstclnt_dll/plist_mgr.cpp:213`: `//adserver.eudora.com/adjoin/playlists`. Überschreibbar über `[Debug] PlayListServer` (`IDS_INI_DEBUG_PLAYLIST_SERVER` = 10805, `EudoraRes.rc:8446`) |
 | 3 | **`eudora.com` gehört seit 2018 dem Computer History Museum.** Das steht in dessen eigener Ankündigung zur Quelltextfreigabe: *„transfer ownership of the code, the Eudora trademarks, the copyrights, and the Eudora domain names to the Computer History Museum"*. Was dieser Rechner heute antwortet, ist eine WordPress-Seite |
 | 4 | `CAdView::loadEntry` (`AdView.cpp`): ist der MIME-Typ des Eintrags `text/html`, wird die geholte Datei geöffnet und an `PgDataTranslator::ImportData(…, kFmtHtml)` gegeben |
@@ -8595,6 +8603,12 @@ die beiden Fallen von oben, beide gefangen.
   den Playlist-Client mitschreibt.
 
 ### Was dieser Befund **nicht** behebt
+
+> **Überholt am 13.10.2026 ([L-27.4](Befunde/LEKTOR-27.md#l-27.4)).** An 1.0.84 holt Eudora
+> beim Start **keine** Werbung — die Vorgabe ist `Mode=2`, und selbst mit
+> `Mode=0` kam kein Abruf. Gregor hat die Frage unten entschieden: die
+> Werbe-Betriebsart wird nicht weiter verfolgt. Der Abschnitt bleibt als Stand
+> vom 12.10.2026 stehen.
 
 Der Abruf selbst bleibt. Eudora holt beim Start weiterhin Werbung von einem
 Rechner, der seit 2018 jemand anderem gehört, und zeigt dessen Antwort in einem

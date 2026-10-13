@@ -175,7 +175,12 @@ unless ($t =~ /\Q$anfang\E(.*?)\Q$ende\E/s) {
 
 my $ist = $1;
 my %im_ist;
-while ($ist =~ /\*\*($kennung)\*\*/g) { $im_ist{$1} = 1; }
+# VERLINKTE FORM (LEKTOR-27, L-27.1, 13.10.2026). Seit eb5815d steht die
+# Tabelle nach "-schreiben" plus "befunde-verlinken.pl --verlinken" als
+# **[E-115](BEFUNDE.md#e-115)** da. Bis dahin las diese Zeile nur **E-115**
+# und meldete "in WEITERMACHEN.md 0, FEHLEN 30" - bei inhaltlich deckender
+# Liste. Der Haken zeigt die Ausgabe nur an, also fiel es niemandem auf.
+while ($ist =~ /\*\*\[?($kennung)\]?(?:\([^)]*\))?\*\*/g) { $im_ist{$1} = 1; }
 
 my @fehlen = grep { not $im_ist{$_} } @offene;
 my @zuviel = grep { my $n = $_; not grep { $_ eq $n } @offene } sort keys %im_ist;
