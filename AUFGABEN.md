@@ -93,7 +93,7 @@ wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`), am laufende
 an `a36c47f` gemessen (alle drei Bilder der Prüfnachricht richtig, [E-103](BEFUNDE.md#e-103) mit);
 PRÜFER-22 F1 und F2 sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und
 150x58); PRÜFER-23 N1 (beim Antworten `height="1"`) ist behoben (`9f5142b`), am laufenden
-Programm noch nicht gemessen, die Gegenrichtung und N2 bis N5 sind offen; von Gregor
+Programm gemessen, die Gegenrichtung behoben und gemessen; N2 bis N5 sind offen; von Gregor
 noch nicht bestätigt. Neu daraus: [E-116](BEFUNDE.md#e-116) (`width="35px"` wird als 3508 gelesen).
 Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.85.
 
