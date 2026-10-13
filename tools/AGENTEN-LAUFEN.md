@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| LEKTOR | 2026-10-13 12:10 | Doku gegen Bestand nach N1 und PRUEFER-23, vor Paket 1.0.85 |
