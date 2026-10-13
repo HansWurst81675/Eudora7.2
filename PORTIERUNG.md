@@ -41,6 +41,13 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: [**E-86**](BEFUNDE.md#e-86)
 > (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77) (IMAP-Postfachnamen roh).
 >
+> **Stand 13.10.2026:** Quellstand **7.2.0.85**, `VERSION` **1.0.85**, **in Arbeit, nicht
+> ausgeliefert** — behebt [**E-112**](BEFUNDE.md#e-112) (Bilder in Originalgröße statt der angegebenen)
+> und mit ihm [**E-103**](BEFUNDE.md#e-103); Testsuite 193/193, am laufenden Programm an `a36c47f`
+> gemessen, PRÜFER-22 F1 und F2 danach eingebaut und dort noch nicht gemessen; neu
+> [**E-116**](BEFUNDE.md#e-116). Von Gregor noch nicht bestätigt; Einzelheiten in
+> [CHANGELOG.md](CHANGELOG.md), 7.2.0.85. Der Absatz darunter ist der Stand vom 12.10.2026.
+>
 > **Stand 12.10.2026:** Quellstand **7.2.0.84**, `VERSION` **1.0.84**, veröffentlicht
 > als **`v1.0.84`** — behebt [**E-94**](BEFUNDE.md#e-94) (Betreff mitten im Wort umbrochen), über POP
 > und IMAP gemessen, von Gregor bestätigt. Davor Quellstand **7.2.0.83**, gebaut

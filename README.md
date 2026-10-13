@@ -95,7 +95,8 @@ verschickt.
   internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
   `Content-Type` zunächst ganz; **seit 13.10.2026 wieder offen**, siehe unten),
   **Bilder, die über dem Text lagen** (7.2.0.67,
-  [**E-103**](BEFUNDE.md#e-103)), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
+  [**E-103**](BEFUNDE.md#e-103) — **an 1.0.84 von Gregor widerlegt**, der Rückfall kommt aus
+  [E-112](BEFUNDE.md#e-112), siehe unten), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
   (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
   [**E-104**](BEFUNDE.md#e-104)), **Bilder, die größer sind als im HTML angegeben und deshalb über
   dem Text liegen** (7.2.0.68, [**E-106**](BEFUNDE.md#e-106) — **von Gregor am 17.09.2026 an 1.0.69
@@ -135,7 +136,13 @@ verschickt.
   in Originalgröße statt in der angegebenen — eine Regression der
   E-106-Behebung. **Der Versuch in 7.2.0.76 wirkt nicht** — von Gregor am
   18.09.2026 am laufenden Programm widerlegt, mit Bildschirmfoto; seither
-  liegt der Text sogar wieder auf den Bildern. **Weiter offen ist
+  liegt der Text sogar wieder auf den Bildern. **Behoben in 7.2.0.85, noch nicht
+  ausgeliefert und von Gregor noch nicht bestätigt:** die Bilder werden in der
+  angegebenen Größe gezeichnet, ohne Angabe in Dateigröße ([E-103](BEFUNDE.md#e-103)) — am
+  laufenden Programm gemessen; was danach noch eingebaut wurde (gleiche Bildadresse
+  in zwei Größen, nur Breite oder nur Höhe angegeben), dort noch nicht. Erst mit
+  dieser Behebung wird [**E-116**](BEFUNDE.md#e-116) sichtbar (offen): eine Angabe wie
+  `width="35px"` wird als 3508 gelesen. **Weiter offen ist
   [E-113](BEFUNDE.md#e-113):** ein Bild, dessen angegebene Breite größer ist als das Fenster,
   läuft rechts hinaus.
 * **Die Betreffzeile wird mitten im Wort umbrochen** ([**E-94**](BEFUNDE.md#e-94), in `v1.0.83`
