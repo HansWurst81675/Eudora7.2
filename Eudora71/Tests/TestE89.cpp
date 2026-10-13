@@ -147,6 +147,32 @@ void RunE89Tests(void)
 	}
 	TT_EndTest();
 
+	// ------------------------------------------------------------- (4b)
+	// PRUEFER-23 N1 (13.10.2026): nur die Breite bekannt, und sie ist zu
+	// gross. Der Deckel rechnete 0 * 600 / 1200 = 0, hob auf 1 an und schrieb
+	// height="1" - seit E-112 wird das Bild in dieser Groesse gemalt: ein
+	// Strich. Die unbekannte Hoehe muss unbekannt bleiben; die fehlende Seite
+	// ergaenzt danach E112Zielrechteck aus dem Seitenverhaeltnis der Datei.
+	TT_BeginTest("E-89: zu breit, Hoehe unbekannt - gestutzt wird nur die Breite, kein height=\"1\"");
+	{
+		CString	szB;
+		szB.Format("width=\"%d\"", UTE89_MaxBreite());
+
+		bGeaendert = Umschreiben(
+			"<html><body><img src=\"kopf.png\" width=\"1200\">"
+			"</body></html>", szAus, szSpur);
+
+		TT_CHECK(bGeaendert);
+		TT_CHECK(szAus.Find(szB) >= 0);
+		TT_CHECK_MSG(szAus.Find("height=\"1\"") < 0,
+					 "height=\"1\" war der Zustand bis 7.2.0.85 - das Bild als Strich");
+		TT_CHECK_MSG(szAus.Find("height") < 0,
+					 "Eine unbekannte Hoehe darf nicht erfunden werden");
+		TT_Note("%s", (LPCTSTR) szAus);
+	}
+	TT_EndTest();
+
+
 	// ------------------------------------------------------------- (5)
 	TT_BeginTest("E-89: width mitten im style zwischen anderen Eigenschaften");
 	{

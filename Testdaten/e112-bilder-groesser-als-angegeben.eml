@@ -21,6 +21,8 @@ Content-Transfer-Encoding: 7bit
 <p>Text unter dem Bild ohne Groessenangabe (E-103, Datei 79x64).</p>
 <p><img src="cid:banner@e112.invalid" width="150"></p>
 <p>Banner nur mit width=150 (F2, Browser-Regel): 150x58 erwartet.</p>
+<p><img src="cid:banner@e112.invalid" width="1200"></p>
+<p>Banner nur mit width=1200 (PRUEFER-23 N1): beim Weiterleiten auf 600 gedeckelt, 600x230 erwartet, kein Strich.</p>
 </body></html>
 ------=_E112_Grenze
 Content-Type: image/png; name="gross-330x327.png"
