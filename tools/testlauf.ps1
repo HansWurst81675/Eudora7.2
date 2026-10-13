@@ -155,6 +155,27 @@ Write-Host ''
 Write-Host '  Alle Voraussetzungen erfuellt.'
 Write-Host ('  Freigabe: ' + $Freigabe)
 
+# Startliste: die Fenster, die Eudora beim Start SELBST oeffnet. Eudora
+# schreibt [Open Windows] beim Beenden neu - was vor dem einen Lauf aus der
+# Liste genommen wurde, steht nach ihm wieder drin. Am 13.10.2026 (E-115) hat
+# genau das zwei Nachstelllaeufe wertlos gemacht: "Find Messages" (39) stand
+# in der Startliste, Ctrl+F oeffnete es nicht neu, der Fehler kam nicht -
+# einer der beiden Laeufe war schon fast der Beleg fuer die Behebung.
+# Deshalb steht die Liste in derselben Ausgabe wie das Ergebnis
+# (Arbeitsweise/zwei-werte-in-eine-ausgabe.md,
+# Arbeitsweise/messung-muss-den-weg-treffen.md Fall 10).
+$startIni = Join-Path (Join-Path $voll 'Mailverzeichnis') 'Eudora.ini'
+if (Test-Path -LiteralPath $startIni) {
+    $startListe = @(Get-Content -LiteralPath $startIni | Where-Object { $_ -match '^OpenWindow\d+=' })
+    if ($startListe.Count -gt 0) {
+        Write-Host ('  Startliste [Open Windows]: ' + ($startListe -join ' | '))
+    } else {
+        Write-Host '  Startliste [Open Windows]: leer'
+    }
+} else {
+    Write-Host '  Startliste [Open Windows]: keine Eudora.ini im Mailverzeichnis'
+}
+
 if ($NurPruefen) {
     Write-Host '  -NurPruefen: es wird nichts gestartet.'
     Write-Host ''
