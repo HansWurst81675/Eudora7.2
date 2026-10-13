@@ -3836,8 +3836,8 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 // hatte: "datei gespeichert, aber unbrauchbar". Gemessen an seiner Datei
 // (Fw Ihr Doctolib Verifizierungscode.eml, 5716 Byte):
 //
-//   From: gregor.czempik@web.de
-//   To: markus.bakus@gmx.de
+//   From: konto-webde@gregor.invalid
+//   To: konto-gmx@gregor.invalid
 //   Subject: Fw: Ihr Doctolib Verifizierungscode
 //   Date: Mon, 14 Sep 2026 10:52:45 +0000
 //

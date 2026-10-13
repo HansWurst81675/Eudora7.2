@@ -13,7 +13,7 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 
 | Zeit | Fassung | Freigabe | Ergebnis |
 |---|---|---|---|
-| 2026-09-11 13:00:17 | v1.0.48 | Gregor am 11.09.2026 zu 1.0.48: IMAP mit der verschaerften Zertifikatspruefung getestet, 'Successfully retrieved markus.bakus@gmx.de' ueber Port 993 | veroeffentlicht |
+| 2026-09-11 13:00:17 | v1.0.48 | Gregor am 11.09.2026 zu 1.0.48: IMAP mit der verschaerften Zertifikatspruefung getestet, 'Successfully retrieved konto-gmx@gregor.invalid' ueber Port 993 | veroeffentlicht |
 | 2026-09-11 08:52:00 | v1.0.47 | Gregor am 11.09.2026 zu 1.0.46: 'ja, jetzt geht es' ([E-80](../BEFUNDE.md#e-80)) und zu 1.0.47: 'ja, passt!' ([E-81](../BEFUNDE.md#e-81)) | veroeffentlicht; Release Notes am selben Tag berichtigt (134 statt 175 Nachrichten, zehn statt acht Kopfzeilen) |
 | 2026-09-10 13:00:20 | v1.0.43 | Gregor am 10.09.2026 zu 1.0.42/1.0.43: '1. filter fenstergroesse nach neustart gespeichert: PASS' und '2. filter funktionieren.' | veroeffentlicht |
 | 2026-09-09 09:10:15 | v1.0.27 | nicht dokumentiert | veroeffentlicht |

@@ -3445,7 +3445,7 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 			// Gregor hat am 17.09.2026 mit 1.0.65 eine Nachricht aus dem
 			// geoeffneten Fenster gespeichert. In der Datei stand:
 			//
-			//   From: "markus.bakus@gmx.de" <markus.bakus@gmx.de> Subject:
+			//   From: "konto-gmx@gregor.invalid" <konto-gmx@gregor.invalid> Subject:
 			//   Re: Fwd: Deine Anzeige 'Zu verschenken: kleine Gefaesse' Cc:
 			//
 			// Drei Kopfzeilen in einer. Im Postfach steht jede fuer sich -

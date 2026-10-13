@@ -63,14 +63,14 @@ lautet `"Messages left to scan for junk: "` (`IDS_JUNK_MESSAGES_LEFT`,
 Regeln, alle nach demselben Muster:
 
 ```
-rule From:newsletter@service.freenet.de
+rule From:newsletter@freenet.invalid
 transfer Junk.mbx
 stop
 incoming
 manual
 header From:
 verb contains
-value newsletter@service.freenet.de
+value newsletter@freenet.invalid
 conjunction ignore
 header
 verb contains
@@ -99,7 +99,7 @@ Während des 22er-Laufs stehen im Protokoll vier LMOS-Schreibvorgänge
 (Zeilen 927–949, Maske 8192 = `DEBUG_MASK_LMOS`):
 
 ```
-MAIN  8192: 4.06 Writing single record of LMOS file for adventskalender-mails@freenet.de@mx.freenet.de
+MAIN  8192: 4.06 Writing single record of LMOS file for konto-freenet@gregor.invalid@mx.freenet.de
 MAIN  8192: 4.06 Msg 4 hash 220195767 gmt 6AA13111 flags 0x1289 f R k s D
 ```
 
@@ -225,7 +225,7 @@ Kandidaten unten auf einmal aus oder ein, und sie sagt, ob `Match` überhaupt
 Gregors Wortlaut: *„filter kann man setzen, aber nicht mehr editieren."*
 
 **Was BELEGT ist.** Seine `Filters.pce` enthält vier Regeln, davon **zwei
-wortgleich** (`rule From:news@softmaker.software` steht zweimal, mit
+wortgleich** (`rule From:news@softmaker.invalid` steht zweimal, mit
 identischen Bedingungen und Aktionen). Das ist das Bild eines Anwenders, der
 eine Regel neu anlegt, weil er die vorhandene nicht ändern kann. Die Regeln
 tragen die Namen, die `CFilter::SetName` (`filtersd.cpp:310-323`) aus

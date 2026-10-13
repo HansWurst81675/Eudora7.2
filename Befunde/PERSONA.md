@@ -75,12 +75,12 @@ LoginName=
 Persona0=Persona-hans wurst
 
 [Persona-hans wurst]
-POPAccount=adventskalender-mails@freenet.de@mx.freenet.de
-RealName=adventskalender-mails@freenet.de
-ReturnAddress=adventskalender-mails@freenet.de
+POPAccount=konto-freenet@gregor.invalid@mx.freenet.de
+RealName=konto-freenet@gregor.invalid
+ReturnAddress=konto-freenet@gregor.invalid
 SMTPServer=mx.freenet.de
 PopServer=mx.freenet.de
-LoginName=adventskalender-mails@freenet.de
+LoginName=konto-freenet@gregor.invalid
 ```
 
 - **Assistent bei jedem Start** — `[Settings]` ist leer.
@@ -218,12 +218,12 @@ leeren Zeilen im Abschnitt `[Settings]` durch die Werte aus
 
 | Zeile in `[Settings]` | vorher | nachher |
 |---|---|---|
-| `POPAccount=` | leer | `adventskalender-mails@freenet.de@mx.freenet.de` |
-| `RealName=` | leer | `adventskalender-mails@freenet.de` |
-| `ReturnAddress=` | leer | `adventskalender-mails@freenet.de` |
+| `POPAccount=` | leer | `konto-freenet@gregor.invalid@mx.freenet.de` |
+| `RealName=` | leer | `konto-freenet@gregor.invalid` |
+| `ReturnAddress=` | leer | `konto-freenet@gregor.invalid` |
 | `SMTPServer=` | leer | `mx.freenet.de` |
 | `PopServer=` | leer | `mx.freenet.de` |
-| `LoginName=` | leer | `adventskalender-mails@freenet.de` |
+| `LoginName=` | leer | `konto-freenet@gregor.invalid` |
 
 Danach **den Abschnitt `[Persona-hans wurst]` und die Zeile
 `Persona0=Persona-hans wurst` löschen** — sonst hat er dasselbe Konto zweimal
