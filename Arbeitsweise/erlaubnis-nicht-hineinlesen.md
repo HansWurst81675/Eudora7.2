@@ -88,3 +88,33 @@ Eine Schranke auf einem von zwei Wegen ist eine Schranke auf keinem
 - **Jedes Werkzeug, das einen Prozess mit Fenster startet, verlangt
   `-Freigabe`** (für `stapel-untersuchen.ps1` am 13.10.2026 im Hauptbaum
   nachgezogen). Wer ein neues Startwerkzeug baut, baut die Freigabe mit.
+
+## Nachtrag 13.10.2026, 10:09: „ok" auf eine Entweder-oder-Frage
+
+Um 09:54 UTC endete meine Meldung mit zwei Fragen: *„Soll ich sie
+[LEKTOR und CHRONIST] trotzdem noch einmal laufen lassen, was etwa 15 Minuten
+länger dauert? Oder soll ich das Paket diesmal ohne sie bauen, wie bei
+1.0.83 und 1.0.84?"* Gregor antwortete um 10:09, nach einer Viertelstunde,
+mit *„ok"*. Das passt auf beide Möglichkeiten und entscheidet keine.
+
+Diesmal richtig gelesen (10:09:39): *„Dein ‚ok' lese ich nicht als Freigabe,
+die Rollen auszulassen."* Die Rollen liefen parallel zu Bau und Messung und
+kosteten kaum Wartezeit. Der Fehler lag vorher, in der Frage selbst:
+
+- Sie bot an, eine **Schranke** auszulassen (`paket-bereit.pl` verlangt die
+  Rollen). Das ist eine Lockerung, die ich nicht anbieten soll. Wer sie als
+  Wahl stellt, lädt zu einem „ok" ein, das wie Zustimmung aussieht.
+- Die Kosten standen falsch darin. „15 Minuten länger" stimmte nur, wenn
+  nacheinander gearbeitet wird; parallel waren es fast null. Mit der
+  richtigen Zahl wäre die Frage gar nicht entstanden.
+
+**How to apply, zusätzlich:**
+
+- **Eine Frage an Gregor muss so gebaut sein, dass „ok" genau eine Lesart
+  hat:** eine Handlung nennen (*„Ich lasse die Rollen parallel laufen, das
+  Paket kommt dadurch nicht später."*), keine zwei zur Wahl. Braucht es
+  wirklich eine Wahl, dann nummeriert (*„1 oder 2?"*).
+- **Was eine Schranke verlangt, wird nicht als Frage angeboten.** Erst die
+  Kosten bei paralleler Arbeit messen; meist erledigt sich die Frage dann.
+- **Ein mehrdeutiges „ok" gilt für den kleineren Umfang**, also für das, was
+  ohnehin läuft. Siehe den Nachtrag davor.

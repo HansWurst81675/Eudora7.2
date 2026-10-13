@@ -78,6 +78,16 @@ if [ -f "$WURZEL/tools/rollen-faellig.pl" ]; then
   perl "$WURZEL/tools/rollen-faellig.pl" 2>/dev/null | grep -E "FAELLIG|ist faellig" | head -4
 fi
 
+# 1c. Vorgemerkte Quellen, die KEIN Projekt der Mappe baut, MELDEN - nicht
+#     abweisen: eine Aenderung an Fremdquellen kann gewollt sein (Lesehilfe,
+#     Spurmarke fuer spaeter). Am 13.10.2026 sass die Behebung E-112 F1 in
+#     PaigeDLL/PGSOURCE/PGEMBED.C; Paige32.dll wird nicht aus dem Quelltext
+#     gebaut, und das zeigte erst die Messung am laufenden Programm nach
+#     einem vollen Bau (Arbeitsweise/quelle-muss-im-bau-stehen.md).
+if [ -f "$WURZEL/tools/wer-baut.pl" ]; then
+  perl "$WURZEL/tools/wer-baut.pl" --staged 2>/dev/null | sed 's/^/pre-commit: /'
+fi
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #

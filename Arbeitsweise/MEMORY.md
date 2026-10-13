@@ -82,3 +82,5 @@
 - [Commit auf einmal prüfen](commit-auf-einmal-pruefen.md) — vor dem ersten Commit nach Versionssprung `perl tools/commit-bereit.pl`; der Haken zeigt je Anlauf nur einen Mangel, am 13.10. neun Anläufe
 - [Funktionsbug vor Buchführung](funktionsbug-vor-buchfuehrung.md) — wartet Gregor auf eine Behebung, ist sie der nächste Vordergrundschritt; Doku und Aufräumen in den Hintergrund, ein Zweig je Arbeitspaket
 - [CHRONIST 13.10.2026 b](CHRONIST-2026-10-13b.md) — Laufbericht: zwei neue Lehren, drei Nachträge, Werkzeug commit-bereit.pl
+- [Quelle muss im Bau stehen](quelle-muss-im-bau-stehen.md) — vor dem Ändern `perl tools/wer-baut.pl <datei>`; F1 saß in PGEMBED.C, das kein Projekt baut, 379 von 1727 Quellen sind ungebaut
+- [CHRONIST 13.10.2026 c](CHRONIST-2026-10-13c.md) — Laufbericht: eine neue Lehre, zwei Nachträge (F2 am Ladeweg, „ok" auf Entweder-oder), Werkzeug wer-baut.pl, Rollenschranke bewertet

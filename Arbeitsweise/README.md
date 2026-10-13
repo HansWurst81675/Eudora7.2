@@ -45,6 +45,7 @@ eine Datei liest, liest diese.
 | [CHRONIST-2026-10-12](CHRONIST-2026-10-12.md) | CHRONIST-Lauf vom 12.10.2026 - vier Nachtraege zu bestehenden Lehren, fertig zum Einsetzen ins Gedaechtnis; dazu warum sie nicht direkt in den Lehren stehen |
 | [CHRONIST-2026-10-13](CHRONIST-2026-10-13.md) | CHRONIST-Lauf vom 13.10.2026 - acht Nachträge zu bestehenden Lehren aus Release 1.0.83/1.0.84 und Gregors Testlauf an 1.0.84; keine neue Lehre |
 | [CHRONIST-2026-10-13b](CHRONIST-2026-10-13b.md) | CHRONIST-Lauf 13.10.2026 (zweiter): zwei neue Lehren (Commit-Schranken auf einmal, Funktionsbug vor Buchführung), drei Nachträge, neues Werkzeug tools/commit-bereit.pl |
+| [CHRONIST-2026-10-13c](CHRONIST-2026-10-13c.md) | CHRONIST-Lauf 13.10.2026 (dritter): neue Lehre quelle-muss-im-bau-stehen mit Werkzeug tools/wer-baut.pl, Nachträge zu messung-muss-den-weg-treffen (F2) und erlaubnis-nicht-hineinlesen („ok“ auf Entweder-oder) |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
@@ -102,6 +103,7 @@ eine Datei liest, liest diese.
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
 | [pruefumfang-nicht-von-hand](pruefumfang-nicht-von-hand.md) | Prueflisten und Agentenauftraege holen ihren Umfang aus der Quelle; was von Hand aufgezaehlt wird, prueft genau das nicht, woran niemand gedacht hat |
 | [quelldateien-nur-byte-erhaltend-aendern](quelldateien-nur-byte-erhaltend-aendern.md) | Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden - nur byte-erhaltend aendern, nie mit dem Edit-Werkzeug |
+| [quelle-muss-im-bau-stehen](quelle-muss-im-bau-stehen.md) | Vor dem Ändern einer Quelldatei prüfen, ob ein Projekt der Mappe sie überhaupt baut (tools/wer-baut.pl) - die F1-Behebung saß in PGEMBED.C, Paige32.dll wird nicht aus dem Quelltext gebaut |
 | [reihenfolge-nach-1083](reihenfolge-nach-1083.md) | Gregors Reihenfolge nach dem Release v1.0.83 - E-94 (Test zuerst), dann E-112, E-113, E-77 |
 | [release-erst-nach-gregors-test](release-erst-nach-gregors-test.md) | Ein GitHub-Release entsteht erst, nachdem Gregor die Fassung lokal geprüft und für gut befunden hat |
 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) | Ein Diff-Review kann eine veraltete unveraenderte Datei nicht sehen; vor dem Merge wird der Bestand geprueft, nicht die Aenderung |

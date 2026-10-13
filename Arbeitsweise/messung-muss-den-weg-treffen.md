@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:58:23.408Z
+  modified: 2026-10-13T10:20:00.000Z
 ---
 
 Schranke: tools/testlauf.ps1 (vor jedem Programmstart — prüft vorher, ob Eudora.exe und EudoraRes.dll dieselbe Dateiversion tragen)
@@ -288,3 +288,35 @@ sondern zwischen einer Funktion und ihrem Aufrufer.
 - **In einer Frage an Gregor steht nur, was gemessen ist.** „Per Test grün“
   ist wahr. „Dein Fall ist behoben“ wäre erst mit seiner Nachricht am
   laufenden Programm wahr ([[erfolg-aus-anwendersicht]]).
+
+## Fall 9, 13.10.2026: der Regeltest war grün, am Ladeweg stand die Angabe woanders
+
+Gregor um 09:24 UTC: *„ja, F2 so einbauen wie im browser"*. Gemeint war:
+steht im HTML nur die Breite, wird die Höhe aus dem Seitenverhältnis
+berechnet. Die Regel bekam erst rote, dann grüne Tests (09:28). Am laufenden
+Programm (09:45) kam `<img width=150>` trotzdem als `angegeben=0x0` an und
+wurde in Dateigröße 985x378 gezeichnet. Am Ladeweg in `PgEmbeddedImage.cpp`
+ist `embed->width/height` bei einer halben Angabe **noch 0**. Die Angabe steht
+dort in `source_width/height` aus dem HTML-Import. Die getestete Regel bekam
+also nie, was sie rechnen sollte. Nach der Umstellung (09:46) zeigte die
+Messung `angegeben=150x0 ... gemalt=150x58`.
+
+Das Besondere daran: **PRÜFER-22 hatte es vorhergesagt.** Seine Zeile zu F2
+nannte `PgEmbeddedImage.cpp:384-392, 549-552, 584-594`, also genau die
+Ladestelle. Die Regel wurde trotzdem nur als Funktion getestet. Es ist
+derselbe Fehler wie Fall 8, einen Tag später, nur an einer anderen
+Schnittstelle: dort der Zerleger vor der Funktion, hier das Feld, aus dem der
+Aufrufer liest.
+
+**Wie anwenden, zusätzlich:**
+
+- **Zu einer Regel mit Eingabewerten gehört die Frage, woher der Aufrufer
+  die Werte nimmt**, und zwar am Ort des Aufrufs, nicht in der
+  Funktionssignatur. Eine Spurmarke, die die *Eingabe* der Regel am
+  laufenden Programm ausgibt (`angegeben=…`), hätte es im ersten Lauf
+  gezeigt. Hier hat sie es gezeigt, weil sie schon da war
+  ([[eingebaute-messung-auslesen]]).
+- **Nennt ein PRÜFER-Fund Zeilen am Aufrufweg, gehört genau dieser Weg in
+  die Messung**, nicht nur die Regel.
+- Was keine Wirkung hatte, weil die Datei gar nicht gebaut wird, steht in
+  [[quelle-muss-im-bau-stehen]] (F1, derselbe Vormittag).
