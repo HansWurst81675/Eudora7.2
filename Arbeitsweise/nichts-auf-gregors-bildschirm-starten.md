@@ -68,3 +68,15 @@ unter `C:\Temp\E33-pruefstand`. Also gehört zur Erlaubnis noch die Ansage:
 
 Siehe [[lauffaehiges-ergebnis-liefern]], [[keine-tastendruecke-verschicken]]
 und [[agenten-benennen]].
+
+**Nachtrag 13.10.2026 — der zweite Weg auf den Bildschirm.** Die Schranke
+oben sitzt in `testlauf.ps1`. Am 13.10. um 08:10 UTC lief der Start über
+`tools/stapel-untersuchen.ps1` (Eudora im Debugger, Kopie von Gregors
+Mailverzeichnis in `C:\Temp\E115-gregor`), das keine Freigabe verlangte.
+Erlaubt war nur das Kopieren. Gregor: *„wenn du nächstes mal was starten
+willst, kläre es mit mir!"* und *„diese absprache gilt schon seit wochen"*.
+Die Ansage aus dem Nachtrag vom 08.09. (Fenstertitel, Verzeichnis, Dauer)
+fehlte ebenfalls. Hergang und Regeln: [[erlaubnis-nicht-hineinlesen]],
+Nachtrag 13.10.2026. Daraus folgt für diese Lehre: **die Schranke gehört in
+jedes Werkzeug, das startet**, nicht in eines. `stapel-untersuchen.ps1`
+bekommt die `-Freigabe`-Pflicht im Hauptbaum (13.10.2026).

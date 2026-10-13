@@ -77,3 +77,4 @@
 - [schranke-teilt-nicht-die-annahme](schranke-teilt-nicht-die-annahme.md) — Eine Schranke, die ihren Umfang aus derselben Annahme nimmt wie das Werkzeug, das sie pruefen soll, prueft nichts
 - [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) — Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern
 - [Chat knapp halten](chat-knapp-halten.md) — Urteil, nächster Handgriff, höchstens eine Frage; Herleitung gehört in BEFUNDE.md
+- [CHRONIST 13.10.2026](CHRONIST-2026-10-13.md) — Laufbericht: acht Nachträge (Freigabe-Umfang, Rückstrich Fall 13–15, INI vor Probe, lmos.dat, Testplan-Stand, Orientierungsfragen, offene LEKTOR-Funde beim Merge)

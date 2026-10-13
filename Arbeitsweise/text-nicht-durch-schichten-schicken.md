@@ -284,3 +284,48 @@ also **nicht behoben**, obwohl `Befunde/LEKTOR-19.md` und `LEKTORAT.md`
 „alle eingearbeitet" meldeten. **Behoben in `bb01b74`** (LEKTOR-20, L-19.3)
 mit dem Edit-Werkzeug; nachgezählt über `\x5c`: zwei Rückstriche, Fragezeichen,
 ein Rückstrich (LEKTOR-21 hat diesen Absatz als veraltet gemeldet).
+
+## Dreizehnter bis fünfzehnter Fall, 13.10.2026: die Regeln aus Fall 11 und 12 kein einziges Mal angewendet
+
+Am Abend des 12.10. stand in [[reihenfolge-nach-1083]] als Auftrag für die
+nächste Sitzung: *„dabei die Steuerzeichen-Schranke für MD-Dateien bauen
+(Rückstrich/Escape heute viermal verloren)"*. Gebaut wurde sie nicht. Am
+13.10., während Gregors Testlauf an 1.0.84, kamen drei weitere Fälle in
+einer Viertelstunde (Transkript `7cea137a-…jsonl`):
+
+| Zeit (UTC) | Absicht | Weg | Ergebnis |
+|---|---|---|---|
+| 06:40:02 | C1 im TESTPLAN berichtigen, Pfad `C:\Temp\E94-nachher` | Hier-Dokument nach `testplan-haken.pl`, Pfad in einem Perl-String in doppelten Anführungszeichen | Perl warnt zu `\T` und `\E`; `\T` wird zu `T`, `\E` (Ende einer Groß-/Kleinschreibungs-Umschaltung) verschwindet ganz. Im TESTPLAN steht **`C:Temp94-nachher`** |
+| 06:45:44 | E-83-Nachtrag in BEFUNDE mit `C:\Temp\E83-1084` und `spool\lmos.dat` | `printf '%s'` mit `\x5c` statt Rückstrich in eine Datei | `printf '%s'` deutet nichts, also auch kein `\x5c`: **wörtlich `\x5c`** in BEFUNDE.md |
+| 06:55:51 | AN-2-Widerlegung mit `C:\Temp\AN2-1084` | `printf '%s'` in eine Datei, danach Pfad-Zähler | Zähler meldet **0**, `od -c` zeigt den Pfad **richtig**: diesmal war die Nachprüfung kaputt, nicht der Text |
+
+**Why:** Fall 11/12 hatte drei Regeln hinterlassen: Text mit Rückstrich nur
+mit dem **Write-Werkzeug** in eine Datei, sonst `chr(92)`, und nachzählen
+über `\x5c` **im Suchmuster**. Am 13.10. lief jeder der drei Schreibvorgänge
+wieder durch Bash. Der zweite Fall zeigt, warum ein Ausweg im Kopf nicht
+reicht: `\x5c` ist ein Escape, und `printf '%s'` wurde ja gerade deshalb
+gewählt, weil es **keine** Escapes deutet. Die beiden Hälften der Regel
+wurden kombiniert und haben sich gegenseitig aufgehoben.
+
+Bemerkt wurden alle drei, weil gemessen wurde (Perl-Warnung gelesen,
+`grep -o` und `od -c` danach). Gekostet haben sie trotzdem je einen
+Zusatzgriff mitten in Gregors Testlauf, während er auf Antworten wartete.
+
+**How to apply, zusätzlich:**
+
+- **Die Schranke zählt mehr als die Regel.** Fünfzehn Fälle, und die
+  `Schranke:`-Zeile oben nennt ein Werkzeug, das nur wirkt, wenn man es
+  aufruft. Gemessen am 13.10.2026 im ganzen Repo: das Muster
+  `\b[A-Z]:(Temp|Users|Program|Windows|Eudora)` (Laufwerk ohne Rückstrich)
+  kommt in `*.md` **nur** in den beiden Zeilen vor, die diese Fälle
+  beschreiben; `\x5c` wörtlich nur in Lehren und LEKTOR-Berichten, die es
+  als Probe nennen. Eine `pre-commit`-Prüfung auf **hinzugefügte** Zeilen
+  hätte also keinen Fehlalarm und hätte `C:TempAN5`, `C:Temp94-nachher` und
+  das wörtliche `\x5c` abgewiesen. Gegenproben liegen in der Historie
+  (`643ad27`, `324d5d1` vor der Berichtigung).
+- **Ein Pfad mit Rückstrich in einer Doku-Zeile geht mit dem Edit- oder
+  Write-Werkzeug**, nicht über Bash. Die `.md` sind UTF-8 mit LF; für sie
+  gilt die Warnung über das Edit-Werkzeug (Latin-1-Quellen) nicht.
+
+**Offen:** die Prüfung bauen und in `tools/hooks-einrichten.sh` hängen;
+dann diese `Schranke:`-Zeile auf sie umstellen.

@@ -199,3 +199,33 @@ veröffentlicht oder die neue als unveröffentlicht nennt. Es endet mit
 „N Stellen nachzuziehen". Gegentest: Bei einem Lauf auf dem Stand `ec9f11d`
 muss die Liste die sieben Stellen von heute nennen, bei einem Lauf auf
 `f49a0d0` muss sie 0 nennen.
+
+
+## Nachtrag 13.10.2026: das neue Dokument schrieb den alten Stand ab
+
+Gregor am 13.10.2026, 06:39 UTC, mitten in der Testrunde zu 1.0.84:
+*„warum ist C1 offen, wenn gemessen?"*
+
+- `a013f08` (12.10.2026, 14:06 +0200): CHANGELOG 7.2.0.84 führt die
+  Messung von AN-1 an 7.2.0.84 in `C:\Temp\E94-nachher`, sechs von sechs
+  Anhängen heil.
+- `7421385` (12.10.2026, 16:57 UTC), **drei Stunden später**: der neue
+  `TESTPLAN.md` schreibt unter C1 *„An 7.2.0.83 bereits 6/6 gemessen — das
+  ist die Wiederholung an 1.0.84"*. In meiner Übersicht für Gregor stand
+  C1 deshalb als offener Test.
+- `324d5d1` (13.10.2026): berichtigt auf *„Schon an 7.2.0.84 gemessen"*.
+
+**Why:** Diese Lehre und `doku-pruefen.pl` behandeln einen Wert, der sich
+ändert und an alten Stellen stehen bleibt. Hier war es umgekehrt: der Wert
+war längst richtig, und ein **neues** Dokument hat einen älteren übernommen.
+`doku-pruefen.pl` vergleicht Fassungsnummern und Stand-Köpfe, aber nicht,
+an welcher Fassung ein Testpunkt zuletzt gemessen wurde.
+
+**How to apply, zusätzlich:**
+
+- **Ein Testplan holt den Stand jedes Punktes beim Schreiben aus der
+  Quelle** (BEFUNDE-Zeile, CHANGELOG-Abschnitt der aktuellen Fassung),
+  nicht aus dem Gedächtnis und nicht aus einem älteren Plan.
+- **Bevor ich Gregor eine Übersicht „offen / erledigt" gebe, prüfe ich
+  jedes „offen" gegen den CHANGELOG der aktuellen Fassung.** Er testet nach
+  dieser Liste; ein falsches „offen" kostet ihn einen Durchgang.
