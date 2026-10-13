@@ -93,4 +93,4 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-10-13 08:44:11 | `C:\Temp\E83-1084` | Gregor am 13.10.2026: 'e-83: selbst testen und ergebnis eintragen' | Hauptfenster 4523730 - Eudora  Schliesszeit 1 s. |
 | 2026-10-13 08:45:17 | `C:\Temp\E83-1084` | Gregor am 13.10.2026: 'e-83: selbst testen und ergebnis eintragen' | Hauptfenster 5113986 - Eudora  Schliesszeit 1 s. |
 | 2026-10-13 08:54:41 | `C:\Temp\AN2-1084` | Gregor am 13.10.2026: 'ja' (saubere INI fuer [AN-2](../BEFUNDE.md#an-2) vorher einmal in C:\Temp durchfahren) | Hauptfenster 3409272 - Eudora  Schliesszeit 1 s. |
-| 2026-10-13 09:52:51 | `C:\Temp\AN2-1084` | Gregor am 13.10.2026: 'ok, mach' (AN-2 mit Mode=0 in C:\Temp durchfahren) | Hauptfenster 918784 - Eudora   [Eudora 7.2.0.84 / Paket 1.0.84+05bbaba* 2026-10-12 14:02 - AN2-1084]  Schliesszeit 1 s. |
+| 2026-10-13 09:52:51 | `C:\Temp\AN2-1084` | Gregor am 13.10.2026: 'ok, mach' ([AN-2](../BEFUNDE.md#an-2) mit Mode=0 in C:\Temp durchfahren) | Hauptfenster 918784 - Eudora   [Eudora 7.2.0.84 / Paket 1.0.84+05bbaba* 2026-10-12 14:02 - AN2-1084]  Schliesszeit 1 s. |
