@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 12.10.2026; die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 13.10.2026 (kein neues Paket seit 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -165,6 +165,7 @@ haben.
 | SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
 | URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, *Latest*, Marke auf `eb54752` |
 | Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
+| Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
 
 Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlichten
 7.2.0.83 ändert (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.84.
@@ -684,8 +685,8 @@ Debug-Laufzeit, keine `.pdb`. Vier Warnungen, alle bekannt und hingenommen:
 | **E-60** | ein Trennbalken konnte **während des Ziehens** gelöscht werden — `Track` verteilt Nachrichten, eine davon löst einen Anordnungsdurchlauf aus | **behoben** |
 | **E-61** | `Track` verschluckte `WM_QUIT` — Kriterium 7 wäre lautlos wieder offen gewesen | **behoben, von Gregor bestätigt** (*File → Exit* geprüft) |
 | **E-62** | **sieben** eigene Nachrichtenschleifen in Eudoras Quellen verschluckten `WM_QUIT`; zwei davon (`LeftClickAttachment`, `CTocView::SizeColumn`) **hängen** danach für immer, mit gehaltenem Mausfang — bei `SizeColumn` genügt das Ziehen einer Spaltenbreite | **behoben** |
-| **E-63** | die **letzte** Registerkarte zeigt keinen Kurzhinweis | **offen, von Gregor zurückgestellt** |
-| **E-49**, **E-52** | linken Bereich breiter ziehen und Balken danach greifbar (**A-4**) — aus 1.0.26/1.0.27 übernommen | **behoben, das seitliche Ziehen noch nicht beurteilt** |
+| **E-63** | die **letzte** Registerkarte zeigt keinen Kurzhinweis | **offen, von Gregor zurückgestellt** — behoben in 7.2.0.30, von Gregor an 1.0.84 bestätigt am 13.10.2026 |
+| **E-49**, **E-52** | linken Bereich breiter ziehen und Balken danach greifbar (**A-4**) — aus 1.0.26/1.0.27 übernommen | **behoben, das seitliche Ziehen damals noch nicht beurteilt** — von Gregor an 1.0.84 bestätigt am 13.10.2026 |
 
 ## 1.0.27 — veröffentlicht am 09.09.2026
 
@@ -723,8 +724,8 @@ Alle Zahlen am 09.09.2026 nachgemessen: `sha256sum`, `stat -c%s`, `unzip -l`.
 | Befund | was | Stand |
 |---|---|---|
 | **E-52** | nach dem Verbreitern war der Trennbalken nicht mehr greifbar, und die Registerkarten standen doppelt — MFC verschiebt die Leisten mit `DeferWindowPos`, in `OnSizeParent` ist die neue Größe noch nicht gesetzt. Der Balken entsteht jetzt in `OnSize`, und `OnSplitterMoved` frischt mit `RDW_INVALIDATE \| RDW_ERASE \| RDW_ALLCHILDREN` auf | **behoben, nicht bestätigt** |
-| **E-49** | der linke Bereich lässt sich breiter ziehen (Anforderung **A-4**) — aus 1.0.26 übernommen, Endstand 188 Pixel Andockleiste bei 180 Pixel Leiste, 8 Pixel freier Streifen | **behoben, nicht bestätigt** |
-| **E-50** | drei Mängel an der Registerkartenleiste — aus 1.0.26 übernommen | **behoben, nicht bestätigt** |
+| **E-49** | der linke Bereich lässt sich breiter ziehen (Anforderung **A-4**) — aus 1.0.26 übernommen, Endstand 188 Pixel Andockleiste bei 180 Pixel Leiste, 8 Pixel freier Streifen | **behoben, damals nicht bestätigt** — von Gregor an 1.0.84 bestätigt am 13.10.2026 |
+| **E-50** | drei Mängel an der Registerkartenleiste — aus 1.0.26 übernommen | **behoben, damals nicht bestätigt** — von Gregor an 1.0.84 bestätigt am 13.10.2026 |
 | **E-51** | die eigene Ziehschleife konnte Eudora einfrieren; jetzt höchstens 100 ms Wartezeit, danach Fenster, Mausfang und **physische** Maustaste erneut geprüft | **behoben, bevor es ausgeliefert wurde** |
 | **E-48** | die Registerkartenleiste für die offenen Fenster (Anforderung **A-3**) — aus 1.0.25 übernommen | **behoben, von Gregor am 09.09.2026 bestätigt** |
 | **E-43** | `SECControlBar` war zweimal definiert — aus 1.0.24 übernommen; mit ihm fielen **E-37** und **E-38** weg | **behoben, von Gregor am 08.09.2026 bestätigt** |

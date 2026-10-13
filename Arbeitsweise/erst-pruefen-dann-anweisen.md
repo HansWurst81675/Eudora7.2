@@ -79,3 +79,50 @@ schlaegt jede Vorgabe.
 - **Und wenn ich es nicht selbst fahren kann, wird die Probe umgedreht** statt
   bestaetigt — Gregors Test hat die Frage in einem Zug entschieden
   ([[gegenprobe-umdrehen]]).
+
+## Nachtrag 12./13.10.2026: zwei INI-Dateien, beide vor der Probe übergeben
+
+**12.10.2026, 12:40 UTC.** Gregor: *„mach mir eine neue, saubere ini"*. Um
+12:41 lag sie in seinem 1.0.84-Verzeichnis, nicht gestartet. Um 12:42:
+*„kann keine mails abrufen, bei check for mails passiert nichts"*. Das
+IMAP-Konto braucht in einem leeren Verzeichnis erst *Refresh Mailbox List*;
+das wusste die INI nicht und ich auch nicht. Gleich danach, 12:45, sagte
+ich ihm *„Das ist schon erledigt … alles frisch vom Server geholt"* — und
+er: *„nein, ich habe sie vom backup zurück kopiert"*. Eine Behauptung über
+seinen Bildschirm, ungemessen ([[pruefen-statt-vermuten]]).
+
+**13.10.2026, Transkript `7cea137a-…jsonl` (UTC):**
+
+| Zeit | Was geschah |
+|---|---|
+| 06:52:22 | Gregor: *„für AN-2 brauche ich eine saubere ini"* |
+| 06:53:08 | ich übergebe `Eudora-AN2-sauber.ini` mit drei Handgriffen und *„Was richtig ist"*. Darunter: *„Diese INI habe ich nicht selbst gestartet. […] Sag „ja", dann starte ich."* Begründung in der Anleitung: *„Ohne `Mode`-Zeile startet Eudora in der Werbe-Betriebsart"* |
+| 06:53:48 | Gregor: *„ja"* |
+| 06:54:44 | Probelauf in `C:\Temp\AN2-1084`: Kontoassistent, **kein Werbeabruf** |
+| 06:55:30 | Ursache: `BUILD_BOX_OR_SITE_R_VERSION` ist in Debug und Release gesetzt (`Eudora.vcxproj:78`, `:132`), seit `bf14e14` vom **30.08.2026** — die Vorgabe ist `Mode=2`, Pro, ohne Werbung |
+| 06:56:23 | Gregor: *„was muß ich jetzt tun?"* |
+| 06:58:59 | ich: *„Nimm die INI, die ich dir gegeben habe, nicht."* Dazwischen 2½ Minuten Hakenpflege am CHANGELOG |
+
+Die Annahme stand seit `804c91e` (12.10.2026) in BEFUNDE, CHANGELOG 7.2.0.80
+und AUFGABEN, mit der Begründung *„`BUILD_BOX_OR_SITE_R_VERSION` ist nicht
+gesetzt"*. Ein `grep` über `Eudora71/Eudora/Eudora.vcxproj` hätte sie am
+Tag ihres Entstehens widerlegt; der Schalter war damals sechs Wochen alt.
+
+**Why:** Die Lehre oben erlaubt, Ungeprüftes **als ungeprüft** weiterzugeben,
+wenn ich es nicht selbst fahren kann. Hier konnte ich es — in `C:\Temp`,
+mit seiner Erlaubnis, eine Minute. Der Vermerk „nicht selbst gestartet"
+stand **unter** einer fertigen Anleitung; gelesen wird die Anleitung. Und
+als die Probe sie widerlegte, kam die Rücknahme erst nach dem Haken, obwohl
+Gregor in der Zwischenzeit fragte, was er tun soll.
+
+**How to apply, zusätzlich:**
+
+- **Kann ich es in `C:\Temp` fahren, frage ich zuerst nach dem Probelauf**,
+  nicht nach dem Einsatz. Die Anleitung kommt danach, mit dem, was der Lauf
+  gezeigt hat. Für eine INI heißt das: mit genau dieser Datei einmal starten
+  und den Zustand lesen, den Gregor sehen soll.
+- **Die Begründung einer Anleitung ist selbst eine Behauptung.** Nennt sie
+  einen Schalter, eine Vorgabe oder eine Datei („ist nicht gesetzt"), wird
+  das vor dem Schreiben mit einem `grep` belegt — mit Fundstelle.
+- **Widerruf vor Hakenpflege.** Ist eine Anweisung an Gregor widerlegt,
+  ist der Widerruf die nächste Nachricht. Der Commit kann warten.

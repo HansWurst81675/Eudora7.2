@@ -9,12 +9,14 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 12.10.2026)
+## Noch offen (Stand 13.10.2026)
 
 | Kennung | | |
 |---|---|---|
+| [**E-115**](BEFUNDE.md#e-115) | **Ctrl+F (*Find Messages*) bringt „Encountered an improper argument“**, kein Postfach angehakt | **Neu, offen.** Von Gregor am 13.10.2026 an 1.0.84 gemeldet. Ohne IMAP-Konto (`C:\Temp\E115-1084`) nicht nachgestellt — Kandidat sind die IMAP-Ordner in seinem Baum, nicht gemessen. Kein Datenverlust |
+| [**E-114**](BEFUNDE.md#e-114) | **angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich** | **Neu, offen.** Von Gregor am 13.10.2026 an 1.0.84 gemeldet (Filterfenster) |
+| [**E-101**](BEFUNDE.md#e-101) | **gespeicherte HTML-Datei: Umlaute falsch** | **Wieder offen seit 13.10.2026.** Die Datei sagt im `<meta>` UTF-8, enthält aber Windows-1252 |
 | [**AN-1**](BEFUNDE.md#an-1) | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt; sein Urteil: *„gekürzt mit endung reicht"*. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist [B5.7](AUFGABEN.md#b5.7)** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
-| [**AN-2**](BEFUNDE.md#an-2) | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80; seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | [**E-112**](BEFUNDE.md#e-112) | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | [**E-113**](BEFUNDE.md#e-113) | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie [E-112](BEFUNDE.md#e-112): dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | [**E-111**](BEFUNDE.md#e-111) | **`resolve_URL` kann ein Byte hinter das Zielfeld schreiben** | **Offen, am Quelltext belegt, nicht ausgelöst gesehen.** Vom PRUEFER am 18.09.2026 beim Nachrechnen der [E-110](BEFUNDE.md#e-110)-Spurmarke gefunden ([`Befunde/PRUEFER-18.md`](Befunde/PRUEFER-18.md)). `PGHTMIMP.CPP:2025-2033`. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
@@ -33,9 +35,8 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-68**](BEFUNDE.md#e-68), halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit [E-78](BEFUNDE.md#e-78)**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
-| — | **Gebaut, aber von Gregor nicht beurteilt:** [**E-49**](BEFUNDE.md#e-49) (linken Bereich breiter **ziehen**, Anforderung **A-4**) und [**E-52**](BEFUNDE.md#e-52) (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei [E-52](BEFUNDE.md#e-52) nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
 | — | [**E-39**](BEFUNDE.md#e-39): wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
-| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet |
+| — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet. **Dieselbe Meldung beim Suchen (Ctrl+F) ist ein eigener, offener Befund, [E-115](BEFUNDE.md#e-115)**, gemeldet am 13.10.2026 an 1.0.84 |
 | — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** [**R-1**](BEFUNDE.md#r-1) (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), [**V-1**](BEFUNDE.md#v-1) (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und [**E-14**](BEFUNDE.md#e-14) (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
 | — | **Zwei Tests schlagen fehl, beide vorbestehend und beide seit dem 10.09.2026 unsichtbar:** `SECImage: FlipHorz meldet sich` zählt `DoMessageBox`, während `OTShimNichtUmgesetzt` seit [**E-33**](BEFUNDE.md#e-33) nur noch `OutputDebugString` benutzt — ein veralteter Test, nicht ein Mangel am Code; und `SECControlBar::CalcDynamicLayout`, **PRÜFERs Schranke zu [E-76](BEFUNDE.md#e-76)** vom 13.09.2026, die nie laufen konnte. Der Grund, warum es zwei Tage niemand merkte: das Testprojekt **linkte nicht mehr** — `OTShim.cpp` ruft seit der E-76-Spurmarke (`3acb82f`) `PutDebugLog`, das in QCUtils liegt und nicht zum Testprojekt gehört. Mit 7.2.0.51 schließt eine Attrappe in `OTShimProbe.cpp` das; beide Fehlschläge sind **offen** |
 
@@ -52,7 +53,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**A-1**](BEFUNDE.md#a-1) (Vorgaben für ein neu angelegtes Konto) | **erfüllt** — *„default werte beim neuen persona konto für 'leave message on server' greifen."* |
 | **A-2** (*Task Status* und *Task Errors* waagrecht unten) | **erfüllt** — *„leiste unten paßt."* |
 | **A-3** (offene Fenster als Registerkarten direkt auswählen) | **erfüllt** — von Gregor am 09.09.2026 bestätigt ([**E-48**](BEFUNDE.md#e-48), umgesetzt in 7.2.0.25). Damit ist Kriterium 8 ganz erfüllt |
-| **A-4** (den linken Bereich breiter ziehen) | **gebaut, nicht bestätigt** — [**E-49**](BEFUNDE.md#e-49) in 7.2.0.26, in 7.2.0.27 durch [**E-52**](BEFUNDE.md#e-52) und in 7.2.0.29 durch [**E-54**](BEFUNDE.md#e-54) (der Ziehrahmen war nach rechts unsichtbar) und [**E-55**](BEFUNDE.md#e-55) (acht Pixel leerer Streifen unter der Werkzeugleiste) nachgebessert. Bestätigt ist nur die Höhenänderung des unteren Bereichs: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* |
+| **A-4** (den linken Bereich breiter ziehen) | **erfüllt — von Gregor an 1.0.84 bestätigt am 13.10.2026** (Testplan Teil A: *„nach neustart immer noch gleiche größe“*; mit ihm [E-50](BEFUNDE.md#e-50) und [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63), die Urteile mit Zitat in BEFUNDE.md). Gebaut als [**E-49**](BEFUNDE.md#e-49) in 7.2.0.26, in 7.2.0.27 durch [**E-52**](BEFUNDE.md#e-52) und in 7.2.0.29 durch [**E-54**](BEFUNDE.md#e-54) (der Ziehrahmen war nach rechts unsichtbar) und [**E-55**](BEFUNDE.md#e-55) (acht Pixel leerer Streifen unter der Werkzeugleiste) nachgebessert. Bis zum 13.10.2026 war nur die Höhenänderung des unteren Bereichs bestätigt (09.09.2026: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*) |
 
 > **07.09.2026, Gregor zu Paket 1.0.21:** *„mail können jetzt abgeschickt
 > werden."* und *„weiterleitung funktioniert übrigens."* Damit ist der Kreis
@@ -305,6 +306,13 @@ B5.1 jede heil durchgekommene Faltung als Abbruch. Sie fragt jetzt nach dem LF.
 > *Stand 12.10.2026: übersetzt erst als Teil von 7.2.0.82 (Rebuild 0 Fehler,
 > Testsuite 185/185); am laufenden Programm **nicht gemessen** — der
 > Werbefensterfall lässt sich mit dem Prüfstand nicht auslösen.*
+>
+> **Stand 13.10.2026 ([L-27.4](Befunde/LEKTOR-27.md#l-27.4)): von Gregor an 1.0.84 bestätigt** —
+> *„HTML newsletter (weiter geleitet) wird korrekt dargestellt.“* Der Werbeweg
+> unten ist an diesem Bau **nicht** auslösbar: Punkt 1 ist widerlegt (Vorgabe
+> `Mode=2`), und auch mit `Mode=0` kam an 1.0.84 kein Abruf. Gregor hat
+> entschieden, die Werbe-Betriebsart nicht weiter zu verfolgen
+> ([AN-2](BEFUNDE.md#an-2)).
 
 Gregor am 12.10.2026: *„nachdem eudora gestartet wurde, ist es innerhalb eines
 Fensters darin angezeigt worden. ohne daß ich etwas gemacht habe."* Eingefügt
@@ -315,7 +323,7 @@ Tag Manager, Microsoft Clarity, Disqus, `schema.org`, `var wpcf7 = {…}`.
 
 1. Eine frische `Eudora.ini` hat kein `[Settings] Mode`, also greift
    `DEFAULT_SWM_MODE` — und das ist **0 = Werbe-Betriebsart**
-   (`QCSharewareManager.h`, `BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt).
+   (`QCSharewareManager.h`, `BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt). **[widerlegt 13.10.2026: der Schalter ist seit `bf14e14` gesetzt, Vorgabe ist 2 = Pro; siehe [AN-2](BEFUNDE.md#an-2)]**
 2. Der Playlist-Client holt Werbung von `//adserver.eudora.com/adjoin/playlists`
    (`plist_mgr.cpp:213`). **Diese Adresse gehört seit 2018 dem Computer History
    Museum** — nachzulesen in dessen eigener Ankündigung zur Quelltextfreigabe.
@@ -346,7 +354,9 @@ richtige Stelle, meldet es **sieben** Abweichungen.
 **Nicht behoben, und das ist die eigentliche Frage:** Eudora holt beim Start
 weiterhin Werbung von einem Rechner, der jemand anderem gehört. Ob das so
 bleiben soll, ist eine Entscheidung über das Produkt — die drei Wege stehen in
-[AUFGABEN.md](AUFGABEN.md), **B6**.
+[AUFGABEN.md](AUFGABEN.md), **B6**. **[Überholt 13.10.2026: an 1.0.84 holt
+Eudora keine Werbung — weder mit frischer INI noch mit `Mode=0`; Gregor hat
+die Frage entschieden, die Werbe-Betriebsart wird nicht weiter verfolgt.]**
 
 ---
 
@@ -763,7 +773,7 @@ Stand vor [E-103](BEFUNDE.md#e-103) und [E-106](BEFUNDE.md#e-106) zurück. Schli
 ## 7.2.0.70 — ein vollständiger Stand zum Testen, und die Paketliste wieder geradegezogen
 
 > **Nicht mehr zu prüfen, und 1.0.70 nicht mehr zu benutzen** (Nachtrag LEKTOR,
-> 18.09.2026, [L-15.8](Befunde/LEKTOR-15.md#l-15.8)): diese Fassung war die erste, die [E-101](BEFUNDE.md#e-101) in beiden Teilen,
+> 18.09.2026, [L-15.8](Befunde/LEKTOR-15.md#l-15.8)): diese Fassung war die erste, die [E-101](BEFUNDE.md#e-101) (seit 13.10.2026 wieder offen) in beiden Teilen,
 > [E-103](BEFUNDE.md#e-103), [E-104](BEFUNDE.md#e-104) und [E-106](BEFUNDE.md#e-106) zusammen trug — sie trägt aber auch den **Absturz beim
 > Antworten** ([E-107](BEFUNDE.md#e-107)/[E-108](BEFUNDE.md#e-108)), der erst in **7.2.0.72** behoben ist, und sie ist
 > nie zu Gregor gelangt. Der Messpunkt unten ist durch **seinen Lauf an 1.0.69**
@@ -874,7 +884,7 @@ Aber: **`nachher` ist gleich `rumpf-nachher`.** Es kam **nichts** dazu.
 Seine Dateien trugen HTML ohne `MIME-Version`, ohne `Content-Type`, ohne
 Zeichensatz — *„datei gespeichert, aber unbrauchbar"*, unverändert. Der
 ganze Kopfzeilenblock hängt an `if ( !szKopf.IsEmpty() )`; ohne
-*Kopfzeilen einschließen* ist er leer. **[E-101](BEFUNDE.md#e-101) war nur behoben, wenn der
+*Kopfzeilen einschließen* ist er leer. **[E-101](BEFUNDE.md#e-101)** *(wieder offen seit 13.10.2026, aus anderem Grund: Zeichensatz)* **war nur behoben, wenn der
 Schalter an war** — und laut [**E-98**](BEFUNDE.md#e-98) ist das Kästchen auf Windows 10 gar
 nicht anwählbar.
 

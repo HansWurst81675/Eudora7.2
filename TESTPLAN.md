@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 12.10.2026, Paket 1.0.84
+# Testplan für Gregor — Stand 13.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen), Paket 1.0.84
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -30,7 +30,7 @@ LogLevel=124063
 | `25759` | die Vorgabe |
 | `58527` | **+ 32768** = `DEBUG_MASK_MISC` — **alle `E-nn`-Marken** |
 | `124063` | **+ 65536** = `DEBUG_MASK_ATTACH` — die **`ANHANG`**-Marken ([AN-1](BEFUNDE.md#an-1)) |
-| `128159` | **+ 4096** = `DEBUG_MASK_PLIST` — der Werbeweg (nur für [AN-2](BEFUNDE.md#an-2) nötig) |
+| `128159` | **+ 4096** = `DEBUG_MASK_PLIST` — der Werbeweg; seit dem 13.10.2026 **nicht mehr nötig** (siehe C2) |
 
 Geschrieben wird nach **`eudora.log`** im Eudora-Verzeichnis. Die Einstellung
 wirkt beim **nächsten Start**.
@@ -54,27 +54,30 @@ klar, welche Zeilen aus diesem Durchgang stammen.
 
 ## Teil A — Die vierzehn aus 7.2.0.26 bis 7.2.0.30 (Augenprüfung)
 
-Alle vierzehn stehen in `BEFUNDE.md` als **„von Gregor noch nicht bestätigt"**.
+**Alle vierzehn sind seit dem 13.10.2026 von Gregor an 1.0.84 bestätigt** —
+die Urteile mit Zitat stehen in `BEFUNDE.md`. Bis dahin standen sie dort als
+„von Gregor noch nicht bestätigt"; der Plan bleibt als Anleitung für einen
+späteren Rückfalltest stehen.
 Acht davon siehst du sofort, sechs merkst du nur, wenn etwas hängt.
 
 ### Sichtbar — hier entscheidet dein Auge
 
 | | Befund | Handgriff | richtig ist |
 |---|---|---|---|
-| ☐ | [**E-49**](BEFUNDE.md#e-49) (A-4) | Maus auf die Kante zwischen linkem Bereich und Nachrichtenliste | Zeiger wird zum **Größenzeiger** |
-| ☐ | [**E-49**](BEFUNDE.md#e-49) | nach rechts ziehen | linker Bereich wird **breiter**, Nachrichtenbereich gibt nach |
-| ☐ | [**E-49**](BEFUNDE.md#e-49) | weiter als 180 Pixel ziehen | geht — das war deine eigentliche Bitte |
-| ☐ | [**E-49**](BEFUNDE.md#e-49) | Eudora beenden und neu starten | die Breite ist **noch da** (landet im `[ToolBar…]`-Abschnitt der `Eudora.ini`) |
-| ☐ | [**E-52**](BEFUNDE.md#e-52) | nach dem Verbreitern noch einmal am Balken ziehen | Balken ist **weiter greifbar**, Karten stehen **nicht doppelt** |
-| ☐ | [**E-54**](BEFUNDE.md#e-54) | beim Ziehen **nach rechts** hinsehen | der **Ziehrahmen ist sichtbar** — man zieht nicht ins Blinde |
-| ☐ | [**E-55**](BEFUNDE.md#e-55) | unter die Werkzeugleiste sehen | **kein** acht Pixel hoher leerer Streifen |
-| ☐ | [**E-50**](BEFUNDE.md#e-50) (1) | ein Fenster öffnen, in ein anderes wechseln | die Karte des **verlassenen** Fensters ist **nicht mehr eingedrückt** |
-| ☐ | [**E-50**](BEFUNDE.md#e-50) (2) | Hauptfenster in der Größe ziehen | der Kartenstreifen wird **richtig** gezeichnet |
-| ☐ | [**E-50**](BEFUNDE.md#e-50) (3) | Fenster öffnen und schließen | die Karten sind **nicht weg** |
-| ☐ | [**E-53**](BEFUNDE.md#e-53) | ein Fenster schließen | an der Stelle der Karte bleibt **kein Strich** stehen |
-| ☐ | [**E-58**](BEFUNDE.md#e-58) | in den **rechten Rand** des Kartenstreifens klicken, wo nichts steht | es öffnet sich **kein Browser** |
-| ☐ | [**E-63**](BEFUNDE.md#e-63) | mit der Maus über die **letzte** Registerkarte fahren | ein **Kurzhinweis** erscheint, wie bei den anderen |
-| ☐ | [**E-56**](BEFUNDE.md#e-56) | *Show MDI task bar* **abschalten** | der Kartenstreifen **verschwindet** |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) (A-4) | Maus auf die Kante zwischen linkem Bereich und Nachrichtenliste | Zeiger wird zum **Größenzeiger** |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) | nach rechts ziehen | linker Bereich wird **breiter**, Nachrichtenbereich gibt nach |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) | weiter als 180 Pixel ziehen | geht — das war deine eigentliche Bitte |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) | Eudora beenden und neu starten | die Breite ist **noch da** (landet im `[ToolBar…]`-Abschnitt der `Eudora.ini`) |
+| ✅ | [**E-52**](BEFUNDE.md#e-52) | nach dem Verbreitern noch einmal am Balken ziehen | Balken ist **weiter greifbar**, Karten stehen **nicht doppelt** |
+| ✅ | [**E-54**](BEFUNDE.md#e-54) | beim Ziehen **nach rechts** hinsehen | der **Ziehrahmen ist sichtbar** — man zieht nicht ins Blinde |
+| ✅ | [**E-55**](BEFUNDE.md#e-55) | unter die Werkzeugleiste sehen | **kein** acht Pixel hoher leerer Streifen |
+| ✅ | [**E-50**](BEFUNDE.md#e-50) (1) | ein Fenster öffnen, in ein anderes wechseln | die Karte des **verlassenen** Fensters ist **nicht mehr eingedrückt** |
+| ✅ | [**E-50**](BEFUNDE.md#e-50) (2) | Hauptfenster in der Größe ziehen | der Kartenstreifen wird **richtig** gezeichnet |
+| ✅ | [**E-50**](BEFUNDE.md#e-50) (3) | Fenster öffnen und schließen | die Karten sind **nicht weg** |
+| ✅ | [**E-53**](BEFUNDE.md#e-53) | ein Fenster schließen | an der Stelle der Karte bleibt **kein Strich** stehen |
+| ✅ | [**E-58**](BEFUNDE.md#e-58) | in den **rechten Rand** des Kartenstreifens klicken, wo nichts steht | es öffnet sich **kein Browser** |
+| ✅ | [**E-63**](BEFUNDE.md#e-63) | mit der Maus über die **letzte** Registerkarte fahren | ein **Kurzhinweis** erscheint, wie bei den anderen |
+| ✅ | [**E-56**](BEFUNDE.md#e-56) | *Show MDI task bar* **abschalten** | der Kartenstreifen **verschwindet** |
 
 ### Nicht sichtbar — nur „ist etwas passiert?"
 
@@ -84,11 +87,11 @@ und **nichts** hängenbleibt.
 
 | | Befund | was es war |
 |---|---|---|
-| ☐ | [**E-57**](BEFUNDE.md#e-57) | `IsTabLabelTruncated` legte bei **jeder Mausbewegung** eine `CPaintDC` an |
-| ☐ | [**E-59**](BEFUNDE.md#e-59) | `m_cxTab` wurde **nur in `OnPaint`** gesetzt |
-| ☐ | [**E-60**](BEFUNDE.md#e-60) | ein Trennbalken konnte **während des Ziehens gelöscht** werden |
-| ☐ | [**E-61**](BEFUNDE.md#e-61) | `Splitter::Track` **verschluckte `WM_QUIT`** |
-| ☐ | [**E-62**](BEFUNDE.md#e-62) | **sieben** Nachrichtenschleifen verschluckten `WM_QUIT`, zwei mit Hängegefahr |
+| ✅ | [**E-57**](BEFUNDE.md#e-57) | `IsTabLabelTruncated` legte bei **jeder Mausbewegung** eine `CPaintDC` an |
+| ✅ | [**E-59**](BEFUNDE.md#e-59) | `m_cxTab` wurde **nur in `OnPaint`** gesetzt |
+| ✅ | [**E-60**](BEFUNDE.md#e-60) | ein Trennbalken konnte **während des Ziehens gelöscht** werden |
+| ✅ | [**E-61**](BEFUNDE.md#e-61) | `Splitter::Track` **verschluckte `WM_QUIT`** |
+| ✅ | [**E-62**](BEFUNDE.md#e-62) | **sieben** Nachrichtenschleifen verschluckten `WM_QUIT`, zwei mit Hängegefahr |
 
 **Die Probe auf [E-61](BEFUNDE.md#e-61)/[E-62](BEFUNDE.md#e-62):** nach dem Ziehen **Alt+F4** drücken. Eudora muss
 sich beenden. Bleibt es stehen, ist einer der beiden wieder da.
@@ -142,24 +145,31 @@ dir attach
 
 | | muss sein |
 |---|---|
-| ☐ | **alle sechs** Dateien mit **vollem Namen und `.pdf`** |
-| ☐ | im Log je Nachricht eine Zeile `ANHANG Datei: WIRD GESCHRIEBEN ALS` |
+| ✅ | **alle sechs** Dateien mit **vollem Namen und `.pdf`** |
+| ✅ | im Log je Nachricht eine Zeile `ANHANG Datei: WIRD GESCHRIEBEN ALS` |
 
-*(An 7.2.0.83 bereits 6/6 gemessen — das ist die Wiederholung an 1.0.84.)*
+**Schon an 7.2.0.84 gemessen, 12.10.2026:** Fälle 00–05 in `C:\Temp\E94-nachher` unverändert heil, alle sechs mit vollem Namen und `.pdf` (CHANGELOG 7.2.0.84). Für dich nur eine Gegenprobe, kein offener Punkt.
 
 ### C2 · AN-2 — kein JavaScript mehr in der Anzeige
 
-Eudora mit **frischer** `Eudora.ini` starten (ohne `[Settings] Mode`), damit
-das Werbefenster wieder erscheint.
+**Erledigt am 13.10.2026:** von Gregor an 1.0.84 bestätigt. Bis dahin stand
+hier, eine **frische** `Eudora.ini` bringe das Werbefenster zurück — das ist
+**widerlegt**: dieser Bau startet mit `Mode=2` (Pro, ohne Werbung), und auch
+mit `Mode=0` kam an 1.0.84 kein Abruf ([AN-2](BEFUNDE.md#an-2),
+[L-27.4](Befunde/LEKTOR-27.md#l-27.4)). Geprüft wird nur noch der Newsletter.
 
 | | muss sein |
 |---|---|
-| ☐ | im Fenster steht **lesbarer Text oder nichts** — **kein** `(window.NREUM…` |
-| ☐ | dasselbe bei einem HTML-Newsletter: **kein** CSS im Nachrichtentext |
+| — | **entfällt** (Gregor 13.10.2026): das Werbefenster kommt in diesem Bau nicht mehr, siehe [AN-2](BEFUNDE.md#an-2) |
+| ✅ | dasselbe bei einem HTML-Newsletter: **kein** CSS im Nachrichtentext |
 
-Mit `LogLevel=128159` zeigt `grep "PLIST\|E-7" eudora.log` dazu den Werbeweg.
+*(Der Werbeweg ist an diesem Bau nicht auslösbar; die frühere Zeile zu
+`LogLevel=128159` und `grep "PLIST\|E-7"` entfällt mit ihm.)*
 
-### C3 · Die sechs, die auf dein Urteil warten
+### C3 · Die sechs, die auf dein Urteil warteten — offen sind noch zwei
+
+**Stand 13.10.2026:** [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen,
+[E-101](BEFUNDE.md#e-101) durchgefallen (wieder offen). **Offen sind [E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96).**
 
 **Berichtigt am 12.10.2026 (LEKTOR, [L-18.5](Befunde/LEKTOR-26.md#l-18.5)):** hier standen *fünf*. `BEFUNDE.md` führt
 **fünfzehn** Behebungen als „von Gregor noch nicht bestätigt" — vierzehn davon
@@ -168,10 +178,10 @@ unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 
 | | Befund | Handgriff |
 |---|---|---|
-| ☐ | [**E-101**](BEFUNDE.md#e-101) | eine **weitergeleitete** Nachricht über *File → Save As* sichern und die `.eml` in einem anderen Programm öffnen — sie muss lesbar sein (`Content-Type`, `MIME-Version`, kein `<x-html>`) |
-| ☐ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
-| ☐ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
-| ☐ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
+| ❌ | [**E-101**](BEFUNDE.md#e-101) | eine **weitergeleitete** Nachricht über *File → Save As* sichern und die `.eml` in einem anderen Programm öffnen — sie muss lesbar sein (`Content-Type`, `MIME-Version`, kein `<x-html>`) |
+| ✅ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
+| ✅ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
+| ✅ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
 | ☐ | [**E-95**](BEFUNDE.md#e-95) | antworten/weiterleiten mit Bildern — Bilder in der **angegebenen** Größe |
 | ☐ | [**E-96**](BEFUNDE.md#e-96) | dasselbe mit mehreren Bildern hintereinander |
 

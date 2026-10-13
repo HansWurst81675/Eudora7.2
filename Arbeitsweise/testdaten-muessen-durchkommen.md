@@ -125,3 +125,47 @@ Entwurfsentscheidung, und sie steht deshalb als erste in der Liste oben.
 Siehe [[pruefstand-kann-blind-sein]] — dort war das Messgerät kaputt, hier
 kommt die Probe nicht bis zum Messgerät. Ausserdem
 [[messung-muss-den-weg-treffen]] und [[lauffaehiges-ergebnis-liefern]].
+
+## Nachtrag 13.10.2026: die Schranke lag im eigenen Testverzeichnis
+
+Auf Gregors Auftrag *„e-83: selbst testen und ergebnis eintragen"* habe ich
+`C:\Temp\E83-1084` als **Kopie von `C:\Temp\E94-nachher`** angelegt, dem
+Verzeichnis eines früheren Messlaufs gegen denselben POP-Prüfserver.
+Gelöscht habe ich `eudora.log`, `In.mbx`, `In.toc` und `attach\`. Stehen
+blieb `spool\lmos.dat`: die Liste der Nachrichten, die Eudora vom Server
+schon kennt (*Leave Mail On Server*).
+
+| Zeit (UTC) | Lauf | Ergebnis |
+|---|---|---|
+| 06:42:12 | 1 | **0 Nachrichten** |
+| 06:43:22 | `LMOS*` im Mailverzeichnis gelöscht — dort liegt die Datei nicht | — |
+| 06:43:25 | 2 | **0 Nachrichten** |
+| 06:44:28 | `spool\lmos.dat` gefunden und gelöscht | — |
+| 06:44:31 | 3 | 7 Nachrichten, E-83 bestanden |
+
+Die Testdaten waren richtig, der Server lieferte. Durchgekommen sind sie
+trotzdem nicht: Eudora hat sie als „schon geholt" übersprungen. Das ist
+die Lage dieser Lehre, nur liegt die Schranke diesmal nicht bei einem
+fremden Server, sondern in einer Datei, die ich selbst mitkopiert habe.
+
+**Why:** Ein Verzeichnis aus einem früheren Lauf trägt dessen Zustand mit.
+Welche Dateien dazu gehören, stand nirgends; ich habe die gelöscht, die
+mir einfielen. Am Vortag (12.10., 12:45) bin ich am selben Punkt
+andersherum gestolpert: ich habe Gregor gesagt, seine Nachrichten seien
+*„alle frisch vom Server geholt"*, obwohl er sie vom Backup zurückkopiert
+hatte.
+
+**How to apply, zusätzlich:**
+
+- **Ein Testverzeichnis wird aus dem Paket und einer INI aufgebaut, nicht
+  aus einem früheren Lauf kopiert.** Muss kopiert werden, gehört
+  `spool\lmos.dat` ausdrücklich auf die Löschliste, neben `eudora.log`,
+  `*.toc`, `attach\` und `OWNER.LOK`.
+- **Null ist ein Messwert, kein Fehlschlag des Programms.** Kommt bei einem
+  Abruf nichts an, ist die erste Frage: was hat der Server geantwortet
+  (Protokoll des Prüfservers), und was hat Eudora davon verworfen. Am 13.10.
+  stand die Antwort nach dem zweiten Lauf im Prüfserver-Protokoll.
+
+**Offen:** `testlauf.ps1` könnte warnen, wenn im `-Verzeichnis` ein
+`spool\lmos.dat` liegt und das Messskript Mail abruft. Nicht gebaut —
+Werkzeuge sind nicht Sache des CHRONIST.

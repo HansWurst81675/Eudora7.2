@@ -203,3 +203,29 @@ Ausgewertet: der Rest von `75d9adec-…jsonl` nach `4e89347` (18.09.2026,
 451 655 Byte, rückwärts geprüft), `offene-befunde.pl` lief zuerst, der
 Testlauf ging nur über `testlauf.ps1` mit Gregors wörtlicher Freigabe, und
 der Widerspruch der Marke 2 wurde in derselben Ausgabe erkannt.
+
+## Lauf vom 13.10.2026 (CHRONIST)
+
+Ausgewertet: `7cea137a-…jsonl` ab 12.10.2026, 09:36 UTC (nach dem
+CHRONIST-Lauf `33c90c5`) bis 13.10.2026, 08:13 UTC. Zwei Abschnitte:
+12.10. 09:36–13:09 (Release 1.0.83, E-94, Paket 1.0.84) und 13.10.
+06:00–08:13 (Gregors Testlauf an 1.0.84). `perl tools/verlauf-messen.pl`:
+100 Nachrichten, **35 Einwürfe (35 %)**; nur 13.10.: 55 Nachrichten,
+**24 Einwürfe (43 %)**. Am 12.10. früh waren es 66 %.
+
+| Muster | Beleg | Lehre (Nachtrag) |
+|---|---|---|
+| Start im Debugger nach einem Ja zum Kopieren; die Schranke saß nur in `testlauf.ps1` | 13.10., 08:09:31 / 08:10:10 / 08:11:32 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md), [nichts-auf-gregors-bildschirm-starten](nichts-auf-gregors-bildschirm-starten.md) |
+| Rückstrich dreimal verloren (`C:Temp94-nachher`, wörtliches `\x5c`, stummer Zähler), Schranke seit dem Vorabend geplant, nicht gebaut | 13.10., 06:40–06:56 | [text-nicht-durch-schichten-schicken](text-nicht-durch-schichten-schicken.md), Fall 13–15 |
+| INI an Gregor übergeben, Probe danach; Begründung („Schalter nicht gesetzt") nie gegrept | 12.10. 12:41, 13.10. 06:53 | [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) |
+| Testverzeichnis aus altem Lauf kopiert, `spool\lmos.dat` blieb, zwei Läufe mit 0 Nachrichten | 13.10., 06:42–06:44 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) |
+| TESTPLAN schrieb C1 „an 7.2.0.83" ab, drei Stunden nach der Messung an 7.2.0.84 | `7421385`, Gregor 06:39 | [doku-parallel-nicht-hinterher](doku-parallel-nicht-hinterher.md) |
+| Zehn Orientierungsfragen an einem Vormittag, E-110 statt E-101, Pfad zweimal geschickt | 13.10., 06:04–08:09 | [chat-knapp-halten](chat-knapp-halten.md) |
+| Merge mit offenen LEKTOR-Funden, „Veröffentlicht als v1.0.83" vor dem Release | 12.10., 12:51 / 12:56 +0200 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) |
+
+**Was gut lief:** jedes PASS sofort in eine Datei und dann in BEFUNDE.md
+(vierzehn Urteile mit Paketnummer, `324d5d1`); vor jedem neuen Befund
+(E-114, E-115) im Bestand gesucht; E-94 „kaputte Betreffs" in 1.0.84 nicht
+geglaubt, sondern über `X-Mailer` auf den Empfang mit 7.2.0.58/59 am 14.09.
+zurückgeführt; „was haben wir gefixt?" mit `git diff v1.0.84..HEAD --
+Eudora71` beantwortet statt aus dem Gedächtnis.

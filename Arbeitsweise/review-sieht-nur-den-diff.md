@@ -103,3 +103,22 @@ als benannte Altlast in der Schranke, damit **neue** Lücken auffallen.
   Drei fehlende Abschnitte stehen im Skript mit Nummer; wer sie nachträgt,
   streicht sie dort. Eine stille Ausnahme wäre wieder eine Namensliste
   ([[pruefumfang-nicht-von-hand]]).
+
+
+## Nachtrag 12.10.2026: „keine lügen auf main!" zum vierten Mal
+
+PR #84 (`an1-endungen`) wurde am 12.10.2026 um 12:51 +0200 gemergt. Die
+Berichte LEKTOR-16 (`4ec9dd1`, 11:38) und LEKTOR-17 (`e26f24c`, 11:59)
+lagen da schon im Repo, ihre Funde waren noch nicht eingearbeitet. Dazu
+stand auf dem Release-Zweig bereits *„Veröffentlicht als **v1.0.83**"*,
+bevor es das Release gab. Gregor um 12:56: *„keine lügen auf main!"* —
+derselbe Satz wie am 07.09., 13.09. und 18.09.
+
+**How to apply, zusätzlich:**
+
+- **Offene LEKTOR- oder PRÜFER-Funde zum Zweig sind ein Merge-Hindernis**,
+  auch wenn der Bericht selbst schon im Zweig liegt. Vor dem
+  Merge-Vorschlag: jeden Fund des letzten Berichts als eingearbeitet oder
+  mit Gregors Zustimmung zurückgestellt nachweisen.
+- **Kein Vorgriff in der Doku.** *„Veröffentlicht als …"* wird geschrieben,
+  nachdem das Release-Werkzeug durchgelaufen ist, nicht davor.

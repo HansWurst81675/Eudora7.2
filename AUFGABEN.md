@@ -1,13 +1,21 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.84`, 12.10.2026)
+**Stand 13.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.84`, 12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
 ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 ([AGENTEN.md](AGENTEN.md)).
 
-## Die Hauptarbeit: vierzehn gebaute Behebungen warten auf Gregors Urteil
+## Die Hauptarbeit bis 13.10.2026: vierzehn gebaute Behebungen — jetzt von Gregor bestätigt
+
+> **Stand 13.10.2026 ([L-27.3](Befunde/LEKTOR-27.md#l-27.3)).** Gregor hat an Paket 1.0.84 den
+> [Testplan](TESTPLAN.md) Teil A durchgeprüft: alle vierzehn ([E-49](BEFUNDE.md#e-49), [E-50](BEFUNDE.md#e-50),
+> [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63)) sind **bestätigt**, damit auch **A-4**. Ebenso bestätigt:
+> [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) und [AN-2](BEFUNDE.md#an-2); [E-83](BEFUNDE.md#e-83) auf seinen Auftrag an 1.0.84 nachgemessen.
+> **Durchgefallen:** [E-101](BEFUNDE.md#e-101) (wieder offen), [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert;
+> **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
+> Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
 **Alle neun Kriterien aus [ZIEL.md](ZIEL.md) sind entweder erfüllt oder haben
 eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
@@ -18,7 +26,7 @@ darüber hinaus** [**E-86**](BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestel
 **2a**. Bis zum 14.09.2026 stand hier „beiden fehlt **dasselbe**", und das
 stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
 
-**Dazu warten sechs frische Behebungen auf sein Urteil:** [**E-85**](BEFUNDE.md#e-85) (Umlaute
+**Dazu warteten sechs frische Behebungen auf sein Urteil** *(Stand vor dem 13.10.2026 — [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) sind seither von Gregor an 1.0.84 bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen; offen bleiben [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96))*: [**E-85**](BEFUNDE.md#e-85) (Umlaute
 über IMAP, 7.2.0.52, am laufenden Programm belegt), [**E-83**](BEFUNDE.md#e-83) (Eudora liess
 sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), [**E-93**](BEFUNDE.md#e-93)
 (Inhaltsverlust beim Weiterleiten einer bereits weitergeleiteten Nachricht,
@@ -38,7 +46,8 @@ uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
 Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
 **7.2.0.66** (erster Teil) und **7.2.0.69** (zweiter Teil — ohne *Kopfzeilen
 einschließen* fehlte der `Content-Type` ganz), am laufenden Programm geprüft,
-**171 Tests**), [**E-103**](BEFUNDE.md#e-103) (Bilder ohne
+**171 Tests** — **seit 13.10.2026 wieder offen**: Gregors an 1.0.84 gespeicherte
+HTML-Datei sagt im `<meta>` UTF-8 und enthält Windows-1252), [**E-103**](BEFUNDE.md#e-103) (Bilder ohne
 Größenangabe lagen über dem Text. **Das Fehlerbild** hat Gregor am 17.09.2026
 an 1.0.64 belegt — auf seinem Bild liegt das *kleinanzeigen*-Logo über dem
 Text. **Gemessen und behoben** wurde an seiner Doctolib-Nachricht: der Import
@@ -73,8 +82,11 @@ Fehlerseite ab und zeichnete einen grauen Kasten. Zehn von zwanzig Bildern.
 **Dabei wurde [E-112](BEFUNDE.md#e-112) sichtbar:** die Bilder erschienen danach in **Originalgröße**
 statt in der angegebenen — das WhatsApp-Symbol ist als `35x35` ausgezeichnet und
 die Datei hat `330x327`. Das war eine Regression der **[E-106](BEFUNDE.md#e-106)**-Behebung, die die
-Zeile vergrößerte statt das Bild zu verkleinern. **Behoben in 7.2.0.76**, noch
-nicht von Gregor bestätigt.
+Zeile vergrößerte statt das Bild zu verkleinern. **Der Versuch in 7.2.0.76
+wirkt nicht** — von Gregor am 18.09.2026 widerlegt und am 13.10.2026 an 1.0.84
+unverändert gesehen; [E-112](BEFUNDE.md#e-112) ist **wieder offen**. *(Bis zum 13.10.2026 stand
+hier „Behoben in 7.2.0.76, noch nicht von Gregor bestätigt“ —
+[L-27.3](Befunde/LEKTOR-27.md#l-27.3).)*
 
 **Weiter offen: [E-113](BEFUNDE.md#e-113)** — ein Bild, dessen **angegebene** Breite größer ist als
 das Fenster, läuft rechts hinaus (`max-width:100%` kennt Paige nicht). Auf
@@ -140,7 +152,11 @@ löschen. keine messagebox"*) — und damit fielen [**E-37**](BEFUNDE.md#e-37) u
 weil beide Symptome derselben Ursache waren. **[E-37](BEFUNDE.md#e-37), [E-38](BEFUNDE.md#e-38) und [E-43](BEFUNDE.md#e-43) stehen
 deshalb nicht mehr in dieser Datei als Aufgabe.**
 
-### 1. Gebaut, nicht bestätigt — vierzehn Befunde
+### 1. Gebaut und von Gregor an 1.0.84 bestätigt (13.10.2026) — vierzehn Befunde
+
+> **Erledigt am 13.10.2026.** Alle vierzehn der Tabelle unten sind von Gregor an
+> Paket 1.0.84 bestätigt (Testplan Teil A, Urteile mit Zitat in
+> [BEFUNDE.md](BEFUNDE.md)). Der Text darunter ist der Stand davor.
 
 **Nachgemessen am 13.09.2026** über alle Urteilszeilen in
 [BEFUNDE.md](BEFUNDE.md): **vierzehn** behobene Befunde stehen dort als *von
@@ -382,7 +398,9 @@ widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 
 | Punkt | wo | braucht |
 |---|---|---|
-| [**E-49**](BEFUNDE.md#e-49) (A-4), [**E-50**](BEFUNDE.md#e-50), [**E-52**](BEFUNDE.md#e-52) — **gebaut, nicht bestätigt** | oben, 1. | Start durch Gregor |
+| [**E-101**](BEFUNDE.md#e-101) — gespeicherte HTML-Datei sagt UTF-8, enthält Windows-1252 (**wieder offen** seit 13.10.2026) | `BEFUNDE.md` | Bau, dann Gregors Gegenprobe |
+| [**E-114**](BEFUNDE.md#e-114) — ein gelöstes angedocktes Fenster hinterlässt einen leeren Bereich (neu, 13.10.2026) | `BEFUNDE.md` | Messen, dann Bau |
+| [**E-115**](BEFUNDE.md#e-115) — Ctrl+F bringt „Encountered an improper argument“ (neu, 13.10.2026) | `BEFUNDE.md` | Wurfstelle mit `tools/stapel-untersuchen.ps1` an einem IMAP-Konto |
 | Meldung **„Encountered an improper argument"** beim **Anzeigen** mancher Nachrichten | oben, 2. | Start, dann Bau |
 | **Die Fenster stehen nach dem Neustart nicht im Vollbild** — Nebenbefund ohne Kennung | oben, 3. | Start, `Eudora.ini` lesen |
 | [**E-39**](BEFUNDE.md#e-39) — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |
@@ -708,7 +726,7 @@ von Gregor an seinem Postfach getestet (B5.4, B5.6, B5.10 und B5.11 lassen sich 
 Prüfdaten nicht auslösen).
 
 Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, [AN-1](BEFUNDE.md#an-1)**.
-### <a id="b6"></a>B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, übersetzt in 7.2.0.82, am laufenden Programm nicht gemessen**
+### <a id="b6"></a>B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, übersetzt in 7.2.0.82, von Gregor an 1.0.84 bestätigt (13.10.2026); die Werbe-Betriebsart wird nach seiner Entscheidung nicht weiter verfolgt**
 
 Gregors Meldung vom 12.10.2026, wörtlich: *„nachdem eudora gestartet wurde, ist
 es innerhalb eines Fensters darin angezeigt worden. ohne daß ich etwas gemacht
@@ -718,13 +736,22 @@ Vollständige Herleitung in **BEFUNDE.md, [AN-2](BEFUNDE.md#an-2)**. Kurz:
 
 | | |
 |---|---|
-| **Was** | Eudora startet mit einer frischen `Eudora.ini` in der **Werbe-Betriebsart** (`[Settings] Mode` fehlt → `DEFAULT_SWM_MODE` = 0), holt Werbung von `//adserver.eudora.com/adjoin/playlists` — und diese Adresse gehört seit 2018 dem Computer History Museum. Die Antwort ist eine Webseite |
+| **Was** | Eudora startet mit einer frischen `Eudora.ini` in der **Werbe-Betriebsart** (`[Settings] Mode` fehlt → `DEFAULT_SWM_MODE` = 0) **[widerlegt 13.10.2026: der Schalter ist seit `bf14e14` gesetzt, Vorgabe ist 2 = Pro; siehe [AN-2](BEFUNDE.md#an-2)]**, holt Werbung von `//adserver.eudora.com/adjoin/playlists` — und diese Adresse gehört seit 2018 dem Computer History Museum. Die Antwort ist eine Webseite |
 | **Warum sie als Text erscheint** | Das Werbefenster ist `class CAdView : public CPaigeEdtView` — kein Browser, sondern Paige. Und Paige kannte kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung |
 | **Geändert** | neuer Merker `inside_script`, nach dem Muster des vorhandenen `inside_title`. Vier Dateien, 29 Zeilen |
 | **Gemessen** | `perl tools/html-tags-pruefen.pl` — 30 Fälle, 0 Abweichungen, Gegenprobe gefahren |
 | **Nicht gemessen** | übersetzt ist es seit 7.2.0.82 (Rebuild 0 Fehler, Testsuite 185/185, ebenso in 7.2.0.83). Dass es im Werbefenster wirkt, ist nicht belegt — der Prüfstand löst den Fall nicht aus |
+| **Bestätigt, 13.10.2026** | von Gregor an 1.0.84 im normalen Betrieb: *„HTML newsletter (weiter geleitet) wird korrekt dargestellt.“* Das Werbefenster ist an diesem Bau **nicht auslösbar** — mit frischer INI nicht (Vorgabe `Mode=2`) und auch mit `Mode=0` nicht (`C:\Temp\AN2-1084`, kein Abruf) |
 
 #### Was offen bleibt — und zwar als Frage an Gregor
+
+> **Beantwortet am 13.10.2026 ([L-27.4](Befunde/LEKTOR-27.md#l-27.4)).** Gregor auf die Frage
+> *„brauchen wir mode=0 überhaupt?“*: *„ja, einverstanden“* — die
+> Werbe-Betriebsart wird **nicht weiter verfolgt**. Dazu ist die Annahme unten
+> überholt: dieser Bau startet nicht in der Werbe-Betriebsart, `DEFAULT_SWM_MODE`
+> ist bereits **2** (`BUILD_BOX_OR_SITE_R_VERSION` gesetzt seit `bf14e14`), und
+> auch mit `Mode=0` holte 1.0.84 nichts. Weg 3 ist damit schon der Zustand des
+> Baus. Die drei Wege bleiben als Stand vom 12.10.2026 stehen.
 
 **Soll diese Fassung überhaupt noch Werbung abrufen?** Das ist keine
 Programmierfrage. Der Abruf ist Absicht aus dem Jahr 2000; heute holt er eine

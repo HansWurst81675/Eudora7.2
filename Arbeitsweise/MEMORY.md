@@ -73,3 +73,9 @@
 - [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht
 - [Fertige Fassung bereitstellen](fertige-fassung-bereitstellen.md) — erst eigene Tests, dann als neues Verzeichnis neben Gregors letztem Eudora72-*-release; das alte nicht anfassen
 - [Reihenfolge nach 1.0.83](reihenfolge-nach-1083.md) — Gregor: Release, dann E-94 mit Test zuerst, dann E-112, E-113, E-77
+- [datenformat-aendern-heisst-alle-leser-messen](datenformat-aendern-heisst-alle-leser-messen.md) — Wer das Format einer gemeinsam gelesenen Datei aendert, misst JEDEN Leser dagegen - sonst melden die blind gewordenen weiter gruen
+- [schranke-teilt-nicht-die-annahme](schranke-teilt-nicht-die-annahme.md) — Eine Schranke, die ihren Umfang aus derselben Annahme nimmt wie das Werkzeug, das sie pruefen soll, prueft nichts
+- [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) — Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern
+- [Chat knapp halten](chat-knapp-halten.md) — Urteil, nächster Handgriff, höchstens eine Frage; Herleitung gehört in BEFUNDE.md
+- [CHRONIST 13.10.2026](CHRONIST-2026-10-13.md) — Laufbericht: acht Nachträge (Freigabe-Umfang, Rückstrich Fall 13–15, INI vor Probe, lmos.dat, Testplan-Stand, Orientierungsfragen, offene LEKTOR-Funde beim Merge)
+- [Fehlerbild ist ein Messfenster](fehlerbild-ist-ein-messfenster.md) — offene Fehlermeldung erst messen (Log, Stapel mit Freigabe), dann schließen lassen

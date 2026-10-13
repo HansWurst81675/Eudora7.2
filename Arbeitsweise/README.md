@@ -43,6 +43,7 @@ eine Datei liest, liest diese.
 | Datei | Worum es geht |
 |---|---|
 | [CHRONIST-2026-10-12](CHRONIST-2026-10-12.md) | CHRONIST-Lauf vom 12.10.2026 - vier Nachtraege zu bestehenden Lehren, fertig zum Einsetzen ins Gedaechtnis; dazu warum sie nicht direkt in den Lehren stehen |
+| [CHRONIST-2026-10-13](CHRONIST-2026-10-13.md) | CHRONIST-Lauf vom 13.10.2026 - acht Nachträge zu bestehenden Lehren aus Release 1.0.83/1.0.84 und Gregors Testlauf an 1.0.84; keine neue Lehre |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
@@ -59,6 +60,7 @@ eine Datei liest, liest diese.
 | [ausloeser-an-den-anfang](ausloeser-an-den-anfang.md) | Eine Schranke am Ende der Arbeit beantwortet eine Frage, die am Anfang gestellt werden musste - rollen-faellig.pl hing nur am Paketbau |
 | [ausreisser-ist-der-befund](ausreisser-ist-der-befund.md) | Was in der eigenen Messausgabe steht und nicht ins Ergebnis passt, ist der Befund - nicht das Rauschen, das man wegerklaert |
 | [bestand-vor-neuer-suche](bestand-vor-neuer-suche.md) | Bevor etwas neu gesucht wird, wird der Bestand gelesen - die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md, mit Zeilennummern und Handlungsanweisung |
+| [chat-knapp-halten](chat-knapp-halten.md) | Antworten im Chat kurz halten; Messdetails gehören in BEFUNDE.md, nicht in die Konsole |
 | [commit-auf-extra-branch-und-pushen](commit-auf-extra-branch-und-pushen.md) | Zwischenstaende regelmaessig auf einem eigenen Branch committen und pushen, nicht erst am Ende |
 | [datenformat-aendern-heisst-alle-leser-messen](datenformat-aendern-heisst-alle-leser-messen.md) | Wer das Format einer gemeinsam gelesenen Datei aendert, misst JEDEN Leser dagegen - sonst melden die blind gewordenen weiter gruen |
 | [daueraufgaben-brauchen-einen-takt](daueraufgaben-brauchen-einen-takt.md) | Lektor, Pruefer und Chronist laufen nach einem festen Auslaeser; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet |
@@ -73,6 +75,7 @@ eine Datei liest, liest diese.
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
 | [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) | Keine Handlungsanweisung an Gregor geben, ohne sie vorher selbst durchgeführt und gemessen zu haben |
+| [fehlerbild-ist-ein-messfenster](fehlerbild-ist-ein-messfenster.md) | Solange Gregors Fehlermeldung offen steht, ist der Fehlerzustand messbar - erst messen (Log, Stapel des laufenden Prozesses), dann schließen lassen |
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
 | [fertige-fassung-bereitstellen](fertige-fassung-bereitstellen.md) | Ist eine neue Fassung fertig, erst eigene Tests, dann als Verzeichnis neben Gregors letztem Release-Verzeichnis bereitstellen |

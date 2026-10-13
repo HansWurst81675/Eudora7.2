@@ -48,7 +48,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > abgeschnitten, Endung fehlt) — über POP am laufenden Programm gemessen und
 > heil, über IMAP von Gregor mit 1.0.83 getestet und bestätigt, offen nur [B5.7](AUFGABEN.md#b5.7);
 > [**AN-2**](BEFUNDE.md#an-2) (Quelltext einer Webseite im Werbefenster) — seit 7.2.0.82 übersetzt,
-> am laufenden Programm nicht gemessen. **Veröffentlicht als `v1.0.83`** am
+> **von Gregor an 1.0.84 am 13.10.2026 bestätigt**. **Veröffentlicht als `v1.0.83`** am
 > 12.10.2026 (davor `v1.0.72`), danach `v1.0.84`. Einzelheiten in
 > [CHANGELOG.md](CHANGELOG.md), 7.2.0.79 bis 7.2.0.83. Der Absatz darunter ist
 > der Stand vom 18.09.2026.
