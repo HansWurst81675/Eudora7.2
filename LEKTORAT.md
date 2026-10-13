@@ -1241,3 +1241,18 @@ lief ([L-28.6](Befunde/LEKTOR-28.md#l-28.6)) — und F1 war als Änderung an `PG
 wirkungslos ist, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird
 ([L-28.7](Befunde/LEKTOR-28.md#l-28.7), nach `ac8f030`). [E-116](BEFUNDE.md#e-116) fehlte unter *Noch offen*, die
 E-112-Prüfnachricht in `Testdaten/README.md`.
+
+## Vierunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-29.md`)
+
+Kurzer Lauf nach [LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28), zum Stand `9f5142b` auf `e-112-skalierung`:
+nur die neuen Themen, aber in allen 195 MDs gesucht. Sechs Mängel, **vier
+berichtigt**, zwei nur gemeldet ([L-29.5](Befunde/LEKTOR-29.md#l-29.5) Fehlalarm in `pruefe-befundurteile.pl`,
+[L-29.6](Befunde/LEKTOR-29.md#l-29.6) die Spiegelung eines laufenden CHRONIST blockierte den Commit).
+
+Der Kern: PRÜFER-22 F1 und F2 waren am Bau `11b6a3a` gemessen, und `BEFUNDE.md`
+und `CHANGELOG.md` sagten es — acht andere Dateien und ein Aufzählungspunkt im
+CHANGELOG selbst sagten weiter *„noch nicht gebaut“* ([L-29.1](Befunde/LEKTOR-29.md#l-29.1)). PRÜFER-23 und
+seine Funde N1–N5 standen in keiner MD außer dem Bericht ([L-29.2](Befunde/LEKTOR-29.md#l-29.2)). Und N1
+ist nur zur Hälfte behoben: die Gegenrichtung, nur `height` über 600, ergibt
+weiter `width="1"` (`msgutils.cpp:3668-3677`, aus der Quelle gelesen,
+[L-29.3](Befunde/LEKTOR-29.md#l-29.3)).

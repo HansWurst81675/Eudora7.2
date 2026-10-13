@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 13.10.2026**, Quellstand **7.2.0.85** / `VERSION` **1.0.85** in Arbeit ([E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und dort noch nicht gemessen, [E-116](BEFUNDE.md#e-116) neu; nicht ausgeliefert, von Gregor noch nicht bestätigt); zuletzt veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
+**Stand 13.10.2026**, Quellstand **7.2.0.85** / `VERSION` **1.0.85** in Arbeit ([E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 behoben und dort noch nicht gemessen, Testsuite 194/194, [E-116](BEFUNDE.md#e-116) neu; nicht ausgeliefert, von Gregor noch nicht bestätigt); zuletzt veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -91,7 +91,9 @@ hier „Behoben in 7.2.0.76, noch nicht von Gregor bestätigt“ —
 [L-27.3](Befunde/LEKTOR-27.md#l-27.3).)* **Seit 7.2.0.85 behoben, nicht ausgeliefert:** die Metadatei
 wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`), am laufenden Programm
 an `a36c47f` gemessen (alle drei Bilder der Prüfnachricht richtig, [E-103](BEFUNDE.md#e-103) mit);
-PRÜFER-22 F1 und F2 sind danach eingebaut und dort noch nicht gemessen; von Gregor
+PRÜFER-22 F1 und F2 sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und
+150x58); PRÜFER-23 N1 (beim Antworten `height="1"`) ist behoben (`9f5142b`), am laufenden
+Programm noch nicht gemessen, die Gegenrichtung und N2 bis N5 sind offen; von Gregor
 noch nicht bestätigt. Neu daraus: [E-116](BEFUNDE.md#e-116) (`width="35px"` wird als 3508 gelesen).
 Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.85.
 
