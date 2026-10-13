@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 13.10.2026 (Teil A, C1, E-83 erledigt; E-101 durchgefallen), Paket 1.0.84
+# Testplan für Gregor — Stand 13.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen), Paket 1.0.84
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -30,7 +30,7 @@ LogLevel=124063
 | `25759` | die Vorgabe |
 | `58527` | **+ 32768** = `DEBUG_MASK_MISC` — **alle `E-nn`-Marken** |
 | `124063` | **+ 65536** = `DEBUG_MASK_ATTACH` — die **`ANHANG`**-Marken ([AN-1](BEFUNDE.md#an-1)) |
-| `128159` | **+ 4096** = `DEBUG_MASK_PLIST` — der Werbeweg (nur für [AN-2](BEFUNDE.md#an-2) nötig) |
+| `128159` | **+ 4096** = `DEBUG_MASK_PLIST` — der Werbeweg; seit dem 13.10.2026 **nicht mehr nötig** (siehe C2) |
 
 Geschrieben wird nach **`eudora.log`** im Eudora-Verzeichnis. Die Einstellung
 wirkt beim **nächsten Start**.
@@ -54,7 +54,10 @@ klar, welche Zeilen aus diesem Durchgang stammen.
 
 ## Teil A — Die vierzehn aus 7.2.0.26 bis 7.2.0.30 (Augenprüfung)
 
-Alle vierzehn stehen in `BEFUNDE.md` als **„von Gregor noch nicht bestätigt"**.
+**Alle vierzehn sind seit dem 13.10.2026 von Gregor an 1.0.84 bestätigt** —
+die Urteile mit Zitat stehen in `BEFUNDE.md`. Bis dahin standen sie dort als
+„von Gregor noch nicht bestätigt"; der Plan bleibt als Anleitung für einen
+späteren Rückfalltest stehen.
 Acht davon siehst du sofort, sechs merkst du nur, wenn etwas hängt.
 
 ### Sichtbar — hier entscheidet dein Auge
@@ -149,17 +152,24 @@ dir attach
 
 ### C2 · AN-2 — kein JavaScript mehr in der Anzeige
 
-Eudora mit **frischer** `Eudora.ini` starten (ohne `[Settings] Mode`), damit
-das Werbefenster wieder erscheint.
+**Erledigt am 13.10.2026:** von Gregor an 1.0.84 bestätigt. Bis dahin stand
+hier, eine **frische** `Eudora.ini` bringe das Werbefenster zurück — das ist
+**widerlegt**: dieser Bau startet mit `Mode=2` (Pro, ohne Werbung), und auch
+mit `Mode=0` kam an 1.0.84 kein Abruf ([AN-2](BEFUNDE.md#an-2),
+[L-27.4](Befunde/LEKTOR-27.md#l-27.4)). Geprüft wird nur noch der Newsletter.
 
 | | muss sein |
 |---|---|
 | — | **entfällt** (Gregor 13.10.2026): das Werbefenster kommt in diesem Bau nicht mehr, siehe [AN-2](BEFUNDE.md#an-2) |
 | ✅ | dasselbe bei einem HTML-Newsletter: **kein** CSS im Nachrichtentext |
 
-Mit `LogLevel=128159` zeigt `grep "PLIST\|E-7" eudora.log` dazu den Werbeweg.
+*(Der Werbeweg ist an diesem Bau nicht auslösbar; die frühere Zeile zu
+`LogLevel=128159` und `grep "PLIST\|E-7"` entfällt mit ihm.)*
 
-### C3 · Die sechs, die auf dein Urteil warten
+### C3 · Die sechs, die auf dein Urteil warteten — offen sind noch zwei
+
+**Stand 13.10.2026:** [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen,
+[E-101](BEFUNDE.md#e-101) durchgefallen (wieder offen). **Offen sind [E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96).**
 
 **Berichtigt am 12.10.2026 (LEKTOR, [L-18.5](Befunde/LEKTOR-26.md#l-18.5)):** hier standen *fünf*. `BEFUNDE.md` führt
 **fünfzehn** Behebungen als „von Gregor noch nicht bestätigt" — vierzehn davon
