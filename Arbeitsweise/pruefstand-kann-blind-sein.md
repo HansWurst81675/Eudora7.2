@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-13T19:14:56.428Z
+  modified: 2026-10-13T09:45:00.000Z
 ---
 
 Schranke: tools/pruefe-testbau.pl (pre-push) - weist ab, wenn sich EudoraTests.exe nicht bauen laesst; nicht bei roten Tests. Gegengetestet mit --selbsttest (7 Faelle in beide Richtungen) und am echten Fehler im echten Bau.
@@ -122,3 +122,21 @@ Verwandt: [[lehren-anwenden-nicht-nur-schreiben]] — eine Lehre ohne Auslöser
 wirkt nicht. [[eingebaute-messung-auslesen]] ist derselbe Gedanke eine Ebene
 tiefer: eine Spurmarke, die niemand ausliest, ist keine Messung. Hier war es
 ein Pruefstand, den niemand gestartet hat.
+
+## Nachtrag 13.10.2026 (CHRONIST): rot aus dem falschen Grund, erkannt am Kontrollfall
+
+Der neue Test zu [E-112](../BEFUNDE.md#e-112) sollte gegen das alte Verhalten
+rot sein - und war es (08:54 UTC). Aber **alle vier** Fälle meldeten
+*„gemalt 0x0"*, auch der Fall ohne Größenangabe, der zu
+[E-103](../BEFUNDE.md#e-103) gehört und mit altem wie neuem Code dasselbe
+liefern muss. Ursache war das Testbild, nicht Eudora: ein negatives
+`biHeight` (Bild von oben nach unten) nimmt die WMF-Metadatei nicht auf,
+Eudoras Bilder aus `SECImage` liegen von unten nach oben. Nach der
+Umstellung zeigte der Test *„gemalt 330x327"* statt 35x35 - wie Gregor es
+an 1.0.84 gesehen hatte -, und der E-103-Fall war grün.
+
+**How to apply, zusätzlich:** Ein Test, der vor der Behebung rot sein soll,
+bekommt einen **Kontrollfall, der vor und nach der Behebung grün sein
+muss**. Ist der Kontrollfall auch rot, misst der Prüfstand sich selbst, nicht
+den Fehler. Und der rote Wert muss **der sein, den Gregor gesehen hat**
+(hier 330x327), nicht irgendein falscher.
