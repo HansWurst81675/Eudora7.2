@@ -41,12 +41,20 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: [**E-86**](BEFUNDE.md#e-86)
 > (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77) (IMAP-Postfachnamen roh).
 >
-> **Stand 13.10.2026:** Quellstand **7.2.0.85**, `VERSION` **1.0.85**, **in Arbeit, nicht
+> **Stand 13.10.2026, abends:** Quellstand **7.2.0.87**, `VERSION` **1.0.87**, **in Arbeit, nicht
+> ausgeliefert** — behebt [**E-117**](BEFUNDE.md#e-117) (`&amp;` in Bildadressen), Testsuite 196/196,
+> am laufenden Programm gemessen, von Gregor noch nicht bestätigt. Davor 7.2.0.86 / 1.0.86
+> ([**E-115**](BEFUNDE.md#e-115), Ctrl+F bei aktivem IMAP-Postfach) und 7.2.0.85 / 1.0.85, beide als
+> Testverzeichnis bei Gregor; **[E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103) und [E-115](BEFUNDE.md#e-115) hat er an 1.0.86 bestätigt.**
+> Neu aus seinem Test und offen: [**E-118**](BEFUNDE.md#e-118), [**E-119**](BEFUNDE.md#e-119), [**E-105**](BEFUNDE.md#e-105) zweiter Fall.
+> Der Absatz darunter ist der Stand von 7.2.0.85.
+>
+> **Stand 13.10.2026, mittags:** Quellstand **7.2.0.85**, `VERSION` **1.0.85**, **in Arbeit, nicht
 > ausgeliefert** — behebt [**E-112**](BEFUNDE.md#e-112) (Bilder in Originalgröße statt der angegebenen)
 > und mit ihm [**E-103**](BEFUNDE.md#e-103); Testsuite 195/195, am laufenden Programm an `a36c47f`
 > gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23
 > N1 und seine Gegenrichtung eingebaut und am Bau `bf96856` gemessen; neu
-> [**E-116**](BEFUNDE.md#e-116). Von Gregor noch nicht bestätigt; Einzelheiten in
+> [**E-116**](BEFUNDE.md#e-116). Damals von Gregor noch nicht bestätigt; Einzelheiten in
 > [CHANGELOG.md](CHANGELOG.md), 7.2.0.85. Der Absatz darunter ist der Stand vom 12.10.2026.
 >
 > **Stand 12.10.2026:** Quellstand **7.2.0.84**, `VERSION` **1.0.84**, veröffentlicht

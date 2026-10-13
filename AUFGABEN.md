@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 13.10.2026**, Quellstand **7.2.0.87** / `VERSION` **1.0.87** in Arbeit ([E-117](BEFUNDE.md#e-117) eingebaut, ungemessen; davor [E-115](BEFUNDE.md#e-115) eingebaut, ungemessen); 1.0.85 als Testverzeichnis bei Gregor ([E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 und seine Gegenrichtung behoben und am Bau `bf96856` am laufenden Programm gemessen, Testsuite 195/195, [E-116](BEFUNDE.md#e-116) neu; nicht ausgeliefert, von Gregor noch nicht bestätigt); zuletzt veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
+**Stand 13.10.2026**, Quellstand **7.2.0.87** / `VERSION` **1.0.87** in Arbeit ([E-117](BEFUNDE.md#e-117) behoben und am laufenden Programm gemessen, Testsuite 196/196, von Gregor noch nicht bestätigt); 1.0.85 und 1.0.86 als Testverzeichnisse bei Gregor, nicht veröffentlicht (1.0.85: [E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 und seine Gegenrichtung behoben und am Bau `bf96856` am laufenden Programm gemessen, [E-116](BEFUNDE.md#e-116) neu; 1.0.86: dazu [E-115](BEFUNDE.md#e-115) behoben und gemessen). **Von Gregor am 13.10.2026 an 1.0.86 bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115)**; neu aus diesem Test und offen: [E-118](BEFUNDE.md#e-118), [E-119](BEFUNDE.md#e-119), [E-105](BEFUNDE.md#e-105) zweiter Fall ([E-120](BEFUNDE.md#e-120) kein eigener Fehler); zuletzt veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -14,7 +14,7 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 > [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63)) sind **bestätigt**, damit auch **A-4**. Ebenso bestätigt:
 > [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) und [AN-2](BEFUNDE.md#an-2); [E-83](BEFUNDE.md#e-83) auf seinen Auftrag an 1.0.84 nachgemessen.
 > **Durchgefallen:** [E-101](BEFUNDE.md#e-101) (wieder offen), [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert, [E-103](BEFUNDE.md#e-103) an 1.0.84 widerlegt
-> (beide seither in 7.2.0.85 behoben, nicht ausgeliefert);
+> (beide seither in 7.2.0.85 behoben, nicht veröffentlicht, von Gregor an 1.0.86 bestätigt);
 > **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
 > Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
@@ -93,8 +93,8 @@ wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`), am laufende
 an `a36c47f` gemessen (alle drei Bilder der Prüfnachricht richtig, [E-103](BEFUNDE.md#e-103) mit);
 PRÜFER-22 F1 und F2 sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und
 150x58); PRÜFER-23 N1 (beim Antworten `height="1"`) ist behoben (`9f5142b`), am laufenden
-Programm gemessen, die Gegenrichtung behoben und gemessen; N2 bis N5 sind offen; von Gregor
-noch nicht bestätigt. Neu daraus: [E-116](BEFUNDE.md#e-116) (`width="35px"` wird als 3508 gelesen).
+Programm gemessen, die Gegenrichtung behoben und gemessen; N2 bis N5 sind offen; **von Gregor
+am 13.10.2026 an 1.0.86 bestätigt** (*„paßt dagegen“*). Neu daraus: [E-116](BEFUNDE.md#e-116) (`width="35px"` wird als 3508 gelesen).
 Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.85.
 
 **Weiter offen: [E-113](BEFUNDE.md#e-113)** — ein Bild, dessen **angegebene** Breite größer ist als
@@ -410,7 +410,9 @@ widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 | [**E-101**](BEFUNDE.md#e-101) — gespeicherte HTML-Datei sagt UTF-8, enthält Windows-1252 (**wieder offen** seit 13.10.2026) | `BEFUNDE.md` | Bau, dann Gregors Gegenprobe |
 | [**E-114**](BEFUNDE.md#e-114) — ein gelöstes angedocktes Fenster hinterlässt einen leeren Bereich (neu, 13.10.2026) | `BEFUNDE.md` | Messen, dann Bau |
 | [**E-116**](BEFUNDE.md#e-116) — `width="35px"` wird als 3508 gelesen (neu, 13.10.2026, PRÜFER-22 F3; am Quelltext belegt, sichtbar erst ab 7.2.0.85) | `BEFUNDE.md` | Test zuerst, dann Bau (Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694`) |
-| [**E-115**](BEFUNDE.md#e-115) — Ctrl+F bringt „Encountered an improper argument“ (neu, 13.10.2026) | `BEFUNDE.md` | Wurfstelle mit `tools/stapel-untersuchen.ps1` an einem IMAP-Konto |
+| [**E-118**](BEFUNDE.md#e-118) — HTML-Mail, in ein IMAP-Postfach verschoben, erscheint als Quelltext (neu, 13.10.2026, an 1.0.86; am Quelltext belegt) | `BEFUNDE.md` | Test zuerst, dann Bau (`AppendContentType`, `ImapAppend.cpp:120`, kennt kein `text/html`) |
+| [**E-119**](BEFUNDE.md#e-119) — `data:`-Bilder beim Antworten und Weiterleiten als grauer Kasten (neu, 13.10.2026, an 1.0.86; am Protokoll belegt) | `BEFUNDE.md` | Messen, ob 1.0.84 dasselbe zeigt; dann Bau im Ladeweg |
+| [**E-105**](BEFUNDE.md#e-105) — `display:none` wird nicht ausgewertet: Vorschautext und, zweiter Fall an 1.0.86, doppelte Bilder | `BEFUNDE.md` | Entscheidung, ob Paige `display:none` lernen soll |
 | Meldung **„Encountered an improper argument"** beim **Anzeigen** mancher Nachrichten | oben, 2. | Start, dann Bau |
 | **Die Fenster stehen nach dem Neustart nicht im Vollbild** — Nebenbefund ohne Kennung | oben, 3. | Start, `Eudora.ini` lesen |
 | [**E-39**](BEFUNDE.md#e-39) — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |
