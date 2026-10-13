@@ -514,7 +514,10 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 				int TransparencySysColor = COLOR_3DFACE;
 				if (pSB && pSB->kind != PgStuffBucket::kAd)
 					TransparencySysColor = COLOR_WINDOW;
-                if (MetafileFromImage( filePath, &mfi, TransparencySysColor))
+                // BEFUND E-112: die angegebene Groesse mitgeben - die Metadatei wird
+                // darin geschrieben (QCGraphics.cpp, E112MetadateiAusDIB).
+                if (MetafileFromImage( filePath, &mfi, TransparencySysColor,
+                                       (long) embed->width, (long) embed->height ))
                 {
                     //
                     // BEFUND E-106: die ECHTE Dateigroesse merken, auch wenn
@@ -530,6 +533,18 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
                     //
                     nEchtBreite = (long)mfi.width;
                     nEchtHoehe  = (long)mfi.height;
+                    {
+                    	// BEFUND E-112: in welcher Groesse wurde die Metadatei geschrieben?
+                    	// Alle Werte in EINER Zeile (Arbeitsweise/zwei-werte-in-eine-ausgabe.md).
+                    	long nGemaltB = 0, nGemaltH = 0;
+                    	E112Zielrechteck( (long) embed->width, (long) embed->height,
+                    					  nEchtBreite, nEchtHoehe, &nGemaltB, &nGemaltH );
+                    	CString szE112;
+                    	szE112.Format( "E-112 Metadatei: angegeben=%ldx%ld Datei=%ldx%ld gemalt=%ldx%ld",
+                    				   (long) embed->width, (long) embed->height,
+                    				   nEchtBreite, nEchtHoehe, nGemaltB, nGemaltH );
+                    	PutDebugLog( DEBUG_MASK_MISC, szE112 );
+                    }
 
                     if ( !pUrlImage->source_width )
                         pUrlImage->source_width = (short)mfi.width;

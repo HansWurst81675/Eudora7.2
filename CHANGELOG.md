@@ -69,6 +69,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.85 — Bilder in der angegebenen Größe gezeichnet (E-112) — **in Arbeit, nicht ausgeliefert**
+
+**[E-112](BEFUNDE.md#e-112):** Paige spielt die Metadatei eines Bildes als `MM_TEXT` ab, und die Metadatei setzt beim Abspielen selbst `MM_TEXT` (`QCGraphics.cpp`, `MetafileFromImage`). Das Zielrechteck aus 7.2.0.76 bestimmte deshalb nur die **Lage**; gezeichnet wurde in Dateigröße, und der Text lag darauf. Jetzt schreibt `E112MetadateiAusDIB` die Metadatei gleich in der Größe aus `E112Zielrechteck` (angegeben gewinnt, ohne Angabe gilt die Datei – [E-103](BEFUNDE.md#e-103)). Spurmarke im Ladeweg: `E-112 Metadatei: angegeben=… Datei=… gemalt=…` (`LogLevel` mit 32768).
+
+**Test zuerst:** `Tests/TestE112Metadatei.cpp` spielt die Metadatei in einen Speicher-DC und misst die gemalte Fläche. Vor der Behebung rot (35×35 angegeben, **330×327 gemalt**), danach grün; der Fall ohne Angabe in beiden Richtungen grün. **Testsuite 193/193.** Am laufenden Programm noch nicht gemessen.
+
 ## 7.2.0.84 — Betreff nicht mehr mitten im Wort umbrochen (E-94) — **veröffentlicht als `v1.0.84`**
 
 **Veröffentlicht am 12.10.2026 um 12:59:15 UTC** als `v1.0.84`, auf GitHub als

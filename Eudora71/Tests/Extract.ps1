@@ -247,4 +247,14 @@ $nStart = Find-Line $em '^void E112Zielrechteck\s*\(' 0
 $nEnd = Find-Line $em '^\}\s*$' $nStart
 Write-Region $em $nStart $nEnd (Join-Path $OutDir "pgembedded_e112.inc") $embPath
 
+# Region O: E112MetadateiAusDIB - in welcher Groesse wird das Bild GEZEICHNET?
+# Region N prueft nur die Regel. Die stimmte seit 7.2.0.76, und trotzdem lag
+# bei Gregor an 1.0.76 und 1.0.84 das Logo ueber dem Text: Paige spielt die
+# Metadatei als MM_TEXT ab, gemalt wird also, was IN ihr steht.
+$qcgPath = Join-Path $SrcDir "QCGraphics.cpp"
+$qg = Read-Lines $qcgPath
+$nStart = Find-Line $qg '^HMETAFILE E112MetadateiAusDIB\s*\(' 0
+$nEnd = Find-Line $qg '^\}\s*$' $nStart
+Write-Region $qg $nStart $nEnd (Join-Path $OutDir "qcgraphics_e112.inc") $qcgPath
+
 Write-Host "Extract.ps1: fertig."

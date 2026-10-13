@@ -108,7 +108,55 @@ SECImage* LoadImage(LPCSTR pURL, int TransparencySysColor /*= COLOR_3DFACE*/)
 	return pImage;
 }
 
-bool MetafileFromImage(LPCSTR pURL, QCMetaFileInfo* pMFI, int TransparencySysColor /*= COLOR_3DFACE*/)
+//
+// BEFUND E-112 (13.10.2026): die Metadatei wird in der GROESSE geschrieben,
+// in der das Bild erscheinen soll.
+//
+// Paige zeichnet eine Metadatei mit mapping_mode 0 als MM_TEXT
+// (draw_meta_file, PaigeDLL/PGSOURCE/PGEMBED.C:4090) - das Zielrechteck
+// bestimmt dort nur die LAGE, nicht die Groesse. Der Versuch in 7.2.0.76,
+// nur pict_frame auf die angegebene Groesse zu setzen, wirkte deshalb nicht.
+// Auch ein anderer mapping_mode hilft nicht: die Metadatei selbst traegt
+// SetMapMode(MM_TEXT) und setzt beim Abspielen jede Skalierung von aussen
+// zurueck. Also wird die Skalierung IN die Metadatei geschrieben: das Ziel
+// von StretchDIBits ist die Groesse aus E112Zielrechteck.
+//
+// Eigene Funktion ohne MFC und ohne Paige, damit der Pruefstand sie mit
+// einem echten Bild messen kann (Tests/TestE112Metadatei.cpp).
+//
+void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
+					   long nEchtBreite, long nEchtHoehe,
+					   long* pnRahmenBreite, long* pnRahmenHoehe );
+
+HMETAFILE E112MetadateiAusDIB( const BITMAPINFO* pBMI, const void* pBits,
+							   long nEchtBreite, long nEchtHoehe,
+							   long nZielBreite, long nZielHoehe )
+{
+	if ( !pBMI || !pBits || nEchtBreite <= 0 || nEchtHoehe <= 0 )
+		return NULL;
+	if ( nZielBreite <= 0 || nZielHoehe <= 0 )
+	{
+		nZielBreite = nEchtBreite;
+		nZielHoehe  = nEchtHoehe;
+	}
+
+	HDC hdc = ::CreateMetaFile( NULL );
+	if ( !hdc )
+		return NULL;
+
+	::SetMapMode( hdc, MM_TEXT );
+	// Verkleinern mit Mittelung statt Zeilen wegzuwerfen - Absender legen
+	// Bilder in doppelter bis dreifacher Aufloesung ab (E-112: 35x35 aus
+	// 330x327). Der Modus wird in der Metadatei mit abgespielt.
+	::SetStretchBltMode( hdc, HALFTONE );
+	::StretchDIBits( hdc, 0, 0, nZielBreite, nZielHoehe,
+					 0, 0, nEchtBreite, nEchtHoehe,
+					 pBits, pBMI, DIB_RGB_COLORS, SRCCOPY );
+	return ::CloseMetaFile( hdc );
+}
+
+bool MetafileFromImage(LPCSTR pURL, QCMetaFileInfo* pMFI, int TransparencySysColor /*= COLOR_3DFACE*/,
+					   long nAngabeBreite /*= 0*/, long nAngabeHoehe /*= 0*/)
 {
 	HMETAFILE hm = 0;
 
@@ -116,22 +164,26 @@ bool MetafileFromImage(LPCSTR pURL, QCMetaFileInfo* pMFI, int TransparencySysCol
 	if (!pMFI)
 		return false;
 
-	// Create metafile
-	CMetaFileDC mdc;
-	mdc.Create();
-	mdc.SetMapMode(MM_TEXT);
-
 	SECImage* pImage = LoadImage(pURL, TransparencySysColor);
 	if (pImage)
 	{
-		::StretchDIBits(mdc.GetSafeHdc(), 0, 0, pImage->m_dwWidth, pImage->m_dwHeight,
-										  0, 0, pImage->m_dwWidth, pImage->m_dwHeight,
-										  pImage->m_lpSrcBits, pImage->m_lpBMI, DIB_RGB_COLORS, SRCCOPY);
+		// BEFUND E-112: in der Groesse schreiben, in der das Bild erscheint.
+		// Ohne Angabe gilt die Datei (E-103) - das entscheidet E112Zielrechteck.
+		long nZielBreite = 0, nZielHoehe = 0;
+		E112Zielrechteck( nAngabeBreite, nAngabeHoehe,
+						  (long) pImage->m_dwWidth, (long) pImage->m_dwHeight,
+						  &nZielBreite, &nZielHoehe );
+		hm = E112MetadateiAusDIB( pImage->m_lpBMI, pImage->m_lpSrcBits,
+								  (long) pImage->m_dwWidth, (long) pImage->m_dwHeight,
+								  nZielBreite, nZielHoehe );
+		if (!hm)
+		{
+			delete pImage;
+			return false;
+		}
 
-		// Close metafile
-		hm = mdc.Close();
-
-		// Set metafile return values
+		// Set metafile return values - weiterhin die ECHTE Groesse der Datei;
+		// das Zielrechteck rechnet der Aufrufer mit derselben Regel nach.
 		pMFI->hm = hm;
 		pMFI->width = pImage->m_dwWidth;
 		pMFI->height = pImage->m_dwHeight;
