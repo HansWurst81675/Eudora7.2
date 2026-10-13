@@ -244,34 +244,35 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
-| [**E-113**](BEFUNDE.md#e-113) | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
-| [**E-112**](BEFUNDE.md#e-112) | Bilder werden in Originalgröße gezeichnet statt in der angegebenen — das WhatsApp-Symb… |
-| [**E-111**](BEFUNDE.md#e-111) | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
-| [**E-109**](BEFUNDE.md#e-109) | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
-| [**E-105**](BEFUNDE.md#e-105) | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |
-| [**E-98**](BEFUNDE.md#e-98) | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
-| [**E-92**](BEFUNDE.md#e-92) | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |
-| [**E-90**](BEFUNDE.md#e-90) | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… |
-| [**E-78**](BEFUNDE.md#e-78) | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… |
-| [**E-77**](BEFUNDE.md#e-77) | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… |
-| [**E-71**](BEFUNDE.md#e-71) | der Filterbericht ist nach einem Filterlauf leer |
-| [**E-69**](BEFUNDE.md#e-69) | CFiltersDoc::FilterMsg bricht den Filterlauf im Freigabebau lautlos ab und meldet Erfolg |
-| [**E-67**](BEFUNDE.md#e-67) | ein Filter *„«Junk Score» is less than N"* wird durch bloßes Anschauen im Filterfenst… |
-| [**E-47**](BEFUNDE.md#e-47) | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … |
-| [**E-39**](BEFUNDE.md#e-39) | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… |
-| [**E-14**](BEFUNDE.md#e-14) | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) |
-| [**S-6**](BEFUNDE.md#s-6) | Bereiche überlagern sich |
-| [**NP2-3**](BEFUNDE.md#np2-3) | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben |
-| [**NP3-3**](BEFUNDE.md#np3-3) | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch |
-| [**S-3**](BEFUNDE.md#s-3) | erster Lauf durch Gregor: drei Beobachtungen |
-| [**AN-2**](BEFUNDE.md#an-2) | Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite — JavaScript, CSS un… |
-| [**NP2-2**](BEFUNDE.md#np2-2) | SysColorChange() tut nicht, was daneben steht |
-| [**NP3-2**](BEFUNDE.md#np3-2) | OnToolHitTest als int statt INT_PTR — x64-Sperre |
-| [**A-1**](BEFUNDE.md#a-1) | Erscheinungsbild: fünf Punkte umgesetzt |
-| [**AN-1**](BEFUNDE.md#an-1) | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — elf Ursachen (Teile B5.1 bis B5… |
-| [**NP3-1**](BEFUNDE.md#np3-1) | ZeigeInhaltsfenster läuft, bevor Eudora das Fenster umhängt |
-| [**P-1**](BEFUNDE.md#p-1) | der POP-Abrufpfad gegengelesen, elf Altlasten benannt |
-| [**R-1**](BEFUNDE.md#r-1) | die Fehlerklasse hinter [E-11](BEFUNDE.md#e-11) ausgezählt |
+| **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… |
+| **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
+| **[E-112](BEFUNDE.md#e-112)** | Bilder werden in Originalgröße gezeichnet statt in der angegebenen — das WhatsApp-Symb… |
+| **[E-111](BEFUNDE.md#e-111)** | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
+| **[E-109](BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
+| **[E-105](BEFUNDE.md#e-105)** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |
+| **[E-98](BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
+| **[E-92](BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |
+| **[E-90](BEFUNDE.md#e-90)** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… |
+| **[E-78](BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… |
+| **[E-77](BEFUNDE.md#e-77)** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… |
+| **[E-71](BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer |
+| **[E-69](BEFUNDE.md#e-69)** | CFiltersDoc::FilterMsg bricht den Filterlauf im Freigabebau lautlos ab und meldet Erfolg |
+| **[E-67](BEFUNDE.md#e-67)** | ein Filter *„«Junk Score» is less than N"* wird durch bloßes Anschauen im Filterfenst… |
+| **[E-47](BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … |
+| **[E-39](BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… |
+| **[E-14](BEFUNDE.md#e-14)** | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) |
+| **[S-6](BEFUNDE.md#s-6)** | Bereiche überlagern sich |
+| **[NP2-3](BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben |
+| **[NP3-3](BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch |
+| **[S-3](BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen |
+| **[AN-2](BEFUNDE.md#an-2)** | Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite — JavaScript, CSS un… |
+| **[NP2-2](BEFUNDE.md#np2-2)** | SysColorChange() tut nicht, was daneben steht |
+| **[NP3-2](BEFUNDE.md#np3-2)** | OnToolHitTest als int statt INT_PTR — x64-Sperre |
+| **[A-1](BEFUNDE.md#a-1)** | Erscheinungsbild: fünf Punkte umgesetzt |
+| **[AN-1](BEFUNDE.md#an-1)** | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — elf Ursachen (Teile B5.1 bis B5… |
+| **[NP3-1](BEFUNDE.md#np3-1)** | ZeigeInhaltsfenster läuft, bevor Eudora das Fenster umhängt |
+| **[P-1](BEFUNDE.md#p-1)** | der POP-Abrufpfad gegengelesen, elf Altlasten benannt |
+| **[R-1](BEFUNDE.md#r-1)** | die Fehlerklasse hinter [E-11](BEFUNDE.md#e-11) ausgezählt |
 
 <!-- offene-befunde: Ende -->
 
