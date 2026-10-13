@@ -161,7 +161,7 @@ haben.
 | | |
 |---|---|
 | Inhalt | wie 1.0.86, dazu [E-117](../BEFUNDE.md#e-117): `&amp;` in Bildadressen |
-| Nicht gemessen | am laufenden Programm; kein Paket |
+| Gemessen | am laufenden Programm, siehe [E-117](../BEFUNDE.md#e-117); kein Paket |
 
 ## 1.0.86 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.86 (E-115)
 

@@ -113,7 +113,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > **Stand 13.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
 > **Für den 14.10.2026, Stand 13.10.2026 abends (gilt vor dem Block darunter):** Zweig `e-112-skalierung`, Quellstand **7.2.0.87**, alles gepusht.
-> 1. **[E-117](BEFUNDE.md#e-117) am laufenden Programm messen** (`&amp;` in Bildadressen; Testsuite 196/196). Prüffall: Gregors eBay-Synology-Weiterleitung – in `eudora.log` muss `E-110 Laden: src=…imgWidth=448&imgHeight=…` ohne `&amp;` stehen und `Datei=` nicht `1x1`.
+> 1. **[E-117](BEFUNDE.md#e-117) ist am laufenden Programm gemessen** (13.10.2026 abends, Gegenprobe 7.2.0.85 Pixel, 7.2.0.87 Bild) — Gregors eigener Test an seiner eBay-Mail steht noch aus.
 > 2. **Rollen LEKTOR, PRÜFER, CHRONIST** nachholen (fällig seit [E-115](BEFUNDE.md#e-115)/[E-117](BEFUNDE.md#e-117)), dann Paket **1.0.87** wie 1.0.85/1.0.86 bauen (ZIP der letzten Veröffentlichung + `Bin/Release`, `paket-pruefen.ps1`) und Gregor hinlegen.
 > 3. **PR `e-112-skalierung` → `main`**, Release nach Gregors Test. Bestätigt sind schon [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103) und [E-115](BEFUNDE.md#e-115) (an 1.0.86).
 > 4. **Neu und offen aus Gregors Test:** [E-118](BEFUNDE.md#e-118) (HTML-Mail in IMAP-Ordner verschoben → Quelltext, `ImapAppend.cpp` kennt kein `text/html`), [E-119](BEFUNDE.md#e-119) (`data:`-Bilder als grauer Kasten), [E-105](BEFUNDE.md#e-105) (doppelte Bilder durch `display:none`).
@@ -276,7 +276,6 @@ nicht selbst messen kann*.
 |---|---|
 | **[E-119](BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … |
 | **[E-118](BEFUNDE.md#e-118)** | Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als HTML-Quelltext |
-| **[E-117](BEFUNDE.md#e-117)** | Bilder mit &amp; in der Adresse kommen nicht an — statt des Fotos lädt ein 1×1-Pixel, … |
 | **[E-116](BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… |
 | **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… |
 | **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |

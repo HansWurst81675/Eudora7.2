@@ -1,0 +1,14 @@
+From: Pruefung <absender@e117.invalid>
+To: empfaenger@e117.invalid
+Subject: Pruefung E-117: &amp; in der Bildadresse
+Date: Tue, 13 Oct 2026 16:30:00 +0200
+Message-ID: <e117-pruefung@e117.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<html><body>
+<p>E-117 Pruefnachricht: das Bild darunter kommt nur an, wenn &amp;amp; zu &amp; wird.</p>
+<p><img src="http://127.0.0.1:18117/bild.png?a=1&amp;w=2" width="165"></p>
+<p>Text unter dem Bild: erwartet ein gruenes Quadrat 165x164, kein leeres Feld.</p>
+</body></html>

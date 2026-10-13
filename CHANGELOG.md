@@ -72,7 +72,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ## 7.2.0.87 — Bilder mit `&amp;` in der Adresse (E-117) — **in Arbeit, nicht ausgeliefert**
 
-**[E-117](BEFUNDE.md#e-117):** `resolve_URL` (`HTMLUtils.cpp`) übersetzt `&amp;` im `src` eines Bildes zu `&`. Gregors eBay-Nachricht lud statt des Fotos ein 1×1-Pixel, weil der Bilddienst `&amp;imgWidth=448` bekam (seine `eudora.log` an 1.0.86). Test zuerst: `TestResolveURL.cpp` (8) vorher rot, Testsuite **196/196**. Am laufenden Programm noch nicht gemessen.
+**[E-117](BEFUNDE.md#e-117):** `resolve_URL` (`HTMLUtils.cpp`) übersetzt `&amp;` im `src` eines Bildes zu `&`. Gregors eBay-Nachricht lud statt des Fotos ein 1×1-Pixel, weil der Bilddienst `&amp;imgWidth=448` bekam (seine `eudora.log` an 1.0.86). Test zuerst: `TestResolveURL.cpp` (8) vorher rot, Testsuite **196/196**. **am laufenden Programm gemessen (13.10.2026)**, `C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml` über `tools/anhang-pruefdaten.pl --pop`, Bildserver `tools/bildserver-e117.pl` auf 127.0.0.1:18117 (liefert das Bild nur bei echtem `&`, sonst 1×1): **Gegenprobe 7.2.0.85** — Abruf `GET /bild.png?a=1&amp;w=2` → Pixel, `E-112 Metadatei: angegeben=165x0 Datei=1x1 gemalt=165x165`; **7.2.0.87** — nur `GET /bild.png?a=1&w=2`, `Datei=330x327 gemalt=165x164`, das Fensterfoto zeigt das Bild. (Die Leseansicht holte schon vorher die richtige Adresse, weil der Internet Explorer `&amp;` selbst übersetzt.)
 
 ## 7.2.0.86 — Ctrl+F wirft nicht mehr, wenn ein IMAP-Postfach aktiv ist (E-115) — **in Arbeit, nicht ausgeliefert**
 
