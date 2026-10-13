@@ -254,11 +254,9 @@ nicht selbst messen kann*.
 | **[E-115](BEFUNDE.md#e-115)** | Ctrl+F (*Find Messages*) bringt „Encountered an improper argument“, und im Reiter *Mai… |
 | **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… |
 | **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
-| **[E-112](BEFUNDE.md#e-112)** | Bilder werden in Originalgröße gezeichnet statt in der angegebenen — das WhatsApp-Symb… |
 | **[E-111](BEFUNDE.md#e-111)** | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
 | **[E-109](BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
 | **[E-105](BEFUNDE.md#e-105)** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |
-| **[E-103](BEFUNDE.md#e-103)** | Bilder liegen über dem Text — *„da ist alles durcheinander, man kann ja nichts lesen.… |
 | **[E-101](BEFUNDE.md#e-101)** | Die gespeicherte Datei ist für jedes andere Programm unbrauchbar — *„datei gespeicher… |
 | **[E-98](BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
 | **[E-92](BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |

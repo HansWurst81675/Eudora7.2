@@ -68,11 +68,14 @@ my $CR = chr(13);
 my $LF = chr(10);
 my $CRLF = $CR . $LF;
 
-my ($erzeugen, $pop, $port);
+my ($erzeugen, $pop, $port, $nur_eml);
+my @eml;
 for (my $i = 0; $i < @ARGV; $i++) {
   my $a = $ARGV[$i];
   if    ($a eq '--erzeugen') { $erzeugen = 1 }
   elsif ($a eq '--pop')      { $pop = 1; $port = $ARGV[$i+1] if defined $ARGV[$i+1] && $ARGV[$i+1] =~ /^\d+$/; $i++ if defined $port }
+  elsif ($a eq '--eml')      { push @eml, $ARGV[++$i] }
+  elsif ($a eq '--nur-eml')  { $nur_eml = 1 }
   else                       { die "unbekannte Option: $a\n" }
 }
 $port = 11110 unless $port;
@@ -278,6 +281,21 @@ if ($erzeugen) {
 require IO::Socket::INET;
 
 my @post = map { nachricht($_) } @faelle;
+my @uid  = map { "an1-" . $_->{nr} } @faelle;
+
+# --eml <datei> liefert zusaetzlich eine fertige Nachricht aus (E-112,
+# 13.10.2026: die Pruefnachricht mit eingebetteten Bildern muss ueber den
+# echten Empfangsweg kommen). --nur-eml laesst die AN-1-Faelle weg.
+if ($nur_eml) { @post = (); @uid = () }
+for my $datei (@eml) {
+  open my $f, '<:raw', $datei or die "$datei: $!\n";
+  local $/; my $t = <$f>; close $f;
+  $t =~ s/\r?\n/$CRLF/g;
+  $t .= $CRLF unless $t =~ /$CRLF\z/;
+  push @post, $t;
+  (my $name = $datei) =~ s{.*[\/]}{};
+  push @uid, "eml-" . $name;
+}
 
 my $horch = IO::Socket::INET->new(
   LocalAddr => '127.0.0.1', LocalPort => $port,
@@ -316,14 +334,14 @@ while (my $v = $horch->accept) {
       if (@arg) {
         my $i = $arg[0] - 1;
         if ($i < 0 || $i > $#post || $weg[$i]) { print $v "-ERR gibt es nicht$CRLF" }
-        elsif ($uidl) { print $v "+OK " . ($i+1) . " an1-" . $faelle[$i]{nr} . $CRLF }
+        elsif ($uidl) { print $v "+OK " . ($i+1) . " " . $uid[$i] . $CRLF }
         else          { print $v "+OK " . ($i+1) . " " . length($post[$i]) . $CRLF }
       }
       else {
         print $v "+OK$CRLF";
         for my $i (0 .. $#post) {
           next if $weg[$i];
-          print $v ($i+1) . " " . ($uidl ? "an1-" . $faelle[$i]{nr}
+          print $v ($i+1) . " " . ($uidl ? $uid[$i]
                                          : length($post[$i])) . $CRLF;
         }
         print $v ".$CRLF";
@@ -347,7 +365,7 @@ while (my $v = $horch->accept) {
         print $v $zl . $CRLF;
       }
       print $v ".$CRLF";
-      print "[$wer] < Nachricht " . ($i+1) . " (" . $faelle[$i]{nr} . ") ausgeliefert\n";
+      print "[$wer] < Nachricht " . ($i+1) . " (" . $uid[$i] . ") ausgeliefert\n";
     }
     elsif ($b eq 'DELE') {
       #  Wir merken das Loeschen nur vor und vergessen es beim Trennen -

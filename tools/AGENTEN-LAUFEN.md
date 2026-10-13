@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-13 11:08 | [E-112](../BEFUNDE.md#e-112) Behebung a36c47f nachrechnen |
