@@ -34,8 +34,42 @@ param(
   # schon in erster Gelegenheit fest - dort steht der Werfer noch im Stapel.
   [int]$Befehl = 0,
   [int]$BefehlNachSekunden = 20,
-  [switch]$CppErsteGelegenheit
+  [switch]$CppErsteGelegenheit,
+  # Absprache seit 05.09.2026 (Arbeitsweise/nichts-auf-gregors-bildschirm-
+  # starten.md): nichts starten ohne Gregors Ja ZUM START. Am 13.10.2026 hat
+  # dieses Werkzeug Eudora gestartet, obwohl Gregor nur das Kopieren seines
+  # Mailverzeichnisses erlaubt hatte ("ja, kannst du kopieren") - es kannte
+  # keine Freigabe. Jetzt Pflicht, und der Text muss den Start nennen.
+  [Parameter(Mandatory=$true)][string]$Freigabe,
+  [string[]]$ErlaubtePfade = @('C:\Temp'),
+  [switch]$NurPruefen
 )
+
+$mangel = @()
+if ([string]::IsNullOrWhiteSpace($Freigabe) -or $Freigabe.Trim().Length -lt 10) {
+  $mangel += 'Keine tragfaehige Freigabe: -Freigabe muss Gregors Satz nennen (mindestens 10 Zeichen).'
+}
+elseif ($Freigabe -notmatch '(?i)start') {
+  $mangel += ('Die Freigabe nennt keinen START: "' + $Freigabe + '". Eine Erlaubnis fuer ' +
+              'einen anderen Schritt (kopieren, lesen, messen) ist keine Erlaubnis zu starten.')
+}
+$exeVoll = [IO.Path]::GetFullPath($Exe)
+$erlaubt = $false
+foreach ($p in $ErlaubtePfade) {
+  $basis = [IO.Path]::GetFullPath($p).TrimEnd('\') + '\'
+  if ($exeVoll.StartsWith($basis, [StringComparison]::OrdinalIgnoreCase)) { $erlaubt = $true }
+}
+if (-not $erlaubt) {
+  $mangel += ('Die .exe liegt nicht unter ' + ($ErlaubtePfade -join ', ') + ': ' + $exeVoll +
+              ' - Gregors eigene Verzeichnisse sind ausgeschlossen.')
+}
+if ($mangel.Count -gt 0) {
+  Write-Host 'NICHT GESTARTET:'
+  foreach ($m in $mangel) { Write-Host ('  - ' + $m) }
+  exit 3
+}
+Write-Host ('Freigabe: ' + $Freigabe)
+if ($NurPruefen) { Write-Host 'Alle Voraussetzungen erfuellt (-NurPruefen: nicht gestartet).'; exit 0 }
 
 if ([IntPtr]::Size -ne 4) {
   Write-Error "Muss in der 32-Bit-PowerShell laufen: C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe"
