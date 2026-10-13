@@ -43,9 +43,9 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 >
 > **Stand 13.10.2026:** Quellstand **7.2.0.85**, `VERSION` **1.0.85**, **in Arbeit, nicht
 > ausgeliefert** — behebt [**E-112**](BEFUNDE.md#e-112) (Bilder in Originalgröße statt der angegebenen)
-> und mit ihm [**E-103**](BEFUNDE.md#e-103); Testsuite 194/194, am laufenden Programm an `a36c47f`
+> und mit ihm [**E-103**](BEFUNDE.md#e-103); Testsuite 195/195, am laufenden Programm an `a36c47f`
 > gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23
-> N1 eingebaut (Test grün), dort noch nicht gemessen; neu
+> N1 und seine Gegenrichtung eingebaut und am Bau `bf96856` gemessen; neu
 > [**E-116**](BEFUNDE.md#e-116). Von Gregor noch nicht bestätigt; Einzelheiten in
 > [CHANGELOG.md](CHANGELOG.md), 7.2.0.85. Der Absatz darunter ist der Stand vom 12.10.2026.
 >

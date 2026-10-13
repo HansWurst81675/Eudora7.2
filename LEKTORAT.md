@@ -1256,3 +1256,16 @@ seine Funde N1–N5 standen in keiner MD außer dem Bericht ([L-29.2](Befunde/LE
 ist nur zur Hälfte behoben: die Gegenrichtung, nur `height` über 600, ergibt
 weiter `width="1"` (`msgutils.cpp:3668-3677`, aus der Quelle gelesen,
 [L-29.3](Befunde/LEKTOR-29.md#l-29.3)).
+
+## Fünfunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-30.md`)
+
+Kurzer Lauf nach [LEKTOR-29](Befunde/LEKTOR-29.md#lektor-29), zum Stand `f305f49` auf `e-112-skalierung`:
+nur die neuen Themen, aber in allen 198 MDs gesucht. Vier Mängel, **alle
+berichtigt**.
+
+Der Kern: `f305f49` hatte N1 und seine Gegenrichtung in den Einzelabschnitten
+als gemessen nachgezogen, die Stand-Köpfe in `AUFGABEN.md`, `ZIEL.md`,
+`PORTIERUNG.md`, `WEITERMACHEN.md` (Schritt 3) und `README.md` sagten weiter
+*„N1 noch nicht gemessen“* und *„194/194“* ([L-30.1](Befunde/LEKTOR-30.md#l-30.1)). In `Releases/PAKETE.md`
+standen die Messwerte unter *Nicht gemessen* ([L-30.2](Befunde/LEKTOR-30.md#l-30.2)), `Testdaten/README.md`
+zählte sechs statt sieben `<img>` ([L-30.3](Befunde/LEKTOR-30.md#l-30.3)).
