@@ -246,6 +246,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **[E-115](BEFUNDE.md#e-115)** | Ctrl+F (*Find Messages*) bringt „Encountered an improper argument“, und im Reiter *Mai… |
 | **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… |
 | **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
 | **[E-112](BEFUNDE.md#e-112)** | Bilder werden in Originalgröße gezeichnet statt in der angegebenen — das WhatsApp-Symb… |
