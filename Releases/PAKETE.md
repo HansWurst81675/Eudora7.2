@@ -156,12 +156,13 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.86 — **in Arbeit, kein Paket**, Quellstand 7.2.0.86 (E-115)
+## 1.0.86 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.86 (E-115)
 
 | | |
 |---|---|
+| Testverzeichnis | **bereitgestellt am 13.10.2026** auf Gregors Anweisung (*„bau mir dann auch ein 0.86 zum testen.“*), `C:\Users\Gregor\Eudora72-1.0.86-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem gemessenen Prüfstand `C:\Temp\E115-gregor`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide melden 7.2.0.86. Rollen nach der E-115-Behebung nicht gelaufen. Von Gregor noch nicht getestet |
 | Inhalt | wie 1.0.85, dazu [E-115](../BEFUNDE.md#e-115): `FindCheck` überspringt Recent nicht mehr ins Leere |
-| Nicht gemessen | die Wirkung am laufenden Programm; kein Paket |
+| Gemessen | am laufenden Programm: mit 7.2.0.84 Meldung, mit 7.2.0.86 keine (siehe [E-115](../BEFUNDE.md#e-115)) |
 
 ## 1.0.85 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.85 (E-112)
 
