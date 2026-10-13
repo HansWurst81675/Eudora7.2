@@ -79,3 +79,6 @@
 - [Chat knapp halten](chat-knapp-halten.md) — Urteil, nächster Handgriff, höchstens eine Frage; Herleitung gehört in BEFUNDE.md
 - [CHRONIST 13.10.2026](CHRONIST-2026-10-13.md) — Laufbericht: acht Nachträge (Freigabe-Umfang, Rückstrich Fall 13–15, INI vor Probe, lmos.dat, Testplan-Stand, Orientierungsfragen, offene LEKTOR-Funde beim Merge)
 - [Fehlerbild ist ein Messfenster](fehlerbild-ist-ein-messfenster.md) — offene Fehlermeldung erst messen (Log, Stapel mit Freigabe), dann schließen lassen
+- [Commit auf einmal prüfen](commit-auf-einmal-pruefen.md) — vor dem ersten Commit nach Versionssprung `perl tools/commit-bereit.pl`; der Haken zeigt je Anlauf nur einen Mangel, am 13.10. neun Anläufe
+- [Funktionsbug vor Buchführung](funktionsbug-vor-buchfuehrung.md) — wartet Gregor auf eine Behebung, ist sie der nächste Vordergrundschritt; Doku und Aufräumen in den Hintergrund, ein Zweig je Arbeitspaket
+- [CHRONIST 13.10.2026 b](CHRONIST-2026-10-13b.md) — Laufbericht: zwei neue Lehren, drei Nachträge, Werkzeug commit-bereit.pl

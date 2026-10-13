@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-05T17:51:39.000Z
+  modified: 2026-10-13T09:45:00.000Z
 ---
 
 Schranke: keine - ob ich vor einer Aussage die Quelle geöffnet habe, ist im Repo nicht sichtbar; stehen bleibt nur die Aussage, nicht ihr Weg
@@ -223,3 +223,22 @@ Die Regel dazu: **eine Zahl, die in einen Satz soll, wird in demselben Lauf
 erzeugt, in dem der Satz geschrieben wird.** Ein Einzeiler, der sie ausrechnet,
 gehört in den Bericht oder in den Werkzeugkommentar daneben — dann kann sie der
 nächste nachfahren, statt sie zu glauben.
+## Nachtrag 13.10.2026 (CHRONIST): „warum sehe ich das?" - viermal gefragt, zweimal geraten
+
+Gregor fragte an diesem Vormittag viermal, warum bei ihm *„Updated
+<Datei>"* erscheint: BEFUNDE.md (08:37), Arbeitsweise\MEMORY.md (08:38),
+tools\ZWEIGE.md (08:50, *„warum sehe ich es immer noch?"*), zweimal
+WEITERMACHEN.md (08:50). Die Antworten waren zwei verschiedene Vermutungen,
+beide als Tatsache formuliert: *„Du siehst die Meldung, weil die Datei auf
+deiner Seite offen ist oder weil PR #94 mit jedem Push neue Commits
+bekommt"* und *„Dein Editor meldet sie nur verzögert"*. Gemessen war nur
+die Änderungszeit von WEITERMACHEN.md; was die Anzeige auslöst, steht im
+Transkript nicht (dort gibt es für diese Zeit keinen Eintrag zu geänderten
+Dateien) - es kommt aus seiner Oberfläche, die ich nicht sehe.
+
+**How to apply, zusätzlich:** Fragt Gregor nach etwas, das **nur er sieht**,
+ist die ehrliche Antwort zuerst *„das sehe ich nicht, ich vermute …"*, dazu
+die Frage, die es entscheidet (*„steht die Zeile im Claude-Fenster oder in
+der Leiste des Editors?"*). Die inhaltliche Antwort (*„du musst damit nichts
+tun"*) war richtig und gehört in den ersten Satz; die Ursache nur mit
+Kennzeichnung.
