@@ -61,20 +61,20 @@ Acht davon siehst du sofort, sechs merkst du nur, wenn etwas hängt.
 
 | | Befund | Handgriff | richtig ist |
 |---|---|---|---|
-| ☐ | [**E-49**](BEFUNDE.md#e-49) (A-4) | Maus auf die Kante zwischen linkem Bereich und Nachrichtenliste | Zeiger wird zum **Größenzeiger** |
-| ☐ | [**E-49**](BEFUNDE.md#e-49) | nach rechts ziehen | linker Bereich wird **breiter**, Nachrichtenbereich gibt nach |
-| ☐ | [**E-49**](BEFUNDE.md#e-49) | weiter als 180 Pixel ziehen | geht — das war deine eigentliche Bitte |
-| ☐ | [**E-49**](BEFUNDE.md#e-49) | Eudora beenden und neu starten | die Breite ist **noch da** (landet im `[ToolBar…]`-Abschnitt der `Eudora.ini`) |
-| ☐ | [**E-52**](BEFUNDE.md#e-52) | nach dem Verbreitern noch einmal am Balken ziehen | Balken ist **weiter greifbar**, Karten stehen **nicht doppelt** |
-| ☐ | [**E-54**](BEFUNDE.md#e-54) | beim Ziehen **nach rechts** hinsehen | der **Ziehrahmen ist sichtbar** — man zieht nicht ins Blinde |
-| ☐ | [**E-55**](BEFUNDE.md#e-55) | unter die Werkzeugleiste sehen | **kein** acht Pixel hoher leerer Streifen |
-| ☐ | [**E-50**](BEFUNDE.md#e-50) (1) | ein Fenster öffnen, in ein anderes wechseln | die Karte des **verlassenen** Fensters ist **nicht mehr eingedrückt** |
-| ☐ | [**E-50**](BEFUNDE.md#e-50) (2) | Hauptfenster in der Größe ziehen | der Kartenstreifen wird **richtig** gezeichnet |
-| ☐ | [**E-50**](BEFUNDE.md#e-50) (3) | Fenster öffnen und schließen | die Karten sind **nicht weg** |
-| ☐ | [**E-53**](BEFUNDE.md#e-53) | ein Fenster schließen | an der Stelle der Karte bleibt **kein Strich** stehen |
-| ☐ | [**E-58**](BEFUNDE.md#e-58) | in den **rechten Rand** des Kartenstreifens klicken, wo nichts steht | es öffnet sich **kein Browser** |
-| ☐ | [**E-63**](BEFUNDE.md#e-63) | mit der Maus über die **letzte** Registerkarte fahren | ein **Kurzhinweis** erscheint, wie bei den anderen |
-| ☐ | [**E-56**](BEFUNDE.md#e-56) | *Show MDI task bar* **abschalten** | der Kartenstreifen **verschwindet** |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) (A-4) | Maus auf die Kante zwischen linkem Bereich und Nachrichtenliste | Zeiger wird zum **Größenzeiger** |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) | nach rechts ziehen | linker Bereich wird **breiter**, Nachrichtenbereich gibt nach |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) | weiter als 180 Pixel ziehen | geht — das war deine eigentliche Bitte |
+| ✅ | [**E-49**](BEFUNDE.md#e-49) | Eudora beenden und neu starten | die Breite ist **noch da** (landet im `[ToolBar…]`-Abschnitt der `Eudora.ini`) |
+| ✅ | [**E-52**](BEFUNDE.md#e-52) | nach dem Verbreitern noch einmal am Balken ziehen | Balken ist **weiter greifbar**, Karten stehen **nicht doppelt** |
+| ✅ | [**E-54**](BEFUNDE.md#e-54) | beim Ziehen **nach rechts** hinsehen | der **Ziehrahmen ist sichtbar** — man zieht nicht ins Blinde |
+| ✅ | [**E-55**](BEFUNDE.md#e-55) | unter die Werkzeugleiste sehen | **kein** acht Pixel hoher leerer Streifen |
+| ✅ | [**E-50**](BEFUNDE.md#e-50) (1) | ein Fenster öffnen, in ein anderes wechseln | die Karte des **verlassenen** Fensters ist **nicht mehr eingedrückt** |
+| ✅ | [**E-50**](BEFUNDE.md#e-50) (2) | Hauptfenster in der Größe ziehen | der Kartenstreifen wird **richtig** gezeichnet |
+| ✅ | [**E-50**](BEFUNDE.md#e-50) (3) | Fenster öffnen und schließen | die Karten sind **nicht weg** |
+| ✅ | [**E-53**](BEFUNDE.md#e-53) | ein Fenster schließen | an der Stelle der Karte bleibt **kein Strich** stehen |
+| ✅ | [**E-58**](BEFUNDE.md#e-58) | in den **rechten Rand** des Kartenstreifens klicken, wo nichts steht | es öffnet sich **kein Browser** |
+| ✅ | [**E-63**](BEFUNDE.md#e-63) | mit der Maus über die **letzte** Registerkarte fahren | ein **Kurzhinweis** erscheint, wie bei den anderen |
+| ✅ | [**E-56**](BEFUNDE.md#e-56) | *Show MDI task bar* **abschalten** | der Kartenstreifen **verschwindet** |
 
 ### Nicht sichtbar — nur „ist etwas passiert?"
 
@@ -84,11 +84,11 @@ und **nichts** hängenbleibt.
 
 | | Befund | was es war |
 |---|---|---|
-| ☐ | [**E-57**](BEFUNDE.md#e-57) | `IsTabLabelTruncated` legte bei **jeder Mausbewegung** eine `CPaintDC` an |
-| ☐ | [**E-59**](BEFUNDE.md#e-59) | `m_cxTab` wurde **nur in `OnPaint`** gesetzt |
-| ☐ | [**E-60**](BEFUNDE.md#e-60) | ein Trennbalken konnte **während des Ziehens gelöscht** werden |
-| ☐ | [**E-61**](BEFUNDE.md#e-61) | `Splitter::Track` **verschluckte `WM_QUIT`** |
-| ☐ | [**E-62**](BEFUNDE.md#e-62) | **sieben** Nachrichtenschleifen verschluckten `WM_QUIT`, zwei mit Hängegefahr |
+| ✅ | [**E-57**](BEFUNDE.md#e-57) | `IsTabLabelTruncated` legte bei **jeder Mausbewegung** eine `CPaintDC` an |
+| ✅ | [**E-59**](BEFUNDE.md#e-59) | `m_cxTab` wurde **nur in `OnPaint`** gesetzt |
+| ✅ | [**E-60**](BEFUNDE.md#e-60) | ein Trennbalken konnte **während des Ziehens gelöscht** werden |
+| ✅ | [**E-61**](BEFUNDE.md#e-61) | `Splitter::Track` **verschluckte `WM_QUIT`** |
+| ✅ | [**E-62**](BEFUNDE.md#e-62) | **sieben** Nachrichtenschleifen verschluckten `WM_QUIT`, zwei mit Hängegefahr |
 
 **Die Probe auf [E-61](BEFUNDE.md#e-61)/[E-62](BEFUNDE.md#e-62):** nach dem Ziehen **Alt+F4** drücken. Eudora muss
 sich beenden. Bleibt es stehen, ist einer der beiden wieder da.
@@ -142,10 +142,10 @@ dir attach
 
 | | muss sein |
 |---|---|
-| ☐ | **alle sechs** Dateien mit **vollem Namen und `.pdf`** |
-| ☐ | im Log je Nachricht eine Zeile `ANHANG Datei: WIRD GESCHRIEBEN ALS` |
+| ✅ | **alle sechs** Dateien mit **vollem Namen und `.pdf`** |
+| ✅ | im Log je Nachricht eine Zeile `ANHANG Datei: WIRD GESCHRIEBEN ALS` |
 
-*(An 7.2.0.83 bereits 6/6 gemessen — das ist die Wiederholung an 1.0.84.)*
+**Schon an 7.2.0.84 gemessen, 12.10.2026:** Fälle 00–05 in `C:\Temp\E94-nachher` unverändert heil, alle sechs mit vollem Namen und `.pdf` (CHANGELOG 7.2.0.84). Für dich nur eine Gegenprobe, kein offener Punkt.
 
 ### C2 · AN-2 — kein JavaScript mehr in der Anzeige
 
@@ -168,7 +168,7 @@ unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 
 | | Befund | Handgriff |
 |---|---|---|
-| ☐ | [**E-101**](BEFUNDE.md#e-101) | eine **weitergeleitete** Nachricht über *File → Save As* sichern und die `.eml` in einem anderen Programm öffnen — sie muss lesbar sein (`Content-Type`, `MIME-Version`, kein `<x-html>`) |
+| ❌ | [**E-101**](BEFUNDE.md#e-101) | eine **weitergeleitete** Nachricht über *File → Save As* sichern und die `.eml` in einem anderen Programm öffnen — sie muss lesbar sein (`Content-Type`, `MIME-Version`, kein `<x-html>`) |
 | ☐ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
 | ☐ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
 | ☐ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
