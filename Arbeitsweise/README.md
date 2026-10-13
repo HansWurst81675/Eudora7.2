@@ -44,6 +44,7 @@ eine Datei liest, liest diese.
 |---|---|
 | [CHRONIST-2026-10-12](CHRONIST-2026-10-12.md) | CHRONIST-Lauf vom 12.10.2026 - vier Nachtraege zu bestehenden Lehren, fertig zum Einsetzen ins Gedaechtnis; dazu warum sie nicht direkt in den Lehren stehen |
 | [CHRONIST-2026-10-13](CHRONIST-2026-10-13.md) | CHRONIST-Lauf vom 13.10.2026 - acht Nachträge zu bestehenden Lehren aus Release 1.0.83/1.0.84 und Gregors Testlauf an 1.0.84; keine neue Lehre |
+| [CHRONIST-2026-10-13b](CHRONIST-2026-10-13b.md) | CHRONIST-Lauf 13.10.2026 (zweiter): zwei neue Lehren (Commit-Schranken auf einmal, Funktionsbug vor Buchführung), drei Nachträge, neues Werkzeug tools/commit-bereit.pl |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
@@ -61,6 +62,7 @@ eine Datei liest, liest diese.
 | [ausreisser-ist-der-befund](ausreisser-ist-der-befund.md) | Was in der eigenen Messausgabe steht und nicht ins Ergebnis passt, ist der Befund - nicht das Rauschen, das man wegerklaert |
 | [bestand-vor-neuer-suche](bestand-vor-neuer-suche.md) | Bevor etwas neu gesucht wird, wird der Bestand gelesen - die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md, mit Zeilennummern und Handlungsanweisung |
 | [chat-knapp-halten](chat-knapp-halten.md) | Antworten im Chat kurz halten; Messdetails gehören in BEFUNDE.md, nicht in die Konsole |
+| [commit-auf-einmal-pruefen](commit-auf-einmal-pruefen.md) | Vor dem ersten Commit nach einem Versionssprung oder Urteilswechsel alle Schranken auf einmal fahren (tools/commit-bereit.pl) - der Haken zeigt je Anlauf nur den ersten Mangel |
 | [commit-auf-extra-branch-und-pushen](commit-auf-extra-branch-und-pushen.md) | Zwischenstaende regelmaessig auf einem eigenen Branch committen und pushen, nicht erst am Ende |
 | [datenformat-aendern-heisst-alle-leser-messen](datenformat-aendern-heisst-alle-leser-messen.md) | Wer das Format einer gemeinsam gelesenen Datei aendert, misst JEDEN Leser dagegen - sonst melden die blind gewordenen weiter gruen |
 | [daueraufgaben-brauchen-einen-takt](daueraufgaben-brauchen-einen-takt.md) | Lektor, Pruefer und Chronist laufen nach einem festen Auslaeser; wenn Gregor nach ihnen fragen muss, ist die Rolle nicht eingerichtet |
@@ -80,6 +82,7 @@ eine Datei liest, liest diese.
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
 | [fertige-fassung-bereitstellen](fertige-fassung-bereitstellen.md) | Ist eine neue Fassung fertig, erst eigene Tests, dann als Verzeichnis neben Gregors letztem Release-Verzeichnis bereitstellen |
 | [funktion-bringt-ihre-vorbedingung-mit](funktion-bringt-ihre-vorbedingung-mit.md) | Wer eine bewaehrte Funktion in einen neuen Weg einbaut, uebernimmt ihre Vorbedingungen und Nebenwirkungen - ISOTranslate nullt ein Byte hinter dem Bereich |
+| [funktionsbug-vor-buchfuehrung](funktionsbug-vor-buchfuehrung.md) | Wartet Gregor auf eine Behebung, läuft sie im Vordergrund zuerst; Buchführung (Doku, Aufräumen, Merges der Rollen) geht in den Hintergrund oder danach |
 | [gegenprobe-umdrehen](gegenprobe-umdrehen.md) | Nicht pruefen, ob der gewuenschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt; Gregors Technik vom 07.09.2026 |
 | [gemeinsame-dateien-gegen-alles-messen](gemeinsame-dateien-gegen-alles-messen.md) | Änderungen an gemeinsam benutzten Dateien gegen die ganze Solution messen, nicht nur gegen das eigene Projekt |
 | [haengende-kommandos-abbrechen](haengende-kommandos-abbrechen.md) | Hängende Kommandos früh erkennen, abbrechen und anders lösen statt Zeitlimits auslaufen zu lassen |

@@ -44,7 +44,7 @@ schranke() {
     echo "  Arbeitsbaum (Befund X-8). Im Hauptbaum laeuft die Schranke."
     return 0
   fi
-  perl "$WURZEL/tools/$1"
+  perl "$WURZEL/tools/$1" || { rc=$?; echo "  -> alle Maengel auf einmal: perl tools/commit-bereit.pl (-push fuer den pre-push)"; return $rc; }
 }
 
 # 1. Schranke gegen Commits auf einen toten Zweig: schon zusammengefuehrt,
@@ -380,7 +380,7 @@ schranke() {
     echo "pre-push: tools/$1 gibt es in diesem Arbeitsbaum nicht - uebersprungen."
     return 0
   fi
-  perl "$WURZEL/tools/$1"
+  perl "$WURZEL/tools/$1" || { rc=$?; echo "  -> alle Maengel auf einmal: perl tools/commit-bereit.pl (-push fuer den pre-push)"; return $rc; }
 }
 
 # Ist der Zweigname mit Gregor abgestimmt? Beim COMMIT meldet pruefe-branch.pl
