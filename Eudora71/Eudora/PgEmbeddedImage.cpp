@@ -384,13 +384,29 @@ void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
 		*pnRahmenBreite = nAttrBreite;
 		*pnRahmenHoehe  = nAttrHoehe;
 	}
+	else if ( nEchtBreite > 0 && nEchtHoehe > 0 && nAttrBreite > 0 )
+	{
+		// Nur die Breite angegeben: die Hoehe folgt dem Seitenverhaeltnis
+		// der Datei, gerundet - wie im Browser. Bis 7.2.0.85 zaehlte das wie
+		// keine Angabe, und das Bild kam in Dateigroesse (PRUEFER-22, F2;
+		// Gregor am 13.10.2026: "ja, F2 so einbauen wie im browser").
+		*pnRahmenBreite = nAttrBreite;
+		*pnRahmenHoehe  = ( nAttrBreite * nEchtHoehe + nEchtBreite / 2 ) / nEchtBreite;
+		if ( *pnRahmenHoehe < 1 )
+			*pnRahmenHoehe = 1;
+	}
+	else if ( nEchtBreite > 0 && nEchtHoehe > 0 && nAttrHoehe > 0 )
+	{
+		// Nur die Hoehe angegeben: die Breite folgt dem Seitenverhaeltnis.
+		*pnRahmenHoehe  = nAttrHoehe;
+		*pnRahmenBreite = ( nAttrHoehe * nEchtBreite + nEchtHoehe / 2 ) / nEchtHoehe;
+		if ( *pnRahmenBreite < 1 )
+			*pnRahmenBreite = 1;
+	}
 	else if ( nEchtBreite > 0 && nEchtHoehe > 0 )
 	{
-		// Keine oder halbe Angabe: die Datei entscheidet. Das ist E-103 -
-		// eine Zeile von 13 Punkten fuer ein Bild von 60, und der Text lag
-		// darunter. Eine halbe Angabe wird hier bewusst wie keine behandelt:
-		// was eine Seitenverhaeltnis-Rechnung daraus machen soll, ist NICHT
-		// gemessen, und Raten hat bei E-106 schon einmal gereicht.
+		// Keine Angabe: die Datei entscheidet. Das ist E-103 - eine Zeile
+		// von 13 Punkten fuer ein Bild von 60, und der Text lag darunter.
 		*pnRahmenBreite = nEchtBreite;
 		*pnRahmenHoehe  = nEchtHoehe;
 	}

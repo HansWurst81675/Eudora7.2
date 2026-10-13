@@ -19,6 +19,8 @@ Content-Transfer-Encoding: 7bit
 <p><img src="cid:gross@e112.invalid" width="70" height="70"> Dasselbe Bild noch einmal, als 70x70 angegeben (PRUEFER-22 F1).</p>
 <p><img src="cid:ohne@e112.invalid"></p>
 <p>Text unter dem Bild ohne Groessenangabe (E-103, Datei 79x64).</p>
+<p><img src="cid:banner@e112.invalid" width="150"></p>
+<p>Banner nur mit width=150 (F2, Browser-Regel): 150x58 erwartet.</p>
 </body></html>
 ------=_E112_Grenze
 Content-Type: image/png; name="gross-330x327.png"
