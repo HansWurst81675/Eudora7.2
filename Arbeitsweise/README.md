@@ -43,6 +43,7 @@ eine Datei liest, liest diese.
 | Datei | Worum es geht |
 |---|---|
 | [CHRONIST-2026-10-12](CHRONIST-2026-10-12.md) | CHRONIST-Lauf vom 12.10.2026 - vier Nachtraege zu bestehenden Lehren, fertig zum Einsetzen ins Gedaechtnis; dazu warum sie nicht direkt in den Lehren stehen |
+| [CHRONIST-2026-10-13](CHRONIST-2026-10-13.md) | CHRONIST-Lauf vom 13.10.2026 - acht Nachträge zu bestehenden Lehren aus Release 1.0.83/1.0.84 und Gregors Testlauf an 1.0.84; keine neue Lehre |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
