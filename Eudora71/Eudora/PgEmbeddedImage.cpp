@@ -535,8 +535,13 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					TransparencySysColor = COLOR_WINDOW;
                 // BEFUND E-112: die angegebene Groesse mitgeben - die Metadatei wird
                 // darin geschrieben (QCGraphics.cpp, E112MetadateiAusDIB).
-                if (MetafileFromImage( filePath, &mfi, TransparencySysColor,
-                                       (long) embed->width, (long) embed->height ))
+                // Die Angabe steht hier in source_* (aus dem HTML-Import); embed->width/
+                // height ist bei einer halben Angabe noch 0 - gemessen 13.10.2026:
+                // width=150 kam als angegeben=0x0 (PRUEFER-22 F2). Vor dem Laden sichern,
+                // denn source_* wird darunter ueberschrieben.
+                long nAngabeB = (long) pUrlImage->source_width;
+                long nAngabeH = (long) pUrlImage->source_height;
+                if (MetafileFromImage( filePath, &mfi, TransparencySysColor, nAngabeB, nAngabeH ))
                 {
                     //
                     // BEFUND E-106: die ECHTE Dateigroesse merken, auch wenn
@@ -556,13 +561,21 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
                     	// BEFUND E-112: in welcher Groesse wurde die Metadatei geschrieben?
                     	// Alle Werte in EINER Zeile (Arbeitsweise/zwei-werte-in-eine-ausgabe.md).
                     	long nGemaltB = 0, nGemaltH = 0;
-                    	E112Zielrechteck( (long) embed->width, (long) embed->height,
+                    	E112Zielrechteck( nAngabeB, nAngabeH,
                     					  nEchtBreite, nEchtHoehe, &nGemaltB, &nGemaltH );
                     	CString szE112;
                     	szE112.Format( "E-112 Metadatei: angegeben=%ldx%ld Datei=%ldx%ld gemalt=%ldx%ld",
-                    				   (long) embed->width, (long) embed->height,
+                    				   nAngabeB, nAngabeH,
                     				   nEchtBreite, nEchtHoehe, nGemaltB, nGemaltH );
                     	PutDebugLog( DEBUG_MASK_MISC, szE112 );
+                    	// BEFUND E-112: source_* bekommt das Zielrechteck - der Block darunter
+                    	// setzt daraus embed und pict_frame, also Zeilenhoehe und Rahmen. Ohne
+                    	// Angabe ist das die Dateigroesse wie bisher (E-103).
+                    	if ( nGemaltB > 0 && nGemaltH > 0 )
+                    	{
+                    		pUrlImage->source_width  = (short) nGemaltB;
+                    		pUrlImage->source_height = (short) nGemaltH;
+                    	}
                     }
 
                     if ( !pUrlImage->source_width )
