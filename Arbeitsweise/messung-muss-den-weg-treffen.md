@@ -320,3 +320,7 @@ Aufrufer liest.
   die Messung**, nicht nur die Regel.
 - Was keine Wirkung hatte, weil die Datei gar nicht gebaut wird, steht in
   [[quelle-muss-im-bau-stehen]] (F1, derselbe Vormittag).
+- Eine Stunde später derselbe Fehler noch einmal, bei PRÜFER-23 N1 (die
+  Gegenrichtung stand im Abschnitt). Daraus wurde [[fund-ganz-abhaken]] mit
+  dem Werkzeug `tools/fund-punkte.pl`, das jeden genannten Ort eines Fundes
+  als Liste ausgibt.

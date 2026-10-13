@@ -140,3 +140,26 @@ nicht, *warum*. Eine reguläre Nachricht, die einen Zustand erfragt („ich
 sehe noch kein …", „wo liegt …", „läuft … schon?"), gehört in dieselbe
 Spalte wie ein Einwurf. `verlauf-messen.pl` sollte solche Nachfragen
 gesondert zählen (Vorschlag unten im CHRONIST-Bericht).
+
+## Nachtrag 13.10.2026, 10:27: der Einwurf kam zur angekündigten Zeit
+
+Gemessen mit `perl tools/verlauf-messen.pl 7cea137a-….jsonl 2026-10-13T10:11`:
+3 Nachrichten, 2 davon Einwurf (66 %), größter Block 3 Werkzeugaufrufe.
+Am Schweigen lag es also nicht.
+
+Um 10:12:59 UTC stand im Stand: *„Es laufen noch LEKTOR und CHRONIST, etwa
+15 Minuten. Danach baue ich das Paket."* Um 10:22 kam der LEKTOR-Fund
+(Gegenrichtung von N1, siehe [[fund-ganz-abhaken]]), und die Arbeit wurde
+länger. Eine neue Zeit wurde nicht genannt. Um 10:27:57, genau nach den
+angekündigten 15 Minuten, fragte Gregor *„kann ich was mergen?"*. Die
+Antwort war richtig gebaut ([[abschalten-ist-ein-termin]]): *„Noch nicht"*
+stand vorn, dazu, was auf dem Zweig liegt. Um 10:29:44 kam der zweite
+Einwurf, *„ok. 15 min. sollten reichen. kann ich schon lokal was testen?"*.
+Er hat die Zeit selbst wiederholt und nach einer Beschäftigung für die
+Wartezeit gefragt.
+
+**How to apply, zusätzlich:** Eine angekündigte Zeit ist eine Frist
+([[abschalten-ist-ein-termin]]). Verschiebt ein Fund die Arbeit, kommt die
+**neue Zeit in dieselbe Meldung wie der Fund**, hier also um 10:22: *„dadurch
+etwa 10 Minuten später"*. Gibt es währenddessen etwas, das Gregor schon
+prüfen kann, wird das mit angeboten, bevor er danach fragt.

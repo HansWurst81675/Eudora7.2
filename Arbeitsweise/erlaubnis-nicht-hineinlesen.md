@@ -118,3 +118,30 @@ kosteten kaum Wartezeit. Der Fehler lag vorher, in der Frage selbst:
   Kosten bei paralleler Arbeit messen; meist erledigt sich die Frage dann.
 - **Ein mehrdeutiges „ok" gilt für den kleineren Umfang**, also für das, was
   ohnehin läuft. Siehe den Nachtrag davor.
+
+## Nachtrag 13.10.2026, 10:28: Antwortvorgabe wirkte, der Rollenname fehlte
+
+Um 10:28:10 UTC endete die Meldung mit *„Soll ich das Paket 1.0.85 jetzt
+bauen, ohne eine weitere Rollenrunde für diese drei Zeilen? Antworte bitte
+mit ‚ja, Paket jetzt' oder ‚nein, erst Rollen'."* Gregor antwortete nach
+einer Minute: *„nein, erst rollen (wenn du lerktor und prüfer meinst?)"*.
+Die Antwort war eindeutig, die Vorgabe der beiden Antworten hat gewirkt.
+Offen blieb, **welche** Rollen: Die Frage sprach von *„die drei Rollen"*,
+ohne sie zu nennen. Gregor riet zwei, gemeint waren LEKTOR, PRÜFER und
+CHRONIST.
+
+Zweitens hat die Frage gegen den Nachtrag davor verstoßen, der zehn Minuten
+alt war: Sie bot wieder an, eine Schranke auszulassen (`paket-bereit.pl`
+meldete die Rollen fällig). Gregor hat die Schranke gewählt. Darauf darf
+sich die Frage nicht verlassen.
+
+**How to apply, zusätzlich:**
+
+- **In einer Frage an Gregor steht jede Rolle, jeder Befund und jedes
+  Werkzeug mit Namen**, nicht als Anzahl: *„LEKTOR, PRÜFER und CHRONIST"*,
+  nicht *„die drei Rollen"*. Eine Zahl muss er zurückübersetzen und rät dabei.
+- **Die vorgegebenen Antworten beibehalten.** Sie haben beim ersten Einsatz
+  ein „ok" verhindert.
+- **Verlangt eine Schranke etwas, wird es angekündigt und nicht gefragt.**
+  Hier also: *„LEKTOR, PRÜFER und CHRONIST laufen jetzt parallel, etwa 15
+  Minuten, danach baue ich das Paket."*

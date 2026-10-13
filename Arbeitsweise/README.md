@@ -46,6 +46,7 @@ eine Datei liest, liest diese.
 | [CHRONIST-2026-10-13](CHRONIST-2026-10-13.md) | CHRONIST-Lauf vom 13.10.2026 - acht Nachträge zu bestehenden Lehren aus Release 1.0.83/1.0.84 und Gregors Testlauf an 1.0.84; keine neue Lehre |
 | [CHRONIST-2026-10-13b](CHRONIST-2026-10-13b.md) | CHRONIST-Lauf 13.10.2026 (zweiter): zwei neue Lehren (Commit-Schranken auf einmal, Funktionsbug vor Buchführung), drei Nachträge, neues Werkzeug tools/commit-bereit.pl |
 | [CHRONIST-2026-10-13c](CHRONIST-2026-10-13c.md) | CHRONIST-Lauf 13.10.2026 (dritter): neue Lehre quelle-muss-im-bau-stehen mit Werkzeug tools/wer-baut.pl, Nachträge zu messung-muss-den-weg-treffen (F2) und erlaubnis-nicht-hineinlesen („ok“ auf Entweder-oder) |
+| [CHRONIST-2026-10-13d](CHRONIST-2026-10-13d.md) | CHRONIST-Lauf 13.10.2026 (vierter): neue Lehre fund-ganz-abhaken mit Werkzeug tools/fund-punkte.pl (N1 nur in einer Richtung behoben), Nachträge zu erlaubnis-nicht-hineinlesen (Rollen in Fragen ausschreiben) und einwurf-ist-ein-messwert (neue Zeit mit dem Fund melden) |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
@@ -82,6 +83,7 @@ eine Datei liest, liest diese.
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
 | [fertige-fassung-bereitstellen](fertige-fassung-bereitstellen.md) | Ist eine neue Fassung fertig, erst eigene Tests, dann als Verzeichnis neben Gregors letztem Release-Verzeichnis bereitstellen |
+| [fund-ganz-abhaken](fund-ganz-abhaken.md) | Vor der Behebung eines Fundes seine Punkte als Liste abhaken (tools/fund-punkte.pl): N1 wurde nur in einer Richtung behoben, obwohl PRÜFER-23 die Gegenrichtung im selben Abschnitt nannte |
 | [funktion-bringt-ihre-vorbedingung-mit](funktion-bringt-ihre-vorbedingung-mit.md) | Wer eine bewaehrte Funktion in einen neuen Weg einbaut, uebernimmt ihre Vorbedingungen und Nebenwirkungen - ISOTranslate nullt ein Byte hinter dem Bereich |
 | [funktionsbug-vor-buchfuehrung](funktionsbug-vor-buchfuehrung.md) | Wartet Gregor auf eine Behebung, läuft sie im Vordergrund zuerst; Buchführung (Doku, Aufräumen, Merges der Rollen) geht in den Hintergrund oder danach |
 | [gegenprobe-umdrehen](gegenprobe-umdrehen.md) | Nicht pruefen, ob der gewuenschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt; Gregors Technik vom 07.09.2026 |
