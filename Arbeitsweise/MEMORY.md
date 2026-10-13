@@ -86,3 +86,4 @@
 - [CHRONIST 13.10.2026 c](CHRONIST-2026-10-13c.md) — Laufbericht: eine neue Lehre, zwei Nachträge (F2 am Ladeweg, „ok" auf Entweder-oder), Werkzeug wer-baut.pl, Rollenschranke bewertet
 - [Fund ganz abhaken](fund-ganz-abhaken.md) — vor der Behebung `perl tools/fund-punkte.pl <Bericht> <anker>`; N1 nur in einer Richtung behoben, die Gegenrichtung stand im selben PRÜFER-Abschnitt
 - [CHRONIST 13.10.2026 d](CHRONIST-2026-10-13d.md) — Laufbericht: eine neue Lehre, drei Nachträge (Rollen in Fragen ausschreiben, neue Zeit mit dem Fund melden), Werkzeug fund-punkte.pl
+- [CHRONIST 13.10.2026 e](CHRONIST-2026-10-13e.md) — Laufbericht: sieben Nachträge (Messfenster hat gewirkt, Startliste, Paket aus Bin\Debug, „schlimmer" ungemessen, Übergabe nur im Chat, Abschaltmeldung, „für morgen" heute machbar), Werkzeuge stapel-lesen.ps1 und Startliste in testlauf.ps1

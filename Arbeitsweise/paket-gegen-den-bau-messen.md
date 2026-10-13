@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:54:15.228Z
+  modified: 2026-10-13T15:00:00.000Z
 ---
 
 Schranke: tools/paket-pruefen.ps1 (nach jedem Paketbau, vor der Übergabe)
@@ -103,3 +103,24 @@ Bauarten, und galt trotzdem für beide. Seither kommt `QCSSL.dll` bei
 - **Der Patch sagt, welche Datei zu prüfen ist.** Wer eine einzelne Quelldatei
   ändert, weiß, welche Binärdatei sich bewegen muss — und misst genau diese im
   Paket nach, bevor er das Paket meldet.
+
+## Nachtrag 13.10.2026: dieselbe Falle, diesmal aus Bin\Debug, und das Werkzeug hat sie gefangen
+
+Paket 1.0.85 (10:35 UTC) wurde mit `paket-bauen.ps1 -Ziel … -AusBauverzeichnis` gebaut. Ohne weitere Angaben nimmt das Werkzeug zwei Vorgaben, die nicht mehr zum Projekt passen:
+
+- `-Bauart` ist standardmäßig `Debug`. Übernommen wurde also `Eudora71\Bin\Debug`, und dort lag eine `Eudora.exe` mit **7.2.0.12**.
+- `-Grundlage` ist standardmäßig `Releases\Eudora72-1.0.2-lauffaehig.zip`.
+
+Das Protokoll meldete *„7 von 7 uebernommen“*. Gemessen hat es erst der nächste Aufruf, `paket-pruefen.ps1` (*„KRITERIUM 0 … NEIN“*, MSVCP71.dll fehlt). In derselben Ausgabe standen die Dateiversion `7.2.0.12` und der Prüfsummenvergleich mit `Bin\Release` (`False`). Die Lehre hat also gewirkt. Gregor hat das falsche Verzeichnis nie gesehen.
+
+Danach:
+
+- Das Löschen des falschen Verzeichnisses lehnte die Sitzung ab (*Irreversible Local Destruction*). Es wurde umbenannt in `Eudora72-1.0.85-FALSCH-debug-7.2.0.12-nicht-benutzen`, und Gregor wurde gebeten, es selbst zu löschen. Das war richtig: Ein Name, der sagt, was das Verzeichnis ist, kann nicht verwechselt werden.
+- 1.0.85 und 1.0.86 wurden **von Hand** gebaut: `Eudora72-1.0.84-release.zip` auspacken, die EXE/DLL/OCX aus `Bin\Release` darüberkopieren, dann `paket-pruefen.ps1`. Für die nächste Sitzung steht in `WEITERMACHEN.md` nur ein Satz: *„nicht `paket-bauen.ps1 -AusBauverzeichnis`, das nimmt `Bin\Debug`“*.
+
+**Das ist das zweite Auftreten derselben Klasse** (08.09.: alte Debug-EXE aus der Grundlage; 13.10.: alte Debug-EXE aus `Bin\Debug`). Nach [[fehlerklassen-abstellen]] reicht kein Satz in `WEITERMACHEN.md`. Der Weg, auf dem das Paketwerkzeug ohne Zusatzangaben ein richtiges Paket baut, ist bisher der Handweg daneben.
+
+**How to apply (Ergänzung):**
+
+- **Das Paketwerkzeug muss beim Bauen selbst abweisen**, nicht erst `paket-pruefen.ps1` danach. Vorschlag für die Hauptsitzung, nicht gebaut: `paket-bauen.ps1` vergleicht nach dem Übernehmen die Dateiversion von `Eudora.exe` im Ziel mit `Eudora71/Version.h` und bricht bei Abweichung ab. Dazu `-Bauart` standardmäßig `Release` und als Grundlage das ZIP des letzten Tags statt 1.0.2. Gegenprobe: der Aufruf vom 13.10. (`-AusBauverzeichnis` ohne `-Bauart`) muss abgewiesen werden.
+- Bis dahin gilt: Wer ein Paket baut, nennt `-Bauart` und `-Grundlage` ausdrücklich, oder nimmt den Handweg oben. Fertig ist es erst, wenn `paket-pruefen.ps1` grün meldet und die Fassung gleich `Version.h` ist.
