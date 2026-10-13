@@ -160,9 +160,9 @@ haben.
 
 | | |
 |---|---|
-| Inhalt | [E-112](../BEFUNDE.md#e-112): die Metadatei eines Bildes wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`, `QCGraphics.cpp`), mit ihm [E-103](../BEFUNDE.md#e-103); danach PRÜFER-22 **F1** (gleiche URL nicht mehr teilen: zuerst `dae6727` an `PGEMBED.C`, wirkungslos, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird; jetzt `ac8f030` in `PGHTMIMP.CPP`, `check_to` 0, noch nicht gebaut) und **F2** (`c294594`, halbe Angabe ergänzt die fehlende Seite aus dem Seitenverhältnis) |
+| Inhalt | [E-112](../BEFUNDE.md#e-112): die Metadatei eines Bildes wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`, `QCGraphics.cpp`), mit ihm [E-103](../BEFUNDE.md#e-103); danach PRÜFER-22 **F1** (gleiche URL nicht mehr teilen: zuerst `dae6727` an `PGEMBED.C`, wirkungslos, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird; jetzt `ac8f030` in `PGHTMIMP.CPP`, `check_to` 0, noch nicht gebaut) und **F2** (halbe Angabe ergänzt die fehlende Seite aus dem Seitenverhältnis: zuerst `c294594`, am Ladeweg wirkungslos; jetzt `11b6a3a`, noch nicht gebaut) |
 | Gemessen | Testsuite 193/193, darunter `TestE112Metadatei.cpp` (vor der Behebung rot: 330×327 statt 35×35 gemalt) und `TestE112.cpp` (3), (6) zu F2. **Am laufenden Programm an `a36c47f`** (Prüfstand `C:\Temp\E112-1085`, Titelzeile `1.0.85+a36c47f*`): `gemalt=35x35`, `250x96`, `79x64`, kein Bild auf dem Text |
-| Nicht gemessen | F1 (`ac8f030`) und F2 am laufenden Programm als wirksam (die Messung oben lief an `a36c47f`; ein Lauf danach zeigte F1 aus `dae6727` wirkungslos); kein Paket. Bekannt offen und erst ab dieser Fassung sichtbar: [E-116](../BEFUNDE.md#e-116) |
+| Nicht gemessen | F1 (`ac8f030`) und F2 am laufenden Programm als wirksam (die Messung oben lief an `a36c47f`; Läufe danach zeigten F1 aus `dae6727` und F2 aus `c294594` wirkungslos); kein Paket. Bekannt offen und erst ab dieser Fassung sichtbar: [E-116](../BEFUNDE.md#e-116) |
 
 ## 1.0.84 — **veröffentlicht als `v1.0.84`** am 12.10.2026, Quellstand 7.2.0.84 (E-94)
 

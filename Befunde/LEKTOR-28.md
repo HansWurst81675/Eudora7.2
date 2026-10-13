@@ -105,8 +105,13 @@ eigenen Einträge aus diesem Lauf in `CHANGELOG.md`, `Releases/PAKETE.md` und
 `WEITERMACHEN.md` (*„F1 (`dae6727`, `PGEMBED.C`: gleiche URL nur bei gleicher
 Größenangabe teilen)“*). **Geändert (5 Stellen):** `dae6727` als wirkungslos und
 zurückgenommen, F1 jetzt in `PGHTMIMP.CPP`, *noch nicht gebaut, nicht gemessen*.
-Weil das Banner mit `width=150` geteilt wurde, war **auch F2** in diesem Lauf
-verdeckt; das steht jetzt im CHANGELOG. **Ausdrücklich nichts** zu F1 als
+**Nachtrag, nach dem Merge von `11b6a3a`:** auch F2 aus `c294594` war am
+Ladeweg wirkungslos — gemessen an `ac8f030`, *„<img width=150> kam als
+angegeben=0x0 und wurde in Dateigroesse 985x378 gemalt - embed->width/height ist
+bei halber Angabe an dieser Stelle noch 0“*. Meine erste Lesart (F2 sei nur
+hinter dem Teilen aus F1 verdeckt) war falsch und ist berichtigt; F2 sitzt jetzt
+in `PgEmbeddedImage.cpp` (`11b6a3a`), noch nicht gebaut. Nachgezogen in
+`BEFUNDE.md`, `CHANGELOG.md`, `WEITERMACHEN.md`, `Releases/PAKETE.md` (5 Stellen). **Ausdrücklich nichts** zu F1 als
 *gemessen* eingetragen — die Messung des neuen Baus läuft beim Auftraggeber.
 `Befunde/PRUEFER-22.md` nennt `PGEMBED.C:1828-1846` als **Ort der Ursache**; das
 stimmt und bleibt stehen.
