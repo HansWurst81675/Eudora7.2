@@ -266,6 +266,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **[E-119](BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … |
 | **[E-118](BEFUNDE.md#e-118)** | Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als HTML-Quelltext |
 | **[E-117](BEFUNDE.md#e-117)** | Bilder mit &amp; in der Adresse kommen nicht an — statt des Fotos lädt ein 1×1-Pixel, … |
 | **[E-116](BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… |
