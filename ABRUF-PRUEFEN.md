@@ -18,7 +18,7 @@ Eudora beenden. Dann in `Eudora.ini` unter `[Settings]` diese Zeilen setzen
 LoginName=DEIN-BENUTZERNAME
 POPAccount=DEIN-BENUTZERNAME@mx.freenet.de
 RealName=Gregor
-ReturnAddress=DEIN-BENUTZERNAME@freenet.de
+ReturnAddress=DEIN-BENUTZERname@freenet.invalid
 SMTPServer=mx.freenet.de
 SmtpAuthAllowed=1
 
@@ -162,7 +162,7 @@ für Kriterium 3.
 | „SSL Negotiation Failed: …" (`IDS_ERR_SSL_NEGOTIATION`, `QCWorkerSocket.cpp:1959`) | Der Handshake selbst ist gescheitert | **Siehe Abschnitt 5a** — der Text hinter dem Doppelpunkt sagt, warum. |
 | Eudora verschwindet beim Abruf kommentarlos, ohne Dialog | War bis 31.08. der wahrscheinlichste Absturz: ein NULL-Zeiger nach gescheiterter SSL-Aushandlung (`QCWorkerSocket.cpp:1969`, Befund P-1.5a) | **Behoben** (Befund [P-2.1](BEFUNDE.md#p-2.1)). Stürzt es trotzdem ab, ist es *nicht* diese Stelle — dann bitte melden, mit dem Zeitpunkt. |
 | „Server does not support SSL" (`IDS_SSL_NOSUPPORT`, `POPSession.cpp:2144`) | `SSLReceiveUse=3` gesetzt, aber der Server bietet in `CAPA` kein `STLS` an | Auf `SSLReceiveUse=2` und Port 995 umstellen. |
-| `-ERR` mit `[AUTH]` oder „authentication failed" | Benutzername oder Passwort falsch (`POPSession.cpp:1818-1878`) | `POPAccount` prüfen: muss `benutzer@server` sein, nicht die Mailadresse. Bei freenet ist der Anmeldename oft die vollständige Mailadresse — dann lautet `POPAccount` `name@freenet.de@mx.freenet.de`. |
+| `-ERR` mit `[AUTH]` oder „authentication failed" | Benutzername oder Passwort falsch (`POPSession.cpp:1818-1878`) | `POPAccount` prüfen: muss `benutzer@server` sein, nicht die Mailadresse. Bei freenet ist der Anmeldename oft die vollständige Mailadresse — dann lautet `POPAccount` `name@freenet.invalid@mx.freenet.de`. |
 | Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe *„Welcher Servername? — beantwortet"* unter Schritt 2. |
 | Nachricht kommt an, aber Umlaute sind kaputt | Zeichensatzpfad | Genau festhalten, was dasteht (siehe unten) — daran lässt sich die Stelle bestimmen. |
 

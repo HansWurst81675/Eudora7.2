@@ -13,7 +13,7 @@ There has been an error transferring your mail.  I said:
 Persona : <Dominant>
 Status  : Logging into POP Server
 Info    : PASS
-und der POP server (adventskalender-mails@freenet.de@mx.freenet.de) said:
+und der POP server (konto-freenet@gregor.invalid@mx.freenet.de) said:
     ERR [AUTH] Authentication failed.
 ```
 
@@ -219,10 +219,10 @@ if (NULL == pAtSign) { ASSERT(0); return (-1); }
 ```
 
 `strrchr` sucht das **letzte** `@`. Aus
-`adventskalender-mails@freenet.de@mx.freenet.de` wird damit
+`konto-freenet@gregor.invalid@mx.freenet.de` wird damit
 
 ```
-USER adventskalender-mails@freenet.de
+USER konto-freenet@gregor.invalid
 ```
 
 — genau das, was freenet verlangt. Zum Server wird der Teil dahinter,

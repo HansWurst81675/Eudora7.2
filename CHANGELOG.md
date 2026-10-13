@@ -1098,7 +1098,7 @@ Gregor speicherte mit 1.0.65 eine Nachricht aus dem geöffneten Fenster. In der
 Datei stand:
 
 ```
-From: "markus.bakus@gmx.de" <markus.bakus@gmx.de> Subject: Re: Fwd: Deine
+From: "konto-gmx@gregor.invalid" <konto-gmx@gregor.invalid> Subject: Re: Fwd: Deine
 Anzeige 'Zu verschenken: kleine Gefäße' Cc:
 ```
 
@@ -2391,7 +2391,7 @@ nicht schon im vom Anwender bestätigten Speicher liegt. Die Einzelfreigabe
 geht weiter, weg fällt die pauschale Annahme.
 
 **Gemessen an Gregors Konten:** `Open 212.227.17.186:993` und
-`Successfully retrieved markus.bakus@gmx.de` — GMX' Kette hält der echten
+`Successfully retrieved konto-gmx@gregor.invalid` — GMX' Kette hält der echten
 Prüfung stand. Die pauschale Annahme war also nicht nötig, um seine Konten zu
 erreichen. Der Verdacht, Eudoras `rootcerts.p7b` von 2006 könnte zu alt sein,
 ist damit für diese beiden Konten widerlegt.
@@ -2804,11 +2804,11 @@ geprüft wurde:
 
 ```
 E-64 FilterMsg: Liste=1 Filter=3 verlangt WhenToApply=4 vorhandene Masken=[5,5,5]
-E-64 Match=0 Filter="From:angebot@email.waipu.tv" … Betreff="Hans, unsere TV-Empfehlungen der Woche"
+E-64 Match=0 Filter="From:angebot@waipu.invalid" … Betreff="Hans, unsere TV-Empfehlungen der Woche"
 ```
 
-`Match=0` war korrekt: die Nachricht kommt von `neues@mail.waipu.tv`, der
-Filter sucht `angebot@email.waipu.tv`. Gregors eigenes Urteil dazu:
+`Match=0` war korrekt: die Nachricht kommt von `neues@waipu.invalid`, der
+Filter sucht `angebot@waipu.invalid`. Gregors eigenes Urteil dazu:
 *„fehlalarm: die mail adresse war im filter eine andere"*. Damit ist [**E-64**](BEFUNDE.md#e-64)
 an einem Fall mit drei Filtern und mehreren Nachrichten bestätigt.
 
@@ -2838,8 +2838,8 @@ Fortschrittsanzeige:
 
 ```
 6.26  E-64 FilterMsg: Liste=1 Filter=1 verlangt WhenToApply=4 … Masken=[5]
-7.38  E-64 Match=1 Filter="From:newsletter@service.freenet.de" … "Coole Comics | …"
-7.38  E-64 Match=0 Filter="From:newsletter@service.freenet.de" … "Fwd: Neue Anmeldung …"
+7.38  E-64 Match=1 Filter="From:newsletter@freenet.invalid" … "Coole Comics | …"
+7.38  E-64 Match=0 Filter="From:newsletter@freenet.invalid" … "Fwd: Neue Anmeldung …"
 ```
 
 Das ist der echte Filterlauf, und er arbeitet **richtig**: eine Nachricht
@@ -2855,7 +2855,7 @@ Hier wurde `CFiltersDoc::FilterMsg` **überhaupt nicht aufgerufen**. `Junk.mbx`
 wuchs trotzdem von 174 196 auf 501 987 Bytes.
 
 **Gegenprobe am Bestand:** von zwölf Nachrichten in `Junk.mbx` haben zehn
-keinen Filtergrund. Sechs davon kommen von `adventskalender-mails@freenet.de`
+keinen Filtergrund. Sechs davon kommen von `konto-freenet@gregor.invalid`
 — für die sieht Gregors zweiter Filter ausdrücklich `HW_Bxo.mbx` als Ziel
 vor. Diese Datei ist 0 Bytes groß.
 

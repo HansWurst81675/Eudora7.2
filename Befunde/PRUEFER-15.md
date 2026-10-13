@@ -282,7 +282,7 @@ genau dann nicht, wenn `UnwrapText` den Schutz bräuchte. Richtig:
 „aus dem geöffneten Fenster" mit `From:`/`Subject:`/`Cc:` — die Reihenfolge und
 das leere `Cc:` passen zum Kopfzeilensatz des Verfassenfensters
 (`GetMessageHeaders`, `IDS_HEADER_TO + i`), deshalb ist die behobene Stelle
-plausibel die getroffene. Aber `markus.bakus@gmx.de` ist ein **Absender**, also
+plausibel die getroffene. Aber `konto-gmx@gregor.invalid` ist ein **Absender**, also
 eine empfangene Nachricht. Speichert Gregor nach diesem Paket eine empfangene
 Nachricht aus ihrem eigenen Fenster, **tritt derselbe Fehler wieder auf**, und
 zwar mit derselben Sichtbarkeit wie am 17.09. Vor der Auslieferung sollte

@@ -59,7 +59,7 @@ die Liste der Regeln mit den Schaltflächen **Up**, **Down**, **New** und
 *New* legt eine leere Regel an. Sie bekommt ihren Namen nicht von Ihnen,
 sondern aus der ersten Bedingung — `CFilter::SetName` setzt ihn beim
 Übernehmen zusammen, weshalb eine Regel in der Liste zum Beispiel
-`From:mailings@sicher.gmx.net` heißt.
+`From:mailings@gmx.invalid` heißt.
 
 Rechts stellen Sie ein:
 

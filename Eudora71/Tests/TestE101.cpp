@@ -31,8 +31,8 @@
 // dort im Wort "gueltig" steht - gemessen, nicht angenommen.
 //
 static const char* const kSelbstVerfasst =
-	"From: gregor.czempik@web.de\r\n"
-	"To: markus.bakus@gmx.de\r\n"
+	"From: konto-webde@gregor.invalid\r\n"
+	"To: konto-gmx@gregor.invalid\r\n"
 	"Subject: Fw: Ihr Doctolib Verifizierungscode\r\n"
 	"Date: Mon, 14 Sep 2026 10:52:45 +0000\r\n"
 	"\r\n"
@@ -46,7 +46,7 @@ static const char* const kSelbstVerfasst =
 //
 static const char* const kEmpfangen =
 	"From: no-reply@doctolib.de\r\n"
-	"To: gregor.czempik@web.de\r\n"
+	"To: konto-webde@gregor.invalid\r\n"
 	"Subject: Ihr Doctolib Verifizierungscode\r\n"
 	"MIME-Version: 1.0\r\n"
 	"Content-Type: text/html; charset=UTF-8\r\n"
