@@ -1837,7 +1837,15 @@ PG_PASCAL (memory_ref) pgNewImageRecord (pg_ref pg, pg_url_image_ptr image, embe
             
             GetMemoryRecord((memory_ref)embed_ptr->data, 0, &image_record);
             
-            if (pgEqualStruct(image_record.URL, image->URL, sizeof(image_record.URL))) {
+            /* BEFUND E-112, PRUEFER-22 F1 (13.10.2026): nur teilen, wenn auch die
+               Groessenangabe gleich ist. Seit 7.2.0.85 wird die Metadatei in der
+               ANGEGEBENEN Groesse geschrieben (QCGraphics.cpp, E112MetadateiAusDIB);
+               zwei <img> mit derselben URL und verschiedener Angabe (Logo klein und
+               gross, spacer.gif) bekaemen sonst beide die Groesse des zuerst
+               geladenen. */
+            if (pgEqualStruct(image_record.URL, image->URL, sizeof(image_record.URL))
+                  && image_record.source_width == image->source_width
+                  && image_record.source_height == image->source_height) {
                
                result = (memory_ref)embed_ptr->data;
                UnuseMemory(styles->embed_object);

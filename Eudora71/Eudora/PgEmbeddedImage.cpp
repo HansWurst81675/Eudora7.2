@@ -355,10 +355,13 @@ static PG_PASCAL (long) eCallback( paige_rec_ptr pg,
 // Als E-110 behoben war, luden sie - und das WhatsApp-Symbol fuellte das halbe
 // Fenster.
 //
-// WIE DAS VERKLEINERN GEHT, OHNE DASS PAIGE SKALIEREN KANN. MetafileFromImage
-// liefert eine METADATEI, und eine Metadatei wird auf ihr Zielrechteck
-// gestreckt - pict_frame ist dieses Rechteck. Paige muss dafuer nichts
-// koennen; es reicht, das Rechteck richtig zu setzen.
+// WIE DAS VERKLEINERN GEHT, OHNE DASS PAIGE SKALIEREN KANN. Bis 7.2.0.84 stand
+// hier: "eine Metadatei wird auf ihr Zielrechteck gestreckt - pict_frame ist
+// dieses Rechteck". WIDERLEGT (Gregor an 1.0.76 und 1.0.84, PRUEFER-22):
+// Paige spielt eine Metadatei mit mapping_mode 0 als MM_TEXT ab
+// (PGEMBED.C:4093-4101), pict_frame bestimmt dort nur die LAGE. Seit
+// 7.2.0.85 wird die Metadatei deshalb schon in der Zielgroesse geschrieben
+// (QCGraphics.cpp, E112MetadateiAusDIB); diese Funktion liefert die Groesse.
 //
 // DER AUFRUFER SETZT BEIDES auf denselben Wert: embed->width/height (danach
 // rechnet der Zeilenumbruch) und pict_frame (danach wird gezeichnet). Laufen
@@ -377,7 +380,7 @@ void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
 
 	if ( nAttrBreite > 0 && nAttrHoehe > 0 )
 	{
-		// Vollstaendige Angabe - sie gewinnt, das Bild wird hineingestreckt.
+		// Vollstaendige Angabe - sie gewinnt, das Bild wird in dieser Groesse gezeichnet.
 		*pnRahmenBreite = nAttrBreite;
 		*pnRahmenHoehe  = nAttrHoehe;
 	}
@@ -859,9 +862,10 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					// halbe Fenster. Gregor: "warum ist die reply ansicht so
 					// gross?"
 					//
-					// pict_frame ist das ZIELRECHTECK der Metadatei - sie
-					// wird hineingestreckt. Damit skaliert das Bild, ohne
-					// dass Paige selbst skalieren koennen muss.
+					// pict_frame bestimmt bei Paige nur die LAGE (MM_TEXT,
+					// PGEMBED.C:4093). Die Groesse steht seit 7.2.0.85 in der
+					// Metadatei selbst (MetafileFromImage, E112MetadateiAusDIB);
+					// hier wird dieselbe Groesse fuer den Zeilenumbruch gesetzt.
 					//
 					// embed->width/height und pict_frame bekommen denselben
 					// Wert: nach dem ersten rechnet der Zeilenumbruch, nach

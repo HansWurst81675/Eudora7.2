@@ -116,9 +116,11 @@ SECImage* LoadImage(LPCSTR pURL, int TransparencySysColor /*= COLOR_3DFACE*/)
 // (draw_meta_file, PaigeDLL/PGSOURCE/PGEMBED.C:4090) - das Zielrechteck
 // bestimmt dort nur die LAGE, nicht die Groesse. Der Versuch in 7.2.0.76,
 // nur pict_frame auf die angegebene Groesse zu setzen, wirkte deshalb nicht.
-// Auch ein anderer mapping_mode hilft nicht: die Metadatei selbst traegt
-// SetMapMode(MM_TEXT) und setzt beim Abspielen jede Skalierung von aussen
-// zurueck. Also wird die Skalierung IN die Metadatei geschrieben: das Ziel
+// Ein anderer mapping_mode hilft nicht: im else-Zweig spielt Paige mit
+// PlayMetaFile ab, und die Metadatei traegt selbst SetMapMode(MM_TEXT) - das
+// setzt die Skalierung von aussen zurueck. (Im MM_TEXT-Zweig filtert Paige
+// META_SETMAPMODE heraus, PGEMBED.C:4141 - dort gibt es aber nichts zu
+// skalieren. Berichtigt nach PRUEFER-22.) Also wird die Skalierung IN die Metadatei geschrieben: das Ziel
 // von StretchDIBits ist die Groesse aus E112Zielrechteck.
 //
 // Eigene Funktion ohne MFC und ohne Paige, damit der Pruefstand sie mit

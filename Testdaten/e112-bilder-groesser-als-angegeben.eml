@@ -16,6 +16,7 @@ Content-Transfer-Encoding: 7bit
 <p>Deine Anzeige wird weniger gesehen - diese Zeile darf NICHT unter einem Bild liegen.</p>
 <p><img src="cid:banner@e112.invalid" width="250" height="96"></p>
 <p>Text unter dem Banner (angegeben 250x96, Datei 985x378).</p>
+<p><img src="cid:gross@e112.invalid" width="70" height="70"> Dasselbe Bild noch einmal, als 70x70 angegeben (PRUEFER-22 F1).</p>
 <p><img src="cid:ohne@e112.invalid"></p>
 <p>Text unter dem Bild ohne Groessenangabe (E-103, Datei 79x64).</p>
 </body></html>
