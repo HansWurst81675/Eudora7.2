@@ -269,7 +269,6 @@ nicht selbst messen kann*.
 | **[NP2-3](BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben |
 | **[NP3-3](BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch |
 | **[S-3](BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen |
-| **[AN-2](BEFUNDE.md#an-2)** | Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite — JavaScript, CSS un… |
 | **[NP2-2](BEFUNDE.md#np2-2)** | SysColorChange() tut nicht, was daneben steht |
 | **[NP3-2](BEFUNDE.md#np3-2)** | OnToolHitTest als int statt INT_PTR — x64-Sperre |
 | **[A-1](BEFUNDE.md#a-1)** | Erscheinungsbild: fünf Punkte umgesetzt |

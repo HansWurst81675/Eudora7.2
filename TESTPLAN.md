@@ -155,7 +155,7 @@ das Werbefenster wieder erscheint.
 | | muss sein |
 |---|---|
 | — | **entfällt** (Gregor 13.10.2026): das Werbefenster kommt in diesem Bau nicht mehr, siehe [AN-2](BEFUNDE.md#an-2) |
-| ☐ | dasselbe bei einem HTML-Newsletter: **kein** CSS im Nachrichtentext |
+| ✅ | dasselbe bei einem HTML-Newsletter: **kein** CSS im Nachrichtentext |
 
 Mit `LogLevel=128159` zeigt `grep "PLIST\|E-7" eudora.log` dazu den Werbeweg.
 
