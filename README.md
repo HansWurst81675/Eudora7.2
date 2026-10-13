@@ -76,7 +76,7 @@ verschickt.
 * **`v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18 Uhr UTC) — **von Gregor
   vorher am laufenden Programm geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
   darin: **Anhänge behalten Endung und Namen** ([AN-1](BEFUNDE.md#an-1), über POP und IMAP gemessen)
-  und, übersetzt, aber am Programm nicht gemessen, [**AN-2**](BEFUNDE.md#an-2) (kein Quelltext einer
+  und, übersetzt, aber damals am Programm nicht gemessen (seit 13.10.2026 von Gregor an 1.0.84 bestätigt), [**AN-2**](BEFUNDE.md#an-2) (kein Quelltext einer
   Webseite mehr im Werbefenster). Das Release davor war **`v1.0.72`** (17.09.2026,
   von Gregor geprüft: *„kein crash"*). **Seit `v1.0.72` im Download enthalten**
   sind damit: Zeichensalat
@@ -93,7 +93,8 @@ verschickt.
   Stellen (7.2.0.65, [**E-100**](BEFUNDE.md#e-100)), die **unbrauchbare gespeicherte Datei**
   (7.2.0.66 und 7.2.0.69, [**E-101**](BEFUNDE.md#e-101) — ohne `Content-Type`-Zeile und mit Eudoras
   internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
-  `Content-Type` zunächst ganz), **Bilder, die über dem Text lagen** (7.2.0.67,
+  `Content-Type` zunächst ganz; **seit 13.10.2026 wieder offen**, siehe unten),
+  **Bilder, die über dem Text lagen** (7.2.0.67,
   [**E-103**](BEFUNDE.md#e-103)), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
   (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
   [**E-104**](BEFUNDE.md#e-104)), **Bilder, die größer sind als im HTML angegeben und deshalb über
@@ -168,17 +169,30 @@ verschickt.
   wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
   Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**.
 * **Beim Start erschien der Quelltext einer Webseite in einem Fenster**
-  ([**AN-2**](BEFUNDE.md#an-2)): JavaScript, CSS und JSON als Text, ohne dass man etwas getan
-  hatte. Eudora startet ohne Eintrag `[Settings] Mode` in der
-  **Werbe-Betriebsart** und holt Werbung von `adserver.eudora.com` — diese
-  Adresse gehört seit 2018 dem Computer History Museum, und was von dort
-  kommt, ist eine gewöhnliche Webseite. Angezeigt wird sie von **Paige**,
-  nicht von einem Browser, und Paige kannte kein Element, dessen Inhalt kein
-  Text ist: `<script>` war unbekannt, `<style>` bekannt aber unbehandelt.
-  **Die Anzeige ist in 7.2.0.80 geändert und seit 7.2.0.82 übersetzt, am
-  laufenden Programm aber noch nicht gesehen.** Dass
-  Eudora überhaupt noch Werbung abruft, ist offen — drei Wege in
-  [AUFGABEN.md](AUFGABEN.md), **B6**.
+  ([**AN-2**](BEFUNDE.md#an-2), **behoben, von Gregor an 1.0.84 am 13.10.2026 bestätigt**):
+  JavaScript, CSS und JSON als Text. Angezeigt wird HTML von **Paige**, nicht
+  von einem Browser, und Paige kannte kein Element, dessen Inhalt kein Text
+  ist: `<script>` war unbekannt, `<style>` bekannt aber unbehandelt — das traf
+  auch jeden Newsletter mit eingebettetem CSS. Seit 7.2.0.80 wird beides
+  unterdrückt. Die frühere Erklärung, Eudora starte ohne `[Settings] Mode` in
+  der **Werbe-Betriebsart**, ist **widerlegt**: dieser Bau startet mit
+  `Mode=2` (ohne Werbung), und auch mit `Mode=0` holte 1.0.84 nichts. Die
+  Werbe-Betriebsart wird nach Gregors Entscheidung nicht weiter verfolgt
+  ([AUFGABEN.md](AUFGABEN.md), **B6**).
+* **Eine gespeicherte HTML-Nachricht zeigt in anderen Programmen falsche
+  Umlaute** ([**E-101**](BEFUNDE.md#e-101), **wieder offen** seit 13.10.2026, an 1.0.84 gemeldet):
+  die Datei aus *File → Save As* sagt im `<meta>` UTF-8, enthält aber
+  Windows-1252. Jedes Programm, das sie als HTML liest, folgt dem `<meta>` und
+  zeigt statt der Umlaute Ersatzzeichen.
+* **Ein gelöstes angedocktes Fenster hinterlässt eine leere Fläche**
+  ([**E-114**](BEFUNDE.md#e-114), offen, an 1.0.84 gemeldet): wird etwa das Filterfenster
+  angedockt und wieder gelöst, bleibt an seiner alten Stelle ein weißer
+  Bereich stehen.
+* **Ctrl+F (*Find Messages*) meldet „Encountered an improper argument"**
+  ([**E-115**](BEFUNDE.md#e-115), offen, an 1.0.84 gemeldet), und im Reiter *Mailboxes* ist kein
+  Postfach angehakt. Ohne IMAP-Konto nicht nachgestellt. Kein Datenverlust,
+  aber die Suche ist ohne Handgriff unbenutzbar, solange kein Postfach
+  angehakt ist.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
 
 Die vollständige Liste der offenen Punkte steht in [CHANGELOG.md](CHANGELOG.md)
