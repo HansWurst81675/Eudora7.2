@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 12.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.84`, 12.10.2026)
+**Stand 13.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.84`, 12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -718,7 +718,7 @@ Vollständige Herleitung in **BEFUNDE.md, [AN-2](BEFUNDE.md#an-2)**. Kurz:
 
 | | |
 |---|---|
-| **Was** | Eudora startet mit einer frischen `Eudora.ini` in der **Werbe-Betriebsart** (`[Settings] Mode` fehlt → `DEFAULT_SWM_MODE` = 0), holt Werbung von `//adserver.eudora.com/adjoin/playlists` — und diese Adresse gehört seit 2018 dem Computer History Museum. Die Antwort ist eine Webseite |
+| **Was** | Eudora startet mit einer frischen `Eudora.ini` in der **Werbe-Betriebsart** (`[Settings] Mode` fehlt → `DEFAULT_SWM_MODE` = 0) **[widerlegt 13.10.2026: der Schalter ist seit `bf14e14` gesetzt, Vorgabe ist 2 = Pro; siehe [AN-2](BEFUNDE.md#an-2)]**, holt Werbung von `//adserver.eudora.com/adjoin/playlists` — und diese Adresse gehört seit 2018 dem Computer History Museum. Die Antwort ist eine Webseite |
 | **Warum sie als Text erscheint** | Das Werbefenster ist `class CAdView : public CPaigeEdtView` — kein Browser, sondern Paige. Und Paige kannte kein Element, dessen Inhalt kein Text ist: `script` fehlte in `control_commands`, `style` stand darin ohne Behandlung |
 | **Geändert** | neuer Merker `inside_script`, nach dem Muster des vorhandenen `inside_title`. Vier Dateien, 29 Zeilen |
 | **Gemessen** | `perl tools/html-tags-pruefen.pl` — 30 Fälle, 0 Abweichungen, Gegenprobe gefahren |

@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 12.10.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 13.10.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
@@ -110,7 +110,9 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-> **Stand 12.10.2026.** Hier ansetzen, in dieser Reihenfolge.
+> **Stand 13.10.2026.** Hier ansetzen, in dieser Reihenfolge.
+>
+> **Gregors Test an 1.0.84 am 13.10.2026:** Testplan Teil A (vierzehn Befunde) bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen; [E-101](BEFUNDE.md#e-101) wieder offen (Zeichensatz der gespeicherten HTML-Datei), [E-114](BEFUNDE.md#e-114) neu, [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert gesehen. Für [AN-2](BEFUNDE.md#an-2) braucht die INI `Mode=0` — eine frische INI startet in diesem Bau ohne Werbung.
 >
 > **Gregors Reihenfolge vom 12.10.2026:** zuerst *„danach die reihenfolge aus
 > deinem vorschlag: E112, [E-113](BEFUNDE.md#e-113), [E-94](BEFUNDE.md#e-94), [E-77](BEFUNDE.md#e-77)"*, dann auf den Vorschlag dreier

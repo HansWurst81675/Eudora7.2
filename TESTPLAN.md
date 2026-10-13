@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 12.10.2026, Paket 1.0.84
+# Testplan für Gregor — Stand 13.10.2026 (Teil A, C1, E-83 erledigt; E-101 durchgefallen), Paket 1.0.84
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten

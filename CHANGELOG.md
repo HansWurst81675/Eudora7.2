@@ -9,10 +9,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 12.10.2026)
+## Noch offen (Stand 13.10.2026)
 
 | Kennung | | |
 |---|---|---|
+| [**E-114**](BEFUNDE.md#e-114) | **angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich** | **Neu, offen.** Von Gregor am 13.10.2026 an 1.0.84 gemeldet (Filterfenster) |
+| [**E-101**](BEFUNDE.md#e-101) | **gespeicherte HTML-Datei: Umlaute falsch** | **Wieder offen seit 13.10.2026.** Die Datei sagt im `<meta>` UTF-8, enthält aber Windows-1252 |
 | [**AN-1**](BEFUNDE.md#an-1) | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt; sein Urteil: *„gekürzt mit endung reicht"*. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist [B5.7](AUFGABEN.md#b5.7)** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
 | [**AN-2**](BEFUNDE.md#an-2) | **Beim Start zeigt ein Fenster in Eudora den Quelltext einer Webseite** — JavaScript, CSS und JSON als Text | **Ursache belegt, Anzeige behoben in 7.2.0.80; seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen.** Paige kannte kein Element, dessen Inhalt kein Text ist. **Offen bleibt die Produktfrage:** Eudora holt beim Start Werbung von `adserver.eudora.com`, und diese Adresse gehört seit 2018 dem Computer History Museum. Drei Wege in [AUFGABEN.md](AUFGABEN.md), B6 |
 | [**E-112**](BEFUNDE.md#e-112) | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht: `draw_meta_file` skaliert nur, wenn `pict_data.mapping_mode` nicht `MM_TEXT` ist — bei aus dem Netz geladenen Bildern ist er `0`, und dann bestimmt das Zielrechteck allein die **Position**. **1.0.76 ist in einem Punkt schlechter als 1.0.75:** dort waren die Bilder zu groß, aber der Text stand darunter. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
@@ -33,7 +35,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-68**](BEFUNDE.md#e-68), halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit [E-78](BEFUNDE.md#e-78)**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
-| — | **Gebaut, aber von Gregor nicht beurteilt:** [**E-49**](BEFUNDE.md#e-49) (linken Bereich breiter **ziehen**, Anforderung **A-4**) und [**E-52**](BEFUNDE.md#e-52) (Balken bleibt danach greifbar, Karten nicht doppelt) | Bestätigt ist bei [E-52](BEFUNDE.md#e-52) nur der **Gegenfall**: *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."* Das **seitliche** Ziehen lässt sich grundsätzlich nicht selbst messen — dazu braucht es eine physisch gedrückte Maustaste |
+| — | **Testplan Teil A an 1.0.84 von Gregor bestätigt (13.10.2026):** [E-49](BEFUNDE.md#e-49), [E-50](BEFUNDE.md#e-50), [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63) | die Urteile mit Zitat stehen in BEFUNDE.md |
 | — | [**E-39**](BEFUNDE.md#e-39): wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet |
 | — | **Drei Befunde, die `BEFUNDE.md` offen führt und die dieser Abschnitt bisher nicht nannte:** [**R-1**](BEFUNDE.md#r-1) (`ReleaseBuffer` ohne `GetBuffer` — 137 Vorkommen gemessen, **21** zu ändern, zuerst `QCSharewareManager.cpp:1318`, weil die Stelle bei jedem Start läuft), [**V-1**](BEFUNDE.md#v-1) (zwei verschiedene ZIPs unter derselben Nummer `v1.0.3`; die Regel steht, eine Schranke dazu fehlt) und [**E-14**](BEFUNDE.md#e-14) (Zusicherung beim Start, der X1-Suchindex werde neu angelegt) | Keiner der drei ist von Gregor als Betriebsmangel gemeldet, alle drei stehen ausführlich in [WEITERMACHEN.md](WEITERMACHEN.md). Sie stehen hier, damit dieser Abschnitt nicht vollständiger aussieht, als er ist — gemessen am 11.09.2026 über alle Urteilszeilen in `BEFUNDE.md` |
@@ -315,7 +317,7 @@ Tag Manager, Microsoft Clarity, Disqus, `schema.org`, `var wpcf7 = {…}`.
 
 1. Eine frische `Eudora.ini` hat kein `[Settings] Mode`, also greift
    `DEFAULT_SWM_MODE` — und das ist **0 = Werbe-Betriebsart**
-   (`QCSharewareManager.h`, `BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt).
+   (`QCSharewareManager.h`, `BUILD_BOX_OR_SITE_R_VERSION` ist nicht gesetzt). **[widerlegt 13.10.2026: der Schalter ist seit `bf14e14` gesetzt, Vorgabe ist 2 = Pro; siehe [AN-2](BEFUNDE.md#an-2)]**
 2. Der Playlist-Client holt Werbung von `//adserver.eudora.com/adjoin/playlists`
    (`plist_mgr.cpp:213`). **Diese Adresse gehört seit 2018 dem Computer History
    Museum** — nachzulesen in dessen eigener Ankündigung zur Quelltextfreigabe.
