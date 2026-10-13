@@ -25,7 +25,16 @@
 param(
   [Parameter(Mandatory=$true)][string]$Exe,
   [string]$Argumente = "",
-  [int]$Sekunden = 90
+  [int]$Sekunden = 90,
+  # BEFUND E-115: eine Ausnahme, die MFC selbst faengt und nur als Meldung
+  # ("Encountered an improper argument") zeigt, kommt hier nie in zweiter
+  # Gelegenheit vorbei. -Befehl schickt nach -BefehlNachSekunden ein
+  # WM_COMMAND an das Hauptfenster (z.B. 32779 = ID_CTRL_F, Find Messages);
+  # -CppErsteGelegenheit haelt danach die erste C++-Ausnahme (0xE06D7363)
+  # schon in erster Gelegenheit fest - dort steht der Werfer noch im Stapel.
+  [int]$Befehl = 0,
+  [int]$BefehlNachSekunden = 20,
+  [switch]$CppErsteGelegenheit
 )
 
 if ([IntPtr]::Size -ne 4) {
@@ -69,6 +78,30 @@ $STATUS_STACK_OVERFLOW      = [uint32]3221225725   # 0xC00000FD
 $STATUS_BREAKPOINT          = [uint32]2147483651   # 0x80000003
 $CONTEXT_CONTROL            = 65537                # 0x00010001
 $THREAD_ALL                 = 2032639              # 0x001F03FF
+$CPP_AUSNAHME               = [uint32]3765269347   # 0xE06D7363
+
+Add-Type @"
+using System; using System.Text; using System.Runtime.InteropServices;
+public class StFenster {
+  public delegate bool EnumProc(IntPtr h, IntPtr l);
+  [DllImport("user32.dll")] public static extern bool EnumWindows(EnumProc f, IntPtr l);
+  [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, out uint p);
+  [DllImport("user32.dll", CharSet=CharSet.Ansi)] public static extern int GetClassName(IntPtr h, StringBuilder s, int n);
+  [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr h, uint m, IntPtr w, IntPtr l);
+  public static IntPtr Haupt(uint pid) {
+    IntPtr gefunden = IntPtr.Zero;
+    EnumWindows(delegate(IntPtr h, IntPtr l) {
+      uint p; GetWindowThreadProcessId(h, out p);
+      if (p != pid) return true;
+      StringBuilder k = new StringBuilder(128); GetClassName(h, k, 128);
+      if (k.ToString() == "EudoraMainWindow") { gefunden = h; return false; }
+      return true; }, IntPtr.Zero);
+    return gefunden;
+  }
+}
+"@
+$befehlGesendet = $false
+$befehlZeit = (Get-Date).AddSeconds($BefehlNachSekunden)
 
 $script:module = @()
 function Modul($a) {
@@ -130,6 +163,16 @@ $ende = (Get-Date).AddSeconds($Sekunden)
 $gefunden = $false
 
 while ((Get-Date) -lt $ende) {
+  if ($Befehl -gt 0 -and -not $befehlGesendet -and (Get-Date) -ge $befehlZeit) {
+    # Nur an das Hauptfenster DIESES Prozesses - gemessenes Handle, kein
+    # Tastendruck (Arbeitsweise/keine-tastendruecke-verschicken.md).
+    $hHaupt = [StFenster]::Haupt([uint32]$pi.dwProcessId)
+    if ($hHaupt -ne [IntPtr]::Zero) {
+      [void][StFenster]::PostMessage($hHaupt, 0x0111, [IntPtr]$Befehl, [IntPtr]::Zero)
+      $befehlGesendet = $true
+      Write-Host ("WM_COMMAND " + $Befehl + " an Hauptfenster " + $hHaupt + " geschickt.")
+    }
+  }
   if (-not [Dbg]::WaitForDebugEvent($ev,500)) { continue }
   $code = [BitConverter]::ToUInt32($ev,0)
   $pidD = [BitConverter]::ToUInt32($ev,4)
@@ -143,7 +186,7 @@ while ((Get-Date) -lt $ende) {
 
     # Melden bei Stapelueberlauf (immer toedlich) oder bei jeder Ausnahme in
     # zweiter Gelegenheit - dann hat das Programm sie nicht behandelt.
-    if ($exc -eq $STATUS_STACK_OVERFLOW -or ($erst -eq 0 -and $exc -ne $STATUS_BREAKPOINT)) {
+    if ($exc -eq $STATUS_STACK_OVERFLOW -or ($erst -eq 0 -and $exc -ne $STATUS_BREAKPOINT) -or ($CppErsteGelegenheit -and $befehlGesendet -and $exc -eq $CPP_AUSNAHME -and $erst -ne 0)) {
       Write-Host ""
       Write-Host ("AUSNAHME 0x{0:X8} in Thread {1} (erste Gelegenheit: {2})" -f $exc,$tid,$erst)
       $hT = [Dbg]::OpenThread($THREAD_ALL,$false,$tid)
