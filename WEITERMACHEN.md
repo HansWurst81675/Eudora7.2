@@ -112,6 +112,12 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 > **Stand 13.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
+> **Einstieg nächste Sitzung (Stand 13.10.2026, ca. 13:15, vor Gregors Abschalten):** Zweig `e-112-skalierung` (von Gregor bestätigt), alles gepusht, Quellstand **7.2.0.86**.
+> 1. **1.0.85** liegt als Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.85-release` bei Gregor ([E-112](BEFUNDE.md#e-112) mit F1/F2/N1, am laufenden Programm gemessen) – **sein Test steht aus**. Daneben `Eudora72-1.0.85-FALSCH-debug-7.2.0.12-nicht-benutzen` (mein Fehlversuch, Gregor löscht).
+> 2. **7.2.0.86** = Stand des Testverzeichnisses aus Punkt 1 + [E-115](BEFUNDE.md#e-115) (Ctrl+F bei aktivem IMAP-Postfach), gebaut und am laufenden Programm gemessen (Gegenprobe 7.2.0.84 mit Meldung, 7.2.0.86 ohne) – **kein Paket**. Vor dem Paket: Rollen (LEKTOR, PRÜFER, CHRONIST) – das Paket so bauen wie das Testverzeichnis aus Punkt 1: das ZIP der letzten Veröffentlichung unter `Releases/` entpacken, EXE/DLL/OCX aus `Eudora71/Bin/Release` darüber, `tools/paket-pruefen.ps1` (**nicht** `paket-bauen.ps1 -AusBauverzeichnis`, das nimmt `Bin\Debug`).
+> 3. Nach Gregors Test: PR `e-112-skalierung` → `main`, Release.
+> 4. Danach in Gregors Reihenfolge: [E-113](BEFUNDE.md#e-113), [E-77](BEFUNDE.md#e-77); dazu [E-116](BEFUNDE.md#e-116) (`width="35px"`), PRÜFER-23 N2–N5, [E-114](BEFUNDE.md#e-114) (nicht nachstellbar), [E-101](BEFUNDE.md#e-101) (Zeichensatz beim Speichern).
+>
 > **Gregors Test an 1.0.84 am 13.10.2026:** Testplan Teil A (vierzehn Befunde) bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen; [E-101](BEFUNDE.md#e-101) wieder offen (Zeichensatz der gespeicherten HTML-Datei), [E-114](BEFUNDE.md#e-114) neu, [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert gesehen und damit [E-103](BEFUNDE.md#e-103) widerlegt (beide seither in 7.2.0.85 behoben, nicht ausgeliefert). Ebenso bestätigt: [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) und [AN-2](BEFUNDE.md#an-2) (Newsletter ohne CSS als Text); [E-115](BEFUNDE.md#e-115) neu (Ctrl+F). Die Werbe-Betriebsart ist an diesem Bau nicht auslösbar — eine frische INI startet mit `Mode=2`, und auch mit `Mode=0` kam kein Abruf; Gregor hat entschieden, sie nicht weiter zu verfolgen.
 >
 > **Gregors Reihenfolge vom 12.10.2026:** zuerst *„danach die reihenfolge aus
