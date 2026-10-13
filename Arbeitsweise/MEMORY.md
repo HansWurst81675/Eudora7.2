@@ -84,3 +84,5 @@
 - [CHRONIST 13.10.2026 b](CHRONIST-2026-10-13b.md) — Laufbericht: zwei neue Lehren, drei Nachträge, Werkzeug commit-bereit.pl
 - [Quelle muss im Bau stehen](quelle-muss-im-bau-stehen.md) — vor dem Ändern `perl tools/wer-baut.pl <datei>`; F1 saß in PGEMBED.C, das kein Projekt baut, 379 von 1727 Quellen sind ungebaut
 - [CHRONIST 13.10.2026 c](CHRONIST-2026-10-13c.md) — Laufbericht: eine neue Lehre, zwei Nachträge (F2 am Ladeweg, „ok" auf Entweder-oder), Werkzeug wer-baut.pl, Rollenschranke bewertet
+- [Fund ganz abhaken](fund-ganz-abhaken.md) — vor der Behebung `perl tools/fund-punkte.pl <Bericht> <anker>`; N1 nur in einer Richtung behoben, die Gegenrichtung stand im selben PRÜFER-Abschnitt
+- [CHRONIST 13.10.2026 d](CHRONIST-2026-10-13d.md) — Laufbericht: eine neue Lehre, drei Nachträge (Rollen in Fragen ausschreiben, neue Zeit mit dem Fund melden), Werkzeug fund-punkte.pl
