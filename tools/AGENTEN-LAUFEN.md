@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-10-13 10:07 | Alle MDs gegen den Bestand von e-112_e-113_fix (25c0874) vor dem Merge |
