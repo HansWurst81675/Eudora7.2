@@ -144,6 +144,8 @@ verschickt.
   nicht mehr zum Strich wird (und ein hohes ohne Breite nicht zum senkrechten), ist behoben
   und gemessen. Erst mit
   dieser Behebung wird [**E-116**](BEFUNDE.md#e-116) sichtbar (offen): eine Angabe wie
+
+Neu und eingebaut in 7.2.0.87, noch ungemessen: [E-117](BEFUNDE.md#e-117) — Bilder mit `&amp;` in der Adresse kamen als 1×1-Pixel an.
   `width="35px"` wird als 3508 gelesen. **Weiter offen ist
   [E-113](BEFUNDE.md#e-113):** ein Bild, dessen angegebene Breite größer ist als das Fenster,
   läuft rechts hinaus.
@@ -791,7 +793,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.86` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.87` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

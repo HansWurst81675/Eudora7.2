@@ -156,6 +156,13 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.87 — **in Arbeit, kein Paket**, Quellstand 7.2.0.87 (E-117)
+
+| | |
+|---|---|
+| Inhalt | wie 1.0.86, dazu [E-117](../BEFUNDE.md#e-117): `&amp;` in Bildadressen |
+| Nicht gemessen | am laufenden Programm; kein Paket |
+
 ## 1.0.86 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.86 (E-115)
 
 | | |

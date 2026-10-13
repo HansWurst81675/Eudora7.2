@@ -70,6 +70,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.87 — Bilder mit `&amp;` in der Adresse (E-117) — **in Arbeit, nicht ausgeliefert**
+
+**[E-117](BEFUNDE.md#e-117):** `resolve_URL` (`HTMLUtils.cpp`) übersetzt `&amp;` im `src` eines Bildes zu `&`. Gregors eBay-Nachricht lud statt des Fotos ein 1×1-Pixel, weil der Bilddienst `&amp;imgWidth=448` bekam (seine `eudora.log` an 1.0.86). Test zuerst: `TestResolveURL.cpp` (8) vorher rot, Testsuite **196/196**. Am laufenden Programm noch nicht gemessen.
+
 ## 7.2.0.86 — Ctrl+F wirft nicht mehr, wenn ein IMAP-Postfach aktiv ist (E-115) — **in Arbeit, nicht ausgeliefert**
 
 **[E-115](BEFUNDE.md#e-115):** Ursache an Gregors laufendem 1.0.85 gemessen, während die Meldung offen stand: Stapel des Meldungsthreads ohne Debugger gelesen — `CMBoxTreeCtrlCheck::FindCheck` (`MBoxTreeCtrlCheck.cpp:938`) übersprang den Ordner Recent mit `GetNextSiblingItem`; Recent ist der letzte Eintrag, also NULL, und `GetItemData(NULL)` warf *„Encountered an improper argument“* (der Text stammt aus MFC). Erreicht wird das nur, wenn *Find Messages* ein Postfach hinter Recent vorwählt — ein IMAP-Postfach. Jetzt: Recent samt Inhalt überspringen (`GetNextTraversalItem(hItem, false)`), bei NULL Ende. **Nicht gemessen:** dass die Meldung danach ausbleibt.
