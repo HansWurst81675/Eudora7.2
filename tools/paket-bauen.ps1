@@ -312,7 +312,10 @@ if (Test-Path -LiteralPath $urteilspruefer) {
     exit 1
   }
 
-  & $perlU $urteilspruefer
+  # FindBin im Git-Perl versteht keinen Backslash-Pfad und suchte die
+  # Hilfsdatei im Arbeitsverzeichnis (13.10.2026, Paket 1.0.85 abgewiesen
+  # mit "Can't locate .../Eudora7.2/verweise-filtern.pl").
+  & $perlU ($urteilspruefer -replace '\', '/')
   if ($LASTEXITCODE -ne 0) {
     Write-Host ''
     Write-Host '  KEIN PAKET. Ein Dokument erklaert einen Befund fuer erledigt,'
