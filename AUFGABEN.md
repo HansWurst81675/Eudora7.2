@@ -72,7 +72,7 @@ fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
 **Am 18.09.2026 behoben: [E-110](BEFUNDE.md#e-110)** — [E-112](BEFUNDE.md#e-112) galt damals mit, der Versuch wirkte aber nicht
-(siehe unten; bis zum 13.10.2026 stand er hier in der Überschrift, LEKTOR-28). Beim **Antworten und Weiterleiten**
+(siehe unten; bis zum 13.10.2026 stand er hier in der Überschrift, [LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28)). Beim **Antworten und Weiterleiten**
 kamen nicht alle Bilder ins Verfassenfenster, ein Teil stand als grauer Kasten
 da. **Ursache:** `resolve_URL` (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg,
 statt sie zu entschlüsseln — aus `en%20aktuellen%20Verlust.png` wurde

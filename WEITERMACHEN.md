@@ -144,7 +144,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > setzt selbst `MM_TEXT`; deshalb schreibt `E112MetadateiAusDIB` sie gleich in der angegebenen
 > Größe. Am laufenden Programm an `a36c47f` gemessen; PRÜFER-22 F1 und F2 danach eingebaut,
 > dort **noch nicht gemessen**. Einzelheiten in [CHANGELOG.md](CHANGELOG.md), 7.2.0.85. Der
-> Wortlaut darunter ist der Stand vor der Behebung (LEKTOR-28).
+> Wortlaut darunter ist der Stand vor der Behebung ([LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28)).
 >
 > *Bisher:* **[E-112](BEFUNDE.md#e-112) messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
 > `draw_meta_file` (`PaigeDLL/PGSOURCE/PGEMBED.C:4085-4125`) skaliert nur,
