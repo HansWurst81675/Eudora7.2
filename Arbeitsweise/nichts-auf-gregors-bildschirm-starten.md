@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-08T07:58:38.293Z
 ---
 
-Schranke: tools/testlauf.ps1 (vor jedem Programmstart)
+Schranke: tools/testlauf.ps1 und tools/stapel-untersuchen.ps1 (vor jedem Programmstart; beide verlangen -Freigabe, stapel-untersuchen.ps1 seit 13.10.2026 mit dem Wort "start")
 
 Gregor testet Eudora selbst auf derselben Windows-Sitzung, auf der ich arbeite.
 Jedes Programm, das ich oder ein Agent startet, landet auf **seinem** Bildschirm
