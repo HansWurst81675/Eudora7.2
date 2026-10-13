@@ -141,7 +141,8 @@ verschickt.
   angegebenen Größe gezeichnet, ohne Angabe in Dateigröße ([E-103](BEFUNDE.md#e-103)) — am
   laufenden Programm gemessen, auch für dieselbe Bildadresse in zwei Größen und
   für ein Bild mit nur der Breite; dass ein breites Bild ohne Höhe beim Antworten
-  nicht mehr zum Strich wird, ist behoben, aber noch nicht gemessen. Erst mit
+  nicht mehr zum Strich wird (und ein hohes ohne Breite nicht zum senkrechten), ist behoben
+  und gemessen. Erst mit
   dieser Behebung wird [**E-116**](BEFUNDE.md#e-116) sichtbar (offen): eine Angabe wie
   `width="35px"` wird als 3508 gelesen. **Weiter offen ist
   [E-113](BEFUNDE.md#e-113):** ein Bild, dessen angegebene Breite größer ist als das Fenster,
