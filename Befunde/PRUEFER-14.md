@@ -32,7 +32,7 @@ MFC-Quelle 14.38.33130: `dlgfile.cpp`, `winocc.cpp`, `afxwin2.inl`.
 2. **Gregors eigenes Protokoll** wurde gelesen:
    `C:\Users\Gregor\Eudora72-1.0.65-release\Mailverzeichnis\eudora.log`,
    608 659 Byte vom 17.09.2026 12:23. Es enthält 12 `E-95 Bild`-Zeilen,
-   6 `E-97 Nachtrag`-Zeilen, je eine `E-88`- und `E-89`-Zeile. Drei der
+   6 `E-97 Nachtrag`-Zeilen, je eine [`E-88`](../BEFUNDE.md#e-88)- und [`E-89`](../BEFUNDE.md#e-89)-Zeile. Drei der
    Befunde unten sind **daran** belegt, nicht am Quelltext allein.
 
 ---
@@ -42,7 +42,7 @@ MFC-Quelle 14.38.33130: `dlgfile.cpp`, `winocc.cpp`, `afxwin2.inl`.
 **32 Behauptungen geprüft, 9 widerlegt. Eine davon ist Datenverlust, und sie
 steht seit PR #58 in `main`.**
 
-**P-28: `E101SpeicherfassungAufbereiten` löscht den gesamten Nachrichtenrumpf,
+**[P-28](#p-28): `E101SpeicherfassungAufbereiten` löscht den gesamten Nachrichtenrumpf,
 wenn `<x-html>` und der Text auf derselben Zeile stehen.** Gemessen: 104 Byte
 rein, 128 Byte raus, davon **null Byte Rumpf**. Die Spurmarke meldet
 `geaendert=1 bytes-vorher=104 nachher=128` — die Datei wird *größer*, deshalb
@@ -54,7 +54,7 @@ line"*. Und die Ressource, aus der der Marker gebaut wird, hat **kein**
 Zeilenende: `IDS_MIME_RICH_ON "<%s>"` (`EudoraRes.rc:9564`);
 `etf2html.cpp:200` schreibt `OutPuts( "<x-html>" )` ebenfalls ohne.
 
-Der Gegenvorschlag unten ist **gemessen**: er schließt P-28 und lässt alle
+Der Gegenvorschlag unten ist **gemessen**: er schließt [P-28](#p-28) und lässt alle
 zwölf Fälle aus PRÜFER-13 bitgleich.
 
 Der Rest ist ohne Datenverlust: vier falsche Kommentare, drei Spurmarken, die
@@ -65,7 +65,7 @@ offen sind.
 
 # 1. DATENVERLUST
 
-### P-28 — der Marker verschlingt die ganze erste Zeile (`msgutils.cpp:3921-3941`)
+### <a id="p-28"></a>P-28 — der Marker verschlingt die ganze erste Zeile (`msgutils.cpp:3921-3941`)
 
 ```c
 	if ( szKlein.Left( 7 ) == "<x-html" )
@@ -112,7 +112,7 @@ typ=text/html charset=us-ascii bytes-vorher=104 nachher=128 geaendert=1
 ```
 
 `nachher` ist **größer** als `vorher`. Wer das Protokoll liest, sieht einen
-Erfolg. Das ist derselbe stumme Schnitt, vor dem PRÜFER-13 unter P-26 gewarnt
+Erfolg. Das ist derselbe stumme Schnitt, vor dem PRÜFER-13 unter [P-26](PRUEFER-13.md#p-26) gewarnt
 hat — nur diesmal nicht am Zitat, sondern am ganzen Rumpf.
 
 **Warum der Fall kein Papierfall ist.** Drei Stellen schreiben den Marker:
@@ -236,7 +236,7 @@ Aus `rumpf-vorher=72 rumpf-nachher=0` wird der Verlust in einer Zeile sichtbar.
 
 # 2. E-97 / E-100 — die Behebung hält, zwei Begründungen halten nicht
 
-### P-29 — der Kommentar in `OnInitDialog` nennt eine Ursache, die nicht abstürzen kann (`SaveAsDialog.cpp:110-121`)
+### <a id="p-29"></a>P-29 — der Kommentar in `OnInitDialog` nennt eine Ursache, die nicht abstürzen kann (`SaveAsDialog.cpp:110-121`)
 
 ```
 // DIE URSACHE steht drei Funktionen weiter oben: DoDataExchange bindet
@@ -256,7 +256,7 @@ _AFXWIN_INLINE void CButton::SetCheck(int nCheck)
 
 `::SendMessage(NULL, …)` liefert 0 und löst **keine** Ausnahme aus. Das `ASSERT`
 davor ist im Release nichts. `SetCheck` auf einem nicht angebundenen Schalter
-stürzt nicht ab — das stand schon in PRÜFER-11 (P-1) und gilt unverändert.
+stürzt nicht ab — das stand schon in PRÜFER-11 ([P-1](../BEFUNDE.md#p-1)) und gilt unverändert.
 
 Die **echte** Ursache steht 400 Zeilen tiefer im selben File, in
 `OnTypeChange` (`SaveAsDialog.cpp:510-515`), mit symbolisiertem Stapel:
@@ -290,7 +290,7 @@ Nebenbei: *„drei Funktionen weiter oben"* — `DoDataExchange` steht **eine**
 Funktion darüber (Zeile 63 gegen Zeile 88, dazwischen nur die
 Nachrichtentabelle).
 
-### P-30 — die Behebungen in `OnOK` und `GetFileNameFromDialog` liegen auf einem Weg, den MFC 14.38 nie betritt
+### <a id="p-30"></a>P-30 — die Behebungen in `OnOK` und `GetFileNameFromDialog` liegen auf einem Weg, den MFC 14.38 nie betritt
 
 `realFileName[0] = 0` (`SaveAsDialog.cpp:388`) und `buf[0] = '\0'`
 (`:431-432`) sind richtig. Aber:
@@ -304,7 +304,7 @@ Nachrichtentabelle).
 * Vista-Schiene ist der Normalfall: `m_bVistaStyle` wird im Basiskonstruktor
   entschieden (`dlgfile.cpp:40-47`, `103-144`), **bevor** der Rumpf von
   `CSaveAsDialog` das `OFN_ENABLETEMPLATE` setzt (`SaveAsDialog.cpp:55`).
-  Das Flag kommt zu spät und bleibt wirkungslos — das ist P-2/P-4 aus
+  Das Flag kommt zu spät und bleibt wirkungslos — das ist [P-2](../BEFUNDE.md#p-2)/[P-4](PRUEFER-11.md#p-4) aus
   PRÜFER-11, unverändert gültig.
 
 **Kein Mangel, aber eine Unwahrheit durch Auslassung:** die Kommentare an
@@ -318,13 +318,13 @@ Ein Satz genügt:
 ```
 
 Dasselbe gilt für den `else`-Zweig in `SetFileNameInDialog`
-(`SaveAsDialog.cpp:483-500`), in den PRÜFER-12 (P-15) den Wächter verschoben
+(`SaveAsDialog.cpp:483-500`), in den PRÜFER-12 ([P-15](PRUEFER-12.md#p-15)) den Wächter verschoben
 hat: `IsVersion4()` ist `dwMajorVersion >= 4` (`eudora.h:311-312`), auf
 Windows 10 immer wahr. Der Zweig, in dem der Wächter jetzt steht, ist toter
 Code. Die Verschiebung war trotzdem richtig — falsch war der Wächter über der
 ganzen Funktion.
 
-### P-31 — `m_Inc`/`m_Guess`: die Vorbelegung schließt den Weg, gemessen am Ablauf
+### <a id="p-31"></a>P-31 — `m_Inc`/`m_Guess`: die Vorbelegung schließt den Weg, gemessen am Ablauf
 
 `SaveAsDialog.cpp:48-49` belegt beide aus der INI vor. Nachgerechnet:
 
@@ -334,17 +334,17 @@ ganzen Funktion.
 * Alle drei Aufrufstellen (`tocview.cpp:3087`, `saveas.cpp:106`,
   `compmsgd.cpp:3375`) schreiben danach denselben Wert zurück.
 
-**P-5 aus PRÜFER-11 ist damit geschlossen.** Der Weg in die INI des Anwenders
+**[P-5](PRUEFER-11.md#p-5) aus PRÜFER-11 ist damit geschlossen.** Der Weg in die INI des Anwenders
 ist zu.
 
 Offen bleibt die Messung selbst: `SaveAsDialog.cpp:92` schreibt
 `E-97 OnInitDialog: 1 …`, ausgeliefert seit 1.0.64. In Gregors Protokoll von
 1.0.65 steht die Zeile **null Mal** — bei eingeschaltetem `DEBUG_MASK_MISC`
-(12 `E-95`-Zeilen im selben Lauf beweisen, dass protokolliert wurde). Das
+(12 [`E-95`](../BEFUNDE.md#e-95)-Zeilen im selben Lauf beweisen, dass protokolliert wurde). Das
 heißt entweder *„er hat in diesem Lauf nichts gespeichert"* oder
 *„`OnInitDialog` läuft nicht"*, und beides ist mit einer Handlung zu trennen:
 **einmal Datei → Speichern unter öffnen und abbrechen, dann die Zeile suchen.**
-Solange das offen ist, ist P-4 (die beiden Kästchen) nicht abschließend
+Solange das offen ist, ist [P-4](PRUEFER-11.md#p-4) (die beiden Kästchen) nicht abschließend
 beschrieben.
 
 ---
@@ -373,17 +373,17 @@ Nachgerechnet, was die Rastung wertlos machen würde:
   (`msgutils.cpp:2941-2942`). Kein Weg, auf dem das Original getippten Text
   überschreiben könnte.
 
-**P-13 aus PRÜFER-11 ist geschlossen.**
+**[P-13](PRUEFER-11.md#p-13) aus PRÜFER-11 ist geschlossen.**
 
-### P-32 — der Kommentar in `msgutils.cpp` nennt noch die alte Quelle (`msgutils.cpp:2984-2989`)
+### <a id="p-32"></a>P-32 — der Kommentar in `msgutils.cpp` nennt noch die alte Quelle (`msgutils.cpp:2984-2989`)
 
 > *„Deshalb zaehlt jetzt zuerst, ob der Anwender ueberhaupt etwas getippt hat.
 > Paige fuehrt darueber Buch (CPaigeEdtView::HasChanged, PaigeEdtView.h:193)."*
 
-Seit E-99 führt **nicht mehr Paige** darüber Buch, sondern das
+Seit [E-99](../BEFUNDE.md#e-99) führt **nicht mehr Paige** darüber Buch, sondern das
 Verfassendokument. `HasChanged()` heißt weiterhin nur *„seit dem letzten
 Export"* — genau deshalb wurde der Merker eingeführt. Wer diesem Kommentar
-folgt und wieder `HasChanged()` einsetzt, baut P-13 zurück. Richtig:
+folgt und wieder `HasChanged()` einsetzt, baut [P-13](PRUEFER-11.md#p-13) zurück. Richtig:
 
 ```c
 			// Deshalb zaehlt jetzt zuerst, ob der Anwender ueberhaupt etwas
@@ -396,14 +396,14 @@ folgt und wieder `HasChanged()` einsetzt, baut P-13 zurück. Richtig:
 ```
 
 Der Satz zwei Absätze weiter — *„Die Regel kann nur helfen, nie schaden"* —
-trägt jetzt, nach E-99, tatsächlich. Vor E-99 tat er es nicht. Das gehört
+trägt jetzt, nach [E-99](../BEFUNDE.md#e-99), tatsächlich. Vor [E-99](../BEFUNDE.md#e-99) tat er es nicht. Das gehört
 dazugeschrieben, sonst liest der nächste ihn als seit jeher gültig.
 
 ---
 
 # 4. Kommentare, die etwas Falsches behaupten
 
-### P-33 — „eine vorhandene Content-Type-Zeile bleibt unangetastet": auf diesem Weg gibt es keine (`tocview.cpp:3176-3178`, `msgutils.cpp:3817-3820`)
+### <a id="p-33"></a>P-33 — „eine vorhandene Content-Type-Zeile bleibt unangetastet": auf diesem Weg gibt es keine (`tocview.cpp:3176-3178`, `msgutils.cpp:3817-3820`)
 
 `tocview.cpp` sagt drei Zeilen unter dem Aufruf, der sie entfernt:
 
@@ -425,7 +425,7 @@ Der Ablauf ist aber:
 Also sind `Content-Type`, `Content-Transfer-Encoding` und `MIME-Version`
 **weg**, bevor `E101SpeicherfassungAufbereiten` den Text sieht. Der Zweig
 *„unangetastet"* ist auf diesem Weg tot, und **jede** empfangene Nachricht
-bekommt den aus den Bytes abgeleiteten Zeichensatz. Das ist P-23 aus
+bekommt den aus den Bytes abgeleiteten Zeichensatz. Das ist [P-23](PRUEFER-13.md#p-23) aus
 PRÜFER-13, unverändert in `main`, an zwei Stellen als Gegenteil aufgeschrieben.
 
 Richtig an beiden Stellen:
@@ -441,7 +441,7 @@ Richtig an beiden Stellen:
 	// aber es ist nicht das, was hier bisher stand.
 ```
 
-### P-34 — `E101SpeicherfassungAufbereiten` entfernt das Gegenstück nicht immer (`msgutils.cpp:3808`)
+### <a id="p-34"></a>P-34 — `E101SpeicherfassungAufbereiten` entfernt das Gegenstück nicht immer (`msgutils.cpp:3808`)
 
 Kopfkommentar: *„Sie entfernt den `<x-html>`-Marker und sein Gegenstück
 `</x-html>`."* Seit der P-19-Behebung gilt das nur, wenn hinter dem Fund
@@ -455,9 +455,9 @@ AUS:  ... <html>Inhalt</html><CR><LF></x-html><CR><LF>Anhang folgt<CR><LF>
 Das `</x-html>` bleibt in der Datei, und die Datei ist trotzdem als
 `text/html` ausgezeichnet. Das ist die richtige Abwägung — die Alternative war
 Textverlust —, aber der Kopfkommentar behauptet etwas anderes. Ein Halbsatz
-reicht: *„…, sofern dahinter nur Leerraum steht (PRÜFER P-19)."*
+reicht: *„…, sofern dahinter nur Leerraum steht (PRÜFER [P-19](PRUEFER-13.md#p-19))."*
 
-### P-35 — der gemerkte Text-Ascent ist Zustand über Nachrichtengrenzen hinweg (`PGHTMIMP.CPP:3091-3095`)
+### <a id="p-35"></a>P-35 — der gemerkte Text-Ascent ist Zustand über Nachrichtengrenzen hinweg (`PGHTMIMP.CPP:3091-3095`)
 
 > *„Er wird einmal je Import gesetzt und danach nur gelesen. Die Variable ist
 > dateilokal und nicht threadsicher - der HTML-Import laeuft im Hauptstrang,
@@ -468,7 +468,7 @@ Drei Behauptungen, alle drei falsch:
 1. **„einmal je Import"** — die Bedingung ist
    `if (!embed_last_action && original_ascent > 0)` (`:2052`), und
    `embed_last_action` wird an `:382` und `:923` nach jedem Textstück wieder
-   auf FALSE gesetzt. Sie läuft mehrfach je Import. (P-9 aus PRÜFER-11,
+   auf FALSE gesetzt. Sie läuft mehrfach je Import. ([P-9](PRUEFER-11.md#p-9) aus PRÜFER-11,
    unverändert.)
 2. **„danach nur gelesen"** — siehe 1.
 3. **„kein Zustand"** — doch. `PaigeHTMLImportTextAscent` und
@@ -495,7 +495,7 @@ Abhilfe: die beiden Zeilen in den Rücksetzblock bei `:112`:
 (Die Deklarationen stehen weiter unten als der Rücksetzblock — sie müssen
 dafür nach vorn oder als `extern` deklariert werden.)
 
-### P-36 — `nOhneMass` heißt „unangetastet gelassen" und wird trotzdem angetastet (`msgutils.cpp:3399`, `3644`)
+### <a id="p-36"></a>P-36 — `nOhneMass` heißt „unangetastet gelassen" und wird trotzdem angetastet (`msgutils.cpp:3399`, `3644`)
 
 ```c
 	int		nOhneMass = 0;		// kein Mass bekannt - Bild unangetastet gelassen
@@ -563,7 +563,7 @@ benutzt. Ersetzt `:2177-2183`:
                szSrc[32] = 0;
 ```
 
-### P-37 — die `E-97 Nachtrag`-Marke vergleicht einen Wert mit sich selbst (`PgEmbeddedImage.cpp:468-487`)
+### <a id="p-37"></a>P-37 — die `E-97 Nachtrag`-Marke vergleicht einen Wert mit sich selbst (`PgEmbeddedImage.cpp:468-487`)
 
 Die Marke steht **hinter** den Zuweisungen:
 
@@ -598,20 +598,20 @@ damit offen. Richtig ist, den alten Wert vorher zu sichern:
 					"embed-nachher=%ldx%ld gefunden=%d\r\n", ...);
 ```
 
-Dazu: **die Marke trägt die falsche Befundnummer.** `E-97` ist der
-Speichern-Absturz. Das hier gehört zur Bildgrößen-Familie (E-95/E-96/E-103).
+Dazu: **die Marke trägt die falsche Befundnummer.** [`E-97`](../BEFUNDE.md#e-97) ist der
+Speichern-Absturz. Das hier gehört zur Bildgrößen-Familie ([E-95](../BEFUNDE.md#e-95)/[E-96](../BEFUNDE.md#e-96)/[E-103](../BEFUNDE.md#e-103)).
 Gregor hat sie auf seinem Zweig `e103-darstellung-bilder` bereits auf
-`E-103 Nachtrag` umbenannt — auf `main` steht noch `E-97`.
+`E-103 Nachtrag` umbenannt — auf `main` steht noch [`E-97`](../BEFUNDE.md#e-97).
 
 ### P-12 (bestätigt) — die E-96-Behebung ist im Quelltext durchweg mit E-95 ausgezeichnet
 
-`PGHTMIMP.CPP` Zeilen 9, 2049, 2157, 2186, 3041, 3061 sagen **E-95**. Der
-Commit heißt `d1edf31 „E-96 behoben: jedes Bild bekam die Zeilenhoehe des
-ersten"`. Wer E-96 im Quelltext sucht, findet nichts. Unverändert offen.
+`PGHTMIMP.CPP` Zeilen 9, 2049, 2157, 2186, 3041, 3061 sagen **[E-95](../BEFUNDE.md#e-95)**. Der
+Commit heißt `d1edf31 „[E-96](../BEFUNDE.md#e-96) behoben: jedes Bild bekam die Zeilenhoehe des
+ersten"`. Wer [E-96](../BEFUNDE.md#e-96) im Quelltext sucht, findet nichts. Unverändert offen.
 
-### P-38 — die E-101-Marke kann den Verlust aus P-28 nicht zeigen
+### <a id="p-38"></a>P-38 — die E-101-Marke kann den Verlust aus P-28 nicht zeigen
 
-Siehe P-28: `rumpf-vorher`/`rumpf-nachher` fehlen. Solange sie fehlen, ist die
+Siehe [P-28](#p-28): `rumpf-vorher`/`rumpf-nachher` fehlen. Solange sie fehlen, ist die
 Marke bei jedem Schnitt am Rumpf stumm.
 
 ---
@@ -628,23 +628,23 @@ bcbcd8e E-89 behoben: die Bildhoehe zaehlt wieder fuer die Zeilenhoehe (7.2.0.58
 
 Kein Commit seit PRÜFER-11. Stand der fünf:
 
-* **P-8** — `PaigeHTMLImportTextDescent` (`:1827`) wird **nirgends** zugewiesen;
+* **[P-8](PRUEFER-11.md#p-8)** — `PaigeHTMLImportTextDescent` (`:1827`) wird **nirgends** zugewiesen;
   nur der Ascent wird bei `:2053` gemerkt. `:3097` schreibt stets die fest
   verdrahtete 3 zurück. Der Kommentar bei `:3041` (*„der Text-Ascent/-Descent,
   wie er VOR dem ersten Bild galt"*) beschreibt für den Descent etwas, das der
   Code nicht tut. **Offen und bestätigt.**
-* **P-9** — Bedingung falsch beschrieben. **Offen**, und in P-35 oben
+* **[P-9](PRUEFER-11.md#p-9)** — Bedingung falsch beschrieben. **Offen**, und in [P-35](#p-35) oben
   zusammengefasst.
-* **P-10** — `ProcessEmbed:3096-3097` klemmt `current_style.ascent/descent` auf
+* **[P-10](PRUEFER-11.md#p-10)** — `ProcessEmbed:3096-3097` klemmt `current_style.ascent/descent` auf
   13/3 fest, und `current_style` gilt auch für den **folgenden Text**.
   **Offen und ungemessen.** Gregors Protokoll stützt die Vermutung indirekt:
   zwölfmal `text-asc=13 text-desc=3` in einer Nachricht mit 13 Bildern — nie
   ein anderer Wert. Entweder ist die Nachricht durchweg 13-Punkt, oder die
   Rückschreibung deckt jede andere Schriftgröße zu. Die Messung aus PRÜFER-11
   (HTML-Nachricht mit 20-pt-Text hinter einem Bild) steht weiter aus.
-* **P-11** — bestätigt, siehe oben; richtiger Code genannt.
-* **P-12** — bestätigt, siehe oben; dazu die zweite falsche Nummer in
-  `PgEmbeddedImage.cpp` (P-37).
+* **[P-11](PRUEFER-11.md#p-11)** — bestätigt, siehe oben; richtiger Code genannt.
+* **[P-12](PRUEFER-11.md#p-12)** — bestätigt, siehe oben; dazu die zweite falsche Nummer in
+  `PgEmbeddedImage.cpp` ([P-37](#p-37)).
 
 ---
 
@@ -668,7 +668,7 @@ Der Weg:
 * Geschrieben wird mit `pFile->Put(msg)` (`compmsgd.cpp:3452`,
   `ReadMessageDoc.cpp:595`) — Byte für Byte, ohne Umkodierung.
 
-Die Bytes sind Latin-1 (das ist derselbe Nachweis wie bei E-101: der
+Die Bytes sind Latin-1 (das ist derselbe Nachweis wie bei [E-101](../BEFUNDE.md#e-101): der
 Empfangsweg setzt über `TextReader::ReadIt` → `ISOTranslate` um, bevor etwas
 ins Postfach geht). Ein heutiger Browser ohne `charset`-Angabe nimmt bei einer
 lokalen Datei UTF-8 an — jeder Umlaut ist hin.
@@ -719,7 +719,7 @@ im Browser öffnen — einmal ohne die Zeile (kaputt) und einmal mit (richtig).
 Das ist genau der Fall aus `Arbeitsweise/nie-benutzt-ist-nicht-geprueft.md`:
 den HTML-Zweig hat in diesem Projekt noch nie jemand angeklickt.
 
-**Ein eigener Befund, kein E-101.** `befund-suchen.pl` vor dem Anlegen.
+**Ein eigener Befund, kein [E-101](../BEFUNDE.md#e-101).** `befund-suchen.pl` vor dem Anlegen.
 
 ---
 
@@ -728,7 +728,7 @@ den HTML-Zweig hat in diesem Projekt noch nie jemand angeklickt.
 Beim Lesen von `PgEmbeddedImage.cpp:455-523` und Gregors Protokoll sind drei
 Dinge aufgefallen, die zu deiner laufenden Arbeit gehören:
 
-### P-39 — der Suchlauf vergleicht Stile, nicht Bilder (`PgEmbeddedImage.cpp:500-511`)
+### <a id="p-39"></a>P-39 — der Suchlauf vergleicht Stile, nicht Bilder (`PgEmbeddedImage.cpp:500-511`)
 
 ```c
 				for ( long li = 1; !bFound && (er = pgGetIndEmbed(...)); li++ )
@@ -745,13 +745,13 @@ Dinge aufgefallen, die zu deiner laufenden Arbeit gehören:
 (`PGHTMIMP.CPP:3096-3097`), tragen denselben Stil. Der Lauf nimmt den
 **ersten** Treffer, und `pgInvalEmbedRef(pg->myself, pos, embed, draw_none)`
 (`:517`) wird dann an der Stelle eines **anderen** Bildes angewandt. Das ist
-das Schadensbild von E-96, nur eine Schicht tiefer. Der Kommentar bei `:477-479`
+das Schadensbild von [E-96](../BEFUNDE.md#e-96), nur eine Schicht tiefer. Der Kommentar bei `:477-479`
 ahnt es (*„haengt daran, ob der Suchlauf unten das richtige Embed findet"*) —
 die Marke sagt aber nur `gefunden=1`, also *dass* etwas gefunden wurde, nicht
 *ob das richtige*. Was fehlt, ist `pos` und die Zahl der Durchläufe in der
 Marke.
 
-### P-40 — der Nachtrag ändert die Größe, aber nicht die Zeilenhöhe
+### <a id="p-40"></a>P-40 — der Nachtrag ändert die Größe, aber nicht die Zeilenhöhe
 
 `:462-466` setzt `embed->width/height` und `pict_frame`. **Nichts** auf diesem
 Weg fasst den Ascent/Descent des Stils an — und der ist es, der die Zeile
@@ -764,10 +764,10 @@ Wenn der Nachtrag wirken soll, muss er den Stil des betroffenen Embeds
 nachziehen, nicht nur dessen Maße — also dort dasselbe tun wie
 `PGHTMIMP.CPP:2150-2153` (`current_style.ascent = source_height`, mit dem
 Text-Ascent als Untergrenze), nur nachträglich über `pgSetStyleInfo` auf dem
-gefundenen Bereich. Das ist der Punkt, an dem P-39 scharf wird: an der
+gefundenen Bereich. Das ist der Punkt, an dem [P-39](#p-39) scharf wird: an der
 falschen Stelle angewandt, wandert die Höhe zum falschen Bild.
 
-### P-41 — vier von zehn Bildern bekommen den Nachtrag nie
+### <a id="p-41"></a>P-41 — vier von zehn Bildern bekommen den Nachtrag nie
 
 Aus Gregors Protokoll, ein Lauf, eine Nachricht:
 
@@ -792,21 +792,21 @@ Während dieser Prüfung hat Gregor auf `e103-darstellung-bilder` committet:
 oben bezieht sich auf `origin/main`; damit er nicht am Tag seiner Entstehung
 veraltet ist, hier der Abgleich:
 
-* **P-37, Nummer — erledigt.** `E-97 Nachtrag` heißt jetzt `E-103 Nachtrag`.
-* **P-37, Tautologie — steht.** Die neue Marke schreibt weiterhin
+* **[P-37](#p-37), Nummer — erledigt.** `E-97 Nachtrag` heißt jetzt `E-103 Nachtrag`.
+* **[P-37](#p-37), Tautologie — steht.** Die neue Marke schreibt weiterhin
   `(long)embed->width, (long)embed->height` **hinter** den Zuweisungen bei
   `:462/465`. Deshalb steht auch in Gregors neuer Messung
   `quelle=202x60 embed=202x60`: die zweite Zahl ist eine Kopie der ersten, kein
   zweiter Messwert. Die Aussage *„Eudora kennt die echte Größe"* trägt allein
   `quelle`. Wer später `embed=` als Gegenprobe liest, liest nichts.
-* **P-39 — halb erledigt.** `pos=%ld style=%ld` steht jetzt in der Marke, damit
+* **[P-39](#p-39) — halb erledigt.** `pos=%ld style=%ld` steht jetzt in der Marke, damit
   ist die Stelle sichtbar. Der Vergleich selbst ist unverändert
   `embed->style == embed_ptr->style` und nimmt den **ersten** Treffer. Mit
   einem Bild ohne Maße fällt das nicht auf; mit zweien, die denselben Stil
   tragen, schon. Offen.
-* **P-40 — erledigt und gemessen.** Die neue Marke `E-103 Zeilenhoehe:
+* **[P-40](#p-40) — erledigt und gemessen.** Die neue Marke `[E-103](../BEFUNDE.md#e-103) Zeilenhoehe:
   ascent-vorher=60 bildhoehe=60 nachgezogen=0` beantwortet genau die Frage.
-* **P-41 — erklärt.** Gregors Gegenprobe (*„Logo auf einen Rechner, den es nicht
+* **[P-41](#p-41) — erklärt.** Gregors Gegenprobe (*„Logo auf einen Rechner, den es nicht
   gibt: keine einzige der drei E-103-Marken erscheint"*) ist die Erklärung für
   die vier fehlenden `Nachtrag`-Zeilen im Protokoll von 1.0.65: die Bilder
   wurden nicht geladen. Damit ist die Zahl aufgegangen.
@@ -819,7 +819,7 @@ veraltet ist, hier der Abgleich:
   Bei einem 16-Punkt-Symbol ohne Maßangabe entsteht bis zum Laden eine Lücke.
   Das ist die Abwägung, die im Kommentar auch so steht; ich vermerke sie nur,
   damit sie beim nächsten Bildbefund nicht neu entdeckt wird.
-* **P-35 bleibt und wird durch E-103 wichtiger:** `PaigeHTMLImportTextAscent`
+* **[P-35](#p-35) bleibt und wird durch [E-103](../BEFUNDE.md#e-103) wichtiger:** `PaigeHTMLImportTextAscent`
   ist dateilokal statisch und wird zwischen Nachrichten nicht zurückgesetzt.
   `ProcessEmbed:3096` schreibt ihn in jeden Embed-Stil zurück. Trägt er den
   Wert der vorigen Nachricht, verschiebt das jede Rechnung, die jetzt auf 13
@@ -829,21 +829,21 @@ veraltet ist, hier der Abgleich:
 
 # Reihenfolge, in der ich das angehen würde
 
-1. **P-28** — der Datenverlust. Der Vorschlag ist gemessen, er kostet ~35
+1. **[P-28](#p-28)** — der Datenverlust. Der Vorschlag ist gemessen, er kostet ~35
    Zeilen und lässt alle zwölf alten Fälle bitgleich. **Kein weiteres Paket
    ohne ihn** (`Arbeitsweise/kein-paket-mit-offenem-datenverlust.md`).
-2. **P-38 + die zwei Testfälle** — sonst kommt der nächste Schnitt wieder
+2. **[P-38](#p-38) + die zwei Testfälle** — sonst kommt der nächste Schnitt wieder
    stumm zurück.
-3. **P-33** — die falsche Aussage über die Content-Type-Zeile, an zwei Stellen.
+3. **[P-33](#p-33)** — die falsche Aussage über die Content-Type-Zeile, an zwei Stellen.
    Sie steht direkt über dem Code, der das Gegenteil tut.
-4. **P-11, P-37** — die beiden Marken, die nichts messen. Beide sind
+4. **[P-11](PRUEFER-11.md#p-11), [P-37](#p-37)** — die beiden Marken, die nichts messen. Beide sind
    ausgeliefert und beide in Gregors Protokoll als Unsinn belegt.
-5. **P-36, P-35** — Zähler und gemerkte Zeilenhöhe. Beides erklärt heute
+5. **[P-36](#p-36), [P-35](#p-35)** — Zähler und gemerkte Zeilenhöhe. Beides erklärt heute
    unerklärte Zahlen.
-6. **P-29, P-30, P-32, P-34** — Text berichtigen.
+6. **[P-29](#p-29), [P-30](#p-30), [P-32](#p-32), [P-34](#p-34)** — Text berichtigen.
 7. **Der `.htm`-Weg** — eigener Befund, mit Gegenprobe im Browser.
-8. **P-39 bis P-41** — gehört zu E-103, liegt bei Gregor.
-9. **P-8, P-10, P-12** — unverändert wie in PRÜFER-11.
+8. **[P-39](#p-39) bis [P-41](#p-41)** — gehört zu [E-103](../BEFUNDE.md#e-103), liegt bei Gregor.
+9. **[P-8](PRUEFER-11.md#p-8), [P-10](PRUEFER-11.md#p-10), [P-12](PRUEFER-11.md#p-12)** — unverändert wie in PRÜFER-11.
 
 ---
 
@@ -851,12 +851,12 @@ veraltet ist, hier der Abgleich:
 
 * **Das laufende Programm.** Kein Fenster gestartet
   (`Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md`). Alle Messungen an
-  E-101 sind an der **geschnittenen echten Funktion** gefahren, alle Messungen
-  an E-95/E-97/E-88/E-89 stammen aus Gregors vorhandenem Protokoll von 1.0.65.
-* **Ob `OnInitDialog` auf der Vista-Schiene erreicht wird** (P-31). Die Marke
+  [E-101](../BEFUNDE.md#e-101) sind an der **geschnittenen echten Funktion** gefahren, alle Messungen
+  an [E-95](../BEFUNDE.md#e-95)/[E-97](../BEFUNDE.md#e-97)/[E-88](../BEFUNDE.md#e-88)/[E-89](../BEFUNDE.md#e-89) stammen aus Gregors vorhandenem Protokoll von 1.0.65.
+* **Ob `OnInitDialog` auf der Vista-Schiene erreicht wird** ([P-31](#p-31)). Die Marke
   ist eingebaut und ausgeliefert, im Protokoll steht sie null Mal — aber im
   selben Lauf wurde auch nichts gespeichert. Eine Handlung trennt das.
-* **Ob die Verlustfälle aus P-28 in Gregors Postfach tatsächlich vorkommen.**
+* **Ob die Verlustfälle aus [P-28](#p-28) in Gregors Postfach tatsächlich vorkommen.**
   Belegt ist, dass Eudora sie schreibt (`etf2html.cpp:200`,
   `IDS_MIME_RICH_ON`) und liest (`msgutils.cpp:2374`). Ein Suchlauf über
   `In.mbx`/`Out.mbx` nach `<x-html>` mit Text dahinter auf derselben Zeile
@@ -864,5 +864,5 @@ veraltet ist, hier der Abgleich:
   Postfächer.
 * **Die Wirkung des fehlenden `<meta charset>` im Browser.** Der fehlende
   `<head>` steht im Quelltext; die kaputte Anzeige habe ich nicht gesehen.
-* **P-10** — die Gegenvermutung zur festen 13/3 bleibt ungemessen. Sie braucht
+* **[P-10](PRUEFER-11.md#p-10)** — die Gegenvermutung zur festen 13/3 bleibt ungemessen. Sie braucht
   eine HTML-Nachricht mit großer Schrift hinter einem Bild.

@@ -14,23 +14,23 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | Zeit | Fassung | Freigabe | Ergebnis |
 |---|---|---|---|
 | 2026-09-11 13:00:17 | v1.0.48 | Gregor am 11.09.2026 zu 1.0.48: IMAP mit der verschaerften Zertifikatspruefung getestet, 'Successfully retrieved markus.bakus@gmx.de' ueber Port 993 | veroeffentlicht |
-| 2026-09-11 08:52:00 | v1.0.47 | Gregor am 11.09.2026 zu 1.0.46: 'ja, jetzt geht es' (E-80) und zu 1.0.47: 'ja, passt!' (E-81) | veroeffentlicht; Release Notes am selben Tag berichtigt (134 statt 175 Nachrichten, zehn statt acht Kopfzeilen) |
+| 2026-09-11 08:52:00 | v1.0.47 | Gregor am 11.09.2026 zu 1.0.46: 'ja, jetzt geht es' ([E-80](../BEFUNDE.md#e-80)) und zu 1.0.47: 'ja, passt!' ([E-81](../BEFUNDE.md#e-81)) | veroeffentlicht; Release Notes am selben Tag berichtigt (134 statt 175 Nachrichten, zehn statt acht Kopfzeilen) |
 | 2026-09-10 13:00:20 | v1.0.43 | Gregor am 10.09.2026 zu 1.0.42/1.0.43: '1. filter fenstergroesse nach neustart gespeichert: PASS' und '2. filter funktionieren.' | veroeffentlicht |
 | 2026-09-09 09:10:15 | v1.0.27 | nicht dokumentiert | veroeffentlicht |
 | 2026-09-06 13:11:23 | v1.0.15 | nicht dokumentiert | veroeffentlicht; Messfassung mit Spurmarken |
 | 2026-09-06 12:12:10 | v1.0.14 | nicht dokumentiert | veroeffentlicht |
 | 2026-09-05 20:20:58 | v1.0.10 | nicht dokumentiert | veroeffentlicht |
-| 2026-08-31 06:29:35 | v1.0.3 | nicht dokumentiert | veroeffentlicht; Befund V-1 - zwei verschiedene ZIPs unter derselben Nummer |
+| 2026-08-31 06:29:35 | v1.0.3 | nicht dokumentiert | veroeffentlicht; Befund [V-1](../BEFUNDE.md#v-1) - zwei verschiedene ZIPs unter derselben Nummer |
 | 2026-08-30 16:21:16 | v1.0.2 | nicht dokumentiert | veroeffentlicht |
 | 2026-08-30 15:08:07 | v1.0.1 | nicht dokumentiert | veroeffentlicht |
 | 2026-09-09 13:25:20 | v1.0.29 | Gregor am 09.09.2026 zu Paket 1.0.29: '1-6, ok.' und 'bau mir mit dem bug ein 0.29 release auf github. den fehler notieren wir, wird im naechsten release behoben.' | veroeffentlicht |
-| 2026-09-13 13:24:37 | v1.0.50 | Gregor am 13.09.2026: 'gemerged, jetzt 0.50 releasen' - E-76 und E-84 hatte er zuvor am laufenden Programm bestaetigt | veroeffentlicht |
-| 2026-09-17 20:07:49 | v1.0.72 | Gregor am 17.09.2026 zu 1.0.72: „kein crash" — belegt durch sein Protokoll: der E-106-Block läuft 18 mal und über die bisher tödliche Stelle hinaus (`pos=770` hinter `pos=765`), letzte Zeile `Logging shutdown`, keine `Exception.log`. Marke auf dem Merge-Commit `8da72c8`. Enthält **E-101**, **E-103**, **E-104**, **E-106** und **E-108**. Offen bleibt **E-98** |
-| 2026-09-17 10:23:08 | v1.0.64 | Gregor am 17.09.2026 zu 1.0.64: 'gespeichert. funktioniert.' (E-97) und 'ja, kein datenverlust!' (E-99) | veroeffentlicht, auf GitHub als *Latest* markiert; Tag `1d37623` |
+| 2026-09-13 13:24:37 | v1.0.50 | Gregor am 13.09.2026: 'gemerged, jetzt 0.50 releasen' - [E-76](../BEFUNDE.md#e-76) und [E-84](../BEFUNDE.md#e-84) hatte er zuvor am laufenden Programm bestaetigt | veroeffentlicht |
+| 2026-09-17 20:07:49 | v1.0.72 | Gregor am 17.09.2026 zu 1.0.72: „kein crash" — belegt durch sein Protokoll: der E-106-Block läuft 18 mal und über die bisher tödliche Stelle hinaus (`pos=770` hinter `pos=765`), letzte Zeile `Logging shutdown`, keine `Exception.log`. Marke auf dem Merge-Commit `8da72c8`. Enthält **[E-101](../BEFUNDE.md#e-101)**, **[E-103](../BEFUNDE.md#e-103)**, **[E-104](../BEFUNDE.md#e-104)**, **[E-106](../BEFUNDE.md#e-106)** und **[E-108](../BEFUNDE.md#e-108)**. Offen bleibt **[E-98](../BEFUNDE.md#e-98)** |
+| 2026-09-17 10:23:08 | v1.0.64 | Gregor am 17.09.2026 zu 1.0.64: 'gespeichert. funktioniert.' ([E-97](../BEFUNDE.md#e-97)) und 'ja, kein datenverlust!' ([E-99](../BEFUNDE.md#e-99)) | veroeffentlicht, auf GitHub als *Latest* markiert; Tag `1d37623` |
 | 2026-10-12 11:18:20 | v1.0.83 | Gregor am 12.10.2026 nach seinem IMAP-Test mit 1.0.83: 'gekuerzt mit endung reicht, mach PR fuer an1-endungen'; nach dem Merge von PR #84: 'erstelle ein release auf github' | veroeffentlicht |
 | 2026-10-12 12:59:15 | v1.0.84 | Gregor am 12.10.2026 nach seinem IMAP-Test mit 1.0.84 (Bildschirmfoto: Toner-Betreff in einem Stueck), PR #86 gemergt: 'dann ein github release' und 'ja, beides jetzt' | veroeffentlicht |
 
-> **Nachgetragen am 17.09.2026 vom LEKTOR (L-13.1).** Die Zeile zu `v1.0.64`
+> **Nachgetragen am 17.09.2026 vom LEKTOR ([L-13.1](../Befunde/LEKTOR-13.md#l-13.1)).** Die Zeile zu `v1.0.64`
 > fehlte hier, und **vier** Dokumente behaupteten zur selben Zeit, veroeffentlicht
 > sei weiterhin nur `v1.0.50`: `WEITERMACHEN.md`, `AUFGABEN.md`,
 > `Releases/PAKETE.md` und diese Datei. Gemessen mit `gh release list` (13
@@ -38,5 +38,5 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > `git ls-remote --tags origin` (`refs/tags/v1.0.64`). **Warum das die
 > teuerste Sorte Unwahrheit ist:** wer diese Datei liest, glaubt, seit dem
 > 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
-> eine Fassung, in der **E-98** offen ist und **E-101** noch gar nicht gefunden
+> eine Fassung, in der **[E-98](../BEFUNDE.md#e-98)** offen ist und **[E-101](../BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).

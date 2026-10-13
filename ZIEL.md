@@ -14,14 +14,14 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-Stand **12.10.2026**; die Urteile in dieser Tabelle sind unverändert seit dem 18.09.2026 und an Fassung **7.2.0.55 / Paket 1.0.55** gemessen. **Quellstand ist jetzt 7.2.0.84 / Paket 1.0.84** (E-94, gebaut und gemessen am 12.10.2026, Testsuite 188/188); zuvor veröffentlicht war **7.2.0.83 / 1.0.83**, gebaut am 12.10.2026 (Rebuild 0 Fehler, Testsuite 185/185): darin ist **AN-1** (abgeschnittene Anhangnamen, fehlende Endung) über POP am laufenden Programm gemessen und heil — alle sechs Prüffälle seit 7.2.0.81 — und über IMAP von Gregor mit 1.0.83 getestet und bestätigt; von den elf Ursachen ist nur B5.7 offen. Dazu **AN-2** (Paige zeigte JavaScript und CSS als Text), seit 7.2.0.82 übersetzt, am laufenden Programm **nicht** gemessen — siehe [AUFGABEN.md](AUFGABEN.md), B5 und B6. **Veröffentlicht als `v1.0.83`** am 12.10.2026 um 11:18 UTC, von Gregor vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung reicht"*). **7.2.0.84 behebt E-94** (Betreff mitten im Wort umbrochen, `Toner bestel len`): über POP und IMAP am laufenden Programm gemessen, von Gregor bestätigt, **veröffentlicht als `v1.0.84`** am 12.10.2026 um 12:59 UTC, auf GitHub als *Latest* — siehe [AUFGABEN.md](AUFGABEN.md), B7. Der davor gebaute inhaltliche Stand ist **7.2.0.76** — darin sind **E-110** (Bilder kamen beim Antworten nicht mit; `resolve_URL` warf jede Prozent-Sequenz weg, von Gregor an 1.0.75 bestätigt) und **E-112** (die Bilder erschienen danach in Originalgröße statt in der angegebenen, Regression der E-106-Behebung, noch nicht bestätigt) behoben, dazu **E-113** neu aufgeschrieben; der davor **veröffentlichte** Stand war **7.2.0.72** (E-88, E-89, E-93, E-95, E-96, E-97, E-99, E-100, E-101, E-103, E-104, E-106, E-108 — **171/171 Tests**), und genau dieser Stand ist am 17.09.2026 um 20:07:49 UTC als **`v1.0.72`** auf GitHub veröffentlicht, dort bis zum 12.10.2026 *Latest*. **Von Gregor am laufenden Programm bestätigt:** **E-97** (*File → Save As* stürzte ab) und **E-99** (Datenverlust beim Senden eines gesicherten Entwurfs) an **1.0.64**, **E-106** (Bilder über dem Text) an **1.0.69** — sein Bildschirmfoto zeigt die Überlappung weg —, und **E-108** (Absturz beim Antworten) an **1.0.72**: *„kein crash"*, sein Protokoll läuft über die bisher tödliche Stelle hinaus bis `Logging shutdown`, ohne `Exception.log`. **Noch nicht von ihm beurteilt** sind **E-100** (7.2.0.65), **E-101** (7.2.0.66 erster, 7.2.0.69 zweiter Teil), **E-103** (7.2.0.67) und **E-104** (7.2.0.67 und 7.2.0.68) — alle vier stecken im Download `v1.0.72`, es fehlt allein sein Urteil. **Offen aus derselben Ecke: E-98** — die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten* fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht mehr anzeigt; das berührt **Kriterium 4** nicht (kein Absturz), wohl aber die Bedienbarkeit. **1.0.70 ist nie geschnürt zu Gregor gelangt, 1.0.71 stürzt beim Antworten ab und ist nie veröffentlicht worden**; bei ihm lagen am 17.09.2026 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72 — **am 12.10.2026 liegen dort** die Verzeichnisse 1.0.72 bis 1.0.76, 1.0.83 und 1.0.84 sowie die ZIPs 1.0.44, 1.0.53 und 1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
+Stand **12.10.2026**; die Urteile in dieser Tabelle sind unverändert seit dem 18.09.2026 und an Fassung **7.2.0.55 / Paket 1.0.55** gemessen. **Quellstand ist jetzt 7.2.0.84 / Paket 1.0.84** ([E-94](BEFUNDE.md#e-94), gebaut und gemessen am 12.10.2026, Testsuite 188/188); zuvor veröffentlicht war **7.2.0.83 / 1.0.83**, gebaut am 12.10.2026 (Rebuild 0 Fehler, Testsuite 185/185): darin ist [**AN-1**](BEFUNDE.md#an-1) (abgeschnittene Anhangnamen, fehlende Endung) über POP am laufenden Programm gemessen und heil — alle sechs Prüffälle seit 7.2.0.81 — und über IMAP von Gregor mit 1.0.83 getestet und bestätigt; von den elf Ursachen ist nur [B5.7](AUFGABEN.md#b5.7) offen. Dazu [**AN-2**](BEFUNDE.md#an-2) (Paige zeigte JavaScript und CSS als Text), seit 7.2.0.82 übersetzt, am laufenden Programm **nicht** gemessen — siehe [AUFGABEN.md](AUFGABEN.md), B5 und B6. **Veröffentlicht als `v1.0.83`** am 12.10.2026 um 11:18 UTC, von Gregor vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung reicht"*). **7.2.0.84 behebt [E-94](BEFUNDE.md#e-94)** (Betreff mitten im Wort umbrochen, `Toner bestel len`): über POP und IMAP am laufenden Programm gemessen, von Gregor bestätigt, **veröffentlicht als `v1.0.84`** am 12.10.2026 um 12:59 UTC, auf GitHub als *Latest* — siehe [AUFGABEN.md](AUFGABEN.md), B7. Der davor gebaute inhaltliche Stand ist **7.2.0.76** — darin sind [**E-110**](BEFUNDE.md#e-110) (Bilder kamen beim Antworten nicht mit; `resolve_URL` warf jede Prozent-Sequenz weg, von Gregor an 1.0.75 bestätigt) behoben, [**E-112**](BEFUNDE.md#e-112) dagegen **wieder offen** (die Bilder erscheinen in Originalgröße statt in der angegebenen, Regression der E-106-Behebung; der Versuch in 7.2.0.76 ist von Gregor am 18.09.2026 widerlegt), dazu [**E-113**](BEFUNDE.md#e-113) neu aufgeschrieben; der davor **veröffentlichte** Stand war **7.2.0.72** ([E-88](BEFUNDE.md#e-88), [E-89](BEFUNDE.md#e-89), [E-93](BEFUNDE.md#e-93), [E-95](BEFUNDE.md#e-95), [E-96](BEFUNDE.md#e-96), [E-97](BEFUNDE.md#e-97), [E-99](BEFUNDE.md#e-99), [E-100](BEFUNDE.md#e-100), [E-101](BEFUNDE.md#e-101), [E-103](BEFUNDE.md#e-103), [E-104](BEFUNDE.md#e-104), [E-106](BEFUNDE.md#e-106), [E-108](BEFUNDE.md#e-108) — **171/171 Tests**), und genau dieser Stand ist am 17.09.2026 um 20:07:49 UTC als **`v1.0.72`** auf GitHub veröffentlicht, dort bis zum 12.10.2026 *Latest*. **Von Gregor am laufenden Programm bestätigt:** **[E-97](BEFUNDE.md#e-97)** (*File → Save As* stürzte ab) und **[E-99](BEFUNDE.md#e-99)** (Datenverlust beim Senden eines gesicherten Entwurfs) an **1.0.64**, **[E-106](BEFUNDE.md#e-106)** (Bilder über dem Text) an **1.0.69** — sein Bildschirmfoto zeigt die Überlappung weg —, und **[E-108](BEFUNDE.md#e-108)** (Absturz beim Antworten) an **1.0.72**: *„kein crash"*, sein Protokoll läuft über die bisher tödliche Stelle hinaus bis `Logging shutdown`, ohne `Exception.log`. **Noch nicht von ihm beurteilt** sind **[E-100](BEFUNDE.md#e-100)** (7.2.0.65), **[E-101](BEFUNDE.md#e-101)** (7.2.0.66 erster, 7.2.0.69 zweiter Teil), **[E-103](BEFUNDE.md#e-103)** (7.2.0.67) und **[E-104](BEFUNDE.md#e-104)** (7.2.0.67 und 7.2.0.68) — alle vier stecken im Download `v1.0.72`, es fehlt allein sein Urteil. **Offen aus derselben Ecke: [E-98](BEFUNDE.md#e-98)** — die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten* fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht mehr anzeigt; das berührt **Kriterium 4** nicht (kein Absturz), wohl aber die Bedienbarkeit. **1.0.70 ist nie geschnürt zu Gregor gelangt, 1.0.71 stürzt beim Antworten ab und ist nie veröffentlicht worden**; bei ihm lagen am 17.09.2026 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72 — **am 12.10.2026 liegen dort** die Verzeichnisse 1.0.72 bis 1.0.76, 1.0.83 und 1.0.84 sowie die ZIPs 1.0.44, 1.0.53 und 1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
 
-> **Berichtigt am 18.09.2026 (LEKTOR, L-15.2).** Hier stand *„Als Paket
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.2](Befunde/LEKTOR-15.md#l-15.2)).** Hier stand *„Als Paket
 > geschnürt ist **1.0.70** … das erste, das alles enthält; bei Gregor liegen
-> 1.0.65, 1.0.67, 1.0.68 und 1.0.69, **1.0.70 noch nicht**"* — und **E-106**
+> 1.0.65, 1.0.67, 1.0.68 und 1.0.69, **1.0.70 noch nicht**"* — und [**E-106**](BEFUNDE.md#e-106)
 > galt als *„ausdrücklich nicht nachgewiesen"*. Beides ist überholt: das
 > Release `v1.0.72` war zu diesem Zeitpunkt schon draußen (`gh release list`),
-> und E-106 hat Gregor an 1.0.69 bestätigt. Vom Release stand in dieser Zeile
+> und [E-106](BEFUNDE.md#e-106) hat Gregor an 1.0.69 bestätigt. Vom Release stand in dieser Zeile
 > kein Wort.
 
 **Neun Kriterien.** 0 bis 3 hat Gregor am 30.08.2026 festgelegt — sie messen, ob
@@ -36,21 +36,21 @@ kein Mailprogramm.
 |---|---|---|
 | 0 | Das Paket läuft ohne Nachinstallieren | **erfüllt** — Gregor hat `Eudora72-1.0.10-release.zip` am 06.09.2026 auf einem Rechner **ohne Visual Studio** ausgepackt und gestartet: *„test bestanden: eudora läuft ohne VS2022 installiert."* |
 | 1 | Eudora startet und zeigt sein Hauptfenster | **erfüllt** — mehrfach gestartet und bedient |
-| 2 | Die Darstellung ist korrekt | **fast.** Erfüllt sind: Fenster, Menüs und Werkzeugleiste (E-1, E-2), Bau-Kennung im Titel (E-7), Fortschritt beim Abruf (E-13), Umlaute im lokal geschriebenen Text (Z-2, Z-2b), „In" nur noch einmal unter *Recent* (E-24), gesperrte Knöpfe zeigen ihr Symbol (E-30), Doppelklick und Suchtreffer öffnen die Nachricht (E-28). **Umlaute in per IMAP abgerufenen Nachrichten** sind seit 7.2.0.52 in Ordnung: **E-85** war eine Kette aus vier Mängeln — der Zeichensatz wurde aus dem Top-Level-Header statt aus dem MIME-Teil gelesen, der Suchbereich endete vor `IDS_MIME_UTF_8`, der Rückgabewert von `ISOTranslate` wurde verworfen, und der Übertrag über die Stückgrenze fehlte; die Behebung führte zudem eine Regression ein, die PRÜFER vor der Auslieferung fand. **Am laufenden Programm belegt:** `uebersetzt=ja` im Protokoll, null unübersetzte UTF-8-Folgen in der Mailboxdatei. **Was diesem Kriterium noch fehlt, steht in der Zeile darunter.** |
-| 2a | *offen zu Kriterium 2* | **E-86**: HTML-Nachrichten werden falsch dargestellt — Bilder in der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um verlinkte Bilder. **E-77**: IMAP-Postfachnamen mit Umlauten stehen roh da, `Entw&APw-rfe` statt *Entwürfe* — modifiziertes UTF-7, ein anderer Weg als E-85. Dazu die Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
+| 2 | Die Darstellung ist korrekt | **fast.** Erfüllt sind: Fenster, Menüs und Werkzeugleiste ([E-1](BEFUNDE.md#e-1), [E-2](BEFUNDE.md#e-2)), Bau-Kennung im Titel ([E-7](BEFUNDE.md#e-7)), Fortschritt beim Abruf ([E-13](BEFUNDE.md#e-13)), Umlaute im lokal geschriebenen Text ([Z-2](BEFUNDE.md#z-2), [Z-2b](BEFUNDE.md#z-2b)), „In" nur noch einmal unter *Recent* ([E-24](BEFUNDE.md#e-24)), gesperrte Knöpfe zeigen ihr Symbol ([E-30](BEFUNDE.md#e-30)), Doppelklick und Suchtreffer öffnen die Nachricht ([E-28](BEFUNDE.md#e-28)). **Umlaute in per IMAP abgerufenen Nachrichten** sind seit 7.2.0.52 in Ordnung: [**E-85**](BEFUNDE.md#e-85) war eine Kette aus vier Mängeln — der Zeichensatz wurde aus dem Top-Level-Header statt aus dem MIME-Teil gelesen, der Suchbereich endete vor `IDS_MIME_UTF_8`, der Rückgabewert von `ISOTranslate` wurde verworfen, und der Übertrag über die Stückgrenze fehlte; die Behebung führte zudem eine Regression ein, die PRÜFER vor der Auslieferung fand. **Am laufenden Programm belegt:** `uebersetzt=ja` im Protokoll, null unübersetzte UTF-8-Folgen in der Mailboxdatei. **Was diesem Kriterium noch fehlt, steht in der Zeile darunter.** |
+| 2a | *offen zu Kriterium 2* | [**E-86**](BEFUNDE.md#e-86): HTML-Nachrichten werden falsch dargestellt — Bilder in der falschen Größe, Hintergrund weiß statt schwarz, blaue Rahmen um verlinkte Bilder. [**E-77**](BEFUNDE.md#e-77): IMAP-Postfachnamen mit Umlauten stehen roh da, `Entw&APw-rfe` statt *Entwürfe* — modifiziertes UTF-7, ein anderer Weg als [E-85](BEFUNDE.md#e-85). Dazu die Meldung „Encountered an improper argument" beim Anzeigen mancher Nachrichten |
 | 3 | Ein Mailkonto lässt sich einrichten, verbinden und Mail abrufen | **erfüllt** — POP3 über **Port 995 mit TLSv1.3**, `Negotiation Status: Succeeded`, von Gregor bestätigt. **Seit 10.09.2026 auch IMAP:** *„imap: funktioniert“*, `imap.gmx.net:993`, TLSv1.3, `TLS_AES_256_GCM_SHA384` (256 Bit) |
-| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: **E-34**, **E-35**, **E-36**. Das Beenden ist erledigt (Kriterium 7), und mit **E-43** sind auch **E-37** und **E-38** weggefallen. **Offen bleibt eine Stelle:** die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten |
+| 4 | **Keine Abstürze** | **fast** — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen an 7.2.0.21, danach 20 s offen: kein `Exception.log`). Drei Fehler lagen hintereinander: [**E-34**](BEFUNDE.md#e-34), [**E-35**](BEFUNDE.md#e-35), [**E-36**](BEFUNDE.md#e-36). Das Beenden ist erledigt (Kriterium 7), und mit [**E-43**](BEFUNDE.md#e-43) sind auch [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) weggefallen. **Offen bleibt eine Stelle:** die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten |
 | 5 | **Eine neue Mail lässt sich schreiben und abschicken** | **erfüllt** — Gregor hat am 07.09.2026 mit 7.2.0.21 eine Mail geschrieben und abgeschickt: *„mail können jetzt abgeschickt werden."* Belegt durch sein Bildschirmfoto: *Out* enthält „test von freenet nach GMX", 10:01 Uhr |
 | 6 | **Eine Mail lässt sich weiterleiten** | **erfüllt** — dasselbe Bildschirmfoto zeigt die **Antwort** darauf im Postfach *In*: „Re: test von freenet nach GMX — ja, ist da.", 10:02 Uhr. Verfassen, Senden, Zitieren und Empfangen laufen damit im Kreis |
-| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch **E-40**, **E-41** und **E-42**: ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler dahinter, **E-43**, ist in 7.2.0.24 an der Wurzel behoben und ebenfalls bestätigt: die Protokollzeile `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst` kommt nicht mehr |
-| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund **E-48**, umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben (**E-50**) und noch nicht nachgesehen |
+| 7 | *File → Exit* beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026 an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden: Menü, Alt-F4 und das Kreuz. Behoben durch [**E-40**](BEFUNDE.md#e-40), [**E-41**](BEFUNDE.md#e-41) und [**E-42**](BEFUNDE.md#e-42): ein Fehler beim *Aufräumen* verhindert das Beenden nicht mehr, nur eine bewusste Entscheidung des Anwenders. Der Fehler dahinter, [**E-43**](BEFUNDE.md#e-43), ist in 7.2.0.24 an der Wurzel behoben und ebenfalls bestätigt: die Protokollzeile `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgelöst` kommt nicht mehr |
+| 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund [**E-48**](BEFUNDE.md#e-48), umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben ([**E-50**](BEFUNDE.md#e-50)) und noch nicht nachgesehen |
 
 **Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
 erfüllt (2, 4).** Was Kriterium 2 noch fehlt, steht vollständig in der Zeile
-**2a**: **E-86** (HTML-Nachrichten falsch dargestellt), **E-77**
+**2a**: [**E-86**](BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt), [**E-77**](BEFUNDE.md#e-77)
 (IMAP-Postfachnamen mit Umlauten) und die Meldung „Encountered an improper
 argument" beim **Anzeigen** mancher Nachrichten — diese Meldung fehlt auch
-Kriterium 4. Die Umlaute in per IMAP abgerufenen Nachrichten sind mit **E-85**
+Kriterium 4. Die Umlaute in per IMAP abgerufenen Nachrichten sind mit [**E-85**](BEFUNDE.md#e-85)
 in **7.2.0.52** behoben und **am laufenden Programm belegt** (`uebersetzt=ja`
 im Protokoll, null unübersetzte UTF-8-Folgen in der Mailboxdatei); 7.2.0.51
 hatte nur den Suchbereich repariert, nicht die Quelle.
@@ -62,7 +62,7 @@ hatte nur den Suchbereich repariert, nicht die Quelle.
 >
 > Was sich verbessert hat, ist die **Ausgangslage**, nicht das Programm: bis
 > 06.09.2026 entstand in dieser Portierung kein einziges Paige-Fenster, und die
-> Ursache war unbekannt. Jetzt ist sie gefunden und behoben (E-31). Ob daraus für
+> Ursache war unbekannt. Jetzt ist sie gefunden und behoben ([E-31](BEFUNDE.md#e-31)). Ob daraus für
 > den Anwender ein sichtbares Verfassen-Fenster wird, entscheidet der nächste
 > Lauf auf Gregors Rechner — nicht diese Datei.
 
@@ -92,7 +92,7 @@ Kriterium 0 steht vor allen anderen, weil ohne lauffähiges Paket niemand die
 
 Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die übrigen) bleiben
 davon unberührt — sie sind eigene Module mit eigener Laufzeit und brauchen
-weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund B-1 einen **eigenen Nachbau**
+weiterhin `MSVCR71.dll`. Dafür gibt es seit Befund [B-1](BEFUNDE.md#b-1) einen **eigenen Nachbau**
 (`Eudora71/VC71Bruecke`), der auf die von Windows selbst mitgelieferte
 `msvcrt.dll` weiterleitet. Der darf mit ins Paket, er ist unser eigener Code.
 
@@ -111,7 +111,7 @@ installiert."*
 > `Plugins`-Ordner gelöscht — das Ergebnis blieb **„keine Fehler, EXIT=0"**. Das
 > Werkzeug prüfte die Maschine, nicht das Paket, und seine feste
 > Debug-Laufzeitliste erzeugte bei einem Release-Paket vier Falschwarnungen, die
-> zum Lizenzverstoß anleiteten. **Das ist am 06.09.2026 behoben** (PR-2.0,
+> zum Lizenzverstoß anleiteten. **Das ist am 06.09.2026 behoben** ([PR-2.0](Befunde/PAKET.md#pr-2.0),
 > Commit `dfc8b40`): es rechnet die Startkette aus den PE-Import- und
 > Verzögerungstabellen aus, zählt einen Treffer in `SysWOW64`/`System32`
 > ausdrücklich **nicht** als vorhanden und weist den Weg über
@@ -180,7 +180,7 @@ werte beim neuen persona konto für ‚leave message on server' greifen."*
 vier Werte nicht trägt, und `tools/doku-pruefen.pl` hält die Datei gegen diese
 Tabelle — eine Anforderung ohne Schranke ist ein Versprechen.
 
-**Was A-1 ausdrücklich nicht verlangt:** ein **bestehendes** Konto zu ändern.
+**Was [A-1](BEFUNDE.md#a-1) ausdrücklich nicht verlangt:** ein **bestehendes** Konto zu ändern.
 `CPersonality::GetIniDefaultValue` (`persona.cpp:606-620`) liest beim Laden
 eines vorhandenen Kontos ausschließlich die Ressource, nie die `DEudora.ini`.
 Gregors Wort dazu: *„bestehendes kann ich selbst korrigieren."* Von Hand geht es
@@ -227,7 +227,7 @@ Rahmen. Und zwar **sowohl** beim ersten Start (frisches Profil, kein
 `Eudora.ini` — das sind zwei verschiedene Programmwege, und nur der zweite ist
 der, den Gregor gesehen hat.
 
-**Umgesetzt in 7.2.0.23** (Befund **E-44**), von Gregor am 08.09.2026 am
+**Umgesetzt in 7.2.0.23** (Befund [**E-44**](BEFUNDE.md#e-44)), von Gregor am 08.09.2026 am
 ausgelieferten Paket bestätigt: *„leiste unten paßt."*
 Zwei Ursachen, beide gemessen, beide behoben:
 
@@ -238,7 +238,7 @@ Zwei Ursachen, beide gemessen, beide behoben:
    **überhaupt nicht** setzt: `LoadWazooConfigFromIni` (`WazooBar.cpp:552`)
    stellt nur wieder her, welche Fenster in einer Leiste sitzen. Die Lage käme
    aus MFCs `LoadBarState` und damit aus dem INI-Abschnitt `[ToolBar...]` —
-   den es nicht gibt, weil `SaveBarState` beim Beenden abbricht (**E-43**).
+   den es nicht gibt, weil `SaveBarState` beim Beenden abbricht ([**E-43**](BEFUNDE.md#e-43)).
    Jetzt wird die Standardanordnung nachgezogen, wenn eine Leiste an keiner
    Andockleiste hängt.
 
@@ -258,7 +258,7 @@ Gestellt am 09.09.2026, nachdem Gregor 1.0.24 geprüft hatte:
 
 Das ist der noch fehlende Teil von **Kriterium 8**. Mit A-3 ist es ganz erfüllt.
 
-**Der Befund dazu ist E-48.** Und die Lage ist besser als gedacht: die Leiste
+**Der Befund dazu ist [E-48](BEFUNDE.md#e-48).** Und die Lage ist besser als gedacht: die Leiste
 ist nicht *nicht vorhanden*, sondern **abgeschaltet**. Nachgemessen am
 09.09.2026:
 
@@ -282,7 +282,7 @@ Es fehlten also nur Anschlüsse in der Ersatzschicht, nicht die Funktion selbst.
 `No Recipient, No S…`, die aktive hervorgehoben). **Von Gregor am 09.09.2026
 bestätigt:** der Klick auf eine Karte holt das Fenster nach vorn, und die
 Beschriftungen stimmen mit dem Menü *Window*. Damit ist **Kriterium 8** ganz
-erfüllt. Drei Mängel, die er dabei an 1.0.25 gefunden hat, sind als **E-50** in
+erfüllt. Drei Mängel, die er dabei an 1.0.25 gefunden hat, sind als [**E-50**](BEFUNDE.md#e-50) in
 7.2.0.26 behoben und noch nicht nachgesehen; ein **Nebenbefund ohne Nummer**
 bleibt offen — nach einem Neustart stehen die Fenster nicht im Vollbild,
 obwohl sie beim Beenden so waren. Der gehört nicht zu A-3, sondern zum
@@ -327,7 +327,7 @@ gesetzt in `WazooBarMgr.cpp`, `SetDefaultWazooBarState` Fall 0
 (`DockControlBarEx(pWazooBar, AFX_IDW_DOCKBAR_LEFT, 0, 0, 1.00, 180)`) — und
 lässt sich mit der Maus nicht verändern.
 
-**Der Befund dazu ist E-49.** Wie bei A-3 ist die Mechanik vorhanden und nur
+**Der Befund dazu ist [E-49](BEFUNDE.md#e-49).** Wie bei A-3 ist die Mechanik vorhanden und nur
 nicht angeschlossen. Nachgemessen am 09.09.2026:
 
 | Stück | wo | Zustand |
@@ -340,7 +340,7 @@ nicht angeschlossen. Nachgemessen am 09.09.2026:
 | `Splitter::DrawTrackerRect` (der Ziehbalken) | `OTShim.cpp:4249`, 14 Anweisungen | **umgesetzt** |
 | `DeleteAllSplitters` | `OTShim.cpp:3711` | **umgesetzt** |
 
-> **Alle sieben Zeilenangaben am 17.09.2026 vom LEKTOR neu gemessen (L-13.3).**
+> **Alle sieben Zeilenangaben am 17.09.2026 vom LEKTOR neu gemessen ([L-13.3](Befunde/LEKTOR-13.md#l-13.3)).**
 > Sie waren um 500 bis 1000 Zeilen abgewandert und zeigten ins Leere:
 > `OTShim.h:724ff`, `OTShim.cpp:3038`, `:3159`, `:3199`, `:3178`, `:3255`,
 > `:3066`. An keiner dieser Stellen steht heute noch, was hier behauptet wurde.
@@ -362,7 +362,7 @@ Splitter selbst. AddSplitter wird nie aufgerufen …"*
 3. Die Breite lässt sich über **180 Pixel hinaus** vergrößern — das ist
    Gregors eigentliche Bitte.
 4. Die eingestellte Breite **überlebt einen Neustart** (sie landet im
-   `[ToolBar…]`-Abschnitt der `Eudora.ini`, der seit **E-43** überhaupt
+   `[ToolBar…]`-Abschnitt der `Eudora.ini`, der seit [**E-43**](BEFUNDE.md#e-43) überhaupt
    erst geschrieben wird).
 5. `tools/leisten-messen.ps1` gibt die geänderte Breite als Zahl aus — vorher
    180, hinterher der neue Wert.
@@ -371,8 +371,8 @@ Splitter selbst. AddSplitter wird nie aufgerufen …"*
 derselben Fensterebene, und beides ist „Mechanik da, Anschluss fehlt".
 Deshalb zusammen umzusetzen, nicht nacheinander.
 
-**Umgesetzt in 7.2.0.26, nachgebessert in 7.2.0.27 (E-52) und in 7.2.0.29
-(E-54: der Ziehrahmen war nach rechts unsichtbar; E-55: acht Pixel leerer
+**Umgesetzt in 7.2.0.26, nachgebessert in 7.2.0.27 ([E-52](BEFUNDE.md#e-52)) und in 7.2.0.29
+([E-54](BEFUNDE.md#e-54): der Ziehrahmen war nach rechts unsichtbar; [E-55](BEFUNDE.md#e-55): acht Pixel leerer
 Streifen unter der Werkzeugleiste), von Gregor noch nicht bestätigt.** Bestätigt ist nur der **Gegenfall**: am 09.09.2026
 *„verschieben rauf / runter — bug gefixt, die anzeige ist korrekt."*, also die
 Höhenänderung des unteren Bereichs samt Auffrischen. Das seitliche Ziehen hat
@@ -410,7 +410,7 @@ am 30.08.2026 (*„das hauptfenster ist ja kaputt!"*). Deshalb zählen Strg-N, d
 Doppelklick auf eine Nachricht und die Suchtreffer zu Kriterium 2 und nicht zu
 den Kleinigkeiten.
 
-Bekannte Abweichungen im Erscheinungsbild sind in `BEFUNDE.md` unter S-6
+Bekannte Abweichungen im Erscheinungsbild sind in `BEFUNDE.md` unter [S-6](BEFUNDE.md#s-6)
 gesammelt.
 
 ## Woran sich Kriterium 3 misst
@@ -419,7 +419,7 @@ Nachweis ist ein tatsächlicher Abruf gegen einen echten Server, mit Beleg:
 Protokollversion und Verfahren aus *Tools → Last SSL Info*, und mindestens eine
 empfangene Nachricht, die lesbar dargestellt wird.
 
-> **Erbracht.** Am 31.08.2026, 08:09:43 (Befund E-3): `mx.freenet.de` auf
+> **Erbracht.** Am 31.08.2026, 08:09:43 (Befund [E-3](BEFUNDE.md#e-3)): `mx.freenet.de` auf
 > **Port 110 mit STARTTLS**, `TLSv1.3`, `TLS_AES_256_GCM_SHA384` (256 Bit),
 > Status *Succeeded*, danach 159 abgerufene und lesbar dargestellte Nachrichten.
 > Am 06.09.2026 zusätzlich über **Port 995** mit `TLSv1.3`,

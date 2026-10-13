@@ -13,55 +13,55 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
 fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
 improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2 fehlt
-darüber hinaus** **E-86** (HTML-Nachrichten falsch dargestellt) und **E-77**
+darüber hinaus** [**E-86**](BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77)
 (IMAP-Postfachnamen roh) — beides steht in `ZIEL.md` in der eigenen Zeile
 **2a**. Bis zum 14.09.2026 stand hier „beiden fehlt **dasselbe**", und das
 stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
 
-**Dazu warten sechs frische Behebungen auf sein Urteil:** **E-85** (Umlaute
-über IMAP, 7.2.0.52, am laufenden Programm belegt), **E-83** (Eudora liess
-sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), **E-93**
+**Dazu warten sechs frische Behebungen auf sein Urteil:** [**E-85**](BEFUNDE.md#e-85) (Umlaute
+über IMAP, 7.2.0.52, am laufenden Programm belegt), [**E-83**](BEFUNDE.md#e-83) (Eudora liess
+sich nicht beenden, 7.2.0.53, am laufenden Programm gemessen), [**E-93**](BEFUNDE.md#e-93)
 (Inhaltsverlust beim Weiterleiten einer bereits weitergeleiteten Nachricht,
-7.2.0.59), **E-95**/**E-96** (Bildgrößen im Verfassenfenster, 7.2.0.62
-und 7.2.0.63, an einem selbst gestarteten Eudora gemessen) sowie **E-97**
+7.2.0.59), [**E-95**](BEFUNDE.md#e-95)/[**E-96**](BEFUNDE.md#e-96) (Bildgrößen im Verfassenfenster, 7.2.0.62
+und 7.2.0.63, an einem selbst gestarteten Eudora gemessen) sowie [**E-97**](BEFUNDE.md#e-97)
 (*File → Save As* beendete Eudora sofort, 7.2.0.64, am laufenden Programm
 gemessen — der Fehler steckte in **jeder** Fassung seit 1.0.49 und steckt
 auch im veröffentlichten `v1.0.50`; **von Gregor am 17.09.2026 an 1.0.64
 bestätigt**: *„speichern test hat also funktioniert."*).
 
 **Aus der Arbeit am Speichern sind drei weitere Befunde entstanden:**
-**E-99** (Datenverlust beim Senden eines gesicherten Entwurfs, 7.2.0.64, vom
-Gregor bestätigt: *„ja, kein datenverlust!"*), **E-100** (dieselbe
-Nullzeiger-Stelle wie E-97 an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
+[**E-99**](BEFUNDE.md#e-99) (Datenverlust beim Senden eines gesicherten Entwurfs, 7.2.0.64, vom
+Gregor bestätigt: *„ja, kein datenverlust!"*), [**E-100**](BEFUNDE.md#e-100) (dieselbe
+Nullzeiger-Stelle wie [E-97](BEFUNDE.md#e-97) an drei weiteren Stellen, dazu `m_Inc`/`m_Guess`
 uninitialisiert in die INI, 7.2.0.65, am laufenden Programm geprüft) und
-**E-101** (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
+[**E-101**](BEFUNDE.md#e-101) (die gespeicherte Datei war ohne `Content-Type`-Zeile und mit
 Eudoras internem Marker `<x-html>` für jedes andere Programm unbrauchbar,
 **7.2.0.66** (erster Teil) und **7.2.0.69** (zweiter Teil — ohne *Kopfzeilen
 einschließen* fehlte der `Content-Type` ganz), am laufenden Programm geprüft,
-**171 Tests**), **E-103** (Bilder ohne
+**171 Tests**), [**E-103**](BEFUNDE.md#e-103) (Bilder ohne
 Größenangabe lagen über dem Text. **Das Fehlerbild** hat Gregor am 17.09.2026
 an 1.0.64 belegt — auf seinem Bild liegt das *kleinanzeigen*-Logo über dem
 Text. **Gemessen und behoben** wurde an seiner Doctolib-Nachricht: der Import
 reserviert jetzt eine Mindestzeilenhöhe, die echte Höhe aus der geladenen Datei
 gewinnt danach. **Von Gregor am laufenden Programm noch nicht bestätigt**,
-7.2.0.67) und **E-104** (die Kopfzeilen der
+7.2.0.67) und [**E-104**](BEFUNDE.md#e-104) (die Kopfzeilen der
 gespeicherten Nachricht klebten zusammen, weil `UnwrapText` über die ganze
-Nachricht lief und weil verdorbene INI-Werte aus **E-100** „Absätze raten"
+Nachricht lief und weil verdorbene INI-Werte aus [**E-100**](BEFUNDE.md#e-100) „Absätze raten"
 eingeschaltet hatten, 7.2.0.67 für die verfasste und 7.2.0.68 für die
-empfangene Nachricht). **E-106** (7.2.0.68) ist **von Gregor am 17.09.2026 an
+empfangene Nachricht). [**E-106**](BEFUNDE.md#e-106) (7.2.0.68) ist **von Gregor am 17.09.2026 an
 1.0.69 bestätigt**: die Überlappung ist weg, der Text steht wieder unter dem
-Bild. **E-108** (7.2.0.72) entfernt den Stilweg, der beim Antworten zum Absturz
-geführt hat — **E-107** war die falsche Erklärung und ist durch Gregors
+Bild. [**E-108**](BEFUNDE.md#e-108) (7.2.0.72) entfernt den Stilweg, der beim Antworten zum Absturz
+geführt hat — [**E-107**](BEFUNDE.md#e-107) war die falsche Erklärung und ist durch Gregors
 Protokoll widerlegt. Ursprünglich: Bilder, die größer sind als im HTML
 angegeben, liegen
 über dem Text — sein Protokoll vom 17.09.2026 zeigt, dass Bilder **ohne**
 Größenangabe nachgemessen werden und die Zeile mitwächst, Bilder **mit**
 Angabe aber nie. **Offen bleibt
-E-98:** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
+[E-98](BEFUNDE.md#e-98):** die beiden Optionen *Kopfzeilen einschließen* und *Absätze raten*
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Am 18.09.2026 behoben: E-110 und E-112.** Beim **Antworten und Weiterleiten**
+**Am 18.09.2026 behoben: [E-110](BEFUNDE.md#e-110) und [E-112](BEFUNDE.md#e-112).** Beim **Antworten und Weiterleiten**
 kamen nicht alle Bilder ins Verfassenfenster, ein Teil stand als grauer Kasten
 da. **Ursache:** `resolve_URL` (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg,
 statt sie zu entschlüsseln — aus `en%20aktuellen%20Verlust.png` wurde
@@ -70,13 +70,13 @@ Fehlerseite ab und zeichnete einen grauen Kasten. Zehn von zwanzig Bildern.
 **Behoben in 7.2.0.75** mit einem `++output;`, **von Gregor bestätigt** (49 ×
 `datei=1 intern=1`, kein `intern=0` mehr).
 
-**Dabei wurde E-112 sichtbar:** die Bilder erschienen danach in **Originalgröße**
+**Dabei wurde [E-112](BEFUNDE.md#e-112) sichtbar:** die Bilder erschienen danach in **Originalgröße**
 statt in der angegebenen — das WhatsApp-Symbol ist als `35x35` ausgezeichnet und
-die Datei hat `330x327`. Das war eine Regression der **E-106**-Behebung, die die
+die Datei hat `330x327`. Das war eine Regression der **[E-106](BEFUNDE.md#e-106)**-Behebung, die die
 Zeile vergrößerte statt das Bild zu verkleinern. **Behoben in 7.2.0.76**, noch
 nicht von Gregor bestätigt.
 
-**Weiter offen: E-113** — ein Bild, dessen **angegebene** Breite größer ist als
+**Weiter offen: [E-113](BEFUNDE.md#e-113)** — ein Bild, dessen **angegebene** Breite größer ist als
 das Fenster, läuft rechts hinaus (`max-width:100%` kennt Paige nicht). Auf
 Gregors Anordnung *„erst A, dann B"* getrennt gehalten. Einzelheiten in
 [BEFUNDE.md](BEFUNDE.md), Prüfanleitungen in [CHANGELOG.md](CHANGELOG.md),
@@ -86,13 +86,13 @@ Abschnitte 7.2.0.75 und 7.2.0.76.
 `v1.0.83`, siehe unten. **Gebaut, geschnürt und veröffentlicht war damals
 7.2.0.72 / 1.0.72** (gemessen an `Eudora71/Version.h`, `VERSION` und
 `gh release list`). **Es war der erste Stand, der alles enthielt und zugleich
-draußen war**: E-93, E-96, E-97, E-99, E-100, E-101 in beiden Teilen, E-103,
-E-104, E-106 und E-108. **Bei Gregor lagen damals 1.0.65, 1.0.67, 1.0.68,
+draußen war**: [E-93](BEFUNDE.md#e-93), [E-96](BEFUNDE.md#e-96), [E-97](BEFUNDE.md#e-97), [E-99](BEFUNDE.md#e-99), [E-100](BEFUNDE.md#e-100), [E-101](BEFUNDE.md#e-101) in beiden Teilen, [E-103](BEFUNDE.md#e-103),
+[E-104](BEFUNDE.md#e-104), [E-106](BEFUNDE.md#e-106) und [E-108](BEFUNDE.md#e-108). **Bei Gregor lagen damals 1.0.65, 1.0.67, 1.0.68,
 1.0.69, 1.0.71 und 1.0.72** — **1.0.70 nie**. Am 12.10.2026 liegen dort die
 Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
 
-> **Berichtigt am 18.09.2026 (LEKTOR, L-15.3).** Hier stand *„Gebaut und
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.3](Befunde/LEKTOR-15.md#l-15.3)).** Hier stand *„Gebaut und
 > geschnürt ist **7.2.0.70 / 1.0.70** … **Es ist das erste Paket, das alles
 > enthält** … Bei Gregor liegen 1.0.65 sowie **1.0.67 bis 1.0.72**"*. Drei
 > Fehler in fünf Zeilen: der Stand ist 7.2.0.72 (`Version.h`, `VERSION`,
@@ -101,7 +101,7 @@ Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 > `ls C:\Users\Gregor\Eudora72-*`.
 
 **Veröffentlicht ist `v1.0.84`** — am 12.10.2026 um 12:59 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert, Marke auf `eb54752`, mit E-94;
+herausgegangen und dort als *Latest* markiert, Marke auf `eb54752`, mit [E-94](BEFUNDE.md#e-94);
 Gregor hat sie vorher an seinem Postfach geprüft (Bildschirmfoto). Davor
 **`v1.0.83`** — am 12.10.2026 um 11:18 Uhr UTC, Marke auf `ec9f11d`; Gregor hat
 die Fassung vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung
@@ -111,13 +111,13 @@ Merge-Commit `8da72c8`; Gregor hat sie vorher am laufenden Programm geprüft
 **1.0.65 bis 1.0.71 sind nicht freigegeben** — 1.0.71 stürzt ab und ist
 ausdrücklich nicht zu benutzen.
 
-> **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Hier stand *„veröffentlicht
+> **Berichtigt am 17.09.2026 (LEKTOR, [L-13.1](Befunde/LEKTOR-13.md#l-13.1)).** Hier stand *„veröffentlicht
 > ist weiterhin nur `v1.0.50`"*. Gemessen mit `gh release list` und
 > `git ls-remote --tags origin`: `v1.0.64` existiert. Dieselbe Unwahrheit
 > stand in `WEITERMACHEN.md`, `Releases/PAKETE.md`, `README.md` und
 > `tools/RELEASES.md` — fünf Dokumente, ein Irrtum.
 >
-> **Nachgemessen am 17.09.2026 (LEKTOR, L-14.2):** In `WEITERMACHEN.md` stand
+> **Nachgemessen am 17.09.2026 (LEKTOR, [L-14.2](Befunde/LEKTOR-14.md#l-14.2)):** In `WEITERMACHEN.md` stand
 > die Unwahrheit danach **weiter** (Zeile 24, *„Auf GitHub veröffentlicht ist
 > weiterhin `v1.0.50`; 1.0.51 bis 1.0.68 sind nicht freigegeben"*), und
 > **`PORTIERUNG.md` trug sie auch** — dort war sie in keinem der beiden
@@ -126,18 +126,18 @@ ausdrücklich nicht zu benutzen.
 
 | # | | Stand |
 |---|---|---|
-| 4 | **Keine Abstürze** | *fast* — Strg-N fünfmal ohne Absturz gemessen, das Beenden ist erledigt (Kriterium 7), und mit **E-43** sind **E-37** und **E-38** weggefallen. Offen: die Meldung beim Anzeigen mancher Nachrichten |
+| 4 | **Keine Abstürze** | *fast* — Strg-N fünfmal ohne Absturz gemessen, das Beenden ist erledigt (Kriterium 7), und mit [**E-43**](BEFUNDE.md#e-43) sind [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) weggefallen. Offen: die Meldung beim Anzeigen mancher Nachrichten |
 | 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** — Gregor am 07.09.2026: *„mail können jetzt abgeschickt werden."* |
 | 6 | **Eine Mail weiterleiten** | **erfüllt** — Gregor am 07.09.2026: *„weiterleitung funktioniert übrigens."* |
 | 7 | ***File → Exit*** beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026: *„schließen klappt jetzt."* Alle drei Wege: Menü, Alt-F4, Kreuz |
-| 8 | Offene Fenster sichtbar und auswählbar | **erfüllt** — Gregor am 09.09.2026: der Klick auf eine Registerkarte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window* (**A-3** / **E-48**) |
+| 8 | Offene Fenster sichtbar und auswählbar | **erfüllt** — Gregor am 09.09.2026: der Klick auf eine Registerkarte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window* (**A-3** / [**E-48**](BEFUNDE.md#e-48)) |
 
 **Was sich am 09.09.2026 geändert hat.** Gregor hat **A-3** bestätigt und damit
 Kriterium 8 geschlossen, und er hat die Höhenänderung des unteren Bereichs
 bestätigt (*„verschieben rauf / runter — bug gefixt, die anzeige ist
-korrekt."*). Am 08.09.2026 hatte er **E-43** bestätigt (*„persona läßt sich
-löschen. keine messagebox"*) — und damit fielen **E-37** und **E-38** mit weg,
-weil beide Symptome derselben Ursache waren. **E-37, E-38 und E-43 stehen
+korrekt."*). Am 08.09.2026 hatte er [**E-43**](BEFUNDE.md#e-43) bestätigt (*„persona läßt sich
+löschen. keine messagebox"*) — und damit fielen [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) mit weg,
+weil beide Symptome derselben Ursache waren. **[E-37](BEFUNDE.md#e-37), [E-38](BEFUNDE.md#e-38) und [E-43](BEFUNDE.md#e-43) stehen
 deshalb nicht mehr in dieser Datei als Aufgabe.**
 
 ### 1. Gebaut, nicht bestätigt — vierzehn Befunde
@@ -147,18 +147,52 @@ deshalb nicht mehr in dieser Datei als Aufgabe.**
 Gregor nicht bestätigt*, alle aus 7.2.0.26 bis 7.2.0.30 und alle rund um
 Registerkartenleiste und Trennbalken.
 
-| Befund | Fassung | merkt ein Anwender das? |
-|---|---|---|
-| **E-49** (Anforderung **A-4**) | 7.2.0.26 | ja — den linken Bereich breiter ziehen |
-| **E-50** | 7.2.0.26 | ja — drei Mängel an der Registerkartenleiste |
-| **E-52** | 7.2.0.27 | ja — Trennbalken nicht mehr greifbar, Karten doppelt |
-| **E-53** | 7.2.0.28 | ja — beim Schließen blieb ein Strich stehen |
-| **E-54**, **E-55** | 7.2.0.29 | ja — unsichtbarer Ziehrahmen; acht Pixel leerer Streifen |
-| **E-58** | 7.2.0.29 | ja — ein Klick in den rechten Rand öffnete den Browser |
-| **E-63** | 7.2.0.30 | ja — die letzte Registerkarte zeigt keinen Kurzhinweis |
-| **E-56**, **E-57**, **E-59**, **E-60**, **E-61**, **E-62** | 7.2.0.29 | nein — von PRÜFER gefundene Robustheitsmängel im selben Code: Benutzung nach dem Freigeben, verschlucktes `WM_QUIT`, Ressourcen je Mausbewegung |
+> **Zum Durchtesten gibt es [TESTPLAN.md](TESTPLAN.md)** — dieselben vierzehn
+> als Hakenliste mit Handgriff und Sollzustand, dazu die Schalter für das
+> Protokoll und die frischen Behebungen. **Für [E-49](BEFUNDE.md#e-49) bis [E-63](BEFUNDE.md#e-63) gibt es keine
+> Spurmarken**; nachgezählt über alle `E-nn`-Protokolltexte im Quelltext. Das
+> ist Augenprüfung, und sie braucht deshalb eine Anleitung.
 
-**E-51 steht nicht in dieser Liste**, weil es behoben wurde, bevor es
+| Befund | Was kaputt war | Fassung | merkst du das? |
+|---|---|---|---|
+| [**E-49**](BEFUNDE.md#e-49) (Anforderung **A-4**) | der **linke Bereich** ließ sich nicht breiter ziehen | 7.2.0.26 | ja |
+| [**E-50**](BEFUNDE.md#e-50) | **drei Mängel an der Registerkartenleiste**, von Gregor an 1.0.25 gemeldet — siehe darunter | 7.2.0.26 | ja |
+| [**E-52**](BEFUNDE.md#e-52) | nach dem Verbreitern war der **Trennbalken nicht mehr greifbar**, und die Karten standen **doppelt** | 7.2.0.27 | ja |
+| [**E-53**](BEFUNDE.md#e-53) | beim **Schließen** eines Fensters blieb an der Stelle der Karte ein **Strich** stehen | 7.2.0.28 | ja |
+| [**E-54**](BEFUNDE.md#e-54) | beim Ziehen **nach rechts** war der **Ziehrahmen unsichtbar** — man zog ins Blinde | 7.2.0.29 | ja |
+| [**E-55**](BEFUNDE.md#e-55) | ein **acht Pixel hoher leerer Streifen** unter der Werkzeugleiste | 7.2.0.29 | ja |
+| [**E-58**](BEFUNDE.md#e-58) | ein Klick in den **rechten Rand** des Kartenstreifens öffnete den **Browser**, ohne dass dort etwas zu sehen war | 7.2.0.29 | ja |
+| [**E-63**](BEFUNDE.md#e-63) | die **letzte** Registerkarte zeigt keinen Kurzhinweis, alle anderen schon | 7.2.0.30 | ja |
+| [**E-56**](BEFUNDE.md#e-56) | beim **Abschalten** von *Show MDI task bar* blieb der Kartenstreifen stehen | 7.2.0.29 | eher nicht |
+| [**E-57**](BEFUNDE.md#e-57) | `QCWorkbook::IsTabLabelTruncated` legte bei **jeder Mausbewegung** eine `CPaintDC` an — außerhalb von `WM_PAINT` | 7.2.0.29 | nein |
+| [**E-59**](BEFUNDE.md#e-59) | `m_cxTab` wurde **nur in `OnPaint`** gesetzt | 7.2.0.29 | nein |
+| [**E-60**](BEFUNDE.md#e-60) | ein Trennbalken konnte **während des Ziehens gelöscht** werden — Benutzung nach dem Freigeben | 7.2.0.29 | nein, bis es kracht |
+| [**E-61**](BEFUNDE.md#e-61) | `Splitter::Track` **verschluckte `WM_QUIT`** — Eudora wäre weitergelaufen, obwohl es enden sollte | 7.2.0.29 | nein, bis es hängt |
+| [**E-62**](BEFUNDE.md#e-62) | **sieben eigene Nachrichtenschleifen** verschluckten `WM_QUIT`, zwei davon mit echter Hängegefahr | 7.2.0.29 | nein, bis es hängt |
+
+**Die drei Mängel von [E-50](BEFUNDE.md#e-50)**, in Gregors eigenen Worten von damals — alle drei
+mit **einer** Wurzel: der Streifen wird nur beim Neuzeichnen gemalt, und
+niemand erklärt ihn für ungültig.
+
+1. *„die karte bleibt eingedrückt, auch wenn man im anderen fenster ist"* —
+   `QCWorkbook::OnLButtonDown` setzte `SetSelected(TRUE)` (`workbook.cpp:1109`),
+   und **niemand** setzte es zurück; im Original tat das die Stingray-Ebene.
+2. *„beim skalieren ist die darstellung falsch"* — `WM_SIZE` frischt jetzt auf.
+3. *„die karten sind dann weg"* beim Öffnen und Schließen — `AddSheet` und
+   `RemoveSheet` frischen jetzt auf.
+
+**Nicht dazugezählt:** *„nach dem neustart sind die fenster nicht im
+vollbildmodus, wie beim beenden"* — das ist der Fensterzustand, ein eigener
+Weg über `SaveOpenWindows`, getrennt zu messen.
+
+**Warum hier bis zum 12.10.2026 nur die Nummern standen.** Die Tabelle nannte
+Kennung, Fassung und ein Stichwort — **nicht, was der Fehler war**. Wer sie
+benutzen wollte, musste jede Nummer in `BEFUNDE.md` nachschlagen, und das sind
+8500 Zeilen. Gregor am 12.10.2026: *„in den aufgaben sehe ich nicht mal, was
+z.b. e-50 für ein fehler ist."* Die Beschreibungen stammen aus den
+Urteilszeilen von `BEFUNDE.md`, Wort für Wort übernommen.
+
+**[E-51](BEFUNDE.md#e-51) steht nicht in dieser Liste**, weil es behoben wurde, bevor es
 ausgeliefert war. Prüfbar wäre es ohnehin nicht, nicht von Gregor und nicht von
 mir: es geht darum, ob beim Ziehen etwas einfriert, und die Ziehschleife läuft
 nur mit einer **physisch gedrückten Maustaste**
@@ -172,7 +206,7 @@ Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
 > Datum, nicht den Widerspruch dahinter. Gefunden hat es Gregor.
 >
 > **Am 13.09.2026 dasselbe noch einmal, andersherum.** Der Abschnitt erklärte
-> danach **E-49**, **E-50** und **E-52** für *bestätigt* — `BEFUNDE.md` führt
+> danach [**E-49**](BEFUNDE.md#e-49), [**E-50**](BEFUNDE.md#e-50) und [**E-52**](BEFUNDE.md#e-52) für *bestätigt* — `BEFUNDE.md` führt
 > alle drei ausdrücklich als *von Gregor noch nicht bestätigt*. Die Berichtigung
 > vom 11.09. hat den Widerspruch nicht aufgelöst, sondern umgedreht.
 > `tools/pruefe-befundurteile.pl` fängt genau diese Klasse — es prüft aber nur
@@ -184,14 +218,14 @@ Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
 **Das ist der letzte bekannte Fehler, den ein Anwender merkt** — und der
 einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt* heißen.
 
-MFCs Text für `CInvalidArgException`, **dieselbe Fehlerklasse wie E-34 und
-E-43**, andere Aufrufstelle. **Neu zu messen, seit E-43 an der Wurzel behoben
+MFCs Text für `CInvalidArgException`, **dieselbe Fehlerklasse wie [E-34](BEFUNDE.md#e-34) und
+[E-43](BEFUNDE.md#e-43)**, andere Aufrufstelle. **Neu zu messen, seit [E-43](BEFUNDE.md#e-43) an der Wurzel behoben
 ist** — gut möglich, dass sie mit verschwunden ist. Erst messen, dann suchen.
 
 **Vor jedem Suchen:** `ASSERT(0)` und `VERIFY(` sind im Release-Bau nichts
 (`Arbeitsweise/assert-ist-im-release-nichts.md`). Das ist die häufigste
-Ursachenklasse dieses Projekts — E-40 (`ASSERT(FALSE)` im `default`-Zweig),
-E-37 (`ASSERT(nIndex != -1)`), E-38 (`VERIFY` um `Add`).
+Ursachenklasse dieses Projekts — [E-40](BEFUNDE.md#e-40) (`ASSERT(FALSE)` im `default`-Zweig),
+[E-37](BEFUNDE.md#e-37) (`ASSERT(nIndex != -1)`), [E-38](BEFUNDE.md#e-38) (`VERIFY` um `Add`).
 
 ### 3. Der Nebenbefund ohne Nummer: die Fenster stehen nicht im Vollbild
 
@@ -207,7 +241,7 @@ in der `Eudora.ini` des Mailverzeichnisses nachsehen, ob der Maximiert-Zustand
 dort steht. Steht er nicht drin, ist es die Schreibseite; steht er drin, die
 Leseseite.
 
-> **Zusammenhang mit E-43, aber nicht dasselbe.** Bis 7.2.0.24 entstand
+> **Zusammenhang mit [E-43](BEFUNDE.md#e-43), aber nicht dasselbe.** Bis 7.2.0.24 entstand
 > überhaupt kein `[ToolBar…]`-Abschnitt in der `Eudora.ini`; seither entstehen
 > **13**. Ob der Fensterzustand denselben Weg nimmt, ist **nicht** gemessen.
 
@@ -223,7 +257,7 @@ trusting souls"*). `FlushINIFile` schreibt `SavePassword` und
 (`rs.cpp:1237-1250`) — der nächste `SetCurrent` legt damit zwei Schlüssel im
 gelöschten Abschnitt wieder an.
 
-**Unabhängig von E-43**, das den Zeitpunkt nur nach vorn verschiebt.
+**Unabhängig von [E-43](BEFUNDE.md#e-43)**, das den Zeitpunkt nur nach vorn verschiebt.
 Naheliegend: nach erfolgreichem `Remove` auf `<Dominant>` umschalten, wenn die
 gelöschte die aktuelle war.
 
@@ -248,7 +282,7 @@ mit `tools/leisten-messen.ps1` war Leiste 319 **rechts und unsichtbar**.
 
 ### Was schon nachgemessen ist — nicht wiederholen
 
-**Kriterium 8 ist geschlossen (A-3 / E-48).** Die Registerkartenleiste war
+**Kriterium 8 ist geschlossen (A-3 / [E-48](BEFUNDE.md#e-48)).** Die Registerkartenleiste war
 nicht abwesend, sondern **abgeschaltet**: Eudoras Code liegt vollständig im
 Quellbaum (`workbook.cpp`), der Einschalter steht in `mainfrm.cpp`, die
 INI-Vorgabe `ShowMDITaskbar\n1` in `EudoraRes.rc`. Vier Anschlüsse fehlten in
@@ -256,7 +290,7 @@ der Ersatzschicht — `SetWorkbookMode` war eine Attrappe, `GetTabPts` lieferte
 sechs Nullpunkte, der Rückgabewert von `recalcTabWidth()` wurde weggeworfen,
 und `OnDrawTabIconAndLabel` rief niemand. **Nicht wieder von vorn suchen.**
 
-**A-4 / E-49: drei Anläufe, zwei am laufenden Programm widerlegt.**
+**A-4 / [E-49](BEFUNDE.md#e-49): drei Anläufe, zwei am laufenden Programm widerlegt.**
 `SetBorders` verkleinert den Innenbereich statt die Leiste zu vergrößern
 (Andockleiste Client **176** bei Leiste **180**); eine Bedingung über
 `m_arrBars` hatte **gar keine Wirkung**; ein Messversuch mit Zuschlag **11**
@@ -264,14 +298,14 @@ ergab **187**, also 7 Pixel frei — daraus folgt, dass der Weg über
 `CalcFixedLayout` stimmt und **MFC 4 Pixel des Zuschlags selbst verbraucht**.
 Endstand **188**, 8 Pixel frei. **Diese drei nicht noch einmal durchprobieren.**
 
-**Das Beenden ist entschieden** (Kriterium 7, von Gregor bestätigt): **E-40**
+**Das Beenden ist entschieden** (Kriterium 7, von Gregor bestätigt): [**E-40**](BEFUNDE.md#e-40)
 (eine Rückfrage, die sich nicht öffnen lässt, galt als „Abbrechen" —
 `SaveModified` in `doc.cpp` und `msgdoc.cpp` hatten im `default`-Zweig nur
-`ASSERT(FALSE)`), **E-41** (Alt-F4 und das Kreuz laufen durch das
+`ASSERT(FALSE)`), [**E-41**](BEFUNDE.md#e-41) (Alt-F4 und das Kreuz laufen durch das
 `ENSURE_VALID` in `CFrameWnd::OnSysCommand`, das *File → Exit* nicht hat —
-gefunden von PRUEFER, indem er meine Beweisführung verwarf), **E-42** (zwölf
+gefunden von PRUEFER, indem er meine Beweisführung verwarf), [**E-42**](BEFUNDE.md#e-42) (zwölf
 Aufräumschritte konnten den Ablauf abbrechen; neues Makro `AUFRAEUMEN` in
-`mainfrm.cpp`) und **E-45** (einer dieser zwölf, `QCWorkbook::OnClose`, darf
+`mainfrm.cpp`) und [**E-45**](BEFUNDE.md#e-45) (einer dieser zwölf, `QCWorkbook::OnClose`, darf
 **nicht** übersprungen werden — sonst bleibt ein Prozess ohne Fenster übrig).
 Der vermessene Weg steht in [Befunde/BEENDEN.md](Befunde/BEENDEN.md), das
 Review in [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md).
@@ -280,40 +314,40 @@ eingefasste Aufräumschritte**. Der zwölfte, `QCWorkbook::OnClose`, darf
 ausdrücklich **nicht** durch `AUFRAEUMEN` laufen, und genau das prüft das
 Werkzeug umgekehrt mit.
 
-**E-43 ist behoben, und mit ihm drei weitere Befunde.** `SECControlBar` war
+**[E-43](BEFUNDE.md#e-43) ist behoben, und mit ihm drei weitere Befunde.** `SECControlBar` war
 **zweimal definiert** — `OT501/Include/sbarcore.h` (Original) und
 `OTShim/OTShim.h` (Ersatz), und der Ersatz hat ein Feld mehr. Zwei
 Übersetzungseinheiten lasen dasselbe Feld acht Byte auseinander. Gemessen
 vorher `GetBtnCount=24/24 m_btns.GetSize=0/0`, nachher
 `GetBtnCount=24/24 m_btns.GetSize=24/24`; die `Eudora.ini` enthält seither
 **13** `[ToolBar…]`-Abschnitte statt **0**. Die Schranke dazu ist
-`tools/pruefe-waechter.pl`. **Damit fielen die Fehlerklasse hinter E-34, E-37
-und E-38 weg** — die zwei Behebungsanläufe an der Kontoliste (`FindItem`, dann
+`tools/pruefe-waechter.pl`. **Damit fielen die Fehlerklasse hinter [E-34](BEFUNDE.md#e-34), [E-37](BEFUNDE.md#e-37)
+und [E-38](BEFUNDE.md#e-38) weg** — die zwei Behebungsanläufe an der Kontoliste (`FindItem`, dann
 `GetItemText`) lagen hinter dem Wurf und konnten nie wirken.
 
-**Die Wurzel der Abstürze ist gefunden und behoben: E-31.** Strg-N und
+**Die Wurzel der Abstürze ist gefunden und behoben: [E-31](BEFUNDE.md#e-31).** Strg-N und
 *Weiterleiten* beendeten Eudora mit `0xC00000FD` STATUS_STACK_OVERFLOW in
 `Paige32.dll` (`pgInstallFont`, 525 Windungen tief). Ursache war `pg_time_t` in
 `Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`: acht Byte breit unter VS2022, vier in
 der DLL von 2005 — damit war jede Paige-Struktur verschoben. Darauf folgten
-drei Fehler derselben Art, alle behoben und gemessen: **E-34** (eine
+drei Fehler derselben Art, alle behoben und gemessen: [**E-34**](BEFUNDE.md#e-34) (eine
 MFC-Ausnahme in `QCChildToolBar::GetButton` wickelte den ganzen Fensterbau ab,
-ohne Meldung und ohne Absturz), **E-35** und **E-36** (blinde Zeigerzugriffe an
-den Aufrufstellen, die E-34 erst sichtbar machte).
+ohne Meldung und ohne Absturz), [**E-35**](BEFUNDE.md#e-35) und [**E-36**](BEFUNDE.md#e-36) (blinde Zeigerzugriffe an
+den Aufrufstellen, die [E-34](BEFUNDE.md#e-34) erst sichtbar machte).
 
 **Widerlegt und nicht wieder aufzugreifen:**
 
-- **E-46** — der Verdacht, `CMainFrame::OnClose` arbeite nach
+- [**E-46**](BEFUNDE.md#e-46) — der Verdacht, `CMainFrame::OnClose` arbeite nach
   `QCWorkbook::OnClose` auf einem **freigegebenen** Objekt weiter. Die
   Spurmarke `E-46 CMainFrame::~CMainFrame betreten` erscheint erst **nach**
   der Stelle. Die Marke bleibt drin, weil sie die Reihenfolge belegt.
-- **E-32** — meine Ursachenbehauptung zur modalen Meldung.
+- [**E-32**](BEFUNDE.md#e-32) — meine Ursachenbehauptung zur modalen Meldung.
   `CHeaderView::OnKillFocusRecipient` war es nicht; PRUEFER hat es dreifach
   gemessen. Steht im [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20.
 - **Ein ODR-Bruch durch zwei `SECCustomToolBar`-Definitionen** — `stdafx.h`
   zieht `OTShimAll.h` zuerst und setzt `__TBARCUST_H__`; stünde `tbarcust.h`
   je zuerst, bräche der Bau mit dem `#error` in `OTShim_Werkzeugleiste.h` ab.
-  Der echte ODR-Bruch lag bei `SECControlBar` (E-43), nicht hier.
+  Der echte ODR-Bruch lag bei `SECControlBar` ([E-43](BEFUNDE.md#e-43)), nicht hier.
 - **Sieben weitere Vermutungen**, jede gebaut und gemessen — die Liste mit
   Messwerten steht im [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21.
 - **Beim Beenden:** `CFileBrowseView::OnAppExit` (ausgeschlossen — alle drei
@@ -328,35 +362,35 @@ Alles Übrige in dieser Datei ist **nebenbei**, nicht statt dessen.
 
 **Von Gregor bestätigt:** **Kriterium 0** (Paket startet ohne Visual Studio),
 **Kriterium 5** und **6** (Mail schreiben, abschicken, weiterleiten),
-**Kriterium 7** (sauberes Beenden — **E-40**, **E-41**, **E-42**, ergänzt um
-**E-45**), **Kriterium 8** (offene Fenster als Registerkarten — **A-3** /
-**E-48**), **Anforderung A-1** (Vorgaben für ein neu angelegtes Konto),
-**Anforderung A-2** / **E-44** (*Task Status* und *Task Errors* waagrecht
-unten), **E-43** samt **E-37** und **E-38** (Persönlichkeit löschen, ohne
-Meldung), **E-30** (Symbole gesperrter Knöpfe) und **E-28** (Doppelklick und
+**Kriterium 7** (sauberes Beenden — [**E-40**](BEFUNDE.md#e-40), [**E-41**](BEFUNDE.md#e-41), [**E-42**](BEFUNDE.md#e-42), ergänzt um
+[**E-45**](BEFUNDE.md#e-45)), **Kriterium 8** (offene Fenster als Registerkarten — **A-3** /
+[**E-48**](BEFUNDE.md#e-48)), **Anforderung [A-1](BEFUNDE.md#a-1)** (Vorgaben für ein neu angelegtes Konto),
+**Anforderung A-2** / [**E-44**](BEFUNDE.md#e-44) (*Task Status* und *Task Errors* waagrecht
+unten), [**E-43**](BEFUNDE.md#e-43) samt [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) (Persönlichkeit löschen, ohne
+Meldung), [**E-30**](BEFUNDE.md#e-30) (Symbole gesperrter Knöpfe) und [**E-28**](BEFUNDE.md#e-28) (Doppelklick und
 Suchtreffer öffnen die Nachricht). Dazu die **Höhenänderung** des unteren
 Bereichs (*„verschieben rauf / runter — bug gefixt"*).
 
-Dazu **E-26** (Ladeadressen im Absturzbericht), **E-29**
+Dazu [**E-26**](BEFUNDE.md#e-26) (Ladeadressen im Absturzbericht), [**E-29**](BEFUNDE.md#e-29)
 (`tools/absturz-auswerten.pl`) und die entfernte `dbghelp.dll` von 2005.
-**E-31 ist von Gregor mittelbar bestätigt** — ohne Paige-Fenster gibt es
+**[E-31](BEFUNDE.md#e-31) ist von Gregor mittelbar bestätigt** — ohne Paige-Fenster gibt es
 kein Verfassen-Fenster, und er hat am 07.09.2026 mit 7.2.0.21 eine Mail
-geschrieben und abgeschickt. Zu **E-32** und **E-46** siehe oben: beide
+geschrieben und abgeschickt. Zu [**E-32**](BEFUNDE.md#e-32) und [**E-46**](BEFUNDE.md#e-46) siehe oben: beide
 widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 
 ## Was sonst noch offen ist
 
 | Punkt | wo | braucht |
 |---|---|---|
-| **E-49** (A-4), **E-50**, **E-52** — **gebaut, nicht bestätigt** | oben, 1. | Start durch Gregor |
+| [**E-49**](BEFUNDE.md#e-49) (A-4), [**E-50**](BEFUNDE.md#e-50), [**E-52**](BEFUNDE.md#e-52) — **gebaut, nicht bestätigt** | oben, 1. | Start durch Gregor |
 | Meldung **„Encountered an improper argument"** beim **Anzeigen** mancher Nachrichten | oben, 2. | Start, dann Bau |
 | **Die Fenster stehen nach dem Neustart nicht im Vollbild** — Nebenbefund ohne Kennung | oben, 3. | Start, `Eudora.ini` lesen |
-| **E-39** — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |
-| **E-47** — Fehlerdialog des Verzeichnisdienstes, `MFC71.DLL` und `MSVCP71.dll` fehlen | oben, 5. | keine Behebung in Sicht |
-| **E-14** — Zusicherung beim Start, der X1-Suchindex wird neu angelegt | `BEFUNDE.md` | echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
-| **E-13** — kein Fortschritt beim Mailabruf; die Behebung liegt auf `wt/fortschritt-arbeit`, nicht in diesem Zweig | `BEFUNDE.md` | Merge-Entscheidung |
-| **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse R-1, **16** Stellen bleiben (gemessen 07.09.2026) | A2, R-1 | Bau |
-| **Neun Zeigerstellen** aus X-3 | D3a | Bau |
+| [**E-39**](BEFUNDE.md#e-39) — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |
+| [**E-47**](BEFUNDE.md#e-47) — Fehlerdialog des Verzeichnisdienstes, `MFC71.DLL` und `MSVCP71.dll` fehlen | oben, 5. | keine Behebung in Sicht |
+| [**E-14**](BEFUNDE.md#e-14) — Zusicherung beim Start, der X1-Suchindex wird neu angelegt | `BEFUNDE.md` | echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
+| [**E-13**](BEFUNDE.md#e-13) — kein Fortschritt beim Mailabruf; die Behebung liegt auf `wt/fortschritt-arbeit`, nicht in diesem Zweig | `BEFUNDE.md` | Merge-Entscheidung |
+| **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse [R-1](BEFUNDE.md#r-1), **16** Stellen bleiben (gemessen 07.09.2026) | [A2](#a2), [R-1](BEFUNDE.md#r-1) | Bau |
+| **Neun Zeigerstellen** aus [X-3](BEFUNDE.md#x-3) | D3a | Bau |
 | **`EuMemMgr.dll` ist kein Projekt der Projektmappe** — vorgebaut, 2005, Version 7.0.0.9. Ausgerechnet sie löst den Aufrufstapel im Absturzbericht auf | — | — |
 | **Hostnamenprüfung greift nicht** (sicherheitsrelevant) | `PORTIERUNG.md` | **zurückgestellt**, siehe unten |
 
@@ -364,7 +398,7 @@ widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 
 ## A — Die Fehlerklasse `ReleaseBuffer` ohne `GetBuffer`
 
-### A2 · 21 Stellen sind zu ändern — ausgezählt
+### <a id="a2"></a>A2 · 21 Stellen sind zu ändern — ausgezählt
 
 `ReleaseBuffer` ohne vorangehendes `GetBuffer` ist bei MFC 14 unzulässig:
 `CStringT` zählt Referenzen. Eine VC6-Altlast, die sich erst zur Laufzeit meldet,
@@ -398,11 +432,11 @@ sobald etwas zu tun ist; `--alle` zeigt auch die richtigen):
 
 **Ersatz beim Kürzen: `s.Truncate(n)`** oder `s = s.Left(n)`.
 
-Erledigt und darum nicht mehr in der Messung: `eudora.cpp:3372` (E-11),
-`fileutil.cpp:482` (E-12), `QCMailboxDirector.cpp:1316` (E-24) — alle seit
+Erledigt und darum nicht mehr in der Messung: `eudora.cpp:3372` ([E-11](BEFUNDE.md#e-11)),
+`fileutil.cpp:482` ([E-12](BEFUNDE.md#e-12)), `QCMailboxDirector.cpp:1316` ([E-24](BEFUNDE.md#e-24)) — alle seit
 31.08.2026 — sowie die drei Hesiod- und Drucktitel-Stellen
-`POPSession.cpp:1747` und `SMTPSession.cpp:683` (beide `LoginName`, R-1) und
-`PaigeEdtView.cpp:657` (`strTitle`, E-27); dort steht heute `Left(n)` mit einem
+`POPSession.cpp:1747` und `SMTPSession.cpp:683` (beide `LoginName`, [R-1](BEFUNDE.md#r-1)) und
+`PaigeEdtView.cpp:657` (`strTitle`, [E-27](BEFUNDE.md#e-27)); dort steht heute `Left(n)` mit einem
 Befundkommentar daneben. `ConConProfile.cpp:198` stand früher in dieser Liste
 und gehört nicht hinein — dort steht ein `GetBuffer` auf derselben Variablen
 davor.
@@ -414,37 +448,37 @@ abschreiben.
 
 ## B — Was Gregor sieht
 
-### B1 · Die Bedienfehler, die Gregor merkt
+### <a id="b1"></a>B1 · Die Bedienfehler, die Gregor merkt
 
-**Neun sind behoben und von Gregor bestätigt** (Stand 11.09.2026, seither sind **E-79**, **E-80** und **E-81** dazugekommen und ebenfalls bestätigt): Doppelklick
-und Suchtreffer öffnen die Nachricht (**E-28**), gesperrte Knöpfe zeigen ihr
-Symbol (**E-30**), eine Mail lässt sich schreiben und abschicken (Kriterium 5)
+**Neun sind behoben und von Gregor bestätigt** (Stand 11.09.2026, seither sind [**E-79**](BEFUNDE.md#e-79), [**E-80**](BEFUNDE.md#e-80) und [**E-81**](BEFUNDE.md#e-81) dazugekommen und ebenfalls bestätigt): Doppelklick
+und Suchtreffer öffnen die Nachricht ([**E-28**](BEFUNDE.md#e-28)), gesperrte Knöpfe zeigen ihr
+Symbol ([**E-30**](BEFUNDE.md#e-30)), eine Mail lässt sich schreiben und abschicken (Kriterium 5)
 und weiterleiten (Kriterium 6), Eudora **beendet sich** über alle drei Wege
-(Kriterium 7), die Vorgaben für ein neu angelegtes Konto greifen (**A-1**),
-*Task Status* und *Task Errors* liegen waagrecht unten (**A-2**/**E-44**), eine
+(Kriterium 7), die Vorgaben für ein neu angelegtes Konto greifen ([**A-1**](BEFUNDE.md#a-1)),
+*Task Status* und *Task Errors* liegen waagrecht unten (**A-2**/[**E-44**](BEFUNDE.md#e-44)), eine
 **Persönlichkeit lässt sich löschen** — ohne Meldung, und der Eintrag
-verschwindet sofort (**E-43**, mit ihm **E-37** und **E-38**) —, die offenen
+verschwindet sofort ([**E-43**](BEFUNDE.md#e-43), mit ihm [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38)) —, die offenen
 Fenster stehen als **Registerkarten** unten und ein Klick holt sie nach vorn
-(**A-3**/**E-48**, Kriterium 8), und die **Höhe** des unteren Bereichs lässt
+(**A-3**/[**E-48**](BEFUNDE.md#e-48), Kriterium 8), und die **Höhe** des unteren Bereichs lässt
 sich verschieben.
 
-Was bleibt: die **vier gebauten, nicht beurteilten** Behebungen (**E-49**,
-**E-50**, **E-51**, **E-52** — oben unter *Die Hauptarbeit*, 1.), die Meldung
+Was bleibt: die **vier gebauten, nicht beurteilten** Behebungen ([**E-49**](BEFUNDE.md#e-49),
+[**E-50**](BEFUNDE.md#e-50), [**E-51**](BEFUNDE.md#e-51), [**E-52**](BEFUNDE.md#e-52) — oben unter *Die Hauptarbeit*, 1.), die Meldung
 „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten, der
 **Nebenbefund ohne Kennung** (Fenster nicht im Vollbild nach dem Neustart) und
-der Fehlerdialog des Verzeichnisdienstes (**E-47**). Das ist der erste Schritt,
+der Fehlerdialog des Verzeichnisdienstes ([**E-47**](BEFUNDE.md#e-47)). Das ist der erste Schritt,
 nicht ein Punkt unter vielen.
 
-### B2 · Gesperrte Werkzeugleisten-Knöpfe — **erledigt**
+### <a id="b2"></a>B2 · Gesperrte Werkzeugleisten-Knöpfe — **erledigt**
 
-**E-30 ist behoben und von Gregor bestätigt** (Paket 1.0.14). Ursache waren die
+**[E-30](BEFUNDE.md#e-30) ist behoben und von Gregor bestätigt** (Paket 1.0.14). Ursache waren die
 sechs **24-Bit**-Bitmaps der Hauptleiste: ohne Farbtabelle konnte
 `CreateMappedBitmap` das Buttongrau `192,192,192` nicht auf das heutige
 `COLOR_BTNFACE` (`240,240,240`) umsetzen, und die Maske erfasste das ganze
 Bildrechteck. Behoben in `OTShim/OTShim_Werkzeugleiste.cpp`, abgesichert durch
 `tools/pruefe-symbole.pl` und `Eudora71/Tests/TestSymbole.cpp`.
 
-### B3 · Die Umlaut-Gegenprobe ohne Start
+### <a id="b3"></a>B3 · Die Umlaut-Gegenprobe ohne Start
 
 Nach einem **neuen** Abruf (schon geholte Nachrichten bleiben kaputt, die rohen
 Bytes stehen im Postfach):
@@ -453,9 +487,9 @@ Bytes stehen im Postfach):
 perl tools/postfach-zeichen-pruefen.pl <Mailverzeichnis>\In.mbx
 ```
 
-Es darf keine vollständige UTF-8-Folge mehr melden (Z-2b).
+Es darf keine vollständige UTF-8-Folge mehr melden ([Z-2b](BEFUNDE.md#z-2b)).
 
-### B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **über POP heil seit 7.2.0.81, über IMAP von Gregor mit 1.0.83 getestet; B5.7 offen** (7.2.0.79: 4 von 6, 7.2.0.80-an1: 5 von 6, 7.2.0.81 bis 7.2.0.83: alle sechs)
+### <a id="b5"></a>B5 · Anhänge: Dateiname abgeschnitten, Endung weg (**AN-1**) — **über POP heil seit 7.2.0.81, über IMAP von Gregor mit 1.0.83 getestet; B5.7 offen** (7.2.0.79: 4 von 6, 7.2.0.80-an1: 5 von 6, 7.2.0.81 bis 7.2.0.83: alle sechs)
 
 > **Am laufenden Programm gemessen, 12.10.2026** (7.2.0.79, Rebuild 0 Fehler,
 > `C:\Temp\AN1`, Prüfnachrichten über `--pop`): **00, 01, 02, 04 heil** —
@@ -501,20 +535,20 @@ erzeugen dasselbe Bild, alle sind Originalfehler aus Eudora 7.1.
 > `ImapLex822`/`ImapHeader` zerlegen den Kopf sehr wohl — aber für die
 > Mailbox-Datei. Die IMAP-Hälfte von B5.1 bis B5.3 gehört dorthin und bleibt
 > nötig; sie betrifft nur nicht den Dateinamen. Umgekehrt hat der IMAP-Weg
-> **eigene** Fehler, die der POP-Weg nicht hat: B5.6 und B5.7.
+> **eigene** Fehler, die der POP-Weg nicht hat: B5.6 und [B5.7](#b5.7).
 
 #### Stand der elf Teile
 
 | Schritt | Was | Stand |
 |---|---|---|
-| **B5.0** | **Debug-Marken**, elf Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` | **im Quelltext.** POP-Marken 1–8 und IMAP 1–3 sind am laufenden Programm gemessen (12.10.2026, 7.2.0.77, 285 `ANHANG`-Zeilen); POP-Marken 10 und 11 am 12.10.2026 an 7.2.0.80-an1 und 7.2.0.81 gemessen; IMAP 4–9 übersetzt, aber **nicht gemessen** (kein IMAP-Abruf) |
+| **[B5.0](#b5.0)** | **Debug-Marken**, elf Stellen auf dem Weg des Namens, Bitmaske `DEBUG_MASK_ATTACH` | **im Quelltext.** POP-Marken 1–8 und IMAP 1–3 sind am laufenden Programm gemessen (12.10.2026, 7.2.0.77, 285 `ANHANG`-Zeilen); POP-Marken 10 und 11 am 12.10.2026 an 7.2.0.80-an1 und 7.2.0.81 gemessen; IMAP 4–9 übersetzt, aber **nicht gemessen** (kein IMAP-Abruf) |
 | **B5.1** | **Faltung überleben.** Eine Faltung (`CRLF` + Leerzeichen/Tabulator) beendete die Zeichenkette in Anführungszeichen — die Faltungsregel prüft das LF, im Strom kommt aber das CR zuerst | **behoben**, geändert in POP und IMAP; für den Dateinamen wirkt es nur über POP (siehe unten). Gemessen mit `tools/kopfzeile-pruefen.pl --vorschlag` und am laufenden Programm (Fall 01, 02 heil seit 7.2.0.79) |
 | **B5.2** | **Marke beim Neuanfang leeren** — `Token[0] = 0;`. Sonst wurde `filename=""` zum Wert `=`, weil die leere Marke das erste Byte der **vorigen** trug | **behoben**, POP und IMAP |
 | **B5.3** | **Marke vergrößern.** `BYTE Token[256]` kappte ab 254 Zeichen; ein Dateiname nach `_MAX_PATH` (260) passte nicht hinein | **behoben**: `LEX822_TOKEN_MAX` = 1024 in `lex822.h`, benutzt von beiden Zerlegern **und** von `szWert` in beiden `AddAttribute` — die Zahl steht nur noch an einer Stelle. Die Kopfzeile kommt seit 7.2.0.79 ganz an (304 Zeichen gemessen); **im Dateinamen wirksam erst mit B5.8** |
 | **B5.4** | **`DeMacifyName32`** schrieb bei 255 übernommenen Zeichen ein Byte hinter `pcname[255]` | **behoben**, beide Abschriften. **Dabei neu gefunden:** `DeMacifyName` (die 8+3-Fassung) schrieb bis zu **drei** Byte über — `pcname[15]`, und 8 + Punkt + 8 + Null sind 18. Der zweite Zähler stand auf 8 statt 3 |
 | **B5.5** | **RFC 2231** (`filename*0*=UTF-8''…`) kannte der Baum nicht. Dann gab es **gar kein** `filename`, und `mime.cpp` nahm den **Betreff** — `subj[32]`, also 31 Zeichen ohne Endung | **behoben**: neu `QCUtils/src/rfc2231.cpp`, benutzt von POP (`HeaderDesc::GetAttribute`) **und** IMAP (`GetFilenameParameter`). **20 von 20 Prüffällen grün**, gemessen mit `tools/rfc2231-pruefen.pl` |
 | **B5.6** | **`LOCAL_CheckName`: `char tmp[255]`.** `tmp[len] = 0;` mit `len` bis 255 schrieb auf den Stapel — bei jedem Anhangnamen ab 255 Zeichen **ohne Punkt**, und der Name kommt vom Server | **behoben** (`_MAX_PATH + 1`), nur IMAP. Das POP-Gegenstück ist auf `CString` umgebaut und hatte es nicht |
-| **B5.7** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach; der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden | **offen.** Siehe unten — es ist eine Binde-, keine Logikfrage. In Gregors IMAP-Test mit 1.0.83 fiel es nicht auf: alle drei Namen trugen schon eine Endung |
+| **[B5.7](#b5.7)** | **Über IMAP gibt es kein `MIMEMap::SetExtension`.** Der POP-Weg trägt eine fehlende Endung aus dem MIME-Typ nach; der IMAP-Weg ruft `MIMEMap` nur, um über das Löschen zu entscheiden | **offen.** Siehe unten — es ist eine Binde-, keine Logikfrage. In Gregors IMAP-Test mit 1.0.83 fiel es nicht auf: alle drei Namen trugen schon eine Endung |
 | **B5.8** | **Kappung von hinten.** `strncpy(fName, …, _MAX_PATH - 1)` in `mime.cpp` (259, ohne abschließende Null) und `DeMacifyName32` (255, beide Abschriften) schnitten das Ende ab — mit der Endung | **behoben in 7.2.0.80-an1** mit `AnhangNameKuerzen` (`QCUtils/src/rfc2231.cpp`), das die Endung behält. Am laufenden Programm gemessen: Fall 03 kommt als `<220×A>.pdf` (224) |
 | **B5.9** | **`MIMEMap::GetMaps` verwarf die ganze Tabelle**, sobald ein Registry-Typ unter `HKCR\Mime\Database\Content Type` keinen Schrägstrich hat (`pkcs10`). Damit trug `SetExtension` **nie** eine Endung nach, auch in echter Post | **behoben in 7.2.0.81**: solch ein Schlüssel wird übersprungen. Am laufenden Programm gemessen: Fall 05 bekommt `.pdf`, sechsmal „nach MIMEMap::SetExtension“, keinmal „kennt den Typ NICHT“ |
 | **B5.10** | **Vorzeichenfehler in `SetExtension`** (PRUEFER-19): beim Kürzen war `Difference` negativ, `while (Difference--)` lief rückwärts durch den Speicher. Erst durch B5.9 erreichbar | **behoben in 7.2.0.81**. Mit den Prüfdaten nicht auslösbar, aus dem Quelltext begründet |
@@ -522,10 +556,10 @@ erzeugen dasselbe Bild, alle sind Originalfehler aus Eudora 7.1.
 
 **Wer B5.2 oder B5.3 nur in einem der beiden Zweige ändert, baut sich einen
 Fehler, der von der Kontenart abhängt.** Für den Anhangnamen gilt das nicht,
-siehe die Berichtigung oben: B5.1 wirkt nur auf dem POP-Weg, B5.6 und B5.7 nur
+siehe die Berichtigung oben: B5.1 wirkt nur auf dem POP-Weg, B5.6 und [B5.7](#b5.7) nur
 auf dem IMAP-Weg.
 
-#### B5.7 — warum es offen bleibt
+#### <a id="b5.7"></a>B5.7 — warum es offen bleibt
 
 `MIMEMap` braucht dafür eine Fassung von `Find`, die Typ und Untertyp direkt
 nimmt statt eines `MIMEState`, den es über IMAP nicht gibt. Die Suche selbst
@@ -571,7 +605,7 @@ gestartet“.
 
 > *Stand 12.10.2026: Schritte 1 bis 4 sind erledigt, an 7.2.0.79 bis 7.2.0.83.
 > **Offen ist Schritt 5** — in `TestPopEmpfang.cpp` steht noch kein Fall zu
-> AN-1 — und B5.7.*
+> [AN-1](BEFUNDE.md#an-1) — und [B5.7](#b5.7).*
 
 1. **Bauen**, mit `-Ziel Rebuild`: `QCUtils/public/inc/debug.h` und
    `rfc2231.h` sind öffentliche DLL-Header, und `QCUtils` hat mit
@@ -590,10 +624,10 @@ gestartet“.
 > Programm wirkt — wer die Spalte vorher nachzieht, löscht den Vergleichspunkt.
 >
 > *Stand 12.10.2026: die Bedingung ist erfüllt — B5.1 und B5.2 sind am
-> laufenden Programm gemessen (Fall 01, 02, 05), und Gregor hat AN-1 nach seinem
+> laufenden Programm gemessen (Fall 01, 02, 05), und Gregor hat [AN-1](BEFUNDE.md#an-1) nach seinem
 > Test mit 1.0.83 bestätigt. Die Spalte ist trotzdem noch nicht nachgezogen.*
 
-#### B5.0 · Die Debug-Marken — beim Abrufen zusehen
+#### <a id="b5.0"></a>B5.0 · Die Debug-Marken — beim Abrufen zusehen
 
 Gregor: *„nicht vergessen, Debug-Marken einzufügen, wenn da was schief läuft,
 dass man das auf die Schnelle rausfindet … damit man beim Mail abrufen oder beim
@@ -636,14 +670,14 @@ Konto in Eudora, in der Gruppe `[Settings]` der `eudora.ini`:
 `POPAccount=pruef@127.0.0.1`, `LoginName=pruef`, `POPPort=11110`,
 `SSLReceiveUse=0`, Kennwort beliebig. Alle vier liegen unter 10800 und gehören
 damit nach `GetSectionID` (`rs.cpp:89`) in `[Settings]`. **`POPPort` muss
-wirklich dastehen** — fehlt er, landet Eudora laut Befund **E-23** stillschweigend
+wirklich dastehen** — fehlt er, landet Eudora laut Befund [**E-23**](BEFUNDE.md#e-23) stillschweigend
 auf 110.
 
 | | |
 |---|---|
-| **alle sechs heil** | die Teile des POP-Wegs wirken am laufenden Programm (B5.1, B5.2, B5.3 mit B5.8, B5.5, B5.9) — B5.6 und B5.7 betreffen nur IMAP und lassen sich so nicht zeigen. **So ist es seit 7.2.0.81** |
+| **alle sechs heil** | die Teile des POP-Wegs wirken am laufenden Programm (B5.1, B5.2, B5.3 mit B5.8, B5.5, B5.9) — B5.6 und [B5.7](#b5.7) betreffen nur IMAP und lassen sich so nicht zeigen. **So ist es seit 7.2.0.81** |
 | **00 heil, 01 bis 05 kaputt** | die Behebung ist nicht im Bau gelandet |
-| **00 kaputt** | etwas anderes ist schiefgegangen, nicht AN-1 |
+| **00 kaputt** | etwas anderes ist schiefgegangen, nicht [AN-1](BEFUNDE.md#an-1) |
 | **gemischt** | die Liste der kaputten Fälle zeigt auf den Teil — so war es an 7.2.0.79 (4 von 6) und 7.2.0.80-an1 (5 von 6) |
 
 Der Server löscht nie etwas — beliebig oft abrufbar. Einzelheiten:
@@ -652,14 +686,14 @@ Der Server löscht nie etwas — beliebig oft abrufbar. Einzelheiten:
 **In echter Post erkannte man es am doppelten Anführungszeichen** in der
 `.mbx`-Datei: eines am Zeilenende vor einer Zeile, die mit Leerzeichen oder
 Tabulator beginnt, und das ursprüngliche am Ende. Eudora setzte es im Fehlerfall
-dorthin. Siehe BEFUNDE.md AN-1, „Der Fingerabdruck in der Mailbox-Datei".
+dorthin. Siehe BEFUNDE.md [AN-1](BEFUNDE.md#an-1), „Der Fingerabdruck in der Mailbox-Datei".
 
 #### Warum das behoben wurde — und worauf **nicht** zu warten war
 
 Gregors Begründung vom 30.09., wörtlich: *„Ich möchte das fixen, weil es unschön
 ist und weil es im freigegebenen Release schlecht aussieht."* Dass es sich um
 einen Originalfehler aus Eudora 7.1 handelt, ist ihm ausdrücklich **egal** —
-die Herkunft steht in AN-1 nur, weil sie sagt, wo zu suchen ist.
+die Herkunft steht in [AN-1](BEFUNDE.md#an-1) nur, weil sie sagt, wo zu suchen ist.
 
 Sein Ziel vom 12.10.2026: *„anhänge werden korrekt gespeichert - mit erweiterung,
 komplette dateiname"*.
@@ -673,14 +707,14 @@ sind sie mit MSVC gebaut und über POP am laufenden Programm gemessen, über IMA
 von Gregor an seinem Postfach getestet (B5.4, B5.6, B5.10 und B5.11 lassen sich mit den
 Prüfdaten nicht auslösen).
 
-Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, AN-1**.
-### B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, übersetzt in 7.2.0.82, am laufenden Programm nicht gemessen**
+Vollständige Herleitung mit allen Messungen: **BEFUNDE.md, [AN-1](BEFUNDE.md#an-1)**.
+### <a id="b6"></a>B6 · Beim Start zeigt ein Fenster den Quelltext einer Webseite (**AN-2**) — **geändert in 7.2.0.80, übersetzt in 7.2.0.82, am laufenden Programm nicht gemessen**
 
 Gregors Meldung vom 12.10.2026, wörtlich: *„nachdem eudora gestartet wurde, ist
 es innerhalb eines Fensters darin angezeigt worden. ohne daß ich etwas gemacht
 habe."*
 
-Vollständige Herleitung in **BEFUNDE.md, AN-2**. Kurz:
+Vollständige Herleitung in **BEFUNDE.md, [AN-2](BEFUNDE.md#an-2)**. Kurz:
 
 | | |
 |---|---|
@@ -720,15 +754,15 @@ erschlossen. Wer es messen will: `LogLevel` um 4096 erhöhen.
 `<style>`-Block — also die meisten Newsletter — hat ihr CSS bisher als Text
 angezeigt. Dass das nie als eigener Befund auftauchte, heißt nicht, dass es
 nicht passierte; es sah aus wie wirrer Text am Anfang der Nachricht. Verwandt
-mit **E-105** (versteckter Vorschautext, weil Paige `display:none` nicht kennt).
+mit [**E-105**](BEFUNDE.md#e-105) (versteckter Vorschautext, weil Paige `display:none` nicht kennt).
 
 ---
 
-### B7 · Betreff mitten im Wort umbrochen (**E-94**) — **behoben in 7.2.0.84, über POP und IMAP am laufenden Programm gemessen, von Gregor bestätigt**
+### <a id="b7"></a>B7 · Betreff mitten im Wort umbrochen (**E-94**) — **behoben in 7.2.0.84, über POP und IMAP am laufenden Programm gemessen, von Gregor bestätigt**
 
 Gregors Fall: *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*.
 Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
-**„Jetzt, vor E-112"** gilt: erst die Tests rot, dann die Behebung.
+**„Jetzt, vor [E-112](BEFUNDE.md#e-112)"** gilt: erst die Tests rot, dann die Behebung.
 
 | Schritt | Stand |
 |---|---|
@@ -738,11 +772,11 @@ Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
 | Bau, Prüfnachrichten 00–06 am laufenden Programm, PRÜFER | **erledigt**: 06 heil, 00–05 unverändert, PRUEFER-21 „kann ausgeliefert werden" |
 | Gregors Test an 1.0.84 über IMAP | **bestätigt** am 12.10.2026, Bildschirmfoto: Toner-Betreff und „Rabatt aktivieren“ in einem Stück |
 
-Einzelheiten: [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.84; BEFUNDE.md, E-94.
+Einzelheiten: [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.84; BEFUNDE.md, [E-94](BEFUNDE.md#e-94).
 
 ## C — Das Auslieferungspaket
 
-### C1 · `paket-pruefen.ps1` — **behoben am 06.09.2026** (PR-2.0)
+### <a id="c1"></a>C1 · `paket-pruefen.ps1` — **behoben am 06.09.2026** (PR-2.0)
 
 Zwei belegte Mängel, beide beseitigt:
 
@@ -763,19 +797,19 @@ Gegenproben in `Befunde/PAKET.md:106-127`.
 **Was weiter gilt:** das Werkzeug ersetzt keinen Startversuch auf einem fremden
 Rechner. Es sagt, ob der Lader alles findet, was er vor dem ersten Befehl
 braucht — nicht, ob Eudora läuft. **Kriterium 0** ist ohnehin am lebenden Objekt
-belegt (siehe C2).
+belegt (siehe [C2](#c2)).
 
-### C2 · Kriterium 0 auf einem Rechner ohne Visual Studio nachweisen — **erledigt**
+### <a id="c2"></a>C2 · Kriterium 0 auf einem Rechner ohne Visual Studio nachweisen — **erledigt**
 
 **Erbracht am 06.09.2026** von Gregor selbst: `Eudora72-1.0.10-release.zip` auf
 einem Rechner **ohne Visual Studio** ausgepackt und gestartet — *„test
 bestanden: eudora läuft ohne VS2022 installiert."* Am 31.08. lief dort noch das
-**Debug**-Paket mit beigelegten, nicht verteilbaren DLLs (**E-8**); das zählte
+**Debug**-Paket mit beigelegten, nicht verteilbaren DLLs ([**E-8**](BEFUNDE.md#e-8)); das zählte
 nicht, und deshalb stand diese Aufgabe hier.
 
-### C3 · Warum musste das Mailverzeichnis von Hand dazugelegt werden?
+### <a id="c3"></a>C3 · Warum musste das Mailverzeichnis von Hand dazugelegt werden?
 
-Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt (**E-6**).
+Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt ([**E-6**](BEFUNDE.md#e-6)).
 
 ---
 
@@ -786,7 +820,7 @@ Beide Pakete enthalten `Mailverzeichnis\Eudora.ini`. Ungeklärt (**E-6**).
 Prüfung vorhanden, Zugriff danach ungeschützt, kein erkennbarer Grund, warum der
 Zeiger dort belegt sein müsste. **Neu gemessen am 07.09.2026** mit
 `perl tools/suche-zeiger.pl <datei> …`; der Funktionsname steht dabei, weil die
-Zeilennummern verrutschen (bei `headervw.cpp` allein um 34, seit E-32).
+Zeilennummern verrutschen (bei `headervw.cpp` allein um 34, seit [E-32](BEFUNDE.md#e-32)).
 
 | # | Zeiger | Funktion | Prüfung → Zugriff |
 |---|---|---|---|
@@ -814,7 +848,7 @@ oder früh aussteigen.
 > Es ist ein **Fehlalarm von `suche-zeiger.pl`**: bei einem **negativen**
 > Wächter (`if (!p)`) sucht das Werkzeug das `return` nur in den nächsten sechs
 > Zeilen, hier steht es fünfzehn Zeilen weiter. Das ist eine vierte
-> Fehlerklasse neben den drei, die X-1 schon abgestellt hat, und sie gehört ins
+> Fehlerklasse neben den drei, die [X-1](BEFUNDE.md#x-1) schon abgestellt hat, und sie gehört ins
 > **Werkzeug**, nicht in diese Liste.
 >
 > Ebenfalls hier gestanden: drei *„unklare"* Treffer, `ImapAccount.cpp:3152`,
@@ -823,20 +857,20 @@ oder früh aussteigen.
 > `ImapAccount.cpp:3152` ist ein gewöhnlicher positiver Wächter und steht jetzt
 > als Nummer 9 in der Liste.
 
-**Nummer 8 ist nicht der Assistenten-Absturz** — der ist E-25, siehe oben. Die
+**Nummer 8 ist nicht der Assistenten-Absturz** — der ist [E-25](BEFUNDE.md#e-25), siehe oben. Die
 Stelle bleibt trotzdem zu härten.
 
 ---
 
 ## E — Die Ersatzschicht
 
-### E1 · `FloatControlBarInMDIChild` ist ein leerer Rumpf (Erscheinungsbild-Befund **A-1**)
+### <a id="e1"></a>E1 · `FloatControlBarInMDIChild` ist ein leerer Rumpf (Erscheinungsbild-Befund **A-1**)
 
-> **Achtung, die Kennung `A-1` ist zweimal vergeben** (Befund L-9.8, offen —
+> **Achtung, die Kennung [`A-1`](BEFUNDE.md#a-1) ist zweimal vergeben** (Befund [L-9.8](Befunde/LEKTOR-5.md#l-9.8), offen —
 > Kennungen vergibt Gregor, nicht ein Agent). Gemeint ist hier der
-> **Agentenbefund vom 30.08.2026 zum Erscheinungsbild** (fünf Punkte aus S-6),
-> **nicht** die Anforderung **A-1** in [ZIEL.md](ZIEL.md) (Vorgaben für ein neu
-> angelegtes Konto). Wer „A-1" liest, prüft zuerst, welche der beiden gemeint
+> **Agentenbefund vom 30.08.2026 zum Erscheinungsbild** (fünf Punkte aus [S-6](BEFUNDE.md#s-6)),
+> **nicht** die Anforderung [**A-1**](BEFUNDE.md#a-1) in [ZIEL.md](ZIEL.md) (Vorgaben für ein neu
+> angelegtes Konto). Wer „[A-1](BEFUNDE.md#a-1)" liest, prüft zuerst, welche der beiden gemeint
 > ist.
 
 `CWazooBarMgr::CreateNewWazooBar` (`WazooBarMgr.cpp`, heute Zeile 254) und
@@ -846,7 +880,7 @@ und schicken danach `ID_SEC_MDIFLOAT`. Der Befehl läuft ins Leere:
 kein Gegenstück dafür hat. Die Leiste bleibt angedockt, und `GetParentFrame()`
 liefert weiterhin **das Hauptfenster** statt eines `QCControlBarWorksheet`. Im
 Debug greift `ASSERT_KINDOF`, **im Release liefe `MoveWindow` auf das
-Hauptfenster** — beide Stellen sind deshalb seit Befund **E-4** ausdrücklich
+Hauptfenster** — beide Stellen sind deshalb seit Befund [**E-4**](BEFUNDE.md#e-4) ausdrücklich
 abgesichert; der Kommentar dazu steht im Quelltext daneben.
 Der größte verbliebene Rest im Erscheinungsbild, dazu die Splitter
 (`SECDockBar::AddSplitter` wird nie gerufen).
@@ -855,13 +889,13 @@ Der größte verbliebene Rest im Erscheinungsbild, dazu die Splitter
 > Fundstelle. Dieser Bereich ist **vollständig auskommentiert** — jede Zeile
 > beginnt mit `//FORNOW`. Die lebenden Stellen sind die beiden oben genannten.
 
-### E2 · Der größte Eingriff an `OTShim.cpp` hat keinen Test (**PR-2**)
+### <a id="e2"></a>E2 · Der größte Eingriff an `OTShim.cpp` hat keinen Test (**PR-2**)
 
 `1a4a6d5` ändert `OTShim.cpp` um **334 Zeilen**; `Eudora71/Tests/` blieb
 unangetastet. `TestOTShimAndocken.cpp:214` prüft sogar noch das **alte**
 Verhalten (`CalcDynamicLayout(0, LM_HORZDOCK) == 32767`).
 
-### E3 · `SetControlBarWidthsInRow` ist noch leer
+### <a id="e3"></a>E3 · `SetControlBarWidthsInRow` ist noch leer
 
 `SECDockBar::SetControlBarWidthsInRow` in `Eudora71/OTShim/OTShim.cpp` (heute
 Zeile 2245) hat einen leeren Rumpf, und `SECDockBar::OnSizeParent` (heute
@@ -874,8 +908,8 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
 - **`Out.mbx`-Größe 1.788.158.654 für eine leere Datei** — nicht initialisierter
   Wert im Protokoll, zwei Zeilen später steht korrekt 0.
 - **`EUMAPI.DLL` ist eine 16-Bit-Datei** von 1995 (Signatur `NE`, belegt in
-  Z-1). Niemand importiert sie. Kann vermutlich aus dem Paket.
-- **`MFC71.DLL` und `MSVCP71.dll`** sind nicht nachbaubar (157 Ordinale, B-1).
+  [Z-1](BEFUNDE.md#z-1)). Niemand importiert sie. Kann vermutlich aus dem Paket.
+- **`MFC71.DLL` und `MSVCP71.dll`** sind nicht nachbaubar (157 Ordinale, [B-1](BEFUNDE.md#b-1)).
   Adressbuch, LDAP und Ph fallen dauerhaft aus, solange die Fremd-DLLs von 2006
   benutzt werden.
 - **Toter Include-Pfad** `..\OpenSSL\inc32` in `QCSocket.vcxproj:60` und das
@@ -883,7 +917,7 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
   kein Projekt mehr. Beides kann weg.
 - **`Releases/PAKETE.md` hinkt hinterher** — einen eigenen Abschnitt haben
   1.0.23, 1.0.22, 1.0.21, 1.0.18, 1.0.3, 1.0.2 und 1.0.1; **1.0.4 bis 1.0.17
-  sowie 1.0.19 und 1.0.20 fehlen** (Mangel **M-4**, weiter offen). In der
+  sowie 1.0.19 und 1.0.20 fehlen** (Mangel **[M-4](Befunde/PRUEFER-15.md#m-4)**, weiter offen). In der
   Tabelle *Wo die Pakete liegen* stehen 1.0.4, 1.0.10, 1.0.14, 1.0.15 und
   1.0.19 mit Prüfsumme; 1.0.20 fehlt auch dort. Wer das nächste Paket schnürt,
   trägt seinen Abschnitt gleich mit ein — für 1.0.22 und 1.0.23 ist das am
@@ -900,7 +934,7 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
 ## Zurückgestellt — nicht von selbst aufgreifen
 
 Von `tools/patches/zertifikatspruefung-verschaerfen.patch` ist der Teil zu
-`X509_V_ERR_CERT_UNTRUSTED` **erledigt** — er ist als Befund **E-82** in
+`X509_V_ERR_CERT_UNTRUSTED` **erledigt** — er ist als Befund [**E-82**](BEFUNDE.md#e-82) in
 7.2.0.48 eingespielt und von Gregor am 11.09.2026 bestätigt
 (`Eudora71/QCSSL/src/qccertificate.cpp:82-90`).
 
@@ -918,16 +952,16 @@ entschieden, das später anzugehen. **Nicht ohne sein Wort anwenden.**
 2. **Erst prüfen, dann anweisen.** Keine Handlungsanweisung ohne den Weg selbst
    gegangen zu sein. Ein Bauverzeichnis ist kein Startverzeichnis.
 3. **Byte-erhaltend ändern:** `tools/aendere-zeile.pl`, `tools/ersetze-bereich.pl`.
-   **Niemals `sed`** — das cygwin-`sed` wirft CR weg (X-1). Zum Messen `perl`
+   **Niemals `sed`** — das cygwin-`sed` wirft CR weg ([X-1](BEFUNDE.md#x-1)). Zum Messen `perl`
    mit `:raw`.
 4. **Bauen mit `tools/bauen.ps1`**, in der PowerShell, nicht in der Git-Bash.
    Kein MSBuild-Aufruf von Hand mehr: am 05.09.2026 hat einer Erfolg gemeldet,
-   ohne gebaut zu haben (X-6). Die Plattform heißt auf Projektmappenebene
+   ohne gebaut zu haben ([X-6](BEFUNDE.md#x-6)). Die Plattform heißt auf Projektmappenebene
    **`x86`**, nicht `Win32`. Visual Studio liegt unter **Professional**.
    **Die ganze Projektmappe bauen** — die `.lib` entstehen erst dabei.
    `/p:BuildProjectReferences=false` ist seit dem 05.09.2026 **nicht mehr nötig
-   und nicht mehr erwünscht** (B-3).
-5. **Zeilenangaben veralten**, sobald jemand dieselbe Datei anfasst (Z-1: sieben
+   und nicht mehr erwünscht** ([B-3](BEFUNDE.md#b-3)).
+5. **Zeilenangaben veralten**, sobald jemand dieselbe Datei anfasst ([Z-1](BEFUNDE.md#z-1): sieben
    von elf Abweichungen waren genau das). Wer eine Fundstelle benutzt, prüft sie
    nach.
 6. **In kleinen Schritten committen und pushen.** Was nicht gepusht ist, ist bei
@@ -937,7 +971,7 @@ entschieden, das später anzugehen. **Nicht ohne sein Wort anwenden.**
    Der `pre-commit`-Hook prüft es als **ersten** Schritt und bricht ab. Wer den
    Hook nicht eingerichtet hat (`sh tools/hooks-einrichten.sh`), arbeitet ohne
    diese Schranke — sie liegt unter `.git/hooks` und wird nicht mitversioniert.
-   Anlass war **X-5**: am 31.08.2026 lag drei Minuten nach einem Merge ein
+   Anlass war [**X-5**](BEFUNDE.md#x-5): am 31.08.2026 lag drei Minuten nach einem Merge ein
    weiterer Commit auf genau dem zusammengeführten Zweig.
 8. **Kündigt Gregor einen Merge an, läuft SOFORT `perl tools/gesichert.pl`** —
    vor jeder anderen Handlung, und das Ergebnis wird gemeldet. Rückgabewert `0`
@@ -949,7 +983,7 @@ entschieden, das später anzugehen. **Nicht ohne sein Wort anwenden.**
    weitergearbeitet:
    `git checkout main && git pull && git switch -c <neuer-name>`.
 10. **Eine Auflage, die nur im Text steht, trägt nicht.** Das war der
-    Entwurfsfehler hinter X-5. Wer eine neue Regel aufstellt, **baut die
+    Entwurfsfehler hinter [X-5](BEFUNDE.md#x-5). Wer eine neue Regel aufstellt, **baut die
     Schranke dazu** — ein Werkzeug mit Rückgabewert, eingehängt im Hook, und
     einen Testfall in einer Sammlung, der beweist, dass sie greift *und* dass sie
     nicht grundlos anschlägt. Beides gehört in denselben Commit wie die Regel.
@@ -962,5 +996,5 @@ entschieden, das später anzugehen. **Nicht ohne sein Wort anwenden.**
     `.md`, `VERSION` oder `Eudora71/Version.h` mit im Commit ist (Befund L-7).
 12. **Zahlen und Fundstellen werden gemessen, nicht abgeschrieben.** Jede Zahl
     in der Doku braucht den Befehl, mit dem man sie nachzählt, daneben. Eine
-    Zahl, die niemand pflegt, ist schlimmer als keine (Lehre L-6.10). Wo eine
+    Zahl, die niemand pflegt, ist schlimmer als keine (Lehre [L-6.10](Befunde/LEKTOR-2.md#l-6.10)). Wo eine
     Zeilennummer unvermeidlich ist, gehört der **Funktionsname** dazu.

@@ -1,6 +1,6 @@
-# PRUEFER-10 — E-85 adversarisch nachgerechnet
+# <a id="pruefer-10"></a>PRUEFER-10 — E-85 adversarisch nachgerechnet
 
-Stand: 13.09.2026, Zweig `wt/pruefer`, Ausgangspunkt 82a6d6f (E-85 aus 881d5c4).
+Stand: 13.09.2026, Zweig `wt/pruefer`, Ausgangspunkt 82a6d6f ([E-85](../BEFUNDE.md#e-85) aus 881d5c4).
 
 Alle Aussagen unten sind an der Quelle gemessen, nicht vermutet. Zeilennummern
 beziehen sich auf den Stand 82a6d6f.
@@ -268,12 +268,12 @@ Schreibweg hat die Lücke nicht, weil er gar nicht übersetzt.
 ### `SECImage: FlipHorz/FlipVert/… melden sich`
 
 Die Vermutung stimmt. `OTShimNichtUmgesetzt` (`Eudora71/OTShim/OTShim.cpp`)
-ruft seit E-33 (07.09.2026) `::OutputDebugString`, nicht mehr `AfxMessageBox`.
+ruft seit [E-33](../BEFUNDE.md#e-33) (07.09.2026) `::OutputDebugString`, nicht mehr `AfxMessageBox`.
 Die Probe in `Eudora71/Tests/OTShimProbe.cpp` fängt `CWinApp::DoMessageBox` ab
 und sieht deshalb nichts; sie zählte auf null, der Test erwartete fünf.
 
 Berichtigt, aber **nicht entschärft, sondern umgedreht**: aus der Zählung wird
-eine Schranke GEGEN E-33 — kein Rumpf darf ein Meldungsfenster aufmachen.
+eine Schranke GEGEN [E-33](../BEFUNDE.md#e-33) — kein Rumpf darf ein Meldungsfenster aufmachen.
 Damit sie nicht grün ist, weil gar nichts lief, belegen die Rückgabewerte, dass
 alle sechs Rümpfe gelaufen sind. Was nicht prüfbar ist (ob die Meldung wirklich
 in der Debug-Ausgabe ankommt, ob das Merkzeichen sie beim zweiten Mal
@@ -281,14 +281,14 @@ unterdrückt), behauptet der Test nicht mehr — `::OutputDebugString` lässt si
 im eigenen Prozess ohne Debugger nicht verlässlich mitlesen.
 
 Gegengetestet: mit `AfxMessageBox(strMeldung)` statt `::OutputDebugString`
-schlägt die Schranke an — *"E-33 ist zurueck: 6 modale Meldung(en) aus den
+schlägt die Schranke an — *"[E-33](../BEFUNDE.md#e-33) ist zurueck: 6 modale Meldung(en) aus den
 Ruempfen"*.
 
 ### `SECControlBar::CalcDynamicLayout: der Schwebe-Zweig zieht an einem Rand`
 
 **Der Test war falsch, der Code hat recht.** Er erwartete von
 `CalcDynamicLayout(320, LM_COMMIT)` das Ergebnis 320x150 — also genau das, was
-BEFUND E-76 WAR. Die Schranke war am 13.09.2026 gegen die *Erwartung*
+BEFUND [E-76](../BEFUNDE.md#e-76) WAR. Die Schranke war am 13.09.2026 gegen die *Erwartung*
 geschrieben, nicht gegen das Gemessene, und konnte nie laufen, weil
 `EudoraTests.exe` seit dem 10.09. nicht linkte.
 
@@ -298,7 +298,7 @@ trägt dort die BREITE (780), nicht die gezogene Höhe. Wer beim COMMIT `nLength
 als Breite übernimmt, speichert 780x100 statt 780x299 — Gregors Meldung
 *"filter fenster laesst sich nicht nach unten vergroessern, nur zur seite"*.
 Deshalb ignoriert die Behebung `nLength` beim COMMIT und nimmt
-`m_szZuletztGezogen`. E-76 ist am laufenden Programm bestätigt.
+`m_szZuletztGezogen`. [E-76](../BEFUNDE.md#e-76) ist am laufenden Programm bestätigt.
 
 Der Test prüft jetzt das bestätigte Verhalten und bekommt eine Gegenprobe in
 Gregors Richtung: der gemessene Ablauf (105/172/234/299 mit
@@ -313,7 +313,7 @@ exakt die aus dem Protokoll bekannten 780x100.
 
 `TestPopEmpfang.cpp`: *"POP: der Index wird um eins verschoben — anders als im
 IMAP-Pfad"* war grün und trotzdem veraltet. Der Test beschrieb sich selbst als
-"Belegstelle fuer den bekannten IMAP-Fehler" — den es seit E-85 nicht mehr
+"Belegstelle fuer den bekannten IMAP-Fehler" — den es seit [E-85](../BEFUNDE.md#e-85) nicht mehr
 gibt. Name und Begründung nachgezogen; die Messungen bleiben, denn sie
 begründen jetzt, WARUM die Verschiebung nötig ist.
 

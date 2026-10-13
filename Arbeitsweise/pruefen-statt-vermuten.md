@@ -198,3 +198,28 @@ Messgröße wächst, während ich über sie schreibe.
     nicht sagen, woher die Zahl stammt; im heutigen Bestand kommt sie nicht
     heraus" ist der Satz, den PRÜFER geschrieben hat, und er ist der richtige
     ([[widerlegte-vermutungen-aufschreiben]]).
+
+## Nachtrag 12.10.2026 — zwei Zahlen aus derselben Stunde, beide ungemessen
+
+Dieselbe Klasse, am selben Abend, zweimal:
+
+| ich schrieb | gemessen sind es | woher die falsche Zahl kam |
+|---|---|---|
+| *„von 164 Kennungen haben nur **44** eine eigene Überschrift, **120** stehen nur als Tabellenzeile"* | **70** und **94** | die 44 stammten aus einem früheren Lauf mit **138** Kennungen; die 120 habe ich aus 164 − 44 **gerechnet** |
+| *„E-112 steht an **11** Stellen"* | **17**, in sechs Dateien | geschätzt, weil die Größenordnung stimmte |
+
+Beide standen schon in einem Commit, die erste sogar als **Begründung** für
+eine Entwurfsentscheidung. Berichtigt in einem zweiten Commit, der den Fehler
+benennt.
+
+**Das Muster, und es ist das unangenehmere:** die 44 war einmal richtig. Eine
+gemessene Zahl bleibt richtig für **den Bestand, an dem sie gemessen wurde** —
+sobald sich der Bestand ändert, ist sie eine Erinnerung, und eine Erinnerung
+ist eine Vermutung. Dasselbe gilt für jede abgeleitete Zahl: `164 − 44` ist
+keine Messung, sondern eine Rechnung auf einer Annahme, die niemand geprüft
+hat.
+
+Die Regel dazu: **eine Zahl, die in einen Satz soll, wird in demselben Lauf
+erzeugt, in dem der Satz geschrieben wird.** Ein Einzeiler, der sie ausrechnet,
+gehört in den Bericht oder in den Werkzeugkommentar daneben — dann kann sie der
+nächste nachfahren, statt sie zu glauben.

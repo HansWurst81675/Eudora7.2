@@ -1,7 +1,7 @@
 # Wie Agenten zusammenarbeiten, ohne sich zu behindern
 
 Am 05.09.2026 liefen bis zu acht Agenten gleichzeitig an diesem Baum. Sie haben
-viel geschafft — E-4, E-12, Z-2b, die Statusleiste, zwei Prüfberichte an einem
+viel geschafft — [E-4](BEFUNDE.md#e-4), [E-12](BEFUNDE.md#e-12), [Z-2b](BEFUNDE.md#z-2b), die Statusleiste, zwei Prüfberichte an einem
 Abend. Sie haben sich dabei aber **fünfmal gegenseitig behindert**, und jedes
 Mal auf eine andere Weise.
 
@@ -21,8 +21,8 @@ existiert, feuert nicht.**
 | 1 | **Raum** | Zwei Agenten bekamen denselben Arbeitsbaum. Der zweite wechselte den Branch und löschte die unversionierte Arbeit des ersten. |
 | 2 | **Zeit** | Sechs Agenten bauten gleichzeitig: 28 MSBuild-Prozesse. Ein Debug-Bau stieg von 2 auf 14 Minuten. |
 | 3 | **Zusammenführung** | Alle hängten ihre Befunde ans Ende von `BEFUNDE.md`. Jede einzelne Zusammenführung endete im Konflikt — viermal derselbe Handgriff. |
-| 4 | **Namensraum** | KONTO und FORTSCHRITT wählten unabhängig „die nächste freie E-Nummer" und nahmen beide `E-12`. |
-| 5 | **Doppelarbeit** | BEENDEN und ich haben E-4 unabhängig voneinander behoben. Beide Fassungen waren richtig, eine war überflüssig. |
+| 4 | **Namensraum** | KONTO und FORTSCHRITT wählten unabhängig „die nächste freie E-Nummer" und nahmen beide [`E-12`](BEFUNDE.md#e-12). |
+| 5 | **Doppelarbeit** | BEENDEN und ich haben [E-4](BEFUNDE.md#e-4) unabhängig voneinander behoben. Beide Fassungen waren richtig, eine war überflüssig. |
 
 Keine davon ist ein Fehler der Agenten. Alle fünf sind Fehler der **Zuteilung**
 — und die liegt bei mir.
@@ -109,7 +109,7 @@ eigener Auftrag (LEKTOR) und läuft **allein**, wenn die anderen fertig sind.
 ## 4. Namensraum: Kennungen vergebe ich, nicht der Agent
 
 Ein Agent kann nicht wissen, welche Nummer frei ist — der Nachbar schreibt
-gleichzeitig. `E-12` wurde deshalb zweimal vergeben.
+gleichzeitig. [`E-12`](BEFUNDE.md#e-12) wurde deshalb zweimal vergeben.
 
 **Verfahren:** die Kennung steht **im Auftrag**. Ich reserviere sie vor dem
 Start:
@@ -119,7 +119,7 @@ perl tools/befunde-einsammeln.pl --naechste E    # nennt die nächste freie
 ```
 
 Wenn ich mehrere Agenten gleichzeitig starte, vergebe ich einen Block: KONTO
-bekommt `E-12`, ZEICHEN `E-13`, BEENDEN `E-14`. Jeder benutzt seine und keine
+bekommt [`E-12`](BEFUNDE.md#e-12), ZEICHEN [`E-13`](BEFUNDE.md#e-13), BEENDEN [`E-14`](BEFUNDE.md#e-14). Jeder benutzt seine und keine
 andere.
 
 ---
@@ -138,7 +138,7 @@ C:/.../Eudora7.2-wt-konto    KONTO    Kontodialog zeigt leere Felder (E-12)
 Und die Regel für mich selbst: **wenn ein Agent an einer Sache sitzt, arbeite
 ich nicht daran mit.** Was ich finde, geht per Nachricht an ihn — das ist
 schneller als eine zweite Behebung und kollidiert nicht. Heute hat genau das
-funktioniert: Gregors Bildschirmfoto hat die Ursache von E-4 gezeigt, ich habe
+funktioniert: Gregors Bildschirmfoto hat die Ursache von [E-4](BEFUNDE.md#e-4) gezeigt, ich habe
 sie an BEENDEN geschickt, und er hat sie gründlicher behoben, als ich es getan
 hatte.
 
@@ -179,7 +179,7 @@ hatte.
    mehr gibt. Am 07.09.2026 waren **16 von 47** MD-Dateien in keinem Lektorat je
    erwähnt, und drei davon trugen Ergebnisse, die anderswo noch als offen
    standen — eines seit fünf Tagen, mit einer Liste der Fundstellen dabei (L-8,
-   Befund W-2 und W-22 in `Befunde/LEKTOR-4.md`). Mechanisch prüft
+   Befund [W-2](Befunde/LEKTOR-4.md#w-2) und [W-22](Befunde/LEKTOR-4.md#w-22) in `Befunde/LEKTOR-4.md`). Mechanisch prüft
    `perl tools/doku-pruefen.pl` denselben Umfang; es läuft im `pre-commit` und
    im `pre-push` und weist ab.
 8. **Freigeben**: `arbeitsbaum-frei.pl --freigeben`, und `gesichert.pl` als

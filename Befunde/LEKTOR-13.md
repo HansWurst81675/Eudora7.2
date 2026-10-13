@@ -1,4 +1,4 @@
-# LEKTOR-13 — `main` auf Unwahrheiten geprüft
+# <a id="lektor-13"></a>LEKTOR-13 — `main` auf Unwahrheiten geprüft
 
 **Stand 17.09.2026.** Zweig `wt/lektor-main-pruefung`, Grundlage `origin/main`
 (`bc515e2`). Vorgänger: [LEKTOR-11.md](LEKTOR-11.md), [LEKTOR-12.md](LEKTOR-12.md).
@@ -37,7 +37,7 @@ gegen den Quelltext, gegen GitHub und gegen das Dateisystem nachgemessen.
 
 ## Die Liste: Behauptung — gemessener Befund — berichtigt
 
-### L-13.1 — Fünf Dokumente behaupteten, veröffentlicht sei nur `v1.0.50` (**die schlimmste**)
+### <a id="l-13.1"></a>L-13.1 — Fünf Dokumente behaupteten, veröffentlicht sei nur `v1.0.50` (**die schlimmste**)
 
 | | |
 |---|---|
@@ -49,7 +49,7 @@ gegen den Quelltext, gegen GitHub und gegen das Dateisystem nachgemessen.
 Dort stand nicht nur die falsche Fassungsnummer, sondern darunter eine
 **Warnung an die Anwender**:
 
-> *„Im Release `v1.0.50` beendet *File → Save As* Eudora sofort (E-97) … wer
+> *„Im Release `v1.0.50` beendet *File → Save As* Eudora sofort ([E-97](../BEFUNDE.md#e-97)) … wer
 > das veröffentlichte Paket benutzt, speichert Nachrichten bis dahin besser
 > nicht."*
 
@@ -64,7 +64,7 @@ jede Veröffentlichung samt Freigabe zu führen. Sie hat die eigene Aufgabe
 verfehlt — und die Lehre [[release-erst-nach-gregors-test]] lässt sich an einem
 Verzeichnis, das das Release nicht kennt, nicht nachhalten.
 
-### L-13.2 — Der Eintrag zu **E-85** in `BEFUNDE.md` war an vier Stellen unwahr
+### <a id="l-13.2"></a>L-13.2 — Der Eintrag zu **E-85** in `BEFUNDE.md` war an vier Stellen unwahr
 
 | | |
 |---|---|
@@ -73,8 +73,8 @@ Verzeichnis, das das Release nicht kennt, nicht nachhalten.
 | **Berichtigt** | **ja**, dazu sechs abgewanderte Zeilenangaben in derselben Zelle |
 
 **Warum das schwer wiegt.** `BEFUNDE.md` ist die Datei, die `CLAUDE.md` an die
-**erste Stelle jeder Sitzung** setzt — mit der Begründung E-85. Wer sie heute
-liest, findet E-85 als Befund mit offener Regression, an der falschen Fassung,
+**erste Stelle jeder Sitzung** setzt — mit der Begründung [E-85](../BEFUNDE.md#e-85). Wer sie heute
+liest, findet [E-85](../BEFUNDE.md#e-85) als Befund mit offener Regression, an der falschen Fassung,
 ohne den Mangel, der den Fall überhaupt gelöst hat. Das ist dieselbe Falle wie
 damals, nur andersherum: nicht ein übersehener Befund, sondern ein Befund, der
 **falsch über sich selbst berichtet**. [[bestand-vor-neuer-suche]] hilft nur,
@@ -91,7 +91,7 @@ Die sechs berichtigten Zeilenangaben derselben Zelle:
 | `utils.cpp:1440-1442` | **1477-1479** (der Kommentar) |
 | `utils.cpp:1412-1415` | **1449-1452** (`if (iCharsetIdx <= 2)`) |
 
-### L-13.3 — `ZIEL.md`: sieben Fundstellen der Splitter-Umsetzung, alle abgewandert
+### <a id="l-13.3"></a>L-13.3 — `ZIEL.md`: sieben Fundstellen der Splitter-Umsetzung, alle abgewandert
 
 | | |
 |---|---|
@@ -99,7 +99,7 @@ Die sechs berichtigten Zeilenangaben derselben Zelle:
 | **Gemessen** | **Keine einzige stimmt.** Wirklich: 3683, 3808, 3974, 3835, 4249, 3711 und `OTShim.h:753`. Abstand 500 bis 1000 Zeilen. **Die Sache selbst ist wahr** — alle sieben sind umgesetzt, einzeln nachgeschlagen; falsch war nur der Ort |
 | **Berichtigt** | **ja**, alle sieben |
 
-### L-13.4 — `CHANGELOG.md`, Abschnitt 7.2.0.64: Paketstand überholt
+### <a id="l-13.4"></a>L-13.4 — `CHANGELOG.md`, Abschnitt 7.2.0.64: Paketstand überholt
 
 | | |
 |---|---|
@@ -107,21 +107,21 @@ Die sechs berichtigten Zeilenangaben derselben Zelle:
 | **Gemessen** | Beide Hälften falsch. `Releases/Eudora72-1.0.64-release.zip` liegt da (17.09., 12:01), das Release `v1.0.64` ist heraus, und das letzte Verzeichnis unter `Releases/` ist `Eudora72-1.0.65-release` |
 | **Berichtigt** | **ja** |
 
-### L-13.5 — Zwei Verweise ins Leere
+### <a id="l-13.5"></a>L-13.5 — Zwei Verweise ins Leere
 
 | | |
 |---|---|
 | **Behauptung** | `Arbeitsweise/agenten-koordinieren.md:13` verweist auf `[AGENTEN.md](AGENTEN.md)`; `Befunde/LEKTOR-5.md:483` auf `[ZIEL.md](ZIEL.md)` |
 | **Gemessen** | Beide Dateien liegen im Wurzelverzeichnis, die Verweise stehen in Unterverzeichnissen — sie lösen zu `Arbeitsweise/AGENTEN.md` und `Befunde/ZIEL.md` auf. Beide existieren nicht. Es sind die **einzigen zwei** unter allen `[…](….md)`-Verweisen der 151 Dateien |
-| **Berichtigt** | **`agenten-koordinieren.md` ja** (lebende Anweisung). `LEKTOR-5.md` **nein** — datierter Bericht; ausgerechnet dessen Abschnitt L-9.11 heißt *„18 Verweise ins Leere"* |
+| **Berichtigt** | **`agenten-koordinieren.md` ja** (lebende Anweisung). `LEKTOR-5.md` **nein** — datierter Bericht; ausgerechnet dessen Abschnitt [L-9.11](LEKTOR-5.md#l-9.11) heißt *„18 Verweise ins Leere"* |
 
-### L-13.6 — 148 Fundstellen im Quelltext zeigen ins Leere (**Klasse, nicht Einzelfall**)
+### <a id="l-13.6"></a>L-13.6 — 148 Fundstellen im Quelltext zeigen ins Leere (**Klasse, nicht Einzelfall**)
 
 | | |
 |---|---|
 | **Behauptung** | Über alle 151 MDs stehen **2543** Angaben der Form `Datei.cpp:Zeile` |
 | **Gemessen** | **Keine einzige** zeigt hinter das Dateiende — das wäre aufgefallen. Aber bei **148** steht das im selben Atemzug genannte Symbol nicht innerhalb von ±15 Zeilen um die behauptete Stelle. Verteilung: **80 in lebenden Dokumenten** (`BEFUNDE.md` 38, `CHANGELOG.md` 8, `ZIEL.md` 7, `FILTER.md` 7, `Eudora71/OTShim/BEFUND-ANSICHT.md` 7, `PORTIERUNG.md` 3, `ABRUF-PRUEFEN.md` 2, `Eudora71/OTShim/PLAN.md` 2, dazu je eine in `AUFGABEN.md`, `EINSTELLUNGEN.md`, `WEITERMACHEN.md`, `Pruefung/PRUEFUNG-KETTE.md` und zwei Lehren), **68 in datierten Berichten** (`Befunde/PRUEFER-*`, `Befunde/BEENDEN.md` u. a.) |
-| **Berichtigt** | **teilweise: 13** — die sechs aus E-85 und die sieben aus `ZIEL.md`, also die, bei denen die Angabe eine **Handlungsanweisung** trägt. Die übrigen 135 stehen aufgeschrieben und unangetastet |
+| **Berichtigt** | **teilweise: 13** — die sechs aus [E-85](../BEFUNDE.md#e-85) und die sieben aus `ZIEL.md`, also die, bei denen die Angabe eine **Handlungsanweisung** trägt. Die übrigen 135 stehen aufgeschrieben und unangetastet |
 
 **Warum nicht alle.** Eine Zeilennummer in einem datierten Bericht ist ein
 Zeitdokument und war am Tag der Messung richtig ([[review-sieht-nur-den-diff]]
@@ -129,15 +129,15 @@ gilt hier andersherum). Gefährlich ist sie nur dort, wo jemand ihr **folgen**
 soll. Genau diese Unterscheidung kann ein Skript nicht treffen — deshalb der
 Vorschlag unter *Schranken* weiter unten.
 
-### L-13.7 — Drei Werkzeugverweise ohne Werkzeug
+### <a id="l-13.7"></a>L-13.7 — Drei Werkzeugverweise ohne Werkzeug
 
 | | |
 |---|---|
 | **Behauptung** | `tools/rekursion-suchen.pl`, `tools/werkzeuge-angeschlossen.pl`, `tools/gibt-es-nicht.pl` |
-| **Gemessen** | Keines liegt im Baum. **Alle drei sind harmlos**: `rekursion-suchen.pl` ist unter **PR-8** ausdrücklich als *gelöscht* geführt, `werkzeuge-angeschlossen.pl` ist in `werkzeug-vor-eigenbau.md` als **Vorschlag** bezeichnet, `gibt-es-nicht.pl` ist ein Beispiel |
+| **Gemessen** | Keines liegt im Baum. **Alle drei sind harmlos**: `rekursion-suchen.pl` ist unter **[PR-8](../BEFUNDE.md#pr-8)** ausdrücklich als *gelöscht* geführt, `werkzeuge-angeschlossen.pl` ist in `werkzeug-vor-eigenbau.md` als **Vorschlag** bezeichnet, `gibt-es-nicht.pl` ist ein Beispiel |
 | **Berichtigt** | **nein** — keine Unwahrheit |
 
-### L-13.8 — Was **nicht** falsch war (gegengeprüft)
+### <a id="l-13.8"></a>L-13.8 — Was **nicht** falsch war (gegengeprüft)
 
 Der Auftrag nennt fünf Verdachtsfelder. Drei davon halten der Messung stand,
 und das gehört genauso ins Protokoll wie die Funde:
@@ -155,7 +155,7 @@ und das gehört genauso ins Protokoll wie die Funde:
 Alle acht angeordneten Schranken wurden gefahren. **Alle acht blieben still** —
 auch die, die die Funde oben hätten sehen müssen.
 
-| Schranke | Meldung | hätte sie L-13.1 / L-13.2 / L-13.6 sehen können? |
+| Schranke | Meldung | hätte sie [L-13.1](#l-13.1) / [L-13.2](#l-13.2) / [L-13.6](#l-13.6) sehen können? |
 |---|---|---|
 | `doku-pruefen.pl` | „Kein Widerspruch gefunden" | nein — prüft Fassungsnummern gegeneinander, nicht gegen GitHub |
 | `pruefe-doku-takt.pl` | „Die Fassung ist beschrieben" | nein |
@@ -213,7 +213,7 @@ sondern **„nichts zu prüfen — der Bestand ist nicht abgedeckt"**.
 **2543 Angaben `Datei:Zeile` in den MDs, und kein Werkzeug sieht sie an.**
 `befund-suchen.pl` *sucht* nach Orten, `pruefe-anzeigetext.pl` *verlangt* eine
 Fundstelle — aber **keines misst, ob die genannte Stelle trifft**. Das ist die
-größte unbewachte Fläche der Dokumentation; L-13.2, L-13.3 und L-13.6 stammen
+größte unbewachte Fläche der Dokumentation; [L-13.2](#l-13.2), [L-13.3](#l-13.3) und [L-13.6](#l-13.6) stammen
 alle daraus.
 
 *Vorschlag, nicht gebaut:* `tools/fundstellen-pruefen.pl` — jede Angabe
@@ -226,7 +226,7 @@ schlägt die Schranke bei 68 Zeitdokumenten an, die richtig sind.
 
 | Stelle | warum |
 |---|---|
-| 135 der 148 abgewanderten Fundstellen | datierte Berichte oder Stellen ohne Handlungsanweisung; siehe L-13.6 |
+| 135 der 148 abgewanderten Fundstellen | datierte Berichte oder Stellen ohne Handlungsanweisung; siehe [L-13.6](#l-13.6) |
 | `Befunde/LEKTOR-5.md:483` | datierter Bericht |
 | `WEITERMACHEN.md:19`, `ImapDownload.cpp:2798, 3034, 3283` (wirklich 2837, 3074, 3324) | steht in einer Zeile, die selbst mit **„ERLEDIGT — Fassungsgeschichte, kein offener Punkt"** überschrieben ist. Der Inhalt darunter ist trotzdem in der Gegenwart geschrieben (*„Zu tun: …"*) und liest sich für jeden, der die Überschrift überspringt, wie eine offene Aufgabe. **Gregor sollte entscheiden, ob solche Zeilen nicht besser ganz verschwinden** |
 | `EINSTELLUNGEN.md` (höchste Fassung 7.2.0.57), `FILTER.md`, `tools/WERKZEUGE.md` (7.2.0.13) | `doku-pruefen.pl` meldet sie als *„Zur Kenntnis"*. Kein Fehler, aber die drei Dateien sind seit 9 bzw. 53 Fassungen nicht gegen den Stand gehalten worden |
@@ -235,15 +235,15 @@ schlägt die Schranke bei 68 Zeitdokumenten an, die richtig sind.
 
 | | |
 |---|---|
-| `86b6eb6` | L-13.1 — `v1.0.64` in `tools/RELEASES.md` nachgetragen |
-| `9932770` | L-13.1 — `README.md`, `WEITERMACHEN.md`, `AUFGABEN.md`, `Releases/PAKETE.md` |
-| `90a5e34` | L-13.2 — der E-85-Eintrag in `BEFUNDE.md` |
-| `0c4f228` | L-13.3/L-13.4 — `ZIEL.md`, `CHANGELOG.md`, `agenten-koordinieren.md` |
+| `86b6eb6` | [L-13.1](#l-13.1) — `v1.0.64` in `tools/RELEASES.md` nachgetragen |
+| `9932770` | [L-13.1](#l-13.1) — `README.md`, `WEITERMACHEN.md`, `AUFGABEN.md`, `Releases/PAKETE.md` |
+| `90a5e34` | [L-13.2](#l-13.2) — der E-85-Eintrag in `BEFUNDE.md` |
+| `0c4f228` | [L-13.3](#l-13.3)/[L-13.4](#l-13.4) — `ZIEL.md`, `CHANGELOG.md`, `agenten-koordinieren.md` |
 
 Nach jedem Schreibzugriff gemessen ([[zeilenenden-nach-jedem-schreibzugriff-messen]]):
 **CR=0 in allen berührten Dateien**, Zeilenzahlen geprüft. In `BEFUNDE.md` hatte
 ein Ersetzungslauf eine Leerzeile eingefügt (7838 → 7839); sie wurde entfernt,
-die Tabelle steht wieder lückenlos von E-84 über E-85 zu E-86.
+die Tabelle steht wieder lückenlos von [E-84](../BEFUNDE.md#e-84) über [E-85](../BEFUNDE.md#e-85) zu [E-86](../BEFUNDE.md#e-86).
 
 ## Was daraus zu lernen war
 

@@ -2,6 +2,17 @@
 use strict;
 use warnings;
 
+# Liefert verweise_text() - macht eine verlinkte Zeile wieder zu der
+# Zeile, die vor dem Verlinken dastand.
+use FindBin;
+require "$FindBin::Bin/verweise-filtern.pl";
+
+
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # pruefe-befundurteile.pl - kein Dokument darf einen Befund fuer erledigt
 # erklaeren, den BEFUNDE.md offen fuehrt.
 #
@@ -87,6 +98,12 @@ my @offen = (
     'in Arbeit',
     'zurueckgestellt',
     "zur\xc3\xbcckgestellt",     # UTF-8, zurückgestellt
+    # Am 12.10.2026 dazu: "aufgeschrieben" heisst in diesem Projekt, dass ein
+    # Befund ERFASST ist - nicht, dass er behoben waere. WEITERMACHEN.md und
+    # ZIEL.md sagen "E-105, E-111, E-112, E-113 aufgeschrieben" in demselben
+    # Satz, in dem E-110 als behoben steht; ohne dieses Wort schlug die
+    # Schranke dort viermal an, obwohl der Text richtig ist.
+    'aufgeschrieben',
 );
 
 # --- Absaetze, die eine Berichtigung beschreiben, duerfen zitieren -------
@@ -117,6 +134,20 @@ sub ohne_code {
     for my $z (@zeilen) {
         if ($z =~ /^\s*```/) { $drin = !$drin; $z = ''; next; }
         $z = '' if $drin;
+
+        # Seit dem 12.10.2026 ist jede Kennung ein Link (befunde-verlinken.pl).
+        # Das Linkziel traegt die Kennung ein zweites Mal - und zwar als
+        # #e-112 mitten im Text. Diese Schranke liest ein Umfeld von 40
+        # Zeichen um jede Kennung; ohne das Folgende meldet sie
+        # "README.md nennt E-112 als behoben", weil vierzig Zeichen weiter
+        # ein ganz anderer Befund als behoben bezeichnet wird. Gemessen:
+        # fuenf solche Fehlalarme. Der Linktext bleibt stehen, nur das
+        # Ziel faellt weg - die Zeilenzahl aendert sich dadurch nicht.
+        # Auch die eckigen Klammern fallen weg: bleiben sie stehen, ist die
+        # Zeile zwei Zeichen laenger als vor dem Verlinken, das Umfeld
+        # verschiebt sich um zwei Zeichen - und zwei weitere Fehlalarme
+        # standen da. Gemessen: 5 -> 2 -> 0.
+        $z = verweise_text($z);
     }
     return join("\n", @zeilen);
 }
@@ -130,7 +161,7 @@ unless (defined $befunde) {
 
 my %urteil;      # Kennung -> 'offen' | 'erledigt'
 for my $zeile (split /\n/, $befunde) {
-    next unless $zeile =~ /^\|\s*(E-\d+)\s*\|/;
+    next unless $zeile =~ /^\|\s*$ANKER\s*(E-\d+)\s*\|/;
     my $kennung = $1;
     next if exists $urteil{$kennung};    # erste Zeile gewinnt
 
@@ -272,7 +303,14 @@ for my $datei (@dateien) {
                 # Dieselbe Grenze wie oben: steht hinter der Kennung eine
                 # Ziffer, ist es eine andere (E-7 in E-71).
                 if (substr($text, $i + length($k), 1) =~ /\d/) { $pos = $i + 1; next; }
-                my $umfeld = lc substr($text, $i, length($k) + 40);
+                # Das Umfeld reicht nach BEIDEN Seiten. Bis zum 12.10.2026
+                # sah es nur nach vorn - damit schlug "Weiter offen ist
+                # E-113" an, obwohl die Kennung dort richtig eingestuft ist.
+                # Vier der elf Beanstandungen an jenem Tag waren von dieser
+                # Sorte; sie haben die Schranke unglaubwuerdig gemacht und
+                # damit die sieben echten mit begraben.
+                my $von = $i - 40; $von = 0 if $von < 0;
+                my $umfeld = lc substr($text, $von, ($i - $von) + length($k) + 40);
                 $nahe = 1 if grep { index($umfeld, lc $_) >= 0 } @offen;
                 $pos = $i + 1;
             }
@@ -297,8 +335,22 @@ for my $datei (@dateien) {
     # der erste Anlauf produziert: die Tabelle der offenen Befunde in
     # FILTER.md nennt bei E-68 zu Recht, dass die andere Haelfte behoben
     # ist - und wurde deshalb fuer E-47, E-67 und E-69 angeschwaerzt.
+    # Am 12.10.2026 dazu: dasselbe gilt INNERHALB eines Zitatblocks. Der
+    # Abschnitt "Der naechste Schritt" in WEITERMACHEN.md ist ein einziger
+    # Block aus "> "-Zeilen und zaehlt darin numerierte Schritte auf. Ein
+    # "- erledigt." in Schritt 1 schlug damit gegen jede Kennung in Schritt
+    # 2 bis 5 an: fuenf Fehlalarme aus einem einzigen Absatz. Ein Schritt
+    # ist eine Aufzaehlung, auch wenn ein "> " davor steht.
+    my $zitat_punkt = qr/^\s*>\s*(?:\*\*)?\d+\./;
+
     for my $z (@zeilen) {
         $nr++;
+        if ($z =~ $zitat_punkt) {
+            $pruefe->(join(' ', @absatz), $start) if @absatz;
+            @absatz = ($z);              # der Schritt beginnt hier
+            $start = $nr;
+            next;
+        }
         if ($z =~ /^\s*[|*+-]|^\s*\d+\./) {
             $pruefe->(join(' ', @absatz), $start) if @absatz;
             @absatz = ();
@@ -306,7 +358,11 @@ for my $datei (@dateien) {
             $start = $nr + 1;
             next;
         }
-        if ($z =~ /^\s*$/) {
+        # Eine Zeile aus nichts als "> " ist der Absatzwechsel INNERHALB
+        # eines Zitatblocks - genauso trennend wie eine Leerzeile. Ohne das
+        # lag in WEITERMACHEN.md "E-110 behoben" im selben Topf wie
+        # "E-105, E-111, E-112, E-113 aufgeschrieben", vier Zeilen weiter.
+        if ($z =~ /^\s*$/ || $z =~ /^\s*>\s*$/) {
             $pruefe->(join(' ', @absatz), $start);
             @absatz = ();
             $start = $nr + 1;

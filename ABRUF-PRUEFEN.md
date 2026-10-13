@@ -60,7 +60,7 @@ verschlüsselt aufgebaut (`POPSession.cpp:602-605`), noch bevor irgendein Passwo
 > `SSLReceiveUse=2`. **Der empfohlene Weg dieser Anleitung ist damit der
 > gemessene.**
 >
-> Der erste Beleg überhaupt stammt vom 31.08.2026 (Befund E-3): 159 Nachrichten
+> Der erste Beleg überhaupt stammt vom 31.08.2026 (Befund [E-3](BEFUNDE.md#e-3)): 159 Nachrichten
 > über **Port 110 mit STARTTLS**, ebenfalls `TLSv1.3`. Beide Wege
 > funktionieren. Der Verdacht, `mx.freenet.de` sei nur ein MX-Eintrag für die
 > Zustellung, war unbegründet.
@@ -160,7 +160,7 @@ für Kriterium 3.
 |---|---|---|
 | Dialog mit Zertifikatstext und einem Ablehnungsgrund (*CTrustCertDlg*, `QCTaskManager.cpp:695`) | Das Serverzertifikat ließ sich nicht bis zu einer bekannten Wurzel zurückverfolgen | Text notieren. „OK" nimmt das Zertifikat dauerhaft an. **Vorher den Text melden**, denn er sagt, ob `rootcerts.p7b` gefunden wurde. |
 | „SSL Negotiation Failed: …" (`IDS_ERR_SSL_NEGOTIATION`, `QCWorkerSocket.cpp:1959`) | Der Handshake selbst ist gescheitert | **Siehe Abschnitt 5a** — der Text hinter dem Doppelpunkt sagt, warum. |
-| Eudora verschwindet beim Abruf kommentarlos, ohne Dialog | War bis 31.08. der wahrscheinlichste Absturz: ein NULL-Zeiger nach gescheiterter SSL-Aushandlung (`QCWorkerSocket.cpp:1969`, Befund P-1.5a) | **Behoben** (Befund P-2.1). Stürzt es trotzdem ab, ist es *nicht* diese Stelle — dann bitte melden, mit dem Zeitpunkt. |
+| Eudora verschwindet beim Abruf kommentarlos, ohne Dialog | War bis 31.08. der wahrscheinlichste Absturz: ein NULL-Zeiger nach gescheiterter SSL-Aushandlung (`QCWorkerSocket.cpp:1969`, Befund P-1.5a) | **Behoben** (Befund [P-2.1](BEFUNDE.md#p-2.1)). Stürzt es trotzdem ab, ist es *nicht* diese Stelle — dann bitte melden, mit dem Zeitpunkt. |
 | „Server does not support SSL" (`IDS_SSL_NOSUPPORT`, `POPSession.cpp:2144`) | `SSLReceiveUse=3` gesetzt, aber der Server bietet in `CAPA` kein `STLS` an | Auf `SSLReceiveUse=2` und Port 995 umstellen. |
 | `-ERR` mit `[AUTH]` oder „authentication failed" | Benutzername oder Passwort falsch (`POPSession.cpp:1818-1878`) | `POPAccount` prüfen: muss `benutzer@server` sein, nicht die Mailadresse. Bei freenet ist der Anmeldename oft die vollständige Mailadresse — dann lautet `POPAccount` `name@freenet.de@mx.freenet.de`. |
 | Verbindung kommt gar nicht zustande, Zeitüberschreitung | Falscher Server oder falscher Port | Siehe *„Welcher Servername? — beantwortet"* unter Schritt 2. |
@@ -171,7 +171,7 @@ dann, wenn Eudora die Kette nicht bis zu einer bekannten Wurzel zurückverfolgen
 konnte — mit dem Wurzelspeicher `rootcerts.p7b` von 2004 ist das häufig.
 
 **Seit 7.2.0.48 ist die Prüfung aber nicht mehr nachsichtig** (Befund
-**E-82**, von Gregor am 11.09.2026 bestätigt). Bis dahin nahm der
+[**E-82**](BEFUNDE.md#e-82), von Gregor am 11.09.2026 bestätigt). Bis dahin nahm der
 Verifikations-Callback die Fehler `X509_V_ERR_CERT_UNTRUSTED` (27) und
 `X509_V_ERR_UNABLE_TO_VERIFY_LEAF_SIGNATURE` (21) ausdrücklich als *Erfolg* an,
 ohne dem Anwender etwas zu zeigen. Jetzt hängen beide am Zweig für

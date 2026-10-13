@@ -1,6 +1,6 @@
 # PAIGE — die Anbindung an Paige32.dll
 
-Kennung **E-31**. Bearbeitet den Absturz **E-27** (Strg-N und *Weiterleiten*
+Kennung **[E-31](../BEFUNDE.md#e-31)**. Bearbeitet den Absturz **[E-27](../BEFUNDE.md#e-27)** (Strg-N und *Weiterleiten*
 beenden Eudora sofort und lautlos).
 
 ---
@@ -19,7 +19,7 @@ Es gibt sie. Sie liegen seit dem ersten Commit im Baum:
 * `Eudora71/PaigeDLL/PGHEADER/` — die Kopfdateien
 * `Eudora71/PaigeDLL/PAIGE32/Paige32.vcproj` — das Projekt der DLL
 
-Damit ist die Endlosrekursion aus E-27 nicht mehr nur zu vermuten,
+Damit ist die Endlosrekursion aus [E-27](../BEFUNDE.md#e-27) nicht mehr nur zu vermuten,
 sondern nachzulesen. `PGWIN.C:635` ruft bei `style_overlay != 0`
 `pgStyleSuperImpose`, und `PGDEFSTL.C:1585` ruft am Ende
 

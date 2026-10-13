@@ -419,7 +419,7 @@ In den vier für diese Prüfung angelegten Klonen meldete der dritte Schritt
 jedesmal **6444 Dateien byteidentisch zu HEAD, 0 anzugleichen** — weil der
 erste Schritt schon vor dem Klonen wirksam war. Wer mit `core.autocrlf=true`
 klont, bekommt genau die 4616 stillschweigend umgeschriebenen Dateien, die
-Befund S-7 beschreibt.
+Befund [S-7](BEFUNDE.md#s-7) beschreibt.
 
 `perl` wird **nicht zwingend** gebraucht: der `PreBuildEvent` von
 `Eudora.vcxproj` sucht `perl`, dann `C:\Program Files\Git\usr\bin\perl.exe`,
@@ -431,7 +431,7 @@ aber (Git für Windows bringt es mit).
 
 > **Nachtrag (06.09.2026).** Der rohe `MSBuild.exe`-Aufruf unten ist **nicht
 > mehr der empfohlene Weg**. Er meldet Erfolg auch dann, wenn nichts gebaut
-> wurde — genau der Fall, der am 05.09.2026 als Befund **X-6** aufgeschrieben
+> wurde — genau der Fall, der am 05.09.2026 als Befund [**X-6**](BEFUNDE.md#x-6) aufgeschrieben
 > wurde. Zu bauen ist mit
 >
 > ```powershell

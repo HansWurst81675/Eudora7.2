@@ -51,3 +51,44 @@ damit sie niemand erneut aufmacht.
 
 Verwandt: [[lehren-anwenden-nicht-nur-schreiben]], [[werkzeug-vor-eigenbau]],
 [[fehlerklassen-abstellen]], [[schranke-gegentesten]], [[fertig-heisst-fertig]].
+
+## Nachtrag 12.10.2026 — die Zeile im Erzeuger ist nicht der Haken
+
+Zwei frische Schranken habe ich an einem Tag eingehängt, beide in
+`tools/hooks-einrichten.sh`:
+
+```sh
+schranke pruefe-befundurteile.pl || exit $?
+schranke befunde-verlinken.pl    || exit $?
+```
+
+Beide Commits meldeten *„eingehängt in `pre-commit`, `pre-push` und
+`paket-bauen.ps1`"*. Gemessen am selben Abend:
+
+```sh
+$ grep -c 'befunde-verlinken' .git/hooks/pre-commit .git/hooks/pre-push
+.git/hooks/pre-commit:0
+.git/hooks/pre-push:0
+```
+
+**Null.** `tools/hooks-einrichten.sh` ist ein **Erzeuger**; `.git/hooks/*` sind
+die Haken. Wer den Erzeuger ändert und ihn nicht laufen lässt, hat eine
+Schranke, die nur in der Quelle steht. Aufgefallen ist es, weil
+`befunde-verlinken.pl` von Hand aufgerufen `MANGEL` meldete und
+Rückgabewert 1 gab — und der Commit **trotzdem durchging**.
+
+Dasselbe Muster wie die Schranke, die in keinem Haken hing
+([pruefe-befundurteile am 12.10.2026](../tools/WERKZEUGE.md)); nur ist der
+Weg hier noch kürzer, weil ich die Zeile ja geschrieben hatte.
+
+**Die Regel:** nach **jeder** Änderung an `tools/hooks-einrichten.sh` wird das
+Skript ausgeführt **und** nachgezählt, dass der Name im erzeugten Haken steht:
+
+```sh
+bash tools/hooks-einrichten.sh
+grep -c '<name>' .git/hooks/pre-commit .git/hooks/pre-push
+```
+
+Eine Zahl ungleich 0 auf beiden Seiten ist der Beleg. *„Eingehängt"* ohne
+diese zwei Zahlen ist eine Behauptung, keine Messung
+([pruefen-statt-vermuten](pruefen-statt-vermuten.md)).

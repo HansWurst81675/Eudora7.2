@@ -1,12 +1,12 @@
-# PRUEFER-5 — Review der Exit-Behebung in 7.2.0.22
+# <a id="pruefer-5"></a>PRUEFER-5 — Review der Exit-Behebung in 7.2.0.22
 
 | | |
 |---|---|
 | Datum | 08.09.2026 |
 | Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer` |
-| Bezugscommit | `d003d46` („Paket 1.0.22: Kriterium 7 erfuellt, A-1 belegt"), per `git merge --ff-only origin/pruefer-4-einarbeiten` |
-| Behebungscommit | `269f3b5` („E-40/E-41/E-42: ein Fehler beim Aufraeumen verhindert das Beenden nicht mehr") |
+| Bezugscommit | `d003d46` („Paket 1.0.22: Kriterium 7 erfuellt, [A-1](../BEFUNDE.md#a-1) belegt"), per `git merge --ff-only origin/pruefer-4-einarbeiten` |
+| Behebungscommit | `269f3b5` („[E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42): ein Fehler beim Aufraeumen verhindert das Beenden nicht mehr") |
 | Zusatzstand | `Eudora71/Eudora/PersonalityView.cpp` **unversioniert im Hauptbaum**, Stand 08.09.2026 09:21:30, MD5 `25eaca77a17e45a4dcedded2cac6d879` — der zweite E-37-Anlauf ist im Prüfstand `d003d46` **nicht** enthalten (dort steht noch der erste). Punkt 4 wurde deshalb gegen eine Momentaufnahme des Hauptbaums geprüft. |
 | MFC-Quellen | `C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Tools\MSVC\14.38.33130\atlmfc` |
 | Nicht getan | nicht gebaut, kein Programm gestartet, nichts committet, keinen Zweig angelegt; geschrieben wurde nur diese Datei |
@@ -76,7 +76,7 @@ beiden Zeichensatzmodellen gültig; der Bau ist MBCS (kein `_UNICODE` in
 `CString::Format` stehen selbst im `CATCH_ALL`-Rumpf. Wirft `Format` bei
 Speichermangel eine `CMemoryException`, verlässt sie `AUFRAEUMEN` und trifft
 `AfxCallWndProc` — das Beenden bleibt dann stehen wie vor der Behebung. Das ist
-der Fall „kein Speicher", nicht der Fall, den E-42 adressiert.
+der Fall „kein Speicher", nicht der Fall, den [E-42](../BEFUNDE.md#e-42) adressiert.
 
 ### (b) Welcher Schritt darf NICHT übersprungen werden?
 
@@ -124,11 +124,11 @@ hinter `winfrm.cpp:941`, `DestroyWindow` läuft nie, es kommt kein `WM_QUIT`,
 `winfrm.cpp:885`, ist das Fenster dabei schon versteckt: ein Prozess ohne
 Fenster und ohne Taskleisteneintrag, den nur der Taskmanager beendet.
 
-Die Einschränkung: **das ist keine neue Gefahr.** Vor E-42 fing dieselbe
+Die Einschränkung: **das ist keine neue Gefahr.** Vor [E-42](../BEFUNDE.md#e-42) fing dieselbe
 Ausnahme `AfxCallWndProc` (`atlmfc/src/mfc/wincore.cpp:252-278`),
 `AfxProcessWndProcException` zeigte die Meldung und lieferte 0 — auch dann lief
-`DestroyWindow` nicht. Das Ergebnis ist identisch. E-42 **erbt** diesen Hänger,
-es erzeugt ihn nicht. Was E-42 hier ändert, ist nur die Sichtbarkeit: vorher
+`DestroyWindow` nicht. Das Ergebnis ist identisch. [E-42](../BEFUNDE.md#e-42) **erbt** diesen Hänger,
+es erzeugt ihn nicht. Was [E-42](../BEFUNDE.md#e-42) hier ändert, ist nur die Sichtbarkeit: vorher
 sah Gregor „Encountered an improper argument", jetzt passiert nichts und die
 Begründung landet in einem Protokoll, das standardmäßig nicht geschrieben wird
 (siehe „Was die Behebung kostet", Abschnitt Protokoll).
@@ -172,7 +172,7 @@ Schritte erzeugt also einen Minidump und beendet den Prozess.
 **Urteil: bestätigt.** Und das ist hier die gute Nachricht: `AUFRAEUMEN`
 verwandelt einen Absturz nicht in einen stillen Hänger. Es wirkt ausschließlich
 auf `CException`-Würfe, also genau auf `ENSURE`/`ENSURE_VALID`/`ENSURE_ARG` und
-`AfxThrow*` — die Klasse, die E-33 verursacht hat.
+`AfxThrow*` — die Klasse, die [E-33](../BEFUNDE.md#e-33) verursacht hat.
 
 ---
 
@@ -250,7 +250,7 @@ schluckt die Nachricht, solange der Anpassen-Dialog offen ist. Die beiden
 Stellen behandeln dasselbe Ereignis nach zwei verschiedenen Regeln. Zusätzlich
 sieht `PreTranslateMessage` nur *gepostete* Nachrichten; das `WM_SYSCOMMAND`
 aus Alt-F4 erzeugt `DefWindowProc` per `SendMessage` und läuft dort nie durch.
-Für E-41 ohne Folge, für den Anpassen-Dialog wahrscheinlich ein eigener Befund.
+Für [E-41](../BEFUNDE.md#e-41) ohne Folge, für den Anpassen-Dialog wahrscheinlich ein eigener Befund.
 
 ### (d) Läuft `ID_SYSTEM_MENU_CHECKMAIL` noch, und kehrt es richtig zurück?
 
@@ -572,9 +572,9 @@ ohnehin unabhängig von der Debug-Maske führt.
      ein Wurf, der keine `CException` ist, läuft durch. Achtung: `Tests`
      definiert `NOEXPRLOG` (`Tests.vcxproj:43`), dort zieht `qcassert.h` kein
      `debug.h` nach — ein solcher Test braucht die Aufnahme ausdrücklich.
-   * **Die Maske aus E-41** — `(nID & 0xFFF0) == SC_CLOSE` als freie Funktion,
+   * **Die Maske aus [E-41](../BEFUNDE.md#e-41)** — `(nID & 0xFFF0) == SC_CLOSE` als freie Funktion,
      Tabellentest über alle `SC_*`-Werte und über `ID_SYSTEM_MENU_CHECKMAIL`.
-   * **Die Entscheidungstabelle aus E-40** — dafür müsste der `switch` aus
+   * **Die Entscheidungstabelle aus [E-40](../BEFUNDE.md#e-40)** — dafür müsste der `switch` aus
      `SaveModified` in eine freie Funktion `SaveModifiedEntscheidung(int)`
      mit vier Ausgängen (Abbrechen / Speichern / Verwerfen / Fortsetzen)
      herausgezogen werden. Das ist die einzige der drei Behebungen, deren Kern
@@ -592,7 +592,7 @@ ohnehin unabhängig von der Debug-Maske führt.
 | Punkt | Frage | Urteil |
 |---|---|---|
 | 1a | Makro `AUFRAEUMEN` sauber — `do/while(0)`, Schachtelung, `e` | **bestätigt** |
-| 1b | Überspringen von `QCWorkbook::OnClose` kann das Beenden hängen lassen | **bestätigt** (aber schon vor E-42 so — geerbt, nicht neu) |
+| 1b | Überspringen von `QCWorkbook::OnClose` kann das Beenden hängen lassen | **bestätigt** (aber schon vor [E-42](../BEFUNDE.md#e-42) so — geerbt, nicht neu) |
 | 1c | Es wird etwas nicht gespeichert, was der Anwender erwartet | **teilweise** — Leisten- und Fensteranordnung ja, Nachrichten und Postfächer nein |
 | 1d | Speicherschutzverletzung läuft durch `CATCH_ALL` hindurch | **bestätigt** (`/EHsc` aus `CL.command.1.tlog`) |
 | 2a | Endlosschleife `WM_CLOSE` → `SC_CLOSE` möglich | **widerlegt** |
@@ -617,5 +617,5 @@ ohnehin unabhängig von der Debug-Maske führt.
 3. `default` in beiden `SaveModified` auf „speichern" statt „verwerfen" stellen
    (Punkt 3b). Zwei Zeilen, und der einzige Datenverlust der Behebung fällt weg.
 4. `lvFindInfo` in `OnCmdDeletePersonality` entfernen (Punkt 4d), toter Code.
-5. `SaveModifiedEntscheidung` herausziehen, damit E-40 überhaupt testbar wird
+5. `SaveModifiedEntscheidung` herausziehen, damit [E-40](../BEFUNDE.md#e-40) überhaupt testbar wird
    (Abschnitt „Was ich nicht prüfen konnte", Punkt 5).

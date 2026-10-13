@@ -2,9 +2,17 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # Liefert entmojibake_nur_kodierung_gefiltert().
 use FindBin;
 require "$FindBin::Bin/entmojibaken.pl";
+# Liefert verweise_nur_links_gefiltert() - eine Zeile, die sich nur im
+# Verweis geaendert hat, ist kein Zuwachs.
+require "$FindBin::Bin/verweise-filtern.pl";
 
 # pruefe-anzeigetext.pl - ein zitierter Oberflaechentext ist eine Behauptung
 # des Programms ueber sich selbst, kein Messwert.
@@ -139,7 +147,7 @@ sub hat_herkunft {
 # Rueckgabe: (Kennung, Zitat) wenn ein Mangel vorliegt, sonst ()
 sub beurteile {
     my ($zeile) = @_;
-    return () unless $zeile =~ /^\|\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
+    return () unless $zeile =~ /^\|\s*$ANKER\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
     my $kennung = $1;
 
     for my $z (zitate($zeile)) {
@@ -221,7 +229,8 @@ sub zeilen_aus_diff {
     }
     # Eine rein umkodierte Zeile ist kein Zuwachs - siehe Kommentar bei
     # entmojibake_nur_kodierung_gefiltert() in entmojibaken.pl.
-    return entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
+    my @zuwachs = entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
+    return verweise_nur_links_gefiltert(\@alt, \@zuwachs);
 }
 
 sub zeilen_aus_datei {
@@ -248,7 +257,7 @@ my @zeilen = $modus eq 'datei'  ? zeilen_aus_datei($wert)
 my (@mangel, %gesehen);
 my ($befundzeilen, $zitatzeilen) = (0, 0);
 for my $z (@zeilen) {
-    $befundzeilen++ if $z =~ /^\|\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
+    $befundzeilen++ if $z =~ /^\|\s*$ANKER\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
     $zitatzeilen++  if zitate($z);
     my @m = beurteile($z);
     next unless @m;

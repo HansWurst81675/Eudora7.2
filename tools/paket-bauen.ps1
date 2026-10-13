@@ -283,6 +283,84 @@ if (Test-Path -LiteralPath $standpruefer) {
 }
 
 
+# --- Schranke: kein Dokument darf einen offenen Befund fuer erledigt -------
+#     erklaeren (Fehlerklasse E-109: Schranken, die in keinem Haken hingen)
+#
+# Am 12.10.2026 gemessen: pruefe-befundurteile.pl hing in KEINEM Haken und
+# war auf main rot. Drei Widersprueche standen dort - E-112 galt in README
+# und ZIEL als behoben, waehrend BEFUNDE.md ihn seit dem 18.09.2026 als
+# WIEDER OFFEN fuehrt, von Gregor mit Bildschirmfoto widerlegt. Eine
+# Schranke, die niemand aufruft, ist keine.
+$urteilspruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-befundurteile.pl'
+if (Test-Path -LiteralPath $urteilspruefer) {
+
+  $perlU = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlU) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlU = $k; break }
+    }
+  }
+
+  if (-not $perlU) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Urteilspruefung konnte'
+    Write-Host '  nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlU $urteilspruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Ein Dokument erklaert einen Befund fuer erledigt,'
+    Write-Host '  den BEFUNDE.md offen fuehrt. Erst die Stelle berichtigen.'
+    Write-Host ''
+    exit 1
+  }
+}
+
+
+# --- Schranke: jede genannte Kennung ist ein Link auf ihre Urteilszeile ----
+#
+# Gregor am 12.10.2026: "mein anliegen ist, dass man sich schneller zurecht
+# findet, nicht die uebersicht verliert und die infos nicht ueberall
+# verteilt sind, wo man sie muehsam erst zusammen suchen muss." Ohne diese
+# Schranke verfaellt das mit der ersten neu geschriebenen Zeile wieder.
+$verweispruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'befunde-verlinken.pl'
+if (Test-Path -LiteralPath $verweispruefer) {
+
+  $perlV = (Get-Command perl -ErrorAction Ignore).Source
+  if (-not $perlV) {
+    foreach ($k in @(
+        'C:\Program Files\Git\usr\bin\perl.exe',
+        'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+        'C:\Strawberry\perl\bin\perl.exe')) {
+      if (Test-Path -LiteralPath $k) { $perlV = $k; break }
+    }
+  }
+
+  if (-not $perlV) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET: perl nicht gefunden, die Verweispruefung konnte'
+    Write-Host '  nicht laufen. Ohne sie wird nicht ausgeliefert.'
+    Write-Host ''
+    exit 1
+  }
+
+  & $perlV $verweispruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Eine genannte Kennung ist kein Link, oder ein Link'
+    Write-Host '  zeigt ins Leere. Nachziehen mit:'
+    Write-Host '    perl tools/befunde-verlinken.pl --anker --verlinken'
+    Write-Host ''
+    exit 1
+  }
+}
+
 # --- Schranke: kein Paket, solange ein Agentenauftrag offen ist -----------
 #
 # Gregor am 13.09.2026, mit der Auswertung von 474 Nachrichten: Platz 1 der

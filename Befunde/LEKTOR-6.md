@@ -7,7 +7,7 @@ geändert wurde, **mit der Messung dahinter**, was an der schon nachgezogenen
 
 Ausgangsstand: `43034b4` (`git log --oneline -1`). Auftrag: die vier Dateien
 nachziehen, die [LEKTOR-5.md](LEKTOR-5.md) als veraltet gemeldet hatte, und die
-Befunde L-9.5, L-9.6, L-9.7, L-9.11, L-9.14, L-9.15, L-9.16 abarbeiten.
+Befunde [L-9.5](LEKTOR-5.md#l-9.5), [L-9.6](LEKTOR-5.md#l-9.6), [L-9.7](LEKTOR-5.md#l-9.7), [L-9.11](LEKTOR-5.md#l-9.11), [L-9.14](LEKTOR-5.md#l-9.14), [L-9.15](LEKTOR-5.md#l-9.15), [L-9.16](LEKTOR-5.md#l-9.16) abarbeiten.
 
 **Nichts gebaut, nichts gestartet, nicht gepusht.** Alle Angaben sind an der
 Quelle nachgemessen; wo eine Angabe aus dem Auftrag nicht stimmte, steht das
@@ -37,7 +37,7 @@ unten in *Was ich am Auftrag berichtigt habe*.
 Zwei Angaben aus dem Auftrag habe ich **nicht** übernommen, weil die Messung
 etwas anderes sagt, und eine dritte habe ich ergänzt.
 
-### L-10.3 — `EUDORA_BUILD_NUMBER` war beim Heben auf 7.2.0.23 zurückgeblieben
+### <a id="l-10.3"></a>L-10.3 — `EUDORA_BUILD_NUMBER` war beim Heben auf 7.2.0.23 zurückgeblieben
 
 `Eudora71/Version.h` sagte:
 
@@ -73,7 +73,7 @@ veröffentlicht ist.
 ### Anforderung A-2: der Auftrag und `BEFUNDE.md` widersprachen sich
 
 Der Auftrag sagt, Gregor habe A-2 bestätigt (*„jetzt ist sie unten, ja"*).
-`BEFUNDE.md` (E-44) und `ZIEL.md` sagten **„von Gregor noch nicht bestätigt"**.
+`BEFUNDE.md` ([E-44](../BEFUNDE.md#e-44)) und `ZIEL.md` sagten **„von Gregor noch nicht bestätigt"**.
 `CHANGELOG.md:103` dagegen zitiert die Bestätigung wörtlich. Zwei von vier
 Stellen waren also nicht nachgezogen. **Ich habe der Bestätigung gefolgt** —
 sie steht wörtlich im CHANGELOG und im Auftrag — und die beiden anderen Stellen
@@ -88,29 +88,29 @@ selbst am laufenden Programm prüfen konnte.
 ### `AUFGABEN.md` — Kopf und Hauptarbeit neu (Befund L-9.14)
 
 Die Datei stand auf *„Stand 07.09.2026, morgens"*, und der ganze vordere Teil
-war überholt: 87 Zeilen Suchanleitung für das **behobene** Beenden, E-37 als
-behoben geführt, E-38 als gesperrt.
+war überholt: 87 Zeilen Suchanleitung für das **behobene** Beenden, [E-37](../BEFUNDE.md#e-37) als
+behoben geführt, [E-38](../BEFUNDE.md#e-38) als gesperrt.
 
 | geändert | vorher | jetzt |
 |---|---|---|
 | Kopfzeile | Stand 07.09.2026, morgens | **Stand 08.09.2026, mittags** |
 | Überschrift der Hauptarbeit | *„das Beenden, zwei Kontofehler, die Reiterleiste"* | *„zwei Kontofehler und die Reiterleiste"* |
-| Kriterientabelle 4–8 | 7 *„nicht erfüllt"*, 4 *„das Beenden fehlt noch"*, 8 *„die Reiterleiste am unteren Rand fehlt"* | 7 **erfüllt** mit Zitat; 4 nennt die zwei verbliebenen Stellen; 8 nennt, dass die Leiste seit E-44 da ist und **die Reiter** fehlen |
-| `### 1.` | Kriterium 7 (E-33), 87 Zeilen | **E-37**, mit dem Regressionsverlauf und dem unbestätigten zweiten Anlauf |
-| `### 2.` | E-37 *„Anzeige behoben"* | **E-38**, mit *„die Sperre ist weg"* und der Messung ohne Bau |
-| `### 3.` | E-38 *„hängt an E-33"* | **E-39** |
+| Kriterientabelle 4–8 | 7 *„nicht erfüllt"*, 4 *„das Beenden fehlt noch"*, 8 *„die Reiterleiste am unteren Rand fehlt"* | 7 **erfüllt** mit Zitat; 4 nennt die zwei verbliebenen Stellen; 8 nennt, dass die Leiste seit [E-44](../BEFUNDE.md#e-44) da ist und **die Reiter** fehlen |
+| `### 1.` | Kriterium 7 ([E-33](../BEFUNDE.md#e-33)), 87 Zeilen | **[E-37](../BEFUNDE.md#e-37)**, mit dem Regressionsverlauf und dem unbestätigten zweiten Anlauf |
+| `### 2.` | [E-37](../BEFUNDE.md#e-37) *„Anzeige behoben"* | **[E-38](../BEFUNDE.md#e-38)**, mit *„die Sperre ist weg"* und der Messung ohne Bau |
+| `### 3.` | [E-38](../BEFUNDE.md#e-38) *„hängt an [E-33](../BEFUNDE.md#e-33)"* | **[E-39](../BEFUNDE.md#e-39)** |
 | `### 4.` | Kriterium 8 | Kriterium 8, jetzt mit *„die Leiste ist da, die Reiter fehlen"* |
-| `### 5.` | — | **E-43**, neu, mit `GetBtnCount=24/24` / `m_btns.GetSize=0/0` und E-46 als widerlegt |
-| *Was schon nachgemessen ist* | ohne das Beenden | E-40/E-41/E-42/E-45 samt `tools/pruefe-beenden.pl` (**elf** eingefasste Schritte, selbst gefahren, Rückgabe 0) |
-| *Erledigt seit 1.0.10* | ohne 7, A-1, A-2 | Kriterien 5, 6, **7**, Anforderungen **A-1** und **A-2**/E-44 |
-| *Was sonst noch offen ist* | Zeile *„File → Exit bringt eine Meldung (E-33)"* | E-37, E-38, E-39, E-43 mit Verweis nach oben; E-33 ist heraus |
+| `### 5.` | — | **[E-43](../BEFUNDE.md#e-43)**, neu, mit `GetBtnCount=24/24` / `m_btns.GetSize=0/0` und [E-46](../BEFUNDE.md#e-46) als widerlegt |
+| *Was schon nachgemessen ist* | ohne das Beenden | [E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42)/[E-45](../BEFUNDE.md#e-45) samt `tools/pruefe-beenden.pl` (**elf** eingefasste Schritte, selbst gefahren, Rückgabe 0) |
+| *Erledigt seit 1.0.10* | ohne 7, [A-1](../BEFUNDE.md#a-1), A-2 | Kriterien 5, 6, **7**, Anforderungen **[A-1](../BEFUNDE.md#a-1)** und **A-2**/[E-44](../BEFUNDE.md#e-44) |
+| *Was sonst noch offen ist* | Zeile *„File → Exit bringt eine Meldung ([E-33](../BEFUNDE.md#e-33))"* | [E-37](../BEFUNDE.md#e-37), [E-38](../BEFUNDE.md#e-38), [E-39](../BEFUNDE.md#e-39), [E-43](../BEFUNDE.md#e-43) mit Verweis nach oben; [E-33](../BEFUNDE.md#e-33) ist heraus |
 | `B1` | *„Vier sind behoben"*, Kriterium 7 als erster Schritt | *„Sieben sind behoben"*, die vier offenen Punkte namentlich |
-| `E1` | Überschrift *„(**A-1**)"* ohne Warnung | Kasten, dass **A-1 zweimal vergeben** ist (L-9.8, offen) und welche der beiden gemeint ist |
-| `F` | PAKETE.md-Eintrag ohne 1.0.22/1.0.23 | Abschnitte für 1.0.23 und 1.0.22 vermerkt, M-4 bleibt offen; LEKTOR-5 und LEKTOR-6 verlinkt |
+| `E1` | Überschrift *„(**[A-1](../BEFUNDE.md#a-1)**)"* ohne Warnung | Kasten, dass **[A-1](../BEFUNDE.md#a-1) zweimal vergeben** ist ([L-9.8](LEKTOR-5.md#l-9.8), offen) und welche der beiden gemeint ist |
+| `F` | PAKETE.md-Eintrag ohne 1.0.22/1.0.23 | Abschnitte für 1.0.23 und 1.0.22 vermerkt, [M-4](PRUEFER-15.md#m-4) bleibt offen; [LEKTOR-5](LEKTOR-5.md#lektor-5) und LEKTOR-6 verlinkt |
 
 ### `WEITERMACHEN.md` — Kopfkasten und nächster Schritt (Befund L-9.16)
 
-L-9.16 hatte vier Zeilen des Kopfkastens als überholt gemessen. Alle vier sind
+[L-9.16](LEKTOR-5.md#l-9.16) hatte vier Zeilen des Kopfkastens als überholt gemessen. Alle vier sind
 berichtigt, und die falsche Bilanz ist mit weg.
 
 | Zeile | vorher | jetzt |
@@ -119,10 +119,10 @@ berichtigt, und die falsche Bilanz ist mit weg.
 | Quellstand / Paketnummer | 7.2.0.22 / 1.0.22 | **7.2.0.23 / 1.0.23** |
 | Zuletzt gebaut | Paket 1.0.22 mit SHA256 | Paket **1.0.23** mit gemessener SHA256, Größe, `Eudora.exe`-Zeit, **noch nicht committet**, keine Marke |
 | Zuletzt gestartet | Paket 1.0.21 am 07.09.2026 | Paket **1.0.22** am 08.09.2026 mit zwei Zitaten, dazu die Prüfinstanz 7.2.0.23 zu A-2 |
-| Bestätigte Behebungen | 7.2.0.21 (E-31/E-34/E-35/E-36) | dazu 7.2.0.22 (E-40/E-41/E-42, A-1) und 7.2.0.23 (E-44) |
+| Bestätigte Behebungen | 7.2.0.21 ([E-31](../BEFUNDE.md#e-31)/[E-34](../BEFUNDE.md#e-34)/[E-35](../BEFUNDE.md#e-35)/[E-36](../BEFUNDE.md#e-36)) | dazu 7.2.0.22 ([E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42), [A-1](../BEFUNDE.md#a-1)) und 7.2.0.23 ([E-44](../BEFUNDE.md#e-44)) |
 | Bemängelt | *„beenden geht nicht"*, *„untere zeile"* | die beiden E-37-Sätze vom 08.09.2026 |
 | Bilanz (`:23`) | *„fünf belegt (0, 1, 3, 5, 6), drei fast oder halb (2, 4, 8), eines nicht: das Beenden (7)"* | **sechs belegt (0, 1, 3, 5, 6, 7), drei fast oder halb (2, 4, 8)** |
-| *Der nächste Schritt* | 58 Zeilen Suchanleitung für E-33 | fünf nummerierte Punkte (E-37, E-38, E-39, Kriterium 8, E-43) plus ein Kasten *„Was nicht mehr zu suchen ist"* |
+| *Der nächste Schritt* | 58 Zeilen Suchanleitung für [E-33](../BEFUNDE.md#e-33) | fünf nummerierte Punkte ([E-37](../BEFUNDE.md#e-37), [E-38](../BEFUNDE.md#e-38), [E-39](../BEFUNDE.md#e-39), Kriterium 8, [E-43](../BEFUNDE.md#e-43)) plus ein Kasten *„Was nicht mehr zu suchen ist"* |
 
 ### `Releases/PAKETE.md` — zwei fehlende Abschnitte (Befund L-9.5)
 
@@ -136,14 +136,14 @@ berichtigt, und die falsche Bilanz ist mit weg.
 - Die Marken-Aufzählung sagt jetzt ausdrücklich, dass es **`v1.0.22` und
   `v1.0.23` nicht gibt**.
 - **Neu: `## 1.0.23`** — Prüfsumme, Größe, `Eudora.exe`-Zeit, QCSSL, und eine
-  Befundtabelle (E-44 bestätigt, E-45 behoben, E-46 widerlegt, E-43 offen,
-  E-37 gebaut und unbestätigt).
+  Befundtabelle ([E-44](../BEFUNDE.md#e-44) bestätigt, [E-45](../BEFUNDE.md#e-45) behoben, [E-46](../BEFUNDE.md#e-46) widerlegt, [E-43](../BEFUNDE.md#e-43) offen,
+  [E-37](../BEFUNDE.md#e-37) gebaut und unbestätigt).
 - **Neu: `## 1.0.22`** — dieselbe Form; die Fassung, mit der Kriterium 7 und
-  A-1 belegt sind.
+  [A-1](../BEFUNDE.md#a-1) belegt sind.
 - *Wo die Pakete liegen*: Stand 07.09. → **08.09.2026**, mit dem Nachtrag,
   welche ZIPs seither wieder im Repo liegen.
 - Der Kasten zu `EUDORA_BUILD_NUMBER` nennt jetzt den **zweiten** Vorfall
-  (L-10.3).
+  ([L-10.3](#l-10.3)).
 
 ### `README.md` — meine Nachprüfung der schon nachgezogenen Fassung
 
@@ -152,31 +152,31 @@ berichtigt, und die falsche Bilanz ist mit weg.
 | Behauptung | Prüfung | Urteil |
 |---|---|---|
 | sechs Kriterien belegt (0, 1, 3, 5, 6, 7) | Tabelle in `ZIEL.md`, Zeile für Zeile | **stimmt** |
-| drei fast oder halb (2, 4, 8) | dieselbe Tabelle | **stimmt** — und die Bilanz**zeile** in `ZIEL.md` sagte etwas anderes, siehe L-10.1 |
-| A-1 bestätigt | Zitat in `ZIEL.md` und `CHANGELOG.md` | **stimmt** |
+| drei fast oder halb (2, 4, 8) | dieselbe Tabelle | **stimmt** — und die Bilanz**zeile** in `ZIEL.md` sagte etwas anderes, siehe [L-10.1](#l-10.1) |
+| [A-1](../BEFUNDE.md#a-1) bestätigt | Zitat in `ZIEL.md` und `CHANGELOG.md` | **stimmt** |
 | A-2 bestätigt | Zitat in `CHANGELOG.md:103` | **stimmt**, widersprach aber `BEFUNDE.md` und `ZIEL.md` — angeglichen |
-| Quellstand 7.2.0.23 | `Version.h` | **stimmt**, bis auf `EUDORA_BUILD_NUMBER` (L-10.3) |
+| Quellstand 7.2.0.23 | `Version.h` | **stimmt**, bis auf `EUDORA_BUILD_NUMBER` ([L-10.3](#l-10.3)) |
 | Paket `Releases/Eudora72-1.0.23-release.zip` | `ls`, `sha256sum` | ZIP da, aber **unverfolgt und ohne Marke** — ergänzt |
-| offene Anwenderpunkte E-37, E-38, Kriterium 8 | `BEFUNDE.md`, `CHANGELOG.md` | **stimmt**, unvollständig: **E-39** und **E-43** merkt ein Anwender ebenfalls — ergänzt |
+| offene Anwenderpunkte [E-37](../BEFUNDE.md#e-37), [E-38](../BEFUNDE.md#e-38), Kriterium 8 | `BEFUNDE.md`, `CHANGELOG.md` | **stimmt**, unvollständig: **[E-39](../BEFUNDE.md#e-39)** und **[E-43](../BEFUNDE.md#e-43)** merkt ein Anwender ebenfalls — ergänzt |
 
 **Was ich geändert habe:**
 
 - Der Abschnitt **`### Offen — Stand 07.09.2026`** war unverändert stehen
   geblieben und widersprach dem neuen Kopf: er führte das Beenden als offen,
-  E-37 als *„nur die Anzeige behoben"* und E-38 als *„hängt an E-33"*. Er heißt
-  jetzt **`### Offen — Stand 08.09.2026`**, das Beenden ist heraus, E-37 steht
-  als **nicht behoben** mit dem Regressionsverlauf, E-38 mit *„der Blocker ist
-  weg"*, Kriterium 8 mit der Leiste aus E-44, und **E-43** ist neu dabei.
+  [E-37](../BEFUNDE.md#e-37) als *„nur die Anzeige behoben"* und [E-38](../BEFUNDE.md#e-38) als *„hängt an [E-33](../BEFUNDE.md#e-33)"*. Er heißt
+  jetzt **`### Offen — Stand 08.09.2026`**, das Beenden ist heraus, [E-37](../BEFUNDE.md#e-37) steht
+  als **nicht behoben** mit dem Regressionsverlauf, [E-38](../BEFUNDE.md#e-38) mit *„der Blocker ist
+  weg"*, Kriterium 8 mit der Leiste aus [E-44](../BEFUNDE.md#e-44), und **[E-43](../BEFUNDE.md#e-43)** ist neu dabei.
 - Der Kasten *„Drei dieser Befunde schweigen aus demselben Grund"* sagte
-  *„E-37 viermal (behoben)"* — E-37 ist **nicht** behoben. Jetzt: *„die Stellen
+  *„[E-37](../BEFUNDE.md#e-37) viermal (behoben)"* — [E-37](../BEFUNDE.md#e-37) ist **nicht** behoben. Jetzt: *„die Stellen
   melden jetzt, behoben ist der Befund nicht"*, dazu die zwölf Schritte aus
-  E-42.
+  [E-42](../BEFUNDE.md#e-42).
 - Die Tabelle **Belegt** hatte keine Zeile für das Beenden und keine für die
   beiden Anforderungen. Drei Zeilen dazu, jede mit Zitat und Messung.
 - Im Kopfkasten stehen wieder **Prüfsumme und Größe** des Pakets; die
   nachgezogene Fassung hatte die Prüfsumme ganz gestrichen.
-- Der Satz *„Fertig ist es nicht"* nennt jetzt bei E-37 und E-38 ausdrücklich,
-  dass der zweite Anlauf nur **gebaut** ist und E-38 **neu zu messen** ist.
+- Der Satz *„Fertig ist es nicht"* nennt jetzt bei [E-37](../BEFUNDE.md#e-37) und [E-38](../BEFUNDE.md#e-38) ausdrücklich,
+  dass der zweite Anlauf nur **gebaut** ist und [E-38](../BEFUNDE.md#e-38) **neu zu messen** ist.
 
 ### `ZIEL.md` — die Bilanzzeile widersprach der eigenen Tabelle (Befund L-10.1)
 
@@ -192,16 +192,16 @@ Bilanzzeile war also die einzige Stelle mit *„eines nicht"* — geändert auf
 (2, 4, 8)."**, mit einem Satz darunter, was an 8 fehlt.
 
 Weiter in `ZIEL.md`: die Kopfzeile *„gemessen an Fassung 7.2.0.22 / Paket
-1.0.22"* auf **7.2.0.23 / 1.0.23**; Kriterium 2 nennt E-44; Kriterium 4 nennt
+1.0.22"* auf **7.2.0.23 / 1.0.23**; Kriterium 2 nennt [E-44](../BEFUNDE.md#e-44); Kriterium 4 nennt
 statt *„offen bleibt das Beenden"* die zwei verbliebenen Stellen; Kriterium 8
-nennt die Leiste aus E-44; A-2 steht als **bestätigt** mit Zitat und Messung.
+nennt die Leiste aus [E-44](../BEFUNDE.md#e-44); A-2 steht als **bestätigt** mit Zitat und Messung.
 
 ### `CHANGELOG.md`
 
 - Die Tabelle **Erreicht** sagte noch *„Kriterium 7 (Beenden) | **nicht
   erfüllt** — der einzige verbliebene Fehler der zweiten Stufe"*. Jetzt
   **erfüllt** mit Zitat; Kriterium 4 und 8 nachgezogen; zwei neue Zeilen für
-  **A-1** und **A-2**.
+  **[A-1](../BEFUNDE.md#a-1)** und **A-2**.
 - `## Nach 7.2.0.22 — alles Gebaute ist gepackt` → **`## Nach 7.2.0.23`**, mit
   dem Hinweis auf **alle fünf** Versionszeilen und darauf, dass das ZIP zu
   1.0.23 nicht committet ist.
@@ -213,16 +213,16 @@ nennt die Leiste aus E-44; A-2 steht als **bestätigt** mit Zitat und Messung.
 
 ### `BEFUNDE.md`
 
-- **E-44**: *„behoben in 7.2.0.23, von Gregor noch nicht bestätigt"* → **behoben
+- **[E-44](../BEFUNDE.md#e-44)**: *„behoben in 7.2.0.23, von Gregor noch nicht bestätigt"* → **behoben
   und von Gregor bestätigt**, mit Zitat und der Messung aus
   `tools/leisten-messen.ps1`.
-- **E-46**: *„offen, Spurmarke gesetzt"* → **widerlegt**, mit der
+- **[E-46](../BEFUNDE.md#e-46)**: *„offen, Spurmarke gesetzt"* → **widerlegt**, mit der
   Protokollzeile, die es entscheidet. Der ausführliche Abschnitt weiter unten
   hat einen Nachtragskasten bekommen.
-- **E-43**: der Satz *„Neuer Hauptverdacht (E-46): das CMainFrame-Objekt ist
+- **[E-43](../BEFUNDE.md#e-43)**: der Satz *„Neuer Hauptverdacht ([E-46](../BEFUNDE.md#e-46)): das CMainFrame-Objekt ist
   schon freigegeben"* ist durch die Messung ersetzt, die ihn widerlegt.
-- **E-42**: die Aufzählung der Schritte führte `QCWorkbook::OnClose` als durch
-  `AUFRAEUMEN` laufend — seit **E-45** läuft er ausdrücklich **nicht**
+- **[E-42](../BEFUNDE.md#e-42)**: die Aufzählung der Schritte führte `QCWorkbook::OnClose` als durch
+  `AUFRAEUMEN` laufend — seit **[E-45](../BEFUNDE.md#e-45)** läuft er ausdrücklich **nicht**
   hindurch. Berichtigt, mit der Zahl **elf** aus `tools/pruefe-beenden.pl`.
 
 ### `Befunde/BEENDEN.md` (Befund L-9.12) und `Befunde/PRUEFER-4.md` (L-9.13)
@@ -230,11 +230,11 @@ nennt die Leiste aus E-44; A-2 steht als **bestätigt** mit Zitat und Messung.
 Beide sind Zeitdokumente und behalten ihren Text. Sie haben je einen
 Nachtragskasten am Anfang bekommen:
 
-- `BEENDEN.md` heißt *„E-33 — File → Exit beendet Eudora nicht"* und sagte, das
+- `BEENDEN.md` heißt *„[E-33](../BEFUNDE.md#e-33) — File → Exit beendet Eudora nicht"* und sagte, das
   sei *„der einzige verbliebene Fehler der zweiten Stufe"*. Der Nachtrag sagt,
-  dass der Fall entschieden ist, durch welche Befunde, und dass E-43 offen und
-  E-46 widerlegt ist.
-- `PRUEFER-4.md` urteilt zu E-37 *„teilweise bestätigt — die Behebung … richtet
+  dass der Fall entschieden ist, durch welche Befunde, und dass [E-43](../BEFUNDE.md#e-43) offen und
+  [E-46](../BEFUNDE.md#e-46) widerlegt ist.
+- `PRUEFER-4.md` urteilt zu [E-37](../BEFUNDE.md#e-37) *„teilweise bestätigt — die Behebung … richtet
   keinen neuen Schaden an"*. Das ist am laufenden Programm widerlegt; der
   Nachtrag sagt es und warnt ausdrücklich davor, den Abschnitt als Beleg zu
   zitieren. Genau das war schon einmal passiert.
@@ -280,13 +280,13 @@ Beides berichtigt.
 Das Fahrtenbuch führte die Durchgänge nur bis L-8. Jetzt sind **L-9**
 (`LEKTOR-5.md`) und **L-10** (diese Datei) verlinkt, und daneben stehen die
 drei **Reviews** von PRUEFER — `PRUEFER-3.md`, `PRUEFER-4.md` und der neue
-`PRUEFER-5.md`, in dem **E-45** gefunden wurde.
+`PRUEFER-5.md`, in dem **[E-45](../BEFUNDE.md#e-45)** gefunden wurde.
 
 ---
 
 ## Zwei Schranken nachgezogen — mit Gegenprobe
 
-### L-10.1 — `tools/doku-pruefen.pl` war für **neun** Kriterien blind
+### <a id="l-10.1"></a>L-10.1 — `tools/doku-pruefen.pl` war für **neun** Kriterien blind
 
 Die Wortzahl-Tabelle im Werkzeug reichte von `zwei` bis `acht`. `ZIEL.md` führt
 **neun** Kriterien. Damit lieferte `$wort{'neun'}` `undef`, und **beide**
@@ -312,16 +312,16 @@ gewünschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt):
 
 Und der Beweis, dass sie am echten Fehler greift: der erste Lauf nach der
 Änderung meldete `WEITERMACHEN.md:23 nennt 9 Kriterien, die Aufteilung ergibt
-aber 3` — die Bilanz, die L-9.4 von Hand gefunden hatte.
+aber 3` — die Bilanz, die [L-9.4](LEKTOR-5.md#l-9.4) von Hand gefunden hatte.
 
-### L-10.2 — Prüfung 5c warnte zweimal umsonst
+### <a id="l-10.2"></a>L-10.2 — Prüfung 5c warnte zweimal umsonst
 
 Der Kommentar über Prüfung 5c behauptet seit dem 07.09.2026: *„eine Nummer in
 einem datierten Rückblick ist richtig und wird nicht gemeldet."* **Umgesetzt
 war das nicht.** Gemeldet wurden dadurch zwei Sätze in `CHANGELOG.md`, die
 genau das sind — *„Paket: Releases/Eudora72-1.0.22-release.zip"* unter der
 Überschrift `## 7.2.0.22 / Paket 1.0.22`. Zwei Fehlalarme in einem Lauf, und
-eine Schranke, die umsonst warnt, wird ignoriert (Befund X-1).
+eine Schranke, die umsonst warnt, wird ignoriert (Befund [X-1](../BEFUNDE.md#x-1)).
 
 Die Prüffrage lautet jetzt: **nennt die Überschrift des Abschnitts, in dem der
 Satz liegt, dieselbe Nummer?** Dann ist der Satz eine Aussage *über* jene
@@ -350,11 +350,11 @@ Fassung. Nennt sie eine andere, bleibt es ein Mangel.
 
 ## Offen — ausdrücklich nicht entschieden
 
-1. **A-2/E-44: „bestätigt" habe ich nicht selbst gemessen.** Das Zitat
+1. **A-2/[E-44](../BEFUNDE.md#e-44): „bestätigt" habe ich nicht selbst gemessen.** Das Zitat
    *„jetzt ist sie unten, ja"* steht im `CHANGELOG.md` und im Auftrag; ich habe
    `BEFUNDE.md` und `ZIEL.md` daran angeglichen. **Wenn es nicht von Gregor
    stammt, sind jetzt vier Stellen falsch statt zwei.** Bitte einmal bestätigen.
-2. **Die Kennung `A-1` ist zweimal vergeben** (Befund L-9.8, weiter offen).
+2. **Die Kennung [`A-1`](../BEFUNDE.md#a-1) ist zweimal vergeben** (Befund [L-9.8](LEKTOR-5.md#l-9.8), weiter offen).
    Einmal für Gregors Anforderung in `ZIEL.md`, einmal für den
    Erscheinungsbild-Befund vom 30.08.2026 (`BEFUNDE.md`, `PORTIERUNG.md:35,513`,
    `LEKTORAT.md`, `Releases/PAKETE.md:307`, `AUFGABEN.md` Abschnitt E1).
@@ -363,7 +363,7 @@ Fassung. Nennt sie eine andere, bleibt es ein Mangel.
    welche der beiden dort gemeint ist. Umbenennen wäre der nächste Schritt und
    braucht sein Wort.
 3. **`Arbeitsweise/agenten-koordinieren.md:11`** verweist auf `](AGENTEN.md)`
-   statt `](../AGENTEN.md)`. Das ist derselbe Fehler wie L-9.11, aber
+   statt `](../AGENTEN.md)`. Das ist derselbe Fehler wie [L-9.11](LEKTOR-5.md#l-9.11), aber
    `Arbeitsweise/` ist ein **Spiegel** des Gedächtnisverzeichnisses
    (`tools/lehren-spiegeln.pl`) — eine Änderung hier geht beim nächsten
    Spiegeln verloren. Die Quelle liegt in
@@ -374,7 +374,7 @@ Fassung. Nennt sie eine andere, bleibt es ein Mangel.
    `](../ZIEL.md)`. Das ist **kein Fehler**: die Zeile **zitiert** `ZIEL.md`
    wortgetreu in einem Blockzitat. Ein Zitat zu berichtigen wäre eine
    Verfälschung. **Absichtlich stehen gelassen.**
-5. **Mangel M-4 bleibt offen.** 1.0.22 und 1.0.23 haben jetzt einen Abschnitt
+5. **Mangel [M-4](PRUEFER-15.md#m-4) bleibt offen.** 1.0.22 und 1.0.23 haben jetzt einen Abschnitt
    in `Releases/PAKETE.md`; **1.0.4 bis 1.0.17 sowie 1.0.19 und 1.0.20** haben
    weiter keinen. Erfunden wird dort nichts — für die meisten liegt kein ZIP
    und keine Prüfsumme vor.
@@ -383,8 +383,8 @@ Fassung. Nennt sie eine andere, bleibt es ein Mangel.
    Prüfsumme steht in `Releases/PAKETE.md`, damit sie nicht verloren geht.
 7. **Keine Marke für 1.0.22 und 1.0.23.** Veröffentlichen ist Gregors
    Entscheidung. Alle Dateien sagen jetzt ausdrücklich, dass es diese Marken
-   **nicht** gibt — Befund W-0 war genau der umgekehrte Fall.
-8. **Befund L-9.18** (fünf Dateien ohne H1, Adressat und Zweck) ist **nicht**
+   **nicht** gibt — Befund [W-0](LEKTOR-4.md#w-0) war genau der umgekehrte Fall.
+8. **Befund [L-9.18](LEKTOR-5.md#l-9.18)** (fünf Dateien ohne H1, Adressat und Zweck) ist **nicht**
    abgearbeitet — er stand nicht im Auftrag und betrifft andere Dateien als die
    vier hier.
 9. **`Eudora71/Version.h` und `VERSION` liegen in diesem Commit mit** (Quellstand
@@ -392,7 +392,7 @@ Fassung. Nennt sie eine andere, bleibt es ein Mangel.
    **diese beiden Dateien im selben Baum** hält — ohne sie wäre jede
    Standangabe in diesem Commit ein Mangel. Im Hauptbaum sind dieselben
    Änderungen unverfolgt vorhanden; der Inhalt ist bis auf
-   `EUDORA_BUILD_NUMBER` (L-10.3) gleich, ein Zusammenführen sollte also
+   `EUDORA_BUILD_NUMBER` ([L-10.3](#l-10.3)) gleich, ein Zusammenführen sollte also
    glattgehen. **Falls doch ein Konflikt kommt: meine Fassung ist die mit
    `7,2,0,23`.**
 
@@ -420,21 +420,21 @@ Ausgangsstand: `3b9f609`. **Nichts gebaut, nichts gestartet, nicht gepusht.**
 | versionierte ZIPs | `git ls-files Releases/` | **nur 1.0.2 und 1.0.27**; zu 1.0.27 fehlt die `.sha256`, für 1.0.21 und 1.0.22 liegt die `.sha256` **ohne** ZIP daneben |
 | Marken | `git ls-remote --tags origin` | `v1.0.1`, `v1.0.2`, `v1.0.3`, `v1.0.10`, `v1.0.14`, `v1.0.15`, `v1.0.18`, `v1.0.21`, `v1.0.23`, `v1.0.24`, `v1.0.27` — **kein `v1.0.22`, `v1.0.25`, `v1.0.26`** |
 | Kriterien | Tabelle in `ZIEL.md` | neun; nach diesem Durchgang belegt 0, 1, 3, 5, 6, 7, **8** |
-| Befundkennungen | `grep '^| E-' BEFUNDE.md` | höchste vergebene ist **E-52** |
+| Befundkennungen | `grep '^| E-' BEFUNDE.md` | höchste vergebene ist **[E-52](../BEFUNDE.md#e-52)** |
 | `BEFUNDE.md` | `wc -l`, `grep -c '^## '`, `grep -cE '^### +[A-Z]'` | 7 577 Zeilen, 123 / 204 Abschnitte |
 | Zeilenenden aller MDs | `perl -0777` über `git ls-files "*.md"` | **eine** Datei mit CRLF: `tools/TESTLAEUFE.md`, 17 von 17 Zeilen, dazu eine **BOM**. In `HEAD` sind es 9 — sie wachsen mit jedem Testlauf |
 
 ## Was ich am Auftrag berichtigt habe
 
-### L-11.0 — „Eine Kennung `E-53` gibt es nicht" — **diese Meldung war falsch**
+### <a id="l-11.0"></a>L-11.0 — „Eine Kennung `E-53` gibt es nicht" — **diese Meldung war falsch**
 
-> **Widerlegt um 12:45 desselben Tages, siehe L-11.7 am Ende.** E-53 lag auf
+> **Widerlegt um 12:45 desselben Tages, siehe [L-11.7](#l-11.7) am Ende.** [E-53](../BEFUNDE.md#e-53) lag auf
 > dem Zweig `karten-und-trennbalken`, der noch nicht gepusht war und den
 > `wt/lektor` deshalb nicht sehen konnte. Die höchste vergebene Kennung ist
-> **E-62**. Der Abschnitt darunter bleibt stehen, weil er die Messung zeigt,
+> **[E-62](../BEFUNDE.md#e-62)**. Der Abschnitt darunter bleibt stehen, weil er die Messung zeigt,
 > die zu dem falschen Schluss geführt hat.
 
-Der Auftrag nannte „neue Befunde **E-48 bis E-53**" und führte **E-53** unter
+Der Auftrag nannte „neue Befunde **[E-48](../BEFUNDE.md#e-48) bis [E-53](../BEFUNDE.md#e-53)**" und führte **[E-53](../BEFUNDE.md#e-53)** unter
 *gebaut, aber nicht bestätigt*. Gemessen:
 
 ```
@@ -445,11 +445,11 @@ git log --all --oneline -S"E-53"             # 0 Commits
 
 **Die Kennung ist nie vergeben worden**, weder in diesem Zweig noch in
 `origin/lessons_learned` noch irgendwo im Verlauf. Die höchste vergebene ist
-**E-52**. Ich habe **nichts erfunden** — Kennungen vergibt Gregor, nicht ein
+**[E-52](../BEFUNDE.md#e-52)**. Ich habe **nichts erfunden** — Kennungen vergibt Gregor, nicht ein
 Agent (`AGENTEN.md`, Abschnitt 4). Der Hinweis steht jetzt im Kopf von
 `BEFUNDE.md`, damit die Angabe nicht ein zweites Mal kursiert.
 
-### L-11.0b — Der Zwischenstand war weiter als angegeben
+### <a id="l-11.0b"></a>L-11.0b — Der Zwischenstand war weiter als angegeben
 
 Der Auftrag nannte `a7f3fb0` als Ausgangsstand. Gemessen war `3b9f609`
 (*„lessons_learned in wt/lektor eingearbeitet, zehn Konflikte gemessen
@@ -459,8 +459,8 @@ gebracht, nicht mehr: `BEFUNDE.md`, `CHANGELOG.md`, `PORTIERUNG.md`, `ZIEL.md`
 — alle vier nach Auflage zugunsten `origin/lessons_learned` gelöst.
 
 > **Was dieser Merge gekostet hat:** meine L-10-Änderungen an `BEFUNDE.md`
-> waren damit weg. **E-44** stand wieder auf „von Gregor noch nicht bestätigt",
-> **E-46** wieder auf „offen, Spurmarke gesetzt". Beides ist unten erneut
+> waren damit weg. **[E-44](../BEFUNDE.md#e-44)** stand wieder auf „von Gregor noch nicht bestätigt",
+> **[E-46](../BEFUNDE.md#e-46)** wieder auf „offen, Spurmarke gesetzt". Beides ist unten erneut
 > nachgezogen. Das ist der Preis der Auflage, nicht ihr Fehler — aber wer sie
 > das nächste Mal gibt, sollte wissen, dass sie fremde Messungen mit
 > überschreibt.
@@ -475,7 +475,7 @@ Der Auftrag sagt: Fehlalarme in Prüfung 3b melden, statt die Doku danach zu
 verbiegen. Ich habe **zwei** gefunden und **die Prüfung** geändert, nicht die
 Aussagen.
 
-### L-11.1a — Der Gegenstand einer Tabellenzeile steht in der ersten Spalte
+### <a id="l-11.1a"></a>L-11.1a — Der Gegenstand einer Tabellenzeile steht in der ersten Spalte
 
 ```
 AUFGABEN.md:19 fuehrt Kriterium 7 als 'fast', ZIEL.md sagt 'erfuellt'
@@ -493,7 +493,7 @@ hier 7, weil die 4 in der **ersten Tabellenspalte** steht.
 ist **das** der Gegenstand der Zeile. Es ist dieselbe Form, in der die
 Kriterientabelle in `ZIEL.md` selbst gelesen wird.
 
-### L-11.1b — Eine Verneinung außerhalb der Auszeichnung wurde nicht gesehen
+### <a id="l-11.1b"></a>L-11.1b — Eine Verneinung außerhalb der Auszeichnung wurde nicht gesehen
 
 ```
 AUFGABEN.md:53 fuehrt Kriterium 2 als 'erfuellt', ZIEL.md sagt 'fast'
@@ -572,13 +572,13 @@ aber es ist eine Änderung an einer Schranke, und die gehört abgesprochen.
 - **Kriterium 8** stand auf *„halb, Behebung gebaut"* mit dem Satz *„Erfüllt
   ist das Kriterium erst, wenn Gregor bestätigt hat, dass ein Klick auf eine
   Karte ihr Fenster nach vorn holt"*. **Genau das hat er am 09.09.2026
-  bestätigt** — es steht in derselben Datei in der Verzeichniszeile zu E-48.
+  bestätigt** — es steht in derselben Datei in der Verzeichniszeile zu [E-48](../BEFUNDE.md#e-48).
   Jetzt **erfüllt**, mit seiner Beobachtung.
 - **Kriterium 4** sagte *„Offen bleibt das Beenden, siehe Kriterium 7"*,
   während Kriterium 7 zwei Zeilen darunter als **erfüllt** geführt wird. Jetzt:
-  das Beenden ist erledigt, mit E-43 sind E-37 und E-38 weggefallen, offen
+  das Beenden ist erledigt, mit [E-43](../BEFUNDE.md#e-43) sind [E-37](../BEFUNDE.md#e-37) und [E-38](../BEFUNDE.md#e-38) weggefallen, offen
   bleibt **eine** Stelle — die Meldung beim Anzeigen mancher Nachrichten.
-- **Kriterium 7** endete mit *„und ist als **E-43** weiter offen"*. E-43 ist in
+- **Kriterium 7** endete mit *„und ist als **[E-43](../BEFUNDE.md#e-43)** weiter offen"*. [E-43](../BEFUNDE.md#e-43) ist in
   7.2.0.24 behoben und von Gregor bestätigt. Berichtigt.
 - Die **Bilanzzeile** sagte *„Sechs von neun … eines nicht (8 — die
   Reiterleiste)"* und widersprach damit ihrer eigenen Tabelle. Jetzt
@@ -590,7 +590,7 @@ aber es ist eine Änderung an einer Schranke, und die gehört abgesprochen.
 - **A-3** stand auf *„Von Gregor noch nicht bestätigt — offen ist vor allem, ob
   ein Klick die Karte nach vorn holt"*. Jetzt bestätigt, mit dem Nebenbefund
   ohne Nummer (Vollbild nach Neustart) ausdrücklich **daneben**, nicht darin.
-- **A-4** stand auf *„von Gregor noch nicht bestätigt"* ohne E-52. Jetzt mit
+- **A-4** stand auf *„von Gregor noch nicht bestätigt"* ohne [E-52](../BEFUNDE.md#e-52). Jetzt mit
   der Nachbesserung in 7.2.0.27 und der Unterscheidung: bestätigt ist nur der
   **Gegenfall**, die Höhe.
 - Im A-2-Abschnitt hieß Kriterium 8 noch *„die Reiterleiste, wer eines angeht,
@@ -600,26 +600,26 @@ aber es ist eine Änderung an einer Schranke, und die gehört abgesprochen.
 ### `AUFGABEN.md` — die Datei, über die Gregor sich zweimal beschwert hat
 
 Sie stand auf **„Stand 08.09.2026, mittags"** und führte als *Hauptarbeit*
-**E-37**, **E-38**, **Kriterium 8** und **E-43** — alle vier sind erledigt und
+**[E-37](../BEFUNDE.md#e-37)**, **[E-38](../BEFUNDE.md#e-38)**, **Kriterium 8** und **[E-43](../BEFUNDE.md#e-43)** — alle vier sind erledigt und
 drei davon von Gregor bestätigt. Der Kopf bis einschließlich *Was sonst noch
 offen ist* ist neu geschrieben (13 720 → 14 864 Byte):
 
 - **Stand 09.09.2026**, mit dem Befehl, mit dem man Quellstand und Paketnummer
   nachmisst.
 - Die *Hauptarbeit* heißt jetzt **„vier gebaute Behebungen warten auf Gregors
-  Urteil"** und nennt sie in einer Tabelle mit je einem Prüfschritt: **E-49**
-  (A-4), **E-50**, **E-52**, **E-51**. Dazu ausdrücklich: **bestätigt ist bei
-  E-52 nur der Gegenfall.**
+  Urteil"** und nennt sie in einer Tabelle mit je einem Prüfschritt: **[E-49](../BEFUNDE.md#e-49)**
+  (A-4), **[E-50](../BEFUNDE.md#e-50)**, **[E-52](../BEFUNDE.md#e-52)**, **[E-51](../BEFUNDE.md#e-51)**. Dazu ausdrücklich: **bestätigt ist bei
+  [E-52](../BEFUNDE.md#e-52) nur der Gegenfall.**
 - Danach in dieser Reihenfolge: die Meldung beim **Anzeigen** (der letzte
   bekannte Fehler, den ein Anwender merkt), der **Nebenbefund ohne Nummer**
-  (Vollbild nach Neustart) mit einem ersten Handgriff **ohne Bau**, **E-39**
-  und **E-47**.
+  (Vollbild nach Neustart) mit einem ersten Handgriff **ohne Bau**, **[E-39](../BEFUNDE.md#e-39)**
+  und **[E-47](../BEFUNDE.md#e-47)**.
 - *Was schon nachgemessen ist — nicht wiederholen* ist um Kriterium 8 (vier
   fehlende Anschlüsse), A-4 (drei Anläufe, zwei widerlegt, mit den Zahlen
-  176/180/187/188) und E-43 ergänzt; **E-46** steht bei den **widerlegten**
+  176/180/187/188) und [E-43](../BEFUNDE.md#e-43) ergänzt; **[E-46](../BEFUNDE.md#e-46)** steht bei den **widerlegten**
   Vermutungen.
 - *Erledigt seit 1.0.10* nennt jetzt neun bestätigte Punkte statt sieben.
-- Abschnitt **B1** führte weiter E-37, E-38 und Kriterium 8 als offen —
+- Abschnitt **B1** führte weiter [E-37](../BEFUNDE.md#e-37), [E-38](../BEFUNDE.md#e-38) und Kriterium 8 als offen —
   berichtigt.
 
 ### `WEITERMACHEN.md`
@@ -627,18 +627,18 @@ offen ist* ist neu geschrieben (13 720 → 14 864 Byte):
 - **Stand 08.09.2026, nachmittags** → **09.09.2026, abends**.
 - Die Kopftabelle nennt bei *Zuletzt bestätigt* jetzt auch die Höhenänderung
   und den Nebenbefund; bei *Was als Nächstes zu messen ist* steht **A-4 an
-  1.0.27** statt an 1.0.26, mit E-52 und E-51.
+  1.0.27** statt an 1.0.26, mit [E-52](../BEFUNDE.md#e-52) und [E-51](../BEFUNDE.md#e-51).
 - Der Ziel-Block sagte *„sechs sind belegt, drei fast oder halb (2, 4, 8)"* und
   führte Kriterium 8 als *halb* mit *Task Status* in der Leiste. Berichtigt;
-  aus *zwei Anforderungen* sind **vier** geworden (A-1 bis A-4, mit dem Stand
+  aus *zwei Anforderungen* sind **vier** geworden ([A-1](../BEFUNDE.md#a-1) bis A-4, mit dem Stand
   jeder einzelnen).
 - *Der nächste Schritt* nannte fünf Punkte, von denen **drei** erledigt sind
-  (E-37, E-38, Kriterium 8) und einer (E-43) behoben. Neu geschrieben: der
+  ([E-37](../BEFUNDE.md#e-37), [E-38](../BEFUNDE.md#e-38), Kriterium 8) und einer ([E-43](../BEFUNDE.md#e-43)) behoben. Neu geschrieben: der
   nächste Schritt gehört Gregor. Der Kasten *„Was nicht mehr zu suchen ist"*
-  ist um E-43 und E-46 erweitert.
+  ist um [E-43](../BEFUNDE.md#e-43) und [E-46](../BEFUNDE.md#e-46) erweitert.
 - *Ebenfalls offen* endete mitten im Satz und lief ohne Leerzeile in
-  `## Wie man misst` hinein. Neu und vollständig: R-1 (16 Stellen), X-3,
-  E-14, E-13, `EuMemMgr.dll`, Hostnamenprüfung.
+  `## Wie man misst` hinein. Neu und vollständig: [R-1](../BEFUNDE.md#r-1) (16 Stellen), [X-3](../BEFUNDE.md#x-3),
+  [E-14](../BEFUNDE.md#e-14), [E-13](../BEFUNDE.md#e-13), `EuMemMgr.dll`, Hostnamenprüfung.
 
 ### `Releases/PAKETE.md`
 
@@ -662,7 +662,7 @@ offen ist* ist neu geschrieben (13 720 → 14 864 Byte):
   Repo". Die Tabelle ist neu, nach Fassung absteigend, mit den vollen
   Prüfsummen für 1.0.27, 1.0.23, 1.0.22 und 1.0.21 und der Angabe, was noch
   abrufbar ist. Ein Kasten sagt, dass zu **1.0.25** und **1.0.26** keine
-  Prüfsumme existiert — Teil des Mangels **M-4**.
+  Prüfsumme existiert — Teil des Mangels **[M-4](PRUEFER-15.md#m-4)**.
 
 ### `LEKTORAT.md`
 
@@ -674,26 +674,26 @@ dort **L-10 und L-11** mit je einem Satz, was drin ist, dazu ein Stand-Kasten
 
 - Der Stand-Block sagte *„sechs sind belegt … drei fast oder halb (2, 4, 8)"*
   und *„die untere Leiste zeigt Aufgabenstatus …, nicht die Reiter"*. Neu
-  geschrieben: sieben belegt, **drei** bestätigte Anforderungen (A-1, A-2,
+  geschrieben: sieben belegt, **drei** bestätigte Anforderungen ([A-1](../BEFUNDE.md#a-1), A-2,
   A-3) und **A-4** als gebaut-nicht-bestätigt.
 - Der Abschnitt **Offen** widersprach dem Stand-Block **vierzig Zeilen
-  darüber**: er führte E-37 als *„Nicht behoben"*, E-38 als *„erstmals
+  darüber**: er führte [E-37](../BEFUNDE.md#e-37) als *„Nicht behoben"*, [E-38](../BEFUNDE.md#e-38) als *„erstmals
   messbar"* und Kriterium 8 als *halb* — während oben in derselben Datei
-  stand, dass Gregor E-43 samt E-37 und E-38 bestätigt hat. **Das ist genau
+  stand, dass Gregor [E-43](../BEFUNDE.md#e-43) samt [E-37](../BEFUNDE.md#e-37) und [E-38](../BEFUNDE.md#e-38) bestätigt hat. **Das ist genau
   der Fall, den Prüfung 3b nicht sieht**, weil keine der Zeilen ein
   Zustandswort neben einer Kriteriumsnummer trägt. Neu geschrieben.
-- Die Tabelle *Belegt* hat vier Zeilen dazubekommen: Kriterium 8 / A-3, E-43
-  samt E-37 und E-38, die Höhenänderung.
+- Die Tabelle *Belegt* hat vier Zeilen dazubekommen: Kriterium 8 / A-3, [E-43](../BEFUNDE.md#e-43)
+  samt [E-37](../BEFUNDE.md#e-37) und [E-38](../BEFUNDE.md#e-38), die Höhenänderung.
 
 ### `CHANGELOG.md`
 
 - *Noch offen* stand auf 08.09.2026 und führte **Kriterium 8** als *halb*.
   Jetzt 09.09.2026, ohne Kriterium 8, dafür mit dem **Nebenbefund ohne
-  Nummer** und einer Zeile *gebaut, aber nicht bestätigt* für E-49, E-50, E-52.
+  Nummer** und einer Zeile *gebaut, aber nicht bestätigt* für [E-49](../BEFUNDE.md#e-49), [E-50](../BEFUNDE.md#e-50), [E-52](../BEFUNDE.md#e-52).
 - *Erreicht*: Kriterium 8 auf **erfüllt**, neue Zeilen für **A-3** und **A-4**.
 - Der Abschnitt *Nach 7.2.0.27 — alles Gebaute ist gepackt* behauptete im
   ersten Satz, es liege nichts Ungepacktes im Repo — und zählte darunter
-  **fünf** Punkte auf, die als ungepackt geführt wurden, darunter *„E-37: nur
+  **fünf** Punkte auf, die als ungepackt geführt wurden, darunter *„[E-37](../BEFUNDE.md#e-37): nur
   die ANZEIGE behoben"*. Die Aufzählung war ein Rest des alten Abschnitts
   *Nach 7.2.0.23*. Ersetzt durch einen Berichtigungskasten, der sagt, was dort
   stand und warum es weg ist.
@@ -702,7 +702,7 @@ dort **L-10 und L-11** mit je einem Satz, was drin ist, dazu ein Stand-Kasten
   *„Kriterium 7 — File → Exit beendet Eudora nicht … Noch nicht untersucht"*
   und unter Punkt 3, die Leiste am unteren Rand fehle. Beides ist seit Tagen
   erledigt und bestätigt. Punkte 2, 3 und 4 sind neu geschrieben; Punkt 4
-  nennt jetzt E-43 als die gefundene Antwort auf die Frage, warum
+  nennt jetzt [E-43](../BEFUNDE.md#e-43) als die gefundene Antwort auf die Frage, warum
   `GetBtnCount()` und `m_btns.GetSize()` verschiedene Werte melden.
 
 ### `PORTIERUNG.md`
@@ -712,11 +712,11 @@ Der Stand-Kasten sagte *„von neun Kriterien sind sechs belegt …, eines nicht
 
 ### `BEFUNDE.md`
 
-- **E-44**: *„behoben in 7.2.0.23, von Gregor noch nicht bestätigt"* →
+- **[E-44](../BEFUNDE.md#e-44)**: *„behoben in 7.2.0.23, von Gregor noch nicht bestätigt"* →
   **bestätigt am 08.09.2026**, mit Zitat und der Messung aus
   `tools/leisten-messen.ps1`. (Diese Berichtigung stand schon in L-10 und war
   durch den Merge verloren.)
-- **E-46**: *„offen, Spurmarke gesetzt"* → **widerlegt**, mit der
+- **[E-46](../BEFUNDE.md#e-46)**: *„offen, Spurmarke gesetzt"* → **widerlegt**, mit der
   Protokollzeile, die es entscheidet. Der ausführliche Abschnitt weiter unten
   hat einen Nachtragskasten bekommen, der ausdrücklich sagt: **wer ihn
   zitiert, zitiert einen widerlegten Verdacht.** (Ebenfalls aus L-10, ebenfalls
@@ -726,11 +726,11 @@ Der Stand-Kasten sagte *„von neun Kriterien sind sechs belegt …, eines nicht
   schon vorher nicht).
 - *Stand der Statusspalte* stand auf 07.09.2026, Commit `060a4bf`. Jetzt
   09.09.2026 mit den beiden nachgezogenen Kennungen und dem Satz, dass es
-  **kein E-53** gibt.
+  **kein [E-53](../BEFUNDE.md#e-53)** gibt.
 
-## L-11.2 — `tools/TESTLAEUFE.md` ist die einzige MD mit CRLF, und dazu mit BOM
+## <a id="l-11.2"></a>L-11.2 — `tools/TESTLAEUFE.md` ist die einzige MD mit CRLF, und dazu mit BOM
 
-Befund **L-9.15** (CRLF in `Pruefung/PRUEFUNG-ZEIGER.md`) ist **erledigt** —
+Befund **[L-9.15](LEKTOR-5.md#l-9.15)** (CRLF in `Pruefung/PRUEFUNG-ZEIGER.md`) ist **erledigt** —
 diese Datei ist reines LF. Gemessen über alle 105 MD-Dateien hat aber genau
 **eine** wieder CRLF: die seit dem 08.09.2026 neue `tools/TESTLAEUFE.md`,
 **17 von 17 Zeilen CRLF**, dazu eine **UTF-8-BOM** am Anfang. In `HEAD`
@@ -763,7 +763,7 @@ Ich habe die Datei deshalb auf die Fassung aus `40ec935` zurückgesetzt;
 `perl tools/pruefe-bytes.pl` gibt danach **0**.
 
 > **Das ist ein struktureller Befund, nicht nur ein Handgriff.** Die
-> Fehlerklasse L-9.15 lässt sich an einer **bestehenden** Datei nicht beheben,
+> Fehlerklasse [L-9.15](LEKTOR-5.md#l-9.15) lässt sich an einer **bestehenden** Datei nicht beheben,
 > ohne die Schranke zu umgehen. Beim vorigen Mal
 > (`Pruefung/PRUEFUNG-ZEIGER.md`, 193 CR) ist das nicht aufgefallen, weil jene
 > Datei in demselben Commit auch inhaltlich geändert wurde und Regel 2 nur
@@ -795,10 +795,10 @@ Lauf unter *Zur Kenntnis*, `tools/TESTLAEUFE.md` nenne weder den Quellstand
 noch die Paketnummer. Die Datei ist ein **Protokoll vergangener Läufe** — sie
 kann nur die Fassung nennen, mit der damals getestet wurde, und niemand kann
 daran etwas ändern. Eine Schranke, die umsonst warnt, wird ignoriert (Befund
-**X-1**). Die Datei steht jetzt in der Zeitdokument-Liste des Werkzeugs, mit
+**[X-1](../BEFUNDE.md#x-1)**). Die Datei steht jetzt in der Zeitdokument-Liste des Werkzeugs, mit
 Begründung im Kommentar; die geprüften Dateien gehen damit von 19 auf 18
 zurück, und die Ausgabe ist zum ersten Mal seit Tagen **frei von Hinweisen**.
-## L-11.3 — Der pre-commit-Hook wies **jeden** Commit im Repo ab
+## <a id="l-11.3"></a>L-11.3 — Der pre-commit-Hook wies **jeden** Commit im Repo ab
 
 **Gefunden, weil mein eigener Commit dreimal scheiterte.** Der installierte
 Hook (`.git/hooks/pre-commit`, Zeitstempel **09.09.2026 12:13**) ruft seit
@@ -879,9 +879,9 @@ Von diesen sieben ist **keiner zu ändern**:
 | `Arbeitsweise/agenten-koordinieren.md:13` | `Arbeitsweise/` ist ein **Spiegel** des Gedächtnisverzeichnisses (`tools/lehren-spiegeln.pl`); eine Änderung hier geht beim nächsten Spiegeln verloren. Die Quelle trägt denselben Fehler und liegt **nicht** in meinem Arbeitsbaum |
 | `Befunde/LEKTOR-5.md:483` | die Zeile **zitiert** vorgeschlagenen Text für `README.md` in einem Blockzitat; dort im Wurzelverzeichnis ist `](ZIEL.md)` **richtig**. Ein Zitat zu berichtigen wäre eine Verfälschung |
 | `Befunde/LEKTOR-5.md:490`, `Befunde/LEKTOR-6.md:365`, `:373` sowie **zwei Treffer in der Tabelle, die Du gerade liest** | die „Verweise" stehen in **Schrägstrichen** — als Beispiel dafür, wie der Fehler aussieht. Das ist eine Schwäche meines Prüfskripts (es überliest Inline-Code nicht), kein Mangel in der Doku. Die beiden neuen Treffer sind erst durch **diesen Bericht** entstanden: 5 vor dem Anhängen, 7 danach |
-## L-11.4 — Der Hook zeigte auf ein Werkzeug, das es in keinem Zweig gab
+## <a id="l-11.4"></a>L-11.4 — Der Hook zeigte auf ein Werkzeug, das es in keinem Zweig gab
 
-**Nach der Behebung von L-11.3 scheiterte derselbe Commit erneut**, diesmal so:
+**Nach der Behebung von [L-11.3](#l-11.3) scheiterte derselbe Commit erneut**, diesmal so:
 
 ```
 Can't open perl script
@@ -908,7 +908,7 @@ Meldung, die nichts mit der Änderung zu tun hat, um die es geht.
 unfertige Arbeit eines anderen Agenten; sie zu committen wäre, fremde Arbeit
 unter meinem Commit einzureichen. Ebenso habe ich `--no-verify` nicht benutzt.
 
-> **Das ist dieselbe Klasse wie L-11.3, eine Stufe schärfer.** Dort war die
+> **Das ist dieselbe Klasse wie [L-11.3](#l-11.3), eine Stufe schärfer.** Dort war die
 > Forderung einer Schranke im Bestand nicht erfüllt; hier existiert die
 > Schranke selbst nicht. **Verfahren, das beides abstellt:** eine Schranke
 > gehört erst in den Hook, wenn sie (1) **committet** ist und (2) im Bestand
@@ -918,7 +918,7 @@ unter meinem Commit einzureichen. Ebenso habe ich `--no-verify` nicht benutzt.
 >
 > **Nachtrag, 12:34 desselben Tages — gelöst, und zwar besser als von mir
 > vorgeschlagen.** Ein anderer Agent hat den Hook umgebaut und den Fall als
-> **Befund X-8** aufgeschrieben: `WURZEL` kommt jetzt aus `--show-toplevel`,
+> **Befund [X-8](../BEFUNDE.md#x-8)** aufgeschrieben: `WURZEL` kommt jetzt aus `--show-toplevel`,
 > und eine Hilfsfunktion `schranke()` **überspringt** ein Werkzeug, das es im
 > aktuellen Arbeitsbaum nicht gibt, statt den Commit abzuweisen. Sein
 > Kommentar nennt die Messung ausdrücklich: *„gemessen an LEKTOR, der eine
@@ -935,9 +935,9 @@ unter meinem Commit einzureichen. Ebenso habe ich `--no-verify` nicht benutzt.
 > die gewählte Lösung — die gewählte ist allgemeiner und deckt auch den Fall
 > ab, dass ein Werkzeug absichtlich nur in einem Arbeitsbaum liegt. Sie steht
 > aber nur im laufenden Hook, nicht in `tools/hooks-einrichten.sh`: siehe
-> **L-11.6**.
+> **[L-11.6](#l-11.6)**.
 
-## L-11.5 — `lehren-spiegeln.pl` schrieb aus **jedem** Arbeitsbaum in den Hauptbaum
+## <a id="l-11.5"></a>L-11.5 — `lehren-spiegeln.pl` schrieb aus **jedem** Arbeitsbaum in den Hauptbaum
 
 **Das ist der schwerste Befund dieses Durchgangs**, und er ist genau die
 Gefahr, gegen die es `AGENTEN.md` und
@@ -1014,9 +1014,9 @@ zurückgefallen — das alte Verhalten. `perl -c` fehlerfrei, CR=0.
 > Fehler gefunden war. Ich habe sie dort **nicht angefasst**; wer im Hauptbaum
 > committet, sieht sie und muss entscheiden.
 
-## L-11.6 — `tools/hooks-einrichten.sh` und der laufende Hook sind wieder auseinander
+## <a id="l-11.6"></a>L-11.6 — `tools/hooks-einrichten.sh` und der laufende Hook sind wieder auseinander
 
-Gemessen um 12:34 am 09.09.2026, nach der Behebung von **X-8** durch einen
+Gemessen um 12:34 am 09.09.2026, nach der Behebung von **[X-8](../BEFUNDE.md#x-8)** durch einen
 anderen Agenten: der laufende `.git/hooks/pre-commit` ist **neu gebaut** —
 `WURZEL` kommt jetzt aus `--show-toplevel`, und eine Hilfsfunktion
 `schranke()` **überspringt** ein Werkzeug, das es im aktuellen Arbeitsbaum
@@ -1031,7 +1031,7 @@ Arbeitsbaum nicht - uebersprungen.
 
 **`tools/hooks-einrichten.sh` kennt diese Fassung nicht.** Ein frischer Klon
 bekommt weiter den alten Hook: ohne `schranke()`-Wächter und ohne
-`pruefe-nachrichtenschleife.pl`. Damit gilt dieselbe Aussage wie in L-11.3,
+`pruefe-nachrichtenschleife.pl`. Damit gilt dieselbe Aussage wie in [L-11.3](#l-11.3),
 nur umgekehrt — was im Repo läuft und was das Einrichtungsskript aufsetzt,
 sind zwei verschiedene Haken.
 
@@ -1044,7 +1044,7 @@ Hook steht:** `tools/hooks-einrichten.sh` einmal gegen
 die beide gegeneinander hält. Ohne die läuft dieser Widerspruch zum dritten
 Mal auf.
 
-## L-11.7 — Nachtrag um 12:45: ein fremder Merge in meinem Arbeitsbaum, und eine widerlegte eigene Aussage
+## <a id="l-11.7"></a>L-11.7 — Nachtrag um 12:45: ein fremder Merge in meinem Arbeitsbaum, und eine widerlegte eigene Aussage
 
 **Beides gehört in denselben Abschnitt, weil das eine das andere aufgedeckt
 hat.**
@@ -1057,15 +1057,15 @@ Arbeitsbaum** `git merge karten-und-trennbalken` gefahren. Gemessen um 12:43:
 | gemessen | Ergebnis |
 |---|---|
 | `MERGE_MSG` | `Merge branch 'karten-und-trennbalken' into wt/lektor` |
-| `MERGE_HEAD` | `9ae3bb8` — *„X-8: fremde Arbeitsbaeume nicht durch ein neues Werkzeug blockieren"* |
+| `MERGE_HEAD` | `9ae3bb8` — *„[X-8](../BEFUNDE.md#x-8): fremde Arbeitsbaeume nicht durch ein neues Werkzeug blockieren"* |
 | `ORIG_HEAD` | `46936e1` — mein eigener Commit, der Merge sitzt also darauf |
 | Konflikte | `PORTIERUNG.md`, `WEITERMACHEN.md`, `tools/hooks-einrichten.sh` |
-| mitgebracht | 8 Commits, darunter `E-53 behoben`, `E-62`, Quellstand **7.2.0.28** und **7.2.0.29** |
+| mitgebracht | 8 Commits, darunter `E-53 behoben`, [`E-62`](../BEFUNDE.md#e-62), Quellstand **7.2.0.28** und **7.2.0.29** |
 
 **Ich habe diesen Merge nicht angefangen und nicht abgeschlossen.** Während ich
 den Konflikt in `PORTIERUNG.md` löste, war der in `WEITERMACHEN.md` plötzlich
-schon aufgelöst — mit Text, den ich nicht geschrieben habe (Befunde **E-54**,
-**E-55**, **E-61**, die ich gar nicht kannte). **Zwei Agenten haben in
+schon aufgelöst — mit Text, den ich nicht geschrieben habe (Befunde **[E-54](../BEFUNDE.md#e-54)**,
+**[E-55](../BEFUNDE.md#e-55)**, **[E-61](../BEFUNDE.md#e-61)**, die ich gar nicht kannte). **Zwei Agenten haben in
 demselben Augenblick dieselben Dateien im selben Arbeitsbaum bearbeitet.** Das
 ist genau die Kollision, gegen die es [../AGENTEN.md](../AGENTEN.md) gibt.
 **Ich habe daraufhin aufgehört, den Merge anzufassen**, und nur noch das
@@ -1098,7 +1098,7 @@ geprüfte Dateien, **61** Kennungen im Verzeichnis.
 ### Meine Aussage „es gibt kein E-53" war falsch
 
 **Und sie war falsch, obwohl ich sie dreimal gemessen hatte.** Meine Messung
-(oben unter L-11.0) war:
+(oben unter [L-11.0](#l-11.0)) war:
 
 ```
 grep -rn "E-53" --include=*.md .              # 0
@@ -1108,11 +1108,11 @@ git log --all --oneline -S"E-53"               # 0
 
 Alle drei stimmen — und alle drei sind **blind für einen Zweig, der in einem
 anderen Arbeitsbaum entsteht und noch nicht gepusht ist.** Genau dort lag
-`karten-und-trennbalken` mit **E-53** (*„schönheitsfehler beim schließen, da
+`karten-und-trennbalken` mit **[E-53](../BEFUNDE.md#e-53)** (*„schönheitsfehler beim schließen, da
 bleibt ein strich übrig"*, behoben in 7.2.0.28, von Gregor noch nicht
-bestätigt) und danach **E-54** bis **E-62**.
+bestätigt) und danach **[E-54](../BEFUNDE.md#e-54)** bis **[E-62](../BEFUNDE.md#e-62)**.
 
-**Die höchste vergebene Kennung ist `E-62`, nicht `E-52`.** Der Satz in
+**Die höchste vergebene Kennung ist [`E-62`](../BEFUNDE.md#e-62), nicht [`E-52`](../BEFUNDE.md#e-52).** Der Satz in
 `BEFUNDE.md` ist berichtigt und trägt die Widerlegung samt Messung bei sich.
 
 **Die Lehre ist nicht „besser greppen".** `git log --all` sieht nur, was
@@ -1122,11 +1122,11 @@ bestätigt) und danach **E-54** bis **E-62**.
 daraufhin eine falsche Aussage in `BEFUNDE.md` geschrieben; sie stand
 dort 25 Minuten.
 
-> **Zur Einordnung des Auftrags:** der Auftrag nannte „neue Befunde **E-48 bis
-> E-53**" und lag damit **richtig**. Meine Meldung „E-53 gibt es nicht" war der
-> Fehler, nicht der Auftrag. Was stimmte: E-53 war zu dem Zeitpunkt in keinem
+> **Zur Einordnung des Auftrags:** der Auftrag nannte „neue Befunde **[E-48](../BEFUNDE.md#e-48) bis
+> [E-53](../BEFUNDE.md#e-53)**" und lag damit **richtig**. Meine Meldung „[E-53](../BEFUNDE.md#e-53) gibt es nicht" war der
+> Fehler, nicht der Auftrag. Was stimmte: [E-53](../BEFUNDE.md#e-53) war zu dem Zeitpunkt in keinem
 > Zweig, den `wt/lektor` sehen konnte — deshalb konnte ich ihn nicht prüfen.
-> Der richtige Satz wäre gewesen: *„E-53 ist von hier aus nicht messbar, bitte
+> Der richtige Satz wäre gewesen: *„[E-53](../BEFUNDE.md#e-53) ist von hier aus nicht messbar, bitte
 > den Zweig nennen"* — nicht *„es gibt ihn nicht"*.
 
 
@@ -1136,11 +1136,11 @@ dort 25 Minuten.
 |---|---|
 | `perl tools/doku-pruefen.pl` | **0** — *Kein Widerspruch gefunden*, **ohne** Hinweise |
 | `perl tools/pruefe-bytes.pl` | **0** |
-| CR-Zählung über alle **105** verfolgten MD-Dateien | **0** in **104** von ihnen; die eine Ausnahme ist `tools/TESTLAEUFE.md` mit CRLF und BOM — siehe L-11.2, Entscheidung liegt bei Gregor. UTF-8 in allen 105 lesbar |
+| CR-Zählung über alle **105** verfolgten MD-Dateien | **0** in **104** von ihnen; die eine Ausnahme ist `tools/TESTLAEUFE.md` mit CRLF und BOM — siehe [L-11.2](#l-11.2), Entscheidung liegt bei Gregor. UTF-8 in allen 105 lesbar |
 | Verweise ins Leere | 7, alle drei Ursachen oben benannt, keiner zu ändern |
 | `perl tools/pruefe-waechter.pl` | **0** |
 | `perl tools/pruefe-beenden.pl` | **0** |
-| `perl tools/lehren-schranken.pl` | **0** — nach der Behebung aus L-11.3; vorher wies es **jeden** Commit im Repo ab |
+| `perl tools/lehren-schranken.pl` | **0** — nach der Behebung aus [L-11.3](#l-11.3); vorher wies es **jeden** Commit im Repo ab |
 | `sh -n tools/hooks-einrichten.sh` | **0** |
 
 ## Offen — ausdrücklich nicht entschieden
@@ -1148,36 +1148,36 @@ dort 25 Minuten.
 1. **Der Fehlalarm der Summenprüfung** in `tools/doku-pruefen.pl` (oben
    gemessen). **Gemeldet, nicht behoben** — der Auftrag verlangt es so. Die
    Behebung wäre ein Zweizeiler.
-2. ~~**Es gibt kein `E-53`.**~~ **Widerlegt, siehe L-11.7.** E-53 existiert auf
-   `karten-und-trennbalken`; die höchste Kennung ist **E-62**. Mein Auftrag lag
+2. ~~**Es gibt kein [`E-53`](../BEFUNDE.md#e-53).**~~ **Widerlegt, siehe [L-11.7](#l-11.7).** [E-53](../BEFUNDE.md#e-53) existiert auf
+   `karten-und-trennbalken`; die höchste Kennung ist **[E-62](../BEFUNDE.md#e-62)**. Mein Auftrag lag
    richtig, meine Meldung war falsch.
 3. **Zu `Releases/Eudora72-1.0.27-release.zip` fehlt die `.sha256`-Datei.** Die
    Prüfsumme steht in `Releases/PAKETE.md`, damit sie nicht verloren geht; ob
    die Datei angelegt wird, entscheide ich nicht. Ebenso liegen die
    `.sha256`-Dateien zu **1.0.21** und **1.0.22** ohne ihr ZIP im Repo — ob sie
    bleiben sollen, ist Gregors Entscheidung.
-4. **Mangel M-4 bleibt offen und ist gewachsen.** Ohne eigenen Abschnitt in
+4. **Mangel [M-4](PRUEFER-15.md#m-4) bleibt offen und ist gewachsen.** Ohne eigenen Abschnitt in
    `Releases/PAKETE.md` sind jetzt **1.0.4 bis 1.0.17**, **1.0.19**, **1.0.20**
    sowie **1.0.24**, **1.0.25** und **1.0.26**. Zu 1.0.24 bis 1.0.26 liegt
    weder ZIP noch Prüfsumme vor — erfunden wird dort nichts.
-5. **Die Kennung `A-1` ist zweimal vergeben** (Befund L-9.8, weiter offen).
+5. **Die Kennung [`A-1`](../BEFUNDE.md#a-1) ist zweimal vergeben** (Befund [L-9.8](LEKTOR-5.md#l-9.8), weiter offen).
    Einmal für Gregors Anforderung in `ZIEL.md`, einmal für den
    Erscheinungsbild-Befund vom 30.08.2026. **Kennungen vergibt Gregor.**
 6. **`Eudora.exe` im Paket 1.0.27 und im Bauverzeichnis des Hauptbaums haben
    dieselbe Größe, aber verschiedene Zeitstempel** (11:02 gegen 11:35). Größe
    und Quellstand stimmen; ob im Hauptbaum nach dem Packen etwas geändert und
    neu gebaut wurde, habe ich **nicht** untersucht — ich baue nicht.
-7. **Befund L-9.18** (fünf Dateien ohne H1, Adressat und Zweck) ist weiter
+7. **Befund [L-9.18](LEKTOR-5.md#l-9.18)** (fünf Dateien ohne H1, Adressat und Zweck) ist weiter
    **nicht** abgearbeitet.
 8. **Ich habe zwei Werkzeuge angefasst, um überhaupt committen zu können**
-   (L-11.3): `tools/hooks-einrichten.sh` und `tools/lehren-schranken.pl`. Das
+   ([L-11.3](#l-11.3)): `tools/hooks-einrichten.sh` und `tools/lehren-schranken.pl`. Das
    war keine Wahl — der Hook wies jeden Commit ab. **Beide Änderungen sind
    gegengetestet und im Bericht begründet, aber sie betreffen das, was bei
    jedem Commit läuft. Wenn Gregor sie anders will, sind sie in zwei
    Handgriffen zurückgenommen.** Was ich **nicht** getan habe: `--no-verify`
    benutzen.
 9. **Drei Werkzeuge habe ich heute angefasst, nicht zwei** — dazu kommt
-   `tools/lehren-spiegeln.pl` (L-11.5). Diese Änderung war nicht nötig, um zu
+   `tools/lehren-spiegeln.pl` ([L-11.5](#l-11.5)). Diese Änderung war nicht nötig, um zu
    committen; sie war nötig, weil das Werkzeug aus meinem Arbeitsbaum in den
    **Hauptbaum** geschrieben hat. Fünf Gegenproben, beide Richtungen, im
    Bericht.
@@ -1189,7 +1189,7 @@ dort 25 Minuten.
    richtig (der Spiegel des Gedächtnisses), sie sind nur am falschen Ort
    entstanden.
 11. **`tools/hooks-einrichten.sh` und der laufende Hook sind wieder
-   auseinander** (L-11.6). **Bewusst nicht nachgezogen:** der Hook wird gerade
+   auseinander** ([L-11.6](#l-11.6)). **Bewusst nicht nachgezogen:** der Hook wird gerade
    von einem anderen Agenten umgebaut, drei Fassungen in einer halben Stunde.
    Zu tun, sobald er steht — und danach eine Schranke, die beide gegeneinander
    hält, sonst läuft der Widerspruch zum dritten Mal auf.
@@ -1200,7 +1200,7 @@ dort 25 Minuten.
    Datei gibt es nicht"*. **Ich habe die fremde Datei nicht kopiert und die
    Schranke nicht dafür gelockert.** Sobald der andere Agent sie committet,
    ist der Mangel weg. Solange sie fehlt, blockiert sie jeden weiteren Commit
-   in diesem Arbeitsbaum — dieselbe Klasse wie X-8, nur eine Schranke weiter:
+   in diesem Arbeitsbaum — dieselbe Klasse wie [X-8](../BEFUNDE.md#x-8), nur eine Schranke weiter:
    der Hook überspringt ein fehlendes Werkzeug inzwischen, `lehren-schranken.pl`
    nicht.
 13. **Verfahrensvorschlag, nicht umgesetzt:** eine neue Schranke erst in den
@@ -1211,15 +1211,15 @@ dort 25 Minuten.
    `README.md`, `ZIEL.md` und `Releases/PAKETE.md` — überall mit dem
    ausdrücklichen Hinweis, dass er **nicht** zur Registerkartenleiste gehört.
 
-## L-12 — Die andere Seite derselben Kollision, und der Abschluss des Merges
+## <a id="l-12"></a>L-12 — Die andere Seite derselben Kollision, und der Abschluss des Merges
 
-**Dieser Abschnitt ist von dem Agenten geschrieben, den L-11.7 „ein fremder
+**Dieser Abschnitt ist von dem Agenten geschrieben, den [L-11.7](#l-11.7) „ein fremder
 Vorgang in meinem Arbeitsbaum" nennt.** Beide Seiten sind LEKTOR, beide haben
 denselben Fortsetzungsauftrag bekommen, beide haben in `wt/lektor` gearbeitet,
 und **jede hat die andere für den Eindringling gehalten.** Das ist der Befund;
 alles Weitere ist Nacharbeit.
 
-### L-12.1 — Zwei Agenten, ein Arbeitsbaum, gemessen
+### <a id="l-12.1"></a>L-12.1 — Zwei Agenten, ein Arbeitsbaum, gemessen
 
 Ich habe den Merge um **12:40** angefangen. Aufgefallen ist mir die zweite
 Hand nicht am Merge, sondern daran, dass eine Ersetzung **ins Leere lief**:
@@ -1231,7 +1231,7 @@ Hand nicht am Merge, sondern daran, dass eine Ersetzung **ins Leere lief**:
 | 12:44:54 | ich löse `PORTIERUNG.md` und `WEITERMACHEN.md` auf |
 | 12:47:39 | `BEFUNDE.md` ändert sich — **Inhalt**, nicht nur Zeitstempel |
 | 12:48:03 | `ZIEL.md` und `AUFGABEN.md` ändern sich |
-| 12:49:33 | letzte fremde Schreibung (`Befunde/LEKTOR-6.md`, L-11.7) |
+| 12:49:33 | letzte fremde Schreibung (`Befunde/LEKTOR-6.md`, [L-11.7](#l-11.7)) |
 | danach | 100 Messungen im Abstand von 6 s: **keine fremde Schreibung mehr** |
 
 **Der Auslöser war ein Werkzeug, das abbrach statt still nichts zu tun.** Mein
@@ -1253,16 +1253,16 @@ einem sitzt.** Eine Marke im Arbeitsbaum (Agentenname, PID, Zeit), die beim
 Start geschrieben und beim Ende entfernt wird, hätte beide Seiten in der
 ersten Sekunde gewarnt. Nicht umgesetzt — das entscheidet Gregor.
 
-### L-12.2 — Was ich zurückgenommen habe, und warum
+### <a id="l-12.2"></a>L-12.2 — Was ich zurückgenommen habe, und warum
 
 Auf Auflage, und in beiden Fällen ist die Lösung auf
 `karten-und-trennbalken` die bessere:
 
 - **`tools/hooks-einrichten.sh`** — dort hängt jetzt zusätzlich
   `pruefe-nachrichtenschleife.pl` mit ein, plus die `schranke()`-Hilfsfunktion
-  aus X-8, die ein im eigenen Arbeitsbaum **fehlendes** Werkzeug überspringt
+  aus [X-8](../BEFUNDE.md#x-8), die ein im eigenen Arbeitsbaum **fehlendes** Werkzeug überspringt
   statt den Commit abzuweisen. Meine Fassung kannte nur die ersten beiden
-  Werkzeuge und hätte den Blocker aus L-11.4/X-8 wieder aufgemacht.
+  Werkzeuge und hätte den Blocker aus [L-11.4](#l-11.4)/[X-8](../BEFUNDE.md#x-8) wieder aufgemacht.
 - **`tools/lehren-schranken.pl`** — meine Fassung nahm drei Dateien im
   **Werkzeug** aus. Die andere Lösung schreibt statt dessen eine Zeile
   `**Schranke:** keine — <Begründung>` in die Datei selbst. Das ist der
@@ -1277,7 +1277,7 @@ danach **byte-gleich** mit dort (`git hash-object` gegen
 `git rev-parse <zweig>:<datei>`, zweimal identisch). `sh -n` und `perl -c`
 fehlerfrei.
 
-### L-12.3 — Die Summenprüfung: der Zweizeiler, und was die umgedrehte Gegenprobe zusätzlich fand
+### <a id="l-12.3"></a>L-12.3 — Die Summenprüfung: der Zweizeiler, und was die umgedrehte Gegenprobe zusätzlich fand
 
 Gemeldet war ein Fehlalarm: die Satzform **„N von M Kriterien"** verstand
 `tools/doku-pruefen.pl` nicht. Bei *„Sieben von neun Kriterien sind belegt
@@ -1311,7 +1311,7 @@ Wert durchkommt**. Hätte ich nur Fall 5 gemessen — „richtiger Satz, bleibt
 still, gut" —, wäre die Prüfung für die gesamte fette Schreibweise **stumm**
 geblieben, und genau so steht der Satz in `PORTIERUNG.md`. Es ist dieselbe
 Lücke, die in der Wortzahlprüfung zwanzig Zeilen darüber am 08.09.2026 als
-L-10.1 geschlossen wurde: das **zweite** Auftreten derselben Fehlerklasse
+[L-10.1](#l-10.1) geschlossen wurde: das **zweite** Auftreten derselben Fehlerklasse
 ([../Arbeitsweise/fehlerklassen-abstellen.md](../Arbeitsweise/fehlerklassen-abstellen.md)).
 
 Gegen den Bestand: `perl tools/doku-pruefen.pl` **0**, *Kein Widerspruch
@@ -1321,7 +1321,7 @@ Verbreiterung.
 Der Gegentest liegt als `sh`-Skript vor und ist wiederholbar; er baut sein
 Repo in einem eigenen Verzeichnis auf und räumt es wieder ab.
 
-### L-12.4 — Was nach dem Abgleich mit 1.0.29 übrig blieb
+### <a id="l-12.4"></a>L-12.4 — Was nach dem Abgleich mit 1.0.29 übrig blieb
 
 Von meinen Aussagen aus L-11 (Stand 1.0.27) hat der Abgleich **eine** als
 weiterhin richtig und **von `karten-und-trennbalken` übersehen** bestätigt:
@@ -1341,22 +1341,22 @@ Weggefallen ist alles, was nur die Fassungsnummern betraf — das hat
 `karten-und-trennbalken` selbst nachgezogen. Neu dazugekommen beim Abgleich:
 
 1. `CHANGELOG.md`, Zeile *„Gebaut, aber von Gregor nicht bestätigt"* nannte
-   E-49, E-50 und E-52. **E-53 und E-54 bis E-62 fehlten** — zehn gebaute,
+   [E-49](../BEFUNDE.md#e-49), [E-50](../BEFUNDE.md#e-50) und [E-52](../BEFUNDE.md#e-52). **[E-53](../BEFUNDE.md#e-53) und [E-54](../BEFUNDE.md#e-54) bis [E-62](../BEFUNDE.md#e-62) fehlten** — zehn gebaute,
    unbestätigte Behebungen, die in der Übersicht nicht vorkamen.
-2. `CHANGELOG.md` und `ZIEL.md` führten A-4 als *„in 7.2.0.27 durch E-52
-   nachgebessert"*. **E-54** (Ziehrahmen nach rechts unsichtbar) und **E-55**
+2. `CHANGELOG.md` und `ZIEL.md` führten A-4 als *„in 7.2.0.27 durch [E-52](../BEFUNDE.md#e-52)
+   nachgebessert"*. **[E-54](../BEFUNDE.md#e-54)** (Ziehrahmen nach rechts unsichtbar) und **[E-55](../BEFUNDE.md#e-55)**
    (acht Pixel leerer Streifen unter der Werkzeugleiste) betreffen A-4
    unmittelbar und fehlten.
 3. `WEITERMACHEN.md` schickte Gregor zum Prüfen an **1.0.27** — zwei Pakete
-   alt. Jetzt 1.0.29, mit E-54 und E-55 in der Prüfliste.
+   alt. Jetzt 1.0.29, mit [E-54](../BEFUNDE.md#e-54) und [E-55](../BEFUNDE.md#e-55) in der Prüfliste.
 4. `CHANGELOG.md`: *„Seit 1.0.27 ist nichts dazugekommen, was nicht im Paket
    steckt."* Auf **Behebungen** eingegrenzt und auf 1.0.29 gezogen; für die
    **Werkzeuge** ist es nicht nachgemessen, und `tools/` ist im Paket ohnehin
    nicht die Frage.
 
-### L-12.5 — `Releases/PAKETE.md` ist zwei Pakete im Rückstand
+### <a id="l-12.5"></a>L-12.5 — `Releases/PAKETE.md` ist zwei Pakete im Rückstand
 
-**Unabhängig von L-11.7 gemessen, und dort schon als Warnung notiert — hier
+**Unabhängig von [L-11.7](#l-11.7) gemessen, und dort schon als Warnung notiert — hier
 mit Zahlen:**
 
 | gemessen | Ergebnis |

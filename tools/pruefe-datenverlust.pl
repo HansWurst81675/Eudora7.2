@@ -2,6 +2,11 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # pruefe-datenverlust.pl - kein Paket, solange ein Weg offen ist, auf dem
 # Gregor Daten verliert.
 #
@@ -53,7 +58,7 @@ for my $z (@zeilen) {
     next unless $z =~ /DATENVERLUST/;
     next unless $z =~ /^\|/;              # nur Tabellenzeilen
 
-    my ($kennung) = $z =~ /^\|\s*(\S+)\s*\|/;
+    my ($kennung) = $z =~ /^\|\s*$ANKER\s*(\S+)\s*\|/;
     $kennung = '?' unless defined $kennung;
 
     # "behoben" muss FETT dastehen - "nicht behoben" oder "teilweise behoben"

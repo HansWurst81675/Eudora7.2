@@ -26,7 +26,7 @@ steht, ist es eine Folgerung aus den davor genannten Messungen.
 | 3 | Version 7.2.0.4 / Paket 1.0.4 | **TRÄGT im Quelltext**, **MANGEL im Paket** |
 | 4 | `pruefe-branch.pl` / `gesichert.pl` | **MANGEL** — eine Lücke, die genau den Anlassfall durchlässt |
 
-**Elf Mängel**, davon zwei schwer (M-1, M-5), **keiner gefährlich** im Sinne von
+**Elf Mängel**, davon zwei schwer ([M-1](BEFUNDE.md#m-1), M-5), **keiner gefährlich** im Sinne von
 „zerstört Arbeit oder Bau". Kein Eingriff ist zurückzunehmen.
 
 **Bauprobe, gemessen:** zwei volle Projektmappen-Bauten in diesem Arbeitsbaum.
@@ -221,7 +221,7 @@ einem Arbeitsfaden gefunden (gemessen: die einzigen beiden Fundstellen sind
 
 ### Mangel
 
-**M-1 (schwer).** *Die Behebung ist in keinem ausgelieferten Paket.*
+**[M-1](BEFUNDE.md#m-1) (schwer).** *Die Behebung ist in keinem ausgelieferten Paket.*
 
 **gemessen:** `Releases/Eudora72-1.0.4-release.zip` wurde in Commit `2734414`
 hinzugefügt; die Behebung steht in `bcc59bb` — **danach**. Die `Eudora.exe` im
@@ -234,7 +234,7 @@ Eudora 7.2.0.4 / Paket 1.0.4+d59cf63* 2026-09-05 19:05
 `d59cf63` ist die Spitze von **`origin/main`**, nicht ein Commit dieses Branches,
 und das Sternchen sagt: beim Bau lagen uncommittete Änderungen vor. Das
 ausgelieferte 1.0.4 ist damit **aus keinem Commit reproduzierbar** und enthält
-E-7 nicht. `BEFUNDE.md:133` führt E-7 weiterhin als „offen" — was für das Paket
+[E-7](BEFUNDE.md#e-7) nicht. `BEFUNDE.md:133` führt [E-7](BEFUNDE.md#e-7) weiterhin als „offen" — was für das Paket
 sogar stimmt, aber nicht mehr für den Quelltext.
 
 ---
@@ -312,7 +312,7 @@ Prüfung wäre stillschweigend ausgefallen.
 
 ### Mängel
 
-**M-2 (mittel).** *Das ausgelieferte 1.0.4-Paket nennt sich selbst 1.0.3.*
+**[M-2](Befunde/PRUEFER-15.md#m-2) (mittel).** *Das ausgelieferte 1.0.4-Paket nennt sich selbst 1.0.3.*
 
 **gemessen** in `LIESMICH.txt` im ZIP `Eudora72-1.0.4-release.zip`:
 
@@ -326,7 +326,7 @@ die Datei nicht an. Jedes künftige Paket erbt damit das 1.0.3-LIESMICH.
 `PAKETE.md` warnt selbst genau davor („bei der QCSSL.dll sind genau so zwei
 verschiedene Binärdateien unter derselben Kennung ausgeliefert worden").
 
-**M-3 (mittel).** *`tools/Eudora starten.cmd` fällt beim nächsten Paketbau
+**[M-3](Befunde/PRUEFER-15.md#m-3) (mittel).** *`tools/Eudora starten.cmd` fällt beim nächsten Paketbau
 heraus.*
 
 **gemessen:** die Datei liegt im ausgelieferten ZIP im Wurzelverzeichnis
@@ -335,7 +335,7 @@ heraus.*
 hineingelegt. Der nächste Lauf von `paket-bauen.ps1` liefert ein Paket **ohne**
 Starter, und `paket-pruefen.ps1` merkt es nicht.
 
-**M-4 (klein).** *Kein `Releases/1.0.4/`, kein Abschnitt in `PAKETE.md`.*
+**[M-4](Befunde/PRUEFER-15.md#m-4) (klein).** *Kein `Releases/1.0.4/`, kein Abschnitt in `PAKETE.md`.*
 
 **gemessen:** `Releases/` enthält `1.0.2/`, `1.0.3/` — aber kein `1.0.4/`.
 `Releases/PAKETE.md` hat Abschnitte bis „## 1.0.3", keinen für 1.0.4. Das ZIP ist
@@ -473,7 +473,7 @@ ist die Messung von `core.autocrlf` unabhängig.
 | `README.md` | 0 → 0 | 390 → **579** | 28659 → 35608 | +189 / 0 | ✅ +189 = +189 |
 
 **Kein Sprung.** Jede Differenz entspricht exakt der Zahl der geänderten Zeilen.
-Befund S-7 ist hier nicht aufgetreten.
+Befund [S-7](BEFUNDE.md#s-7) ist hier nicht aufgetreten.
 
 Bemerkenswert und **unverändert richtig behandelt:**
 
@@ -572,7 +572,7 @@ nachtragen) oder auf „**zweimal** erstellen" abgeschwächt werden. **M-11.**
 
 > **M-11 ist behoben (nachgesehen am 06.09.2026).** Der `ProjectReference` auf
 > `QCUtils.vcxproj` steht in `NSImport`, `OEImport`, `OLImport` und `plstclnt`
-> — Commit `57fe6a4`, „Z-3 richtig behoben". Nachzählen:
+> — Commit `57fe6a4`, „[Z-3](BEFUNDE.md#z-3) richtig behoben". Nachzählen:
 >
 > ```sh
 > grep -c QCUtils.vcxproj Eudora71/Importers/*/*.vcxproj \
@@ -613,7 +613,7 @@ ist hier nicht aufgetreten.
 
   **Ohne Sternchen** und auf dem Commit `bcc59bb` — also aus einem sauberen
   Stand der Branchspitze, **mit** der E-7-Behebung. Das ist genau das, was dem
-  ausgelieferten Paket fehlt (M-1): dort steht `1.0.4+d59cf63*`.
+  ausgelieferten Paket fehlt ([M-1](BEFUNDE.md#m-1)): dort steht `1.0.4+d59cf63*`.
 
 Damit ist belegt: **der Branch baut vollständig und liefert eine reproduzierbare
 `Eudora.exe`.** Ein neues Paket 1.0.4 ist einen Lauf entfernt.
@@ -626,14 +626,14 @@ Was in diesen Commits hätte mitgezogen werden müssen und nicht wurde:
 
 | # | fehlt | Beleg |
 |---|---|---|
-| 1 | **`BEFUNDE.md`: E-7 steht weiter auf „offen"** | `BEFUNDE.md:133` — der Quelltext ist behoben (`bcc59bb`). Richtig wäre **behoben, ungeprüft**, mit dem Hinweis, dass das ausgelieferte 1.0.4 die Behebung nicht enthält. Auch der Befundtext ab `BEFUNDE.md:5372` („31.08.2026, OFFEN") gehört fortgeschrieben |
+| 1 | **`BEFUNDE.md`: [E-7](BEFUNDE.md#e-7) steht weiter auf „offen"** | `BEFUNDE.md:133` — der Quelltext ist behoben (`bcc59bb`). Richtig wäre **behoben, ungeprüft**, mit dem Hinweis, dass das ausgelieferte 1.0.4 die Behebung nicht enthält. Auch der Befundtext ab `BEFUNDE.md:5372` („31.08.2026, OFFEN") gehört fortgeschrieben |
 | 2 | **`BEFUNDE.md`: kein Befund für das Herausnehmen von OT501** | Der Eingriff ist die größte Änderung am Bau seit OTShim, hat eine eigene Beweiskette und eine Berichtigung (`f468a02`) — und steht nur im README. Ein Befund samt Zeile im Verzeichnis (Zeile 46 ff.) fehlt |
-| 3 | **`BEFUNDE.md`: kein Befund X-5** für die Schranke | Der Commit `5e1187a` auf `wt/schranke` beruft sich auf „Befund X-5", das Verzeichnis kennt nur X-1 bis X-4 |
-| 4 | **`AUFGABEN.md` unverändert** | Kopf sagt weiter „Stand 31.08.2026, 09:00. Branch `darstellung-und-menue`". Weder das Herausnehmen von OT501 noch 1.0.4 noch E-7 sind eingetragen; die Punkte, die durch den Eingriff erledigt oder hinfällig sind, stehen unverändert drin |
+| 3 | **`BEFUNDE.md`: kein Befund [X-5](BEFUNDE.md#x-5)** für die Schranke | Der Commit `5e1187a` auf `wt/schranke` beruft sich auf „Befund [X-5](BEFUNDE.md#x-5)", das Verzeichnis kennt nur [X-1](BEFUNDE.md#x-1) bis [X-4](BEFUNDE.md#x-4) |
+| 4 | **`AUFGABEN.md` unverändert** | Kopf sagt weiter „Stand 31.08.2026, 09:00. Branch `darstellung-und-menue`". Weder das Herausnehmen von OT501 noch 1.0.4 noch [E-7](BEFUNDE.md#e-7) sind eingetragen; die Punkte, die durch den Eingriff erledigt oder hinfällig sind, stehen unverändert drin |
 | 5 | **`PORTIERUNG.md` unverändert** | Zeilen 32, 47–49, 55 beschreiben einen Bauzustand, den es nicht mehr gibt (siehe M-8) |
 | 6 | **`Releases/PAKETE.md`: kein Abschnitt „## 1.0.4"** | Abschnitte enden bei „## 1.0.3" (Zeile 93). Das ZIP liegt im Repo, ohne Zeile in der Buchführung — genau die Lücke, vor der die Datei selbst in Zeile 70–76 warnt |
-| 7 | **`Releases/1.0.4/` fehlt** samt eigenem `LIESMICH.txt` | `Releases/` hat `1.0.2/` und `1.0.3/`. Deshalb greift `paket-bauen.ps1:156` weiter auf `Releases\1.0.3\LIESMICH.txt` — Ursache von M-2 |
-| 8 | **`tools/paket-bauen.ps1` nicht nachgezogen** | Zeile 156 verdrahtet 1.0.3 fest; `Eudora starten.cmd` kommt gar nicht vor (M-2, M-3) |
+| 7 | **`Releases/1.0.4/` fehlt** samt eigenem `LIESMICH.txt` | `Releases/` hat `1.0.2/` und `1.0.3/`. Deshalb greift `paket-bauen.ps1:156` weiter auf `Releases\1.0.3\LIESMICH.txt` — Ursache von [M-2](Befunde/PRUEFER-15.md#m-2) |
+| 8 | **`tools/paket-bauen.ps1` nicht nachgezogen** | Zeile 156 verdrahtet 1.0.3 fest; `Eudora starten.cmd` kommt gar nicht vor ([M-2](Befunde/PRUEFER-15.md#m-2), [M-3](Befunde/PRUEFER-15.md#m-3)) |
 | 9 | **`tools/paket-pruefen.ps1` prüft den Starter nicht** | Ein von Hand hineingelegter Bestandteil, den kein Prüfwerkzeug kennt, verschwindet unbemerkt |
 | 10 | **keine Testsammlung für `tools/gesichert.pl`** | `pruefe-branch.pl` hat 15 Fälle, `gesichert.pl` null — bei 287 geänderten Zeilen |
 | 11 | **`README.md` und `mainfrm.cpp:9686` zeigen die alte Kennungsform** | M-9 |
@@ -644,10 +644,10 @@ Was in diesen Commits hätte mitgezogen werden müssen und nicht wurde:
 
 | # | Mangel | Schwere | Fundstelle |
 |---|---|---|---|
-| M-1 | Die E-7-Behebung ist in keinem Paket; das ausgelieferte 1.0.4 stammt aus `d59cf63*` und ist nicht reproduzierbar | **schwer** | `2734414` vs. `bcc59bb`; Kennung in der EXE |
-| M-2 | Das 1.0.4-Paket nennt sich in `LIESMICH.txt` selbst 1.0.3 | mittel | `tools/paket-bauen.ps1:156` |
-| M-3 | `Eudora starten.cmd` fällt beim nächsten Paketbau heraus | mittel | `tools/paket-bauen.ps1` (kein Treffer) |
-| M-4 | Kein `Releases/1.0.4/`, kein `PAKETE.md`-Abschnitt | klein | `Releases/` |
+| [M-1](BEFUNDE.md#m-1) | Die E-7-Behebung ist in keinem Paket; das ausgelieferte 1.0.4 stammt aus `d59cf63*` und ist nicht reproduzierbar | **schwer** | `2734414` vs. `bcc59bb`; Kennung in der EXE |
+| [M-2](Befunde/PRUEFER-15.md#m-2) | Das 1.0.4-Paket nennt sich in `LIESMICH.txt` selbst 1.0.3 | mittel | `tools/paket-bauen.ps1:156` |
+| [M-3](Befunde/PRUEFER-15.md#m-3) | `Eudora starten.cmd` fällt beim nächsten Paketbau heraus | mittel | `tools/paket-bauen.ps1` (kein Treffer) |
+| [M-4](Befunde/PRUEFER-15.md#m-4) | Kein `Releases/1.0.4/`, kein `PAKETE.md`-Abschnitt | klein | `Releases/` |
 | M-5 | Die Schranke lässt ohne vorheriges `fetch` genau den Anlassfall durch; kein Testfall hält die Grenze fest | **schwer** | `tools/pruefe-branch.pl`, nachgestellt |
 | M-6 | `README.md:354` widerspricht `README.md:359` | klein | `README.md` |
 | M-7 | `bau-und-pruefung` bringt die alte, falsche Fassung der beiden Werkzeuge mit; Konflikt mit `wt/schranke` | mittel | `git merge-tree`: changed in both |
@@ -675,9 +675,9 @@ Zusammenführen sollten erledigt werden:
 3. `README.md:82-84`, `:101-103`, `:354`, `:464-465` und die Versionsangaben
    berichtigen (M-6, M-8).
 4. `tools/paket-bauen.ps1` von `Releases\1.0.3\LIESMICH.txt` lösen und den
-   Starter aufnehmen (M-2, M-3).
+   Starter aufnehmen ([M-2](Befunde/PRUEFER-15.md#m-2), [M-3](Befunde/PRUEFER-15.md#m-3)).
 5. Das Paket 1.0.4 **neu bauen** — aus einem sauberen Commit, mit der
-   E-7-Behebung, mit einem eigenen `LIESMICH.txt` (M-1). Die `Eudora.exe` dafür
+   E-7-Behebung, mit einem eigenen `LIESMICH.txt` ([M-1](BEFUNDE.md#m-1)). Die `Eudora.exe` dafür
    liegt bereits gebaut in diesem Arbeitsbaum, Kennung `1.0.4+bcc59bb` ohne
    Sternchen.
 6. In `gesichert.pl` die unverfolgten Dateien fremder Arbeitsbäume mitmelden
@@ -690,8 +690,8 @@ Zusammenführen sollten erledigt werden:
   einer Merge-Ankündigung auf sie verlässt, verlässt sich auf nichts. Bis ein
   Testfall die Grenze festhält und `gesichert.pl` (das holt) vorgeschaltet ist,
   ist die Regel weiter Prosa.
-- **M-1.** Solange das veröffentlichte 1.0.4 aus `d59cf63*` stammt, ist es nicht
-  reproduzierbar — und E-7 in `BEFUNDE.md` steht für dieses Paket zu Recht auf
+- **[M-1](BEFUNDE.md#m-1).** Solange das veröffentlichte 1.0.4 aus `d59cf63*` stammt, ist es nicht
+  reproduzierbar — und [E-7](BEFUNDE.md#e-7) in `BEFUNDE.md` steht für dieses Paket zu Recht auf
   „offen". Der Eintrag darf erst umgeschrieben werden, wenn ein Paket aus einem
   Commit ohne Sternchen existiert.
 

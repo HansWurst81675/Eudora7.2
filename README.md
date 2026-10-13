@@ -3,7 +3,7 @@
 <!-- pruefstand: eceeecf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
-     Gelesen von tools/pruefstand-melden.pl (Befund NP3-7). -->
+     Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](BEFUNDE.md#np3-7)). -->
 
 **Der Mailclient Eudora 7.1, wieder baubar — mit Visual Studio 2022 unter
 Windows 10 und 11.**
@@ -54,29 +54,29 @@ verschickt.
 * **Adressbuch, LDAP, Ph und S/MIME fallen aus.** Diese Teile brauchen
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
-  **E-47**).
+  [**E-47**](BEFUNDE.md#e-47)).
 * **Eine Filterregel verträgt kein bloßes Ansehen.** Eine Regel der Form
   *„Junk Score is less than N"* wird unbrauchbar, sobald man sie im
-  Filterfenster anklickt (**E-67**, offen). Sichern Sie `Filters.pce`, bevor
+  Filterfenster anklickt ([**E-67**](BEFUNDE.md#e-67), offen). Sichern Sie `Filters.pce`, bevor
   Sie im Filterfenster stöbern. Das Filtern selbst arbeitet korrekt — dass
-  ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob (**E-64**),
+  ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob ([**E-64**](BEFUNDE.md#e-64)),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
 * **HTML-Nachrichten werden beim Lesen inzwischen richtig dargestellt**
-  (**E-86**, behoben in 7.2.0.55): MSHTML lief ohne `X-UA-Compatible` im
+  ([**E-86**](BEFUNDE.md#e-86), behoben in 7.2.0.55): MSHTML lief ohne `X-UA-Compatible` im
   IE-7-Modus von 2006. Im **Verfassenfenster** bleibt die Darstellung schlicht
   — siehe *Wo die Grenzen liegen* weiter unten.
-* **IMAP-Postfachnamen mit Umlauten stehen roh da** (**E-77**, offen):
+* **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
 * **Das neueste Release ist `v1.0.84`** (veröffentlicht am 12.10.2026 um 12:59
-  Uhr UTC, auf GitHub als *Latest*) — **E-94 behoben**: Betreffs werden nicht
+  Uhr UTC, auf GitHub als *Latest*) — **[E-94](BEFUNDE.md#e-94) behoben**: Betreffs werden nicht
   mehr mitten im Wort umbrochen; von Gregor vorher an seinem Postfach geprüft
   (Bildschirmfoto). Sonst wie `v1.0.83`:
 * **`v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18 Uhr UTC) — **von Gregor
   vorher am laufenden Programm geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
-  darin: **Anhänge behalten Endung und Namen** (AN-1, über POP und IMAP gemessen)
-  und, übersetzt, aber am Programm nicht gemessen, **AN-2** (kein Quelltext einer
+  darin: **Anhänge behalten Endung und Namen** ([AN-1](BEFUNDE.md#an-1), über POP und IMAP gemessen)
+  und, übersetzt, aber am Programm nicht gemessen, [**AN-2**](BEFUNDE.md#an-2) (kein Quelltext einer
   Webseite mehr im Werbefenster). Das Release davor war **`v1.0.72`** (17.09.2026,
   von Gregor geprüft: *„kein crash"*). **Seit `v1.0.72` im Download enthalten**
   sind damit: Zeichensalat
@@ -84,58 +84,60 @@ verschickt.
   HTML-Darstellung beim Lesen (7.2.0.55), der Formatverlust beim Weiterleiten
   (7.2.0.56), sich überlagernde Bilder im Verfassenfenster (7.2.0.58),
   Fragezeichen statt Emoji (7.2.0.59), **Inhaltsverlust beim Weiterleiten**
-  einer bereits weitergeleiteten Nachricht (7.2.0.59, **E-93** — es gingen
+  einer bereits weitergeleiteten Nachricht (7.2.0.59, [**E-93**](BEFUNDE.md#e-93) — es gingen
   17.889 statt 105.125 Byte hinaus), die **Bildgrößen im Verfassenfenster**
-  (7.2.0.62, **E-96**; der Notbehelf davor ist mit 7.2.0.63 wieder weg), der
-  **Absturz beim Speichern einer Nachricht** (7.2.0.64, **E-97**, von Gregor an
+  (7.2.0.62, [**E-96**](BEFUNDE.md#e-96); der Notbehelf davor ist mit 7.2.0.63 wieder weg), der
+  **Absturz beim Speichern einer Nachricht** (7.2.0.64, [**E-97**](BEFUNDE.md#e-97), von Gregor an
   1.0.64 bestätigt), der **Datenverlust beim Senden eines gesicherten
-  Entwurfs** (7.2.0.64, **E-99**), dieselbe Absturzstelle an drei weiteren
-  Stellen (7.2.0.65, **E-100**), die **unbrauchbare gespeicherte Datei**
-  (7.2.0.66 und 7.2.0.69, **E-101** — ohne `Content-Type`-Zeile und mit Eudoras
+  Entwurfs** (7.2.0.64, [**E-99**](BEFUNDE.md#e-99)), dieselbe Absturzstelle an drei weiteren
+  Stellen (7.2.0.65, [**E-100**](BEFUNDE.md#e-100)), die **unbrauchbare gespeicherte Datei**
+  (7.2.0.66 und 7.2.0.69, [**E-101**](BEFUNDE.md#e-101) — ohne `Content-Type`-Zeile und mit Eudoras
   internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
   `Content-Type` zunächst ganz), **Bilder, die über dem Text lagen** (7.2.0.67,
-  **E-103**), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
+  [**E-103**](BEFUNDE.md#e-103)), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
   (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
-  **E-104**), **Bilder, die größer sind als im HTML angegeben und deshalb über
-  dem Text liegen** (7.2.0.68, **E-106** — **von Gregor am 17.09.2026 an 1.0.69
+  [**E-104**](BEFUNDE.md#e-104)), **Bilder, die größer sind als im HTML angegeben und deshalb über
+  dem Text liegen** (7.2.0.68, [**E-106**](BEFUNDE.md#e-106) — **von Gregor am 17.09.2026 an 1.0.69
   bestätigt**) und der **Absturz beim Antworten auf eine geöffnete Nachricht**
-  (**E-107** war die falsche Erklärung und ist widerlegt; **E-108** in 7.2.0.72
+  ([**E-107**](BEFUNDE.md#e-107) war die falsche Erklärung und ist widerlegt; [**E-108**](BEFUNDE.md#e-108) in 7.2.0.72
   entfernt den Stilweg, der ihn ausgelöst hat — **von Gregor am 17.09.2026 an
   1.0.72 bestätigt**: *„kein crash"*, und sein Protokoll läuft über die bisher
   tödliche Stelle hinaus bis `Logging shutdown`, ohne `Exception.log`).
   **`1.0.71` darf nicht benutzt werden**: diese Fassung stürzt beim Antworten
   ab, ist nie veröffentlicht worden und liegt nur noch als Paket in Gregors
   Testverzeichnis.
-  > **Berichtigt am 17.09.2026 (LEKTOR, L-13.1).** Bis hierher stand hier
+  > **Berichtigt am 17.09.2026 (LEKTOR, [L-13.1](Befunde/LEKTOR-13.md#l-13.1)).** Bis hierher stand hier
   > *„das neueste Release ist `v1.0.50`"* und darunter eine Warnung, das
   > veröffentlichte Paket stürze beim Speichern ab. Beides war überholt:
-  > `gh release list` nennt `v1.0.64` als *Latest*, und genau dort ist E-97
+  > `gh release list` nennt `v1.0.64` als *Latest*, und genau dort ist [E-97](BEFUNDE.md#e-97)
   > behoben. Die Warnung hätte Anwender von einem Download abgehalten, der
   > den gewarnten Fehler nicht mehr hat.
 * **Wer noch `v1.0.50` oder älter benutzt: *File → Save As* beendet Eudora
-  sofort** (**E-97**): der Windows-Dateidialog ruft
+  sofort** ([**E-97**](BEFUNDE.md#e-97)): der Windows-Dateidialog ruft
   `CSaveAsDialog::OnTypeChange` auf, bevor der Dialog fertig aufgebaut ist,
   und ein ungeprüfter `GetParent()` liefert dort `NULL`. Der Fehler steckt in
   **jeder** Fassung von 1.0.49 bis 1.0.63.
   Behoben in **7.2.0.64** und im Release **`v1.0.64`**; wer ein älteres Paket benutzt,
   speichert Nachrichten bis dahin besser nicht.
-* **Im Dialog *Speichern unter* fehlen zwei Optionen** (**E-98**, offen):
+* **Im Dialog *Speichern unter* fehlen zwei Optionen** ([**E-98**](BEFUNDE.md#e-98), offen):
   *Kopfzeilen einschließen* und *Absätze raten* sind nicht wählbar. Windows 10
   öffnet den modernen Dateidialog, und der zeigt Eudoras Dialogvorlage von 1996
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
-  Rückschritt durch die Behebung von E-97** — die Kästchen fehlen seit der
+  Rückschritt durch die Behebung von [E-97](BEFUNDE.md#e-97)** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
 * **Beim Antworten und Weiterleiten fehlten Bilder im Verfassenfenster**
-  (**E-110**, behoben in 7.2.0.75, von Gregor bestätigt): `resolve_URL` warf
+  ([**E-110**](BEFUNDE.md#e-110), behoben in 7.2.0.75, von Gregor bestätigt): `resolve_URL` warf
   jede Prozent-Sequenz weg, statt sie zu entschlüsseln — aus
   `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
   antwortete 404, und Eudora zeichnete einen grauen Kasten. Zehn von zwanzig
-  Bildern. **Dabei wurde E-112 sichtbar** (behoben in 7.2.0.76, noch nicht
-  bestätigt): die Bilder erschienen danach in Originalgröße statt in der
-  angegebenen — eine Regression der E-106-Behebung. **Weiter offen ist
-  E-113:** ein Bild, dessen angegebene Breite größer ist als das Fenster,
+  Bildern. **Dabei wurde [E-112](BEFUNDE.md#e-112) sichtbar** (**wieder offen**): die Bilder erscheinen
+  in Originalgröße statt in der angegebenen — eine Regression der
+  E-106-Behebung. **Der Versuch in 7.2.0.76 wirkt nicht** — von Gregor am
+  18.09.2026 am laufenden Programm widerlegt, mit Bildschirmfoto; seither
+  liegt der Text sogar wieder auf den Bildern. **Weiter offen ist
+  [E-113](BEFUNDE.md#e-113):** ein Bild, dessen angegebene Breite größer ist als das Fenster,
   läuft rechts hinaus.
-* **Die Betreffzeile wird mitten im Wort umbrochen** (**E-94**, in `v1.0.83`
+* **Die Betreffzeile wird mitten im Wort umbrochen** ([**E-94**](BEFUNDE.md#e-94), in `v1.0.83`
   noch enthalten, **behoben in 7.2.0.84**): beim **Empfang** werden Betreffs
   wie `Toner bestel len` oder `Wochenend e!` angezeigt, wenn der Absender
   (etwa der web.de-Webmailer) einen langen Betreff in mehrere kodierte Wörter
@@ -143,13 +145,13 @@ verschickt.
   nach RFC 2047 wegzulassen; über POP zeigte die Postfachliste sogar nur die
   erste Zeile. Der frühere Verdacht auf `Encode2047` beim Senden ist widerlegt
   — Eudora hatte diese Nachrichten gar nicht gesendet. **Kein Datenverlust.**
-* **Versteckter Vorschautext wird mitgelesen** (**E-105**, offen): In manchen
+* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), offen): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
   Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
   Bereich deshalb an. Nur Darstellung, kein Datenverlust.
 * **Anhänge werden unter abgeschnittenem Namen gespeichert, die Endung fehlt**
-  (**AN-1**): aus `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf`
+  ([**AN-1**](BEFUNDE.md#an-1)): aus `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf`
   wird `Angebot Nr 4711 fuer die Stadtwerke`. **Es liegt nicht an der Länge** —
   ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile
   steht. Elf getrennte Ursachen (B5.1 bis B5.11), alle aus Eudora 7.1: eine
@@ -162,11 +164,11 @@ verschickt.
   Registry-Eintrag ganz. **Behoben bis auf einen Teil:** über POP am laufenden
   Programm gemessen, alle sechs Prüffälle heil seit 7.2.0.81 (auch an 7.2.0.82
   und 7.2.0.83, Testsuite 185/185); über IMAP von Gregor mit Paket 1.0.83 an
-  seinem Postfach getestet und bestätigt. **Offen bleibt B5.7:** über IMAP
+  seinem Postfach getestet und bestätigt. **Offen bleibt [B5.7](AUFGABEN.md#b5.7):** über IMAP
   wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
   Durchlauf in [AUFGABEN.md](AUFGABEN.md), **B5**.
 * **Beim Start erschien der Quelltext einer Webseite in einem Fenster**
-  (**AN-2**): JavaScript, CSS und JSON als Text, ohne dass man etwas getan
+  ([**AN-2**](BEFUNDE.md#an-2)): JavaScript, CSS und JSON als Text, ohne dass man etwas getan
   hatte. Eudora startet ohne Eintrag `[Settings] Mode` in der
   **Werbe-Betriebsart** und holt Werbung von `adserver.eudora.com` — diese
   Adresse gehört seit 2018 dem Computer History Museum, und was von dort
@@ -203,7 +205,7 @@ auf, was er versteht; CSS kommt darin nicht vor. Bildgrößen liest er nur aus
 den Attributen `width` und `height`, nicht aus `style="width:…"`.
 
 Seit der Fassung 7.2.0.56 geht beim Senden das **aufgehobene Original** hinaus
-statt der Editorfassung (Befund **E-88**). Was im Verfassenfenster fehlt, fehlt
+statt der Editorfassung (Befund [**E-88**](BEFUNDE.md#e-88)). Was im Verfassenfenster fehlt, fehlt
 also nicht beim Empfänger — das Fenster ist Arbeitsfläche, nicht Vorschau.
 
 ### 2. Emoji lassen sich nicht anzeigen
@@ -212,7 +214,7 @@ Eudora ist durchgehend **ANSI** gebaut: Mailboxen, Kopfzeilen, die
 Nachrichtenliste. Der Zeichensatz Windows-1252 kennt 256 Zeichen und darunter
 kein einziges Emoji. Beim Umwandeln entstand früher Bytesalat, dann ein
 Fragezeichen je Emoji-Hälfte (`??`), seit 7.2.0.59 fallen sie ersatzlos weg
-(**E-90**). Kyrillisch, Griechisch und Polnisch bleiben erhalten, soweit die
+([**E-90**](BEFUNDE.md#e-90)). Kyrillisch, Griechisch und Polnisch bleiben erhalten, soweit die
 Ersetzungstabelle von Windows sie abbilden kann.
 
 ### 3. Was ein Austausch des Motors kosten würde
@@ -413,7 +415,7 @@ Bereiche.
 | 8192 | *Leave mail on server* | an |
 | 16384 | Suche und Suchindex | an |
 | 32768 | **Spurmarken dieser Portierung** | **aus** |
-| 65536 | **Anhangnamen** (Zeilen `ANHANG`, Befund AN-1) | **aus** |
+| 65536 | **Anhangnamen** (Zeilen `ANHANG`, Befund [AN-1](BEFUNDE.md#an-1)) | **aus** |
 
 Belegt in `Eudora71/QCUtils/public/inc/debug.h:14-44`; gelesen wird der
 Schlüssel in `eudora.cpp:1192`, ausgewertet in `debug.cpp:140-146`.
@@ -543,7 +545,7 @@ absichtlich gemischten Zeilenenden aus den Neunzigern kommen unversehrt an.
 
 **Wer etwas geändert hat, hebt vorher die Nummer** — sonst tragen zwei
 verschiedene `Eudora.exe` dieselbe Produktversion, und ein Fehlerbericht lässt
-sich keinem Bau mehr zuordnen (Befund **V-1**). Es sind **fünf Zeilen in zwei
+sich keinem Bau mehr zuordnen (Befund [**V-1**](BEFUNDE.md#v-1)). Es sind **fünf Zeilen in zwei
 Dateien**; die Tabelle dazu steht in
 [Releases/PAKETE.md](Releases/PAKETE.md), Abschnitt *„Wie man die Version
 hebt"*. Nachsehen, was gerade gilt:
@@ -581,14 +583,14 @@ pushen, oder, wenn es wirklich ein Wegwerfbau ist, `-Ungesichert` anhängen.
 und sucht MSBuild über `vswhere.exe`; geraten wird nichts. Erfolg meldet es
 **nur**, wenn vier voneinander unabhängige Prüfungen zustimmen: Rückgabewert,
 Fehlerprotokoll, Zeitstempel der Artefakte und die Versionsressource der
-`Eudora.exe`. Grund dafür ist Befund **X-6** — am 05.09.2026 hat ein
+`Eudora.exe`. Grund dafür ist Befund [**X-6**](BEFUNDE.md#x-6) — am 05.09.2026 hat ein
 MSBuild-Aufruf von Hand Erfolg gemeldet, ohne gebaut zu haben.
 
 Wer doch von Hand baut, kennt drei Fallen:
 
 - **`/p:BuildProjectReferences=false` wird nicht mehr gebraucht** und ist auch
   nicht mehr erwünscht: `OT501` ist seit dem 05.09.2026 aus dem Bau genommen
-  (Befund **B-3**). Wer den Schalter trotzdem setzt, bekommt in einem frischen
+  (Befund [**B-3**](BEFUNDE.md#b-3)). Wer den Schalter trotzdem setzt, bekommt in einem frischen
   Klon `LNK1104: imap.lib` — nicht, weil etwas kaputt wäre, sondern weil
   `Eudora71/Lib/` von `.gitignore` erfasst ist und `imap.lib` erst vom Projekt
   `imapdll` entsteht.
@@ -679,7 +681,7 @@ Bildschirmfoto eindeutig einem Bau und einer Instanz zuzuordnen.
 
 **Das Release-Paket braucht nichts aus diesem Abschnitt.** Es bringt
 `mfc140.dll`, `msvcp140.dll` und `vcruntime140.dll` selbst mit; die drei sind
-Teil des Visual-C++-Redistributable und dürfen beiliegen (Befund F-1).
+Teil des Visual-C++-Redistributable und dürfen beiliegen (Befund [F-1](BEFUNDE.md#f-1)).
 
 Der **Debug**-Bau dagegen braucht vier DLLs, die nicht weiterverteilt werden
 dürfen und nur mit einer Visual-Studio-Installation kommen:
@@ -696,7 +698,7 @@ powershell -ExecutionPolicy Bypass -File tools\laufzeit-holen.ps1 -Ziel "C:\Pfad
 ```
 
 Fehlen sie, bricht der Start mit **`0xc000007b`** ab — `STATUS_INVALID_IMAGE_FORMAT`,
-Befund S-8. Derselbe Code kommt bei falscher Bitness heraus, und **`Eudora.exe`
+Befund [S-8](BEFUNDE.md#s-8). Derselbe Code kommt bei falscher Bitness heraus, und **`Eudora.exe`
 ist ein 32-Bit-Programm**. Zwei Fallen führen zu 64-Bit-DLLs: DLL-Sammelseiten
 wie dll-files.com liefern häufig die 64-Bit-Fassung, ohne es deutlich zu machen
 (von dort **keine** Laufzeit-DLLs holen), und der 32-Bit-Systemordner heißt unter
@@ -750,6 +752,7 @@ Eudora7.2/
 | Welche Schalter gibt es ohne Menüpunkt, und was überrascht beim Betrieb? | [EINSTELLUNGEN.md](EINSTELLUNGEN.md) |
 | Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](BEFUNDE.md), Einzelbefunde in `Befunde/` |
 | Was ist als Nächstes zu tun? | [AUFGABEN.md](AUFGABEN.md), Einstieg in [WEITERMACHEN.md](WEITERMACHEN.md) |
+| Wie teste ich, was auf mein Urteil wartet? | [TESTPLAN.md](TESTPLAN.md) — die vierzehn, die frischen Behebungen, und was im Protokoll zu sehen sein muss |
 | Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](PORTIERUNG.md) |
 | Welche Werkzeuge gibt es in `tools/`? | [tools/WERKZEUGE.md](tools/WERKZEUGE.md) |
 | Was muss neben `Eudora.exe` liegen, damit sie startet? | [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
@@ -770,7 +773,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
 verschiedene Bauten dieselbe Kennung, und ein Fehlerbericht ist keinem Stand
-mehr zuzuordnen (Befund **V-1**).
+mehr zuzuordnen (Befund [**V-1**](BEFUNDE.md#v-1)).
 
 Die Titelzeile nennt beide Nummern plus den Commit; ein Bildschirmfoto ist
 damit eindeutig. Welches ZIP zu welcher Marke und welchem Commit gehört, führt
@@ -847,7 +850,7 @@ das trennt die Stingray-Klassen von den gleichnamigen SSPI-Konstanten
 **Gewählter Weg und heutiger Zustand:** eine eigene Ersatzschicht auf modernes
 MFC, `Eudora71/OTShim/`, in fünf Teilen über `OTShimAll.h` eingebunden.
 `Eudora.exe` bindet damit ohne Stingray, **0 ungelöste Externe**; das Projekt
-`OT501` ist ganz aus dem Bau genommen (Befund B-3), die frühere Attrappe
+`OT501` ist ganz aus dem Bau genommen (Befund [B-3](BEFUNDE.md#b-3)), die frühere Attrappe
 `Lib/Debug/OTA50D.LIB` entfällt und **darf nicht wieder angelegt werden** —
 sonst linkt Eudora gegen eine leere Bibliothek.
 

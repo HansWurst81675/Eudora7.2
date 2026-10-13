@@ -2,9 +2,17 @@
 use strict;
 use warnings;
 
+# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
+# liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
+my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
+
 # Liefert entmojibake_text() - siehe Kommentar in zeilen_aus_diff().
 use FindBin;
 require "$FindBin::Bin/entmojibaken.pl";
+# Liefert verweise_nur_links_gefiltert() - eine Zeile, die sich nur im
+# Verweis geaendert hat, ist kein Zuwachs.
+require "$FindBin::Bin/verweise-filtern.pl";
 
 # pruefe-behoben-belegt.pl - ein neues "behoben" ohne Beleg wird abgewiesen.
 #
@@ -108,7 +116,7 @@ sub beurteile {
     my ($zeile) = @_;
 
     return (undef, 'keins', undef)
-        unless $zeile =~ /^\|\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
+        unless $zeile =~ /^\|\s*$ANKER\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
     my $kennung = $1;
 
     my @spalten = split /\|/, $zeile, -1;
@@ -293,7 +301,8 @@ sub zeilen_aus_diff {
     # alten Zeilen aus dem Bestand, die der Kommentar oben ausdruecklich
     # in Ruhe lassen will. Darum wird jede entfernte Zeile entmojibakt
     # und gegen die hinzugefuegten gehalten.
-    return entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
+    my @zuwachs = entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
+    return verweise_nur_links_gefiltert(\@alt, \@zuwachs);
 }
 
 sub zeilen_aus_datei {
