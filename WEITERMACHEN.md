@@ -113,6 +113,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > **Stand 13.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
 > **Für den 14.10.2026, Stand 13.10.2026 abends (gilt vor dem Block darunter):** Zweig `e-112-skalierung`, Quellstand **7.2.0.87**, alles gepusht.
+> **Nachtrag 13.10.2026 spät:** Punkt 1 und 2 unten sind abgeschlossen – [E-117](BEFUNDE.md#e-117) gemessen, Rollen gelaufen ([LEKTOR-31](Befunde/LEKTOR-31.md#lektor-31), PRÜFER-25 auslieferbar, CHRONIST e), **1.0.87 liegt bei Gregor** (`Eudora72-1.0.87-release`, mit `TESTEN.txt`). Morgen: Gregors Ergebnis zu 1.0.87 abwarten; LEKTOR ist wegen `Releases/PAKETE.md`/`tools/WERKZEUGE.md` fällig – vor dem PR laufen lassen; dann PR `e-112-skalierung` → `main`, Release; danach [E-118](BEFUNDE.md#e-118).
 > 1. **[E-117](BEFUNDE.md#e-117) ist am laufenden Programm gemessen** (13.10.2026 abends, Gegenprobe 7.2.0.85 Pixel, 7.2.0.87 Bild) — Gregors eigener Test an seiner eBay-Mail steht noch aus.
 > 2. **Rollen LEKTOR, PRÜFER, CHRONIST** nachholen (fällig seit [E-115](BEFUNDE.md#e-115)/[E-117](BEFUNDE.md#e-117)), dann Paket **1.0.87** wie 1.0.85/1.0.86 bauen (ZIP der letzten Veröffentlichung + `Bin/Release`, `paket-pruefen.ps1`) und Gregor hinlegen.
 > 3. **PR `e-112-skalierung` → `main`**, Release nach Gregors Test. Bestätigt sind schon [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103) und [E-115](BEFUNDE.md#e-115) (an 1.0.86).
