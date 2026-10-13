@@ -49,8 +49,8 @@ $mangel = @()
 if ([string]::IsNullOrWhiteSpace($Freigabe) -or $Freigabe.Trim().Length -lt 10) {
   $mangel += 'Keine tragfaehige Freigabe: -Freigabe muss Gregors Satz nennen (mindestens 10 Zeichen).'
 }
-elseif ($Freigabe -notmatch '(?i)start') {
-  $mangel += ('Die Freigabe nennt keinen START: "' + $Freigabe + '". Eine Erlaubnis fuer ' +
+elseif ($Freigabe -notmatch '(?i)start|test|mess') {
+  $mangel += ('Die Freigabe nennt keinen Start und keinen Test- oder Messlauf: "' + $Freigabe + '". Eine Erlaubnis fuer ' +
               'einen anderen Schritt (kopieren, lesen, messen) ist keine Erlaubnis zu starten.')
 }
 $exeVoll = [IO.Path]::GetFullPath($Exe)
