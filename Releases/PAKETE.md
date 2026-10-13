@@ -156,10 +156,11 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.87 — **in Arbeit, kein Paket**, Quellstand 7.2.0.87 (E-117)
+## 1.0.87 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.87 (E-117)
 
 | | |
 |---|---|
+| Testverzeichnis | **bereitgestellt am 13.10.2026** nach LEKTOR-31, PRÜFER-25 (auslieferbar) und CHRONIST, `C:\Users\Gregor\Eudora72-1.0.87-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem gemessenen Prüfstand `C:\Temp\E112-1085`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide melden 7.2.0.87. Im Paket `TESTEN.txt` mit den Testschritten (Kopie `Releases/1.0.87/TESTEN.txt`). Von Gregor noch nicht getestet |
 | Inhalt | wie 1.0.86, dazu [E-117](../BEFUNDE.md#e-117): `&amp;` in Bildadressen |
 | Gemessen | Testsuite 196/196 (`TestResolveURL.cpp` (8), vorher rot); am laufenden Programm (`C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml`, Bildserver `tools/bildserver-e117.pl`): 7.2.0.85 holt `&amp;` und malt ein Pixel, 7.2.0.87 holt `&` und das Bild (`Datei=330x327 gemalt=165x164`), siehe [E-117](../BEFUNDE.md#e-117); kein Paket. Von Gregor noch nicht getestet |
 
