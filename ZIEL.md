@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 | Gruppe | Befund | Worum es geht |
 |---|---|---|
-| Post wird verfälscht | [E-118](BEFUNDE.md#e-118) | HTML-Mail im IMAP-Ordner als Quelltext, lokale Kopie weg (eingebaut in 7.2.0.89) |
+| Post wird verfälscht | [E-118](BEFUNDE.md#e-118) | HTML-Mail im IMAP-Ordner als Quelltext, lokale Kopie weg (**eingebaut in 7.2.0.89, von Gregor am 14.10.2026 an 1.0.89 bestätigt**) |
 | Post wird verfälscht | [E-69](BEFUNDE.md#e-69) | Filterlauf bricht im Release lautlos ab, meldet Erfolg |
 | Post wird verfälscht | [E-101](BEFUNDE.md#e-101) | gespeicherte Datei in anderen Programmen unbrauchbar |
 | Kriterium 2 | [E-105](BEFUNDE.md#e-105) | versteckte Abschnitte doppelt (eingebaut in 7.2.0.88) |
