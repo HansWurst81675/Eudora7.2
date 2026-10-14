@@ -39,6 +39,7 @@ use IO::Select;
 #   perl tools/imap-pruefserver.pl --protokoll <datei>
 #   perl tools/imap-pruefserver.pl --nachrichten 5
 #   perl tools/imap-pruefserver.pl --zeitschranke 300   Sekunden bis Feierabend
+#   perl tools/imap-pruefserver.pl --gruss-verzoegerung 8   erste Verbindung wartet (E-121)
 #   perl tools/imap-pruefserver.pl --ablage <verzeichnis>
 #
 # APPEND (seit 14.10.2026, Befund E-118): nimmt "tag APPEND <postfach>
@@ -62,6 +63,8 @@ my %opt = (
     nachrichten  => 4,
     zeitschranke => 600,
     ablage       => '',
+    gruss_verzoegerung => 0,
+    append_ablehnen => 0,
 );
 
 while (@ARGV) {
@@ -70,6 +73,8 @@ while (@ARGV) {
     elsif ($a eq '--protokoll')    { $opt{protokoll}    = shift @ARGV }
     elsif ($a eq '--nachrichten')  { $opt{nachrichten}  = shift @ARGV }
     elsif ($a eq '--zeitschranke') { $opt{zeitschranke} = shift @ARGV }
+    elsif ($a eq '--gruss-verzoegerung') { $opt{gruss_verzoegerung} = shift @ARGV }
+    elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     else { die "unbekannt: $a\n" }
 }
@@ -174,6 +179,15 @@ while (time < $ende) {
             $gewaehlt{$c} = 'INBOX';
             $sel->add($c);
             notiz('Verbindung von ' . $c->peerhost);
+            # E-121: die ERSTE Verbindung wartet auf Wunsch einige Sekunden auf die
+            # Begruessung. So holt das POP-Konto seine Post und der Filter uebertraegt,
+            # bevor das IMAP-Konto verbunden ist - der Fall, in dem Eudora den
+            # Zielordner erst mitten in der Uebertragung oeffnet.
+            if ($opt{gruss_verzoegerung} > 0) {
+                notiz("Begruessung verzoegert um $opt{gruss_verzoegerung} s");
+                sleep $opt{gruss_verzoegerung};
+                $opt{gruss_verzoegerung} = 0;
+            }
             print $c "* OK [CAPABILITY IMAP4rev1 LOGINDISABLED=0] Pruefserver bereit\r\n";
             next;
         }
@@ -263,6 +277,14 @@ while (time < $ende) {
             notiz("  !! Rest nach Literal: '$nach'") if $nach ne '';
             if (length($daten) != $n) {
                 notiz(sprintf('  !! Literal unvollstaendig: %d von %d Bytes', length($daten), $n));
+            }
+            # E-121: das Hochladen ablehnen - darf die Nachricht beim Absender bleiben?
+            if ($opt{append_ablehnen}) {
+                $antwort = "$marke NO [TRYCREATE] APPEND abgelehnt (Pruefserver, --append-ablehnen)";
+                print $h "$antwort
+";
+                notiz("  -> $antwort");
+                next;
             }
             push @ablage, { text => $daten, flags => '', geloescht_verlangt => 0 };
             my $uid = scalar @ablage;

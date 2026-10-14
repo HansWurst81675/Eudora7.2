@@ -1045,10 +1045,11 @@ CSummary* CTocDoc::ImapXferFromLocalToImap(CTocDoc *pTargetToc,
 					}
 				}
 
-				// Includes free-ing memory.
-				RemoveSum(pSum);
-
-				pSum = NULL;
+				// E-121: die Quelle NICHT hier entfernen. Bisher geschah das, bevor die
+				// Nachricht auf dem Server war; verwarf ein Abgleich des Zielordners die
+				// lokale Kopie, bevor die Aufgabe sie hochlud, war die Nachricht weg.
+				// Entfernt wird sie jetzt in CImapFromLocalTransferMsgAction::
+				// DoPostProcessing - erst nachdem der Server sie angenommen hat.
 			}
 		}
 	}

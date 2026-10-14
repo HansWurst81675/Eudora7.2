@@ -73,6 +73,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.90 — eingebettete Bilder beim Hochladen, kein Verlust beim Verschieben in IMAP (E-118 Teil 2, E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-118](BEFUNDE.md#e-118) Teil 2:** an 1.0.89 fehlten bei Gregors SoftMaker-Mail nach dem Verschieben in den IMAP-Ordner die eingebetteten Bilder – der Hochladecode kannte die Zeilen `Embedded Content:` nicht (Originalfehler). Jetzt wird jedes Bild ein eigener Teil mit dem `Content-ID`, unter dem das HTML es ruft, die Nachricht wird `multipart/related`. Nach PRÜFER-27: Text hinter `</x-html>` bleibt erhalten, die Teilegrenze entsteht nur einmal. Test `TestE118.cpp` (5), (6), Testsuite **209/209**.
+
+**[E-121](BEFUNDE.md#e-121) (Datenverlust, Originalfehler):** gefunden beim Messen von [E-118](BEFUNDE.md#e-118) – eine Nachricht, die aus einem lokalen Postfach in einen IMAP-Ordner verschoben wird, konnte verschwinden, wenn die Abgleichsaufgabe des Zielordners vom Start die lokale Kopie verwarf, bevor sie hochgeladen war; gelöscht wurden dabei auch die eingebetteten Bilddateien. Jetzt bleibt die Nachricht in der Quelle, bis der Server sie angenommen hat; fehlt die Kopie im Ziel, wird aus der Quelle hochgeladen. **Am IMAP-Prüfserver gemessen (14.10.2026):** Normalfall, fehlende Kopie (mit Prüfschalter erzwungen) und abgelehntes `APPEND` (`--append-ablehnen`): nie verloren. Neu im Prüfserver: `--append-ablehnen`, `--gruss-verzoegerung`.
+
 ## 7.2.0.89 — HTML-Mail im IMAP-Ordner behält ihren Typ (E-118) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 
 **Von Gregor am 14.10.2026 an 1.0.89 bestätigt** (waipu.tv-Mail in den IMAP-Ordner verschoben, erscheint als HTML; *„main von in box in die imap box verschoben“*).

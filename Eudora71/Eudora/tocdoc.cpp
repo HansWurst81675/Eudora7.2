@@ -2920,6 +2920,16 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 					break;
 				CopySum = DEBUG_NEW CSummary;
 				CopySum->Copy(Sum);
+#ifdef IMAP4
+				// E-121: die lokale Vorab-Kopie im IMAP-Zielordner teilt sich die
+				// eingebetteten Bilddateien mit der Nachricht in der Quelle. Verwirft
+				// ein Abgleich die Kopie, bevor sie hochgeladen ist, darf er diese
+				// Dateien nicht loeschen - sonst fehlt das Bild auch beim Hochladen aus
+				// der Quelle (gemessen 14.10.2026: "E-118 Bild: vorhanden=0").
+				// Geloescht werden sie mit der Quelle, nach dem Hochladen.
+				if (!IsImapToc() && TargetToc->IsImapToc())
+					CopySum->SetDeleteEmbedded(FALSE);
+#endif
 				// If transferring from an IMAP mailbox to a local mailbox, don't copy the IMAP
 				// deleted flag.  Currently all other flags make sense in a POP mailbox, but
 				// local mailboxes have no notion of a summary being deleted.

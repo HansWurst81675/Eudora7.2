@@ -179,6 +179,12 @@ verschickt.
   HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert, von Gregor noch nicht bestätigt): beim Hochladen
   verwirft Eudora die `Content-*`-Köpfe und schreibt keinen oder nur
   `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
+  Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach.
+* **Eine Nachricht, die in einen IMAP-Ordner verschoben wird, kann spurlos
+  verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
+  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert):
+  ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
+  Selten, aber still. Originalfehler von QUALCOMM.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
@@ -815,7 +821,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.89` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.90` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

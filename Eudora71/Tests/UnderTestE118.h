@@ -9,5 +9,7 @@
 
 int E118Huelle(const char* p, long nLaenge, long* pnAnfang, long* pnEnde);
 int E118Achtbit(const char* p, long nLaenge);
+int E118Verweis(const char* pHtml, long nLaenge, unsigned long ulHash, int bCid,
+                unsigned long (*pfHash)(const char*), char* szAus, int nAus);
 
 #endif

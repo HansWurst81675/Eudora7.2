@@ -17,6 +17,15 @@
 #include "TinyTest.h"
 #include "UnderTestE118.h"
 
+// Ein einfacher, aber unterscheidender Hash statt HashMT (das liegt in QCUtils).
+static unsigned long ZaehlHash(const char* s)
+{
+	unsigned long h = 5381;
+	while (*s)
+		h = h * 33 + (unsigned char)*s++;
+	return h;
+}
+
 void RunE118Tests(void)
 {
 	long a = -1, e = -1;
@@ -78,6 +87,48 @@ void RunE118Tests(void)
 		const char szEuro[] = { (char)0xFC, ' ', (char)0x80, 0 };
 		TT_CHECK_MSG(E118Achtbit(szUmlaut, 2) == 1, "Umlaut allein: Art 1 (iso-8859-1 reicht)");
 		TT_CHECK_MSG(E118Achtbit(szEuro, 3) == 2, "mit Euro-Zeichen: Art 2 (windows-1252)");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------- (5)
+	// PRUEFER-27 F1: steht hinter </x-html> noch etwas, darf es nicht
+	// verschwinden - die lokale Kopie ist nach dem Verschieben geloescht.
+	TT_BeginTest("E-118: Text hinter der Huelle geht nicht verloren");
+	{
+		const char* p = "<x-html><p>a</p></x-html>\r\nFusszeile der Liste\r\n";
+		long n = (long)strlen(p);
+		TT_CHECK_MSG(E118Huelle(p, n, &a, &e) == 1 && e == n,
+			"Fusszeile hinter </x-html>: der Bereich reicht bis zum Ende");
+		TT_Note("Anfang=%ld Ende=%ld Laenge=%ld", a, e, n);
+
+		p = "<x-html><p>a</p></x-html>\r\n \r\n";
+		n = (long)strlen(p);
+		TT_CHECK_MSG(E118Huelle(p, n, &a, &e) == 1 && strncmp(p + e, "</x-html>", 9) == 0,
+			"nur Leerraum dahinter: die Markierung wird abgestreift");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------- (6)
+	// Die SoftMaker-Mail: drei Bilder als cid:, Eudora kennt nur den Hash.
+	TT_BeginTest("E-118: das eingebettete Bild findet seinen Verweis im HTML");
+	{
+		const char* pHtml = "<img src=\"cid:logo_softmaker-33ed702b.png\" alt=\"\">"
+			"<td background='cid:bell.png'><img src=https://example.invalid/a.png >";
+		long n = (long)strlen(pHtml);
+		char szCid[256];
+
+		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("logo_softmaker-33ed702b.png"), 1, ZaehlHash, szCid, sizeof(szCid)) == 1
+			&& strcmp(szCid, "logo_softmaker-33ed702b.png") == 0, "cid in Anfuehrungszeichen");
+		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("bell.png"), 1, ZaehlHash, szCid, sizeof(szCid)) == 1
+			&& strcmp(szCid, "bell.png") == 0, "cid in background mit einfachen Anfuehrungszeichen");
+		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("https://example.invalid/a.png"), 0, ZaehlHash, szCid, sizeof(szCid)) == 1
+			&& strcmp(szCid, "https://example.invalid/a.png") == 0, "Content-Location ueber src ohne Anfuehrungszeichen");
+
+		// Gegenrichtung: kein passender Verweis - kein erfundener Name.
+		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("gibt-es-nicht.png"), 1, ZaehlHash, szCid, sizeof(szCid)) == 0
+			&& szCid[0] == 0, "ohne Treffer bleibt szAus leer");
+		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("cid:bell.png"), 0, ZaehlHash, szCid, sizeof(szCid)) == 0,
+			"im Location-Modus zaehlt ein cid:-Verweis nicht");
 	}
 	TT_EndTest();
 }
