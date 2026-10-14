@@ -212,7 +212,7 @@ das Mailverzeichnis im Paket ist leer.
 
 | | Befund | Paket | Handgriff |
 |---|---|---|---|
-| ✅ | [**E-118**](BEFUNDE.md#e-118) | 1.0.89 | eine HTML-Mail (etwa einen Newsletter) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — sie erscheint normal (Bilder, Formatierung, Umlaute richtig), **kein** `<head>… <body …>` als Text. Mails, die schon **vor** 1.0.89 verschoben wurden, bleiben auf dem Server falsch und erscheinen auch in 1.0.89 als Quelltext — **bestätigt 14.10.2026 an 1.0.89** |
+| ✅ | [**E-118**](BEFUNDE.md#e-118) | 1.0.89 | eine HTML-Mail (etwa einen Newsletter) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — sie erscheint normal (Bilder, Formatierung, Umlaute richtig), **kein** `<head>… <body …>` als Text. Mails, die schon **vor** 1.0.89 verschoben wurden, bleiben auf dem Server falsch und erscheinen auch in 1.0.89 als Quelltext — **bestätigt 14.10.2026 an 1.0.89** (waipu.tv-Mail). **Nicht bestanden** bei der SoftMaker-Mail: die eingebetteten Bilder fehlten (*„hier fehlt der inhalt“*) – das ist [E-118](BEFUNDE.md#e-118) Teil 2, zu prüfen an 1.0.90 |
 | ☐ | [**E-105**](BEFUNDE.md#e-105) | 1.0.89 | einen freenet-Newsletter beantworten oder weiterleiten — jedes Bild und jeder Absatz genau einmal, keine Zeile `? ? ? ?` über dem Inhalt |
 
 Bekannt und nicht behoben, also kein neuer Fehler: [E-119](BEFUNDE.md#e-119) (`data:`-Bilder als
