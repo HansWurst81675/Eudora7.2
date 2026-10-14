@@ -7,6 +7,35 @@ ausgeliefert wurde, die zwar startete, aber nicht bedienbar war.
 > * die darstellung sollte korrekt sein
 > * ich möchte damit einen mail server verbinden und mails abrufen.
 
+## Maßstab für die Fassung 7.2.1.0
+
+Von Gregor am 14.10.2026 bestätigt (*„hört sich vernünftig an für die 7.2.1.0
+version."*), auf seine Frage, welche Fehler behoben und welche Funktionen
+eingebaut sein müssen. **7.2.1.0 ist die erste Fassung ohne Vorbehalt für den
+täglichen Gebrauch.** Neue Funktionen gehören nicht dazu. Maßstab sind alle
+neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
+
+| Gruppe | Befund | Worum es geht |
+|---|---|---|
+| Post wird verfälscht | [E-118](BEFUNDE.md#e-118) | HTML-Mail im IMAP-Ordner als Quelltext, lokale Kopie weg |
+| Post wird verfälscht | [E-69](BEFUNDE.md#e-69) | Filterlauf bricht im Release lautlos ab, meldet Erfolg |
+| Post wird verfälscht | [E-101](BEFUNDE.md#e-101) | gespeicherte Datei in anderen Programmen unbrauchbar |
+| Kriterium 2 | [E-105](BEFUNDE.md#e-105) | versteckte Abschnitte doppelt (eingebaut in 7.2.0.88) |
+| Kriterium 2 | [E-77](BEFUNDE.md#e-77) | IMAP-Ordnernamen mit Umlauten roh |
+| Kriterium 2 | [E-113](BEFUNDE.md#e-113) | breite Bilder laufen rechts hinaus |
+| Kriterium 2 | [E-119](BEFUNDE.md#e-119) | `data:`-Bilder als grauer Kasten |
+| Kriterium 2 | [E-116](BEFUNDE.md#e-116) | `35px` falsch gelesen |
+| Kriterium 2 | [E-95](BEFUNDE.md#e-95), [E-96](BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Doctolib- und FairToner-Nachricht |
+| Kriterium 4 | [E-111](BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld |
+| Kriterium 4 | [E-14](BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis — klären |
+
+**Ausdrücklich nicht Voraussetzung:** [E-114](BEFUNDE.md#e-114), [E-78](BEFUNDE.md#e-78), [E-47](BEFUNDE.md#e-47), [E-67](BEFUNDE.md#e-67), [E-98](BEFUNDE.md#e-98), [E-39](BEFUNDE.md#e-39), die
+zurückgestellte [E-71](BEFUNDE.md#e-71), die NP-Punkte und [R-1](BEFUNDE.md#r-1).
+
+**Vor dem Release:** die Tabelle der Kriterien neu messen (ihre Urteile
+stammen von 7.2.0.55), dann Gregors Test aller neun Kriterien an einem frischen
+Paket, erst danach Marke `v7.2.1.0`.
+
 ## Die Kriterien
 
 > **Diese Tabelle ist die Quelle.** `README.md`, `AUFGABEN.md`,
