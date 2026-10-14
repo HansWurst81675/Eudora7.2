@@ -39,6 +39,15 @@ use IO::Select;
 #   perl tools/imap-pruefserver.pl --protokoll <datei>
 #   perl tools/imap-pruefserver.pl --nachrichten 5
 #   perl tools/imap-pruefserver.pl --zeitschranke 300   Sekunden bis Feierabend
+#   perl tools/imap-pruefserver.pl --ablage <verzeichnis>
+#
+# APPEND (seit 14.10.2026, Befund E-118): nimmt "tag APPEND <postfach>
+# [(flags)] ["datum"] {n}" und {n+} (LITERAL+) an, liest genau n Bytes und
+# legt sie UNVERAENDERT als <verzeichnis>/append-NNN.eml ab (ohne --ablage:
+# nur mitgeschrieben). Damit laesst sich der Kopf messen, den Eudora einer
+# Nachricht beim Hochladen in einen IMAP-Ordner gibt. LIST/LSUB nennen dazu
+# das Postfach "Ablage"; SELECT/STATUS darauf zaehlen die hochgeladenen
+# Nachrichten, FETCH liefert sie.
 #
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
@@ -52,6 +61,7 @@ my %opt = (
     protokoll    => '',
     nachrichten  => 4,
     zeitschranke => 600,
+    ablage       => '',
 );
 
 while (@ARGV) {
@@ -60,7 +70,12 @@ while (@ARGV) {
     elsif ($a eq '--protokoll')    { $opt{protokoll}    = shift @ARGV }
     elsif ($a eq '--nachrichten')  { $opt{nachrichten}  = shift @ARGV }
     elsif ($a eq '--zeitschranke') { $opt{zeitschranke} = shift @ARGV }
+    elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     else { die "unbekannt: $a\n" }
+}
+
+if ($opt{ablage} ne '' and !-d $opt{ablage}) {
+    mkdir $opt{ablage} or die "$opt{ablage}: $!\n";
 }
 
 # --- Testnachrichten ------------------------------------------------------
@@ -131,6 +146,21 @@ my $sel       = IO::Select->new($server);
 my $loeschen  = 0;      # wie oft \Deleted verlangt wurde
 my $expunge   = 0;
 my %gesehen;            # Befehl -> Anzahl
+my @ablage;             # per APPEND hochgeladene Nachrichten (Postfach "Ablage")
+my %gewaehlt;           # Verbindung -> gewaehltes Postfach
+my $append_nr = 0;      # laufende Nummer der Ablagedateien
+
+# Postfachname aus "..." oder Atom; liefert die Liste dazu.
+sub postfach_name {
+    my ($s) = @_;
+    return $1 if $s =~ /^"((?:[^"\\]|\\.)*)"/;
+    return $1 if $s =~ /^(\S+)/;
+    return '';
+}
+sub liste_fuer {
+    my ($name) = @_;
+    return ($name =~ /^Ablage$/i) ? \@ablage : \@nachrichten;
+}
 
 while (time < $ende) {
     my @bereit = $sel->can_read(2);
@@ -140,6 +170,8 @@ while (time < $ende) {
         if ($h == $server) {
             my $c = $server->accept or next;
             $c->autoflush(1);
+            binmode $c;
+            $gewaehlt{$c} = 'INBOX';
             $sel->add($c);
             notiz('Verbindung von ' . $c->peerhost);
             print $c "* OK [CAPABILITY IMAP4rev1 LOGINDISABLED=0] Pruefserver bereit\r\n";
@@ -149,6 +181,7 @@ while (time < $ende) {
         my $zeile = <$h>;
         unless (defined $zeile) {
             notiz('Verbindung beendet');
+            delete $gewaehlt{$h};
             $sel->remove($h);
             close $h;
             next;
@@ -182,10 +215,12 @@ while (time < $ende) {
             print $h "* $B (\\HasNoChildren) \"/\" \"INBOX\"\r\n";
             print $h "* $B (\\HasNoChildren) \"/\" \"Entw&APw-rfe\"\r\n";
             print $h "* $B (\\HasNoChildren) \"/\" \"Gel&APY-scht\"\r\n";
+            print $h "* $B (\\HasNoChildren) \"/\" \"Ablage\"\r\n";
             $antwort = "$marke OK $B";
         }
         elsif ($B eq 'SELECT' or $B eq 'EXAMINE') {
-            my $n = scalar @nachrichten;
+            $gewaehlt{$h} = postfach_name($rest);
+            my $n = scalar @{ liste_fuer($gewaehlt{$h}) };
             print $h "* $n EXISTS\r\n";
             print $h "* 0 RECENT\r\n";
             print $h "* OK [UIDVALIDITY 1] gueltig\r\n";
@@ -194,15 +229,64 @@ while (time < $ende) {
             print $h "* OK [PERMANENTFLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)] erlaubt\r\n";
             $antwort = "$marke OK [READ-WRITE] $B";
         }
+        elsif ($B eq 'STATUS') {
+            my $name = postfach_name($rest);
+            my $n = scalar @{ liste_fuer($name) };
+            printf $h "* STATUS \"%s\" (MESSAGES %d RECENT 0 UIDNEXT %d UIDVALIDITY 1 UNSEEN 0)\r\n",
+                $name, $n, $n + 1;
+            $antwort = "$marke OK STATUS";
+        }
+        elsif ($B eq 'APPEND') {
+            # tag APPEND <postfach> [(flags)] ["datum"] {n} bzw. {n+}
+            my $name = postfach_name($rest);
+            my ($n, $plus) = $zeile =~ /\{(\d+)(\+?)\}$/;
+            unless (defined $n) {
+                $antwort = "$marke BAD APPEND ohne Literal";
+                print $h "$antwort\r\n";
+                notiz("  -> $antwort");
+                next;
+            }
+            unless ($plus) {
+                print $h "+ Ready for literal data\r\n";
+                notiz('  -> + Ready for literal data');
+            }
+            my $daten = '';
+            while (length($daten) < $n) {
+                my $r = read($h, my $stueck, $n - length($daten));
+                last unless $r;
+                $daten .= $stueck;
+            }
+            # Zeilenende nach dem Literal (CRLF oder LF)
+            my $nach = <$h>;
+            $nach = '' unless defined $nach;
+            $nach =~ s/\r?\n$//;
+            notiz("  !! Rest nach Literal: '$nach'") if $nach ne '';
+            if (length($daten) != $n) {
+                notiz(sprintf('  !! Literal unvollstaendig: %d von %d Bytes', length($daten), $n));
+            }
+            push @ablage, { text => $daten, flags => '', geloescht_verlangt => 0 };
+            my $uid = scalar @ablage;
+            $append_nr++;
+            my $wohin = '(nicht abgelegt, kein --ablage)';
+            if ($opt{ablage} ne '') {
+                $wohin = sprintf('%s/append-%03d.eml', $opt{ablage}, $append_nr);
+                open my $af, '>:raw', $wohin or die "$wohin: $!\n";
+                print $af $daten;
+                close $af;
+            }
+            notiz(sprintf('  APPEND nach "%s": %d Bytes -> %s', $name, length($daten), $wohin));
+            $antwort = "$marke OK [APPENDUID 1 $uid] APPEND completed";
+        }
         elsif ($B eq 'FETCH' or ($B eq 'UID' and $rest =~ /^FETCH/i)) {
+            my $liste = liste_fuer($gewaehlt{$h} || 'INBOX');
             my $r = ($B eq 'UID') ? do { my $x = $rest; $x =~ s/^FETCH\s*//i; $x } : $rest;
             my ($von, $bis) = $r =~ /^(\d+)(?::(\d+|\*))?/;
             $von = 1 unless defined $von;
             $bis = $von unless defined $bis;
-            $bis = scalar @nachrichten if !defined $bis or $bis eq '*';
-            $bis = scalar @nachrichten if $bis > @nachrichten;
+            $bis = scalar @$liste if !defined $bis or $bis eq '*';
+            $bis = scalar @$liste if $bis > @$liste;
             for my $i ($von .. $bis) {
-                my $m = $nachrichten[$i - 1] or next;
+                my $m = $liste->[$i - 1] or next;
                 my $laenge = length $m->{text};
                 my $flags = $m->{flags} || '';
                 if ($r =~ /BODY\.PEEK\[HEADER|BODY\[HEADER|RFC822\.HEADER/i) {

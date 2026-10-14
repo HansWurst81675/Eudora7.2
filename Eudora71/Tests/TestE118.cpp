@@ -73,6 +73,11 @@ void RunE118Tests(void)
 		TT_CHECK_MSG(E118Achtbit(pAscii, (long)strlen(pAscii)) == 0, "reines ASCII: kein Zeichensatz");
 		TT_CHECK_MSG(E118Achtbit(szUmlaut, 2) == 1, "ein Umlaut: Zeichensatz und 8bit");
 		TT_CHECK_MSG(E118Achtbit(szUmlaut, 1) == 0, "nur der geprueft Bereich zaehlt");
+
+		// Euro 0x80 gibt es in ISO-8859-1 nicht - dann windows-1252 (MESSSTAND).
+		const char szEuro[] = { (char)0xFC, ' ', (char)0x80, 0 };
+		TT_CHECK_MSG(E118Achtbit(szUmlaut, 2) == 1, "Umlaut allein: Art 1 (iso-8859-1 reicht)");
+		TT_CHECK_MSG(E118Achtbit(szEuro, 3) == 2, "mit Euro-Zeichen: Art 2 (windows-1252)");
 	}
 	TT_EndTest();
 }

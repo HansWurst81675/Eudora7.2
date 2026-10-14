@@ -402,7 +402,7 @@ CImapAppend::CImapAppend(CImapConnection *pDstImap,
 
 	// E-118: Art des einteiligen Textes, gesetzt in ReformatBody.
 	m_bE118Html = FALSE;
-	m_bE118Achtbit = FALSE;
+	m_nE118Achtbit = 0;
 
 	// Scratch buffer. Allocated when needed.
 	m_nBufferSize	= 0;
@@ -712,29 +712,46 @@ int E118Huelle (const char* p, long nLaenge, long* pnAnfang, long* pnEnde)
 int E118Achtbit (const char* p, long nLaenge)
 {
    long  i;
+   int   nArt = 0;
 
-   for (i = 0; i < nLaenge; ++i)
-      if ((unsigned char)p[i] > 0x7F)
-         return   1;
+   // 1 = Bytes ueber 0x7F, 2 = darunter auch 0x80-0x9F. Die gibt es in
+   // ISO-8859-1 nicht; in Windows-1252 sind es Euro, Anfuehrungszeichen,
+   // Gedankenstrich - lokal steht der Text in Windows-1252.
+   for (i = 0; i < nLaenge; ++i) {
+      unsigned char  c = (unsigned char)p[i];
 
-   return   0;
+      if (c >= 0x80 && c <= 0x9F)
+         return   2;
+      if (c > 0x7F)
+         nArt = 1;
+   }
+
+   return   nArt;
 }
 
 // E-118: Kopfzeilen fuer den Textteil - Content-Type mit Zeichensatz und,
 // bei Bytes ueber 0x7F, Content-Transfer-Encoding 8bit. Vorlage ist
 // SendContentType (Eudora/sendmail.cpp). Der Text wird nicht umkodiert: er
 // steht lokal schon im Zeichensatz, den NameCharset nennt.
-static void E118TextKopf (BOOL bHtml, BOOL bAchtbit, CString& szTyp, CString& szKodierung)
+static void E118TextKopf (BOOL bHtml, int nAchtbit, CString& szTyp, CString& szKodierung)
 {
 	char	scratch[128];
 
-	NameCharset (scratch, bAchtbit ? 1 : 0);
+	NameCharset (scratch, nAchtbit ? 1 : 0);
+
+	// Euro und Co. (0x80-0x9F) gibt es in ISO-8859-1 nicht. Steht ein solches
+	// Byte im Text und nennt NameCharset ISO-8859-1 (kein SendCharset im INI),
+	// heisst der Zeichensatz windows-1252 (MESSSTAND zu E-118, 14.10.2026).
+	CString	szZeichensatz (scratch);
+	if (nAchtbit == 2)
+		szZeichensatz.Replace ((LPCSTR) CRString (IDS_MIME_ISO_LATIN1), "windows-1252");
+
 	szTyp.Format ("%s %s/%s%s", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_TYPE),
 				  (LPCSTR) CRString (IDS_MIME_TEXT),
-				  (LPCSTR) CRString (bHtml ? IDS_MIME_HTML : IDS_MIME_PLAIN), scratch);
+				  (LPCSTR) CRString (bHtml ? IDS_MIME_HTML : IDS_MIME_PLAIN), (LPCSTR) szZeichensatz);
 
 	szKodierung.Empty();
-	if (bAchtbit)
+	if (nAchtbit)
 		szKodierung.Format ("%s %s", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_ENCODING),
 							(LPCSTR) CRString (IDS_MIME_8BIT));
 }
@@ -793,7 +810,7 @@ BOOL CImapAppend::ReformatMessage ()
 				{
 					CString	szTyp, szKodierung;
 
-					E118TextKopf (m_bE118Html, m_bE118Achtbit, szTyp, szKodierung);
+					E118TextKopf (m_bE118Html, m_nE118Achtbit, szTyp, szKodierung);
 					bResult = SUCCEEDED ( jFile.PutLine (szTyp) );
 					if (bResult && !szKodierung.IsEmpty())
 						bResult = SUCCEEDED ( jFile.PutLine (szKodierung) );
@@ -1192,7 +1209,7 @@ BOOL CImapAppend::ReformatBody ()
 
 			len = strlen ( p );
 			m_bE118Html = E118Huelle (p, (long) len, &nAnfang, &nEnde);
-			m_bE118Achtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
+			m_nE118Achtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
 			p += nAnfang;
 			len = nEnde - nAnfang;
 
@@ -1271,7 +1288,7 @@ BOOL CImapAppend::AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWri
 	// text/plain, und die HTML-Huelle abstreifen.
 	long	nAnfang = 0, nEnde = 0;
 	BOOL	bHtml = E118Huelle (p, len, &nAnfang, &nEnde);
-	BOOL	bAchtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
+	int		nAchtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
 
 	p += nAnfang;
 	len = nEnde - nAnfang;
@@ -1291,7 +1308,7 @@ BOOL CImapAppend::AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWri
 
 	// Write the Content-Type header (E-118: text/html oder text/plain, mit Zeichensatz).
 	CString szHeader, szKodierung;
-	E118TextKopf (bHtml, bAchtbit, szHeader, szKodierung);
+	E118TextKopf (bHtml, nAchtbit, szHeader, szKodierung);
 	bResult = pBodyFileWriter->WriteTextLine (szHeader);
 	if (bResult && !szKodierung.IsEmpty())
 		bResult = pBodyFileWriter->WriteTextLine (szKodierung);

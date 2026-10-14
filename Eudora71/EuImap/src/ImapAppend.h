@@ -91,7 +91,7 @@ private:
 	// MIME status of message
 	BOOL		m_bIsMultipart;
 	BOOL		m_bE118Html;		// E-118: einteiliger Text war <x-html> - text/html schreiben
-	BOOL		m_bE118Achtbit;		// E-118: Bytes ueber 0x7F - Zeichensatz und 8bit
+	int			m_nE118Achtbit;		// E-118: 1 = Bytes ueber 0x7F, 2 = auch 0x80-0x9F (windows-1252)
 	CString		m_TransferEncoding;
 	CString		m_Boundary;
 	CString		m_Type;

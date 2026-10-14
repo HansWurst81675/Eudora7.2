@@ -1,0 +1,13 @@
+From: Pruefung <absender@e118.invalid>
+To: empfaenger@e118.invalid
+Subject: Pruefung E-118: HTML-Mail in IMAP-Ordner
+Date: Wed, 14 Oct 2026 09:10:00 +0200
+Message-ID: <e118-pruefung@e118.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+
+<html><body>
+<p>E-118 Pruefnachricht: Grüße aus München, äöü ÄÖÜ ß.</p>
+<p>Erwartet nach dem Hochladen: <b>Content-Type: text/html</b> mit Zeichensatz, kein x-html im Rumpf.</p>
+</body></html>

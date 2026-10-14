@@ -160,9 +160,9 @@ haben.
 
 | | |
 |---|---|
-| Testverzeichnis | noch keines bei Gregor; Messung am IMAP-Prüfserver in Arbeit |
+| Testverzeichnis | wird bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.89-release` |
 | Inhalt | wie 1.0.88, dazu [E-118](../BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
-| Gemessen | Testsuite 207/207 (`TestE118.cpp`) |
+| Gemessen | Testsuite 207/207 (`TestE118.cpp`); IMAP-Prüfserver: `text/html` mit Zeichensatz, ohne Hülle; Gegenprobe 1.0.88 ohne `Content-Type` |
 
 ## 1.0.88 — **nicht ausgeliefert**, Quellstand 7.2.0.88, gemergt mit PR #97 (E-105); Gregor verzichtete auf einen eigenen Test
 
