@@ -235,6 +235,11 @@ private:
 // IMplementation of a delay before requesting password from user if he just cancelled.
 //
 	void	SetUserJustCancelledLogin ();
+
+public:
+	// E-121 P3: steht fuer diese Kennung noch eine Uebertragung lokal -> IMAP aus?
+	BOOL	HatOffeneUebertragung (unsigned long ulHash);
+private:
 	BOOL	UserJustCancelledLogin ();
 
 	void	ShowError(UINT iError, CImapConnection *pImap, LPCSTR szImapName, TCHAR cDelimiter);

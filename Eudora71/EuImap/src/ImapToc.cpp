@@ -4313,7 +4313,16 @@ BOOL CTocDoc::ImapRemoveAttachments(CSummary *pSum)
 
 		//this should be done only if we are not transferring to a local mailbox. 
 		// get rid of embedded objects
-		if(pSum && pSum->CanDeleteEmbedded())
+		// E-121 P3: steht fuer diese Nachricht noch eine Uebertragung aus einem
+		// lokalen Postfach aus, ist sie die Vorab-Kopie - ihre Bilddateien gehoeren
+		// auch der Quelle und werden mit ihr hochgeladen. Nicht loeschen.
+		BOOL bE121Offen = FALSE;
+		if (pSum && m_pImapMailbox)
+		{
+			CImapAccount *pE121Konto = g_ImapAccountMgr.FindAccount(m_pImapMailbox->GetAccountID());
+			bE121Offen = pE121Konto && pE121Konto->HatOffeneUebertragung(pSum->GetHash());
+		}
+		if(pSum && pSum->CanDeleteEmbedded() && !bE121Offen)
 		{
 			char* buf = pMsgDoc->GetFullMessage();		// gots ta get da URIMap
 			CString Paths;

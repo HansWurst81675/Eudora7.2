@@ -3865,6 +3865,56 @@ CImapAction *CActionQueue::GetNextMailboxMatch(unsigned long ulHashToMatch)
 }
 
 //
+//	CActionQueue::HatOffeneUebertragung()
+//
+//	E-121 P3 (PRUEFER-28): steht fuer diese Kennung noch eine Uebertragung aus
+//	einem lokalen Postfach in die Warteschlange? Dann teilt sich die lokale
+//	Vorab-Kopie im IMAP-Zielordner die eingebetteten Bilddateien mit der Quelle,
+//	und wer die Kopie entfernt, darf die Dateien nicht loeschen. Die Aufgaben
+//	stehen auch nach einem Neustart hier (actionqueue.dat) - anders als der
+//	Merker SetDeleteEmbedded(FALSE), der nur im Speicher lebt.
+//
+bool CActionQueue::HatOffeneUebertragung(unsigned long ulHash)
+{
+	if (ulHash == 0)
+	{
+		return false;
+	}
+
+	int		iSize = m_array.GetSize();
+	for (int i = 0; i < iSize; ++i)
+	{
+		CImapFromLocalTransferMsgAction	*pAktion = dynamic_cast<CImapFromLocalTransferMsgAction*>((CImapAction*)m_array.GetAt(i));
+		if (!pAktion || !pAktion->m_szMessageIDs)
+		{
+			continue;
+		}
+
+		const char	*p = pAktion->m_szMessageIDs;
+		while (*p)
+		{
+			char			*pEnde = NULL;
+			unsigned long	 ulId = strtoul(p, &pEnde, 10);
+			if (pEnde == p)
+			{
+				break;
+			}
+			if (ulId == ulHash)
+			{
+				return true;
+			}
+			p = pEnde;
+			while (*p == ',' || *p == ' ')
+			{
+				++p;
+			}
+		}
+	}
+
+	return false;
+}
+
+//
 //	CActionQueue::WriteQueue()
 //
 //	Write the queue to disk.

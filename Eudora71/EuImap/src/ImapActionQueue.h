@@ -558,6 +558,7 @@ public:
 	int				 GetCount() {return m_array.GetCount();}
 	bool			 HasHighPriorityItems();
 	CImapAction		*GetNextMailboxMatch(unsigned long ulHashToMatch);
+	bool			 HatOffeneUebertragung(unsigned long ulHash);	// E-121 P3
 
 	void			 SetNeedsWrite(bool bNeedsWrite) {m_bNeedsWrite = bNeedsWrite;}
 	bool			 NeedsWrite() {return m_bNeedsWrite;}

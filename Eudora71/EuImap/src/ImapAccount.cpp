@@ -578,6 +578,12 @@ void CImapAccount::InitQueue()
 //
 //	Adds the specified action to the action queue for this account.
 //
+// E-121 P3: siehe CActionQueue::HatOffeneUebertragung.
+BOOL CImapAccount::HatOffeneUebertragung (unsigned long ulHash)
+{
+	return (m_pActionQueue && m_pActionQueue->HatOffeneUebertragung(ulHash)) ? TRUE : FALSE;
+}
+
 void CImapAccount::QueueAction(CImapAction *pImapAction)
 {
 	if (m_pActionQueue)
