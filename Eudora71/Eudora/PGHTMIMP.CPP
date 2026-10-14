@@ -106,6 +106,8 @@ PaigeHTMLImportFilter::PaigeHTMLImportFilter ()
    inside_script = FALSE;
    e105_tag[0] = 0;			// E-105
    e105_tiefe = 0;
+   e105_vorlauf = FALSE;
+   memset(e105_offen, 0, sizeof(e105_offen));
    //QUALCOMM Begin - Kusuma (mimic v3.14) added style-stack-ref
    param_ref = attribute_ref = anchor_ref = table_text = tables_ref = style_stack_ref = MEM_NULL;
    linebreak_char = 0x0D;
@@ -158,6 +160,10 @@ pg_error PaigeHTMLImportFilter::pgPrepareImport (void)
 
 //QUALCOMM Begin - Kusuma (mimic v3.14)
    FreeStyleSheetDefs();
+
+   e105_tag[0] = 0;			// E-105: jeder Import beginnt sichtbar (PRUEFER-26)
+   e105_tiefe = 0;
+   memset(e105_offen, 0, sizeof(e105_offen));
 
    //def_text_color = cur_text_color = paige_globals->def_style.fg_color;
    current_style.fg_color = paige_globals->def_style.fg_color;
@@ -594,9 +600,13 @@ Die Funktion ist frei von Paige-Typen, damit sie ohne Paige pruefbar ist
 (Tests/TestE105.cpp, Extract.ps1 Region P).
 
 Schutz gegen ein nie geschlossenes Element: </body> und </html> beenden den
-Bereich immer. Ein verstecktes <p> endet wie im Browser auch am naechsten
-Blockelement und am Ende eines umgebenden Containers - sonst verschluckte ein
-<p style="display:none"> ohne </p> die ganze restliche Mail. */
+Bereich immer. Implizite Enden wie im Browser: ein verstecktes <p> endet am
+naechsten Blockelement (auch td/th/tr/li), ein verstecktes <td>/<th> am
+naechsten <td>/<th>/<tr>, ein <tr> am naechsten <tr>, ein <li> am naechsten
+<li> - jeweils nur auf seiner eigenen Ebene. Und ein Ende-Tag eines Behaelters
+(table, tr, td, th, li, ul, ol, div), das im Bereich nie geoeffnet wurde,
+gehoert einem Vorfahren und beendet den Bereich. Sonst verschluckte ein
+vergessenes Ende-Tag die ganze restliche Mail (PRUEFER-26 F1). */
 
 static int E105GleichKlein (const char* pA, int nA, const char* pB)
 {
@@ -681,16 +691,23 @@ static int E105DisplayNone (const char* pWert, int nWert)
    return   0;
 }
 
-int E105Schritt (const char* pPuffer, char* szTag, long* pnTiefe)
+int E105Schritt (const char* pPuffer, char* szTag, long* pnTiefe, long* anOffen)
 {
    static const char* const aLeer[] = { "area", "base", "br", "col", "embed", "hr", "img",
       "input", "link", "meta", "param", "source", "track", "wbr", 0 };
    static const char* const aBlock[] = { "p", "div", "table", "ul", "ol", "dl", "h1", "h2",
-      "h3", "h4", "h5", "h6", "blockquote", "pre", "hr", "center", "address", 0 };
-   static const char* const aContainer[] = { "div", "table", "tr", "td", "th", "li", "ul",
-      "ol", "dl", "blockquote", "center", 0 };
+      "h3", "h4", "h5", "h6", "blockquote", "pre", "hr", "center", "address",
+      "td", "th", "tr", "li", 0 };
+   // Behaelter, deren Ende-Tags im Bereich mitgezaehlt werden (anOffen hat
+   // genau so viele Plaetze, PGTXRCPP.H e105_offen[8]). Ein Ende-Tag, das im
+   // versteckten Bereich nie geoeffnet wurde, gehoert einem Vorfahren: der
+   // Browser schliesst dort alles Offene, der Bereich ist zu Ende
+   // (PRUEFER-26 F1: vergessenes </div> in einer Zelle).
+   static const char* const aBehaelter[] = { "table", "tr", "td", "th", "li", "ul", "ol",
+      "div", 0 };
    char        szName[16];
    int         nName = 0, bLang = 0, bEnde = 0, bSelbst = 0, bVersteckt = 0;
+   int         iBehaelter = -1, i;
    const char* p = pPuffer;
 
    while (*p == ' ')
@@ -758,30 +775,64 @@ int E105Schritt (const char* pPuffer, char* szTag, long* pnTiefe)
       }
    }
 
+   if (!bLang)
+      for (i = 0; aBehaelter[i]; ++i)
+         if (strcmp(szName, aBehaelter[i]) == 0)
+            iBehaelter = i;
+
    if (*pnTiefe > 0) {
+      int   bSchluss = 0;
 
-      if (bEnde && (strcmp(szName, "body") == 0 || strcmp(szName, "html") == 0)) {
-         *pnTiefe = 0;
-         return   0;
+      if (bEnde && (strcmp(szName, "body") == 0 || strcmp(szName, "html") == 0))
+         bSchluss = 1;
+
+      // Implizite Enden wie im Browser, nur auf der Ebene des versteckten
+      // Elements - nicht in einer Tabelle oder Liste, die im Bereich selbst
+      // geoeffnet wurde (PRUEFER-26 F1, F2).
+      if (!bEnde && !bSchluss) {
+         if (strcmp(szTag, "p") == 0 && E105InListe(szName, aBlock))
+            bSchluss = 1;
+         else
+         if ((strcmp(szTag, "td") == 0 || strcmp(szTag, "th") == 0) && anOffen[0] == 0 &&
+             (strcmp(szName, "td") == 0 || strcmp(szName, "th") == 0 || strcmp(szName, "tr") == 0))
+            bSchluss = 1;
+         else
+         if (strcmp(szTag, "tr") == 0 && anOffen[0] == 0 && strcmp(szName, "tr") == 0)
+            bSchluss = 1;
+         else
+         if (strcmp(szTag, "li") == 0 && anOffen[5] == 0 && anOffen[6] == 0 && strcmp(szName, "li") == 0)
+            bSchluss = 1;
       }
 
-      if (strcmp(szTag, "p") == 0) {
-         if ((!bEnde && E105InListe(szName, aBlock)) || (bEnde && E105InListe(szName, aContainer)))
-            *pnTiefe = 0;    // weiter unten: das Tag selbst kann wieder versteckt sein
-      }
-
-      if (*pnTiefe > 0) {
-
-         if (!bLang && nName > 0 && strcmp(szName, szTag) == 0) {
-            if (bEnde)
-               --*pnTiefe;
-            else
-            if (!bSelbst)
-               ++*pnTiefe;
-         }
-
+      if (!bSchluss && !bLang && nName > 0 && strcmp(szName, szTag) == 0) {
+         if (bEnde)
+            --*pnTiefe;
+         else
+         if (!bSelbst)
+            ++*pnTiefe;
          return   1;
       }
+
+      if (!bSchluss && iBehaelter >= 0) {
+         if (!bEnde) {
+            if (!bSelbst)
+               ++anOffen[iBehaelter];
+         }
+         else
+         if (anOffen[iBehaelter] > 0)
+            --anOffen[iBehaelter];
+         else
+            bSchluss = 1;     // Ende eines Vorfahren
+      }
+
+      if (!bSchluss)
+         return   1;
+
+      // Bereich zu Ende; das Tag selbst wird unten neu bewertet - es kann
+      // wieder versteckt sein (zweites <p style=display:none>).
+      *pnTiefe = 0;
+      for (i = 0; aBehaelter[i]; ++i)
+         anOffen[i] = 0;
    }
 
    if (!bEnde && bVersteckt) {
@@ -789,6 +840,8 @@ int E105Schritt (const char* pPuffer, char* szTag, long* pnTiefe)
       if (!bSelbst && !bLang && nName > 0 && !E105InListe(szName, aLeer)) {
          strcpy(szTag, szName);
          *pnTiefe = 1;
+         for (i = 0; aBehaelter[i]; ++i)
+            anOffen[i] = 0;
       }
 
       return   1;
@@ -918,14 +971,17 @@ long PaigeHTMLImportFilter::ReadHTMLTag (pg_boolean PG_FAR *end_tag)
 // E-105: Elemente mit style="display:none" samt Inhalt auslassen. Der Puffer
 // steht hier vollstaendig, Attribute sind noch nicht ausgewertet. Ein
 // verschlucktes Tag liefert 0 wie ein unbekanntes; der Text dazwischen wird in
-// pgReadNextBlock ueber e105_tiefe gesperrt.
-   if (!code_listing) {
+// pgReadNextBlock ueber e105_tiefe gesperrt. Nicht in <script>: dort ist ein
+// Tag Text eines Programms, kein Element (PRUEFER-26 G1). Die Spur schreibt
+// nur der Hauptlauf - der Tabellen-Vorlauf liest dieselben Tags noch einmal
+// (PRUEFER-26 G2).
+   if (!code_listing && !inside_script) {
       long     e105_vorher = e105_tiefe;
       char     szSpur[96];
 
-      if (E105Schritt((const char *)attribute_ptr, e105_tag, &e105_tiefe)) {
+      if (E105Schritt((const char *)attribute_ptr, e105_tag, &e105_tiefe, e105_offen)) {
 
-         if (e105_vorher == 0 && e105_tiefe > 0) {
+         if (e105_vorher == 0 && e105_tiefe > 0 && !e105_vorlauf) {
             sprintf(szSpur, "E-105 versteckt (display:none): <%s>", e105_tag);
             PutDebugLog(DEBUG_MASK_MISC, szSpur);
          }
@@ -933,8 +989,8 @@ long PaigeHTMLImportFilter::ReadHTMLTag (pg_boolean PG_FAR *end_tag)
          return   0;
       }
 
-      if (e105_vorher > 0) {
-         sprintf(szSpur, "E-105 versteckter Bereich <%s> ohne Ende-Tag beendet", e105_tag);
+      if (e105_vorher > 0 && !e105_vorlauf) {
+         sprintf(szSpur, "E-105 versteckter Bereich <%s> ohne eigenes Ende-Tag beendet", e105_tag);
          PutDebugLog(DEBUG_MASK_MISC, szSpur);
       }
    }
@@ -2770,8 +2826,11 @@ void PaigeHTMLImportFilter::ProcessPreTable (tag_attribute_ptr params, long num_
    // nicht ueberleben, sonst zaehlt jedes Ende-Tag doppelt.
    char              e105_tag_vorher[16];
    long              e105_tiefe_vorher = e105_tiefe;
+   long              e105_offen_vorher[8];
 
    strcpy(e105_tag_vorher, e105_tag);
+   memcpy(e105_offen_vorher, e105_offen, sizeof(e105_offen_vorher));
+   e105_vorlauf = TRUE;
    old_params_ref = param_ref;
    param_ref = ::MemoryAlloc(paige_globals->mem_globals, sizeof(tag_attribute), 0, 6);
    
@@ -2839,6 +2898,8 @@ void PaigeHTMLImportFilter::ProcessPreTable (tag_attribute_ptr params, long num_
    param_ref = old_params_ref;
    strcpy(e105_tag, e105_tag_vorher);			// E-105
    e105_tiefe = e105_tiefe_vorher;
+   memcpy(e105_offen, e105_offen_vorher, sizeof(e105_offen));
+   e105_vorlauf = FALSE;
    
    SetDefaultTable(&master_table);
 }

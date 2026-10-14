@@ -25,7 +25,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 | Kriterium 2 | [E-113](BEFUNDE.md#e-113) | breite Bilder laufen rechts hinaus |
 | Kriterium 2 | [E-119](BEFUNDE.md#e-119) | `data:`-Bilder als grauer Kasten |
 | Kriterium 2 | [E-116](BEFUNDE.md#e-116) | `35px` falsch gelesen |
-| Kriterium 2 | [E-95](BEFUNDE.md#e-95), [E-96](BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Doctolib- und FairToner-Nachricht |
+| Kriterium 2 | [E-95](BEFUNDE.md#e-95), [E-96](BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Doctolib- und FairToner-Nachricht — **am 14.10.2026 an 1.0.87 bestätigt** |
 | Kriterium 4 | [E-111](BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld |
 | Kriterium 4 | [E-14](BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis — klären |
 

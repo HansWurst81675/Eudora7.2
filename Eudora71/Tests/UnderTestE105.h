@@ -7,6 +7,6 @@
 #ifndef EUDORA_TESTS_UNDERTEST_E105_H
 #define EUDORA_TESTS_UNDERTEST_E105_H
 
-int E105Schritt(const char* pPuffer, char* szTag, long* pnTiefe);
+int E105Schritt(const char* pPuffer, char* szTag, long* pnTiefe, long* anOffen);
 
 #endif

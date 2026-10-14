@@ -395,6 +395,8 @@ class PaigeHTMLImportFilter : public PaigeImportFilter {
 		pg_boolean			inside_script;		// AN-2: TRUE innerhalb <script> oder <style>
 		char				e105_tag[16];		// E-105: Name des versteckten Elements (display:none)
 		long				e105_tiefe;			// E-105: > 0 innerhalb davon - Text und Tags verschluckt
+		long				e105_offen[8];		// E-105: im Bereich geoeffnete Behaelter (table tr td th li ul ol div)
+		pg_boolean			e105_vorlauf;		// E-105: TRUE waehrend ProcessPreTable - keine Spur schreiben
 		long				table_unique_id;	// Next unique ID for tables
 		long				page_width;			// Max width for page
 		long				span_flag;			// Column span if non-zero
