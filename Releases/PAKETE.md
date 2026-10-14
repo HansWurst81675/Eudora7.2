@@ -160,7 +160,7 @@ haben.
 
 | | |
 |---|---|
-| Testverzeichnis | wird bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.89-release` |
+| Testverzeichnis | bereitgestellt am 14.10.2026, `C:\Users\Gregor\Eudora72-1.0.89-release`; Prüfschritte in [TESTPLAN.md](../TESTPLAN.md#c5) |
 | Inhalt | wie 1.0.88, dazu [E-118](../BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
 | Gemessen | Testsuite 207/207 (`TestE118.cpp`); IMAP-Prüfserver: `text/html` mit Zeichensatz, ohne Hülle; Gegenprobe 1.0.88 ohne `Content-Type` |
 
