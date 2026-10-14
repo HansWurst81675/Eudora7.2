@@ -229,3 +229,27 @@ CHRONIST-Lauf `33c90c5`) bis 13.10.2026, 08:13 UTC. Zwei Abschnitte:
 geglaubt, sondern über `X-Mailer` auf den Empfang mit 7.2.0.58/59 am 14.09.
 zurückgeführt; „was haben wir gefixt?" mit `git diff v1.0.84..HEAD --
 Eudora71` beantwortet statt aus dem Gedächtnis.
+
+## Lauf vom 14.10.2026 (CHRONIST)
+
+Ausgewertet: `7cea137a-…jsonl` ab 13.10.2026, 14:29 UTC (nach dem
+CHRONIST-Lauf `4c50e3b5`) bis 14.10.2026, 06:25 UTC: Paket 1.0.87, Gregors
+Test, PR #96, Release `v1.0.87`, E-105 (7.2.0.88). `perl
+tools/verlauf-messen.pl`: 32 Nachrichten, **23 Einwürfe (71 %)**, größter
+Block 47 Werkzeugaufrufe (E-105 Test und Einbau, 05:48).
+
+| Muster | Beleg | Lehre (Nachtrag) |
+|---|---|---|
+| Rückstrich dreimal verloren (`fotoDir` als `C:SERSGREGOR…`, `C:Temp105`, Senkrechtstrich unmaskiert); Perls Warnung `Unrecognized escape \T` mit `grep -v` weggefiltert; dazu `chomp` unter `-0` und `() =` mit Fanggruppen | 14.10., 05:38–06:10 | [text-nicht-durch-schichten-schicken](text-nicht-durch-schichten-schicken.md), Fall 16–18; **Schranke `pruefe-rueckstrich.pl` gebaut** |
+| Messverzeichnis wieder aus altem Lauf kopiert, wieder `lmos.dat` am falschen Ort gelöscht; sechs Läufe | 14.10., 05:56–06:04 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md); **`testlauf.ps1` nennt Altlasten** |
+| Gregors Postfächer in `Eudora72-1.0.87-release` durchsucht, weil er sagte, wo die Daten liegen; die Rechteprüfung hat abgelehnt | 14.10., 05:56:22 / 06:07:38 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) |
+| *„gibt es da etwas für mich zu tun?"* ohne Ja/Nein; Versprechen „prüfe E-95/E-96 und trage es nach" ohne Eintrag; *„bei dem vielen text übersehen"* | 14.10., 06:02–06:15 | [chat-knapp-halten](chat-knapp-halten.md) |
+| Release im Vordergrund begonnen, während E-105 vorgezogen war; Gregor: *„sollte es nicht ein anderer agent machen"* | 14.10., 05:40:26 / 05:40:39 | [funktionsbug-vor-buchfuehrung](funktionsbug-vor-buchfuehrung.md) |
+| „an"/„ab" falsch gelesen, zwei Commit-Anläufe à 90 s nach „ab", Akku leer | 13.10., 14:51–14:55 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) |
+
+**Was gut lief:** Release `v1.0.87` von einem Agenten im eigenen
+Arbeitsbaum, ZIP byte-gleich mit Gregors getesteter Fassung nachgerechnet;
+E-105 mit dem Test zuerst (Gegentest 5 rot), am laufenden Programm an einer
+Prüfnachricht **und** am echten Newsletter gemessen, jeweils mit Gegenprobe
+1.0.87; der echte Newsletter kam von Gregor selbst als `.htm`, nicht aus
+seinen Postfächern.

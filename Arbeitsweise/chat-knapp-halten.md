@@ -97,3 +97,35 @@ Drei Gründe, warum die Lehre nicht gegriffen hat:
 - **Ein Versprechen wie „ab jetzt weniger" ist keine Maßnahme.** Was sich
   ändert, muss im nächsten Zug zählbar sein - weniger Einträge, nicht nur
   kürzere.
+
+## Nachtrag 14.10.2026: eine Frage Gregors bekam keine Antwort, ein Versprechen keinen Eintrag
+
+`tools/verlauf-messen.pl` vom 13.10. 14:29 bis 14.10. 06:25 UTC: 32
+Nachrichten von Gregor, **23 davon Einwürfe (71 %)**; am Vortag waren es 60 %.
+Drei davon zeigen, wo es hakt:
+
+| Zeit (UTC) | Gregor | Was er bekam |
+|---|---|---|
+| 06:02:24 | *„TESTPLAN.md … gibt es da etwas für mich zu tun?"* | um 06:05:23 *„Zuerst deine Frage zum Testplan:"*, danach zwei Werkzeugaufrufe und um 06:05:36 eine Statuszeile: *„Im Testplan sind noch E-95/E-96 offen …, die aber durch E-112 bereits größtenteils abgedeckt scheinen, ich prüfe das und trage es nach."* Weder ja noch nein. **Geprüft und eingetragen wurde es nicht**: `TESTPLAN.md` sagt auf `1d010e0f` weiter *„Offen sind E-95 und E-96"* |
+| 06:09:42 und 06:10:12 | *„welche mail möchtest du als .eml haben?"*, *„sag mir, wenn ich eudora dafür starten soll"* | zwei Bitten in 17 Sekunden, die sich widersprechen: erst *„als `.eml`-Dateien"*, dann *„starte Eudora 1.0.87 … speichere ihn per File → Save As als `.htm`"* |
+| 06:15:38 | *„sonst noch aktionen, die ich bei dem vielen text übersehen habe?"* | zwei Aufgaben (Verzeichnis 1.0.85-Debug löschen, `LogLevel` zurück), die vorher irgendwo standen. Er hat beide in fünf Minuten erledigt |
+
+Er sagt es selbst: *„bei dem vielen text"*. Die Antworten waren kurz. Aber
+was **er** tun soll, stand verstreut in Statuszeilen zwischen
+Werkzeugaufrufen, und er musste es zusammensuchen.
+
+**How to apply, zusätzlich:**
+
+- **Eine direkte Frage Gregors wird im ersten Satz beantwortet**, mit ja
+  oder nein: *„Für dich im Testplan: nichts. E-95 und E-96 sehe ich mir
+  selbst an."* Erst danach Werkzeugaufrufe.
+- **Jede Antwort, die etwas von Gregor will, endet mit einer Zeile „Für
+  dich:"** und allem, was offen ist. Will sie nichts: *„Für dich: nichts."*
+  Dann muss er nicht fragen, ob er etwas übersehen hat.
+- **Eine Bitte an Gregor nennt einen Weg, den ich geprüft habe**
+  ([[erst-pruefen-dann-anweisen]]). Zwischen der Bitte um `.eml` und der um
+  `.htm` steht im Protokoll kein Werkzeugaufruf, der einen der beiden Wege
+  ausprobiert hätte; die zweite hat die erste nach 17 Sekunden ersetzt.
+- **„Ich prüfe das und trage es nach" ist ein Versprechen.** Es kommt sofort
+  in `WEITERMACHEN.md` oder wird nicht gegeben. Offen seit 14.10.2026
+  06:05: E-95/E-96 gegen E-112 prüfen und `TESTPLAN.md` C3 berichtigen.

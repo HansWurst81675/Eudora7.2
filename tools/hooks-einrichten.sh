@@ -262,6 +262,18 @@ schranke pruefe-behoben-belegt.pl || exit $?
 #      gemessenen Fehlalarme (deutsches Zitat, Quelltextkommentar).
 schranke pruefe-anzeigetext.pl || exit $?
 
+# 14d. Kein Windows-Pfad ohne Rueckstrich im Zuwachs einer .md. Bis zum
+#      14.10.2026 achtzehn Faelle in Arbeitsweise/text-nicht-durch-
+#      schichten-schicken.md (C:TempAN5, C:Temp94-nachher, C:Temp105):
+#      ein Pfad in einem Perl-String in doppelten Anfuehrungszeichen
+#      verliert \T und \E. Die Lehre trug die Pruefung seit dem 13.10.2026
+#      als "Offen". Nur der Zuwachs; Arbeitsweise/ und die Rollenberichte
+#      sind ausgenommen, weil sie den Fehler zitieren.
+#      Gegenprobe: --selbsttest, 16 Faelle; dazu die echte Zeile aus PAKETE.md
+#      vom 14.10.2026 06:10 in einem Wegwerf-Repo (weist ab) und berichtigt
+#      (laesst durch).
+schranke pruefe-rueckstrich.pl || exit $?
+
 # ---------------------------------------------------------------------------
 # 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
 #
@@ -535,6 +547,9 @@ echo "                               WORAN es belegt ist?"
 echo " 14c. tools/pruefe-anzeigetext.pl"
 echo "                               nennt ein zitierter Oberflaechentext seine"
 echo "                               Herkunft? (E-83)"
+echo " 14d. tools/pruefe-rueckstrich.pl"
+echo "                               steht ein Windows-Pfad ohne Rueckstrich"
+echo "                               (C:Temp105) in einer neuen MD-Zeile?"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo

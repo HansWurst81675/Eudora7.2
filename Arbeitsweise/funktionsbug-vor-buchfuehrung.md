@@ -20,3 +20,28 @@ Gemessen am Verlauf: Um 08:07 fragte er *„sind e-112 und e-113 gefixt?"*. Der 
 - **Zweig mit Behebungsnamen ohne Behebung nicht zum Merge anbieten**, sondern umbenennen lassen oder die Behebung zuerst bauen.
 
 Schranke: keine - ob der Vordergrund einer Behebung oder der Buchführung gehört, steht in keiner Datei; Messwert ist `tools/verlauf-messen.pl` (13.10. ab 08:13: 59 % Einwürfe) und `git diff --stat <letztes Paket>..HEAD -- Eudora71` beim Zweigvorschlag.
+
+## Nachtrag 14.10.2026: das Release ist Buchführung, Gregor hat es angemahnt
+
+Um 05:32:32 UTC zog Gregor E-105 vor (*„ja, E-105 vorziehen"*), um 05:40:15
+kam *„ja, wir releasen ein 0.87 in github"*. Um 05:40:26 begann ich im
+Vordergrund, `release-veroeffentlichen.ps1` zu lesen (*„Ich veröffentliche
+jetzt 1.0.87 …"*). 13 Sekunden später Gregor: *„sollte es nicht ein anderer
+agent machen, was du gerade sagst?"*
+
+Danach lief es so, wie diese Lehre es will: ab 05:40:51 ein Agent im
+eigenen Arbeitsbaum `Eudora7.2-release` für das Release, im Vordergrund
+E-105. Um 05:46:20 war `v1.0.87` veröffentlicht, um 05:50 stand der Test von
+E-105 grün, um 05:54 war 7.2.0.88 gebaut.
+
+**Why:** Ein Release ist für Gregor so unsichtbar wie Doku: er hat 1.0.87
+schon getestet. Ich habe es trotzdem in den Vordergrund genommen, weil es
+**sein** letzter Satz war. Der letzte Auftrag ist nicht der wichtigste; der
+wichtigste ist der Funktionsfehler, den er vorgezogen hat.
+
+**How to apply, zusätzlich:**
+
+- **Kommt ein Buchführungsauftrag (Release, PR, Doku), während ein
+  Funktionsfehler ansteht, geht er sofort an einen Agenten.** Im
+  Vordergrund bleibt der Fehler. Den Agentenauftrag schreibe ich, bevor ich
+  das Werkzeug selbst lese.
