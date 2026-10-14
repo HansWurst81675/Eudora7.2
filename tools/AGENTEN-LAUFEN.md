@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-14 12:21 | [E-118](../BEFUNDE.md#e-118) Teil 2 und [E-121](../BEFUNDE.md#e-121) (7.2.0.90) nachrechnen |
