@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-14 08:22 | [E-105](../BEFUNDE.md#e-105) display:none (7.2.0.88) nachrechnen |
