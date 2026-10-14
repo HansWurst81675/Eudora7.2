@@ -176,6 +176,36 @@ if (Test-Path -LiteralPath $startIni) {
     Write-Host '  Startliste [Open Windows]: keine Eudora.ini im Mailverzeichnis'
 }
 
+# Altlasten aus einem frueheren Lauf: sie lassen einen Abruf leer ausgehen
+# oder die falsche Nachricht oeffnen. Am 13.10.2026 (E-83) drei Laeufe, am
+# 14.10.2026 (E-105) sechs Laeufe, bis die Pruefnachricht ankam:
+#   - spool\lmos.dat und seine Sicherungen lmos.dat.001, .002 (Leave Mail On
+#     Server: Eudora haelt die Nachricht fuer schon geholt). Geloescht wurde
+#     beide Male lmos.dat im Mailverzeichnis selbst - dort liegt sie nicht.
+#   - ein alter In.mbx: der erste Lauf am 14.10. oeffnete eine alte Nachricht.
+#   - ein alter Pruefserver auf 127.0.0.1:11110 haelt den Port, der neue
+#     startet nicht ("Address already in use"), Eudora holt beim alten.
+# Nur ein Hinweis, keine Abweisung: ein Lauf ohne Abruf braucht nichts davon.
+# (Arbeitsweise/testdaten-muessen-durchkommen.md)
+$altSpool = Join-Path (Join-Path $voll 'Mailverzeichnis') 'spool'
+$altLmos = @()
+if (Test-Path -LiteralPath $altSpool) {
+    $altLmos = @(Get-ChildItem -LiteralPath $altSpool -Filter 'lmos.dat*' -ErrorAction SilentlyContinue | ForEach-Object { $_.Name })
+}
+$altIn = Join-Path (Join-Path $voll 'Mailverzeichnis') 'In.mbx'
+$altInGroesse = 0
+if (Test-Path -LiteralPath $altIn) { $altInGroesse = (Get-Item -LiteralPath $altIn).Length }
+$altPort = @(Get-NetTCPConnection -LocalPort 11110 -State Listen -ErrorAction SilentlyContinue)
+$altText = @()
+if ($altLmos.Count -gt 0) { $altText += ('spool\' + ($altLmos -join ', spool\')) }
+if ($altInGroesse -gt 0) { $altText += ('In.mbx ' + $altInGroesse + ' Byte') }
+if ($altPort.Count -gt 0) { $altText += ('Port 11110 belegt von Prozess ' + (($altPort | ForEach-Object { $_.OwningProcess }) -join ',')) }
+if ($altText.Count -gt 0) {
+    Write-Host ('  ALTLASTEN vor dem Lauf: ' + ($altText -join ' | '))
+} else {
+    Write-Host '  Altlasten vor dem Lauf: keine (kein spool\lmos.dat*, In.mbx leer, Port 11110 frei)'
+}
+
 if ($NurPruefen) {
     Write-Host '  -NurPruefen: es wird nichts gestartet.'
     Write-Host ''

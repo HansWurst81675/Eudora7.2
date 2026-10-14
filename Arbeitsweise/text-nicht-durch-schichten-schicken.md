@@ -5,10 +5,10 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-12T11:15:41.665Z
+  modified: 2026-10-14T06:48:34.529Z
 ---
 
-Schranke: tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
+Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
 
 **Gregor am 06.09.2026:** *„das hatten wir schon mit bash und PS. warum lernst du
 nicht daraus? warum passiert dir das immer wieder?"*
@@ -329,3 +329,64 @@ Zusatzgriff mitten in Gregors Testlauf, während er auf Antworten wartete.
 
 **Offen:** die Prüfung bauen und in `tools/hooks-einrichten.sh` hängen;
 dann diese `Schranke:`-Zeile auf sie umstellen.
+
+## Sechzehnter bis achtzehnter Fall, 14.10.2026: die Perl-Warnung stand da und wurde weggefiltert
+
+Während E-105, Transkript `7cea137a-…jsonl`, Zeiten UTC:
+
+| Zeit | Absicht | Weg | Ergebnis |
+|---|---|---|---|
+| 05:38:50 | Senkrechtstriche aus zitierten Betreffzeilen in der E-105-Zeile von BEFUNDE.md maskieren | Ersatz über die Befehlszeile | der Rückstrich vor dem Senkrechtstrich fehlte, die Tabellenzeile war in Spalten zerfallen; zweiter Anlauf mit `\x5c` im Perl-Ersatz |
+| 05:55:40 | `$fotoDir` im Messskript auf das Scratchpad setzen | `perl -0pe 's/…/\$fotoDir = "C:\\Users\\Gregor\\AppData\\Local…"/'` | im Skript stand **`C:SERSGREGORAPPDATAocaltempaudec--users-…`**: `\U` schaltet auf Großschreibung, `\L` auf Kleinschreibung, `\E` beendet das. 8 s später gelesen und durch `$PSScriptRoot` ersetzt, ganz ohne Rückstrich |
+| 06:09:59 | `C:\Temp\E105` in WEITERMACHEN und PAKETE | Ersatzskript per Hier-Dokument, Pfad in einem Perl-String in **doppelten** Anführungszeichen | Perl meldete `Unrecognized escape \T passed through` und `Useless use of \E`. **Der nächste Aufruf um 06:10:17 hängte ein `grep -v` auf „escape" und „Useless" an.** Im Ergebnis stand `C:Temp105`, gefunden um 06:10:43 mit einem eigenen `grep` |
+
+**Why:** Der dritte Fall ist der schlimmste. Perl hat den Fehler beim Namen
+genannt, mit Zeilennummer, und ich habe die Meldung als Rauschen behandelt
+und ausgeblendet. `perl -c` sagte zugleich `syntax OK`, die Warnung ist kein
+Syntaxfehler. Das ist [[ausreisser-ist-der-befund]]: was in der eigenen
+Ausgabe nicht ins Ergebnis passt, ist der Befund.
+
+Gemessen am 14.10.2026, wie man die Warnung zum Abbruch macht:
+
+    perl -e 'use warnings FATAL => "all"; eval q{"C:\Temp\E105"}; print $@'
+    ->  Unrecognized escape \T passed through at (eval 1) line 1.
+
+**How to apply, zusätzlich:**
+
+- **Eine Perl-Warnung zu einem Escape wird nie weggefiltert.** Sie ist die
+  Fehlermeldung genau dieser Lehre. `grep -v` auf `escape`, `Useless` oder
+  `Unrecognized` in einem Befehl ist der Auslöser, sofort anzuhalten.
+- **Ein Ersatzskript beginnt mit `use warnings FATAL => 'all';`** Dann bricht
+  es ab, bevor es schreibt.
+- **Ein Pfad im Ersatz steht in einfachen Anführungszeichen** (`'C:\Temp\E105'`
+  deutet in Perl nur `\\` und `\'`) **oder fällt ganz weg**, wie `$PSScriptRoot`
+  um 05:55:51.
+
+### Zwei Perl-Fallen im selben Einsetzskript, beide gemessen
+
+| Zeit | Zeile | Erwartet | Tatsächlich |
+|---|---|---|---|
+| 06:08:12 | `perl -0pi -e 'my $r = do { local $/; …<$f> }; chomp $r; …'` | Ersatztext ohne abschließenden Zeilenumbruch | `-0` setzt `$/` auf `"\0"`, das `local $/` gilt nur im `do`-Block. `chomp` entfernt danach ein Nullbyte, das es nicht gibt. Der Zeilenumbruch aus dem Hier-Dokument landete **mitten in der E-105-Tabellenzeile** von BEFUNDE.md, gesehen im `git diff` um 06:08:19 |
+| 06:10:01 | `my $n = () = $t =~ /$re/g;` als Trefferzähler | 1 | **2**: die Liste enthält je Treffer **alle Fanggruppen**, das Muster hatte zwei. Das Skript brach mit „README.md: 2 Treffer" ab, und um 06:10:10 suchte ich nach einer „doppelten Stelle in README", die es nicht gab |
+
+Nachgerechnet am 14.10.2026: `"xab y"` mit `/(a)(b)/g` ergibt in der
+Listenzählung 2, mit `$n++ while $t =~ /…/g` 1. Eine Datei `abc\n`, unter
+`perl -0` eingelesen und `chomp`t, hat danach noch 4 Zeichen.
+
+**How to apply:**
+
+- **Treffer zählt `$n++ while $t =~ /…/g`**, nie `() =` mit einem Muster,
+  das Klammern hat. Die Prüfung meldet sonst einen Fehler, den es nicht gibt,
+  und schickt mich auf die Suche danach ([[pruefstand-kann-blind-sein]]).
+- **Unter `-0` oder `-0777` den Zeilenumbruch mit `s/\n\z//` entfernen**,
+  nicht mit `chomp`.
+
+**Schranke ab 14.10.2026:** `tools/pruefe-rueckstrich.pl` im `pre-commit`
+(14d) weist einen Windows-Pfad ohne Rückstrich (`C:Temp105`) und ein
+wörtliches `\x5c` im **Zuwachs** einer `.md` ab. Der Punkt „Offen" aus
+Fall 13 bis 15 ist damit erledigt. Sie wirkt erst nach `sh
+tools/hooks-einrichten.sh` im Hauptbaum. Gegenprobe: `--selbsttest`, 16 Fälle;
+mit abgeschalteter Regel 5 rot; die echte `PAKETE.md`-Zeile von 06:10 weist
+sie in einem Wegwerf-Repo ab, berichtigt lässt sie sie durch. Für die beiden
+Perl-Fallen gibt es keine Schranke: sie stehen in Wegwerfskripten im
+Scratchpad, die kein Haken sieht.

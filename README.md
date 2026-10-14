@@ -69,8 +69,16 @@ verschickt.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.84`** (veröffentlicht am 12.10.2026 um 12:59
-  Uhr UTC, auf GitHub als *Latest*) — **[E-94](BEFUNDE.md#e-94) behoben**: Betreffs werden nicht
+* **Das neueste Release ist `v1.0.87`** (veröffentlicht am 14.10.2026 um 05:46
+  Uhr UTC, auf GitHub als *Latest*,
+  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.87) — Bilder in
+  der angegebenen Größe ([E-112](BEFUNDE.md#e-112) mit [E-103](BEFUNDE.md#e-103)),
+  Ctrl+F bei aktivem IMAP-Postfach ([E-115](BEFUNDE.md#e-115)) und `&amp;` in
+  Bildadressen ([E-117](BEFUNDE.md#e-117)); alle von Gregor vorher an 1.0.86 und
+  1.0.87 bestätigt. Das Mailverzeichnis im ZIP ist leer (nur die Vorgabe-`Eudora.ini`):
+  ein vorhandenes Mailverzeichnis hineinkopieren. Sonst wie `v1.0.84`:
+* **`v1.0.84`** (veröffentlicht am 12.10.2026 um 12:59
+  Uhr UTC) — **[E-94](BEFUNDE.md#e-94) behoben**: Betreffs werden nicht
   mehr mitten im Wort umbrochen; von Gregor vorher an seinem Postfach geprüft
   (Bildschirmfoto). Sonst wie `v1.0.83`:
 * **`v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18 Uhr UTC) — **von Gregor
@@ -136,8 +144,8 @@ verschickt.
   in Originalgröße statt in der angegebenen — eine Regression der
   E-106-Behebung. **Der Versuch in 7.2.0.76 wirkt nicht** — von Gregor am
   18.09.2026 am laufenden Programm widerlegt, mit Bildschirmfoto; seither
-  liegt der Text sogar wieder auf den Bildern. **Behoben in 7.2.0.85, noch nicht
-  veröffentlicht, von Gregor am 13.10.2026 am Testverzeichnis 1.0.86 bestätigt:** die Bilder werden in der
+  liegt der Text sogar wieder auf den Bildern. **Behoben in 7.2.0.85, veröffentlicht mit
+  `v1.0.87`, von Gregor am 13.10.2026 am Testverzeichnis 1.0.86 bestätigt:** die Bilder werden in der
   angegebenen Größe gezeichnet, ohne Angabe in Dateigröße ([E-103](BEFUNDE.md#e-103), ebenfalls
   bestätigt) — am
   laufenden Programm gemessen, auch für dieselbe Bildadresse in zwei Größen und
@@ -145,7 +153,7 @@ verschickt.
   nicht mehr zum Strich wird (und ein hohes ohne Breite nicht zum senkrechten), ist behoben
   und gemessen. Erst mit
   dieser Behebung wird [**E-116**](BEFUNDE.md#e-116) sichtbar (offen): eine Angabe wie
-  `width="35px"` wird als 3508 gelesen. **Behoben in 7.2.0.87, am laufenden
+  `width="35px"` wird als 3508 gelesen. **Behoben in 7.2.0.87, veröffentlicht als `v1.0.87`, am laufenden
   Programm gemessen, von Gregor an 1.0.87 bestätigt (14.10.2026):** [**E-117**](BEFUNDE.md#e-117) — Bilder
   mit `&amp;` in der Adresse kamen beim Antworten und Weiterleiten als 1×1-Pixel
   an und blieben eine leere Fläche. **Weiter offen ist
@@ -159,7 +167,7 @@ verschickt.
   nach RFC 2047 wegzulassen; über POP zeigte die Postfachliste sogar nur die
   erste Zeile. Der frühere Verdacht auf `Encode2047` beim Senden ist widerlegt
   — Eudora hatte diese Nachrichten gar nicht gesendet. **Kein Datenverlust.**
-* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), offen): In manchen
+* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, noch nicht ausgeliefert, von Gregor noch nicht bestätigt): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
   Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
@@ -215,7 +223,7 @@ verschickt.
 * **Ctrl+F (*Find Messages*) meldet „Encountered an improper argument"**
   ([**E-115**](BEFUNDE.md#e-115), an 1.0.84 gemeldet), und im Reiter *Mailboxes* ist kein
   Postfach angehakt — wenn ein IMAP-Postfach aktiv ist. **Behoben in 7.2.0.86,
-  noch nicht veröffentlicht, von Gregor am 13.10.2026 an 1.0.86 bestätigt**
+  veröffentlicht mit `v1.0.87`, von Gregor am 13.10.2026 an 1.0.86 bestätigt**
   (vorläufig: der Fehler trat vorher nur sporadisch auf). In `v1.0.84` und
   älter noch enthalten; kein Datenverlust.
 * **Nur 32 Bit.** Eine 64-Bit-Fassung ist nicht in Arbeit.
@@ -807,7 +815,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.87` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.88` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

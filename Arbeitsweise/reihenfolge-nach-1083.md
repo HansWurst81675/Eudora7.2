@@ -19,3 +19,7 @@ Gregors Reihenfolge, fortgeschrieben:
 **How to apply:** Nach dem Merge zuerst einen Zweignamen für E-105 vorschlagen ([[zweig-vorher-abstimmen]]), Test zuerst ([[tests-vor-jedem-commit-laufen-lassen]]).
 
 Schranke: keine - eine Reihenfolge ist eine Absprache, kein Zustand im Code.
+
+- **14.10.2026: Zweig für E-118 heißt `e-118_HTML_header`** (Gregors Vorschlag, von mir bestätigt). Anlegen erst nach dem Merge von `e-105_doppelte_bilder`, auf frischem `main` - sonst tragen beide Zweige 7.2.0.88 (Gregor: *„ja, macht sinn.“*).
+
+- **14.10.2026, Gregor: „ja, guter ansatz. so machen wir es“** - nach E-118 kommt eine **Untersuchung: HTML vor der Übergabe an Paige durch den eingebauten IE (MSHTML) vereinfachen lassen** (Unsichtbares entfernen auch über Klassen, `data:`-Bilder als Dateien ablegen, Größen umrechnen). Erst messen, ob MSHTML das in Eudora sauber hergibt; trägt es, erledigt es E-119, E-116, E-113 und den Klassenfall von E-105 als Klasse statt einzeln. Hintergrund: Lesen läuft über IE, Antworten/Weiterleiten über Paige (Editor von ~1995 ohne CSS) - deshalb „doktern wir so lange herum“.

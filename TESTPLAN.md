@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor; getestet wurde an 1.0.84, 1.0.86 und 1.0.87
+# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 am 14.10. an 1.0.87 bestätigt; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -166,10 +166,10 @@ mit `Mode=0` kam an 1.0.84 kein Abruf ([AN-2](BEFUNDE.md#an-2),
 *(Der Werbeweg ist an diesem Bau nicht auslösbar; die frühere Zeile zu
 `LogLevel=128159` und `grep "PLIST\|E-7"` entfällt mit ihm.)*
 
-### C3 · Die sechs, die auf dein Urteil warteten — offen sind noch zwei
+### C3 · Die sechs, die auf dein Urteil warteten — alle beurteilt
 
 **Stand 13.10.2026:** [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen,
-[E-101](BEFUNDE.md#e-101) durchgefallen (wieder offen). **Offen sind [E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96).**
+[E-101](BEFUNDE.md#e-101) durchgefallen (wieder offen). **[E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96) am 14.10.2026 an 1.0.87 bestätigt.**
 
 **Berichtigt am 12.10.2026 (LEKTOR, [L-18.5](Befunde/LEKTOR-26.md#l-18.5)):** hier standen *fünf*. `BEFUNDE.md` führt
 **fünfzehn** Behebungen als „von Gregor noch nicht bestätigt" — vierzehn davon
@@ -182,8 +182,8 @@ unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 | ✅ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
 | ✅ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
 | ✅ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
-| ☐ | [**E-95**](BEFUNDE.md#e-95) | antworten/weiterleiten mit Bildern — Bilder in der **angegebenen** Größe |
-| ☐ | [**E-96**](BEFUNDE.md#e-96) | dasselbe mit mehreren Bildern hintereinander |
+| ✅ | [**E-95**](BEFUNDE.md#e-95) | die **Doctolib**- und die **FairToner**-Nachricht je beantworten und weiterleiten — kein Bild abgeschnitten oder gequetscht, Text frei ([L-33.4](Befunde/LEKTOR-33.md#l-33.4)) — **bestätigt 14.10.2026 an 1.0.87** |
+| ✅ | [**E-96**](BEFUNDE.md#e-96) | dasselbe mit mehreren Bildern hintereinander — **bestätigt 14.10.2026 an 1.0.87** |
 
 **[E-97](BEFUNDE.md#e-97) und [E-99](BEFUNDE.md#e-99) gehören nicht hierher** — die hast du am 17.09.2026 schon
 bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
@@ -192,6 +192,7 @@ bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
 
 **Stand 14.10.2026 ([LEKTOR-32](Befunde/LEKTOR-32.md#lektor-32)).** 1.0.85, 1.0.86 und 1.0.87 liegen als
 Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87.
+1.0.87 ist am 14.10.2026 als `v1.0.87` veröffentlicht.
 
 | | Befund | Paket | Handgriff |
 |---|---|---|---|

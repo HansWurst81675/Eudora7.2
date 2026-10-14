@@ -257,4 +257,16 @@ $nStart = Find-Line $qg '^HMETAFILE E112MetadateiAusDIB\s*\(' 0
 $nEnd = Find-Line $qg '^\}\s*$' $nStart
 Write-Region $qg $nStart $nEnd (Join-Path $OutDir "qcgraphics_e112.inc") $qcgPath
 
+# ------------------------------------------------------- PGHTMIMP.CPP (E-105)
+# Region P: E105Schritt - wird ein Tag samt Inhalt ausgeblendet, weil sein
+# style display:none sagt? Newsletter verstecken so die Handyfassung; Eudora
+# zeigte beide, jedes Bild doppelt. Die Region beginnt bei der ersten
+# Hilfsfunktion und endet mit E105Schritt.
+$imPath = Join-Path $SrcDir "PGHTMIMP.CPP"
+$im = Read-Lines $imPath
+$pStart = Find-Line $im '^static int E105GleichKlein\s*\(' 0
+$pFn = Find-Line $im '^int E105Schritt\s*\(' $pStart
+$pEnd = Find-Line $im '^\}\s*$' $pFn
+Write-Region $im $pStart $pEnd (Join-Path $OutDir "pghtmimp_e105.inc") $imPath
+
 Write-Host "Extract.ps1: fertig."
