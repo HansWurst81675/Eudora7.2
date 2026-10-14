@@ -9,14 +9,14 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 13.10.2026)
+## Noch offen (Stand 14.10.2026)
 
 | Kennung | | |
 |---|---|---|
 | [**E-116**](BEFUNDE.md#e-116) | **`width="35px"` wird als 3508 gelesen** — eine Größenangabe mit Einheit oder Nachkommastelle verzerrt das Bild | **Neu, offen, am Quelltext belegt** (PRÜFER-22 F3, 13.10.2026), nicht am laufenden Programm gesehen. `decimal_value_percent` (`PGHTMIMP.CPP:3683-3697`) prüft nicht, ob eine Ziffer folgt: `"35px"` ergibt 3508, `"35.5"` ergibt 3645. **Sichtbar erst ab 7.2.0.85**, weil [E-112](BEFUNDE.md#e-112) das Bild auf die angegebene Breite zeichnet |
 | [**E-118**](BEFUNDE.md#e-118) | **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als HTML-Quelltext** | **Neu, offen, am Quelltext belegt.** Von Gregor am 13.10.2026 an 1.0.86 gemeldet (Bildschirmfoto). Beim Hochladen verwirft `IsHeaderToInclude` (`EuImap/src/ImapAppend.cpp:2020-2026`) alle `Content-*`-Köpfe; einteilig wird gar kein `Content-Type` geschrieben (`:692`), mehrteilig fest `text/plain` (`:1166-1169`) — [PRÜFER-25](Befunde/PRUEFER-25.md) H1; die zuerst genannte Stelle `AppendContentType` ist widerlegt (läuft nur für Anhänge). Originalfehler von QUALCOMM |
 | [**E-119**](BEFUNDE.md#e-119) | **Bilder als `data:`-Adresse erscheinen beim Antworten und Weiterleiten als grauer Kasten** | **Neu, offen, am Protokoll belegt.** Von Gregor am 13.10.2026 an 1.0.86 gemeldet. Der Lader findet keine Datei (`E-110 Laden: … datei=0`), denn das Bild steht base64-kodiert in der Adresse; Paige zeichnet seinen Platzhalter. Nicht von [E-112](BEFUNDE.md#e-112) verursacht; ob 1.0.84 dasselbe zeigt, ist nicht gemessen |
-| [**E-117**](BEFUNDE.md#e-117) | **Bilder mit `&amp;` in der Adresse kommen nicht an** — beim Antworten und Weiterleiten eine leere Fläche | **Behoben in 7.2.0.87, nicht ausgeliefert, am laufenden Programm gemessen, von Gregor noch nicht bestätigt** (Abschnitt 7.2.0.87). In `v1.0.84` und älter noch enthalten (dort als 1×1-Pixel unsichtbar) |
+| [**E-117**](BEFUNDE.md#e-117) | **Bilder mit `&amp;` in der Adresse kommen nicht an** — beim Antworten und Weiterleiten eine leere Fläche | **Behoben in 7.2.0.87, nicht veröffentlicht, am laufenden Programm gemessen, von Gregor am 14.10.2026 an 1.0.87 bestätigt** (Abschnitt 7.2.0.87). In `v1.0.84` und älter noch enthalten (dort als 1×1-Pixel unsichtbar) |
 | [**E-115**](BEFUNDE.md#e-115) | **Ctrl+F (*Find Messages*) bringt „Encountered an improper argument“**, kein Postfach angehakt | **Behoben in 7.2.0.86, nicht veröffentlicht, von Gregor am 13.10.2026 an 1.0.86 bestätigt** (vorläufig: der Fehler war sporadisch). Von ihm an 1.0.84 gemeldet; Ursache und Behebung im Abschnitt 7.2.0.86. In `v1.0.84` und älter noch enthalten. Kein Datenverlust |
 | [**E-114**](BEFUNDE.md#e-114) | **angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich** | **Neu, offen.** Von Gregor am 13.10.2026 an 1.0.84 gemeldet (Filterfenster) |
 | [**E-101**](BEFUNDE.md#e-101) | **gespeicherte HTML-Datei: Umlaute falsch** | **Wieder offen seit 13.10.2026.** Die Datei sagt im `<meta>` UTF-8, enthält aber Windows-1252 |
@@ -73,7 +73,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.87 — Bilder mit `&amp;` in der Adresse (E-117) — **in Arbeit, nicht ausgeliefert**
+## 7.2.0.87 — Bilder mit `&amp;` in der Adresse (E-117) — **als Testverzeichnis 1.0.87 bei Gregor, von ihm am 14.10.2026 bestätigt, nicht veröffentlicht**
 
 **[E-117](BEFUNDE.md#e-117):** `resolve_URL` (`HTMLUtils.cpp`) übersetzt `&amp;` im `src` eines Bildes zu `&`. Gregors eBay-Nachricht lud statt des Fotos ein 1×1-Pixel, weil der Bilddienst `&amp;imgWidth=448` bekam (seine `eudora.log` an 1.0.86). Test zuerst: `TestResolveURL.cpp` (8) vorher rot, Testsuite **196/196**. **am laufenden Programm gemessen (13.10.2026)**, `C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml` über `tools/anhang-pruefdaten.pl --pop`, Bildserver `tools/bildserver-e117.pl` auf 127.0.0.1:18117 (liefert das Bild nur bei echtem `&`, sonst 1×1): **Gegenprobe 7.2.0.85** — Abruf `GET /bild.png?a=1&amp;w=2` → Pixel, `E-112 Metadatei: angegeben=165x0 Datei=1x1 gemalt=165x165`; **7.2.0.87** — nur `GET /bild.png?a=1&w=2`, `Datei=330x327 gemalt=165x164`, das Fensterfoto zeigt das Bild. (Die Leseansicht holte schon vorher die richtige Adresse, weil der Internet Explorer `&amp;` selbst übersetzt.)
 

@@ -72,7 +72,7 @@
 - [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)
 - [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht
 - [Fertige Fassung bereitstellen](fertige-fassung-bereitstellen.md) — erst eigene Tests, dann als neues Verzeichnis neben Gregors letztem Eudora72-*-release; das alte nicht anfassen
-- [Reihenfolge nach 1.0.83](reihenfolge-nach-1083.md) — Gregor: Release, dann E-94 mit Test zuerst, dann E-112, E-113, E-77
+- [Reihenfolge nach 1.0.83](reihenfolge-nach-1083.md) — Stand 14.10.2026: nach PR e-112-skalierung zuerst E-105, dann E-118, E-113, E-77
 - [datenformat-aendern-heisst-alle-leser-messen](datenformat-aendern-heisst-alle-leser-messen.md) — Wer das Format einer gemeinsam gelesenen Datei aendert, misst JEDEN Leser dagegen - sonst melden die blind gewordenen weiter gruen
 - [schranke-teilt-nicht-die-annahme](schranke-teilt-nicht-die-annahme.md) — Eine Schranke, die ihren Umfang aus derselben Annahme nimmt wie das Werkzeug, das sie pruefen soll, prueft nichts
 - [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) — Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern

@@ -146,7 +146,7 @@ verschickt.
   und gemessen. Erst mit
   dieser Behebung wird [**E-116**](BEFUNDE.md#e-116) sichtbar (offen): eine Angabe wie
   `width="35px"` wird als 3508 gelesen. **Behoben in 7.2.0.87, am laufenden
-  Programm gemessen, von Gregor noch nicht bestätigt:** [**E-117**](BEFUNDE.md#e-117) — Bilder
+  Programm gemessen, von Gregor an 1.0.87 bestätigt (14.10.2026):** [**E-117**](BEFUNDE.md#e-117) — Bilder
   mit `&amp;` in der Adresse kamen beim Antworten und Weiterleiten als 1×1-Pixel
   an und blieben eine leere Fläche. **Weiter offen ist
   [E-113](BEFUNDE.md#e-113):** ein Bild, dessen angegebene Breite größer ist als das Fenster,

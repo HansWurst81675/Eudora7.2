@@ -1284,3 +1284,16 @@ ungemessen ([L-31.2](Befunde/LEKTOR-31.md#l-31.2)), [E-118](BEFUNDE.md#e-118)/[E
 Testplan hatte keinen Schritt für 1.0.85–1.0.87 ([L-31.4](Befunde/LEKTOR-31.md#l-31.4)), die neue Prüfnachricht
 fehlte in `Testdaten/README.md` ([L-31.5](Befunde/LEKTOR-31.md#l-31.5)). Aus [PRÜFER-25](Befunde/PRUEFER-25.md): die Ursachenstelle von
 [E-118](BEFUNDE.md#e-118) war falsch, der Behebungsort von [E-119](BEFUNDE.md#e-119) zu spät ([L-31.6](Befunde/LEKTOR-31.md#l-31.6)).
+
+## Siebenunddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-32.md`)
+
+Kurzlauf vor dem PR `e-112-skalierung` → `main`, zum Stand `1ea7fb3` (Quellstand
+7.2.0.87); in allen 205 MDs gesucht. Vier Mängel, **alle berichtigt**.
+
+Der Kern: Gregor hat [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87 bestätigt; das stand nur im
+Kopf der Zeile in `BEFUNDE.md`. Rumpf derselben Zeile, `AUFGABEN.md`, `CHANGELOG.md`,
+`README.md`, `PORTIERUNG.md`, `ZIEL.md`, `Testdaten/README.md` und `WEITERMACHEN.md`
+sagten weiter *„von Gregor noch nicht bestätigt“* bzw. *„in Arbeit“* ([L-32.1](Befunde/LEKTOR-32.md#l-32.1)).
+Der Einstieg in `WEITERMACHEN.md` wartete noch auf Gregors Ergebnis; jetzt steht
+dort PR, Release, dann [E-118](BEFUNDE.md#e-118) ([L-32.2](Befunde/LEKTOR-32.md#l-32.2)). TESTPLAN C4 hatte [E-117](BEFUNDE.md#e-117) offen ([L-32.3](Befunde/LEKTOR-32.md#l-32.3)),
+`Releases/PAKETE.md` *„Von Gregor noch nicht getestet“* ([L-32.4](Befunde/LEKTOR-32.md#l-32.4)).

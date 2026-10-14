@@ -41,9 +41,9 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: [**E-86**](BEFUNDE.md#e-86)
 > (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77) (IMAP-Postfachnamen roh).
 >
-> **Stand 13.10.2026, abends:** Quellstand **7.2.0.87**, `VERSION` **1.0.87**, **in Arbeit, nicht
-> ausgeliefert** — behebt [**E-117**](BEFUNDE.md#e-117) (`&amp;` in Bildadressen), Testsuite 196/196,
-> am laufenden Programm gemessen, von Gregor noch nicht bestätigt. Davor 7.2.0.86 / 1.0.86
+> **Stand 14.10.2026:** Quellstand **7.2.0.87**, `VERSION` **1.0.87**, **als Testverzeichnis bei Gregor, nicht
+> veröffentlicht** — behebt [**E-117**](BEFUNDE.md#e-117) (`&amp;` in Bildadressen), Testsuite 196/196,
+> am laufenden Programm gemessen, **von Gregor am 14.10.2026 an 1.0.87 bestätigt**. Davor 7.2.0.86 / 1.0.86
 > ([**E-115**](BEFUNDE.md#e-115), Ctrl+F bei aktivem IMAP-Postfach) und 7.2.0.85 / 1.0.85, beide als
 > Testverzeichnis bei Gregor; **[E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103) und [E-115](BEFUNDE.md#e-115) hat er an 1.0.86 bestätigt.**
 > Neu aus seinem Test und offen: [**E-118**](BEFUNDE.md#e-118), [**E-119**](BEFUNDE.md#e-119), [**E-105**](BEFUNDE.md#e-105) zweiter Fall.
