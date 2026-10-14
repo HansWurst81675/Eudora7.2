@@ -167,7 +167,7 @@ verschickt.
   nach RFC 2047 wegzulassen; über POP zeigte die Postfachliste sogar nur die
   erste Zeile. Der frühere Verdacht auf `Encode2047` beim Senden ist widerlegt
   — Eudora hatte diese Nachrichten gar nicht gesendet. **Kein Datenverlust.**
-* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), offen): In manchen
+* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, noch nicht ausgeliefert, von Gregor noch nicht bestätigt): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
   Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den

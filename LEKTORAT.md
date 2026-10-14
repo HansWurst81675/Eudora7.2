@@ -1297,3 +1297,19 @@ sagten weiter *„von Gregor noch nicht bestätigt“* bzw. *„in Arbeit“* ([
 Der Einstieg in `WEITERMACHEN.md` wartete noch auf Gregors Ergebnis; jetzt steht
 dort PR, Release, dann [E-118](BEFUNDE.md#e-118) ([L-32.2](Befunde/LEKTOR-32.md#l-32.2)). TESTPLAN C4 hatte [E-117](BEFUNDE.md#e-117) offen ([L-32.3](Befunde/LEKTOR-32.md#l-32.3)),
 `Releases/PAKETE.md` *„Von Gregor noch nicht getestet“* ([L-32.4](Befunde/LEKTOR-32.md#l-32.4)).
+
+## Achtunddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-33.md`)
+
+Nach Release `v1.0.87` und dem Einbau von [E-105](BEFUNDE.md#e-105) in 7.2.0.88, zum Stand
+`1d010e0f`; 31 MDs (Wurzel, `tools/`, `Testdaten/`, `Releases/`). Die führenden
+Dateien standen schon richtig; berichtigt wurden drei nackte Kennungen
+([L-33.1](Befunde/LEKTOR-33.md#l-33.1)), die `v1.0.87`-Zeile in `tools/RELEASES.md`, die außerhalb der
+Tabelle und in Ortszeit stand ([L-33.2](Befunde/LEKTOR-33.md#l-33.2)), und drei Stellen, die [E-105](BEFUNDE.md#e-105) noch
+vor dem Einbau zeigten ([L-33.3](Befunde/LEKTOR-33.md#l-33.3)).
+
+Der Kern: [E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96) bleiben offen. Gregors Bestätigung von
+[E-112](BEFUNDE.md#e-112) an 1.0.86 gilt einem Logo in der Kleinanzeigen-Nachricht, nicht den
+zerschnittenen Doctolib-Bildern und nicht mehreren Bildern verschiedener Höhe
+([L-33.4](Befunde/LEKTOR-33.md#l-33.4)); der C3-Handgriff im Testplan nennt aber das E-112-Kriterium
+([L-33.5](Befunde/LEKTOR-33.md#l-33.5)). Offen außerdem: `release-veroeffentlichen.ps1` schreibt Ortszeit
+und hängt hinter ein Blockzitat ([L-33.6](Befunde/LEKTOR-33.md#l-33.6)).
