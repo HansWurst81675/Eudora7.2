@@ -29,6 +29,7 @@ DAMAGE. */
 #ifdef IMAP4 // Only for IMAP.
 
 #include "ImapActionQueue.h"
+#include "msgframe.h"			// PRUEFER-28 P2: Nachrichtenfenster der Quelle schliessen
 
 #include "POPSession.h"
 #include "QCTaskManager.h"
@@ -2285,19 +2286,7 @@ bool CImapFromLocalTransferMsgAction::DoPreThreadAction()
 		return false;
 	}
 
-	// E-118: Spurmarke - verliert der Zielordner beim Oeffnen die abgelegte Kopie?
-	CString szSpurA;
-	szSpurA.Format("E-118 Ziel vor dem Oeffnen: summen=%d ids=%s gefunden=%d", (int) m_pDestTocDoc->NumSums(), (LPCSTR) m_szMessageIDs,
-				   m_pDestTocDoc->GetSummaryFromUID(atoi(m_szMessageIDs)) != NULL);
-	::PutDebugLog(DEBUG_MASK_MISC, szSpurA);
-
-	BOOL bGeoeffnet = OpenMailbox(m_pDestTocDoc->m_pImapMailbox);
-
-	szSpurA.Format("E-118 Ziel nach dem Oeffnen: geoeffnet=%d summen=%d gefunden=%d", bGeoeffnet, (int) m_pDestTocDoc->NumSums(),
-				   m_pDestTocDoc->GetSummaryFromUID(atoi(m_szMessageIDs)) != NULL);
-	::PutDebugLog(DEBUG_MASK_MISC, szSpurA);
-
-	if (!bGeoeffnet)
+	if (!OpenMailbox(m_pDestTocDoc->m_pImapMailbox))
 	{
 		return false;
 	}
@@ -2366,7 +2355,28 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 		CString strVorher(strUIDList);
 		CString strId = strVorher.SpanExcluding(",");
 		pSum = GetSummaryFromUIDStringFromDestination(strUIDList);
-		CSummary *pQuelle = (pSrcToc && !strId.IsEmpty()) ? pSrcToc->GetSummaryFromUID(strtoul(strId, NULL, 10)) : NULL;
+		// PRUEFER-28 P1: lokal ist die Kennung nicht eindeutig - alle Nachrichten
+		// aus Out haben 0. Die Quelle wird nur benutzt (und spaeter entfernt), wenn
+		// ihre Kennung ungleich 0 ist und im Ordner genau einmal vorkommt. Sonst
+		// bleibt sie stehen: doppelt statt eine fremde Nachricht geloescht.
+		CSummary *pQuelle = NULL;
+		unsigned long ulId = strId.IsEmpty() ? 0 : strtoul(strId, NULL, 10);
+		if (pSrcToc && ulId != 0)
+		{
+			int nTreffer = 0;
+			POSITION posQ = pSrcToc->GetSumList().GetHeadPosition();
+			while (posQ)
+			{
+				CSummary *pKandidat = pSrcToc->GetSumList().GetNext(posQ);
+				if (pKandidat && pKandidat->GetHash() == ulId)
+				{
+					pQuelle = pKandidat;
+					nTreffer++;
+				}
+			}
+			if (nTreffer != 1)
+				pQuelle = NULL;
+		}
 		BOOL bHochgeladen = FALSE;
 
 		if (pSum)
@@ -2389,6 +2399,19 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 
 		if (bHochgeladen && !m_bCopy && pQuelle && pSrcToc != m_pDestTocDoc)
 		{
+			// PRUEFER-28 P2: ein offenes Nachrichtenfenster zuerst schliessen - so
+			// hat es das Original vor dem Entfernen getan (ImapXferFromLocalToImap).
+			// Laesst es sich nicht schliessen, bleibt die Quelle stehen.
+			CFrameWnd* Frame = pQuelle->m_FrameWnd;
+			if (Frame && !Frame->GetActiveDocument()->CanCloseFrame(Frame))
+			{
+				continue;
+			}
+			if (Frame)
+			{
+				Frame->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+			}
+
 			// Includes free-ing memory.
 			pSrcToc->RemoveSum(pQuelle);
 			bQuelleGeaendert = TRUE;

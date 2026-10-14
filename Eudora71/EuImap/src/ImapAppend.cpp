@@ -907,11 +907,13 @@ static BOOL E118EingebettetLesen (LPCSTR pZeile, LPCSTR pHtml, CString& szPfad, 
 		szPfad = EudoraDir + CString ((LPCSTR) CRString (IDS_EMBEDDED_FOLDER)) + "\\" + szPfad;
 
 	szKopf.Empty();
+	// Nur ueber den Content-ID. Bilder, die Eudora ueber Content-Location
+	// zuordnet, tragen den CL-Hash nicht im zweiten Feld (es ist immer 0,
+	// mime.cpp:2109), sondern einen Hash aus MRI und URL im vierten
+	// (Convhtml.cpp:671-678). Sie werden als Teil ohne Kopf hochgeladen:
+	// nicht verloren, aber im HTML nicht verknuepft (PRUEFER-28 E1).
 	if (CIDHash && E118Verweis (pHtml, nHtml, CIDHash, 1, E118Hash, szVerweis, sizeof (szVerweis)))
 		szKopf.Format ("%s <%s>", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_ID), szVerweis);
-	else
-	if (CLHash && E118Verweis (pHtml, nHtml, CLHash, 0, E118Hash, szVerweis, sizeof (szVerweis)))
-		szKopf.Format ("Content-Location: %s", szVerweis);
 
 	return TRUE;
 }
