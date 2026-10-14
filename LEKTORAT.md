@@ -1328,3 +1328,16 @@ Der Kern: `befund-suchen.pl` liest nur Abschnitte mit eigener Überschrift und
 `ImapAppend.cpp` meldet es *„ein neuer Eintrag ist berechtigt“*, obwohl
 [E-118](BEFUNDE.md#e-118) die Stelle nennt ([L-34.6](Befunde/LEKTOR-34.md#l-34.6)). Offen außerdem: PRÜFER hat [E-118](BEFUNDE.md#e-118) nicht
 nachgerechnet, 1.0.89 liegt schon bereit ([L-34.8](Befunde/LEKTOR-34.md#l-34.8)).
+
+## Vierzigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-35.md`)
+
+Nach 7.2.0.90 ([E-118](BEFUNDE.md#e-118) Teil 2, [E-121](BEFUNDE.md#e-121), [E-122](BEFUNDE.md#e-122)), zum Stand `d7439ee6`; 41 MDs aus
+`git ls-files` ohne `Befunde/` und `Arbeitsweise/`. Der Kern: [E-118](BEFUNDE.md#e-118) stand mit
+*„BESTÄTIGT“* vorn und galt `offene-befunde.pl` als erledigt, obwohl Teil 2 nicht
+bestätigt ist; [E-121](BEFUNDE.md#e-121) und [E-122](BEFUNDE.md#e-122) fehlten in der offenen Liste ([L-35.1](Befunde/LEKTOR-35.md#l-35.1)).
+Berichtigt außerdem: „bestätigt“ ohne Teil 2 bzw. „nicht getestet“ nach Gregors
+Test in sieben Dateien ([L-35.2](Befunde/LEKTOR-35.md#l-35.2)); das falsche IMAP-Ordnerpräfix bei [E-120](BEFUNDE.md#e-120)
+([L-35.3](Befunde/LEKTOR-35.md#l-35.3)); neue Schalter des Prüfservers ([L-35.4](Befunde/LEKTOR-35.md#l-35.4)); Zweck des Zweigs ([L-35.5](Befunde/LEKTOR-35.md#l-35.5)).
+Offen: `PRUEFER-27.md` fehlt auf dem Zweig ([L-35.6](Befunde/LEKTOR-35.md#l-35.6)), PRÜFER hat [E-121](BEFUNDE.md#e-121) nicht
+gesehen ([L-35.7](Befunde/LEKTOR-35.md#l-35.7)), 20 von 62 Testläufen am 14.10. abgeschossen ([L-35.9](Befunde/LEKTOR-35.md#l-35.9)),
+TESTPLAN-Vorschlag C6 für 1.0.90 ([L-35.11](Befunde/LEKTOR-35.md#l-35.11)).
