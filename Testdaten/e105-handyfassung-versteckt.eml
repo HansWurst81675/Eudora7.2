@@ -1,0 +1,26 @@
+From: Pruefung <absender@e105.invalid>
+To: empfaenger@e105.invalid
+Subject: Pruefung E-105: versteckte Handyfassung
+Date: Wed, 14 Oct 2026 08:30:00 +0200
+Message-ID: <e105-pruefung@e105.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<html><head><style>@media only screen and (max-width:480px){.desktop{display:none!important}.mobile{display:block!important}}</style></head><body>
+<div style="display: none; max-height: 0px; overflow: hidden; mso-hide: all">VORSCHAUZEILE-VERSTECKT darf nicht erscheinen</div>
+<p>Zeile 1 - SICHTBAR-ANFANG: E-105 Pruefnachricht.</p>
+<table class="desktop" width="600" style="width: 600px; display: block"><tr><td>
+<p>DESKTOP-FASSUNG: dieser Absatz erscheint genau einmal.</p>
+<table><tr><td>Desktop innen A</td><td>Desktop innen B</td></tr></table>
+</td></tr></table>
+<table class="mobile" style="width: 100%; display: none; visibility: hidden; max-height: 0; overflow: hidden"><tr><td>
+<p>HANDY-FASSUNG: darf nicht erscheinen.</p>
+<table><tr><td>Handy innen A</td><td>Handy innen B</td></tr></table>
+<img src="cid:gibt-es-nicht" width="10" height="10" style="display:none">
+</td></tr></table>
+<p>Text mit <span style="DISPLAY:NONE">VERSTECKTES-WORT </span>einem versteckten Wort dazwischen.</p>
+<p style="display:none">VERSTECKTER-ABSATZ ohne Ende-Tag
+<div>SICHTBAR-NACH-ABSATZ: erscheint, weil ein Block das p beendet.</div>
+<p>Zeile 9 - SICHTBAR-ENDE.</p>
+</body></html>

@@ -393,6 +393,8 @@ class PaigeHTMLImportFilter : public PaigeImportFilter {
 		//pg_char_ptr			title_ptr;			// Non-null if title enabled
 		pg_boolean			inside_title;		// TRUE if currently processing title tag
 		pg_boolean			inside_script;		// AN-2: TRUE innerhalb <script> oder <style>
+		char				e105_tag[16];		// E-105: Name des versteckten Elements (display:none)
+		long				e105_tiefe;			// E-105: > 0 innerhalb davon - Text und Tags verschluckt
 		long				table_unique_id;	// Next unique ID for tables
 		long				page_width;			// Max width for page
 		long				span_flag;			// Column span if non-zero

@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.88 — **nicht ausgeliefert**, Quellstand 7.2.0.88, Zweig `e-105_doppelte_bilder` (E-105)
+
+| | |
+|---|---|
+| Testverzeichnis | noch keines bei Gregor; gemessen in `C:\Temp\E105` (Programmdateien aus `Eudora71/Bin/Release`, 14.10.2026) |
+| Inhalt | wie 1.0.87, dazu [E-105](../BEFUNDE.md#e-105): Abschnitte mit `style="display:none"` werden samt Inhalt nicht angezeigt |
+| Gemessen | Testsuite 202/202 (`TestE105.cpp`); Prüfnachricht `Testdaten/e105-handyfassung-versteckt.eml`: Öffnen und Weiterleiten ohne versteckte Teile, Gegenprobe 1.0.87 zeigt sie |
+
 ## 1.0.87 — **veröffentlicht als `v1.0.87`** am 14.10.2026, Quellstand 7.2.0.87 (E-117, mit E-112, E-103, E-115)
 
 | | |

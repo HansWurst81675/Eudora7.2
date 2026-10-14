@@ -27,6 +27,7 @@ void RunE101Tests(void);
 void RunResolveURLTests(void);
 void RunE112Tests(void);
 void RunE112MetadateiTests(void);
+void RunE105Tests(void);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -112,6 +113,7 @@ int main(int argc, char* argv[])
 	RunResolveURLTests();
 	RunE112Tests();
 	RunE112MetadateiTests();
+	RunE105Tests();
 
 	iFailed = TT_Summary();
 	return iFailed;
