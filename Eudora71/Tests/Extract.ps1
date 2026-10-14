@@ -269,4 +269,15 @@ $pFn = Find-Line $im '^int E105Schritt\s*\(' $pStart
 $pEnd = Find-Line $im '^\}\s*$' $pFn
 Write-Region $im $pStart $pEnd (Join-Path $OutDir "pghtmimp_e105.inc") $imPath
 
+# ------------------------------------------------- ImapAppend.cpp (E-118)
+# Region Q: E118Huelle und E118Achtbit - erkennt Eudoras lokale HTML-Huelle
+# <x-html>...</x-html> beim Hochladen in einen IMAP-Ordner. Ohne sie ging
+# eine HTML-Mail als text/plain an den Server und erschien dort als Quelltext.
+$iaPath = Join-Path $SrcDir "..\EuImap\src\ImapAppend.cpp"
+$ia = Read-Lines $iaPath
+$qStart = Find-Line $ia '^static int E118Gleich\s*\(' 0
+$qFn = Find-Line $ia '^int E118Achtbit\s*\(' $qStart
+$qEnd = Find-Line $ia '^\}\s*$' $qFn
+Write-Region $ia $qStart $qEnd (Join-Path $OutDir "imapappend_e118.inc") $iaPath
+
 Write-Host "Extract.ps1: fertig."

@@ -102,6 +102,8 @@
     <ClCompile Include="TestE112Metadatei.cpp" />
     <ClCompile Include="UnderTestE105.cpp" />
     <ClCompile Include="TestE105.cpp" />
+    <ClCompile Include="UnderTestE118.cpp" />
+    <ClCompile Include="TestE118.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +117,7 @@
     <ClInclude Include="UnderTestE101.h" />
     <ClInclude Include="UnderTestE112Meta.h" />
     <ClInclude Include="UnderTestE105.h" />
+    <ClInclude Include="UnderTestE118.h" />
     <ClInclude Include="TestRes.h" />
   </ItemGroup>
   <ItemGroup>

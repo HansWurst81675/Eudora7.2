@@ -400,6 +400,10 @@ CImapAppend::CImapAppend(CImapConnection *pDstImap,
 	// Don't know if it will be multipart.
 	m_bIsMultipart = FALSE;
 
+	// E-118: Art des einteiligen Textes, gesetzt in ReformatBody.
+	m_bE118Html = FALSE;
+	m_bE118Achtbit = FALSE;
+
 	// Scratch buffer. Allocated when needed.
 	m_nBufferSize	= 0;
 	m_pBuffer		= NULL;
@@ -645,6 +649,96 @@ BOOL CImapAppend::SpoolMessageToFile (CString& SpoolFilepath)
 
 
 
+/* E-118: eine HTML-Mail, in einen IMAP-Ordner verschoben, erschien dort als
+HTML-Quelltext. Eudora legt eine empfangene HTML-Mail lokal als
+   <x-html> ... </x-html>
+ab. ReformatHeader wirft alle Content-*-Koepfe weg, und neu geschrieben
+wurde fuer den Text gar keiner (einteilig) bzw. fest text/plain
+(mehrteilig). Der Server nahm text/plain; charset=us-ascii an, samt der
+<x-html>-Huelle als Text.
+
+E118Huelle erkennt die Huelle im Text p[0..nLaenge) und liefert den Inhalt
+dazwischen als [*pnAnfang, *pnEnde). Ohne Huelle: 0, der Bereich bleibt der
+ganze Text. E118Achtbit meldet ein Byte ueber 0x7F - dann braucht der Teil
+einen Zeichensatz und 8bit. Beide ohne Eudora-Typen, damit sie ohne IMAP
+pruefbar sind (Tests/TestE118.cpp, Extract.ps1 Region Q). */
+
+static int E118Gleich (const char* p, const char* szMuster, long n)
+{
+   long  i;
+
+   for (i = 0; i < n; ++i) {
+      char  c = p[i];
+
+      if (c >= 'A' && c <= 'Z')
+         c += 0x20;
+      if (c != szMuster[i])
+         return   0;
+   }
+
+   return   1;
+}
+
+int E118Huelle (const char* p, long nLaenge, long* pnAnfang, long* pnEnde)
+{
+   long  a = 0, e = nLaenge, k;
+
+   *pnAnfang = 0;
+   *pnEnde = nLaenge;
+
+   while (a < e && (p[a] == ' ' || p[a] == '\t' || p[a] == '\r' || p[a] == '\n'))
+      ++a;
+   if (e - a < 8 || !E118Gleich(p + a, "<x-html>", 8))
+      return   0;
+
+   a += 8;
+   if (a < e && p[a] == '\r')
+      ++a;
+   if (a < e && p[a] == '\n')
+      ++a;
+
+   // Das letzte </x-html>; fehlt es, gehoert der Rest zum Inhalt.
+   for (k = e - 9; k >= a; --k)
+      if (E118Gleich(p + k, "</x-html>", 9))
+         break;
+   if (k >= a)
+      e = k;
+
+   *pnAnfang = a;
+   *pnEnde = e;
+   return   1;
+}
+
+int E118Achtbit (const char* p, long nLaenge)
+{
+   long  i;
+
+   for (i = 0; i < nLaenge; ++i)
+      if ((unsigned char)p[i] > 0x7F)
+         return   1;
+
+   return   0;
+}
+
+// E-118: Kopfzeilen fuer den Textteil - Content-Type mit Zeichensatz und,
+// bei Bytes ueber 0x7F, Content-Transfer-Encoding 8bit. Vorlage ist
+// SendContentType (Eudora/sendmail.cpp). Der Text wird nicht umkodiert: er
+// steht lokal schon im Zeichensatz, den NameCharset nennt.
+static void E118TextKopf (BOOL bHtml, BOOL bAchtbit, CString& szTyp, CString& szKodierung)
+{
+	char	scratch[128];
+
+	NameCharset (scratch, bAchtbit ? 1 : 0);
+	szTyp.Format ("%s %s/%s%s", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_TYPE),
+				  (LPCSTR) CRString (IDS_MIME_TEXT),
+				  (LPCSTR) CRString (bHtml ? IDS_MIME_HTML : IDS_MIME_PLAIN), scratch);
+
+	szKodierung.Empty();
+	if (bAchtbit)
+		szKodierung.Format ("%s %s", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_ENCODING),
+							(LPCSTR) CRString (IDS_MIME_8BIT));
+}
+
 // FUNCTION
 // Do the grunge work for properly formatting the message to be appended.
 // END FUNCTION
@@ -689,7 +783,22 @@ BOOL CImapAppend::ReformatMessage ()
 		if (bResult)
 		{
 			if (!m_bIsMultipart)
+			{
 				bResult = ( AppendMIMEMessageHeaders( NULL, 0, &jFile) >= 0 );
+
+				// E-118: einteilig wurde gar kein Content-Type geschrieben,
+				// der Server nahm text/plain; charset=us-ascii an. Den Typ
+				// hat ReformatBody beim Abstreifen der Huelle ermittelt.
+				if (bResult)
+				{
+					CString	szTyp, szKodierung;
+
+					E118TextKopf (m_bE118Html, m_bE118Achtbit, szTyp, szKodierung);
+					bResult = SUCCEEDED ( jFile.PutLine (szTyp) );
+					if (bResult && !szKodierung.IsEmpty())
+						bResult = SUCCEEDED ( jFile.PutLine (szKodierung) );
+				}
+			}
 			else
 				bResult = ( AppendMIMEMessageHeaders( (LPCSTR)m_Boundary, 0, &jFile) >= 0 );
 						
@@ -1077,7 +1186,15 @@ BOOL CImapAppend::ReformatBody ()
 		else
 		{
 			// Just Write it out.
+			// E-118: vorher die HTML-Huelle abstreifen und merken, was fuer
+			// ein Text es ist - ReformatMessage schreibt danach den Kopf.
+			long	nAnfang = 0, nEnde = 0;
+
 			len = strlen ( p );
+			m_bE118Html = E118Huelle (p, (long) len, &nAnfang, &nEnde);
+			m_bE118Achtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
+			p += nAnfang;
+			len = nEnde - nAnfang;
 
 			if (len > 0)
 			{
@@ -1150,6 +1267,15 @@ BOOL CImapAppend::AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWri
 	if (bIsBlank)
 		return TRUE;
 
+	// E-118: auch im mehrteiligen Fall den Typ des Textes nennen statt fest
+	// text/plain, und die HTML-Huelle abstreifen.
+	long	nAnfang = 0, nEnde = 0;
+	BOOL	bHtml = E118Huelle (p, len, &nAnfang, &nEnde);
+	BOOL	bAchtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
+
+	p += nAnfang;
+	len = nEnde - nAnfang;
+
 	// Have we already decided to go multipart?
 	if (!m_bIsMultipart) 
 	{
@@ -1163,12 +1289,12 @@ BOOL CImapAppend::AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWri
 	// Write the boundary.
 	bResult = pBodyFileWriter->WriteTextLine (m_Boundary);
 
-	// Write the Content-Type:Text/Plain header.
-	CString szHeader;
-	szHeader.Format ("%s%s/%s", CRString(IDS_MIME_HEADER_CONTENT_TYPE),
-				 CRString(IDS_MIME_TEXT), CRString (IDS_MIME_PLAIN) );
-
+	// Write the Content-Type header (E-118: text/html oder text/plain, mit Zeichensatz).
+	CString szHeader, szKodierung;
+	E118TextKopf (bHtml, bAchtbit, szHeader, szKodierung);
 	bResult = pBodyFileWriter->WriteTextLine (szHeader);
+	if (bResult && !szKodierung.IsEmpty())
+		bResult = pBodyFileWriter->WriteTextLine (szKodierung);
 	if (!bResult)
 		return FALSE;
 
