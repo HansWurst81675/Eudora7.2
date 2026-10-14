@@ -87,3 +87,4 @@
 - [Fund ganz abhaken](fund-ganz-abhaken.md) — vor der Behebung `perl tools/fund-punkte.pl <Bericht> <anker>`; N1 nur in einer Richtung behoben, die Gegenrichtung stand im selben PRÜFER-Abschnitt
 - [CHRONIST 13.10.2026 d](CHRONIST-2026-10-13d.md) — Laufbericht: eine neue Lehre, drei Nachträge (Rollen in Fragen ausschreiben, neue Zeit mit dem Fund melden), Werkzeug fund-punkte.pl
 - [CHRONIST 13.10.2026 e](CHRONIST-2026-10-13e.md) — Laufbericht: sieben Nachträge (Messfenster hat gewirkt, Startliste, Paket aus Bin\Debug, „schlimmer" ungemessen, Übergabe nur im Chat, Abschaltmeldung, „für morgen" heute machbar), Werkzeuge stapel-lesen.ps1 und Startliste in testlauf.ps1
+- [CHRONIST 14.10.2026](CHRONIST-2026-10-14.md) — Laufbericht: sechs Nachträge (Rückstrich und Perl-Fallen, lmos.dat wieder am falschen Ort, Gregors Postfächer, unbeantwortete Frage, Release im Vordergrund, Abschalten), Schranke pruefe-rueckstrich.pl, Altlasten in testlauf.ps1

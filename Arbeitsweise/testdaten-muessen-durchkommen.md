@@ -169,3 +169,45 @@ hatte.
 **Offen:** `testlauf.ps1` könnte warnen, wenn im `-Verzeichnis` ein
 `spool\lmos.dat` liegt und das Messskript Mail abruft. Nicht gebaut —
 Werkzeuge sind nicht Sache des CHRONIST.
+
+## Nachtrag 14.10.2026: am nächsten Morgen derselbe Weg, sechs Läufe
+
+E-105 sollte an der Prüfnachricht `Testdaten/e105-handyfassung-versteckt.eml`
+gemessen werden. Das Messverzeichnis entstand um 05:55 mit
+`cp -r /c/Temp/E112-1085 /c/Temp/E105`, also **wieder als Kopie eines
+früheren Laufs**, gegen die erste Regel des Nachtrags vom Vortag. Gelöscht
+wurde `$D/lmos.dat` im Mailverzeichnis selbst. Dort liegt die Datei nicht;
+die Zeile 06:43:22 der Tabelle oben sagt genau das.
+
+| Zeit (UTC) | Lauf | Ergebnis | Ursache |
+|---|---|---|---|
+| 05:56 | 1 | Nachricht abgerufen, **eine alte geöffnet** | `In.mbx` aus `E112-1085` mitkopiert |
+| 05:57:55 | 2 | 0 neue Nachrichten | `spool\lmos.dat` geblieben |
+| 05:59:14 | 3 | 0 neue Nachrichten | dasselbe |
+| 06:00:37 | 4 | 0 neue Nachrichten | dazu: der neue Prüfserver startete nicht (`Port 11110 … Address already in use`), der alte aus Lauf 1 hielt ihn |
+| 06:02:05 | 5 | „Completed. No new messages." | `spool` enthielt `lmos.dat`, `lmos.dat.001`, `lmos.dat.002`: Eudora legt **Sicherungen** an |
+| 06:03:3x | 6 | richtig | `spool/lmos.dat*` gelöscht |
+
+Gregor schrieb währenddessen *„ja, du testest, ich halte mich zurück"* und
+*„ok. du testest weiter, ich starte nichts."*, also acht Minuten Warten auf
+einen Lauf, der nach der Lehre vom Vortag der erste hätte sein können.
+
+**Why:** Der Nachtrag vom 13.10. endete mit *„Offen: `testlauf.ps1` könnte
+warnen … Nicht gebaut."* Eine Lehre, die ich beim Anlegen des Verzeichnisses
+lesen müsste, wird beim Anlegen nicht gelesen. Gelesen wird, was der Lauf
+selbst ausgibt ([[lehren-anwenden-nicht-nur-schreiben]],
+[[schranke-gehoert-in-den-haken]]).
+
+**How to apply, zusätzlich:**
+
+- **Zu löschen ist `spool\lmos.dat*` mit Stern**, nicht `lmos.dat`: Eudora
+  hält Sicherungen `.001`, `.002`.
+- **Vor einem neuen Prüfserver wird der alte beendet**, nach Pfad gefiltert
+  (`perl.exe` auf Port 11110), so wie um 06:01:59 geschehen.
+- **Null neue Nachrichten heißt: zuerst die Ausgabe von `testlauf.ps1` lesen.**
+
+Schranke ab 14.10.2026: `tools/testlauf.ps1` nennt vor jedem Start
+„ALTLASTEN vor dem Lauf: …" mit `spool\lmos.dat*`, der Größe von `In.mbx`
+und dem Prozess, der Port 11110 hält. Das ist ein Hinweis und weist nicht ab,
+weil ein Lauf ohne Abruf nichts davon braucht. Gegentest: `C:\Temp\E105-1087`
+und `C:\Temp\E112-1085` melden alle drei.

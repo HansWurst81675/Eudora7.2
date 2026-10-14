@@ -130,3 +130,24 @@ Der Zeitstempel der Datei hätte nicht geholfen. `WEITERMACHEN.md` wurde um 15:4
 
 - **Jeder Satz der Abschaltmeldung braucht einen Befehl hinter sich.** „Gesichert“ belegt `gesichert.pl`. „Steht in WEITERMACHEN.md“ belegt nur ein Blick in den Einstieg: Nennt er jeden Befund, der heute neu ist oder seinen Stand geändert hat? Das ist `git log --since=<Sitzungsbeginn> -p -- BEFUNDE.md`, abgeglichen gegen die Kennungen im Einstieg. Fehlt einer, wird der Einstieg **vor** der Meldung nachgezogen. Danach kommt die Meldung, nicht umgekehrt.
 - Vorschlag, nicht gebaut: `gesichert.pl` vergleicht die Kennungen, deren Zeile in `BEFUNDE.md` seit dem Sitzungsbeginn geändert wurde, mit dem Einstiegsabschnitt von `WEITERMACHEN.md`, also nicht mit der automatisch geschriebenen Liste. Die Gegenprobe wäre der Stand `508830d0`: E-117 bis E-120 hätten als fehlend gemeldet werden müssen.
+
+## Nachtrag 13.10.2026, 14:51: „ab" heißt jetzt, und ein Commit kostet 90 Sekunden
+
+Gregor um 14:51:27 UTC *„schalte jetzt an"*, eine Sekunde später *„ab"*. Um
+14:51:32 antwortete ich *„Bis dahin hole ich die fällige Rollenrunde nach"*,
+gelesen als „ich schalte Eudora an". Um 14:51:45 hatte ich es richtig
+verstanden und keinen Agenten gestartet. Es folgten zwei Anläufe für denselben
+Commit samt Push (*„WEITERMACHEN: Nachtrag - 1.0.87 bei Gregor …"*), jeder
+mit Haken etwa 90 Sekunden (14:51:51 bis 14:53:21, 14:53:28 bis 14:55:19). Gregor fragte um 14:52:53 *„fertig?"* und
+schrieb um 14:54:19 *„der strom wird alle: akku vom laptop ist leer"*. Die
+Meldung *„Du kannst abschalten"* kam um 14:55:22.
+
+**How to apply, zusätzlich:**
+
+- **Ein Tippfehler-Paar wie „an" / „ab" wird nach der zweiten Nachricht
+  gelesen**, nicht nach der ersten.
+- **Nach „ab" höchstens ein Commit, vorher `perl tools/commit-bereit.pl`**,
+  damit er im ersten Anlauf durchgeht ([[commit-auf-einmal-pruefen]]). Die
+  Haken brauchen etwa 90 Sekunden je Anlauf. Der Satz *„Du kannst
+  abschalten"* kommt, sobald der Push durch ist, nicht nach einer weiteren
+  Runde.
