@@ -19,3 +19,5 @@ Gregors Reihenfolge, fortgeschrieben:
 **How to apply:** Nach dem Merge zuerst einen Zweignamen für E-105 vorschlagen ([[zweig-vorher-abstimmen]]), Test zuerst ([[tests-vor-jedem-commit-laufen-lassen]]).
 
 Schranke: keine - eine Reihenfolge ist eine Absprache, kein Zustand im Code.
+
+- **14.10.2026: Zweig für E-118 heißt `e-118_HTML_header`** (Gregors Vorschlag, von mir bestätigt). Anlegen erst nach dem Merge von `e-105_doppelte_bilder`, auf frischem `main` - sonst tragen beide Zweige 7.2.0.88 (Gregor: *„ja, macht sinn.“*).

@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| CHRONIST | 2026-10-14 08:22 | Verlauf 14.10.2026: Release v1.0.87 und [E-105](../BEFUNDE.md#e-105) |
