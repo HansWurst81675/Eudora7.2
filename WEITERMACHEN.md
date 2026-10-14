@@ -110,7 +110,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
-> **Stand 14.10.2026 ([LEKTOR-32](Befunde/LEKTOR-32.md#lektor-32)).** **[E-117](BEFUNDE.md#e-117) ist von Gregor an 1.0.87 bestätigt** (14.10.2026, Bildschirmfoto der eBay-Weiterleitung mit Produktfoto). Damit sind alle Behebungen des Zweigs `e-112-skalierung` bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) (an 1.0.86), [E-117](BEFUNDE.md#e-117) (an 1.0.87). **Nächster Schritt:** PR `e-112-skalierung` → `main` (Gregor merged), dann Release 1.0.87 nach seiner Zustimmung, danach [E-118](BEFUNDE.md#e-118). Die Blöcke darunter sind der Stand vom 13.10.2026; Punkt 1 und 2 sind abgeschlossen, Punkt 3 ist jetzt dran.
+> **Stand 14.10.2026 ([LEKTOR-32](Befunde/LEKTOR-32.md#lektor-32)).** **[E-117](BEFUNDE.md#e-117) ist von Gregor an 1.0.87 bestätigt** (14.10.2026, Bildschirmfoto der eBay-Weiterleitung mit Produktfoto). Damit sind alle Behebungen des Zweigs `e-112-skalierung` bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) (an 1.0.86), [E-117](BEFUNDE.md#e-117) (an 1.0.87). **Nächster Schritt:** PR `e-112-skalierung` → `main` (Gregor merged), dann Release 1.0.87 nach seiner Zustimmung, danach **[E-105](BEFUNDE.md#e-105)** (Gregor am 14.10.2026: *„ja, [E-105](BEFUNDE.md#e-105) vorziehen“*, Zweig *„brach: e-105_doppelte_bilder“* → `e-105_doppelte_bilder`), dann [E-118](BEFUNDE.md#e-118), [E-113](BEFUNDE.md#e-113), [E-77](BEFUNDE.md#e-77). Die Blöcke darunter sind der Stand vom 13.10.2026; Punkt 1 und 2 sind abgeschlossen, Punkt 3 ist jetzt dran.
 >
 > **Stand 13.10.2026.** Hier ansetzen, in dieser Reihenfolge.
 >
