@@ -156,11 +156,19 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.90 — **nicht ausgeliefert**, Quellstand 7.2.0.90, Zweig `e-118_HTML_header` (E-118 Teil 2, E-121)
+
+| | |
+|---|---|
+| Testverzeichnis | noch keines bei Gregor |
+| Inhalt | wie 1.0.89, dazu [E-118](../BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder werden mit hochgeladen) und [E-121](../BEFUNDE.md#e-121) (kein Verlust beim Verschieben in einen IMAP-Ordner) |
+| Gemessen | Testsuite 209/209; IMAP-Prüfserver: Bild als `multipart/related` mit `Content-ID`, Fußzeile erhalten; fehlende Kopie und abgelehntes `APPEND` ohne Verlust |
+
 ## 1.0.89 — **nicht ausgeliefert**, Quellstand 7.2.0.89, Zweig `e-118_HTML_header` (E-118)
 
 | | |
 |---|---|
-| Testverzeichnis | wird bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.89-release` |
+| Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.89-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip`, darüber 33 EXE/DLL/OCX aus `Eudora71/Bin/Release` (`SPELL32.DLL` bleibt die aus dem ZIP); `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`; `paket-pruefen.ps1`: keine Fehler; beide melden 7.2.0.89. Im Paket `TESTEN.txt` (Kopie `Releases/1.0.89/TESTEN.txt`); Prüfschritte in [TESTPLAN.md](../TESTPLAN.md#c5) |
 | Inhalt | wie 1.0.88, dazu [E-118](../BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
 | Gemessen | Testsuite 207/207 (`TestE118.cpp`); IMAP-Prüfserver: `text/html` mit Zeichensatz, ohne Hülle; Gegenprobe 1.0.88 ohne `Content-Type` |
 

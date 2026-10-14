@@ -2285,7 +2285,19 @@ bool CImapFromLocalTransferMsgAction::DoPreThreadAction()
 		return false;
 	}
 
-	if (!OpenMailbox(m_pDestTocDoc->m_pImapMailbox))
+	// E-118: Spurmarke - verliert der Zielordner beim Oeffnen die abgelegte Kopie?
+	CString szSpurA;
+	szSpurA.Format("E-118 Ziel vor dem Oeffnen: summen=%d ids=%s gefunden=%d", (int) m_pDestTocDoc->NumSums(), (LPCSTR) m_szMessageIDs,
+				   m_pDestTocDoc->GetSummaryFromUID(atoi(m_szMessageIDs)) != NULL);
+	::PutDebugLog(DEBUG_MASK_MISC, szSpurA);
+
+	BOOL bGeoeffnet = OpenMailbox(m_pDestTocDoc->m_pImapMailbox);
+
+	szSpurA.Format("E-118 Ziel nach dem Oeffnen: geoeffnet=%d summen=%d gefunden=%d", bGeoeffnet, (int) m_pDestTocDoc->NumSums(),
+				   m_pDestTocDoc->GetSummaryFromUID(atoi(m_szMessageIDs)) != NULL);
+	::PutDebugLog(DEBUG_MASK_MISC, szSpurA);
+
+	if (!bGeoeffnet)
 	{
 		return false;
 	}
@@ -2341,18 +2353,52 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 	CSummary		*pCopySum = NULL;
 	CString			 strUIDList(m_szMessageIDs);
 	bool			 bSomeFailed = false;
+
+	// E-121: die Quelle (lokales Postfach) wird erst hier entfernt, nach dem
+	// Hochladen - siehe CTocDoc::ImapXferFromLocalToImap. Ist die lokale Kopie
+	// im Zielordner nicht (mehr) da, weil ein Abgleich sie verworfen hat, wird
+	// direkt aus der Quelle hochgeladen. Scheitert beides, bleibt die Nachricht
+	// in der Quelle - nichts geht verloren.
+	CTocDoc			*pSrcToc = (m_szMailbox && *m_szMailbox) ? GetToc(m_szMailbox) : NULL;
+	BOOL			 bQuelleGeaendert = FALSE;
 	do
 	{
+		CString strVorher(strUIDList);
+		CString strId = strVorher.SpanExcluding(",");
 		pSum = GetSummaryFromUIDStringFromDestination(strUIDList);
+		CSummary *pQuelle = (pSrcToc && !strId.IsEmpty()) ? pSrcToc->GetSummaryFromUID(strtoul(strId, NULL, 10)) : NULL;
+		BOOL bHochgeladen = FALSE;
 
 		if (pSum)
 		{
-			if (!m_pDestTocDoc->ImapCopyMsgFromLocalToImap(pSum, m_pDestTocDoc, &pCopySum))
-			{
-				bSomeFailed = true;
-			}
+			bHochgeladen = m_pDestTocDoc->ImapCopyMsgFromLocalToImap(pSum, m_pDestTocDoc, &pCopySum);
 		}
-	} while (pSum);
+		else if (pQuelle)
+		{
+			bHochgeladen = pSrcToc->ImapCopyMsgFromLocalToImap(pQuelle, m_pDestTocDoc, &pCopySum);
+		}
+
+		CString szSpur;
+		szSpur.Format("E-121 Uebertragung: id=%s im-ziel=%d in-quelle=%d hochgeladen=%d", (LPCSTR) strId, pSum != NULL, pQuelle != NULL, bHochgeladen);
+		::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+		if (!strVorher.IsEmpty() && !bHochgeladen)
+		{
+			bSomeFailed = true;
+		}
+
+		if (bHochgeladen && !m_bCopy && pQuelle && pSrcToc != m_pDestTocDoc)
+		{
+			// Includes free-ing memory.
+			pSrcToc->RemoveSum(pQuelle);
+			bQuelleGeaendert = TRUE;
+		}
+	} while (!strUIDList.IsEmpty());
+
+	if (bQuelleGeaendert && pSrcToc)
+	{
+		pSrcToc->Write();
+	}
 
 	if (bSomeFailed)
 	{

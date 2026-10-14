@@ -1313,3 +1313,18 @@ zerschnittenen Doctolib-Bildern und nicht mehreren Bildern verschiedener Höhe
 ([L-33.4](Befunde/LEKTOR-33.md#l-33.4)); der C3-Handgriff im Testplan nennt aber das E-112-Kriterium
 ([L-33.5](Befunde/LEKTOR-33.md#l-33.5)). Offen außerdem: `release-veroeffentlichen.ps1` schreibt Ortszeit
 und hängt hinter ein Blockzitat ([L-33.6](Befunde/LEKTOR-33.md#l-33.6)).
+
+## Neununddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-34.md`)
+
+Nach dem Merge von PR #97 ([E-105](BEFUNDE.md#e-105), 7.2.0.88) und dem Einbau von [E-118](BEFUNDE.md#e-118) in
+7.2.0.89, zum Stand `65d066a8`; 41 MDs aus `git ls-files` ohne `Befunde/` und
+`Arbeitsweise/`. Berichtigt: [E-105](BEFUNDE.md#e-105) ohne Merge-Vermerk und mit erwartetem Test an
+1.0.88, das nie ausgeliefert wurde ([L-34.2](Befunde/LEKTOR-34.md#l-34.2)); [E-118](BEFUNDE.md#e-118) in `README.md` noch
+*„am Quelltext belegt“* ([L-34.3](Befunde/LEKTOR-34.md#l-34.3)); das Testverzeichnis 1.0.89 als nicht vorhanden
+geführt ([L-34.4](Befunde/LEKTOR-34.md#l-34.4)); TESTPLAN bekommt C5 für 1.0.89 ([L-34.5](Befunde/LEKTOR-34.md#l-34.5)).
+
+Der Kern: `befund-suchen.pl` liest nur Abschnitte mit eigener Überschrift und
+übersieht damit 101 von 171 Befunden, darunter jeden ab [E-100](BEFUNDE.md#e-100) — zu
+`ImapAppend.cpp` meldet es *„ein neuer Eintrag ist berechtigt“*, obwohl
+[E-118](BEFUNDE.md#e-118) die Stelle nennt ([L-34.6](Befunde/LEKTOR-34.md#l-34.6)). Offen außerdem: PRÜFER hat [E-118](BEFUNDE.md#e-118) nicht
+nachgerechnet, 1.0.89 liegt schon bereit ([L-34.8](Befunde/LEKTOR-34.md#l-34.8)).

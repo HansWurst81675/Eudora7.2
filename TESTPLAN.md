@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 am 14.10. an 1.0.87 bestätigt; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87
+# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 am 14.10. an 1.0.87 bestätigt; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **in Arbeit: Paket 1.0.90 ([E-118](BEFUNDE.md#e-118) Teil 2, [E-121](BEFUNDE.md#e-121)); offen: C5 zum Testverzeichnis 1.0.89 ([E-118](BEFUNDE.md#e-118), [E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -200,6 +200,24 @@ Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e
 | ✅ | [**E-103**](BEFUNDE.md#e-103) | 1.0.86 | dieselbe Prüfung — kein Bild auf dem Text |
 | ✅ | [**E-115**](BEFUNDE.md#e-115) | 1.0.86 | ein IMAP-Postfach öffnen, dann Ctrl+F — keine Meldung „Encountered an improper argument“ (*„tritt bisher nicht mehr auf“*; vorläufig, der Fehler war sporadisch) |
 | ✅ | [**E-117**](BEFUNDE.md#e-117) | 1.0.87 | die eBay-Nachricht (Synology, „Der Countdown läuft!“) weiterleiten oder beantworten — unter der Überschrift steht das **Foto**, keine leere Fläche (bestätigt 14.10.2026, Bildschirmfoto, *„so?“*). Mit `LogLevel=58527` (wie bei dir eingestellt) nennt die Spurmarke `E-110 Laden: src=…` die Adresse mit `&`, nicht mit `&amp;` |
+
+### <a id="c5"></a>C5 · Paket 1.0.89 — E-118 und E-105
+
+**Stand 14.10.2026 ([LEKTOR-34](Befunde/LEKTOR-34.md#lektor-34)).** Testverzeichnis
+`C:\Users\Gregor\Eudora72-1.0.89-release`, die Anleitung liegt dort als `TESTEN.txt`.
+1.0.88 wurde nicht ausgeliefert (*„nein, 0.88 teste ich nicht zusätzlich, deine tests
+sollten reichen“*); [E-105](BEFUNDE.md#e-105) wird deshalb an 1.0.89 geprüft.
+**Vorher:** das Mailverzeichnis aus 1.0.87 hineinkopieren, Eudora dabei geschlossen —
+das Mailverzeichnis im Paket ist leer.
+
+| | Befund | Paket | Handgriff |
+|---|---|---|---|
+| ✅ | [**E-118**](BEFUNDE.md#e-118) | 1.0.89 | eine HTML-Mail (etwa einen Newsletter) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — sie erscheint normal (Bilder, Formatierung, Umlaute richtig), **kein** `<head>… <body …>` als Text. Mails, die schon **vor** 1.0.89 verschoben wurden, bleiben auf dem Server falsch und erscheinen auch in 1.0.89 als Quelltext — **bestätigt 14.10.2026 an 1.0.89** |
+| ☐ | [**E-105**](BEFUNDE.md#e-105) | 1.0.89 | einen freenet-Newsletter beantworten oder weiterleiten — jedes Bild und jeder Absatz genau einmal, keine Zeile `? ? ? ?` über dem Inhalt |
+
+Bekannt und nicht behoben, also kein neuer Fehler: [E-119](BEFUNDE.md#e-119) (`data:`-Bilder als
+grauer Kasten), [E-113](BEFUNDE.md#e-113) (Bilder breiter als das Fenster), [E-116](BEFUNDE.md#e-116)
+(`width="35px"` mit Einheit).
 
 ---
 
