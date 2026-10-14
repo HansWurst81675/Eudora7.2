@@ -281,8 +281,7 @@ while (time < $ende) {
             # E-121: das Hochladen ablehnen - darf die Nachricht beim Absender bleiben?
             if ($opt{append_ablehnen}) {
                 $antwort = "$marke NO [TRYCREATE] APPEND abgelehnt (Pruefserver, --append-ablehnen)";
-                print $h "$antwort
-";
+                print $h "$antwort\r\n";
                 notiz("  -> $antwort");
                 next;
             }
