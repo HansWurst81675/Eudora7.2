@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 13.10.2026**, gemessen an Quellstand **7.2.0.84** / `VERSION` **1.0.84** (veröffentlicht als `v1.0.84`, 12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
+**Stand 14.10.2026**, Quellstand **7.2.0.87** / `VERSION` **1.0.87** als Testverzeichnis bei Gregor, nicht veröffentlicht ([E-117](BEFUNDE.md#e-117) behoben und am laufenden Programm gemessen, Testsuite 196/196, **von Gregor am 14.10.2026 an 1.0.87 bestätigt**; damit sind alle Behebungen des Zweigs `e-112-skalierung` bestätigt, nächster Schritt PR und Release); 1.0.85 und 1.0.86 als Testverzeichnisse bei Gregor, nicht veröffentlicht (1.0.85: [E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 und seine Gegenrichtung behoben und am Bau `bf96856` am laufenden Programm gemessen, [E-116](BEFUNDE.md#e-116) neu; 1.0.86: dazu [E-115](BEFUNDE.md#e-115) behoben und gemessen). **Von Gregor am 13.10.2026 an 1.0.86 bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115)**; neu aus diesem Test und offen: [E-118](BEFUNDE.md#e-118), [E-119](BEFUNDE.md#e-119), [E-105](BEFUNDE.md#e-105) zweiter Fall ([E-120](BEFUNDE.md#e-120) kein eigener Fehler); zuletzt veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -13,7 +13,8 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 > [Testplan](TESTPLAN.md) Teil A durchgeprüft: alle vierzehn ([E-49](BEFUNDE.md#e-49), [E-50](BEFUNDE.md#e-50),
 > [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63)) sind **bestätigt**, damit auch **A-4**. Ebenso bestätigt:
 > [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) und [AN-2](BEFUNDE.md#an-2); [E-83](BEFUNDE.md#e-83) auf seinen Auftrag an 1.0.84 nachgemessen.
-> **Durchgefallen:** [E-101](BEFUNDE.md#e-101) (wieder offen), [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert;
+> **Durchgefallen:** [E-101](BEFUNDE.md#e-101) (wieder offen), [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert, [E-103](BEFUNDE.md#e-103) an 1.0.84 widerlegt
+> (beide seither in 7.2.0.85 behoben, nicht veröffentlicht, von Gregor an 1.0.86 bestätigt);
 > **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
 > Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
@@ -70,7 +71,8 @@ Angabe aber nie. **Offen bleibt
 fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
-**Am 18.09.2026 behoben: [E-110](BEFUNDE.md#e-110) und [E-112](BEFUNDE.md#e-112).** Beim **Antworten und Weiterleiten**
+**Am 18.09.2026 behoben: [E-110](BEFUNDE.md#e-110)** — [E-112](BEFUNDE.md#e-112) galt damals mit, der Versuch wirkte aber nicht
+(siehe unten; bis zum 13.10.2026 stand er hier in der Überschrift, [LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28)). Beim **Antworten und Weiterleiten**
 kamen nicht alle Bilder ins Verfassenfenster, ein Teil stand als grauer Kasten
 da. **Ursache:** `resolve_URL` (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg,
 statt sie zu entschlüsseln — aus `en%20aktuellen%20Verlust.png` wurde
@@ -84,9 +86,16 @@ statt in der angegebenen — das WhatsApp-Symbol ist als `35x35` ausgezeichnet u
 die Datei hat `330x327`. Das war eine Regression der **[E-106](BEFUNDE.md#e-106)**-Behebung, die die
 Zeile vergrößerte statt das Bild zu verkleinern. **Der Versuch in 7.2.0.76
 wirkt nicht** — von Gregor am 18.09.2026 widerlegt und am 13.10.2026 an 1.0.84
-unverändert gesehen; [E-112](BEFUNDE.md#e-112) ist **wieder offen**. *(Bis zum 13.10.2026 stand
+unverändert gesehen; [E-112](BEFUNDE.md#e-112) war damit **wieder offen**. *(Bis zum 13.10.2026 stand
 hier „Behoben in 7.2.0.76, noch nicht von Gregor bestätigt“ —
-[L-27.3](Befunde/LEKTOR-27.md#l-27.3).)*
+[L-27.3](Befunde/LEKTOR-27.md#l-27.3).)* **Seit 7.2.0.85 behoben, nicht ausgeliefert:** die Metadatei
+wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`), am laufenden Programm
+an `a36c47f` gemessen (alle drei Bilder der Prüfnachricht richtig, [E-103](BEFUNDE.md#e-103) mit);
+PRÜFER-22 F1 und F2 sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und
+150x58); PRÜFER-23 N1 (beim Antworten `height="1"`) ist behoben (`9f5142b`), am laufenden
+Programm gemessen, die Gegenrichtung behoben und gemessen; N2 bis N5 sind offen; **von Gregor
+am 13.10.2026 an 1.0.86 bestätigt** (*„paßt dagegen“*). Neu daraus: [E-116](BEFUNDE.md#e-116) (`width="35px"` wird als 3508 gelesen).
+Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.85.
 
 **Weiter offen: [E-113](BEFUNDE.md#e-113)** — ein Bild, dessen **angegebene** Breite größer ist als
 das Fenster, läuft rechts hinaus (`max-width:100%` kennt Paige nicht). Auf
@@ -400,7 +409,10 @@ widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 |---|---|---|
 | [**E-101**](BEFUNDE.md#e-101) — gespeicherte HTML-Datei sagt UTF-8, enthält Windows-1252 (**wieder offen** seit 13.10.2026) | `BEFUNDE.md` | Bau, dann Gregors Gegenprobe |
 | [**E-114**](BEFUNDE.md#e-114) — ein gelöstes angedocktes Fenster hinterlässt einen leeren Bereich (neu, 13.10.2026) | `BEFUNDE.md` | Messen, dann Bau |
-| [**E-115**](BEFUNDE.md#e-115) — Ctrl+F bringt „Encountered an improper argument“ (neu, 13.10.2026) | `BEFUNDE.md` | Wurfstelle mit `tools/stapel-untersuchen.ps1` an einem IMAP-Konto |
+| [**E-116**](BEFUNDE.md#e-116) — `width="35px"` wird als 3508 gelesen (neu, 13.10.2026, PRÜFER-22 F3; am Quelltext belegt, sichtbar erst ab 7.2.0.85) | `BEFUNDE.md` | Test zuerst, dann Bau (Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694`) |
+| [**E-118**](BEFUNDE.md#e-118) — HTML-Mail, in ein IMAP-Postfach verschoben, erscheint als Quelltext (neu, 13.10.2026, an 1.0.86; am Quelltext belegt) | `BEFUNDE.md` | Test zuerst, dann Bau (`ImapAppend.cpp:692`/`:1980` einteilig ohne `Content-Type`, `:1166` mehrteilig fest `text/plain`; Vorlage `SendContentType`, [PRÜFER-25](Befunde/PRUEFER-25.md) H1) |
+| [**E-119**](BEFUNDE.md#e-119) — `data:`-Bilder beim Antworten und Weiterleiten als grauer Kasten (neu, 13.10.2026, an 1.0.86; am Protokoll belegt) | `BEFUNDE.md` | Messen, ob 1.0.84 dasselbe zeigt; dann Bau im HTML-Import vor `PGHTMIMP.CPP:3317` (der Ladeweg ist zu spät, Attribute werden auf 1023 Zeichen gekürzt — [PRÜFER-25](Befunde/PRUEFER-25.md) H2) |
+| [**E-105**](BEFUNDE.md#e-105) — `display:none` wird nicht ausgewertet: Vorschautext und, zweiter Fall an 1.0.86, doppelte Bilder | `BEFUNDE.md` | Entscheidung, ob Paige `display:none` lernen soll |
 | Meldung **„Encountered an improper argument"** beim **Anzeigen** mancher Nachrichten | oben, 2. | Start, dann Bau |
 | **Die Fenster stehen nach dem Neustart nicht im Vollbild** — Nebenbefund ohne Kennung | oben, 3. | Start, `Eudora.ini` lesen |
 | [**E-39**](BEFUNDE.md#e-39) — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |

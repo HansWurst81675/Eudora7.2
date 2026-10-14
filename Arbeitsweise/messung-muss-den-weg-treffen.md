@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:58:23.408Z
+  modified: 2026-10-13T15:00:00.000Z
 ---
 
 Schranke: tools/testlauf.ps1 (vor jedem Programmstart — prüft vorher, ob Eudora.exe und EudoraRes.dll dieselbe Dateiversion tragen)
@@ -288,3 +288,64 @@ sondern zwischen einer Funktion und ihrem Aufrufer.
 - **In einer Frage an Gregor steht nur, was gemessen ist.** „Per Test grün“
   ist wahr. „Dein Fall ist behoben“ wäre erst mit seiner Nachricht am
   laufenden Programm wahr ([[erfolg-aus-anwendersicht]]).
+
+## Fall 9, 13.10.2026: der Regeltest war grün, am Ladeweg stand die Angabe woanders
+
+Gregor um 09:24 UTC: *„ja, F2 so einbauen wie im browser"*. Gemeint war:
+steht im HTML nur die Breite, wird die Höhe aus dem Seitenverhältnis
+berechnet. Die Regel bekam erst rote, dann grüne Tests (09:28). Am laufenden
+Programm (09:45) kam `<img width=150>` trotzdem als `angegeben=0x0` an und
+wurde in Dateigröße 985x378 gezeichnet. Am Ladeweg in `PgEmbeddedImage.cpp`
+ist `embed->width/height` bei einer halben Angabe **noch 0**. Die Angabe steht
+dort in `source_width/height` aus dem HTML-Import. Die getestete Regel bekam
+also nie, was sie rechnen sollte. Nach der Umstellung (09:46) zeigte die
+Messung `angegeben=150x0 ... gemalt=150x58`.
+
+Das Besondere daran: **PRÜFER-22 hatte es vorhergesagt.** Seine Zeile zu F2
+nannte `PgEmbeddedImage.cpp:384-392, 549-552, 584-594`, also genau die
+Ladestelle. Die Regel wurde trotzdem nur als Funktion getestet. Es ist
+derselbe Fehler wie Fall 8, einen Tag später, nur an einer anderen
+Schnittstelle: dort der Zerleger vor der Funktion, hier das Feld, aus dem der
+Aufrufer liest.
+
+**Wie anwenden, zusätzlich:**
+
+- **Zu einer Regel mit Eingabewerten gehört die Frage, woher der Aufrufer
+  die Werte nimmt**, und zwar am Ort des Aufrufs, nicht in der
+  Funktionssignatur. Eine Spurmarke, die die *Eingabe* der Regel am
+  laufenden Programm ausgibt (`angegeben=…`), hätte es im ersten Lauf
+  gezeigt. Hier hat sie es gezeigt, weil sie schon da war
+  ([[eingebaute-messung-auslesen]]).
+- **Nennt ein PRÜFER-Fund Zeilen am Aufrufweg, gehört genau dieser Weg in
+  die Messung**, nicht nur die Regel.
+- Was keine Wirkung hatte, weil die Datei gar nicht gebaut wird, steht in
+  [[quelle-muss-im-bau-stehen]] (F1, derselbe Vormittag).
+- Eine Stunde später derselbe Fehler noch einmal, bei PRÜFER-23 N1 (die
+  Gegenrichtung stand im Abschnitt). Daraus wurde [[fund-ganz-abhaken]] mit
+  dem Werkzeug `tools/fund-punkte.pl`, das jeden genannten Ort eines Fundes
+  als Liste ausgibt.
+
+## Fall 10, 13.10.2026: das Programm hat den Prüfstand zwischen zwei Läufen zurückgeschrieben
+
+Nachgestellt wurde [E-115](../BEFUNDE.md#e-115) („Encountered an improper argument“ nach Ctrl+F), an einer Kopie von Gregors Mailverzeichnis in `C:\Temp\E115-gregor`. Der Fehler kommt nur, wenn Ctrl+F das Fenster *Find Messages* **neu öffnet**. Ist es schon offen, holt Ctrl+F es nur nach vorn, und es passiert nichts.
+
+| Zeit (UTC) | Lauf | Startliste `[Open Windows]` | Ergebnis | gültig? |
+|---|---|---|---|---|
+| 10:48:49 | 7.2.0.84 (Fehler erwartet) | `OpenWindow3=39,3` (*Find Messages*) | `Meldungsfenster: ''` | **nein**, erkannt um 10:49:01 an `titel='Find Messages'` bei 0.02 s im Protokoll |
+| 10:51:39 | 7.2.0.84, Zeile 39 entfernt | ohne 39 | Meldung kommt („ja, treffer!“) | ja |
+| 10:53:41 | 7.2.0.86 (Behebung) | **wieder** `OpenWindow3=39,3` | `Meldungsfenster: ''` | **nein**, aber das sah genau wie der erwartete Erfolg aus |
+| 10:54:28 | 7.2.0.86, Zeile 39 wieder entfernt | ohne 39 | keine Meldung, `titel='Find Messages'` bei 0.13 s, nach dem Ctrl+F | ja |
+
+Eudora schreibt `[Open Windows]` **beim Beenden** neu. Der Lauf um 10:51, der *Find Messages* geöffnet hatte, setzte es dadurch für den nächsten Lauf wieder auf die Startliste. Der Lauf um 10:53 lieferte das erhoffte Bild: neue Fassung, keine Meldung. Erst der Blick ins Protokoll, *wann* das Fenster aufging (10:53:50), zeigte, dass der Auslöser gar nicht gelaufen war. Zwischen dem ungültigen Lauf und seiner Entdeckung lagen neun Sekunden und kein Satz an Gregor. Wäre das Ergebnis vor diesem Nachsehen gemeldet worden, wäre ein ungültiger Lauf als Beleg hinausgegangen.
+
+Gegenprobe beim CHRONIST-Lauf (≈15:00 UTC): `testlauf.ps1 -NurPruefen` an derselben Kopie meldet `OpenWindow3=39,1`. Nach dem gültigen Lauf von 10:54 steht die Zeile also schon wieder drin. Der nächste E-115-Lauf wäre ohne Eingriff wieder ungültig.
+
+**Vermutung, nicht gemessen:** Auch die beiden Vormittagsläufe in `E115-gregor` (Debugger, „keine C++-Ausnahme“) könnten an der Startliste gescheitert sein. Um 10:42:45 stand `OpenWindow3=39,3` in der Kopie, und ob die Zeile schon beim Kopieren drin war, ist nicht festgehalten. Die damalige Folgerung „hängt an Online-Betrieb oder IMAP-Abgleich“ ist dadurch nicht widerlegt, aber auch nicht gestützt.
+
+**Why:** Ein Prüfstand, den das geprüfte Programm selbst beschreibt, ist nach jedem Lauf ein anderer. Eine Vorbedingung, die einmal hergestellt wurde, gilt nur für einen Lauf. Und „kein Fehler“ ist das Ergebnis, das sowohl die Behebung als auch der nicht gelaufene Auslöser liefert.
+
+**How to apply:**
+
+- **„Kein Fehler“ aus einem Nachstelllauf zählt nur mit dem Protokollbeleg, dass der Auslöser lief**, hier `titel='Find Messages'` *nach* dem Zeitpunkt des Ctrl+F. Diese Zeile gehört in dieselbe Meldung wie das Ergebnis ([[zwei-werte-in-eine-ausgabe]]).
+- **Vorbedingungen, die das Programm beim Beenden zurückschreibt, werden vor jedem Lauf neu hergestellt**, nicht einmal am Anfang einer Serie. Bei Eudora sind das mindestens `[Open Windows]` und die Fensterlagen in `Eudora.ini`.
+- **Werkzeug:** `tools/testlauf.ps1` gibt seit diesem Lauf die Startliste `[Open Windows]` vor jedem Start aus, auch mit `-NurPruefen`. Abweisen kann es nicht: welches Fenster für welchen Befund stört, weiß nur der Lauf ([[schranke-gehoert-in-den-haken]]: Hinweise dürfen nicht abweisen).

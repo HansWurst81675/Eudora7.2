@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 7cea137a-b641-4fdd-8a0a-143e0faaaa8b
-  modified: 2026-10-13T07:54:02.042Z
+  modified: 2026-10-13T09:45:00.000Z
 ---
 
 Gregor am 13.10.2026, mitten im Testlauf zu 1.0.84: *„schreib hier nicht so viele inhalte in die console, das macht das ganze unübersichtlicher"*.
@@ -52,3 +52,48 @@ Nachfrage.
 - **Bei jeder Frage nach dem Mergen steht vorne, ob Code geändert ist**
   (`git diff --stat v<letztes Paket>..HEAD -- Eudora71`), erst recht, wenn
   der Zweigname eine Behebung verspricht.
+
+## Nachtrag 13.10.2026, zweiter Lauf (CHRONIST): warum es fünfzig Minuten später nicht gewirkt hat
+
+Um 08:45 UTC, nicht ganz eine Stunde nach dieser Lehre: *„ich sehe
+inzwischen wieder nichts, was du mir schreibst, weil so viel schrott
+angezeigt wird. hatten wir anders ausgemacht"*, um 08:49 *„viel bla, bla,
+wenig fortschritt"*.
+
+Gemessen am Verlauf (`tools/verlauf-messen.pl`, ab 08:13): 27 Nachrichten
+von Gregor, davon **16 Einwürfe (59 %)**. Von 08:13 bis 08:45 standen
+**31 Textblöcke und 55 Werkzeugaufrufe** in seinem Fenster; drei Antworten
+über 1000 Zeichen (08:33 PR-Meldung 1366, 08:37 1039, 08:43 1053), obwohl
+die Lehre „Urteil in einem Satz" verlangt.
+
+Drei Gründe, warum die Lehre nicht gegriffen hat:
+
+1. **Sie regelte nur die Antwort am Ende.** Gregor sieht aber **jede**
+   Zwischenzeile (*„Ich lese zuerst …"*, *„Der Haken weist ab …"*) und jeden
+   Werkzeugaufruf mit seiner Beschreibung. Nach meinem Versprechen um 08:45
+   (*„Ab jetzt laufen meine Befehle mit möglichst wenig Ausgabe"*) kamen bis
+   09:31 noch **51 Textblöcke und 129 Werkzeugaufrufe**. Die Ausgabe der
+   Befehle war kürzer - die Menge der Einträge nicht.
+2. **Der Inhalt war Buchführung**, kein Fortschritt am Programm
+   ([[funktionsbug-vor-buchfuehrung]]). Neun abgewiesene Commits erzeugen
+   neun Ketten aus „Grund lesen - berichtigen - neu versuchen"
+   ([[commit-auf-einmal-pruefen]]).
+3. **Interne Kennungen gingen unübersetzt durch.** Um 09:23: *„was ist F2
+   und F3? die funktionstasten auf meiner tastatur?"* - das waren die
+   Fundnummern aus dem Bericht des PRÜFERS, wörtlich weitergegeben.
+
+**How to apply, zusätzlich:**
+
+- **Zwischenzeilen nur, wenn sie etwas für Gregor ändern** (er soll warten,
+  er kann testen, etwas ist schiefgegangen). Sonst Werkzeugaufrufe ohne
+  Begleittext hintereinander.
+- **Mechanische Ketten (Doku nachziehen, Commit-Schranken, Merges der
+  Rollen) gehören in einen Hintergrundagenten** - dessen Aufrufe stehen
+  nicht in Gregors Fenster.
+- **Fundnummern aus Agentenberichten (F1, C2, M-4) werden beim Weitergeben
+  übersetzt:** *„Fund 2: steht nur die Breite im HTML, bleibt das Bild
+  groß"*, nicht *„F2"*. Das gilt wie für Agentennamen
+  ([[agenten-benennen]]).
+- **Ein Versprechen wie „ab jetzt weniger" ist keine Maßnahme.** Was sich
+  ändert, muss im nächsten Zug zählbar sein - weniger Einträge, nicht nur
+  kürzere.

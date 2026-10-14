@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-08-29T19:56:08.761Z
+  modified: 2026-10-13T15:00:00.000Z
 ---
 
 Schranke: keine - Leerlauf ist eine Eigenschaft des Gesprächsverlaufs; im Repo ist eine Pause nicht von Arbeit zu unterscheiden
@@ -49,3 +49,18 @@ Grundeinstellung. Reden blockiert nicht arbeiten: eine Antwort an Gregor und ein
 laufender Agent schliessen sich nicht aus.
 
 Siehe auch [[anweisungen-abarbeiten]] und [[agenten-benennen]].
+
+## Nachtrag 13.10.2026: „für morgen" war zum Teil schon heute machbar
+
+Um 14:10 UTC stand der Plan für den nächsten Tag in `WEITERMACHEN.md` und im Chat. Punkt 1 lautete *„E-117 am laufenden Programm messen. Prüffall ist deine eBay-Weiterleitung"*. Schon die Abschaltmeldung um 14:06 hatte gesagt: *„E-117 ist noch nicht am laufenden Programm gemessen … Beides erledige ich in der nächsten Sitzung."* Gregor um 14:11:00:
+
+> *„du kannst es ja teilweise selbst überprüfen, nicht wahr?"*
+
+Die Antwort kam elf Sekunden später: *„Ja. E-117 kann ich ohne dich nachstellen."* Gebaut wurden eine Prüfnachricht mit `&amp;` in der Bildadresse (`Testdaten/e117-amp-in-bildadresse.eml`) und ein Bildserver auf `127.0.0.1` (`tools/bildserver-e117.pl`), der das richtige Bild nur bei `&` liefert. Um 14:13:43 stand die Gegenprobe (`Datei=1x1 gemalt=165x165`, genau Gregors eBay-Bild), um 14:15:40 die Messung an 7.2.0.87. **Viereinhalb Minuten.** Der Punkt stand als Aufgabe für morgen da, mit Gregors Postfach als Prüffall.
+
+**Why:** Wer eine Liste für morgen schreibt, sortiert nach Reihenfolge, nicht danach, wer etwas braucht. Ein Punkt, der Gregors Nachricht als Prüffall nennt, sieht aus, als bräuchte er Gregor. Der Mechanismus (`&amp;` im `src`) ließ sich aber aus seinem Protokoll vollständig nachbauen.
+
+**How to apply:**
+
+- **Jeder Punkt einer Liste für später bekommt eine Spalte: braucht Gregor / geht ohne ihn.** Was ohne ihn geht und keine Stunde braucht, wird gemacht, solange er noch da ist, und die Liste wird danach geschrieben.
+- **Ein Prüffall aus Gregors Postfach ist ein Hinweis auf den Mechanismus, kein Termin bei ihm.** Erst fragen, ob sich der Mechanismus mit einer Testnachricht und einem Server auf `127.0.0.1` nachbauen lässt ([[testdaten-muessen-durchkommen]]: das Netz außen vor lassen).

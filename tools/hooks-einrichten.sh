@@ -44,7 +44,7 @@ schranke() {
     echo "  Arbeitsbaum (Befund X-8). Im Hauptbaum laeuft die Schranke."
     return 0
   fi
-  perl "$WURZEL/tools/$1"
+  perl "$WURZEL/tools/$1" || { rc=$?; echo "  -> alle Maengel auf einmal: perl tools/commit-bereit.pl (-push fuer den pre-push)"; return $rc; }
 }
 
 # 1. Schranke gegen Commits auf einen toten Zweig: schon zusammengefuehrt,
@@ -76,6 +76,16 @@ schranke pruefe-branch.pl || exit $?
 #     nichts mehr. Abweisend bleibt sie beim Paketbau.
 if [ -f "$WURZEL/tools/rollen-faellig.pl" ]; then
   perl "$WURZEL/tools/rollen-faellig.pl" 2>/dev/null | grep -E "FAELLIG|ist faellig" | head -4
+fi
+
+# 1c. Vorgemerkte Quellen, die KEIN Projekt der Mappe baut, MELDEN - nicht
+#     abweisen: eine Aenderung an Fremdquellen kann gewollt sein (Lesehilfe,
+#     Spurmarke fuer spaeter). Am 13.10.2026 sass die Behebung E-112 F1 in
+#     PaigeDLL/PGSOURCE/PGEMBED.C; Paige32.dll wird nicht aus dem Quelltext
+#     gebaut, und das zeigte erst die Messung am laufenden Programm nach
+#     einem vollen Bau (Arbeitsweise/quelle-muss-im-bau-stehen.md).
+if [ -f "$WURZEL/tools/wer-baut.pl" ]; then
+  perl "$WURZEL/tools/wer-baut.pl" --staged 2>/dev/null | sed 's/^/pre-commit: /'
 fi
 
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
@@ -380,7 +390,7 @@ schranke() {
     echo "pre-push: tools/$1 gibt es in diesem Arbeitsbaum nicht - uebersprungen."
     return 0
   fi
-  perl "$WURZEL/tools/$1"
+  perl "$WURZEL/tools/$1" || { rc=$?; echo "  -> alle Maengel auf einmal: perl tools/commit-bereit.pl (-push fuer den pre-push)"; return $rc; }
 }
 
 # Ist der Zweigname mit Gregor abgestimmt? Beim COMMIT meldet pruefe-branch.pl

@@ -67,16 +67,28 @@ void RunE112Tests(void)
 
 	// ------------------------------------------------------------- (3)
 	// Die halbe Angabe. In Gregors Protokoll kommt sie oft vor: attr=150x0,
-	// attr=56x0, attr=110x0. Sie wird wie KEINE Angabe behandelt - was eine
-	// Seitenverhaeltnis-Rechnung daraus machen soll, ist nicht gemessen, und
-	// Raten hat bei E-106 schon einmal gereicht.
-	TT_BeginTest("E-112: halbe Angabe zaehlt wie keine - die Datei gewinnt");
+	// attr=56x0, attr=110x0. Bis 7.2.0.85 zaehlte sie wie KEINE Angabe - das
+	// Bild kam in Dateigroesse und konnte Text zudecken (PRUEFER-22, F2).
+	// Gregor am 13.10.2026: "ja, F2 so einbauen wie im browser" - die
+	// fehlende Seite folgt dem Seitenverhaeltnis der Datei, gerundet.
+	TT_BeginTest("E-112: halbe Angabe - die fehlende Seite folgt dem Seitenverhaeltnis");
 	{
 		E112Zielrechteck(150, 0, 300, 86, &b, &h);
-		TT_CHECK_MSG(b == 300 && h == 86, "Nur Breite angegeben: die Datei gilt");
+		TT_CHECK_MSG(b == 150 && h == 43, "Nur Breite 150 bei 300x86: 150x43");
 
 		E112Zielrechteck(0, 52, 400, 104, &b, &h);
-		TT_CHECK_MSG(b == 400 && h == 104, "Nur Hoehe angegeben: die Datei gilt");
+		TT_CHECK_MSG(b == 200 && h == 52, "Nur Hoehe 52 bei 400x104: 200x52");
+
+		E112Zielrechteck(56, 0, 330, 327, &b, &h);
+		TT_CHECK_MSG(b == 56 && h == 55, "Nur Breite 56 bei 330x327: 55,49 wird 55");
+
+		// Die Gegenrichtung ausdruecklich: GENAU das stand bis 7.2.0.85 da.
+		E112Zielrechteck(150, 0, 300, 86, &b, &h);
+		TT_CHECK_MSG(!(b == 300 && h == 86), "300x86 war die halbe Angabe als keine");
+
+		// Ohne Dateigroesse laesst sich nichts ergaenzen - kein Rahmen.
+		E112Zielrechteck(150, 0, 0, 0, &b, &h);
+		TT_CHECK_MSG(b == 0 && h == 0, "halbe Angabe ohne Dateigroesse: kein Rahmen");
 	}
 	TT_EndTest();
 
@@ -115,7 +127,7 @@ void RunE112Tests(void)
 	TT_BeginTest("E-112: negative Masse zaehlen nicht als Angabe");
 	{
 		E112Zielrechteck(-1, 40, 200, 80, &b, &h);
-		TT_CHECK_MSG(b == 200 && h == 80, "Eine negative Breite ist keine Angabe");
+		TT_CHECK_MSG(b == 100 && h == 40, "Eine negative Breite ist keine Angabe - es gilt die Hoehe 40, die Breite folgt dem Verhaeltnis");
 
 		E112Zielrechteck(100, 50, -5, -5, &b, &h);
 		TT_CHECK_MSG(b == 100 && h == 50,

@@ -1223,3 +1223,77 @@ eine falsche Probenzahl in `tools/WERKZEUGE.md`.
 Nebenbei gemessen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13)): der `pre-commit` spiegelt nach jedem CHRONIST-Lauf
 dessen Lehren in den Baum, in dem gerade committet wird, und weist dort ab, bis
 die Übersicht nachgezogen ist.
+
+## Dreiunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-28.md`)
+
+Zum Quellstand 7.2.0.85 auf `e-112-skalierung`, vor einem Paket 1.0.85. 193 MDs,
+105 außerhalb von `Arbeitsweise/`, gegen den Bestand. Zehn Mängel, **acht
+berichtigt**, zwei nur gemeldet ([L-28.9](Befunde/LEKTOR-28.md#l-28.9) Fehlalarm in `doku-pruefen.pl`,
+[L-28.10](Befunde/LEKTOR-28.md#l-28.10) die Spiegelung blockierte wieder den Commit). Alle fünf Doku-Schranken
+liefen vorher **grün**.
+
+Der Kern: [E-112](BEFUNDE.md#e-112) war behoben und am laufenden Programm gemessen, aber
+`CHANGELOG.md`, `WEITERMACHEN.md` und `Releases/PAKETE.md` sagten *noch nicht
+gemessen* oder *wieder offen*, `WEITERMACHEN.md` und `ZIEL.md` nannten 7.2.0.84
+als Quellstand, `ZIEL.md` [E-103](BEFUNDE.md#e-103) *noch nicht beurteilt*, obwohl Gregor es widerlegt
+hatte. Umgekehrt stand nirgends, dass die Messung **vor** PRÜFER-22 F1 und F2
+lief ([L-28.6](Befunde/LEKTOR-28.md#l-28.6)) — und F1 war als Änderung an `PGEMBED.C` beschrieben, die
+wirkungslos ist, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird
+([L-28.7](Befunde/LEKTOR-28.md#l-28.7), nach `ac8f030`). [E-116](BEFUNDE.md#e-116) fehlte unter *Noch offen*, die
+E-112-Prüfnachricht in `Testdaten/README.md`.
+
+## Vierunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-29.md`)
+
+Kurzer Lauf nach [LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28), zum Stand `9f5142b` auf `e-112-skalierung`:
+nur die neuen Themen, aber in allen 195 MDs gesucht. Sechs Mängel, **vier
+berichtigt**, zwei nur gemeldet ([L-29.5](Befunde/LEKTOR-29.md#l-29.5) Fehlalarm in `pruefe-befundurteile.pl`,
+[L-29.6](Befunde/LEKTOR-29.md#l-29.6) die Spiegelung eines laufenden CHRONIST blockierte den Commit).
+
+Der Kern: PRÜFER-22 F1 und F2 waren am Bau `11b6a3a` gemessen, und `BEFUNDE.md`
+und `CHANGELOG.md` sagten es — acht andere Dateien und ein Aufzählungspunkt im
+CHANGELOG selbst sagten weiter *„noch nicht gebaut“* ([L-29.1](Befunde/LEKTOR-29.md#l-29.1)). PRÜFER-23 und
+seine Funde N1–N5 standen in keiner MD außer dem Bericht ([L-29.2](Befunde/LEKTOR-29.md#l-29.2)). Und N1
+ist nur zur Hälfte behoben: die Gegenrichtung, nur `height` über 600, ergibt
+weiter `width="1"` (`msgutils.cpp:3668-3677`, aus der Quelle gelesen,
+[L-29.3](Befunde/LEKTOR-29.md#l-29.3)).
+
+## Fünfunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-30.md`)
+
+Kurzer Lauf nach [LEKTOR-29](Befunde/LEKTOR-29.md#lektor-29), zum Stand `f305f49` auf `e-112-skalierung`:
+nur die neuen Themen, aber in allen 198 MDs gesucht. Vier Mängel, **alle
+berichtigt**.
+
+Der Kern: `f305f49` hatte N1 und seine Gegenrichtung in den Einzelabschnitten
+als gemessen nachgezogen, die Stand-Köpfe in `AUFGABEN.md`, `ZIEL.md`,
+`PORTIERUNG.md`, `WEITERMACHEN.md` (Schritt 3) und `README.md` sagten weiter
+*„N1 noch nicht gemessen“* und *„194/194“* ([L-30.1](Befunde/LEKTOR-30.md#l-30.1)). In `Releases/PAKETE.md`
+standen die Messwerte unter *Nicht gemessen* ([L-30.2](Befunde/LEKTOR-30.md#l-30.2)), `Testdaten/README.md`
+zählte sechs statt sieben `<img>` ([L-30.3](Befunde/LEKTOR-30.md#l-30.3)).
+
+## Sechsunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-31.md`)
+
+Lauf nach [LEKTOR-30](Befunde/LEKTOR-30.md#lektor-30), zum Stand `2d7c922` auf `e-112-skalierung` (Quellstand
+7.2.0.87) plus [PRÜFER-25](Befunde/PRUEFER-25.md); in allen 202 MDs gesucht. Sechs Mängel, **alle
+berichtigt**; `commit-bereit.pl` war vorher grün.
+
+Der Kern: Gregors Urteile an 1.0.86 ([E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) bestätigt) standen nur in
+`BEFUNDE.md` und im Plan in `WEITERMACHEN.md`; die Stand-Köpfe sagten weiter
+*„von Gregor noch nicht bestätigt“*, *„ungemessen“* und `WEITERMACHEN.md` sogar
+*„Quellstand 7.2.0.85“* ([L-31.1](Befunde/LEKTOR-31.md#l-31.1)). `CHANGELOG.md` führte [E-115](BEFUNDE.md#e-115) als offen und
+ungemessen ([L-31.2](Befunde/LEKTOR-31.md#l-31.2)), [E-118](BEFUNDE.md#e-118)/[E-119](BEFUNDE.md#e-119) standen außer dort nirgends ([L-31.3](Befunde/LEKTOR-31.md#l-31.3)), der
+Testplan hatte keinen Schritt für 1.0.85–1.0.87 ([L-31.4](Befunde/LEKTOR-31.md#l-31.4)), die neue Prüfnachricht
+fehlte in `Testdaten/README.md` ([L-31.5](Befunde/LEKTOR-31.md#l-31.5)). Aus [PRÜFER-25](Befunde/PRUEFER-25.md): die Ursachenstelle von
+[E-118](BEFUNDE.md#e-118) war falsch, der Behebungsort von [E-119](BEFUNDE.md#e-119) zu spät ([L-31.6](Befunde/LEKTOR-31.md#l-31.6)).
+
+## Siebenunddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-32.md`)
+
+Kurzlauf vor dem PR `e-112-skalierung` → `main`, zum Stand `1ea7fb3` (Quellstand
+7.2.0.87); in allen 205 MDs gesucht. Vier Mängel, **alle berichtigt**.
+
+Der Kern: Gregor hat [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87 bestätigt; das stand nur im
+Kopf der Zeile in `BEFUNDE.md`. Rumpf derselben Zeile, `AUFGABEN.md`, `CHANGELOG.md`,
+`README.md`, `PORTIERUNG.md`, `ZIEL.md`, `Testdaten/README.md` und `WEITERMACHEN.md`
+sagten weiter *„von Gregor noch nicht bestätigt“* bzw. *„in Arbeit“* ([L-32.1](Befunde/LEKTOR-32.md#l-32.1)).
+Der Einstieg in `WEITERMACHEN.md` wartete noch auf Gregors Ergebnis; jetzt steht
+dort PR, Release, dann [E-118](BEFUNDE.md#e-118) ([L-32.2](Befunde/LEKTOR-32.md#l-32.2)). TESTPLAN C4 hatte [E-117](BEFUNDE.md#e-117) offen ([L-32.3](Befunde/LEKTOR-32.md#l-32.3)),
+`Releases/PAKETE.md` *„Von Gregor noch nicht getestet“* ([L-32.4](Befunde/LEKTOR-32.md#l-32.4)).

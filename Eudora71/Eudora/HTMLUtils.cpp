@@ -70,6 +70,18 @@ void resolve_URL (pg_char_ptr source_URL, pg_char_ptr target_URL, size_t nMaxLen
          //
          ++output;
       }
+      else if (input[0] == '&' && input[1] == 'a' && input[2] == 'm' &&
+               input[3] == 'p' && input[4] == ';') {
+         //
+         // BEFUND E-117 (13.10.2026): im src eines Bildes steht laut HTML
+         // &amp; fuer &. Fuer Links uebersetzt Eudora das (PGHTMIMP.CPP,
+         // Html2Text), fuer Bilder kam die Adresse bis hierher roh an -
+         // gemessen an Gregors 1.0.86: "...&amp;imgWidth=448&amp;..." und
+         // der Bilddienst lieferte ein 1x1-Pixel statt des Fotos.
+         //
+         *output++ = '&';
+         input += 5;
+      }
       else
          *output++ = *input++;
 

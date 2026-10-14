@@ -3653,16 +3653,23 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 
 		if (!bProzB && nBreite > E89_MAX_BREITE)
 		{
-			nHoehe = (int) (((double) nHoehe * E89_MAX_BREITE) / (double) nBreite);
-			if (nHoehe < 1)
-				nHoehe = 1;
+			// PRUEFER-23 N1: nur eine BEKANNTE Hoehe geht mit. Unbekannt (0)
+			// wurde sie bis 7.2.0.85 zu height="1" - seit E-112 ein Strich.
+			if (nHoehe > 0)
+			{
+				nHoehe = (int) (((double) nHoehe * E89_MAX_BREITE) / (double) nBreite);
+				if (nHoehe < 1)
+					nHoehe = 1;
+			}
 			nBreite = E89_MAX_BREITE;
 			bGedeckelt = true;
 		}
 
 		if (nHoehe > E89_MAX_HOEHE)
 		{
-			if (!bProzB)
+			// LEKTOR-29: nur eine BEKANNTE Breite geht mit (Gegenstueck zu N1) -
+			// unbekannt (0) wurde sie bis 7.2.0.85 zu width="1".
+			if (!bProzB && nBreite > 0)
 			{
 				nBreite = (int) (((double) nBreite * E89_MAX_HOEHE) / (double) nHoehe);
 				if (nBreite < 1)

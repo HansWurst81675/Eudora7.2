@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 13.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen), Paket 1.0.84
+# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor; getestet wurde an 1.0.84, 1.0.86 und 1.0.87
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -187,6 +187,18 @@ unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 
 **[E-97](BEFUNDE.md#e-97) und [E-99](BEFUNDE.md#e-99) gehören nicht hierher** — die hast du am 17.09.2026 schon
 bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
+
+### <a id="c4"></a>C4 · Die Pakete 1.0.85 bis 1.0.87 — alle bestätigt
+
+**Stand 14.10.2026 ([LEKTOR-32](Befunde/LEKTOR-32.md#lektor-32)).** 1.0.85, 1.0.86 und 1.0.87 liegen als
+Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87.
+
+| | Befund | Paket | Handgriff |
+|---|---|---|---|
+| ✅ | [**E-112**](BEFUNDE.md#e-112) | 1.0.86 | die Kleinanzeigen-Nachricht weiterleiten — das Logo steht **über** „Deine Anzeige wird weniger gesehen“, nicht darauf, und in der angegebenen Größe (*„paßt dagegen“*) |
+| ✅ | [**E-103**](BEFUNDE.md#e-103) | 1.0.86 | dieselbe Prüfung — kein Bild auf dem Text |
+| ✅ | [**E-115**](BEFUNDE.md#e-115) | 1.0.86 | ein IMAP-Postfach öffnen, dann Ctrl+F — keine Meldung „Encountered an improper argument“ (*„tritt bisher nicht mehr auf“*; vorläufig, der Fehler war sporadisch) |
+| ✅ | [**E-117**](BEFUNDE.md#e-117) | 1.0.87 | die eBay-Nachricht (Synology, „Der Countdown läuft!“) weiterleiten oder beantworten — unter der Überschrift steht das **Foto**, keine leere Fläche (bestätigt 14.10.2026, Bildschirmfoto, *„so?“*). Mit `LogLevel=58527` (wie bei dir eingestellt) nennt die Spurmarke `E-110 Laden: src=…` die Adresse mit `&`, nicht mit `&amp;` |
 
 ---
 

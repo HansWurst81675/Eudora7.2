@@ -2072,7 +2072,16 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
          	if (find_parameter(params, num_params, ismap_attribute))
 				InsertErrorLog(IMAGE_MAP_ERROR, current_offset, current_offset + 2, NULL, FALSE);
 
-            image_ref = pgNewImageRecord(import_pg, &image_record, image_callback, -1);
+            // BEFUND E-112, PRUEFER-22 F1 (13.10.2026): NICHT teilen (check_to 0).
+            // Mit -1 sucht pgNewImageRecord einen Datensatz mit gleicher URL
+            // (PGEMBED.C:1840) und das GetMemoryRecord darunter ueberschreibt
+            // die eigene Groessenangabe mit der des ersten Bildes - am laufenden
+            // Programm gemessen: dasselbe Logo als 70x70 kam als 35x35. Seit
+            // 7.2.0.85 wird die Metadatei in der angegebenen Groesse geschrieben,
+            // also braucht jedes <img> seinen eigenen Datensatz. Die Aenderung
+            // gehoert hierher und nicht nach PGEMBED.C: Paige32.dll wird nicht
+            // aus dem Quelltext gebaut (nur Paige32.vcproj, nicht in Eudora.sln).
+            image_ref = pgNewImageRecord(import_pg, &image_record, image_callback, 0);
             GetMemoryRecord(image_ref, 0, &image_record);
 
             original_ascent = current_style.ascent;

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-14T00:00:00.000Z
+  modified: 2026-10-13T15:00:00.000Z
 ---
 
 Schranke: keine - „was Gregor jetzt tun kann" ist ein Urteil über die Bedienbarkeit des laufenden Programms; kein Werkzeug kann ein Fenster bedienen und beurteilen
@@ -277,3 +277,16 @@ die Sitzungen vom 30.09. und 11./12.10. ohne Haken.
 - **Zweites Auftreten derselben Klasse = Werkzeug** ([[fehlerklassen-abstellen]]):
   `pruefe-behoben-belegt.pl` gehört zusätzlich in einen `commit-msg`-Haken,
   der die **erste Zeile** prüft. Noch nicht gebaut.
+
+## Nachtrag 13.10.2026: „es wird immer schlimmer!" ist ein Vergleich, und der wurde nicht gemessen
+
+Gregor testete 1.0.86 und meldete in 30 Minuten fünf Dinge. Das vierte war *„graue kästchen beim weiterleiten und antworten. es wird immer schlimmer!“* (13:40 UTC), zwei Minuten später *„hier auch wieder nur graue kästchen!“*. Die Ursache stand nach fünf Minuten im Protokoll: Die Bilder stecken als `data:image/…;base64` im HTML, und der Lader kann sie nicht auspacken ([E-119](../BEFUNDE.md#e-119)). Das war gut. Die Antwort lautete dann aber:
+
+> *„Das ist ein Fehler aus dem Original und nicht durch die Änderungen von heute entstanden.“*
+
+In `BEFUNDE.md` steht zur selben Zeit: *„ob 1.0.84 dasselbe zeigt, ist **nicht gemessen**“*. Die Antwort an Gregor war also bestimmter als der Befund. Gregors Satz behauptet, dass es in 1.0.86 schlechter **aussieht** als in 1.0.84. Das ist eine Aussage über die Anzeige. „Die Ursache ist alt“ ist eine Aussage über den Code. Beides kann gleichzeitig stimmen. **Vermutung, nicht gemessen:** Seit [E-112](../BEFUNDE.md#e-112) zeichnet Paige jedes Bild in der angegebenen Größe. Ein Bild, das nicht lädt, ist damit ein grauer Kasten von 600×224 statt eines kleinen Platzhalters. Ein alter Fehler wäre dann durch eine Behebung **sichtbarer** geworden, und das ist für Gregor eine Regression (Punkt 5 oben). Dasselbe Muster gab es um 13:35 bei den doppelten Bildern ([E-105](../BEFUNDE.md#e-105)): *„Keine Folge von E-112 (vorher standen beide in Dateigröße da)“*, ebenfalls aus dem Code geschlossen.
+
+**How to apply:**
+
+- **Sagt Gregor „schlimmer“, ist die Frage: dieselbe Nachricht, alte Fassung, wie sah sie aus?** Das lässt sich ohne ihn messen. Die Nachricht wird als `.eml` in ein Prüfverzeichnis unter `C:\Temp` gelegt und mit beiden Fassungen geöffnet. Bis das gemacht ist, heißt die Antwort: *„Die Ursache ist alt (E-119). Ob 1.0.84 dieselbe Nachricht anders zeigte, habe ich nicht gemessen.“*
+- **„Alt“ und „sichtbar geworden“ getrennt nennen.** Hat eine Behebung einen alten Fehler sichtbarer gemacht, steht das in der Übergabe des nächsten Pakets in der Zeile *schlechter geworden*, auch wenn die Ursache im Original liegt.

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:57:47.222Z
+  modified: 2026-10-13T15:00:00.000Z
 ---
 
 Schranke: tools/gesichert.pl (sobald Gregor das Abschalten ankündigt, und vor jedem Merge)
@@ -115,3 +115,18 @@ alles, was nich commited ist."*
 
 Siehe auch [[commit-auf-extra-branch-und-pushen]], [[nie-stillstehen]] und
 [[daueraufgaben-brauchen-einen-takt]].
+
+## Nachtrag 13.10.2026: „gesichert" geprüft, „steht in WEITERMACHEN.md" behauptet
+
+Um 14:05:50 UTC fragte Gregor: *„stand? welcher branch? was ist zum mergen? was ist nicht dokumentiert und nicht commited?"*, gefolgt von *„möchte jetzt VM runterfahren."* Die Antwort begann richtig mit *„Ich prüfe den Stand, statt ihn aus dem Gedächtnis zu nennen"*. Geprüft wurden Zweig, `git status`, Commits gegen `main`, fällige Rollen und `VERSION`. Die Antwort um 14:06:23 sagte dann aber auch:
+
+> *„Alles, was heute gefunden und gemessen wurde, steht in BEFUNDE.md, und der Einstieg für die nächste Sitzung steht in WEITERMACHEN.md."*
+
+Den zweiten Teil hatte kein Befehl gemessen. Gregor fragte 70 Sekunden später: *„steht für morgen, was als näcshtes ansteht?"* Jetzt erst wurde nachgesehen: *„Teilweise. Der Einstieg in WEITERMACHEN.md stammt von 13:15, da fehlen noch E-117 bis E-120."* Nachgezogen war er um 14:10.
+
+Der Zeitstempel der Datei hätte nicht geholfen. `WEITERMACHEN.md` wurde um 15:41 Ortszeit (`0fc0cd57`) zuletzt geändert, aber nur, weil `offene-befunde.pl -schreiben` die Liste der offenen Befunde neu setzte. Der Einstieg darüber blieb so alt, wie er war. Eine Datei, die ein Werkzeug laufend mitschreibt, sieht immer frisch aus ([[schranke-teilt-nicht-die-annahme]]).
+
+**How to apply (Ergänzung):**
+
+- **Jeder Satz der Abschaltmeldung braucht einen Befehl hinter sich.** „Gesichert“ belegt `gesichert.pl`. „Steht in WEITERMACHEN.md“ belegt nur ein Blick in den Einstieg: Nennt er jeden Befund, der heute neu ist oder seinen Stand geändert hat? Das ist `git log --since=<Sitzungsbeginn> -p -- BEFUNDE.md`, abgeglichen gegen die Kennungen im Einstieg. Fehlt einer, wird der Einstieg **vor** der Meldung nachgezogen. Danach kommt die Meldung, nicht umgekehrt.
+- Vorschlag, nicht gebaut: `gesichert.pl` vergleicht die Kennungen, deren Zeile in `BEFUNDE.md` seit dem Sitzungsbeginn geändert wurde, mit dem Einstiegsabschnitt von `WEITERMACHEN.md`, also nicht mit der automatisch geschriebenen Liste. Die Gegenprobe wäre der Stand `508830d0`: E-117 bis E-120 hätten als fehlend gemeldet werden müssen.

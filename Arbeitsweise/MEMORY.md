@@ -72,10 +72,18 @@
 - [Einigkeit ist kein Beweis](einigkeit-ist-kein-beweis.md) — Dokumente gegeneinander findet nur Widersprüche; der Maßstab kommt von außen (Tag, ausgelieferte EXE, Gregors Lauf)
 - [Zweigname heißt: vorheriger fertig](zweigname-heisst-vorheriger-fertig.md) — ein Namensvorschlag ist die Meldung, dass der vorherige Zweig vollständig ist; vorher git status leer und gepusht
 - [Fertige Fassung bereitstellen](fertige-fassung-bereitstellen.md) — erst eigene Tests, dann als neues Verzeichnis neben Gregors letztem Eudora72-*-release; das alte nicht anfassen
-- [Reihenfolge nach 1.0.83](reihenfolge-nach-1083.md) — Gregor: Release, dann E-94 mit Test zuerst, dann E-112, E-113, E-77
+- [Reihenfolge nach 1.0.83](reihenfolge-nach-1083.md) — Stand 14.10.2026: nach PR e-112-skalierung zuerst E-105, dann E-118, E-113, E-77
 - [datenformat-aendern-heisst-alle-leser-messen](datenformat-aendern-heisst-alle-leser-messen.md) — Wer das Format einer gemeinsam gelesenen Datei aendert, misst JEDEN Leser dagegen - sonst melden die blind gewordenen weiter gruen
 - [schranke-teilt-nicht-die-annahme](schranke-teilt-nicht-die-annahme.md) — Eine Schranke, die ihren Umfang aus derselben Annahme nimmt wie das Werkzeug, das sie pruefen soll, prueft nichts
 - [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) — Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern
 - [Chat knapp halten](chat-knapp-halten.md) — Urteil, nächster Handgriff, höchstens eine Frage; Herleitung gehört in BEFUNDE.md
 - [CHRONIST 13.10.2026](CHRONIST-2026-10-13.md) — Laufbericht: acht Nachträge (Freigabe-Umfang, Rückstrich Fall 13–15, INI vor Probe, lmos.dat, Testplan-Stand, Orientierungsfragen, offene LEKTOR-Funde beim Merge)
 - [Fehlerbild ist ein Messfenster](fehlerbild-ist-ein-messfenster.md) — offene Fehlermeldung erst messen (Log, Stapel mit Freigabe), dann schließen lassen
+- [Commit auf einmal prüfen](commit-auf-einmal-pruefen.md) — vor dem ersten Commit nach Versionssprung `perl tools/commit-bereit.pl`; der Haken zeigt je Anlauf nur einen Mangel, am 13.10. neun Anläufe
+- [Funktionsbug vor Buchführung](funktionsbug-vor-buchfuehrung.md) — wartet Gregor auf eine Behebung, ist sie der nächste Vordergrundschritt; Doku und Aufräumen in den Hintergrund, ein Zweig je Arbeitspaket
+- [CHRONIST 13.10.2026 b](CHRONIST-2026-10-13b.md) — Laufbericht: zwei neue Lehren, drei Nachträge, Werkzeug commit-bereit.pl
+- [Quelle muss im Bau stehen](quelle-muss-im-bau-stehen.md) — vor dem Ändern `perl tools/wer-baut.pl <datei>`; F1 saß in PGEMBED.C, das kein Projekt baut, 379 von 1727 Quellen sind ungebaut
+- [CHRONIST 13.10.2026 c](CHRONIST-2026-10-13c.md) — Laufbericht: eine neue Lehre, zwei Nachträge (F2 am Ladeweg, „ok" auf Entweder-oder), Werkzeug wer-baut.pl, Rollenschranke bewertet
+- [Fund ganz abhaken](fund-ganz-abhaken.md) — vor der Behebung `perl tools/fund-punkte.pl <Bericht> <anker>`; N1 nur in einer Richtung behoben, die Gegenrichtung stand im selben PRÜFER-Abschnitt
+- [CHRONIST 13.10.2026 d](CHRONIST-2026-10-13d.md) — Laufbericht: eine neue Lehre, drei Nachträge (Rollen in Fragen ausschreiben, neue Zeit mit dem Fund melden), Werkzeug fund-punkte.pl
+- [CHRONIST 13.10.2026 e](CHRONIST-2026-10-13e.md) — Laufbericht: sieben Nachträge (Messfenster hat gewirkt, Startliste, Paket aus Bin\Debug, „schlimmer" ungemessen, Übergabe nur im Chat, Abschaltmeldung, „für morgen" heute machbar), Werkzeuge stapel-lesen.ps1 und Startliste in testlauf.ps1

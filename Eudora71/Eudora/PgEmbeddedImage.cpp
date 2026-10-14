@@ -355,10 +355,13 @@ static PG_PASCAL (long) eCallback( paige_rec_ptr pg,
 // Als E-110 behoben war, luden sie - und das WhatsApp-Symbol fuellte das halbe
 // Fenster.
 //
-// WIE DAS VERKLEINERN GEHT, OHNE DASS PAIGE SKALIEREN KANN. MetafileFromImage
-// liefert eine METADATEI, und eine Metadatei wird auf ihr Zielrechteck
-// gestreckt - pict_frame ist dieses Rechteck. Paige muss dafuer nichts
-// koennen; es reicht, das Rechteck richtig zu setzen.
+// WIE DAS VERKLEINERN GEHT, OHNE DASS PAIGE SKALIEREN KANN. Bis 7.2.0.84 stand
+// hier: "eine Metadatei wird auf ihr Zielrechteck gestreckt - pict_frame ist
+// dieses Rechteck". WIDERLEGT (Gregor an 1.0.76 und 1.0.84, PRUEFER-22):
+// Paige spielt eine Metadatei mit mapping_mode 0 als MM_TEXT ab
+// (PGEMBED.C:4093-4101), pict_frame bestimmt dort nur die LAGE. Seit
+// 7.2.0.85 wird die Metadatei deshalb schon in der Zielgroesse geschrieben
+// (QCGraphics.cpp, E112MetadateiAusDIB); diese Funktion liefert die Groesse.
 //
 // DER AUFRUFER SETZT BEIDES auf denselben Wert: embed->width/height (danach
 // rechnet der Zeilenumbruch) und pict_frame (danach wird gezeichnet). Laufen
@@ -377,17 +380,33 @@ void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
 
 	if ( nAttrBreite > 0 && nAttrHoehe > 0 )
 	{
-		// Vollstaendige Angabe - sie gewinnt, das Bild wird hineingestreckt.
+		// Vollstaendige Angabe - sie gewinnt, das Bild wird in dieser Groesse gezeichnet.
 		*pnRahmenBreite = nAttrBreite;
 		*pnRahmenHoehe  = nAttrHoehe;
 	}
+	else if ( nEchtBreite > 0 && nEchtHoehe > 0 && nAttrBreite > 0 )
+	{
+		// Nur die Breite angegeben: die Hoehe folgt dem Seitenverhaeltnis
+		// der Datei, gerundet - wie im Browser. Bis 7.2.0.85 zaehlte das wie
+		// keine Angabe, und das Bild kam in Dateigroesse (PRUEFER-22, F2;
+		// Gregor am 13.10.2026: "ja, F2 so einbauen wie im browser").
+		*pnRahmenBreite = nAttrBreite;
+		*pnRahmenHoehe  = ( nAttrBreite * nEchtHoehe + nEchtBreite / 2 ) / nEchtBreite;
+		if ( *pnRahmenHoehe < 1 )
+			*pnRahmenHoehe = 1;
+	}
+	else if ( nEchtBreite > 0 && nEchtHoehe > 0 && nAttrHoehe > 0 )
+	{
+		// Nur die Hoehe angegeben: die Breite folgt dem Seitenverhaeltnis.
+		*pnRahmenHoehe  = nAttrHoehe;
+		*pnRahmenBreite = ( nAttrHoehe * nEchtBreite + nEchtHoehe / 2 ) / nEchtHoehe;
+		if ( *pnRahmenBreite < 1 )
+			*pnRahmenBreite = 1;
+	}
 	else if ( nEchtBreite > 0 && nEchtHoehe > 0 )
 	{
-		// Keine oder halbe Angabe: die Datei entscheidet. Das ist E-103 -
-		// eine Zeile von 13 Punkten fuer ein Bild von 60, und der Text lag
-		// darunter. Eine halbe Angabe wird hier bewusst wie keine behandelt:
-		// was eine Seitenverhaeltnis-Rechnung daraus machen soll, ist NICHT
-		// gemessen, und Raten hat bei E-106 schon einmal gereicht.
+		// Keine Angabe: die Datei entscheidet. Das ist E-103 - eine Zeile
+		// von 13 Punkten fuer ein Bild von 60, und der Text lag darunter.
 		*pnRahmenBreite = nEchtBreite;
 		*pnRahmenHoehe  = nEchtHoehe;
 	}
@@ -514,7 +533,15 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 				int TransparencySysColor = COLOR_3DFACE;
 				if (pSB && pSB->kind != PgStuffBucket::kAd)
 					TransparencySysColor = COLOR_WINDOW;
-                if (MetafileFromImage( filePath, &mfi, TransparencySysColor))
+                // BEFUND E-112: die angegebene Groesse mitgeben - die Metadatei wird
+                // darin geschrieben (QCGraphics.cpp, E112MetadateiAusDIB).
+                // Die Angabe steht hier in source_* (aus dem HTML-Import); embed->width/
+                // height ist bei einer halben Angabe noch 0 - gemessen 13.10.2026:
+                // width=150 kam als angegeben=0x0 (PRUEFER-22 F2). Vor dem Laden sichern,
+                // denn source_* wird darunter ueberschrieben.
+                long nAngabeB = (long) pUrlImage->source_width;
+                long nAngabeH = (long) pUrlImage->source_height;
+                if (MetafileFromImage( filePath, &mfi, TransparencySysColor, nAngabeB, nAngabeH ))
                 {
                     //
                     // BEFUND E-106: die ECHTE Dateigroesse merken, auch wenn
@@ -530,6 +557,26 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
                     //
                     nEchtBreite = (long)mfi.width;
                     nEchtHoehe  = (long)mfi.height;
+                    {
+                    	// BEFUND E-112: in welcher Groesse wurde die Metadatei geschrieben?
+                    	// Alle Werte in EINER Zeile (Arbeitsweise/zwei-werte-in-eine-ausgabe.md).
+                    	long nGemaltB = 0, nGemaltH = 0;
+                    	E112Zielrechteck( nAngabeB, nAngabeH,
+                    					  nEchtBreite, nEchtHoehe, &nGemaltB, &nGemaltH );
+                    	CString szE112;
+                    	szE112.Format( "E-112 Metadatei: angegeben=%ldx%ld Datei=%ldx%ld gemalt=%ldx%ld",
+                    				   nAngabeB, nAngabeH,
+                    				   nEchtBreite, nEchtHoehe, nGemaltB, nGemaltH );
+                    	PutDebugLog( DEBUG_MASK_MISC, szE112 );
+                    	// BEFUND E-112: source_* bekommt das Zielrechteck - der Block darunter
+                    	// setzt daraus embed und pict_frame, also Zeilenhoehe und Rahmen. Ohne
+                    	// Angabe ist das die Dateigroesse wie bisher (E-103).
+                    	if ( nGemaltB > 0 && nGemaltH > 0 )
+                    	{
+                    		pUrlImage->source_width  = (short) nGemaltB;
+                    		pUrlImage->source_height = (short) nGemaltH;
+                    	}
+                    }
 
                     if ( !pUrlImage->source_width )
                         pUrlImage->source_width = (short)mfi.width;
@@ -844,9 +891,10 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					// halbe Fenster. Gregor: "warum ist die reply ansicht so
 					// gross?"
 					//
-					// pict_frame ist das ZIELRECHTECK der Metadatei - sie
-					// wird hineingestreckt. Damit skaliert das Bild, ohne
-					// dass Paige selbst skalieren koennen muss.
+					// pict_frame bestimmt bei Paige nur die LAGE (MM_TEXT,
+					// PGEMBED.C:4093). Die Groesse steht seit 7.2.0.85 in der
+					// Metadatei selbst (MetafileFromImage, E112MetadateiAusDIB);
+					// hier wird dieselbe Groesse fuer den Zeilenumbruch gesetzt.
 					//
 					// embed->width/height und pict_frame bekommen denselben
 					// Wert: nach dem ersten rechnet der Zeilenumbruch, nach

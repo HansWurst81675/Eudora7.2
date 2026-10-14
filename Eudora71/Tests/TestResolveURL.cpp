@@ -183,4 +183,26 @@ void RunResolveURLTests(void)
 		TT_Note("nMaxLength=8 ergab '%s' (%d Zeichen)", szEng, (int)strlen(szEng));
 	}
 	TT_EndTest();
+
+	// ------------------------------------------------------------- (8)
+	// BEFUND E-117 (13.10.2026, Gregors Protokoll zu 1.0.86): im src eines
+	// Bildes steht laut HTML &amp; fuer &. Fuer Links uebersetzt Eudora das
+	// (PGHTMIMP.CPP, Html2Text), fuer Bilder nicht - der Bilddienst bekam
+	// "&amp;imgWidth=448" und lieferte ein 1x1-Pixel statt des Fotos.
+	TT_BeginTest("E-117: &amp; im src wird zu & - sonst liefert der Bilddienst 1x1");
+	{
+		Loese("https://svcs.ebay.com/imageser/v1/image/x?a=1&amp;imgWidth=448&amp;imgHeight=448",
+			  szAus, sizeof(szAus));
+		TT_CHECK_MSG(strcmp(szAus,
+			"https://svcs.ebay.com/imageser/v1/image/x?a=1&imgWidth=448&imgHeight=448") == 0,
+			"Aus &amp; muss & werden");
+		TT_CHECK_MSG(strstr(szAus, "&amp;") == NULL,
+			"&amp; im Abruf war der Zustand bis 7.2.0.86 - Foto fehlt");
+
+		// Ein einzelnes & ohne amp; bleibt, wie es ist.
+		Loese("https://x.invalid/b?a=1&b=2", szAus, sizeof(szAus));
+		TT_CHECK(strcmp(szAus, "https://x.invalid/b?a=1&b=2") == 0);
+		TT_Note("%s", szAus);
+	}
+	TT_EndTest();
 }
