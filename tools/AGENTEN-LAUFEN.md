@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-14 09:18 | [E-118](../BEFUNDE.md#e-118) Content-Type beim IMAP-Hochladen (7.2.0.89) nachrechnen |
