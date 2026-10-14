@@ -160,7 +160,7 @@ haben.
 
 | | |
 |---|---|
-| Testverzeichnis | noch keines bei Gregor |
+| Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.90-release`, Grundlage 1.0.84-ZIP, 33 EXE/DLL/OCX aus dem Bau (`SPELL32.DLL` aus dem ZIP), `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`, `paket-pruefen.ps1`: keine Fehler, `TESTEN.txt` (Kopie `Releases/1.0.90/TESTEN.txt`); PRÜFER-29: auslieferbar |
 | Inhalt | wie 1.0.89, dazu [E-118](../BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder werden mit hochgeladen) und [E-121](../BEFUNDE.md#e-121) (kein Verlust beim Verschieben in einen IMAP-Ordner) |
 | Gemessen | Testsuite 209/209; IMAP-Prüfserver: Bild als `multipart/related` mit `Content-ID`, Fußzeile erhalten; fehlende Kopie und abgelehntes `APPEND` ohne Verlust |
 

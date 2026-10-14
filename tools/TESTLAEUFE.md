@@ -175,3 +175,6 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-10-14 12:52:32 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) p28b Lauf 1 | Hauptfenster 3736848 - Eudora  Schliesszeit 28.3 s. |
 | 2026-10-14 12:55:24 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) p28b Lauf 2 | Hauptfenster 9504698 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 30.3 s. |
 | 2026-10-14 12:55:51 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) p28b Lauf 3 | Hauptfenster 8717634 - Eudora  Schliesszeit 2 s. |
+| 2026-10-14 13:09:18 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) p3 Lauf 1 | Hauptfenster 8848706 - Eudora  ABER: musste abgeschossen werden.  Schliesszeit 30.5 s. |
+| 2026-10-14 13:09:53 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) p3 Lauf 2 | Hauptfenster 4916682 - Eudora  Schliesszeit 3.1 s. |
+| 2026-10-14 13:10:28 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) p3 Lauf 3 | Hauptfenster 7603424 - Eudora  Schliesszeit 3.1 s. |
