@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 14.10.2026**, Quellstand **7.2.0.87** / `VERSION` **1.0.87** als Testverzeichnis bei Gregor, nicht veröffentlicht ([E-117](BEFUNDE.md#e-117) behoben und am laufenden Programm gemessen, Testsuite 196/196, **von Gregor am 14.10.2026 an 1.0.87 bestätigt**; damit sind alle Behebungen des Zweigs `e-112-skalierung` bestätigt, nächster Schritt PR und Release); 1.0.85 und 1.0.86 als Testverzeichnisse bei Gregor, nicht veröffentlicht (1.0.85: [E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 und seine Gegenrichtung behoben und am Bau `bf96856` am laufenden Programm gemessen, [E-116](BEFUNDE.md#e-116) neu; 1.0.86: dazu [E-115](BEFUNDE.md#e-115) behoben und gemessen). **Von Gregor am 13.10.2026 an 1.0.86 bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115)**; neu aus diesem Test und offen: [E-118](BEFUNDE.md#e-118), [E-119](BEFUNDE.md#e-119), [E-105](BEFUNDE.md#e-105) zweiter Fall ([E-120](BEFUNDE.md#e-120) kein eigener Fehler); zuletzt veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
+**Stand 14.10.2026**, Quellstand **7.2.0.87** / `VERSION` **1.0.87**, **veröffentlicht als `v1.0.87`** am 14.10.2026 ([E-117](BEFUNDE.md#e-117) behoben und am laufenden Programm gemessen, Testsuite 196/196, **von Gregor am 14.10.2026 an 1.0.87 bestätigt**; damit sind alle Behebungen des Zweigs `e-112-skalierung` bestätigt, PR #96 gemergt, Release auf `41c6752`, ZIP-SHA-256 `a4f1c28d…904c`); 1.0.85 und 1.0.86 als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in `v1.0.87` (1.0.85: [E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 und seine Gegenrichtung behoben und am Bau `bf96856` am laufenden Programm gemessen, [E-116](BEFUNDE.md#e-116) neu; 1.0.86: dazu [E-115](BEFUNDE.md#e-115) behoben und gemessen). **Von Gregor am 13.10.2026 an 1.0.86 bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115)**; neu aus diesem Test und offen: [E-118](BEFUNDE.md#e-118), [E-119](BEFUNDE.md#e-119), [E-105](BEFUNDE.md#e-105) zweiter Fall ([E-120](BEFUNDE.md#e-120) kein eigener Fehler); davor veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
@@ -14,7 +14,7 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 > [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63)) sind **bestätigt**, damit auch **A-4**. Ebenso bestätigt:
 > [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) und [AN-2](BEFUNDE.md#an-2); [E-83](BEFUNDE.md#e-83) auf seinen Auftrag an 1.0.84 nachgemessen.
 > **Durchgefallen:** [E-101](BEFUNDE.md#e-101) (wieder offen), [E-112](BEFUNDE.md#e-112) an 1.0.84 unverändert, [E-103](BEFUNDE.md#e-103) an 1.0.84 widerlegt
-> (beide seither in 7.2.0.85 behoben, nicht veröffentlicht, von Gregor an 1.0.86 bestätigt);
+> (beide seither in 7.2.0.85 behoben, veröffentlicht mit `v1.0.87`, von Gregor an 1.0.86 bestätigt);
 > **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
 > Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
@@ -88,7 +88,7 @@ Zeile vergrößerte statt das Bild zu verkleinern. **Der Versuch in 7.2.0.76
 wirkt nicht** — von Gregor am 18.09.2026 widerlegt und am 13.10.2026 an 1.0.84
 unverändert gesehen; [E-112](BEFUNDE.md#e-112) war damit **wieder offen**. *(Bis zum 13.10.2026 stand
 hier „Behoben in 7.2.0.76, noch nicht von Gregor bestätigt“ —
-[L-27.3](Befunde/LEKTOR-27.md#l-27.3).)* **Seit 7.2.0.85 behoben, nicht ausgeliefert:** die Metadatei
+[L-27.3](Befunde/LEKTOR-27.md#l-27.3).)* **Seit 7.2.0.85 behoben, ausgeliefert mit `v1.0.87`:** die Metadatei
 wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`), am laufenden Programm
 an `a36c47f` gemessen (alle drei Bilder der Prüfnachricht richtig, [E-103](BEFUNDE.md#e-103) mit);
 PRÜFER-22 F1 und F2 sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und
@@ -121,8 +121,11 @@ Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 > vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
 > `ls C:\Users\Gregor\Eudora72-*`.
 
-**Veröffentlicht ist `v1.0.84`** — am 12.10.2026 um 12:59 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert, Marke auf `eb54752`, mit [E-94](BEFUNDE.md#e-94);
+**Veröffentlicht ist `v1.0.87`** — am 14.10.2026 um 05:46 Uhr UTC auf GitHub
+herausgegangen und dort als *Latest* markiert, Marke auf `41c6752` (Merge von PR #96), mit
+[E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) und [E-117](BEFUNDE.md#e-117);
+Gregor hat sie vorher an 1.0.86 und 1.0.87 geprüft. Davor **`v1.0.84`** — am 12.10.2026
+um 12:59 Uhr UTC, Marke auf `eb54752`, mit [E-94](BEFUNDE.md#e-94);
 Gregor hat sie vorher an seinem Postfach geprüft (Bildschirmfoto). Davor
 **`v1.0.83`** — am 12.10.2026 um 11:18 Uhr UTC, Marke auf `ec9f11d`; Gregor hat
 die Fassung vorher über IMAP an seinem Postfach geprüft (*„gekürzt mit endung

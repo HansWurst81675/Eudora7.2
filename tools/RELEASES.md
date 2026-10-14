@@ -40,3 +40,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
 > eine Fassung, in der **[E-98](../BEFUNDE.md#e-98)** offen ist und **[E-101](../BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
+| 2026-10-14 07:46:21 | v1.0.87 | Gregor am 14.10.2026: 'ja, wir releasen ein 0.87 in github' (nach seinem Test von 1.0.87, alle Behebungen bestaetigt) | veroeffentlicht |

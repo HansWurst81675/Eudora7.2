@@ -4681,6 +4681,23 @@ Importe aufloesbar", nicht die Frage "ist das Paket vollstaendig". Als
 Freigabekriterium fuer Kriterium 0 taugt es in dieser Fassung nicht. Was
 fehlt, ist eine Soll-Liste der Dateien, gegen die geprueft wird.
 
+**Fortschreibung 14.10.2026 (Release `v1.0.87`) — dieselbe Lücke von der
+anderen Seite: eine Soll-Liste der Namen reicht nicht, es braucht die
+Soll-Bytes.** Beim Packen von 1.0.87 (1.0.84-ZIP entpackt, darüber jede
+EXE/DLL/OCX aus `Eudora71/Bin/Release`, die es im Paket schon gibt — 34
+Dateien) wich genau eine Datei von Gregors getestetem Verzeichnis
+`C:\Users\Gregor\Eudora72-1.0.87-release` ab: **`SPELL32.DLL`**. In
+`Bin/Release` liegt eine vom 05.09.2026 19:18 (112 128 Byte, SHA-256
+`c085571c07da0f30179d6efe02ccbecbce5df0914dcbb445f83d8ac40aa48ac9`); getestet
+und ausgeliefert ist die aus dem 1.0.84-ZIP (30.08.2026 17:57, gleich groß,
+SHA-256 `2d5d3d78c7ca04f258f243c218dca1576f56fc7805da7d7e7bd7310625fd7f45`).
+`paket-pruefen.ps1` sagt zu beiden dasselbe — es prüft Importe, nicht
+Identität. Gefunden hat es allein der `cmp` gegen Gregors Verzeichnis; ins
+ZIP kam die getestete Datei. **Offen:** woher die `SPELL32.DLL` vom 05.09.
+stammt und welche die richtige ist. Bis dahin liefert jedes Paket, das seine
+Programmdateien nur aus `Bin/Release` holt, eine ungetestete `SPELL32.DLL`
+aus. Nicht behoben (Nebenbefund des Releases, auf Anweisung nicht angefasst).
+
 ---
 
 ### PR-2.3 — Der Pruefer benotet die Maschine, nicht das Paket (hoch)

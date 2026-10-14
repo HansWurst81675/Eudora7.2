@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor; getestet wurde an 1.0.84, 1.0.86 und 1.0.87
+# Testplan für Gregor — Stand 14.10.2026 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 offen; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -192,6 +192,7 @@ bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
 
 **Stand 14.10.2026 ([LEKTOR-32](Befunde/LEKTOR-32.md#lektor-32)).** 1.0.85, 1.0.86 und 1.0.87 liegen als
 Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87.
+1.0.87 ist am 14.10.2026 als `v1.0.87` veröffentlicht.
 
 | | Befund | Paket | Handgriff |
 |---|---|---|---|

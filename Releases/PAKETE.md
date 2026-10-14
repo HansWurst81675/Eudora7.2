@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 14.10.2026 (als Testverzeichnisse bei Gregor, nicht veröffentlicht: 1.0.85, 1.0.86 und 1.0.87, alle Behebungen darin von ihm bestätigt; zuletzt veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 14.10.2026 (zuletzt veröffentlicht **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -17,8 +17,8 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.84`** (12.10.2026, 12:59 UTC, auf GitHub als
-> *Latest*; davor `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
+> veröffentlicht ist inzwischen **`v1.0.87`** (14.10.2026, 05:46 UTC, auf GitHub als
+> *Latest*; davor `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
 > hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
@@ -156,16 +156,21 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.87 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.87 (E-117)
+## 1.0.87 — **veröffentlicht als `v1.0.87`** am 14.10.2026, Quellstand 7.2.0.87 (E-117, mit E-112, E-103, E-115)
 
 | | |
 |---|---|
-| Testverzeichnis | **bereitgestellt am 13.10.2026** nach LEKTOR-31, PRÜFER-25 (auslieferbar) und CHRONIST, `C:\Users\Gregor\Eudora72-1.0.87-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem gemessenen Prüfstand `C:\Temp\E112-1085`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide melden 7.2.0.87. Im Paket `TESTEN.txt` mit den Testschritten (Kopie `Releases/1.0.87/TESTEN.txt`). Von Gregor noch nicht getestet |
+| Testverzeichnis | **bereitgestellt am 13.10.2026** nach LEKTOR-31, PRÜFER-25 (auslieferbar) und CHRONIST, `C:\Users\Gregor\Eudora72-1.0.87-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem gemessenen Prüfstand `C:\Temp\E112-1085`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide melden 7.2.0.87. Im Paket `TESTEN.txt` mit den Testschritten (Kopie `Releases/1.0.87/TESTEN.txt`). Von Gregor getestet, siehe unten |
 | Inhalt | wie 1.0.86, dazu [E-117](../BEFUNDE.md#e-117): `&amp;` in Bildadressen |
-| Gemessen | Testsuite 196/196 (`TestResolveURL.cpp` (8), vorher rot); am laufenden Programm (`C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml`, Bildserver `tools/bildserver-e117.pl`): 7.2.0.85 holt `&amp;` und malt ein Pixel, 7.2.0.87 holt `&` und das Bild (`Datei=330x327 gemalt=165x164`), siehe [E-117](../BEFUNDE.md#e-117); kein ZIP, nur Testverzeichnis |
+| Gemessen | Testsuite 196/196 (`TestResolveURL.cpp` (8), vorher rot); am laufenden Programm (`C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml`, Bildserver `tools/bildserver-e117.pl`): 7.2.0.85 holt `&amp;` und malt ein Pixel, 7.2.0.87 holt `&` und das Bild (`Datei=330x327 gemalt=165x164`), siehe [E-117](../BEFUNDE.md#e-117); das ZIP entstand erst zum Release (siehe unten) |
 | Gregors Test, 14.10.2026 | **bestätigt:** [E-117](../BEFUNDE.md#e-117) (Bildschirmfoto: eBay-Synology-Weiterleitung, das Produktfoto steht unter „Der Countdown läuft!“; *„so?“*) |
+| ZIP (Release) | `Releases/Eudora72-1.0.87-release.zip`, 9 060 108 Byte (nicht versioniert), 158 Dateien, flach ohne Wurzelordner. Gebaut am 14.10.2026 **nicht** aus Gregors Testverzeichnis (darin liegt inzwischen sein Mailverzeichnis), sondern frisch: 1.0.84-ZIP (157 Dateien) entpackt, darüber die EXE/DLL/OCX aus `Eudora71/Bin/Release` außer `SPELL32.DLL` (siehe Nebenbefund), dazu `TESTEN.txt`. Die 34 EXE/DLL/OCX byteidentisch (`cmp`) mit Gregors getestetem `Eudora72-1.0.87-release`; `Eudora.exe` und `EudoraRes.dll` melden 7.2.0.87; `paket-pruefen.ps1`: startet ohne Nachinstallation. `Mailverzeichnis` enthält nur die Vorgabe-`Eudora.ini` (3249 Byte) |
+| SHA256 | `a4f1c28ddfa22dbd1c16bd71705157134fca431dbc161d1554f78da42864904c` — gemessen am lokalen und am von GitHub heruntergeladenen ZIP, gleich |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.87 — 14.10.2026, 05:46:20 UTC, *Latest*, Marke auf `41c6752` (Merge von PR #96) |
+| Freigabe | Gregor am 14.10.2026: *„ja, wir releasen ein 0.87 in github“*, nach seinem Test von 1.0.87 |
+| Nebenbefund | `Eudora71/Bin/Release/SPELL32.DLL` (05.09.2026 19:18, SHA-256 `c085571c…48ac9`) ist **nicht** die getestete und ausgelieferte Datei: ausgeliefert ist die aus dem 1.0.84-ZIP (30.08.2026 17:57, `2d5d3d78…7f45`), gleich groß (112 128 Byte). Der erste Packlauf hatte die aus `Bin/Release` genommen; erst der Byte-Vergleich gegen Gregors Verzeichnis hat es gezeigt, `paket-pruefen.ps1` sieht es nicht. Nicht behoben, siehe [PR-2](../BEFUNDE.md#pr-2), Abschnitt PR-2.2 |
 
-## 1.0.86 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.86 (E-115)
+## 1.0.86 — **als Testverzeichnis an Gregor, nicht einzeln veröffentlicht** (enthalten in `v1.0.87`), Quellstand 7.2.0.86 (E-115)
 
 | | |
 |---|---|
@@ -174,7 +179,7 @@ haben.
 | Gemessen | am laufenden Programm: mit 7.2.0.84 Meldung, mit 7.2.0.86 keine (siehe [E-115](../BEFUNDE.md#e-115)) |
 | Gregors Test, 13.10.2026 | **bestätigt:** [E-112](../BEFUNDE.md#e-112) (*„paßt dagegen“*, Bildschirmfoto), mit ihm [E-103](../BEFUNDE.md#e-103), und [E-115](../BEFUNDE.md#e-115) (*„tritt bisher nicht mehr auf“*, vorläufig). **Neu gemeldet:** [E-117](../BEFUNDE.md#e-117) (seither in 1.0.87 behoben), [E-118](../BEFUNDE.md#e-118), [E-119](../BEFUNDE.md#e-119), [E-105](../BEFUNDE.md#e-105) zweiter Fall, [E-120](../BEFUNDE.md#e-120) (kein eigener Fehler). Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
 
-## 1.0.85 — **als Testverzeichnis an Gregor, nicht veröffentlicht**, Quellstand 7.2.0.85 (E-112)
+## 1.0.85 — **als Testverzeichnis an Gregor, nicht einzeln veröffentlicht** (enthalten in `v1.0.87`), Quellstand 7.2.0.85 (E-112)
 
 | | |
 |---|---|
@@ -190,7 +195,7 @@ haben.
 | Testverzeichnis | als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.84-release` (Prüfstand: `C:\Temp\E94-nachher`, die 8 Kerndateien byteidentisch) |
 | ZIP (Release) | `Releases/Eudora72-1.0.84-release.zip`, 9 361 952 Byte (nicht versioniert); die 34 EXE/DLL/OCX darin byteidentisch mit Gregors getestetem Verzeichnis |
 | SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, *Latest*, Marke auf `eb54752` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87`; Marke auf `eb54752` |
 | Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
 | Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
 
@@ -203,7 +208,7 @@ Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlich
 |---|---|
 | ZIP | `Releases/Eudora72-1.0.83-release.zip`, 9 361 416 Byte (nicht versioniert); dazu als Verzeichnis bei Gregor, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
 | SHA256 | `7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84`; Marke auf `ec9f11d` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v1.0.87` *Latest*); Marke auf `ec9f11d` |
 | Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
 
 Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
