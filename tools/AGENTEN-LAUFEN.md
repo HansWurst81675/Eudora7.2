@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-10-14 08:22 | Doku nach Release v1.0.87 und [E-105](../BEFUNDE.md#e-105) (7.2.0.88) |
