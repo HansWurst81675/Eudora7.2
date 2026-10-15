@@ -3664,6 +3664,28 @@ BOOL CTocDoc::ImapMergeTmpMbx (CPtrList *pExpungedUidList)
 				break;
 			}
 
+			// E-121 (Gregors Test an 1.0.93): steht dieselbe UID schon im Ordner -
+			// die beim Verschieben hochgeladene und lokal ersetzte Kopie -, dann
+			// ersetzt die hier vom Server geladene Fassung diesen Eintrag. Bisher
+			// kam sie daneben: jede verschobene Mail doppelt, bis der Ordner neu
+			// geoeffnet wurde (neue-uid war gesetzt, summen nach dem Hochladen
+			// stimmten). Die Bilddateien des alten Eintrags bleiben.
+			{
+				CSummary *pSchonDa = (Sum->GetHash() != 0) ? GetSummaryFromUID(Sum->GetHash()) : NULL;
+				CString szSpur;
+				szSpur.Format("E-121 Abgleich uebernimmt: uid=%lu schon-da=%d", (unsigned long) Sum->GetHash(), pSchonDa != NULL);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				if (pSchonDa)
+				{
+					pSchonDa->SetDeleteEmbedded(FALSE);
+					InvalidateCachedPreviewSummary(pSchonDa, true);
+					CFrameWnd* pFenster = pSchonDa->m_FrameWnd;
+					if (pFenster)
+						pFenster->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+					RemoveSum(pSchonDa);
+				}
+			}
+
 			// Add a new TOC to the target mailbox.
 			CopySum = DEBUG_NEW CSummary;
 			CopySum->Copy(Sum);

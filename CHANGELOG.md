@@ -73,6 +73,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.94 — Doppelanzeige: der Abgleich ersetzt statt zu verdoppeln (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.93: FAILED** – weiter doppelt in `Inbox` und `OUTBOX`, bis der Ordner neu geöffnet wird. Sein Protokoll **widerlegt** die UIDPLUS-Vermutung aus 7.2.0.93: GMX meldet die UID (`E-121 Hochgeladen: … neue-uid=7`, `8`, `9`, `319`), und direkt nach dem Hochladen steht jede Mail einmal da. Die zweite Zeile legt der nachlaufende Abgleich an: `CTocDoc::ImapMergeTmpMbx` (`EuImap/src/ImapToc.cpp`) übernimmt die vom Server geladenen Mails **ohne** zu prüfen, ob dieselbe UID schon im Ordner steht (die Prüfung in `ImapMailbox.cpp` um :4999 sitzt in einem anderen Weg). Jetzt ersetzt die vom Server geladene Fassung einen solchen Eintrag (Vorschau gelöst, offenes Fenster geschlossen, Bilddateien bleiben). Spurmarke `E-121 Abgleich uebernimmt: uid=… schon-da=…`. Am Prüfstand nicht gemessen; Testsuite **209/209**.
+
 ## 7.2.0.93 — Doppelanzeige bei Servern ohne UIDPLUS (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 
 **[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.92:** drei Mails, jede doppelt bei offenem IMAP-Ordner; sein Protokoll: je einmal hochgeladen, nach dem Anstoß des Abgleichs je **ein** neuer Eintrag. Ursache: der Abgleich prüft schon selbst, ob eine Nachricht mit derselben UID im Ordner steht (`ImapMailbox.cpp` um :4999). Die UID kennt Eudora nach dem Hochladen aber nur, wenn der Server sie meldet (UIDPLUS, `APPENDUID`); der Prüfserver meldet sie, Gregors Server (GMX) vermutlich nicht. Ohne UID blieb die Vorab-Kopie mit lokaler Kennung stehen, der Abgleich holte die Server-Fassung dazu. Jetzt wird die Vorab-Kopie in diesem Fall nach dem Hochladen entfernt (Bilddateien bleiben, nicht bei Kennung 0). Spurmarke `E-121 Hochgeladen: … neue-uid=…`; Prüfserver neu mit `--ohne-appenduid`. Am Prüfstand NICHT gemessen (vier Läufe mit `--ohne-appenduid` hingen alle am Start-Abgleich des Prüfservers); Prüfung bei Gregor mit offenem IMAP-Ordner. Testsuite **209/209**.
