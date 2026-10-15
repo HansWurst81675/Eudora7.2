@@ -183,3 +183,19 @@ Schranke: keine im Repo. Ein Lesezugriff ist ein Werkzeugaufruf, kein Commit,
 den ein Haken sieht; ein `PreToolUse`-Haken in den Einstellungen wäre eine
 Änderung an der Konfiguration, die nur Gregor anordnen kann. Gegriffen hat
 am 14.10. die Rechteprüfung von Claude Code.
+
+## Nachtrag 15.10.2026 (CHRONIST): „wer testet“ ist nicht „ohne Ansage starten“
+
+Gregor um 11:05 UTC: *„die tests, die du selbst machen kannst, machst du auch
+selbst.“* Zwölf Minuten später lief der Prüfstand-Eudora auf seinem
+Bildschirm, ohne Ansage, und um 11:22 kam *„testen wir wieder beide
+parallel?“*. Sein Satz legte fest, **wer** testet — er nahm nichts von der
+Absprache zurück, **vorher** Fenster, Verzeichnis und Dauer zu nennen. Dazu
+trug der Startweg eine Freigabe vom Vortag fest im Skript. Hergang, Schranke
+und Form der Ansage: [[nichts-auf-gregors-bildschirm-starten]], Nachtrag
+15.10.2026.
+
+Und die Gegenrichtung: sein *„ohne absprache?“* um 08:47 war kein Verbot zu
+messen. Darauf ganz mit dem Messen aufzuhören (1.0.94, 1.0.95: *„ich teste
+selbst nichts“*) war dieselbe Hineinleserei, nur mit umgekehrtem Vorzeichen
+([[erst-nachstellen-dann-ausliefern]]).

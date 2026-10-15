@@ -7,7 +7,7 @@ metadata:
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
 ---
 
-Schranke: tools/pruefe-testbau.pl (pre-push) haelt die Testsammlung baubar; die eigentliche Pruefung ist `Test_ChunkLaesstDasByteDahinterInRuhe` in `Eudora71/Tests/TestIsoTranslate.cpp` - ein Waechterbyte hinter dem uebersetzten Stueck muss unveraendert bleiben. Gegenprobe umgedreht: geprueft wird nicht, ob das Ergebnis stimmt, sondern ob der falsche Wert durchkommt.
+Schranke: tools/pruefe-testbau.pl (pre-push) haelt die Testsammlung baubar; die eigentliche Pruefung ist `Test_ChunkLaesstDasByteDahinterInRuhe` in `Eudora71/Tests/TestIsoTranslate.cpp` - ein Waechterbyte hinter dem uebersetzten Stueck muss unveraendert bleiben. Gegenprobe umgedreht: geprueft wird nicht, ob das Ergebnis stimmt, sondern ob der falsche Wert durchkommt. Dazu seit 15.10.2026 der Hinweis tools/pruefe-kennung-suche.pl (pre-commit) fuer jede neue Suche ueber eine Nachrichtenkennung, siehe Nachtrag.
 
 # Die Nebenwirkung wandert mit
 
@@ -88,3 +88,44 @@ Siehe ausserdem [[assert-ist-im-release-nichts]] — auch dort haette der
 Schaden im Debug-Bau gemeldet und im Release geschwiegen —, sowie
 [[mannschaft-fuehren]] und [[pruefstand-kann-blind-sein]] zur Rolle, die
 diesen Fehler gefunden hat.
+
+## Nachtrag 15.10.2026 (CHRONIST): die Kennung gilt nur in ihrem Namensraum
+
+In [E-121](../BEFUNDE.md#e-121) hat eine übernommene Suche dreimal dieselbe
+Vorbedingung verletzt. `GetSummaryFromUID(pSum->GetHash())` findet „die“
+Nachricht mit einer Kennung. In einem IMAP-Ordner ist `m_Hash` die
+**Server-UID** — eindeutig, weil der Server sie vergibt. Die Vorab-Kopie einer
+lokal verschobenen Nachricht trägt aber ihre **lokale** Kennung, und die ist
+weder eindeutig noch von jeder UID verschieden:
+
+| wann | Kennung | was passiert wäre / ist |
+|---|---|---|
+| PRÜFER-28 P1, 14.10. | 0 (alle Nachrichten aus `Out`) | die erste Nachricht mit 0 — eine **fremde** — wäre aus der Quelle gelöscht worden |
+| 1.0.95, 15.10. | 13, alte UID aus einem früheren IMAP-Abruf | traf UID 13 einer fremden Mail im Ziel; Gregor sah *„Attempt to add the message to mailbox Inbox failed“* |
+| N1, offen | wie oben, auf der Quellseite | ein Namensvetter mit gleicher Kennung kann entfernt werden |
+
+Das Muster kam aus `ImapCopyMsgBetweenAccounts` (15.10., 05:44 UTC: *„Ich
+übernehme das Muster“*). Dort sind beide Seiten IMAP-Ordner, und die
+Vorbedingung gilt. Im Weg lokal → IMAP gilt sie nicht. Die Zeile, die den Fall
+1.0.95 auslöste, stand schon in `8008f96e` (1.0.91), drei Pakete vorher:
+`pTargetToc->GetSummaryFromUID(pSum->GetHash())`. Die Klasse war am 14.10.
+durch P1 bekannt und wurde an der nächsten Stelle wieder geschrieben.
+
+**Vor jeder Suche über eine Kennung drei Fragen:**
+
+1. Wer vergibt sie — der Server (UID) oder Eudora lokal (`m_Hash`)?
+2. In welchem Behälter ist sie eindeutig — und wird **genau dort** gesucht?
+3. Kann ein anderer Vergeber im selben Behälter denselben Wert haben (0 aus
+   `Out`, alte UID aus einem früheren Abruf)?
+
+Die Behebung in 1.0.96 ist die allgemeine Form: ein **Merkzeichen an der
+eigenen Kopie** (`IstE121Vorab`) statt einer Suche über einen fremden
+Schlüssel. N1 lässt sich nach demselben Prinzip schließen.
+
+**Schranke dazu:** `tools/pruefe-kennung-suche.pl` meldet im pre-commit jede
+neu geschriebene Suche über eine Nachrichtenkennung im Eudora-Quelltext
+(`GetSummaryFromUID(`, `GetHash() ==`), mit den drei Fragen — als Hinweis,
+nicht als Abweisung. Gemessen an den letzten 300 Commits unter `Eudora71/`
+hätte er 6-mal angeschlagen, alle zu E-121, darunter `8008f96e`. Gegenprobe:
+`--selbsttest`, 8 Fälle in beide Richtungen, Kommentare und Protokolltexte
+bleiben still ([[schranke-liest-nur-code]]).

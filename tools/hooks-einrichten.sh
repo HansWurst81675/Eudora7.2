@@ -88,6 +88,18 @@ if [ -f "$WURZEL/tools/wer-baut.pl" ]; then
   perl "$WURZEL/tools/wer-baut.pl" --staged 2>/dev/null | sed 's/^/pre-commit: /'
 fi
 
+# 1d. Neue Suche ueber eine Nachrichtenkennung im Eudora-Quelltext MELDEN -
+#     nicht abweisen. In E-121 traf dieselbe Annahme dreimal ("die Kennung
+#     findet DIE Nachricht"): Kennung 0 aus Out (PRUEFER-28 P1), alte UID 13 =
+#     fremde UID 13 im Ziel (1.0.95), N1 auf der Quellseite. Die Zeile fuer
+#     1.0.95 stand schon in 8008f96e (1.0.91). Von 300 Commits unter Eudora71/
+#     haetten 6 angeschlagen, alle zu E-121
+#     (Arbeitsweise/funktion-bringt-ihre-vorbedingung-mit.md, Nachtrag 15.10.2026).
+#     Gegenprobe: --selbsttest, 8 Faelle; --commit 8008f96e meldet.
+if [ -f "$WURZEL/tools/pruefe-kennung-suche.pl" ]; then
+  perl "$WURZEL/tools/pruefe-kennung-suche.pl" 2>/dev/null | sed 's/^/pre-commit: /'
+fi
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #
@@ -273,6 +285,19 @@ schranke pruefe-anzeigetext.pl || exit $?
 #      vom 14.10.2026 06:10 in einem Wegwerf-Repo (weist ab) und berichtigt
 #      (laesst durch).
 schranke pruefe-rueckstrich.pl || exit $?
+
+# 14e. Kein Paket an Gregor ohne Nachstellung am eigenen Pruefstand. E-121
+#      ging am 15.10.2026 durch sechs Pakete; fuenf trugen in PAKETE.md eine
+#      Zeile "Gemessen" ohne roten alten Stand ("am Pruefstand nicht
+#      gemessen", "summen=1" ohne Gegenprobe) und fielen alle bei Gregor
+#      durch. Das erste mit "an 1.0.95 nachgestellt, an 1.0.96 gruen" hat er
+#      beim ersten Anlauf bestaetigt. Nur der Zuwachs, nur Abschnitte mit
+#      bereitgestelltem Testverzeichnis; Ausnahme "ohne Nachstellung" plus
+#      Gregors woertliches Ja (Arbeitsweise/erst-nachstellen-dann-ausliefern.md).
+#      Gegenprobe: --selbsttest, 13 Faelle; die fuenf echten Commits
+#      8008f96e, 83337910, 7b95567a, 3731980c, 31afea0d weisen ab, 9578a1bf
+#      (1.0.96) und die zehn Pakete davor lassen durch.
+schranke pruefe-nachgestellt.pl || exit $?
 
 # ---------------------------------------------------------------------------
 # 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
@@ -550,6 +575,9 @@ echo "                               Herkunft? (E-83)"
 echo " 14d. tools/pruefe-rueckstrich.pl"
 echo "                               steht ein Windows-Pfad ohne Rueckstrich"
 echo "                               (C:Temp105) in einer neuen MD-Zeile?"
+echo " 14e. tools/pruefe-nachgestellt.pl"
+echo "                               nennt ein neues Paket an Gregor einen roten"
+echo "                               alten Stand am eigenen Pruefstand? (E-121)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo

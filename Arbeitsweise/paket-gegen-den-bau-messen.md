@@ -124,3 +124,24 @@ Danach:
 
 - **Das Paketwerkzeug muss beim Bauen selbst abweisen**, nicht erst `paket-pruefen.ps1` danach. Vorschlag für die Hauptsitzung, nicht gebaut: `paket-bauen.ps1` vergleicht nach dem Übernehmen die Dateiversion von `Eudora.exe` im Ziel mit `Eudora71/Version.h` und bricht bei Abweichung ab. Dazu `-Bauart` standardmäßig `Release` und als Grundlage das ZIP des letzten Tags statt 1.0.2. Gegenprobe: der Aufruf vom 13.10. (`-AusBauverzeichnis` ohne `-Bauart`) muss abgewiesen werden.
 - Bis dahin gilt: Wer ein Paket baut, nennt `-Bauart` und `-Grundlage` ausdrücklich, oder nimmt den Handweg oben. Fertig ist es erst, wenn `paket-pruefen.ps1` grün meldet und die Fassung gleich `Version.h` ist.
+
+## Nachtrag 15.10.2026 (CHRONIST): die Prüfung fing das Fehlende, nicht das Überzählige
+
+Beim Paket 1.0.96 (15.10., 11:35 UTC) meldete `paket-pruefen.ps1`, dass
+`MSVCP71.dll` fehlt, und das Paket hatte 31 statt 33 Dateien. Ursache: das
+ZIP der Grundlage hat keinen Oberordner, und beim Entpacken war der Ordner
+`Emoticons` umbenannt worden. **Die Schranke hat gegriffen**, bevor Gregor
+etwas bekam; das Paket wurde neu gebaut.
+
+Danach blieb ein Unterschied, den **keine** Prüfung meldete: `LDAP32.DLL` lag
+im neuen Paket und in keinem früheren. Gefunden durch einen Vergleich von Hand
+mit 1.0.95 (11:36), herausgenommen um 11:36:54. `paket-pruefen.ps1` prüft die
+Startkette auf **fehlende** Abhängigkeiten; eine zusätzliche Datei gegenüber
+dem vorigen Paket fällt nicht auf.
+
+**How to apply (Ergänzung):** nach jedem Paketbau die Dateiliste gegen das
+vorige Paket halten, in beide Richtungen — fehlt etwas, ist etwas dazu? Der
+Handvergleich vom 15.10. ist der Weg, bis das Werkzeug ihn kann.
+**Vorschlag für die Hauptsitzung (nicht gebaut):** `paket-pruefen.ps1
+-Vorgaenger <Verzeichnis>` meldet beide Richtungen; Gegenprobe: 1.0.96 vor dem
+Herausnehmen von `LDAP32.DLL` gegen 1.0.95 muss die Datei nennen.

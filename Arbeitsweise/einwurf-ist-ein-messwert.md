@@ -163,3 +163,34 @@ Wartezeit gefragt.
 **neue Zeit in dieselbe Meldung wie der Fund**, hier also um 10:22: *„dadurch
 etwa 10 Minuten später"*. Gibt es währenddessen etwas, das Gregor schon
 prüfen kann, wird das mit angeboten, bevor er danach fragt.
+
+## Nachtrag 15.10.2026 (CHRONIST): die Frage, die niemand beantwortet hat
+
+`tools/verlauf-messen.pl` ab 14.10.2026 06:50 UTC: **95 Nachrichten, 51
+Einwürfe (53 %)**, 523 Werkzeugaufrufe, größter Block 41 ohne neue Nachricht.
+Die Quote liegt wieder auf dem Stand vom 13.09.2026.
+
+Drei Muster darin:
+
+1. **Eine Sachfrage blieb ganz ohne Antwort.** 15.10., 11:13: *„warum brauchen
+   wir so viele anläufe, um es zu fixen? dürfte doch nicht so schwer sein?“*
+   Danach kamen Nachstellen, Paket, Bestätigung, Rollen — eine Antwort auf
+   diese Frage kam nicht. Sie hätte gelautet: weil fünf Pakete ohne
+   Nachstellung am eigenen Prüfstand hinausgingen
+   ([[erst-nachstellen-dann-ausliefern]]). Eine Frage nach dem **Warum** ist
+   die Frage, auf die eine Lehre antwortet; sie zu überspringen heißt, die
+   Lehre nicht zu ziehen.
+2. **Vordergrundläufe machen taub.** 15.10., 11:22:30 *„testen wir wieder beide
+   parallel?“* — 11:23:58 *„ich habe was gefragt.“* — Antwort 11:26:28, erst
+   als der Prüfstandlauf zurückkam. 14.10. ebenso: Fragen um 10:44, 10:51,
+   10:53, erste Antwort 10:58. Ein Lauf, der Minuten dauert, gehört in den
+   Hintergrund ([[nie-stillstehen]],
+   [[nichts-auf-gregors-bildschirm-starten]], Nachtrag 15.10.2026).
+3. **78 Minuten ohne Antwort, ungeklärt.** 15.10., 09:09:56 *„willst du was
+   testen? oder brauchst du noch meine instanz?“* — beantwortet 10:29:54. Der
+   eine Werkzeugaufruf dazwischen (Commit, `git push`, Paket 1.0.94) begann
+   09:10:35 und kam 10:27:47 zurück, mit *„Failed to connect to
+   github.com:443“*. Ob der Rechner ruhte oder der Aufruf hing, ist aus dem
+   Verlauf nicht zu entscheiden; gemessen ist nur die Lücke. Ein `git push`
+   gehört nicht in denselben Vordergrundaufruf wie die Arbeit, auf die Gregor
+   wartet ([[haengende-kommandos-abbrechen]]).
