@@ -372,6 +372,8 @@ public:
 	{	return ( m_RespondingToSum != NULL ); }
 	void SetDeleteEmbedded(BOOL bDelete = TRUE) {m_DeleteEmbedded = bDelete;}
 	BOOL CanDeleteEmbedded(){ return m_DeleteEmbedded;}
+	void SetE121Vorab(BOOL bVorab) {m_bE121Vorab = bVorab;}	// E-121, siehe m_bE121Vorab
+	BOOL IstE121Vorab() const { return m_bE121Vorab;}
 
 	bool		GetNotifySearchManager() const { return m_bNotifySearchManager; }
 	void		SetNotifySearchManager(bool in_bNotify) { m_bNotifySearchManager = in_bNotify; }
@@ -469,6 +471,7 @@ private:
 	short			m_RespondingToOldState;
 	unsigned long	m_PersonaHash;	// hash of m_Persona (save in TOC)
 	long			m_DeleteEmbedded;
+	BOOL			m_bE121Vorab;		// E-121: lokale Vorab-Kopie im IMAP-Zielordner, noch nicht hochgeladen (nur im Speicher, wird nicht gespeichert, nicht von Copy uebernommen)
 	bool			m_bNotifySearchManager;		//	Used to "gate" search manager notifications - ideally so that only occur when necessary
 	bool			m_bShouldBeAddedToIndex;	//	Used by search manager to flag whether or not message is already indexed
 };

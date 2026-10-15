@@ -66,6 +66,7 @@ my %opt = (
     gruss_verzoegerung => 0,
     append_ablehnen => 0,
     ohne_appenduid => 0,
+    fremde_uid   => 0,
 );
 
 while (@ARGV) {
@@ -77,6 +78,7 @@ while (@ARGV) {
     elsif ($a eq '--gruss-verzoegerung') { $opt{gruss_verzoegerung} = shift @ARGV }
     elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
     elsif ($a eq '--ohne-appenduid') { $opt{ohne_appenduid} = 1 }
+    elsif ($a eq '--fremde-uid')  { $opt{fremde_uid}   = shift @ARGV }
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     else { die "unbekannt: $a\n" }
 }
@@ -156,6 +158,33 @@ my %gesehen;            # Befehl -> Anzahl
 my @ablage;             # per APPEND hochgeladene Nachrichten (Postfach "Ablage")
 my %gewaehlt;           # Verbindung -> gewaehltes Postfach
 my $append_nr = 0;      # laufende Nummer der Ablagedateien
+
+# E-121 (Gregor an 1.0.95): im Ordner "Ablage" liegt schon eine FREMDE Nachricht,
+# deren UID gleich der lokalen Kennung der zu verschiebenden Mail ist (bei Gregor
+# 13). Eudora darf sie nicht fuer die eigene Vorab-Kopie halten.
+if ($opt{fremde_uid}) {
+    my $text = join("\r\n",
+        'From: Fremd <fremd@pruefserver.invalid>',
+        'To: pruefling@pruefserver.invalid',
+        "Subject: Fremde Nachricht mit UID $opt{fremde_uid}",
+        'Date: Thu, 10 Sep 2026 12:00:00 +0200',
+        'Message-ID: <fremd-uid@pruefserver.invalid>',
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=us-ascii',
+        '',
+        'Diese Nachricht lag schon vor dem Verschieben auf dem Server.',
+        '');
+    push @ablage, { text => $text, flags => '', geloescht_verlangt => 0, uid => $opt{fremde_uid} };
+}
+
+# UID einer Nachricht: gespeichert oder ihre Position.
+sub uid_von { my ($m, $i) = @_; return defined $m->{uid} ? $m->{uid} : $i }
+sub naechste_uid {
+    my ($liste) = @_;
+    my $max = 0;
+    for my $i (1 .. @$liste) { my $u = uid_von($liste->[$i - 1], $i); $max = $u if $u > $max }
+    return $max + 1;
+}
 
 # Postfachname aus "..." oder Atom; liefert die Liste dazu.
 sub postfach_name {
@@ -240,7 +269,7 @@ while (time < $ende) {
             print $h "* $n EXISTS\r\n";
             print $h "* 0 RECENT\r\n";
             print $h "* OK [UIDVALIDITY 1] gueltig\r\n";
-            print $h "* OK [UIDNEXT " . ($n + 1) . "] naechste\r\n";
+            print $h "* OK [UIDNEXT " . naechste_uid(liste_fuer($gewaehlt{$h})) . "] naechste\r\n";
             print $h "* FLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)\r\n";
             print $h "* OK [PERMANENTFLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)] erlaubt\r\n";
             $antwort = "$marke OK [READ-WRITE] $B";
@@ -249,7 +278,7 @@ while (time < $ende) {
             my $name = postfach_name($rest);
             my $n = scalar @{ liste_fuer($name) };
             printf $h "* STATUS \"%s\" (MESSAGES %d RECENT 0 UIDNEXT %d UIDVALIDITY 1 UNSEEN 0)\r\n",
-                $name, $n, $n + 1;
+                $name, $n, naechste_uid(liste_fuer($name));
             $antwort = "$marke OK STATUS";
         }
         elsif ($B eq 'APPEND') {
@@ -287,8 +316,8 @@ while (time < $ende) {
                 notiz("  -> $antwort");
                 next;
             }
-            push @ablage, { text => $daten, flags => '', geloescht_verlangt => 0 };
-            my $uid = scalar @ablage;
+            my $uid = naechste_uid(\@ablage);
+            push @ablage, { text => $daten, flags => '', geloescht_verlangt => 0, uid => $uid };
             $append_nr++;
             my $wohin = '(nicht abgelegt, kein --ablage)';
             if ($opt{ablage} ne '') {
@@ -307,21 +336,34 @@ while (time < $ende) {
             my ($von, $bis) = $r =~ /^(\d+)(?::(\d+|\*))?/;
             $von = 1 unless defined $von;
             $bis = $von unless defined $bis;
-            $bis = scalar @$liste if !defined $bis or $bis eq '*';
-            $bis = scalar @$liste if $bis > @$liste;
-            for my $i ($von .. $bis) {
+            my @nummern;
+            if ($B eq 'UID') {
+                # UID FETCH: nach UID auswaehlen, nicht nach Position (E-121 --fremde-uid).
+                my $obere = ($bis eq '*') ? 4294967295 : $bis;
+                for my $i (1 .. @$liste) {
+                    my $u = uid_von($liste->[$i - 1], $i);
+                    push @nummern, $i if ($u >= $von && $u <= $obere) || ($bis eq '*' && $i == @$liste);
+                }
+            }
+            else {
+                $bis = scalar @$liste if $bis eq '*';
+                $bis = scalar @$liste if $bis > @$liste;
+                @nummern = ($von .. $bis);
+            }
+            for my $i (@nummern) {
                 my $m = $liste->[$i - 1] or next;
+                my $uid = uid_von($m, $i);
                 my $laenge = length $m->{text};
                 my $flags = $m->{flags} || '';
                 if ($r =~ /BODY\.PEEK\[HEADER|BODY\[HEADER|RFC822\.HEADER/i) {
                     my ($kopf) = $m->{text} =~ /^(.*?\r\n)\r\n/s;
                     $kopf = $m->{text} unless defined $kopf;
                     printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[HEADER] {%d}\r\n%s)\r\n",
-                        $i, $i, $flags, $laenge, length($kopf), $kopf;
+                        $i, $uid, $flags, $laenge, length($kopf), $kopf;
                 }
                 else {
                     printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[] {%d}\r\n%s)\r\n",
-                        $i, $i, $flags, $laenge, $laenge, $m->{text};
+                        $i, $uid, $flags, $laenge, $laenge, $m->{text};
                 }
             }
             $antwort = "$marke OK FETCH";

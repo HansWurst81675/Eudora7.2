@@ -2360,6 +2360,9 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 		CString strVorher(strUIDList);
 		CString strId = strVorher.SpanExcluding(",");
 		pSum = GetSummaryFromUIDStringFromDestination(strUIDList);
+		// E-121 (Gregor an 1.0.95): im Ziel nur die markierte Vorab-Kopie - die
+		// Kennung allein (hier 13) traf eine fremde Server-Nachricht mit derselben UID.
+		pSum = E121FindeVorabKopie(m_pDestTocDoc, strtoul(strId, NULL, 10));
 		// PRUEFER-28 P1: lokal ist die Kennung nicht eindeutig - alle Nachrichten
 		// aus Out haben 0. Die Quelle wird nur benutzt (und spaeter entfernt), wenn
 		// ihre Kennung ungleich 0 ist und im Ordner genau einmal vorkommt. Sonst

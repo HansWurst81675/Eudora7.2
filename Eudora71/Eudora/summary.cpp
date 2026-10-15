@@ -535,6 +535,7 @@ CSummary::CSummary() : CObject(),
 	// The number of attachments that would be associated with this summary when the mail is being sent
 	m_nAttachmentCount = 0;
 	m_DeleteEmbedded = TRUE;
+	m_bE121Vorab = FALSE;
 	SetPersona( g_Personalities.GetCurrent() );
 
 #ifdef IMAP4

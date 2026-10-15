@@ -1384,7 +1384,7 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 	}
 	if (bResult && !NewUid && pSum->GetHash() != 0)
 	{
-		CSummary *pVorab = pTargetToc->GetSummaryFromUID(pSum->GetHash());
+		CSummary *pVorab = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
 		if (pVorab)
 		{
 			pVorab->SetDeleteEmbedded(FALSE);
@@ -1407,7 +1407,9 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 			// Vorab-Kopie mit derselben Kennung wird fuer die hochgeladene Fassung
 			// wiederverwendet. Nicht bei Kennung 0 (Nachrichten aus Out): dort waere
 			// der Treffer eine beliebige andere Kopie (PRUEFER-28 P1).
-			CSummary *pCopySum = (pSum->GetHash() != 0) ? pTargetToc->GetSummaryFromUID(pSum->GetHash()) : NULL;
+			// Gregor an 1.0.95: nur eine als Vorab-Kopie markierte Zusammenfassung - die
+			// Kennung allein traf eine fremde Server-Nachricht mit derselben UID.
+			CSummary *pCopySum = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
 			// E-121 (Gregors Test an 1.0.94): die Vorab-Kopie an Ort und Stelle
 			// aktualisieren, NICHT herausnehmen und wieder einfuegen. SubtractSum
 			// loescht die Listenzeile ueber die Position in m_Sums; ist die Liste im
@@ -1441,6 +1443,7 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 				// anschliessende Abgleich die Kopie nicht als die Nachricht vom Server und
 				// fuegte diese zusaetzlich ein - doppelt bis zum naechsten Oeffnen.
 				pCopySum->SetHash(NewUid);
+				pCopySum->SetE121Vorab(FALSE);	// jetzt die Server-Fassung
 
 				// Messages in the local Out mailbox have a hash of 0.  If the user copies more
 				// than one message from Out to an IMAP mailbox all copies in the IMAP mailbox
@@ -1622,6 +1625,22 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 //	Return:
 //	Pointer to CSummary whose hash matches lUID.  NULL if no match found.
 //
+// E-121: siehe tocdoc.h.
+CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
+{
+	if (!pToc || ulHash == 0)
+		return NULL;
+
+	POSITION pos = pToc->GetSumList().GetHeadPosition();
+	while (pos)
+	{
+		CSummary *pKandidat = pToc->GetSumList().GetNext(pos);
+		if (pKandidat && pKandidat->IstE121Vorab() && pKandidat->GetHash() == ulHash)
+			return pKandidat;
+	}
+	return NULL;
+}
+
 CSummary *CTocDoc::GetSummaryFromUID(unsigned long lUID)
 {
 	CSummary		*pSummary = NULL;

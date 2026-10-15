@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.96 — **nicht ausgeliefert**, Quellstand 7.2.0.96, Zweig `e-118_HTML_header` (E-121 Kollision Kennung/Server-UID)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.96-release` |
+| Inhalt | wie 1.0.95, dazu: die Vorab-Kopie trägt ein Merkzeichen, eine fremde Mail mit gleicher UID wird nicht mehr angefasst ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; Prüfstand mit `--fremde-uid`: an 1.0.95 Gregors Fehler nachgestellt, an 1.0.96 grün |
+
 ## 1.0.95 — **nicht ausgeliefert**, Quellstand 7.2.0.95, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, fünfter Teil)
 
 | | |
