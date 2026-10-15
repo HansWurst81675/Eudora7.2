@@ -1341,3 +1341,17 @@ Test in sieben Dateien ([L-35.2](Befunde/LEKTOR-35.md#l-35.2)); das falsche IMAP
 Offen: `PRUEFER-27.md` fehlt auf dem Zweig ([L-35.6](Befunde/LEKTOR-35.md#l-35.6)), PRÜFER hat [E-121](BEFUNDE.md#e-121) nicht
 gesehen ([L-35.7](Befunde/LEKTOR-35.md#l-35.7)), 20 von 62 Testläufen am 14.10. abgeschossen ([L-35.9](Befunde/LEKTOR-35.md#l-35.9)),
 TESTPLAN-Vorschlag C6 für 1.0.90 ([L-35.11](Befunde/LEKTOR-35.md#l-35.11)).
+
+## Einundvierzigster Durchgang — 15.10.2026 (Bericht: `Befunde/LEKTOR-36.md`)
+
+Nach 7.2.0.96 ([E-118](BEFUNDE.md#e-118) Teil 1 und 2 bestätigt, [E-121](BEFUNDE.md#e-121) Teile 1 bis 6, Teil 6 an 1.0.96
+bestätigt), zum Stand `9840ee35`; 120 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 41
+außerhalb von `Befunde/` gelesen. Der Kern: [E-118](BEFUNDE.md#e-118) stand noch in der offenen Liste
+([L-36.1](Befunde/LEKTOR-36.md#l-36.1)), Teil 2 galt an sieben Stellen als nicht bestätigt, `ZIEL.md` widersprach sich in
+einer Zelle ([L-36.2](Befunde/LEKTOR-36.md#l-36.2), [L-36.3](Befunde/LEKTOR-36.md#l-36.3)); [E-121](BEFUNDE.md#e-121) stand bei 7.2.0.90 und fehlte mit [E-122](BEFUNDE.md#e-122) im
+CHANGELOG unter *Noch offen* ([L-36.4](Befunde/LEKTOR-36.md#l-36.4)); Gregors Tests an 1.0.89 bis 1.0.96 fehlten in
+`WEITERMACHEN.md` und `Releases/PAKETE.md` ([L-36.5](Befunde/LEKTOR-36.md#l-36.5)); neue Schalter von Prüfserver und
+Messserie ([L-36.6](Befunde/LEKTOR-36.md#l-36.6)); `Testdaten/README.md` ([L-36.7](Befunde/LEKTOR-36.md#l-36.7)).
+Offen: PRÜFER hat 7.2.0.91 bis 7.2.0.96 nicht gesehen ([L-36.8](Befunde/LEKTOR-36.md#l-36.8)), der erste Satz des
+[E-121](BEFUNDE.md#e-121)-Urteils ([L-36.9](Befunde/LEKTOR-36.md#l-36.9)), feste Freigabe in `e118-serie.ps1` ([L-36.10](Befunde/LEKTOR-36.md#l-36.10)),
+Messbeleg 1.0.96 nur uncommittet ([L-36.11](Befunde/LEKTOR-36.md#l-36.11)), TESTPLAN ohne C6 ([L-36.12](Befunde/LEKTOR-36.md#l-36.12)).

@@ -172,6 +172,7 @@ haben.
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.95-release` |
 | Inhalt | wie 1.0.94, dazu: die Vorab-Kopie wird an Ort und Stelle aktualisiert ([E-121](../BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; am Prüfstand nicht gemessen |
+| Gregors Test, 15.10.2026 | Doppelanzeige weg; neuer Fehler *„Attempt to add the message to mailbox Inbox failed“* – lokale Kennung 13 gleich Server-UID 13, die fremde Mail wurde für die Vorab-Kopie gehalten. Kein Verlust, die Mail blieb in In ([E-121](../BEFUNDE.md#e-121), behoben in 1.0.96) |
 
 ## 1.0.94 — **nicht ausgeliefert**, Quellstand 7.2.0.94, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, vierter Teil)
 
@@ -180,6 +181,7 @@ haben.
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.94-release` |
 | Inhalt | wie 1.0.93, dazu: der Abgleich ersetzt einen Eintrag mit derselben UID, statt ihn zu verdoppeln ([E-121](../BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; am Prüfstand nicht gemessen |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** weiter doppelt in der Fensterliste, nach dem Neuöffnen einmal; `summen` unverändert, der Abgleich-Weg aus 7.2.0.94 lief gar nicht ([E-121](../BEFUNDE.md#e-121)) |
 
 ## 1.0.93 — **nicht ausgeliefert**, Quellstand 7.2.0.93, Zweig `e-118_HTML_header` (E-121 Doppelanzeige ohne UIDPLUS)
 
@@ -188,6 +190,7 @@ haben.
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.93-release` |
 | Inhalt | wie 1.0.92, dazu: meldet der Server keine UID, wird die Vorab-Kopie nach dem Hochladen entfernt ([E-121](../BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; Am Prüfstand NICHT gemessen (vier Läufe mit `--ohne-appenduid` hingen alle am Start-Abgleich des Prüfservers); Prüfung bei Gregor mit offenem IMAP-Ordner. |
+| Gregors Test, 15.10.2026 | **nicht bestanden** (*„FAILED“*): weiter doppelt in Inbox und OUTBOX bis zum Neuöffnen; GMX meldet die UID, die UIDPLUS-Vermutung ist widerlegt ([E-121](../BEFUNDE.md#e-121)) |
 
 ## 1.0.92 — **nicht ausgeliefert**, Quellstand 7.2.0.92, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, zweiter Teil)
 
@@ -196,6 +199,7 @@ haben.
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.92-release` |
 | Inhalt | wie 1.0.91, dazu: die ersetzte Vorab-Kopie trägt die Server-UID, damit der Abgleich keine zweite Zeile einfügt ([E-121](../BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; am Prüfstand nicht im Doppelfall gemessen |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** drei Mails, jede doppelt bei offenem Ordner ([E-121](../BEFUNDE.md#e-121)) |
 
 ## 1.0.91 — **nicht ausgeliefert**, Quellstand 7.2.0.91, Zweig `e-118_HTML_header` (E-121 Doppelanzeige)
 
@@ -204,6 +208,7 @@ haben.
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.91-release` |
 | Inhalt | wie 1.0.90, dazu: nach dem Verschieben in einen IMAP-Ordner steht die Mail nicht mehr doppelt da ([E-121](../BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; Prüfstand: `summen=1` im Fall mit Vorab-Kopie |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** die Mail steht nach dem Verschieben weiter doppelt da, bis der Ordner neu geöffnet wird ([E-121](../BEFUNDE.md#e-121)) |
 
 ## 1.0.90 — **nicht ausgeliefert**, Quellstand 7.2.0.90, Zweig `e-118_HTML_header` (E-118 Teil 2, E-121)
 
@@ -212,6 +217,7 @@ haben.
 | Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.90-release`, Grundlage 1.0.84-ZIP, 33 EXE/DLL/OCX aus dem Bau (`SPELL32.DLL` aus dem ZIP), `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`, `paket-pruefen.ps1`: keine Fehler, `TESTEN.txt` (Kopie `Releases/1.0.90/TESTEN.txt`); PRÜFER-29: auslieferbar |
 | Inhalt | wie 1.0.89, dazu [E-118](../BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder werden mit hochgeladen) und [E-121](../BEFUNDE.md#e-121) (kein Verlust beim Verschieben in einen IMAP-Ordner) |
 | Gemessen | Testsuite 209/209; IMAP-Prüfserver: Bild als `multipart/related` mit `Content-ID`, Fußzeile erhalten; fehlende Kopie und abgelehntes `APPEND` ohne Verlust |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../BEFUNDE.md#e-118) Teil 2 an der SoftMaker-Mail (*„ja, bilder sind drin.“*). **Gemeldet:** nach dem Verschieben erscheint die Mail doppelt, auf dem Server einmal ([E-121](../BEFUNDE.md#e-121), behoben in 1.0.91 bis 1.0.96) |
 
 ## 1.0.89 — **nicht ausgeliefert**, Quellstand 7.2.0.89, Zweig `e-118_HTML_header` (E-118)
 

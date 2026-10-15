@@ -176,13 +176,15 @@ verschickt.
   Handyfassung, eine davon per `display:none` verborgen; zweiter Fall,
   von Gregor am 13.10.2026 an 1.0.86 gemeldet).
 * **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als
-  HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert, von Gregor am 14.10.2026 an 1.0.89 bestätigt): beim Hochladen
+  HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert, Teil 1 von Gregor am 14.10.2026 an 1.0.89 bestätigt, Teil 2 am 14.10.2026 an 1.0.90): beim Hochladen
   verwirft Eudora die `Content-*`-Köpfe und schreibt keinen oder nur
   `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
-  Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach (am IMAP-Prüfserver gemessen, von Gregor noch nicht bestätigt).
+  Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach (am IMAP-Prüfserver gemessen, von Gregor am 14.10.2026 an 1.0.90 bestätigt).
 * **Eine Nachricht, die in einen IMAP-Ordner verschoben wird, kann spurlos
   verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
-  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert):
+  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
+  gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
+  von Gregor bestätigt; Restfälle N1–N3 offen):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
