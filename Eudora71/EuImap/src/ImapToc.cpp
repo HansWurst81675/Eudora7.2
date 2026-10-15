@@ -1378,11 +1378,28 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 		bResult = RewriteMbxStub (pSum, this, pTargetToc, NewUid, MStart, NewLength);
 		if (bResult)
 		{ 
-			// Create target summary.
-			CSummary *pCopySum = DEBUG_NEW_MFCOBJ_NOTHROW CSummary;
+			// E-121, Gregors Test an 1.0.90: "mails erscheinen nach dem verschieben 2x".
+			// Die lokale Vorab-Kopie im Ziel (CTocDoc::Xfer) wurde hier nicht ersetzt,
+			// sondern eine zweite Zusammenfassung angelegt; erst der naechste Abgleich
+			// raeumte die Vorab-Kopie weg. Jetzt wie in ImapCopyMsgBetweenAccounts: die
+			// Vorab-Kopie mit derselben Kennung wird fuer die hochgeladene Fassung
+			// wiederverwendet. Nicht bei Kennung 0 (Nachrichten aus Out): dort waere
+			// der Treffer eine beliebige andere Kopie (PRUEFER-28 P1).
+			CSummary *pCopySum = (pSum->GetHash() != 0) ? pTargetToc->GetSummaryFromUID(pSum->GetHash()) : NULL;
 			if (pCopySum)
 			{
-				pCopySum->Copy(pSum);
+				// Ihre Bilddateien gehoeren auch der hochgeladenen Fassung - nicht loeschen.
+				pCopySum->SetDeleteEmbedded(FALSE);
+				pTargetToc->SubtractSum(pCopySum);
+			}
+			else
+			{
+				pCopySum = DEBUG_NEW_MFCOBJ_NOTHROW CSummary;
+			}
+			if (pCopySum)
+			{
+				if (pCopySum != pSum)
+					pCopySum->Copy(pSum);
 
 				pTargetToc->AddSum(pCopySum);
 				pCopySum->SetOffset(MStart);

@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 14.10.2026)
+## Noch offen (Stand 15.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -72,6 +72,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.91 — keine Doppelanzeige nach dem Verschieben in einen IMAP-Ordner (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.90:** *„mails erscheinen nach dem verschieben 2x“* – bei offenem IMAP-Ordner blieb die Mail doppelt stehen, bis zum nächsten Abgleich; auf dem Server lag sie nur einmal. `CTocDoc::ImapCopyMsgFromLocalToImap` legte nach dem Hochladen eine zweite Zusammenfassung an, statt die lokale Vorab-Kopie zu ersetzen. Jetzt wie in `ImapCopyMsgBetweenAccounts`: die Vorab-Kopie mit derselben Kennung wird wiederverwendet (nicht bei Kennung 0), ihre Bilddateien bleiben. **Am Prüfstand gemessen (15.10.2026, `tools/e118-serie.ps1`):** im Fall `im-ziel=1` (Vorab-Kopie noch da) neue Spurmarke `E-121 Ziel nach dem Hochladen: summen=1`; Gegenprobe ist Gregors Beobachtung an 1.0.90 (der Fall trat am Prüfstand mit 7.2.0.90 in fünf Läufen nicht auf). Testsuite **209/209**.
 
 ## 7.2.0.90 — eingebettete Bilder beim Hochladen, kein Verlust beim Verschieben in IMAP (E-118 Teil 2, E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 

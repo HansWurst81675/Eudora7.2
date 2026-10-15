@@ -2418,6 +2418,15 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 		}
 	} while (!strUIDList.IsEmpty());
 
+	// E-121: Spurmarke - wie viele Eintraege stehen nach dem Hochladen im Ziel,
+	// vor dem Abgleich? Steht dieselbe Nachricht doppelt da, war die Vorab-Kopie
+	// nicht ersetzt (Gregors Test an 1.0.90).
+	{
+		CString szSpurZ;
+		szSpurZ.Format("E-121 Ziel nach dem Hochladen: summen=%d", (int) m_pDestTocDoc->NumSums());
+		::PutDebugLog(DEBUG_MASK_MISC, szSpurZ);
+	}
+
 	if (bQuelleGeaendert && pSrcToc)
 	{
 		pSrcToc->Write();
