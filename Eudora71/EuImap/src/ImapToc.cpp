@@ -1370,6 +1370,28 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 		}
 	}
 
+	// E-121 (Gregors Test an 1.0.92): meldet der Server keine neue UID
+	// (kein UIDPLUS/APPENDUID), wurde unten nichts ersetzt - die lokale
+	// Vorab-Kopie mit der lokalen Kennung blieb stehen, und der Abgleich holte
+	// die Server-Fassung dazu: doppelt, bis der Ordner neu geoeffnet wurde.
+	// Jetzt wird die Vorab-Kopie nach dem Hochladen entfernt; der Abgleich holt
+	// die Nachricht einmal vom Server. Ihre Bilddateien bleiben (die Quelle und
+	// die Server-Fassung brauchen sie). Nicht bei Kennung 0 (Out, PRUEFER-28 P1).
+	{
+		CString szSpur;
+		szSpur.Format("E-121 Hochgeladen: ergebnis=%d neue-uid=%lu", bResult, (unsigned long) NewUid);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
+	if (bResult && !NewUid && pSum->GetHash() != 0)
+	{
+		CSummary *pVorab = pTargetToc->GetSummaryFromUID(pSum->GetHash());
+		if (pVorab)
+		{
+			pVorab->SetDeleteEmbedded(FALSE);
+			pTargetToc->RemoveSum(pVorab);
+		}
+	}
+
 	// If we got a new Uid, we can do the copy locally.
 	if (bResult && NewUid)
 	{

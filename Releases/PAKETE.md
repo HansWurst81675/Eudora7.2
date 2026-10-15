@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.93 — **nicht ausgeliefert**, Quellstand 7.2.0.93, Zweig `e-118_HTML_header` (E-121 Doppelanzeige ohne UIDPLUS)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.93-release` |
+| Inhalt | wie 1.0.92, dazu: meldet der Server keine UID, wird die Vorab-Kopie nach dem Hochladen entfernt ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; Am Prüfstand NICHT gemessen (vier Läufe mit `--ohne-appenduid` hingen alle am Start-Abgleich des Prüfservers); Prüfung bei Gregor mit offenem IMAP-Ordner. |
+
 ## 1.0.92 — **nicht ausgeliefert**, Quellstand 7.2.0.92, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, zweiter Teil)
 
 | | |

@@ -65,6 +65,7 @@ my %opt = (
     ablage       => '',
     gruss_verzoegerung => 0,
     append_ablehnen => 0,
+    ohne_appenduid => 0,
 );
 
 while (@ARGV) {
@@ -75,6 +76,7 @@ while (@ARGV) {
     elsif ($a eq '--zeitschranke') { $opt{zeitschranke} = shift @ARGV }
     elsif ($a eq '--gruss-verzoegerung') { $opt{gruss_verzoegerung} = shift @ARGV }
     elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
+    elsif ($a eq '--ohne-appenduid') { $opt{ohne_appenduid} = 1 }
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     else { die "unbekannt: $a\n" }
 }
@@ -296,7 +298,8 @@ while (time < $ende) {
                 close $af;
             }
             notiz(sprintf('  APPEND nach "%s": %d Bytes -> %s', $name, length($daten), $wohin));
-            $antwort = "$marke OK [APPENDUID 1 $uid] APPEND completed";
+            # E-121: wie ein Server ohne UIDPLUS (vermutlich GMX) - keine neue UID melden.
+            $antwort = $opt{ohne_appenduid} ? "$marke OK APPEND completed" : "$marke OK [APPENDUID 1 $uid] APPEND completed";
         }
         elsif ($B eq 'FETCH' or ($B eq 'UID' and $rest =~ /^FETCH/i)) {
             my $liste = liste_fuer($gewaehlt{$h} || 'INBOX');

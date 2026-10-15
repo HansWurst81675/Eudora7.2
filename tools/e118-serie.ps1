@@ -1,4 +1,4 @@
-param([string] $Eml, [int] $Anzahl = 3, [string] $Kennung = 'serie', [string] $Verzeichnis = 'C:\Temp\E118', [switch] $OhneZielFenster, [int] $GrussVerzoegerung = 0, [switch] $AppendAblehnen)
+param([string] $Eml, [int] $Anzahl = 3, [string] $Kennung = 'serie', [string] $Verzeichnis = 'C:\Temp\E118', [switch] $OhneZielFenster, [int] $GrussVerzoegerung = 0, [switch] $AppendAblehnen, [switch] $OhneAppendUid)
 # Mehrere Messlaeufe E-118 hintereinander, je mit frischem Posteingang und frischen Pruefservern.
 $repo = 'C:\Users\Gregor\Documents\github\Eudora7.2'
 $sp   = $PSScriptRoot   # messen-e118.ps1 liegt daneben (tools/)
@@ -18,6 +18,7 @@ for ($i = 1; $i -le $Anzahl; $i++) {
     if (Test-Path (Join-Path $m 'eudora.log')) { Move-Item (Join-Path $m 'eudora.log') (Join-Path $m "eudora-$Kennung-$i-vorher.log") -Force }
     $imapArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--ablage', $abl, '--protokoll', (Join-Path $Verzeichnis "imap-$Kennung-$i.log"), '--zeitschranke', '200', '--gruss-verzoegerung', "$GrussVerzoegerung")
     if ($AppendAblehnen) { $imapArgs += '--append-ablehnen' }
+    if ($OhneAppendUid) { $imapArgs += '--ohne-appenduid' }
     $imap = Start-Process $perl -ArgumentList $imapArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     $pop  = Start-Process $perl -ArgumentList @("$repo\tools\anhang-pruefdaten.pl", '--pop', '--nur-eml', '--eml', $Eml) -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     Start-Sleep -Seconds 2

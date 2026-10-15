@@ -73,6 +73,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.93 — Doppelanzeige bei Servern ohne UIDPLUS (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.92:** drei Mails, jede doppelt bei offenem IMAP-Ordner; sein Protokoll: je einmal hochgeladen, nach dem Anstoß des Abgleichs je **ein** neuer Eintrag. Ursache: der Abgleich prüft schon selbst, ob eine Nachricht mit derselben UID im Ordner steht (`ImapMailbox.cpp` um :4999). Die UID kennt Eudora nach dem Hochladen aber nur, wenn der Server sie meldet (UIDPLUS, `APPENDUID`); der Prüfserver meldet sie, Gregors Server (GMX) vermutlich nicht. Ohne UID blieb die Vorab-Kopie mit lokaler Kennung stehen, der Abgleich holte die Server-Fassung dazu. Jetzt wird die Vorab-Kopie in diesem Fall nach dem Hochladen entfernt (Bilddateien bleiben, nicht bei Kennung 0). Spurmarke `E-121 Hochgeladen: … neue-uid=…`; Prüfserver neu mit `--ohne-appenduid`. Am Prüfstand NICHT gemessen (vier Läufe mit `--ohne-appenduid` hingen alle am Start-Abgleich des Prüfservers); Prüfung bei Gregor mit offenem IMAP-Ordner. Testsuite **209/209**.
+
 ## 7.2.0.92 — Doppelanzeige nach dem Verschieben, zweiter Teil (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 
 **[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.91:** die Mail stand nach dem Verschieben weiter doppelt da, bis der Ordner neu geöffnet wurde. 7.2.0.91 ersetzte die Vorab-Kopie, ließ ihr aber die lokale Kennung; der anschließende Abgleich erkannte sie nicht als die Nachricht vom Server (im IMAP-Ordner ist die Kennung die UID) und fügte diese zusätzlich ein. Jetzt bekommt die ersetzte Kopie die vom Server gemeldete UID (`ImapCopyMsgFromLocalToImap`). Neue Spurmarke `E-121 Ziel nach dem Abgleich: summen=…`. **Am Prüfstand nicht im Doppelfall gemessen** (vier von fünf Läufen hingen am Start-Abgleich des Prüfservers, der eine gültige hatte die Vorab-Kopie schon verloren); Testsuite **209/209**. Prüfung bei Gregor mit offenem IMAP-Ordner.
