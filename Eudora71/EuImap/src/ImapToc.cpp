@@ -1408,11 +1408,17 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 			// wiederverwendet. Nicht bei Kennung 0 (Nachrichten aus Out): dort waere
 			// der Treffer eine beliebige andere Kopie (PRUEFER-28 P1).
 			CSummary *pCopySum = (pSum->GetHash() != 0) ? pTargetToc->GetSummaryFromUID(pSum->GetHash()) : NULL;
-			if (pCopySum)
+			// E-121 (Gregors Test an 1.0.94): die Vorab-Kopie an Ort und Stelle
+			// aktualisieren, NICHT herausnehmen und wieder einfuegen. SubtractSum
+			// loescht die Listenzeile ueber die Position in m_Sums; ist die Liste im
+			// Fenster gerade anders sortiert (nach dem Einfuegen der Vorab-Kopie steht
+			// die Sortierung noch aus), traf das eine andere Zeile, und AddSum fuegte
+			// eine neue hinzu: die Mail stand doppelt da, obwohl summen stimmte.
+			BOOL bSchonImZiel = (pCopySum != NULL);
+			if (bSchonImZiel)
 			{
 				// Ihre Bilddateien gehoeren auch der hochgeladenen Fassung - nicht loeschen.
 				pCopySum->SetDeleteEmbedded(FALSE);
-				pTargetToc->SubtractSum(pCopySum);
 			}
 			else
 			{
@@ -1420,10 +1426,13 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 			}
 			if (pCopySum)
 			{
-				if (pCopySum != pSum)
+				// Eine Vorab-Kopie ist schon eine Kopie der Quelle (CTocDoc::Xfer) - nur
+				// eine neue Zusammenfassung wird hier gefuellt und eingefuegt.
+				if (!bSchonImZiel)
+				{
 					pCopySum->Copy(pSum);
-
-				pTargetToc->AddSum(pCopySum);
+					pTargetToc->AddSum(pCopySum);
+				}
 				pCopySum->SetOffset(MStart);
 				pCopySum->m_Length = NewLength;
 

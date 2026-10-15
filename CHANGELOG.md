@@ -73,6 +73,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.95 — Doppelanzeige: Vorab-Kopie an Ort und Stelle aktualisieren (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.94:** weiter doppelt in der Liste. Sein Protokoll: einmal hochgeladen (`neue-uid=320`), `summen=37` vor **und** nach dem Abgleich, die Spurmarke `E-121 Abgleich uebernimmt` aus 7.2.0.94 fehlt ganz – der Abgleich legt keine zweite Zeile an, die **Daten** sind einfach, nur die **Liste im Fenster** zeigt eine Zeile doppelt. Ursache (am Quelltext, nicht gemessen): 7.2.0.91 ersetzte die Vorab-Kopie mit `SubtractSum` + `AddSum`; `SubtractSum` löscht die Listenzeile über die Position in `m_Sums` (`tocdoc.cpp`), ist die Liste anders sortiert, trifft es eine andere Zeile, und `AddSum` fügt eine neue hinzu. Jetzt wird die Vorab-Kopie an Ort und Stelle aktualisiert (Lage, Länge, UID), ohne Herausnehmen. Testsuite **209/209**; am Prüfstand nicht gemessen.
+
 ## 7.2.0.94 — Doppelanzeige: der Abgleich ersetzt statt zu verdoppeln (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 
 **[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.93: FAILED** – weiter doppelt in `Inbox` und `OUTBOX`, bis der Ordner neu geöffnet wird. Sein Protokoll **widerlegt** die UIDPLUS-Vermutung aus 7.2.0.93: GMX meldet die UID (`E-121 Hochgeladen: … neue-uid=7`, `8`, `9`, `319`), und direkt nach dem Hochladen steht jede Mail einmal da. Die zweite Zeile legt der nachlaufende Abgleich an: `CTocDoc::ImapMergeTmpMbx` (`EuImap/src/ImapToc.cpp`) übernimmt die vom Server geladenen Mails **ohne** zu prüfen, ob dieselbe UID schon im Ordner steht (die Prüfung in `ImapMailbox.cpp` um :4999 sitzt in einem anderen Weg). Jetzt ersetzt die vom Server geladene Fassung einen solchen Eintrag (Vorschau gelöst, offenes Fenster geschlossen, Bilddateien bleiben). Spurmarke `E-121 Abgleich uebernimmt: uid=… schon-da=…`. Am Prüfstand nicht gemessen; Testsuite **209/209**.
