@@ -1578,6 +1578,11 @@ void CImapTransferMsgAction::DoPostProcessing()
 	if (m_bIsLastOnMailbox && m_pDestTocDoc && m_pDestTocDoc->m_pImapMailbox)
 	{
 		m_pDestTocDoc->m_pImapMailbox->DoManualResync(m_pDestTocDoc, TRUE, FALSE, FALSE);
+
+		// E-121: Spurmarke - steht die Nachricht nach dem Abgleich einmal da?
+		CString szSpurR;
+		szSpurR.Format("E-121 Ziel nach dem Abgleich: summen=%d", (int) m_pDestTocDoc->NumSums());
+		::PutDebugLog(DEBUG_MASK_MISC, szSpurR);
 	}
 }
 
@@ -2449,6 +2454,11 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 	if (m_bIsLastOnMailbox && m_pDestTocDoc && m_pDestTocDoc->m_pImapMailbox)
 	{
 		m_pDestTocDoc->m_pImapMailbox->DoManualResync(m_pDestTocDoc, TRUE, FALSE, FALSE);
+
+		// E-121: Spurmarke - steht die Nachricht nach dem Abgleich einmal da?
+		CString szSpurR;
+		szSpurR.Format("E-121 Ziel nach dem Abgleich: summen=%d", (int) m_pDestTocDoc->NumSums());
+		::PutDebugLog(DEBUG_MASK_MISC, szSpurR);
 	}
 }
 

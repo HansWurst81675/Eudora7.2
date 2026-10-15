@@ -73,6 +73,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.92 — Doppelanzeige nach dem Verschieben, zweiter Teil (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.91:** die Mail stand nach dem Verschieben weiter doppelt da, bis der Ordner neu geöffnet wurde. 7.2.0.91 ersetzte die Vorab-Kopie, ließ ihr aber die lokale Kennung; der anschließende Abgleich erkannte sie nicht als die Nachricht vom Server (im IMAP-Ordner ist die Kennung die UID) und fügte diese zusätzlich ein. Jetzt bekommt die ersetzte Kopie die vom Server gemeldete UID (`ImapCopyMsgFromLocalToImap`). Neue Spurmarke `E-121 Ziel nach dem Abgleich: summen=…`. **Am Prüfstand nicht im Doppelfall gemessen** (vier von fünf Läufen hingen am Start-Abgleich des Prüfservers, der eine gültige hatte die Vorab-Kopie schon verloren); Testsuite **209/209**. Prüfung bei Gregor mit offenem IMAP-Ordner.
+
 ## 7.2.0.91 — keine Doppelanzeige nach dem Verschieben in einen IMAP-Ordner (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 
 **[E-121](BEFUNDE.md#e-121), Gregors Test an 1.0.90:** *„mails erscheinen nach dem verschieben 2x“* – bei offenem IMAP-Ordner blieb die Mail doppelt stehen, bis zum nächsten Abgleich; auf dem Server lag sie nur einmal. `CTocDoc::ImapCopyMsgFromLocalToImap` legte nach dem Hochladen eine zweite Zusammenfassung an, statt die lokale Vorab-Kopie zu ersetzen. Jetzt wie in `ImapCopyMsgBetweenAccounts`: die Vorab-Kopie mit derselben Kennung wird wiederverwendet (nicht bei Kennung 0), ihre Bilddateien bleiben. **Am Prüfstand gemessen (15.10.2026, `tools/e118-serie.ps1`):** im Fall `im-ziel=1` (Vorab-Kopie noch da) neue Spurmarke `E-121 Ziel nach dem Hochladen: summen=1`; Gegenprobe ist Gregors Beobachtung an 1.0.90 (der Fall trat am Prüfstand mit 7.2.0.90 in fünf Läufen nicht auf). Testsuite **209/209**.

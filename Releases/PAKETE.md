@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.92 — **nicht ausgeliefert**, Quellstand 7.2.0.92, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, zweiter Teil)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.92-release` |
+| Inhalt | wie 1.0.91, dazu: die ersetzte Vorab-Kopie trägt die Server-UID, damit der Abgleich keine zweite Zeile einfügt ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; am Prüfstand nicht im Doppelfall gemessen |
+
 ## 1.0.91 — **nicht ausgeliefert**, Quellstand 7.2.0.91, Zweig `e-118_HTML_header` (E-121 Doppelanzeige)
 
 | | |

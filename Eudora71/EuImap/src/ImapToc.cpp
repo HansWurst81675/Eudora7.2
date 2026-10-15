@@ -1405,6 +1405,12 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 				pCopySum->SetOffset(MStart);
 				pCopySum->m_Length = NewLength;
 
+				// E-121 (Gregors Test an 1.0.91): die Server-Kennung eintragen. Im IMAP-
+				// Ordner ist die Kennung die UID; mit der lokalen Kennung erkannte der
+				// anschliessende Abgleich die Kopie nicht als die Nachricht vom Server und
+				// fuegte diese zusaetzlich ein - doppelt bis zum naechsten Oeffnen.
+				pCopySum->SetHash(NewUid);
+
 				// Messages in the local Out mailbox have a hash of 0.  If the user copies more
 				// than one message from Out to an IMAP mailbox all copies in the IMAP mailbox
 				// will have hashes of 0 which causes problems later.  If we are transferring
