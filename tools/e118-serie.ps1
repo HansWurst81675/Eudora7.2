@@ -1,5 +1,9 @@
-param([string] $Eml, [int] $Anzahl = 3, [string] $Kennung = 'serie', [string] $Verzeichnis = 'C:\Temp\E118', [switch] $OhneZielFenster, [int] $GrussVerzoegerung = 0, [switch] $AppendAblehnen, [switch] $OhneAppendUid, [string] $FremdeUid = "", [switch] $ZielBehalten)
+param([Parameter(Mandatory = $true)] [string] $Freigabe, [string] $Eml, [int] $Anzahl = 3, [string] $Kennung = 'serie', [string] $Verzeichnis = 'C:\Temp\E118', [switch] $OhneZielFenster, [int] $GrussVerzoegerung = 0, [switch] $AppendAblehnen, [switch] $OhneAppendUid, [string] $FremdeUid = "", [switch] $ZielBehalten)
 # Mehrere Messlaeufe E-118 hintereinander, je mit frischem Posteingang und frischen Pruefservern.
+# -Freigabe ist Pflicht und wird an testlauf.ps1 durchgereicht: Gregors Satz von HEUTE, mit Datum.
+# Bis 15.10.2026 stand hier fest "Gregor am 14.10.2026: ich mache gar nichts, du testest." -
+# 29 Starts am Folgetag liefen damit, zweimal sah Gregor fremde Fenster, waehrend er selbst testen
+# wollte (Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md, Nachtrag 15.10.2026).
 $repo = 'C:\Users\Gregor\Documents\github\Eudora7.2'
 $sp   = $PSScriptRoot   # messen-e118.ps1 liegt daneben (tools/)
 $perl = 'C:\Program Files\Git\usr\bin\perl.exe'
@@ -28,7 +32,7 @@ for ($i = 1; $i -le $Anzahl; $i++) {
     $pop  = Start-Process $perl -ArgumentList @("$repo\tools\anhang-pruefdaten.pl", '--pop', '--nur-eml', '--eml', $Eml) -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     Start-Sleep -Seconds 2
     $env:E118_ABLAGE = $abl
-    & powershell -NoProfile -ExecutionPolicy Bypass -File "$repo\tools\testlauf.ps1" -Verzeichnis $Verzeichnis -Freigabe "Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - E-118 $Kennung Lauf $i" -Sekunden 60 -MessenSkript "$sp\messen-e118.ps1" | Out-Null
+    & powershell -NoProfile -ExecutionPolicy Bypass -File "$repo\tools\testlauf.ps1" -Verzeichnis $Verzeichnis -Freigabe "$Freigabe - E-118 $Kennung Lauf $i" -Sekunden 60 -MessenSkript "$sp\messen-e118.ps1" | Out-Null
     foreach ($p in $imap, $pop) { if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force } }
     $n = @(Get-ChildItem $abl -ErrorAction SilentlyContinue).Count
     Write-Host "== Lauf ${i}: ablage=$n"

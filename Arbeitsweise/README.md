@@ -1,4 +1,4 @@
-0# Arbeitsweise
+# Arbeitsweise
 
 Regeln und Lehren aus der Portierungsarbeit an diesem Projekt — geschrieben von und
 für den Assistenten, der daran arbeitet.
@@ -49,6 +49,7 @@ eine Datei liest, liest diese.
 | [CHRONIST-2026-10-13d](CHRONIST-2026-10-13d.md) | CHRONIST-Lauf 13.10.2026 (vierter): neue Lehre fund-ganz-abhaken mit Werkzeug tools/fund-punkte.pl (N1 nur in einer Richtung behoben), Nachträge zu erlaubnis-nicht-hineinlesen (Rollen in Fragen ausschreiben) und einwurf-ist-ein-messwert (neue Zeit mit dem Fund melden) |
 | [CHRONIST-2026-10-13e](CHRONIST-2026-10-13e.md) | CHRONIST-Lauf 13.10.2026 (fünfter): keine neue Lehre, sieben Nachträge (Messfenster hat gewirkt, Startliste machte Nachstellläufe wertlos, Paket aus Bin\Debug, „schlimmer“ ungemessen verneint, Übergabe nur im Chat, Abschaltmeldung ungeprüft, „für morgen“ war heute machbar); Werkzeuge stapel-lesen.ps1 gesichert, testlauf.ps1 zeigt die Startliste |
 | [CHRONIST-2026-10-14](CHRONIST-2026-10-14.md) | CHRONIST-Lauf 14.10.2026: keine neue Lehre, sechs Nachträge (Rückstrich und Perl-Fallen, lmos.dat wieder am falschen Ort, Gregors Postfächer, unbeantwortete Frage, Release im Vordergrund, Abschalten); Schranke pruefe-rueckstrich.pl gebaut, testlauf.ps1 nennt Altlasten |
+| [CHRONIST-2026-10-15](CHRONIST-2026-10-15.md) | CHRONIST-Lauf 15.10.2026: neue Lehre erst-nachstellen-dann-ausliefern (E-121, sechs Pakete) mit Schranke pruefe-nachgestellt.pl; fünf Nachträge (Freigabe vom Vortag fest im Skript, Kennung nur im Namensraum, Zitat als Urteil gelesen, überzählige DLL im Paket, unbeantwortete Warum-Frage); testlauf.ps1 verlangt das Tagesdatum |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
@@ -80,6 +81,7 @@ eine Datei liest, liest diese.
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
+| [erst-nachstellen-dann-ausliefern](erst-nachstellen-dann-ausliefern.md) | Ein Paket, das Gregors Fehler beheben soll, braucht vorher am eigenen Prüfstand: alter Stand rot, neuer grün - E-121 brauchte sechs Pakete, das erste nachgestellte hielt beim ersten Anlauf |
 | [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) | Keine Handlungsanweisung an Gregor geben, ohne sie vorher selbst durchgeführt und gemessen zu haben |
 | [fehlerbild-ist-ein-messfenster](fehlerbild-ist-ein-messfenster.md) | Solange Gregors Fehlermeldung offen steht, ist der Fehlerzustand messbar - erst messen (Log, Stapel des laufenden Prozesses), dann schließen lassen |
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
