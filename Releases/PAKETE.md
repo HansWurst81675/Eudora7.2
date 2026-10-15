@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.97 — **nicht ausgeliefert, nicht freigegeben**, Quellstand 7.2.0.97, Zweig `e-118_HTML_header` (E-121: gesendete Post wieder hochgeladen, N1)
+
+| | |
+|---|---|
+| Testverzeichnis | am 15.10.2026 bei Gregor abgelegt, `C:\Users\Gregor\Eudora72-1.0.97-release`; sein Test steht aus |
+| Inhalt | wie 1.0.96, dazu: gesendete Post (Kennung 0) wird wieder hochgeladen ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1, Rückfall in 1.0.96), nur die markierte Quelle wird entfernt (N1, [E-121](../BEFUNDE.md#e-121)) |
+| Stand | Testsuite 209/209, Paketprüfung grün. **Keine Nachstellung am Prüfstand** – F1 ist dort nicht nachstellbar, für N1/Kollision fehlte die Zustimmung zu Fenstern. Ob ohne Nachstellung getestet wird, entscheidet Gregor (siehe WEITERMACHEN.md). |
+
 ## 1.0.96 — **nicht ausgeliefert**, Quellstand 7.2.0.96, Zweig `e-118_HTML_header` (E-121 Kollision Kennung/Server-UID)
 
 | | |

@@ -201,3 +201,9 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-10-15 10:53:50 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) d93b Lauf 2 | Hauptfenster 11274644 - Eudora  Schliesszeit 2 s. |
 | 2026-10-15 10:56:16 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) d93b Lauf 3 | Hauptfenster 18285748 - Eudora   [Eudora 7.2.0.93 / Paket 1.0.93+cfcc555e* 2026-10-15 10:41 - E118]  Schliesszeit 2 s. |
 | 2026-10-15 10:58:50 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) d93b Lauf 4 | Hauptfenster 18810030 - Eudora  Schliesszeit 2 s. |
+| 2026-10-15 13:18:48 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) k95 Lauf 1 | Hauptfenster 5637604 - Eudora  Schliesszeit 8.3 s. |
+| 2026-10-15 13:22:25 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) k95b Lauf 1 | Hauptfenster 4983272 - Eudora  Schliesszeit 5.1 s. |
+| 2026-10-15 13:23:24 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) k96a Lauf 1 | Hauptfenster 5048808 - Eudora  Schliesszeit 4.1 s. |
+| 2026-10-15 13:25:58 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) k96b Lauf 1 | Hauptfenster 11340288 - Eudora |
+| 2026-10-15 13:28:15 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) k96c Lauf 1 | Hauptfenster 12782104 - Eudora  Schliesszeit 3 s. |
+| 2026-10-15 13:28:50 | `C:\Temp\E118` | Gregor am 14.10.2026: 'ich mache gar nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) k96d Lauf 1 | Hauptfenster 9241066 - Eudora  Schliesszeit 3.1 s. |

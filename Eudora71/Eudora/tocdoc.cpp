@@ -2931,6 +2931,7 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 				{
 					CopySum->SetDeleteEmbedded(FALSE);
 					CopySum->SetE121Vorab(TRUE);	// E-121: als Vorab-Kopie erkennbar
+					Sum->SetE121Quelle(TRUE);		// E-121 N1: nur diese Quelle wird nach dem Hochladen entfernt
 				}
 #endif
 				// If transferring from an IMAP mailbox to a local mailbox, don't copy the IMAP

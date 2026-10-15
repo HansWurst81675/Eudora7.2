@@ -2368,10 +2368,12 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 		// ihre Kennung ungleich 0 ist und im Ordner genau einmal vorkommt. Sonst
 		// bleibt sie stehen: doppelt statt eine fremde Nachricht geloescht.
 		CSummary *pQuelle = NULL;
+		CSummary *pMarkiert = NULL;	// E-121 N1: die beim Verschieben markierte Quelle
 		unsigned long ulId = strId.IsEmpty() ? 0 : strtoul(strId, NULL, 10);
 		if (pSrcToc && ulId != 0)
 		{
 			int nTreffer = 0;
+			int nMarkiert = 0;
 			POSITION posQ = pSrcToc->GetSumList().GetHeadPosition();
 			while (posQ)
 			{
@@ -2380,10 +2382,21 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 				{
 					pQuelle = pKandidat;
 					nTreffer++;
+					if (pKandidat->IstE121Quelle())
+					{
+						pMarkiert = pKandidat;
+						nMarkiert++;
+					}
 				}
 			}
 			if (nTreffer != 1)
 				pQuelle = NULL;
+			if (nMarkiert != 1)
+				pMarkiert = NULL;
+			// Die markierte Quelle geht vor; ohne Merkzeichen (nach einem Neustart)
+			// darf ein eindeutiger Namensvetter nur hochgeladen, nie entfernt werden.
+			if (pMarkiert)
+				pQuelle = pMarkiert;
 		}
 		BOOL bHochgeladen = FALSE;
 
@@ -2397,7 +2410,7 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 		}
 
 		CString szSpur;
-		szSpur.Format("E-121 Uebertragung: id=%s im-ziel=%d in-quelle=%d hochgeladen=%d", (LPCSTR) strId, pSum != NULL, pQuelle != NULL, bHochgeladen);
+		szSpur.Format("E-121 Uebertragung: id=%s im-ziel=%d in-quelle=%d markiert=%d hochgeladen=%d", (LPCSTR) strId, pSum != NULL, pQuelle != NULL, pMarkiert != NULL, bHochgeladen);
 		::PutDebugLog(DEBUG_MASK_MISC, szSpur);
 
 		if (!strVorher.IsEmpty() && !bHochgeladen)
@@ -2405,8 +2418,12 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 			bSomeFailed = true;
 		}
 
-		if (bHochgeladen && !m_bCopy && pQuelle && pSrcToc != m_pDestTocDoc)
+		// E-121 N1: entfernt wird nur die beim Verschieben markierte Quelle. Hat der
+		// Nutzer sie vorher selbst entfernt, traf die Kennung sonst einen Namensvetter.
+		// Ohne Merkzeichen (Neustart) bleibt die Quelle stehen: doppelt statt weg.
+		if (bHochgeladen && !m_bCopy && pMarkiert && pSrcToc != m_pDestTocDoc)
 		{
+			pQuelle = pMarkiert;
 			// PRUEFER-28 P2: ein offenes Nachrichtenfenster zuerst schliessen - so
 			// hat es das Original vor dem Entfernen getan (ImapXferFromLocalToImap).
 			// Laesst es sich nicht schliessen, bleibt die Quelle stehen.

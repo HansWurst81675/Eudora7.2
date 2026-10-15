@@ -1409,7 +1409,14 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 			// der Treffer eine beliebige andere Kopie (PRUEFER-28 P1).
 			// Gregor an 1.0.95: nur eine als Vorab-Kopie markierte Zusammenfassung - die
 			// Kennung allein traf eine fremde Server-Nachricht mit derselben UID.
-			CSummary *pCopySum = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
+			// PRUEFER-30 F1: wird aus dem Ziel hochgeladen, ist pSum selbst die Vorab-Kopie.
+			// Aus der Quelle nur bei Kennung ungleich 0 suchen - bei 0 waere der Treffer
+			// womoeglich die Vorab-Kopie einer anderen Nachricht.
+			CSummary *pCopySum = NULL;
+			if (this == pTargetToc)
+				pCopySum = pSum;
+			else if (pSum->GetHash() != 0)
+				pCopySum = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
 			// E-121 (Gregors Test an 1.0.94): die Vorab-Kopie an Ort und Stelle
 			// aktualisieren, NICHT herausnehmen und wieder einfuegen. SubtractSum
 			// loescht die Listenzeile ueber die Position in m_Sums; ist die Liste im
@@ -1628,7 +1635,10 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 // E-121: siehe tocdoc.h.
 CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
 {
-	if (!pToc || ulHash == 0)
+	// PRUEFER-30 F1: auch Kennung 0 (Out, gesendete Post) - eine Server-UID ist nie 0,
+	// und das Merkzeichen allein unterscheidet. Bis 7.2.0.96 lieferte das hier NULL:
+	// solche Nachrichten wurden nicht mehr hochgeladen.
+	if (!pToc)
 		return NULL;
 
 	POSITION pos = pToc->GetSumList().GetHeadPosition();

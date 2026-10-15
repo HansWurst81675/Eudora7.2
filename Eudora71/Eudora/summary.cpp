@@ -536,6 +536,7 @@ CSummary::CSummary() : CObject(),
 	m_nAttachmentCount = 0;
 	m_DeleteEmbedded = TRUE;
 	m_bE121Vorab = FALSE;
+	m_bE121Quelle = FALSE;
 	SetPersona( g_Personalities.GetCurrent() );
 
 #ifdef IMAP4
