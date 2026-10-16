@@ -1045,10 +1045,11 @@ CSummary* CTocDoc::ImapXferFromLocalToImap(CTocDoc *pTargetToc,
 					}
 				}
 
-				// Includes free-ing memory.
-				RemoveSum(pSum);
-
-				pSum = NULL;
+				// E-121: die Quelle NICHT hier entfernen. Bisher geschah das, bevor die
+				// Nachricht auf dem Server war; verwarf ein Abgleich des Zielordners die
+				// lokale Kopie, bevor die Aufgabe sie hochlud, war die Nachricht weg.
+				// Entfernt wird sie jetzt in CImapFromLocalTransferMsgAction::
+				// DoPostProcessing - erst nachdem der Server sie angenommen hat.
 			}
 		}
 	}
@@ -1369,6 +1370,28 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 		}
 	}
 
+	// E-121 (Gregors Test an 1.0.92): meldet der Server keine neue UID
+	// (kein UIDPLUS/APPENDUID), wurde unten nichts ersetzt - die lokale
+	// Vorab-Kopie mit der lokalen Kennung blieb stehen, und der Abgleich holte
+	// die Server-Fassung dazu: doppelt, bis der Ordner neu geoeffnet wurde.
+	// Jetzt wird die Vorab-Kopie nach dem Hochladen entfernt; der Abgleich holt
+	// die Nachricht einmal vom Server. Ihre Bilddateien bleiben (die Quelle und
+	// die Server-Fassung brauchen sie). Nicht bei Kennung 0 (Out, PRUEFER-28 P1).
+	{
+		CString szSpur;
+		szSpur.Format("E-121 Hochgeladen: ergebnis=%d neue-uid=%lu", bResult, (unsigned long) NewUid);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
+	if (bResult && !NewUid && pSum->GetHash() != 0)
+	{
+		CSummary *pVorab = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
+		if (pVorab)
+		{
+			pVorab->SetDeleteEmbedded(FALSE);
+			pTargetToc->RemoveSum(pVorab);
+		}
+	}
+
 	// If we got a new Uid, we can do the copy locally.
 	if (bResult && NewUid)
 	{
@@ -1377,15 +1400,57 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 		bResult = RewriteMbxStub (pSum, this, pTargetToc, NewUid, MStart, NewLength);
 		if (bResult)
 		{ 
-			// Create target summary.
-			CSummary *pCopySum = DEBUG_NEW_MFCOBJ_NOTHROW CSummary;
+			// E-121, Gregors Test an 1.0.90: "mails erscheinen nach dem verschieben 2x".
+			// Die lokale Vorab-Kopie im Ziel (CTocDoc::Xfer) wurde hier nicht ersetzt,
+			// sondern eine zweite Zusammenfassung angelegt; erst der naechste Abgleich
+			// raeumte die Vorab-Kopie weg. Jetzt wie in ImapCopyMsgBetweenAccounts: die
+			// Vorab-Kopie mit derselben Kennung wird fuer die hochgeladene Fassung
+			// wiederverwendet. Nicht bei Kennung 0 (Nachrichten aus Out): dort waere
+			// der Treffer eine beliebige andere Kopie (PRUEFER-28 P1).
+			// Gregor an 1.0.95: nur eine als Vorab-Kopie markierte Zusammenfassung - die
+			// Kennung allein traf eine fremde Server-Nachricht mit derselben UID.
+			// PRUEFER-30 F1: wird aus dem Ziel hochgeladen, ist pSum selbst die Vorab-Kopie.
+			// Aus der Quelle nur bei Kennung ungleich 0 suchen - bei 0 waere der Treffer
+			// womoeglich die Vorab-Kopie einer anderen Nachricht.
+			CSummary *pCopySum = NULL;
+			if (this == pTargetToc)
+				pCopySum = pSum;
+			else if (pSum->GetHash() != 0)
+				pCopySum = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
+			// E-121 (Gregors Test an 1.0.94): die Vorab-Kopie an Ort und Stelle
+			// aktualisieren, NICHT herausnehmen und wieder einfuegen. SubtractSum
+			// loescht die Listenzeile ueber die Position in m_Sums; ist die Liste im
+			// Fenster gerade anders sortiert (nach dem Einfuegen der Vorab-Kopie steht
+			// die Sortierung noch aus), traf das eine andere Zeile, und AddSum fuegte
+			// eine neue hinzu: die Mail stand doppelt da, obwohl summen stimmte.
+			BOOL bSchonImZiel = (pCopySum != NULL);
+			if (bSchonImZiel)
+			{
+				// Ihre Bilddateien gehoeren auch der hochgeladenen Fassung - nicht loeschen.
+				pCopySum->SetDeleteEmbedded(FALSE);
+			}
+			else
+			{
+				pCopySum = DEBUG_NEW_MFCOBJ_NOTHROW CSummary;
+			}
 			if (pCopySum)
 			{
-				pCopySum->Copy(pSum);
-
-				pTargetToc->AddSum(pCopySum);
+				// Eine Vorab-Kopie ist schon eine Kopie der Quelle (CTocDoc::Xfer) - nur
+				// eine neue Zusammenfassung wird hier gefuellt und eingefuegt.
+				if (!bSchonImZiel)
+				{
+					pCopySum->Copy(pSum);
+					pTargetToc->AddSum(pCopySum);
+				}
 				pCopySum->SetOffset(MStart);
 				pCopySum->m_Length = NewLength;
+
+				// E-121 (Gregors Test an 1.0.91): die Server-Kennung eintragen. Im IMAP-
+				// Ordner ist die Kennung die UID; mit der lokalen Kennung erkannte der
+				// anschliessende Abgleich die Kopie nicht als die Nachricht vom Server und
+				// fuegte diese zusaetzlich ein - doppelt bis zum naechsten Oeffnen.
+				pCopySum->SetHash(NewUid);
+				pCopySum->SetE121Vorab(FALSE);	// jetzt die Server-Fassung
 
 				// Messages in the local Out mailbox have a hash of 0.  If the user copies more
 				// than one message from Out to an IMAP mailbox all copies in the IMAP mailbox
@@ -1567,6 +1632,25 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 //	Return:
 //	Pointer to CSummary whose hash matches lUID.  NULL if no match found.
 //
+// E-121: siehe tocdoc.h.
+CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
+{
+	// PRUEFER-30 F1: auch Kennung 0 (Out, gesendete Post) - eine Server-UID ist nie 0,
+	// und das Merkzeichen allein unterscheidet. Bis 7.2.0.96 lieferte das hier NULL:
+	// solche Nachrichten wurden nicht mehr hochgeladen.
+	if (!pToc)
+		return NULL;
+
+	POSITION pos = pToc->GetSumList().GetHeadPosition();
+	while (pos)
+	{
+		CSummary *pKandidat = pToc->GetSumList().GetNext(pos);
+		if (pKandidat && pKandidat->IstE121Vorab() && pKandidat->GetHash() == ulHash)
+			return pKandidat;
+	}
+	return NULL;
+}
+
 CSummary *CTocDoc::GetSummaryFromUID(unsigned long lUID)
 {
 	CSummary		*pSummary = NULL;
@@ -3618,6 +3702,28 @@ BOOL CTocDoc::ImapMergeTmpMbx (CPtrList *pExpungedUidList)
 				break;
 			}
 
+			// E-121 (Gregors Test an 1.0.93): steht dieselbe UID schon im Ordner -
+			// die beim Verschieben hochgeladene und lokal ersetzte Kopie -, dann
+			// ersetzt die hier vom Server geladene Fassung diesen Eintrag. Bisher
+			// kam sie daneben: jede verschobene Mail doppelt, bis der Ordner neu
+			// geoeffnet wurde (neue-uid war gesetzt, summen nach dem Hochladen
+			// stimmten). Die Bilddateien des alten Eintrags bleiben.
+			{
+				CSummary *pSchonDa = (Sum->GetHash() != 0) ? GetSummaryFromUID(Sum->GetHash()) : NULL;
+				CString szSpur;
+				szSpur.Format("E-121 Abgleich uebernimmt: uid=%lu schon-da=%d", (unsigned long) Sum->GetHash(), pSchonDa != NULL);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				if (pSchonDa)
+				{
+					pSchonDa->SetDeleteEmbedded(FALSE);
+					InvalidateCachedPreviewSummary(pSchonDa, true);
+					CFrameWnd* pFenster = pSchonDa->m_FrameWnd;
+					if (pFenster)
+						pFenster->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+					RemoveSum(pSchonDa);
+				}
+			}
+
 			// Add a new TOC to the target mailbox.
 			CopySum = DEBUG_NEW CSummary;
 			CopySum->Copy(Sum);
@@ -4312,7 +4418,16 @@ BOOL CTocDoc::ImapRemoveAttachments(CSummary *pSum)
 
 		//this should be done only if we are not transferring to a local mailbox. 
 		// get rid of embedded objects
-		if(pSum && pSum->CanDeleteEmbedded())
+		// E-121 P3: steht fuer diese Nachricht noch eine Uebertragung aus einem
+		// lokalen Postfach aus, ist sie die Vorab-Kopie - ihre Bilddateien gehoeren
+		// auch der Quelle und werden mit ihr hochgeladen. Nicht loeschen.
+		BOOL bE121Offen = FALSE;
+		if (pSum && m_pImapMailbox)
+		{
+			CImapAccount *pE121Konto = g_ImapAccountMgr.FindAccount(m_pImapMailbox->GetAccountID());
+			bE121Offen = pE121Konto && pE121Konto->HatOffeneUebertragung(pSum->GetHash());
+		}
+		if(pSum && pSum->CanDeleteEmbedded() && !bE121Offen)
 		{
 			char* buf = pMsgDoc->GetFullMessage();		// gots ta get da URIMap
 			CString Paths;

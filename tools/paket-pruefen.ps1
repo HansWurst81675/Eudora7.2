@@ -675,6 +675,52 @@ if ($luecken.Count -eq 0) {
 }
 Write-Host ''
 
+# ---------------------------------------------------------- Defender --
+#
+# WARUM ES DAS GIBT: am 16.10.2026 um 10:12:25 hat Microsoft Defender Gregors
+# laufendes Eudora 1.0.98 als "Trojan:Win32/Bearfoos.A!ml" eingestuft und
+# beendet - das Fenster war weg, ohne Dialog und ohne Absturzbericht, und
+# sah aus wie ein Absturz beim Verschieben. Die Signatur kam um 10:11:00 aus
+# der Cloud, erzeugt 10 Sekunden vorher fuer genau diese Datei (Lernverfahren,
+# "!ml"); 1.0.87, 1.0.96 und 1.0.97 waren sauber. Jeder Bau ist eine neue,
+# unsignierte Datei - das kann bei jedem Bau wieder passieren, auch beim
+# Anwender nach einem Release. Deshalb prueft dieses Werkzeug jede EXE/DLL/OCX
+# des Pakets mit Defender, OHNE einzugreifen (-DisableRemediation), und weist
+# bei einem Fund ab. Fehlt MpCmdRun.exe, ist das eine Warnung, kein Fehler.
+#
+# Grenze: die Cloud urteilt mitunter erst Minuten nach dem ersten Start. Ein
+# sauberer Befund hier ist kein Freibrief - er faengt nur, was Defender jetzt
+# schon weiss.
+
+Write-Host '--- Defender ---------------------------------------------'
+$mpCmd = Join-Path $env:ProgramFiles 'Windows Defender\MpCmdRun.exe'
+if (-not (Test-Path -LiteralPath $mpCmd)) {
+  Melde-Warnung 'Defender-Pruefung uebersprungen: MpCmdRun.exe nicht gefunden.'
+  Write-Host '   uebersprungen - MpCmdRun.exe nicht gefunden' -ForegroundColor Yellow
+} else {
+  $defDateien = @(Get-ChildItem -LiteralPath $Paket -Recurse -File | Where-Object { $_.Extension -in '.exe','.dll','.ocx' })
+  $defFunde = 0
+  foreach ($d in $defDateien) {
+    $aus = & $mpCmd -Scan -ScanType 3 -File $d.FullName -DisableRemediation 2>&1 | Out-String
+    $rc = $LASTEXITCODE
+    $bedrohung = ''
+    if ($aus -match 'Threat\s*:\s*(\S+)') { $bedrohung = $Matches[1] }
+    if ($rc -eq 2 -or $bedrohung) {
+      $defFunde++
+      if (-not $bedrohung) { $bedrohung = '(Fund, Name nicht gelesen)' }
+      Write-Host ("   FUND  {0,-16} {1}" -f $d.Name, $bedrohung) -ForegroundColor Red
+      Melde-Fehler ("Defender meldet {0} in {1} - so nicht ausliefern (Fehlalarm melden oder neu bauen)." -f $bedrohung, $d.Name)
+    } elseif ($rc -ne 0) {
+      Write-Host ("   ??    {0,-16} MpCmdRun Rueckgabe {1}" -f $d.Name, $rc) -ForegroundColor Yellow
+      Melde-Warnung ("Defender-Pruefung von {0} lieferte Rueckgabe {1}." -f $d.Name, $rc)
+    } elseif ($Ausfuehrlich) {
+      Write-Host ("   ok    {0}" -f $d.Name)
+    }
+  }
+  Write-Host ("   {0} Datei(en) geprueft, {1} Fund(e)" -f $defDateien.Count, $defFunde)
+}
+Write-Host ''
+
 # ------------------------------------------------------------- Zusammenzug --
 
 Write-Host '========================================================'

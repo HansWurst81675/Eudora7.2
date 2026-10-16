@@ -51,7 +51,8 @@ private:
 	BOOL ReformatMessage ();
 	BOOL ReformatHeader ();
 	BOOL ReformatBody ();
-	BOOL ReformatAttachment (LPCSTR pAttachmentPathname, CFileWriter *pBodyFileWriter);
+	BOOL ReformatAttachment (LPCSTR pAttachmentPathname, CFileWriter *pBodyFileWriter,
+							 LPCSTR pszZusatzKopf = NULL, BOOL bInline = FALSE);
 	BOOL AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWriter);
 
 	HRESULT AppendSpoolFile (LPCSTR pSpoolFilepath);
@@ -90,6 +91,9 @@ private:
 
 	// MIME status of message
 	BOOL		m_bIsMultipart;
+	BOOL		m_bE118Html;		// E-118: einteiliger Text war <x-html> - text/html schreiben
+	BOOL		m_bE118Related;		// E-118: eingebettete Bilder hochgeladen - multipart/related
+	int			m_nE118Achtbit;		// E-118: 1 = Bytes ueber 0x7F, 2 = auch 0x80-0x9F (windows-1252)
 	CString		m_TransferEncoding;
 	CString		m_Boundary;
 	CString		m_Type;

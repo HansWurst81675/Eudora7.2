@@ -191,6 +191,12 @@ void QCTaskManager::Register(CTaskInfoMT *pTaskInfo)
 	pTaskInfo->SetMainText(CRString(IDS_TASK_WAITING_TO_START));
 
 	SpurmarkeE83("eingetragen", pTaskInfo);	// BEFUND E-83
+
+	// E-83 Nachtrag 16.10.2026: ohne Anzeigefenster (Task Status noch nicht
+	// aufgebaut) bekommt die Aufgabe keine Abmeldung zugestellt - siehe
+	// SetDisplayWindow. Die Marke zeigt, ob das beim Start vorkommt.
+	if (!pTaskInfo->GetDisplayWnd())
+		SpurmarkeE83("ohne-Anzeige", pTaskInfo);
 }
 
 void QCTaskManager::Register(CTaskErrorMT *pTaskError)
@@ -979,14 +985,37 @@ CWnd *QCTaskManager::SetDisplayWindow(CTaskObjectMT::TaskObjectType type, CWnd *
 	{
 		if (type == CTaskObjectMT::TOBJ_INFO)
 		{
-			CSingleLock lock(&m_Guard_TaskInfoList, TRUE);
-
-			for(TaskIterator ti=m_TaskInfoList.begin(); ti != m_TaskInfoList.end(); ++ti)
+			// E-83 Nachtrag 16.10.2026: zuerst ist der Rahmen CTaskStatusWazooWnd
+			// angemeldet; er baut beim ersten "Alive" die Ansicht, und die meldet
+			// sich hier an. Eine Aufgabe, die in diesem Moment schon FERTIG ist,
+			// meldet sich bei der neuen Ansicht nicht an (NotifyAlive prueft
+			// IsAlive), und ihre Abmeldung ging an den Rahmen, der sie nicht
+			// kennt. Sie blieb fuer immer in der Liste ("liegengeblieben"),
+			// belegte ihr Postfach und hielt Eudora beim Beenden fest. Gemessen
+			// am IMAP-Pruefstand: 12 von 12 Laeufen (7.2.0.96 und 7.2.0.97) hingen
+			// am ersten Abgleich nach dem Start. Solche Aufgaben werden jetzt
+			// hier entfernt.
+			std::list<unsigned long> lErledigt;
 			{
-				CTaskInfoMT* pTaskInfo = *ti;
-				if (pTaskInfo->GetDisplayWnd() == pOldWnd)
-					pTaskInfo->SetDisplayWnd(pWnd, true);
+				CSingleLock lock(&m_Guard_TaskInfoList, TRUE);
+
+				for(TaskIterator ti=m_TaskInfoList.begin(); ti != m_TaskInfoList.end(); ++ti)
+				{
+					CTaskInfoMT* pTaskInfo = *ti;
+					if (pTaskInfo->GetDisplayWnd() == pOldWnd)
+					{
+						if (pWnd && !pTaskInfo->IsAlive())
+						{
+							SpurmarkeE83("beim-Umhaengen-schon-fertig-entfernt", pTaskInfo);
+							lErledigt.push_back(pTaskInfo->GetUID());
+						}
+						else
+							pTaskInfo->SetDisplayWnd(pWnd, true);
+					}
+				}
 			}
+			for (std::list<unsigned long>::iterator ui = lErledigt.begin(); ui != lErledigt.end(); ++ui)
+				RemoveTaskInfo(*ui);
 		}
 		else if (type == CTaskObjectMT::TOBJ_ERROR)
 		{
@@ -1001,6 +1030,42 @@ CWnd *QCTaskManager::SetDisplayWindow(CTaskObjectMT::TaskObjectType type, CWnd *
 		}
 		else
 			ASSERT(0);	// Uh oh, unkown task type
+	}
+	else if (pWnd && type == CTaskObjectMT::TOBJ_INFO)
+	{
+		// E-83 Nachtrag 16.10.2026, gemessen am IMAP-Pruefstand: sechs von sechs
+		// Laeufen hingen, weil der erste Abgleich nach dem Start ("Resyncing",
+		// uid=1) als "liegengeblieben" in der Liste stehen blieb und den Ordner
+		// belegte. Eine Aufgabe, die VOR dem Fenster "Task Status" angelegt wird,
+		// erhaelt in Register() kein Anzeigefenster; das Original hat hier nur
+		// die Aufgaben eines VORHERIGEN Fensters umgehaengt. Ihre Abmeldung
+		// (NotifyDead) ging ins Leere - und aus der Liste entfernt wird eine
+		// Aufgabe nur ueber diese Abmeldung (CTaskStatusView::OnMsgDeleteInfo).
+		// Jetzt uebernimmt das erste Fenster auch diese Aufgaben; schon fertige
+		// werden gleich entfernt.
+		std::list<unsigned long> lErledigt;
+		{
+			CSingleLock lockListe(&m_Guard_TaskInfoList, TRUE);
+
+			for(TaskIterator ti=m_TaskInfoList.begin(); ti != m_TaskInfoList.end(); ++ti)
+			{
+				CTaskInfoMT* pTaskInfo = *ti;
+				if (pTaskInfo->GetDisplayWnd() != NULL)
+					continue;
+				if (pTaskInfo->IsAlive())
+				{
+					SpurmarkeE83("Anzeige-nachgetragen", pTaskInfo);
+					pTaskInfo->SetDisplayWnd(pWnd, true);
+				}
+				else
+				{
+					SpurmarkeE83("ohne-Anzeige-erledigt-entfernt", pTaskInfo);
+					lErledigt.push_back(pTaskInfo->GetUID());
+				}
+			}
+		}
+		for (std::list<unsigned long>::iterator ui = lErledigt.begin(); ui != lErledigt.end(); ++ui)
+			RemoveTaskInfo(*ui);
 	}
 
 	return (pOldWnd);

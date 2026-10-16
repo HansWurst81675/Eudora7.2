@@ -313,6 +313,12 @@ LONG CTaskStatusView::OnMsgNewInfo( WPARAM wParam, LPARAM lParam ) // ADD
 	
 	VERIFY(FindTaskIndex(nUID) == -1); // Make sure we dont already have an item with this UID
 
+	{	// E-83 Nachtrag 16.10.2026: welche Aufgabe kennt die Ansicht, und welche Ansicht ist es?
+		CString szSpur;
+		szSpur.Format("E-83 Ansicht-aufgenommen: uid=%u ansicht=%p zeilen=%d", nUID, (void *) this, m_TaskList.GetItemCount());
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
+
 	int idx = m_TaskList.InsertItem(0, "");
 	CTaskSummary *pTaskSum = DEBUG_NEW_NOTHROW CTaskSummary(pInfo);
 
@@ -408,7 +414,18 @@ LONG CTaskStatusView::OnMsgDeleteInfo( WPARAM wParam, LPARAM lParam ) // DELETE
 	int idx = FindTaskIndex(nUID);
 	ASSERT(idx != (-1));
 	if (idx == (-1))
+	{
+		// E-83 Nachtrag 16.10.2026: die Aufgabe steht nicht in der Ansicht (ihre
+		// Anmeldung kam nie an). Trotzdem aus dem Aufgabenverwalter entfernen -
+		// sonst bleibt sie dort als "liegengeblieben" stehen, belegt ihr
+		// Postfach und haelt Eudora beim Beenden fest ("1 task(s) running").
+		CString szSpur;
+		szSpur.Format("E-83 Ansicht-kannte-Aufgabe-nicht: uid=%u ansicht=%p zeilen=%d", nUID, (void *) this, m_TaskList.GetItemCount());
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		QCGetTaskManager()->RemoveTaskInfo(nUID);
+		NotifyStatusBar();
 		return (0);
+	}
 
 	CTaskSummary *pTaskSum = (CTaskSummary *) m_TaskList.GetItemData(idx);
 	if (pTaskSum)
@@ -779,6 +796,11 @@ void CTaskStatusView::OnInitialUpdate()
 	m_DlgSpacing = LOWORD(GetDialogBaseUnits()) * 2; // spacing between controls, in pixels
 	m_DlgMargin = 0; // margin (border) size, in pixels
 
+	{	// E-83 Nachtrag 16.10.2026: wann und wie oft wird eine Ansicht angemeldet?
+		CString szSpur;
+		szSpur.Format("E-83 Ansicht-angemeldet: ansicht=%p", (void *) this);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
 	QCGetTaskManager()->SetDisplayWindow(CTaskObjectMT::TOBJ_INFO, this);
 
 	m_TaskList.SetHighlightType(LVEX_HIGHLIGHT_ROW);

@@ -29,6 +29,7 @@ DAMAGE. */
 #ifdef IMAP4 // Only for IMAP.
 
 #include "ImapActionQueue.h"
+#include "msgframe.h"			// PRUEFER-28 P2: Nachrichtenfenster der Quelle schliessen
 
 #include "POPSession.h"
 #include "QCTaskManager.h"
@@ -1577,6 +1578,11 @@ void CImapTransferMsgAction::DoPostProcessing()
 	if (m_bIsLastOnMailbox && m_pDestTocDoc && m_pDestTocDoc->m_pImapMailbox)
 	{
 		m_pDestTocDoc->m_pImapMailbox->DoManualResync(m_pDestTocDoc, TRUE, FALSE, FALSE);
+
+		// E-121: Spurmarke - steht die Nachricht nach dem Abgleich einmal da?
+		CString szSpurR;
+		szSpurR.Format("E-121 Ziel nach dem Abgleich: summen=%d", (int) m_pDestTocDoc->NumSums());
+		::PutDebugLog(DEBUG_MASK_MISC, szSpurR);
 	}
 }
 
@@ -2341,18 +2347,115 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 	CSummary		*pCopySum = NULL;
 	CString			 strUIDList(m_szMessageIDs);
 	bool			 bSomeFailed = false;
+
+	// E-121: die Quelle (lokales Postfach) wird erst hier entfernt, nach dem
+	// Hochladen - siehe CTocDoc::ImapXferFromLocalToImap. Ist die lokale Kopie
+	// im Zielordner nicht (mehr) da, weil ein Abgleich sie verworfen hat, wird
+	// direkt aus der Quelle hochgeladen. Scheitert beides, bleibt die Nachricht
+	// in der Quelle - nichts geht verloren.
+	CTocDoc			*pSrcToc = (m_szMailbox && *m_szMailbox) ? GetToc(m_szMailbox) : NULL;
+	BOOL			 bQuelleGeaendert = FALSE;
 	do
 	{
+		CString strVorher(strUIDList);
+		CString strId = strVorher.SpanExcluding(",");
 		pSum = GetSummaryFromUIDStringFromDestination(strUIDList);
+		// E-121 (Gregor an 1.0.95): im Ziel nur die markierte Vorab-Kopie - die
+		// Kennung allein (hier 13) traf eine fremde Server-Nachricht mit derselben UID.
+		pSum = E121FindeVorabKopie(m_pDestTocDoc, strtoul(strId, NULL, 10));
+		// PRUEFER-28 P1: lokal ist die Kennung nicht eindeutig - alle Nachrichten
+		// aus Out haben 0. Die Quelle wird nur benutzt (und spaeter entfernt), wenn
+		// ihre Kennung ungleich 0 ist und im Ordner genau einmal vorkommt. Sonst
+		// bleibt sie stehen: doppelt statt eine fremde Nachricht geloescht.
+		CSummary *pQuelle = NULL;
+		CSummary *pMarkiert = NULL;	// E-121 N1: die beim Verschieben markierte Quelle
+		unsigned long ulId = strId.IsEmpty() ? 0 : strtoul(strId, NULL, 10);
+		if (pSrcToc && ulId != 0)
+		{
+			int nTreffer = 0;
+			int nMarkiert = 0;
+			POSITION posQ = pSrcToc->GetSumList().GetHeadPosition();
+			while (posQ)
+			{
+				CSummary *pKandidat = pSrcToc->GetSumList().GetNext(posQ);
+				if (pKandidat && pKandidat->GetHash() == ulId)
+				{
+					pQuelle = pKandidat;
+					nTreffer++;
+					if (pKandidat->IstE121Quelle())
+					{
+						pMarkiert = pKandidat;
+						nMarkiert++;
+					}
+				}
+			}
+			if (nTreffer != 1)
+				pQuelle = NULL;
+			if (nMarkiert != 1)
+				pMarkiert = NULL;
+			// Die markierte Quelle geht vor; ohne Merkzeichen (nach einem Neustart)
+			// darf ein eindeutiger Namensvetter nur hochgeladen, nie entfernt werden.
+			if (pMarkiert)
+				pQuelle = pMarkiert;
+		}
+		BOOL bHochgeladen = FALSE;
 
 		if (pSum)
 		{
-			if (!m_pDestTocDoc->ImapCopyMsgFromLocalToImap(pSum, m_pDestTocDoc, &pCopySum))
-			{
-				bSomeFailed = true;
-			}
+			bHochgeladen = m_pDestTocDoc->ImapCopyMsgFromLocalToImap(pSum, m_pDestTocDoc, &pCopySum);
 		}
-	} while (pSum);
+		else if (pQuelle)
+		{
+			bHochgeladen = pSrcToc->ImapCopyMsgFromLocalToImap(pQuelle, m_pDestTocDoc, &pCopySum);
+		}
+
+		CString szSpur;
+		szSpur.Format("E-121 Uebertragung: id=%s im-ziel=%d in-quelle=%d markiert=%d hochgeladen=%d", (LPCSTR) strId, pSum != NULL, pQuelle != NULL, pMarkiert != NULL, bHochgeladen);
+		::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+		if (!strVorher.IsEmpty() && !bHochgeladen)
+		{
+			bSomeFailed = true;
+		}
+
+		// E-121 N1: entfernt wird nur die beim Verschieben markierte Quelle. Hat der
+		// Nutzer sie vorher selbst entfernt, traf die Kennung sonst einen Namensvetter.
+		// Ohne Merkzeichen (Neustart) bleibt die Quelle stehen: doppelt statt weg.
+		if (bHochgeladen && !m_bCopy && pMarkiert && pSrcToc != m_pDestTocDoc)
+		{
+			pQuelle = pMarkiert;
+			// PRUEFER-28 P2: ein offenes Nachrichtenfenster zuerst schliessen - so
+			// hat es das Original vor dem Entfernen getan (ImapXferFromLocalToImap).
+			// Laesst es sich nicht schliessen, bleibt die Quelle stehen.
+			CFrameWnd* Frame = pQuelle->m_FrameWnd;
+			if (Frame && !Frame->GetActiveDocument()->CanCloseFrame(Frame))
+			{
+				continue;
+			}
+			if (Frame)
+			{
+				Frame->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+			}
+
+			// Includes free-ing memory.
+			pSrcToc->RemoveSum(pQuelle);
+			bQuelleGeaendert = TRUE;
+		}
+	} while (!strUIDList.IsEmpty());
+
+	// E-121: Spurmarke - wie viele Eintraege stehen nach dem Hochladen im Ziel,
+	// vor dem Abgleich? Steht dieselbe Nachricht doppelt da, war die Vorab-Kopie
+	// nicht ersetzt (Gregors Test an 1.0.90).
+	{
+		CString szSpurZ;
+		szSpurZ.Format("E-121 Ziel nach dem Hochladen: summen=%d", (int) m_pDestTocDoc->NumSums());
+		::PutDebugLog(DEBUG_MASK_MISC, szSpurZ);
+	}
+
+	if (bQuelleGeaendert && pSrcToc)
+	{
+		pSrcToc->Write();
+	}
 
 	if (bSomeFailed)
 	{
@@ -2371,6 +2474,11 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 	if (m_bIsLastOnMailbox && m_pDestTocDoc && m_pDestTocDoc->m_pImapMailbox)
 	{
 		m_pDestTocDoc->m_pImapMailbox->DoManualResync(m_pDestTocDoc, TRUE, FALSE, FALSE);
+
+		// E-121: Spurmarke - steht die Nachricht nach dem Abgleich einmal da?
+		CString szSpurR;
+		szSpurR.Format("E-121 Ziel nach dem Abgleich: summen=%d", (int) m_pDestTocDoc->NumSums());
+		::PutDebugLog(DEBUG_MASK_MISC, szSpurR);
 	}
 }
 
@@ -3793,6 +3901,56 @@ CImapAction *CActionQueue::GetNextMailboxMatch(unsigned long ulHashToMatch)
 	}
 
 	return NULL;
+}
+
+//
+//	CActionQueue::HatOffeneUebertragung()
+//
+//	E-121 P3 (PRUEFER-28): steht fuer diese Kennung noch eine Uebertragung aus
+//	einem lokalen Postfach in die Warteschlange? Dann teilt sich die lokale
+//	Vorab-Kopie im IMAP-Zielordner die eingebetteten Bilddateien mit der Quelle,
+//	und wer die Kopie entfernt, darf die Dateien nicht loeschen. Die Aufgaben
+//	stehen auch nach einem Neustart hier (actionqueue.dat) - anders als der
+//	Merker SetDeleteEmbedded(FALSE), der nur im Speicher lebt.
+//
+bool CActionQueue::HatOffeneUebertragung(unsigned long ulHash)
+{
+	if (ulHash == 0)
+	{
+		return false;
+	}
+
+	int		iSize = m_array.GetSize();
+	for (int i = 0; i < iSize; ++i)
+	{
+		CImapFromLocalTransferMsgAction	*pAktion = dynamic_cast<CImapFromLocalTransferMsgAction*>((CImapAction*)m_array.GetAt(i));
+		if (!pAktion || !pAktion->m_szMessageIDs)
+		{
+			continue;
+		}
+
+		const char	*p = pAktion->m_szMessageIDs;
+		while (*p)
+		{
+			char			*pEnde = NULL;
+			unsigned long	 ulId = strtoul(p, &pEnde, 10);
+			if (pEnde == p)
+			{
+				break;
+			}
+			if (ulId == ulHash)
+			{
+				return true;
+			}
+			p = pEnde;
+			while (*p == ',' || *p == ' ')
+			{
+				++p;
+			}
+		}
+	}
+
+	return false;
 }
 
 //

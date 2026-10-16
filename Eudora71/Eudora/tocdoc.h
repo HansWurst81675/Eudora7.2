@@ -532,6 +532,12 @@ public:
 
 // Function Prototypes
 
+// E-121: die lokale Vorab-Kopie einer Nachricht im IMAP-Ordner finden - nur ein
+// Eintrag mit Merkzeichen m_bE121Vorab und dieser Kennung; die Kennung allein kann
+// mit einer Server-UID zusammenfallen (Gregor an 1.0.95: Kennung 13).
+class CSummary;
+CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash);
+
 CTocDoc* GetToc(
 			const char *			Filename,
 			const char *			Name = NULL,

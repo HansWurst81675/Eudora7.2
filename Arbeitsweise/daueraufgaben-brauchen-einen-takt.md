@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-08T07:58:08.284Z
+  modified: 2026-10-16T08:54:47.888Z
 ---
 
 Schranke: tools/rollen-faellig.pl UND tools/pruefe-doku-takt.pl, beide in tools/paket-bauen.ps1 eingehängt (seit 11.09.2026)
@@ -15,6 +15,8 @@ Schranke: tools/rollen-faellig.pl UND tools/pruefe-doku-takt.pl, beide in tools/
 > Gregor am 11.09.2026, nachdem Release v1.0.47 gebaut, gemergt und veröffentlicht war und er danach nach dem Lektor fragen musste: *„nein, lektor sollte vor dem commit und merge fertig sein, nicht hinterher laufen - vor allem nicht auf meine nachfrage!"*, *„jedes mal das gleiche chaos bei dir."* und *„du behältst den überblick, nicht ich."* Damit ist die Entscheidung gefallen.
 >
 > **Eingehängt in den Paketbau, nicht in den Push-Haken.** Ein Haken, der jeden Push abweist, blockiert auch das Sichern von Zwischenständen — und laufende Arbeit zu sichern ist wichtiger, als dabei die Rollen im Takt zu haben. Ein Paket dagegen ist die Auslieferung: da muss die Doku stehen. Dieselbe Begründung wie bei `spuren-auswerten.pl`, der Schranke, die am 11.09.2026 zweimal gegriffen und mich zweimal zurückgeschickt hat — der Beleg, dass diese Bauart wirkt.
+
+> **Nachtrag 16.10.2026.** Gregor um 10:45, nachdem ich PRÜFER-31 und LEKTOR-37 erst auf seine Frage *„lektor und prüfer sind auch schon gelaufen?“* gestartet hatte: *„das hätte man nicht schon vorher starten können?“* – ja: als 1.0.99 um 10:30 zu ihm ging. **Ursache mechanisch:** die Schranke hängt in `tools/paket-bauen.ps1`, die Testpakete 1.0.89–1.0.99 habe ich aber **von Hand** gebaut (ZIP entpacken, `Bin\Release` darüber, `paket-pruefen.ps1`) – `rollen-faellig.pl` lief dabei nie. **Regel:** in dem Schritt, in dem ein Paket in `C:\Users\Gregor\Eudora72-*` gelegt wird, `perl tools/rollen-faellig.pl` aufrufen und PRÜFER/LEKTOR sofort starten – sein Test und ihre Prüfung laufen parallel. Offen: den Aufruf in `paket-pruefen.ps1` einhängen, das bei jedem Handbau läuft (Vorschlag für den CHRONIST).
 
 # Eine Daueraufgabe ohne Auslöser läuft nicht
 

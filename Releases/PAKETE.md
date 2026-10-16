@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 14.10.2026 (zuletzt veröffentlicht **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 16.10.2026 (zuletzt veröffentlicht **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -156,7 +156,107 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.88 — **nicht ausgeliefert**, Quellstand 7.2.0.88, Zweig `e-105_doppelte_bilder` (E-105)
+## 1.0.99 — **nicht ausgeliefert**, Quellstand 7.2.0.99, Zweig `e-118_HTML_header` (Neubau von 1.0.98, E-124)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.99-release` |
+| Inhalt | derselbe Quelltext wie 1.0.98, neu gebaut ([E-124](../BEFUNDE.md#e-124): Defender stufte 1.0.98 als Trojaner ein) |
+| Gemessen | wie 1.0.98 nachgestellt (Start-Abgleich: an 7.2.0.96/97 12 von 12 hängend, Fehler `liegengeblieben`; Kollisionsfall an 1.0.95 mit Fehler); an 7.2.0.99 drei Läufe hochgeladen; Defender sauber vor und nach den Läufen; Testsuite 209/209 |
+| Defender | 1.0.98: `Trojan:Win32/Bearfoos.A!ml` (nicht ausliefern); 1.0.99: sauber |
+| Bei Gregor | bestätigt am 16.10.2026: gesendete Mail und zwei Mails aus `In` hochgeladen, sauber beendet |
+
+## 1.0.98 — **nicht ausgeliefert**, Quellstand 7.2.0.98, Zweig `e-118_HTML_header` (E-83 zweite Ursache; E-121 gesendete Post, N1)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.98-release` |
+| Inhalt | wie 1.0.97, dazu: eine beim Start schon erledigte Aufgabe bleibt nicht mehr stehen ([E-83](../BEFUNDE.md#e-83)) |
+| Gemessen | Nachgestellt: an 7.2.0.96 und 7.2.0.97 hingen 12 von 12 Läufen am Start-Abgleich (Fehler `liegengeblieben`), an 7.2.0.98 10 von 10 hochgeladen; Kollisionsfall an 1.0.95 mit Fehler nachgestellt, an 7.2.0.98 grün; Testsuite 209/209. Gesendete Post (Kennung 0) am Prüfstand nicht nachstellbar – Prüfung bei Gregor. |
+| Bei Gregor | 16.10.2026: Microsoft Defender beendete das laufende Programm (`Trojan:Win32/Bearfoos.A!ml`, [E-124](../BEFUNDE.md#e-124)) – kein Absturz; die gesendete Mail war schon hochgeladen (`id=0 … hochgeladen=1`). **Nicht testen, nicht ausliefern**, ersetzt durch 1.0.99 |
+
+## 1.0.97 — **nicht ausgeliefert, nicht freigegeben**, Quellstand 7.2.0.97, Zweig `e-118_HTML_header` (E-121: gesendete Post wieder hochgeladen, N1)
+
+| | |
+|---|---|
+| Testverzeichnis | am 15.10.2026 bei Gregor abgelegt, `C:\Users\Gregor\Eudora72-1.0.97-release`; **nicht testen** (`f6d98141`: *„Gregor testet 1.0.97 nicht“*), ersetzt durch 1.0.99 |
+| Inhalt | wie 1.0.96, dazu: gesendete Post (Kennung 0) wird wieder hochgeladen ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1, Rückfall in 1.0.96), nur die markierte Quelle wird entfernt (N1, [E-121](../BEFUNDE.md#e-121)) |
+| Stand | Testsuite 209/209, Paketprüfung grün. **Keine Nachstellung am Prüfstand** – F1 ist dort nicht nachstellbar, für N1/Kollision fehlte die Zustimmung zu Fenstern. Ob ohne Nachstellung getestet wird, entscheidet Gregor (siehe WEITERMACHEN.md). **Nachtrag 16.10.2026 ([LEKTOR-37](../Befunde/LEKTOR-37.md#l-37.5)):** am Prüfstand hingen an 7.2.0.96 und 7.2.0.97 zusammen 12 von 12 Läufen am Start-Abgleich – Ursache [E-83](../BEFUNDE.md#e-83), behoben in 7.2.0.98; der Verdacht eines Rückfalls in 7.2.0.97 ist widerlegt. |
+
+## 1.0.96 — **nicht ausgeliefert**, Quellstand 7.2.0.96, Zweig `e-118_HTML_header` (E-121 Kollision Kennung/Server-UID)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.96-release` |
+| Inhalt | wie 1.0.95, dazu: die Vorab-Kopie trägt ein Merkzeichen, eine fremde Mail mit gleicher UID wird nicht mehr angefasst ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; Prüfstand mit `--fremde-uid`: an 1.0.95 Gregors Fehler nachgestellt, an 1.0.96 grün |
+| Bei Gregor | bestätigt am 15.10.2026: kein Fehlerdialog, vier Übertragungen alle hochgeladen |
+| Freigabe | **nicht veröffentlichen** ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1: gesendete Post mit Kennung 0 wird nicht hochgeladen, behoben in 1.0.97) |
+
+## 1.0.95 — **nicht ausgeliefert**, Quellstand 7.2.0.95, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, fünfter Teil)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.95-release` |
+| Inhalt | wie 1.0.94, dazu: die Vorab-Kopie wird an Ort und Stelle aktualisiert ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; am Prüfstand nicht gemessen |
+| Gregors Test, 15.10.2026 | Doppelanzeige weg; neuer Fehler *„Attempt to add the message to mailbox Inbox failed“* – lokale Kennung 13 gleich Server-UID 13, die fremde Mail wurde für die Vorab-Kopie gehalten. Kein Verlust, die Mail blieb in In ([E-121](../BEFUNDE.md#e-121), behoben in 1.0.96) |
+
+## 1.0.94 — **nicht ausgeliefert**, Quellstand 7.2.0.94, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, vierter Teil)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.94-release` |
+| Inhalt | wie 1.0.93, dazu: der Abgleich ersetzt einen Eintrag mit derselben UID, statt ihn zu verdoppeln ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; am Prüfstand nicht gemessen |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** weiter doppelt in der Fensterliste, nach dem Neuöffnen einmal; `summen` unverändert, der Abgleich-Weg aus 7.2.0.94 lief gar nicht ([E-121](../BEFUNDE.md#e-121)) |
+
+## 1.0.93 — **nicht ausgeliefert**, Quellstand 7.2.0.93, Zweig `e-118_HTML_header` (E-121 Doppelanzeige ohne UIDPLUS)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.93-release` |
+| Inhalt | wie 1.0.92, dazu: meldet der Server keine UID, wird die Vorab-Kopie nach dem Hochladen entfernt ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; Am Prüfstand NICHT gemessen (vier Läufe mit `--ohne-appenduid` hingen alle am Start-Abgleich des Prüfservers); Prüfung bei Gregor mit offenem IMAP-Ordner. |
+| Gregors Test, 15.10.2026 | **nicht bestanden** (*„FAILED“*): weiter doppelt in Inbox und OUTBOX bis zum Neuöffnen; GMX meldet die UID, die UIDPLUS-Vermutung ist widerlegt ([E-121](../BEFUNDE.md#e-121)) |
+
+## 1.0.92 — **nicht ausgeliefert**, Quellstand 7.2.0.92, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, zweiter Teil)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.92-release` |
+| Inhalt | wie 1.0.91, dazu: die ersetzte Vorab-Kopie trägt die Server-UID, damit der Abgleich keine zweite Zeile einfügt ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; am Prüfstand nicht im Doppelfall gemessen |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** drei Mails, jede doppelt bei offenem Ordner ([E-121](../BEFUNDE.md#e-121)) |
+
+## 1.0.91 — **nicht ausgeliefert**, Quellstand 7.2.0.91, Zweig `e-118_HTML_header` (E-121 Doppelanzeige)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.91-release` |
+| Inhalt | wie 1.0.90, dazu: nach dem Verschieben in einen IMAP-Ordner steht die Mail nicht mehr doppelt da ([E-121](../BEFUNDE.md#e-121)) |
+| Gemessen | Testsuite 209/209; Prüfstand: `summen=1` im Fall mit Vorab-Kopie |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** die Mail steht nach dem Verschieben weiter doppelt da, bis der Ordner neu geöffnet wird ([E-121](../BEFUNDE.md#e-121)) |
+
+## 1.0.90 — **nicht ausgeliefert**, Quellstand 7.2.0.90, Zweig `e-118_HTML_header` (E-118 Teil 2, E-121)
+
+| | |
+|---|---|
+| Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.90-release`, Grundlage 1.0.84-ZIP, 33 EXE/DLL/OCX aus dem Bau (`SPELL32.DLL` aus dem ZIP), `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`, `paket-pruefen.ps1`: keine Fehler, `TESTEN.txt` (Kopie `Releases/1.0.90/TESTEN.txt`); PRÜFER-29: auslieferbar |
+| Inhalt | wie 1.0.89, dazu [E-118](../BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder werden mit hochgeladen) und [E-121](../BEFUNDE.md#e-121) (kein Verlust beim Verschieben in einen IMAP-Ordner) |
+| Gemessen | Testsuite 209/209; IMAP-Prüfserver: Bild als `multipart/related` mit `Content-ID`, Fußzeile erhalten; fehlende Kopie und abgelehntes `APPEND` ohne Verlust |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../BEFUNDE.md#e-118) Teil 2 an der SoftMaker-Mail (*„ja, bilder sind drin.“*). **Gemeldet:** nach dem Verschieben erscheint die Mail doppelt, auf dem Server einmal ([E-121](../BEFUNDE.md#e-121), behoben in 1.0.91 bis 1.0.96) |
+
+## 1.0.89 — **nicht ausgeliefert**, Quellstand 7.2.0.89, Zweig `e-118_HTML_header` (E-118)
+
+| | |
+|---|---|
+| Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.89-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip`, darüber 33 EXE/DLL/OCX aus `Eudora71/Bin/Release` (`SPELL32.DLL` bleibt die aus dem ZIP); `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`; `paket-pruefen.ps1`: keine Fehler; beide melden 7.2.0.89. Im Paket `TESTEN.txt` (Kopie `Releases/1.0.89/TESTEN.txt`); Prüfschritte in [TESTPLAN.md](../TESTPLAN.md#c5) |
+| Inhalt | wie 1.0.88, dazu [E-118](../BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
+| Gemessen | Testsuite 207/207 (`TestE118.cpp`); IMAP-Prüfserver: `text/html` mit Zeichensatz, ohne Hülle; Gegenprobe 1.0.88 ohne `Content-Type` |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../BEFUNDE.md#e-118) an der waipu.tv-Mail (in den IMAP-Ordner verschoben, erscheint als HTML). **Nicht bestanden:** bei der SoftMaker-Mail fehlten danach die eingebetteten Bilder (*„hier fehlt der inhalt“*) – [E-118](../BEFUNDE.md#e-118) Teil 2, eingebaut in 1.0.90. [E-105](../BEFUNDE.md#e-105) an 1.0.89 noch nicht geprüft |
+
+## 1.0.88 — **nicht ausgeliefert**, Quellstand 7.2.0.88, gemergt mit PR #97 (E-105); Gregor verzichtete auf einen eigenen Test
 
 | | |
 |---|---|

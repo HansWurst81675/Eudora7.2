@@ -17,7 +17,9 @@
 # WAS ES ERZWINGT
 #
 #   1. -Freigabe <Text> ist PFLICHT. Ohne den Satz, mit dem Gregor den Lauf
-#      erlaubt hat, startet nichts. Der Text landet im Protokoll.
+#      erlaubt hat, startet nichts. Der Text landet im Protokoll. Seit dem
+#      15.10.2026 muss er das HEUTIGE Datum nennen - ein fest eingetragener
+#      Satz vom Vortag hat 29 Starts getragen (siehe Abschnitt 1 unten).
 #   2. Das Verzeichnis muss unter einem erlaubten Pfad liegen (Standard:
 #      C:\Temp). Gregors eigene Verzeichnisse sind ausgeschlossen - dort
 #      testet er selbst.
@@ -74,6 +76,22 @@ if ([string]::IsNullOrWhiteSpace($Freigabe) -or $Freigabe.Trim().Length -lt 10) 
     Melde-Mangel ('Keine tragfaehige Freigabe. -Freigabe muss den Satz nennen, mit dem ' +
                   'Gregor diesen Lauf erlaubt hat (mindestens 10 Zeichen). ' +
                   'Ohne Absprache wird nichts gestartet.')
+}
+
+# Eine Freigabe gilt fuer den Tag und die Lage, in der Gregor sie gegeben
+# hat. Am 15.10.2026 liefen 29 Starts mit dem Satz "Gregor am 14.10.2026:
+# 'ich mache gar nichts, du testest.'" - fest eingetragen in
+# tools/e118-serie.ps1. Zweimal sah Gregor fremde Fenster, waehrend er selbst
+# testen wollte ("testen wir wieder beide? ohne absprache?", "ich habe was
+# gefragt. mache sonst DEINE fenster zu!"). Der Satz vom Vortag erfuellte
+# die Laengenpruefung oben und war doch keine Freigabe mehr.
+# (Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md, Nachtrag 15.10.2026)
+$heute = (Get-Date).ToString('dd.MM.yyyy')
+if ($Freigabe -notmatch [regex]::Escape($heute)) {
+    Melde-Mangel ('Die Freigabe nennt nicht das heutige Datum (' + $heute + '). ' +
+                  'Eine Freigabe gilt fuer den Tag, an dem Gregor sie gegeben hat; ' +
+                  'ein fest eingetragener Satz vom Vortag ist keine. Form: ' +
+                  '"Gregor am ' + $heute + ': ''<sein Wortlaut>''".')
 }
 
 # --- 2. Pfad ---------------------------------------------------------------

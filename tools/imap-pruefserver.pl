@@ -39,6 +39,16 @@ use IO::Select;
 #   perl tools/imap-pruefserver.pl --protokoll <datei>
 #   perl tools/imap-pruefserver.pl --nachrichten 5
 #   perl tools/imap-pruefserver.pl --zeitschranke 300   Sekunden bis Feierabend
+#   perl tools/imap-pruefserver.pl --gruss-verzoegerung 8   erste Verbindung wartet (E-121)
+#   perl tools/imap-pruefserver.pl --ablage <verzeichnis>
+#
+# APPEND (seit 14.10.2026, Befund E-118): nimmt "tag APPEND <postfach>
+# [(flags)] ["datum"] {n}" und {n+} (LITERAL+) an, liest genau n Bytes und
+# legt sie UNVERAENDERT als <verzeichnis>/append-NNN.eml ab (ohne --ablage:
+# nur mitgeschrieben). Damit laesst sich der Kopf messen, den Eudora einer
+# Nachricht beim Hochladen in einen IMAP-Ordner gibt. LIST/LSUB nennen dazu
+# das Postfach "Ablage"; SELECT/STATUS darauf zaehlen die hochgeladenen
+# Nachrichten, FETCH liefert sie.
 #
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
@@ -52,6 +62,11 @@ my %opt = (
     protokoll    => '',
     nachrichten  => 4,
     zeitschranke => 600,
+    ablage       => '',
+    gruss_verzoegerung => 0,
+    append_ablehnen => 0,
+    ohne_appenduid => 0,
+    fremde_uid   => 0,
 );
 
 while (@ARGV) {
@@ -60,7 +75,16 @@ while (@ARGV) {
     elsif ($a eq '--protokoll')    { $opt{protokoll}    = shift @ARGV }
     elsif ($a eq '--nachrichten')  { $opt{nachrichten}  = shift @ARGV }
     elsif ($a eq '--zeitschranke') { $opt{zeitschranke} = shift @ARGV }
+    elsif ($a eq '--gruss-verzoegerung') { $opt{gruss_verzoegerung} = shift @ARGV }
+    elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
+    elsif ($a eq '--ohne-appenduid') { $opt{ohne_appenduid} = 1 }
+    elsif ($a eq '--fremde-uid')  { $opt{fremde_uid}   = shift @ARGV }
+    elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     else { die "unbekannt: $a\n" }
+}
+
+if ($opt{ablage} ne '' and !-d $opt{ablage}) {
+    mkdir $opt{ablage} or die "$opt{ablage}: $!\n";
 }
 
 # --- Testnachrichten ------------------------------------------------------
@@ -131,6 +155,48 @@ my $sel       = IO::Select->new($server);
 my $loeschen  = 0;      # wie oft \Deleted verlangt wurde
 my $expunge   = 0;
 my %gesehen;            # Befehl -> Anzahl
+my @ablage;             # per APPEND hochgeladene Nachrichten (Postfach "Ablage")
+my %gewaehlt;           # Verbindung -> gewaehltes Postfach
+my $append_nr = 0;      # laufende Nummer der Ablagedateien
+
+# E-121 (Gregor an 1.0.95): im Ordner "Ablage" liegt schon eine FREMDE Nachricht,
+# deren UID gleich der lokalen Kennung der zu verschiebenden Mail ist (bei Gregor
+# 13). Eudora darf sie nicht fuer die eigene Vorab-Kopie halten.
+if ($opt{fremde_uid}) {
+    my $text = join("\r\n",
+        'From: Fremd <fremd@pruefserver.invalid>',
+        'To: pruefling@pruefserver.invalid',
+        "Subject: Fremde Nachricht mit UID $opt{fremde_uid}",
+        'Date: Thu, 10 Sep 2026 12:00:00 +0200',
+        'Message-ID: <fremd-uid@pruefserver.invalid>',
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=us-ascii',
+        '',
+        'Diese Nachricht lag schon vor dem Verschieben auf dem Server.',
+        '');
+    push @ablage, { text => $text, flags => '', geloescht_verlangt => 0, uid => $opt{fremde_uid} };
+}
+
+# UID einer Nachricht: gespeichert oder ihre Position.
+sub uid_von { my ($m, $i) = @_; return defined $m->{uid} ? $m->{uid} : $i }
+sub naechste_uid {
+    my ($liste) = @_;
+    my $max = 0;
+    for my $i (1 .. @$liste) { my $u = uid_von($liste->[$i - 1], $i); $max = $u if $u > $max }
+    return $max + 1;
+}
+
+# Postfachname aus "..." oder Atom; liefert die Liste dazu.
+sub postfach_name {
+    my ($s) = @_;
+    return $1 if $s =~ /^"((?:[^"\\]|\\.)*)"/;
+    return $1 if $s =~ /^(\S+)/;
+    return '';
+}
+sub liste_fuer {
+    my ($name) = @_;
+    return ($name =~ /^Ablage$/i) ? \@ablage : \@nachrichten;
+}
 
 while (time < $ende) {
     my @bereit = $sel->can_read(2);
@@ -140,8 +206,19 @@ while (time < $ende) {
         if ($h == $server) {
             my $c = $server->accept or next;
             $c->autoflush(1);
+            binmode $c;
+            $gewaehlt{$c} = 'INBOX';
             $sel->add($c);
             notiz('Verbindung von ' . $c->peerhost);
+            # E-121: die ERSTE Verbindung wartet auf Wunsch einige Sekunden auf die
+            # Begruessung. So holt das POP-Konto seine Post und der Filter uebertraegt,
+            # bevor das IMAP-Konto verbunden ist - der Fall, in dem Eudora den
+            # Zielordner erst mitten in der Uebertragung oeffnet.
+            if ($opt{gruss_verzoegerung} > 0) {
+                notiz("Begruessung verzoegert um $opt{gruss_verzoegerung} s");
+                sleep $opt{gruss_verzoegerung};
+                $opt{gruss_verzoegerung} = 0;
+            }
             print $c "* OK [CAPABILITY IMAP4rev1 LOGINDISABLED=0] Pruefserver bereit\r\n";
             next;
         }
@@ -149,6 +226,7 @@ while (time < $ende) {
         my $zeile = <$h>;
         unless (defined $zeile) {
             notiz('Verbindung beendet');
+            delete $gewaehlt{$h};
             $sel->remove($h);
             close $h;
             next;
@@ -182,38 +260,110 @@ while (time < $ende) {
             print $h "* $B (\\HasNoChildren) \"/\" \"INBOX\"\r\n";
             print $h "* $B (\\HasNoChildren) \"/\" \"Entw&APw-rfe\"\r\n";
             print $h "* $B (\\HasNoChildren) \"/\" \"Gel&APY-scht\"\r\n";
+            print $h "* $B (\\HasNoChildren) \"/\" \"Ablage\"\r\n";
             $antwort = "$marke OK $B";
         }
         elsif ($B eq 'SELECT' or $B eq 'EXAMINE') {
-            my $n = scalar @nachrichten;
+            $gewaehlt{$h} = postfach_name($rest);
+            my $n = scalar @{ liste_fuer($gewaehlt{$h}) };
             print $h "* $n EXISTS\r\n";
             print $h "* 0 RECENT\r\n";
             print $h "* OK [UIDVALIDITY 1] gueltig\r\n";
-            print $h "* OK [UIDNEXT " . ($n + 1) . "] naechste\r\n";
+            print $h "* OK [UIDNEXT " . naechste_uid(liste_fuer($gewaehlt{$h})) . "] naechste\r\n";
             print $h "* FLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)\r\n";
             print $h "* OK [PERMANENTFLAGS (\\Answered \\Flagged \\Deleted \\Seen \\Draft)] erlaubt\r\n";
             $antwort = "$marke OK [READ-WRITE] $B";
         }
+        elsif ($B eq 'STATUS') {
+            my $name = postfach_name($rest);
+            my $n = scalar @{ liste_fuer($name) };
+            printf $h "* STATUS \"%s\" (MESSAGES %d RECENT 0 UIDNEXT %d UIDVALIDITY 1 UNSEEN 0)\r\n",
+                $name, $n, naechste_uid(liste_fuer($name));
+            $antwort = "$marke OK STATUS";
+        }
+        elsif ($B eq 'APPEND') {
+            # tag APPEND <postfach> [(flags)] ["datum"] {n} bzw. {n+}
+            my $name = postfach_name($rest);
+            my ($n, $plus) = $zeile =~ /\{(\d+)(\+?)\}$/;
+            unless (defined $n) {
+                $antwort = "$marke BAD APPEND ohne Literal";
+                print $h "$antwort\r\n";
+                notiz("  -> $antwort");
+                next;
+            }
+            unless ($plus) {
+                print $h "+ Ready for literal data\r\n";
+                notiz('  -> + Ready for literal data');
+            }
+            my $daten = '';
+            while (length($daten) < $n) {
+                my $r = read($h, my $stueck, $n - length($daten));
+                last unless $r;
+                $daten .= $stueck;
+            }
+            # Zeilenende nach dem Literal (CRLF oder LF)
+            my $nach = <$h>;
+            $nach = '' unless defined $nach;
+            $nach =~ s/\r?\n$//;
+            notiz("  !! Rest nach Literal: '$nach'") if $nach ne '';
+            if (length($daten) != $n) {
+                notiz(sprintf('  !! Literal unvollstaendig: %d von %d Bytes', length($daten), $n));
+            }
+            # E-121: das Hochladen ablehnen - darf die Nachricht beim Absender bleiben?
+            if ($opt{append_ablehnen}) {
+                $antwort = "$marke NO [TRYCREATE] APPEND abgelehnt (Pruefserver, --append-ablehnen)";
+                print $h "$antwort\r\n";
+                notiz("  -> $antwort");
+                next;
+            }
+            my $uid = naechste_uid(\@ablage);
+            push @ablage, { text => $daten, flags => '', geloescht_verlangt => 0, uid => $uid };
+            $append_nr++;
+            my $wohin = '(nicht abgelegt, kein --ablage)';
+            if ($opt{ablage} ne '') {
+                $wohin = sprintf('%s/append-%03d.eml', $opt{ablage}, $append_nr);
+                open my $af, '>:raw', $wohin or die "$wohin: $!\n";
+                print $af $daten;
+                close $af;
+            }
+            notiz(sprintf('  APPEND nach "%s": %d Bytes -> %s', $name, length($daten), $wohin));
+            # E-121: wie ein Server ohne UIDPLUS (vermutlich GMX) - keine neue UID melden.
+            $antwort = $opt{ohne_appenduid} ? "$marke OK APPEND completed" : "$marke OK [APPENDUID 1 $uid] APPEND completed";
+        }
         elsif ($B eq 'FETCH' or ($B eq 'UID' and $rest =~ /^FETCH/i)) {
+            my $liste = liste_fuer($gewaehlt{$h} || 'INBOX');
             my $r = ($B eq 'UID') ? do { my $x = $rest; $x =~ s/^FETCH\s*//i; $x } : $rest;
             my ($von, $bis) = $r =~ /^(\d+)(?::(\d+|\*))?/;
             $von = 1 unless defined $von;
             $bis = $von unless defined $bis;
-            $bis = scalar @nachrichten if !defined $bis or $bis eq '*';
-            $bis = scalar @nachrichten if $bis > @nachrichten;
-            for my $i ($von .. $bis) {
-                my $m = $nachrichten[$i - 1] or next;
+            my @nummern;
+            if ($B eq 'UID') {
+                # UID FETCH: nach UID auswaehlen, nicht nach Position (E-121 --fremde-uid).
+                my $obere = ($bis eq '*') ? 4294967295 : $bis;
+                for my $i (1 .. @$liste) {
+                    my $u = uid_von($liste->[$i - 1], $i);
+                    push @nummern, $i if ($u >= $von && $u <= $obere) || ($bis eq '*' && $i == @$liste);
+                }
+            }
+            else {
+                $bis = scalar @$liste if $bis eq '*';
+                $bis = scalar @$liste if $bis > @$liste;
+                @nummern = ($von .. $bis);
+            }
+            for my $i (@nummern) {
+                my $m = $liste->[$i - 1] or next;
+                my $uid = uid_von($m, $i);
                 my $laenge = length $m->{text};
                 my $flags = $m->{flags} || '';
                 if ($r =~ /BODY\.PEEK\[HEADER|BODY\[HEADER|RFC822\.HEADER/i) {
                     my ($kopf) = $m->{text} =~ /^(.*?\r\n)\r\n/s;
                     $kopf = $m->{text} unless defined $kopf;
                     printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[HEADER] {%d}\r\n%s)\r\n",
-                        $i, $i, $flags, $laenge, length($kopf), $kopf;
+                        $i, $uid, $flags, $laenge, length($kopf), $kopf;
                 }
                 else {
                     printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[] {%d}\r\n%s)\r\n",
-                        $i, $i, $flags, $laenge, $laenge, $m->{text};
+                        $i, $uid, $flags, $laenge, $laenge, $m->{text};
                 }
             }
             $antwort = "$marke OK FETCH";

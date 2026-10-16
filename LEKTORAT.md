@@ -1313,3 +1313,58 @@ zerschnittenen Doctolib-Bildern und nicht mehreren Bildern verschiedener Höhe
 ([L-33.4](Befunde/LEKTOR-33.md#l-33.4)); der C3-Handgriff im Testplan nennt aber das E-112-Kriterium
 ([L-33.5](Befunde/LEKTOR-33.md#l-33.5)). Offen außerdem: `release-veroeffentlichen.ps1` schreibt Ortszeit
 und hängt hinter ein Blockzitat ([L-33.6](Befunde/LEKTOR-33.md#l-33.6)).
+
+## Neununddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-34.md`)
+
+Nach dem Merge von PR #97 ([E-105](BEFUNDE.md#e-105), 7.2.0.88) und dem Einbau von [E-118](BEFUNDE.md#e-118) in
+7.2.0.89, zum Stand `65d066a8`; 41 MDs aus `git ls-files` ohne `Befunde/` und
+`Arbeitsweise/`. Berichtigt: [E-105](BEFUNDE.md#e-105) ohne Merge-Vermerk und mit erwartetem Test an
+1.0.88, das nie ausgeliefert wurde ([L-34.2](Befunde/LEKTOR-34.md#l-34.2)); [E-118](BEFUNDE.md#e-118) in `README.md` noch
+*„am Quelltext belegt“* ([L-34.3](Befunde/LEKTOR-34.md#l-34.3)); das Testverzeichnis 1.0.89 als nicht vorhanden
+geführt ([L-34.4](Befunde/LEKTOR-34.md#l-34.4)); TESTPLAN bekommt C5 für 1.0.89 ([L-34.5](Befunde/LEKTOR-34.md#l-34.5)).
+
+Der Kern: `befund-suchen.pl` liest nur Abschnitte mit eigener Überschrift und
+übersieht damit 101 von 171 Befunden, darunter jeden ab [E-100](BEFUNDE.md#e-100) — zu
+`ImapAppend.cpp` meldet es *„ein neuer Eintrag ist berechtigt“*, obwohl
+[E-118](BEFUNDE.md#e-118) die Stelle nennt ([L-34.6](Befunde/LEKTOR-34.md#l-34.6)). Offen außerdem: PRÜFER hat [E-118](BEFUNDE.md#e-118) nicht
+nachgerechnet, 1.0.89 liegt schon bereit ([L-34.8](Befunde/LEKTOR-34.md#l-34.8)).
+
+## Vierzigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-35.md`)
+
+Nach 7.2.0.90 ([E-118](BEFUNDE.md#e-118) Teil 2, [E-121](BEFUNDE.md#e-121), [E-122](BEFUNDE.md#e-122)), zum Stand `d7439ee6`; 41 MDs aus
+`git ls-files` ohne `Befunde/` und `Arbeitsweise/`. Der Kern: [E-118](BEFUNDE.md#e-118) stand mit
+*„BESTÄTIGT“* vorn und galt `offene-befunde.pl` als erledigt, obwohl Teil 2 nicht
+bestätigt ist; [E-121](BEFUNDE.md#e-121) und [E-122](BEFUNDE.md#e-122) fehlten in der offenen Liste ([L-35.1](Befunde/LEKTOR-35.md#l-35.1)).
+Berichtigt außerdem: „bestätigt“ ohne Teil 2 bzw. „nicht getestet“ nach Gregors
+Test in sieben Dateien ([L-35.2](Befunde/LEKTOR-35.md#l-35.2)); das falsche IMAP-Ordnerpräfix bei [E-120](BEFUNDE.md#e-120)
+([L-35.3](Befunde/LEKTOR-35.md#l-35.3)); neue Schalter des Prüfservers ([L-35.4](Befunde/LEKTOR-35.md#l-35.4)); Zweck des Zweigs ([L-35.5](Befunde/LEKTOR-35.md#l-35.5)).
+Offen: `PRUEFER-27.md` fehlt auf dem Zweig ([L-35.6](Befunde/LEKTOR-35.md#l-35.6)), PRÜFER hat [E-121](BEFUNDE.md#e-121) nicht
+gesehen ([L-35.7](Befunde/LEKTOR-35.md#l-35.7)), 20 von 62 Testläufen am 14.10. abgeschossen ([L-35.9](Befunde/LEKTOR-35.md#l-35.9)),
+TESTPLAN-Vorschlag C6 für 1.0.90 ([L-35.11](Befunde/LEKTOR-35.md#l-35.11)).
+
+## Einundvierzigster Durchgang — 15.10.2026 (Bericht: `Befunde/LEKTOR-36.md`)
+
+Nach 7.2.0.96 ([E-118](BEFUNDE.md#e-118) Teil 1 und 2 bestätigt, [E-121](BEFUNDE.md#e-121) Teile 1 bis 6, Teil 6 an 1.0.96
+bestätigt), zum Stand `9840ee35`; 120 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 41
+außerhalb von `Befunde/` gelesen. Der Kern: [E-118](BEFUNDE.md#e-118) stand noch in der offenen Liste
+([L-36.1](Befunde/LEKTOR-36.md#l-36.1)), Teil 2 galt an sieben Stellen als nicht bestätigt, `ZIEL.md` widersprach sich in
+einer Zelle ([L-36.2](Befunde/LEKTOR-36.md#l-36.2), [L-36.3](Befunde/LEKTOR-36.md#l-36.3)); [E-121](BEFUNDE.md#e-121) stand bei 7.2.0.90 und fehlte mit [E-122](BEFUNDE.md#e-122) im
+CHANGELOG unter *Noch offen* ([L-36.4](Befunde/LEKTOR-36.md#l-36.4)); Gregors Tests an 1.0.89 bis 1.0.96 fehlten in
+`WEITERMACHEN.md` und `Releases/PAKETE.md` ([L-36.5](Befunde/LEKTOR-36.md#l-36.5)); neue Schalter von Prüfserver und
+Messserie ([L-36.6](Befunde/LEKTOR-36.md#l-36.6)); `Testdaten/README.md` ([L-36.7](Befunde/LEKTOR-36.md#l-36.7)).
+Offen: PRÜFER hat 7.2.0.91 bis 7.2.0.96 nicht gesehen ([L-36.8](Befunde/LEKTOR-36.md#l-36.8)), der erste Satz des
+[E-121](BEFUNDE.md#e-121)-Urteils ([L-36.9](Befunde/LEKTOR-36.md#l-36.9)), feste Freigabe in `e118-serie.ps1` ([L-36.10](Befunde/LEKTOR-36.md#l-36.10)),
+Messbeleg 1.0.96 nur uncommittet ([L-36.11](Befunde/LEKTOR-36.md#l-36.11)), TESTPLAN ohne C6 ([L-36.12](Befunde/LEKTOR-36.md#l-36.12)).
+
+## Zweiundvierzigster Durchgang — 16.10.2026 (Bericht: `Befunde/LEKTOR-37.md`)
+
+Nach 7.2.0.99 (7.2.0.97 gesendete Post und N1, 7.2.0.98 [E-83](BEFUNDE.md#e-83) zweite Ursache, 7.2.0.99 Neubau
+wegen [E-124](BEFUNDE.md#e-124); 1.0.99 von Gregor bestätigt), zum Stand `8e5936aa`, vor PR und Release; 122 MDs
+aus `git ls-files` ohne `Arbeitsweise/`, davon 41 außerhalb von `Befunde/` gelesen. Der Kern:
+[E-121](BEFUNDE.md#e-121) stand an drei Stellen mit *„Restfälle N1–N3 offen“* ([L-37.1](Befunde/LEKTOR-37.md#l-37.1) bis [L-37.3](Befunde/LEKTOR-37.md#l-37.3)); [E-123](BEFUNDE.md#e-123) und
+[E-124](BEFUNDE.md#e-124) fehlten im CHANGELOG unter *Noch offen* ([L-37.2](Befunde/LEKTOR-37.md#l-37.2)); der Block *„hier weitermachen“* führte
+1.0.98 als zu testen und ein Release v1.0.97 ([L-37.4](Befunde/LEKTOR-37.md#l-37.4)); `Releases/PAKETE.md` nannte 1.0.97
+*„sein Test steht aus“* ([L-37.5](Befunde/LEKTOR-37.md#l-37.5)); `WERKZEUGE.md` kannte die Defender-Prüfung nicht ([L-37.6](Befunde/LEKTOR-37.md#l-37.6)).
+Offen: PRÜFER hat 7.2.0.97/98 nicht gesehen ([L-37.7](Befunde/LEKTOR-37.md#l-37.7)), der erste Satz des [E-121](BEFUNDE.md#e-121)-Urteils
+([L-37.8](Befunde/LEKTOR-37.md#l-37.8)), PRÜFER-30 F6 als Datenverlust-Vermutung ohne Eintrag ([L-37.9](Befunde/LEKTOR-37.md#l-37.9)), was für
+`v1.0.99` nachzuziehen ist ([L-37.11](Befunde/LEKTOR-37.md#l-37.11)), uncommittete DLLs im Hauptbaum ([L-37.13](Befunde/LEKTOR-37.md#l-37.13)).

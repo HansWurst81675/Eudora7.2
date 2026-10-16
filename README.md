@@ -25,13 +25,70 @@ verschickt.
 |---|---|
 | **Sofort ausprobieren** | [Neuestes Paket herunterladen](https://github.com/HansWurst81675/Eudora7.2/releases/latest) — auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren |
 | **Selbst bauen** | [Selbst bauen](#selbst-bauen) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
-| **Was geht und was nicht** | [Was es kann](#was-es-kann), [Was es nicht kann](#was-es-nicht-kann) und [ZIEL.md](ZIEL.md) |
+| **Was geht und was nicht** | [Auf einen Blick](#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind) – bekannte Fehler mit Abhilfe; ausführlich [Was es kann](#was-es-kann), [Was es nicht kann](#was-es-nicht-kann) und [ZIEL.md](ZIEL.md) |
 | **Was gefunden und behoben wurde** | [CHANGELOG.md](CHANGELOG.md) je Fassung, [BEFUNDE.md](BEFUNDE.md) je Befund mit Messung |
 | **Wie portiert wurde** | [PORTIERUNG.md](PORTIERUNG.md) |
 
 <!-- Hier gehoert ein Bildschirmfoto des Hauptfensters hin. Es liegt keines
      im Repo, und ein Agent darf zum Erzeugen nichts starten (tools/testlauf.ps1
      braucht Gregors Freigabe). Gregor entscheidet, ob eines aufgenommen wird. -->
+
+## Auf einen Blick: was das Paket kann und wo noch Fehler sind
+
+*Stand Paket **1.0.99** (Quellstand 7.2.0.99), 16.10.2026. Die ausführliche
+Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
+[Was es nicht kann](#was-es-nicht-kann), jede Messung in
+[BEFUNDE.md](BEFUNDE.md).*
+
+### Was geht
+
+* **Mail abrufen und senden** über POP3, IMAP und SMTP mit TLS 1.3 – auch an
+  heutigen Servern (geprüft an GMX und freenet).
+* **Lesen** von Text- und HTML-Nachrichten, mit Bildern in der richtigen Größe.
+* **Schreiben, antworten, weiterleiten**, Anhänge mit vollem Namen und Endung,
+  mehrere Persönlichkeiten, Filter, Postfachverwaltung.
+* **Verschieben in einen IMAP-Ordner** – auch HTML-Nachrichten mit
+  eingebetteten Bildern und gesendete Post; die Nachricht verschwindet aus dem
+  lokalen Postfach erst, wenn sie auf dem Server steht.
+* **Ohne Installation**: ZIP auspacken, `Eudora starten.cmd` doppelklicken.
+
+**Neu gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
+beim Verschieben in einen IMAP-Ordner vollständig an
+([E-118](BEFUNDE.md#e-118)); eine verschobene Nachricht kann nicht mehr
+verlorengehen, steht nicht mehr doppelt in der Liste und trifft keine fremde
+Nachricht mit gleicher Nummer ([E-121](BEFUNDE.md#e-121)); eine beim Start
+schon fertige IMAP-Aufgabe blockiert den Ordner nicht mehr und Eudora lässt sich
+ohne *„1 task(s) running“* beenden ([E-83](BEFUNDE.md#e-83)); ein versteckter
+Vorschautext wird nicht mehr als `? ? ? ?` mitgelesen
+([E-105](BEFUNDE.md#e-105), an einer Prüfnachricht gemessen, am echten
+Postfach noch nicht bestätigt).
+
+### Bekannte Fehler
+
+Spalte **Daten**: *ja* heißt, es kann etwas verlorengehen oder verfälscht
+werden; *nein* heißt, es betrifft nur Anzeige oder Bedienung.
+
+| Was passiert | Daten | Was hilft | Befund |
+|---|---|---|---|
+| Ein Filter *„Junk Score is less than N“* wird unbrauchbar, sobald man ihn im Filterfenster anklickt | **ja** (die Regel) | `Filters.pce` sichern, bevor Sie im Filterfenster stöbern | [E-67](BEFUNDE.md#e-67) |
+| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | **ja** (Rest bleibt ungefiltert) | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
+| Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | **ja** (die Datei) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
+| Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **ja** (Einstellungen) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
+| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | **ja** (Bilder) | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
+| Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nein | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
+| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nein | – | [E-119](BEFUNDE.md#e-119) |
+| Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nein | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
+| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nein | – | [E-122](BEFUNDE.md#e-122) |
+| IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nein | – | [E-77](BEFUNDE.md#e-77) |
+| Emoji in Betreffzeilen erscheinen als `?` | nein | – | [E-90](BEFUNDE.md#e-90) |
+| Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nein | es gilt die zuletzt gewählte Einstellung | [E-98](BEFUNDE.md#e-98) |
+| Der Filterbericht bleibt nach einem Filterlauf leer | nein | – | [E-71](BEFUNDE.md#e-71) |
+| Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nein | Fenster einmal neu anordnen | [E-114](BEFUNDE.md#e-114) |
+| Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nein | siehe [Windows Defender meldet Eudora als Trojaner](#windows-defender-meldet-eudora-als-trojaner) | [E-124](BEFUNDE.md#e-124) |
+
+**Ihre Post sichern.** Eudora legt alles im Verzeichnis `Mailverzeichnis`
+neben dem Programm ab. Wer es vor dem ersten Start einer neuen Fassung kopiert,
+kann jederzeit zurück.
 
 ## Was es kann
 
@@ -176,9 +233,23 @@ verschickt.
   Handyfassung, eine davon per `display:none` verborgen; zweiter Fall,
   von Gregor am 13.10.2026 an 1.0.86 gemeldet).
 * **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als
-  HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), offen, am Quelltext belegt): beim Hochladen
+  HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert, Teil 1 von Gregor am 14.10.2026 an 1.0.89 bestätigt, Teil 2 am 14.10.2026 an 1.0.90): beim Hochladen
   verwirft Eudora die `Content-*`-Köpfe und schreibt keinen oder nur
   `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
+  Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach (am IMAP-Prüfserver gemessen, von Gregor am 14.10.2026 an 1.0.90 bestätigt).
+* **Eine Nachricht, die in einen IMAP-Ordner verschoben wird, kann spurlos
+  verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
+  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
+  gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
+  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen und N1 eingebaut,
+  an 1.0.99 von Gregor bestätigt (16.10.2026); N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123)):
+  ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
+  Selten, aber still. Originalfehler von QUALCOMM.
+* **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):
+  sie belegte ihren Ordner, das Verschieben dorthin wartete ewig, und beim Beenden kam
+  *„You currently have 1 task(s) running“*. Behoben in 7.2.0.98, am IMAP-Prüfstand gemessen
+  (vorher 12 von 12 Läufen hängend, danach 10 von 10 durch), an 1.0.99 von Gregor sauber
+  beendet (16.10.2026; der Wettlauf selbst trat in seinem Lauf nicht auf), noch nicht ausgeliefert.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
@@ -382,6 +453,52 @@ Das ist **kein Fehler dieser Portierung**, sondern Verhalten des Originals;
 es hat deshalb keine Befundnummer. Verwandt: bei IMAP fragt auch ein
 **Filterlauf** nach dem Kennwort, aus einem anderen Grund — siehe
 [FILTER.md](FILTER.md), Abschnitt *Was überrascht*.
+
+### Windows Defender meldet Eudora als Trojaner
+
+**Was man sieht.** Das Eudora-Fenster ist plötzlich weg – ohne Fehlermeldung,
+ohne Absturzdialog, und im Mailverzeichnis liegt **keine** `Exception.log`.
+Das sieht aus wie ein Absturz, ist aber keiner: **Microsoft Defender hat
+Eudora beendet.** In *Windows-Sicherheit → Viren- & Bedrohungsschutz →
+Schutzverlauf* steht dann eine Meldung wie **`Trojan:Win32/Bearfoos.A!ml`**
+mit `Eudora.exe` als betroffenem Element. Danach lässt sich die Datei nicht
+mehr starten oder kopieren.
+
+**Was das ist.** Das Kürzel `!ml` heißt: die Einstufung stammt aus Defenders
+**maschinellem Lernverfahren**, nicht aus der Signatur einer bekannten
+Schadsoftware. Defender schickt eine unbekannte, **unsignierte** Programmdatei
+an die Microsoft-Cloud, bewertet sie dort und verteilt bei einem negativen
+Urteil eine Signatur für genau diese Datei. Jede Fassung dieses Projekts ist
+eine neue, unsignierte Datei – das Urteil kann bei jeder Fassung neu fallen.
+Am 16.10.2026 traf es das Testpaket 1.0.98 ([E-124](BEFUNDE.md#e-124)); das
+veröffentlichte `v1.0.87` und die Pakete 1.0.96 und 1.0.97 waren sauber,
+1.0.99 (derselbe Quelltext wie 1.0.98, neu gebaut) ebenfalls. Wir halten
+das für einen **Fehlalarm**: die Datei ist aus dem Quelltext in diesem Repo
+gebaut, und der Unterschied zur sauberen Vorfassung sind rund 60 Zeilen im
+Aufgabenverwalter ohne jeden neuen Systemaufruf.
+
+**Was Sie tun können.**
+
+1. **Prüfen, ob es Defender war:** im Schutzverlauf nachsehen, oder in einer
+   PowerShell `Get-MpThreatDetection` – dort steht die Uhrzeit und der Pfad
+   der `Eudora.exe`.
+2. **Ihre Post ist nicht betroffen.** Defender beendet nur das Programm; das
+   Mailverzeichnis bleibt, wie es war. Was Eudora vor dem Beenden schon
+   geschrieben hatte, ist da.
+3. **Eine andere Fassung nehmen** – die nächste Fassung ist eine neue Datei
+   und wird neu bewertet –, **oder** die Datei im Schutzverlauf selbst
+   **zulassen**, wenn Sie der Herkunft vertrauen. Das ist Ihre Entscheidung;
+   wir empfehlen nicht, Defender abzuschalten.
+4. **Den Fehlalarm melden:** <https://www.microsoft.com/wdsi/filesubmission>,
+   Kategorie *Incorrectly detected as malware*. Microsoft nimmt solche
+   Signaturen meist binnen weniger Tage zurück.
+
+**Was wir dagegen tun.** `tools/paket-pruefen.ps1` lässt seit 7.2.0.99
+Defender über jede EXE und DLL eines Pakets laufen und weist bei einem Fund
+ab; kein Paket geht mehr hinaus, das Defender **in diesem Moment** schon
+beanstandet. Ganz ausschließen lässt es sich nicht, weil die Cloud mitunter
+erst nach dem ersten Start urteilt. Dauerhaft hilft nur eine Code-Signatur
+mit einem Zertifikat – die gibt es für dieses Projekt bisher nicht.
 
 ### Einen Fehler melden
 
@@ -815,7 +932,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.88` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.99` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

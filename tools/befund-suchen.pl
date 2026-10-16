@@ -91,6 +91,34 @@ my $aktuell;
 for my $zeile (split /\n/, $text) {
     if ($zeile =~ /^#{2,3}\s+([A-Z]+[0-9]*-[0-9]+[a-z]?)\b\s*[-\x{2014}]?\s*(.*)$/) {
         push @abschnitte, $aktuell if $aktuell;
+
+# --- Die Urteilstabelle dazunehmen (LEKTOR-34, L-34.6) ------------------------
+#
+# Bis zum 14.10.2026 stand oben: die Tabellen "tragen das Urteil, aber nicht
+# die Fundstellen". Das galt einmal. Gemessen am 14.10.2026 stehen 101 von 171
+# Befunden NUR als Tabellenzeile - darunter jede Kennung von E-100 bis E-120,
+# mit Datei und Zeile. Das Werkzeug meldete zu `ImapAppend.cpp` "ein neuer
+# Eintrag ist berechtigt", waehrend E-118 genau diese Datei nennt. Genau den
+# Fehler, den CLAUDE.md Abschnitt 2 verhindern soll, hat es damit selbst
+# begangen. Jetzt zaehlt jede Zeile "| <a id=..></a>KENNUNG | Titel | Urteil |"
+# als Abschnitt; gibt es zur Kennung auch eine Ueberschrift, wird beides
+# zusammen durchsucht.
+my %nach_nummer = map { $_->{nummer} => $_ } @abschnitte;
+for my $zeile (split /\n/, $text) {
+    next unless $zeile =~ /^\|\s*<a id="[^"]*"><\/a>\s*([A-Z]+[0-9]*-[0-9]+[a-z]?)\s*\|\s*(.*?)\s*\|\s*(.*)$/;
+    my ($nummer, $titel, $rest) = ($1, $2, $3);
+    $titel =~ s/\*\*//g;
+    $titel = substr($titel, 0, 90) . '...' if length($titel) > 90;
+    if (my $a = $nach_nummer{$nummer}) {
+        unshift @{ $a->{zeilen} }, $rest;
+        $a->{text} = "$zeile\n" . $a->{text};
+    }
+    else {
+        my $neu = { nummer => $nummer, titel => $titel, zeilen => [ $rest ], text => "$zeile\n" };
+        push @abschnitte, $neu;
+        $nach_nummer{$nummer} = $neu;
+    }
+}
         $aktuell = { nummer => $1, titel => $2, zeilen => [], text => '' };
     }
     elsif ($aktuell) {

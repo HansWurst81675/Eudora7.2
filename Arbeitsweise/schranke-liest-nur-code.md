@@ -70,3 +70,34 @@ Schranke langsam (sie wird nicht mehr geglaubt), eine stumme Prüfung sofort
 
 Siehe [[schranke-gegentesten]], [[fehlerklassen-abstellen]],
 [[text-nicht-durch-schichten-schicken]] und [[messung-muss-den-weg-treffen]].
+
+## Nachtrag 15.10.2026 (CHRONIST): die Schranke las Gregors Wortlaut als mein Urteil
+
+Am 15.10. um 12:00 UTC wies der pre-commit-Haken die Bestätigung von 1.0.96
+ab. `tools/pruefe-befundurteile.pl` fand im CHANGELOG das Erledigt-Wort *„nicht
+mehr auf“* neben [E-121](../BEFUNDE.md#e-121), das zu Recht offen steht (N1 bis
+N3). Das Wort stand in **Gregors** Satz: *„ja, jetzt klappt es, der fehler
+tritt nicht mehr auf“*. Die Schranke kann ein Zitat nicht von einer eigenen
+Einstufung unterscheiden — dieselbe Klasse wie oben: sie liest Text, der nicht
+Behauptung ist.
+
+Behoben wurde es um 12:01 am **Text**, nicht an der Schranke: das wörtliche
+Zitat wurde im CHANGELOG durch *„kein Fehlerdialog beim Verschieben“* ersetzt.
+In BEFUNDE.md steht es noch. Das war hier vertretbar — der Absatz sagte
+„Bestätigt“ über einen offenen Befund, und die Umschreibung ist genauer
+(bestätigt ist der sechste Teil, nicht E-121) —, aber es ist die gefährliche
+Richtung: **wenn eine Schranke einen wörtlichen Beleg abweist, wird zuerst
+gefragt, ob die Schranke irrt.** Gregors Wortlaut ist die Messung; ihn
+umzuformulieren, bis die Prüfung schweigt, löscht den Beleg, um den Alarm
+loszuwerden.
+
+Dazu: `tools/commit-bereit.pl` zeigt je Schranke nur die Kernzeilen (Filter
+auf `MANGEL`, `fehlt`, …). Die Erklärung von `pruefe-befundurteile.pl` („Ein
+Urteil steht an zwei Stellen …“) kam darin nicht vor; um 12:00:39 fand die
+Suche danach nichts, erst ein zweiter `git commit` zeigte sie.
+
+**Offen, Vorschlag für die Hauptsitzung (nicht gebaut):**
+`pruefe-befundurteile.pl` lässt Erledigt-Wörter innerhalb eines Zitats in
+deutschen Anführungszeichen („…“) aus, wenn im selben Absatz „Gregor“ steht;
+Gegenprobe: die CHANGELOG-Zeile aus dem Stand vor `9840ee35` muss
+durchgehen, *„E-121 ist behoben“* ohne Zitat muss weiter abweisen.

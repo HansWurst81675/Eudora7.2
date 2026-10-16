@@ -29,6 +29,7 @@ DAMAGE. */
 #ifdef IMAP4 // Only for IMAP.
 
 #include "summary.h"
+#include "fileutil.h"		// E-118 Teil 2: EudoraDir fuer den Ordner Embedded
 #include "sendmail.h"
 #include "progress.h"
 #include "resource.h"
@@ -116,7 +117,8 @@ void APPENDError(const char* Command, const char* Message);
 // For Apppend:
 void	NewMimeBoundary ( CString& Boundary);
 long	APPENDEncodingType ( const char* fname, MIMEMap& mm );
-int		AppendMIME(const char* Filename, MIMEMap& mm, long EncoType, CFileWriter *pBodyFileWriter);
+int		AppendMIME(const char* Filename, MIMEMap& mm, long EncoType, CFileWriter *pBodyFileWriter,
+				   LPCSTR pszZusatzKopf = NULL, BOOL bInline = FALSE);
 int		AppendContentType(short tableID, WORD flag, CFileWriter *pBodyFileWriter, MIMEMap* mm = NULL);
 int		AppendDataText (const char* text, CFileWriter *pBodyFileWriter, int length = -1, int InitCharsOnLine = -1);
 BOOL	UseQPToAppend( const char* text1, const char* text2, short etid, BOOL bIsRich );
@@ -400,6 +402,11 @@ CImapAppend::CImapAppend(CImapConnection *pDstImap,
 	// Don't know if it will be multipart.
 	m_bIsMultipart = FALSE;
 
+	// E-118: Art des einteiligen Textes, gesetzt in ReformatBody.
+	m_bE118Html = FALSE;
+	m_nE118Achtbit = 0;
+	m_bE118Related = FALSE;
+
 	// Scratch buffer. Allocated when needed.
 	m_nBufferSize	= 0;
 	m_pBuffer		= NULL;
@@ -517,11 +524,18 @@ HRESULT CImapAppend::AppendMessage (BOOL Spool, BOOL InBackground)
 		CString SpoolFilepath;
 
 		// Return the full path to the spool file in SpoolFilepath.
-		if (SpoolMessageToFile (SpoolFilepath))
+		BOOL bGespoolt = SpoolMessageToFile (SpoolFilepath);
+		if (bGespoolt)
 		{
 			// Now append the file.
 			hResult = AppendSpoolFile (SpoolFilepath);
 		}
+
+		// E-118: Spurmarke - was wurde hochgeladen, und hat es geklappt?
+		CString szSpur;
+		szSpur.Format ("E-118 Hochladen: gespoolt=%d Ergebnis=0x%08lx html=%d achtbit=%d related=%d mehrteilig=%d",
+					   bGespoolt, (unsigned long) hResult, m_bE118Html, m_nE118Achtbit, m_bE118Related, m_bIsMultipart);
+		::PutDebugLog (DEBUG_MASK_MISC, szSpur);
 
 		// Delete the spool file if it exists.
 		DeleteLocalFile ( SpoolFilepath );
@@ -645,12 +659,264 @@ BOOL CImapAppend::SpoolMessageToFile (CString& SpoolFilepath)
 
 
 
+/* E-118: eine HTML-Mail, in einen IMAP-Ordner verschoben, erschien dort als
+HTML-Quelltext. Eudora legt eine empfangene HTML-Mail lokal als
+   <x-html> ... </x-html>
+ab. ReformatHeader wirft alle Content-*-Koepfe weg, und neu geschrieben
+wurde fuer den Text gar keiner (einteilig) bzw. fest text/plain
+(mehrteilig). Der Server nahm text/plain; charset=us-ascii an, samt der
+<x-html>-Huelle als Text.
+
+E118Huelle erkennt die Huelle im Text p[0..nLaenge) und liefert den Inhalt
+dazwischen als [*pnAnfang, *pnEnde). Ohne Huelle: 0, der Bereich bleibt der
+ganze Text. E118Achtbit meldet ein Byte ueber 0x7F - dann braucht der Teil
+einen Zeichensatz und 8bit. Beide ohne Eudora-Typen, damit sie ohne IMAP
+pruefbar sind (Tests/TestE118.cpp, Extract.ps1 Region Q). */
+
+static int E118Gleich (const char* p, const char* szMuster, long n)
+{
+   long  i;
+
+   for (i = 0; i < n; ++i) {
+      char  c = p[i];
+
+      if (c >= 'A' && c <= 'Z')
+         c += 0x20;
+      if (c != szMuster[i])
+         return   0;
+   }
+
+   return   1;
+}
+
+int E118Huelle (const char* p, long nLaenge, long* pnAnfang, long* pnEnde)
+{
+   long  a = 0, e = nLaenge, k;
+
+   *pnAnfang = 0;
+   *pnEnde = nLaenge;
+
+   while (a < e && (p[a] == ' ' || p[a] == '\t' || p[a] == '\r' || p[a] == '\n'))
+      ++a;
+   if (e - a < 8 || !E118Gleich(p + a, "<x-html>", 8))
+      return   0;
+
+   a += 8;
+   if (a < e && p[a] == '\r')
+      ++a;
+   if (a < e && p[a] == '\n')
+      ++a;
+
+   // Das letzte </x-html> - aber nur, wenn dahinter nichts mehr steht als
+   // Leerraum. Sonst bleibt es samt Rest im Text: ein Textteil oder eine
+   // Anhangszeile hinter der Huelle ginge beim Hochladen verloren, und die
+   // lokale Kopie ist danach geloescht (PRUEFER-27 F1, Datenverlust).
+   for (k = e - 9; k >= a; --k)
+      if (E118Gleich(p + k, "</x-html>", 9))
+         break;
+   if (k >= a) {
+      long  r;
+
+      for (r = k + 9; r < e; ++r)
+         if (p[r] != ' ' && p[r] != '\t' && p[r] != '\r' && p[r] != '\n')
+            break;
+      if (r >= e)
+         e = k;
+   }
+
+   *pnAnfang = a;
+   *pnEnde = e;
+   return   1;
+}
+
+/* E-118, Teil 2: eingebettete Bilder (Gregor am 14.10.2026 an 1.0.89, die
+SoftMaker-Mail). Eudora legt die Bildteile einer multipart/related-Mail als
+Dateien ab und schreibt in den Text nur
+   Embedded Content: <datei>: <MRI>,<CID-Hash>,<CL-Hash>,<MRI_CB_CL-Hash>
+Den Content-ID selbst merkt es sich nicht, nur seinen Hash (HashMT, mime.cpp
+EmbeddedElement::SetCID). Beim Hochladen muss das Bild aber unter genau dem
+Namen wieder dranhaengen, unter dem das HTML es ruft - sonst bleibt der
+Kasten leer.
+
+E118Verweis sucht im HTML den Verweis, dessen Hash passt:
+  bCid = 1: jedes "cid:..." - geliefert wird der Teil hinter "cid:"
+  bCid = 0: jeder Wert von src=, background=, href= ohne "cid:" (fuer
+            Bilder, die ueber Content-Location verknuepft waren)
+Gefunden: 1, Verweis in szAus. Sonst 0. pfHash ist im Programm HashMT; der
+Test reicht eine eigene Funktion hinein. */
+
+int E118Verweis (const char* pHtml, long nLaenge, unsigned long ulHash, int bCid,
+                 unsigned long (*pfHash)(const char*), char* szAus, int nAus)
+{
+   long  i;
+
+   if (nAus < 2)
+      return   0;
+   szAus[0] = 0;
+
+   for (i = 0; i < nLaenge; ++i) {
+      long  a = 0, e = 0;
+      int   bTreffer = 0;
+
+      if (bCid) {
+         if (i + 4 <= nLaenge && E118Gleich(pHtml + i, "cid:", 4)) {
+            a = i + 4;
+            for (e = a; e < nLaenge; ++e) {
+               char  c = pHtml[e];
+               if (c == '"' || c == '\'' || c == '<' || c == '>' || c == ' ' || c == ')' ||
+                   c == '\t' || c == '\r' || c == '\n')
+                  break;
+            }
+            bTreffer = 1;
+         }
+      }
+      else {
+         int   nAttr = 0;
+
+         if (i + 4 <= nLaenge && E118Gleich(pHtml + i, "src=", 4))
+            nAttr = 4;
+         else
+         if (i + 5 <= nLaenge && E118Gleich(pHtml + i, "href=", 5))
+            nAttr = 5;
+         else
+         if (i + 11 <= nLaenge && E118Gleich(pHtml + i, "background=", 11))
+            nAttr = 11;
+
+         if (nAttr && (i == 0 || pHtml[i - 1] == ' ' || pHtml[i - 1] == '\t' ||
+                       pHtml[i - 1] == '\r' || pHtml[i - 1] == '\n')) {
+            char  q;
+
+            a = i + nAttr;
+            q = (a < nLaenge) ? pHtml[a] : 0;
+            if (q == '"' || q == '\'') {
+               ++a;
+               for (e = a; e < nLaenge && pHtml[e] != q; ++e)
+                  ;
+            }
+            else
+               for (e = a; e < nLaenge && pHtml[e] != ' ' && pHtml[e] != '>' &&
+                           pHtml[e] != '\t' && pHtml[e] != '\r' && pHtml[e] != '\n'; ++e)
+                  ;
+            if (!(e - a >= 4 && E118Gleich(pHtml + a, "cid:", 4)))
+               bTreffer = 1;
+         }
+      }
+
+      if (bTreffer && e > a && e - a < nAus) {
+         char  szKandidat[1024];
+
+         if (e - a < (long)sizeof(szKandidat)) {
+            memcpy(szKandidat, pHtml + a, e - a);
+            szKandidat[e - a] = 0;
+            if (pfHash(szKandidat) == ulHash) {
+               strcpy(szAus, szKandidat);
+               return   1;
+            }
+         }
+      }
+   }
+
+   return   0;
+}
+
+int E118Achtbit (const char* p, long nLaenge)
+{
+   long  i;
+   int   nArt = 0;
+
+   // 1 = Bytes ueber 0x7F, 2 = darunter auch 0x80-0x9F. Die gibt es in
+   // ISO-8859-1 nicht; in Windows-1252 sind es Euro, Anfuehrungszeichen,
+   // Gedankenstrich - lokal steht der Text in Windows-1252.
+   for (i = 0; i < nLaenge; ++i) {
+      unsigned char  c = (unsigned char)p[i];
+
+      if (c >= 0x80 && c <= 0x9F)
+         return   2;
+      if (c > 0x7F)
+         nArt = 1;
+   }
+
+   return   nArt;
+}
+
+// E-118: Kopfzeilen fuer den Textteil - Content-Type mit Zeichensatz und,
+// bei Bytes ueber 0x7F, Content-Transfer-Encoding 8bit. Vorlage ist
+// SendContentType (Eudora/sendmail.cpp). Der Text wird nicht umkodiert: er
+// steht lokal schon im Zeichensatz, den NameCharset nennt.
+static void E118TextKopf (BOOL bHtml, int nAchtbit, CString& szTyp, CString& szKodierung)
+{
+	char	scratch[128];
+
+	NameCharset (scratch, nAchtbit ? 1 : 0);
+
+	// Euro und Co. (0x80-0x9F) gibt es in ISO-8859-1 nicht. Steht ein solches
+	// Byte im Text und nennt NameCharset ISO-8859-1 (kein SendCharset im INI),
+	// heisst der Zeichensatz windows-1252 (MESSSTAND zu E-118, 14.10.2026).
+	CString	szZeichensatz (scratch);
+	if (nAchtbit == 2)
+		szZeichensatz.Replace ((LPCSTR) CRString (IDS_MIME_ISO_LATIN1), "windows-1252");
+
+	szTyp.Format ("%s %s/%s%s", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_TYPE),
+				  (LPCSTR) CRString (IDS_MIME_TEXT),
+				  (LPCSTR) CRString (bHtml ? IDS_MIME_HTML : IDS_MIME_PLAIN), (LPCSTR) szZeichensatz);
+
+	szKodierung.Empty();
+	if (nAchtbit)
+		szKodierung.Format ("%s %s", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_ENCODING),
+							(LPCSTR) CRString (IDS_MIME_8BIT));
+}
+
 // FUNCTION
 // Do the grunge work for properly formatting the message to be appended.
 // END FUNCTION
 // NOTES
 // This accumulates the message into m_SpoolFilepath.
 // END FUNCTION
+
+// E-118 Teil 2: HashMT als Funktion fuer E118Verweis (dort per Zeiger, damit
+// der Test ohne QCUtils auskommt).
+static unsigned long E118Hash (const char* s)
+{
+	return (unsigned long) HashMT (s);
+}
+
+// E-118 Teil 2: eine Zeile "Embedded Content: <datei>: MRI,CID,CL,X" lesen
+// (Format aus mime.cpp WriteEmbeddedElements, gelesen wie Convhtml.cpp),
+// den Pfad wie URIMap::ResolvePathToFullPath vervollstaendigen und im HTML
+// den Verweis suchen, unter dem das Bild gerufen wird. szKopf bekommt
+// "Content-ID: <...>" oder "Content-Location: ..." - oder bleibt leer, dann
+// haengt das Bild wenigstens als Teil an, statt verloren zu gehen.
+static BOOL E118EingebettetLesen (LPCSTR pZeile, LPCSTR pHtml, CString& szPfad, CString& szKopf)
+{
+	LPCSTR	pEnde = strpbrk (pZeile, "\r\n");
+	CString	szZeile = pEnde ? CString (pZeile, (int) (pEnde - pZeile)) : CString (pZeile);
+	DWORD	MRI = 0, CIDHash = 0, CLHash = 0, X = 0;
+	char	szVerweis[1024];
+	long	nHtml = pHtml ? (long) strlen (pHtml) : 0;
+
+	szZeile.TrimLeft();
+	int nDoppel = szZeile.ReverseFind (':');		// die Hashes enthalten keinen Doppelpunkt
+	if (nDoppel <= 0)
+		return FALSE;
+	if (sscanf ((LPCSTR) szZeile + nDoppel + 1, " %lx,%lx,%lx,%lx", &MRI, &CIDHash, &CLHash, &X) != 4)
+		return FALSE;
+
+	szPfad = szZeile.Left (nDoppel);
+	szPfad.TrimRight();
+	if ( (szPfad.GetLength() > 1) && (szPfad[0] != '\\') && (szPfad[1] != ':') )
+		szPfad = EudoraDir + CString ((LPCSTR) CRString (IDS_EMBEDDED_FOLDER)) + "\\" + szPfad;
+
+	szKopf.Empty();
+	// Nur ueber den Content-ID. Bilder, die Eudora ueber Content-Location
+	// zuordnet, tragen den CL-Hash nicht im zweiten Feld (es ist immer 0,
+	// mime.cpp:2109), sondern einen Hash aus MRI und URL im vierten
+	// (Convhtml.cpp:671-678). Sie werden als Teil ohne Kopf hochgeladen:
+	// nicht verloren, aber im HTML nicht verknuepft (PRUEFER-28 E1).
+	if (CIDHash && E118Verweis (pHtml, nHtml, CIDHash, 1, E118Hash, szVerweis, sizeof (szVerweis)))
+		szKopf.Format ("%s <%s>", (LPCSTR) CRString (IDS_MIME_HEADER_CONTENT_ID), szVerweis);
+
+	return TRUE;
+}
 
 BOOL CImapAppend::ReformatMessage ()
 {
@@ -689,9 +955,24 @@ BOOL CImapAppend::ReformatMessage ()
 		if (bResult)
 		{
 			if (!m_bIsMultipart)
+			{
 				bResult = ( AppendMIMEMessageHeaders( NULL, 0, &jFile) >= 0 );
+
+				// E-118: einteilig wurde gar kein Content-Type geschrieben,
+				// der Server nahm text/plain; charset=us-ascii an. Den Typ
+				// hat ReformatBody beim Abstreifen der Huelle ermittelt.
+				if (bResult)
+				{
+					CString	szTyp, szKodierung;
+
+					E118TextKopf (m_bE118Html, m_nE118Achtbit, szTyp, szKodierung);
+					bResult = SUCCEEDED ( jFile.PutLine (szTyp) );
+					if (bResult && !szKodierung.IsEmpty())
+						bResult = SUCCEEDED ( jFile.PutLine (szKodierung) );
+				}
+			}
 			else
-				bResult = ( AppendMIMEMessageHeaders( (LPCSTR)m_Boundary, 0, &jFile) >= 0 );
+				bResult = ( AppendMIMEMessageHeaders( (LPCSTR)m_Boundary, m_bE118Related ? 1 : 0, &jFile) >= 0 );
 						
 			if (!bResult)
 				return bResult;
@@ -998,6 +1279,10 @@ BOOL CImapAppend::ReformatBody ()
 	GetIniString(IDS_ATTACH_CONVERTED, ACStr, sizeof(ACStr));
 	ACLen = strlen(ACStr);
 
+	// E-118 Teil 2: "Embedded Content:" - die Bilder einer multipart/related-Mail.
+	CRString	ECStr (IDS_EMBEDDED_CONTENT);
+	int			ECLen = ECStr.GetLength();
+
 
 	// Now the fun begins. Loop through the stub
 
@@ -1047,6 +1332,32 @@ BOOL CImapAppend::ReformatBody ()
 				}
 			}
 		}
+		// E-118 Teil 2: ein eingebettetes Bild. Bisher ging diese Zeile als
+		// Text an den Server und das Bild verloren - die lokale Datei loescht
+		// Eudora nach dem Verschieben (Gregor am 14.10.2026, SoftMaker-Mail).
+		// Jetzt wird es ein eigener Teil mit dem Content-ID, unter dem das HTML
+		// es ruft; die Nachricht wird multipart/related. Fehlt die Datei,
+		// bleibt die Zeile als Text stehen - wie bei einem Anhang.
+		else if ( !strncmp((LPCSTR) ECStr, t, ECLen) )
+		{
+			CString	szPfad, szKopf;
+
+			BOOL bGelesen = E118EingebettetLesen (t + ECLen, m_pStartBody, szPfad, szKopf);
+			BOOL bDa = bGelesen && FileExistsMT (szPfad);
+			CString szSpur;
+			szSpur.Format ("E-118 Bild: gelesen=%d vorhanden=%d pfad=%s kopf=%s", bGelesen, bDa, (LPCSTR) szPfad, (LPCSTR) szKopf);
+			::PutDebugLog (DEBUG_MASK_MISC, szSpur);
+			if ( bDa )
+			{
+				bResult = bPreviousWritten = AddTextBodyPart (p, t, &BodyFileWriter);
+				if (bResult)
+				{
+					m_bE118Related = TRUE;
+					bResult = ReformatAttachment (szPfad, &BodyFileWriter,
+												  szKopf.IsEmpty() ? NULL : (LPCSTR) szKopf, TRUE);
+				}
+			}
+		}
 
 		if (bResult)
 		{
@@ -1077,7 +1388,15 @@ BOOL CImapAppend::ReformatBody ()
 		else
 		{
 			// Just Write it out.
+			// E-118: vorher die HTML-Huelle abstreifen und merken, was fuer
+			// ein Text es ist - ReformatMessage schreibt danach den Kopf.
+			long	nAnfang = 0, nEnde = 0;
+
 			len = strlen ( p );
+			m_bE118Html = E118Huelle (p, (long) len, &nAnfang, &nEnde);
+			m_nE118Achtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
+			p += nAnfang;
+			len = nEnde - nAnfang;
 
 			if (len > 0)
 			{
@@ -1150,25 +1469,36 @@ BOOL CImapAppend::AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWri
 	if (bIsBlank)
 		return TRUE;
 
+	// E-118: auch im mehrteiligen Fall den Typ des Textes nennen statt fest
+	// text/plain, und die HTML-Huelle abstreifen.
+	long	nAnfang = 0, nEnde = 0;
+	BOOL	bHtml = E118Huelle (p, len, &nAnfang, &nEnde);
+	int		nAchtbit = E118Achtbit (p + nAnfang, nEnde - nAnfang);
+
+	p += nAnfang;
+	len = nEnde - nAnfang;
+
 	// Have we already decided to go multipart?
 	if (!m_bIsMultipart) 
 	{
 		m_bIsMultipart = TRUE;
 
+		// Generate a boundary - nur EINMAL je Nachricht. Vorher stand das hinter
+		// der Klammer: jeder Textteil bekam eine neue Grenze aus time(0), und
+		// ueberschritt das Kodieren eines Anhangs eine Sekundengrenze, war alles
+		// davor fuer jeden Leser unsichtbar (PRUEFER-27 F5, Originalfehler).
+		NewMimeBoundary ( m_Boundary );
 	}
-	
-	// Generate a boundary.
-	NewMimeBoundary ( m_Boundary );
 					
 	// Write the boundary.
 	bResult = pBodyFileWriter->WriteTextLine (m_Boundary);
 
-	// Write the Content-Type:Text/Plain header.
-	CString szHeader;
-	szHeader.Format ("%s%s/%s", CRString(IDS_MIME_HEADER_CONTENT_TYPE),
-				 CRString(IDS_MIME_TEXT), CRString (IDS_MIME_PLAIN) );
-
+	// Write the Content-Type header (E-118: text/html oder text/plain, mit Zeichensatz).
+	CString szHeader, szKodierung;
+	E118TextKopf (bHtml, nAchtbit, szHeader, szKodierung);
 	bResult = pBodyFileWriter->WriteTextLine (szHeader);
+	if (bResult && !szKodierung.IsEmpty())
+		bResult = pBodyFileWriter->WriteTextLine (szKodierung);
 	if (!bResult)
 		return FALSE;
 
@@ -1262,7 +1592,8 @@ BOOL CImapAppend::AddTextBodyPart (LPCSTR p, LPCSTR t, CFileWriter *pBodyFileWri
 
 
 
-BOOL CImapAppend::ReformatAttachment (LPCSTR pAttachmentPathname, CFileWriter *pBodyFileWriter)
+BOOL CImapAppend::ReformatAttachment (LPCSTR pAttachmentPathname, CFileWriter *pBodyFileWriter,
+									  LPCSTR pszZusatzKopf /* = NULL */, BOOL bInline /* = FALSE */)
 {
 	long et;
 	MIMEMap mm;
@@ -1306,7 +1637,7 @@ BOOL CImapAppend::ReformatAttachment (LPCSTR pAttachmentPathname, CFileWriter *p
 	if (!mm.m_Type[0])
 		strcpy(mm.m_Type, CRString(et? IDS_ATTACH_TEXT_TYPE : IDS_TYPE_UNKNOWN));
 		
-	if (AppendMIME(pAttachmentPathname, mm, et, pBodyFileWriter) < 0)
+	if (AppendMIME(pAttachmentPathname, mm, et, pBodyFileWriter, pszZusatzKopf, bInline) < 0)
 		return FALSE;
 
 	return TRUE;
@@ -1604,7 +1935,8 @@ public:
 // the CFileWriter.
 // END NOTES
 
-int AppendMIME(const char* Filename, MIMEMap& mm, long EncoType, CFileWriter *pBodyFileWriter)
+int AppendMIME(const char* Filename, MIMEMap& mm, long EncoType, CFileWriter *pBodyFileWriter,
+			   LPCSTR pszZusatzKopf /* = NULL */, BOOL bInline /* = FALSE */)
 {
 	Encoder* TheEncoder = NULL;
 	JJFileMT	InFile;
@@ -1709,8 +2041,12 @@ int AppendMIME(const char* Filename, MIMEMap& mm, long EncoType, CFileWriter *pB
 		// (JOK - always set displostion as attachment!!
 		// Content-Disposition
 		//
+		// E-118 Teil 2: Content-ID bzw. Content-Location eines eingebetteten Bildes.
+		if (pszZusatzKopf && *pszZusatzKopf)
+			if ( !pBodyFileWriter->WriteTextLine(pszZusatzKopf) ) break;
+
 		CRString ContentDisp(IDS_MIME_HEADER_CONTENT_DISP);
-		CRString ContentDispAttach(IDS_MIME_CONTENT_DISP_ATTACH);
+		CRString ContentDispAttach(bInline ? IDS_MIME_CONTENT_DISP_INLINE : IDS_MIME_CONTENT_DISP_ATTACH);
 		CRString ContentDispFilename(IDS_MIME_CONTENT_DISP_FILENAME);
 		sprintf(buf, "%s %s; %s=\"%s\"",
 				(const char*)ContentDisp, (const char*)ContentDispAttach,
@@ -1996,12 +2332,14 @@ int AppendMIMEMessageHeaders(LPCSTR pBoundary, int flag, JJFileMT *pOpenFile)
 	if (pBoundary)
 	{
 		// Build Content-Type and append Multipart/Mixed.
-		sprintf(buf, "%s %s/%s; %s=\"%s\"",
+		// E-118 Teil 2: flag 1 = mit eingebetteten Bildern, multipart/related.
+		sprintf(buf, "%s %s/%s; %s=\"%s\"%s",
 			(const char*)CRString(IDS_MIME_HEADER_CONTENT_TYPE),
 			(const char*)CRString(IDS_MIME_MULTIPART),
-			(const char*)CRString(IDS_MIME_MIXED),
+			(const char*)CRString(flag == 1 ? IDS_MIME_RELATED : IDS_MIME_MIXED),
 			(const char*)CRString(IDS_MIME_BOUNDARY),
-			pBoundary + 4);
+			pBoundary + 4,
+			flag == 1 ? "; type=\"text/html\"" : "");
 		if (FAILED (pOpenFile->PutLine(buf) ) ) return (-1);
 		return (0);
 	}
