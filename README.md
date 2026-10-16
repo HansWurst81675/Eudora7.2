@@ -395,6 +395,52 @@ es hat deshalb keine Befundnummer. Verwandt: bei IMAP fragt auch ein
 **Filterlauf** nach dem Kennwort, aus einem anderen Grund — siehe
 [FILTER.md](FILTER.md), Abschnitt *Was überrascht*.
 
+### Windows Defender meldet Eudora als Trojaner
+
+**Was man sieht.** Das Eudora-Fenster ist plötzlich weg – ohne Fehlermeldung,
+ohne Absturzdialog, und im Mailverzeichnis liegt **keine** `Exception.log`.
+Das sieht aus wie ein Absturz, ist aber keiner: **Microsoft Defender hat
+Eudora beendet.** In *Windows-Sicherheit → Viren- & Bedrohungsschutz →
+Schutzverlauf* steht dann eine Meldung wie **`Trojan:Win32/Bearfoos.A!ml`**
+mit `Eudora.exe` als betroffenem Element. Danach lässt sich die Datei nicht
+mehr starten oder kopieren.
+
+**Was das ist.** Das Kürzel `!ml` heißt: die Einstufung stammt aus Defenders
+**maschinellem Lernverfahren**, nicht aus der Signatur einer bekannten
+Schadsoftware. Defender schickt eine unbekannte, **unsignierte** Programmdatei
+an die Microsoft-Cloud, bewertet sie dort und verteilt bei einem negativen
+Urteil eine Signatur für genau diese Datei. Jede Fassung dieses Projekts ist
+eine neue, unsignierte Datei – das Urteil kann bei jeder Fassung neu fallen.
+Am 16.10.2026 traf es das Testpaket 1.0.98 ([E-124](BEFUNDE.md#e-124)); das
+veröffentlichte `v1.0.87` und die Pakete 1.0.96 und 1.0.97 waren sauber,
+1.0.99 (derselbe Quelltext wie 1.0.98, neu gebaut) ebenfalls. Wir halten
+das für einen **Fehlalarm**: die Datei ist aus dem Quelltext in diesem Repo
+gebaut, und der Unterschied zur sauberen Vorfassung sind rund 60 Zeilen im
+Aufgabenverwalter ohne jeden neuen Systemaufruf.
+
+**Was Sie tun können.**
+
+1. **Prüfen, ob es Defender war:** im Schutzverlauf nachsehen, oder in einer
+   PowerShell `Get-MpThreatDetection` – dort steht die Uhrzeit und der Pfad
+   der `Eudora.exe`.
+2. **Ihre Post ist nicht betroffen.** Defender beendet nur das Programm; das
+   Mailverzeichnis bleibt, wie es war. Was Eudora vor dem Beenden schon
+   geschrieben hatte, ist da.
+3. **Eine andere Fassung nehmen** – die nächste Fassung ist eine neue Datei
+   und wird neu bewertet –, **oder** die Datei im Schutzverlauf selbst
+   **zulassen**, wenn Sie der Herkunft vertrauen. Das ist Ihre Entscheidung;
+   wir empfehlen nicht, Defender abzuschalten.
+4. **Den Fehlalarm melden:** <https://www.microsoft.com/wdsi/filesubmission>,
+   Kategorie *Incorrectly detected as malware*. Microsoft nimmt solche
+   Signaturen meist binnen weniger Tage zurück.
+
+**Was wir dagegen tun.** `tools/paket-pruefen.ps1` lässt seit 7.2.0.99
+Defender über jede EXE und DLL eines Pakets laufen und weist bei einem Fund
+ab; kein Paket geht mehr hinaus, das Defender **in diesem Moment** schon
+beanstandet. Ganz ausschließen lässt es sich nicht, weil die Cloud mitunter
+erst nach dem ersten Start urteilt. Dauerhaft hilft nur eine Code-Signatur
+mit einem Zertifikat – die gibt es für dieses Projekt bisher nicht.
+
 ### Einen Fehler melden
 
 Fehler gehören in die
@@ -827,7 +873,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.98` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.99` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

@@ -156,6 +156,15 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.99 — **nicht ausgeliefert**, Quellstand 7.2.0.99, Zweig `e-118_HTML_header` (Neubau von 1.0.98, E-124)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.99-release` |
+| Inhalt | derselbe Quelltext wie 1.0.98, neu gebaut ([E-124](../BEFUNDE.md#e-124): Defender stufte 1.0.98 als Trojaner ein) |
+| Gemessen | wie 1.0.98 nachgestellt (Start-Abgleich: an 7.2.0.96/97 12 von 12 hängend, Fehler `liegengeblieben`; Kollisionsfall an 1.0.95 mit Fehler); an 7.2.0.99 drei Läufe hochgeladen; Defender sauber vor und nach den Läufen; Testsuite 209/209 |
+| Defender | 1.0.98: `Trojan:Win32/Bearfoos.A!ml` (nicht ausliefern); 1.0.99: sauber |
+
 ## 1.0.98 — **nicht ausgeliefert**, Quellstand 7.2.0.98, Zweig `e-118_HTML_header` (E-83 zweite Ursache; E-121 gesendete Post, N1)
 
 | | |
