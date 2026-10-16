@@ -243,7 +243,9 @@ kann jederzeit zurück.
   Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
   gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
   von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen und N1 eingebaut,
-  an 1.0.99 von Gregor bestätigt (16.10.2026); N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123)):
+  an 1.0.99 von Gregor bestätigt (16.10.2026); N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123);
+  in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](Befunde/PRUEFER-31.md) F1),
+  am Prüfstand gemessen, Paket 1.0.100 zum Test bei Gregor):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
 * **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):
