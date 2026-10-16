@@ -184,13 +184,15 @@ verschickt.
   verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
   Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
   gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
-  von Gregor bestätigt; Restfälle N1–N3 offen):
+  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen und N1 eingebaut,
+  an 1.0.99 von Gregor bestätigt (16.10.2026); N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123)):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
 * **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):
   sie belegte ihren Ordner, das Verschieben dorthin wartete ewig, und beim Beenden kam
   *„You currently have 1 task(s) running“*. Behoben in 7.2.0.98, am IMAP-Prüfstand gemessen
-  (vorher 12 von 12 Läufen hängend, danach 10 von 10 durch), noch nicht ausgeliefert.
+  (vorher 12 von 12 Läufen hängend, danach 10 von 10 durch), an 1.0.99 von Gregor sauber
+  beendet (16.10.2026; der Wettlauf selbst trat in seinem Lauf nicht auf), noch nicht ausgeliefert.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der

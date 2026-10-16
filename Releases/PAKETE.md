@@ -173,14 +173,15 @@ haben.
 | Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.98-release` |
 | Inhalt | wie 1.0.97, dazu: eine beim Start schon erledigte Aufgabe bleibt nicht mehr stehen ([E-83](../BEFUNDE.md#e-83)) |
 | Gemessen | Nachgestellt: an 7.2.0.96 und 7.2.0.97 hingen 12 von 12 Läufen am Start-Abgleich (Fehler `liegengeblieben`), an 7.2.0.98 10 von 10 hochgeladen; Kollisionsfall an 1.0.95 mit Fehler nachgestellt, an 7.2.0.98 grün; Testsuite 209/209. Gesendete Post (Kennung 0) am Prüfstand nicht nachstellbar – Prüfung bei Gregor. |
+| Bei Gregor | 16.10.2026: Microsoft Defender beendete das laufende Programm (`Trojan:Win32/Bearfoos.A!ml`, [E-124](../BEFUNDE.md#e-124)) – kein Absturz; die gesendete Mail war schon hochgeladen (`id=0 … hochgeladen=1`). **Nicht testen, nicht ausliefern**, ersetzt durch 1.0.99 |
 
 ## 1.0.97 — **nicht ausgeliefert, nicht freigegeben**, Quellstand 7.2.0.97, Zweig `e-118_HTML_header` (E-121: gesendete Post wieder hochgeladen, N1)
 
 | | |
 |---|---|
-| Testverzeichnis | am 15.10.2026 bei Gregor abgelegt, `C:\Users\Gregor\Eudora72-1.0.97-release`; sein Test steht aus |
+| Testverzeichnis | am 15.10.2026 bei Gregor abgelegt, `C:\Users\Gregor\Eudora72-1.0.97-release`; **nicht testen** (`f6d98141`: *„Gregor testet 1.0.97 nicht“*), ersetzt durch 1.0.99 |
 | Inhalt | wie 1.0.96, dazu: gesendete Post (Kennung 0) wird wieder hochgeladen ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1, Rückfall in 1.0.96), nur die markierte Quelle wird entfernt (N1, [E-121](../BEFUNDE.md#e-121)) |
-| Stand | Testsuite 209/209, Paketprüfung grün. **Keine Nachstellung am Prüfstand** – F1 ist dort nicht nachstellbar, für N1/Kollision fehlte die Zustimmung zu Fenstern. Ob ohne Nachstellung getestet wird, entscheidet Gregor (siehe WEITERMACHEN.md). |
+| Stand | Testsuite 209/209, Paketprüfung grün. **Keine Nachstellung am Prüfstand** – F1 ist dort nicht nachstellbar, für N1/Kollision fehlte die Zustimmung zu Fenstern. Ob ohne Nachstellung getestet wird, entscheidet Gregor (siehe WEITERMACHEN.md). **Nachtrag 16.10.2026 ([LEKTOR-37](../Befunde/LEKTOR-37.md#l-37.5)):** am Prüfstand hingen an 7.2.0.96 und 7.2.0.97 zusammen 12 von 12 Läufen am Start-Abgleich – Ursache [E-83](../BEFUNDE.md#e-83), behoben in 7.2.0.98; der Verdacht eines Rückfalls in 7.2.0.97 ist widerlegt. |
 
 ## 1.0.96 — **nicht ausgeliefert**, Quellstand 7.2.0.96, Zweig `e-118_HTML_header` (E-121 Kollision Kennung/Server-UID)
 
@@ -190,6 +191,7 @@ haben.
 | Inhalt | wie 1.0.95, dazu: die Vorab-Kopie trägt ein Merkzeichen, eine fremde Mail mit gleicher UID wird nicht mehr angefasst ([E-121](../BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; Prüfstand mit `--fremde-uid`: an 1.0.95 Gregors Fehler nachgestellt, an 1.0.96 grün |
 | Bei Gregor | bestätigt am 15.10.2026: kein Fehlerdialog, vier Übertragungen alle hochgeladen |
+| Freigabe | **nicht veröffentlichen** ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1: gesendete Post mit Kennung 0 wird nicht hochgeladen, behoben in 1.0.97) |
 
 ## 1.0.95 — **nicht ausgeliefert**, Quellstand 7.2.0.95, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, fünfter Teil)
 

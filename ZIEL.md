@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 | Gruppe | Befund | Worum es geht |
 |---|---|---|
-| Post wird verfälscht | [E-121](BEFUNDE.md#e-121) | Nachricht beim Verschieben in einen IMAP-Ordner spurlos weg (**eingebaut in 7.2.0.90; gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96 von Gregor bestätigt; Restfälle N1–N3 offen**) |
+| Post wird verfälscht | [E-121](BEFUNDE.md#e-121) | Nachricht beim Verschieben in einen IMAP-Ordner spurlos weg (**eingebaut in 7.2.0.90; gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96 von Gregor bestätigt; in 7.2.0.97 gesendete Post und N1, an 1.0.99 von Gregor bestätigt; N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123)**) |
 | Post wird verfälscht | [E-118](BEFUNDE.md#e-118) | HTML-Mail im IMAP-Ordner als Quelltext, lokale Kopie weg (**Teil 2 – eingebettete Bilder – von Gregor am 14.10.2026 an 1.0.90 bestätigt; eingebaut in 7.2.0.89, von Gregor am 14.10.2026 an 1.0.89 bestätigt**) |
 | Post wird verfälscht | [E-69](BEFUNDE.md#e-69) | Filterlauf bricht im Release lautlos ab, meldet Erfolg |
 | Post wird verfälscht | [E-101](BEFUNDE.md#e-101) | gespeicherte Datei in anderen Programmen unbrauchbar |

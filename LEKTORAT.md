@@ -1355,3 +1355,16 @@ Messserie ([L-36.6](Befunde/LEKTOR-36.md#l-36.6)); `Testdaten/README.md` ([L-36.
 Offen: PRÜFER hat 7.2.0.91 bis 7.2.0.96 nicht gesehen ([L-36.8](Befunde/LEKTOR-36.md#l-36.8)), der erste Satz des
 [E-121](BEFUNDE.md#e-121)-Urteils ([L-36.9](Befunde/LEKTOR-36.md#l-36.9)), feste Freigabe in `e118-serie.ps1` ([L-36.10](Befunde/LEKTOR-36.md#l-36.10)),
 Messbeleg 1.0.96 nur uncommittet ([L-36.11](Befunde/LEKTOR-36.md#l-36.11)), TESTPLAN ohne C6 ([L-36.12](Befunde/LEKTOR-36.md#l-36.12)).
+
+## Zweiundvierzigster Durchgang — 16.10.2026 (Bericht: `Befunde/LEKTOR-37.md`)
+
+Nach 7.2.0.99 (7.2.0.97 gesendete Post und N1, 7.2.0.98 [E-83](BEFUNDE.md#e-83) zweite Ursache, 7.2.0.99 Neubau
+wegen [E-124](BEFUNDE.md#e-124); 1.0.99 von Gregor bestätigt), zum Stand `8e5936aa`, vor PR und Release; 122 MDs
+aus `git ls-files` ohne `Arbeitsweise/`, davon 41 außerhalb von `Befunde/` gelesen. Der Kern:
+[E-121](BEFUNDE.md#e-121) stand an drei Stellen mit *„Restfälle N1–N3 offen“* ([L-37.1](Befunde/LEKTOR-37.md#l-37.1) bis [L-37.3](Befunde/LEKTOR-37.md#l-37.3)); [E-123](BEFUNDE.md#e-123) und
+[E-124](BEFUNDE.md#e-124) fehlten im CHANGELOG unter *Noch offen* ([L-37.2](Befunde/LEKTOR-37.md#l-37.2)); der Block *„hier weitermachen“* führte
+1.0.98 als zu testen und ein Release v1.0.97 ([L-37.4](Befunde/LEKTOR-37.md#l-37.4)); `Releases/PAKETE.md` nannte 1.0.97
+*„sein Test steht aus“* ([L-37.5](Befunde/LEKTOR-37.md#l-37.5)); `WERKZEUGE.md` kannte die Defender-Prüfung nicht ([L-37.6](Befunde/LEKTOR-37.md#l-37.6)).
+Offen: PRÜFER hat 7.2.0.97/98 nicht gesehen ([L-37.7](Befunde/LEKTOR-37.md#l-37.7)), der erste Satz des [E-121](BEFUNDE.md#e-121)-Urteils
+([L-37.8](Befunde/LEKTOR-37.md#l-37.8)), PRÜFER-30 F6 als Datenverlust-Vermutung ohne Eintrag ([L-37.9](Befunde/LEKTOR-37.md#l-37.9)), was für
+`v1.0.99` nachzuziehen ist ([L-37.11](Befunde/LEKTOR-37.md#l-37.11)), uncommittete DLLs im Hauptbaum ([L-37.13](Befunde/LEKTOR-37.md#l-37.13)).

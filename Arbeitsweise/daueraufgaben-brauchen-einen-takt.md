@@ -16,6 +16,8 @@ Schranke: tools/rollen-faellig.pl UND tools/pruefe-doku-takt.pl, beide in tools/
 >
 > **Eingehängt in den Paketbau, nicht in den Push-Haken.** Ein Haken, der jeden Push abweist, blockiert auch das Sichern von Zwischenständen — und laufende Arbeit zu sichern ist wichtiger, als dabei die Rollen im Takt zu haben. Ein Paket dagegen ist die Auslieferung: da muss die Doku stehen. Dieselbe Begründung wie bei `spuren-auswerten.pl`, der Schranke, die am 11.09.2026 zweimal gegriffen und mich zweimal zurückgeschickt hat — der Beleg, dass diese Bauart wirkt.
 
+> **Nachtrag 16.10.2026.** Gregor um 10:45, nachdem ich PRÜFER-31 und LEKTOR-37 erst auf seine Frage *„lektor und prüfer sind auch schon gelaufen?“* gestartet hatte: *„das hätte man nicht schon vorher starten können?“* – ja: als 1.0.99 um 10:30 zu ihm ging. **Ursache mechanisch:** die Schranke hängt in `tools/paket-bauen.ps1`, die Testpakete 1.0.89–1.0.99 habe ich aber **von Hand** gebaut (ZIP entpacken, BinRelease darüber, `paket-pruefen.ps1`) – `rollen-faellig.pl` lief dabei nie. **Regel:** in dem Schritt, in dem ein Paket in `C:SERSGREGORudora72-*` gelegt wird, `perl tools/rollen-faellig.pl` aufrufen und PRÜFER/LEKTOR sofort starten – sein Test und ihre Prüfung laufen parallel. Offen: den Aufruf in `paket-pruefen.ps1` einhängen, das bei jedem Handbau läuft (Vorschlag für den CHRONIST).
+
 # Eine Daueraufgabe ohne Auslöser läuft nicht
 
 **Gregor am 06.09.2026, 16:28 Uhr:**
