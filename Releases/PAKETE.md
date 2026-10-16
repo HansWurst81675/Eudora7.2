@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.100 — **nicht ausgeliefert**, Quellstand 7.2.0.100, Zweig `e-121-mehrere-gesendete` ([PRÜFER-31](Befunde/PRUEFER-31.md) F1, F3, F4)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.100-release` |
+| Inhalt | wie 1.0.99, dazu: mehrere gesendete Mails in einer Übertragung nach IMAP ([E-121](../BEFUNDE.md#e-121)), leere Kennungsliste, Sperre in `SetDisplayWindow` ([E-83](../BEFUNDE.md#e-83)) |
+| Stand | Testsuite 209/209; sechs Prüfstandläufe an 7.2.0.100 grün (Normalfall, Server ohne neue UID, Kollisionsfall); F1 selbst **ohne Nachstellung** – am Prüfstand nicht nachstellbar (Kennung 0 nur aus `Out`), bei Gregor (GMX mit UIDPLUS) tritt es nicht auf. Gregors Test: zwei gesendete Mails auf einmal verschieben. |
+
 ## 1.0.99 — **nicht ausgeliefert**, Quellstand 7.2.0.99, Zweig `e-118_HTML_header` (Neubau von 1.0.98, E-124)
 
 | | |

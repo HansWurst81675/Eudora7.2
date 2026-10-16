@@ -2359,6 +2359,10 @@ void CImapFromLocalTransferMsgAction::DoPostProcessing()
 	{
 		CString strVorher(strUIDList);
 		CString strId = strVorher.SpanExcluding(",");
+		// PRUEFER-31 F3: eine leere Liste ergaebe Kennung 0 und griffe eine
+		// fremde Vorab-Kopie mit Kennung 0.
+		if (strId.IsEmpty())
+			break;
 		pSum = GetSummaryFromUIDStringFromDestination(strUIDList);
 		// E-121 (Gregor an 1.0.95): im Ziel nur die markierte Vorab-Kopie - die
 		// Kennung allein (hier 13) traf eine fremde Server-Nachricht mit derselben UID.

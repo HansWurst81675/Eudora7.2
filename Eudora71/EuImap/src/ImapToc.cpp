@@ -1349,6 +1349,17 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 	if (!pTargetToc->m_pImapMailbox)
 		return FALSE;
     pSum->SetDeleteEmbedded(FALSE);
+
+	// PRUEFER-31 F1: wird die Vorab-Kopie selbst hochgeladen, verliert sie ihr
+	// Merkzeichen VOR dem Versuch, nicht erst bei Erfolg. Sonst nahm bei
+	// mehreren Nachrichten mit Kennung 0 (gesendete Post) in EINER Uebertragung
+	// jede weitere Runde dieselbe Kopie noch einmal - wenn der Server keine neue
+	// UID meldet oder das Hochladen scheitert: die erste Mail mehrfach auf dem
+	// Server, die anderen gar nicht, und deren Quellen lagen schon im lokalen
+	// Papierkorb. Scheitert der Versuch, bleibt die Quelle stehen; die
+	// unmarkierte Kopie verwirft der naechste Abgleich.
+	if (this == pTargetToc)
+		pSum->SetE121Vorab(FALSE);
 	// Accumulate source message into an RFC822 message file and call
 	// the mailbox's append API.
 
@@ -1384,7 +1395,9 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 	}
 	if (bResult && !NewUid && pSum->GetHash() != 0)
 	{
-		CSummary *pVorab = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
+		// PRUEFER-31 F1: aus dem Ziel hochgeladen ist pSum selbst die Vorab-Kopie
+		// (ihr Merkzeichen ist oben schon geloescht).
+		CSummary *pVorab = (this == pTargetToc) ? pSum : E121FindeVorabKopie(pTargetToc, pSum->GetHash());
 		if (pVorab)
 		{
 			pVorab->SetDeleteEmbedded(FALSE);

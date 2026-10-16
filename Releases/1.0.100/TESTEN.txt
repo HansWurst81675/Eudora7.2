@@ -1,0 +1,17 @@
+Eudora 1.0.100 (Quellstand 7.2.0.100) - was zu testen ist, Stand 16.10.2026
+============================================================================
+
+Vorher: dein Mailverzeichnis aus 1.0.99 hierher kopieren - Eudora dabei geschlossen.
+
+| Nr.   | Beschreibung                                    | Testschritte                                                   | richtig ist                                         |
+|-------|-------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------|
+| E-121 | NEU: mehrere gesendete Mails auf einmal nach    | ZWEI gesendete Mails (aus "Out") markieren und zusammen in     | beide stehen im IMAP-Ordner je EINMAL, mit Inhalt;   |
+| F1    | IMAP (PRUEFER-31 F1)                            | einen IMAP-Ordner ziehen, bei offenem Ordner                    | kein Fehlerdialog                                   |
+| E-121 | Gegenprobe: eine Mail aus "In" verschieben       | wie an 1.0.99                                                  | verschwindet aus "In", steht einmal im IMAP-Ordner   |
+| E-83  | Gegenprobe: Start und Beenden                    | starten, abgleichen lassen, beenden                            | keine Meldung "1 task(s) running"                    |
+
+Hinweis: der Fehler F1 trat nur bei Servern OHNE Rueckmeldung der neuen Nummer
+(UIDPLUS) oder bei einem gescheiterten Hochladen auf. GMX meldet die Nummer -
+dein Test zeigt also, dass nichts kaputtgegangen ist, nicht den Fehler selbst.
+
+Bekannt und NICHT behoben: siehe README, Abschnitt "Auf einen Blick".
