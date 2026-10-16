@@ -187,6 +187,10 @@ verschickt.
   von Gregor bestätigt; Restfälle N1–N3 offen):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
+* **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):
+  sie belegte ihren Ordner, das Verschieben dorthin wartete ewig, und beim Beenden kam
+  *„You currently have 1 task(s) running“*. Behoben in 7.2.0.98, am IMAP-Prüfstand gemessen
+  (vorher 12 von 12 Läufen hängend, danach 10 von 10 durch), noch nicht ausgeliefert.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
@@ -823,7 +827,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.97` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.98` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

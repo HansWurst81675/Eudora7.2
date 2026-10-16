@@ -1,0 +1,22 @@
+Eudora 1.0.98 (Quellstand 7.2.0.98) - was zu testen ist, Stand 16.10.2026
+==========================================================================
+
+Vorher: dein Mailverzeichnis aus 1.0.96 hierher kopieren - Eudora dabei geschlossen.
+1.0.97 bitte NICHT testen, es ist durch dieses Paket ersetzt.
+
+| Nr.   | Beschreibung                                    | Testschritte                                                   | richtig ist                                         |
+|-------|-------------------------------------------------|----------------------------------------------------------------|-----------------------------------------------------|
+| E-121 | NEU: gesendete Post wurde in 1.0.96 beim         | eine GESENDETE Mail (aus "Out" oder einem lokalen Ordner mit  | die Mail steht im IMAP-Ordner genau EINMAL, mit      |
+| F1    | Verschieben in einen IMAP-Ordner nicht           | gesendeter Post) in einen IMAP-Ordner verschieben, Ordner      | Inhalt; kein Fehlerdialog                           |
+|       | hochgeladen                                     | einmal schliessen und neu oeffnen                              |                                                     |
+| E-121 | NEU: nur die verschobene Mail wird aus der      | eine Mail aus "In" in einen IMAP-Ordner verschieben             | Mail verschwindet aus "In", steht einmal im          |
+| N1    | Quelle entfernt                                 |                                                                | IMAP-Ordner; die anderen Mails in "In" bleiben       |
+| E-83  | NEU: beim Start blieb manchmal eine erledigte   | Eudora starten, IMAP-Konto abgleichen lassen, dann beenden      | im Fenster "Task Status" bleibt nichts stehen;       |
+|       | Aufgabe stehen (Folge: Verschieben nach IMAP    |                                                                | beim Beenden KEINE Meldung "You currently have       |
+|       | wartet ewig, "1 task(s) running" beim Beenden)  |                                                                | 1 task(s) running"                                   |
+| E-121 | Gegenprobe 1.0.96: Mail, die frueher aus IMAP   | wie an 1.0.96                                                  | kein Fehlerdialog, einmal im IMAP-Ordner            |
+|       | kam, zurueck verschieben                        |                                                                |                                                     |
+
+Bekannt und NICHT behoben: E-119 (data:-Bilder grau beim Antworten), E-77 (Ordnernamen mit
+Umlauten roh), E-122 (Eingangsdatum im IMAP-Ordner um die Zeitzone verschoben),
+E-123 (nach einem Neustart mitten im Verschieben koennen Bilder fehlen - abgetrennt aus E-121).

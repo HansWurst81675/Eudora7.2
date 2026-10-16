@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 15.10.2026)
+## Noch offen (Stand 16.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -74,6 +74,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.98 — Erledigte Startaufgabe blieb stehen und belegte den IMAP-Ordner (E-83, zweite Ursache) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
+
+**[E-83](BEFUNDE.md#e-83), zweite Ursache:** Zuerst ist der Rahmen `CTaskStatusWazooWnd` als Anzeige der Aufgaben angemeldet; beim ersten *„Alive“* baut er die Ansicht `CTaskStatusView`, die sich in `QCTaskManager::SetDisplayWindow` anmeldet und die Aufgaben übernimmt. Eine Aufgabe, die in diesem Moment **schon fertig** ist, meldet sich bei der Ansicht nicht an (`NotifyAlive` prüft `IsAlive`), und ihre Abmeldung ging an den Rahmen, der sie nicht kennt. Aus der Liste entfernt wird eine Aufgabe aber nur über diese Abmeldung (`CTaskStatusView::OnMsgDeleteInfo`) – sie blieb für immer stehen (`E-83 liegengeblieben`), belegte ihr Postfach, jede weitere IMAP-Aufgabe darauf wartete (*„Waiting to update mailbox“*), und beim Beenden kam *„You currently have 1 task(s) running“*. Behoben: `SetDisplayWindow` entfernt beim Übernehmen schon fertige Aufgaben; `OnMsgDeleteInfo` entfernt auch eine Aufgabe, die die Ansicht nicht kennt; eine Aufgabe ohne Anzeigefenster wird beim ersten Fenster nachgetragen. Spurmarken `E-83 Ansicht-angemeldet`, `Ansicht-aufgenommen`, `beim-Umhaengen-schon-fertig-entfernt`, `Ansicht-kannte-Aufgabe-nicht`, `ohne-Anzeige`. Nachgestellt am IMAP-Prüfstand `C:\Temp\E118` (16.10.2026): an 7.2.0.96 und 7.2.0.97 hingen **12 von 12** Läufen am ersten Abgleich nach dem Start (Aufgabe `Resyncing`, `uid=1`, `E-83 liegengeblieben`, an den Server nur noch `NOOP`, kein Hochladen); an 7.2.0.98 kamen **10 von 10** durch, in jedem Lauf mit der Spurmarke `E-83 beim-Umhaengen-schon-fertig-entfernt: uid=1`. Kollisionsfall (`--fremde-uid`, `-ZielBehalten`) an 7.2.0.98 grün: `im-ziel=1 markiert=1 hochgeladen=1`, fremde Nachricht unverändert. Gesendete Post (Kennung 0, [PRÜFER-30](Befunde/PRUEFER-30.md) F1) ist am Prüfstand nicht nachstellbar – Prüfung bei Gregor. Testsuite **209/209**. Der Verdacht vom 15.10. gegen 7.2.0.97 ist damit widerlegt.
 
 ## 7.2.0.97 — Verschieben nach IMAP: gesendete Post wieder hochgeladen, nur die markierte Quelle entfernt (E-121) — **nicht veröffentlicht, Zweig `e-118_HTML_header`**
 
