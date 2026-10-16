@@ -65,26 +65,27 @@ Postfach noch nicht bestätigt).
 
 ### Bekannte Fehler
 
-Spalte **Daten**: *ja* heißt, es kann etwas verlorengehen oder verfälscht
-werden; *nein* heißt, es betrifft nur Anzeige oder Bedienung.
+In keinem dieser Fälle geht eine **Nachricht in Ihrem Postfach** verloren. Die
+zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
+*nichts* heißt, es betrifft nur Anzeige oder Bedienung.
 
-| Was passiert | Daten | Was hilft | Befund |
+| Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| Ein Filter *„Junk Score is less than N“* wird unbrauchbar, sobald man ihn im Filterfenster anklickt | **ja** (die Regel) | `Filters.pce` sichern, bevor Sie im Filterfenster stöbern | [E-67](BEFUNDE.md#e-67) |
-| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | **ja** (Rest bleibt ungefiltert) | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
-| Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | **ja** (die Datei) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
-| Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **ja** (Einstellungen) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
-| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | **ja** (Bilder) | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
-| Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nein | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
-| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nein | – | [E-119](BEFUNDE.md#e-119) |
-| Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nein | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
-| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nein | – | [E-122](BEFUNDE.md#e-122) |
-| IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nein | – | [E-77](BEFUNDE.md#e-77) |
-| Emoji in Betreffzeilen erscheinen als `?` | nein | – | [E-90](BEFUNDE.md#e-90) |
-| Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nein | es gilt die zuletzt gewählte Einstellung | [E-98](BEFUNDE.md#e-98) |
-| Der Filterbericht bleibt nach einem Filterlauf leer | nein | – | [E-71](BEFUNDE.md#e-71) |
-| Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nein | Fenster einmal neu anordnen | [E-114](BEFUNDE.md#e-114) |
-| Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nein | siehe [Windows Defender meldet Eudora als Trojaner](#windows-defender-meldet-eudora-als-trojaner) | [E-124](BEFUNDE.md#e-124) |
+| Ein Filter *„Junk Score is less than N“* wird unbrauchbar, sobald man ihn im Filterfenster anklickt | die **Filterregel**: sie wird verändert und filtert danach anders (Ihre Post nicht) | `Filters.pce` sichern, bevor Sie im Filterfenster stöbern | [E-67](BEFUNDE.md#e-67) |
+| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | nichts geht verloren – aber die **übrigen Nachrichten bleiben ungefiltert** liegen | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
+| Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
+| Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
+| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
+| Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
+| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
+| Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
+| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – | [E-122](BEFUNDE.md#e-122) |
+| IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | – | [E-77](BEFUNDE.md#e-77) |
+| Emoji in Betreffzeilen erscheinen als `?` | nichts | – | [E-90](BEFUNDE.md#e-90) |
+| Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](BEFUNDE.md#e-98) |
+| Der Filterbericht bleibt nach einem Filterlauf leer | nichts | – | [E-71](BEFUNDE.md#e-71) |
+| Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nichts | Fenster einmal neu anordnen | [E-114](BEFUNDE.md#e-114) |
+| Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nichts | siehe [Windows Defender meldet Eudora als Trojaner](#windows-defender-meldet-eudora-als-trojaner) | [E-124](BEFUNDE.md#e-124) |
 
 **Ihre Post sichern.** Eudora legt alles im Verzeichnis `Mailverzeichnis`
 neben dem Programm ab. Wer es vor dem ersten Start einer neuen Fassung kopiert,
