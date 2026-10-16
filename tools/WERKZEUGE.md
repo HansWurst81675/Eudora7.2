@@ -1,6 +1,6 @@
 # Die Werkzeuge in `tools/`
 
-> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.99** (einzelne Zeilen nachgezogen, zuletzt `paket-pruefen.ps1` in [L-37.6](../Befunde/LEKTOR-37.md#l-37.6), davor `imap-pruefserver.pl` und `e118-serie.ps1` in [L-36.6](../Befunde/LEKTOR-36.md#l-36.6)). Die Liste wird fortgeschrieben; die
+> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.100** (zwischen 7.2.0.99 und 7.2.0.100 hat sich unter `tools/` nur `TESTLAEUFE.md` und `ZWEIGE.md` geändert, [L-38.3](../Befunde/LEKTOR-38.md#l-38.3); einzelne Zeilen nachgezogen, zuletzt `paket-pruefen.ps1` in [L-37.6](../Befunde/LEKTOR-37.md#l-37.6), davor `imap-pruefserver.pl` und `e118-serie.ps1` in [L-36.6](../Befunde/LEKTOR-36.md#l-36.6)). Die Liste wird fortgeschrieben; die
 > Fassungsangabe sagt, gegen welchen Quellstand sie zuletzt geprüft wurde.
 
 Diese Übersicht stand bis zum 09.09.2026 in [README.md](../README.md). Sie ist
