@@ -90,3 +90,4 @@
 - [CHRONIST 14.10.2026](CHRONIST-2026-10-14.md) — Laufbericht: sechs Nachträge (Rückstrich und Perl-Fallen, lmos.dat wieder am falschen Ort, Gregors Postfächer, unbeantwortete Frage, Release im Vordergrund, Abschalten), Schranke pruefe-rueckstrich.pl, Altlasten in testlauf.ps1
 - [Erst nachstellen, dann ausliefern](erst-nachstellen-dann-ausliefern.md) — Gregors Fehler zuerst am eigenen Prüfstand rot sehen, dann grün; E-121 brauchte sechs Pakete, fünfmal war Gregor der Prüfstand; `pruefe-nachgestellt.pl` prüft die Zeile „Gemessen“
 - [CHRONIST 15.10.2026](CHRONIST-2026-10-15.md) — Laufbericht: neue Lehre erst-nachstellen-dann-ausliefern, fünf Nachträge (Freigabe vom Vortag fest im Skript, Kennung nur im Namensraum, Zitat als Urteil gelesen, überzählige DLL, unbeantwortete Warum-Frage); testlauf.ps1 verlangt das Tagesdatum
+- [Kürzel im Chat übersetzen](kuerzel-im-chat-uebersetzen.md) — F1, N1, L-38.4 nie allein; immer was passiert und was verloren gehen kann
