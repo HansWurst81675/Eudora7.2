@@ -519,9 +519,12 @@ abweichend von der eingebauten Vorgabe **1** (Befund [**E-74**](BEFUNDE.md#e-74)
 `tools/DEudora.ini`). Einer Einstufung, die auf einem nicht geladenen Modul
 beruht, darf man keine Post zum Löschen anvertrauen.
 
-> **Achtung bei der Regel `«Junk Score» is less than N`.** Sie wird durch
-> bloßes Anschauen im Filterfenster unbrauchbar und verwandelt sich in
-> `matches regexp N` (Befund [**E-67**](BEFUNDE.md#e-67), offen).
+> **Die Regel `«Junk Score» is less than N` verträgt das Anschauen wieder.**
+> Im Original wurde sie durch bloßes Anschauen im Filterfenster unbrauchbar und
+> verwandelte sich in `matches regexp N` (Befund [**E-67**](BEFUNDE.md#e-67)). Die Korrektur
+> steht seit 7.2.0.43 im Code und ist am 17.10.2026 am laufenden Programm
+> gemessen, von Gregor noch nicht bestätigt. Eine `Filters.pce` aus einer
+> älteren Fassung kann die verfälschte Regel schon enthalten.
 
 ---
 
@@ -715,15 +718,13 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 
 | Befund | was passiert |
 |---|---|
-| [**E-67**](BEFUNDE.md#e-67) | eine Regel `«Junk Score» is less than N` wird durch bloßes Anschauen im Filterfenster zu `matches regexp N` |
 | [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann den Lauf im Freigabebau lautlos abbrechen und trotzdem Erfolg melden |
 | [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
-| [**E-76**](BEFUNDE.md#e-76) | das freischwebende Filterfenster lässt sich nicht nach unten vergrößern |
 | [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
 
 Behoben, aber gut zu wissen, weil sie erklären, warum ältere `Filters.pce`
-beschädigt sein können: [**E-64**](BEFUNDE.md#e-64), [**E-72**](BEFUNDE.md#e-72), [**E-73**](BEFUNDE.md#e-73), [**E-74**](BEFUNDE.md#e-74), [**E-75**](BEFUNDE.md#e-75).
+beschädigt sein können: [**E-64**](BEFUNDE.md#e-64), [**E-67**](BEFUNDE.md#e-67) (Korrektur seit 7.2.0.43, am 17.10.2026 gemessen), [**E-72**](BEFUNDE.md#e-72), [**E-73**](BEFUNDE.md#e-73), [**E-74**](BEFUNDE.md#e-74), [**E-75**](BEFUNDE.md#e-75). Ebenfalls behoben: [**E-76**](BEFUNDE.md#e-76), das freischwebende Filterfenster lässt sich wieder nach unten vergrößern (7.2.0.49, von Gregor am 11.09.2026 bestätigt).
 
 ---
 

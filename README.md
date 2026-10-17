@@ -82,6 +82,7 @@ zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
 | IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | – | [E-77](BEFUNDE.md#e-77) |
 | Emoji in Betreffzeilen erscheinen als `?` | nichts | – | [E-90](BEFUNDE.md#e-90) |
 | Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](BEFUNDE.md#e-98) |
+| Eine Nachricht aus einem IMAP-Ordner nach `Out` gezogen wird nicht verschoben: in `Out` entsteht eine neue Nachricht mit `<br>` im Betreff und in den Kopfzeilen, dazu die Meldung *„No messages were transferred!“* | nichts – das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger | Nachrichten nicht aus einem IMAP-Ordner nach `Out` ziehen; so entstandene Einträge in `Out` nicht senden, sondern löschen | [E-125](BEFUNDE.md#e-125) |
 | Der Filterbericht bleibt nach einem Filterlauf leer | nichts | – | [E-71](BEFUNDE.md#e-71) |
 | Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nichts | Fenster einmal neu anordnen | [E-114](BEFUNDE.md#e-114) |
 | Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nichts | siehe [Windows Defender meldet Eudora als Trojaner](#windows-defender-meldet-eudora-als-trojaner) | [E-124](BEFUNDE.md#e-124) |
@@ -241,10 +242,15 @@ kann jederzeit zurück.
   verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
   Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
   gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
-  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen und N1 eingebaut,
-  an 1.0.99 von Gregor bestätigt (16.10.2026); N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123);
-  in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](Befunde/PRUEFER-31.md) F1),
-  am Prüfstand gemessen, Paket 1.0.100 zum Test bei Gregor):
+  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen, und entfernt
+  wird nur noch die Nachricht, die tatsächlich verschoben wurde, an 1.0.99 von Gregor
+  bestätigt (16.10.2026); der Verlust eingebetteter Bilder nach einem Neustart ist
+  abgetrennt als [E-123](BEFUNDE.md#e-123);
+  in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](Befunde/PRUEFER-31.md)),
+  am Prüfstand gemessen, an 1.0.100 von Gregor getestet (16.10.2026);
+  in 7.2.0.101 bekommt gesendete Post beim Verschieben eine eigene Kennung, und eine
+  Kopie, deren Hochladen scheiterte, wird sofort entfernt ([PRÜFER-32](Befunde/PRUEFER-32.md)),
+  am Prüfstand gemessen, Paket 1.0.101 zum Test bei Gregor):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
 * **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):

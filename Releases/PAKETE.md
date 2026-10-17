@@ -164,13 +164,14 @@ haben.
 | Inhalt | wie 1.0.100, dazu: gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung, eine gescheiterte Vorab-Kopie wird sofort entfernt ([E-121](../BEFUNDE.md#e-121)); Spurmarken zu [E-67](../BEFUNDE.md#e-67) |
 | Gemessen | Prüfstand an 7.2.0.101: Normalfall, abgelehntes Hochladen (Kopie entfernt, Mail bleibt in `In`), Kollisionsfall; Filterfenster nachgestellt – an 7.2.0.101 grün, Gegenprobe mit dem alten Vergleich zeigt den Fehler (`verb-auswahl=14 eintraege=2`); Testsuite 209/209. Die Kennung für gesendete Post ist am Prüfstand nicht nachstellbar – Prüfung bei Gregor, auf seine Anweisung (*„nur was nicht geht, werde ich testen.“*). |
 
-## 1.0.100 — **nicht ausgeliefert**, Quellstand 7.2.0.100, Zweig `e-121-mehrere-gesendete` ([PRÜFER-31](Befunde/PRUEFER-31.md) F1, F3, F4)
+## 1.0.100 — **nicht ausgeliefert**, Quellstand 7.2.0.100, Zweig `e-121-mehrere-gesendete` ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1, F3, F4)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.100-release` |
 | Inhalt | wie 1.0.99, dazu: mehrere gesendete Mails in einer Übertragung nach IMAP ([E-121](../BEFUNDE.md#e-121)), leere Kennungsliste, Sperre in `SetDisplayWindow` ([E-83](../BEFUNDE.md#e-83)) |
 | Stand | Testsuite 209/209; sechs Prüfstandläufe an 7.2.0.100 grün (Normalfall, Server ohne neue UID, Kollisionsfall); F1 selbst **ohne Nachstellung** – am Prüfstand nicht nachstellbar (Kennung 0 nur aus `Out`), bei Gregor (GMX mit UIDPLUS) tritt es nicht auf. Gregor hat entschieden, ohne Nachstellung zu testen: *„ja, leg 1.0.100 hin, ich teste es“* (Chat, 16.10.2026). Sein Test: zwei gesendete Mails auf einmal verschieben. |
+| Bei Gregor | 16.10.2026 (nachgetragen von [LEKTOR-39](../Befunde/LEKTOR-39.md), Quelle `WEITERMACHEN.md`): eine gesendete Mail `test 20261016c` hochgeladen (`id=0 … hochgeladen=1`, einmal in der `OUTBOX`), zwei Mails aus `In` mit `markiert=1`, sauber beendet. Der Fall *mehrere gesendete Mails auf einmal* ist damit nicht gemessen ([PRÜFER-32](../Befunde/PRUEFER-32.md)). Dabei gefunden: [E-125](../BEFUNDE.md#e-125). Kein Release wegen [PRÜFER-32](../Befunde/PRUEFER-32.md) (zwei Wege zum Datenverlust, behoben in 7.2.0.101) |
 
 ## 1.0.99 — **nicht ausgeliefert**, Quellstand 7.2.0.99, Zweig `e-118_HTML_header` (Neubau von 1.0.98, E-124)
 
