@@ -41,3 +41,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
 > eine Fassung, in der **[E-98](../BEFUNDE.md#e-98)** offen ist und **[E-101](../BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
+| 2026-10-17 21:12:09 | v1.0.101 | Gregor am 17.10.2026: 'ja, veröffentlichen' (nach seinem Test von 1.0.101 in vier Runden und dem Merge von PR #99) | veroeffentlicht |

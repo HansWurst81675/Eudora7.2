@@ -121,8 +121,8 @@ Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 > vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
 > `ls C:\Users\Gregor\Eudora72-*`.
 
-**Veröffentlicht ist `v1.0.87`** — am 14.10.2026 um 05:46 Uhr UTC auf GitHub
-herausgegangen und dort als *Latest* markiert, Marke auf `41c6752` (Merge von PR #96), mit
+**Veröffentlicht ist `v1.0.101`** — am 17.10.2026 um 19:12:08 UTC auf GitHub veröffentlicht (*Latest*, Marke auf `eec4e4e5` = Merge von PR #99, ZIP 9 066 464 Byte, SHA-256 `79a40bc00e2ca4d929e23f4ad5d043a8cbdab27ce9a7ab66eb58a77764e8694a`, nachgerechnet an der von GitHub zurückgeladenen Datei; die 34 EXE/DLL/OCX byteidentisch mit Gregors getestetem `Eudora72-1.0.101-release`; Defender: 0 Funde). **Davor `v1.0.87`** — am 14.10.2026 um 05:46 Uhr UTC auf GitHub
+herausgegangen (bis 17.10.2026 das neueste), Marke auf `41c6752` (Merge von PR #96), mit
 [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) und [E-117](BEFUNDE.md#e-117);
 Gregor hat sie vorher an 1.0.86 und 1.0.87 geprüft. Davor **`v1.0.84`** — am 12.10.2026
 um 12:59 Uhr UTC, Marke auf `eb54752`, mit [E-94](BEFUNDE.md#e-94);

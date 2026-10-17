@@ -77,7 +77,7 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
 | Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-121](BEFUNDE.md#e-121) |
 | Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
-| War der IMAP-Ordner beim Verschieben geschlossen, fehlen die eben verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-121](BEFUNDE.md#e-121) |
+| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-121](BEFUNDE.md#e-121) |
 | Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
@@ -130,8 +130,16 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.87`** (veröffentlicht am 14.10.2026 um 05:46
+* **Das neueste Release ist `v1.0.101`** (veröffentlicht am 17.10.2026 um 19:12
   Uhr UTC, auf GitHub als *Latest*,
+  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.101) — **Verschieben in einen
+  IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal
+  ([E-121](BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an
+  ([E-118](BEFUNDE.md#e-118)); sauberes Beenden ([E-83](BEFUNDE.md#e-83)); der Filterfehler
+  [E-67](BEFUNDE.md#e-67) gemessen; von Gregor an 1.0.101 bestätigt. Bekannte Fehler: siehe
+  *Auf einen Blick* oben. Sonst wie `v1.0.87`:
+* **`v1.0.87`** (veröffentlicht am 14.10.2026 um 05:46
+  Uhr UTC, bis 17.10.2026 das Release auf GitHub,
   https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.87) — Bilder in
   der angegebenen Größe ([E-112](BEFUNDE.md#e-112) mit [E-103](BEFUNDE.md#e-103)),
   Ctrl+F bei aktivem IMAP-Postfach ([E-115](BEFUNDE.md#e-115)) und `&amp;` in
