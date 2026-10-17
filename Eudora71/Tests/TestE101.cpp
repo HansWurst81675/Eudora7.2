@@ -587,6 +587,126 @@ void RunE101Tests(void)
 	}
 	TT_EndTest();
 
+	// ------------------------------------------------------------------
+	// E-101, dritter Teil (17.10.2026): die empfangene Nachricht, wie sie
+	// im Postfach liegt. Nachgebaut nach den sechs Nachrichten in
+	// C:/Temp/E80b/Mailverzeichnis/In.mbx und Gregors Datei vom 13.10.2026
+	// ("Fwd Deine Anzeige 'Zu verschenken kleine Gefe'.txt"): der Kopf sagt
+	// multipart mit Grenze, der Rumpf ist schon einteilig; das HTML sagt
+	// UTF-8, die Bytes sind Windows-1252 (E4 = ae, DF = ss, 80 = Euro).
+	{
+		static const char* const kEmpfangenMultipart =
+			"From: kleinanzeigen@example.invalid\r\n"
+			"Subject: Fwd: Deine Anzeige\r\n"
+			"MIME-Version: 1.0\r\n"
+			"Content-Type: multipart/alternative;\r\n"
+			"\tboundary=\"grenze-e101\"\r\n"
+			"\r\n"
+			"<x-html>\r\n"
+			"<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\"></head>"
+			"<body>Gef\xE4\xDF" "e f\xFCr 5 \x80</body></html>\r\n"
+			"</x-html>\r\n";
+
+		TT_BeginTest("E-101 dritter Teil: multipart-Kopf ueber einteiligem Rumpf wird ersetzt");
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kEmpfangenMultipart, true,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(bGeaendert, "ein Kopf, der Teile ankuendigt, die es nicht gibt, muss weg");
+		TT_CHECK_MSG(Hat(szDatei, "\r\nContent-Type: text/html; charset=\"windows-1252\""),
+				 "einteilig, HTML, und 0x80 heisst windows-1252");
+		TT_CHECK_MSG(Hat(szDatei, "X-Original-Content-Type: multipart/alternative;\r\n\tboundary=\"grenze-e101\""),
+				 "die alte Zeile bleibt samt Fortsetzung erhalten, nur umbenannt");
+		TT_CHECK_MSG(!Hat(szDatei, "\nContent-Type: multipart"),
+				 "kein Leser darf noch multipart lesen");
+		{
+			int		nMime = 0;
+			for (int p = szDatei.Find("MIME-Version:"); p >= 0; p = szDatei.Find("MIME-Version:", p + 1))
+				nMime++;
+			TT_CHECK_MSG(nMime == 1, "MIME-Version steht genau einmal");
+		}
+		TT_CHECK_MSG(Hat(szDatei, "content=\"text/html; charset=windows-1252\""),
+				 "das <meta> nennt den echten Zeichensatz");
+		TT_CHECK_MSG(!Hat(szDatei, "UTF-8"), "die falsche Angabe ist ueberall fort");
+		TT_CHECK_MSG(Hat(szDatei, "Gef\xE4\xDF" "e f\xFCr 5 \x80"),
+				 "die Bytes selbst bleiben unveraendert");
+		TT_CHECK_MSG(Hat(szSpur, "ct-ersetzt=1") && Hat(szSpur, "meta-charset=1"),
+				 "die Spurmarke nennt beide Eingriffe");
+		{
+			// Byte fuer Byte: der Rumpf der Eingabe ohne die beiden
+			// Markerzeilen und mit dem einen ersetzten Namen muss GLEICH
+			// dem Rumpf der Ausgabe sein - nicht nur darin enthalten.
+			CString		szErwartet = RumpfVon(CString(kEmpfangenMultipart));
+			szErwartet.Replace("<x-html>\r\n", "");
+			szErwartet.Replace("</x-html>\r\n", "");
+			szErwartet.Replace("charset=UTF-8", "charset=windows-1252");
+			TT_CHECK_MSG(RumpfVon(szDatei) == szErwartet,
+					 "nichts ausser dem Namen des Zeichensatzes hat sich im Rumpf geaendert");
+		}
+		TT_EndTest();
+
+		TT_BeginTest("E-101 dritter Teil: ohne Kopfzeilen wird das <meta> trotzdem berichtigt");
+		const char*	pRumpf = strstr(kEmpfangenMultipart, "\r\n\r\n") + 4;
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(pRumpf, false, szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "Content-Type: text/html; charset=\"windows-1252\""),
+				 "Kopf ergaenzt mit windows-1252");
+		TT_CHECK_MSG(Hat(szDatei, "charset=windows-1252\">"), "<meta> berichtigt");
+		TT_CHECK_MSG(!Hat(szDatei, "UTF-8"), "keine falsche Angabe mehr");
+		TT_EndTest();
+	}
+
+	// Gegenprobe: was schon stimmt, wird nicht angefasst - windows-1252 im
+	// Kopf und im <meta>, die Bytes nur Latin-1 (ISO-8859-1 waere ebenso
+	// richtig, aber windows-1252 deckt es ab).
+	{
+		static const char* const kStimmtSchon =
+			"From: a@example.invalid\r\n"
+			"Subject: passt\r\n"
+			"MIME-Version: 1.0\r\n"
+			"Content-Type: text/html; charset=windows-1252\r\n"
+			"\r\n"
+			"<x-html>\r\n"
+			"<html><head><meta charset=\"windows-1252\"></head><body>Gr\xFC\xDF" "e</body></html>\r\n"
+			"</x-html>\r\n";
+
+		TT_BeginTest("E-101 dritter Teil Gegenprobe: passender Kopf und passendes <meta> bleiben");
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kStimmtSchon, true, szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szSpur, "ct-ersetzt=0") && Hat(szSpur, "meta-charset=0"),
+				 "nichts ersetzt");
+		TT_CHECK_MSG(!Hat(szDatei, "X-Original"), "keine umbenannte Zeile");
+		TT_CHECK_MSG(Hat(szDatei, "\r\nContent-Type: text/html; charset=windows-1252\r\n"),
+				 "die vorhandene Zeile steht unveraendert");
+		TT_EndTest();
+	}
+
+	// Klartext mit falschem Zeichensatz im Kopf: UTF-8 angesagt, Latin-1
+	// gespeichert. Dazu eine Content-Transfer-Encoding-Zeile, die nach dem
+	// Entschluesseln nicht mehr stimmt.
+	{
+		static const char* const kTextUtf8 =
+			"From: a@example.invalid\r\n"
+			"Subject: Text\r\n"
+			"Content-Type: text/plain; charset=utf-8\r\n"
+			"Content-Transfer-Encoding: quoted-printable\r\n"
+			"\r\n"
+			"Gr\xFC\xDF" "e\r\n";
+
+		TT_BeginTest("E-101 dritter Teil: Klartext mit falschem Zeichensatz im Kopf");
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kTextUtf8, true, szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "\r\nContent-Type: text/plain; charset=\"ISO-8859-1\""),
+				 "Klartext bleibt Klartext, Zeichensatz nach den Bytes");
+		TT_CHECK_MSG(Hat(szDatei, "X-Original-Content-Type: text/plain; charset=utf-8"),
+				 "alte Zeile erhalten");
+		TT_CHECK_MSG(Hat(szDatei, "X-Original-Content-Transfer-Encoding: quoted-printable"),
+				 "die Kodierung ist schon aufgeloest, ihre Zeile wird umbenannt");
+		TT_CHECK_MSG(Hat(szDatei, "\r\nContent-Transfer-Encoding: 8bit"), "neue Kodierung 8bit");
+		TT_CHECK_MSG(Hat(szDatei, "MIME-Version: 1.0"), "MIME-Version ergaenzt, weil sie fehlte");
+		TT_CHECK_MSG(Hat(szDatei, "\r\n\r\nGr\xFC\xDF" "e\r\n"), "Rumpf unveraendert");
+		TT_EndTest();
+	}
+
 	TT_BeginTest("E-101: leere Eingabe aendert nichts und stuerzt nicht ab");
 	bGeaendert = UTE101_SpeicherfassungAufbereiten("", true, szDatei, szSpur);
 	TT_CHECK_MSG(!bGeaendert, "an nichts ist nichts zu tun");

@@ -4166,23 +4166,233 @@ bool E101SpeicherfassungAufbereiten(
 	// deshalb ist ISO-8859-1 die richtige Angabe. Sie wird aus dem Inhalt
 	// abgeleitet und nicht geraten.
 	//
+	//
+	// E-101 (13.10.2026, Gregor an 1.0.84: "inhalt ist mit falschen zeichen
+	// dargestellt"): die Bytes 0x80-0x9F gibt es in ISO-8859-1 nicht. In
+	// seiner Datei standen 80 (Euro), 92 und 96 - das ist Windows-1252, und
+	// genau das schreibt der Anzeigeweg (TridentView.cpp, szCharsetMeta).
+	// Dieselbe Regel wie E118Achtbit beim Hochladen.
+	//
 	bool		bHochbyte = false;
+	bool		bCp1252   = false;
 
 	{
 		const int	nRLen = szRumpf.GetLength();
 
 		for ( int i = 0; i < nRLen; i++ )
 		{
-			if ( (unsigned char) szRumpf[i] >= 0x80 )
+			const unsigned char	b = (unsigned char) szRumpf[i];
+
+			if ( b >= 0x80 )
 			{
 				bHochbyte = true;
-				break;
+				if ( b <= 0x9F )
+				{
+					bCp1252 = true;
+					break;
+				}
 			}
 		}
 	}
 
-	const char *	pszUntertyp = bWarHtml  ? "html"        : "plain";
-	const char *	pszCharset  = bHochbyte ? "ISO-8859-1"  : "us-ascii";
+	const char *	pszCharset  = bCp1252   ? "windows-1252"
+										: ( bHochbyte ? "ISO-8859-1" : "us-ascii" );
+
+	//
+	// 4a. E-101, dritter Teil (17.10.2026): eine vorhandene Content-Type-
+	// Zeile ist NICHT immer richtig.
+	//
+	// Der Rumpf ist immer Eudoras interne Fassung: beim Empfang zerlegt,
+	// entschluesselt und nach Windows-1252 uebersetzt (TextReader.cpp,
+	// ISOTranslate). Die Kopfzeilen aber stehen, wie sie ankamen. Gemessen
+	// an sechs empfangenen HTML-Nachrichten im Postfach des Pruefstands
+	// (C:\Temp\E80b\Mailverzeichnis\In.mbx, nur gelesen): alle sechs tragen
+	// "Content-Type: multipart/...; boundary=..." - und keine einzige der
+	// Grenzen steht im Rumpf. Ein anderes Programm sucht die Teile und
+	// findet keinen. Vier davon sagen im HTML "charset=UTF-8", die Bytes
+	// sind aber Windows-1252.
+	//
+	// Ersetzt wird nur, was nachweislich nicht passt:
+	//   - multipart/...: der Rumpf ist einteilig.
+	//   - der Marker sagt HTML, die Zeile etwas anderes.
+	//   - der Rumpf hat Hochbytes, und die Zeile nennt einen anderen
+	//     Zeichensatz (windows-1252 deckt ISO-8859-1 mit ab).
+	// Die alte Zeile geht NICHT verloren: sie wird zu
+	// "X-Original-Content-Type:" umbenannt, ebenso eine
+	// Content-Transfer-Encoding-Zeile (der Rumpf ist schon entschluesselt).
+	//
+	auto	KopfwertKlein = []( const CString & szK, const char * pszName ) -> CString
+	{
+		// pszName klein, mit Doppelpunkt; liefert den Wert samt
+		// Fortsetzungszeilen, klein geschrieben, oder "".
+		CString		szKlein( "\n" + szK );
+		szKlein.MakeLower();
+		CString		szSuch( "\n" );
+		szSuch += pszName;
+		int			nAb = szKlein.Find( szSuch );
+		if ( nAb < 0 )
+			return CString("");
+		nAb += szSuch.GetLength();
+		int			nBis = nAb;
+		while ( nBis < szKlein.GetLength() )
+		{
+			if ( szKlein[nBis] == '\n' &&
+				 !( nBis + 1 < szKlein.GetLength() &&
+					( szKlein[nBis+1] == ' ' || szKlein[nBis+1] == '\t' ) ) )
+				break;
+			nBis++;
+		}
+		return szKlein.Mid( nAb, nBis - nAb );
+	};
+
+	auto	KopfzeileUmbenennen = []( CString & szK, const char * pszName ) -> int
+	{
+		// Jede Zeile, die mit pszName (klein, mit Doppelpunkt) beginnt,
+		// bekommt "X-Original-" davor. Fortsetzungszeilen bleiben, wo sie
+		// sind, und gehoeren damit zur umbenannten Zeile.
+		const int	nNameLen = (int) strlen( pszName );
+		int			nAnzahl  = 0;
+		int			nZeile   = 0;
+		while ( nZeile < szK.GetLength() )
+		{
+			CString		szAnfang = szK.Mid( nZeile, nNameLen );
+			szAnfang.MakeLower();
+			if ( szAnfang == pszName )
+			{
+				szK.Insert( nZeile, "X-Original-" );
+				nAnzahl++;
+			}
+			const int	nLf = szK.Find( '\n', nZeile );
+			if ( nLf < 0 )
+				break;
+			nZeile = nLf + 1;
+		}
+		return nAnzahl;
+	};
+
+	bool		bCtErsetzt = false;
+	bool		bKopfSagtHtml = false;
+
+	if ( bHatContentType )
+	{
+		CString		szCt = KopfwertKlein( szKopf, "content-type:" );
+		szCt.TrimLeft();
+		bKopfSagtHtml = ( szCt.Left( 9 ) == "text/html" );
+
+		const bool	bMultipart = ( szCt.Left( 10 ) == "multipart/" );
+		const bool	bTypFalsch = ( bWarHtml && !bKopfSagtHtml );
+
+		bool		bCharsetFalsch = false;
+		if ( bHochbyte )
+		{
+			CString		szCs;
+			const int	nCs = szCt.Find( "charset" );
+			if ( nCs >= 0 )
+			{
+				int		q = nCs + 7;
+				while ( q < szCt.GetLength() && ( szCt[q] == ' ' || szCt[q] == '\t' || szCt[q] == '=' || szCt[q] == '"' || szCt[q] == '\'' ) )
+					q++;
+				while ( q < szCt.GetLength() && szCt[q] != '"' && szCt[q] != '\'' && szCt[q] != ';' &&
+						szCt[q] != ' ' && szCt[q] != '\t' && szCt[q] != '\r' && szCt[q] != '\n' )
+					szCs += szCt[q++];
+			}
+			CString		szUnser( pszCharset );
+			szUnser.MakeLower();
+			bCharsetFalsch = !( szCs == szUnser ||
+								( szCs == "windows-1252" && szUnser == "iso-8859-1" ) );
+		}
+
+		if ( bMultipart || bTypFalsch || bCharsetFalsch )
+		{
+			KopfzeileUmbenennen( szKopf, "content-type:" );
+			KopfzeileUmbenennen( szKopf, "content-transfer-encoding:" );
+			bCtErsetzt = true;
+		}
+	}
+
+	const char *	pszUntertyp = ( bWarHtml || bKopfSagtHtml ) ? "html" : "plain";
+
+	//
+	// 4b. E-101 (13.10.2026): die Zeichensatzangabe IM HTML.
+	//
+	// Eine empfangene Nachricht bringt ihr <meta charset=UTF-8> mit, die
+	// Bytes sind aber Windows-1252. Jedes Programm, das die Datei als HTML
+	// liest, glaubt dem <meta> und zeigt statt der Umlaute Ersatzzeichen.
+	// Der Anzeigeweg loest das mit einer eigenen Zeile vorneweg; hier wird
+	// der Wert im vorhandenen Tag umgeschrieben - nichts wird entfernt, nur
+	// der Name des Zeichensatzes ersetzt. Nur bei Hochbytes: ohne sie ist
+	// jede ASCII-vertraegliche Angabe richtig.
+	//
+	int			nMetaUmgeschrieben = 0;
+
+	if ( bHochbyte && ( bWarHtml || bKopfSagtHtml ) )
+	{
+		int		nPos = 0;
+		for (;;)
+		{
+			CString		szRKlein( szRumpf );
+			szRKlein.MakeLower();
+			const int	nMeta = szRKlein.Find( "<meta", nPos );
+			if ( nMeta < 0 )
+				break;
+
+			// Ende des Tags: erstes '>' ausserhalb von Anfuehrungszeichen.
+			int			nZu = -1;
+			char		cAnf = 0;
+			for ( int q = nMeta + 5; q < szRKlein.GetLength(); q++ )
+			{
+				const char	c = szRKlein[q];
+				if ( cAnf )
+				{
+					if ( c == cAnf )
+						cAnf = 0;
+				}
+				else if ( c == '"' || c == '\'' )
+					cAnf = c;
+				else if ( c == '>' )
+				{
+					nZu = q;
+					break;
+				}
+			}
+			if ( nZu < 0 )
+				break;
+
+			const int	nCs = szRKlein.Find( "charset", nMeta );
+			if ( nCs >= 0 && nCs < nZu )
+			{
+				int		q = nCs + 7;
+				while ( q < nZu && ( szRKlein[q] == ' ' || szRKlein[q] == '\t' ) )
+					q++;
+				if ( q < nZu && szRKlein[q] == '=' )
+				{
+					q++;
+					while ( q < nZu && ( szRKlein[q] == ' ' || szRKlein[q] == '\t' || szRKlein[q] == '"' || szRKlein[q] == '\'' ) )
+						q++;
+					int		nWertEnde = q;
+					while ( nWertEnde < nZu &&
+							( isalnum( (unsigned char) szRKlein[nWertEnde] ) ||
+							  szRKlein[nWertEnde] == '-' || szRKlein[nWertEnde] == '_' ||
+							  szRKlein[nWertEnde] == '.' || szRKlein[nWertEnde] == ':' ) )
+						nWertEnde++;
+
+					CString		szWert  = szRKlein.Mid( q, nWertEnde - q );
+					CString		szUnser( pszCharset );
+					szUnser.MakeLower();
+					const bool	bPasst = ( szWert == szUnser ||
+										   ( szWert == "windows-1252" && szUnser == "iso-8859-1" ) );
+
+					if ( nWertEnde > q && !bPasst )
+					{
+						szRumpf = szRumpf.Left( q ) + pszCharset + szRumpf.Mid( nWertEnde );
+						nZu += (int) strlen( pszCharset ) - ( nWertEnde - q );
+						nMetaUmgeschrieben++;
+					}
+				}
+			}
+			nPos = nZu + 1;
+		}
+	}
 
 	//
 	// 5. Zusammensetzen.
@@ -4205,9 +4415,10 @@ bool E101SpeicherfassungAufbereiten(
 
 		szNeu = szKopf;
 
-		if ( !bHatContentType )
+		if ( !bHatContentType || bCtErsetzt )
 		{
-			szNeu += "\r\nMIME-Version: 1.0";
+			if ( KopfwertKlein( szKopf, "mime-version:" ).IsEmpty() )
+				szNeu += "\r\nMIME-Version: 1.0";
 			szNeu += "\r\nContent-Type: text/";
 			szNeu += pszUntertyp;
 			szNeu += "; charset=\"";
@@ -4284,7 +4495,7 @@ bool E101SpeicherfassungAufbereiten(
 	out_szSpur.Format(
 		"E-101 speichern: kopfzeilen=%d trenner=%d xhtml=%d content-type-vorhanden=%d "
 		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d rumpf-vorher=%d "
-		"rumpf-nachher=%d mime-ergaenzt=%d geaendert=%d",
+		"rumpf-nachher=%d mime-ergaenzt=%d ct-ersetzt=%d meta-charset=%d geaendert=%d",
 		bHatKopfzeilen ? 1 : 0,
 		( nKopfEnde > 0 ) ? 1 : 0,
 		bWarHtml ? 1 : 0,
@@ -4296,6 +4507,8 @@ bool E101SpeicherfassungAufbereiten(
 		nRumpfVorher,
 		szRumpf.GetLength(),
 		bMimeErgaenzt ? 1 : 0,
+		bCtErsetzt ? 1 : 0,
+		nMetaUmgeschrieben,
 		bGeaendert ? 1 : 0 );
 
 	return bGeaendert;
