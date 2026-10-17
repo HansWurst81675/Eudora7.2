@@ -421,6 +421,7 @@ protected:
 	UINT	m_timerID;
 	UINT	m_idAutoActivateTimer;	// for Auto-Wazoo drag and drop auto-activation
 	BOOL	m_bE123Gewartet;		// E-123: beim Beenden schon auf Uebertragungen gewartet
+	BOOL	m_bE123WarteAktiv;		// E-123: das Warten laeuft gerade (Zeitgeber aktiv)
 	DWORD	m_dwE123Beginn;			// E-123: Beginn des Wartens (GetTickCount)
 	int		m_iNewMsgs;				// Counter for Win95 status pane
 

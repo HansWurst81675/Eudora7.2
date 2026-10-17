@@ -731,7 +731,8 @@ extern BOOL g_bPopupOn;
 CMainFrame::CMainFrame() :
 	m_idAutoActivateTimer(0),
 	m_bE123Gewartet(FALSE),
-	m_dwE123Beginn(0)
+	m_dwE123Beginn(0),
+	m_bE123WarteAktiv(FALSE)
 {
 	ASSERT(!m_pTheMainFrame);
 	m_pTheMainFrame = this;
@@ -1963,11 +1964,17 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 	case E123_WARTE_TIMER_ID:
 		{
 			// E-123: siehe OnClose. Fertig oder Zeit um - dann wirklich beenden.
-			int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen();
+			bool bLaeuft = false;
+			int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen(&bLaeuft);
 			DWORD dwVergangen = ::GetTickCount() - m_dwE123Beginn;
-			if (nOffen == 0 || dwVergangen > 90000)
+			// PRUEFER-34 S1: solange ein Hochladen laeuft, nie beenden - auch nicht
+			// nach 90 s. S5: steht ein Dialog offen (Kennwort, Fehler), warten.
+			BOOL bDialogOffen = (::GetLastActivePopup(m_hWnd) != m_hWnd);
+			if (!bLaeuft && !bDialogOffen && (nOffen == 0 || dwVergangen > 90000))
 			{
 				KillTimer(E123_WARTE_TIMER_ID);
+				m_bE123WarteAktiv = FALSE;
+				SetMessageText(AFX_IDS_IDLEMESSAGE);
 				CString szSpur;
 				szSpur.Format("E-123 Beenden: Warten zu Ende nach %lu ms, offen=%d", (unsigned long) dwVergangen, nOffen);
 				PutDebugLog(DEBUG_MASK_MISC, szSpur);
@@ -5226,6 +5233,17 @@ void CMainFrame::OnClose()
 	// einen Zeitgeber, keine eigene Schleife), hoechstens 90 s. Nicht beim
 	// Herunterfahren von Windows (OnQueryEndSession ruft CloseDown direkt) und
 	// nicht, wenn ein Konto offline oder blockiert ist.
+	//
+	// PRUEFER-34 (17.10.2026): waehrend des Wartens wird ein weiteres Schliessen
+	// IGNORIERT (S1 - das Hochladen laeuft im Hauptfaden und stellt nebenbei
+	// Botschaften zu; ein zweites WM_CLOSE darin fuehrte in einen Haenger), die
+	// Statuszeile sagt, worauf gewartet wird (S2), und solange ein Hochladen
+	// gerade laeuft, wird nie beendet - auch nicht nach 90 s (siehe OnTimer).
+	if (m_bE123WarteAktiv)
+	{
+		PutDebugLog(DEBUG_MASK_MISC, "E-123 Beenden: weiteres Schliessen waehrend des Wartens ignoriert");
+		return;
+	}
 	if (!m_bE123Gewartet)
 	{
 		int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen();
@@ -5235,7 +5253,9 @@ void CMainFrame::OnClose()
 			szSpur.Format("E-123 Beenden wartet auf %d Uebertragung(en) in IMAP-Ordner", nOffen);
 			PutDebugLog(DEBUG_MASK_MISC, szSpur);
 			m_bE123Gewartet = TRUE;
+			m_bE123WarteAktiv = TRUE;
 			m_dwE123Beginn = ::GetTickCount();
+			SetMessageText("Waiting for messages to finish transferring to the IMAP server before quitting...");
 			SetTimer(E123_WARTE_TIMER_ID, 2000, NULL);
 			return;
 		}
@@ -5248,6 +5268,9 @@ void CMainFrame::OnClose()
 		// Welche Stufe abgelehnt hat, sagt die letzte E-33-Zeile davor.
 		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 OnClose: ABBRUCH - CloseDown hat FALSE geliefert, Eudora laeuft weiter");
+		// E-123 (PRUEFER-34 S4): der Anwender hat abgebrochen - beim naechsten
+		// Beenden wieder warten.
+		m_bE123Gewartet = FALSE;
 		return;
 	}
 

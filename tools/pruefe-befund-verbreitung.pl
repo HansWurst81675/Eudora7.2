@@ -168,7 +168,10 @@ sub kennungen_der_neuesten_fassung {
     for my $zeile (split /\n/, $abschnitt) {
         next unless $zeile =~ /^#{2,3}\s/;
 
-        while ($zeile =~ /\b([A-Z]{1,3}\d*-\d+)\b/g) {
+        # 17.10.2026: "PRÜFER-34" in einer Ueberschrift wurde zweimal als Befund
+        # "FER-34" gelesen - \b sieht hinter dem UTF-8-Umlaut eine Wortgrenze.
+        # Davor darf weder Buchstabe noch Ziffer noch ein Byte >= 0x80 stehen.
+        while ($zeile =~ /(?<![A-Za-z0-9\x80-\xff])([A-Z]{1,3}\d*-\d+)\b/g) {
             my $k = $1;
 
             # Punkte aus einem Bericht von PRUEFER oder LEKTOR, keine Befunde.
@@ -238,6 +241,14 @@ if (grep { $_ eq '--tests' } @ARGV) {
     }
     unless ($ueber =~ /7\.2\.0\.67/) {
         print "  FEHLER Selbsttest 2: Ueberschrift nicht erkannt ($ueber)\n";
+        $fehler++;
+    }
+
+    # --- 2b. Umlaut vor der Kennung (17.10.2026, zweimal Fehlalarm "FER-31",
+    # "FER-34"): "PRÜFER-34" ist ein Bericht, kein Befund.
+    my ($u2b, @k2b) = kennungen_der_neuesten_fassung("## 7.2.0.103 - nach PR\xc3\x9cFER-34 (E-123)\n\nText.\n");
+    unless (join(' ', @k2b) eq 'E-123') {
+        print "  FEHLER Selbsttest 2b: erwartet 'E-123', bekommen '" . join(' ', @k2b) . "'\n";
         $fehler++;
     }
 

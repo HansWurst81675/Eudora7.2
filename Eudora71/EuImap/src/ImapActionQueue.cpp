@@ -3640,7 +3640,8 @@ CActionQueue::CActionQueue(unsigned long lAccountID, CString &strFileName, CStri
 	m_iState(kQueueStateIdle),
 	m_bNeedsWrite(false),
 	m_bE123NurBelegt(false),
-	m_dwE123BlockiertSeit(0)
+	m_dwE123BlockiertSeit(0),
+	m_bE123UebertragungLaeuft(false)
 {
 	m_strFileName = strFileName;
 	m_strDirName = strDirName;
@@ -3709,6 +3710,8 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 				// All main thread actions succeeded.
 				if (QCGetTaskManager()->QueueWorkerThread(pImapAction))
 				{
+					// E-123 (PRUEFER-34 S6): merken, ob gerade eine Uebertragung laeuft.
+					m_bE123UebertragungLaeuft = (dynamic_cast<CImapFromLocalTransferMsgAction*>(pImapAction) != NULL);
 					m_array.RemoveAt(0);
 					m_bNeedsWrite = true;
 				}
@@ -3872,6 +3875,7 @@ void CActionQueue::ReAdd(CImapAction *pImapAction)
 void CActionQueue::ActionDone()
 {
 	m_iState = kQueueStateIdle;
+	m_bE123UebertragungLaeuft = false;	// E-123
 }
 
 //
@@ -3936,7 +3940,7 @@ CImapAction *CActionQueue::GetNextMailboxMatch(unsigned long ulHashToMatch)
 //	steht noch aus). bBlockiert: die Warteschlange kommt von selbst nicht weiter
 //	(offline, Anmeldung gescheitert) - dann lohnt kein Warten.
 //
-int CActionQueue::E123OffeneUebertragungen(bool &bBlockiert)
+int CActionQueue::E123OffeneUebertragungen(bool &bBlockiert, bool &bLaeuft)
 {
 	// Nur kurz blockiert (Verbindung belegt) zaehlt nicht als blockiert - die
 	// Warteschlange laeuft von selbst wieder an.
@@ -3951,14 +3955,16 @@ int CActionQueue::E123OffeneUebertragungen(bool &bBlockiert)
 			++nOffen;
 		}
 	}
-	if (m_iState == kQueueStateProcessing)
+	// PRUEFER-34 S6: nur eine laufende UEBERTRAGUNG zaehlt, kein Abgleich.
+	bLaeuft = (m_iState == kQueueStateProcessing) && m_bE123UebertragungLaeuft;
+	if (bLaeuft)
 	{
 		++nOffen;
 	}
 
 	{
 		CString szSpur;
-		szSpur.Format("E-123 Warteschlange: konto=%lu eintraege=%d zustand=%d nur-belegt=%d uebertragungen=%d", m_lAccountID, (int) m_array.GetSize(), m_iState, m_bE123NurBelegt ? 1 : 0, nOffen);
+		szSpur.Format("E-123 Warteschlange: konto=%lu eintraege=%d zustand=%d nur-belegt=%d laeuft=%d uebertragungen=%d", m_lAccountID, (int) m_array.GetSize(), m_iState, m_bE123NurBelegt ? 1 : 0, bLaeuft ? 1 : 0, nOffen);
 		::PutDebugLog(DEBUG_MASK_MISC, szSpur);
 	}
 

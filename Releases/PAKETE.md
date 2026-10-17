@@ -156,7 +156,15 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.102 — **nicht ausgeliefert**, Quellstand 7.2.0.102, Zweig `e-123-beenden-warten` (E-123 Beenden wartet)
+## 1.0.103 — **nicht ausgeliefert**, Quellstand 7.2.0.103, Zweig `e-123-beenden-warten` (E-123 Beenden wartet, nach PRÜFER-34 abgesichert)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.103-release` |
+| Inhalt | wie 1.0.102, dazu die Korrekturen aus [PRÜFER-34](../Befunde/PRUEFER-34.md) |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.101 kein Warten, Hochladen nie bestätigt (Fehler); an 7.2.0.103 gewartet, zweites Schließen ignoriert, hochgeladen, sauber beendet; Testsuite 209/209 |
+
+## 1.0.102 — **ersetzt durch 1.0.103, Testverzeichnis entfernt, nie getestet**, Quellstand 7.2.0.102, Zweig `e-123-beenden-warten` (E-123 Beenden wartet)
 
 | | |
 |---|---|

@@ -585,10 +585,11 @@ BOOL CImapAccount::HatOffeneUebertragung (unsigned long ulHash)
 }
 
 // E-123: siehe CActionQueue::E123OffeneUebertragungen.
-int CImapAccount::E123OffeneUebertragungen (bool &bBlockiert)
+int CImapAccount::E123OffeneUebertragungen (bool &bBlockiert, bool &bLaeuft)
 {
 	bBlockiert = false;
-	return m_pActionQueue ? m_pActionQueue->E123OffeneUebertragungen(bBlockiert) : 0;
+	bLaeuft = false;
+	return m_pActionQueue ? m_pActionQueue->E123OffeneUebertragungen(bBlockiert, bLaeuft) : 0;
 }
 
 void CImapAccount::QueueAction(CImapAction *pImapAction)
