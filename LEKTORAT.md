@@ -1394,3 +1394,15 @@ und im CHANGELOG *Noch offen*, Prüfer-Kürzel in README und TESTPLAN ([L-39.2](
 mehr als das E-121-Urteil, PRÜFER hat 7.2.0.101 nicht gesehen ([L-39.1](Befunde/LEKTOR-39.md#l-39.1)); Kürzel in der CHANGELOG-Zeile
 [E-121](BEFUNDE.md#e-121) ([L-39.6](Befunde/LEKTOR-39.md#l-39.6)); was für v1.0.101 nachzuziehen ist, Defender für 1.0.100/1.0.101 nirgends belegt
 ([L-39.7](Befunde/LEKTOR-39.md#l-39.7)).
+
+## Fünfundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-40.md`)
+
+Nach Release v1.0.101 (Marke auf `eec4e4e5`, PR #99, Doku PR #100) und 7.2.0.102 auf
+`e-123-beenden-warten` ([E-123](BEFUNDE.md#e-123) Teilbehebung: Beenden wartet; [E-125](BEFUNDE.md#e-125) Gregors Entscheidung B), zum
+Stand `3ea8cbc7`; 129 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 42 außerhalb von `Befunde/`
+über Stand- und Release-Aussagen gesucht. Berichtigt: neue Prüfserver-Option, drei Parameter und
+`messen-e123.ps1` fehlten in `tools/WERKZEUGE.md` ([L-40.2](Befunde/LEKTOR-40.md#l-40.2)); v1.0.101 stand in README,
+CHANGELOG (13 Überschriften), ZIEL, PAKETE, WEITERMACHEN und ZWEIGE noch als Zukunft ([L-40.3](Befunde/LEKTOR-40.md#l-40.3));
+[E-123](BEFUNDE.md#e-123)-Teilbehebung und [E-125](BEFUNDE.md#e-125)-Entscheidung fehlten außerhalb von `BEFUNDE.md` ([L-40.4](Befunde/LEKTOR-40.md#l-40.4)).
+Offen: `offene-befunde.pl` liest [E-123](BEFUNDE.md#e-123) als erledigt ([L-40.1](Befunde/LEKTOR-40.md#l-40.1)); PRÜFER und CHRONIST für
+7.2.0.102 fällig ([L-40.5](Befunde/LEKTOR-40.md#l-40.5)).
