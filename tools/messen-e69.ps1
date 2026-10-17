@@ -4,7 +4,7 @@
 # die Sperre geloest.
 #
 # WARUM ES DAS GIBT: Befund E-69 - eine Nachricht, die der Filter nicht lesen
-# kann, wurde lautlos uebersprungen. Seit 7.2.0.105 steht dafuer ein Eintrag
+# kann, wurde lautlos uebersprungen. Seit 7.2.0.106 steht dafuer ein Eintrag
 # in "Task Errors" und die Spurmarke "E-69 Filter uebersprungen" im Protokoll.
 # Voraussetzung: in "In" liegt eine Nachricht, auf die eine Filterregel passt.
 param([string] $Pfadfilter)

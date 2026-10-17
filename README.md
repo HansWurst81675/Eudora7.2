@@ -72,12 +72,12 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | nichts geht verloren – aber die **übrigen Nachrichten bleiben ungefiltert** liegen | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
+| Eine Nachricht, die der Filter nicht lesen kann, wird still übersprungen | nichts geht verloren – **diese eine Nachricht** bleibt ungefiltert liegen, die übrigen werden weiter gefiltert (am Quelltext gelesen für *Filter Messages*, [LEKTOR-41](Befunde/LEKTOR-41.md)) | nach dem Filtern stichprobenartig nachsehen; ab 7.2.0.106 (noch nicht veröffentlicht) steht die Nachricht mit Betreff und Grund im Fenster *Task Errors* | [E-69](BEFUNDE.md#e-69) |
 | Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
-| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-121](BEFUNDE.md#e-121) |
-| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab der nächsten Fassung (7.2.0.102, noch nicht veröffentlicht) wartet Eudora beim Beenden selbst, höchstens 90 Sekunden; nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](BEFUNDE.md#e-123) |
-| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-121](BEFUNDE.md#e-121) |
+| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-126](BEFUNDE.md#e-126) |
+| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (noch nicht veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist, höchstens 5 Minuten; nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](BEFUNDE.md#e-123) |
+| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](BEFUNDE.md#e-127) |
 | Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
@@ -251,13 +251,13 @@ kann jederzeit zurück.
   `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
   Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach (am IMAP-Prüfserver gemessen, von Gregor am 14.10.2026 an 1.0.90 bestätigt).
 * **Eine Nachricht, die in einen IMAP-Ordner verschoben wird, kann spurlos
-  verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
+  verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, in `v1.0.87` offen, **in `v1.0.101` behoben, von Gregor am 17.10.2026 bestätigt**; zwei Reste abgetrennt als [E-126](BEFUNDE.md#e-126) (offen) und [E-127](BEFUNDE.md#e-127) (offen);
   Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, ausgeliefert mit `v1.0.101`;
   gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
   von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen, und entfernt
   wird nur noch die Nachricht, die tatsächlich verschoben wurde, an 1.0.99 von Gregor
   bestätigt (16.10.2026); der Verlust eingebetteter Bilder nach einem Neustart ist
-  abgetrennt als [E-123](BEFUNDE.md#e-123);
+  abgetrennt als [E-123](BEFUNDE.md#e-123) (offen);
   in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](Befunde/PRUEFER-31.md)),
   am Prüfstand gemessen, an 1.0.100 von Gregor getestet (16.10.2026);
   in 7.2.0.101 bekommt gesendete Post beim Verschieben eine eigene Kennung, und eine

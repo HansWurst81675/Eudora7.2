@@ -1,6 +1,6 @@
 # Die Werkzeuge in `tools/`
 
-> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.102** (zwischen 7.2.0.101 und 7.2.0.102 kamen `messen-e123.ps1`, `--append-verzoegerung` in `imap-pruefserver.pl` und drei Parameter in `e118-serie.ps1` dazu, eingetragen in [L-40.2](../Befunde/LEKTOR-40.md#l-40.2); zwischen 7.2.0.100 und 7.2.0.101 kam unter `tools/` nur `messen-e67.ps1` dazu, eingetragen unter *Nicht in der Tabelle* in [L-39.3](../Befunde/LEKTOR-39.md#l-39.3); zwischen 7.2.0.99 und 7.2.0.100 hat sich nur `TESTLAEUFE.md` und `ZWEIGE.md` geändert, [L-38.3](../Befunde/LEKTOR-38.md#l-38.3); einzelne Zeilen nachgezogen, zuletzt `paket-pruefen.ps1` in [L-37.6](../Befunde/LEKTOR-37.md#l-37.6), davor `imap-pruefserver.pl` und `e118-serie.ps1` in [L-36.6](../Befunde/LEKTOR-36.md#l-36.6)). Die Liste wird fortgeschrieben; die
+> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.106** (zwischen 7.2.0.102 und 7.2.0.106 kamen `messen-e123-doppelt.ps1` und `messen-e69.ps1` dazu, siehe *Nicht in der Tabelle*, [L-41.8](../Befunde/LEKTOR-41.md); zwischen 7.2.0.101 und 7.2.0.102 kamen `messen-e123.ps1`, `--append-verzoegerung` in `imap-pruefserver.pl` und drei Parameter in `e118-serie.ps1` dazu, eingetragen in [L-40.2](../Befunde/LEKTOR-40.md#l-40.2); zwischen 7.2.0.100 und 7.2.0.101 kam unter `tools/` nur `messen-e67.ps1` dazu, eingetragen unter *Nicht in der Tabelle* in [L-39.3](../Befunde/LEKTOR-39.md#l-39.3); zwischen 7.2.0.99 und 7.2.0.100 hat sich nur `TESTLAEUFE.md` und `ZWEIGE.md` geändert, [L-38.3](../Befunde/LEKTOR-38.md#l-38.3); einzelne Zeilen nachgezogen, zuletzt `paket-pruefen.ps1` in [L-37.6](../Befunde/LEKTOR-37.md#l-37.6), davor `imap-pruefserver.pl` und `e118-serie.ps1` in [L-36.6](../Befunde/LEKTOR-36.md#l-36.6)). Die Liste wird fortgeschrieben; die
 > Fassungsangabe sagt, gegen welchen Quellstand sie zuletzt geprüft wurde.
 
 Diese Übersicht stand bis zum 09.09.2026 in [README.md](../README.md). Sie ist
@@ -142,6 +142,12 @@ Sekunden zurück, damit `testlauf.ps1` das Fenster schließt, während das Hochl
 IMAP noch aussteht; gemessen werden die Spurmarken `E-123 Beenden wartet` und
 `Warten zu Ende … offen=0`; aufgerufen über `e118-serie.ps1 -Messen messen-e123.ps1
 -AppendVerzoegerung <s>`),
+`tools/messen-e123-doppelt.ps1` ([E-123](../BEFUNDE.md#e-123), [PRÜFER-34](../Befunde/PRUEFER-34.md): wie
+`messen-e123.ps1`, schickt aber zweimal *File → Exit*, Befehl 57665, um zu zeigen, dass das
+zweite Schließen während des Wartens ignoriert wird),
+`tools/messen-e69.ps1` ([E-69](../BEFUNDE.md#e-69): öffnet `In`, wählt alles aus, sperrt `In.mbx`
+von außen und löst *Special → Filter Messages* aus, Befehl 32816; gemessen wird die Spurmarke
+`E-69 Filter uebersprungen` und der Eintrag in *Task Errors*; die Sperre wird danach gelöst),
 `tools/e80-messen.ps1` (ein Lauf, drei Schritte: starten, Nachricht öffnen,
 die angezeigte HTML-Fassung einsammeln — **öffnet ein Fenster, nur nach
 Absprache**) und

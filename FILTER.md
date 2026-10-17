@@ -719,7 +719,7 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 | Befund | was passiert |
 |---|---|
 | [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
-| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann den Lauf im Freigabebau lautlos abbrechen und trotzdem Erfolg melden |
+| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors*** |
 | [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
 | [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
 
