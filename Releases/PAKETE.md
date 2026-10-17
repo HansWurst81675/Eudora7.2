@@ -156,6 +156,35 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.107 — gebaut am 18.10.2026, Quellstand 7.2.0.107, Zweig `E-101_korrektur_datei_speichern` (E-101, dritter Teil)
+
+**Die gespeicherte Datei bekommt jetzt die Kopfzeile, die zum Rumpf passt.**
+Bis hierher liess der Speicherweg eine vorhandene `Content-Type`-Zeile
+unangetastet — mit der Begründung, eine empfangene Nachricht bringe ihre echten
+Kopfzeilen mit. **Das stimmt nicht:** der **Rumpf** ist immer Eudoras interne
+Fassung (beim Empfang zerlegt, entschlüsselt, nach Windows-1252 übersetzt), die
+**Kopfzeilen** stehen dagegen so da, wie sie ankamen.
+
+**Gemessen** an sechs empfangenen HTML-Nachrichten im Postfach des Prüfstands:
+alle sechs tragen `Content-Type: multipart/…; boundary=…`, und **keine einzige**
+der Grenzen steht im Rumpf — ein anderes Programm sucht die Teile und findet
+keinen. Vier davon sagen im HTML `charset=UTF-8`, die Bytes sind aber
+Windows-1252.
+
+Dazu der Zeichensatz: `0x80` (€), `0x92` (’) und `0x96` (–) gibt es in
+ISO-8859-1 nicht. Gespeichert wird jetzt `windows-1252`, wie es der Anzeigeweg
+schon tut (`TridentView.cpp`).
+
+**213 Tests, 213 bestanden** (vier neue). Gegenprobe gefahren: mit dem alten
+`msgutils.cpp` fallen **genau diese vier** um, die übrigen 209 bleiben grün —
+darunter die Gegenprobe *„passender Kopf und passendes `<meta>` bleiben
+unberührt"*, ohne die aus der Behebung *„jede Kopfzeile wird überschrieben"*
+geworden wäre.
+
+**Nicht ins Release, solange P1–P3 aus [PRÜFER-36](../Befunde/PRUEFER-36.md)
+offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
+(Meldungsflut in *Task Errors*).
+
 ## 1.0.106 — **nicht ausgeliefert**, Quellstand 7.2.0.106, Zweig `e-123-beenden-warten` (E-69 Task Errors; E-123 Beenden wartet)
 
 | | |
