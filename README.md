@@ -54,7 +54,8 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 
 **Neu gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
 beim Verschieben in einen IMAP-Ordner vollständig an
-([E-118](BEFUNDE.md#e-118)); eine verschobene Nachricht kann nicht mehr
+([E-118](BEFUNDE.md#e-118)); eine verschobene Nachricht kann – bis auf einen seltenen, vermuteten Fall
+(siehe Tabelle) – nicht mehr
 verlorengehen, steht nicht mehr doppelt in der Liste und trifft keine fremde
 Nachricht mit gleicher Nummer ([E-121](BEFUNDE.md#e-121)); eine beim Start
 schon fertige IMAP-Aufgabe blockiert den Ordner nicht mehr und Eudora lässt sich
@@ -65,8 +66,8 @@ Postfach noch nicht bestätigt).
 
 ### Bekannte Fehler
 
-In keinem dieser Fälle geht eine **Nachricht in Ihrem Postfach** verloren. Die
-zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
+Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
+**Nachricht in Ihrem Postfach** verloren. Die zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
 *nichts* heißt, es betrifft nur Anzeige oder Bedienung.
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
@@ -74,7 +75,9 @@ zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
 | Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | nichts geht verloren – aber die **übrigen Nachrichten bleiben ungefiltert** liegen | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
 | Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
+| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-121](BEFUNDE.md#e-121) |
 | Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
+| War der IMAP-Ordner beim Verschieben geschlossen, fehlen die eben verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-121](BEFUNDE.md#e-121) |
 | Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |

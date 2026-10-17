@@ -163,6 +163,8 @@ haben.
 | Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.101-release` |
 | Inhalt | wie 1.0.100, dazu: gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung, eine gescheiterte Vorab-Kopie wird sofort entfernt ([E-121](../BEFUNDE.md#e-121)); Spurmarken zu [E-67](../BEFUNDE.md#e-67) |
 | Gemessen | Prüfstand an 7.2.0.101: Normalfall, abgelehntes Hochladen (Kopie entfernt, Mail bleibt in `In`), Kollisionsfall; Filterfenster nachgestellt – an 7.2.0.101 grün, Gegenprobe mit dem alten Vergleich zeigt den Fehler (`verb-auswahl=14 eintraege=2`); Testsuite 209/209. Die Kennung für gesendete Post ist am Prüfstand nicht nachstellbar – Prüfung bei Gregor, auf seine Anweisung (*„nur was nicht geht, werde ich testen.“*). |
+| Defender | sauber (Paketprüfung, 34 Dateien, 0 Funde) |
+| Bei Gregor | bestätigt am 17.10.2026: zwei gesendete Mails mit zwei verschiedenen eigenen Kennungen hochgeladen; in der Liste erst nach Neuöffnen des Ordners sichtbar ([E-121](../BEFUNDE.md#e-121)) |
 
 ## 1.0.100 — **nicht ausgeliefert**, Quellstand 7.2.0.100, Zweig `e-121-mehrere-gesendete` ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1, F3, F4)
 
