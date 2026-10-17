@@ -1368,3 +1368,29 @@ aus `git ls-files` ohne `Arbeitsweise/`, davon 41 außerhalb von `Befunde/` gele
 Offen: PRÜFER hat 7.2.0.97/98 nicht gesehen ([L-37.7](Befunde/LEKTOR-37.md#l-37.7)), der erste Satz des [E-121](BEFUNDE.md#e-121)-Urteils
 ([L-37.8](Befunde/LEKTOR-37.md#l-37.8)), PRÜFER-30 F6 als Datenverlust-Vermutung ohne Eintrag ([L-37.9](Befunde/LEKTOR-37.md#l-37.9)), was für
 `v1.0.99` nachzuziehen ist ([L-37.11](Befunde/LEKTOR-37.md#l-37.11)), uncommittete DLLs im Hauptbaum ([L-37.13](Befunde/LEKTOR-37.md#l-37.13)).
+
+## Dreiundvierzigster Durchgang — 16.10.2026 (Bericht: `Befunde/LEKTOR-38.md`)
+
+Nach 7.2.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1, F3, F4; PR #98 gemergt; Paket 1.0.100 bei Gregor), zum
+Stand `a5604ddf`, vor dem Release v1.0.100; 124 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon
+41 außerhalb von `Befunde/` gelesen, dazu der neue README-Abschnitt *Auf einen Blick* Zeile für Zeile
+gegen die Statusspalte von `BEFUNDE.md`. Berichtigt: 7.2.0.100 fehlte bei [E-121](BEFUNDE.md#e-121) in README,
+`ZIEL.md` und CHANGELOG *Noch offen* ([L-38.1](Befunde/LEKTOR-38.md#l-38.1)); der Merge von PR #98 in `tools/ZWEIGE.md` und
+das Release-Ziel v1.0.99 in `WEITERMACHEN.md` ([L-38.2](Befunde/LEKTOR-38.md#l-38.2)); der Kopf von `tools/WERKZEUGE.md`
+([L-38.3](Befunde/LEKTOR-38.md#l-38.3)). Offen: *Auf einen Blick* nennt [E-121](BEFUNDE.md#e-121) erledigt, `BEFUNDE.md` einen offenen
+Datenverlust ([L-38.4](Befunde/LEKTOR-38.md#l-38.4)); Junk-Bewertung bei [E-47](BEFUNDE.md#e-47) und [E-78](BEFUNDE.md#e-78) fehlen in der Tabelle ([L-38.5](Befunde/LEKTOR-38.md#l-38.5));
+7.2.0.100 von keinem PRÜFER nachgerechnet ([L-38.6](Befunde/LEKTOR-38.md#l-38.6)); was für v1.0.100 nachzuziehen ist ([L-38.7](Befunde/LEKTOR-38.md#l-38.7)).
+
+## Vierundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-39.md`)
+
+Nach 7.2.0.101 ([PRÜFER-32](Befunde/PRUEFER-32.md): eigene Kennung für gesendete Post, gescheiterte Vorab-Kopie wird
+entfernt; [E-67](BEFUNDE.md#e-67) als behoben geführt; [E-125](BEFUNDE.md#e-125) neu), zum Stand `04a33cca`, vor dem Release
+v1.0.101; 126 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 41 außerhalb von `Befunde/` über
+Fassungsangaben und die drei Befunde gesucht, die 15 geänderten an den geänderten Stellen gelesen.
+Berichtigt: 7.2.0.101 fehlte bei [E-121](BEFUNDE.md#e-121) in README, ZIEL und CHANGELOG, [E-125](BEFUNDE.md#e-125) in der README-Tabelle
+und im CHANGELOG *Noch offen*, Prüfer-Kürzel in README und TESTPLAN ([L-39.2](Befunde/LEKTOR-39.md#l-39.2)); `FILTER.md` führte
+[E-67](BEFUNDE.md#e-67) und [E-76](BEFUNDE.md#e-76) als offen, [E-76](BEFUNDE.md#e-76) seit 11.09.2026 bestätigt ([L-39.5](Befunde/LEKTOR-39.md#l-39.5)); `messen-e67.ps1` fehlte in
+`tools/WERKZEUGE.md` ([L-39.3](Befunde/LEKTOR-39.md#l-39.3)); ZIEL und ZWEIGE ([L-39.4](Befunde/LEKTOR-39.md#l-39.4)). Offen: *Auf einen Blick* verspricht weiter
+mehr als das E-121-Urteil, PRÜFER hat 7.2.0.101 nicht gesehen ([L-39.1](Befunde/LEKTOR-39.md#l-39.1)); Kürzel in der CHANGELOG-Zeile
+[E-121](BEFUNDE.md#e-121) ([L-39.6](Befunde/LEKTOR-39.md#l-39.6)); was für v1.0.101 nachzuziehen ist, Defender für 1.0.100/1.0.101 nirgends belegt
+([L-39.7](Befunde/LEKTOR-39.md#l-39.7)).

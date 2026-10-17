@@ -95,6 +95,7 @@ eine Datei liest, liest diese.
 | [haengende-kommandos-abbrechen](haengende-kommandos-abbrechen.md) | Hängende Kommandos früh erkennen, abbrechen und anders lösen statt Zeitlimits auslaufen zu lassen |
 | [kein-paket-mit-offenem-datenverlust](kein-paket-mit-offenem-datenverlust.md) | Kein Paket ausliefern, solange ein bekannter Weg offen ist, auf dem der Anwender Daten verliert |
 | [keine-tastendruecke-verschicken](keine-tastendruecke-verschicken.md) | SendKeys geht an das Fenster im Vordergrund, nicht an mein Zielfenster - am 08.09.2026 habe ich damit Gregors Explorer-Fenster geschlossen |
+| [kuerzel-im-chat-uebersetzen](kuerzel-im-chat-uebersetzen.md) | Fundkürzel der Prüfer (F1, N1, L-38.4 …) nie allein im Chat – immer was passiert, wann, mit welcher Folge |
 | [lauffaehiges-ergebnis-liefern](lauffaehiges-ergebnis-liefern.md) | Ziel ist eine einsetzbare Eudora-Version, nicht ein Zwischenstand — pragmatisch priorisieren, mit Prüfanleitung übergeben |
 | [lehren-anwenden-nicht-nur-schreiben](lehren-anwenden-nicht-nur-schreiben.md) | Eine aufgeschriebene Lehre ohne Ausloeser und Werkzeug wirkt nicht - jede Lehre braucht einen Moment, in dem sie geprueft wird |
 | [main-muss-immer-baubar-sein](main-muss-immer-baubar-sein.md) | main trägt immer einen Stand, der fehlerfrei baut und aus dem sich jederzeit ein Release erstellen lässt |

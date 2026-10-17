@@ -1349,6 +1349,17 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 	if (!pTargetToc->m_pImapMailbox)
 		return FALSE;
     pSum->SetDeleteEmbedded(FALSE);
+
+	// PRUEFER-31 F1: wird die Vorab-Kopie selbst hochgeladen, verliert sie ihr
+	// Merkzeichen VOR dem Versuch, nicht erst bei Erfolg. Sonst nahm bei
+	// mehreren Nachrichten mit Kennung 0 (gesendete Post) in EINER Uebertragung
+	// jede weitere Runde dieselbe Kopie noch einmal - wenn der Server keine neue
+	// UID meldet oder das Hochladen scheitert: die erste Mail mehrfach auf dem
+	// Server, die anderen gar nicht, und deren Quellen lagen schon im lokalen
+	// Papierkorb. Scheitert der Versuch, bleibt die Quelle stehen; die
+	// unmarkierte Kopie verwirft der naechste Abgleich.
+	if (this == pTargetToc)
+		pSum->SetE121Vorab(FALSE);
 	// Accumulate source message into an RFC822 message file and call
 	// the mailbox's append API.
 
@@ -1384,7 +1395,9 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 	}
 	if (bResult && !NewUid && pSum->GetHash() != 0)
 	{
-		CSummary *pVorab = E121FindeVorabKopie(pTargetToc, pSum->GetHash());
+		// PRUEFER-31 F1: aus dem Ziel hochgeladen ist pSum selbst die Vorab-Kopie
+		// (ihr Merkzeichen ist oben schon geloescht).
+		CSummary *pVorab = (this == pTargetToc) ? pSum : E121FindeVorabKopie(pTargetToc, pSum->GetHash());
 		if (pVorab)
 		{
 			pVorab->SetDeleteEmbedded(FALSE);
@@ -1465,6 +1478,25 @@ BOOL CTocDoc::ImapCopyMsgFromLocalToImap (CSummary *pSum, CTocDoc *pTargetToc, C
 				*ppCopySum = pCopySum;
 			}
 		}
+	}
+
+	// E-121 (PRUEFER-32): ist das Hochladen der Vorab-Kopie gescheitert, wird sie
+	// sofort entfernt. Liegengeblieben trug sie eine lokale Kennung, die ein
+	// Abgleich fuer die UID einer fremden Server-Nachricht halten konnte - wer sie
+	// dann loeschte, loeschte die fremde. Die Quelle bleibt stehen (bei Nachrichten
+	// aus Out: im lokalen Papierkorb); ihre Bilddateien bleiben.
+	if (!bResult && this == pTargetToc && pSum && pTargetToc->GetSumList().Find(pSum))
+	{
+		CString szSpur;
+		szSpur.Format("E-121 Hochladen gescheitert, Vorab-Kopie entfernt: kennung=%lu", (unsigned long) pSum->GetHash());
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		pSum->SetDeleteEmbedded(FALSE);
+		InvalidateCachedPreviewSummary(pSum, true);
+		CFrameWnd* pFenster = pSum->m_FrameWnd;
+		if (pFenster)
+			pFenster->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+		pTargetToc->RemoveSum(pSum);
+		*ppCopySum = NULL;
 	}
 
 	return bResult;
@@ -1632,6 +1664,35 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 //	Return:
 //	Pointer to CSummary whose hash matches lUID.  NULL if no match found.
 //
+// E-121 (PRUEFER-32): siehe tocdoc.h. Alle Nachrichten aus Out tragen die Kennung
+// 0; ueber sie wurden Quelle und Vorab-Kopie wiedergefunden. Blieb eine Vorab-Kopie
+// liegen, weil die Uebertragung nie eingereiht wurde (Server nicht erreichbar,
+// offline, Esc), griff die naechste Nachricht mit Kennung 0 diese fremde Kopie und
+// lud sie hoch - die eigene lag da schon nur noch im lokalen Papierkorb. Mit einer
+// eigenen Kennung je Nachricht passt eine liegengebliebene Kopie zu keiner anderen.
+// Die Werte liegen weit ueber ueblichen Server-UIDs; das Merkzeichen schuetzt
+// zusaetzlich, und belegte Werte werden uebersprungen.
+unsigned long E121NeueKennung(CTocDoc* pQuelle, CTocDoc* pZiel)
+{
+	static unsigned long s_ulZaehler = 0;
+
+	for (int nVersuch = 0; nVersuch < 64; nVersuch++)
+	{
+		unsigned long ulKandidat = 0xE1210000UL
+			^ ((unsigned long) ::GetTickCount() * 2654435761UL)
+			^ ((++s_ulZaehler) << 8);
+		if (ulKandidat < 0x10000000UL)
+			ulKandidat |= 0x80000000UL;		// nie klein wie eine Server-UID, nie 0
+		if (pQuelle && pQuelle->GetSummaryFromUID(ulKandidat))
+			continue;
+		if (pZiel && pZiel->GetSummaryFromUID(ulKandidat))
+			continue;
+		return ulKandidat;
+	}
+	ASSERT(0);
+	return 0x80000000UL | (++s_ulZaehler);
+}
+
 // E-121: siehe tocdoc.h.
 CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
 {

@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.99** (Quellstand 7.2.0.99), 16.10.2026. Die ausführliche
+*Stand Paket **1.0.101** (Quellstand 7.2.0.101), 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -54,7 +54,8 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 
 **Neu gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
 beim Verschieben in einen IMAP-Ordner vollständig an
-([E-118](BEFUNDE.md#e-118)); eine verschobene Nachricht kann nicht mehr
+([E-118](BEFUNDE.md#e-118)); eine verschobene Nachricht kann – bis auf einen seltenen, vermuteten Fall
+(siehe Tabelle) – nicht mehr
 verlorengehen, steht nicht mehr doppelt in der Liste und trifft keine fremde
 Nachricht mit gleicher Nummer ([E-121](BEFUNDE.md#e-121)); eine beim Start
 schon fertige IMAP-Aufgabe blockiert den Ordner nicht mehr und Eudora lässt sich
@@ -65,26 +66,29 @@ Postfach noch nicht bestätigt).
 
 ### Bekannte Fehler
 
-Spalte **Daten**: *ja* heißt, es kann etwas verlorengehen oder verfälscht
-werden; *nein* heißt, es betrifft nur Anzeige oder Bedienung.
+Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
+**Nachricht in Ihrem Postfach** verloren. Die zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
+*nichts* heißt, es betrifft nur Anzeige oder Bedienung.
 
-| Was passiert | Daten | Was hilft | Befund |
+| Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| Ein Filter *„Junk Score is less than N“* wird unbrauchbar, sobald man ihn im Filterfenster anklickt | **ja** (die Regel) | `Filters.pce` sichern, bevor Sie im Filterfenster stöbern | [E-67](BEFUNDE.md#e-67) |
-| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | **ja** (Rest bleibt ungefiltert) | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
-| Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | **ja** (die Datei) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
-| Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **ja** (Einstellungen) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
-| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | **ja** (Bilder) | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
-| Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nein | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
-| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nein | – | [E-119](BEFUNDE.md#e-119) |
-| Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nein | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
-| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nein | – | [E-122](BEFUNDE.md#e-122) |
-| IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nein | – | [E-77](BEFUNDE.md#e-77) |
-| Emoji in Betreffzeilen erscheinen als `?` | nein | – | [E-90](BEFUNDE.md#e-90) |
-| Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nein | es gilt die zuletzt gewählte Einstellung | [E-98](BEFUNDE.md#e-98) |
-| Der Filterbericht bleibt nach einem Filterlauf leer | nein | – | [E-71](BEFUNDE.md#e-71) |
-| Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nein | Fenster einmal neu anordnen | [E-114](BEFUNDE.md#e-114) |
-| Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nein | siehe [Windows Defender meldet Eudora als Trojaner](#windows-defender-meldet-eudora-als-trojaner) | [E-124](BEFUNDE.md#e-124) |
+| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | nichts geht verloren – aber die **übrigen Nachrichten bleiben ungefiltert** liegen | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
+| Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
+| Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
+| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-121](BEFUNDE.md#e-121) |
+| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
+| War der IMAP-Ordner beim Verschieben geschlossen, fehlen die eben verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-121](BEFUNDE.md#e-121) |
+| Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
+| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
+| Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
+| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – | [E-122](BEFUNDE.md#e-122) |
+| IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | – | [E-77](BEFUNDE.md#e-77) |
+| Emoji in Betreffzeilen erscheinen als `?` | nichts | – | [E-90](BEFUNDE.md#e-90) |
+| Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](BEFUNDE.md#e-98) |
+| Eine Nachricht aus einem IMAP-Ordner nach `Out` gezogen wird nicht verschoben: in `Out` entsteht eine neue Nachricht mit `<br>` im Betreff und in den Kopfzeilen, dazu die Meldung *„No messages were transferred!“* | nichts – das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger | Nachrichten nicht aus einem IMAP-Ordner nach `Out` ziehen; so entstandene Einträge in `Out` nicht senden, sondern löschen | [E-125](BEFUNDE.md#e-125) |
+| Der Filterbericht bleibt nach einem Filterlauf leer | nichts | – | [E-71](BEFUNDE.md#e-71) |
+| Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nichts | Fenster einmal neu anordnen | [E-114](BEFUNDE.md#e-114) |
+| Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nichts | siehe [Windows Defender meldet Eudora als Trojaner](#windows-defender-meldet-eudora-als-trojaner) | [E-124](BEFUNDE.md#e-124) |
 
 **Ihre Post sichern.** Eudora legt alles im Verzeichnis `Mailverzeichnis`
 neben dem Programm ab. Wer es vor dem ersten Start einer neuen Fassung kopiert,
@@ -112,10 +116,10 @@ kann jederzeit zurück.
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
   [**E-47**](BEFUNDE.md#e-47)).
-* **Eine Filterregel verträgt kein bloßes Ansehen.** Eine Regel der Form
-  *„Junk Score is less than N"* wird unbrauchbar, sobald man sie im
-  Filterfenster anklickt ([**E-67**](BEFUNDE.md#e-67), offen). Sichern Sie `Filters.pce`, bevor
-  Sie im Filterfenster stöbern. Das Filtern selbst arbeitet korrekt — dass
+* **Eine Filterregel verträgt bloßes Ansehen wieder.** Eine Regel der Form
+  *„Junk Score is less than N"* wurde unbrauchbar, sobald man sie im
+  Filterfenster anklickte ([**E-67**](BEFUNDE.md#e-67)); die Korrektur steht seit
+  7.2.0.43 im Code und ist seit 17.10.2026 am laufenden Programm gemessen. Das Filtern selbst arbeitet korrekt — dass
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob ([**E-64**](BEFUNDE.md#e-64)),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
@@ -241,8 +245,15 @@ kann jederzeit zurück.
   verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
   Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
   gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
-  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen und N1 eingebaut,
-  an 1.0.99 von Gregor bestätigt (16.10.2026); N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123)):
+  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen, und entfernt
+  wird nur noch die Nachricht, die tatsächlich verschoben wurde, an 1.0.99 von Gregor
+  bestätigt (16.10.2026); der Verlust eingebetteter Bilder nach einem Neustart ist
+  abgetrennt als [E-123](BEFUNDE.md#e-123);
+  in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](Befunde/PRUEFER-31.md)),
+  am Prüfstand gemessen, an 1.0.100 von Gregor getestet (16.10.2026);
+  in 7.2.0.101 bekommt gesendete Post beim Verschieben eine eigene Kennung, und eine
+  Kopie, deren Hochladen scheiterte, wird sofort entfernt ([PRÜFER-32](Befunde/PRUEFER-32.md)),
+  am Prüfstand gemessen, Paket 1.0.101 zum Test bei Gregor):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
 * **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):
@@ -932,7 +943,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.99` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.101` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

@@ -1014,6 +1014,10 @@ CWnd *QCTaskManager::SetDisplayWindow(CTaskObjectMT::TaskObjectType type, CWnd *
 					}
 				}
 			}
+			// PRUEFER-31 F4: m_ObjGuard freigeben, bevor RemoveTaskInfo laeuft - es
+			// ruft Gruppenrueckrufe und kann einen Dialog zeigen; Register sperrt in
+			// umgekehrter Folge (Verklemmung). Danach wird hier nichts mehr gelesen.
+			lock.Unlock();
 			for (std::list<unsigned long>::iterator ui = lErledigt.begin(); ui != lErledigt.end(); ++ui)
 				RemoveTaskInfo(*ui);
 		}
@@ -1064,6 +1068,7 @@ CWnd *QCTaskManager::SetDisplayWindow(CTaskObjectMT::TaskObjectType type, CWnd *
 				}
 			}
 		}
+		lock.Unlock();	// PRUEFER-31 F4, siehe oben
 		for (std::list<unsigned long>::iterator ui = lErledigt.begin(); ui != lErledigt.end(); ++ui)
 			RemoveTaskInfo(*ui);
 	}

@@ -2932,6 +2932,14 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 					CopySum->SetDeleteEmbedded(FALSE);
 					CopySum->SetE121Vorab(TRUE);	// E-121: als Vorab-Kopie erkennbar
 					Sum->SetE121Quelle(TRUE);		// E-121 N1: nur diese Quelle wird nach dem Hochladen entfernt
+					// E-121 (PRUEFER-32): Nachrichten aus Out tragen alle die Kennung 0 -
+					// Quelle und Vorab-Kopie bekommen hier eine eigene, gemeinsame.
+					if (Sum->GetHash() == 0)
+					{
+						unsigned long ulKennung = E121NeueKennung(this, TargetToc);
+						Sum->SetHash(ulKennung);
+						CopySum->SetHash(ulKennung);
+					}
 				}
 #endif
 				// If transferring from an IMAP mailbox to a local mailbox, don't copy the IMAP

@@ -1,6 +1,6 @@
 # Die Werkzeuge in `tools/`
 
-> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.99** (einzelne Zeilen nachgezogen, zuletzt `paket-pruefen.ps1` in [L-37.6](../Befunde/LEKTOR-37.md#l-37.6), davor `imap-pruefserver.pl` und `e118-serie.ps1` in [L-36.6](../Befunde/LEKTOR-36.md#l-36.6)). Die Liste wird fortgeschrieben; die
+> **Zuletzt geprüft gegen 7.2.0.70 / Paket 1.0.70; der Quellstand ist inzwischen 7.2.0.101** (zwischen 7.2.0.100 und 7.2.0.101 kam unter `tools/` nur `messen-e67.ps1` dazu, eingetragen unter *Nicht in der Tabelle* in [L-39.3](../Befunde/LEKTOR-39.md#l-39.3); zwischen 7.2.0.99 und 7.2.0.100 hat sich nur `TESTLAEUFE.md` und `ZWEIGE.md` geändert, [L-38.3](../Befunde/LEKTOR-38.md#l-38.3); einzelne Zeilen nachgezogen, zuletzt `paket-pruefen.ps1` in [L-37.6](../Befunde/LEKTOR-37.md#l-37.6), davor `imap-pruefserver.pl` und `e118-serie.ps1` in [L-36.6](../Befunde/LEKTOR-36.md#l-36.6)). Die Liste wird fortgeschrieben; die
 > Fassungsangabe sagt, gegen welchen Quellstand sie zuletzt geprüft wurde.
 
 Diese Übersicht stand bis zum 09.09.2026 in [README.md](../README.md). Sie ist
@@ -133,6 +133,9 @@ Verweise sind von der **Wurzel** des Arbeitsbaums aus zu lesen, nicht von
 
 **Nicht in der Tabelle**, weil Hilfsmittel für einen einzelnen Befund:
 `tools/befehl-schicken.ps1` (schickt `WM_COMMAND` an ein Fenster),
+`tools/messen-e67.ps1` ([E-67](../BEFUNDE.md#e-67): läuft unter `testlauf.ps1 -MessenSkript`,
+öffnet über `befehl-schicken.ps1` das Filterfenster, Befehl 32826, und lässt es einige
+Sekunden stehen; ausgewertet wird `Filters.pce` im Aufrufer),
 `tools/e80-messen.ps1` (ein Lauf, drei Schritte: starten, Nachricht öffnen,
 die angezeigte HTML-Fassung einsammeln — **öffnet ein Fenster, nur nach
 Absprache**) und
