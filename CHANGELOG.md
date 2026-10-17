@@ -77,7 +77,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
-## 7.2.0.101 — Gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung; Filterfehler gemessen (E-121, E-67) — **nicht veröffentlicht, Zweig `e-121-mehrere-gesendete`**
+## 7.2.0.101 — Gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung; Filterfehler gemessen (E-121, E-67) — **veröffentlicht als `v1.0.101` am 17.10.2026** (enthält 7.2.0.88 bis 7.2.0.101)
 
 **Von Gregor bestätigt an 1.0.101 (17.10.2026):** Gregor an 1.0.101 (17.10.2026): *„ich starte 1.0.101 und teste: mail verschoben, sind aber im outbox nicht zu sehen.“* und nach dem Neuöffnen des Ordners *„nach neu-öffnen sind mails zu sehen.“* (Chat). Sein Protokoll: zwei gesendete Mails mit zwei verschiedenen eigenen Kennungen, `E-121 Uebertragung: id=3348826478 … hochgeladen=1` und `id=3348826734 … hochgeladen=1`, neue UIDs 17 und 18 – der neue Weg ist gelaufen. **Dabei aufgefallen:** War der IMAP-Ordner beim Verschieben **nicht geöffnet** und wird er gleich danach geöffnet, fehlen die eben hochgeladenen Mails in der Liste, bis der Ordner noch einmal geschlossen und geöffnet wird (Gregors Protokoll: Hochladen um 5.01 bei `summen=2`, danach erst `NewChildFrame … OUTBOX`, Abgleich ohne Übernahme). **Kein Datenverlust**, nur Anzeige; Ursache nicht untersucht.
 

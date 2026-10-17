@@ -130,8 +130,16 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.87`** (veröffentlicht am 14.10.2026 um 05:46
+* **Das neueste Release ist `v1.0.101`** (veröffentlicht am 17.10.2026 um 19:12
   Uhr UTC, auf GitHub als *Latest*,
+  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.101) — **Verschieben in einen
+  IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal
+  ([E-121](BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an
+  ([E-118](BEFUNDE.md#e-118)); sauberes Beenden ([E-83](BEFUNDE.md#e-83)); der Filterfehler
+  [E-67](BEFUNDE.md#e-67) gemessen; von Gregor an 1.0.101 bestätigt. Bekannte Fehler: siehe
+  *Auf einen Blick* oben. Sonst wie `v1.0.87`:
+* **`v1.0.87`** (veröffentlicht am 14.10.2026 um 05:46
+  Uhr UTC, bis 17.10.2026 das Release auf GitHub,
   https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.87) — Bilder in
   der angegebenen Größe ([E-112](BEFUNDE.md#e-112) mit [E-103](BEFUNDE.md#e-103)),
   Ctrl+F bei aktivem IMAP-Postfach ([E-115](BEFUNDE.md#e-115)) und `&amp;` in
