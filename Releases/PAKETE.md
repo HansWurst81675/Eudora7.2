@@ -156,7 +156,17 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.104 — **nicht ausgeliefert**, Quellstand 7.2.0.104, Zweig `e-123-beenden-warten` (E-123 Beenden wartet, nach PRÜFER-35 abgesichert)
+## 1.0.106 — **nicht ausgeliefert**, Quellstand 7.2.0.106, Zweig `e-123-beenden-warten` (E-69 Task Errors; E-123 Beenden wartet)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.106-release` |
+| Inhalt | wie 1.0.104, dazu: übersprungene Nachricht beim Filtern erscheint in *Task Errors* ([E-69](../BEFUNDE.md#e-69)) |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.104 nur Protokollzeile ohne Meldung (Fehler: lautlos), an 7.2.0.106 Eintrag in Task Errors, Nachricht bleibt in `In`; E-123 wie 1.0.104; Testsuite 209/209 |
+
+## 1.0.105 — **nie gebaut als Paket**, Zwischenbau 7.2.0.105 (Meldungstext *„message text is empty“*), nur am Prüfstand
+
+## 1.0.104 — **ersetzt durch 1.0.106, Testverzeichnis entfernt, nie getestet**, Quellstand 7.2.0.104, Zweig `e-123-beenden-warten` (E-123 Beenden wartet, nach PRÜFER-35 abgesichert)
 
 | | |
 |---|---|
