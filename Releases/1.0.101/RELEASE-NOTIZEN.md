@@ -25,8 +25,9 @@ Die vollständige Liste mit Abhilfe steht in der
 [README, Abschnitt „Auf einen Blick“](https://github.com/HansWurst81675/Eudora7.2#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind).
 Die wichtigsten:
 
-- **War der IMAP-Ordner beim Verschieben geschlossen**, erscheinen die verschobenen
-  Mails erst, wenn man ihn noch einmal schließt und öffnet. Sie sind auf dem Server.
+- **War der IMAP-Ordner seit dem Start noch nie geöffnet**, erscheinen die dorthin
+  verschobenen Mails erst, wenn man ihn noch einmal schließt und öffnet. Sie sind auf
+  dem Server.
 - **Selten, vermutet:** Wird eine gesendete Mail genau dann verschoben, wenn Eudora
   den Zielordner gerade abgleicht, kann sie nur im lokalen Papierkorb landen. Nach dem
   Verschieben kurz nachsehen und den Papierkorb nicht sofort leeren.
