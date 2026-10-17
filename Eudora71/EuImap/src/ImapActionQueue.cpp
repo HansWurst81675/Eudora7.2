@@ -641,8 +641,28 @@ CImapAction::~CImapAction()
 //
 //	Do work in main thread to prepare for DoWork() in the secondary thread.
 //
+// E-123 (PRUEFER-35): "wird gerade hochgeladen" - gezaehlt direkt um den
+// Verbindungsaufbau und das Hochladen einer Uebertragung lokal -> IMAP herum.
+// Das Objekt zaehlt beim Verlassen des Rumpfs zurueck, auch nach einem Fehler
+// oder einer Ausnahme; es haengt nicht an der Abmeldung ueber "Task Status"
+// (E-83), die mehrfach gerissen ist. Gelesen von CImapAccountMgr beim Beenden.
+static LONG s_lE123HochladenLaeuft = 0;
+bool E123HochladenLaeuft()
+{
+	return s_lE123HochladenLaeuft > 0;
+}
+class CE123HochladenZaehler
+{
+public:
+	CE123HochladenZaehler(bool bAktiv) : m_bAktiv(bAktiv) { if (m_bAktiv) ::InterlockedIncrement(&s_lE123HochladenLaeuft); }
+	~CE123HochladenZaehler() { if (m_bAktiv) ::InterlockedDecrement(&s_lE123HochladenLaeuft); }
+private:
+	bool m_bAktiv;
+};
+
 bool CImapAction::DoPreThreadAction()
 {
+	CE123HochladenZaehler e123Zaehler(dynamic_cast<CImapFromLocalTransferMsgAction*>(this) != NULL);
 	m_iState = kActionStateWorking;
 
 	m_pAccount = g_ImapAccountMgr.FindAccount(m_lAccountID);
@@ -2342,6 +2362,7 @@ HRESULT CImapFromLocalTransferMsgAction::DoWork()
 //
 void CImapFromLocalTransferMsgAction::DoPostProcessing()
 {
+	CE123HochladenZaehler e123Zaehler(true);	// E-123, siehe CImapAction::DoPreThreadAction
 	// Now transfer the messages on the server.
 	CSummary		*pSum = NULL;
 	CSummary		*pCopySum = NULL;
@@ -3638,7 +3659,10 @@ void CImapDownloadAction::DoPostProcessing()
 CActionQueue::CActionQueue(unsigned long lAccountID, CString &strFileName, CString &strDirName) :
 	m_lAccountID(lAccountID),
 	m_iState(kQueueStateIdle),
-	m_bNeedsWrite(false)
+	m_bNeedsWrite(false),
+	m_bE123NurBelegt(false),
+	m_dwE123BlockiertSeit(0),
+	m_bE123UebertragungLaeuft(false)
 {
 	m_strFileName = strFileName;
 	m_strDirName = strDirName;
@@ -3662,6 +3686,19 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 	{
 		// When the state changes, reset the flag if it is blocked.  No matter what failed to cause us
 		// to be blocked, it is time to give it another try.
+		m_iState = kQueueStateIdle;
+	}
+
+	// E-123 (17.10.2026, am Pruefstand gemessen): war die Verbindung nur BELEGT
+	// (kActionStateBusy, z.B. vom Abgleich beim Start), blieb die Warteschlange
+	// bisher blockiert, bis jemand zwischen online und offline umschaltete - eine
+	// Uebertragung lokal -> IMAP lief dann in dieser Sitzung nie mehr, sondern erst
+	// nach dem naechsten Start. Jetzt wird es nach 3 s erneut versucht. Offline und
+	// gescheiterte Anmeldung bleiben wie im Original.
+	if ((m_iState == kQueueStateBlocked) && m_bE123NurBelegt &&
+		((::GetTickCount() - m_dwE123BlockiertSeit) > 3000))
+	{
+		m_bE123NurBelegt = false;
 		m_iState = kQueueStateIdle;
 	}
 
@@ -3694,6 +3731,8 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 				// All main thread actions succeeded.
 				if (QCGetTaskManager()->QueueWorkerThread(pImapAction))
 				{
+					// E-123 (PRUEFER-34 S6): merken, ob gerade eine Uebertragung laeuft.
+					m_bE123UebertragungLaeuft = (dynamic_cast<CImapFromLocalTransferMsgAction*>(pImapAction) != NULL);
 					m_array.RemoveAt(0);
 					m_bNeedsWrite = true;
 				}
@@ -3720,6 +3759,11 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 				// The action couldn't proceed because of a temporary failure.  These failures would
 				// apply to any further actions on this account so block any further actions for now.
 				m_iState = kQueueStateBlocked;
+				// E-123: nur belegt -> nach kurzer Zeit erneut versuchen (siehe oben).
+				m_bE123NurBelegt = (pImapAction->GetState() == kActionStateBusy);
+				m_dwE123BlockiertSeit = ::GetTickCount();
+				if (m_bE123NurBelegt)
+					::PutDebugLog(DEBUG_MASK_MISC, "E-123 Warteschlange: Verbindung belegt, neuer Versuch in 3 s");
 				break;
 			case kActionStateSucceeded:
 			case kActionStateWaiting:
@@ -3852,6 +3896,7 @@ void CActionQueue::ReAdd(CImapAction *pImapAction)
 void CActionQueue::ActionDone()
 {
 	m_iState = kQueueStateIdle;
+	m_bE123UebertragungLaeuft = false;	// E-123
 }
 
 //
@@ -3905,6 +3950,46 @@ CImapAction *CActionQueue::GetNextMailboxMatch(unsigned long ulHashToMatch)
 	}
 
 	return NULL;
+}
+
+//
+//	CActionQueue::E123OffeneUebertragungen()
+//
+//	E-123: wie viele Uebertragungen lokal -> IMAP stehen noch aus? Gezaehlt wird
+//	jede wartende Aufgabe dieser Art, dazu eine gerade laufende Aufgabe (sie ist
+//	schon aus m_array genommen, ihre Nachbearbeitung - das eigentliche Hochladen -
+//	steht noch aus). bBlockiert: die Warteschlange kommt von selbst nicht weiter
+//	(offline, Anmeldung gescheitert) - dann lohnt kein Warten.
+//
+int CActionQueue::E123OffeneUebertragungen(bool &bBlockiert, bool &bLaeuft)
+{
+	// Nur kurz blockiert (Verbindung belegt) zaehlt nicht als blockiert - die
+	// Warteschlange laeuft von selbst wieder an.
+	bBlockiert = (m_iState == kQueueStateBlocked) && !m_bE123NurBelegt;
+
+	int		nOffen = 0;
+	int		iSize = m_array.GetSize();
+	for (int i = 0; i < iSize; ++i)
+	{
+		if (dynamic_cast<CImapFromLocalTransferMsgAction*>((CImapAction*)m_array.GetAt(i)))
+		{
+			++nOffen;
+		}
+	}
+	// PRUEFER-34 S6: nur eine laufende UEBERTRAGUNG zaehlt, kein Abgleich.
+	bLaeuft = (m_iState == kQueueStateProcessing) && m_bE123UebertragungLaeuft;
+	if (bLaeuft)
+	{
+		++nOffen;
+	}
+
+	{
+		CString szSpur;
+		szSpur.Format("E-123 Warteschlange: konto=%lu eintraege=%d zustand=%d nur-belegt=%d laeuft=%d uebertragungen=%d", m_lAccountID, (int) m_array.GetSize(), m_iState, m_bE123NurBelegt ? 1 : 0, bLaeuft ? 1 : 0, nOffen);
+		::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
+
+	return nOffen;
 }
 
 //

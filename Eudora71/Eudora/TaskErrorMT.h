@@ -37,6 +37,8 @@ public:
 	CString	GetTitle() { return m_Title; }
 	bool NeedsPostProcessing() { return m_bNeedsPost; }
 	CString GetErrText() { return m_ErrStr; }
+	// E-69: Meldungen ohne laufende Aufgabe (Filter) brauchen eigenen Zusammenhang.
+	void SetzeKontext(LPCSTR pPersona, LPCSTR pHaupt, LPCSTR pTitel) { m_strPersona = pPersona; m_MainText = pHaupt; m_Title = pTitel; }
 	CTime GetInfoTimeStamp() { return m_InfoTimeStamp; }
 
 	TaskErrorType GetErrorType(){ return m_ErrorType; }

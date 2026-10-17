@@ -78,6 +78,9 @@ public:
 
 	BOOL	ProcessActionQueues(bool bHighPriorityOnly);
 	void	FinishUpActionQueues();
+	// E-123: ausstehende Uebertragungen lokal -> IMAP in allen Konten, deren
+	// Warteschlange von selbst weiterkommt (nicht offline/blockiert).
+	int		E123OffeneUebertragungen(bool *pbLaeuft = NULL);
 
 // Private list of IMAP lists. User shouldn't know about this.
 private:

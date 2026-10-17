@@ -67,6 +67,7 @@ my %opt = (
     append_ablehnen => 0,
     ohne_appenduid => 0,
     fremde_uid   => 0,
+    append_verzoegerung => 0,
 );
 
 while (@ARGV) {
@@ -79,6 +80,7 @@ while (@ARGV) {
     elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
     elsif ($a eq '--ohne-appenduid') { $opt{ohne_appenduid} = 1 }
     elsif ($a eq '--fremde-uid')  { $opt{fremde_uid}   = shift @ARGV }
+    elsif ($a eq '--append-verzoegerung') { $opt{append_verzoegerung} = shift @ARGV }
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     else { die "unbekannt: $a\n" }
 }
@@ -308,6 +310,12 @@ while (time < $ende) {
             notiz("  !! Rest nach Literal: '$nach'") if $nach ne '';
             if (length($daten) != $n) {
                 notiz(sprintf('  !! Literal unvollstaendig: %d von %d Bytes', length($daten), $n));
+            }
+            # E-123: die Antwort auf das Hochladen verzoegern - laeuft die Uebertragung
+            # noch, wenn Eudora beendet wird, muss das Beenden warten.
+            if ($opt{append_verzoegerung} > 0) {
+                notiz("  APPEND: Antwort verzoegert um $opt{append_verzoegerung} s");
+                sleep $opt{append_verzoegerung};
             }
             # E-121: das Hochladen ablehnen - darf die Nachricht beim Absender bleiben?
             if ($opt{append_ablehnen}) {

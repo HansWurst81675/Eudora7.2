@@ -60,6 +60,8 @@ DAMAGE. */
 
 #include "mainfrm.h"		// FORNOW A TOTAL HACK
 #include "FilterReportView.h"
+#include "QCTaskManager.h"	// E-69: Eintrag in Task Errors
+#include "TaskErrorMT.h"
 
 #include "QCCommandActions.h"
 #include "QCMailboxCommand.h"
@@ -2365,6 +2367,36 @@ BOOL CFiltersDoc::CreateFilterItem(CFilter *pFilter)
 // the filtering.  Returns the filter actions performed.
 //
 /////////////////////////////////////////////////////////////////////////////
+// E-69 (Gregor am 17.10.2026: "E-69 = doch A"): eine Nachricht, die der Filter
+// nicht lesen kann, wird uebersprungen - das ist richtig, aber es geschah
+// lautlos: der Anwender wunderte sich, warum eine Mail nicht einsortiert
+// wurde. Jetzt steht dafuer ein Eintrag im Fenster "Task Errors", mit Betreff,
+// Postfach und Grund. Nichts geht verloren: die Nachricht bleibt, wo sie ist.
+static void E69UebersprungenMelden(CSummary *Sum, LPCSTR pGrund)
+{
+	CString szBetreff = (Sum && Sum->GetSubject()) ? Sum->GetSubject() : "";
+	CString szPostfach;
+	if (Sum && Sum->m_TheToc)
+		szPostfach = Sum->m_TheToc->Name();
+
+	CString szText;
+	szText.Format("The message \"%s\" in mailbox \"%s\" could not be read and was not filtered (%s). "
+				  "It is still in that mailbox; nothing was lost.",
+				  (LPCSTR) szBetreff, (LPCSTR) szPostfach, pGrund);
+
+	CString szSpur;
+	szSpur.Format("E-69 Filter uebersprungen: betreff=\"%s\" postfach=\"%s\" grund=%s",
+				  (LPCSTR) szBetreff, (LPCSTR) szPostfach, pGrund);
+	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+	CTaskErrorMT *pFehler = DEBUG_NEW_NOTHROW CTaskErrorMT(NULL, szText, TERR_MSG);
+	if (pFehler)
+	{
+		pFehler->SetzeKontext("", "Filtering", "Filters");
+		QCGetTaskManager()->Register(pFehler);
+	}
+}
+
 int CFiltersDoc::FilterMsg(CSummary*& Sum,
 						   int WhenToApply,
 						   CFilterActions *pFiltAct,
@@ -2450,6 +2482,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 					// bleibt richtig - stumm darf er nicht sein.
 					PutDebugLog(DEBUG_MASK_MISC,
 						"E-69 FilterMsg abgebrochen: kein CTocDoc zur Nachricht");
+					E69UebersprungenMelden(Sum, "no mailbox");
 					ASSERT(0);
 					break;
 				}
@@ -2471,12 +2504,17 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 						CImapMailbox	*pImapMailbox = pTocDoc->m_pImapMailbox;
 						if (!pImapMailbox)
 						{
+							E69UebersprungenMelden(Sum, "no IMAP mailbox");	// E-69
 							break;
 						}
 
 						HRESULT hResult = pImapMailbox->DownloadFullHeaders(pTocDoc, Sum, Sum->m_strFullHeaders);
-						if (!hResult)
+						// E-69: DownloadFullHeaders liefert bei Erfolg TRUE (1), bei manchen
+						// Fehlern aber einen negativen HRESULT (E_FAIL, E_INVALIDARG) - "!hResult"
+						// sah nur die 0, bei E_FAIL wurde mit leeren Kopfzeilen weitergefiltert.
+						if (!hResult || FAILED(hResult))
 						{
+							E69UebersprungenMelden(Sum, "headers could not be fetched from the server");	// E-69
 							break;
 						}
 					}
@@ -2498,6 +2536,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 						// BEFUND E-69, siehe oben.
 						PutDebugLog(DEBUG_MASK_MISC,
 							"E-69 FilterMsg abgebrochen: GetMessageDoc lieferte NULL");
+						E69UebersprungenMelden(Sum, "message could not be loaded from the mailbox file");
 						ASSERT(0);
 						break;
 					}
@@ -2517,6 +2556,7 @@ int CFiltersDoc::FilterMsg(CSummary*& Sum,
 					// BEFUND E-69, siehe oben.
 					PutDebugLog(DEBUG_MASK_MISC,
 						"E-69 FilterMsg abgebrochen: kein Nachrichtentext");
+					E69UebersprungenMelden(Sum, "the message text could not be read");
 					ASSERT(0);
 					break;
 				}

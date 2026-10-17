@@ -729,7 +729,10 @@ extern BOOL g_bPopupOn;
 
 
 CMainFrame::CMainFrame() :
-	m_idAutoActivateTimer(0)
+	m_idAutoActivateTimer(0),
+	m_bE123Gewartet(FALSE),
+	m_dwE123Beginn(0),
+	m_bE123WarteAktiv(FALSE)
 {
 	ASSERT(!m_pTheMainFrame);
 	m_pTheMainFrame = this;
@@ -1955,6 +1958,32 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 			}
 			last_pt.x = pt.x;
 			last_pt.y = pt.y;
+		}
+		break;
+
+	case E123_WARTE_TIMER_ID:
+		{
+			// E-123: siehe OnClose. Fertig oder Zeit um - dann wirklich beenden.
+			bool bLaeuft = false;
+			int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen(&bLaeuft);
+			DWORD dwVergangen = ::GetTickCount() - m_dwE123Beginn;
+			// PRUEFER-34 S1: solange ein Hochladen laeuft, nicht beenden - auch nicht
+			// nach 90 s. S5/PRUEFER-35 N2: steht ein modaler Dialog offen (Kennwort,
+			// Fehler), ist das Hauptfenster gesperrt - dann warten; ein schwebendes
+			// Fenster sperrt nichts. PRUEFER-35: nach 5 Minuten wird in jedem Fall
+			// beendet, damit Eudora nie fuer immer offen bleibt.
+			BOOL bDialogOffen = !IsWindowEnabled();
+			BOOL bNotfall = (dwVergangen > 300000);
+			if (bNotfall || (!bLaeuft && !bDialogOffen && (nOffen == 0 || dwVergangen > 90000)))
+			{
+				KillTimer(E123_WARTE_TIMER_ID);
+				m_bE123WarteAktiv = FALSE;
+				SetMessageText(AFX_IDS_IDLEMESSAGE);
+				CString szSpur;
+				szSpur.Format("E-123 Beenden: Warten zu Ende nach %lu ms, offen=%d", (unsigned long) dwVergangen, nOffen);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				PostMessage(WM_CLOSE);
+			}
 		}
 		break;
 
@@ -5145,6 +5174,17 @@ BOOL CMainFrame::QuerySendQueuedMessages()
 
 BOOL CMainFrame::OnQueryEndSession()
 {
+	// E-123 (PRUEFER-35 N5): beim Herunterfahren wird nicht gewartet; ein
+	// laufendes Warten wird beendet, damit nach einem abgebrochenen
+	// Herunterfahren nichts von selbst schliesst.
+	if (m_bE123WarteAktiv)
+	{
+		KillTimer(E123_WARTE_TIMER_ID);
+		m_bE123WarteAktiv = FALSE;
+		m_bE123Gewartet = FALSE;
+		SetMessageText(AFX_IDS_IDLEMESSAGE);
+	}
+
 	if (!CloseDown())
 		return (FALSE);
 		
@@ -5199,6 +5239,43 @@ void CMainFrame::OnClose()
 	if (m_lpfnCloseProc != NULL && !(*m_lpfnCloseProc)(this))
 		return;
 
+	// E-123 (Gregor am 17.10.2026: "sollen wir das beenden so lange hinaus
+	// zoegern, bis der vorgang abgeschlossen ist"): stehen noch Uebertragungen
+	// lokal -> IMAP aus, wurden sie bisher nur in actionqueue.dat gespeichert und
+	// nach dem naechsten Start fortgesetzt - ueber den Neustart gingen die nur im
+	// Speicher stehenden Schutzvermerke der eingebetteten Bilder verloren. Jetzt
+	// wartet das Beenden, bis die Warteschlange leer ist (Pruefung alle 2 s ueber
+	// einen Zeitgeber, keine eigene Schleife), hoechstens 90 s. Nicht beim
+	// Herunterfahren von Windows (OnQueryEndSession ruft CloseDown direkt) und
+	// nicht, wenn ein Konto offline oder blockiert ist.
+	//
+	// PRUEFER-34 (17.10.2026): waehrend des Wartens wird ein weiteres Schliessen
+	// IGNORIERT (S1 - das Hochladen laeuft im Hauptfaden und stellt nebenbei
+	// Botschaften zu; ein zweites WM_CLOSE darin fuehrte in einen Haenger), die
+	// Statuszeile sagt, worauf gewartet wird (S2), und solange ein Hochladen
+	// gerade laeuft, wird nie beendet - auch nicht nach 90 s (siehe OnTimer).
+	if (m_bE123WarteAktiv)
+	{
+		PutDebugLog(DEBUG_MASK_MISC, "E-123 Beenden: weiteres Schliessen waehrend des Wartens ignoriert");
+		return;
+	}
+	if (!m_bE123Gewartet)
+	{
+		int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen();
+		if (nOffen > 0)
+		{
+			CString szSpur;
+			szSpur.Format("E-123 Beenden wartet auf %d Uebertragung(en) in IMAP-Ordner", nOffen);
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			m_bE123Gewartet = TRUE;
+			m_bE123WarteAktiv = TRUE;
+			m_dwE123Beginn = ::GetTickCount();
+			SetMessageText("Waiting for messages to finish transferring to the IMAP server before quitting...");
+			SetTimer(E123_WARTE_TIMER_ID, 2000, NULL);
+			return;
+		}
+	}
+
 	if (!CloseDown())
 	{
 		// BEFUND E-33: hier endet das Beenden ohne jede Meldung, und Eudora
@@ -5206,6 +5283,9 @@ void CMainFrame::OnClose()
 		// Welche Stufe abgelehnt hat, sagt die letzte E-33-Zeile davor.
 		PutDebugLog(DEBUG_MASK_MISC,
 			"E-33 OnClose: ABBRUCH - CloseDown hat FALSE geliefert, Eudora laeuft weiter");
+		// E-123 (PRUEFER-34 S4): der Anwender hat abgebrochen - beim naechsten
+		// Beenden wieder warten.
+		m_bE123Gewartet = FALSE;
 		return;
 	}
 

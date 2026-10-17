@@ -1,0 +1,19 @@
+Eudora 1.0.106 (Quellstand 7.2.0.106) - was zu testen ist, Stand 17.10.2026
+============================================================================
+
+Vorher: dein Mailverzeichnis aus 1.0.101 hierher kopieren - Eudora dabei geschlossen.
+Beides unten habe ich am Pruefstand selbst gemessen; bei dir nur der Alltag.
+
+| Was                          | Testschritte                                                    | richtig ist                                        |
+|------------------------------|-----------------------------------------------------------------|----------------------------------------------------|
+| Beenden waehrend Verschieben | einige Mails (gern mit Bildern) aus "In" in einen IMAP-Ordner    | Eudora schliesst sich nicht sofort, sondern ein     |
+| (E-123)                      | ziehen und SOFORT danach Eudora schliessen (File > Exit)        | paar Sekunden spaeter von selbst; unten in der      |
+|                              |                                                                 | Statuszeile "Waiting for messages ..."; nach dem    |
+|                              |                                                                 | Neustart stehen die Mails je einmal im IMAP-Ordner  |
+| Normales Beenden             | Eudora ohne laufende Uebertragung schliessen                    | schliesst sofort wie bisher                         |
+| Filter (E-69)                | nichts Besonderes tun - nur falls je ein Eintrag "could not be  | die genannte Mail liegt noch im genannten Postfach  |
+|                              | read and was not filtered" unter Task Errors erscheint          |                                                    |
+
+Falls Eudora doch einmal nicht zugeht: nach spaetestens 5 Minuten beendet es sich
+von selbst. Sonst Task-Manager > Details > Eudora.exe > Task beenden, und mir
+die eudora.log zeigen.

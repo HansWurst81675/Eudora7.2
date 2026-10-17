@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.101** (Quellstand 7.2.0.101), 17.10.2026. Die ausführliche
+*Stand Paket **1.0.101** (Quellstand 7.2.0.101), 17.10.2026; in Arbeit 7.2.0.106. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -72,12 +72,12 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | nichts geht verloren – aber die **übrigen Nachrichten bleiben ungefiltert** liegen | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
+| Eine Nachricht, die der Filter nicht lesen kann, wird still übersprungen | nichts geht verloren – **diese eine Nachricht** bleibt ungefiltert liegen, die übrigen werden weiter gefiltert (am Quelltext gelesen für *Filter Messages*, [LEKTOR-41](Befunde/LEKTOR-41.md)) | nach dem Filtern stichprobenartig nachsehen; ab 7.2.0.106 (noch nicht veröffentlicht) steht die Nachricht mit Betreff und Grund im Fenster *Task Errors* | [E-69](BEFUNDE.md#e-69) |
 | Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
-| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-121](BEFUNDE.md#e-121) |
-| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist | [E-123](BEFUNDE.md#e-123) |
-| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-121](BEFUNDE.md#e-121) |
+| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-126](BEFUNDE.md#e-126) |
+| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (noch nicht veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist, höchstens 5 Minuten; nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](BEFUNDE.md#e-123) |
+| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](BEFUNDE.md#e-127) |
 | Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
@@ -133,7 +133,8 @@ kann jederzeit zurück.
 * **Das neueste Release ist `v1.0.101`** (veröffentlicht am 17.10.2026 um 19:12
   Uhr UTC, auf GitHub als *Latest*,
   https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.101) — **Verschieben in einen
-  IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal
+  IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –
+  bis auf einen seltenen, vermuteten Fall bei gesendeter Post (siehe *Auf einen Blick*)
   ([E-121](BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an
   ([E-118](BEFUNDE.md#e-118)); sauberes Beenden ([E-83](BEFUNDE.md#e-83)); der Filterfehler
   [E-67](BEFUNDE.md#e-67) gemessen; von Gregor an 1.0.101 bestätigt. Bekannte Fehler: siehe
@@ -236,7 +237,7 @@ kann jederzeit zurück.
   nach RFC 2047 wegzulassen; über POP zeigte die Postfachliste sogar nur die
   erste Zeile. Der frühere Verdacht auf `Encode2047` beim Senden ist widerlegt
   — Eudora hatte diese Nachrichten gar nicht gesendet. **Kein Datenverlust.**
-* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, noch nicht ausgeliefert, von Gregor noch nicht bestätigt): In manchen
+* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, ausgeliefert mit `v1.0.101`, von Gregor noch nicht bestätigt): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
   Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
@@ -245,30 +246,30 @@ kann jederzeit zurück.
   Handyfassung, eine davon per `display:none` verborgen; zweiter Fall,
   von Gregor am 13.10.2026 an 1.0.86 gemeldet).
 * **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als
-  HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert, Teil 1 von Gregor am 14.10.2026 an 1.0.89 bestätigt, Teil 2 am 14.10.2026 an 1.0.90): beim Hochladen
+  HTML-Quelltext** ([**E-118**](BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, ausgeliefert mit `v1.0.101`, Teil 1 von Gregor am 14.10.2026 an 1.0.89 bestätigt, Teil 2 am 14.10.2026 an 1.0.90): beim Hochladen
   verwirft Eudora die `Content-*`-Köpfe und schreibt keinen oder nur
   `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
   Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach (am IMAP-Prüfserver gemessen, von Gregor am 14.10.2026 an 1.0.90 bestätigt).
 * **Eine Nachricht, die in einen IMAP-Ordner verschoben wird, kann spurlos
-  verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, im Download `v1.0.87` offen;
-  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, noch nicht ausgeliefert;
+  verschwinden** ([**E-121**](BEFUNDE.md#e-121), Datenverlust, in `v1.0.87` offen, **in `v1.0.101` behoben, von Gregor am 17.10.2026 bestätigt**; zwei Reste abgetrennt als [E-126](BEFUNDE.md#e-126) (offen) und [E-127](BEFUNDE.md#e-127) (offen);
+  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, ausgeliefert mit `v1.0.101`;
   gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
   von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen, und entfernt
   wird nur noch die Nachricht, die tatsächlich verschoben wurde, an 1.0.99 von Gregor
   bestätigt (16.10.2026); der Verlust eingebetteter Bilder nach einem Neustart ist
-  abgetrennt als [E-123](BEFUNDE.md#e-123);
+  abgetrennt als [E-123](BEFUNDE.md#e-123) (offen);
   in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](Befunde/PRUEFER-31.md)),
   am Prüfstand gemessen, an 1.0.100 von Gregor getestet (16.10.2026);
   in 7.2.0.101 bekommt gesendete Post beim Verschieben eine eigene Kennung, und eine
   Kopie, deren Hochladen scheiterte, wird sofort entfernt ([PRÜFER-32](Befunde/PRUEFER-32.md)),
-  am Prüfstand gemessen, Paket 1.0.101 zum Test bei Gregor):
+  am Prüfstand gemessen, an 1.0.101 von Gregor bestätigt (17.10.2026)):
   ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
   Selten, aber still. Originalfehler von QUALCOMM.
 * **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](BEFUNDE.md#e-83), zweite Ursache):
   sie belegte ihren Ordner, das Verschieben dorthin wartete ewig, und beim Beenden kam
   *„You currently have 1 task(s) running“*. Behoben in 7.2.0.98, am IMAP-Prüfstand gemessen
   (vorher 12 von 12 Läufen hängend, danach 10 von 10 durch), an 1.0.99 von Gregor sauber
-  beendet (16.10.2026; der Wettlauf selbst trat in seinem Lauf nicht auf), noch nicht ausgeliefert.
+  beendet (16.10.2026; der Wettlauf selbst trat in seinem Lauf nicht auf), ausgeliefert mit `v1.0.101`.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
@@ -951,7 +952,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.101` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.106` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

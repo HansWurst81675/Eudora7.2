@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 17.10.2026 (zuletzt veröffentlicht **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 17.10.2026 (zuletzt veröffentlicht **1.0.101** als `v1.0.101` am 17.10.2026, davor **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -17,8 +17,8 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.87`** (14.10.2026, 05:46 UTC, auf GitHub als
-> *Latest*; davor `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
+> veröffentlicht ist inzwischen **`v1.0.101`** (17.10.2026, 19:12 UTC, auf GitHub als
+> *Latest*; davor `v1.0.87` vom 14.10.2026, 05:46 UTC, `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
 > hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
@@ -155,6 +155,40 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.106 — **nicht ausgeliefert**, Quellstand 7.2.0.106, Zweig `e-123-beenden-warten` (E-69 Task Errors; E-123 Beenden wartet)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.106-release` |
+| Inhalt | wie 1.0.104, dazu: übersprungene Nachricht beim Filtern erscheint in *Task Errors* ([E-69](../BEFUNDE.md#e-69)) |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.104 nur Protokollzeile ohne Meldung (Fehler: lautlos), an 7.2.0.106 Eintrag in Task Errors, Nachricht bleibt in `In`; E-123 wie 1.0.104; Testsuite 209/209 |
+
+## 1.0.105 — **nie gebaut als Paket**, Zwischenbau 7.2.0.105 (Meldungstext *„message text is empty“*), nur am Prüfstand
+
+## 1.0.104 — **ersetzt durch 1.0.106, Testverzeichnis entfernt, nie getestet**, Quellstand 7.2.0.104, Zweig `e-123-beenden-warten` (E-123 Beenden wartet, nach PRÜFER-35 abgesichert)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.104-release` |
+| Inhalt | wie 1.0.103, dazu die Korrekturen aus [PRÜFER-35](../Befunde/PRUEFER-35.md) – kein Warten für immer mehr |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.101 kein Warten, Hochladen nie bestätigt (Fehler); an 7.2.0.104 einfaches und doppeltes Schließen grün; Testsuite 209/209 |
+
+## 1.0.103 — **ersetzt durch 1.0.104, Testverzeichnis entfernt, nie getestet**, Quellstand 7.2.0.103, Zweig `e-123-beenden-warten` (E-123 Beenden wartet, nach PRÜFER-34 abgesichert)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.103-release` |
+| Inhalt | wie 1.0.102, dazu die Korrekturen aus [PRÜFER-34](../Befunde/PRUEFER-34.md) |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.101 kein Warten, Hochladen nie bestätigt (Fehler); an 7.2.0.103 gewartet, zweites Schließen ignoriert, hochgeladen, sauber beendet; Testsuite 209/209 |
+
+## 1.0.102 — **ersetzt durch 1.0.103, Testverzeichnis entfernt, nie getestet**, Quellstand 7.2.0.102, Zweig `e-123-beenden-warten` (E-123 Beenden wartet)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.102-release` |
+| Inhalt | wie 1.0.101, dazu: Beenden wartet auf IMAP-Übertragungen, belegte Verbindung blockiert die Warteschlange nicht mehr ([E-123](../BEFUNDE.md#e-123)) |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.101 kein Warten, Hochladen nie bestätigt (Fehler), an 7.2.0.102 Warten 10 s bis zum bestätigten Hochladen, sauber beendet; Testsuite 209/209 |
 
 ## 1.0.101 — **veröffentlicht als `v1.0.101`** (17.10.2026), Quellstand 7.2.0.101, Zweig `e-121-mehrere-gesendete` (eigene Kennung für gesendete Post, E-67 gemessen)
 

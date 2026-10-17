@@ -1394,3 +1394,27 @@ und im CHANGELOG *Noch offen*, Prüfer-Kürzel in README und TESTPLAN ([L-39.2](
 mehr als das E-121-Urteil, PRÜFER hat 7.2.0.101 nicht gesehen ([L-39.1](Befunde/LEKTOR-39.md#l-39.1)); Kürzel in der CHANGELOG-Zeile
 [E-121](BEFUNDE.md#e-121) ([L-39.6](Befunde/LEKTOR-39.md#l-39.6)); was für v1.0.101 nachzuziehen ist, Defender für 1.0.100/1.0.101 nirgends belegt
 ([L-39.7](Befunde/LEKTOR-39.md#l-39.7)).
+
+## Fünfundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-40.md`)
+
+Nach Release v1.0.101 (Marke auf `eec4e4e5`, PR #99, Doku PR #100) und 7.2.0.102 auf
+`e-123-beenden-warten` ([E-123](BEFUNDE.md#e-123) Teilbehebung: Beenden wartet; [E-125](BEFUNDE.md#e-125) Gregors Entscheidung B), zum
+Stand `3ea8cbc7`; 129 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 42 außerhalb von `Befunde/`
+über Stand- und Release-Aussagen gesucht. Berichtigt: neue Prüfserver-Option, drei Parameter und
+`messen-e123.ps1` fehlten in `tools/WERKZEUGE.md` ([L-40.2](Befunde/LEKTOR-40.md#l-40.2)); v1.0.101 stand in README,
+CHANGELOG (13 Überschriften), ZIEL, PAKETE, WEITERMACHEN und ZWEIGE noch als Zukunft ([L-40.3](Befunde/LEKTOR-40.md#l-40.3));
+[E-123](BEFUNDE.md#e-123)-Teilbehebung und [E-125](BEFUNDE.md#e-125)-Entscheidung fehlten außerhalb von `BEFUNDE.md` ([L-40.4](Befunde/LEKTOR-40.md#l-40.4)).
+Offen: `offene-befunde.pl` liest [E-123](BEFUNDE.md#e-123) als erledigt ([L-40.1](Befunde/LEKTOR-40.md#l-40.1)); PRÜFER und CHRONIST für
+7.2.0.102 fällig ([L-40.5](Befunde/LEKTOR-40.md#l-40.5)).
+
+## Sechsundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-41.md`)
+
+Nach 7.2.0.103 bis 7.2.0.106 auf `e-123-beenden-warten` ([E-123](BEFUNDE.md#e-123) nach PRÜFER-34/35, [E-69](BEFUNDE.md#e-69) in Task
+Errors) und Gregors *„ja, e-121 behoben“* (17.10.2026, Chat), zum Stand `d3314ddd`; 132 MDs aus `git ls-files`
+ohne `Arbeitsweise/`, davon 42 außerhalb von `Befunde/` durchsucht. Auftrag: nur melden, nichts ändern.
+Offen: Gregors Urteil zu [E-121](BEFUNDE.md#e-121) steht in keiner Datei, `BEFUNDE.md:288`, CHANGELOG, WEITERMACHEN, ZIEL
+und README führen den Befund offen, die zwei Restfälle in der README brauchen eine eigene Kennung
+([L-41.1](Befunde/LEKTOR-41.md#l-41.1)); `v1.0.87` als *„veröffentlicht ist“* in ZIEL und AUFGABEN ([L-41.2](Befunde/LEKTOR-41.md#l-41.2)); [E-123](BEFUNDE.md#e-123) fehlt im
+Maßstab 7.2.1.0 ([L-41.3](Befunde/LEKTOR-41.md#l-41.3)); README und CHANGELOG nennen für [E-123](BEFUNDE.md#e-123) 90 s und 7.2.0.102 statt bis zu
+5 Minuten ab 7.2.0.104 ([L-41.4](Befunde/LEKTOR-41.md#l-41.4)); README überzeichnet [E-69](BEFUNDE.md#e-69), CHANGELOG und FILTER ohne 7.2.0.106
+([L-41.5](Befunde/LEKTOR-41.md#l-41.5)); `messen-e69.ps1` und `messen-e123-doppelt.ps1` fehlen in `tools/WERKZEUGE.md` ([L-41.8](Befunde/LEKTOR-41.md#l-41.8)).

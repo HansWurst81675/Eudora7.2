@@ -559,6 +559,7 @@ public:
 	bool			 HasHighPriorityItems();
 	CImapAction		*GetNextMailboxMatch(unsigned long ulHashToMatch);
 	bool			 HatOffeneUebertragung(unsigned long ulHash);	// E-121 P3
+	int				 E123OffeneUebertragungen(bool &bBlockiert, bool &bLaeuft);	// E-123: vor dem Beenden
 
 	void			 SetNeedsWrite(bool bNeedsWrite) {m_bNeedsWrite = bNeedsWrite;}
 	bool			 NeedsWrite() {return m_bNeedsWrite;}
@@ -573,6 +574,9 @@ private:
 	CString			 m_strFileName;
 	CString			 m_strDirName;
 	bool			 m_bNeedsWrite;
+	bool			 m_bE123NurBelegt;	// E-123: blockiert nur, weil die Verbindung belegt war
+	DWORD			 m_dwE123BlockiertSeit;	// E-123: seit wann (GetTickCount)
+	bool			 m_bE123UebertragungLaeuft;	// E-123: die laufende Aufgabe ist eine Uebertragung lokal -> IMAP
 };
 
 #endif // __IMAPACTIONQUEUE_H
