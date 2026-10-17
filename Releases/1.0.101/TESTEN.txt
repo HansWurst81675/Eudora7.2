@@ -1,0 +1,19 @@
+Eudora 1.0.101 (Quellstand 7.2.0.101) - was zu testen ist, Stand 17.10.2026
+============================================================================
+
+Vorher: dein Mailverzeichnis aus 1.0.100 hierher kopieren - Eudora dabei geschlossen.
+Alles andere habe ich am Pruefstand selbst getestet. Bei dir nur, was dort nicht geht:
+
+| Was                                   | Testschritte                                                  | richtig ist                                          |
+|---------------------------------------|---------------------------------------------------------------|------------------------------------------------------|
+| gesendete Mails nach IMAP verschieben | ZWEI gesendete Mails (aus "Out", mit gruenem Haken) markieren | beide stehen je EINMAL in der OUTBOX, mit Inhalt;     |
+|                                       | und zusammen auf "OUTBOX" unter <Dominant> ziehen             | kein Fehlerdialog; aus "Out" sind sie verschwunden   |
+| Beenden                               | Eudora schliessen                                             | keine Meldung "1 task(s) running"                    |
+
+Bitte NICHT: Mails aus der OUTBOX zurueck nach "Out" ziehen - das legt neue
+Nachrichten mit kaputten Kopfzeilen an (E-125, noch offen). Die drei Eintraege
+"test 20261016a<br>" in deinem Out bitte nicht senden.
+
+Selbst getestet (Pruefstand): Normalfall, Server lehnt das Hochladen ab (Mail
+bleibt in "In"), fremde Mail mit gleicher Nummer im Ziel, Filterfenster mit
+"Junk Score is less than" (E-67).

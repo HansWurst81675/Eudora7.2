@@ -1243,6 +1243,15 @@ void CFiltersViewRight::DoDataExchange(CDataExchange* pDX)
 			{
 				RefreshVerbCombo(&m_Verb0Combo, false);
 			}
+			// E-67 Spurmarke (17.10.2026): gespeicherter Wert und Auswahl in EINER Zeile -
+			// nur so ist belegt, dass die Regel wirklich angezeigt wurde.
+			{
+				CString szSpur;
+				szSpur.Format("E-67 Filteransicht laden: regel=\"%s\" junk=%d verb-gespeichert=%d verb-auswahl=%d eintraege=%d",
+					(LPCTSTR) filt->m_Name, m_Header0.Compare(strJunkScoreHeader) == 0,
+					filt->m_Verb[0], m_Verb0, m_Verb0Combo.GetSafeHwnd() ? m_Verb0Combo.GetCount() : -1);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			}
 			if (m_Header1.Compare(strJunkScoreHeader) == 0)
 			{
 				if (m_Verb1 >= NumVerbsNonJunk)		// E-67, siehe oben
@@ -1488,6 +1497,12 @@ void CFiltersViewRight::DoDataExchange(CDataExchange* pDX)
 
 		{
 			doc->SetModifiedFlag();
+		}
+		{	// E-67 Spurmarke: was beim Wegklicken zurueckgeschrieben wird
+			CString szSpur;
+			szSpur.Format("E-67 Filteransicht speichern: regel=\"%s\" verb-vorher=%d verb-neu=%d geaendert=%d",
+				(LPCTSTR) filt->m_Name, filt->m_Verb[0], m_Verb0, m_Verb0 != filt->m_Verb[0]);
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
 		}
 			
 

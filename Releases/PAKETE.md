@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 16.10.2026 (zuletzt veröffentlicht **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 17.10.2026 (zuletzt veröffentlicht **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -155,6 +155,14 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.101 — **nicht ausgeliefert**, Quellstand 7.2.0.101, Zweig `e-121-mehrere-gesendete` (eigene Kennung für gesendete Post, E-67 gemessen)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.101-release` |
+| Inhalt | wie 1.0.100, dazu: gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung, eine gescheiterte Vorab-Kopie wird sofort entfernt ([E-121](../BEFUNDE.md#e-121)); Spurmarken zu [E-67](../BEFUNDE.md#e-67) |
+| Gemessen | Prüfstand an 7.2.0.101: Normalfall, abgelehntes Hochladen (Kopie entfernt, Mail bleibt in `In`), Kollisionsfall; Filterfenster nachgestellt – an 7.2.0.101 grün, Gegenprobe mit dem alten Vergleich zeigt den Fehler (`verb-auswahl=14 eintraege=2`); Testsuite 209/209. Die Kennung für gesendete Post ist am Prüfstand nicht nachstellbar – Prüfung bei Gregor, auf seine Anweisung (*„nur was nicht geht, werde ich testen.“*). |
 
 ## 1.0.100 — **nicht ausgeliefert**, Quellstand 7.2.0.100, Zweig `e-121-mehrere-gesendete` ([PRÜFER-31](Befunde/PRUEFER-31.md) F1, F3, F4)
 

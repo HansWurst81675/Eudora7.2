@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 16.10.2026)
+## Noch offen (Stand 17.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -39,7 +39,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-78**](BEFUNDE.md#e-78) | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von [E-70](BEFUNDE.md#e-70) am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
 | [**E-71**](BEFUNDE.md#e-71) | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
 | [**E-77**](BEFUNDE.md#e-77) | **IMAP-Postfachnamen mit Umlauten** werden roh angezeigt: `Entw&APw-rfe` statt *Entwürfe* | Von Gregor am 10.09.2026 an 1.0.42 gemeldet. Modifiziertes UTF-7 (RFC 3501, 5.1.3), das Eudora nicht dekodiert — in `Eudora71/` kommt keine UTF-7-Behandlung vor. Bei der Behebung gehört die Gegenrichtung dazu: beim Anlegen und Umbenennen muss der Name wieder kodiert werden |
-| [**E-67**](BEFUNDE.md#e-67) | eine Regel *„Junk Score is less than N"* wird durch bloßes Ansehen im Filterfenster unbrauchbar | belegt am Quelltext (`filtersv.cpp:1210`, `:1222`). Wer im Filterfenster stöbert, sollte vorher `Filters.pce` sichern |
 | [**E-68**](BEFUNDE.md#e-68), halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit [E-78](BEFUNDE.md#e-78)**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
@@ -76,6 +75,12 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.101 — Gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung; Filterfehler gemessen (E-121, E-67) — **nicht veröffentlicht, Zweig `e-121-mehrere-gesendete`**
+
+**[E-121](BEFUNDE.md#e-121), [PRÜFER-32](Befunde/PRUEFER-32.md):** Alle Nachrichten aus `Out` tragen die Kennung 0, und über sie fanden sich Quelle und Vorab-Kopie wieder. Kam eine Übertragung nicht zustande (Server nicht erreichbar, offline, Esc), blieb die markierte Vorab-Kopie liegen, und die **nächste** gesendete Mail griff diese fremde Kopie – die eigene lag dann nur noch im lokalen Papierkorb (Rückfall seit 7.2.0.96). Jetzt bekommen Quelle und Vorab-Kopie in `CTocDoc::Xfer` eine eigene, gemeinsame Kennung (`E121NeueKennung`, `EuImap/src/ImapToc.cpp`), die weder in der Quelle noch im Ziel vorkommt. Außerdem wird eine Vorab-Kopie, deren Hochladen scheitert, sofort entfernt (`ImapCopyMsgFromLocalToImap`, Spurmarke `E-121 Hochladen gescheitert, Vorab-Kopie entfernt`) – liegengeblieben konnte ein Abgleich sie für eine fremde Server-Nachricht halten. Am Prüfstand `C:\Temp\E118` an 7.2.0.101 (17.10.2026): Normalfall `hochgeladen=1`; **Server lehnt das Hochladen ab** (`--append-ablehnen`): `E-121 Hochladen gescheitert, Vorab-Kopie entfernt`, die Nachricht bleibt in `In`; Kollisionsfall zweimal grün; alle sauber beendet. Die eigene Kennung für Nachrichten aus `Out` ist am Prüfstand **nicht nachstellbar** (per POP abgerufene Post hat nie Kennung 0) – Prüfung bei Gregor. Testsuite **209/209**.
+
+**[E-67](BEFUNDE.md#e-67):** die Korrektur (`>` → `>=` in `filtersv.cpp`) steht seit 7.2.0.43 im Code; jetzt mit Spurmarken `E-67 Filteransicht laden/speichern` gemessen. Gemessen am Prüfstand an 7.2.0.101 (17.10.2026), mit neuer Spurmarke und `tools/messen-e67.ps1` (öffnet das Filterfenster per Menübefehl 32826): Regel *„Junk Score is less than 50“* als erste Regel – `E-67 Filteransicht laden: … verb-gespeichert=14 verb-auswahl=0 eintraege=2`, beim Wegklicken `verb-neu=14 geaendert=0`, `Filters.pce` danach unverändert `verb less`. **Gegenprobe** mit dem alten `>`: `verb-auswahl=14 eintraege=2` – der ungültige Wert, aus dem der Fehler entsteht. Nicht nachgestellt: die Verfälschung der Datei selbst, dafür müsste im Fenster eine zweite Regel angeklickt werden.
 
 ## 7.2.0.100 — Mehrere gesendete Mails auf einmal nach IMAP; zwei Absicherungen aus der Nachprüfung (E-121, E-83) — **nicht veröffentlicht, Zweig `e-121-mehrere-gesendete`**
 

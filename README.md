@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.100** (Quellstand 7.2.0.100), 16.10.2026. Die ausführliche
+*Stand Paket **1.0.101** (Quellstand 7.2.0.101), 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -71,7 +71,6 @@ zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| Ein Filter *„Junk Score is less than N“* wird unbrauchbar, sobald man ihn im Filterfenster anklickt | die **Filterregel**: sie wird verändert und filtert danach anders (Ihre Post nicht) | `Filters.pce` sichern, bevor Sie im Filterfenster stöbern | [E-67](BEFUNDE.md#e-67) |
 | Ein Filterlauf kann bei einer nicht lesbaren Nachricht still abbrechen und trotzdem Erfolg melden | nichts geht verloren – aber die **übrigen Nachrichten bleiben ungefiltert** liegen | nach dem Filtern stichprobenartig nachsehen | [E-69](BEFUNDE.md#e-69) |
 | Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern | [E-101](BEFUNDE.md#e-101) |
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
@@ -113,10 +112,10 @@ kann jederzeit zurück.
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
   [**E-47**](BEFUNDE.md#e-47)).
-* **Eine Filterregel verträgt kein bloßes Ansehen.** Eine Regel der Form
-  *„Junk Score is less than N"* wird unbrauchbar, sobald man sie im
-  Filterfenster anklickt ([**E-67**](BEFUNDE.md#e-67), offen). Sichern Sie `Filters.pce`, bevor
-  Sie im Filterfenster stöbern. Das Filtern selbst arbeitet korrekt — dass
+* **Eine Filterregel verträgt bloßes Ansehen wieder.** Eine Regel der Form
+  *„Junk Score is less than N"* wurde unbrauchbar, sobald man sie im
+  Filterfenster anklickte ([**E-67**](BEFUNDE.md#e-67)); die Korrektur steht seit
+  7.2.0.43 im Code und ist seit 17.10.2026 am laufenden Programm gemessen. Das Filtern selbst arbeitet korrekt — dass
   ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob ([**E-64**](BEFUNDE.md#e-64)),
   ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
   Grenzen liegen, steht in [FILTER.md](FILTER.md).
@@ -935,7 +934,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.100` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.101` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
