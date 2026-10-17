@@ -407,7 +407,8 @@ protected:
 		COMMERCIAL_32_VERSION = 16,
 		LIGHT_32_VERSION = 16,
 		AUTOACTIVATE_TIMER_EVENT_ID = 1000,
-		GENERAL_BACKGROUND_TIMER_ID = 1001
+		GENERAL_BACKGROUND_TIMER_ID = 1001,
+		E123_WARTE_TIMER_ID = 1002	// E-123: Beenden wartet auf IMAP-Uebertragungen
 	};
 
 	//
@@ -419,6 +420,8 @@ protected:
 	UINT	m_IconID;
 	UINT	m_timerID;
 	UINT	m_idAutoActivateTimer;	// for Auto-Wazoo drag and drop auto-activation
+	BOOL	m_bE123Gewartet;		// E-123: beim Beenden schon auf Uebertragungen gewartet
+	DWORD	m_dwE123Beginn;			// E-123: Beginn des Wartens (GetTickCount)
 	int		m_iNewMsgs;				// Counter for Win95 status pane
 
 	long	m_ldb;   // playlist db handle

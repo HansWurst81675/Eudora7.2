@@ -1274,6 +1274,31 @@ BOOL CImapAccountMgr::ProcessActionQueues(bool bHighPriorityOnly)
 //
 //	Have each account finish processing its action queue.
 //
+// E-123: siehe ImapAccountMgr.h.
+int CImapAccountMgr::E123OffeneUebertragungen()
+{
+	int nOffen = 0;
+	int numLists = GetSize();
+	for (int listIndex = 0; listIndex < numLists; listIndex++)
+	{
+		CImapAccountList* pAccountList = GetAt(listIndex);
+		if (!pAccountList)
+			continue;
+		int numAccounts = pAccountList->GetSize();
+		for (int acctIndex = 0; acctIndex < numAccounts; acctIndex++)
+		{
+			CImapAccount* pAccount = pAccountList->GetAt(acctIndex);
+			if (!pAccount)
+				continue;
+			bool bBlockiert = false;
+			int n = pAccount->E123OffeneUebertragungen(bBlockiert);
+			if (!bBlockiert)
+				nOffen += n;
+		}
+	}
+	return nOffen;
+}
+
 void CImapAccountMgr::FinishUpActionQueues()
 {
 	// Must be in main thread.

@@ -156,6 +156,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.102 — **nicht ausgeliefert**, Quellstand 7.2.0.102, Zweig `e-123-beenden-warten` (E-123 Beenden wartet)
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.102-release` |
+| Inhalt | wie 1.0.101, dazu: Beenden wartet auf IMAP-Übertragungen, belegte Verbindung blockiert die Warteschlange nicht mehr ([E-123](../BEFUNDE.md#e-123)) |
+| Gemessen | nachgestellt am Prüfstand: an 7.2.0.101 kein Warten, Hochladen nie bestätigt (Fehler), an 7.2.0.102 Warten 10 s bis zum bestätigten Hochladen, sauber beendet; Testsuite 209/209 |
+
 ## 1.0.101 — **veröffentlicht als `v1.0.101`** (17.10.2026), Quellstand 7.2.0.101, Zweig `e-121-mehrere-gesendete` (eigene Kennung für gesendete Post, E-67 gemessen)
 
 | | |

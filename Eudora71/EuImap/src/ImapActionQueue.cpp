@@ -3638,7 +3638,9 @@ void CImapDownloadAction::DoPostProcessing()
 CActionQueue::CActionQueue(unsigned long lAccountID, CString &strFileName, CString &strDirName) :
 	m_lAccountID(lAccountID),
 	m_iState(kQueueStateIdle),
-	m_bNeedsWrite(false)
+	m_bNeedsWrite(false),
+	m_bE123NurBelegt(false),
+	m_dwE123BlockiertSeit(0)
 {
 	m_strFileName = strFileName;
 	m_strDirName = strDirName;
@@ -3662,6 +3664,19 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 	{
 		// When the state changes, reset the flag if it is blocked.  No matter what failed to cause us
 		// to be blocked, it is time to give it another try.
+		m_iState = kQueueStateIdle;
+	}
+
+	// E-123 (17.10.2026, am Pruefstand gemessen): war die Verbindung nur BELEGT
+	// (kActionStateBusy, z.B. vom Abgleich beim Start), blieb die Warteschlange
+	// bisher blockiert, bis jemand zwischen online und offline umschaltete - eine
+	// Uebertragung lokal -> IMAP lief dann in dieser Sitzung nie mehr, sondern erst
+	// nach dem naechsten Start. Jetzt wird es nach 3 s erneut versucht. Offline und
+	// gescheiterte Anmeldung bleiben wie im Original.
+	if ((m_iState == kQueueStateBlocked) && m_bE123NurBelegt &&
+		((::GetTickCount() - m_dwE123BlockiertSeit) > 3000))
+	{
+		m_bE123NurBelegt = false;
 		m_iState = kQueueStateIdle;
 	}
 
@@ -3720,6 +3735,11 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 				// The action couldn't proceed because of a temporary failure.  These failures would
 				// apply to any further actions on this account so block any further actions for now.
 				m_iState = kQueueStateBlocked;
+				// E-123: nur belegt -> nach kurzer Zeit erneut versuchen (siehe oben).
+				m_bE123NurBelegt = (pImapAction->GetState() == kActionStateBusy);
+				m_dwE123BlockiertSeit = ::GetTickCount();
+				if (m_bE123NurBelegt)
+					::PutDebugLog(DEBUG_MASK_MISC, "E-123 Warteschlange: Verbindung belegt, neuer Versuch in 3 s");
 				break;
 			case kActionStateSucceeded:
 			case kActionStateWaiting:
@@ -3905,6 +3925,44 @@ CImapAction *CActionQueue::GetNextMailboxMatch(unsigned long ulHashToMatch)
 	}
 
 	return NULL;
+}
+
+//
+//	CActionQueue::E123OffeneUebertragungen()
+//
+//	E-123: wie viele Uebertragungen lokal -> IMAP stehen noch aus? Gezaehlt wird
+//	jede wartende Aufgabe dieser Art, dazu eine gerade laufende Aufgabe (sie ist
+//	schon aus m_array genommen, ihre Nachbearbeitung - das eigentliche Hochladen -
+//	steht noch aus). bBlockiert: die Warteschlange kommt von selbst nicht weiter
+//	(offline, Anmeldung gescheitert) - dann lohnt kein Warten.
+//
+int CActionQueue::E123OffeneUebertragungen(bool &bBlockiert)
+{
+	// Nur kurz blockiert (Verbindung belegt) zaehlt nicht als blockiert - die
+	// Warteschlange laeuft von selbst wieder an.
+	bBlockiert = (m_iState == kQueueStateBlocked) && !m_bE123NurBelegt;
+
+	int		nOffen = 0;
+	int		iSize = m_array.GetSize();
+	for (int i = 0; i < iSize; ++i)
+	{
+		if (dynamic_cast<CImapFromLocalTransferMsgAction*>((CImapAction*)m_array.GetAt(i)))
+		{
+			++nOffen;
+		}
+	}
+	if (m_iState == kQueueStateProcessing)
+	{
+		++nOffen;
+	}
+
+	{
+		CString szSpur;
+		szSpur.Format("E-123 Warteschlange: konto=%lu eintraege=%d zustand=%d nur-belegt=%d uebertragungen=%d", m_lAccountID, (int) m_array.GetSize(), m_iState, m_bE123NurBelegt ? 1 : 0, nOffen);
+		::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	}
+
+	return nOffen;
 }
 
 //

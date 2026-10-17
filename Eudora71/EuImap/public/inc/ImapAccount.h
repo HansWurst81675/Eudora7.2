@@ -239,6 +239,8 @@ private:
 public:
 	// E-121 P3: steht fuer diese Kennung noch eine Uebertragung lokal -> IMAP aus?
 	BOOL	HatOffeneUebertragung (unsigned long ulHash);
+	// E-123: ausstehende Uebertragungen lokal -> IMAP vor dem Beenden.
+	int		E123OffeneUebertragungen (bool &bBlockiert);
 private:
 	BOOL	UserJustCancelledLogin ();
 

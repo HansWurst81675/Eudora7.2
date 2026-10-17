@@ -1,4 +1,4 @@
-param([Parameter(Mandatory = $true)] [string] $Freigabe, [string] $Eml, [int] $Anzahl = 3, [string] $Kennung = 'serie', [string] $Verzeichnis = 'C:\Temp\E118', [switch] $OhneZielFenster, [int] $GrussVerzoegerung = 0, [switch] $AppendAblehnen, [switch] $OhneAppendUid, [string] $FremdeUid = "", [switch] $ZielBehalten)
+param([Parameter(Mandatory = $true)] [string] $Freigabe, [string] $Eml, [int] $Anzahl = 3, [string] $Kennung = 'serie', [string] $Verzeichnis = 'C:\Temp\E118', [switch] $OhneZielFenster, [int] $GrussVerzoegerung = 0, [switch] $AppendAblehnen, [switch] $OhneAppendUid, [string] $FremdeUid = "", [switch] $ZielBehalten, [string] $Messen = "messen-e118.ps1", [int] $SchliessSekunden = 30, [int] $AppendVerzoegerung = 0)
 # Mehrere Messlaeufe E-118 hintereinander, je mit frischem Posteingang und frischen Pruefservern.
 # -Freigabe ist Pflicht und wird an testlauf.ps1 durchgereicht: Gregors Satz von HEUTE, mit Datum.
 # Bis 15.10.2026 stand hier fest "Gregor am 14.10.2026: ich mache gar nichts, du testest." -
@@ -27,12 +27,13 @@ for ($i = 1; $i -le $Anzahl; $i++) {
     $imapArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--ablage', $abl, '--protokoll', (Join-Path $Verzeichnis "imap-$Kennung-$i.log"), '--zeitschranke', '200', '--gruss-verzoegerung', "$GrussVerzoegerung")
     if ($AppendAblehnen) { $imapArgs += '--append-ablehnen' }
     if ($OhneAppendUid) { $imapArgs += '--ohne-appenduid' }
+    if ($AppendVerzoegerung -gt 0) { $imapArgs += @("--append-verzoegerung", "$AppendVerzoegerung") }
     if ($FremdeUid) { $imapArgs += @("--fremde-uid", $FremdeUid) }
     $imap = Start-Process $perl -ArgumentList $imapArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     $pop  = Start-Process $perl -ArgumentList @("$repo\tools\anhang-pruefdaten.pl", '--pop', '--nur-eml', '--eml', $Eml) -WorkingDirectory $repo -WindowStyle Hidden -PassThru
     Start-Sleep -Seconds 2
     $env:E118_ABLAGE = $abl
-    & powershell -NoProfile -ExecutionPolicy Bypass -File "$repo\tools\testlauf.ps1" -Verzeichnis $Verzeichnis -Freigabe "$Freigabe - E-118 $Kennung Lauf $i" -Sekunden 60 -MessenSkript "$sp\messen-e118.ps1" | Out-Null
+    & powershell -NoProfile -ExecutionPolicy Bypass -File "$repo\tools\testlauf.ps1" -Verzeichnis $Verzeichnis -Freigabe "$Freigabe - E-118 $Kennung Lauf $i" -Sekunden 60 -SchliessSekunden $SchliessSekunden -MessenSkript (Join-Path $sp $Messen) | Out-Null
     foreach ($p in $imap, $pop) { if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force } }
     $n = @(Get-ChildItem $abl -ErrorAction SilentlyContinue).Count
     Write-Host "== Lauf ${i}: ablage=$n"

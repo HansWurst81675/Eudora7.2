@@ -729,7 +729,9 @@ extern BOOL g_bPopupOn;
 
 
 CMainFrame::CMainFrame() :
-	m_idAutoActivateTimer(0)
+	m_idAutoActivateTimer(0),
+	m_bE123Gewartet(FALSE),
+	m_dwE123Beginn(0)
 {
 	ASSERT(!m_pTheMainFrame);
 	m_pTheMainFrame = this;
@@ -1955,6 +1957,22 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 			}
 			last_pt.x = pt.x;
 			last_pt.y = pt.y;
+		}
+		break;
+
+	case E123_WARTE_TIMER_ID:
+		{
+			// E-123: siehe OnClose. Fertig oder Zeit um - dann wirklich beenden.
+			int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen();
+			DWORD dwVergangen = ::GetTickCount() - m_dwE123Beginn;
+			if (nOffen == 0 || dwVergangen > 90000)
+			{
+				KillTimer(E123_WARTE_TIMER_ID);
+				CString szSpur;
+				szSpur.Format("E-123 Beenden: Warten zu Ende nach %lu ms, offen=%d", (unsigned long) dwVergangen, nOffen);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				PostMessage(WM_CLOSE);
+			}
 		}
 		break;
 
@@ -5198,6 +5216,30 @@ void CMainFrame::OnClose()
 
 	if (m_lpfnCloseProc != NULL && !(*m_lpfnCloseProc)(this))
 		return;
+
+	// E-123 (Gregor am 17.10.2026: "sollen wir das beenden so lange hinaus
+	// zoegern, bis der vorgang abgeschlossen ist"): stehen noch Uebertragungen
+	// lokal -> IMAP aus, wurden sie bisher nur in actionqueue.dat gespeichert und
+	// nach dem naechsten Start fortgesetzt - ueber den Neustart gingen die nur im
+	// Speicher stehenden Schutzvermerke der eingebetteten Bilder verloren. Jetzt
+	// wartet das Beenden, bis die Warteschlange leer ist (Pruefung alle 2 s ueber
+	// einen Zeitgeber, keine eigene Schleife), hoechstens 90 s. Nicht beim
+	// Herunterfahren von Windows (OnQueryEndSession ruft CloseDown direkt) und
+	// nicht, wenn ein Konto offline oder blockiert ist.
+	if (!m_bE123Gewartet)
+	{
+		int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen();
+		if (nOffen > 0)
+		{
+			CString szSpur;
+			szSpur.Format("E-123 Beenden wartet auf %d Uebertragung(en) in IMAP-Ordner", nOffen);
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			m_bE123Gewartet = TRUE;
+			m_dwE123Beginn = ::GetTickCount();
+			SetTimer(E123_WARTE_TIMER_ID, 2000, NULL);
+			return;
+		}
+	}
 
 	if (!CloseDown())
 	{
