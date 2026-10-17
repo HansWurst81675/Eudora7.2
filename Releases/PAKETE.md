@@ -156,7 +156,7 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.107 — gebaut am 18.10.2026, Quellstand 7.2.0.107, Zweig `E-101_korrektur_datei_speichern` (E-101, dritter Teil)
+## 1.0.107 — gebaut am 17.10.2026, Quellstand 7.2.0.107, Zweig `E-101_korrektur_datei_speichern` (E-101, dritter Teil)
 
 **Die gespeicherte Datei bekommt jetzt die Kopfzeile, die zum Rumpf passt.**
 Bis hierher liess der Speicherweg eine vorhandene `Content-Type`-Zeile
