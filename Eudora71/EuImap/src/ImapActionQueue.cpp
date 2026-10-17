@@ -641,8 +641,28 @@ CImapAction::~CImapAction()
 //
 //	Do work in main thread to prepare for DoWork() in the secondary thread.
 //
+// E-123 (PRUEFER-35): "wird gerade hochgeladen" - gezaehlt direkt um den
+// Verbindungsaufbau und das Hochladen einer Uebertragung lokal -> IMAP herum.
+// Das Objekt zaehlt beim Verlassen des Rumpfs zurueck, auch nach einem Fehler
+// oder einer Ausnahme; es haengt nicht an der Abmeldung ueber "Task Status"
+// (E-83), die mehrfach gerissen ist. Gelesen von CImapAccountMgr beim Beenden.
+static LONG s_lE123HochladenLaeuft = 0;
+bool E123HochladenLaeuft()
+{
+	return s_lE123HochladenLaeuft > 0;
+}
+class CE123HochladenZaehler
+{
+public:
+	CE123HochladenZaehler(bool bAktiv) : m_bAktiv(bAktiv) { if (m_bAktiv) ::InterlockedIncrement(&s_lE123HochladenLaeuft); }
+	~CE123HochladenZaehler() { if (m_bAktiv) ::InterlockedDecrement(&s_lE123HochladenLaeuft); }
+private:
+	bool m_bAktiv;
+};
+
 bool CImapAction::DoPreThreadAction()
 {
+	CE123HochladenZaehler e123Zaehler(dynamic_cast<CImapFromLocalTransferMsgAction*>(this) != NULL);
 	m_iState = kActionStateWorking;
 
 	m_pAccount = g_ImapAccountMgr.FindAccount(m_lAccountID);
@@ -2342,6 +2362,7 @@ HRESULT CImapFromLocalTransferMsgAction::DoWork()
 //
 void CImapFromLocalTransferMsgAction::DoPostProcessing()
 {
+	CE123HochladenZaehler e123Zaehler(true);	// E-123, siehe CImapAction::DoPreThreadAction
 	// Now transfer the messages on the server.
 	CSummary		*pSum = NULL;
 	CSummary		*pCopySum = NULL;

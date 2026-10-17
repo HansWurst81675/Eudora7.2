@@ -1967,10 +1967,14 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 			bool bLaeuft = false;
 			int nOffen = g_ImapAccountMgr.E123OffeneUebertragungen(&bLaeuft);
 			DWORD dwVergangen = ::GetTickCount() - m_dwE123Beginn;
-			// PRUEFER-34 S1: solange ein Hochladen laeuft, nie beenden - auch nicht
-			// nach 90 s. S5: steht ein Dialog offen (Kennwort, Fehler), warten.
-			BOOL bDialogOffen = (::GetLastActivePopup(m_hWnd) != m_hWnd);
-			if (!bLaeuft && !bDialogOffen && (nOffen == 0 || dwVergangen > 90000))
+			// PRUEFER-34 S1: solange ein Hochladen laeuft, nicht beenden - auch nicht
+			// nach 90 s. S5/PRUEFER-35 N2: steht ein modaler Dialog offen (Kennwort,
+			// Fehler), ist das Hauptfenster gesperrt - dann warten; ein schwebendes
+			// Fenster sperrt nichts. PRUEFER-35: nach 5 Minuten wird in jedem Fall
+			// beendet, damit Eudora nie fuer immer offen bleibt.
+			BOOL bDialogOffen = !IsWindowEnabled();
+			BOOL bNotfall = (dwVergangen > 300000);
+			if (bNotfall || (!bLaeuft && !bDialogOffen && (nOffen == 0 || dwVergangen > 90000)))
 			{
 				KillTimer(E123_WARTE_TIMER_ID);
 				m_bE123WarteAktiv = FALSE;
@@ -5170,6 +5174,17 @@ BOOL CMainFrame::QuerySendQueuedMessages()
 
 BOOL CMainFrame::OnQueryEndSession()
 {
+	// E-123 (PRUEFER-35 N5): beim Herunterfahren wird nicht gewartet; ein
+	// laufendes Warten wird beendet, damit nach einem abgebrochenen
+	// Herunterfahren nichts von selbst schliesst.
+	if (m_bE123WarteAktiv)
+	{
+		KillTimer(E123_WARTE_TIMER_ID);
+		m_bE123WarteAktiv = FALSE;
+		m_bE123Gewartet = FALSE;
+		SetMessageText(AFX_IDS_IDLEMESSAGE);
+	}
+
 	if (!CloseDown())
 		return (FALSE);
 		

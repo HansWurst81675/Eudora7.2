@@ -1275,10 +1275,15 @@ BOOL CImapAccountMgr::ProcessActionQueues(bool bHighPriorityOnly)
 //	Have each account finish processing its action queue.
 //
 // E-123: siehe ImapAccountMgr.h.
+bool E123HochladenLaeuft();	// ImapActionQueue.cpp
+
 int CImapAccountMgr::E123OffeneUebertragungen(bool *pbLaeuft)
 {
+	// PRUEFER-35 N1/N3/N4: "laeuft" kommt aus dem Zaehler um das Hochladen,
+	// nicht aus dem Zustand der Warteschlange, und wird VOR der Offline-Pruefung
+	// bestimmt.
 	if (pbLaeuft)
-		*pbLaeuft = false;
+		*pbLaeuft = E123HochladenLaeuft();
 
 	// PRUEFER-34 S3: im Offline-Modus wird die Warteschlange nie abgearbeitet -
 	// nichts zu erwarten.
@@ -1303,8 +1308,6 @@ int CImapAccountMgr::E123OffeneUebertragungen(bool *pbLaeuft)
 			int n = pAccount->E123OffeneUebertragungen(bBlockiert, bLaeuft);
 			if (!bBlockiert)
 				nOffen += n;
-			if (bLaeuft && pbLaeuft)
-				*pbLaeuft = true;
 		}
 	}
 	return nOffen;
