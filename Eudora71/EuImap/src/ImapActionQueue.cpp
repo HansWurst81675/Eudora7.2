@@ -662,7 +662,26 @@ private:
 
 bool CImapAction::DoPreThreadAction()
 {
-	CE123HochladenZaehler e123Zaehler(dynamic_cast<CImapFromLocalTransferMsgAction*>(this) != NULL);
+	//
+	// PRUEFER-36, P2 (19.10.2026): hier stand
+	//
+	//     CE123HochladenZaehler e123Zaehler(
+	//         dynamic_cast<CImapFromLocalTransferMsgAction*>(this) != NULL);
+	//
+	// und hat NIE gezaehlt. Ausgerechnet die eine Unterklasse, auf die der
+	// dynamic_cast zielt, ruft diese Basisfunktion nicht auf - das steht
+	// zwanzig Zeilen vor ihrem eigenen Rumpf als Kommentar von QUALCOMM:
+	// "This is the only subclass of CImapAction that doesn't call
+	// CImapAction::DoPreThreadAction()". Fuer alle anderen Unterklassen ist
+	// der dynamic_cast NULL. Der Zaehler blieb also durchgehend 0.
+	//
+	// Folge: E123OffeneUebertragungen meldete bLaeuft=false, waehrend ein
+	// Hochladen lief - und die Wache in mainfrm.cpp (E123_WARTE_TIMER_ID),
+	// die genau das verhindern soll, lief ins Leere.
+	//
+	// Der Zaehler steht jetzt dort, wo das Hochladen wirklich beginnt:
+	// am Anfang von CImapFromLocalTransferMsgAction::DoPreThreadAction.
+	//
 	m_iState = kActionStateWorking;
 
 	m_pAccount = g_ImapAccountMgr.FindAccount(m_lAccountID);
@@ -2287,6 +2306,20 @@ bool CImapFromLocalTransferMsgAction::DoPreThreadAction()
 	// That is because in this one case the source account/mailbox is not IMAP.  Just make sure we
 	// do any appropriate initialization from CImapAction::DoPreThreadAction() here.  As of now,
 	// all that means is set our state correctly.
+
+	//
+	// PRUEFER-36, P2 (19.10.2026): HIER gehoert der Zaehler hin, nicht in die
+	// Basisfunktion - die wird von dieser Klasse ja gerade nicht gerufen, wie
+	// der Kommentar drei Zeilen darueber selbst sagt. Dort stand er bis zum
+	// 19.10.2026 und hat deshalb nie gezaehlt.
+	//
+	// Er lebt bis zum Ende dieser Funktion. Das deckt den Verbindungsaufbau
+	// mit ab - OpenMailbox, Anmeldung und SELECT (PRUEFER-35, N4): genau das
+	// Fenster, in dem der Beenden-Zeitgeber bisher zuschlagen konnte, weil
+	// bLaeuft falsch war und die Aufgabe trotzdem noch in m_array stand.
+	//
+	CE123HochladenZaehler e123Zaehler(true);
+
 	m_iState = kActionStateWorking;
 
 	m_pAccount = g_ImapAccountMgr.FindAccount(m_lDestAccountID);
