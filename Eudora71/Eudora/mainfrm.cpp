@@ -1974,7 +1974,53 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 			// beendet, damit Eudora nie fuer immer offen bleibt.
 			BOOL bDialogOffen = !IsWindowEnabled();
 			BOOL bNotfall = (dwVergangen > 300000);
-			if (bNotfall || (!bLaeuft && !bDialogOffen && (nOffen == 0 || dwVergangen > 90000)))
+
+			//
+			// PRUEFER-36, P1 (19.10.2026): die Notbremse schliesst nicht mehr
+			// ueber die beiden Sperren hinweg.
+			//
+			// Hier stand:
+			//
+			//     if (bNotfall || (!bLaeuft && !bDialogOffen && (...)))
+			//
+			// bNotfall uebergeht damit bLaeuft UND bDialogOffen. Nach fuenf
+			// Minuten wurde WM_CLOSE gepostet, auch wenn gerade ein Hochladen
+			// auf dem Stapel lag oder die Kennwortabfrage offen stand:
+			//
+			//   * beim Hochladen laeuft CloseDown VERSCHACHTELT darin - das
+			//     Fenster verschwindet, der Prozess haengt unsichtbar weiter
+			//     (PRUEFER-34, Lauf d);
+			//   * unter einem modalen Dialog laufen CloseDown und
+			//     DestroyWindow, und dessen DoModal kehrt danach in Code
+			//     zurueck, dessen Fenster schon abgebaut sind.
+			//
+			// DER DENKFEHLER WAR DIE ALTERNATIVE. Die Notbremse gab es, damit
+			// Eudora nie fuer immer offen bleibt - als waere "ewig offen" das
+			// einzige andere Ende. Das Gegenteil von "mit Gewalt schliessen"
+			// ist aber nicht "ewig warten", sondern: das Beenden AUFGEBEN,
+			// das Fenster stehen lassen und es dem Anwender sagen. Dann
+			// bleibt nichts unsichtbar haengen, nichts wird zerstoert, und
+			// ein zweiter Versuch steht ihm jederzeit frei.
+			//
+			if (bNotfall && (bLaeuft || bDialogOffen))
+			{
+				KillTimer(E123_WARTE_TIMER_ID);
+				m_bE123WarteAktiv = FALSE;
+
+				// Der Text folgt dem Muster der Wartemeldung weiter unten
+				// (SetMessageText("Waiting for messages to finish ...")):
+				// feste englische Zeichenkette, keine eigene Ressource.
+				SetMessageText(bLaeuft
+					? "Quit cancelled: messages are still being transferred to the IMAP server."
+					: "Quit cancelled: a dialog is still open. Close it, then quit again.");
+
+				CString szSpur;
+				szSpur.Format("E-123 Beenden: nach %lu ms aufgegeben, laeuft=%d dialog=%d offen=%d - Fenster bleibt offen",
+							  (unsigned long) dwVergangen, bLaeuft ? 1 : 0,
+							  bDialogOffen ? 1 : 0, nOffen);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			}
+			else if (bNotfall || (!bLaeuft && !bDialogOffen && (nOffen == 0 || dwVergangen > 90000)))
 			{
 				KillTimer(E123_WARTE_TIMER_ID);
 				m_bE123WarteAktiv = FALSE;
