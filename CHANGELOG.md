@@ -78,6 +78,67 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.109 — aus 500 Pieptönen werden 25 (E-69, P3)
+
+`E69UebersprungenMelden` legte bei **jedem** Abbruch einen eigenen Eintrag in
+*Task Errors* an. Jeder Eintrag piept (`MessageBeep`) und holt das Fenster
+nach vorn (`TaskErrorBringToFront`, Vorgabe **1**). Beim Filtern eines
+IMAP-Postfachs mit 500 nur angerissenen Nachrichten und nicht erreichbarem
+Server: **500 Einträge, 500 Pieptöne, 500 Fenstersprünge** — und nichts davon
+lässt sich wegklicken.
+
+Gregor hatte etwas anderes vermutet: *„ich dachte, es wäre eine große meldung
+in der dialogbox, ähnlich wie die meldung, daß man neue mails hat"*. Gemessen
+gibt es die nicht — der modale Dialog erscheint nur bei `ShowMeTheErrors=1`
+und immer nur **einer gleichzeitig**. Was stört, ist das Laute.
+
+### A — an der Quelle zusammenfassen
+
+Der **erste** übersprungene Fall eines Laufs bekommt einen eigenen Eintrag;
+alles Weitere wird gezählt und am Ende zu **einem** zusammengefasst. Die
+Klammer ist `CE69Filterlauf`, ein Objekt auf dem Stapel — damit der Abbau auch
+läuft, wenn die Schleife über `EscapePressed()` verlassen wird. Aufrufstellen
+**ohne** Klammer verhalten sich wie bisher; das ist eigens getestet.
+
+### B — den Schwall abfangen
+
+Piepen und Nach-vorn-Holen höchstens **einmal je zwei Sekunden**, unabhängig
+von der Quelle. Der **Eintrag entsteht weiterhin in jedem Fall** — gedämpft
+wird nur das Laute. Damit hilft es auch der nächsten Fehlerquelle.
+
+### Beide Regeln sind prüfbar
+
+`struct CE69Sammlung` und `bool E69LautErlaubt()` — keine Task Errors, kein
+Fenster, kein `CSummary`. `Extract.ps1` schneidet beide bei jedem Bau frisch
+aus dem Produktivcode (Region O und P). Das ist die Lehre aus **[E-106](BEFUNDE.md#e-106)**: dort
+stand dieselbe Art Regel mitten im Ladeweg und war nur an Gregors Rechner
+messbar.
+
+**222 Tests, 222 bestanden** (neun neue). Gegenprobe gefahren — mit dem alten
+Verhalten fallen drei um:
+
+```
+mit Behebung:  500 Fehler in 50 s, Fenster 2 s ->  25 mal laut
+ohne:          500 Fehler in 50 s, Fenster 2 s -> 500 mal laut
+```
+
+Mitgeprüft: die Fenstergrenze genau getroffen (1999 ms still, 2000 ms laut)
+und der **Überlauf von `GetTickCount`** nach 49,7 Tagen.
+
+### Prüfanleitung
+
+Ein IMAP-Postfach filtern, während der Server nicht erreichbar ist
+(*Special → Filter Messages*). Es darf nicht mehr ununterbrochen piepen, und
+*Task Errors* darf sich nicht bei jeder Nachricht nach vorn drängen. In der
+Liste stehen **zwei** Einträge: der erste Fall und ein Sammeleintrag.
+
+### Noch nicht behoben
+
+**F1** und **F3/F4** aus [PRÜFER-37](Befunde/PRUEFER-37.md) zu **[E-101](BEFUNDE.md#e-101)**.
+**F4 ist eine Regression gegenüber 1.0.106:** eine Nachricht mit einem
+Zeichensatz, den Eudora nicht übersetzt (`windows-1251`, `koi8-r`,
+`iso-8859-2`), bekommt beim Speichern eine falsche `<meta>`-Angabe.
+
 ## 7.2.0.108 — Beenden beschädigt keine laufende Übertragung mehr (E-123: P1, P2)
 
 Zwei Funde aus [PRÜFER-36](Befunde/PRUEFER-36.md), beide an **[E-123](BEFUNDE.md#e-123)**.

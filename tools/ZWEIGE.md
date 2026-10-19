@@ -109,6 +109,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `e-123-notbremse-und-zaehler` | 19.10.2026 | Von Gregor angenommen (*„ja, beide namen passen"*), zusammen mit `e-69-meldungsflut`; Reihenfolge von ihm gesetzt: *„e-123 und e-69 zuerst"*, weil beide ein Release blockieren. Zweck: **P1** und **P2** aus [PRÜFER-36](../Befunde/PRUEFER-36.md) an [E-123](../BEFUNDE.md#e-123) — die Notbremse nach fünf Minuten schließt nicht mehr über ein laufendes Hochladen oder einen offenen Dialog hinweg, und der Hochladezähler deckt jetzt auch den Verbindungsaufbau. Dazu `Befunde/PRUEFER-37.md` ([E-101](../BEFUNDE.md#e-101) nachgerechnet, lief parallel) |
 
+| `e-69-meldungsflut` | 19.10.2026 | Von Gregor angenommen (*„ja, beide namen passen"*), Inhalt von ihm festgelegt: *„A und B"*. Zweck: **P3** aus [PRÜFER-36](../Befunde/PRUEFER-36.md) an [E-69](../BEFUNDE.md#e-69) — ein Eintrag je Filterlauf statt je Nachricht (A) und höchstens ein Piepton je zwei Sekunden (B). Er hatte eine große Meldung im Dialog vermutet; gemessen gibt es die nicht, es piept nur. Beide Regeln stehen in prüfbaren Einheiten, neun neue Tests, Gegenprobe gefahren |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
