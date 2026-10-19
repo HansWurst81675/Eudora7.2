@@ -2431,15 +2431,47 @@ struct CE69Sammlung
 	// Laeuft ausserhalb eines Laufs ueberhaupt etwas auf (nTiefe == 0, etwa
 	// weil ein Aufrufer die Klammer nicht setzt), wird jeder Fall einzeln
 	// gemeldet - das ist das alte Verhalten und damit kein Rueckschritt.
+	//
+	// PRUEFER-38, R1 (19.10.2026): HIER FEHLTE DAS ZURUECKSETZEN. Ohne die
+	// beiden Zeilen unten blieb bErstGemeldet nach dem ersten geklammerten
+	// Lauf auf true - und jeder spaetere Fall AUSSERHALB einer Klammer bekam
+	// gar keinen Eintrag mehr. Kein Eintrag, kein Sammeleintrag, nichts, bis
+	// Eudora neu startet. Das ist genau das Symptom, gegen das E-69 angelegt
+	// wurde: der Anwender wundert sich, warum eine Mail nicht einsortiert
+	// wurde, und nichts sagt es ihm.
+	//
+	// Die neun Tests waren dabei GRUEN, auch der mit dem Namen "ohne Klammer
+	// bleibt es beim alten Verhalten": jeder Testblock legt ein frisches
+	// CE69Sammlung an, in Eudora ist es eine globale Variable. Ein Test, der
+	// seinen Zustand nicht teilt, kann einen Zustandsfehler nicht sehen.
 	int LaufEnde()
 	{
-		if (nTiefe > 0 && --nTiefe == 0 && nUebersprungen > 1)
-			return nUebersprungen - 1;
+		if (nTiefe > 0 && --nTiefe == 0)
+		{
+			int nWeitere = (nUebersprungen > 1) ? nUebersprungen - 1 : 0;
+
+			nUebersprungen = 0;
+			bErstGemeldet  = false;
+
+			return nWeitere;
+		}
 		return 0;
 	}
 };
 
-static CE69Sammlung g_E69Sammlung = { 0, 0, false };
+//
+// PRUEFER-38, R3 (19.10.2026): je Faden eine eigene Sammlung.
+//
+// E69UebersprungenMelden wird nicht nur aus dem Hauptfaden gerufen:
+// CImapMailbox::DoFetchNewMessages ruft DoFiltering und prueft im selben
+// Rumpf zweimal IsMainThreadMT(). Eine gemeinsame globale Variable ohne
+// Sperre wuerde dort Eintraege verlieren oder falsch zaehlen.
+//
+// __declspec(thread) gibt jedem Faden seine eigene. Die Klammern des
+// Hauptfadens wirken wie bisher; ein Nebenfaden ohne Klammer verhaelt sich
+// wie vor der Behebung - jeder Fall einzeln, also kein Rueckschritt.
+//
+static __declspec(thread) CE69Sammlung g_E69Sammlung = { 0, 0, false };
 
 // Legt EINEN Eintrag in "Task Errors" an.
 static void E69EintragAnlegen(LPCSTR pszText)

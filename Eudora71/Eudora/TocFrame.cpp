@@ -1176,6 +1176,10 @@ void CTocFrame::SetJunkStatus(bool bJunk)
 											   GetIniShort(IDS_INI_ADDBOOK_IS_WHITELIST) &&
 											   GetIniShort(IDS_INI_ADD_NONJUNK_TO_ADDBOOK);
 
+		// BEFUND E-69, PRUEFER-38 R2: auch dieser Lauf geht ueber beliebig
+		// viele Nachrichten und ruft ueber DeclareJunk den Filter.
+		CE69Filterlauf e69Lauf;
+
 		// Iterate over the selection and individually change the junk status
 		// of each message in the selection.
 		for (int i = m_pSumListBox->GetCount() - 1; (i >= 0) && iSelCount; i--)

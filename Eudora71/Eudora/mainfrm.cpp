@@ -2007,6 +2007,24 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 				KillTimer(E123_WARTE_TIMER_ID);
 				m_bE123WarteAktiv = FALSE;
 
+				//
+				// PRUEFER-38, R4 (19.10.2026): der naechste Versuch wartet
+				// wieder.
+				//
+				// Ohne diese Zeile faende OnClose beim zweiten "File -> Exit"
+				// m_bE123Gewartet == TRUE, uebersprungen den Warteblock und
+				// riefe CloseDown() OHNE bLaeuft noch einmal anzusehen -
+				// verschachtelt im laufenden Hochladen, Fenster weg, Prozess
+				// unsichtbar weiter (PRUEFER-34, Lauf d).
+				//
+				// Mit ihr wartet der naechste Versuch erneut und gibt
+				// schlimmstenfalls wieder nach fuenf Minuten auf. Unbeendbar
+				// wird Eudora dadurch nicht: jeder Versuch endet entweder im
+				// Beenden oder im Aufgeben, und das Fenster bleibt beide Male
+				// bedienbar.
+				//
+				m_bE123Gewartet = FALSE;
+
 				// Der Text folgt dem Muster der Wartemeldung weiter unten
 				// (SetMessageText("Waiting for messages to finish ...")):
 				// feste englische Zeichenkette, keine eigene Ressource.

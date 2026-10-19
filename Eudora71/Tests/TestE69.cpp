@@ -177,4 +177,60 @@ void RunE69Tests(void)
 		TT_CHECK_MSG(E69LautErlaubt(1234, NULL, 2000), "Ohne Merker: laut, kein Absturz");
 	}
 	TT_EndTest();
+
+	// ------------------------------------------------------------ (10)
+	// PRUEFER-38, R1: DIESELBE Sammlung ueber mehrere Laeufe hinweg.
+	//
+	// In Eudora ist g_E69Sammlung eine GLOBALE Variable. Alle Tests oben
+	// legen je ein frisches Objekt an und konnten deshalb nicht sehen, dass
+	// LaufEnde() nichts zurueckgesetzt hat: nach dem ersten geklammerten
+	// Lauf blieb bErstGemeldet auf true, und jeder spaetere Fall ausserhalb
+	// einer Klammer bekam GAR KEINEN Eintrag mehr - E-69 war stumm, bis
+	// Eudora neu startete.
+	//
+	// Neun gruene Tests, und der Fehler war trotzdem da. Ein Test, der
+	// seinen Zustand nicht teilt, kann einen Zustandsfehler nicht sehen.
+	TT_BeginTest("E-69 A / R1: nach einem Lauf meldet dieselbe Sammlung weiter");
+	{
+		void* p = UTE69_Neu();		// EIN Objekt fuer alles, wie in Eudora
+
+		// Erster Lauf, geklammert, mit zwei Faellen.
+		UTE69_LaufBeginn(p);
+		TT_CHECK(UTE69_Melden(p));
+		UTE69_Melden(p);
+		TT_CHECK_MSG(UTE69_LaufEnde(p) == 1, "Erster Lauf: ein Sammeleintrag");
+
+		// Danach ein Fall OHNE Klammer - er muss gemeldet werden.
+		TT_CHECK_MSG(UTE69_Melden(p),
+			"Nach dem Lauf muss der naechste Fall wieder einen Eintrag bekommen");
+
+		// Und ein zweiter geklammerter Lauf faengt sauber an.
+		UTE69_LaufBeginn(p);
+		TT_CHECK_MSG(UTE69_Melden(p), "Zweiter Lauf: erster Fall wieder voll gemeldet");
+		TT_CHECK(UTE69_LaufEnde(p) == 0);
+
+		UTE69_Frei(p);
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------ (11)
+	// Die Zahl im Sammeleintrag darf sich nicht ueber Laeufe hinweg
+	// aufaddieren - sonst stuende nach dem dritten Lauf eine Zahl da, die
+	// Faelle aus den ersten beiden mitzaehlt.
+	TT_BeginTest("E-69 A / R1: die Zahl im Sammeleintrag addiert sich nicht auf");
+	{
+		void* p = UTE69_Neu();
+		int i, k;
+
+		for (k = 0; k < 3; k++)
+		{
+			UTE69_LaufBeginn(p);
+			for (i = 0; i < 5; i++)
+				UTE69_Melden(p);
+			int nWeitere = UTE69_LaufEnde(p);
+			TT_CHECK_MSG(nWeitere == 4, "Jeder Lauf meldet 4 weitere, nicht 4-9-14");
+		}
+		UTE69_Frei(p);
+	}
+	TT_EndTest();
 }

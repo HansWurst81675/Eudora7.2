@@ -991,6 +991,10 @@ BOOL CPOP::DoFilterMail_()
 
 		// Generate the address book hashes once for the entire filtering loop
 		CFilter::GenerateHashes(&oaABHashes);
+
+		// BEFUND E-69, PRUEFER-38 R2: auch das POP-Abholen geht ueber
+		// beliebig viele Nachrichten.
+		CE69Filterlauf e69Lauf;
 		
 		while (pos)
 		{
