@@ -1,4 +1,76 @@
-# Testplan für Gregor — Stand 19.10.2026, Paket 1.0.110 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 am 14.10. an 1.0.87 bestätigt; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.110 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und E-123) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: C5 zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
+# Testplan für Gregor — Paket 1.0.110, Stand 19.10.2026
+
+## Was jetzt zu testen ist — vier Schritte
+
+Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.110-release`, starten mit
+`Eudora starten.cmd`. Das Mailverzeichnis im Paket ist **leer** — deine
+Postfächer liegen in `C:\Users\Gregor\Eudora72-Postfaecher-gesichert` und
+müssen bei **geschlossenem** Eudora hineinkopiert werden.
+Unter *Help → About Eudora* muss **7.2.0.110** stehen.
+
+**Schritt 1 — Filtern, während der Mailserver nicht erreichbar ist.**
+Ein IMAP-Postfach filtern (*Special → Filter Messages*), zum Beispiel mit
+gezogenem Netzwerkkabel oder ausgeschaltetem WLAN.
+*So ist es richtig:* es piept **nicht** ununterbrochen, das Fenster
+*Task Errors* drängt sich **nicht** bei jeder Nachricht nach vorn, und in der
+Liste stehen **zwei** Zeilen — die erste Nachricht mit Betreff und Grund, und
+darunter eine Sammelzeile *„N further message(s) …"*.
+*Vorher:* bei 500 angerissenen Nachrichten 500 Einträge, 500 Pieptöne, 500
+Fenstersprünge — nicht wegzuklicken.
+
+**Schritt 2 — gleich noch einmal filtern, ohne Eudora neu zu starten.**
+Eine einzelne Nachricht filtern, die Eudora nicht lesen kann (Server weiter
+nicht erreichbar).
+*So ist es richtig:* es kommt **ein** Eintrag in *Task Errors*.
+*Wenn gar keiner kommt, bitte melden:* dann meldet Eudora ab dem zweiten
+Filterlauf gar nichts mehr, und abgebrochene Filter fallen still unter den
+Tisch. Genau dieser Fehler steckte in der Zwischenfassung vom selben Tag.
+
+**Schritt 3 — Beenden, während noch etwas hochgeladen wird.**
+Mehrere Nachrichten in einen IMAP-Ordner verschieben und **sofort**
+*File → Exit*.
+*So ist es richtig:* das Fenster verschwindet **nicht**, solange die
+Übertragung läuft. Dauert es länger als fünf Minuten, steht
+*„Quit cancelled: …"* in der Statuszeile und Eudora bleibt offen.
+Danach **noch einmal** *File → Exit*: es wartet wieder.
+*Wenn das Fenster verschwindet, der Prozess aber weiterläuft, bitte melden.*
+*Was sonst passieren kann:* eine halb übertragene Nachricht verliert ihre
+eingebetteten Bilder.
+
+**Schritt 4 — eine Nachricht als Datei speichern.**
+Eine empfangene HTML-Nachricht mit Umlauten und `€` über *File → Save As*
+sichern, die Datei danach in Thunderbird oder im Browser öffnen.
+*So ist es richtig:* die Zeichen stimmen. Hat die Nachricht einen **Anhang**,
+ist der in der gespeicherten Datei noch ein Anhang.
+*Wenn stattdessen ein Block aus `--grenze`, Kopfzeilen und wirrem Text
+dasteht, bitte melden:* dann ist der Anhang aus der Datei nicht mehr zu holen.
+
+### Was bekannt ist — bitte nicht als neuen Fehler melden
+
+* Nach einem **Absturz**, einem Eingriff von **Defender**, einem Stromausfall
+  oder einem erzwungenen Herunterfahren können eingebettete Bilder einer
+  verschobenen Nachricht weiter fehlen. Schritt 3 prüft nur das **ordentliche**
+  Beenden.
+* Bilder, die als `data:`-Adresse in der Mail stecken, erscheinen als **grauer
+  Kasten**.
+* Bilder, die **breiter sind als das Fenster**, werden nicht verkleinert.
+* Eine Größenangabe mit Einheit (`width="35px"`) wird nicht ausgewertet.
+* Beim **Weiterleiten eines Newsletters** können Bilder doppelt erscheinen.
+
+### Wie dein Urteil zählt
+
+Mit der **Paketnummer**: *„Schritt 1 an 1.0.110 in Ordnung"* oder
+*„Schritt 2 an 1.0.110 gescheitert, es kam kein Eintrag"*. Ohne die Nummer
+ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
+das ausgelieferte Paket den Fehler noch hatte.
+
+Eigene Tests dieser Fassung: **229 Tests, 229 bestanden.**
+
+---
+
+## Buchführung — was wann an welchem Paket bestätigt wurde
+
+**Stand 19.10.2026, Paket 1.0.110.** (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.110 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -232,14 +304,16 @@ hast am 19.10.2026 alle alten Testverzeichnisse gelöscht (*„alles weg!"*) —
 **1.0.110 ist das erste Paket, das du danach bekommst.** Wenn dir jemand
 1.0.107, 1.0.108 oder 1.0.109 zum Testen nennt, ist das falsch.
 
-| | Befund | Handgriff | was richtig ist |
-|---|---|---|---|
-| ☐ | [**E-69**](BEFUNDE.md#e-69), der Anlassfall | ein **IMAP**-Postfach filtern (*Special → Filter Messages*), während der Server nicht erreichbar ist | es piept **nicht** mehr ununterbrochen, *Task Errors* drängt sich nicht bei jeder Nachricht nach vorn, und in der Liste stehen **zwei** Einträge: der erste Fall und ein Sammeleintrag *„N further message(s) …"* |
-| ☐ | [**E-69**](BEFUNDE.md#e-69), Gegenprobe zu [R1](Befunde/PRUEFER-38.md) | **direkt danach**, ohne Neustart, eine einzelne nicht lesbare Nachricht filtern | es kommt **ein** Eintrag. Kommt **keiner**, ist R1 nicht behoben — genau das war der Fehler in 7.2.0.109 |
-| ☐ | [**E-123**](BEFUNDE.md#e-123), Beenden-Weg | mehrere Nachrichten in einen IMAP-Ordner verschieben und sofort *File → Exit* | das Fenster verschwindet **nicht**, solange die Übertragung läuft; nach fünf Minuten steht *„Quit cancelled: …"* in der Statuszeile — es wird **nicht** mehr erzwungen beendet |
-| ☐ | [**E-123**](BEFUNDE.md#e-123), zweiter Versuch ([R4](Befunde/PRUEFER-38.md)) | nach dem *„Quit cancelled"* noch einmal *File → Exit* | es wartet wieder; es darf **kein** unsichtbarer Hänger entstehen (Fenster weg, Prozess läuft weiter) |
-| ☐ | [**E-101**](BEFUNDE.md#e-101), dritter Teil ([F1](Befunde/PRUEFER-37.md), [F3/F4](Befunde/PRUEFER-37.md)) | eine empfangene HTML-Nachricht mit Umlauten und `€` über *File → Save As* sichern und die Datei in Thunderbird oder im Browser öffnen | die Zeichen stimmen. Hat die Nachricht einen **Anhang**, ist der in der Datei noch ein Anhang — **kein** Block aus Grenzen, Teilköpfen und Base64-Text |
+| | Schritt | wird geprüft |
+|---|---|---|
+| ☐ | **Schritt 1** — filtern bei totem Server | [E-69](BEFUNDE.md#e-69), die Meldungsflut |
+| ☐ | **Schritt 2** — gleich noch einmal filtern | [E-69](BEFUNDE.md#e-69), die Gegenprobe zu [R1](Befunde/PRUEFER-38.md) |
+| ☐ | **Schritt 3** — beenden während einer Übertragung | [E-123](BEFUNDE.md#e-123), der Beenden-Weg und [R4](Befunde/PRUEFER-38.md) |
+| ☐ | **Schritt 4** — Nachricht als Datei speichern | [E-101](BEFUNDE.md#e-101), dritter Teil ([F1](Befunde/PRUEFER-37.md), F3, F4) |
 
+**Was jeder Schritt im Einzelnen verlangt und woran man sieht, dass er
+geglückt ist, steht ganz oben in diesem Dokument** — dort im Klartext, ohne
+Befundnummern. Hier stehen nur die Haken und die Zuordnung zu den Befunden.
 **[E-123](BEFUNDE.md#e-123) selbst bleibt offen.** Was hier geprüft wird, sind
 die Prüfpunkte am Beenden-Weg. Nach einem Absturz, einem Eingriff von Defender,
 einem Stromausfall oder einem erzwungenen Herunterfahren können eingebettete
