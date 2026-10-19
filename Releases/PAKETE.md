@@ -156,7 +156,7 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.110 — gebaut am 19.10.2026, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
+## 1.0.110 — geschnürt am 19.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.110-release`, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
 
 **Das erste Paket, das E-69 und E-123 zusammen trägt** — und das erste, in dem
 die Behebung zu E-69 wirklich greift.
