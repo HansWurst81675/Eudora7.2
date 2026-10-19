@@ -1418,3 +1418,25 @@ und README führen den Befund offen, die zwei Restfälle in der README brauchen 
 Maßstab 7.2.1.0 ([L-41.3](Befunde/LEKTOR-41.md#l-41.3)); README und CHANGELOG nennen für [E-123](BEFUNDE.md#e-123) 90 s und 7.2.0.102 statt bis zu
 5 Minuten ab 7.2.0.104 ([L-41.4](Befunde/LEKTOR-41.md#l-41.4)); README überzeichnet [E-69](BEFUNDE.md#e-69), CHANGELOG und FILTER ohne 7.2.0.106
 ([L-41.5](Befunde/LEKTOR-41.md#l-41.5)); `messen-e69.ps1` und `messen-e123-doppelt.ps1` fehlen in `tools/WERKZEUGE.md` ([L-41.8](Befunde/LEKTOR-41.md#l-41.8)).
+
+## Siebenundvierzigster Durchgang — 19.10.2026 (Bericht: `Befunde/LEKTOR-42.md`)
+
+Nach 7.2.0.107 bis 7.2.0.110 auf `E-101_korrektur_datei_speichern` und `e-69-meldungsflut`
+([E-101](BEFUNDE.md#e-101) dritter Teil mit [PRÜFER-37](Befunde/PRUEFER-37.md), [E-123](BEFUNDE.md#e-123) P1/P2, [E-69](BEFUNDE.md#e-69) P3, dazu R1–R4 aus
+[PRÜFER-38](Befunde/PRUEFER-38.md)), zum Stand `8d1075b0`; 233 MDs aus `git ls-files`, davon 136 ohne
+`Arbeitsweise/` und 42 außerhalb von `Befunde/` durchsucht. Auftrag: melden und berichtigen.
+Berichtigt: der Quellstand stand an **sechs** Stellen auf 7.2.0.106, während `Version.h` 7.2.0.110
+sagt — in `WEITERMACHEN.md:9` sogar drei Zeilen über der richtigen Paketnummer ([L-42.1](Befunde/LEKTOR-42.md#l-42.1));
+der Block *HIER WEITERMACHEN* und die Kopftabelle nannten weder 1.0.110 noch das Paket, das Gregor
+wirklich hat ([L-42.2](Befunde/LEKTOR-42.md#l-42.2), [L-42.3](Befunde/LEKTOR-42.md#l-42.3)); die **Regression F3/F4** zu [E-101](BEFUNDE.md#e-101) fehlte in README, TESTPLAN,
+ZIEL, AUFGABEN und in der CHANGELOG-Zeile *Noch offen* ([L-42.4](Befunde/LEKTOR-42.md#l-42.4)); der Testplan nannte 1.0.110
+im Kopf und gab dazu keinen einzigen Handgriff — neuer Abschnitt [C6](TESTPLAN.md#c6) ([L-42.5](Befunde/LEKTOR-42.md#l-42.5)); die
+Prüfpunkte am Beenden-Weg wurden mehrfach wie der Befund [E-123](BEFUNDE.md#e-123) gelesen, einmal von mir selbst
+— `pruefe-befundurteile.pl` hat es gefangen ([L-42.6](Befunde/LEKTOR-42.md#l-42.6)); [E-69](BEFUNDE.md#e-69) endete an vier Stellen bei
+7.2.0.106 ([L-42.7](Befunde/LEKTOR-42.md#l-42.7)); zwei Zeilen in `tools/ZWEIGE.md` standen durch Leerzeilen außerhalb der
+Tabelle ([L-42.8](Befunde/LEKTOR-42.md#l-42.8)); die Prüfanleitung zu 7.2.0.107 verlangte etwas, das auf dem einzigen
+Aufrufweg nicht vorkommt ([L-42.9](Befunde/LEKTOR-42.md#l-42.9)); zwei PRÜFER-Berichte luden zum Test nie geschnürter
+Pakete ein ([L-42.10](Befunde/LEKTOR-42.md#l-42.10)). Offen: `pruefe-befundurteile.pl` prüft sieben von Hand aufgezählte
+Dokumente ohne TESTPLAN, AUFGABEN und PAKETE ([L-42.12](Befunde/LEKTOR-42.md#l-42.12)); `doku-pruefen.pl` sieht einen
+Widerspruch innerhalb derselben Tabelle nicht ([L-42.13](Befunde/LEKTOR-42.md#l-42.13)); [E-123](BEFUNDE.md#e-123) fehlt weiter im Maßstab
+7.2.1.0 — Gregors Entscheidung ([L-42.14](Befunde/LEKTOR-42.md#l-42.14)).

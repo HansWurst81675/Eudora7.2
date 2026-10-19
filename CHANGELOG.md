@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 17.10.2026)
+## Noch offen (Stand 19.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -17,7 +17,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-127**](BEFUNDE.md#e-127) | **Ein IMAP-Ordner, der seit dem Start noch nie geöffnet war, zeigt eben dorthin verschobene Mails erst nach erneutem Öffnen** | **Offen, an Gregors Protokoll gemessen.** Kein Datenverlust, die Mails sind auf dem Server |
 | [**E-125**](BEFUNDE.md#e-125) | **Eine Nachricht aus einem IMAP-Ordner nach `Out` verschieben legt eine neue Nachricht mit `<br>` in den Kopfzeilen an – und überträgt nichts** | **Offen, am Protokoll gemessen, Ursache am Quelltext vermutet** (*Send Again* in `CTocDoc::Xfer`). Von Gregor am 16.10.2026 an 1.0.100 gemeldet. Kein Datenverlust, das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger. Ob `v1.0.87` dasselbe tut, ist nicht gemessen. **Entschieden von Gregor am 17.10.2026:** Ziehen nach `Out` wird künftig abgelehnt, mit Hinweis auf *Message → Send Again*; noch nicht gebaut |
 | [**E-122**](BEFUNDE.md#e-122) | **Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone verschoben** | **Offen, gemessen und am Quelltext belegt, keine Änderung eingebaut.** Originalfehler, kein Datenverlust; der `Date:`-Kopf bleibt richtig |
-| [**E-123**](BEFUNDE.md#e-123) | **Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilder einer verschobenen Nachricht fehlen** — die Nachricht selbst bleibt (abgetrennt aus [E-121](BEFUNDE.md#e-121), dort N2/N3) | **Offen; Teilbehebung eingebaut in 7.2.0.102** (Abschnitt 7.2.0.102, nicht veröffentlicht): Eudora wartet beim Beenden, bis ausstehende Übertragungen fertig sind (in 7.2.0.102 höchstens 90 s; ab 7.2.0.104 bis das Hochladen fertig ist, höchstens 5 Minuten); am Prüfstand gemessen, mit Gegenprobe an 7.2.0.101. Bleibt offen für Absturz, Defender, Stromausfall, erzwungenes Herunterfahren. Kein Verlust der Nachricht |
+| [**E-123**](BEFUNDE.md#e-123) | **Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilder einer verschobenen Nachricht fehlen** — die Nachricht selbst bleibt (abgetrennt aus [E-121](BEFUNDE.md#e-121), dort N2/N3) | **Offen; Teilbehebung eingebaut in 7.2.0.102** (Abschnitt 7.2.0.102, nicht veröffentlicht): Eudora wartet beim Beenden, bis ausstehende Übertragungen fertig sind (in 7.2.0.102 höchstens 90 s; ab 7.2.0.104 bis das Hochladen fertig ist, höchstens 5 Minuten); am Prüfstand gemessen, mit Gegenprobe an 7.2.0.101. **Weiter abgesichert in 7.2.0.108 und 7.2.0.110** (Abschnitte dort; beide nicht veröffentlicht): nach fünf Minuten wird **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben, mit dem Grund in der Statuszeile ([P1](#p1)); der Hochladezähler deckt auch den Verbindungsaufbau ([P2](#p2)); der zweite *File → Exit* wartet wieder, statt verschachtelt abzubauen ([R4](#r4)). **Das sind Prüfpunkte am Beenden-Weg, nicht der Befund** – [E-123](BEFUNDE.md#e-123) selbst bleibt offen. Bleibt offen für Absturz, Defender, Stromausfall, erzwungenes Herunterfahren. Kein Verlust der Nachricht |
 | [**E-124**](BEFUNDE.md#e-124) | **Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Programm** — `Trojan:Win32/Bearfoos.A!ml` auf 7.2.0.98, sieht aus wie ein Absturz | **Offen (nicht im Code behebbar), gemessen am 16.10.2026; Schranke in `tools/paket-pruefen.ps1` eingebaut** (Abschnitt 7.2.0.99). Offen: Fehlalarm zu 1.0.98 bei Microsoft melden, Code-Signatur (Gregors Entscheidung). Anwenderhinweis in der README. Kein Datenverlust |
 | [**E-116**](BEFUNDE.md#e-116) | **`width="35px"` wird als 3508 gelesen** — eine Größenangabe mit Einheit oder Nachkommastelle verzerrt das Bild | **Neu, offen, am Quelltext belegt** (PRÜFER-22 F3, 13.10.2026), nicht am laufenden Programm gesehen. `decimal_value_percent` (`PGHTMIMP.CPP:3683-3697`) prüft nicht, ob eine Ziffer folgt: `"35px"` ergibt 3508, `"35.5"` ergibt 3645. **Sichtbar erst ab 7.2.0.85**, weil [E-112](BEFUNDE.md#e-112) das Bild auf die angegebene Breite zeichnet |
 | [**E-118**](BEFUNDE.md#e-118) | **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als HTML-Quelltext** | **Behoben in 7.2.0.89 (Zweig `e-118_HTML_header`), am IMAP-Prüfserver gemessen, von Gregor am 14.10.2026 an 1.0.89 bestätigt, veröffentlicht mit `v1.0.101`** (Abschnitt 7.2.0.89); **Teil 2** (eingebettete Bilder) in 7.2.0.90, von Gregor am 14.10.2026 an 1.0.90 bestätigt (Abschnitt 7.2.0.90). Am Quelltext belegt. Von Gregor am 13.10.2026 an 1.0.86 gemeldet (Bildschirmfoto). Beim Hochladen verwirft `IsHeaderToInclude` (`EuImap/src/ImapAppend.cpp:2020-2026`) alle `Content-*`-Köpfe; einteilig wird gar kein `Content-Type` geschrieben (`:692`), mehrteilig fest `text/plain` (`:1166-1169`) — [PRÜFER-25](Befunde/PRUEFER-25.md) H1; die zuerst genannte Stelle `AppendContentType` ist widerlegt (läuft nur für Anhänge). Originalfehler von QUALCOMM |
@@ -25,7 +25,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-117**](BEFUNDE.md#e-117) | **Bilder mit `&amp;` in der Adresse kommen nicht an** — beim Antworten und Weiterleiten eine leere Fläche | **Behoben in 7.2.0.87, veröffentlicht als `v1.0.87` (14.10.2026), am laufenden Programm gemessen, von Gregor am 14.10.2026 an 1.0.87 bestätigt** (Abschnitt 7.2.0.87). In `v1.0.84` und älter noch enthalten (dort als 1×1-Pixel unsichtbar) |
 | [**E-115**](BEFUNDE.md#e-115) | **Ctrl+F (*Find Messages*) bringt „Encountered an improper argument“**, kein Postfach angehakt | **Behoben in 7.2.0.86, veröffentlicht mit `v1.0.87` (14.10.2026), von Gregor am 13.10.2026 an 1.0.86 bestätigt** (vorläufig: der Fehler war sporadisch). Von ihm an 1.0.84 gemeldet; Ursache und Behebung im Abschnitt 7.2.0.86. In `v1.0.84` und älter noch enthalten. Kein Datenverlust |
 | [**E-114**](BEFUNDE.md#e-114) | **angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich** | **Neu, offen.** Von Gregor am 13.10.2026 an 1.0.84 gemeldet (Filterfenster) |
-| [**E-101**](BEFUNDE.md#e-101) | **gespeicherte HTML-Datei: Umlaute falsch** | **Wieder offen seit 13.10.2026.** Die Datei sagt im `<meta>` UTF-8, enthält aber Windows-1252 |
+| [**E-101**](BEFUNDE.md#e-101) | **gespeicherte HTML-Datei: Umlaute falsch** | **Wieder offen seit 13.10.2026.** Die Datei sagt im `<meta>` UTF-8, enthält aber Windows-1252. Dritter Teil eingebaut in **7.2.0.107** (Abschnitt dort, nie geschnürt); nach [PRÜFER-37](Befunde/PRUEFER-37.md) ist der Teil um die `Content-Type`-Zeile auf dem einzigen Aufrufweg **tot** (F2: `StripTabooHeaders` entfernt sie vorher, gemessen in 72 von 72 Nachrichten), **F1, F3 und F4 behoben in 7.2.0.110** (Abschnitt dort): eine echte mehrteilige Nachricht wird nicht mehr zu `text/plain` gemacht (F1 — sonst war der Anhang aus der gespeicherten Datei nicht mehr zu holen), und ein Zeichensatz, den Eudora beim Empfang nicht übersetzt (`windows-1251`, `koi8-r`, `iso-8859-2`, `gb2312`), behält seine Angabe (F3/F4). **Offen bleibt F2** |
 | [**AN-1**](BEFUNDE.md#an-1) | **Anhänge: lange Dateinamen kommen abgeschnitten an, die Endung fehlt** — *„immer wieder Dateien im Attachment …, bei denen zum Beispiel PDF oder Doc … fehlt und der Dateiname ist nicht vollständig"* | **Über POP am laufenden Programm heil seit 7.2.0.81** (12.10.2026): alle sechs Prüfanhänge mit vollem Namen und `.pdf`, ebenso an 7.2.0.82 (`C:\Temp\AN4`) und 7.2.0.83 (`C:\Temp\AN5`), Testsuite 185/185 an beiden. **Über IMAP von Gregor mit Paket 1.0.83 getestet** (Abschnitt 7.2.0.83): drei Anhänge, alle mit Endung, der längste auf 175 Zeichen gekürzt; sein Urteil: *„gekürzt mit endung reicht"*. Elf Teile B5.1 bis B5.11, davon zehn behoben; **offen ist [B5.7](AUFGABEN.md#b5.7)** (IMAP ohne `SetExtension` — im Test fiel es nicht auf, weil alle drei Namen schon eine Endung trugen) |
 | [**E-112**](BEFUNDE.md#e-112) | **Bilder werden in Originalgröße gezeichnet statt in der angegebenen** — und der Text liegt darauf | **Behoben in 7.2.0.85, veröffentlicht mit `v1.0.87` (14.10.2026), von Gregor am 13.10.2026 an 1.0.86 bestätigt** (Abschnitt 7.2.0.85): die Metadatei wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`); am laufenden Programm an `a36c47f` gemessen, alle drei Bilder der Prüfnachricht in der richtigen Größe, kein Bild auf dem Text, mit ihm [E-103](BEFUNDE.md#e-103). PRÜFER-22 F1 (gleiche URL) und F2 (halbe Angabe) sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und 150x58). PRÜFER-23 N1 (`height="1"` beim Antworten) ist behoben und am laufenden Programm gemessen, ebenso die Gegenrichtung (`width="1"`); N2 bis N5 sind offen. In `v1.0.84` und älter gilt weiter: der Versuch in 7.2.0.76 wirkt nicht (`draw_meta_file` spielt die Metadatei als `MM_TEXT` ab, das Zielrechteck bestimmt nur die **Position**), die Bilder sind zu groß und der Text liegt darauf. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
 | [**E-113**](BEFUNDE.md#e-113) | **Bilder, die breiter sind als das Fenster, laufen rechts hinaus** — statt anteilig eingepasst zu werden | **Offen, von Gregor am 18.09.2026 angeordnet** (*„ok, erst A, dann B"*). **Nicht** dasselbe wie [E-112](BEFUNDE.md#e-112): dort ging es darum, dass die **angegebene** Größe gilt; hier darum, was geschieht, wenn schon die angegebene breiter ist als der Platz. Das ist die Regel, die Newsletter mit `max-width:100%` meinen — Paige kennt kein CSS. **Was schon da ist:** `PGHTMIMP.CPP:235-240` rechnet `page_width` aus und `:2043` benutzt sie bereits für prozentuale Breiten. **Nicht gemessen:** `page_width` ist die Breite **beim Umbruch**; damit ein Bild einer Fenstergrößenänderung folgt, müsste das Dokument neu umbrochen werden. Ein Deckel beim Umbruch ist billig, echtes Mitwachsen ist es nicht. Einzelheiten in [BEFUNDE.md](BEFUNDE.md) |
@@ -42,7 +42,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-71**](BEFUNDE.md#e-71) | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
 | [**E-77**](BEFUNDE.md#e-77) | **IMAP-Postfachnamen mit Umlauten** werden roh angezeigt: `Entw&APw-rfe` statt *Entwürfe* | Von Gregor am 10.09.2026 an 1.0.42 gemeldet. Modifiziertes UTF-7 (RFC 3501, 5.1.3), das Eudora nicht dekodiert — in `Eudora71/` kommt keine UTF-7-Behandlung vor. Bei der Behebung gehört die Gegenrichtung dazu: beim Anlegen und Umbenennen muss der Name wieder kodiert werden |
 | [**E-68**](BEFUNDE.md#e-68), halb | `copyInstead` wird beim Schreiben von `Filters.pce` anders behandelt als beim Lesen | Die andere Hälfte — der Pufferüberlauf ab der sechsten Aktion je Regel — ist am 10.09.2026 behoben |
-| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die drei Abbruchstellen protokollieren jetzt, statt nur zu assertieren; **ab 7.2.0.106 Eintrag in *Task Errors*** (Abschnitt 7.2.0.106) |
+| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` kann im Freigabebau lautlos abbrechen | die Abbruchstellen protokollieren, statt nur zu assertieren; **ab 7.2.0.106 Eintrag in *Task Errors*** (Abschnitt 7.2.0.106), **ab 7.2.0.109/7.2.0.110 nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, höchstens ein Piepton je zwei Sekunden** ([PRÜFER-36](Befunde/PRUEFER-36.md) P3, [PRÜFER-38](Befunde/PRUEFER-38.md) [R1](#r1)–[R3](#r3); Abschnitte 7.2.0.109 und 7.2.0.110). Keine dieser Fassungen ist veröffentlicht, von Gregor noch nicht bestätigt |
 | — | **Nach einem Neustart stehen die Fenster nicht im Vollbild**, obwohl sie beim Beenden so waren | Nebenbefund **ohne Nummer**, von Gregor am 09.09.2026 an 1.0.25 gemeldet. **Möglicher Zusammenhang mit [E-78](BEFUNDE.md#e-78)**, siehe oben: wenn `SetDockState` den gespeicherten Zustand nicht anwendet, trifft das denselben Mechanismus |
 | — | [**E-39**](BEFUNDE.md#e-39): wird die **aktuell benutzte** Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wiederentstehen | `Remove` stellt die aktuelle Persönlichkeit nicht um, und `FlushINIFile` schreibt `SavePassword`/`SavePasswordText` in `GetCurrent()` (`rs.cpp:1237-1250`). Nicht am laufenden Programm bestätigt |
 | — | Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten | dieselbe Quelle wie [E-34](BEFUNDE.md#e-34), andere Aufrufstelle. **Neu zu messen**, seit [E-43](BEFUNDE.md#e-43) behoben ist — gut möglich, dass sie mit verschwindet. **Dieselbe Meldung beim Suchen (Ctrl+F) ist ein eigener Befund, [E-115](BEFUNDE.md#e-115)**, gemeldet am 13.10.2026 an 1.0.84, behoben in 7.2.0.86 |
@@ -125,7 +125,7 @@ Behobene: **Eudora bleibt beendbar** (`m_bE123Gewartet` trägt den zweiten
 Versuch), und die beiden Hochladezähler liegen **nacheinander**, nicht
 ineinander — der Zähler kann nicht stehenbleiben.
 
-**224 Tests, 224 bestanden.**
+**229 Tests, 229 bestanden.**
 
 ### Prüfanleitung
 
@@ -134,12 +134,52 @@ ineinander — der Zähler kann nicht stehenbleiben.
 2. **Direkt danach** eine einzelne unlesbare Nachricht filtern. Kommt **kein**
    Eintrag, ist [R1](#r1) nicht behoben.
 3. Mehrere Nachrichten in einen IMAP-Ordner verschieben, sofort *File → Exit*.
+4. Eine HTML-Nachricht mit Umlauten und `€` über *File → Save As* sichern und
+   in Thunderbird oder im Browser öffnen — die Zeichen müssen stimmen. Mit
+   **Anhang**: der muss in der Datei noch Anhang sein, nicht Textblock.
 
-### Bekannte Regression, nicht behoben
+### Nachtrag am 19.10.2026: F1, F3 und F4 sind ebenfalls drin
 
-F3/F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) zu **[E-101](BEFUNDE.md#e-101)**: `windows-1251`,
-`koi8-r`, `iso-8859-2` bekommen beim Speichern eine falsche `<meta>`-Angabe.
-Gegenüber 1.0.106 ein Rückschritt. **Kein Release, solange das offen ist.**
+Gregor: *„f1 und f3/f4 erst beheben, dann 0.111 releasen"* und *„ich teste
+alles in 0.111, nicht zwei verschiedene"*. Da 7.2.0.110 bis dahin **nie
+übersetzt** worden war, ist alles in **1.0.110** gelandet — eine vierte nie
+geschnürte Nummer entsteht nicht.
+
+**Die Regression aus [PRÜFER-37](Befunde/PRUEFER-37.md) ist damit weg.**
+
+**F3/F4 — `windows-1252` galt für jeden Weg.** Der Code hielt **jede**
+abweichende Zeichensatzangabe für falsch. Für Kodierungen, die Eudora beim
+Empfang **nicht** übersetzt, ist die vorgefundene Angabe aber die **einzige
+richtige**: `FindMIMECharset` (`mime.cpp:383`) liefert für `windows-*` den
+Wert 0 und für Unbekanntes −1, `TextReader.cpp:271` übersetzt erst ab 3.
+`windows-1251`, `koi8-r`, `iso-8859-2` und `gb2312` liegen **unübersetzt** im
+Postfach. Aus `charset=windows-1251` wurde `windows-1252` — aus lesbarem
+Russisch `Àáâ`. **F4** ist dieselbe Sache im `<meta>` und wog schwerer, weil
+der Zweig auf dem **Vorgabeweg** läuft, also auch ohne *Kopfzeilen
+einschließen*.
+
+**F1 — eine `multipart`-Kopfzeile wird nur ersetzt, wenn die angekündigte
+Grenze wirklich fehlt.** Vorher hing das allein am Text der Kopfzeile. Bei
+einer echten mehrteiligen Nachricht mit PDF-Anhang wurde daraus `text/plain`,
+und jeder Leser zeigt danach Grenzen, Teilköpfe und Base64 als Text — der
+Anhang ist aus der Datei nicht mehr zu holen.
+
+**Beim Testen kam ein zweiter Weg heraus**, den PRÜFER-37 so nicht nennt: eine
+`multipart`-Zeile trägt **kein** `charset`, `szCs` ist leer, und *„leer ist
+nicht iso-8859-1"* machte den Zeichensatz-Zweig wahr — die Ersetzung lief
+trotz F1. Jetzt bleibt die Kopfzeile **ganz** unangetastet, wenn der Rumpf
+wirklich mehrteilig ist.
+
+**229 Tests, 229 bestanden** (fünf neue). Die wichtigste davon ist die
+**Gegenprobe**: ein falsches `UTF-8` über CP1252-Bytes wird weiterhin
+berichtigt. Ohne sie wäre aus der Behebung *„fasse nie etwas an"* geworden,
+und [E-101](BEFUNDE.md#e-101) wäre zurück.
+
+**Zwei meiner Tests waren zuerst falsch, nicht der Code** — sie prüften den
+Inhalt der Ausgabedatei, obwohl die Funktion bei *„nichts zu tun"* gar nichts
+hineinschreibt. Die Spurmarke sagte `ct-ersetzt=0 geaendert=0`, also das
+Richtige.
+
 
 ## 7.2.0.109 — aus 500 Pieptönen werden 25 (E-69, P3)
 
@@ -195,12 +235,13 @@ Ein IMAP-Postfach filtern, während der Server nicht erreichbar ist
 *Task Errors* darf sich nicht bei jeder Nachricht nach vorn drängen. In der
 Liste stehen **zwei** Einträge: der erste Fall und ein Sammeleintrag.
 
-### Noch nicht behoben
+### In dieser Fassung noch nicht behoben
 
 **F1** und **F3/F4** aus [PRÜFER-37](Befunde/PRUEFER-37.md) zu **[E-101](BEFUNDE.md#e-101)**.
 **F4 ist eine Regression gegenüber 1.0.106:** eine Nachricht mit einem
 Zeichensatz, den Eudora nicht übersetzt (`windows-1251`, `koi8-r`,
 `iso-8859-2`), bekommt beim Speichern eine falsche `<meta>`-Angabe.
+*Nachtrag 19.10.2026: alle drei sind in **7.2.0.110** behoben, Abschnitt dort.*
 
 ## 7.2.0.108 — Beenden beschädigt keine laufende Übertragung mehr (E-123: P1, P2)
 
@@ -282,9 +323,19 @@ schon tut (`TridentView.cpp`, `szCharsetMeta`).
 ### Prüfanleitung
 
 Eine empfangene HTML-Nachricht über *File → Save As* sichern und die Datei in
-einem anderen Programm öffnen. Die `Content-Type`-Zeile muss zum Inhalt passen
-(kein `multipart` über einem einteiligen Rumpf), und Umlaute, `€`, `’` und `–`
-müssen richtig erscheinen.
+einem anderen Programm öffnen. Umlaute, `€`, `’` und `–` müssen richtig
+erscheinen.
+
+**Nachtrag nach [PRÜFER-37](Befunde/PRUEFER-37.md) (19.10.2026):** der zweite
+Teil dieser Anleitung — *„die `Content-Type`-Zeile muss zum Inhalt passen"* —
+lässt sich auf dem einzigen Aufrufweg **nicht** prüfen. `StripTabooHeaders`
+entfernt die `Content-Type`-Zeile vorher, gemessen in **72 von 72**
+Nachrichten (F2); im Protokoll steht dann `ct-ersetzt=0`, und das ist
+**erwartet**, kein Mangel. Offen bleiben F1 (ein echter mehrteiliger Rumpf
+würde trotzdem ersetzt) sowie **F3/F4, eine Regression gegenüber 1.0.106** bei
+`windows-1251`, `koi8-r` und `iso-8859-2`. **Nicht testen:** eine Nachricht
+mit Anhang speichern, bei der die `Content-Type`-Zeile erhalten geblieben ist
+— das ist F1, und die Datei wird dabei unbrauchbar.
 
 ### Noch nicht im Release
 

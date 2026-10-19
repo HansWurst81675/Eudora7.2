@@ -1,4 +1,4 @@
-# Testplan für Gregor — Stand 19.10.2026, Paket 1.0.110 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 am 14.10. an 1.0.87 bestätigt; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und E-123) zum Test bei Gregor;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: C5 zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
+# Testplan für Gregor — Stand 19.10.2026, Paket 1.0.110 (Teil A, C1, C2, E-83, E-85, E-93 erledigt; E-101 durchgefallen; E-95/E-96 am 14.10. an 1.0.87 bestätigt; C4 erledigt: E-112, E-103, E-115 an 1.0.86, E-117 an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.110 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und E-123) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: C5 zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -218,6 +218,39 @@ das Mailverzeichnis im Paket ist leer.
 Bekannt und nicht behoben, also kein neuer Fehler: [E-119](BEFUNDE.md#e-119) (`data:`-Bilder als
 grauer Kasten), [E-113](BEFUNDE.md#e-113) (Bilder breiter als das Fenster), [E-116](BEFUNDE.md#e-116)
 (`width="35px"` mit Einheit).
+
+---
+
+### <a id="c6"></a>C6 · Paket 1.0.110 — E-69, der Beenden-Weg und eine bekannte Regression
+
+**Stand 19.10.2026 ([LEKTOR-42](Befunde/LEKTOR-42.md#lektor-42)).** Quellstand
+7.2.0.110, Zweig `e-69-meldungsflut`, 229 Tests / 229 bestanden.
+
+**1.0.107, 1.0.108 und 1.0.109 gibt es nicht als Paket** — sie wurden
+übersetzt und wieder verworfen; ihr Inhalt steckt vollständig in 1.0.110. Du
+hast am 19.10.2026 alle alten Testverzeichnisse gelöscht (*„alles weg!"*) —
+**1.0.110 ist das erste Paket, das du danach bekommst.** Wenn dir jemand
+1.0.107, 1.0.108 oder 1.0.109 zum Testen nennt, ist das falsch.
+
+| | Befund | Handgriff | was richtig ist |
+|---|---|---|---|
+| ☐ | [**E-69**](BEFUNDE.md#e-69), der Anlassfall | ein **IMAP**-Postfach filtern (*Special → Filter Messages*), während der Server nicht erreichbar ist | es piept **nicht** mehr ununterbrochen, *Task Errors* drängt sich nicht bei jeder Nachricht nach vorn, und in der Liste stehen **zwei** Einträge: der erste Fall und ein Sammeleintrag *„N further message(s) …"* |
+| ☐ | [**E-69**](BEFUNDE.md#e-69), Gegenprobe zu [R1](Befunde/PRUEFER-38.md) | **direkt danach**, ohne Neustart, eine einzelne nicht lesbare Nachricht filtern | es kommt **ein** Eintrag. Kommt **keiner**, ist R1 nicht behoben — genau das war der Fehler in 7.2.0.109 |
+| ☐ | [**E-123**](BEFUNDE.md#e-123), Beenden-Weg | mehrere Nachrichten in einen IMAP-Ordner verschieben und sofort *File → Exit* | das Fenster verschwindet **nicht**, solange die Übertragung läuft; nach fünf Minuten steht *„Quit cancelled: …"* in der Statuszeile — es wird **nicht** mehr erzwungen beendet |
+| ☐ | [**E-123**](BEFUNDE.md#e-123), zweiter Versuch ([R4](Befunde/PRUEFER-38.md)) | nach dem *„Quit cancelled"* noch einmal *File → Exit* | es wartet wieder; es darf **kein** unsichtbarer Hänger entstehen (Fenster weg, Prozess läuft weiter) |
+| ☐ | [**E-101**](BEFUNDE.md#e-101), dritter Teil ([F1](Befunde/PRUEFER-37.md), [F3/F4](Befunde/PRUEFER-37.md)) | eine empfangene HTML-Nachricht mit Umlauten und `€` über *File → Save As* sichern und die Datei in Thunderbird oder im Browser öffnen | die Zeichen stimmen. Hat die Nachricht einen **Anhang**, ist der in der Datei noch ein Anhang — **kein** Block aus Grenzen, Teilköpfen und Base64-Text |
+
+**[E-123](BEFUNDE.md#e-123) selbst bleibt offen.** Was hier geprüft wird, sind
+die Prüfpunkte am Beenden-Weg. Nach einem Absturz, einem Eingriff von Defender,
+einem Stromausfall oder einem erzwungenen Herunterfahren können eingebettete
+Bilder weiter fehlen.
+
+**Die Regression aus [PRÜFER-37](Befunde/PRUEFER-37.md) ist behoben** (Nachtrag
+19.10.2026, auf Gregors Wort *„f1 und f3/f4 erst beheben, dann 0.111 releasen"*):
+F1, F3 und F4 stecken ebenfalls in 1.0.110. Eine Nachricht in `windows-1251`,
+`koi8-r` oder `iso-8859-2` behält beim Speichern ihre richtige Angabe, und eine
+echte mehrteilige Nachricht wird nicht mehr zu `text/plain` gemacht. Der
+Handgriff dazu steht oben in der Tabelle.
 
 ---
 

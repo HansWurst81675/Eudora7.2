@@ -1,7 +1,7 @@
 # Post automatisch einsortieren — Filter und Junk
 
 > **Geprüft gegen Quellstand 7.2.0.68 / Paket 1.0.68.** Der Quellstand ist
-> inzwischen **7.2.0.73 / 1.0.73**; **gegen ihn ist diese Datei nicht erneut
+> inzwischen **7.2.0.110 / 1.0.110**; **gegen ihn ist diese Datei nicht erneut
 > geprüft.** Nachgesehen wurde am 18.09.2026 nur, ob die Änderungen seither sie
 > falsch gemacht haben: [**E-104**](BEFUNDE.md#e-104) hat das Lesen der INI-Schalter umgebaut,
 > betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen in
@@ -719,7 +719,7 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 | Befund | was passiert |
 |---|---|
 | [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
-| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors*** |
+| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors***; **ab 7.2.0.109/7.2.0.110** nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden ([PRÜFER-36](Befunde/PRUEFER-36.md) P3, [PRÜFER-38](Befunde/PRUEFER-38.md) R1–R3). Keine dieser Fassungen ist veröffentlicht; von Gregor noch nicht bestätigt |
 | [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
 | [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
 

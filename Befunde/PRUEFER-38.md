@@ -547,6 +547,8 @@ Danach kann das Paket zu Gregor. **R3** (Faden), **R5** (Text), **R6.2/6.3**
 
 ## Gregors Test an 1.0.109 — wenn R1 und R2 drin sind
 
+> **Nachtrag LEKTOR, 19.10.2026 ([LEKTOR-42](LEKTOR-42.md#lektor-42)):** **1.0.109 ist nie geschnürt worden** (`Releases/PAKETE.md`, Abschnitt 1.0.109). R1 bis R4 sind eingebaut, und das Ergebnis heißt **1.0.110**. Gregors Prüfschritte stehen dort: `TESTPLAN.md`, Abschnitt [C6](../TESTPLAN.md#c6).
+
 **Test 1 ([E-69](../BEFUNDE.md#e-69)/A, der Anlassfall):** Ein IMAP-Postfach mit mehreren nur
 angerissenen Nachrichten auswählen, Netz trennen, dann
 *Special → Filter Messages*. Erwartet: **genau zwei** Einträge in „Task Errors"

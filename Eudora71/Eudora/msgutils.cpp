@@ -4298,11 +4298,89 @@ bool E101SpeicherfassungAufbereiten(
 			}
 			CString		szUnser( pszCharset );
 			szUnser.MakeLower();
-			bCharsetFalsch = !( szCs == szUnser ||
+
+			//
+			// PRUEFER-37, F3 (19.10.2026): eine Angabe ist nur dann falsch,
+			// wenn der Rumpf nachweislich CP1252 ist.
+			//
+			// Hier stand vorher nur der Vergleich darunter - und damit galt
+			// JEDE abweichende Angabe als falsch. Fuer Kodierungen, die
+			// Eudora beim Empfang NICHT uebersetzt, ist die vorgefundene
+			// Angabe aber die EINZIGE richtige: FindMIMECharset
+			// (mime.cpp:383) liefert fuer windows-* den Wert 0 und fuer
+			// Unbekanntes -1, und TextReader.cpp:271 uebersetzt erst ab 3.
+			// windows-1251, koi8-r, iso-8859-2, gb2312 liegen also
+			// UNUEBERSETZT im Postfach.
+			//
+			// Gemessen von PRUEFER-37: aus "charset=windows-1251" mit den
+			// Bytes C0 E1 E2 wurde "windows-1252" - aus lesbarem Russisch
+			// wird "Aab". Das war ein Rueckschritt gegenueber 1.0.106, wo
+			// die Kopfzeile unangetastet blieb.
+			//
+			const bool	bRumpfIstCp1252 =
+					  szCs.IsEmpty()            || szCs == "us-ascii"
+					|| szCs == "iso-8859-1"     || szCs == "windows-1252"
+					|| szCs == "iso-8859-15"    || szCs == "utf-8"
+					|| szCs == "utf8"           || szCs == "latin1";
+
+			bCharsetFalsch = bRumpfIstCp1252 &&
+							 !( szCs == szUnser ||
 								( szCs == "windows-1252" && szUnser == "iso-8859-1" ) );
 		}
 
-		if ( bMultipart || bTypFalsch || bCharsetFalsch )
+		//
+		// PRUEFER-37, F1 (19.10.2026): eine multipart-Kopfzeile wird nur
+		// ersetzt, wenn der Rumpf die angekuendigten Teile WIRKLICH nicht
+		// hat.
+		//
+		// Vorher hing bMultipart allein am Text der Kopfzeile. Bei einer
+		// echten mehrteiligen Nachricht - etwa mit einem PDF in Base64 -
+		// wurde daraus "text/plain", und jeder Leser zeigt danach Grenzen,
+		// Teilkoepfe und den Base64-Block als Text. Der Anhang ist aus der
+		// Datei nicht mehr zu holen. Gemessen von PRUEFER-37: Rumpf 206 Byte
+		// rein, 206 raus, Byte fuer Byte gleich - und trotzdem unbrauchbar.
+		//
+		// Im Bestand nicht ausgeloest: 374 Nachrichten in 175 Postfaechern,
+		// 222 davon multipart mit Grenze, in KEINER steht die Grenze im
+		// Rumpf. Die Annahme haelt also - aber sie wird jetzt geprueft
+		// statt geglaubt.
+		//
+		bool		bGrenzeImRumpf = false;
+		if ( bMultipart )
+		{
+			const int	nB = szCt.Find( "boundary" );
+			if ( nB >= 0 )
+			{
+				int		q = nB + 8;
+				while ( q < szCt.GetLength() && ( szCt[q] == ' ' || szCt[q] == '\t' ||
+						szCt[q] == '=' || szCt[q] == '"' || szCt[q] == '\'' ) )
+					q++;
+
+				CString		szGrenze;
+				while ( q < szCt.GetLength() && szCt[q] != '"' && szCt[q] != '\'' &&
+						szCt[q] != ';' && szCt[q] != ' ' && szCt[q] != '\t' &&
+						szCt[q] != '\r' && szCt[q] != '\n' )
+					szGrenze += szCt[q++];
+
+				if ( !szGrenze.IsEmpty() )
+				{
+					CString		szRKlein( szRumpf );
+					szRKlein.MakeLower();
+					bGrenzeImRumpf = ( szRKlein.Find( "--" + szGrenze ) >= 0 );
+				}
+			}
+		}
+
+		//
+		// Ist der Rumpf WIRKLICH mehrteilig, bleibt die Kopfzeile ganz
+		// unangetastet - auch der Zeichensatz-Zweig darf dann nicht
+		// zuschlagen. Eine multipart-Zeile traegt naemlich kein charset,
+		// szCs ist leer, und "leer ist nicht iso-8859-1" machte
+		// bCharsetFalsch wahr. Dann waere aus einer gueltigen Nachricht
+		// trotz F1 wieder text/plain geworden - gemessen am Testfall mit
+		// PDF-Anhang, ct-ersetzt=1.
+		//
+		if ( !bGrenzeImRumpf && ( bMultipart || bTypFalsch || bCharsetFalsch ) )
 		{
 			KopfzeileUmbenennen( szKopf, "content-type:" );
 			KopfzeileUmbenennen( szKopf, "content-transfer-encoding:" );
@@ -4379,7 +4457,32 @@ bool E101SpeicherfassungAufbereiten(
 					CString		szWert  = szRKlein.Mid( q, nWertEnde - q );
 					CString		szUnser( pszCharset );
 					szUnser.MakeLower();
-					const bool	bPasst = ( szWert == szUnser ||
+
+					//
+					// PRUEFER-37, F4 (19.10.2026): dieselbe Einschraenkung
+					// wie bei der Kopfzeile (F3) - und hier wiegt sie
+					// schwerer.
+					//
+					// Dieser Zweig laeuft auf dem VORGABEWEG, also auch ohne
+					// "Kopfzeilen einschliessen". Ohne die Pruefung wurde aus
+					// einem richtigen <meta charset=windows-1251> ein
+					// falsches windows-1252, und zwar bei jedem Speichern -
+					// ein echter Rueckschritt gegenueber 1.0.106, wo der
+					// Zweig die Angabe gar nicht ansah.
+					//
+					// Eine Angabe ist nur dann falsch, wenn der Rumpf
+					// nachweislich CP1252 ist; alles andere liegt
+					// unuebersetzt im Postfach und traegt die einzige
+					// richtige Angabe.
+					//
+					const bool	bMetaIstCp1252 =
+							  szWert.IsEmpty()          || szWert == "us-ascii"
+							|| szWert == "iso-8859-1"   || szWert == "windows-1252"
+							|| szWert == "iso-8859-15"  || szWert == "utf-8"
+							|| szWert == "utf8"         || szWert == "latin1";
+
+					const bool	bPasst = !bMetaIstCp1252 ||
+										 ( szWert == szUnser ||
 										   ( szWert == "windows-1252" && szUnser == "iso-8859-1" ) );
 
 					if ( nWertEnde > q && !bPasst )

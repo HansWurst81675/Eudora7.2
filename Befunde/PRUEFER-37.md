@@ -498,6 +498,8 @@ berichtigt"*: er trifft als einziger den Vorgabeweg (`IncludeHeaders=0`).
 
 ## Gregors Test an 1.0.107
 
+> **Nachtrag LEKTOR, 19.10.2026 ([LEKTOR-42](LEKTOR-42.md#lektor-42)):** **1.0.107 ist nie geschnürt worden** (`Releases/PAKETE.md`, Abschnitt 1.0.107). Gregor hat dieses Paket nicht. Der Inhalt steckt in **1.0.110**; die Prüfschritte dazu stehen in `TESTPLAN.md`, Abschnitt [C6](../TESTPLAN.md#c6). Der Abschnitt hier bleibt als Prüfidee stehen, nicht als Auftrag.
+
 Eine empfangene HTML-Nachricht mit Umlauten und einem Euro-Zeichen in der
 Übersichtsliste markieren, **Datei → Speichern unter**, und die Datei in
 Thunderbird oder im Browser öffnen. Erwartung: Umlaute und `€` stehen richtig

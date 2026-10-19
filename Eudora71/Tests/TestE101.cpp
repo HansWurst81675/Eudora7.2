@@ -713,4 +713,131 @@ void RunE101Tests(void)
 	bGeaendert = UTE101_SpeicherfassungAufbereiten(NULL, true, szDatei, szSpur);
 	TT_CHECK_MSG(!bGeaendert, "auch ein Nullzeiger darf nicht stoeren");
 	TT_EndTest();
+
+	// ===================================================================
+	// PRUEFER-37, F1 und F3/F4 (19.10.2026)
+	//
+	// Die vier Tests darueber pruefen, dass eine FALSCHE Kopfzeile ersetzt
+	// wird. Sie pruefen nicht, dass eine RICHTIGE stehen bleibt - und genau
+	// daran ist die erste Fassung gescheitert: sie hielt jede abweichende
+	// Angabe fuer falsch und machte aus lesbarem Russisch "Aab".
+	// ===================================================================
+
+	// --- F1: echte mehrteilige Nachricht ------------------------------
+	//
+	// Steht die angekuendigte Grenze WIRKLICH im Rumpf, darf die Kopfzeile
+	// nicht angefasst werden. Sonst zeigt jeder Leser Grenzen, Teilkoepfe
+	// und den Base64-Block als Text, und der Anhang ist aus der Datei nicht
+	// mehr zu holen - gemessen von PRUEFER-37 an 206 Byte, die Byte fuer
+	// Byte gleich blieben und trotzdem unbrauchbar waren.
+	static const char* const kEchtMehrteilig =
+		"From: a@beispiel.invalid\r\n"
+		"Subject: mit Anhang\r\n"
+		"MIME-Version: 1.0\r\n"
+		"Content-Type: multipart/mixed; boundary=\"GRENZE\"\r\n"
+		"\r\n"
+		"--GRENZE\r\n"
+		"Content-Type: text/plain; charset=\"windows-1252\"\r\n"
+		"\r\n"
+		"Hallo Gef\xE4\xDF" "e\r\n"
+		"--GRENZE\r\n"
+		"Content-Type: application/pdf\r\n"
+		"Content-Transfer-Encoding: base64\r\n"
+		"\r\n"
+		"JVBERi0xLjQKJeLjz9MK\r\n"
+		"--GRENZE--\r\n";
+
+	TT_BeginTest("E-101 F1: echte mehrteilige Nachricht bleibt unangetastet");
+	bGeaendert = UTE101_SpeicherfassungAufbereiten(kEchtMehrteilig, true,
+												   szDatei, szSpur);
+	TT_Note("%s", (const char*) szSpur);
+	TT_CHECK_MSG(!Hat(szDatei, "X-Original-Content-Type"),
+			 "die Grenze steht im Rumpf - die Kopfzeile ist richtig und bleibt");
+	TT_CHECK_MSG(Hat(szSpur, "ct-ersetzt=0"),
+			 "die Spurmarke muss das Nichtstun ausweisen");
+	TT_EndTest();
+
+	// --- F3: ein Zeichensatz, den Eudora NICHT uebersetzt -------------
+	//
+	// windows-1251 liegt unuebersetzt im Postfach (FindMIMECharset liefert
+	// fuer windows-* 0, TextReader.cpp:271 uebersetzt erst ab 3). Die
+	// vorgefundene Angabe ist also die EINZIGE richtige.
+	static const char* const kKyrillisch =
+		"From: a@beispiel.invalid\r\n"
+		"Subject: kyrillisch\r\n"
+		"MIME-Version: 1.0\r\n"
+		"Content-Type: text/plain; charset=\"windows-1251\"\r\n"
+		"\r\n"
+		"\xC0\xE1\xE2 \x90\r\n";
+
+	TT_BeginTest("E-101 F3: windows-1251 im Kopf bleibt stehen");
+	bGeaendert = UTE101_SpeicherfassungAufbereiten(kKyrillisch, true,
+												   szDatei, szSpur);
+	TT_Note("%s", (const char*) szSpur);
+	TT_CHECK_MSG(!bGeaendert,
+			 "Eudora uebersetzt windows-1251 nicht - die Angabe ist richtig, "
+			 "also gibt es nichts zu tun und szDatei bleibt leer");
+	TT_CHECK_MSG(Hat(szSpur, "ct-ersetzt=0"), "nichts zu ersetzen");
+	TT_EndTest();
+
+	TT_BeginTest("E-101 F3: koi8-r und iso-8859-2 ebenso");
+	{
+		CString		szVorlage( kKyrillisch );
+		const char*	apszCs[] = { "koi8-r", "iso-8859-2", "gb2312" };
+
+		for (int i = 0; i < 3; i++)
+		{
+			CString		szEin( szVorlage );
+			szEin.Replace("windows-1251", apszCs[i]);
+			const bool bG = UTE101_SpeicherfassungAufbereiten(szEin, true, szDatei, szSpur);
+			TT_CHECK_MSG(!bG,
+					 "ein nicht uebersetzter Zeichensatz bleibt stehen - nichts zu tun");
+			TT_CHECK_MSG(Hat(szSpur, "ct-ersetzt=0"),
+					 "und die Spurmarke weist das Nichtstun aus");
+		}
+	}
+	TT_EndTest();
+
+	// --- F4: dasselbe im <meta>, auf dem VORGABEWEG -------------------
+	//
+	// Dieser Zweig laeuft auch OHNE "Kopfzeilen einschliessen" - er war
+	// deshalb eine echte Regression gegenueber 1.0.106.
+	TT_BeginTest("E-101 F4: <meta charset=windows-1251> bleibt stehen, auch ohne Kopfzeilen");
+	{
+		static const char* const kMetaKyrillisch =
+			"<x-html>\r\n"
+			"<html><head><meta http-equiv=\"content-type\" "
+			"content=\"text/html; charset=windows-1251\"></head>"
+			"<body>\xC0\xE1\xE2</body></html>\r\n"
+			"</x-html>\r\n";
+
+		bGeaendert = UTE101_SpeicherfassungAufbereiten(kMetaKyrillisch, false,
+													   szDatei, szSpur);
+		TT_Note("%s", (const char*) szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "charset=windows-1251"),
+				 "das <meta> nennt den einzigen richtigen Zeichensatz");
+		TT_CHECK_MSG(Hat(szSpur, "meta-charset=0"),
+				 "die Spurmarke muss ausweisen, dass nichts angefasst wurde");
+	}
+	TT_EndTest();
+
+	// --- Gegenprobe: der FALSCHE Fall muss weiter greifen -------------
+	//
+	// Ohne diesen Test waere die Behebung "fasse nie etwas an" - und E-101
+	// waere zurueck.
+	TT_BeginTest("E-101 F3 Gegenprobe: ein falsches UTF-8 wird weiter berichtigt");
+	{
+		static const char* const kFalschUtf8 =
+			"<x-html>\r\n"
+			"<html><head><meta http-equiv=\"content-type\" "
+			"content=\"text/html; charset=UTF-8\"></head>"
+			"<body>Gef\xE4\xDF" "e \x80</body></html>\r\n"
+			"</x-html>\r\n";
+
+		UTE101_SpeicherfassungAufbereiten(kFalschUtf8, false, szDatei, szSpur);
+		TT_CHECK_MSG(Hat(szDatei, "charset=windows-1252"),
+				 "UTF-8 ueber CP1252-Bytes ist falsch und wird berichtigt");
+		TT_CHECK_MSG(Hat(szSpur, "meta-charset=1"), "und die Spurmarke sagt es");
+	}
+	TT_EndTest();
 }
