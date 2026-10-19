@@ -78,6 +78,59 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.108 — Beenden beschädigt keine laufende Übertragung mehr (E-123: P1, P2)
+
+Zwei Funde aus [PRÜFER-36](Befunde/PRUEFER-36.md), beide an **[E-123](BEFUNDE.md#e-123)**.
+
+### <a id="p1"></a>P1 — die Notbremse übergeht die Sperren nicht mehr
+
+`mainfrm.cpp` beendete nach fünf Minuten **in jedem Fall**:
+
+```cpp
+BOOL bNotfall = (dwVergangen > 300000);
+if (bNotfall || (!bLaeuft && !bDialogOffen && (…)))
+```
+
+`bNotfall` übergeht `bLaeuft` **und** `bDialogOffen`. Lag ein Hochladen auf dem
+Stapel, lief `CloseDown` **verschachtelt darin** — das Fenster verschwand, der
+Prozess hing unsichtbar weiter. Stand ein modaler Dialog offen, liefen
+`CloseDown` und `DestroyWindow` darunter, und dessen `DoModal` kehrte in
+abgebauten Code zurück.
+
+**Der Denkfehler lag in der Alternative.** Die Notbremse gab es, damit Eudora
+nie für immer offen bleibt — als wäre *„ewig offen"* das einzige andere Ende.
+Das Gegenteil von *„mit Gewalt schließen"* ist aber nicht *„ewig warten"*,
+sondern: **das Beenden aufgeben**, das Fenster stehen lassen und es sagen.
+
+### <a id="p2"></a>P2 — der Zähler zählt dort, wo das Hochladen beginnt
+
+Er stand in `CImapAction::DoPreThreadAction` hinter einem `dynamic_cast` auf
+`CImapFromLocalTransferMsgAction` — und ausgerechnet diese Klasse ruft die
+Basisfunktion **nicht** auf; das steht als QUALCOMM-Kommentar zwanzig Zeilen
+vor ihrem Rumpf. Für alle anderen Unterklassen ist der Cast `NULL`.
+
+**Beim Einbauen gefunden:** in `DoPostProcessing` steht bereits ein zweiter
+Zähler — der **eigentliche Transfer war gedeckt**. Ungedeckt war genau das
+Fenster aus N4: der **Verbindungsaufbau** mit `OpenMailbox`, Anmeldung und
+`SELECT`.
+
+### Prüfanleitung
+
+Mehrere Nachrichten in einen IMAP-Ordner verschieben und sofort *File → Exit*.
+Das Fenster darf **nicht** verschwinden, solange die Übertragung läuft. Nach
+fünf Minuten muss in der Statuszeile stehen:
+
+```
+Quit cancelled: messages are still being transferred to the IMAP server.
+Quit cancelled: a dialog is still open. Close it, then quit again.
+```
+
+Im Protokoll steht dazu eine Zeile mit `laeuft=`, `dialog=` und `offen=`.
+
+### Noch nicht im Release
+
+**P3** aus PRÜFER-36 ist offen: **[E-69](BEFUNDE.md#e-69)**, Meldungsflut in *Task Errors*.
+
 ## 7.2.0.107 — die gespeicherte Datei bekommt die Kopfzeile, die zum Rumpf passt (E-101, dritter Teil)
 
 Bis hierher liess der Speicherweg eine vorhandene `Content-Type`-Zeile
@@ -111,7 +164,7 @@ müssen richtig erscheinen.
 
 ### Noch nicht im Release
 
-**P1–P3 aus [PRÜFER-36](Befunde/PRUEFER-36.md)** sind offen: P1/P2 zu
+**[P1](#p1)–P3 aus [PRÜFER-36](Befunde/PRUEFER-36.md)** sind offen: [P1](#p1)/[P2](#p2) zu
 **[E-123](BEFUNDE.md#e-123)** (Beenden wartet), P3 zu **[E-69](BEFUNDE.md#e-69)** (Meldungsflut in *Task Errors*).
 
 ## 7.2.0.106 — Filter meldet eine übersprungene Nachricht in Task Errors (E-69) — **nicht veröffentlicht, Zweig `e-123-beenden-warten`**

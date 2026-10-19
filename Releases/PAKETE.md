@@ -156,7 +156,37 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.107 — gebaut am 17.10.2026, Quellstand 7.2.0.107, Zweig `E-101_korrektur_datei_speichern` (E-101, dritter Teil)
+## 1.0.108 — gebaut am 19.10.2026, Quellstand 7.2.0.108, Zweig `e-123-notbremse-und-zaehler` (E-123: P1 und P2 aus PRÜFER-36)
+
+**Beenden beschädigt keine laufende Übertragung mehr.** Zwei Funde aus
+[PRÜFER-36](../Befunde/PRUEFER-36.md), beide an **E-123**:
+
+**P1 — die Notbremse übergeht die Sperren nicht mehr.** `mainfrm.cpp` beendete
+nach fünf Minuten *in jedem Fall*, auch wenn ein Hochladen auf dem Stapel lag
+oder ein modaler Dialog offen war. Im ersten Fall lief `CloseDown`
+verschachtelt im Hochladen — das Fenster verschwand, der Prozess hing
+unsichtbar weiter; im zweiten liefen `CloseDown` und `DestroyWindow` unter der
+Kennwortabfrage. Jetzt wird das **Beenden aufgegeben** statt erzwungen: das
+Fenster bleibt offen, in der Statuszeile steht der Grund, und ein zweiter
+Versuch steht jederzeit frei.
+
+**P2 — der Zähler zählt dort, wo das Hochladen beginnt.** Er stand in
+`CImapAction::DoPreThreadAction` hinter einem `dynamic_cast`, den ausgerechnet
+die einzige Unterklasse nie erreicht, die ihn auslösen würde — sie ruft die
+Basisfunktion nicht auf (QUALCOMM-Kommentar an Ort und Stelle). Der eigentliche
+Transfer war über einen zweiten Zähler in `DoPostProcessing` gedeckt;
+ungedeckt war der **Verbindungsaufbau** (`OpenMailbox`, Anmeldung, `SELECT`).
+
+**Was Gregor prüft:** mehrere Nachrichten in einen IMAP-Ordner verschieben und
+sofort *File → Exit*. Das Fenster darf nicht verschwinden, solange die
+Übertragung läuft; nach fünf Minuten muss in der Statuszeile *„Quit
+cancelled…"* stehen statt eines geschlossenen Fensters.
+
+**Nicht ins Release**, solange **P3** aus PRÜFER-36 offen ist (E-69,
+Meldungsflut in *Task Errors*) — dafür ist der Zweig `e-69-meldungsflut`
+vereinbart.
+
+## 1.0.107 — **nie geschnürt**, Quellstand 7.2.0.107 (nur übersetzt am 17.10.2026), Zweig `E-101_korrektur_datei_speichern` (E-101, dritter Teil)
 
 **Die gespeicherte Datei bekommt jetzt die Kopfzeile, die zum Rumpf passt.**
 Bis hierher liess der Speicherweg eine vorhandene `Content-Type`-Zeile
