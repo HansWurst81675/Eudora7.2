@@ -197,6 +197,37 @@ LONG CTaskErrorView::OnMsgListDblClk(WPARAM wParam, LPARAM lParam)
 
 // --------------------------------------------------------------------------
 
+//
+// BEFUND E-69, P3/B aus PRUEFER-36 (19.10.2026): Schwall abfangen.
+//
+// Jeder Eintrag in "Task Errors" piept und holt das Fenster nach vorn
+// (TaskErrorBringToFront, Vorgabe 1). Kommen viele Fehler kurz
+// hintereinander, ist das nicht mehr ein Hinweis, sondern eine Belaestigung,
+// die man nicht wegklicken kann: bei 500 Nachrichten 500 Pieptoene und 500
+// Fenstersprunge. Der EINTRAG bleibt in jedem Fall erhalten - gedaempft wird
+// nur das Laute.
+//
+// Hier steht die Regel als eigene Funktion und nicht als zwei Zeilen im
+// Meldeweg, damit der Pruefstand sie ohne Fenster messen kann.
+//
+// dwLetzte == 0 heisst "noch nie" - der allererste Fehler ist immer laut,
+// auch wenn Windows gerade erst hochgefahren ist und GetTickCount klein ist.
+// Die Differenz zweier DWORD traegt den Ueberlauf nach 49,7 Tagen von selbst.
+//
+#define E69_SCHWALL_FENSTER_MS	2000
+
+bool E69LautErlaubt(DWORD dwJetzt, DWORD *pdwLetzte, DWORD dwFenster)
+{
+	if (!pdwLetzte)
+		return true;
+
+	if (*pdwLetzte != 0 && (dwJetzt - *pdwLetzte) < dwFenster)
+		return false;
+
+	*pdwLetzte = dwJetzt ? dwJetzt : 1;	// 0 bleibt "noch nie"
+	return true;
+}
+
 LONG CTaskErrorView::OnMsgNewError( WPARAM wParam, LPARAM lParam ) // NEW ERROR
 {
 	CTaskErrorMT *pError = (CTaskErrorMT *) wParam;
@@ -268,36 +299,6 @@ LONG CTaskErrorView::OnMsgNewError( WPARAM wParam, LPARAM lParam ) // NEW ERROR
 
 // --------------------------------------------------------------------------
 
-//
-// BEFUND E-69, P3/B aus PRUEFER-36 (19.10.2026): Schwall abfangen.
-//
-// Jeder Eintrag in "Task Errors" piept und holt das Fenster nach vorn
-// (TaskErrorBringToFront, Vorgabe 1). Kommen viele Fehler kurz
-// hintereinander, ist das nicht mehr ein Hinweis, sondern eine Belaestigung,
-// die man nicht wegklicken kann: bei 500 Nachrichten 500 Pieptoene und 500
-// Fenstersprunge. Der EINTRAG bleibt in jedem Fall erhalten - gedaempft wird
-// nur das Laute.
-//
-// Hier steht die Regel als eigene Funktion und nicht als zwei Zeilen im
-// Meldeweg, damit der Pruefstand sie ohne Fenster messen kann.
-//
-// dwLetzte == 0 heisst "noch nie" - der allererste Fehler ist immer laut,
-// auch wenn Windows gerade erst hochgefahren ist und GetTickCount klein ist.
-// Die Differenz zweier DWORD traegt den Ueberlauf nach 49,7 Tagen von selbst.
-//
-#define E69_SCHWALL_FENSTER_MS	2000
-
-bool E69LautErlaubt(DWORD dwJetzt, DWORD *pdwLetzte, DWORD dwFenster)
-{
-	if (!pdwLetzte)
-		return true;
-
-	if (*pdwLetzte != 0 && (dwJetzt - *pdwLetzte) < dwFenster)
-		return false;
-
-	*pdwLetzte = dwJetzt ? dwJetzt : 1;	// 0 bleibt "noch nie"
-	return true;
-}
 
 void CTaskErrorView::SwitchAndHighlight(unsigned int nIdx)
 {
