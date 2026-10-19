@@ -78,6 +78,42 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.107 — die gespeicherte Datei bekommt die Kopfzeile, die zum Rumpf passt (E-101, dritter Teil)
+
+Bis hierher liess der Speicherweg eine vorhandene `Content-Type`-Zeile
+unangetastet — mit der Begründung, eine empfangene Nachricht bringe ihre echten
+Kopfzeilen mit. **Das stimmt nicht:**
+
+| | |
+|---|---|
+| **Rumpf** | immer Eudoras interne Fassung — beim Empfang zerlegt, entschlüsselt, nach Windows-1252 übersetzt (`TextReader.cpp`, `ISOTranslate`) |
+| **Kopfzeilen** | stehen so da, wie sie ankamen |
+
+**Gemessen an sechs empfangenen HTML-Nachrichten** im Postfach des Prüfstands:
+alle sechs tragen `Content-Type: multipart/…; boundary=…`, und **keine einzige**
+der Grenzen steht im Rumpf. Ein anderes Programm sucht die Teile und findet
+keinen. Vier davon sagen im HTML `charset=UTF-8`, die Bytes sind aber
+Windows-1252.
+
+Dazu der Zeichensatz: `0x80` (€), `0x92` (’) und `0x96` (–) gibt es in
+ISO-8859-1 nicht. Gespeichert wird jetzt `windows-1252`, wie es der Anzeigeweg
+schon tut (`TridentView.cpp`, `szCharsetMeta`).
+
+**213 Tests, 213 bestanden** (vier neue). Gegenprobe gefahren: mit dem alten
+`msgutils.cpp` fallen **genau diese vier** um, die übrigen 209 bleiben grün.
+
+### Prüfanleitung
+
+Eine empfangene HTML-Nachricht über *File → Save As* sichern und die Datei in
+einem anderen Programm öffnen. Die `Content-Type`-Zeile muss zum Inhalt passen
+(kein `multipart` über einem einteiligen Rumpf), und Umlaute, `€`, `’` und `–`
+müssen richtig erscheinen.
+
+### Noch nicht im Release
+
+**P1–P3 aus [PRÜFER-36](Befunde/PRUEFER-36.md)** sind offen: P1/P2 zu
+**[E-123](BEFUNDE.md#e-123)** (Beenden wartet), P3 zu **[E-69](BEFUNDE.md#e-69)** (Meldungsflut in *Task Errors*).
+
 ## 7.2.0.106 — Filter meldet eine übersprungene Nachricht in Task Errors (E-69) — **nicht veröffentlicht, Zweig `e-123-beenden-warten`**
 
 **[E-69](BEFUNDE.md#e-69)** (Gregor am 17.10.2026: *„[E-69](BEFUNDE.md#e-69) = doch A“*): `CFiltersDoc::FilterMsg` übersprang eine Nachricht, deren Text es nicht lesen konnte, lautlos – sie wurde nicht gefiltert, und niemand erfuhr warum. Jetzt legt `E69UebersprungenMelden` (`filtersd.cpp`) an allen fünf Stellen einen Eintrag in *Task Errors* an: *„The message "…" in mailbox "…" could not be read and was not filtered (…). It is still in that mailbox; nothing was lost.“* (stammt aus `E69UebersprungenMelden`, filtersd.cpp:2383). Dazu (`CTaskErrorMT::SetzeKontext`) Spalten *Filtering*/*Filters*. Nebenbei: das Nachladen der Kopfzeilen für IMAP prüfte nur `!hResult`, `DownloadFullHeaders` liefert bei manchen Fehlern aber einen negativen HRESULT – dann wurde mit leeren Kopfzeilen weitergefiltert; jetzt `!hResult || FAILED(hResult)`. Nachgestellt am Prüfstand (17.10.2026) mit `tools/messen-e69.ps1`: *In* öffnen, alles auswählen, `In.mbx` von außen sperren (wie ein Virenscanner), *Special → Filter Messages*. An 7.2.0.106: Eudora meldet wie im Original *„Could not open the file … In.mbx … locked“* (stammt aus `IDS_ERR_FILE_OPEN`, EudoraRes.rc:9303), dann `E-69 Filter uebersprungen: betreff=… postfach="In" grund=the message text could not be read` und der Eintrag in *Task Errors*; die Nachricht bleibt in `In`, sauber beendet. Vorher (bis 7.2.0.104) gab es an dieser Stelle nur die Protokollzeile `E-69 FilterMsg abgebrochen`, keine Meldung. Testsuite 209/209. 7.2.0.105 war ein Zwischenbau mit dem Grundtext *„message text is empty“*, nie ausgeliefert.

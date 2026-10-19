@@ -104,7 +104,7 @@ sind später entstanden. Zusätzlich:
 * `CHANGELOG.md:44`, *Noch offen*, [E-69](../BEFUNDE.md#e-69): *„die drei Abbruchstellen protokollieren jetzt, statt nur zu
   assertieren“* – Stand vor 7.2.0.106. Richtig nach `CHANGELOG.md:82`/`BEFUNDE.md:237`: *behoben in
   7.2.0.106, fünf Stellen melden in Task Errors, am Prüfstand gemessen, von Gregor noch nicht bestätigt*.
-* `FILTER.md:722`: [E-69](../BEFUNDE.md#e-69) unter *„sind **offen**“* ohne 7.2.0.106. Dazu der Kopf `FILTER.md:3-4`
+* `FILTER.md:722`: [E-69](../BEFUNDE.md#e-69) unter *„sind **offen**“* ohne den damals geltenden Quellstand 7.2.0.106 (Stand dieses Berichts; inzwischen 7.2.0.107). Dazu der Kopf `FILTER.md:3-4`
   *„Der Quellstand ist inzwischen **7.2.0.73 / 1.0.73**“* (niedrig, alt).
 
 ### <a id="l-41.6"></a>L-41.6 — WEITERMACHEN: der Block „Der nächste Schritt“ steht bei 7.2.0.102 (mittel)
@@ -133,7 +133,7 @@ jedes `tools/*.ps1` und `tools/*.pl` gegen `tools/WERKZEUGE.md`: **genau diese z
 `testlauf.ps1 -MessenSkript`, öffnet *In*, wählt alles aus, sperrt `In.mbx` von außen und löst
 *Special → Filter Messages* aus; gemessen wird `E-69 Filter uebersprungen`. `messen-e123-doppelt.ps1`:
 wie `messen-e123.ps1`, beendet aber selbst über *File → Exit*, danach kommt das zweite Schließen
-([PRÜFER-34](PRUEFER-34.md) S1). Der Kopf `:3` sagt *„der Quellstand ist inzwischen 7.2.0.102“* – jetzt 7.2.0.106.
+([PRÜFER-34](PRUEFER-34.md) S1). Der Kopf `:3` sagt *„der Quellstand ist inzwischen 7.2.0.102“* – am 17.10.2026 war er 7.2.0.106.
 Nebenbei `tools/messen-e69.ps1:7` *„Seit 7.2.0.105 steht dafuer ein Eintrag“* – 7.2.0.105 wurde nie
 ausgeliefert, ausgeliefert ist es ab 7.2.0.106 (niedrig).
 
