@@ -78,6 +78,69 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.110 — die Behebung zu E-69 greift jetzt wirklich (PRÜFER-38, R1–R4)
+
+7.2.0.109 war übersetzt, aber nie geschnürt. **PRÜFER-38 fand darin zwei
+Löcher, die beide meine eigene Behebung aufgerissen hatte.**
+
+### <a id="r1"></a>R1 — E-69 wäre nach dem ersten Filterlauf stumm gewesen
+
+`CE69Sammlung::LaufEnde()` setzte nichts zurück. Nach dem ersten geklammerten
+Lauf blieb `bErstGemeldet` auf `true`, und **jeder spätere Fall außerhalb einer
+Klammer bekam gar keinen Eintrag mehr** — kein Eintrag, kein Sammeleintrag,
+nichts, bis Eudora neu startet. Genau das Symptom, gegen das [E-69](BEFUNDE.md#e-69) angelegt
+wurde.
+
+**Neun grüne Tests haben es nicht gesehen**, auch nicht der mit dem Namen
+*„ohne Klammer bleibt es beim alten Verhalten"*: jeder Testblock legt ein
+**frisches** Objekt an, in Eudora ist es eine **globale** Variable. Ein Test,
+der seinen Zustand nicht teilt, kann einen Zustandsfehler nicht sehen. Zwei
+neue Tests teilen ihn jetzt.
+
+### <a id="r2"></a>R2 — die Klammer fehlte am Anlassfall
+
+`CTocFrame::OnFilterMessages` kehrt für IMAP-Postfächer **32 Zeilen vor** der
+Klammer um und landet über `DoManualFiltering` in
+`CImapFilterActions::DoFiltering`. Gregors Fall — ein IMAP-Postfach filtern,
+während der Server nicht erreichbar ist — lief also an der Zusammenfassung
+vorbei. Jetzt geklammert, ebenso das POP-Abholen und *Message → Junk* über
+eine Auswahl.
+
+### <a id="r3"></a>R3 — eine Sammlung je Faden
+
+`g_E69Sammlung` war global ohne Sperre und wird auch aus einem Nebenfaden
+angefasst (`CImapMailbox::DoFetchNewMessages`). `__declspec(thread)` gibt
+jedem Faden seine eigene.
+
+### <a id="r4"></a>R4 — der zweite Versuch wartet wieder
+
+Ohne `m_bE123Gewartet = FALSE` im Aufgeben-Zweig hätte das **zweite**
+*File → Exit* `CloseDown` verschachtelt im laufenden Hochladen gerufen —
+derselbe unsichtbare Hänger wie [P1](#p1), nur nicht mehr von selbst.
+
+### Entwarnt
+
+PRÜFER-38 hat die beiden Fragen geprüft, die schwerer gewesen wären als alles
+Behobene: **Eudora bleibt beendbar** (`m_bE123Gewartet` trägt den zweiten
+Versuch), und die beiden Hochladezähler liegen **nacheinander**, nicht
+ineinander — der Zähler kann nicht stehenbleiben.
+
+**224 Tests, 224 bestanden.**
+
+### Prüfanleitung
+
+1. Ein **IMAP**-Postfach filtern, während der Server nicht erreichbar ist.
+   Zwei Einträge in *Task Errors*, kein Dauerpiepen.
+2. **Direkt danach** eine einzelne unlesbare Nachricht filtern. Kommt **kein**
+   Eintrag, ist [R1](#r1) nicht behoben.
+3. Mehrere Nachrichten in einen IMAP-Ordner verschieben, sofort *File → Exit*.
+
+### Bekannte Regression, nicht behoben
+
+F3/F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) zu **[E-101](BEFUNDE.md#e-101)**: `windows-1251`,
+`koi8-r`, `iso-8859-2` bekommen beim Speichern eine falsche `<meta>`-Angabe.
+Gegenüber 1.0.106 ein Rückschritt. **Kein Release, solange das offen ist.**
+
 ## 7.2.0.109 — aus 500 Pieptönen werden 25 (E-69, P3)
 
 `E69UebersprungenMelden` legte bei **jedem** Abbruch einen eigenen Eintrag in

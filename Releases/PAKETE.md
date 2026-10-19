@@ -156,7 +156,49 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.109 — gebaut am 19.10.2026, Quellstand 7.2.0.109, Zweig `e-69-meldungsflut` (E-69: P3 aus PRÜFER-36)
+## 1.0.110 — gebaut am 19.10.2026, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
+
+**Das erste Paket, das E-69 und E-123 zusammen trägt** — und das erste, in dem
+die Behebung zu E-69 wirklich greift.
+
+**E-69 (P3 aus PRÜFER-36, dazu R1–R3 aus PRÜFER-38).** Statt eines Eintrags je
+übersprungener Nachricht: einer für den ersten Fall, einer als Sammeleintrag
+am Ende des Laufs. Piepen und Nach-vorn-Holen höchstens einmal je zwei
+Sekunden. **PRÜFER-38 hat dabei zwei Löcher in der ersten Fassung gefunden:**
+nach dem ersten Lauf wäre E-69 **stumm** gewesen (R1), und die Klammer fehlte
+ausgerechnet am **IMAP-Weg** — also an Gregors Anlassfall (R2). Beides behoben,
+dazu eine eigene Sammlung je Faden (R3).
+
+**E-123 (P1, P2 aus PRÜFER-36, R4 aus PRÜFER-38).** Die Notbremse nach fünf
+Minuten schließt nicht mehr über ein laufendes Hochladen oder einen offenen
+Dialog hinweg, sondern gibt das Beenden auf und sagt es in der Statuszeile.
+Der Hochladezähler deckt jetzt auch den Verbindungsaufbau. Der **zweite**
+*File → Exit* wartet wieder, statt verschachtelt abzubauen (R4).
+
+**224 Tests, 224 bestanden.** Gegenproben gefahren — für E-69 fallen drei der
+alten und einer der neuen Tests gegen die jeweils alte Fassung um.
+
+**Was Gregor prüft:**
+
+1. **E-69, der Anlassfall:** ein **IMAP**-Postfach filtern, während der Server
+   nicht erreichbar ist (*Special → Filter Messages*). Es darf nicht mehr
+   ununterbrochen piepen, und *Task Errors* darf sich nicht bei jeder
+   Nachricht nach vorn drängen. In der Liste: **zwei** Einträge.
+2. **E-69, die Gegenprobe zu R1:** **direkt danach** eine einzelne Nachricht
+   filtern, die nicht lesbar ist. Kommt **kein** Eintrag, ist R1 nicht behoben.
+3. **E-123:** mehrere Nachrichten in einen IMAP-Ordner verschieben und sofort
+   *File → Exit*. Das Fenster darf nicht verschwinden, solange die Übertragung
+   läuft; nach fünf Minuten steht *„Quit cancelled: …"* in der Statuszeile.
+   Ein zweites *File → Exit* darf nicht in einen unsichtbaren Hänger führen.
+
+**Bekannte Regression, nicht behoben:** F3/F4 aus
+[PRÜFER-37](../Befunde/PRUEFER-37.md) zu **E-101**. Eine Nachricht mit einem
+Zeichensatz, den Eudora nicht übersetzt (`windows-1251`, `koi8-r`,
+`iso-8859-2`), bekommt beim Speichern eine falsche `<meta>`-Angabe —
+gegenüber 1.0.106 ein Rückschritt. Bei Latin-1- und UTF-8-Post tritt er nicht
+auf.
+
+## 1.0.109 — **nie geschnürt**, Quellstand 7.2.0.109 (nur übersetzt am 19.10.2026; PRÜFER-38 fand danach R1 bis R4, der Inhalt steckt in 1.0.110), Zweig `e-69-meldungsflut` (E-69: P3 aus PRÜFER-36)
 
 **Aus 500 Pieptönen werden 25, aus 500 Einträgen zwei.** `E69UebersprungenMelden`
 legte bei **jedem** Abbruch einen eigenen Eintrag in *Task Errors* an. Jeder
