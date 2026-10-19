@@ -1003,6 +1003,11 @@ void CTocFrame::OnRecheckMessagesForJunk()
 	// Generate the address book hashes once for the entire loop
 	CFilter::GenerateHashes(&oaABHashes);
 
+	// BEFUND E-69, P3 (19.10.2026): wie in OnSpecialFilterMessages - auch
+	// dieser Lauf geht ueber beliebig viele Nachrichten und ruft dabei
+	// FilterOne (ueber CJunkMail::ReprocessOne).
+	CE69Filterlauf e69Lauf;
+
 	// Iterate over the selection and rescore each message.
 	for (int i = m_pSumListBox->GetCount() - 1; (i >= 0) && iSelCount; i--)
 	{
@@ -1170,6 +1175,10 @@ void CTocFrame::SetJunkStatus(bool bJunk)
 		bool		bAddNotJunkedSendersToAB = !bJunk &&
 											   GetIniShort(IDS_INI_ADDBOOK_IS_WHITELIST) &&
 											   GetIniShort(IDS_INI_ADD_NONJUNK_TO_ADDBOOK);
+
+		// BEFUND E-69, PRUEFER-38 R2: auch dieser Lauf geht ueber beliebig
+		// viele Nachrichten und ruft ueber DeclareJunk den Filter.
+		CE69Filterlauf e69Lauf;
 
 		// Iterate over the selection and individually change the junk status
 		// of each message in the selection.
@@ -2388,6 +2397,18 @@ void CTocFrame::OnFilterMessages()
 
 	// Generate the address book hashes once for the entire filtering loop
 	CFilter::GenerateHashes(&oaABHashes);
+
+	//
+	// BEFUND E-69, P3 (19.10.2026): Klammer um den ganzen Lauf. Nur der erste
+	// uebersprungene Fall bekommt einen eigenen Eintrag in "Task Errors", der
+	// Rest wird beim Abbau zu einem zusammengefasst. Ohne sie piept Eudora je
+	// uebersprungener Nachricht und holt das Fenster nach vorn - bei einem
+	// IMAP-Postfach mit 500 angerissenen Nachrichten 500-mal.
+	//
+	// Auf dem Stapel, damit der Abbau auch beim Abbruch ueber EscapePressed()
+	// laeuft.
+	//
+	CE69Filterlauf e69Lauf;
 
 	// process things from highest index to lowest
 	// if messages are transfered out the lower selection indexes remain valid

@@ -91,3 +91,7 @@
 - [Erst nachstellen, dann ausliefern](erst-nachstellen-dann-ausliefern.md) — Gregors Fehler zuerst am eigenen Prüfstand rot sehen, dann grün; E-121 brauchte sechs Pakete, fünfmal war Gregor der Prüfstand; `pruefe-nachgestellt.pl` prüft die Zeile „Gemessen“
 - [CHRONIST 15.10.2026](CHRONIST-2026-10-15.md) — Laufbericht: neue Lehre erst-nachstellen-dann-ausliefern, fünf Nachträge (Freigabe vom Vortag fest im Skript, Kennung nur im Namensraum, Zitat als Urteil gelesen, überzählige DLL, unbeantwortete Warum-Frage); testlauf.ps1 verlangt das Tagesdatum
 - [Kürzel im Chat übersetzen](kuerzel-im-chat-uebersetzen.md) — F1, N1, L-38.4 nie allein; immer was passiert und was verloren gehen kann
+- [Vor dem Code die Prüfberichte](vor-dem-code-die-pruefberichte.md) — wer hat diese Stelle schon geprüft? befund-suchen.pl sieht nur 182 von 591 Kennungen
+- [Extrakt ist nicht das Programm](extrakt-ist-nicht-das-programm.md) — Lebenslauf, Aufrufstellen, Übersetzbarkeit; 222/222 grün und dreimal falsch
+- [Nummer erst beim Schnüren](nummer-erst-beim-schnueren.md) — „nur übersetzt" bis das ZIP da ist; 1.0.107–.109 mussten alle drei zurückgenommen werden
+- [Ursache nur gemessen behaupten](ursache-nur-gemessen-behaupten.md) — gemessen / belegt am Quelltext / Vermutung; zeitliche Nähe ist keine Messung

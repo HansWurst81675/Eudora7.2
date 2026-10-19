@@ -98,6 +98,8 @@
     <ClCompile Include="TestResolveURL.cpp" />
     <ClCompile Include="UnderTestE112.cpp" />
     <ClCompile Include="TestE112.cpp" />
+    <ClCompile Include="UnderTestE69.cpp" />
+    <ClCompile Include="TestE69.cpp" />
     <ClCompile Include="UnderTestE112Meta.cpp" />
     <ClCompile Include="TestE112Metadatei.cpp" />
     <ClCompile Include="UnderTestE105.cpp" />

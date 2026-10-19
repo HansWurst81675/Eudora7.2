@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 17.10.2026 (zuletzt veröffentlicht **1.0.101** als `v1.0.101` am 17.10.2026, davor **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 19.10.2026 (Pakete bis 1.0.110 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.101** als `v1.0.101` am 17.10.2026, davor **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -156,7 +156,108 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.108 — gebaut am 19.10.2026, Quellstand 7.2.0.108, Zweig `e-123-notbremse-und-zaehler` (E-123: P1 und P2 aus PRÜFER-36)
+## 1.0.110 — geschnürt am 19.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.110-release`, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
+
+**Das erste Paket, das E-69 und E-123 zusammen trägt** — und das erste, in dem
+die Behebung zu E-69 wirklich greift.
+
+**E-69 (P3 aus PRÜFER-36, dazu R1–R3 aus PRÜFER-38).** Statt eines Eintrags je
+übersprungener Nachricht: einer für den ersten Fall, einer als Sammeleintrag
+am Ende des Laufs. Piepen und Nach-vorn-Holen höchstens einmal je zwei
+Sekunden. **PRÜFER-38 hat dabei zwei Löcher in der ersten Fassung gefunden:**
+nach dem ersten Lauf wäre E-69 **stumm** gewesen (R1), und die Klammer fehlte
+ausgerechnet am **IMAP-Weg** — also an Gregors Anlassfall (R2). Beides behoben,
+dazu eine eigene Sammlung je Faden (R3).
+
+**E-123 (P1, P2 aus PRÜFER-36, R4 aus PRÜFER-38).** Die Notbremse nach fünf
+Minuten schließt nicht mehr über ein laufendes Hochladen oder einen offenen
+Dialog hinweg, sondern gibt das Beenden auf und sagt es in der Statuszeile.
+Der Hochladezähler deckt jetzt auch den Verbindungsaufbau. Der **zweite**
+*File → Exit* wartet wieder, statt verschachtelt abzubauen (R4).
+
+**E-123 selbst bleibt offen.** P1, P2 und R4 sind Prüfpunkte **am
+Beenden-Weg**, nicht der Befund: nach einem Absturz, einem Eingriff von
+Defender, einem Stromausfall oder einem erzwungenen Herunterfahren können
+eingebettete Bilder weiter fehlen.
+
+**229 Tests, 229 bestanden.** Gegenproben gefahren — für E-69 fallen drei der
+alten und einer der neuen Tests gegen die jeweils alte Fassung um.
+
+**Was Gregor prüft:**
+
+1. **E-69, der Anlassfall:** ein **IMAP**-Postfach filtern, während der Server
+   nicht erreichbar ist (*Special → Filter Messages*). Es darf nicht mehr
+   ununterbrochen piepen, und *Task Errors* darf sich nicht bei jeder
+   Nachricht nach vorn drängen. In der Liste: **zwei** Einträge.
+2. **E-69, die Gegenprobe zu R1:** **direkt danach** eine einzelne Nachricht
+   filtern, die nicht lesbar ist. Kommt **kein** Eintrag, ist R1 nicht behoben.
+3. **E-123:** mehrere Nachrichten in einen IMAP-Ordner verschieben und sofort
+   *File → Exit*. Das Fenster darf nicht verschwinden, solange die Übertragung
+   läuft; nach fünf Minuten steht *„Quit cancelled: …"* in der Statuszeile.
+   Ein zweites *File → Exit* darf nicht in einen unsichtbaren Hänger führen.
+
+4. **E-101, der dritte Prüfpunkt:** eine empfangene HTML-Nachricht mit
+   Umlauten und `€` über *File → Save As* sichern und in Thunderbird oder im
+   Browser öffnen. Die Zeichen müssen stimmen. Hat die Nachricht einen
+   **Anhang**, muss der in der gespeicherten Datei noch als Anhang erkennbar
+   sein — nicht als Textblock.
+
+**Nachtrag vom 19.10.2026: F1, F3 und F4 sind ebenfalls drin.** Gregor:
+*„f1 und f3/f4 erst beheben, dann 0.111 releasen"* und *„ich teste alles in
+0.111, nicht zwei verschiedene"*. Da 7.2.0.110 bis dahin **nie übersetzt**
+worden war, ist alles in **1.0.110** gelandet — eine vierte nie geschnürte
+Nummer entsteht nicht.
+
+**Die bekannte Regression gegenüber 1.0.106 ist damit weg.** `windows-1251`,
+`koi8-r` und `iso-8859-2` behalten beim Speichern ihre richtige Angabe, und
+eine echte mehrteilige Nachricht wird nicht mehr zu `text/plain` gemacht —
+vorher wurde dabei der Anhang aus der gespeicherten Datei unbrauchbar (F1).
+Einzelheiten im CHANGELOG, Abschnitt 7.2.0.110.
+
+## 1.0.109 — **nie geschnürt**, Quellstand 7.2.0.109 (nur übersetzt am 19.10.2026; PRÜFER-38 fand danach R1 bis R4, der Inhalt steckt in 1.0.110), Zweig `e-69-meldungsflut` (E-69: P3 aus PRÜFER-36)
+
+**Aus 500 Pieptönen werden 25, aus 500 Einträgen zwei.** `E69UebersprungenMelden`
+legte bei **jedem** Abbruch einen eigenen Eintrag in *Task Errors* an. Jeder
+Eintrag piept und holt das Fenster nach vorn (`TaskErrorBringToFront`,
+Vorgabe 1). Beim Filtern eines IMAP-Postfachs mit 500 nur angerissenen
+Nachrichten und nicht erreichbarem Server: 500 Einträge, 500 Pieptöne, 500
+Fenstersprünge — und nichts davon lässt sich wegklicken.
+
+**A — an der Quelle zusammenfassen.** Der **erste** übersprungene Fall eines
+Laufs bekommt einen eigenen Eintrag, damit der Anwender überhaupt erfährt,
+dass etwas übersprungen wurde; alles Weitere wird gezählt und am Ende des
+Laufs zu **einem** Eintrag zusammengefasst.
+
+**B — den Schwall abfangen.** Piepen und Nach-vorn-Holen höchstens einmal je
+zwei Sekunden, **unabhängig von der Quelle**. Der Eintrag entsteht weiterhin
+in jedem Fall — gedämpft wird nur das Laute.
+
+**222 Tests, 222 bestanden** (neun neue). Gegenprobe gefahren: mit dem alten
+Verhalten fallen drei davon um.
+
+**Enthält außerdem 7.2.0.108** (E-123, P1 und P2): die Notbremse nach fünf
+Minuten schließt nicht mehr über ein laufendes Hochladen oder einen offenen
+Dialog hinweg, und der Hochladezähler deckt jetzt auch den Verbindungsaufbau.
+
+**Was Gregor prüft:**
+
+1. **E-69:** ein IMAP-Postfach filtern, während der Server nicht erreichbar
+   ist (*Special → Filter Messages*). Es darf nicht mehr ununterbrochen
+   piepen, und *Task Errors* darf sich nicht bei jeder Nachricht nach vorn
+   drängen. In der Liste stehen **zwei** Einträge: der erste Fall und ein
+   Sammeleintrag *„N further message(s) …"*.
+2. **E-123:** mehrere Nachrichten in einen IMAP-Ordner verschieben und sofort
+   *File → Exit*. Das Fenster darf nicht verschwinden, solange die
+   Übertragung läuft; nach fünf Minuten steht *„Quit cancelled: …"* in der
+   Statuszeile.
+
+**Nicht enthalten:** die E-101-Nachbesserungen F1 und F3/F4 aus
+[PRÜFER-37](../Befunde/PRUEFER-37.md). **F4 ist eine Regression gegenüber
+1.0.106** — eine Nachricht mit einem Zeichensatz, den Eudora nicht übersetzt
+(`windows-1251`, `koi8-r`, `iso-8859-2`), bekommt beim Speichern eine falsche
+`<meta>`-Angabe. Wer solche Post bekommt, sollte mit dem Speichern warten.
+
+## 1.0.108 — **nie geschnürt**, Quellstand 7.2.0.108 (nur übersetzt am 19.10.2026; der Inhalt steckt in 1.0.109), Zweig `e-123-notbremse-und-zaehler` (E-123: P1 und P2 aus PRÜFER-36)
 
 **Beenden beschädigt keine laufende Übertragung mehr.** Zwei Funde aus
 [PRÜFER-36](../Befunde/PRUEFER-36.md), beide an **E-123**:

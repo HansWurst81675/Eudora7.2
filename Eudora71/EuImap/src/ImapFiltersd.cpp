@@ -368,6 +368,21 @@ int CImapFilterActions::DoFiltering(CTocDoc *pTocDoc,
 	BOOL		 bUserAborted = FALSE;
 	BOOL		 bSearchOnServer = FALSE;
 
+	//
+	// BEFUND E-69, PRUEFER-38 R2 (19.10.2026): HIER fehlte die Klammer - und
+	// zwar ausgerechnet am Anlassfall.
+	//
+	// CTocFrame::OnFilterMessages kehrt fuer IMAP-Postfaecher 32 Zeilen VOR
+	// der dortigen Klammer um (TocFrame.cpp: "if (Doc->IsImapToc()) {
+	// Doc->ImapFilterMessages(); return; }") und landet ueber
+	// DoManualFiltering hier. Gregors Fall - ein IMAP-Postfach filtern,
+	// waehrend der Server nicht erreichbar ist - lief also an der
+	// Zusammenfassung vorbei: 500 Eintraege blieben 500 Eintraege, nur das
+	// Piepen war gedaempft.
+	//
+	CE69Filterlauf e69Lauf;
+
+
 	// If sumlist is empty, nothing to do.
 	if (sumlist.GetCount() == 0)
 	{
