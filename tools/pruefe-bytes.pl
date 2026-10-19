@@ -289,6 +289,54 @@ my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
 #
 # Diese Folgen kommen in echtem Text praktisch nicht vor: sie hiessen woertlich
 # "A-Tilde, Klammeraffe-Rest" mitten in einem Wort.
+# Steuerzeichen zaehlen - Regel 6.
+#
+# Am 19.10.2026 hat ein printf aus "\E" in einem Windows-Pfad ein ESC-Byte
+# (0x1B) gemacht: aus "C:\Users\Gregor\Eudora72-..." wurde "C:\Users\Gregor"
+# plus ESC plus "udora72-...". Das Zeichen stand mitten in Releases/PAKETE.md
+# und in WEITERMACHEN.md, beide Dateien waren gueltiges UTF-8 mit reinen LF,
+# ohne Ersatzzeichen und ohne Doppelkodierung - alle fuenf bisherigen Regeln
+# sahen nichts. Sichtbar wurde es erst, weil der Pfad im Chat falsch aussah.
+#
+# Dieselbe Falle hat an diesem Tag zweimal zugeschlagen: "\U" verschwand
+# spurlos (printf: "missing unicode digit"), "\E" wurde zum Steuerzeichen.
+# Der Schaden ist lautlos und ueberlebt jedes Weiterreichen.
+#
+# ERLAUBT bleiben fuenf Zeichen, jedes mit Grund und gemessen am Bestand:
+#
+#   9  TAB               Einrueckung, ueberall
+#   10 LF, 13 CR         Zeilenenden, siehe Regel 1 und 2
+#   12 Seitenvorschub    Seitenumbruch in alten C-Quellen - 10 Dateien
+#   26 DOS-Dateiende     Endemarke in den mitgelieferten OpenSSL-Koepfen,
+#                        168 Dateien. Beides Altbestand, nicht zu beanstanden.
+#
+# Gemessen am 19.10.2026 ueber alle verfolgten Dateien im Muster: mit diesen
+# fuenf Ausnahmen bleibt GENAU EINE Datei uebrig - ein Entwurfsdokument von
+# 1997 unter Documents/ mit 0x01 und 0x1C. Gezaehlt wird trotzdem der ZUWACHS,
+# damit auch sie nicht bei jedem Commit anschlaegt.
+#
+# Bewusst ohne Escape-Sequenzen aufgebaut, wie der Rest dieser Datei: chr().
+my @STEUER_ERLAUBT = (9, 10, 12, 13, 26);
+my $STEUER_KLASSE  = join('', map { chr($_) }
+                     grep { my $c = $_; not grep { $_ == $c } @STEUER_ERLAUBT }
+                     (0 .. 31, 127));
+
+sub steuerzeichen {
+  my ($s) = @_;
+  return 0 unless defined $s;
+  my $n = () = $s =~ /[\Q$STEUER_KLASSE\E]/g;
+  return $n;
+}
+
+sub steuerzeichen_namen {
+  my ($s) = @_;
+  return '' unless defined $s;
+  my %h;
+  $h{ord($1)}++ while $s =~ /([\Q$STEUER_KLASSE\E])/g;
+  return join(', ', map { sprintf('0x%02X x%d', $_, $h{$_}) }
+                    sort { $a <=> $b } keys %h);
+}
+
 sub doppelkodiert {
   my ($s) = @_;
   return 0 unless defined $s;
@@ -344,6 +392,11 @@ for my $e (@eintraege) {
     my $dk = doppelkodiert($jetzt);
     push @fehler, "$d: neue Datei mit $dk doppelt kodierten Stellen (Regel 5, X-7)"
       if $dk;
+
+    my $sz = steuerzeichen($jetzt);
+    push @fehler, "$d: neue Datei mit $sz Steuerzeichen (Regel 6) - "
+                  . steuerzeichen_namen($jetzt)
+      if $sz;
     next;
   }
 
@@ -441,6 +494,13 @@ for my $e (@eintraege) {
   push @fehler, "$d$umbenannt: doppelt kodiert - $dk_b Stellen, vorher $dk_a "
                 . "(Datei als Latin-1 gelesen und als UTF-8 geschrieben?)"
     if $dk_b > $dk_a;
+
+  # Regel 6: Steuerzeichen. Wie Regel 5 der ZUWACHS - die eine Altdatei im
+  # Baum, die welche hat, soll nicht bei jedem Commit anschlagen.
+  my $sz_a = steuerzeichen($vorher); my $sz_b = steuerzeichen($jetzt);
+  push @fehler, "$d$umbenannt: Steuerzeichen dazugekommen - $sz_b Stelle(n), "
+                . "vorher $sz_a (Regel 6: " . steuerzeichen_namen($jetzt) . ")"
+    if $sz_b > $sz_a;
 
   my $bd_a = zaehle($vorher, $BAD); my $bd_b = zaehle($jetzt, $BAD);
   push @fehler, "$d$umbenannt: Sonderzeichen zerstoert - $bd_b Ersatzzeichen (U+FFFD), vorher $bd_a"
