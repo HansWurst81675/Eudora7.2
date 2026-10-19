@@ -199,7 +199,7 @@ Dialog hinweg, und der Hochladezähler deckt jetzt auch den Verbindungsaufbau.
 (`windows-1251`, `koi8-r`, `iso-8859-2`), bekommt beim Speichern eine falsche
 `<meta>`-Angabe. Wer solche Post bekommt, sollte mit dem Speichern warten.
 
-## 1.0.108 — gebaut am 19.10.2026, Quellstand 7.2.0.108, Zweig `e-123-notbremse-und-zaehler` (E-123: P1 und P2 aus PRÜFER-36)
+## 1.0.108 — **nie geschnürt**, Quellstand 7.2.0.108 (nur übersetzt am 19.10.2026; der Inhalt steckt in 1.0.109), Zweig `e-123-notbremse-und-zaehler` (E-123: P1 und P2 aus PRÜFER-36)
 
 **Beenden beschädigt keine laufende Übertragung mehr.** Zwei Funde aus
 [PRÜFER-36](../Befunde/PRUEFER-36.md), beide an **E-123**:
