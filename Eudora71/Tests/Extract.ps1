@@ -280,4 +280,25 @@ $qFn = Find-Line $ia '^int E118Achtbit\s*\(' $qStart
 $qEnd = Find-Line $ia '^\}\s*$' $qFn
 Write-Region $ia $qStart $qEnd (Join-Path $OutDir "imapappend_e118.inc") $iaPath
 
+
+# ----------------------------------------------------------- filtersd.cpp (E-69)
+# Region O: CE69Sammlung - wer bekommt einen eigenen Eintrag in "Task Errors"
+# und wer wird nur gezaehlt (Befund E-69, P3 aus PRUEFER-36). Reine
+# Buchhaltung, ohne Task Errors, ohne Fenster, ohne CSummary - genau deshalb
+# steht sie in einer eigenen Struktur und nicht im Meldeweg.
+$filtPath = Join-Path $SrcDir "filtersd.cpp"
+$fi = Read-Lines $filtPath
+$oStart = Find-Line $fi '^struct CE69Sammlung' 0
+$oEnd = Find-Line $fi '^\};\s*$' $oStart
+Write-Region $fi $oStart $oEnd (Join-Path $OutDir "filtersd_e69.inc") $filtPath
+
+# ------------------------------------------------------- TaskErrorView.cpp (E-69)
+# Region P: E69LautErlaubt - darf dieser Fehler piepen und das Fenster nach
+# vorn holen? Die Zeitregel gegen den Schwall (P3/B).
+$tevPath = Join-Path $SrcDir "TaskErrorView.cpp"
+$te = Read-Lines $tevPath
+$pStart = Find-Line $te '^bool E69LautErlaubt' 0
+$pEnd = Find-Line $te '^\}\s*$' $pStart
+Write-Region $te $pStart $pEnd (Join-Path $OutDir "taskerror_e69.inc") $tevPath
+
 Write-Host "Extract.ps1: fertig."

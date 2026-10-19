@@ -69,7 +69,27 @@ const int FA_TRANSFER   = 1;
 const int FA_SKIPREST   = 2;
 const int FA_NORMAL		= 4;
 
+//
+// BEFUND E-69, P3 aus PRUEFER-36 (19.10.2026): Klammer um einen Filterlauf.
+//
+// Solange eines dieser Objekte lebt, bekommt nur der ERSTE uebersprungene
+// Fall einen eigenen Eintrag in "Task Errors"; alles Weitere wird gezaehlt
+// und beim Abbau zu einem Eintrag zusammengefasst. Ohne die Klammer piept
+// Eudora je uebersprungener Nachricht und holt das Fenster nach vorn - bei
+// 500 Nachrichten 500-mal.
+//
+// Auf den Stapel legen, nicht neu anlegen: der Abbau muss auch dann laufen,
+// wenn die Schleife ueber EscapePressed() verlassen wird.
+//
+class CE69Filterlauf
+{
+public:
+	CE69Filterlauf();
+	~CE69Filterlauf();
+};
+
 class CFilterActions;
+
 
 class CABHash : public CObject
 {

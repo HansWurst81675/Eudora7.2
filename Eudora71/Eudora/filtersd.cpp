@@ -2372,6 +2372,110 @@ BOOL CFiltersDoc::CreateFilterItem(CFilter *pFilter)
 // lautlos: der Anwender wunderte sich, warum eine Mail nicht einsortiert
 // wurde. Jetzt steht dafuer ein Eintrag im Fenster "Task Errors", mit Betreff,
 // Postfach und Grund. Nichts geht verloren: die Nachricht bleibt, wo sie ist.
+//
+// BEFUND E-69, P3 aus PRUEFER-36 (19.10.2026): die Buchhaltung der
+// uebersprungenen Nachrichten - absichtlich OHNE Task Errors, ohne Fenster,
+// ohne CSummary.
+//
+// WARUM EIGENE STRUKTUR. Bis zum 19.10.2026 legte E69UebersprungenMelden bei
+// JEDEM Abbruch einen eigenen Eintrag an. Jeder Eintrag piept
+// (MessageBeep, TaskErrorView.cpp:255) und holt das Fenster "Task Errors"
+// nach vorn (TaskErrorBringToFront, Vorgabe 1). Filtert der Anwender ein
+// IMAP-Postfach mit 500 nur angerissenen Nachrichten, waehrend der Server
+// nicht erreichbar ist, entstehen 500 Eintraege, 500 Pieptoene, und das
+// Fenster springt 500-mal nach vorn. Gregor am 19.10.2026, auf die Frage
+// nach einem Kaestchen im Dialog: "ich dachte, es waere eine grosse meldung
+// in der dialogbox" - es gibt keine; es piept nur.
+//
+// Die Regel: der ERSTE Fall eines Laufs wird voll gemeldet, damit der
+// Anwender ueberhaupt erfaehrt, dass etwas uebersprungen wurde. Alle
+// weiteren werden gezaehlt und am Ende des Laufs zu EINEM Eintrag
+// zusammengefasst.
+//
+// Die Entscheidung steht hier und nicht im Meldeweg, damit der Pruefstand
+// sie messen kann - bei E-106 stand dieselbe Art Regel mitten im Ladeweg,
+// war nur an Gregors Rechner pruefbar, und dass sie falsch herum war, kam
+// erst zwei Befunde spaeter heraus.
+//
+struct CE69Sammlung
+{
+	int		nTiefe;			// geschachtelte Laeufe: nur der aeusserste zaehlt ab
+	int		nUebersprungen;	// wie viele in diesem Lauf
+	bool	bErstGemeldet;	// ist der erste Fall schon als Eintrag heraus?
+
+	void LaufBeginn()
+	{
+		if (nTiefe++ == 0)
+		{
+			nUebersprungen = 0;
+			bErstGemeldet  = false;
+		}
+	}
+
+	// true = fuer DIESEN Fall einen eigenen Eintrag anlegen.
+	bool Melden()
+	{
+		nUebersprungen++;
+
+		if (!bErstGemeldet)
+		{
+			bErstGemeldet = true;
+			return true;
+		}
+		return false;
+	}
+
+	// Rueckgabe > 0: so viele WEITERE Faelle gab es, dafuer einen
+	// Sammeleintrag anlegen. 0 heisst: nichts nachzutragen.
+	//
+	// Laeuft ausserhalb eines Laufs ueberhaupt etwas auf (nTiefe == 0, etwa
+	// weil ein Aufrufer die Klammer nicht setzt), wird jeder Fall einzeln
+	// gemeldet - das ist das alte Verhalten und damit kein Rueckschritt.
+	int LaufEnde()
+	{
+		if (nTiefe > 0 && --nTiefe == 0 && nUebersprungen > 1)
+			return nUebersprungen - 1;
+		return 0;
+	}
+};
+
+static CE69Sammlung g_E69Sammlung = { 0, 0, false };
+
+// Legt EINEN Eintrag in "Task Errors" an.
+static void E69EintragAnlegen(LPCSTR pszText)
+{
+	CTaskErrorMT *pFehler = DEBUG_NEW_NOTHROW CTaskErrorMT(NULL, pszText, TERR_MSG);
+	if (pFehler)
+	{
+		pFehler->SetzeKontext("", "Filtering", "Filters");
+		QCGetTaskManager()->Register(pFehler);
+	}
+}
+
+// Klammer um einen Filterlauf. Siehe CE69Sammlung.
+CE69Filterlauf::CE69Filterlauf()
+{
+	g_E69Sammlung.LaufBeginn();
+}
+
+CE69Filterlauf::~CE69Filterlauf()
+{
+	int nWeitere = g_E69Sammlung.LaufEnde();
+	if (nWeitere > 0)
+	{
+		CString szText;
+		szText.Format("%d further message(s) could not be read and were not filtered. "
+					  "They are still in their mailboxes; nothing was lost.",
+					  nWeitere);
+
+		CString szSpur;
+		szSpur.Format("E-69 Filter uebersprungen: sammeleintrag weitere=%d", nWeitere);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+		E69EintragAnlegen(szText);
+	}
+}
+
 static void E69UebersprungenMelden(CSummary *Sum, LPCSTR pGrund)
 {
 	CString szBetreff = (Sum && Sum->GetSubject()) ? Sum->GetSubject() : "";
@@ -2389,12 +2493,16 @@ static void E69UebersprungenMelden(CSummary *Sum, LPCSTR pGrund)
 				  (LPCSTR) szBetreff, (LPCSTR) szPostfach, pGrund);
 	PutDebugLog(DEBUG_MASK_MISC, szSpur);
 
-	CTaskErrorMT *pFehler = DEBUG_NEW_NOTHROW CTaskErrorMT(NULL, szText, TERR_MSG);
-	if (pFehler)
-	{
-		pFehler->SetzeKontext("", "Filtering", "Filters");
-		QCGetTaskManager()->Register(pFehler);
-	}
+	//
+	// E-69, P3: nur der ERSTE Fall eines Laufs bekommt einen eigenen Eintrag.
+	// Alles Weitere zaehlt CE69Sammlung, und ~CE69Filterlauf fasst es zu
+	// einem Eintrag zusammen. Ohne das: ein Piepton und ein Fenstersprung je
+	// uebersprungener Nachricht.
+	//
+	if (!g_E69Sammlung.Melden())
+		return;
+
+	E69EintragAnlegen(szText);
 }
 
 int CFiltersDoc::FilterMsg(CSummary*& Sum,
