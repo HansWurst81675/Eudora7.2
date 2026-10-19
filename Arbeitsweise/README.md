@@ -83,6 +83,7 @@ eine Datei liest, liest diese.
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
 | [erst-nachstellen-dann-ausliefern](erst-nachstellen-dann-ausliefern.md) | Ein Paket, das Gregors Fehler beheben soll, braucht vorher am eigenen Prüfstand: alter Stand rot, neuer grün - E-121 brauchte sechs Pakete, das erste nachgestellte hielt beim ersten Anlauf |
 | [erst-pruefen-dann-anweisen](erst-pruefen-dann-anweisen.md) | Keine Handlungsanweisung an Gregor geben, ohne sie vorher selbst durchgeführt und gemessen zu haben |
+| [extrakt-ist-nicht-das-programm](extrakt-ist-nicht-das-programm.md) | Ein ausgeschnittener Pruefstand misst die Regel, nicht ihre Verwendung - Lebenslauf, Aufrufstellen und Uebersetzbarkeit bleiben ungeprueft; am 19.10.2026 dreimal an einem Tag |
 | [fehlerbild-ist-ein-messfenster](fehlerbild-ist-ein-messfenster.md) | Solange Gregors Fehlermeldung offen steht, ist der Fehlerzustand messbar - erst messen (Log, Stapel des laufenden Prozesses), dann schließen lassen |
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
@@ -105,6 +106,7 @@ eine Datei liest, liest diese.
 | [nie-benutzt-ist-nicht-geprueft](nie-benutzt-ist-nicht-geprueft.md) | Was niemand je angeklickt hat, gilt nicht als geprueft - E-97 lag 15 Fassungen und ein veroeffentlichtes Release lang im Speichern-Dialog |
 | [nie-direkt-auf-main](nie-direkt-auf-main.md) | Jede Änderung geht über einen eigenen Zweig; auf main wird nur gemergt, und Gregor merged |
 | [nie-stillstehen](nie-stillstehen.md) | Leerlauf ist der teuerste Fehler dieses Projekts — im Hintergrund bauen, weiterarbeiten, ungefragt melden |
+| [nummer-erst-beim-schnueren](nummer-erst-beim-schnueren.md) | Ein Paketeintrag heisst "gebaut", bevor es ein Paket gibt - 1.0.107, .108 und .109 mussten alle drei nachtraeglich in "nie geschnuert" umgeschrieben werden |
 | [paket-gegen-den-bau-messen](paket-gegen-den-bau-messen.md) | Was im Paket liegt, ist nicht automatisch das, was ich gebaut habe - jede Datei im Paket gegen das Bauverzeichnis messen, bevor Gregor sie bekommt |
 | [pruefen-statt-vermuten](pruefen-statt-vermuten.md) | Vorhandene Quellen oeffnen, bevor ich eine Ursache vermute - und Vermutungen nie als Tatsache aussprechen |
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
@@ -125,8 +127,10 @@ eine Datei liest, liest diese.
 | [text-nicht-durch-schichten-schicken](text-nicht-durch-schichten-schicken.md) | Ersetzungstext mit Backslashes oder Anfuehrungszeichen nie inline durch Bash/PowerShell nach Perl reichen; in eine Datei schreiben und ueber Zeilenanker einsetzen |
 | [ueberall-heisst-ueberall](ueberall-heisst-ueberall.md) | Wenn Gregor den Umfang absolut nennt, wird er nicht aus Geschmack gekuerzt - die Sparversion anbieten, nicht heimlich liefern |
 | [unterschied-im-selben-bild](unterschied-im-selben-bild.md) | Was im selben Bild richtig ist, schliesst jede gemeinsame Ursache aus - der Unterschied ist der Befund |
+| [ursache-nur-gemessen-behaupten](ursache-nur-gemessen-behaupten.md) | Eine Ursache, die ich nicht gemessen habe, gehoert nicht in einen Bericht - zeitliche Naehe ist keine Messung; am 19.10.2026 zweimal behauptet, beide Male war der Beschuldigte unschuldig |
 | [version-eindeutig-machen](version-eindeutig-machen.md) | Jede Fassung, die Gregor in die Hand bekommt, muss sich selbst benennen koennen - Nummer, Commit, Bauzeit, sichtbar im Programm |
 | [verwerfen-nur-mit-zaehler](verwerfen-nur-mit-zaehler.md) | Ein verwerfender Befehl wirkt auf seinen ganzen Umfang, nicht auf das gemeinte Ziel - vier Selbstverschuldungen in einer Stunde, jede mit einem Wert vorher oder nachher zu fangen |
+| [vor-dem-code-die-pruefberichte](vor-dem-code-die-pruefberichte.md) | Vor der ersten Zeile an einer Stelle nachsehen, wer sie schon geprueft hat - befund-suchen.pl sieht nur 182 von 591 Kennungen, die Antwort auf E-101 lag in den uebrigen |
 | [was-lauffaehig-heisst](was-lauffaehig-heisst.md) | Gregors drei Kriterien für „lauffähig" — und dass ein erscheinendes, aber unbedienbares Fenster keines davon erfüllt |
 | [werkzeug-vor-eigenbau](werkzeug-vor-eigenbau.md) | Vor dem eigenen Dreizeiler in tools/WERKZEUGE.md nachsehen; und ein fertiges Werkzeug, das niemand aufruft, wirkt so wenig wie eine Lehre, die nur Text ist |
 | [widerlegte-vermutungen-aufschreiben](widerlegte-vermutungen-aufschreiben.md) | Jede widerlegte Vermutung mit ihrer Messung in die Befunddatei; das Ausschlussverfahren fuehrt zur Zeile |
