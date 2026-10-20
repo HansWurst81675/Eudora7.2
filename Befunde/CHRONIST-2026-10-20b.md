@@ -232,7 +232,7 @@ das, wonach ein Leser handelt.
 
 **Es steht inzwischen im Repo, aber nicht auf `main`.** Im Hauptarbeitsbaum
 liegt der Zweig `e-132-fremdes-mailverzeichnis` mit einem **neuen Befund
-**E-132****, gestaget und **nicht committet**. Sein Text
+**[E-132](../BEFUNDE.md#e-132)****, gestaget und **nicht committet**. Sein Text
 belegt die Kette am Quelltext:
 
 * `eudora.cpp:1036-1052` — ist die Befehlszeile **leer** *und* liegt **keine**
@@ -251,7 +251,7 @@ Registry-Weg wird gar nicht erst betreten. Der Doppelklick auf `Eudora.exe`
 betritt ihn.
 
 **Offen bleibt — und das ist der Punkt für Gregor:** auf `origin/main` steht
-`E-132` **nirgends** (`grep -c 'e-132'` auf `BEFUNDE.md` und `README.md` je 0),
+[`E-132`](../BEFUNDE.md#e-132) **nirgends** (`grep -c 'e-132'` auf `BEFUNDE.md` und `README.md` je 0),
 `README.md:75` trägt unverändert die widerlegte Bedingung **und** den Satz
 *„von uns **noch nicht nachgestellt**"*, obwohl [E-131](../BEFUNDE.md#e-131)
 seit 14:34 behoben und seit 15:01 veröffentlicht ist. In `WEITERMACHEN.md`
@@ -706,7 +706,7 @@ die von `v1.0.112`** (Uhrzeit, Marke, PR-Nummer, Prüfsumme). Dazu beanspruchen
 | `main`, `WEITERMACHEN.md:45` | vier von sechs Angaben zu `v1.0.113` sind die von `v1.0.112` (11:55:10 statt 13:01:36 UTC, `f87a4a74`/#113 statt `ac094f15`/#117, SHA `0406c108…` statt `0d1d4bf4…`, Quellstand 7.2.0.112 statt .113) | gemessene Werte eintragen; danach läuft `doku-pruefen.pl` wieder |
 | `main`, `Releases/PAKETE.md:159` und `:167` | zwei Pakete beanspruchen die Marke `v1.0.113` | eines davon richtigstellen |
 | GitHub, `v1.0.113` | Zeile 128 ist ein Satzrest mit offener Fettschrift | die Zeile in `Releases/1.0.113/RELEASE-NOTIZEN.md` an ihren Punkt anschließen, dann `gh release edit v1.0.113 --notes-file Releases/1.0.113/RELEASE-NOTIZEN.md` |
-| `main`, `README.md:75` | sagt über den **behobenen** [E-131](../BEFUNDE.md#e-131) *„von uns noch nicht nachgestellt"* und nennt die widerlegte Bedingung *„solange dieselbe `Eudora.ini` benutzt wird"* | gehört in denselben Zweig wie **E-132** |
+| `main`, `README.md:75` | sagt über den **behobenen** [E-131](../BEFUNDE.md#e-131) *„von uns noch nicht nachgestellt"* und nennt die widerlegte Bedingung *„solange dieselbe `Eudora.ini` benutzt wird"* | gehört in denselben Zweig wie **[E-132](../BEFUNDE.md#e-132)** |
 | `main`, `BEFUNDE.md:300/301` | die Zeile zu [E-131](../BEFUNDE.md#e-131) ist über zwei Zeilen gebrochen, `:300` endet ohne schließenden senkrechten Strich | eine Zeile daraus machen |
 
 Dazu: `WEITERMACHEN.md` führt [E-131](../BEFUNDE.md#e-131) weiter als offen
@@ -749,7 +749,7 @@ im Issue verfällt.
 2. **Der Leseweg zu [E-131](../BEFUNDE.md#e-131) ist offen**: eine bereits
    beschädigte INI wird erst beim nächsten Sichern berichtigt. Steht so im
    Befund und in den Notizen.
-3. ****E-132** ist nicht committet** und auf `main`
+3. ****[E-132](../BEFUNDE.md#e-132)** ist nicht committet** und auf `main`
    unbekannt; er ist am Quelltext belegt und **nicht nachgestellt**.
 4. **[PRÜFER-39](PRUEFER-39.md) N2 bis N9** sind nicht abgearbeitet; N1 ist
    durch die Rücknahme erledigt.

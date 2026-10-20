@@ -5,7 +5,7 @@
 **Ein Schritt, und er ist neu.** Alles andere in diesem Plan ist
 Nachschlagewerk.
 
-### <a id="c8"></a>C8 · Paket 1.0.114 — startet Eudora im fremden Mailverzeichnis?
+### <a id="c8"></a>Der Starttest — nimmt sich Eudora ein fremdes Mailverzeichnis?
 
 **Worum es geht.** Startest du `Eudora.exe` **direkt** (Doppelklick) statt über
 `Eudora starten.cmd`, sucht Eudora sich das Mailverzeichnis selbst — und findet
@@ -158,8 +158,8 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„[C8](#c8) an 1.0.114 in Ordnung"* oder
-*„[C8](#c8) an 1.0.114 gescheitert, es kam keine Rueckfrage"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Starttest an 1.0.114 in Ordnung"* oder
+*„Starttest an 1.0.114 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
