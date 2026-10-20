@@ -80,13 +80,27 @@ We believe this is a false positive and ask for the detection to be reviewed.
 We can provide build logs or a reproducible build on request.
 ```
 
-## Danach
+## Eingereicht am 20.10.2026 — und was daraus geworden ist
 
-Microsoft schickt eine Bestätigung an die angegebene Adresse und später das
-Ergebnis. **Beides gehört in [E-124](../BEFUNDE.md#e-124)** — mit Datum und
-der Vorgangsnummer aus der Bestätigung. Fällt der Fehlalarm weg, ist das der
-erste Fall, in dem eine Fehlerklasse dieses Projekts **außerhalb** des
-Projekts abgestellt wurde.
+| | |
+|---|---|
+| Vorgangsnummer | `a567fe2a-9f58-47e1-a675-a62733ec538f` |
+| Eingereicht | 20.10.2026, 20:57:52, von Gregor |
+| Hochgeladen | `Eudora72-1.0.113-release.zip` |
+| Einstufung | *Incorrect detection* |
+| Status | **Submitted** → *pending* (Stand 20.10.2026, 21:00) |
+| Gutachten | — *(hier eintragen, sobald es da ist)* |
+
+Der Stand steht auf der Seite des Vorgangs und ändert sich, ohne dass jemand
+etwas tut; *pending* heißt, dass die Datei in der Warteschlange der Analyse
+liegt. **Das Ergebnis gehört hierher und nach
+[E-124](../BEFUNDE.md#e-124)** — auch ein ablehnendes. Fällt der Fehlalarm
+weg, ist es der erste Fall, in dem eine Fehlerklasse dieses Projekts
+**außerhalb** des Projekts abgestellt wurde.
+
+**Kommt nichts oder kommt eine Ablehnung**, bleibt als nächster Schritt die
+Code-Signatur — ein Zertifikat kostet Geld und ist deshalb Gregors
+Entscheidung, nicht meine.
 
 **Bis dahin unverändert:** jedes Paket kann wieder eingezogen werden. Der
 Scan vor der Auslieferung ist **kein** Freispruch — der Fund vom 20.10.2026
