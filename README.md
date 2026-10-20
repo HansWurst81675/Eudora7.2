@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.101** (Quellstand 7.2.0.101), 17.10.2026; in Arbeit 7.2.0.112 / Paket 1.0.111 (20.10.2026, nicht veröffentlicht). Die ausführliche
+*Stand Paket **1.0.113** (Quellstand 7.2.0.113, nicht veröffentlicht); veröffentlicht ist **1.0.112** (Quellstand 7.2.0.112), am 20.10.2026 als `v1.0.112`; davor `v1.0.101` vom 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -52,7 +52,7 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
   lokalen Postfach erst, wenn sie auf dem Server steht.
 * **Ohne Installation**: ZIP auspacken, `Eudora starten.cmd` doppelklicken.
 
-**Neu gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
+**Neu in `v1.0.101` gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
 beim Verschieben in einen IMAP-Ordner vollständig an
 ([E-118](BEFUNDE.md#e-118)); eine verschobene Nachricht kann – bis auf einen seltenen, vermuteten Fall
 (siehe Tabelle) – nicht mehr
@@ -72,12 +72,15 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| Eine Nachricht, die der Filter nicht lesen kann, wird still übersprungen | nichts geht verloren – **diese eine Nachricht** bleibt ungefiltert liegen, die übrigen werden weiter gefiltert (am Quelltext gelesen für *Filter Messages*, [LEKTOR-41](Befunde/LEKTOR-41.md)) | nach dem Filtern stichprobenartig nachsehen; ab 7.2.0.106 (noch nicht veröffentlicht) steht die Nachricht mit Betreff und Grund im Fenster *Task Errors*, ab 7.2.0.110 nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden | [E-69](BEFUNDE.md#e-69) |
+| Läuft diese Fassung neben einer vorhandenen Eudora oder Hermes 7.1, kann **das alte Programm danach nicht mehr starten** (`EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`): unsere Fassung schreibt `MRUFloatXPos=-2147483648` – eine ungültige Fensterposition – in die gemeinsam benutzte `Eudora.ini` | nichts von Ihrer Post – aber die **Benutzbarkeit der vorhandenen Installation** | **vor dem ersten Start `Eudora.ini` und das Mailverzeichnis sichern.** Ein eigener Ordner genügt **nicht**, solange dieselbe `Eudora.ini` benutzt wird. Von außen gemeldet ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102), 18.10.2026, an `v1.0.101`); von uns **noch nicht nachgestellt** | [E-131](BEFUNDE.md#e-131) |
+| Eine Nachricht, die der Filter nicht lesen kann, wird still übersprungen | nichts geht verloren – **diese eine Nachricht** bleibt ungefiltert liegen, die übrigen werden weiter gefiltert (am Quelltext gelesen für *Filter Messages*, [LEKTOR-41](Befunde/LEKTOR-41.md)) | nach dem Filtern stichprobenartig nachsehen; ab 7.2.0.106 (seit `v1.0.112` veröffentlicht) steht die Nachricht mit Betreff und Grund im Fenster *Task Errors*, ab 7.2.0.110 nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden | [E-69](BEFUNDE.md#e-69) |
 | Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern. **In 7.2.0.107 bis 7.2.0.109 — alle drei nie als Paket geschnürt — war es für Post in `windows-1251`, `koi8-r` oder `iso-8859-2` schlechter als in `v1.0.101`; ab 7.2.0.110 nicht mehr** ([PRÜFER-37](Befunde/PRUEFER-37.md) F3/F4 behoben). Bei Latin-1- und UTF-8-Post trat das nie auf | [E-101](BEFUNDE.md#e-101) |
+| Eine über *File → Save As* gespeicherte Nachricht heißt immer `.txt` – auch wenn ihr Inhalt HTML ist, und ohne jeden Hinweis | nichts – der Inhalt ist vollständig, nur die Endung passt nicht | die Datei in `.html` umbenennen und im Browser öffnen, oder in `.eml` umbenennen und in Thunderbird | [E-128](BEFUNDE.md#e-128) |
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](BEFUNDE.md#e-39) |
 | Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-126](BEFUNDE.md#e-126) |
-| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (noch nicht veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist; ab 7.2.0.108 wird nach fünf Minuten **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben — das Fenster bleibt offen und der Grund steht in der Statuszeile. Nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](BEFUNDE.md#e-123) |
+| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (seit `v1.0.112` veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist; ab 7.2.0.108 wird nach fünf Minuten **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben — das Fenster bleibt offen und der Grund steht in der Statuszeile. Nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](BEFUNDE.md#e-123) |
 | War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](BEFUNDE.md#e-127) |
+| Wird **ohne Serververbindung** in einen IMAP-Ordner verschoben und sofort beendet, zeigt der Zielordner danach nur einen Teil der Nachrichten | nichts – die Nachrichten stehen weiter im Ausgangspostfach | *Rechtsklick auf das Postfach → Show Deleted Messages* macht sie wieder sichtbar, *Message → UnDelete* holt sie zurück; *Message → Purge Messages* dabei **nicht** benutzen – das entfernt sie | [E-129](BEFUNDE.md#e-129) |
 | Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
@@ -130,9 +133,10 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.101`** (veröffentlicht am 17.10.2026 um 19:12
+* **Das neueste Release ist `v1.0.112`** (veröffentlicht am 20.10.2026 um 11:55
   Uhr UTC, auf GitHub als *Latest*,
-  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.101) — **Verschieben in einen
+  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.112; davor `v1.0.101`
+  vom 17.10.2026) — **Verschieben in einen
   IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –
   bis auf einen seltenen, vermuteten Fall bei gesendeter Post (siehe *Auf einen Blick*)
   ([E-121](BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an
@@ -952,7 +956,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.112` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.113` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

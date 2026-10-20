@@ -21,6 +21,8 @@
 > Postfächer hineinkopiert, nimmt auch seine `Eudora.ini` mit.
 
 ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
+Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopieren.
+
 ## Neu gegenüber v1.0.101
 
 - **Beenden wartet jetzt auf jede Art von Übertragung.** Wird eine Nachricht in
@@ -29,6 +31,7 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
   IMAP-Kontos verschoben wurde. Bis 7.2.0.110 zählte die Wache nur
   Übertragungen aus einem lokalen Postfach, und der andere Weg lief an ihr
   vorbei.
+- **Keine Flut von Fehlermeldungen mehr beim Filtern.** Konnte Eudora eine Nachricht
   nicht lesen, legte es je Nachricht einen eigenen Eintrag in *Task Errors* an – jeder
   mit Piepton und Fenstersprung. Bei einem IMAP-Postfach mit 500 angerissenen
   Nachrichten waren das 500 Pieptöne, nicht wegzuklicken. Jetzt bekommt der **erste**
@@ -81,16 +84,21 @@ Die wichtigsten:
 ## Hinweis zu Windows Defender
 
 Jede Fassung dieses Projekts ist eine neue, nicht signierte Datei. Microsoft Defender
-hat eine Zwischenfassung (1.0.98) fälschlich als Trojaner eingestuft und das Programm
-ohne Meldung beendet. **Dieses Paket wurde vor dem Hochladen mit Defender geprüft: 0
-Funde** (34 Dateien). Sollte Defender es bei Ihnen trotzdem melden, steht in der README
-unter *Windows Defender meldet Eudora als Trojaner*, was zu tun ist.
+hat Zwischenfassungen fälschlich als Trojaner eingestuft und das Programm ohne Meldung
+beendet — zuletzt am 20.10.2026 eine Fassung, die **acht Minuten zuvor** mit 0 Funden
+geprüft worden war.
+
+**Dieses Paket wurde vor dem Hochladen mit Defender geprüft: 0 Funde** (34 Dateien).
+**Das ist kein Freispruch**, sondern nur der Nachweis, dass zu diesem Zeitpunkt nichts
+bekannt war: das Urteil über eine neue, unsignierte Datei entsteht erst, wenn
+Microsofts Lernverfahren sie bewertet hat — und das kann Minuten später sein. Sollte
+Defender es bei Ihnen melden, steht in der README unter *Windows Defender meldet Eudora
+als Trojaner*, was zu tun ist.
 
 ## Prüfsumme
 
 SHA-256 des ZIPs: `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`
 
-## Was geprüft wurde – und was nicht
 ## Was geprüft wurde – und was nicht
 
 - **229 Tests, 229 bestanden** gegen genau diesen Bau; `paket-pruefen.ps1` ohne
@@ -105,8 +113,10 @@ SHA-256 des ZIPs: `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced2876
   verschwand, obwohl eine Aufgabe in der Warteschlange stand. Die Behebung ist
   am Quelltext belegt und durch eine eigene Schranke abgesichert
   (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am Fehlerstand 2 von 2 rot).
-- **Von Gregor am 20.10.2026 an Paket 1.0.112 am laufenden Programm bestätigt,
-  auf beiden Wegen:** aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
+- **Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt,
+  auf beiden Wegen** (1.0.112 unterscheidet sich davon nur durch den wieder
+  entfernten Hochladezähler, der an beiden Messungen nichts ändert — belegt an
+  seinen eigenen Protokollen): aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
   wartete **6015 ms**) und innerhalb desselben IMAP-Kontos (**4015 ms**). Beide
   Male brachte Eudora die Übertragung zu Ende und beendete sich dann sauber;
   die Warteschlange war danach leer. An 1.0.110 war das Fenster beim zweiten

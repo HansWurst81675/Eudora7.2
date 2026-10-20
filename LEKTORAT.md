@@ -1441,11 +1441,48 @@ Dokumente ohne TESTPLAN, AUFGABEN und PAKETE ([L-42.12](Befunde/LEKTOR-42.md#l-4
 Widerspruch innerhalb derselben Tabelle nicht ([L-42.13](Befunde/LEKTOR-42.md#l-42.13)); [E-123](BEFUNDE.md#e-123) fehlt weiter im Maßstab
 7.2.1.0 — Gregors Entscheidung ([L-42.14](Befunde/LEKTOR-42.md#l-42.14)).
 
+
+## Achtundvierzigster Durchgang — 20.10.2026 (Bericht: `Befunde/LEKTOR-43.md`)
+
+**Der erste Durchgang nach einem Release.** `v1.0.112` ging um 11:55:10 UTC
+hinaus; der veröffentlichte Text ist mit `Releases/1.0.112/RELEASE-NOTIZEN.md`
+byte-gleich, und die Datei war an drei Stellen beschädigt: der
+Aufzählungspunkt zu [E-69](BEFUNDE.md#e-69) hatte seinen Kopf verloren und hing
+als Fließtext am Punkt darüber, der Einleitungssatz brach nach „Nichts zu
+installieren. Das" ab, und eine Überschrift stand doppelt
+([L-43.1](Befunde/LEKTOR-43.md#l-43.1)). Die Notizen schrieben Gregors Messung
+dem Paket 1.0.112 zu — gemessen hat er an 1.0.111, 26 Minuten vor dem Bau von
+1.0.112 ([L-43.2](Befunde/LEKTOR-43.md#l-43.2)). Nach dem Release sagten sechs
+Stellen weiter `v1.0.101` ([L-43.3](Befunde/LEKTOR-43.md#l-43.3)); die README,
+auf die die Notizen für die „vollständige Liste" verweisen, kannte
+[E-128](BEFUNDE.md#e-128), [E-129](BEFUNDE.md#e-129) und
+[E-131](BEFUNDE.md#e-131) mit keinem Wort
+([L-43.4](Befunde/LEKTOR-43.md#l-43.4)); der Testplan nannte im Kopf 1.0.112 und
+schickte Gregor nach 1.0.110, mit zwei Schritten, die er längst bestätigt hatte
+([L-43.5](Befunde/LEKTOR-43.md#l-43.5)); [E-131](BEFUNDE.md#e-131) stand als
+verwaiste Tabellenzeile in der letzten Zeile von `BEFUNDE.md` statt im
+Verzeichnis ([L-43.6](Befunde/LEKTOR-43.md#l-43.6)); die Liste „Noch offen"
+vom heutigen Tag kannte drei der vier neuen Befunde nicht
+([L-43.7](Befunde/LEKTOR-43.md#l-43.7)); `tools/RELEASES.md` kannte `v1.0.112`
+nicht, und seine beiden jüngsten Zeilen standen außerhalb der Tabelle
+([L-43.8](Befunde/LEKTOR-43.md#l-43.8)).
+
+**Offen:** `pruefe-release-buchfuehrung.pl` hängt im `pre-commit`, das Tag
+entsteht danach — die Unwahrheit entsteht in einem Augenblick, den keine
+Schranke sieht ([L-43.11](Befunde/LEKTOR-43.md#l-43.11));
+`paket-bereit.pl` gibt acht Schranken als „alle" aus
+([L-43.12](Befunde/LEKTOR-43.md#l-43.12)); `ist_standaussage()` hört auf
+Wörter, nicht auf Aussagen ([L-43.13](Befunde/LEKTOR-43.md#l-43.13)); die
+PRÜFER-Berichte haben vier Nummernkreise, und [`P-39`](Befunde/PRUEFER-14.md#p-39) ist an einen anderen
+Befund vergeben ([L-43.14](Befunde/LEKTOR-43.md#l-43.14)); kein Werkzeug prüft
+die Release-Notizen auf Befundurteile
+([L-43.15](Befunde/LEKTOR-43.md#l-43.15)).
+
 ## Nachtrag am 20.10.2026 (kein eigener Durchgang)
 **Nachtrag am 20.10.2026 — nicht vom LEKTOR, sondern beim Versionssprung auf
 7.2.0.111.** [LEKTOR-42](Befunde/LEKTOR-42.md) nennt an drei Stellen 7.2.0.110
 als Quellstand. Der Bericht ist ein **Rückblick** auf den 19.10.2026 und bleibt
 inhaltlich unverändert; die drei Stellen tragen jetzt den Vermerk, dass der
-Quellstand seit dem 20.10.2026 **7.2.0.111** ist. `pruefe-stand-md.pl` hat den
+Quellstand seit dem 20.10.2026 **7.2.0.111** ist. **Weiter fortgeschrieben am 20.10.2026 ([LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43)):** seit 13:41 Uhr ist der Quellstand **7.2.0.112**, und seit 11:55 UTC ist `v1.0.112` veröffentlicht. `pruefe-stand-md.pl` hat den
 Nachtrag erzwungen — ein Bericht, der ohne Hinweis eine überholte Fassung als
 gültig ausgibt, ist eine Unwahrheit auf `main`.

@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 20.10.2026 (Pakete bis 1.0.112 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.101** als `v1.0.101` am 17.10.2026, davor **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 20.10.2026 (Pakete bis 1.0.113 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.112** als `v1.0.112` am 20.10.2026, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -17,8 +17,8 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.101`** (17.10.2026, 19:12 UTC, auf GitHub als
-> *Latest*; davor `v1.0.87` vom 14.10.2026, 05:46 UTC, `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
+> veröffentlicht ist inzwischen **`v1.0.112`** (20.10.2026, 11:55 UTC, auf GitHub als
+> *Latest*; davor `v1.0.101` vom 17.10.2026, 19:12 UTC, `v1.0.87` vom 14.10.2026, 05:46 UTC, `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
 > hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
 > und **1.0.24** sind ebenfalls entfernt; ihre `.sha256`-Dateien für 1.0.21
@@ -156,11 +156,20 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.112 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.112-release`, Quellstand 7.2.0.112, Zweig `e-123-transfersame`
+## 1.0.113 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.113-release`, Quellstand 7.2.0.113, Zweig `e-131-leistenposition`
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.113-release`, mit `TESTEN.txt` |
+| Inhalt | wie 1.0.112, dazu: [E-131](../BEFUNDE.md#e-131) behoben — keine ungültige Fensterposition mehr in der `Eudora.ini`, die eine daneben installierte Eudora/Hermes 7.1 beim Start abstürzen ließ |
+| Gemessen | **rot:** ein einziges Starten und Beenden von 7.2.0.112 im Prüfverzeichnis schrieb `MRUFloatXPos=-2147483648` **dreimal** in die INI, die von 3249 auf 6480 Byte wuchs. **grün:** nach der Behebung `E-131 Leistenposition: abschnitte-mit-eintrag=5 berichtigt=5`, danach `MRUFloatXPos=40` und **null** Treffer für `INT_MIN`; beim zweiten Lauf dasselbe. **234 Tests, 234 bestanden** (fünf neue, darunter die Gegenprobe, dass gewöhnliche Positionen unangetastet bleiben). Bau Release 0 Fehler. **Offen bleibt der Leseweg** — eine bereits kaputte INI wird erst beim nächsten Sichern berichtigt |
+
+## 1.0.112 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.112-release`, Quellstand 7.2.0.112, Zweig `e-123-transfersame`, **als `v1.0.112` veröffentlicht**
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.112-release`, mit `TESTEN.txt` |
+| Veröffentlicht | **`v1.0.112`** am 20.10.2026 um 11:55:10 UTC auf GitHub (*Latest*), Marke auf `f87a4a74` = Merge von PR #113; ZIP `Eudora72-1.0.112-release.zip`, SHA-256 `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`. Die Release-Notizen standen beim Veröffentlichen verstümmelt da – siehe [LEKTOR-43](../Befunde/LEKTOR-43.md#l-43.1) |
 | Inhalt | wie 1.0.111, **ohne** den Hochladezähler in `CImapSameServerTransferMsgAction::DoWork` ([PRÜFER-39](../Befunde/PRUEFER-39.md) N1); dazu beide neuen Schranken im **versionierten** Haken |
 | Gemessen | **ohne Nachstellung** — Gregor am 20.10.2026: *„wie auch immer: release eine neue version, alles in release notes und changelog, auch der neue befund“* und *„ja, mach das!“*. Diese Fassung behebt **keinen** Fehler Gregors, sie **nimmt eine Gefahr zurück**, die [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 gefunden hat; ein rot-grüner Lauf am Prüfstand ist dafür nicht zu führen, weil der entfernte Zweig nur bei einer im Netz hängenden Verbindung sichtbar würde. **Belegt am Quelltext:** `DoWork` läuft im Nebenfaden (`QCTaskManager.cpp:1095`, `AfxBeginThread` in `:549`), `RequestThreadStop()` ist ein leerer Rumpf (`ImapActionQueue.cpp:709`) — der Zähler hätte `bLaeuft` dauerhaft wahr halten und Eudora unbeendbar machen können. **Gemessen an Gregors eigenen Protokollen, dass das Entfernen nichts ändert:** bei Weg 2b blieb `laeuft=0`, bei Weg 2a kam `laeuft=1` aus `m_bE123UebertragungLaeuft` (`:3768`). Bau Release 0 Fehler, **229 Tests, 229 bestanden**. **Warnung in den Release-Notizen:** [E-131](../BEFUNDE.md#e-131), von außen gemeldet, von uns nicht nachgestellt |
 
@@ -535,7 +544,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | Testverzeichnis | als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.84-release` (Prüfstand: `C:\Temp\E94-nachher`, die 8 Kerndateien byteidentisch) |
 | ZIP (Release) | `Releases/Eudora72-1.0.84-release.zip`, 9 361 952 Byte (nicht versioniert); die 34 EXE/DLL/OCX darin byteidentisch mit Gregors getestetem Verzeichnis |
 | SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v1.0.101` *Latest*); Marke auf `eb54752` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v1.0.112` *Latest*); Marke auf `eb54752` |
 | Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
 | Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
 
@@ -548,7 +557,7 @@ Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlich
 |---|---|
 | ZIP | `Releases/Eudora72-1.0.83-release.zip`, 9 361 416 Byte (nicht versioniert); dazu als Verzeichnis bei Gregor, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
 | SHA256 | `7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v1.0.101` *Latest*); Marke auf `ec9f11d` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v1.0.112` *Latest*); Marke auf `ec9f11d` |
 | Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
 
 Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon

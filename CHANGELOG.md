@@ -13,6 +13,10 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 | Kennung | | |
 |---|---|---|
+| [**E-131**](BEFUNDE.md#e-131) | **Eine daneben installierte Eudora oder Hermes 7.1 startet nach unserer Fassung nicht mehr** — `MRUFloatXPos=-2147483648` in der gemeinsam benutzten `Eudora.ini` | **Offen, von außen gemeldet und am Quelltext belegt, von uns noch nicht nachgestellt.** Der **erste Fehlerbericht eines Fremden** ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102), 18.10.2026, an `v1.0.101`). Abhilfe: `Eudora.ini` und Mailverzeichnis vorher sichern. In `v1.0.112` ausdrücklich **nicht** angefasst — die Release-Notizen warnen oben |
+| [**E-130**](BEFUNDE.md#e-130) | **Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt** — und im Paket liegen andere Fassungen als im Repo | **Offen, am 20.10.2026 gemessen, Ursache des Stempelns nicht gefunden.** Kein Datenverlust, keine bekannte Fehlfunktion; der Arbeitsbaum ist nach jedem Bau schmutzig. Entschieden: die fünf Byte werden **nicht** committet |
+| [**E-129**](BEFUNDE.md#e-129) | **Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt der Zielordner nur einen Teil** | **Offen, am 20.10.2026 am Prüfstand nachgestellt und im Quelltext belegt.** **Kein Datenverlust** — die Nachrichten stehen weiter im Ausgangspostfach, sichtbar über *Show Deleted Messages*, zurückzuholen mit *Message → UnDelete*. Zwei Mängel: die Einträge gehen beim Beenden verloren, und das zu kleine Inhaltsverzeichnis wird wortlos angenommen |
+| [**E-128**](BEFUNDE.md#e-128) | **Eine gespeicherte Nachricht heißt `.txt` und enthält HTML** — der Anwender erfährt es nicht | **Offen, am Quelltext belegt und am 20.10.2026 von Gregor am laufenden Programm bestätigt.** Kein Datenverlust; Abhilfe: die Datei in `.html` oder `.eml` umbenennen. Vorschlag (nicht entschieden): die Vorgabeendung aus dem Inhalt ableiten |
 | [**E-126**](BEFUNDE.md#e-126) | **Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin verschoben wird, kommt vielleicht nicht auf dem Server an** | **Offen, Vermutung am Quelltext, nie beobachtet.** Abgetrennt aus [E-121](BEFUNDE.md#e-121) am 17.10.2026 (Urteil zu [E-121](BEFUNDE.md#e-121) dort) |
 | [**E-127**](BEFUNDE.md#e-127) | **Ein IMAP-Ordner, der seit dem Start noch nie geöffnet war, zeigt eben dorthin verschobene Mails erst nach erneutem Öffnen** | **Offen, an Gregors Protokoll gemessen.** Kein Datenverlust, die Mails sind auf dem Server |
 | [**E-125**](BEFUNDE.md#e-125) | **Eine Nachricht aus einem IMAP-Ordner nach `Out` verschieben legt eine neue Nachricht mit `<br>` in den Kopfzeilen an – und überträgt nichts** | **Offen, am Protokoll gemessen, Ursache am Quelltext vermutet** (*Send Again* in `CTocDoc::Xfer`). Von Gregor am 16.10.2026 an 1.0.100 gemeldet. Kein Datenverlust, das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger. Ob `v1.0.87` dasselbe tut, ist nicht gemessen. **Entschieden von Gregor am 17.10.2026:** Ziehen nach `Out` wird künftig abgelehnt, mit Hinweis auf *Message → Send Again*; noch nicht gebaut |
@@ -77,6 +81,51 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.113 — E-131: keine ungültige Fensterposition mehr in der `Eudora.ini`
+
+**Der erste Fehlerbericht von außen, und er saß.** Ein Anwender meldete am
+18.10.2026 ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)),
+dass seine daneben installierte Hermes 7.1.0.9 nach dem Lauf unserer Fassung
+`v1.0.101` nicht mehr startet — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`,
+Ordinal 3952, `ECX=0`. Sein Vergleich beider INIs nannte die Stelle:
+`MRUFloatXPos=-2147483648`, also `INT_MIN` statt eines Bildschirmpunkts.
+
+**Nachgestellt am 20.10.2026** in `C:\Temp\E131`: ein **einziges** Starten und
+Beenden von 7.2.0.112 genügt. Die INI wuchs von 3249 auf 6480 Byte, 16
+Abschnitte kamen dazu, und der Wert stand **dreimal** darin. Es betraf also
+nicht nur die eine veröffentlichte Fassung.
+
+**Behoben:** `E131LeistenpositionenBereinigen()` am Ende von
+`CMainFrame::SaveBarState` geht die `ToolBar*`-Abschnitte durch und ersetzt
+jede unbrauchbare Schwebeposition durch eine, die auf dem Bildschirm liegt.
+Entschieden wird in der eigenen, prüfbaren Funktion
+`E131PositionIstBrauchbar`. Nach der Behebung:
+
+```
+E-131 Leistenposition: abschnitte-mit-eintrag=5 berichtigt=5 bildschirm=0,0,1920x1294 ersatz=40,40
+MRUFloatXPos=40        INT_MIN: 0 Treffer
+```
+
+**234 Tests, 234 bestanden** (fünf neue). **Der erste Entwurf der Regel war
+falsch, und ein Test hat ihn gefangen:** er verlangte 100 Pixel Luft auf allen
+vier Seiten, wodurch `y=1200` auf einem 1294 Pixel hohen Schirm als unbrauchbar
+galt. Nach links und oben gilt die Luft, nach rechts und unten die
+Bildschirmkante. **Die Gegenprobe ist der wichtigere Test:** gewöhnliche
+Positionen bleiben unangetastet — sonst wäre aus der Behebung *„jede Position
+wird überschrieben"* geworden.
+
+**Offen bleibt der Leseweg:** eine INI, die bereits kaputte Werte trägt, wird
+erst beim nächsten Sichern berichtigt.
+
+### Dazu: [E-124](BEFUNDE.md#e-124) fortgeschrieben — die Defender-Schranke prüft zu früh
+
+Gemessen am 20.10.2026: `Eudora.exe` um **13:09:05** gebaut und sofort geprüft
+(34 Dateien, 0 Funde), von Defender um **13:17:28** als
+`Trojan:Win32/Bearfoos.A!ml` erkannt. **Acht Minuten Abstand**, dasselbe Muster
+wie am 16.10. bei 1.0.98. Gregors Entscheidung: keine Wartezeit in die
+Auslieferung einbauen, er meldet es. Der Satz in den Release-Notizen sagt
+jetzt, dass 0 Funde **kein Freispruch** sind.
 
 ## 7.2.0.112 — E-123: der Zähler aus `SameServer::DoWork` ist wieder heraus (PRÜFER-39, N1)
 

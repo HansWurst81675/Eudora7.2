@@ -1,5 +1,13 @@
 **Eudora 7.2.0.110 / Paket 1.0.110**
 
+> **Nachtrag LEKTOR, 20.10.2026 — dieses Paket ist nie veröffentlicht worden.**
+> Es gibt kein Tag `v1.0.110`. Der Inhalt dieser Notizen steckt vollständig in
+> `v1.0.112` (`Releases/1.0.112/RELEASE-NOTIZEN.md`), dazu die Behebung zu
+> [E-123](../../BEFUNDE.md#e-123) aus 7.2.0.111 und der Warnblock zu
+> [E-131](../../BEFUNDE.md#e-131). Die Prüfsumme unten ist deshalb nie gefüllt
+> worden. Diese Datei bleibt als Rückblick stehen; **als Anleitung gilt sie
+> nicht** — was zu prüfen ist, steht in [TESTPLAN.md](../../TESTPLAN.md).
+
 ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
 Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopieren.
 
@@ -59,7 +67,7 @@ unter *Windows Defender meldet Eudora als Trojaner*, was zu tun ist.
 
 ## Prüfsumme
 
-SHA-256 des ZIPs: `<wird beim Schnüren eingetragen>`
+SHA-256 des ZIPs: `—` (nie geschnürt, siehe Nachtrag oben)
 
 ## Was geprüft wurde – und was nicht
 

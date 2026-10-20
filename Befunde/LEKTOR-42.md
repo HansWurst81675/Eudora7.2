@@ -163,7 +163,7 @@ und höchstens ein Piepton je zwei Sekunden.
 | `FILTER.md:722` | endete bei 7.2.0.106 | dasselbe, mit Verweis auf PRÜFER-36 P3 und PRÜFER-38 R1–R3 |
 | `ZIEL.md:22`, Maßstabszeile | *„behoben in 7.2.0.106 … vor dem Release [PRÜFER-36](PRUEFER-36.md) P3“* | P3 ist abgearbeitet; jetzt *„nachgebessert in 7.2.0.109 und 7.2.0.110“* |
 
-Dazu `FILTER.md:4`: *„Der Quellstand ist inzwischen 7.2.0.73“* → 7.2.0.112
+Dazu `FILTER.md:4`: *„Der Quellstand ist inzwischen 7.2.0.73“* → 7.2.0.113
 (Altlast aus [L-41.5](LEKTOR-41.md#l-41.5)).
 
 ### <a id="l-42.8"></a>L-42.8 — ZWEIGE: die beiden neuen Zeilen standen außerhalb der Tabelle (mittel)
@@ -303,7 +303,7 @@ Vor diesem Lauf wiesen **vier von acht** ab, danach **zwei**:
 
 **PRÜFER ist erneut fällig, und zwar an genau einer Datei:** seit `8eded03`
 ([PRÜFER-38](PRUEFER-38.md)) hat sich `Eudora71/Version.h` geändert — der
-Versionssprung auf 7.2.0.110 in `8d1075b0` (Stand dieses Berichts; seit dem 20.10.2026 ist der Quellstand 7.2.0.112). Inhaltlich ist seit PRÜFER-38 kein
+Versionssprung auf 7.2.0.110 in `8d1075b0` (Stand dieses Berichts; seit dem 20.10.2026 ist der Quellstand 7.2.0.113). Inhaltlich ist seit PRÜFER-38 kein
 Quelltext dazugekommen; die Schranke zählt die Datei trotzdem, weil sie in
 PRÜFERs Bereich liegt. **Das ist kein Mangel an der Behebung**, sondern einer
 am Zuschnitt: ein reiner Versionssprung macht jede Behebung wieder

@@ -30,6 +30,8 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-10-12 11:18:20 | v1.0.83 | Gregor am 12.10.2026 nach seinem IMAP-Test mit 1.0.83: 'gekuerzt mit endung reicht, mach PR fuer an1-endungen'; nach dem Merge von PR #84: 'erstelle ein release auf github' | veroeffentlicht |
 | 2026-10-12 12:59:15 | v1.0.84 | Gregor am 12.10.2026 nach seinem IMAP-Test mit 1.0.84 (Bildschirmfoto: Toner-Betreff in einem Stueck), PR #86 gemergt: 'dann ein github release' und 'ja, beides jetzt' | veroeffentlicht |
 | 2026-10-14 05:46:20 | v1.0.87 | Gregor am 14.10.2026: 'ja, wir releasen ein 0.87 in github' (nach seinem Test von 1.0.87, alle Behebungen bestaetigt) | veroeffentlicht |
+| 2026-10-17 21:12:09 | v1.0.101 | Gregor am 17.10.2026: 'ja, veröffentlichen' (nach seinem Test von 1.0.101 in vier Runden und dem Merge von PR #99) | veroeffentlicht |
+| 2026-10-20 13:55:11 | v1.0.112 | Gregor am 20.10.2026: 'wie auch immer: release eine neue version, alles in release notes und changelog, auch der neue befund' und 'ja, mach das!' | veroeffentlicht, auf GitHub als *Latest*; Marke auf `f87a4a74` |
 
 > **Nachgetragen am 17.09.2026 vom LEKTOR ([L-13.1](../Befunde/LEKTOR-13.md#l-13.1)).** Die Zeile zu `v1.0.64`
 > fehlte hier, und **vier** Dokumente behaupteten zur selben Zeit, veroeffentlicht
@@ -41,4 +43,3 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
 > eine Fassung, in der **[E-98](../BEFUNDE.md#e-98)** offen ist und **[E-101](../BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
-| 2026-10-17 21:12:09 | v1.0.101 | Gregor am 17.10.2026: 'ja, veröffentlichen' (nach seinem Test von 1.0.101 in vier Runden und dem Merge von PR #99) | veroeffentlicht |

@@ -2735,6 +2735,145 @@ BOOL CMainFrame::SaveOpenWindows(BOOL Close)
 // we'll just let it work the old way, under the assumption that writing out the info in
 // an inefficient manor is better than not writing any info at all or the wrong info.
 //
+//
+// BEFUND E-131 (20.10.2026) - gemeldet von aussen, Issue #102.
+//
+// Ein Anwender hat unsere Fassung v1.0.101 in einem EIGENEN Ordner neben
+// seinem Hermes 7.1.0.9 gestartet. Danach stuerzte sein Hermes beim Start ab:
+// EXCEPTION_ACCESS_VIOLATION in MFC71.DLL, Ordinal 3952, ECX=0 - ein
+// Nullzeiger im Fensteraufbau. Sein Vergleich beider INIs nannte die Stelle:
+//
+//     MRUFloatXPos=-2147483648
+//
+// Das ist INT_MIN, kein Bildschirmpunkt. MFC fuehrt die zuletzt benutzte
+// Schwebeposition je Leiste in CDockContext::m_ptMRUFloatPos (afxpriv.h:523)
+// und schreibt sie ueber CControlBarInfo::SaveState hinaus. Wurde eine Leiste
+// nie frei bewegt, steht dort ein nie gesetzter Wert - und der landet in der
+// Eudora.ini, die sich beide Programme teilen.
+//
+// NACHGESTELLT am 20.10.2026 am Pruefstand (C:\Temp\E131): ein einziges
+// Starten und Beenden von 7.2.0.112 genuegt. Die INI wuchs von 3249 auf 6480
+// Byte, 16 Abschnitte kamen dazu, und MRUFloatXPos=-2147483648 stand
+// dreimal darin. Es ist also nicht nur v1.0.101 betroffen.
+//
+// WAS DIESE FUNKTION TUT: nach dem Schreiben geht sie die Abschnitte der INI
+// durch und ersetzt jede unbrauchbare Schwebeposition durch eine, die auf dem
+// Bildschirm liegt. Sie erfindet nichts dazu und entfernt nichts - ein
+// fehlender Schluessel koennte einen anderen Leser ebenso ueberraschen wie
+// ein unsinniger Wert.
+//
+// WARUM NACH dem Schreiben und nicht davor: die Werte kommen aus MFCs
+// Innerem; die Datei ist der einzige Ort, an dem alle Wege zusammenlaufen,
+// und sie ist zugleich das, was der fremde Leser sieht.
+//
+// NICHT BEHOBEN ist der Leseweg: eine INI, die bereits kaputte Werte traegt,
+// wird hier erst beim naechsten Sichern berichtigt. Unser eigenes Eudora
+// kommt damit zurecht (gemessen), ein fremdes Programm vielleicht nicht.
+//
+bool E131PositionIstBrauchbar(int nX, int nY, int nLinks, int nOben, int nBreite, int nHoehe)
+{
+	// Ein Rechteck ohne Flaeche heisst: wir wissen nichts ueber den
+	// Bildschirm. Dann wird nicht geurteilt - lieber stehen lassen als
+	// aufgrund einer Fehlmessung ueberschreiben.
+	if (nBreite <= 0 || nHoehe <= 0)
+		return true;
+
+	// Die Regel ist bewusst UNSYMMETRISCH, und der erste Entwurf war hier
+	// falsch - ein Test hat ihn gefangen:
+	//
+	//   nach LINKS und OBEN darf die Ecke hinauslaufen, solange ein Streifen
+	//   von 100 Pixeln sichtbar bleibt;
+	//   nach RECHTS und UNTEN endet sie an der Bildschirmkante, denn dort
+	//   liegt die Ecke selbst noch auf dem Schirm, auch wenn das Fenster
+	//   darueber hinausragt.
+	//
+	// Der erste Entwurf verlangte die 100 Pixel auf allen vier Seiten. Auf
+	// einem 1294 Pixel hohen Schirm galt damit y=1200 als unbrauchbar,
+	// obwohl die Ecke klar sichtbar ist - der Test "gewoehnliche Positionen
+	// bleiben unangetastet" schlug fehl. Zu eng zu pruefen heisst, gueltige
+	// Anordnungen des Anwenders zu zerstoeren; das waere ein eigener Fehler.
+	const int nLuft = 100;
+
+	if (nX < nLinks - nBreite + nLuft || nX > nLinks + nBreite)
+		return false;
+	if (nY < nOben - nHoehe + nLuft || nY > nOben + nHoehe)
+		return false;
+
+	return true;
+}
+
+static void E131LeistenpositionenBereinigen(void)
+{
+	CWinApp *pApp = AfxGetApp();
+	if (!pApp || !pApp->m_pszProfileName || !*pApp->m_pszProfileName)
+		return;
+
+	LPCTSTR pIni = pApp->m_pszProfileName;
+
+	const int nLinks  = ::GetSystemMetrics(SM_XVIRTUALSCREEN);
+	const int nOben   = ::GetSystemMetrics(SM_YVIRTUALSCREEN);
+	const int nBreite = ::GetSystemMetrics(SM_CXVIRTUALSCREEN);
+	const int nHoehe  = ::GetSystemMetrics(SM_CYVIRTUALSCREEN);
+
+	// Ersatzwert: ein Stueck innerhalb des Bildschirms, nicht in der Ecke.
+	const int nErsatzX = nLinks + 40;
+	const int nErsatzY = nOben + 40;
+
+	// Abschnittsnamen holen. 32 KB reichen; wer mehr hat, bekommt den Rest
+	// beim naechsten Sichern - besser unvollstaendig als abgeschnitten
+	// geraten.
+	const DWORD dwPuffer = 32768;
+	char *pNamen = new char[dwPuffer];
+	if (!pNamen)
+		return;
+	::ZeroMemory(pNamen, dwPuffer);
+
+	DWORD dwGelesen = ::GetPrivateProfileSectionNames(pNamen, dwPuffer, pIni);
+	if (dwGelesen == 0 || dwGelesen >= dwPuffer - 2)
+	{
+		delete [] pNamen;
+		return;
+	}
+
+	int nBerichtigt = 0;
+	int nGesehen = 0;
+
+	for (const char *p = pNamen; *p; p += strlen(p) + 1)
+	{
+		// Nur Leistenabschnitte. Andere Abschnitte haben diese Schluessel
+		// nicht, und wer sie doch hat, meint etwas anderes damit.
+		if (strncmp(p, "ToolBar", 7) != 0)
+			continue;
+
+		int nX = ::GetPrivateProfileInt(p, "MRUFloatXPos", INT_MAX, pIni);
+		int nY = ::GetPrivateProfileInt(p, "MRUFloatYPos", INT_MAX, pIni);
+
+		if (nX == INT_MAX && nY == INT_MAX)
+			continue;			// kein Eintrag, nichts zu tun
+
+		nGesehen++;
+
+		if (E131PositionIstBrauchbar(nX, nY, nLinks, nOben, nBreite, nHoehe))
+			continue;
+
+		CString szX, szY;
+		szX.Format("%d", nErsatzX);
+		szY.Format("%d", nErsatzY);
+		::WritePrivateProfileString(p, "MRUFloatXPos", szX, pIni);
+		::WritePrivateProfileString(p, "MRUFloatYPos", szY, pIni);
+		nBerichtigt++;
+	}
+
+	delete [] pNamen;
+
+	CString szSpur;
+	szSpur.Format("E-131 Leistenposition: abschnitte-mit-eintrag=%d berichtigt=%d "
+				  "bildschirm=%d,%d,%dx%d ersatz=%d,%d",
+				  nGesehen, nBerichtigt, nLinks, nOben, nBreite, nHoehe,
+				  nErsatzX, nErsatzY);
+	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+}
+
 void CMainFrame::SaveBarState(LPCTSTR lpszProfileName) const
 {
 	CWinApp* pApp = AfxGetApp();
@@ -2971,6 +3110,13 @@ void CMainFrame::SaveBarState(LPCTSTR lpszProfileName) const
 		QCWorkbook::SaveBarState(lpszProfileName);
 		((QCToolBarManager*)m_pControlBarManager)->SaveState(lpszProfileName);
 	}
+
+	//
+	// BEFUND E-131: ganz zum Schluss, nachdem ALLE Wege geschrieben haben -
+	// auch der Notweg oben. Die Datei ist der einzige Ort, an dem beide
+	// zusammenlaufen, und sie ist das, was ein fremdes Programm liest.
+	//
+	E131LeistenpositionenBereinigen();
 }
 
 CRect CMainFrame::GetMainWindowPosFromIni()
