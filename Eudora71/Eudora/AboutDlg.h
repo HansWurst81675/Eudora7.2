@@ -42,6 +42,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg void OnDestroy();
 	afx_msg void OnClickedCredits();
+	afx_msg void OnClickedCopyInfo();	// Angaben auf die Zwischenablage
 	afx_msg void OnClickedOK();
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg BOOL OnQueryNewPalette();

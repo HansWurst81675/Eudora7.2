@@ -157,6 +157,34 @@ nicht vor. Einzelheiten in [E-132](BEFUNDE.md#e-132).
 EXE. Das würde die vorhandene Installation kapern und Gregors Anforderung vom
 20.10.2026 verletzen — eine vorhandene Installation nimmt keinen Schaden.
 
+### Der Über-Dialog nennt jetzt die Pfade, nach denen man bei einem Fehler fragt
+
+Auf Gregors Wunsch vom 20.10.2026: *„wir sollten noch das ini verzeichnis hier
+nennen. und auch weitere, die für debug zwecke relevant sind"* und *„diese
+sollte man kopieren können, um sie z.B. in ein Ticket oder Issue
+einzutragen"*.
+
+*Help → About Eudora* zeigt unter *Data* und *Application* vier neue Zeilen:
+
+| Zeile | was sie beantwortet |
+|---|---|
+| **INI** | **welche** `Eudora.ini` gelesen wird — in unseren Paketen liegt sie in `Mailverzeichnis\`, nicht neben der EXE |
+| **Default INI** | die `DEudora.ini` mit `DataFolder` und `UseAppData` |
+| **Log** | wohin das Protokoll geht, **und ob es überhaupt etwas enthält** (`LogLevel`, mit dem Hinweis *„keine E-nn-Marken"*, wenn 32768 fehlt) |
+| **Mail folder from** | **woher** das Mailverzeichnis stammt: Befehlszeile, Umgebungsvariable, `DEudora.ini`, Registry oder Application Data |
+
+Die letzte Zeile ist die Lehre dieses Tages: Eudora **wusste** die Herkunft
+längst — `CheckMailDirectory` bekommt sie als zweiten Parameter —, benutzte sie
+aber nur im Fehlerfall und warf sie danach weg. Jetzt wird sie aufgehoben
+(`MailDirHerkunft`), und `StartEudoraWithDefaultLocation` trägt die Wahrheit
+nach, wo `GetDirs` sonst „command line" schriebe.
+
+Der Knopf **Copy info** legt den ganzen Block als Text auf die Zwischenablage,
+fertig zum Einfügen in ein Issue. Genommen wird, was im Dialog **steht** — der
+Block kann also nichts behaupten, was der Anwender nicht selbst sieht. Im
+Startbild ist der Knopf ausgeblendet. Beschrieben in
+[README.md](README.md#was-in-einen-fehlerbericht-gehört--help--about-eudora).
+
 **Offen bleibt** der Leseweg von [E-131](BEFUNDE.md#e-131), und neu
 aufgeschrieben: `SaveBarState` legt die Leistenzustände **zuerst** in der
 Registry ab (`HKCU\Software\Qualcomm\Eudora\<INI-Pfad>\ToolBar-*`). Auf jenem

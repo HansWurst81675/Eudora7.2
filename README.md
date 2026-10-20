@@ -569,6 +569,43 @@ und entschieden: *„nur in einstellungen, nicht in readme"*.
 Was ein Anwender beim **ersten Start** wissen muss, steht weiter unten unter
 *Ein Mailverzeichnis übernehmen* und *Mehr ins Protokoll schreiben lassen*.
 
+## Was in einen Fehlerbericht gehört — *Help → About Eudora*
+
+**Seit 7.2.0.114 nennt der Über-Dialog alle Pfade, nach denen bei einem Fehler
+als erstes gefragt wird**, und ein Knopf legt sie auf die Zwischenablage.
+
+*Help → About Eudora* → **Copy info** → in das Ticket oder Issue einfügen.
+Herauskommt ein Block wie dieser:
+
+```
+Version 7.2.0.114R - Paid Mode
+Not Registered in This Mode
+Data: C:\Users\Name\Eudora72-1.0.114-release\Mailverzeichnis
+Application: C:\Users\Name\Eudora72-1.0.114-release
+INI: C:\Users\Name\Eudora72-1.0.114-release\Mailverzeichnis\Eudora.ini
+Default INI: C:\Users\Name\Eudora72-1.0.114-release\DEudora.ini
+Log: C:\Users\Name\Eudora72-1.0.114-release\Mailverzeichnis\eudora.log  (LogLevel=25759, keine E-nn-Marken)
+Mail folder from: command line
+```
+
+| Zeile | warum sie gebraucht wird |
+|---|---|
+| **Version** | ohne sie ist kein Urteil zuzuordnen — *„behoben"* stand hier schon einen Tag lang da, während das ausgelieferte Paket den Fehler noch hatte |
+| **Data** | das Mailverzeichnis: dort liegen Postfächer, Anhänge und das Protokoll |
+| **Application** | das Programmverzeichnis — bei uns **nicht** dasselbe wie *Data* |
+| **INI** | **welche** `Eudora.ini` wirklich gelesen wird. In unseren Paketen liegt sie in `Mailverzeichnis\`, nicht neben der EXE. Genau diese Abweichung öffnet den Weg von [E-132](BEFUNDE.md#e-132) |
+| **Default INI** | die `DEudora.ini`. Dort stehen `DataFolder` und `UseAppData` — die Stufen 3 und 4 der Verzeichnissuche |
+| **Log** | wohin das Protokoll geschrieben wird **und ob es überhaupt etwas enthält**. Steht dort *„keine E-nn-Marken"*, fehlt `DEBUG_MASK_MISC` (32768) im `LogLevel`, und keine einzige Spurmarke wird geschrieben — siehe den nächsten Abschnitt |
+| **Mail folder from** | **woher** Eudora das Mailverzeichnis hat: Befehlszeile, Umgebungsvariable, `DEudora.ini`, Registry oder Application Data. Diese eine Zeile hat am 20.10.2026 Stunden gekostet, weil sie fehlte ([E-132](BEFUNDE.md#e-132)) |
+
+**Die Angaben werden aus dem Dialog genommen, nicht aus dem Programminneren.**
+Der kopierte Block kann also nichts behaupten, was auf dem Bildschirm nicht
+genauso dasteht.
+
+**Eine Warnung zum Mitschicken:** die Pfade enthalten deinen
+Windows-Benutzernamen. Wer das nicht veröffentlichen will, ersetzt ihn vor dem
+Einfügen — die Angaben bleiben auch dann brauchbar.
+
 ## Mehr ins Protokoll schreiben lassen
 
 Eudora führt ein Protokoll in `eudora.log` im Mailverzeichnis. **Wie viel

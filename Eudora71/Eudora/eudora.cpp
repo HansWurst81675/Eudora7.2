@@ -3889,6 +3889,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 {
     HKEY  hkResult;
 	DWORD dwType = REG_SZ;
+	LPCTSTR pHerkunft = "unbekannt";	// fuer den Ueber-Dialog, siehe unten
 	TCHAR buf[MAX_PATH + 1];
 	TCHAR cmdLine[MAX_PATH + 1];
 	LONG err = 0;
@@ -3900,6 +3901,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 	{
 		// We found it, and it has a non-zero value.  Empty the buffer so that we use APPDATA below.
 		buf[0] = 0;
+		pHerkunft = "DEudora.ini UseAppData=1 -> Application Data";
 	}
 	else
 	{
@@ -3934,6 +3936,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 			while (*c == ' ')
 				c++;
 			strcpy(buf, c);
+			pHerkunft = "Registry: Qualcomm\\Eudora\\CommandLine\\Current";
 		}
 	}
 
@@ -3942,6 +3945,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 	// the user has to have installed IE 4.0 or greater (which is always true of Win 98 and Win 2000).
 	if (!*buf)
 	{
+		pHerkunft = "Application Data (nichts in Registry oder DEudora.ini)";
 		HMODULE hShell32 = GetModuleHandle("Shell32.dll");
 
 		if (!hShell32)
@@ -4080,6 +4084,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				_tcsncpy(buf, szEigenes, sizeof(buf) / sizeof(TCHAR) - 1);
 				buf[sizeof(buf) / sizeof(TCHAR) - 1] = 0;
 
+				pHerkunft = "eigenes Verzeichnis, nach Rueckfrage gewaehlt (E-132)";
 				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"", buf);
 				E132SpurMerken(szSpur);
 			}
@@ -4095,6 +4100,10 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		ErrorDialog(IDS_ERR_CANNOT_START_WITH_ATTACH);
 		return FALSE;
 	}
+
+	// GetDirs hat eben "command line" eingetragen - der Pfad wird ihm ja wie
+	// eine Befehlszeile uebergeben. Hier steht die Wahrheit.
+	MailDirHerkunft = pHerkunft;
 	
 	return (TRUE);	
 }

@@ -957,6 +957,11 @@
 #define IDC_SETTINGS_CAT_LIST           1387
 #define IDC_ABOUT_APP_DIRECTORY         1388
 #define IDC_ABOUT_DATA_DIRECTORY        1389
+#define IDC_ABOUT_INI_PATH              8313
+#define IDC_ABOUT_DEFAULT_INI           8314
+#define IDC_ABOUT_LOG_PATH              8315
+#define IDC_ABOUT_MAILDIR_FROM          8316
+#define IDC_ABOUT_COPY                  8317
 #define IDC_CREDITS                     1390
 #define IDS_GSSAPI_LIBNAME              1391
 #define IDC_COPYRIGHT_INFO              1392
@@ -4468,7 +4473,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        8117
 #define _APS_NEXT_COMMAND_VALUE         8093
-#define _APS_NEXT_CONTROL_VALUE         8313
+#define _APS_NEXT_CONTROL_VALUE         8318
 #define _APS_NEXT_SYMED_VALUE           8077
 #endif
 #endif
