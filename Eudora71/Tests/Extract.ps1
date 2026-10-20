@@ -311,4 +311,15 @@ $qStart = Find-Line $mf '^bool E131PositionIstBrauchbar' 0
 $qEnd = Find-Line $mf '^\}\s*$' $qStart
 Write-Region $mf $qStart $qEnd (Join-Path $OutDir "mainfrm_e131.inc") $mfPath
 
+# ------------------------------------------------------------- eudora.cpp (E-132)
+# Region R: E132IstFremdesVerzeichnis - gehoert das gefundene Mailverzeichnis
+# einer anderen Installation? Reine Pfadrechnung, ohne Registry und ohne
+# Fenster, damit sie ohne Oberflaeche geprueft werden kann (Befund E-132,
+# Issue #102).
+$euPath = Join-Path $SrcDir "eudora.cpp"
+$eu = Read-Lines $euPath
+$rStart = Find-Line $eu '^bool E132IstFremdesVerzeichnis' 0
+$rEnd = Find-Line $eu '^\}\s*$' $rStart
+Write-Region $eu $rStart $rEnd (Join-Path $OutDir "eudora_e132.inc") $euPath
+
 Write-Host "Extract.ps1: fertig."

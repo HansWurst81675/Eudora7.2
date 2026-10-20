@@ -3697,6 +3697,54 @@ BOOL CEudoraApp::RegisterCommandLine(char *cmdLine)
 	return ( (BOOL)err );	
 }
 
+//
+// BEFUND E-132 (20.10.2026) - ein Doppelklick auf Eudora.exe uebernahm
+// stillschweigend das Mailverzeichnis einer FREMDEN Installation.
+//
+// Der Weg: ist die Befehlszeile leer UND liegt keine Eudora.ini neben der EXE
+// (bei uns liegt sie in Mailverzeichnis\), ruft InitInstance
+// StartEudoraWithDefaultLocation. Die liest
+// HKEY_CURRENT_USER\Software\Qualcomm\Eudora\CommandLine\Current und schneidet
+// den Datenordner aus der Befehlszeile heraus, mit der ein ANDERES Eudora
+// zuletzt gestartet wurde - also aus einer vorhandenen Installation 7.1.
+//
+// Gemeldet von aussen (Issue #102): "the new install found (via registry
+// lookups) the existing one in another folder and modified its ini". Danach
+// startete seine Eudora 7.1 nicht mehr (Befund E-131).
+//
+// Gregors Anforderung vom 20.10.2026: eine vorhandene Installation nimmt
+// keinen Schaden, gleich ob der Anwender absichtlich auf ihre Postfaecher
+// zeigt oder sie sich kopiert hat. Seine Entscheidung zum Weg: FRAGEN, nicht
+// verweigern - und die Vorgabe so setzen, dass ein unbedachtes Enter nichts
+// beschaedigt.
+//
+// Diese Funktion entscheidet nur. Sie kennt kein Fenster und keine Registry,
+// damit sie ohne Oberflaeche geprueft werden kann.
+//
+bool E132IstFremdesVerzeichnis(LPCTSTR pKandidat, LPCTSTR pEigenes, bool bHatEigeneIni)
+{
+	// Nichts gefunden: nichts zu fragen.
+	if (!pKandidat || !*pKandidat)
+		return false;
+
+	// Dort steht keine Einrichtung - dann ist es auch keine fremde.
+	if (!bHatEigeneIni)
+		return false;
+
+	// Ohne eigenes Verzeichnis laesst sich nicht vergleichen. Dann lieber
+	// nicht fragen als falsch fragen.
+	if (!pEigenes || !*pEigenes)
+		return false;
+
+	// Liegt der Kandidat UNTERHALB des Programmverzeichnisses, gehoert er uns.
+	// Gross- und Kleinschreibung spielt bei Windows-Pfaden keine Rolle.
+	const size_t nEigen = _tcslen(pEigenes);
+	if (_tcsnicmp(pKandidat, pEigenes, nEigen) == 0)
+		return false;
+
+	return true;
+}
+
 BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 {
     HKEY  hkResult;
@@ -3795,6 +3843,85 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		}
 	}
 	 
+	//
+	// BEFUND E-132: bevor hier irgendetwas uebernommen wird, nachfragen.
+	//
+	// buf traegt jetzt das Verzeichnis, das aus der Registry oder aus
+	// Application Data stammt. Liegt es AUSSERHALB des Programmverzeichnisses
+	// und enthaelt es bereits eine Eudora.ini, dann gehoert es sehr
+	// wahrscheinlich einer anderen Installation - und ab GetDirs(buf) wuerde
+	// hineingeschrieben.
+	//
+	// Die Vorgabe ist "Eigenes anlegen" (MB_DEFBUTTON2): wer die Meldung
+	// wegdrueckt, beschaedigt nichts.
+	//
+	if (*buf)
+	{
+		CString szFremdeIni(buf);
+		if (szFremdeIni.Right(1) != SLASH)
+			szFremdeIni += SLASH;
+		szFremdeIni += CRString(IDS_EUDORA_INI_NAME);
+
+		if (E132IstFremdesVerzeichnis(buf, ExecutableDir, FileExistsMT(szFremdeIni) != FALSE))
+		{
+			CString szSpur;
+			szSpur.Format("E-132 Startverzeichnis: gefunden=\"%s\" eigenes=\"%s\" fremd=1",
+						  buf, (LPCTSTR) ExecutableDir);
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+			CString szText;
+			szText.Format(
+				"Eudora found an existing mail folder that belongs to another "
+				"installation:\n\n%s\n\n"
+				"Using it means both programs share the same Eudora.ini. An older "
+				"Eudora or Hermes may then fail to start.\n\n"
+				"Yes\tuse that folder anyway\n"
+				"No\tstart with a fresh folder next to this program\n"
+				"Cancel\tquit without changing anything",
+				buf);
+
+			int nWahl = ::MessageBox(NULL, szText, "Eudora 7.2",
+									 MB_YESNOCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+
+			if (nWahl == IDCANCEL)
+			{
+				PutDebugLog(DEBUG_MASK_MISC, "E-132 Startverzeichnis: abgebrochen");
+				return FALSE;
+			}
+
+			if (nWahl == IDNO)
+			{
+				//
+				// Das eigene Verzeichnis. In unseren Paketen liegt die
+				// Einrichtung in "Mailverzeichnis" neben der EXE - genau das,
+				// was "Eudora starten.cmd" uebergeben haette. Gibt es das
+				// nicht, bleibt das Programmverzeichnis selbst.
+				//
+				CString szEigenes(ExecutableDir);
+				if (szEigenes.Right(1) != SLASH)
+					szEigenes += SLASH;
+				szEigenes += "Mailverzeichnis";	// Name aus unseren Paketen, siehe tools/paket-bauen.ps1
+
+				CString szProbe(szEigenes);
+				szProbe += SLASH;
+				szProbe += CRString(IDS_EUDORA_INI_NAME);
+
+				if (!FileExistsMT(szProbe))
+					szEigenes = ExecutableDir;
+
+				_tcsncpy(buf, szEigenes, sizeof(buf)/sizeof(TCHAR) - 1);
+				buf[sizeof(buf)/sizeof(TCHAR) - 1] = 0;
+
+				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"", buf);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			}
+			else
+			{
+				PutDebugLog(DEBUG_MASK_MISC, "E-132 Startverzeichnis: fremdes bewusst uebernommen");
+			}
+		}
+	}
+
 	if (err || !GetDirs(buf))
 	{
 		ErrorDialog(IDS_ERR_CANNOT_START_WITH_ATTACH);
