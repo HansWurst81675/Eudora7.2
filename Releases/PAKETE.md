@@ -162,7 +162,7 @@ haben.
 |---|---|
 | Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.111-release`, mit `TESTEN.txt` |
 | Inhalt | wie 1.0.110, dazu: die Wache beim Beenden zählt **jede** Übertragungsart, nicht nur die aus einem lokalen Postfach ([E-123](../BEFUNDE.md#e-123)) |
-| Gemessen | Gregors Lauf an 1.0.110 vom 20.10.2026 ist der Fehlerstand: `E-123 Warteschlange: konto=1 eintraege=1 … laeuft=0 uebertragungen=0` bei einem `transfersame`-Eintrag in `actionqueue.dat`, Fenster sofort weg. Nach der Behebung zählt `E123OffeneUebertragungen` die Basisklasse `CImapTransferMsgAction`. Schranke `tools/pruefe-e123-zaehlung.pl` gegengetestet: am Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2 Fälle, 0 Fehler. Bau Release 0 Fehler. **Nicht am laufenden Programm gemessen** – dafür wäre ein IMAP-Konto nötig, das der Prüfstand nicht hat; Weg 2b prüft Gregor |
+| Gemessen | Gregors Lauf an 1.0.110 vom 20.10.2026 ist der Fehlerstand: `E-123 Warteschlange: konto=1 eintraege=1 … laeuft=0 uebertragungen=0` bei einem `transfersame`-Eintrag in `actionqueue.dat`, Fenster sofort weg. Nach der Behebung zählt `E123OffeneUebertragungen` die Basisklasse `CImapTransferMsgAction`. Schranke `tools/pruefe-e123-zaehlung.pl` gegengetestet: am Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2 Fälle, 0 Fehler. Bau Release 0 Fehler. **Von Gregor am 20.10.2026 an 1.0.111 am laufenden Programm bestätigt (Weg 2b):** `uebertragungen=1` statt vorher `0`, `E-123 Beenden wartet auf 1 Uebertragung(en)`, `Warten zu Ende nach 4015 ms, offen=0`, danach leere `actionqueue.dat` |
 
 ## 1.0.110 — geschnürt am 19.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.110-release`, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
 

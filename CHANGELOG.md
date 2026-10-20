@@ -113,9 +113,20 @@ drei E-123-Stellen darauf fest, die **Basisklasse** zu prüfen. Gegenprobe am
 echten Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2
 Fälle, 0 Fehler.
 
-**Nicht am laufenden Programm gemessen** — dafür wäre ein IMAP-Konto nötig,
-das der Prüfstand nicht hat. Der Weg ist in `TESTEN.txt` als **2b**
-ausgeschrieben; bis dahin steht die Behebung am Quelltext und an der Schranke.
+**Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt
+(Weg 2b).** Sein Protokoll:
+
+```
+E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=1
+E-123 Beenden wartet auf 1 Uebertragung(en) in IMAP-Ordner
+E-123 Warteschlange: konto=1 eintraege=0 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=0
+E-123 Beenden: Warten zu Ende nach 4015 ms, offen=0
+```
+
+**`uebertragungen=1`, wo an 1.0.110 noch `0` stand** — bei demselben Handgriff.
+Eudora hat **4015 ms gewartet**, die Übertragung zu Ende gebracht und sich dann
+sauber beendet; `actionqueue.dat` war danach **leer**, die Aufgabe also
+ausgeführt und nicht auf die nächste Sitzung verschoben.
 
 ### Prüfanleitung
 
