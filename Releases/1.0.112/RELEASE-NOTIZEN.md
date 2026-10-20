@@ -107,8 +107,10 @@ SHA-256 des ZIPs: `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced2876
   verschwand, obwohl eine Aufgabe in der Warteschlange stand. Die Behebung ist
   am Quelltext belegt und durch eine eigene Schranke abgesichert
   (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am Fehlerstand 2 von 2 rot).
-- **Von Gregor am 20.10.2026 an Paket 1.0.112 am laufenden Programm bestätigt,
-  auf beiden Wegen:** aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
+- **Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt,
+  auf beiden Wegen** (1.0.112 unterscheidet sich davon nur durch den wieder
+  entfernten Hochladezähler, der an beiden Messungen nichts ändert — belegt an
+  seinen eigenen Protokollen): aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
   wartete **6015 ms**) und innerhalb desselben IMAP-Kontos (**4015 ms**). Beide
   Male brachte Eudora die Übertragung zu Ende und beendete sich dann sauber;
   die Warteschlange war danach leer. An 1.0.110 war das Fenster beim zweiten
