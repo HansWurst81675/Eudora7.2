@@ -35,14 +35,14 @@ den freigegebenen Wortlaut unten habe ich nicht angefasst.**
    seine aus der Sicherung zurückgespielt, also trifft es ihn nicht mehr — ein
    anderer Leser desselben Beitrags aber schon.
 2. **Die Ursache seines Absturzes ist weiterhin nicht belegt.**
-   [PRÜFER-40](PRUEFER-40.md#k1) K1: `-2147483648` ist `CW_USEDEFAULT`, das MFC
+   [PRÜFER-40](../Befunde/PRUEFER-40.md#k1) K1: `-2147483648` ist `CW_USEDEFAULT`, das MFC
    selbst setzt und beim Lesen wieder abfängt. Dieselbe Richtigstellung steht
    schon als eigener Beitrag im Issue (20.10.2026); *„we found the mechanism
    behind this and fixed it"* ganz oben kann so gelesen werden, als sei auch
    das erledigt.
 3. **Die Bitte, `v1.0.114` neben seiner Installation zu probieren, nennt keine
    Vorsichtsmaßnahme.** Solange die Ursache offen ist
-   ([PRÜFER-40](PRUEFER-40.md#k14) K14 nennt mit `Docking=1` ohne Andockkontext
+   ([PRÜFER-40](../Befunde/PRUEFER-40.md#k14) K14 nennt mit `Docking=1` ohne Andockkontext
    einen zweiten, ungemessenen Weg zu genau seinem Null-Zeiger), gehört ein
    *„back up your `Eudora.ini` first"* dazu — dasselbe, was wir in der README
    von jedem Anwender verlangen.
