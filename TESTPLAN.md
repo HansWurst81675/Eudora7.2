@@ -1,4 +1,4 @@
-# Testplan für Gregor — Paket 1.0.110, Stand 19.10.2026
+# Testplan für Gregor — Paket 1.0.112, Stand 20.10.2026
 
 ## Was jetzt zu testen ist — zwei Schritte
 
@@ -32,9 +32,19 @@ das ist **richtig so** und kein Fehler (*offline kein Warten*, seit
 7.2.0.103). Am 20.10.2026 hat ein Testlauf gegen einen nicht auflösbaren
 `imap.gmx.net` genau das gezeigt; im Protokoll stand `uebertragungen=0`.
 
-Mehrere Nachrichten in einen IMAP-Ordner verschieben und **sofort**
-*File → Exit*.
-*So ist es richtig:* das Fenster verschwindet **nicht**, solange die
+**Zweimal durchführen — die Herkunft der Nachrichten macht den Unterschied:**
+
+**2a — aus einem lokalen Postfach.** Mehrere Nachrichten aus `In` in einen
+IMAP-Ordner verschieben und **sofort** *File → Exit*.
+
+**2b — innerhalb des IMAP-Kontos.** Mehrere Nachrichten aus `Inbox
+(<Dominant>)` in einen anderen IMAP-Ordner verschieben und **sofort**
+*File → Exit*. Dieser Weg lief bis 7.2.0.110 an der Wache **vorbei**: gezählt
+wurden nur Übertragungen aus einem **lokalen** Postfach. Gregors Lauf vom
+20.10.2026 zeigte `eintraege=1` bei `uebertragungen=0` — ein Eintrag in der
+Warteschlange, gezählt als null. Behoben in 7.2.0.112.
+
+*So ist es richtig (beide Male):* das Fenster verschwindet **nicht**, solange die
 Übertragung läuft. Dauert es länger als fünf Minuten, steht
 *„Quit cancelled: …"* in der Statuszeile und Eudora bleibt offen.
 Danach **noch einmal** *File → Exit*: es wartet wieder.
@@ -82,8 +92,8 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Schritt 1 an 1.0.110 in Ordnung"* oder
-*„Schritt 2 an 1.0.110 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Schritt 1 an 1.0.112 in Ordnung"* oder
+*„Schritt 2 an 1.0.112 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
@@ -93,7 +103,7 @@ Eigene Tests dieser Fassung: **229 Tests, 229 bestanden.**
 
 ## Buchführung — was wann an welchem Paket bestätigt wurde
 
-**Stand 19.10.2026, Paket 1.0.110.** (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.110 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
+**Stand 20.10.2026, Paket 1.0.110.** (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -318,7 +328,7 @@ grauer Kasten), [E-113](BEFUNDE.md#e-113) (Bilder breiter als das Fenster), [E-1
 
 ### <a id="c6"></a>C6 · Paket 1.0.110 — E-69, der Beenden-Weg und eine bekannte Regression
 
-**Stand 19.10.2026 ([LEKTOR-42](Befunde/LEKTOR-42.md#lektor-42)).** Quellstand
+**Stand 20.10.2026 ([LEKTOR-42](Befunde/LEKTOR-42.md#lektor-42)).** Quellstand
 7.2.0.110, Zweig `e-69-meldungsflut`, 229 Tests / 229 bestanden.
 
 **1.0.107, 1.0.108 und 1.0.109 gibt es nicht als Paket** — sie wurden
