@@ -94,7 +94,7 @@ als Trojaner*, was zu tun ist.
 
 ## Prüfsumme
 
-SHA-256 des ZIPs: `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`
+SHA-256 des ZIPs: `0d1d4bf43eab8323f2ce3ad2ff1c78f44af5c7adf7a84e979334aab5687f4772`
 
 ## Was geprüft wurde – und was nicht
 ## Was geprüft wurde – und was nicht
