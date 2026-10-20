@@ -81,8 +81,9 @@ SHA-256 des ZIPs: `72350cc64b86b8dd0713618e471c71c0883089353d64659ba435bdb57bf3e
   verschwand, obwohl eine Aufgabe in der Warteschlange stand. Die Behebung ist
   am Quelltext belegt und durch eine eigene Schranke abgesichert
   (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am Fehlerstand 2 von 2 rot).
-- **Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt:**
-  Verschieben innerhalb des IMAP-Kontos und sofortiges Beenden — Eudora wartete
-  4015 ms, brachte die Übertragung zu Ende und beendete sich sauber; die
-  Warteschlange war danach leer. An 1.0.110 war das Fenster bei demselben
-  Handgriff sofort weg.
+- **Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt,
+  auf beiden Wegen:** aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
+  wartete **6015 ms**) und innerhalb desselben IMAP-Kontos (**4015 ms**). Beide
+  Male brachte Eudora die Übertragung zu Ende und beendete sich dann sauber;
+  die Warteschlange war danach leer. An 1.0.110 war das Fenster beim zweiten
+  Weg sofort weg.

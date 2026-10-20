@@ -128,6 +128,22 @@ Eudora hat **4015 ms gewartet**, die Übertragung zu Ende gebracht und sich dann
 sauber beendet; `actionqueue.dat` war danach **leer**, die Aufgabe also
 ausgeführt und nicht auf die nächste Sitzung verschoben.
 
+**Weg 2a, ebenfalls von Gregor am 20.10.2026 an 1.0.111 bestätigt** — Post aus
+dem lokalen `In` in einen IMAP-Ordner, dann sofort *Ctrl+Q*:
+
+```
+E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=1
+E-123 Beenden wartet auf 1 Uebertragung(en) in IMAP-Ordner
+E-123 Warteschlange: konto=1 eintraege=0 zustand=1 nur-belegt=0 laeuft=1 uebertragungen=1
+E-123 Warteschlange: konto=1 eintraege=0 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=0
+E-123 Beenden: Warten zu Ende nach 6015 ms, offen=0
+```
+
+**Hier steht `laeuft=1`** — bei 2b blieb der Wert auf `0`, weil das Hochladen zu
+kurz war. Damit ist auch der **zweite** Teil gemessen: der Zähler um die
+laufende Übertragung, nicht nur die Warteschlange. Eudora wartete **6015 ms**
+und beendete sich dann sauber.
+
 ### Prüfanleitung
 
 **2a:** mehrere Nachrichten aus `In` in einen IMAP-Ordner verschieben, sofort
