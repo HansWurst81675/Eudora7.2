@@ -123,11 +123,11 @@ SHA-256 des ZIPs: *(wird beim Schnüren des Pakets eingetragen)*
 - **Nicht geprüft:** ob eine daneben installierte Hermes 7.1 danach wieder
   startet. Dazu fehlt uns Hermes; wer es testen kann, wird in
   [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102) darum gebeten.
-- **Der Über-Dialog ist am laufenden Programm geprüft — von Gregor, nicht von
-  einem Skript.** Mein Messskript hat den Dialog nicht einmal geöffnet
-  (`KEIN Dialog gefunden`); es hat den Kontoassistenten weggeräumt und ist
-  dann ins Leere gelaufen. Gregor hat *Help → About Eudora* selbst geöffnet,
-  *Copy info* gedrückt und den Inhalt der Zwischenablage geschickt:
+- **Der Über-Dialog ist am laufenden Programm geprüft — gedrückt hat Gregor.**
+  Mein Messskript hat den Dialog über `WM_COMMAND ID_APP_ABOUT` geöffnet,
+  ihn aber **nicht wiedererkannt** und `KEIN Dialog gefunden` gemeldet; es
+  lief ab und ließ ihn offen stehen. Gregor fand ihn offen vor, drückte
+  *Copy info* und schickte den Inhalt der Zwischenablage:
 
   ```
   Version 7.2.0.114R - Paid Mode
