@@ -331,32 +331,57 @@ liest aber zuerst die Notizen. Punkt an den Anfang der Liste gesetzt, mit der
 Abhilfe (`Eudora starten.cmd`, Pfad in der Verknüpfung) und dem Vermerk, dass
 die Behebung erst in 7.2.0.114 steckt.
 
-### <a id="l-44.14"></a>L-44.14 — 16 Verweise aus `Befunde/` auf die Wurzeldokumente gingen ins Leere (mittel)
+### <a id="l-44.14"></a>L-44.14 — mein eigener Verweis-Prüfer meldete 20 tote Links; **18 davon waren Zitate**, und zwei hatte ich selbst erzeugt (hoch — gegen mich)
 
-Alle **6135** Markdown-Verweise auf eine `.md`-Datei maschinell gegen das
-Dateisystem gehalten (Skript im Kratzverzeichnis). **20 tot**, davon 16 von
-derselben Art: ein Bericht unter `Befunde/` schreibt `](ZIEL.md)`,
-`](AGENTEN.md)`, `](BEFUNDE.md)` oder `](README.md)` statt `](../ZIEL.md)`.
-Betroffen: [`LEKTOR-5`](LEKTOR-5.md#lektor-5), `-6`, `-11`, `-13`, `-14`, `-27`, `-35` und
-[PRÜFER-40](PRUEFER-40.md). Alle berichtigt — es ändert nur den Pfad, keinen
-Satz; die Berichte bleiben Rückblicke.
+Ich habe alle Markdown-Verweise auf eine `.md`-Datei maschinell gegen das
+Dateisystem gehalten (Skript im Kratzverzeichnis). Ergebnis: **6135 geprüft,
+20 tot.** Davon schienen 16 von derselben Art: ein Bericht unter `Befunde/`
+schreibt den Verweis ohne `../`. Ich habe sie in acht Dateien „berichtigt".
 
-**Zwei davon waren meine eigenen**, eine halbe Stunde alt:
-`Releases/ISSUE-102-ANTWORT.md` zeigte mit `](PRUEFER-40.md#k1)` auf eine Datei
-neben sich statt auf `../Befunde/`. Gefunden hat sie nicht mein Lesen, sondern
-der Durchlauf über den **ganzen** Bestand
-([Prüfumfang nicht von Hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md)).
+**Das war falsch, und es ist mir sofort widersprochen worden** (Commit
+`d536265f`, 21:50 — *„VERWORFEN … Diese Berichte führen den kaputten Verweis
+als **Befund** an"*). **Nachgemessen, jede einzelne Stelle:**
 
-**Vier bleiben stehen, zu Recht:** dreimal `](….md)` in [`LEKTOR-13`](LEKTOR-13.md#lektor-13)/`-14` — ein
-Platzhalter im Fließtext, keine Adresse —, und einmal in
-`tools/WERKZEUGE.md:130`, wo `[E-115](BEFUNDE.md#e-115)` **als Beispieltext
-in Rückstrichen** steht und zeigt, was `befunde-verlinken.pl --verlinken`
-schreibt.
+| Stelle | was dort steht |
+|---|---|
+| `LEKTOR-11:217` | ``` `](README.md)`, `](AGENTEN.md)` und `](ZIEL.md)` zeigen aus `tools/` heraus ``` |
+| `LEKTOR-5:490` | ``` schreibt aber `](CHANGELOG.md)` statt `](../CHANGELOG.md)` ``` |
+| `LEKTOR-6:365`, `:373` | ``` verweist auf `](AGENTEN.md)` … auf `](ZIEL.md)` statt … ``` |
+| `LEKTOR-13:114`, `LEKTOR-14:153` | dieselbe Fundstelle als Behauptung zitiert |
+| `LEKTOR-27:36`, `LEKTOR-35:91` | ``` stand als `**[E-115](BEFUNDE.md#e-115)**` da ``` — ein Beispiel dafür, was das Werkzeug schreibt |
+| `PRUEFER-40:309` | innerhalb eines **Blockzitats** aus dem CHANGELOG |
 
-**`befunde-verlinken.pl` prüft das nicht.** Es prüft, ob jede **Kennung** ein
-Link ist und ob der Anker existiert — nicht, ob der **Dateipfad** davor
-stimmt. Vorschlag: die Dateiprüfung dort ergänzen; sie kostet einen
-`-e`-Test je Link und hätte alle 16 beim Schreiben gefangen.
+**Jede einzelne steht in Rückstrichen oder in einem Blockzitat.** Es sind
+keine Verweise, sondern **Abbildungen** von Verweisen — der Beleg, mit dem
+der jeweilige Bericht seinen Fund zeigt. Mein „Berichtigen" hätte acht
+Berichten ihre eigene Beweisführung weggenommen. Die acht Dateien stehen
+wieder unverändert da.
+
+**Echte tote Verweise im Bestand: null.** Die einzigen zwei waren **meine
+eigenen**, eine halbe Stunde alt: `Releases/ISSUE-102-ANTWORT.md` zeigte mit
+`](PRUEFER-40.md#k1)` auf eine Datei neben sich statt auf `../Befunde/`
+([L-44.8](#l-44.8)). Die sind behoben, in einem eigenen Commit.
+
+**Die Lehre ist nicht über die Verweise, sondern über das Werkzeug.** Mein
+Prüfer kennt keine Rückstriche und keine Blockzitate; er liest die Datei als
+flachen Text. Dieselbe Klasse wie
+[Schranke liest nur Code](../Arbeitsweise/schranke-liest-nur-code.md) — dort
+hat `pruefe-beenden.pl` die eigene Begründung angeschwärzt, hier hätte mein
+Lauf die Belege von acht Berichten gelöscht. **Eine Messung mit 18 von 20
+Fehlalarmen ist keine Messung** ([Schranke
+gegentesten](../Arbeitsweise/schranke-gegentesten.md)); ich habe sie nicht
+gegen den **erlaubten** Fall gefahren, bevor ich auf ihr Ergebnis hin
+geschrieben habe.
+
+**Vorschlag, falls daraus ein Werkzeug werden soll:** Code-Spannen
+(`` ` ``…`` ` ``), eingerückte Blöcke und Zeilen, die mit `>` beginnen, vor dem
+Suchen wegwerfen — dann bleibt dieselbe Zählung übrig, die ich von Hand
+erarbeiten musste. Erst danach ist der Satz *„kein Verweis im Bestand geht ins
+Leere"* belegt statt behauptet. Bis dahin steht er hier **als Handarbeit**:
+24 Treffer, alle 24 einzeln angesehen, 20 Zitate, drei Platzhalter `` `](….md)` ``
+im Fließtext, ein Beispieltext in `tools/WERKZEUGE.md:130` — und, seit diesem
+Bericht, die Treffer aus **dieser** Tabelle, die aus demselben Grund
+Fehlalarme sind.
 
 ---
 
@@ -493,7 +518,7 @@ diese Form.
 `README.md`, `CHANGELOG.md`, `WEITERMACHEN.md`, `BEFUNDE.md`, `ZIEL.md`,
 `AUFGABEN.md`, `PORTIERUNG.md`, `TESTPLAN.md`, `Releases/PAKETE.md`,
 `Releases/1.0.113/RELEASE-NOTIZEN.md`, `Releases/ISSUE-102-ANTWORT.md`,
-`tools/RELEASES.md`, `tools/ZWEIGE.md`, `LEKTORAT.md`, dazu acht Berichte unter `Befunde/` nur an ihren Verweispfaden ([L-44.14](#l-44.14)), und dieser Bericht.
+`tools/RELEASES.md`, `tools/ZWEIGE.md`, `LEKTORAT.md` und dieser Bericht. **Acht Berichte unter `Befunde/` habe ich angefasst und wieder zurückgenommen** ([L-44.14](#l-44.14)).
 
 **Keine Datei unter `Eudora71/` angefasst, kein Werkzeug unter `tools/*.pl`
 oder `*.ps1` geändert.** `Releases/DEFENDER-FEHLALARM.md` bewusst unverändert.
