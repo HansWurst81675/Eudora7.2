@@ -1,0 +1,114 @@
+=====================================================================
+ Eudora 7.2 - Paket 1.0.111, Quellstand 7.2.0.111
+ Gebaut am 20.10.2026.
+=====================================================================
+
+ZWEI Schritte. Der dritte und vierte aus der ersten Fassung sind
+zurueckgezogen - die Handgriffe trafen den Fehler nicht, den sie
+pruefen sollten. Das war mein Fehler, nicht deiner.
+
+---------------------------------------------------------------------
+ VORHER
+---------------------------------------------------------------------
+
+Das Mailverzeichnis in diesem Paket ist leer. Postfaecher bei
+GESCHLOSSENEM Eudora hineinkopieren; deine Sicherung liegt unter
+C:\Users\Gregor\Eudora72-Postfaecher-gesichert.
+
+Starten mit "Eudora starten.cmd".
+Unter Help -> About Eudora muss 7.2.0.111 stehen.
+
+---------------------------------------------------------------------
+ SCHRITT 1 - eine Nachricht als Datei speichern
+---------------------------------------------------------------------
+
+Voraussetzung: keine. Geht offline.
+
+Eine empfangene HTML-Nachricht mit Umlauten und Euro-Zeichen ueber
+File -> Save As sichern, die Datei danach in Thunderbird oder im
+Browser oeffnen.
+
+RICHTIG:  die Zeichen stimmen. Hat die Nachricht einen ANHANG, ist der
+          in der gespeicherten Datei noch ein Anhang.
+MELDEN:   wenn stattdessen ein Block aus "--grenze", Kopfzeilen und
+          wirrem Text dasteht - dann ist der Anhang aus der Datei
+          nicht mehr zu holen.
+
+WICHTIG ZUR ENDUNG: Eudora bietet im Dialog nur .txt an und haengt
+.txt an, AUCH WENN DER INHALT HTML IST - der Dateityp aendert kein
+einziges Byte. Zum Pruefen die Datei in .html umbenennen und im
+Browser oeffnen, oder in .eml umbenennen und in Thunderbird. Dass es
+dafuer keinen Hinweis gibt, ist als E-128 aufgenommen - kein neuer
+Fehler, nicht noch einmal melden.
+
+---------------------------------------------------------------------
+ SCHRITT 2 - beenden, waehrend noch etwas hochgeladen wird
+---------------------------------------------------------------------
+
+VORAUSSETZUNG: der IMAP-Server muss ERREICHBAR sein.
+
+Ist er es nicht, entsteht aus dem Verschieben nie ein Hochladen, und
+Eudora schliesst sofort. Das ist RICHTIG so und kein Fehler ("offline
+kein Warten", seit 7.2.0.103). Am 20.10.2026 hat ein Lauf gegen einen
+nicht aufloesbaren imap.gmx.net genau das gezeigt; im Protokoll stand
+"uebertragungen=0".
+
+ZWEIMAL durchfuehren - die HERKUNFT macht den Unterschied:
+
+  2a  aus einem LOKALEN Postfach: mehrere Nachrichten aus "In" in
+      einen IMAP-Ordner verschieben und SOFORT File -> Exit.
+
+  2b  INNERHALB des IMAP-Kontos: mehrere Nachrichten aus
+      "Inbox (<Dominant>)" in einen anderen IMAP-Ordner verschieben
+      und SOFORT File -> Exit.
+
+Weg 2b lief bis 7.2.0.110 an der Wache VORBEI: gezaehlt wurden nur
+Uebertragungen aus einem lokalen Postfach. Behoben in 7.2.0.111.
+
+RICHTIG:  das Fenster verschwindet NICHT, solange die Uebertragung
+          laeuft. Dauert es laenger als fuenf Minuten, steht
+          "Quit cancelled: ..." in der Statuszeile und Eudora bleibt
+          offen. Danach noch einmal File -> Exit: es wartet wieder.
+MELDEN:   wenn das Fenster verschwindet, der Prozess aber weiterlaeuft.
+
+---------------------------------------------------------------------
+ ZURUECKGEZOGEN AM 20.10.2026
+---------------------------------------------------------------------
+
+"Ein IMAP-Postfach filtern, waehrend der Server nicht erreichbar ist"
+stand hier als Schritt 1 und 2. Die Anweisung ist falsch: scheitert
+schon der Verbindungsaufbau, zeigt Eudora EINEN Dialog ("host not
+found 11001") und kommt nie bis zu den einzelnen Nachrichten - der
+Befund E-69 greift aber erst dort. Gemessen an Gregors Lauf: null
+E-69-Spurmarken im Protokoll, Task Errors leer.
+
+Der richtige Weg - In sperren, waehrend gefiltert wird - wird am
+Pruefstand nachgestellt, nicht hier.
+
+---------------------------------------------------------------------
+ WAS BEKANNT IST UND KEIN NEUER FEHLER
+---------------------------------------------------------------------
+
+E-123 selbst bleibt OFFEN. Schritt 2 prueft nur das ORDENTLICHE
+Beenden. Nach Absturz, Defender, Stromausfall oder erzwungenem
+Herunterfahren koennen eingebettete Bilder weiter fehlen.
+
+Ebenfalls bekannt und offen: data:-Bilder als grauer Kasten; Bilder
+breiter als das Fenster; width="35px" mit Einheit; doppelte Bilder
+beim Weiterleiten eines Newsletters.
+
+E-129 (20.10.2026): wird ohne Serververbindung in einen IMAP-Ordner
+verschoben und gleich beendet, zeigt der Zielordner nur eine von
+fuenf Nachrichten. Die anderen stehen vollstaendig in der Datei, und
+in der Inbox erscheinen sie wieder ueber Rechtsklick auf das Postfach
+-> "Show Deleted Messages". KEIN DATENVERLUST.
+
+---------------------------------------------------------------------
+ WIE DEIN URTEIL ZAEHLT
+---------------------------------------------------------------------
+
+Mit der Paketnummer: "Schritt 1 an 1.0.111 in Ordnung" oder
+"Schritt 2 an 1.0.111 gescheitert, Eudora schloss sofort".
+
+Eigene Tests dieser Fassung: 229 Tests, 229 bestanden.
+=====================================================================

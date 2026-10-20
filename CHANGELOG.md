@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 19.10.2026)
+## Noch offen (Stand 20.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -77,6 +77,52 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.111 — die Wache beim Beenden sieht jetzt jede Übertragung (E-123)
+
+**Gregor am 20.10.2026 an Paket 1.0.110:** *„verschoben und beendet. fenster
+ging gleich weg"*. Sein Protokoll:
+
+```
+E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=0
+```
+
+**Ein Eintrag in der Warteschlange, gezählt als null.** In `actionqueue.dat`
+stand er: `<ActionType>transfersame</ActionType>`, `INBOX` → `HW_Box`, fünf
+Nachrichten.
+
+**Die Ursache** (`ImapActionQueue.cpp:4007` und `:3768`): gezählt wurde
+`CImapFromLocalTransferMsgAction` — nur der Weg aus einem **lokalen** Postfach
+nach IMAP. Gregor hat **innerhalb** desselben IMAP-Kontos verschoben, das ist
+`CImapSameServerTransferMsgAction`. Von vier Übertragungsarten war eine
+gezählt und drei waren blind.
+
+**Behoben:** gezählt wird die Basisklasse `CImapTransferMsgAction` — jede
+Übertragungsaufgabe muss noch mit dem Server reden, gleich aus welcher
+Richtung. Dazu zählt `CImapSameServerTransferMsgAction::DoWork` jetzt wie der
+Weg von lokal nach IMAP, solange sie kopiert und löscht.
+
+**Kein Datenverlust:** die Aufgabe wird beim Beenden nach `actionqueue.dat`
+geschrieben und beim nächsten Start ausgeführt. Gregors fünf Nachrichten sind
+angekommen.
+
+**Das ist dieselbe Klasse wie [P2](#p2) aus PRÜFER-36** — dort stand der
+Hochladezähler in einer Funktion, die die gemeinte Unterklasse gar nicht ruft.
+Zweites Auftreten, also eine Schranke: `tools/pruefe-e123-zaehlung.pl` hält die
+drei E-123-Stellen darauf fest, die **Basisklasse** zu prüfen. Gegenprobe am
+echten Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2
+Fälle, 0 Fehler.
+
+**Nicht am laufenden Programm gemessen** — dafür wäre ein IMAP-Konto nötig,
+das der Prüfstand nicht hat. Der Weg ist in `TESTEN.txt` als **2b**
+ausgeschrieben; bis dahin steht die Behebung am Quelltext und an der Schranke.
+
+### Prüfanleitung
+
+**2a:** mehrere Nachrichten aus `In` in einen IMAP-Ordner verschieben, sofort
+*File → Exit*. **2b:** dasselbe aus `Inbox (<Dominant>)` in einen anderen
+IMAP-Ordner. Beide Male darf das Fenster nicht verschwinden, solange die
+Übertragung läuft.
 
 ## 7.2.0.110 — die Behebung zu E-69 greift jetzt wirklich (PRÜFER-38, R1–R4)
 

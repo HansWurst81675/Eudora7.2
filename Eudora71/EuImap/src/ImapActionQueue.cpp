@@ -1770,6 +1770,15 @@ void CImapSameServerTransferMsgAction::Copy(CImapAction *pImapAction)
 //
 HRESULT CImapSameServerTransferMsgAction::DoWork()
 {
+	//
+	// E-123 (20.10.2026): solange hier kopiert und geloescht wird, laeuft
+	// eine Uebertragung. Diese Klasse hat kein eigenes DoPreThreadAction und
+	// benutzt die Basisfassung; der Zaehler gehoert deshalb hierher, wo die
+	// Arbeit auf dem Server wirklich stattfindet (XferMessagesOnServer und
+	// DeleteMessagesFromServer darunter).
+	//
+	CE123HochladenZaehler e123Zaehler(true);
+
 	if (!m_pTocDoc || !m_pImapMailbox || !m_pDestTocDoc || !m_pDestTocDoc->m_pImapMailbox)
 	{
 		m_iState = kActionStateFailed;
@@ -3765,7 +3774,7 @@ bool CActionQueue::OnIdle(bool bHighPriorityOnly, bool bOnlineStateChanged)
 				if (QCGetTaskManager()->QueueWorkerThread(pImapAction))
 				{
 					// E-123 (PRUEFER-34 S6): merken, ob gerade eine Uebertragung laeuft.
-					m_bE123UebertragungLaeuft = (dynamic_cast<CImapFromLocalTransferMsgAction*>(pImapAction) != NULL);
+					m_bE123UebertragungLaeuft = (dynamic_cast<CImapTransferMsgAction*>(pImapAction) != NULL);
 					m_array.RemoveAt(0);
 					m_bNeedsWrite = true;
 				}
@@ -4004,7 +4013,23 @@ int CActionQueue::E123OffeneUebertragungen(bool &bBlockiert, bool &bLaeuft)
 	int		iSize = m_array.GetSize();
 	for (int i = 0; i < iSize; ++i)
 	{
-		if (dynamic_cast<CImapFromLocalTransferMsgAction*>((CImapAction*)m_array.GetAt(i)))
+		//
+		// E-123 (20.10.2026, an Gregors Lauf gemessen): hier stand
+		// CImapFromLocalTransferMsgAction - nur Uebertragungen aus einem
+		// LOKALEN Postfach nach IMAP. Gregor hat innerhalb desselben
+		// IMAP-Kontos verschoben; das ist CImapSameServerTransferMsgAction
+		// und wurde nicht gezaehlt. Sein Protokoll:
+		//
+		//   E-123 Warteschlange: konto=1 eintraege=1 ... uebertragungen=0
+		//
+		// Ein Eintrag in der Warteschlange, gezaehlt als null - also kein
+		// Warten, und das Fenster war sofort weg. In actionqueue.dat stand
+		// <ActionType>transfersame</ActionType> mit fuenf Nachrichten.
+		//
+		// Gezaehlt wird deshalb die Basisklasse: jede Uebertragungsaufgabe
+		// muss noch mit dem Server reden, gleich aus welcher Richtung.
+		//
+		if (dynamic_cast<CImapTransferMsgAction*>((CImapAction*)m_array.GetAt(i)))
 		{
 			++nOffen;
 		}

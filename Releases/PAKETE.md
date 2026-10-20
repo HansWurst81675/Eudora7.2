@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 19.10.2026 (Pakete bis 1.0.110 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.101** als `v1.0.101` am 17.10.2026, davor **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 20.10.2026 (Pakete bis 1.0.111 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.101** als `v1.0.101` am 17.10.2026, davor **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -155,6 +155,14 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.111 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.111-release`, Quellstand 7.2.0.111, Zweig `e-123-transfersame`
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.111-release`, mit `TESTEN.txt` |
+| Inhalt | wie 1.0.110, dazu: die Wache beim Beenden zählt **jede** Übertragungsart, nicht nur die aus einem lokalen Postfach ([E-123](../BEFUNDE.md#e-123)) |
+| Gemessen | Gregors Lauf an 1.0.110 vom 20.10.2026 ist der Fehlerstand: `E-123 Warteschlange: konto=1 eintraege=1 … laeuft=0 uebertragungen=0` bei einem `transfersame`-Eintrag in `actionqueue.dat`, Fenster sofort weg. Nach der Behebung zählt `E123OffeneUebertragungen` die Basisklasse `CImapTransferMsgAction`. Schranke `tools/pruefe-e123-zaehlung.pl` gegengetestet: am Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2 Fälle, 0 Fehler. Bau Release 0 Fehler. **Nicht am laufenden Programm gemessen** – dafür wäre ein IMAP-Konto nötig, das der Prüfstand nicht hat; Weg 2b prüft Gregor |
 
 ## 1.0.110 — geschnürt am 19.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.110-release`, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
 
