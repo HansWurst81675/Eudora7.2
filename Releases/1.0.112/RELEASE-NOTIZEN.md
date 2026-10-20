@@ -88,7 +88,7 @@ unter *Windows Defender meldet Eudora als Trojaner*, was zu tun ist.
 
 ## Prüfsumme
 
-SHA-256 des ZIPs: `72350cc64b86b8dd0713618e471c71c0883089353d64659ba435bdb57bf3e0a8`
+SHA-256 des ZIPs: `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`
 
 ## Was geprüft wurde – und was nicht
 ## Was geprüft wurde – und was nicht
