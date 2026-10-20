@@ -17,6 +17,14 @@ ist der in der gespeicherten Datei noch ein Anhang.
 dasteht, bitte melden:* dann ist der Anhang aus der Datei nicht mehr zu holen.
 *Voraussetzung:* keine. Geht offline.
 
+**Wichtig zur Endung.** Eudora bietet im Dialog nur `.txt` an und hängt `.txt`
+an, **auch wenn der Inhalt HTML ist** — der Dateityp ändert kein einziges Byte
+(gemessen, siehe [E-101](BEFUNDE.md#e-101): `.eml` und `.txt` sind
+byte-identisch). Zum Prüfen die Datei also in `.html` umbenennen und im Browser
+öffnen, oder in `.eml` umbenennen und in Thunderbird. Dass der Anwender darauf
+keinen Hinweis bekommt, ist als [E-128](BEFUNDE.md#e-128) aufgenommen —
+**kein neuer Fehler, nicht noch einmal melden.**
+
 **Schritt 2 — Beenden, während noch etwas hochgeladen wird.**
 **Voraussetzung: der IMAP-Server muss erreichbar sein.** Ist er es nicht,
 entsteht aus dem Verschieben nie ein Hochladen, und Eudora schließt sofort —
@@ -65,6 +73,13 @@ einen ersten Filterlauf gar nichts aussagt.
 * Eine Größenangabe mit Einheit (`width="35px"`) wird nicht ausgewertet.
 * Beim **Weiterleiten eines Newsletters** können Bilder doppelt erscheinen.
 
+* Eine gespeicherte Nachricht heißt **`.txt` und enthält HTML** — ohne Hinweis
+  ([E-128](BEFUNDE.md#e-128), 20.10.2026).
+* Wird ohne Serververbindung in einen IMAP-Ordner verschoben und gleich
+  beendet, zeigt der **Zielordner nur eine von fünf** Nachrichten; die anderen
+  stehen vollständig in der Datei, und in der `Inbox` erscheinen sie wieder
+  über *Rechtsklick → Show Deleted Messages*
+  ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
 Mit der **Paketnummer**: *„Schritt 1 an 1.0.110 in Ordnung"* oder

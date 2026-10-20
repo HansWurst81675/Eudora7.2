@@ -34,6 +34,13 @@ MELDEN:   wenn stattdessen ein Block aus "--grenze", Kopfzeilen und
           wirrem Text dasteht - dann ist der Anhang aus der Datei
           nicht mehr zu holen.
 
+WICHTIG ZUR ENDUNG: Eudora bietet im Dialog nur .txt an und haengt
+.txt an, AUCH WENN DER INHALT HTML IST - der Dateityp aendert kein
+einziges Byte. Zum Pruefen die Datei in .html umbenennen und im
+Browser oeffnen, oder in .eml umbenennen und in Thunderbird. Dass es
+dafuer keinen Hinweis gibt, ist als E-128 aufgenommen - kein neuer
+Fehler, nicht noch einmal melden.
+
 ---------------------------------------------------------------------
  SCHRITT 2 - beenden, waehrend noch etwas hochgeladen wird
 ---------------------------------------------------------------------
@@ -80,6 +87,12 @@ Herunterfahren koennen eingebettete Bilder weiter fehlen.
 Ebenfalls bekannt und offen: data:-Bilder als grauer Kasten; Bilder
 breiter als das Fenster; width="35px" mit Einheit; doppelte Bilder
 beim Weiterleiten eines Newsletters.
+
+E-129 (20.10.2026): wird ohne Serververbindung in einen IMAP-Ordner
+verschoben und gleich beendet, zeigt der Zielordner nur eine von
+fuenf Nachrichten. Die anderen stehen vollstaendig in der Datei, und
+in der Inbox erscheinen sie wieder ueber Rechtsklick auf das Postfach
+-> "Show Deleted Messages". KEIN DATENVERLUST.
 
 ---------------------------------------------------------------------
  WIE DEIN URTEIL ZAEHLT
