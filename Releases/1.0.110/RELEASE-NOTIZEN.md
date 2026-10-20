@@ -32,8 +32,10 @@ Die wichtigsten:
   und im Browser öffnen, oder in `.eml` und in Thunderbird.
 - **Wird ohne Serververbindung in einen IMAP-Ordner verschoben und sofort beendet**,
   zeigt der Zielordner danach nur einen Teil der Nachrichten. **Nichts geht verloren:**
-  die Nachrichten stehen weiter im Ausgangspostfach und werden dort wieder sichtbar
-  über *Rechtsklick auf das Postfach → Show Deleted Messages*.
+  die Nachrichten stehen weiter im Ausgangspostfach. Sichtbar werden sie über
+  *Rechtsklick auf das Postfach → Show Deleted Messages*, und mit *Message → UnDelete*
+  holt man sie endgültig zurück. *Message → Purge Messages* dabei nicht benutzen –
+  das entfernt sie.
 - **War der IMAP-Ordner seit dem Start noch nie geöffnet**, erscheinen die dorthin
   verschobenen Mails erst, wenn man ihn noch einmal schließt und öffnet. Sie sind auf
   dem Server.
