@@ -5,9 +5,12 @@
 > Ein Anwender hat am 18.10.2026 gemeldet
 > ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)), dass sein
 > **Hermes 7.1.0.9 nach dem Lauf unserer Fassung `v1.0.101` nicht mehr startet**
-> — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`. Ursache: in der gemeinsam
+> — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`. Unsere Spur: in der gemeinsam
 > benutzten `Eudora.ini` stand `MRUFloatXPos=-2147483648`, eine ungültige
-> Fensterposition, die wir beim Beenden hineingeschrieben hatten.
+> Fensterposition, die wir beim Beenden hineingeschrieben hatten. **Belegt ist,
+> dass wir sie schreiben — nicht, dass sie den Absturz verursacht hat**:
+> `-2147483648` ist `CW_USEDEFAULT`, ein Wert, den MFC selbst setzt und beim
+> Lesen wieder abfängt. Die Ursache ist damit weiter offen.
 >
 > **Nachgestellt und behoben.** Ein einziges Starten und Beenden der Fassung
 > 7.2.0.112 genügte, um den Wert dreimal in die Datei zu schreiben; mit
@@ -24,6 +27,8 @@
 > Sichern** berichtigt — der Leseweg ist noch offen.
 
 ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
+Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopieren.
+
 ## Neu gegenüber v1.0.112
 
 - **Keine ungültige Fensterposition mehr in der `Eudora.ini`.** Beim Beenden
@@ -39,6 +44,7 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
   IMAP-Kontos verschoben wurde. Bis 7.2.0.110 zählte die Wache nur
   Übertragungen aus einem lokalen Postfach, und der andere Weg lief an ihr
   vorbei.
+- **Keine Flut von Fehlermeldungen mehr beim Filtern.** Konnte Eudora eine Nachricht
   nicht lesen, legte es je Nachricht einen eigenen Eintrag in *Task Errors* an – jeder
   mit Piepton und Fenstersprung. Bei einem IMAP-Postfach mit 500 angerissenen
   Nachrichten waren das 500 Pieptöne, nicht wegzuklicken. Jetzt bekommt der **erste**
@@ -55,6 +61,15 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
   Hänger zu führen.
 
 ## Bekannte Fehler
+
+- **`Eudora.exe` nicht direkt doppelklicken.** Ohne Angabe des Mailverzeichnisses
+  sucht Eudora sich eines und findet dabei über die Registry das einer
+  **vorhandenen** Eudora- oder Hermes-Installation — auch in einem ganz anderen
+  Ordner — und schreibt dann in deren `Eudora.ini`. Immer `Eudora starten.cmd`
+  benutzen; eine Verknüpfung bekommt den Pfad mit:
+  `Eudora.exe "C:\…\Mailverzeichnis"`. Das ist der Weg hinter #102
+  ([E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-132));
+  in dieser Fassung ist er **noch offen**, behoben erst in 7.2.0.114.
 
 - **Eine bereits beschädigte `Eudora.ini`** — etwa von einer älteren Fassung
   dieses Projekts — wird erst beim **nächsten Sichern** berichtigt; der Leseweg
@@ -125,6 +140,7 @@ SHA-256 des ZIPs: `0d1d4bf43eab8323f2ce3ad2ff1c78f44af5c7adf7a84e979334aab5687f4
   Aufgabe in der Warteschlange stand. Behoben in 7.2.0.111, abgesichert durch
   eine eigene Schranke (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am
   Fehlerstand 2 von 2 rot).
+- **Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt,
   auf beiden Wegen:** aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
   wartete **6015 ms**) und innerhalb desselben IMAP-Kontos (**4015 ms**). Beide
   Male brachte Eudora die Übertragung zu Ende und beendete sich dann sauber;
