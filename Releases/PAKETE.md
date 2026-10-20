@@ -17,7 +17,7 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.113`** (20.10.2026, 11:55 UTC, auf GitHub als
+> veröffentlicht ist inzwischen **`v1.0.113`** (20.10.2026, 13:01:36 UTC, Marke `ac094f15`, ZIP `Eudora72-1.0.113-release.zip`, SHA-256 `0d1d4bf4` am Anfang; davor am selben Tag `v1.0.112` um 11:55 UTC, auf GitHub als
 > *Latest*; davor `v1.0.101` vom 17.10.2026, 19:12 UTC, `v1.0.87` vom 14.10.2026, 05:46 UTC, `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
 > hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
@@ -169,7 +169,7 @@ haben.
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.112-release`, mit `TESTEN.txt` |
-| Veröffentlicht | **`v1.0.113`** am 20.10.2026 um 11:55:10 UTC auf GitHub (*Latest*), Marke auf `f87a4a74` = Merge von PR #113; ZIP `Eudora72-1.0.112-release.zip`, SHA-256 `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`. Die Release-Notizen standen beim Veröffentlichen verstümmelt da – siehe [LEKTOR-43](../Befunde/LEKTOR-43.md#l-43.1) |
+| Veröffentlicht | **`v1.0.112`** am 20.10.2026 um 11:55:10 UTC auf GitHub, Marke auf `f87a4a74` = Merge von PR #113; ZIP `Eudora72-1.0.112-release.zip`, SHA-256 `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`. Die Release-Notizen standen beim Veröffentlichen verstümmelt da – siehe [LEKTOR-43](../Befunde/LEKTOR-43.md#l-43.1) |
 | Inhalt | wie 1.0.111, **ohne** den Hochladezähler in `CImapSameServerTransferMsgAction::DoWork` ([PRÜFER-39](../Befunde/PRUEFER-39.md) N1); dazu beide neuen Schranken im **versionierten** Haken |
 | Gemessen | **ohne Nachstellung** — Gregor am 20.10.2026: *„wie auch immer: release eine neue version, alles in release notes und changelog, auch der neue befund“* und *„ja, mach das!“*. Diese Fassung behebt **keinen** Fehler Gregors, sie **nimmt eine Gefahr zurück**, die [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 gefunden hat; ein rot-grüner Lauf am Prüfstand ist dafür nicht zu führen, weil der entfernte Zweig nur bei einer im Netz hängenden Verbindung sichtbar würde. **Belegt am Quelltext:** `DoWork` läuft im Nebenfaden (`QCTaskManager.cpp:1095`, `AfxBeginThread` in `:549`), `RequestThreadStop()` ist ein leerer Rumpf (`ImapActionQueue.cpp:709`) — der Zähler hätte `bLaeuft` dauerhaft wahr halten und Eudora unbeendbar machen können. **Gemessen an Gregors eigenen Protokollen, dass das Entfernen nichts ändert:** bei Weg 2b blieb `laeuft=0`, bei Weg 2a kam `laeuft=1` aus `m_bE123UebertragungLaeuft` (`:3768`). Bau Release 0 Fehler, **229 Tests, 229 bestanden**. **Warnung in den Release-Notizen:** [E-131](../BEFUNDE.md#e-131), von außen gemeldet, von uns nicht nachgestellt |
 

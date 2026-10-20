@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.113** (Quellstand 7.2.0.113, nicht veröffentlicht); veröffentlicht ist **1.0.112** (Quellstand 7.2.0.112), am 20.10.2026 als `v1.0.113`; davor `v1.0.101` vom 17.10.2026. Die ausführliche
+*Stand Paket **1.0.113** (Quellstand 7.2.0.113), am 20.10.2026 um 13:01 UTC als `v1.0.113` veröffentlicht; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -51,6 +51,13 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
   eingebetteten Bildern und gesendete Post; die Nachricht verschwindet aus dem
   lokalen Postfach erst, wenn sie auf dem Server steht.
 * **Ohne Installation**: ZIP auspacken, `Eudora starten.cmd` doppelklicken.
+  **Nicht `Eudora.exe` direkt starten** — ohne Angabe des Mailverzeichnisses
+  sucht Eudora sich eines und findet dabei über die Registry das einer
+  **vorhandenen** Eudora- oder Hermes-Installation, auch in einem ganz anderen
+  Ordner; es schreibt dann in deren `Eudora.ini` ([E-132](BEFUNDE.md#e-132),
+  der Weg hinter [E-131](BEFUNDE.md#e-131)). `Eudora starten.cmd` übergibt das
+  Verzeichnis als Argument und verhindert das; wer eine Verknüpfung anlegt,
+  gibt den Pfad mit an: `Eudora.exe "C:\…\Mailverzeichnis"`.
 
 **Neu in `v1.0.101` gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
 beim Verschieben in einen IMAP-Ordner vollständig an
@@ -133,10 +140,10 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.113`** (veröffentlicht am 20.10.2026 um 11:55
+* **Das neueste Release ist `v1.0.113`** (veröffentlicht am 20.10.2026 um 13:01
   Uhr UTC, auf GitHub als *Latest*,
-  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.113; davor `v1.0.101`
-  vom 17.10.2026) — **Verschieben in einen
+  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.113; davor am
+  selben Tag `v1.0.112` um 11:55 Uhr UTC, davor `v1.0.101` vom 17.10.2026)
   IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –
   bis auf einen seltenen, vermuteten Fall bei gesendeter Post (siehe *Auf einen Blick*)
   ([E-121](BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an
