@@ -118,6 +118,23 @@ wird überschrieben"* geworden.
 **Offen bleibt der Leseweg:** eine INI, die bereits kaputte Werte trägt, wird
 erst beim nächsten Sichern berichtigt.
 
+### Von Gregor bestätigt
+
+**Von Gregor am 20.10.2026 zur Veröffentlichung freigegeben**, mit Begründung:
+*„jetzt schon releasen, wie soll er ja an die gefixte version kommen?"* — der
+Melder aus [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102) kann
+die Behebung nur prüfen, wenn sie veröffentlicht ist.
+
+**Ehrlich dazu, was gemessen ist und was nicht.** Gemessen am Prüfstand: mit
+7.2.0.112 schreibt ein einziges Starten und Beenden `MRUFloatXPos=-2147483648`
+dreimal in die INI, mit 7.2.0.113 steht dort `MRUFloatXPos=40` und **null**
+Treffer für `INT_MIN`; zwei Läufe hintereinander, 234 Tests grün. **Nicht
+gemessen:** ob die daneben installierte Hermes 7.1 danach wieder startet — dazu
+fehlt uns Hermes. Der Melder ist in #102 ausdrücklich darum gebeten worden.
+Ebenfalls unverändert gilt: der Inhalt von 7.2.0.112 ist von Gregor auf beiden
+Wegen am laufenden Programm bestätigt (2a mit `laeuft=1` und 6015 ms, 2b mit
+`uebertragungen=1` und 4015 ms).
+
 ### Dazu: [E-124](BEFUNDE.md#e-124) fortgeschrieben — die Defender-Schranke prüft zu früh
 
 Gemessen am 20.10.2026: `Eudora.exe` um **13:09:05** gebaut und sofort geprüft
