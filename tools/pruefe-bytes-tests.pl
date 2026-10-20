@@ -342,6 +342,46 @@ my @faelle = (
     datei => 'L9.cpp', erwartet => 1,
     roh_vorher  => '',
     roh_nachher => 'Umlaut ' . $bad . $LF },
+
+  # ------------------------------------------------------ Regel 6, 19.10.2026
+  #
+  # Der echte Fall: ein printf hat aus "\E" in einem Windows-Pfad ein
+  # ESC-Byte gemacht. Die Datei blieb gueltiges UTF-8 mit reinen LF, ohne
+  # Ersatzzeichen, ohne Doppelkodierung - die fuenf alten Regeln sahen nichts.
+  { schl => 'L13a', name => 'ESC-Byte kommt dazu (der Fall vom 19.10.2026)',
+    datei => 'L13a.md', erwartet => 1,
+    roh_vorher  => 'Pfad C:' . chr(92) . 'Users' . chr(92) . 'Gregor' . $LF,
+    roh_nachher => 'Pfad C:' . chr(92) . 'Users' . chr(92) . 'Gregor'
+                   . chr(27) . 'udora72' . $LF },
+
+  { schl => 'L13b', name => 'NEUE Datei mit einem Steuerzeichen',
+    datei => 'L13b.md', erwartet => 1,
+    roh_vorher  => undef,
+    roh_nachher => 'eins' . $LF . 'zwei' . chr(1) . 'drei' . $LF },
+
+  # GEGENPROBE 1: TAB und Zeilenenden sind Steuerzeichen und muessen durch.
+  # Ohne diesen Fall waere die Regel ein Dauerfehlalarm ueber den ganzen Baum.
+  { schl => 'L13c', name => 'Gegenprobe: TAB und Zeilenenden schlagen nicht an',
+    datei => 'L13c.cpp', erwartet => 0,
+    roh_vorher  => 'void f()' . $CR . $LF . '{' . $CR . $LF . '}' . $CR . $LF,
+    roh_nachher => 'void f()' . $CR . $LF . '{' . $CR . $LF
+                   . chr(9) . 'int a;' . $CR . $LF . '}' . $CR . $LF },
+
+  # GEGENPROBE 2: Seitenvorschub in alten C-Quellen (10 Dateien im Baum) und
+  # das DOS-Dateiende in den mitgelieferten OpenSSL-Koepfen (168 Dateien).
+  # Beides Altbestand; wer sie anschlagen laesst, hat 178 Fehlalarme.
+  { schl => 'L13d', name => 'Gegenprobe: Seitenvorschub und DOS-Dateiende sind erlaubt',
+    datei => 'L13d.h', erwartet => 0,
+    roh_vorher  => 'erste Seite' . $LF,
+    roh_nachher => 'erste Seite' . $LF . chr(12) . 'zweite Seite' . $LF . chr(26) },
+
+  # GEGENPROBE 3: eine Datei, die SCHON VORHER Steuerzeichen hatte, darf nicht
+  # bei jedem Commit anschlagen - gezaehlt wird der Zuwachs. Vorbild ist das
+  # Entwurfsdokument von 1997 unter Documents/, die einzige solche Datei.
+  { schl => 'L13e', name => 'Gegenprobe: Altbestand mit Steuerzeichen, nichts kommt dazu',
+    datei => 'L13e.md', erwartet => 0,
+    roh_vorher  => 'alt' . chr(1) . 'bestand' . chr(28) . $LF,
+    roh_nachher => 'alt' . chr(1) . 'bestand' . chr(28) . $LF . 'eine neue Zeile' . $LF },
 );
 
 # ------------------------------------------------------------- Durchlauf
