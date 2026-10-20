@@ -82,6 +82,88 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.114 — E-132: Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt
+
+**Der zweite Teil des Fehlerberichts von außen.** Der Melder aus
+[Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) schrieb,
+die neue Installation habe *über Registry-Abfragen* die vorhandene in einem
+anderen Ordner gefunden und deren INI verändert. [E-131](BEFUNDE.md#e-131) war
+die Folge; **[E-132](BEFUNDE.md#e-132)** ist der Weg dorthin.
+
+**Der Weg.** Ist die Befehlszeile leer **und** liegt keine `Eudora.ini` neben
+der EXE — beides trifft auf unser Paket zu, denn unsere INI liegt in
+`Mailverzeichnis\` —, dann liest Eudora
+`HKEY_CURRENT_USER\Software\Qualcomm\Eudora\CommandLine\Current` und benutzt
+den Datenordner, mit dem zuletzt eine **andere** Eudora gestartet wurde. Wer
+`Eudora.exe` doppelklickt statt `Eudora starten.cmd` zu benutzen, landet
+deshalb im fremden Verzeichnis und schreibt hinein.
+
+**Behoben:** vor der Übernahme kommt eine Rückfrage mit drei Wegen — *Ja*
+(fremdes Verzeichnis trotzdem benutzen), *Nein* (eigenes neben dem Programm
+anlegen), *Abbrechen*. **Vorgabe ist „Nein"**, damit ein unbedachtes Enter
+nichts beschädigt. Entschieden wird in `E132IstFremdesVerzeichnis` — ohne
+Fenster und ohne Registry, damit der Prüfstand sie fahren kann.
+
+**Zwei Schichten lagen darunter, und beide hat erst die Messung gezeigt.**
+
+1. **Die Registry speichert keinen Pfad, sondern den ganzen Aufruf.** Nach dem
+   Abschneiden des Programmnamens stehen in `buf` **zwei** Pfade, durch ein
+   Leerzeichen getrennt; `GetDirs()` trennt sie erst später
+   (`fileutil.cpp:432`). Die erste Fassung hängte `\Eudora.ini` an diese
+   **Gesamtzeichenkette** an — eine Datei, die es nie gibt. Die Rückfrage war
+   eingebaut und kam **nie**. Dafür gibt es jetzt `E132AufrufZerlegen` mit
+   derselben Trennregel wie `GetDirs`.
+2. **Die Spurmarke konnte an dieser Stelle gar nicht geschrieben werden.**
+   `StartEudoraWithDefaultLocation` läuft, **bevor** `QCLogFileMT::InitDebug`
+   das Protokoll öffnet — und das muss so sein, denn das Protokoll liegt im
+   Mailverzeichnis, das dort erst gesucht wird. `PutDebugLog` kehrt ohne
+   `s_pLogFile` stumm zurück (`QCUtils/src/debug.cpp:141`). Die Zeilen werden
+   jetzt gemerkt und in `InitInstance` direkt nach `InitDebug` ausgegeben —
+   **in beiden Ausgängen**, auch wenn nichts Fremdes gefunden wurde.
+
+**Gemessen am 20.10.2026**, Paket in `C:\Temp\E132` gegen die fremde
+Installation in `C:\Temp\E131`; die Antwort kam jeweils als `WM_COMMAND` an ein
+gemessenes Fensterhandle, nicht als Tastendruck:
+
+```
+Nein       E-132 Startverzeichnis: ... fremd=1
+           E-132 Startverzeichnis: eigenes gewaehlt="C:\Temp\E132\Mailverzeichnis"
+           fremde Eudora.ini SHA256 unveraendert
+
+Ja         E-132 Startverzeichnis: fremdes bewusst uebernommen
+           Protokoll landet im FREMDEN Verzeichnis
+           dessen Eudora.ini aendert sich (LastKnownCrashInfo=0 -> =1)
+
+Abbrechen  Programm endet, nichts angefasst
+
+Gegenprobe zeigt die Registry auf das eigene Paket: fremd=0, keine Frage
+```
+
+Der Fall *Ja* ist **genau der Schaden aus Issue #102** — nach fünfzehn
+Sekunden Laufzeit. Die Rückfrage ist das einzige, was dazwischensteht.
+
+**241 Tests, 241 bestanden** (sieben zu [E-132](BEFUNDE.md#e-132), davon zwei neu: die zerlegte
+Registryzeile und der gemeldete Fall von Ende zu Ende).
+
+**Was Gregors Registry-Export eines fremden PC zeigt** (Suche nach „eudora"
+auf einem Rechner mit vier Eudora-Installationen): dieselbe Startbefehlszeile
+steht **dreifach** — unter `HKCU`, unter `HKEY_CLASSES_ROOT` (die zweite Stufe
+im Code) und unter `HKU\<SID>`; `LaunchManager` führt zehn `Path#N`-Werte aus
+vier Installationen; sämtliche Dateizuordnungen (`mailto`, `.sta`,
+`Eudora.Mailbox`, `App Paths`) zeigen auf die **alte** EXE; `UseAppData` kommt
+nicht vor. Einzelheiten in [E-132](BEFUNDE.md#e-132).
+
+**Nicht getan, bewusst:** wir setzen die Dateizuordnungen **nicht** auf unsere
+EXE. Das würde die vorhandene Installation kapern und Gregors Anforderung vom
+20.10.2026 verletzen — eine vorhandene Installation nimmt keinen Schaden.
+
+**Offen bleibt** der Leseweg von [E-131](BEFUNDE.md#e-131), und neu
+aufgeschrieben: `SaveBarState` legt die Leistenzustände **zuerst** in der
+Registry ab (`HKCU\Software\Qualcomm\Eudora\<INI-Pfad>\ToolBar-*`). Auf jenem
+PC liegen diese Schlüssel nur unter **unserem** Pfad, nicht unter denen der
+drei Originalinstallationen. Ob `LoadBarState` sie vor der INI liest, ist noch
+nicht gemessen.
+
 ## 7.2.0.113 — E-131: keine ungültige Fensterposition mehr in der `Eudora.ini`
 
 **Der erste Fehlerbericht von außen, und er saß.** Ein Anwender meldete am

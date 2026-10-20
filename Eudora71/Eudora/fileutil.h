@@ -79,6 +79,12 @@ extern CString EudoraDirNoBackslash;
 extern CString ExecutableDir;
 extern CString TempDir;
 
+// Woher das Mailverzeichnis stammt - Befehlszeile, Umgebungsvariable,
+// DEudora.ini, Registry oder Application Data. Gesetzt in
+// CheckMailDirectory und in StartEudoraWithDefaultLocation; angezeigt im
+// Ueber-Dialog, weil genau diese Frage bei E-132 zwei Tage gekostet hat.
+extern CString MailDirHerkunft;
+
 
 // Function Prototypes
 BOOL GetDirs(char* CmdLine);

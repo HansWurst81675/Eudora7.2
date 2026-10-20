@@ -1,18 +1,70 @@
-# Testplan für Gregor — Paket 1.0.113, Stand 20.10.2026
+# Testplan für Gregor — Paket 1.0.114, Stand 20.10.2026
 
 ## Was jetzt zu testen ist
 
-**Die beiden Schritte, die hier standen, sind erledigt.** Beide hast du am
-20.10.2026 selbst bestätigt, und beide stecken in `v1.0.112`, das seit heute
-11:55 UTC veröffentlicht ist. Sie stehen unten als **[C7](#c7)** weiter — zum
-Nachschlagen, nicht als Auftrag.
+**Ein Schritt, und er ist neu.** Alles andere in diesem Plan ist
+Nachschlagewerk.
 
-**Offen ist nur noch eines, und dafür braucht es dich:**
-[E-131](BEFUNDE.md#e-131) — läuft unsere Fassung neben einer vorhandenen
-Eudora oder Hermes 7.1, kann das **alte** Programm danach nicht mehr starten.
-Gemeldet hat das ein Fremder ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)),
-**nachgestellt haben wir es nicht**. Wer das prüft, sichert vorher
-`Eudora.ini` und das Mailverzeichnis.
+### <a id="c8"></a>C8 · Paket 1.0.114 — startet Eudora im fremden Mailverzeichnis?
+
+**Worum es geht.** Startest du `Eudora.exe` **direkt** (Doppelklick) statt über
+`Eudora starten.cmd`, sucht Eudora sich das Mailverzeichnis selbst — und findet
+über die Registry das Verzeichnis, mit dem **zuletzt irgendeine** Eudora
+gestartet wurde. Bisher nahm es das wortlos und schrieb hinein. Genau das hat
+der Melder aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)
+erlebt; danach startete seine Hermes 7.1 nicht mehr
+([E-131](BEFUNDE.md#e-131)). Ab 1.0.114 **fragt** Eudora vorher.
+
+**Vorbereitung.** Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.114-release`.
+Dein bisheriges `Eudora72-1.0.113-release` **stehen lassen** — es ist in diesem
+Test die „fremde Installation". Notier dir vorher Datum und Uhrzeit von
+`Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini`; daran siehst du am Ende,
+ob etwas hineingeschrieben wurde.
+
+**Schritt 1 — ein Mal mit 1.0.113 starten und beenden.** Ganz normal über
+`Eudora starten.cmd`. Damit zeigt die Registry auf dessen Mailverzeichnis;
+nur so ist es nachher das „fremde".
+
+**Schritt 2 — in 1.0.114 die `Eudora.exe` doppelklicken.** **Nicht**
+`Eudora starten.cmd`.
+
+*So ist es richtig:* es kommt ein Fenster **Eudora 7.2** mit der Meldung
+*„Eudora found an existing mail folder that belongs to another installation"*
+und dem Pfad deines 1.0.113-Verzeichnisses, dazu drei Schaltflächen:
+
+| Taste | was passiert |
+|---|---|
+| **Yes** | das fremde Verzeichnis wird benutzt — **und beschrieben** |
+| **No** | Eudora legt sich ein eigenes `Mailverzeichnis` neben dem Programm an (**Vorgabe**, so dass ein unbedachtes Enter nichts beschädigt) |
+| **Cancel** | Eudora beendet sich, ohne irgendetwas anzufassen |
+
+**Bitte „No" drücken.**
+
+*Danach prüfen:* Eudora läuft mit einem leeren eigenen Postfach, und
+`Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini` hat **noch denselben
+Zeitstempel wie vorher**.
+
+*Wenn gar kein Fenster kommt und Eudora einfach startet, bitte melden* — dann
+greift die Rückfrage nicht. In dem Fall hilft die Zeile aus dem Protokoll:
+
+```
+grep "E-132" "C:\Users\Gregor\Eudora72-1.0.114-release\Mailverzeichnis\eudora.log"
+```
+
+Dort muss `E-132 Startverzeichnis: … fremd=1` stehen. Steht da `fremd=0`,
+hat Eudora das Verzeichnis als sein eigenes angesehen — auch das bitte melden,
+mit der ganzen Zeile.
+
+*Voraussetzung:* keine. Geht offline, dauert zwei Minuten.
+
+**Was dieser Test NICHT prüft:** ob eine daneben installierte **Hermes 7.1**
+danach wieder startet. Dafür fehlt uns Hermes; der Melder aus Issue #102 ist
+ausdrücklich darum gebeten worden.
+
+**Bei uns schon gemessen** (20.10.2026, Prüfstand, nicht bei dir): *No* →
+eigenes Verzeichnis, fremde `Eudora.ini` unverändert. *Yes* → fremdes
+Verzeichnis, dessen `Eudora.ini` ändert sich nach fünfzehn Sekunden. *Cancel* →
+Programm endet, nichts angefasst.
 
 ### <a id="c7"></a>C7 · Paket 1.0.112 — was am 20.10.2026 schon bestätigt wurde
 
@@ -106,12 +158,12 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Schritt 1 an 1.0.113 in Ordnung"* oder
-*„Schritt 2 an 1.0.113 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
+Mit der **Paketnummer**: *„[C8](#c8) an 1.0.114 in Ordnung"* oder
+*„[C8](#c8) an 1.0.114 gescheitert, es kam keine Rueckfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
-Eigene Tests dieser Fassung: **229 Tests, 229 bestanden.**
+Eigene Tests dieser Fassung: **241 Tests, 241 bestanden.**
 
 ---
 
