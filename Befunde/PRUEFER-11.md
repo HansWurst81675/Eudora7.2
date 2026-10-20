@@ -308,7 +308,7 @@ wurde (`BEFUNDE.md:256`). Wer künftig [E-96](../BEFUNDE.md#e-96) im Quelltext s
 
 ---
 
-## E-88 / E-93 (`PgMsgView.cpp`, `msgutils.cpp`)
+## <a id="e-88"></a>E-88 / E-93 (`PgMsgView.cpp`, `msgutils.cpp`)
 
 ### <a id="p-13"></a>P-13 — Möglicher Inhaltsverlust: `HasChanged()` heißt nicht „hat getippt"
 

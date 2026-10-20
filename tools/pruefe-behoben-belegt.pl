@@ -119,7 +119,30 @@ sub beurteile {
         unless $zeile =~ /^\|\s*$ANKER\s*\*{0,2}([A-Za-z]{1,3}\d*-[0-9a-z]+)\*{0,2}\s*\|/;
     my $kennung = $1;
 
-    my @spalten = split /\|/, $zeile, -1;
+    #
+    # Ein "|" MITTEN im Text - etwa in einer zitierten Filterzeile wie
+    # "Text Files (*.txt)|*.txt" - muss in Markdown als "\|" geschuetzt
+    # werden, sonst erzeugt es eine zusaetzliche Spalte und GitHub schneidet
+    # die letzte ab (20.10.2026, von Gregor gefunden: "die letzte spalte ist
+    # schlecht lesbar, weil abgeschnitten").
+    #
+    # Beim Trennen darf so ein geschuetzter Strich NICHT zaehlen. Sonst sieht
+    # diese Schranke nur das erste Bruchstueck der Urteilsspalte und meldet
+    # einen Beleg als fehlend, der zwei Zeichen weiter steht - genau das ist
+    # bei E-87 passiert, nachdem die Striche geschuetzt wurden.
+    #
+    # Arbeitsweise/datenformat-aendern-heisst-alle-leser-messen.md
+    #
+    my $SCHUTZ = chr(1);
+    (my $sicher = $zeile) =~ s/\Q${\ chr(92)}\E\|/$SCHUTZ/g;
+    my @spalten = split /\|/, $sicher, -1;
+    #
+    # Das Schutzzeichen bleibt STEHEN. Die Belegmuster unten suchen mit
+    # [^|]{0,70} innerhalb einer Spalte; stuende dort wieder ein echtes "|",
+    # zerschnitte es den Suchbereich an derselben Stelle wie vorher der
+    # Trenner, und der Beleg waere wieder nicht zu finden. Gemeldet wird
+    # ohnehin die ganze Rohzeile, nicht diese Spalte.
+    #
     return ($kennung, 'keins', undef) unless @spalten >= 4;
     my $urteilstext = $spalten[3];
 
@@ -302,7 +325,44 @@ sub zeilen_aus_diff {
     # in Ruhe lassen will. Darum wird jede entfernte Zeile entmojibakt
     # und gegen die hinzugefuegten gehalten.
     my @zuwachs = entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
+    @zuwachs    = trenner_nur_schreibweise_gefiltert(\@alt, \@zuwachs);
     return verweise_nur_links_gefiltert(\@alt, \@zuwachs);
+}
+
+#
+# Dasselbe eine Ebene weiter: eine Zeile, die sich NUR in der Schreibweise
+# ihrer Striche geaendert hat, ist kein Zuwachs.
+#
+# Am 20.10.2026 hatten 16 Urteilszeilen mehr als drei Spalten, weil ein "|"
+# im Text stand; GitHub machte daraus eine weitere Spalte und schnitt die
+# letzte ab. Beim Berichtigen wurde aus " | " im Fliesstext ein
+# Gedankenstrich und aus einem "|" in einem Code-Abschnitt ein "\|". Diese
+# Schranke sah daraufhin fuenf ALTE Befunde als neu an und verlangte
+# Belege, die nie dazugehoert hatten - derselbe Fehlalarm wie am
+# 14.09.2026, nur eine andere Ursache.
+#
+# Verglichen wird deshalb in einer Form, in der alle drei Schreibweisen
+# gleich aussehen.
+#
+sub trenner_nur_schreibweise_gefiltert {
+    my ($alt, $neu) = @_;
+
+    my $BS  = chr(92);
+    my $GED = chr(0xE2) . chr(0x80) . chr(0x94);
+
+    my $gleichform = sub {
+        my ($z) = @_;
+        $z =~ s/\Q$BS\E\|/|/g;        # geschuetzter Strich -> Strich
+        $z =~ s/\Q$GED\E/|/g;         # Gedankenstrich      -> Strich
+        $z =~ s/\s+/ /g;
+        $z =~ s/^\s+|\s+$//g;
+        return $z;
+    };
+
+    my %vorher;
+    $vorher{ $gleichform->($_) } = 1 for @$alt;
+
+    return grep { !$vorher{ $gleichform->($_) } } @$neu;
 }
 
 sub zeilen_aus_datei {
