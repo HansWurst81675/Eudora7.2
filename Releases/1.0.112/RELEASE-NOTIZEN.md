@@ -21,6 +21,8 @@
 > Postfächer hineinkopiert, nimmt auch seine `Eudora.ini` mit.
 
 ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
+Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopieren.
+
 ## Neu gegenüber v1.0.101
 
 - **Beenden wartet jetzt auf jede Art von Übertragung.** Wird eine Nachricht in
@@ -29,6 +31,7 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
   IMAP-Kontos verschoben wurde. Bis 7.2.0.110 zählte die Wache nur
   Übertragungen aus einem lokalen Postfach, und der andere Weg lief an ihr
   vorbei.
+- **Keine Flut von Fehlermeldungen mehr beim Filtern.** Konnte Eudora eine Nachricht
   nicht lesen, legte es je Nachricht einen eigenen Eintrag in *Task Errors* an – jeder
   mit Piepton und Fenstersprung. Bei einem IMAP-Postfach mit 500 angerissenen
   Nachrichten waren das 500 Pieptöne, nicht wegzuklicken. Jetzt bekommt der **erste**
@@ -90,7 +93,6 @@ unter *Windows Defender meldet Eudora als Trojaner*, was zu tun ist.
 
 SHA-256 des ZIPs: `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`
 
-## Was geprüft wurde – und was nicht
 ## Was geprüft wurde – und was nicht
 
 - **229 Tests, 229 bestanden** gegen genau diesen Bau; `paket-pruefen.ps1` ohne
