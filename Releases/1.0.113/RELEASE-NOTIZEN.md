@@ -1,28 +1,38 @@
 **Eudora 7.2.0.113 / Paket 1.0.113**
 
-> ## ⚠ Vor dem Start lesen — gemeldeter Schaden an vorhandenen Installationen
->
-> **Wer bereits ein Eudora oder Hermes 7.1 installiert hat, sichert vorher
-> `Eudora.ini` und das Mailverzeichnis.**
+> ## Diese Fassung behebt einen Schaden an fremden Installationen
 >
 > Ein Anwender hat am 18.10.2026 gemeldet
 > ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)), dass sein
 > **Hermes 7.1.0.9 nach dem Lauf unserer Fassung `v1.0.101` nicht mehr startet**
-> — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`. Seine Untersuchung zeigt in der
-> gemeinsam benutzten `Eudora.ini` den Leisteneintrag
-> `MRUFloatXPos=-2147483648`, also eine ungültige Fensterposition.
+> — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`. Ursache: in der gemeinsam
+> benutzten `Eudora.ini` stand `MRUFloatXPos=-2147483648`, eine ungültige
+> Fensterposition, die wir beim Beenden hineingeschrieben hatten.
 >
-> **Wir haben es noch nicht nachgestellt** und wissen nicht, ob diese Fassung
-> dasselbe tut — der Aufruf ist unverändert, also ist es anzunehmen. Der Befund
-> läuft bei uns als **E-131**.
+> **Nachgestellt und behoben.** Ein einziges Starten und Beenden der Fassung
+> 7.2.0.112 genügte, um den Wert dreimal in die Datei zu schreiben; mit
+> 7.2.0.113 steht dort eine gültige Position und **kein** `INT_MIN` mehr. Der
+> Befund läuft bei uns als **E-131**.
 >
-> Ein eigener Ordner reicht **nicht** aus: eine gemeinsam benutzte `Eudora.ini`
-> genügt für den Schaden. Das Mailverzeichnis in diesem ZIP ist leer; wer seine
-> Postfächer hineinkopiert, nimmt auch seine `Eudora.ini` mit.
+> **Was wir nicht prüfen konnten:** ob eine daneben installierte Hermes 7.1
+> danach wieder startet — wir haben kein Hermes. Wer das testen kann, wird in
+> [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102) darum gebeten.
+>
+> **Trotzdem vorher sichern:** wer bereits ein Eudora oder Hermes 7.1
+> installiert hat, legt eine Kopie von `Eudora.ini` und dem Mailverzeichnis an.
+> Eine bereits beschädigte Datei wird von dieser Fassung erst beim **nächsten
+> Sichern** berichtigt — der Leseweg ist noch offen.
 
 ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
-## Neu gegenüber v1.0.101
+## Neu gegenüber v1.0.112
 
+- **Keine ungültige Fensterposition mehr in der `Eudora.ini`.** Beim Beenden
+  schrieb Eudora eine nie gesetzte Schwebeposition (`-2147483648`) in die
+  Datei; eine daneben installierte Eudora oder Hermes 7.1 stürzte danach beim
+  Start ab. Jetzt wird jede unbrauchbare Position durch eine ersetzt, die auf
+  dem Bildschirm liegt.
+
+## Neu gegenüber v1.0.101
 - **Beenden wartet jetzt auf jede Art von Übertragung.** Wird eine Nachricht in
   einen IMAP-Ordner verschoben und Eudora sofort beendet, bleibt das Fenster
   stehen, bis die Übertragung durch ist — auch wenn **innerhalb** desselben
@@ -46,12 +56,10 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
 
 ## Bekannte Fehler
 
-- **Eine daneben installierte Eudora oder Hermes 7.1 kann danach nicht mehr
-  starten** — siehe die Warnung ganz oben
-  ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102), bei uns
-  E-131). Von außen gemeldet, von uns noch nicht nachgestellt. Abhilfe:
-  `Eudora.ini` und Mailverzeichnis vorher sichern.
-
+- **Eine bereits beschädigte `Eudora.ini`** — etwa von einer älteren Fassung
+  dieses Projekts — wird erst beim **nächsten Sichern** berichtigt; der Leseweg
+  ist noch offen ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
+  bei uns E-131). Vorher eine Kopie anlegen.
 Die vollständige Liste mit Abhilfe steht in der
 [README, Abschnitt „Auf einen Blick“](https://github.com/HansWurst81675/Eudora7.2#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind).
 Die wichtigsten:
