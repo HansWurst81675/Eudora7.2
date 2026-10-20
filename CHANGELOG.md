@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 19.10.2026)
+## Noch offen (Stand 20.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -77,6 +77,137 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.112 — E-123: der Zähler aus `SameServer::DoWork` ist wieder heraus (PRÜFER-39, N1)
+
+**Neu aufgenommen und weiter OFFEN: [E-131](BEFUNDE.md#e-131)** — in dieser Fassung ausdruecklich NICHT angefasst.
+der **erste Fehlerbericht von außen**
+([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
+18.10.2026). Nach dem Lauf unserer Fassung `v1.0.101` startet eine daneben
+installierte Hermes 7.1.0.9 nicht mehr; in der gemeinsam benutzten `Eudora.ini`
+steht `MRUFloatXPos=-2147483648`. Geschrieben wird das von
+`SaveBarState(_T("ToolBar"))` (`mainfrm.cpp:1027`) — MFCs eigene Leistenschlüssel
+mit einem Wert, der nie gesetzt wurde. **Von uns noch nicht nachgestellt.** Die
+Release-Notizen zu 1.0.112 tragen deshalb eine Warnung ganz oben.
+
+**[PRÜFER-39](Befunde/PRUEFER-39.md) hat 7.2.0.111 abgelehnt**, und zu Recht. Der
+dritte meiner drei Eingriffe — ein `CE123HochladenZaehler` am Anfang von
+`CImapSameServerTransferMsgAction::DoWork` — konnte Eudora **unbeendbar**
+machen.
+
+**Nachgemessen:** `DoWork` läuft im **Nebenfaden** (`QCTaskManager.cpp:1095`,
+gestartet in `:549` mit `AfxBeginThread`) und blockiert dort unbegrenzt auf dem
+Netz; `CImapAction::RequestThreadStop()` ist ein **leerer Rumpf**
+(`ImapActionQueue.cpp:709`), niemand bricht den Faden ab. Solange der Zähler
+stünde, wäre `bLaeuft` wahr, die Wache in `mainfrm.cpp:2005` nähme jedes Mal den
+Zweig `bNotfall && (bLaeuft || bDialogOffen)`, gäbe das Beenden auf und setzte
+`m_bE123Gewartet` zurück — der nächste Versuch wartete wieder, **endlos**.
+Heraus käme man nur über den Offline-Modus oder den Task-Manager.
+
+**Für Gregors Fehler trug der Zähler ohnehin nichts bei:** sein Protokoll sagte
+`eintraege=1` bei `uebertragungen=0` — die Aufgabe stand noch in `m_array` und
+war **nie gestartet**. Gezählt wird sie von der Schleife in
+`E123OffeneUebertragungen`, und die prüft seit 7.2.0.111 die Basisklasse.
+
+**An seinen beiden Messungen ändert das Entfernen nichts, und das ist belegt:**
+bei Weg 2b blieb `laeuft` durchgehend `0`, bei Weg 2a kam `laeuft=1` aus
+`m_bE123UebertragungLaeuft` (`:3768`) — also aus dem **zweiten** Eingriff, nicht
+aus dem entfernten dritten.
+
+**Dazu N3, und der wog mehr, als der Bericht sagt:** die neue Schranke stand nur
+in der unversionierten `.git/hooks/pre-commit` dieser Maschine. Beim Nachsehen
+fehlte dort auch **`pruefe-datum.pl` von gestern**. Beide stehen jetzt in
+`tools/hooks-einrichten.sh`; ein frischer Klon bekommt sie.
+
+**229 Tests, 229 bestanden.** Offen aus PRÜFER-39: N2 (der Zähler fehlt an den
+drei `DoPostProcessing`), N4 (die Schranke lässt sechs von sieben Umgehungen
+durch), N5 (ihre Bereichserkennung).
+
+### Von Gregor bestätigt
+
+**Von Gregor am 20.10.2026 bestätigt.** Der Inhalt dieser Fassung ist derselbe
+wie in 7.2.0.111, das er auf **beiden** Wegen am laufenden Programm gemessen hat
+— Weg 2a mit `laeuft=1` und 6015 ms Wartezeit, Weg 2b mit `uebertragungen=1` und
+4015 ms; beide Male beendete sich Eudora danach sauber und die Warteschlange war
+leer. 7.2.0.112 unterscheidet sich davon **nur** durch die Rücknahme des
+Zählers aus `SameServer::DoWork`, und dass der in keinem seiner beiden Läufe
+gewirkt hat, steht in seinen eigenen Protokollen (`laeuft=0` bei 2b, `laeuft=1`
+aus `:3768` bei 2a). Seine Freigabe zur Veröffentlichung: *„wie auch immer:
+release eine neue version, alles in release notes und changelog, auch der neue
+befund“* und *„ja, mach das!“*
+
+## 7.2.0.111 — die Wache beim Beenden sieht jetzt jede Übertragung (E-123)
+
+**Gregor am 20.10.2026 an Paket 1.0.110:** *„verschoben und beendet. fenster
+ging gleich weg"*. Sein Protokoll:
+
+```
+E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=0
+```
+
+**Ein Eintrag in der Warteschlange, gezählt als null.** In `actionqueue.dat`
+stand er: `<ActionType>transfersame</ActionType>`, `INBOX` → `HW_Box`, fünf
+Nachrichten.
+
+**Die Ursache** (`ImapActionQueue.cpp:4007` und `:3768`): gezählt wurde
+`CImapFromLocalTransferMsgAction` — nur der Weg aus einem **lokalen** Postfach
+nach IMAP. Gregor hat **innerhalb** desselben IMAP-Kontos verschoben, das ist
+`CImapSameServerTransferMsgAction`. Von vier Übertragungsarten war eine
+gezählt und drei waren blind.
+
+**Behoben:** gezählt wird die Basisklasse `CImapTransferMsgAction` — jede
+Übertragungsaufgabe muss noch mit dem Server reden, gleich aus welcher
+Richtung. Dazu zählt `CImapSameServerTransferMsgAction::DoWork` jetzt wie der
+Weg von lokal nach IMAP, solange sie kopiert und löscht.
+
+**Kein Datenverlust:** die Aufgabe wird beim Beenden nach `actionqueue.dat`
+geschrieben und beim nächsten Start ausgeführt. Gregors fünf Nachrichten sind
+angekommen.
+
+**Das ist dieselbe Klasse wie [P2](#p2) aus PRÜFER-36** — dort stand der
+Hochladezähler in einer Funktion, die die gemeinte Unterklasse gar nicht ruft.
+Zweites Auftreten, also eine Schranke: `tools/pruefe-e123-zaehlung.pl` hält die
+drei E-123-Stellen darauf fest, die **Basisklasse** zu prüfen. Gegenprobe am
+echten Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2
+Fälle, 0 Fehler.
+
+**Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt
+(Weg 2b).** Sein Protokoll:
+
+```
+E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=1
+E-123 Beenden wartet auf 1 Uebertragung(en) in IMAP-Ordner
+E-123 Warteschlange: konto=1 eintraege=0 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=0
+E-123 Beenden: Warten zu Ende nach 4015 ms, offen=0
+```
+
+**`uebertragungen=1`, wo an 1.0.110 noch `0` stand** — bei demselben Handgriff.
+Eudora hat **4015 ms gewartet**, die Übertragung zu Ende gebracht und sich dann
+sauber beendet; `actionqueue.dat` war danach **leer**, die Aufgabe also
+ausgeführt und nicht auf die nächste Sitzung verschoben.
+
+**Weg 2a, ebenfalls von Gregor am 20.10.2026 an 1.0.111 bestätigt** — Post aus
+dem lokalen `In` in einen IMAP-Ordner, dann sofort *Ctrl+Q*:
+
+```
+E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=1
+E-123 Beenden wartet auf 1 Uebertragung(en) in IMAP-Ordner
+E-123 Warteschlange: konto=1 eintraege=0 zustand=1 nur-belegt=0 laeuft=1 uebertragungen=1
+E-123 Warteschlange: konto=1 eintraege=0 zustand=0 nur-belegt=0 laeuft=0 uebertragungen=0
+E-123 Beenden: Warten zu Ende nach 6015 ms, offen=0
+```
+
+**Hier steht `laeuft=1`** — bei 2b blieb der Wert auf `0`, weil das Hochladen zu
+kurz war. Damit ist auch der **zweite** Teil gemessen: der Zähler um die
+laufende Übertragung, nicht nur die Warteschlange. Eudora wartete **6015 ms**
+und beendete sich dann sauber.
+
+### Prüfanleitung
+
+**2a:** mehrere Nachrichten aus `In` in einen IMAP-Ordner verschieben, sofort
+*File → Exit*. **2b:** dasselbe aus `Inbox (<Dominant>)` in einen anderen
+IMAP-Ordner. Beide Male darf das Fenster nicht verschwinden, solange die
+Übertragung läuft.
 
 ## 7.2.0.110 — die Behebung zu E-69 greift jetzt wirklich (PRÜFER-38, R1–R4)
 
