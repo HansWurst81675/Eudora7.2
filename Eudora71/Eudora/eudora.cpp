@@ -888,6 +888,10 @@ static BOOL AnyPersonalityHasAccount()
 
 //	=========================================================================================
 
+// BEFUND E-132: die Spurmarken des Startverzeichnisses entstehen, bevor das
+// Protokoll offen ist. Sie werden gemerkt und hier unten ausgegeben.
+void E132SpurAusgeben(void);
+
 BOOL CEudoraApp::InitInstance()
 {
 	// Guard against re-entrancy of multiple copies on the same set of mailboxes
@@ -1202,6 +1206,11 @@ BOOL CEudoraApp::InitInstance()
 		//
 		return FALSE;
 	}
+
+	// BEFUND E-132: jetzt ist das Protokoll offen. Was beim Suchen des
+	// Mailverzeichnisses gemessen wurde, konnte damals nicht geschrieben
+	// werden - PutDebugLog kehrt ohne s_pLogFile stumm zurueck.
+	E132SpurAusgeben();
 
 		// Load up Translation DLL's
 //	InitTranslators();	// This used to be here, but we moved it so that plugins would get the right value for Eudora's HWnd
@@ -3698,6 +3707,56 @@ BOOL CEudoraApp::RegisterCommandLine(char *cmdLine)
 }
 
 //
+// E-132, dritter Teil: die Spurmarke muss WARTEN koennen.
+//
+// StartEudoraWithDefaultLocation laeuft, BEVOR das Protokoll offen ist.
+// QCLogFileMT::InitDebug kommt erst spaeter in InitInstance, weil es das
+// Mailverzeichnis braucht - genau das, was hier erst gesucht wird. Und
+// PutDebugLog kehrt ohne s_pLogFile stumm zurueck
+// (QCUtils/src/debug.cpp:141).
+//
+// GEMESSEN am 20.10.2026: die Rueckfrage erschien auf dem Bildschirm, das
+// gewaehlte Verzeichnis stimmte, die fremde Eudora.ini blieb unveraendert -
+// und im Protokoll stand trotzdem keine einzige E-132-Zeile. Der Einbau war
+// richtig und die Messung trotzdem blind. Dasselbe Muster wie bei E-70: die
+// Spurmarke war da und wurde nie gelesen, nur hier konnte sie gar nicht
+// geschrieben werden.
+//
+// Darum werden die Zeilen gemerkt und ausgegeben, sobald das Protokoll offen
+// ist.
+//
+static CString g_szE132Spur;
+
+void E132SpurMerken(LPCTSTR pZeile)
+{
+	if (!pZeile || !*pZeile)
+		return;
+
+	if (!g_szE132Spur.IsEmpty())
+		g_szE132Spur += "\n";
+	g_szE132Spur += pZeile;
+}
+
+void E132SpurAusgeben(void)
+{
+	if (g_szE132Spur.IsEmpty())
+		return;
+
+	int nAnfang = 0;
+	while (nAnfang < g_szE132Spur.GetLength())
+	{
+		int nEnde = g_szE132Spur.Find('\n', nAnfang);
+		if (nEnde < 0)
+			nEnde = g_szE132Spur.GetLength();
+
+		PutDebugLog(DEBUG_MASK_MISC, g_szE132Spur.Mid(nAnfang, nEnde - nAnfang));
+		nAnfang = nEnde + 1;
+	}
+
+	g_szE132Spur.Empty();
+}
+
+//
 // BEFUND E-132 (20.10.2026) - ein Doppelklick auf Eudora.exe uebernahm
 // stillschweigend das Mailverzeichnis einer FREMDEN Installation.
 //
@@ -3972,7 +4031,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		szSpur.Format("E-132 Startverzeichnis: gefunden=\"%s\" ini=\"%s\" da=%d eigenes=\"%s\" fremd=%d",
 					  szVerzeichnis, (LPCTSTR) szFremdeIni, bIniDa ? 1 : 0,
 					  (LPCTSTR) ExecutableDir, bFremd ? 1 : 0);
-		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		E132SpurMerken(szSpur);
 
 		if (bFremd)
 		{
@@ -3992,7 +4051,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 
 			if (nWahl == IDCANCEL)
 			{
-				PutDebugLog(DEBUG_MASK_MISC, "E-132 Startverzeichnis: abgebrochen");
+				E132SpurMerken("E-132 Startverzeichnis: abgebrochen");
 				return FALSE;
 			}
 
@@ -4022,11 +4081,11 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				buf[sizeof(buf) / sizeof(TCHAR) - 1] = 0;
 
 				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"", buf);
-				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				E132SpurMerken(szSpur);
 			}
 			else
 			{
-				PutDebugLog(DEBUG_MASK_MISC, "E-132 Startverzeichnis: fremdes bewusst uebernommen");
+				E132SpurMerken("E-132 Startverzeichnis: fremdes bewusst uebernommen");
 			}
 		}
 	}
