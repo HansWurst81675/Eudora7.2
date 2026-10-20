@@ -1,4 +1,4 @@
-# Testplan für Gregor — Paket 1.0.111, Stand 20.10.2026
+# Testplan für Gregor — Paket 1.0.112, Stand 20.10.2026
 
 ## Was jetzt zu testen ist — zwei Schritte
 
@@ -42,7 +42,7 @@ IMAP-Ordner verschieben und **sofort** *File → Exit*.
 *File → Exit*. Dieser Weg lief bis 7.2.0.110 an der Wache **vorbei**: gezählt
 wurden nur Übertragungen aus einem **lokalen** Postfach. Gregors Lauf vom
 20.10.2026 zeigte `eintraege=1` bei `uebertragungen=0` — ein Eintrag in der
-Warteschlange, gezählt als null. Behoben in 7.2.0.111.
+Warteschlange, gezählt als null. Behoben in 7.2.0.112.
 
 *So ist es richtig (beide Male):* das Fenster verschwindet **nicht**, solange die
 Übertragung läuft. Dauert es länger als fünf Minuten, steht
@@ -92,8 +92,8 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Schritt 1 an 1.0.111 in Ordnung"* oder
-*„Schritt 2 an 1.0.111 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Schritt 1 an 1.0.112 in Ordnung"* oder
+*„Schritt 2 an 1.0.112 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 

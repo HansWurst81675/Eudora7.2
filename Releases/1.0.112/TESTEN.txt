@@ -1,5 +1,5 @@
 =====================================================================
- Eudora 7.2 - Paket 1.0.111, Quellstand 7.2.0.111
+ Eudora 7.2 - Paket 1.0.112, Quellstand 7.2.0.112
  Gebaut am 20.10.2026.
 =====================================================================
 
@@ -11,12 +11,26 @@ pruefen sollten. Das war mein Fehler, nicht deiner.
  VORHER
 ---------------------------------------------------------------------
 
+!!! WARNUNG - gemeldeter Schaden an vorhandenen Installationen !!!
+
+Wer bereits ein Eudora oder Hermes 7.1 installiert hat, sichert
+VORHER Eudora.ini UND das Mailverzeichnis.
+
+Ein Anwender hat am 18.10.2026 gemeldet (Issue #102), dass sein
+Hermes 7.1.0.9 nach dem Lauf unserer Fassung v1.0.101 nicht mehr
+startet. In der gemeinsam benutzten Eudora.ini steht danach
+MRUFloatXPos=-2147483648, eine ungueltige Fensterposition.
+Wir haben es noch nicht nachgestellt; der Aufruf ist unveraendert,
+also ist anzunehmen, dass diese Fassung dasselbe tut. Befund E-131.
+Ein eigener Ordner reicht NICHT - eine gemeinsame Eudora.ini genuegt.
+
+
 Das Mailverzeichnis in diesem Paket ist leer. Postfaecher bei
 GESCHLOSSENEM Eudora hineinkopieren; deine Sicherung liegt unter
 C:\Users\Gregor\Eudora72-Postfaecher-gesichert.
 
 Starten mit "Eudora starten.cmd".
-Unter Help -> About Eudora muss 7.2.0.111 stehen.
+Unter Help -> About Eudora muss 7.2.0.112 stehen.
 
 ---------------------------------------------------------------------
  SCHRITT 1 - eine Nachricht als Datei speichern
@@ -63,7 +77,7 @@ ZWEIMAL durchfuehren - die HERKUNFT macht den Unterschied:
       und SOFORT File -> Exit.
 
 Weg 2b lief bis 7.2.0.110 an der Wache VORBEI: gezaehlt wurden nur
-Uebertragungen aus einem lokalen Postfach. Behoben in 7.2.0.111.
+Uebertragungen aus einem lokalen Postfach. Behoben in 7.2.0.112.
 
 RICHTIG:  das Fenster verschwindet NICHT, solange die Uebertragung
           laeuft. Dauert es laenger als fuenf Minuten, steht
@@ -107,8 +121,8 @@ in der Inbox erscheinen sie wieder ueber Rechtsklick auf das Postfach
  WIE DEIN URTEIL ZAEHLT
 ---------------------------------------------------------------------
 
-Mit der Paketnummer: "Schritt 1 an 1.0.111 in Ordnung" oder
-"Schritt 2 an 1.0.111 gescheitert, Eudora schloss sofort".
+Mit der Paketnummer: "Schritt 1 an 1.0.112 in Ordnung" oder
+"Schritt 2 an 1.0.112 gescheitert, Eudora schloss sofort".
 
 Eigene Tests dieser Fassung: 229 Tests, 229 bestanden.
 =====================================================================

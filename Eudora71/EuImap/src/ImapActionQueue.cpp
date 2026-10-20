@@ -1771,14 +1771,27 @@ void CImapSameServerTransferMsgAction::Copy(CImapAction *pImapAction)
 HRESULT CImapSameServerTransferMsgAction::DoWork()
 {
 	//
-	// E-123 (20.10.2026): solange hier kopiert und geloescht wird, laeuft
-	// eine Uebertragung. Diese Klasse hat kein eigenes DoPreThreadAction und
-	// benutzt die Basisfassung; der Zaehler gehoert deshalb hierher, wo die
-	// Arbeit auf dem Server wirklich stattfindet (XferMessagesOnServer und
-	// DeleteMessagesFromServer darunter).
+	// E-123, PRUEFER-39/N1 (20.10.2026): HIER STAND EIN HOCHLADEZAEHLER, UND
+	// ER MUSSTE WIEDER HERAUS.
 	//
-	CE123HochladenZaehler e123Zaehler(true);
-
+	// DoWork laeuft im NEBENFADEN (QCTaskManager.cpp:1095, gestartet in :549
+	// mit AfxBeginThread) und blockiert dort unbegrenzt auf dem Netz;
+	// CImapAction::RequestThreadStop() ist ein leerer Rumpf (:709), niemand
+	// bricht den Faden ab. Solange der Zaehler stuende, waere bLaeuft wahr,
+	// die Wache in mainfrm.cpp naehme jedes Mal den Zweig
+	// "bNotfall && (bLaeuft || bDialogOffen)", gaebe das Beenden auf und
+	// setzte m_bE123Gewartet zurueck - der naechste Versuch wartete wieder.
+	// Eudora liesse sich dann NIE MEHR beenden, ausser ueber den Offline-
+	// Modus oder den Task-Manager. Das waere schlimmer als der Fehler.
+	//
+	// Fuer Gregors Fall trug der Zaehler ohnehin nichts bei: sein Protokoll
+	// sagte eintraege=1 bei uebertragungen=0 - die Aufgabe stand noch in
+	// m_array und war nie gestartet. Gezaehlt wird sie von der Schleife in
+	// E123OffeneUebertragungen, und die prueft seit dieser Fassung die
+	// Basisklasse. An seinen beiden Messungen aendert das Entfernen nichts:
+	// bei Weg 2b blieb laeuft durchgehend 0, bei Weg 2a kam laeuft=1 aus
+	// m_bE123UebertragungLaeuft (:3768), nicht von hier.
+	//
 	if (!m_pTocDoc || !m_pImapMailbox || !m_pDestTocDoc || !m_pDestTocDoc->m_pImapMailbox)
 	{
 		m_iState = kActionStateFailed;

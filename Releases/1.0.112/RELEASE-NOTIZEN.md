@@ -1,8 +1,26 @@
-**Eudora 7.2.0.111 / Paket 1.0.111**
+**Eudora 7.2.0.112 / Paket 1.0.112**
+
+> ## ⚠ Vor dem Start lesen — gemeldeter Schaden an vorhandenen Installationen
+>
+> **Wer bereits ein Eudora oder Hermes 7.1 installiert hat, sichert vorher
+> `Eudora.ini` und das Mailverzeichnis.**
+>
+> Ein Anwender hat am 18.10.2026 gemeldet
+> ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)), dass sein
+> **Hermes 7.1.0.9 nach dem Lauf unserer Fassung `v1.0.101` nicht mehr startet**
+> — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`. Seine Untersuchung zeigt in der
+> gemeinsam benutzten `Eudora.ini` den Leisteneintrag
+> `MRUFloatXPos=-2147483648`, also eine ungültige Fensterposition.
+>
+> **Wir haben es noch nicht nachgestellt** und wissen nicht, ob diese Fassung
+> dasselbe tut — der Aufruf ist unverändert, also ist es anzunehmen. Der Befund
+> läuft bei uns als **E-131**.
+>
+> Ein eigener Ordner reicht **nicht** aus: eine gemeinsam benutzte `Eudora.ini`
+> genügt für den Schaden. Das Mailverzeichnis in diesem ZIP ist leer; wer seine
+> Postfächer hineinkopiert, nimmt auch seine `Eudora.ini` mit.
 
 ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
-Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopieren.
-
 ## Neu gegenüber v1.0.101
 
 - **Beenden wartet jetzt auf jede Art von Übertragung.** Wird eine Nachricht in
@@ -27,6 +45,12 @@ Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopi
   Hänger zu führen.
 
 ## Bekannte Fehler
+
+- **Eine daneben installierte Eudora oder Hermes 7.1 kann danach nicht mehr
+  starten** — siehe die Warnung ganz oben
+  ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102), bei uns
+  E-131). Von außen gemeldet, von uns noch nicht nachgestellt. Abhilfe:
+  `Eudora.ini` und Mailverzeichnis vorher sichern.
 
 Die vollständige Liste mit Abhilfe steht in der
 [README, Abschnitt „Auf einen Blick“](https://github.com/HansWurst81675/Eudora7.2#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind).
@@ -81,7 +105,7 @@ SHA-256 des ZIPs: `72350cc64b86b8dd0713618e471c71c0883089353d64659ba435bdb57bf3e
   verschwand, obwohl eine Aufgabe in der Warteschlange stand. Die Behebung ist
   am Quelltext belegt und durch eine eigene Schranke abgesichert
   (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am Fehlerstand 2 von 2 rot).
-- **Von Gregor am 20.10.2026 an Paket 1.0.111 am laufenden Programm bestätigt,
+- **Von Gregor am 20.10.2026 an Paket 1.0.112 am laufenden Programm bestätigt,
   auf beiden Wegen:** aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
   wartete **6015 ms**) und innerhalb desselben IMAP-Kontos (**4015 ms**). Beide
   Male brachte Eudora die Übertragung zu Ende und beendete sich dann sauber;

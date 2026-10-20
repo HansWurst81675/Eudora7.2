@@ -78,6 +78,51 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.112 — E-123: der Zähler aus `SameServer::DoWork` ist wieder heraus (PRÜFER-39, N1)
+
+**Neu aufgenommen und weiter OFFEN: [E-131](BEFUNDE.md#e-131)** — in dieser Fassung ausdruecklich NICHT angefasst.
+der **erste Fehlerbericht von außen**
+([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
+18.10.2026). Nach dem Lauf unserer Fassung `v1.0.101` startet eine daneben
+installierte Hermes 7.1.0.9 nicht mehr; in der gemeinsam benutzten `Eudora.ini`
+steht `MRUFloatXPos=-2147483648`. Geschrieben wird das von
+`SaveBarState(_T("ToolBar"))` (`mainfrm.cpp:1027`) — MFCs eigene Leistenschlüssel
+mit einem Wert, der nie gesetzt wurde. **Von uns noch nicht nachgestellt.** Die
+Release-Notizen zu 1.0.112 tragen deshalb eine Warnung ganz oben.
+
+**[PRÜFER-39](Befunde/PRUEFER-39.md) hat 7.2.0.111 abgelehnt**, und zu Recht. Der
+dritte meiner drei Eingriffe — ein `CE123HochladenZaehler` am Anfang von
+`CImapSameServerTransferMsgAction::DoWork` — konnte Eudora **unbeendbar**
+machen.
+
+**Nachgemessen:** `DoWork` läuft im **Nebenfaden** (`QCTaskManager.cpp:1095`,
+gestartet in `:549` mit `AfxBeginThread`) und blockiert dort unbegrenzt auf dem
+Netz; `CImapAction::RequestThreadStop()` ist ein **leerer Rumpf**
+(`ImapActionQueue.cpp:709`), niemand bricht den Faden ab. Solange der Zähler
+stünde, wäre `bLaeuft` wahr, die Wache in `mainfrm.cpp:2005` nähme jedes Mal den
+Zweig `bNotfall && (bLaeuft || bDialogOffen)`, gäbe das Beenden auf und setzte
+`m_bE123Gewartet` zurück — der nächste Versuch wartete wieder, **endlos**.
+Heraus käme man nur über den Offline-Modus oder den Task-Manager.
+
+**Für Gregors Fehler trug der Zähler ohnehin nichts bei:** sein Protokoll sagte
+`eintraege=1` bei `uebertragungen=0` — die Aufgabe stand noch in `m_array` und
+war **nie gestartet**. Gezählt wird sie von der Schleife in
+`E123OffeneUebertragungen`, und die prüft seit 7.2.0.111 die Basisklasse.
+
+**An seinen beiden Messungen ändert das Entfernen nichts, und das ist belegt:**
+bei Weg 2b blieb `laeuft` durchgehend `0`, bei Weg 2a kam `laeuft=1` aus
+`m_bE123UebertragungLaeuft` (`:3768`) — also aus dem **zweiten** Eingriff, nicht
+aus dem entfernten dritten.
+
+**Dazu N3, und der wog mehr, als der Bericht sagt:** die neue Schranke stand nur
+in der unversionierten `.git/hooks/pre-commit` dieser Maschine. Beim Nachsehen
+fehlte dort auch **`pruefe-datum.pl` von gestern**. Beide stehen jetzt in
+`tools/hooks-einrichten.sh`; ein frischer Klon bekommt sie.
+
+**229 Tests, 229 bestanden.** Offen aus PRÜFER-39: N2 (der Zähler fehlt an den
+drei `DoPostProcessing`), N4 (die Schranke lässt sechs von sieben Umgehungen
+durch), N5 (ihre Bereichserkennung).
+
 ## 7.2.0.111 — die Wache beim Beenden sieht jetzt jede Übertragung (E-123)
 
 **Gregor am 20.10.2026 an Paket 1.0.110:** *„verschoben und beendet. fenster

@@ -399,7 +399,19 @@ fi
 #      Projekt schon zweimal vorgekommen (Befund E-109).
 schranke pruefe-testdaten-anonym.pl || exit $?
 
-# 15. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
+# 15. E-123: die Wache beim Beenden muss JEDE Uebertragungsart sehen. Am
+#      20.10.2026 meldete Gregors Protokoll "eintraege=1 ... uebertragungen=0"
+#      - eine Verschiebung innerhalb desselben IMAP-Kontos wurde nicht
+#      gezaehlt, das Fenster war sofort weg. Gezaehlt wird die Basisklasse.
+schranke pruefe-e123-zaehlung.pl || exit $?
+
+# 16. Datumsangaben gegen die Uhr. Am 17.10.2026 stand in vier Dokumenten
+#      "18.10.2026" - ein Tag, den es noch nicht gab. Gefunden hat das kein
+#      Werkzeug, sondern der Zeitstempel der gebauten EXE. Geprueft werden
+#      nur HINZUGEFUEGTE Zeilen in gestageten .md, Fenster 31 Tage.
+schranke pruefe-datum.pl || exit $?
+
+# 17. Schranke gegen lautlose Dateischaeden (Zeilenenden, Kodierung).
 schranke pruefe-bytes.pl
 exit $?
 HOOKENDE
