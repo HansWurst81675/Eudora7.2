@@ -27,6 +27,7 @@ void RunE101Tests(void);
 void RunResolveURLTests(void);
 void RunE112Tests(void);
 void RunE69Tests(void);
+void RunE131Tests(void);
 void RunE112MetadateiTests(void);
 void RunE105Tests(void);
 void RunE118Tests(void);
@@ -115,6 +116,7 @@ int main(int argc, char* argv[])
 	RunResolveURLTests();
 	RunE112Tests();
 	RunE69Tests();
+	RunE131Tests();
 	RunE112MetadateiTests();
 	RunE105Tests();
 	RunE118Tests();

@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 20.10.2026 (Pakete bis 1.0.112 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.112** als `v1.0.112` am 20.10.2026, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 20.10.2026 (Pakete bis 1.0.113 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.112** als `v1.0.112` am 20.10.2026, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -155,6 +155,14 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.113 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.113-release`, Quellstand 7.2.0.113, Zweig `e-131-leistenposition`
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.113-release`, mit `TESTEN.txt` |
+| Inhalt | wie 1.0.112, dazu: [E-131](../BEFUNDE.md#e-131) behoben — keine ungültige Fensterposition mehr in der `Eudora.ini`, die eine daneben installierte Eudora/Hermes 7.1 beim Start abstürzen ließ |
+| Gemessen | **rot:** ein einziges Starten und Beenden von 7.2.0.112 im Prüfverzeichnis schrieb `MRUFloatXPos=-2147483648` **dreimal** in die INI, die von 3249 auf 6480 Byte wuchs. **grün:** nach der Behebung `E-131 Leistenposition: abschnitte-mit-eintrag=5 berichtigt=5`, danach `MRUFloatXPos=40` und **null** Treffer für `INT_MIN`; beim zweiten Lauf dasselbe. **234 Tests, 234 bestanden** (fünf neue, darunter die Gegenprobe, dass gewöhnliche Positionen unangetastet bleiben). Bau Release 0 Fehler. **Offen bleibt der Leseweg** — eine bereits kaputte INI wird erst beim nächsten Sichern berichtigt |
 
 ## 1.0.112 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.112-release`, Quellstand 7.2.0.112, Zweig `e-123-transfersame`, **als `v1.0.112` veröffentlicht**
 

@@ -84,10 +84,16 @@ Die wichtigsten:
 ## Hinweis zu Windows Defender
 
 Jede Fassung dieses Projekts ist eine neue, nicht signierte Datei. Microsoft Defender
-hat eine Zwischenfassung (1.0.98) fälschlich als Trojaner eingestuft und das Programm
-ohne Meldung beendet. **Dieses Paket wurde vor dem Hochladen mit Defender geprüft: 0
-Funde** (34 Dateien). Sollte Defender es bei Ihnen trotzdem melden, steht in der README
-unter *Windows Defender meldet Eudora als Trojaner*, was zu tun ist.
+hat Zwischenfassungen fälschlich als Trojaner eingestuft und das Programm ohne Meldung
+beendet — zuletzt am 20.10.2026 eine Fassung, die **acht Minuten zuvor** mit 0 Funden
+geprüft worden war.
+
+**Dieses Paket wurde vor dem Hochladen mit Defender geprüft: 0 Funde** (34 Dateien).
+**Das ist kein Freispruch**, sondern nur der Nachweis, dass zu diesem Zeitpunkt nichts
+bekannt war: das Urteil über eine neue, unsignierte Datei entsteht erst, wenn
+Microsofts Lernverfahren sie bewertet hat — und das kann Minuten später sein. Sollte
+Defender es bei Ihnen melden, steht in der README unter *Windows Defender meldet Eudora
+als Trojaner*, was zu tun ist.
 
 ## Prüfsumme
 

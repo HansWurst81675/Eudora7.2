@@ -82,6 +82,51 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.113 — E-131: keine ungültige Fensterposition mehr in der `Eudora.ini`
+
+**Der erste Fehlerbericht von außen, und er saß.** Ein Anwender meldete am
+18.10.2026 ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)),
+dass seine daneben installierte Hermes 7.1.0.9 nach dem Lauf unserer Fassung
+`v1.0.101` nicht mehr startet — `EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`,
+Ordinal 3952, `ECX=0`. Sein Vergleich beider INIs nannte die Stelle:
+`MRUFloatXPos=-2147483648`, also `INT_MIN` statt eines Bildschirmpunkts.
+
+**Nachgestellt am 20.10.2026** in `C:\Temp\E131`: ein **einziges** Starten und
+Beenden von 7.2.0.112 genügt. Die INI wuchs von 3249 auf 6480 Byte, 16
+Abschnitte kamen dazu, und der Wert stand **dreimal** darin. Es betraf also
+nicht nur die eine veröffentlichte Fassung.
+
+**Behoben:** `E131LeistenpositionenBereinigen()` am Ende von
+`CMainFrame::SaveBarState` geht die `ToolBar*`-Abschnitte durch und ersetzt
+jede unbrauchbare Schwebeposition durch eine, die auf dem Bildschirm liegt.
+Entschieden wird in der eigenen, prüfbaren Funktion
+`E131PositionIstBrauchbar`. Nach der Behebung:
+
+```
+E-131 Leistenposition: abschnitte-mit-eintrag=5 berichtigt=5 bildschirm=0,0,1920x1294 ersatz=40,40
+MRUFloatXPos=40        INT_MIN: 0 Treffer
+```
+
+**234 Tests, 234 bestanden** (fünf neue). **Der erste Entwurf der Regel war
+falsch, und ein Test hat ihn gefangen:** er verlangte 100 Pixel Luft auf allen
+vier Seiten, wodurch `y=1200` auf einem 1294 Pixel hohen Schirm als unbrauchbar
+galt. Nach links und oben gilt die Luft, nach rechts und unten die
+Bildschirmkante. **Die Gegenprobe ist der wichtigere Test:** gewöhnliche
+Positionen bleiben unangetastet — sonst wäre aus der Behebung *„jede Position
+wird überschrieben"* geworden.
+
+**Offen bleibt der Leseweg:** eine INI, die bereits kaputte Werte trägt, wird
+erst beim nächsten Sichern berichtigt.
+
+### Dazu: [E-124](BEFUNDE.md#e-124) fortgeschrieben — die Defender-Schranke prüft zu früh
+
+Gemessen am 20.10.2026: `Eudora.exe` um **13:09:05** gebaut und sofort geprüft
+(34 Dateien, 0 Funde), von Defender um **13:17:28** als
+`Trojan:Win32/Bearfoos.A!ml` erkannt. **Acht Minuten Abstand**, dasselbe Muster
+wie am 16.10. bei 1.0.98. Gregors Entscheidung: keine Wartezeit in die
+Auslieferung einbauen, er meldet es. Der Satz in den Release-Notizen sagt
+jetzt, dass 0 Funde **kein Freispruch** sind.
+
 ## 7.2.0.112 — E-123: der Zähler aus `SameServer::DoWork` ist wieder heraus (PRÜFER-39, N1)
 
 **Neu aufgenommen und weiter OFFEN: [E-131](BEFUNDE.md#e-131)** — in dieser Fassung ausdruecklich NICHT angefasst.

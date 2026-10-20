@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.112** (Quellstand 7.2.0.112), am 20.10.2026 als `v1.0.112` veröffentlicht; davor `v1.0.101` vom 17.10.2026. Die ausführliche
+*Stand Paket **1.0.113** (Quellstand 7.2.0.113, nicht veröffentlicht); veröffentlicht ist **1.0.112** (Quellstand 7.2.0.112), am 20.10.2026 als `v1.0.112`; davor `v1.0.101` vom 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -956,7 +956,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.112` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.113` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

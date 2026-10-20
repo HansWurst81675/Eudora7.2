@@ -301,4 +301,14 @@ $pStart = Find-Line $te '^bool E69LautErlaubt' 0
 $pEnd = Find-Line $te '^\}\s*$' $pStart
 Write-Region $te $pStart $pEnd (Join-Path $OutDir "taskerror_e69.inc") $tevPath
 
+# ------------------------------------------------------------ mainfrm.cpp (E-131)
+# Region Q: E131PositionIstBrauchbar - liegt eine gemerkte Schwebeposition
+# noch auf dem Bildschirm? Reine Rechnung, ohne Fenster und ohne INI, damit
+# sie ohne Oberflaeche geprueft werden kann (Befund E-131, Issue #102).
+$mfPath = Join-Path $SrcDir "mainfrm.cpp"
+$mf = Read-Lines $mfPath
+$qStart = Find-Line $mf '^bool E131PositionIstBrauchbar' 0
+$qEnd = Find-Line $mf '^\}\s*$' $qStart
+Write-Region $mf $qStart $qEnd (Join-Path $OutDir "mainfrm_e131.inc") $mfPath
+
 Write-Host "Extract.ps1: fertig."
