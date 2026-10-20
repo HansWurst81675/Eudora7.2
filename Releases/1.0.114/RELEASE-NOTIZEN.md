@@ -123,9 +123,11 @@ SHA-256 des ZIPs: *(wird beim Schnüren des Pakets eingetragen)*
 - **Nicht geprüft:** ob eine daneben installierte Hermes 7.1 danach wieder
   startet. Dazu fehlt uns Hermes; wer es testen kann, wird in
   [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102) darum gebeten.
-- **Der Über-Dialog ist am laufenden Programm gemessen**, einschließlich
-  *Copy info*: der Knopf wurde als Fensterbotschaft an sein gemessenes Handle
-  gedrückt, und aus der Zwischenablage kam
+- **Der Über-Dialog ist am laufenden Programm geprüft — von Gregor, nicht von
+  einem Skript.** Mein Messskript hat den Dialog nicht einmal geöffnet
+  (`KEIN Dialog gefunden`); es hat den Kontoassistenten weggeräumt und ist
+  dann ins Leere gelaufen. Gregor hat *Help → About Eudora* selbst geöffnet,
+  *Copy info* gedrückt und den Inhalt der Zwischenablage geschickt:
 
   ```
   Version 7.2.0.114R - Paid Mode
