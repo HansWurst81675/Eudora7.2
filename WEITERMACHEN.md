@@ -308,6 +308,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
+| **[E-130](BEFUNDE.md#e-130)** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… |
 | **[E-129](BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… |
 | **[E-128](BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… |
 | **[E-127](BEFUNDE.md#e-127)** | Ein IMAP-Ordner, der seit dem Start noch nie geöffnet war, zeigt die eben dorthin verscho… |
