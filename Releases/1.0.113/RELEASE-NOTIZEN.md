@@ -12,7 +12,7 @@
 > **Nachgestellt und behoben.** Ein einziges Starten und Beenden der Fassung
 > 7.2.0.112 genügte, um den Wert dreimal in die Datei zu schreiben; mit
 > 7.2.0.113 steht dort eine gültige Position und **kein** `INT_MIN` mehr. Der
-> Befund läuft bei uns als **E-131**.
+> Befund läuft bei uns als **[E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-131)**.
 >
 > **Was wir nicht prüfen konnten:** ob eine daneben installierte Hermes 7.1
 > danach wieder startet — wir haben kein Hermes. Wer das testen kann, wird in
@@ -59,7 +59,7 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren. Das
 - **Eine bereits beschädigte `Eudora.ini`** — etwa von einer älteren Fassung
   dieses Projekts — wird erst beim **nächsten Sichern** berichtigt; der Leseweg
   ist noch offen ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
-  bei uns E-131). Vorher eine Kopie anlegen.
+  bei uns [E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-131)). Vorher eine Kopie anlegen.
 Die vollständige Liste mit Abhilfe steht in der
 [README, Abschnitt „Auf einen Blick“](https://github.com/HansWurst81675/Eudora7.2#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind).
 Die wichtigsten:
@@ -105,21 +105,26 @@ als Trojaner*, was zu tun ist.
 SHA-256 des ZIPs: `0d1d4bf43eab8323f2ce3ad2ff1c78f44af5c7adf7a84e979334aab5687f4772`
 
 ## Was geprüft wurde – und was nicht
-## Was geprüft wurde – und was nicht
 
-- **229 Tests, 229 bestanden** gegen genau diesen Bau; `paket-pruefen.ps1` ohne
+- **234 Tests, 234 bestanden** gegen genau diesen Bau; `paket-pruefen.ps1` ohne
   Fehler, Defender 0 Funde bei 34 Dateien, Kriterium 0 erfüllt.
+- **Am Prüfstand gemessen, rot und grün:** mit der Vorgängerfassung schrieb ein
+  einziges Starten und Beenden `MRUFloatXPos=-2147483648` dreimal in die
+  `Eudora.ini`; mit dieser Fassung steht dort eine gültige Position und **null**
+  Treffer für `INT_MIN` — zwei Läufe hintereinander, gleiches Ergebnis.
+- **Nicht geprüft:** ob eine daneben installierte Hermes 7.1 danach wieder
+  startet. Dazu fehlt uns Hermes; wer es testen kann, wird in
+  [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102) darum gebeten.
 - **Von Gregor am 20.10.2026 bestätigt:** eine über *File → Save As* gespeicherte
   Nachricht wird in Chrome richtig dargestellt (Paket 1.0.110, gleicher Code).
 - **Am Programm gemessen:** die Zusammenfassung der Filtermeldungen — ein
   übersprungener Fall ergibt einen Eintrag, drei ergeben einen Eintrag und einen
   Sammeleintrag, und ein zweiter Filterlauf im selben Programmlauf meldet wieder.
-- **Der Fehler, den diese Fassung behebt, stammt aus Gregors Lauf an 1.0.110:**
-  Verschieben innerhalb eines IMAP-Kontos und sofortiges Beenden — das Fenster
-  verschwand, obwohl eine Aufgabe in der Warteschlange stand. Die Behebung ist
-  am Quelltext belegt und durch eine eigene Schranke abgesichert
-  (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am Fehlerstand 2 von 2 rot).
-- **Von Gregor am 20.10.2026 an Paket 1.0.113 am laufenden Programm bestätigt,
+- **Der Beenden-Weg stammt aus Gregors Lauf an 1.0.110:** Verschieben innerhalb
+  eines IMAP-Kontos und sofortiges Beenden — das Fenster verschwand, obwohl eine
+  Aufgabe in der Warteschlange stand. Behoben in 7.2.0.111, abgesichert durch
+  eine eigene Schranke (`tools/pruefe-e123-zaehlung.pl`, Gegenprobe am
+  Fehlerstand 2 von 2 rot).
   auf beiden Wegen:** aus einem lokalen Postfach in einen IMAP-Ordner (Eudora
   wartete **6015 ms**) und innerhalb desselben IMAP-Kontos (**4015 ms**). Beide
   Male brachte Eudora die Übertragung zu Ende und beendete sich dann sauber;
