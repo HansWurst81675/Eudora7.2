@@ -1440,3 +1440,12 @@ Pakete ein ([L-42.10](Befunde/LEKTOR-42.md#l-42.10)). Offen: `pruefe-befundurtei
 Dokumente ohne TESTPLAN, AUFGABEN und PAKETE ([L-42.12](Befunde/LEKTOR-42.md#l-42.12)); `doku-pruefen.pl` sieht einen
 Widerspruch innerhalb derselben Tabelle nicht ([L-42.13](Befunde/LEKTOR-42.md#l-42.13)); [E-123](BEFUNDE.md#e-123) fehlt weiter im Maßstab
 7.2.1.0 — Gregors Entscheidung ([L-42.14](Befunde/LEKTOR-42.md#l-42.14)).
+
+## Nachtrag am 20.10.2026 (kein eigener Durchgang)
+**Nachtrag am 20.10.2026 — nicht vom LEKTOR, sondern beim Versionssprung auf
+7.2.0.111.** [LEKTOR-42](Befunde/LEKTOR-42.md) nennt an drei Stellen 7.2.0.110
+als Quellstand. Der Bericht ist ein **Rückblick** auf den 19.10.2026 und bleibt
+inhaltlich unverändert; die drei Stellen tragen jetzt den Vermerk, dass der
+Quellstand seit dem 20.10.2026 **7.2.0.111** ist. `pruefe-stand-md.pl` hat den
+Nachtrag erzwungen — ein Bericht, der ohne Hinweis eine überholte Fassung als
+gültig ausgibt, ist eine Unwahrheit auf `main`.
