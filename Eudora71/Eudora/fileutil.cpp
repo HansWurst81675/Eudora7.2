@@ -317,6 +317,7 @@ CString EudoraDir;
 CString EudoraDirNoBackslash;
 CString ExecutableDir;
 CString TempDir;
+CString MailDirHerkunft;	// siehe fileutil.h
 
 BOOL CheckMailDirectory(const char* dir, const char* Location)
 {
@@ -391,6 +392,12 @@ BOOL CheckMailDirectory(const char* dir, const char* Location)
 	
 	EudoraDir = Edir;
 	EudoraDirLen = EudoraDir.GetLength();
+
+	// Die Herkunft kam bisher nur im Fehlerfall vor (ErrorDialog oben).
+	// Sie zu behalten kostet nichts und beantwortet im Ueber-Dialog die
+	// Frage, die bei E-132 teuer war: WOHER hat Eudora dieses Verzeichnis?
+	MailDirHerkunft = Location ? Location : "";
+
 	return (TRUE);
 }
 

@@ -9,5 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-10-20 14:03 | Doku gegen den Bestand nach v1.0.112 ([LEKTOR-43](../Befunde/LEKTOR-43.md#lektor-43)) |
-| PRUEFER | 2026-10-20 14:59 | [E-131](../BEFUNDE.md#e-131): die INI-Nachbehandlung in CMainFrame::SaveBarState nachrechnen |

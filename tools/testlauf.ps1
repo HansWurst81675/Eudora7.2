@@ -44,6 +44,8 @@
 #              -Sekunden 25
 #
 #   -NurPruefen        prueft alles und startet NICHT (fuer Gegentests)
+#   -OhneArgument      startet Eudora OHNE Mailverzeichnis-Argument; nur so
+#                      sucht Eudora sich eines selbst (Registry, Befund E-132)
 #   -ErlaubtePfade     Standard C:\Temp
 #
 # Kodierung: reines ASCII, kein BOM. Umlaute als ae/oe/ue.
@@ -62,7 +64,10 @@ param(
     # denselben Lauf und die Instanz bleibt nicht aus Versehen stehen.
     [string]   $MessenSkript  = '',
     [string[]] $ErlaubtePfade = @('C:\Temp'),
-    [switch]   $NurPruefen
+    [switch]   $NurPruefen,
+    # Startet Eudora OHNE das Mailverzeichnis als Argument - der einzige Weg,
+    # auf dem Eudora sich sein Verzeichnis selbst sucht (Befund E-132).
+    [switch]   $OhneArgument
 )
 
 $ErrorActionPreference = 'Stop'
@@ -276,8 +281,30 @@ if (-not ([System.Management.Automation.PSTypeName]'TL').Type) {
 
 $daten = Join-Path $voll 'Mailverzeichnis'
 Write-Host ''
-Write-Host ('  Starte  ' + $exe + '  "' + $daten + '"')
-$proz = Start-Process -FilePath $exe -ArgumentList $daten -WorkingDirectory $voll -PassThru
+if ($OhneArgument) {
+    #
+    # BEFUND E-132: Eudora sucht sich sein Mailverzeichnis nur dann selbst,
+    # wenn die Befehlszeile LEER ist und keine Eudora.ini neben der EXE liegt
+    # (eudora.cpp:1036-1052). Dann liest es
+    # HKEY_CURRENT_USER\Software\Qualcomm\Eudora\CommandLine\Current und
+    # uebernimmt den Datenordner einer FREMDEN Installation.
+    #
+    # Dieser Schalter gibt es, weil der Pruefstand am 20.10.2026 einen Lauf
+    # zu E-132 gefahren hat, der den Befund gar nicht erreichen KONNTE: er
+    # uebergibt das Mailverzeichnis immer als Argument, womit die erste
+    # Bedingung nie erfuellt ist. Im Protokoll stand danach keine einzige
+    # E-132-Spurmarke, und beinahe waere das als Beleg durchgegangen.
+    # Derselbe Fehler wie bei E-69 am selben Tag.
+    # Arbeitsweise/messung-muss-den-weg-treffen.md
+    #
+    Write-Host ('  Starte  ' + $exe + '   OHNE Argument (Befund E-132)')
+    Write-Host '  Eudora sucht sein Mailverzeichnis dann selbst - ueber die Registry.'
+    $proz = Start-Process -FilePath $exe -WorkingDirectory $voll -PassThru
+}
+else {
+    Write-Host ('  Starte  ' + $exe + '  "' + $daten + '"')
+    $proz = Start-Process -FilePath $exe -ArgumentList $daten -WorkingDirectory $voll -PassThru
+}
 
 $ergebnis = ''
 $hHaupt = [IntPtr]::Zero

@@ -1,18 +1,70 @@
-# Testplan für Gregor — Paket 1.0.113, Stand 20.10.2026
+# Testplan für Gregor — Paket 1.0.114, Stand 20.10.2026
 
 ## Was jetzt zu testen ist
 
-**Die beiden Schritte, die hier standen, sind erledigt.** Beide hast du am
-20.10.2026 selbst bestätigt, und beide stecken in `v1.0.112`, das seit heute
-11:55 UTC veröffentlicht ist. Sie stehen unten als **[C7](#c7)** weiter — zum
-Nachschlagen, nicht als Auftrag.
+**Ein Schritt, und er ist neu.** Alles andere in diesem Plan ist
+Nachschlagewerk.
 
-**Offen ist nur noch eines, und dafür braucht es dich:**
-[E-131](BEFUNDE.md#e-131) — läuft unsere Fassung neben einer vorhandenen
-Eudora oder Hermes 7.1, kann das **alte** Programm danach nicht mehr starten.
-Gemeldet hat das ein Fremder ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)),
-**nachgestellt haben wir es nicht**. Wer das prüft, sichert vorher
-`Eudora.ini` und das Mailverzeichnis.
+### <a id="c8"></a>Der Starttest — nimmt sich Eudora ein fremdes Mailverzeichnis?
+
+**Worum es geht.** Startest du `Eudora.exe` **direkt** (Doppelklick) statt über
+`Eudora starten.cmd`, sucht Eudora sich das Mailverzeichnis selbst — und findet
+über die Registry das Verzeichnis, mit dem **zuletzt irgendeine** Eudora
+gestartet wurde. Bisher nahm es das wortlos und schrieb hinein. Genau das hat
+der Melder aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)
+erlebt; danach startete seine Hermes 7.1 nicht mehr
+([E-131](BEFUNDE.md#e-131)). Ab 1.0.114 **fragt** Eudora vorher.
+
+**Vorbereitung.** Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.114-release` — **das Paket ist noch nicht geschnürt**, das Verzeichnis gibt es also noch nicht; dieser Schritt wird fällig, sobald es da ist.
+Dein bisheriges `Eudora72-1.0.113-release` **stehen lassen** — es ist in diesem
+Test die „fremde Installation". Notier dir vorher Datum und Uhrzeit von
+`Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini`; daran siehst du am Ende,
+ob etwas hineingeschrieben wurde.
+
+**Schritt 1 — ein Mal mit 1.0.113 starten und beenden.** Ganz normal über
+`Eudora starten.cmd`. Damit zeigt die Registry auf dessen Mailverzeichnis;
+nur so ist es nachher das „fremde".
+
+**Schritt 2 — in 1.0.114 die `Eudora.exe` doppelklicken.** **Nicht**
+`Eudora starten.cmd`.
+
+*So ist es richtig:* es kommt ein Fenster **Eudora 7.2** mit der Meldung
+*„Eudora found an existing mail folder that belongs to another installation"*
+und dem Pfad deines 1.0.113-Verzeichnisses, dazu drei Schaltflächen:
+
+| Taste | was passiert |
+|---|---|
+| **Yes** | das fremde Verzeichnis wird benutzt — **und beschrieben** |
+| **No** | Eudora legt sich ein eigenes `Mailverzeichnis` neben dem Programm an (**Vorgabe**, so dass ein unbedachtes Enter nichts beschädigt) |
+| **Cancel** | Eudora beendet sich, ohne irgendetwas anzufassen |
+
+**Bitte „No" drücken.**
+
+*Danach prüfen:* Eudora läuft mit einem leeren eigenen Postfach, und
+`Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini` hat **noch denselben
+Zeitstempel wie vorher**.
+
+*Wenn gar kein Fenster kommt und Eudora einfach startet, bitte melden* — dann
+greift die Rückfrage nicht. In dem Fall hilft die Zeile aus dem Protokoll:
+
+```
+grep "E-132" "C:\Users\Gregor\Eudora72-1.0.114-release\Mailverzeichnis\eudora.log"
+```
+
+Dort muss `E-132 Startverzeichnis: … fremd=1` stehen. Steht da `fremd=0`,
+hat Eudora das Verzeichnis als sein eigenes angesehen — auch das bitte melden,
+mit der ganzen Zeile.
+
+*Voraussetzung:* keine. Geht offline, dauert zwei Minuten.
+
+**Was dieser Test NICHT prüft:** ob eine daneben installierte **Hermes 7.1**
+danach wieder startet. Dafür fehlt uns Hermes; der Melder aus Issue #102 ist
+ausdrücklich darum gebeten worden.
+
+**Bei uns schon gemessen** (20.10.2026, Prüfstand, nicht bei dir): *No* →
+eigenes Verzeichnis, fremde `Eudora.ini` unverändert. *Yes* → fremdes
+Verzeichnis, dessen `Eudora.ini` ändert sich nach fünfzehn Sekunden. *Cancel* →
+Programm endet, nichts angefasst.
 
 ### <a id="c7"></a>C7 · Paket 1.0.112 — was am 20.10.2026 schon bestätigt wurde
 
@@ -106,18 +158,18 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Schritt 1 an 1.0.113 in Ordnung"* oder
-*„Schritt 2 an 1.0.113 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Starttest an 1.0.114 in Ordnung"* oder
+*„Starttest an 1.0.114 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
-Eigene Tests dieser Fassung: **229 Tests, 229 bestanden.**
+Eigene Tests dieser Fassung: **241 Tests, 241 bestanden.**
 
 ---
 
 ## Buchführung — was wann an welchem Paket bestätigt wurde
 
-**Stand 20.10.2026, Paket 1.0.112** (veröffentlicht als `v1.0.112`; an **1.0.110** bestätigt: eine gespeicherte Nachricht wird in Chrome richtig dargestellt — an **1.0.111** bestätigt: der Beenden-Weg auf beiden Wegen, 6015 ms aus dem lokalen Postfach und 4015 ms innerhalb des IMAP-Kontos — an **1.0.112** selbst ist **nichts am laufenden Programm gemessen**, es nimmt nur den Hochladezähler aus [PRÜFER-39](Befunde/PRUEFER-39.md) N1 zurück). Davor: (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
+**Stand 20.10.2026. Zu testen ist 1.0.114 (oben, [C8](#c8)) - es ist noch nicht geschnürt. Veröffentlicht ist 1.0.113 als `v1.0.113`; an 1.0.113 selbst hat Gregor nichts am laufenden Programm gemessen. Davor Paket 1.0.112** (veröffentlicht als `v1.0.112`; an **1.0.110** bestätigt: eine gespeicherte Nachricht wird in Chrome richtig dargestellt — an **1.0.111** bestätigt: der Beenden-Weg auf beiden Wegen, 6015 ms aus dem lokalen Postfach und 4015 ms innerhalb des IMAP-Kontos — an **1.0.112** selbst ist **nichts am laufenden Programm gemessen**, es nimmt nur den Hochladezähler aus [PRÜFER-39](Befunde/PRUEFER-39.md) N1 zurück). Davor: (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -342,8 +394,13 @@ grauer Kasten), [E-113](BEFUNDE.md#e-113) (Bilder breiter als das Fenster), [E-1
 
 ### <a id="c6"></a>C6 · Paket 1.0.110 — E-69, der Beenden-Weg und eine bekannte Regression
 
-**Stand 20.10.2026 ([LEKTOR-42](Befunde/LEKTOR-42.md#lektor-42)).** Quellstand
-7.2.0.110, Zweig `e-69-meldungsflut`, 229 Tests / 229 bestanden.
+**Stand 20.10.2026 ([LEKTOR-44](Befunde/LEKTOR-44.md#lektor-44)).** Quellstand
+**7.2.0.114**, Zweig `e-132-fremdes-mailverzeichnis`, **241 Tests / 241
+bestanden** — **noch nicht als Paket geschnürt.** Veröffentlicht ist
+**1.0.113** (`v1.0.113`, 20.10.2026, 13:01:36 UTC); davor am selben Tag
+`v1.0.112`. Bis zum 20.10.2026 stand hier *„Quellstand 7.2.0.110, Zweig
+`e-69-meldungsflut`, 229 Tests"* — vier Fassungen alt, und die Zeile darüber
+sagte trotzdem *Stand 20.10.2026*.
 
 **1.0.107, 1.0.108 und 1.0.109 gibt es nicht als Paket** — sie wurden
 übersetzt und wieder verworfen; ihr Inhalt steckt vollständig in 1.0.110. Du

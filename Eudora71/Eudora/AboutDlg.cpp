@@ -113,6 +113,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDOK, OnClickedOK)
 	ON_BN_CLICKED(IDC_CREDITS, OnClickedCredits)
+	ON_BN_CLICKED(IDC_ABOUT_COPY, OnClickedCopyInfo)
 	ON_WM_TIMER()
 	ON_WM_ACTIVATE()
 	ON_WM_QUERYNEWPALETTE()
@@ -389,6 +390,46 @@ BOOL CAboutDlg::OnInitDialog()
 	m_AppDirCtrl.SetWindowText(csAppCtrlText);
 
 	//
+	// BEFUND E-132, auf Gregors Wunsch vom 20.10.2026: "wir sollten noch das
+	// ini verzeichnis hier nennen. und auch weitere, die fuer debug zwecke
+	// relevant sind".
+	//
+	// Die vier Zeilen beantworten die Fragen, die bei einem Fehlerbericht als
+	// erste kommen - und die der Anwender sonst nirgends beantwortet bekommt:
+	// WELCHE Eudora.ini wird gelesen (bei uns liegt sie in Mailverzeichnis\,
+	// nicht neben der EXE), steht eine DEudora.ini daneben, WO liegt das
+	// Protokoll und ist es ueberhaupt eingeschaltet, und WOHER stammt das
+	// Mailverzeichnis. Die letzte Frage hat am 20.10.2026 Stunden gekostet.
+	//
+	{
+		CString szIni(INIPath);
+		ConvertToLongPathName(szIni);
+		SetDlgItemText(IDC_ABOUT_INI_PATH,
+			CString("INI: ") + (szIni.IsEmpty() ? CString("(keine)") : szIni));
+
+		CString szDefault(DefaultINIPath);
+		if (!szDefault.IsEmpty())
+			ConvertToLongPathName(szDefault);
+		SetDlgItemText(IDC_ABOUT_DEFAULT_INI,
+			CString("Default INI: ") + (szDefault.IsEmpty() ? CString("(keine)") : szDefault));
+
+		// Der Protokollname steht in der INI; ohne DEBUG_MASK_MISC (32768)
+		// schreibt keine einzige E-nn-Marke, deshalb steht der Wert dabei.
+		const long lLevel = GetIniLong(IDS_INI_DEBUG_LOG_LEVEL);
+		CString szLog;
+		szLog.Format("Log: %s%s  (LogLevel=%ld%s)",
+					 (LPCTSTR) EudoraDir,
+					 (LPCTSTR) CString(GetIniString(IDS_INI_DEBUG_LOG_FILE_NAME)),
+					 lLevel,
+					 (lLevel & 32768) ? "" : ", keine E-nn-Marken");
+		SetDlgItemText(IDC_ABOUT_LOG_PATH, szLog);
+
+		SetDlgItemText(IDC_ABOUT_MAILDIR_FROM,
+			CString("Mail folder from: ")
+			+ (MailDirHerkunft.IsEmpty() ? CString("(unbekannt)") : MailDirHerkunft));
+	}
+
+	//
 	// Center the static text labels (and while we're
 	// at it, set the labels to use the standard "thin" font.
 	//
@@ -396,6 +437,10 @@ BOOL CAboutDlg::OnInitDialog()
 	CenterControl(GetDlgItem(IDC_COPYRIGHT_INFO));
 	CenterControl(GetDlgItem(IDC_ABOUT_DATA_DIRECTORY));
 	CenterControl(GetDlgItem(IDC_ABOUT_APP_DIRECTORY));
+	CenterControl(GetDlgItem(IDC_ABOUT_INI_PATH));
+	CenterControl(GetDlgItem(IDC_ABOUT_DEFAULT_INI));
+	CenterControl(GetDlgItem(IDC_ABOUT_LOG_PATH));
+	CenterControl(GetDlgItem(IDC_ABOUT_MAILDIR_FROM));
 
 	//
 	// Position the buttons.
@@ -436,6 +481,27 @@ BOOL CAboutDlg::OnInitDialog()
 			SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOSIZE | SWP_NOZORDER);
 	}
 
+	// "Copy info" rechts neben "Close". Beide Knoepfe werden hier von
+	// Hand gesetzt, weil der Dialog seine Breite erst zur Laufzeit aus dem
+	// Logo bekommt.
+	{
+		CWnd* pOk   = GetDlgItem(IDOK);
+		CWnd* pCopy = GetDlgItem(IDC_ABOUT_COPY);
+		if (pOk && pCopy && !m_IsSplash)
+		{
+			CRect rcOk;
+			pOk->GetWindowRect(&rcOk);
+			ScreenToClient(&rcOk);
+			pCopy->SetWindowPos(NULL, rcOk.right + 10, rcOk.top, 0, 0,
+				SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOSIZE | SWP_NOZORDER);
+		}
+		else if (pCopy)
+		{
+			// Im Startbild gibt es keine Knoepfe.
+			pCopy->ShowWindow(SW_HIDE);
+		}
+	}
+
 	CenterControl(GetDlgItem(IDC_HYPERLINK_BTN));
 
 	//
@@ -445,6 +511,80 @@ BOOL CAboutDlg::OnInitDialog()
 		CenterWindow();
 
     return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+
+/* ------------------------------------------------------------------------ */
+
+//
+// Die Angaben des Dialogs auf die Zwischenablage.
+//
+// Gregor am 20.10.2026: "diese sollte man kopieren koennen, um sie z.b. in ein
+// ticket oder issue einzutragen". Ein CTEXT laesst sich nicht markieren,
+// deshalb der Knopf.
+//
+// Genommen wird, was im Dialog STEHT - nicht, was die Variablen gerade sagen.
+// Dann kann der Block nichts behaupten, was der Anwender nicht selbst sieht.
+//
+void CAboutDlg::OnClickedCopyInfo()
+{
+	static const UINT nFelder[] =
+	{
+		IDC_VERSION,
+		IDC_ABOUT_DATA_DIRECTORY,
+		IDC_ABOUT_APP_DIRECTORY,
+		IDC_ABOUT_INI_PATH,
+		IDC_ABOUT_DEFAULT_INI,
+		IDC_ABOUT_LOG_PATH,
+		IDC_ABOUT_MAILDIR_FROM
+	};
+
+	CString szBlock;
+	for (int i = 0; i < sizeof(nFelder) / sizeof(nFelder[0]); i++)
+	{
+		CString szZeile;
+		GetDlgItemText(nFelder[i], szZeile);
+		szZeile.TrimRight();
+		if (szZeile.IsEmpty())
+			continue;
+
+		// IDC_VERSION ist mehrzeilig und traegt nur LF; Notepad und die
+		// meisten Eingabefelder wollen CRLF.
+		szZeile.Replace("\r\n", "\n");
+		szZeile.Replace("\n", "\r\n");
+
+		szBlock += szZeile;
+		szBlock += "\r\n";
+	}
+
+	if (szBlock.IsEmpty() || !OpenClipboard())
+		return;
+
+	EmptyClipboard();
+
+	const int nLaenge = szBlock.GetLength();
+	HGLOBAL hSpeicher = ::GlobalAlloc(GMEM_MOVEABLE, nLaenge + 1);
+	if (hSpeicher)
+	{
+		LPSTR pZiel = (LPSTR) ::GlobalLock(hSpeicher);
+		if (pZiel)
+		{
+			memcpy(pZiel, (LPCTSTR) szBlock, nLaenge + 1);
+			::GlobalUnlock(hSpeicher);
+
+			// Ab hier gehoert der Speicher der Zwischenablage, nicht uns.
+			if (::SetClipboardData(CF_TEXT, hSpeicher))
+				hSpeicher = NULL;
+		}
+		if (hSpeicher)
+			::GlobalFree(hSpeicher);
+	}
+
+	CloseClipboard();
+
+	// Rueckmeldung ohne zweites Fenster: der Knopf sagt selbst, dass es
+	// geklappt hat. Der Dialog ist ohnehin gleich wieder zu.
+	SetDlgItemText(IDC_ABOUT_COPY, "Copied");
 }
 
 /* ------------------------------------------------------------------------ */

@@ -365,16 +365,26 @@ for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip")) {
     my ($nr) = $zip =~ /(1\.0\.\d+)/ or next;
     next if $pakete{$nr};                 # entpackt vorhanden, das zaehlt zuerst
 
-    my $tmp = "$wurzel/Releases/.pruefe-behoben-$nr";
-    mkdir $tmp;
-    system("unzip -o -j -q \"$zip\" \"*/Eudora.exe\" \"Eudora.exe\" -d \"$tmp\" 2>/dev/null");
-
-    my $exe = "$tmp/Eudora.exe";
-    if (-f $exe) {
-        $pakete{$nr} = [ fassungen_der_exe(lies_ende($exe)) ];
-        unlink $exe;
+    # NICHT entpacken. Am 20.10.2026 um 20:45:19 hat Defender die hier
+    # ausgepackte Eudora.exe eingezogen - ausgeloest von perl.exe, also von
+    # dieser Schranke -, und die Schranke meldete daraufhin eine falsche
+    # Fassung fuer ein richtiges Paket (E-124). Was nie auf der Platte liegt,
+    # kann auch nicht eingezogen werden; fassungen_der_exe() sucht ohnehin nur
+    # in den Bytes.
+    my $roh = '';
+    if (open(my $pz, '-|', "unzip -p \"$zip\" \"*/Eudora.exe\" \"Eudora.exe\" 2>/dev/null")) {
+        binmode($pz);
+        local $/;
+        $roh = <$pz>;
+        close $pz;
     }
-    rmdir $tmp;
+
+    # "nicht lesbar" ist etwas anderes als "falsche Fassung". Nur wenn Bytes
+    # ankamen, ist das Paket geprueft; sonst bleibt es ungeprueft und faellt
+    # weiter unten unter "NICHTS GEPRUEFT ist kein gruenes Ergebnis".
+    if (defined($roh) && length($roh) > 0) {
+        $pakete{$nr} = [ fassungen_der_exe(substr($roh, -1024 * 1024)) ];
+    }
 }
 
 my @u = urteile(lies("$wurzel/BEFUNDE.md"));
