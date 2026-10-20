@@ -15,6 +15,38 @@ wenn es diese Fassung als Release gibt — sonst zeigt der Hinweis ins Leere.
 Abschalten, und ein freigegebener Wortlaut, der danach aus dem Gedächtnis
 nachgebaut wird, ist nicht mehr derselbe.
 
+**Was ich am 20.10.2026 Satz für Satz gegen [E-132](../BEFUNDE.md#e-132),
+[E-131](../BEFUNDE.md#e-131), [E-124](../BEFUNDE.md#e-124) und
+[CHANGELOG 7.2.0.114](../CHANGELOG.md) gehalten habe
+([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.8)).** **Belegt ist jeder Satz**: der
+Registry-Weg und die drei Antworten samt Vorgabe stehen so in E-132, die drei
+Messungen (*No* → fremde INI SHA-256 unverändert, *Yes* → `LastKnownCrashInfo`
+ändert sich, *Cancel* → nichts angefasst) ebenso, die vier neuen Zeilen im
+Über-Dialog und der Knopf *Copy info* stehen im CHANGELOG-Abschnitt 7.2.0.114,
+und die Defender-Angaben (Erkennungsname, Datum, Vorgangsnummer) decken sich
+mit E-124 und [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md).
+
+**Drei Dinge sagt der Text nicht. Ob sie hinein sollen, entscheidet Gregor —
+den freigegebenen Wortlaut unten habe ich nicht angefasst.**
+
+1. **Seine vorhandene `Eudora.ini` wird dadurch nicht heil.** Unsere Behebung
+   zu [E-131](../BEFUNDE.md#e-131) berichtigt die Leistenwerte erst beim
+   **Sichern**; eine INI, die sie schon trägt, bleibt, wie sie ist. Er hat
+   seine aus der Sicherung zurückgespielt, also trifft es ihn nicht mehr — ein
+   anderer Leser desselben Beitrags aber schon.
+2. **Die Ursache seines Absturzes ist weiterhin nicht belegt.**
+   [PRÜFER-40](PRUEFER-40.md#k1) K1: `-2147483648` ist `CW_USEDEFAULT`, das MFC
+   selbst setzt und beim Lesen wieder abfängt. Dieselbe Richtigstellung steht
+   schon als eigener Beitrag im Issue (20.10.2026); *„we found the mechanism
+   behind this and fixed it"* ganz oben kann so gelesen werden, als sei auch
+   das erledigt.
+3. **Die Bitte, `v1.0.114` neben seiner Installation zu probieren, nennt keine
+   Vorsichtsmaßnahme.** Solange die Ursache offen ist
+   ([PRÜFER-40](PRUEFER-40.md#k14) K14 nennt mit `Docking=1` ohne Andockkontext
+   einen zweiten, ungemessenen Weg zu genau seinem Null-Zeiger), gehört ein
+   *„back up your `Eudora.ini` first"* dazu — dasselbe, was wir in der README
+   von jedem Anwender verlangen.
+
 ---
 
 Hi @rjsdotorg — we found the mechanism behind this and fixed it in **v1.0.114**.

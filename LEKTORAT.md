@@ -1486,3 +1486,42 @@ inhaltlich unverändert; die drei Stellen tragen jetzt den Vermerk, dass der
 Quellstand seit dem 20.10.2026 **7.2.0.111** ist. **Weiter fortgeschrieben am 20.10.2026 ([LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43)):** seit 13:41 Uhr ist der Quellstand **7.2.0.112**, und seit 11:55 UTC ist `v1.0.112` veröffentlicht. `pruefe-stand-md.pl` hat den
 Nachtrag erzwungen — ein Bericht, der ohne Hinweis eine überholte Fassung als
 gültig ausgibt, ist eine Unwahrheit auf `main`.
+
+## Neunundvierzigster Durchgang — 20.10.2026 (Bericht: `Befunde/LEKTOR-44.md`)
+
+**249 MD-Dateien, ohne `Arbeitsweise/` 148, davon 47 außerhalb von
+`Befunde/`.** Anlass: zwei Fassungssprünge seit
+[LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43) — **7.2.0.113 ist als `v1.0.113`
+veröffentlicht** (20.10.2026, 13:01:36 UTC), **7.2.0.114 ist nicht geschnürt**.
+Dazu drei Texte nach außen an einem Tag: die veröffentlichten Notizen, der
+freigegebene Issue-Beitrag und die bei Microsoft eingereichte Fehlalarmmeldung.
+
+**Der Befund über die Befunde:** `commit-bereit.pl` meldete zu Beginn **32 von
+32 grün**, während `Releases/PAKETE.md` ein Paket führte, das es nicht gibt
+([L-44.5](Befunde/LEKTOR-44.md#l-44.5)), `WEITERMACHEN.md` der Fassung
+`v1.0.113` die Prüfsumme von `v1.0.112` gab
+([L-44.2](Befunde/LEKTOR-44.md#l-44.2)) und die README einen behobenen,
+veröffentlichten Fehler als offen auswies
+([L-44.1](Befunde/LEKTOR-44.md#l-44.1)). Die Schranken prüfen, **ob** eine
+Nummer vorkommt, nicht **wem** sie gehört
+([L-44.11](Befunde/LEKTOR-44.md#l-44.11)).
+
+**Weiter berichtigt:** drei Dokumente behaupteten eine Ursache, die wir im
+Issue selbst zwanzig Minuten vorher zurückgenommen hatten
+([L-44.3](Befunde/LEKTOR-44.md#l-44.3)); die veröffentlichten Notizen zu
+`v1.0.113` tragen dieselben zwei kopflosen Stellen wie `v1.0.112` — der Ordner
+wurde aus dem **unreparierten** Text kopiert
+([L-44.4](Befunde/LEKTOR-44.md#l-44.4),
+[L-44.12](Befunde/LEKTOR-44.md#l-44.12)); die Defender-Messung, mit der wir
+gegenüber Microsoft argumentieren, stand in keinem Befund
+([L-44.6](Befunde/LEKTOR-44.md#l-44.6)); `CHANGELOG.md`, `AUFGABEN.md`,
+`PORTIERUNG.md`, `ZIEL.md` und `TESTPLAN.md` standen auf überholten Fassungen,
+jede mit richtigem Datum im Kopf
+([L-44.7](Befunde/LEKTOR-44.md#l-44.7)); `tools/RELEASES.md` hatte seine
+jüngste Zeile wieder außerhalb der Tabelle
+([L-44.9](Befunde/LEKTOR-44.md#l-44.9)); die Notizen zu `v1.0.113` warnen nicht
+vor [E-132](BEFUNDE.md#e-132) ([L-44.10](Befunde/LEKTOR-44.md#l-44.10)).
+
+**Satz für Satz geprüft:** `Releases/ISSUE-102-ANTWORT.md` — jede Behauptung
+belegt, drei Dinge ungesagt; der freigegebene Wortlaut **unverändert**, die
+drei Punkte stehen darüber ([L-44.8](Befunde/LEKTOR-44.md#l-44.8)).
