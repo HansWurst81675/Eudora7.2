@@ -149,6 +149,13 @@ zweite Schließen während des Wartens ignoriert wird),
 `tools/messen-e69.ps1` ([E-69](../BEFUNDE.md#e-69): öffnet `In`, wählt alles aus, sperrt `In.mbx`
 von außen und löst *Special → Filter Messages* aus, Befehl 32816; gemessen wird die Spurmarke
 `E-69 Filter uebersprungen` und der Eintrag in *Task Errors*; die Sperre wird danach gelöst),
+`tools/messen-e69-zweimal.ps1` (dasselbe **zweimal im selben Eudora-Lauf** — die
+Gegenprobe zu [R1](../Befunde/PRUEFER-38.md): ohne den Rücksetzer in `LaufEnde()`
+bliebe der **zweite** Durchgang stumm. Am 20.10.2026 an 7.2.0.110 gefahren, beide
+Durchgänge melden. **Offene Schwäche:** der Fehlerdialog *„Could not open the file … locked"* (aus `IDS_ERR_FILE_OPEN`, `EudoraRes.rc:9303`, einmal beim Öffnen gesetzt) wird nicht weggeklickt,
+der Lauf hängt darin und Eudora muss abgeschossen
+werden — Destruktoren laufen dann nicht, der Sammeleintrag des zweiten Durchgangs
+fehlt deshalb im Protokoll. Braucht einen Dialogschließer),
 `tools/e80-messen.ps1` (ein Lauf, drei Schritte: starten, Nachricht öffnen,
 die angezeigte HTML-Fassung einsammeln — **öffnet ein Fenster, nur nach
 Absprache**) und
