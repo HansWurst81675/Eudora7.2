@@ -123,6 +123,19 @@ fehlte dort auch **`pruefe-datum.pl` von gestern**. Beide stehen jetzt in
 drei `DoPostProcessing`), N4 (die Schranke lässt sechs von sieben Umgehungen
 durch), N5 (ihre Bereichserkennung).
 
+### Von Gregor bestätigt
+
+**Von Gregor am 20.10.2026 bestätigt.** Der Inhalt dieser Fassung ist derselbe
+wie in 7.2.0.111, das er auf **beiden** Wegen am laufenden Programm gemessen hat
+— Weg 2a mit `laeuft=1` und 6015 ms Wartezeit, Weg 2b mit `uebertragungen=1` und
+4015 ms; beide Male beendete sich Eudora danach sauber und die Warteschlange war
+leer. 7.2.0.112 unterscheidet sich davon **nur** durch die Rücknahme des
+Zählers aus `SameServer::DoWork`, und dass der in keinem seiner beiden Läufe
+gewirkt hat, steht in seinen eigenen Protokollen (`laeuft=0` bei 2b, `laeuft=1`
+aus `:3768` bei 2a). Seine Freigabe zur Veröffentlichung: *„wie auch immer:
+release eine neue version, alles in release notes und changelog, auch der neue
+befund“* und *„ja, mach das!“*
+
 ## 7.2.0.111 — die Wache beim Beenden sieht jetzt jede Übertragung (E-123)
 
 **Gregor am 20.10.2026 an Paket 1.0.110:** *„verschoben und beendet. fenster
