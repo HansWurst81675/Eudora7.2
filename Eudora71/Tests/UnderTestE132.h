@@ -12,4 +12,9 @@
 
 bool E132IstFremdesVerzeichnis(LPCTSTR pKandidat, LPCTSTR pEigenes, bool bHatEigeneIni);
 
+// Die Registry nennt eine ganze Befehlszeile. Ohne diese Trennung lief die
+// Pruefung oben gegen einen Pfad aus zwei Pfaden und blieb stumm (E-132).
+void E132AufrufZerlegen(LPCTSTR pAufruf, LPTSTR pVerzeichnis, size_t nVerzeichnis,
+						LPTSTR pIni, size_t nIni);
+
 #endif

@@ -3745,6 +3745,87 @@ bool E132IstFremdesVerzeichnis(LPCTSTR pKandidat, LPCTSTR pEigenes, bool bHatEig
 	return true;
 }
 
+//
+// E-132, zweiter Teil: die Registry nennt eine ganze BEFEHLSZEILE, nicht nur
+// ein Verzeichnis. Eudora schreibt dort beim Start seinen eigenen Aufruf ab:
+//
+//     C:\Eudora\Eudora.exe C:\Eudora\MAILVE~1 C:\Eudora\MAILVE~1\Eudora.ini
+//
+// StartEudoraWithDefaultLocation schneidet davon nur den Programmnamen weg.
+// In buf stehen danach ZWEI Pfade, durch ein Leerzeichen getrennt; erst
+// GetDirs() (fileutil.cpp:432) trennt sie wieder auf.
+//
+// GEMESSEN am 20.10.2026: ohne diese Zerlegung haengte die Pruefung den Namen
+// der Eudora.ini an die GESAMTE Zeichenkette an. Diese Datei gibt es nie,
+// bHatEigeneIni war darum immer falsch, und die Rueckfrage kam nie. Die
+// Rueckfrage war eingebaut und blieb stumm - im Protokoll stand nichts, weil
+// auch die Spurmarke nur im Fremdfall geschrieben wurde. Deshalb protokolliert
+// die Stelle unten jetzt BEIDE Ausgaenge.
+//
+// Die Trennregel ist dieselbe wie in GetDirs(): erst ein Anfuehrungszeichen
+// gefolgt von einem Leerzeichen, sonst das erste Leerzeichen - und das nur,
+// wenn die Zeichenkette nicht selbst auf ein Anfuehrungszeichen endet.
+//
+// Ohne Fenster und ohne Registry, damit der Pruefstand sie fahren kann.
+//
+void E132AufrufZerlegen(LPCTSTR pAufruf, LPTSTR pVerzeichnis, size_t nVerzeichnis,
+						LPTSTR pIni, size_t nIni)
+{
+	if (pVerzeichnis && nVerzeichnis)
+		pVerzeichnis[0] = 0;
+	if (pIni && nIni)
+		pIni[0] = 0;
+
+	if (!pAufruf || !*pAufruf || !pVerzeichnis || nVerzeichnis < 2)
+		return;
+
+	const size_t nLaenge = _tcslen(pAufruf);
+	LPCTSTR pTrenner = NULL;
+
+	LPCTSTR pZitat = _tcsstr(pAufruf, _T("\" "));
+	if (pZitat)
+		pTrenner = pZitat + 1;					// das Leerzeichen hinter dem Zitat
+	else if (pAufruf[nLaenge - 1] != '"')
+		pTrenner = _tcschr(pAufruf, ' ');
+
+	size_t nVorn = pTrenner ? (size_t)(pTrenner - pAufruf) : nLaenge;
+	if (nVorn > nVerzeichnis - 1)
+		nVorn = nVerzeichnis - 1;
+	_tcsncpy(pVerzeichnis, pAufruf, nVorn);
+	pVerzeichnis[nVorn] = 0;
+
+	if (pTrenner && pIni && nIni > 1)
+	{
+		LPCTSTR pRest = pTrenner;
+		while (*pRest == ' ')
+			pRest++;
+		_tcsncpy(pIni, pRest, nIni - 1);
+		pIni[nIni - 1] = 0;
+	}
+
+	// Beide Stuecke von Leerraum und Anfuehrungszeichen befreien - GetDirs()
+	// tut dasselbe mit StripQuotesMT und TrimWhitespaceMT.
+	LPTSTR pZiele[2];
+	pZiele[0] = pVerzeichnis;
+	pZiele[1] = pIni;
+	for (int i = 0; i < 2; i++)
+	{
+		LPTSTR p = pZiele[i];
+		if (!p || !*p)
+			continue;
+
+		size_t n = _tcslen(p);
+		while (n > 0 && (p[n - 1] == ' ' || p[n - 1] == '\t'))
+			p[--n] = 0;
+
+		if (n >= 2 && p[0] == '"' && p[n - 1] == '"')
+		{
+			memmove(p, p + 1, (n - 2) * sizeof(TCHAR));
+			p[n - 2] = 0;
+		}
+	}
+}
+
 BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 {
     HKEY  hkResult;
@@ -3857,18 +3938,44 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 	//
 	if (*buf)
 	{
-		CString szFremdeIni(buf);
-		if (szFremdeIni.Right(1) != SLASH)
-			szFremdeIni += SLASH;
-		szFremdeIni += CRString(IDS_EUDORA_INI_NAME);
+		//
+		// buf traegt den REST der Befehlszeile aus der Registry: erst das
+		// Mailverzeichnis, dann - meistens - der volle Pfad zur Eudora.ini.
+		// Vor jeder Pruefung muss das auseinandergenommen werden, sonst wird
+		// auf eine Datei geprueft, die es nie gibt (siehe E132AufrufZerlegen).
+		//
+		TCHAR szVerzeichnis[MAX_PATH + 1];
+		TCHAR szIni[MAX_PATH + 1];
+		E132AufrufZerlegen(buf, szVerzeichnis, sizeof(szVerzeichnis) / sizeof(TCHAR),
+						   szIni, sizeof(szIni) / sizeof(TCHAR));
 
-		if (E132IstFremdesVerzeichnis(buf, ExecutableDir, FileExistsMT(szFremdeIni) != FALSE))
+		// Nennt die Registry die Eudora.ini nicht selbst, dann dort, wo Eudora
+		// sie anlegen wuerde.
+		CString szFremdeIni(szIni);
+		if (szFremdeIni.IsEmpty())
 		{
-			CString szSpur;
-			szSpur.Format("E-132 Startverzeichnis: gefunden=\"%s\" eigenes=\"%s\" fremd=1",
-						  buf, (LPCTSTR) ExecutableDir);
-			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			szFremdeIni = szVerzeichnis;
+			if (!szFremdeIni.IsEmpty() && szFremdeIni.Right(1) != SLASH)
+				szFremdeIni += SLASH;
+			szFremdeIni += CRString(IDS_EUDORA_INI_NAME);
+		}
 
+		const BOOL bIniDa = FileExistsMT(szFremdeIni);
+		const bool bFremd = E132IstFremdesVerzeichnis(szVerzeichnis, ExecutableDir,
+													  bIniDa != FALSE);
+
+		// BEIDE Ausgaenge protokollieren, in EINER Zeile mit allen Werten.
+		// Am 20.10.2026 blieb die Rueckfrage stumm, und weil nur der Fremdfall
+		// eine Spur schrieb, stand im Protokoll nichts - nicht einmal, dass
+		// die Stelle ueberhaupt erreicht wurde.
+		CString szSpur;
+		szSpur.Format("E-132 Startverzeichnis: gefunden=\"%s\" ini=\"%s\" da=%d eigenes=\"%s\" fremd=%d",
+					  szVerzeichnis, (LPCTSTR) szFremdeIni, bIniDa ? 1 : 0,
+					  (LPCTSTR) ExecutableDir, bFremd ? 1 : 0);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+		if (bFremd)
+		{
 			CString szText;
 			szText.Format(
 				"Eudora found an existing mail folder that belongs to another "
@@ -3878,7 +3985,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				"Yes\tuse that folder anyway\n"
 				"No\tstart with a fresh folder next to this program\n"
 				"Cancel\tquit without changing anything",
-				buf);
+				szVerzeichnis);
 
 			int nWahl = ::MessageBox(NULL, szText, "Eudora 7.2",
 									 MB_YESNOCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
@@ -3909,8 +4016,10 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				if (!FileExistsMT(szProbe))
 					szEigenes = ExecutableDir;
 
-				_tcsncpy(buf, szEigenes, sizeof(buf)/sizeof(TCHAR) - 1);
-				buf[sizeof(buf)/sizeof(TCHAR) - 1] = 0;
+				// Der INI-Pfad aus der Registry faellt damit weg; GetDirs()
+				// nimmt dann die Eudora.ini aus dem Verzeichnis selbst.
+				_tcsncpy(buf, szEigenes, sizeof(buf) / sizeof(TCHAR) - 1);
+				buf[sizeof(buf) / sizeof(TCHAR) - 1] = 0;
 
 				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"", buf);
 				PutDebugLog(DEBUG_MASK_MISC, szSpur);

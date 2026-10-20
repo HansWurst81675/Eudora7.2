@@ -88,4 +88,69 @@ void RunE132Tests(void)
 		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Programme\\Hermes\\", "", true), "eigenes leer");
 	}
 	TT_EndTest();
+
+	// ------------------------------------------------------------- (6)
+	// DER EIGENTLICHE FUND vom 20.10.2026.
+	//
+	// Die Registry speichert nicht ein Verzeichnis, sondern den ganzen
+	// Aufruf. Nach dem Abschneiden des Programmnamens stehen dort ZWEI
+	// Pfade, durch ein Leerzeichen getrennt:
+	//
+	//   C:\Temp\E131\MAILVE~1 C:\Temp\E131\MAILVE~1\Eudora.ini
+	//
+	// Die erste Fassung der Rueckfrage haengte "\Eudora.ini" an diese ganze
+	// Zeichenkette an. Diese Datei gibt es nie - also galt nie etwas als
+	// fremd, und die Rueckfrage kam nicht. Eingebaut, aber stumm.
+	TT_BeginTest("E-132: Befehlszeile aus der Registry wird zerlegt");
+	{
+		TCHAR szVerz[MAX_PATH + 1];
+		TCHAR szIni[MAX_PATH + 1];
+
+		E132AufrufZerlegen("C:\\Temp\\E131\\MAILVE~1 C:\\Temp\\E131\\MAILVE~1\\Eudora.ini",
+						   szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(strcmp(szVerz, "C:\\Temp\\E131\\MAILVE~1") == 0, szVerz);
+		TT_CHECK_MSG(strcmp(szIni, "C:\\Temp\\E131\\MAILVE~1\\Eudora.ini") == 0, szIni);
+
+		// Lange Namen kommen in Anfuehrungszeichen - dieselbe Regel wie in
+		// GetDirs() (fileutil.cpp:432).
+		E132AufrufZerlegen("\"C:\\Mein Mail\" \"C:\\Mein Mail\\Eudora.ini\"",
+						   szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(strcmp(szVerz, "C:\\Mein Mail") == 0, szVerz);
+		TT_CHECK_MSG(strcmp(szIni, "C:\\Mein Mail\\Eudora.ini") == 0, szIni);
+
+		// Nur ein Pfad, ohne INI-Angabe: dann bleibt der INI-Teil leer.
+		E132AufrufZerlegen("C:\\Temp\\E131\\MAILVE~1",
+						   szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(strcmp(szVerz, "C:\\Temp\\E131\\MAILVE~1") == 0, szVerz);
+		TT_CHECK_MSG(szIni[0] == 0, "kein INI-Teil");
+
+		// Leer und NULL duerfen nichts anstellen.
+		E132AufrufZerlegen(NULL, szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(szVerz[0] == 0 && szIni[0] == 0, "NULL");
+		E132AufrufZerlegen("", szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(szVerz[0] == 0 && szIni[0] == 0, "leer");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------- (7)
+	// Beide Teile zusammen, so wie es in StartEudoraWithDefaultLocation
+	// ablaeuft: zerlegen, dann entscheiden. Das ist der Weg, der am
+	// 20.10.2026 stumm blieb.
+	TT_BeginTest("E-132: zerlegt und entschieden - der gemeldete Fall");
+	{
+		TCHAR szVerz[MAX_PATH + 1];
+		TCHAR szIni[MAX_PATH + 1];
+
+		E132AufrufZerlegen("C:\\Temp\\E131\\MAILVE~1 C:\\Temp\\E131\\MAILVE~1\\Eudora.ini",
+						   szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(E132IstFremdesVerzeichnis(szVerz, "C:\\Temp\\E132\\", true),
+			"fremde Installation, Einrichtung vorhanden");
+
+		// Gegenprobe: zeigt die Registry auf das eigene Paket, bleibt es still.
+		E132AufrufZerlegen("C:\\Temp\\E132\\MAILVE~1 C:\\Temp\\E132\\MAILVE~1\\Eudora.ini",
+						   szVerz, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis(szVerz, "C:\\Temp\\E132\\", true),
+			"eigenes Paket - keine Rueckfrage");
+	}
+	TT_EndTest();
 }
