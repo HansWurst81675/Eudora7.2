@@ -331,6 +331,33 @@ liest aber zuerst die Notizen. Punkt an den Anfang der Liste gesetzt, mit der
 Abhilfe (`Eudora starten.cmd`, Pfad in der Verknüpfung) und dem Vermerk, dass
 die Behebung erst in 7.2.0.114 steckt.
 
+### <a id="l-44.14"></a>L-44.14 — 16 Verweise aus `Befunde/` auf die Wurzeldokumente gingen ins Leere (mittel)
+
+Alle **6135** Markdown-Verweise auf eine `.md`-Datei maschinell gegen das
+Dateisystem gehalten (Skript im Kratzverzeichnis). **20 tot**, davon 16 von
+derselben Art: ein Bericht unter `Befunde/` schreibt `](ZIEL.md)`,
+`](AGENTEN.md)`, `](BEFUNDE.md)` oder `](README.md)` statt `](../ZIEL.md)`.
+Betroffen: [`LEKTOR-5`](LEKTOR-5.md#lektor-5), `-6`, `-11`, `-13`, `-14`, `-27`, `-35` und
+[PRÜFER-40](PRUEFER-40.md). Alle berichtigt — es ändert nur den Pfad, keinen
+Satz; die Berichte bleiben Rückblicke.
+
+**Zwei davon waren meine eigenen**, eine halbe Stunde alt:
+`Releases/ISSUE-102-ANTWORT.md` zeigte mit `](PRUEFER-40.md#k1)` auf eine Datei
+neben sich statt auf `../Befunde/`. Gefunden hat sie nicht mein Lesen, sondern
+der Durchlauf über den **ganzen** Bestand
+([Prüfumfang nicht von Hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md)).
+
+**Vier bleiben stehen, zu Recht:** dreimal `](….md)` in [`LEKTOR-13`](LEKTOR-13.md#lektor-13)/`-14` — ein
+Platzhalter im Fließtext, keine Adresse —, und einmal in
+`tools/WERKZEUGE.md:130`, wo `[E-115](BEFUNDE.md#e-115)` **als Beispieltext
+in Rückstrichen** steht und zeigt, was `befunde-verlinken.pl --verlinken`
+schreibt.
+
+**`befunde-verlinken.pl` prüft das nicht.** Es prüft, ob jede **Kennung** ein
+Link ist und ob der Anker existiert — nicht, ob der **Dateipfad** davor
+stimmt. Vorschlag: die Dateiprüfung dort ergänzen; sie kostet einen
+`-e`-Test je Link und hätte alle 16 beim Schreiben gefangen.
+
 ---
 
 ## Offen — gemeldet, nicht geändert
@@ -466,7 +493,7 @@ diese Form.
 `README.md`, `CHANGELOG.md`, `WEITERMACHEN.md`, `BEFUNDE.md`, `ZIEL.md`,
 `AUFGABEN.md`, `PORTIERUNG.md`, `TESTPLAN.md`, `Releases/PAKETE.md`,
 `Releases/1.0.113/RELEASE-NOTIZEN.md`, `Releases/ISSUE-102-ANTWORT.md`,
-`tools/RELEASES.md`, `tools/ZWEIGE.md`, `LEKTORAT.md`, dieser Bericht.
+`tools/RELEASES.md`, `tools/ZWEIGE.md`, `LEKTORAT.md`, dazu acht Berichte unter `Befunde/` nur an ihren Verweispfaden ([L-44.14](#l-44.14)), und dieser Bericht.
 
 **Keine Datei unter `Eudora71/` angefasst, kein Werkzeug unter `tools/*.pl`
 oder `*.ps1` geändert.** `Releases/DEFENDER-FEHLALARM.md` bewusst unverändert.
