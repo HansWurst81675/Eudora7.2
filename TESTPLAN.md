@@ -1,6 +1,6 @@
 # Testplan für Gregor — Paket 1.0.110, Stand 19.10.2026
 
-## Was jetzt zu testen ist — vier Schritte
+## Was jetzt zu testen ist — zwei Schritte
 
 Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.110-release`, starten mit
 `Eudora starten.cmd`. Das Mailverzeichnis im Paket ist **leer** — deine
@@ -8,25 +8,22 @@ Postfächer liegen in `C:\Users\Gregor\Eudora72-Postfaecher-gesichert` und
 müssen bei **geschlossenem** Eudora hineinkopiert werden.
 Unter *Help → About Eudora* muss **7.2.0.110** stehen.
 
-**Schritt 1 — Filtern, während der Mailserver nicht erreichbar ist.**
-Ein IMAP-Postfach filtern (*Special → Filter Messages*), zum Beispiel mit
-gezogenem Netzwerkkabel oder ausgeschaltetem WLAN.
-*So ist es richtig:* es piept **nicht** ununterbrochen, das Fenster
-*Task Errors* drängt sich **nicht** bei jeder Nachricht nach vorn, und in der
-Liste stehen **zwei** Zeilen — die erste Nachricht mit Betreff und Grund, und
-darunter eine Sammelzeile *„N further message(s) …"*.
-*Vorher:* bei 500 angerissenen Nachrichten 500 Einträge, 500 Pieptöne, 500
-Fenstersprünge — nicht wegzuklicken.
+**Schritt 1 — eine Nachricht als Datei speichern.**
+Eine empfangene HTML-Nachricht mit Umlauten und `€` über *File → Save As*
+sichern, die Datei danach in Thunderbird oder im Browser öffnen.
+*So ist es richtig:* die Zeichen stimmen. Hat die Nachricht einen **Anhang**,
+ist der in der gespeicherten Datei noch ein Anhang.
+*Wenn stattdessen ein Block aus `--grenze`, Kopfzeilen und wirrem Text
+dasteht, bitte melden:* dann ist der Anhang aus der Datei nicht mehr zu holen.
+*Voraussetzung:* keine. Geht offline.
 
-**Schritt 2 — gleich noch einmal filtern, ohne Eudora neu zu starten.**
-Eine einzelne Nachricht filtern, die Eudora nicht lesen kann (Server weiter
-nicht erreichbar).
-*So ist es richtig:* es kommt **ein** Eintrag in *Task Errors*.
-*Wenn gar keiner kommt, bitte melden:* dann meldet Eudora ab dem zweiten
-Filterlauf gar nichts mehr, und abgebrochene Filter fallen still unter den
-Tisch. Genau dieser Fehler steckte in der Zwischenfassung vom selben Tag.
+**Schritt 2 — Beenden, während noch etwas hochgeladen wird.**
+**Voraussetzung: der IMAP-Server muss erreichbar sein.** Ist er es nicht,
+entsteht aus dem Verschieben nie ein Hochladen, und Eudora schließt sofort —
+das ist **richtig so** und kein Fehler (*offline kein Warten*, seit
+7.2.0.103). Am 20.10.2026 hat ein Testlauf gegen einen nicht auflösbaren
+`imap.gmx.net` genau das gezeigt; im Protokoll stand `uebertragungen=0`.
 
-**Schritt 3 — Beenden, während noch etwas hochgeladen wird.**
 Mehrere Nachrichten in einen IMAP-Ordner verschieben und **sofort**
 *File → Exit*.
 *So ist es richtig:* das Fenster verschwindet **nicht**, solange die
@@ -37,19 +34,30 @@ Danach **noch einmal** *File → Exit*: es wartet wieder.
 *Was sonst passieren kann:* eine halb übertragene Nachricht verliert ihre
 eingebetteten Bilder.
 
-**Schritt 4 — eine Nachricht als Datei speichern.**
-Eine empfangene HTML-Nachricht mit Umlauten und `€` über *File → Save As*
-sichern, die Datei danach in Thunderbird oder im Browser öffnen.
-*So ist es richtig:* die Zeichen stimmen. Hat die Nachricht einen **Anhang**,
-ist der in der gespeicherten Datei noch ein Anhang.
-*Wenn stattdessen ein Block aus `--grenze`, Kopfzeilen und wirrem Text
-dasteht, bitte melden:* dann ist der Anhang aus der Datei nicht mehr zu holen.
+### Nicht von Gregor zu testen: die Meldungsflut beim Filtern
 
+[E-69](BEFUNDE.md#e-69) stand bis zum 20.10.2026 als Schritt 1 in diesem Plan,
+mit der Anweisung *„ein IMAP-Postfach filtern, während der Server nicht
+erreichbar ist"*. **Die Anweisung ist falsch.** Scheitert schon der
+Verbindungsaufbau, zeigt Eudora **einen** Dialog (*„The IMAP command has
+failed … host not found (11001)"*) und kommt nie bis zu den einzelnen
+Nachrichten — [E-69](BEFUNDE.md#e-69) greift aber erst dort. Gemessen am
+20.10.2026 an Gregors Lauf: **null** [`E-69`](BEFUNDE.md#e-69)-Spurmarken im Protokoll, *Task
+Errors* leer. Er hat zweimal richtig gemessen und zweimal nichts gefunden,
+weil der Handgriff nicht zum Befund passte.
+
+Der nachgestellte Weg ist ein anderer: `In` öffnen, alles auswählen, `In.mbx`
+von außen sperren (wie ein Virenscanner) und *Special → Filter Messages* —
+`tools/messen-e69.ps1`, so am 17.10.2026 an 7.2.0.106 gemessen.
+**Das stelle ich am Prüfstand selbst nach, bevor es wieder in diese Liste
+kommt** ([erst-nachstellen-dann-ausliefern](Arbeitsweise/erst-nachstellen-dann-ausliefern.md)).
+Dasselbe gilt für die Gegenprobe zu [R1](Befunde/PRUEFER-38.md), die ohne
+einen ersten Filterlauf gar nichts aussagt.
 ### Was bekannt ist — bitte nicht als neuen Fehler melden
 
 * Nach einem **Absturz**, einem Eingriff von **Defender**, einem Stromausfall
   oder einem erzwungenen Herunterfahren können eingebettete Bilder einer
-  verschobenen Nachricht weiter fehlen. Schritt 3 prüft nur das **ordentliche**
+  verschobenen Nachricht weiter fehlen. Schritt 2 prüft nur das **ordentliche**
   Beenden.
 * Bilder, die als `data:`-Adresse in der Mail stecken, erscheinen als **grauer
   Kasten**.
@@ -60,7 +68,7 @@ dasteht, bitte melden:* dann ist der Anhang aus der Datei nicht mehr zu holen.
 ### Wie dein Urteil zählt
 
 Mit der **Paketnummer**: *„Schritt 1 an 1.0.110 in Ordnung"* oder
-*„Schritt 2 an 1.0.110 gescheitert, es kam kein Eintrag"*. Ohne die Nummer
+*„Schritt 2 an 1.0.110 gescheitert, Eudora schloss sofort"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
@@ -306,10 +314,9 @@ hast am 19.10.2026 alle alten Testverzeichnisse gelöscht (*„alles weg!"*) —
 
 | | Schritt | wird geprüft |
 |---|---|---|
-| ☐ | **Schritt 1** — filtern bei totem Server | [E-69](BEFUNDE.md#e-69), die Meldungsflut |
-| ☐ | **Schritt 2** — gleich noch einmal filtern | [E-69](BEFUNDE.md#e-69), die Gegenprobe zu [R1](Befunde/PRUEFER-38.md) |
-| ☐ | **Schritt 3** — beenden während einer Übertragung | [E-123](BEFUNDE.md#e-123), der Beenden-Weg und [R4](Befunde/PRUEFER-38.md) |
-| ☐ | **Schritt 4** — Nachricht als Datei speichern | [E-101](BEFUNDE.md#e-101), dritter Teil ([F1](Befunde/PRUEFER-37.md), F3, F4) |
+| ☐ | **Schritt 1** — Nachricht als Datei speichern | [E-101](BEFUNDE.md#e-101), dritter Teil ([F1](Befunde/PRUEFER-37.md), F3, F4) |
+| ☐ | **Schritt 2** — beenden während einer Übertragung (**Server muss erreichbar sein**) | [E-123](BEFUNDE.md#e-123), der Beenden-Weg und [R4](Befunde/PRUEFER-38.md) |
+| — | ~~filtern bei totem Server~~ — **zurückgezogen am 20.10.2026**, der Handgriff trifft [E-69](BEFUNDE.md#e-69) nicht | steht oben unter *Nicht von Gregor zu testen* |
 
 **Was jeder Schritt im Einzelnen verlangt und woran man sieht, dass er
 geglückt ist, steht ganz oben in diesem Dokument** — dort im Klartext, ohne
