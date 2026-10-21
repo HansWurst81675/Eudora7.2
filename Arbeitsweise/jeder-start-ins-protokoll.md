@@ -114,6 +114,16 @@ Sekunden danach).
   ([[schranke-gehoert-in-den-haken]]).
 - Sie prüft, was in `TESTLAEUFE.md` **steht**. Wer nachträgt, was er nicht
   gefragt hat, kommt durch — dagegen hilft nur die Ansage vorher.
+- **Sie liest eine flüchtige Quelle.** Um 12:45 fand sie die 15 Starts vom
+  21.10.; um 13:03 fand sie **null**, weil die Verzeichnisse
+  `C:\Temp\E134-*` in der Zwischenzeit aufgeräumt worden waren (53
+  Verzeichnisse blieben, die 15 waren weg). Wer seine Prüfstände vor dem
+  Commit löscht, bekommt grün — und grün sieht aus wie geprüft
+  ([[ausbleiben-ist-kein-befund]]). Deshalb steht die Zahl der gefundenen
+  Prüfstände in jeder Ausgabe: `0 Verzeichnisse` und `15 Verzeichnisse, 0
+  Starts` sind zwei verschiedene Lagen. Die Messung dieser Lehre stammt von
+  12:45 und ist in den Commits `faf8aa5f` und `d92e47e0` festgehalten; sie
+  lässt sich heute nicht mehr nachfahren.
 - Sie sitzt im `pre-commit`, also **nach** dem Start. Der richtige Moment
   wäre davor ([[ausloeser-an-den-anfang]]); dafür bräuchte es einen
   `PreToolUse`-Haken auf Befehle, die `Eudora.exe` starten, ohne
