@@ -324,9 +324,61 @@ if (length $upstream) {
 #
 # Die Faelle ganz ohne Upstream faengt die Pruefung weiter oben ab. Hier geht
 # es um den Zweig, der einen HAT, aber den falschen.
+#
+# NACHTRAG 21.10.2026 (CHRONIST): der Rat war beim Push NICHT AUSFUEHRBAR.
+# Gemessen in wt/chronist-20261021c, das von origin/main abgezweigt war:
+#
+#   git commit  -> "ABBRUCH ... Richtigstellen: git push -u origin wt/..."
+#   git push -u origin wt/chronist-20261021c
+#               -> pre-push ruft pruefe-branch.pl --streng
+#               -> dieselbe Meldung, "error: failed to push some refs"
+#
+# Die Schranke wies genau den Befehl ab, den sie selbst als Heilung nannte.
+# Es gab keinen Ausweg ausser --no-verify, und damit faellt jede andere
+# Schranke gleich mit aus. Derselbe Fehler steht seit dem 07.09.2026 in
+# gesichert.pl beschrieben: "ein Hinweis, dem man nicht folgen kann, ist so
+# schlecht wie ein Fehlalarm."
+#
+# Unterschieden wird deshalb nach dem, was auf dem Server LIEGT:
+#
+#   origin/wt/<name> fehlt, und dies ist der Push -> nur ein Push kann es
+#       anlegen. Durchlassen und melden. Beim COMMIT weiter abweisen: dort
+#       ist der Rat ausfuehrbar und kommt frueh genug.
+#   origin/wt/<name> ist da -> es braucht gar keinen Push, sondern
+#       'git branch --set-upstream-to'. Abweisen, und zwar mit DIESEM Rat.
 if ($branch =~ m{^wt/(.+)$}) {
     my $eigen = "origin/wt/$1";
+    my $streng_hier = grep { $_ eq '--streng' } @ARGV;
     if (length($upstream) && $upstream ne $eigen) {
+        my $eigen_da = length git('rev-parse', '--verify', '--quiet', $eigen);
+
+        if ($streng_hier && !$eigen_da) {
+            print "\n";
+            print "  HINWEIS: '$branch' verfolgt '$upstream' statt '$eigen',\n";
+            print "  und '$eigen' gibt es auf dem Server noch nicht.\n";
+            print "\n";
+            print "  Genau dieser Push legt es an - durchgelassen. Abzuweisen waere\n";
+            print "  eine Sackgasse: der Commit davor ist mit derselben Meldung\n";
+            print "  abgewiesen worden, und ihr Rat lautete 'git push -u'.\n";
+            print "\n";
+            print "  Mit -u pushen, damit die Bindung danach stimmt:\n";
+            print "      git push -u origin $branch\n";
+            print "\n";
+        }
+        elsif ($eigen_da) {
+            print "\n";
+            print "  ABBRUCH: '$branch' verfolgt '$upstream' statt '$eigen' -\n";
+            print "  obwohl es '$eigen' auf dem Server bereits gibt.\n";
+            print "\n";
+            print "  Hier braucht es keinen Push, nur die Bindung:\n";
+            print "\n";
+            print "      git branch --set-upstream-to=$eigen $branch\n";
+            print "\n";
+            print "  (Bewusst trotzdem committen: git commit --no-verify)\n";
+            print "\n";
+            exit($nur_melden ? 0 : 1);
+        }
+        else {
         print "\n";
         print "  ABBRUCH: '$branch' verfolgt '$upstream' statt '$eigen'.\n";
         print "\n";
@@ -346,6 +398,7 @@ if ($branch =~ m{^wt/(.+)$}) {
         print "  (Bewusst trotzdem committen: git commit --no-verify)\n";
         print "\n";
         exit($nur_melden ? 0 : 1);
+        }
     }
 }
 

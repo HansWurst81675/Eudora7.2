@@ -121,6 +121,34 @@ for my $e (@liste) {
     print "  [", ($abweisend ? 'ROT' : 'ok '), "] $teil  $werk @arg\n" unless $knapp;
 }
 
+# --- Kennt der INSTALLIERTE Haken diese Schranken ueberhaupt? --------------
+#
+# Hier und nicht im Haken selbst: ein veralteter Haken kann die Pruefung, die
+# ihn veraltet nennt, nicht enthalten. Dieses Werkzeug liest seine Liste aus
+# dem Quelltext und ist deshalb der richtige Ort
+# (Arbeitsweise/schranke-teilt-nicht-die-annahme.md).
+#
+# Am 21.10.2026 fehlten dem installierten pre-commit VIER Schranken; der
+# Bericht desselben Tages hatte von Hand nach DREIEN gesucht und genau die
+# drei gefunden (Arbeitsweise/pruefumfang-nicht-von-hand.md).
+{
+    my $w = "$wurzel/tools/pruefe-haken-aktuell.pl";
+    if (-f $w) {
+        my $aus = qx{perl "$w" --knapp 2>&1};
+        my $rc  = $? >> 8;
+        if ($rc == 1) {
+            for my $z (split /\n/, $aus) {
+                next unless $z =~ /kennt \d+ Schranke/;
+                $z =~ s/^\s*-\s*//;
+                $z =~ s/^\s+//;
+                $z =~ s/\s+$//;
+                push @hinweis, "der INSTALLIERTE Haken ist nicht auf dem Stand - $z"
+                             . "  (einrichten: sh tools/hooks-einrichten.sh)";
+            }
+        }
+    }
+}
+
 print "\n" unless $knapp;
 print "  Hinweis: $_\n" for @hinweis;
 if (!@mangel) {
