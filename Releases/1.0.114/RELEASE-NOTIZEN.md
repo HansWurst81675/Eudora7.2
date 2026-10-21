@@ -97,7 +97,17 @@ Defender meldet Eudora als Trojaner*, was sonst noch hilft.
 
 ## Prüfsumme
 
-SHA-256 des ZIPs: `335751a91ca67b7996c4076f077deb49a0f4ce4ac1de74c8a079cc2cb7eeb1a1`
+SHA-256 des ZIPs `Eudora72-1.0.114-release.zip`: *(nie eingetragen)*
+
+> **Berichtigt am 21.10.2026 ([LEKTOR-46](../../Befunde/LEKTOR-46.md#l-46.3)).**
+> Hier stand `335751a9…1a1`. Das ist **nicht** die Prüfsumme dieses Pakets,
+> sondern die von `Eudora72-1.0.117-release.zip` — nachgemessen mit
+> `sha256sum`. Sie ist beim Bau von 1.0.117 in diese Datei geraten.
+> **Diese Notizen gehören zu 1.0.114, und 1.0.114 wird nicht veröffentlicht:**
+> das Paket lag zwei Minuten bei Gregor und ist an seinem eigenen Fund
+> gescheitert (das eigene Mailverzeichnis galt als fremd, behoben in
+> 7.2.0.115). Die Notizen zur Fassung, die herausgeht, stehen in
+> [1.0.117/RELEASE-NOTIZEN.md](../1.0.117/RELEASE-NOTIZEN.md).
 
 ## Was geprüft wurde – und was nicht
 

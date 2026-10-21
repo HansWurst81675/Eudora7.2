@@ -126,25 +126,31 @@ der Prüfstand sie weiter fahren kann.
 
 **243 Tests, 243 bestanden.**
 
-### Zwei Bauten unter demselben Namen — und wie man sie unterscheidet
+### Wie diese Fassung zu ihrer Nummer kam
 
-**Auf Gregors ausdrückliche Entscheidung vom 21.10.2026.** Ich hatte
-vorgeschlagen, diese Fassung **1.0.117** zu nennen, weil 1.0.116 zu diesem
-Zeitpunkt schon bei ihm lag und die beiden Behebungen nicht enthielt. Seine
-Antwort: *„ich habe auch 0.116 gesagt, nicht 0.117."* Also 1.0.116.
+**Berichtigt am 21.10.2026 ([LEKTOR-46](Befunde/LEKTOR-46.md#l-46.2)).** Hier
+stand ein Abschnitt *„Zwei Bauten unter demselben Namen"* mit dem Schluss
+*„Also 1.0.116"* und einer Tabelle aus einem ersten und einem zweiten Bau
+**unter derselben Nummer**. Er ist gegenstandslos: diese Fassung heißt
+**1.0.117**, so steht sie in `VERSION` und in `Eudora71/Version.h`
+(`7.2.0.117`), und der Abschnitt stand unter der Überschrift *7.2.0.117* und
+widersprach ihr im selben Atemzug.
 
-Damit gibt es den Namen zweimal. Was das kostet, steht in
-[version-eindeutig-machen](Arbeitsweise/version-eindeutig-machen.md): *„gemessen
-an 1.0.116"* ist ab jetzt zweideutig. Unterscheidbar bleiben die beiden an der
-Prüfsumme ihrer `Eudora.exe`:
+**Was wirklich geschehen ist.** Ich hatte 1.0.117 vorgeschlagen, weil 1.0.116
+schon bei Gregor lag und die beiden Behebungen nicht enthielt. Er sagte
+zweimal 1.0.116 — und meinte damit das **GitHub-Release**, nicht ein weiteres
+Paket. Ich hatte den Bau bis dahin schon auf 1.0.116 zurückgedreht. Seine
+Entscheidung danach: *„sonst müssen wir tatsächlich die versionsnummer
+hochzählen"* und *„release 1.0.117 auf github"*.
 
-| Bau | `Eudora.exe` SHA-256 | Inhalt |
-|---|---|---|
-| **erster**, 21.10.2026 vormittags | `1454F544…C665E2E6` | Rückfrage auf allen Startwegen, Merker |
-| **zweiter**, 21.10.2026 mittags | *(siehe `Releases/PAKETE.md`)* | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* |
+**Es gibt also zwei Pakete nebeneinander, mit zwei Nummern**, und das ist der
+Zustand, den [version-eindeutig-machen](Arbeitsweise/version-eindeutig-machen.md)
+verlangt:
 
-Wer eine Messung an 1.0.116 festhält, schreibt die Prüfsumme dazu — sonst ist
-sie später nicht zuzuordnen.
+| Paket | `Eudora.exe` | Inhalt | wo es liegt |
+|---|---|---|---|
+| **1.0.116**, 21.10.2026 vormittags | SHA-256 `1454F544…C665E2E6` | Rückfrage auf allen Startwegen, Merker | bei Gregor, von ihm getestet; **nicht veröffentlicht** |
+| **1.0.117**, 21.10.2026 mittags | ZIP-SHA-256 `335751a9…7eeb1a1` | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* | bei Gregor; **die Fassung, die veröffentlicht wird** |
 
 ## 7.2.0.116 — E-132: die Rückfrage greift jetzt auf allen Startwegen, und Eudora merkt sich die Antwort
 
