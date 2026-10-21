@@ -17,9 +17,10 @@ and traceable — and the issue can be closed without the matter being lost.
 Anyone wondering what happened to their report looks here.
 
 **What is *not* here:** the measurements and the reasoning. Those live in
-[BEFUNDE.md](BEFUNDE.md), which every row links to. This file is the table of
-contents, not the case file. It is in German, as is the rest of the project
-documentation.
+[BEFUNDE.md](BEFUNDE.md), which the rows link to wherever a measurement
+exists. This file is the table of contents, not the case file. `BEFUNDE.md`
+is in German, as is the rest of the project documentation — this register is
+the single exception.
 
 ## Priority
 
@@ -33,8 +34,10 @@ documentation.
 
 | Report | Date | Reporter | Priority | What it is about | Status |
 |---|---|---|---|---|---|
-| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-3 | 2026-10-21 | `rjsdotorg` | low | **Orphaned `[ToolBar-BarN]` sections.** His `Eudora.ini` declares `Bars=12` but contains `Bar0`–`Bar15`. Suggestion: delete the surplus sections when saving | **Will not be fixed.** Measured on 2026-10-21: both load paths read only up to `Bars`, so the orphans are inert. The reporter confirmed this himself — he deleted them and nothing changed. `CDockState::SaveState` already keeps `Bars` equal to the number of sections it writes. Backward compatibility of `Eudora.ini` is **not a goal** of this project |
-| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-4 | 2026-10-21 | `rjsdotorg` | medium | **`MRUFloatYPos=-682908189` in `[ToolBar-Bar10]`.** Unlike the orphans this section lies *inside* `Bars=12` and is therefore loaded on every start. `Bar10` is the search bar (`IDC_SEARCH_BAR`) | **Not yet measured.** Open question: does `E131PositionIstBrauchbar` catch this value? The rule from [E-131](BEFUNDE.md#e-131) was built against `INT_MIN`, not against an arbitrary garbage number. The reporter himself treated this as a side note and investigated the inert orphans instead |
+| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-3 | 2026-10-21 | `rjsdotorg` | low | **Orphaned `[ToolBar-BarN]` sections.** His `Eudora.ini` declares `Bars=12` but contains `Bar0`–`Bar15`. Suggestion: delete the surplus sections when saving | **Will not be fixed.** Measured at source on 2026-10-21: neither load path ever looks at the orphans. `CDockState::LoadState` reads `Bars` first and then loads only `Bar0`…`Bar(Bars-1)` (MFC 14.38, `dockstat.cpp:327-351`); Eudora's second loader, `QCToolBarManager::LoadState`, does not read `[ToolBar-BarN]` at all — it reads `[ToolBar-ToolBarManager]` plus one `[ToolBar-BarID<control id>]` section per toolbar that actually exists. The reporter confirmed the effect himself — he deleted the orphans and nothing changed. `CDockState::SaveState` writes `Bars=nIndex`, where `nIndex` counts exactly the sections it just wrote, so the count cannot drift. Backward compatibility of `Eudora.ini` is **not a goal** of this project |
+
+| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-4 | 2026-10-21 | `rjsdotorg` | medium | **`MRUFloatYPos=-682908189` in `[ToolBar-Bar10]`.** Unlike the orphans this section lies *inside* `Bars=12` and is therefore loaded on every start. `Bar10` is the search bar (`IDC_SEARCH_BAR`) | **Answered at source on 2026-10-21, not yet measured at runtime.** `E131PositionIstBrauchbar` (`mainfrm.cpp:2773`) does catch this value: it rejects any `nY < nTop - nHeight + 100`, and `-682908189` satisfies that on every real screen. But the correction runs when the toolbar state is **written** (`CMainFrame::SaveBarState`), not when it is read — so the bad line survives until our build exits once, and is loaded as it stands before that. What MFC does with it in the meantime is the part still unmeasured. See [E-131](BEFUNDE.md#e-131) |
+
 
 ## Resolved
 

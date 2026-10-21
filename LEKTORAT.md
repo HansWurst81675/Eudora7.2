@@ -1719,3 +1719,61 @@ denselben Fehler in die andere Richtung
 [L-48.1](Befunde/LEKTOR-48.md#l-48.1) bis
 [L-48.4](Befunde/LEKTOR-48.md#l-48.4) gefangen — **alle vier schweren Funde
 der Buchführung.**
+
+## Vierundfünfzigster Durchgang — nach der Veröffentlichung von `v1.0.120`, 21.10.2026 abends (Bericht: `Befunde/LEKTOR-49.md`)
+
+**Voller Durchgang über alle 163 `.md` aus `git ls-files '*.md'` ohne
+`Arbeitsweise/`** — die Schranken gegen den Tag-Bestand, die neue englische
+Seite nach außen, die Verweise und die Papiere zum Release.
+
+**Der schwerste Fund ist eine Wiederholung.** Zwischen
+[LEKTOR-48](Befunde/LEKTOR-48.md) am Nachmittag und diesem Durchgang ist
+1.0.120 geschnürt **und als `v1.0.120` veröffentlicht** worden — und **fünf**
+führende Dokumente sagten weiterhin *„nicht veröffentlicht"* oder
+*„`v1.0.117` ist der veröffentlichte Stand"*: `ZIEL.md`, `PORTIERUNG.md`,
+`WEITERMACHEN.md` an zwei Stellen und `Releases/PAKETE.md`
+([L-49.1](Befunde/LEKTOR-49.md#l-49.1)). `WEITERMACHEN.md` widersprach sich
+dabei **in sich** — Zeile 46 richtig, Zeile 9 und 140 falsch —, und Punkt 1
+ihrer Arbeitsliste verlangte ein Paket, das es seit fünf Stunden gibt. Das
+ist der **vierte** Fall dieser Art an einem einzigen Tag. **Beide dafür
+gebauten Schranken meldeten grün**; `pruefe-release-buchfuehrung.pl` kennt
+`ZIEL.md` und `PORTIERUNG.md` gar nicht.
+
+**Der teuerste Fund für Gregor ist eine Falschaussage über das eigene
+Programm:** `README.md` sagte an zwei Stellen *„Adressbuch, LDAP, Ph und
+S/MIME fallen aus"* — während das lokale Adressbuch in `Eudora.exe`
+übersetzt ist (`nickdoc.cpp`, `nicktree.cpp`, `nickpage.cpp`,
+`NicknamesWazooWnd.cpp` in `Eudora.vcxproj`) und in 1.0.119 und 1.0.120
+**zwei bestätigte Behebungen** bekommen hat
+([E-134](BEFUNDE.md#e-134), [E-135](BEFUNDE.md#e-135)). Die Verwechslung
+kommt von `EudoraBk.dll`, die nach Adressbuch klingt, aber der
+Protokollanbieter des Verzeichnisdienstes ist
+([L-49.4](Befunde/LEKTOR-49.md#l-49.4)). Gefunden hat das Gregor.
+`README.md` ist berichtigt; dieselbe Zeile steht noch an **zehn** weiteren
+Stellen, darunter **sechs ausgelieferte Release-Notizen**.
+
+**Die Seite nach außen trug drei Mängel.**
+[MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) sagte von sich selbst, sie
+sei auf Deutsch ([L-49.8](Befunde/LEKTOR-49.md#l-49.8)); die Begründung
+*„both load paths read only up to `Bars`"* stimmt für den zweiten Ladeweg
+nicht — er liest `Bars` überhaupt nicht
+([L-49.9](Befunde/LEKTOR-49.md#l-49.9)); und **die einzige offene Zusage an
+einen Melder von außen** (`#102-4`, `MRUFloatYPos=-682908189`) stand in
+keinem Befund und in keiner Arbeitsliste
+([L-49.10](Befunde/LEKTOR-49.md#l-49.10)). Alle drei berichtigt, der dritte
+in [E-131](BEFUNDE.md#e-131) fortgeschrieben und am Quelltext beantwortet.
+Dazu stand [E-132](BEFUNDE.md#e-132) auf *„noch nicht ausgeliefert"*, während
+genau die Zeile, die darauf verlinkt, dem Melder *„released in `v1.0.120`"*
+sagt ([L-49.2](Befunde/LEKTOR-49.md#l-49.2)).
+
+**Zwei offene Fragen sind am Quelltext beantwortet worden**, beide ohne Bau:
+`LoadBarState` liest die `Eudora.ini`, nicht die Registry
+([L-49.3](Befunde/LEKTOR-49.md#l-49.3)), und `E131PositionIstBrauchbar`
+fängt auch einen beliebigen Müllwert — aber erst beim **Schreiben**
+([L-49.10](Befunde/LEKTOR-49.md#l-49.10)).
+
+**Das Urteil: ja, die Papiere tragen** — nach vierzehn Funden, davon elf
+berichtigt. **Die Schranke aus
+[L-44.11](Befunde/LEKTOR-44.md#l-44.11) fehlt zum sechsten Mal**; sie hätte
+[L-49.1](Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses
+Durchgangs.
