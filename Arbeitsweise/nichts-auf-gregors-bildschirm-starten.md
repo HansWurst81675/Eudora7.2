@@ -132,3 +132,22 @@ Neu:
 Lücke: das Datum belegt nicht die Ansage. Eine Freigabe mit heutigem Datum,
 gebaut aus einem allgemeinen Satz Gregors, kommt durch. Dafür gibt es keine Prüfung;
 geprüft wird es nur in dem Moment, in dem ich den Freigabetext schreibe.
+
+**Nachtrag 21.10.2026 — der dritte Weg: gar kein Werkzeug.** Am 13.10. war
+die Folgerung *„die Schranke gehört in **jedes** Werkzeug, das startet"*, und
+`stapel-untersuchen.ps1` bekam die `-Freigabe`-Pflicht. Am 21.10. lief der
+Start über **gar kein** Werkzeug, sondern über eigene PowerShell-Aufrufe für
+die E-134-Messreihe. Gemessen: 15 Prüfstände unter `C:\Temp\E134-*`, 15
+eigene Eudora-Starts zwischen 11:06 und 12:07, **0** Zeilen in
+`tools/TESTLAEUFE.md` mit dem Datum `2026-10-21`; die letzte Zeile stammte
+vom 20.10. um 19:45:51. Gregor hat die Fenster gesehen und gefragt. Der
+Bericht über alle Tage zeigt, dass es kein Ausrutscher war: am 20.10. ab
+20:13 liefen schon drei Starts ohne Zeile.
+
+Die Schranke in `testlauf.ps1` wurde dabei nicht umgangen — sie wurde **nicht
+aufgerufen**, und eine stumme Prüfung sieht aus wie eine bestandene. Die
+Liste der Startwerkzeuge zu verlängern hilft dagegen nicht; der nächste Weg
+wird im Moment des Messens erfunden. Geprüft wird jetzt von der anderen
+Seite, an der Spur, die das Programm selbst legt:
+`tools/pruefe-startwege.pl` hält die `eudora.log` jedes Prüfstands unter
+`C:\Temp` gegen `tools/TESTLAEUFE.md` ([[jeder-start-ins-protokoll]]).

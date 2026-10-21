@@ -156,3 +156,38 @@ mehr. Jede liest dieselbe Ausgangszahl und zählt für sich hoch.
 - Ein Merge von `main` in den Zweig ist ein Anlass für `git show
   origin/main:VERSION`, bevor der eigene Stand weiter hochgezählt wird. So
   wurde es am 12.10. gemacht, und es ging schnell.
+
+## Nachtrag 21.10.2026: die Messfassung nennt sich wie die, gegen die sie misst
+
+Bei [E-134](../BEFUNDE.md#e-134) wurden sechs Läufe gefahren, drei mit der
+Behebung und drei mit der ausgelieferten 1.0.118. Nachgemessen am 21.10.2026
+im Zweig `wt/chronist-20261021`:
+
+| Prüfstand | `Eudora.exe` (MD5, erste 12) | `Version`-Zeile in `eudora.log` |
+|---|---|---|
+| `C:\Temp\E134-F1` (mit Behebung) | `8dabda7360fd` | `Version 7.2.0.118` |
+| `C:\Temp\E134-G1` (ausgeliefert) | `b52792cd7d9e` | `Version 7.2.0.118` |
+
+Zwei verschiedene Binärdateien, **dieselbe Fassungsnummer in beiden
+Protokollen**. `Version.h` wurde erst beim Commit auf 7.2.0.119 gehoben; die
+Messläufe liefen vorher. Wer die 15 Protokolle unter `C:\Temp\E134-*`
+morgen wieder öffnet, kann aus ihnen **nicht** ablesen, welcher Lauf welche
+Fassung gemessen hat. Der einzige Unterschied steht in der Prüfsumme der
+Datei — und die hat damals niemand aufgeschrieben.
+
+Es ist nichts passiert: die Verzeichnisnamen (`F` für die Behebung, `G` für
+die ausgelieferte Fassung) waren zur Laufzeit eindeutig, und das Ergebnis
+steht in `BEFUNDE.md`. Aber genau das ist der Fall, den Punkt 4 oben
+beschreibt — nur eine Ebene tiefer: nicht zwei Fassungen bei Gregor, sondern
+**zwei Fassungen in meiner eigenen Messreihe**, und die Messreihe ist der
+Beleg, mit dem ein Befund geschlossen wird.
+
+**How to apply, als Ergänzung zu Punkt 2:**
+
+- **Eine Messreihe, die zwei Fassungen vergleicht, hebt die Nummer schon vor
+  der ersten Messung** — oder trägt wenigstens das Kürzel aus dem Nachtrag
+  vom 12.10.2026 ein (`EUDORA_BUILD_DESC "Version 7.2.0.118-e134fix"`). Die
+  Nummer kostet nichts und ist nach dem Lauf nicht mehr nachzutragen.
+- **Geht das nicht, gehört die Prüfsumme in den Befund:** *„mit Behebung
+  `8dabda73`, ausgeliefert `b52792cd`"*. Ein Verzeichnisname ist eine
+  Behauptung über die Datei, eine Prüfsumme ist die Datei.

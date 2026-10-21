@@ -508,13 +508,17 @@ BOOL CNicknamesTreeCtrl::AddNewNickname(CNicknameFile* pNicknameFile, CNickname*
 			SelectItem(h_nickname);
 
 			//
-			//	E-134: SelectItem() setzt die Karette, aber in diesem Bau NICHT
-			//	TVIS_SELECTED - und genau das liest IsItemSelected(), auf dem
-			//	GetSelectedNicknames() steht. Gemessen am 21.10.2026: unmittelbar
-			//	nach SelectItem() stand das Kind auf "NICHT ausgewaehlt". Fehlt die
-			//	folgende Zeile, ist der neue Eintrag fuer GetSelectedNicknames()
-			//	nicht ausgewaehlt, und der Kurzname, den der Anwender gleich
-			//	eintippt, wird verworfen.
+			//	E-134: SelectItem() ist TVM_SELECTITEM/TVGN_CARET und tut NICHTS,
+			//	wenn hItem schon die Karette traegt - auch dann nicht, wenn das
+			//	DoDeselectAll() darueber TVIS_SELECTED gerade geloescht hat. Genau
+			//	dieses Bit liest IsItemSelected(), auf dem GetSelectedNicknames()
+			//	steht. Gemessen am 21.10.2026 an einem eigenen Baum (comctl32 5.82
+			//	und 6.16 verhalten sich gleich): Karette woanders -> SelectItem
+			//	setzt das Bit; Karette schon auf hItem -> das Bit bleibt aus.
+			//	Hier ist der neue Eintrag in aller Regel noch nicht die Karette;
+			//	die folgende Zeile ist die Sicherung fuer den Fall, dass er es
+			//	doch ist - sonst faellt sie stumm durch und der Kurzname, den der
+			//	Anwender gleich eintippt, wird verworfen.
 			//
 			DoSelectItem(h_nickname, TRUE);
 			break;		// we're outta here
@@ -877,12 +881,15 @@ void CNicknamesTreeCtrl::NicknameWasChanged(CNickname* pNickname)
 					SelectItem(h_child);
 
 					//
-					//	E-134: dieselbe Annahme wie in AddNewNickname(), und hier wiegt
-					//	sie schwerer - diese Funktion laeuft bei JEDEM Tastendruck im
-					//	Namensfeld. Ohne die folgende Zeile raeumt das DoDeselectAll()
-					//	darueber die Auswahl ab, SelectItem() setzt sie nicht wieder, und
-					//	ab dem ZWEITEN Buchstaben findet GetSelectedNicknames() nichts
-					//	mehr. Gemessen: von "hans" kam genau "h" in der NNdbase.txt an.
+					//	E-134: dieselbe Stelle wie in AddNewNickname(), und hier trifft
+					//	sie immer zu: diese Funktion laeuft bei JEDEM Tastendruck im
+					//	Namensfeld, die Karette steht also laengst auf h_child. Damit
+					//	ist SelectItem() ein Leerlauf - TVM_SELECTITEM/TVGN_CARET tut
+					//	nichts, wenn hItem schon die Karette ist -, waehrend das
+					//	DoDeselectAll() darueber TVIS_SELECTED geloescht hat. Ohne die
+					//	folgende Zeile findet GetSelectedNicknames() ab dem ZWEITEN
+					//	Buchstaben nichts mehr. Gemessen: von "hans" kam genau "h" in
+					//	der NNdbase.txt an.
 					//
 					DoSelectItem(h_child, TRUE);
 					m_LastEvaluatedSelectionState = SELSTATE_SINGLE;

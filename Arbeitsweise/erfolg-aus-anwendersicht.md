@@ -290,3 +290,43 @@ In `BEFUNDE.md` steht zur selben Zeit: *„ob 1.0.84 dasselbe zeigt, ist **nicht
 
 - **Sagt Gregor „schlimmer“, ist die Frage: dieselbe Nachricht, alte Fassung, wie sah sie aus?** Das lässt sich ohne ihn messen. Die Nachricht wird als `.eml` in ein Prüfverzeichnis unter `C:\Temp` gelegt und mit beiden Fassungen geöffnet. Bis das gemacht ist, heißt die Antwort: *„Die Ursache ist alt (E-119). Ob 1.0.84 dieselbe Nachricht anders zeigte, habe ich nicht gemessen.“*
 - **„Alt“ und „sichtbar geworden“ getrennt nennen.** Hat eine Behebung einen alten Fehler sichtbarer gemacht, steht das in der Übergabe des nächsten Pakets in der Zeile *schlechter geworden*, auch wenn die Ursache im Original liegt.
+
+## Nachtrag 21.10.2026: ein Buchstabe auf der Platte sah aus wie Erfolg
+
+Bei [E-134](../BEFUNDE.md#e-134) (ein neuer Adressbucheintrag nimmt den
+eingetippten Kurznamen nicht an) gab es einen Zwischenstand, der nur die
+erste der beiden Stellen behob. Gemessen wurde er dreimal, mit frischem
+Prüfstand, und alle drei Läufe sahen grün aus — **bis auf die Prüfgröße**.
+
+| was gemessen wurde | Ergebnis | Urteil |
+|---|---|---|
+| Spurmarke `E134 TREE ganz am Ende` | `[ausgewaehlt]` | grün |
+| Spurmarke `Auswahl im Baum` | von `(0)` auf `(1)` | grün |
+| `Mailverzeichnis\NNdbase.txt` (`C:\Temp\E134-L1` bis `-L3`) | 3 × `alias h` | **falsch** |
+
+`alias h` statt `alias hans`: **ein** Buchstabe war angekommen. Die zweite
+Stelle (`NicknameWasChanged`, `nicktree.cpp:936`) läuft bei **jedem**
+Tastendruck und räumte die Auswahl beim ersten Umbenennen gleich wieder ab.
+Mit beiden Stellen behoben: `C:\Temp\E134-F1` bis `-F3`, 3 × `alias hans`;
+mit der ausgelieferten 1.0.118: `C:\Temp\E134-G1` bis `-G3`, 3 × `alias
+Untitled`.
+
+**Warum es trotzdem gutgegangen ist:** weil die Prüfgröße von Anfang an die
+**Anwenderdatei** war und nicht der Zustand im Baum. Beide Spurmarken sind
+Zwischenstände — sie sagen, dass mein Eingriff gewirkt hat, nicht, dass
+Gregors Eintrag ankommt. Hätte die Messung auf *„Auswahl (1)"* abgestellt,
+wäre der Zwischenstand als Behebung ausgeliefert worden und Gregor hätte
+gemeldet, sein Kurzname heiße jetzt `h`.
+
+**How to apply, als Ergänzung zu Punkt 3:**
+
+- **Die Prüfgröße ist die Datei oder die Anzeige, die der Anwender danach
+  vor sich hat** — hier `NNdbase.txt`, bei E-121 der Inhalt des Postfachs,
+  bei E-97 die gespeicherte Datei. Eine eingebaute Spurmarke ist der Beleg
+  für den **Weg**, nie für das **Ergebnis**.
+- **Ein Zwischenstand, der einen Teil richtig macht, sieht gründlicher aus
+  als gar keiner.** `alias h` ist näher an `alias hans` als `alias Untitled`
+  — und beides ist gleich falsch.
+- **Den Vollwert vergleichen, nicht die Veränderung.** *„Im Baum steht jetzt
+  etwas anderes"* ist kein Ergebnis; *„in `NNdbase.txt` steht `alias hans`"*
+  ist eines.

@@ -96,3 +96,45 @@ kannst, machst du auch selbst.“* Die Rücksicht auf seinen Bildschirm bestimmt
 den roten Messwert mit in die Zeile zu schreiben. Und eine Zeile „Gemessen“,
 die schon vor dem Bereitstellen dastand, wird beim Bereitstellen nicht mehr
 geprüft (die Schranke liest nur den Zuwachs).
+
+## Nachtrag 21.10.2026: „mal so, mal so" heißt drei Läufe je Fassung
+
+Gregor zu [E-134](../BEFUNDE.md#e-134), am 21.10.2026:
+
+> *„es war 1x nicht richtig, 1x richtig gespeichert, jetzt wieder falsch."*
+
+Dieser Satz ist eine Messangabe. Er sagt: die Stelle ist **nicht
+festgelegt**, und ein einzelner Lauf entscheidet gar nichts. Und so war es
+auch — zwei Läufe derselben Fassung meldeten an derselben Codezeile einmal
+*ausgewaehlt* und einmal *NICHT ausgewaehlt*, weil `SelectItem()` über
+`TVN_SELCHANGED` → `OnSelChanged` → `SetFocus()` den Fokus verschiebt.
+
+Deshalb wurde am Ende nicht einmal gemessen, sondern **dreimal gegen
+dreimal**, jedes Mal mit frischem Prüfstand, Prüfgröße `NNdbase.txt`:
+
+| Prüfstand | Fassung | Ergebnis |
+|---|---|---|
+| `C:\Temp\E134-G1` bis `-G3` | ausgeliefert 1.0.118 | 3 × `alias Untitled` |
+| `C:\Temp\E134-F1` bis `-F3` | mit der Behebung | 3 × `alias hans` |
+
+Ein einzelner grüner Lauf hätte auch den **Zwischenstand** bestätigt, der nur
+eine der beiden Stellen behob; drei Läufe zeigten dort dreimal `alias h`
+([[erfolg-aus-anwendersicht]], Nachtrag 21.10.2026).
+
+**How to apply, als Ergänzung zu Punkt 1:**
+
+- **Nennt Gregor das Fehlerbild in Häufigkeiten** — *„mal ja, mal nein",
+  „1x so, 1x so", „manchmal", „meistens"* —, dann zählt die Behebung erst
+  nach **drei** Läufen am neuen Stand und **drei** am alten. Ein roter alter
+  Stand in einem Lauf ist bei einem nicht festgelegten Fehler kein roter
+  alter Stand.
+- **Die Läufe laufen auf getrennten, frischen Prüfständen** (`E134-F1`,
+  `-F2`, `-F3`), nicht dreimal im selben. Ein zweiter Lauf im selben
+  Verzeichnis sieht die Datei, die der erste geschrieben hat.
+- **Die Zeile „Gemessen" nennt die Anzahl**, nicht nur das Ergebnis:
+  *„je drei Läufe, 3 × `alias hans` gegen 3 × `alias Untitled` an 1.0.118"*.
+
+**Noch nicht gebaut:** `tools/pruefe-nachgestellt.pl` prüft, dass ein roter
+alter Stand dasteht, nicht, dass er mehrfach gemessen wurde. Die Erweiterung
+wäre: nennt der Befund Gregors Häufigkeitswort, muss die Zeile „Gemessen"
+eine Anzahl ≥ 3 tragen.
