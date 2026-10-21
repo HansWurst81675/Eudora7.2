@@ -247,7 +247,7 @@ vollständig auf. `ucrtbase` und die `api-ms-win-crt-*` bringt Windows 10 mit.
 
 Was in 1.0.3 fehlt, ist **nicht startrelevant**: `MFC71.DLL` und `MSVCP71.dll`
 (VS.NET 2003, von Microsoft nie als Redistributable veröffentlicht). Sie kosten
-Adressbuch, LDAP, Ph, S/MIME und SpamWatch — nicht den Start.
+die Verzeichnisdienste (LDAP, Ph, `EudoraBk`), S/MIME und SpamWatch — nicht den Start und nicht das eigene Adressbuch.
 
 Zwei Fallstricke, die nur die Importmessung aufdeckt: `Paige32d.dll` ist trotz
 des „d" ein **Release**-Bau, und `msvcr71.dll` (35 KB) ist nicht Microsofts

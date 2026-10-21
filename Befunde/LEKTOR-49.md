@@ -143,15 +143,26 @@ zieht wie Gregor.
 | `Pruefung/PRUEFUNG-PAKET.md:142` und `:386`, `PRUEFUNG-BRANCH.md:250` | intern |
 | `BEFUNDE.md:3063` und `:3970` ([B-1](../BEFUNDE.md#b-1)), `Befunde/PAKET.md:150` | historisch, Beweisführung von damals |
 
-**In diesem Durchgang berichtigt ist `README.md`** — die Datei, die der
-Auftrag mir zuweist und die jeder Fremde zuerst liest. Die neu angelegten
-Notizen zu 1.0.120 ([L-49.6](#l-49.6)) führen die falsche Zeile
-**ausdrücklich nicht** fort und sagen warum. **Die übrigen zehn Stellen sind
-nicht berichtigt**: bei den sechs Release-Notizen vergangener Fassungen wäre
-es eine nachträgliche Änderung dessen, was ausgeliefert wurde, und dafür
-braucht es Gregors Entscheidung. Die vier internen Stellen in `AUFGABEN.md`,
-`WEITERMACHEN.md`, `PORTIERUNG.md` und `Pruefung/` gehören in den nächsten
-Durchgang und stehen hier, damit sie nicht wieder verlorengehen.
+**Berichtigt sind alle Stellen, die den heutigen Stand behaupten** — zehn an
+der Zahl: `README.md` (2), `CHANGELOG.md` (1), `AUFGABEN.md` (2),
+`WEITERMACHEN.md` (1), `PORTIERUNG.md` (2), `Pruefung/PRUEFUNG-PAKET.md` (2)
+und `PRUEFUNG-BRANCH.md` (1). Überall steht jetzt *Verzeichnisdienste (LDAP,
+Ph, `EudoraBk`)*, und wo Platz war, ausdrücklich, dass das eigene Adressbuch
+**nicht** gemeint ist.
+
+**Nicht berichtigt, mit Grund:**
+
+* die **sechs ausgelieferten Release-Notizen** (`Releases/1.0.101/`,
+  `1.0.110/`, `1.0.112/`, `1.0.113/`, `1.0.114/`, `1.0.117/`) — sie sind das
+  Protokoll dessen, was hinausgegangen ist; sie nachträglich zu ändern, ist
+  Gregors Entscheidung, nicht meine. **Das ist der schwerste Teil dieses
+  Fundes:** die falsche Zeile stand in sechs Paketen auf der Platte von
+  Anwendern. Die neuen Notizen zu 1.0.120 ([L-49.6](#l-49.6)) führen sie
+  ausdrücklich nicht fort und sagen warum;
+* die historische Beweisführung — `BEFUNDE.md` [B-1](../BEFUNDE.md#b-1) (zwei Stellen),
+  `Befunde/PAKET.md:150`, `Eudora71/VC71Bruecke/BEFUND.md:501`,
+  `Releases/PAKETE.md:1426` und `:1487`. Das sind datierte Befunde und
+  Paketeinträge; sie gelten für ihren Tag.
 
 ---
 

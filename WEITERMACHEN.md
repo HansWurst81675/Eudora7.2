@@ -297,7 +297,7 @@ Sie stecken alle im zuletzt geschnürten Paket **1.0.63** und im Quellstand
    Naheliegend: nach erfolgreichem `Remove` auf `<Dominant>` umschalten.
 6. [**E-47**](BEFUNDE.md#e-47) — der Fehlerdialog des Verzeichnisdienstes. Ursache belegt
    (`MFC71.DLL` und `MSVCP71.dll` fehlen und wird es immer), **keine Behebung
-   in Sicht**; betrifft Adressbuch, LDAP, Ph und S/MIME, nicht den Start.
+   in Sicht**; betrifft die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME, nicht den Start und nicht das eigene Adressbuch.
 
 > **Was nicht mehr zu suchen ist.** Das Beenden ist entschieden: [E-40](BEFUNDE.md#e-40) (eine
 > Rückfrage, die sich nicht öffnen lässt, galt als Abbrechen), [E-41](BEFUNDE.md#e-41) (Alt-F4 und

@@ -609,7 +609,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    Einzelliste steht in `AUFGABEN.md` unter A2 und ist mit dem Werkzeug jederzeit
    neu zu erzeugen.
 4. **`MFC71.DLL` und `MSVCP71.dll`.** Nicht nachbaubar — `MFC71` wird über 157
-   Ordinale importiert. Dadurch fallen **Adressbuch, LDAP und Ph** aus. Die
+   Ordinale importiert. Dadurch fallen die **Verzeichnisdienste** aus (LDAP, Ph, `EudoraBk`) — **nicht** das eigene Adressbuch, das in `Eudora.exe` übersetzt ist. Die
    `MSVCR71.dll` dagegen ist als eigener Nachbau vorhanden
    (`Eudora71/VC71Bruecke`, 1429 Weiterleitungen auf Windows' `msvcrt.dll`).
 5. ~~**Release-Bau.**~~ **Erledigt** seit Befund [F-1](BEFUNDE.md#f-1) (31.08.2026): der
@@ -734,7 +734,7 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
   Weiterleitungen). Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die
   übrigen) brauchen diese Laufzeit. `MFC71.DLL` und `MSVCP71.dll` sind dagegen
   **nicht** nachbaubar — 157 Importe nach Ordinal, kein einziger nach Namen
-  (Befund [**B-1**](BEFUNDE.md#b-1)); Adressbuch, LDAP, Ph und S/MIME fallen deshalb dauerhaft aus.
+  (Befund [**B-1**](BEFUNDE.md#b-1)); die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME fallen deshalb dauerhaft aus — das eigene Adressbuch nicht.
   Alle Messungen: [Eudora71/VC71Bruecke/BEFUND.md](Eudora71/VC71Bruecke/BEFUND.md).
 
 ## Zwei Fehler in der Zeichentabelle - gefunden und behoben

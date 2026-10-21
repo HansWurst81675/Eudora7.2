@@ -1749,8 +1749,12 @@ S/MIME fallen aus"* — während das lokale Adressbuch in `Eudora.exe`
 kommt von `EudoraBk.dll`, die nach Adressbuch klingt, aber der
 Protokollanbieter des Verzeichnisdienstes ist
 ([L-49.4](Befunde/LEKTOR-49.md#l-49.4)). Gefunden hat das Gregor.
-`README.md` ist berichtigt; dieselbe Zeile steht noch an **zehn** weiteren
-Stellen, darunter **sechs ausgelieferte Release-Notizen**.
+Berichtigt sind **zehn** Stellen — `README.md`, `CHANGELOG.md`,
+`AUFGABEN.md`, `WEITERMACHEN.md`, `PORTIERUNG.md`,
+`Pruefung/PRUEFUNG-PAKET.md` und `PRUEFUNG-BRANCH.md`. **Nicht berichtigt
+sind die sechs ausgelieferten Release-Notizen** (1.0.101 bis 1.0.117): sie
+sind das Protokoll dessen, was hinausgegangen ist, und ihre Änderung ist
+Gregors Entscheidung.
 
 **Die Seite nach außen trug drei Mängel.**
 [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) sagte von sich selbst, sie
@@ -1772,7 +1776,7 @@ sagt ([L-49.2](Befunde/LEKTOR-49.md#l-49.2)).
 fängt auch einen beliebigen Müllwert — aber erst beim **Schreiben**
 ([L-49.10](Befunde/LEKTOR-49.md#l-49.10)).
 
-**Das Urteil: ja, die Papiere tragen** — nach fünfzehn Funden, davon zwölf
+**Das Urteil: ja, die Papiere tragen** — nach fünfzehn Funden, davon dreizehn
 berichtigt. **Die Schranke aus
 [L-44.11](Befunde/LEKTOR-44.md#l-44.11) fehlt zum sechsten Mal**; sie hätte
 [L-49.1](Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses

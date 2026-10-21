@@ -139,7 +139,7 @@ vor dem ersten Befehl genau diese 14 Module, und **alle 14 lösen auf**:
     plstclnt.dll  QCSocket.dll  QCUtils.dll  vcruntime140.dll
 
 `EudoraBk`, `ISock`, `Ldap`, `Ph` und die drei Plugins lädt Eudora erst bei
-Benutzung nach. Was ausfällt: **Adressbuch, LDAP-/Ph-Verzeichnisdienste, S/MIME,
+Benutzung nach. Was ausfällt: **die LDAP-/Ph-/EudoraBk-Verzeichnisdienste, S/MIME,
 SpamWatch, SpamHeaders.** Der Start ist davon nicht betroffen.
 
 Dass `MFC71.DLL` nicht zu ersetzen ist, ist bereits belegt und liegt nicht am
@@ -383,6 +383,6 @@ Zu tun bleibt:
 5. **Versionsnummern nicht wiederverwenden** (Abschnitt 6). Die nächste
    Auslieferung heißt 1.0.4, auch wenn sich nur eine Datei ändert.
 6. **`MFC71.DLL` / `MSVCP71.dll` bleiben offen** und sind nicht legal zu
-   schließen. Das kostet Adressbuch, LDAP, Ph, S/MIME, SpamWatch und
+   schließen. Das kostet die Verzeichnisdienste (LDAP, Ph, `EudoraBk`), S/MIME, SpamWatch und
    SpamHeaders — **nicht** den Start. Das gehört ehrlich in die `LIESMICH.txt`,
    die es bislang nicht erwähnt.

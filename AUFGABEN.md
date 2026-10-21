@@ -301,7 +301,7 @@ angezeigt in `DSRightViewImpl.cpp` aus `DSRightView::OnActivateWazoo` — **nur*
 wenn `RegisterCOMObjects()` fehlschlägt. Es schlägt fehl, weil `DirServ.dll`,
 `ISock.dll`, `Ph.dll`, `Ldap.dll` und `EudoraBk.dll` **`MFC71.DLL` und
 `MSVCP71.dll`** brauchen, und die hat Microsoft nie als Redistributable
-veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME — **nicht** den Start.
+veröffentlicht. Betrifft die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME — **nicht** den Start und **nicht** das eigene Adressbuch, das in `Eudora.exe` übersetzt ist.
 
 `tools/paket-pruefen.ps1` führt beide DLLs seit dem 31.08.2026 als hingenommene
 Lücke; **dass dabei ein Fehlerdialog erscheint, stand dort nicht.**
@@ -952,7 +952,7 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
 - **`EUMAPI.DLL` ist eine 16-Bit-Datei** von 1995 (Signatur `NE`, belegt in
   [Z-1](BEFUNDE.md#z-1)). Niemand importiert sie. Kann vermutlich aus dem Paket.
 - **`MFC71.DLL` und `MSVCP71.dll`** sind nicht nachbaubar (157 Ordinale, [B-1](BEFUNDE.md#b-1)).
-  Adressbuch, LDAP und Ph fallen dauerhaft aus, solange die Fremd-DLLs von 2006
+  Die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) fallen dauerhaft aus, solange die Fremd-DLLs von 2006
   benutzt werden.
 - **Toter Include-Pfad** `..\OpenSSL\inc32` in `QCSocket.vcxproj:60` und das
   `OpenSSL`-Projekt in der Solution: gegen `libeay32.lib`/`ssleay32.lib` linkt
