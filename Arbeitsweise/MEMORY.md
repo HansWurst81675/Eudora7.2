@@ -98,3 +98,6 @@
 - [Ausbleiben ist kein Befund](ausbleiben-ist-kein-befund.md) — eine Messung, die nichts ausgibt, hat nichts gemessen; erst die Positivprobe (tools/spur-lesen.pl), dann die Deutung
 - [Prüfung legt nichts ab](pruefung-legt-nichts-ab.md) — eine Prüfung packt nichts aus und meldet „ungeprüft", wenn sie nichts lesen konnte; Defender fraß die eigene Messprobe
 - [Prüfstand nicht bequemer als die Wirklichkeit](pruefstand-nicht-bequemer-als-die-wirklichkeit.md) — C:\Temp\E132 ist sein eigener 8.3-Kurzname; drei grüne Messungen zu E-132, und Gregor widerlegte sie nach zwei Minuten
+- [Original ist eine Messung](original-ist-eine-messung.md) — „Originalfehler" ist eine Aussage über Verhalten, nicht über Quelltext; in einer Portierung ist die unveränderte Quelle der Ort, an dem Verhalten lautlos umkippt (tools/pruefe-original-belegt.pl)
+- [Jeder Start ins Protokoll](jeder-start-ins-protokoll.md) — eine Schranke im Werkzeug prüft nur die, die das Werkzeug benutzen; 15 Eudora-Starts am 21.10.2026, 0 Zeilen in TESTLAEUFE.md (tools/pruefe-startwege.pl)
+- [CHRONIST 21.10.2026](CHRONIST-2026-10-21.md) — Laufbericht E-134: zwei neue Lehren mit Schranken, fünf Nachträge, offene Punkte zu E-133/E-117 und zum fehlenden Messskript
