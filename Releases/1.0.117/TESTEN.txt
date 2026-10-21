@@ -1,0 +1,220 @@
+=====================================================================
+ Eudora 7.2 - Paket 1.0.117, Quellstand 7.2.0.117
+ Gebaut am 21.10.2026, dritte Fassung des Tages.
+=====================================================================
+
+EIN Schritt, und er dauert zwei Minuten. Alles andere unten ist
+Hintergrund.
+
+Dieses Paket ist zum TESTEN. Es ist nicht veroeffentlicht, und es
+bekommt erst dann ein Release, wenn dieser eine Schritt durch ist.
+
+---------------------------------------------------------------------
+ VORHER
+---------------------------------------------------------------------
+
+Dein Verzeichnis Eudora72-1.0.113-release STEHEN LASSEN.
+Es wird in diesem Test gebraucht - es spielt die "fremde
+Installation". Nicht loeschen, nicht verschieben.
+
+Notier dir vorher Datum und Uhrzeit dieser Datei:
+
+   C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini
+
+Daran siehst du am Ende, ob etwas hineingeschrieben wurde.
+
+Das Mailverzeichnis in diesem Paket ist leer. Fuer diesen Test ist
+das richtig so - es muessen keine Postfaecher hinein.
+
+---------------------------------------------------------------------
+ DER STARTTEST - nimmt sich Eudora ein fremdes Mailverzeichnis?
+---------------------------------------------------------------------
+
+WORUM ES GEHT
+
+Startest du Eudora.exe direkt per Doppelklick, statt ueber
+"Eudora starten.cmd", dann sucht Eudora sich das Mailverzeichnis
+selbst - und findet ueber die Registry das Verzeichnis, mit dem
+ZULETZT IRGENDEINE Eudora gestartet wurde. Bisher hat es das
+wortlos genommen und hineingeschrieben. Genau das ist dem Melder
+aus Issue #102 passiert; danach startete seine Hermes 7.1 nicht
+mehr. Ab dieser Fassung FRAGT Eudora vorher.
+
+SCHRITT 1
+
+Starte einmal dein 1.0.113 ganz normal ueber "Eudora starten.cmd"
+und beende es wieder. Damit zeigt die Registry auf dessen
+Mailverzeichnis - nur so ist es nachher das "fremde".
+
+SCHRITT 2
+
+Gehe in DIESES Verzeichnis und mache einen DOPPELKLICK auf
+Eudora.exe. NICHT auf "Eudora starten.cmd".
+
+SO IST ES RICHTIG
+
+Es kommt ein Fenster "Eudora 7.2" mit der Meldung
+
+   Eudora found an existing mail folder that belongs to another
+   installation:
+   C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis
+
+und drei Schaltflaechen:
+
+   Yes      das fremde Verzeichnis trotzdem benutzen
+            - und hineinschreiben
+   No       Eudora legt sich ein eigenes Mailverzeichnis neben
+            dem Programm an  (VORGABE)
+   Cancel   Eudora beendet sich, ohne irgendetwas anzufassen
+
+BITTE "No" DRUECKEN.
+
+DANACH PRUEFEN
+
+Eudora laeuft mit einem leeren eigenen Postfach, und
+
+   C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini
+
+hat NOCH DENSELBEN ZEITSTEMPEL wie vorher.
+
+WENN GAR KEIN FENSTER KOMMT
+
+Dann greift die Rueckfrage nicht - bitte melden. Hilfreich ist
+dann diese Zeile aus dem Protokoll:
+
+   findstr E-132 "C:\Users\Gregor\Eudora72-1.0.117-release\Mailverzeichnis\eudora.log"
+
+Dort muss "E-132 Startverzeichnis: ... fremd=1" stehen. Steht da
+"fremd=0", hat Eudora das Verzeichnis fuer sein eigenes gehalten -
+auch das bitte melden, mit der ganzen Zeile.
+
+VORAUSSETZUNG: keine. Geht offline.
+
+---------------------------------------------------------------------
+ NEU IN DIESER FASSUNG, ZUM ANSEHEN
+---------------------------------------------------------------------
+
+Help -> About Eudora zeigt jetzt vier Zeilen mehr:
+
+   INI                welche Eudora.ini wirklich gelesen wird
+   Default INI        die DEudora.ini
+   Log                wohin das Protokoll geht, mit LogLevel
+   Mail folder from   WOHER das Mailverzeichnis stammt
+
+Der Knopf "Copy info" legt alles als Text auf die Zwischenablage -
+fertig zum Einfuegen in ein Ticket oder ein Issue.
+
+---------------------------------------------------------------------
+ WAS DIESER TEST NICHT PRUEFT
+---------------------------------------------------------------------
+
+Ob eine daneben installierte HERMES 7.1 danach wieder startet.
+Dafuer fehlt uns Hermes. Der Melder aus Issue #102 ist darum
+gebeten worden.
+
+Eine Eudora.ini, die bereits eine ungueltige Fensterposition
+traegt, wird erst beim naechsten Sichern berichtigt - der Leseweg
+ist noch offen (Befund E-131).
+
+---------------------------------------------------------------------
+ WINDOWS DEFENDER
+---------------------------------------------------------------------
+
+Jede Fassung ist eine neue, nicht signierte Datei. Defender hat am
+20.10.2026 DREIMAL zugeschlagen, zuletzt beim Starten von 1.0.113 -
+waehrend ein gezielter Scan derselben Datei nichts meldete.
+
+Der Fehlalarm ist am 20.10.2026 bei Microsoft eingereicht,
+Vorgang a567fe2a-9f58-47e1-a675-a62733ec538f. Antwort steht aus.
+
+Wird die Datei eingezogen:
+   Windows-Sicherheit -> Schutzverlauf -> Aktionen
+   -> "Auf Geraet zulassen"
+Nur "Wiederherstellen" genuegt nicht - dann holt er sie beim
+naechsten Start wieder.
+
+---------------------------------------------------------------------
+ WIE DEIN URTEIL ZAEHLT
+---------------------------------------------------------------------
+
+Mit der Paketnummer, zum Beispiel:
+
+   "Starttest an 1.0.117 in Ordnung"
+   "Starttest an 1.0.117 gescheitert, es kam keine Rueckfrage"
+
+Ohne die Nummer ist das Urteil wertlos - einmal stand "behoben"
+einen Tag lang da, waehrend das ausgelieferte Paket den Fehler
+noch hatte.
+
+Eigene Tests dieser Fassung: 241 Tests, 241 bestanden.
+
+---------------------------------------------------------------------
+ NEU IN 1.0.117 - UND DER ZWEITE TEIL DEINES TESTS
+---------------------------------------------------------------------
+
+In 1.0.114 kam die Rueckfrage bei JEDEM Start, auch ueber das
+EIGENE Verzeichnis. Ursache: die Registry traegt die 8.3-Kurzform
+(EUDORA~1.114), verglichen wurde mit der Langform. Behoben.
+
+BITTE DESHALB NOCH EINMAL STARTEN:
+
+  Nach dem Durchgang oben Eudora beenden und dieselbe Eudora.exe
+  ein ZWEITES Mal doppelklicken.
+
+SO IST ES RICHTIG:
+  Beim zweiten Mal kommt KEINE Frage mehr. Eudora benutzt sein
+  eigenes Verzeichnis und startet durch.
+
+WENN DOCH WIEDER GEFRAGT WIRD:
+  Dann ist der Fehler aus 1.0.114 nicht weg - bitte melden, mit
+  dem Pfad, der im Fenster steht. Steht dort ein Name mit Tilde
+  (EUDORA~1.115), greift die Aufloesung nicht.
+
+Der Pfad im Fenster muss jetzt AUSGESCHRIEBEN sein, also
+C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis
+und nicht C:\Users\Gregor\EUDORA~1.113\MAILVE~1.
+
+
+---------------------------------------------------------------------
+ NEU IN 1.0.117 - DRITTER PRUEFSCHRITT
+---------------------------------------------------------------------
+
+1) DIE ANTWORT WIRD GEMERKT
+
+   Nach dem Durchgang oben Eudora beenden, die 0.115 (oder 0.114)
+   einmal starten und beenden, dann wieder DIESE Eudora.exe
+   doppelklicken.
+
+   SO IST ES RICHTIG: es kommt KEINE Frage mehr, obwohl die andere
+   Fassung dazwischen lief - Eudora hat sich dein "Nein" gemerkt.
+
+   Nachsehen kann man es in der DEudora.ini neben der EXE:
+     E132Abgelehnt=C:\...\Mailverzeichnis
+
+   WIEDER GEFRAGT WERDEN: diese Zeile aus der DEudora.ini loeschen.
+
+2) DIE RUECKFRAGE AUF EINEM ANDEREN STARTWEG
+
+   Bis 1.0.115 kam die Frage NUR beim Doppelklick auf Eudora.exe.
+   Ueber einen mailto:-Link, eine Postfachdatei (.mbx), Briefpapier
+   (.sta) oder eine auf Eudora gezogene Datei kam sie NIE - und
+   Eudora ging ohne Nachfrage ins fremde Verzeichnis.
+
+   Wenn du magst: die Zeile E132Abgelehnt aus der DEudora.ini
+   entfernen, dafuer sorgen dass die Registry auf ein fremdes
+   Verzeichnis zeigt (also 0.115 einmal starten und beenden), und
+   dann eine beliebige Datei auf die Eudora.exe von 1.0.117 ziehen.
+
+   SO IST ES RICHTIG: dieselbe Rueckfrage wie beim Doppelklick.
+
+   Das ist Kuer, kein Muss - ich habe es am Quelltext behoben und am
+   Pruefstand nicht nachgestellt. Wenn du es nicht pruefst, bleibt es
+   so in den Notizen stehen.
+
+3) COPY INFO IM UEBER-DIALOG
+
+   Help -> About Eudora -> Copy info. Der Knopf muss "Copied"
+   melden UND der Block muss sich einfuegen lassen. Bis 1.0.115 sagte
+   er "Copied" auch dann, wenn nichts ankam - und die Zwischenablage
+   war vorher geleert, also war der alte Inhalt weg.
+
