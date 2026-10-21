@@ -16,7 +16,7 @@ für die Frage nach der Initialisierungsreihenfolge. Eine eigene Messung am
 lebenden Windows: ob auf Laufwerk `C:` 8.3-Namen erzeugt werden (siehe
 [K3](#k3)).
 
-**25 Stellen geprüft, 12 Befunde darunter 9 Funde, davon 3 hoch.**
+**26 Stellen geprüft, 13 Befunde darunter 12 Funde, davon 4 hoch.**
 
 ---
 
@@ -44,6 +44,17 @@ richtig, und die Zerlegung `E132AufrufZerlegen` trifft die Trennregel von
   schreibt die Registry in Kurzform, `ExecutableDir` ist lang, der
   Präfixvergleich scheitert.
 
+* **[K13](#k13): derselbe Fehlalarm bleibt nach der Behebung von [K3](#k3)
+  stehen** — die Registry speichert das Mailverzeichnis ohne Rückstrich,
+  `ExecutableDir` trägt einen. Wer sein Mailverzeichnis **im**
+  Programmverzeichnis führt, bekommt die Warnung über sein eigenes. Die
+  Behebung von [K1](#k1) macht diesen Weg erst erreichbar; beide gehören
+  zusammen hinein.
+
+Die Fragen des Koordinators zur geplanten Behebung sind unter
+[Antwort auf die vier Fragen](#antwort) beantwortet — mit einer Vergleichsregel,
+die [K4](#k4) und [K13](#k13) in einem erledigt und ohne Win32 auskommt.
+
 Siehe [Was ich behoben habe](#behoben). Nach den Behebungen darf das Paket
 raus — **nicht vorher**.
 
@@ -63,6 +74,7 @@ raus — **nicht vorher**.
 | **[K10](#k10)** Statische Initialisierungsreihenfolge von `g_szE132Spur`: **kein Fund** | — | **belegt an der MFC-Quelle** (`strcore.cpp:133`, `UseOfMfc=Dynamic`) |
 | **[K11](#k11)** Der Über-Dialog schneidet lange Zeilen ohne Ellipse ab; die Log-Zeile verliert dabei gerade das `(LogLevel=…)`, das sie erklären soll. Startbild (`m_IsSplash`) bleibt richtig | gering | **belegt an Quelltext und `.rc`** |
 | **[K12](#k12)** Altbestand, durch [E-132](../BEFUNDE.md#e-132) neu sichtbar: `cmdLine` ist nicht vorbelegt und wird nach gescheitertem `RegQueryValueEx` gelesen; die neue `MessageBox` steht **vor** der `err`-Prüfung und kann einen Müllpfad anzeigen | gering | **belegt am Quelltext** |
+| **[K13](#k13)** Die Registry speichert das Mailverzeichnis **ohne** Rückstrich, `ExecutableDir` trägt einen — ist das Mailverzeichnis das Programmverzeichnis selbst, meldet der Vergleich „fremd". **Überlebt die Behebung von [K3](#k3)** und wird durch die Behebung von [K1](#k1) erst scharf | **hoch, sobald [K1](#k1) behoben ist** | **belegt am Quelltext** (`eudora.cpp:3681-3684` gegen `fileutil.cpp:435`) |
 
 ---
 
@@ -471,8 +483,221 @@ dann nicht, wenn Application Data gefunden wurde.
 
 ---
 
+<a id="k13"></a>
+
+## K13 — der Fehlalarm, der die Behebung von K3 überlebt
+
+Gefunden beim Nachrechnen der geplanten Behebung, **neu**, und er wird durch
+`GetLongPathName` auf beiden Seiten **nicht** behoben.
+
+Die beiden Seiten stehen nicht in derselben Schreibweise, und zwar nicht nur
+bei 8.3:
+
+* `RegisterCommandLine` **entfernt den Rückstrich**, bevor es schreibt
+  (`eudora.cpp:3681-3684`):
+  ```cpp
+  //strip	tailing SLASH
+  strcpy(eDir,EudoraDir);
+  if (eDir[strlen(eDir)-1] == SLASH)
+      eDir[strlen(eDir)-1] = 0;
+  ```
+* `GetDirs` **setzt ihn** (`fileutil.cpp:435`: `temp[1] = 0;`).
+
+Solange das Mailverzeichnis ein **Unterordner** ist (`…\release\Mailverzeichnis`
+gegen `…\release\`), fällt das nicht auf. Ist das Mailverzeichnis aber das
+**Programmverzeichnis selbst** — der gewöhnliche Eudora-Aufbau, `Eudora.ini`
+neben der EXE —, dann steht in der Registry `C:\…\Eudora72` und in
+`ExecutableDir` `C:\…\Eudora72\`. `nEigen` ist dann **ein Zeichen länger als
+der Kandidat**, `_tcsnicmp` läuft in dessen Nullbyte und meldet ungleich:
+**`fremd = 1` auf dem eigenen Programmverzeichnis.**
+
+Testfall (2) deckt das nicht ab, weil er `EIGEN` gegen `EIGEN` prüft — **beide
+mit** Rückstrich. Die Registry liefert ihn nie so.
+
+Heute ist dieser Weg nur über `:1017`/`:1029` erreichbar (vgl. [K1](#k1)):
+liegt eine `Eudora.ini` neben der EXE, wird
+`StartEudoraWithDefaultLocation` von `:1055` gar nicht erst gerufen. **Wird
+[K1](#k1) behoben, wird K13 scharf.** Beide Behebungen müssen zusammen hinein.
+
+---
+
+<a id="antwort"></a>
+
+## Antwort auf die vier Fragen zur geplanten Behebung
+
+### 1. Reicht `GetLongPathName`? Was, wenn das Verzeichnis nicht existiert?
+
+**Für die Kurzform ja, für den Vergleich nein.** Drei Teilantworten, alle
+gemessen oder am Quelltext belegt.
+
+**(a) Nicht roh aufrufen — `ConvertToLongPathName` nehmen.** **Gemessen** über
+P/Invoke gegen `kernel32`, sechs Fälle:
+
+| Eingabe | `rc` | `GetLastError` | Puffer |
+|---|---|---|---|
+| Kurzform, ohne Rückstrich | 161 | 203 | aufgelöst, **ohne** Rückstrich |
+| Kurzform, **mit** Rückstrich | 162 | 203 | aufgelöst, **mit** Rückstrich |
+| Langform, mit Rückstrich | 162 | 203 | unverändert, mit Rückstrich |
+| Kurzform, Unterordner | 177 | 203 | beide Stufen aufgelöst |
+| gibt es nicht (kurz) | **0** | 3 | **unberührt** |
+| gibt es nicht (lang) | **0** | 3 | **unberührt** |
+
+Zwei Dinge daran sind für die Behebung wichtig. Erstens: **der abschließende
+Rückstrich bleibt erhalten** — die Vorbedingung aus [K4](#k4) überlebt die
+Auflösung, `ExecutableDir` endet danach weiter auf `\`. Zweitens: bei
+`rc == 0` bleibt der Puffer **unangetastet**; ein roher Aufruf in einen
+uninitialisierten `TCHAR[]` liefert dann Stapelmüll. `CheckMailDirectory`
+(`fileutil.cpp:354-356`) kennt die Falle und belegt den Puffer vorher — und
+`ConvertToLongPathName` (`fileutil.cpp:903-915`) macht es richtig: `rc == 0`
+oder `rc > _MAX_PATH` → `false`, `CString` unverändert. **Die gibt es schon,
+sie ist in `fileutil.h:124` deklariert, und sie ist die richtige Wahl.**
+
+**(b) Dass das Verzeichnis fehlt, ist der ungefährliche Fall.** Existiert der
+Kandidat nicht, dann existiert dort auch keine `Eudora.ini` — `bIniDa` ist
+`FALSE`, `E132IstFremdesVerzeichnis` kehrt an der zweiten Schranke um, und es
+wird nicht gefragt. Die misslungene Auflösung kann also gar nicht in eine
+Falschmeldung münden. **Gegenvermutung geprüft:** eine Lage, in der
+`FileExistsMT` auf die `Eudora.ini` gelingt und `GetLongPathName` auf das
+Verzeichnis scheitert, gibt es trotzdem — NTFS kennt *Traverse* ohne *List*,
+und auf einem Netzlaufwerk kann die Auflösung mit `ERROR_ACCESS_DENIED`
+zurückkommen. Dann steht der Kandidat kurz, `ExecutableDir` lang, und der
+Fehlalarm ist zurück. **Empfehlung:** scheitert die Auflösung des Kandidaten,
+nicht einfach weitervergleichen, sondern zusätzlich die **Kurzform** von
+`ExecutableDir` (`GetShortPathName`) gegenhalten und nur dann „fremd" sagen,
+wenn **beide** Formen fremd sagen.
+
+**(c) Die Auflösung heilt nur eine von drei Ursachen.** Übrig bleiben
+[K4](#k4) (Präfix ohne Trennzeichen) und [K13](#k13) (Rückstrich auf nur einer
+Seite). Beide sitzen in der Vergleichsregel, nicht in der Schreibweise. Die
+Regel unten erledigt alle drei zusammen.
+
+**Vollständig wäre nur `GetFinalPathNameByHandle`** (Vista+, mit
+`CreateFile`/`FILE_FLAG_BACKUP_SEMANTICS`): das löst zusätzlich
+Laufwerkszuordnungen, `subst` und Verzweigungspunkte auf und würde auch die
+Zeilen „Z:\ gegen UNC" und „`/` statt `\`" aus [K4](#k4) schließen. Das ist
+mehr Aufwand als der Befund wert ist — aber es gehört genannt, damit niemand
+die Langform für eine Normalform hält. **Sie ist keine.**
+
+### 2. Weitere Stellen, an denen kurz gegen lang verglichen wird
+
+**Gesucht** nach allen Vergleichen über `ExecutableDir`, `EudoraDir` und
+`INIPath`. Fünf Stellen vergleichen zwei Verzeichnisse miteinander:
+
+| Stelle | Vergleich | Form |
+|---|---|---|
+| `ContentConcentrator.cpp:241` | `EudoraDir.CompareNoCase(ExecutableDir)` | beide lang |
+| `eudora.cpp:4657` | `_tcsicmp(ExecutableDir, EudoraDir)` | beide lang |
+| `fileutil.cpp:750` | `EudoraDir.Compare(ExecutableDir)` | beide lang, **aber groß/klein-empfindlich** |
+| `QCMailboxDirector.cpp:110` | `stricmp(szPath, EudoraDir)` | beide lang |
+| `QCMailboxDirector.cpp:2455` | `szParentPathname.CompareNoCase(EudoraDir)` | beide lang |
+
+**Keine davon mischt kurz und lang** — weil `CheckMailDirectory` `EudoraDir`
+durch `GetLongPathName` schickt (`fileutil.cpp:354-356`) und `ExecutableDir`
+aus `GetModuleFileName` ohnehin lang ist. Der neue E-132-Vergleich ist der
+**einzige**, der eine Zeichenkette direkt aus der Registry gegen
+`ExecutableDir` hält, und damit der einzige, der die Kurzform je zu sehen
+bekommt.
+
+Zwei Einschränkungen, beide Altbestand, beide gering:
+
+* Scheitert `GetLongPathName` in `CheckMailDirectory`, bleibt `EudoraDir`
+  **kurz** (der Puffer ist vorher mit der Kurzform belegt) — dann melden alle
+  fünf Zeilen oben fälschlich „verschieden". Folgen: die
+  `ContentConcentrator`-Profildatei und die `EPI`-Erweiterungen werden zweimal
+  gesucht, `GetRegInfoFileAlternatePath` liefert einen zweiten Pfad. Nichts
+  davon zerstört Daten.
+* `fileutil.cpp:750` vergleicht **mit** Groß-/Kleinschreibung. Allein eine
+  andere Schreibweise macht daraus „verschieden". Das ist falsch, aber
+  harmlos — und es ist nicht neu.
+
+### 3. Der Präfixvergleich ohne Trennzeichen — eine Regel für drei Fehler
+
+Das steht als [K4](#k4) im Bericht, und [K13](#k13) ist derselbe Fehler von der
+anderen Seite. Beide verschwinden mit **einer** Regel, die ohne Win32 auskommt
+— die Funktion bleibt also für den Prüfstand fahrbar:
+
+```cpp
+// Vergleichslaenge OHNE abschliessenden Rueckstrich: die Registry speichert
+// das Mailverzeichnis ohne (eudora.cpp:3681-3684), GetDirs haengt ihn an
+// ExecutableDir an (fileutil.cpp:435). Beide Seiten muessen gleich enden.
+size_t nEigen = _tcslen(pEigenes);
+while (nEigen > 0 && (pEigenes[nEigen - 1] == '\\' || pEigenes[nEigen - 1] == '/'))
+    nEigen--;
+if (nEigen == 0)
+    return false;
+
+if (_tcsnicmp(pKandidat, pEigenes, nEigen) != 0)
+    return true;                        // anderer Anfang -> fremd
+
+// Praefix allein genuegt nicht: "C:\Eudora2" faengt mit "C:\Eudora" an.
+// Es muss ENDEN oder ein Trennzeichen folgen.
+const TCHAR cNach = pKandidat[nEigen];
+return !(cNach == 0 || cNach == '\\' || cNach == '/');
+```
+
+Durchgerechnet, alle sieben Fälle aus [K4](#k4) plus die beiden aus
+[K13](#k13):
+
+| `pEigenes` | `pKandidat` | vorher | mit der Regel |
+|---|---|---|---|
+| `C:\Eudora\` | `C:\Eudora2\Mail` | fremd ✔ | fremd ✔ |
+| `C:\Eudora` *(ohne)* | `C:\Eudora2\Mail` | **nicht fremd ✘** | fremd ✔ |
+| `C:\Eudora\` | `C:\Eudora` *(Registry-Form)* | **fremd ✘** | nicht fremd ✔ |
+| `C:\Eudora` | `C:\Eudora\` | fremd ✘ | nicht fremd ✔ |
+| `C:\Eudora\` | `c:\eudora\mail` | nicht fremd ✔ | nicht fremd ✔ |
+| `C:\Eudora\` | `C:\Eudor` | fremd ✔ | fremd ✔ |
+| `C:\Eudora\` | `C:/Eudora/Mail` | fremd ✘ | fremd ✘ *(bleibt)* |
+| `Z:\Eudora\` | `\\srv\share\Eudora\Mail` | fremd ✘ | fremd ✘ *(bleibt)* |
+
+Die beiden, die bleiben, gehen in die misstrauische Richtung: es wird zu viel
+gefragt, nie zu wenig. Sie brauchen `GetFinalPathNameByHandle` (siehe 1c) und
+sind den Aufwand heute nicht wert — **aber sie gehören in den Kommentar der
+Funktion**, damit der nächste Leser nicht denkt, der Vergleich sei vollständig.
+
+**Gegentests, die dazugehören** (alle ohne Dateisystem, also im Prüfstand
+fahrbar): `("C:\\Eudora2\\Mail", "C:\\Eudora", true)` muss **fremd** sein,
+`("C:\\Eudora", "C:\\Eudora\\", true)` und
+`("C:\\Eudora\\", "C:\\Eudora", true)` müssen **nicht fremd** sein. Dazu je ein
+Fall für die Auflösung kurz/lang — der gehört aber in den **Aufrufer** und
+braucht ein echtes Verzeichnis; mein Vorschlag ist, dafür keinen Testfall zu
+bauen, sondern den Aufruf von `ConvertToLongPathName` in der Spurzeile
+mitzuprotokollieren (`gefunden=` vor und nach der Auflösung). Dann steht die
+Antwort beim nächsten Fehlerbericht im Protokoll statt in einer Vermutung.
+
+### 4. Geht 1.0.114 so raus?
+
+**Nein.** Als **Testpaket bei Gregor** darf es bleiben und soll es bleiben — es
+hat gerade seinen Zweck erfüllt und einen Fehler gezeigt, den vier
+Prüfdurchgänge nicht gezeigt haben. Als **Veröffentlichung** nicht, und zwar
+nicht wegen [K3](#k3) allein:
+
+| | muss vor der Veröffentlichung hinein | warum |
+|---|---|---|
+| [K1](#k1) | **ja** | ohne das ist [E-132](../BEFUNDE.md#e-132) auf vier von fünf Startwegen gar nicht behoben. Ein Befund, der in der Hälfte der Fälle nicht greift, darf nicht als behoben ausgeliefert werden |
+| [K2](#k2) | **ja** | die **Vorgabeantwort** macht Eudora in jedem Pfad mit Leerzeichen startunfähig. Das ist schlimmer als der Fehler, den wir beheben |
+| [K3](#k3) | **ja** | läuft bereits |
+| [K13](#k13) | **ja**, zusammen mit [K1](#k1) | wird durch die Behebung von [K1](#k1) überhaupt erst erreichbar |
+| [K7](#k7) | sollte | eine Zeile |
+| [K4](#k4) Rest, [K5](#k5), [K6](#k6), [K8](#k8)–[K12](#k12) | nein | nachziehbar, nichts davon verliert Daten |
+
+Dazu eine Bedingung, die nicht am Code hängt: **die Behebung muss an einem
+Prüfstand rot gewesen sein, bevor sie grün ist** —
+`C:\Temp\E132` taugt dafür nicht mehr. Nötig sind ein Verzeichnis mit
+8.3-Alias (`Eudora72-1.0.115-release` genügt, gemessen) und eines mit einem
+Leerzeichen im Pfad. Erst wenn beide den Fehler **zeigen** und nach der
+Behebung nicht mehr, ist die Zeile „Gemessen" in `BEFUNDE.md` gedeckt.
+
+---
+
 <a id="behoben"></a>
 
 ## Was ich behoben habe
 
-*(wird nach Bau und Testlauf eingetragen)*
+**Nichts am Quelltext.** Der Koordinator hat `Eudora71/Eudora/eudora.cpp` und
+`Eudora71/Tests/TestE132.cpp` für seine eigene Behebung übernommen, solange
+dieser Bericht lief; eine zweite Hand in denselben Dateien hätte seine Arbeit
+beschädigt. Die Funde stehen deshalb vollständig hier, mit der Regel aus
+[Punkt 3](#antwort) als fertigem Ersatztext.
+
+**Offen und nicht zugeteilt:** [K7](#k7) (`AboutDlg.cpp`, eine Zeile),
+[K5](#k5), [K6](#k6), [K11](#k11), [K12](#k12).
