@@ -146,10 +146,9 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.113`** (veröffentlicht am 20.10.2026 um 13:01
-  Uhr UTC, auf GitHub als *Latest*,
-  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.113; davor am
-  selben Tag `v1.0.112` um 11:55 Uhr UTC, davor `v1.0.101` vom 17.10.2026)
+* **Das neueste Release ist `v1.0.117`** (veröffentlicht am 21.10.2026 um 09:56 UTC, Marke auf `f546b004`, ZIP `Eudora72-1.0.117-release.zip`, SHA-256 `335751a9…7eeb1a1`): Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt — auf allen Startwegen und auch bei einer kopierten Sicherung ohne `Eudora.ini`. Davor `v1.0.113` (20.10.2026 um 13:01
+  ohne `Eudora.ini`. Davor erschienen `v1.0.113` und `v1.0.112` am 20.10.2026
+  sowie `v1.0.101` am 17.10.2026 — alle drei überholt.
   IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –
   bis auf einen seltenen, vermuteten Fall bei gesendeter Post (siehe *Auf einen Blick*)
   ([E-121](BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an

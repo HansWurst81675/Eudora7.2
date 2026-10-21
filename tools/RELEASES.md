@@ -33,6 +33,7 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-10-17 21:12:09 | v1.0.101 | Gregor am 17.10.2026: 'ja, veröffentlichen' (nach seinem Test von 1.0.101 in vier Runden und dem Merge von PR #99) | veroeffentlicht |
 | 2026-10-20 13:55:11 | v1.0.112 | Gregor am 20.10.2026: 'wie auch immer: release eine neue version, alles in release notes und changelog, auch der neue befund' und 'ja, mach das!' | veroeffentlicht 11:55:10 UTC; Marke auf `f87a4a74` (PR #113). **Nicht mehr *Latest*** - am selben Tag von `v1.0.113` abgeloest |
 | 2026-10-20 15:01:37 | v1.0.113 | Gregor am 20.10.2026: 'jetzt schon releasen, wie soll er ja an die gefixte version kommen?' | veroeffentlicht 13:01:36 UTC, auf GitHub als *Latest*; Marke auf `ac094f15` (PR #117), ZIP `Eudora72-1.0.113-release.zip`, 9 378 205 Byte, SHA-256 `0d1d4bf4...f4772`. **Am 20.10.2026 vom LEKTOR in die Tabelle geholt** - das Skript haengt die Zeile ans Dateiende, also hinter den Zitatblock, und sie stand dort als rohe Strichzeile ([L-43.8](../Befunde/LEKTOR-43.md#l-43.8), [L-43.12](../Befunde/LEKTOR-43.md#l-43.12)) |
+| 2026-10-21 09:56:57 | v1.0.117 | Gregor am 21.10.2026: "ja, release 1.0.117 auf github". Begruendung, warum er diese Fassung nicht eigens testet: "wenn es identisch zu 0.116 ist, muss ich ja nichts testen, das hast du bereits gemacht" - 1.0.116 hat er bestaetigt ("2x nacheinander starten verhaelt sich jetzt korrekt"), und 1.0.117 unterscheidet sich davon nur durch zwei Behebungen, die danach rot und gruen am laufenden Programm gemessen wurden. PRUEFER-42: "JA - v1.0.117 geht so raus" (acht Funde, keiner haelt auf). [LEKTOR-46](../Befunde/LEKTOR-46.md#lektor-46): "JA" (sieben Funde in den Papieren, alle berichtigt). | veroeffentlicht |
 
 > **Nachgetragen am 17.09.2026 vom LEKTOR ([L-13.1](../Befunde/LEKTOR-13.md#l-13.1)).** Die Zeile zu `v1.0.64`
 > fehlte hier, und **vier** Dokumente behaupteten zur selben Zeit, veroeffentlicht
@@ -44,3 +45,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > 13.09.2026 sei nichts hinausgegangen - waehrend Anwender 1.0.64 herunterladen,
 > eine Fassung, in der **[E-98](../BEFUNDE.md#e-98)** offen ist und **[E-101](../BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
+
