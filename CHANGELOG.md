@@ -81,6 +81,64 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.120 — die Auswahlbox schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135))
+
+Gregor am 21.10.2026 an 1.0.119, während er sein Ziel für diesen Weg
+beschrieb: *„das Fenster wird bei jeder Änderung (z.B. nächster Eintrag)
+kleiner!"*
+
+### Innenmaß gelesen, Außenmaß gesetzt
+
+`AutoCompleterListBox::ReCalcACListBoxPos` (`AutoCompleteSearcher.cpp:530`)
+holte sich mit `GetClientRect` die **Innen**maße der Liste und setzte daraus
+mit `MoveWindow` die **Außen**maße — plus sechs Pixel. Der Kommentar des
+ursprünglichen Verfassers steht daneben:
+
+> *„Why 6? I haven't a clue. I imagine it's because the border around the
+> window is 3 pixels? I dunno."*
+
+**Gemessen ist der Rand 14 Pixel.** Also verlor das Fenster bei jedem Aufruf
+acht Pixel, und der nächste Aufruf las den schon geschrumpften Innenraum.
+Gerufen wird zweimal je Cursor-Schritt — aus `OnArrowKey` und aus dem
+`SetControlToItem`, das `OnArrowKey` selbst auslöst:
+
+| Schritt | 0 | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|---|
+| Fenster | 100 × 62 | 84 × 46 | 68 × 30 | 52 × 14 | 36 × 14 | 20 × 14 |
+
+Nach fünf Schritten war von der Liste nichts mehr übrig.
+
+**Jetzt** wird Außenmaß gegen Außenmaß gerechnet — genau wie in `InitList`,
+das es von Anfang an so machte und deshalb nie geschrumpft ist. Die Größe
+setzt `InitList`; diese Funktion heißt `…Pos` und verschiebt nur noch.
+
+### Gemessen
+
+Am laufenden Programm, über `tools/testlauf.ps1` mit dem neuen
+`tools/messen-e135.ps1`, Prüfstand mit fünf Kurznamen gleichen Anfangs, je
+sechs Cursor-Schritte, zwei nachweislich verschiedene EXE (MD5 `b50d9136`
+gegen `1158d27c`):
+
+| | vorher | nachher |
+|---|---|---|
+| Schritt 0 | 100 × 62 | 108 × **70** |
+| Schritt 3 | 52 × 14 | 108 × **70** |
+| Schritt 5 | 20 × 14 | 108 × **70** |
+
+**243 Tests, 243 bestanden.** Die Suite deckt diesen Weg nicht ab.
+
+### Eine Vorhersage, die sich nicht bestätigt hat
+
+[PRÜFER-43 K9](Befunde/PRUEFER-43.md#k9) sagte für `OnRightButtonDown`
+(`nicktree.cpp:2941`) denselben Fehlerfall voraus wie bei
+[E-134](BEFUNDE.md#e-134): der Rechtsklick wähle nicht aus, das Kontextmenü
+bleibe ausgegraut. **Am laufenden Programm nicht nachstellbar** — fünf
+Klickhöhen je Fassung (`tools/messen-k9.ps1`), beide melden danach genau
+**ein** ausgewähltes Kind. Beim Klick auf ein *anderes* Element wandert die
+Karette, und dann setzt `SelectItem()` `TVIS_SELECTED` sehr wohl. Die Zeile
+ist trotzdem eingebaut — als **Sicherung**, nicht als gemessene Behebung, und
+genau so steht es im Befund.
+
 ## 7.2.0.119 — der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134))
 
 Gregor am 21.10.2026, mit Bildschirmfoto: *„adressbuch übernimmt nichts."* Im
