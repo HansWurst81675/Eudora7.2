@@ -161,6 +161,7 @@ haben.
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 21.10.2026, `C:\Users\Gregor\Eudora72-1.0.117-release`, mit `TESTEN.txt` |
+| ZIP und Prüfsumme | `Eudora72-1.0.117-release.zip`, 9.382.044 Byte, geschnürt am 21.10.2026 um 09:14. SHA-256 `335751a91ca67b7996c4076f077deb49a0f4ce4ac1de74c8a079cc2cb7eeb1a1` — am 21.10.2026 mit `sha256sum` an der Datei selbst nachgemessen ([LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.3)). Release-Notizen: [1.0.117/RELEASE-NOTIZEN.md](1.0.117/RELEASE-NOTIZEN.md). **Noch nicht veröffentlicht** — veröffentlicht ist `v1.0.113` |
 | Inhalt | wie 1.0.116, dazu zwei Funde aus [PRÜFER-41](../Befunde/PRUEFER-41.md): **eine kopierte Sicherung ohne `Eudora.ini`** wurde ungefragt übernommen — gefragt wurde nur, wenn dort eine INI lag, obwohl Eudora danach Postfächer, `Attach\` und `Embedded\` hineinschreibt; jetzt genügt irgendeine Spur einer Einrichtung. Und die Zeile *„Mail folder from"* im Über-Dialog **log auf vier Wegen**, darunter der häufigste überhaupt (`Eudora.ini` neben der EXE → *„(unbekannt)"* statt *Programmverzeichnis*) |
 | Warum nicht 1.0.116 | **1.0.116 liegt bereits bei Gregor** und enthält diese beiden Behebungen nicht. Zwei Stände unter demselben Namen machen jede spätere Messung wertlos ([version-eindeutig-machen](../Arbeitsweise/version-eindeutig-machen.md)) |
 | Gemessen, **rot und grün am laufenden Programm** | Prüfstand `C:\Temp\Eudora Pruefstand 116` (Kurzform `C:\Temp\EUDORA~1`, **mit Leerzeichen im Pfad**) gegen ein fremdes Verzeichnis **ohne `Eudora.ini`**: `C:\Temp\Sicherung ohne INI` mit `In.mbx` und `Attach\` — der Fall einer kopierten Sicherung. **an 1.0.116 rot:** keine Rückfrage, und Eudora schreibt in 90 Sekunden **29 Einträge** in die fremde Sicherung, darunter eine **neue `Eudora.ini`**, `Out.mbx`, `Trash.mbx`, `Junk.mbx`, `descmap.pce`, `OWNER.LOK` und die Verzeichnisse `Attach\`, `Embedded\`, `Filters\`, `Nickname\`, `Sigs\`, `Stationery\`. **an 1.0.117 grün:** `gefunden="C:\Temp\Sicherung ohne INI" … da=1 … fremd=1`, Rückfrage, nach *Nein* `eigenes gewaehlt="…\Mailverzeichnis"`. Damit ist belegt, was Gregors Anforderung vom 20.10.2026 verlangt: *„die alte version von eudora sollte weiterhin funktionieren und keinen schaden bekommen"* — eine Sicherung ist eine vorhandene Installation. Bau Release 0 Fehler, **243 Tests, 243 bestanden**, `Eudora.exe` im Paket byteidentisch mit `Bin\Release`, keine Debug-Laufzeit, Defender 0 Funde |
@@ -185,24 +186,33 @@ haben.
 | Gefunden hat beides Gregor | 1.0.114 lag zwei Minuten bei ihm. Mein Prüfstand lag in `C:\Temp\E132` — **zu kurz für einen 8.3-Alias**, und hat den Fehler dadurch weggemessen. Alle drei Messungen am laufenden Programm waren grün, und der Fehler war trotzdem da |
 | Nach dem Paket eingebaut | [PRÜFER-41](../Befunde/PRUEFER-41.md) K1 (die Rückfrage gab es nur auf **einem von drei** Startwegen, weil `ExecutableDir` sonst leer ist) und K2 (mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* **gar nicht mehr** — und *Nein* ist die Vorgabe). **Beide sind im Quelltext, aber NICHT im Paket 1.0.115** |
 
-## 1.0.114 — Quellstand 7.2.0.114, Zweig `e-132-fremdes-mailverzeichnis` — **noch nicht geschnürt, noch nicht veröffentlicht**
+## 1.0.114 — geschnürt am 21.10.2026, Quellstand 7.2.0.114, Zweig `e-132-fremdes-mailverzeichnis` — **an Gregors Lauf gescheitert, nicht veröffentlicht**
 
-> **Diese Nummer ist vergeben, das Paket gibt es noch nicht.** Gemessen am
-> 21.10.2026: unter `Releases/` liegt kein `Eudora72-1.0.114-release.zip`,
-> es gibt kein Tag `v1.0.114` und keine Veröffentlichung, und bei Gregor
-> liegt kein `Eudora72-1.0.114-release` (dort stehen 1.0.110 bis 1.0.113).
-> Die Zeilen unten beschreiben den **Quellstand**, nicht ein ausgeliefertes
-> Paket. **Das Verzeichnis `Releases/1.0.114/` gibt es seit dem 20.10.2026**
-> — es hält die [Release-Notizen](1.0.114/RELEASE-NOTIZEN.md), deren
-> SHA-256 noch ein Platzhalter ist. Bis zum 20.10.2026 stand in der
-> Überschrift *geschnürt am 20.10.2026* mit einem Testverzeichnis, das es
-> nicht gibt — eine Anleitung, der niemand folgen kann
+> **Berichtigt am 21.10.2026 ([LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.4)).**
+> Hier stand *„Diese Nummer ist vergeben, das Paket gibt es noch nicht"* mit
+> einer Messung vom selben Tag. Die ist überholt, und zwar in jedem Punkt:
+> `Eudora72-1.0.114-release.zip` liegt seit dem 21.10.2026 um 07:07 in
+> `Releases/` (9.380.859 Byte), bei Gregor standen an diesem Tag außerdem
+> 1.0.115, 1.0.116 und 1.0.117 — die Aufzählung *„dort stehen 1.0.110 bis
+> 1.0.113"* war falsch —, und die SHA-256 in den
+> [Release-Notizen](1.0.114/RELEASE-NOTIZEN.md) war kein Platzhalter mehr,
+> sondern die Prüfsumme **eines fremden Pakets**
+> ([L-46.3](../Befunde/LEKTOR-46.md#l-46.3)).
+>
+> **Was gilt:** 1.0.114 ist geschnürt und lag zwei Minuten bei Gregor. Sein
+> Lauf hat es zu Fall gebracht — Eudora hielt sein **eigenes** Mailverzeichnis
+> für fremd (8.3-Kurzform gegen Langform), behoben in 7.2.0.115. **Es gibt
+> kein Tag `v1.0.114` und keine Veröffentlichung, und es wird keine geben;**
+> veröffentlicht wird 1.0.117. Die Zeile *Gemessen* unten gehört zum
+> Quellstand 7.2.0.114. Bis zum 20.10.2026 stand in der Überschrift
+> *geschnürt am 20.10.2026* mit einem Testverzeichnis, das es nicht gab — eine
+> Anleitung, der niemand folgen kann
 > ([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.5),
 > [LEKTOR-45](../Befunde/LEKTOR-45.md#l-45.2)).
 
 | | |
 |---|---|
-| Testverzeichnis | **noch keines** — wird beim Schnüren nach `C:\Users\Gregor\Eudora72-1.0.114-release` gelegt |
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.114-release`, am 21.10.2026 bereitgestellt. **Steht heute nicht mehr bei ihm** (gemessen am 21.10.2026: dort liegen 1.0.110 bis 1.0.113 und 1.0.115 bis 1.0.117); wer es entfernt hat, ist nicht gemessen |
 | Inhalt | wie 1.0.113, dazu: [E-132](../BEFUNDE.md#e-132) behoben — Eudora fragt, bevor es das Mailverzeichnis einer **fremden** Installation übernimmt, die es über die Registry gefunden hat. Vorgabe ist *Nein* (eigenes Verzeichnis anlegen), damit ein unbedachtes Enter nichts beschädigt. Dazu zwei Dinge, die erst die Messung gezeigt hat: `E132AufrufZerlegen` trennt die **zwei** Pfade, die in der Registry in **einer** Zeichenkette stehen, und die Spurmarken werden gemerkt, bis das Protokoll offen ist — vorher konnten sie gar nicht geschrieben werden |
 | Gemessen | **am laufenden Programm, auf allen drei Wegen** (20.10.2026, `C:\Temp\E132` gegen die fremde Installation `C:\Temp\E131`; die Antwort kam als `WM_COMMAND` an ein gemessenes Fensterhandle). *Nein:* `fremd=1`, danach `eigenes gewaehlt="C:\Temp\E132\Mailverzeichnis"`, fremde `Eudora.ini` SHA-256 unverändert. *Ja:* `fremdes bewusst uebernommen`, das Protokoll landet im **fremden** Verzeichnis und dessen `Eudora.ini` ändert sich nach fünfzehn Sekunden (`LastKnownCrashInfo=0` → `=1`) — genau der Schaden aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102). *Abbrechen:* das Programm endet, nichts wird angefasst. **Gegenprobe:** zeigt die Registry auf das eigene Paket, steht `fremd=0` und es wird nicht gefragt. **241 Tests, 241 bestanden**, Bau Release 0 Fehler |
 | Defender | **1.0.113 wurde am 20.10.2026 um 20:33:12 beim Starten eingezogen** (`Trojan:Win32/Bearfoos.A!ml`, Signaturstand 1.461.115.0) — dritter betroffener Bau nach 1.0.98 (16.10.) und 1.0.111 (20.10., 13:17:28, acht Minuten nach einer Prüfung mit 0 Funden; gemessen und in der Commit-Nachricht von `0f4b2b1a` festgehalten). Nach **Erkennungen** gezählt ist es der vierte Fall, und um 20:45:19 kam ein fuenfter dazu. Ein gezielter Scan derselben Datei meldet **nichts**; der Fund kommt beim **Ausführen**. Die Meldung an Microsoft liegt fertig ausgefüllt in [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md); absenden muss sie ein Mensch, das Formular verlangt ein CAPTCHA ([E-124](../BEFUNDE.md#e-124)) |
