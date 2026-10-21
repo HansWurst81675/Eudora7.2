@@ -315,6 +315,23 @@ schranke pruefe-nachgestellt.pl || exit $?
 #      heutige Bestand (56 Pruefwerkzeuge) laesst durch.
 schranke pruefe-auspacken.pl || exit $?
 
+# 14g. Jeder eigene Eudora-Start gehoert ins Protokoll. GEMESSEN am
+#      21.10.2026: 15 Pruefstaende unter C:\Temp\E134-*, 15 eigene Starts
+#      zwischen 11:06 und 12:07, und NULL Zeilen in tools/TESTLAEUFE.md mit
+#      diesem Datum - die letzte stammte vom 20.10. um 19:45:51. Gestartet
+#      wurde mit eigenen PowerShell-Aufrufen; die Freigabe-Schranke in
+#      testlauf.ps1 wurde nicht umgangen, sondern gar nicht erst aufgerufen,
+#      und eine stumme Pruefung sieht aus wie eine bestandene. Gregor hat die
+#      Fenster gesehen und gefragt. Geprueft wird nur HEUTE und nur C:\Temp;
+#      gezaehlt wird nur, was nach der Eudora.exe des Pruefstands liegt,
+#      sonst zaehlt die mitkopierte Startzeile aus Gregors Verzeichnis
+#      fuenfzehnmal mit (Arbeitsweise/jeder-start-ins-protokoll.md).
+#      Gegenprobe: --selbsttest, 11 Faelle in beide Richtungen; am echten
+#      Bestand weist --tag 2026-10-21 ab (15 Starts, 0 Zeilen), und die
+#      Messtage 2026-10-12, -13, -14, -17 sowie 2026-09-15 und -17 laufen
+#      durch (0 ohne Zeile).
+schranke pruefe-startwege.pl || exit $?
+
 # ---------------------------------------------------------------------------
 # 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
 #
@@ -609,6 +626,9 @@ echo "                               alten Stand am eigenen Pruefstand? (E-121)"
 echo " 14f. tools/pruefe-auspacken.pl"
 echo "                               packt eine Pruefung etwas Ausfuehrbares"
 echo "                               auf die Platte? (E-124, Defender)"
+echo " 14g. tools/pruefe-startwege.pl"
+echo "                               steht jeder eigene Eudora-Start von heute"
+echo "                               in tools/TESTLAEUFE.md? (21.10.2026: 15/0)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo
