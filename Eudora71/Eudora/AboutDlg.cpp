@@ -562,6 +562,8 @@ void CAboutDlg::OnClickedCopyInfo()
 
 	EmptyClipboard();
 
+	BOOL bKopiert = FALSE;
+
 	const int nLaenge = szBlock.GetLength();
 	HGLOBAL hSpeicher = ::GlobalAlloc(GMEM_MOVEABLE, nLaenge + 1);
 	if (hSpeicher)
@@ -574,7 +576,10 @@ void CAboutDlg::OnClickedCopyInfo()
 
 			// Ab hier gehoert der Speicher der Zwischenablage, nicht uns.
 			if (::SetClipboardData(CF_TEXT, hSpeicher))
+			{
 				hSpeicher = NULL;
+				bKopiert = TRUE;
+			}
 		}
 		if (hSpeicher)
 			::GlobalFree(hSpeicher);
@@ -582,9 +587,15 @@ void CAboutDlg::OnClickedCopyInfo()
 
 	CloseClipboard();
 
-	// Rueckmeldung ohne zweites Fenster: der Knopf sagt selbst, dass es
-	// geklappt hat. Der Dialog ist ohnehin gleich wieder zu.
-	SetDlgItemText(IDC_ABOUT_COPY, "Copied");
+	// Rueckmeldung ohne zweites Fenster: der Knopf sagt selbst, wie es
+	// ausgegangen ist. Der Dialog ist ohnehin gleich wieder zu.
+	//
+	// PRUEFER-41/K7: die Meldung darf nicht pauschal "Copied" sagen.
+	// EmptyClipboard() ist zu diesem Zeitpunkt in JEDEM Fall gelaufen -
+	// scheitert GlobalAlloc, GlobalLock oder SetClipboardData, dann ist die
+	// Zwischenablage LEER, der vorherige Inhalt des Anwenders ist weg, und
+	// er fuegt in sein Ticket nichts ein, ohne zu wissen warum.
+	SetDlgItemText(IDC_ABOUT_COPY, bKopiert ? "Copied" : "Copy failed");
 }
 
 /* ------------------------------------------------------------------------ */

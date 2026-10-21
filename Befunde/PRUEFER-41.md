@@ -693,11 +693,27 @@ Behebung nicht mehr, ist die Zeile „Gemessen" in `BEFUNDE.md` gedeckt.
 
 ## Was ich behoben habe
 
-**Nichts am Quelltext.** Der Koordinator hat `Eudora71/Eudora/eudora.cpp` und
-`Eudora71/Tests/TestE132.cpp` für seine eigene Behebung übernommen, solange
-dieser Bericht lief; eine zweite Hand in denselben Dateien hätte seine Arbeit
-beschädigt. Die Funde stehen deshalb vollständig hier, mit der Regel aus
-[Punkt 3](#antwort) als fertigem Ersatztext.
+**Einen Fund: [K7](#k7)** in `Eudora71/Eudora/AboutDlg.cpp`. Der Knopf „Copy
+info" sagt jetzt „Copied" nur noch dann, wenn `SetClipboardData` auch
+geglückt ist, und sonst „Copy failed". Die Behandlung des `HGLOBAL` selbst war
+schon richtig und blieb unangetastet.
 
-**Offen und nicht zugeteilt:** [K7](#k7) (`AboutDlg.cpp`, eine Zeile),
-[K5](#k5), [K6](#k6), [K11](#k11), [K12](#k12).
+```
+Release gebaut   0 Fehler, 0 neue Warnungen, 00:07:20
+Testsammlung     241 Tests, 241 bestanden
+Bytes            CRLF 18, nur-LF 1179, >127 0  (vorher CRLF 18 — unverändert)
+```
+
+**Nichts am Quelltext von [E-132](../BEFUNDE.md#e-132).** Der Koordinator hat
+`Eudora71/Eudora/eudora.cpp` und `Eudora71/Tests/TestE132.cpp` für seine
+eigene Behebung übernommen, solange dieser Bericht lief; eine zweite Hand in
+denselben Dateien hätte seine Arbeit beschädigt. [K1](#k1) bis [K4](#k4) und
+[K13](#k13) stehen deshalb vollständig hier, mit der Vergleichsregel aus
+[Punkt 3](#antwort) als fertigem Ersatztext und mit den Gegentests, die
+dazugehören.
+
+**Offen und nicht zugeteilt:** [K5](#k5), [K6](#k6), [K8](#k8), [K9](#k9),
+[K11](#k11), [K12](#k12). Keiner davon verliert Daten; [K6](#k6) und
+[K9](#k9) sind beide Prüflücken und gehören in denselben Handgriff wie
+[K1](#k1), weil sie beide das Protokoll betreffen, aus dem beim nächsten Mal
+die Antwort kommen soll.
