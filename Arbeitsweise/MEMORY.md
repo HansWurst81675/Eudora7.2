@@ -101,3 +101,5 @@
 - [Original ist eine Messung](original-ist-eine-messung.md) — „Originalfehler" ist eine Aussage über Verhalten, nicht über Quelltext; in einer Portierung ist die unveränderte Quelle der Ort, an dem Verhalten lautlos umkippt (tools/pruefe-original-belegt.pl)
 - [Jeder Start ins Protokoll](jeder-start-ins-protokoll.md) — eine Schranke im Werkzeug prüft nur die, die das Werkzeug benutzen; 15 Eudora-Starts am 21.10.2026, 0 Zeilen in TESTLAEUFE.md (tools/pruefe-startwege.pl)
 - [CHRONIST 21.10.2026](CHRONIST-2026-10-21.md) — Laufbericht E-134: zwei neue Lehren mit Schranken, fünf Nachträge, offene Punkte zu E-133/E-117 und zum fehlenden Messskript
+- [Messziel am Merkmal erkennen](messziel-am-merkmal-erkennen.md) — ein Messziel wird an einem Merkmal der Sache erkannt, nicht an einer geteilten Eigenschaft; die Suche nach `#32770` fand den Kontenassistenten, 453×341 über alle sechs Schritte (tools/pruefe-messziel.pl)
+- [CHRONIST 21.10.2026 b](CHRONIST-2026-10-21b.md) — Laufbericht E-135: eine neue Lehre mit Schranke, drei Nachträge; die Gegenprobe zur eigenen Schranke ergab grün, aber der installierte pre-commit ist vom 20.10. und kennt sie nicht

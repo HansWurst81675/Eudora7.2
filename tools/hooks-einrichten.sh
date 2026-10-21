@@ -350,6 +350,23 @@ schranke pruefe-startwege.pl || exit $?
 #      E-117) weisen ab.
 schranke pruefe-original-belegt.pl || exit $?
 
+# 14i. Ein Messskript erkennt sein Ziel an einem Merkmal DER SACHE, nicht
+#      an einer Eigenschaft, die viele teilen. Am 21.10.2026 suchte der
+#      erste Messlauf zu E-135 die Vervollstaendigungsbox nach ihrer
+#      Fensterklasse "#32770" - der Klasse JEDES Windows-Dialogs - und fand
+#      den Kontenassistenten: 453x341, ueber alle sechs Schritte
+#      unveraendert. Sechs saubere Zeilen, das Bild eines behobenen
+#      Fehlers, gemessen an einer Fassung mit dem Fehler. Erst die Suche
+#      nach einem Dialog, der eine SysListView32 enthaelt, traf die Box.
+#      Geflaggt wird eine Auswahl von GENAU EINEM Fenster nach einer
+#      mehrdeutigen Klasse ohne unterscheidendes Merkmal; Sichtbarkeit
+#      zaehlt nicht, ueber ALLE Kandidaten laufen ist erlaubt
+#      (Arbeitsweise/messziel-am-merkmal-erkennen.md).
+#      Gegenprobe: --selbsttest, 12 Faelle in beide Richtungen; am Bestand
+#      26 Dateien, 0 Treffer; gegen die in messen-e135.ps1
+#      wiederhergestellte historische Fehlzeile Rueckgabe 1.
+schranke pruefe-messziel.pl || exit $?
+
 # ---------------------------------------------------------------------------
 # 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
 #
@@ -650,6 +667,9 @@ echo "                               in tools/TESTLAEUFE.md? (21.10.2026: 15/0)"
 echo " 14h. tools/pruefe-original-belegt.pl"
 echo "                               nennt ein neues \"Originalfehler\" seine"
 echo "                               Messung am Verhalten? (E-134, E-133)"
+echo " 14i. tools/pruefe-messziel.pl"
+echo "                               erkennt ein Messskript sein Fenster an"
+echo "                               einem Merkmal der Sache? (E-135, #32770)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo

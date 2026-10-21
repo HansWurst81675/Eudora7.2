@@ -349,3 +349,56 @@ Gegenprobe beim CHRONIST-Lauf (≈15:00 UTC): `testlauf.ps1 -NurPruefen` an ders
 - **„Kein Fehler“ aus einem Nachstelllauf zählt nur mit dem Protokollbeleg, dass der Auslöser lief**, hier `titel='Find Messages'` *nach* dem Zeitpunkt des Ctrl+F. Diese Zeile gehört in dieselbe Meldung wie das Ergebnis ([[zwei-werte-in-eine-ausgabe]]).
 - **Vorbedingungen, die das Programm beim Beenden zurückschreibt, werden vor jedem Lauf neu hergestellt**, nicht einmal am Anfang einer Serie. Bei Eudora sind das mindestens `[Open Windows]` und die Fensterlagen in `Eudora.ini`.
 - **Werkzeug:** `tools/testlauf.ps1` gibt seit diesem Lauf die Startliste `[Open Windows]` vor jedem Start aus, auch mit `-NurPruefen`. Abweisen kann es nicht: welches Fenster für welchen Befund stört, weiß nur der Lauf ([[schranke-gehoert-in-den-haken]]: Hinweise dürfen nicht abweisen).
+
+## Fall 11, 21.10.2026: die Vorhersage nannte ihre Vorbedingung, die Messung stellte sie nicht her
+
+[PRÜFER-43 K9](../Befunde/PRUEFER-43.md#k9) sagte für `OnRightButtonDown`
+(`nicktree.cpp:2941`) denselben Fehlerfall voraus wie
+[E-134](../BEFUNDE.md#e-134) — Rechtsklick wähle nicht aus, das Kontextmenü
+bleibe ausgegraut. Der Bericht nannte die **Vorbedingung** wörtlich:
+
+> *„Erreichbar: erst mit der rechten Maustaste in den leeren Bereich unter
+> die Einträge klicken (der `else`-Zweig räumt ab, … die Karette bleibt aber
+> stehen), dann **denselben** Eintrag rechts anklicken."*
+
+Gemessen wurde mit `tools/messen-k9.ps1` an fünf Klickhöhen
+(`y = 10, 26, 42, 58, 74`, `x = 60`) je Fassung. Das Ergebnis: **beide**
+Fassungen melden danach genau ein ausgewähltes Kind, die Wirkung tritt nicht
+ein. Daraus wurde *„am laufenden Programm nicht nachstellbar"*.
+
+**Nachgezählt am Skript und am Prüfstand:** `C:\Temp\E135-box` enthält
+**fünf** Kurznamen, die Zeilenhöhe ist 16 Pixel — die fünf Klickhöhen
+treffen die fünf Einträge. Es gibt **keinen** Klick in den leeren Bereich und
+**keinen** zweiten Klick auf dasselbe Element. Beide Teile der Vorbedingung
+fehlen. Die Begründung im Commit sagt es selbst: *„beim Klick auf ein
+**anderes** Element wandert die Karette, und dann setzt `SelectItem()`
+`TVIS_SELECTED` sehr wohl."* Das ist die Beschreibung eines Laufs, der an der
+Vorbedingung vorbeigeht.
+
+Richtig behandelt wurde die Folge: die Zeile `DoSelectItem(tvhit.hItem, TRUE)`
+steht in 7.2.0.120 ausdrücklich als **Sicherung, nicht als gemessene
+Behebung**, und das steht in der Commit-Nachricht und in
+[E-135](../BEFUNDE.md#e-135) ([[widerlegte-vermutungen-aufschreiben]],
+[[ursache-nur-gemessen-behaupten]]). Falsch ist nur das **Urteil über die
+Messung**: *„nicht nachstellbar"* behauptet, der Versuch sei gelaufen.
+Gelaufen ist ein anderer Versuch.
+
+**Why:** Ein Prüfbericht ist eine **Vermutung mit Fundstelle**. Wenn er seine
+Vorbedingung mitliefert, ist sie Teil des Messaufbaus und nicht Zierat. Eine
+Messung, die sie nicht herstellt, liefert zuverlässig das beruhigende
+Ergebnis — und ein beruhigendes Ergebnis schließt den Fund.
+
+**How to apply:**
+
+- **Die Vorbedingung aus dem Bericht wird abgeschrieben, bevor das Messskript
+  entsteht**, Satz für Satz, und jeder Satz bekommt im Skript eine Zeile. Hier
+  wären es zwei gewesen: ein Rechtsklick unterhalb des letzten Eintrags, dann
+  ein zweiter auf **dasselbe** Element.
+- **Die hergestellte Lage wird ausgegeben, nicht angenommen.** Vor dem
+  entscheidenden Klick gehört der gelesene Zustand in die Ausgabe — hier
+  Karette (`TVGN_CARET`) und `TVIS_SELECTED` desselben Elements in **einer**
+  Zeile ([[zwei-werte-in-eine-ausgabe]]). Dann wäre sichtbar gewesen, dass
+  die Lage „Karette ja, ausgewählt nein" nie eintrat.
+- **Wortwahl im Befund:** *„nicht nachstellbar"* nur, wenn die Vorbedingung
+  belegt hergestellt wurde. Sonst heißt es *„nicht gemessen — die
+  Vorbedingung X wurde im Messlauf nicht hergestellt"*.
