@@ -332,6 +332,24 @@ schranke pruefe-auspacken.pl || exit $?
 #      durch (0 ohne Zeile).
 schranke pruefe-startwege.pl || exit $?
 
+# 14h. "Originalfehler" ist eine Aussage ueber ein VERHALTEN. Am 21.10.2026
+#      stand E-134 (Adressbuch nimmt den Kurznamen nicht an) als
+#      "Originalverhalten" da; belegt war nur, dass die //FORNOW-Kommentare
+#      in nickview.cpp aus dem initial commit stammen - eine Aussage ueber
+#      den Kommentar (1315 Vorkommen in 44 Dateien). Gregor: "was ist denn
+#      hier neu? in der alten hermes implementierung hat es ja
+#      funktioniert." Danach gemessen: Quelltext original (je ein Commit,
+#      der initial commit), Verhalten veraendert. Geprueft wird nur der
+#      Zuwachs an BEFUNDE.md; als Beleg zaehlt eine aeltere eigene Fassung
+#      mit demselben Bild, Hermes/7.1, Gregor am alten Programm - oder die
+#      Einschraenkung "Quelltext original, Verhalten nicht gemessen"
+#      (Arbeitsweise/original-ist-eine-messung.md).
+#      Gegenprobe: --selbsttest, 14 Faelle in beide Richtungen; am Bestand
+#      --datei BEFUNDE.md: 199 Befundzeilen, 6 Original-Urteile, 4 mit
+#      Beleg (E-118, E-121, E-122, E-134) laufen durch, 2 ohne (E-133,
+#      E-117) weisen ab.
+schranke pruefe-original-belegt.pl || exit $?
+
 # ---------------------------------------------------------------------------
 # 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
 #
@@ -629,6 +647,9 @@ echo "                               auf die Platte? (E-124, Defender)"
 echo " 14g. tools/pruefe-startwege.pl"
 echo "                               steht jeder eigene Eudora-Start von heute"
 echo "                               in tools/TESTLAEUFE.md? (21.10.2026: 15/0)"
+echo " 14h. tools/pruefe-original-belegt.pl"
+echo "                               nennt ein neues \"Originalfehler\" seine"
+echo "                               Messung am Verhalten? (E-134, E-133)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo

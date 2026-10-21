@@ -109,6 +109,7 @@ eine Datei liest, liest diese.
 | [nie-direkt-auf-main](nie-direkt-auf-main.md) | Jede Änderung geht über einen eigenen Zweig; auf main wird nur gemergt, und Gregor merged |
 | [nie-stillstehen](nie-stillstehen.md) | Leerlauf ist der teuerste Fehler dieses Projekts — im Hintergrund bauen, weiterarbeiten, ungefragt melden |
 | [nummer-erst-beim-schnueren](nummer-erst-beim-schnueren.md) | Ein Paketeintrag heisst "gebaut", bevor es ein Paket gibt - 1.0.107, .108 und .109 mussten alle drei nachtraeglich in "nie geschnuert" umgeschrieben werden |
+| [original-ist-eine-messung](original-ist-eine-messung.md) | „Originalfehler\" ist eine Aussage über ein Verhalten, nicht über Quelltext - in einer Portierung ist die unveränderte Quelle gerade der Ort, an dem Verhalten lautlos umkippt |
 | [paket-gegen-den-bau-messen](paket-gegen-den-bau-messen.md) | Was im Paket liegt, ist nicht automatisch das, was ich gebaut habe - jede Datei im Paket gegen das Bauverzeichnis messen, bevor Gregor sie bekommt |
 | [pruefen-statt-vermuten](pruefen-statt-vermuten.md) | Vorhandene Quellen oeffnen, bevor ich eine Ursache vermute - und Vermutungen nie als Tatsache aussprechen |
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
