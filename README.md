@@ -5,6 +5,21 @@
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](BEFUNDE.md#np3-7)). -->
 
+> **Vor dem ersten Start: sichern.** Wer bereits Eudora 7.1 oder Hermes
+> benutzt, sichert **vorher** die `Eudora.ini` und das komplette
+> Mailverzeichnis. Dieses Projekt startet mit einem **eigenen**
+> Mailverzeichnis und fasst eine vorhandene Installation nicht an —
+> `Eudora starten.cmd` hält sich daran, und wer `Eudora.exe` direkt startet,
+> wird gefragt. Eine Sicherung kostet zwei Minuten; eine verlorene Postablage
+> ist nicht wiederherstellbar.
+>
+> **Getrennte Verzeichnisse benutzen.** Die `Eudora.ini` bleibt **nicht**
+> rückwärtskompatibel — unsere Fassung und eine vorhandene Eudora oder Hermes
+> schreiben denselben Satz Werkzeugleisten mit unterschiedlichen MFC-Fassungen
+> in dieselbe Datei. Wer sich **eine** INI oder **ein** Mailverzeichnis teilt,
+> muss damit rechnen, dass die jeweils andere Installation danach Fehler
+> zeigt. Parallelbetrieb geschieht **auf eigene Gefahr**.
+
 **Der Mailclient Eudora 7.1, wieder baubar — mit Visual Studio 2022 unter
 Windows 10 und 11.**
 
@@ -27,6 +42,7 @@ verschickt.
 | **Selbst bauen** | [Selbst bauen](#selbst-bauen) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
 | **Was geht und was nicht** | [Auf einen Blick](#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind) – bekannte Fehler mit Abhilfe; ausführlich [Was es kann](#was-es-kann), [Was es nicht kann](#was-es-nicht-kann) und [ZIEL.md](ZIEL.md) |
 | **Was gefunden und behoben wurde** | [CHANGELOG.md](CHANGELOG.md) je Fassung, [BEFUNDE.md](BEFUNDE.md) je Befund mit Messung |
+| **Was Anwender gemeldet haben** | [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) — jede Meldung von außen mit Datum, Dringlichkeit und Stand |
 | **Wie portiert wurde** | [PORTIERUNG.md](PORTIERUNG.md) |
 
 <!-- Hier gehoert ein Bildschirmfoto des Hauptfensters hin. Es liegt keines
@@ -35,7 +51,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.120** / `VERSION` **1.0.120** — am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.120-release`, **nicht veröffentlicht**: die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). Davor **1.0.119**, am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.119-release`, nicht veröffentlicht: der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)). **Veröffentlicht ist `v1.0.117`** (21.10.2026, 07:56:56 UTC); davor `v1.0.113` am 20.10.2026 um 13:01 UTC; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
+*Stand **7.2.0.120** / `VERSION` **1.0.120** — am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.120-release`, **veröffentlicht als `v1.0.120`**: die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). Davor **1.0.119**, am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.119-release`, nicht veröffentlicht: der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — es trägt 7.2.0.118, 7.2.0.119 und 7.2.0.120, weil die beiden mittleren gebaut, aber nie veröffentlicht wurden; davor `v1.0.117` (07:56:56 UTC); davor `v1.0.113` am 20.10.2026 um 13:01 UTC; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -61,7 +77,7 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
   fragt Eudora vorher** und legt ohne Zutun ein eigenes Verzeichnis an — seit
   7.2.0.116 auf allen Startwegen, seit 7.2.0.117 auch bei einem fremden Ordner
   ohne `Eudora.ini`. **Veröffentlicht ist das seit dem 21.10.2026 als
-  `v1.0.117`** (07:56:56 UTC); **für `v1.0.113` und älter gilt der Hinweis oben
+  `v1.0.120`** (19:07:37 UTC); **für `v1.0.117` und älter gilt der Hinweis oben
   unverändert.** Die Pakete 1.0.115 bis 1.0.118 sind geschnürt und liegen bei
   Gregor; 1.0.119 liegt seit dem 21.10.2026 als Testverzeichnis bei ihm.
 
@@ -146,7 +162,7 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.117`** (veröffentlicht am 21.10.2026 um 07:56:56 UTC, Marke auf `f546b004`, ZIP `Eudora72-1.0.117-release.zip`, SHA-256 `335751a9…7eeb1a1`): Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt — auf allen Startwegen und auch bei einer kopierten Sicherung ohne `Eudora.ini`. Davor `v1.0.113` (20.10.2026 um 13:01
+* **Das neueste Release ist `v1.0.120`** (veröffentlicht am 21.10.2026 um 19:07:37 UTC, Marke auf `30feeae2`, ZIP `Eudora72-1.0.120-release.zip`, 9.381.870 Byte, SHA-256 `26fde414…3af6a6a1`): es trägt drei Fassungen — die Vervollständigungsbox im `To:`-Feld schrumpft nicht mehr ([E-135](BEFUNDE.md#e-135)), der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)), und eine fehlgeschlagene Rückfrage übernimmt nicht mehr das fremde Verzeichnis ([E-132](BEFUNDE.md#e-132)). Davor `v1.0.117` (07:56:56 UTC, Marke `f546b004`): Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt — auf allen Startwegen und auch bei einer kopierten Sicherung ohne `Eudora.ini`. Davor `v1.0.113` (20.10.2026 um 13:01
   ohne `Eudora.ini`. Davor erschienen `v1.0.113` und `v1.0.112` am 20.10.2026
   sowie `v1.0.101` am 17.10.2026 — alle drei überholt.
   IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –

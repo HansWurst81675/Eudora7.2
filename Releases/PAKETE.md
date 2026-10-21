@@ -634,7 +634,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | Testverzeichnis | als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.84-release` (Prüfstand: `C:\Temp\E94-nachher`, die 8 Kerndateien byteidentisch) |
 | ZIP (Release) | `Releases/Eudora72-1.0.84-release.zip`, 9 361 952 Byte (nicht versioniert); die 34 EXE/DLL/OCX darin byteidentisch mit Gregors getestetem Verzeichnis |
 | SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v1.0.117` *Latest*); Marke auf `eb54752` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v1.0.120` *Latest*); Marke auf `eb54752` |
 | Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
 | Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
 
@@ -647,7 +647,7 @@ Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlich
 |---|---|
 | ZIP | `Releases/Eudora72-1.0.83-release.zip`, 9 361 416 Byte (nicht versioniert); dazu als Verzeichnis bei Gregor, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
 | SHA256 | `7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v1.0.117` *Latest*); Marke auf `ec9f11d` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v1.0.120` *Latest*); Marke auf `ec9f11d` |
 | Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
 
 Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
