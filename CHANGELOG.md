@@ -89,13 +89,18 @@ richtig, 1x richtig gespeichert, jetzt wieder falsch."*
 
 ### Eine Zeile, die auswählt, ohne auszuwählen
 
-`CTreeCtrl::SelectItem()` setzt in diesem Bau die **Karette**, aber **nicht**
-`TVIS_SELECTED`. Genau das liest `IsItemSelected()`, und darauf steht
-`GetSelectedNicknames()`. Zwei Stellen verlassen sich auf die Annahme:
+`CTreeCtrl::SelectItem()` ist `TVM_SELECTITEM`/`TVGN_CARET`, und diese
+Botschaft tut **nichts**, wenn das Element schon die Karette trägt — auch dann
+nicht, wenn ein `DoDeselectAll()` davor `TVIS_SELECTED` gerade gelöscht hat.
+Genau dieses Bit liest `IsItemSelected()`, und darauf steht
+`GetSelectedNicknames()`. Zwei Stellen verlassen sich auf die Annahme,
+`SelectItem()` wähle aus:
 
 * `AddNewNickname` (`nicktree.cpp:508`) — der frisch angelegte Eintrag.
-* `NicknameWasChanged` (`nicktree.cpp:936`) — **läuft bei jedem Tastendruck**
-  im Namensfeld und ruft dort erst `DoDeselectAll()`, dann `SelectItem()`.
+* `NicknameWasChanged` (`nicktree.cpp:881`) — **läuft bei jedem Tastendruck**
+  im Namensfeld, die Karette steht dort also längst auf dem Eintrag, und die
+  Funktion ruft erst `DoDeselectAll()` und dann das wirkungslose
+  `SelectItem()`.
 
 Also liefert `GetSelectedNicknames()` null Einträge, `nickname` wird nie
 geholt, und das Eingetippte wird verworfen. Ein Zwischenstand, der nur die
@@ -103,11 +108,23 @@ erste Stelle behob, brachte genau **einen** Buchstaben auf die Platte —
 `alias h` statt `alias hans` — weil die zweite die Auswahl beim ersten
 Umbenennen gleich wieder abräumte.
 
+**Gemessen** (21.10.2026, eigener Baum mit denselben Stilbits wie
+`IDC_NICKNAME_LEFT_LIST`, je einmal gegen comctl32 **5.82** und **6.16** —
+beide verhalten sich **gleich**):
+
+| Lage | `TVIS_SELECTED` danach |
+| --- | --- |
+| Karette steht woanders, dann `SelectItem(X)` | **1** (und das Bit der alten Karette wird gelöscht) |
+| Bit von `X` gelöscht, Karette steht schon auf `X`, dann `SelectItem(X)` | **0** |
+
+Die Fassung der Common Controls ist es also **nicht**; es ist die Lage der
+Karette. Für `NicknameWasChanged` ist das der belegte Fall. Für
+`AddNewNickname` ist es eine **Sicherung**: dort steht die Karette in aller
+Regel noch nicht auf dem neuen Eintrag, und derselbe Ablauf mit einem frisch
+eingefügten, sortierten Kind setzt das Bit in der Messung sehr wohl.
+
 **Warum es manchmal doch ging:** wer vorher einen vorhandenen Eintrag anklickt,
 bekommt seine Auswahl über `OnLButtonDown` → `DoSelectItem`, und die hält.
-Zusätzlich liegt die Stelle nicht fest: zwei Läufe derselben Fassung meldeten
-an derselben Zeile einmal *ausgewählt* und einmal *nicht ausgewählt*, weil
-`SelectItem()` über `TVN_SELCHANGED` → `OnSelChanged` den Fokus verschiebt.
 
 **Jetzt** steht hinter beiden `SelectItem()` ein `DoSelectItem(…, TRUE)` — der
 Zustand wird gesetzt, statt angenommen.
@@ -117,11 +134,13 @@ Zustand wird gesetzt, statt angenommen.
 `nickview.cpp`, `nickview.h`, `nicktree.cpp`, `nicktree.h` und
 `Eudora.manifest` sind seit dem initial commit **von uns nie angefasst**
 worden; `git log` und `git diff` dagegen sind leer. QUALCOMMs Entwurf wählt den
-neuen Eintrag sehr wohl aus. Es ist also eine **Portierungsfolge, obwohl keine
-Zeile dieser Dateien von uns stammt** — und es deckt sich mit Gregors Hinweis,
-dass es in Hermes funktioniert hat. **Warum** `SelectItem()` den Zustand nicht
-mehr setzt, ist **nicht gemessen**; naheliegend ist die Fassung der Common
-Controls oder der MFC. Die Behebung hängt nicht daran.
+neuen Eintrag sehr wohl aus — und es deckt sich mit Gregors Hinweis, dass es in
+Hermes funktioniert hat. **Was dabei offen bleibt:** die Messung oben zeigt,
+dass `SelectItem()` sich in comctl32 5.82 und 6.16 **gleich** verhält. Die
+Fassung der Common Controls scheidet damit als Erklärung aus. Offen ist, warum
+die Karette in diesem Bau schon auf dem Eintrag steht, wo sie es früher nicht
+tat. Die Behebung hängt nicht daran — sie setzt den Zustand ausdrücklich,
+statt ihn anzunehmen.
 
 ### Und ein stummes `return`
 
