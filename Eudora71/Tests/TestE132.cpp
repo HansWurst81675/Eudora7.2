@@ -153,4 +153,64 @@ void RunE132Tests(void)
 			"eigenes Paket - keine Rueckfrage");
 	}
 	TT_EndTest();
+
+	// ------------------------------------------------------------- (8)
+	// GREGORS LAUF VOM 21.10.2026. Er hat die Rueckfrage am gebauten
+	// 1.0.114 ausgeloest, und im Fenster stand
+	//
+	//   C:\Users\Gregor\EUDORA~1.113\MAILVE~1
+	//
+	// Das ist die 8.3-Kurzform: Eudora schreibt sie so in die Registry
+	// (GetShortPathName), waehrend ExecutableDir aus GetModuleFileName lang
+	// ist. Der Praefixvergleich schlaegt dann fehl, und Eudora haelt sein
+	// EIGENES Verzeichnis fuer fremd - bei jedem Doppelklick.
+	//
+	// Mein Pruefstand lag in C:\Temp\E132. Dieser Pfad ist zu kurz fuer
+	// einen 8.3-Alias, deshalb ist der Fehler durch alle drei Messungen
+	// gekommen. Ein zu bequemer Pruefstand misst den Fehler weg.
+	//
+	// Aufgeloest wird im Aufrufer (E132LangerPfad), damit diese Funktion
+	// ohne Win32 bleibt. Hier wird geprueft, dass sie mit AUFGELOESTEN
+	// Pfaden das Richtige tut - und mit unaufgeloesten das Falsche, denn
+	// genau das war der Fehler.
+	TT_BeginTest("E-132: Kurzform und Langform, der Fall vom 21.10.2026");
+	{
+		const char *LANG = "C:\\Users\\Gregor\\Eudora72-1.0.114-release\\";
+
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis(
+				"C:\\Users\\Gregor\\Eudora72-1.0.114-release\\Mailverzeichnis",
+				LANG, true),
+			"aufgeloest: das eigene Verzeichnis ist nicht fremd");
+
+		// Der Fehlerstand, zum Festhalten: ohne Aufloesung meldet dieselbe
+		// Funktion fremd - sie kann es nicht anders wissen.
+		TT_CHECK_MSG(E132IstFremdesVerzeichnis(
+				"C:\\Users\\Gregor\\EUDORA~1.114\\MAILVE~1", LANG, true),
+			"unaufgeloest: die Kurzform sieht fremd aus - deshalb der Aufrufer");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------- (9)
+	// Der umgekehrte Falschalarm, beim Aufraeumen des obigen gefunden:
+	// "C:\Eudora2" faengt mit "C:\Eudora" an. Ohne Pruefung auf die Grenze
+	// haelt die Entscheidung das zweite fuer ein Unterverzeichnis des
+	// ersten und meldet "gehoert uns" - dann kaeme bei einem echten
+	// Nachbarverzeichnis KEINE Rueckfrage, und genau davor soll sie
+	// schuetzen.
+	TT_BeginTest("E-132: der Praefix allein genuegt nicht");
+	{
+		TT_CHECK_MSG(E132IstFremdesVerzeichnis("C:\\Eudora2\\Mail", "C:\\Eudora", true),
+			"C:\\Eudora2 ist NICHT unterhalb von C:\\Eudora");
+		TT_CHECK_MSG(E132IstFremdesVerzeichnis("C:\\Eudora2\\Mail", "C:\\Eudora\\", true),
+			"dasselbe mit abschliessendem Rueckstrich");
+
+		// Die Gegenprobe: echte Unterverzeichnisse bleiben eigene.
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Eudora\\Mail", "C:\\Eudora", true),
+			"echtes Unterverzeichnis");
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Eudora", "C:\\Eudora", true),
+			"genau dasselbe Verzeichnis");
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Eudora\\Mail", "C:\\Eudora\\", true),
+			"mit abschliessendem Rueckstrich");
+	}
+	TT_EndTest();
 }

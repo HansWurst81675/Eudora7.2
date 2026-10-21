@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 20.10.2026 (Pakete bis 1.0.114 verzeichnet; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 21.10.2026 (Pakete bis 1.0.115 verzeichnet; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -156,15 +156,30 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.115 — geschnürt am 21.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.115-release`, Quellstand 7.2.0.115, Zweig `release_1.0.115`
+
+| | |
+|---|---|
+| Testverzeichnis | bereitgestellt am 21.10.2026, `C:\Users\Gregor\Eudora72-1.0.115-release`, mit `TESTEN.txt` |
+| Inhalt | wie 1.0.114, dazu die **zweite** Behebung zu [E-132](../BEFUNDE.md#e-132): Eudora hielt sein **eigenes** Mailverzeichnis für fremd und fragte bei jedem Start. Die Registry trägt die 8.3-Kurzform (`EUDORA~1.114`), `ExecutableDir` die Langform; `E132LangerPfad` löst jetzt beide Seiten auf, und der Dialog zeigt den ganzen Pfad. Dazu der Präfix ohne Grenze (`C:\Eudora` schluckte `C:\Eudora2`) |
+| Gemessen | **Von Gregor am 21.10.2026 an 1.0.115 bestätigt:** *„2x nacheinander starten verhält sich jetzt korrekt"*, und im Dialog steht der ausgeschriebene Pfad statt `EUDORA~1.113`. Er hat ausserdem nachgewiesen, dass die Rückfrage **wiederkommt**, wenn dazwischen 1.0.114 läuft — das ist richtig so, 1.0.114 ist aus Sicht von 1.0.115 eine fremde Installation. **243 Tests, 243 bestanden**, Bau Release 0 Fehler, `Eudora.exe` im Paket byteidentisch mit `Bin\Release`, keine Debug-Laufzeit, Defender 0 Funde |
+| Gefunden hat beides Gregor | 1.0.114 lag zwei Minuten bei ihm. Mein Prüfstand lag in `C:\Temp\E132` — **zu kurz für einen 8.3-Alias**, und hat den Fehler dadurch weggemessen. Alle drei Messungen am laufenden Programm waren grün, und der Fehler war trotzdem da |
+| Nach dem Paket eingebaut | [PRÜFER-41](../Befunde/PRUEFER-41.md) K1 (die Rückfrage gab es nur auf **einem von drei** Startwegen, weil `ExecutableDir` sonst leer ist) und K2 (mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* **gar nicht mehr** — und *Nein* ist die Vorgabe). **Beide sind im Quelltext, aber NICHT im Paket 1.0.115** |
+
 ## 1.0.114 — Quellstand 7.2.0.114, Zweig `e-132-fremdes-mailverzeichnis` — **noch nicht geschnürt, noch nicht veröffentlicht**
 
 > **Diese Nummer ist vergeben, das Paket gibt es noch nicht.** Gemessen am
-> 20.10.2026: unter `Releases/` liegt kein `Eudora72-1.0.114-release.zip`, es
-> gibt kein Verzeichnis `Releases/1.0.114/`, kein Tag `v1.0.114`, und bei
-> Gregor liegt kein `Eudora72-1.0.114-release`. Die Zeilen unten beschreiben
-> den **Quellstand**, nicht ein ausgeliefertes Paket. Bis zum Schnüren steht
-> hier *geschnürt am 20.10.2026* mit einem Testverzeichnis, das es nicht gibt
-> — eine Anleitung, der niemand folgen kann ([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.5)).
+> 21.10.2026: unter `Releases/` liegt kein `Eudora72-1.0.114-release.zip`,
+> es gibt kein Tag `v1.0.114` und keine Veröffentlichung, und bei Gregor
+> liegt kein `Eudora72-1.0.114-release` (dort stehen 1.0.110 bis 1.0.113).
+> Die Zeilen unten beschreiben den **Quellstand**, nicht ein ausgeliefertes
+> Paket. **Das Verzeichnis `Releases/1.0.114/` gibt es seit dem 20.10.2026**
+> — es hält die [Release-Notizen](1.0.114/RELEASE-NOTIZEN.md), deren
+> SHA-256 noch ein Platzhalter ist. Bis zum 20.10.2026 stand in der
+> Überschrift *geschnürt am 20.10.2026* mit einem Testverzeichnis, das es
+> nicht gibt — eine Anleitung, der niemand folgen kann
+> ([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.5),
+> [LEKTOR-45](../Befunde/LEKTOR-45.md#l-45.2)).
 
 | | |
 |---|---|

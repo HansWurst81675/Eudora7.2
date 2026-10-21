@@ -15,3 +15,27 @@ Im Chat mit Gregor keine Kürzel aus PRÜFER-/LEKTOR-Berichten (F1, N1, N2, L-38
 **Why:** Gregor am 16.10.2026 abends, nachdem ich ein Release mit „wegen N1/N2, F1 behoben“ abgelehnt hatte: *„ich weiß auch nicht, was N1, N2 und F1 sind. das sagt mir nichts“*. Die Kürzel gelten nur innerhalb eines Berichts (N1 hieß in E-121 schon etwas anderes als in PRÜFER-32), und er liest die Berichte nicht – er entscheidet auf Grund meiner Chatzeilen. Gleich danach: *„du kannst mir nicht solche fragen stellen, ob F1 oder N17 oder P32.“* – das gilt also ausdrücklich auch für **Fragen und Entscheidungsvorlagen** an ihn: jede Wahl wird in Anwendersprache gestellt (was passiert bei A, was bei B), nie über eine Kennung.
 
 **How to apply:** vor jeder Antwort, die einen Prüferbericht weitergibt, die Kürzel durch Anwendersätze ersetzen. Verwandt: [[chat-knapp-halten]], [[erfolg-aus-anwendersicht]], [[mannschaft-fuehren]].
+
+## Nachtrag 20.10.2026: „was ist C8? ich kenne nur C4, das ist ein auto"
+
+Um 19:18:30 UTC, als **Wiederholung** („und nochmal:"), und das Werkzeug
+`verlauf-messen.pl` zählt für den Abend genau **ein** Wiederholungssignal —
+dieses. Eine Stunde später, um 19:50:56: *„verstehe nichts, was du
+schreibst."*
+
+**Neu an diesem Fall: das Kürzel stand nicht nur im Chat, sondern im
+`TESTPLAN.md`** — in dem Dokument, nach dem er handeln soll. Der Schritt hieß
+„C8"; er hat dieselbe Sache schon dreimal gerügt (*„mit E- nur N- und R-
+nummern komme ich nicht weiter"*). Berichtigt in `4953e1f1`: der Schritt heißt
+jetzt *„Der Starttest — nimmt sich Eudora ein fremdes Mailverzeichnis?"*, die
+Urteilszeile *„Starttest an 1.0.114 in Ordnung"*; der Anker `c8` bleibt, damit
+vorhandene Verweise nicht ins Leere zeigen.
+
+**How to apply, zusätzlich:**
+
+- **Ein Dokument, nach dem Gregor handelt** (TESTPLAN, Release-Notizen,
+  TESTEN.txt, Issue-Antworten), trägt in Überschrift und Urteilszeile **keine
+  Kennung aus meiner Nummerierung**. Die Kennung darf als Anker bestehen
+  bleiben — ein Anker ist eine Adresse, kein Text.
+- **Nicht „kurz erklären" sondern ersetzen.** *„C8 (der Starttest)"* ist immer
+  noch C8. Der Satz muss ohne die Kennung vollständig sein.

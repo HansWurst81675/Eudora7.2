@@ -299,6 +299,22 @@ schranke pruefe-rueckstrich.pl || exit $?
 #      (1.0.96) und die zehn Pakete davor lassen durch.
 schranke pruefe-nachgestellt.pl || exit $?
 
+# 14f. Keine Pruefung, die etwas Ausfuehrbares auf die Platte legt. GEMESSEN
+#      am 20.10.2026 um 20:45:19: Defender zog die von
+#      pruefe-behoben-ausgeliefert.pl ausgepackte Eudora.exe unter
+#      Releases/.pruefe-behoben-1.0.113/ ein - ausgeloest von perl.exe, also
+#      von der Schranke selbst -, und die Schranke meldete danach "Paket
+#      1.0.113: in der Eudora.exe steht keine Fassung 7.2.0.NN": eine falsche
+#      Aussage ueber ein richtiges Paket (E-124). Geprueft werden nur
+#      tools/pruefe-*.pl/.ps1 und tools/*-pruefen.pl/.ps1; Bauwerkzeuge
+#      duerfen auspacken. Ausnahme mit Begruendung: eine Zeile
+#      "auspacken-erlaubt: <Grund>" im Werkzeug
+#      (Arbeitsweise/pruefung-legt-nichts-ab.md).
+#      Gegenprobe: --selbsttest, 14 Faelle in beide Richtungen; der echte
+#      Stand 1d081b27^ von pruefe-behoben-ausgeliefert.pl weist ab, der
+#      heutige Bestand (56 Pruefwerkzeuge) laesst durch.
+schranke pruefe-auspacken.pl || exit $?
+
 # ---------------------------------------------------------------------------
 # 16. bis 19.: DIE BUCHFUEHRUNG UEBER DAS RELEASE.
 #
@@ -590,6 +606,9 @@ echo "                               (C:Temp105) in einer neuen MD-Zeile?"
 echo " 14e. tools/pruefe-nachgestellt.pl"
 echo "                               nennt ein neues Paket an Gregor einen roten"
 echo "                               alten Stand am eigenen Pruefstand? (E-121)"
+echo " 14f. tools/pruefe-auspacken.pl"
+echo "                               packt eine Pruefung etwas Ausfuehrbares"
+echo "                               auf die Platte? (E-124, Defender)"
 echo " 15. tools/pruefe-bytes.pl     sind Zeilenenden und Kodierung heil?"
 echo
 echo

@@ -264,3 +264,27 @@ Commit eingetragen wie das Werkzeug — in einen Hook, in `CLAUDE.md`, in eine
 Auftragsvorlage oder in die Lehre, die es traegt. Ein Werkzeug ohne genannten
 Auslaeser ist nicht fertig, sondern nur geschrieben
 ([[werkzeug-vor-eigenbau]], [[ausloeser-an-den-anfang]]).
+
+## Nachtrag 21.10.2026: gemessen — fünf von neun vorgeschlagenen Lehren sind nie angekommen
+
+Die CHRONIST-Berichte unter `Befunde/CHRONIST-*.md` schlagen Lehren mit
+fertiger `name:`-Zeile vor. Gezählt am 21.10.2026 (`grep -h "^name: "` gegen
+`Arbeitsweise/*.md`):
+
+| Vorgeschlagen | in `Arbeitsweise/` |
+|---|---|
+| `extrakt-ist-nicht-das-programm`, `nummer-erst-beim-schnueren`, `ursache-nur-gemessen-behaupten`, `vor-dem-code-die-pruefberichte` | **ja** (4) |
+| `anleitung-ist-ein-pruefling`, `main-ist-was-gregor-sieht`, `schranke-an-den-augenblick`, `einfuegen-misst-den-nachbarn`, `notizen-aus-der-quelle-nicht-aus-der-kopie` | **nein** (5) |
+
+Die drei letzten stammen vom Abend des 20.10. und tragen ihre Schranke samt
+Gegenprobe fertig im Text — sie liegen in `Befunde/CHRONIST-2026-10-20b.md`
+und wirken dort nicht. Ein Bericht, der eine Lehre nur **vorschlägt**, ist
+derselbe Fehler wie eine Lehre ohne Schranke: Text, der nicht ausgeführt wird.
+
+**Daraus die Regel für die Rolle selbst:** Ein CHRONIST-Lauf **schreibt** seine
+Lehren — in das Gedächtnisverzeichnis, von dort gespiegelt nach
+`Arbeitsweise/` (`tools/lehren-spiegeln.pl`), mit Zeile in
+`Arbeitsweise/README.md` und `MEMORY.md`. Der Bericht unter `Befunde/` erklärt
+sie, er ersetzt sie nicht. Fertig ist ein Lauf, wenn
+`perl tools/lehren-uebersicht.pl` und `perl tools/lehren-schranken.pl` die
+neuen Lehren zählen.

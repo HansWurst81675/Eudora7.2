@@ -101,3 +101,32 @@ Suche danach nichts, erst ein zweiter `git commit` zeigte sie.
 deutschen Anführungszeichen („…“) aus, wenn im selben Absatz „Gregor“ steht;
 Gegenprobe: die CHANGELOG-Zeile aus dem Stand vor `9840ee35` muss
 durchgehen, *„E-121 ist behoben“* ohne Zitat muss weiter abweisen.
+
+## Nachtrag 20.10.2026: dasselbe in Markdown — ein Zitat ist kein Verweis
+
+`befunde-verlinken.pl`/der Verweis-Prüfer hielt alle **6135** Markdown-Verweise
+gegen das Dateisystem und meldete **20 tote**. Daraufhin wurden 16 davon in
+acht alten Prüfberichten „berichtigt" (`6091eff3`).
+
+Beim Nachmessen (`35403b6e`, 45 Minuten später): **18 der 20 standen in
+Rückstrichen oder in einem Blockzitat.** `LEKTOR-11:217` zeigt
+`` `](README.md)` `` als **Beispiel** für den Fehler, den der Bericht meldet;
+`PRUEFER-40:309` steht in einem Blockzitat aus dem CHANGELOG. Das sind keine
+Verweise, sondern **Abbildungen von Verweisen** — der Beleg, mit dem der
+Bericht seinen Fund zeigt. Die „Berichtigung" hätte acht Berichten ihre eigene
+Beweisführung weggenommen. Echte tote Verweise im Bestand: **null**; die
+einzigen zwei waren meine eigenen von derselben Stunde.
+
+**Die Regel dieser Lehre gilt also nicht nur für Quelltext.** Jedes Werkzeug,
+das eine Textdatei mit einem Muster prüft, muss die **Zitatformen seines
+Formats** vorher wegwerfen:
+
+| Format | wegzuwerfen, bevor gesucht wird |
+|---|---|
+| C/C++ | `//`, `/* */`, Zeichenketten, Protokolltexte |
+| Markdown | Rückstriche (`` ` `` und ```` ``` ````), Blockzitate (`>`), eingerückte Blöcke |
+| Commit-Nachricht | der zitierte Wortlaut hinter `>` oder in Anführungszeichen |
+
+**Und:** eine Messung mit 18 von 20 Fehlalarmen ist keine Messung. Wer auf ihr
+Ergebnis hin **schreibt**, braucht vorher den Gegentest gegen den erlaubten
+Fall ([[schranke-gegentesten]]).

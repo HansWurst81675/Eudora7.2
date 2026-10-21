@@ -150,3 +150,30 @@ Ausreißer, [[ausreisser-ist-der-befund]]); wiederhergestellt aus `HEAD`.
 `open '<:raw'` / `open '>:raw'`, Trefferzahl und Zeilenzahl vorher/nachher als
 Abbruchbedingung, danach `wc -c` gegen `git show HEAD:<datei> | wc -c`.
 Nie `perl -i` mit selbst gelesenem `<>`.
+
+## Nachtrag 20.10.2026: „liegt ja auf GitHub" ist eine Behauptung über Bytes
+
+Gregor um 19:35 UTC: *„Releases — da müssen wir auch mal aufräumen. oder
+brauchst du all die ZIPs?"*, um 19:42 dann ausdrücklich auch die
+Verzeichnisse. `Releases/` ging von **745 MB auf 229 MB**: 21 entpackte
+`Eudora72-*`-Verzeichnisse, 9 ZIPs und zehn Paketverzeichnisse.
+
+Die Begründung für die ZIPs war *„liegt als GitHub-Release vor, jederzeit
+wieder ladbar"*. Vor dem Löschen **nachgemessen** — und genau dort lag der
+Ausreißer: `Eudora72-1.0.29-release.zip` ist lokal **9.349.810 Byte**, auf
+GitHub **9.342.274 Byte**. **Nicht dieselbe Datei.** Sie ist liegen geblieben;
+der Grund steht in `WEITERMACHEN.md`.
+
+Dazu die zweite Messung vor dem Verwerfen: dreizehn Verzeichnisse
+`Releases/1.0.NN/` sind aus MD-Dateien verlinkt. Wären sie weg, hätte
+`doku-pruefen.pl` danach **jeden** Commit und **jeden** Push abgewiesen — kein
+Aufräumen, sondern eine Sperre. Beides gemessen, bevor gelöscht wurde; Gregor
+hat die dreizehn bestätigt (*„nein, die dreizehn können bleiben"*).
+
+**How to apply, zusätzlich:**
+
+- **Wer löscht, weil es „woanders auch liegt", misst das Woanders.** Größe und
+  Prüfsumme, nicht den Namen. Eine Release-Datei kann sich vom lokalen Stand
+  unterscheiden, ohne dass es jemand gemerkt hat.
+- **Vor dem Löschen zählen, wer darauf verweist** (`grep -r` über die MDs) —
+  und erst dann entscheiden.

@@ -46,3 +46,27 @@ Er hat vier Mal nachfassen müssen ("war ja nicht so ausgemacht!", "habe ich ges
 les' nach!", "muß ich dich an alles erinnern?"). Siehe [[anweisungen-abarbeiten]].
 
 Siehe auch [[commit-auf-extra-branch-und-pushen]] und [[agenten-benennen]].
+
+## Nachtrag 20.10.2026: „steht es in weitermachen.md drin?" — nein, es stand im Chat
+
+Um 19:54:25 UTC, 20 Sekunden nach *„schluß für jetzt!"*, fragte Gregor genau
+das. Die ehrliche Antwort war **nein**: die vier nächsten Handgriffe — Paket
+1.0.114 schnüren samt Prüfsumme, sein Starttest, dann erst das Release, dann
+erst der Beitrag in Issue #102 — standen vollständig und in der richtigen
+Reihenfolge **im Chat**. In `WEITERMACHEN.md` stand nur die Fassungszeile
+*„noch nicht als Paket geschnürt"*. Nachgetragen wurde es am nächsten Morgen
+um 06:51 Ortszeit (`ad9dee3f`), nach dem Abschalten.
+
+**Der Unterschied zum Fall vom 13.10.** (Nachtrag in
+[[abschalten-ist-ein-termin]]): damals war der Einstieg **veraltet**, hier
+existierte er gar nicht. Beide Male fiel es nicht mir auf, sondern ihm, und
+beide Male durch dieselbe Frage.
+
+**How to apply, zusätzlich:**
+
+- **Jede nummerierte Reihenfolge, die ich im Chat schreibe („erst 1., dann
+  2."), gehört vorher in `WEITERMACHEN.md`.** Der Chat bekommt den Verweis,
+  nicht die Liste. Wenn es sich nicht lohnt, es in die Datei zu schreiben,
+  lohnt es sich auch nicht, es in den Chat zu schreiben.
+- **Die Antwort auf „steht es in X?" wird gelesen, nicht erinnert** —
+  `grep` auf die Datei, bevor ich „ja" sage.

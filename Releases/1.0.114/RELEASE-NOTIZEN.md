@@ -82,7 +82,7 @@ Die wichtigsten:
 
 Jede Fassung dieses Projekts ist eine neue, nicht signierte Datei. Microsoft
 Defender hat mehrere davon fälschlich als Trojaner eingestuft und das Programm
-ohne Meldung beendet — am 20.10.2026 **zweimal an einem Tag**, zuletzt die
+ohne Meldung beendet — am 20.10.2026 **dreimal an einem Tag**, darunter die
 Fassung 7.2.0.113 **beim Starten**, während ein gezielter Scan derselben Datei
 nichts meldete.
 

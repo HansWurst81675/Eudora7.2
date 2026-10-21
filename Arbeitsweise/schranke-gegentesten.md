@@ -270,3 +270,29 @@ läuft an keiner Prüfung vorbei, denn das Löschen eines gemergten Zweigs
 prüft dieser Haken nicht. Er geht nur nicht durch die Prüfung, die sich
 geirrt hat. Ein `--no-verify` hätte auch die anderen Schranken im pre-push
 abgeschaltet (Doku, Bytes, Testdaten).
+
+## Nachtrag 20.10.2026: die Gelegenheitsmessung ist die ungetestete Schranke
+
+Die Lehre zählt Schranken unter `tools/` — und genau die haben inzwischen
+Selbsttests. Am 20.10. abends kam der Schaden von zwei Messungen, die niemand
+„Schranke" nennt und die deshalb nie einen Gegentest hatten:
+
+1. **Der Verweis-Lauf über 6135 Markdown-Verweise.** 20 Treffer, davon **18
+   Fehlalarme** (Zitate in Rückstrichen und Blockzitaten). Auf dieses Ergebnis
+   hin wurden acht fremde Prüfberichte geändert, bevor irgendjemand einen
+   bekannt-guten Fall gegengeprüft hatte ([[schranke-liest-nur-code]]).
+2. **Das Fenstererkennungs-Skript zum Über-Dialog.** Es meldete *„KEIN Dialog
+   gefunden"*, während der Dialog offen vor ihm stand. Ein **falsch
+   negatives** Ergebnis, ungetestet, und es wurde zur Grundlage einer
+   Berichtigung, die dadurch selbst falsch war ([[ausbleiben-ist-kein-befund]]).
+
+**How to apply, zusätzlich:**
+
+- **Eine einmalige Messung, auf deren Ergebnis hin ich etwas ändere, ist eine
+  Schranke.** Vor der ersten Änderung: ein Treffer, den das Ergebnis enthalten
+  **muss** (Positivprobe), und einer, den es **nicht** enthalten darf
+  (Gegenprobe). Zwei Minuten.
+- **Eine Trefferquote gehört in die Meldung.** „20 tot von 6135" klingt nach
+  Arbeit; „20 Treffer, davon 2 nachgesehen" ist die ehrliche Lage. Wer eine
+  Trefferliste nicht stichprobenartig öffnet, hat nicht gemessen, sondern
+  gesucht.

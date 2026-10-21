@@ -1,6 +1,17 @@
 # Issue #102 — der Beitrag, der nach dem Release abgeschickt wird
 
-**Stand 20.10.2026.** Gehört zu [E-132](../BEFUNDE.md#e-132) und
+**Stand 21.10.2026.** Weiterhin **nicht abgeschickt**.
+
+> **ACHTUNG, bevor dieser Text rausgeht:** er nennt viermal **`v1.0.114`**.
+> Diese Fassung ist nie veröffentlicht worden — Gregor hat am 21.10.2026 beim
+> Testen von 1.0.114 einen Fehler gefunden (Eudora hielt sein eigenes
+> Mailverzeichnis für fremd), behoben in **7.2.0.115**. Die Nummer im Text
+> muss auf die Fassung gesetzt werden, die wirklich veröffentlicht wird.
+> **Das ist die einzige Änderung, die ich ohne neue Freigabe vornehmen würde**
+> — eine Fassungsnummer ist eine Tatsache, kein Wortlaut. Alles andere bleibt,
+> wie Gregor es freigegeben hat.
+
+Gehört zu [E-132](../BEFUNDE.md#e-132) und
 [E-131](../BEFUNDE.md#e-131). Ziel:
 [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
 Adressat `@rjsdotorg`.
