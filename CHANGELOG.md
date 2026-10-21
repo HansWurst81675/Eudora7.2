@@ -81,6 +81,50 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.118 — eine fehlgeschlagene Rückfrage übernahm das fremde Verzeichnis ([E-132](BEFUNDE.md#e-132))
+
+Vier Behebungen aus [PRÜFER-42](Befunde/PRUEFER-42.md), von ihm selbst
+eingebaut. Sein Urteil zu [v1.0.117](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.117)
+war *„JA, geht so raus"* — diese vier hängen nicht daran, aber zwei davon
+gehören nicht länger offen gelassen.
+
+### Null ist keine Antwort
+
+`::MessageBox` gibt **0** zurück, wenn das Fenster nicht erzeugt werden kann —
+kein Speicher, keine Fensterstation, ein Dienstkontext. Null ist weder
+`IDCANCEL` noch `IDNO`. Die Abfrage lautete `if (nWahl == IDNO) … else …`,
+also fiel die Null in den **Ja**-Zweig: Eudora übernahm das fremde
+Verzeichnis und schrieb ins Protokoll *„fremdes bewusst uebernommen"*.
+**Bewusst war daran nichts.** Jetzt heißt es `if (nWahl != IDYES)` — alles,
+was nicht ausdrücklich *Ja* ist, wird wie *Nein* behandelt.
+
+### Ein gemerktes „Ja" sperrte unsichtbar ein
+
+Auf die Frage *„kann ein gemerktes Ja jemanden dauerhaft einsperren, ohne dass
+er merkt warum?"* lautete die Antwort: **ja**. Ab dem zweiten Start kam kein
+Dialog mehr, ohne das Protokoll-Bit stand keine Zeile da, und der Über-Dialog
+erwähnte den Merker nicht. Der Dialogtext nennt zwar die Lösung — aber er wird
+genau einmal gezeigt, nämlich in dem Augenblick, in dem der Anwender *Ja*
+sagt.
+
+**Jetzt steht die gemerkte Antwort in *Mail folder from:***, zusammen mit der
+Zeile aus der `DEudora.ini`, die sie löscht. Für den Melder aus
+[Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) ist das
+der heikle Punkt — er ist genau der Mensch, der den fremden Ordner schon hat.
+
+### Zwei kleinere
+
+- Ab etwa 243 Zeichen Programmpfad schnitt `_tcsncpy` das **schließende**
+  Anführungszeichen ab. Halb geklammert ist schlechter als gar nicht
+  geklammert — der Startfehler aus 7.2.0.116 wäre zurückgewesen. Jetzt wird
+  auf die Kurzform ausgewichen, wenn die Klammerung nicht in den Puffer passt.
+- Zwei Grenzfälle in `TestE132.cpp` nachgetragen: Kandidat **ohne**,
+  Programmverzeichnis **mit** abschließendem Rückstrich — genau die Form, für
+  die die Grenzprüfung geschrieben wurde, und sie stand in keinem Test.
+
+**243 Tests, 243 bestanden.** Gegenprobe von PRÜFER gefahren: die neue Prüfung
+umgedreht → `[FEHL]`, 242 von 243; zurück → 243 von 243.
+
 ## 7.2.0.117 — eine kopierte Sicherung wird nicht mehr stillschweigend übernommen ([E-132](BEFUNDE.md#e-132))
 
 Zwei Funde aus [PRÜFER-41](Befunde/PRUEFER-41.md), beide an Stellen, die erst

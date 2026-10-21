@@ -3940,6 +3940,9 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
     HKEY  hkResult;
 	DWORD dwType = REG_SZ;
 	LPCTSTR pHerkunft = "unbekannt";	// fuer den Ueber-Dialog, siehe unten
+	CString szHerkunftGemerkt;		// PRUEFER-42 K2: Traeger, wenn pHerkunft aus
+								// mehreren Stuecken gebaut wird. Muss bis zum
+								// "MailDirHerkunft = pHerkunft" unten leben.
 
 	//
 	// K1 aus PRUEFER-41: ExecutableDir kann hier LEER sein.
@@ -4252,7 +4255,19 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				return FALSE;
 			}
 
-			if (nWahl == IDNO)
+			//
+			// PRUEFER-42 K1: NICHT "== IDNO", sondern "!= IDYES".
+			//
+			// ::MessageBox gibt bei einem Fehlschlag 0 zurueck. 0 ist weder
+			// IDCANCEL noch IDNO - mit "== IDNO" fiel dieser Fall in den
+			// else-Zweig und UEBERNAHM das fremde Verzeichnis, mit der
+			// Protokollzeile "fremdes bewusst uebernommen". Bewusst war
+			// daran nichts: die Frage war nie auf dem Bildschirm. Die
+			// Entwurfsregel oben lautet "wer die Meldung wegdrueckt,
+			// beschaedigt nichts" - eine Meldung, die gar nicht erscheint,
+			// ist deren Grenzfall. Nur ein ausdrueckliches "Ja" uebernimmt.
+			//
+			if (nWahl != IDYES)
 			{
 				//
 				// Das eigene Verzeichnis. In unseren Paketen liegt die
@@ -4296,15 +4311,67 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				//
 				CString szGeklammert;
 				szGeklammert.Format("\"%s\"", (LPCTSTR) szEigenes);
+
+				//
+				// PRUEFER-42 K3: passt die geklammerte Form nicht in buf,
+				// schneidet _tcsncpy HINTEN ab - also genau das SCHLIESSENDE
+				// Anfuehrungszeichen. Eine halb geklammerte Zeile ist
+				// schlechter als eine ungeklammerte: GetDirs sieht ein letztes
+				// Zeichen, das kein " ist, trennt am ersten Leerzeichen, und
+				// StripQuotesMT raeumt das fuehrende weg - der Fehler aus
+				// PRUEFER-41 K2 waere zurueck. Dann QUALCOMMs eigener Ausweg
+				// (:3686): die Kurzform hat keine Leerzeichen und braucht
+				// keine Klammer.
+				//
+				if (szGeklammert.GetLength() >= (int)(sizeof(buf) / sizeof(TCHAR)))
+				{
+					TCHAR szKurz[MAX_PATH + 1];
+					if (::GetShortPathName(szEigenes, szKurz, MAX_PATH + 1) > 0)
+						szGeklammert = szKurz;
+				}
+
 				_tcsncpy(buf, szGeklammert, sizeof(buf) / sizeof(TCHAR) - 1);
 				buf[sizeof(buf) / sizeof(TCHAR) - 1] = 0;
 
-				pHerkunft = "eigenes Verzeichnis, nach Rueckfrage gewaehlt (E-132)";
+				if (nGemerkt == IDNO)
+				{
+					// PRUEFER-42 K2: auf diesem Weg hat niemand gefragt - das
+					// muss im Ueber-Dialog stehen, samt der Zeile, die man
+					// loeschen muss, um wieder gefragt zu werden.
+					szHerkunftGemerkt = "eigenes Verzeichnis (E-132: fremdes "
+						"Verzeichnis frueher mit \"Nein\" abgelehnt - Zeile "
+						"E132Abgelehnt in DEudora.ini loescht den Merker)";
+					pHerkunft = szHerkunftGemerkt;
+				}
+				else
+					pHerkunft = "eigenes Verzeichnis, nach Rueckfrage gewaehlt (E-132)";
 				// szEigenes, nicht buf: buf traegt seit der K2-Behebung die
 				// Klammern, und im Protokoll staende sonst ""C:..."".
 				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"",
 							  (LPCTSTR) szEigenes);
 				E132SpurMerken(szSpur);
+			}
+			else if (nGemerkt == IDYES)
+			{
+				//
+				// PRUEFER-42 K2: DAS ist die gefaehrlichste Zeile der ganzen
+				// Fassung. Ab hier uebernimmt Eudora das fremde Verzeichnis
+				// OHNE Dialog - also genau der Zustand aus Issue #102, nur
+				// diesmal einmal erlaubt. Der Dialogtext nennt die Loesung,
+				// aber er wird genau EINMAL gezeigt: in dem Augenblick, in dem
+				// der Anwender "Ja" sagt. Wer sich drei Wochen spaeter fragt,
+				// warum sein neues Eudora in den alten Ordner schreibt,
+				// bekommt ihn nie wieder zu sehen. Deshalb steht die gemerkte
+				// Antwort im Ueber-Dialog - der ist jederzeit erreichbar und
+				// genau fuer diese Frage gebaut (AboutDlg.cpp:395-402).
+				//
+				CString szVorher(pHerkunft);
+				szHerkunftGemerkt.Format("%s - E-132: fremdes Verzeichnis, "
+					"frueher mit \"Ja\" bestaetigt (Zeile E132Angenommen in "
+					"DEudora.ini loescht den Merker)", (LPCTSTR) szVorher);
+				pHerkunft = szHerkunftGemerkt;
+
+				E132SpurMerken("E-132 Startverzeichnis: fremdes uebernommen, gemerkte Antwort Ja");
 			}
 			else
 			{

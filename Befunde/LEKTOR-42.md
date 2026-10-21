@@ -163,7 +163,7 @@ und höchstens ein Piepton je zwei Sekunden.
 | `FILTER.md:722` | endete bei 7.2.0.106 | dasselbe, mit Verweis auf PRÜFER-36 P3 und PRÜFER-38 R1–R3 |
 | `ZIEL.md:22`, Maßstabszeile | *„behoben in 7.2.0.106 … vor dem Release [PRÜFER-36](PRUEFER-36.md) P3“* | P3 ist abgearbeitet; jetzt *„nachgebessert in 7.2.0.109 und 7.2.0.110“* |
 
-Dazu `FILTER.md:4`: *„Der Quellstand ist inzwischen 7.2.0.73“* → 7.2.0.117
+Dazu `FILTER.md:4`: *„Der Quellstand ist inzwischen 7.2.0.73“* → 7.2.0.118
 (Altlast aus [L-41.5](LEKTOR-41.md#l-41.5)).
 
 ### <a id="l-42.8"></a>L-42.8 — ZWEIGE: die beiden neuen Zeilen standen außerhalb der Tabelle (mittel)
