@@ -154,6 +154,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `e131-muellwert-testfall` | 21.10.2026 | Von Gregor angenommen (*„e131-muellwert-testfall ist ok, mach das"*). Zweck: der offene Punkt #102-4 aus [MELDUNGEN-VON-AUSSEN.md](../MELDUNGEN-VON-AUSSEN.md) — fängt `E131PositionIstBrauchbar` auch einen **beliebigen** Müllwert, oder nur `INT_MIN`? Zwei Testfälle ergänzt: der gemeldete Wert `MRUFloatYPos=-682908189` aus `[ToolBar-Bar10]` und die Grenze bei −1194 in beide Richtungen. **Gegenprobe gefahren:** mit entfernter oberer y-Grenze bleiben alle fünf alten Fälle grün und nur die beiden neuen werden rot — die Richtung war vorher ungeprüft. 245 Tests, 245 bestanden |
 
+| `rollen-faellig-ohne-binaerdateien` | 21.10.2026 | Von Gregor angenommen (*„rollen-faellig-ohne-binaerdateien ist ok, mach das"*). Zweck: der CHRONIST-Bereich in `tools/rollen-faellig.pl` war als `^(?:Eudora71/|tools/)` ohne Einschränkung auf den Dateityp festgelegt und zählte deshalb Binärdateien mit. Am 21.10.2026 meldete die Schranke *„CHRONIST ist fällig: 11 Dateien — `DirServ.dll`, `EudoraBk.dll`, `ISock.dll` und 8 weitere"*; die fünf DLLs unterschieden sich nur im PE-Zeitstempel. Von CHRONIST gemeldet statt behoben, weil dieselbe Datei den Umfang aller drei Rollen festlegt. **Gegenprobe in beide Richtungen:** der Fehlalarm fällt von 11 auf 2 echte Dateien, und für alle fünf letzten CHRONIST-Berichte bleiben Textdateien übrig — kein berechtigter Fall geht verloren |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl

@@ -125,7 +125,18 @@ my @rollen = (
         was     => 'die Lehren aus dem Verlauf',
         muster  => qr{^(?:Eudora71/|tools/)},
         # Die Protokolle der Werkzeuge nicht - siehe LEKTOR oben.
-        ausser  => qr{^tools/(?:AGENTEN-LAUFEN|TESTLAEUFE)\.md$},
+        #
+        # UND KEINE BINAERDATEIEN. Der CHRONIST zieht Lehren aus dem
+        # Gespraechsverlauf; eine DLL kann dafuer nichts hergeben. Ohne diese
+        # Ausnahme meldete die Schranke am 21.10.2026 "CHRONIST ist faellig:
+        # 11 Dateien - DirServ.dll, EudoraBk.dll, ISock.dll und 8 weitere".
+        # Die fuenf DLLs unterschieden sich nur im PE-Zeitstempel, weil ein
+        # Paketbau sie angefasst hatte. Wer eine solche Meldung ein paarmal
+        # liest, liest sie irgendwann gar nicht mehr - und uebersieht den
+        # Lauf, bei dem es wirklich etwas zu lernen gab. Derselbe
+        # Fehlalarmtyp wie bei gesichert.pl am selben Tag
+        # (Arbeitsweise/schranke-gegentesten.md).
+        ausser  => qr{^tools/(?:AGENTEN-LAUFEN|TESTLAEUFE)\.md$|(?i:\.(?:dll|exe|lib|obj|pdb|idb|exp|res|zip|ico|bmp|png|jpg|gif|tlb|ocx|sbr|tlog))$},
         bericht => 'Arbeitsweise/*.md',
         auftrag => 'Den Chat seit dem letzten Lauf auswerten, Lehren anlegen und ergaenzen.',
     },
