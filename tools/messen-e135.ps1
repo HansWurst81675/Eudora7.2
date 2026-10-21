@@ -16,7 +16,9 @@
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [string] $Tippen   = 'ha',
-    [int]    $Schritte = 5
+    [int]    $Schritte = 5,
+    # PRUEFER-44: so viele Entf-Taste-Schritte nach den Cursor-Schritten
+    [int]    $Entfernen = 3
 )
 $ErrorActionPreference = 'Stop'
 
@@ -32,6 +34,7 @@ public class E135 {
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out R r);
   [DllImport("user32.dll")] public static extern bool GetClientRect(IntPtr h, out R r);
+  [DllImport("user32.dll")] public static extern IntPtr SendMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   [DllImport("user32.dll")] public static extern bool PostMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   public delegate bool EP(IntPtr h, IntPtr p);
   [StructLayout(LayoutKind.Sequential)] public struct R { public int L, T, Ri, B; }
@@ -95,6 +98,7 @@ Start-Sleep -Milliseconds 1800     # Vorgabe ist 500 ms, mit Luft
 $kandidaten = AlleFenster $pp | Where-Object { $_.Vis -and $_.Klasse -eq '#32770' }
 Write-Host ("E135 {0} sichtbare Dialoge" -f $kandidaten.Count)
 $box = $null
+$boxliste = $null
 foreach ($k in $kandidaten) {
     $kinder = New-Object System.Collections.ArrayList
     $cc = [E135+EP]{ param($x,$q) [void]$kinder.Add($x); return $true }
@@ -104,24 +108,46 @@ foreach ($k in $kandidaten) {
     Write-Host ("E135   Dialog {0} [{1}] {2}x{3} Kinder {4} Liste {5}" -f `
         $k.H, $k.Text, ($r.Ri-$r.L), ($r.B-$r.T), $kinder.Count, $(if($liste){"ja"}else{"nein"}))
     if ($liste -and -not $box) { $box = $k }
+    if ($liste -and -not $box) { $box = $k; $boxliste = $liste }
 }
 if (-not $box) {
     Write-Host 'E135 KEINE BOX - erscheint die Auswahlbox? NNdbase.txt mit mehreren'
     Write-Host 'E135 Kurznamen gleichen Anfangs gefuellt? Auto-completion eingeschaltet?'
     exit 1
 }
-Write-Host ("E135 Box {0}" -f $box.H)
+Write-Host ("E135 Box {0}  Liste {1}" -f $box.H, $boxliste)
 
 # --- messen, Schritt fuer Schritt ------------------------------------------
+# PRUEFER-44: zusaetzlich zur Groesse werden LINKS/OBEN auf dem Bildschirm und
+# die Zahl der Listeneintraege ausgegeben. Die Position beantwortet, ob das
+# fehlende ScreenToClient in InitList() wirkt; die Zahl der Eintraege
+# beantwortet, ob die Box nach dem Entfernen eines Eintrags zu gross bleibt.
+function Anzahl($h) { return [int][E135]::SendMessageA($h, 0x1004, [IntPtr]::Zero, [IntPtr]::Zero) }
+function Zeile($nr, $h, $lh) {
+    $a = Rechteck $h
+    $k = Innen    $h
+    Write-Host ("E135 {0,-10} Hoehe {1,4} Breite {2,4} (innen {3,4} x {4,4})  links {5,5} oben {6,5}  Eintraege {7}" -f `
+        $nr, ($a.B-$a.T), ($a.Ri-$a.L), ($k.B-$k.T), ($k.Ri-$k.L), $a.L, $a.T, (Anzahl $lh))
+}
+
 for ($i = 0; $i -le $Schritte; $i++) {
-    $a = Rechteck $box.H
-    $k = Innen    $box.H
-    Write-Host ("E135 Schritt {0} Hoehe {1} Breite {2} (innen {3} x {4})" -f `
-                $i, ($a.B - $a.T), ($a.Ri - $a.L), ($k.B - $k.T), ($k.Ri - $k.L))
+    Zeile "Schritt $i" $box.H $boxliste
     if ($i -lt $Schritte) {
         [void][E135]::PostMessageA($to.H, 0x0100, [IntPtr]0x28, [IntPtr]1)    # WM_KEYDOWN VK_DOWN
         [void][E135]::PostMessageA($to.H, 0x0101, [IntPtr]0x28, [IntPtr]1)    # WM_KEYUP
         Start-Sleep -Milliseconds 600
+    }
+}
+
+# --- Entf: nimmt einen Eintrag weg und ruft ReCalcACListBoxPos -------------
+# AutoCompleteSearcher.cpp:1160 OnDeleteKey. InitList wird auf diesem Weg NICHT
+# gerufen, die Hoehe kann also nicht mehr nachgezogen werden.
+if ($Entfernen) {
+    for ($d = 1; $d -le $Entfernen; $d++) {
+        [void][E135]::PostMessageA($to.H, 0x0100, [IntPtr]0x2E, [IntPtr]1)    # WM_KEYDOWN VK_DELETE
+        [void][E135]::PostMessageA($to.H, 0x0101, [IntPtr]0x2E, [IntPtr]1)    # WM_KEYUP
+        Start-Sleep -Milliseconds 900
+        Zeile "Entf $d" $box.H $boxliste
     }
 }
 Write-Host 'E135 fertig'
