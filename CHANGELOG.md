@@ -83,6 +83,18 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ## 7.2.0.120 — die Auswahlbox schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135))
 
+> **Veröffentlicht als [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120)**
+> am 21.10.2026 um **19:07:37 UTC**, Marke `30feeae2`, auf GitHub *Latest*.
+> Das Release trägt **drei** Quellstände — 7.2.0.118, 7.2.0.119 und
+> 7.2.0.120 —, weil die beiden mittleren gebaut, aber nie eigens
+> veröffentlicht wurden. Freigabe von Gregor: *„ich habe ja schon alles
+> getestet."* Anhang `Eudora72-1.0.120-release.zip`, 9 381 870 Byte,
+> SHA-256 `26fde414…a6a1`. Notizen:
+> [Releases/1.0.120/RELEASE-NOTIZEN.md](Releases/1.0.120/RELEASE-NOTIZEN.md).
+> *(Nachgetragen am 21.10.2026 abends — dieser Abschnitt sagte bis dahin
+> nichts über das Release, während der Abschnitt 7.2.0.117 es tut;
+> [L-49.15](Befunde/LEKTOR-49.md#l-49.15).)*
+
 Gregor am 21.10.2026 an 1.0.119, während er sein Ziel für diesen Weg
 beschrieb: *„das Fenster wird bei jeder Änderung (z.B. nächster Eintrag)
 kleiner!"*
@@ -373,7 +385,7 @@ verlangt:
 | Paket | `Eudora.exe` | Inhalt | wo es liegt |
 |---|---|---|---|
 | **1.0.116**, 21.10.2026 vormittags | SHA-256 `1454F544…C665E2E6` | Rückfrage auf allen Startwegen, Merker | bei Gregor, von ihm getestet; **nicht veröffentlicht** |
-| **1.0.117**, 21.10.2026 mittags | ZIP-SHA-256 `335751a9…7eeb1a1` | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* | bei Gregor; **die Fassung, die veröffentlicht wird** |
+| **1.0.117**, 21.10.2026 mittags | ZIP-SHA-256 `335751a9…7eeb1a1` | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* | bei Gregor; **die Fassung, die am 21.10.2026 um 07:56:56 UTC als `v1.0.117` veröffentlicht wurde** |
 
 ## 7.2.0.116 — E-132: die Rückfrage greift jetzt auf allen Startwegen, und Eudora merkt sich die Antwort
 

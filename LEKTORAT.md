@@ -1772,7 +1772,7 @@ sagt ([L-49.2](Befunde/LEKTOR-49.md#l-49.2)).
 fängt auch einen beliebigen Müllwert — aber erst beim **Schreiben**
 ([L-49.10](Befunde/LEKTOR-49.md#l-49.10)).
 
-**Das Urteil: ja, die Papiere tragen** — nach vierzehn Funden, davon elf
+**Das Urteil: ja, die Papiere tragen** — nach fünfzehn Funden, davon zwölf
 berichtigt. **Die Schranke aus
 [L-44.11](Befunde/LEKTOR-44.md#l-44.11) fehlt zum sechsten Mal**; sie hätte
 [L-49.1](Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses

@@ -336,6 +336,64 @@ im Hauptarbeitsbaum. **`PORTIERUNG.md` berichtigt.** Im selben Zug stand dort
 1.0.119 falsch als eigenes Release — es hat keines, sein Stand steckt in
 `v1.0.120`.
 
+### <a id="l-49.15"></a>L-49.15 — `CHANGELOG.md` sagte nicht, dass 7.2.0.118 bis .120 draußen sind (mittel)
+
+Der Abschnitt **7.2.0.117** trägt eine eigene Überschrift *Von Gregor
+freigegeben* mit seinem Wortlaut und dem Datum. Die Abschnitte **7.2.0.118**,
+**7.2.0.119** und **7.2.0.120** sagten **nichts** über eine
+Veröffentlichung — obwohl alle drei in `v1.0.120` stecken. Wer den
+`CHANGELOG` von oben liest, erfährt also, was sich geändert hat, aber nicht,
+dass es draußen ist.
+
+Dazu stand in der Fassungstabelle des Abschnitts 7.2.0.117 weiterhin
+*„die Fassung, die veröffentlicht **wird**"* — Gegenwart, seit zwölf Stunden
+überholt.
+
+**Beides berichtigt:** ein Kasten über dem Abschnitt 7.2.0.120 mit Marke,
+Uhrzeit, Anhanggröße, SHA-256, den drei enthaltenen Fassungen, Gregors
+Freigabe und dem Verweis auf die neuen Notizen; die Tabellenzeile in die
+Vergangenheit gesetzt.
+
+---
+
+## Prüfumfang — ehrlich gezählt
+
+`git ls-files '*.md' | grep -v '^Arbeitsweise/'` ergab beim Start **163**
+Dateien (jetzt 165, meine beiden neuen mitgezählt).
+
+**Mechanisch über alle 163 gelaufen**, jede Datei einzeln angefasst:
+
+* eigener Verweisprüfer — jeder relative Link und jeder Anker gegen
+  `git ls-files` und die Überschriften der Zieldatei ([L-49.13](#l-49.13));
+* Sweep auf Standaussagen: jede Datei, die *„veröffentlicht ist"*,
+  *„neuestes Release"*, *„aktueller Stand"* oder *„Stand 7.2.0…"* sagt und
+  dabei `1.0.120` **nicht** nennt — 39 Treffer, davon 35 in dauerhaft
+  datierten Berichten unter `Befunde/`, vier nachgesehen
+  (`CHANGELOG.md` → [L-49.15](#l-49.15), `Pruefung/PRUEFUNG-PAKET.md`,
+  `tools/WERKZEUGE.md`, `Releases/ISSUE-102-ANTWORT.md` — die drei
+  letzten in Ordnung);
+* Sweep auf die Adressbuch-Verwechslung ([L-49.4](#l-49.4));
+* die Schranken des Projekts: `doku-pruefen.pl` (39 Dateien),
+  `pruefe-release-buchfuehrung.pl` (5), `befunde-verlinken.pl` (alle MDs in
+  Wurzel, `tools/` und `Befunde/`), `pruefe-ini-abschnitte.pl`.
+
+**Inhaltlich gelesen und beurteilt habe ich 23 Dateien** — nicht 163, und
+das steht hier so, weil *„alle"* sonst eine Behauptung wäre
+([Prüfumfang nicht von
+Hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md)):
+`README.md`, `ZIEL.md`, `PORTIERUNG.md`, `WEITERMACHEN.md`, `AUFGABEN.md`,
+`BEFUNDE.md` (die Abschnitte [E-47](../BEFUNDE.md#e-47), [E-131](../BEFUNDE.md#e-131), [E-132](../BEFUNDE.md#e-132), [E-133](../BEFUNDE.md#e-133)), `CHANGELOG.md`,
+`TESTPLAN.md`, `EINSTELLUNGEN.md`, `FILTER.md`, `LEKTORAT.md`,
+`MELDUNGEN-VON-AUSSEN.md`, `Releases/PAKETE.md`,
+`Releases/ISSUE-102-ABSCHLUSS.md`, `Releases/ISSUE-102-ANTWORT.md`,
+`Releases/1.0.114/RELEASE-NOTIZEN.md`, `Releases/1.0.117/RELEASE-NOTIZEN.md`,
+`tools/RELEASES.md`, `tools/WERKZEUGE.md`, `Pruefung/PRUEFUNG-PAKET.md`,
+`PRUEFUNG-BRANCH.md`, `Befunde/LEKTOR-48.md`, `Befunde/PRUEFER-40.md`.
+
+**Nicht gelesen** sind vor allem die rund 100 Berichte unter `Befunde/` —
+Fahrtenbücher, die für ihren Tag gelten und deren veraltete Standangaben
+richtig sind. Sie sind mechanisch, nicht inhaltlich geprüft.
+
 ---
 
 ## Was ich selbst falsch gemacht habe
