@@ -111,6 +111,7 @@ eine Datei liest, liest diese.
 | [paket-gegen-den-bau-messen](paket-gegen-den-bau-messen.md) | Was im Paket liegt, ist nicht automatisch das, was ich gebaut habe - jede Datei im Paket gegen das Bauverzeichnis messen, bevor Gregor sie bekommt |
 | [pruefen-statt-vermuten](pruefen-statt-vermuten.md) | Vorhandene Quellen oeffnen, bevor ich eine Ursache vermute - und Vermutungen nie als Tatsache aussprechen |
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
+| [pruefstand-nicht-bequemer-als-die-wirklichkeit](pruefstand-nicht-bequemer-als-die-wirklichkeit.md) | Ein Prüfstand, der bequemer gebaut ist als die Wirklichkeit, misst den Fehler weg - C:\Temp\E132 ist sein eigener 8.3-Kurzname, und alle drei Messungen zu E-132 meldeten grün |
 | [pruefumfang-nicht-von-hand](pruefumfang-nicht-von-hand.md) | Prueflisten und Agentenauftraege holen ihren Umfang aus der Quelle; was von Hand aufgezaehlt wird, prueft genau das nicht, woran niemand gedacht hat |
 | [pruefung-legt-nichts-ab](pruefung-legt-nichts-ab.md) | Eine Prüfung verändert das Geprüfte nicht - sie packt nichts aus, und "nicht lesbar" ist kein Befund; Defender zog die von unserer eigenen Schranke ausgepackte Eudora.exe ein |
 | [quelldateien-nur-byte-erhaltend-aendern](quelldateien-nur-byte-erhaltend-aendern.md) | Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden - nur byte-erhaltend aendern, nie mit dem Edit-Werkzeug |
