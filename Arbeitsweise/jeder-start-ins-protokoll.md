@@ -132,3 +132,36 @@ Sekunden danach).
 
 Siehe [[nichts-auf-gregors-bildschirm-starten]], [[werkzeug-vor-eigenbau]],
 [[erst-nachstellen-dann-ausliefern]], [[pruefstand-kann-blind-sein]].
+
+## Gegenprobe desselben Tages, 21.10.2026 nachmittags: grün — und nicht von dieser Schranke
+
+Am Nachmittag lief das Arbeitspaket [E-135](../BEFUNDE.md#e-135), und die
+Starts stehen im Protokoll:
+
+| | |
+|---|---|
+| Prüfstände `C:\Temp\E135-*` | **2** (`E135-box`, `E135-gruen`) |
+| eigene Eudora-Starts am 2026-10-21, jetzt noch messbar | **5** |
+| Zeilen in `tools/TESTLAEUFE.md` mit diesem Datum | **5** (Zeilen 278–282) |
+| `perl tools/pruefe-startwege.pl --tag 2026-10-21` | **0 ohne Zeile**, Rückgabe 0 |
+
+Zwei Dinge gehören dazu, sonst ist das Grün gelogen:
+
+1. **Die Schranke hat nicht gewirkt — sie lief nie.** Der installierte Haken
+   `.git/hooks/pre-commit` im Hauptbaum ist vom **20.10.2026, 12:55** und
+   enthält `pruefe-startwege` **null**-mal. `sh tools/hooks-einrichten.sh`
+   ist seit dem Merge nicht gelaufen. Der Commit `f6d525dc` (7.2.0.120) ist
+   also an 14g und 14h vorbeigegangen. Was die Starts ins Protokoll gebracht
+   hat, war der Gebrauch von `tools/testlauf.ps1` selbst — nicht die
+   Prüfung. **Zeitliche Nähe ist keine Messung**
+   ([[ursache-nur-gemessen-behaupten]]); belegt ist nur, dass die Schranke
+   es nicht gewesen sein **kann**.
+2. **Die 15 Starts vom Vormittag sind für immer unprotokolliert.** Sie
+   erscheinen in keiner Zählung mehr, weil ihre Prüfstände gelöscht sind.
+   Die Schranke meldet den Tag grün, an dem sie den Mangel gefunden hat.
+
+Daraus die Verschärfung: **eine Schranke zählt erst ab dem Lauf, in dem sie
+im Haken steht.** Wer sie baut, richtet sie im selben Arbeitsschritt ein und
+misst, dass sie dort angekommen ist — `grep -c <werkzeug>
+.git/hooks/pre-commit` ist die ganze Messung ([[schranke-gehoert-in-den-haken]],
+[[lehren-anwenden-nicht-nur-schreiben]]).

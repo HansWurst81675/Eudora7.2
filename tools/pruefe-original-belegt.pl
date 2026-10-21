@@ -104,8 +104,19 @@ my @belege = (
     ['von Gregor am alten Programm',
      qr/\bGregor\b[^|]{0,120}?\b(?:Hermes|7\.1)\b[^|]{0,80}?(?:best(?:\xc3\xa4|ae)tigt|gemeldet|funktioniert|lief|ging)/i],
 
-    # 4. Die ausdrueckliche Einschraenkung - der Satz, der in E-134 gefehlt
-    #    hat. Wer so schreibt, behauptet nichts Ungedecktes mehr.
+);
+
+# Die ausdrueckliche Einschraenkung - der Satz, der in E-134 gefehlt hat.
+# Wer so schreibt, behauptet nichts Ungedecktes mehr.
+#
+# Diese Liste wird VOR @belege gefahren ([L-48.7](../Befunde/LEKTOR-48.md#l-48.7)).
+# Grund: E-133 traegt beides - die Einschraenkung "Quelltext original,
+# Verhalten nicht gemessen" UND den Satz "Ob ein Hermes 7.1 ... ebenfalls
+# den Start verweigert, ist nicht gemessen". Der zweite traf Beleg 2 und
+# wurde als "am Original gemessen" ausgegeben, also als das Gegenteil
+# dessen, was dort steht. Steht die Einschraenkung zuerst, nennt die
+# Ausgabe den richtigen Grund.
+my @grenzen = (
     ['Einschraenkung: Quelltext original, Verhalten nicht gemessen',
      qr/Quelltext\s+original[^|]{0,60}?Verhalten/i],
     ['Einschraenkung: Verhalten nicht gemessen',
@@ -113,6 +124,14 @@ my @belege = (
     ['Einschraenkung: nur am Quelltext belegt',
      qr/nur\s+(?:am|im)\s+Quelltext\s+(?:belegt|gelesen|gesehen)/i],
 );
+
+# Eine Verneinung IM Treffer macht aus dem Beleg sein Gegenteil
+# ([L-48.7](../Befunde/LEKTOR-48.md#l-48.7)). Gemessen am 21.10.2026: die
+# Zeile "das ist ein Originalfehler. Ob ein Hermes 7.1 sich ebenso
+# verhielt, ist nicht gemessen" kam gruen heraus, mit dem Grund "am
+# Original gemessen". Geprueft wird nur der Treffer selbst, nicht die
+# ganze Zelle - ein "kein Rueckfall" am Satzende soll weiter durchgehen.
+my $VERNEINT = qr/\b(?:nicht|nie|niemals|kaum)\b/i;
 
 # ---------------------------------------------------------------------------
 # Kern: eine Zeile beurteilen
@@ -140,8 +159,16 @@ sub beurteile {
     }
     return ($kennung, undef, undef) unless defined $name;
 
+    # Erst die Einschraenkung: wer sie schreibt, behauptet nichts.
+    for my $g (@grenzen) {
+        return ($kennung, $name, $g->[0]) if $text =~ $g->[1];
+    }
+    # Dann die Belege - aber ein Treffer, der selbst eine Verneinung
+    # enthaelt, belegt nichts.
     for my $b (@belege) {
-        return ($kennung, $name, $b->[0]) if $text =~ $b->[1];
+        next unless $text =~ $b->[1];
+        next if $& =~ $VERNEINT;
+        return ($kennung, $name, $b->[0]);
     }
     return ($kennung, $name, undef);
 }
@@ -222,6 +249,21 @@ sub selbsttest {
         ['Einschraenkung "nur am Quelltext belegt" reicht',
          '| E-93 | irgendwas | **offen** - Originalverhalten, nur am '
          . 'Quelltext belegt |',
+         1, 1],
+
+        # L-48.7, gemessen am 21.10.2026: diese Zeile kam vorher GRUEN
+        # heraus, mit dem Grund "am Original gemessen" - also mit dem
+        # Gegenteil dessen, was sie sagt.
+        ['Verneinung im Treffer belegt nichts - muss abgewiesen werden',
+         '| E-91 | irgendwas | **offen** - das ist ein Originalfehler. Ob '
+         . 'ein Hermes 7.1 sich ebenso verhielt, ist nicht gemessen |',
+         1, 0],
+
+        # Die Gegenprobe dazu: dieselbe Form OHNE Verneinung muss weiter
+        # durchgehen, sonst ist die Schranke ein Dauerfehlalarm.
+        ['dieselbe Form ohne Verneinung - muss weiter durchgehen',
+         '| E-90 | irgendwas | **offen** - das ist ein Originalfehler. Ein '
+         . 'Hermes 7.1 hat sich ebenso verhalten, am 21.10.2026 gemessen |',
          1, 1],
 
         ['ganz ohne Original-Wort - wird nicht geprueft',
