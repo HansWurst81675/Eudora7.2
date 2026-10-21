@@ -159,12 +159,17 @@ haben.
 ## 1.0.114 — Quellstand 7.2.0.114, Zweig `e-132-fremdes-mailverzeichnis` — **noch nicht geschnürt, noch nicht veröffentlicht**
 
 > **Diese Nummer ist vergeben, das Paket gibt es noch nicht.** Gemessen am
-> 20.10.2026: unter `Releases/` liegt kein `Eudora72-1.0.114-release.zip`, es
-> gibt kein Verzeichnis `Releases/1.0.114/`, kein Tag `v1.0.114`, und bei
-> Gregor liegt kein `Eudora72-1.0.114-release`. Die Zeilen unten beschreiben
-> den **Quellstand**, nicht ein ausgeliefertes Paket. Bis zum Schnüren steht
-> hier *geschnürt am 20.10.2026* mit einem Testverzeichnis, das es nicht gibt
-> — eine Anleitung, der niemand folgen kann ([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.5)).
+> 21.10.2026: unter `Releases/` liegt kein `Eudora72-1.0.114-release.zip`,
+> es gibt kein Tag `v1.0.114` und keine Veröffentlichung, und bei Gregor
+> liegt kein `Eudora72-1.0.114-release` (dort stehen 1.0.110 bis 1.0.113).
+> Die Zeilen unten beschreiben den **Quellstand**, nicht ein ausgeliefertes
+> Paket. **Das Verzeichnis `Releases/1.0.114/` gibt es seit dem 20.10.2026**
+> — es hält die [Release-Notizen](1.0.114/RELEASE-NOTIZEN.md), deren
+> SHA-256 noch ein Platzhalter ist. Bis zum 20.10.2026 stand in der
+> Überschrift *geschnürt am 20.10.2026* mit einem Testverzeichnis, das es
+> nicht gibt — eine Anleitung, der niemand folgen kann
+> ([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.5),
+> [LEKTOR-45](../Befunde/LEKTOR-45.md#l-45.2)).
 
 | | |
 |---|---|

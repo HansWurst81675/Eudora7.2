@@ -1534,3 +1534,50 @@ jeweilige Bericht seinen eigenen Fund zeigt. Die acht Dateien stehen wieder
 unverändert da. Echte tote Verweise im Bestand: **null**; die einzigen zwei
 waren meine eigenen, eine halbe Stunde alt
 ([L-44.14](Befunde/LEKTOR-44.md#l-44.14)).
+
+## Fünfzigster Durchgang — Nachlauf vor 1.0.114, 21.10.2026 (Bericht: `Befunde/LEKTOR-45.md`)
+
+**Kein voller Durchgang.** Zehn Dokumente, die mit dem Paket 1.0.114 nach außen
+gehen oder seinen Stand behaupten, dazu `tools/ZWEIGE.md` und
+`tools/RELEASES.md`. Anlass: **1.0.114 wird geschnürt und soll veröffentlicht
+werden**, und zur Stunde gibt es kein ZIP, kein Tag `v1.0.114`, kein
+Testverzeichnis bei Gregor und keine Veröffentlichung.
+
+**Drei Sätze behaupteten den Stand falsch, alle drei berichtigt:**
+`Releases/PAKETE.md` bewies mit Datum, es gebe kein Verzeichnis
+`Releases/1.0.114/` — es entstand **sechs Minuten** nach diesem Beweis
+([L-45.2](Befunde/LEKTOR-45.md#l-45.2)); die Release-Notizen zu 1.0.114
+zählten Defender **zweimal an einem Tag**, während
+[E-124](BEFUNDE.md#e-124), `Releases/PAKETE.md` und `WEITERMACHEN.md`
+**dreimal** zählen und `Releases/DEFENDER-FEHLALARM.md` mit *„three separate
+builds"* bei Microsoft **eingereicht** ist
+([L-45.3](Befunde/LEKTOR-45.md#l-45.3)); und der Block *HIER WEITERMACHEN*
+meldete `PR #119` als offen, obwohl er elf Stunden vor dem Schreiben gemergt
+worden war ([L-45.4](Befunde/LEKTOR-45.md#l-45.4)).
+
+**Die neue Zeile in `tools/ZWEIGE.md` hält jeder Gegenprobe stand**
+([L-45.1](Befunde/LEKTOR-45.md#l-45.1)) — Zweig vorhanden und in `main`, Datum
+richtig, Verweise treffen, PR #120 trägt genau das, was die Zeile behauptet.
+Dass sie zwischen 19.10. und 20.10. steht, ist kein Fehler der Zeile: die
+Tabelle hat zwei Sortierrichtungen, und jede neue Zeile wird seit dem
+20.10.2026 oben auf den absteigenden Block gesetzt.
+
+**Das Urteil zum Paket: ja, 1.0.114 darf so geschnürt werden.** Nach diesen
+drei Berichtigungen behauptet kein geprüftes Dokument mehr etwas Unwahres über
+1.0.114; die SHA-256 ist als Platzhalter kenntlich, und die Notizen tragen
+**nicht** den Textschaden aus [L-43.1](Befunde/LEKTOR-43.md#l-43.1) —
+gemessen, 0 Absätze mit ungerader Zahl von `**`. **Zwei Dinge treten beim
+Veröffentlichen von selbst wieder ein**, wenn niemand sie tut:
+`tools/release-veroeffentlichen.ps1` ruft **keine einzige** `pruefe-*`-Schranke
+auf ([L-43.11](Befunde/LEKTOR-43.md#l-43.11)), und es hängt die neue Zeile mit
+`AppendAllText` ans Dateiende von `tools/RELEASES.md` statt in die Tabelle —
+nach `v1.0.112` und `v1.0.113` wäre das das **dritte Mal**
+([L-43.12](Befunde/LEKTOR-43.md#l-43.12)).
+
+Alles, was seit [LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43) und
+[LEKTOR-44](Befunde/LEKTOR-44.md#lektor-44) offen ist, steht jetzt als **eine**
+Liste in [L-45.5](Befunde/LEKTOR-45.md#l-45.5): vier Punkte erledigt
+(darunter [L-44.9](Befunde/LEKTOR-44.md#l-44.9)), elf offen, vier davon
+Gregors Entscheidung. **Die Frage, ob die veröffentlichte Beschreibung von
+`v1.0.113` berichtigt wird, ist damit zum dritten Mal offen** — sie stand
+schon für `v1.0.112` in [LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43).
