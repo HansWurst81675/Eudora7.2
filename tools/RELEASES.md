@@ -46,3 +46,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > eine Fassung, in der **[E-98](../BEFUNDE.md#e-98)** offen ist und **[E-101](../BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
 
+| 2026-10-21 21:07:37 | v1.0.120 | Gregor am 21.10.2026: 'ich habe ja schon alles getestet.' | veroeffentlicht |
