@@ -180,6 +180,27 @@ Durchgänge melden. **Offene Schwäche:** der Fehlerdialog *„Could not open th
 der Lauf hängt darin und Eudora muss abgeschossen
 werden — Destruktoren laufen dann nicht, der Sammeleintrag des zweiten Durchgangs
 fehlt deshalb im Protokoll. Braucht einen Dialogschließer),
+`tools/messen-e135.ps1` ([E-135](../BEFUNDE.md#e-135): läuft unter `testlauf.ps1 -MessenSkript`
+und bekommt von dort `-Pfadfilter`. **Vorbedingung:** das Mailverzeichnis des Prüfstands
+muss in `NNdbase.txt` **mehrere Kurznamen mit gleichem Anfang** führen, sonst erscheint
+gar keine Auswahlbox. Öffnet eine neue Nachricht, tippt `-Tippen` (Vorgabe `ha`) ins
+`To:`-Feld und geht `-Schritte` mal (Vorgabe 5) mit Cursor-runter durch die Liste.
+Ausgabe je Schritt eine Zeile `E135 Schritt <n> Hoehe <px> Breite <px>` — schrumpft die
+Höhe von Schritt zu Schritt, ist der Fehler da. Gemessen am 21.10.2026: vorher
+`100 × 62` bis `20 × 14`, nachher sechsmal `108 × 70`. Aufruf:
+`powershell -ExecutionPolicy Bypass -File tools\testlauf.ps1 -Verzeichnis C:\Temp\E135-box
+-Freigabe "<Gregors Satz von heute, mit Datum>" -MessenSkript tools\messen-e135.ps1
+-Sekunden 60`),
+`tools/messen-k9.ps1` ([PRÜFER-43 K9](../Befunde/PRUEFER-43.md#k9), dieselbe Ursachenklasse
+wie [E-134](../BEFUNDE.md#e-134): läuft unter `testlauf.ps1 -MessenSkript` mit `-Pfadfilter`.
+**Vorbedingung:** dieselbe wie oben — mehrere Kurznamen in `NNdbase.txt`, damit der Baum
+im Adressbuch überhaupt Kinder hat. Öffnet das Adressbuch, klickt mit der **rechten**
+Maustaste an fünf verschiedenen Höhen in den Baum und liest nach jedem Klick
+`TVIS_SELECTED` aller Kinder. Die Zeilenhöhe über `TVM_GETITEMHEIGHT` quer über die
+Prozessgrenze zu holen ist nicht verlässlich — gemessen 21.10.2026: `16777215` —, deshalb
+die fünf Höhen. Ausgabe je Klick die Zahl der ausgewählten Kinder. Gemessen am
+21.10.2026: **beide** Fassungen melden genau eines, die Vorhersage aus K9 ließ sich
+nicht nachstellen),
 `tools/e80-messen.ps1` (ein Lauf, drei Schritte: starten, Nachricht öffnen,
 die angezeigte HTML-Fassung einsammeln — **öffnet ein Fenster, nur nach
 Absprache**) und
