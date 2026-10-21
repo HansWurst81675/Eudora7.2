@@ -555,8 +555,14 @@ Zeile oben lautet „v1.0.117 geht so raus", und das gilt mit oder ohne diese
 vier.
 
 ```
-Release gebaut   siehe unten
-Testsammlung     siehe unten
+Release gebaut   0 Fehler, 0 neue Warnungen, 00:01:09
+Testsammlung     243 Tests, 243 bestanden
+Gegenprobe       die neue Pruefung umgedreht (das ! vor E132IstFremdes-
+                 Verzeichnis entfernt) -> [FEHL] E-132: der Praefix allein
+                 genuegt nicht, Zeile 225, 242 von 243. Zurueckgedreht
+                 wieder 243/243. Die Pruefung laeuft also wirklich.
+Bytes            eudora.cpp   CRLF 18, nur-LF 5550, >127 0  (vorher CRLF 18)
+                 TestE132.cpp CRLF  0, nur-LF  230, >127 0  (vorher CRLF  0)
 ```
 
 ---
