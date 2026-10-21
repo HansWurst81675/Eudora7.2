@@ -1,6 +1,6 @@
 # Issue #102 — separate Nachfrage zum Unicode-Plug-in
 
-**ENTWURF, noch nicht abgeschickt.** Warten auf Gregors Freigabe.
+**ABGESCHICKT am 21.10.2026** als eigener Beitrag, unmittelbar nach dem Abschluss: [Kommentar in #102](https://github.com/HansWurst81675/Eudora7.2/issues/102#issuecomment-6324767170). Der Wortlaut ging unverändert hinaus.
 
 **Als eigener Beitrag abzuschicken**, nicht zusammen mit dem Abschlussbeitrag
 ([ISSUE-102-ABSCHLUSS.md](ISSUE-102-ABSCHLUSS.md)). Gregors Vorgabe vom
