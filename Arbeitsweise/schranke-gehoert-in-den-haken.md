@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-18T07:35:33.513Z
 ---
 
-Schranke: tools/lehren-schranken.pl (pre-commit) haelt jede Lehre gegen ihre Aufrufstelle; die Verdrahtung der Schranken selbst prueft niemand - gemessen am 18.09.2026 hingen 4 von 6 Doku-Schranken in keinem Haken, und release-pruefen.pl hing mit "|| true"
+Schranke: tools/lehren-schranken.pl (pre-commit) haelt jede Lehre gegen ihre Aufrufstelle. Die Verdrahtung der Schranken selbst prueft seit dem 21.10.2026 **tools/pruefe-haken-aktuell.pl**: es liest die Schrankenliste aus tools/hooks-einrichten.sh und haelt sie gegen den INSTALLIERTEN .git/hooks/pre-commit und pre-push; tools/commit-bereit.pl meldet den Befund als Hinweis. Gegenprobe: --selbsttest 9 Faelle in beide Richtungen; am Bestand 4 fehlende Schranken gefunden, von denen eine Handsuche desselben Tages nur 3 kannte. Davor: gemessen am 18.09.2026 hingen 4 von 6 Doku-Schranken in keinem Haken, und release-pruefen.pl hing mit "|| true"
 
 Eine Prüfung, die nicht in `.git/hooks/pre-commit` **oder** `pre-push` steht,
 läuft nur, wenn ich daran denke — und genau dann, wenn es darauf ankommt, denke
@@ -92,3 +92,51 @@ grep -c '<name>' .git/hooks/pre-commit .git/hooks/pre-push
 Eine Zahl ungleich 0 auf beiden Seiten ist der Beleg. *„Eingehängt"* ohne
 diese zwei Zahlen ist eine Behauptung, keine Messung
 ([pruefen-statt-vermuten](pruefen-statt-vermuten.md)).
+## Nachtrag 21.10.2026 — zum dritten Mal, und die Handsuche fand zu wenig
+
+Am 21.10.2026 abends gemessen, im Hauptbaum:
+
+```
+.git/hooks/pre-commit          20.10.2026 12:55, 22313 Bytes
+im Quelltext                   40 Schranken
+im installierten Haken         36 Schranken
+```
+
+**Vier** fehlten: `pruefe-auspacken.pl` (14f, vom 20.10.), und die drei, die an
+diesem Tag entstanden sind — `pruefe-startwege.pl` (14g),
+`pruefe-original-belegt.pl` (14h), `pruefe-messziel.pl` (14i). Drei
+CHRONIST-Läufe desselben Tages hatten je eine Schranke gebaut, und keine
+einzige lief.
+
+**Das Entscheidende ist die Vier.** Der Bericht vom Mittag
+([CHRONIST-2026-10-21b](CHRONIST-2026-10-21b.md)) hatte den Mangel bemerkt und
+dafür den Dreizeiler aus dem Nachtrag vom 12.10. benutzt:
+
+```sh
+grep -c pruefe-startwege .git/hooks/pre-commit        # 0
+grep -c pruefe-original-belegt .git/hooks/pre-commit  # 0
+grep -c pruefe-messziel .git/hooks/pre-commit         # 0
+```
+
+Drei Namen gesucht, drei Lücken gefunden — und die vierte sah niemand, weil
+niemand nach ihr gesucht hat. Eine Prüfliste von Hand prüft genau das nicht,
+woran man nicht gedacht hat ([[pruefumfang-nicht-von-hand]]). Der Umfang muss
+aus der Quelle kommen.
+
+**Deshalb jetzt ein Werkzeug statt eines Befehls:**
+
+```sh
+perl tools/pruefe-haken-aktuell.pl
+```
+
+Es liest beide Blöcke aus `tools/hooks-einrichten.sh` — also dieselbe Quelle,
+aus der auch `commit-bereit.pl` seine Liste nimmt — und vergleicht sie mit dem,
+was wirklich unter `.git/hooks/` liegt. Ausgegeben werden Datum und Anzahl
+beider Seiten und namentlich, was fehlt.
+
+**Es sitzt bewusst nicht im Haken.** Ein veralteter Haken enthält die Prüfung,
+die ihn veraltet nennt, ja gerade nicht — eine Schranke, die ihren Umfang aus
+derselben Annahme nimmt wie das Geprüfte, prüft nichts
+([[schranke-teilt-nicht-die-annahme]]). Ihr Platz ist `tools/commit-bereit.pl`,
+das aus dem Arbeitsbaum läuft und seine Liste aus dem Quelltext liest; von dort
+meldet sie seither bei jedem Lauf.

@@ -296,3 +296,45 @@ Selbsttests. Am 20.10. abends kam der Schaden von zwei Messungen, die niemand
   Arbeit; „20 Treffer, davon 2 nachgesehen" ist die ehrliche Lage. Wer eine
   Trefferliste nicht stichprobenartig öffnet, hat nicht gemessen, sondern
   gesucht.
+
+## Nachtrag 21.10.2026 — der Fehlalarm, der 11 Dateien erfand
+
+`tools/gesichert.pl` meldete am Abend des 21.10.2026:
+
+```
+Arbeitsbaum ...-wt-pruefer hat 11 nicht committete Datei(en)
+NICHT GESICHERT
+```
+
+Nachgemessen war **nichts** ungesichert. Die vier Textdateien waren Byte für
+Byte die aus `origin/main` (gleicher Blob-Hash), die sieben DLLs unterschieden
+sich um 7–8 Byte im PE-Zeitstempel. Der Zweig in jenem Arbeitsbaum hing 16
+Commits zurück — dadurch sah **neuerer** Inhalt wie eine lokale Änderung aus.
+Dieselbe Messung ein paar Stunden später: 21 Commits zurück, 6 Dateien, alle 6
+mit dem Blob-Hash aus `origin/main`.
+
+**Die Ursache ist eine verwechselte Frage.** `git status` beantwortet *„weicht
+das von MEINEM HEAD ab?"*. Die Frage dieses Werkzeugs ist aber *„geht etwas
+verloren, wenn Gregor jetzt abschaltet?"* — und die heißt *„liegt dieser Inhalt
+schon auf dem SERVER?"*. Beide fallen nur zusammen, solange der Zweig vorne
+steht.
+
+Behoben, indem jede geänderte Datei gegen `origin/main` **und** das eigene
+Gegenstück gehalten wird (`git diff --name-only -z <ref>`). Was in keinem von
+beiden steht, bleibt Mangel; der Rest ist ein Hinweis *„der Zweig hängt nur
+zurück, es geht nichts verloren"*.
+
+**Warum das hierher gehört:** ein Werkzeug, das vor dem Abschalten warnt, wird
+in dem Moment gelesen, in dem Gregor es eilig hat. Warnt es zweimal umsonst,
+wird beim dritten Mal darüber hinweggelesen — und dann fehlt die echte Meldung.
+Genau diese Begründung steht an zwei anderen Stellen **im selben Quelltext**
+schon einmal: für die ungepushten Commits (06.09.2026) und für den Rat, dem man
+nicht folgen kann (07.09.2026). Sie galt nur nicht für den Zähler ganz oben.
+
+Gegenprobe in beide Richtungen, `perl tools/gesichert.pl --selbsttest`, 9 Fälle
+in einem Wegwerf-Repo: zurückhängender Zweig, Löschung die `main` schon kennt,
+gestagte identische Datei, unverfolgte Datei — **kein** Mangel; echte Änderung,
+echte Löschung, Inhalt nur im eigenen Gegenstück — **Mangel**. Am Bestand
+desselben Abends: PRÜFER-Baum 6 Dateien / 0 verloren (jetzt Hinweis),
+LEKTOR-Baum 5 Dateien, die es wirklich nirgends gibt — die werden jetzt
+**namentlich** genannt, was die alte Fassung nicht tat.
