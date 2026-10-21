@@ -332,7 +332,7 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht |
 |---|---|
-| **[E-134](BEFUNDE.md#e-134)** | Ein neuer Adressbucheintrag nimmt den eingetippten Kurznamen nicht an — der Baum behält… |
+| **[E-135](BEFUNDE.md#e-135)** | Die Vervollständigungsbox im To:-Feld wird bei jedem Cursor-Schritt kleiner |
 | **[E-133](BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… |
 | **[E-130](BEFUNDE.md#e-130)** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… |
 | **[E-129](BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… |
