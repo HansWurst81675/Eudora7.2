@@ -81,6 +81,161 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.117 — eine kopierte Sicherung wird nicht mehr stillschweigend übernommen ([E-132](BEFUNDE.md#e-132))
+
+Zwei Funde aus [PRÜFER-41](Befunde/PRUEFER-41.md), beide an Stellen, die erst
+gestern und heute entstanden sind.
+
+### Gefragt wurde nur, wenn im fremden Verzeichnis eine `Eudora.ini` lag
+
+Das ist zu eng. Sagt der Anwender *Ja*, legt Eudora in diesem Verzeichnis
+`Attach\`, `Embedded\`, Postfächer, `eudora.log` und beim Beenden eine frische
+`Eudora.ini` an. **Ein fremdes Datenverzeichnis ohne INI wurde deshalb
+ungefragt in Besitz genommen** — eine kopierte Sicherung zum Beispiel, oder
+eine Installation, deren INI woanders liegt.
+
+Gregors Anforderung vom 20.10.2026 lautet: *„in beiden fällen sollte die alte
+version von eudora weiterhin funktionieren und keinen schaden bekommen!"* Eine
+Sicherung ist eine vorhandene Installation.
+
+**Jetzt genügt irgendeine Spur einer Einrichtung** — `Eudora.ini`, `In.mbx`,
+`Attach\` oder `Embedded\`.
+
+Dazu ein zweiter Punkt derselben Stelle: geprüft wurde die Existenz von
+`szIni`, entschieden und benutzt wird `szVerzeichnis`. Die Registry nennt
+beide Pfade **unabhängig** voneinander; lag die INI in einem anderen Ordner,
+beantwortete die Prüfung eine Frage über ein Verzeichnis, über das gar nicht
+entschieden wurde. Nachgesehen wird jetzt dort, wo auch entschieden wird.
+
+### *„Mail folder from"* im Über-Dialog log auf vier Wegen
+
+Die Zeile ist seit 7.2.0.114 da und genau für den Fall gedacht, in dem jemand
+einen Fehler meldet. **Eine Angabe, die dann falsch ist, ist schlimmer als
+keine** — man glaubt ihr.
+
+| Weg | was dastand | was stimmte |
+|---|---|---|
+| `UseAppData=1` in der `DEudora.ini` | *„nichts in Registry oder DEudora.ini"* | genau dieser Schlüssel hat den Weg erzwungen |
+| Application Data nicht erreichbar | *„Application Data"* | das Programmverzeichnis |
+| **`Eudora.ini` neben der EXE** — der häufigste Fall überhaupt | *„(unbekannt)"* | das Programmverzeichnis |
+| ein gescheiterter Versuch davor | die Herkunft des **vorigen** Versuchs | keine |
+
+Alle vier berichtigt. Die Entscheidungsfunktion selbst bleibt unverändert und
+damit frei von Windows-Aufrufen — nur der Aufrufer sieht genauer hin, damit
+der Prüfstand sie weiter fahren kann.
+
+**243 Tests, 243 bestanden.**
+
+### Zwei Bauten unter demselben Namen — und wie man sie unterscheidet
+
+**Auf Gregors ausdrückliche Entscheidung vom 21.10.2026.** Ich hatte
+vorgeschlagen, diese Fassung **1.0.117** zu nennen, weil 1.0.116 zu diesem
+Zeitpunkt schon bei ihm lag und die beiden Behebungen nicht enthielt. Seine
+Antwort: *„ich habe auch 0.116 gesagt, nicht 0.117."* Also 1.0.116.
+
+Damit gibt es den Namen zweimal. Was das kostet, steht in
+[version-eindeutig-machen](Arbeitsweise/version-eindeutig-machen.md): *„gemessen
+an 1.0.116"* ist ab jetzt zweideutig. Unterscheidbar bleiben die beiden an der
+Prüfsumme ihrer `Eudora.exe`:
+
+| Bau | `Eudora.exe` SHA-256 | Inhalt |
+|---|---|---|
+| **erster**, 21.10.2026 vormittags | `1454F544…C665E2E6` | Rückfrage auf allen Startwegen, Merker |
+| **zweiter**, 21.10.2026 mittags | *(siehe `Releases/PAKETE.md`)* | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* |
+
+Wer eine Messung an 1.0.116 festhält, schreibt die Prüfsumme dazu — sonst ist
+sie später nicht zuzuordnen.
+
+## 7.2.0.116 — E-132: die Rückfrage greift jetzt auf allen Startwegen, und Eudora merkt sich die Antwort
+
+Diese Fassung enthält, was in 1.0.115 noch fehlte: die beiden Funde aus
+[PRÜFER-41](Befunde/PRUEFER-41.md) und das Merken der Antwort.
+
+### Die Rückfrage gab es nur auf einem von drei Startwegen (PRÜFER-41 K1)
+
+`StartEudoraWithDefaultLocation` wird an drei Stellen gerufen. `ExecutableDir`
+wird im ganzen Programm aber nur an **einer** Stelle gesetzt — in `GetDirs`
+(`fileutil.cpp:436`) —, und die lief bei zwei der drei Aufrufe noch gar nicht.
+Dann ist `ExecutableDir` leer, `E132IstFremdesVerzeichnis` steigt mit *nicht
+fremd* aus, und im Protokoll steht
+
+```
+E-132 Startverzeichnis: … eigenes="" fremd=0
+```
+
+— eine Zeile, die wie eine **Entwarnung** aussieht und keine ist. Betroffen
+waren `mailto:`-Verweise, Postfachdateien (`.mbx`), Briefpapier (`.sta`), jeder
+per Ziehen übergebene Anhang — und, weil `GetCommandType` alles nicht Erkannte
+als Anhang behandelt (`fileutil.cpp:585`), auch jeder Start mit einem
+Mailverzeichnis, das es noch nicht gibt. **Jetzt wird `ExecutableDir` notfalls
+aus `GetModuleFileName` gefüllt.**
+
+### Mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* gar nicht mehr (PRÜFER-41 K2)
+
+Und *Nein* ist die **Vorgabe**. Der Zweig legte einen ungeklammerten langen
+Pfad in `buf`; `GetDirs` liest `buf` als Befehlszeile und trennt am ersten
+Leerzeichen (`fileutil.cpp:445`). Aus `C:\Program Files\Eudora72\Mailverzeichnis`
+wurde das Verzeichnis `C:\Program`, `CheckMailDirectory` scheiterte, und
+`InitInstance` stieg mit einer zweiten Fehlermeldung aus: **zwei Meldungen,
+kein Eudora.** QUALCOMM war dem anderswo mit `GetShortPathName` ausgewichen —
+unser Zweig war der erste, der dort einen langen Pfad hineinlegte. **Jetzt
+wird geklammert**; eine vollständig geklammerte Zeichenkette nimmt `GetDirs`
+als **einen** Pfad.
+
+### Eudora merkt sich die Antwort
+
+Auf Gregors Ansage vom 21.10.2026 (*„ja, merken"*), nachdem er gemessen hatte:
+zweimal 1.0.115 hintereinander fragt nicht — aber wer dazwischen eine andere
+Fassung startet, bekommt die Frage bei jedem Wechsel.
+
+Der Merker steht in der **`DEudora.ini` neben der EXE**, nicht in der
+`Eudora.ini`: an dieser Stelle im Start ist das Mailverzeichnis noch gar nicht
+bekannt. Zwei Schlüssel, damit *Ja* und *Nein* unterscheidbar bleiben:
+
+```ini
+[Settings]
+E132Abgelehnt=C:\Pfad\zum\fremden\Mailverzeichnis
+E132Angenommen=C:\Pfad\zum\fremden\Mailverzeichnis
+```
+
+*Abbrechen* wird **nicht** gemerkt — wer abbricht, hat sich nicht entschieden.
+Gibt es keine `DEudora.ini`, wird nichts gemerkt und jedes Mal gefragt; das ist
+der sichere Ausgang, nicht der bequeme. **Wie man den Merker wieder loswird,
+steht im Dialog selbst** — sonst wäre er eine Falle: wer einmal *Ja* gesagt
+hat, würde nie wieder gefragt und wüsste nicht, warum.
+
+### Dazu
+
+*Copy info* im Über-Dialog meldete **„Copied" auch dann, wenn nichts in der
+Zwischenablage stand** — `EmptyClipboard()` war da schon gelaufen, der
+vorherige Inhalt des Anwenders also weg. Meldet jetzt *„Copy failed"*
+(PRÜFER-41 K7).
+
+**243 Tests, 243 bestanden.**
+
+### Gemessen, an einem Prüfstand, der nicht bequemer ist als die Wirklichkeit
+
+`C:\Temp\Eudora Pruefstand 116` — Kurzform `C:\Temp\EUDORA~1`, **mit
+Leerzeichen im Pfad**, Aufbau wie in unseren Paketen (`Eudora.ini` in
+`Mailverzeichnis\`, nicht neben der EXE):
+
+```
+E-132 Startverzeichnis: gefunden="C:\Temp\E131\Mailverzeichnis" … fremd=1
+E-132 Startverzeichnis: gemerkte Antwort Nein fuer "C:\Temp\E131\Mailverzeichnis"
+E-132 Startverzeichnis: eigenes gewaehlt="…\Mailverzeichnis"
+```
+
+Nach *Nein* läuft Eudora **weiter** (K2), der Pfad steht ausgeschrieben da,
+der zweite Start fragt nicht mehr, und die fremde `Eudora.ini` bleibt
+SHA-256-gleich.
+
+**Ein Zwischenergebnis war kein Beweis.** Mein erster zweiter Lauf meldete
+*keine Rückfrage* — im Protokoll stand aber **keine einzige** E-132-Zeile.
+Beim ersten Lauf war das Datenverzeichnis das Programmverzeichnis geworden,
+danach lag eine `Eudora.ini` neben der EXE, und dann wird der ganze
+Registry-Weg übersprungen. Erst nach dem Umbau auf den Paketaufbau war es eine
+Messung.
+
 ## 7.2.0.115 — E-132: Eudora hielt sein eigenes Mailverzeichnis für fremd
 
 **Gefunden von Gregor am 21.10.2026, zwei Minuten nach dem ersten Start von

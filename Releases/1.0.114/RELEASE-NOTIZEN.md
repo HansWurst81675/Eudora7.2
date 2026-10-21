@@ -97,7 +97,7 @@ Defender meldet Eudora als Trojaner*, was sonst noch hilft.
 
 ## Prüfsumme
 
-SHA-256 des ZIPs: *(wird beim Schnüren des Pakets eingetragen)*
+SHA-256 des ZIPs: `335751a91ca67b7996c4076f077deb49a0f4ce4ac1de74c8a079cc2cb7eeb1a1`
 
 ## Was geprüft wurde – und was nicht
 

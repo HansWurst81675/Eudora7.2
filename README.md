@@ -572,6 +572,42 @@ und entschieden: *„nur in einstellungen, nicht in readme"*.
 Was ein Anwender beim **ersten Start** wissen muss, steht weiter unten unter
 *Ein Mailverzeichnis übernehmen* und *Mehr ins Protokoll schreiben lassen*.
 
+## Wie Eudora gestartet werden kann — und warum das zählt
+
+**Es gibt mehr Wege als den Doppelklick auf `Eudora.exe`.** Jedes Mal muss
+Eudora sein Mailverzeichnis finden, und jedes Mal kann es dabei über die
+Registry im Verzeichnis einer **fremden** Installation landen
+([E-132](BEFUNDE.md#e-132)).
+
+| Weg | was dabei passiert |
+|---|---|
+| **`Eudora starten.cmd`** doppelklicken | der vorgesehene Weg: das Mailverzeichnis wird als Argument übergeben, Eudora muss nicht suchen |
+| Doppelklick auf **`Eudora.exe`** | Eudora sucht sich das Mailverzeichnis selbst |
+| Klick auf einen **`mailto:`-Link** | Windows startet Eudora und übergibt die Adresse |
+| Doppelklick auf eine **Postfachdatei** (`.mbx`) | Eudora startet und soll das Postfach öffnen |
+| Doppelklick auf **Briefpapier** (`.sta`) | Eudora startet und legt eine Nachricht damit an |
+| Eine Datei **auf Eudora ziehen** | Eudora startet und hängt sie an |
+
+**Nur der erste Weg kommt ohne Suche aus.** Bei allen anderen greift seit
+7.2.0.114 eine Rückfrage, bevor ein fremdes Verzeichnis übernommen wird —
+**seit 7.2.0.116 auf allen Wegen.** Bis 7.2.0.115 kam sie nur beim Doppelklick
+auf `Eudora.exe`; auf den vier anderen war das Programmverzeichnis intern noch
+nicht gesetzt, und die Prüfung stieg wortlos mit *nicht fremd* aus. Im
+Protokoll stand dann
+
+```
+E-132 Startverzeichnis: … eigenes="" fremd=0
+```
+
+— eine Zeile, die wie eine Entwarnung aussieht und keine war. Gefunden hat das
+der Agent PRÜFER beim Nachrechnen, nicht ein Testlauf: über einen
+`mailto:`-Link muss man erst einmal kommen.
+
+**Wenn gefragt wird, ist die Vorgabe *Nein*** — ein eigenes Verzeichnis neben
+dem Programm. Wer die Meldung wegdrückt, beschädigt nichts. Die Antwort wird
+gemerkt (in der `DEudora.ini` neben der EXE); wie man sie wieder loswird,
+steht im Dialog.
+
 ## Was in einen Fehlerbericht gehört — *Help → About Eudora*
 
 **Seit 7.2.0.114 nennt der Über-Dialog alle Pfade, nach denen bei einem Fehler
@@ -1003,7 +1039,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.115` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.117` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei

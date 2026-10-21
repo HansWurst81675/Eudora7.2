@@ -30,6 +30,35 @@ gelesen (`Arbeitsweise/lehren-anwenden-nicht-nur-schreiben.md`).
 | `wt/lektor`, `wt/pruefer`, `wt/chronist` | die drei Arbeitsbäume der Daueraufgaben, beschrieben in `AGENTEN.md` |
 
 
+## Der Name nennt den Befund, nicht die Fassungsnummer
+
+**Gregor am 21.10.2026:**
+
+> *„wir müssen jetzt langsam die branch-namen als bug-nummer wählen, nicht nur
+> als release-version. sonst blickt da keiner durch."*
+
+Er hat recht, und die Liste unten belegt es: `release_1.0.113` und
+`release_1.0.115` sagen nichts darüber, **was** darin steckt — man muss erst
+den CHANGELOG aufschlagen. `e-131-leistenposition` und
+`e-132-fremdes-mailverzeichnis` sagen es im Namen.
+
+**Also: `<kennung>-<zwei bis drei Worte>`,** klein, mit Bindestrichen:
+
+```
+e-132-startwege-und-merker
+e-105-doppelte-bilder
+```
+
+**Die Fassungsnummer gehört nicht hinein.** Sie steht in `VERSION`, in
+`Eudora71/Version.h`, im CHANGELOG und in `Releases/PAKETE.md` — viermal; ein
+fünftes Mal im Zweignamen hilft niemandem und ist beim nächsten Hochzählen
+falsch. Ein Zweig, der **nur** eine Fassung schnürt und keinen Befund behebt,
+heißt weiter `release_1.0.NN`; das ist der Ausnahmefall, nicht die Regel.
+
+**Gibt es noch keine Kennung**, wird der Befund zuerst in `BEFUNDE.md`
+angelegt — vorher `perl tools/befund-suchen.pl <Datei oder Funktion>`, sonst
+entsteht die zweite Nummer für dasselbe Problem.
+
 ## Ein Zweig, ein Thema
 
 **Der Zweigname nennt das Thema. Kommt während der Arbeit ein zweites dazu,
@@ -107,6 +136,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `befundurteile-einhaengen` | 12.10.2026 | **Von Gregor mit „ja" angenommen**, Name von mir vorgeschlagen. Anlass: seine Frage zu `CHANGELOG.md` — *„was ist damit? stimmt noch alles?"*. Es stimmte nicht: `pruefe-befundurteile.pl` war auf `main` **rot** und hing in **keinem** Haken. Zweck: die Schranke von ihren Fehlalarmen befreien, die drei echten Widersprüche berichtigen und sie verdrahten. **Drei Fehlalarmquellen:** das Umfeld um eine Kennung wurde nur nach vorn gelesen, ein Zitatblock mit nummerierten Schritten fiel in einen Topf, und *„aufgeschrieben"* galt nicht als offen — 8 von 11 Meldungen waren davon. **Drei echte:** **[E-112](../BEFUNDE.md#e-112)** galt in `README.md` und `ZIEL.md` als behoben, während `BEFUNDE.md` ihn seit dem 18.09.2026 als **WIEDER OFFEN** führt (von Gregor mit Bildschirmfoto widerlegt), und `CHANGELOG.md` schrieb zweimal *„seit [E-90](../BEFUNDE.md#e-90) korrekt zusammen"*, obwohl [E-90](../BEFUNDE.md#e-90) als Grenze zurückgestellt und nie behoben wurde. Eingehängt in `pre-commit`, `pre-push` (über `tools/hooks-einrichten.sh`) und `paket-bauen.ps1`. Kein Quelltext geändert, keine Fassung gehoben |
 | `befunde-verlinken` | 12.10.2026 | **Von Gregor mit „ok" angenommen**, Name von mir vorgeschlagen. Anlass: *„ich möchte überall, wenn auf einen bug (z.b. [E-108](../BEFUNDE.md#e-108) oder [AN-1](../BEFUNDE.md#an-1)) verwiesen wird, daß ich drauf als link klicken kann"*, und der Grund dahinter: *„mein anliegen ist, daß man sich schneller zurecht findet, nicht die übersicht verliert und die infos nicht überall verteilt sind, wo man sie mühsam erst zusammen suchen muß."* Gemessen war die Streuung: **1473 Nennungen von Kennungen in den Dokumenten des Wurzelverzeichnisses**, keine einzige anklickbar. Gebaut: `tools/befunde-verlinken.pl`, Anker auf der Urteilszeile in `BEFUNDE.md` (164 Stück), **1095 Zeilen verlinkt** — die erste je Absatz, nicht jede. Kein Quelltext geändert, keine Fassung gehoben, keine Zeile hinzugekommen oder weggefallen (1095 ersetzte Zeilen, Zeilenzahl und Bytezählung je Datei unverändert) |
 | `e-123-notbremse-und-zaehler` | 19.10.2026 | Von Gregor angenommen (*„ja, beide namen passen"*), zusammen mit `e-69-meldungsflut`; Reihenfolge von ihm gesetzt: *„e-123 und e-69 zuerst"*, weil beide ein Release blockieren. Zweck: **P1** und **P2** aus [PRÜFER-36](../Befunde/PRUEFER-36.md) an [E-123](../BEFUNDE.md#e-123) — die Notbremse nach fünf Minuten schließt nicht mehr über ein laufendes Hochladen oder einen offenen Dialog hinweg, und der Hochladezähler deckt jetzt auch den Verbindungsaufbau. Dazu `Befunde/PRUEFER-37.md` ([E-101](../BEFUNDE.md#e-101) nachgerechnet, lief parallel) |
+| `e-132-startwege-und-merker` | 21.10.2026 | Von Gregor angenommen (*„e-132-startwege-und-merker ist ok"*) — und der erste Zweig nach seiner Ansage vom selben Tag, dass der Name den **Befund** nennen soll und nicht die Fassungsnummer. Zweck: [E-132](../BEFUNDE.md#e-132), dritter Teil. Aus [PRÜFER-41](../Befunde/PRUEFER-41.md): K1 — die Rückfrage kam nur auf **einem von drei** Startwegen, weil `ExecutableDir` sonst leer ist (betroffen `mailto:`, `.mbx`, `.sta`, Anhang); K2 — mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* gar nicht mehr; K7 — *Copy info* meldete „Copied" auch ohne Inhalt. Dazu auf Gregors Ansage *„ja, merken"*: Eudora merkt sich die Antwort je fremdem Verzeichnis in der `DEudora.ini`. Quellstand 7.2.0.116, Paket 1.0.116 |
 | `release_1.0.115` | 21.10.2026 | Von Gregor angenommen (*„branch: release_1.0.115 ist ok"*). Zweck: Fassung 7.2.0.115 / Paket 1.0.115 sichern. Inhalt: die zweite Behebung zu [E-132](../BEFUNDE.md#e-132) — Eudora hielt sein **eigenes** Mailverzeichnis für fremd, weil die Registry die 8.3-Kurzform trägt und `ExecutableDir` die Langform (von Gregor am 21.10.2026 an 1.0.114 gefunden); dazu der Präfix ohne Grenze, und aus PRÜFER-41 (Bericht liegt auf `wt/pruefer-20261020b`, noch nicht hereingeholt) K1 (die Rückfrage gab es nur auf einem von drei Startwegen, weil `ExecutableDir` sonst leer ist) und K2 (mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* gar nicht mehr — und *Nein* ist die Vorgabe). 243 Tests |
 | `20261021_alles_was_claude_vergessen_hat` | 21.10.2026 | Von Gregor angenommen, im Wortlaut: *„zweig name: 20261021_alles_was_claude_vergessen_hat"* — und der Name ist eine Rüge. Er hatte mehrfach gesagt, dass Schluss ist (*„schluß für jetzt!"*, *„mach jetzt fertig!"*, *„pech! habe mehrfach gesagt, daß jetzt schluß ist."*), und ich habe weitergearbeitet. Zweck: das Liegengebliebene sichern — der Eintrag in `WEITERMACHEN.md` mit den vier nächsten Handgriffen (Paket 1.0.114, Gregors Starttest, Release, dann der Beitrag in [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)) und der letzte Commit von [LEKTOR-44](../Befunde/LEKTOR-44.md), der nach dem Merge von PR #119 kam und nur an `wt/lektor` hing |
 | `e-132-fremdes-mailverzeichnis` | 20.10.2026 | Von Gregor angenommen (*„fragen, und e-132-fremdes-mailverzeichnis"*). Zweck: [E-132](../BEFUNDE.md#e-132) — ein Doppelklick auf `Eudora.exe` übernimmt stillschweigend das Mailverzeichnis einer fremden Installation, gefunden über die Registry (`eudora.cpp:1036-1052` → `:3700`). Entschieden: **fragen** statt verweigern, Vorgabe *Eigenes anlegen*. Dazu die Anforderung in `ZIEL.md` (eine vorhandene 7.1-Installation nimmt keinen Schaden, in beiden Fällen), die Warnung in der README, und Quellstand 7.2.0.114, Paket 1.0.114 (noch nicht geschnürt); die Berichtigung der Veröffentlichungsangaben aus [PRÜFER-40](../Befunde/PRUEFER-40.md) K15 |

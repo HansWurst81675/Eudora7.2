@@ -374,6 +374,11 @@ BOOL CheckMailDirectory(const char* dir, const char* Location)
 	//
     if (!::FileExistsMT(Edir))	
 	{
+		// K6 aus PRUEFER-41, Weg 4: die Angabe eines frueheren, erfolgreichen
+		// Aufrufs darf hier nicht stehenbleiben - sonst nennt der
+		// Ueber-Dialog eine Herkunft, die zu einem Verzeichnis gehoert, das
+		// gar nicht genommen wurde.
+		MailDirHerkunft.Empty();
 		ErrorDialog(IDS_ERR_BAD_EUDORA_DIR, Location, dir);
 		return (FALSE);
     }
@@ -502,6 +507,13 @@ BOOL GetDirs(char* CmdLine)
 	{
 		EudoraDir = ExecutableDir;
 		status = TRUE;
+
+		// K6 aus PRUEFER-41, Weg 3: das ist der HAEUFIGSTE Fall - eine
+		// Eudora.ini neben der EXE, keine Befehlszeile, keine
+		// Umgebungsvariable. CheckMailDirectory laeuft dabei nie, also blieb
+		// MailDirHerkunft leer und der Ueber-Dialog sagte "(unbekannt)",
+		// obwohl die Antwort feststeht.
+		MailDirHerkunft = "Programmverzeichnis (keine andere Angabe gefunden)";
 	}
 
 	if (status)

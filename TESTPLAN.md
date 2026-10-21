@@ -1,4 +1,4 @@
-# Testplan für Gregor — Paket 1.0.115, Stand 21.10.2026
+# Testplan für Gregor — Paket 1.0.117, Stand 21.10.2026
 
 ## Was jetzt zu testen ist
 
@@ -158,8 +158,8 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Starttest an 1.0.115 in Ordnung"* oder
-*„Starttest an 1.0.115 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Starttest an 1.0.117 in Ordnung"* oder
+*„Starttest an 1.0.117 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
