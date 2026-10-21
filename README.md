@@ -27,6 +27,7 @@ verschickt.
 | **Selbst bauen** | [Selbst bauen](#selbst-bauen) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
 | **Was geht und was nicht** | [Auf einen Blick](#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind) – bekannte Fehler mit Abhilfe; ausführlich [Was es kann](#was-es-kann), [Was es nicht kann](#was-es-nicht-kann) und [ZIEL.md](ZIEL.md) |
 | **Was gefunden und behoben wurde** | [CHANGELOG.md](CHANGELOG.md) je Fassung, [BEFUNDE.md](BEFUNDE.md) je Befund mit Messung |
+| **Was Anwender gemeldet haben** | [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) — jede Meldung von außen mit Datum, Dringlichkeit und Stand |
 | **Wie portiert wurde** | [PORTIERUNG.md](PORTIERUNG.md) |
 
 <!-- Hier gehoert ein Bildschirmfoto des Hauptfensters hin. Es liegt keines
