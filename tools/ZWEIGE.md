@@ -152,6 +152,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `readme-warnung-parallelbetrieb` | 21.10.2026 | Von Gregor benannt und in die Reihenfolge gestellt (*„wir machen erst github release fertig, dann erst readme-warnung-prarallelbetrieb"*). Zweck: ein Hinweis **ganz am Anfang der README** — vor dem ersten Start sichern, und Parallelbetrieb mit einer vorhandenen Eudora oder Hermes auf eigene Gefahr. Anlass ist [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102); Gregors Festlegung dazu: *„es ist nicht unser ziel, ini rückwärts kompatibel zu halten. dann soll man zwei verschiedene verzeichnisse dafür verwenden und sauber trennen."* Trägt zusätzlich die Release-Buchführung zu `v1.0.120` |
 
+| `e131-muellwert-testfall` | 21.10.2026 | Von Gregor angenommen (*„e131-muellwert-testfall ist ok, mach das"*). Zweck: der offene Punkt #102-4 aus [MELDUNGEN-VON-AUSSEN.md](../MELDUNGEN-VON-AUSSEN.md) — fängt `E131PositionIstBrauchbar` auch einen **beliebigen** Müllwert, oder nur `INT_MIN`? Zwei Testfälle ergänzt: der gemeldete Wert `MRUFloatYPos=-682908189` aus `[ToolBar-Bar10]` und die Grenze bei −1194 in beide Richtungen. **Gegenprobe gefahren:** mit entfernter oberer y-Grenze bleiben alle fünf alten Fälle grün und nur die beiden neuen werden rot — die Richtung war vorher ungeprüft. 245 Tests, 245 bestanden |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
