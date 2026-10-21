@@ -506,6 +506,17 @@ BOOL CNicknamesTreeCtrl::AddNewNickname(CNicknameFile* pNicknameFile, CNickname*
 			//
 			DoDeselectAll();
 			SelectItem(h_nickname);
+
+			//
+			//	E-134: SelectItem() setzt die Karette, aber in diesem Bau NICHT
+			//	TVIS_SELECTED - und genau das liest IsItemSelected(), auf dem
+			//	GetSelectedNicknames() steht. Gemessen am 21.10.2026: unmittelbar
+			//	nach SelectItem() stand das Kind auf "NICHT ausgewaehlt". Fehlt die
+			//	folgende Zeile, ist der neue Eintrag fuer GetSelectedNicknames()
+			//	nicht ausgewaehlt, und der Kurzname, den der Anwender gleich
+			//	eintippt, wird verworfen.
+			//
+			DoSelectItem(h_nickname, TRUE);
 			break;		// we're outta here
 		}
 
@@ -864,6 +875,16 @@ void CNicknamesTreeCtrl::NicknameWasChanged(CNickname* pNickname)
 					if (m_LastEvaluatedSelectionState != SELSTATE_SINGLE)
 						DoDeselectAll();
 					SelectItem(h_child);
+
+					//
+					//	E-134: dieselbe Annahme wie in AddNewNickname(), und hier wiegt
+					//	sie schwerer - diese Funktion laeuft bei JEDEM Tastendruck im
+					//	Namensfeld. Ohne die folgende Zeile raeumt das DoDeselectAll()
+					//	darueber die Auswahl ab, SelectItem() setzt sie nicht wieder, und
+					//	ab dem ZWEITEN Buchstaben findet GetSelectedNicknames() nichts
+					//	mehr. Gemessen: von "hans" kam genau "h" in der NNdbase.txt an.
+					//
+					DoSelectItem(h_child, TRUE);
 					m_LastEvaluatedSelectionState = SELSTATE_SINGLE;
 					return;		// we're outta here
 				}

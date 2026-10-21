@@ -1,9 +1,39 @@
-# Testplan für Gregor — Paket 1.0.118, Stand 21.10.2026
+# Testplan für Gregor — Paket 1.0.119, Stand 21.10.2026
 
 ## Was jetzt zu testen ist
 
-**Ein Schritt, und er ist neu.** Alles andere in diesem Plan ist
+**Zwei Schritte, beide neu.** Alles andere in diesem Plan ist
 Nachschlagewerk.
+
+### <a id="c9"></a>Das Adressbuch — kommt ein neuer Kurzname an?
+
+**Worum es geht.** Du hast es am 21.10.2026 gemeldet: *„adressbuch übernimmt
+nichts."* Im Formular stand `hans`, im Baum weiter `Untitled`. Und dazu
+*„es war 1x nicht richtig, 1x richtig gespeichert, jetzt wieder falsch."*
+Behoben in 7.2.0.119, siehe [E-134](BEFUNDE.md#e-134).
+
+**Was zu tun ist** — eine Minute:
+
+1. *Tools → Address Book* öffnen.
+2. Auf **New** klicken. Im Baum erscheint ein Eintrag `Untitled`, **und er ist
+   jetzt ausgewählt** (vorher war das Adressbuch selbst ausgewählt).
+3. Oben im Feld *Nickname* den Text ersetzen durch `hans`.
+4. Irgendwo anders hinklicken, damit das Feld den Fokus verliert.
+
+**Was passieren soll.** Der Baum zeigt **`hans`**, nicht mehr `Untitled`.
+
+**Und die Gegenprobe, die den Fehler erst sichtbar gemacht hat:** Eudora
+beenden, dann in deinem Mailverzeichnis die Datei `NNdbase.txt` öffnen. Dort
+muss `alias hans` stehen. An 1.0.118 stand dort dreimal `alias Untitled`.
+
+**Bitte auch das probieren**, denn hier habe ich nur den einen Weg gemessen:
+einen **vorhandenen** Eintrag anklicken und umbenennen — das ging vorher schon
+und darf nicht kaputtgegangen sein. Und einen Namen eingeben, den es **schon
+gibt**: dann soll die bekannte Meldung kommen und der alte Name stehenbleiben.
+
+**Was ich NICHT gemessen habe:** ob `Untitled` auch dann angenommen wird, wenn
+du den Namen über *Einfügen* aus der Zwischenablage setzt statt ihn zu tippen.
+Der Weg geht durch dieselbe Stelle, aber gemessen ist er nicht.
 
 ### <a id="c8"></a>Der Starttest — nimmt sich Eudora ein fremdes Mailverzeichnis?
 
@@ -158,8 +188,8 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Starttest an 1.0.118 in Ordnung"* oder
-*„Starttest an 1.0.118 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Starttest an 1.0.119 in Ordnung"* oder
+*„Starttest an 1.0.119 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
