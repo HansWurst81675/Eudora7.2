@@ -487,7 +487,7 @@ also nicht. Was es dort gibt: bestand vorher eine **Mehrfachauswahl**, bleiben
 deren übrige Bits stehen, und `GetFirstSelectedNickorFile()` (4445) — der
 Startpunkt des nächsten *Weitersuchen* — liefert dann nicht den Treffer,
 sondern den ersten ausgewählten Eintrag in Baumreihenfolge. *Weitersuchen*
-kommt dann nicht vom Fleck. Vorbestehend, unabhängig von E-134, und keine Zeile
+kommt dann nicht vom Fleck. Vorbestehend, unabhängig von [E-134](../BEFUNDE.md#e-134), und keine Zeile
 dieses Commits berührt es.
 
 ---
