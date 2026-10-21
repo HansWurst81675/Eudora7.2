@@ -81,6 +81,71 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.117 — eine kopierte Sicherung wird nicht mehr stillschweigend übernommen ([E-132](BEFUNDE.md#e-132))
+
+Zwei Funde aus [PRÜFER-41](Befunde/PRUEFER-41.md), beide an Stellen, die erst
+gestern und heute entstanden sind.
+
+### Gefragt wurde nur, wenn im fremden Verzeichnis eine `Eudora.ini` lag
+
+Das ist zu eng. Sagt der Anwender *Ja*, legt Eudora in diesem Verzeichnis
+`Attach\`, `Embedded\`, Postfächer, `eudora.log` und beim Beenden eine frische
+`Eudora.ini` an. **Ein fremdes Datenverzeichnis ohne INI wurde deshalb
+ungefragt in Besitz genommen** — eine kopierte Sicherung zum Beispiel, oder
+eine Installation, deren INI woanders liegt.
+
+Gregors Anforderung vom 20.10.2026 lautet: *„in beiden fällen sollte die alte
+version von eudora weiterhin funktionieren und keinen schaden bekommen!"* Eine
+Sicherung ist eine vorhandene Installation.
+
+**Jetzt genügt irgendeine Spur einer Einrichtung** — `Eudora.ini`, `In.mbx`,
+`Attach\` oder `Embedded\`.
+
+Dazu ein zweiter Punkt derselben Stelle: geprüft wurde die Existenz von
+`szIni`, entschieden und benutzt wird `szVerzeichnis`. Die Registry nennt
+beide Pfade **unabhängig** voneinander; lag die INI in einem anderen Ordner,
+beantwortete die Prüfung eine Frage über ein Verzeichnis, über das gar nicht
+entschieden wurde. Nachgesehen wird jetzt dort, wo auch entschieden wird.
+
+### *„Mail folder from"* im Über-Dialog log auf vier Wegen
+
+Die Zeile ist seit 7.2.0.114 da und genau für den Fall gedacht, in dem jemand
+einen Fehler meldet. **Eine Angabe, die dann falsch ist, ist schlimmer als
+keine** — man glaubt ihr.
+
+| Weg | was dastand | was stimmte |
+|---|---|---|
+| `UseAppData=1` in der `DEudora.ini` | *„nichts in Registry oder DEudora.ini"* | genau dieser Schlüssel hat den Weg erzwungen |
+| Application Data nicht erreichbar | *„Application Data"* | das Programmverzeichnis |
+| **`Eudora.ini` neben der EXE** — der häufigste Fall überhaupt | *„(unbekannt)"* | das Programmverzeichnis |
+| ein gescheiterter Versuch davor | die Herkunft des **vorigen** Versuchs | keine |
+
+Alle vier berichtigt. Die Entscheidungsfunktion selbst bleibt unverändert und
+damit frei von Windows-Aufrufen — nur der Aufrufer sieht genauer hin, damit
+der Prüfstand sie weiter fahren kann.
+
+**243 Tests, 243 bestanden.**
+
+### Zwei Bauten unter demselben Namen — und wie man sie unterscheidet
+
+**Auf Gregors ausdrückliche Entscheidung vom 21.10.2026.** Ich hatte
+vorgeschlagen, diese Fassung **1.0.117** zu nennen, weil 1.0.116 zu diesem
+Zeitpunkt schon bei ihm lag und die beiden Behebungen nicht enthielt. Seine
+Antwort: *„ich habe auch 0.116 gesagt, nicht 0.117."* Also 1.0.116.
+
+Damit gibt es den Namen zweimal. Was das kostet, steht in
+[version-eindeutig-machen](Arbeitsweise/version-eindeutig-machen.md): *„gemessen
+an 1.0.116"* ist ab jetzt zweideutig. Unterscheidbar bleiben die beiden an der
+Prüfsumme ihrer `Eudora.exe`:
+
+| Bau | `Eudora.exe` SHA-256 | Inhalt |
+|---|---|---|
+| **erster**, 21.10.2026 vormittags | `1454F544…C665E2E6` | Rückfrage auf allen Startwegen, Merker |
+| **zweiter**, 21.10.2026 mittags | *(siehe `Releases/PAKETE.md`)* | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* |
+
+Wer eine Messung an 1.0.116 festhält, schreibt die Prüfsumme dazu — sonst ist
+sie später nicht zuzuordnen.
+
 ## 7.2.0.116 — E-132: die Rückfrage greift jetzt auf allen Startwegen, und Eudora merkt sich die Antwort
 
 Diese Fassung enthält, was in 1.0.115 noch fehlte: die beiden Funde aus
