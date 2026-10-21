@@ -5,6 +5,21 @@
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
      Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](BEFUNDE.md#np3-7)). -->
 
+> **Vor dem ersten Start: sichern.** Wer bereits Eudora 7.1 oder Hermes
+> benutzt, sichert **vorher** die `Eudora.ini` und das komplette
+> Mailverzeichnis. Dieses Projekt startet mit einem **eigenen**
+> Mailverzeichnis und fasst eine vorhandene Installation nicht an —
+> `Eudora starten.cmd` hält sich daran, und wer `Eudora.exe` direkt startet,
+> wird gefragt. Eine Sicherung kostet zwei Minuten; eine verlorene Postablage
+> ist nicht wiederherstellbar.
+>
+> **Getrennte Verzeichnisse benutzen.** Die `Eudora.ini` bleibt **nicht**
+> rückwärtskompatibel — unsere Fassung und eine vorhandene Eudora oder Hermes
+> schreiben denselben Satz Werkzeugleisten mit unterschiedlichen MFC-Fassungen
+> in dieselbe Datei. Wer sich **eine** INI oder **ein** Mailverzeichnis teilt,
+> muss damit rechnen, dass die jeweils andere Installation danach Fehler
+> zeigt. Parallelbetrieb geschieht **auf eigene Gefahr**.
+
 **Der Mailclient Eudora 7.1, wieder baubar — mit Visual Studio 2022 unter
 Windows 10 und 11.**
 
