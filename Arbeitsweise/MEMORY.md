@@ -95,3 +95,5 @@
 - [Extrakt ist nicht das Programm](extrakt-ist-nicht-das-programm.md) — Lebenslauf, Aufrufstellen, Übersetzbarkeit; 222/222 grün und dreimal falsch
 - [Nummer erst beim Schnüren](nummer-erst-beim-schnueren.md) — „nur übersetzt" bis das ZIP da ist; 1.0.107–.109 mussten alle drei zurückgenommen werden
 - [Ursache nur gemessen behaupten](ursache-nur-gemessen-behaupten.md) — gemessen / belegt am Quelltext / Vermutung; zeitliche Nähe ist keine Messung
+- [Ausbleiben ist kein Befund](ausbleiben-ist-kein-befund.md) — eine Messung, die nichts ausgibt, hat nichts gemessen; erst die Positivprobe (tools/spur-lesen.pl), dann die Deutung
+- [Prüfung legt nichts ab](pruefung-legt-nichts-ab.md) — eine Prüfung packt nichts aus und meldet „ungeprüft", wenn sie nichts lesen konnte; Defender fraß die eigene Messprobe
