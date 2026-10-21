@@ -149,3 +149,37 @@ Nach einem zweiten Durchgang gilt:
 4. **Jeden Rücklauf nachmessen**, bevor ich ihn weitergebe
 5. **Zusammenführen, einmal bauen, einmal packen** — eine Nummer je Bau
 6. **Lehren in `Arbeitsweise/`**, nicht nur in die Commit-Nachricht
+
+## Nachtrag 21.10.2026: eine Zahl im Auftrag ist ein Befund, der nachgemessen wird
+
+Der CHRONIST-Auftrag vom 21.10.2026 nannte als Beleg für die falsche
+Einordnung von [E-134](../BEFUNDE.md#e-134):
+
+> *„belegt war aber nur, dass die `//FORNOW`-Kommentare aus dem initial
+> commit stammen (**1412 Vorkommen in 58 Dateien**)."*
+
+Nachgezählt im Zweig `wt/chronist-20261021`, am Stand `c70297c5`:
+
+| Zählweise | Vorkommen | Dateien |
+|---|---|---|
+| `//FORNOW` unter `Eudora71/` | **1315** | **44** |
+| `//FORNOW` unter `Eudora71/Eudora/` | 1282 | 37 |
+| `FORNOW` ohne Schrägstriche, ohne Groß-/Kleinschreibung | 1500 | 84 |
+| `//FORNOW` im ganzen Repo (`git grep`) | 2890 | 101 |
+
+Keine davon ist 1412/58. Die Aussage des Auftrags stimmt — `//FORNOW` ist ein
+Allerweltszeichen des Originals und trägt kein Urteil —, die Zahl daneben
+ließ sich nicht nachstellen. In die Lehre ist deshalb die **eigene** Messung
+gegangen, mit Zweig und Stand daneben.
+
+**How to apply, als Ergänzung zu Punkt 4 der Reihenfolge:**
+
+- **Eine Zahl in einem Auftrag wird nachgemessen, bevor sie weitergeschrieben
+  wird** — auch wenn der Auftrag von mir selbst kommt. Eine Zahl, die in eine
+  Lehre wandert, wird zehnmal zitiert und nie wieder geprüft.
+- **Wer eine Zahl weitergibt, gibt den Befehl mit, der sie erzeugt hat.**
+  `grep -ro "//FORNOW" Eudora71/ | wc -l` ist nachstellbar, „1412" ist es
+  nicht. Dasselbe gilt in die andere Richtung, für den Rücklauf eines Agenten.
+- **Stimmt die Zahl nicht, wird das aufgeschrieben, nicht stillschweigend
+  ersetzt** — sonst sieht der nächste Leser zwei verschiedene Werte in zwei
+  Dateien und weiß nicht, welcher gemessen ist.

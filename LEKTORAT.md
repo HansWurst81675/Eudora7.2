@@ -1630,3 +1630,46 @@ Dateiende. **Ein Muster für eine neue Schranke:** fünf der sieben Funde sind
 Aussagen über den eigenen Auslieferungsstand, und keine der 33 Schranken hat
 eine davon gesehen — sie prüfen Dokumente gegen Dokumente, nie gegen
 `ls Releases/*.zip`, `ls C:\Users\Gregor\Eudora72-*` oder `sha256sum`.
+
+## Zweiundfünfzigster Durchgang — die Papiere zu 1.0.119, 21.10.2026 (Bericht: `Befunde/LEKTOR-47.md`)
+
+**Kein voller Durchgang.** Nur die Papiere zu [E-134](BEFUNDE.md#e-134) und
+dem Stand 7.2.0.119. Anlass: **Gregor wartet auf das Paket 1.0.119**.
+
+**Der Befund selbst ist sauber.** Die gemessenen Zahlen — dreimal `alias hans`
+gegen dreimal `alias Untitled` an 1.0.118, 243 Tests, die Spurmarken aus dem
+Code, die Auswahl im Baum von (0) auf (1) — stehen in `BEFUNDE.md`,
+`CHANGELOG.md`, `Releases/PAKETE.md`, `AUFGABEN.md`, `PORTIERUNG.md` und
+`tools/ZWEIGE.md` in **derselben** Form. Die beiden nicht gemessenen Punkte
+(warum `SelectItem()` `TVIS_SELECTED` nicht mehr setzt; der Weg über
+*Einfügen*) stehen ausdrücklich als nicht gemessen da, und die erste
+Fehleinstufung *„Originalverhalten"* ist in [E-134](BEFUNDE.md#e-134) ausdrücklich zurückgenommen —
+Quelltext original, Verhalten verändert
+([L-47.13](Befunde/LEKTOR-47.md#l-47.13)).
+
+**Alle zwölf Funde liegen in der Buchführung ringsum.** Der schwerste:
+`Releases/PAKETE.md` führte **1.0.119 als geschnürt und bei Gregor
+bereitgestellt** — es gibt weder das ZIP noch das Verzeichnis
+([L-47.1](Befunde/LEKTOR-47.md#l-47.1)). Dazu stand `WEITERMACHEN.md` zum
+zweiten Mal an einem Tag mit zwei Fassungen in derselben Tabelle
+([L-47.2](Befunde/LEKTOR-47.md#l-47.2)), und sein Block *HIER WEITERMACHEN*
+verlangte zum dritten Mal in Folge ein Release, das es schon gibt — `v1.0.117`,
+veröffentlicht um 07:56:56 UTC, Beitrag an den Melder um 08:13:26 UTC
+abgeschickt ([L-47.3](Befunde/LEKTOR-47.md#l-47.3)). Vier weitere Stellen gaben
+weiter `v1.0.113` als veröffentlichten Stand aus
+([L-47.4](Befunde/LEKTOR-47.md#l-47.4) bis
+[L-47.6](Befunde/LEKTOR-47.md#l-47.6)), der Testplan trug *„241 Tests"* unter
+dem Plan zu 1.0.119 ([L-47.7](Befunde/LEKTOR-47.md#l-47.7)), `ZIEL.md` stand
+fünf Fassungen zurück ([L-47.8](Befunde/LEKTOR-47.md#l-47.8)) — und die vier
+Stellen mit *„09:56:57 UTC"* nennen in Wahrheit **Ortszeit**, abgeschrieben aus
+der Ortszeitspalte von `tools/RELEASES.md`
+([L-47.9](Befunde/LEKTOR-47.md#l-47.9)).
+
+**Das Urteil: ja, die Papiere tragen** — nach diesen zwölf Berichtigungen, und
+unter der Bedingung, dass beim Schnüren vier Stellen nachgezogen werden, die
+jetzt ausdrücklich *„noch nicht geschnürt"* sagen. **Dieselbe Schranke fehlt
+zum vierten Mal:** die Prüfung aus [L-44.11](Befunde/LEKTOR-44.md#l-44.11),
+die *„veröffentlicht ist …"* und *„geschnürt ist …"* gegen `gh release view`,
+`ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen andere
+Dokumente. Sie hätte sechs der zwölf Funde gefangen, darunter alle vier
+schweren.

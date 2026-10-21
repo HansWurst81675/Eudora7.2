@@ -81,6 +81,105 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 
 ---
 
+## 7.2.0.119 — der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134))
+
+Gregor am 21.10.2026, mit Bildschirmfoto: *„adressbuch übernimmt nichts."* Im
+Formular steht `hans`, im Baum weiter `Untitled`. Und dazu: *„es war 1x nicht
+richtig, 1x richtig gespeichert, jetzt wieder falsch."*
+
+### Eine Zeile, die auswählt, ohne auszuwählen
+
+`CTreeCtrl::SelectItem()` ist `TVM_SELECTITEM`/`TVGN_CARET`, und diese
+Botschaft tut **nichts**, wenn das Element schon die Karette trägt — auch dann
+nicht, wenn ein `DoDeselectAll()` davor `TVIS_SELECTED` gerade gelöscht hat.
+Genau dieses Bit liest `IsItemSelected()`, und darauf steht
+`GetSelectedNicknames()`. Zwei Stellen verlassen sich auf die Annahme,
+`SelectItem()` wähle aus:
+
+* `AddNewNickname` (`nicktree.cpp:508`) — der frisch angelegte Eintrag.
+* `NicknameWasChanged` (`nicktree.cpp:881`) — **läuft bei jedem Tastendruck**
+  im Namensfeld, die Karette steht dort also längst auf dem Eintrag, und die
+  Funktion ruft erst `DoDeselectAll()` und dann das wirkungslose
+  `SelectItem()`.
+
+Also liefert `GetSelectedNicknames()` null Einträge, `nickname` wird nie
+geholt, und das Eingetippte wird verworfen. Ein Zwischenstand, der nur die
+erste Stelle behob, brachte genau **einen** Buchstaben auf die Platte —
+`alias h` statt `alias hans` — weil die zweite die Auswahl beim ersten
+Umbenennen gleich wieder abräumte.
+
+**Gemessen** (21.10.2026, eigener Baum mit denselben Stilbits wie
+`IDC_NICKNAME_LEFT_LIST`, je einmal gegen comctl32 **5.82** und **6.16** —
+beide verhalten sich **gleich**):
+
+| Lage | `TVIS_SELECTED` danach |
+| --- | --- |
+| Karette steht woanders, dann `SelectItem(X)` | **1** (und das Bit der alten Karette wird gelöscht) |
+| Bit von `X` gelöscht, Karette steht schon auf `X`, dann `SelectItem(X)` | **0** |
+
+Die Fassung der Common Controls ist es also **nicht**; es ist die Lage der
+Karette. Für `NicknameWasChanged` ist das der belegte Fall. Für
+`AddNewNickname` ist es eine **Sicherung**: dort steht die Karette in aller
+Regel noch nicht auf dem neuen Eintrag, und derselbe Ablauf mit einem frisch
+eingefügten, sortierten Kind setzt das Bit in der Messung sehr wohl.
+
+**Warum es manchmal doch ging:** wer vorher einen vorhandenen Eintrag anklickt,
+bekommt seine Auswahl über `OnLButtonDown` → `DoSelectItem`, und die hält.
+
+**Jetzt** steht hinter beiden `SelectItem()` ein `DoSelectItem(…, TRUE)` — der
+Zustand wird gesetzt, statt angenommen.
+
+### Der Quelltext ist original. Das Verhalten nicht.
+
+`nickview.cpp`, `nickview.h`, `nicktree.cpp`, `nicktree.h` und
+`Eudora.manifest` sind seit dem initial commit **von uns nie angefasst**
+worden; `git log` und `git diff` dagegen sind leer. QUALCOMMs Entwurf wählt den
+neuen Eintrag sehr wohl aus — und es deckt sich mit Gregors Hinweis, dass es in
+Hermes funktioniert hat. **Was dabei offen bleibt:** die Messung oben zeigt,
+dass `SelectItem()` sich in comctl32 5.82 und 6.16 **gleich** verhält. Die
+Fassung der Common Controls scheidet damit als Erklärung aus. Offen ist, warum
+die Karette in diesem Bau schon auf dem Eintrag steht, wo sie es früher nicht
+tat. Die Behebung hängt nicht daran — sie setzt den Zustand ausdrücklich,
+statt ihn anzunehmen.
+
+### Und ein stummes `return`
+
+In `NicknameEditChanged` (`nickview.cpp:622`) stand
+
+```c
+if (strEditText != nickname->GetName())
+{
+    if (!CNickname::IsValidNickName(strEditText)) { MessageBeep(0); ASSERT(0); }
+    return;
+}
+```
+
+Das `return` griff **immer**, sobald sich der Name geändert hatte — nicht nur
+im Fehlerfall. Im Freigabebau ist `ASSERT(0)` nichts, der Abbruch also stumm;
+dieselbe Klasse wie [E-83](BEFUNDE.md#e-83). Dass es trotzdem meistens ging,
+lag allein daran, dass jeder Tastendruck den Namen schon mitgeführt hatte.
+Jetzt wird beim **Fokusverlust** die Eingabe übernommen, beim Fokusgewinn
+bleibt es beim alten Verhalten (dort kann das Feld noch den Text des vorher
+gewählten Eintrags tragen), und der Prüfmodus wird auf jedem Ausgang
+zurückgesetzt.
+
+### Gemessen
+
+Am laufenden Programm, je drei Läufe mit frischem Prüfstand, Prüfgröße ist der
+Inhalt von `Mailverzeichnis\NNdbase.txt` nach *New* → `hans` eintippen →
+Fokus weg → beenden:
+
+| Fassung | Ergebnis |
+|---|---|
+| ausgeliefert **1.0.118** | 3 × `alias Untitled` |
+| **diese Fassung** | 3 × `alias hans` |
+
+Dazu im Code abgelesen: *„nach SelectItem allein: NICHT ausgewaehlt"*,
+*„nach DoSelectItem: ausgewaehlt"*, und `Auswahl im Baum` von `(0)` auf `(1)`.
+
+**243 Tests, 243 bestanden** — die Suite deckt diesen Weg allerdings **nicht**
+ab; der Beleg ist die Messung am laufenden Programm.
+
 ## 7.2.0.118 — eine fehlgeschlagene Rückfrage übernahm das fremde Verzeichnis ([E-132](BEFUNDE.md#e-132))
 
 Vier Behebungen aus [PRÜFER-42](Befunde/PRUEFER-42.md), von ihm selbst

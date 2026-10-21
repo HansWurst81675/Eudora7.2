@@ -625,10 +625,39 @@ void CNicknamesViewRight::NicknameEditChanged(CString strEditText, bool bValidat
 					{
 						if(!CNickname::IsValidNickName(strEditText))
 						{
+							//
+							//	E-134: ASSERT(0) ist im Freigabebau nichts.
+							//	Ein ungueltiger Name wird abgewiesen - hoerbar,
+							//	und ohne den Pruefmodus abgeschaltet zu lassen,
+							//	wie es jeder andere Ausgang dieser Funktion tut.
+							//
 							MessageBeep(0);
-							ASSERT(0);
-						}		
-						return;
+							nickname->SetValidateMode(true);
+							return;
+						}
+
+						if(!bIsKillFocus)
+						{
+							//
+							//	Beim FOKUSGEWINN ist ein Unterschied kein
+							//	Umbenennen: das Feld kann noch den Text des
+							//	vorher gewaehlten Eintrags tragen. Hier bleibt
+							//	es beim alten Verhalten.
+							//
+							nickname->SetValidateMode(true);
+							return;
+						}
+
+						//
+						//	E-134: Beim FOKUSVERLUST ist der Unterschied die
+						//	Eingabe des Anwenders. Frueher stand hier ein
+						//	return ohne Bedingung - die Umbenennung fiel
+						//	stillschweigend aus, sobald der Name sich
+						//	ueberhaupt geaendert hatte. Dass es meistens
+						//	trotzdem ging, lag allein daran, dass jeder
+						//	Tastendruck den Namen schon mitgefuehrt hatte.
+						//
+						nickname->SetName(strEditText);
 					}
 					
 

@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand Paket **1.0.113** (Quellstand 7.2.0.113), am 20.10.2026 um 13:01 UTC als `v1.0.113` veröffentlicht; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
+*Stand **7.2.0.119** / `VERSION` **1.0.119** — am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.119-release`, **nicht veröffentlicht**: der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)). **Veröffentlicht ist `v1.0.117`** (21.10.2026, 07:56:56 UTC); davor `v1.0.113` am 20.10.2026 um 13:01 UTC; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
@@ -60,10 +60,10 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
   gibt den Pfad mit an: `Eudora.exe "C:\…\Mailverzeichnis"`. **Ab 7.2.0.114
   fragt Eudora vorher** und legt ohne Zutun ein eigenes Verzeichnis an — seit
   7.2.0.116 auf allen Startwegen, seit 7.2.0.117 auch bei einem fremden Ordner
-  ohne `Eudora.ini`. **Veröffentlicht ist davon noch nichts** (Stand
-  21.10.2026: jüngstes Release `v1.0.113`); **für `v1.0.113` gilt der Hinweis
-  oben unverändert.** Die Pakete 1.0.115 bis 1.0.117 sind geschnürt und liegen
-  bei Gregor.
+  ohne `Eudora.ini`. **Veröffentlicht ist das seit dem 21.10.2026 als
+  `v1.0.117`** (07:56:56 UTC); **für `v1.0.113` und älter gilt der Hinweis oben
+  unverändert.** Die Pakete 1.0.115 bis 1.0.118 sind geschnürt und liegen bei
+  Gregor; 1.0.119 liegt seit dem 21.10.2026 als Testverzeichnis bei ihm.
 
 **Neu in `v1.0.101` gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
 beim Verschieben in einen IMAP-Ordner vollständig an
@@ -146,7 +146,7 @@ kann jederzeit zurück.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.117`** (veröffentlicht am 21.10.2026 um 09:56 UTC, Marke auf `f546b004`, ZIP `Eudora72-1.0.117-release.zip`, SHA-256 `335751a9…7eeb1a1`): Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt — auf allen Startwegen und auch bei einer kopierten Sicherung ohne `Eudora.ini`. Davor `v1.0.113` (20.10.2026 um 13:01
+* **Das neueste Release ist `v1.0.117`** (veröffentlicht am 21.10.2026 um 07:56:56 UTC, Marke auf `f546b004`, ZIP `Eudora72-1.0.117-release.zip`, SHA-256 `335751a9…7eeb1a1`): Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt — auf allen Startwegen und auch bei einer kopierten Sicherung ohne `Eudora.ini`. Davor `v1.0.113` (20.10.2026 um 13:01
   ohne `Eudora.ini`. Davor erschienen `v1.0.113` und `v1.0.112` am 20.10.2026
   sowie `v1.0.101` am 17.10.2026 — alle drei überholt.
   IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –
@@ -1041,7 +1041,7 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.118` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.119` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
