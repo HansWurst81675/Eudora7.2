@@ -1,6 +1,6 @@
 # Fehlalarm bei Microsoft melden — fertig ausgefüllt
 
-**Stand 20.10.2026.** Gehört zu [E-124](../BEFUNDE.md#e-124). Auf Gregors
+**Stand 21.10.2026** — am 21.10.2026 nachgesehen, der Vorgang steht weiterhin auf *pending*; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../BEFUNDE.md#e-124). Auf Gregors
 Ansage vom 20.10.2026: *„ja, melde den fehlalarm bei microsoft"*.
 
 **Warum das hier als Datei liegt und nicht erledigt ist.** Das Formular

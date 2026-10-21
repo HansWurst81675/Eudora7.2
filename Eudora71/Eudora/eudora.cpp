@@ -3797,9 +3797,30 @@ bool E132IstFremdesVerzeichnis(LPCTSTR pKandidat, LPCTSTR pEigenes, bool bHatEig
 
 	// Liegt der Kandidat UNTERHALB des Programmverzeichnisses, gehoert er uns.
 	// Gross- und Kleinschreibung spielt bei Windows-Pfaden keine Rolle.
-	const size_t nEigen = _tcslen(pEigenes);
-	if (_tcsnicmp(pKandidat, pEigenes, nEigen) == 0)
+	//
+	// ACHTUNG, beide Seiten muessen in derselben Schreibweise ankommen. Die
+	// Registry liefert die 8.3-KURZFORM, ExecutableDir ist lang - der
+	// Aufrufer loest das auf, bevor er hier hereingeht. Ohne das meldet
+	// Eudora sein EIGENES Verzeichnis als fremd (gemessen am 21.10.2026 an
+	// C:\Users\Gregor\EUDORA~1.114\MAILVE~1 gegen
+	// C:\Users\Gregor\Eudora72-1.0.114-release\).
+	size_t nEigen = _tcslen(pEigenes);
+
+	// Ein abschliessender Rueckstrich gehoert nicht zum Namen.
+	while (nEigen > 0 && (pEigenes[nEigen - 1] == '\\' || pEigenes[nEigen - 1] == '/'))
+		nEigen--;
+	if (nEigen == 0)
 		return false;
+
+	if (_tcsnicmp(pKandidat, pEigenes, nEigen) == 0)
+	{
+		// Der Praefix allein genuegt nicht: "C:\Eudora2" faengt mit
+		// "C:\Eudora" an und ist trotzdem ein anderes Verzeichnis. Es muss
+		// dort auch wirklich die Grenze sein.
+		const TCHAR cGrenze = pKandidat[nEigen];
+		if (cGrenze == 0 || cGrenze == '\\' || cGrenze == '/')
+			return false;
+	}
 
 	return true;
 }
@@ -3885,11 +3906,67 @@ void E132AufrufZerlegen(LPCTSTR pAufruf, LPTSTR pVerzeichnis, size_t nVerzeichni
 	}
 }
 
+//
+// BEFUND E-132: beide Seiten des Vergleichs in dieselbe Schreibweise bringen.
+//
+// Die Registry traegt die 8.3-Kurzform, ExecutableDir die Langform. Ohne
+// diese Aufloesung haelt Eudora sein eigenes Verzeichnis fuer fremd und fragt
+// bei jedem Doppelklick - und der Pfad im Fenster ist fuer einen Menschen
+// nicht lesbar (Gregor am 21.10.2026 zum Dialog: "koennen wir den pfad
+// komplett angeben?").
+//
+// GetLongPathName kann scheitern - wenn das Verzeichnis gar nicht existiert
+// zum Beispiel. Es gibt dann 0 zurueck und laesst den Puffer unberuehrt.
+// Deshalb wird in einen eigenen Puffer aufgeloest und nur bei Erfolg
+// uebernommen; der Kurzname ist immer noch besser als ein leerer Pfad.
+//
+static void E132LangerPfad(LPTSTR pPfad, size_t nPfad)
+{
+	if (!pPfad || !*pPfad || nPfad < 2)
+		return;
+
+	TCHAR szLang[MAX_PATH + 1];
+	const DWORD dwLaenge = ::GetLongPathName(pPfad, szLang, MAX_PATH + 1);
+
+	if (dwLaenge > 0 && dwLaenge <= MAX_PATH)
+	{
+		_tcsncpy(pPfad, szLang, nPfad - 1);
+		pPfad[nPfad - 1] = 0;
+	}
+}
+
 BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 {
     HKEY  hkResult;
 	DWORD dwType = REG_SZ;
 	LPCTSTR pHerkunft = "unbekannt";	// fuer den Ueber-Dialog, siehe unten
+
+	//
+	// K1 aus PRUEFER-41: ExecutableDir kann hier LEER sein.
+	//
+	// Gesetzt wird es im ganzen Programm nur an einer Stelle - in GetDirs
+	// (fileutil.cpp:436). Von den drei Aufrufen dieser Funktion lief GetDirs
+	// vorher aber nur bei einem (:1055); bei den anderen beiden (Anhang,
+	// Briefpapier, mailto:, Postfachdatei, Automation) ist es leer.
+	//
+	// Und leer heisst: E132IstFremdesVerzeichnis steigt mit "nicht fremd"
+	// aus, die Rueckfrage kommt nie, und im Protokoll steht eigenes=""
+	// fremd=0 - eine Zeile, die wie eine Entwarnung aussieht. Der Schutz
+	// haette also auf vier von fuenf Startwegen gefehlt.
+	//
+	if (ExecutableDir.IsEmpty())
+	{
+		TCHAR szEigeneDatei[MAX_PATH + 1];
+		if (::GetModuleFileName(AfxGetInstanceHandle(), szEigeneDatei, MAX_PATH + 1))
+		{
+			TCHAR* pLetzterStrich = _tcsrchr(szEigeneDatei, '\\');
+			if (pLetzterStrich)
+			{
+				pLetzterStrich[1] = 0;		// Rueckstrich bleibt stehen, wie in GetDirs
+				ExecutableDir = szEigeneDatei;
+			}
+		}
+	}
 	TCHAR buf[MAX_PATH + 1];
 	TCHAR cmdLine[MAX_PATH + 1];
 	LONG err = 0;
@@ -4012,6 +4089,16 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		E132AufrufZerlegen(buf, szVerzeichnis, sizeof(szVerzeichnis) / sizeof(TCHAR),
 						   szIni, sizeof(szIni) / sizeof(TCHAR));
 
+		// BEIDE Seiten in die Langform, sonst vergleicht man EUDORA~1.114
+		// mit Eudora72-1.0.114-release.
+		E132LangerPfad(szVerzeichnis, sizeof(szVerzeichnis) / sizeof(TCHAR));
+		E132LangerPfad(szIni, sizeof(szIni) / sizeof(TCHAR));
+
+		TCHAR szEigenesLang[MAX_PATH + 1];
+		_tcsncpy(szEigenesLang, ExecutableDir, MAX_PATH);
+		szEigenesLang[MAX_PATH] = 0;
+		E132LangerPfad(szEigenesLang, sizeof(szEigenesLang) / sizeof(TCHAR));
+
 		// Nennt die Registry die Eudora.ini nicht selbst, dann dort, wo Eudora
 		// sie anlegen wuerde.
 		CString szFremdeIni(szIni);
@@ -4024,7 +4111,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		}
 
 		const BOOL bIniDa = FileExistsMT(szFremdeIni);
-		const bool bFremd = E132IstFremdesVerzeichnis(szVerzeichnis, ExecutableDir,
+		const bool bFremd = E132IstFremdesVerzeichnis(szVerzeichnis, szEigenesLang,
 													  bIniDa != FALSE);
 
 		// BEIDE Ausgaenge protokollieren, in EINER Zeile mit allen Werten.
@@ -4034,8 +4121,43 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		CString szSpur;
 		szSpur.Format("E-132 Startverzeichnis: gefunden=\"%s\" ini=\"%s\" da=%d eigenes=\"%s\" fremd=%d",
 					  szVerzeichnis, (LPCTSTR) szFremdeIni, bIniDa ? 1 : 0,
-					  (LPCTSTR) ExecutableDir, bFremd ? 1 : 0);
+					  szEigenesLang, bFremd ? 1 : 0);
 		E132SpurMerken(szSpur);
+
+		//
+		// Gregor am 21.10.2026: "ja, merken". Wer zwei Fassungen
+		// nebeneinander benutzt, bekommt die Frage sonst bei jedem Wechsel.
+		//
+		// Der Merker liegt in der DEudora.ini neben der EXE - die Eudora.ini
+		// kommt dafuer zu spaet, an dieser Stelle ist das Mailverzeichnis
+		// noch gar nicht bekannt. Ohne DEudora.ini wird nichts gemerkt und
+		// jedes Mal gefragt; das ist der sichere Ausgang.
+		//
+		int nGemerkt = 0;		// 0 = nicht gemerkt, IDYES, IDNO
+		if (bFremd && !DefaultINIPath.IsEmpty())
+		{
+			TCHAR szGemerkt[MAX_PATH + 1];
+
+			if (GetPrivateProfileString(CRString(IDS_INISN_SETTINGS),
+					"E132Abgelehnt", "", szGemerkt, sizeof(szGemerkt), DefaultINIPath)
+				&& _tcsicmp(szGemerkt, szVerzeichnis) == 0)
+			{
+				nGemerkt = IDNO;
+			}
+			else if (GetPrivateProfileString(CRString(IDS_INISN_SETTINGS),
+					"E132Angenommen", "", szGemerkt, sizeof(szGemerkt), DefaultINIPath)
+				&& _tcsicmp(szGemerkt, szVerzeichnis) == 0)
+			{
+				nGemerkt = IDYES;
+			}
+
+			if (nGemerkt)
+			{
+				szSpur.Format("E-132 Startverzeichnis: gemerkte Antwort %s fuer \"%s\"",
+							  (nGemerkt == IDNO) ? "Nein" : "Ja", szVerzeichnis);
+				E132SpurMerken(szSpur);
+			}
+		}
 
 		if (bFremd)
 		{
@@ -4047,11 +4169,36 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				"Eudora or Hermes may then fail to start.\n\n"
 				"Yes\tuse that folder anyway\n"
 				"No\tstart with a fresh folder next to this program\n"
-				"Cancel\tquit without changing anything",
+				"Cancel\tquit without changing anything\n\n"
+				"Your answer is remembered for this folder. To be asked "
+				"again, remove the E132Abgelehnt or E132Angenommen line "
+				"from DEudora.ini next to this program.",
 				szVerzeichnis);
 
-			int nWahl = ::MessageBox(NULL, szText, "Eudora 7.2",
+			int nWahl = nGemerkt;
+			if (!nWahl)
+			{
+				nWahl = ::MessageBox(NULL, szText, "Eudora 7.2",
 									 MB_YESNOCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+
+				//
+				// Die Antwort merken, bevor sie ausgewertet wird - auch
+				// "Ja". Nur "Abbrechen" wird nicht gemerkt: wer abbricht,
+				// hat sich nicht entschieden.
+				//
+				if ((nWahl == IDYES || nWahl == IDNO) && !DefaultINIPath.IsEmpty())
+				{
+					WritePrivateProfileString(CRString(IDS_INISN_SETTINGS),
+						(nWahl == IDNO) ? "E132Abgelehnt" : "E132Angenommen",
+						szVerzeichnis, DefaultINIPath);
+
+					// Die jeweils andere Antwort faellt weg, sonst stehen
+					// beide da und die Reihenfolge entscheidet.
+					WritePrivateProfileString(CRString(IDS_INISN_SETTINGS),
+						(nWahl == IDNO) ? "E132Angenommen" : "E132Abgelehnt",
+						NULL, DefaultINIPath);
+				}
+			}
 
 			if (nWahl == IDCANCEL)
 			{
@@ -4079,13 +4226,38 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				if (!FileExistsMT(szProbe))
 					szEigenes = ExecutableDir;
 
+				//
+				// K2 aus PRUEFER-41: GEKLAMMERT, sonst startet Eudora mit
+				// einem Leerzeichen im Programmpfad nach "Nein" gar nicht
+				// mehr - und "Nein" ist die Vorgabe.
+				//
+				// GetDirs liest buf als Befehlszeile und trennt am ersten
+				// Leerzeichen (fileutil.cpp:445). Aus
+				// "C:\Program Files\Eudora72\Mailverzeichnis" wuerde das
+				// Verzeichnis "C:\Program"; CheckMailDirectory scheitert,
+				// GetDirs liefert FALSE, und InitInstance steigt mit einer
+				// zweiten Fehlermeldung aus. QUALCOMM ist dem anderswo mit
+				// GetShortPathName ausgewichen (:3686) - unser Zweig ist der
+				// erste, der einen langen Pfad hineinlegt.
+				//
+				// Eine VOLLSTAENDIG geklammerte Zeichenkette nimmt GetDirs
+				// als EINEN Pfad: das letzte Zeichen ist ein
+				// Anfuehrungszeichen, die Trennung unterbleibt, und
+				// StripQuotesMT raeumt die Klammern wieder weg.
+				//
 				// Der INI-Pfad aus der Registry faellt damit weg; GetDirs()
 				// nimmt dann die Eudora.ini aus dem Verzeichnis selbst.
-				_tcsncpy(buf, szEigenes, sizeof(buf) / sizeof(TCHAR) - 1);
+				//
+				CString szGeklammert;
+				szGeklammert.Format("\"%s\"", (LPCTSTR) szEigenes);
+				_tcsncpy(buf, szGeklammert, sizeof(buf) / sizeof(TCHAR) - 1);
 				buf[sizeof(buf) / sizeof(TCHAR) - 1] = 0;
 
 				pHerkunft = "eigenes Verzeichnis, nach Rueckfrage gewaehlt (E-132)";
-				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"", buf);
+				// szEigenes, nicht buf: buf traegt seit der K2-Behebung die
+				// Klammern, und im Protokoll staende sonst ""C:..."".
+				szSpur.Format("E-132 Startverzeichnis: eigenes gewaehlt=\"%s\"",
+							  (LPCTSTR) szEigenes);
 				E132SpurMerken(szSpur);
 			}
 			else

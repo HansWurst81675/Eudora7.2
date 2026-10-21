@@ -9,7 +9,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > was im Einzelnen gefunden wurde. Der Abschnitt **Wo man weitermachen kann**
 > ganz unten nennt die offenen Enden mit Fundstelle.
 
-## Noch offen (Stand 20.10.2026)
+## Noch offen (Stand 21.10.2026)
 
 | Kennung | | |
 |---|---|---|
@@ -80,6 +80,63 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.115 — E-132: Eudora hielt sein eigenes Mailverzeichnis für fremd
+
+**Gefunden von Gregor am 21.10.2026, zwei Minuten nach dem ersten Start von
+1.0.114** — und zweimal gemeldet, erst als Schönheitsfehler, dann als
+Fehlverhalten:
+
+> *„können wir den pfad komplett angeben?"* — im Fenster stand
+> `C:\Users\Gregor\EUDORA~1.113\MAILVE~1`.
+>
+> *„eudora 0.114 2x gestartet, jedes mal werde ich nach dem verzeichnis
+> gefragt, obwohl schon einmal ein eigenes für 0.114 angelegt wurde. ist es
+> so gewünscht?"*
+
+**Nein, war es nicht.** Eudora schreibt in
+`HKCU\Software\Qualcomm\Eudora\CommandLine\Current` die **8.3-Kurzform**
+(`GetShortPathName`), vergleicht sie in [E-132](BEFUNDE.md#e-132) aber mit
+`ExecutableDir`, und das kommt aus `GetModuleFileName` und ist **lang**:
+
+```
+Kandidat (aus der Registry): C:\Users\Gregor\EUDORA~1.114\MAILVE~1
+Eigenes  (ExecutableDir)   : C:\Users\Gregor\Eudora72-1.0.114-release\
+-> Praefixvergleich schlaegt fehl -> fremd=1
+```
+
+Die beiden stimmen nie überein. Also fragte Eudora bei **jedem** Doppelklick
+nach seinem eigenen, gerade selbst angelegten Verzeichnis — und eine Meldung,
+die immer kommt, liest nach drei Tagen niemand mehr. Betroffen ist jeder
+Installationspfad, der lang genug für einen 8.3-Alias ist, also praktisch
+jeder.
+
+**Behoben:** `E132LangerPfad` löst **beide** Seiten mit `GetLongPathName` auf,
+bevor verglichen wird — im **Aufrufer**, damit `E132IstFremdesVerzeichnis`
+ohne Win32 bleibt und der Prüfstand sie weiter fahren kann. Scheitert die
+Auflösung (das Verzeichnis gibt es nicht mehr), bleibt der Kurzname stehen;
+er ist immer noch besser als ein leerer Pfad. Der Dialog zeigt damit auch den
+**ganzen** Pfad, nicht `EUDORA~1.113` — das war Gregors erste Frage.
+
+**Beim Aufräumen gleich mitgefunden, der umgekehrte Falschalarm:**
+`C:\Eudora2` fängt mit `C:\Eudora` an. Der Präfixvergleich hielt das zweite
+für ein Unterverzeichnis des ersten und hätte bei einem echten
+Nachbarverzeichnis **keine** Rückfrage gestellt — genau dem Fall, vor dem sie
+schützen soll. Jetzt muss hinter dem Präfix auch wirklich die Grenze sein
+(`\`, `/` oder Ende), und ein abschließender Rückstrich zählt nicht zum Namen.
+
+**243 Tests, 243 bestanden** (zwei neue Fälle).
+
+### Warum der Prüfstand das nicht gefunden hat
+
+Mein Prüfpaket lag in `C:\Temp\E132`. Dieser Pfad ist **zu kurz für einen
+8.3-Alias** — Windows legt dort gar keine Kurzform an, und deshalb stimmten
+Registry und `ExecutableDir` zufällig überein. Alle drei Messungen am
+laufenden Programm (*Nein*, *Ja*, *Abbrechen*) liefen durch, die Gegenprobe
+meldete korrekt `fremd=0`, und der Fehler war trotzdem da. **Ein Prüfstand,
+der es sich bequem macht, misst den Fehler weg.** Der Testfall hält beides
+fest: mit aufgelösten Pfaden das richtige Ergebnis, mit der Kurzform das
+falsche.
 
 ## 7.2.0.114 — E-132: Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt
 
