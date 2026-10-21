@@ -8,7 +8,7 @@ metadata:
   modified: 2026-09-13T19:52:29.137Z
 ---
 
-Schranke: tools/pruefe-branch.pl (pre-commit) - weist ab, wenn ein Zweig wt/<name> nicht origin/wt/<name> verfolgt; gegengetestet in beide Richtungen, die 15 Faelle von pruefe-branch-tests.pl bleiben gruen
+Schranke: tools/pruefe-branch.pl (pre-commit) - weist ab, wenn ein Zweig wt/<name> nicht origin/wt/<name> verfolgt; gegengetestet in beide Richtungen, die 15 Faelle von pruefe-branch-tests.pl bleiben gruen. Seit 21.10.2026 laesst sie im pre-push (--streng) genau den Push durch, der das fehlende Gegenstueck anlegt - vorher wies sie den Befehl ab, den sie selbst als Heilung nannte (siehe Nachtrag unten)
 
 ## Der Auslöser
 
@@ -82,3 +82,50 @@ und genau deshalb muss es ausdrücklich sein.
 * **Einen Zustand, an dem parallele Agenten arbeiten, immer mit Uhrzeit
   messen** — und vor dem Urteil noch einmal, weil er sich inzwischen geändert
   haben kann.
+
+## Nachtrag 21.10.2026 — die Schranke wies ihren eigenen Rat ab
+
+Der Arbeitsbaum `wt/chronist-20261021c` war von `origin/main` abgezweigt und
+verfolgte es damit. Gemessen, in dieser Reihenfolge:
+
+```
+$ git commit ...
+  ABBRUCH: 'wt/chronist-20261021c' verfolgt 'origin/main' statt
+  'origin/wt/chronist-20261021c'.
+  Richtigstellen:  git push -u origin wt/chronist-20261021c
+
+$ git push -u origin wt/chronist-20261021c
+  pre-push: ist der Zweigname mit Gregor abgestimmt?
+  ABBRUCH: ... (dieselbe Meldung)
+  error: failed to push some refs
+```
+
+**Die Schranke hat genau den Befehl abgewiesen, den sie als Heilung nannte.**
+Der einzige Ausweg war `--no-verify`, und damit fallen alle anderen Schranken
+desselben Hakens gleich mit aus — eine Prüfung, der man nicht folgen kann, wird
+umgangen, und dann fängt sie auch die Fälle nicht mehr, für die es sie gibt
+([[schranke-gehoert-in-den-haken]], [[pruefstand-kann-blind-sein]]).
+
+Dieselbe Einsicht steht seit dem 07.09.2026 **im Quelltext von
+`tools/gesichert.pl`**, als Kommentar an einer anderen Stelle: *„ein Hinweis,
+dem man nicht folgen kann, ist so schlecht wie ein Fehlalarm."* Dort war der
+Rat `git checkout main`, den ein Arbeitsbaum nicht ausführen kann, solange der
+Hauptbaum darauf steht. Zwei Werkzeuge, dieselbe Falle, sechs Wochen
+auseinander.
+
+**Behoben, indem die Schranke nach dem Serverstand unterscheidet:**
+
+| Lage | Urteil |
+|---|---|
+| `origin/wt/<name>` fehlt, und dies ist der **Push** (`--streng`) | durchlassen und melden — nur dieser Push kann es anlegen |
+| `origin/wt/<name>` fehlt, und dies ist der **Commit** | weiter abweisen; dort ist der Rat ausführbar und kommt früh genug |
+| `origin/wt/<name>` ist **da**, der Zweig verfolgt etwas anderes | abweisen, aber mit dem Rat `git branch --set-upstream-to=…` — der braucht gar keinen Push |
+
+Gegenprobe beide Richtungen: Commit-Lauf Rückgabe 1 (weist weiter ab),
+`--streng`-Lauf Rückgabe 0 — und der Push lief danach ohne `--no-verify` durch.
+
+**Die allgemeine Regel:** eine Schranke, die einen Befehl als Heilung nennt,
+muss diesen Befehl durchlassen. Wer eine Abweisung schreibt, fährt ihren
+eigenen Rat einmal gegen die Lage, für die sie geschrieben ist — das ist
+dieselbe Probe wie in [[auftrag-darf-nicht-loeschen]], wo der Nachfolger
+`merge --ff-only` genau in der Lage scheiterte, für die er gedacht war.

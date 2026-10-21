@@ -282,6 +282,18 @@ Zwei Dinge getan:
    offene Leseweg, der in [E-131](../BEFUNDE.md#e-131) schon steht. In `MELDUNGEN-VON-AUSSEN.md`
    und in [E-131](../BEFUNDE.md#e-131) nachgetragen.
 
+**Nachtrag vom selben Abend:** während dieses Durchgangs ist PR **#130**
+(`e131-muellwert-testfall`) auf `main` gelandet und hat genau das in Tests
+gegossen — zwei Fälle in `Eudora71/Tests/TestE131.cpp` für
+`-682908189`, **mit Gegenprobe**: nimmt man die obere y-Schranke heraus,
+bleiben die fünf vorhandenen Fälle grün und nur die beiden neuen werden rot.
+245 Tests, 245 bestanden. Die Zeile `#102-4` steht auf `main` seither unter
+*Resolved*. **Meine Quelltextlesung und die Messung stimmen überein** — und
+damit ist der Fund hier erledigt: er war nicht aufgeschrieben, jetzt ist er
+es, an beiden Orten. Beim Zusammenführen habe ich `main` den Vortritt
+gelassen (ihre Fassung trägt den laufenden Test) und nur meine Zeile zu
+`#102-3` behalten.
+
 ### <a id="l-49.11"></a>L-49.11 — „Bar10 ist die Suchleiste" ist im Repo nicht nachmessbar (niedrig, keine Änderung)
 
 `MELDUNGEN-VON-AUSSEN.md` und `Releases/ISSUE-102-ABSCHLUSS.md` sagen dem

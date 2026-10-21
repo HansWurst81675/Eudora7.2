@@ -91,4 +91,38 @@ void RunE131Tests(void)
 			"negative Masse: keine Entscheidung");
 	}
 	TT_EndTest();
+
+	// ------------------------------------------------------------- (6)
+	// Gemeldet von aussen: in der Eudora.ini von rjsdotorg stand im
+	// Abschnitt [ToolBar-Bar10] - der Suchleiste - der Wert
+	// MRUFloatYPos=-682908189. Anders als die verwaisten Abschnitte
+	// Bar12..Bar15 liegt Bar10 INNERHALB von Bars=12 und wird bei jedem
+	// Start geladen (Issue #102, Eintrag #102-4 in MELDUNGEN-VON-AUSSEN.md).
+	//
+	// Die Regel war gegen INT_MIN gebaut. Ob sie auch eine beliebige
+	// Muellzahl faengt, war bis zum 21.10.2026 NICHT gemessen - genau das
+	// prueft dieser Fall. Das x daneben ist -1 und fuer sich genommen
+	// gueltig; verworfen werden muss das Paar trotzdem.
+	TT_BeginTest("E-131: beliebiger Muellwert, nicht nur INT_MIN (Issue #102)");
+	{
+		TT_CHECK_MSG(!E131PositionIstBrauchbar(-1, -682908189, L, O, B, H),
+			"MRUFloatYPos=-682908189 aus [ToolBar-Bar10] wird verworfen");
+		TT_CHECK_MSG(E131PositionIstBrauchbar(-1, 300, L, O, B, H),
+			"Gegenprobe: dasselbe x mit brauchbarem y bleibt stehen");
+	}
+	TT_EndTest();
+
+	// ------------------------------------------------------------- (7)
+	// Wo genau liegt die Grenze nach oben? Bei O - H + Luft = 0 - 1294 + 100
+	// = -1194. Diese beiden Faelle halten sie fest: ein Pixel darueber bleibt
+	// stehen, ein Pixel darunter faellt. Ohne sie koennte jemand die Luft
+	// aendern, ohne dass ein Test es merkt.
+	TT_BeginTest("E-131: die Grenze nach oben liegt bei -1194");
+	{
+		TT_CHECK_MSG(E131PositionIstBrauchbar(100, -1193, L, O, B, H),
+			"ein Pixel innerhalb der Grenze bleibt stehen");
+		TT_CHECK_MSG(!E131PositionIstBrauchbar(100, -1195, L, O, B, H),
+			"ein Pixel ausserhalb wird verworfen");
+	}
+	TT_EndTest();
 }

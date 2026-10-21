@@ -178,3 +178,25 @@ Die Berichtigung musste hinterher in einen eigenen Commit.
 - **Wer einem Agenten widerspricht, misst vorher nach** und nennt die Messung
   in derselben Zeile wie den Widerspruch ([[auftrag-darf-nicht-loeschen]],
   Punkt 4).
+
+## Nachtrag 21.10.2026 — drei gesucht, vier gefehlt
+
+Der CHRONIST-Lauf vom Mittag wollte wissen, ob die an diesem Tag gebauten
+Schranken im installierten `pre-commit` angekommen sind. Er suchte sie so:
+
+```sh
+grep -c pruefe-startwege        .git/hooks/pre-commit   # 0
+grep -c pruefe-original-belegt  .git/hooks/pre-commit   # 0
+grep -c pruefe-messziel         .git/hooks/pre-commit   # 0
+```
+
+Drei Namen, drei Lücken — und das Urteil lautete *„drei Schranken fehlen"*.
+Gemessen hat der Lauf am Abend, mit dem Umfang aus der Quelle
+(`tools/pruefe-haken-aktuell.pl` liest alle `schranke …`-Zeilen aus
+`tools/hooks-einrichten.sh`): **40 im Quelltext, 36 im Haken, vier fehlen.**
+Die vierte war `pruefe-auspacken.pl` vom Vortag.
+
+Die Handsuche war nicht schlampig, sie war **vollständig für das, was man
+wusste**. Genau das ist der Punkt dieser Lehre: eine Liste von Hand prüft die
+eigene Erinnerung, nicht den Bestand. Und sie meldet dabei eine Zahl, der man
+glaubt — „drei" klang nach einem Befund, nicht nach einer Teilmenge.
