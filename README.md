@@ -35,7 +35,7 @@ verschickt.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.120** / `VERSION` **1.0.120** — übersetzt, **noch nicht geschnürt und nicht veröffentlicht**: die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). Davor **1.0.119**, am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.119-release`, nicht veröffentlicht: der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)). **Veröffentlicht ist `v1.0.117`** (21.10.2026, 07:56:56 UTC); davor `v1.0.113` am 20.10.2026 um 13:01 UTC; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
+*Stand **7.2.0.120** / `VERSION` **1.0.120** — am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.120-release`, **nicht veröffentlicht**: die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). Davor **1.0.119**, am 21.10.2026 geschnürt nach `C:\Users\Gregor\Eudora72-1.0.119-release`, nicht veröffentlicht: der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)). **Veröffentlicht ist `v1.0.117`** (21.10.2026, 07:56:56 UTC); davor `v1.0.113` am 20.10.2026 um 13:01 UTC; davor am selben Tag um 11:55 UTC `v1.0.112` (Quellstand 7.2.0.112); davor `v1.0.101` vom 17.10.2026. Die ausführliche
 Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
 [Was es nicht kann](#was-es-nicht-kann), jede Messung in
 [BEFUNDE.md](BEFUNDE.md).*
