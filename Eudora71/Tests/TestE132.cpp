@@ -211,6 +211,20 @@ void RunE132Tests(void)
 			"genau dasselbe Verzeichnis");
 		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Eudora\\Mail", "C:\\Eudora\\", true),
 			"mit abschliessendem Rueckstrich");
+
+		// PRUEFER-42 K6: DIE Form, fuer die PRUEFER-41 K13 geschrieben
+		// wurde, stand in keinem Test - Kandidat OHNE, Eigenes MIT
+		// Rueckstrich. Genau so liefern die beiden Seiten es:
+		// RegisterCommandLine streicht den Rueckstrich vor dem Schreiben
+		// (eudora.cpp:3681-3684), GetDirs haengt ihn an ExecutableDir an
+		// (fileutil.cpp:435). Liegt das Mailverzeichnis IM
+		// Programmverzeichnis - der gewoehnliche Eudora-Aufbau mit der
+		// Eudora.ini neben der EXE -, dann sind beide Pfade dasselbe
+		// Verzeichnis und unterscheiden sich NUR im Rueckstrich.
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Eudora", "C:\\Eudora\\", true),
+			"Registry ohne Rueckstrich gegen ExecutableDir mit - dasselbe Verzeichnis");
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Eudora\\", "C:\\Eudora", true),
+			"und andersherum");
 	}
 	TT_EndTest();
 }
