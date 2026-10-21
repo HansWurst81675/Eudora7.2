@@ -33,6 +33,26 @@ use warnings;
 # paket-bauen.ps1 anfasst - siehe Arbeitsweise/pruefumfang-nicht-von-hand.md.
 #
 # ---------------------------------------------------------------------------
+# WOFUER ES NICHT ZUSTAENDIG IST (Nachtrag 21.10.2026, CHRONIST)
+# ---------------------------------------------------------------------------
+#
+# Am 21.10.2026 abends wollte Gregor das GitHub-Release zu 1.0.120 fertig
+# haben. Das Paket war seit Stunden gebaut. Gelaufen ist trotzdem DIESES
+# Werkzeug; es wies ab (LEKTOR faellig), und daraufhin wurden Rollen und
+# Arbeitsbaeume sortiert, statt zu veroeffentlichen. Gregor: "was ist das
+# wieder fuer chaos? wir bauen es doch nicht zum ersten mal."
+#
+# Diese Schranke steht vor dem BAUEN eines Pakets. Ihre Liste kommt aus
+# paket-bauen.ps1 und sagt ueber jeden anderen Schritt genau nichts. Das
+# Veroeffentlichen hat ein eigenes Tor mit eigenen Voraussetzungen:
+# tools/release-veroeffentlichen.ps1 (tools/WERKZEUGE.md, Zeile 123). Die
+# Abweisung hier ist kein Urteil darueber.
+#
+# Deshalb nennt die Ausgabe seither in BEIDEN Faellen ihren Umfang. Eine
+# Schranke, die nicht sagt, wovor sie steht, wird fuer das Tor des naechsten
+# Schritts gehalten (Arbeitsweise/tor-gehoert-zum-schritt.md).
+#
+# ---------------------------------------------------------------------------
 # AUFRUF
 # ---------------------------------------------------------------------------
 #
@@ -78,9 +98,11 @@ my $perl = $^X;
 # --- Fahren ----------------------------------------------------------------
 unless ($knapp) {
     print "\n  ------------------------------------------------------------\n";
-    print "  paket-bereit - alle Schranken vor dem Paket\n";
+    print "  paket-bereit - alle Schranken vor dem BAUEN eines Pakets\n";
     print "  ------------------------------------------------------------\n";
-    printf "  %d Schranke(n), gelesen aus paket-bauen.ps1\n\n", scalar @pruefer;
+    printf "  %d Schranke(n), gelesen aus paket-bauen.ps1\n", scalar @pruefer;
+    print "  Nicht zustaendig fuers Veroeffentlichen - dafuer gibt es\n";
+    print "  tools/release-veroeffentlichen.ps1 mit eigenen Voraussetzungen.\n\n";
 }
 
 my (@mangel, @frei, @fehlt);
@@ -136,7 +158,9 @@ if (@fehlt) {
 }
 
 unless (@mangel) {
-    print "  Alle Schranken frei - das Paket kann gebaut werden.\n\n";
+    print "  Alle Schranken frei - das Paket kann GEBAUT werden.\n";
+    print "  (Ueber das Veroeffentlichen sagt das nichts:\n";
+    print "   tools/release-veroeffentlichen.ps1 ist ein eigenes Tor.)\n\n";
     exit 0;
 }
 
@@ -148,6 +172,14 @@ for my $m (@mangel) {
 }
 
 print <<'ENDE';
+  Wovor diese Schranke steht: vor dem BAUEN eines Pakets. Ueber andere
+  Schritte sagt sie nichts. Ein schon gebautes Paket VEROEFFENTLICHEN
+  geht durch tools/release-veroeffentlichen.ps1 und hat eigene
+  Voraussetzungen (Gregors Freigabe, CHANGELOG-Bestaetigung, Nummern,
+  ZIP). Am 21.10.2026 hat die Abweisung hier das Veroeffentlichen von
+  1.0.120 aufgehalten, obwohl das Paket seit Stunden fertig war -
+  Gregor: "was ist das wieder fuer chaos?"
+
   Alle Maengel auf einmal, nicht einer nach dem anderen: paket-bauen.ps1
   steigt bei der ersten Schranke aus, und wer vier Maengel hat, braucht
   sonst vier Anlaeufe. Gregor am 13.09.2026: "du hast nach mind. 51

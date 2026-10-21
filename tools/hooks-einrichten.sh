@@ -100,6 +100,29 @@ if [ -f "$WURZEL/tools/pruefe-kennung-suche.pl" ]; then
   perl "$WURZEL/tools/pruefe-kennung-suche.pl" 2>/dev/null | sed 's/^/pre-commit: /'
 fi
 
+# 1e. Verweise nach aussen, die heute noch ins Leere zeigen, MELDEN - nicht
+#     abweisen. Ein Entwurf darf einen Verweis tragen, dessen Ziel noch auf
+#     dem Zweig liegt; abzuschicken ist er erst nach dem Merge. Eine
+#     Abweisung hier wuerde das normale Arbeiten blockieren und die
+#     Schranke damit entwaffnen (Arbeitsweise/schranke-gehoert-in-den-haken.md).
+#
+#     Am 21.10.2026 um 21:33 ging ein Beitrag an Issue 102 hinaus, der auf
+#     blob/main/MELDUNGEN-VON-AUSSEN.md verwies. Die Datei kam erst um
+#     21:36:59 mit dem Merge von PR 128 auf main an - drei Minuten 404,
+#     gefunden hat es Gregor. Es war das ZWEITE Mal; dieselbe Falle steht in
+#     Releases/ISSUE-102-ANTWORT.md Zeile 14 schon aufgeschrieben
+#     (Arbeitsweise/verweis-erst-nach-dem-merge.md).
+#
+#     Der Commit mit dem Entwurf lief um 21:25, acht Minuten vor dem
+#     Abschicken - dieser Hinweis waere also rechtzeitig gekommen.
+#     Gegenprobe: --selbsttest, 16 Faelle; --stand 80b472aa (main um 21:33)
+#     weist Releases/ISSUE-102-ABSCHLUSS.md ab, derselbe Lauf gegen
+#     origin/main von heute nicht.
+if [ -f "$WURZEL/tools/pruefe-aussenverweise.pl" ]; then
+  perl "$WURZEL/tools/pruefe-aussenverweise.pl" --hinweis 2>/dev/null \
+    | grep -E "MANGEL|  -> " | head -6 | sed 's/^/pre-commit: /'
+fi
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #
