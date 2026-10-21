@@ -86,6 +86,28 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 Zwei Funde aus [PRÜFER-41](Befunde/PRUEFER-41.md), beide an Stellen, die erst
 gestern und heute entstanden sind.
 
+### Von Gregor freigegeben
+
+**Am 21.10.2026 zur Veröffentlichung freigegeben:** *„ja, release 1.0.117 auf
+github"*.
+
+Seine Begründung, warum er diese Fassung nicht noch einmal eigens testet:
+*„wenn es identisch zu 0.116 ist, muß ich ja nichts testen, das hast du
+bereits gemacht."* **Das stimmte in dem Augenblick nicht** — zu dem Zeitpunkt
+war nur gebaut und die Testsammlung gefahren. Die beiden Behebungen sind
+**danach** am laufenden Programm gemessen worden, rot und grün, an einem
+fremden Verzeichnis ohne `Eudora.ini`; erst damit trägt sein Satz.
+
+**Bestätigt hat er 1.0.116** (*„2x nacheinander starten verhält sich jetzt
+korrekt"*), und 1.0.117 unterscheidet sich davon nur durch die beiden oben
+beschriebenen Behebungen.
+
+**Nachgerechnet vor der Veröffentlichung:** [PRÜFER-42](Befunde/PRUEFER-42.md)
+— acht Funde, keiner hält das Paket auf, Urteil *„JA — v1.0.117 geht so
+raus"*. [LEKTOR-46](Befunde/LEKTOR-46.md) — sieben Funde in den Papieren, alle
+berichtigt, Urteil *„JA"*. Der schwerste war meiner: die Prüfsumme des
+ausgelieferten ZIPs stand in den Release-Notizen eines **anderen** Pakets.
+
 ### Gefragt wurde nur, wenn im fremden Verzeichnis eine `Eudora.ini` lag
 
 Das ist zu eng. Sagt der Anwender *Ja*, legt Eudora in diesem Verzeichnis
