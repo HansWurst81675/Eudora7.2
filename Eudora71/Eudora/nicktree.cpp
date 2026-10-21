@@ -2939,6 +2939,16 @@ long CNicknamesTreeCtrl::OnRightButtonDown(WPARAM wParam, LPARAM lParam)
 			//
 			DoDeselectAll();
 			SelectItem(tvhit.hItem);
+
+			//
+			//	PRUEFER-43 K9, dieselbe Ursache wie E-134: SelectItem()
+			//	tut nichts, wenn das Element schon die Karette traegt -
+			//	dann bleibt TVIS_SELECTED geloescht, und darauf steht
+			//	IsItemSelected(). Folge: der Rechtsklick waehlt nicht
+			//	aus, und das Kontextmenue bleibt ausgegraut.
+			//
+			DoSelectItem(tvhit.hItem, TRUE);
+			EvaluateSelection();
 		}
 	}
 	else

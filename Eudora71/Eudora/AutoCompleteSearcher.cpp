@@ -531,15 +531,40 @@ void AutoCompleterListBox::ReCalcACListBoxPos()
 {
 	CRect rct, rct2;
 	
-	m_AutoCompList->GetClientRect(rct2);
+	//
+	//	E-135: Hier stand GetClientRect und darauf "+ 6".
+	//
+	//	Die Funktion setzt mit MoveWindow das AUSSENmass, las aber das
+	//	INNENmass. Der nichtklientische Rand ist breiter als die sechs
+	//	Pixel, die der urspruengliche Verfasser dazugerechnet hat - sein
+	//	Kommentar lautete "Why 6? I haven't a clue." Also wurde das
+	//	Fenster bei jedem Aufruf kleiner, und der naechste Aufruf las den
+	//	schon geschrumpften Innenraum und zog erneut ab.
+	//
+	//	Gemessen am 21.10.2026 am laufenden Programm (Paket 1.0.119,
+	//	tools/messen-e135.ps1): Rahmen 14 Pixel, also 8 Pixel Verlust je
+	//	Aufruf. Pro Cursor-Schritt wird zweimal gerufen - aus OnArrowKey
+	//	und aus dem SetControlToItem, das OnArrowKey selbst ausloest -,
+	//	macht 16 Pixel je Schritt in Hoehe UND Breite:
+	//
+	//	    Schritt 0   100 x 62      Schritt 3    52 x 14
+	//	    Schritt 1    84 x 46      Schritt 4    36 x 14
+	//	    Schritt 2    68 x 30      Schritt 5    20 x 14
+	//
+	//	Nach fuenf Cursor-Schritten war von der Liste nichts mehr zu sehen.
+	//
+	//	Jetzt wird das Aussenmass gegen das Aussenmass gerechnet - genau
+	//	wie in InitList(), das aus demselben Grund GetWindowRect benutzt
+	//	und deshalb nie geschrumpft ist. Die GROESSE setzt InitList; diese
+	//	Funktion heisst ...Pos und verschiebt nur noch.
+	//
+	m_AutoCompList->GetWindowRect(rct2);
 
 	((CHeaderField*)m_pEditControl)->GetACListWindowRect(rct);
 
 	rct.top = rct.bottom - 1;
-	rct.bottom = rct.top + (rct2.bottom - rct2.top) + 6; // Why 6? I haven't  a clue. I imagine it's because
-														 // the border around the window is 3 pixels? I dunno.
-														 // Hopefully I'll be able to fix this.
-	rct.right = rct.left + (rct2.right - rct2.left) + 6;
+	rct.bottom = rct.top + (rct2.bottom - rct2.top);
+	rct.right = rct.left + (rct2.right - rct2.left);
 
 	AfxGetMainWnd()->ScreenToClient(rct);
 	m_AutoCompList->MoveWindow(rct);

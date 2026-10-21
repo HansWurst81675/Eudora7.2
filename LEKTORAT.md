@@ -1673,3 +1673,49 @@ die *„veröffentlicht ist …"* und *„geschnürt ist …"* gegen `gh release
 `ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen andere
 Dokumente. Sie hätte sechs der zwölf Funde gefangen, darunter alle vier
 schweren.
+
+## Dreiundfünfzigster Durchgang — die Papiere zu 1.0.120, 21.10.2026 nachmittags (Bericht: `Befunde/LEKTOR-48.md`)
+
+**Kein voller Durchgang.** Nur die Papiere zu [E-135](BEFUNDE.md#e-135) und
+dem Stand 7.2.0.120, drei Stunden nach [LEKTOR-47](Befunde/LEKTOR-47.md).
+Dazwischen ist **1.0.119 geschnürt und bei Gregor bereitgestellt worden**
+(13:07), und der Quellstand ist auf 1.0.120 gegangen.
+
+**Der Befund selbst ist die beste Arbeit seit langem.** Alle Messzahlen zu
+[E-135](BEFUNDE.md#e-135) — die Reihe 100×62 bis 20×14, konstant 108×70,
+14 Pixel Rand, zweimal gerufen je Cursor-Schritt, MD5 `b50d9136` gegen
+`1158d27c` — stehen in `BEFUNDE.md`, `CHANGELOG.md`, `Releases/PAKETE.md`,
+`PORTIERUNG.md` und `ZIEL.md` in **derselben** Form; keine einzige war falsch.
+**Drei Lücken stehen ausdrücklich da**, darunter eine widerlegte eigene
+Vorhersage: [PRÜFER-43](Befunde/PRUEFER-43.md#k9) K9 ließ sich an fünf
+Klickhöhen in **beiden** Fassungen nicht nachstellen und ist als **Sicherung**
+eingebaut, nicht als Behebung — fünfmal so aufgeschrieben, jedesmal mit Grund
+([L-48.12](Befunde/LEKTOR-48.md#l-48.12)).
+
+**Elf Funde, wieder alle in der Buchführung ringsum.** `WEITERMACHEN.md:9`
+nannte zum **dritten Mal an einem Tag** zwei Fassungen in derselben Tabelle
+([L-48.1](Befunde/LEKTOR-48.md#l-48.1)), und sein Block *HIER WEITERMACHEN*
+verlangte zum **vierten Mal in Folge** etwas, das es schon gibt — diesmal das
+Paket 1.0.119 von 13:07 ([L-48.2](Befunde/LEKTOR-48.md#l-48.2)). `ZIEL.md:51`
+stand auf 7.2.0.119 ([L-48.3](Befunde/LEKTOR-48.md#l-48.3)), `AUFGABEN.md:3`
+nannte in **einem** Absatz `v1.0.117` und `v1.0.113`
+([L-48.4](Befunde/LEKTOR-48.md#l-48.4)). Der schwerste für Gregor war eine
+**Lücke**: `TESTPLAN.md` trug *„Paket 1.0.120"* im Titel und **keinen
+Handgriff zu [E-135](BEFUNDE.md#e-135)** im Text — [C10](TESTPLAN.md#c10) ist
+angelegt ([L-48.5](Befunde/LEKTOR-48.md#l-48.5)).
+
+**Zwei Schranken lesen Verneinungen nicht.** `pruefe-original-belegt.pl` hielt
+den Satz *„Ob ein Hermes 7.1 sich ebenso verhielt, ist **nicht** gemessen"*
+für den Beleg *„am Original gemessen"* — gemessen an einer eigenen Probe,
+behoben, Selbsttest jetzt **16 von 16**
+([L-48.7](Befunde/LEKTOR-48.md#l-48.7)); offen bleibt, dass sie ein **Zitat**
+eines zurückgenommenen Urteils für ein eigenes hält. `doku-pruefen.pl` las
+denselben Fehler in die andere Richtung
+([L-48.10](Befunde/LEKTOR-48.md#l-48.10)).
+
+**Das Urteil: ja, die Papiere tragen** — nach diesen elf Berichtigungen.
+**Dieselbe Schranke fehlt zum fünften Mal:** die Prüfung aus
+[L-44.11](Befunde/LEKTOR-44.md#l-44.11). Sie hätte in diesem Durchgang
+[L-48.1](Befunde/LEKTOR-48.md#l-48.1) bis
+[L-48.4](Befunde/LEKTOR-48.md#l-48.4) gefangen — **alle vier schweren Funde
+der Buchführung.**

@@ -101,3 +101,28 @@ soll das PRÜFER; ich nenne nur die Lücke.
 Siehe [[daueraufgaben-brauchen-einen-takt]],
 [[lehren-anwenden-nicht-nur-schreiben]], [[schranke-gegentesten]],
 [[anwenderdatei-nicht-erschlagen]] und [[fehlerklassen-abstellen]].
+
+## Nachtrag 21.10.2026: das Werkzeug war da, der Eintrag fehlte
+
+Am Vormittag stand als Mangel im CHRONIST-Bericht: *„Ein Messskript für E-134
+fehlt. Wenn der Adressbuchweg noch einmal gemessen werden muss, fängt die
+Arbeit von vorn an."* Am Nachmittag war der Mangel abgestellt — der Commit
+`f6d525dc` bringt **zwei** Messskripte mit, `tools/messen-e135.ps1` (127
+Zeilen) und `tools/messen-k9.ps1` (82 Zeilen), beide unter
+`tools/testlauf.ps1` lauffähig.
+
+**`tools/WERKZEUGE.md` hat der Commit nicht angefasst.** Damit standen zwei
+Werkzeuge im Repo, die über den Weg, den diese Lehre vorschreibt — *„erst in
+`tools/WERKZEUGE.md` nachsehen"* — nicht zu finden waren. Für einen späteren
+Lauf ist ein unverzeichnetes Werkzeug dasselbe wie keines: er baut es neu.
+Eingetragen wurden beide im CHRONIST-Lauf desselben Tages.
+
+**Regel dazu:** ein neues Werkzeug und seine Zeile in `WERKZEUGE.md` gehören
+in **denselben** Commit, wie Code und Doku ([[doku-bei-jedem-commit-mitziehen]],
+[[doku-parallel-nicht-hinterher]]). Die Probe dauert einen Befehl:
+
+```bash
+git diff --name-only --cached | grep '^tools/' | while read f; do
+    grep -q "$(basename "$f")" tools/WERKZEUGE.md || echo "nicht verzeichnet: $f"
+done
+```
