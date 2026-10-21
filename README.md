@@ -57,10 +57,13 @@ Fassungsgeschichte steht weiter unten in [Was es kann](#was-es-kann) und
   Ordner; es schreibt dann in deren `Eudora.ini` ([E-132](BEFUNDE.md#e-132),
   der Weg hinter [E-131](BEFUNDE.md#e-131)). `Eudora starten.cmd` übergibt das
   Verzeichnis als Argument und verhindert das; wer eine Verknüpfung anlegt,
-  gibt den Pfad mit an: `Eudora.exe "C:\…\Mailverzeichnis"`. **In 7.2.0.114
-  fragt Eudora vorher** und legt ohne Zutun ein eigenes Verzeichnis an; diese
-  Fassung ist aber **noch nicht als Paket geschnürt und nicht veröffentlicht**,
-  für `v1.0.113` gilt der Hinweis oben unverändert.
+  gibt den Pfad mit an: `Eudora.exe "C:\…\Mailverzeichnis"`. **Ab 7.2.0.114
+  fragt Eudora vorher** und legt ohne Zutun ein eigenes Verzeichnis an — seit
+  7.2.0.116 auf allen Startwegen, seit 7.2.0.117 auch bei einem fremden Ordner
+  ohne `Eudora.ini`. **Veröffentlicht ist davon noch nichts** (Stand
+  21.10.2026: jüngstes Release `v1.0.113`); **für `v1.0.113` gilt der Hinweis
+  oben unverändert.** Die Pakete 1.0.115 bis 1.0.117 sind geschnürt und liegen
+  bei Gregor.
 
 **Neu in `v1.0.101` gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
 beim Verschieben in einen IMAP-Ordner vollständig an

@@ -1581,3 +1581,52 @@ Liste in [L-45.5](Befunde/LEKTOR-45.md#l-45.5): vier Punkte erledigt
 Gregors Entscheidung. **Die Frage, ob die veröffentlichte Beschreibung von
 `v1.0.113` berichtigt wird, ist damit zum dritten Mal offen** — sie stand
 schon für `v1.0.112` in [LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43).
+
+## Einundfünfzigster Durchgang — Nachlauf vor der Veröffentlichung von `v1.0.117`, 21.10.2026 (Bericht: `Befunde/LEKTOR-46.md`)
+
+**Kein voller Durchgang.** Nur, was mit dem Paket 1.0.117 nach außen geht oder
+seinen Stand behauptet. Anlass: **1.0.117 soll als `v1.0.117` veröffentlicht
+werden**, auch für den Melder aus
+[Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102). Davor lag
+eine Versionsschleife — 1.0.117 gebaut, auf Gregors Ansage auf 1.0.116
+zurückgebaut, dann stellte sich heraus, dass er das **GitHub-Release** meinte,
+danach wieder 1.0.117.
+
+**Der schwerste Fund: die Prüfsumme des ZIPs, das herausgeht, stand in den
+Release-Notizen eines anderen Pakets** — `335751a9…eb1a1` in
+`Releases/1.0.114/RELEASE-NOTIZEN.md`, mit `sha256sum` als die von
+`Eudora72-1.0.117-release.zip` nachgewiesen. Notizen zu 1.0.117 gab es
+überhaupt keine; ein Release hätte entweder die 1.0.114-Notizen bekommen (241
+statt 243 Tests, kein Wort zu den Behebungen aus 115, 116 und 117) oder gar
+keine. Beides berichtigt, `Releases/1.0.117/RELEASE-NOTIZEN.md` neu angelegt
+([L-46.3](Befunde/LEKTOR-46.md#l-46.3)).
+
+**Die Reste der Versionsschleife, alle berichtigt:** `WEITERMACHEN.md` nannte in
+**derselben Tabelle** 7.2.0.114 und 1.0.117 und forderte unten, 1.0.114 zu
+schnüren und als `v1.0.114` zu veröffentlichen
+([L-46.1](Befunde/LEKTOR-46.md#l-46.1)); der `CHANGELOG` schloss **unter der
+Überschrift 7.2.0.117** mit *„Also 1.0.116"* und einer Tabelle zweier Bauten
+unter einem Namen ([L-46.2](Befunde/LEKTOR-46.md#l-46.2));
+`Releases/PAKETE.md` bewies zum dritten Mal in Folge die Abwesenheit des
+1.0.114-Pakets, das seit 07:07 als ZIP vorliegt
+([L-46.4](Befunde/LEKTOR-46.md#l-46.4)); der Testplan trug 1.0.117 im Titel und
+schickte Gregor an 1.0.115, das er zugleich für ungeschnürt erklärte
+([L-46.5](Befunde/LEKTOR-46.md#l-46.5)); der freigegebene Beitrag an den Melder
+nannte viermal `v1.0.114` ([L-46.6](Befunde/LEKTOR-46.md#l-46.6)); die README
+erklärte die Behebung für ungeschnürt
+([L-46.7](Befunde/LEKTOR-46.md#l-46.7)).
+
+**Die Zahlen stimmen überein** ([L-46.8](Befunde/LEKTOR-46.md#l-46.8)): 243
+Tests in sechs Dokumenten, die rot/grün-Messung (keine Rückfrage und 29
+Einträge in die fremde Sicherung an 1.0.116, Rückfrage an 1.0.117) in vier,
+Defender dreimal am 20.10.2026 in fünf, `v1.0.113` als veröffentlichter Stand
+in fünf. Die einzige Zahl, die nicht stimmte, war die Prüfsumme — und zwar
+nicht ihr Wert, sondern die Datei, in der sie stand.
+
+**Das Urteil: ja, `v1.0.117` darf so veröffentlicht werden** — nach Gregors
+Test, mit `pruefe-release-buchfuehrung.pl` von Hand direkt nach
+`gh release create`, und mit der `RELEASES.md`-Zeile in der Tabelle statt am
+Dateiende. **Ein Muster für eine neue Schranke:** fünf der sieben Funde sind
+Aussagen über den eigenen Auslieferungsstand, und keine der 33 Schranken hat
+eine davon gesehen — sie prüfen Dokumente gegen Dokumente, nie gegen
+`ls Releases/*.zip`, `ls C:\Users\Gregor\Eudora72-*` oder `sha256sum`.

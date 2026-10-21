@@ -2,14 +2,18 @@
 
 **Stand 21.10.2026.** Weiterhin **nicht abgeschickt**.
 
-> **ACHTUNG, bevor dieser Text rausgeht:** er nennt viermal **`v1.0.114`**.
-> Diese Fassung ist nie veröffentlicht worden — Gregor hat am 21.10.2026 beim
-> Testen von 1.0.114 einen Fehler gefunden (Eudora hielt sein eigenes
-> Mailverzeichnis für fremd), behoben in **7.2.0.115**. Die Nummer im Text
-> muss auf die Fassung gesetzt werden, die wirklich veröffentlicht wird.
-> **Das ist die einzige Änderung, die ich ohne neue Freigabe vornehmen würde**
-> — eine Fassungsnummer ist eine Tatsache, kein Wortlaut. Alles andere bleibt,
-> wie Gregor es freigegeben hat.
+> **Die Fassungsnummer steht jetzt auf `v1.0.117`** — vier Stellen, geändert am
+> 21.10.2026 ([LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.6)). Vorher stand
+> viermal `v1.0.114` da; diese Fassung ist nie veröffentlicht worden, Gregor
+> hat beim Testen einen Fehler gefunden (Eudora hielt sein eigenes
+> Mailverzeichnis für fremd), behoben in 7.2.0.115, und darauf folgten
+> 7.2.0.116 und 7.2.0.117. **Nur die Nummer ist geändert** — eine
+> Fassungsnummer ist eine Tatsache, kein Wortlaut; alles andere steht, wie
+> Gregor es am 20.10.2026 freigegeben hat.
+>
+> **Abgeschickt wird der Beitrag erst, wenn `v1.0.117` wirklich
+> veröffentlicht ist** — gemessen am 21.10.2026 gibt es das Tag noch nicht,
+> veröffentlicht ist `v1.0.113`. Vorher zeigen alle vier Verweise ins Leere.
 
 Gehört zu [E-132](../BEFUNDE.md#e-132) und
 [E-131](../BEFUNDE.md#e-131). Ziel:
@@ -19,7 +23,7 @@ Adressat `@rjsdotorg`.
 **Von Gregor am 20.10.2026 freigegeben**, mit einer Änderung: *„statt »lives«
 schreib lieber »is located«"*. Der Text unten trägt sie bereits.
 
-**Noch nicht abgeschickt.** Er nennt `v1.0.114`; abgeschickt wird er erst,
+**Noch nicht abgeschickt.** Er nennt `v1.0.117`; abgeschickt wird er erst,
 wenn es diese Fassung als Release gibt — sonst zeigt der Hinweis ins Leere.
 
 **Warum dieser Text hier liegt und nicht nur im Chat:** ein Chat überlebt kein
@@ -51,7 +55,7 @@ den freigegebenen Wortlaut unten habe ich nicht angefasst.**
    schon als eigener Beitrag im Issue (20.10.2026); *„we found the mechanism
    behind this and fixed it"* ganz oben kann so gelesen werden, als sei auch
    das erledigt.
-3. **Die Bitte, `v1.0.114` neben seiner Installation zu probieren, nennt keine
+3. **Die Bitte, `v1.0.117` neben seiner Installation zu probieren, nennt keine
    Vorsichtsmaßnahme.** Solange die Ursache offen ist
    ([PRÜFER-40](../Befunde/PRUEFER-40.md#k14) K14 nennt mit `Docking=1` ohne Andockkontext
    einen zweiten, ungemessenen Weg zu genau seinem Null-Zeiger), gehört ein
@@ -60,7 +64,7 @@ den freigegebenen Wortlaut unten habe ich nicht angefasst.**
 
 ---
 
-Hi @rjsdotorg — we found the mechanism behind this and fixed it in **v1.0.114**.
+Hi @rjsdotorg — we found the mechanism behind this and fixed it in **v1.0.117**.
 
 **What was happening.** If you start `Eudora.exe` directly instead of via
 `Eudora starten.cmd`, and there is no `Eudora.ini` next to the executable —
@@ -85,7 +89,7 @@ Enter cannot damage an existing installation.
 * *Cancel* → Eudora exits, nothing is touched.
 
 **What we could not test: whether your Hermes 7.1 starts again afterwards.**
-We have no Hermes here. If you can try v1.0.114 alongside your existing
+We have no Hermes here. If you can try v1.0.117 alongside your existing
 installation, that closes the last gap.
 
 Also new: *Help → About Eudora* now shows the INI path, the log path with its
