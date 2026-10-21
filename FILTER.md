@@ -557,8 +557,8 @@ in `Eudora71/Eudora/EudoraRes.rc` im Format
 > `perl tools/pruefe-ini-abschnitte.pl --was <Name>`.
 >
 > Die vollständige Suchreihenfolge — Persönlichkeit, `Eudora.ini`,
-> `DEudora.ini`, eingebauter Wert — steht in [README.md](README.md) unter
-> *Wo ein Schlüssel stehen muss*. Wichtig für diese Tabellen ist daraus nur:
+> `DEudora.ini`, eingebauter Wert — steht in
+> [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Regel 1.2. Wichtig für diese Tabellen ist daraus nur:
 > ein Eintrag im Abschnitt der **aktiven Persönlichkeit** (`[Persona-…]`)
 > schlägt beides — wer dort etwas stehen hat, ändert es dort.
 

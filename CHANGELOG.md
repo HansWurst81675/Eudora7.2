@@ -40,7 +40,7 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 | [**E-90**](BEFUNDE.md#e-90) | **Emoji in Betreffzeilen erscheinen als `?`** | **Gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.** Der Betreff wird korrekt dekodiert; das `?` entsteht erst, weil `ISOTranslate` (`utils.cpp:1439`) nach **CP1252** wandelt und CP1252 kein Emoji kennt. Das ist die bessere von zwei Möglichkeiten — vorher standen Emoji als roher Bytesalat da. Beheben ließe es sich nur mit einem Unicode-Oberflächenweg; Eudora ist durchgehend ANSI/MBCS gebaut |
 | [**E-91**](BEFUNDE.md#e-91) | **zitierte Bereiche stehen bündig im Text**, ohne Randbalken und Einrückung | **Beobachtet, Ursache NICHT gemessen.** Aufgefallen beim Thunderbird-Vergleich zu [E-89](BEFUNDE.md#e-89), nicht eigens untersucht. Offen und ungemessen ist, ob das Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` trug oder nur `>`-Zeilen. Kosmetik, keine Fehlfunktion |
 | [**E-92**](BEFUNDE.md#e-92) | **der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle** | **Beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.** Ein Vergleichsbild aus Eudora zur selben Nachricht liegt **nicht** vor, also ist offen, ob unser Kopf überhaupt abweicht. Die Erzeugungsstelle des eigenen Kopfs ist noch nicht gefunden; `ConConMessage.cpp:1150-1200` ist die **Erkennung** eines fremden Kopfs, nicht die Erzeugung |
-| [**E-47**](BEFUNDE.md#e-47) | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft Adressbuch, LDAP, Ph und S/MIME, **nicht** den Start. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
+| [**E-47**](BEFUNDE.md#e-47) | beim Öffnen der **Kurznamen-/Verzeichnisdienst-Leiste** kommt *„Directory Services unavailable during this session…"* | Ursache belegt: `RegisterCOMObjects()` scheitert, weil `MFC71.DLL` und `MSVCP71.dll` fehlen — von Microsoft nie als Redistributable veröffentlicht. Betrifft die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME, **nicht** den Start und **nicht** das eigene Adressbuch, das in `Eudora.exe` übersetzt ist. **Trifft auch die Junk-Bewertung:** `SpamWatch` und `SpamHeaders` laden aus demselben Grund nicht, also bleibt jede Nachricht bei Punktzahl 0. Keine Behebung in Sicht |
 | [**E-78**](BEFUNDE.md#e-78) | die **Standardanordnung der Leisten wird bei jedem Start nachgezogen**, obwohl der Zustand gespeichert ist | Gefunden beim Nachmessen von [E-70](BEFUNDE.md#e-70) am 10.09.2026. Die Meldung *„für 3 Leiste(n) war keine Lage gespeichert (kein `[ToolBar...]`-Abschnitt)"* stimmt nachweislich nicht: in der `Eudora.ini` stehen dreizehn solche Abschnitte, und die vier Andockleisten tragen ihre Kinderlisten (`Bars=4`, `Bars=3`, `Bars=3`, `Bars=3`). MFC schreibt `Bars=N` nur für eine **nicht leere** Andockleiste (`dockstat.cpp:245`). `SetDockState` wendet den Zustand also nicht an. **Zwei Marken liegen seit 7.2.0.43 im Bau** (Zeilen `E-78 …`) — einschalten mit `LogLevel=58527`. Könnte auch den Vollbild-Punkt darunter erklären |
 | [**E-71**](BEFUNDE.md#e-71) | der **Filterbericht** bleibt nach einem Filterlauf leer | Von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. **Auf seinen Wunsch zurückgestellt:** *„kann aber als ToDo für die nächste version aufgeschrieben werden."* Belegt ist, dass der Lauf trifft und auf den Protokollkanal des Berichts schreibt; zu messen ist `CFilterActions::EndFiltering` |
 | [**E-77**](BEFUNDE.md#e-77) | **IMAP-Postfachnamen mit Umlauten** werden roh angezeigt: `Entw&APw-rfe` statt *Entwürfe* | Von Gregor am 10.09.2026 an 1.0.42 gemeldet. Modifiziertes UTF-7 (RFC 3501, 5.1.3), das Eudora nicht dekodiert — in `Eudora71/` kommt keine UTF-7-Behandlung vor. Bei der Behebung gehört die Gegenrichtung dazu: beim Anlegen und Umbenennen muss der Name wieder kodiert werden |
@@ -82,6 +82,18 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 ---
 
 ## 7.2.0.120 — die Auswahlbox schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135))
+
+> **Veröffentlicht als [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120)**
+> am 21.10.2026 um **19:07:37 UTC**, Marke `30feeae2`, auf GitHub *Latest*.
+> Das Release trägt **drei** Quellstände — 7.2.0.118, 7.2.0.119 und
+> 7.2.0.120 —, weil die beiden mittleren gebaut, aber nie eigens
+> veröffentlicht wurden. Freigabe von Gregor: *„ich habe ja schon alles
+> getestet."* Anhang `Eudora72-1.0.120-release.zip`, 9 381 870 Byte,
+> SHA-256 `26fde414…a6a1`. Notizen:
+> [Releases/1.0.120/RELEASE-NOTIZEN.md](Releases/1.0.120/RELEASE-NOTIZEN.md).
+> *(Nachgetragen am 21.10.2026 abends — dieser Abschnitt sagte bis dahin
+> nichts über das Release, während der Abschnitt 7.2.0.117 es tut;
+> [L-49.15](Befunde/LEKTOR-49.md#l-49.15).)*
 
 Gregor am 21.10.2026 an 1.0.119, während er sein Ziel für diesen Weg
 beschrieb: *„das Fenster wird bei jeder Änderung (z.B. nächster Eintrag)
@@ -373,7 +385,7 @@ verlangt:
 | Paket | `Eudora.exe` | Inhalt | wo es liegt |
 |---|---|---|---|
 | **1.0.116**, 21.10.2026 vormittags | SHA-256 `1454F544…C665E2E6` | Rückfrage auf allen Startwegen, Merker | bei Gregor, von ihm getestet; **nicht veröffentlicht** |
-| **1.0.117**, 21.10.2026 mittags | ZIP-SHA-256 `335751a9…7eeb1a1` | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* | bei Gregor; **die Fassung, die veröffentlicht wird** |
+| **1.0.117**, 21.10.2026 mittags | ZIP-SHA-256 `335751a9…7eeb1a1` | **zusätzlich**: kopierte Sicherung ohne INI, und *„Mail folder from"* | bei Gregor; **die Fassung, die am 21.10.2026 um 07:56:56 UTC als `v1.0.117` veröffentlicht wurde** |
 
 ## 7.2.0.116 — E-132: die Rückfrage greift jetzt auf allen Startwegen, und Eudora merkt sich die Antwort
 

@@ -110,7 +110,7 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 | Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (seit `v1.0.112` veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist; ab 7.2.0.108 wird nach fünf Minuten **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben — das Fenster bleibt offen und der Grund steht in der Statuszeile. Nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](BEFUNDE.md#e-123) |
 | War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](BEFUNDE.md#e-127) |
 | Wird **ohne Serververbindung** in einen IMAP-Ordner verschoben und sofort beendet, zeigt der Zielordner danach nur einen Teil der Nachrichten | nichts – die Nachrichten stehen weiter im Ausgangspostfach | *Rechtsklick auf das Postfach → Show Deleted Messages* macht sie wieder sichtbar, *Message → UnDelete* holt sie zurück; *Message → Purge Messages* dabei **nicht** benutzen – das entfernt sie | [E-129](BEFUNDE.md#e-129) |
-| Adressbuch, LDAP, Ph und S/MIME fehlen (Dialog *„Directory Services unavailable“*) | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
+| **Verzeichnisdienste** (LDAP, Ph, EudoraBk) und S/MIME fehlen — Dialog *„Directory Services unavailable“*. **Das eigene Adressbuch ist davon nicht betroffen** und arbeitet | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](BEFUNDE.md#e-113), [E-116](BEFUNDE.md#e-116) |
 | In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – | [E-122](BEFUNDE.md#e-122) |
@@ -144,10 +144,20 @@ kann jederzeit zurück.
 ## Was es nicht kann
 
 * **Kein fertiges Installationsprogramm.** Es gibt ein ZIP, sonst nichts.
-* **Adressbuch, LDAP, Ph und S/MIME fallen aus.** Diese Teile brauchen
+* **LDAP, Ph, S/MIME und die Suche über den Verzeichnisdienst fallen aus —
+  das eigene Adressbuch nicht.** Diese Teile brauchen
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
-  [**E-47**](BEFUNDE.md#e-47)).
+  [**E-47**](BEFUNDE.md#e-47)). **Nicht gemeint ist das eigene Adressbuch**
+  (*Tools → Address Book*, die Kurznamen-Leiste): es ist in `Eudora.exe`
+  übersetzt — `nickdoc.cpp`, `nicktree.cpp`, `nickpage.cpp` und
+  `NicknamesWazooWnd.cpp` stehen in `Eudora71/Eudora/Eudora.vcxproj` —,
+  braucht kein `MFC71.DLL` und arbeitet; in 1.0.119 und 1.0.120 sind zwei
+  Fehler darin behoben und von Gregor bestätigt
+  ([E-134](BEFUNDE.md#e-134), [E-135](BEFUNDE.md#e-135)). `EudoraBk.dll`
+  klingt nach Adressbuch, ist aber der Protokollanbieter *„EudoraBk
+  Protocol"* des Verzeichnisdienstes
+  (`DirectoryServices/DirectoryServicesUI/inc/RegisterComponentImpl.h:67`).
 * **Eine Filterregel verträgt bloßes Ansehen wieder.** Eine Regel der Form
   *„Junk Score is less than N"* wurde unbrauchbar, sobald man sie im
   Filterfenster anklickte ([**E-67**](BEFUNDE.md#e-67)); die Korrektur steht seit
@@ -676,8 +686,10 @@ LogLevel=25759
 
 > **`[Debug]`, nicht `[Settings]`.** `LogLevel` trägt die Nummer 10802 und
 > fällt damit in den Bereich, den `GetSectionID` dem Abschnitt `[Debug]`
-> zuweist — siehe [Wo ein Schlüssel stehen
-> muss](#wo-ein-schlüssel-stehen-muss). Bis zum 11.09.2026 stand hier
+> zuweist — siehe [EINSTELLUNGEN.md](EINSTELLUNGEN.md), Regel 1.1. Der
+> Abschnitt *Wo ein Schlüssel stehen muss*, auf den hier bis zum 21.10.2026
+> verwiesen wurde, steht seit dem 14.09.2026 nicht mehr in dieser Datei.
+> Bis zum 11.09.2026 stand hier
 > `[Settings]`; das war falsch. Dasselbe gilt für die beiden Nachbarn
 > `LogFileName` (10801) und `LogFileSize` (10803).
 

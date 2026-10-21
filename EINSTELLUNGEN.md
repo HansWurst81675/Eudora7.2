@@ -45,9 +45,12 @@ Wer diese fünf kennt, spart sich die meisten Runden.
 `GetSectionID` (`Eudora71/Eudora/rs.cpp:89-97`) teilt vier Bereiche ein:
 bis 10800 `[Settings]`, 10801–10900 `[Debug]`, 10901–11100
 `[Window Position]`, ab 11101 wieder `[Settings]`. **Ein Eintrag im falschen
-Abschnitt wirkt nicht — ohne jede Meldung.** Die Tabelle, das Beispiel und
-die Geschichte dazu stehen in [README.md](README.md), Abschnitt *Wo ein
-Schlüssel stehen muss*. Wohin ein einzelner Schlüssel gehört, sagt:
+Abschnitt wirkt nicht — ohne jede Meldung.** Das ausgearbeitete Beispiel —
+der Protokollschalter mit der Nummer 10802 — steht in
+[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+Der früher hier genannte Abschnitt *Wo ein Schlüssel stehen muss* ist am
+14.09.2026 aus `README.md` entfernt worden (`beecdb55`); die Bereiche stehen
+seither nur hier. Wohin ein einzelner Schlüssel gehört, sagt:
 
 ```
 perl tools/pruefe-ini-abschnitte.pl --was LogLevel
