@@ -4022,7 +4022,12 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 	// the user has to have installed IE 4.0 or greater (which is always true of Win 98 and Win 2000).
 	if (!*buf)
 	{
-		pHerkunft = "Application Data (nichts in Registry oder DEudora.ini)";
+		// K6 aus PRUEFER-41, Weg 1: NICHT ueberschreiben, wenn oben schon
+		// etwas Genaueres gesetzt wurde. Bei UseAppData=1 steht dort der
+		// Grund, warum wir ueberhaupt hier sind - und der Dialog behauptete
+		// danach, in der DEudora.ini habe nichts gestanden.
+		if (!_tcscmp(pHerkunft, "unbekannt"))
+			pHerkunft = "Application Data (nichts in Registry oder DEudora.ini)";
 		HMODULE hShell32 = GetModuleHandle("Shell32.dll");
 
 		if (!hShell32)
@@ -4110,9 +4115,50 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 			szFremdeIni += CRString(IDS_EUDORA_INI_NAME);
 		}
 
+		//
+		// K5 aus PRUEFER-41: nicht nur nach der Eudora.ini sehen.
+		//
+		// Sagt der Anwender "Ja", legt Eudora in diesem Verzeichnis Attach\,
+		// Embedded\, Postfaecher, eudora.log und beim Beenden eine frische
+		// Eudora.ini an. Eine fremde Einrichtung OHNE INI - eine kopierte
+		// Sicherung, oder eine Installation, deren INI woanders liegt -
+		// wurde deshalb ungefragt in Besitz genommen. Gregors Anforderung
+		// lautet aber: eine vorhandene Installation nimmt keinen Schaden,
+		// und eine Sicherung ist eine vorhandene Installation.
+		//
+		// Ausserdem: geprueft wurde szIni, entschieden wird ueber
+		// szVerzeichnis. Die Registry nennt beide unabhaengig voneinander.
+		// Darum wird jetzt in dem Verzeichnis nachgesehen, um das es geht.
+		//
+		CString szProbe(szVerzeichnis);
+		if (!szProbe.IsEmpty() && szProbe.Right(1) != SLASH)
+			szProbe += SLASH;
+
 		const BOOL bIniDa = FileExistsMT(szFremdeIni);
+		BOOL bEinrichtungDa = bIniDa;
+
+		if (!bEinrichtungDa)
+		{
+			static const TCHAR* const apSpuren[] =
+			{
+				"Eudora.ini",		// die eigene, falls die Registry woanders hinzeigt
+				"In.mbx",			// das Postfach, das es immer gibt
+				"Attach",			// Anhaenge
+				"Embedded"			// eingebettete Bilder
+			};
+
+			for (int i = 0; i < sizeof(apSpuren) / sizeof(apSpuren[0]); i++)
+			{
+				if (FileExistsMT(szProbe + apSpuren[i]))
+				{
+					bEinrichtungDa = TRUE;
+					break;
+				}
+			}
+		}
+
 		const bool bFremd = E132IstFremdesVerzeichnis(szVerzeichnis, szEigenesLang,
-													  bIniDa != FALSE);
+													  bEinrichtungDa != FALSE);
 
 		// BEIDE Ausgaenge protokollieren, in EINER Zeile mit allen Werten.
 		// Am 20.10.2026 blieb die Rueckfrage stumm, und weil nur der Fremdfall
@@ -4120,7 +4166,7 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		// die Stelle ueberhaupt erreicht wurde.
 		CString szSpur;
 		szSpur.Format("E-132 Startverzeichnis: gefunden=\"%s\" ini=\"%s\" da=%d eigenes=\"%s\" fremd=%d",
-					  szVerzeichnis, (LPCTSTR) szFremdeIni, bIniDa ? 1 : 0,
+					  szVerzeichnis, (LPCTSTR) szFremdeIni, bEinrichtungDa ? 1 : 0,
 					  szEigenesLang, bFremd ? 1 : 0);
 		E132SpurMerken(szSpur);
 
@@ -4272,6 +4318,12 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		ErrorDialog(IDS_ERR_CANNOT_START_WITH_ATTACH);
 		return FALSE;
 	}
+
+	// K6 aus PRUEFER-41, Weg 2: ist buf trotz allem leer geblieben, hat
+	// GetDirs das Programmverzeichnis genommen (fileutil.cpp:503) - und
+	// nicht Application Data, was hier sonst noch stuende.
+	if (!*buf)
+		pHerkunft = "Programmverzeichnis (Application Data war nicht erreichbar)";
 
 	// GetDirs hat eben "command line" eingetragen - der Pfad wird ihm ja wie
 	// eine Befehlszeile uebergeben. Hier steht die Wahrheit.
