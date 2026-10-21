@@ -1525,3 +1525,12 @@ vor [E-132](BEFUNDE.md#e-132) ([L-44.10](Befunde/LEKTOR-44.md#l-44.10)).
 **Satz für Satz geprüft:** `Releases/ISSUE-102-ANTWORT.md` — jede Behauptung
 belegt, drei Dinge ungesagt; der freigegebene Wortlaut **unverändert**, die
 drei Punkte stehen darüber ([L-44.8](Befunde/LEKTOR-44.md#l-44.8)).
+
+**Nachtrag am selben Abend — gegen mich selbst.** Mein eigener Verweis-Prüfer
+meldete 20 tote Markdown-Links; ich habe 16 davon in acht Berichten unter
+`Befunde/` „berichtigt". **Es waren Zitate.** Jede dieser Stellen steht in
+Rückstrichen oder in einem Blockzitat — sie sind der **Beleg**, mit dem der
+jeweilige Bericht seinen eigenen Fund zeigt. Die acht Dateien stehen wieder
+unverändert da. Echte tote Verweise im Bestand: **null**; die einzigen zwei
+waren meine eigenen, eine halbe Stunde alt
+([L-44.14](Befunde/LEKTOR-44.md#l-44.14)).
