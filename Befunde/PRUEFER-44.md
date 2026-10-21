@@ -201,13 +201,14 @@ Anzeigefehler, der durch 1.0.120 weder besser noch schlechter wird.
 
 ---
 
-## K3 — `RemoveFirstItem` / `RemoveLastItem`: toter Code, aber mit dem Fehler aus [K2](#k2), nicht mit dem aus E-135. *Hält nicht auf.*
+## K3 — `RemoveFirstItem` / `RemoveLastItem`: toter Code, aber mit dem Fehler aus [K2](#k2), nicht mit dem aus [E-135](../BEFUNDE.md#e-135). *Hält nicht auf.*
 
 **Gemessen (Suche über den ganzen Baum):** beide Funktionen haben außer
 Deklaration (`AutoCompleteSearcher.h:172,173`) und Definition **keine
 Aufrufstelle**. Toter Code.
 
-**Welchen Fehler tragen sie?** Nicht den von E-135: sie lesen mit
+**Welchen Fehler tragen sie?** Nicht den von
+[E-135](../BEFUNDE.md#e-135): sie lesen mit
 `GetWindowRect` das Außenmaß und setzen das Außenmaß — das ist in sich
 stimmig. Sie tragen den Fehler aus [K2](#k2): `GetWindowRect` → `MoveWindow`
 **ohne** `ScreenToClient`. Würde man sie je aufrufen, spränge die Box um
