@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-10-21 13:42 | Papiere zu 1.0.120 |
