@@ -1,6 +1,6 @@
 # Issue #102 — der Beitrag, der nach dem Release abgeschickt wird
 
-**Stand 21.10.2026.** Weiterhin **nicht abgeschickt**.
+**ABGESCHICKT am 21.10.2026**, nachdem `v1.0.117` veröffentlicht war: [Kommentar in #102](https://github.com/HansWurst81675/Eudora7.2/issues/102#issuecomment-6311302743). Gegenüber Gregors Freigabe geändert: die Fassungsnummer (`v1.0.114` → `v1.0.117`, eine Tatsache, kein Wortlaut) und **zwei angehängte Sätze** auf seine Ansage *„ja, anhängen und abschicken"* — die Bitte, vorher `Eudora.ini` und Mailverzeichnis zu sichern, und der Hinweis, dass eine bereits beschädigte `Eudora.ini` dadurch nicht heil wird. **Nicht aufgenommen** (bewusst, siehe unten): dass die Ursache seines Absturzes weiterhin unbelegt ist.
 
 > **Die Fassungsnummer steht jetzt auf `v1.0.117`** — vier Stellen, geändert am
 > 21.10.2026 ([LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.6)). Vorher stand
@@ -101,3 +101,8 @@ One warning: Windows Defender currently flags our executable as
 Microsoft on 2026-10-20 (submission
 `a567fe2a-9f58-47e1-a675-a62733ec538f`). You may need to restore the file from
 quarantine.
+
+**Before you try it:** please back up your `Eudora.ini` and your mail folder
+first. If your existing `Eudora.ini` already contains the bad value, this
+version does not repair it — it only stops writing it; the file is corrected
+the next time that installation saves its window positions.
