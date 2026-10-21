@@ -22,6 +22,12 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 
+# testlauf.ps1 reicht nur -Pfadfilter durch. Damit sich Tippfolge und Zahl der
+# Entf-Schritte trotzdem von aussen setzen lassen, gelten zusaetzlich die
+# Umgebungsvariablen E135_TIPPEN und E135_ENTFERNEN.
+if ($env:E135_TIPPEN)    { $Tippen    = $env:E135_TIPPEN }
+if ($env:E135_ENTFERNEN) { $Entfernen = [int] $env:E135_ENTFERNEN }
+
 Add-Type @"
 using System; using System.Text; using System.Runtime.InteropServices;
 public class E135 {
@@ -37,7 +43,10 @@ public class E135 {
   [DllImport("user32.dll")] public static extern IntPtr SendMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   [DllImport("user32.dll")] public static extern bool PostMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   public delegate bool EP(IntPtr h, IntPtr p);
+  [DllImport("user32.dll")] public static extern IntPtr GetParent(IntPtr h);
+  [DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr h, ref P p);
   [StructLayout(LayoutKind.Sequential)] public struct R { public int L, T, Ri, B; }
+  [StructLayout(LayoutKind.Sequential)] public struct P { public int X, Y; }
 }
 "@
 
@@ -107,7 +116,6 @@ foreach ($k in $kandidaten) {
     $r = Rechteck $k.H
     Write-Host ("E135   Dialog {0} [{1}] {2}x{3} Kinder {4} Liste {5}" -f `
         $k.H, $k.Text, ($r.Ri-$r.L), ($r.B-$r.T), $kinder.Count, $(if($liste){"ja"}else{"nein"}))
-    if ($liste -and -not $box) { $box = $k }
     if ($liste -and -not $box) { $box = $k; $boxliste = $liste }
 }
 if (-not $box) {
@@ -139,14 +147,58 @@ for ($i = 0; $i -le $Schritte; $i++) {
     }
 }
 
+# --- Wo liegt der Nullpunkt des Elternfensters? ----------------------------
+# PRUEFER-44: InitList() (AutoCompleteSearcher.cpp:618) gibt MoveWindow die
+# Koordinaten aus GetWindowRect, also BILDSCHIRMkoordinaten, obwohl
+# IDD_AUTOCOMP WS_CHILD ist und MoveWindow dort ELTERNkoordinaten erwartet.
+# DoACListBox (:516) und ReCalcACListBoxPos (:530) rechnen mit ScreenToClient
+# um. Der Unterschied ist genau der Nullpunkt des Elternfensters - ist der
+# (0,0), fallen beide Rechnungen zusammen und der Mangel bleibt unsichtbar.
+$pt = New-Object E135+P; $pt.X = 0; $pt.Y = 0
+$eltern = [E135]::GetParent($box.H)
+[void][E135]::ClientToScreen($eltern, [ref]$pt)
+Write-Host ("E135 Elternfenster {0} [{1}] Nullpunkt auf dem Bildschirm {2},{3}" -f `
+            $eltern, (Kl $eltern), $pt.X, $pt.Y)
+
 # --- Entf: nimmt einen Eintrag weg und ruft ReCalcACListBoxPos -------------
-# AutoCompleteSearcher.cpp:1160 OnDeleteKey. InitList wird auf diesem Weg NICHT
-# gerufen, die Hoehe kann also nicht mehr nachgezogen werden.
+# AutoCompleteSearcher.cpp:1160 OnDeleteKey. Fuer einen Adressbucheintrag
+# (Bild 1) fragt die Funktion erst mit WarnYesNoDialog(0, IDS_DELETE_AB_ADDRESS)
+# nach - der Dialog wird hier beantwortet, sonst wird nichts entfernt und der
+# Schritt misst nichts (gemessen 21.10.2026: ohne Antwort bleibt es bei 5
+# Eintraegen). Danach ruft OnDeleteKey ReCalcACListBoxPos; InitList wird auf
+# diesem Weg NICHT gerufen, die Hoehe kann also nicht nachgezogen werden.
+function AntworteWarnung($pp, $bekannt) {
+    $neu = AlleFenster $pp | Where-Object {
+        $_.Vis -and $_.Klasse -eq '#32770' -and ($bekannt -notcontains $_.H) }
+    foreach ($d in $neu) {
+        $kn = New-Object System.Collections.ArrayList
+        $cc = [E135+EP]{ param($x,$q) [void]$kn.Add($x); return $true }
+        [void][E135]::EnumChildWindows($d.H,$cc,[IntPtr]::Zero)
+        foreach ($b in $kn) {
+            if ((Kl $b) -eq 'Button') {
+                $t = (Tx $b) -replace '&',''
+                if ($t -match '^(Yes|Ja|OK)$') {
+                    Write-Host ("E135   Dialog [{0}] mit Knopf [{1}] beantwortet" -f $d.Text, $t)
+                    [void][E135]::PostMessageA($b, 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero)   # BM_CLICK
+                    Start-Sleep -Milliseconds 800
+                    return $true
+                }
+            }
+        }
+    }
+    return $false
+}
+
 if ($Entfernen) {
+    $bekannt = (AlleFenster $pp | Where-Object { $_.Vis -and $_.Klasse -eq '#32770' }).H
     for ($d = 1; $d -le $Entfernen; $d++) {
         [void][E135]::PostMessageA($to.H, 0x0100, [IntPtr]0x2E, [IntPtr]1)    # WM_KEYDOWN VK_DELETE
         [void][E135]::PostMessageA($to.H, 0x0101, [IntPtr]0x2E, [IntPtr]1)    # WM_KEYUP
         Start-Sleep -Milliseconds 900
+        if (-not (AntworteWarnung $pp $bekannt)) {
+            Write-Host "E135   Entf $d - KEIN neuer Dialog, Taste kam nicht an oder Bild 0"
+        }
+        Start-Sleep -Milliseconds 700
         Zeile "Entf $d" $box.H $boxliste
     }
 }
