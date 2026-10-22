@@ -93,7 +93,7 @@ my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr a
 my $kennung = qr/[A-Z]{1,3}\d?-\d+[a-z]?/;
 
 my $befunde = lies($quelle);
-my (@offene, %beschreibung, %fehlt, %gesehen);
+my (@offene, %beschreibung, %fehlt, %gemessen, %messnummer, %gesehen);
 
 for my $zeile (split /\n/, $befunde) {
     next unless $zeile =~ /^\|\s*$ANKER\s*\**\s*($kennung)\s*\**\s*\|/;
@@ -159,6 +159,34 @@ for my $zeile (split /\n/, $befunde) {
     next if !$wieder and grep { index($w, $_) >= 0 } @erledigt_wort;
     next unless $bleibt_offen or grep { index($w, $_) >= 0 } @offen_wort;
 
+
+    # ZULETZT GEMESSEN (22.10.2026). Gregor: "wir haben schon heute zig-mal
+    # gemessen ... haben aber immer noch kein klares und sauberes und
+    # vollstaendiges bild, was noch offen ist? wie kommt es? du reportest
+    # punkte, an denen du arbeiten moechtest, ohne zu wissen, ob sie bereits
+    # behoben sind?"
+    #
+    # Er hat recht, und die Ursache ist dieses Werkzeug: es fragt, ob im
+    # Urteil ein Wort wie "offen" steht - nicht, ob das HEUTE noch stimmt.
+    # Die Liste war damit keine Liste kaputter Dinge, sondern eine Liste
+    # nicht nachgezogener Saetze. Zweimal an einem Tag (E-131, E-101) habe
+    # ich angefangen, etwas zu beheben, das laengst behoben war.
+    #
+    # Gemessen am 22.10.2026: von 37 offenen Befunden nannten nur DREI eine
+    # Fassung ab 7.2.0.110, achtzehn gar keine, vier nicht einmal ein Datum.
+    #
+    # Die Marke steht im Urteil und ist ABSICHTLICH streng: nur ein
+    # ausdrueckliches
+    #
+    #     **Zuletzt gemessen: 22.10.2026 an 7.2.0.121**
+    #
+    # zaehlt. Ein Datum irgendwo im Fliesstext zaehlt NICHT - genau solche
+    # Daten haben die Liste jahrelang glaubwuerdig aussehen lassen.
+    if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.0\.\d+)\*\*/) {
+        $gemessen{$k} = "$1 an $2";
+        my ($nr) = $2 =~ /\.(\d+)$/;
+        $messnummer{$k} = $nr;
+    }
     # Die Kurzbeschreibung ist die zweite Spalte, ohne Auszeichnung.
     my $b = $s[2];
     $b =~ s/\*\*//g;
@@ -219,10 +247,38 @@ unless (@offene) {
 # Die laufende Nummer ist die LETZTE Zahl: bei NP3-1 ist es die 1, nicht die 3.
 @offene = sort { my ($x) = $a =~ /(\d+)[a-z]?$/; my ($y) = $b =~ /(\d+)[a-z]?$/; $y <=> $x or $a cmp $b } @offene;
 
+# Wie glaubwuerdig ist der Status? Verglichen wird gegen den Quellstand aus
+# Eudora71/Version.h; fuenf Fassungen Spielraum, damit nicht jeder Bau alle
+# Messungen entwertet.
+my $aktuell = 0;
+if (open my $vh, '<:raw', "$wurzel/Eudora71/Version.h") {
+    local $/;
+    my $v = <$vh>;
+    close $vh;
+    ($aktuell) = $v =~ /EUDORA_BUILD_VERSION\s+"7\.2\.0\.(\d+)"/;
+    $aktuell ||= 0;
+}
+my ($zahl_aktuell, $zahl_alt, $zahl_nie) = (0, 0, 0);
+
 my $soll = '';
 for my $k (@offene) {
     my $f = $fehlt{$k} // '— **nicht aufgeschrieben**';
-    $soll .= "| **$k** | $beschreibung{$k} | $f |\n";
+    # Die dritte Spalte sagt, WIE GLAUBWUERDIG der Status ist. Ohne sie ist
+    # eine Zeile "offen" nur eine Behauptung aus der Vergangenheit.
+    my $g;
+    if (!defined $gemessen{$k}) {
+        $g = '**nie gemessen**';
+        $zahl_nie++;
+    }
+    elsif ($messnummer{$k} >= $aktuell - 5) {
+        $g = $gemessen{$k};
+        $zahl_aktuell++;
+    }
+    else {
+        $g = $gemessen{$k} . ' — **veraltet**';
+        $zahl_alt++;
+    }
+    $soll .= "| **$k** | $beschreibung{$k} | $g | $f |\n";
 }
 
 # --- Gegen Intern/WEITERMACHEN.md halten -----------------------------------------
@@ -270,8 +326,11 @@ my @zuviel = grep { my $n = $_; not grep { $_ eq $n } @offene } sort keys %im_is
 print "\n  ------------------------------------------------------------\n";
 print "  offene-befunde\n";
 print "  ------------------------------------------------------------\n";
-printf "    offen laut Intern/BEFUNDE.md      %2d\n", scalar @offene;
-printf "    in Intern/WEITERMACHEN.md         %2d\n", scalar keys %im_ist;
+printf "    offen laut Intern/BEFUNDE.md  %2d\n", scalar @offene;
+printf "      davon aktuell gemessen      %2d  (ab 7.2.0.%d)\n", $zahl_aktuell, ($aktuell > 5 ? $aktuell - 5 : 0);
+printf "      davon veraltet gemessen     %2d\n", $zahl_alt;
+printf "      davon NIE gemessen          %2d\n", $zahl_nie;
+printf "    in Intern/WEITERMACHEN.md     %2d\n", scalar keys %im_ist;
 
 # ABWEISEN, WENN EIN OFFENER BEFUND NICHT SAGT, WAS NOCH FEHLT (22.10.2026).
 # Gregor, nachdem er sich A-1 angesehen hatte: "was heisst es? was fehlt
@@ -348,7 +407,12 @@ sub block_fuer {
     return $roh;
 }
 
-my $block = "$anfang\n\n| Kennung | worum es geht | was noch fehlt |\n|---|---|---|\n$soll\n$ende";
+my $block = "$anfang
+
+| Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
+|---|---|---|---|
+$soll
+$ende";
 
 # ZWEI ZIELE (22.10.2026). Bis dahin pflegte CHANGELOG.md eine EIGENE Liste
 # "Noch offen" von Hand. Gregor am 22.10.2026: "alles, was als 'offen'
