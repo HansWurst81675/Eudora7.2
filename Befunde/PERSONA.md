@@ -241,7 +241,7 @@ zulässig, solange man beim Verfassen die Persönlichkeit „hans wurst" wählt.
   an die Sortierung, keine Zusicherung.
 - **Der Dialog „Account Settings for &lt;Dominant&gt;" lässt sich mit komplett
   leeren Feldern mit OK schließen** und schreibt dann den leeren Schlüsselblock
-  nach `[Settings]`. Genau so entsteht der Zustand, der [E-17](../BEFUNDE.md#e-17) ausgelöst hat.
+  nach `[Settings]`. Genau so entsteht der Zustand, der [E-17](../Intern/BEFUNDE.md#e-17) ausgelöst hat.
   Eine Plausibilitätsprüfung dort wäre die eigentliche Vorbeugung — eigener
   Auftrag.
 - **`CPersonality::List()` benutzt `m_ListBuf` doppelt** (`persona.cpp:643`

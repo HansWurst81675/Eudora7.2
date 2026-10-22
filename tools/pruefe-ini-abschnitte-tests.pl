@@ -56,7 +56,7 @@ my @faelle = (
 
 	# --- Form 2, am 11.10.2026 nachgetragen -----------------------------
 	# Die sechs Faelle darunter sind genau die, an denen Form 1 vorbeilief.
-	# Der erste ist der Wortlaut, der am 11.10.2026 in AUFGABEN.md stand und
+	# Der erste ist der Wortlaut, der am 11.10.2026 in Intern/AUFGABEN.md stand und
 	# gruen durchging, obwohl LogLevel nach [Debug] gehoert.
 	[ 'Form 2: Abschnitt zuerst, Schluessel danach, ueber zwei Zeilen',
 	  "Einschalten: in `eudora.ini`, Gruppe\n`[Settings]`, `LogLevel=91295` - das ist 25759 plus 65536.\n", 1 ],

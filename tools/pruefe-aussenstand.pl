@@ -13,7 +13,7 @@
 #
 # LEKTOR-44 L-44.11, am 20.10.2026 gemessen: 32 Schranken meldeten gruen,
 # waehrend vier Dokumente unwahr waren - PAKETE.md fuehrte ein Paket, das es
-# nicht gab, WEITERMACHEN.md gab einem Release die Pruefsumme eines anderen,
+# nicht gab, Intern/WEITERMACHEN.md gab einem Release die Pruefsumme eines anderen,
 # README nannte einen behobenen Fehler offen. Jede Schranke war fuer sich zu
 # Recht gruen, denn alle messen Dokumente gegen Dokumente.
 #
@@ -187,10 +187,10 @@ my @nummern = sort { $b <=> $a } map { nummer($_) } keys %da;
 my $ab_nummer = @nummern >= 6 ? $nummern[5] : 0;
 printf "    geprueft ab Paket:       1.0.%d\n", $ab_nummer;
 
-# LEKTORAT.md ist ein Verzeichnis alter Berichte - jede Zeile beschreibt,
+# Intern/LEKTORAT.md ist ein Verzeichnis alter Berichte - jede Zeile beschreibt,
 # was EIN Bericht damals sagte. Ein Archiv behauptet nichts ueber heute,
 # genauso wenig wie Befunde/ und Arbeitsweise/.
-my %ARCHIV = map { $_ => 1 } ('LEKTORAT.md', 'PRUEFBERICHT.md');
+my %ARCHIV = map { $_ => 1 } ('Intern/LEKTORAT.md', 'Intern/PRUEFBERICHT.md');
 
 my @dateien = grep { -f && !$ARCHIV{$_} }
               (glob('*.md'), glob('Releases/*.md'), glob('tools/*.md'));

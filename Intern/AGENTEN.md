@@ -179,7 +179,7 @@ hatte.
    mehr gibt. Am 07.09.2026 waren **16 von 47** MD-Dateien in keinem Lektorat je
    erwähnt, und drei davon trugen Ergebnisse, die anderswo noch als offen
    standen — eines seit fünf Tagen, mit einer Liste der Fundstellen dabei (L-8,
-   Befund [W-2](Befunde/LEKTOR-4.md#w-2) und [W-22](Befunde/LEKTOR-4.md#w-22) in `Befunde/LEKTOR-4.md`). Mechanisch prüft
+   Befund [W-2](../Befunde/LEKTOR-4.md#w-2) und [W-22](../Befunde/LEKTOR-4.md#w-22) in `Befunde/LEKTOR-4.md`). Mechanisch prüft
    `perl tools/doku-pruefen.pl` denselben Umfang; es läuft im `pre-commit` und
    im `pre-push` und weist ab.
 8. **Freigeben**: `arbeitsbaum-frei.pl --freigeben`, und `gesichert.pl` als

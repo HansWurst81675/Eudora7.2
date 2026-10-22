@@ -11,8 +11,8 @@ gemessenen Werte passen Zeile für Zeile zur Quelle. Was ich gefunden habe, lieg
 **neben** den beiden Änderungen:
 
 * **N1 (mittel, nicht neu, seit 7.2.0.85 sichtbar):** Beim Antworten und
-  Weiterleiten macht [E-89](../BEFUNDE.md#e-89) aus `<img width="1200">` (ohne
-  `height`) die vollständige Angabe `width="600" height="1"`. Seit [E-112](../BEFUNDE.md#e-112) wird
+  Weiterleiten macht [E-89](../Intern/BEFUNDE.md#e-89) aus `<img width="1200">` (ohne
+  `height`) die vollständige Angabe `width="600" height="1"`. Seit [E-112](../Intern/BEFUNDE.md#e-112) wird
   die Metadatei in genau dieser Größe geschrieben, also erscheint das Bild als
   Strich, 600 × 1 Punkt. F2 kommt dort gar nicht zum Zug.
   `msgutils.cpp:3655-3658` und `:3663-3669`.
@@ -108,7 +108,7 @@ die eigene Angabe. Daher kam 70×70 als 35×35.
 | Weg | `source_*` vor `MetafileFromImage` | Beleg |
 |---|---|---|
 | Lesen, HTML-Import | Attribute `width`/`height` | `PGHTMIMP.CPP:2059-2062` |
-| Antworten/Weiterleiten ([E-89](../BEFUNDE.md#e-89)) | Attribute des **umgeschriebenen** HTML, gleicher Import | `summary.cpp:1531` → `msgutils.cpp:3739-3742` → `PGHTMIMP.CPP:2059` — **aber siehe N1** |
+| Antworten/Weiterleiten ([E-89](../Intern/BEFUNDE.md#e-89)) | Attribute des **umgeschriebenen** HTML, gleicher Import | `summary.cpp:1531` → `msgutils.cpp:3739-3742` → `PGHTMIMP.CPP:2059` — **aber siehe N1** |
 | Zweitladen desselben Datensatzes | das Zielrechteck des ersten Ladens | `PgEmbeddedImage.cpp:574-578` |
 | `PgNewUrlImageRef` (Verfassen, Emoticon) | `0,0` von allen drei Aufrufern | `PgEmbeddedImage.cpp:166`, `:186`, `:245`, `:1417-1418` |
 | Bild aus Zwischenablage-Bitmap | Bitmapgröße, `image_data` schon gesetzt → kein Laden | `:1630-1631`, `:278` |
@@ -194,17 +194,17 @@ weiter (das hat [P-36](PRUEFER-14.md) schon angemerkt). In den Deckel,
 
 Mit `nHoehe == 0` ergibt die Rechnung 0, und daraus wird **1**. `:3741` schreibt
 dann `height="1"`, weil 1 > 0. Aus `<img width="1200">` wird
-`width="600" height="1"`, eine **vollständige** Angabe. Seit [E-112](../BEFUNDE.md#e-112) malt
+`width="600" height="1"`, eine **vollständige** Angabe. Seit [E-112](../Intern/BEFUNDE.md#e-112) malt
 `E112MetadateiAusDIB` genau 600×1 (`QCGraphics.cpp:154-156`): das Bild wird zum
 Strich. Gegenrichtung `:3663-3669`: bei nur `height="900"` wird aus der
 Breite 0 die Breite 1, also `width="1" height="600"`.
 
 Betroffen ist das Verfassenfenster beim Antworten und Weiterleiten
-(`summary.cpp:1531`). Nach [E-88](../BEFUNDE.md#e-88) geht beim Senden das
+(`summary.cpp:1531`). Nach [E-88](../Intern/BEFUNDE.md#e-88) geht beim Senden das
 Original hinaus, der Empfänger sieht es also vermutlich nicht. Gregor sieht es
 aber im Editor. Vor 7.2.0.85 wurde das Bild in Dateigröße gemalt und blieb
 lesbar. **F2 ist für genau diesen Fall gebaut**, die halbe Angabe, und kommt
-nicht zum Zug, weil [E-89](../BEFUNDE.md#e-89) sie vorher zu einer falschen vollständigen macht.
+nicht zum Zug, weil [E-89](../Intern/BEFUNDE.md#e-89) sie vorher zu einer falschen vollständigen macht.
 
 **Ungemessen:** Kein Test deckt das ab. `TestE89.cpp` hat nur 1200×600 (`:131-143`).
 Das Ergebnis ist aus der Quelle gerechnet und nicht am Prüfstand gefahren.
@@ -234,7 +234,7 @@ den Datensatz** zurück (`PgEmbeddedImage.cpp:1091-1092`).
   `IsRealCID` der neuen CID und an der Aufräumlogik in `PgMsgView::SaveInfo`.
   Das habe ich nicht verfolgt.
 
-Dazu kommt, dass nach [E-88](../BEFUNDE.md#e-88) beim Senden womöglich gar nicht die Editorfassung
+Dazu kommt, dass nach [E-88](../Intern/BEFUNDE.md#e-88) beim Senden womöglich gar nicht die Editorfassung
 hinausgeht. **Messvorschlag:** die Prüfnachricht
 `Testdaten/e112-bilder-groesser-als-angegeben.eml` (zweimal `cid:gross`, zweimal
 `cid:banner`) weiterleiten, als Entwurf speichern bzw. in die Warteschlange
@@ -244,7 +244,7 @@ zählen. Gegenprobe ist derselbe Lauf an 7.2.0.85.
 ### <a id="n3"></a>N3 (niedrig, Restrisiko, durch F1 häufiger): der E-103-Block läuft auch beim `PREPARE` mit dem flüchtigen Embed
 
 Der Block `PgEmbeddedImage.cpp:616-700` hat **keine** Schranke
-`bAllowThreadedFetch`, anders als der E-106-Block (`:805`, [E-107](../BEFUNDE.md#e-107)). Beim
+`bAllowThreadedFetch`, anders als der E-106-Block (`:805`, [E-107](../Intern/BEFUNDE.md#e-107)). Beim
 `PREPARE` ist `embed` der genullte `temp_embed` (`PGEMBED.C:1867`), also
 `embed->style == NULL`. Die Suche `:658-670` vergleicht `embed->style ==
 embed_ptr->style`, und ein ruhendes Embed hat `style == NULL`
@@ -255,7 +255,7 @@ setzt dessen Zeilenhöhe auf die Höhe des neuen Bildes.
 **Gemessen, entlastend:** Im Lauf E112-1085 steht beide Male `gefunden=0 pos=0
 style=0` (Protokollzeilen 223, 227), obwohl schon drei Embeds importiert waren
 (219-221). Vermutlich ist `t_length` während des Imports noch 0. Das habe ich
-nicht nachgeprüft. Der Fehler ist nicht neu (QUALCOMM-Code, schon bei [E-107](../BEFUNDE.md#e-107)
+nicht nachgeprüft. Der Fehler ist nicht neu (QUALCOMM-Code, schon bei [E-107](../Intern/BEFUNDE.md#e-107)
 angemerkt). F1 vervielfacht nur die `PREPARE`-Läufe: einer je `<img>` statt
 einer je URL. **Vorschlag, billig:** `bAllowThreadedFetch &&` auch vor den
 Suchlauf in `:658` setzen. Das `embed`-Setzen davor darf bleiben, weil es nur
@@ -293,7 +293,7 @@ sechs DLLs habe ich nicht verglichen.
 | Freigabe korrekt, keine doppelte? | **ja**, `PGEMBED.C:3058-3076`, `used_ctr` 1 → 0 |
 | Abhängigkeiten vom Teilen | Ladezustand, Löschen, Werbeansicht: keine. Speichern/Senden: möglich (N2, ungemessen) |
 | Paige32.dll nicht gebaut | **belegt** (Projektmappe, Bauprotokoll, Byte-Vergleich N4) |
-| `source_*` trägt vor dem Laden die Angabe | ja, auf allen Wegen. Beim Antworten aber die von [E-89](../BEFUNDE.md#e-89) **verfälschte** (N1) |
+| `source_*` trägt vor dem Laden die Angabe | ja, auf allen Wegen. Beim Antworten aber die von [E-89](../Intern/BEFUNDE.md#e-89) **verfälschte** (N1) |
 | Überschreiben von `source_*` schädlich? | nein, nachgerechnet idempotent, auch über Paige-Strom und Export |
-| [E-103](../BEFUNDE.md#e-103)/[E-106](../BEFUNDE.md#e-106)/`E112Zielrechteck` zusammen | stimmt; doppelte Invalidierung bei http (N5) |
+| [E-103](../Intern/BEFUNDE.md#e-103)/[E-106](../Intern/BEFUNDE.md#e-106)/`E112Zielrechteck` zusammen | stimmt; doppelte Invalidierung bei http (N5) |
 | Messung passt zur Quelle | **ja**, alle fünf Werte, auch die Rundung 57,56 → 58 |

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
@@ -64,12 +64,20 @@ require "$FindBin::Bin/verweise-filtern.pl";
 #
 #   perl tools/pruefe-anzeigetext.pl              # gestagte Aenderung
 #   perl tools/pruefe-anzeigetext.pl --commit ABC
-#   perl tools/pruefe-anzeigetext.pl --datei BEFUNDE.md   # ganzer Bestand
+#   perl tools/pruefe-anzeigetext.pl --datei Intern/BEFUNDE.md   # ganzer Bestand
 #   perl tools/pruefe-anzeigetext.pl --selbsttest
 #
 # Rueckgabe 0 = in Ordnung, 1 = Mangel.
 
-my $DATEI = 'BEFUNDE.md';
+my $DATEI = 'Intern/BEFUNDE.md';
+
+# UMZUG ERKENNEN (22.10.2026). Am 22.10.2026 zogen 16 Dokumente von der
+# Wurzel nach Intern/. Mit nur dem NEUEN Pfad im Pathspec kann git die
+# Umbenennung nicht paaren und meldet die ganze Datei als neu: 8703
+# hinzugefuegte Zeilen statt 35. Diese Schranke haette daraufhin 68
+# Urteile angemahnt, die seit Wochen unveraendert dastehen. Mit beiden
+# Pfaden und -M erkennt git die Umbenennung.
+my $ALTPFAD = ($DATEI =~ m{^Intern/(.+)$}) ? $1 : '';
 
 # --- Woerter, an denen ein englischer Oberflaechentext erkannt wird --------
 #
@@ -98,11 +106,11 @@ my @herkunft = (
 # Zitate aus einer Zeile holen
 # ---------------------------------------------------------------------------
 #
-# BEFUNDE.md benutzt deutsche typografische Anfuehrungszeichen (UTF-8
+# Intern/BEFUNDE.md benutzt deutsche typografische Anfuehrungszeichen (UTF-8
 # E2 80 9E ... E2 80 9C), gelegentlich aber auch gerade. Beide Formen werden
 # gelesen - der erste Selbsttest war gruen, waehrend die Schranke am echten
 # Eintrag stumm blieb, weil mein Testfall typografisch schloss und
-# BEFUNDE.md gerade.
+# Intern/BEFUNDE.md gerade.
 sub zitate {
     my ($zeile) = @_;
     my @z;
@@ -217,7 +225,7 @@ sub zeilen_aus_diff {
     my ($bereich) = @_;
     my $cmd = defined $bereich
             ? "git show $bereich --format= --unified=0 -- $DATEI 2>&1"
-            : "git diff --cached --unified=0 -- $DATEI 2>&1";
+            : "git diff --cached -M --unified=0 -- $DATEI $ALTPFAD 2>&1";
     my (@neu, @alt);
     for my $z (`$cmd`) {
         if ($z =~ /^\+[^+]/) {
@@ -300,7 +308,7 @@ ENDE
 
 if (!@zeilen) {
     print "\n  Nichts zu pruefen: dieser Zuwachs enthaelt keine Zeile aus\n";
-    print "  BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
+    print "  Intern/BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
     exit 0;
 }
 

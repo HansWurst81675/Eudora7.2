@@ -2,7 +2,7 @@
 
 **ABGESCHICKT am 21.10.2026** auf Gregors Freigabe *„beide abschicken und das issue schliessen“*: [Kommentar in #102](https://github.com/HansWurst81675/Eudora7.2/issues/102#issuecomment-6324764209). Der Wortlaut ging unverändert hinaus. **Issue #102 ist danach geschlossen worden** (Grund: completed), mit dem Hinweis, dass die verbliebenen Punkte in [MELDUNGEN-VON-AUSSEN.md](../MELDUNGEN-VON-AUSSEN.md) weitergeführt werden und er jederzeit wieder öffnen kann, falls seine Hermes weiterhin nicht startet.
 
-Gehört zu [E-131](../BEFUNDE.md#e-131), [E-132](../BEFUNDE.md#e-132) und dem
+Gehört zu [E-131](../Intern/BEFUNDE.md#e-131), [E-132](../Intern/BEFUNDE.md#e-132) und dem
 neuen Register [MELDUNGEN-VON-AUSSEN.md](../MELDUNGEN-VON-AUSSEN.md).
 Adressat `@rjsdotorg`.
 

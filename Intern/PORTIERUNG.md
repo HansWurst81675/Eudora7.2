@@ -9,14 +9,14 @@
 > Mensch oder Agent. Sie ist das **Begründungsarchiv** der Portierung: welcher
 > Compilerfehler wodurch entstand, welches Muster wie oft auftrat, welche
 > Entscheidung warum so ausfiel. Sie ist **nicht** der Statusbericht; was jetzt
-> gilt, steht in [ZIEL.md](ZIEL.md), [README.md](README.md) und
-> [CHANGELOG.md](CHANGELOG.md). Gregor hat am 07.09.2026 gefragt *„ist es intern
+> gilt, steht in [ZIEL.md](../ZIEL.md), [README.md](../README.md) und
+> [CHANGELOG.md](../CHANGELOG.md). Gregor hat am 07.09.2026 gefragt *„ist es intern
 > für dich? oder für einen agenten?"* — die Antwort stand bis dahin nirgends
-> (Befund **[W-31](Befunde/LEKTOR-4.md#w-31)**, `Befunde/LEKTOR-4.md`).
+> (Befund **[W-31](../Befunde/LEKTOR-4.md#w-31)**, `Befunde/LEKTOR-4.md`).
 
 Stand: 2026-09-07 · Zweig `wt/lektor` · die Abschnitte *Kurzfassung*, *Blocker
 OT501*, *Umgebung*, *[E-11](BEFUNDE.md#e-11)*, *OpenSSL3* und *Nächster Schritt* sind gegen den
-Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, [L-6](Befunde/LEKTOR.md#l-6), und
+Baum nachgemessen (Befunde `Befunde/LEKTOR-2.md`, [L-6](../Befunde/LEKTOR.md#l-6), und
 `Befunde/LEKTOR-3.md`, L-7). Ältere Messwerte im Rest der Datei nennen ihren
 eigenen Bezugscommit — meist `a807b93` vom 31.08.2026.
 
@@ -34,26 +34,26 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > Port 110 mit STARTTLS. Die Menüs gehen auf ([M-1](BEFUNDE.md#m-1) wirkt), die Bereiche
 > überlagern sich nicht mehr ([A-1](BEFUNDE.md#a-1) wirkt).
 >
-> **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](ZIEL.md)** —
+> **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](../ZIEL.md)** —
 > **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
 > sind fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
 > improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
 > darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: [**E-86**](BEFUNDE.md#e-86)
 > (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77) (IMAP-Postfachnamen roh).
 >
-> **Stand 21.10.2026, Zweig `e-135-vervollstaendigungsbox`:** Quellstand **7.2.0.120**, `VERSION` **1.0.120**, **am 21.10.2026 um 14:14 geschnürt und am selben Tag um 19:07:37 UTC als `v1.0.120` veröffentlicht** — [E-135](BEFUNDE.md#e-135): die Vervollständigungsbox im `To:`-Feld wurde bei jedem Cursor-Schritt kleiner. `ReCalcACListBoxPos` las mit `GetClientRect` das Innenmaß und setzte daraus über `MoveWindow` das Außenmaß, plus sechs Pixel; gemessen ist der Rand 14 Pixel, und gerufen wird zweimal je Schritt. Jetzt Außenmaß gegen Außenmaß, wie in `InitList`. Rot und grün am laufenden Programm gemessen: 100×62 → 20×14 gegen konstant 108×70, zwei verschiedene EXE. Mit drin, aber **nicht gemessen**: [PRÜFER-43 K9](Befunde/PRUEFER-43.md#k9) als Sicherung — die vorhergesagte Wirkung (Rechtsklick wählt nicht aus) war an fünf Klickhöhen in **beiden** Fassungen nicht nachstellbar.
+> **Stand 21.10.2026, Zweig `e-135-vervollstaendigungsbox`:** Quellstand **7.2.0.120**, `VERSION` **1.0.120**, **am 21.10.2026 um 14:14 geschnürt und am selben Tag um 19:07:37 UTC als `v1.0.120` veröffentlicht** — [E-135](BEFUNDE.md#e-135): die Vervollständigungsbox im `To:`-Feld wurde bei jedem Cursor-Schritt kleiner. `ReCalcACListBoxPos` las mit `GetClientRect` das Innenmaß und setzte daraus über `MoveWindow` das Außenmaß, plus sechs Pixel; gemessen ist der Rand 14 Pixel, und gerufen wird zweimal je Schritt. Jetzt Außenmaß gegen Außenmaß, wie in `InitList`. Rot und grün am laufenden Programm gemessen: 100×62 → 20×14 gegen konstant 108×70, zwei verschiedene EXE. Mit drin, aber **nicht gemessen**: [PRÜFER-43 K9](../Befunde/PRUEFER-43.md#k9) als Sicherung — die vorhergesagte Wirkung (Rechtsklick wählt nicht aus) war an fünf Klickhöhen in **beiden** Fassungen nicht nachstellbar.
 >
 > **Stand 21.10.2026, Zweig `e-134-adressbuch-auswahl`:** Quellstand **7.2.0.119**, `VERSION` **1.0.119**, **am 21.10.2026 um 13:07 geschnürt, kein eigenes Release — sein Stand steckt in `v1.0.120`** — [E-134](BEFUNDE.md#e-134): ein neuer Adressbucheintrag nimmt den eingetippten Kurznamen an. `CTreeCtrl::SelectItem()` tut nichts, wenn das Element schon die Karette trägt — auch dann nicht, wenn ein `DoDeselectAll()` davor `TVIS_SELECTED` gelöscht hat (nachgemessen gegen comctl32 5.82 und 6.16, beide gleich); `AddNewNickname` und `NicknameWasChanged` verlassen sich darauf, und letztere läuft bei **jedem** Tastendruck, hat die Karette also immer schon dort. Beide ziehen den Zustand jetzt mit `DoSelectItem(…, TRUE)` nach. **Der Quelltext dieser Dateien ist seit dem initial commit von uns nie angefasst worden** — eine Portierungsfolge ohne eigene Zeile. Dazu das stumme `return` in `NicknameEditChanged`. Dreimal gegengemessen: `alias hans` gegen `alias Untitled` an 1.0.118.
 >
 > **Stand 20.10.2026, Zweig `e-132-fremdes-mailverzeichnis`:** Quellstand **7.2.0.114**, `VERSION` **1.0.114**, **am 21.10.2026 geschnürt und bei Gregor an seinem eigenen Fund gescheitert, nicht veröffentlicht** — [E-132](BEFUNDE.md#e-132): Eudora fragt, bevor es das Mailverzeichnis einer **fremden** Installation übernimmt, das es über `HKCU\Software\Qualcomm\Eudora\CommandLine\Current` gefunden hat; Vorgabe ist das eigene Verzeichnis. Am 20.10.2026 auf allen drei Wegen am laufenden Programm gemessen. Dazu zeigt *Help → About Eudora* INI-Pfad, Default-INI, Protokollpfad mit `LogLevel` und die **Herkunft** des Mailverzeichnisses, mit Knopf *Copy info*.
 >
-> **Stand 20.10.2026, Zweig `e-131-leistenposition`:** Quellstand **7.2.0.113**, `VERSION` **1.0.113**, **am 20.10.2026 um 13:01:36 UTC als `v1.0.113` veröffentlicht** (Marke `ac094f15`, PR #117) — [E-131](BEFUNDE.md#e-131): keine ungültige Schwebeposition (`MRUFloatXPos=-2147483648`) mehr in der `Eudora.ini`. Am Prüfstand rot und grün gemessen, 234 Tests. **Offen bleibt der Leseweg**, und dass dieser Wert den gemeldeten Absturz verursacht hat, ist **nicht** belegt ([PRÜFER-40](Befunde/PRUEFER-40.md#k1) K1).
+> **Stand 20.10.2026, Zweig `e-131-leistenposition`:** Quellstand **7.2.0.113**, `VERSION` **1.0.113**, **am 20.10.2026 um 13:01:36 UTC als `v1.0.113` veröffentlicht** (Marke `ac094f15`, PR #117) — [E-131](BEFUNDE.md#e-131): keine ungültige Schwebeposition (`MRUFloatXPos=-2147483648`) mehr in der `Eudora.ini`. Am Prüfstand rot und grün gemessen, 234 Tests. **Offen bleibt der Leseweg**, und dass dieser Wert den gemeldeten Absturz verursacht hat, ist **nicht** belegt ([PRÜFER-40](../Befunde/PRUEFER-40.md#k1) K1).
 >
-> **Stand 20.10.2026, Zweig `e-123-transfersame`:** Quellstand **7.2.0.112**, `VERSION` **1.0.112**, **am 20.10.2026 um 11:55:10 UTC als `v1.0.112` veröffentlicht** — die Wache beim Beenden zählt **jede** Übertragungsart ([E-123](BEFUNDE.md#e-123)); bis 7.2.0.110 war nur der Weg aus einem **lokalen** Postfach gezählt, eine Verschiebung innerhalb desselben IMAP-Kontos lief an der Wache vorbei. An Gregors Lauf vom 20.10.2026 an **1.0.111** gemessen, Schranke `tools/pruefe-e123-zaehlung.pl` gegengetestet (2 von 2 rot am Fehlerstand). 7.2.0.112 selbst nimmt nur den Hochladezähler aus [PRÜFER-39](Befunde/PRUEFER-39.md) N1 zurück.
+> **Stand 20.10.2026, Zweig `e-123-transfersame`:** Quellstand **7.2.0.112**, `VERSION` **1.0.112**, **am 20.10.2026 um 11:55:10 UTC als `v1.0.112` veröffentlicht** — die Wache beim Beenden zählt **jede** Übertragungsart ([E-123](BEFUNDE.md#e-123)); bis 7.2.0.110 war nur der Weg aus einem **lokalen** Postfach gezählt, eine Verschiebung innerhalb desselben IMAP-Kontos lief an der Wache vorbei. An Gregors Lauf vom 20.10.2026 an **1.0.111** gemessen, Schranke `tools/pruefe-e123-zaehlung.pl` gegengetestet (2 von 2 rot am Fehlerstand). 7.2.0.112 selbst nimmt nur den Hochladezähler aus [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 zurück.
 
-> **Stand 19.10.2026, Zweig `e-69-meldungsflut`:** Quellstand **7.2.0.110**, `VERSION` **1.0.110**, nicht veröffentlicht — [E-69](BEFUNDE.md#e-69) (P3 aus [PRÜFER-36](Befunde/PRUEFER-36.md), dazu R1–R3 aus [PRÜFER-38](Befunde/PRUEFER-38.md)) und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123) (P1, P2, R4); **[E-123](BEFUNDE.md#e-123) selbst bleibt offen**. 229 Tests, 229 bestanden. **7.2.0.109, 7.2.0.108 und 7.2.0.107 wurden übersetzt, aber nie als Paket geschnürt** — ihr Inhalt steckt in 1.0.110. **Die bekannte Regression ist weg:** F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) zu [E-101](BEFUNDE.md#e-101) sind ebenfalls in 7.2.0.110 behoben; offen bleibt F2. Veröffentlicht ist weiterhin `v1.0.101`.
+> **Stand 19.10.2026, Zweig `e-69-meldungsflut`:** Quellstand **7.2.0.110**, `VERSION` **1.0.110**, nicht veröffentlicht — [E-69](BEFUNDE.md#e-69) (P3 aus [PRÜFER-36](../Befunde/PRUEFER-36.md), dazu R1–R3 aus [PRÜFER-38](../Befunde/PRUEFER-38.md)) und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123) (P1, P2, R4); **[E-123](BEFUNDE.md#e-123) selbst bleibt offen**. 229 Tests, 229 bestanden. **7.2.0.109, 7.2.0.108 und 7.2.0.107 wurden übersetzt, aber nie als Paket geschnürt** — ihr Inhalt steckt in 1.0.110. **Die bekannte Regression ist weg:** F1, F3 und F4 aus [PRÜFER-37](../Befunde/PRUEFER-37.md) zu [E-101](BEFUNDE.md#e-101) sind ebenfalls in 7.2.0.110 behoben; offen bleibt F2. Veröffentlicht ist weiterhin `v1.0.101`.
 >
-> **Stand 17.10.2026, Zweig `e-123-beenden-warten`:** Quellstand **7.2.0.106**, `VERSION` **1.0.106**, nicht veröffentlicht — [E-69](BEFUNDE.md#e-69) in Task Errors. Davor 7.2.0.104 — [PRÜFER-35](Befunde/PRUEFER-35.md) eingearbeitet. Davor 7.2.0.103 — [PRÜFER-34](Befunde/PRUEFER-34.md) eingearbeitet. Davor 7.2.0.102 — [E-123](BEFUNDE.md#e-123) Beenden wartet auf IMAP-Übertragungen. Davor 7.2.0.101, veröffentlicht als `v1.0.101` — [PRÜFER-32](Befunde/PRUEFER-32.md) (eigene Kennung für gesendete Post), [E-67](BEFUNDE.md#e-67) gemessen. Davor 7.2.0.100 — [PRÜFER-31](Befunde/PRUEFER-31.md) F1, F3, F4. PR #98 (bis 7.2.0.99) gemergt. Davor 7.2.0.99 — Neubau von 7.2.0.98 ([E-124](BEFUNDE.md#e-124), Defender). Davor 7.2.0.98 — [E-83](BEFUNDE.md#e-83) zweite Ursache (fertige Startaufgabe blieb stehen). Davor 7.2.0.97 — [E-121](BEFUNDE.md#e-121) Kennung 0 wieder hochgeladen, N1 eingebaut. Davor 7.2.0.96 — [E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID. Davor 7.2.0.95 — [E-121](BEFUNDE.md#e-121) Doppelanzeige, fünfter Teil. Davor 7.2.0.94 — [E-121](BEFUNDE.md#e-121) Doppelanzeige, vierter Teil. Davor 7.2.0.93 — [E-121](BEFUNDE.md#e-121) Doppelanzeige bei Servern ohne UIDPLUS. Davor 7.2.0.92 — [E-121](BEFUNDE.md#e-121) Doppelanzeige, zweiter Teil. Davor 7.2.0.91 — [E-121](BEFUNDE.md#e-121): nach dem Verschieben in einen IMAP-Ordner steht die Mail nicht mehr doppelt da. Davor 7.2.0.90 — [E-118](BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder beim Hochladen in einen IMAP-Ordner) und [E-121](BEFUNDE.md#e-121) (Datenverlust beim Verschieben in einen IMAP-Ordner), Testsuite 209/209. Davor 7.2.0.89 — [E-118](BEFUNDE.md#e-118): eine HTML-Mail bekommt beim Hochladen in einen IMAP-Ordner wieder `Content-Type: text/html` (Testsuite 207/207). Davor 7.2.0.88 (gemergt mit PR #97) — [E-105](BEFUNDE.md#e-105): Abschnitte mit `style="display:none"` werden nicht mehr angezeigt (Testsuite 202/202, an der Prüfnachricht gemessen).
+> **Stand 17.10.2026, Zweig `e-123-beenden-warten`:** Quellstand **7.2.0.106**, `VERSION` **1.0.106**, nicht veröffentlicht — [E-69](BEFUNDE.md#e-69) in Task Errors. Davor 7.2.0.104 — [PRÜFER-35](../Befunde/PRUEFER-35.md) eingearbeitet. Davor 7.2.0.103 — [PRÜFER-34](../Befunde/PRUEFER-34.md) eingearbeitet. Davor 7.2.0.102 — [E-123](BEFUNDE.md#e-123) Beenden wartet auf IMAP-Übertragungen. Davor 7.2.0.101, veröffentlicht als `v1.0.101` — [PRÜFER-32](../Befunde/PRUEFER-32.md) (eigene Kennung für gesendete Post), [E-67](BEFUNDE.md#e-67) gemessen. Davor 7.2.0.100 — [PRÜFER-31](../Befunde/PRUEFER-31.md) F1, F3, F4. PR #98 (bis 7.2.0.99) gemergt. Davor 7.2.0.99 — Neubau von 7.2.0.98 ([E-124](BEFUNDE.md#e-124), Defender). Davor 7.2.0.98 — [E-83](BEFUNDE.md#e-83) zweite Ursache (fertige Startaufgabe blieb stehen). Davor 7.2.0.97 — [E-121](BEFUNDE.md#e-121) Kennung 0 wieder hochgeladen, N1 eingebaut. Davor 7.2.0.96 — [E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID. Davor 7.2.0.95 — [E-121](BEFUNDE.md#e-121) Doppelanzeige, fünfter Teil. Davor 7.2.0.94 — [E-121](BEFUNDE.md#e-121) Doppelanzeige, vierter Teil. Davor 7.2.0.93 — [E-121](BEFUNDE.md#e-121) Doppelanzeige bei Servern ohne UIDPLUS. Davor 7.2.0.92 — [E-121](BEFUNDE.md#e-121) Doppelanzeige, zweiter Teil. Davor 7.2.0.91 — [E-121](BEFUNDE.md#e-121): nach dem Verschieben in einen IMAP-Ordner steht die Mail nicht mehr doppelt da. Davor 7.2.0.90 — [E-118](BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder beim Hochladen in einen IMAP-Ordner) und [E-121](BEFUNDE.md#e-121) (Datenverlust beim Verschieben in einen IMAP-Ordner), Testsuite 209/209. Davor 7.2.0.89 — [E-118](BEFUNDE.md#e-118): eine HTML-Mail bekommt beim Hochladen in einen IMAP-Ordner wieder `Content-Type: text/html` (Testsuite 207/207). Davor 7.2.0.88 (gemergt mit PR #97) — [E-105](BEFUNDE.md#e-105): Abschnitte mit `style="display:none"` werden nicht mehr angezeigt (Testsuite 202/202, an der Prüfnachricht gemessen).
 >
 > **Stand 14.10.2026:** Quellstand **7.2.0.87**, `VERSION` **1.0.87**, **veröffentlicht als `v1.0.87`**
 > (14.10.2026, 05:46 UTC, *Latest*, Marke auf `41c6752`, ZIP-SHA-256 `a4f1c28d…904c`,
@@ -70,7 +70,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23
 > N1 und seine Gegenrichtung eingebaut und am Bau `bf96856` gemessen; neu
 > [**E-116**](BEFUNDE.md#e-116). Damals von Gregor noch nicht bestätigt; Einzelheiten in
-> [CHANGELOG.md](CHANGELOG.md), 7.2.0.85. Der Absatz darunter ist der Stand vom 12.10.2026.
+> [CHANGELOG.md](../CHANGELOG.md), 7.2.0.85. Der Absatz darunter ist der Stand vom 12.10.2026.
 >
 > **Stand 12.10.2026:** Quellstand **7.2.0.84**, `VERSION` **1.0.84**, veröffentlicht
 > als **`v1.0.84`** — behebt [**E-94**](BEFUNDE.md#e-94) (Betreff mitten im Wort umbrochen), über POP
@@ -81,7 +81,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > [**AN-2**](BEFUNDE.md#an-2) (Quelltext einer Webseite im Werbefenster) — seit 7.2.0.82 übersetzt,
 > **von Gregor an 1.0.84 am 13.10.2026 bestätigt**. **Veröffentlicht als `v1.0.83`** am
 > 12.10.2026 (davor `v1.0.72`), danach `v1.0.84`. Einzelheiten in
-> [CHANGELOG.md](CHANGELOG.md), 7.2.0.79 bis 7.2.0.83. Der Absatz darunter ist
+> [CHANGELOG.md](../CHANGELOG.md), 7.2.0.79 bis 7.2.0.83. Der Absatz darunter ist
 > der Stand vom 18.09.2026.
 >
 > Stand 18.09.2026, Quellstand **7.2.0.73**, `VERSION` **1.0.73** — eine **Messfassung** zu [E-110](BEFUNDE.md#e-110), die nichts behebt. Der letzte inhaltliche Stand ist **7.2.0.72 / 1.0.72**; er ist als Paket
@@ -100,11 +100,11 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > liegt nur noch als Paket in seinem Testverzeichnis** — bei ihm liegen
 > 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71 und 1.0.72.
 >
-> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.1](Befunde/LEKTOR-15.md#l-15.1)).** Hier stand *„Quellstand
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.1](../Befunde/LEKTOR-15.md#l-15.1)).** Hier stand *„Quellstand
 > **7.2.0.70** / `VERSION` **1.0.70** … **Veröffentlicht** ist bei GitHub
 > `v1.0.64`"*. Gemessen mit `gh release list`: **`v1.0.72`**, als *Latest*
-> markiert, 2026-09-17T20:07:49Z. **Dieselbe Zeile war schon [L-14.2](Befunde/LEKTOR-14.md#l-14.2) und davor
-> [L-13.1](Befunde/LEKTOR-13.md#l-13.1)** — sie trug den Vermerk der vorigen Berichtigung und war trotzdem
+> markiert, 2026-09-17T20:07:49Z. **Dieselbe Zeile war schon [L-14.2](../Befunde/LEKTOR-14.md#l-14.2) und davor
+> [L-13.1](../Befunde/LEKTOR-13.md#l-13.1)** — sie trug den Vermerk der vorigen Berichtigung und war trotzdem
 > wieder falsch, weil das Veröffentlichen selbst kein Anlass ist, der die
 > Dokumente nachzieht.
 > Hier steht bewusst keine zweite Fassung dieser Tabelle.
@@ -160,7 +160,7 @@ Für `Eudora` sind alle 269 ursprünglichen Compilerfehler behoben (Verlauf
 269 - 74 - 25 - 16 - 4 - 0, null seit `3f6877a`), seit `78a9c10` übersetzt die
 Ersatzschicht fehlerfrei mit, und seit `a807b93` bindet die `.exe` ohne ein
 ungelöstes Symbol. Der Verlauf mit Bezugscommits steht in
-[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md), Abschnitt "Der Weg zum Linken".
+[Eudora71/OTShim/PLAN.md](../Eudora71/OTShim/PLAN.md), Abschnitt "Der Weg zum Linken".
 
 Die vier Quelldateien, deren Header vorlagen, deren Implementierung aber in der
 Freigabe fehlte (`TBarBmpCombo.cpp`, `TBarEdit.cpp`, `TBarStatic.cpp`, `spell.cpp`),
@@ -269,7 +269,7 @@ Dasselbe gilt für die zweite Kopie unter `Sandbox/OT501`.
 
 Eudora leitet an **30 Stellen** von **22 verschiedenen** dieser Klassen ab und ruft
 **77 Methoden** auf. Beide Zahlen sind die Zeilenzahlen der Abschnitte 1 und 2 von
-[Eudora71/OTShim/INVENTAR.md](Eudora71/OTShim/INVENTAR.md) und nachgezählt.
+[Eudora71/OTShim/INVENTAR.md](../Eudora71/OTShim/INVENTAR.md) und nachgezählt.
 
 Abschnitt 3 des Inventars listet 52 weitere `SEC`-Bezeichner. **Diese 52 ist keine
 belastbare Zahl** und sollte nicht zitiert werden: sie enthält mindestens zwei
@@ -358,7 +358,7 @@ Registerkarten sind deshalb als eigener Teil der Ersatzschicht ausgeführt
 > `Eudora71/OTShim/OTShim.h:1024,1468` („bleibt fest FALSE") ist ebenfalls
 > überholt — **Quelltext, hier nicht geändert.**
 
-Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
+Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](../Eudora71/OTShim/PLAN.md)**.
 
 > **Nachgetragen am 06.09.2026 (Befund [E-30](BEFUNDE.md#e-30)).** Der Ladeweg der
 > Werkzeugleistenbitmaps geht nicht mehr unmittelbar über
@@ -371,7 +371,7 @@ Stufenplan mit Belegen: **[Eudora71/OTShim/PLAN.md](Eudora71/OTShim/PLAN.md)**.
 > dadurch zu leeren grauen Flächen. Unter VC6 fiel das nicht auf, weil
 > `COLOR_BTNFACE` dort selbst 192,192,192 war. Messung, Behebung und die
 > beiden neuen Testsammlungen stehen in
-> **[Befunde/SYMBOLE.md](Befunde/SYMBOLE.md)**.
+> **[Befunde/SYMBOLE.md](../Befunde/SYMBOLE.md)**.
 
 ## Erledigt: OpenSSL 3.5.8 LTS hinter QCSSL
 
@@ -430,7 +430,7 @@ handelt die Bibliothek stets das höchste beiderseits unterstützte Protokoll au
 
 Header und statische Libs liegen fertig im Repo unter `Eudora71/OpenSSL3`, damit sich
 QCSSL ohne einen 25-minütigen OpenSSL-Lauf übersetzen lässt. Der komplette Bauweg
-steht in [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
+steht in [Eudora71/OpenSSL3/BAUEN.md](../Eudora71/OpenSSL3/BAUEN.md).
 
 Zwei Stolperfallen, die Zeit gekostet haben:
 
@@ -563,7 +563,7 @@ Release bei, erzeugt von `Releases/1.0/rootcerts-erzeugen.ps1`. Einzelheiten in
 
 ## Nächster Schritt
 
-Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
+Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](../ZIEL.md).
 
 ### Erledigt
 
@@ -572,7 +572,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    mit der ausgelieferten QCSSL 1.0.1 selbst** (`ab55281a`): `mx.freenet.de`,
    Port 110 mit STARTTLS, `TLSv1.3`, `TLS_AES_256_GCM_SHA384`, 256 Bit, Status
    *Succeeded* (Befund [E-3](BEFUNDE.md#e-3)). Einzelheiten in
-   [Releases/1.0/AUSLIEFERUNGEN.md](Releases/1.0/AUSLIEFERUNGEN.md).
+   [Releases/1.0/AUSLIEFERUNGEN.md](../Releases/1.0/AUSLIEFERUNGEN.md).
 2. ~~Aktuellen `rootcerts.p7b` erzeugen~~ — erledigt mit `75b60e1`.
 3. ~~OT501-Ersatzschicht implementieren~~ — erledigt (`e50a89c`), 0 ungelöste
    Externe ohne die Attrappe `OTA50D.LIB`.
@@ -589,7 +589,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    `Eudora72-1.0.10-release.zip` auf einem Rechner **ohne** Visual Studio
    ausgepackt und gestartet — *„test bestanden: eudora läuft ohne VS2022
    installiert."* Das bleibt der belastbare Nachweis ([E-8](BEFUNDE.md#e-8));
-   `tools/paket-pruefen.ps1` sagt seit der Behebung von [PR-2.0](Befunde/PAKET.md#pr-2.0) (06.09.2026,
+   `tools/paket-pruefen.ps1` sagt seit der Behebung von [PR-2.0](../Befunde/PAKET.md#pr-2.0) (06.09.2026,
    `dfc8b40`) das Richtige voraus, ersetzt aber keinen Startversuch auf einem
    fremden Rechner.
 2. **Die Darstellung, zweite Runde.** [M-1](BEFUNDE.md#m-1) und [A-1](BEFUNDE.md#a-1) wirken ([E-1](BEFUNDE.md#e-1), [E-2](BEFUNDE.md#e-2)), offen
@@ -597,7 +597,7 @@ Stand 31.08.2026. Maßstab ist die Kriterientabelle in [ZIEL.md](ZIEL.md).
    `SECMDIFrameWnd::FloatControlBarInMDIChild` (leerer Rumpf, größter
    verbliebener Einzelposten) und `SetControlBarWidthsInRow`. Dazu PR-2.5:
    `DrawChecked` hat denselben Farbfehler, der in `DrawDisabled` behoben wurde.
-   Einzelheiten in [BEFUND-ANSICHT.md](Eudora71/OTShim/BEFUND-ANSICHT.md).
+   Einzelheiten in [BEFUND-ANSICHT.md](../Eudora71/OTShim/BEFUND-ANSICHT.md).
 3. **`ReleaseBuffer` ohne `GetBuffer`** — **Befund [E-11](BEFUNDE.md#e-11) ist zurückgenommen.** Er
    erklärte den Absturz auf frischen Installationen mit einem `ReleaseBuffer` in
    `CEudoraApp::RegisterURLSchemes` (damals `eudora.cpp:3372`); die richtige
@@ -705,7 +705,7 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
 - `Eudora71/OpenSSL3` — Header und statische Bibliotheken von OpenSSL 3.5.8 LTS
   (`libcrypto.lib`, `libssl.lib`), damit sich QCSSL ohne einen 25-minütigen
   OpenSSL-Lauf übersetzen lässt. Bauweg und Prüfsumme in
-  [Eudora71/OpenSSL3/BAUEN.md](Eudora71/OpenSSL3/BAUEN.md).
+  [Eudora71/OpenSSL3/BAUEN.md](../Eudora71/OpenSSL3/BAUEN.md).
   Beide `.lib` **liegen im Repo** (`git ls-files Eudora71/OpenSSL3/lib` nennt
   sie); `.gitattributes` und die Ausnahmeregeln am Ende von `.gitignore`
   (`!Eudora71/OpenSSL3/lib/*.lib`) sorgen dafür. Ein frischer Klon bindet
@@ -735,7 +735,7 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
   übrigen) brauchen diese Laufzeit. `MFC71.DLL` und `MSVCP71.dll` sind dagegen
   **nicht** nachbaubar — 157 Importe nach Ordinal, kein einziger nach Namen
   (Befund [**B-1**](BEFUNDE.md#b-1)); die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME fallen deshalb dauerhaft aus — das eigene Adressbuch nicht.
-  Alle Messungen: [Eudora71/VC71Bruecke/BEFUND.md](Eudora71/VC71Bruecke/BEFUND.md).
+  Alle Messungen: [Eudora71/VC71Bruecke/BEFUND.md](../Eudora71/VC71Bruecke/BEFUND.md).
 
 ## Zwei Fehler in der Zeichentabelle - gefunden und behoben
 
@@ -916,7 +916,7 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   verwandt — und beim Beenden waren es zwölf Schritte ([**E-42**](BEFUNDE.md#e-42)). Wer auf einem
   Weg sucht, auf dem „gar nichts passiert", sucht dort **zuerst** nach
   `ASSERT(0)` und `VERIFY(`. Die Lehre dazu:
-  [Arbeitsweise/assert-ist-im-release-nichts.md](Arbeitsweise/assert-ist-im-release-nichts.md).
+  [Arbeitsweise/assert-ist-im-release-nichts.md](../Arbeitsweise/assert-ist-im-release-nichts.md).
   Dieser Absatz stand bis zum 09.09.2026 in `README.md`.
 - **Die Wurzel der Abstürze ist gefunden — nicht noch einmal durchprobieren.**
   Bis zum 06.09.2026 galt die Doppelfreigabe [**E-25**](BEFUNDE.md#e-25) in
@@ -926,7 +926,7 @@ zu `?`. Das ist eine Entscheidung des Auftraggebers und **nicht** miterledigt.
   tatsächliche Ursache war [**E-31**](BEFUNDE.md#e-31): `pg_time_t` war unter VS2022 acht Byte breit
   statt vier (`Eudora71/PaigeDLL/PGHEADER/CPUDEFS.H`), womit jede an
   `Paige32.dll` gereichte Struktur verschoben war. Messung mit allen
-  Feldversätzen: [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21, Herleitung in
+  Feldversätzen: [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.21, Herleitung in
   `Befunde/PAIGE.md`. Die Härtung aus [E-25](BEFUNDE.md#e-25) ist unabhängig davon richtig und
   bleibt drin.
   **Was daran richtig war:** `afxcoll.inl:213` und „Encountered an improper

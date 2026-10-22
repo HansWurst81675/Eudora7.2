@@ -1,7 +1,7 @@
 # PRÜFER-34 — 7.2.0.102 nachgerechnet
 
 Gegenstand: `git diff 66a2ed04..HEAD -- Eudora71/`, also Commit `f09362f0` (7.2.0.102) zu
-[E-123](../BEFUNDE.md#e-123): Das Beenden wartet auf Übertragungen lokal → IMAP, und eine nur
+[E-123](../Intern/BEFUNDE.md#e-123): Das Beenden wartet auf Übertragungen lokal → IMAP, und eine nur
 belegte Verbindung blockiert die IMAP-Warteschlange nicht mehr. Gelesen am Quelltext, nichts gebaut,
 nichts gestartet. Die Zeilenangaben beziehen sich auf `f09362f0`. Messdaten, nur gelesen:
 `C:\Temp\E118\Mailverzeichnis\eudora-w123{a,b,c,d,rot}-1.log` und `C:\Temp\E118\imap-w123*-1.log`.
@@ -27,7 +27,7 @@ Während des Wartens zeigt Eudora nichts an (S2).
 | S4 Zeitgeber läuft nach dem zweiten Schließen weiter; `m_bE123Gewartet` wird nie zurückgesetzt | falsche Anzeige; der E-123-Schutz fällt für den Rest der Sitzung weg | belegt am Quelltext |
 | S5 Modaler Dialog (Kennwort, Fehlermeldung) beim Ablauf der 90 s: `WM_CLOSE` läuft in der Dialogschleife | Absturz oder Hänger | Vermutung |
 | S6 Gezählt wird jede laufende Aufgabe, nicht nur Übertragungen lokal → IMAP | Hänger (unnötige Wartezeit bis 90 s) | belegt am Quelltext |
-| S7 Wiederholung bei belegter Verbindung: endlos alle 3 s, kein Serververkehr, kein wiederholter Kennwortdialog | kosmetisch (Protokoll), mit [E-83](../BEFUNDE.md#e-83) jedes Beenden 90 s | am Quelltext begründet, **ungemessen** |
+| S7 Wiederholung bei belegter Verbindung: endlos alle 3 s, kein Serververkehr, kein wiederholter Kennwortdialog | kosmetisch (Protokoll), mit [E-83](../Intern/BEFUNDE.md#e-83) jedes Beenden 90 s | am Quelltext begründet, **ungemessen** |
 | S8 Spurmarke `E-123 Warteschlange` schreibt nur beim Beenden, `Verbindung belegt` auch sonst | kosmetisch | belegt (Lauf d: 6 Zeilen in 10 s) |
 | S9 Läufe a und b zeigen an „7.2.0.102“ keine einzige E-123-Zeile | Prüflücke | belegt; Ursache Vermutung |
 | S10 Kommentar am falschen Ort; Kommentar „nicht, wenn offline“ trifft den Offline-Modus nicht | kosmetisch | belegt |
@@ -94,7 +94,7 @@ verschachtelt.
 **Folge:** Das Fenster verschwindet, der Prozess läuft weiter, bis er abgeschossen wird. Ein neuer
 Start trifft dann womöglich auf die hängende Instanz (Vermutung). Die Übertragung steht nicht in
 `actionqueue.dat`. Sie ist schon aus `m_array` genommen (`ImapActionQueue.cpp:3706`), und in der
-Gegenprobe war die Datei leer. Die Mail bleibt in der Quelle ([E-121](../BEFUNDE.md#e-121)), aber der E-123-Bildschaden
+Gegenprobe war die Datei leer. Die Mail bleibt in der Quelle ([E-121](../Intern/BEFUNDE.md#e-121)), aber der E-123-Bildschaden
 ist über den Neustart wieder möglich.
 
 **Anwender:** Er klickt aufs Kreuz, sieht nichts geschehen (S2) und klickt noch einmal. Das
@@ -145,7 +145,7 @@ bleibt 90 s ohne Hinweis offen. In 7.2.0.101 schloss es sofort.
   läuft Eudora weiter. Höchstens 90 s später schickt der Zeitgeber selbst `WM_CLOSE`. Eudora fragt
   dann erneut oder schließt ganz ohne Rückfrage, wenn keine Rückfrage mehr ansteht.
 * `m_bE123Gewartet` wird nie zurückgesetzt (`mainfrm.cpp:733`, `:5237`). Hat der Anwender einmal
-  in `CloseDown` abgebrochen, wartet kein späteres Beenden derselben Sitzung mehr. [E-123](../BEFUNDE.md#e-123) ist dann
+  in `CloseDown` abgebrochen, wartet kein späteres Beenden derselben Sitzung mehr. [E-123](../Intern/BEFUNDE.md#e-123) ist dann
   wieder offen.
 
 **Anwender:** Er drückt beim Beenden „Abbrechen“, weil noch etwas läuft. Kurz darauf fragt Eudora
@@ -192,7 +192,7 @@ warten, obwohl keine Übertragung lokal → IMAP aussteht.
   erreichbar**. `CanScheduleTask` lehnt nur einen zweiten POP-Abruf derselben Persönlichkeit ab
   (`QCTaskManager.cpp:258-261`, `:289-301`), IMAP-Aufgaben nie. Diese Gegenvermutung ist
   entkräftet.
-* Über [E-83](../BEFUNDE.md#e-83) („liegengeblieben“, die Nachbearbeitung läuft nie, also läuft
+* Über [E-83](../Intern/BEFUNDE.md#e-83) („liegengeblieben“, die Nachbearbeitung läuft nie, also läuft
   auch der Destruktor nie, der `ActionDone` ruft, `:619-627`): Steckt eine Aufgabe der
   Warteschlange dort fest, wartet jedes Beenden 90 s. Das ist Vermutung. In c steht die
   liegengebliebene Aufgabe „Checking“ außerhalb der Warteschlange (`zustand=0`).
@@ -221,14 +221,14 @@ Jeder Versuch prüft nur lokale Sperren, **ohne Netzverkehr**. Der Server wird n
 belegte Verbindung setzt eine bestehende Anmeldung voraus. Bricht der Anwender ab, wird daraus
 `Cancel`, und die Wiederholung endet. **Kein wiederholter Dialog.**
 
-Bleibt die Verbindung dauerhaft belegt ([E-83](../BEFUNDE.md#e-83)), entstehen zwei Folgen:
+Bleibt die Verbindung dauerhaft belegt ([E-83](../Intern/BEFUNDE.md#e-83)), entstehen zwei Folgen:
 
 * alle 3 s die Zeile `Verbindung belegt` für die ganze Sitzung;
 * `bBlockiert` ist falsch (`:3943`), also wartet jedes Beenden 90 s.
 
 **Ungemessen:** In keinem der fünf Läufe steht `Verbindung belegt`. Das sagt auch BEFUNDE.md.
 
-**Anwender:** Er merkt nichts, solange [E-83](../BEFUNDE.md#e-83) nicht zuschlägt. Steckt der Abgleich fest, dauert das
+**Anwender:** Er merkt nichts, solange [E-83](../Intern/BEFUNDE.md#e-83) nicht zuschlägt. Steckt der Abgleich fest, dauert das
 Beenden 90 s.
 
 ## S8 — Spurmarken

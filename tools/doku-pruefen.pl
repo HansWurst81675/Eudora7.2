@@ -14,7 +14,7 @@
 #
 #   1. CHANGELOG.md behauptete "Alle vier Kriterien sind erfuellt", waehrend
 #      ZIEL.md "drei von vier belegt, eines fast" sagte. Dieselbe falsche
-#      Behauptung stand in README.md und WEITERMACHEN.md; PORTIERUNG.md stand
+#      Behauptung stand in README.md und Intern/WEITERMACHEN.md; Intern/PORTIERUNG.md stand
 #      noch auf "zwei von vier".
 #   2. ZIEL.md fuehrte vier Kriterien in der Tabelle, obwohl sieben verabredet
 #      waren - drei standen in einem eigenen Abschnitt weiter unten.
@@ -49,7 +49,7 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
@@ -106,14 +106,14 @@ unless (length $quellstand && length $paket) {
 # moechte dir nicht jede einzelne MD datei nennen, es betrifft ALLE!" - eine
 # Schranke, der man ihren Umfang von Hand nennen muss, prueft genau die Dateien
 # nicht, an die niemand gedacht hat. Gemessen an jenem Tag: 47 MD-Dateien im
-# Repo, davon kamen 16 in LEKTORAT.md nie vor.
+# Repo, davon kamen 16 in Intern/LEKTORAT.md nie vor.
 #
 # Deshalb holt sich das Werkzeug die Liste jetzt selbst aus git. Ausgenommen
 # sind nur zwei Gruppen, und zwar mit Begruendung:
 #   - Arbeitsweise/  ist ein Spiegel des Gedaechtnisses (tools/lehren-spiegeln.pl);
 #     eine Aenderung dort geht beim naechsten Spiegeln verloren. Die Quelle liegt
 #     im Gedaechtnisverzeichnis und wird dort nachgezogen (Befund NP3-4).
-#   - Zeitdokumente (Befunde/, Pruefung/, BEFUNDE.md, LEKTORAT.md, PRUEFUNG-*.md,
+#   - Zeitdokumente (Befunde/, Pruefung/, Intern/BEFUNDE.md, Intern/LEKTORAT.md, PRUEFUNG-*.md,
 #     Releases/PAKETE.md, Releases/1.0/) beschreiben einen Zustand von damals und
 #     DUERFEN alte Zahlen nennen. Sie werden nur auf Widersprueche in Befund-IDs
 #     geprueft, nicht auf Aktualitaet.
@@ -136,7 +136,7 @@ my @alle_md = grep { length } split /
 # veroeffentlichter Releases. Es nennt zwangslaeufig alte Fassungen (die
 # hoechste veroeffentlichte ist v1.0.50, gebaut ist laengst mehr), und kein
 # Mensch konnte an der Meldung etwas aendern, ohne das Protokoll zu faelschen.
-my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|BEFUNDE\.md$|LEKTORAT\.md$|PRUEFUNG-|ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$|tools/TESTLAEUFE\.md$|tools/RELEASES\.md$)};
+my $zeitdokument = qr{^(?:Befunde/|Pruefung/|Releases/1\.0/|Intern/BEFUNDE\.md$|Intern/LEKTORAT\.md$|Intern/PRUEFUNG-|Intern/ABRUF-PRUEFEN\.md$|Releases/PAKETE\.md$|tools/TESTLAEUFE\.md$|tools/RELEASES\.md$)};
 my @aktuell   = grep { $_ !~ $zeitdokument } @alle_md;
 my @zeitdok   = grep { $_ =~ $zeitdokument } @alle_md;
 
@@ -185,7 +185,7 @@ for my $datei (@aktuell) {
         my $z = $zeilen[$i];
         # "vier Kriterien", "alle vier Kriterien", "sieben Kriterien"
         # Das \*{0,2} ist am 08.09.2026 dazugekommen (Befund L-10.1): in
-        # PORTIERUNG.md:38 steht "von **neun** Kriterien" - die Auszeichnung
+        # Intern/PORTIERUNG.md:38 steht "von **neun** Kriterien" - die Auszeichnung
         # zwischen Zahlwort und Wort liess das Muster ins Leere laufen, und die
         # Zahl wurde nie gegen ZIEL.md gehalten.
         while ($z =~ /(zwei|drei|vier|fuenf|sechs|sieben|acht|neun|zehn)\*{0,2}\s+Kriterien/gi) {
@@ -202,7 +202,7 @@ for my $datei (@aktuell) {
 }
 
 # Zusaetzlich: die SUMME der genannten Teile muss zur Kriterienzahl passen.
-# Am 07.09.2026 stand in README.md und WEITERMACHEN.md "Neun Kriterien ... drei
+# Am 07.09.2026 stand in README.md und Intern/WEITERMACHEN.md "Neun Kriterien ... drei
 # belegt, eines fast, vier nicht" - das sind acht. Das Werkzeug hatte nur das
 # Wort vor "Kriterien" geprueft und die Summe uebersehen.
 for my $datei (@aktuell) {
@@ -378,7 +378,7 @@ for my $datei (@alle_md) {
         #
         # Zweite Falle, gemessen am 09.09.2026 (Befund L-11.1, Fehlalarm):
         #
-        #   AUFGABEN.md:19  "| 4 | **Keine Abstuerze** | *fast* - ... das
+        #   Intern/AUFGABEN.md:19  "| 4 | **Keine Abstuerze** | *fast* - ... das
         #                    Beenden ist erledigt (Kriterium 7) ..."
         #
         # Diese Zeile handelt von Kriterium 4 - und das steht in der ERSTEN
@@ -402,7 +402,7 @@ for my $datei (@alle_md) {
                     # Dritte Falle, gemessen am 09.09.2026 (Befund L-11.1,
                     # Fehlalarm):
                     #
-                    #   AUFGABEN.md:53  "... der einzige Grund, warum
+                    #   Intern/AUFGABEN.md:53  "... der einzige Grund, warum
                     #                    Kriterium 2 und Kriterium 4 nicht
                     #                    *erfuellt* heissen."
                     #
@@ -462,7 +462,7 @@ sub status_aus_zeile {
     return undef;
 }
 
-my $befunde = lies('BEFUNDE.md');
+my $befunde = lies('Intern/BEFUNDE.md');
 my (%verzeichnis, %ueberschrift);
 if (defined $befunde) {
     my @zeilen = split /\n/, $befunde;
@@ -488,7 +488,7 @@ if (defined $befunde) {
 # 4a. Eine Kennung, zwei Abschnitte - das ist eine doppelt vergebene Nummer.
 for my $k (sort keys %ueberschrift) {
     next unless @{ $ueberschrift{$k} } > 1;
-    push @mangel, sprintf("%s hat in BEFUNDE.md zwei Abschnitte (Zeilen %s) - eine Kennung, eine Bedeutung",
+    push @mangel, sprintf("%s hat in Intern/BEFUNDE.md zwei Abschnitte (Zeilen %s) - eine Kennung, eine Bedeutung",
                           $k, join(', ', @{ $ueberschrift{$k} }));
 }
 
@@ -498,7 +498,7 @@ for my $k (sort keys %verzeichnis) {
     next unless @mit > 1;
     my %verschieden = map { $_->{status} => $_->{zeile} } @mit;
     next unless keys %verschieden > 1;
-    push @mangel, sprintf("%s steht im Verzeichnis von BEFUNDE.md mit verschiedenem Status: %s",
+    push @mangel, sprintf("%s steht im Verzeichnis von Intern/BEFUNDE.md mit verschiedenem Status: %s",
                           $k,
                           join('; ', map { "$_ (Zeile $verschieden{$_})" } sort keys %verschieden));
 }
@@ -516,14 +516,14 @@ if (defined $changelog && defined $befunde) {
         next unless $z =~ /^\|\s*$ANKER\s*\*{0,2}(E-\d+)\*{0,2}\s*\|/;
         my $k = $1;
         if (!exists $verzeichnis{$k}) {
-            push @mangel, sprintf("%s steht in CHANGELOG.md:%d unter 'Noch offen', fehlt aber im Verzeichnis von BEFUNDE.md",
+            push @mangel, sprintf("%s steht in CHANGELOG.md:%d unter 'Noch offen', fehlt aber im Verzeichnis von Intern/BEFUNDE.md",
                                   $k, $i + 1);
             next;
         }
         my @behoben = grep { defined $_->{status} && $_->{status} eq 'behoben' }
                       @{ $verzeichnis{$k} };
         next unless @behoben;
-        push @mangel, sprintf("%s steht in CHANGELOG.md:%d unter 'Noch offen', im Verzeichnis von BEFUNDE.md aber als behoben (Zeile %d)",
+        push @mangel, sprintf("%s steht in CHANGELOG.md:%d unter 'Noch offen', im Verzeichnis von Intern/BEFUNDE.md aber als behoben (Zeile %d)",
                               $k, $i + 1, $behoben[0]->{zeile});
     }
 }
@@ -605,7 +605,7 @@ if (length $paket_haupt) {
             # Tabellenzeile ist eine eigene Aussage; eine Tabelle hat aber
             # keine Leerzeilen, deshalb lief das Fenster bisher in die
             # naechste Zeile hinein. Gemeldet wurde am 09.09.2026
-            # WEITERMACHEN.md:10 ("Paket 1.0.25") wegen der Zahl 1.0.24 in
+            # Intern/WEITERMACHEN.md:10 ("Paket 1.0.25") wegen der Zahl 1.0.24 in
             # Zeile 12 - und die steht dort zu Recht, als datierte
             # Rueckschau "Zuletzt von Gregor bestaetigt".
             $fenster =~ s/\r?\n\|.*\z//s;
@@ -646,13 +646,13 @@ if (length $paket_haupt) {
 # Eine Datei ist aktuell, wenn sie den Quellstand ODER die Paketnummer nennt.
 # Sie darf daneben aeltere Fassungen erwaehnen - "die sieben Vermutungen stehen
 # unter 7.2.0.17" ist eine Fundstelle, kein veralteter Stand. Der erste Anlauf
-# hat genau das gemeldet und AUFGABEN.md damit zu Unrecht angeschwaerzt.
+# hat genau das gemeldet und Intern/AUFGABEN.md damit zu Unrecht angeschwaerzt.
 #
 # Ausgenommen ist ausserdem, wer sich im Kopf SELBST datiert: eine Datei, die in
 # den ersten zwoelf Zeilen "Stand: <Datum>", "gemessen an <commit>" oder
 # "Geprueft ... am <Datum>" sagt, ist ein Zeitdokument und darf alt sein. Am
 # 07.09.2026 meldete das Werkzeug drei solche Dateien (VC71Bruecke/BEFUND.md,
-# PRUEFBERICHT.md, STARTUMGEBUNG.md) - alle drei nennen ihr Datum in Zeile 3.
+# Intern/PRUEFBERICHT.md, Intern/STARTUMGEBUNG.md) - alle drei nennen ihr Datum in Zeile 3.
 # Das Merkmal ist besser als eine Ausnahmeliste von Hand: eine Liste vergisst
 # die naechste Datei, das Merkmal nicht.
 for my $datei (@aktuell) {
@@ -717,7 +717,7 @@ for my $datei (@aktuell) {
 }
 
 # --- 8. Marken: keine Veroeffentlichung ankuendigen, die es nicht gibt -------
-# Befund W-0 (L-8, 07.09.2026): README.md, WEITERMACHEN.md und PAKETE.md nannten
+# Befund W-0 (L-8, 07.09.2026): README.md, Intern/WEITERMACHEN.md und PAKETE.md nannten
 # v1.0.21 mit Adresse, waehrend die Marke noch nicht gesetzt war. Sie wurde es
 # eine halbe Stunde spaeter - der Text war also nicht falsch gemeint, aber eine
 # Weile lang schlicht unwahr. Zuerst gegen origin fragen; ohne Netz gegen die
@@ -749,7 +749,7 @@ if (keys %marke_da) {
 
 # --- 9. Eine alte Fassungsnummer als HEUTIGER Stand, auch in Zeitdokumenten --
 # Befund W-3 und W-17 (L-8): CHANGELOG.md sagte "Version.h und VERSION stehen
-# weiter auf 7.2.0.18 / 1.0.18", PRUEFUNG-BAU.md "der Quellstand ist seit dem
+# weiter auf 7.2.0.18 / 1.0.18", Intern/PRUEFUNG-BAU.md "der Quellstand ist seit dem
 # 06.09.2026 7.2.0.12". Beide Dateien waren von der Zeitdokument-Ausnahme
 # gedeckt - deshalb hier ALLE Dateien.
 #
@@ -810,7 +810,7 @@ for my $datei (@alle_md) {
 # Befund W-8, W-10, W-11, W-24 (L-8), und von PRUEFER schon am 07.09.2026
 # gefordert (Befunde/PRUEFER-3.md:266). Zwei Richtungen:
 #   a) eine Kennung mit eigenem Abschnitt im CHANGELOG muss im Verzeichnis von
-#      BEFUNDE.md vorkommen. E-34, E-35 und E-36 fehlten dort vollstaendig -
+#      Intern/BEFUNDE.md vorkommen. E-34, E-35 und E-36 fehlten dort vollstaendig -
 #      und ZIEL.md belegte Kriterium 4 mit genau diesen drei.
 #   b) eine Kennung, die irgendwo als "behoben" steht, darf im Verzeichnis
 #      nicht "offen" heissen (E-16, E-22).
@@ -819,7 +819,7 @@ my %im_changelog;
 $im_changelog{$1} = 1 while $changelog_inhalt =~ /^###\s+(E-\d+)\b/gm;
 for my $k (sort keys %im_changelog) {
     next if exists $verzeichnis{$k};
-    push @mangel, sprintf("%s hat einen eigenen Abschnitt in CHANGELOG.md, fehlt aber im Verzeichnis von BEFUNDE.md", $k);
+    push @mangel, sprintf("%s hat einen eigenen Abschnitt in CHANGELOG.md, fehlt aber im Verzeichnis von Intern/BEFUNDE.md", $k);
 }
 
 # --- 11. Anforderung A-1 gegen das Gebaute -----------------------------------
@@ -885,7 +885,7 @@ unless ($leise) {
     printf("  %-28s %d\n", "Kriterien in ZIEL.md", $anzahl_kriterien);
     printf("  %-28s %d\n", "gepruefte Dateien", scalar @aktuell);
     printf("  %-28s %d\n", "Kennungen im Verzeichnis", scalar keys %verzeichnis);
-    printf("  %-28s %d\n", "Abschnitte in BEFUNDE.md", scalar keys %ueberschrift);
+    printf("  %-28s %d\n", "Abschnitte in Intern/BEFUNDE.md", scalar keys %ueberschrift);
     print "  ", "-" x 60, "\n";
     if (@mangel) {
         print "\n  MANGEL:\n\n";

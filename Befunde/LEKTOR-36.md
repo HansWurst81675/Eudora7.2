@@ -2,8 +2,8 @@
 
 Lauf am 15.10.2026 auf `wt/lektor` (`9840ee35`, gleich `e-118_HTML_header`; `origin/main`
 mit PR #97 ist enthalten). Anlass: seit [LEKTOR-35](LEKTOR-35.md#lektor-35) (`4b289d5`) sind
-[E-118](../BEFUNDE.md#e-118) Teil 1 (an 1.0.89) und Teil 2 (an 1.0.90) von Gregor bestätigt,
-[E-121](../BEFUNDE.md#e-121) hat sechs weitere Anläufe gegen die Doppelanzeige bekommen
+[E-118](../Intern/BEFUNDE.md#e-118) Teil 1 (an 1.0.89) und Teil 2 (an 1.0.90) von Gregor bestätigt,
+[E-121](../Intern/BEFUNDE.md#e-121) hat sechs weitere Anläufe gegen die Doppelanzeige bekommen
 (7.2.0.91 bis 7.2.0.96, Pakete 1.0.91 bis 1.0.96), Teil 6 ist an 1.0.96 bestätigt, der
 Befund bleibt offen wegen N1–N3. Neuestes Tag: `v1.0.87`.
 
@@ -17,14 +17,14 @@ Codespannen, also Beispiele, keine echten). **Maßstab:** `Eudora71/Version.h` =
 
 `perl tools/doku-pruefen.pl`: kein Widerspruch; zur Kenntnis vier Dateien ohne 7.2.0.96
 ([L-36.7](#l-36.7), [L-36.14](#l-36.14)). `perl tools/offene-befunde.pl` vor dem Lauf:
-**ZU VIEL [E-118](../BEFUNDE.md#e-118)** ([L-36.1](#l-36.1)), danach 32/32.
+**ZU VIEL [E-118](../Intern/BEFUNDE.md#e-118)** ([L-36.1](#l-36.1)), danach 32/32.
 
 ## Berichtigt
 
 ### <a id="l-36.1"></a>L-36.1 — E-118 stand noch in der offenen Liste
 
 `BEFUNDE.md:285` beginnt jetzt mit *„**BESTÄTIGT von Gregor am 14.10.2026 an 1.0.90 (Teil 2)**“*,
-Teil 1 ist an 1.0.89 bestätigt; `offene-befunde.pl` meldete [E-118](../BEFUNDE.md#e-118) als zu viel in
+Teil 1 ist an 1.0.89 bestätigt; `offene-befunde.pl` meldete [E-118](../Intern/BEFUNDE.md#e-118) als zu viel in
 `WEITERMACHEN.md`. Neu gesetzt mit `-schreiben`, dann `befunde-verlinken.pl --verlinken`
 (der Linkverlust aus [L-35.8](LEKTOR-35.md#l-35.8) trat wieder auf und wurde wieder
 so behoben). 32 offen laut `BEFUNDE.md`, 32 in `WEITERMACHEN.md`.
@@ -44,10 +44,10 @@ so behoben). 32 offen laut `BEFUNDE.md`, 32 in `WEITERMACHEN.md`.
 | `ZIEL.md:21` | **widersprach sich in derselben Zelle:** *„Teil 2 … an 1.0.90 bestätigt; … Teil 2, eingebettete Bilder, eingebaut in 7.2.0.90, noch nicht bestätigt“* | der veraltete Schluss gestrichen |
 | `AUFGABEN.md:416` | *„Teil 2 (eingebettete Bilder) eingebaut in 7.2.0.90, noch nicht bestätigt“* | *„… von Gregor am 14.10.2026 an 1.0.90 bestätigt“* |
 | `CHANGELOG.md:17` (*Noch offen*) | nur Teil 1 an 1.0.89 | dazu Teil 2 an 1.0.90 |
-| `Testdaten/README.md:36` | `e118-eingebettetes-bild.eml`: *„eingebaut in 7.2.0.90, am IMAP-Prüfserver gemessen“* | dazu Teil 2 bestätigt, [E-121](../BEFUNDE.md#e-121) bis 7.2.0.96 nachgebessert |
-| `TESTPLAN.md:1` | *„offen: C5 … ([E-118](../BEFUNDE.md#e-118), [E-105](../BEFUNDE.md#e-105))“*, 1.0.96 *„in Arbeit“* | offen nur noch [E-105](../BEFUNDE.md#e-105); 1.0.96 bestätigt |
+| `Testdaten/README.md:36` | `e118-eingebettetes-bild.eml`: *„eingebaut in 7.2.0.90, am IMAP-Prüfserver gemessen“* | dazu Teil 2 bestätigt, [E-121](../Intern/BEFUNDE.md#e-121) bis 7.2.0.96 nachgebessert |
+| `TESTPLAN.md:1` | *„offen: C5 … ([E-118](../Intern/BEFUNDE.md#e-118), [E-105](../Intern/BEFUNDE.md#e-105))“*, 1.0.96 *„in Arbeit“* | offen nur noch [E-105](../Intern/BEFUNDE.md#e-105); 1.0.96 bestätigt |
 
-Beleg wie [L-36.2](#l-36.2). Die Zeile [E-118](../BEFUNDE.md#e-118) in `ZIEL.md` bleibt unter den Maßstabsfehlern
+Beleg wie [L-36.2](#l-36.2). Die Zeile [E-118](../Intern/BEFUNDE.md#e-118) in `ZIEL.md` bleibt unter den Maßstabsfehlern
 stehen: veröffentlicht ist die Behebung nicht (`v1.0.87`).
 
 ### <a id="l-36.4"></a>L-36.4 — E-121 stand bei 7.2.0.90; in *Noch offen* fehlten E-121 und E-122
@@ -55,16 +55,16 @@ stehen: veröffentlicht ist die Behebung nicht (`v1.0.87`).
 | Stelle | stand | jetzt |
 |---|---|---|
 | `ZIEL.md:20` | *„(**eingebaut in 7.2.0.90**)“* | dazu sechs Anläufe gegen die Doppelanzeige bis 7.2.0.96, an 1.0.96 bestätigt, N1–N3 offen |
-| `CHANGELOG.md`, *Noch offen (Stand 15.10.2026)* | keine Zeile zu [E-121](../BEFUNDE.md#e-121) (Datenverlust!) und [E-122](../BEFUNDE.md#e-122) | zwei Zeilen, Wortlaut aus `BEFUNDE.md:288-289` |
+| `CHANGELOG.md`, *Noch offen (Stand 15.10.2026)* | keine Zeile zu [E-121](../Intern/BEFUNDE.md#e-121) (Datenverlust!) und [E-122](../Intern/BEFUNDE.md#e-122) | zwei Zeilen, Wortlaut aus `BEFUNDE.md:288-289` |
 | `tools/ZWEIGE.md:101` | Zweck des Zweigs endet bei 7.2.0.90 | dazu 7.2.0.91 bis 7.2.0.96 |
 
 ### <a id="l-36.5"></a>L-36.5 — Gregors Tests an 1.0.89 bis 1.0.96 fehlten in zwei Übersichten
 
 * `WEITERMACHEN.md:38`, *Zuletzt von Gregor bestätigt*: begann mit *„**1.0.87 am 14.10.2026**“*.
-  Jetzt eine eigene Zeile davor: 1.0.96 ([E-121](../BEFUNDE.md#e-121) Teil 6, Zitat aus `BEFUNDE.md:288`), 1.0.90 und
-  1.0.89 ([E-118](../BEFUNDE.md#e-118)); die alte Zeile heißt *„Davor von Gregor bestätigt“*. Eigene Zeile, weil
-  `pruefe-befundurteile.pl` zeilenweise liest: das [E-115](../BEFUNDE.md#e-115)-Zitat *„tritt bisher nicht mehr auf“* in
-  derselben Zelle hätte [E-121](../BEFUNDE.md#e-121) als erledigt ausgegeben (der Haken wies ab).
+  Jetzt eine eigene Zeile davor: 1.0.96 ([E-121](../Intern/BEFUNDE.md#e-121) Teil 6, Zitat aus `BEFUNDE.md:288`), 1.0.90 und
+  1.0.89 ([E-118](../Intern/BEFUNDE.md#e-118)); die alte Zeile heißt *„Davor von Gregor bestätigt“*. Eigene Zeile, weil
+  `pruefe-befundurteile.pl` zeilenweise liest: das [E-115](../Intern/BEFUNDE.md#e-115)-Zitat *„tritt bisher nicht mehr auf“* in
+  derselben Zelle hätte [E-121](../Intern/BEFUNDE.md#e-121) als erledigt ausgegeben (der Haken wies ab).
 * `WEITERMACHEN.md:123`, *„Stand 14.10.2026 abends – hier weitermachen“*: Schritt (1)
   (Doppelanzeige beheben, 1.0.91 an Gregor) ist erledigt. Nachtrag angefügt; Schritt (2) nennt
   jetzt auch PRÜFER ([L-36.8](#l-36.8)).
@@ -101,7 +101,7 @@ Kopfdatum; berichtigt.
 `perl tools/rollen-faellig.pl`: **PRÜFER fällig** seit `a550a7d` (PRÜFER-29, 7.2.0.90), 7
 Dateien, darunter `ImapActionQueue.cpp`, `ImapToc.cpp`, `summary.cpp`. Die sechs Commits
 `8008f96e`, `83337910`, `7b95567a`, `3731980c`, `31afea0d`, `9578a1bf` ändern den Weg, auf
-dem [E-121](../BEFUNDE.md#e-121) Daten verlor – darunter `ImapMergeTmpMbx`, das *„beim Abgleich einen Eintrag mit
+dem [E-121](../Intern/BEFUNDE.md#e-121) Daten verlor – darunter `ImapMergeTmpMbx`, das *„beim Abgleich einen Eintrag mit
 derselben UID“* entfernt (`BEFUNDE.md:288`, vierter Teil), und das Merkzeichen der Vorab-Kopie.
 [PRÜFER-29](PRUEFER-29.md) stellte unter *„Frage: Kollision lokale Kennung ↔ echte IMAP-UID“*
 die Klasse, an der 1.0.95 scheiterte, und urteilte *„Folge nur Leck“* – betrachtet war nur
@@ -114,7 +114,7 @@ Mail traf (kein Verlust, aber ein Weg, den kein PRÜFER gelesen hat). Vor dem PR
 
 `BEFUNDE.md:288` beginnt *„**DATENVERLUST. Offen, Behebung eingebaut in 7.2.0.90 …, von Gregor
 noch nicht bestätigt.**“*; weiter hinten in derselben Zelle steht *„**Sechster Teil, eingebaut in
-7.2.0.96 (15.10.2026), bestätigt**“*, und `WEITERMACHEN.md:123` sagt *„der Kern von [E-121](../BEFUNDE.md#e-121) [ist] von
+7.2.0.96 (15.10.2026), bestätigt**“*, und `WEITERMACHEN.md:123` sagt *„der Kern von [E-121](../Intern/BEFUNDE.md#e-121) [ist] von
 Gregor bestätigt“*. Das Urteil „offen“ stimmt (N1–N3), der erste Satz aber nicht mehr: er nennt
 7.2.0.90 als Stand und verneint eine Bestätigung, die es gibt. Vorschlag für den Anfang:
 *„**DATENVERLUST. Offen wegen N1–N3. Kern (7.2.0.90) und Doppelanzeige (Teile 1–6, bis
@@ -127,9 +127,9 @@ Wortlaut im Befund, deshalb nicht selbst umgeschrieben.
 ### <a id="l-36.10"></a>L-36.10 — `e118-serie.ps1`: feste Freigabe vom Vortag, fester Repo-Pfad
 
 `tools/e118-serie.ps1:31` übergibt `testlauf.ps1` immer *„Gregor am 14.10.2026: 'ich mache gar
-nichts, du testest.' - [E-118](../BEFUNDE.md#e-118) $Kennung Lauf $i“*. In `tools/TESTLAEUFE.md` stützen sich damit
+nichts, du testest.' - [E-118](../Intern/BEFUNDE.md#e-118) $Kennung Lauf $i“*. In `tools/TESTLAEUFE.md` stützen sich damit
 alle Läufe vom 15.10.2026 (`gp90`, `d92`, `d93`, `d93b`, `k95`, `k96…`) auf eine Freigabe
-vom Vortag und heißen *„[E-118](../BEFUNDE.md#e-118)“*, obwohl sie [E-121](../BEFUNDE.md#e-121) messen. Ob Gregors Satz vom 14.10. auch für
+vom Vortag und heißen *„[E-118](../Intern/BEFUNDE.md#e-118)“*, obwohl sie [E-121](../Intern/BEFUNDE.md#e-121) messen. Ob Gregors Satz vom 14.10. auch für
 den 15.10. galt, steht nirgends. Dazu `:3` `$repo = 'C:\Users\Gregor\Documents\github\Eudora7.2'`:
 aus einem Arbeitsbaum gestartet, laufen Prüfserver und `testlauf.ps1` aus dem Hauptbaum,
 nicht aus dem eigenen (`$PSScriptRoot` wird nur für `messen-e118.ps1` benutzt). Werkzeug
@@ -150,14 +150,14 @@ werden (Fortsetzung von [L-35.9](LEKTOR-35.md#l-35.9)); wo das Beenden hängt, s
 
 Vorschlag [L-35.11](LEKTOR-35.md#l-35.11) (C6 für 1.0.90) ist nicht umgesetzt; inzwischen hat Gregor
 sieben Pakete geprüft, deren Ergebnisse nur in `BEFUNDE.md`, `WEITERMACHEN.md` und
-`Releases/PAKETE.md` stehen. C5 trägt weiter [E-105](../BEFUNDE.md#e-105) an 1.0.89 als offen – ob Gregor es an einem
+`Releases/PAKETE.md` stehen. C5 trägt weiter [E-105](../Intern/BEFUNDE.md#e-105) an 1.0.89 als offen – ob Gregor es an einem
 der späteren Pakete geprüft hat, steht nirgends. Vorschlag: C6 mit je einer Zeile
-[E-118](../BEFUNDE.md#e-118) Teil 2 (✅ 1.0.90), [E-121](../BEFUNDE.md#e-121) (✅ 1.0.96), [E-105](../BEFUNDE.md#e-105) (☐, auf 1.0.96 verschieben).
+[E-118](../Intern/BEFUNDE.md#e-118) Teil 2 (✅ 1.0.90), [E-121](../Intern/BEFUNDE.md#e-121) (✅ 1.0.96), [E-105](../Intern/BEFUNDE.md#e-105) (☐, auf 1.0.96 verschieben).
 
 ### <a id="l-36.13"></a>L-36.13 — E-121 und E-122 fehlen in AUFGABEN, E-122 in README
 
-`AUFGABEN.md` nennt [E-121](../BEFUNDE.md#e-121) und [E-122](../BEFUNDE.md#e-122) nur in der Kopfzeile (`:3`), in keiner Aufgabenzeile –
-die Restfälle N1–N3 haben damit keine Aufgabe. `README.md`, *bekannte Fehler*, führt [E-122](../BEFUNDE.md#e-122)
+`AUFGABEN.md` nennt [E-121](../Intern/BEFUNDE.md#e-121) und [E-122](../Intern/BEFUNDE.md#e-122) nur in der Kopfzeile (`:3`), in keiner Aufgabenzeile –
+die Restfälle N1–N3 haben damit keine Aufgabe. `README.md`, *bekannte Fehler*, führt [E-122](../Intern/BEFUNDE.md#e-122)
 (Eingangsdatum im IMAP-Ordner um die Zeitzone verschoben, steckt auch in `v1.0.87`) nicht.
 Beides ist eine Einordnung, keine mechanische Berichtigung.
 

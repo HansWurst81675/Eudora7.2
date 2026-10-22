@@ -358,7 +358,7 @@ Seltener Fall, kein Datenverlust, nachziehbar.
 ## 6 — Der Merker: `E132Abgelehnt` / `E132Angenommen`
 
 Nicht von PRÜFER-41 gefordert, und der riskanteste Teil der Fassung — weil er
-das Einzige wieder abschaltet, was gegen [E-132](../BEFUNDE.md#e-132) schützt. Vier Gefahren, einzeln
+das Einzige wieder abschaltet, was gegen [E-132](../Intern/BEFUNDE.md#e-132) schützt. Vier Gefahren, einzeln
 nachgegangen.
 
 ### Schreibgeschützte `DefaultINIPath` — **ungefährlich**
@@ -455,7 +455,7 @@ Die Frage aus dem Auftrag, Schritt für Schritt durchgegangen:
 1. Der Anwender klickt einmal „Ja" — bewusst, denn die Vorgabe ist „Nein".
 2. `E132Angenommen=<fremder Pfad>` steht in der `DEudora.ini`.
 3. Eudora übernimmt das fremde Verzeichnis und schreibt in dessen `Eudora.ini`
-   — **genau der Schaden aus Issue #102 und [E-131](../BEFUNDE.md#e-131).**
+   — **genau der Schaden aus Issue #102 und [E-131](../Intern/BEFUNDE.md#e-131).**
 4. `RegisterCommandLine` schreibt den fremden Pfad zurück in die Registry.
 5. **Ab dem zweiten Start erscheint kein Dialog mehr.** `nWahl` kommt aus dem
    Merker, die `MessageBox` wird übersprungen.
@@ -465,7 +465,7 @@ Die Frage aus dem Auftrag, Schritt für Schritt durchgegangen:
    **Vom Merker steht dort kein Wort.**
 
 Der Zustand ist also dauerhaft, er sieht von außen aus wie der Fehler, gegen
-den [E-132](../BEFUNDE.md#e-132) gebaut wurde, und er ist von innen nicht zu sehen.
+den [E-132](../Intern/BEFUNDE.md#e-132) gebaut wurde, und er ist von innen nicht zu sehen.
 
 **Genügt der Dialogtext?** Er nennt die Lösung wörtlich — *„To be asked again,
 remove the E132Abgelehnt or E132Angenommen line from DEudora.ini next to this

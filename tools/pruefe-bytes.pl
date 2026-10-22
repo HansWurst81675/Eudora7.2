@@ -294,7 +294,7 @@ my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
 # Am 19.10.2026 hat ein printf aus "\E" in einem Windows-Pfad ein ESC-Byte
 # (0x1B) gemacht: aus "C:\Users\Gregor\Eudora72-..." wurde "C:\Users\Gregor"
 # plus ESC plus "udora72-...". Das Zeichen stand mitten in Releases/PAKETE.md
-# und in WEITERMACHEN.md, beide Dateien waren gueltiges UTF-8 mit reinen LF,
+# und in Intern/WEITERMACHEN.md, beide Dateien waren gueltiges UTF-8 mit reinen LF,
 # ohne Ersatzzeichen und ohne Doppelkodierung - alle fuenf bisherigen Regeln
 # sahen nichts. Sichtbar wurde es erst, weil der Pfad im Chat falsch aussah.
 #
@@ -345,7 +345,7 @@ sub doppelkodiert {
   # Anfuehrung - in Backticks oder in Anfuehrungszeichen. Wer sie versehentlich
   # erzeugt, erzeugt sie im Fliesstext.
   #
-  # Gemessen am 14.09.2026: in BEFUNDE.md stehen drei solche Belege, alle drei
+  # Gemessen am 14.09.2026: in Intern/BEFUNDE.md stehen drei solche Belege, alle drei
   # angefuehrt, alle drei absichtlich:
   #
   #     5437   ... stuenden dort **zwei** Zeichen (`A-Tilde u`). Der ...
@@ -361,7 +361,7 @@ sub doppelkodiert {
   # Warum das nicht als Schlupfloch taugt: ein Werkzeug, das eine Datei als
   # Latin-1 liest und als UTF-8 zurueckschreibt - der Fall, um den es hier
   # geht (X-7, README.md am 05.09.2026: 238 Stellen) - trifft jedes Wort, nicht
-  # nur die eingerahmten. Von 1517 beschaedigten Zeilen in BEFUNDE.md waren
+  # nur die eingerahmten. Von 1517 beschaedigten Zeilen in Intern/BEFUNDE.md waren
   # genau diese drei angefuehrt.
   my $t = $s;
   $t =~ s/`[^`\n]*`//g;                                   # Backticks

@@ -8,12 +8,12 @@ Stand: Zweig `wt/pruefer`, gemergt mit `origin/e-112-skalierung` (`2d7c922`).
 dem Auftrag bzw. den Commit-Nachrichten übernommen. Nachgerechnet ist nur, ob sie
 zur Quelle passen.
 
-**Urteil: beide Behebungen richtig und auslieferbar.** [E-115](../BEFUNDE.md#e-115) traversiert vollständig,
-ohne Lücke und ohne Doppelprüfung. [E-117](../BEFUNDE.md#e-117) ist längen- und lesesicher, deckt aber nur
+**Urteil: beide Behebungen richtig und auslieferbar.** [E-115](../Intern/BEFUNDE.md#e-115) traversiert vollständig,
+ohne Lücke und ohne Doppelprüfung. [E-117](../Intern/BEFUNDE.md#e-117) ist längen- und lesesicher, deckt aber nur
 die eine Entität `&amp;` ab (G2). Zwei Funde am Rand, beide **nicht** durch diese
 Commits entstanden: eine zweite %-Dekodierung im Ladeweg mit Überlesen am
-Pufferende (G3), und für [E-118](../BEFUNDE.md#e-118) eine andere Ursachenstelle als in BEFUNDE.md (H1).
-Für [E-119](../BEFUNDE.md#e-119) ist der in BEFUNDE.md vorgeschlagene Behebungsort zu spät (H2).
+Pufferende (G3), und für [E-118](../Intern/BEFUNDE.md#e-118) eine andere Ursachenstelle als in BEFUNDE.md (H1).
+Für [E-119](../Intern/BEFUNDE.md#e-119) ist der in BEFUNDE.md vorgeschlagene Behebungsort zu spät (H2).
 
 ---
 
@@ -109,7 +109,7 @@ Entitätsdekoder `Html2Text` (`PGHTMIMP.CPP:3151-3154`), Bilder jetzt nur durch
 **nicht** gleichwertig (behandelt Tags/Zeilen), wohl aber die Entitätentabelle,
 die der Import schon hat (`PGHTMIMP.CPP:3000-3020`, `character_entity_arr`).
 
-**G3 — zweite %-Dekodierung im Ladeweg (Original, ungemessen, betrifft [E-110](../BEFUNDE.md#e-110)).**
+**G3 — zweite %-Dekodierung im Ladeweg (Original, ungemessen, betrifft [E-110](../Intern/BEFUNDE.md#e-110)).**
 `PgEmbeddedImage.cpp:494-495` ruft vor dem Abruf `unescape_url(purl)` auf
 `pUrlImage->URL` auf — die Adresse ist dann bereits durch `resolve_URL` dekodiert.
 Folgen:
@@ -183,13 +183,13 @@ schon außerhalb von MIME benutzt in `AuthRPA.cpp:257`. Prozent-kodierte `data:`
 
 | Nr | Art | Ort | Stand |
 |---|---|---|---|
-| [E-115](../BEFUNDE.md#e-115) | Behebung richtig | `MBoxTreeCtrlCheck.cpp:945-950` | Traversierung nachgerechnet |
+| [E-115](../Intern/BEFUNDE.md#e-115) | Behebung richtig | `MBoxTreeCtrlCheck.cpp:945-950` | Traversierung nachgerechnet |
 | — | Kommentar enger als Quelle | `MBoxTreeCtrlCheck.cpp:939-941` vs. `QCMailboxTreeCtrl.cpp:445-458` | ungemessen |
 | — | Recent-Kinder in Suchliste | `MBoxTreeCtrlCheck.cpp:791/856` | Original, ungemessen |
-| [E-117](../BEFUNDE.md#e-117) | Behebung richtig | `HTMLUtils.cpp:73-84` | Länge/Lesen nachgerechnet |
+| [E-117](../Intern/BEFUNDE.md#e-117) | Behebung richtig | `HTMLUtils.cpp:73-84` | Länge/Lesen nachgerechnet |
 | G1 | `&amp;` im Dateinamen | `PgEmbeddedImage.cpp:1294-1302, 1415` | gering, ungemessen |
 | G2 | nur `&amp;`, nicht `&#38;` u.a. | `HTMLUtils.cpp:73` vs. `PGHTMIMP.CPP:3151-3154` | Lücke, ungemessen |
 | G3 | doppelte %-Dekodierung, Überlesen | `PgEmbeddedImage.cpp:495`, `HTMLUtils.cpp:116-127` | Original, ungemessen |
 | G4 | Ausfuhr maskiert nicht | `PGHTMEXP.CPP:961, 1750-1781` | Original, ungemessen |
-| H1 | [E-118](../BEFUNDE.md#e-118) Ursachenort | `ImapAppend.cpp:692, 1980-2010, 1166-1169, 2020-2026` | am Quelltext |
-| H2 | [E-119](../BEFUNDE.md#e-119) Behebungsort zu spät | `PGHTMIMP.CPP:3317`, `PAIGE.H:1479` | am Quelltext |
+| H1 | [E-118](../Intern/BEFUNDE.md#e-118) Ursachenort | `ImapAppend.cpp:692, 1980-2010, 1166-1169, 2020-2026` | am Quelltext |
+| H2 | [E-119](../Intern/BEFUNDE.md#e-119) Behebungsort zu spät | `PGHTMIMP.CPP:3317`, `PAIGE.H:1479` | am Quelltext |

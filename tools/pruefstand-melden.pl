@@ -34,21 +34,21 @@
 #   "git rev-parse --show-toplevel", und eine fehlende Datei ist eine WARNUNG.
 #
 # NP3-7: Es lief ueber ALLE hashartigen Funde der Datei und behielt den letzten,
-#   der ein gueltiger Commit war. Gemessen am 31.08.2026: PORTIERUNG.md "geprueft
+#   der ein gueltiger Commit war. Gemessen am 31.08.2026: Intern/PORTIERUNG.md "geprueft
 #   bis 567a5d8, seither 186 Commits" - 567a5d8 ist der Commit mit den
 #   Originalquellen von 2006, den ein Befund nur zitiert. Die Zahl war
 #   bedeutungslos. Jetzt entscheidet die Marke, und wo keine steht, wird das
 #   gemeldet statt geraten.
 #
 #   Nebenbei: die alte Fassung rief fuer JEDEN Kandidaten ein eigenes
-#   "git cat-file -t" auf - gemessen 122 Kandidaten in BEFUNDE.md, 41 in
-#   PORTIERUNG.md, 19 in README.md, also 182 Prozessstarts. Jetzt ist es genau
+#   "git cat-file -t" auf - gemessen 122 Kandidaten in Intern/BEFUNDE.md, 41 in
+#   Intern/PORTIERUNG.md, 19 in README.md, also 182 Prozessstarts. Jetzt ist es genau
 #   einer: "git cat-file --batch-check" fuer alle Marken zusammen.
 #
 use strict;
 use warnings;
 
-my @beobachtet = qw(BEFUNDE.md README.md PORTIERUNG.md);
+my @beobachtet = qw(Intern/BEFUNDE.md README.md Intern/PORTIERUNG.md);
 
 sub git {
     my @arg = @_;

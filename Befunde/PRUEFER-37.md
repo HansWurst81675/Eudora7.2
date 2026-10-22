@@ -166,7 +166,7 @@ if ( ( bMultipart && !bGrenzeImRumpf ) || bTypFalsch || bCharsetFalsch )
 kleingeschriebenen Rumpf.) Steht die Grenze im Rumpf, bleibt alles, wie es war
 — genau das Verhalten von 1.0.106.
 
-**Dazu ein Test**, der heute fehlt: *„[E-101](../BEFUNDE.md#e-101) dritter Teil: ein Kopf, dessen Teile
+**Dazu ein Test**, der heute fehlt: *„[E-101](../Intern/BEFUNDE.md#e-101) dritter Teil: ein Kopf, dessen Teile
 es wirklich gibt, bleibt stehen"* — Eingabe wie oben, Erwartung
 `ct-ersetzt=0`, `geaendert=0`.
 
@@ -312,7 +312,7 @@ bCharsetFalsch = bRumpfIstCp1252 &&
 					( szCs == "windows-1252" && szUnser == "iso-8859-1" ) );
 ```
 
-**Und ein Test**, der heute fehlt: *„[E-101](../BEFUNDE.md#e-101) dritter Teil Gegenprobe: ein
+**Und ein Test**, der heute fehlt: *„[E-101](../Intern/BEFUNDE.md#e-101) dritter Teil Gegenprobe: ein
 Zeichensatz, den Eudora nicht übersetzt, bleibt stehen"* — Fall 21 oben,
 Erwartung `ct-ersetzt=0`.
 
@@ -360,7 +360,7 @@ const char *	pszUntertyp = ( bWarHtml || bKopfSagtHtml ) ? "html" : "plain";
 Sagt der Kopf `multipart/alternative` und steht im Rumpf HTML **ohne**
 `<x-html>`-Marker, dann ist `bWarHtml` falsch und `bKopfSagtHtml` ebenso — die
 Datei wird als `text/plain` ausgezeichnet, und der Leser zeigt HTML-Quelltext.
-Genau das Bild, mit dem [E-101](../BEFUNDE.md#e-101) angefangen hat.
+Genau das Bild, mit dem [E-101](../Intern/BEFUNDE.md#e-101) angefangen hat.
 
 **Gemessen** (Fall 5): Eingabe `multipart/alternative` + `<html><body>Grüße</body></html>`,
 Ausgabe `typ=text/plain charset=ISO-8859-1 ct-ersetzt=1`.
@@ -498,7 +498,7 @@ berichtigt"*: er trifft als einziger den Vorgabeweg (`IncludeHeaders=0`).
 
 ## Gregors Test an 1.0.107
 
-> **Nachtrag LEKTOR, 19.10.2026 ([LEKTOR-42](LEKTOR-42.md#lektor-42)):** **1.0.107 ist nie geschnürt worden** (`Releases/PAKETE.md`, Abschnitt 1.0.107). Gregor hat dieses Paket nicht. Der Inhalt steckt in **1.0.110**; die Prüfschritte dazu stehen in `TESTPLAN.md`, Abschnitt [C6](../TESTPLAN.md#c6). Der Abschnitt hier bleibt als Prüfidee stehen, nicht als Auftrag.
+> **Nachtrag LEKTOR, 19.10.2026 ([LEKTOR-42](LEKTOR-42.md#lektor-42)):** **1.0.107 ist nie geschnürt worden** (`Releases/PAKETE.md`, Abschnitt 1.0.107). Gregor hat dieses Paket nicht. Der Inhalt steckt in **1.0.110**; die Prüfschritte dazu stehen in `TESTPLAN.md`, Abschnitt [C6](../Intern/TESTPLAN.md#c6). Der Abschnitt hier bleibt als Prüfidee stehen, nicht als Auftrag.
 
 Eine empfangene HTML-Nachricht mit Umlauten und einem Euro-Zeichen in der
 Übersichtsliste markieren, **Datei → Speichern unter**, und die Datei in

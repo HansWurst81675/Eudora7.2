@@ -9,18 +9,18 @@ nichts committet.**
 > klappt jetzt."* Alle drei Wege beenden: *File → Exit*, **Alt-F4** und das
 > **Kreuz**.
 >
-> Behoben durch **[E-40](../BEFUNDE.md#e-40)** (eine Rückfrage, die sich nicht öffnen lässt, galt als
-> „Abbrechen"), **[E-41](../BEFUNDE.md#e-41)** (Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`
+> Behoben durch **[E-40](../Intern/BEFUNDE.md#e-40)** (eine Rückfrage, die sich nicht öffnen lässt, galt als
+> „Abbrechen"), **[E-41](../Intern/BEFUNDE.md#e-41)** (Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID`
 > in `CFrameWnd::OnSysCommand`, das *File → Exit* nicht hat — die Folgerung des
-> **zweiten** Durchgangs, unten am Ende dieser Datei, hat getragen) und **[E-42](../BEFUNDE.md#e-42)**
-> (zwölf Aufräumschritte konnten das Beenden abbrechen). Dazu **[E-45](../BEFUNDE.md#e-45)**: einer
+> **zweiten** Durchgangs, unten am Ende dieser Datei, hat getragen) und **[E-42](../Intern/BEFUNDE.md#e-42)**
+> (zwölf Aufräumschritte konnten das Beenden abbrechen). Dazu **[E-45](../Intern/BEFUNDE.md#e-45)**: einer
 > der zwölf Schritte, `QCWorkbook::OnClose`, darf **nicht** übersprungen werden
 > — sonst bleibt ein Prozess ohne Fenster übrig. Gefunden hat das PRUEFER
 > ([PRUEFER-5.md](PRUEFER-5.md)).
 >
 > **Der Wurf selbst ist nicht verschwunden:** `SaveBarState("ToolBar")` wirft
-> weiter und steht als **[E-43](../BEFUNDE.md#e-43)** offen — abgefangen, nicht behoben. Der daraus
-> abgeleitete Verdacht **[E-46](../BEFUNDE.md#e-46)** (freigegebenes `CMainFrame`-Objekt) ist am
+> weiter und steht als **[E-43](../Intern/BEFUNDE.md#e-43)** offen — abgefangen, nicht behoben. Der daraus
+> abgeleitete Verdacht **[E-46](../Intern/BEFUNDE.md#e-46)** (freigegebenes `CMainFrame`-Objekt) ist am
 > 08.09.2026 **widerlegt**.
 >
 > Alles, was unten steht, bleibt als **vermessener Weg** richtig und ist
@@ -105,7 +105,7 @@ verschwunden und nur der Prozess übrig geblieben.
   ist gegenstandslos: die `AfxMessageBox`-Aufrufe in `Eudora71/OTShim/*.cpp`
   sind durch `OutputDebugString` ersetzt, und `tools/pruefe-fensterbau.pl` hält
   das als Schranke (Prüfung läuft grün, 0 modale Meldungen).
-* **[E-32](../BEFUNDE.md#e-32)** (`CHeaderView::OnKillFocusRecipient`) war nie die Ursache — dreimal
+* **[E-32](../Intern/BEFUNDE.md#e-32)** (`CHeaderView::OnKillFocusRecipient`) war nie die Ursache — dreimal
   gemessen, `Befunde/PRUEFER-3.md`.
 
 ## Der Weg des Beendens, vollständig
@@ -255,7 +255,7 @@ Dasselbe in `SetAt` (206) und `ElementAt` (212) — und `operator[]` ist nichts
 als `GetAt` bzw. `ElementAt` (226-229). **Jeder Griff neben ein
 `CPtrArray`/`CObArray`/`CStringArray`/`CDWordArray` wirft im Release-Bau
 `CInvalidArgException`, also genau Gregors Meldung.** In MFC 6 stand dort nur
-das `ASSERT`. Das ist die Fehlerklasse aus [E-16](../BEFUNDE.md#e-16)/[E-34](../BEFUNDE.md#e-34), und `BEFUNDE.md:164`
+das `ASSERT`. Das ist die Fehlerklasse aus [E-16](../Intern/BEFUNDE.md#e-16)/[E-34](../Intern/BEFUNDE.md#e-34), und `BEFUNDE.md:164`
 nennt `afxcoll.inl:213` schon namentlich.
 
 ## Auftrag 2: der bisherige Spitzenkandidat ist **widerlegt**
@@ -322,9 +322,9 @@ for( iCurrentButton = 0; iCurrentButton < GetBtnCount(); iCurrentButton ++ )
 
 **Warum das die Ursache sein dürfte, in drei Sätzen:**
 
-1. Es ist **wortwörtlich die Form von [E-34](../BEFUNDE.md#e-34)** — Grenze aus `GetBtnCount()`
+1. Es ist **wortwörtlich die Form von [E-34](../Intern/BEFUNDE.md#e-34)** — Grenze aus `GetBtnCount()`
    (`OTShim_Werkzeugleiste.h:744`, `m_btns.GetSize()`), Zugriff mit
-   `m_btns[...]` über `CPtrArray::ElementAt` — und [E-34](../BEFUNDE.md#e-34) hat mit einer eigenen
+   `m_btns[...]` über `CPtrArray::ElementAt` — und [E-34](../Intern/BEFUNDE.md#e-34) hat mit einer eigenen
    Protokollzeile **belegt**, dass dieses Paar in diesem Bau auseinanderläuft
    (*„Ausnahme bei Index 24 von 27 … Grund: Encountered an improper
    argument."*, `CHANGELOG.md` zu 7.2.0.20).
@@ -341,7 +341,7 @@ for( iCurrentButton = 0; iCurrentButton < GetBtnCount(); iCurrentButton ++ )
    Meldung bei **jedem** Beendenversuch kommt und im laufenden Betrieb nicht.
 
 Die zwölf Zugriffe in dieser Funktion sind **alle ungesichert** — anders als
-die Zugriffe der Ersatzschicht selbst, die seit [E-16](../BEFUNDE.md#e-16) durchweg
+die Zugriffe der Ersatzschicht selbst, die seit [E-16](../Intern/BEFUNDE.md#e-16) durchweg
 `if (nIndex < 0 || nIndex >= GetBtnCount()) return ...;` davor haben
 (`OTShim_Werkzeugleiste.cpp:2257,2277,2305,2311,2319,2327` — nachgesehen).
 
@@ -362,7 +362,7 @@ Erreichbar beim Beenden über `CMainFrame::RemoveBogusAdToolBars`
 (`mainfrm.cpp:5965-6014`) → `RemoveAdToolBarFromItsDockBar`
 (`mainfrm.cpp:6158-6184`) und über die Werbeleiste selbst.
 
-**Was dagegen spricht:** die Schranke aus **BEFUND [E-4](../BEFUNDE.md#e-4)** sitzt in
+**Was dagegen spricht:** die Schranke aus **BEFUND [E-4](../Intern/BEFUNDE.md#e-4)** sitzt in
 `SECDockBar::RemoveControlBar` (`OTShim.cpp:2541-2566`) und prüft vorher
 `if (FindBar(pBar, nPosExclude) <= 0) return FALSE;`. Sie wird erreicht, weil
 alle Andockleisten dieses Baus `SECDockBar` sind: `CMainFrame::EnableDocking`
@@ -409,7 +409,7 @@ für „es passiert nichts" — **nicht** für die Meldung.
 * `QuerySendQueuedMessages` (`mainfrm.cpp:5027`) → `ExitAfterSend`
   (`sendmail.cpp:3741-3745`): bei jedem Sendefehler wird `WM_CLOSE` nie
   nachgeschickt.
-* Blinde Zeiger (Fehlerklasse [E-35](../BEFUNDE.md#e-35)): `compmsgd.cpp:524`, `msgdoc.cpp:1027`,
+* Blinde Zeiger (Fehlerklasse [E-35](../Intern/BEFUNDE.md#e-35)): `compmsgd.cpp:524`, `msgdoc.cpp:1027`,
   `TocFrame.cpp:3966-3972`, `QCTaskManager.cpp:82-86`, `mainfrm.cpp` bei
   `g_Nicknames`. Jeder stürzt ab, keiner wirft.
 * `VERIFY(...Destroy())` sechsmal in `CEudoraApp::ExitInstance`
@@ -436,7 +436,7 @@ für „es passiert nichts" — **nicht** für die Meldung.
 
 **Belegt ist das noch nicht.** Aus dem Quelltext allein ist es nicht zu
 beweisen: die Schleifengrenze und der Index stammen sichtbar aus demselben
-Feld, und **warum** sie bei [E-34](../BEFUNDE.md#e-34) auseinanderliefen, ist bis heute offen (siehe
+Feld, und **warum** sie bei [E-34](../Intern/BEFUNDE.md#e-34) auseinanderliefen, ist bis heute offen (siehe
 unten). Nach der Auflage aus dem Auftrag — *„Kannst Du sie nicht belegen,
 behebe nichts"* — ist deshalb **nichts behoben**.
 
@@ -478,12 +478,12 @@ nicht nur die Stufe.**
 ## Auftrag 4: nichts behoben — und warum
 
 Es ist **nichts** behoben. Grund: der Verdacht ist nicht belegt (Auftrag 3),
-und eine Behebung nach dem Muster von [E-34](../BEFUNDE.md#e-34) (Indexschranke +
+und eine Behebung nach dem Muster von [E-34](../Intern/BEFUNDE.md#e-34) (Indexschranke +
 `TRY`/`CATCH_ALL` + NULL-Prüfung an jeder Aufrufstelle) hätte hier keine
 Aufrufstellen, die etwas prüfen könnten — `SaveCustomInfo` schreibt nur in die
 INI-Datei. Eine Schranke, die den Wurf verschluckt, würde das Beenden
 vielleicht durchlassen und dabei die **Ursache** endgültig verdecken. Genau
-diesen Fehler hat [E-34](../BEFUNDE.md#e-34) gemacht und damit [E-35](../BEFUNDE.md#e-35) und [E-36](../BEFUNDE.md#e-36) erzeugt.
+diesen Fehler hat [E-34](../Intern/BEFUNDE.md#e-34) gemacht und damit [E-35](../Intern/BEFUNDE.md#e-35) und [E-36](../Intern/BEFUNDE.md#e-36) erzeugt.
 
 `tools/pruefe-bytes.pl` → **0**. `tools/pruefe-fensterbau.pl` → **0**, alle
 drei Schranken stehen (0 modale Meldungen; `GetButton` mit Schranke und
@@ -503,7 +503,7 @@ Werkzeug, mit Gegenprobe. Vorher wäre es eine Schranke ohne Gegenstand. Was
 
 * **Die Ursache ist nicht gefunden.** Die Rangliste ist eine Rangliste mit
   Fundstellen und Messungen, kein Befund.
-* **Die offene Wurzel von [E-34](../BEFUNDE.md#e-34) bleibt offen, und sie ist ein Widerspruch.**
+* **Die offene Wurzel von [E-34](../Intern/BEFUNDE.md#e-34) bleibt offen, und sie ist ein Widerspruch.**
   `GetBtnCount()` ist `inline (int)m_btns.GetSize()`, also `m_nSize`; der
   Zugriff `m_btns[24]` prüft in `CPtrArray::ElementAt` gegen **dasselbe**
   `m_nSize`. Aus einem einzigen, unveränderten Objekt heraus **kann** „Index 24
@@ -519,7 +519,7 @@ Werkzeug, mit Gegenprobe. Vorher wäre es eine Schranke ohne Gegenstand. Was
 
 ## Nebenbefund: `tools/lehren-spiegeln.pl` ist aus einem Arbeitsbaum unbrauchbar
 
-Das gehört nicht zu [E-33](../BEFUNDE.md#e-33), darf aber nicht verlorengehen.
+Das gehört nicht zu [E-33](../Intern/BEFUNDE.md#e-33), darf aber nicht verlorengehen.
 
 `tools/lehren-spiegeln.pl` bestimmt sein Ziel über
 **`git rev-parse --git-common-dir`**. In einem `git worktree` zeigt das immer

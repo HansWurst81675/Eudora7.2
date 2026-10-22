@@ -55,7 +55,7 @@ belegte Löcher in den Schranken selbst und **eine Lüge, die noch heute auf
 | **Fund** | Beide melden ihren Erfolgssatz und geben 0 zurück, obwohl sie **0 Zeilen** angesehen haben. |
 | **Ort** | `tools/pruefe-behoben-belegt.pl`, `tools/pruefe-anzeigetext.pl` |
 | **Gemessen** | Lauf am 18.09.2026 im jetzigen Arbeitsbaum: `geprueft (neu oder geaendert) 0 / mit Beleg 0 / ohne Beleg 0` → *„Jedes neue \"behoben\" nennt seinen Beleg."*, Rückgabe **0**. Und: `gepruefte Zeilen 0 / Zitate ohne Herkunftsangabe 0` → *„Jeder zitierte Oberflaechentext nennt seine Herkunft."*, Rückgabe **0**. |
-| **Bewertung** | Die Zahl steht in der Ausgabe und widerspricht dem Satz darunter — `Arbeitsweise/ausreisser-ist-der-befund.md`. *„Nichts geprüft"* und *„geprüft und frei"* sehen identisch aus; das ist genau der Zustand, den [E-109](../BEFUNDE.md#e-109) Punkt (4) beschreibt. |
+| **Bewertung** | Die Zahl steht in der Ausgabe und widerspricht dem Satz darunter — `Arbeitsweise/ausreisser-ist-der-befund.md`. *„Nichts geprüft"* und *„geprüft und frei"* sehen identisch aus; das ist genau der Zustand, den [E-109](../Intern/BEFUNDE.md#e-109) Punkt (4) beschreibt. |
 | **Behebung** | siehe Abschnitt „Repariert". |
 
 ---
@@ -66,8 +66,8 @@ belegte Löcher in den Schranken selbst und **eine Lüge, die noch heute auf
 |---|---|
 | **Fund** | Der Prüfumfang kommt aus den **Überschriften** des jüngsten CHANGELOG-Abschnitts. Nennt ein Abschnitt seine Befunde nur im Fließtext, ist der Umfang 0 — und die Schranke meldet grün. |
 | **Ort** | `tools/pruefe-befund-verbreitung.pl`, `kennungen_der_neuesten_fassung` (Zeile 121–136) |
-| **Gemessen** | Der Abschnitt `## 7.2.0.70` hat genau drei Überschriften: *„ein vollständiger Stand zum Testen…"*, *„Warum es zwei Fassungsnummern 1.0.68 gab"*, *„Was in welchem Paket steckt"*. **Keine davon nennt eine Kennung.** Im Fließtext desselben Abschnitts stehen **[E-101](../BEFUNDE.md#e-101), [E-103](../BEFUNDE.md#e-103), [E-104](../BEFUNDE.md#e-104), [E-106](../BEFUNDE.md#e-106)**. Umfang 0 → Ausgabe *„nennt keinen Befund - nichts zu pruefen"*, Rückgabe 0. |
-| **Bewertung** | Belegt, genau wie in [E-109](../BEFUNDE.md#e-109) beschrieben. Die beiden Schärfungen gegen Fehlalarme (54 → 3 → 0) haben in die Blindheit hinein geschärft. |
+| **Gemessen** | Der Abschnitt `## 7.2.0.70` hat genau drei Überschriften: *„ein vollständiger Stand zum Testen…"*, *„Warum es zwei Fassungsnummern 1.0.68 gab"*, *„Was in welchem Paket steckt"*. **Keine davon nennt eine Kennung.** Im Fließtext desselben Abschnitts stehen **[E-101](../Intern/BEFUNDE.md#e-101), [E-103](../Intern/BEFUNDE.md#e-103), [E-104](../Intern/BEFUNDE.md#e-104), [E-106](../Intern/BEFUNDE.md#e-106)**. Umfang 0 → Ausgabe *„nennt keinen Befund - nichts zu pruefen"*, Rückgabe 0. |
+| **Bewertung** | Belegt, genau wie in [E-109](../Intern/BEFUNDE.md#e-109) beschrieben. Die beiden Schärfungen gegen Fehlalarme (54 → 3 → 0) haben in die Blindheit hinein geschärft. |
 | **Behebung** | siehe Abschnitt „Repariert". |
 
 ---
@@ -79,7 +79,7 @@ belegte Löcher in den Schranken selbst und **eine Lüge, die noch heute auf
 | **Fund** | `pruefe-release-buchfuehrung.pl` prüft **zeilenweise**. Steht die Standaussage in einer Zeile und die Nummer in der Zeile darüber, sieht sie beide nie zusammen. |
 | **Ort** | `tools/pruefe-release-buchfuehrung.pl`, `sub pruefe` (`for my $z (split /\n/, $inhalt)`) — gegen `Releases/PAKETE.md:322-323` |
 | **Gemessen** | In `Releases/PAKETE.md` steht heute: Zeile 322 `## 1.0.29 — veröffentlicht am 09.09.2026`, Zeile 323 `**Die aktuelle Fassung, und die einzige, die als Paket im Repo liegt.**` Das ist eine Standaussage über **1.0.29**, während v1.0.72 veröffentlicht ist. Der Lauf gegen den jetzigen Arbeitsbaum meldet zu `Releases/PAKETE.md` **null Mängel**. |
-| **Bewertung** | Der Fall, vor dem `Arbeitsweise/schranke-gegentesten.md` seit dem 07.09.2026 ausdrücklich warnt: *„Zeilenweise ist eine Annahme. Ein Satz in einer MD-Datei umbricht."* Die Schranke wurde gegen genau den Fall gebaut, der passiert war (README-Einzeiler), nicht gegen die nächste Spielart — das Muster aus [E-109](../BEFUNDE.md#e-109). |
+| **Bewertung** | Der Fall, vor dem `Arbeitsweise/schranke-gegentesten.md` seit dem 07.09.2026 ausdrücklich warnt: *„Zeilenweise ist eine Annahme. Ein Satz in einer MD-Datei umbricht."* Die Schranke wurde gegen genau den Fall gebaut, der passiert war (README-Einzeiler), nicht gegen die nächste Spielart — das Muster aus [E-109](../Intern/BEFUNDE.md#e-109). |
 | **Behebung** | siehe Abschnitt „Repariert". |
 
 ---
@@ -211,7 +211,7 @@ belegte Löcher in den Schranken selbst und **eine Lüge, die noch heute auf
 | `offene-befunde.pl` | ja, meldend | — |
 | `pruefe-branch.pl --streng` | meldend (ohne `--streng`) | ja, abweisend |
 
-Alle über die `schranke()`-Hilfsfunktion, also Befund [X-8](../BEFUNDE.md#x-8) gewahrt: fehlt ein
+Alle über die `schranke()`-Hilfsfunktion, also Befund [X-8](../Intern/BEFUNDE.md#x-8) gewahrt: fehlt ein
 Werkzeug in diesem Arbeitsbaum, wird es übersprungen und gemeldet.
 
 ---
@@ -252,7 +252,7 @@ an denen LEKTOR parallel arbeitet, und der vierte braucht Gregors Wortlaut.
    für Doku-Schranken — aber das ist eine Entscheidung, die ich nicht allein
    treffe.
 
-2. **`pruefe-befundurteile.pl`** hat nach [E-109](../BEFUNDE.md#e-109) dasselbe `{1,80}`-Muster wie
+2. **`pruefe-befundurteile.pl`** hat nach [E-109](../Intern/BEFUNDE.md#e-109) dasselbe `{1,80}`-Muster wie
    `pruefe-behoben-belegt.pl`. Ich habe es **nicht** geändert: es steht in
    keinem der beiden Haken, und eine Änderung ohne Gegentest an seiner eigenen
    Testsammlung wäre genau der Fehler, den dieser Bericht anderswo benennt.
@@ -273,7 +273,7 @@ an denen LEKTOR parallel arbeitet, und der vierte braucht Gregors Wortlaut.
    Commit und keinen Push ausgelöst — das war mir untersagt und ist richtig so.
    Was ich **nicht** gemessen habe: ob `git` selbst den Rückgabewert so
    auswertet, wie ich annehme. Das ist für `pre-commit` seit dem 31.08.2026
-   im Repo belegt (Befund [X-1](../BEFUNDE.md#x-1)/[X-2](../BEFUNDE.md#x-2)), für den neuen Rückgabewert **3** aber
+   im Repo belegt (Befund [X-1](../Intern/BEFUNDE.md#x-1)/[X-2](../Intern/BEFUNDE.md#x-2)), für den neuen Rückgabewert **3** aber
    nicht — er wird im Haken abgefangen und erreicht `git` nie, also hängt
    daran nichts.
 

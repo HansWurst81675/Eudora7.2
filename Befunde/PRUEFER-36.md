@@ -2,9 +2,9 @@
 
 Gegenstand: `git diff 6b52c618..d3314ddd -- Eudora71/`, also zwei Commits:
 
-* `a4cae066` (7.2.0.104): [E-123](../BEFUNDE.md#e-123), das Beenden-Warten nach
+* `a4cae066` (7.2.0.104): [E-123](../Intern/BEFUNDE.md#e-123), das Beenden-Warten nach
   [PRÜFER-35](PRUEFER-35.md) abgesichert;
-* `d3314ddd` (7.2.0.106): [E-69](../BEFUNDE.md#e-69), eine Nachricht, die der Filter
+* `d3314ddd` (7.2.0.106): [E-69](../Intern/BEFUNDE.md#e-69), eine Nachricht, die der Filter
   überspringt, erscheint jetzt im Fenster „Task Errors“.
 
 Gelesen am Quelltext, nichts gebaut, nichts gestartet. Die Zeilenangaben beziehen sich auf
@@ -35,13 +35,13 @@ nicht, aber Gregor wird es merken, sobald eine IMAP-Verbindung beim Filtern stre
 
 | Fund | Stand in 7.2.0.104 | Beleg |
 |---|---|---|
-| N1 `bLaeuft` ohne Obergrenze | **geschlossen.** `bLaeuft` kommt nur noch aus dem Zähler `s_lE123HochladenLaeuft`, und der hängt am Stapel von `DoPostProcessing`, nicht an der Abmeldekette aus [E-83](../BEFUNDE.md#e-83). Bleibt die Abmeldung aus, zählt die Aufgabe nur noch in `nOffen`, und dort gilt die Grenze von 90 s | Quelltext; ungemessen, siehe P4 |
+| N1 `bLaeuft` ohne Obergrenze | **geschlossen.** `bLaeuft` kommt nur noch aus dem Zähler `s_lE123HochladenLaeuft`, und der hängt am Stapel von `DoPostProcessing`, nicht an der Abmeldekette aus [E-83](../Intern/BEFUNDE.md#e-83). Bleibt die Abmeldung aus, zählt die Aufgabe nur noch in `nOffen`, und dort gilt die Grenze von 90 s | Quelltext; ungemessen, siehe P4 |
 | N2 `GetLastActivePopup` | **geschlossen.** `!IsWindowEnabled()` (`mainfrm.cpp:1975`) | Quelltext |
 | N3 Offline-Abfrage vor `bLaeuft` | **geschlossen.** `*pbLaeuft` wird vor der Offline-Prüfung gesetzt (`ImapAccountMgr.cpp:1285-1286`) | Quelltext |
 | N4 Verbindungsaufbau der nächsten Übertragung | **nicht geschlossen**, siehe P2 | Quelltext |
 | N5 Herunterfahren abgebrochen | **geschlossen.** `OnQueryEndSession` löscht Zeitgeber und Merker vor `CloseDown` (`mainfrm.cpp:5175-5187`) | Quelltext |
 | N6 Statuszeile kann „Ready“ zeigen | **offen, bekannt.** `OnTimer` setzt den Text nicht neu | Quelltext |
-| N7 zwei Bauten unter einer Nummer | für [E-123](../BEFUNDE.md#e-123) diesmal sauber: h und i melden `7.2.0.104`. Für [E-69](../BEFUNDE.md#e-69) siehe P7 | gemessen |
+| N7 zwei Bauten unter einer Nummer | für [E-123](../Intern/BEFUNDE.md#e-123) diesmal sauber: h und i melden `7.2.0.104`. Für [E-69](../Intern/BEFUNDE.md#e-69) siehe P7 | gemessen |
 
 ### Neue Funde
 
@@ -81,7 +81,7 @@ der Offline-Prüfung gelesen wird. Beendet wird also erst nach dem Hochladen.
 * Lauf i, Zeilen 153-203: Datei → Beenden, zweites Schließen ignoriert (167-168), Ende nach
   8078 ms (170), `ExitInstance` (203).
 
-**[E-69](../BEFUNDE.md#e-69), gemessen in v69d (7.2.0.106):** In.mbx war von außen gesperrt. Zeile 78 zeigt
+**[E-69](../Intern/BEFUNDE.md#e-69), gemessen in v69d (7.2.0.106):** In.mbx war von außen gesperrt. Zeile 78 zeigt
 „kein Nachrichtentext“, Zeile 79 die Spurmarke mit Betreff, Postfach `In` und Grund, Zeile 80 den
 Text des Eintrags (über `Register`, `DEBUG_MASK_DIALOG`). Danach läuft der Filterlauf zu Ende
 („Messages left to filter: 0“), und Eudora beendet normal.
@@ -131,7 +131,7 @@ nicht oder findet die alte Sitzung noch vor. Er muss im Task-Manager abschießen
 sichert Fensterlagen und Leisten dann nicht vollständig. Ob beim Verschieben eine Nachricht lokal
 schon entfernt, auf dem Server aber noch nicht angekommen ist, habe ich nicht verfolgt (offen).
 Nach PRÜFER-34 steht die Aufgabe dann in `actionqueue.dat` und läuft beim nächsten Start weiter,
-die Schutzvermerke der eingebetteten Bilder aus [E-123](../BEFUNDE.md#e-123) gehen dabei aber verloren.
+die Schutzvermerke der eingebetteten Bilder aus [E-123](../Intern/BEFUNDE.md#e-123) gehen dabei aber verloren.
 
 **Vorschlag:** Die Notbremse nur greifen lassen, wenn `!bLaeuft && !bDialogOffen`, oder sie ganz
 streichen. Damit ist sie gleichwertig mit der Regel nach 90 s. In die Zeile „Warten zu Ende“
@@ -165,7 +165,7 @@ Botschaften zustellt. Das ist wie in PRÜFER-35 ungemessen.
 verschwindet das Fenster, und Eudora hängt unsichtbar weiter.
 
 **Was verloren gehen kann:** wie bei P1, die noch ausstehenden Übertragungen. Sie stehen in
-`actionqueue.dat`, aber ohne die Schutzvermerke aus [E-123](../BEFUNDE.md#e-123).
+`actionqueue.dat`, aber ohne die Schutzvermerke aus [E-123](../Intern/BEFUNDE.md#e-123).
 
 **Vorschlag:** Den Zähler an den Anfang von
 `CImapFromLocalTransferMsgAction::DoPreThreadAction` setzen
@@ -324,12 +324,12 @@ Ein Betreff mit `%s%n` erscheint wörtlich.
 
 ## Gregors Test an 1.0.106
 
-**Test 1 ([E-123](../BEFUNDE.md#e-123), wie bisher):** Eine Mail aus einem lokalen Ordner in einen IMAP-Ordner
+**Test 1 ([E-123](../Intern/BEFUNDE.md#e-123), wie bisher):** Eine Mail aus einem lokalen Ordner in einen IMAP-Ordner
 verschieben, sofort beenden und gleich noch einmal auf das Kreuz klicken. In `eudora.log` stehen
 dann „Beenden wartet auf 1 Uebertragung(en)“, „weiteres Schliessen waehrend des Wartens
 ignoriert“, „Warten zu Ende nach … ms, offen=0“ und `E-33 ExitInstance: erreicht`.
 
-**Test 2 ([E-69](../BEFUNDE.md#e-69)):** Eine Nachricht, die der Filter nicht lesen kann, steht als Eintrag in
+**Test 2 ([E-69](../Intern/BEFUNDE.md#e-69)):** Eine Nachricht, die der Filter nicht lesen kann, steht als Eintrag in
 „Task Errors“ und bleibt in ihrem Postfach. Auf eine Wiederholung achten: Erscheint derselbe
 Betreff mehrmals, ist das P3.
 

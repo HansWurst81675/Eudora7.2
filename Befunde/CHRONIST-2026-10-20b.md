@@ -74,7 +74,7 @@ ist der Auftragstext die einzige Quelle.
 
 | Schritt | Commit | was verlorenging |
 |---|---|---|
-| 1.0.110 → 1.0.111 | `d6db51c7`, 13:13 | die Kopfzeile des [E-69](../BEFUNDE.md#e-69)-Punktes (*„Keine Flut von Fehlermeldungen mehr beim Filtern."*) wurde durch den neuen [E-123](../BEFUNDE.md#e-123)-Block **ersetzt**; die Überschrift `## Was geprüft wurde – und was nicht` kam ein **zweites** Mal dazu |
+| 1.0.110 → 1.0.111 | `d6db51c7`, 13:13 | die Kopfzeile des [E-69](../Intern/BEFUNDE.md#e-69)-Punktes (*„Keine Flut von Fehlermeldungen mehr beim Filtern."*) wurde durch den neuen [E-123](../Intern/BEFUNDE.md#e-123)-Block **ersetzt**; die Überschrift `## Was geprüft wurde – und was nicht` kam ein **zweites** Mal dazu |
 | 1.0.111 → 1.0.112 | `61c91b43`, 13:41 | die zweite Zeile des Einleitungsabsatzes (*„Mailverzeichnis im ZIP ist leer …"*) |
 | berichtigt | `ce5c2e33`, 14:07 ([L-43.1](LEKTOR-43.md#l-43.1)) | alle drei zurückgeholt |
 
@@ -143,7 +143,7 @@ Dazu die Testzahl: `grep -o '2[0-9][0-9] Tests'` auf der 113-Datei um 14:34 →
 **`229 Tests`**, während die Commit-Nachricht desselben Commits
 *„234 Tests, 234 bestanden (fuenf neue)"* sagt.
 
-Gregor hat beides gefunden (*„Befund läuft bei uns als [E-131](../BEFUNDE.md#e-131). link fehlt!"*,
+Gregor hat beides gefunden (*„Befund läuft bei uns als [E-131](../Intern/BEFUNDE.md#e-131). link fehlt!"*,
 *„zeile doppelt: fehlt da war?"*), und `d64247cb` / `fe49a6ab` haben es
 berichtigt.
 
@@ -232,7 +232,7 @@ das, wonach ein Leser handelt.
 
 **Es steht inzwischen im Repo, aber nicht auf `main`.** Im Hauptarbeitsbaum
 liegt der Zweig `e-132-fremdes-mailverzeichnis` mit einem **neuen Befund
-**[E-132](../BEFUNDE.md#e-132)****, gestaget und **nicht committet**. Sein Text
+**[E-132](../Intern/BEFUNDE.md#e-132)****, gestaget und **nicht committet**. Sein Text
 belegt die Kette am Quelltext:
 
 * `eudora.cpp:1036-1052` — ist die Befehlszeile **leer** *und* liegt **keine**
@@ -251,12 +251,12 @@ Registry-Weg wird gar nicht erst betreten. Der Doppelklick auf `Eudora.exe`
 betritt ihn.
 
 **Offen bleibt — und das ist der Punkt für Gregor:** auf `origin/main` steht
-[`E-132`](../BEFUNDE.md#e-132) **nirgends** (`grep -c 'e-132'` auf `BEFUNDE.md` und `README.md` je 0),
+[`E-132`](../Intern/BEFUNDE.md#e-132) **nirgends** (`grep -c 'e-132'` auf `BEFUNDE.md` und `README.md` je 0),
 `README.md:75` trägt unverändert die widerlegte Bedingung **und** den Satz
-*„von uns **noch nicht nachgestellt**"*, obwohl [E-131](../BEFUNDE.md#e-131)
+*„von uns **noch nicht nachgestellt**"*, obwohl [E-131](../Intern/BEFUNDE.md#e-131)
 seit 14:34 behoben und seit 15:01 veröffentlicht ist. In `WEITERMACHEN.md`
-steht [E-131](../BEFUNDE.md#e-131) weiter unter den offenen Befunden
-(`offene-befunde.pl`: *„ZU VIEL (1, laut BEFUNDE.md erledigt): [E-131](../BEFUNDE.md#e-131)"*).
+steht [E-131](../Intern/BEFUNDE.md#e-131) weiter unter den offenen Befunden
+(`offene-befunde.pl`: *„ZU VIEL (1, laut BEFUNDE.md erledigt): [E-131](../Intern/BEFUNDE.md#e-131)"*).
 
 **Und noch etwas steht in derselben Antwort**, das niemand aufgenommen hat: der
 Melder hat ein eigenes
@@ -270,7 +270,7 @@ nur im Issue steht.
 
 Sachlich, ohne Bewertung — es war Gregors Entscheidung mit seiner Begründung.
 
-| | 7.2.0.111 | 7.2.0.113 ([E-131](../BEFUNDE.md#e-131)) |
+| | 7.2.0.111 | 7.2.0.113 ([E-131](../Intern/BEFUNDE.md#e-131)) |
 |---|---|---|
 | Urteil des PRÜFERS | [PRÜFER-39](PRUEFER-39.md) **N1**, Gewicht *hoch*: der Zähler in `CImapSameServerTransferMsgAction::DoWork` kann Eudora unbeendbar machen (13:26, `dd26a967`) | `PRUEFER-40` **angestoßen 14:59**, läuft noch (`paket-bereit.pl`: *weist ab*) |
 | Sicherheit des Urteils | **belegt am Quelltext**; der Bericht sagt selbst, dass ein tatsächlich hängendes `XferMessagesOnServer` **nicht gemessen** ist | — |
@@ -279,13 +279,13 @@ Sachlich, ohne Bewertung — es war Gregors Entscheidung mit seiner Begründung.
 
 Der Unterschied zwischen beiden Lagen ist nicht die Schwere, sondern **wer
 wartet**. Bei 7.2.0.111 wartete niemand außer uns; bei
-[E-131](../BEFUNDE.md#e-131) wartet ein Fremder, dessen vorhandene Installation
+[E-131](../Intern/BEFUNDE.md#e-131) wartet ein Fremder, dessen vorhandene Installation
 unbrauchbar ist, und für den jede Stunde ohne Paket eine Stunde ohne Abhilfe
 ist. Diese Größe kommt in keiner unserer Lehren vor —
 [kein-paket-mit-offenem-datenverlust](../Arbeitsweise/kein-paket-mit-offenem-datenverlust.md)
 kennt nur Gregor als Empfänger.
 
-### Punkt 5 — [E-124](../BEFUNDE.md#e-124): die Messung steht, aber am falschen Ort
+### Punkt 5 — [E-124](../Intern/BEFUNDE.md#e-124): die Messung steht, aber am falschen Ort
 
 **Die Messung ist veröffentlicht, gemessen.**
 `Releases/1.0.113/RELEASE-NOTIZEN.md:91-101`, wortgleich im GitHub-Körper:
@@ -300,19 +300,19 @@ Gregors Entscheidung — keine Wartezeit einbauen, er meldet es — steht in der
 Commit-Nachricht von `0f4b2b1a`.
 
 **Die Messung steht aber in keinem Befund.** `grep` über `BEFUNDE.md` nach
-`13:09:05` und `13:17:28`: **null Treffer**. [E-124](../BEFUNDE.md#e-124) endet
+`13:09:05` und `13:17:28`: **null Treffer**. [E-124](../Intern/BEFUNDE.md#e-124) endet
 unverändert beim Fall vom 16.10.2026. In `Releases/PAKETE.md` steht zu 1.0.113
 keine Defender-Zeile mit dieser Messung.
 
 **Und die Commit-Nachricht behauptet das Gegenteil.** `0f4b2b1a` sagt im
 Körper:
 
-> *„[E-124](../BEFUNDE.md#e-124) fortgeschrieben: die Defender-Schranke prueft ZU FRUEH. Gemessen -
+> *„[E-124](../Intern/BEFUNDE.md#e-124) fortgeschrieben: die Defender-Schranke prueft ZU FRUEH. Gemessen -
 > Eudora.exe 13:09:05 gebaut und sofort geprueft (34 Dateien, 0 Funde), von
 > Defender 13:17:28 erkannt."*
 
 `git show 0f4b2b1a -- BEFUNDE.md` ändert **ausschließlich** die Zeile zu
-[E-131](../BEFUNDE.md#e-131). Die Nachricht nennt eine Änderung, die der Commit
+[E-131](../Intern/BEFUNDE.md#e-131). Die Nachricht nennt eine Änderung, die der Commit
 nicht enthält —
 [erfolgsmeldung-aus-dem-ergebnis](../Arbeitsweise/erfolgsmeldung-aus-dem-ergebnis.md)
 in der Fassung *Commit-Nachricht*.
@@ -329,7 +329,7 @@ nicht schaut.
 |---|---|
 | [L-43.11](LEKTOR-43.md#l-43.11) `pruefe-release-buchfuehrung.pl` läuft vor dem Tag | `grep -c 'pruefe-release-buchfuehrung' tools/release-veroeffentlichen.ps1` = **0**. **Rückwirkend gefahren:** im Baum `ac094f15` (15:01, unmittelbar nach dem Tag `v1.0.113`) meldet die Schranke **MANGEL, 6 Stellen** — `README.md:136`, `Releases/PAKETE.md:547` und `:560`, `WEITERMACHEN.md:15` und `:45`, `tools/RELEASES.md` kennt die 113 nicht. Der Auftrag sagt fünf; es sind **sechs**, und mit den sechs von 1.0.112 ([L-43.3](LEKTOR-43.md#l-43.3)) **zwölf an einem Tag** |
 | [L-43.12](LEKTOR-43.md#l-43.12) `paket-bereit.pl` kennt den Umfang nicht | `grep -c` in `paket-bauen.ps1` = **0**. Schärfer als im Bericht: **32** Schranken hängen im `pre-commit`/`pre-push`, **10** in `paket-bauen.ps1`, **27 hängen im Haken und nicht vor dem Paket** — während die Kopfzeile von `paket-bereit.pl` *„alle Schranken vor dem Paket"* lautet und die Zeile darunter *„8 Schranke(n), gelesen aus paket-bauen.ps1"* |
-| [L-43.13](LEKTOR-43.md#l-43.13) `ist_standaussage()` hört auf Wörter | unverändert — **und derselbe Bauteil sitzt in einer zweiten Schranke:** `pruefe-befundurteile.pl:212-217` führt `@unerledigt` als **acht von Hand geschriebene Wendungen**; *„noch nicht nachgestellt"* ist keine davon. Deshalb meldet die Schranke heute *„Kein Dokument … keinen behobenen für unerledigt"* — während `README.md:75` über den behobenen [E-131](../BEFUNDE.md#e-131) sagt, er sei *„von uns noch nicht nachgestellt"* |
+| [L-43.13](LEKTOR-43.md#l-43.13) `ist_standaussage()` hört auf Wörter | unverändert — **und derselbe Bauteil sitzt in einer zweiten Schranke:** `pruefe-befundurteile.pl:212-217` führt `@unerledigt` als **acht von Hand geschriebene Wendungen**; *„noch nicht nachgestellt"* ist keine davon. Deshalb meldet die Schranke heute *„Kein Dokument … keinen behobenen für unerledigt"* — während `README.md:75` über den behobenen [E-131](../Intern/BEFUNDE.md#e-131) sagt, er sei *„von uns noch nicht nachgestellt"* |
 | [L-43.15](LEKTOR-43.md#l-43.15) Release-Notizen nicht im Prüfumfang | unverändert |
 
 **Ein fünfter, aus derselben Wurzel, heute gefunden:**
@@ -438,12 +438,12 @@ Arbeit.
 | 1 | `d6db51c7` — E-69-Kopfzeile in den 1.0.111-Notizen überschrieben | berichtigt `ce5c2e33` |
 | 2 | `d6db51c7` — Überschrift *Was geprüft wurde* doppelt | berichtigt `ce5c2e33` |
 | 3 | `61c91b43` — zweite Zeile des Einleitungsabsatzes der 1.0.112-Notizen | berichtigt `ce5c2e33` |
-| 4 | `0f4b2b1a` — [E-131](../BEFUNDE.md#e-131) als verwaiste Tabellenzeile in Zeile **8666 von 8666** von `BEFUNDE.md` ([L-43.6](LEKTOR-43.md#l-43.6)) | verschoben |
+| 4 | `0f4b2b1a` — [E-131](../Intern/BEFUNDE.md#e-131) als verwaiste Tabellenzeile in Zeile **8666 von 8666** von `BEFUNDE.md` ([L-43.6](LEKTOR-43.md#l-43.6)) | verschoben |
 | 5 | `d64247cb`/`fe49a6ab` — *„auf beiden Wegen:"* als Satzrest mit offener Fettschrift in den 1.0.113-Notizen, Zeile 128 | **steht öffentlich auf GitHub** |
-| 6 | `BEFUNDE.md` auf `origin/main`: die Zeile zu [E-131](../BEFUNDE.md#e-131) ist über **zwei** Zeilen gebrochen — `:300` endet mit *„…vielleicht nicht."* **ohne** schließenden senkrechten Strich, `:301` beginnt mit einem Leerzeichen und endet mit einem | **steht auf `main`** |
+| 6 | `BEFUNDE.md` auf `origin/main`: die Zeile zu [E-131](../Intern/BEFUNDE.md#e-131) ist über **zwei** Zeilen gebrochen — `:300` endet mit *„…vielleicht nicht."* **ohne** schließenden senkrechten Strich, `:301` beginnt mit einem Leerzeichen und endet mit einem | **steht auf `main`** |
 
 Die Ursache zu #4 — das Einfügen verankerte sich an einem
-[E-130](../BEFUNDE.md#e-130)-Treffer, der nach einer Zusammenführung
+[E-130](../Intern/BEFUNDE.md#e-130)-Treffer, der nach einer Zusammenführung
 woanders stand — ist **Vermutung**; belegt ist nur das Ergebnis. Was alle sechs
 gemeinsam haben, ist dagegen gemessen: **der eingefügte Text war jedes Mal in
 Ordnung, kaputt war sein Nachbar.** Keine Byteprüfung, keine der 32 Schranken
@@ -600,8 +600,8 @@ lautlos, genau wie eine Anzeige
    Fassung: die Testzahl aus diesem Lauf, die Messungen aus diesem Prüfstand,
    die Fassungsnummer, an der Gregor gemessen hat. Heute standen dort
    nacheinander die Testzahl von 1.0.110, der Warnblock von 1.0.112 und ein
-   Satz über [E-123](../BEFUNDE.md#e-123) in den Notizen zu
-   [E-131](../BEFUNDE.md#e-131).
+   Satz über [E-123](../Intern/BEFUNDE.md#e-123) in den Notizen zu
+   [E-131](../Intern/BEFUNDE.md#e-131).
 3. **Ein Warnblock, den die Fassung behebt, ist keine Warnung mehr.** Der
    gefährlichste Satz des Tages stand in den veröffentlichten Notizen zu
    1.0.113: *„Wir haben es noch nicht nachgestellt"* — über genau den Befund,
@@ -624,14 +624,14 @@ Schaden. Der Satz dieser Lehre gehört in die dortige Regel 2.
 | [text-nicht-durch-schichten-schicken](../Arbeitsweise/text-nicht-durch-schichten-schicken.md) | **Dritter bis fünfter Rückfall, und der Nachtrag vom Vormittag ist nie angekommen.** Gemessen: die Datei ist zuletzt am **14.10.2026** geändert worden (`d135f170`); die `%s`-Regel, die genau diesen Fall benennt, steht nur in [CHRONIST-2026-10-20](CHRONIST-2026-10-20.md). **Zweitens, und das ist der härtere Befund:** über alle 48 Commits dieses Tages und die drei betroffenen Dateien gemessen, trägt **kein einziger** ein Steuerzeichen (0 von 144). `pruefe-bytes.pl` Regel 6 hatte nie etwas zu fangen — der Schaden entsteht und vergeht **vor** dem Commit. Die Lehre braucht deshalb keinen weiteren Satz über Perl, sondern einen Augenblick vor dem Schreibbefehl (`schranke-an-den-augenblick`). |
 | [lehren-anwenden-nicht-nur-schreiben](../Arbeitsweise/lehren-anwenden-nicht-nur-schreiben.md) | **Die Lücke ist gemessen, und sie ist die Übergabe.** Von **6** in CHRONIST-Berichten vorgeschlagenen Lehren fehlen **2** in `Arbeitsweise/` und in `MEMORY.md` — beide von **heute 11:58**, und der Nachmittag hat genau das getan, wovor sie warnen. `tools/lehren-schranken.pl` prüft nur Lehren, die **schon** in `Arbeitsweise/` liegen; `tools/lehren-spiegeln.pl` spiegelt vom Gedächtnis **nach** `Arbeitsweise/`. **Die Gegenrichtung prüft niemand.** Ein kleines Werkzeug genügt: die `name:`-Zeilen aus `Befunde/CHRONIST-*.md` gegen `Arbeitsweise/*.md` halten und die nie angekommenen nennen. Dazu gehört die ehrliche Zahl: der Weg funktioniert (4 von 6 sind angekommen), **die Laufzeit ist das Problem** — sieben Stunden, und sie lagen genau über dem Teil des Tages, in dem die Lehren gebraucht wurden. |
 | [schranke-gehoert-in-den-haken](../Arbeitsweise/schranke-gehoert-in-den-haken.md) | **Ein Gegenfall, den die Lehre nicht kennt: die Schranke hängt im Haken und greift trotzdem nicht.** Drei Belege an einem Tag, alle gemessen (Tabelle unter `schranke-an-den-augenblick`). Dazu der Umfang: **32** Schranken hängen im `pre-commit`/`pre-push`, **10** stehen in `paket-bauen.ps1` — **27 im Haken und nicht vor dem Paket**. Der Satz *„nicht im Haken = keine Schranke"* bleibt richtig; er ist nur nicht mehr hinreichend. |
-| [schranke-teilt-nicht-die-annahme](../Arbeitsweise/schranke-teilt-nicht-die-annahme.md) | **Zwei neue Belege, beide heute grün gemeldet.** (1) `pruefe-befundurteile.pl` sagt *„keinen behobenen für unerledigt"*, während `README.md:75` über den behobenen [E-131](../BEFUNDE.md#e-131) sagt, er sei *„von uns noch nicht nachgestellt"*. Ursache am Quelltext: `@unerledigt` (`:212-217`) ist eine Liste von **acht** von Hand geschriebenen Wendungen, und diese ist keine davon. (2) `pruefe-release-buchfuehrung.pl` meldet grün, während `Releases/PAKETE.md:6` sagt *„zuletzt veröffentlicht **1.0.112** als `v1.0.113`"* — die Schranke fragt, **ob** die Nummer vorkommt, nicht **wem** sie zugeordnet ist. Beide Male prüft die Schranke eine Wortliste statt einer Aussage, genau wie [L-43.13](LEKTOR-43.md#l-43.13). |
-| [erfolgsmeldung-aus-dem-ergebnis](../Arbeitsweise/erfolgsmeldung-aus-dem-ergebnis.md) | **Die Fassung *Commit-Nachricht*.** `0f4b2b1a` schreibt im Körper *„[E-124](../BEFUNDE.md#e-124) fortgeschrieben … 13:09:05 … 13:17:28"*; `git show 0f4b2b1a -- BEFUNDE.md` ändert ausschließlich die Zeile zu [E-131](../BEFUNDE.md#e-131), und `grep` über `BEFUNDE.md` findet beide Zeitangaben **nirgends**. Eine Commit-Nachricht ist eine Erfolgsmeldung wie jede andere: **jeder Punkt, den sie nennt, wird vor dem Absenden im Diff wiedergefunden.** `tools/commit-bereit.pl` wäre der Ort dafür. |
-| [wissen-gehoert-in-dateien](../Arbeitsweise/wissen-gehoert-in-dateien.md) | **Es reicht nicht, dass es in *einer* Datei steht — es muss in *der* Datei stehen.** Die Acht-Minuten-Messung zu [E-124](../BEFUNDE.md#e-124) steht vollständig und gut formuliert in `Releases/1.0.113/RELEASE-NOTIZEN.md:91-101` und damit öffentlich auf GitHub, aber in **keinem** Befund und in keiner Paketzeile. Der nächste, der [E-124](../BEFUNDE.md#e-124) aufschlägt, liest den Stand vom 16.10. — und [L-43.17](LEKTOR-43.md#l-43.17) hat heute früh genau nach diesem Beleg gesucht und keinen gefunden. **Ein Messwert gehört in den Befund, bevor er in ein Anwenderdokument geht.** |
-| [erst-nachstellen-dann-ausliefern](../Arbeitsweise/erst-nachstellen-dann-ausliefern.md) | **Zum ersten Mal hat sie ohne Gregor als Prüfstand funktioniert — und das Dokument hat es bestritten.** Gemessen und in [E-131](../BEFUNDE.md#e-131) belegt: 7.2.0.112 schrieb bei einem einzigen Start-und-Beenden `MRUFloatXPos=-2147483648` dreimal in die INI (3249 → 6480 Byte, 16 neue Abschnitte), 7.2.0.113 null Treffer für `INT_MIN`, in zwei Läufen. Rot und grün, am eigenen Prüfstand, **vor** der Auslieferung. Die veröffentlichten Notizen derselben Fassung sagten dazu *„Wir haben es noch nicht nachgestellt"*. **Nachtrag:** die Lehre endet nicht beim Messen. Der Satz, der die Messung behauptet oder bestreitet, steht in einem anderen Dokument, und der gehört dazu. |
+| [schranke-teilt-nicht-die-annahme](../Arbeitsweise/schranke-teilt-nicht-die-annahme.md) | **Zwei neue Belege, beide heute grün gemeldet.** (1) `pruefe-befundurteile.pl` sagt *„keinen behobenen für unerledigt"*, während `README.md:75` über den behobenen [E-131](../Intern/BEFUNDE.md#e-131) sagt, er sei *„von uns noch nicht nachgestellt"*. Ursache am Quelltext: `@unerledigt` (`:212-217`) ist eine Liste von **acht** von Hand geschriebenen Wendungen, und diese ist keine davon. (2) `pruefe-release-buchfuehrung.pl` meldet grün, während `Releases/PAKETE.md:6` sagt *„zuletzt veröffentlicht **1.0.112** als `v1.0.113`"* — die Schranke fragt, **ob** die Nummer vorkommt, nicht **wem** sie zugeordnet ist. Beide Male prüft die Schranke eine Wortliste statt einer Aussage, genau wie [L-43.13](LEKTOR-43.md#l-43.13). |
+| [erfolgsmeldung-aus-dem-ergebnis](../Arbeitsweise/erfolgsmeldung-aus-dem-ergebnis.md) | **Die Fassung *Commit-Nachricht*.** `0f4b2b1a` schreibt im Körper *„[E-124](../Intern/BEFUNDE.md#e-124) fortgeschrieben … 13:09:05 … 13:17:28"*; `git show 0f4b2b1a -- BEFUNDE.md` ändert ausschließlich die Zeile zu [E-131](../Intern/BEFUNDE.md#e-131), und `grep` über `BEFUNDE.md` findet beide Zeitangaben **nirgends**. Eine Commit-Nachricht ist eine Erfolgsmeldung wie jede andere: **jeder Punkt, den sie nennt, wird vor dem Absenden im Diff wiedergefunden.** `tools/commit-bereit.pl` wäre der Ort dafür. |
+| [wissen-gehoert-in-dateien](../Arbeitsweise/wissen-gehoert-in-dateien.md) | **Es reicht nicht, dass es in *einer* Datei steht — es muss in *der* Datei stehen.** Die Acht-Minuten-Messung zu [E-124](../Intern/BEFUNDE.md#e-124) steht vollständig und gut formuliert in `Releases/1.0.113/RELEASE-NOTIZEN.md:91-101` und damit öffentlich auf GitHub, aber in **keinem** Befund und in keiner Paketzeile. Der nächste, der [E-124](../Intern/BEFUNDE.md#e-124) aufschlägt, liest den Stand vom 16.10. — und [L-43.17](LEKTOR-43.md#l-43.17) hat heute früh genau nach diesem Beleg gesucht und keinen gefunden. **Ein Messwert gehört in den Befund, bevor er in ein Anwenderdokument geht.** |
+| [erst-nachstellen-dann-ausliefern](../Arbeitsweise/erst-nachstellen-dann-ausliefern.md) | **Zum ersten Mal hat sie ohne Gregor als Prüfstand funktioniert — und das Dokument hat es bestritten.** Gemessen und in [E-131](../Intern/BEFUNDE.md#e-131) belegt: 7.2.0.112 schrieb bei einem einzigen Start-und-Beenden `MRUFloatXPos=-2147483648` dreimal in die INI (3249 → 6480 Byte, 16 neue Abschnitte), 7.2.0.113 null Treffer für `INT_MIN`, in zwei Läufen. Rot und grün, am eigenen Prüfstand, **vor** der Auslieferung. Die veröffentlichten Notizen derselben Fassung sagten dazu *„Wir haben es noch nicht nachgestellt"*. **Nachtrag:** die Lehre endet nicht beim Messen. Der Satz, der die Messung behauptet oder bestreitet, steht in einem anderen Dokument, und der gehört dazu. |
 | [kein-paket-mit-offenem-datenverlust](../Arbeitsweise/kein-paket-mit-offenem-datenverlust.md) | **Eine Größe, die in der Lehre fehlt: wer wartet.** Zweimal an einem Tag dieselbe Frage, zwei verschiedene Antworten, beide von Gregor. 7.2.0.111 wurde wegen [PRÜFER-39](PRUEFER-39.md) N1 zurückgenommen — Gewicht *hoch*, aber **belegt am Quelltext**, nicht gemessen, und es wartete niemand außer uns. 7.2.0.113 ging hinaus, ohne auf `PRUEFER-40` zu warten (*„wir nehmen die alternative"*), weil ein Fremder mit unbrauchbarer Installation wartet. Die Lehre kennt bisher nur Gregor als Empfänger. **Ab dem ersten Fehlerbericht von außen gibt es Empfänger, für die Warten teurer ist als für uns** — die Abwägung gehört benannt, die Entscheidung bleibt seine. |
 | [nie-direkt-auf-main](../Arbeitsweise/nie-direkt-auf-main.md) | **Gemessen: auf `main` ist nichts gelandet.** `git log --first-parent main` zeigt für den 20.10. zwölf Einträge, alle Zusammenführungen; `git reflog show main` sechs Bewegungen, alle `pull --ff-only`. Verletzt war die Regel im **Arbeitsbaum**. `pruefe-branch.pl:185` weist den Commit auf `main` ab — beim Commit, also beliebig spät. **Nachtrag ins How-to-apply:** der erste Handgriff nach `git checkout main` ist `git branch --show-current`, und der erste **Schreibzugriff** auf eine Projektdatei gehört auf einen Zweig — nicht erst der erste Commit. |
 | [pruefen-statt-vermuten](../Arbeitsweise/pruefen-statt-vermuten.md) | **Eine Schutzbehauptung ist eine Ursachenbehauptung und braucht dieselbe Messung.** `README.md:75` und die veröffentlichten Notizen zu 1.0.112 nannten eine **Bedingung** — *„solange dieselbe `Eudora.ini` benutzt wird"* —, die nie gemessen wurde und die im Umkehrschluss einen Schutz verspricht, den es nicht gibt. Der Melder hat sie am 20.10. um 16:11 UTC widerlegt. **Eine Bedingung in einer Warnung ist das, wonach der Leser handelt; sie ist der geprüfte Teil, nicht das Beiwerk.** |
-| [kuerzel-im-chat-uebersetzen](../Arbeitsweise/kuerzel-im-chat-uebersetzen.md) | **Zweiter Beleg für die Erweiterung vom Vormittag, diesmal nach außen.** Gregors Einwurf *„Befund läuft bei uns als [E-131](../BEFUNDE.md#e-131). link fehlt!"* betraf den veröffentlichten Release-Text: dort stand die Kennung ohne Verweis, für Leser, die `BEFUNDE.md` nicht kennen. In der berichtigten Fassung ist sie verlinkt. **In einem veröffentlichten Dokument ist eine Kennung ohne Link und ohne Klartext nicht nur unhöflich, sie ist unbrauchbar** — der Leser hat unser Repo nicht im Kopf. |
+| [kuerzel-im-chat-uebersetzen](../Arbeitsweise/kuerzel-im-chat-uebersetzen.md) | **Zweiter Beleg für die Erweiterung vom Vormittag, diesmal nach außen.** Gregors Einwurf *„Befund läuft bei uns als [E-131](../Intern/BEFUNDE.md#e-131). link fehlt!"* betraf den veröffentlichten Release-Text: dort stand die Kennung ohne Verweis, für Leser, die `BEFUNDE.md` nicht kennen. In der berichtigten Fassung ist sie verlinkt. **In einem veröffentlichten Dokument ist eine Kennung ohne Link und ohne Klartext nicht nur unhöflich, sie ist unbrauchbar** — der Leser hat unser Repo nicht im Kopf. |
 
 ---
 
@@ -681,8 +681,8 @@ Nach [widerlegte-vermutungen-aufschreiben](../Arbeitsweise/widerlegte-vermutunge
 **Nicht widerlegt, aber auch nicht belegt:** dass der erste Versuch zu
 `v1.0.112` die Notizen **leer** veröffentlichte (im Repo steht dazu nichts; am
 Quelltext belegt ist nur, dass das Skript es zulässt und nicht meldet); dass das
-Einfügen von [E-131](../BEFUNDE.md#e-131) sich an einem verschobenen
-[E-130](../BEFUNDE.md#e-130)-Treffer verankert hat (belegt ist nur das Ergebnis);
+Einfügen von [E-131](../Intern/BEFUNDE.md#e-131) sich an einem verschobenen
+[E-130](../Intern/BEFUNDE.md#e-130)-Treffer verankert hat (belegt ist nur das Ergebnis);
 und wann genau `gh release edit` auf `v1.0.112` und `v1.0.113` gelaufen ist —
 GitHub führt darüber keine Historie, die `gh` ausgibt.
 
@@ -706,10 +706,10 @@ die von `v1.0.112`** (Uhrzeit, Marke, PR-Nummer, Prüfsumme). Dazu beanspruchen
 | `main`, `WEITERMACHEN.md:45` | vier von sechs Angaben zu `v1.0.113` sind die von `v1.0.112` (11:55:10 statt 13:01:36 UTC, `f87a4a74`/#113 statt `ac094f15`/#117, SHA `0406c108…` statt `0d1d4bf4…`, Quellstand 7.2.0.112 statt .113) | gemessene Werte eintragen; danach läuft `doku-pruefen.pl` wieder |
 | `main`, `Releases/PAKETE.md:159` und `:167` | zwei Pakete beanspruchen die Marke `v1.0.113` | eines davon richtigstellen |
 | GitHub, `v1.0.113` | Zeile 128 ist ein Satzrest mit offener Fettschrift | die Zeile in `Releases/1.0.113/RELEASE-NOTIZEN.md` an ihren Punkt anschließen, dann `gh release edit v1.0.113 --notes-file Releases/1.0.113/RELEASE-NOTIZEN.md` |
-| `main`, `README.md:75` | sagt über den **behobenen** [E-131](../BEFUNDE.md#e-131) *„von uns noch nicht nachgestellt"* und nennt die widerlegte Bedingung *„solange dieselbe `Eudora.ini` benutzt wird"* | gehört in denselben Zweig wie **[E-132](../BEFUNDE.md#e-132)** |
-| `main`, `BEFUNDE.md:300/301` | die Zeile zu [E-131](../BEFUNDE.md#e-131) ist über zwei Zeilen gebrochen, `:300` endet ohne schließenden senkrechten Strich | eine Zeile daraus machen |
+| `main`, `README.md:75` | sagt über den **behobenen** [E-131](../Intern/BEFUNDE.md#e-131) *„von uns noch nicht nachgestellt"* und nennt die widerlegte Bedingung *„solange dieselbe `Eudora.ini` benutzt wird"* | gehört in denselben Zweig wie **[E-132](../Intern/BEFUNDE.md#e-132)** |
+| `main`, `BEFUNDE.md:300/301` | die Zeile zu [E-131](../Intern/BEFUNDE.md#e-131) ist über zwei Zeilen gebrochen, `:300` endet ohne schließenden senkrechten Strich | eine Zeile daraus machen |
 
-Dazu: `WEITERMACHEN.md` führt [E-131](../BEFUNDE.md#e-131) weiter als offen
+Dazu: `WEITERMACHEN.md` führt [E-131](../Intern/BEFUNDE.md#e-131) weiter als offen
 (`perl tools/offene-befunde.pl -schreiben` setzt es).
 
 **3. `pruefe-branch.pl` weist beim ersten Push eines neuen `wt/`-Zweigs den
@@ -746,16 +746,16 @@ im Issue verfällt.
 
 1. **`PRUEFER-40` läuft** (angestoßen 14:59) und prüft die INI-Nachbehandlung
    in `CMainFrame::SaveBarState`. Das Paket ist bereits veröffentlicht.
-2. **Der Leseweg zu [E-131](../BEFUNDE.md#e-131) ist offen**: eine bereits
+2. **Der Leseweg zu [E-131](../Intern/BEFUNDE.md#e-131) ist offen**: eine bereits
    beschädigte INI wird erst beim nächsten Sichern berichtigt. Steht so im
    Befund und in den Notizen.
-3. ****[E-132](../BEFUNDE.md#e-132)** ist nicht committet** und auf `main`
+3. ****[E-132](../Intern/BEFUNDE.md#e-132)** ist nicht committet** und auf `main`
    unbekannt; er ist am Quelltext belegt und **nicht nachgestellt**.
 4. **[PRÜFER-39](PRUEFER-39.md) N2 bis N9** sind nicht abgearbeitet; N1 ist
    durch die Rücknahme erledigt.
 5. **Die vier Werkzeugmängel aus [LEKTOR-43](LEKTOR-43.md#lektor-43)**
    ([L-43.11](LEKTOR-43.md#l-43.11) bis [L-43.15](LEKTOR-43.md#l-43.15)) und
    die neun Punkte aus [L-43.16](LEKTOR-43.md#l-43.16).
-6. **Die fünf `Eudora71/Bin/Release/*.dll`** ([E-130](../BEFUNDE.md#e-130))
+6. **Die fünf `Eudora71/Bin/Release/*.dll`** ([E-130](../Intern/BEFUNDE.md#e-130))
    stehen weiter als geändert im Hauptarbeitsbaum; entschieden ist, sie nicht
    zu committen.

@@ -1,6 +1,6 @@
 # Fehlalarm bei Microsoft melden — fertig ausgefüllt
 
-**Stand 21.10.2026** — am 21.10.2026 nachgesehen, der Vorgang steht weiterhin auf *pending*; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../BEFUNDE.md#e-124). Auf Gregors
+**Stand 22.10.2026** — zuletzt am 21.10.2026 bei Microsoft nachgesehen, der Vorgang stand auf *pending*; am 22.10.2026 nicht erneut abgefragt; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../Intern/BEFUNDE.md#e-124). Auf Gregors
 Ansage vom 20.10.2026: *„ja, melde den fehlalarm bei microsoft"*.
 
 **Warum das hier als Datei liegt und nicht erledigt ist.** Das Formular
@@ -94,7 +94,7 @@ We can provide build logs or a reproducible build on request.
 Der Stand steht auf der Seite des Vorgangs und ändert sich, ohne dass jemand
 etwas tut; *pending* heißt, dass die Datei in der Warteschlange der Analyse
 liegt. **Das Ergebnis gehört hierher und nach
-[E-124](../BEFUNDE.md#e-124)** — auch ein ablehnendes. Fällt der Fehlalarm
+[E-124](../Intern/BEFUNDE.md#e-124)** — auch ein ablehnendes. Fällt der Fehlalarm
 weg, ist es der erste Fall, in dem eine Fehlerklasse dieses Projekts
 **außerhalb** des Projekts abgestellt wurde.
 

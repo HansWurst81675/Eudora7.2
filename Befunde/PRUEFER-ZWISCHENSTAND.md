@@ -108,5 +108,5 @@ ihm einen leeren Kasten zu geben.
 ## 5. Was unverändert gilt
 
 Die Trennung der Fassungen in `summary.cpp` (`EditorBody` gegen `Body`) ist
-davon nicht berührt: das aufgehobene Original aus **[E-88](../BEFUNDE.md#e-88)** bleibt unangetastet,
-gleich wie [E-89](../BEFUNDE.md#e-89) weitergeht.
+davon nicht berührt: das aufgehobene Original aus **[E-88](../Intern/BEFUNDE.md#e-88)** bleibt unangetastet,
+gleich wie [E-89](../Intern/BEFUNDE.md#e-89) weitergeht.

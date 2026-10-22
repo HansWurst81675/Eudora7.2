@@ -16,7 +16,7 @@ use warnings;
 #
 #     "das hat jemand auf dem schirm?"
 #
-# Beide standen in BEFUNDE.md - der Datei, in die ich E-85 als NEUEN Befund
+# Beide standen in Intern/BEFUNDE.md - der Datei, in die ich E-85 als NEUEN Befund
 # eingetragen habe. NP3-8 trug den Vermerk "Sicherheit: nachgewiesen.
 # Originalfehler von QUALCOMM", eine Tabelle mit beiden Zaehlweisen
 # nebeneinander, die Zeilennummern und am Ende die Handlungsanweisung:
@@ -28,7 +28,7 @@ use warnings;
 # Genau so wurde es am Ende behoben. Die Antwort lag fertig im Repo, mit
 # Zeilennummern, und wurde nicht gelesen.
 #
-# WAS DARAN SCHWER WIEGT: BEFUNDE.md ist ueber 7800 Zeilen lang und fuehrt
+# WAS DARAN SCHWER WIEGT: Intern/BEFUNDE.md ist ueber 7800 Zeilen lang und fuehrt
 # mehrere Nummernkreise nebeneinander (E-, NP-, PR-, P-, X-, Z-, R-). Wer
 # einen neuen Fehler meldet, nennt ihn mit SEINEN Worten - "Umlaute kommen
 # falsch an" - und findet damit einen Eintrag nicht, der "uebersetzt keinen
@@ -43,7 +43,7 @@ use warnings;
 #   perl tools/befund-suchen.pl ISOTranslate
 #   perl tools/befund-suchen.pl "Eudora71/EuImap/src/ImapDownload.cpp:4644"
 #
-# Sucht in BEFUNDE.md nach jedem Abschnitt, der diesen Ort nennt, und gibt
+# Sucht in Intern/BEFUNDE.md nach jedem Abschnitt, der diesen Ort nennt, und gibt
 # Nummer, Ueberschrift und Urteil aus. Mehrere Suchbegriffe sind erlaubt; ein
 # Abschnitt gilt als Treffer, wenn er einen davon nennt.
 #
@@ -55,13 +55,13 @@ use warnings;
 #            2 = Aufrufproblem.
 
 my $wurzel = -f 'VERSION' ? '.' : '..';
-my $datei  = "$wurzel/BEFUNDE.md";
+my $datei  = "$wurzel/Intern/BEFUNDE.md";
 
 unless (@ARGV) {
     print <<'ENDE';
   Aufruf: perl tools/befund-suchen.pl <Ort> [<Ort> ...]
 
-  Sucht in BEFUNDE.md nach Abschnitten, die diesen Ort im Quelltext nennen.
+  Sucht in Intern/BEFUNDE.md nach Abschnitten, die diesen Ort im Quelltext nennen.
   Gedacht fuer den Moment, BEVOR ein neuer Befund angelegt wird.
 
   Beispiele:
@@ -72,7 +72,7 @@ ENDE
 }
 
 unless (-f $datei) {
-    print "  befund-suchen: BEFUNDE.md nicht gefunden - bitte aus dem\n";
+    print "  befund-suchen: Intern/BEFUNDE.md nicht gefunden - bitte aus dem\n";
     print "  Wurzelverzeichnis aufrufen.\n";
     exit 2;
 }
@@ -129,7 +129,7 @@ for my $zeile (split /\n/, $text) {
 push @abschnitte, $aktuell if $aktuell;
 
 unless (@abschnitte) {
-    print "  befund-suchen: in BEFUNDE.md steht kein Abschnitt mit Kennung -\n";
+    print "  befund-suchen: in Intern/BEFUNDE.md steht kein Abschnitt mit Kennung -\n";
     print "  entweder hat sich der Aufbau geaendert oder die Datei ist leer.\n";
     exit 2;
 }
@@ -166,7 +166,7 @@ for my $a (@abschnitte) {
 printf "\n  ------------------------------------------------------------\n";
 printf "  befund-suchen: %s\n", join(', ', @ARGV);
 printf "  ------------------------------------------------------------\n";
-printf "  %d Abschnitt(e) in BEFUNDE.md durchsucht\n\n", scalar @abschnitte;
+printf "  %d Abschnitt(e) in Intern/BEFUNDE.md durchsucht\n\n", scalar @abschnitte;
 
 unless (@treffer) {
     print "  Kein bestehender Befund nennt diesen Ort.\n";

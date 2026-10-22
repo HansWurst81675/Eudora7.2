@@ -1,8 +1,8 @@
 # PRÜFER-32 — 7.2.0.100 nachgerechnet
 
 Gegenstand: `git diff b1cc0b9f..16c27e4e -- Eudora71/`, also Commit `16c27e4e` (7.2.0.100) mit den
-Behebungen von [PRUEFER-31](PRUEFER-31.md) F1, F3 und F4 zu [E-121](../BEFUNDE.md#e-121) und
-[E-83](../BEFUNDE.md#e-83). Gelesen am Quelltext, nichts gebaut, nichts gestartet. Zeilen beziehen
+Behebungen von [PRUEFER-31](PRUEFER-31.md) F1, F3 und F4 zu [E-121](../Intern/BEFUNDE.md#e-121) und
+[E-83](../Intern/BEFUNDE.md#e-83). Gelesen am Quelltext, nichts gebaut, nichts gestartet. Zeilen beziehen
 sich auf `16c27e4e`. Messdaten (nur gelesen): `C:\Temp\E118\Mailverzeichnis\eudora-{n,u,x}100{a,b}-1.log`
 und `C:\Temp\E118\imap-{n,u,x}100{a,b}-1.log`, sechs Läufe an 7.2.0.100.
 
@@ -244,7 +244,7 @@ nicht. Nach dem `APPEND` schickt Eudora nur `NOOP`, und `tools/imap-pruefserver.
 `NOOP` ohne `* n EXISTS`. Eudora erfährt also nicht, dass eine Nachricht dazukam. Das ist ein Mangel
 des Prüfservers, kein Fehler in Eudora: Ein echter Server meldet `EXISTS`.
 
-Folge: Der Teil von [E-121](../BEFUNDE.md#e-121) „ohne UIDPLUS genau einmal im Ziel“ ist am Prüfstand in beiden Richtungen
+Folge: Der Teil von [E-121](../Intern/BEFUNDE.md#e-121) „ohne UIDPLUS genau einmal im Ziel“ ist am Prüfstand in beiden Richtungen
 blind. Ein Doppel würde er ebenso wenig zeigen wie ein Fehlen. Vorschlag: Der Prüfserver meldet bei
 `NOOP` für das gewählte Postfach `* n EXISTS`, wenn sich `n` seit der letzten Meldung geändert hat.
 

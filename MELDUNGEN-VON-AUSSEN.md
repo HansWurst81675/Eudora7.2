@@ -3,7 +3,7 @@
 > **Diese Datei ist bewusst auf Englisch** — als einzige im Projekt. Sie ist
 > das Dokument, auf das wir Melder von außen per Link stoßen; eine deutsche
 > Tabelle wäre für sie eine Geste ohne Inhalt. Die Tiefe bleibt deutsch:
-> [BEFUNDE.md](BEFUNDE.md) trägt die Messungen, hierher gehört nur das
+> [BEFUNDE.md](Intern/BEFUNDE.md) trägt die Messungen, hierher gehört nur das
 > Verzeichnis. Bitte nicht „zurückkorrigieren".
 
 **As of 21 October 2026.** Every report that reaches us from outside the
@@ -17,7 +17,7 @@ and traceable — and the issue can be closed without the matter being lost.
 Anyone wondering what happened to their report looks here.
 
 **What is *not* here:** the measurements and the reasoning. Those live in
-[BEFUNDE.md](BEFUNDE.md), which the rows link to wherever a measurement
+[BEFUNDE.md](Intern/BEFUNDE.md), which the rows link to wherever a measurement
 exists. This file is the table of contents, not the case file. `BEFUNDE.md`
 is in German, as is the rest of the project documentation — this register is
 the single exception.
@@ -40,9 +40,9 @@ the single exception.
 
 | Report | Date | Reporter | Priority | What it is about | Status |
 |---|---|---|---|---|---|
-| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-4 | 2026-10-21 | `rjsdotorg` | medium | **`MRUFloatYPos=-682908189` in `[ToolBar-Bar10]`.** Unlike the orphans this section lies *inside* `Bars=12` and is therefore loaded on every start. `Bar10` is the search bar (`IDC_SEARCH_BAR`) | **Measured on 2026-10-21: the rule already catches it.** `E131PositionIstBrauchbar` rejects the value and replaces the position — the upper bound on a 1294-pixel screen is y = −1194. Two test cases were added (`Eudora71/Tests/TestE131.cpp`), and the counter-test proves they bite: with the upper y bound removed, all five pre-existing cases stay green and only the two new ones turn red. That direction had never been tested. 245 tests, 245 passed. **Caveat unchanged:** this only applies when *our* Eudora saves; a foreign `Eudora.ini` that already carries the value is not repaired until then — the known open read path of [E-131](BEFUNDE.md#e-131) |
-| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-1 | 2026-10-18 | `rjsdotorg` | high | **After running our build, his Hermes 7.1.0.9 would no longer start** (`EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`). Our build had silently adopted his mail folder via the registry and modified its `Eudora.ini` | **Fixed** in 7.2.0.117 and 7.2.0.118, released in [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). Eudora now asks before adopting a foreign mail folder, defaulting to a fresh one; a *failed* prompt no longer adopts it either. See [E-132](BEFUNDE.md#e-132). **Still open:** whether his Hermes starts again afterwards — he has not reported back |
-| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-2 | 2026-10-18 | `rjsdotorg` | high | **`MRUFloatXPos=-2147483648` written into the shared `Eudora.ini`** — his hypothesis for the crash | **Fixed** in 7.2.0.113. We no longer write the value; measured red and green on the test bench. **That it caused the crash is not established** — `-2147483648` is `CW_USEDEFAULT`, which MFC sets itself and catches again on read ([PRÜFER-40 K1](Befunde/PRUEFER-40.md#k1)). What is proven is only that we wrote it. See [E-131](BEFUNDE.md#e-131) |
+| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-4 | 2026-10-21 | `rjsdotorg` | medium | **`MRUFloatYPos=-682908189` in `[ToolBar-Bar10]`.** Unlike the orphans this section lies *inside* `Bars=12` and is therefore loaded on every start. `Bar10` is the search bar (`IDC_SEARCH_BAR`) | **Measured on 2026-10-21: the rule already catches it.** `E131PositionIstBrauchbar` rejects the value and replaces the position — the upper bound on a 1294-pixel screen is y = −1194. Two test cases were added (`Eudora71/Tests/TestE131.cpp`), and the counter-test proves they bite: with the upper y bound removed, all five pre-existing cases stay green and only the two new ones turn red. That direction had never been tested. 245 tests, 245 passed. **Caveat unchanged:** this only applies when *our* Eudora saves; a foreign `Eudora.ini` that already carries the value is not repaired until then — the known open read path of [E-131](Intern/BEFUNDE.md#e-131) |
+| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-1 | 2026-10-18 | `rjsdotorg` | high | **After running our build, his Hermes 7.1.0.9 would no longer start** (`EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`). Our build had silently adopted his mail folder via the registry and modified its `Eudora.ini` | **Fixed** in 7.2.0.117 and 7.2.0.118, released in [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). Eudora now asks before adopting a foreign mail folder, defaulting to a fresh one; a *failed* prompt no longer adopts it either. See [E-132](Intern/BEFUNDE.md#e-132). **Still open:** whether his Hermes starts again afterwards — he has not reported back |
+| [#102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-2 | 2026-10-18 | `rjsdotorg` | high | **`MRUFloatXPos=-2147483648` written into the shared `Eudora.ini`** — his hypothesis for the crash | **Fixed** in 7.2.0.113. We no longer write the value; measured red and green on the test bench. **That it caused the crash is not established** — `-2147483648` is `CW_USEDEFAULT`, which MFC sets itself and catches again on read ([PRÜFER-40 K1](Befunde/PRUEFER-40.md#k1)). What is proven is only that we wrote it. See [E-131](Intern/BEFUNDE.md#e-131) |
 
 ## What we do not take on
 

@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 # befunde-verlinken.pl - macht jede Befundkennung in den fuehrenden Dokumenten
-# anklickbar und haelt die Verweise gegen BEFUNDE.md.
+# anklickbar und haelt die Verweise gegen Intern/BEFUNDE.md.
 #
 #   perl tools/befunde-verlinken.pl              # nur pruefen (Schranke)
-#   perl tools/befunde-verlinken.pl --anker      # Anker in BEFUNDE.md anlegen
+#   perl tools/befunde-verlinken.pl --anker      # Anker in Intern/BEFUNDE.md anlegen
 #   perl tools/befunde-verlinken.pl --verlinken  # Kennungen zu Links machen
 #   perl tools/befunde-verlinken.pl --anker --verlinken
 #   perl tools/befunde-verlinken.pl --zeigen     # was sich aendern wuerde
@@ -24,7 +24,7 @@
 #
 # WOHIN DER LINK ZEIGT
 #
-# Auf die Zeile in der Urteilstabelle von BEFUNDE.md. Gemessen am 12.10.2026:
+# Auf die Zeile in der Urteilstabelle von Intern/BEFUNDE.md. Gemessen am 12.10.2026:
 # von 138 Kennungen haben nur 44 einen eigenen Abschnitt, 94 stehen
 # ausschliesslich in dieser Tabelle - und ihre Urteilsspalte IST die
 # Beschreibung. Ein Anker je Kennung, immer an derselben Sorte Stelle.
@@ -61,11 +61,11 @@ $wurzel = '.' if $wurzel eq $0 || $wurzel eq '';
 # NP2/NP3, S, B, A, W, F, LEKTOR und PRUEFER, also auch NP3-8, genau den
 # Befund, dessen Uebersehen CLAUDE.md als teuersten Fehler des Projekts
 # festhaelt. Gesucht wird die FORM; ob die Kennung existiert, entscheidet
-# allein die Urteilstabelle in BEFUNDE.md.
+# allein die Urteilstabelle in Intern/BEFUNDE.md.
 my $PRAEFIX = qr/[A-Z][A-Za-z0-9]{0,8}/;
 my $KENNUNG = qr/$PRAEFIX-\d+(?:\.\d+)?[a-z]?/;
 # Dritte Form, ohne Bindestrich: B5, B5.7, C1 - die Abschnittskennungen der
-# Arbeitspakete in AUFGABEN.md und TESTPLAN.md. Gregor am 12.10.2026:
+# Arbeitspakete in Intern/AUFGABEN.md und Intern/TESTPLAN.md. Gregor am 12.10.2026:
 # "Offen bleibt B5.7: ... link fehlt". 44 Nennungen allein fuer B5.7.
 my $KURZ    = qr/[A-Z]\d+(?:\.\d+)?/;
 my $JEDE    = qr/(?:$KENNUNG|$KURZ)/;
@@ -84,7 +84,7 @@ sub schreib {
 # ---------------------------------------------------------------------------
 # 1. Welche Kennungen gibt es, und wo steht ihre Urteilszeile?
 # ---------------------------------------------------------------------------
-my $bef = "$wurzel/BEFUNDE.md";
+my $bef = "$wurzel/Intern/BEFUNDE.md";
 my @bz = split /\n/, lies($bef), -1;
 
 my %zeile_von;        # Kennung -> Index in @bz
@@ -95,16 +95,16 @@ for my $i (0 .. $#bz) {
 my @kennungen = sort keys %zeile_von;
 my %ankerda = map { lc($_) => 1 } @kennungen;
 our %ankerda2;
-printf "BEFUNDE.md: %d Kennungen in der Urteilstabelle\n", scalar @kennungen;
+printf "Intern/BEFUNDE.md: %d Kennungen in der Urteilstabelle\n", scalar @kennungen;
 
 sub ankername { my $k = lc shift; $k =~ s/[^a-z0-9.-]//g; return $k }
 
 # ---------------------------------------------------------------------------
 # 1b. Das zweite Verzeichnis: die Agentenbefunde unter Befunde/
 # ---------------------------------------------------------------------------
-# Gregor am 12.10.2026, mit LEKTORAT.md vor sich: "L-17 usw. - links fehlen!".
+# Gregor am 12.10.2026, mit Intern/LEKTORAT.md vor sich: "L-17 usw. - links fehlen!".
 # Richtig: L-17.1, LEKTOR-20, P-42, W-2 stehen NICHT in der Urteilstabelle
-# von BEFUNDE.md, sondern haben ihre eigene Ueberschrift in einem Bericht
+# von Intern/BEFUNDE.md, sondern haben ihre eigene Ueberschrift in einem Bericht
 # unter Befunde/. Die erste Fassung kannte nur ein Verzeichnis und ging an
 # 603 Nennungen vorbei.
 my %bericht_zeilen;   # Datei -> [Zeilen]
@@ -116,7 +116,7 @@ for my $f (sort glob("$wurzel/Befunde/*.md")) {
   for my $i (0 .. $#z) {
     next unless $z[$i] =~ /^\#+\s+(?:<a\s+id="[^"]*"><\/a>)?\s*\*{0,2}\s*($KENNUNG)(?![\w.-])/;
     my $k = $1;
-    next if exists $zeile_von{$k};          # BEFUNDE.md hat Vorrang
+    next if exists $zeile_von{$k};          # Intern/BEFUNDE.md hat Vorrang
     next if exists $bericht_anker{$k};      # die erste Nennung gewinnt
     $bericht_anker{$k} = [$kurz, $i];
   }
@@ -128,8 +128,8 @@ printf "Befunde/*.md: %d Kennungen mit eigener Ueberschrift\n",
 # ---------------------------------------------------------------------------
 # 1c. Das dritte Verzeichnis: Abschnittskennungen in den Dokumenten selbst
 # ---------------------------------------------------------------------------
-# B5, B5.7, C1 stehen weder in BEFUNDE.md noch unter Befunde/, sondern sind
-# Ueberschriften in AUFGABEN.md und TESTPLAN.md.
+# B5, B5.7, C1 stehen weder in Intern/BEFUNDE.md noch unter Befunde/, sondern sind
+# Ueberschriften in Intern/AUFGABEN.md und Intern/TESTPLAN.md.
 my %doku_zeilen;
 my %doku_anker;
 for my $f (sort (glob("$wurzel/*.md"), glob("$wurzel/tools/*.md"))) {
@@ -148,7 +148,7 @@ printf "Dokumente: %d Abschnittskennungen (B5, B5.7, C1 ...)\n", scalar keys %do
 
 # Wohin zeigt eine Kennung? Datei und Anker, beides relativ zur Wurzel.
 my %ziel_von;
-$ziel_von{$_} = ['BEFUNDE.md', ankername($_)] for @kennungen;
+$ziel_von{$_} = ['Intern/BEFUNDE.md', ankername($_)] for @kennungen;
 $ziel_von{$_} = [$bericht_anker{$_}[0], ankername($_)] for keys %bericht_anker;
 $ziel_von{$_} = [$doku_anker{$_}[0],    ankername($_)] for keys %doku_anker;
 
@@ -204,10 +204,10 @@ if ($neu_anker || $neu_anker_b) {
       $zu{ $bericht_anker{$_}[0] } = 1 for keys %bericht_anker;
       schreib("$wurzel/$_", join("\n", @{ $bericht_zeilen{$_} })) for sort keys %zu;
     }
-    print "Anker gesetzt: $neu_anker in BEFUNDE.md, $neu_anker_b unter Befunde/\n";
+    print "Anker gesetzt: $neu_anker in Intern/BEFUNDE.md, $neu_anker_b unter Befunde/\n";
   }
   else {
-    print "Anker fehlen: $neu_anker in BEFUNDE.md, $neu_anker_b unter Befunde/ (mit --anker setzen)\n";
+    print "Anker fehlen: $neu_anker in Intern/BEFUNDE.md, $neu_anker_b unter Befunde/ (mit --anker setzen)\n";
   }
 }
 else { print "Anker: vollstaendig\n" }
@@ -241,11 +241,11 @@ for my $d (@dateien) {
     if ($z =~ /^\s*```/) { $in_block = !$in_block; next }
     next if $in_block;
     next if $z =~ /^\s*#/;                       # Ueberschrift
-    # Die Ankerzelle der Urteilstabelle in BEFUNDE.md bleibt, wie sie ist.
-    # In BEFUNDE.md bleibt die Urteilstabelle unverlinkt: dort steht die
+    # Die Ankerzelle der Urteilstabelle in Intern/BEFUNDE.md bleibt, wie sie ist.
+    # In Intern/BEFUNDE.md bleibt die Urteilstabelle unverlinkt: dort steht die
     # Kennung bei ihrer eigenen Beschreibung, ein Link auf sich selbst
     # hilft niemandem und faerbt 138 Zeilen blau.
-    next if $d eq 'BEFUNDE.md' && $z =~ /^\|\s*(?:<a\s+id="[^"]*"><\/a>)?\s*$KENNUNG\s*\|/;
+    next if $d eq 'Intern/BEFUNDE.md' && $z =~ /^\|\s*(?:<a\s+id="[^"]*"><\/a>)?\s*$KENNUNG\s*\|/;
 
     # Abschnitte, die NICHT angefasst werden duerfen: Code in Rueckstrichen
     # und fertige Links. Beides wird herausgeschnitten, ersetzt und wieder
@@ -255,10 +255,10 @@ for my $d (@dateien) {
       my $s = $1;
       # Ein Rueckstrichstueck, das NUR aus einer Kennung besteht, ist eine
       # Beschriftung, kein Befehl - das wird verlinkt. Gregor am 12.10.2026
-      # zur Markentabelle in TESTPLAN.md: "links in der tabelle fehlen".
+      # zur Markentabelle in Intern/TESTPLAN.md: "links in der tabelle fehlen".
       # `grep "E-78\|E-70" eudora.log` bleibt unangetastet: wer das kopiert,
       # soll einen Befehl bekommen und keinen Link. Nur die Form MIT
-      # Bindestrich: `B7` ist in BEFUNDE.md:6839 das Byte 0xB7, nicht der
+      # Bindestrich: `B7` ist in Intern/BEFUNDE.md:6839 das Byte 0xB7, nicht der
       # Abschnitt B7.
       if ($s =~ /^`($KENNUNG)`$/ && exists $ziel_von{$1}) {
         my $k = $1;
@@ -278,7 +278,7 @@ for my $d (@dateien) {
       my $k = $1;
       # Eine Abschnittskennung OHNE Punkt gilt nur in ihrer eigenen Datei.
       # B1 und E1 heissen in Befunde/LEKTOR-6.md etwas anderes als in
-      # TESTPLAN.md, und `B7` ist anderswo das Byte 0xB7. Ein falscher Link
+      # Intern/TESTPLAN.md, und `B7` ist anderswo das Byte 0xB7. Ein falscher Link
       # ist schlimmer als ein fehlender. Mit Punkt - B5.7 - ist die Kennung
       # eindeutig und zaehlt ueberall.
       my $nur_hier = ($k =~ /^$KURZ$/ && $k !~ /\./);

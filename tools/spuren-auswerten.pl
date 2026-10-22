@@ -155,7 +155,7 @@ for my $z (split /\n/, $verz) {
     shift @s;                      # das Leere vor dem ersten Strich
     next unless @s >= 3;
     for (@s) { s/^\s+//; s/\s+$//; }
-    # Seit dem 12.10.2026 steht die Kennung als Link da - [E-64](../BEFUNDE.md#e-64).
+    # Seit dem 12.10.2026 steht die Kennung als Link da - [E-64](../Intern/BEFUNDE.md#e-64).
     # Ohne das Folgende sieht diese Schranke die Tabelle leer und meldet
     # jede vorhandene Zeile als fehlend (LEKTOR, L-18.11).
     $s[0] =~ s/^\[\*{0,2}(E-\d+)\*{0,2}\]\([^)]*\)$/$1/;

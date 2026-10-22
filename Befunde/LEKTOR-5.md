@@ -32,12 +32,12 @@ git ls-files "*.md" | grep -vc '^Arbeitsweise/'   # 50
 |---|---|
 | Quellstand **7.2.0.22**, Paketnummer **1.0.22** | `VERSION`, `Eudora71/Version.h:14`, `ZIEL.md:17` |
 | **Kriterium 7 ist ERFÜLLT** — *„schließen klappt jetzt."*, alle drei Wege | `ZIEL.md:36` |
-| Behoben durch **[E-40](../BEFUNDE.md#e-40)**, **[E-41](../BEFUNDE.md#e-41)**, **[E-42](../BEFUNDE.md#e-42)** | `ZIEL.md:36`; im Quelltext `doc.cpp:73`, `msgdoc.cpp:1057`, `mainfrm.cpp:5462`, `mainfrm.cpp:5079` |
-| **[E-43](../BEFUNDE.md#e-43)** ist der Rest: `SaveBarState` wirft weiter, [E-42](../BEFUNDE.md#e-42) fängt es nur ab | `ZIEL.md:36` |
+| Behoben durch **[E-40](../Intern/BEFUNDE.md#e-40)**, **[E-41](../Intern/BEFUNDE.md#e-41)**, **[E-42](../Intern/BEFUNDE.md#e-42)** | `ZIEL.md:36`; im Quelltext `doc.cpp:73`, `msgdoc.cpp:1057`, `mainfrm.cpp:5462`, `mainfrm.cpp:5079` |
+| **[E-43](../Intern/BEFUNDE.md#e-43)** ist der Rest: `SaveBarState` wirft weiter, [E-42](../Intern/BEFUNDE.md#e-42) fängt es nur ab | `ZIEL.md:36` |
 | Bilanz: **sechs von neun belegt (0, 1, 3, 5, 6, 7)**, zwei fast/halb (2, 4), eines nicht (8) | `ZIEL.md:39-40` |
-| **[A-1](../BEFUNDE.md#a-1) ist am laufenden Programm belegt** | `ZIEL.md:159-161` |
+| **[A-1](../Intern/BEFUNDE.md#a-1) ist am laufenden Programm belegt** | `ZIEL.md:159-161` |
 | **A-2 ist neu und nicht angefangen** | `ZIEL.md:175-195` |
-| **[E-37](../BEFUNDE.md#e-37) ist NICHT behoben** — der erste Anlauf hat es schlimmer gemacht, der zweite ist unbestätigt | Gregors Messung vom 08.09.2026 |
+| **[E-37](../Intern/BEFUNDE.md#e-37) ist NICHT behoben** — der erste Anlauf hat es schlimmer gemacht, der zweite ist unbestätigt | Gregors Messung vom 08.09.2026 |
 | Neuer Befund: Erscheinungsbild nach dem **ersten Anlegen eines Kontos** falsch (Wazoo-Bereiche als senkrechte Spalten links) | noch nirgends aufgeschrieben |
 
 ## Ergebnis in Zahlen
@@ -58,7 +58,7 @@ git ls-files "*.md" | grep -vc '^Arbeitsweise/'   # 50
 | `AGENTEN.md` | nein | — |
 | `AUFGABEN.md` | **ja** — 9 Stellen ([L-9.1](#l-9.1), [L-9.3](#l-9.3), [L-9.6](#l-9.6), [L-9.8](#l-9.8), [L-9.14](#l-9.14)) | **schwer** |
 | `BEFUNDE-ALTBESTAND.md` | nein | — |
-| `BEFUNDE.md` | **ja** — E-37-Zeile falsch, [E-40](../BEFUNDE.md#e-40)…[E-43](../BEFUNDE.md#e-43) fehlen ganz, [A-1](../BEFUNDE.md#a-1) doppelt vergeben ([L-9.2](#l-9.2), [L-9.3](#l-9.3), [L-9.8](#l-9.8)) | **schwer** |
+| `BEFUNDE.md` | **ja** — E-37-Zeile falsch, [E-40](../Intern/BEFUNDE.md#e-40)…[E-43](../Intern/BEFUNDE.md#e-43) fehlen ganz, [A-1](../Intern/BEFUNDE.md#a-1) doppelt vergeben ([L-9.2](#l-9.2), [L-9.3](#l-9.3), [L-9.8](#l-9.8)) | **schwer** |
 | `Befunde/ASSISTENT.md` | nein (Zeitdokument, datiert) | — |
 | `Befunde/BEENDEN.md` | ja — kein Nachtrag zum Abschluss ([L-9.12](#l-9.12)) | mittel |
 | `Befunde/FENSTER.md` | nein (Zeitdokument mit Nachtrag) | — |
@@ -122,7 +122,7 @@ einzigen verbliebenen.
 > die untere Statuszeile mit den Reitern für offene Fenster fehlt"*
 
 **`README.md:69-75`** führt denselben Punkt als ersten Aufzählungspunkt unter
-*Offen*, mit der Ursachenanalyse zu [E-33](../BEFUNDE.md#e-33).
+*Offen*, mit der Ursachenanalyse zu [E-33](../Intern/BEFUNDE.md#e-33).
 
 **`WEITERMACHEN.md:34`**
 
@@ -132,9 +132,9 @@ einzigen verbliebenen.
 Beenden: *„Das ist der einzige verbliebene **Fehler**; alles Weitere ist
 Ausstattung."* (`:77-78`), samt Verdacht auf `QCCustomToolBar::SaveCustomInfo`
 und der Anleitung *„ein Paket aus diesem Stand bauen … und die letzte
-[`E-33`](../BEFUNDE.md#e-33)-Zeile in `eudora.log` lesen"* (`:101-107`).
+[`E-33`](../Intern/BEFUNDE.md#e-33)-Zeile in `eudora.log` lesen"* (`:101-107`).
 
-**`CHANGELOG.md:17`** führt [E-33](../BEFUNDE.md#e-33) unter *Noch offen*; **`:33`**
+**`CHANGELOG.md:17`** führt [E-33](../Intern/BEFUNDE.md#e-33) unter *Noch offen*; **`:33`**
 
 > `| **Kriterium 7** (Beenden) | **nicht erfüllt** — der einzige verbliebene Fehler der zweiten Stufe |`
 
@@ -156,27 +156,27 @@ und behoben ist es auch.
 
 **Was stattdessen gilt.** `ZIEL.md:36`: **erfüllt**, Gregor am 08.09.2026 an
 Paket 1.0.22 — *„schließen klappt jetzt."* Alle drei Wege beenden. Offen bleibt
-allein **[E-43](../BEFUNDE.md#e-43)**: `SaveBarState` wirft weiter, der Leistenzustand wird nie
-gespeichert, und das Beenden läuft nur durch, weil [E-42](../BEFUNDE.md#e-42) den Wurf abfängt.
+allein **[E-43](../Intern/BEFUNDE.md#e-43)**: `SaveBarState` wirft weiter, der Leistenzustand wird nie
+gespeichert, und das Beenden läuft nur durch, weil [E-42](../Intern/BEFUNDE.md#e-42) den Wurf abfängt.
 
 **Vorschlag für den neuen Text** (`README.md:43-46`):
 
 > **Fertig ist es nicht.** Was ein Anwender jetzt noch merkt, sind drei Dinge:
 > das Erscheinungsbild direkt nach dem ersten Anlegen eines Kontos ist falsch
-> ([E-44](../BEFUNDE.md#e-44)), *Task Status* und *Task Errors* stehen senkrecht links statt waagrecht
+> ([E-44](../Intern/BEFUNDE.md#e-44)), *Task Status* und *Task Errors* stehen senkrecht links statt waagrecht
 > unten (A-2), und die untere Statuszeile mit den Reitern für offene Fenster
 > fehlt; die offenen Fenster stehen nur im *Window*-Menü (Kriterium 8, halb).
 > **Beenden geht** — seit dem 08.09.2026, alle drei Wege (Menü, Alt-F4, Kreuz).
 > Der Fehler dahinter ist damit nicht verschwunden, sondern abgefangen: er steht
-> als Protokollzeile da und ist als **[E-43](../BEFUNDE.md#e-43)** offen.
+> als Protokollzeile da und ist als **[E-43](../Intern/BEFUNDE.md#e-43)** offen.
 
 Für `CHANGELOG.md:148`:
 
-> \| ***File → Exit***, **Alt-F4**, **Kreuz** \| beenden sauber \| [E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42) greifen nicht — die [`E-42`](../BEFUNDE.md#e-42)-Zeile in `eudora.log` nennt den Schritt \|
+> \| ***File → Exit***, **Alt-F4**, **Kreuz** \| beenden sauber \| [E-40](../Intern/BEFUNDE.md#e-40)/[E-41](../Intern/BEFUNDE.md#e-41)/[E-42](../Intern/BEFUNDE.md#e-42) greifen nicht — die [`E-42`](../Intern/BEFUNDE.md#e-42)-Zeile in `eudora.log` nennt den Schritt \|
 
 Für `WEITERMACHEN.md:34`:
 
-> \| 7 \| ***File → Exit*** beendet Eudora sauber \| **erfüllt** (08.09.2026, Paket 1.0.22, von Gregor bestätigt) — Rest als [E-43](../BEFUNDE.md#e-43) offen \|
+> \| 7 \| ***File → Exit*** beendet Eudora sauber \| **erfüllt** (08.09.2026, Paket 1.0.22, von Gregor bestätigt) — Rest als [E-43](../Intern/BEFUNDE.md#e-43) offen \|
 
 ## <a id="l-9.2"></a>L-9.2 — E-40, E-41, E-42 und E-43 stehen in **keiner** Datei außer `ZIEL.md` (schwer)
 
@@ -191,45 +191,45 @@ Im Quelltext sind die drei Behebungen dagegen vergeben und begründet:
 
 | Kennung | Fundstelle im Quelltext |
 |---|---|
-| [E-40](../BEFUNDE.md#e-40) | `Eudora71/Eudora/doc.cpp:11,73,87`; `Eudora71/Eudora/msgdoc.cpp:1057,1066` |
-| [E-41](../BEFUNDE.md#e-41) | `Eudora71/Eudora/mainfrm.cpp:5462,5494,5508` |
-| [E-42](../BEFUNDE.md#e-42) | `Eudora71/Eudora/mainfrm.cpp:5079,5102` |
-| [E-43](../BEFUNDE.md#e-43) | **nirgends** — weder Quelltext noch MD außer `ZIEL.md:36` |
+| [E-40](../Intern/BEFUNDE.md#e-40) | `Eudora71/Eudora/doc.cpp:11,73,87`; `Eudora71/Eudora/msgdoc.cpp:1057,1066` |
+| [E-41](../Intern/BEFUNDE.md#e-41) | `Eudora71/Eudora/mainfrm.cpp:5462,5494,5508` |
+| [E-42](../Intern/BEFUNDE.md#e-42) | `Eudora71/Eudora/mainfrm.cpp:5079,5102` |
+| [E-43](../Intern/BEFUNDE.md#e-43) | **nirgends** — weder Quelltext noch MD außer `ZIEL.md:36` |
 
-**Was stattdessen gilt.** Das Verzeichnis in `BEFUNDE.md` endet bei **[E-39](../BEFUNDE.md#e-39)**
+**Was stattdessen gilt.** Das Verzeichnis in `BEFUNDE.md` endet bei **[E-39](../Intern/BEFUNDE.md#e-39)**
 (`BEFUNDE.md:183`). Die drei Behebungen, die Kriterium 7 erfüllt haben, haben
-dort keine Zeile; der verbliebene Fehler **[E-43](../BEFUNDE.md#e-43)** existiert als bloße Erwähnung
+dort keine Zeile; der verbliebene Fehler **[E-43](../Intern/BEFUNDE.md#e-43)** existiert als bloße Erwähnung
 in einem Satz von `ZIEL.md:36`. Damit ist die Frage aus dem Auftrag gemessen:
-**`BEFUNDE.md` kennt [E-43](../BEFUNDE.md#e-43) nicht.**
+**`BEFUNDE.md` kennt [E-43](../Intern/BEFUNDE.md#e-43) nicht.**
 
 Das ist genau die Fehlerklasse, für die Prüfung 10 in `tools/doku-pruefen.pl`
-gebaut wurde — *„[E-34](../BEFUNDE.md#e-34), [E-35](../BEFUNDE.md#e-35) und [E-36](../BEFUNDE.md#e-36) fehlten dort vollständig, und `ZIEL.md`
+gebaut wurde — *„[E-34](../Intern/BEFUNDE.md#e-34), [E-35](../Intern/BEFUNDE.md#e-35) und [E-36](../Intern/BEFUNDE.md#e-36) fehlten dort vollständig, und `ZIEL.md`
 belegte Kriterium 4 mit genau diesen drei"* (`tools/doku-pruefen.pl:507-515`).
 Sie greift hier nicht, siehe [L-9.17](#l-9.17).
 
 **Vorschlag für den neuen Text**, vier Zeilen hinter `BEFUNDE.md:183`
 (Spalten: Kennung | Worum es geht | Status):
 
-- **[E-40](../BEFUNDE.md#e-40)** — eine Rückfrage, die sich nicht öffnen lässt, galt als *Abbrechen*:
+- **[E-40](../Intern/BEFUNDE.md#e-40)** — eine Rückfrage, die sich nicht öffnen lässt, galt als *Abbrechen*:
   `CDoc::SaveModified` und `CMessageDoc::SaveModified` gaben bei jedem
   fehlgeschlagenen `AfxMessageBox` FALSE zurück und brachen damit das Beenden ab.
   **Status:** behoben und von Gregor bestätigt (Paket 1.0.22, 08.09.2026) —
   `doc.cpp:73-87`, `msgdoc.cpp:1057-1066`; der Fehlschlag geht ins Protokoll und
   gilt nicht mehr als Nein.
-- **[E-41](../BEFUNDE.md#e-41)** — Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID` in
+- **[E-41](../Intern/BEFUNDE.md#e-41)** — Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID` in
   `CFrameWnd::OnSysCommand`, das *File → Exit* nicht hat: dieselbe Ausnahme,
   dieselbe Meldung, **vor** jedem `OnClose`. **Status:** behoben und von Gregor
   bestätigt (Paket 1.0.22) — `CMainFrame::OnSysCommand`
   (`mainfrm.cpp:5462-5508`) fängt `SC_CLOSE` ab und schickt `WM_CLOSE` selbst.
-- **[E-42](../BEFUNDE.md#e-42)** — zwölf Aufräumschritte in `CMainFrame::CloseDown` konnten das
+- **[E-42](../Intern/BEFUNDE.md#e-42)** — zwölf Aufräumschritte in `CMainFrame::CloseDown` konnten das
   Beenden abbrechen. **Status:** behoben und von Gregor bestätigt (Paket 1.0.22)
   — jeder Schritt einzeln in `TRY`/`CATCH_ALL`, der Wurf geht ins Protokoll
   (`mainfrm.cpp:5079-5102`). Nur eine bewusste Entscheidung des Anwenders bricht
   das Beenden noch ab.
-- **[E-43](../BEFUNDE.md#e-43)** — `SaveBarState("ToolBar")` wirft; der Leistenzustand wird nie
-  gespeichert. **Status: offen.** Sichtbar seit [E-42](../BEFUNDE.md#e-42) als Protokollzeile
+- **[E-43](../Intern/BEFUNDE.md#e-43)** — `SaveBarState("ToolBar")` wirft; der Leistenzustand wird nie
+  gespeichert. **Status: offen.** Sichtbar seit [E-42](../Intern/BEFUNDE.md#e-42) als Protokollzeile
   `E-42 Beenden: Schritt 'SaveBarState(ToolBar)' hat eine Ausnahme ausgeloest`.
-  Das Beenden läuft nur deshalb durch, weil [E-42](../BEFUNDE.md#e-42) den Wurf abfängt; die Ursache
+  Das Beenden läuft nur deshalb durch, weil [E-42](../Intern/BEFUNDE.md#e-42) den Wurf abfängt; die Ursache
   ist nicht belegt. Der vermessene Weg steht in `Befunde/BEENDEN.md`.
 
 ## <a id="l-9.3"></a>L-9.3 — E-37 wird an acht Stellen als behoben geführt (schwer)
@@ -244,14 +244,14 @@ Gregor nicht bestätigt**.
 
 | Datei:Zeile | Zitat | was stattdessen gilt |
 |---|---|---|
-| `AUFGABEN.md:119` | *„### 2. [E-37](../BEFUNDE.md#e-37) — Anzeige behoben, Ursache offen"* | die Anzeige ist **nicht** behoben; der erste Anlauf hat sie verschlechtert |
+| `AUFGABEN.md:119` | *„### 2. [E-37](../Intern/BEFUNDE.md#e-37) — Anzeige behoben, Ursache offen"* | die Anzeige ist **nicht** behoben; der erste Anlauf hat sie verschlechtert |
 | `AUFGABEN.md:121` | *„**Behoben am 07.09.2026, aber in keinem Paket.**"* | es war in Paket 1.0.22, und dort ist es aufgeschlagen |
 | `AUFGABEN.md:131-132` | *„die Liste wird einmal am Ende über `PopulateView()` neu aufgebaut"* | genau dieser Aufruf ist die Fehlerquelle |
-| `AUFGABEN.md:8` | *„## Die Hauptarbeit: das Beenden, zwei Kontofehler, die Reiterleiste"* | [E-37](../BEFUNDE.md#e-37) ist einer der „zwei Kontofehler" und wird unten als behoben geführt |
+| `AUFGABEN.md:8` | *„## Die Hauptarbeit: das Beenden, zwei Kontofehler, die Reiterleiste"* | [E-37](../Intern/BEFUNDE.md#e-37) ist einer der „zwei Kontofehler" und wird unten als behoben geführt |
 | `README.md:76-78` | *„**Nur die Anzeige ist behoben, die Ursache ist offen — und in keinem Paket.**"* | zweimal falsch: nicht behoben, und in 1.0.22 gewesen |
-| `README.md:116` | *„[E-37](../BEFUNDE.md#e-37) viermal (behoben)"* | nicht behoben |
-| `CHANGELOG.md:22` | *„[E-37](../BEFUNDE.md#e-37) ist behoben, indem die Liste neu aufgebaut wird."* | der Neuaufbau ist die Fehlerquelle |
-| `CHANGELOG.md:58,68` | *„**[E-37](../BEFUNDE.md#e-37): nur die ANZEIGE behoben** … **Von Gregor nicht nachgemessen** — es ist in keinem Paket."* | von Gregor nachgemessen, und durchgefallen |
+| `README.md:116` | *„[E-37](../Intern/BEFUNDE.md#e-37) viermal (behoben)"* | nicht behoben |
+| `CHANGELOG.md:22` | *„[E-37](../Intern/BEFUNDE.md#e-37) ist behoben, indem die Liste neu aufgebaut wird."* | der Neuaufbau ist die Fehlerquelle |
+| `CHANGELOG.md:58,68` | *„**[E-37](../Intern/BEFUNDE.md#e-37): nur die ANZEIGE behoben** … **Von Gregor nicht nachgemessen** — es ist in keinem Paket."* | von Gregor nachgemessen, und durchgefallen |
 | `BEFUNDE.md:181` | *„**nur die ANZEIGE behoben — die Ursache ist offen.**"* | die Anzeige ist nicht behoben |
 
 **Vorschlag für den neuen Text** (`BEFUNDE.md:181`, Statusspalte):
@@ -266,9 +266,9 @@ Gregor nicht bestätigt**.
 > geloescht habe"*, *„sie verschwindet links nicht, bis ich eudora geschlossen
 > habe"*. Ein **zweiter** Anlauf ist gebaut und **noch nicht bestätigt**. Offen
 > bleiben zusätzlich: (a) **warum** `FindItem` den Eintrag nicht findet;
-> (b) das Löschen der **aktuell benutzten** Persönlichkeit, siehe **[E-39](../BEFUNDE.md#e-39)**
+> (b) das Löschen der **aktuell benutzten** Persönlichkeit, siehe **[E-39](../Intern/BEFUNDE.md#e-39)**
 
-Und für `AUFGABEN.md:119`: **`### 2. [E-37](../BEFUNDE.md#e-37) — nicht behoben; der erste Anlauf hat
+Und für `AUFGABEN.md:119`: **`### 2. [E-37](../Intern/BEFUNDE.md#e-37) — nicht behoben; der erste Anlauf hat
 geworfen`**.
 
 ## <a id="l-9.4"></a>L-9.4 — die Bilanz „fünf von neun belegt" steht dreimal (schwer)
@@ -347,8 +347,8 @@ Dazu ein neuer Abschnitt `## 1.0.22 — gebaut am 08.09.2026, nicht als Marke
 veröffentlicht` mit ZIP-Name, SHA256
 (`7ddab1a0f0fdf1c4458a7aa2ab00d2f1fbb15561ab576657c73006fcfa95586c`,
 gemessen in `WEITERMACHEN.md:11` und `CHANGELOG.md:136`), Quellstand 7.2.0.22,
-und: *„Die Fassung, mit der Kriterium 7 erfüllt wurde — [E-40](../BEFUNDE.md#e-40), [E-41](../BEFUNDE.md#e-41), [E-42](../BEFUNDE.md#e-42); Gregor
-am 08.09.2026: ‚schließen klappt jetzt.' Ebenfalls belegt: [A-1](../BEFUNDE.md#a-1). Aufgeschlagen
+und: *„Die Fassung, mit der Kriterium 7 erfüllt wurde — [E-40](../Intern/BEFUNDE.md#e-40), [E-41](../Intern/BEFUNDE.md#e-41), [E-42](../Intern/BEFUNDE.md#e-42); Gregor
+am 08.09.2026: ‚schließen klappt jetzt.' Ebenfalls belegt: [A-1](../Intern/BEFUNDE.md#a-1). Aufgeschlagen
 ist der erste E-37-Anlauf."* Und `:28` löschen.
 
 ## <a id="l-9.6"></a>L-9.6 — Anforderung A-2 steht nur in `ZIEL.md` (schwer)
@@ -395,14 +395,14 @@ Zeitdokumenten (`BEFUNDE.md:121,3048,5513`, `LEKTORAT.md`,
 Verbindung mit dem **Anlegen eines Kontos**. Kein Eintrag in `BEFUNDE.md`, keine
 Kennung, keine Aufgabe.
 
-**Vorschlag:** eine neue Kennung **[E-44](../BEFUNDE.md#e-44)** im Verzeichnis von `BEFUNDE.md`:
+**Vorschlag:** eine neue Kennung **[E-44](../Intern/BEFUNDE.md#e-44)** im Verzeichnis von `BEFUNDE.md`:
 
-> **[E-44](../BEFUNDE.md#e-44)** — das Erscheinungsbild direkt nach dem **ersten** Anlegen eines
+> **[E-44](../Intern/BEFUNDE.md#e-44)** — das Erscheinungsbild direkt nach dem **ersten** Anlegen eines
 > Kontos ist falsch: alle Wazoo-Bereiche liegen als schmale senkrechte Spalten
 > links, der MDI-Bereich ist nach rechts gedrängt. **Status: offen, von Gregor
 > am 08.09.2026 an Paket 1.0.22 gemeldet** (*„erscheinungsbild nach dem ersten
 > anlegen von konto wie im screenshot. muss korrigiert werden."*), mit
-> Bildschirmfoto. Der Fall unterscheidet sich von [S-6](../BEFUNDE.md#s-6): er tritt beim **ersten**
+> Bildschirmfoto. Der Fall unterscheidet sich von [S-6](../Intern/BEFUNDE.md#s-6): er tritt beim **ersten**
 > Lauf auf, also bevor `[WazooBars]` in der `Eudora.ini` steht — der Weg führt
 > deshalb über `CWazooBarMgr::SetDefaultWazooBarState` und
 > `CWazooBarMgr::CreateInitialWazooBars`, nicht über `LoadBarState`. Gehört mit
@@ -415,14 +415,14 @@ Dazu ein Verweis in `ZIEL.md` bei Kriterium 2, weil es die Darstellung betrifft.
 | Bedeutung | Fundstellen |
 |---|---|
 | **Vorgaben für ein neu angelegtes Konto** (Gregors Anforderung) | `ZIEL.md:113,167`; `CHANGELOG.md:75,85`; `tools/doku-pruefen.pl:523` |
-| **Erscheinungsbild ([S-6](../BEFUNDE.md#s-6)), fünf Punkte umgesetzt** (Agentenbefund vom 30.08.2026) | `BEFUNDE.md:110,121,3048,4911,4925,5051,5071,5099`; `PORTIERUNG.md:35,512`; `Releases/PAKETE.md:307`; `LEKTORAT.md:66,170,172,181,193,289`; `AUFGABEN.md:396` |
+| **Erscheinungsbild ([S-6](../Intern/BEFUNDE.md#s-6)), fünf Punkte umgesetzt** (Agentenbefund vom 30.08.2026) | `BEFUNDE.md:110,121,3048,4911,4925,5051,5071,5099`; `PORTIERUNG.md:35,512`; `Releases/PAKETE.md:307`; `LEKTORAT.md:66,170,172,181,193,289`; `AUFGABEN.md:396` |
 
 `AUFGABEN.md:396` ist die verwirrendste Stelle, weil sie beide Zählungen mischt:
 
-> *„### E1 · `FloatControlBarInMDIChild` ist ein leerer Rumpf (**[A-1](../BEFUNDE.md#a-1)**)"*
+> *„### E1 · `FloatControlBarInMDIChild` ist ein leerer Rumpf (**[A-1](../Intern/BEFUNDE.md#a-1)**)"*
 
-Hier steht [`A-1`](../BEFUNDE.md#a-1) für den Erscheinungsbild-Befund, in einem Abschnitt, der `E1`
-heißt — während [`E-1`](../BEFUNDE.md#e-1) im Verzeichnis von `BEFUNDE.md:151` der erste erfolgreiche
+Hier steht [`A-1`](../Intern/BEFUNDE.md#a-1) für den Erscheinungsbild-Befund, in einem Abschnitt, der `E1`
+heißt — während [`E-1`](../Intern/BEFUNDE.md#e-1) im Verzeichnis von `BEFUNDE.md:151` der erste erfolgreiche
 Mailabruf ist.
 
 **Was stattdessen gilt.** `ZIEL.md:106-111` legt die Zählung `A-n` ausdrücklich
@@ -431,8 +431,8 @@ hier, damit sie nachprüfbar sind"*. Der ältere Agentenbefund hat damit einen
 Namen, der schon vergeben ist.
 
 **Vorschlag:** den alten Befund in `BEFUNDE.md` auf **`S-6a`** umbenennen (er
-ist ohnehin die Umsetzung von [S-6](../BEFUNDE.md#s-6), siehe `BEFUNDE.md:110`) und in jeder der
-oben genannten Zeitdokumentzeilen einmalig `A-1 (heute S-6a)` schreiben. [`A-1`](../BEFUNDE.md#a-1)
+ist ohnehin die Umsetzung von [S-6](../Intern/BEFUNDE.md#s-6), siehe `BEFUNDE.md:110`) und in jeder der
+oben genannten Zeitdokumentzeilen einmalig `A-1 (heute S-6a)` schreiben. [`A-1`](../Intern/BEFUNDE.md#a-1)
 bleibt allein Gregors Kontovorgabe. Die Umbenennung gehört in einen eigenen
 Commit, weil sie 18 Zeilen in fünf Dateien berührt.
 
@@ -449,21 +449,21 @@ Gemessen (`grep -n '^#\{2,3\} ' CHANGELOG.md`):
 
 Die Prüfanleitung zum aktuellen Paket hängt als `###` **innerhalb** des
 Abschnitts zu 1.0.21. Damit hat 1.0.22 keinen eigenen Eintrag, obwohl es die
-Fassung ist, die Kriterium 7 erfüllt und [A-1](../BEFUNDE.md#a-1) belegt.
+Fassung ist, die Kriterium 7 erfüllt und [A-1](../Intern/BEFUNDE.md#a-1) belegt.
 
 Dazu drei Widersprüche im Abschnitt `## Nach 7.2.0.22` (`:49-85`):
 
 | Zeile | Zitat | was stattdessen gilt |
 |---|---|---|
 | `:51` | *„Zurzeit liegt **keine** Änderung im Repo, die nicht in Paket **1.0.22** steckt."* | richtig — dann gehören die Punkte darunter aber in den Abschnitt zu 1.0.22, nicht in „danach" |
-| `:68` | *„**Von Gregor nicht nachgemessen** — es ist in keinem Paket."* (zu [E-37](../BEFUNDE.md#e-37)) | es war in 1.0.22 und ist aufgeschlagen, siehe [L-9.3](#l-9.3) |
-| `:75-77` | *„**`tools/DEudora.ini`** — Vorgaben für neu angelegte Konten (**[A-1](../BEFUNDE.md#a-1)** …)"* | ohne den Beleg: [A-1](../BEFUNDE.md#a-1) ist seit dem 08.09.2026 am laufenden Programm bestätigt |
+| `:68` | *„**Von Gregor nicht nachgemessen** — es ist in keinem Paket."* (zu [E-37](../Intern/BEFUNDE.md#e-37)) | es war in 1.0.22 und ist aufgeschlagen, siehe [L-9.3](#l-9.3) |
+| `:75-77` | *„**`tools/DEudora.ini`** — Vorgaben für neu angelegte Konten (**[A-1](../Intern/BEFUNDE.md#a-1)** …)"* | ohne den Beleg: [A-1](../Intern/BEFUNDE.md#a-1) ist seit dem 08.09.2026 am laufenden Programm bestätigt |
 | `:12` | *„## Noch offen (Stand 07.09.2026)"* | der Stand ist der 08.09.2026 |
 
 **Vorschlag:** einen Abschnitt `## 7.2.0.22 / Paket 1.0.22 — 08.09.2026 ·
 Beenden geht` **oberhalb** von `:99` anlegen, die vorhandene Unterüberschrift
 `### Was an 1.0.22 zu prüfen ist` (`:134`) dorthin verschieben, und die Punkte
-aus `:58-85` ([E-37](../BEFUNDE.md#e-37), Spurmarken, `DEudora.ini`, `bauen.ps1`, `doku-pruefen.pl`)
+aus `:58-85` ([E-37](../Intern/BEFUNDE.md#e-37), Spurmarken, `DEudora.ini`, `bauen.ps1`, `doku-pruefen.pl`)
 in ihn hineinziehen. Der Abschnitt `## Nach 7.2.0.22` bleibt dann als leerer
 Platzhalter mit dem Satz aus `:51-56` stehen — das ist seine Aufgabe.
 
@@ -479,7 +479,7 @@ nicht dass es wirkt.
 
 > **Am laufenden Programm belegt.** Gregor am 08.09.2026 an Paket 1.0.22, nach
 > dem Anlegen eines neuen Kontos: *„default werte beim neuen persona konto für
-> ‚leave message on server' greifen."* Die Anforderung dahinter ist **[A-1](../BEFUNDE.md#a-1)** in
+> ‚leave message on server' greifen."* Die Anforderung dahinter ist **[A-1](../Intern/BEFUNDE.md#a-1)** in
 > [ZIEL.md](../ZIEL.md); `tools/paket-pruefen.ps1` warnt, wenn die Datei im Paket
 > fehlt oder einen der vier Werte nicht trägt.
 
@@ -506,7 +506,7 @@ keine Aussage.
 
 ## <a id="l-9.12"></a>L-9.12 — `Befunde/BEENDEN.md` hat keinen Nachtrag zum Abschluss (mittel)
 
-Die Datei heißt in `:1` **„[E-33](../BEFUNDE.md#e-33) — *File → Exit* beendet Eudora nicht"** und sagt
+Die Datei heißt in `:1` **„[E-33](../Intern/BEFUNDE.md#e-33) — *File → Exit* beendet Eudora nicht"** und sagt
 in `:32-33`:
 
 > *„Das ist **Kriterium 7** in [ZIEL.md](../ZIEL.md) und der einzige verbliebene
@@ -521,22 +521,22 @@ Hinweis, dass der Fall entschieden ist.
 
 > **Nachtrag 08.09.2026: der Fall ist entschieden.** Kriterium 7 ist **erfüllt**
 > — Gregor an Paket 1.0.22: *„schließen klappt jetzt."* Alle drei Wege beenden.
-> Behoben durch **[E-40](../BEFUNDE.md#e-40)** (eine Rückfrage, die sich nicht öffnen lässt, galt als
-> Abbrechen), **[E-41](../BEFUNDE.md#e-41)** (Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID` in
+> Behoben durch **[E-40](../Intern/BEFUNDE.md#e-40)** (eine Rückfrage, die sich nicht öffnen lässt, galt als
+> Abbrechen), **[E-41](../Intern/BEFUNDE.md#e-41)** (Alt-F4 und das Kreuz laufen durch ein `ENSURE_VALID` in
 > `CFrameWnd::OnSysCommand`, das *File → Exit* nicht hat — die Folgerung des
-> zweiten Durchgangs, siehe `:522`, hat getragen) und **[E-42](../BEFUNDE.md#e-42)** (zwölf
+> zweiten Durchgangs, siehe `:522`, hat getragen) und **[E-42](../Intern/BEFUNDE.md#e-42)** (zwölf
 > Aufräumschritte konnten das Beenden abbrechen). Der Wurf selbst ist **nicht**
-> verschwunden: `SaveBarState("ToolBar")` wirft weiter und steht als **[E-43](../BEFUNDE.md#e-43)**
+> verschwunden: `SaveBarState("ToolBar")` wirft weiter und steht als **[E-43](../Intern/BEFUNDE.md#e-43)**
 > offen. Was unten steht, bleibt als vermessener Weg richtig.
 
 ## <a id="l-9.13"></a>L-9.13 — `Befunde/PRUEFER-4.md`: das E-37-Urteil ist widerlegt, ohne Nachtrag (leicht)
 
-`Befunde/PRUEFER-4.md:19` fragt *„## 1. [E-37](../BEFUNDE.md#e-37) — ist die Behebung richtig und
+`Befunde/PRUEFER-4.md:19` fragt *„## 1. [E-37](../Intern/BEFUNDE.md#e-37) — ist die Behebung richtig und
 vollständig?"* und antwortet mit *„teilweise bestätigt — die Behebung wirkt und
 richtet keinen neuen Schaden an"* (zitiert in `BEFUNDE.md:181`). Am laufenden
 Programm ist das widerlegt: sie richtet Schaden an ([L-9.3](#l-9.3)). Zeitdokument, darf
 stehen bleiben — aber ein Zweizeiler *„Nachtrag 08.09.2026: am laufenden
-Programm widerlegt, siehe [E-37](../BEFUNDE.md#e-37)"* würde verhindern, dass das Urteil ein zweites
+Programm widerlegt, siehe [E-37](../Intern/BEFUNDE.md#e-37)"* würde verhindern, dass das Urteil ein zweites
 Mal als Beleg zitiert wird. Es ist genau so schon einmal zitiert worden.
 
 ## <a id="l-9.14"></a>L-9.14 — `AUFGABEN.md`: was ich als überholt gemessen habe (schwer)
@@ -546,16 +546,16 @@ Gregor hat die Datei ausdrücklich genannt. Gemessen, Abschnitt für Abschnitt:
 | Abschnitt | Zeilen | Zustand |
 |---|---|---|
 | Kopf *„Stand 07.09.2026, morgens"* | 3 | **überholt** — Stand ist der 08.09.2026, zwei Pakete später |
-| `## Die Hauptarbeit: das Beenden, zwei Kontofehler, die Reiterleiste` | 8 | **überholt in allen drei Punkten:** das Beenden ist erledigt, einer der zwei Kontofehler ([E-37](../BEFUNDE.md#e-37)) ist nicht behoben statt behoben, und die Reiterleiste ist nicht mehr die zweite Aufgabe, sondern A-2 ist es |
+| `## Die Hauptarbeit: das Beenden, zwei Kontofehler, die Reiterleiste` | 8 | **überholt in allen drei Punkten:** das Beenden ist erledigt, einer der zwei Kontofehler ([E-37](../Intern/BEFUNDE.md#e-37)) ist nicht behoben statt behoben, und die Reiterleiste ist nicht mehr die zweite Aufgabe, sondern A-2 ist es |
 | Kriterientabelle | 15-21 | **falsch bei 4 und 7** — `:17` *„das Beenden fehlt noch"*, `:20` *„**nicht erfüllt**"* |
 | *„**Damit bleiben vier Punkte.**"* | 23-29 | **überholt** — von den vier ist Kriterium 7 erledigt; dazu kommen A-2 und der neue Befund zum Erscheinungsbild |
 | `### 1. Kriterium 7 — das Beenden (E-33)` | 31-117 | **vollständig überholt.** 87 Zeilen Suchanleitung für einen behobenen Fehler: die offene Frage in `:51-54` (*„bringt File → Exit die Meldung … das ist die nächste Frage an Gregor"*) ist beantwortet, der Verdacht in `:71-80` ist erledigt, die Bauanleitung in `:99-105` ist gefahren |
 | `### 2. E-37 — Anzeige behoben, Ursache offen` | 119-137 | **falsch** — siehe [L-9.3](#l-9.3) |
-| `### 3. E-38` | 139-163 | **gültig, aber die Sperre ist weg.** `:139ff` hängt nach `README.md:99` an [E-33](../BEFUNDE.md#e-33); [E-33](../BEFUNDE.md#e-33) ist erledigt, also ist [E-38](../BEFUNDE.md#e-38) jetzt **messbar**. Das steht nirgends |
+| `### 3. E-38` | 139-163 | **gültig, aber die Sperre ist weg.** `:139ff` hängt nach `README.md:99` an [E-33](../Intern/BEFUNDE.md#e-33); [E-33](../Intern/BEFUNDE.md#e-33) ist erledigt, also ist [E-38](../Intern/BEFUNDE.md#e-38) jetzt **messbar**. Das steht nirgends |
 | `### 4. Kriterium 8` | 165-172 | gültig |
 | `### Was schon nachgemessen ist` | 174-195 | gültig |
-| `## Erledigt seit 1.0.10` | 197-207 | **unvollständig** — [E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42) und [A-1](../BEFUNDE.md#a-1) fehlen, beide von Gregor bestätigt |
-| `## Was sonst noch offen ist` | 209-218 | **falsch in Zeile 213** (*„File → Exit bringt eine Meldung ([E-33](../BEFUNDE.md#e-33)) — Bau + Start"*); [E-43](../BEFUNDE.md#e-43) fehlt in der Tabelle |
+| `## Erledigt seit 1.0.10` | 197-207 | **unvollständig** — [E-40](../Intern/BEFUNDE.md#e-40)/[E-41](../Intern/BEFUNDE.md#e-41)/[E-42](../Intern/BEFUNDE.md#e-42) und [A-1](../Intern/BEFUNDE.md#a-1) fehlen, beide von Gregor bestätigt |
+| `## Was sonst noch offen ist` | 209-218 | **falsch in Zeile 213** (*„File → Exit bringt eine Meldung ([E-33](../Intern/BEFUNDE.md#e-33)) — Bau + Start"*); [E-43](../Intern/BEFUNDE.md#e-43) fehlt in der Tabelle |
 | `## A` (ReleaseBuffer) | 222-268 | gültig, gemessen am 07.09.2026 |
 | `## B` | 272-302 | `:279-282` **falsch** (nennt Kriterium 7 als ersten Schritt) |
 | `## C` | 306-341 | gültig |
@@ -569,20 +569,20 @@ Gregor hat die Datei ausdrücklich genannt. Gemessen, Abschnitt für Abschnitt:
 **Vorgeschlagene neue Reihenfolge der Hauptarbeit** (nicht gesetzt, nur
 vorgeschlagen — die Reihenfolge ist Gregors Sache):
 
-1. **[E-37](../BEFUNDE.md#e-37) zu Ende bringen.** Der zweite Anlauf ist gebaut und unbestätigt; der
+1. **[E-37](../Intern/BEFUNDE.md#e-37) zu Ende bringen.** Der zweite Anlauf ist gebaut und unbestätigt; der
    erste hat am laufenden Programm Schaden angerichtet. Das ist der einzige
    Punkt, an dem die Portierung gerade **schlechter** ist als vor der letzten
    Änderung — deshalb vor allem anderen.
 2. **A-2** — *Task Status* und *Task Errors* waagrecht unten. Gregor hat die
    Reihenfolge selbst gesetzt: *„nach dem exit-fix korrigieren"*, und der ist da.
-3. **[E-44](../BEFUNDE.md#e-44)** (neu) — das Erscheinungsbild nach dem ersten Anlegen eines Kontos.
+3. **[E-44](../Intern/BEFUNDE.md#e-44)** (neu) — das Erscheinungsbild nach dem ersten Anlegen eines Kontos.
    Gehört mit A-2 in einen Arbeitsgang: dieselbe Andockrechnung, dieselbe
    Ersatzschicht.
-4. **[E-38](../BEFUNDE.md#e-38)** — jetzt erstmals messbar, weil Eudora sich normal beenden lässt. Der
+4. **[E-38](../Intern/BEFUNDE.md#e-38)** — jetzt erstmals messbar, weil Eudora sich normal beenden lässt. Der
    erste Handgriff kostet keinen Bau: `[Persona-<Name>]` in der `Eudora.ini`
    nach einem normalen Beenden ansehen (`AUFGABEN.md:159-163`).
 5. **Kriterium 8** — die Reiterleiste. Mit A-2 verwandt, aber größer.
-6. **[E-43](../BEFUNDE.md#e-43)** — `SaveBarState` wirft. Abgefangen, nicht behoben; der Leistenzustand
+6. **[E-43](../Intern/BEFUNDE.md#e-43)** — `SaveBarState` wirft. Abgefangen, nicht behoben; der Leistenzustand
    wird nie gespeichert. Kein Anwender merkt es unmittelbar, deshalb hinten.
 
 ## <a id="l-9.15"></a>L-9.15 — `Pruefung/PRUEFUNG-ZEIGER.md` ist die einzige MD mit CRLF (leicht)
@@ -605,7 +605,7 @@ LF ziehen, in einem eigenen Commit, damit der Diff nachvollziehbar bleibt.
 |---|---|---|
 | `:3` | *„**Stand 07.09.2026, morgens.**"* | 08.09.2026 |
 | `:12` | *„Zuletzt von Gregor gestartet \| Paket 1.0.21 am 07.09.2026"* | Paket **1.0.22** am 08.09.2026 |
-| `:13` | *„Zuletzt von Gregor bestätigte Behebungen \| 7.2.0.21 ([E-31](../BEFUNDE.md#e-31)/[E-34](../BEFUNDE.md#e-34)/[E-35](../BEFUNDE.md#e-35)/[E-36](../BEFUNDE.md#e-36))"* | dazu **7.2.0.22**: [E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42) (Beenden) und **[A-1](../BEFUNDE.md#a-1)** (Kontovorgaben) |
+| `:13` | *„Zuletzt von Gregor bestätigte Behebungen \| 7.2.0.21 ([E-31](../Intern/BEFUNDE.md#e-31)/[E-34](../Intern/BEFUNDE.md#e-34)/[E-35](../Intern/BEFUNDE.md#e-35)/[E-36](../Intern/BEFUNDE.md#e-36))"* | dazu **7.2.0.22**: [E-40](../Intern/BEFUNDE.md#e-40)/[E-41](../Intern/BEFUNDE.md#e-41)/[E-42](../Intern/BEFUNDE.md#e-42) (Beenden) und **[A-1](../Intern/BEFUNDE.md#a-1)** (Kontovorgaben) |
 | `:14` | *„Was er dabei bemängelt hat \| *„beenden geht nicht."* und *„kann man die untere zeile (status) immer anzeigen lassen?"*"* | jetzt: A-2 (*„task errors und task status wären waagrecht unten besser"*), das Erscheinungsbild nach dem Kontoanlegen, und die aufgeschlagene E-37-Behebung |
 
 `:9-11` sind **richtig** (7.2.0.22 / 1.0.22 / ZIP mit SHA256) — die Datei ist
@@ -640,9 +640,9 @@ vermutet:
 2. **Prüfung 10a liest `CHANGELOG.md`, nicht `ZIEL.md`**
    (`:507-521`): `$im_changelog{$1} = 1 while $changelog =~ /^###\s+(E-\d+)\b/gm`
    — sie meldet nur Kennungen, die im `CHANGELOG` eine **eigene
-   `###`-Überschrift** haben und im Verzeichnis fehlen. [E-40](../BEFUNDE.md#e-40), [E-41](../BEFUNDE.md#e-41) und [E-42](../BEFUNDE.md#e-42)
+   `###`-Überschrift** haben und im Verzeichnis fehlen. [E-40](../Intern/BEFUNDE.md#e-40), [E-41](../Intern/BEFUNDE.md#e-41) und [E-42](../Intern/BEFUNDE.md#e-42)
    stehen im `CHANGELOG` überhaupt nicht, also fällt nichts auf. Dabei nennt der
-   Kommentar darüber genau diesen Fall als Anlass: *„[E-34](../BEFUNDE.md#e-34), [E-35](../BEFUNDE.md#e-35) und [E-36](../BEFUNDE.md#e-36) fehlten
+   Kommentar darüber genau diesen Fall als Anlass: *„[E-34](../Intern/BEFUNDE.md#e-34), [E-35](../Intern/BEFUNDE.md#e-35) und [E-36](../Intern/BEFUNDE.md#e-36) fehlten
    dort vollständig — und `ZIEL.md` belegte Kriterium 4 mit genau diesen drei."*
    Der Anlass war `ZIEL.md`, die Umsetzung liest `CHANGELOG.md`.
 3. **18 von 50 Dateien werden auf Aktualität geprüft** (`:106`): alles unter
@@ -661,7 +661,7 @@ vermutet:
   muss dann schweigen; auf `**nicht erfüllt**` setzen — sie muss anschlagen.
 - **Prüfung 13: Kennungen aus `ZIEL.md` gegen das Verzeichnis.** Jede `E-\d+`
   und `A-\d+`, die in `ZIEL.md` vorkommt, muss im Verzeichnis von `BEFUNDE.md`
-  eine Zeile haben. Gegenprobe: [E-43](../BEFUNDE.md#e-43) aus `ZIEL.md:36` entfernen — Prüfung
+  eine Zeile haben. Gegenprobe: [E-43](../Intern/BEFUNDE.md#e-43) aus `ZIEL.md:36` entfernen — Prüfung
   schweigt; wieder einsetzen — sie schlägt an. Heute schlägt sie an.
 - **Prüfung 14: Kopfkästen sind keine Zeitdokumente.** Die
   Zeitdokument-Ausnahme endet nach der ersten `##`-Überschrift einer Datei; was
@@ -703,12 +703,12 @@ als nächstes anfängt. Was hier steht, ist die Reihenfolge; der Maßstab ist
 - **Das Bildschirmfoto zum Erscheinungsbild nach dem Kontoanlegen.** Ich habe es
   nicht gesehen; die Beschreibung (*„Wazoo-Bereiche als schmale senkrechte
   Spalten links, MDI-Bereich nach rechts gedrängt"*) stammt aus dem Auftrag.
-  **Vermutung**, dass der Fall von [S-6](../BEFUNDE.md#s-6) verschieden ist, weil beim **ersten** Lauf
+  **Vermutung**, dass der Fall von [S-6](../Intern/BEFUNDE.md#s-6) verschieden ist, weil beim **ersten** Lauf
   noch kein `[WazooBars]` in der `Eudora.ini` steht und der Weg deshalb über
   `SetDefaultWazooBarState` statt `LoadBarState` läuft — gelesen in
   `Eudora71/OTShim/BEFUND-ANSICHT.md:304-314` und `BEFUNDE.md:5265-5303`, **nicht
   am laufenden Programm gemessen**.
-- **Ob [E-40](../BEFUNDE.md#e-40)/[E-41](../BEFUNDE.md#e-41)/[E-42](../BEFUNDE.md#e-42) im Quelltext das tun, was `ZIEL.md:36` behauptet.** Ich
+- **Ob [E-40](../Intern/BEFUNDE.md#e-40)/[E-41](../Intern/BEFUNDE.md#e-41)/[E-42](../Intern/BEFUNDE.md#e-42) im Quelltext das tun, was `ZIEL.md:36` behauptet.** Ich
   habe die Kennungen und ihre Kommentare gefunden (`doc.cpp:73`,
   `msgdoc.cpp:1057`, `mainfrm.cpp:5079`, `mainfrm.cpp:5462`) und den
   Protokolltext aus `mainfrm.cpp:5102` gegen `ZIEL.md:36` gehalten — er stimmt

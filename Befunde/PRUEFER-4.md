@@ -23,7 +23,7 @@ nachgeschlagen.
 > hat geworfen, die Ausnahme lief aus dem Befehlsbehandler heraus, und Gregor
 > sah **„Encountered an improper argument"**: *„die meldung kommt, wenn ich eine
 > persona gelöscht habe"*. Der Eintrag verschwand außerdem weiter nicht: *„sie
-> verschwindet links nicht, bis ich eudora geschlossen habe"*. **[E-37](../BEFUNDE.md#e-37) steht
+> verschwindet links nicht, bis ich eudora geschlossen habe"*. **[E-37](../Intern/BEFUNDE.md#e-37) steht
 > wieder als nicht behoben**, der zweite Anlauf ist in 7.2.0.23 gebaut und
 > unbestätigt. Der Abschnitt bleibt als Zeitdokument stehen — aber **nicht als
 > Beleg zitieren**; genau das ist einmal passiert.
@@ -269,7 +269,7 @@ Kommentar `mainfrm.cpp:5316`).
 
 **Urteil: die Begründung ist widerlegt, die Aufrufkette und die Einfassung sind
 bestätigt.** Der Verdacht bleibt als Verdacht möglich, aber die angegebene
-Begründung („dieselbe Form wie [E-34](../BEFUNDE.md#e-34)") trägt nicht.
+Begründung („dieselbe Form wie [E-34](../Intern/BEFUNDE.md#e-34)") trägt nicht.
 
 ### Die Aufrufkette — nachgeprüft, stimmt
 
@@ -315,7 +315,7 @@ zweimal laufen.
 ### Die Begründung — widerlegt
 
 **Behauptet:** „Grenze aus `GetBtnCount()`, Zugriff mit `m_btns[...]` —
-dieselbe Form wie bei [E-34](../BEFUNDE.md#e-34), wo dieses Paar auseinanderlief."
+dieselbe Form wie bei [E-34](../Intern/BEFUNDE.md#e-34), wo dieses Paar auseinanderlief."
 
 **Gemessen:**
 
@@ -355,7 +355,7 @@ gemessen habe: `if (iIndex < 0 || iIndex >= GetBtnCount()) return NULL;`
 (Zeile 120) — und hat trotzdem geworfen („Ausnahme bei Index 24 von 27").
 Dieser Widerspruch ist in der eigenen Doku als offen vermerkt
 (`Befunde/BEENDEN.md:417`, `Befunde/LEKTOR-4.md:591`). Solange er offen ist,
-lässt sich aus „gleiche Form wie [E-34](../BEFUNDE.md#e-34)" nichts folgern: die Form hat bei [E-34](../BEFUNDE.md#e-34)
+lässt sich aus „gleiche Form wie [E-34](../Intern/BEFUNDE.md#e-34)" nichts folgern: die Form hat bei [E-34](../Intern/BEFUNDE.md#e-34)
 selbst nichts erklärt.
 
 **Eigene Vermutung, geprüft und widerlegt.** Ich habe vermutet, dass zwei
@@ -397,7 +397,7 @@ also nicht gefallen — `tbarcust.h` wird nie übersetzt.
   (Zeile 533) sieht denselben Wert wie vorher. Der Ablauf ist unverändert.
 
 **Warnung zum Auslesen:** die Einfassung in `QCChildToolBar::GetButton`
-([E-34](../BEFUNDE.md#e-34), `QCChildToolBar.cpp:151-175`) **verschluckt** dagegen bewusst und gibt
+([E-34](../Intern/BEFUNDE.md#e-34), `QCChildToolBar.cpp:151-175`) **verschluckt** dagegen bewusst und gibt
 NULL zurück. Entsteht dieselbe Ausnahme dort, erreicht sie die Meldung nie.
 Kein Mangel des Prüfstands, aber beim Lesen des Protokolls zu bedenken.
 
@@ -405,7 +405,7 @@ Kein Mangel des Prüfstands, aber beim Lesen des Protokolls zu bedenken.
 
 **Die Zahl stimmt nicht: es sind 32, nicht 28.**
 
-| Datei | neue `PutDebugLog`-Aufrufe mit [`E-33`](../BEFUNDE.md#e-33) |
+| Datei | neue `PutDebugLog`-Aufrufe mit [`E-33`](../Intern/BEFUNDE.md#e-33) |
 |---|---|
 | `Eudora71/Eudora/mainfrm.cpp` | **28** |
 | `Eudora71/Eudora/eudora.cpp` | 2 (`OnAppExit`, `ExitInstance`) |
@@ -552,7 +552,7 @@ Symbolarbeit (`Releases/Eudora72-1.0.2-symbole.zip`) nicht theoretisch.
 * Ob ein anderer Faden `m_btns` während `SaveCustomInfo` verkleinert — statisch
   nicht entscheidbar. Meine Aussage „Indexfehler nicht möglich" gilt für den
   Einfaden-Fall.
-* Die offene Wurzel von [E-34](../BEFUNDE.md#e-34) („27 gemeldet, Index 24 wirft") bleibt offen. Ich
+* Die offene Wurzel von [E-34](../Intern/BEFUNDE.md#e-34) („27 gemeldet, Index 24 wirft") bleibt offen. Ich
   habe nur **eine** Erklärung ausgeschlossen (ODR-Bruch durch zwei
   `SECCustomToolBar`-Definitionen).
 * Die Suche nach weiteren Erzeugern des Meldungstexts in den Eudora-Quellen war
@@ -575,7 +575,7 @@ Symbolarbeit (`Releases/Eudora72-1.0.2-symbole.zip`) nicht theoretisch.
 | 3a | Aufrufkette `CloseDown` → `SaveBarState` → `CMainFrame::SaveBarState` → `QCToolBarManager::SaveState` → `SaveCustomInfo` | **bestätigt**; zwei Zeilenangaben um 1 daneben (`:1203`, `:377`). Zusatz: `mainfrm.cpp:2803` ruft die Kette bei Registry-Fehler ein zweites Mal |
 | 3b | Die Stelle liegt vor `pApp->HideApplication()` | **bestätigt**, `winfrm.cpp:843`/`:885` stimmen genau |
 | 3c | `SaveCustomInfo` läuft im normalen Betrieb nur beim Beenden | **teilweise** — der Anpassen-Dialog (`QCToolBarManager.cpp:1109`) ist normaler Betrieb |
-| 3d | Begründung: „dieselbe Form wie [E-34](../BEFUNDE.md#e-34), Grenze aus `GetBtnCount()`, Zugriff mit `m_btns[...]`" | **widerlegt.** `GetBtnCount()` **ist** `m_btns.GetSize()` (`OTShim_Werkzeugleiste.h:744`), wird je Durchlauf neu ausgewertet, und der Rumpf verändert `m_btns` nicht. Ein Indexfehler ist hier nicht möglich |
+| 3d | Begründung: „dieselbe Form wie [E-34](../Intern/BEFUNDE.md#e-34), Grenze aus `GetBtnCount()`, Zugriff mit `m_btns[...]`" | **widerlegt.** `GetBtnCount()` **ist** `m_btns.GetSize()` (`OTShim_Werkzeugleiste.h:744`), wird je Durchlauf neu ausgewertet, und der Rumpf verändert `m_btns` nicht. Ein Indexfehler ist hier nicht möglich |
 | 3e | Die 28 Marken liegen an den behaupteten Stellen | **teilweise.** Die Lage stimmt überall, die **Zahl nicht**: 32 Marken (28 `mainfrm.cpp`, 2 `eudora.cpp`, 2 `QCCustomToolBar.cpp`) |
 | 3f | `THROW_LAST()` im `CATCH_ALL` lässt den Ablauf unverändert, verschluckt nichts | **bestätigt** (`afx.h:867/870/878`, `except.cpp:153-165`). `CATCH_ALL` fängt nur `CException*` — Speicherschutzverletzungen laufen durch |
 | 3g | Zeilenangaben `bardock.cpp:302-308` mit `ENSURE(nPos > 0)`, `mainfrm.cpp:6179` (IsKindOf-Zweig), `OTShim.cpp:2541` | `bardock.cpp` **stimmt genau**; `mainfrm.cpp:6179` **falsch** (richtig `:6263-6266`); `OTShim.cpp:2541` um 2 daneben (`:2543`) |
@@ -587,6 +587,6 @@ Symbolarbeit (`Releases/Eudora72-1.0.2-symbole.zip`) nicht theoretisch.
 
 | Vermutung | Messung |
 |---|---|
-| Zwei konkurrierende `SECCustomToolBar`-Definitionen (`tbarcust.h:73` gegen `OTShim_Werkzeugleiste.h:693`) erzeugen einen ODR-Bruch und erklären [E-34](../BEFUNDE.md#e-34) | **widerlegt.** `OTShim_Werkzeugleiste.h:1436` setzt `__TBARCUST_H__`, `:53-58` bricht mit `#error` ab, `stdafx.h:52` bindet den Shim zuerst ein, der Bau hat 0 Fehler — `tbarcust.h` wird nie übersetzt |
+| Zwei konkurrierende `SECCustomToolBar`-Definitionen (`tbarcust.h:73` gegen `OTShim_Werkzeugleiste.h:693`) erzeugen einen ODR-Bruch und erklären [E-34](../Intern/BEFUNDE.md#e-34) | **widerlegt.** `OTShim_Werkzeugleiste.h:1436` setzt `__TBARCUST_H__`, `:53-58` bricht mit `#error` ab, `stdafx.h:52` bindet den Shim zuerst ein, der Bau hat 0 Fehler — `tbarcust.h` wird nie übersetzt |
 | `RestorePassInfo` schreibt beim Zurückstellen der gelöschten Persönlichkeit deren INI-Abschnitt neu | **widerlegt.** `persona.cpp:1073-1129` berührt nur `m_Passwords` und `::POPPassword`, keine INI |
 | `WEITERMACHEN.md:145` „Ohne `LogLevel=32896` schreibt Eudora nichts" | **widerlegt.** Vorgabe 25759 = `0x649F`, `& 0x80 = 0x80` — die Marken schreiben auch ohne die Zeile. Der Kasten in `:140-146` sagt es richtig, der Satz in `:145` widerspricht ihm |

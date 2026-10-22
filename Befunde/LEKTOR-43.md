@@ -3,11 +3,11 @@
 Lauf am 20.10.2026 im Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`,
 Ausgang `f87a4a74` (während des Laufs auf `8f7092a0` nachgezogen). Anlass:
 seit [LEKTOR-42](LEKTOR-42.md#lektor-42) (`8d1075b0`, 19.10. abends) sind
-7.2.0.111 ([E-123](../BEFUNDE.md#e-123): die Wache beim Beenden zählt jede
+7.2.0.111 ([E-123](../Intern/BEFUNDE.md#e-123): die Wache beim Beenden zählt jede
 Übertragungsart), 7.2.0.112 (Rücknahme des Hochladezählers nach
 [PRÜFER-39](PRUEFER-39.md) N1), vier neue Befunde
-([E-128](../BEFUNDE.md#e-128), [E-129](../BEFUNDE.md#e-129),
-[E-130](../BEFUNDE.md#e-130), [E-131](../BEFUNDE.md#e-131)), zwei neue
+([E-128](../Intern/BEFUNDE.md#e-128), [E-129](../Intern/BEFUNDE.md#e-129),
+[E-130](../Intern/BEFUNDE.md#e-130), [E-131](../Intern/BEFUNDE.md#e-131)), zwei neue
 Schranken und — zum ersten Mal in diesem Lauf — **ein Release** dazugekommen.
 
 **Das ändert den Maßstab.** Bis gestern war die schlimmste Unwahrheit eine, die
@@ -66,7 +66,7 @@ sie steht aber nicht unter den acht, die `paket-bereit.pl` liest
 `Releases/1.0.112/RELEASE-NOTIZEN.md`: **identisch.** Also stehen alle drei
 Schäden öffentlich.
 
-**1. Der Aufzählungspunkt zu [E-69](../BEFUNDE.md#e-69) hat seinen Kopf verloren.**
+**1. Der Aufzählungspunkt zu [E-69](../Intern/BEFUNDE.md#e-69) hat seinen Kopf verloren.**
 Der veröffentlichte Text lautet:
 
 > — auch wenn **innerhalb** desselben IMAP-Kontos verschoben wurde. Bis
@@ -77,7 +77,7 @@ Der veröffentlichte Text lautet:
 
 Der Satz beginnt mitten im Nebensatz. **Herkunft gemessen:** in `d6db51c7`
 (`Releases/1.0.111/RELEASE-NOTIZEN.md`, 13:13 Uhr) wurde die neue
-[E-123](../BEFUNDE.md#e-123)-Zeile eingesetzt, dabei aber nicht **vor** den
+[E-123](../Intern/BEFUNDE.md#e-123)-Zeile eingesetzt, dabei aber nicht **vor** den
 E-69-Punkt, sondern **über** seine ersten zwei Zeilen. Verloren ging:
 
 > `- **Keine Flut von Fehlermeldungen mehr beim Filtern.** Konnte Eudora eine Nachricht`
@@ -94,7 +94,7 @@ am E-123-Punkt und las sich wie ein Übertragungsfehler.
 > ## Neu gegenüber v1.0.101
 
 **Herkunft gemessen:** in `61c91b43` ersetzte der Warnblock zu
-[E-131](../BEFUNDE.md#e-131) beide Zeilen des Absatzes; zurück kam nur die
+[E-131](../Intern/BEFUNDE.md#e-131) beide Zeilen des Absatzes; zurück kam nur die
 erste. Die zweite — *„Mailverzeichnis im ZIP ist leer – ein vorhandenes
 `Mailverzeichnis` hineinkopieren."* — fehlt. Ein Anwender, der das ZIP auspackt,
 findet ein leeres Postfachverzeichnis und erfährt an dieser Stelle nicht, was zu
@@ -122,7 +122,7 @@ Veröffentlicht steht:
 | Zeit | Vorgang |
 |---|---|
 | 13:13 | `d6db51c7` — 1.0.111 geschnürt |
-| 13:15 | `9d78748c` — *„[E-123](../BEFUNDE.md#e-123) Weg 2b von Gregor am laufenden Programm bestaetigt"* |
+| 13:15 | `9d78748c` — *„[E-123](../Intern/BEFUNDE.md#e-123) Weg 2b von Gregor am laufenden Programm bestaetigt"* |
 | 13:25 | `099e3871` — Weg 2a dazu |
 | **13:41** | `61c91b43` — **7.2.0.112 gebaut**, der Zähler ist heraus |
 
@@ -174,18 +174,18 @@ Die Notizen sagen unter *Bekannte Fehler*:
 
 **Gemessen:** `grep -c "E-128\|E-129\|E-130\|E-131" README.md` = **0**. Keiner
 der vier kam in der ganzen Datei vor. Die Notizen nennen drei davon namentlich —
-[E-131](../BEFUNDE.md#e-131) sogar im Warnblock ganz oben — und schicken den
+[E-131](../Intern/BEFUNDE.md#e-131) sogar im Warnblock ganz oben — und schicken den
 Leser für die Einzelheiten an eine Stelle, die sie nicht kennt.
 
 Drei Zeilen in die Tabelle eingesetzt:
 
 | Befund | wo | warum dort |
 |---|---|---|
-| [E-131](../BEFUNDE.md#e-131) | **als erste Zeile** | der einzige bekannte Fehler, der etwas **außerhalb** von Eudora unbrauchbar macht; er trifft jeden mit vorhandener Installation, und zwar sofort |
-| [E-128](../BEFUNDE.md#e-128) | bei den Speicher-Befunden | *„heißt `.txt`, enthält HTML"* mit der Abhilfe (umbenennen in `.html` oder `.eml`) |
-| [E-129](../BEFUNDE.md#e-129) | bei den IMAP-Befunden | mit *Show Deleted Messages* / *UnDelete* **und** der Warnung, *Purge Messages* dabei nicht zu benutzen |
+| [E-131](../Intern/BEFUNDE.md#e-131) | **als erste Zeile** | der einzige bekannte Fehler, der etwas **außerhalb** von Eudora unbrauchbar macht; er trifft jeden mit vorhandener Installation, und zwar sofort |
+| [E-128](../Intern/BEFUNDE.md#e-128) | bei den Speicher-Befunden | *„heißt `.txt`, enthält HTML"* mit der Abhilfe (umbenennen in `.html` oder `.eml`) |
+| [E-129](../Intern/BEFUNDE.md#e-129) | bei den IMAP-Befunden | mit *Show Deleted Messages* / *UnDelete* **und** der Warnung, *Purge Messages* dabei nicht zu benutzen |
 
-**[E-130](../BEFUNDE.md#e-130) bewusst nicht eingesetzt:** gestempelte
+**[E-130](../Intern/BEFUNDE.md#e-130) bewusst nicht eingesetzt:** gestempelte
 Fremd-DLLs im Bau sind kein Anwenderfehler. Der Abschnitt heißt *„was das Paket
 kann und wo noch Fehler sind"* und ist in Anwendersprache; ein Befund über den
 schmutzigen Arbeitsbaum gehört dorthin nicht.
@@ -214,9 +214,9 @@ abverlangt, die er schon geleistet hat
 gilt auch umgekehrt: schon geprüft ist nicht noch einmal zu prüfen).
 
 **Neu:** der Kopf nennt, was wirklich offen ist und wofür es ihn braucht —
-[E-131](../BEFUNDE.md#e-131), von außen gemeldet, von uns nicht nachgestellt,
+[E-131](../Intern/BEFUNDE.md#e-131), von außen gemeldet, von uns nicht nachgestellt,
 mit der Auflage, vorher `Eudora.ini` und Mailverzeichnis zu sichern. Die beiden
-erledigten Schritte stehen als **[C7](../TESTPLAN.md#c7)** weiter da, jeder mit
+erledigten Schritte stehen als **[C7](../Intern/TESTPLAN.md#c7)** weiter da, jeder mit
 dem Paket, an dem er gemessen wurde. Der Buchführungsabschnitt (`:118`) stand
 auf *„Stand 20.10.2026, Paket 1.0.110"* und nennt jetzt alle drei Pakete
 getrennt — samt dem Satz, dass an **1.0.112 selbst nichts am laufenden Programm
@@ -232,10 +232,10 @@ in Markdown rendert sie als **rohe Zeile voller senkrechter Striche** unter
 einer fremden Überschrift. Dieselbe Klasse wie
 [L-42.8](LEKTOR-42.md#l-42.8) (`tools/ZWEIGE.md`) und [L-43.8](#l-43.8).
 
-Im **Verzeichnis** oben, wo [E-128](../BEFUNDE.md#e-128) bis
-[E-130](../BEFUNDE.md#e-130) stehen und wo `befund-suchen.pl` und jeder Leser
+Im **Verzeichnis** oben, wo [E-128](../Intern/BEFUNDE.md#e-128) bis
+[E-130](../Intern/BEFUNDE.md#e-130) stehen und wo `befund-suchen.pl` und jeder Leser
 sucht, fehlte er. Zeile **wörtlich unverändert** dorthin verschoben, hinter
-[E-130](../BEFUNDE.md#e-130).
+[E-130](../Intern/BEFUNDE.md#e-130).
 
 Dass `offene-befunde.pl` trotzdem 36/36 meldete, ist kein Trost: das Werkzeug
 findet die Zeile über ihr Muster, egal wo sie liegt. Ein Mensch findet sie nicht.
@@ -243,14 +243,14 @@ findet die Zeile über ihr Muster, egal wo sie liegt. Ein Mensch findet sie nich
 ### <a id="l-43.7"></a>L-43.7 — die CHANGELOG-Liste „Noch offen" vom heutigen Tag kannte drei der vier neuen Befunde nicht (mittel)
 
 `CHANGELOG.md:12` heißt *„## Noch offen (Stand 20.10.2026)"*. Die Tabelle
-darunter führt 28 Kennungen. **Gemessen:** [`E-128`](../BEFUNDE.md#e-128) 0 Treffer in der ganzen
-Datei, [`E-129`](../BEFUNDE.md#e-129) 0, [`E-130`](../BEFUNDE.md#e-130) 0; [`E-131`](../BEFUNDE.md#e-131) **ein** Treffer, und der steht im
+darunter führt 28 Kennungen. **Gemessen:** [`E-128`](../Intern/BEFUNDE.md#e-128) 0 Treffer in der ganzen
+Datei, [`E-129`](../Intern/BEFUNDE.md#e-129) 0, [`E-130`](../Intern/BEFUNDE.md#e-130) 0; [`E-131`](../Intern/BEFUNDE.md#e-131) **ein** Treffer, und der steht im
 Abschnitt 7.2.0.112 (*„in dieser Fassung ausdrücklich NICHT angefasst"*), nicht
 in der Liste.
 
 Eine Liste, die sich im Titel auf den heutigen Tag datiert und drei heute
 aufgenommene Befunde nicht nennt, ist schlechter als eine undatierte. Vier
-Zeilen an den Kopf der Tabelle gesetzt ([E-131](../BEFUNDE.md#e-131), [E-130](../BEFUNDE.md#e-130), [E-129](../BEFUNDE.md#e-129), [E-128](../BEFUNDE.md#e-128) — die
+Zeilen an den Kopf der Tabelle gesetzt ([E-131](../Intern/BEFUNDE.md#e-131), [E-130](../Intern/BEFUNDE.md#e-130), [E-129](../Intern/BEFUNDE.md#e-129), [E-128](../Intern/BEFUNDE.md#e-128) — die
 Tabelle ist neueste-zuerst geordnet), jede mit Urteil, Datenverlustfrage und
 Abhilfe.
 
@@ -376,7 +376,7 @@ Beim Berichtigen von `AUFGABEN.md:124` habe ich den wahrheitsgemäßen Rückblic
 traf die Zeile daneben (`/neueste[sn]?\s+(?:Release|Fassung|Paket)/`). Erst
 *„seinerzeit auf GitHub bereitgestellt"* kam durch.
 
-Das ist dieselbe Klasse wie [`L-15.5`](LEKTOR-15.md#l-15.5)/[E-109](../BEFUNDE.md#e-109) — *Wortauslöser
+Das ist dieselbe Klasse wie [`L-15.5`](LEKTOR-15.md#l-15.5)/[E-109](../Intern/BEFUNDE.md#e-109) — *Wortauslöser
 statt Aussage* —, und sie kostet zweimal: einmal den Fehlalarm, einmal die
 Umformulierung, die am Ende **weniger** genau ist als der Text davor (jetzt
 steht nicht mehr da, dass `v1.0.101` einmal *Latest* war). **Vorschlag:** ein
@@ -398,7 +398,7 @@ gefährlich:
 Kein Kreis trägt die Nummer seines Berichts, und vier Buchstaben stehen für
 dasselbe. **[`P-39`](PRUEFER-14.md#p-39) existiert bereits** — als Befund in
 `Befunde/PRUEFER-14.md:731` (*„der Suchlauf vergleicht Stile, nicht Bilder"*,
-zu [E-103](../BEFUNDE.md#e-103)), zitiert in `PRUEFER-16.md` an vier Stellen.
+zu [E-103](../Intern/BEFUNDE.md#e-103)), zitiert in `PRUEFER-16.md` an vier Stellen.
 Wer *„[P-39](PRUEFER-14.md#p-39)"* schreibt und `PRÜFER-39` meint, trifft einen fremden Befund.
 
 **Der LEKTOR macht es anders und richtig:** [`L-42.1`](LEKTOR-42.md#l-42.1) bis [`L-42.15`](LEKTOR-42.md#l-42.15) tragen die
@@ -418,8 +418,8 @@ darin** — ausgerechnet das Dokument, das veröffentlicht wird.
 
 Hätten die Notizen einen offenen Befund als behoben ausgegeben, hätte das
 niemand gemerkt. Diesmal taten sie es nicht (ich habe alle Urteile gegen
-`BEFUNDE.md` gehalten; [E-123](../BEFUNDE.md#e-123) wird korrekt als *weiterhin
-möglich nach Absturz* geführt, [E-101](../BEFUNDE.md#e-101)s Teilbehebung
+`BEFUNDE.md` gehalten; [E-123](../Intern/BEFUNDE.md#e-123) wird korrekt als *weiterhin
+möglich nach Absturz* geführt, [E-101](../Intern/BEFUNDE.md#e-101)s Teilbehebung
 korrekt beschrieben). Aber [L-43.2](#l-43.2) zeigt, dass gerade dieses Dokument
 die Fehler sammelt. **Vorschlag:** den Umfang am Merkmal aufhängen statt an der
 Positivliste — alle `*.md` außer `Befunde/`, `Arbeitsweise/` und `LEKTORAT.md`,
@@ -434,11 +434,11 @@ mit hinein.
 | [L-42.11](LEKTOR-42.md#l-42.11) drei Hinweise *zur Kenntnis* aus `doku-pruefen.pl` | **unverändert** — `Releases/1.0.101/RELEASE-NOTIZEN.md`, `Testdaten/README.md`, `tools/pruefdaten/LIESMICH.md`. Alle drei zu Recht; der Vorschlag einer Ausnahmeliste steht seit [L-41.10](LEKTOR-41.md#l-41.10) |
 | [L-42.12](LEKTOR-42.md#l-42.12) `pruefe-befundurteile.pl` prüft 7 Dateien von Hand | **offen**, verschärft durch [L-43.15](#l-43.15) |
 | [L-42.13](LEKTOR-42.md#l-42.13) `doku-pruefen.pl` sieht Widerspruch in derselben Tabelle nicht | **offen** |
-| [L-42.14](LEKTOR-42.md#l-42.14) / [L-41.3](LEKTOR-41.md#l-41.3) [E-123](../BEFUNDE.md#e-123) fehlt im Maßstab 7.2.1.0 | **offen** — `ZIEL.md:18-34` führt [E-123](../BEFUNDE.md#e-123) und [E-122](../BEFUNDE.md#e-122) bis [E-131](../BEFUNDE.md#e-131) weder als Voraussetzung noch unter *ausdrücklich nicht*. **Gregors Entscheidung**, und mit vier neuen Befunden dringlicher als gestern |
+| [L-42.14](LEKTOR-42.md#l-42.14) / [L-41.3](LEKTOR-41.md#l-41.3) [E-123](../Intern/BEFUNDE.md#e-123) fehlt im Maßstab 7.2.1.0 | **offen** — `ZIEL.md:18-34` führt [E-123](../Intern/BEFUNDE.md#e-123) und [E-122](../Intern/BEFUNDE.md#e-122) bis [E-131](../Intern/BEFUNDE.md#e-131) weder als Voraussetzung noch unter *ausdrücklich nicht*. **Gregors Entscheidung**, und mit vier neuen Befunden dringlicher als gestern |
 | [L-41.8](LEKTOR-41.md#l-41.8) zwei Messskripte ohne Eintrag in `tools/WERKZEUGE.md` | **offen** |
-| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
-| [L-37.10](LEKTOR-37.md#l-37.10) AUFGABEN ohne Zeilen für [E-122](../BEFUNDE.md#e-122) ff. | **offen**, jetzt bis [E-131](../BEFUNDE.md#e-131) |
-| [L-37.13](LEKTOR-37.md#l-37.13) / [E-130](../BEFUNDE.md#e-130) fünf DLLs im Hauptbaum | **als Befund aufgenommen** ([E-130](../BEFUNDE.md#e-130)), Entscheidung getroffen: nicht committen. Der Hauptbaum zeigt sie weiter als ` M` |
+| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../Intern/BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
+| [L-37.10](LEKTOR-37.md#l-37.10) AUFGABEN ohne Zeilen für [E-122](../Intern/BEFUNDE.md#e-122) ff. | **offen**, jetzt bis [E-131](../Intern/BEFUNDE.md#e-131) |
+| [L-37.13](LEKTOR-37.md#l-37.13) / [E-130](../Intern/BEFUNDE.md#e-130) fünf DLLs im Hauptbaum | **als Befund aufgenommen** ([E-130](../Intern/BEFUNDE.md#e-130)), Entscheidung getroffen: nicht committen. Der Hauptbaum zeigt sie weiter als ` M` |
 | [L-42.15](LEKTOR-42.md#l-42.15) PRÜFER wegen reinem Versionssprung fällig | **entschärft** — `rollen-faellig.pl` meldet PRÜFER heute *aktuell*. Fällig sind LEKTOR (dieser Lauf) und **CHRONIST** |
 
 ---
@@ -508,12 +508,12 @@ kommt. **Das muss Gregor entscheiden** — siehe unten.
    `Releases/PAKETE.md` nach. Wenn nein, gehört der Satz aus den Notizen
    heraus ([L-43.17](#l-43.17)).
 
-3. **[E-131](../BEFUNDE.md#e-131) im Maßstab** `ZIEL.md:18-34`: Voraussetzung
+3. **[E-131](../Intern/BEFUNDE.md#e-131) im Maßstab** `ZIEL.md:18-34`: Voraussetzung
    für 7.2.1.0 oder ausdrücklich nicht? Er ist der erste Fehler, den ein
    Fremder gemeldet hat, er trifft jeden mit vorhandener Installation, und im
    Hauptarbeitsbaum läuft bereits ein Zweig `e-131-leistenposition`. Dasselbe
    steht seit [L-41.3](LEKTOR-41.md#l-41.3) für
-   [E-122](../BEFUNDE.md#e-122) bis [E-130](../BEFUNDE.md#e-130) offen.
+   [E-122](../Intern/BEFUNDE.md#e-122) bis [E-130](../Intern/BEFUNDE.md#e-130) offen.
 
 4. **Die drei Werkzeugvorschläge** aus [L-43.11](#l-43.11),
    [L-43.12](#l-43.12) und [L-43.13](#l-43.13) — soll ich sie bauen, oder

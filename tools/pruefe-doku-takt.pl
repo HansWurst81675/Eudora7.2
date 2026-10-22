@@ -175,8 +175,18 @@ if (defined $offen_jahr) {
     } else {
         push @gut, "'Noch offen' ist auf dem Stand $offen_tag.$offen_monat.$offen_jahr";
     }
+} elsif ($cl =~ /<!-- offene-befunde: Anfang -->/) {
+    # ERZEUGTER ABSCHNITT BRAUCHT KEIN DATUM (22.10.2026). Bis dahin trug die
+    # Ueberschrift "## Noch offen (Stand TT.MM.JJJJ)" ein handgeschriebenes
+    # Datum, und diese Schranke hielt es gegen das juengste Datum im
+    # CHANGELOG. Seit die Liste aus Intern/BEFUNDE.md ERZEUGT wird, ist das
+    # Datum ueberfluessig und waere nur eine weitere Stelle, an der etwas
+    # falsch stehen kann - genau das, was Gregor am 22.10.2026 abgestellt
+    # haben wollte ("single point of truth"). offene-befunde.pl haelt den
+    # Abschnitt aktuell und weist im pre-commit ab, wenn er abweicht.
+    push @gut, "'Noch offen' wird erzeugt (offene-befunde.pl) - kein Datum noetig";
 } else {
-    push @mangel, "CHANGELOG.md hat keinen Abschnitt '## Noch offen (Stand TT.MM.JJJJ)'";
+    push @mangel, "CHANGELOG.md hat weder '## Noch offen (Stand TT.MM.JJJJ)' noch den erzeugten Abschnitt";
 }
 
 # --- 5. Reihenfolge und Luecken der Fassungsabschnitte ---------------------

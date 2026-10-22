@@ -21,7 +21,7 @@ nachgezogen. Die Mängel sitzen an den Rändern.
 ### <a id="l-33.1"></a>L-33.1 — drei nackte Kennungen
 
 `tools/TESTLAEUFE.md` (zwei Zeilen zum freenet-Newsletter) und
-`tools/AGENTEN-LAUFEN.md` (dieser Lauf) nannten [E-105](../BEFUNDE.md#e-105) ohne Link.
+`tools/AGENTEN-LAUFEN.md` (dieser Lauf) nannten [E-105](../Intern/BEFUNDE.md#e-105) ohne Link.
 Nachgezogen mit `perl tools/befunde-verlinken.pl --anker --verlinken`. Commit `663c15c`.
 
 ### <a id="l-33.2"></a>L-33.2 — `tools/RELEASES.md`: die Zeile zu `v1.0.87` stand außerhalb der Tabelle, in Ortszeit
@@ -38,29 +38,29 @@ Jetzt: in die Tabelle hinter `v1.0.84` verschoben, Zeit `05:46:20` nach
 | Datei, Stelle | stand | jetzt |
 |---|---|---|
 | `AUFGABEN.md`, Tabelle der nächsten Schritte | *„Entscheidung, ob Paige `display:none` lernen soll“* | gestrichen; eingebaut in 7.2.0.88, gemessen, offen bis Gregors Test an 1.0.88 |
-| `README.md`, Liste der bekannten Fehler | *„([E-105](../BEFUNDE.md#e-105), offen)“* | *„im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, noch nicht ausgeliefert, von Gregor noch nicht bestätigt“* |
-| `WEITERMACHEN.md`, Stand-Block [LEKTOR-32](LEKTOR-32.md#lektor-32) | *„Nächster Schritt: [E-105](../BEFUNDE.md#e-105)“* ohne Ergebnis | Nachtrag: eingebaut, gemessen, es fehlen Paket 1.0.88 bei Gregor und sein Urteil |
+| `README.md`, Liste der bekannten Fehler | *„([E-105](../Intern/BEFUNDE.md#e-105), offen)“* | *„im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, noch nicht ausgeliefert, von Gregor noch nicht bestätigt“* |
+| `WEITERMACHEN.md`, Stand-Block [LEKTOR-32](LEKTOR-32.md#lektor-32) | *„Nächster Schritt: [E-105](../Intern/BEFUNDE.md#e-105)“* ohne Ergebnis | Nachtrag: eingebaut, gemessen, es fehlen Paket 1.0.88 bei Gregor und sein Urteil |
 
 ## Offen — mit Ermessen, nicht berichtigt
 
 ### <a id="l-33.4"></a>L-33.4 — E-95 und E-96 bleiben offen; Gregors E-112-Bestätigung deckt sie nicht
 
-**Urteil: offen.** Die Bestätigung von [E-112](../BEFUNDE.md#e-112) an 1.0.86
+**Urteil: offen.** Die Bestätigung von [E-112](../Intern/BEFUNDE.md#e-112) an 1.0.86
 (13.10.2026, *„paßt dagegen“*) gilt der **Kleinanzeigen**-Nachricht: ein Logo steht
 in der angegebenen Größe **über** dem Text statt darauf. Geprüft wird damit
 Größe und Überdeckung **eines** Bildes.
 
-* [E-95](../BEFUNDE.md#e-95) ist ein anderes Fehlerbild: im Verfassenfenster wurden
+* [E-95](../Intern/BEFUNDE.md#e-95) ist ein anderes Fehlerbild: im Verfassenfenster wurden
   Bilder **zerschnitten** bzw. auf 20×20 **gequetscht** — an der **Doctolib**-Nachricht
   (eingebettete `cid:`-Bilder) und an der FairToner-Nachricht.
-* [E-96](../BEFUNDE.md#e-96) betrifft **mehrere** Bilder unterschiedlicher Höhe
+* [E-96](../Intern/BEFUNDE.md#e-96) betrifft **mehrere** Bilder unterschiedlicher Höhe
   hintereinander (jedes bekam die Zeilenhöhe des ersten). Gemessen nur im eigenen
   Lauf vom 15.09.2026.
 
 In `BEFUNDE.md`, `WEITERMACHEN.md`, `TESTPLAN.md`, `CHANGELOG.md` und allen
 `Befunde/*.md` steht **kein** Zitat Gregors zu Doctolib, FairToner oder
 abgeschnittenen Bildern nach dem 15.09.2026. Die Urteilszeile zu
-[E-95](../BEFUNDE.md#e-95) sagt selbst *„von Gregor noch nicht am laufenden
+[E-95](../Intern/BEFUNDE.md#e-95) sagt selbst *„von Gregor noch nicht am laufenden
 Programm bestätigt“*. TESTPLAN C3 führt beide zu Recht als offen.
 
 **Was Gregor dafür tun müsste** (aus `WEITERMACHEN.md`, Zeile *VON GREGOR ZU
@@ -71,11 +71,11 @@ gequetscht, jedes Bild in eigener Höhe, der Text frei.
 
 ### <a id="l-33.5"></a>L-33.5 — TESTPLAN C3: der Handgriff zu E-95 prüft das Falsche
 
-In C3 steht für [E-95](../BEFUNDE.md#e-95): *„antworten/weiterleiten mit Bildern —
+In C3 steht für [E-95](../Intern/BEFUNDE.md#e-95): *„antworten/weiterleiten mit Bildern —
 Bilder in der **angegebenen** Größe“*. Das ist das Kriterium von
-[E-112](../BEFUNDE.md#e-112), nicht von [E-95](../BEFUNDE.md#e-95) — und genau diese Formulierung lädt
-dazu ein, die E-112-Bestätigung als Erledigung von [E-95](../BEFUNDE.md#e-95) zu lesen. `WEITERMACHEN.md`
-beschreibt [E-95](../BEFUNDE.md#e-95)/[E-96](../BEFUNDE.md#e-96) dagegen als *„die Bilder behalten ihre wirkliche Größe, und
+[E-112](../Intern/BEFUNDE.md#e-112), nicht von [E-95](../Intern/BEFUNDE.md#e-95) — und genau diese Formulierung lädt
+dazu ein, die E-112-Bestätigung als Erledigung von [E-95](../Intern/BEFUNDE.md#e-95) zu lesen. `WEITERMACHEN.md`
+beschreibt [E-95](../Intern/BEFUNDE.md#e-95)/[E-96](../Intern/BEFUNDE.md#e-96) dagegen als *„die Bilder behalten ihre wirkliche Größe, und
 jedes bekommt seine eigene Zeilenhöhe“* mit den Doctolib- und FairToner-Nachrichten.
 **Vorschlag:** die beiden C3-Zeilen auf den Handgriff aus [L-33.4](#l-33.4)
 umschreiben. Nicht selbst geändert, weil das die Prüfanweisung an Gregor ändert.
@@ -91,7 +91,7 @@ und hinter der letzten Tabellenzeile einfügen statt anhängen (oder das Blockzi
 
 ### <a id="l-33.7"></a>L-33.7 — TESTPLAN hat keinen Schritt für 1.0.88
 
-Kopf und C4 enden bei 1.0.87. Für [E-105](../BEFUNDE.md#e-105) gibt es keinen
+Kopf und C4 enden bei 1.0.87. Für [E-105](../Intern/BEFUNDE.md#e-105) gibt es keinen
 Handgriff. Solange 1.0.88 nicht bei Gregor liegt, ist das kein Fehler; mit dem
 Paket gehört ein Abschnitt C5 dazu (den freenet-Newsletter „Änderungen für
 Autofahrer“ und eine eBay-Nachricht mit Fragezeichenzeile öffnen und weiterleiten:

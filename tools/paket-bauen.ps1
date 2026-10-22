@@ -246,7 +246,7 @@ if (Test-Path -LiteralPath $dokupruefer) {
 
 # --- Schranke: keine Datei, die einen Stand behauptet, den sie nicht hat --
 #
-# Gregor am 11.09.2026, auf LEKTORAT.md zeigend: "ich fragte, ob alles
+# Gregor am 11.09.2026, auf Intern/LEKTORAT.md zeigend: "ich fragte, ob alles
 # aktualisiert ist, du sagst, ja. war es der letzte 'Siebter Durchgang -
 # 07.09.2026'? danach nichts mehr?" - Meine Antwort war falsch: gemessen
 # hatte ich 21 von 47 MDs.
@@ -288,7 +288,7 @@ if (Test-Path -LiteralPath $standpruefer) {
 #
 # Am 12.10.2026 gemessen: pruefe-befundurteile.pl hing in KEINEM Haken und
 # war auf main rot. Drei Widersprueche standen dort - E-112 galt in README
-# und ZIEL als behoben, waehrend BEFUNDE.md ihn seit dem 18.09.2026 als
+# und ZIEL als behoben, waehrend Intern/BEFUNDE.md ihn seit dem 18.09.2026 als
 # WIEDER OFFEN fuehrt, von Gregor mit Bildschirmfoto widerlegt. Eine
 # Schranke, die niemand aufruft, ist keine.
 $urteilspruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-befundurteile.pl'
@@ -319,7 +319,7 @@ if (Test-Path -LiteralPath $urteilspruefer) {
   if ($LASTEXITCODE -ne 0) {
     Write-Host ''
     Write-Host '  KEIN PAKET. Ein Dokument erklaert einen Befund fuer erledigt,'
-    Write-Host '  den BEFUNDE.md offen fuehrt. Erst die Stelle berichtigen.'
+    Write-Host '  den Intern/BEFUNDE.md offen fuehrt. Erst die Stelle berichtigen.'
     Write-Host ''
     exit 1
   }

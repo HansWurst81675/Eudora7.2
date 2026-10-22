@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
@@ -30,7 +30,7 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #
 # WAS ES PRUEFT
 #
-# In BEFUNDE.md gilt: eine Zeile, die das Wort DATENVERLUST traegt,
+# In Intern/BEFUNDE.md gilt: eine Zeile, die das Wort DATENVERLUST traegt,
 # beschreibt einen Weg, auf dem Daten des Anwenders verlorengehen. Solange
 # eine solche Zeile nicht ALS BEHOBEN gekennzeichnet ist, wird kein Paket
 # gebaut.
@@ -45,7 +45,7 @@ my $wurzel = $0;
 $wurzel =~ s{[\\/]tools[\\/][^\\/]+$}{};
 $wurzel = '.' if $wurzel eq $0 || $wurzel eq '';
 
-my $datei = "$wurzel/BEFUNDE.md";
+my $datei = "$wurzel/Intern/BEFUNDE.md";
 open my $h, '<:raw', $datei or die "$datei: $!\n";
 my $t;
 { local $/; $t = <$h>; }
@@ -70,13 +70,13 @@ for my $z (@zeilen) {
         push @behoben, "$kennung";
     }
     else {
-        push @offen, "$kennung - Urteil in BEFUNDE.md: $urteil";
+        push @offen, "$kennung - Urteil in Intern/BEFUNDE.md: $urteil";
     }
 }
 
 print "\n  Wege, auf denen Daten verlorengehen\n";
 print '  ', '-' x 68, "\n";
-printf "  in BEFUNDE.md gekennzeichnet   %d\n", scalar(@offen) + scalar(@behoben);
+printf "  in Intern/BEFUNDE.md gekennzeichnet   %d\n", scalar(@offen) + scalar(@behoben);
 printf "  davon behoben                  %d\n", scalar @behoben;
 printf "  davon OFFEN                    %d\n", scalar @offen;
 print '  ', '-' x 68, "\n";

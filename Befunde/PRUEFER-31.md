@@ -1,8 +1,8 @@
 # PRÜFER-31 — 7.2.0.97 bis 7.2.0.99 nachgerechnet
 
 Gegenstand: `git diff 45ed40c0..8e5936aa -- Eudora71/` und `tools/paket-pruefen.ps1`, also
-7.2.0.97 (PRUEFER-30 F1 und PRUEFER-29 N1 zu [E-121](../BEFUNDE.md#e-121)), 7.2.0.98 (zweite
-Ursache von [E-83](../BEFUNDE.md#e-83)) und 7.2.0.99 (nur Versionsnummer, Defender-Schranke).
+7.2.0.97 (PRUEFER-30 F1 und PRUEFER-29 N1 zu [E-121](../Intern/BEFUNDE.md#e-121)), 7.2.0.98 (zweite
+Ursache von [E-83](../Intern/BEFUNDE.md#e-83)) und 7.2.0.99 (nur Versionsnummer, Defender-Schranke).
 Gelesen am Quelltext, nichts gebaut, nichts gestartet. Zeilen beziehen sich auf `8e5936aa`.
 Messdaten: `C:\Temp\E118\Mailverzeichnis\eudora-*.log` und Gregors Protokoll
 `Eudora72-1.0.99-release\Mailverzeichnis\eudora.log` (nur gelesen; ab Zeile 1590 der Lauf mit
@@ -222,7 +222,7 @@ starten, senkt den Zähler um eins. Im Protokoll sind das die Zeilen
 leben, und die hatten gestartet. Die Wirkung ist gering: Regel 1 in `ScheduleTasks` (`:503`,
 `m_nActiveTasks == m_nMaxConcurrentTasks`) greift später, es laufen also mehr als zehn Aufgaben
 zugleich. Gefährlich wäre die Gegenrichtung, ein Zähler, der dauerhaft auf 10 steht. Die kommt nur
-von liegengebliebenen, gestarteten Aufgaben, also von [E-83](../BEFUNDE.md#e-83) selbst, und die räumt 7.2.0.98 jetzt ab.
+von liegengebliebenen, gestarteten Aufgaben, also von [E-83](../Intern/BEFUNDE.md#e-83) selbst, und die räumt 7.2.0.98 jetzt ab.
 Vorschlag: nur zurückzählen, wenn `m_pWinThread` gesetzt ist. Nicht vor dem Release nötig.
 
 ## F7 — Defender-Block in `tools/paket-pruefen.ps1` — Prüflücke, Vermutung
@@ -277,7 +277,7 @@ Reihenfolge:
 `m_pDestTocDoc->ImapCopyMsgFromLocalToImap(pSum, m_pDestTocDoc, …)` gab es schon in `45ed40c0`
 (Zeile 2392). Neu ist nur `pCopySum = pSum`. `RewriteMbxStub` mit Quelle = Ziel liest den Text über
 das Dokument der Zusammenfassung (`ImapToc.cpp:4672-4683`), nicht über Versatz und Datei. Seit
-[E-121](../BEFUNDE.md#e-121) Teil 1 ist das an Gregors Tests bestätigt.
+[E-121](../Intern/BEFUNDE.md#e-121) Teil 1 ist das an Gregors Tests bestätigt.
 
 **`RemoveTaskInfo` aus `SetDisplayWindow`, zu früh oder mit wartender Nachricht: nein.**
 
@@ -311,6 +311,6 @@ beim tatsächlichen Löschen (`:831` steht innerhalb des Treffers).
 * PRUEFER-29 N1 ist behoben. Entfernt wird nur die markierte Quelle (`ImapActionQueue.cpp:2424`),
   ohne Merkzeichen bleibt die Quelle stehen. Am Prüfstand 25-mal und bei Gregor zweimal
   `markiert=1` mit `hochgeladen=1`. `markiert=1` ohne Hochladen kommt nicht vor.
-* [E-83](../BEFUNDE.md#e-83) zweite Ursache ist behoben. Alle 15 Läufe mit 7.2.0.98/99 am Prüfstand beenden sauber, in
+* [E-83](../Intern/BEFUNDE.md#e-83) zweite Ursache ist behoben. Alle 15 Läufe mit 7.2.0.98/99 am Prüfstand beenden sauber, in
   sechs davon greift die neue Entfernung. Gregors Lauf mit 7.2.0.99 endet ebenfalls mit
   `ExitInstance: erreicht`.

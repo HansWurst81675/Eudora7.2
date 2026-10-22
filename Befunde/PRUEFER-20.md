@@ -5,7 +5,7 @@ Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Nachgang:** B
 
 Stand: 12.10.2026, Zweig `an1-endungen`. Nur gelesen; nichts geändert, gebaut
 oder gestartet. Zeilennummern beziehen sich auf den Arbeitsbaum (= 123b218).
-`befund-suchen.pl`: zu `SetExtension` gibt es [AN-1](../BEFUNDE.md#an-1); zu `hexbin.cpp` und
+`befund-suchen.pl`: zu `SetExtension` gibt es [AN-1](../Intern/BEFUNDE.md#an-1); zu `hexbin.cpp` und
 `uudecode.cpp` gibt es noch keinen Befund.
 
 ## Ergebnis vorab

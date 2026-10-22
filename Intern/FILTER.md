@@ -6,12 +6,12 @@
 > falsch gemacht haben: [**E-104**](BEFUNDE.md#e-104) hat das Lesen der INI-Schalter umgebaut,
 > betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen in
 > dieser Datei nicht vor**, gemessen. **Ein offener Punkt aus derselben Ecke
-> gehört aber hierher und stand bisher nirgends in dieser Datei: [M-3](Befunde/PRUEFER-15.md#m-3).** Die
+> gehört aber hierher und stand bisher nirgends in dieser Datei: [M-3](../Befunde/PRUEFER-15.md#m-3).** Die
 > Filteraktion *Notify Application* sichert `IDS_INI_INCLUDE_HEADERS` **roh**
 > (`filtersd.cpp:2048`, `GetIniShort` statt `E104SchalterLesen`) und schreibt
 > den gesicherten Wert zurück (`:2083`) — ein verdorbener Wert überlebt damit
 > die Reparatur aus [E-104](BEFUNDE.md#e-104). Offen, gefunden von PRUEFER
-> (`Befunde/PRUEFER-16.md`, [M-3](Befunde/PRUEFER-15.md#m-3)). Nachgetragen vom LEKTOR, [L-15.14](Befunde/LEKTOR-15.md#l-15.14).
+> (`Befunde/PRUEFER-16.md`, [M-3](../Befunde/PRUEFER-15.md#m-3)). Nachgetragen vom LEKTOR, [L-15.14](../Befunde/LEKTOR-15.md#l-15.14).
 
 Diese Datei beschreibt die Filter von Eudora aus Sicht dessen, der sie
 benutzt: wie eine Regel entsteht, wann sie läuft, was sie tun kann, wo sie
@@ -22,10 +22,10 @@ Zeilennummer. Wo etwas nicht belegbar war, steht das ausdrücklich dabei.
 Die Zeilennummern beziehen sich auf den Stand dieses Zweigs; die Dateien
 liegen unter `Eudora71/Eudora/`.
 
-Verwandte Dokumente: [README.md](README.md) — dort der Abschnitt
+Verwandte Dokumente: [README.md](../README.md) — dort der Abschnitt
 *Einstellungen, die es nur hier gibt* mit den Abweichungen dieser
 Portierung; [BEFUNDE.md](BEFUNDE.md) — die vollständigen Befunde;
-[CHANGELOG.md](CHANGELOG.md) — was wann behoben wurde.
+[CHANGELOG.md](../CHANGELOG.md) — was wann behoben wurde.
 
 ---
 
@@ -563,7 +563,7 @@ in `Eudora71/Eudora/EudoraRes.rc` im Format
 > schlägt beides — wer dort etwas stehen hat, ändert es dort.
 
 Wo diese Portierung abweicht, steht das dabei — die Begründungen stehen in
-[README.md](README.md), Abschnitt *Einstellungen, die es nur hier gibt*.
+[README.md](../README.md), Abschnitt *Einstellungen, die es nur hier gibt*.
 
 ### Filter
 
@@ -663,7 +663,7 @@ arbeitet rein lokal und fragt nichts.
 **Nicht zu verwechseln** mit der Kennwortfrage **beim Start**: die kommt
 nicht vom Filtern, sondern davon, dass Eudora ein beim Beenden offenes
 IMAP-Postfachfenster wieder herstellt. Dagegen hilft, das Fenster vorher zu
-schließen — [README.md](README.md), Abschnitt *Beim Start wird nach dem
+schließen — [README.md](../README.md), Abschnitt *Beim Start wird nach dem
 IMAP-Kennwort gefragt*.
 
 **Ein leeres Suchfeld trifft alles.** *„enthält nichts"* ist für jede
@@ -719,7 +719,7 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 | Befund | was passiert |
 |---|---|
 | [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
-| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors***; **ab 7.2.0.109/7.2.0.110** nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden ([PRÜFER-36](Befunde/PRUEFER-36.md) P3, [PRÜFER-38](Befunde/PRUEFER-38.md) R1–R3). Keine dieser Fassungen ist veröffentlicht; von Gregor noch nicht bestätigt |
+| [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors***; **ab 7.2.0.109/7.2.0.110** nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden ([PRÜFER-36](../Befunde/PRUEFER-36.md) P3, [PRÜFER-38](../Befunde/PRUEFER-38.md) R1–R3). Keine dieser Fassungen ist veröffentlicht; von Gregor noch nicht bestätigt |
 | [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
 | [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
 

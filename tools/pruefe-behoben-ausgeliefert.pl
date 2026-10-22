@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer und
 # meldet trotzdem gruen (LEKTOR, L-18.11).
@@ -32,7 +32,7 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #
 # Es gab dafuer keine Schranke. paket-pruefen.ps1 misst das Paket gegen das
 # Bauverzeichnis, aber niemand hielt die Fassung der AUSGELIEFERTEN Eudora.exe
-# gegen das, was BEFUNDE.md behauptet.
+# gegen das, was Intern/BEFUNDE.md behauptet.
 #
 # ---------------------------------------------------------------------------
 # WORAN GEMESSEN WIRD
@@ -64,7 +64,7 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #      Releases/Eudora72-1.0.NN-release/Eudora.exe muss 7.2.0.NN melden.
 #      Das ist der gemessene Fall "Paket sagt .68, EXE sagt .67".
 #
-#   B. Was BEFUNDE.md als "behoben in 7.2.0.NN" fuehrt und zugleich als bei
+#   B. Was Intern/BEFUNDE.md als "behoben in 7.2.0.NN" fuehrt und zugleich als bei
 #      Gregor BESTAETIGT ausgibt, muss in einem Paket liegen, dessen EXE
 #      mindestens 7.2.0.NN meldet. Eine Bestaetigung an einem Stand, den es
 #      als Paket nie gab, kann es nicht geben.
@@ -134,7 +134,7 @@ sub fassungen_der_exe {
     return sort keys %v;
 }
 
-# Die Urteile aus BEFUNDE.md: Kennung => { fassung, bestaetigt }
+# Die Urteile aus Intern/BEFUNDE.md: Kennung => { fassung, bestaetigt }
 sub urteile {
     my ($befunde) = @_;
     my @u;
@@ -162,7 +162,7 @@ sub urteile {
 sub pruefe {
     my ($pakete, $urteile, $dokumentiert) = @_;
     # $pakete       { 1.0.NN => [Fassungen der EXE] } - hier VORHANDENE Pakete
-    # $urteile      [Urteile aus BEFUNDE.md]
+    # $urteile      [Urteile aus Intern/BEFUNDE.md]
     # $dokumentiert hoechste Paketnummer, die Releases/PAKETE.md fuehrt
     my (@mangel, @hinweis);
     my $geprueft = 0;
@@ -279,7 +279,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     $pruef->('stimmige Pakete laufen durch', join('|', @$m_ok), '');
     $pruef->('und es wurde etwas geprueft', $g_ok >= 2 ? 'ja' : "nein ($g_ok)", 'ja');
 
-    # --- Urteile aus BEFUNDE.md lesen -------------------------------------
+    # --- Urteile aus Intern/BEFUNDE.md lesen -------------------------------------
     my $bef = "| E-108 | Absturz | **behoben in 7.2.0.72**, von Gregor am laufenden Programm best"
             . "\xc3\xa4" . "tigt |\n"
             . "| E-99 | Datenverlust | **behoben in 7.2.0.80**, von Gregor best"
@@ -387,7 +387,7 @@ for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip")) {
     }
 }
 
-my @u = urteile(lies("$wurzel/BEFUNDE.md"));
+my @u = urteile(lies("$wurzel/Intern/BEFUNDE.md"));
 
 # Die hoechste Paketnummer, die Releases/PAKETE.md FUEHRT. Sie sagt, was es je
 # als Paket gab - auch dann, wenn das Paket hier nicht liegt (die ZIPs sind in
@@ -417,7 +417,7 @@ print "\n  HINWEIS: $_\n" for @$hinweis;
 unless ($geprueft) {
     print "\n  NICHTS GEPRUEFT - das ist kein gruenes Ergebnis.\n";
     print "  Es liegt kein Paketverzeichnis mit einer lesbaren Eudora.exe vor, und\n";
-    print "  BEFUNDE.md nennt kein bestaetigtes \"behoben in 7.2.0.NN\". Damit kann\n";
+    print "  Intern/BEFUNDE.md nennt kein bestaetigtes \"behoben in 7.2.0.NN\". Damit kann\n";
     print "  diese Schranke nichts aussagen - was nicht dasselbe ist wie in Ordnung.\n\n";
     exit 1;
 }

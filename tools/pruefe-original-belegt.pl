@@ -20,7 +20,7 @@ use warnings;
 #     "was ist denn hier neu? in der alten hermes implementierung hat es ja
 #      funktioniert."
 #
-# Erst danach wurde nachgesehen. Das Ergebnis steht jetzt in BEFUNDE.md:
+# Erst danach wurde nachgesehen. Das Ergebnis steht jetzt in Intern/BEFUNDE.md:
 #
 #     "nickview.cpp, nickview.h, nicktree.cpp, nicktree.h und
 #      Eudora.manifest sind seit 567a5d87 von uns nie angefasst worden
@@ -43,7 +43,7 @@ use warnings;
 # WAS GEPRUEFT WIRD - UND WAS BEWUSST NICHT
 # ---------------------------------------------------------------------------
 #
-# Geprueft wird NUR der Zuwachs an BEFUNDE.md, aus demselben Grund wie bei
+# Geprueft wird NUR der Zuwachs an Intern/BEFUNDE.md, aus demselben Grund wie bei
 # pruefe-behoben-belegt.pl: im Bestand stehen 19 Zeilen mit einem
 # Original-Urteil, und eine Schranke, die bei jedem Commit neunzehnmal
 # meckert, wird abgeschaltet (Arbeitsweise/schranke-gehoert-in-den-haken.md).
@@ -59,13 +59,21 @@ use warnings;
 #
 #   perl tools/pruefe-original-belegt.pl              # gestagte Aenderung
 #   perl tools/pruefe-original-belegt.pl --commit ABC
-#   perl tools/pruefe-original-belegt.pl --datei BEFUNDE.md
+#   perl tools/pruefe-original-belegt.pl --datei Intern/BEFUNDE.md
 #   perl tools/pruefe-original-belegt.pl --selbsttest
 #
 # Rueckgabe 0 = in Ordnung, 1 = Mangel, 2 = Aufrufproblem.
 
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
-my $DATEI = 'BEFUNDE.md';
+my $DATEI = 'Intern/BEFUNDE.md';
+
+# UMZUG ERKENNEN (22.10.2026). Am 22.10.2026 zogen 16 Dokumente von der
+# Wurzel nach Intern/. Mit nur dem NEUEN Pfad im Pathspec kann git die
+# Umbenennung nicht paaren und meldet die ganze Datei als neu: 8703
+# hinzugefuegte Zeilen statt 35. Diese Schranke haette daraufhin 68
+# Urteile angemahnt, die seit Wochen unveraendert dastehen. Mit beiden
+# Pfaden und -M erkennt git die Umbenennung.
+my $ALTPFAD = ($DATEI =~ m{^Intern/(.+)$}) ? $1 : '';
 
 # --- Was als Original-Urteil gilt ------------------------------------------
 #
@@ -181,7 +189,7 @@ sub selbsttest {
     my @faelle = (
         # [Name, Zeile, Urteil erwartet?, Beleg erwartet?]
 
-        # DER ECHTE FEHLER. Nachgebaut aus dem, was BEFUNDE.md ueber den
+        # DER ECHTE FEHLER. Nachgebaut aus dem, was Intern/BEFUNDE.md ueber den
         # ersten Entwurf sagt ("Die Einordnung Originalverhalten, die hier
         # zuerst stand, war falsch; belegt war nur, dass die //FORNOW-
         # Kommentare original sind"). Der Entwurf selbst wurde nie
@@ -305,7 +313,7 @@ sub zeilen_aus_diff {
     my ($bereich) = @_;
     my $cmd = defined $bereich
             ? "git show $bereich --format= --unified=0 -- $DATEI 2>&1"
-            : "git diff --cached --unified=0 -- $DATEI 2>&1";
+            : "git diff --cached -M --unified=0 -- $DATEI $ALTPFAD 2>&1";
     my @aus = `$cmd`;
     my (@neu, @alt);
     for my $z (@aus) {
@@ -368,7 +376,7 @@ if ($modus eq 'datei' && $befundzeilen == 0) {
 
 if (!@zeilen) {
     print "\n  Nichts zu pruefen: dieser Zuwachs enthaelt keine Zeile aus\n";
-    print "  BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
+    print "  Intern/BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
     exit 0;
 }
 

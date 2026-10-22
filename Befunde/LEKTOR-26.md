@@ -41,9 +41,9 @@ ein Leser zuerst aufschlägt. Zeile eingefügt.
 
 ### <a id="l-18.4"></a>L-18.4 — `CHANGELOG.md` führt `E-94` unter *„Noch offen"* und `E-111` gar nicht
 
-[E-94](../BEFUNDE.md#e-94) ist **behoben in 7.2.0.84 und von Gregor am 12.10.2026 bestätigt** — die
+[E-94](../Intern/BEFUNDE.md#e-94) ist **behoben in 7.2.0.84 und von Gregor am 12.10.2026 bestätigt** — die
 Zelle sagt das selbst, sie steht nur unter der falschen Überschrift. Der Leser
-trifft zuerst auf *„Noch offen"*. Umgekehrt führt `WEITERMACHEN.md` [E-111](../BEFUNDE.md#e-111)
+trifft zuerst auf *„Noch offen"*. Umgekehrt führt `WEITERMACHEN.md` [E-111](../Intern/BEFUNDE.md#e-111)
 als offen und `CHANGELOG.md` kannte ihn in der offenen Liste nicht.
 `pruefe-befundurteile.pl` greift hier nicht: sie liest ein Umfeld von 40
 Zeichen um die Kennung, und die Überschrift steht sieben Zeilen weiter oben.
@@ -53,8 +53,8 @@ E-111-Zeile eingefügt.
 ### <a id="l-18.5"></a>L-18.5 — `TESTPLAN.md` lässt die fünfzehnte wartende Behebung aus
 
 `BEFUNDE.md` führt **fünfzehn** Behebungen als *„von Gregor noch nicht
-bestätigt"*: die vierzehn aus Teil A und [E-101](../BEFUNDE.md#e-101). Teil C3 heißt *„Die fünf, die
-auf dein Urteil warten"* und nennt [E-101](../BEFUNDE.md#e-101) nicht — die Nachricht, die gespeichert
+bestätigt"*: die vierzehn aus Teil A und [E-101](../Intern/BEFUNDE.md#e-101). Teil C3 heißt *„Die fünf, die
+auf dein Urteil warten"* und nennt [E-101](../Intern/BEFUNDE.md#e-101) nicht — die Nachricht, die gespeichert
 für jedes andere Programm unbrauchbar war. Ausgerechnet die aus der
 Datenverlustklasse. Als sechster Punkt aufgenommen, Überschrift berichtigt.
 
@@ -83,7 +83,7 @@ tragen sollen. Auf 8600 und 100 gezogen.
 
 ### <a id="l-18.9"></a>L-18.9 — `PRUEFUNG-BRANCH.md:29` schreibt `NP3-6/7`
 
-Kurzform für [NP3-6](../BEFUNDE.md#np3-6) und [NP3-7](../BEFUNDE.md#np3-7). Die zweite Kennung steht nicht da, also
+Kurzform für [NP3-6](../Intern/BEFUNDE.md#np3-6) und [NP3-7](../Intern/BEFUNDE.md#np3-7). Die zweite Kennung steht nicht da, also
 kann kein Werkzeug sie finden und kein Leser sie anklicken. Gregor hat genau
 diese Zeile gemeldet. Ausgeschrieben.
 
@@ -95,9 +95,9 @@ Nachrichten hintereinander:
 | gemeldet | Ursache | behoben |
 |---|---|---|
 | *„e-85 fehlt"* | ich verlinkte nur die **erste** Nennung je Absatz — meine Sparsamkeit, nicht sein Wunsch. Er hatte *„überall"* gesagt | jede Nennung |
-| *„Dazu fehlten [E-98](../BEFUNDE.md#e-98) bis [E-101](../BEFUNDE.md#e-101) — hier auch!"* | der Fettdruck wurde als Einheit gefasst und das Sternchenpaar auf beiden Seiten verlangt; in `**E-98 bis E-101**` steht es nur außen, also blieben **beide** unverlinkt | nur die Kennung wird Link, der Fettdruck bleibt stehen |
+| *„Dazu fehlten [E-98](../Intern/BEFUNDE.md#e-98) bis [E-101](../Intern/BEFUNDE.md#e-101) — hier auch!"* | der Fettdruck wurde als Einheit gefasst und das Sternchenpaar auf beiden Seiten verlangt; in `**E-98 bis E-101**` steht es nur außen, also blieben **beide** unverlinkt | nur die Kennung wird Link, der Fettdruck bleibt stehen |
 | *„[L-17](LEKTOR-12.md#l-17) usw. - links fehlen!"* | [L-17.1](LEKTOR-17.md#l-17.1), [LEKTOR-20](LEKTOR-20.md#lektor-20), [P-42](PRUEFER-16.md#p-42), [W-2](LEKTOR-4.md#w-2) stehen **nicht** in der Urteilstabelle von `BEFUNDE.md`, sondern haben ihre Überschrift in einem Bericht unter `Befunde/`. Das Werkzeug kannte nur ein Verzeichnis | zweites Verzeichnis, 239 Kennungen |
-| *„Offen bleibt [B5.7](../AUFGABEN.md#b5.7) … link fehlt"* und *„links in der tabelle fehlen"* | `B5.7` hat keinen Bindestrich und fiel durch jedes Muster; und die Markentabelle in `TESTPLAN.md` schreibt `` [`E-78`](../BEFUNDE.md#e-78) `` in Rückstrichen, die das Werkzeug grundsätzlich schützt | drittes Verzeichnis für Abschnittskennungen; ein Rückstrichstück, das **nur** aus einer Kennung mit Bindestrich besteht, wird verlinkt |
+| *„Offen bleibt [B5.7](../Intern/AUFGABEN.md#b5.7) … link fehlt"* und *„links in der tabelle fehlen"* | `B5.7` hat keinen Bindestrich und fiel durch jedes Muster; und die Markentabelle in `TESTPLAN.md` schreibt `` [`E-78`](../Intern/BEFUNDE.md#e-78) `` in Rückstrichen, die das Werkzeug grundsätzlich schützt | drittes Verzeichnis für Abschnittskennungen; ein Rückstrichstück, das **nur** aus einer Kennung mit Bindestrich besteht, wird verlinkt |
 
 **Zwei Fallen, die beim Beheben aufgingen und nicht übersehen werden dürfen:**
 
@@ -117,11 +117,11 @@ Nachgemessen gegen einen Arbeitsbaum auf `97f50c8`, Werkzeug für Werkzeug:
 |---|---|---|
 | `spuren-auswerten.pl` | frei | **weist ab** — meldet vier vorhandene Zeilen in `Befunde/SPURMARKEN.md` als fehlend |
 | `pruefe-behoben-ausgeliefert.pl` | 17 Urteile geprüft, 8 bestätigt | **0 Urteile, 0 bestätigt — und Rückgabewert 0** |
-| `pruefe-befund-verbreitung.pl` | Umfang [`E-94`](../BEFUNDE.md#e-94) | Umfang `(keine)` — und Rückgabewert 0 |
+| `pruefe-befund-verbreitung.pl` | Umfang [`E-94`](../Intern/BEFUNDE.md#e-94) | Umfang `(keine)` — und Rückgabewert 0 |
 
 Alle drei lesen die **erste Zelle** der Urteilstabelle und kamen mit dem Anker
 davor nicht zurecht. Die lautere der drei weist wenigstens ab; die beiden
-anderen prüfen nichts und sagen *grün* — genau der Zustand, den [E-109](../BEFUNDE.md#e-109) Punkt (4)
+anderen prüfen nichts und sagen *grün* — genau der Zustand, den [E-109](../Intern/BEFUNDE.md#e-109) Punkt (4)
 beschreibt: *„ein Freispruch über eine leere Menge"*.
 
 Alle drei überspringen den Anker jetzt. Belegt: jede der neunzehn `pruefe-*`-
@@ -131,7 +131,7 @@ des Vergleichsbaums, und `pruefe-stand-md.pl`, das diesen Bericht mitzählt).
 
 **Damit sind es an einem Tag zwölf Werkzeuge, die dieselbe Zeile falsch gelesen
 haben** — sieben beim ersten Lauf, drei hier, dazu `pruefe-anzeigetext.pl` und
-`pruefe-behoben-belegt.pl` über den Zuwachs. Die Lehre steht schon in [E-109](../BEFUNDE.md#e-109):
+`pruefe-behoben-belegt.pl` über den Zuwachs. Die Lehre steht schon in [E-109](../Intern/BEFUNDE.md#e-109):
 wer den Umfang aus derselben Annahme nimmt wie das Werkzeug, das er prüfen
 soll, prüft nichts.
 
@@ -140,7 +140,7 @@ soll, prüft nichts.
 * **CHRONIST ist fällig** (`rollen-faellig.pl`), seit seinem Bericht `1be7554`
   haben sich 14 Dateien in seinem Bereich geändert. Nicht mein Auftrag.
 * **Die Streuung selbst.** Dieselbe Kennung steht im Schnitt an sieben Stellen,
-  [E-112](../BEFUNDE.md#e-112) an siebzehn in sechs Dateien. Jetzt ist jede davon anklickbar — aber
+  [E-112](../Intern/BEFUNDE.md#e-112) an siebzehn in sechs Dateien. Jetzt ist jede davon anklickbar — aber
   *eine* Beschreibung an *einer* Stelle wäre die Antwort auf Gregors Satz
   *„daß die infos nicht überall verteilt sind"*. Das ist eine Umarbeitung an
   den Dokumenten und wartet auf seine Entscheidung.

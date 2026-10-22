@@ -66,8 +66,8 @@ nachinstalliert ist?**
 | Abhängigkeiten | Import- **und** Verzögerungstabelle aus dem PE-Kopf, transitiv weiterverfolgt: eine importierte DLL, die im Paket liegt, hat selbst wieder Importe |
 | Einsortierung | jeder Name in genau einen von drei Töpfen: **(a)** liegt im Paket, **(b)** bringt Windows mit, **(c)** fehlt. Topf (c) ist die Antwort |
 | Systemverzeichnisse | ein Treffer in `SysWOW64`/`System32` zählt **nicht** als vorhanden. Er wird nur als erklärender Nebensatz ausgegeben („liegt zwar in SysWOW64 dieser Maschine — zählt nicht") |
-| Debug-Laufzeiten | ein Import auf `mfc140d`, `msvcp140d`, `vcruntime140d`, `vcruntime140_1d`, `ucrtbased`, `concrt140d` ist ein **Fehler** (Befund [S-8](../BEFUNDE.md#s-8)/[E-8](../BEFUNDE.md#e-8)). Abhilfe ist ein Release-Bau, nicht das Mitliefern |
-| Pakethygiene | keine `.pdb` im Release-Paket, `Mailverzeichnis\Eudora.ini` (Befund [S-1](../BEFUNDE.md#s-1)), `Eudora starten.cmd` (Befund [E-6](../BEFUNDE.md#e-6)) |
+| Debug-Laufzeiten | ein Import auf `mfc140d`, `msvcp140d`, `vcruntime140d`, `vcruntime140_1d`, `ucrtbased`, `concrt140d` ist ein **Fehler** (Befund [S-8](../Intern/BEFUNDE.md#s-8)/[E-8](../Intern/BEFUNDE.md#e-8)). Abhilfe ist ein Release-Bau, nicht das Mitliefern |
+| Pakethygiene | keine `.pdb` im Release-Paket, `Mailverzeichnis\Eudora.ini` (Befund [S-1](../Intern/BEFUNDE.md#s-1)), `Eudora starten.cmd` (Befund [E-6](../Intern/BEFUNDE.md#e-6)) |
 
 Gelesen wird der **PE-Kopf**, nicht der Dateiinhalt. Ein `grep` über die Datei
 liefert Bruchstücke wie `s.dll` und `ts.dll`, weil in der Zeichenkettentabelle
@@ -141,7 +141,7 @@ Paketdateien. In der Startkette fehlt **nichts**.
 
 Das ist ein Nachweis über den PE-Kopf, kein Startversuch. Er sagt: der Lader
 findet alles, was er vor dem ersten Befehl braucht. Er sagt nicht, dass das
-Fenster danach bedienbar ist — dafür stehen [S-5](../BEFUNDE.md#s-5), [S-6](../BEFUNDE.md#s-6) und [M-1](../BEFUNDE.md#m-1) weiter offen.
+Fenster danach bedienbar ist — dafür stehen [S-5](../Intern/BEFUNDE.md#s-5), [S-6](../Intern/BEFUNDE.md#s-6) und [M-1](../Intern/BEFUNDE.md#m-1) weiter offen.
 
 **Bekannte, erwartete Lücken** — kein Fehlschlag von Kriterium 0:
 

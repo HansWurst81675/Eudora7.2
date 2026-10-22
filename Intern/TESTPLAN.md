@@ -1,4 +1,4 @@
-# Testplan für Gregor — Paket 1.0.120, Stand 21.10.2026
+# Testplan für Gregor — Quellstand 1.0.121 — geschnürt und bei dir liegt 1.0.120, Stand 22.10.2026
 
 ## Was jetzt zu testen ist
 
@@ -85,7 +85,7 @@ der Melder aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/1
 erlebt; danach startete seine Hermes 7.1 nicht mehr
 ([E-131](BEFUNDE.md#e-131)). Ab 1.0.114 **fragt** Eudora vorher — seit **1.0.115** nur noch dann, wenn das Verzeichnis wirklich fremd ist (in 1.0.114 kam die Frage bei **jedem** Start, auch über das eigene Verzeichnis; Gregor hat das am 21.10.2026 gemeldet), seit **1.0.116** auf **allen** Startwegen und mit gemerkter Antwort, und seit **1.0.117** auch dann, wenn im fremden Ordner **keine** `Eudora.ini` liegt — der Fall einer kopierten Sicherung.
 
-**Vorbereitung.** Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.117-release`, am 21.10.2026 bereitgestellt. *(Bis zum 21.10.2026 stand hier `Eudora72-1.0.115-release` mit dem Zusatz „das Paket ist noch nicht geschnürt" — 1.0.115, 1.0.116 und 1.0.117 liegen alle drei bei dir, [LEKTOR-46](Befunde/LEKTOR-46.md#l-46.5).)*
+**Vorbereitung.** Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.117-release`, am 21.10.2026 bereitgestellt. *(Bis zum 21.10.2026 stand hier `Eudora72-1.0.115-release` mit dem Zusatz „das Paket ist noch nicht geschnürt" — 1.0.115, 1.0.116 und 1.0.117 liegen alle drei bei dir, [LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.5).)*
 Dein bisheriges `Eudora72-1.0.113-release` **stehen lassen** — es ist in diesem
 Test die „fremde Installation". Notier dir vorher Datum und Uhrzeit von
 `Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini`; daran siehst du am Ende,
@@ -204,8 +204,8 @@ Der nachgestellte Weg ist ein anderer: `In` öffnen, alles auswählen, `In.mbx`
 von außen sperren (wie ein Virenscanner) und *Special → Filter Messages* —
 `tools/messen-e69.ps1`, so am 17.10.2026 an 7.2.0.106 gemessen.
 **Das stelle ich am Prüfstand selbst nach, bevor es wieder in diese Liste
-kommt** ([erst-nachstellen-dann-ausliefern](Arbeitsweise/erst-nachstellen-dann-ausliefern.md)).
-Dasselbe gilt für die Gegenprobe zu [R1](Befunde/PRUEFER-38.md), die ohne
+kommt** ([erst-nachstellen-dann-ausliefern](../Arbeitsweise/erst-nachstellen-dann-ausliefern.md)).
+Dasselbe gilt für die Gegenprobe zu [R1](../Befunde/PRUEFER-38.md), die ohne
 einen ersten Filterlauf gar nichts aussagt.
 ### Was bekannt ist — bitte nicht als neuen Fehler melden
 
@@ -228,8 +228,8 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Starttest an 1.0.120 in Ordnung"* oder
-*„Starttest an 1.0.120 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
+Mit der **Paketnummer**: *„Starttest an 1.0.121 in Ordnung"* oder
+*„Starttest an 1.0.121 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
@@ -239,7 +239,7 @@ Eigene Tests dieser Fassung: **243 Tests, 243 bestanden.**
 
 ## Buchführung — was wann an welchem Paket bestätigt wurde
 
-**Stand 21.10.2026, nachmittags. [C9](#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](BEFUNDE.md#e-134) bestätigt** (*„ja, e-134 eintragen"*) — sein Bildschirmfoto zeigt `hans`, `markus` und `freenet` mit Adressen im Baum. **[C10](#c10) ist ebenfalls durch: Gregor hat 1.0.120 getestet und [E-135](BEFUNDE.md#e-135) bestätigt** (*„beim cursor up/down bleibt die größe der box gleich. klasse!"*) — die Vervollständigungsbox im `To:`-Feld behält ihre Größe. **Offen zu testen bleibt [C8](#c8)** (der Starttest). Das Paket 1.0.119 liegt seit dem 21.10.2026 um 13:07 in `C:\Users\Gregor\Eudora72-1.0.119-release`; diese Zeile unverändert. Geschnürt und bei Gregor stehen 1.0.115 bis 1.0.118 (1.0.116 ist von ihm getestet, 1.0.117 und 1.0.118 nicht); 1.0.114 war bei ihm und ist an seinem eigenen Fund gescheitert. Veröffentlicht ist 1.0.120 als `v1.0.120` (21.10.2026, 19:07:37 UTC) — es trägt 1.0.118, 1.0.119 und 1.0.120; davor 1.0.117 als `v1.0.117` (07:56:56 UTC); an 1.0.117 selbst hat Gregor nichts am laufenden Programm gemessen, davor an 1.0.113 ebenfalls nichts. Davor Paket 1.0.112** (veröffentlicht als `v1.0.112`; an **1.0.110** bestätigt: eine gespeicherte Nachricht wird in Chrome richtig dargestellt — an **1.0.111** bestätigt: der Beenden-Weg auf beiden Wegen, 6015 ms aus dem lokalen Postfach und 4015 ms innerhalb des IMAP-Kontos — an **1.0.112** selbst ist **nichts am laufenden Programm gemessen**, es nimmt nur den Hochladezähler aus [PRÜFER-39](Befunde/PRUEFER-39.md) N1 zurück). Davor: (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
+**Stand 21.10.2026, nachmittags. [C9](#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](BEFUNDE.md#e-134) bestätigt** (*„ja, e-134 eintragen"*) — sein Bildschirmfoto zeigt `hans`, `markus` und `freenet` mit Adressen im Baum. **[C10](#c10) ist ebenfalls durch: Gregor hat 1.0.120 getestet und [E-135](BEFUNDE.md#e-135) bestätigt** (*„beim cursor up/down bleibt die größe der box gleich. klasse!"*) — die Vervollständigungsbox im `To:`-Feld behält ihre Größe. **Offen zu testen bleibt [C8](#c8)** (der Starttest). Das Paket 1.0.119 liegt seit dem 21.10.2026 um 13:07 in `C:\Users\Gregor\Eudora72-1.0.119-release`; diese Zeile unverändert. Geschnürt und bei Gregor stehen 1.0.115 bis 1.0.118 (1.0.116 ist von ihm getestet, 1.0.117 und 1.0.118 nicht); 1.0.114 war bei ihm und ist an seinem eigenen Fund gescheitert. Veröffentlicht ist 1.0.120 als `v1.0.120` (21.10.2026, 19:07:37 UTC) — es trägt 1.0.118, 1.0.119 und 1.0.120; davor 1.0.117 als `v1.0.117` (07:56:56 UTC); an 1.0.117 selbst hat Gregor nichts am laufenden Programm gemessen, davor an 1.0.113 ebenfalls nichts. Davor Paket 1.0.112** (veröffentlicht als `v1.0.112`; an **1.0.110** bestätigt: eine gespeicherte Nachricht wird in Chrome richtig dargestellt — an **1.0.111** bestätigt: der Beenden-Weg auf beiden Wegen, 6015 ms aus dem lokalen Postfach und 4015 ms innerhalb des IMAP-Kontos — an **1.0.112** selbst ist **nichts am laufenden Programm gemessen**, es nimmt nur den Hochladezähler aus [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 zurück). Davor: (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](../Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](../Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -397,7 +397,7 @@ dir attach
 hier, eine **frische** `Eudora.ini` bringe das Werbefenster zurück — das ist
 **widerlegt**: dieser Bau startet mit `Mode=2` (Pro, ohne Werbung), und auch
 mit `Mode=0` kam an 1.0.84 kein Abruf ([AN-2](BEFUNDE.md#an-2),
-[L-27.4](Befunde/LEKTOR-27.md#l-27.4)). Geprüft wird nur noch der Newsletter.
+[L-27.4](../Befunde/LEKTOR-27.md#l-27.4)). Geprüft wird nur noch der Newsletter.
 
 | | muss sein |
 |---|---|
@@ -412,7 +412,7 @@ mit `Mode=0` kam an 1.0.84 kein Abruf ([AN-2](BEFUNDE.md#an-2),
 **Stand 13.10.2026:** [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen,
 [E-101](BEFUNDE.md#e-101) durchgefallen (wieder offen). **[E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96) am 14.10.2026 an 1.0.87 bestätigt.**
 
-**Berichtigt am 12.10.2026 (LEKTOR, [L-18.5](Befunde/LEKTOR-26.md#l-18.5)):** hier standen *fünf*. `BEFUNDE.md` führt
+**Berichtigt am 12.10.2026 (LEKTOR, [L-18.5](../Befunde/LEKTOR-26.md#l-18.5)):** hier standen *fünf*. `BEFUNDE.md` führt
 **fünfzehn** Behebungen als „von Gregor noch nicht bestätigt" — vierzehn davon
 in Teil A, und eine, die in keinem Teil dieses Plans vorkam: [**E-101**](BEFUNDE.md#e-101), die
 unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
@@ -423,7 +423,7 @@ unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 | ✅ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
 | ✅ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
 | ✅ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
-| ✅ | [**E-95**](BEFUNDE.md#e-95) | die **Doctolib**- und die **FairToner**-Nachricht je beantworten und weiterleiten — kein Bild abgeschnitten oder gequetscht, Text frei ([L-33.4](Befunde/LEKTOR-33.md#l-33.4)) — **bestätigt 14.10.2026 an 1.0.87** |
+| ✅ | [**E-95**](BEFUNDE.md#e-95) | die **Doctolib**- und die **FairToner**-Nachricht je beantworten und weiterleiten — kein Bild abgeschnitten oder gequetscht, Text frei ([L-33.4](../Befunde/LEKTOR-33.md#l-33.4)) — **bestätigt 14.10.2026 an 1.0.87** |
 | ✅ | [**E-96**](BEFUNDE.md#e-96) | dasselbe mit mehreren Bildern hintereinander — **bestätigt 14.10.2026 an 1.0.87** |
 
 **[E-97](BEFUNDE.md#e-97) und [E-99](BEFUNDE.md#e-99) gehören nicht hierher** — die hast du am 17.09.2026 schon
@@ -431,7 +431,7 @@ bestätigt (*„gespeichert. funktioniert."* / *„ja, kein datenverlust!"*).
 
 ### <a id="c4"></a>C4 · Die Pakete 1.0.85 bis 1.0.87 — alle bestätigt
 
-**Stand 14.10.2026 ([LEKTOR-32](Befunde/LEKTOR-32.md#lektor-32)).** 1.0.85, 1.0.86 und 1.0.87 liegen als
+**Stand 14.10.2026 ([LEKTOR-32](../Befunde/LEKTOR-32.md#lektor-32)).** 1.0.85, 1.0.86 und 1.0.87 liegen als
 Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87.
 1.0.87 ist am 14.10.2026 als `v1.0.87` veröffentlicht.
 
@@ -444,7 +444,7 @@ Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e
 
 ### <a id="c5"></a>C5 · Paket 1.0.89 — E-118 und E-105
 
-**Stand 14.10.2026 ([LEKTOR-34](Befunde/LEKTOR-34.md#lektor-34)).** Testverzeichnis
+**Stand 14.10.2026 ([LEKTOR-34](../Befunde/LEKTOR-34.md#lektor-34)).** Testverzeichnis
 `C:\Users\Gregor\Eudora72-1.0.89-release`, die Anleitung liegt dort als `TESTEN.txt`.
 1.0.88 wurde nicht ausgeliefert (*„nein, 0.88 teste ich nicht zusätzlich, deine tests
 sollten reichen“*); [E-105](BEFUNDE.md#e-105) wird deshalb an 1.0.89 geprüft.
@@ -464,7 +464,7 @@ grauer Kasten), [E-113](BEFUNDE.md#e-113) (Bilder breiter als das Fenster), [E-1
 
 ### <a id="c6"></a>C6 · Paket 1.0.110 — E-69, der Beenden-Weg und eine bekannte Regression
 
-**Stand 20.10.2026 ([LEKTOR-44](Befunde/LEKTOR-44.md#lektor-44)).** Quellstand
+**Stand 20.10.2026 ([LEKTOR-44](../Befunde/LEKTOR-44.md#lektor-44)).** Quellstand
 **7.2.0.114**, Zweig `e-132-fremdes-mailverzeichnis`, **241 Tests / 241
 bestanden** — **noch nicht als Paket geschnürt.** Veröffentlicht ist
 **1.0.113** (`v1.0.113`, 20.10.2026, 13:01:36 UTC); davor am selben Tag
@@ -480,8 +480,8 @@ hast am 19.10.2026 alle alten Testverzeichnisse gelöscht (*„alles weg!"*) —
 
 | | Schritt | wird geprüft |
 |---|---|---|
-| ☐ | **Schritt 1** — Nachricht als Datei speichern | [E-101](BEFUNDE.md#e-101), dritter Teil ([F1](Befunde/PRUEFER-37.md), F3, F4) |
-| ☐ | **Schritt 2** — beenden während einer Übertragung (**Server muss erreichbar sein**) | [E-123](BEFUNDE.md#e-123), der Beenden-Weg und [R4](Befunde/PRUEFER-38.md) |
+| ☐ | **Schritt 1** — Nachricht als Datei speichern | [E-101](BEFUNDE.md#e-101), dritter Teil ([F1](../Befunde/PRUEFER-37.md), F3, F4) |
+| ☐ | **Schritt 2** — beenden während einer Übertragung (**Server muss erreichbar sein**) | [E-123](BEFUNDE.md#e-123), der Beenden-Weg und [R4](../Befunde/PRUEFER-38.md) |
 | — | ~~filtern bei totem Server~~ — **zurückgezogen am 20.10.2026**, der Handgriff trifft [E-69](BEFUNDE.md#e-69) nicht | steht oben unter *Nicht von Gregor zu testen* |
 
 **Was jeder Schritt im Einzelnen verlangt und woran man sieht, dass er
@@ -492,7 +492,7 @@ die Prüfpunkte am Beenden-Weg. Nach einem Absturz, einem Eingriff von Defender,
 einem Stromausfall oder einem erzwungenen Herunterfahren können eingebettete
 Bilder weiter fehlen.
 
-**Die Regression aus [PRÜFER-37](Befunde/PRUEFER-37.md) ist behoben** (Nachtrag
+**Die Regression aus [PRÜFER-37](../Befunde/PRUEFER-37.md) ist behoben** (Nachtrag
 19.10.2026, auf Gregors Wort *„f1 und f3/f4 erst beheben, dann 0.111 releasen"*):
 F1, F3 und F4 stecken ebenfalls in 1.0.110. Eine Nachricht in `windows-1251`,
 `koi8-r` oder `iso-8859-2` behält beim Speichern ihre richtige Angabe, und eine

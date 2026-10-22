@@ -146,9 +146,9 @@ sub beurteilen {
 if ($selbsttest) {
     my ($eigner, $repo) = ('HansWurst81675', 'Eudora7.2');
 
-    # Der Server kennt: README.md, BEFUNDE.md, tools (Baum). Nicht:
+    # Der Server kennt: README.md, Intern/BEFUNDE.md, tools (Baum). Nicht:
     # MELDUNGEN-VON-AUSSEN.md. Der Ref "v1.0.117" ist unbekannt.
-    my %da = map { $_ => 1 } ('README.md', 'BEFUNDE.md', 'tools',
+    my %da = map { $_ => 1 } ('README.md', 'Intern/BEFUNDE.md', 'tools',
                               'Arbeitsweise/README.md', 'ein Pfad.md');
     my $sieht = sub {
         my ($ref, $pfad) = @_;
@@ -171,7 +171,7 @@ if ($selbsttest) {
          "Siehe https://github.com/HansWurst81675/Eudora7.2/blob/main/MELDUNGEN-VON-AUSSEN.md.\n",
          1, 0, 0, 0],
         ['Anker an vorhandener Datei zaehlt nicht als tot',
-         "[E-85](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-85)\n",
+         "[E-85](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-85)\n",
          0, 1, 0, 0],
         ['Anker an fehlender Datei bleibt tot',
          "[x](https://github.com/HansWurst81675/Eudora7.2/blob/main/MELDUNGEN-VON-AUSSEN.md#open)\n",

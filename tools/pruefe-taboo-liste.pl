@@ -48,7 +48,7 @@
 #   Eudora71/Eudora/TridentReadMessageView.cpp:2465 (HTML-Ansicht),
 #   gleichlautend Eudora71/Eudora/ReadMessageDoc.cpp:504 (Paige-Ansicht).
 #
-# Diese beiden Zeilennummern sind am 11.09.2026 nachgemessen worden. BEFUNDE.md
+# Diese beiden Zeilennummern sind am 11.09.2026 nachgemessen worden. Intern/BEFUNDE.md
 # und tools/taboo-rechnen.pl nennen 2444 und 499; beides stimmt nicht. 2444
 # war vor der Behebung zu E-80 Teil 2 die Zeile 2445 und ist seither 2465
 # (der Patch hat 21 Zeilen davor eingefuegt); 499 war nie richtig, die Stelle

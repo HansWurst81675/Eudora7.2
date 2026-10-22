@@ -17,6 +17,20 @@ void resolve_URL (pg_char_ptr source_URL, pg_char_ptr target_URL, size_t nMaxLen
    pg_char_ptr       output, input;
    size_t            output_size;
 
+   // BEFUND E-111, zweiter Teil (22.10.2026): die entarteten Groessen.
+   //
+   // Die Schranke unten prueft ERST NACH dem Schreiben. Mit ">=" allein
+   // bleibt deshalb nMaxLength 0 und 1 ungedeckt: der erste Durchlauf
+   // schreibt target_URL[0], und das abschliessende "*output = 0" setzt
+   // target_URL[1] - bei nMaxLength=1 ein Byte zu weit, bei nMaxLength=0
+   // zwei. Hier abgefangen, damit die Schleife darunter unveraendert
+   // bleiben kann.
+   if (nMaxLength == 0)
+      return;
+   *target_URL = 0;
+   if (nMaxLength == 1)
+      return;
+
    // Start at 1 so that when we stop we still have room to NULL terminate
    output_size = 1;
    input = source_URL;
@@ -87,7 +101,24 @@ void resolve_URL (pg_char_ptr source_URL, pg_char_ptr target_URL, size_t nMaxLen
 
       output_size++;
 
-      if (output_size == nMaxLength)
+      //
+      // BEFUND E-111 (22.10.2026): hier stand "==" statt ">=".
+      //
+      // output_size startet bei 1 und zaehlt je Durchlauf um genau 1 hoch.
+      // Bei nMaxLength 0 oder 1 wird "==" deshalb NIE wahr, und die
+      // Schleife schreibt ueber das Zielfeld hinaus, bis die Quelle endet.
+      //
+      // Fuer jedes nMaxLength >= 2 verhaelt sich ">=" genau wie "==": die
+      // Behebung aendert am heutigen Verhalten nichts und schliesst nur den
+      // Fall, den der PRUEFER am 18.09.2026 beim Nachrechnen der
+      // E-110-Spurmarke fand (Befunde/PRUEFER-18.md).
+      //
+      // Ausgeloest gesehen wurde es nie - alle heutigen Aufrufer uebergeben
+      // sizeof() eines grossen Feldes (PGHTMIMP.CPP:2310,
+      // PgEmbeddedImage.cpp:1415). Es ist eine Schranke, die haelt, solange
+      // niemand sie braucht.
+      //
+      if (output_size >= nMaxLength)
          break;
    }
    

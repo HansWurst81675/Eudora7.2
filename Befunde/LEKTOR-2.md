@@ -208,18 +208,18 @@ anderen `.md`. Stand nach diesem Durchgang:
 
 | Datei | Was |
 |---|---|
-| `PORTIERUNG.md` | Kasten „gemessen 05.09.2026" (Stand vor [B-3](../BEFUNDE.md#b-3)); „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; OpenSSL3-Libs „nicht im Repo"; [E-11](../BEFUNDE.md#e-11); „im Release-Zweig ungetestet"; Kopf, Zweig, Prüfstandsmarke; Port 995 ergänzt |
+| `PORTIERUNG.md` | Kasten „gemessen 05.09.2026" (Stand vor [B-3](../Intern/BEFUNDE.md#b-3)); „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; OpenSSL3-Libs „nicht im Repo"; [E-11](../Intern/BEFUNDE.md#e-11); „im Release-Zweig ungetestet"; Kopf, Zweig, Prüfstandsmarke; Port 995 ergänzt |
 | `STARTUMGEBUNG.md` | Debug-Laufzeiten als Punkt 1 für jeden Paketanwender ([L-3](LEKTOR.md#l-3)); `EudoraRes` hänge an OT501; `eudora.cpp:3542`; SUPERASSERT „nur Debug-Bau"; alte Bau-Kennung (M-9); „ob Eudora startet, sagt diese Datei nicht" |
-| `Releases/PAKETE.md` | Kasten über die Lücke 1.0.4–1.0.10; Versionsanleitung; [E-11](../BEFUNDE.md#e-11) an zwei Stellen; Debug-Laufzeiten im Release-Abschnitt ([L-3](LEKTOR.md#l-3)); LIESMICH „beschreibt noch den Debug-Weg"; Tabelle „Stand nach ZIEL.md"; `eudora.cpp:3542` |
+| `Releases/PAKETE.md` | Kasten über die Lücke 1.0.4–1.0.10; Versionsanleitung; [E-11](../Intern/BEFUNDE.md#e-11) an zwei Stellen; Debug-Laufzeiten im Release-Abschnitt ([L-3](LEKTOR.md#l-3)); LIESMICH „beschreibt noch den Debug-Weg"; Tabelle „Stand nach ZIEL.md"; `eudora.cpp:3542` |
 | `ABRUF-PRUEFEN.md` | „Belegt ist Port 110"; Entscheidungsbaum „auf 995 horcht dort nichts"; Verweis auf einen UNGEPRÜFT-Hinweis, den es nicht mehr gibt |
 | `Eudora71/OpenSSL3/BAUEN.md` | die Aufforderung ganz oben, OpenSSL selbst zu bauen |
-| `BEFUNDE.md` | [`Z-3`](../BEFUNDE.md#z-3) auf „offen"; **[E-14](../BEFUNDE.md#e-14), [E-16](../BEFUNDE.md#e-16), [E-17](../BEFUNDE.md#e-17), [E-22](../BEFUNDE.md#e-22), [E-23](../BEFUNDE.md#e-23), [E-24](../BEFUNDE.md#e-24), [E-25](../BEFUNDE.md#e-25), [E-26](../BEFUNDE.md#e-26)** fehlten im Verzeichnis; Kopfzahlen; Prüfstandsmarke |
-| `PRUEFUNG-BRANCH.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | „Ursache wieder offen" / „weiterhin unerklärt" / [E-11](../BEFUNDE.md#e-11) — Nachtragskästen mit [E-25](../BEFUNDE.md#e-25) und [E-26](../BEFUNDE.md#e-26) |
-| `PRUEFUNG-BAU.md` | `Version.h` sage 7.2.0.3; roher `MSBuild.exe`-Aufruf statt `tools/bauen.ps1` ([X-6](../BEFUNDE.md#x-6)) |
+| `BEFUNDE.md` | [`Z-3`](../Intern/BEFUNDE.md#z-3) auf „offen"; **[E-14](../Intern/BEFUNDE.md#e-14), [E-16](../Intern/BEFUNDE.md#e-16), [E-17](../Intern/BEFUNDE.md#e-17), [E-22](../Intern/BEFUNDE.md#e-22), [E-23](../Intern/BEFUNDE.md#e-23), [E-24](../Intern/BEFUNDE.md#e-24), [E-25](../Intern/BEFUNDE.md#e-25), [E-26](../Intern/BEFUNDE.md#e-26)** fehlten im Verzeichnis; Kopfzahlen; Prüfstandsmarke |
+| `PRUEFUNG-BRANCH.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | „Ursache wieder offen" / „weiterhin unerklärt" / [E-11](../Intern/BEFUNDE.md#e-11) — Nachtragskästen mit [E-25](../Intern/BEFUNDE.md#e-25) und [E-26](../Intern/BEFUNDE.md#e-26) |
+| `PRUEFUNG-BAU.md` | `Version.h` sage 7.2.0.3; roher `MSBuild.exe`-Aufruf statt `tools/bauen.ps1` ([X-6](../Intern/BEFUNDE.md#x-6)) |
 | `PRUEFUNG-CODE.md` | M-11 stand an drei Stellen als offen, ist mit `57fe6a4` behoben; M-8 abgearbeitet |
 | `Releases/1.0/README.md`, `Releases/1.0/AUSLIEFERUNGEN.md` | rootcerts „nicht getestet"; Servertest nur über Port 110 |
 | `Eudora71/VC71Bruecke/BEFUND.md` | alle vier „nächsten Schritte" erledigt; die drei Fremd-DLLs liegen inzwischen im Repo |
-| `Eudora71/OTShim/PLAN.md`, `BEFUND-ANSICHT.md`, `BEFUND-MENUE.md` | `LNK1104: imap.lib`; „zu prüfen, ob ein Solution-Bau die Datei erzeugt"; „EudoraRes.dll fehlt, der Startversuch scheitert daran"; Projektverweis Zeile 1015; eine Vorhersage, die [E-1](../BEFUNDE.md#e-1) entschieden hat |
+| `Eudora71/OTShim/PLAN.md`, `BEFUND-ANSICHT.md`, `BEFUND-MENUE.md` | `LNK1104: imap.lib`; „zu prüfen, ob ein Solution-Bau die Datei erzeugt"; „EudoraRes.dll fehlt, der Startversuch scheitert daran"; Projektverweis Zeile 1015; eine Vorhersage, die [E-1](../Intern/BEFUNDE.md#e-1) entschieden hat |
 | `BEFUNDE-ALTBESTAND.md`, `tools/patches/zertifikatspruefung-verschaerfen.md` | die alte CR-Anzahl-Regel und „`--no-verify` gerechtfertigt" |
 | `LEKTORAT.md` | der fünfte Durchgang war der letzte Eintrag; dieser hier ist als **sechster** nachgetragen |
 
@@ -234,7 +234,7 @@ anderen `.md`. Stand nach diesem Durchgang:
 | **`README.md` „30 Stellen, 22 Stingray-Klassen, 77 Methoden"** | Die Zählweise ist nicht dokumentiert, und anders als bei den 42 Quelldateien ist mir keine Rekonstruktion gelungen, die genau diese drei Zahlen ergibt. Raten wäre schlimmer als stehen lassen. **Zurückgestellt** |
 | **`Eudora71/Eudora/mainfrm.cpp:9684`** | Der Kommentar zeigt die alte Bau-Kennung `[1.0.3+31810e2 - Eudora72-1.0.3]`; heute lautet sie `Eudora <Produkt> / Paket <Nummer>+<Commit><Marke> <Zeit>`. Das ist **Quelltext**, nicht Dokumentation — LEKTOR fasst keinen Quelltext an. Als **M-9** bekannt, in `STARTUMGEBUNG.md` jetzt ausdrücklich benannt |
 | **`Eudora71/Tests/QCSSL/README.md`, `Eudora71/OTShim/INVENTAR.md`** | Schon im fünften Durchgang ohne Befund; erneut durchgesehen, weiter ohne Befund |
-| **`BEFUNDE.md`: [E-27](../BEFUNDE.md#e-27), [E-28](../BEFUNDE.md#e-28), [E-29](../BEFUNDE.md#e-29)** | Laufen gerade bei anderen Agenten. Ein Verzeichniseintrag ohne Abschnitt wäre genau der Fehler, gegen den das Verzeichnis geschrieben ist |
+| **`BEFUNDE.md`: [E-27](../Intern/BEFUNDE.md#e-27), [E-28](../Intern/BEFUNDE.md#e-28), [E-29](../Intern/BEFUNDE.md#e-29)** | Laufen gerade bei anderen Agenten. Ein Verzeichniseintrag ohne Abschnitt wäre genau der Fehler, gegen den das Verzeichnis geschrieben ist |
 
 ## <a id="l-6.10"></a>L-6.10 — Zwei Fehlerklassen, nicht zwei Einzelfehler
 
@@ -275,7 +275,7 @@ Dateien sind CR-Zahl und Doppelkodierungszahl unverändert.**
   meldet 3, `PORTIERUNG.md` 1, `ABRUF-PRUEFEN.md` 1, `LEKTORAT.md` 1 — alle
   vorher wie nachher, und alle sind **absichtlich** dort: es sind zitierte
   Beispiele für genau diesen Schaden, in den Befunden zur Umlautdarstellung
-  ([Z-2](../BEFUNDE.md#z-2), [Z-2b](../BEFUNDE.md#z-2b)). Nicht der absolute Wert zählt, sondern der **Vergleich mit
+  ([Z-2](../Intern/BEFUNDE.md#z-2), [Z-2b](../Intern/BEFUNDE.md#z-2b)). Nicht der absolute Wert zählt, sondern der **Vergleich mit
   `HEAD`**.
 * **`Pruefung/PRUEFUNG-ZEIGER.md` hat CRLF** (193 CR). Ein Ersatzblock mit
   LF-Enden senkt die CR-Zahl lautlos — beim ersten Versuch genau so passiert und
@@ -293,4 +293,4 @@ Dateien sind CR-Zahl und Doppelkodierungszahl unverändert.**
 * **`README.md`, Abschnitte „Nach einem frischen Klon" und „Das
   Absturzprotokoll" nicht angefasst** — die hat der auftraggebende Agent vorher
   selbst geprüft und berichtigt.
-* **Keinen Befund [E-27](../BEFUNDE.md#e-27) bis [E-29](../BEFUNDE.md#e-29) eingetragen** — die laufen bei anderen Agenten.
+* **Keinen Befund [E-27](../Intern/BEFUNDE.md#e-27) bis [E-29](../Intern/BEFUNDE.md#e-29) eingetragen** — die laufen bei anderen Agenten.

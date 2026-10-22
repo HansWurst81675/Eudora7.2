@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer und
 # meldet trotzdem gruen (LEKTOR, L-18.11).
@@ -20,9 +20,9 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #
 #     "ist auch changelog und readme usw. (alle MD) aktualiert?"
 #
-# Von Hand nachgezaehlt war die Antwort NEIN. E-103 fehlte in WEITERMACHEN.md,
-# AUFGABEN.md und ZIEL.md; E-104 in README.md, AUFGABEN.md und ZIEL.md. Sechs
-# Luecken - und beide Befunde waren in CHANGELOG.md und BEFUNDE.md
+# Von Hand nachgezaehlt war die Antwort NEIN. E-103 fehlte in Intern/WEITERMACHEN.md,
+# Intern/AUFGABEN.md und ZIEL.md; E-104 in README.md, Intern/AUFGABEN.md und ZIEL.md. Sechs
+# Luecken - und beide Befunde waren in CHANGELOG.md und Intern/BEFUNDE.md
 # ausfuehrlich beschrieben. Der Eindruck war also "ist dokumentiert".
 #
 # Danach, unmissverstaendlich:
@@ -89,7 +89,7 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #      ist der Zustand in einem Schritt: die Befunde in die Ueberschrift des
 #      CHANGELOG-Abschnitts schreiben, wo sie ohnehin hingehoeren.
 #
-#   2. ZWEITE QUELLE FUER DEN UMFANG: BEFUNDE.md. Was dort als
+#   2. ZWEITE QUELLE FUER DEN UMFANG: Intern/BEFUNDE.md. Was dort als
 #      "behoben in 7.2.0.NN" mit der AKTUELLEN Fassungsnummer steht, gehoert
 #      in die fuehrenden Dokumente - unabhaengig davon, wie der CHANGELOG
 #      seine Ueberschriften formuliert. Die Fassungsnummer kommt aus
@@ -108,10 +108,10 @@ my $wurzel = -f 'VERSION' ? '.' : '..';
 # Die Dateien, die einen ausgelieferten Befund nennen muessen. Bewusst kurz:
 # jede weitere Datei macht die Schranke lauter, ohne sie besser zu machen.
 my @PFLICHT = qw(
-    BEFUNDE.md
+    Intern/BEFUNDE.md
     README.md
-    WEITERMACHEN.md
-    AUFGABEN.md
+    Intern/WEITERMACHEN.md
+    Intern/AUFGABEN.md
     ZIEL.md
 );
 
@@ -128,7 +128,7 @@ sub lies {
 #
 # Der Abschnitt reicht von der ersten "## "-Zeile bis zur naechsten. Gesucht
 # werden Kennungen der Form E-NN, NP-NN, PR-NN - dieselbe Form, die
-# BEFUNDE.md in der ersten Spalte fuehrt.
+# Intern/BEFUNDE.md in der ersten Spalte fuehrt.
 #
 # P-NN, M-NN, L-NN und S-NN sind Punkte INNERHALB eines Berichts von PRUEFER
 # oder LEKTOR, keine eigenen Befunde. Sie gehoeren in den Bericht, nicht in
@@ -194,10 +194,10 @@ sub quellstand {
     return $versionh =~ /EUDORA_BUILD_VERSION\s+"(\d+\.\d+\.\d+\.\d+)"/ ? $1 : undef;
 }
 
-# Zweite Quelle fuer den Umfang: die Befunde, die BEFUNDE.md fuer GENAU diese
+# Zweite Quelle fuer den Umfang: die Befunde, die Intern/BEFUNDE.md fuer GENAU diese
 # Fassung als behoben fuehrt.
 #
-# BEFUNDE.md ist eine Tabelle; die Kennung steht in der ersten Spalte, das
+# Intern/BEFUNDE.md ist eine Tabelle; die Kennung steht in der ersten Spalte, das
 # Urteil in der letzten. Gesucht wird die Zeile, deren Urteil "behoben in
 # <Fassung>" sagt - dieselbe Wendung, die pruefe-behoben-belegt.pl prueft.
 sub behoben_in_fassung {
@@ -332,7 +332,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     # --- 9. Umfang 0 ist kein Freispruch ----------------------------------
     #
     # Genau das war der Zustand am 17.09.2026: keine Kennung in den
-    # Ueberschriften, keine in BEFUNDE.md fuer diese Fassung - und gruen.
+    # Ueberschriften, keine in Intern/BEFUNDE.md fuer diese Fassung - und gruen.
     my @umfang0 = do {
         my %u;
         $u{$_} = 1 for (@k70, behoben_in_fassung($befunde, '7.2.0.70'));
@@ -364,9 +364,9 @@ unless (defined $changelog) {
 
 my ($ueberschrift, @aus_ueberschrift) = kennungen_der_neuesten_fassung($changelog);
 
-# Zweite Quelle: BEFUNDE.md, gegen die Fassung aus Version.h.
+# Zweite Quelle: Intern/BEFUNDE.md, gegen die Fassung aus Version.h.
 my $fassung = quellstand(lies("$wurzel/Eudora71/Version.h"));
-my @aus_befunden = behoben_in_fassung(lies("$wurzel/BEFUNDE.md"), $fassung);
+my @aus_befunden = behoben_in_fassung(lies("$wurzel/Intern/BEFUNDE.md"), $fassung);
 
 my @kennungen = do {
     my %u;
@@ -380,7 +380,7 @@ printf "    Abschnitt                      %s\n", $ueberschrift;
 printf "    Fassung (Version.h)            %s\n", $fassung // '(nicht gelesen)';
 printf "    aus den Ueberschriften         %s\n",
     @aus_ueberschrift ? join(', ', @aus_ueberschrift) : '(keine)';
-printf "    aus BEFUNDE.md (behoben in %s)  %s\n", $fassung // '?',
+printf "    aus Intern/BEFUNDE.md (behoben in %s)  %s\n", $fassung // '?',
     @aus_befunden ? join(', ', @aus_befunden) : '(keine)';
 printf "    Geprueft in                    %d Datei(en)\n", scalar @PFLICHT;
 
@@ -394,7 +394,7 @@ unless (@kennungen) {
 
   NICHTS GEPRUEFT - das ist kein gruenes Ergebnis.
 
-  Weder eine Ueberschrift des Abschnitts noch BEFUNDE.md nennt einen Befund
+  Weder eine Ueberschrift des Abschnitts noch Intern/BEFUNDE.md nennt einen Befund
   fuer diese Fassung. Damit hat diese Schranke NICHTS angesehen, und das darf
   nicht aussehen wie "alles in Ordnung" (E-109, Punkt 4).
 

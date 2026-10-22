@@ -23,7 +23,7 @@ Ladeadresse gilt also gerade **nicht**, und die tatsächliche stand nirgends im
 Bericht. Ohne Bezugspunkt ist keine einzige Adresse zuzuordnen.
 
 Behoben ist das durch `QCExceptionHandler::WriteModuleTable()` in
-`Eudora71/Eudora/ExceptionHandler.cpp` (Befund [E-26](../BEFUNDE.md#e-26)): ab 7.2.0.13 steht vor dem
+`Eudora71/Eudora/ExceptionHandler.cpp` (Befund [E-26](../Intern/BEFUNDE.md#e-26)): ab 7.2.0.13 steht vor dem
 Aufrufstapel eine Tabelle mit den Ladeadressen aller geladenen Module.
 
 Dieses Werkzeug liest genau diese Tabelle — und **rät nicht**, wenn sie fehlt.
@@ -210,7 +210,7 @@ Das ist das erwartete Ergebnis und der Beleg, dass nicht geraten wird.
 |---|---|
 | `tools/absturz-auswerten.pl` | das Werkzeug |
 | `tools/absturz-auswerten-tests.pl` | 15 Selbsttests |
-| `Eudora71/Eudora/ExceptionHandler.cpp` | Quelle der Modultabelle (Befund [E-26](../BEFUNDE.md#e-26), nicht von SPUR geändert) |
+| `Eudora71/Eudora/ExceptionHandler.cpp` | Quelle der Modultabelle (Befund [E-26](../Intern/BEFUNDE.md#e-26), nicht von SPUR geändert) |
 
 ---
 
@@ -218,7 +218,7 @@ Das ist das erwartete Ergebnis und der Beleg, dass nicht geraten wird.
 
 > Dieser Abschnitt stand bis zum 09.09.2026 in `README.md`. Er ist dort
 > herausgenommen worden, weil er kein Anwenderwissen ist, sondern die
-> Bedienungsanleitung zu Befund **[E-26](../BEFUNDE.md#e-26)** und zu diesem Werkzeug.
+> Bedienungsanleitung zu Befund **[E-26](../Intern/BEFUNDE.md#e-26)** und zu diesem Werkzeug.
 
 Eudora schreibt seinen eigenen Absturzbericht, ohne dass man etwas einschalten
 muss: **`Mailverzeichnis\Exception.log`** neben der EXE. Gregor hat 7.2.0.12 am
@@ -233,8 +233,8 @@ Call stack: 00894B53, 008962D7, 6FB9A3E6 (mfc140.dll), ...
 **Das Modul heißt `<UNKNOWN>`.** Der Sprung ging auf eine Adresse, die zu
 *keinem* geladenen Modul gehört. So etwas passiert, wenn eine Sprungtabelle oder
 ein Funktionszeiger überschrieben wurde — das Schadensbild einer beschädigten
-Halde. Die Doppelfreigabe [E-25](../BEFUNDE.md#e-25) war demnach **nicht die Quelle**; gefunden wurde
-sie erst am 06.09.2026 als **[E-31](../BEFUNDE.md#e-31)** (siehe oben).
+Halde. Die Doppelfreigabe [E-25](../Intern/BEFUNDE.md#e-25) war demnach **nicht die Quelle**; gefunden wurde
+sie erst am 06.09.2026 als **[E-31](../Intern/BEFUNDE.md#e-31)** (siehe oben).
 
 #### 8a. Warum die Adressen bis 7.2.0.12 nichts hergaben
 
@@ -251,7 +251,7 @@ sichtbarer Unsinn, und der Beweis, dass die Rechnung nicht stimmte.
 | Hälfte | Wo | Seit |
 |---|---|---|
 | **Namen zu Adressen**: `Eudora71/Bin/Release/Eudora.map`, 51.075 Einträge | `Eudora.vcxproj` erzeugt sie bei jedem Bau | 06.09.2026 |
-| **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](../Eudora71/Eudora/ExceptionHandler.cpp) ([E-26](../BEFUNDE.md#e-26)) | 06.09.2026 |
+| **Ladeadressen**: eine Modultabelle im Bericht, vor dem Aufrufstapel | `QCExceptionHandler::WriteModuleTable` in [ExceptionHandler.cpp](../Eudora71/Eudora/ExceptionHandler.cpp) ([E-26](../Intern/BEFUNDE.md#e-26)) | 06.09.2026 |
 
 Ein Bericht **ab 7.2.0.13** beginnt deshalb so (ausgeliefert erstmals in Paket
 1.0.14 — 1.0.13 wurde übersprungen):

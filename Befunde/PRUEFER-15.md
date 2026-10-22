@@ -1,6 +1,6 @@
 # PRÜFER-15 — E-104 auf Datenverlust: **nein, es geht kein Text verloren**
 
-Stand: 17.09.2026. Geprüfter Commit: `eed2e4e` („[E-104](../BEFUNDE.md#e-104): Kopfzeilen kleben nicht
+Stand: 17.09.2026. Geprüfter Commit: `eed2e4e` („[E-104](../Intern/BEFUNDE.md#e-104): Kopfzeilen kleben nicht
 mehr zusammen, verdorbene INI-Werte repariert"), enthalten in `origin/main`
 (`5cf45b7`); `compmsgd.cpp` und `msgutils.cpp` sind seit `eed2e4e` unverändert
 (`git diff --stat eed2e4e origin/main` meldet nichts).
@@ -21,7 +21,7 @@ den es bekommen hat. `pFile->Put( CopyText )` schreibt damit byteweise
 dasselbe, was `pFile->Put( UnwrapText( CopyText ) )` geschrieben hätte.
 
 **Das Paket kann in dieser Hinsicht raus.** Es bleiben vier Mängel, davon einer
-gewichtig ([M-1](../BEFUNDE.md#m-1): derselbe Fehler steht im Lesefenster-Weg unverändert offen).
+gewichtig ([M-1](../Intern/BEFUNDE.md#m-1): derselbe Fehler steht im Lesefenster-Weg unverändert offen).
 
 ---
 
@@ -371,6 +371,6 @@ Ganz gelesen: `UnwrapText` (`msgutils.cpp:448-512`), `FindBody`
 `IDS_INI_INCLUDE_HEADERS`, `IDS_INI_GUESS_PARAGRAPHS` — alle Fundstellen oben
 abgehandelt.
 
-**Nicht geprüft** (außerhalb des Auftrags): der Bau, die Doku zu [E-104](../BEFUNDE.md#e-104), die
+**Nicht geprüft** (außerhalb des Auftrags): der Bau, die Doku zu [E-104](../Intern/BEFUNDE.md#e-104), die
 Frage, was `PgDataTranslator::kFmtText` für Zeilenenden liefert, und alles
 außerhalb von `eed2e4e`.

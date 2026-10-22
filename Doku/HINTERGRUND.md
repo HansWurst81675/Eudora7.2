@@ -23,7 +23,7 @@ auf, was er versteht; CSS kommt darin nicht vor. Bildgrößen liest er nur aus
 den Attributen `width` und `height`, nicht aus `style="width:…"`.
 
 Seit der Fassung 7.2.0.56 geht beim Senden das **aufgehobene Original** hinaus
-statt der Editorfassung (Befund [**E-88**](../BEFUNDE.md#e-88)). Was im Verfassenfenster fehlt, fehlt
+statt der Editorfassung (Befund [**E-88**](../Intern/BEFUNDE.md#e-88)). Was im Verfassenfenster fehlt, fehlt
 also nicht beim Empfänger — das Fenster ist Arbeitsfläche, nicht Vorschau.
 
 ### 2. Emoji lassen sich nicht anzeigen
@@ -32,7 +32,7 @@ Eudora ist durchgehend **ANSI** gebaut: Mailboxen, Kopfzeilen, die
 Nachrichtenliste. Der Zeichensatz Windows-1252 kennt 256 Zeichen und darunter
 kein einziges Emoji. Beim Umwandeln entstand früher Bytesalat, dann ein
 Fragezeichen je Emoji-Hälfte (`??`), seit 7.2.0.59 fallen sie ersatzlos weg
-([**E-90**](../BEFUNDE.md#e-90)). Kyrillisch, Griechisch und Polnisch bleiben erhalten, soweit die
+([**E-90**](../Intern/BEFUNDE.md#e-90)). Kyrillisch, Griechisch und Polnisch bleiben erhalten, soweit die
 Ersetzungstabelle von Windows sie abbilden kann.
 
 ### 3. Was ein Austausch des Motors kosten würde
@@ -91,7 +91,7 @@ ohne Rückgabetyp, entfernte Header, alte `for`-Scope-Regeln, die
 `const char*`-Überladungen von `strchr`/`strstr`/`strrchr`, `std::auto_ptr`
 und Iteratoren-als-Zeiger, MFC-`const`-Overloads, Namenskollisionen mit
 winsock2 und der UCRT, dazu drei Projekteinstellungen. Jedes Muster mit den
-betroffenen Stellen und der Begründung: **[PORTIERUNG.md](../PORTIERUNG.md)**,
+betroffenen Stellen und der Begründung: **[PORTIERUNG.md](../Intern/PORTIERUNG.md)**,
 Abschnitt *Angewandte Korrekturen*.
 
 Getrennt davon steht die Portierung von QCSSL auf die **OpenSSL-3.x-API**:
@@ -121,13 +121,13 @@ das trennt die Stingray-Klassen von den gleichnamigen SSPI-Konstanten
 **Gewählter Weg und heutiger Zustand:** eine eigene Ersatzschicht auf modernes
 MFC, `Eudora71/OTShim/`, in fünf Teilen über `OTShimAll.h` eingebunden.
 `Eudora.exe` bindet damit ohne Stingray, **0 ungelöste Externe**; das Projekt
-`OT501` ist ganz aus dem Bau genommen (Befund [B-3](../BEFUNDE.md#b-3)), die frühere Attrappe
+`OT501` ist ganz aus dem Bau genommen (Befund [B-3](../Intern/BEFUNDE.md#b-3)), die frühere Attrappe
 `Lib/Debug/OTA50D.LIB` entfällt und **darf nicht wieder angelegt werden** —
 sonst linkt Eudora gegen eine leere Bibliothek.
 
 Ein naheliegender Irrtum, der schon zweimal Arbeit gekostet hat: die
 Registerkartenleiste ist **nicht** verzichtbar — abschaltbar ist nur der
-MDI-Streifen. Warum, steht in [PORTIERUNG.md](../PORTIERUNG.md) unter *Blocker:
+MDI-Streifen. Warum, steht in [PORTIERUNG.md](../Intern/PORTIERUNG.md) unter *Blocker:
 OT501*.
 
 Bestandsaufnahme: [Eudora71/OTShim/INVENTAR.md](../Eudora71/OTShim/INVENTAR.md) —
@@ -173,7 +173,7 @@ pauschale Annahme also nie nötig.
 > Gemessen: ein Zertifikat mit falschem `CN` wird mit `SSLSUCCEEDED` und
 > `ErrorCode 0` angenommen. Ein Hinweistext wird angehängt, bleibt aber ohne
 > Wirkung. Altbestand von QUALCOMM, Einzelheiten in
-> [PORTIERUNG.md](../PORTIERUNG.md).
+> [PORTIERUNG.md](../Intern/PORTIERUNG.md).
 
 QCSSL prüft ausschließlich gegen `rootcerts.p7b`, nicht gegen den
 Windows-Zertifikatspeicher. Für die Auslieferung erzeugt
@@ -201,7 +201,7 @@ mussten ergänzt werden, damit daraus wieder ein Programm wird:
 Dazu die erweiterte UTF-8-Übersetzungstabelle in `Eudora71/Eudora/utils.cpp`
 (von 27 auf 123 Einträge, sieben falsche Zuordnungen aus dem Altbestand
 berichtigt) — belegt durch die Unit-Tests in `Eudora71/Tests`, beschrieben in
-[PORTIERUNG.md](../PORTIERUNG.md) unter *Zwei Fehler in der Zeichentabelle*. Die
+[PORTIERUNG.md](../Intern/PORTIERUNG.md) unter *Zwei Fehler in der Zeichentabelle*. Die
 vollständige Liste der Fremdbestandteile steht dort ebenfalls.
 
 ## Verwandte Projekte

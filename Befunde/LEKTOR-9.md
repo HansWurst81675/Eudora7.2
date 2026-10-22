@@ -25,7 +25,7 @@ Dazu je eine Stelle in `ABRUF-PRUEFEN.md`, `LEKTORAT.md`, `PORTIERUNG.md`.
 
 ### Warum die vorhandene Schranke geschwiegen hat
 
-`pruefe-bytes.pl` hat seit Befund **[X-7](../BEFUNDE.md#x-7)** eine **Regel 5 gegen genau diesen
+`pruefe-bytes.pl` hat seit Befund **[X-7](../Intern/BEFUNDE.md#x-7)** eine **Regel 5 gegen genau diesen
 Schaden**. Sie hat trotzdem nie angeschlagen, und der Grund steht in ihrer
 eigenen Zeile:
 
@@ -42,8 +42,8 @@ dass **kein Werkzeug den Bestand je wieder ansieht**.
 
 ### Fünf Stellen blieben absichtlich stehen
 
-In `BEFUNDE.md` zeigen sechs Zeilen kaputten Text als **Beleg** zu [E-85](../BEFUNDE.md#e-85) und
-[NP3-8](../BEFUNDE.md#np3-8). Eine steht wörtlich hinter dem Wort `falsch`, eine andere sagt, dort
+In `BEFUNDE.md` zeigen sechs Zeilen kaputten Text als **Beleg** zu [E-85](../Intern/BEFUNDE.md#e-85) und
+[NP3-8](../Intern/BEFUNDE.md#np3-8). Eine steht wörtlich hinter dem Wort `falsch`, eine andere sagt, dort
 stünden *„zwei Zeichen"*. Eine vollständige Reparatur hätte aus dem
 Gegenbeispiel den richtigen Text gemacht und damit den Beweis gelöscht.
 
@@ -65,7 +65,7 @@ Das steht als Warnung im Kopf von `tools/entmojibaken.pl`.
 |---|---|
 | `BEFUNDE.md` | 3211 Läufe entmojibakt |
 | `ABRUF-PRUEFEN.md`, `LEKTORAT.md`, `PORTIERUNG.md` | je 1 Lauf |
-| `CHANGELOG.md` | [E-89](../BEFUNDE.md#e-89) bis [E-92](../BEFUNDE.md#e-92) nachgetragen; [E-89](../BEFUNDE.md#e-89) nach seiner Behebung wieder aus *Noch offen* genommen |
+| `CHANGELOG.md` | [E-89](../Intern/BEFUNDE.md#e-89) bis [E-92](../Intern/BEFUNDE.md#e-92) nachgetragen; [E-89](../Intern/BEFUNDE.md#e-89) nach seiner Behebung wieder aus *Noch offen* genommen |
 | `ZIEL.md` | Messstand und Baustand getrennt, beide auf .57 |
 | `WEITERMACHEN.md` | Selbstwiderspruch (Kopf sagte 1.0.56, *„zuletzt gebaut"* sagte 1.0.51); Liste der offenen Befunde zweimal neu gesetzt |
 | `Releases/PAKETE.md` | Paketspanne `1.0.30 bis 1.0.50` → `1.0.57` |
@@ -146,7 +146,7 @@ im Original.
 **„Deren Fassung nehmen" hätte drei Befunde gelöscht.** Beim Merge von
 `origin/wt/pruefer` löste ich den Konflikt in `BEFUNDE.md` zuerst so, wie ich
 es beim Merge davor getan hatte: deren Fassung als Ganzes, dann die Reparatur
-darauf. Beim Nachzählen der Kennungen fiel auf, dass **[E-90](../BEFUNDE.md#e-90), [E-91](../BEFUNDE.md#e-91) und [E-92](../BEFUNDE.md#e-92)
+darauf. Beim Nachzählen der Kennungen fiel auf, dass **[E-90](../Intern/BEFUNDE.md#e-90), [E-91](../Intern/BEFUNDE.md#e-91) und [E-92](../Intern/BEFUNDE.md#e-92)
 verschwunden waren** — ihr Zweig ist älter als diese drei Einträge. Der Prüfer
 hatte an der Datei genau **eine** Zeile geändert. Zurückgenommen, bevor etwas
 committet wurde.
@@ -176,7 +176,7 @@ regelt sich beim nächsten Lauf selbst.
 
 **Möglicher Widerspruch in `ZIEL.md`, den ich nicht angefasst habe:** Kriterien
 5 und 6 (*Mail schreiben, senden, weiterleiten*) stehen als **erfüllt**,
-während [E-89](../BEFUNDE.md#e-89) das Verfassenfenster bis 7.2.0.57 als *unbrauchbar* führte. Eine
+während [E-89](../Intern/BEFUNDE.md#e-89) das Verfassenfenster bis 7.2.0.57 als *unbrauchbar* führte. Eine
 Urteilsänderung an den Kriterien ist keine Lektoratsfrage — sie braucht Gregors
 Messung am laufenden Programm. **Hier nur benannt.**
 
@@ -212,10 +212,10 @@ Nachgetragen: `tools/pruefstand/messen.ps1` und
 * **Quelltext unter `Eudora71/`** — nicht mein Bereich, nicht angefasst.
 * **Inhaltliche Richtigkeit der Befunde.** Ich habe geprüft, ob dieselbe
   Kennung in `BEFUNDE.md`, `CHANGELOG.md`, `AUFGABEN.md` und `WEITERMACHEN.md`
-  **denselben Zustand** trägt — nicht, ob der Zustand stimmt. Ob [E-88](../BEFUNDE.md#e-88) wirklich
+  **denselben Zustand** trägt — nicht, ob der Zustand stimmt. Ob [E-88](../Intern/BEFUNDE.md#e-88) wirklich
   behoben ist, misst Gregor, nicht ich.
 * **Die 72 Dateien unter `Arbeitsweise/`** — sie sind ein Spiegel des
-  Gedächtnisses und werden beim nächsten Spiegeln überschrieben ([NP3-4](../BEFUNDE.md#np3-4)). Eine
+  Gedächtnisses und werden beim nächsten Spiegeln überschrieben ([NP3-4](../Intern/BEFUNDE.md#np3-4)). Eine
   Änderung dort wäre verloren.
 * **`Befunde/` und `Pruefung/`** nur auf Bytes, nicht auf Aktualität — es sind
   Zeitdokumente und dürfen alte Zahlen nennen.

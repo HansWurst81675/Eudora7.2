@@ -54,7 +54,7 @@ Zeitpunkt lief die Aufgabe gar nicht.
 
 | Fund | Schwere | Stand |
 |---|---|---|
-| **N1** Zähler in `SameServer::DoWork` blockiert das Beenden unbegrenzt; jeder weitere Versuch wartet neu | **hoch.** Genau die Symptomklasse, gegen die [E-33](../BEFUNDE.md#e-33) und [E-123](../BEFUNDE.md#e-123) angelegt sind | **belegt am Quelltext**; dass ein `XferMessagesOnServer` tatsächlich hängt, ist nicht gemessen |
+| **N1** Zähler in `SameServer::DoWork` blockiert das Beenden unbegrenzt; jeder weitere Versuch wartet neu | **hoch.** Genau die Symptomklasse, gegen die [E-33](../Intern/BEFUNDE.md#e-33) und [E-123](../Intern/BEFUNDE.md#e-123) angelegt sind | **belegt am Quelltext**; dass ein `XferMessagesOnServer` tatsächlich hängt, ist nicht gemessen |
 | **N2** Zähler deckt die Nebenfaden-Phase, nicht die drei Hauptfaden-`DoPostProcessing` | **mittel.** Der eigentliche Schutzzweck bleibt unerfüllt | belegt am Quelltext |
 | **N3** Die Schranke steht **nicht** in `tools/hooks-einrichten.sh` — nur in der unversionierten `.git/hooks/pre-commit` dieser Maschine | **mittel.** Nach frischem Klon fehlt sie; `WERKZEUGE.md` nennt sie trotzdem „pre-commit-Schranke" | **gemessen** (0 Treffer in der Hook-Quelle) |
 | **N4** Die Schranke lässt sechs von sieben naheliegenden Umgehungen durch, darunter die im Auftrag genannte Hilfsvariable **und die ganz entfernte Zählschleife** | **mittel.** Prüflücke | **gemessen**, 7 Fassungen |
@@ -297,12 +297,12 @@ Spalte 1 danach ist das Rumpfende von `CImapAction::DoPreThreadAction`.
 **Warum es trotzdem zählt.** Vierzig Zeilen unter der Zählschleife steht
 `CActionQueue::HatOffeneUebertragung` (`ImapActionQueue.cpp:4064`), und die
 **muss** auf `CImapFromLocalTransferMsgAction` prüfen. Dort werden
-`m_szMessageIDs` gegen einen **lokalen** Hash verglichen ([E-121](../BEFUNDE.md#e-121) P3, die
+`m_szMessageIDs` gegen einen **lokalen** Hash verglichen ([E-121](../Intern/BEFUNDE.md#e-121) P3, die
 Schutzvermerke der eingebetteten Bilder). Bei den anderen drei Arten stehen in
 `m_szMessageIDs` **IMAP-UIDs**, keine lokalen Hashes — eine Umstellung auf die
 Basisklasse gäbe Falschtreffer, und eingebettete Bilddateien würden nicht mehr
 gelöscht. Öffnet der Bereich eines Tages zu früh, meldet die Schranke genau
-diese Zeile, und die naheliegende „Behebung" macht [E-121](../BEFUNDE.md#e-121) P3 kaputt.
+diese Zeile, und die naheliegende „Behebung" macht [E-121](../Intern/BEFUNDE.md#e-121) P3 kaputt.
 
 **Gegenvorschlag:** den Bereich an der **Definitionszeile** öffnen
 (`^int\s+CActionQueue::E123OffeneUebertragungen`), nicht an jeder Nennung —
@@ -422,7 +422,7 @@ Die Commit-Nachricht sagt es selbst:
 > ein IMAP-Konto noetig, das der Pruefstand nicht hat."
 
 Das ist offen und richtig benannt, aber es heißt: **Gregor ist wieder der
-Prüfstand** ([Erst nachstellen, dann ausliefern](../Arbeitsweise/erst-nachstellen-dann-ausliefern.md)). Zu [E-123](../BEFUNDE.md#e-123) gibt es in
+Prüfstand** ([Erst nachstellen, dann ausliefern](../Arbeitsweise/erst-nachstellen-dann-ausliefern.md)). Zu [E-123](../Intern/BEFUNDE.md#e-123) gibt es in
 `Eudora71/Tests` nichts Neues; die einzige Absicherung ist die Textschranke,
 und die hat die Lücken aus N4.
 
@@ -451,7 +451,7 @@ Durchgang; **N2 nicht ohne N1**. **N6**, **N7** und **N8** sind entwarnt,
 
 ## Gregors Test an 1.0.111 — wenn N1 und N3 drin sind
 
-**Test 1 (der Anlassfall, [E-123](../BEFUNDE.md#e-123)/2b):** Mehrere Nachrichten **innerhalb**
+**Test 1 (der Anlassfall, [E-123](../Intern/BEFUNDE.md#e-123)/2b):** Mehrere Nachrichten **innerhalb**
 desselben IMAP-Kontos verschieben (INBOX → HW_Box), sofort *File → Exit*.
 Erwartet im Protokoll:
 
@@ -465,7 +465,7 @@ E-33 ExitInstance: erreicht
 Entscheidend ist `uebertragungen=1` — bei 1.0.110 stand dort `0`. Danach muss
 `Imap\Dominant\actionqueue.dat` **leer** sein.
 
-**Test 2 (die Gegenprobe, [E-123](../BEFUNDE.md#e-123)/2a):** dasselbe aus dem **lokalen** In in einen
+**Test 2 (die Gegenprobe, [E-123](../Intern/BEFUNDE.md#e-123)/2a):** dasselbe aus dem **lokalen** In in einen
 IMAP-Ordner. Muss weiter wie in 1.0.110 laufen — hier ist nichts geändert
 worden außer der Weite des Casts.
 

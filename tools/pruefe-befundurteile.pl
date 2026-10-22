@@ -8,33 +8,33 @@ use FindBin;
 require "$FindBin::Bin/verweise-filtern.pl";
 
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 
 # pruefe-befundurteile.pl - kein Dokument darf einen Befund fuer erledigt
-# erklaeren, den BEFUNDE.md offen fuehrt.
+# erklaeren, den Intern/BEFUNDE.md offen fuehrt.
 #
 # WARUM ES DAS GIBT
 #
-# Am 10.09.2026 las Gregor den Abschnitt "Der Filterbericht" in FILTER.md:
+# Am 10.09.2026 las Gregor den Abschnitt "Der Filterbericht" in Intern/FILTER.md:
 #
 #     Ein leerer Bericht nach einem Lauf, bei dem sichtbar etwas passiert
 #     ist, war Befund E-71 - kein eigener Fehler, sondern Folge von E-72.
 #
 # Sein Urteil: "das ist noch eine luege, das stimmt ja nicht." Er hatte
 # recht. E-72 war behoben, die Filter griffen nachweislich, und der Bericht
-# blieb leer - E-71 stand in BEFUNDE.md laengst wieder als OFFEN. Die
+# blieb leer - E-71 stand in Intern/BEFUNDE.md laengst wieder als OFFEN. Die
 # Einstufung "kein eigener Fehler" war meine eigene, widerlegte Behauptung;
-# sie war in BEFUNDE.md berichtigt worden und in FILTER.md stehengeblieben.
+# sie war in Intern/BEFUNDE.md berichtigt worden und in Intern/FILTER.md stehengeblieben.
 #
 # Das ist die Klasse: ein Urteil steht an zwei Stellen, und nur eine wird
 # berichtigt. Der Leser trifft zuerst auf die falsche.
 #
 # WAS GEPRUEFT WIRD
 #
-# BEFUNDE.md ist die Quelle. Fuer jede Kennung wird dort das erste
+# Intern/BEFUNDE.md ist die Quelle. Fuer jede Kennung wird dort das erste
 # fettgedruckte Urteil gelesen. Fuehrt es den Befund als OFFEN, dann darf
 # keine andere MD-Datei im Repo dieselbe Kennung in einem Absatz nennen,
 # der eines der Erledigt-Woerter enthaelt.
@@ -50,7 +50,7 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #
 #   - der Zertifikats-Patch als "nicht angewandt", waehrend er seit b3be298
 #     im Code war und Gregor die Fassung bereits getestet hatte
-#   - AUFGABEN.md mit "vier Behebungen warten auf Gregors Urteil", waehrend
+#   - Intern/AUFGABEN.md mit "vier Behebungen warten auf Gregors Urteil", waehrend
 #     drei davon (E-49, E-50, E-52) laengst von ihm bestaetigt waren
 #
 # Wer dem glaubt, prueft Dinge nach, die durch sind, oder laesst eine
@@ -73,8 +73,8 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #
 # GEGENGETESTET, beide Richtungen, am 10.09.2026:
 #
-#   abweisen    FILTER.md im Stand vor der Berichtigung ("E-71 - kein
-#               eigener Fehler") gegen BEFUNDE.md mit E-71 offen
+#   abweisen    Intern/FILTER.md im Stand vor der Berichtigung ("E-71 - kein
+#               eigener Fehler") gegen Intern/BEFUNDE.md mit E-71 offen
 #               -> Rueckgabe 1, die Stelle wird mit Datei und Zeile genannt
 #   durchlassen derselbe Baum nach der Berichtigung
 #               -> Rueckgabe 0
@@ -99,7 +99,7 @@ my @offen = (
     'zurueckgestellt',
     "zur\xc3\xbcckgestellt",     # UTF-8, zurückgestellt
     # Am 12.10.2026 dazu: "aufgeschrieben" heisst in diesem Projekt, dass ein
-    # Befund ERFASST ist - nicht, dass er behoben waere. WEITERMACHEN.md und
+    # Befund ERFASST ist - nicht, dass er behoben waere. Intern/WEITERMACHEN.md und
     # ZIEL.md sagen "E-105, E-111, E-112, E-113 aufgeschrieben" in demselben
     # Satz, in dem E-110 als behoben steht; ohne dieses Wort schlug die
     # Schranke dort viermal an, obwohl der Text richtig ist.
@@ -118,10 +118,10 @@ my @ausnahme = (
 
 # TEILBEFUNDE (22.10.2026). "F1, F3 und F4 ... sind behoben; offen bleibt F2"
 # ist KEIN Widerspruch zu einem offenen E-101 - behoben sind die TEILE, nicht
-# der Befund. Als E-101 am 22.10.2026 in BEFUNDE.md von "behoben" auf "offen"
+# der Befund. Als E-101 am 22.10.2026 in Intern/BEFUNDE.md von "behoben" auf "offen"
 # berichtigt wurde, meldete diese Schranke genau deshalb fuenf Fehlalarme
-# (README.md:106, PORTIERUNG.md:54, ZIEL.md:28, CHANGELOG.md:31,
-# WEITERMACHEN.md:9) - alle fuenf Saetze waren richtig.
+# (README.md:106, Intern/PORTIERUNG.md:54, ZIEL.md:28, CHANGELOG.md:31,
+# Intern/WEITERMACHEN.md:9) - alle fuenf Saetze waren richtig.
 #
 # Eng gehalten: es muss eine TEILKENNUNG (F3, N2, P1, B5.7, K1 ...) kurz vor
 # dem "behoben" stehen. Ein blosses "offen bleibt" irgendwo im Absatz reicht
@@ -165,10 +165,10 @@ sub ohne_code {
     return join("\n", @zeilen);
 }
 
-# --- 1. Die Urteile aus BEFUNDE.md ----------------------------------------
-my $befunde = lesen("$wurzel/BEFUNDE.md");
+# --- 1. Die Urteile aus Intern/BEFUNDE.md ----------------------------------------
+my $befunde = lesen("$wurzel/Intern/BEFUNDE.md");
 unless (defined $befunde) {
-    print "\n  BEFUNDE.md nicht lesbar - nichts zu pruefen.\n\n";
+    print "\n  Intern/BEFUNDE.md nicht lesbar - nichts zu pruefen.\n\n";
     exit 0;
 }
 
@@ -207,7 +207,7 @@ for my $zeile (split /\n/, $befunde) {
 
 my @offene = sort grep { $urteil{$_} eq 'offen' } keys %urteil;
 
-# Die Gegenrichtung, seit 11.09.2026: was BEFUNDE.md als behoben fuehrt.
+# Die Gegenrichtung, seit 11.09.2026: was Intern/BEFUNDE.md als behoben fuehrt.
 my @behobene = sort grep { $urteil{$_} eq 'erledigt' } keys %urteil;
 
 # Statusworte, die einen Befund als NICHT erledigt ausgeben. Bewusst eng:
@@ -237,7 +237,7 @@ my @unerledigt = (
 #
 #   Befunde/       Berichte der Agenten - Momentaufnahmen, die alte
 #                  Einstufungen zu Recht zitieren
-#   LEKTORAT.md    ein Verzeichnis vergangener Falschaussagen; es MUSS die
+#   Intern/LEKTORAT.md    ein Verzeichnis vergangener Falschaussagen; es MUSS die
 #                  alten Worte enthalten, sonst haette es keinen Inhalt
 #   Arbeitsweise/  Lehren, die aus Fehlern entstanden sind und diese
 #                  Fehler beschreiben
@@ -251,11 +251,11 @@ my @dateien = grep { -f $_ } map { "$wurzel/$_" } qw(
     Doku/BAUEN.md
     Doku/MITARBEITEN.md
     Doku/HINTERGRUND.md
-    FILTER.md
-    PORTIERUNG.md
+    Intern/FILTER.md
+    Intern/PORTIERUNG.md
     ZIEL.md
     CHANGELOG.md
-    WEITERMACHEN.md
+    Intern/WEITERMACHEN.md
     Releases/1.0.3/LIESMICH.txt
 );
 
@@ -275,6 +275,15 @@ for my $datei (@dateien) {
     my $pruefe = sub {
         my ($text, $zeile) = @_;
         return unless length $text;
+        # LINKZIELE AUS DEM UMFELD WERFEN (22.10.2026). Die Naehe wird in
+        # einem 40-Zeichen-Fenster gemessen - "im selben Gedanken". Ein
+        # Linkziel ist aber kein Gedanke, sondern ein Pfad. Als die Dokumente
+        # nach Intern/ zogen, wurde jedes Ziel um sieben Zeichen laenger, und
+        # zwei Absaetze in CHANGELOG.md schlugen auf einmal an, deren Text
+        # unveraendert richtig war (Zeile 1662 und 1929 - letztere sagt
+        # woertlich "seit 13.10.2026 wieder offen"). Gemessen wird deshalb auf
+        # dem SICHTBAREN Text.
+        $text =~ s/\]\([^)]*\)/]/g;
         return if grep { index(lc $text, lc $_) >= 0 } @ausnahme;
         # Teilbefunde (F3, N2, B5.7 ...) behoben heisst nicht: Befund behoben.
         return if $text =~ $teilbefund;
@@ -296,12 +305,12 @@ for my $datei (@dateien) {
                            ? lc $text
                            : lc substr($text, $i, length($k) + 40);
                 for my $w (@unerledigt) {
-                    next unless index($umfeld, lc $w) >= 0;
+                    next unless $umfeld =~ /\b\Q$w\E/i;   # Wortgrenze: "mitbehoben" ist kein "behoben"
                     my $kurz = $text;
                     $kurz =~ s/\s+/ /g;
                     $kurz = substr($kurz, 0, 100) . '…' if length($kurz) > 100;
                     push @mangel, sprintf(
-                        "%s:%d nennt %s als '%s' - BEFUNDE.md fuehrt ihn BEHOBEN\n        %s",
+                        "%s:%d nennt %s als '%s' - Intern/BEFUNDE.md fuehrt ihn BEHOBEN\n        %s",
                         $datei, $zeile, $k, $w, $kurz);
                     last;
                 }
@@ -336,12 +345,12 @@ for my $datei (@dateien) {
             next if $nahe;
 
             for my $w (@erledigt) {
-                next unless index(lc $text, lc $w) >= 0;
+                next unless lc($text) =~ /\b\Q$w\E/i;   # dito
                 my $kurz = $text;
                 $kurz =~ s/\s+/ /g;
                 $kurz = substr($kurz, 0, 100) . '…' if length($kurz) > 100;
                 push @mangel, sprintf(
-                    "%s:%d nennt %s als '%s' - BEFUNDE.md fuehrt ihn OFFEN\n        %s",
+                    "%s:%d nennt %s als '%s' - Intern/BEFUNDE.md fuehrt ihn OFFEN\n        %s",
                     $datei, $zeile, $k, $w, $kurz);
                 last;
             }
@@ -352,10 +361,10 @@ for my $datei (@dateien) {
     # faellt eine ganze Tabelle in einen Topf, und ein "behoben" in Zeile 5
     # schlaegt gegen eine Kennung in Zeile 2 an. Genau diese Fehlalarme hat
     # der erste Anlauf produziert: die Tabelle der offenen Befunde in
-    # FILTER.md nennt bei E-68 zu Recht, dass die andere Haelfte behoben
+    # Intern/FILTER.md nennt bei E-68 zu Recht, dass die andere Haelfte behoben
     # ist - und wurde deshalb fuer E-47, E-67 und E-69 angeschwaerzt.
     # Am 12.10.2026 dazu: dasselbe gilt INNERHALB eines Zitatblocks. Der
-    # Abschnitt "Der naechste Schritt" in WEITERMACHEN.md ist ein einziger
+    # Abschnitt "Der naechste Schritt" in Intern/WEITERMACHEN.md ist ein einziger
     # Block aus "> "-Zeilen und zaehlt darin numerierte Schritte auf. Ein
     # "- erledigt." in Schritt 1 schlug damit gegen jede Kennung in Schritt
     # 2 bis 5 an: fuenf Fehlalarme aus einem einzigen Absatz. Ein Schritt
@@ -379,7 +388,7 @@ for my $datei (@dateien) {
         }
         # Eine Zeile aus nichts als "> " ist der Absatzwechsel INNERHALB
         # eines Zitatblocks - genauso trennend wie eine Leerzeile. Ohne das
-        # lag in WEITERMACHEN.md "E-110 behoben" im selben Topf wie
+        # lag in Intern/WEITERMACHEN.md "E-110 behoben" im selben Topf wie
         # "E-105, E-111, E-112, E-113 aufgeschrieben", vier Zeilen weiter.
         if ($z =~ /^\s*$/ || $z =~ /^\s*>\s*$/) {
             $pruefe->(join(' ', @absatz), $start);
@@ -393,9 +402,9 @@ for my $datei (@dateien) {
 }
 
 # --- 3. Bericht ------------------------------------------------------------
-print "\n  Befundurteile gegen BEFUNDE.md\n";
+print "\n  Befundurteile gegen Intern/BEFUNDE.md\n";
 print '  ', '-' x 68, "\n";
-printf "  Kennungen in BEFUNDE.md        %d\n", scalar keys %urteil;
+printf "  Kennungen in Intern/BEFUNDE.md        %d\n", scalar keys %urteil;
 printf "  davon offen                    %d\n", scalar @offene;
 printf "  davon behoben                  %d\n", scalar @behobene;
 printf "  gepruefte Dokumente            %d\n", $geprueft;

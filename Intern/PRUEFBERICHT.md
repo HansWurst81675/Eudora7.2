@@ -2,7 +2,7 @@
 
 > **Dies ist ein abgeschlossener Bericht vom 30.08.2026 — nicht der aktuelle
 > Stand.** PRÜFER berichtet seither in `Befunde/PRUEFER-*.md`; der jüngste ist
-> [Befunde/PRUEFER-8.md](Befunde/PRUEFER-8.md) vom 11.09.2026 (vier Schranken
+> [Befunde/PRUEFER-8.md](../Befunde/PRUEFER-8.md) vom 11.09.2026 (vier Schranken
 > zu [E-80](BEFUNDE.md#e-80), [E-81](BEFUNDE.md#e-81) und der Zertifikatsprüfung, 55 Gegenproben). Was hier steht,
 > gilt für den Stand `371c1e3` und wird nicht fortgeschrieben.
 

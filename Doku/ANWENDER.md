@@ -19,26 +19,26 @@ Alltag am ehesten merkt.
   das eigene Adressbuch nicht.** Diese Teile brauchen
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
-  [**E-47**](../BEFUNDE.md#e-47)). **Nicht gemeint ist das eigene Adressbuch**
+  [**E-47**](../Intern/BEFUNDE.md#e-47)). **Nicht gemeint ist das eigene Adressbuch**
   (*Tools → Address Book*, die Kurznamen-Leiste): es ist in `Eudora.exe`
   übersetzt — `nickdoc.cpp`, `nicktree.cpp`, `nickpage.cpp` und
   `NicknamesWazooWnd.cpp` stehen in `Eudora71/Eudora/Eudora.vcxproj` —,
   braucht kein `MFC71.DLL` und arbeitet; in 1.0.119 und 1.0.120 sind zwei
   Fehler darin behoben und von Gregor bestätigt
-  ([E-134](../BEFUNDE.md#e-134), [E-135](../BEFUNDE.md#e-135)). `EudoraBk.dll`
+  ([E-134](../Intern/BEFUNDE.md#e-134), [E-135](../Intern/BEFUNDE.md#e-135)). `EudoraBk.dll`
   klingt nach Adressbuch, ist aber der Protokollanbieter *„EudoraBk
   Protocol"* des Verzeichnisdienstes
   (`DirectoryServices/DirectoryServicesUI/inc/RegisterComponentImpl.h:67`).
-* **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](../BEFUNDE.md#e-77), offen):
+* **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](../Intern/BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Im Dialog *Speichern unter* fehlen zwei Optionen** ([**E-98**](../BEFUNDE.md#e-98), offen):
+* **Im Dialog *Speichern unter* fehlen zwei Optionen** ([**E-98**](../Intern/BEFUNDE.md#e-98), offen):
   *Kopfzeilen einschließen* und *Absätze raten* sind nicht wählbar. Windows 10
   öffnet den modernen Dateidialog, und der zeigt Eudoras Dialogvorlage von 1996
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
-  Rückschritt durch die Behebung von [E-97](../BEFUNDE.md#e-97)** — die Kästchen fehlen seit der
+  Rückschritt durch die Behebung von [E-97](../Intern/BEFUNDE.md#e-97)** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
-* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](../BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, ausgeliefert mit `v1.0.101`, von Gregor noch nicht bestätigt): In manchen
+* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](../Intern/BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, ausgeliefert mit `v1.0.101`, von Gregor noch nicht bestätigt): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
   Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
@@ -47,11 +47,11 @@ Alltag am ehesten merkt.
   Handyfassung, eine davon per `display:none` verborgen; zweiter Fall,
   von Gregor am 13.10.2026 an 1.0.86 gemeldet).
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
-  und Weiterleiten als grauer Kasten** ([**E-119**](../BEFUNDE.md#e-119), offen, am Protokoll belegt):
+  und Weiterleiten als grauer Kasten** ([**E-119**](../Intern/BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
   Adresse selbst.
 * **Anhänge werden unter abgeschnittenem Namen gespeichert, die Endung fehlt**
-  ([**AN-1**](../BEFUNDE.md#an-1)): aus `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf`
+  ([**AN-1**](../Intern/BEFUNDE.md#an-1)): aus `Angebot Nr 4711 fuer die Stadtwerke Musterstadt 2025.pdf`
   wird `Angebot Nr 4711 fuer die Stadtwerke`. **Es liegt nicht an der Länge** —
   ein Name mit 76 Zeichen kommt vollständig an, solange er in *einer* Zeile
   steht. Elf getrennte Ursachen (B5.1 bis B5.11), alle aus Eudora 7.1: eine
@@ -64,20 +64,20 @@ Alltag am ehesten merkt.
   Registry-Eintrag ganz. **Behoben bis auf einen Teil:** über POP am laufenden
   Programm gemessen, alle sechs Prüffälle heil seit 7.2.0.81 (auch an 7.2.0.82
   und 7.2.0.83, Testsuite 185/185); über IMAP von Gregor mit Paket 1.0.83 an
-  seinem Postfach getestet und bestätigt. **Offen bleibt [B5.7](../AUFGABEN.md#b5.7):** über IMAP
+  seinem Postfach getestet und bestätigt. **Offen bleibt [B5.7](../Intern/AUFGABEN.md#b5.7):** über IMAP
   wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
-  Durchlauf in [AUFGABEN.md](../AUFGABEN.md), **B5**.
+  Durchlauf in [AUFGABEN.md](../Intern/AUFGABEN.md), **B5**.
 * **Eine gespeicherte HTML-Nachricht zeigt in anderen Programmen falsche
-  Umlaute** ([**E-101**](../BEFUNDE.md#e-101), **wieder offen** seit 13.10.2026, an 1.0.84 gemeldet):
+  Umlaute** ([**E-101**](../Intern/BEFUNDE.md#e-101), **wieder offen** seit 13.10.2026, an 1.0.84 gemeldet):
   die Datei aus *File → Save As* sagt im `<meta>` UTF-8, enthält aber
   Windows-1252. Jedes Programm, das sie als HTML liest, folgt dem `<meta>` und
   zeigt statt der Umlaute Ersatzzeichen.
 * **Ein gelöstes angedocktes Fenster hinterlässt eine leere Fläche**
-  ([**E-114**](../BEFUNDE.md#e-114), offen, an 1.0.84 gemeldet): wird etwa das Filterfenster
+  ([**E-114**](../Intern/BEFUNDE.md#e-114), offen, an 1.0.84 gemeldet): wird etwa das Filterfenster
   angedockt und wieder gelöst, bleibt an seiner alten Stelle ein weißer
   Bereich stehen.
 * **Ctrl+F (*Find Messages*) meldet „Encountered an improper argument"**
-  ([**E-115**](../BEFUNDE.md#e-115), an 1.0.84 gemeldet), und im Reiter *Mailboxes* ist kein
+  ([**E-115**](../Intern/BEFUNDE.md#e-115), an 1.0.84 gemeldet), und im Reiter *Mailboxes* ist kein
   Postfach angehakt — wenn ein IMAP-Postfach aktiv ist. **Behoben in 7.2.0.86,
   veröffentlicht mit `v1.0.87`, von Gregor am 13.10.2026 an 1.0.86 bestätigt**
   (vorläufig: der Fehler trat vorher nur sporadisch auf). In `v1.0.84` und
@@ -113,14 +113,14 @@ und behält damit Mails, Konten und Filter.
 
 Wie ein Filter entsteht, wann er läuft, was seine fünf Aktionen tun, wo die
 Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
-[FILTER.md](../FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
+[FILTER.md](../Intern/FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
 jeder eingehenden Nachricht **0** bleibt.
 
 ### Was nicht in der Oberfläche steht
 
 Schalter ohne Menüpunkt, die Regeln für die `Eudora.ini` und das
 Verhalten, das sich nicht von selbst meldet — gesammelt und belegt in
-[EINSTELLUNGEN.md](../EINSTELLUNGEN.md). Dort steht auch, was beim Umstieg
+[EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md). Dort steht auch, was beim Umstieg
 auf eine neue Fassung mitkopiert werden muss.
 
 ### Beim Start wird nach dem IMAP-Kennwort gefragt: das Fenster schließen
@@ -160,7 +160,7 @@ beiden Wege haben keine gemeinsame Stelle.
 Das ist **kein Fehler dieser Portierung**, sondern Verhalten des Originals;
 es hat deshalb keine Befundnummer. Verwandt: bei IMAP fragt auch ein
 **Filterlauf** nach dem Kennwort, aus einem anderen Grund — siehe
-[FILTER.md](../FILTER.md), Abschnitt *Was überrascht*.
+[FILTER.md](../Intern/FILTER.md), Abschnitt *Was überrascht*.
 
 ### Windows Defender meldet Eudora als Trojaner
 
@@ -178,7 +178,7 @@ Schadsoftware. Defender schickt eine unbekannte, **unsignierte** Programmdatei
 an die Microsoft-Cloud, bewertet sie dort und verteilt bei einem negativen
 Urteil eine Signatur für genau diese Datei. Jede Fassung dieses Projekts ist
 eine neue, unsignierte Datei – das Urteil kann bei jeder Fassung neu fallen.
-Am 16.10.2026 traf es das Testpaket 1.0.98 ([E-124](../BEFUNDE.md#e-124)); das
+Am 16.10.2026 traf es das Testpaket 1.0.98 ([E-124](../Intern/BEFUNDE.md#e-124)); das
 veröffentlichte `v1.0.87` und die Pakete 1.0.96 und 1.0.97 waren sauber,
 1.0.99 (derselbe Quelltext wie 1.0.98, neu gebaut) ebenfalls. Wir halten
 das für einen **Fehlalarm**: die Datei ist aus dem Quelltext in diesem Repo
@@ -236,7 +236,7 @@ Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab — und
 jede Abweichung lässt sich zurückdrehen.
 
-**Die vollständige Liste steht in [EINSTELLUNGEN.md](../EINSTELLUNGEN.md)**, mit
+**Die vollständige Liste steht in [EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md)**, mit
 Schlüssel, Abschnitt, Vorgabe hier, Vorgabe im Original und Fundstelle im
 Quelltext. Dort und nur dort — bis zum 14.09.2026 standen dieselben Schlüssel
 in **zwei** Tabellen, hier und dort, und zwölf davon in beiden. Zwei Listen
@@ -251,7 +251,7 @@ Was ein Anwender beim **ersten Start** wissen muss, steht weiter unten unter
 **Es gibt mehr Wege als den Doppelklick auf `Eudora.exe`.** Jedes Mal muss
 Eudora sein Mailverzeichnis finden, und jedes Mal kann es dabei über die
 Registry im Verzeichnis einer **fremden** Installation landen
-([E-132](../BEFUNDE.md#e-132)).
+([E-132](../Intern/BEFUNDE.md#e-132)).
 
 | Weg | was dabei passiert |
 |---|---|
@@ -306,10 +306,10 @@ Mail folder from: command line
 | **Version** | ohne sie ist kein Urteil zuzuordnen — *„behoben"* stand hier schon einen Tag lang da, während das ausgelieferte Paket den Fehler noch hatte |
 | **Data** | das Mailverzeichnis: dort liegen Postfächer, Anhänge und das Protokoll |
 | **Application** | das Programmverzeichnis — bei uns **nicht** dasselbe wie *Data* |
-| **INI** | **welche** `Eudora.ini` wirklich gelesen wird. In unseren Paketen liegt sie in `Mailverzeichnis\`, nicht neben der EXE. Genau diese Abweichung öffnet den Weg von [E-132](../BEFUNDE.md#e-132) |
+| **INI** | **welche** `Eudora.ini` wirklich gelesen wird. In unseren Paketen liegt sie in `Mailverzeichnis\`, nicht neben der EXE. Genau diese Abweichung öffnet den Weg von [E-132](../Intern/BEFUNDE.md#e-132) |
 | **Default INI** | die `DEudora.ini`. Dort stehen `DataFolder` und `UseAppData` — die Stufen 3 und 4 der Verzeichnissuche |
 | **Log** | wohin das Protokoll geschrieben wird **und ob es überhaupt etwas enthält**. Steht dort *„keine E-nn-Marken"*, fehlt `DEBUG_MASK_MISC` (32768) im `LogLevel`, und keine einzige Spurmarke wird geschrieben — siehe den nächsten Abschnitt |
-| **Mail folder from** | **woher** Eudora das Mailverzeichnis hat: Befehlszeile, Umgebungsvariable, `DEudora.ini`, Registry oder Application Data. Diese eine Zeile hat am 20.10.2026 Stunden gekostet, weil sie fehlte ([E-132](../BEFUNDE.md#e-132)) |
+| **Mail folder from** | **woher** Eudora das Mailverzeichnis hat: Befehlszeile, Umgebungsvariable, `DEudora.ini`, Registry oder Application Data. Diese eine Zeile hat am 20.10.2026 Stunden gekostet, weil sie fehlte ([E-132](../Intern/BEFUNDE.md#e-132)) |
 
 **Die Angaben werden aus dem Dialog genommen, nicht aus dem Programminneren.**
 Der kopierte Block kann also nichts behaupten, was auf dem Bildschirm nicht
@@ -332,7 +332,7 @@ LogLevel=25759
 
 > **`[Debug]`, nicht `[Settings]`.** `LogLevel` trägt die Nummer 10802 und
 > fällt damit in den Bereich, den `GetSectionID` dem Abschnitt `[Debug]`
-> zuweist — siehe [EINSTELLUNGEN.md](../EINSTELLUNGEN.md), Regel 1.1. Der
+> zuweist — siehe [EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md), Regel 1.1. Der
 > Abschnitt *Wo ein Schlüssel stehen muss*, auf den hier bis zum 21.10.2026
 > verwiesen wurde, steht seit dem 14.09.2026 nicht mehr in dieser Datei.
 > Bis zum 11.09.2026 stand hier
@@ -362,7 +362,7 @@ Bereiche.
 | 8192 | *Leave mail on server* | an |
 | 16384 | Suche und Suchindex | an |
 | 32768 | **Spurmarken dieser Portierung** | **aus** |
-| 65536 | **Anhangnamen** (Zeilen `ANHANG`, Befund [AN-1](../BEFUNDE.md#an-1)) | **aus** |
+| 65536 | **Anhangnamen** (Zeilen `ANHANG`, Befund [AN-1](../Intern/BEFUNDE.md#an-1)) | **aus** |
 
 Belegt in `Eudora71/QCUtils/public/inc/debug.h:14-44`; gelesen wird der
 Schlüssel in `eudora.cpp:1192`, ausgewertet in `debug.cpp:140-146`.

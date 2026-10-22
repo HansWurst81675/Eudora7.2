@@ -2,13 +2,13 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 
-# offene-befunde.pl - die Liste der offenen Befunde aus BEFUNDE.md erzeugen
-# und in WEITERMACHEN.md setzen.
+# offene-befunde.pl - die Liste der offenen Befunde aus Intern/BEFUNDE.md erzeugen
+# und in Intern/WEITERMACHEN.md setzen.
 #
 # ---------------------------------------------------------------------------
 # WARUM ES DIESES WERKZEUG GIBT
@@ -21,11 +21,11 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 #
 # Und davor: "welche aufgaben sind noch mir zugewiesen und noch nicht
 # erledigt?" - eine Frage, die KEINE Datei direkt beantwortet hat. Die Liste
-# musste ich mir aus BEFUNDE.md zusammenrechnen; im Chat steht sie jetzt und
+# musste ich mir aus Intern/BEFUNDE.md zusammenrechnen; im Chat steht sie jetzt und
 # ist morgen weg.
 #
 # EINE VON HAND GEFUEHRTE LISTE WAERE DER FALSCHE WEG. Am selben Tag hat sich
-# dreimal gezeigt, wohin das fuehrt: AUFGABEN.md nannte vier wartende
+# dreimal gezeigt, wohin das fuehrt: Intern/AUFGABEN.md nannte vier wartende
 # Behebungen, von denen drei laengst bestaetigt waren; die Lehrentabelle
 # fuehrte 27 von 56; tools/RELEASES.md kannte ein Release von elf. Deshalb
 # wird diese Liste ERZEUGT.
@@ -34,13 +34,13 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 # WAS ES TUT
 # ---------------------------------------------------------------------------
 #
-# Es liest die Urteile aus BEFUNDE.md - dieselbe Quelle und dieselbe Regel
+# Es liest die Urteile aus Intern/BEFUNDE.md - dieselbe Quelle und dieselbe Regel
 # wie pruefe-befundurteile.pl: die dritte Spalte, darin das erste
 # Fettgedruckte - und setzt daraus die Tabelle zwischen zwei Marken in
-# WEITERMACHEN.md.
+# Intern/WEITERMACHEN.md.
 #
 # Die Spalte "was als Naechstes zu tun ist" kann kein Skript erzeugen; sie
-# bleibt Handarbeit und steht in WEITERMACHEN.md. Was das Werkzeug
+# bleibt Handarbeit und steht in Intern/WEITERMACHEN.md. Was das Werkzeug
 # sicherstellt: dass KEIN offener Befund fehlt und KEIN erledigter darin
 # steht. Ohne Schalter prueft es nur und weist ab.
 #
@@ -52,11 +52,12 @@ my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
 my $schreiben = grep { $_ eq '-schreiben' } @ARGV;
 
 my $wurzel = -f 'VERSION' ? '.' : '..';
-my $quelle = "$wurzel/BEFUNDE.md";
-my $ziel   = "$wurzel/WEITERMACHEN.md";
+my $quelle = "$wurzel/Intern/BEFUNDE.md";
+my $ziel   = "$wurzel/Intern/WEITERMACHEN.md";
+my $ziel2  = "$wurzel/CHANGELOG.md";
 
 unless (-f $quelle and -f $ziel) {
-    print "  offene-befunde: BEFUNDE.md oder WEITERMACHEN.md nicht gefunden -\n";
+    print "  offene-befunde: Intern/BEFUNDE.md oder Intern/WEITERMACHEN.md nicht gefunden -\n";
     print "  bitte aus dem Wurzelverzeichnis aufrufen.\n";
     exit 2;
 }
@@ -70,7 +71,7 @@ sub lies {
     return $t;
 }
 
-# --- Die Urteile aus BEFUNDE.md -------------------------------------------
+# --- Die Urteile aus Intern/BEFUNDE.md -------------------------------------------
 # Dieselbe Regel wie pruefe-befundurteile.pl: dritte Spalte, erstes
 # Fettgedrucktes. Wer sie hier anders liest, bekommt zwei Wahrheiten.
 # "beobachtet" und "nicht gemessen" gehoeren dazu (22.10.2026). E-91 stand
@@ -83,7 +84,7 @@ my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr a
                      'ueberholt', "\xc3\xbcberholt");
 
 # KENNUNGEN ALLER FAMILIEN (LEKTOR-16, L-16.1, 12.10.2026). Bis dahin stand
-# hier E-\d+. BEFUNDE.md fuehrt aber auch AN-, NP-, P-, A-, R- ... - das
+# hier E-\d+. Intern/BEFUNDE.md fuehrt aber auch AN-, NP-, P-, A-, R- ... - das
 # Werkzeug meldete "16 offen, Liste deckt" und sah AN-1 und AN-2 gar nicht,
 # ausgerechnet die beiden Befunde, an denen an dem Tag gearbeitet wurde.
 # Die Schranke aus CLAUDE.md Schritt 1 war damit fuer jeden Nicht-E-Befund
@@ -114,7 +115,7 @@ for my $zeile (split /\n/, $befunde) {
     # Zeile OHNE Urteilswort liess die naechste Zeile derselben Kennung
     # zum Zug kommen, und die steht meist in einer Teiltabelle weit unten.
     # A-1 zum Beispiel steht oben in der Uebersicht mit "teilweise"
-    # (BEFUNDE.md:147) und unten mit "heute ueberholt" (:5020) - gelten
+    # (Intern/BEFUNDE.md:147) und unten mit "heute ueberholt" (:5020) - gelten
     # soll die Uebersicht. (LEKTOR-21 hat den ersten Wortlaut dieses
     # Kommentars berichtigt: er hatte oben und unten vertauscht.)
     next if $gesehen{$k}++;
@@ -185,7 +186,7 @@ for my $zeile (split /\n/, $befunde) {
     # Fehlt sie, schreibt die Tabelle "— nicht aufgeschrieben". Das ist
     # Absicht: die Luecke soll sichtbar und zaehlbar sein, nicht hinter
     # einem "teilweise" verschwinden (Arbeitsweise/ausbleiben-ist-kein-befund.md).
-    if ($urteil =~ /\*\*Was noch fehlt:\*\*\s*(.+)\z/s) {
+    if ($urteil =~ /\*\*Was noch fehlt:\*\*\s*(.+?)(?=\s*\*\*Wie zu pruefen:\*\*|\z)/s) {
         my $f = $1;
         $f =~ s/\s+/ /g;
         $f =~ s/\s+\z//;
@@ -197,7 +198,7 @@ for my $zeile (split /\n/, $befunde) {
 }
 
 unless (@offene) {
-    print "  offene-befunde: BEFUNDE.md fuehrt keinen offenen Befund.\n";
+    print "  offene-befunde: Intern/BEFUNDE.md fuehrt keinen offenen Befund.\n";
     exit 2;
 }
 
@@ -212,19 +213,19 @@ for my $k (@offene) {
     $soll .= "| **$k** | $beschreibung{$k} | $f |\n";
 }
 
-# --- Gegen WEITERMACHEN.md halten -----------------------------------------
+# --- Gegen Intern/WEITERMACHEN.md halten -----------------------------------------
 my $t = lies($ziel);
 my $anfang = '<!-- offene-befunde: Anfang -->';
 my $ende   = '<!-- offene-befunde: Ende -->';
 
 unless ($t =~ /\Q$anfang\E(.*?)\Q$ende\E/s) {
     if ($schreiben) {
-        print "  offene-befunde: die Marken fehlen in WEITERMACHEN.md.\n";
+        print "  offene-befunde: die Marken fehlen in Intern/WEITERMACHEN.md.\n";
         print "  Bitte einmal von Hand einsetzen:\n\n";
         print "    $anfang\n    | Kennung | worum es geht |\n    |---|---|\n    $ende\n\n";
         exit 2;
     }
-    print "\n  offene-befunde: WEITERMACHEN.md hat keinen erzeugten Abschnitt.\n";
+    print "\n  offene-befunde: Intern/WEITERMACHEN.md hat keinen erzeugten Abschnitt.\n";
     print "  Einmal einsetzen, dann haelt das Werkzeug ihn aktuell.\n\n";
     exit 1;
 }
@@ -233,14 +234,14 @@ my $ist = $1;
 my %im_ist;
 # VERLINKTE FORM (LEKTOR-27, L-27.1, 13.10.2026). Seit eb5815d steht die
 # Tabelle nach "-schreiben" plus "befunde-verlinken.pl --verlinken" als
-# **[E-115](BEFUNDE.md#e-115)** da. Bis dahin las diese Zeile nur **E-115**
-# und meldete "in WEITERMACHEN.md 0, FEHLEN 30" - bei inhaltlich deckender
+# **[E-115](Intern/BEFUNDE.md#e-115)** da. Bis dahin las diese Zeile nur **E-115**
+# und meldete "in Intern/WEITERMACHEN.md 0, FEHLEN 30" - bei inhaltlich deckender
 # Liste. Der Haken zeigt die Ausgabe nur an, also fiel es niemandem auf.
 # NUR DIE ERSTE SPALTE (22.10.2026, von LEKTOR gemessen). Bis die Tabelle
 # eine dritte Spalte bekam, war der ganze Block eine sichere Quelle fuer
 # Kennungen. Jetzt nicht mehr: LEKTORs erste Fassung der S-3-Marke schrieb
 # "**S-3c**" in "was noch fehlt", und der naechste Lauf meldete
-# "ZU VIEL (1, laut BEFUNDE.md erledigt): S-3c" - eine Kennung, die gar
+# "ZU VIEL (1, laut Intern/BEFUNDE.md erledigt): S-3c" - eine Kennung, die gar
 # keine Tabellenzeile war. Gezaehlt wird deshalb nur noch, was in der
 # KENNUNGSSPALTE steht. Damit darf eine Marke eine Kennung auch fett
 # nennen, ohne das Werkzeug zu verwirren.
@@ -257,8 +258,8 @@ my @zuviel = grep { my $n = $_; not grep { $_ eq $n } @offene } sort keys %im_is
 print "\n  ------------------------------------------------------------\n";
 print "  offene-befunde\n";
 print "  ------------------------------------------------------------\n";
-printf "    offen laut BEFUNDE.md      %2d\n", scalar @offene;
-printf "    in WEITERMACHEN.md         %2d\n", scalar keys %im_ist;
+printf "    offen laut Intern/BEFUNDE.md      %2d\n", scalar @offene;
+printf "    in Intern/WEITERMACHEN.md         %2d\n", scalar keys %im_ist;
 
 # ABWEISEN, WENN EIN OFFENER BEFUND NICHT SAGT, WAS NOCH FEHLT (22.10.2026).
 # Gregor, nachdem er sich A-1 angesehen hatte: "was heisst es? was fehlt
@@ -287,20 +288,17 @@ ENDE
     exit 1;
 }
 
-# Bei deckungsgleicher Kennungsliste war hier frueher Schluss. Seit die
-# Tabelle eine dritte Spalte traegt ("was noch fehlt", 22.10.2026), kann
-# sich ihr INHALT aendern, ohne dass eine Kennung dazukommt - "-schreiben"
-# muss deshalb immer durchlaufen.
-if (not @fehlen and not @zuviel and not $schreiben) {
-    print "\n  Die Liste deckt die offenen Befunde.\n\n";
-    exit 0;
-}
-
+# Hier war bis zum 22.10.2026 Schluss, wenn die Kennungslisten deckungsgleich
+# waren. Das war zweimal zu frueh: die dritte Spalte ("was noch fehlt") kann
+# sich aendern, ohne dass eine Kennung dazukommt, und seit CHANGELOG.md als
+# zweites Ziel dazugekommen ist, muss auch DESSEN Abschnitt verglichen werden.
+# Die Gegenprobe (eine Kennung im CHANGELOG verfaelschen) kam mit dem alten
+# Ausstieg gruen zurueck - die Schranke war an dieser Stelle blind.
 printf "\n  FEHLEN (%d): %s\n", scalar @fehlen, join(', ', @fehlen) if @fehlen;
-printf "\n  ZU VIEL (%d, laut BEFUNDE.md erledigt): %s\n",
+printf "\n  ZU VIEL (%d, laut Intern/BEFUNDE.md erledigt): %s\n",
        scalar @zuviel, join(', ', @zuviel) if @zuviel;
 
-unless ($schreiben) {
+if ((@fehlen or @zuviel) and not $schreiben) {
     print <<'ENDE';
 
   Gregor am 11.09.2026: "mir ging es darum, wo das alles an einer
@@ -313,15 +311,82 @@ ENDE
     exit 1;
 }
 
-my $neu = "$anfang\n\n| Kennung | worum es geht | was noch fehlt |\n|---|---|---|\n$soll\n$ende";
-$t =~ s/\Q$anfang\E.*?\Q$ende\E/$neu/s;
+# LINKS JE ZIEL UMRECHNEN (22.10.2026). Die Beschreibungen stammen aus
+# Intern/BEFUNDE.md, ihre relativen Links gelten also ab Intern/. Derselbe
+# Block geht aber in zwei Verzeichnisebenen: Intern/WEITERMACHEN.md und
+# CHANGELOG.md in der Wurzel. Ohne Umrechnung landete "../Befunde/PRUEFER-33.md"
+# unveraendert im CHANGELOG und zeigte ins Leere - gemessen von doku-pruefen.pl
+# direkt nach dem Umzug.
+sub block_fuer {
+    my ($roh, $datei) = @_;
+    return $roh if $datei =~ m{/Intern/};      # schon richtig
+    $roh =~ s{\]\(([^)#][^)]*)\)}{
+        my $z = $1;
+        if ($z =~ m{^(?:https?:|mailto:|/|Intern/)}) { "]($z)" }
+        else {
+            my @t;
+            for my $s (split m{/}, "Intern/$z") {
+                next if $s eq '.' or $s eq '';
+                if ($s eq '..') { pop @t if @t && $t[-1] ne '..'; next }
+                push @t, $s;
+            }
+            '](' . join('/', @t) . ')';
+        }
+    }ge;
+    return $roh;
+}
 
-my $c0 = () = lies($ziel) =~ /\r\n/g;
-my $c  = () = $t =~ /\r\n/g;
-if ($c != $c0) { printf "  ABBRUCH - CRLF %d statt %d\n", $c, $c0; exit 1; }
+my $block = "$anfang\n\n| Kennung | worum es geht | was noch fehlt |\n|---|---|---|\n$soll\n$ende";
 
-open my $o, '>:raw', $ziel or die "$ziel: $!\n";
-print $o $t;
-close $o;
-printf "\n  Tabelle neu gesetzt: %d offene Befunde.\n\n", scalar @offene;
+# ZWEI ZIELE (22.10.2026). Bis dahin pflegte CHANGELOG.md eine EIGENE Liste
+# "Noch offen" von Hand. Gregor am 22.10.2026: "alles, was als 'offen'
+# markiert ist, ist wahr? die direktive 'keine luegen auf main' gilt immer
+# noch ... im moment sehe ich es nicht!" Gemessen: die Liste nannte fuenf
+# Befunde als offen, die in ihrer eigenen Statusspalte "Behoben" sagten
+# (E-112, E-115, E-117, E-118, E-68), und zehn offene fehlten ganz.
+#
+# Eine zweite handgepflegte Liste derselben Sache war in diesem Projekt noch
+# jedes Mal falsch. Beide kommen jetzt aus derselben Quelle.
+my @ziele = ($ziel, $ziel2);
+my $abweichung = 0;
+
+for my $datei (@ziele) {
+    my $inhalt = lies($datei);
+    unless (defined $inhalt and $inhalt =~ /\Q$anfang\E(.*?)\Q$ende\E/s) {
+        print "  offene-befunde: $datei hat keinen erzeugten Abschnitt.\n";
+        $abweichung = 1;
+        next;
+    }
+    my $ist_block = $anfang . $1 . $ende;
+    my $soll_block = block_fuer($block, $datei);
+    # LINKSCHREIBWEISE IGNORIEREN. Der Erzeuger schreibt "**E-133**",
+    # befunde-verlinken.pl macht daraus "**[E-133](Intern/BEFUNDE.md#e-133)**".
+    # Beides ist derselbe Stand; verglichen wird der sichtbare Text.
+    my $ohne = sub { my $s = shift; $s =~ s/\]\([^)]*\)//g; $s =~ s/[\[\]]//g; $s };
+    # Der Vergleich ignoriert die Linkschreibweise (siehe oben) - ein reiner
+    # PFAD-Unterschied faellt ihm deshalb nicht auf. Mit "-schreiben" wird
+    # darum immer gesetzt, sonst blieb "../Befunde/..." im CHANGELOG stehen.
+    next if !$schreiben && $ohne->($ist_block) eq $ohne->($soll_block);
+
+    unless ($schreiben) {
+        print "  offene-befunde: der Abschnitt in $datei ist nicht auf dem Stand.\n";
+        $abweichung = 1;
+        next;
+    }
+
+    my $neu_inhalt = $inhalt;
+    $neu_inhalt =~ s{\Q$anfang\E.*?\Q$ende\E}{$soll_block}s;
+
+    my $c0 = () = $inhalt =~ /\r\n/g;
+    my $c  = () = $neu_inhalt =~ /\r\n/g;
+    if ($c != $c0) { printf "  ABBRUCH - %s: CRLF %d statt %d\n", $datei, $c, $c0; exit 1; }
+
+    open my $o, '>:raw', $datei or die "$datei: $!\n";
+    print $o $neu_inhalt;
+    close $o;
+    printf "  neu gesetzt: %s\n", $datei;
+}
+
+exit 1 if $abweichung and not $schreiben;
+printf "\n  %d offene Befunde, in beiden Listen gleich.\n\n", scalar @offene;
 exit 0;

@@ -48,7 +48,7 @@ Gemessen, Punkt für Punkt:
 | Er ist in `main` | `git branch --contains 34c43204` nennt `main`; PR **#120** gemergt am 21.10.2026, 04:55:35 UTC |
 | Datum **21.10.2026** | Commit `34c43204` trägt 21.10.2026, 06:52:58 +0200; der Merge liegt davor am selben Tag |
 | Zweck *„der Eintrag in `WEITERMACHEN.md` … und der letzte Commit von [LEKTOR-44](LEKTOR-44.md#lektor-44)"* | PR #120 trägt genau drei Commits und vier Dateien: `WEITERMACHEN.md`, `Befunde/LEKTOR-44.md`, `LEKTORAT.md`, `tools/ZWEIGE.md` |
-| Verweis `[LEKTOR-44](../Befunde/LEKTOR-44.md)` | trifft, aus `tools/` heraus richtig aufgelöst |
+| Verweis `[LEKTOR-44](LEKTOR-44.md)` | trifft, aus `tools/` heraus richtig aufgelöst |
 | Verweis `[Issue #102](…/issues/102)` | vorhanden, 7 Beiträge |
 
 **Zur Stelle in der Tabelle.** Die Zeile steht zwischen `19.10.2026` und
@@ -98,7 +98,7 @@ drei Dinge auf, die es wirklich nicht gibt: ZIP, Tag, Veröffentlichung.
 
 | Quelle | Zählung für den 20.10.2026 |
 |---|---|
-| [E-124](../BEFUNDE.md#e-124) | **drei**: 13:17:28 (Bau zu 1.0.111), 20:33:12 (1.0.113, beim Ausführen), 20:45:19 (1.0.113, ausgelöst von `perl.exe`) |
+| [E-124](../Intern/BEFUNDE.md#e-124) | **drei**: 13:17:28 (Bau zu 1.0.111), 20:33:12 (1.0.113, beim Ausführen), 20:45:19 (1.0.113, ausgelöst von `perl.exe`) |
 | `Releases/PAKETE.md:174` | *„dritter betroffener Bau … nach **Erkennungen** gezählt der vierte Fall, und um 20:45:19 kam ein **fünfter** dazu"* |
 | `WEITERMACHEN.md` | *„An einem Tag **dreimal** zugeschlagen"* |
 | `Releases/1.0.114/RELEASE-NOTIZEN.md` | **zweimal** |
@@ -120,7 +120,7 @@ heute weiß die Veröffentlichung nichts vom Befund.
 Berichtigt auf *„dreimal an einem Tag, **darunter** die Fassung 7.2.0.113 beim
 Starten"*. Eine Zeile, eine Änderung; der Rest des Abschnitts (Vorgangsnummer
 `a567fe2a-…`, *Incorrect detection*, der Weg über *Auf Gerät zulassen*) deckt
-sich mit [E-124](../BEFUNDE.md#e-124).
+sich mit [E-124](../Intern/BEFUNDE.md#e-124).
 
 ### <a id="l-45.4"></a>L-45.4 — der Block *HIER WEITERMACHEN* meldete einen Pull Request als offen, der seit elf Stunden gemergt war (mittel)
 
@@ -160,10 +160,10 @@ etwas über 1.0.114, das nicht stimmt. Gemessen:
 * **Die SHA-256 ist als Platzhalter kenntlich** (`:100`, *„wird beim Schnüren
   des Pakets eingetragen"*), und `WEITERMACHEN.md` Punkt 1 nennt sie als ersten
   Handgriff.
-* **Die Zahlen decken sich** mit [E-132](../BEFUNDE.md#e-132) und
-  [E-124](../BEFUNDE.md#e-124): 241 Tests / 241 bestanden (identisch in
+* **Die Zahlen decken sich** mit [E-132](../Intern/BEFUNDE.md#e-132) und
+  [E-124](../Intern/BEFUNDE.md#e-124): 241 Tests / 241 bestanden (identisch in
   `CHANGELOG.md:144`, `TESTPLAN.md:166/:398`, `Releases/PAKETE.md:173`,
-  [E-132](../BEFUNDE.md#e-132)), die drei Wege mit *Nein* als Vorgabe, die
+  [E-132](../Intern/BEFUNDE.md#e-132)), die drei Wege mit *Nein* als Vorgabe, die
   Gegenprobe `fremd=0`, die beiden Fehlfassungen (`E132AufrufZerlegen`, die
   gemerkte Spurmarke), Vorgang `a567fe2a-9f58-47e1-a675-a62733ec538f`,
   *Incorrect detection* — und nach [L-45.3](#l-45.3) auch die Defender-Zählung.
@@ -208,7 +208,7 @@ Nachgemessen, nicht abgeschrieben. **Vier Dinge sind erledigt**, elf nicht.
 |---|---|
 | [L-44.9](LEKTOR-44.md#l-44.9) `tools/RELEASES.md` Zeile außerhalb der Tabelle | `grep -n '^\|'` → Zeilen 30–35 lückenlos, `v1.0.113` steht **in** der Tabelle |
 | [L-43.14](LEKTOR-43.md#l-43.14) Nummernkreise in den PRÜFER-Berichten | bleibt erledigt — `K1 … K15` mit Ankern |
-| [L-43.17](LEKTOR-43.md#l-43.17) Defender-Beleg zu 1.0.113 | in [E-124](../BEFUNDE.md#e-124); für **1.0.112** weiterhin keiner |
+| [L-43.17](LEKTOR-43.md#l-43.17) Defender-Beleg zu 1.0.113 | in [E-124](../Intern/BEFUNDE.md#e-124); für **1.0.112** weiterhin keiner |
 | Die 16 „toten Verweise" aus [L-44.14](LEKTOR-44.md#l-44.14) | zurückgenommen, die acht Berichte stehen unverändert |
 
 **Offen — Gregors Entscheidung (aus [LEKTOR-44](LEKTOR-44.md#lektor-44),
@@ -216,7 +216,7 @@ unverändert):**
 
 | # | Was | Stand am 21.10.2026 |
 |---|---|---|
-| 1 | **Die veröffentlichte Beschreibung von `v1.0.113` berichtigen?** `gh release edit v1.0.113 --notes-file Releases/1.0.113/RELEASE-NOTIZEN.md` | **offen.** Nachgemessen mit `gh release view v1.0.113 --json body`: der veröffentlichte Text weicht weiter ab — zwei abgebrochene Sätze, der fehlende Punkt zur Meldungsflut, *„Ursache"* statt *„Unsere Spur"*, keine Warnung vor [E-132](../BEFUNDE.md#e-132). **Dieselbe Frage stand schon für `v1.0.112` in [LEKTOR-43](LEKTOR-43.md#lektor-43); sie ist damit zum dritten Mal offen** |
+| 1 | **Die veröffentlichte Beschreibung von `v1.0.113` berichtigen?** `gh release edit v1.0.113 --notes-file Releases/1.0.113/RELEASE-NOTIZEN.md` | **offen.** Nachgemessen mit `gh release view v1.0.113 --json body`: der veröffentlichte Text weicht weiter ab — zwei abgebrochene Sätze, der fehlende Punkt zur Meldungsflut, *„Ursache"* statt *„Unsere Spur"*, keine Warnung vor [E-132](../Intern/BEFUNDE.md#e-132). **Dieselbe Frage stand schon für `v1.0.112` in [LEKTOR-43](LEKTOR-43.md#lektor-43); sie ist damit zum dritten Mal offen** |
 | 2 | **Die drei Punkte aus [L-44.8](LEKTOR-44.md#l-44.8) in den Issue-Beitrag?** Besonders *„back up your `Eudora.ini` first"* | **offen.** Der Wortlaut in `Releases/ISSUE-102-ANTWORT.md` ist unverändert, die drei Punkte stehen darüber. **Wird mit dem Release fällig** — Punkt 4 in `WEITERMACHEN.md` |
 | 3 | **Die Schranke aus [L-44.11](LEKTOR-44.md#l-44.11) bauen?** Hält die führenden Dokumente gegen `gh release view` statt gegen sich selbst | **nicht gebaut.** Sie hätte [L-45.4](#l-45.4) gefangen |
 | 4 | **[L-43.11](LEKTOR-43.md#l-43.11) und [L-43.12](LEKTOR-43.md#l-43.12)** | **beide offen**, siehe oben — beide treten bei `v1.0.114` wieder ein |
@@ -232,11 +232,11 @@ unverändert):**
 | [L-44.11](LEKTOR-44.md#l-44.11) 32 Schranken grün, während Dokumente unwahr sind | **unverändert.** Heute wieder: 32 grün, drei falsche Sätze ([L-45.2](#l-45.2)–[L-45.4](#l-45.4)) |
 | [L-44.12](LEKTOR-44.md#l-44.12) Notizen werden aus dem Vorgänger kopiert | **Werkzeug unverändert**, aber bei 1.0.114 **nicht** eingetreten (oben gemessen) |
 | `tools/pruefe-halbe-saetze.pl` (angefangen in `WEITERMACHEN.md`) | **nicht gebaut.** Die Regel ist formuliert und in beide Richtungen geprüft; die Datei gibt es nicht |
-| [L-42.14](LEKTOR-42.md#l-42.14) / [L-41.3](LEKTOR-41.md#l-41.3) `ZIEL.md` kennt [E-122](../BEFUNDE.md#e-122)–[E-130](../BEFUNDE.md#e-130) nicht | **offen** |
+| [L-42.14](LEKTOR-42.md#l-42.14) / [L-41.3](LEKTOR-41.md#l-41.3) `ZIEL.md` kennt [E-122](../Intern/BEFUNDE.md#e-122)–[E-130](../Intern/BEFUNDE.md#e-130) nicht | **offen** |
 | [L-41.8](LEKTOR-41.md#l-41.8) zwei Messskripte ohne Eintrag in `tools/WERKZEUGE.md` | **offen** |
-| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
-| [L-37.10](LEKTOR-37.md#l-37.10) `AUFGABEN.md` ohne Zeilen für [E-122](../BEFUNDE.md#e-122) ff. | **offen**, jetzt bis [E-132](../BEFUNDE.md#e-132) |
-| [E-130](../BEFUNDE.md#e-130) fünf DLLs im Hauptbaum | **unverändert** |
+| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../Intern/BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
+| [L-37.10](LEKTOR-37.md#l-37.10) `AUFGABEN.md` ohne Zeilen für [E-122](../Intern/BEFUNDE.md#e-122) ff. | **offen**, jetzt bis [E-132](../Intern/BEFUNDE.md#e-132) |
+| [E-130](../Intern/BEFUNDE.md#e-130) fünf DLLs im Hauptbaum | **unverändert** |
 | `README.md:577` *„Seit 7.2.0.114 nennt der Über-Dialog…"* | **ohne den Vermerk, dass 7.2.0.114 nicht veröffentlicht ist** — anders als die E-132-Stelle 500 Zeilen darüber, die ihn trägt. **Nicht berichtigt:** mit dem Release von `v1.0.114` wird der Satz von selbst wahr. Bleibt das Release aus, gehört er nachgezogen |
 
 ---

@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
@@ -30,7 +30,7 @@ require "$FindBin::Bin/verweise-filtern.pl";
 #
 #   "das ist auf jeden fall eine frische mail, ist aber falsch dargestellt!"
 #
-# Der Wortlaut, der in BEFUNDE.md stand, waehrend das Paket unterwegs war:
+# Der Wortlaut, der in Intern/BEFUNDE.md stand, waehrend das Paket unterwegs war:
 #
 #   "Alle drei Maengel behoben in 7.2.0.51 - aber die Behebung hat eine
 #    Regression eingefuehrt, die noch offen ist ... Die ersten drei Punkte
@@ -47,7 +47,7 @@ require "$FindBin::Bin/verweise-filtern.pl";
 # WAS GEPRUEFT WIRD - UND WAS BEWUSST NICHT
 # ---------------------------------------------------------------------------
 #
-# Geprueft wird NUR der Zuwachs: die Zeilen, die dieser Commit in BEFUNDE.md
+# Geprueft wird NUR der Zuwachs: die Zeilen, die dieser Commit in Intern/BEFUNDE.md
 # neu einbringt oder aendert. Im Bestand stehen Dutzende alter Zeilen ohne
 # Beleg; eine Schranke, die bei jedem Commit siebzigmal meckert, wird nach
 # dem dritten Mal abgeschaltet (Lehre: schranke-gegentesten).
@@ -66,7 +66,15 @@ require "$FindBin::Bin/verweise-filtern.pl";
 #
 # Rueckgabe 0 = in Ordnung, 1 = Mangel.
 
-my $DATEI = 'BEFUNDE.md';
+my $DATEI = 'Intern/BEFUNDE.md';
+
+# UMZUG ERKENNEN (22.10.2026). Am 22.10.2026 zogen 16 Dokumente von der
+# Wurzel nach Intern/. Mit nur dem NEUEN Pfad im Pathspec kann git die
+# Umbenennung nicht paaren und meldet die ganze Datei als neu: 8703
+# hinzugefuegte Zeilen statt 35. Diese Schranke haette daraufhin 68
+# Urteile angemahnt, die seit Wochen unveraendert dastehen. Mit beiden
+# Pfaden und -M erkennt git die Umbenennung.
+my $ALTPFAD = ($DATEI =~ m{^Intern/(.+)$}) ? $1 : '';
 
 # --- Woerter, die ein Urteil "erledigt" ausdruecken ------------------------
 my @erledigt = ('behoben', 'erledigt', 'geschlossen');
@@ -301,7 +309,7 @@ sub zeilen_aus_diff {
     my ($bereich) = @_;
     my $cmd = defined $bereich
             ? "git show --format= --unified=0 -- $DATEI $bereich 2>&1"
-            : "git diff --cached --unified=0 -- $DATEI 2>&1";
+            : "git diff --cached -M --unified=0 -- $DATEI $ALTPFAD 2>&1";
     # git show braucht den Commit VOR dem Pfadtrenner
     if (defined $bereich) {
         $cmd = "git show $bereich --format= --unified=0 -- $DATEI 2>&1";
@@ -319,7 +327,7 @@ sub zeilen_aus_diff {
 
     # Eine Zeile, die sich NUR in der Kodierung geaendert hat, ist kein
     # Zuwachs. Am 14.09.2026 hat die Berichtigung von 1517 doppelt
-    # umkodierten Zeilen in BEFUNDE.md diese Schranke 46-mal ausgeloest,
+    # umkodierten Zeilen in Intern/BEFUNDE.md diese Schranke 46-mal ausgeloest,
     # obwohl kein einziges Urteil neu geschrieben wurde - es waren die
     # alten Zeilen aus dem Bestand, die der Kommentar oben ausdruecklich
     # in Ruhe lassen will. Darum wird jede entfernte Zeile entmojibakt
@@ -415,7 +423,7 @@ printf "    ohne Beleg                     %d\n", scalar @ohne_beleg;
 
 # UMFANG 0 - und was das je nach Betriebsart bedeutet.
 #
-# Im Diff-Betrieb ist 0 der NORMALFALL: die meisten Commits fassen BEFUNDE.md
+# Im Diff-Betrieb ist 0 der NORMALFALL: die meisten Commits fassen Intern/BEFUNDE.md
 # nicht an. Das darf nicht abweisen, sonst ist jeder Commit blockiert. Es darf
 # aber auch nicht wie ein bestandenes Urteil klingen - deshalb ein eigener
 # Satz statt des Erfolgssatzes.
@@ -441,7 +449,7 @@ ENDE
 
 if (!@zeilen) {
     print "\n  Nichts zu pruefen: dieser Zuwachs enthaelt keine Zeile aus\n";
-    print "  BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
+    print "  Intern/BEFUNDE.md. Das ist kein Urteil ueber die Datei.\n\n";
     exit 0;
 }
 

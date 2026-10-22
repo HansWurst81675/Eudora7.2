@@ -15,8 +15,8 @@ Zwei Dinge sollte Gregor vor dem Test wissen:
   des Bildes, das zuerst geladen wurde, und das andere wird in dieser Größe gemalt.
   Vorher wurden beide in Dateigröße gemalt, also gleich falsch. Vorschlag mit
   einer Bedingung siehe unten.
-* **F2 (mittel, nicht neu, [E-112](../BEFUNDE.md#e-112) dort nicht behoben):** Bei **nur `width`** (häufig:
-  `width="600" style="height:auto"`, und [E-89](../BEFUNDE.md#e-89) erzeugt beim Verfassen genau das)
+* **F2 (mittel, nicht neu, [E-112](../Intern/BEFUNDE.md#e-112) dort nicht behoben):** Bei **nur `width`** (häufig:
+  `width="600" style="height:auto"`, und [E-89](../Intern/BEFUNDE.md#e-89) erzeugt beim Verfassen genau das)
   wird weiterhin in Dateigröße gemalt, während die Zeile die angegebene Breite hat.
 
 ---
@@ -48,7 +48,7 @@ Die Wege einzeln:
 | Keine Angabe, `EMBED_LOAD_IMAGE` (http, beim Vorbereiten nicht holbar) | 0/0 | Dateigröße ✔ |
 | erneuter Ladeversuch nach `:590` oder `:882` | bereits gesetzt, Datei bzw. Angabe | dieselbe Regel liefert denselben Wert ✔ |
 | Antworten/Weiterleiten | Angabe, aber vorher durch `E89BilderMessbarMachen` umgeschrieben (`msgutils.cpp:3654-3745`: gedeckelt, im Verhältnis, Einheiten entfernt) | ✔ |
-| Lesefenster/Vorschau | Angabe **roh** aus dem HTML ([E-89](../BEFUNDE.md#e-89) wirkt nur beim Verfassen, `msgutils.cpp:3171-3173`) | siehe F3 |
+| Lesefenster/Vorschau | Angabe **roh** aus dem HTML ([E-89](../Intern/BEFUNDE.md#e-89) wirkt nur beim Verfassen, `msgutils.cpp:3171-3173`) | siehe F3 |
 | Werbeansicht `kAd` | `AdView.cpp:53` schreibt `<img src alt>` **ohne** Maße → 0/0 | Dateigröße, unverändert. `kAd` ändert nur die Transparenzfarbe (`:514-516`) |
 | Emoticons, `PgInsertImageFromFile` | `PgNewUrlImageRef(…, 0, 0, …)` (`:166, :186`) → 0/0 | Dateigröße, unverändert |
 
@@ -92,7 +92,7 @@ zurück (`QCGraphics.cpp:135`), `MetafileFromImage` liefert dann `false`
   waren es 330 Druckerpunkte. Der Fehler bestand schon vorher, die Behebung
   verkleinert das Druckbild um den Faktor Angabe/Datei. **Ungemessen**, ob Paige
   die Zeile im Druck hochskaliert.
-* **Senden:** Seit [E-88](../BEFUNDE.md#e-88) geht das aufgehobene Original hinaus
+* **Senden:** Seit [E-88](../Intern/BEFUNDE.md#e-88) geht das aufgehobene Original hinaus
   (`msgutils.cpp:3111-3114`). In der Editorfassung kopiert `make_it_schmookie`
   einen vorhandenen cid-Teil Byte für Byte (`PgEmbeddedImage.cpp:1297-1330`), es
   geht also die **Originaldatei** hinaus. Nur wenn **kein Teil** existiert
@@ -198,7 +198,7 @@ Embed bekommt aber die **angegebene Breite**:
 * Bei http setzt `:584-594` `embed->width = source_width`, also die Angabe.
 
 Bei `width="600"` und einer Datei von 1200×400 ist die Zeile 600 breit, gemalt
-wird 1200×400. Das ist das E-112-Symptom, nur in der Breite. [E-89](../BEFUNDE.md#e-89) erzeugt diesen
+wird 1200×400. Das ist das E-112-Symptom, nur in der Breite. [E-89](../Intern/BEFUNDE.md#e-89) erzeugt diesen
 Fall beim Antworten absichtlich (`msgutils.cpp:3633-3645`, `:3739-3742`: nur
 `width`, „keine erfundene Höhe").
 
@@ -238,7 +238,7 @@ kommt: `digit &= 0x000F` auf jedes Zeichen.
 * `"35.5"` → 364, **3645**.
 
 `numeric_value` (Höhe) bricht dagegen richtig ab und liest 35. Im
-**Lesefenster** ([E-89](../BEFUNDE.md#e-89) normalisiert nur beim Verfassen) wird die Metadatei jetzt auf
+**Lesefenster** ([E-89](../Intern/BEFUNDE.md#e-89) normalisiert nur beim Verfassen) wird die Metadatei jetzt auf
 3508×35 gestreckt. Vorher war die Zeile 3508 breit und das Bild in Dateigröße.
 Beides ist falsch, neu ist das sichtbar verzerrte Band. **Ungemessen**, wie oft
 `px` im Attribut vorkommt; in `Testdaten/` kein Fall. `befund-suchen.pl
@@ -262,7 +262,7 @@ vorher ausgewertet.
   (`PGEMBED.C:3439-3453`). Embed und Bild stimmen überein ✔, wie im Browser.
 * **Prozentbreite mit Höhe** (`width="100%" height="50"`): `page_width × 50`,
   verzerrt, genau wie im Browser angegeben ✔. `height="50%"` wird von
-  `numeric_value` als 50 gelesen. Das bestand schon vorher und wird bei [E-89](../BEFUNDE.md#e-89)
+  `numeric_value` als 50 gelesen. Das bestand schon vorher und wird bei [E-89](../Intern/BEFUNDE.md#e-89)
   verworfen (`msgutils.cpp:3538-3542`).
 * **Überlauf auf short** (`width="40000"`): Der Wert wird negativ, und die Regel
   nimmt die Datei ✔.
@@ -305,7 +305,7 @@ vorher ausgewertet.
 **In Ordnung:** Kernweg vollständige Angabe; einziger Aufrufer; Vorgabe 0 =
 altes Verhalten; Vorbereiten mit genulltem Embed liefert Dateigröße; Werbeansicht
 und Emoticons unverändert; HALFTONE aufgezeichnet und wirksam, durch
-`RestoreDC` eingefasst; kein Leck; Senden schickt das Original ([E-88](../BEFUNDE.md#e-88) bzw.
+`RestoreDC` eingefasst; kein Leck; Senden schickt das Original ([E-88](../Intern/BEFUNDE.md#e-88) bzw.
 Byte-Kopie des cid-Teils); Zwischenablage und `make_new_part` liefern jetzt das
 ganze Bild statt eines Ausschnitts.
 

@@ -8,12 +8,12 @@ Zeilennummern beziehen sich auf diesen Stand.
 (eigenes Prüfprogramm im Scratchpad, `cl /MT`): `atoi("2147483648")` = 2147483647,
 `atoi(NULL)` bricht den Prozess mit `0xC0000409` ab. (b) Spurmarken der Messläufe in
 `C:\Temp\E118` gelesen (`E-118 Ziel …`, `E-121 Uebertragung …`): alle Kennungen dort liegen unter 2^31.
-**Nicht selbst gemessen:** Suite 209/209, die drei Prüfserverläufe aus [E-121](../BEFUNDE.md#e-121) —
+**Nicht selbst gemessen:** Suite 209/209, die drei Prüfserverläufe aus [E-121](../Intern/BEFUNDE.md#e-121) —
 übernommen aus Commit-Nachricht und Befund.
 `perl tools/befund-suchen.pl ImapActionQueue.cpp` / `GetSummaryFromUID` / `SetDeleteEmbedded`:
-alles gehört zu [E-121](../BEFUNDE.md#e-121); kein neuer Befund nötig, dort fortschreiben.
+alles gehört zu [E-121](../Intern/BEFUNDE.md#e-121); kein neuer Befund nötig, dort fortschreiben.
 
-**Urteil: auslieferbar, nein.** [E-121](../BEFUNDE.md#e-121) schließt den gemessenen Wettlauf, öffnet aber einen
+**Urteil: auslieferbar, nein.** [E-121](../Intern/BEFUNDE.md#e-121) schließt den gemessenen Wettlauf, öffnet aber einen
 neuen Verlustweg: die Quelle wird jetzt **über ihren Hash** wiedergefunden und entfernt
 (`EuImap/src/ImapActionQueue.cpp:2369`, `:2390-2395`). Der Hash ist lokal **nicht eindeutig** —
 alle Nachrichten aus `Out` haben den Hash 0 (`ImapToc.cpp:1391-1394`, Originalkommentar). Wer eine
@@ -60,7 +60,7 @@ geht sofort in den lokalen Papierkorb (`ImapToc.cpp:1018-1028`). In `DoPostProce
 `GetToc(Out)` + `GetSummaryFromUID(0)` die **älteste andere Nachricht in `Out`** — z. B. eine noch
 **nicht versandte**. Das Hochladen der Vorab-Kopie gelingt, `pQuelle` ist nicht `NULL`, also
 `RemoveSum` auf die fremde Nachricht. Sie ist weder auf dem Server noch lokal (der Rumpf bleibt nur
-bis zum Komprimieren in `Out.mbx`). Gregors „OUTBOX“-Fall aus [E-118](../BEFUNDE.md#e-118) (weitergeleitete Mails aus `Out` in
+bis zum Komprimieren in `Out.mbx`). Gregors „OUTBOX“-Fall aus [E-118](../Intern/BEFUNDE.md#e-118) (weitergeleitete Mails aus `Out` in
 einen IMAP-Ordner) ist genau dieser Weg.
 
 **Fall B — aus einem lokalen Ordner mit gesendeter Post:** die verschobene Nachricht M bleibt in der
@@ -96,7 +96,7 @@ den Hash wiederfinden (`tocdoc.cpp:1438`) — das ändert `actionqueue.dat`, als
 * T2: lokaler Ordner mit drei aus `Out` übertragenen Nachrichten; die jüngste nach IMAP verschieben.
   Soll: die jüngste weg, zwei bleiben. Erwartet: die älteste fehlt, die jüngste bleibt.
 * T3: Gegenrichtung zur Abhilfe: POP-Nachricht mit eindeutigem Hash — Quelle wird nach dem
-  Hochladen entfernt (der gemessene Fall 1 aus [E-121](../BEFUNDE.md#e-121) muss grün bleiben).
+  Hochladen entfernt (der gemessene Fall 1 aus [E-121](../Intern/BEFUNDE.md#e-121) muss grün bleiben).
 
 ### P2 — offenes Fenster der Quelle beim Entfernen (Gegenvermutung, nicht gemessen)
 
@@ -107,7 +107,7 @@ wieder öffnen. `DoPostProcessing` ruft `RemoveSum` ohne Blick auf `pQuelle->m_F
 (`ImapActionQueue.cpp:2390-2394`). `RemoveSum` schließt keine Fenster: `NukeMessageDocIfUnused` lässt
 ein angezeigtes Dokument stehen (`Eudora/summary.cpp:776-790`), der Destruktor setzt nur
 `Doc->m_Sum = NULL` (`summary.cpp:566-572`). Ein offenes Fenster mit `m_Sum == NULL` ist die Lage aus
-[E-28](../BEFUNDE.md#e-28). Abhilfe: Fenster offen → Quelle nicht entfernen (doppelt statt Absturz) oder wie
+[E-28](../Intern/BEFUNDE.md#e-28). Abhilfe: Fenster offen → Quelle nicht entfernen (doppelt statt Absturz) oder wie
 `:1039-1046` schließen. Die Vorschau ist versorgt (`tocdoc.cpp:1545-1553`).
 
 ### P3 — `SetDeleteEmbedded(FALSE)` überlebt keinen Neustart (Bildverlust, Gegenvermutung zum Weg)
@@ -117,7 +117,7 @@ ein angezeigtes Dokument stehen (`Eudora/summary.cpp:776-790`), der Destruktor s
 (`summary.cpp:537`), `m_DeleteEmbedded` wird weder gelesen noch geschrieben (`summary.cpp:2463ff.`,
 `:2542ff.` lesen/schreiben `m_Hash` usw., der Merker kommt in keiner anderen Zeile vor). Nach einem
 Neustart trägt die Vorab-Kopie aus der `.toc` wieder `TRUE`. Genau dann läuft der in
-[E-121](../BEFUNDE.md#e-121) beschriebene Fall: liegengebliebene Übertragung, nachgeholt aus `actionqueue.dat`, Abgleich
+[E-121](../Intern/BEFUNDE.md#e-121) beschriebene Fall: liegengebliebene Übertragung, nachgeholt aus `actionqueue.dat`, Abgleich
 vom Start. Verwirft der Abgleich die Kopie vorher, löscht `ImapRemoveAttachments` die geteilten
 Bilddateien (`ImapToc.cpp:4316-4324` → `DeleteEmbeddedObjects`, ohne Verzeichnisprüfung), und der
 Quellweg lädt ohne Bild hoch (`E-118 Bild: vorhanden=0`) — die Quelle wird danach entfernt; die Bilder
@@ -146,11 +146,11 @@ Diagnose ist abgeschlossen) oder `m_szMessageIDs ? strtoul(…) : 0`.
 * **Doppelt über mehrere Aufgaben:** möglich, wenn der Nutzer die (jetzt sichtbar gebliebene) Quelle
   vor dem Hochladen ein zweites Mal nach IMAP verschiebt, oder beim Nachholen aus `actionqueue.dat`
   nach einem Abbruch mitten in `DoPostProcessing`. Ergebnis jeweils doppelt auf dem Server, kein
-  Verlust. Nebenbefund (b) aus [E-121](../BEFUNDE.md#e-121) bleibt.
+  Verlust. Nebenbefund (b) aus [E-121](../Intern/BEFUNDE.md#e-121) bleibt.
 * **Die Aufgabe verlässt die Warteschlange schon bei der Übergabe an den Faden**
   (`ImapActionQueue.cpp:3629-3633`), und `FinishUp` beim Beenden ruft nur `DoPreThreadAction`
   (`:3690-3701`, aus `Eudora/mainfrm.cpp:5381`) — eine dort hängende Übertragung lädt nie hoch.
-  Vorher war die Quelle dann schon weg; jetzt bleibt sie. **Echte Verbesserung durch [E-121](../BEFUNDE.md#e-121).**
+  Vorher war die Quelle dann schon weg; jetzt bleibt sie. **Echte Verbesserung durch [E-121](../Intern/BEFUNDE.md#e-121).**
 * **Dauerhaftes Scheitern:** die Quelle bleibt liegen, die Aufgabe ist aus der Schlange
   (keine Wiederholung). Sichtbar: `IDS_ERR_IMAP_APPEND_FAILED` (`ImapToc.cpp:1365-1370`), außer bei
   Abbruch durch den Nutzer oder lokalem Fehler (z. B. Anhang nicht lesbar) — dann still, die Nachricht
@@ -197,7 +197,7 @@ Diagnose ist abgeschlossen) oder `m_szMessageIDs ? strtoul(…) : 0`.
 | CID-Hash | `Init` streift `<…>` ab und hasht (`mime.cpp:2101-2108`); Eudoras Anzeige hasht den Teil hinter `cid:` (`Convhtml.cpp:658-662`, `strnicmp`) — `E118Verweis` genauso, `E118Gleich` vergleicht ohne Groß/Klein (`ImapAppend.cpp:676-690`) | gleiche Zählweise wie die Anzeige. Was Eudora lokal anzeigen kann, findet auch das Hochladen |
 | Bild ohne passenden Verweis | `szKopf` leer → Teil ohne `Content-ID`, `inline` (`:1354-1355`, `:2043-2047`) | kein Verlust, Bild hängt als Teil an |
 | mehrere Bilder | je Zeile `AddTextBodyPart` (leer → nichts, `:1457-1468`) und ein Bildteil | richtig |
-| Text hinter den Bildern | Rest über `AddTextBodyPart(p, NULL)` (`:1380-1385`) | richtig, gemessen in [E-118](../BEFUNDE.md#e-118) (`FUSSZEILE-E118`) |
+| Text hinter den Bildern | Rest über `AddTextBodyPart(p, NULL)` (`:1380-1385`) | richtig, gemessen in [E-118](../Intern/BEFUNDE.md#e-118) (`FUSSZEILE-E118`) |
 | `m_bE118Related` je Nachricht | `CImapAppend` je Nachricht neu (`ImapMailbox.cpp:4189`, `:4428`) | kein Überhang |
 
 ### E1 — Zweig „Content-Location“ ist toter Code; der Test prüft eine Annahme, die nicht gilt

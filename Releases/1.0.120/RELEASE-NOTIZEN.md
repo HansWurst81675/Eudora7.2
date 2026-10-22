@@ -16,7 +16,7 @@
 | URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120 |
 | Anhang | `Eudora72-1.0.120-release.zip`, **9 381 870 Byte** |
 | SHA-256 | `26fde41437ae159659675f73cef9037a87aff755e3f71ca5a4bc084a3af6a6a1` — am Anhang auf GitHub gemessen (`gh release view v1.0.120 --json assets`), byte-gleich mit dem ZIP im Arbeitsbaum |
-| Enthält | **drei** Quellstände: 7.2.0.118 ([E-132](../../BEFUNDE.md#e-132), fehlgeschlagene Rückfrage), 7.2.0.119 ([E-134](../../BEFUNDE.md#e-134), Kurzname), 7.2.0.120 ([E-135](../../BEFUNDE.md#e-135), Vervollständigungsbox) |
+| Enthält | **drei** Quellstände: 7.2.0.118 ([E-132](../../Intern/BEFUNDE.md#e-132), fehlgeschlagene Rückfrage), 7.2.0.119 ([E-134](../../Intern/BEFUNDE.md#e-134), Kurzname), 7.2.0.120 ([E-135](../../Intern/BEFUNDE.md#e-135), Vervollständigungsbox) |
 | Freigabe | Gregor am 21.10.2026: *„ich habe ja schon alles getestet."* |
 | Geschnürt | 21.10.2026 um 14:14 nach `C:\Users\Gregor\Eudora72-1.0.120-release`; Einzelheiten in [Releases/PAKETE.md](../PAKETE.md), Abschnitt 1.0.120 |
 
@@ -78,7 +78,7 @@
 Die älteren Notizen tragen am Ende die Zeile *„Adressbuch, LDAP und S/MIME
 fehlen weiterhin."* **Sie ist falsch und wird hier nicht fortgeschrieben.**
 Das eigene Adressbuch ist in `Eudora.exe` übersetzt und arbeitet — in genau
-diesem Release sind zwei Fehler darin behoben ([E-134](../../BEFUNDE.md#e-134),
-[E-135](../../BEFUNDE.md#e-135)). Was aus [E-47](../../BEFUNDE.md#e-47) tatsächlich ausfällt, sind die
+diesem Release sind zwei Fehler darin behoben ([E-134](../../Intern/BEFUNDE.md#e-134),
+[E-135](../../Intern/BEFUNDE.md#e-135)). Was aus [E-47](../../Intern/BEFUNDE.md#e-47) tatsächlich ausfällt, sind die
 **Verzeichnisdienste**: LDAP, Ph, `EudoraBk` und S/MIME. Siehe
 [L-49.4](../../Befunde/LEKTOR-49.md#l-49.4).

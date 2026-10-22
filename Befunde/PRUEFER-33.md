@@ -1,8 +1,8 @@
 # PRÜFER-33 — 7.2.0.101 nachgerechnet
 
 Gegenstand: `git diff 01f4a2a8..04a33cca -- Eudora71/`, also Commit `04a33cca` (7.2.0.101) mit den
-Behebungen von [PRUEFER-32](PRUEFER-32.md) N1 und N2 zu [E-121](../BEFUNDE.md#e-121) und den Spurmarken
-zu [E-67](../BEFUNDE.md#e-67). Gelesen am Quelltext, nichts gebaut, nichts gestartet. Zeilen beziehen
+Behebungen von [PRUEFER-32](PRUEFER-32.md) N1 und N2 zu [E-121](../Intern/BEFUNDE.md#e-121) und den Spurmarken
+zu [E-67](../Intern/BEFUNDE.md#e-67). Gelesen am Quelltext, nichts gebaut, nichts gestartet. Zeilen beziehen
 sich auf `04a33cca`. Messdaten (nur gelesen): `C:\Temp\E118\Mailverzeichnis\eudora-{n101,r101,x101a,x101b}-1.log`,
 `eudora-e67b.log`, `eudora-e67rot.log` und `C:\Temp\E118\imap-*101*-1.log`.
 
@@ -35,7 +35,7 @@ mit lokaler Kennung liegen) ist geschlossen und gemessen. Die E-67-Spurmarken ve
 | Q3 Fenster der gescheiterten Vorab-Kopie wird ohne `CanCloseFrame` geschlossen | Absturz, sehr selten | Vermutung |
 | Q4 Beim **Kopieren** aus `Out` behält die Quelle dauerhaft die neue Kennung | keine Wirkung gefunden | belegt (alle Leser von `m_Hash` durchgesehen) |
 | Q5 Kommentare „Kennung 0 = `Out`“ und „verwirft der nächste Abgleich“ sind überholt (erweitert N3) | kosmetisch | belegt |
-| Q6 [E-67](../BEFUNDE.md#e-67): `verb-auswahl` ist der Wert vor `DDX_CBIndex`, nicht die Auswahl im Feld | kosmetisch | belegt |
+| Q6 [E-67](../Intern/BEFUNDE.md#e-67): `verb-auswahl` ist der Wert vor `DDX_CBIndex`, nicht die Auswahl im Feld | kosmetisch | belegt |
 | Q7 `TESTEN.txt` nennt die Protokollzeile nicht, an der Gregors Test erst etwas beweist | kosmetisch (Prüflücke) | belegt |
 | F2, F5, F6, F7 ([PRUEFER-31](PRUEFER-31.md)), N4 ([PRUEFER-32](PRUEFER-32.md)) | wie dort | **unverändert offen**; F2 wird für gesendete Post harmloser |
 
@@ -112,7 +112,7 @@ Leser von `GetHash()`, `SetHash(` und `m_Hash` in `Eudora/` und `EuImap/src/`:
   falsche Anzeige wie bei `In`, an GMX (UIDPLUS) nicht relevant.
 * **Bilderschutz `HatOffeneUebertragung`** (`ImapActionQueue.cpp:3920-3925`): Er gab bei Kennung 0
   immer `false`. Die Bilddateien einer Vorab-Kopie aus `Out` waren nach einem Neustart also nie
-  geschützt ([E-121](../BEFUNDE.md#e-121) PRUEFER-29 N3, [E-123](../BEFUNDE.md#e-123)). **Mit eigener Kennung greift der
+  geschützt ([E-121](../Intern/BEFUNDE.md#e-121) PRUEFER-29 N3, [E-123](../Intern/BEFUNDE.md#e-123)). **Mit eigener Kennung greift der
   Schutz jetzt auch hier.** Das ist eine Verbesserung, nicht beabsichtigt und nicht gemessen.
 
 **Wird die neue Kennung gespeichert?**
@@ -185,7 +185,7 @@ Mechanik, am Quelltext belegt:
    gesendete Post in anderen lokalen Ordnern.
 2. Ein Abgleich des Zielordners, der vor `DoPostProcessing` fertig wird, verwirft die Vorab-Kopie.
    Ihre Kennung steht nicht auf dem Server (`ImapRemoveListedTocs`, `ImapToc.cpp:1787-1860`). Das ist
-   der in [E-121](../BEFUNDE.md#e-121) gemessene Wettlauf mit dem Start-Abgleich.
+   der in [E-121](../Intern/BEFUNDE.md#e-121) gemessene Wettlauf mit dem Start-Abgleich.
 3. `DoPostProcessing` findet keine Vorab-Kopie. Es sucht die Quelle in `pSrcToc`, also im
    **Ursprungsordner** (`ImapActionQueue.cpp:2356`, `:2377-2404`), nicht im Papierkorb. Das ergibt
    `im-ziel=0 in-quelle=0 hochgeladen=0`.
@@ -203,7 +203,7 @@ Ordner ohne Papierkorb oder kein Treffer ändert nichts gegenüber heute.
 
 Gegenprobe: am Prüfstand nicht möglich (keine Post mit `IsComp()`, N4). Erste Wahl wäre ein
 vorübergehender Prüfschalter, der die Vorab-Kopie vor `DoPostProcessing` verwirft. So wurde Fall (2)
-in [E-121](../BEFUNDE.md#e-121) am 14.10. erzwungen. Dazu eine gesendete Mail, die von Hand in einen
+in [E-121](../Intern/BEFUNDE.md#e-121) am 14.10. erzwungen. Dazu eine gesendete Mail, die von Hand in einen
 lokalen Ordner gelegt wird. Erwartet: `im-ziel=0 … hochgeladen=1`, die Mail auf dem Server und im
 Papierkorb.
 

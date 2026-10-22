@@ -18,8 +18,8 @@ Befunde/BEENDEN.md, Befunde/PRUEFER-18.md, Befunde/SPURMARKEN.md, CHANGELOG.md,
 README.md, Releases/PAKETE.md, WEITERMACHEN.md, ZIEL.md, tools/TESTLAEUFE.md,
 tools/WERKZEUGE.md, tools/ZWEIGE.md, tools/pruefdaten/LIESMICH.md.
 Von Hand geprüft: alle ohne `Arbeitsweise/` (nach AGENTEN.md Schritt 7
-ausgenommen). Schwerpunkt [AN-1](../BEFUNDE.md#an-1)/B5. Dazu jede Datei aus `git ls-files '*.md'`
-nach den Stichworten [AN-1](../BEFUNDE.md#an-1), „zehn Marken“, `LogLevel`/`[Settings]` und B5.8/B5.9
+ausgenommen). Schwerpunkt [AN-1](../Intern/BEFUNDE.md#an-1)/B5. Dazu jede Datei aus `git ls-files '*.md'`
+nach den Stichworten [AN-1](../Intern/BEFUNDE.md#an-1), „zehn Marken“, `LogLevel`/`[Settings]` und B5.8/B5.9
 durchsucht.
 
 ## Der Maßstab, gemessen
@@ -38,7 +38,7 @@ durchsucht.
 | `[Mappings]` im Prüfverzeichnis | `Mailverzeichnis\Eudora.ini:48,64` | `both=pdf,,,application,pdf` ist da |
 | ANHANG-Marken im Quelltext | `grep -rn "ANHANG-Marke" Eudora71` | POP **1–8, 10, 11**; IMAP **1–9** (Marke 5 zweimal in `ImapDownload.cpp:3727, 4117`) — **elf Nummern** |
 | `perl tools/doku-pruefen.pl` | Lauf | „Kein Widerspruch gefunden“, 5 Hinweise (siehe unten) |
-| `perl tools/offene-befunde.pl` | Lauf | „16 / 16, Die Liste deckt die offenen Befunde“ — **ohne [AN-1](../BEFUNDE.md#an-1) und ohne [E-112](../BEFUNDE.md#e-112)** ([L-16.1](#l-16.1)) |
+| `perl tools/offene-befunde.pl` | Lauf | „16 / 16, Die Liste deckt die offenen Befunde“ — **ohne [AN-1](../Intern/BEFUNDE.md#an-1) und ohne [E-112](../Intern/BEFUNDE.md#e-112)** ([L-16.1](#l-16.1)) |
 | `perl tools/pruefe-ini-abschnitte.pl` | Lauf | „alle Angaben stimmen mit GetSectionID überein“ |
 
 **Die Zahlen im CHANGELOG 7.2.0.80** (Fall-Tabelle, 304 → 259 → 255 → 224,
@@ -58,13 +58,13 @@ README.md und LIESMICH.md gar nicht**.
 | | |
 |---|---|
 | **Behauptung** | `perl tools/offene-befunde.pl`: *„offen laut BEFUNDE.md 16 … Die Liste deckt die offenen Befunde.“* |
-| **Bestand** | (a) `tools/offene-befunde.pl:78` liest nur Zeilen `^\|\s*\**\s*(E-\d+)` — **[AN-1](../BEFUNDE.md#an-1)** (`BEFUNDE.md:177`, Status im Abschnitt „teilweise“, `:7863`) kann nie gezählt werden, auch kein NP-, PR-, X-… Eintrag, obwohl CLAUDE.md genau diese Nummernkreise aufzählt. (b) **[E-112](../BEFUNDE.md#e-112)** (`BEFUNDE.md:278`) steht als *„**WIEDER OFFEN. Der Versuch in 7.2.0.76 wirkt nicht — von Gregor … am laufenden Programm widerlegt …**“*; das Wort `widerlegt` steht in `@erledigt_wort` (`offene-befunde.pl:72`) und schlägt „offen“. [E-112](../BEFUNDE.md#e-112) fehlt deshalb in der erzeugten Liste in WEITERMACHEN.md, obwohl CHANGELOG.md:17 es als „Wieder offen“ führt |
+| **Bestand** | (a) `tools/offene-befunde.pl:78` liest nur Zeilen `^\|\s*\**\s*(E-\d+)` — **[AN-1](../Intern/BEFUNDE.md#an-1)** (`BEFUNDE.md:177`, Status im Abschnitt „teilweise“, `:7863`) kann nie gezählt werden, auch kein NP-, PR-, X-… Eintrag, obwohl CLAUDE.md genau diese Nummernkreise aufzählt. (b) **[E-112](../Intern/BEFUNDE.md#e-112)** (`BEFUNDE.md:278`) steht als *„**WIEDER OFFEN. Der Versuch in 7.2.0.76 wirkt nicht — von Gregor … am laufenden Programm widerlegt …**“*; das Wort `widerlegt` steht in `@erledigt_wort` (`offene-befunde.pl:72`) und schlägt „offen“. [E-112](../Intern/BEFUNDE.md#e-112) fehlt deshalb in der erzeugten Liste in WEITERMACHEN.md, obwohl CHANGELOG.md:17 es als „Wieder offen“ führt |
 | **Warum es zählt** | Das ist genau die Lage, gegen die CLAUDE.md Schritt 1 geschrieben ist: der Bestand nennt einen offenen Befund, das Werkzeug zu Sitzungsbeginn meldet ihn nicht. Schranke stumm = Fehlalarm in der Wirkung ([schranke-gegentesten.md](../Arbeitsweise/schranke-gegentesten.md)) |
-| **Vorschlag** | Kennungsmuster auf `[A-Z]+\d*-\d+` erweitern; „widerlegt“ nur werten, wenn es nicht neben „offen“ steht, oder „wieder offen“ vor `@erledigt_wort` prüfen. Gegentest: [E-112](../BEFUNDE.md#e-112) und [AN-1](../BEFUNDE.md#an-1) müssen erscheinen, [E-110](../BEFUNDE.md#e-110) nicht. Danach `-schreiben` |
+| **Vorschlag** | Kennungsmuster auf `[A-Z]+\d*-\d+` erweitern; „widerlegt“ nur werten, wenn es nicht neben „offen“ steht, oder „wieder offen“ vor `@erledigt_wort` prüfen. Gegentest: [E-112](../Intern/BEFUNDE.md#e-112) und [AN-1](../Intern/BEFUNDE.md#an-1) müssen erscheinen, [E-110](../Intern/BEFUNDE.md#e-110) nicht. Danach `-schreiben` |
 
 ### <a id="l-16.2"></a>L-16.2 — `BEFUNDE.md` AN-1: der Messstand vom 12.10. fehlt ganz, mehrere Stellen sagen „nicht übersetzt“
 
-`ca8da5a` hat BEFUNDE.md nicht angefasst. Der Abschnitt [AN-1](../BEFUNDE.md#an-1) kennt nur die
+`ca8da5a` hat BEFUNDE.md nicht angefasst. Der Abschnitt [AN-1](../Intern/BEFUNDE.md#an-1) kennt nur die
 Messung an **7.2.0.77** (IMAP, keine Anhänge). Die Messung an **7.2.0.79**
 (POP, sechs Prüfnachrichten, 4 von 6 heil), Ursache **B5.8** (Kappung von
 hinten in `strncpy`/`DeMacifyName32`) und Befund **B5.9** (`MIMEMap::Find`
@@ -78,7 +78,7 @@ scheitert überall) stehen nur in AUFGABEN.md und CHANGELOG.md.
 | BEFUNDE.md:8146 | *„Behebung: ein `Token[0] = 0;` … **Nicht angefasst** — kein Compiler.“* | steht im Code: `lex822.cpp:205`, `ImapLex822.cpp:220` | als Altstand kennzeichnen: „seit 7.2.0.79 drin (B5.2)“ |
 | BEFUNDE.md:8260 | DeMacifyName32: *„**Nicht angefasst**, weil hier nicht gebaut werden kann.“* | geändert (B5.4), seit 7.2.0.80 zusätzlich mit `AnhangNameKuerzen` (`mime.cpp:985`, `imapmime.cpp:119`) | ebenso |
 | BEFUNDE.md:8270 | *„Stand \| **im Quelltext seit 7.2.0.79.** Nicht übersetzt“* | übersetzt und gemessen: 01/02 heil | „übersetzt, am laufenden Programm wirksam (Fall 01, 02)“ |
-| BEFUNDE.md:8307-8326 | „Was noch offen ist“ nennt 2 (Marke vergrößern), 3 (RFC 2231), 4 (`Token[0]`), 5 (DeMacifyName32) als offen | alle vier sind B5.3, B5.5, B5.2, B5.4 — erledigt. Offen sind [B5.7](../AUFGABEN.md#b5.7), B5.9, und der Bau von 7.2.0.80 | Abschnitt ersetzen oder als „Stand 30.09.“ markieren |
+| BEFUNDE.md:8307-8326 | „Was noch offen ist“ nennt 2 (Marke vergrößern), 3 (RFC 2231), 4 (`Token[0]`), 5 (DeMacifyName32) als offen | alle vier sind B5.3, B5.5, B5.2, B5.4 — erledigt. Offen sind [B5.7](../Intern/AUFGABEN.md#b5.7), B5.9, und der Bau von 7.2.0.80 | Abschnitt ersetzen oder als „Stand 30.09.“ markieren |
 | BEFUNDE.md:8340-8353 | *„daran hängen **zehn Marken**“*, Tabelle mit **acht** Zeilen, *„Marken 1 bis 3 gibt es doppelt, einmal für IMAP“* | elf Nummern; IMAP hat 1–9; 9 (IMAP), 10 (RFC 2231, `header.cpp:601`), 11 (`MIMEMap.cpp:73`) fehlen in der Tabelle | Tabelle um 9, 10, 11 ergänzen, IMAP-Satz berichtigen |
 | BEFUNDE.md:8402-8405 | Entscheidungstabelle „00 heil, 01–05 kaputt / alle sechs heil / 00 kaputt“ | gemessen ist ein vierter Fall: **gemischt** (4 heil, 2 ohne Endung) | Zeile „gemischt → die Liste der kaputten Fälle zeigt auf den Teil“ ergänzen, oder auf das Ergebnis verweisen |
 | BEFUNDE.md:8449 | *„Nichts davon ist am laufenden Programm nachgesehen. Es gibt keinen Bau.“* | falsch seit 12.10. | streichen bzw. „bis 12.10.“ |
@@ -123,14 +123,14 @@ Textankern statt Zeilennummern; die Doku könnte es auch.
 | Datei:Zeile | Zitat | Bestand | Vorschlag |
 |---|---|---|---|
 | AUFGABEN.md:466-468 | *„**Es ist nichts mit MSVC gebaut.** Alle drei Sitzungen dazu liefen ohne Windows und ohne Compiler.“* | widerspricht dem Kasten 452-460 drei Zeilen darüber (*„Rebuild 0 Fehler“*) | streichen oder „bis 7.2.0.78“ |
-| AUFGABEN.md:471 | *„Sechs getrennte Ursachen“* | Tabelle 489 heißt „sieben Teile“, der Kasten nennt B5.8 und B5.9 | Zahl vereinheitlichen (B5.1–B5.9, davon [B5.0](../AUFGABEN.md#b5.0) Marken) |
-| AUFGABEN.md:489-500 | „Stand der **sieben** Teile“ — Tabelle endet bei [B5.7](../AUFGABEN.md#b5.7) | **B5.8** und **B5.9** gibt es nur im Kasten; sonst kommen sie in keiner MD vor (`grep B5.[89]` → nur AUFGABEN.md:456, :459) | zwei Zeilen: B5.8 „strncpy 259 / DeMacifyName32 255 kappen von hinten — geändert in 7.2.0.80 (`AnhangNameKuerzen`), nicht übersetzt“; B5.9 „`MIMEMap::Find` scheitert bei allen sechs, Ursache offen, Marke 11“ |
-| AUFGABEN.md:493 | [B5.0](../AUFGABEN.md#b5.0): *„zehn Stellen … IMAP 4–9 und Marke 10 sind **nicht übersetzt**“* | elf Marken; 7.2.0.79 ist übersetzt; im POP-Lauf geschrieben haben 2, 3, 4, 5, 6, 7 (Marke 8 nicht, IMAP-Marken konnten nicht) | „elf Marken; POP 2–7 an 7.2.0.79 gemessen, Marke 11 neu in 7.2.0.80, IMAP 4–9 übersetzt, aber ohne IMAP-Abruf ungemessen“ |
+| AUFGABEN.md:471 | *„Sechs getrennte Ursachen“* | Tabelle 489 heißt „sieben Teile“, der Kasten nennt B5.8 und B5.9 | Zahl vereinheitlichen (B5.1–B5.9, davon [B5.0](../Intern/AUFGABEN.md#b5.0) Marken) |
+| AUFGABEN.md:489-500 | „Stand der **sieben** Teile“ — Tabelle endet bei [B5.7](../Intern/AUFGABEN.md#b5.7) | **B5.8** und **B5.9** gibt es nur im Kasten; sonst kommen sie in keiner MD vor (`grep B5.[89]` → nur AUFGABEN.md:456, :459) | zwei Zeilen: B5.8 „strncpy 259 / DeMacifyName32 255 kappen von hinten — geändert in 7.2.0.80 (`AnhangNameKuerzen`), nicht übersetzt“; B5.9 „`MIMEMap::Find` scheitert bei allen sechs, Ursache offen, Marke 11“ |
+| AUFGABEN.md:493 | [B5.0](../Intern/AUFGABEN.md#b5.0): *„zehn Stellen … IMAP 4–9 und Marke 10 sind **nicht übersetzt**“* | elf Marken; 7.2.0.79 ist übersetzt; im POP-Lauf geschrieben haben 2, 3, 4, 5, 6, 7 (Marke 8 nicht, IMAP-Marken konnten nicht) | „elf Marken; POP 2–7 an 7.2.0.79 gemessen, Marke 11 neu in 7.2.0.80, IMAP 4–9 übersetzt, aber ohne IMAP-Abruf ungemessen“ |
 | AUFGABEN.md:496 | B5.3 **behoben** | Kopfzeile trägt 304 Zeichen (gemessen), die Datei hatte trotzdem keine Endung — erst B5.8 macht B5.3 für den Anwender wirksam | Zusatz „Kopfzeile ja; Dateiname erst mit B5.8“ |
 | AUFGABEN.md:454 | *„B5.1, B5.2 und B5.5 wirken“* | CHANGELOG:87 sagt zusätzlich „B5.3 wirkt“ | B5.3 mit Einschränkung ergänzen |
-| AUFGABEN.md:519-521 | *„… genau aus wie die drei Übersetzungsfehler, die am 12.10.2026 ungeklärt blieben“* | 7.2.0.79: Rebuild, 0 Fehler. Die drei Fehler sind in keiner anderen MD beschrieben | sagen, was aus ihnen wurde (behoben? anderer Bau?), sonst ist die Begründung für „[B5.7](../AUFGABEN.md#b5.7) offen“ nicht mehr nachvollziehbar |
+| AUFGABEN.md:519-521 | *„… genau aus wie die drei Übersetzungsfehler, die am 12.10.2026 ungeklärt blieben“* | 7.2.0.79: Rebuild, 0 Fehler. Die drei Fehler sind in keiner anderen MD beschrieben | sagen, was aus ihnen wurde (behoben? anderer Bau?), sonst ist die Begründung für „[B5.7](../Intern/AUFGABEN.md#b5.7) offen“ nicht mehr nachvollziehbar |
 | AUFGABEN.md:539-540 | *„**Nicht gemessen:** nichts davon ist mit MSVC gebaut, nichts ist gestartet.“* | gebaut und gestartet (TESTLAEUFE.md:84-85) | berichtigen |
-| AUFGABEN.md:543-553 | „Der nächste Schritt an einem Windows-Rechner“, 1. bauen … 4. grep | Schritte 1–4 sind für 7.2.0.79 erledigt; offen sind Bau von 7.2.0.80 und Schritt 5 (Test in `TestPopEmpfang.cpp`; dort steht noch nichts zu [AN-1](../BEFUNDE.md#an-1)/`AnhangNameKuerzen`) | als „für 7.2.0.80 wiederholen“ umschreiben |
+| AUFGABEN.md:543-553 | „Der nächste Schritt an einem Windows-Rechner“, 1. bauen … 4. grep | Schritte 1–4 sind für 7.2.0.79 erledigt; offen sind Bau von 7.2.0.80 und Schritt 5 (Test in `TestPopEmpfang.cpp`; dort steht noch nichts zu [AN-1](../Intern/BEFUNDE.md#an-1)/`AnhangNameKuerzen`) | als „für 7.2.0.80 wiederholen“ umschreiben |
 | AUFGABEN.md:555-559 | *„Spalte `stand` … gewollt, solange niemand bestätigt hat, dass die Behebung am laufenden Programm wirkt“* | für B5.1 und B5.2 ist das seit dem 12.10. am Programm gemessen (Fälle 01, 02, 05: kein `=`) | entscheiden und vermerken; die Bedingung ist zumindest technisch erfüllt (Gregors Bestätigung fehlt noch) |
 | AUFGABEN.md:576 | *„Zehn Marken auf dem Weg des Namens“* | elf; dass `MIMEMap::Find` scheitert (Marke 11), fehlt in der Aufzählung | „Elf“ und Marke 11 nennen |
 | AUFGABEN.md:607-611 | Tabelle *„alle sechs heil → B5.1 bis B5.6 wirken“* | (a) gemessen ist „gemischt“, keine Zeile passt; (b) **B5.6 ist nur IMAP** (AUFGABEN.md:499), der Prüfstand ist POP — B5.6 lässt sich damit gar nicht zeigen, B5.4 auch nicht (nur Pufferrand) | „alle sechs heil → B5.1, B5.2, B5.3+B5.8, B5.5 wirken auf POP“; Zeile „gemischt“ ergänzen |
@@ -143,7 +143,7 @@ Textankern statt Zeilennummern; die Doku könnte es auch.
 | CHANGELOG.md:104 | Überschrift *„7.2.0.79 — … **nicht übersetzt**“* | CHANGELOG.md:72 (drei Zeilen weiter oben): *„7.2.0.79 ist am 12.10.2026 zum ersten Mal übersetzt und am laufenden Programm gemessen worden“* | „… übersetzt und gemessen am 12.10.2026, 4 von 6 heil“ |
 | CHANGELOG.md:106-108 | *„**Hier ist nichts gebaut und nichts gestartet.**“* | wie oben | als Stand beim Commit kennzeichnen („beim Einspielen war …“) oder streichen |
 | CHANGELOG.md:125 | *„**Zehn Debug-Marken**“* | mit 7.2.0.79 war das richtig (1–10). Im 7.2.0.80-Abschnitt heißt die neue „Marke 11“, eine Gesamtzahl nennt er nicht | im 7.2.0.80-Abschnitt „jetzt elf Marken“ |
-| CHANGELOG.md:16 | [AN-1](../BEFUNDE.md#an-1) in „Noch offen“: *„**Sechs von sieben Ursachen geändert in 7.2.0.79 — nichts davon ist übersetzt oder am laufenden Programm bestätigt.** … Offen ist [B5.7](../AUFGABEN.md#b5.7) … und der Bau“* | gebaut und gemessen; offen sind [B5.7](../AUFGABEN.md#b5.7), **B5.9** und der Bau von 7.2.0.80 | Zeile auf den Stand von :72-102 bringen |
+| CHANGELOG.md:16 | [AN-1](../Intern/BEFUNDE.md#an-1) in „Noch offen“: *„**Sechs von sieben Ursachen geändert in 7.2.0.79 — nichts davon ist übersetzt oder am laufenden Programm bestätigt.** … Offen ist [B5.7](../Intern/AUFGABEN.md#b5.7) … und der Bau“* | gebaut und gemessen; offen sind [B5.7](../Intern/AUFGABEN.md#b5.7), **B5.9** und der Bau von 7.2.0.80 | Zeile auf den Stand von :72-102 bringen |
 | CHANGELOG.md:70 | Überschrift 7.2.0.80 „**in Arbeit**“ | der Commit `ca8da5a` sagt *„ZWISCHENSTAND: noch nicht übersetzt, Tests nicht gelaufen“* — der Abschnitt selbst sagt das nicht | einen Satz „7.2.0.80 ist nicht übersetzt, Tests nicht gelaufen“ hinzufügen. Sonst liest man „Behoben in 7.2.0.80“ (:92) als gemessen |
 | CHANGELOG.md:88-90 | *„dann kappten drei Stellen **von hinten**: `strncpy` auf 259 …, `DeMacifyName32` auf 255, und der Pfad auf 224. `CheckName` hätte die Endung behalten“* | die dritte Kürzung (Pfad → 224) **ist** `CheckName` (`mime.cpp:1163`, „truncate while maintaining the correct extension“). Sie kappt nicht stumpf von hinten. Die Commit-Nachricht nennt als dritte Stelle `LOCAL_DeMacifyName32` (IMAP), die im POP-Lauf gar nicht vorkommt | „zwei Stellen kappten von hinten (259, 255); danach kürzte `CheckName` den Pfad auf 224 Zeichen Basisname — die Endung war da schon weg“ |
 | CHANGELOG.md:96-99 | *„**ANHANG-Marke 11** in `MIMEMap::Find` nennt jetzt jeden Ausstieg“* | `MIMEMap.cpp:77-78`: der Ausstieg `if (!ms \|\| !ms->m_hd) return (FALSE);` ist **stumm**. Ein Kommentar im Code (`:76`) spricht von „drei Ausstiegen“, und drei sind markiert | „jeden Ausstieg außer dem Nullzeiger-Fall“, oder auch dort eine Zeile schreiben (Sache des PRUEFERs) |
@@ -172,8 +172,8 @@ Textankern statt Zeilennummern; die Doku könnte es auch.
 
 | Datei:Zeile | Zitat | Bestand | Vorschlag |
 |---|---|---|---|
-| WEITERMACHEN.md:106-114 | *„**Stand 12.10.2026.** … Er will `git apply` fahren … **[B5.0](../AUFGABEN.md#b5.0) bis B5.5** … Zwei Patches liegen bereit und sind **nicht angewandt**.“* | Patches sind entfernt und eingespielt (AUFGABEN.md:462-464, CHANGELOG.md:113-114); `git ls-files '*.patch'` zeigt nur `tools/patches/zertifikatspruefung-verschaerfen.patch`; 7.2.0.79 gemessen | Punkt 1 ersetzen: „7.2.0.80 bauen (Rebuild), Prüfdaten erneut über `--pop`, Marke 11 lesen (B5.9)“ |
-| WEITERMACHEN.md:138-142 | *„**Was heute fertig wurde:** [E-110](../BEFUNDE.md#e-110) behoben … 171 → **185** Tests“* | das war der 18.09.2026 (CHANGELOG.md:233); am 12.10. wurde [AN-1](../BEFUNDE.md#an-1) eingespielt, gebaut, gemessen | „Was am 18.09. fertig wurde“ oder durch den 12.10. ersetzen |
+| WEITERMACHEN.md:106-114 | *„**Stand 12.10.2026.** … Er will `git apply` fahren … **[B5.0](../Intern/AUFGABEN.md#b5.0) bis B5.5** … Zwei Patches liegen bereit und sind **nicht angewandt**.“* | Patches sind entfernt und eingespielt (AUFGABEN.md:462-464, CHANGELOG.md:113-114); `git ls-files '*.patch'` zeigt nur `tools/patches/zertifikatspruefung-verschaerfen.patch`; 7.2.0.79 gemessen | Punkt 1 ersetzen: „7.2.0.80 bauen (Rebuild), Prüfdaten erneut über `--pop`, Marke 11 lesen (B5.9)“ |
+| WEITERMACHEN.md:138-142 | *„**Was heute fertig wurde:** [E-110](../Intern/BEFUNDE.md#e-110) behoben … 171 → **185** Tests“* | das war der 18.09.2026 (CHANGELOG.md:233); am 12.10. wurde [AN-1](../Intern/BEFUNDE.md#an-1) eingespielt, gebaut, gemessen | „Was am 18.09. fertig wurde“ oder durch den 12.10. ersetzen |
 | WEITERMACHEN.md:10 | Zeile **Paketnummer** 1.0.80 trägt die ganze AN-1-Messung | in der Sache richtig (deckt sich mit dem Log). Ein Paket 1.0.80 gibt es nicht (PAKETE.md:162). In der Zeile „Paketnummer“ fehlt genau dieser Hinweis | „1.0.80 — vergeben, **nicht gebaut**“ voranstellen, Messung in eine eigene Zeile |
 | WEITERMACHEN.md:27 | „Zuletzt gebaut und veröffentlicht: 7.2.0.72“ | zuletzt **veröffentlicht** stimmt (`v1.0.72`); zuletzt **gebaut** ist 7.2.0.79 (12.10.) | trennen |
 
@@ -191,7 +191,7 @@ Textankern statt Zeilennummern; die Doku könnte es auch.
 |---|---|---|---|
 | ZIEL.md:17 | *„seitdem ist nichts gebaut … **Quellstand ist jetzt 7.2.0.79** … **aber nicht übersetzt** … Der letzte wirklich **gebaute** Stand ist **7.2.0.76**“* | Quellstand 7.2.0.80; gebaut wurden am 12.10. 7.2.0.77, 7.2.0.78 (Gregor) und 7.2.0.79 (`C:\Temp\AN1`) | nachziehen. `doku-pruefen.pl` meldet ZIEL.md schon als Hinweis (höchste Fassung 7.2.0.79) |
 | README.md:149-151 | *„**Sechs davon sind in 7.2.0.79 geändert, aber nicht übersetzt** und von Gregor nicht geprüft“* | übersetzt und gemessen, 4 von 6 heil | nachziehen |
-| README.md:372-390 | LogLevel-Tabelle endet bei 32768; Beleg *„`debug.h:15-32`“* | `DEBUG_MASK_ATTACH = 0x10000` (65536, „ANHANG“) steht in `debug.h:44`, die Tabelle kennt ihn nicht; die Masken stehen heute in `debug.h:14-44` | Zeile „65536 \| Anhangnamen (ANHANG, [AN-1](../BEFUNDE.md#an-1)) \| aus“ und Beleg nachziehen |
+| README.md:372-390 | LogLevel-Tabelle endet bei 32768; Beleg *„`debug.h:15-32`“* | `DEBUG_MASK_ATTACH = 0x10000` (65536, „ANHANG“) steht in `debug.h:44`, die Tabelle kennt ihn nicht; die Masken stehen heute in `debug.h:14-44` | Zeile „65536 \| Anhangnamen (ANHANG, [AN-1](../Intern/BEFUNDE.md#an-1)) \| aus“ und Beleg nachziehen |
 
 ### Kleinere Funde
 
@@ -208,7 +208,7 @@ Textankern statt Zeilennummern; die Doku könnte es auch.
 * **Befunde/BEENDEN.md:473**: berichtigt auf `[Debug]`. Gegengeprüft mit
   `pruefe-ini-abschnitte.pl`, das grün ist. Keine Fundstelle mit `LogLevel`
   unter `[Settings]` mehr in den MDs.
-* **Befunde/PRUEFER-18.md**: neu, Stand 18.09.2026, betrifft [E-110](../BEFUNDE.md#e-110). Ich habe
+* **Befunde/PRUEFER-18.md**: neu, Stand 18.09.2026, betrifft [E-110](../Intern/BEFUNDE.md#e-110). Ich habe
   es nicht gegen den Code nachgerechnet (außerhalb des Schwerpunkts).
 * **tools/WERKZEUGE.md:61-63**: Einträge zu `kopfzeile-pruefen.pl`,
   `rfc2231-pruefen.pl` und `anhang-pruefdaten.pl` passen zu den Dateien. Die
@@ -247,8 +247,8 @@ verzeichnet (hier `7.2.0.79`, :84-85), darf in keiner MD als „nicht
 
 Der neue Messstand (CHANGELOG 7.2.0.80, AUFGABEN-Kasten :452-460,
 WEITERMACHEN:10) ist richtig und deckt sich mit dem Log in `C:\Temp\AN1`.
-Er ist aber **nur an der Spitze** angekommen. BEFUNDE.md [AN-1](../BEFUNDE.md#an-1), PAKETE.md 1.0.79,
+Er ist aber **nur an der Spitze** angekommen. BEFUNDE.md [AN-1](../Intern/BEFUNDE.md#an-1), PAKETE.md 1.0.79,
 LIESMICH.md, ZIEL.md, README.md, CHANGELOG.md 7.2.0.79 sowie der Rest von
 AUFGABEN B5 sagen weiter „nicht übersetzt“, „zehn Marken“ und „sieben Teile“.
 B5.8 und B5.9 stehen nur in einem Kasten. Am schwersten wiegt **[L-16.1](#l-16.1)**:
-`offene-befunde.pl` meldet zu Sitzungsbeginn weder [AN-1](../BEFUNDE.md#an-1) noch [E-112](../BEFUNDE.md#e-112).
+`offene-befunde.pl` meldet zu Sitzungsbeginn weder [AN-1](../Intern/BEFUNDE.md#an-1) noch [E-112](../Intern/BEFUNDE.md#e-112).

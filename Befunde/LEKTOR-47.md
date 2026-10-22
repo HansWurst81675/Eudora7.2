@@ -117,7 +117,7 @@ drei Male angeschlagen.
 **Berichtigt.** Der Block nennt jetzt fünf Punkte in der Reihenfolge, die
 wirklich ansteht: **1.** Paket 1.0.119 schnüren und bereitstellen, dann die
 vier Stellen nachziehen, die *„noch nicht geschnürt"* sagen; **2.** Gregors
-Test an [C9](../TESTPLAN.md#c9) und [C8](../TESTPLAN.md#c8); **3.** kein
+Test an [C9](../Intern/TESTPLAN.md#c9) und [C8](../Intern/TESTPLAN.md#c8); **3.** kein
 Release ohne sein Ja; **4.** die beiden Handgriffe nach einem künftigen
 `gh release create`; **5.** Issue #102 als erledigt, mit den drei offenen
 Fragen aus [L-44.8](LEKTOR-44.md#l-44.8).
@@ -172,7 +172,7 @@ ist, und auf `v1.0.117` als veröffentlichten Stand.
 `ZIEL.md:50`: *„Quellstand ist jetzt 7.2.0.114 / Paket 1.0.114, noch nicht
 geschnürt und nicht veröffentlicht (Zweig `e-132-fremdes-mailverzeichnis`);
 veröffentlicht ist 7.2.0.113 / Paket 1.0.113"*. Der Commit hat in dieselbe
-Datei eine neue Maßstabszeile zu [E-134](../BEFUNDE.md#e-134) eingetragen und
+Datei eine neue Maßstabszeile zu [E-134](../Intern/BEFUNDE.md#e-134) eingetragen und
 diesen Satz zwanzig Zeilen tiefer nicht angefasst. **Berichtigt** auf 7.2.0.119
 / 1.0.119 (übersetzt, nicht geschnürt) und `v1.0.117` als veröffentlichten
 Stand.
@@ -212,8 +212,8 @@ Rückstrich statt eines Gedankenstrichs. **Berichtigt** auf eine Nennung.
 
 ### <a id="l-47.11"></a>L-47.11 — *„Zwei Schritte, beide neu"* — einer ist es nicht (niedrig)
 
-`TESTPLAN.md:4`. [C9](../TESTPLAN.md#c9) ist neu in 1.0.119,
-[C8](../TESTPLAN.md#c8) steht seit 1.0.117 im Plan und ist von Gregor **nie
+`TESTPLAN.md:4`. [C9](../Intern/TESTPLAN.md#c9) ist neu in 1.0.119,
+[C8](../Intern/TESTPLAN.md#c8) steht seit 1.0.117 im Plan und ist von Gregor **nie
 gefahren** worden. *„Neu"* lädt dazu ein, C8 für schon erledigt zu halten.
 **Berichtigt** auf *„beide offen"*, mit einem Satz, welcher seit wann.
 
@@ -229,10 +229,10 @@ Zusatz ergänzt, den die Nachbarabsätze dort führen.
 
 ## <a id="l-47.13"></a>L-47.13 — die vier Fragen des Auftrags, Punkt für Punkt
 
-**Stimmen die gemessenen Zahlen in [E-134](../BEFUNDE.md#e-134), CHANGELOG und PAKETE überein?
+**Stimmen die gemessenen Zahlen in [E-134](../Intern/BEFUNDE.md#e-134), CHANGELOG und PAKETE überein?
 Ja, alle.** Nachgezählt, nicht abgeschrieben:
 
-| Angabe | `BEFUNDE.md` [E-134](../BEFUNDE.md#e-134) | `CHANGELOG.md` 7.2.0.119 | `Releases/PAKETE.md` 1.0.119 | sonst |
+| Angabe | `BEFUNDE.md` [E-134](../Intern/BEFUNDE.md#e-134) | `CHANGELOG.md` 7.2.0.119 | `Releases/PAKETE.md` 1.0.119 | sonst |
 |---|---|---|---|---|
 | **3 × `alias hans`** gegen **3 × `alias Untitled`** an **1.0.118** | ja | ja (als Tabelle) | ja | `AUFGABEN.md`, `PORTIERUNG.md` |
 | **243 Tests, 243 bestanden** | ja | ja | ja | `AUFGABEN.md`, `tools/ZWEIGE.md`, `TESTPLAN.md` (nach [L-47.7](#l-47.7)), Commit `14786286` |
@@ -245,7 +245,7 @@ Ja, alle.** Nachgezählt, nicht abgeschrieben:
 beiden Lücken stehen da, wo sie hingehören:
 
 * **Warum `SelectItem()` `TVIS_SELECTED` nicht mehr setzt** — *„nicht gemessen"*
-  steht in `BEFUNDE.md` ([E-134](../BEFUNDE.md#e-134), eigener Fettsatz *„Nicht gemessen und weiterhin
+  steht in `BEFUNDE.md` ([E-134](../Intern/BEFUNDE.md#e-134), eigener Fettsatz *„Nicht gemessen und weiterhin
   offen"*), in `CHANGELOG.md` (*„ist nicht gemessen; naheliegend ist die
   Fassung der Common Controls oder der MFC"*) und in `Releases/PAKETE.md`
   (Zeile *Offen*). Dreimal, mit derselben Vermutung, und dreimal mit dem
@@ -261,7 +261,7 @@ beiden Lücken stehen da, wo sie hingehören:
   ([Extrakt ist nicht das Programm](../Arbeitsweise/extrakt-ist-nicht-das-programm.md)).
 
 **Ist die frühere Fehleinstufung sauber zurückgenommen? Ja, und zwar
-ausdrücklich.** `BEFUNDE.md` [E-134](../BEFUNDE.md#e-134) schreibt: *„Die Einordnung
+ausdrücklich.** `BEFUNDE.md` [E-134](../Intern/BEFUNDE.md#e-134) schreibt: *„Die Einordnung
 ‚Originalverhalten', die hier zuerst stand, war falsch; belegt war nur,
 dass die `//FORNOW`-Kommentare original sind — eine Aussage über den Kommentar,
 nicht über das Verhalten."* Der Unterschied Quelltext/Verhalten steht gleich
@@ -271,7 +271,7 @@ viermal: `BEFUNDE.md` (*„Also: Quelltext original, Verhalten verändert"*, mit
 Verhalten nicht."*), `PORTIERUNG.md` und `Releases/PAKETE.md`. **Rest der alten
 Fassung gesucht und nicht gefunden:** `grep -rn 'Originalverhalten'` über alle
 MDs trifft im Umfeld Adressbuch/Nickname/Kurzname **nur** den Satz, der sie
-zurücknimmt. Der andere Treffer gehört zu [E-133](../BEFUNDE.md#e-133), wo
+zurücknimmt. Der andere Treffer gehört zu [E-133](../Intern/BEFUNDE.md#e-133), wo
 *„Originalverhalten"* richtig ist — dort ist der **Startweg** unverändert.
 
 **Ist C9 für Gregor ohne Rückfrage ausführbar? Ja.** Gegen den Quelltext
@@ -283,7 +283,7 @@ gehalten, nicht gegen ein Dokument:
 | Knopf **New** | `EudoraRes.rc:2586`, `PUSHBUTTON "&New",IDC_NICKNAME_LEFT_NEW` |
 | Feld *Nickname* | `EudoraRes.rc:1702`, `LTEXT "&Nickname:",IDC_LBL_NICKNAME_CALLIT` |
 | Datei `NNdbase.txt` | `nickview.cpp:1266`, *„Eudora Nicknames address book is called NNdbase.txt"* |
-| Erwartung *Baum zeigt `hans`*, auf der Platte `alias hans` | deckt sich mit der Messung in [E-134](../BEFUNDE.md#e-134) |
+| Erwartung *Baum zeigt `hans`*, auf der Platte `alias hans` | deckt sich mit der Messung in [E-134](../Intern/BEFUNDE.md#e-134) |
 
 Vier nummerierte Handgriffe, eine Minute, kein Netz nötig, und mit der
 Gegenprobe in `NNdbase.txt` eine Prüfgröße, die er selbst nachsehen kann. Dazu
@@ -294,7 +294,7 @@ Regression fangen würde. **Nicht beanstandet, aber angemerkt:** die Tastenfolge
 
 **`tools/ZWEIGE.md` — vollständig und in der Form der Nachbarn? Ja.** Die Zeile
 führt Name, Datum, Gregors wörtliche Zustimmung (*„e-134-adressbuch-auswahl ist
-ok, behebe beides"*), den Zweck mit Verweis auf [E-134](../BEFUNDE.md#e-134),
+ok, behebe beides"*), den Zweck mit Verweis auf [E-134](../Intern/BEFUNDE.md#e-134),
 die Ursache in zwei Sätzen, beide behobenen Stellen und den Quellstand — genau
 der Satzbau der Nachbarzeilen `e-132-rueckfrage-fehlschlag` und
 `e-132-startwege-und-merker`. Der Verweis zeigt mit `../BEFUNDE.md#e-134`
@@ -312,11 +312,11 @@ Byte kein BOM.
 ## Tragen die Papiere zu 1.0.119?
 
 **JA — nach diesen zwölf Berichtigungen.** Der Befund selbst ist die beste
-Arbeit in diesem Durchgang: [E-134](../BEFUNDE.md#e-134) nennt Symptom,
+Arbeit in diesem Durchgang: [E-134](../Intern/BEFUNDE.md#e-134) nennt Symptom,
 Ursache, Messung, Gegenprobe, die zurückgenommene Fehleinstufung und die
 verbleibende Lücke, und `CHANGELOG`, `PAKETE`, `PORTIERUNG`, `ZIEL`,
 `AUFGABEN`, `ZWEIGE` und `TESTPLAN` sagen dasselbe in denselben Zahlen. **Keine
-einzige Zahl zu [E-134](../BEFUNDE.md#e-134) war falsch.**
+einzige Zahl zu [E-134](../Intern/BEFUNDE.md#e-134) war falsch.**
 
 **Alle zwölf Funde sitzen in der Buchführung ringsum** — in den Sätzen, die
 sagen, welche Fassung draußen ist und welche bei Gregor liegt. Zehn davon
@@ -332,7 +332,7 @@ mitgezogen.
    `PORTIERUNG.md`. Das steht als Punkt 1 im Block *HIER WEITERMACHEN*.
 2. **Gregors Urteil abwarten** ([Release erst nach Gregors
    Test](../Arbeitsweise/release-erst-nach-gregors-test.md)). Offen sind bei ihm
-   [C9](../TESTPLAN.md#c9) **und** [C8](../TESTPLAN.md#c8); C8 liegt seit
+   [C9](../Intern/TESTPLAN.md#c9) **und** [C8](../Intern/TESTPLAN.md#c8); C8 liegt seit
    1.0.117 ungefahren da, und 1.0.117 ist trotzdem veröffentlicht worden.
 
 **Die Schranke, die dreimal gefehlt hat.** [L-44.11](LEKTOR-44.md#l-44.11)
@@ -354,7 +354,7 @@ schweren. Solange sie fehlt, findet diese Klasse nur, wer von Hand nachsieht.
 geändert**, `tools/RELEASES.md` ausdrücklich **nicht** ([L-47.9](#l-47.9): die
 Spalte dort ist Ortszeit und in sich stimmig), `Releases/ISSUE-102-ANTWORT.md`
 unverändert (abgeschickt), `BEFUNDE.md` und `CHANGELOG.md` unverändert — an
-[E-134](../BEFUNDE.md#e-134) war nichts zu berichtigen.
+[E-134](../Intern/BEFUNDE.md#e-134) war nichts zu berichtigen.
 
 Nach jedem Schreibzugriff gemessen: **CRLF 0**, reine LF, UTF-8 ohne BOM.
 `perl tools/commit-bereit.pl`: **33 Schranken, keine weist ab.**

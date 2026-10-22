@@ -143,7 +143,7 @@ um 10:36 nachgesehen:**
 |---|---|---|
 | `README.md` | 415 | „**Taugt nicht als Freigabekriterium** — es prüft die Maschine statt das Paket und warnt bei einem Release-Paket viermal falsch ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3)" |
 | `ZIEL.md` | 91, 99 | „**`tools/paket-pruefen.ps1` ist NICHT dieser Nachweis.**" … „Bis das behoben ist ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3), ist es kein Freigabekriterium." |
-| `AUFGABEN.md` | 174 | „### C1 · `paket-pruefen.ps1` ist unbrauchbar als Freigabekriterium (**[PR-2](../BEFUNDE.md#pr-2)**)" |
+| `AUFGABEN.md` | 174 | „### C1 · `paket-pruefen.ps1` ist unbrauchbar als Freigabekriterium (**[PR-2](../Intern/BEFUNDE.md#pr-2)**)" |
 | `PORTIERUNG.md` | 500-501 | „`tools/paket-pruefen.ps1` taugt dafür weiter nicht ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3) und ist deshalb **kein** Freigabekriterium." |
 | `STARTUMGEBUNG.md` | 169-170 | „**Kein Freigabekriterium** — es prüft die Maschine mit, nicht nur das Paket ([PR-2.0](PAKET.md#pr-2.0) bis PR-2.3)." |
 | `Releases/PAKETE.md` | 221 | „**taugt nicht als Freigabekriterium**, siehe [PR-2.0](PAKET.md#pr-2.0)" |
@@ -232,7 +232,7 @@ weiter als **offen**.
 7.2.0.20 (`:220`) und 7.2.0.18 (`:297`). Wer die Datei von oben liest — und das
 ist ihr Zweck, „Neueste Fassung zuerst" (`:3`) —, hält 1.0.18 für den Stand.
 
-Die drei Punkte darunter (`:47-67`) stecken alle in 1.0.19 bis 1.0.21: [E-32](../BEFUNDE.md#e-32)
+Die drei Punkte darunter (`:47-67`) stecken alle in 1.0.19 bis 1.0.21: [E-32](../Intern/BEFUNDE.md#e-32)
 (siehe [W-5](#w-5)), `tools/doku-pruefen.pl` und der Doku-Durchgang L-7.
 
 **Vorschlag:** Abschnitt `:40-69` **streichen**, einschließlich des Trenners.
@@ -318,10 +318,10 @@ Gleichlautend `Befunde/PRUEFER-3.md:9`, `:15` und `:126`.
 
 | Datei | Zeile | Zitat |
 |---|---|---|
-| `BEFUNDE.md` | 176 | „[E-32](../BEFUNDE.md#e-32) … **behoben, ungeprüft** (07.09.2026, `060a4bf`): `CHeaderView::OnKillFocusRecipient` dereferenzierte `pField` ungeprüft" |
-| `WEITERMACHEN.md` | 57 | „**[E-32](../BEFUNDE.md#e-32) ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war die modale Meldung …" |
-| `CHANGELOG.md` | 47-56 | „**[E-32](../BEFUNDE.md#e-32) behoben — die modale Meldung „An unhandled exception has occurred" beim Verfassen.** … **Von Gregor nicht nachgemessen**" |
-| `AUFGABEN.md` | 74-75 | „Gemessen, aber von Gregor **noch nicht** nachgesehen: **[E-31](../BEFUNDE.md#e-31)** und **[E-32](../BEFUNDE.md#e-32)**." |
+| `BEFUNDE.md` | 176 | „[E-32](../Intern/BEFUNDE.md#e-32) … **behoben, ungeprüft** (07.09.2026, `060a4bf`): `CHeaderView::OnKillFocusRecipient` dereferenzierte `pField` ungeprüft" |
+| `WEITERMACHEN.md` | 57 | „**[E-32](../Intern/BEFUNDE.md#e-32) ist am 07.09.2026 behoben, aber von niemandem nachgemessen.** Das war die modale Meldung …" |
+| `CHANGELOG.md` | 47-56 | „**[E-32](../Intern/BEFUNDE.md#e-32) behoben — die modale Meldung „An unhandled exception has occurred" beim Verfassen.** … **Von Gregor nicht nachgemessen**" |
+| `AUFGABEN.md` | 74-75 | „Gemessen, aber von Gregor **noch nicht** nachgesehen: **[E-31](../Intern/BEFUNDE.md#e-31)** und **[E-32](../Intern/BEFUNDE.md#e-32)**." |
 
 `AUFGABEN.md:58-60` sagt es 16 Zeilen darüber richtig — *„Meine
 E-32-Ursachenbehauptung ist von PRUEFER widerlegt"* —, `:74-75` widerspricht
@@ -331,7 +331,7 @@ dem in derselben Datei. In `BEFUNDE.md` ist „ungeprüft" außerdem definiert
 
 Der Unterschied ist nicht kosmetisch. Wer „behoben, ungeprüft" liest, hält die
 modale Meldung für weg. Gemessen ist nur der **Code-Mangel** an `pField` weg;
-was die Meldung wirklich war, hat erst **[E-34](../BEFUNDE.md#e-34)** aufgeklärt.
+was die Meldung wirklich war, hat erst **[E-34](../Intern/BEFUNDE.md#e-34)** aufgeklärt.
 
 **Vorschlag `BEFUNDE.md:176`:**
 
@@ -364,7 +364,7 @@ widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 ```
 
 `CHANGELOG.md:47-56` entfällt mit [W-3](#w-3). Die zweite Stelle dort,
-`CHANGELOG.md:351-359` („Nachtrag 07.09.2026: [E-32](../BEFUNDE.md#e-32) ist behoben … **Von Gregor
+`CHANGELOG.md:351-359` („Nachtrag 07.09.2026: [E-32](../Intern/BEFUNDE.md#e-32) ist behoben … **Von Gregor
 nicht nachgemessen.**"), steht im Abschnitt **7.2.0.18** und ist als Nachtrag
 zu einem Zeitdokument vertretbar — sie sollte aber auf den Abschnitt 7.2.0.20
 verweisen, sonst liest sie sich wie der letzte Stand.
@@ -531,8 +531,8 @@ Sie stehen ausführlich in `CHANGELOG.md:142-187` und `:226-259`, in
 > `> **Auflage: wer einen Befund fortschreibt, ändert die Statusspalte hier mit.**`
 > `> Ein Verzeichnis, das falsche Stände behauptet, ist schlimmer als keines`
 
-Dieselbe Lücke wurde am 07.09.2026 schon einmal geschlossen (`:36`: *„**[E-31](../BEFUNDE.md#e-31)**,
-**[E-32](../BEFUNDE.md#e-32)** und **[E-33](../BEFUNDE.md#e-33)** fehlten ganz und sind eingetragen"*) — drei Kennungen
+Dieselbe Lücke wurde am 07.09.2026 schon einmal geschlossen (`:36`: *„**[E-31](../Intern/BEFUNDE.md#e-31)**,
+**[E-32](../Intern/BEFUNDE.md#e-32)** und **[E-33](../Intern/BEFUNDE.md#e-33)** fehlten ganz und sind eingetragen"*) — drei Kennungen
 später ist sie wieder da. Das ist eine **Fehlerklasse**, keine Nachlässigkeit:
 Kennungen entstehen im `CHANGELOG`, und niemand trägt sie zurück. Die Schranke
 dazu steht in [W-21](#w-21), Vorschlag 4.
@@ -553,11 +553,11 @@ dazu steht in [W-21](#w-21), Vorschlag 4.
 
 > `| E-27 | **Strg-N beendet Eudora lautlos** — ohne Dialog, ohne Protokoll | **Ursache des Schweigens belegt, der Absturz selbst nicht**: … Beste offene Spur: `Paige32.dll`/`EuMemMgr.dll` gegen `MSVCR71` — zwei getrennte Halden (`Befunde/VERFASSER.md`) |`
 
-**Was stattdessen gilt.** Die Ursache ist gefunden und behoben: **[E-31](../BEFUNDE.md#e-31)**,
+**Was stattdessen gilt.** Die Ursache ist gefunden und behoben: **[E-31](../Intern/BEFUNDE.md#e-31)**,
 `pg_time_t` acht Byte statt vier (`ZIEL.md:33`, `CHANGELOG.md:297-330`,
 `WEITERMACHEN.md:39-50`). Strg-N stürzt nicht mehr ab, fünfmal an 7.2.0.21
 nachgemessen. Die als „beste offene Spur" empfohlene Richtung ist genau die,
-die [E-31](../BEFUNDE.md#e-31) abgelöst hat — wer dem Verzeichnis folgt, läuft in eine
+die [E-31](../Intern/BEFUNDE.md#e-31) abgelöst hat — wer dem Verzeichnis folgt, läuft in eine
 Sackgasse, die schon durchsucht ist.
 
 **Vorschlag `BEFUNDE.md:171`:**
@@ -575,15 +575,15 @@ Sackgasse, die schon durchsucht ist.
 > `| E-16 | Absturz beim Verfassen (Strg-N) und „Encountered an improper argument", `afxcoll.inl:213` | **offen** — sechs Stellen in `Befunde/VERFASSEN.md` gehärtet, die Ursache ist damit **nicht** gefunden |`
 
 Dagegen `README.md:81-82`, `CHANGELOG.md:614-615` und `WEITERMACHEN.md:83-84`,
-je *„([E-16](../BEFUNDE.md#e-16), behoben)"*. Die Ursache, die [E-16](../BEFUNDE.md#e-16) nicht fand, ist inzwischen
-**[E-34](../BEFUNDE.md#e-34)** — `CHANGELOG.md:244-248`:
+je *„([E-16](../Intern/BEFUNDE.md#e-16), behoben)"*. Die Ursache, die [E-16](../Intern/BEFUNDE.md#e-16) nicht fand, ist inzwischen
+**[E-34](../Intern/BEFUNDE.md#e-34)** — `CHANGELOG.md:244-248`:
 
 > `Der Index liegt **innerhalb** der von `GetBtnCount()` gemeldeten Zahl — die`
 > `Schranke aus E-16 greift also, und `m_btns[24]` wirft trotzdem.`
 
 Diesen Widerspruch hat PRUEFER am 07.09.2026 schon gemeldet
-(`Befunde/PRUEFER-3.md:265-268`: *„[E-7](../BEFUNDE.md#e-7), [E-11](../BEFUNDE.md#e-11), [E-14](../BEFUNDE.md#e-14) und [E-16](../BEFUNDE.md#e-16) stehen in
-`BEFUNDE.md` gleichzeitig als behoben und als offen"*). Für [E-16](../BEFUNDE.md#e-16) steht er noch.
+(`Befunde/PRUEFER-3.md:265-268`: *„[E-7](../Intern/BEFUNDE.md#e-7), [E-11](../Intern/BEFUNDE.md#e-11), [E-14](../Intern/BEFUNDE.md#e-14) und [E-16](../Intern/BEFUNDE.md#e-16) stehen in
+`BEFUNDE.md` gleichzeitig als behoben und als offen"*). Für [E-16](../Intern/BEFUNDE.md#e-16) steht er noch.
 
 **Vorschlag `BEFUNDE.md:164`:**
 
@@ -777,7 +777,7 @@ Stand HEAD: 4f27a38
   PORTIERUNG.md      abgeglichen bis 060a4bf, seither 36 Commit(s)  <== faellig
 ```
 
-`060a4bf` ist der Commit *„[E-32](../BEFUNDE.md#e-32) behoben"*; in den 36 Commits danach liegen
+`060a4bf` ist der Commit *„[E-32](../Intern/BEFUNDE.md#e-32) behoben"*; in den 36 Commits danach liegen
 7.2.0.19, 7.2.0.20 und 7.2.0.21. Alle drei Dateien sind seither mehrfach
 geändert worden, ohne die Marke mitzuziehen — obwohl der Kommentar direkt
 darunter das verlangt (`README.md:4-6`, `BEFUNDE.md:4-6`, `PORTIERUNG.md:4-6`):
@@ -794,7 +794,7 @@ eine alte Marke.
 
 ```
 49  Was offen ist, steht vollständig in [CHANGELOG.md](../CHANGELOG.md); was als
-50  Nächstes zu tun ist, in [AUFGABEN.md](../AUFGABEN.md). **Die Prüfanleitung zum
+50  Nächstes zu tun ist, in [AUFGABEN.md](../Intern/AUFGABEN.md). **Die Prüfanleitung zum
 51  jeweils aktuellen Paket** steht im CHANGELOG beim zugehörigen Eintrag, nicht
 52  hier.
 53
@@ -919,7 +919,7 @@ Befunde/PAKET.md
 **In diesen 16 Dateien selbst habe ich fast keinen Widerspruch gefunden** — sie
 sind sauber. Die Lücke ist im Verfahren, und sie erklärt drei der schwersten
 Befunde oben: `Befunde/PAKET.md` ([PR-2.0](PAKET.md#pr-2.0) behoben → [W-2](#w-2)),
-`Befunde/VERFASSER.md` ([E-27](../BEFUNDE.md#e-27) → [W-9](#w-9)) und `Befunde/FENSTER.md` ([E-22](../BEFUNDE.md#e-22) → [W-11](#w-11)) sind
+`Befunde/VERFASSER.md` ([E-27](../Intern/BEFUNDE.md#e-27) → [W-9](#w-9)) und `Befunde/FENSTER.md` ([E-22](../Intern/BEFUNDE.md#e-22) → [W-11](#w-11)) sind
 in keinem Lektorat aufgeschlagen worden, und genau ihre Ergebnisse fehlen in den
 Dateien, die sagen, was jetzt gilt. `Befunde/PAKET.md:193-209` hat die
 Fundstellen sogar aufgeschrieben, damit sie niemand suchen muss.
@@ -950,7 +950,7 @@ tools/befunde-einsammeln.pl
 ```
 
 Die ersten vier sind nicht harmlos: `pruefe-fensterbau.pl` ist die Schranke, mit
-der [E-35](../BEFUNDE.md#e-35) und [E-36](../BEFUNDE.md#e-36) gefunden wurden (`CHANGELOG.md:162`, `:189-205`);
+der [E-35](../Intern/BEFUNDE.md#e-35) und [E-36](../Intern/BEFUNDE.md#e-36) gefunden wurden (`CHANGELOG.md:162`, `:189-205`);
 `strg-n-pruefen.ps1` ist das Werkzeug, auf das `CHANGELOG.md:581` verweist, um
 Kriterium 5 ohne Zuschauer zu messen; `arbeitsbaum-frei.pl` und
 `befunde-einsammeln.pl` sind das Verfahren aus `AGENTEN.md:37`, `:97-98`, `:118`.
@@ -960,7 +960,7 @@ Kriterium 5 ohne Zuschauer zu messen; `arbeitsbaum-frei.pl` und
 ```
 | `tools/pruefe-fensterbau.pl` | `pre-commit`-Schranke für den Fensterbau: keine modale Meldung in `Eudora71/OTShim/*.cpp` (E-33), `GetButton` hat Indexschranke **und** Ausnahmefang (E-34), jeder `GetButton`-Aufruf prüft sein Ergebnis auf NULL. Prüft alle `Eudora71/Eudora/*.cpp` — eine feste Dateiliste hatte genau die Lücke, in der E-36 lag. **Wer sie anfasst, lässt die drei Gegenproben laufen** |
 | `tools/strg-n-pruefen.ps1` | startet Eudora, klickt Meldungen weg, schickt Strg-N und sagt, ob das Verfassen-Fenster aufgeht. **Öffnet ein Fenster** — nicht ohne Absprache laufen lassen (Auflage 1) |
-| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Branchwechsel vernichten würde. Verfahren in [AGENTEN.md](../AGENTEN.md) |
+| `tools/arbeitsbaum-frei.pl` | bucht einen Arbeitsbaum auf einen Agenten (`--neu`, `--freigeben`) und nennt namentlich, welche unverfolgten Dateien ein Branchwechsel vernichten würde. Verfahren in [AGENTEN.md](../Intern/AGENTEN.md) |
 | `tools/befunde-einsammeln.pl` | führt die Befunddateien aus `Befunde/` in `BEFUNDE.md` zusammen (`--anhaengen`) und nennt die nächste freie Kennung (`--naechste E`) |
 ```
 
@@ -990,7 +990,7 @@ Handlungsbedarf, Rest **offen**"*.
 
 `Releases/PAKETE.md:249-251` nennt genau diesen Satz *„längst überholt — seither
 sind 1.0.4 bis 1.0.10 gebaut und benutzt worden"*, und `:241` hält fest, dass
-Gregor die erste Fassung gestartet hat (Absturz im Kontoassistenten, [E-6](../BEFUNDE.md#e-6)). Der
+Gregor die erste Fassung gestartet hat (Absturz im Kontoassistenten, [E-6](../Intern/BEFUNDE.md#e-6)). Der
 Zusatz „das nächste Paket heißt 1.0.4" ist siebzehn Nummern alt.
 
 **Vorschlag:**
@@ -1042,7 +1042,7 @@ Verfassen-Weg, die den Speicher beschädigt. Ich habe sie nicht."*
 
 Für ihren Tag ist beides richtig. Wer nur eine dieser Dateien öffnet — und
 `BEFUNDE.md:171` bzw. `:166` verweisen genau dorthin —, erfährt nicht, dass die
-Ursache inzwischen [E-31](../BEFUNDE.md#e-31) bzw. [E-28](../BEFUNDE.md#e-28) heißt.
+Ursache inzwischen [E-31](../Intern/BEFUNDE.md#e-31) bzw. [E-28](../Intern/BEFUNDE.md#e-28) heißt.
 
 **Vorschlag** — je ein Kasten unter die Kopfzeile, nach dem Muster, das
 `Eudora71/OTShim/BEFUND-ANSICHT.md:6-10` schon benutzt. Für
@@ -1058,7 +1058,7 @@ Ursache inzwischen [E-31](../BEFUNDE.md#e-31) bzw. [E-28](../BEFUNDE.md#e-28) he
 > `MSVCR71`) ist damit überholt.
 ```
 
-Für `Befunde/FENSTER.md` entsprechend mit **[E-28](../BEFUNDE.md#e-28)** (`CSummary::m_FrameWnd`).
+Für `Befunde/FENSTER.md` entsprechend mit **[E-28](../Intern/BEFUNDE.md#e-28)** (`CSummary::m_FrameWnd`).
 
 ---
 
@@ -1105,7 +1105,7 @@ hier nennt ihren Bezugscommit; wer sie weiterverwendet, misst nach."*
 > Statusbericht**. Was jetzt gilt, steht in [ZIEL.md](../ZIEL.md) (der Maßstab),
 > [README.md](../README.md) (Bauen und Starten) und [CHANGELOG.md](../CHANGELOG.md)
 > (was in welchem Paket steckt); wo man weitermacht, in
-> [WEITERMACHEN.md](../WEITERMACHEN.md). Ältere Abschnitte hier gelten für ihren
+> [WEITERMACHEN.md](../Intern/WEITERMACHEN.md). Ältere Abschnitte hier gelten für ihren
 > Bezugscommit, nicht für heute.
 ```
 

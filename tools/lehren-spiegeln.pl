@@ -70,7 +70,7 @@ exit 0 unless $wurzel && -d $wurzel;
 # Zwei Folgen, beide gemessen:
 #
 #   1. Der pre-commit-Hook hat aus wt/lektor Dateien im Hauptbaum geaendert -
-#      genau die Kollision, gegen die es AGENTEN.md und die Lehre
+#      genau die Kollision, gegen die es Intern/AGENTEN.md und die Lehre
 #      agenten-trennen-worktrees.md gibt.
 #   2. Er brach danach ab mit "Bitte mit committen: git add Arbeitsweise" -
 #      im Arbeitsbaum, wo sich nichts geaendert hatte. Der Commit war damit

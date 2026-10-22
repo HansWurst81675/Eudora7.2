@@ -1,7 +1,7 @@
 # PRÜFER-30 — E-121 Teile 4 bis 6 (7.2.0.94–7.2.0.96) nachgerechnet
 
 Gegenstand: `git diff a550a7d9..9840ee35 -- Eudora71/`, also die Teile 4 bis 6 von
-[E-121](../BEFUNDE.md#e-121): `ImapMergeTmpMbx` ersetzt einen Eintrag mit derselben UID
+[E-121](../Intern/BEFUNDE.md#e-121): `ImapMergeTmpMbx` ersetzt einen Eintrag mit derselben UID
 (7.2.0.94), Vorab-Kopie an Ort und Stelle aktualisieren (7.2.0.95), Merkzeichen
 `CSummary::m_bE121Vorab` mit Suche `E121FindeVorabKopie` (7.2.0.96). Gelesen am Quelltext,
 nichts gebaut, nichts gestartet. Zeilen beziehen sich auf den Stand `9840ee35`.
@@ -84,7 +84,7 @@ Damit beantwortet: **eine Use-after-free-Lage über `ImapMergeTmpMbx` gibt es ni
 doch, prüfte er das Merkzeichen nicht (`GetSummaryFromUID`, `:3702`) und entfernte auch eine
 Vorab-Kopie; `DoPostProcessing` hält aber keinen Zeiger über Durchläufe hinweg, sondern sucht je
 Kennung neu (`ImapActionQueue.cpp:2365`) und fiele auf die Quelle zurück. In
-[BEFUNDE.md#e-121](../BEFUNDE.md#e-121) steht beim vierten Teil „Aufruf aus `ImapThread.cpp:209`“ als
+[BEFUNDE.md#e-121](../Intern/BEFUNDE.md#e-121) steht beim vierten Teil „Aufruf aus `ImapThread.cpp:209`“ als
 Ursache des Doppels — das ist so nicht haltbar und sollte berichtigt werden; der Code kann als
 toter Code stehen bleiben oder ausgebaut werden. Der wirkliche Abgleichsweg ist
 `CImapMailbox::ImapAppendSumList` (`ImapMailbox.cpp:4961`, siehe F7).
@@ -131,7 +131,7 @@ Teil 5 selbst ist davon unberührt richtig: an Ort und Stelle aktualisieren brau
 ## F5 — Merkzeichen geht beim Neustart verloren — falsche Anzeige, Vermutung
 
 `m_bE121Vorab` steht nur im Speicher (`summary.h:474`, nicht in `Read`/`Write`, `summary.cpp:2464`/`:2543` lesen und schreiben `m_Hash`, kein Merkzeichen). Bleibt eine Übertragung über einen Neustart in der
-Warteschlange (`actionqueue.dat`; [E-121](../BEFUNDE.md#e-121) Nebenbefund (a): das kommt vor), hat die geladene
+Warteschlange (`actionqueue.dat`; [E-121](../Intern/BEFUNDE.md#e-121) Nebenbefund (a): das kommt vor), hat die geladene
 Vorab-Kopie kein Merkzeichen. `E121FindeVorabKopie` findet sie nicht; bei eindeutiger Quelle wird
 aus der Quelle hochgeladen (`ImapActionQueue.cpp:2394-2397`) und im Ziel eine **neue**
 Zusammenfassung angelegt (`ImapToc.cpp:1412`, `:1427`, `:1436`). Die alte Vorab-Kopie mit lokaler
@@ -149,7 +149,7 @@ Kennung. Bearbeitet der Nutzer sie in dieser Zeit im IMAP-Ordner — löschen, a
 in einen anderen IMAP-Ordner verschieben —, geht der Befehl an den Server mit dieser Kennung als UID.
 Fällt sie mit einer fremden Server-UID zusammen (Gregor an 1.0.95: Kennung 13), trifft das die
 **fremde** Mail: löschen und bereinigen hieße fremde Mail weg. Das Zeitfenster ist die Wartezeit
-der Warteschlange, die bis zum nächsten Start reichen kann ([E-121](../BEFUNDE.md#e-121) Nebenbefund (a)).
+der Warteschlange, die bis zum nächsten Start reichen kann ([E-121](../Intern/BEFUNDE.md#e-121) Nebenbefund (a)).
 Nicht neu in 7.2.0.94–96 (so seit QUALCOMM), aber erst jetzt ist die Kollision belegt. Den Weg
 „Löschen einer IMAP-Zusammenfassung → STORE/EXPUNGE“ habe ich nicht durchgerechnet. Vorschlag:
 das Merkzeichen nutzen, um Server-Befehle für markierte Einträge zu sperren (oder die Vorab-Kopie
@@ -213,7 +213,7 @@ anschließende Abgleich die `.toc` ohnehin schreibt, ist nicht nachgerechnet. Vo
 * **B4 — zwei Mails mit gleicher Kennung ≠ 0, dieselbe Mail zweimal verschoben.** Jeder Durchlauf
   nimmt den ersten markierten Eintrag, der Zweig mit UID löscht dessen Merkzeichen (`:1446`), der
   nächste Durchlauf nimmt den nächsten — keine fremde Mail. Zweimal verschoben heißt zweimal
-  hochgeladen (bekannt, [E-121](../BEFUNDE.md#e-121) Nebenbefund (b)), kein Verlust. Die Quelle wird bei doppelter Kennung
+  hochgeladen (bekannt, [E-121](../Intern/BEFUNDE.md#e-121) Nebenbefund (b)), kein Verlust. Die Quelle wird bei doppelter Kennung
   nicht entfernt (`ImapActionQueue.cpp:2385-2386`). PRUEFER-29 N1 bleibt unverändert offen.
 * **B5 — Listenansicht nach der Aktualisierung an Ort und Stelle.** Die Zeile behält denselben
   Zeiger; geändert werden nur `m_Offset`, `m_Length`, `m_Hash` und das Merkzeichen. Angezeigt wird

@@ -28,8 +28,8 @@ Kommentare, die das Gegenteil behaupten**. Nichts davon behoben — Punkt 3.
 
 | Schranke | bewacht | Gegenproben | fängt den echten Fehler |
 |---|---|---|---|
-| `tools/pruefe-fenster-ziehen.pl` | **[E-76](../BEFUNDE.md#e-76)** — `CalcDynamicLayout` darf beim COMMIT nicht aus `nLength` rechnen | **14** (9 melden, 5 still) | ja: die echten Dateien aus `c060648^` |
-| `tools/pruefe-leistengroessen-paar.pl` | **[E-84](../BEFUNDE.md#e-84)** (und rückwirkend **[E-70](../BEFUNDE.md#e-70)**) — `GroessenSichern` und `GroessenLaden` bleiben paarig | **17** (14 melden, 3 still) | ja: die echten Dateien aus `643a634^` |
+| `tools/pruefe-fenster-ziehen.pl` | **[E-76](../Intern/BEFUNDE.md#e-76)** — `CalcDynamicLayout` darf beim COMMIT nicht aus `nLength` rechnen | **14** (9 melden, 5 still) | ja: die echten Dateien aus `c060648^` |
+| `tools/pruefe-leistengroessen-paar.pl` | **[E-84](../Intern/BEFUNDE.md#e-84)** (und rückwirkend **[E-70](../Intern/BEFUNDE.md#e-70)**) — `GroessenSichern` und `GroessenLaden` bleiben paarig | **17** (14 melden, 3 still) | ja: die echten Dateien aus `643a634^` |
 
 Beide melden bei Fehlschlag **was fehlt, warum es zählt und was zu tun ist**.
 Beide lesen nur Code; Kommentare werden weggeworfen, weil die Begründung
@@ -63,7 +63,7 @@ die **Absicht** prüft und nicht eine Formulierung abnickt.
 
 ### `pruefe-leistengroessen-paar.pl` — E-84
 
-[E-70](../BEFUNDE.md#e-70) und [E-84](../BEFUNDE.md#e-84) sind **zweimal dieselbe Fehlerklasse**: ein Schlüssel, den nur
+[E-70](../Intern/BEFUNDE.md#e-70) und [E-84](../Intern/BEFUNDE.md#e-84) sind **zweimal dieselbe Fehlerklasse**: ein Schlüssel, den nur
 eine Seite kennt. Einmal fehlte das Lesen (der Aufruf stand in
 `SECToolBarManager::LoadState`, über der der eigene Kommentar *„Eudora ruft
 diese Fassung nie auf"* steht), einmal das Schreiben (der erste Anlauf saß in
@@ -79,13 +79,13 @@ Die Schranke hält deshalb sieben Dinge fest:
 3. jeder Schlüssel wird auch wirklich geschrieben bzw. gelesen. Einen Namen zu
    bilden und nichts damit zu tun, rutschte sonst durch die Paarigkeit durch;
 4. `m_szFloat` kommt auf **beiden** Seiten vor. Ohne diese Prüfung ließe sich
-   [E-84](../BEFUNDE.md#e-84) wieder aufreißen, indem man die Float-Schlüssel auf beiden Seiten
+   [E-84](../Intern/BEFUNDE.md#e-84) wieder aufreißen, indem man die Float-Schlüssel auf beiden Seiten
    entfernt — paarig und trotzdem falsch. Der Testfall dafür liefert exakt
    dieselben zwei Mängel wie der echte Stand `643a634^`;
 5. der **lebende Weg** hängt: `QCToolBarManager::SaveState` →
    `SECToolBarManager::SaveState` → `GroessenSichern`, und
    `QCToolBarManager::LoadState` → `GroessenLaden`. Der Testfall „der Aufruf
-   verschwindet aus dem lebenden Weg" **ist** [E-70](../BEFUNDE.md#e-70);
+   verschwindet aus dem lebenden Weg" **ist** [E-70](../Intern/BEFUNDE.md#e-70);
 6. der INI-**Abschnitt** wird an allen Stellen aus derselben Formatangabe
    gebildet (siehe Punkt 4);
 7. in `SECControlBarInfo::SaveState` und `::LoadState` steht **kein**
@@ -152,7 +152,7 @@ nachgegriffen; die Aufrufzahlen unten sind gemessen über
   `SECToolBarManager::LoadState`. Die Funktion ist als **Kategorie C**
   markiert (4341) und wird nie erreicht; die lebende Behebung steht in
   `QCToolBarManager.cpp:1199`. **Kein Funktionsverlust** — aber es ist genau
-  die Stelle, an der der erste Anlauf zu [E-70](../BEFUNDE.md#e-70) ins Leere lief, und die tote
+  die Stelle, an der der erste Anlauf zu [E-70](../Intern/BEFUNDE.md#e-70) ins Leere lief, und die tote
   Kopie steht noch da.
 * `OTShim_Werkzeugleiste.cpp:3895` `EnableLargeBtns` — einziger Aufrufer ist
   Zeile 4360, also innerhalb der toten `LoadState`. Ehrlich als Kategorie C
@@ -209,12 +209,12 @@ Codeänderung und gehört nicht in diesen Lauf.
 
 ## 5. Die Spurmarke zu E-76 steht noch drin, und die Übersicht sagt das Falsche
 
-`OTShim.cpp:2032` sagt über sich selbst: *„SIE GEHÖRT WIEDER RAUS, sobald [E-76](../BEFUNDE.md#e-76)
-verstanden ist."* [E-76](../BEFUNDE.md#e-76) **ist** verstanden und von Gregor am 11.09.2026
+`OTShim.cpp:2032` sagt über sich selbst: *„SIE GEHÖRT WIEDER RAUS, sobald [E-76](../Intern/BEFUNDE.md#e-76)
+verstanden ist."* [E-76](../Intern/BEFUNDE.md#e-76) **ist** verstanden und von Gregor am 11.09.2026
 bestätigt — die Marke hat den Befund entschieden, ihre vier Zeilen stehen
 wörtlich in der Commit-Nachricht von `c060648`.
 
-`Befunde/SPURMARKEN.md:37` führt [E-76](../BEFUNDE.md#e-76) aber weiter als
+`Befunde/SPURMARKEN.md:37` führt [E-76](../Intern/BEFUNDE.md#e-76) aber weiter als
 *„entfällt: braucht eine gedrückte Maustaste"*, und `spuren-auswerten.pl`
 zählt sie deshalb unter **„bewusst offen (entfällt)"** statt unter
 „ausgewertet" — und gibt 0 zurück. Die Schranke ist an dieser Stelle blind

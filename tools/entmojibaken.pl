@@ -13,8 +13,8 @@
 # auf keinem Rueckweg auf und bleibt damit unangetastet. Das ist die
 # Eigenschaft, auf der die Sicherheit des Werkzeugs beruht.
 #
-# ACHTUNG, an BEFUNDE.md gemessen: manche Stellen zeigen kaputten Text
-# ABSICHTLICH, als Beleg. In BEFUNDE.md sind das fuenf Zeilen zu E-85 und
+# ACHTUNG, an Intern/BEFUNDE.md gemessen: manche Stellen zeigen kaputten Text
+# ABSICHTLICH, als Beleg. In Intern/BEFUNDE.md sind das fuenf Zeilen zu E-85 und
 # NP3-8 - eine steht woertlich hinter dem Wort "falsch", eine andere sagt,
 # dort stuenden "zwei Zeichen". Wer die berichtigt, loescht den Beweis und
 # macht den Satz sinnlos. Vor -schreiben darum immer erst den Probelauf
@@ -96,7 +96,7 @@ sub entmojibake_text {
 #
 # Wird von den pre-commit-Schranken gebraucht, die nur den ZUWACHS pruefen
 # wollen. Am 14.09.2026 hat die Berichtigung von 1517 doppelt umkodierten
-# Zeilen in BEFUNDE.md gleich zwei dieser Schranken ausgeloest
+# Zeilen in Intern/BEFUNDE.md gleich zwei dieser Schranken ausgeloest
 # (pruefe-behoben-belegt.pl 46-mal, pruefe-anzeigetext.pl 3-mal), obwohl
 # kein einziges Urteil und kein einziges Zitat neu geschrieben wurde.
 sub entmojibake_nur_kodierung_gefiltert {
