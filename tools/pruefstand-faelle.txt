@@ -1,0 +1,120 @@
+# Faelle fuer tools/pruefstand-lauf.ps1 - Regressionstests ueber die Oberflaeche.
+#
+# Gregor am 22.10.2026: "wir sollten auch regression tests haben fuer kritische
+# fehler, die man ueber die oberflaeche (eudora fenster) selbst ueberpruefen
+# kann. also genau so ein messstand / pruefstand, wie du schon immer wieder
+# verwendet hast, um eine instanz mit c:\temp\E-xxx zu starten und einen
+# mailserver im hintergrund, um imap / pop abzurufen."
+#
+# Und: "wenn es schon alles gibt, dann werden wir es ab jetzt nutzen, um zu
+# pruefen, dass nichts kaputt ging. uebrigens: den fehler aus issue #102
+# sollten wir auf jeden fall als regression tests haben, damit wir es nicht
+# zufaellig wieder kaputt implementieren."
+#
+# Und, auf meine Suche nach Testdaten: "test daten haben wir auch schon im
+# repo" - Testdaten/. Die habe ich am 18.09.2026 selbst angelegt und benutzt
+# und bei dieser Arbeit trotzdem nicht zuerst aufgeschlagen. Genau deshalb
+# stehen sie jetzt HIER, in der Fallliste, und nicht in meinem Gedaechtnis.
+#
+# -------------------------------------------------------------------------
+# WARUM ES DIESE DATEI GIBT
+# -------------------------------------------------------------------------
+#
+# Es gab schon acht Skripte tools/messen-*.ps1. Keines davon ist ein
+# Regressionstest. messen-e69.ps1 hat 28 Zeilen und sperrt ein Postfach -
+# mehr nicht. Es stellt eine LAGE her und behauptet NICHTS. Das Urteil hat
+# jedes Mal ein Mensch gefaellt, indem er hinterher das Protokoll las.
+# Deshalb merkt niemand, wenn es beim naechsten Mal anders ausgeht.
+#
+# Was gefehlt hat, ist je Fall die ERWARTETE ZEILE. Die steht in den Befunden
+# und kommt hier herein. Damit wird aus dem Messstand ein Pruefstand.
+#
+# -------------------------------------------------------------------------
+# FORMAT - acht Felder, durch | getrennt
+# -------------------------------------------------------------------------
+#
+#   Kennung | Verzeichnis | Sekunden | Quelle | muss | darf NICHT |
+#   Nachricht | Schalter
+#
+#   Quelle    log    = Mailverzeichnis\eudora.log des Laufs
+#             ini    = Mailverzeichnis\Eudora.ini NACH dem Lauf
+#             ablage = was im IMAP-Zielordner ankam, als Text:
+#                      "ablage-dateien=N" und danach die Dateinamen
+#
+#   muss / darf NICHT   Zeichenkette, buchstabengetreu gesucht. Beide duerfen
+#             leer sein, aber nicht beide zugleich - ein Fall ohne jede
+#             Behauptung wird abgewiesen, sonst steht hier wieder ein
+#             Messskript, das nichts misst.
+#
+#   Nachricht leer = Eudora wird schlicht gestartet (ueber testlauf.ps1).
+#             Sonst ein Pfad unter Testdaten/ - dann laeuft der Fall ueber
+#             e118-serie.ps1: POP- und IMAP-Pruefserver frisch hochgezogen,
+#             Posteingang und IMAP-Zwischenspeicher zurueckgesetzt, die
+#             Nachricht zugestellt. Die neun .eml unter Testdaten/ liegen
+#             dort, weil es sie sonst nirgends mehr gibt - jeder Nachweis an
+#             dieser Ecke kam von Gregors Rechner, keiner vom Pruefstand
+#             (Testdaten/README.md, LEKTOR L-15.9).
+#
+#   Schalter  leer, oder ohne-argument: startet Eudora OHNE das
+#             Mailverzeichnis als Argument. Nur so sucht Eudora es sich
+#             selbst ueber die Registry - und nur auf diesem Weg laeuft
+#             StartEudoraWithDefaultLocation, in der die E-132-Spurmarke
+#             steht. Geht nicht zusammen mit einer Testnachricht.
+#
+# Faelle mit demselben Verzeichnis, derselben Nachricht UND demselben
+# Schalter teilen sich EINEN Lauf. Eudora wird dafuer genau einmal gestartet
+# und beendet; danach werden alle Behauptungen dieser Gruppe auf Protokoll,
+# INI und Ablage angewandt.
+
+# -------------------------------------------------------------------------
+# Issue #102 - der Fehler, den ein Fremder gemeldet hat
+# -------------------------------------------------------------------------
+# Ein Start und ein Beenden unserer Fassung genuegten, damit die daneben
+# installierte Eudora/Hermes 7.1.0.9 beim naechsten Start abstuerzte:
+# MRUFloatXPos=-2147483648 (INT_MIN) stand danach dreimal in der Eudora.ini.
+# Das ist der Schaden selbst - gemessen wird er an der INI, nicht am Protokoll.
+E-131a | C:\Temp\E131L | 25 | ini | | MRUFloatXPos=-2147483648 | |
+E-131b | C:\Temp\E131L | 25 | ini | | MRUFloatYPos=-2147483648 | |
+# Und die Bereinigung muss nachweislich GELAUFEN sein - sonst ist die INI nur
+# zufaellig heil, weil MFC diesmal gueltige Werte geschrieben hat.
+E-131c | C:\Temp\E131L | 25 | log | E-131 Leistenposition: | | |
+
+# -------------------------------------------------------------------------
+# E-132 - derselbe Melder, zweiter Weg: fremdes Mailverzeichnis
+# -------------------------------------------------------------------------
+# Die Pruefung schreibt in BEIDEN Ausgaengen eine Zeile, auch wenn nichts
+# Fremdes gefunden wurde. Verschwindet die Zeile, ist die Pruefung ausgebaut.
+#
+# ACHTUNG, am 22.10.2026 gemessen: der erste Anlauf dieses Falls lief gegen
+# C:\Temp\E131L OHNE den Schalter und meldete FEHL - aber nicht, weil das
+# Programm schlechter geworden waere, sondern weil der Fall den Weg nicht
+# getroffen hat. Die Spurmarke steht in StartEudoraWithDefaultLocation
+# (eudora.cpp:4171), und die laeuft NUR, wenn kein Verzeichnis auf der
+# Befehlszeile steht. testlauf.ps1 uebergibt sonst immer eines.
+# Arbeitsweise/messung-muss-den-weg-treffen.md - derselbe Fehler wie damals.
+# E-132 ist NICHT automatisierbar und steht deshalb hier nicht als Fall.
+# Gemessen am 22.10.2026: mit ohne-argument stellt Eudora die Rueckfrage
+# als Dialog und wartet. Niemand antwortet, also kommt kein Hauptfenster
+# zustande (testlauf.ps1: "Kein Hauptfenster innerhalb von 25 s. ABER:
+# musste abgeschossen werden."), und ohne gewaehltes Verzeichnis wird auch
+# kein Protokoll geschrieben. Ein dauerhaft roter Fall, den alle ignorieren
+# lernen, ist schlimmer als keiner - E-132 steht als MANUELLER Fall in
+# Intern/TESTPLAN.md. Automatisierbar waere er erst mit einer Antwort per
+# WM_COMMAND an ein gemessenes Fensterhandle, so wie bei der Messung am
+# 20.10.2026; das ist ein eigenes Stueck Arbeit.
+
+# -------------------------------------------------------------------------
+# E-14 - der X1-Suchindex darf nicht bei jedem Start neu angelegt werden
+# -------------------------------------------------------------------------
+E-14 | C:\Temp\E131L | 25 | log | | Erasing X1 indices | |
+
+# -------------------------------------------------------------------------
+# Mit Testnachricht aus Testdaten/ - der IMAP-Weg
+# -------------------------------------------------------------------------
+# E-121: eine Nachricht, die aus einem lokalen Postfach in einen IMAP-Ordner
+# verschoben wird, kann spurlos verschwinden. Nach dem Lauf muss genau eine
+# Nachricht beim IMAP-Pruefserver angekommen sein - nicht null.
+E-121 | C:\Temp\E118 | 60 | ablage | ablage-dateien=1 | | Testdaten/e118-html-in-imap-ordner.eml |
+# E-118: eine HTML-Mail, in ein IMAP-Postfach verschoben, erschien dort als
+# Quelltext. Die Spurmarke muss im Protokoll stehen.
+E-118 | C:\Temp\E118 | 60 | log | E-118 Bild: | | Testdaten/e118-eingebettetes-bild.eml |

@@ -1,0 +1,12 @@
+# Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
+zeit=2026-10-22 14:17:23
+freigabe=Gregor am 22.10.2026: 'ja, fahr die regressionstests'
+faelle=6
+bestanden=6
+fehlgeschlagen=0
+fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
+fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
+fall=[ ok ] E-131c   E-131 Leistenposition:
+fall=[ ok ] E-14     ohne Erasing X1 indices
+fall=[ ok ] E-121    ablage-dateien=1
+fall=[ ok ] E-118    E-118 Bild:

@@ -352,3 +352,47 @@ $rmd = Read-Lines $rmdPath
 $sStart = Find-Line $rmd '^void CReadMessageDoc::BuildTabooHeaderArray' 0
 $sEnd = Find-Line $rmd '^\}\s*$' (Find-Line $rmd '^void CReadMessageDoc::StripTabooHeaders' $sStart)
 Write-Region $rmd $sStart $sEnd (Join-Path $OutDir "readmessagedoc_taboo.inc") $rmdPath
+
+
+# ------------------------------------------- QCMailboxDirector.cpp (E-24)
+# Region T: RecentPathsEqual, RecentListContains und RecentListRemove
+# (Befund E-24). Unter "Recent" stand "In" zweimal - gleich nach dem ersten
+# Start mit einem frischen Mailverzeichnis, ohne Zutun der Ini.
+#
+# s_RecentMailboxList haelt ROHE ZEIGER (std::list<LPCTSTR>), und verglichen
+# wurde ueber den Zeiger. Der Ersatzeintrag kam aus einer temporaeren CString
+# und war mit keinem echten Eintrag zeigergleich: die Pruefung "steht schon
+# drin" fand nichts, std::list::remove entfernte nichts, und danach standen
+# zwei Eintraege in der Liste.
+#
+# Die drei Funktionen haengen an nichts ausser <list> und stricmp - reine
+# Listenarbeit, ohne Baum, ohne Fenster, ohne Mailverzeichnis pruefbar.
+$dirPath = Join-Path $SrcDir "QCMailboxDirector.cpp"
+$di = Read-Lines $dirPath
+$tStart = Find-Line $di '^static bool RecentPathsEqual\s*\(' 0
+$tFn = Find-Line $di '^static size_t RecentListRemove\s*\(' $tStart
+$tEnd = Find-Line $di '^\}\s*$' $tFn
+Write-Region $di $tStart $tEnd (Join-Path $OutDir "qcmailboxdirector_e24.inc") $dirPath
+
+
+# ------------------------------------------------- TridentView.cpp (Z-2)
+# Region U: die beiden <meta>-Zeilen, die als erste Bytes in die
+# Zwischendatei gehen, aus der MSHTML die Nachricht laedt (Befund Z-2).
+#
+# Ohne die Zeichensatz-Ansage raet MSHTML den Zeichensatz aus dem Inhalt und
+# setzt fuer jedes CP1252-Byte ein U+FFFD - Gregors "f<>r" statt "fuer".
+# Die Ansage MUSS windows-1252 lauten: nach ISOTranslate steht genau das in
+# der Datei. Gemessen am 05.09.2026 an %TEMP%\eudA.htm - 33 Bytes ueber 0x7F,
+# davon 32 in CP1252.
+#
+# Geschnitten statt abgeschrieben, damit eine Aenderung an der Ansage hier
+# auffaellt und nicht erst im Vorschaufenster.
+$tvPath = Join-Path $SrcDir "TridentView.cpp"
+$tv = Read-Lines $tvPath
+$uStart = Find-Line $tv '^\s*static const char\s+szKompatibilitaet\[\]' 0
+# Das Ende wird an der DEKLARATION festgemacht, nicht am Wert "windows-1252":
+# sonst scheitert schon das Schneiden, sobald jemand den Zeichensatz aendert -
+# und statt eines roten Tests gaebe es einen kaputten Bau, der nicht sagt,
+# was los ist. Die Zeichenkette steht in der Zeile unter der Deklaration.
+$uEnd = (Find-Line $tv '^\s*static const char\s+szCharsetMeta\[\]' $uStart) + 1
+Write-Region $tv $uStart $uEnd (Join-Path $OutDir "tridentview_z2.inc") $tvPath

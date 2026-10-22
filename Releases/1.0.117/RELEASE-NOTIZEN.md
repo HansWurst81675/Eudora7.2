@@ -21,7 +21,7 @@
 > (beenden, ohne etwas anzufassen). **Vorgabe ist *No***, damit ein
 > unbedachtes Enter nichts beschädigt. Die Antwort wird gemerkt, so dass die
 > Frage nicht bei jedem Start wiederkommt. Der Befund läuft bei uns als
-> **[E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-132)**.
+> **[E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-132)**.
 >
 > **Was wir nicht prüfen konnten:** ob eine daneben installierte Hermes 7.1
 > danach wieder startet — wir haben kein Hermes. Wer das testen kann, wird in
@@ -72,7 +72,7 @@ ZIP auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren.
 - **Eine bereits beschädigte `Eudora.ini`** — etwa von einer älteren Fassung
   dieses Projekts — wird erst beim **nächsten Sichern** berichtigt; der
   Leseweg ist noch offen
-  ([E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-131)).
+  ([E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-131)).
   Vorher eine Kopie anlegen.
 
 Die vollständige Liste mit Abhilfe steht in der

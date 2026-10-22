@@ -507,6 +507,47 @@ Handgriff dazu steht oben in der Tabelle.
 
 ---
 
+## Teil M — Manuelle Fälle, die **vor jedem Release** zu fahren sind
+
+Diese Fälle gehören zu **kritischen** Befunden (Stufe `kritisch` in
+[BEFUNDE.md](BEFUNDE.md)), lassen sich aber nicht automatisch fahren. Der
+automatische Satz läuft über `tools/pruefstand-lauf.ps1`; was hier steht,
+bleibt von Hand.
+
+Gregor am 22.10.2026: *„manche muß man wohl manuell testen, diese werden dann
+als solche markiert und vor 7.2.1.0 release ausgeführt."*
+
+### <a id="m1-e132"></a>M1 — E-132: Eudora darf kein fremdes Mailverzeichnis stillschweigend übernehmen
+
+**Warum manuell.** Am 22.10.2026 in den automatischen Satz aufgenommen und
+wieder herausgenommen: der Weg lässt sich nur mit `-OhneArgument` erreichen
+(nur dann sucht Eudora sich das Verzeichnis selbst), und dann steht die
+Rückfrage als **Dialog** und wartet. Ohne Antwort kommt kein Hauptfenster
+zustande — `testlauf.ps1` meldete *„Kein Hauptfenster innerhalb von 25 s.
+ABER: musste abgeschossen werden."* — und ohne gewähltes Verzeichnis wird
+auch kein Protokoll geschrieben. Ein dauerhaft roter Fall, den alle
+ignorieren lernen, ist schlimmer als keiner.
+
+**Vorbereitung.** Zwei Verzeichnisse: das zu prüfende Paket, und daneben eine
+zweite Installation mit **eigener** `Eudora.ini` im Mailverzeichnis (bei mir
+`C:\Temp\E132` und `C:\Temp\E131`). Die zweite einmal starten und beenden,
+damit sie in der Registry unter
+`HKCU\Software\Qualcomm\Eudora\CommandLine\Current` steht.
+
+| Schritt | Was zu tun ist | Was herauskommen muss |
+|---|---|---|
+| 1 | **`Eudora.exe` doppelklicken** — nicht `Eudora starten.cmd`, denn das übergibt das Verzeichnis und schneidet den Weg ab | Eine Rückfrage erscheint: Eudora hat ein vorhandenes Mailverzeichnis gefunden |
+| 2 | Die Vorauswahl ansehen, **ohne** zu klicken | **„Eigenes anlegen" ist vorgewählt.** Ein unbedachtes Enter darf nichts an der fremden Installation ändern |
+| 3 | *Abbrechen* wählen | Das Programm endet. Die fremde `Eudora.ini` ist **unverändert** (SHA256 vorher/nachher vergleichen) |
+| 4 | Neu starten, *Eigenes anlegen* wählen | Im Protokoll steht `E-132 Startverzeichnis: … fremd=1`, danach `eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
+| 5 | Neu starten, *Vorhandenes benutzen* wählen | Im Protokoll steht `fremdes bewusst uebernommen`. Jetzt **darf** sich die fremde Installation ändern — das ist die bewusste Entscheidung des Anwenders |
+| 6 | **Gegenprobe:** `Eudora starten.cmd` benutzen | **Keine** Rückfrage; das Paket arbeitet in seinem eigenen `Mailverzeichnis\` |
+
+**Wenn Schritt 2 oder 3 anders ausgeht, ist der Schaden aus
+[Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) zurück**
+— dort hat genau dieser Weg die vorhandene Installation eines Fremden
+unbrauchbar gemacht.
+
 ## Teil D — Wie dein Urteil ins Repo kommt
 
 Ein Urteil zählt nur mit **Paketnummer**. Ohne sie ist es wertlos — das ist

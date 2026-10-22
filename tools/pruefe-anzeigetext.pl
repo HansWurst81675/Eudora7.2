@@ -238,7 +238,10 @@ sub zeilen_aus_diff {
     # Eine rein umkodierte Zeile ist kein Zuwachs - siehe Kommentar bei
     # entmojibake_nur_kodierung_gefiltert() in entmojibaken.pl.
     my @zuwachs = entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
-    return verweise_nur_links_gefiltert(\@alt, \@zuwachs);
+    @zuwachs    = verweise_nur_links_gefiltert(\@alt, \@zuwachs);
+    # Eine Zeile, die sich nur um die **Stufe:**-Marke unterscheidet, ist
+    # ebenfalls kein Zuwachs - siehe tools/verweise-filtern.pl.
+    return stufenmarke_nur_gefiltert(\@alt, \@zuwachs);
 }
 
 sub zeilen_aus_datei {

@@ -698,6 +698,24 @@ fi
 echo "pre-push: laesst sich die Testsammlung bauen?"
 schranke pruefe-testbau.pl || exit $?
 
+# 20b. SIND DIE TESTS GRUEN? Nicht nur: laesst sich die Sammlung bauen.
+#
+#      Gregor am 22.10.2026: "ich habe gefragt, ob wir dazu jeweils einen
+#      test haben und angenommen, dass er auch immer wieder ausgefuehrt wird
+#      (sonst macht ja ein test keinen sinn!)."
+#
+#      Gemessen an dem Tag: KEIN Haken rief EudoraTests.exe je aus. Die
+#      Schranke darueber prueft nur den BAU, und ihr Selbsttest schrieb rote
+#      Tests ausdruecklich als erlaubt fest ("sauberer Bau MIT roten Tests -
+#      darf NICHT abweisen"). 246 Tests wurden bei jedem Push uebersetzt und
+#      danach weggeworfen.
+#
+#      Gegenprobe am echten Fall: ein absichtlich kaputter TT_CHECK_MSG in
+#      TestResolveURL.cpp - die Schranke meldet "246 Tests, 245 bestanden,
+#      1 fehlgeschlagen", nennt den Test beim Namen und weist ab; nach dem
+#      Zuruecknehmen laesst sie wieder durch.
+schranke pruefe-tests-gruen.pl || exit $?
+
 exit 0
 HOOKPUSHENDE
 chmod +x "$HOOK_PUSH"

@@ -32,6 +32,9 @@ void RunE132Tests(void);
 void RunE112MetadateiTests(void);
 void RunE105Tests(void);
 void RunE118Tests(void);
+void RunE24Tests(void);
+void RunZeichenWegeTests(const char* szEudoraDir);
+void RunStartWegeTests(const char* szEudoraDir);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -73,6 +76,12 @@ int main(int argc, char* argv[])
 	// modalen Dialog aufmachen und den Lauf anhalten - in einem
 	// Agentenlauf oder auf einem Bauserver haengt das Programm dann bis
 	// zum Zeitlimit. Alles geht statt dessen nach stderr.
+	// Die Ausgabe wird nicht gepuffert. Bleibt ein Test haengen, steht
+	// damit im Protokoll, WELCHER es war - mit Blockpufferung fehlen die
+	// letzten Zeilen bis zur 4-KB-Grenze, und die Suche beginnt bei null
+	// (gemessen am 22.10.2026).
+	setvbuf(stdout, NULL, _IONBF, 0);
+
 	_CrtSetReportMode(_CRT_ASSERT, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_ASSERT, _CRTDBG_FILE_STDERR);
 	_CrtSetReportMode(_CRT_ERROR,  _CRTDBG_MODE_FILE);
@@ -122,6 +131,9 @@ int main(int argc, char* argv[])
 	RunE112MetadateiTests();
 	RunE105Tests();
 	RunE118Tests();
+	RunE24Tests();
+	RunZeichenWegeTests(szEudoraDir);
+	RunStartWegeTests(szEudoraDir);
 
 	iFailed = TT_Summary();
 	return iFailed;
