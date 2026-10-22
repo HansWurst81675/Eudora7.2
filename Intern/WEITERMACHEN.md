@@ -331,7 +331,7 @@ nicht selbst messen kann*.
 | Kennung | worum es geht | was noch fehlt |
 |---|---|---|
 | **E-133** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
-| **E-131** | Unsere Fassung schreibt eine ungültige Fensterposition in die Eudora.ini — danach stür… | der **Leseweg**: eine `Eudora.ini`, die den kaputten Wert schon trägt, wird erst beim nächsten Speichern berichtigt — bis dahin startet eine daneb… |
+| **E-131** | Unsere Fassung schreibt eine ungültige Fensterposition in die Eudora.ini — danach stür… | **am 22.10.2026 gemessen — die Lücke ist eine andere, als hier stand.** Bis dahin hieß es, eine `Eudora.ini` mit kaputtem Wert werde *erst beim n… |
 | **E-130** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… | zweierlei — **wer** die fünf DLLs beim Bau stempelt, ist nicht gefunden (`paket-bauen.ps1` liest sie nur, kein `.vcxproj` nennt sie), und es ist ni… |
 | **E-129** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
 | **E-128** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |

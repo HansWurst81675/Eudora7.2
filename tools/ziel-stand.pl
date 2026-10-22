@@ -74,7 +74,19 @@ for my $zeile (split /\n/, $befunde) {
     if ($urteil =~ /\*\*Was noch fehlt:\*\*\s*(.+?)(?=\s*\*\*Wie zu pruefen:\*\*|\z)/s) {
         my $f = $1;
         $f =~ s/\s+/ /g; $f =~ s/\s+\z//;
-        $f = substr($f, 0, 135) . '…' if length($f) > 135;
+        if (length($f) > 150) {
+            $f = substr($f, 0, 150);
+            # UTF-8 NICHT MITTEN IM ZEICHEN ABSCHNEIDEN (22.10.2026). substr
+            # zaehlt Bytes; ein "ä" sind zwei. Beim Kuerzen von E-131 blieb
+            # ein halbes Zeichen stehen, und die beiden erzeugten Bloecke in
+            # CHANGELOG.md und Intern/WEITERMACHEN.md wurden dadurch
+            # ungleich - der Vergleich meldete "nicht auf dem Stand", ohne
+            # dass sich inhaltlich etwas geaendert hatte.
+            1 while length($f) && $f =~ /[\x80-\xBF]\z/ && do { chop $f; 1 };
+            chop $f if $f =~ /[\xC0-\xFF]\z/;
+            $f .= '…';
+        }
+
         $fehlt{$k} = $f;
     }
     # WER PRUEFT UND WIE (22.10.2026). Gregor: "was ist davon fuer mich zu tun

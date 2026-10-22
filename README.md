@@ -122,17 +122,18 @@ Schranken).
   unverändert.** Die Pakete 1.0.115 bis 1.0.118 sind geschnürt und liegen bei
   Gregor; 1.0.119 liegt seit dem 21.10.2026 als Testverzeichnis bei ihm.
 
-**Neu in `v1.0.101` gegenüber `v1.0.87`:** HTML-Nachrichten und eingebettete Bilder kommen
-beim Verschieben in einen IMAP-Ordner vollständig an
-([E-118](Intern/BEFUNDE.md#e-118)); eine verschobene Nachricht kann – bis auf einen seltenen, vermuteten Fall
-(siehe Tabelle) – nicht mehr
-verlorengehen, steht nicht mehr doppelt in der Liste und trifft keine fremde
-Nachricht mit gleicher Nummer ([E-121](Intern/BEFUNDE.md#e-121)); eine beim Start
-schon fertige IMAP-Aufgabe blockiert den Ordner nicht mehr und Eudora lässt sich
-ohne *„1 task(s) running“* beenden ([E-83](Intern/BEFUNDE.md#e-83)); ein versteckter
-Vorschautext wird nicht mehr als `? ? ? ?` mitgelesen
-([E-105](Intern/BEFUNDE.md#e-105), an einer Prüfnachricht gemessen, am echten
-Postfach noch nicht bestätigt).
+**Neu im veröffentlichten `v1.0.120` gegenüber `v1.0.101`:** Eudora übernimmt das
+Mailverzeichnis einer **fremden Installation** nicht mehr stillschweigend, sondern
+fragt vorher und legt ohne Zutun ein eigenes an — auf allen Startwegen
+([E-132](Intern/BEFUNDE.md#e-132), der Weg hinter dem ersten Fehlerbericht von
+außen); der Kurzname eines neuen Adressbucheintrags kommt an
+([E-134](Intern/BEFUNDE.md#e-134)); die Auswahlbox im `To:`-Feld schrumpft nicht
+mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird keine
+ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
+([E-131](Intern/BEFUNDE.md#e-131)).
+
+**Was zur Fassung 7.2.1.0 noch fehlt, steht erzeugt ganz oben in
+[ZIEL.md](ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
 
 ### Bekannte Fehler
 
