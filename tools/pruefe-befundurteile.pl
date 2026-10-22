@@ -247,6 +247,10 @@ my @unerledigt = (
 # abgeschaltet wird, prueft am Ende nichts.
 my @dateien = grep { -f $_ } map { "$wurzel/$_" } qw(
     README.md
+    Doku/ANWENDER.md
+    Doku/BAUEN.md
+    Doku/MITARBEITEN.md
+    Doku/HINTERGRUND.md
     FILTER.md
     PORTIERUNG.md
     ZIEL.md
