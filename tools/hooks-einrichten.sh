@@ -123,6 +123,24 @@ if [ -f "$WURZEL/tools/pruefe-aussenverweise.pl" ]; then
     | grep -E "MANGEL|  -> " | head -6 | sed 's/^/pre-commit: /'
 fi
 
+# 1b. Steht jede Markdown-Tabellenzeile auf EINER Zeile?
+#
+#     Abweisend, nicht nur meldend: der Fall ist eindeutig, die Gegenprobe
+#     laeuft in beide Richtungen (--selbsttest, 18 Faelle, davon 13 die
+#     durchgehen MUESSEN), und die Behebung ist zwei Zeilen zusammenziehen.
+#
+#     Am 22.10.2026 meldete Gregor zu WEITERMACHEN.md auf GitHub: "hat ein
+#     darstellungsproblem: der text ist links, nicht rechts." Zwei
+#     Tabellenzeilen waren ueber zwei physische Zeilen gebrochen (9/10 und
+#     46/47). GFM liest eine Textzeile ohne Leerzeile hinter einer
+#     Tabellenzeile als EIGENE Zeile ("lazy continuation"); weil ihr das
+#     fuehrende "|" fehlt, faellt der Text in Spalte 1. Der Leser bekommt
+#     Zeilen ohne Kennung und Saetze, die mittendrin abbrechen.
+#
+#     Gefunden hat es Gregor am gerenderten Dokument, nicht ich am Quelltext
+#     - eine .md sieht im Editor heil aus (Arbeitsweise/anzeige-ist-kein-zustand.md).
+schranke pruefe-tabellenzeilen.pl || exit $?
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #
