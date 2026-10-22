@@ -26,20 +26,20 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 ## Kurzfassung
 
 > **Eudora startet, ist bedienbar und ruft Mail ab.** Zuletzt gemessen am
-> 06.09.2026 mit 7.2.0.12: POP3 auf **Port 995** gegen `mx.freenet.de`,
-> *Tools → Last SSL Info* meldet `Negotiation Status: Succeeded`, **TLSv1.3**,
-> `TLS_AES_256_GCM_SHA384`. Die richtige Einstellung dafür ist *Secure Sockets
-> when Receiving* → **„Required, Alternate Port"**. Der erste Abruf überhaupt
-> war am 31.08.2026 (Befunde [E-1](BEFUNDE.md#e-1) und [E-3](BEFUNDE.md#e-3)): 159 Nachrichten, damals über
-> Port 110 mit STARTTLS. Die Menüs gehen auf ([M-1](BEFUNDE.md#m-1) wirkt), die Bereiche
-> überlagern sich nicht mehr ([A-1](BEFUNDE.md#a-1) wirkt).
+> 22.10.2026 mit **7.2.0.121** (Prüfstand `C:\Temp\E131L`): Start und sauberes
+> Beenden, Leistenbereinigung greift. Mail über POP3 auf **Port 995** gegen
+> `mx.freenet.de` mit **TLSv1.3** und `TLS_AES_256_GCM_SHA384` — die richtige
+> Einstellung dafür ist *Secure Sockets when Receiving* → **„Required,
+> Alternate Port"**; seit dem 10.09.2026 läuft auch IMAP (`imap.gmx.net:993`).
+> Der erste Abruf überhaupt war am 31.08.2026 ([E-1](BEFUNDE.md#e-1),
+> [E-3](BEFUNDE.md#e-3)): 159 Nachrichten, damals über Port 110 mit STARTTLS.
 >
-> **Maßgeblich für den Stand ist die Kriterientabelle in [ZIEL.md](../ZIEL.md)** —
-> **neun** Kriterien: **sieben** sind belegt (0, 1, 3, 5, 6, 7, 8), **zwei**
-> sind fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
-> improper argument" beim **Anzeigen** mancher Nachrichten; was **Kriterium 2**
-> darüber hinaus fehlt, steht in `ZIEL.md` in der eigenen Zeile **2a**: [**E-86**](BEFUNDE.md#e-86)
-> (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77) (IMAP-Postfachnamen roh).
+> **Was zur Fassung 7.2.1.0 noch fehlt, steht erzeugt ganz oben in
+> [ZIEL.md](../ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
+> Diese Kurzfassung zählt es bewusst **nicht** mit auf: bis zum 22.10.2026
+> stand hier [E-86](BEFUNDE.md#e-86) als offen, obwohl er seit **7.2.0.55**
+> behoben und am laufenden Programm gemessen ist. Gefunden hat das Gregor —
+> an derselben Aussage, die auch in `ZIEL.md` veraltet war.
 >
 > **Stand 21.10.2026, Zweig `e-135-vervollstaendigungsbox`:** Quellstand **7.2.0.120**, `VERSION` **1.0.120**, **am 21.10.2026 um 14:14 geschnürt und am selben Tag um 19:07:37 UTC als `v1.0.120` veröffentlicht** — [E-135](BEFUNDE.md#e-135): die Vervollständigungsbox im `To:`-Feld wurde bei jedem Cursor-Schritt kleiner. `ReCalcACListBoxPos` las mit `GetClientRect` das Innenmaß und setzte daraus über `MoveWindow` das Außenmaß, plus sechs Pixel; gemessen ist der Rand 14 Pixel, und gerufen wird zweimal je Schritt. Jetzt Außenmaß gegen Außenmaß, wie in `InitList`. Rot und grün am laufenden Programm gemessen: 100×62 → 20×14 gegen konstant 108×70, zwei verschiedene EXE. Mit drin, aber **nicht gemessen**: [PRÜFER-43 K9](../Befunde/PRUEFER-43.md#k9) als Sicherung — die vorhergesagte Wirkung (Rechtsklick wählt nicht aus) war an fünf Klickhöhen in **beiden** Fassungen nicht nachstellbar.
 >

@@ -104,10 +104,20 @@ kein Mailprogramm.
 
 **Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
 erfüllt (2, 4).** Was Kriterium 2 noch fehlt, steht vollständig in der Zeile
-**2a**: [**E-86**](Intern/BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt), [**E-77**](Intern/BEFUNDE.md#e-77)
-(IMAP-Postfachnamen mit Umlauten) und die Meldung „Encountered an improper
-argument" beim **Anzeigen** mancher Nachrichten — diese Meldung fehlt auch
-Kriterium 4. Die Umlaute in per IMAP abgerufenen Nachrichten sind mit [**E-85**](Intern/BEFUNDE.md#e-85)
+**2a**: [**E-77**](Intern/BEFUNDE.md#e-77) (IMAP-Postfachnamen mit Umlauten)
+und die Meldung „Encountered an improper argument" beim **Anzeigen** mancher
+Nachrichten — diese Meldung fehlt auch Kriterium 4.
+
+> **Berichtigt am 22.10.2026.** Hier stand bis heute auch
+> [E-86](Intern/BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt) — der
+> ist seit **7.2.0.55** behoben und am laufenden Programm gemessen. Es war
+> die **dritte** Stelle derselben veralteten Aussage: `ZIEL.md:75` (Zeile 2a
+> der Tabelle), diese hier, und `Intern/PORTIERUNG.md` in der Kurzfassung.
+> Gefunden hat alle drei Gregor, nicht die Schranken — `pruefe-befundurteile.pl`
+> kannte das Wort *offen* nicht (behoben am selben Tag), und eine Aufzählung
+> ohne Statuswort erkennt sie bis heute nicht.
+
+Die Umlaute in per IMAP abgerufenen Nachrichten sind mit [**E-85**](Intern/BEFUNDE.md#e-85)
 in **7.2.0.52** behoben und **am laufenden Programm belegt** (`uebersetzt=ja`
 im Protokoll, null unübersetzte UTF-8-Folgen in der Mailboxdatei); 7.2.0.51
 hatte nur den Suchbereich repariert, nicht die Quelle.
