@@ -1781,3 +1781,33 @@ berichtigt. **Die Schranke aus
 [L-44.11](../Befunde/LEKTOR-44.md#l-44.11) fehlt zum sechsten Mal**; sie hätte
 [L-49.1](../Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses
 Durchgangs.
+
+## Fünfundfünfzigster Durchgang — „Was noch fehlt" für alle 40 offenen Befunde, 22.10.2026 (Bericht: `Befunde/LEKTOR-50.md`)
+
+**Kein voller Durchgang über alle `.md`, sondern ein gezielter Auftrag an
+`Intern/BEFUNDE.md`.** Anlass war Gregors Blick auf A-1: *„Erscheinungsbild:
+fünf Punkte umgesetzt | teilweise, Wirkung belegt (E-1/E-2), was heißt es? was
+fehlt hier?"* — und gleich darauf *„mir geht es nicht nur um A-1, sondern um
+alle punkte!"*
+
+**Gemessen:** 23 von 40 offenen Befunden nannten nur ihre **Einstufung**, nicht
+was aussteht; acht davon mit einem einzigen Wort. 34 Urteile sind um die Marke
+`**Was noch fehlt:**` ergänzt (sechs waren gesetzt). `git diff --numstat`:
+`40 40` — ausschließlich die Urteilszeilen berührt.
+
+**Drei Fehler im Werkzeug** hat der Durchgang nebenbei gefunden
+([L-50.1](../Befunde/LEKTOR-50.md#l-50.1)): `split /\|/` zerschnitt an
+**maskierten** Pipes und machte die Marke bei vier Befunden unsichtbar; der
+Abgleich zählte Kennungen aus **allen** Spalten; und **E-89** fiel ganz aus der
+Urteilserkennung, weil die Folge `*** **` als erstes Fettwort ein Leerzeichen
+liefert — er galt weder als offen noch als behoben.
+
+**Elf Befunde gaben nichts her** ([L-50.2](../Befunde/LEKTOR-50.md#l-50.2)).
+Der härteste ist **NP2-3**: nirgends steht, welche Oberfläche leer bleibt, wenn
+`BitBltTransparent` still scheitert — ohne das ist nicht zu entscheiden, ob es
+sich lohnt.
+
+**Zwei Widersprüche** ([L-50.3](../Befunde/LEKTOR-50.md#l-50.3)): **S-3b** wird
+an drei Stellen verschieden bewertet und ist im Release-Bau vermutlich
+gegenstandslos; **A-1** nennt dieselbe Funktion mit zwei verschiedenen
+Zeilennummern.
