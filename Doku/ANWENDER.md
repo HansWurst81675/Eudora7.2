@@ -233,7 +233,9 @@ Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 
 ## Der Zusatz *EudoraUnicodeFix* — kaputte Umlaute nachträglich reparieren
 
-Seit dem 22.10.2026 liegt im Paket unter `Plugins\` ein Zusatz, der **nicht
+**Ab Paket 1.0.121** — in `v1.0.120` ist er **noch nicht** enthalten, und
+1.0.121 ist zum Zeitpunkt dieser Zeile noch nicht geschnürt — liegt unter
+`Plugins\` ein Zusatz, der **nicht
 von uns** stammt: `EudoraUnicodeFix.dll` von
 [`rjsdotorg`](https://github.com/rjsdotorg/EudoraUnicodeFix-releases)
 (BSD-3-Clause). Er ist derselbe, der [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)

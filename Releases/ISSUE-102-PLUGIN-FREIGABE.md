@@ -13,7 +13,7 @@ geantwortet und **alle drei Stufen bewilligt**: *„Feel free to use the
 methods/code … Ship the DLL or a link as you like."* Dazu hat er Punkt 3
 ausführlich beantwortet — die Indikatoren seines Rückwärtstests.
 
-**Zwei Dinge, die heute nachgemessen sind:**
+**Zwei Dinge, die am Vormittag des 22.10.2026 nachgemessen waren** (am Abend desselben Tages beide erledigt - siehe den Nachtrag am Ende):
 
 * Das von ihm verlinkte Quell-Repo `rjsdotorg/EudoraUnicodeFix` (ohne
   `-releases`) liefert **404** — geprüft über die GitHub-API. Öffentlich ist
@@ -98,3 +98,34 @@ es übernehmen und testen."*
 > looks like it simply slipped through.
 > 
 > No rush on any of it.
+
+---
+
+## Nachtrag vom Abend des 22.10.2026 — beides erledigt, nachgemessen
+
+**Die Messungen oben sind überholt.** Sie stammen vom Vormittag; `rjsdotorg`
+hat im Lauf des Tages beides nachgereicht und im Issue geantwortet: *„The
+omission of a file in the release was an oversight on my part… I added BSD-3
+license to each repo, and invited HansWurst81675 to collaborate."*
+
+**Um 19:2x nachgemessen, über die GitHub-API:**
+
+| | Vormittag | Abend |
+|---|---|---|
+| `EudoraUnicodeFix-releases`, Lizenz | `license: null` | **BSD-3-Clause**, `LICENSE` mit 1502 Byte |
+| dort veröffentlichte Releases | **0** | **1** — `V1.0.0`, veröffentlicht 2026-10-22 15:28:46 UTC |
+| die DLL selbst | lag nirgends | `EudoraUnicodeFix.dll`, **284 160 Byte**, am Release angehängt |
+| `rjsdotorg/EudoraUnicodeFix` (Quelltext) | 404 | lesbar, nachdem Gregor die Einladung angenommen hat; weiterhin **privat** |
+
+Damit sind beide Gründe weg, aus denen wir das Plug-in nicht ausliefern
+konnten. Die Weitergabe ist durch die BSD-3-Clause gedeckt; der Lizenztext
+geht als `EudoraUnicodeFix-LIZENZ.txt` neben der DLL mit und ist
+**byte-gleich** mit dem im Repo (SHA256 beider: `811aa38d4cbaad1b…`).
+
+**Weil das Quell-Repo privat ist**, verlinken wir in unserer Dokumentation
+ausschließlich `EudoraUnicodeFix-releases` — ein Verweis auf das Quell-Repo
+ginge für jeden Leser ins Leere.
+
+Aufgenommen wurde das Plug-in am selben Abend als **Add-on mit Warnung**
+(Gregors Entscheidung), siehe [E-136](../Intern/BEFUNDE.md#e-136) und
+`Eudora71/Bin/Release/Plugins/EudoraUnicodeFix-LIESMICH.txt`.

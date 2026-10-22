@@ -721,6 +721,49 @@ if (-not (Test-Path -LiteralPath $mpCmd)) {
 }
 Write-Host ''
 
+# ------------------------------------------- Zusaetze: Warnung bei der DLL --
+#
+# Gregor am 22.10.2026: "wir koennen das plug-in bei uns als add-on aufnehmen
+# mit der warnung, dass es beim speichern evtl. inhalte verfaelscht." Und,
+# als ich es eingebaut hatte, ohne diese Pruefung: "gibt es fuer das neue
+# plug-in auch einen neuen regression test?"
+#
+# Die Warnung ist die BEDINGUNG, unter der das Add-on hinausgehen darf. Eine
+# Bedingung, die niemand nachprueft, ist keine. Wer die DLL ins Paket legt
+# und die LIESMICH vergisst, liefert ein Werkzeug aus, das beim Speichern
+# Zeichen frisst (Befund E-136), ohne dass es irgendwo steht.
+#
+# DLL vorhanden => Warnung und Lizenz MUESSEN daneben liegen, und die Warnung
+# muss ihren Satz wirklich enthalten. Fehlt die DLL ganz, ist das kein
+# Fehler: ein Paket ohne Add-on ist erlaubt.
+
+Write-Host 'ZUSAETZE: Warnung und Lizenz neben der Plug-in-DLL'
+$addonDll = Join-Path $Paket 'Plugins\EudoraUnicodeFix.dll'
+if (Test-Path -LiteralPath $addonDll) {
+  $addonLies = Join-Path $Paket 'Plugins\EudoraUnicodeFix-LIESMICH.txt'
+  $addonLiz  = Join-Path $Paket 'Plugins\EudoraUnicodeFix-LIZENZ.txt'
+
+  if (-not (Test-Path -LiteralPath $addonLies)) {
+    Melde-Fehler 'Plugins\EudoraUnicodeFix.dll liegt im Paket, aber EudoraUnicodeFix-LIESMICH.txt fehlt - die Warnung zu E-136 geht nicht mit'
+  } elseif (-not ((Get-Content -Raw -LiteralPath $addonLies) -match 'BEIM SPEICHERN') -or
+            -not ((Get-Content -Raw -LiteralPath $addonLies) -match 'E-136')) {
+    Melde-Fehler 'Plugins\EudoraUnicodeFix-LIESMICH.txt nennt die Warnung zum Speichern oder den Befund E-136 nicht mehr'
+  } else {
+    Write-Host '   ok  LIESMICH liegt daneben und nennt Warnung und E-136'
+  }
+
+  if (-not (Test-Path -LiteralPath $addonLiz)) {
+    Melde-Fehler 'Plugins\EudoraUnicodeFix.dll liegt im Paket, aber EudoraUnicodeFix-LIZENZ.txt fehlt - ohne Lizenztext duerfen wir sie nicht weitergeben'
+  } elseif (-not ((Get-Content -Raw -LiteralPath $addonLiz) -match 'BSD 3-Clause')) {
+    Melde-Fehler 'Plugins\EudoraUnicodeFix-LIZENZ.txt ist nicht mehr der BSD-3-Clause-Text'
+  } else {
+    Write-Host '   ok  Lizenztext liegt daneben (BSD-3-Clause)'
+  }
+} else {
+  Write-Host '   --  kein EudoraUnicodeFix im Paket, nichts zu pruefen'
+}
+Write-Host ''
+
 # ------------------------------------------------------------- Zusammenzug --
 
 Write-Host '========================================================'

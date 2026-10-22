@@ -103,6 +103,12 @@ for my $zeile (split /\n/, $befunde) {
     # verschwiegen.
     if ($urteil =~ /\*\*Wie zu pruefen:\*\*\s*(.+)\z/s) {
         my $p = $1;
+        # DIE STUFEN-MARKE GEHOERT NICHT IN DIESE SPALTE (22.10.2026).
+        # Seit die Marke **Stufe: ...** am Ende jedes Urteils steht, faellt
+        # sie in das ".+\z" dieses Musters und landet in der Spalte
+        # "Wie zu pruefen" - bei E-77 sogar mitten im Wort abgeschnitten
+        # ("Stufe: wichti…"). Sie wird deshalb VOR dem Kuerzen abgetrennt.
+        $p =~ s/\s*\*\*Stufe: [a-z]+\*\* \([^)]*\)\s*\z//;
         $p =~ s/\s+/ /g; $p =~ s/\s+\z//;
         $wer{$k} = ($p =~ /^\*\*ICH\b/) ? 'ich'
                  : ($p =~ /gregor/i)     ? "Gregor"

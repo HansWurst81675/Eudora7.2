@@ -548,6 +548,32 @@ damit sie in der Registry unter
 — dort hat genau dieser Weg die vorhandene Installation eines Fremden
 unbrauchbar gemacht.
 
+### <a id="m2-e14"></a>M2 — E-14: der Suchindex darf nicht bei jedem Start neu angelegt werden
+
+**Warum manuell.** Am 22.10.2026 stand dieser Fall kurz im automatischen
+Satz und war **Vakuum-Grün**: PRÜFER hat nachgemessen, dass im Protokoll des
+Laufs keine einzige Zeile mit der Maske `16384` (`DEBUG_MASK_SEARCH`,
+`Eudora71/QCUtils/public/inc/debug.h:34`) steht. Das Suchsystem lief in dem
+Lauf überhaupt nicht — die erwartete Meldung konnte also nie erscheinen, und
+„sie fehlt" wurde als Bestanden gelesen. Dazu kommt, was der Befund selbst
+sagt: er *„lässt sich nur am **zweiten** Start eines gewachsenen
+Mailverzeichnisses messen"*, und der Prüfstand macht einen Start.
+
+**Vorbereitung.** Ein Mailverzeichnis, in dem schon Post liegt und in dem
+die Suche einmal benutzt wurde (damit ein X1-Index existiert). In der
+`Eudora.ini` muss `LogLevel` die Maske **16384** enthalten, sonst schreibt
+das Suchsystem gar nichts ins Protokoll.
+
+| Schritt | Was zu tun ist | Was herauskommen muss |
+|---|---|---|
+| 1 | Eudora starten, eine Nachrichtensuche ausführen, beenden | Im `eudora.log` stehen Zeilen mit der Maske `16384` — **wenn nicht, ist die Messung ungültig**, dann stimmt `LogLevel` nicht |
+| 2 | Eudora **ein zweites Mal** starten | Im Protokoll des **zweiten** Starts steht **kein** `Erasing X1 indices` |
+| 3 | Suche erneut ausführen | Die Treffer sind sofort da, ohne dass der Index neu aufgebaut wird |
+| 4 | **Positivprobe:** Index-Dateien von Hand löschen, starten | Jetzt **muss** `Erasing X1 indices` erscheinen — sonst misst Schritt 2 wieder nichts |
+
+**Schritt 4 ist der wichtigere.** Ohne ihn weiß niemand, ob Schritt 2 grün
+war, weil alles stimmt, oder weil die Stelle gar nicht erreicht wurde.
+
 ## Teil D — Wie dein Urteil ins Repo kommt
 
 Ein Urteil zählt nur mit **Paketnummer**. Ohne sie ist es wertlos — das ist

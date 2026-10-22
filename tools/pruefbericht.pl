@@ -106,6 +106,51 @@ if (defined $ober and $exe) {
     $kalt = 1 if (stat($pfad))[9] < (stat($exe))[9];
 }
 
+# --- Welche Fassung lief in jedem Pruefstand? ----------------------------
+#
+# AM 22.10.2026 GELERNT (LEKTOR, L-50.1). Dieser Bericht trug in der Kopfzeile
+# "Quellstand 7.2.0.121" und "BESTANDEN", und zwei seiner sechs gruenen Faelle
+# waren an einem Paket 7.2.0.106 vom 17.10. gemessen - der Pruefstand
+# C:\Temp\E118 stand noch auf der alten Fassung. Ein gruener Bericht ueber
+# eine Fassung, die nicht gelaufen ist, ist genau die Art Luege, gegen die es
+# ihn gibt.
+#
+# Geprueft wird deshalb HIER, wo die Behauptung gemacht wird, und nicht nur
+# im Laeufer: fuer jedes Verzeichnis aus pruefstand-faelle.txt wird die
+# Dateiversion der Eudora.exe gelesen und gegen den Quellstand gehalten.
+# Weicht eine ab, nennt der Bericht sie und das Gesamturteil faellt.
+my (@stand_alt, @stand_ok);
+my $faelle_soll = 0;
+{
+    my $faelle = lies("$wurzel/tools/pruefstand-faelle.txt") // '';
+    my %verz;
+    for my $z (split /\n/, $faelle) {
+        next if $z =~ /^\s*(#|$)/;
+        # -1, sonst wirft split die leeren Felder am Zeilenende weg und die
+        # achtfeldrige Zeile kommt als siebenfeldrige an.
+        my @f = split /\|/, $z, -1;
+        next unless @f >= 8;
+        my $v = $f[1]; $v =~ s/^\s+|\s+$//g;
+        $verz{$v} = 1 if length $v;
+        $faelle_soll++;
+    }
+    for my $v (sort keys %verz) {
+        # NICHT "$v\\Eudora.exe" schreiben: in einer Perl-Zeichenkette ist
+        # \E eine Steuerfolge (Ende von \Q), aus C:\Temp\E118 wuerde
+        # C:\Temp udora.exe. Am 22.10.2026 genau daran gescheitert - die
+        # Pruefung lief ins Leere und meldete nichts, also schien alles gut.
+        (my $slash = $v) =~ s{\\}{/}g;
+        my $exe = $slash . '/Eudora.exe';
+        next unless -f $exe;
+        my $ps = qq{powershell -NoProfile -Command "(Get-Item '$v\\Eudora.exe').VersionInfo.FileVersion"};
+        my $fv = `$ps 2>&1`;
+        $fv =~ s/\s+//g;
+        next unless $fv =~ /^\d+(\.\d+){3}$/;
+        if ($fv eq $quellstand) { push @stand_ok,  "$v ($fv)" }
+        else                    { push @stand_alt, "$v traegt $fv, Quellstand ist $quellstand" }
+    }
+}
+
 # --- Einstufung ----------------------------------------------------------
 my $reg = `perl "$wurzel/tools/pruefe-regressionstest.pl" 2>&1`;
 my %zahl;
@@ -114,12 +159,21 @@ for my $k (qw(kritisch wichtig unkritisch werkzeug)) {
 }
 my ($k_ges)  = $reg =~ /mit Testfall im Pruefstand\s+(\d+) von (\d+)/;
 my $k_alle   = $2 // '?';
-my ($k_man)  = $reg =~ /manuell, im Testplan\s+(\d+)/;
+my ($k_man)  = $reg =~ /zusaetzlich manuell im Plan\s+(\d+)/;
 my ($k_ohne) = $reg =~ /OHNE jede Pruefung\s+(\d+)/;
 
 # --- Bericht -------------------------------------------------------------
 my $gruen_unit  = (defined $u_schlecht and $u_schlecht == 0) ? 1 : 0;
-my $gruen_ober  = (defined $ober and ($o{fehlgeschlagen} // 1) == 0 and !$kalt) ? 1 : 0;
+# TEILLAUF IST KEIN LAUF (22.10.2026, PRUEFER Fund 4a).
+# pruefstand-lauf.ps1 -Nur E-131 schreibt dieselbe Ergebnisdatei wie der
+# volle Lauf und UEBERSCHREIBT ihn damit. Ohne diese Pruefung sagte der
+# Bericht BESTANDEN, obwohl fuenf von sechs Faellen nie gemessen wurden -
+# gemessen von PRUEFER mit einer gestellten Datei "faelle=1".
+my $unvollstaendig = (defined $ober and $faelle_soll
+                      and ($o{faelle} // 0) < $faelle_soll) ? 1 : 0;
+
+my $gruen_ober  = (defined $ober and ($o{fehlgeschlagen} // 1) == 0
+                   and !$kalt and !@stand_alt and !$unvollstaendig) ? 1 : 0;
 my $urteil = ($gruen_unit && $gruen_ober) ? 'BESTANDEN' : 'NICHT VOLLSTAENDIG';
 
 my $b = '';
@@ -153,6 +207,23 @@ if (!defined $ober) {
     $b .= "**Das Ergebnis ist AELTER als die gebaute `Eudora.exe`** - es gilt fuer einen\n"
         . "frueheren Stand und zaehlt fuer dieses Paket nicht.\n\n" if $kalt;
     $b .= "Gefahren am $o{zeit}, Freigabe: *\"$o{freigabe}\"*\n\n" if $o{zeit};
+    if ($unvollstaendig) {
+        $b .= sprintf("**TEILLAUF - nur %d von %d Faellen sind gemessen.** Die Fallliste\n"
+                    . "`tools/pruefstand-faelle.txt` fuehrt %d Faelle; das abgelegte Ergebnis\n"
+                    . "nennt %d. Wahrscheinlich lief `pruefstand-lauf.ps1` mit `-Nur` und hat\n"
+                    . "das vollstaendige Ergebnis ueberschrieben. Dieses Gruen gilt nicht.\n\n",
+                      ($o{faelle} // 0), $faelle_soll, $faelle_soll, ($o{faelle} // 0));
+    }
+    if (@stand_alt) {
+        $b .= "**ACHTUNG - nicht alle Pruefstaende tragen den Quellstand.** Die Faelle\n";
+        $b .= "in diesen Verzeichnissen wurden an einer ANDEREN Fassung gemessen, ihr\n";
+        $b .= "Gruen gilt fuer dieses Paket also nicht:\n\n";
+        $b .= "* $_\n" for @stand_alt;
+        $b .= "\nGemessen an der Dateiversion der jeweiligen `Eudora.exe`.\n\n";
+    } elsif (@stand_ok) {
+        $b .= "Alle Pruefstaende tragen den Quellstand `$quellstand` (an der\n";
+        $b .= "Dateiversion ihrer `Eudora.exe` gemessen).\n\n";
+    }
     $b .= "| Faelle | bestanden | fehlgeschlagen |\n|---|---|---|\n";
     $b .= "| " . ($o{faelle} // '?') . " | " . ($o{bestanden} // '?') . " | " . ($o{fehlgeschlagen} // '?') . " |\n\n";
     if (@o_faelle) {

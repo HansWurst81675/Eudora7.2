@@ -106,7 +106,17 @@ E-131c | C:\Temp\E131L | 25 | log | E-131 Leistenposition: | | |
 # -------------------------------------------------------------------------
 # E-14 - der X1-Suchindex darf nicht bei jedem Start neu angelegt werden
 # -------------------------------------------------------------------------
-E-14 | C:\Temp\E131L | 25 | log | | Erasing X1 indices | |
+# E-14 stand hier und war VAKUUM-GRUEN. PRUEFER hat es am 22.10.2026
+# gemessen: im Protokoll des Laufs steht keine einzige Zeile mit der
+# Maske 16384 (DEBUG_MASK_SEARCH, QCUtils/public/inc/debug.h:34). Das
+# Suchsystem lief in diesem Lauf gar nicht, also KONNTE "Erasing X1
+# indices" nie erscheinen - der Fall meldete Grün, ohne etwas zu messen
+# (Arbeitsweise/ausbleiben-ist-kein-befund.md, woertlich).
+#
+# Dazu sagt der Befund selbst: "Der Befund laesst sich nur am ZWEITEN
+# Start eines gewachsenen Mailverzeichnisses messen." Der Pruefstand
+# macht einen Start. E-14 gehoert deshalb als manueller Zwei-Start-Fall
+# in Intern/TESTPLAN.md und nicht hierher.
 
 # -------------------------------------------------------------------------
 # Mit Testnachricht aus Testdaten/ - der IMAP-Weg
