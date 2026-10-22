@@ -1,8 +1,8 @@
 # <a id="lektor-34"></a>LEKTOR-34 — Doku nach Merge PR #97 und E-118 (7.2.0.89)
 
 Lauf am 14.10.2026 auf `wt/lektor`, nach dem Merge von `origin/e-118_HTML_header`
-(`65d066a8`, schnell vorgespult). Anlass: PR #97 ([E-105](../BEFUNDE.md#e-105), 7.2.0.88) ist
-gemergt und `e-105_doppelte_bilder` gelöscht; [E-118](../BEFUNDE.md#e-118) ist in 7.2.0.89
+(`65d066a8`, schnell vorgespult). Anlass: PR #97 ([E-105](../Intern/BEFUNDE.md#e-105), 7.2.0.88) ist
+gemergt und `e-105_doppelte_bilder` gelöscht; [E-118](../Intern/BEFUNDE.md#e-118) ist in 7.2.0.89
 eingebaut und am IMAP-Prüfserver gemessen; Gregor bekommt
 `C:\Users\Gregor\Eudora72-1.0.89-release` (Verzeichnis vorhanden, `TESTEN.txt` gelesen).
 1.0.88 wurde nie an Gregor ausgeliefert.
@@ -21,7 +21,7 @@ neueste Marke `v1.0.87`, `tools/RELEASES.md` letzte Zeile `v1.0.87`,
 ### <a id="l-34.1"></a>L-34.1 — die eigene Startzeile hielt den Commit-Haken auf
 
 `tools/agenten-laufen.pl --start` schreibt den Auftragstext wörtlich nach
-`tools/AGENTEN-LAUFEN.md`; die nackte Kennung *„[E-118](../BEFUNDE.md#e-118)“* darin ließ
+`tools/AGENTEN-LAUFEN.md`; die nackte Kennung *„[E-118](../Intern/BEFUNDE.md#e-118)“* darin ließ
 `befunde-verlinken.pl` abweisen. Mit `befunde-verlinken.pl --anker --verlinken`
 verlinkt. Klasse: jeder Rollenauftrag mit Befundnummer erzeugt diesen Mangel,
 siehe [L-34.7](#l-34.7).
@@ -30,17 +30,17 @@ siehe [L-34.7](#l-34.7).
 
 | Datei, Stelle | stand | jetzt |
 |---|---|---|
-| `BEFUNDE.md`, Urteil [E-105](../BEFUNDE.md#e-105) | *„eingebaut in 7.2.0.88 (Zweig `e-105_doppelte_bilder`)“* | dazu *„gemergt mit PR #97“* |
-| `CHANGELOG.md`, offene Befunde, [E-105](../BEFUNDE.md#e-105) | dasselbe | dasselbe |
-| `AUFGABEN.md`, nächste Schritte, [E-105](../BEFUNDE.md#e-105) | *„offen bis zu seinem Test an 1.0.88“* | *„an 1.0.89 (1.0.88 wurde nicht ausgeliefert)“*, Link auf TESTPLAN C5 |
-| `WEITERMACHEN.md`, Nachtrag [LEKTOR-33](LEKTOR-33.md#lektor-33) | *„es fehlen das Paket 1.0.88 bei Gregor und sein Urteil“* | Nachtrag [LEKTOR-34](#lektor-34): 1.0.88 nicht ausgeliefert, 1.0.89 bereitgestellt, es fehlt Gregors Urteil zu [E-118](../BEFUNDE.md#e-118) und [E-105](../BEFUNDE.md#e-105) an 1.0.89; danach [E-113](../BEFUNDE.md#e-113), [E-77](../BEFUNDE.md#e-77) |
+| `BEFUNDE.md`, Urteil [E-105](../Intern/BEFUNDE.md#e-105) | *„eingebaut in 7.2.0.88 (Zweig `e-105_doppelte_bilder`)“* | dazu *„gemergt mit PR #97“* |
+| `CHANGELOG.md`, offene Befunde, [E-105](../Intern/BEFUNDE.md#e-105) | dasselbe | dasselbe |
+| `AUFGABEN.md`, nächste Schritte, [E-105](../Intern/BEFUNDE.md#e-105) | *„offen bis zu seinem Test an 1.0.88“* | *„an 1.0.89 (1.0.88 wurde nicht ausgeliefert)“*, Link auf TESTPLAN C5 |
+| `WEITERMACHEN.md`, Nachtrag [LEKTOR-33](LEKTOR-33.md#lektor-33) | *„es fehlen das Paket 1.0.88 bei Gregor und sein Urteil“* | Nachtrag [LEKTOR-34](#lektor-34): 1.0.88 nicht ausgeliefert, 1.0.89 bereitgestellt, es fehlt Gregors Urteil zu [E-118](../Intern/BEFUNDE.md#e-118) und [E-105](../Intern/BEFUNDE.md#e-105) an 1.0.89; danach [E-113](../Intern/BEFUNDE.md#e-113), [E-77](../Intern/BEFUNDE.md#e-77) |
 
 ### <a id="l-34.3"></a>L-34.3 — E-118 in `README.md` noch im Stand vor dem Einbau
 
-Liste der bekannten Fehler: *„([E-118](../BEFUNDE.md#e-118), offen, am Quelltext belegt)“* →
+Liste der bekannten Fehler: *„([E-118](../Intern/BEFUNDE.md#e-118), offen, am Quelltext belegt)“* →
 *„im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver
 gemessen, noch nicht ausgeliefert, von Gregor noch nicht bestätigt“* — gleichlautend
-mit dem Eintrag zu [E-105](../BEFUNDE.md#e-105) direkt darüber und mit dem Urteil in `BEFUNDE.md`.
+mit dem Eintrag zu [E-105](../Intern/BEFUNDE.md#e-105) direkt darüber und mit dem Urteil in `BEFUNDE.md`.
 
 ### <a id="l-34.4"></a>L-34.4 — Testverzeichnis 1.0.89 als „nicht vorhanden“ geführt
 
@@ -50,10 +50,10 @@ mit dem Eintrag zu [E-105](../BEFUNDE.md#e-105) direkt darüber und mit dem Urte
 
 ### <a id="l-34.5"></a>L-34.5 — TESTPLAN hatte keinen Schritt für 1.0.89
 
-Neuer Abschnitt **C5 · Paket 1.0.89 — [E-118](../BEFUNDE.md#e-118) und [E-105](../BEFUNDE.md#e-105)** (Anker `#c5`), Handgriffe
+Neuer Abschnitt **C5 · Paket 1.0.89 — [E-118](../Intern/BEFUNDE.md#e-118) und [E-105](../Intern/BEFUNDE.md#e-105)** (Anker `#c5`), Handgriffe
 und Hinweise wörtlich nach `Releases/1.0.89/TESTEN.txt` (Mailverzeichnis aus 1.0.87
 vorher kopieren; vor 1.0.89 verschobene Mails bleiben auf dem Server falsch;
-[E-119](../BEFUNDE.md#e-119), [E-113](../BEFUNDE.md#e-113), [E-116](../BEFUNDE.md#e-116) bekannt). Kopfzeile nennt C5 als offen. Damit ist
+[E-119](../Intern/BEFUNDE.md#e-119), [E-113](../Intern/BEFUNDE.md#e-113), [E-116](../Intern/BEFUNDE.md#e-116) bekannt). Kopfzeile nennt C5 als offen. Damit ist
 [L-33.7](LEKTOR-33.md#l-33.7) (kein Schritt für 1.0.88) erledigt — durch 1.0.89.
 
 ## Offen — mit Ermessen, nicht berichtigt
@@ -68,9 +68,9 @@ vorher kopieren; vor 1.0.89 verschobene Mails bleiben auf dem Server falsch;
 | `befund-suchen.pl EuImap/src/ImapAppend.cpp` | dasselbe |
 | `befund-suchen.pl IsHeaderToInclude` | dasselbe |
 | `befund-suchen.pl E-118` | dasselbe |
-| Gegenprobe `befund-suchen.pl ImapDownload.cpp` | 6 Treffer, darunter [NP3-8](../BEFUNDE.md#np3-8) — das Werkzeug läuft |
+| Gegenprobe `befund-suchen.pl ImapDownload.cpp` | 6 Treffer, darunter [NP3-8](../Intern/BEFUNDE.md#np3-8) — das Werkzeug läuft |
 
-Die Urteilszeile von [E-118](../BEFUNDE.md#e-118) nennt `EuImap/src/ImapAppend.cpp:2020-2026`,
+Die Urteilszeile von [E-118](../Intern/BEFUNDE.md#e-118) nennt `EuImap/src/ImapAppend.cpp:2020-2026`,
 `IsHeaderToInclude`, `:692`, `:880`, `:1166-1169` wörtlich.
 
 **Ursache, am Werkzeug gelesen** (`tools/befund-suchen.pl:84-100`): es zerlegt
@@ -80,8 +80,8 @@ beginnen. Die Urteilstabellen fallen absichtlich heraus — Begründung im Komme
 eine Wiederholung.“* **Diese Annahme gilt nicht mehr.** Gemessen an `BEFUNDE.md`:
 171 Kennungen haben eine Urteilszeile (`<a id=…>` am Zeilenanfang einer Tabelle),
 74 haben einen eigenen Abschnitt, **101 stehen nur in der Tabelle** — darunter
-jede Kennung von [E-100](../BEFUNDE.md#e-100) bis [E-120](../BEFUNDE.md#e-120) (E-102 ist nicht vergeben). Bei ihnen trägt die Tabellenzeile die gesamte
-Fundstelle ([E-105](../BEFUNDE.md#e-105) und [E-118](../BEFUNDE.md#e-118) je mehrere tausend Zeichen).
+jede Kennung von [E-100](../Intern/BEFUNDE.md#e-100) bis [E-120](../Intern/BEFUNDE.md#e-120) (E-102 ist nicht vergeben). Bei ihnen trägt die Tabellenzeile die gesamte
+Fundstelle ([E-105](../Intern/BEFUNDE.md#e-105) und [E-118](../Intern/BEFUNDE.md#e-118) je mehrere tausend Zeichen).
 
 **Was daran schwer wiegt:** `CLAUDE.md` Abschnitt 2 macht genau dieses Werkzeug zur
 Bedingung für jeden neuen Befund — *„Erst wenn das Werkzeug nichts meldet, ist ein
@@ -93,8 +93,8 @@ fehlendem Werkzeug (`Arbeitsweise/pruefstand-kann-blind-sein.md`,
 
 **Vorschlag, nicht umgesetzt:** Tabellenzeilen mit `<a id="…"></a>` als eigenen
 Abschnitt mitlesen (Nummer aus dem Anker, Titel aus der zweiten Zelle, Urteil aus
-der dritten); Gegentest: `ImapAppend.cpp` muss [E-118](../BEFUNDE.md#e-118) finden, `ImapDownload.cpp`
-weiter [NP3-8](../BEFUNDE.md#np3-8). Dazu eine Schranke, die für jede Kennung mit Urteilszeile prüft, ob
+der dritten); Gegentest: `ImapAppend.cpp` muss [E-118](../Intern/BEFUNDE.md#e-118) finden, `ImapDownload.cpp`
+weiter [NP3-8](../Intern/BEFUNDE.md#np3-8). Dazu eine Schranke, die für jede Kennung mit Urteilszeile prüft, ob
 `befund-suchen.pl` sie über eine ihrer Dateinamen findet. Entscheidung, wer das baut
 und auf welchem Zweig, bei Gregor.
 

@@ -3,9 +3,9 @@
 Lauf am 20.10.2026 im Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`,
 Ausgang `4953e1f1`. Anlass: seit [LEKTOR-43](LEKTOR-43.md#lektor-43) (`1d081b2`,
 20.10.2026 nachmittags) sind dazugekommen: **zwei Fassungssprünge**
-(7.2.0.113 mit [E-131](../BEFUNDE.md#e-131), **veröffentlicht als `v1.0.113`**,
-und 7.2.0.114 mit [E-132](../BEFUNDE.md#e-132), **nicht geschnürt**), der neue
-Über-Dialog, die Defender-Meldung an Microsoft ([E-124](../BEFUNDE.md#e-124)),
+(7.2.0.113 mit [E-131](../Intern/BEFUNDE.md#e-131), **veröffentlicht als `v1.0.113`**,
+und 7.2.0.114 mit [E-132](../Intern/BEFUNDE.md#e-132), **nicht geschnürt**), der neue
+Über-Dialog, die Defender-Meldung an Microsoft ([E-124](../Intern/BEFUNDE.md#e-124)),
 drei neue Dateien (`Releases/DEFENDER-FEHLALARM.md`,
 `Releases/ISSUE-102-ANTWORT.md`, `CHRONIST-2026-10-20b.md`) und
 [PRÜFER-40](PRUEFER-40.md).
@@ -55,7 +55,7 @@ stammt aus einem Dokument des Projekts:
 
 **Werkzeuge vorher:** `doku-pruefen.pl` kein Widerspruch (9 Hinweise *zur
 Kenntnis*), `befunde-verlinken.pl` grün, `commit-bereit.pl` **32 Schranken,
-keine weist ab**, `offene-befunde.pl` **ZU VIEL: [E-131](../BEFUNDE.md#e-131)**. **Nachher:** alle
+keine weist ab**, `offene-befunde.pl` **ZU VIEL: [E-131](../Intern/BEFUNDE.md#e-131)**. **Nachher:** alle
 grün, `offene-befunde.pl` 35/35, `doku-pruefen.pl` 9 Hinweise (unverändert,
 alle berechtigt — es sind Rückblicke und Fremdverzeichnisse).
 
@@ -80,7 +80,7 @@ alle berechtigt — es sind Rückblicke und Fremdverzeichnisse).
 > nachgestellt**
 
 **Gemessen:** `BEFUNDE.md` und `CHANGELOG.md:195` führen
-[E-131](../BEFUNDE.md#e-131) als *„Behoben in 7.2.0.113, am Prüfstand rot und
+[E-131](../Intern/BEFUNDE.md#e-131) als *„Behoben in 7.2.0.113, am Prüfstand rot und
 grün gesehen"*, und genau diese Fassung ist seit **13:01:36 UTC** als
 `v1.0.113` draußen. Die Zeile war also in **beiden** Aussagen falsch: der
 Fehler ist nachgestellt, und *diese Fassung* schreibt den Wert nicht mehr.
@@ -115,7 +115,7 @@ feststellt, ob er die richtige Datei hat; sie ist die einzige Angabe in der
 Zeile, die er nachrechnen kann, und die einzige, die falsch war.
 
 Dazu in derselben Zeile: Gregors Bestätigung zu
-[E-123](../BEFUNDE.md#e-123) (6015 ms / 4015 ms) stand **ohne Paketnummer**
+[E-123](../Intern/BEFUNDE.md#e-123) (6015 ms / 4015 ms) stand **ohne Paketnummer**
 unter `v1.0.113`; gemessen hat er an **1.0.111**. Das ist
 [L-43.2](LEKTOR-43.md#l-43.2), eine Datei weiter.
 
@@ -200,7 +200,7 @@ fragt, **ob** `1.0.113` vorkommt, nicht **wem** die Nummer gehört.
 Dazu zwei kleinere Dinge in derselben Datei: der Abschnitt **1.0.113** hatte
 **keine Defender-Zeile**, obwohl genau dieses Paket zweimal eingezogen und bei
 Microsoft eingereicht wurde (vom CHRONIST gemeldet); und die Defender-Zeile im
-Abschnitt 1.0.114 zählte anders als [E-124](../BEFUNDE.md#e-124)
+Abschnitt 1.0.114 zählte anders als [E-124](../Intern/BEFUNDE.md#e-124)
 ([L-44.6](#l-44.6)).
 
 ### <a id="l-44.6"></a>L-44.6 — die Messung, mit der wir gegenüber Microsoft argumentieren, stand in keinem Befund (hoch)
@@ -211,7 +211,7 @@ Abschnitt 1.0.114 zählte anders als [E-124](../BEFUNDE.md#e-124)
 > **1.0.111** and 1.0.113 on 2026-10-20"*
 
 `Releases/PAKETE.md:166` zählte ebenso *„dritter Fall nach 1.0.98 und
-1.0.111"*. **[E-124](../BEFUNDE.md#e-124) kannte den Fall 1.0.111 nicht** —
+1.0.111"*. **[E-124](../Intern/BEFUNDE.md#e-124) kannte den Fall 1.0.111 nicht** —
 dort standen nur die beiden Erkennungen vom 16.10. und die beiden vom 20.10.
 abends, beide an 1.0.113. Zwei Dokumente waren sich einig, und der Befund
 wusste nichts davon ([Einigkeit ist kein
@@ -225,7 +225,7 @@ ist der, aus dem um **13:13** Paket **1.0.111** geschnürt wurde
 Microsoft ist also belegt** — nur nicht dort, wo das Projekt seine Befunde
 führt, und damit für jeden Leser unauffindbar.
 
-Nachgetragen in [E-124](../BEFUNDE.md#e-124) als *dritter Fall*, mit Quelle und
+Nachgetragen in [E-124](../Intern/BEFUNDE.md#e-124) als *dritter Fall*, mit Quelle und
 mit dem Vermerk, dass er nachgetragen ist. Die Zählung in `Releases/PAKETE.md`
 sagt jetzt, **was** sie zählt (Baue, nicht Erkennungen).
 
@@ -233,7 +233,7 @@ Die Prüfsummen und Größen in `Releases/DEFENDER-FEHLALARM.md` habe ich einzel
 gegengehalten: ZIP 9 378 205 Byte / `0D1D4BF4…`, `Eudora.exe` 3 012 608 Byte /
 `6243D4B6…`, Fassung 7.2.0.113, Erkennungsname `Trojan:Win32/Bearfoos.A!ml`,
 Signaturstand 1.461.115.0, Vorgang `a567fe2a-…`, eingereicht 20:57:52. **Alle
-decken sich mit [E-124](../BEFUNDE.md#e-124) und mit `gh release view`.** Den
+decken sich mit [E-124](../Intern/BEFUNDE.md#e-124) und mit `gh release view`.** Den
 eingereichten Text selbst habe ich **nicht** angefasst: er ist abgeschickt,
 eine Änderung daran machte aus einem Protokoll eine Fälschung.
 
@@ -243,10 +243,10 @@ Alles am selben Tag datiert, alles überholt:
 
 | Stelle | stand dort | gemessen |
 |---|---|---|
-| `CHANGELOG.md:16`, *Noch offen (Stand 20.10.2026)*, **erste Zeile** | [E-131](../BEFUNDE.md#e-131): *„Offen … von uns noch nicht nachgestellt … in `v1.0.112` ausdrücklich nicht angefasst"* | behoben in 7.2.0.113, veröffentlicht. **Zeile entfernt** ([PRÜFER-40](PRUEFER-40.md#k4) K4) |
-| `CHANGELOG.md`, dieselbe Tabelle, [E-124](../BEFUNDE.md#e-124) | *„Offen: Fehlalarm zu 1.0.98 bei Microsoft **melden**"* | am 20.10.2026 um 20:57:52 eingereicht. Zeile neu |
+| `CHANGELOG.md:16`, *Noch offen (Stand 20.10.2026)*, **erste Zeile** | [E-131](../Intern/BEFUNDE.md#e-131): *„Offen … von uns noch nicht nachgestellt … in `v1.0.112` ausdrücklich nicht angefasst"* | behoben in 7.2.0.113, veröffentlicht. **Zeile entfernt** ([PRÜFER-40](PRUEFER-40.md#k4) K4) |
+| `CHANGELOG.md`, dieselbe Tabelle, [E-124](../Intern/BEFUNDE.md#e-124) | *„Offen: Fehlalarm zu 1.0.98 bei Microsoft **melden**"* | am 20.10.2026 um 20:57:52 eingereicht. Zeile neu |
 | `WEITERMACHEN.md:9`, *Quellstand* | **7.2.0.113**, Zweig `e-131-leistenposition` — und dahinter die Beschreibung von 7.2.0.111/112 (*„die Wache beim Beenden zählt jede Übertragungsart"*) | 7.2.0.114. Drei Fassungen stehen jetzt getrennt, jede mit ihrem eigenen Inhalt |
-| `WEITERMACHEN.md`, Liste der offenen Befunde | führte [E-131](../BEFUNDE.md#e-131) | `offene-befunde.pl` meldete *ZU VIEL*; mit `-schreiben` neu gesetzt, 35 von 35 |
+| `WEITERMACHEN.md`, Liste der offenen Befunde | führte [E-131](../Intern/BEFUNDE.md#e-131) | `offene-befunde.pl` meldete *ZU VIEL*; mit `-schreiben` neu gesetzt, 35 von 35 |
 | `AUFGABEN.md:3` | Zweig `e-123-transfersame`; *„veröffentlicht ist `v1.0.112`"* | Zweig `e-132-fremdes-mailverzeichnis`; veröffentlicht `v1.0.113` |
 | `PORTIERUNG.md:44` | *„Stand 20.10.2026, Zweig `e-123-transfersame`: Quellstand 7.2.0.113, `VERSION` 1.0.113, **nicht veröffentlicht**"* | **drei Fehler in einer Zeile:** `e-123-transfersame` trug 7.2.0.112; 7.2.0.113 kam aus `e-131-leistenposition`; und 1.0.113 **ist** veröffentlicht. Die beiden fehlenden Blöcke (7.2.0.113, 7.2.0.114) ergänzt |
 | `ZIEL.md:49` | *„Quellstand ist jetzt **7.2.0.113 / Paket 1.0.112**, am 20.10.2026 als `v1.0.112` veröffentlicht"* | Quellstand und Paketnummer gehörten zu zwei verschiedenen Fassungen |
@@ -261,28 +261,28 @@ richtige. Ein Stand-Kopf, der stimmt, sagt nichts über den Text darunter —
 ### <a id="l-44.8"></a>L-44.8 — `Releases/ISSUE-102-ANTWORT.md`: jeder Satz belegt, drei Dinge ungesagt (hoch)
 
 Der freigegebene Wortlaut geht an einen Fremden. Ich habe ihn **Satz für Satz**
-gegen [E-132](../BEFUNDE.md#e-132), [E-131](../BEFUNDE.md#e-131),
-[E-124](../BEFUNDE.md#e-124) und den CHANGELOG-Abschnitt 7.2.0.114 gehalten.
+gegen [E-132](../Intern/BEFUNDE.md#e-132), [E-131](../Intern/BEFUNDE.md#e-131),
+[E-124](../Intern/BEFUNDE.md#e-124) und den CHANGELOG-Abschnitt 7.2.0.114 gehalten.
 
 **Belegt ist jeder Satz:**
 
 | Behauptung im Text | Beleg |
 |---|---|
-| Registry-Weg `HKCU\…\CommandLine\Current`, greift nur ohne Befehlszeile und ohne `Eudora.ini` neben der EXE | [E-132](../BEFUNDE.md#e-132), am Quelltext (`eudora.cpp:1036-1052` → `:3700`) |
-| *„ours is located in `Mailverzeichnis\`"* | [E-132](../BEFUNDE.md#e-132), genau die zweite Bedingung |
-| drei Antworten, **Vorgabe die mittlere** | [E-132](../BEFUNDE.md#e-132): *„mit „Eigenes anlegen" als Vorgabe"* |
-| *No* → frisches Verzeichnis, fremde `Eudora.ini` **byte-identisch** (SHA-256) | [E-132](../BEFUNDE.md#e-132), Messung am laufenden Programm |
-| *Yes* → fremdes Verzeichnis benutzt, seine `Eudora.ini` **ändert sich** | [E-132](../BEFUNDE.md#e-132): `LastKnownCrashInfo=0` → `=1`, nach 15 s |
-| *Cancel* → Eudora beendet sich, nichts angefasst | [E-132](../BEFUNDE.md#e-132) |
+| Registry-Weg `HKCU\…\CommandLine\Current`, greift nur ohne Befehlszeile und ohne `Eudora.ini` neben der EXE | [E-132](../Intern/BEFUNDE.md#e-132), am Quelltext (`eudora.cpp:1036-1052` → `:3700`) |
+| *„ours is located in `Mailverzeichnis\`"* | [E-132](../Intern/BEFUNDE.md#e-132), genau die zweite Bedingung |
+| drei Antworten, **Vorgabe die mittlere** | [E-132](../Intern/BEFUNDE.md#e-132): *„mit „Eigenes anlegen" als Vorgabe"* |
+| *No* → frisches Verzeichnis, fremde `Eudora.ini` **byte-identisch** (SHA-256) | [E-132](../Intern/BEFUNDE.md#e-132), Messung am laufenden Programm |
+| *Yes* → fremdes Verzeichnis benutzt, seine `Eudora.ini` **ändert sich** | [E-132](../Intern/BEFUNDE.md#e-132): `LastKnownCrashInfo=0` → `=1`, nach 15 s |
+| *Cancel* → Eudora beendet sich, nichts angefasst | [E-132](../Intern/BEFUNDE.md#e-132) |
 | Über-Dialog: INI-Pfad, Protokollpfad mit LogLevel, Herkunft, Knopf *Copy info* | `CHANGELOG.md`, Abschnitt 7.2.0.114, Tabelle der vier Zeilen |
-| Defender `Trojan:Win32/Bearfoos.A!ml`, eingereicht 20.10.2026, Vorgang `a567fe2a-…` | [E-124](../BEFUNDE.md#e-124), `Releases/DEFENDER-FEHLALARM.md` |
+| Defender `Trojan:Win32/Bearfoos.A!ml`, eingereicht 20.10.2026, Vorgang `a567fe2a-…` | [E-124](../Intern/BEFUNDE.md#e-124), `Releases/DEFENDER-FEHLALARM.md` |
 
 **Drei Dinge sagt der Text nicht.** Ich habe den freigegebenen Wortlaut
 **nicht angefasst** und die drei Punkte als Anmerkung darüber gesetzt, damit
 sie sieht, wer ihn abschickt:
 
 1. **Seine vorhandene `Eudora.ini` wird dadurch nicht heil.** Unsere Behebung
-   zu [E-131](../BEFUNDE.md#e-131) berichtigt erst beim **Sichern**. Ihn selbst
+   zu [E-131](../Intern/BEFUNDE.md#e-131) berichtigt erst beim **Sichern**. Ihn selbst
    trifft es nicht mehr (er hat zurückgespielt) — einen anderen Leser schon.
 2. **Die Ursache ist weiterhin nicht belegt** ([L-44.3](#l-44.3)). *„We found
    the mechanism behind this and fixed it"* ganz oben kann so gelesen werden,
@@ -320,7 +320,7 @@ abgelöst"*.
 ### <a id="l-44.10"></a>L-44.10 — die veröffentlichten Notizen zu `v1.0.113` warnen nicht vor E-132 (mittel)
 
 `Releases/1.0.113/RELEASE-NOTIZEN.md`, *Bekannte Fehler*: neun Punkte, von
-`.txt`-Endung bis Adressbuch. **[E-132](../BEFUNDE.md#e-132) kommt nicht vor** —
+`.txt`-Endung bis Adressbuch. **[E-132](../Intern/BEFUNDE.md#e-132) kommt nicht vor** —
 obwohl er in dieser Fassung **offen** ist, obwohl er aus demselben
 [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) stammt, das
 die Notizen oben im Kasten zitieren, und obwohl er das Einzige in der Liste ist,
@@ -446,12 +446,12 @@ diese Form.
 | [L-43.13](LEKTOR-43.md#l-43.13) `ist_standaussage()` hört auf Wörter | **offen**, und derselbe Bauteil sitzt in `pruefe-befundurteile.pl:212-217` — dort hat er [L-44.1](#l-44.1) durchgelassen |
 | [L-43.14](LEKTOR-43.md#l-43.14) vier Nummernkreise in den PRÜFER-Berichten | **teils erledigt:** [PRÜFER-40](PRUEFER-40.md) benutzt `K1` … `K15` **mit Ankern**. Die Verwechslungsgefahr mit [`P-39`](PRUEFER-14.md#p-39) besteht weiter, der Kreis trägt aber nicht mehr die Berichtsnummer |
 | [L-43.15](LEKTOR-43.md#l-43.15) Release-Notizen nicht im Prüfumfang von `pruefe-befundurteile.pl` | **offen** — und [L-44.10](#l-44.10) ist genau der Fall: ein offener Befund fehlt in den Notizen, niemand merkt es |
-| [L-43.17](LEKTOR-43.md#l-43.17) Defender-Beleg zu 1.0.112 | **erledigt für 1.0.113:** die Messung liegt jetzt in [E-124](../BEFUNDE.md#e-124) und in `Releases/PAKETE.md` ([L-44.6](#l-44.6)). Für **1.0.112** gibt es weiterhin keinen Beleg |
-| [L-42.14](LEKTOR-42.md#l-42.14) / [L-41.3](LEKTOR-41.md#l-41.3) `ZIEL.md` kennt die neuen Befunde nicht | **teils erledigt:** `ZIEL.md:20-21` führt jetzt eine Anforderung *Fremde Installation* mit [E-131](../BEFUNDE.md#e-131) und [E-132](../BEFUNDE.md#e-132). [E-122](../BEFUNDE.md#e-122) bis [E-130](../BEFUNDE.md#e-130) stehen weiterhin weder als Voraussetzung noch unter *ausdrücklich nicht* |
+| [L-43.17](LEKTOR-43.md#l-43.17) Defender-Beleg zu 1.0.112 | **erledigt für 1.0.113:** die Messung liegt jetzt in [E-124](../Intern/BEFUNDE.md#e-124) und in `Releases/PAKETE.md` ([L-44.6](#l-44.6)). Für **1.0.112** gibt es weiterhin keinen Beleg |
+| [L-42.14](LEKTOR-42.md#l-42.14) / [L-41.3](LEKTOR-41.md#l-41.3) `ZIEL.md` kennt die neuen Befunde nicht | **teils erledigt:** `ZIEL.md:20-21` führt jetzt eine Anforderung *Fremde Installation* mit [E-131](../Intern/BEFUNDE.md#e-131) und [E-132](../Intern/BEFUNDE.md#e-132). [E-122](../Intern/BEFUNDE.md#e-122) bis [E-130](../Intern/BEFUNDE.md#e-130) stehen weiterhin weder als Voraussetzung noch unter *ausdrücklich nicht* |
 | [L-41.8](LEKTOR-41.md#l-41.8) zwei Messskripte ohne Eintrag in `tools/WERKZEUGE.md` | **offen** |
-| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
-| [L-37.10](LEKTOR-37.md#l-37.10) AUFGABEN ohne Zeilen für [E-122](../BEFUNDE.md#e-122) ff. | **offen**, jetzt bis [E-132](../BEFUNDE.md#e-132) |
-| [E-130](../BEFUNDE.md#e-130) fünf DLLs im Hauptbaum | **unverändert** — `git status` im Hauptbaum zeigt sie weiter als ` M` |
+| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../Intern/BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
+| [L-37.10](LEKTOR-37.md#l-37.10) AUFGABEN ohne Zeilen für [E-122](../Intern/BEFUNDE.md#e-122) ff. | **offen**, jetzt bis [E-132](../Intern/BEFUNDE.md#e-132) |
+| [E-130](../Intern/BEFUNDE.md#e-130) fünf DLLs im Hauptbaum | **unverändert** — `git status` im Hauptbaum zeigt sie weiter als ` M` |
 
 ---
 
@@ -490,7 +490,7 @@ diese Form.
 
    **Dafür spricht:** zwei Sätze brechen mitten ab, der Punkt zur Meldungsflut
    fehlt ganz, die Ursachenbehauptung ist stärker als unsere eigene
-   Richtigstellung im Issue, und vor [E-132](../BEFUNDE.md#e-132) wird nicht
+   Richtigstellung im Issue, und vor [E-132](../Intern/BEFUNDE.md#e-132) wird nicht
    gewarnt. **Dagegen spricht nichts, was ich sehe** — aber es ist eine Aussage
    nach außen. *(Dieselbe Frage stand als Punkt 1 in
    [LEKTOR-43](LEKTOR-43.md#lektor-43) für `v1.0.112` und ist dort offen

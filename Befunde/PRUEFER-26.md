@@ -7,7 +7,7 @@ Stand: Zweig `wt/pruefer`, gemergt mit `origin/e-105_doppelte_bilder` (`1d010e0f
 herausgeschnitten) in einem eigenen Prüfprogramm im Scratchpad, gebaut mit `cl /fsanitize=address`,
 15 Tagfolgen abgespielt (Ergebnisse unten in 2). AddressSanitizer meldet nichts.
 **Nicht selbst gemessen:** Testsuite 202/202 und die Läufe in `C:\Temp\E105`/`E105-1087` —
-aus den Commit-Nachrichten und [E-105](../BEFUNDE.md#e-105) übernommen.
+aus den Commit-Nachrichten und [E-105](../Intern/BEFUNDE.md#e-105) übernommen.
 
 **Urteil: auslieferbar, ja.** Die Behebung trifft Gregors gemessene Fälle (Vorschauzeile,
 Handyfassung als `<table … display:none>`), ist pufferfest und auf die gebaute Quelle gesetzt.
@@ -30,7 +30,7 @@ schließen ihre Zellen. Deshalb kein Sperrgrund, aber Test und Schutz empfohlen.
 | `attribute_ptr` nullterminiert? | `InsertTokenChar` schreibt nach **jedem** Zeichen eine 0 dahinter (`:3630`) und vergrößert vorher (`:3622-3628`, Zeiger neu geholt); `ReadHTMLTag` hängt zusätzlich `'\0'` an (`:917`) | ja, jede Schleife in `E105Schritt` hält an `*p == 0` (`:703`, `:725`, `:732`, `:738`) |
 | `E105DisplayNone` (`:628-681`) | Schleife `i + 7 <= nWert` liest `[i..i+6]`; `k` vor jedem Zugriff gegen `nWert` geprüft (`:657`, `:659`, `:662`); `w[0..3]` nur bei `k + 4 <= nWert` (`:664`); `n` nur bei `k + 4 < nWert` (`:675`) | sicher, kein Lesen hinter `nWert` |
 | Aufruf mit `pTok + 1, nTok - 2` (`:744`) | nur wenn `nTok >= 2` und erstes = letztes Zeichen ein Anführungszeichen | sicher; offenes Anführungszeichen geht über `:746` mit voller Länge |
-| `szSpur[96]` (`:924`) | längster Text „[E-105](../BEFUNDE.md#e-105) versteckter Bereich <%s> ohne Ende-Tag beendet“ = 52 + 15 | sicher |
+| `szSpur[96]` (`:924`) | längster Text „[E-105](../Intern/BEFUNDE.md#e-105) versteckter Bereich <%s> ohne Ende-Tag beendet“ = 52 + 15 | sicher |
 | `pg_char` → `const char*` (`:926`) | Eudora baut ohne `UNICODE`, `pg_char` ist `unsigned char` (`PaigeDLL/PGHEADER/CPUDEFS.H:647`) | richtig; Bytes > 127 werden negativ, alle Vergleiche sind auf `'A'..'Z'`/ASCII, unschädlich |
 
 Mit AddressSanitizer an 15 Folgen gefahren, darunter offenes Anführungszeichen,
@@ -108,14 +108,14 @@ Zweige) und gewöhnlichen Text ab. Daneben:
 
 | Weg | Stelle | im Bereich |
 |---|---|---|
-| CR/LF außerhalb der Tabelle | `:534-541` — der `else if`-Zweig nach der Sperre gibt `' '` aus | **ein Leerzeichen** je Bereich; `IMPORT_NO_LEADING_SPACES` (`:84`, `PGIMPORT.CPP:1078-1081`) schluckt weitere. Gleich wie seit [AN-2](../BEFUNDE.md#an-2) bei `<script>`. Sichtbar höchstens als Leerzeichen zwischen zwei Wörtern: `Hallo<span style=display:none>x⏎</span>Welt` → „Hallo Welt“ statt „HalloWelt“. Kosmetisch. |
+| CR/LF außerhalb der Tabelle | `:534-541` — der `else if`-Zweig nach der Sperre gibt `' '` aus | **ein Leerzeichen** je Bereich; `IMPORT_NO_LEADING_SPACES` (`:84`, `PGIMPORT.CPP:1078-1081`) schluckt weitere. Gleich wie seit [AN-2](../Intern/BEFUNDE.md#an-2) bei `<script>`. Sichtbar höchstens als Leerzeichen zwischen zwei Wörtern: `Hallo<span style=display:none>x⏎</span>Welt` → „Hallo Welt“ statt „HalloWelt“. Kosmetisch. |
 | ESC (0x1B) | `:546-548` | wird ausgegeben. Nur ISO-2022-JP-Mails; unsichtbares Steuerzeichen. Kosmetisch. |
 | `<` vor Nicht-Buchstabe | `ReadHTMLTag` `:857-860` (`OutputCharacter('<')` vor dem E-105-Haken) | ein `<` erscheint, z. B. aus `a < b` oder `<?xml …>` im versteckten Text. Selten. |
 | Kommentare `<!-- -->` | `:827-852` — Rückkehr **vor** dem Haken, Ausgabe nur bei `code_listing` | nichts. Bedingte Kommentare (`<!--[if mso]>`) verhalten sich wie vorher. |
 | `code_listing` (`<listing>`, `PGHTMDEF.C:28`, Wert 12) | Haken übersprungen (`:922`) | ein `<listing>` **im** Bereich wird selbst verschluckt, `code_listing` wird dort nie gesetzt; Bereich **im** `<listing>` wird nicht versteckt — richtig, dort ist alles Literaltext. |
 | `ProcessEmbed` | `:310-312`, nur über `current_style.embed_object` aus `DoDataTag` | verstecktes `<img>` erreicht `DoDataTag` nie. |
 | Tabellen-Vorlauf | `ProcessPreTable` `:2798` ruft `ReadHTMLTag` | Zustand gesichert/wiederhergestellt (`:2771-2774`, `:2840-2841`), versteckte Zellen zählen in beiden Läufen gleich. Richtig. |
-| `ScanStyleSheet`, `SkipToEndTag` (Eudoras Unterklasse) | `Paige_io.cpp:1260`, `:1304` rufen `ReadHTMLTag` | [E-105](../BEFUNDE.md#e-105) läuft dort mit. Ohne Wirkung, solange im CSS bzw. in der Signatur kein unvollständiges verstecktes Element steht. |
+| `ScanStyleSheet`, `SkipToEndTag` (Eudoras Unterklasse) | `Paige_io.cpp:1260`, `:1304` rufen `ReadHTMLTag` | [E-105](../Intern/BEFUNDE.md#e-105) läuft dort mit. Ohne Wirkung, solange im CSS bzw. in der Signatur kein unvollständiges verstecktes Element steht. |
 
 ### Gegenvermutung G1 — Tags in `<script>` öffnen einen Bereich
 
@@ -135,13 +135,13 @@ von Tabellen, dort stimmt „vier“.
 
 ### Hinweis zu BEFUNDE.md
 
-[E-105](../BEFUNDE.md#e-105) schreibt unter „Nicht abgedeckt“: *„Paige wertet `<style>` nicht aus, [AN-2](../BEFUNDE.md#an-2) verschluckt ihn“*.
+[E-105](../Intern/BEFUNDE.md#e-105) schreibt unter „Nicht abgedeckt“: *„Paige wertet `<style>` nicht aus, [AN-2](../Intern/BEFUNDE.md#an-2) verschluckt ihn“*.
 Im gebauten Eudora stimmt der zweite Teil nicht: `CMyPaigeHTMLImportFilter::PreProcessTag`
 fängt `style_command` vorher ab und ruft `ScanStyleSheet` (`Paige_io.cpp:1071-1075`); `DoControlTag`
 mit `inside_script = TRUE` (`PGHTMIMP.CPP:1470-1472`) wird für `<style>` nie erreicht.
 `ScanStyleSheet` liest nur `p.`/`div.`-Klassen auf Ränder hin, `display` nicht. Die Aussage
 „Klassen-`display:none` nicht abgedeckt“ bleibt richtig, die Begründung ist zu berichtigen.
-Wer Klassen nachrüsten will, setzt dort an, nicht bei [AN-2](../BEFUNDE.md#an-2).
+Wer Klassen nachrüsten will, setzt dort an, nicht bei [AN-2](../Intern/BEFUNDE.md#an-2).
 
 ## 4. Zurücksetzen zwischen Importen
 
@@ -163,7 +163,7 @@ enthält keinen HTML-Import; die Behebung sitzt am richtigen Ort.
 Klassenlayout: die neuen Glieder stehen nur in `Eudora71/Eudora/PGTXRCPP.H:396-397`, nicht in
 `PaigeDLL/PGHEADER/PGTXRCPP.H`. `Paige_io.h:8` bindet mit Anführungszeichen ein, also zuerst
 aus dem eigenen Verzeichnis; außerhalb von `Eudora71/Eudora/` bindet keine Datei `pgtxrcpp.h` oder
-`Paige_io.h` ein (grep). Kein Layout-Bruch — dasselbe Muster trägt seit [AN-2](../BEFUNDE.md#an-2) `inside_script`.
+`Paige_io.h` ein (grep). Kein Layout-Bruch — dasselbe Muster trägt seit [AN-2](../Intern/BEFUNDE.md#an-2) `inside_script`.
 
 ## 6. Tests
 
@@ -183,6 +183,6 @@ sichtbare Post verschwindet.
 | G2 | Spurmarke zählt versteckte Elemente in Tabellen doppelt | `PGHTMIMP.CPP:928-931`, `:2798` | nur Messdeutung |
 | G3 | kein Zurücksetzen in `pgPrepareImport` (Vorsorge) | `PGHTMIMP.CPP:154` | heute folgenlos |
 | — | ein Leerzeichen, ESC und `<` können aus dem Bereich durchsickern | `:534-548`, `:857-860` | kosmetisch |
-| — | BEFUNDE.md: `<style>` geht über `ScanStyleSheet`, nicht über [AN-2](../BEFUNDE.md#an-2) | `Paige_io.cpp:1071-1075` | Doku |
+| — | BEFUNDE.md: `<style>` geht über `ScanStyleSheet`, nicht über [AN-2](../Intern/BEFUNDE.md#an-2) | `Paige_io.cpp:1071-1075` | Doku |
 
 Puffergrenzen: alle sicher (Abschnitt 1, ASan ohne Meldung).

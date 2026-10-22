@@ -2,7 +2,7 @@
 
 Gegenstand: der Quelltext, der seit [PRÜFER-40](PRUEFER-40.md) dazugekommen ist
 und als Paket **1.0.114** hinausgehen soll — Befund
-[**E-132**](../BEFUNDE.md#e-132) (fremdes Mailverzeichnis beim Start) und der
+[**E-132**](../Intern/BEFUNDE.md#e-132) (fremdes Mailverzeichnis beim Start) und der
 erweiterte Über-Dialog. Zweig `wt/pruefer-20261020b`, Stand von `main`
 (`6f707bc5`).
 
@@ -73,14 +73,14 @@ raus — **nicht vorher**.
 | **[K9](#k9)** Der Weg „Abbrechen" kann im Protokoll **gar nicht** erscheinen: bei `IDCANCEL` steigt `InitInstance` aus, `E132SpurAusgeben()` (`:1213`) wird nie erreicht. Dasselbe bei `err`, bei scheiterndem `GetDirs` und bei scheiterndem `InitDebug` | mittel, Prüflücke | **belegt am Quelltext** |
 | **[K10](#k10)** Statische Initialisierungsreihenfolge von `g_szE132Spur`: **kein Fund** | — | **belegt an der MFC-Quelle** (`strcore.cpp:133`, `UseOfMfc=Dynamic`) |
 | **[K11](#k11)** Der Über-Dialog schneidet lange Zeilen ohne Ellipse ab; die Log-Zeile verliert dabei gerade das `(LogLevel=…)`, das sie erklären soll. Startbild (`m_IsSplash`) bleibt richtig | gering | **belegt an Quelltext und `.rc`** |
-| **[K12](#k12)** Altbestand, durch [E-132](../BEFUNDE.md#e-132) neu sichtbar: `cmdLine` ist nicht vorbelegt und wird nach gescheitertem `RegQueryValueEx` gelesen; die neue `MessageBox` steht **vor** der `err`-Prüfung und kann einen Müllpfad anzeigen | gering | **belegt am Quelltext** |
+| **[K12](#k12)** Altbestand, durch [E-132](../Intern/BEFUNDE.md#e-132) neu sichtbar: `cmdLine` ist nicht vorbelegt und wird nach gescheitertem `RegQueryValueEx` gelesen; die neue `MessageBox` steht **vor** der `err`-Prüfung und kann einen Müllpfad anzeigen | gering | **belegt am Quelltext** |
 | **[K13](#k13)** Die Registry speichert das Mailverzeichnis **ohne** Rückstrich, `ExecutableDir` trägt einen — ist das Mailverzeichnis das Programmverzeichnis selbst, meldet der Vergleich „fremd". **Überlebt die Behebung von [K3](#k3)** und wird durch die Behebung von [K1](#k1) erst scharf | **hoch, sobald [K1](#k1) behoben ist** | **belegt am Quelltext** (`eudora.cpp:3681-3684` gegen `fileutil.cpp:435`) |
 
 ---
 
 ## Was die drei Messungen nicht zeigen
 
-In [E-132](../BEFUNDE.md#e-132) stehen drei Messungen am laufenden Programm:
+In [E-132](../Intern/BEFUNDE.md#e-132) stehen drei Messungen am laufenden Programm:
 *Nein* → `fremd=1`, *Ja* → fremde INI geändert, *Abbrechen* → Programm endet.
 Alle drei sind echt, und alle drei sind an **`C:\Temp\E132`** gegen
 **`C:\Temp\E131`** gefahren. Was dieser Prüfstand nicht treffen kann:
@@ -151,7 +151,7 @@ für jedes erste Argument, das kein vorhandenes Verzeichnis, keine `.sta`,
 `.msg`, `.mbx` und keine lesbare INI ist (`fileutil.cpp:585`). Also auch für
 ein Mailverzeichnis, **das es noch nicht gibt** — der erste Start nach einem
 versehentlich gelöschten `Mailverzeichnis\` geht über `:1017`. Dazu alles, was
-[E-132](../BEFUNDE.md#e-132) selbst im Registry-Export aufzählt: `mailto:`,
+[E-132](../Intern/BEFUNDE.md#e-132) selbst im Registry-Export aufzählt: `mailto:`,
 `.mbx`, `.sta`, `x-eudora-option`. Der Befund sagt zu Recht, dass wir diese
 Zuordnungen nicht kapern — aber ein Anwender, der eine Nachricht oder ein
 Postfach auf `Eudora.exe` zieht, fährt denselben Weg.
@@ -673,7 +673,7 @@ nicht wegen [K3](#k3) allein:
 
 | | muss vor der Veröffentlichung hinein | warum |
 |---|---|---|
-| [K1](#k1) | **ja** | ohne das ist [E-132](../BEFUNDE.md#e-132) auf vier von fünf Startwegen gar nicht behoben. Ein Befund, der in der Hälfte der Fälle nicht greift, darf nicht als behoben ausgeliefert werden |
+| [K1](#k1) | **ja** | ohne das ist [E-132](../Intern/BEFUNDE.md#e-132) auf vier von fünf Startwegen gar nicht behoben. Ein Befund, der in der Hälfte der Fälle nicht greift, darf nicht als behoben ausgeliefert werden |
 | [K2](#k2) | **ja** | die **Vorgabeantwort** macht Eudora in jedem Pfad mit Leerzeichen startunfähig. Das ist schlimmer als der Fehler, den wir beheben |
 | [K3](#k3) | **ja** | läuft bereits |
 | [K13](#k13) | **ja**, zusammen mit [K1](#k1) | wird durch die Behebung von [K1](#k1) überhaupt erst erreichbar |
@@ -704,7 +704,7 @@ Testsammlung     241 Tests, 241 bestanden
 Bytes            CRLF 18, nur-LF 1179, >127 0  (vorher CRLF 18 — unverändert)
 ```
 
-**Nichts am Quelltext von [E-132](../BEFUNDE.md#e-132).** Der Koordinator hat
+**Nichts am Quelltext von [E-132](../Intern/BEFUNDE.md#e-132).** Der Koordinator hat
 `Eudora71/Eudora/eudora.cpp` und `Eudora71/Tests/TestE132.cpp` für seine
 eigene Behebung übernommen, solange dieser Bericht lief; eine zweite Hand in
 denselben Dateien hätte seine Arbeit beschädigt. [K1](#k1) bis [K4](#k4) und

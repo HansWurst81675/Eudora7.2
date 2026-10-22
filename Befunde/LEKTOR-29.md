@@ -7,7 +7,7 @@ Bestand gesucht (`grep` über `git ls-files '*.md'`, 195 Dateien, 107 außerhalb
 von `Arbeitsweise/`), nicht gegen den Diff. Die Berichte unter `Befunde/`
 bleiben, wie sie sind.
 
-Maßstab: `BEFUNDE.md` [E-112](../BEFUNDE.md#e-112) und `CHANGELOG.md` 7.2.0.85 (F1 und F2 am Bau
+Maßstab: `BEFUNDE.md` [E-112](../Intern/BEFUNDE.md#e-112) und `CHANGELOG.md` 7.2.0.85 (F1 und F2 am Bau
 `11b6a3a` gemessen: `35x35`, `70x70`, `250x96`, `150x58`, `79x64`), der
 Bericht [PRÜFER-23](PRUEFER-23.md) (Urteil auslieferbar, N1–N5), Commit `9f5142b`
 (N1, `msgutils.cpp`, Test `TestE89.cpp` (4b), Testsuite 194/194, am laufenden
@@ -24,11 +24,11 @@ Programm nicht gemessen) und die Quelle selbst.
 | `AUFGABEN.md`, Stand-Kopf und B-Abschnitt | *„F1 und F2 danach eingebaut und dort noch nicht gemessen“* (2×) | ebenso, dazu N1 |
 | `ZIEL.md`, Stand | dasselbe, *„Testsuite 193/193“* | ebenso, 194/194 |
 | `PORTIERUNG.md`, Stand 13.10. | dasselbe, *„Testsuite 193/193“* | ebenso, 194/194 |
-| `README.md`, [E-110](../BEFUNDE.md#e-110)/[E-112](../BEFUNDE.md#e-112) | *„was danach noch eingebaut wurde (…), dort noch nicht“* | gemessen für zwei Größen und für nur die Breite; N1 behoben, ungemessen |
+| `README.md`, [E-110](../Intern/BEFUNDE.md#e-110)/[E-112](../Intern/BEFUNDE.md#e-112) | *„was danach noch eingebaut wurde (…), dort noch nicht“* | gemessen für zwei Größen und für nur die Breite; N1 behoben, ungemessen |
 | `Releases/PAKETE.md`, 1.0.85 | *Inhalt* „noch nicht gebaut“ (2×); *Nicht gemessen* „F1 (`ac8f030`) und F2“ | Messung an `11b6a3a` unter *Gemessen*; N1 neu unter *Inhalt* und *Nicht gemessen* |
 | `Testdaten/README.md`, E-112-Zeile | *„Fuer F1 und F2 erwartet 70x70 und 150x58 — **noch nicht am laufenden Programm gemessen**“* | gemessen; N1-Fall neu (siehe [L-29.3](#l-29.3)) |
 | `CHANGELOG.md`, 7.2.0.85, Punkt F1 | *„**Noch nicht gebaut, nicht gemessen.**“* — der Absatz darunter sagt *gemessen* | auf den Absatz verwiesen; F2-Punkt um `11b6a3a` ergänzt |
-| `CHANGELOG.md`, *Noch offen*, [E-112](../BEFUNDE.md#e-112) | *„am laufenden Programm **noch nicht** gemessen“* | gemessen an `11b6a3a`; N1 und Offenes |
+| `CHANGELOG.md`, *Noch offen*, [E-112](../Intern/BEFUNDE.md#e-112) | *„am laufenden Programm **noch nicht** gemessen“* | gemessen an `11b6a3a`; N1 und Offenes |
 
 `tools/ZWEIGE.md` und `TESTPLAN.md` sagen zu F1/F2 nichts Falsches, unverändert.
 
@@ -36,7 +36,7 @@ Programm nicht gemessen) und die Quelle selbst.
 
 `grep "PRÜFER-23\|PRUEFER-23"` traf nur `Befunde/PRUEFER-23.md`; der Commit
 `9f5142b` ändert Quelle, Test und Prüfnachricht, aber keine MD. **Nachgetragen**
-in `BEFUNDE.md` [E-112](../BEFUNDE.md#e-112) (Urteil, N1 mit Datei:Zeile vor und nach der Behebung,
+in `BEFUNDE.md` [E-112](../Intern/BEFUNDE.md#e-112) (Urteil, N1 mit Datei:Zeile vor und nach der Behebung,
 N2–N5 je ein Satz mit den Stellen aus PRÜFER-23), im `CHANGELOG.md` 7.2.0.85
 (eigener Absatz, Testsuite 194/194) und in den Stand-Zeilen aus [L-29.1](#l-29.1).
 
@@ -64,8 +64,8 @@ mit `width="1200"` hinzu. `Testdaten/README.md` sagte *„Die fuenf
 ### <a id="l-29.5"></a>L-29.5 — `pruefe-befundurteile.pl` las „N1 behoben“ als „E-116 behoben“
 
 Nach meiner Berichtigung in `PORTIERUNG.md` (*„PRÜFER-23 N1 behoben und dort
-noch nicht gemessen; neu [[E-116](../BEFUNDE.md#e-116)]“*) meldete die Schranke *„PORTIERUNG.md:44
-nennt [E-116](../BEFUNDE.md#e-116) als 'behoben'“*. Das Wort gehörte zu N1, nicht zu [E-116](../BEFUNDE.md#e-116); der Satz
+noch nicht gemessen; neu [[E-116](../Intern/BEFUNDE.md#e-116)]“*) meldete die Schranke *„PORTIERUNG.md:44
+nennt [E-116](../Intern/BEFUNDE.md#e-116) als 'behoben'“*. Das Wort gehörte zu N1, nicht zu [E-116](../Intern/BEFUNDE.md#e-116); der Satz
 ist umgestellt (*„N1 eingebaut (Test grün)“*). Ein Fehlalarm derselben Art wie
 [L-28.9](LEKTOR-28.md#l-28.9) — die Schranke ordnet ein Urteilswort dem Absatz zu, nicht dem Satzglied.
 Nur gemeldet.

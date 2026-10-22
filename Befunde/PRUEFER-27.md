@@ -9,7 +9,7 @@ wörtlich herausgeschnitten) in einem eigenen Prüfprogramm im Scratchpad, gebau
 Rümpfe abgespielt (Ergebnisse in 2). Das Protokoll des Prüfservers aus MESSSTANDs Lauf
 (`C:\Temp\E118`, APPEND-Zeilen) gelesen (4).
 **Nicht selbst gemessen:** Testsuite 207/207 und die Läufe 7.2.0.89/7.2.0.88 — aus
-[E-118](../BEFUNDE.md#e-118) und den Commit-Nachrichten übernommen.
+[E-118](../Intern/BEFUNDE.md#e-118) und den Commit-Nachrichten übernommen.
 `perl tools/wer-baut.pl`: `ImapAppend.cpp` wird von `EuImap.vcxproj` gebaut.
 
 **Urteil: auslieferbar, nein — nicht in dieser Form.** Für den gemessenen Fall (einteilige
@@ -18,7 +18,7 @@ HTML-Mail, Hülle umschließt den ganzen Rumpf) ist die Behebung richtig und puf
 beim Verschieben verloren, und die lokale Kopie wird danach gelöscht: ein angehängter
 `text/plain`-Teil (Fußzeile von Mailinglisten) und — im einteiligen Weg — die Zeile
 `Attachment Converted:` eines Anhangs, dessen Datei fehlt. Vorher kam beides als Text an. Das ist
-eine neue Datenverlust-Richtung; genau dieser Fehler wurde in [E-101](../BEFUNDE.md#e-101) schon
+eine neue Datenverlust-Richtung; genau dieser Fehler wurde in [E-101](../Intern/BEFUNDE.md#e-101) schon
 einmal gefunden und abgestellt ([P-19](PRUEFER-13.md#p-19), `Eudora/msgutils.cpp:4097-4130`). Die Abhilfe ist klein
 (2), danach ja.
 
@@ -66,10 +66,10 @@ mehrteilig, wenn die Anhangsdatei gefunden wird (`ImapAppend.cpp:1152-1159`). Fe
 (Anhangsordner verschoben, Datei gelöscht), bleibt die Zeile im Text — und wird seit 7.2.0.89
 abgeschnitten. Vorher stand sie als Hinweis auf dem Server.
 
-**Schwere:** nach dem Verschieben ist die lokale Kopie weg ([E-118](../BEFUNDE.md#e-118)
+**Schwere:** nach dem Verschieben ist die lokale Kopie weg ([E-118](../Intern/BEFUNDE.md#e-118)
 „Vorgeschichte“). Was hier abgeschnitten wird, ist damit nirgends mehr.
 
-**Abhilfe (Vorschlag):** wie [P-19](PRUEFER-13.md#p-19) in [E-101](../BEFUNDE.md#e-101) (`Eudora/msgutils.cpp:4097-4130`): `</x-html>` nur als
+**Abhilfe (Vorschlag):** wie [P-19](PRUEFER-13.md#p-19) in [E-101](../Intern/BEFUNDE.md#e-101) (`Eudora/msgutils.cpp:4097-4130`): `</x-html>` nur als
 Ende nehmen, wenn dahinter nichts als Leerraum steht; sonst `e = nLaenge` lassen (Marken bleiben
 sichtbar, aber nichts geht verloren). Besser noch: den Bereich hinter dem Ende als eigenen
 `text/plain`-Teil schreiben — das verlangt aber `multipart/mixed` im einteiligen Weg und ist
@@ -92,11 +92,11 @@ Kein Verlust, nur Schönheitsfehler; uuencode in HTML ist selten.
 ### Geprüft und unbedenklich
 
 * **Selbst verfasste/weitergeleitete Mails (Gregors OUTBOX-Fall):** in `Out.mbx` steht dieselbe
-  Hülle am Rumpfanfang — gemessen an Gregors Datei in [E-101](../BEFUNDE.md#e-101) (`Eudora/msgutils.cpp:3846-3855`:
+  Hülle am Rumpfanfang — gemessen an Gregors Datei in [E-101](../Intern/BEFUNDE.md#e-101) (`Eudora/msgutils.cpp:3846-3855`:
   vier Kopfzeilen, Leerzeile, `<x-html>`, HTML). `etf2html.cpp:200` schreibt `<x-html>` ohne
   Zeilenende — `E118Huelle` überspringt CR/LF nur, wenn sie da sind (`:693-697`), also auch richtig.
   Die Behebung greift dort. `AppendMessageFromLocal` liest den Text über `GetFullMessage`
-  (`ImapMailbox.cpp:4243`) — dieselbe Quelle wie [E-101](../BEFUNDE.md#e-101).
+  (`ImapMailbox.cpp:4243`) — dieselbe Quelle wie [E-101](../Intern/BEFUNDE.md#e-101).
 * **`<x-html content-base=…>`:** gemessen `html=0`, Rumpf unverändert. TextReader schreibt die
   Form nicht mehr (`TextReader.cpp:117-121` auskommentiert), sehr alte Postfächer könnten sie
   tragen. Ergebnis wie vor 7.2.0.89 (`text/plain` mit Marken), keine Verschlechterung.
@@ -116,7 +116,7 @@ Kein Verlust, nur Schönheitsfehler; uuencode in HTML ist selten.
 dem Verschieben `<x-flowed>`/`</x-flowed>` als erste und letzte Zeile. Abhilfe analog: Hülle
 abstreifen, `; format=flowed` an den `Content-Type` hängen (Vorlage `sendmail.cpp:804-807`).
 `<x-rich>` entsprechend mit `text/enriched` (`AppendContentType`, `ImapAppend.cpp:1989-1990`).
-Nicht gemessen; eigener Befund, kein Sperrgrund für [E-118](../BEFUNDE.md#e-118).
+Nicht gemessen; eigener Befund, kein Sperrgrund für [E-118](../Intern/BEFUNDE.md#e-118).
 
 ## 4. Zeichensatz
 
@@ -208,10 +208,10 @@ wäre das APPEND-Datum dort richtig, und eine Behebung müsste die beiden Fälle
 ### F4 — `befund-suchen.pl` sieht E-118 nicht
 
 `perl tools/befund-suchen.pl ImapAppend` meldet „Kein bestehender Befund nennt diesen Ort. Ein
-neuer Eintrag ist berechtigt.“ — obwohl [E-118](../BEFUNDE.md#e-118) `ImapAppend.cpp` sechsmal mit
+neuer Eintrag ist berechtigt.“ — obwohl [E-118](../Intern/BEFUNDE.md#e-118) `ImapAppend.cpp` sechsmal mit
 Zeilen nennt. Ursache: das Werkzeug zerlegt nur in `##`/`###`-Abschnitte und lässt die
 Übersichtstabelle bewusst aus (`tools/befund-suchen.pl:86-99`, Begründung: „sie tragen das Urteil,
-aber nicht die Fundstellen“). [E-118](../BEFUNDE.md#e-118) steht **nur** als Tabellenzeile (`BEFUNDE.md:285`), mit allen
+aber nicht die Fundstellen“). [E-118](../Intern/BEFUNDE.md#e-118) steht **nur** als Tabellenzeile (`BEFUNDE.md:285`), mit allen
 Fundstellen darin. Gezählt: 118 `E-`-Tabellenzeilen, 25 `E-`-Abschnitte. Die Schranke aus
 `CLAUDE.md` §2 ist für den Großteil der `E-`-Befunde blind — genau der E-85-Fall, gegen den sie
 gebaut wurde. Abhilfe: Tabellenzeilen als eigene Treffer mitnehmen.
@@ -224,7 +224,7 @@ des `if (!m_bIsMultipart)` `:1297-1301`); `ReformatAttachment` nur beim ersten
 **nach** einem Anhang (Fußzeilenteil, Apple-Mail-Bild zwischen zwei Absätzen) und dauert das
 Kodieren des Anhangs über eine Sekundengrenze, bekommt der zweite Textteil eine neue Grenze; der
 Kopf (`:820`) und der Abschluss (`:1231`) nehmen die letzte. Alles davor — erster Text und Anhang —
-steht dann in der Präambel und ist für jeden Leser unsichtbar. Nicht gemessen; nicht durch [E-118](../BEFUNDE.md#e-118)
+steht dann in der Präambel und ist für jeden Leser unsichtbar. Nicht gemessen; nicht durch [E-118](../Intern/BEFUNDE.md#e-118)
 entstanden, aber in derselben Funktion.
 
 ## 9. Tests
@@ -245,5 +245,5 @@ doppelt (gleiche Eingabe wie zwei Zeilen davor) — harmlos.
 | G2 | `<meta charset>` widerspricht dem neuen Kopf | — | nicht gemessen |
 | G3 | Zeilen > 998 Byte trotz `8bit` | — | nicht schlechter als vorher |
 | MESSSTAND | APPEND-Datum um die Ortsabweichung zu früh | `ImapMailbox.cpp:4281` ↔ `services.cpp:2265/2076`, `osdep.cpp:168-194` | **bestätigt**, gemessen und nachgerechnet; eigener Befund |
-| F4 | `befund-suchen.pl` übergeht Tabellenzeilen | `tools/befund-suchen.pl:86-99` | Schranke blind für [E-118](../BEFUNDE.md#e-118) |
+| F4 | `befund-suchen.pl` übergeht Tabellenzeilen | `tools/befund-suchen.pl:86-99` | Schranke blind für [E-118](../Intern/BEFUNDE.md#e-118) |
 | F5 | neue MIME-Grenze je Textteil | `ImapAppend.cpp:1304` | Originalfehler, Gegenvermutung |

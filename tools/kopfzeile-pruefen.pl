@@ -28,7 +28,7 @@ use strict; use warnings;
 # am Zeilenumbruch beendet, auch wenn der Umbruch nur eine Faltung ist
 # (RFC 5322 2.2.3: CRLF gefolgt von Leerzeichen oder Tabulator gehoert noch
 # zur selben Kopfzeile). Alles hinter der Faltung geht verloren - und da steht
-# in aller Regel die Endung. Siehe BEFUNDE.md, Befund AN-1.
+# in aller Regel die Endung. Siehe Intern/BEFUNDE.md, Befund AN-1.
 #
 # WIE ES ARBEITET
 #
@@ -44,7 +44,7 @@ use strict; use warnings;
 #
 # DER VORSCHLAG (--vorschlag)
 #
-# Mit --vorschlag wird die Behebung aus AUFGABEN.md B5.1
+# Mit --vorschlag wird die Behebung aus Intern/AUFGABEN.md B5.1
 # VOR dem Uebersetzen in den ausgelesenen Text eingesetzt - der Baum selbst
 # bleibt unberuehrt. So laesst sich die Wirkung messen, bevor jemand mit
 # Visual Studio sie uebersetzt. Passt der Suchtext nicht mehr, bricht das
@@ -63,7 +63,7 @@ use strict; use warnings;
 # GRENZEN, damit niemand die Ausgabe fuer mehr nimmt als sie ist
 #   * Geprueft wird der Weg bis zum Attributwert. Was OpenAttachFile,
 #     DeMacifyName32 und MIMEMap::SetExtension danach noch tun, steht hier
-#     nicht drin - dafuer siehe BEFUNDE.md AN-1.
+#     nicht drin - dafuer siehe Intern/BEFUNDE.md AN-1.
 #   * Fix2047 laeuft nicht mit. Wer RFC-2047-Woerter prueft, muss das wissen.
 #   * Der Treiber kennt nur Content-Disposition, nicht alle Kopfzeilen.
 #
@@ -173,7 +173,7 @@ if ($vorschlag) {
     . "Entweder steht die Behebung schon im Baum (dann ist --vorschlag ueberfluessig),\n"
     . "oder CollectQText ist anders geaendert worden. Nachsehen, nicht raten.\n"
     unless $n == 1;
-  print "VORSCHLAG eingesetzt (die Behebung B5.1, siehe AUFGABEN.md)\n";
+  print "VORSCHLAG eingesetzt (die Behebung B5.1, siehe Intern/AUFGABEN.md)\n";
 }
 
 # ---------------------------------------------------------------------------

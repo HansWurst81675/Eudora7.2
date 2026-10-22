@@ -112,14 +112,14 @@
 #
 # Gemessen am 05.09.2026, Release|x86: Der Bau der ganzen Projektmappe liefert
 # 3 Fehler, alle aus OT501 (zweimal NMAKE U1073, einmal MSB3073) - der
-# dokumentierte Blocker, PORTIERUNG.md, Abschnitt "Blocker: OT501". Sieben der
+# dokumentierte Blocker, Intern/PORTIERUNG.md, Abschnitt "Blocker: OT501". Sieben der
 # neun ueberwachten Artefakte entstehen, aber Eudora.exe und EudoraRes.dll
 # NICHT: beide Projekte fuehren OT501.vcxproj als Projektverweis
 # (Eudora.vcxproj und EudoraRes.vcxproj), und MSBuild laesst ein Projekt aus,
 # dessen Verweis gescheitert ist. Ohne Gegenmassnahme kommt aus einem
 # Projektmappen-Bau also NIE eine Eudora.exe heraus.
 #
-# Die eingespielte Abhilfe steht seit Wochen in AUFGABEN.md ("Einzelprojekte
+# Die eingespielte Abhilfe steht seit Wochen in Intern/AUFGABEN.md ("Einzelprojekte
 # brauchen /p:BuildProjectReferences=false") und musste bisher von Hand
 # ausgefuehrt werden - eine Handarbeit, die genau dann vergessen wird, wenn es
 # eilt. Deshalb macht dieses Werkzeug sie selbst: fehlt nach dem ersten Gang
@@ -261,7 +261,7 @@ if (-not $Ungesichert -and -not $NurPruefen) {
 # sie warten aufeinander. Schlimmer noch: die Artefaktpruefung am Ende verglich
 # danach Zeitstempel aus einem Mischzustand und meldete Unsinn.
 #
-# Die Regel steht seit dem 05.09.2026 in AGENTEN.md unter Regel 2. Sie wurde
+# Die Regel steht seit dem 05.09.2026 in Intern/AGENTEN.md unter Regel 2. Sie wurde
 # trotzdem verletzt - deshalb steht sie jetzt hier als Schranke und nicht nur
 # als Satz.
 $fremd = @(Get-Process -Name MSBuild,cl,link -ErrorAction SilentlyContinue |
@@ -779,7 +779,7 @@ function Werte-Lauf([object]$lauf, [string]$titel) {
 
   if ($alt.Count -gt 0) {
     Melde-Warnung ($titel + ': ' + $alt.Count + ' BEKANNTE Fehlermeldung(en) aus ' + ($BekannteFehlerAus -join ', ') +
-                   ' - dokumentiert in PORTIERUNG.md, Abschnitt "Blocker: OT501". Mit -JedenFehlerZaehlen zaehlen sie mit.')
+                   ' - dokumentiert in Intern/PORTIERUNG.md, Abschnitt "Blocker: OT501". Mit -JedenFehlerZaehlen zaehlen sie mit.')
     foreach ($f in $alt) { Write-Host ('             ' + $f) -ForegroundColor Yellow }
   }
 

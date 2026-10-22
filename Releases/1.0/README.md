@@ -191,7 +191,7 @@ Beide Dateien lassen sich auch einzeln zurücknehmen — sie hängen nicht vonei
   Zeichenwandlung dort behoben (UTF-8 über den Windows-Codepage-Wandler,
   33 von 33 Tests grün; HTML-Anzeige siehe Befund Z-2) — aber nur im Paket
   `Eudora72-1.0.3`, nicht in diesem DLL-Austausch. Siehe
-  [PORTIERUNG.md](../../PORTIERUNG.md).
+  [PORTIERUNG.md](../../Intern/PORTIERUNG.md).
 - Alles Übrige an Eudora bleibt unverändert.
 
 ## Stand der Erprobung

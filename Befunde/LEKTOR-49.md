@@ -60,22 +60,22 @@ vierten Mal an diesem Tag** (vorher [L-46.1](LEKTOR-46.md#l-46.1) und
 
 ### <a id="l-49.2"></a>L-49.2 — `BEFUNDE.md` E-132 sagte „noch nicht ausgeliefert", während die öffentliche Seite „released in v1.0.120" sagt (hoch)
 
-[E-132](../BEFUNDE.md#e-132) trug als Urteil *„behoben im Zweig
+[E-132](../Intern/BEFUNDE.md#e-132) trug als Urteil *„behoben im Zweig
 `e-132-fremdes-mailverzeichnis` … **noch nicht ausgeliefert**"*.
 
 Dasselbe Thema steht in [MELDUNGEN-VON-AUSSEN.md](../MELDUNGEN-VON-AUSSEN.md),
 Zeile `#102-1`, als *„**Fixed** in 7.2.0.117 and 7.2.0.118, released in
-`v1.0.120`"* — **und diese Zeile verlinkt genau auf [E-132](../BEFUNDE.md#e-132)**. Wer dem Link
+`v1.0.120`"* — **und diese Zeile verlinkt genau auf [E-132](../Intern/BEFUNDE.md#e-132)**. Wer dem Link
 folgt, liest das Gegenteil. Die Datei wird Fremden per Link gezeigt; der
 Melder aus Issue #102 hat den Link im geschlossenen Issue stehen.
 
 Richtig ist die englische Fassung: 7.2.0.117 steckt in `v1.0.117`, 7.2.0.118
-in `v1.0.120`. **[E-132](../BEFUNDE.md#e-132) berichtigt**, mit der Kette 7.2.0.114 → .115 → .116 →
+in `v1.0.120`. **[E-132](../Intern/BEFUNDE.md#e-132) berichtigt**, mit der Kette 7.2.0.114 → .115 → .116 →
 .117 → .118 und dem ausdrücklichen Vermerk, was in welchem Release steckt.
 
 ### <a id="l-49.3"></a>L-49.3 — eine offene Frage in E-131 war am Quelltext zu beantworten und stand einen Tag offen (mittel)
 
-[E-131](../BEFUNDE.md#e-131) endete mit *„**Noch nicht gemessen:** ob
+[E-131](../Intern/BEFUNDE.md#e-131) endete mit *„**Noch nicht gemessen:** ob
 `LoadBarState` diese Registryschlüssel vor der INI liest — das ist der
 nächste Handgriff am offenen Leseweg."*
 
@@ -92,7 +92,7 @@ mit `m_pszRegistryKey == NULL` und liest über `CWinApp::GetProfileInt` die
 Gemessen mit `grep -rn "SetRegistryKey\|m_pszRegistryKey" Eudora71/`: drei
 Treffer, alle oben genannt. **Belegt am Quelltext, nicht am laufenden
 Programm** ([Ursache nur gemessen
-behaupten](../Arbeitsweise/ursache-nur-gemessen-behaupten.md)). In [E-131](../BEFUNDE.md#e-131)
+behaupten](../Arbeitsweise/ursache-nur-gemessen-behaupten.md)). In [E-131](../Intern/BEFUNDE.md#e-131)
 nachgetragen; der eigentliche Leseweg bleibt offen.
 
 ---
@@ -113,7 +113,7 @@ Nachgemessen:
    `nickpage.cpp` und `NicknamesWazooWnd.cpp` stehen in
    `Eudora71/Eudora/Eudora.vcxproj` (Zeilen 380-384), werden also in
    `Eudora.exe` übersetzt und brauchen kein `MFC71.DLL`.
-2. [E-47](../BEFUNDE.md#e-47) selbst beschreibt **nur den
+2. [E-47](../Intern/BEFUNDE.md#e-47) selbst beschreibt **nur den
    Verzeichnisdienst**: der Dialog *„Directory Services unavailable"* kommt
    aus `DSRightViewImpl.h:44`, weil `DirServ.dll`, `ISock.dll`, `Ph.dll`,
    `Ldap.dll` und `EudoraBk.dll` `MFC71.DLL` brauchen. Vom Adressbuch steht
@@ -124,8 +124,8 @@ Nachgemessen:
    **Das ist die Verwechslung, aus der die Falschaussage stammt.**
 4. **Gegenbeleg aus dem eigenen Bestand:** in 1.0.119 und 1.0.120 sind zwei
    Adressbuchfehler behoben und von Gregor am laufenden Programm bestätigt —
-   [E-134](../BEFUNDE.md#e-134) (Kurzname eines neuen Eintrags) und
-   [E-135](../BEFUNDE.md#e-135) (Vervollständigungsbox). Ein Adressbuch, das
+   [E-134](../Intern/BEFUNDE.md#e-134) (Kurzname eines neuen Eintrags) und
+   [E-135](../Intern/BEFUNDE.md#e-135) (Vervollständigungsbox). Ein Adressbuch, das
    „ausfällt", hat keine zwei bestätigten Behebungen in derselben Woche.
 
 **`README.md` berichtigt**, beide Stellen, mit dem ausdrücklichen Satz, dass
@@ -141,7 +141,7 @@ zieht wie Gregor.
 | `AUFGABEN.md:304`, `AUFGABEN.md:955`, `WEITERMACHEN.md:300` | intern |
 | `PORTIERUNG.md:612`, `PORTIERUNG.md:737` | intern |
 | `Pruefung/PRUEFUNG-PAKET.md:142` und `:386`, `PRUEFUNG-BRANCH.md:250` | intern |
-| `BEFUNDE.md:3063` und `:3970` ([B-1](../BEFUNDE.md#b-1)), `Befunde/PAKET.md:150` | historisch, Beweisführung von damals |
+| `BEFUNDE.md:3063` und `:3970` ([B-1](../Intern/BEFUNDE.md#b-1)), `Befunde/PAKET.md:150` | historisch, Beweisführung von damals |
 
 **Berichtigt sind alle Stellen, die den heutigen Stand behaupten** — zehn an
 der Zahl: `README.md` (2), `CHANGELOG.md` (1), `AUFGABEN.md` (2),
@@ -159,7 +159,7 @@ Ph, `EudoraBk`)*, und wo Platz war, ausdrücklich, dass das eigene Adressbuch
   Fundes:** die falsche Zeile stand in sechs Paketen auf der Platte von
   Anwendern. Die neuen Notizen zu 1.0.120 ([L-49.6](#l-49.6)) führen sie
   ausdrücklich nicht fort und sagen warum;
-* die historische Beweisführung — `BEFUNDE.md` [B-1](../BEFUNDE.md#b-1) (zwei Stellen),
+* die historische Beweisführung — `BEFUNDE.md` [B-1](../Intern/BEFUNDE.md#b-1) (zwei Stellen),
   `Befunde/PAKET.md:150`, `Eudora71/VC71Bruecke/BEFUND.md:501`,
   `Releases/PAKETE.md:1426` und `:1487`. Das sind datierte Befunde und
   Paketeinträge; sie gelten für ihren Tag.
@@ -258,7 +258,7 @@ Abschnitte, die soeben geschrieben wurden (`dockstat.cpp:354-367`).
 `MELDUNGEN-VON-AUSSEN.md` versprach im Kopf, die Messungen stünden in
 `BEFUNDE.md`, *„which every row links to"*. Die Zeile `#102-4`
 (`MRUFloatYPos=-682908189` in `[ToolBar-Bar10]`, Stufe **medium**, Status
-*„not yet measured"*) verlinkt zwar auf [E-131](../BEFUNDE.md#e-131), **aber
+*„not yet measured"*) verlinkt zwar auf [E-131](../Intern/BEFUNDE.md#e-131), **aber
 dort stand der Fall nicht.** Gemessen: die Zeichenkette `682908189` kommt in
 `BEFUNDE.md` **null** Mal vor, in `AUFGABEN.md` und `WEITERMACHEN.md`
 ebenfalls nicht.
@@ -269,8 +269,8 @@ die wir ihm gezeigt haben.
 
 Zwei Dinge getan:
 
-1. **Der Fall ist in [E-131](../BEFUNDE.md#e-131) fortgeschrieben** — nicht als neuer Befund:
-   `perl tools/befund-suchen.pl E131PositionIstBrauchbar` meldet [E-131](../BEFUNDE.md#e-131) als
+1. **Der Fall ist in [E-131](../Intern/BEFUNDE.md#e-131) fortgeschrieben** — nicht als neuer Befund:
+   `perl tools/befund-suchen.pl E131PositionIstBrauchbar` meldet [E-131](../Intern/BEFUNDE.md#e-131) als
    denselben Ort.
 2. **Die offene Frage ist am Quelltext beantwortet:**
    `E131PositionIstBrauchbar` (`mainfrm.cpp:2773`) **fängt** den Wert. Die
@@ -279,8 +279,8 @@ Zwei Dinge getan:
    Berichtigung läuft in `CMainFrame::SaveBarState`, also beim Schreiben** —
    die kaputte Zeile verschwindet erst, wenn unsere Fassung einmal beendet
    wurde, und wird bis dahin so geladen, wie sie dasteht. Das ist derselbe
-   offene Leseweg, der in [E-131](../BEFUNDE.md#e-131) schon steht. In `MELDUNGEN-VON-AUSSEN.md`
-   und in [E-131](../BEFUNDE.md#e-131) nachgetragen.
+   offene Leseweg, der in [E-131](../Intern/BEFUNDE.md#e-131) schon steht. In `MELDUNGEN-VON-AUSSEN.md`
+   und in [E-131](../Intern/BEFUNDE.md#e-131) nachgetragen.
 
 **Nachtrag vom selben Abend:** während dieses Durchgangs ist PR **#130**
 (`e131-muellwert-testfall`) auf `main` gelandet und hat genau das in Tests
@@ -405,7 +405,7 @@ das steht hier so, weil *„alle"* sonst eine Behauptung wäre
 ([Prüfumfang nicht von
 Hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md)):
 `README.md`, `ZIEL.md`, `PORTIERUNG.md`, `WEITERMACHEN.md`, `AUFGABEN.md`,
-`BEFUNDE.md` (die Abschnitte [E-47](../BEFUNDE.md#e-47), [E-131](../BEFUNDE.md#e-131), [E-132](../BEFUNDE.md#e-132), [E-133](../BEFUNDE.md#e-133)), `CHANGELOG.md`,
+`BEFUNDE.md` (die Abschnitte [E-47](../Intern/BEFUNDE.md#e-47), [E-131](../Intern/BEFUNDE.md#e-131), [E-132](../Intern/BEFUNDE.md#e-132), [E-133](../Intern/BEFUNDE.md#e-133)), `CHANGELOG.md`,
 `TESTPLAN.md`, `EINSTELLUNGEN.md`, `FILTER.md`, `LEKTORAT.md`,
 `MELDUNGEN-VON-AUSSEN.md`, `Releases/PAKETE.md`,
 `Releases/ISSUE-102-ABSCHLUSS.md`, `Releases/ISSUE-102-ANTWORT.md`,

@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # pruefe-rollen-doku.pl - jede Rolle, die eine Schranke kennt, muss in
-# AGENTEN.md nachschlagbar sein.
+# Intern/AGENTEN.md nachschlagbar sein.
 #
 # ---------------------------------------------------------------------------
 # WARUM ES DIESES WERKZEUG GIBT
@@ -18,7 +18,7 @@ use warnings;
 #
 #   "halt: das war der chronist, ja?"
 #
-# Beim Nachmessen am 13.09.2026 stellte sich heraus: AGENTEN.md - die Datei,
+# Beim Nachmessen am 13.09.2026 stellte sich heraus: Intern/AGENTEN.md - die Datei,
 # die die Rollen beschreibt - enthaelt das Wort CHRONIST KEIN EINZIGES MAL.
 # Sie stammt vom 07.09.2026 und kennt die Rolle nicht. Die einzige Stelle, an
 # der CHRONIST definiert ist ("die Lehren aus dem Verlauf", Auftrag: "Den Chat
@@ -35,7 +35,7 @@ use warnings;
 #
 # Die Rollenliste wird AUS tools/rollen-faellig.pl gelesen, nicht danebengelegt
 # (Arbeitsweise/pruefumfang-nicht-von-hand.md). Fuer jede dort definierte Rolle
-# muss AGENTEN.md
+# muss Intern/AGENTEN.md
 #   - den Namen nennen und
 #   - den Zustaendigkeitssatz ("was") nennen,
 # damit die Zuordnung nachschlagbar ist und nicht nur im Code steht.
@@ -89,7 +89,7 @@ sub fehlende {
         push @fehlt, {
             name => $r->{name},
             was  => $r->{was},
-            grund => (!$hat_namen ? "Name kommt in AGENTEN.md nicht vor"
+            grund => (!$hat_namen ? "Name kommt in Intern/AGENTEN.md nicht vor"
                                   : "Zustaendigkeit fehlt: '$r->{was}'"),
         };
     }
@@ -131,9 +131,9 @@ unless (defined $quelle) {
     print "  pruefe-rollen-doku: tools/rollen-faellig.pl gibt es hier nicht - uebersprungen.\n";
     exit 0;
 }
-my $doku = lies("$wurzel/AGENTEN.md");
+my $doku = lies("$wurzel/Intern/AGENTEN.md");
 unless (defined $doku) {
-    print "  pruefe-rollen-doku: AGENTEN.md gibt es hier nicht - uebersprungen.\n";
+    print "  pruefe-rollen-doku: Intern/AGENTEN.md gibt es hier nicht - uebersprungen.\n";
     exit 0;
 }
 
@@ -147,14 +147,14 @@ unless (@rollen) {
 my @fehlt = fehlende($doku, @rollen);
 
 unless (@fehlt) {
-    printf "  Rollen: alle %d in AGENTEN.md nachschlagbar (%s).\n",
+    printf "  Rollen: alle %d in Intern/AGENTEN.md nachschlagbar (%s).\n",
            scalar(@rollen), join(", ", map { $_->{name} } @rollen);
     exit 0;
 }
 
 print "\n";
 print "  ABBRUCH: " . scalar(@fehlt) . " von " . scalar(@rollen)
-    . " Rollen sind in AGENTEN.md nicht nachschlagbar:\n\n";
+    . " Rollen sind in Intern/AGENTEN.md nicht nachschlagbar:\n\n";
 for my $f (@fehlt) {
     print "  * $f->{name}: $f->{grund}\n";
 }
@@ -165,7 +165,7 @@ print "  deshalb \"den lektor\" beauftragt, wo CHRONIST zustaendig war, und\n";
 print "  musste es 59 Sekunden spaeter selbst berichtigen:\n";
 print "  \"halt: das war der chronist, ja?\"\n";
 print "\n";
-print "  Abhilfe: die Rolle mit Namen UND Zustaendigkeitssatz in AGENTEN.md\n";
+print "  Abhilfe: die Rolle mit Namen UND Zustaendigkeitssatz in Intern/AGENTEN.md\n";
 print "  eintragen. Die Saetze stehen in tools/rollen-faellig.pl.\n";
 print "\n";
 exit 1;

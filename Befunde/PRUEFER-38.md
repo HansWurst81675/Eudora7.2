@@ -23,7 +23,7 @@ Prüfstand sieht R1 nicht; warum, steht unter R6.
 ## Urteil
 
 **Paket 1.0.109 zu Gregor: NEIN — nicht in diesem Stand. Ein Fund muss vorher
-hinein, er ist eine Rückkehr genau des Fehlers, den [E-69](../BEFUNDE.md#e-69) behebt.**
+hinein, er ist eine Rückkehr genau des Fehlers, den [E-69](../Intern/BEFUNDE.md#e-69) behebt.**
 
 **Punkt 1 und Punkt 4 aus dem Auftrag zuerst, weil beide „Eudora lässt sich
 nicht mehr beenden" betreffen — beide sind entwarnt:**
@@ -51,7 +51,7 @@ nicht mehr beenden" betreffen — beide sind entwarnt:**
 > übersprungen, liefert `Melden()` für **jeden** weiteren Fall außerhalb einer
 > Klammer `false` — und `E69UebersprungenMelden` kehrt ohne Eintrag zurück.
 > Es entsteht **kein Eintrag, kein Sammeleintrag, nichts**. Das ist genau das
-> Symptom, gegen das [E-69](../BEFUNDE.md#e-69) angelegt wurde: *„lautlos: der Anwender wunderte
+> Symptom, gegen das [E-69](../Intern/BEFUNDE.md#e-69) angelegt wurde: *„lautlos: der Anwender wunderte
 > sich, warum eine Mail nicht einsortiert wurde"* (`filtersd.cpp:2370`).
 > **Gemessen**, siehe R1.
 
@@ -59,7 +59,7 @@ nicht mehr beenden" betreffen — beide sind entwarnt:**
 
 | Fund | Schwere | Stand |
 |---|---|---|
-| **R1** Nach einem geklammerten Lauf wird jeder ungeklammerte Fall stumm verschluckt — [E-69](../BEFUNDE.md#e-69) ist für den Rest der Sitzung wieder da | **hoch.** Rückschritt hinter 7.2.0.106 | **gemessen** |
+| **R1** Nach einem geklammerten Lauf wird jeder ungeklammerte Fall stumm verschluckt — [E-69](../Intern/BEFUNDE.md#e-69) ist für den Rest der Sitzung wieder da | **hoch.** Rückschritt hinter 7.2.0.106 | **gemessen** |
 | **R2** Die Klammer fehlt am IMAP-Weg — also an genau dem Fall, mit dem der Commit begründet wird | **mittel.** P3 ist für den Anlassfall nicht behoben | belegt am Quelltext |
 | **R3** `g_E69Sammlung` ist global ohne Sperre und wird auch aus einem IMAP-Nebenfaden angefasst | **mittel, selten.** Verlorene und falsch gezählte Einträge, kein Absturz | belegt am Quelltext |
 | **R4** Zweites *File → Exit* nach dem Aufgeben ruft `CloseDown` verschachtelt im laufenden Hochladen | **mittel, selten.** Derselbe unsichtbare Hänger wie P1 — nur nicht mehr von selbst, sondern erst auf Zutun des Anwenders | belegt am Quelltext, Ablauf Vermutung |
@@ -244,7 +244,7 @@ aber noch in `m_array`, also `nOffen > 0`. Fällt die 90-s-Grenze hinein, wird
 beendet. Das ist **nicht neu** und nicht gefährlich im Sinne von P1: der
 Hauptfaden steht in diesem Moment in seiner eigenen Schleife, `CloseDown` läuft
 also nicht verschachtelt in einem Hochladen. Nur die Übertragung bricht ab und
-steht danach in `actionqueue.dat` — ohne die Schutzvermerke aus [E-123](../BEFUNDE.md#e-123). Bekannt,
+steht danach in `actionqueue.dat` — ohne die Schutzvermerke aus [E-123](../Intern/BEFUNDE.md#e-123). Bekannt,
 kein neuer Fund.
 
 ## Punkt 6 — Wird der Wächter auf jedem Rückgabeweg abgebaut? Ja.
@@ -421,7 +421,7 @@ unlesbar sind (`Special → Filter Messages`). Er bekommt richtig einen Eintrag
 und einen Sammeleintrag. **Ab diesem Moment, bis Eudora neu gestartet wird**,
 verschwindet jede weitere übersprungene Nachricht spurlos aus „Task Errors" —
 beim POP-Abholen, beim IMAP-Abholen, beim Filtern einer einzelnen geöffneten
-Nachricht, beim Senden. Genau der Zustand von vor [E-69](../BEFUNDE.md#e-69): *„der Anwender
+Nachricht, beim Senden. Genau der Zustand von vor [E-69](../Intern/BEFUNDE.md#e-69): *„der Anwender
 wunderte sich, warum eine Mail nicht einsortiert wurde."*
 
 Die Protokollzeile bleibt (`filtersd.cpp:2494`, vor der Prüfung) — der Befund
@@ -547,9 +547,9 @@ Danach kann das Paket zu Gregor. **R3** (Faden), **R5** (Text), **R6.2/6.3**
 
 ## Gregors Test an 1.0.109 — wenn R1 und R2 drin sind
 
-> **Nachtrag LEKTOR, 19.10.2026 ([LEKTOR-42](LEKTOR-42.md#lektor-42)):** **1.0.109 ist nie geschnürt worden** (`Releases/PAKETE.md`, Abschnitt 1.0.109). R1 bis R4 sind eingebaut, und das Ergebnis heißt **1.0.110**. Gregors Prüfschritte stehen dort: `TESTPLAN.md`, Abschnitt [C6](../TESTPLAN.md#c6).
+> **Nachtrag LEKTOR, 19.10.2026 ([LEKTOR-42](LEKTOR-42.md#lektor-42)):** **1.0.109 ist nie geschnürt worden** (`Releases/PAKETE.md`, Abschnitt 1.0.109). R1 bis R4 sind eingebaut, und das Ergebnis heißt **1.0.110**. Gregors Prüfschritte stehen dort: `TESTPLAN.md`, Abschnitt [C6](../Intern/TESTPLAN.md#c6).
 
-**Test 1 ([E-69](../BEFUNDE.md#e-69)/A, der Anlassfall):** Ein IMAP-Postfach mit mehreren nur
+**Test 1 ([E-69](../Intern/BEFUNDE.md#e-69)/A, der Anlassfall):** Ein IMAP-Postfach mit mehreren nur
 angerissenen Nachrichten auswählen, Netz trennen, dann
 *Special → Filter Messages*. Erwartet: **genau zwei** Einträge in „Task Errors"
 — einer mit Betreff und Grund, einer mit „N further message(s)…". Nicht einer
@@ -559,11 +559,11 @@ je Nachricht.
 eine einzelne Nachricht öffnen und *Special → Filter This Message*. Erwartet:
 ein eigener Eintrag. Kommt **keiner**, ist R1 nicht behoben.
 
-**Test 3 ([E-69](../BEFUNDE.md#e-69)/B):** Beim Lauf aus Test 1 darauf achten, dass es höchstens alle
+**Test 3 ([E-69](../Intern/BEFUNDE.md#e-69)/B):** Beim Lauf aus Test 1 darauf achten, dass es höchstens alle
 zwei Sekunden piept und das Fenster „Task Errors" nicht dauernd nach vorn
 springt.
 
-**Test 4 ([E-123](../BEFUNDE.md#e-123), wie bisher):** Eine Mail aus einem lokalen Ordner in einen
+**Test 4 ([E-123](../Intern/BEFUNDE.md#e-123), wie bisher):** Eine Mail aus einem lokalen Ordner in einen
 IMAP-Ordner verschieben, sofort beenden und gleich noch einmal auf das Kreuz
 klicken. Im Protokoll: „Beenden wartet auf 1 Uebertragung(en)", „weiteres
 Schliessen waehrend des Wartens ignoriert", „Warten zu Ende nach … ms,

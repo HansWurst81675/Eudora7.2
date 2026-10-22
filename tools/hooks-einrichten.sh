@@ -129,7 +129,7 @@ fi
 #     laeuft in beide Richtungen (--selbsttest, 18 Faelle, davon 13 die
 #     durchgehen MUESSEN), und die Behebung ist zwei Zeilen zusammenziehen.
 #
-#     Am 22.10.2026 meldete Gregor zu WEITERMACHEN.md auf GitHub: "hat ein
+#     Am 22.10.2026 meldete Gregor zu Intern/WEITERMACHEN.md auf GitHub: "hat ein
 #     darstellungsproblem: der text ist links, nicht rechts." Zwei
 #     Tabellenzeilen waren ueber zwei physische Zeilen gebrochen (9/10 und
 #     46/47). GFM liest eine Textzeile ohne Leerzeile hinter einer
@@ -157,6 +157,16 @@ schranke pruefe-tabellenzeilen.pl || exit $?
 #     alte Fassung des Abschnitts, die an genau den beiden von Gregor
 #     genannten Zeilen abweist.
 schranke pruefe-nicht-kann.pl || exit $?
+
+# 1d. Stimmt der Stand zur Fassung 7.2.1.0 in ZIEL.md?
+#
+#     Gregor am 22.10.2026: "was fehlt noch zum 7.2.1.0 release? kann hieraus
+#     nicht auf einen blick entnehmen" - und: "wissen wir, was jetzt noch
+#     alles den prios nach zu tun ist? und wo steht es?"
+#
+#     Es stand an drei Stellen und an keiner sortiert. Jetzt steht es oben in
+#     ZIEL.md, erzeugt aus Intern/BEFUNDE.md. Diese Schranke haelt es aktuell.
+schranke ziel-stand.pl || exit $?
 
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
@@ -204,7 +214,7 @@ fi
 #    sie vorbeigelaufen - eine veraltete Datei, die NIEMAND anfasst, steht in
 #    keinem Diff und wurde deshalb nie geprueft. Gregor fand am selben Tag drei
 #    Widersprueche selbst (Paketnummer 1.0.18 statt 1.0.21 im README, ein ZIP,
-#    das es nicht mehr gibt, und eine Kriterientabelle in AUFGABEN.md, die zwei
+#    das es nicht mehr gibt, und eine Kriterientabelle in Intern/AUFGABEN.md, die zwei
 #    erfuellte Kriterien als offen fuehrte) und sagte: "waere vor dem mergen
 #    wichtig, dass keine luegen im main stehen!" und "ich moechte dir nicht jede
 #    einzelne MD datei nennen, es betrifft ALLE!".
@@ -243,10 +253,10 @@ schranke pruefe-waechter.pl || exit $?
 schranke lehren-schranken.pl || exit $?
 schranke lehren-uebersicht.pl || exit $?
 
-# 8b. Jede Rolle, die eine Schranke kennt, muss in AGENTEN.md nachschlagbar
+# 8b. Jede Rolle, die eine Schranke kennt, muss in Intern/AGENTEN.md nachschlagbar
 #     sein. Am 13.09.2026 um 19:33 beauftragte Gregor "den lektor" mit den
 #     lessons learned - zustaendig ist CHRONIST. Er berichtigte es 59 Sekunden
-#     spaeter selbst. Beim Nachmessen: AGENTEN.md enthielt das Wort CHRONIST
+#     spaeter selbst. Beim Nachmessen: Intern/AGENTEN.md enthielt das Wort CHRONIST
 #     KEIN EINZIGES MAL; die Rolle war nur im Quelltext von rollen-faellig.pl
 #     definiert. Weder Gregor noch ich konnten sie nachschlagen - das ist eine
 #     fehlende Quelle, keine Unaufmerksamkeit.
@@ -311,9 +321,9 @@ schranke pruefe-leistengroessen-paar.pl || exit $?
 # 14b. Ein neues "behoben" muss sagen, WORAN es belegt ist. Gregor am
 #      14.09.2026: "wenn eine aufgabe erledigt ist, dann sollte diese auch
 #      als solche gekennzeichnet werden." Die Gegenrichtung ist die teurere:
-#      am 13.09.2026 stand in BEFUNDE.md "Alle drei Maengel behoben in
+#      am 13.09.2026 stand in Intern/BEFUNDE.md "Alle drei Maengel behoben in
 #      7.2.0.51", waehrend Paket 1.0.51 unterwegs war, das den Fehler nicht
-#      behob. Geprueft wird NUR der Zuwachs an BEFUNDE.md - im Bestand
+#      behob. Geprueft wird NUR der Zuwachs an Intern/BEFUNDE.md - im Bestand
 #      stehen Dutzende alter Zeilen ohne Beleg, und eine Schranke, die
 #      siebzigmal meckert, wird abgeschaltet.
 #      Gegenprobe: --selbsttest, zehn Faelle; dazu am echten Stand
@@ -398,12 +408,12 @@ schranke pruefe-startwege.pl || exit $?
 #      hier neu? in der alten hermes implementierung hat es ja
 #      funktioniert." Danach gemessen: Quelltext original (je ein Commit,
 #      der initial commit), Verhalten veraendert. Geprueft wird nur der
-#      Zuwachs an BEFUNDE.md; als Beleg zaehlt eine aeltere eigene Fassung
+#      Zuwachs an Intern/BEFUNDE.md; als Beleg zaehlt eine aeltere eigene Fassung
 #      mit demselben Bild, Hermes/7.1, Gregor am alten Programm - oder die
 #      Einschraenkung "Quelltext original, Verhalten nicht gemessen"
 #      (Arbeitsweise/original-ist-eine-messung.md).
 #      Gegenprobe: --selbsttest, 14 Faelle in beide Richtungen; am Bestand
-#      --datei BEFUNDE.md: 199 Befundzeilen, 6 Original-Urteile, 4 mit
+#      --datei Intern/BEFUNDE.md: 199 Befundzeilen, 6 Original-Urteile, 4 mit
 #      Beleg (E-118, E-121, E-122, E-134) laufen durch, 2 ohne (E-133,
 #      E-117) weisen ab.
 schranke pruefe-original-belegt.pl || exit $?
@@ -466,7 +476,7 @@ schranke pruefe-release-buchfuehrung.pl || exit $?
 #     ihren Umfang nur aus den UEBERSCHRIFTEN des CHANGELOG-Abschnitts, und
 #     7.2.0.70 nennt seine vier Befunde nur im Fliesstext - Umfang 0, Meldung
 #     "nichts zu pruefen", Rueckgabe 0. Seit dem 18.09.2026 kommt der Umfang
-#     zusaetzlich aus BEFUNDE.md, und Umfang 0 weist ab statt gruen zu melden.
+#     zusaetzlich aus Intern/BEFUNDE.md, und Umfang 0 weist ab statt gruen zu melden.
 schranke pruefe-befund-verbreitung.pl || exit $?
 
 # 18. Ist die Fassung ueberhaupt beschrieben - CHANGELOG-Abschnitt, "Noch
@@ -475,11 +485,11 @@ schranke pruefe-doku-takt.pl || exit $?
 
 # 19. Hinkt ein Stand-Kopf hinterher, und nennt jede Rollenhistorie ihre
 #     Berichte? Die zweite Frage ist seit dem 18.09.2026 dabei: bis dahin
-#     verglich die Schranke NUR Datum gegen Datum und meldete LEKTORAT.md
+#     verglich die Schranke NUR Datum gegen Datum und meldete Intern/LEKTORAT.md
 #     gruen, waehrend die Datei Befunde/LEKTOR-13.md kein einziges Mal nannte.
 schranke pruefe-stand-md.pl || exit $?
-# Haelt jedes Dokument gegen die Urteilszeilen in BEFUNDE.md - kein
-# Text darf einen Befund fuer erledigt erklaeren, den BEFUNDE.md offen
+# Haelt jedes Dokument gegen die Urteilszeilen in Intern/BEFUNDE.md - kein
+# Text darf einen Befund fuer erledigt erklaeren, den Intern/BEFUNDE.md offen
 # fuehrt. Hing bis zum 12.10.2026 in KEINEM Haken und war auf main rot.
 schranke pruefe-befundurteile.pl || exit $?
 schranke befunde-verlinken.pl || exit $?
@@ -506,13 +516,15 @@ schranke pruefe-fassungsnummer.pl || exit $?
 #      dem Dateiende).
 schranke pruefe-behoben-ausgeliefert.pl || exit $?
 
-# 19b. Den Bestand an offenen Befunden MELDEN - nicht abweisen, deshalb steht
-#      hier kein "|| exit". CLAUDE.md verlangt diesen Blick zu Sitzungsbeginn;
-#      der erste Commit eines Arbeitsblocks ist der zweite gute Zeitpunkt
-#      (Arbeitsweise/ausloeser-an-den-anfang.md).
-if [ -f "$WURZEL/tools/offene-befunde.pl" ]; then
-  perl "$WURZEL/tools/offene-befunde.pl" 2>/dev/null | grep -E "offen|OFFEN" | head -5
-fi
+# 19b. Den Bestand an offenen Befunden pruefen - seit dem 22.10.2026
+#      ABWEISEND. Bis dahin stand hier bewusst kein "|| exit", weil das
+#      Werkzeug nur MELDETE. Seitdem tut es zweierlei mehr: es erzeugt die
+#      Liste in CHANGELOG.md und Intern/WEITERMACHEN.md aus derselben Quelle,
+#      und es weist ab, wenn ein offener Befund nicht sagt, was noch fehlt.
+#      Beides kann ohne Abbruch nichts bewirken - CHRONIST hat am 22.10.2026
+#      gemessen, dass der neue Abbruch hier wirkungslos durchlief
+#      (Arbeitsweise/schranke-gehoert-in-den-haken.md).
+schranke offene-befunde.pl || exit $?
 
 # 15b. Keine persoenlichen Daten in Testdaten/. Gregor am 18.09.2026, als er
 #      das Verzeichnis angeordnet hat: "aber: keine persoenlichen inhalte
@@ -630,8 +642,8 @@ schranke pruefe-doku-takt.pl || exit $?
 
 echo "pre-push: hinkt ein Stand-Kopf hinterher?"
 schranke pruefe-stand-md.pl || exit $?
-# Haelt jedes Dokument gegen die Urteilszeilen in BEFUNDE.md - kein
-# Text darf einen Befund fuer erledigt erklaeren, den BEFUNDE.md offen
+# Haelt jedes Dokument gegen die Urteilszeilen in Intern/BEFUNDE.md - kein
+# Text darf einen Befund fuer erledigt erklaeren, den Intern/BEFUNDE.md offen
 # fuehrt. Hing bis zum 12.10.2026 in KEINEM Haken und war auf main rot.
 schranke pruefe-befundurteile.pl || exit $?
 schranke befunde-verlinken.pl || exit $?
@@ -705,7 +717,7 @@ echo " 14. tools/pruefe-leistengroessen-paar.pl"
 echo "                               kennt einen Groessenschluessel nur EINE der"
 echo "                               beiden Seiten? (E-70, E-84)"
 echo " 14b. tools/pruefe-behoben-belegt.pl"
-echo "                               nennt ein neues \"behoben\" in BEFUNDE.md,"
+echo "                               nennt ein neues \"behoben\" in Intern/BEFUNDE.md,"
 echo "                               WORAN es belegt ist?"
 echo " 14c. tools/pruefe-anzeigetext.pl"
 echo "                               nennt ein zitierter Oberflaechentext seine"
@@ -720,6 +732,9 @@ echo " 14f. tools/pruefe-auspacken.pl"
 echo "                               packt eine Pruefung etwas Ausfuehrbares"
 echo "                               auf die Platte? (E-124, Defender)"
 echo " 14g. tools/pruefe-startwege.pl"
+echo " 14h. tools/pruefe-tabellenzeilen.pl"
+echo " 14i. tools/pruefe-nicht-kann.pl"
+echo " 14j. tools/ziel-stand.pl"
 echo "                               steht jeder eigene Eudora-Start von heute"
 echo "                               in tools/TESTLAEUFE.md? (21.10.2026: 15/0)"
 echo " 14h. tools/pruefe-original-belegt.pl"
@@ -735,7 +750,7 @@ echo "Der pre-push prueft zusaetzlich, gegen den fertigen Zweig:"
 echo "  tools/doku-pruefen.pl        alle MD-Dateien noch einmal gegen sich selbst"
 echo "  tools/pruefe-bytes.pl        Zeilenenden und Kodierung"
 echo "  tools/pruefe-rollen-doku.pl  ist jede Rolle aus rollen-faellig.pl in"
-echo "                               AGENTEN.md nachschlagbar? (pre-commit)"
+echo "                               Intern/AGENTEN.md nachschlagbar? (pre-commit)"
 echo "  tools/pruefe-testbau.pl      laesst sich EudoraTests.exe ueberhaupt bauen?"
 echo ""
 echo " Seit dem 18.09.2026 zusaetzlich, in BEIDEN Haken abweisend (Befund E-109):"
@@ -746,7 +761,7 @@ echo "  tools/pruefe-stand-md.pl              hinkt ein Stand-Kopf hinterher?"
 echo "  tools/pruefe-fassungsnummer.pl        ist eine Nummer zweimal vergeben?"
 echo "  tools/pruefe-behoben-ausgeliefert.pl  sagt die AUSGELIEFERTE Eudora.exe dasselbe?"
 echo "  tools/pruefe-testdaten-anonym.pl      keine persoenlichen Daten unter Testdaten/"
-echo "  tools/offene-befunde.pl               deckt WEITERMACHEN.md die offenen Befunde?"
+echo "  tools/offene-befunde.pl               deckt Intern/WEITERMACHEN.md die offenen Befunde?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
 echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"
 echo "                               Baufehler ab, nicht bei roten Tests."

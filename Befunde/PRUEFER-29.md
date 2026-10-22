@@ -34,7 +34,7 @@ zusammengesetzte Nachricht (`IsComp`) mit Hash ≠ 0, die schon im Papierkorb li
 Voraussetzung: doppelte Hashes ≠ 0 in einem lokalen Ordner — möglich bei Post aus mehreren
 IMAP-Ordnern (kleine UIDs, PRUEFER-28 P1 „Gegenvermutung“). Die saubere Lösung bleibt die in
 PRUEFER-28 genannte: Quelle über `m_UniqueMessageId` wiederfinden (Formatänderung
-`actionqueue.dat`). **Kein Hindernis für 7.2.0.90**, aber bei [E-121](../BEFUNDE.md#e-121) als Rest vermerken.
+`actionqueue.dat`). **Kein Hindernis für 7.2.0.90**, aber bei [E-121](../Intern/BEFUNDE.md#e-121) als Rest vermerken.
 
 ## P2 — behoben
 
@@ -87,7 +87,7 @@ Die beiden Spurmarken mit `atoi(m_szMessageIDs)` sind entfernt; `grep "atoi(m_sz
 übergeben ist (`ImapActionQueue.cpp:3652-3656`); `DoPostProcessing` läuft danach
 (`:553-558`). Während `DoPreThreadAction` steht sie noch drin (`:3645` vor `:3654`) — dort liegt
 der Abgleich beim Öffnen des Zielordners (`:2289`), und der ist jetzt geschützt, auch nach einem
-Neustart. Das deckt den gemessenen Wettlauf aus [E-121](../BEFUNDE.md#e-121).
+Neustart. Das deckt den gemessenen Wettlauf aus [E-121](../Intern/BEFUNDE.md#e-121).
 
 ### N2 — Abgleich am Ende von `DoPostProcessing` ist nach einem Neustart ungeschützt (Bildverlust in der Quelle, Gegenvermutung, nicht gemessen)
 
@@ -165,4 +165,4 @@ nennt den Grund und die Folge (Bild als Teil ohne Kopf, nicht verloren).
 Auslieferbar im Sinne der Datenverlust-Klasse: **ja** — keine Nachricht geht auf einem
 gewöhnlichen Weg verloren; N1 braucht doppelte Hashes plus eine Handlung des Nutzers.
 N2/N3 betreffen Bilddateien nach einem Neustart mit ausstehender Übertragung und sollten bei
-[E-121](../BEFUNDE.md#e-121) offen stehen bleiben.
+[E-121](../Intern/BEFUNDE.md#e-121) offen stehen bleiben.

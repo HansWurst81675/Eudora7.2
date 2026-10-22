@@ -1,9 +1,9 @@
 # <a id="lektor-42"></a>LEKTOR-42 — Doku nach 7.2.0.107 bis 7.2.0.110 (E-101 dritter Teil, E-69 P3, R1–R4) und drei nie geschnürte Pakete
 
 Lauf am 19.10.2026 auf Zweig `e-69-meldungsflut`, Stand `8d1075b0`. Anlass: seit
-[LEKTOR-41](LEKTOR-41.md#lektor-41) (`fd890f3`) sind 7.2.0.107 ([E-101](../BEFUNDE.md#e-101), dritter Teil, dazu
-[PRÜFER-37](PRUEFER-37.md)), 7.2.0.108 ([E-123](../BEFUNDE.md#e-123): P1/P2 aus [PRÜFER-36](PRUEFER-36.md)), 7.2.0.109
-([E-69](../BEFUNDE.md#e-69): P3) und 7.2.0.110 (R1–R4 aus [PRÜFER-38](PRUEFER-38.md)) dazugekommen. **Drei
+[LEKTOR-41](LEKTOR-41.md#lektor-41) (`fd890f3`) sind 7.2.0.107 ([E-101](../Intern/BEFUNDE.md#e-101), dritter Teil, dazu
+[PRÜFER-37](PRUEFER-37.md)), 7.2.0.108 ([E-123](../Intern/BEFUNDE.md#e-123): P1/P2 aus [PRÜFER-36](PRUEFER-36.md)), 7.2.0.109
+([E-69](../Intern/BEFUNDE.md#e-69): P3) und 7.2.0.110 (R1–R4 aus [PRÜFER-38](PRUEFER-38.md)) dazugekommen. **Drei
 Paketnummern sind an einem Tag entstanden und wieder verworfen worden** —
 1.0.107, 1.0.108 und 1.0.109 sind übersetzt, aber **nie geschnürt**.
 
@@ -15,7 +15,7 @@ Paketnummern sind an einem Tag entstanden und wieder verworfen worden** —
 davon **42** außerhalb von `Befunde/`.
 
 * **Alle 233** maschinell durchsucht nach: `1\.0\.(107|108|109|110)`;
-  [`E-123`](../BEFUNDE.md#e-123) zusammen mit *behoben / erledigt / geschlossen*;
+  [`E-123`](../Intern/BEFUNDE.md#e-123) zusammen mit *behoben / erledigt / geschlossen*;
   `(Quellstand|Stand|aktuell|derzeit|inzwischen|jetzt).{0,80}7\.2\.0\.(9x|10x)`;
   `Stand TT.MM.2026`; *zum Test bei Gregor / bei Gregor bereitgestellt /
   liegt bei Gregor*.
@@ -71,7 +71,7 @@ Er nannte Zweig `e-123-beenden-warten`, Quellstand 7.2.0.106, *„PR #101 offen�
 und als nächsten Schritt einen Zweig, der inzwischen abgearbeitet ist.
 **Jetzt:** ein neuer Block *Stand 19.10.2026* davor; der alte trägt
 *„(überholt)“* wie die beiden darunter. Der neue nennt ausdrücklich, dass
-1.0.107 bis 1.0.109 nie geschnürt wurden, dass [E-123](../BEFUNDE.md#e-123) offen bleibt und dass
+1.0.107 bis 1.0.109 nie geschnürt wurden, dass [E-123](../Intern/BEFUNDE.md#e-123) offen bleibt und dass
 die Regression ein Release sperrt.
 
 ### <a id="l-42.3"></a>L-42.3 — kein Dokument nannte das letzte Paket, das Gregor wirklich hat (hoch)
@@ -91,31 +91,31 @@ Ein Paket, das eine Regression trägt und es nicht sagt, ist eine Falle.
 und 7.2.0.110), `Releases/PAKETE.md` (1.0.109, 1.0.110), `WEITERMACHEN.md:12`
 und `Befunde/PRUEFER-37.md`. **Nicht genannt** war sie in `README.md`,
 `TESTPLAN.md`, `ZIEL.md`, `AUFGABEN.md` und in der CHANGELOG-Zeile *Noch offen*
-zu [E-101](../BEFUNDE.md#e-101).
+zu [E-101](../Intern/BEFUNDE.md#e-101).
 
 Eingesetzt:
 
 | Stelle | neu |
 |---|---|
 | `README.md:76`, Tabelle *Was passiert* | *„Ab 7.2.0.107 (noch nicht veröffentlicht) ist es für Post in `windows-1251`, `koi8-r` oder `iso-8859-2` **schlechter als in `v1.0.101`**“*, mit dem Hinweis, dass Latin-1 und UTF-8 nicht betroffen sind |
-| `CHANGELOG.md:28`, *Noch offen*, [E-101](../BEFUNDE.md#e-101) | dritter Teil in 7.2.0.107 (nie geschnürt), F2 tot, F1 offen, **F4 Regression gegenüber 1.0.106** |
-| `TESTPLAN.md`, neuer Abschnitt [C6](../TESTPLAN.md#c6) | *„bitte nicht als neuen Fehler melden“* samt der Angabe, welche Zeichensätze betroffen sind |
-| `ZIEL.md:23`, Maßstabszeile [E-101](../BEFUNDE.md#e-101) | Stand ergänzt: F2 tot, F1 offen, F4 Regression |
+| `CHANGELOG.md:28`, *Noch offen*, [E-101](../Intern/BEFUNDE.md#e-101) | dritter Teil in 7.2.0.107 (nie geschnürt), F2 tot, F1 offen, **F4 Regression gegenüber 1.0.106** |
+| `TESTPLAN.md`, neuer Abschnitt [C6](../Intern/TESTPLAN.md#c6) | *„bitte nicht als neuen Fehler melden“* samt der Angabe, welche Zeichensätze betroffen sind |
+| `ZIEL.md:23`, Maßstabszeile [E-101](../Intern/BEFUNDE.md#e-101) | Stand ergänzt: F2 tot, F1 offen, F4 Regression |
 | `AUFGABEN.md:3` | dieselbe Angabe im Kopf, mit *„kein Release, solange das offen ist“* |
 
 ### <a id="l-42.5"></a>L-42.5 — der Testplan nannte 1.0.110 im Kopf und gab Gregor keinen einzigen Handgriff dazu (hoch)
 
 `TESTPLAN.md:1` sagte *„Stand 19.10.2026, Paket 1.0.110“* und im selben Satz
-*„**Paket 1.0.106 ([E-69](../BEFUNDE.md#e-69) und [E-123](../BEFUNDE.md#e-123)) zum Test bei Gregor**“*. Einen Abschnitt zu
+*„**Paket 1.0.106 ([E-69](../Intern/BEFUNDE.md#e-69) und [E-123](../Intern/BEFUNDE.md#e-123)) zum Test bei Gregor**“*. Einen Abschnitt zu
 1.0.110 gab es nicht; die letzte Prüfanleitung im Plan ist **C5 zu 1.0.89**
 (14.10.2026). Die Prüfschritte zu 1.0.110 standen allein in `CHANGELOG.md` und
 `Releases/PAKETE.md` — also dort, wo Gregor sie nicht sucht.
 
-**Eingesetzt:** Abschnitt **[C6 · Paket 1.0.110](../TESTPLAN.md#c6)** mit vier
-Handgriffen und je einer Spalte *was richtig ist*: der Anlassfall zu [E-69](../BEFUNDE.md#e-69)
+**Eingesetzt:** Abschnitt **[C6 · Paket 1.0.110](../Intern/TESTPLAN.md#c6)** mit vier
+Handgriffen und je einer Spalte *was richtig ist*: der Anlassfall zu [E-69](../Intern/BEFUNDE.md#e-69)
 (IMAP-Postfach filtern bei nicht erreichbarem Server, **zwei** Einträge), die
 Gegenprobe zu **R1** (*direkt danach, ohne Neustart* — kommt kein Eintrag, ist
-R1 nicht behoben), der Beenden-Weg zu [E-123](../BEFUNDE.md#e-123) und der zweite *File → Exit*
+R1 nicht behoben), der Beenden-Weg zu [E-123](../Intern/BEFUNDE.md#e-123) und der zweite *File → Exit*
 (**R4**). Dazu der Satz, dass 1.0.107 bis 1.0.109 nicht existieren und dass
 F1 (Nachricht mit Anhang speichern) **nicht** getestet werden darf.
 Der Kopf `:1` nennt jetzt 1.0.110 mit Verweis auf C6 und führt 1.0.106 als
@@ -124,16 +124,16 @@ Der Kopf `:1` nennt jetzt 1.0.110 mit Verweis auf C6 und führt 1.0.106 als
 ### <a id="l-42.6"></a>L-42.6 — E-123: die Prüfpunkte wurden mehrfach wie der Befund gelesen (hoch)
 
 P1, P2 (PRÜFER-36) und R4 (PRÜFER-38) sind Prüfpunkte **am Beenden-Weg**.
-[E-123](../BEFUNDE.md#e-123) selbst — eingebettete Bilder fehlen nach einem Abbruch mitten in der
+[E-123](../Intern/BEFUNDE.md#e-123) selbst — eingebettete Bilder fehlen nach einem Abbruch mitten in der
 Übertragung — **bleibt offen** (`BEFUNDE.md:290`).
 
 * **An meiner eigenen Fassung gefangen:** mein erster Entwurf von
   `WEITERMACHEN.md:9` trug *„Bekannte Regression, nicht behoben“* in derselben
-  **Tabellenzeile** wie [E-123](../BEFUNDE.md#e-123). `pruefe-befundurteile.pl` wertet in einer
+  **Tabellenzeile** wie [E-123](../Intern/BEFUNDE.md#e-123). `pruefe-befundurteile.pl` wertet in einer
   Tabellenzeile die **ganze Zeile** als Umfeld und meldete:
-  *„WEITERMACHEN.md:9 nennt [E-123](../BEFUNDE.md#e-123) als 'behoben' – BEFUNDE.md fuehrt ihn
+  *„WEITERMACHEN.md:9 nennt [E-123](../Intern/BEFUNDE.md#e-123) als 'behoben' – BEFUNDE.md fuehrt ihn
   OFFEN“*. Zu Recht. Umformuliert auf *„weiter offen“*, dazu steht jetzt
-  ausdrücklich *„[E-123](../BEFUNDE.md#e-123) bleibt **offen** – abgearbeitet sind nur die
+  ausdrücklich *„[E-123](../Intern/BEFUNDE.md#e-123) bleibt **offen** – abgearbeitet sind nur die
   Prüfpunkte am Beenden-Weg“* in derselben Zeile.
 * `Releases/PAKETE.md`, Abschnitt 1.0.110, beschrieb P1/P2/R4 ohne ein Wort
   dazu, dass der Befund offen bleibt. **Absatz ergänzt.**
@@ -145,7 +145,7 @@ P1, P2 (PRÜFER-36) und R4 (PRÜFER-38) sind Prüfpunkte **am Beenden-Weg**.
   Dieselbe Umkehrung eingesetzt.
 * `AUFGABEN.md:3` und `ZIEL.md:47`: *„der Befund selbst bleibt offen“* ergänzt.
 
-**Kein Dokument behauptete „[E-123](../BEFUNDE.md#e-123) behoben“** — gesucht über alle 233 MDs in
+**Kein Dokument behauptete „[E-123](../Intern/BEFUNDE.md#e-123) behoben“** — gesucht über alle 233 MDs in
 beiden Richtungen (Kennung vor dem Urteilswort und dahinter). Die Treffer
 liegen alle in `Befunde/` und in `LEKTORAT.md`, und alle beschreiben genau
 diesen Fehler als vergangenen.
@@ -204,7 +204,7 @@ Gregor: NEIN“*) bleiben unverändert stehen. Eine **Prüfanleitung** ist aber
 kein Rückblick, sondern eine Aufforderung zu handeln. Unter beide Überschriften
 ist deshalb ein gekennzeichneter *Nachtrag LEKTOR, 19.10.2026* gesetzt: das
 Paket wurde nie geschnürt, der Inhalt steckt in 1.0.110, die Schritte stehen in
-`TESTPLAN.md` [C6](../TESTPLAN.md#c6).
+`TESTPLAN.md` [C6](../Intern/TESTPLAN.md#c6).
 
 ### <a id="l-42.11"></a>L-42.11 — die Hinweise „zur Kenntnis“ aus `doku-pruefen.pl`
 
@@ -215,7 +215,7 @@ und `tools/ZWEIGE.md` sind berichtigt).
 |---|---|---|
 | `Releases/1.0.101/RELEASE-NOTIZEN.md` | **nein** | veröffentlichter Text zu genau 7.2.0.101 |
 | `Testdaten/README.md` | **nein** | der Kopf (`:3`) sagt selbst *„haengen an keiner Programmfassung“* |
-| `tools/pruefdaten/LIESMICH.md` | **nein** | Messtabelle zu [AN-1](../BEFUNDE.md#an-1) mit den Fassungen, an denen gemessen wurde |
+| `tools/pruefdaten/LIESMICH.md` | **nein** | Messtabelle zu [AN-1](../Intern/BEFUNDE.md#an-1) mit den Fassungen, an denen gemessen wurde |
 
 Der Vorschlag aus [L-41.10](LEKTOR-41.md#l-41.10) steht weiter: diese drei in eine Ausnahmeliste,
 damit der Hinweis die echten nicht übertönt. **Nicht von mir gebaut** — das ist
@@ -256,18 +256,18 @@ Datei sonst noch nennt.
 
 | Punkt | Stand heute |
 |---|---|
-| [L-41.1](LEKTOR-41.md#l-41.1) [E-121](../BEFUNDE.md#e-121): Gregors *„ja, e-121 behoben“* | **erledigt**: `BEFUNDE.md:288` führt ihn behoben, `offene-befunde.pl` 33/33, die Restfälle stehen als [E-126](../BEFUNDE.md#e-126) und [E-127](../BEFUNDE.md#e-127) |
+| [L-41.1](LEKTOR-41.md#l-41.1) [E-121](../Intern/BEFUNDE.md#e-121): Gregors *„ja, e-121 behoben“* | **erledigt**: `BEFUNDE.md:288` führt ihn behoben, `offene-befunde.pl` 33/33, die Restfälle stehen als [E-126](../Intern/BEFUNDE.md#e-126) und [E-127](../Intern/BEFUNDE.md#e-127) |
 | [L-41.2](LEKTOR-41.md#l-41.2) `v1.0.87` als *„veröffentlicht ist“* | **erledigt** in `ZIEL.md:47` und `AUFGABEN.md:3` (beide nennen jetzt `v1.0.101`); `pruefe-release-buchfuehrung.pl` grün |
-| [L-41.3](LEKTOR-41.md#l-41.3) [E-123](../BEFUNDE.md#e-123) fehlt im Maßstab 7.2.1.0 | **offen** — `ZIEL.md:18-34` führt [E-123](../BEFUNDE.md#e-123), [E-122](../BEFUNDE.md#e-122), [E-124](../BEFUNDE.md#e-124) bis [E-127](../BEFUNDE.md#e-127) weiterhin weder als Voraussetzung noch unter *ausdrücklich nicht*. **Bewusst nicht geändert: das ist Gregors Entscheidung** |
+| [L-41.3](LEKTOR-41.md#l-41.3) [E-123](../Intern/BEFUNDE.md#e-123) fehlt im Maßstab 7.2.1.0 | **offen** — `ZIEL.md:18-34` führt [E-123](../Intern/BEFUNDE.md#e-123), [E-122](../Intern/BEFUNDE.md#e-122), [E-124](../Intern/BEFUNDE.md#e-124) bis [E-127](../Intern/BEFUNDE.md#e-127) weiterhin weder als Voraussetzung noch unter *ausdrücklich nicht*. **Bewusst nicht geändert: das ist Gregors Entscheidung** |
 | [L-41.4](LEKTOR-41.md#l-41.4) *„höchstens 90 s“* und *„7.2.0.102“* | **erledigt** in `README.md:79` und `CHANGELOG.md:20` ([L-42.6](#l-42.6)) |
-| [L-41.5](LEKTOR-41.md#l-41.5) README überzeichnet [E-69](../BEFUNDE.md#e-69), CHANGELOG/FILTER ohne Stand | **erledigt** ([L-42.7](#l-42.7)); der Satz *„diese eine Nachricht“* steht in `README.md:75` inzwischen richtig da |
+| [L-41.5](LEKTOR-41.md#l-41.5) README überzeichnet [E-69](../Intern/BEFUNDE.md#e-69), CHANGELOG/FILTER ohne Stand | **erledigt** ([L-42.7](#l-42.7)); der Satz *„diese eine Nachricht“* steht in `README.md:75` inzwischen richtig da |
 | [L-41.6](LEKTOR-41.md#l-41.6) Block *Der nächste Schritt* bei 7.2.0.102 | **erledigt** ([L-42.2](#l-42.2), [L-42.3](#l-42.3)) |
-| [L-41.7](LEKTOR-41.md#l-41.7) TESTPLAN ohne Abschnitt ab 1.0.90 | **erledigt** mit [C6](../TESTPLAN.md#c6) ([L-42.5](#l-42.5)); die Lücke 1.0.90 bis 1.0.106 bleibt |
+| [L-41.7](LEKTOR-41.md#l-41.7) TESTPLAN ohne Abschnitt ab 1.0.90 | **erledigt** mit [C6](../Intern/TESTPLAN.md#c6) ([L-42.5](#l-42.5)); die Lücke 1.0.90 bis 1.0.106 bleibt |
 | [L-41.8](LEKTOR-41.md#l-41.8) zwei Messskripte ohne Eintrag | **offen** — `messen-e69.ps1` und `messen-e123-doppelt.ps1` fehlen weiter in `tools/WERKZEUGE.md`. Seit 7.2.0.106 ist **kein** weiteres dazugekommen (gemessen) |
 | [L-41.9](LEKTOR-41.md#l-41.9) ZWEIGE bei 7.2.0.102 | **erledigt** für den laufenden Zweig ([L-42.8](#l-42.8)); die Zeile `e-123-beenden-warten` (`:102`) endet weiter bei 7.2.0.102 |
 | [L-41.11](LEKTOR-41.md#l-41.11) PRÜFER und CHRONIST fällig | PRÜFER mit [PRÜFER-37](PRUEFER-37.md) und [PRÜFER-38](PRUEFER-38.md) gelaufen; **CHRONIST läuft** (`tools/AGENTEN-LAUFEN.md`, seit 19.10.2026 13:47) |
-| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
-| [L-37.10](LEKTOR-37.md#l-37.10) AUFGABEN ohne Zeilen für [E-122](../BEFUNDE.md#e-122) bis [E-127](../BEFUNDE.md#e-127) | **offen** |
+| [L-38.5](LEKTOR-38.md#l-38.5) [E-78](../Intern/BEFUNDE.md#e-78) in der README-Tabelle | **offen** |
+| [L-37.10](LEKTOR-37.md#l-37.10) AUFGABEN ohne Zeilen für [E-122](../Intern/BEFUNDE.md#e-122) bis [E-127](../Intern/BEFUNDE.md#e-127) | **offen** |
 | [L-37.13](LEKTOR-37.md#l-37.13) DLLs im Hauptbaum | **offen**: ` M` an `DirServ.dll`, `EudoraBk.dll`, `ISock.dll`, `Ldap.dll`, `Ph.dll` (Git-Stand zu Sitzungsbeginn) |
 
 ---

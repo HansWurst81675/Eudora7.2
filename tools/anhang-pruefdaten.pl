@@ -12,7 +12,7 @@ use strict; use warnings;
 #
 # Gregor hat den Fehler im Betrieb gesehen, kann aber keine Beispielnachricht
 # liefern. Auf eine zu warten hiesse, den Fehler liegen zu lassen. Also werden
-# die Faelle hier erzeugt - aus dem, was in BEFUNDE.md AN-1 gemessen ist.
+# die Faelle hier erzeugt - aus dem, was in Intern/BEFUNDE.md AN-1 gemessen ist.
 #
 # WARUM EIN POP3-SERVER UND NICHT NUR DATEIEN
 #
@@ -44,7 +44,7 @@ use strict; use warnings;
 #   06-betreff-gefaltet       Anhang heil, BETREFF mit Luecken mitten im Wort (E-94)
 #
 # Ist 00 heil und sind 01 bis 05 kaputt, ist AN-1 bestaetigt. Sind hinterher
-# ALLE sechs heil, wirken die Behebungen B5.1 bis B5.6 (siehe AUFGABEN.md)
+# ALLE sechs heil, wirken die Behebungen B5.1 bis B5.6 (siehe Intern/AUFGABEN.md)
 # am laufenden Programm.
 #
 # WORAN MAN ES AUCH IN ECHTER POST ERKENNT
@@ -108,7 +108,7 @@ my $PDF_B64 = join '', qw(
 # Die Faelle. "kopf" ist der MIME-Teilkopf des Anhangs, woertlich so, wie er
 # auf der Leitung ankommt - mit CR und LF an genau den Stellen, um die es geht.
 # "soll" ist der Dateiname, den der Absender meint.
-# "heute" ist das, was Eudora daraus macht (BEFUNDE.md AN-1, gemessen).
+# "heute" ist das, was Eudora daraus macht (Intern/BEFUNDE.md AN-1, gemessen).
 # ---------------------------------------------------------------------------
 my $LANGNAME = 'A' x 300;
 
@@ -203,7 +203,7 @@ sub nachricht {
            . "Heute macht Eudora daraus" . $CRLF
            . "  " . $f->{heute} . $CRLF
            . $CRLF
-           . "Siehe BEFUNDE.md, Befund $befund." . $CRLF;
+           . "Siehe Intern/BEFUNDE.md, Befund $befund." . $CRLF;
 
   my $anhang = $PDF_B64;
   $anhang =~ s/(.{1,76})/$1$CRLF/g;

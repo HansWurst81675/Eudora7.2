@@ -1,7 +1,7 @@
 # PRÜFER-35 — 7.2.0.103 nachgerechnet
 
 Gegenstand: `git diff fbbf6c31..HEAD -- Eudora71/`, also Commit `916df7c7` (7.2.0.103). Er soll
-die Funde S1 bis S6 aus [PRÜFER-34](PRUEFER-34.md) zu [E-123](../BEFUNDE.md#e-123) schließen.
+die Funde S1 bis S6 aus [PRÜFER-34](PRUEFER-34.md) zu [E-123](../Intern/BEFUNDE.md#e-123) schließen.
 Gelesen am Quelltext, nichts gebaut, nichts gestartet. Die Zeilenangaben beziehen sich auf
 `916df7c7`. Messdaten, nur gelesen: `C:\Temp\E118\Mailverzeichnis\eudora-w123{e,f,g}-1.log`.
 
@@ -17,10 +17,10 @@ wartete Eudora schlimmstenfalls 90 s. In 7.2.0.103 gibt es zwei Zustände, in de
 endet, und jedes weitere Schließen wird dabei ignoriert:
 
 * N1: Die laufende Übertragung wird nie als erledigt abgemeldet. Diese Abmeldung hängt an
-  derselben Kette, die in [E-83](../BEFUNDE.md#e-83) dreimal gerissen ist.
+  derselben Kette, die in [E-83](../Intern/BEFUNDE.md#e-83) dreimal gerissen ist.
 * N2: Ein nicht-modales Fenster von Eudora war zuletzt aktiv, etwa ein schwebendes Fenster.
 
-Der Anwender kommt dann nur über den Task-Manager heraus. Das ist Gregors altes Symptom aus [E-83](../BEFUNDE.md#e-83):
+Der Anwender kommt dann nur über den Task-Manager heraus. Das ist Gregors altes Symptom aus [E-83](../Intern/BEFUNDE.md#e-83):
 „Eudora lässt sich nicht beenden“. Beide Auslöser sind Vermutung, die Mechanik ist am Quelltext
 belegt. Beides lässt sich mit einer Änderung beheben, siehe unten.
 
@@ -115,7 +115,7 @@ nicht nach 90 s (`mainfrm.cpp:1973`). `OnClose` ignoriert jedes weitere Schließ
 6. `RemoveTaskInfo` löscht die Aufgabe (`QCTaskManager.cpp:902`).
 7. `~CImapAction` ruft `ActionDone` (`ImapActionQueue.cpp:626`).
 
-Genau diese Kette ist in [E-83](../BEFUNDE.md#e-83) gerissen, am Ende von Schritt 1 und zweimal
+Genau diese Kette ist in [E-83](../Intern/BEFUNDE.md#e-83) gerissen, am Ende von Schritt 1 und zweimal
 in Schritt 4/5 (Nachträge 14.09. und 16.10.2026, jeweils als „liegengeblieben“). Dazu kommt
 Schritt 2: Wirft das Hochladen eine Ausnahme, wird sie weitergeworfen (`QCTaskManager.cpp:725`,
 `:732`). `Kill` und alle weiteren Glieder entfallen dann.

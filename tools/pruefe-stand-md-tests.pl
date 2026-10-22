@@ -10,13 +10,13 @@ use File::Spec;
 # Die Faelle sind keine erfundenen Beispiele, sondern die vier Zustaende vom
 # 11.09.2026:
 #
-#   b  AUFGABEN.md behauptete "Stand 09.09.2026", der CHANGELOG war vom 11.
-#   c  LEKTORAT.md endete beim "Siebten Durchgang - 07.09.2026", waehrend
+#   b  Intern/AUFGABEN.md behauptete "Stand 09.09.2026", der CHANGELOG war vom 11.
+#   c  Intern/LEKTORAT.md endete beim "Siebten Durchgang - 07.09.2026", waehrend
 #      LEKTOR am 09.09. zuletzt in Befunde/ berichtet hatte - GREGORS FUND
 #   d  dieselbe Datei mit dem 09.09. im FLIESSTEXT: die erste Fassung der
 #      Schranke hielt sie damit faelschlich fuer fortgeschrieben. Nur die
 #      Ueberschrift zaehlt.
-#   e  PRUEFBERICHT.md erklaert sich selbst als abgeschlossen - kein Mangel.
+#   e  Intern/PRUEFBERICHT.md erklaert sich selbst als abgeschlossen - kein Mangel.
 #
 # Aufruf: perl tools/pruefe-stand-md-tests.pl
 # Rueckgabe: 0 = alle Faelle wie erwartet, 1 = mindestens einer nicht.
@@ -44,8 +44,8 @@ sub probe {
 
     schreib("$d/VERSION", '1.0.48');
     schreib("$d/CHANGELOG.md", "# Fassungen\n\n## 7.2.0.48\n\nAm 11.09.2026 gebaut.\n");
-    schreib("$d/AUFGABEN.md", $o{aufgaben}) if $o{aufgaben};
-    schreib("$d/LEKTORAT.md", $o{lektorat}) if $o{lektorat};
+    schreib("$d/Intern/AUFGABEN.md", $o{aufgaben}) if $o{aufgaben};
+    schreib("$d/Intern/LEKTORAT.md", $o{lektorat}) if $o{lektorat};
     schreib("$d/Befunde/LEKTOR-6.md", "# Bericht\n\nL-12 vom 09.09.2026.\n")
         if $o{lektorat};
 
@@ -109,7 +109,7 @@ my @faelle = (
     o => { aufgaben => "# Aufgaben\n\n**Stand 11.09.2026**, aktuell.\n",
            lektorat => $lektorat_gut } },
 
-  { name => 'b  Stand-Kopf haengt hinterher', soll => 1, erwartet => 'AUFGABEN.md behauptet',
+  { name => 'b  Stand-Kopf haengt hinterher', soll => 1, erwartet => 'Intern/AUFGABEN.md behauptet',
     o => { aufgaben => "# Aufgaben\n\n**Stand 09.09.2026**, veraltet.\n",
            lektorat => $lektorat_gut } },
 

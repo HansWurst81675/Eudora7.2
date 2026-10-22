@@ -21,7 +21,7 @@ use warnings;
 # ausgefuehrt hat):
 #
 #   * `git tag` nannte **v1.0.72** als neuestes Tag - das Release war drauSSen.
-#   * README.md, AUFGABEN.md, WEITERMACHEN.md, Releases/PAKETE.md und
+#   * README.md, Intern/AUFGABEN.md, Intern/WEITERMACHEN.md, Releases/PAKETE.md und
 #     tools/RELEASES.md nannten alle fuenf weiterhin **v1.0.64** als das
 #     neueste Release.
 #
@@ -87,7 +87,7 @@ use warnings;
 #
 #   2. SIE WARF BEI JEDER AUFZAEHLUNG FEHLALARM. Gegen den Arbeitsbaum vom
 #      18.09.2026 meldete sie 7 Maengel, und ALLE SIEBEN waren falsch. Sechs
-#      davon aus einer einzigen Zeile - WEITERMACHEN.md:27:
+#      davon aus einer einzigen Zeile - Intern/WEITERMACHEN.md:27:
 #
 #          | **Zuletzt gebaut und veroeffentlicht** | Quellstand **7.2.0.72** /
 #          `VERSION` **1.0.72**, ... **Sie enthaelt** [1.0.65, .67, .68, .69,
@@ -138,8 +138,8 @@ my $wurzel = -f 'VERSION' ? '.' : '..';
 # genau sie nannten am 17.09.2026 alle v1.0.64.
 my @PFLICHT = qw(
     README.md
-    AUFGABEN.md
-    WEITERMACHEN.md
+    Intern/AUFGABEN.md
+    Intern/WEITERMACHEN.md
     Releases/PAKETE.md
     tools/RELEASES.md
 );
@@ -215,7 +215,7 @@ sub ist_standaussage {
 #                         zwischen den Zeilen; ohne diese Regel waere die
 #                         ganze Tabelle EIN Absatz, und eine veraltete Zeile
 #                         wuerde von der Nummer einer beliebigen anderen Zeile
-#                         gedeckt. Gemessen an WEITERMACHEN.md, dessen
+#                         gedeckt. Gemessen an Intern/WEITERMACHEN.md, dessen
 #                         Kopftabelle 20 Zeilen hat.
 #   Zitat (">")           eigener Block, wird nicht geprueft.
 #   Listenpunkt ("* ")    eigener Block; eingerueckte Folgezeilen gehoeren
@@ -410,10 +410,10 @@ if (grep { $_ eq '--tests' } @ARGV) {
     my %main_alt = (
         'README.md'       => "* **Noch nicht im Download enthalten:** das neueste Release ist **`v1.0.64`**\n"
                            . "  vom 17.09.2026.\n",
-        'AUFGABEN.md'     => "**Veroeffentlicht ist `v1.0.64`** - am 17.09.2026 um 10:23 Uhr UTC auf GitHub\n"
+        'Intern/AUFGABEN.md'     => "**Veroeffentlicht ist `v1.0.64`** - am 17.09.2026 um 10:23 Uhr UTC auf GitHub\n"
                            . "herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.70 sind nicht\n"
                            . "freigegeben**.\n",
-        'WEITERMACHEN.md' => "| **Zuletzt gebaut** | Quellstand **7.2.0.70** / `VERSION` **1.0.70** |\n",
+        'Intern/WEITERMACHEN.md' => "| **Zuletzt gebaut** | Quellstand **7.2.0.70** / `VERSION` **1.0.70** |\n",
     );
     my ($m_alt) = pruefe(\%main_alt, 72);
     $pruef->('Anlassfall: jede der drei Dateien wird beanstandet',
@@ -453,10 +453,10 @@ if (grep { $_ eq '--tests' } @ARGV) {
     # --- 4. Der berichtigte Stand muss durchlaufen ------------------------
     my %main_neu = (
         'README.md'       => "* **Das neueste Release ist `v1.0.72`** (17.09.2026, als *Latest*).\n",
-        'AUFGABEN.md'     => "**Veroeffentlicht ist `v1.0.72`** - am 17.09.2026 auf GitHub\n"
+        'Intern/AUFGABEN.md'     => "**Veroeffentlicht ist `v1.0.72`** - am 17.09.2026 auf GitHub\n"
                            . "herausgegangen und dort als *Latest* markiert; **1.0.65 bis 1.0.71 sind nicht\n"
                            . "freigegeben**.\n",
-        'WEITERMACHEN.md' => "| **Zuletzt gebaut und veroeffentlicht** | Quellstand **7.2.0.72** / `VERSION` **1.0.72**, enthaelt 1.0.65, 1.0.67 bis 1.0.71 |\n",
+        'Intern/WEITERMACHEN.md' => "| **Zuletzt gebaut und veroeffentlicht** | Quellstand **7.2.0.72** / `VERSION` **1.0.72**, enthaelt 1.0.65, 1.0.67 bis 1.0.71 |\n",
     );
     my ($m_neu, $gezaehlt) = pruefe(\%main_neu, 72);
     $pruef->('berichtigter Stand laeuft durch', join(' | ', @$m_neu), '');
@@ -465,10 +465,10 @@ if (grep { $_ eq '--tests' } @ARGV) {
 
     # --- 5. DER FEHLALARM, DER AM 18.09.2026 GEMESSEN WURDE ---------------
     #
-    # WEITERMACHEN.md:27 im Arbeitsbaum - richtige Nummer plus Aufzaehlung der
+    # Intern/WEITERMACHEN.md:27 im Arbeitsbaum - richtige Nummer plus Aufzaehlung der
     # Vorgaenger. Die erste Fassung warf hier SECHS Maengel.
     my %aufzaehlung = (
-        'WEITERMACHEN.md' => "| **Zuletzt gebaut und veroeffentlicht** | Quellstand **7.2.0.72** / `VERSION` **1.0.72**, gebaut am 17.09.2026. **Sie enthaelt** alles aus 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.70 und 1.0.71. |\n",
+        'Intern/WEITERMACHEN.md' => "| **Zuletzt gebaut und veroeffentlicht** | Quellstand **7.2.0.72** / `VERSION` **1.0.72**, gebaut am 17.09.2026. **Sie enthaelt** alles aus 1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.70 und 1.0.71. |\n",
     );
     my ($m_auf) = pruefe(\%aufzaehlung, 72);
     $pruef->('Aufzaehlung der Vorgaenger ist kein Mangel',
@@ -540,7 +540,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     # Aber eine Tabellenzeile OHNE Datum in der ersten Spalte ist keine
     # Protokollzeile - sonst waere die Ausnahme ein Scheunentor.
     my %tab_ohne_datum = (
-        'WEITERMACHEN.md' => "| **Zuletzt gebaut** | 1.0.64 |\n",
+        'Intern/WEITERMACHEN.md' => "| **Zuletzt gebaut** | 1.0.64 |\n",
     );
     my ($m_tod) = pruefe(\%tab_ohne_datum, 72);
     $pruef->('Tabellenzeile ohne Datum bleibt pruefbar',

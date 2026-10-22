@@ -166,7 +166,7 @@ drankommt. Entweder wurde dieser Zustand **vor** dem Anlegen gelesen, oder
 hat drei frühe `return FALSE`, und ihre Suchschleife läuft mit
 `GetNextVisibleItem()` über die Geschwisterliste hinaus, wenn das Dateielement
 nicht sichtbar aufgeklappt ist; abgefangen nur von einem `ASSERT`, das im
-Freigabebau nichts ist (Klasse [E-83](../BEFUNDE.md#e-83)).
+Freigabebau nichts ist (Klasse [E-83](../Intern/BEFUNDE.md#e-83)).
 
 **Es ist kein Grund, das Paket zu halten** — die Zeile schadet in keiner Lage,
 und der gemessene Erfolg (dreimal `alias hans`) steht. Aber die Ursache ist an
@@ -487,7 +487,7 @@ also nicht. Was es dort gibt: bestand vorher eine **Mehrfachauswahl**, bleiben
 deren übrige Bits stehen, und `GetFirstSelectedNickorFile()` (4445) — der
 Startpunkt des nächsten *Weitersuchen* — liefert dann nicht den Treffer,
 sondern den ersten ausgewählten Eintrag in Baumreihenfolge. *Weitersuchen*
-kommt dann nicht vom Fleck. Vorbestehend, unabhängig von [E-134](../BEFUNDE.md#e-134), und keine Zeile
+kommt dann nicht vom Fleck. Vorbestehend, unabhängig von [E-134](../Intern/BEFUNDE.md#e-134), und keine Zeile
 dieses Commits berührt es.
 
 ---

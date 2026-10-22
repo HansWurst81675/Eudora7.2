@@ -24,7 +24,7 @@ Gegenrichtung `606x600` am laufenden Programm gemessen), die Prüfnachricht
 | `ZIEL.md`, Stand | *„Testsuite 194/194 … PRÜFER-23 N1 behoben, dort noch nicht gemessen“* | ebenso |
 | `PORTIERUNG.md`, Stand 13.10. | *„Testsuite 194/194 … N1 eingebaut (Test grün), dort noch nicht gemessen“* | ebenso |
 | `WEITERMACHEN.md`, *Der nächste Schritt* 3. | *„PRÜFER-23 N1 behoben (`9f5142b`), dort **noch nicht gemessen**“* | beide gemessen (`600x230`, `606x600`) |
-| `README.md`, [E-110](../BEFUNDE.md#e-110)/[E-112](../BEFUNDE.md#e-112) | *„ist behoben, aber noch nicht gemessen“* | behoben und gemessen, Gegenrichtung genannt |
+| `README.md`, [E-110](../Intern/BEFUNDE.md#e-110)/[E-112](../Intern/BEFUNDE.md#e-112) | *„ist behoben, aber noch nicht gemessen“* | behoben und gemessen, Gegenrichtung genannt |
 
 ### <a id="l-30.2"></a>L-30.2 — `Releases/PAKETE.md` 1.0.85: Messwerte in der Zeile *Nicht gemessen*
 
@@ -60,5 +60,5 @@ in sich stimmig, belassen.
 `offene-befunde.pl`: *„Die Liste deckt die offenen Befunde.“* `befunde-verlinken.pl
 --verlinken`: *„Jede Kennung ist ein Link“*. `commit-bereit.pl`: zuerst 27 von 28
 grün — `pruefe-befundurteile.pl` las in `PORTIERUNG.md` mein *„behoben“* im selben
-Absatz wie [E-116](../BEFUNDE.md#e-116) als Urteil über [E-116](../BEFUNDE.md#e-116); umformuliert zu *„eingebaut“*, danach
+Absatz wie [E-116](../Intern/BEFUNDE.md#e-116) als Urteil über [E-116](../Intern/BEFUNDE.md#e-116); umformuliert zu *„eingebaut“*, danach
 28 von 28. Alle geänderten MDs: UTF-8 ohne BOM, nur LF, 0 U+FFFD.

@@ -2,7 +2,7 @@
 
 Agent FENSTER, 05./06.09.2026. Branch `wt/fenster-2` (von `fehler-nach-1010`).
 
-> **Nachtrag 07.09.2026: die Ursache ist gefunden.** Es war **[E-28](../BEFUNDE.md#e-28)** —
+> **Nachtrag 07.09.2026: die Ursache ist gefunden.** Es war **[E-28](../Intern/BEFUNDE.md#e-28)** —
 > `CSummary::m_FrameWnd` blieb als Zeiger auf einen zerstörten Rahmen stehen.
 > Behoben (`222c0ba`) und von Gregor bestätigt (Paket 1.0.14): Doppelklick und
 > Suchtreffer öffnen die Nachricht. Was unten steht, bleibt richtig: dieser
@@ -61,13 +61,13 @@ beschädigte `m_nSize`/`m_pData`. Dann meldet **jeder** Zugriff
 nicht Ursache.
 
 Genau dieses Muster ist in diesem Programm schon einmal aufgetreten und
-dokumentiert: **[E-4](../BEFUNDE.md#e-4)** (`BEFUNDE.md`). Dort schrieb
+dokumentiert: **[E-4](../Intern/BEFUNDE.md#e-4)** (`BEFUNDE.md`). Dort schrieb
 `CWazooBarMgr::SetDefaultWazooBarState` beim *Start* über einen C-Cast in ein
 Objekt falschen Typs; sichtbar wurde es erst beim *Beenden* als
 `afxcoll.inl:213`. Der Befund hält ausdrücklich fest: „daher die irreführende
 Spur zu `afxcoll.inl:213`".
 
-**Empfehlung: die Suche nach einem unbegrenzten Feldindex ist mit [E-16](../BEFUNDE.md#e-16)
+**Empfehlung: die Suche nach einem unbegrenzten Feldindex ist mit [E-16](../Intern/BEFUNDE.md#e-16)
 ausgereizt. Gesucht wird ein Schreibzugriff daneben.**
 
 ---
@@ -84,8 +84,8 @@ Alles gegengelesen, nichts davon trägt:
   werfendes `new`. Fehlt ein Eintrag in der Knopftabelle, fällt die Funktion
   auf `SECStdBtn` zurück, sie bricht nicht ab. Also liefert
   `CommandToIndex(ID_EDIT_INSERT)` sehr wohl einen gültigen Platz, und die
-  sechs Stellen aus [E-16](../BEFUNDE.md#e-16) waren nie scharf.
-* **`SECDockBar::NormalizeBarArray` ([E-4](../BEFUNDE.md#e-4)) wird umgangen.** Das stimmt, ist
+  sechs Stellen aus [E-16](../Intern/BEFUNDE.md#e-16) waren nie scharf.
+* **`SECDockBar::NormalizeBarArray` ([E-4](../Intern/BEFUNDE.md#e-4)) wird umgangen.** Das stimmt, ist
   aber folgenlos: **kein einziger** Rahmen in Eudora leitet von
   `QCControlBarWorksheet` ab (einzige Treffer für den Namen liegen in
   `workbook.h`/`workbook.cpp` selbst). Nachrichtenfenster sind
@@ -209,7 +209,7 @@ kein `Rebuild`, kein `Clean`.
   geändert, weil es den Fehlerfall verhaltensmäßig verschiebt.
 * `Eudora71/Eudora/ReadMessageFrame.cpp:490` und `CompMessageFrame.cpp:664`:
   die Menüplätze `1 + i`, `11` und `10` sind fest verdrahtete Wetten auf den
-  Aufbau der Menüressource — dieselbe Bauart wie die feste `13` aus [E-16](../BEFUNDE.md#e-16). Sie
+  Aufbau der Menüressource — dieselbe Bauart wie die feste `13` aus [E-16](../Intern/BEFUNDE.md#e-16). Sie
   fallen jetzt nur nicht mehr um, sie stimmen deshalb noch nicht. Wer die
   Menüs im Nachrichtenfenster vermisst, sucht hier.
 * `Eudora71/OTShim/OTShim_Werkzeugleiste.cpp:4104`:

@@ -32,7 +32,7 @@ MFC-Quelle 14.38.33130: `dlgfile.cpp`, `winocc.cpp`, `afxwin2.inl`.
 2. **Gregors eigenes Protokoll** wurde gelesen:
    `C:\Users\Gregor\Eudora72-1.0.65-release\Mailverzeichnis\eudora.log`,
    608 659 Byte vom 17.09.2026 12:23. Es enthält 12 `E-95 Bild`-Zeilen,
-   6 `E-97 Nachtrag`-Zeilen, je eine [`E-88`](../BEFUNDE.md#e-88)- und [`E-89`](../BEFUNDE.md#e-89)-Zeile. Drei der
+   6 `E-97 Nachtrag`-Zeilen, je eine [`E-88`](../Intern/BEFUNDE.md#e-88)- und [`E-89`](../Intern/BEFUNDE.md#e-89)-Zeile. Drei der
    Befunde unten sind **daran** belegt, nicht am Quelltext allein.
 
 ---
@@ -256,7 +256,7 @@ _AFXWIN_INLINE void CButton::SetCheck(int nCheck)
 
 `::SendMessage(NULL, …)` liefert 0 und löst **keine** Ausnahme aus. Das `ASSERT`
 davor ist im Release nichts. `SetCheck` auf einem nicht angebundenen Schalter
-stürzt nicht ab — das stand schon in PRÜFER-11 ([P-1](../BEFUNDE.md#p-1)) und gilt unverändert.
+stürzt nicht ab — das stand schon in PRÜFER-11 ([P-1](../Intern/BEFUNDE.md#p-1)) und gilt unverändert.
 
 Die **echte** Ursache steht 400 Zeilen tiefer im selben File, in
 `OnTypeChange` (`SaveAsDialog.cpp:510-515`), mit symbolisiertem Stapel:
@@ -304,7 +304,7 @@ Nachrichtentabelle).
 * Vista-Schiene ist der Normalfall: `m_bVistaStyle` wird im Basiskonstruktor
   entschieden (`dlgfile.cpp:40-47`, `103-144`), **bevor** der Rumpf von
   `CSaveAsDialog` das `OFN_ENABLETEMPLATE` setzt (`SaveAsDialog.cpp:55`).
-  Das Flag kommt zu spät und bleibt wirkungslos — das ist [P-2](../BEFUNDE.md#p-2)/[P-4](PRUEFER-11.md#p-4) aus
+  Das Flag kommt zu spät und bleibt wirkungslos — das ist [P-2](../Intern/BEFUNDE.md#p-2)/[P-4](PRUEFER-11.md#p-4) aus
   PRÜFER-11, unverändert gültig.
 
 **Kein Mangel, aber eine Unwahrheit durch Auslassung:** die Kommentare an
@@ -340,7 +340,7 @@ ist zu.
 Offen bleibt die Messung selbst: `SaveAsDialog.cpp:92` schreibt
 `E-97 OnInitDialog: 1 …`, ausgeliefert seit 1.0.64. In Gregors Protokoll von
 1.0.65 steht die Zeile **null Mal** — bei eingeschaltetem `DEBUG_MASK_MISC`
-(12 [`E-95`](../BEFUNDE.md#e-95)-Zeilen im selben Lauf beweisen, dass protokolliert wurde). Das
+(12 [`E-95`](../Intern/BEFUNDE.md#e-95)-Zeilen im selben Lauf beweisen, dass protokolliert wurde). Das
 heißt entweder *„er hat in diesem Lauf nichts gespeichert"* oder
 *„`OnInitDialog` läuft nicht"*, und beides ist mit einer Handlung zu trennen:
 **einmal Datei → Speichern unter öffnen und abbrechen, dann die Zeile suchen.**
@@ -380,7 +380,7 @@ Nachgerechnet, was die Rastung wertlos machen würde:
 > *„Deshalb zaehlt jetzt zuerst, ob der Anwender ueberhaupt etwas getippt hat.
 > Paige fuehrt darueber Buch (CPaigeEdtView::HasChanged, PaigeEdtView.h:193)."*
 
-Seit [E-99](../BEFUNDE.md#e-99) führt **nicht mehr Paige** darüber Buch, sondern das
+Seit [E-99](../Intern/BEFUNDE.md#e-99) führt **nicht mehr Paige** darüber Buch, sondern das
 Verfassendokument. `HasChanged()` heißt weiterhin nur *„seit dem letzten
 Export"* — genau deshalb wurde der Merker eingeführt. Wer diesem Kommentar
 folgt und wieder `HasChanged()` einsetzt, baut [P-13](PRUEFER-11.md#p-13) zurück. Richtig:
@@ -396,7 +396,7 @@ folgt und wieder `HasChanged()` einsetzt, baut [P-13](PRUEFER-11.md#p-13) zurüc
 ```
 
 Der Satz zwei Absätze weiter — *„Die Regel kann nur helfen, nie schaden"* —
-trägt jetzt, nach [E-99](../BEFUNDE.md#e-99), tatsächlich. Vor [E-99](../BEFUNDE.md#e-99) tat er es nicht. Das gehört
+trägt jetzt, nach [E-99](../Intern/BEFUNDE.md#e-99), tatsächlich. Vor [E-99](../Intern/BEFUNDE.md#e-99) tat er es nicht. Das gehört
 dazugeschrieben, sonst liest der nächste ihn als seit jeher gültig.
 
 ---
@@ -598,16 +598,16 @@ damit offen. Richtig ist, den alten Wert vorher zu sichern:
 					"embed-nachher=%ldx%ld gefunden=%d\r\n", ...);
 ```
 
-Dazu: **die Marke trägt die falsche Befundnummer.** [`E-97`](../BEFUNDE.md#e-97) ist der
-Speichern-Absturz. Das hier gehört zur Bildgrößen-Familie ([E-95](../BEFUNDE.md#e-95)/[E-96](../BEFUNDE.md#e-96)/[E-103](../BEFUNDE.md#e-103)).
+Dazu: **die Marke trägt die falsche Befundnummer.** [`E-97`](../Intern/BEFUNDE.md#e-97) ist der
+Speichern-Absturz. Das hier gehört zur Bildgrößen-Familie ([E-95](../Intern/BEFUNDE.md#e-95)/[E-96](../Intern/BEFUNDE.md#e-96)/[E-103](../Intern/BEFUNDE.md#e-103)).
 Gregor hat sie auf seinem Zweig `e103-darstellung-bilder` bereits auf
-`E-103 Nachtrag` umbenannt — auf `main` steht noch [`E-97`](../BEFUNDE.md#e-97).
+`E-103 Nachtrag` umbenannt — auf `main` steht noch [`E-97`](../Intern/BEFUNDE.md#e-97).
 
 ### P-12 (bestätigt) — die E-96-Behebung ist im Quelltext durchweg mit E-95 ausgezeichnet
 
-`PGHTMIMP.CPP` Zeilen 9, 2049, 2157, 2186, 3041, 3061 sagen **[E-95](../BEFUNDE.md#e-95)**. Der
-Commit heißt `d1edf31 „[E-96](../BEFUNDE.md#e-96) behoben: jedes Bild bekam die Zeilenhoehe des
-ersten"`. Wer [E-96](../BEFUNDE.md#e-96) im Quelltext sucht, findet nichts. Unverändert offen.
+`PGHTMIMP.CPP` Zeilen 9, 2049, 2157, 2186, 3041, 3061 sagen **[E-95](../Intern/BEFUNDE.md#e-95)**. Der
+Commit heißt `d1edf31 „[E-96](../Intern/BEFUNDE.md#e-96) behoben: jedes Bild bekam die Zeilenhoehe des
+ersten"`. Wer [E-96](../Intern/BEFUNDE.md#e-96) im Quelltext sucht, findet nichts. Unverändert offen.
 
 ### <a id="p-38"></a>P-38 — die E-101-Marke kann den Verlust aus P-28 nicht zeigen
 
@@ -668,7 +668,7 @@ Der Weg:
 * Geschrieben wird mit `pFile->Put(msg)` (`compmsgd.cpp:3452`,
   `ReadMessageDoc.cpp:595`) — Byte für Byte, ohne Umkodierung.
 
-Die Bytes sind Latin-1 (das ist derselbe Nachweis wie bei [E-101](../BEFUNDE.md#e-101): der
+Die Bytes sind Latin-1 (das ist derselbe Nachweis wie bei [E-101](../Intern/BEFUNDE.md#e-101): der
 Empfangsweg setzt über `TextReader::ReadIt` → `ISOTranslate` um, bevor etwas
 ins Postfach geht). Ein heutiger Browser ohne `charset`-Angabe nimmt bei einer
 lokalen Datei UTF-8 an — jeder Umlaut ist hin.
@@ -719,7 +719,7 @@ im Browser öffnen — einmal ohne die Zeile (kaputt) und einmal mit (richtig).
 Das ist genau der Fall aus `Arbeitsweise/nie-benutzt-ist-nicht-geprueft.md`:
 den HTML-Zweig hat in diesem Projekt noch nie jemand angeklickt.
 
-**Ein eigener Befund, kein [E-101](../BEFUNDE.md#e-101).** `befund-suchen.pl` vor dem Anlegen.
+**Ein eigener Befund, kein [E-101](../Intern/BEFUNDE.md#e-101).** `befund-suchen.pl` vor dem Anlegen.
 
 ---
 
@@ -745,7 +745,7 @@ Dinge aufgefallen, die zu deiner laufenden Arbeit gehören:
 (`PGHTMIMP.CPP:3096-3097`), tragen denselben Stil. Der Lauf nimmt den
 **ersten** Treffer, und `pgInvalEmbedRef(pg->myself, pos, embed, draw_none)`
 (`:517`) wird dann an der Stelle eines **anderen** Bildes angewandt. Das ist
-das Schadensbild von [E-96](../BEFUNDE.md#e-96), nur eine Schicht tiefer. Der Kommentar bei `:477-479`
+das Schadensbild von [E-96](../Intern/BEFUNDE.md#e-96), nur eine Schicht tiefer. Der Kommentar bei `:477-479`
 ahnt es (*„haengt daran, ob der Suchlauf unten das richtige Embed findet"*) —
 die Marke sagt aber nur `gefunden=1`, also *dass* etwas gefunden wurde, nicht
 *ob das richtige*. Was fehlt, ist `pos` und die Zahl der Durchläufe in der
@@ -804,7 +804,7 @@ veraltet ist, hier der Abgleich:
   `embed->style == embed_ptr->style` und nimmt den **ersten** Treffer. Mit
   einem Bild ohne Maße fällt das nicht auf; mit zweien, die denselben Stil
   tragen, schon. Offen.
-* **[P-40](#p-40) — erledigt und gemessen.** Die neue Marke `[E-103](../BEFUNDE.md#e-103) Zeilenhoehe:
+* **[P-40](#p-40) — erledigt und gemessen.** Die neue Marke `[E-103](../Intern/BEFUNDE.md#e-103) Zeilenhoehe:
   ascent-vorher=60 bildhoehe=60 nachgezogen=0` beantwortet genau die Frage.
 * **[P-41](#p-41) — erklärt.** Gregors Gegenprobe (*„Logo auf einen Rechner, den es nicht
   gibt: keine einzige der drei E-103-Marken erscheint"*) ist die Erklärung für
@@ -819,7 +819,7 @@ veraltet ist, hier der Abgleich:
   Bei einem 16-Punkt-Symbol ohne Maßangabe entsteht bis zum Laden eine Lücke.
   Das ist die Abwägung, die im Kommentar auch so steht; ich vermerke sie nur,
   damit sie beim nächsten Bildbefund nicht neu entdeckt wird.
-* **[P-35](#p-35) bleibt und wird durch [E-103](../BEFUNDE.md#e-103) wichtiger:** `PaigeHTMLImportTextAscent`
+* **[P-35](#p-35) bleibt und wird durch [E-103](../Intern/BEFUNDE.md#e-103) wichtiger:** `PaigeHTMLImportTextAscent`
   ist dateilokal statisch und wird zwischen Nachrichten nicht zurückgesetzt.
   `ProcessEmbed:3096` schreibt ihn in jeden Embed-Stil zurück. Trägt er den
   Wert der vorigen Nachricht, verschiebt das jede Rechnung, die jetzt auf 13
@@ -842,7 +842,7 @@ veraltet ist, hier der Abgleich:
    unerklärte Zahlen.
 6. **[P-29](#p-29), [P-30](#p-30), [P-32](#p-32), [P-34](#p-34)** — Text berichtigen.
 7. **Der `.htm`-Weg** — eigener Befund, mit Gegenprobe im Browser.
-8. **[P-39](#p-39) bis [P-41](#p-41)** — gehört zu [E-103](../BEFUNDE.md#e-103), liegt bei Gregor.
+8. **[P-39](#p-39) bis [P-41](#p-41)** — gehört zu [E-103](../Intern/BEFUNDE.md#e-103), liegt bei Gregor.
 9. **[P-8](PRUEFER-11.md#p-8), [P-10](PRUEFER-11.md#p-10), [P-12](PRUEFER-11.md#p-12)** — unverändert wie in PRÜFER-11.
 
 ---
@@ -851,8 +851,8 @@ veraltet ist, hier der Abgleich:
 
 * **Das laufende Programm.** Kein Fenster gestartet
   (`Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md`). Alle Messungen an
-  [E-101](../BEFUNDE.md#e-101) sind an der **geschnittenen echten Funktion** gefahren, alle Messungen
-  an [E-95](../BEFUNDE.md#e-95)/[E-97](../BEFUNDE.md#e-97)/[E-88](../BEFUNDE.md#e-88)/[E-89](../BEFUNDE.md#e-89) stammen aus Gregors vorhandenem Protokoll von 1.0.65.
+  [E-101](../Intern/BEFUNDE.md#e-101) sind an der **geschnittenen echten Funktion** gefahren, alle Messungen
+  an [E-95](../Intern/BEFUNDE.md#e-95)/[E-97](../Intern/BEFUNDE.md#e-97)/[E-88](../Intern/BEFUNDE.md#e-88)/[E-89](../Intern/BEFUNDE.md#e-89) stammen aus Gregors vorhandenem Protokoll von 1.0.65.
 * **Ob `OnInitDialog` auf der Vista-Schiene erreicht wird** ([P-31](#p-31)). Die Marke
   ist eingebaut und ausgeliefert, im Protokoll steht sie null Mal — aber im
   selben Lauf wurde auch nichts gespeichert. Eine Handlung trennt das.

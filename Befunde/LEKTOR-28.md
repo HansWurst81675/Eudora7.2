@@ -9,9 +9,9 @@ gelesen, nicht gegen den Diff. Die Berichte unter `Befunde/` (auch
 `PRUEFER-22.md`) sind Fahrtenbuch ihres Tages und bleiben, wie sie sind.
 
 Maßstab sind die Urteilszeilen in `BEFUNDE.md` und die Commits des Zweigs:
-[E-112](../BEFUNDE.md#e-112) behoben in 7.2.0.85 (`a36c47f`) und an `a36c47f` am laufenden Programm
+[E-112](../Intern/BEFUNDE.md#e-112) behoben in 7.2.0.85 (`a36c47f`) und an `a36c47f` am laufenden Programm
 gemessen (`7892194`, `C:\Temp\E112-1085`, Titelzeile `1.0.85+a36c47f*`), mit ihm
-[E-103](../BEFUNDE.md#e-103); PRÜFER-22 F1 und F2 danach eingebaut; [E-116](../BEFUNDE.md#e-116) neu und offen; nichts
+[E-103](../Intern/BEFUNDE.md#e-103); PRÜFER-22 F1 und F2 danach eingebaut; [E-116](../Intern/BEFUNDE.md#e-116) neu und offen; nichts
 davon von Gregor bestätigt, nichts ausgeliefert.
 
 Mechanisch vorher: `offene-befunde.pl` (30/30), `doku-pruefen.pl`,
@@ -24,14 +24,14 @@ erst durch meine Berichtigungen ([L-28.9](#l-28.9)).
 
 ### <a id="l-28.1"></a>L-28.1 — die Messung am laufenden Programm war nirgends nachgetragen
 
-`7892194` hat [E-112](../BEFUNDE.md#e-112) und [E-103](../BEFUNDE.md#e-103) an 7.2.0.85 gemessen und `BEFUNDE.md` nachgezogen.
+`7892194` hat [E-112](../Intern/BEFUNDE.md#e-112) und [E-103](../Intern/BEFUNDE.md#e-103) an 7.2.0.85 gemessen und `BEFUNDE.md` nachgezogen.
 Stehen geblieben waren:
 
 | Datei | Belegzitat | geändert |
 |---|---|---|
-| `CHANGELOG.md`, 7.2.0.85 | *„**Testsuite 193/193.** Am laufenden Programm noch nicht gemessen.“* | Messung mit Spurmarken, danach F1, F2, [E-116](../BEFUNDE.md#e-116) |
-| `CHANGELOG.md`, *Noch offen* | [E-112](../BEFUNDE.md#e-112) *„**Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht …“* | *behoben in 7.2.0.85, nicht ausgeliefert, nicht bestätigt*; der alte Befund als Lage von `v1.0.84` |
-| `WEITERMACHEN.md`, *Paketnummer* | *„Testsuite 193/193, am laufenden Programm noch nicht gemessen“*; *„**Nächster Schritt: [E-112](../BEFUNDE.md#e-112).**“* | neu gefasst |
+| `CHANGELOG.md`, 7.2.0.85 | *„**Testsuite 193/193.** Am laufenden Programm noch nicht gemessen.“* | Messung mit Spurmarken, danach F1, F2, [E-116](../Intern/BEFUNDE.md#e-116) |
+| `CHANGELOG.md`, *Noch offen* | [E-112](../Intern/BEFUNDE.md#e-112) *„**Wieder offen.** Der Versuch in 7.2.0.76 wirkt nicht …“* | *behoben in 7.2.0.85, nicht ausgeliefert, nicht bestätigt*; der alte Befund als Lage von `v1.0.84` |
+| `WEITERMACHEN.md`, *Paketnummer* | *„Testsuite 193/193, am laufenden Programm noch nicht gemessen“*; *„**Nächster Schritt: [E-112](../Intern/BEFUNDE.md#e-112).**“* | neu gefasst |
 | `Releases/PAKETE.md`, 1.0.85 | Überschrift *„nicht gebaut“*; *Nicht gemessen: am laufenden Programm* | *kein Paket*; Messung an `a36c47f` unter *Gemessen* |
 
 ### <a id="l-28.2"></a>L-28.2 — der Quellstand hieß an drei Stellen noch 7.2.0.84
@@ -46,21 +46,21 @@ veröffentlicht; in `PORTIERUNG.md` ein Kasten vom 13.10.2026 über dem alten.
 
 ### <a id="l-28.3"></a>L-28.3 — E-103 „noch nicht beurteilt“, nachdem Gregor es widerlegt hatte
 
-`ZIEL.md`: *„**Noch nicht von ihm beurteilt** sind [E-100](../BEFUNDE.md#e-100) (7.2.0.65), **[E-103](../BEFUNDE.md#e-103)**
-(7.2.0.67) und [E-104](../BEFUNDE.md#e-104)“* — `BEFUNDE.md` führt seit `a74a1ff` *„WIEDER OFFEN — an
-1.0.84 von Gregor widerlegt (13.10.2026)“*. `README.md` zählt [E-103](../BEFUNDE.md#e-103) unter *Seit
+`ZIEL.md`: *„**Noch nicht von ihm beurteilt** sind [E-100](../Intern/BEFUNDE.md#e-100) (7.2.0.65), **[E-103](../Intern/BEFUNDE.md#e-103)**
+(7.2.0.67) und [E-104](../Intern/BEFUNDE.md#e-104)“* — `BEFUNDE.md` führt seit `a74a1ff` *„WIEDER OFFEN — an
+1.0.84 von Gregor widerlegt (13.10.2026)“*. `README.md` zählt [E-103](../Intern/BEFUNDE.md#e-103) unter *Seit
 `v1.0.72` im Download enthalten* nur als behoben. `AUFGABEN.md` (*Durchgefallen*)
-und `WEITERMACHEN.md` (*Gregors Test an 1.0.84*) nannten [E-112](../BEFUNDE.md#e-112), nicht [E-103](../BEFUNDE.md#e-103).
+und `WEITERMACHEN.md` (*Gregors Test an 1.0.84*) nannten [E-112](../Intern/BEFUNDE.md#e-112), nicht [E-103](../Intern/BEFUNDE.md#e-103).
 **Geändert (4 Stellen)**, jeweils mit *seither in 7.2.0.85 behoben, nicht
-ausgeliefert*. In `WEITERMACHEN.md` die Zeile *DURCHGEFALLEN an 1.0.84 — [E-103](../BEFUNDE.md#e-103)*
+ausgeliefert*. In `WEITERMACHEN.md` die Zeile *DURCHGEFALLEN an 1.0.84 — [E-103](../Intern/BEFUNDE.md#e-103)*
 mit dem neuen Stand davor; der Wortlaut von 1.0.84 bleibt als solcher stehen.
 
 ### <a id="l-28.4"></a>L-28.4 — `AUFGABEN.md` und `README.md`: E-112 nur als „wieder offen“
 
-`AUFGABEN.md`: Überschrift *„**Am 18.09.2026 behoben: [E-110](../BEFUNDE.md#e-110) und [E-112](../BEFUNDE.md#e-112).**“* —
+`AUFGABEN.md`: Überschrift *„**Am 18.09.2026 behoben: [E-110](../Intern/BEFUNDE.md#e-110) und [E-112](../Intern/BEFUNDE.md#e-112).**“* —
 [L-27.3](LEKTOR-27.md#l-27.3) hatte den Absatz darunter berichtigt, die Überschrift nicht;
 Stand-Kopf und Absatz kannten die Behebung in 7.2.0.85 nicht. `README.md`:
-*„**Dabei wurde [E-112](../BEFUNDE.md#e-112) sichtbar** (**wieder offen**)“* ohne 7.2.0.85.
+*„**Dabei wurde [E-112](../Intern/BEFUNDE.md#e-112) sichtbar** (**wieder offen**)“* ohne 7.2.0.85.
 **Geändert:** `AUFGABEN.md` 4 Stellen (Stand-Kopf, Stand-Kasten, Überschrift,
 Absatz), `README.md` 2 Stellen. In `README.md` bleibt *wieder offen* stehen,
 denn der Download `v1.0.84` hat den Fehler; dahinter steht jetzt die Behebung
@@ -68,7 +68,7 @@ als *nicht ausgeliefert*.
 
 ### <a id="l-28.5"></a>L-28.5 — `WEITERMACHEN.md`, *Der nächste Schritt*: Punkt 3 schon erledigt
 
-*„**3. [E-112](../BEFUNDE.md#e-112) messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
+*„**3. [E-112](../Intern/BEFUNDE.md#e-112) messen, BEVOR wieder etwas gebaut wird.** Die eine offene Frage:
 `draw_meta_file` … **Ungemessen ist:** …“* — gemessen und gebaut in `a36c47f`.
 Punkt 4 (*„Wer Gregor vor der Behebung ein Paket gibt, muss das wissen.“*) sagte
 nicht, ab wann es nicht mehr gilt. **Geändert:** Punkt 3 mit *erledigt* und der
@@ -80,13 +80,13 @@ Lage hat jedes Paket bis einschließlich `v1.0.84`“* ergänzt.
 Die Laufmessung (`7892194`) hat `a36c47f` gemessen; F1 (`dae6727`) und F2
 (`c294594`) kamen danach. Gemessen an der Titelzeile in `tools/TESTLAEUFE.md`
 (`1.0.85+a36c47f*`) und den Zeitstempeln: `C:\Temp\E112-1085\Eudora.exe`
-11:09:27, `dae6727` 11:21:51, `c294594` 11:29:25. `BEFUNDE.md` ([E-112](../BEFUNDE.md#e-112)) schrieb
+11:09:27, `dae6727` 11:21:51, `c294594` 11:29:25. `BEFUNDE.md` ([E-112](../Intern/BEFUNDE.md#e-112)) schrieb
 *„BEHOBEN IN 7.2.0.85, am laufenden Programm gemessen“* über eine Zelle, in der
 F1 als *„in `dae6727` behoben“* und F2 als eingebaut stand. Wer das liest, hält
-alle drei für gemessen. **Geändert:** in `BEFUNDE.md` ([E-112](../BEFUNDE.md#e-112) und [E-103](../BEFUNDE.md#e-103)),
+alle drei für gemessen. **Geändert:** in `BEFUNDE.md` ([E-112](../Intern/BEFUNDE.md#e-112) und [E-103](../Intern/BEFUNDE.md#e-103)),
 `CHANGELOG.md`, `WEITERMACHEN.md`, `Releases/PAKETE.md`, `ZIEL.md`, `AUFGABEN.md`
 und `PORTIERUNG.md` steht jetzt, dass die Messung an `a36c47f` war und F1/F2 am
-laufenden Programm nicht als wirksam gemessen sind. In `BEFUNDE.md` ([E-103](../BEFUNDE.md#e-103)): F2
+laufenden Programm nicht als wirksam gemessen sind. In `BEFUNDE.md` ([E-103](../Intern/BEFUNDE.md#e-103)): F2
 ändert die Regel für eine halbe Angabe, nicht den Fall ganz ohne Angabe.
 
 ### <a id="l-28.7"></a>L-28.7 — F1 stand als Änderung an `PGEMBED.C` da, die nichts bewirkt
@@ -100,7 +100,7 @@ width=150 als 250x96“*. F1 sitzt jetzt in `PGHTMIMP.CPP` (`pgNewImageRecord` m
 entsteht, steht in `BEFUNDE.md` schon seit Langem (Tabelle der Module:
 *„Paige32 | **nein** — `Eudora71/PaigeDLL` enthaelt nur Makefiles …“*).
 
-Falsch waren: `BEFUNDE.md` [E-112](../BEFUNDE.md#e-112) *„F1 … ist in `dae6727` behoben“*, und meine
+Falsch waren: `BEFUNDE.md` [E-112](../Intern/BEFUNDE.md#e-112) *„F1 … ist in `dae6727` behoben“*, und meine
 eigenen Einträge aus diesem Lauf in `CHANGELOG.md`, `Releases/PAKETE.md` und
 `WEITERMACHEN.md` (*„F1 (`dae6727`, `PGEMBED.C`: gleiche URL nur bei gleicher
 Größenangabe teilen)“*). **Geändert (5 Stellen):** `dae6727` als wirkungslos und
@@ -118,12 +118,12 @@ stimmt und bleibt stehen.
 
 ### <a id="l-28.8"></a>L-28.8 — E-116 fehlte unter *Noch offen*, die Prüfnachricht im Verzeichnis
 
-[E-116](../BEFUNDE.md#e-116) stand nur in `BEFUNDE.md` und in der erzeugten Liste in
+[E-116](../Intern/BEFUNDE.md#e-116) stand nur in `BEFUNDE.md` und in der erzeugten Liste in
 `WEITERMACHEN.md`. **Nachgetragen:** `CHANGELOG.md` *Noch offen* (eigene Zeile,
 Wortlaut aus der Urteilszeile), `AUFGABEN.md` *Was sonst noch offen ist*,
 Stand-Köpfe in `ZIEL.md` und `PORTIERUNG.md`, `README.md` (*erst mit dieser
 Behebung sichtbar*), `Releases/PAKETE.md`, `tools/ZWEIGE.md` (Zweck von
-`e-112-skalierung` um F1, F2, [E-116](../BEFUNDE.md#e-116) ergänzt).
+`e-112-skalierung` um F1, F2, [E-116](../Intern/BEFUNDE.md#e-116) ergänzt).
 
 `Testdaten/README.md` führte `e112-bilder-groesser-als-angegeben.eml` (seit
 `7892194`) nicht. **Zeile ergänzt**, gemessen: 112 CRLF, 0 nackte LF, 0 Bytes ≥
@@ -141,9 +141,9 @@ Anonymisierung* — die Datei ist gebaut, nicht anonymisiert.
   Arbeit ist; zwischen zwei Paketen ist es ein **Fehlalarm**. Umformuliert
   (*„Die letzte Veröffentlichung ist …“*). **Werkzeug nicht geändert, nur
   gemeldet.**
-* `pruefe-befundurteile.pl`: *„WEITERMACHEN.md:10 nennt [E-116](../BEFUNDE.md#e-116) als 'behoben'“* —
-  zu Recht, im Sinne der Schranke: in derselben Zelle steht *behoben* zu [E-112](../BEFUNDE.md#e-112).
-  [E-116](../BEFUNDE.md#e-116) trägt dort jetzt *offen*.
+* `pruefe-befundurteile.pl`: *„WEITERMACHEN.md:10 nennt [E-116](../Intern/BEFUNDE.md#e-116) als 'behoben'“* —
+  zu Recht, im Sinne der Schranke: in derselben Zelle steht *behoben* zu [E-112](../Intern/BEFUNDE.md#e-112).
+  [E-116](../Intern/BEFUNDE.md#e-116) trägt dort jetzt *offen*.
 
 Und wieder: nach dem ersten Lauf von `offene-befunde.pl`, `doku-pruefen.pl`,
 `pruefe-befundurteile.pl` und `pruefe-befund-verbreitung.pl` waren alle grün,
@@ -188,7 +188,7 @@ darf, ist keine Entscheidung eines Arbeitsbaums.
 
 ## Was nicht berichtigt ist
 
-* **`TESTPLAN.md`** hat keinen Prüfschritt für 1.0.85 ([E-112](../BEFUNDE.md#e-112), F1, F2). Das ist
+* **`TESTPLAN.md`** hat keinen Prüfschritt für 1.0.85 ([E-112](../Intern/BEFUNDE.md#e-112), F1, F2). Das ist
   eine Anleitung an Gregor; sie schreibt, wer das Paket schnürt, nachdem F1 und
   F2 gemessen sind.
 * `Befunde/PRUEFER-22.md` und die übrigen Berichte: Fahrtenbuch.

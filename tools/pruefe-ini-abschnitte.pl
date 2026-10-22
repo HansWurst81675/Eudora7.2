@@ -18,7 +18,7 @@
 # keine Meldung und keinen Fehler; der eingebaute Wert gilt weiter.
 #
 # Am 11.09.2026 hat Gregor "UseMyFilterWindowPosition=1" nach [Settings]
-# geschrieben, weil FILTER.md behauptete, dort gehoerten alle Schluessel hin.
+# geschrieben, weil Intern/FILTER.md behauptete, dort gehoerten alle Schluessel hin.
 # Die Nummer ist 10922, der Abschnitt also [Window Position]; Eudora las die
 # eingebaute 0. Die Doku war schuld, nicht der Anwender.
 #
@@ -269,7 +269,7 @@ for my $datei (@dateien)
 		#
 		# Form 1 verlangt das Wort "Abschnitt" vor dem Abschnittsnamen und findet
 		# den Schluessel irgendwo daneben. Am 11.10.2026 ist genau daran eine
-		# falsche Angabe vorbeigelaufen - in AUFGABEN.md und BEFUNDE.md stand
+		# falsche Angabe vorbeigelaufen - in Intern/AUFGABEN.md und Intern/BEFUNDE.md stand
 		#
 		#     in `eudora.ini`, Gruppe
 		#     `[Settings]`, `LogLevel=91295`
@@ -297,7 +297,7 @@ for my $datei (@dateien)
 			# Ein BERICHT ueber einen falschen Eintrag ist keine Behauptung.
 			# Dieselbe Regel wie in doku-pruefen.pl:771 ("Ein Zitat ist keine
 			# Behauptung"). Ohne sie meldet Form 2 genau die Stellen, die den
-			# Fehler ERKLAEREN - FILTER.md:548 beschreibt, dass
+			# Fehler ERKLAEREN - Intern/FILTER.md:548 beschreibt, dass
 			# UseMyFilterWindowPosition faelschlich in [Settings] stand, und
 			# tools/ZWEIGE.md:91 beschreibt denselben Fall fuer LogLevel.
 			# GRENZE, damit sie niemand uebersieht: eine wirklich falsche

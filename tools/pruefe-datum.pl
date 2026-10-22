@@ -11,8 +11,8 @@ use warnings;
 #
 # Am 17.10.2026 um 23:07 musste der Commit 8e832152 ein Datum berichtigen:
 #
-#     "Ich hatte in vier Dokumenten den 18.10.2026 eingetragen - AUFGABEN.md,
-#      BEFUNDE.md, Releases/PAKETE.md und TESTPLAN.md. Gemessen mit date: es
+#     "Ich hatte in vier Dokumenten den 18.10.2026 eingetragen - Intern/AUFGABEN.md,
+#      Intern/BEFUNDE.md, Releases/PAKETE.md und Intern/TESTPLAN.md. Gemessen mit date: es
 #      ist der 17.10.2026, 23:06. Die Fassung 7.2.0.107 ist heute Abend
 #      entstanden, nicht morgen."
 #
@@ -82,7 +82,7 @@ my $AUSNAHME = qr/geplant|Termin|faellig|f\xe4llig|Frist/i;
 # liegen dicht an heute: der 18. statt des 17., der Monat statt des Vormonats.
 # Ein Datum weit in der Zukunft ist dagegen fast immer Absicht - beim
 # Gegentest gegen den echten Fall vom 17.10.2026 war der einzige Fehlalarm
-# die Zeile "Alle Werte bleiben bis zum 19.01.2038" in BEFUNDE.md, der
+# die Zeile "Alle Werte bleiben bis zum 19.01.2038" in Intern/BEFUNDE.md, der
 # Ueberlauf der Unix-Zeit. Ein Fehlalarm kostet dasselbe wie eine stumme
 # Pruefung (Arbeitsweise/schranke-gegentesten.md), deshalb endet das Fenster
 # nach 31 Tagen.

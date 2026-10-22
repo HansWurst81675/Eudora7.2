@@ -7,7 +7,7 @@
 > (`E104SchalterLesen` zieht verdorbene Werte auf 0 zurück und schreibt sie
 > weg), betroffen sind `IncludeHeaders` und `GuessParagraphs` — **beide kommen
 > in dieser Datei nicht vor**, gemessen. Der Text ist also nicht falsch
-> geworden, nur älter (LEKTOR, [L-15.14](Befunde/LEKTOR-15.md#l-15.14)).
+> geworden, nur älter (LEKTOR, [L-15.14](../Befunde/LEKTOR-15.md#l-15.14)).
 
 Diese Datei ist für den, der Eudora **einrichtet und betreibt** — nicht für
 den, der es baut. Sie beantwortet eine einzige Frage:
@@ -29,11 +29,11 @@ immer auseinander.
 
 | Wozu | wohin |
 |---|---|
-| Abschnittsregel, Suchreihenfolge, `LogLevel`, die Abweichungen dieser Portierung | [README.md](README.md), Abschnitte *Einstellungen, die es nur hier gibt* bis *Mehr ins Protokoll schreiben lassen* |
+| Abschnittsregel, Suchreihenfolge, `LogLevel`, die Abweichungen dieser Portierung | [README.md](../README.md), Abschnitte *Einstellungen, die es nur hier gibt* bis *Mehr ins Protokoll schreiben lassen* |
 | alle Schlüssel zu Filtern und Junk, mit Vorgabe und Fundstelle | [FILTER.md](FILTER.md), Abschnitt *Die Einstellungen in der `Eudora.ini`* |
 | Konto einrichten, TLS, Ports, Fehlermeldungen beim Abruf | [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md) |
 | was neben der `Eudora.exe` liegen muss | [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
-| die Befunde selbst, mit Messung | [BEFUNDE.md](BEFUNDE.md), [CHANGELOG.md](CHANGELOG.md) |
+| die Befunde selbst, mit Messung | [BEFUNDE.md](BEFUNDE.md), [CHANGELOG.md](../CHANGELOG.md) |
 
 ---
 
@@ -47,7 +47,7 @@ bis 10800 `[Settings]`, 10801–10900 `[Debug]`, 10901–11100
 `[Window Position]`, ab 11101 wieder `[Settings]`. **Ein Eintrag im falschen
 Abschnitt wirkt nicht — ohne jede Meldung.** Das ausgearbeitete Beispiel —
 der Protokollschalter mit der Nummer 10802 — steht in
-[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+[README.md](../README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
 Der früher hier genannte Abschnitt *Wo ein Schlüssel stehen muss* ist am
 14.09.2026 aus `README.md` entfernt worden (`beecdb55`); die Bereiche stehen
 seither nur hier. Wohin ein einzelner Schlüssel gehört, sagt:
@@ -61,7 +61,7 @@ perl tools/pruefe-ini-abschnitte.pl --tabelle
 gewinnt: Abschnitt der aktiven Persönlichkeit → `Eudora.ini` →
 `DEudora.ini` → eingebauter Wert aus `EudoraRes.rc`
 (`GetIniString`, `rs.cpp:334-346`). Die vollständige Tabelle steht in
-[README.md](README.md).
+[README.md](../README.md).
 
 **1.3 Solange es nur eine Persönlichkeit gibt, heißt deren Abschnitt
 wörtlich `[Settings]`** (`persona.cpp:887-903`). Ein dorthin verirrter
@@ -121,7 +121,7 @@ Konten, Persönlichkeiten und offenen Fenster durch diese Vorlage.
 
 > **Die sichere Richtung ist die andere:** Paket in ein **neues, leeres**
 > Verzeichnis auspacken und das alte `Mailverzeichnis` dorthin kopieren — so
-> steht es auch in [README.md](README.md) unter *Herunterladen und starten*.
+> steht es auch in [README.md](../README.md) unter *Herunterladen und starten*.
 
 **2.4 Erst ab Paket 1.0.46 bringt das ZIP eine eigene Wurzelebene mit.**
 Gemessen an den abgelegten Paketen: **1.0.40** und **1.0.44** legen
@@ -129,7 +129,7 @@ Gemessen an den abgelegten Paketen: **1.0.40** und **1.0.44** legen
 auf die oberste Ebene, **1.0.46** und alles danach in ein eigenes
 Verzeichnis `Eudora72-1.0.<n>-release\`. Genau daran ist am 10.09.2026
 eine `Eudora.ini` verlorengegangen
-([Arbeitsweise/anwenderdatei-nicht-erschlagen.md](Arbeitsweise/anwenderdatei-nicht-erschlagen.md),
+([Arbeitsweise/anwenderdatei-nicht-erschlagen.md](../Arbeitsweise/anwenderdatei-nicht-erschlagen.md),
 Nachtrag). Wer ein **älteres** Paket auspackt, prüft vorher die oberste Ebene:
 
 ```
@@ -140,7 +140,7 @@ unzip -l <paket>.zip | awk '{print $4}' | cut -d/ -f1 | sort -u | head
 neben der `Eudora.exe` und wird in `GetDefaultIniSetting` (`rs.cpp:357-385`)
 gelesen — an einem bestehenden Konto ändert sie nichts mehr, weil dessen Wert
 schon in der `Eudora.ini` steht. Was diese Portierung dort vorgibt und warum,
-steht kommentiert in `tools/DEudora.ini` und in [README.md](README.md) unter
+steht kommentiert in `tools/DEudora.ini` und in [README.md](../README.md) unter
 *Vorgaben für neu angelegte Konten*.
 
 ---
@@ -153,16 +153,16 @@ ist der eingebaute Wert aus `Eudora71/Eudora/EudoraRes.rc`.
 | Schlüssel | Abschnitt | Vorgabe | Fundstelle | wozu |
 |---|---|---|---|---|
 | `LogFileName` | `[Debug]` | `eudora.log` | `EudoraRes.rc:8440` | Name der Protokolldatei im Mailverzeichnis |
-| `LogLevel` | `[Debug]` | `25759` | `EudoraRes.rc:8441` | **keine Stufe, sondern eine Summe von Schaltern.** Die einzelnen Bits und der Wert `58527` für die Spurmarken stehen in [README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen* |
+| `LogLevel` | `[Debug]` | `25759` | `EudoraRes.rc:8441` | **keine Stufe, sondern eine Summe von Schaltern.** Die einzelnen Bits und der Wert `58527` für die Spurmarken stehen in [README.md](../README.md), Abschnitt *Mehr ins Protokoll schreiben lassen* |
 | `LogFileSize` | `[Debug]` | `10000` | `EudoraRes.rc:8442` | ab welcher Größe das Protokoll umgebrochen wird |
 | `ShowAllHeaders` | `[Settings]` | `0` | `EudoraRes.rc:8667` | Anfangszustand des Knopfes *Blah Blah Blah* beim Öffnen einer Nachricht (`ReadMessageFrame.cpp:497-498`) |
 | `MaxConcurrentTasks` | `[Settings]` | `10` | `EudoraRes.rc:8634` | wie viele Aufgaben gleichzeitig laufen dürfen (`QCTaskManager.cpp:93`). Sind so viele aktiv, wartet die nächste in der Warteschlange (`:376`); `0` heißt *ohne Grenze* |
-| `MessageStyleSheet` | `[Settings]` | siehe `EudoraRes.rc:8130` | `EudoraRes.rc:8130` | Stylesheet der Nachrichtenansicht. **Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig** (`TridentView.cpp:1300`, Rückfall auf die INI erst `:1323`) — die hier ergänzte Regel für die Kopfzeilen entfällt dann, siehe [README.md](README.md) |
-| `TabooHeaders` | `[Settings]` | Liste, `EudoraRes.rc:9996` | `EudoraRes.rc:9996` | welche Kopfzeilen *Blah Blah Blah* versteckt. **Ein Eintrag in der `Eudora.ini` ersetzt die Liste vollständig, er ergänzt sie nicht** — wer etwas hinzufügen will, schreibt die ganze Liste hin. Was diese Portierung ergänzt hat, steht in [README.md](README.md); nachrechnen lässt es sich mit `perl tools/taboo-rechnen.pl` |
+| `MessageStyleSheet` | `[Settings]` | siehe `EudoraRes.rc:8130` | `EudoraRes.rc:8130` | Stylesheet der Nachrichtenansicht. **Liegt eine `read.css` im Eudora-Verzeichnis, ersetzt sie das Stylesheet vollständig** (`TridentView.cpp:1300`, Rückfall auf die INI erst `:1323`) — die hier ergänzte Regel für die Kopfzeilen entfällt dann, siehe [README.md](../README.md) |
+| `TabooHeaders` | `[Settings]` | Liste, `EudoraRes.rc:9996` | `EudoraRes.rc:9996` | welche Kopfzeilen *Blah Blah Blah* versteckt. **Ein Eintrag in der `Eudora.ini` ersetzt die Liste vollständig, er ergänzt sie nicht** — wer etwas hinzufügen will, schreibt die ganze Liste hin. Was diese Portierung ergänzt hat, steht in [README.md](../README.md); nachrechnen lässt es sich mit `perl tools/taboo-rechnen.pl` |
 | `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | *kein Eintrag* | `OTShim_Werkzeugleiste.cpp:4449` (schreiben), `:4495` (lesen) | **gibt es im Original nicht.** Merken sich Breite und Höhe eines **losgerissenen** Fensters, je Leisten-Kennung, damit sie den Neustart überlebt ([**E-84**](BEFUNDE.md#e-84)). Ohne Eintrag gilt die Anfangsgröße. `<id>` ist die Kennung der Leiste, dieselbe wie bei `DockVertCx` und `DockHorzCy` daneben. **Der Abschnittsname ist gemessen, nicht geraten:** `mainfrm.cpp:4456` übergibt `ToolBar`, und `SECToolBarManager::SaveState` setzt daraus `%s-ToolBarManager` (`OTShim_Werkzeugleiste.cpp:4336`) — in Gregors `Eudora.ini` steht der Eintrag unter `[ToolBar-ToolBarManager]`. **Keine Ressourcennummer** — der Schlüssel wird unmittelbar über `WriteProfileInt` geschrieben, die Nummernregel aus Abschnitt 1 gilt für ihn also nicht. Wer eine Größe loswerden will, löscht die Zeile; sie wird beim nächsten Beenden neu geschrieben |
 | `FilterMayDeleteFromServer` | `[Settings]` | `0` | `filtersd.cpp:1133` | **gibt es im Original nicht.** Erst mit `1` darf eine Filteraktion Post auf dem Server löschen (Befund [**E-73**](BEFUNDE.md#e-73)). Der Abschnitt steht hier fest im Quelltext, nicht in der Nummernregel |
 | `KeepHTMLInResponses` | `[Settings]` | `1` | `EudoraRes.rc:7667`, wirksam in `summary.cpp:1135` | **gibt es im Original nicht.** Sorgt dafür, dass **Antworten und Weiterleiten die HTML-Auszeichnung der Ursprungsnachricht behalten** (Befund [**E-87**](BEFUNDE.md#e-87)). Vorher entschied allein das `MSF_XRICH`-Flag des Übersichtseintrags darüber; fehlte es — wie bei Nachrichten, deren Eintrag älter ist als die Kennzeichnung — wurde ein erkanntermassen HTML-haltiger Rumpf als reiner Text zitiert (`QuoteText`, `msgutils.cpp:126-220`). Mit `1` zählt die Messung am Rumpf selbst (`IsFancy`, `utils.cpp:588`). **Mit `0` gilt wieder das alte Verhalten.** Was der Schalter **nicht** leistet, steht in Abschnitt 4 |
-| `ForwardOriginalHTML` | `[Settings]` | `1` | `EudoraRes.rc:7668`, wirksam in `PgMsgView.cpp:407` | **gibt es im Original nicht.** Hebt beim **Antworten, Weiterleiten und Umleiten** den Rumpf, wie er war, auf und setzt ihn beim Senden wieder ein — der Empfänger bekommt dann Kästen, Hintergründe und Bildgrößen, die der Verfassen-Editor nicht kennt (Befund [**E-88**](BEFUNDE.md#e-88)). **Das Verfassenfenster wird dadurch nicht schöner** — es zeigt weiterhin die schlichte Paige-Fassung; nur die versandte Nachricht ändert sich. Seit 7.2.0.57 bekommen dort allerdings die Bilder eine brauchbare Größe, damit sie nicht mehr über dem Text liegen (Befund [**E-89**](BEFUNDE.md#e-89), Abschnitt 4.8); das betrifft **nur die Anzeige**. Eingesetzt wird nur, wenn sich belegen lässt, dass im Zitat nichts geändert wurde — sonst gilt weiter die Editor-Fassung. Was der Schalter **nicht** leistet, steht in Abschnitt 4.8. **Mit `0` gilt wieder das Verhalten von 7.2.0.55.** Jede Entscheidung steht im Protokoll, siehe [Befunde/SPURMARKEN.md](Befunde/SPURMARKEN.md) |
+| `ForwardOriginalHTML` | `[Settings]` | `1` | `EudoraRes.rc:7668`, wirksam in `PgMsgView.cpp:407` | **gibt es im Original nicht.** Hebt beim **Antworten, Weiterleiten und Umleiten** den Rumpf, wie er war, auf und setzt ihn beim Senden wieder ein — der Empfänger bekommt dann Kästen, Hintergründe und Bildgrößen, die der Verfassen-Editor nicht kennt (Befund [**E-88**](BEFUNDE.md#e-88)). **Das Verfassenfenster wird dadurch nicht schöner** — es zeigt weiterhin die schlichte Paige-Fassung; nur die versandte Nachricht ändert sich. Seit 7.2.0.57 bekommen dort allerdings die Bilder eine brauchbare Größe, damit sie nicht mehr über dem Text liegen (Befund [**E-89**](BEFUNDE.md#e-89), Abschnitt 4.8); das betrifft **nur die Anzeige**. Eingesetzt wird nur, wenn sich belegen lässt, dass im Zitat nichts geändert wurde — sonst gilt weiter die Editor-Fassung. Was der Schalter **nicht** leistet, steht in Abschnitt 4.8. **Mit `0` gilt wieder das Verhalten von 7.2.0.55.** Jede Entscheidung steht im Protokoll, siehe [Befunde/SPURMARKEN.md](../Befunde/SPURMARKEN.md) |
 
 Schon vollständig anderswo, deshalb hier nur der Zeiger:
 
@@ -172,7 +172,7 @@ Schon vollständig anderswo, deshalb hier nur der Zeiger:
 * **`SSLSendUse` / `SSLReceiveUse`**, die Bedeutung der Werte 0–3 und die
   zugehörigen Ports: [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md).
 * **Die Abweichungen dieser Portierung vom Original** — eine Tabelle mit
-  *hier* und *Original* nebeneinander: [README.md](README.md).
+  *hier* und *Original* nebeneinander: [README.md](../README.md).
 
 ---
 
@@ -200,7 +200,7 @@ verwandelt sich in *„matches regexp N"* (Befund [**E-67**](BEFUNDE.md#e-67), o
 IMAP-Postfachfenster offen stand — auch dann, wenn *Check mail* abgewählt ist.
 Eudora stellt die Fenster aus dem Abschnitt `[Open Windows]` wieder her, und
 ein IMAP-Postfach zu öffnen heißt, sich anzumelden. Was hilft und warum
-*Check mail* nichts daran ändert: [README.md](README.md), Abschnitt *Beim
+*Check mail* nichts daran ändert: [README.md](../README.md), Abschnitt *Beim
 Start wird nach dem IMAP-Kennwort gefragt*.
 
 **4.4 Auch ein Filterlauf auf einem IMAP-Postfach fragt nach dem Kennwort**,
@@ -218,14 +218,14 @@ damit unbenutzbar; alles andere läuft weiter.
 
 **4.6 IMAP-Postfachnamen mit Umlauten werden roh angezeigt** — `Entw&APw-rfe`
 statt *Entwürfe*. Modifiziertes UTF-7 nach RFC 3501, 5.1.3, das Eudora nicht
-dekodiert (Befund [**E-77**](BEFUNDE.md#e-77), offen, [CHANGELOG.md](CHANGELOG.md) unter *Noch
+dekodiert (Befund [**E-77**](BEFUNDE.md#e-77), offen, [CHANGELOG.md](../CHANGELOG.md) unter *Noch
 offen*).
 
 **4.7 Eine IMAP-Aufgabe kann in der Warteschlange stehenbleiben** — *„Waiting
 in the task queue to be started …"*, und beim Beenden warnt Eudora dann
 *„You currently have 1 task(s) running"*. Nebenbefund ohne Nummer, am
 11.09.2026 an Paket 1.0.48 gemeldet; drei Ursachen sind bereits ausgeschlossen
-([CHANGELOG.md](CHANGELOG.md) unter *Noch offen*). `MaxConcurrentTasks` ist
+([CHANGELOG.md](../CHANGELOG.md) unter *Noch offen*). `MaxConcurrentTasks` ist
 **nicht** die Ursache, aber der Schalter, der bestimmt, wie viele Aufgaben
 überhaupt gleichzeitig laufen dürfen.
 

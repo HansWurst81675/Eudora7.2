@@ -19,9 +19,9 @@ use warnings;
 # pruefe-stand-md - und daraus "alles" gemacht. Geantwortet habe ich:
 #
 #     "Findings eingepflegt? - ja, E-89, E-90, E-93, E-94 stehen in
-#      BEFUNDE.md und CHANGELOG.md.  Alles gesichert, nichts offen."
+#      Intern/BEFUNDE.md und CHANGELOG.md.  Alles gesichert, nichts offen."
 #
-# WEITERMACHEN.md fuehrte zu diesem Zeitpunkt 8 offene Befunde, BEFUNDE.md
+# Intern/WEITERMACHEN.md fuehrte zu diesem Zeitpunkt 8 offene Befunde, Intern/BEFUNDE.md
 # aber 10: E-94 und E-95 fehlten, also genau die beiden des Abends. Gefunden
 # hat es am naechsten Morgen tools/offene-befunde.pl - ein Werkzeug, das es
 # seit Tagen gibt und das ich bei der Schlusspruefung nicht gefahren habe.
@@ -173,8 +173,8 @@ for my $m (@mangel) {
 
 print <<'ENDE';
   Erst beheben, dann antworten. Am 14.09.2026 wurde "alles gesichert,
-  nichts offen" gemeldet, waehrend WEITERMACHEN.md zwei Befunde weniger
-  fuehrte als BEFUNDE.md - offene-befunde.pl haette es gesagt, es wurde
+  nichts offen" gemeldet, waehrend Intern/WEITERMACHEN.md zwei Befunde weniger
+  fuehrte als Intern/BEFUNDE.md - offene-befunde.pl haette es gesagt, es wurde
   nur nicht gefahren.
 
 ENDE

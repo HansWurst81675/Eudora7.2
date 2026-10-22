@@ -5,15 +5,15 @@ Behauptungen widerlegen. Grundlage war Gregors Ansage vom 07.09.2026:
 *„ich traue dir nicht ganz, jemand soll dich immer wieder ueberpruefen — das
 bin aber nicht ich!"*
 
-Ergebnis in einem Satz: **[E-31](../BEFUNDE.md#e-31) ist bestaetigt und sogar staerker belegt als
-behauptet. Die Ursachenbehauptung von [E-32](../BEFUNDE.md#e-32) ist widerlegt. Der Bau stimmt.
+Ergebnis in einem Satz: **[E-31](../Intern/BEFUNDE.md#e-31) ist bestaetigt und sogar staerker belegt als
+behauptet. Die Ursachenbehauptung von [E-32](../Intern/BEFUNDE.md#e-32) ist widerlegt. Der Bau stimmt.
 Die Fehlerklasse ist echt und hat 19 belegte, offene Stellen.**
 
 | Behauptung | Urteil |
 |---|---|
-| 1. [E-31](../BEFUNDE.md#e-31) `pg_time_t` — Ursache gefunden und behoben | **bestaetigt**, mit 1922 gemessenen Feldoffsets |
-| 2. [E-32](../BEFUNDE.md#e-32) — `pField` ungeprueft *war die modale Meldung* | **Code-Mangel ja, Ursachenbehauptung widerlegt** |
-| 3. Die Fehlerklasse [E-18](../BEFUNDE.md#e-18)/[E-22](../BEFUNDE.md#e-22)/[E-32](../BEFUNDE.md#e-32) ist maschinell auffindbar | **bestaetigt**, 19 belegte Stellen, Werkzeug mit 33 Tests |
+| 1. [E-31](../Intern/BEFUNDE.md#e-31) `pg_time_t` — Ursache gefunden und behoben | **bestaetigt**, mit 1922 gemessenen Feldoffsets |
+| 2. [E-32](../Intern/BEFUNDE.md#e-32) — `pField` ungeprueft *war die modale Meldung* | **Code-Mangel ja, Ursachenbehauptung widerlegt** |
+| 3. Die Fehlerklasse [E-18](../Intern/BEFUNDE.md#e-18)/[E-22](../Intern/BEFUNDE.md#e-22)/[E-32](../Intern/BEFUNDE.md#e-32) ist maschinell auffindbar | **bestaetigt**, 19 belegte Stellen, Werkzeug mit 33 Tests |
 | 4. Die ganze Projektmappe baut mit 0 Fehlern | **bestaetigt**, 0 Fehler, 11:58, ohne `-m` |
 
 ---
@@ -130,7 +130,7 @@ und `sizeof UNTERSCHIEDLICH in 2 von 92 Strukturen` mit genau `_iobuf` und
 `Eudora71/Eudora/headervw.cpp`, `CHeaderView::OnKillFocusRecipient`: dass
 `pField` in Zeile 289 auf NULL geprueft und in Zeile 294 ungeprueft
 dereferenziert wurde, **ist objektiv richtig** und ist dieselbe Fehlerklasse
-wie [E-22](../BEFUNDE.md#e-22). Die Absicherung ist eine Verbesserung.
+wie [E-22](../Intern/BEFUNDE.md#e-22). Die Absicherung ist eine Verbesserung.
 
 ### Was nicht stimmt
 
@@ -158,7 +158,7 @@ denselben Versuch gefahren. Ergebnis: **keine Ausnahmemeldung**, und wieder
 **(c) Das ausgelieferte Paket 1.0.18 zeigt die Meldung ebenfalls nicht.**
 Kontrollversuch mit `C:\Users\Gregor\Eudora72-1.0.18-release` (in ein eigenes
 Verzeichnis kopiert): auch dort **keine Ausnahmemeldung** beim Strg-N-Versuch.
-Das ist derselbe Bau, in dem [E-32](../BEFUNDE.md#e-32) gemeldet wurde.
+Das ist derselbe Bau, in dem [E-32](../Intern/BEFUNDE.md#e-32) gemeldet wurde.
 
 Aus (c) folgt die ehrliche Einschraenkung: **das Symptom laesst sich mit
 `strg-n-pruefen.ps1` ueberhaupt nicht erzeugen.** Der wahrscheinliche Grund:
@@ -226,7 +226,7 @@ headervw.cpp:558   PutDebugLog(..., "E-27 CHeaderView::OnInitialUpdate: Anfang")
 erscheint **nicht ein einziges Mal**, und es entsteht kein sichtbares
 Verfassen-Fenster. Der Rahmen wird gebaut (`OnCreateClient: beide Ansichten
 angelegt`), aber die Kopfansicht wird nie erstinitialisiert. Das ist eine
-bessere Spur fuer Kriterium 5 als [E-32](../BEFUNDE.md#e-32) — und sie ist gemessen, nicht vermutet.
+bessere Spur fuer Kriterium 5 als [E-32](../Intern/BEFUNDE.md#e-32) — und sie ist gemessen, nicht vermutet.
 
 ### Weitere Stellen desselben Musters in denselben zwei Dateien
 
@@ -247,9 +247,9 @@ Dazu drei Stellen der verwandten Klasse „gar nicht geprueft" in `headervw.cpp`
 ### Dokumentationswiderspruch
 
 Die Behebung steht als Kommentar im Code und in der Commit-Nachricht von
-`060a4bf` („[E-32](../BEFUNDE.md#e-32) behoben"), aber:
+`060a4bf` („[E-32](../Intern/BEFUNDE.md#e-32) behoben"), aber:
 
-* `ZIEL.md:30/31` nennt [E-32](../BEFUNDE.md#e-32) weiterhin als **nicht erfuellt**,
+* `ZIEL.md:30/31` nennt [E-32](../Intern/BEFUNDE.md#e-32) weiterhin als **nicht erfuellt**,
 * `CHANGELOG.md:16` nennt es weiterhin **offen** mit „Verdacht",
 * `WEITERMACHEN.md:55` fuehrt es weiterhin als offene Aufgabe.
 
@@ -263,7 +263,7 @@ das genau solche Widersprueche finden soll. Es findet diesen **nicht**, weil es
 nur `.md` gegen `.md` prueft — „behoben" steht hier im Quelltextkommentar und in
 der Commit-Nachricht, nicht in einer `.md`. Das Werkzeug meldet stattdessen
 acht andere, ungeloeste Widersprueche (vier Stellen nennen 7 Kriterien statt 8;
-[E-7](../BEFUNDE.md#e-7), [E-11](../BEFUNDE.md#e-11), [E-14](../BEFUNDE.md#e-14) und [E-16](../BEFUNDE.md#e-16) stehen in `BEFUNDE.md` gleichzeitig als behoben und
+[E-7](../Intern/BEFUNDE.md#e-7), [E-11](../Intern/BEFUNDE.md#e-11), [E-14](../Intern/BEFUNDE.md#e-14) und [E-16](../Intern/BEFUNDE.md#e-16) stehen in `BEFUNDE.md` gleichzeitig als behoben und
 als offen). Ein Pruefwerkzeug, dessen erster Lauf acht Maengel findet und deren
 keiner danach behoben wird, prueft nichts.
 
@@ -273,8 +273,8 @@ keiner danach behoben wird, prueft nichts.
 
 ### Warum ein zweites Werkzeug neben `tools/suche-zeiger.pl`
 
-`suche-zeiger.pl` gibt es schon und ist gegen Fehlalarme gehaertet ([X-1](../BEFUNDE.md#x-1)). Es
-hat **[E-32](../BEFUNDE.md#e-32) nicht gefunden**, obwohl [E-32](../BEFUNDE.md#e-32) genau seine Fehlerklasse ist.
+`suche-zeiger.pl` gibt es schon und ist gegen Fehlalarme gehaertet ([X-1](../Intern/BEFUNDE.md#x-1)). Es
+hat **[E-32](../Intern/BEFUNDE.md#e-32) nicht gefunden**, obwohl [E-32](../Intern/BEFUNDE.md#e-32) genau seine Fehlerklasse ist.
 Nachgemessen an der Fassung vor der Behebung:
 
 ```
@@ -286,7 +286,7 @@ Nur Zeile 560. Die E-32-Stelle bei 287/294 fehlt. Zwei Ursachen:
 
 1. **Ein Zugriff in einer Bedingung wurde als Pruefung gewertet.** Filter 6
    von `suche-zeiger.pl` zaehlt „jede Pruefung des Namens in einer Bedingung"
-   als erneute Absicherung. Bei [E-32](../BEFUNDE.md#e-32) steht der ungepruefte Zugriff aber selbst
+   als erneute Absicherung. Bei [E-32](../Intern/BEFUNDE.md#e-32) steht der ungepruefte Zugriff aber selbst
    in einer Bedingung — `if (GetIniShort(...) && pField->IsKindOf(...))`. Der
    Filter, der Fehlalarme verhindern sollte, hat den echten Treffer
    verschluckt.
@@ -297,7 +297,7 @@ Beides ist im neuen Werkzeug abgestellt und als Test hinterlegt.
 
 ### Sieben belegte Fehlalarmklassen, jede mit Fundstelle und Test
 
-Wie [X-1](../BEFUNDE.md#x-1) es gemacht hat: Stichprobe von Hand nachgelesen, Ursache benannt,
+Wie [X-1](../Intern/BEFUNDE.md#x-1) es gemacht hat: Stichprobe von Hand nachgelesen, Ursache benannt,
 Regel gebaut, Test dazu. Von 76 Treffern der ersten Fassung sind es jetzt 48.
 
 | Nr | Klasse | Fundstelle |
@@ -355,13 +355,13 @@ es niemand fuer einen Fund haelt.
 | `TridentReadMessageView.cpp` | 1854 | `pCollection` | 1695 | uninitialisiert erklaert (1660) |
 | `TridentReadMessageView.cpp` | 3841 | `pCollection` | 3724 | uninitialisiert erklaert (3694) |
 | `TridentView.cpp` | 3162 | `pCollection` | 3093 | uninitialisiert erklaert (3020) |
-| `Trnslate.cpp` | 5223 | `pMboxInfo` | 5217 | 5232 prueft wieder — **exakt die Gestalt von [E-32](../BEFUNDE.md#e-32)** |
+| `Trnslate.cpp` | 5223 | `pMboxInfo` | 5217 | 5232 prueft wieder — **exakt die Gestalt von [E-32](../Intern/BEFUNDE.md#e-32)** |
 
 Zwei Muster sind es wert, zusammen behoben zu werden:
 
 * **`settings.cpp:2953-2955`** — drei `GetDlgItem`-Ergebnisse werden bei
   2939/2941/2943 einzeln geprueft und bei 2953/2954/2955 alle drei
-  ungeprueft benutzt. Das ist [E-32](../BEFUNDE.md#e-32) in Reinform, dreifach, und es belegt
+  ungeprueft benutzt. Das ist [E-32](../Intern/BEFUNDE.md#e-32) in Reinform, dreifach, und es belegt
   nebenbei, dass in diesem Quellbaum `GetDlgItem` sehr wohl als
   NULL-faehig behandelt wird.
 * **`pCollection->Release()` nach fehlgeschlagenem `get_all`** —
@@ -377,13 +377,13 @@ perl tools/zeiger-nachpruefen.pl Eudora71/Eudora
 
 ### Ein Wort zur Praemisse des Auftrags
 
-Der Auftrag sagt: *„[E-18](../BEFUNDE.md#e-18), [E-22](../BEFUNDE.md#e-22) und [E-32](../BEFUNDE.md#e-32) sind derselbe Fehler."* Fuer [E-22](../BEFUNDE.md#e-22) und
-[E-32](../BEFUNDE.md#e-32) stimmt das. **Fuer [E-18](../BEFUNDE.md#e-18) nicht:** dort war `pFld` an *keiner* Stelle
+Der Auftrag sagt: *„[E-18](../Intern/BEFUNDE.md#e-18), [E-22](../Intern/BEFUNDE.md#e-22) und [E-32](../Intern/BEFUNDE.md#e-32) sind derselbe Fehler."* Fuer [E-22](../Intern/BEFUNDE.md#e-22) und
+[E-32](../Intern/BEFUNDE.md#e-32) stimmt das. **Fuer [E-18](../Intern/BEFUNDE.md#e-18) nicht:** dort war `pFld` an *keiner* Stelle
 geprueft (`headervw.cpp:246-253`), also nicht „an einer Stelle geprueft, an der
 naechsten nicht", sondern „nie geprueft". Das ist eine Nachbarklasse, die
 dieses Werkzeug ausdruecklich **nicht** findet.
 
-Nebenbei: `BEFUNDE.md:171` behauptet *„E-10, [E-15](../BEFUNDE.md#e-15), [E-18](../BEFUNDE.md#e-18) bis [E-21](../BEFUNDE.md#e-21) gibt es
+Nebenbei: `BEFUNDE.md:171` behauptet *„E-10, [E-15](../Intern/BEFUNDE.md#e-15), [E-18](../Intern/BEFUNDE.md#e-18) bis [E-21](../Intern/BEFUNDE.md#e-21) gibt es
 nicht. Gesucht am 06.09.2026 im ganzen Repo: diese Kennungen sind nie vergeben
 worden."* `headervw.cpp:246` sagt `Befund E-18`. Einer der beiden Saetze ist
 falsch.
@@ -452,12 +452,12 @@ niemand angefasst hat.
 
 ## Was ich nicht pruefen konnte
 
-1. **Das Symptom von [E-32](../BEFUNDE.md#e-32).** Mit `tools/strg-n-pruefen.ps1` erscheint die
+1. **Das Symptom von [E-32](../Intern/BEFUNDE.md#e-32).** Mit `tools/strg-n-pruefen.ps1` erscheint die
    Meldung „An unhandled exception has occurred" **in keinem** der drei
    gefahrenen Versuche — nicht mit Behebung, nicht ohne, und nicht im
    ausgelieferten Paket 1.0.18. Das Werkzeug schickt `WM_COMMAND` direkt und
    erzeugt dabei keinen Fokuswechsel; damit fehlt der `EN_KILLFOCUS`, um den
-   es bei [E-32](../BEFUNDE.md#e-32) geht. Um die Behauptung wirklich zu erledigen, braeuchte es
+   es bei [E-32](../Intern/BEFUNDE.md#e-32) geht. Um die Behauptung wirklich zu erledigen, braeuchte es
    einen Versuch, der **den Fokus bewegt** (`SetFocus` auf ein Kopffeld,
    dann `SetFocus` auf ein anderes) — oder Gregors eigene Sitzung.
 2. **Ob die Umgebung schuld ist.** Mein Testverzeichnis brauchte

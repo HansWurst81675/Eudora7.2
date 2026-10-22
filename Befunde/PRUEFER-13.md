@@ -1,7 +1,7 @@
 # PRÜFER-13 — E-101 nachgerechnet: die Aufbereitung nimmt Text weg, der dem Anwender gehört
 
 Stand: 17.09.2026, Zweig `e101-speichern-dateiformat`, geprüfter Commit
-`a5cbf3c` („[E-101](../BEFUNDE.md#e-101): die gespeicherte Datei ist jetzt brauchbar (1.0.66)").
+`a5cbf3c` („[E-101](../Intern/BEFUNDE.md#e-101): die gespeicherte Datei ist jetzt brauchbar (1.0.66)").
 
 Gelesen wurden nicht nur der Diff, sondern ganz:
 `E101SpeicherfassungAufbereiten` (`msgutils.cpp:3828-4049`),
@@ -35,7 +35,7 @@ Das ist derselbe Tausch, den `Arbeitsweise/kein-paket-mit-offenem-datenverlust.m
 verbietet.
 
 Die Behebung ist klein: die drei Stellen unten ([P-18](#p-18), [P-19](#p-19), [P-21](#p-21)) sind
-zusammen rund 25 Zeilen. Der Nutzen von [E-101](../BEFUNDE.md#e-101) bleibt dabei vollständig
+zusammen rund 25 Zeilen. Der Nutzen von [E-101](../Intern/BEFUNDE.md#e-101) bleibt dabei vollständig
 erhalten — der Normalfall (Fall 10) läuft unverändert durch.
 
 ### Wie gemessen wurde
@@ -302,7 +302,7 @@ genauso begrenzt.
 
 ## Frage 3 — die beiden anderen Speicherwege
 
-**Sie haben den Marker-Teil von [E-101](../BEFUNDE.md#e-101) nicht, den Zeichensatz-Teil aber sehr
+**Sie haben den Marker-Teil von [E-101](../Intern/BEFUNDE.md#e-101) nicht, den Zeichensatz-Teil aber sehr
 wohl.**
 
 `CReadMessageDoc::SaveAsFile` (`ReadMessageDoc.cpp:573`) und
@@ -317,11 +317,11 @@ Was dort **trotzdem** fehlt:
 
 * Beide schreiben mit `pFile->Put(msg)` — **ohne** `MIME-Version`,
   `Content-Type` und Zeichensatz. Speichert der Anwender unter `.eml`, hat er
-  dasselbe Leiden wie bei [E-101](../BEFUNDE.md#e-101), nur ohne den auffälligen Marker.
+  dasselbe Leiden wie bei [E-101](../Intern/BEFUNDE.md#e-101), nur ohne den auffälligen Marker.
 * Der HTML-Zweig (`.htm`/`.html`, `compmsgd.cpp:3424`,
   `ReadMessageDoc.cpp:585`) schreibt Latin-1-Bytes in eine HTML-Datei **ohne
   `<meta charset>`**. Jeder heutige Browser nimmt UTF-8 an — die Umlaute sind
-  im Browser kaputt. Das ist [E-101](../BEFUNDE.md#e-101) in anderer Kleidung und **nachweisbar
+  im Browser kaputt. Das ist [E-101](../Intern/BEFUNDE.md#e-101) in anderer Kleidung und **nachweisbar
   offen**; gemessen habe ich es nicht (kein Fenster gestartet), der fehlende
   `charset` steht aber im Quelltext.
 
@@ -334,7 +334,7 @@ das Richtige:
 * HTML-Zweig: ein `<meta http-equiv="Content-Type" content="text/html;
   charset=ISO-8859-1">` in den `<head>`, nichts weiter.
 
-Das ist ein eigener Befund, kein Teil von [E-101](../BEFUNDE.md#e-101). Ich habe ihn nicht angelegt
+Das ist ein eigener Befund, kein Teil von [E-101](../Intern/BEFUNDE.md#e-101). Ich habe ihn nicht angelegt
 (`befund-suchen.pl` zuerst).
 
 ---
@@ -345,7 +345,7 @@ Das ist ein eigener Befund, kein Teil von [E-101](../BEFUNDE.md#e-101). Ich habe
 Postfach geschrieben wird, ist bereits umgesetzt. `mime.cpp:149/217/248/256`
 hängt einen `TextReader` in den Empfangsweg, und `TextReader::ReadIt` ruft
 `ISOTranslate(buf, size, iCharsetIdx)` (`TextReader.cpp:300`). Was in `In.mbx`
-liegt, ist also Latin-1/CP1252 — genau die Kodierung, von der [NP3-8](../BEFUNDE.md#np3-8) und [E-85](../BEFUNDE.md#e-85)
+liegt, ist also Latin-1/CP1252 — genau die Kodierung, von der [NP3-8](../Intern/BEFUNDE.md#np3-8) und [E-85](../Intern/BEFUNDE.md#e-85)
 handeln. Die Ableitung aus den Bytes ist damit **nicht** geraten.
 
 **Und sie ist sogar richtiger als die Alternative.** Wegen [P-23](#p-23) ist die

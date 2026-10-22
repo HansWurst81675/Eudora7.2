@@ -18,10 +18,10 @@ und zwar an genau der Stelle, an der er entstand.
 
 **Durch die Null-Prüfung geht kein Zustand verloren** — weil es den Zustand
 nicht gibt. Die beiden Kästchen existieren in diesem Dialog überhaupt nicht,
-und zwar schon lange vor [E-97](../BEFUNDE.md#e-97).
+und zwar schon lange vor [E-97](../Intern/BEFUNDE.md#e-97).
 
 Aber: **die Begründung im Quelltext und in `BEFUNDE.md` ist in zwei Punkten
-falsch**, und der wichtigere Mangel liegt neben [E-97](../BEFUNDE.md#e-97) — siehe [P-4](#p-4) und [P-5](#p-5).
+falsch**, und der wichtigere Mangel liegt neben [E-97](../Intern/BEFUNDE.md#e-97) — siehe [P-4](#p-4) und [P-5](#p-5).
 
 ---
 
@@ -117,7 +117,7 @@ Die Antwort auf die wichtigste Frage des Auftrags: **nein, es geht nichts
 verloren.**
 
 Der Grund ist aber nicht der, der im Quelltext steht. Weil die Vorlage
-`IDD_SAVEAS_EXT` nie instanziiert wird ([P-2](../BEFUNDE.md#p-2)), scheitern in `DoDataExchange`
+`IDD_SAVEAS_EXT` nie instanziiert wird ([P-2](../Intern/BEFUNDE.md#p-2)), scheitern in `DoDataExchange`
 (`SaveAsDialog.cpp:52-57`) **alle drei** `if (GetDlgItem(...))`-Abfragen.
 `m_IncludeHeaders`, `m_GuessParagraphs` und `m_Stationery` bleiben dauerhaft
 unangebunden, `m_hWnd == NULL`. `m_GuessParagraphs.EnableWindow()` in
@@ -150,18 +150,18 @@ offen — er führt nur nirgendwohin, und das tat er vorher auch schon.
 
 ### <a id="p-4"></a>P-4 — Der eigentliche Mangel: die beiden Kästchen sind weg, und zwar seit langem
 
-`BEFUNDE.md` hält bei [E-97](../BEFUNDE.md#e-97) ausdrücklich fest:
+`BEFUNDE.md` hält bei [E-97](../Intern/BEFUNDE.md#e-97) ausdrücklich fest:
 
 > *„Bei der Behebung dürfen die beiden Kästchen nicht verlorengehen — sie
 > einfach wegzulassen wäre Funktionsverlust statt Behebung."*
 
 Sie **sind** verloren — nicht durch die Behebung, sondern durch MFC 14.38: der
-Vista-Dateidialog kennt `OFN_ENABLETEMPLATE` nicht ([P-2](../BEFUNDE.md#p-2)). Beim Speichern einer
+Vista-Dateidialog kennt `OFN_ENABLETEMPLATE` nicht ([P-2](../Intern/BEFUNDE.md#p-2)). Beim Speichern einer
 Nachricht kann der Anwender *Kopfzeilen einschließen* und *Absätze raten* seit
 der Portierung nicht mehr wählen. Gespeichert wird stets nach dem, was in der
 INI steht.
 
-Das ist ein eigener Befund, kein [E-97](../BEFUNDE.md#e-97). Wer ihn beheben will, hat zwei Wege:
+Das ist ein eigener Befund, kein [E-97](../Intern/BEFUNDE.md#e-97). Wer ihn beheben will, hat zwei Wege:
 `bVistaStyle = FALSE` an den Basiskonstruktor (dann läuft die Vorlage von 1996
 wieder, mit dem alten Erscheinungsbild), oder `IFileDialogCustomize`
 (`m_pIFileDialogCustomize` liegt in MFC bereit) mit zwei
@@ -265,7 +265,7 @@ Import".
 `current_style` ist der Stil, der auch für den **folgenden Text** gilt, bis ein
 Stil-Tag ihn ändert. Bei einer Nachricht mit großer Schrift (etwa 20 pt) bekommt
 die Textzeile nach einem Bild damit einen 13/3-Zeilenkasten statt der
-Schriftmetrik — dasselbe Schadensbild wie [E-89](../BEFUNDE.md#e-89), nur an Text statt an Bildern.
+Schriftmetrik — dasselbe Schadensbild wie [E-89](../Intern/BEFUNDE.md#e-89), nur an Text statt an Bildern.
 
 Der im Kommentar verworfene Gegenentwurf (`paige_globals->def_style`, gemessen
 `text-asc=0`) misst den **Vorgabestil**, nicht das, was Paige mit `ascent == 0`
@@ -301,10 +301,10 @@ Auch diese Marke ist in 1.0.64 ausgeliefert.
 
 ### <a id="p-12"></a>P-12 — Falsche Befundnummer im Quelltext
 
-Sämtliche Kommentare zur `ProcessEmbed`-Behebung sind mit **[E-95](../BEFUNDE.md#e-95)** ausgezeichnet
+Sämtliche Kommentare zur `ProcessEmbed`-Behebung sind mit **[E-95](../Intern/BEFUNDE.md#e-95)** ausgezeichnet
 (Zeilen 9, 2049, 2156, 3038, 3062). `BEFUNDE.md:257` führt genau diese Behebung
-als **[E-96](../BEFUNDE.md#e-96)**; [E-95](../BEFUNDE.md#e-95) ist das Symptom, dessen 7.2.0.61-Behebung zurückgenommen
-wurde (`BEFUNDE.md:256`). Wer künftig [E-96](../BEFUNDE.md#e-96) im Quelltext sucht, findet nichts.
+als **[E-96](../Intern/BEFUNDE.md#e-96)**; [E-95](../Intern/BEFUNDE.md#e-95) ist das Symptom, dessen 7.2.0.61-Behebung zurückgenommen
+wurde (`BEFUNDE.md:256`). Wer künftig [E-96](../Intern/BEFUNDE.md#e-96) im Quelltext sucht, findet nichts.
 
 ---
 
@@ -363,7 +363,7 @@ Vgl. `Arbeitsweise/kein-paket-mit-offenem-datenverlust.md`.
 
 * Ob `OnInitDialog` in der Vista-Schiene erreicht wird ([P-5](#p-5)) — das ist eine
   Messung am laufenden Programm, keine Quelltextfrage.
-* Die Reihenfolge `OnTypeChange` vor `OnInitDialog` ([P-2](../BEFUNDE.md#p-2)) ist erschlossen, nicht
+* Die Reihenfolge `OnTypeChange` vor `OnInitDialog` ([P-2](../Intern/BEFUNDE.md#p-2)) ist erschlossen, nicht
   gemessen; es fehlt eine zweite Spurmarke in `OnTypeChange`.
 * `QCTaskManager.cpp`, `TridentView.cpp`, `summary.cpp`, `utils.cpp`,
   `ImapDownload.cpp` und die neuen Tests lagen außerhalb des Auftrags.
@@ -379,7 +379,7 @@ Vgl. `Arbeitsweise/kein-paket-mit-offenem-datenverlust.md`.
    gar nichts.
 4. **[P-4](#p-4)** — die beiden Kästchen zurückholen (`IFileDialogCustomize`).
 5. **[P-6](#p-6)** — die drei verbliebenen `dlgPtr->GetDlgItem`-Stellen absichern.
-6. **[P-2](../BEFUNDE.md#p-2), [P-3](#p-3), [P-9](#p-9), [P-12](#p-12)** — Text berichtigen: falsches Vorlagenfenster,
+6. **[P-2](../Intern/BEFUNDE.md#p-2), [P-3](#p-3), [P-9](#p-9), [P-12](#p-12)** — Text berichtigen: falsches Vorlagenfenster,
    „`OnInitDialog` setzt den Zustand ohnehin", falsche Bedingung, falsche
    Befundnummer.
 7. **[P-10](#p-10)** — Gegenvermutung zur festen 13/3 messen.

@@ -3,7 +3,7 @@
 Kurzer Nachlauf am 21.10.2026 nachmittags im Arbeitsbaum
 `Eudora7.2-wt-lektor`, Zweig `wt/lektor-20261021b`, Ausgang `da2eff79`.
 Anlass: die Commits `f6d525dc` und `da2eff79` haben die Papiere zu
-**7.2.0.120 / 1.0.120** geschrieben ([E-135](../BEFUNDE.md#e-135)). Geprüft
+**7.2.0.120 / 1.0.120** geschrieben ([E-135](../Intern/BEFUNDE.md#e-135)). Geprüft
 wurden die Papiere **gegen den Bestand**, nicht gegen den Diff; kein Quelltext
 unter `Eudora71/`.
 
@@ -78,7 +78,7 @@ der Messung (*„unter `Releases/` endet die Reihe der ZIPs bei 1.0.119"*) und
 **Gemessen:** `Releases/Eudora72-1.0.119-release.zip` liegt seit 13:07,
 `C:\Users\Gregor\Eudora72-1.0.119-release` steht bei Gregor seit 13:07, und
 **er hat es getestet** — `TESTPLAN.md` sagt es zwei Abschnitte weiter selbst:
-*„[C9](../TESTPLAN.md#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](../BEFUNDE.md#e-134)
+*„[C9](../Intern/TESTPLAN.md#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](../Intern/BEFUNDE.md#e-134)
 bestätigt."* Wer diesen Block befolgt, schnürt ein zweites Mal ein Paket, das
 schon beim Empfänger steht, und wartet auf ein Urteil, das vorliegt.
 
@@ -95,7 +95,7 @@ gefangen.
 **Berichtigt.** Der Kopf nennt jetzt die drei Messungen; Punkt 1 lautet
 **Paket 1.0.120 schnüren** mit der Liste der fünf Stellen, die danach
 nachzuziehen sind; Punkt 2 schickt Gregor an den neuen
-[C10](../TESTPLAN.md#c10) und an [C8](../TESTPLAN.md#c8) und hakt C9
+[C10](../Intern/TESTPLAN.md#c10) und an [C8](../Intern/TESTPLAN.md#c8) und hakt C9
 ausdrücklich ab; Punkt 3 nennt 1.0.120 mit.
 
 ### <a id="l-48.3"></a>L-48.3 — `ZIEL.md:51` stand auf 7.2.0.119 (mittel)
@@ -103,7 +103,7 @@ ausdrücklich ab; Punkt 3 nennt 1.0.120 mit.
 *„Quellstand ist jetzt 7.2.0.119 / `VERSION` 1.0.119 … (Zweig
 `e-134-adressbuch-auswahl`)"*. Der Commit hat in dieselbe Datei
 **zwanzig Zeilen höher** eine neue Maßstabszeile zu
-[E-135](../BEFUNDE.md#e-135) eingetragen und diesen Satz nicht angefasst.
+[E-135](../Intern/BEFUNDE.md#e-135) eingetragen und diesen Satz nicht angefasst.
 
 **Das ist [L-47.8](LEKTOR-47.md#l-47.8), eine Fassung später, in derselben
 Datei** — dort war es 7.2.0.114 unter einem frischen 7.2.0.119.
@@ -134,26 +134,26 @@ für 1.0.119.
 Die Titelzeile sagt seit dem Commit *„Testplan für Gregor — **Paket
 1.0.120**"*. Der Abschnitt *Was jetzt zu testen ist* nannte darunter
 **C9** (neu in 1.0.119, von Gregor **schon bestätigt**) und **C8** (seit
-1.0.117 offen). Zu [E-135](../BEFUNDE.md#e-135), dem **einzigen** Inhalt von
+1.0.117 offen). Zu [E-135](../Intern/BEFUNDE.md#e-135), dem **einzigen** Inhalt von
 1.0.120 und dem Fehler, auf dessen Behebung Gregor gerade wartet, stand kein
 Handgriff im Plan. Die *Buchführung* derselben Datei wusste es (*„Neu aus
-demselben Lauf und offen: [E-135](../BEFUNDE.md#e-135)"*) — der Plan oben wusste es nicht.
+demselben Lauf und offen: [E-135](../Intern/BEFUNDE.md#e-135)"*) — der Plan oben wusste es nicht.
 **Das ist [Nie benutzt ist nicht
 geprüft](../Arbeitsweise/nie-benutzt-ist-nicht-geprueft.md) an der Stelle, die
 das Benutzen überhaupt erst auslöst.**
 
-**Angelegt: [C10](../TESTPLAN.md#c10)**, nach dem Muster von
-[C9](../TESTPLAN.md#c9) und aus [E-135](../BEFUNDE.md#e-135) heraus
+**Angelegt: [C10](../Intern/TESTPLAN.md#c10)**, nach dem Muster von
+[C9](../Intern/TESTPLAN.md#c9) und aus [E-135](../Intern/BEFUNDE.md#e-135) heraus
 geschrieben, nicht erfunden:
 
 | Teil von C10 | woher |
 |---|---|
-| Symptom im Zitat (*„das Fenster wird bei jeder Änderung … kleiner!"*) | [E-135](../BEFUNDE.md#e-135), Gregor am 21.10.2026 |
-| Messreihe `100 × 62` … `20 × 14` | [E-135](../BEFUNDE.md#e-135), `CHANGELOG.md` 7.2.0.120 |
+| Symptom im Zitat (*„das Fenster wird bei jeder Änderung … kleiner!"*) | [E-135](../Intern/BEFUNDE.md#e-135), Gregor am 21.10.2026 |
+| Messreihe `100 × 62` … `20 × 14` | [E-135](../Intern/BEFUNDE.md#e-135), `CHANGELOG.md` 7.2.0.120 |
 | Sollzustand **konstant `108 × 70`** über sechs Schritte | dieselbe Messung |
 | **Vorbedingung** (mehrere Kurznamen gleichen Anfangs anlegen) | `tools/messen-e135.ps1`, Kopfkommentar — ohne sie erscheint gar keine Box |
 | Gregors eigentliches Ziel (Tab übernimmt, Adresse im `To:`) | sein Wortlaut im Befund, *„dann mit tab wird der eintrag übernommen …"* |
-| *Was ich NICHT gemessen habe* (Hermes; `InitList` ohne `ScreenToClient`) | beide Lücken aus [E-135](../BEFUNDE.md#e-135), mit der Bitte, eine falsch stehende Box zu melden |
+| *Was ich NICHT gemessen habe* (Hermes; `InitList` ohne `ScreenToClient`) | beide Lücken aus [E-135](../Intern/BEFUNDE.md#e-135), mit der Bitte, eine falsch stehende Box zu melden |
 
 Vier nummerierte Handgriffe, eine Minute, kein Netz. Der Kopf des Abschnitts
 sagt jetzt *„Zwei Schritte offen, einer nur noch als Gegenprobe"* statt
@@ -188,8 +188,8 @@ jemand **sucht**.
 
 ### <a id="l-48.7"></a>L-48.7 — `pruefe-original-belegt.pl` hielt eine Verneinung für einen Beleg (mittel; **behoben, 16/16**)
 
-Die neue Schranke zur Lehre aus [E-134](../BEFUNDE.md#e-134) hat heute früh
-[E-133](../BEFUNDE.md#e-133) **grün** gemeldet, mit dem Grund *„am Original
+Die neue Schranke zur Lehre aus [E-134](../Intern/BEFUNDE.md#e-134) hat heute früh
+[E-133](../Intern/BEFUNDE.md#e-133) **grün** gemeldet, mit dem Grund *„am Original
 gemessen"*. Nachgemessen, und es ist ein echter Mangel — sogar ein doppelter.
 
 **Die Gegenprobe** (`C:\Temp\lektor48-probe\PROBE.md`, eine einzige Zeile):
@@ -202,7 +202,7 @@ sich ebenso verhielt, ist nicht gemessen |
 Vorher: `mit Beleg 1`, Grund **„am Original gemessen"**. Die Zeile sagt
 wörtlich das Gegenteil. Beleg 2 sucht `Hermes` und innerhalb von 140 Zeichen
 ein Wort wie `gemessen` — die Verneinung dazwischen sieht sie nicht. In
-[E-133](../BEFUNDE.md#e-133) steht genau dieser Satz (*„Ob ein Hermes 7.1 …
+[E-133](../Intern/BEFUNDE.md#e-133) steht genau dieser Satz (*„Ob ein Hermes 7.1 …
 ebenfalls den Start verweigert, ist **nicht gemessen**"*); dass der Eintrag
 trotzdem in Ordnung ist, liegt an einem **anderen** Satz, den die Schranke gar
 nicht erst erreicht hat.
@@ -216,18 +216,18 @@ nicht erst erreicht hat.
 2. Ein Beleg-Treffer, der **selbst** eine Verneinung enthält
    (`nicht|nie|niemals|kaum`), zählt nicht. Geprüft wird nur der **Treffer**,
    nicht die ganze Zelle — ein *„kein Rückfall"* am Satzende geht weiter
-   durch, und die Bestandszeile zu [E-69](../BEFUNDE.md#e-69) bleibt grün.
+   durch, und die Bestandszeile zu [E-69](../Intern/BEFUNDE.md#e-69) bleibt grün.
 3. Zwei neue Selbsttestfälle: die Probe oben **muss abgewiesen werden**, und
    dieselbe Form **ohne** Verneinung (*„Ein Hermes 7.1 hat sich ebenso
    verhalten, am 21.10.2026 gemessen"*) **muss durchgehen**.
 
 **Gemessen nachher:** Selbsttest **16 von 16**, die Probe **rot**,
-`--datei BEFUNDE.md` nennt für [E-133](../BEFUNDE.md#e-133) und
-[E-134](../BEFUNDE.md#e-134) jetzt *„Einschraenkung: Quelltext original,
+`--datei BEFUNDE.md` nennt für [E-133](../Intern/BEFUNDE.md#e-133) und
+[E-134](../Intern/BEFUNDE.md#e-134) jetzt *„Einschraenkung: Quelltext original,
 Verhalten nicht gemessen"*.
 
 **Nicht behoben, und es bleibt offen:** die Schranke liest in
-[E-133](../BEFUNDE.md#e-133) ein **Zitat** des zurückgenommenen Wortlauts
+[E-133](../Intern/BEFUNDE.md#e-133) ein **Zitat** des zurückgenommenen Wortlauts
 (*„Hier stand bis zum 21.10.2026 ‚Originalverhalten, nicht von uns
 eingebaut'; das war derselbe Fehlschluss …"*) als eigenes Urteil. Grün ist
 der Eintrag nur, weil die Einschränkung daneben steht. Ein Eintrag, der seine
@@ -239,10 +239,10 @@ Suchen weggeworfen. Zu bauen ist ein Vorlauf, der Zitate in `*„…"*` und die
 Wendungen *„hier stand"* und *„die Einordnung … war falsch"* aus dem Text
 nimmt.
 
-### <a id="l-48.8"></a>L-48.8 — die Schranke sieht nur den Diff: [E-117](../BEFUNDE.md#e-117) stand seit je ungedeckt da (niedrig)
+### <a id="l-48.8"></a>L-48.8 — die Schranke sieht nur den Diff: [E-117](../Intern/BEFUNDE.md#e-117) stand seit je ungedeckt da (niedrig)
 
 `--commit f6d525dc` meldet **grün**; `--datei BEFUNDE.md` meldet einen
-**MANGEL**: [E-117](../BEFUNDE.md#e-117) nennt *„Originalfehler von
+**MANGEL**: [E-117](../Intern/BEFUNDE.md#e-117) nennt *„Originalfehler von
 QUALCOMM"* ohne jede Messung am Verhalten. Im Haken läuft die Schranke
 `--cached`, also nur über **neue** Zeilen — der Bestand ist nie gefahren
 worden ([Review sieht nur den
@@ -259,7 +259,7 @@ weiter an der Schranke vorbei.
 
 ## Kleinigkeiten
 
-### <a id="l-48.9"></a>L-48.9 — [E-135](../BEFUNDE.md#e-135) nannte als einziges der Papiere keine Testzahl (niedrig)
+### <a id="l-48.9"></a>L-48.9 — [E-135](../Intern/BEFUNDE.md#e-135) nannte als einziges der Papiere keine Testzahl (niedrig)
 
 `CHANGELOG.md`, `Releases/PAKETE.md` und die Commit-Nachricht führen
 *„243 Tests, 243 bestanden"*; `CHANGELOG.md` und `Releases/PAKETE.md` setzen
@@ -286,7 +286,7 @@ gegengetestet werden, das ist kein kleiner Lauf).
 `perl tools/pruefe-startwege.pl --tag 2026-10-21`: **9 Starts, 5
 Protokollzeilen, 4 ohne Zeile** — `C:/Temp/E135-gruen` um 13:45:20, 13:46:32
 und 13:47:52, `C:/Temp/E135-120` um 13:48:35. `commit-bereit.pl` weist
-deshalb ab (1 von 35). Das sind **Prüfstände zu [E-135](../BEFUNDE.md#e-135)**, also Läufe an genau
+deshalb ab (1 von 35). Das sind **Prüfstände zu [E-135](../Intern/BEFUNDE.md#e-135)**, also Läufe an genau
 der Messung, auf der dieser Zweig steht.
 
 **Nicht nachgetragen, mit Grund:** die vier Zeiten liegen **nach** dem Beginn
@@ -319,7 +319,7 @@ Stellen nachgesehen.
 **2. Stimmen die Messzahlen überall gleich? Ja, alle.** Nachgezählt, nicht
 abgeschrieben:
 
-| Angabe | `BEFUNDE.md` [E-135](../BEFUNDE.md#e-135) | `CHANGELOG.md` 7.2.0.120 | `Releases/PAKETE.md` 1.0.120 | sonst |
+| Angabe | `BEFUNDE.md` [E-135](../Intern/BEFUNDE.md#e-135) | `CHANGELOG.md` 7.2.0.120 | `Releases/PAKETE.md` 1.0.120 | sonst |
 |---|---|---|---|---|
 | Reihe **100×62, 84×46, 68×30, 52×14, 36×14, 20×14** | ja | ja (Tabelle) | ja | `PORTIERUNG.md` und `ZIEL.md` als Spanne `100×62 → 20×14` |
 | nachher **konstant 108×70** | ja | ja (drei Schritte) | ja (*„sechsmal"*) | `PORTIERUNG.md`, `ZIEL.md` |
@@ -356,14 +356,14 @@ diesem Durchgang:
   steht offen"* — in `BEFUNDE.md` und in `Releases/PAKETE.md` (*„Ebenfalls
   offen"*). `CHANGELOG.md` und `PORTIERUNG.md` nennen es nicht; **nicht
   beanstandet**, weil beide an dieser Stelle auch nichts Gegenteiliges
-  behaupten. Jetzt steht es zusätzlich in [C10](../TESTPLAN.md#c10), als Bitte
+  behaupten. Jetzt steht es zusätzlich in [C10](../Intern/TESTPLAN.md#c10), als Bitte
   an Gregor, eine falsch **stehende** Box zu melden — damit ist die Lücke
   dort, wo sie geschlossen werden kann.
 * **(c) Hermes 7.1.** *„Quelltext original — `AutoCompleteSearcher.cpp` ist
   seit dem initial commit unverändert; ob sich Hermes 7.1 ebenso verhielt, ist
-  **nicht gemessen** (Lehre aus [E-134](../BEFUNDE.md#e-134))"* steht in
+  **nicht gemessen** (Lehre aus [E-134](../Intern/BEFUNDE.md#e-134))"* steht in
   `BEFUNDE.md`, und `ZIEL.md` sagt dasselbe in fünf Wörtern (*„Quelltext
-  original, Verhalten in Hermes nicht gemessen"*). **Die Lehre aus [E-134](../BEFUNDE.md#e-134) ist
+  original, Verhalten in Hermes nicht gemessen"*). **Die Lehre aus [E-134](../Intern/BEFUNDE.md#e-134) ist
   angewandt**, und zwar an der Stelle, an der sie greifen muss: der Satz
   *„Quelltext original"* steht **nie allein**. `CHANGELOG.md`,
   `Releases/PAKETE.md` und `PORTIERUNG.md` behaupten *„original"* an dieser
@@ -388,14 +388,14 @@ angefasst, beide neu dazugekommenen ebenfalls **CRLF 0** gemessen.
 
 ## Tragen die Papiere zu 1.0.120?
 
-**JA — nach diesen elf Berichtigungen.** [E-135](../BEFUNDE.md#e-135) ist der
+**JA — nach diesen elf Berichtigungen.** [E-135](../Intern/BEFUNDE.md#e-135) ist der
 sauberste Befund seit langem: Symptom im Zitat, Ursache in einer Zeile,
 QUALCOMMs eigener Kommentar als Beleg, die Messreihe in beiden Fassungen, zwei
 nachweislich verschiedene EXE, und **drei** ausdrücklich benannte Lücken, von
 denen eine eine **widerlegte eigene Vorhersage** ist — K9 steht als Sicherung
 drin und wird nicht als Behebung verkauft. `CHANGELOG`, `PAKETE`,
 `PORTIERUNG`, `ZIEL` und `ZWEIGE` sagen dasselbe in denselben Zahlen.
-**Keine einzige Messzahl zu [E-135](../BEFUNDE.md#e-135) war falsch.**
+**Keine einzige Messzahl zu [E-135](../Intern/BEFUNDE.md#e-135) war falsch.**
 
 **Alle schweren Funde sitzen wieder in der Buchführung ringsum** — in den
 Sätzen, die sagen, welche Fassung draußen ist und welche bei Gregor liegt.
@@ -414,7 +414,7 @@ keinen Handgriff dazu im Text.
    *HIER WEITERMACHEN*.
 2. **Gregors Urteil abwarten** ([Release erst nach Gregors
    Test](../Arbeitsweise/release-erst-nach-gregors-test.md)). Offen sind bei
-   ihm [C10](../TESTPLAN.md#c10) (neu) **und** [C8](../TESTPLAN.md#c8); C8
+   ihm [C10](../Intern/TESTPLAN.md#c10) (neu) **und** [C8](../Intern/TESTPLAN.md#c8); C8
    liegt seit 1.0.117 ungefahren da, und 1.0.117 ist trotzdem veröffentlicht
    worden.
 

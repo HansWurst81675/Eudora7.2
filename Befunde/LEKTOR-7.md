@@ -4,9 +4,9 @@ Gemessen an Quellstand **7.2.0.51** / Paket **1.0.51**. Geprüft wurde der
 **Bestand**, nicht der Diff: `git ls-files "*.md"` lieferte **125** Dateien,
 nicht die 47 aus L-8.
 
-Anlass war **[E-85](../BEFUNDE.md#e-85)** (Umlaute über IMAP), an diesem Tag in drei Schritten
+Anlass war **[E-85](../Intern/BEFUNDE.md#e-85)** (Umlaute über IMAP), an diesem Tag in drei Schritten
 behoben. Der Durchgang hat dabei einen Befund gefunden, der wichtiger ist als
-alle Textstellen zusammen: **die Doku beschrieb [E-85](../BEFUNDE.md#e-85) durchgehend im falschen
+alle Textstellen zusammen: **die Doku beschrieb [E-85](../Intern/BEFUNDE.md#e-85) durchgehend im falschen
 Zustand — erst als offen, obwohl behoben; dann als behoben, obwohl eine
 Regression offen war; dann als regressionsbehaftet, obwohl die auch schon
 geschlossen war.** Dreimal derselbe Mangel innerhalb von zwei Stunden.
@@ -18,8 +18,8 @@ geschlossen war.** Dreimal derselbe Mangel innerhalb von zwei Stunden.
 | Commit | Datei | Was falsch war |
 |---|---|---|
 | `b686c32` | `AUFGABEN.md` | Stand-Zeile nannte 7.2.0.50 / 1.0.50, der Baum stand auf 7.2.0.51 / 1.0.51. `pruefe-stand-md.pl` ging von 1 auf 0 |
-| `6e4fca9` | `ZIEL.md` | Kriterium 2 führte [E-85](../BEFUNDE.md#e-85) als *„noch nicht behoben"*, obwohl vier Commits im Zweig es beheben. Stand-Zeile auf 7.2.0.51 nachgezogen |
-| `48c1ee2` | `BEFUNDE.md` | [E-85](../BEFUNDE.md#e-85) Punkt **(0)** — der schwerwiegendste — stand im Präsens da, als wäre er offen; nur (1) und (2) trugen „behoben in 7.2.0.51" |
+| `6e4fca9` | `ZIEL.md` | Kriterium 2 führte [E-85](../Intern/BEFUNDE.md#e-85) als *„noch nicht behoben"*, obwohl vier Commits im Zweig es beheben. Stand-Zeile auf 7.2.0.51 nachgezogen |
+| `48c1ee2` | `BEFUNDE.md` | [E-85](../Intern/BEFUNDE.md#e-85) Punkt **(0)** — der schwerwiegendste — stand im Präsens da, als wäre er offen; nur (1) und (2) trugen „behoben in 7.2.0.51" |
 | `65a131e` | `WEITERMACHEN.md` | die Einstiegsdatei sagte *„Noch kein Befundeintrag geschrieben, noch kein Zweig angelegt"*. Beides war da |
 | `ae764b3` | `ZIEL.md`, `PORTIERUNG.md` | *„Beiden fehlt dasselbe"* stimmte nach `ed4a345` nicht mehr — Kriterium 2 zählt seither drei Punkte. Dazu drei Nebenbefunde in `PORTIERUNG.md`, die den IMAP-Weg als offen führten |
 | `20f4820` | `BEFUNDE.md`, `ZIEL.md`, `WEITERMACHEN.md` | die Doku sagte „behoben" und verschwieg die von PRUEFER belegte Regression |
@@ -29,7 +29,7 @@ geschlossen war.** Dreimal derselbe Mangel innerhalb von zwei Stunden.
 
 ### Die Zeilenangaben, gegen die geprüft wurde
 
-Jede Aussage über [E-85](../BEFUNDE.md#e-85) wurde am Quelltext nachgemessen, nicht aus einer
+Jede Aussage über [E-85](../Intern/BEFUNDE.md#e-85) wurde am Quelltext nachgemessen, nicht aus einer
 Commit-Nachricht übernommen:
 
 | Stelle | Inhalt |
@@ -54,12 +54,12 @@ solche gekennzeichnet statt als Ist-Zustand.
 
 ### a) `pruefe-befundurteile.pl` meldet einen Altbefund, der bleibt
 
-    ./ZIEL.md:31 nennt [E-77](../BEFUNDE.md#e-77) als 'behoben' - BEFUNDE.md fuehrt ihn OFFEN
+    ./ZIEL.md:31 nennt [E-77](../Intern/BEFUNDE.md#e-77) als 'behoben' - BEFUNDE.md fuehrt ihn OFFEN
 
 **Gegengemessen an `origin/main` in einem eigenen Wegwerf-Baum: dieser Mangel
 bestand schon vor diesem Durchgang.** Ursache ist strukturell: Kriterium 2 ist
 **eine** Tabellenzeile, die erfüllte, offene und behobene Befunde zusammen
-nennt — das Wort „behoben" gehört zu [E-85](../BEFUNDE.md#e-85), [E-77](../BEFUNDE.md#e-77) steht in derselben Zeile. Das
+nennt — das Wort „behoben" gehört zu [E-85](../Intern/BEFUNDE.md#e-85), [E-77](../Intern/BEFUNDE.md#e-77) steht in derselben Zeile. Das
 Werkzeug bietet als Freistellung das Wort „Berichtigung" an; es einzusetzen
 wäre hier ein Kunstgriff, um die Schranke stumm zu stellen, kein Beleg.
 **Zu lösen wäre es nur, indem Kriterium 2 in mehrere Zeilen zerfällt** — das
@@ -79,11 +79,11 @@ Auftragsfrage war, ob bei den Dateien ohne Stand-Kopf nur der Kopf fehlt oder
 der Inhalt veraltet ist. Gemessen:
 
 - **`FILTER.md`** (733 Zeilen, zuletzt 11.09.2026): trägt. Die Aussage zu den
-  INI-Abschnitten ist seit [E-79](../BEFUNDE.md#e-79) berichtigt, und `doku-pruefen.pl` meldet
+  INI-Abschnitten ist seit [E-79](../Intern/BEFUNDE.md#e-79) berichtigt, und `doku-pruefen.pl` meldet
   ausdrücklich *„INI-Abschnitte: alle Angaben stimmen mit GetSectionID
   überein"*.
 - **`EINSTELLUNGEN.md`** (229 Zeilen, zuletzt 13.09.2026): trägt. Abschnitt 4.6
-  führt [E-77](../BEFUNDE.md#e-77) als offen — das stimmt mit `BEFUNDE.md` überein.
+  führt [E-77](../Intern/BEFUNDE.md#e-77) als offen — das stimmt mit `BEFUNDE.md` überein.
 - **`tools/WERKZEUGE.md`**: **trug nicht.** Sieben Werkzeuge fehlten, siehe
   oben. Das war die einzige der vier Dateien mit einem Inhaltsmangel.
 
@@ -119,7 +119,7 @@ Commit ab (*„nennt tools/pruefe-testbau.pl — die Datei gibt es nicht"*),
 während der `pre-commit` gleichzeitig verlangte, die Datei mitzucommitten.
 **Ein Patt, aus dem der Arbeitsbaum von allein nicht herauskam.**
 
-Das ist **[X-8](../BEFUNDE.md#x-8) in neuer Gestalt**: dort war es ein Werkzeug ohne Lehre, hier
+Das ist **[X-8](../Intern/BEFUNDE.md#x-8) in neuer Gestalt**: dort war es ein Werkzeug ohne Lehre, hier
 eine Lehre ohne Werkzeug. Die damalige Behebung — fehlende Werkzeuge
 überspringen — greift in dieser Richtung nicht.
 
@@ -133,7 +133,7 @@ mit seiner Fassung.
 
 **Vorschlag:** `lehren-schranken.pl` sollte ein genanntes Werkzeug, das im
 **Arbeitsbaum** fehlt, aber in einem anderen Zweig desselben Repos liegt,
-melden statt abzuweisen — dieselbe Unterscheidung, die [X-8](../BEFUNDE.md#x-8) eingeführt hat.
+melden statt abzuweisen — dieselbe Unterscheidung, die [X-8](../Intern/BEFUNDE.md#x-8) eingeführt hat.
 
 ### <a id="l-12c"></a>L-12c — eine Berichtigung darf die Schranke nicht lauter machen
 
@@ -141,7 +141,7 @@ Nach `20f4820` meldete `pruefe-befundurteile.pl` **sechs** Mängel. Gegenprobe
 gegen `origin/main` in einem Wegwerf-Baum: dort **einer**. Die fünf neuen
 waren meine: das Wort **„wartet auf"** steht in der Auslöserliste des
 Werkzeugs (Zeile 181), und ich hatte es in zwei Zeilen geschrieben, die noch
-andere Befundkennungen nennen — [E-7](../BEFUNDE.md#e-7), [E-24](../BEFUNDE.md#e-24), [E-28](../BEFUNDE.md#e-28), [E-30](../BEFUNDE.md#e-30) und [E-82](../BEFUNDE.md#e-82) wurden dadurch
+andere Befundkennungen nennen — [E-7](../Intern/BEFUNDE.md#e-7), [E-24](../Intern/BEFUNDE.md#e-24), [E-28](../Intern/BEFUNDE.md#e-28), [E-30](../Intern/BEFUNDE.md#e-30) und [E-82](../Intern/BEFUNDE.md#e-82) wurden dadurch
 gemeldet, obwohl an ihnen nichts falsch war.
 
 Behoben in `2bbc573` durch eine Formulierung ohne das Auslöserwort; **6 → 1**
@@ -155,8 +155,8 @@ Der eigentliche Befund dieses Durchgangs, in seiner Abfolge:
 
 | Zeit | Was die Doku sagte | Was war |
 |---|---|---|
-| Start | [E-85](../BEFUNDE.md#e-85) *„noch nicht behoben"* | vier Commits im Zweig hatten es behoben |
-| nach `20f4820` | [E-85](../BEFUNDE.md#e-85) *„behoben"* | eine Regression war offen ([PRUEFER-10](PRUEFER-10.md#pruefer-10)) |
+| Start | [E-85](../Intern/BEFUNDE.md#e-85) *„noch nicht behoben"* | vier Commits im Zweig hatten es behoben |
+| nach `20f4820` | [E-85](../Intern/BEFUNDE.md#e-85) *„behoben"* | eine Regression war offen ([PRUEFER-10](PRUEFER-10.md#pruefer-10)) |
 | nach `f65f526` | Regression *„vor dem Paket zu schließen"* | sie war seit `3092b33` behoben |
 
 Dreimal stand die Doku still, während der Baum weiterlief — und zweimal davon

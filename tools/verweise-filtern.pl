@@ -6,7 +6,7 @@
 # ---------------------------------------------------------------------------
 #
 # Am 12.10.2026 hat tools/befunde-verlinken.pl in neun Dokumenten 1046
-# Zeilen angefasst - aus E-108 wurde [E-108](BEFUNDE.md#e-108), sonst
+# Zeilen angefasst - aus E-108 wurde [E-108](Intern/BEFUNDE.md#e-108), sonst
 # nichts. Fuer git ist jede dieser Zeilen neu. Die Schranken, die ihren
 # Umfang aus dem Zuwachs nehmen (pruefe-anzeigetext.pl,
 # pruefe-behoben-belegt.pl), sahen damit auf einen Schlag die GANZE
@@ -24,7 +24,7 @@
 use strict;
 use warnings;
 
-# Macht aus "| <a id="e-1"></a>E-1 | ... [**E-2**](BEFUNDE.md#e-2) ..."
+# Macht aus "| <a id="e-1"></a>E-1 | ... [**E-2**](Intern/BEFUNDE.md#e-2) ..."
 # wieder "| E-1 | ... **E-2** ...".
 sub verweise_text {
     my ($t) = @_;
@@ -52,16 +52,16 @@ unless (caller) {
         [ '| E-1 | der Rahmen | behoben |',
           '| <a id="e-1"></a>E-1 | der Rahmen | behoben |', 0 ],
         [ 'siehe E-108 und AN-1',
-          'siehe [E-108](BEFUNDE.md#e-108) und [AN-1](BEFUNDE.md#an-1)', 0 ],
+          'siehe [E-108](Intern/BEFUNDE.md#e-108) und [AN-1](Intern/BEFUNDE.md#an-1)', 0 ],
         [ 'siehe **E-108**',
-          'siehe [**E-108**](BEFUNDE.md#e-108)', 0 ],
+          'siehe [**E-108**](Intern/BEFUNDE.md#e-108)', 0 ],
         [ 'siehe E-108',
           'siehe [E-108](#e-108)', 0 ],
         # echte Aenderung darf NICHT durchrutschen
         [ 'siehe E-108',
-          'siehe [E-108](BEFUNDE.md#e-108), jetzt behoben', 1 ],
+          'siehe [E-108](Intern/BEFUNDE.md#e-108), jetzt behoben', 1 ],
         [ 'siehe E-108',
-          'siehe [E-109](BEFUNDE.md#e-109)', 1 ],
+          'siehe [E-109](Intern/BEFUNDE.md#e-109)', 1 ],
         [ 'Handbuch',
           '[Handbuch](https://example.invalid/)', 1 ],
         [ 'Handbuch',

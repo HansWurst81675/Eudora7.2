@@ -45,7 +45,7 @@ use warnings;
 #   - Befunde/LEKTOR-*, Befunde/PRUEFER-*, Befunde/CHRONIST-*  (Berichte)
 #   - fuer Regel 1 jede Zeile mit dem Wort "laufwerksrelativ" - C:Ordner
 #     OHNE Rueckstrich ist unter Windows ein gueltiger, relativer Pfad, und
-#     BEFUNDE.md beschreibt genau so einen Fehler (C:Mailverzeichnis).
+#     Intern/BEFUNDE.md beschreibt genau so einen Fehler (C:Mailverzeichnis).
 #
 # Aufruf:
 #   perl tools/pruefe-rueckstrich.pl              gestagete Zeilen (pre-commit)
@@ -99,17 +99,17 @@ sub zuwachs {
 
 sub selbsttest {
     my @melden = (
-        ['WEITERMACHEN.md',    'Messverzeichnis `C:Temp105`'],
-        ['WEITERMACHEN.md',    'Pfad `C:TempAN5` im Messlauf'],
-        ['TESTPLAN.md',        'Verzeichnis C:Temp94-nachher anlegen'],
+        ['Intern/WEITERMACHEN.md',    'Messverzeichnis `C:Temp105`'],
+        ['Intern/WEITERMACHEN.md',    'Pfad `C:TempAN5` im Messlauf'],
+        ['Intern/TESTPLAN.md',        'Verzeichnis C:Temp94-nachher anlegen'],
         ['README.md',          '$fotoDir = "C:SERSGREGORAPPDATAocaltemp"'],
-        ['BEFUNDE.md',         'liegt in `spool' . $BS . 'x5clmos.dat`'],
+        ['Intern/BEFUNDE.md',         'liegt in `spool' . $BS . 'x5clmos.dat`'],
         ['Releases/PAKETE.md', '| Testverzeichnis | C:Temp |'],
     );
     my @still = (
-        ['WEITERMACHEN.md',      'Messverzeichnis `C:' . $BS . 'Temp' . $BS . 'E105`'],
+        ['Intern/WEITERMACHEN.md',      'Messverzeichnis `C:' . $BS . 'Temp' . $BS . 'E105`'],
         ['README.md',            'unter C:/Users/Gregor/Documents'],
-        ['BEFUNDE.md',           '`C:Mailverzeichnis` ist laufwerksrelativ, nicht absolut'],
+        ['Intern/BEFUNDE.md',           '`C:Mailverzeichnis` ist laufwerksrelativ, nicht absolut'],
         ['Arbeitsweise/x.md',    'stand `C:Temp105` in WEITERMACHEN'],
         ['Befunde/LEKTOR-33.md', 'Fund: `C:Temp105` in PAKETE.md'],
         ['README.md',            'Teil C: Bilder beim Antworten'],

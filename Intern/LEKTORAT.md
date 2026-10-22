@@ -2,46 +2,46 @@
 
 **Diese Datei ist ein Fahrtenbuch, kein Statusbericht.** Sie sammelt die
 Durchgänge des Agenten LEKTOR in zeitlicher Folge — jeder Abschnitt gilt für
-seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](ZIEL.md),
-[README.md](README.md) und [CHANGELOG.md](CHANGELOG.md).
+seinen Tag, nicht für heute. Was **jetzt** gilt, steht in [ZIEL.md](../ZIEL.md),
+[README.md](../README.md) und [CHANGELOG.md](../CHANGELOG.md).
 
 Hier stehen der erste bis vierte, der sechste bis neunte, der dreizehnte
 bis sechzehnte sowie der neunzehnte und zwanzigste Durchgang. Der
-**fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](Befunde/LEKTOR.md);
-die späteren in [Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md) ([L-6](Befunde/LEKTOR.md#l-6)),
-[Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md) (L-7),
-[Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md) (L-8, alle 47 MD-Dateien),
-[Befunde/LEKTOR-5.md](Befunde/LEKTOR-5.md) (L-9, 41 Befunde am 08.09.2026) und
-[Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md) — dort stehen **L-10** (das
+**fünfte** steht nicht hier, sondern in [Befunde/LEKTOR.md](../Befunde/LEKTOR.md);
+die späteren in [Befunde/LEKTOR-2.md](../Befunde/LEKTOR-2.md) ([L-6](../Befunde/LEKTOR.md#l-6)),
+[Befunde/LEKTOR-3.md](../Befunde/LEKTOR-3.md) (L-7),
+[Befunde/LEKTOR-4.md](../Befunde/LEKTOR-4.md) (L-8, alle 47 MD-Dateien),
+[Befunde/LEKTOR-5.md](../Befunde/LEKTOR-5.md) (L-9, 41 Befunde am 08.09.2026) und
+[Befunde/LEKTOR-6.md](../Befunde/LEKTOR-6.md) — dort stehen **L-10** (das
 Einarbeiten von L-9, 08.09.2026) und **L-11** (der Stand auf 7.2.0.27 / 1.0.27,
 09.09.2026, mit zwei gemessenen Fehlalarmen in `tools/doku-pruefen.pl`) und
-[Befunde/LEKTOR-7.md](Befunde/LEKTOR-7.md) (**[L-12](Befunde/LEKTOR-6.md#l-12)**, der Stand auf
+[Befunde/LEKTOR-7.md](../Befunde/LEKTOR-7.md) (**[L-12](../Befunde/LEKTOR-6.md#l-12)**, der Stand auf
 7.2.0.51 / 1.0.51, 13.09.2026, **125** MD-Dateien, [E-85](BEFUNDE.md#e-85) und seine Regression)
-und [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
-7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien), [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, [E-97](BEFUNDE.md#e-97)) und [Befunde/LEKTOR-12.md](Befunde/LEKTOR-12.md) (**[L-17](Befunde/LEKTOR-12.md#l-17)**, der Stand auf 7.2.0.66 / 1.0.66, 17.09.2026, **149** MD-Dateien, [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101)).
+und [Befunde/LEKTOR-8.md](../Befunde/LEKTOR-8.md) (**L-13**, der Stand auf
+7.2.0.53 / 1.0.53, 14.09.2026, **133** MD-Dateien), [Befunde/LEKTOR-9.md](../Befunde/LEKTOR-9.md) (**L-14**, 7.2.0.57 / 1.0.57, 14.09.2026, 3217 doppelt umkodierte Stellen in BEFUNDE.md), [Befunde/LEKTOR-10.md](../Befunde/LEKTOR-10.md) (**L-15**, der Stand auf 7.2.0.63 / 1.0.63, 15.09.2026, **144** MD-Dateien), [Befunde/LEKTOR-11.md](../Befunde/LEKTOR-11.md) (**L-16**, der Stand auf 7.2.0.64, 17.09.2026, **146** MD-Dateien, [E-97](BEFUNDE.md#e-97)) und [Befunde/LEKTOR-12.md](../Befunde/LEKTOR-12.md) (**[L-17](../Befunde/LEKTOR-12.md#l-17)**, der Stand auf 7.2.0.66 / 1.0.66, 17.09.2026, **149** MD-Dateien, [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101)).
 
 **Die Reviews des Agenten PRUEFER** liegen daneben:
-[Befunde/PRUEFER-3.md](Befunde/PRUEFER-3.md) ([P-3](Befunde/PRUEFER-11.md#p-3)),
-[Befunde/PRUEFER-4.md](Befunde/PRUEFER-4.md) ([P-4](Befunde/PRUEFER-11.md#p-4), [E-37](BEFUNDE.md#e-37) und die
-Exit-Beweisführung) und [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md) ([P-5](Befunde/PRUEFER-11.md#p-5), das
+[Befunde/PRUEFER-3.md](../Befunde/PRUEFER-3.md) ([P-3](../Befunde/PRUEFER-11.md#p-3)),
+[Befunde/PRUEFER-4.md](../Befunde/PRUEFER-4.md) ([P-4](../Befunde/PRUEFER-11.md#p-4), [E-37](BEFUNDE.md#e-37) und die
+Exit-Beweisführung) und [Befunde/PRUEFER-5.md](../Befunde/PRUEFER-5.md) ([P-5](../Befunde/PRUEFER-11.md#p-5), das
 Review der Exit-Behebung — dort ist [**E-45**](BEFUNDE.md#e-45) gefunden worden).
 
 > **Stand dieser Datei: 18.09.2026.** Der jüngste Durchgang steht in
-> `Befunde/LEKTOR-15.md` (Funde **[L-15.1](Befunde/LEKTOR-15.md#l-15.1)** ff.) — *„keine Lügen auf dem main"*
+> `Befunde/LEKTOR-15.md` (Funde **[L-15.1](../Befunde/LEKTOR-15.md#l-15.1)** ff.) — *„keine Lügen auf dem main"*
 > nach dem Release **`v1.0.72`**; gemessen an Quellstand **7.2.0.72** /
 > `VERSION` **1.0.72** über **155** MD-Dateien aus `git ls-files '*.md'`.
-> Davor `Befunde/LEKTOR-14.md` (Funde **[L-14.1](Befunde/LEKTOR-14.md#l-14.1)** ff., 7.2.0.70 / 1.0.70,
-> 153 Dateien), `Befunde/LEKTOR-13.md` (Funde **[L-13.1](Befunde/LEKTOR-13.md#l-13.1)** ff.,
-> `main` auf Unwahrheiten, 17.09.2026, 151 Dateien), **[L-17](Befunde/LEKTOR-12.md#l-17)** in
+> Davor `Befunde/LEKTOR-14.md` (Funde **[L-14.1](../Befunde/LEKTOR-14.md#l-14.1)** ff., 7.2.0.70 / 1.0.70,
+> 153 Dateien), `Befunde/LEKTOR-13.md` (Funde **[L-13.1](../Befunde/LEKTOR-13.md#l-13.1)** ff.,
+> `main` auf Unwahrheiten, 17.09.2026, 151 Dateien), **[L-17](../Befunde/LEKTOR-12.md#l-17)** in
 > `Befunde/LEKTOR-12.md` (7.2.0.66 / 1.0.66, 149 Dateien), **L-16** in
 > `Befunde/LEKTOR-11.md` (7.2.0.64, 146 Dateien) und **L-15** in
 > `Befunde/LEKTOR-10.md` (7.2.0.63 / 1.0.63, 15.09.2026). Der jüngste
 > Durchgang *in dieser Datei* ist der **zwanzigste**, ganz unten. Alles ab
-> **[L-6](Befunde/LEKTOR.md#l-6)** steht nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
+> **[L-6](../Befunde/LEKTOR.md#l-6)** steht nicht hier, sondern in `Befunde/LEKTOR-2.md` bis
 > `Befunde/LEKTOR-15.md`.
 >
-> **Zwei Berichtigungen am 17.09.2026 ([L-14.6](Befunde/LEKTOR-14.md#l-14.6)).** (1) Hier stand *„Der jüngste
-> Durchgang ist **[L-17](Befunde/LEKTOR-12.md#l-17)**"* — `Befunde/LEKTOR-13.md` war da längst geschrieben
+> **Zwei Berichtigungen am 17.09.2026 ([L-14.6](../Befunde/LEKTOR-14.md#l-14.6)).** (1) Hier stand *„Der jüngste
+> Durchgang ist **[L-17](../Befunde/LEKTOR-12.md#l-17)**"* — `Befunde/LEKTOR-13.md` war da längst geschrieben
 > und kam in dieser Datei überhaupt nicht vor. (2) Hier stand *„Der jüngste
 > Durchgang in dieser Datei ist weiterhin der **neunte**"*, während der
 > **sechzehnte** seit dem Vormittag ganz unten stand; dieselbe Zeile weiter
@@ -53,7 +53,7 @@ Review der Exit-Behebung — dort ist [**E-45**](BEFUNDE.md#e-45) gefunden worde
 > Verweise in `README.md`, `AUFGABEN.md` und `tools/RELEASES.md` meinen
 > `Befunde/LEKTOR-13.md`, **nicht** den dreizehnten Durchgang vom 14.09.2026.
 >
-> **[L-17](Befunde/LEKTOR-12.md#l-17) in einem Satz:** Dieselbe Ersetzung wie in L-16, nur andersherum —
+> **[L-17](../Befunde/LEKTOR-12.md#l-17) in einem Satz:** Dieselbe Ersetzung wie in L-16, nur andersherum —
 > [**E-97**](BEFUNDE.md#e-97) stand in `README.md`, `AUFGABEN.md` und `WEITERMACHEN.md` als
 > Fassung **7.2.0.66**, obwohl es in **7.2.0.64** behoben und von Gregor an
 > 1.0.64 **bestätigt** ist; die Prüfzeile in `WEITERMACHEN.md` hätte ihn damit
@@ -85,7 +85,7 @@ Review der Exit-Behebung — dort ist [**E-45**](BEFUNDE.md#e-45) gefunden worde
 > `pruefe-befundurteile.pl` unsichtbar**: das eine Urteil war länger als das
 > 60-Zeichen-Fenster, das andere enthielt weder „offen" noch „behoben".
 >
-> **[L-12](Befunde/LEKTOR-6.md#l-12) in einem Satz:** [E-85](BEFUNDE.md#e-85) (Umlaute über IMAP) war behoben, während vier
+> **[L-12](../Befunde/LEKTOR-6.md#l-12) in einem Satz:** [E-85](BEFUNDE.md#e-85) (Umlaute über IMAP) war behoben, während vier
 > Dokumente ihn noch als offen führten — und dreimal an diesem Tag stand die
 > Doku still, während der Zweig weiterlief, zweimal davon mit einer Aussage,
 > die ich selbst eine Stunde zuvor geschrieben hatte.
@@ -479,7 +479,7 @@ Stellen.
 | `BEFUNDE.md` | [**E-4**](BEFUNDE.md#e-4) und [**E-7**](BEFUNDE.md#e-7) standen auf „offen", sind aber behoben | beide auf „behoben, ungeprüft", je mit Fortschreibungsabschnitt und Commit |
 | `BEFUNDE.md` | [**PR-5**](BEFUNDE.md#pr-5) stand an drei Stellen auf „offen", war aber in `765c39b` behoben | überall berichtigt; die Überschrift „[PR-5](BEFUNDE.md#pr-5) bleibt offen" heißt jetzt „[PR-5](BEFUNDE.md#pr-5) — behoben am 31.08.2026 abends" mit Berichtigungskasten |
 | `BEFUNDE.md` | für den OT501-Ausbau gab es keinen Befund | neuer Abschnitt [**B-3**](BEFUNDE.md#b-3) mit den vier Belegen, dass niemand `OT501` braucht |
-| `BEFUNDE.md` | [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8) und [`P-3`](Befunde/PRUEFER-11.md#p-3) kamen im Verzeichnis nicht vor | neuer Abschnitt „Unterbefunde, die man einzeln sucht" mit 13 Zeilen |
+| `BEFUNDE.md` | [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8) und [`P-3`](../Befunde/PRUEFER-11.md#p-3) kamen im Verzeichnis nicht vor | neuer Abschnitt „Unterbefunde, die man einzeln sucht" mit 13 Zeilen |
 | `AUFGABEN.md` | erster Schritt war „das Release auf dem zweiten PC probieren" (31.08.) | Stand vom 05.09.; erster Schritt ist Produktversion hochzählen, bauen, packen, durchsehen. Was heute erledigt wurde, steht in einer eigenen Tabelle |
 | `AUFGABEN.md` | Auflage 4 verlangte `/p:BuildProjectReferences=false` | berichtigt: ganze Projektmappe bauen, Schalter nicht mehr benutzen |
 | `WEITERMACHEN.md` | Einstieg war vom 31.08. abends | neuer Kasten für den 05.09. ganz oben; die beiden alten Kästen sind als **ÜBERHOLT** gekennzeichnet, nicht gelöscht |
@@ -523,7 +523,7 @@ Kennungen, deren Abschnitt noch auf einem Arbeitszweig liegt ([`X-5`](BEFUNDE.md
 Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor` aus
 `9512108`. **Keine Zeile Quelltext geändert, nichts gebaut, Eudora nicht
 gestartet.** Der fünfte Durchgang ist der Vormittag desselben Tages
-(`Befunde/LEKTOR.md`, [L-1](Befunde/LEKTOR.md#l-1) bis [L-6](Befunde/LEKTOR.md#l-6)): er hat `README.md`, `AUFGABEN.md`,
+(`Befunde/LEKTOR.md`, [L-1](../Befunde/LEKTOR.md#l-1) bis [L-6](../Befunde/LEKTOR.md#l-6)): er hat `README.md`, `AUFGABEN.md`,
 `WEITERMACHEN.md` und `ZIEL.md` von Grabungsbericht auf Anleitung umgestellt
 und die Liste der übrigen Mängel aufgeschrieben. Dieser Durchgang arbeitet
 diese Liste ab.
@@ -535,7 +535,7 @@ inhalte gelöscht?"*
 gegen den Baum geprüft worden — jeder Pfad mit `ls`, jede Zeilenangabe
 `datei.cpp:1234` durch Nachsehen an der Stelle, jede Zahl durch Nachzählen,
 jeder angebotene Befehl durch Ausführen. Der vollständige Befund mit den
-Messbefehlen steht in **[Befunde/LEKTOR-2.md](Befunde/LEKTOR-2.md)**.
+Messbefehlen steht in **[Befunde/LEKTOR-2.md](../Befunde/LEKTOR-2.md)**.
 
 **Ergebnis in einem Satz:** die `README.md` war **nicht** auf dem Stand — sechs
 Tatsachenbehauptungen waren falsch, darunter zwei Fundstellen, die auf etwas
@@ -560,8 +560,8 @@ ganz anderes zeigten. Alle sechs sind berichtigt.
 | `README.md` | `eudora.cpp:3542` als Abbruchstelle bei fehlender `Eudora.ini`; der Absatz über die `.lib`; `cat VERSION` als Beleg für die Quellversion; `mainfrm.cpp:1025`; Stingray-Header 30 statt 28; „121 Zertifikate"; `msvcr71.dll` fehlte in der Ergebnisliste |
 | `BEFUNDE.md` | [`Z-3`](BEFUNDE.md#z-3) stand auf „offen" (behoben mit `57fe6a4`); **[E-14](BEFUNDE.md#e-14), [E-16](BEFUNDE.md#e-16), [E-17](BEFUNDE.md#e-17), [E-22](BEFUNDE.md#e-22), [E-23](BEFUNDE.md#e-23), [E-24](BEFUNDE.md#e-24), [E-25](BEFUNDE.md#e-25), [E-26](BEFUNDE.md#e-26)** fehlten im Verzeichnis ganz |
 | `PORTIERUNG.md` | der Kasten „gemessen 05.09.2026" war der Stand **vor** [B-3](BEFUNDE.md#b-3); „16 der 18 Projekte"; `EudoraRes.vcxproj:351`; die OpenSSL3-Libs lägen nicht im Repo; [E-11](BEFUNDE.md#e-11); Port 110 als einziger Beleg |
-| `STARTUMGEBUNG.md` | Checkliste Punkt 1 verlangte die nicht verteilbaren Debug-Laufzeiten von jedem Paketanwender ([L-3](Befunde/LEKTOR.md#l-3)); `EudoraRes` hänge an OT501; die `Eudora.ini`-Fundstelle; die alte Bau-Kennung; „ob Eudora startet, sagt diese Datei nicht" |
-| `Releases/PAKETE.md` | die Buchführung endet sieben Pakete vor dem Stand; die Versionsanleitung war für 1.0.3→1.0.4 durchgerechnet; [E-11](BEFUNDE.md#e-11) als Begründung der beiden 1.0.3-ZIPs; Debug-Laufzeiten im Release-Abschnitt ([L-3](Befunde/LEKTOR.md#l-3)) |
+| `STARTUMGEBUNG.md` | Checkliste Punkt 1 verlangte die nicht verteilbaren Debug-Laufzeiten von jedem Paketanwender ([L-3](../Befunde/LEKTOR.md#l-3)); `EudoraRes` hänge an OT501; die `Eudora.ini`-Fundstelle; die alte Bau-Kennung; „ob Eudora startet, sagt diese Datei nicht" |
+| `Releases/PAKETE.md` | die Buchführung endet sieben Pakete vor dem Stand; die Versionsanleitung war für 1.0.3→1.0.4 durchgerechnet; [E-11](BEFUNDE.md#e-11) als Begründung der beiden 1.0.3-ZIPs; Debug-Laufzeiten im Release-Abschnitt ([L-3](../Befunde/LEKTOR.md#l-3)) |
 | `ABRUF-PRUEFEN.md` | „Belegt ist Port 110 … das ist **nicht** der Weg, den diese Anleitung empfiehlt" — seit 06.09.2026 ist Port 995 gemessen |
 | `Eudora71/OpenSSL3/BAUEN.md` | Aufforderung ganz oben, OpenSSL selbst zu bauen, weil die `.lib` fehlten — sie liegen im Repo |
 | `PRUEFUNG-BAU.md`, `PRUEFUNG-BRANCH.md`, `PRUEFUNG-CODE.md`, `Pruefung/PRUEFUNG-KETTE.md`, `Pruefung/PRUEFUNG-ZEIGER.md` | überholte Schlussfolgerungen ([E-11](BEFUNDE.md#e-11), „Ursache wieder offen", M-11, roher MSBuild-Aufruf) als solche gekennzeichnet |
@@ -575,7 +575,7 @@ ganz anderes zeigten. Alle sechs sind berichtigt.
   mit einem Nachtragskasten gekennzeichnet, nicht ersetzt.
 * **`Releases/PAKETE.md` nicht um 1.0.4 bis 1.0.10 ergänzt.** Dafür bräuchte es
   Messwerte an den ZIPs, die ich ohne Bau nicht erheben kann. Der Mangel steht
-  jetzt als Kasten am Anfang der Datei und als **[M-4](Befunde/PRUEFER-15.md#m-4)** im Verzeichnis.
+  jetzt als Kasten am Anfang der Datei und als **[M-4](../Befunde/PRUEFER-15.md#m-4)** im Verzeichnis.
 * **Kein Edit-Werkzeug.** Alle Änderungen über `tools/ersetze-bereich.pl` mit
   `:raw`, nach jeder Änderung CR-Zahl und Doppelkodierung gegen `HEAD`
   gemessen.
@@ -672,7 +672,7 @@ berichtigten Dateien noch nicht. Nach dem Merge einmal
 * **Prüfberichte nicht umgeschrieben** — Zeitdokumente. Überholte
   Schlussfolgerungen bekommen einen datierten Nachtrag.
 * **`Releases/PAKETE.md` nicht um 1.0.4 bis 1.0.17 ergänzt.** Für die meisten
-  liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **[M-4](Befunde/PRUEFER-15.md#m-4)** bleibt
+  liegt kein ZIP im Repo; Größen und Prüfsummen wären erfunden. **[M-4](../Befunde/PRUEFER-15.md#m-4)** bleibt
   offen. Für 1.0.18 ist der Abschnitt da, weil dort alles messbar war.
 * **„30 Stellen, 22 Stingray-Klassen, 77 Methoden" in `README.md`** weiter
   zurückgestellt — die Zählweise ist nicht dokumentiert, Raten wäre schlimmer.
@@ -681,7 +681,7 @@ berichtigten Dateien noch nicht. Nach dem Merge einmal
 
 Agent LEKTOR, Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`. **Keine
 Zeile Quelltext geändert, nichts gebaut, Eudora nicht gestartet.**
-Ausführliche Berichte: `Befunde/LEKTOR-6.md` ([L-12](Befunde/LEKTOR-6.md#l-12)) und die Commits
+Ausführliche Berichte: `Befunde/LEKTOR-6.md` ([L-12](../Befunde/LEKTOR-6.md#l-12)) und die Commits
 `a660b1b`, `77b9aa1`, `be5a9cb`, `a788753`.
 
 Nachgetragen am 11.09.2026, nachdem Gregor gefragt hat:
@@ -756,7 +756,7 @@ Arbeitsbaum `Eudora7.2-wt-lektor`, Zweig `wt/lektor`, Ausgangsstand `da95db4`
 
 **Auftrag: den Bestand prüfen, nicht den Diff.** Alle **121** MD-Dateien im
 Verzeichnis (`git ls-files '*.md'`), nicht nur die zuletzt angefassten — die
-Lehre [review-sieht-nur-den-diff](Arbeitsweise/review-sieht-nur-den-diff.md).
+Lehre [review-sieht-nur-den-diff](../Arbeitsweise/review-sieht-nur-den-diff.md).
 Der Auftrag sprach von 47 Dateien; das war die Zahl aus dem achten Durchgang
 (L-8) und stimmt seit dem 08.09.2026 nicht mehr.
 
@@ -810,7 +810,7 @@ unter **`[ToolBar-ToolBarManager]`**. Dazu `WriteProfileString` statt
 Der Bericht kam am 11.09.2026: er hat an 1.0.48 gezogen, und die Marke schrieb
 die fünf Zeilen, die [E-76](BEFUNDE.md#e-76) entschieden haben — und an 1.0.50 ein zweites Mal,
 `E-76 fest: vorher=751x403`, der Beleg für [E-84](BEFUNDE.md#e-84). Dieselbe Klasse wie bei [E-70](BEFUNDE.md#e-70)
-([eingebaute-messung-auslesen](Arbeitsweise/eingebaute-messung-auslesen.md)),
+([eingebaute-messung-auslesen](../Arbeitsweise/eingebaute-messung-auslesen.md)),
 nur andersherum: dort war die Marke ungelesen, hier war sie gelesen und die
 Tabelle sagte weiter, sie sei es nicht.
 
@@ -866,7 +866,7 @@ die Schranke hat genau das getan, wofür sie gebaut ist.
 
 # Dreizehnter Durchgang — 14.09.2026 (L-13)
 
-**Der Bericht steht vollständig in [Befunde/LEKTOR-8.md](Befunde/LEKTOR-8.md).**
+**Der Bericht steht vollständig in [Befunde/LEKTOR-8.md](../Befunde/LEKTOR-8.md).**
 Hier nur der Eintrag ins Fahrtenbuch, damit diese Datei nicht wieder hinter den
 Berichten zurückbleibt.
 
@@ -892,7 +892,7 @@ gefunden und wäre billig.
 
 # Vierzehnter Durchgang — 14.09.2026 (L-14)
 
-**Der Bericht steht vollständig in [Befunde/LEKTOR-9.md](Befunde/LEKTOR-9.md).**
+**Der Bericht steht vollständig in [Befunde/LEKTOR-9.md](../Befunde/LEKTOR-9.md).**
 Nachgetragen am 15.09.2026 — dieser Durchgang hatte hier nie einen Eintrag
 bekommen, obwohl genau das der Zweck dieses Fahrtenbuchs ist.
 
@@ -903,7 +903,7 @@ normal aus, die nur auf Kodierungsfehler sieht.
 
 # Fünfzehnter Durchgang — 15.09.2026 (L-15)
 
-**Der Bericht steht vollständig in [Befunde/LEKTOR-10.md](Befunde/LEKTOR-10.md).**
+**Der Bericht steht vollständig in [Befunde/LEKTOR-10.md](../Befunde/LEKTOR-10.md).**
 
 Gemessen an Quellstand **7.2.0.63** / Paket **1.0.63**, über **144** MD-Dateien
 und alle **108** versionierten Dateien in `tools/`.
@@ -924,7 +924,7 @@ gegen die Verweise in `LEKTORAT.md` hält, hätte es sofort gesagt und wäre bil
 
 # Sechzehnter Durchgang — 17.09.2026 (L-16)
 
-**Der Bericht steht vollständig in [Befunde/LEKTOR-11.md](Befunde/LEKTOR-11.md).**
+**Der Bericht steht vollständig in [Befunde/LEKTOR-11.md](../Befunde/LEKTOR-11.md).**
 
 Gemessen an Quellstand **7.2.0.64** über **146** MD-Dateien aus
 `git ls-files '*.md'`. Anlass: [**E-97**](BEFUNDE.md#e-97) ist behoben — *File → Save As* beendete
@@ -957,7 +957,7 @@ Fassung. Die Klasse ist nicht abgestellt, nur jeweils behoben.
 
 # Neunzehnter Durchgang — 17.09.2026, abends (L-19, `Befunde/LEKTOR-14.md`)
 
-**Der Bericht steht vollständig in [Befunde/LEKTOR-14.md](Befunde/LEKTOR-14.md).**
+**Der Bericht steht vollständig in [Befunde/LEKTOR-14.md](../Befunde/LEKTOR-14.md).**
 
 Gemessen an Quellstand **7.2.0.70** / `VERSION` **1.0.70** über **153**
 MD-Dateien aus `git ls-files '*.md'`. Anlass, Gregor wörtlich: *„readme,
@@ -969,10 +969,10 @@ laufenden Zweig `paketliste-glattziehen`.
 
 | | |
 |---|---|
-| **Der teuerste Fund ([L-14.1](Befunde/LEKTOR-14.md#l-14.1))** | Die Tabelle im neuen CHANGELOG-Abschnitt 7.2.0.70 hat die Zeile zu **1.0.69 vertauscht**: sie sagt *„enthält [E-101](BEFUNDE.md#e-101) zweiter Teil, es fehlt [E-106](BEFUNDE.md#e-106)"*. Gemessen an Zeitstempel und Vorfahrenschaft ist es **umgekehrt** — die `Eudora.exe` entstand 20:24:54 aus `acc8ad7`, der E-106-Merge (20:16:00) ist Vorfahr, der zweite Teil von [E-101](BEFUNDE.md#e-101) (20:58:43) kam danach. Gregor hat **1.0.69** auf der Platte und **1.0.70 nicht** |
-| **Ein Berichtigungsvermerk, der nicht stimmte ([L-14.2](Befunde/LEKTOR-14.md#l-14.2))** | [L-13.1](Befunde/LEKTOR-13.md#l-13.1) erklärte die Unwahrheit *„veröffentlicht ist weiterhin `v1.0.50`"* in fünf Dokumenten für erledigt. In `WEITERMACHEN.md` stand sie **weiter**, und `PORTIERUNG.md` trug sie ebenfalls, ohne in einem der Vermerke genannt zu sein. Sechs Dokumente, zwei blieben stehen |
-| **Vier Befunde unter falscher Fassung ([L-14.4](Befunde/LEKTOR-14.md#l-14.4))** | Alles war auf **7.2.0.68** gezogen. Richtig: [**E-101**](BEFUNDE.md#e-101) in 7.2.0.66 und 7.2.0.69, [**E-103**](BEFUNDE.md#e-103) in 7.2.0.67, [**E-104**](BEFUNDE.md#e-104) in 7.2.0.67 **und** 7.2.0.68, [**E-106**](BEFUNDE.md#e-106) in 7.2.0.68. Dieselbe Ersetzungsklasse wie in L-11, L-16 und [L-17](Befunde/LEKTOR-12.md#l-17) — sie ist zum **vierten Mal** aufgetreten |
-| **[E-106](BEFUNDE.md#e-106) ([L-14.5](Befunde/LEKTOR-14.md#l-14.5))** | **keine einzige Stelle** behauptet, er sei nachgewiesen. Ein Nachtrag in `ZIEL.md`, sonst nichts |
+| **Der teuerste Fund ([L-14.1](../Befunde/LEKTOR-14.md#l-14.1))** | Die Tabelle im neuen CHANGELOG-Abschnitt 7.2.0.70 hat die Zeile zu **1.0.69 vertauscht**: sie sagt *„enthält [E-101](BEFUNDE.md#e-101) zweiter Teil, es fehlt [E-106](BEFUNDE.md#e-106)"*. Gemessen an Zeitstempel und Vorfahrenschaft ist es **umgekehrt** — die `Eudora.exe` entstand 20:24:54 aus `acc8ad7`, der E-106-Merge (20:16:00) ist Vorfahr, der zweite Teil von [E-101](BEFUNDE.md#e-101) (20:58:43) kam danach. Gregor hat **1.0.69** auf der Platte und **1.0.70 nicht** |
+| **Ein Berichtigungsvermerk, der nicht stimmte ([L-14.2](../Befunde/LEKTOR-14.md#l-14.2))** | [L-13.1](../Befunde/LEKTOR-13.md#l-13.1) erklärte die Unwahrheit *„veröffentlicht ist weiterhin `v1.0.50`"* in fünf Dokumenten für erledigt. In `WEITERMACHEN.md` stand sie **weiter**, und `PORTIERUNG.md` trug sie ebenfalls, ohne in einem der Vermerke genannt zu sein. Sechs Dokumente, zwei blieben stehen |
+| **Vier Befunde unter falscher Fassung ([L-14.4](../Befunde/LEKTOR-14.md#l-14.4))** | Alles war auf **7.2.0.68** gezogen. Richtig: [**E-101**](BEFUNDE.md#e-101) in 7.2.0.66 und 7.2.0.69, [**E-103**](BEFUNDE.md#e-103) in 7.2.0.67, [**E-104**](BEFUNDE.md#e-104) in 7.2.0.67 **und** 7.2.0.68, [**E-106**](BEFUNDE.md#e-106) in 7.2.0.68. Dieselbe Ersetzungsklasse wie in L-11, L-16 und [L-17](../Befunde/LEKTOR-12.md#l-17) — sie ist zum **vierten Mal** aufgetreten |
+| **[E-106](BEFUNDE.md#e-106) ([L-14.5](../Befunde/LEKTOR-14.md#l-14.5))** | **keine einzige Stelle** behauptet, er sei nachgewiesen. Ein Nachtrag in `ZIEL.md`, sonst nichts |
 
 **Drei Schranken waren stumm**, und das ist der eigentliche Fund:
 
@@ -992,19 +992,19 @@ laufenden Zweig `paketliste-glattziehen`.
   das Muster beim **nächsten** — aus `**behoben in …**` wurde `**Gemessen an
   seiner Datei**`, und der behobene Befund galt als **offen**. Gefunden an der
   eigenen Berichtigung, weil die Schranke *„geprueft 0"* meldete, wo zwei
-  geänderte Urteilszeilen im Diff standen (**[L-14.10](Befunde/LEKTOR-14.md#l-14.10)**).
+  geänderte Urteilszeilen im Diff standen (**[L-14.10](../Befunde/LEKTOR-14.md#l-14.10)**).
 
 **Ein Nebenbefund, der eine Klasse betrifft:** `Arbeitsweise/` ist ein
 **Spiegel** des Gedächtnisverzeichnisses (`tools/lehren-spiegeln.pl`). Eine
 Berichtigung dort wird vom Vorcommit-Haken aus der Quelle **zurückgenommen** —
 gemessen an meinem eigenen Commit-Versuch. Wer eine Lehre berichtigen will,
-muss an die Quelle; das steht in `Arbeitsweise/README.md` nicht (**[L-14.9](Befunde/LEKTOR-14.md#l-14.9)**).
+muss an die Quelle; das steht in `Arbeitsweise/README.md` nicht (**[L-14.9](../Befunde/LEKTOR-14.md#l-14.9)**).
 
 **Nachtrag desselben Abends.** Während der Bericht entstand, kam **7.2.0.71 /
 1.0.71** mit [**E-107**](BEFUNDE.md#e-107) dazu — ein Absturz beim Antworten, **mit [E-106](BEFUNDE.md#e-106)
 eingeschleppt**. Drei Folgen:
 
-- **Gregors Absturzmeldung belegt [L-14.1](Befunde/LEKTOR-14.md#l-14.1) unabhängig.** `BEFUNDE.md` sagt zu
+- **Gregors Absturzmeldung belegt [L-14.1](../Befunde/LEKTOR-14.md#l-14.1) unabhängig.** `BEFUNDE.md` sagt zu
   [E-107](BEFUNDE.md#e-107): *„von Gregor am 17.09.2026 um 21:23 **an 1.0.69** gemeldet"*. Wer den
   E-106-Fehler an 1.0.69 erlebt, hat [E-106](BEFUNDE.md#e-106) in 1.0.69 — genau das bestreitet
   `CHANGELOG.md:143` bis jetzt.
@@ -1031,26 +1031,26 @@ MD-Dateien; Maßstab war das Release **`v1.0.72`** (`gh release list`:
 
 | Fund | Kurz |
 |---|---|
-| **[L-15.1](Befunde/LEKTOR-15.md#l-15.1)** | `PORTIERUNG.md` nannte 7.2.0.70 / 1.0.70 und *„veröffentlicht ist `v1.0.64`"* — **dieselbe Zeile war schon [L-14.2](Befunde/LEKTOR-14.md#l-14.2) und [L-13.1](Befunde/LEKTOR-13.md#l-13.1)**, samt Berichtigungsvermerk |
-| **[L-15.2](Befunde/LEKTOR-15.md#l-15.2)** | `ZIEL.md` führte 1.0.70 als geschnürtes Paket und **[E-106](BEFUNDE.md#e-106) als *„ausdrücklich nicht nachgewiesen"*** — bestätigt an 1.0.69; vom Release stand kein Wort |
-| **[L-15.3](Befunde/LEKTOR-15.md#l-15.3)** | `AUFGABEN.md` sagte in Zeile 64 *„gebaut und geschnürt ist 7.2.0.70"*, in Zeile 3 derselben Datei **7.2.0.72** — und zählte 1.0.70 zu Gregors Paketen, das er nie hatte |
-| **[L-15.4](Befunde/LEKTOR-15.md#l-15.4)** | `BEFUNDE.md` führte [**E-106**](BEFUNDE.md#e-106) als *„bei Gregor noch nicht nachgewiesen"*, während `AUFGABEN.md` und `README.md` die Bestätigung nannten |
-| **[L-15.5](Befunde/LEKTOR-15.md#l-15.5)** | `tools/ZWEIGE.md:73` **zum dritten Mal** weitergeschoben (69 → 70 → 71 → 72) — **und der Antreiber war `doku-pruefen.pl` selbst**, siehe unten |
-| **[L-15.6](Befunde/LEKTOR-15.md#l-15.6)** | `WEITERMACHEN.md` Zeile 13: Überschrift **BESTÄTIGT**, Text darunter *„Zu prüfen: …"* — zwei Fassungen in einer Zelle. Zeile 28 nannte **1.0.64** als zuletzt bestätigt, eine Zeile über der Angabe 1.0.72 |
-| **[L-15.7](Befunde/LEKTOR-15.md#l-15.7)** | `CHANGELOG.md`, Tabelle 7.2.0.70: 1.0.69 **vertauscht**, von [L-14.1](Befunde/LEKTOR-14.md#l-14.1) gemessen und danach unverändert stehen geblieben; 1.0.70 hieß *„alles"*, trägt aber den Absturz [E-108](BEFUNDE.md#e-108) |
-| **[L-15.8](Befunde/LEKTOR-15.md#l-15.8)** | die Prüfanleitung im Abschnitt 7.2.0.70 schickte Gregor zu einem Paket, das er nie hatte und das abstürzt |
-| **[L-15.9](Befunde/LEKTOR-15.md#l-15.9)** | **drei Fassungen einer Aussage über den eigenen Prüfstand, eine davon falsch** — *„lädt keine Bilder"* gegen *„lädt zwar Bilder"*. Am Protokoll entschieden: er lädt **acht**, ihm fehlt ein **Testdatum** |
-| **[L-15.10](Befunde/LEKTOR-15.md#l-15.10)** | **[E-105](BEFUNDE.md#e-105) hatte keine Zeile in `BEFUNDE.md`** — seit dem 17.09. als Aufgabe geführt, nie angelegt. Belegt und nachgetragen. **E-102 ist nie vergeben worden** |
-| **[L-15.11](Befunde/LEKTOR-15.md#l-15.11)** | `README.md` nannte unter *Wo die Grenzen liegen* nur [E-98](BEFUNDE.md#e-98) und [E-77](BEFUNDE.md#e-77) — **[E-94](BEFUNDE.md#e-94) und [E-105](BEFUNDE.md#e-105) fehlten**; ebenso im CHANGELOG-Abschnitt *Noch offen* [E-105](BEFUNDE.md#e-105), [E-109](BEFUNDE.md#e-109) und die LF-Weiterleitungen |
+| **[L-15.1](../Befunde/LEKTOR-15.md#l-15.1)** | `PORTIERUNG.md` nannte 7.2.0.70 / 1.0.70 und *„veröffentlicht ist `v1.0.64`"* — **dieselbe Zeile war schon [L-14.2](../Befunde/LEKTOR-14.md#l-14.2) und [L-13.1](../Befunde/LEKTOR-13.md#l-13.1)**, samt Berichtigungsvermerk |
+| **[L-15.2](../Befunde/LEKTOR-15.md#l-15.2)** | `ZIEL.md` führte 1.0.70 als geschnürtes Paket und **[E-106](BEFUNDE.md#e-106) als *„ausdrücklich nicht nachgewiesen"*** — bestätigt an 1.0.69; vom Release stand kein Wort |
+| **[L-15.3](../Befunde/LEKTOR-15.md#l-15.3)** | `AUFGABEN.md` sagte in Zeile 64 *„gebaut und geschnürt ist 7.2.0.70"*, in Zeile 3 derselben Datei **7.2.0.72** — und zählte 1.0.70 zu Gregors Paketen, das er nie hatte |
+| **[L-15.4](../Befunde/LEKTOR-15.md#l-15.4)** | `BEFUNDE.md` führte [**E-106**](BEFUNDE.md#e-106) als *„bei Gregor noch nicht nachgewiesen"*, während `AUFGABEN.md` und `README.md` die Bestätigung nannten |
+| **[L-15.5](../Befunde/LEKTOR-15.md#l-15.5)** | `tools/ZWEIGE.md:73` **zum dritten Mal** weitergeschoben (69 → 70 → 71 → 72) — **und der Antreiber war `doku-pruefen.pl` selbst**, siehe unten |
+| **[L-15.6](../Befunde/LEKTOR-15.md#l-15.6)** | `WEITERMACHEN.md` Zeile 13: Überschrift **BESTÄTIGT**, Text darunter *„Zu prüfen: …"* — zwei Fassungen in einer Zelle. Zeile 28 nannte **1.0.64** als zuletzt bestätigt, eine Zeile über der Angabe 1.0.72 |
+| **[L-15.7](../Befunde/LEKTOR-15.md#l-15.7)** | `CHANGELOG.md`, Tabelle 7.2.0.70: 1.0.69 **vertauscht**, von [L-14.1](../Befunde/LEKTOR-14.md#l-14.1) gemessen und danach unverändert stehen geblieben; 1.0.70 hieß *„alles"*, trägt aber den Absturz [E-108](BEFUNDE.md#e-108) |
+| **[L-15.8](../Befunde/LEKTOR-15.md#l-15.8)** | die Prüfanleitung im Abschnitt 7.2.0.70 schickte Gregor zu einem Paket, das er nie hatte und das abstürzt |
+| **[L-15.9](../Befunde/LEKTOR-15.md#l-15.9)** | **drei Fassungen einer Aussage über den eigenen Prüfstand, eine davon falsch** — *„lädt keine Bilder"* gegen *„lädt zwar Bilder"*. Am Protokoll entschieden: er lädt **acht**, ihm fehlt ein **Testdatum** |
+| **[L-15.10](../Befunde/LEKTOR-15.md#l-15.10)** | **[E-105](BEFUNDE.md#e-105) hatte keine Zeile in `BEFUNDE.md`** — seit dem 17.09. als Aufgabe geführt, nie angelegt. Belegt und nachgetragen. **E-102 ist nie vergeben worden** |
+| **[L-15.11](../Befunde/LEKTOR-15.md#l-15.11)** | `README.md` nannte unter *Wo die Grenzen liegen* nur [E-98](BEFUNDE.md#e-98) und [E-77](BEFUNDE.md#e-77) — **[E-94](BEFUNDE.md#e-94) und [E-105](BEFUNDE.md#e-105) fehlten**; ebenso im CHANGELOG-Abschnitt *Noch offen* [E-105](BEFUNDE.md#e-105), [E-109](BEFUNDE.md#e-109) und die LF-Weiterleitungen |
 
-**Der Befund, der über den Tag hinausgeht ([L-15.5](Befunde/LEKTOR-15.md#l-15.5)):** `tools/doku-pruefen.pl`
+**Der Befund, der über den Tag hinausgeht ([L-15.5](../Befunde/LEKTOR-15.md#l-15.5)):** `tools/doku-pruefen.pl`
 löst auf das Wort *Paketnummer* aus und verlangt in den 200 Zeichen dahinter
 die **aktuelle** Nummer. In `tools/ZWEIGE.md` steht dort aber, was ein Zweig
 **gebracht** hat. Die Schranke hat damit dieselbe Zeile an einem Abend
 **dreimal** in die Unwahrheit getrieben — und beim vierten Mal meinen
 berichtigten Wert als *MANGEL* gemeldet. Eine Schranke, die die Unwahrheit
 erzwingt, ist teurer als eine, die schweigt
-([schranke-gegentesten.md](Arbeitsweise/schranke-gegentesten.md)). Aufgelöst
+([schranke-gegentesten.md](../Arbeitsweise/schranke-gegentesten.md)). Aufgelöst
 wurde es ohne Eingriff in `tools/` — die Zeile sagt jetzt *„Daraus entstand
 Quellstand 7.2.0.69 und Paket 1.0.69"*, wie die stumme Nachbarzeile darüber;
 danach meldet die Schranke *„Kein Widerspruch gefunden"*. **Die Grenze bleibt
@@ -1064,18 +1064,18 @@ Programm gemessen (7.2.0.79: 4 von 6 Prüffällen heil). Der Lauf ging nur lesen
 
 | Fund | Kurz |
 |---|---|
-| **[L-16.1](Befunde/LEKTOR-16.md#l-16.1)** | `tools/offene-befunde.pl` liest nur Kennungen der Form `E-\d+` — **[AN-1](BEFUNDE.md#an-1) sieht es nicht**, und [E-112](BEFUNDE.md#e-112) fällt heraus, weil *„widerlegt"* als erledigt zählt. Die Schranke aus CLAUDE.md Schritt 1 ist damit an zwei Stellen blind |
-| **[L-16.2](Befunde/LEKTOR-16.md#l-16.2)** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): der Messstand vom 12.10. fehlt, mehrere Stellen sagen *„nicht übersetzt"* |
-| **[L-16.3](Befunde/LEKTOR-16.md#l-16.3)** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): rund 20 zitierte Zeilennummern stimmen nicht mehr |
-| **[L-16.4](Befunde/LEKTOR-16.md#l-16.4)** | `AUFGABEN.md` B5: der Kasten oben ist neu, der Rest des Abschnitts steht noch auf *„nicht gebaut"* |
-| **[L-16.5](Befunde/LEKTOR-16.md#l-16.5)** | `CHANGELOG.md`: 7.2.0.79 trägt noch *„nicht übersetzt"* |
-| **[L-16.6](Befunde/LEKTOR-16.md#l-16.6)** | `Releases/PAKETE.md`: zwei Antworten im selben Abschnitt |
-| **[L-16.7](Befunde/LEKTOR-16.md#l-16.7)** | `tools/pruefdaten/LIESMICH.md`: *„was Eudora heute daraus macht"* beschreibt 7.2.0.76 |
-| **[L-16.8](Befunde/LEKTOR-16.md#l-16.8)** | `WEITERMACHEN.md`: *„Der nächste Schritt"* trägt das Datum 12.10., der Inhalt ist vom 18.09. und 30.09. |
-| **[L-16.9](Befunde/LEKTOR-16.md#l-16.9)** | Zweig `patch_20261012` nirgends verzeichnet — **erledigt**: umbenannt in `an1-endungen`, von Gregor bestätigt, eingetragen in `tools/ZWEIGE.md` |
-| **[L-16.10](Befunde/LEKTOR-16.md#l-16.10)** | `ZIEL.md:17` und `README.md:149`: *„nicht übersetzt"* |
+| **[L-16.1](../Befunde/LEKTOR-16.md#l-16.1)** | `tools/offene-befunde.pl` liest nur Kennungen der Form `E-\d+` — **[AN-1](BEFUNDE.md#an-1) sieht es nicht**, und [E-112](BEFUNDE.md#e-112) fällt heraus, weil *„widerlegt"* als erledigt zählt. Die Schranke aus CLAUDE.md Schritt 1 ist damit an zwei Stellen blind |
+| **[L-16.2](../Befunde/LEKTOR-16.md#l-16.2)** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): der Messstand vom 12.10. fehlt, mehrere Stellen sagen *„nicht übersetzt"* |
+| **[L-16.3](../Befunde/LEKTOR-16.md#l-16.3)** | `BEFUNDE.md` [AN-1](BEFUNDE.md#an-1): rund 20 zitierte Zeilennummern stimmen nicht mehr |
+| **[L-16.4](../Befunde/LEKTOR-16.md#l-16.4)** | `AUFGABEN.md` B5: der Kasten oben ist neu, der Rest des Abschnitts steht noch auf *„nicht gebaut"* |
+| **[L-16.5](../Befunde/LEKTOR-16.md#l-16.5)** | `CHANGELOG.md`: 7.2.0.79 trägt noch *„nicht übersetzt"* |
+| **[L-16.6](../Befunde/LEKTOR-16.md#l-16.6)** | `Releases/PAKETE.md`: zwei Antworten im selben Abschnitt |
+| **[L-16.7](../Befunde/LEKTOR-16.md#l-16.7)** | `tools/pruefdaten/LIESMICH.md`: *„was Eudora heute daraus macht"* beschreibt 7.2.0.76 |
+| **[L-16.8](../Befunde/LEKTOR-16.md#l-16.8)** | `WEITERMACHEN.md`: *„Der nächste Schritt"* trägt das Datum 12.10., der Inhalt ist vom 18.09. und 30.09. |
+| **[L-16.9](../Befunde/LEKTOR-16.md#l-16.9)** | Zweig `patch_20261012` nirgends verzeichnet — **erledigt**: umbenannt in `an1-endungen`, von Gregor bestätigt, eingetragen in `tools/ZWEIGE.md` |
+| **[L-16.10](../Befunde/LEKTOR-16.md#l-16.10)** | `ZIEL.md:17` und `README.md:149`: *„nicht übersetzt"* |
 
-**Eingearbeitet ist bisher nur [L-16.9](Befunde/LEKTOR-16.md#l-16.9)** und die `CheckName`-Formulierung im
+**Eingearbeitet ist bisher nur [L-16.9](../Befunde/LEKTOR-16.md#l-16.9)** und die `CheckName`-Formulierung im
 CHANGELOG. Der Rest ist offen; er gehört vor einen Merge von `an1-endungen`.
 
 ## Zweiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-17.md`)
@@ -1085,17 +1085,17 @@ lesend über die MDs seit `4ec9dd1`.
 
 | Fund | Kurz |
 |---|---|
-| **[L-17.1](Befunde/LEKTOR-17.md#l-17.1)** | [AN-2](BEFUNDE.md#an-2) an sieben Stellen nur „nicht übersetzt", ohne den Stand 7.2.0.82 |
-| **[L-17.2](Befunde/LEKTOR-17.md#l-17.2)** | AN-1-Inhalte heißen an sieben Stellen „7.2.0.80" statt „7.2.0.80-an1"; zwei Verweise zeigen dadurch auf den AN-2-Abschnitt |
-| **[L-17.3](Befunde/LEKTOR-17.md#l-17.3)** | alter Stand in `ZIEL.md:17`, `README.md:149`, `PORTIERUNG.md:43`, `tools/ZWEIGE.md:93`; 1.0.82 in PAKETE noch „in Arbeit" — **letzteres erledigt** |
-| **[L-17.4](Befunde/LEKTOR-17.md#l-17.4)** | AUFGABEN B5: Überschrift mit kaputter Fettschrift — **erledigt**; Tabelle kennt B5.8 bis B5.10 nicht |
-| **[L-17.5](Befunde/LEKTOR-17.md#l-17.5)** | Zahl der Ursachen schwankt zwischen sechs, sieben und zehn |
-| **[L-17.6](Befunde/LEKTOR-17.md#l-17.6)** | CHANGELOG-Kopf sagte zu [AN-1](BEFUNDE.md#an-1) „nichts davon ist übersetzt" — **erledigt** |
-| **[L-17.7](Befunde/LEKTOR-17.md#l-17.7)** | BEFUNDE [AN-1](BEFUNDE.md#an-1): unter dem neuen Kasten stehen alte Aussagen |
-| **[L-17.8](Befunde/LEKTOR-17.md#l-17.8)** | `offene-befunde.pl` meldet 16/16 gedeckt und sieht [AN-1](BEFUNDE.md#an-1), [AN-2](BEFUNDE.md#an-2), [E-112](BEFUNDE.md#e-112) nicht (= [L-16.1](Befunde/LEKTOR-16.md#l-16.1)) |
+| **[L-17.1](../Befunde/LEKTOR-17.md#l-17.1)** | [AN-2](BEFUNDE.md#an-2) an sieben Stellen nur „nicht übersetzt", ohne den Stand 7.2.0.82 |
+| **[L-17.2](../Befunde/LEKTOR-17.md#l-17.2)** | AN-1-Inhalte heißen an sieben Stellen „7.2.0.80" statt „7.2.0.80-an1"; zwei Verweise zeigen dadurch auf den AN-2-Abschnitt |
+| **[L-17.3](../Befunde/LEKTOR-17.md#l-17.3)** | alter Stand in `ZIEL.md:17`, `README.md:149`, `PORTIERUNG.md:43`, `tools/ZWEIGE.md:93`; 1.0.82 in PAKETE noch „in Arbeit" — **letzteres erledigt** |
+| **[L-17.4](../Befunde/LEKTOR-17.md#l-17.4)** | AUFGABEN B5: Überschrift mit kaputter Fettschrift — **erledigt**; Tabelle kennt B5.8 bis B5.10 nicht |
+| **[L-17.5](../Befunde/LEKTOR-17.md#l-17.5)** | Zahl der Ursachen schwankt zwischen sechs, sieben und zehn |
+| **[L-17.6](../Befunde/LEKTOR-17.md#l-17.6)** | CHANGELOG-Kopf sagte zu [AN-1](BEFUNDE.md#an-1) „nichts davon ist übersetzt" — **erledigt** |
+| **[L-17.7](../Befunde/LEKTOR-17.md#l-17.7)** | BEFUNDE [AN-1](BEFUNDE.md#an-1): unter dem neuen Kasten stehen alte Aussagen |
+| **[L-17.8](../Befunde/LEKTOR-17.md#l-17.8)** | `offene-befunde.pl` meldet 16/16 gedeckt und sieht [AN-1](BEFUNDE.md#an-1), [AN-2](BEFUNDE.md#an-2), [E-112](BEFUNDE.md#e-112) nicht (= [L-16.1](../Befunde/LEKTOR-16.md#l-16.1)) |
 
 **Berichtigung zu Durchgang 21:** dort stand „eingearbeitet ist bisher nur
-[L-16.9](Befunde/LEKTOR-16.md#l-16.9)" — tatsächlich waren es zu dem Zeitpunkt auch [L-16.7](Befunde/LEKTOR-16.md#l-16.7) und Teile von [L-16.2](Befunde/LEKTOR-16.md#l-16.2).
+[L-16.9](../Befunde/LEKTOR-16.md#l-16.9)" — tatsächlich waren es zu dem Zeitpunkt auch [L-16.7](../Befunde/LEKTOR-16.md#l-16.7) und Teile von [L-16.2](../Befunde/LEKTOR-16.md#l-16.2).
 
 ## Dreiundzwanzigster Durchgang — 12.10.2026 (Bericht: `Befunde/LEKTOR-18.md`)
 
@@ -1113,22 +1113,22 @@ Hinweis (umbenannte Datei) — **alle eingearbeitet** im selben Commit.
 
 **Anlass:** Merge von PR #84; Gregor: *„keine lügen auf main!"* Diesmal
 **schreibend**, auf `wt/lektor` über `18f71e5`. Abgearbeitet sind die offenen
-Funde aus [LEKTOR-16](Befunde/LEKTOR-16.md#lektor-16) und [LEKTOR-17](Befunde/LEKTOR-17.md#lektor-17), ausgenommen das Werkzeug ([L-16.1](Befunde/LEKTOR-16.md#l-16.1)/[L-17.8](Befunde/LEKTOR-17.md#l-17.8)).
+Funde aus [LEKTOR-16](../Befunde/LEKTOR-16.md#lektor-16) und [LEKTOR-17](../Befunde/LEKTOR-17.md#lektor-17), ausgenommen das Werkzeug ([L-16.1](../Befunde/LEKTOR-16.md#l-16.1)/[L-17.8](../Befunde/LEKTOR-17.md#l-17.8)).
 
 | Fund | Kurz |
 |---|---|
-| **[L-16.1](Befunde/LEKTOR-16.md#l-16.1)** | Werkzeug nicht angefasst; Übersichtszeilen [AN-1](BEFUNDE.md#an-1)/[AN-2](BEFUNDE.md#an-2) in BEFUNDE.md beginnen jetzt mit dem Urteilswort |
-| **[L-16.2](Befunde/LEKTOR-16.md#l-16.2) / [L-17.7](Befunde/LEKTOR-17.md#l-17.7)** | BEFUNDE [AN-1](BEFUNDE.md#an-1): Kasten um 7.2.0.82/83, Teil 11 und IMAP; Altstellen mit Nachtrag — **erledigt** |
-| **[L-16.3](Befunde/LEKTOR-16.md#l-16.3)** | Markentabelle auf 7.2.0.83, Marken 9–11 ergänzt; Weg-Tabelle nur als „Stand 7.2.0.76" gekennzeichnet |
-| **[L-16.4](Befunde/LEKTOR-16.md#l-16.4) / [L-17.4](Befunde/LEKTOR-17.md#l-17.4)** | AUFGABEN B5: Tabelle um B5.8–B5.11, Altsätze als erledigt — **erledigt** |
-| **[L-16.5](Befunde/LEKTOR-16.md#l-16.5) / [L-17.6](Befunde/LEKTOR-17.md#l-17.6)** | CHANGELOG: „Noch offen", Nachträge in 7.2.0.80-an1, 7.2.0.80, 7.2.0.79 — **erledigt**; Stern in der Bau-Kennung offen |
-| **[L-16.6](Befunde/LEKTOR-16.md#l-16.6)** | PAKETE 1.0.79 Nachtrag, 1.0.83 „angewiesen, nicht veröffentlicht" — **erledigt** |
-| **[L-16.8](Befunde/LEKTOR-16.md#l-16.8)** | WEITERMACHEN „Der nächste Schritt" — **erledigt**; Zeile `:27` nicht trennbar, zwei Schranken weisen gegenläufig ab |
-| **[L-16.10](Befunde/LEKTOR-16.md#l-16.10) / [L-17.3](Befunde/LEKTOR-17.md#l-17.3)** | ZIEL, README (mit LogLevel 65536), PORTIERUNG, ZWEIGE — **erledigt** |
-| **[L-17.1](Befunde/LEKTOR-17.md#l-17.1)** | [AN-2](BEFUNDE.md#an-2) überall „seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen" — **erledigt** |
-| **[L-17.2](Befunde/LEKTOR-17.md#l-17.2)** | „-an1" nachgezogen, beide falschen Verweise berichtigt — **erledigt** |
-| **[L-17.5](Befunde/LEKTOR-17.md#l-17.5)** | Zählung festgelegt: **elf Teile B5.1–B5.11, zehn behoben, [B5.7](AUFGABEN.md#b5.7) offen** |
-| **[L-19.3](Befunde/LEKTOR-20.md#l-19.3)** (nachgeholt) | Langpfad-Präfix im CHANGELOG 7.2.0.83 jetzt `\\?\` (Bytes `5C 5C 3F 5C`) |
+| **[L-16.1](../Befunde/LEKTOR-16.md#l-16.1)** | Werkzeug nicht angefasst; Übersichtszeilen [AN-1](BEFUNDE.md#an-1)/[AN-2](BEFUNDE.md#an-2) in BEFUNDE.md beginnen jetzt mit dem Urteilswort |
+| **[L-16.2](../Befunde/LEKTOR-16.md#l-16.2) / [L-17.7](../Befunde/LEKTOR-17.md#l-17.7)** | BEFUNDE [AN-1](BEFUNDE.md#an-1): Kasten um 7.2.0.82/83, Teil 11 und IMAP; Altstellen mit Nachtrag — **erledigt** |
+| **[L-16.3](../Befunde/LEKTOR-16.md#l-16.3)** | Markentabelle auf 7.2.0.83, Marken 9–11 ergänzt; Weg-Tabelle nur als „Stand 7.2.0.76" gekennzeichnet |
+| **[L-16.4](../Befunde/LEKTOR-16.md#l-16.4) / [L-17.4](../Befunde/LEKTOR-17.md#l-17.4)** | AUFGABEN B5: Tabelle um B5.8–B5.11, Altsätze als erledigt — **erledigt** |
+| **[L-16.5](../Befunde/LEKTOR-16.md#l-16.5) / [L-17.6](../Befunde/LEKTOR-17.md#l-17.6)** | CHANGELOG: „Noch offen", Nachträge in 7.2.0.80-an1, 7.2.0.80, 7.2.0.79 — **erledigt**; Stern in der Bau-Kennung offen |
+| **[L-16.6](../Befunde/LEKTOR-16.md#l-16.6)** | PAKETE 1.0.79 Nachtrag, 1.0.83 „angewiesen, nicht veröffentlicht" — **erledigt** |
+| **[L-16.8](../Befunde/LEKTOR-16.md#l-16.8)** | WEITERMACHEN „Der nächste Schritt" — **erledigt**; Zeile `:27` nicht trennbar, zwei Schranken weisen gegenläufig ab |
+| **[L-16.10](../Befunde/LEKTOR-16.md#l-16.10) / [L-17.3](../Befunde/LEKTOR-17.md#l-17.3)** | ZIEL, README (mit LogLevel 65536), PORTIERUNG, ZWEIGE — **erledigt** |
+| **[L-17.1](../Befunde/LEKTOR-17.md#l-17.1)** | [AN-2](BEFUNDE.md#an-2) überall „seit 7.2.0.82 übersetzt, am laufenden Programm nicht gemessen" — **erledigt** |
+| **[L-17.2](../Befunde/LEKTOR-17.md#l-17.2)** | „-an1" nachgezogen, beide falschen Verweise berichtigt — **erledigt** |
+| **[L-17.5](../Befunde/LEKTOR-17.md#l-17.5)** | Zählung festgelegt: **elf Teile B5.1–B5.11, zehn behoben, [B5.7](AUFGABEN.md#b5.7) offen** |
+| **[L-19.3](../Befunde/LEKTOR-20.md#l-19.3)** (nachgeholt) | Langpfad-Präfix im CHANGELOG 7.2.0.83 jetzt `\\?\` (Bytes `5C 5C 3F 5C`) |
 
 **Werkzeuge nach dem Durchgang** (nur lesend): `perl tools/doku-pruefen.pl` —
 *„Kein Widerspruch gefunden"*, zur Kenntnis nur noch `Testdaten/README.md` und
@@ -1186,14 +1186,14 @@ Werkzeug ausdrücklich nicht ausspricht; `BEFUNDE.md` vermaß sich selbst falsch
 `CLAUDE.md` nannte *„über 7800 Zeilen"* und *„über 80 Werkzeuge"* (8614 und 106);
 `PRUEFUNG-BRANCH.md` schrieb `NP3-6/7` statt beider Kennungen.
 
-**Der teuerste Punkt ist [L-18.10](Befunde/LEKTOR-26.md#l-18.10):** die Verlinkung von PR #90 hatte vier Lücken,
+**Der teuerste Punkt ist [L-18.10](../Befunde/LEKTOR-26.md#l-18.10):** die Verlinkung von PR #90 hatte vier Lücken,
 und alle vier hat **Gregor** gefunden, nicht ich und nicht die Schranke, die ich
-dazu gebaut hatte. Sie lief grün, während [E-85](BEFUNDE.md#e-85), [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101), [L-17](Befunde/LEKTOR-12.md#l-17) und [B5.7](AUFGABEN.md#b5.7)
+dazu gebaut hatte. Sie lief grün, während [E-85](BEFUNDE.md#e-85), [E-98](BEFUNDE.md#e-98) bis [E-101](BEFUNDE.md#e-101), [L-17](../Befunde/LEKTOR-12.md#l-17) und [B5.7](AUFGABEN.md#b5.7)
 unverlinkt dastanden — weil sie nur prüfte, was das Werkzeug selbst für
 verlinkbar hielt. Eine Schranke, die ihren Umfang aus derselben Annahme nimmt
 wie das Werkzeug, das sie prüfen soll, prüft nichts ([E-109](BEFUNDE.md#e-109)).
 
-**Und der Nachschlag, [L-18.11](Befunde/LEKTOR-26.md#l-18.11):** das Verlinken hat an einem Tag **zwölf**
+**Und der Nachschlag, [L-18.11](../Befunde/LEKTOR-26.md#l-18.11):** das Verlinken hat an einem Tag **zwölf**
 Werkzeuge blind gemacht, die alle dieselbe Zeile lesen — die erste Zelle der
 Urteilstabelle. `pruefe-behoben-ausgeliefert.pl` ging von 17 geprüften Urteilen
 auf **0** und meldete weiter grün; `pruefe-befund-verbreitung.pl` ebenso.
@@ -1205,22 +1205,22 @@ dem Verlinken.
 
 Nach Gregors Test an Paket 1.0.84, vor dem Merge von `e-112_e-113_fix`. 103 MDs
 gegen den Bestand. Fünfzehn Mängel: **dreizehn berichtigt**; zwei liegen an den
-Haken und sind nur gemeldet bzw. umgangen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13), [L-27.15](Befunde/LEKTOR-27.md#l-27.15): der eingerichtete
+Haken und sind nur gemeldet bzw. umgangen ([L-27.13](../Befunde/LEKTOR-27.md#l-27.13), [L-27.15](../Befunde/LEKTOR-27.md#l-27.15): der eingerichtete
 `pre-commit` ist vom 18.09.2026 und ruft `pruefe-befundurteile.pl` nicht auf).
 `doku-pruefen.pl` und `pruefe-stand-md.pl` liefen grün; `offene-befunde.pl`
 meldete *„30 fehlen“* bei deckender Liste — es war seit dem Verlinken der Tabelle
-blind ([L-27.1](Befunde/LEKTOR-27.md#l-27.1), Werkzeug berichtigt, Gegenprobe gefahren).
+blind ([L-27.1](../Befunde/LEKTOR-27.md#l-27.1), Werkzeug berichtigt, Gegenprobe gefahren).
 
 Der Kern: die Bestätigungen des Tages standen in `BEFUNDE.md`, aber
 `AUFGABEN.md`, `TESTPLAN.md`, `WEITERMACHEN.md`, `ZIEL.md` und `CHANGELOG.md`
 ließen die vierzehn aus Teil A weiter *warten*, [E-101](BEFUNDE.md#e-101) als erledigt stehen und
 [E-115](BEFUNDE.md#e-115) unter *Noch offen* weg. Die widerlegte Werbe-Betriebsart stand in **neun**
-Dateien weiter als Tatsache ([L-27.4](Befunde/LEKTOR-27.md#l-27.4)). Älter und ausgerechnet zum Namensgeber des
+Dateien weiter als Tatsache ([L-27.4](../Befunde/LEKTOR-27.md#l-27.4)). Älter und ausgerechnet zum Namensgeber des
 Zweigs: `AUFGABEN.md` nannte [E-112](BEFUNDE.md#e-112) seit vier Wochen *„behoben in 7.2.0.76“*
-([L-27.3](Befunde/LEKTOR-27.md#l-27.3)). Dazu drei byteidentisch doppelte Zeilen in `tools/ZWEIGE.md` und
+([L-27.3](../Befunde/LEKTOR-27.md#l-27.3)). Dazu drei byteidentisch doppelte Zeilen in `tools/ZWEIGE.md` und
 eine falsche Probenzahl in `tools/WERKZEUGE.md`.
 
-Nebenbei gemessen ([L-27.13](Befunde/LEKTOR-27.md#l-27.13)): der `pre-commit` spiegelt nach jedem CHRONIST-Lauf
+Nebenbei gemessen ([L-27.13](../Befunde/LEKTOR-27.md#l-27.13)): der `pre-commit` spiegelt nach jedem CHRONIST-Lauf
 dessen Lehren in den Baum, in dem gerade committet wird, und weist dort ab, bis
 die Übersicht nachgezogen ist.
 
@@ -1228,8 +1228,8 @@ die Übersicht nachgezogen ist.
 
 Zum Quellstand 7.2.0.85 auf `e-112-skalierung`, vor einem Paket 1.0.85. 193 MDs,
 105 außerhalb von `Arbeitsweise/`, gegen den Bestand. Zehn Mängel, **acht
-berichtigt**, zwei nur gemeldet ([L-28.9](Befunde/LEKTOR-28.md#l-28.9) Fehlalarm in `doku-pruefen.pl`,
-[L-28.10](Befunde/LEKTOR-28.md#l-28.10) die Spiegelung blockierte wieder den Commit). Alle fünf Doku-Schranken
+berichtigt**, zwei nur gemeldet ([L-28.9](../Befunde/LEKTOR-28.md#l-28.9) Fehlalarm in `doku-pruefen.pl`,
+[L-28.10](../Befunde/LEKTOR-28.md#l-28.10) die Spiegelung blockierte wieder den Commit). Alle fünf Doku-Schranken
 liefen vorher **grün**.
 
 Der Kern: [E-112](BEFUNDE.md#e-112) war behoben und am laufenden Programm gemessen, aber
@@ -1237,53 +1237,53 @@ Der Kern: [E-112](BEFUNDE.md#e-112) war behoben und am laufenden Programm gemess
 gemessen* oder *wieder offen*, `WEITERMACHEN.md` und `ZIEL.md` nannten 7.2.0.84
 als Quellstand, `ZIEL.md` [E-103](BEFUNDE.md#e-103) *noch nicht beurteilt*, obwohl Gregor es widerlegt
 hatte. Umgekehrt stand nirgends, dass die Messung **vor** PRÜFER-22 F1 und F2
-lief ([L-28.6](Befunde/LEKTOR-28.md#l-28.6)) — und F1 war als Änderung an `PGEMBED.C` beschrieben, die
+lief ([L-28.6](../Befunde/LEKTOR-28.md#l-28.6)) — und F1 war als Änderung an `PGEMBED.C` beschrieben, die
 wirkungslos ist, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird
-([L-28.7](Befunde/LEKTOR-28.md#l-28.7), nach `ac8f030`). [E-116](BEFUNDE.md#e-116) fehlte unter *Noch offen*, die
+([L-28.7](../Befunde/LEKTOR-28.md#l-28.7), nach `ac8f030`). [E-116](BEFUNDE.md#e-116) fehlte unter *Noch offen*, die
 E-112-Prüfnachricht in `Testdaten/README.md`.
 
 ## Vierunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-29.md`)
 
-Kurzer Lauf nach [LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28), zum Stand `9f5142b` auf `e-112-skalierung`:
+Kurzer Lauf nach [LEKTOR-28](../Befunde/LEKTOR-28.md#lektor-28), zum Stand `9f5142b` auf `e-112-skalierung`:
 nur die neuen Themen, aber in allen 195 MDs gesucht. Sechs Mängel, **vier
-berichtigt**, zwei nur gemeldet ([L-29.5](Befunde/LEKTOR-29.md#l-29.5) Fehlalarm in `pruefe-befundurteile.pl`,
-[L-29.6](Befunde/LEKTOR-29.md#l-29.6) die Spiegelung eines laufenden CHRONIST blockierte den Commit).
+berichtigt**, zwei nur gemeldet ([L-29.5](../Befunde/LEKTOR-29.md#l-29.5) Fehlalarm in `pruefe-befundurteile.pl`,
+[L-29.6](../Befunde/LEKTOR-29.md#l-29.6) die Spiegelung eines laufenden CHRONIST blockierte den Commit).
 
 Der Kern: PRÜFER-22 F1 und F2 waren am Bau `11b6a3a` gemessen, und `BEFUNDE.md`
 und `CHANGELOG.md` sagten es — acht andere Dateien und ein Aufzählungspunkt im
-CHANGELOG selbst sagten weiter *„noch nicht gebaut“* ([L-29.1](Befunde/LEKTOR-29.md#l-29.1)). PRÜFER-23 und
-seine Funde N1–N5 standen in keiner MD außer dem Bericht ([L-29.2](Befunde/LEKTOR-29.md#l-29.2)). Und N1
+CHANGELOG selbst sagten weiter *„noch nicht gebaut“* ([L-29.1](../Befunde/LEKTOR-29.md#l-29.1)). PRÜFER-23 und
+seine Funde N1–N5 standen in keiner MD außer dem Bericht ([L-29.2](../Befunde/LEKTOR-29.md#l-29.2)). Und N1
 ist nur zur Hälfte behoben: die Gegenrichtung, nur `height` über 600, ergibt
 weiter `width="1"` (`msgutils.cpp:3668-3677`, aus der Quelle gelesen,
-[L-29.3](Befunde/LEKTOR-29.md#l-29.3)).
+[L-29.3](../Befunde/LEKTOR-29.md#l-29.3)).
 
 ## Fünfunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-30.md`)
 
-Kurzer Lauf nach [LEKTOR-29](Befunde/LEKTOR-29.md#lektor-29), zum Stand `f305f49` auf `e-112-skalierung`:
+Kurzer Lauf nach [LEKTOR-29](../Befunde/LEKTOR-29.md#lektor-29), zum Stand `f305f49` auf `e-112-skalierung`:
 nur die neuen Themen, aber in allen 198 MDs gesucht. Vier Mängel, **alle
 berichtigt**.
 
 Der Kern: `f305f49` hatte N1 und seine Gegenrichtung in den Einzelabschnitten
 als gemessen nachgezogen, die Stand-Köpfe in `AUFGABEN.md`, `ZIEL.md`,
 `PORTIERUNG.md`, `WEITERMACHEN.md` (Schritt 3) und `README.md` sagten weiter
-*„N1 noch nicht gemessen“* und *„194/194“* ([L-30.1](Befunde/LEKTOR-30.md#l-30.1)). In `Releases/PAKETE.md`
-standen die Messwerte unter *Nicht gemessen* ([L-30.2](Befunde/LEKTOR-30.md#l-30.2)), `Testdaten/README.md`
-zählte sechs statt sieben `<img>` ([L-30.3](Befunde/LEKTOR-30.md#l-30.3)).
+*„N1 noch nicht gemessen“* und *„194/194“* ([L-30.1](../Befunde/LEKTOR-30.md#l-30.1)). In `Releases/PAKETE.md`
+standen die Messwerte unter *Nicht gemessen* ([L-30.2](../Befunde/LEKTOR-30.md#l-30.2)), `Testdaten/README.md`
+zählte sechs statt sieben `<img>` ([L-30.3](../Befunde/LEKTOR-30.md#l-30.3)).
 
 ## Sechsunddreißigster Durchgang — 13.10.2026 (Bericht: `Befunde/LEKTOR-31.md`)
 
-Lauf nach [LEKTOR-30](Befunde/LEKTOR-30.md#lektor-30), zum Stand `2d7c922` auf `e-112-skalierung` (Quellstand
-7.2.0.87) plus [PRÜFER-25](Befunde/PRUEFER-25.md); in allen 202 MDs gesucht. Sechs Mängel, **alle
+Lauf nach [LEKTOR-30](../Befunde/LEKTOR-30.md#lektor-30), zum Stand `2d7c922` auf `e-112-skalierung` (Quellstand
+7.2.0.87) plus [PRÜFER-25](../Befunde/PRUEFER-25.md); in allen 202 MDs gesucht. Sechs Mängel, **alle
 berichtigt**; `commit-bereit.pl` war vorher grün.
 
 Der Kern: Gregors Urteile an 1.0.86 ([E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) bestätigt) standen nur in
 `BEFUNDE.md` und im Plan in `WEITERMACHEN.md`; die Stand-Köpfe sagten weiter
 *„von Gregor noch nicht bestätigt“*, *„ungemessen“* und `WEITERMACHEN.md` sogar
-*„Quellstand 7.2.0.85“* ([L-31.1](Befunde/LEKTOR-31.md#l-31.1)). `CHANGELOG.md` führte [E-115](BEFUNDE.md#e-115) als offen und
-ungemessen ([L-31.2](Befunde/LEKTOR-31.md#l-31.2)), [E-118](BEFUNDE.md#e-118)/[E-119](BEFUNDE.md#e-119) standen außer dort nirgends ([L-31.3](Befunde/LEKTOR-31.md#l-31.3)), der
-Testplan hatte keinen Schritt für 1.0.85–1.0.87 ([L-31.4](Befunde/LEKTOR-31.md#l-31.4)), die neue Prüfnachricht
-fehlte in `Testdaten/README.md` ([L-31.5](Befunde/LEKTOR-31.md#l-31.5)). Aus [PRÜFER-25](Befunde/PRUEFER-25.md): die Ursachenstelle von
-[E-118](BEFUNDE.md#e-118) war falsch, der Behebungsort von [E-119](BEFUNDE.md#e-119) zu spät ([L-31.6](Befunde/LEKTOR-31.md#l-31.6)).
+*„Quellstand 7.2.0.85“* ([L-31.1](../Befunde/LEKTOR-31.md#l-31.1)). `CHANGELOG.md` führte [E-115](BEFUNDE.md#e-115) als offen und
+ungemessen ([L-31.2](../Befunde/LEKTOR-31.md#l-31.2)), [E-118](BEFUNDE.md#e-118)/[E-119](BEFUNDE.md#e-119) standen außer dort nirgends ([L-31.3](../Befunde/LEKTOR-31.md#l-31.3)), der
+Testplan hatte keinen Schritt für 1.0.85–1.0.87 ([L-31.4](../Befunde/LEKTOR-31.md#l-31.4)), die neue Prüfnachricht
+fehlte in `Testdaten/README.md` ([L-31.5](../Befunde/LEKTOR-31.md#l-31.5)). Aus [PRÜFER-25](../Befunde/PRUEFER-25.md): die Ursachenstelle von
+[E-118](BEFUNDE.md#e-118) war falsch, der Behebungsort von [E-119](BEFUNDE.md#e-119) zu spät ([L-31.6](../Befunde/LEKTOR-31.md#l-31.6)).
 
 ## Siebenunddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-32.md`)
 
@@ -1293,107 +1293,107 @@ Kurzlauf vor dem PR `e-112-skalierung` → `main`, zum Stand `1ea7fb3` (Quellsta
 Der Kern: Gregor hat [E-117](BEFUNDE.md#e-117) am 14.10.2026 an 1.0.87 bestätigt; das stand nur im
 Kopf der Zeile in `BEFUNDE.md`. Rumpf derselben Zeile, `AUFGABEN.md`, `CHANGELOG.md`,
 `README.md`, `PORTIERUNG.md`, `ZIEL.md`, `Testdaten/README.md` und `WEITERMACHEN.md`
-sagten weiter *„von Gregor noch nicht bestätigt“* bzw. *„in Arbeit“* ([L-32.1](Befunde/LEKTOR-32.md#l-32.1)).
+sagten weiter *„von Gregor noch nicht bestätigt“* bzw. *„in Arbeit“* ([L-32.1](../Befunde/LEKTOR-32.md#l-32.1)).
 Der Einstieg in `WEITERMACHEN.md` wartete noch auf Gregors Ergebnis; jetzt steht
-dort PR, Release, dann [E-118](BEFUNDE.md#e-118) ([L-32.2](Befunde/LEKTOR-32.md#l-32.2)). TESTPLAN C4 hatte [E-117](BEFUNDE.md#e-117) offen ([L-32.3](Befunde/LEKTOR-32.md#l-32.3)),
-`Releases/PAKETE.md` *„Von Gregor noch nicht getestet“* ([L-32.4](Befunde/LEKTOR-32.md#l-32.4)).
+dort PR, Release, dann [E-118](BEFUNDE.md#e-118) ([L-32.2](../Befunde/LEKTOR-32.md#l-32.2)). TESTPLAN C4 hatte [E-117](BEFUNDE.md#e-117) offen ([L-32.3](../Befunde/LEKTOR-32.md#l-32.3)),
+`Releases/PAKETE.md` *„Von Gregor noch nicht getestet“* ([L-32.4](../Befunde/LEKTOR-32.md#l-32.4)).
 
 ## Achtunddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-33.md`)
 
 Nach Release `v1.0.87` und dem Einbau von [E-105](BEFUNDE.md#e-105) in 7.2.0.88, zum Stand
 `1d010e0f`; 31 MDs (Wurzel, `tools/`, `Testdaten/`, `Releases/`). Die führenden
 Dateien standen schon richtig; berichtigt wurden drei nackte Kennungen
-([L-33.1](Befunde/LEKTOR-33.md#l-33.1)), die `v1.0.87`-Zeile in `tools/RELEASES.md`, die außerhalb der
-Tabelle und in Ortszeit stand ([L-33.2](Befunde/LEKTOR-33.md#l-33.2)), und drei Stellen, die [E-105](BEFUNDE.md#e-105) noch
-vor dem Einbau zeigten ([L-33.3](Befunde/LEKTOR-33.md#l-33.3)).
+([L-33.1](../Befunde/LEKTOR-33.md#l-33.1)), die `v1.0.87`-Zeile in `tools/RELEASES.md`, die außerhalb der
+Tabelle und in Ortszeit stand ([L-33.2](../Befunde/LEKTOR-33.md#l-33.2)), und drei Stellen, die [E-105](BEFUNDE.md#e-105) noch
+vor dem Einbau zeigten ([L-33.3](../Befunde/LEKTOR-33.md#l-33.3)).
 
 Der Kern: [E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96) bleiben offen. Gregors Bestätigung von
 [E-112](BEFUNDE.md#e-112) an 1.0.86 gilt einem Logo in der Kleinanzeigen-Nachricht, nicht den
 zerschnittenen Doctolib-Bildern und nicht mehreren Bildern verschiedener Höhe
-([L-33.4](Befunde/LEKTOR-33.md#l-33.4)); der C3-Handgriff im Testplan nennt aber das E-112-Kriterium
-([L-33.5](Befunde/LEKTOR-33.md#l-33.5)). Offen außerdem: `release-veroeffentlichen.ps1` schreibt Ortszeit
-und hängt hinter ein Blockzitat ([L-33.6](Befunde/LEKTOR-33.md#l-33.6)).
+([L-33.4](../Befunde/LEKTOR-33.md#l-33.4)); der C3-Handgriff im Testplan nennt aber das E-112-Kriterium
+([L-33.5](../Befunde/LEKTOR-33.md#l-33.5)). Offen außerdem: `release-veroeffentlichen.ps1` schreibt Ortszeit
+und hängt hinter ein Blockzitat ([L-33.6](../Befunde/LEKTOR-33.md#l-33.6)).
 
 ## Neununddreißigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-34.md`)
 
 Nach dem Merge von PR #97 ([E-105](BEFUNDE.md#e-105), 7.2.0.88) und dem Einbau von [E-118](BEFUNDE.md#e-118) in
 7.2.0.89, zum Stand `65d066a8`; 41 MDs aus `git ls-files` ohne `Befunde/` und
 `Arbeitsweise/`. Berichtigt: [E-105](BEFUNDE.md#e-105) ohne Merge-Vermerk und mit erwartetem Test an
-1.0.88, das nie ausgeliefert wurde ([L-34.2](Befunde/LEKTOR-34.md#l-34.2)); [E-118](BEFUNDE.md#e-118) in `README.md` noch
-*„am Quelltext belegt“* ([L-34.3](Befunde/LEKTOR-34.md#l-34.3)); das Testverzeichnis 1.0.89 als nicht vorhanden
-geführt ([L-34.4](Befunde/LEKTOR-34.md#l-34.4)); TESTPLAN bekommt C5 für 1.0.89 ([L-34.5](Befunde/LEKTOR-34.md#l-34.5)).
+1.0.88, das nie ausgeliefert wurde ([L-34.2](../Befunde/LEKTOR-34.md#l-34.2)); [E-118](BEFUNDE.md#e-118) in `README.md` noch
+*„am Quelltext belegt“* ([L-34.3](../Befunde/LEKTOR-34.md#l-34.3)); das Testverzeichnis 1.0.89 als nicht vorhanden
+geführt ([L-34.4](../Befunde/LEKTOR-34.md#l-34.4)); TESTPLAN bekommt C5 für 1.0.89 ([L-34.5](../Befunde/LEKTOR-34.md#l-34.5)).
 
 Der Kern: `befund-suchen.pl` liest nur Abschnitte mit eigener Überschrift und
 übersieht damit 101 von 171 Befunden, darunter jeden ab [E-100](BEFUNDE.md#e-100) — zu
 `ImapAppend.cpp` meldet es *„ein neuer Eintrag ist berechtigt“*, obwohl
-[E-118](BEFUNDE.md#e-118) die Stelle nennt ([L-34.6](Befunde/LEKTOR-34.md#l-34.6)). Offen außerdem: PRÜFER hat [E-118](BEFUNDE.md#e-118) nicht
-nachgerechnet, 1.0.89 liegt schon bereit ([L-34.8](Befunde/LEKTOR-34.md#l-34.8)).
+[E-118](BEFUNDE.md#e-118) die Stelle nennt ([L-34.6](../Befunde/LEKTOR-34.md#l-34.6)). Offen außerdem: PRÜFER hat [E-118](BEFUNDE.md#e-118) nicht
+nachgerechnet, 1.0.89 liegt schon bereit ([L-34.8](../Befunde/LEKTOR-34.md#l-34.8)).
 
 ## Vierzigster Durchgang — 14.10.2026 (Bericht: `Befunde/LEKTOR-35.md`)
 
 Nach 7.2.0.90 ([E-118](BEFUNDE.md#e-118) Teil 2, [E-121](BEFUNDE.md#e-121), [E-122](BEFUNDE.md#e-122)), zum Stand `d7439ee6`; 41 MDs aus
 `git ls-files` ohne `Befunde/` und `Arbeitsweise/`. Der Kern: [E-118](BEFUNDE.md#e-118) stand mit
 *„BESTÄTIGT“* vorn und galt `offene-befunde.pl` als erledigt, obwohl Teil 2 nicht
-bestätigt ist; [E-121](BEFUNDE.md#e-121) und [E-122](BEFUNDE.md#e-122) fehlten in der offenen Liste ([L-35.1](Befunde/LEKTOR-35.md#l-35.1)).
+bestätigt ist; [E-121](BEFUNDE.md#e-121) und [E-122](BEFUNDE.md#e-122) fehlten in der offenen Liste ([L-35.1](../Befunde/LEKTOR-35.md#l-35.1)).
 Berichtigt außerdem: „bestätigt“ ohne Teil 2 bzw. „nicht getestet“ nach Gregors
-Test in sieben Dateien ([L-35.2](Befunde/LEKTOR-35.md#l-35.2)); das falsche IMAP-Ordnerpräfix bei [E-120](BEFUNDE.md#e-120)
-([L-35.3](Befunde/LEKTOR-35.md#l-35.3)); neue Schalter des Prüfservers ([L-35.4](Befunde/LEKTOR-35.md#l-35.4)); Zweck des Zweigs ([L-35.5](Befunde/LEKTOR-35.md#l-35.5)).
-Offen: `PRUEFER-27.md` fehlt auf dem Zweig ([L-35.6](Befunde/LEKTOR-35.md#l-35.6)), PRÜFER hat [E-121](BEFUNDE.md#e-121) nicht
-gesehen ([L-35.7](Befunde/LEKTOR-35.md#l-35.7)), 20 von 62 Testläufen am 14.10. abgeschossen ([L-35.9](Befunde/LEKTOR-35.md#l-35.9)),
-TESTPLAN-Vorschlag C6 für 1.0.90 ([L-35.11](Befunde/LEKTOR-35.md#l-35.11)).
+Test in sieben Dateien ([L-35.2](../Befunde/LEKTOR-35.md#l-35.2)); das falsche IMAP-Ordnerpräfix bei [E-120](BEFUNDE.md#e-120)
+([L-35.3](../Befunde/LEKTOR-35.md#l-35.3)); neue Schalter des Prüfservers ([L-35.4](../Befunde/LEKTOR-35.md#l-35.4)); Zweck des Zweigs ([L-35.5](../Befunde/LEKTOR-35.md#l-35.5)).
+Offen: `PRUEFER-27.md` fehlt auf dem Zweig ([L-35.6](../Befunde/LEKTOR-35.md#l-35.6)), PRÜFER hat [E-121](BEFUNDE.md#e-121) nicht
+gesehen ([L-35.7](../Befunde/LEKTOR-35.md#l-35.7)), 20 von 62 Testläufen am 14.10. abgeschossen ([L-35.9](../Befunde/LEKTOR-35.md#l-35.9)),
+TESTPLAN-Vorschlag C6 für 1.0.90 ([L-35.11](../Befunde/LEKTOR-35.md#l-35.11)).
 
 ## Einundvierzigster Durchgang — 15.10.2026 (Bericht: `Befunde/LEKTOR-36.md`)
 
 Nach 7.2.0.96 ([E-118](BEFUNDE.md#e-118) Teil 1 und 2 bestätigt, [E-121](BEFUNDE.md#e-121) Teile 1 bis 6, Teil 6 an 1.0.96
 bestätigt), zum Stand `9840ee35`; 120 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 41
 außerhalb von `Befunde/` gelesen. Der Kern: [E-118](BEFUNDE.md#e-118) stand noch in der offenen Liste
-([L-36.1](Befunde/LEKTOR-36.md#l-36.1)), Teil 2 galt an sieben Stellen als nicht bestätigt, `ZIEL.md` widersprach sich in
-einer Zelle ([L-36.2](Befunde/LEKTOR-36.md#l-36.2), [L-36.3](Befunde/LEKTOR-36.md#l-36.3)); [E-121](BEFUNDE.md#e-121) stand bei 7.2.0.90 und fehlte mit [E-122](BEFUNDE.md#e-122) im
-CHANGELOG unter *Noch offen* ([L-36.4](Befunde/LEKTOR-36.md#l-36.4)); Gregors Tests an 1.0.89 bis 1.0.96 fehlten in
-`WEITERMACHEN.md` und `Releases/PAKETE.md` ([L-36.5](Befunde/LEKTOR-36.md#l-36.5)); neue Schalter von Prüfserver und
-Messserie ([L-36.6](Befunde/LEKTOR-36.md#l-36.6)); `Testdaten/README.md` ([L-36.7](Befunde/LEKTOR-36.md#l-36.7)).
-Offen: PRÜFER hat 7.2.0.91 bis 7.2.0.96 nicht gesehen ([L-36.8](Befunde/LEKTOR-36.md#l-36.8)), der erste Satz des
-[E-121](BEFUNDE.md#e-121)-Urteils ([L-36.9](Befunde/LEKTOR-36.md#l-36.9)), feste Freigabe in `e118-serie.ps1` ([L-36.10](Befunde/LEKTOR-36.md#l-36.10)),
-Messbeleg 1.0.96 nur uncommittet ([L-36.11](Befunde/LEKTOR-36.md#l-36.11)), TESTPLAN ohne C6 ([L-36.12](Befunde/LEKTOR-36.md#l-36.12)).
+([L-36.1](../Befunde/LEKTOR-36.md#l-36.1)), Teil 2 galt an sieben Stellen als nicht bestätigt, `ZIEL.md` widersprach sich in
+einer Zelle ([L-36.2](../Befunde/LEKTOR-36.md#l-36.2), [L-36.3](../Befunde/LEKTOR-36.md#l-36.3)); [E-121](BEFUNDE.md#e-121) stand bei 7.2.0.90 und fehlte mit [E-122](BEFUNDE.md#e-122) im
+CHANGELOG unter *Noch offen* ([L-36.4](../Befunde/LEKTOR-36.md#l-36.4)); Gregors Tests an 1.0.89 bis 1.0.96 fehlten in
+`WEITERMACHEN.md` und `Releases/PAKETE.md` ([L-36.5](../Befunde/LEKTOR-36.md#l-36.5)); neue Schalter von Prüfserver und
+Messserie ([L-36.6](../Befunde/LEKTOR-36.md#l-36.6)); `Testdaten/README.md` ([L-36.7](../Befunde/LEKTOR-36.md#l-36.7)).
+Offen: PRÜFER hat 7.2.0.91 bis 7.2.0.96 nicht gesehen ([L-36.8](../Befunde/LEKTOR-36.md#l-36.8)), der erste Satz des
+[E-121](BEFUNDE.md#e-121)-Urteils ([L-36.9](../Befunde/LEKTOR-36.md#l-36.9)), feste Freigabe in `e118-serie.ps1` ([L-36.10](../Befunde/LEKTOR-36.md#l-36.10)),
+Messbeleg 1.0.96 nur uncommittet ([L-36.11](../Befunde/LEKTOR-36.md#l-36.11)), TESTPLAN ohne C6 ([L-36.12](../Befunde/LEKTOR-36.md#l-36.12)).
 
 ## Zweiundvierzigster Durchgang — 16.10.2026 (Bericht: `Befunde/LEKTOR-37.md`)
 
 Nach 7.2.0.99 (7.2.0.97 gesendete Post und N1, 7.2.0.98 [E-83](BEFUNDE.md#e-83) zweite Ursache, 7.2.0.99 Neubau
 wegen [E-124](BEFUNDE.md#e-124); 1.0.99 von Gregor bestätigt), zum Stand `8e5936aa`, vor PR und Release; 122 MDs
 aus `git ls-files` ohne `Arbeitsweise/`, davon 41 außerhalb von `Befunde/` gelesen. Der Kern:
-[E-121](BEFUNDE.md#e-121) stand an drei Stellen mit *„Restfälle N1–N3 offen“* ([L-37.1](Befunde/LEKTOR-37.md#l-37.1) bis [L-37.3](Befunde/LEKTOR-37.md#l-37.3)); [E-123](BEFUNDE.md#e-123) und
-[E-124](BEFUNDE.md#e-124) fehlten im CHANGELOG unter *Noch offen* ([L-37.2](Befunde/LEKTOR-37.md#l-37.2)); der Block *„hier weitermachen“* führte
-1.0.98 als zu testen und ein Release v1.0.97 ([L-37.4](Befunde/LEKTOR-37.md#l-37.4)); `Releases/PAKETE.md` nannte 1.0.97
-*„sein Test steht aus“* ([L-37.5](Befunde/LEKTOR-37.md#l-37.5)); `WERKZEUGE.md` kannte die Defender-Prüfung nicht ([L-37.6](Befunde/LEKTOR-37.md#l-37.6)).
-Offen: PRÜFER hat 7.2.0.97/98 nicht gesehen ([L-37.7](Befunde/LEKTOR-37.md#l-37.7)), der erste Satz des [E-121](BEFUNDE.md#e-121)-Urteils
-([L-37.8](Befunde/LEKTOR-37.md#l-37.8)), PRÜFER-30 F6 als Datenverlust-Vermutung ohne Eintrag ([L-37.9](Befunde/LEKTOR-37.md#l-37.9)), was für
-`v1.0.99` nachzuziehen ist ([L-37.11](Befunde/LEKTOR-37.md#l-37.11)), uncommittete DLLs im Hauptbaum ([L-37.13](Befunde/LEKTOR-37.md#l-37.13)).
+[E-121](BEFUNDE.md#e-121) stand an drei Stellen mit *„Restfälle N1–N3 offen“* ([L-37.1](../Befunde/LEKTOR-37.md#l-37.1) bis [L-37.3](../Befunde/LEKTOR-37.md#l-37.3)); [E-123](BEFUNDE.md#e-123) und
+[E-124](BEFUNDE.md#e-124) fehlten im CHANGELOG unter *Noch offen* ([L-37.2](../Befunde/LEKTOR-37.md#l-37.2)); der Block *„hier weitermachen“* führte
+1.0.98 als zu testen und ein Release v1.0.97 ([L-37.4](../Befunde/LEKTOR-37.md#l-37.4)); `Releases/PAKETE.md` nannte 1.0.97
+*„sein Test steht aus“* ([L-37.5](../Befunde/LEKTOR-37.md#l-37.5)); `WERKZEUGE.md` kannte die Defender-Prüfung nicht ([L-37.6](../Befunde/LEKTOR-37.md#l-37.6)).
+Offen: PRÜFER hat 7.2.0.97/98 nicht gesehen ([L-37.7](../Befunde/LEKTOR-37.md#l-37.7)), der erste Satz des [E-121](BEFUNDE.md#e-121)-Urteils
+([L-37.8](../Befunde/LEKTOR-37.md#l-37.8)), PRÜFER-30 F6 als Datenverlust-Vermutung ohne Eintrag ([L-37.9](../Befunde/LEKTOR-37.md#l-37.9)), was für
+`v1.0.99` nachzuziehen ist ([L-37.11](../Befunde/LEKTOR-37.md#l-37.11)), uncommittete DLLs im Hauptbaum ([L-37.13](../Befunde/LEKTOR-37.md#l-37.13)).
 
 ## Dreiundvierzigster Durchgang — 16.10.2026 (Bericht: `Befunde/LEKTOR-38.md`)
 
-Nach 7.2.0.100 ([PRÜFER-31](Befunde/PRUEFER-31.md) F1, F3, F4; PR #98 gemergt; Paket 1.0.100 bei Gregor), zum
+Nach 7.2.0.100 ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1, F3, F4; PR #98 gemergt; Paket 1.0.100 bei Gregor), zum
 Stand `a5604ddf`, vor dem Release v1.0.100; 124 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon
 41 außerhalb von `Befunde/` gelesen, dazu der neue README-Abschnitt *Auf einen Blick* Zeile für Zeile
 gegen die Statusspalte von `BEFUNDE.md`. Berichtigt: 7.2.0.100 fehlte bei [E-121](BEFUNDE.md#e-121) in README,
-`ZIEL.md` und CHANGELOG *Noch offen* ([L-38.1](Befunde/LEKTOR-38.md#l-38.1)); der Merge von PR #98 in `tools/ZWEIGE.md` und
-das Release-Ziel v1.0.99 in `WEITERMACHEN.md` ([L-38.2](Befunde/LEKTOR-38.md#l-38.2)); der Kopf von `tools/WERKZEUGE.md`
-([L-38.3](Befunde/LEKTOR-38.md#l-38.3)). Offen: *Auf einen Blick* nennt [E-121](BEFUNDE.md#e-121) erledigt, `BEFUNDE.md` einen offenen
-Datenverlust ([L-38.4](Befunde/LEKTOR-38.md#l-38.4)); Junk-Bewertung bei [E-47](BEFUNDE.md#e-47) und [E-78](BEFUNDE.md#e-78) fehlen in der Tabelle ([L-38.5](Befunde/LEKTOR-38.md#l-38.5));
-7.2.0.100 von keinem PRÜFER nachgerechnet ([L-38.6](Befunde/LEKTOR-38.md#l-38.6)); was für v1.0.100 nachzuziehen ist ([L-38.7](Befunde/LEKTOR-38.md#l-38.7)).
+`ZIEL.md` und CHANGELOG *Noch offen* ([L-38.1](../Befunde/LEKTOR-38.md#l-38.1)); der Merge von PR #98 in `tools/ZWEIGE.md` und
+das Release-Ziel v1.0.99 in `WEITERMACHEN.md` ([L-38.2](../Befunde/LEKTOR-38.md#l-38.2)); der Kopf von `tools/WERKZEUGE.md`
+([L-38.3](../Befunde/LEKTOR-38.md#l-38.3)). Offen: *Auf einen Blick* nennt [E-121](BEFUNDE.md#e-121) erledigt, `BEFUNDE.md` einen offenen
+Datenverlust ([L-38.4](../Befunde/LEKTOR-38.md#l-38.4)); Junk-Bewertung bei [E-47](BEFUNDE.md#e-47) und [E-78](BEFUNDE.md#e-78) fehlen in der Tabelle ([L-38.5](../Befunde/LEKTOR-38.md#l-38.5));
+7.2.0.100 von keinem PRÜFER nachgerechnet ([L-38.6](../Befunde/LEKTOR-38.md#l-38.6)); was für v1.0.100 nachzuziehen ist ([L-38.7](../Befunde/LEKTOR-38.md#l-38.7)).
 
 ## Vierundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-39.md`)
 
-Nach 7.2.0.101 ([PRÜFER-32](Befunde/PRUEFER-32.md): eigene Kennung für gesendete Post, gescheiterte Vorab-Kopie wird
+Nach 7.2.0.101 ([PRÜFER-32](../Befunde/PRUEFER-32.md): eigene Kennung für gesendete Post, gescheiterte Vorab-Kopie wird
 entfernt; [E-67](BEFUNDE.md#e-67) als behoben geführt; [E-125](BEFUNDE.md#e-125) neu), zum Stand `04a33cca`, vor dem Release
 v1.0.101; 126 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 41 außerhalb von `Befunde/` über
 Fassungsangaben und die drei Befunde gesucht, die 15 geänderten an den geänderten Stellen gelesen.
 Berichtigt: 7.2.0.101 fehlte bei [E-121](BEFUNDE.md#e-121) in README, ZIEL und CHANGELOG, [E-125](BEFUNDE.md#e-125) in der README-Tabelle
-und im CHANGELOG *Noch offen*, Prüfer-Kürzel in README und TESTPLAN ([L-39.2](Befunde/LEKTOR-39.md#l-39.2)); `FILTER.md` führte
-[E-67](BEFUNDE.md#e-67) und [E-76](BEFUNDE.md#e-76) als offen, [E-76](BEFUNDE.md#e-76) seit 11.09.2026 bestätigt ([L-39.5](Befunde/LEKTOR-39.md#l-39.5)); `messen-e67.ps1` fehlte in
-`tools/WERKZEUGE.md` ([L-39.3](Befunde/LEKTOR-39.md#l-39.3)); ZIEL und ZWEIGE ([L-39.4](Befunde/LEKTOR-39.md#l-39.4)). Offen: *Auf einen Blick* verspricht weiter
-mehr als das E-121-Urteil, PRÜFER hat 7.2.0.101 nicht gesehen ([L-39.1](Befunde/LEKTOR-39.md#l-39.1)); Kürzel in der CHANGELOG-Zeile
-[E-121](BEFUNDE.md#e-121) ([L-39.6](Befunde/LEKTOR-39.md#l-39.6)); was für v1.0.101 nachzuziehen ist, Defender für 1.0.100/1.0.101 nirgends belegt
-([L-39.7](Befunde/LEKTOR-39.md#l-39.7)).
+und im CHANGELOG *Noch offen*, Prüfer-Kürzel in README und TESTPLAN ([L-39.2](../Befunde/LEKTOR-39.md#l-39.2)); `FILTER.md` führte
+[E-67](BEFUNDE.md#e-67) und [E-76](BEFUNDE.md#e-76) als offen, [E-76](BEFUNDE.md#e-76) seit 11.09.2026 bestätigt ([L-39.5](../Befunde/LEKTOR-39.md#l-39.5)); `messen-e67.ps1` fehlte in
+`tools/WERKZEUGE.md` ([L-39.3](../Befunde/LEKTOR-39.md#l-39.3)); ZIEL und ZWEIGE ([L-39.4](../Befunde/LEKTOR-39.md#l-39.4)). Offen: *Auf einen Blick* verspricht weiter
+mehr als das E-121-Urteil, PRÜFER hat 7.2.0.101 nicht gesehen ([L-39.1](../Befunde/LEKTOR-39.md#l-39.1)); Kürzel in der CHANGELOG-Zeile
+[E-121](BEFUNDE.md#e-121) ([L-39.6](../Befunde/LEKTOR-39.md#l-39.6)); was für v1.0.101 nachzuziehen ist, Defender für 1.0.100/1.0.101 nirgends belegt
+([L-39.7](../Befunde/LEKTOR-39.md#l-39.7)).
 
 ## Fünfundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-40.md`)
 
@@ -1401,11 +1401,11 @@ Nach Release v1.0.101 (Marke auf `eec4e4e5`, PR #99, Doku PR #100) und 7.2.0.102
 `e-123-beenden-warten` ([E-123](BEFUNDE.md#e-123) Teilbehebung: Beenden wartet; [E-125](BEFUNDE.md#e-125) Gregors Entscheidung B), zum
 Stand `3ea8cbc7`; 129 MDs aus `git ls-files` ohne `Arbeitsweise/`, davon 42 außerhalb von `Befunde/`
 über Stand- und Release-Aussagen gesucht. Berichtigt: neue Prüfserver-Option, drei Parameter und
-`messen-e123.ps1` fehlten in `tools/WERKZEUGE.md` ([L-40.2](Befunde/LEKTOR-40.md#l-40.2)); v1.0.101 stand in README,
-CHANGELOG (13 Überschriften), ZIEL, PAKETE, WEITERMACHEN und ZWEIGE noch als Zukunft ([L-40.3](Befunde/LEKTOR-40.md#l-40.3));
-[E-123](BEFUNDE.md#e-123)-Teilbehebung und [E-125](BEFUNDE.md#e-125)-Entscheidung fehlten außerhalb von `BEFUNDE.md` ([L-40.4](Befunde/LEKTOR-40.md#l-40.4)).
-Offen: `offene-befunde.pl` liest [E-123](BEFUNDE.md#e-123) als erledigt ([L-40.1](Befunde/LEKTOR-40.md#l-40.1)); PRÜFER und CHRONIST für
-7.2.0.102 fällig ([L-40.5](Befunde/LEKTOR-40.md#l-40.5)).
+`messen-e123.ps1` fehlten in `tools/WERKZEUGE.md` ([L-40.2](../Befunde/LEKTOR-40.md#l-40.2)); v1.0.101 stand in README,
+CHANGELOG (13 Überschriften), ZIEL, PAKETE, WEITERMACHEN und ZWEIGE noch als Zukunft ([L-40.3](../Befunde/LEKTOR-40.md#l-40.3));
+[E-123](BEFUNDE.md#e-123)-Teilbehebung und [E-125](BEFUNDE.md#e-125)-Entscheidung fehlten außerhalb von `BEFUNDE.md` ([L-40.4](../Befunde/LEKTOR-40.md#l-40.4)).
+Offen: `offene-befunde.pl` liest [E-123](BEFUNDE.md#e-123) als erledigt ([L-40.1](../Befunde/LEKTOR-40.md#l-40.1)); PRÜFER und CHRONIST für
+7.2.0.102 fällig ([L-40.5](../Befunde/LEKTOR-40.md#l-40.5)).
 
 ## Sechsundvierzigster Durchgang — 17.10.2026 (Bericht: `Befunde/LEKTOR-41.md`)
 
@@ -1414,32 +1414,32 @@ Errors) und Gregors *„ja, e-121 behoben“* (17.10.2026, Chat), zum Stand `d33
 ohne `Arbeitsweise/`, davon 42 außerhalb von `Befunde/` durchsucht. Auftrag: nur melden, nichts ändern.
 Offen: Gregors Urteil zu [E-121](BEFUNDE.md#e-121) steht in keiner Datei, `BEFUNDE.md:288`, CHANGELOG, WEITERMACHEN, ZIEL
 und README führen den Befund offen, die zwei Restfälle in der README brauchen eine eigene Kennung
-([L-41.1](Befunde/LEKTOR-41.md#l-41.1)); `v1.0.87` als *„veröffentlicht ist“* in ZIEL und AUFGABEN ([L-41.2](Befunde/LEKTOR-41.md#l-41.2)); [E-123](BEFUNDE.md#e-123) fehlt im
-Maßstab 7.2.1.0 ([L-41.3](Befunde/LEKTOR-41.md#l-41.3)); README und CHANGELOG nennen für [E-123](BEFUNDE.md#e-123) 90 s und 7.2.0.102 statt bis zu
-5 Minuten ab 7.2.0.104 ([L-41.4](Befunde/LEKTOR-41.md#l-41.4)); README überzeichnet [E-69](BEFUNDE.md#e-69), CHANGELOG und FILTER ohne 7.2.0.106
-([L-41.5](Befunde/LEKTOR-41.md#l-41.5)); `messen-e69.ps1` und `messen-e123-doppelt.ps1` fehlen in `tools/WERKZEUGE.md` ([L-41.8](Befunde/LEKTOR-41.md#l-41.8)).
+([L-41.1](../Befunde/LEKTOR-41.md#l-41.1)); `v1.0.87` als *„veröffentlicht ist“* in ZIEL und AUFGABEN ([L-41.2](../Befunde/LEKTOR-41.md#l-41.2)); [E-123](BEFUNDE.md#e-123) fehlt im
+Maßstab 7.2.1.0 ([L-41.3](../Befunde/LEKTOR-41.md#l-41.3)); README und CHANGELOG nennen für [E-123](BEFUNDE.md#e-123) 90 s und 7.2.0.102 statt bis zu
+5 Minuten ab 7.2.0.104 ([L-41.4](../Befunde/LEKTOR-41.md#l-41.4)); README überzeichnet [E-69](BEFUNDE.md#e-69), CHANGELOG und FILTER ohne 7.2.0.106
+([L-41.5](../Befunde/LEKTOR-41.md#l-41.5)); `messen-e69.ps1` und `messen-e123-doppelt.ps1` fehlen in `tools/WERKZEUGE.md` ([L-41.8](../Befunde/LEKTOR-41.md#l-41.8)).
 
 ## Siebenundvierzigster Durchgang — 19.10.2026 (Bericht: `Befunde/LEKTOR-42.md`)
 
 Nach 7.2.0.107 bis 7.2.0.110 auf `E-101_korrektur_datei_speichern` und `e-69-meldungsflut`
-([E-101](BEFUNDE.md#e-101) dritter Teil mit [PRÜFER-37](Befunde/PRUEFER-37.md), [E-123](BEFUNDE.md#e-123) P1/P2, [E-69](BEFUNDE.md#e-69) P3, dazu R1–R4 aus
-[PRÜFER-38](Befunde/PRUEFER-38.md)), zum Stand `8d1075b0`; 233 MDs aus `git ls-files`, davon 136 ohne
+([E-101](BEFUNDE.md#e-101) dritter Teil mit [PRÜFER-37](../Befunde/PRUEFER-37.md), [E-123](BEFUNDE.md#e-123) P1/P2, [E-69](BEFUNDE.md#e-69) P3, dazu R1–R4 aus
+[PRÜFER-38](../Befunde/PRUEFER-38.md)), zum Stand `8d1075b0`; 233 MDs aus `git ls-files`, davon 136 ohne
 `Arbeitsweise/` und 42 außerhalb von `Befunde/` durchsucht. Auftrag: melden und berichtigen.
 Berichtigt: der Quellstand stand an **sechs** Stellen auf 7.2.0.106, während `Version.h` 7.2.0.110
-sagt — in `WEITERMACHEN.md:9` sogar drei Zeilen über der richtigen Paketnummer ([L-42.1](Befunde/LEKTOR-42.md#l-42.1));
+sagt — in `WEITERMACHEN.md:9` sogar drei Zeilen über der richtigen Paketnummer ([L-42.1](../Befunde/LEKTOR-42.md#l-42.1));
 der Block *HIER WEITERMACHEN* und die Kopftabelle nannten weder 1.0.110 noch das Paket, das Gregor
-wirklich hat ([L-42.2](Befunde/LEKTOR-42.md#l-42.2), [L-42.3](Befunde/LEKTOR-42.md#l-42.3)); die **Regression F3/F4** zu [E-101](BEFUNDE.md#e-101) fehlte in README, TESTPLAN,
-ZIEL, AUFGABEN und in der CHANGELOG-Zeile *Noch offen* ([L-42.4](Befunde/LEKTOR-42.md#l-42.4)); der Testplan nannte 1.0.110
-im Kopf und gab dazu keinen einzigen Handgriff — neuer Abschnitt [C6](TESTPLAN.md#c6) ([L-42.5](Befunde/LEKTOR-42.md#l-42.5)); die
+wirklich hat ([L-42.2](../Befunde/LEKTOR-42.md#l-42.2), [L-42.3](../Befunde/LEKTOR-42.md#l-42.3)); die **Regression F3/F4** zu [E-101](BEFUNDE.md#e-101) fehlte in README, TESTPLAN,
+ZIEL, AUFGABEN und in der CHANGELOG-Zeile *Noch offen* ([L-42.4](../Befunde/LEKTOR-42.md#l-42.4)); der Testplan nannte 1.0.110
+im Kopf und gab dazu keinen einzigen Handgriff — neuer Abschnitt [C6](TESTPLAN.md#c6) ([L-42.5](../Befunde/LEKTOR-42.md#l-42.5)); die
 Prüfpunkte am Beenden-Weg wurden mehrfach wie der Befund [E-123](BEFUNDE.md#e-123) gelesen, einmal von mir selbst
-— `pruefe-befundurteile.pl` hat es gefangen ([L-42.6](Befunde/LEKTOR-42.md#l-42.6)); [E-69](BEFUNDE.md#e-69) endete an vier Stellen bei
-7.2.0.106 ([L-42.7](Befunde/LEKTOR-42.md#l-42.7)); zwei Zeilen in `tools/ZWEIGE.md` standen durch Leerzeilen außerhalb der
-Tabelle ([L-42.8](Befunde/LEKTOR-42.md#l-42.8)); die Prüfanleitung zu 7.2.0.107 verlangte etwas, das auf dem einzigen
-Aufrufweg nicht vorkommt ([L-42.9](Befunde/LEKTOR-42.md#l-42.9)); zwei PRÜFER-Berichte luden zum Test nie geschnürter
-Pakete ein ([L-42.10](Befunde/LEKTOR-42.md#l-42.10)). Offen: `pruefe-befundurteile.pl` prüft sieben von Hand aufgezählte
-Dokumente ohne TESTPLAN, AUFGABEN und PAKETE ([L-42.12](Befunde/LEKTOR-42.md#l-42.12)); `doku-pruefen.pl` sieht einen
-Widerspruch innerhalb derselben Tabelle nicht ([L-42.13](Befunde/LEKTOR-42.md#l-42.13)); [E-123](BEFUNDE.md#e-123) fehlt weiter im Maßstab
-7.2.1.0 — Gregors Entscheidung ([L-42.14](Befunde/LEKTOR-42.md#l-42.14)).
+— `pruefe-befundurteile.pl` hat es gefangen ([L-42.6](../Befunde/LEKTOR-42.md#l-42.6)); [E-69](BEFUNDE.md#e-69) endete an vier Stellen bei
+7.2.0.106 ([L-42.7](../Befunde/LEKTOR-42.md#l-42.7)); zwei Zeilen in `tools/ZWEIGE.md` standen durch Leerzeilen außerhalb der
+Tabelle ([L-42.8](../Befunde/LEKTOR-42.md#l-42.8)); die Prüfanleitung zu 7.2.0.107 verlangte etwas, das auf dem einzigen
+Aufrufweg nicht vorkommt ([L-42.9](../Befunde/LEKTOR-42.md#l-42.9)); zwei PRÜFER-Berichte luden zum Test nie geschnürter
+Pakete ein ([L-42.10](../Befunde/LEKTOR-42.md#l-42.10)). Offen: `pruefe-befundurteile.pl` prüft sieben von Hand aufgezählte
+Dokumente ohne TESTPLAN, AUFGABEN und PAKETE ([L-42.12](../Befunde/LEKTOR-42.md#l-42.12)); `doku-pruefen.pl` sieht einen
+Widerspruch innerhalb derselben Tabelle nicht ([L-42.13](../Befunde/LEKTOR-42.md#l-42.13)); [E-123](BEFUNDE.md#e-123) fehlt weiter im Maßstab
+7.2.1.0 — Gregors Entscheidung ([L-42.14](../Befunde/LEKTOR-42.md#l-42.14)).
 
 
 ## Achtundvierzigster Durchgang — 20.10.2026 (Bericht: `Befunde/LEKTOR-43.md`)
@@ -1450,40 +1450,40 @@ byte-gleich, und die Datei war an drei Stellen beschädigt: der
 Aufzählungspunkt zu [E-69](BEFUNDE.md#e-69) hatte seinen Kopf verloren und hing
 als Fließtext am Punkt darüber, der Einleitungssatz brach nach „Nichts zu
 installieren. Das" ab, und eine Überschrift stand doppelt
-([L-43.1](Befunde/LEKTOR-43.md#l-43.1)). Die Notizen schrieben Gregors Messung
+([L-43.1](../Befunde/LEKTOR-43.md#l-43.1)). Die Notizen schrieben Gregors Messung
 dem Paket 1.0.112 zu — gemessen hat er an 1.0.111, 26 Minuten vor dem Bau von
-1.0.112 ([L-43.2](Befunde/LEKTOR-43.md#l-43.2)). Nach dem Release sagten sechs
-Stellen weiter `v1.0.101` ([L-43.3](Befunde/LEKTOR-43.md#l-43.3)); die README,
+1.0.112 ([L-43.2](../Befunde/LEKTOR-43.md#l-43.2)). Nach dem Release sagten sechs
+Stellen weiter `v1.0.101` ([L-43.3](../Befunde/LEKTOR-43.md#l-43.3)); die README,
 auf die die Notizen für die „vollständige Liste" verweisen, kannte
 [E-128](BEFUNDE.md#e-128), [E-129](BEFUNDE.md#e-129) und
 [E-131](BEFUNDE.md#e-131) mit keinem Wort
-([L-43.4](Befunde/LEKTOR-43.md#l-43.4)); der Testplan nannte im Kopf 1.0.112 und
+([L-43.4](../Befunde/LEKTOR-43.md#l-43.4)); der Testplan nannte im Kopf 1.0.112 und
 schickte Gregor nach 1.0.110, mit zwei Schritten, die er längst bestätigt hatte
-([L-43.5](Befunde/LEKTOR-43.md#l-43.5)); [E-131](BEFUNDE.md#e-131) stand als
+([L-43.5](../Befunde/LEKTOR-43.md#l-43.5)); [E-131](BEFUNDE.md#e-131) stand als
 verwaiste Tabellenzeile in der letzten Zeile von `BEFUNDE.md` statt im
-Verzeichnis ([L-43.6](Befunde/LEKTOR-43.md#l-43.6)); die Liste „Noch offen"
+Verzeichnis ([L-43.6](../Befunde/LEKTOR-43.md#l-43.6)); die Liste „Noch offen"
 vom heutigen Tag kannte drei der vier neuen Befunde nicht
-([L-43.7](Befunde/LEKTOR-43.md#l-43.7)); `tools/RELEASES.md` kannte `v1.0.112`
+([L-43.7](../Befunde/LEKTOR-43.md#l-43.7)); `tools/RELEASES.md` kannte `v1.0.112`
 nicht, und seine beiden jüngsten Zeilen standen außerhalb der Tabelle
-([L-43.8](Befunde/LEKTOR-43.md#l-43.8)).
+([L-43.8](../Befunde/LEKTOR-43.md#l-43.8)).
 
 **Offen:** `pruefe-release-buchfuehrung.pl` hängt im `pre-commit`, das Tag
 entsteht danach — die Unwahrheit entsteht in einem Augenblick, den keine
-Schranke sieht ([L-43.11](Befunde/LEKTOR-43.md#l-43.11));
+Schranke sieht ([L-43.11](../Befunde/LEKTOR-43.md#l-43.11));
 `paket-bereit.pl` gibt acht Schranken als „alle" aus
-([L-43.12](Befunde/LEKTOR-43.md#l-43.12)); `ist_standaussage()` hört auf
-Wörter, nicht auf Aussagen ([L-43.13](Befunde/LEKTOR-43.md#l-43.13)); die
-PRÜFER-Berichte haben vier Nummernkreise, und [`P-39`](Befunde/PRUEFER-14.md#p-39) ist an einen anderen
-Befund vergeben ([L-43.14](Befunde/LEKTOR-43.md#l-43.14)); kein Werkzeug prüft
+([L-43.12](../Befunde/LEKTOR-43.md#l-43.12)); `ist_standaussage()` hört auf
+Wörter, nicht auf Aussagen ([L-43.13](../Befunde/LEKTOR-43.md#l-43.13)); die
+PRÜFER-Berichte haben vier Nummernkreise, und [`P-39`](../Befunde/PRUEFER-14.md#p-39) ist an einen anderen
+Befund vergeben ([L-43.14](../Befunde/LEKTOR-43.md#l-43.14)); kein Werkzeug prüft
 die Release-Notizen auf Befundurteile
-([L-43.15](Befunde/LEKTOR-43.md#l-43.15)).
+([L-43.15](../Befunde/LEKTOR-43.md#l-43.15)).
 
 ## Nachtrag am 20.10.2026 (kein eigener Durchgang)
 **Nachtrag am 20.10.2026 — nicht vom LEKTOR, sondern beim Versionssprung auf
-7.2.0.111.** [LEKTOR-42](Befunde/LEKTOR-42.md) nennt an drei Stellen 7.2.0.110
+7.2.0.111.** [LEKTOR-42](../Befunde/LEKTOR-42.md) nennt an drei Stellen 7.2.0.110
 als Quellstand. Der Bericht ist ein **Rückblick** auf den 19.10.2026 und bleibt
 inhaltlich unverändert; die drei Stellen tragen jetzt den Vermerk, dass der
-Quellstand seit dem 20.10.2026 **7.2.0.111** ist. **Weiter fortgeschrieben am 20.10.2026 ([LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43)):** seit 13:41 Uhr ist der Quellstand **7.2.0.112**, und seit 11:55 UTC ist `v1.0.112` veröffentlicht. `pruefe-stand-md.pl` hat den
+Quellstand seit dem 20.10.2026 **7.2.0.111** ist. **Weiter fortgeschrieben am 20.10.2026 ([LEKTOR-43](../Befunde/LEKTOR-43.md#lektor-43)):** seit 13:41 Uhr ist der Quellstand **7.2.0.112**, und seit 11:55 UTC ist `v1.0.112` veröffentlicht. `pruefe-stand-md.pl` hat den
 Nachtrag erzwungen — ein Bericht, der ohne Hinweis eine überholte Fassung als
 gültig ausgibt, ist eine Unwahrheit auf `main`.
 
@@ -1491,40 +1491,40 @@ gültig ausgibt, ist eine Unwahrheit auf `main`.
 
 **249 MD-Dateien, ohne `Arbeitsweise/` 148, davon 47 außerhalb von
 `Befunde/`.** Anlass: zwei Fassungssprünge seit
-[LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43) — **7.2.0.113 ist als `v1.0.113`
+[LEKTOR-43](../Befunde/LEKTOR-43.md#lektor-43) — **7.2.0.113 ist als `v1.0.113`
 veröffentlicht** (20.10.2026, 13:01:36 UTC), **7.2.0.114 ist nicht geschnürt**.
 Dazu drei Texte nach außen an einem Tag: die veröffentlichten Notizen, der
 freigegebene Issue-Beitrag und die bei Microsoft eingereichte Fehlalarmmeldung.
 
 **Der Befund über die Befunde:** `commit-bereit.pl` meldete zu Beginn **32 von
 32 grün**, während `Releases/PAKETE.md` ein Paket führte, das es nicht gibt
-([L-44.5](Befunde/LEKTOR-44.md#l-44.5)), `WEITERMACHEN.md` der Fassung
+([L-44.5](../Befunde/LEKTOR-44.md#l-44.5)), `WEITERMACHEN.md` der Fassung
 `v1.0.113` die Prüfsumme von `v1.0.112` gab
-([L-44.2](Befunde/LEKTOR-44.md#l-44.2)) und die README einen behobenen,
+([L-44.2](../Befunde/LEKTOR-44.md#l-44.2)) und die README einen behobenen,
 veröffentlichten Fehler als offen auswies
-([L-44.1](Befunde/LEKTOR-44.md#l-44.1)). Die Schranken prüfen, **ob** eine
+([L-44.1](../Befunde/LEKTOR-44.md#l-44.1)). Die Schranken prüfen, **ob** eine
 Nummer vorkommt, nicht **wem** sie gehört
-([L-44.11](Befunde/LEKTOR-44.md#l-44.11)).
+([L-44.11](../Befunde/LEKTOR-44.md#l-44.11)).
 
 **Weiter berichtigt:** drei Dokumente behaupteten eine Ursache, die wir im
 Issue selbst zwanzig Minuten vorher zurückgenommen hatten
-([L-44.3](Befunde/LEKTOR-44.md#l-44.3)); die veröffentlichten Notizen zu
+([L-44.3](../Befunde/LEKTOR-44.md#l-44.3)); die veröffentlichten Notizen zu
 `v1.0.113` tragen dieselben zwei kopflosen Stellen wie `v1.0.112` — der Ordner
 wurde aus dem **unreparierten** Text kopiert
-([L-44.4](Befunde/LEKTOR-44.md#l-44.4),
-[L-44.12](Befunde/LEKTOR-44.md#l-44.12)); die Defender-Messung, mit der wir
+([L-44.4](../Befunde/LEKTOR-44.md#l-44.4),
+[L-44.12](../Befunde/LEKTOR-44.md#l-44.12)); die Defender-Messung, mit der wir
 gegenüber Microsoft argumentieren, stand in keinem Befund
-([L-44.6](Befunde/LEKTOR-44.md#l-44.6)); `CHANGELOG.md`, `AUFGABEN.md`,
+([L-44.6](../Befunde/LEKTOR-44.md#l-44.6)); `CHANGELOG.md`, `AUFGABEN.md`,
 `PORTIERUNG.md`, `ZIEL.md` und `TESTPLAN.md` standen auf überholten Fassungen,
 jede mit richtigem Datum im Kopf
-([L-44.7](Befunde/LEKTOR-44.md#l-44.7)); `tools/RELEASES.md` hatte seine
+([L-44.7](../Befunde/LEKTOR-44.md#l-44.7)); `tools/RELEASES.md` hatte seine
 jüngste Zeile wieder außerhalb der Tabelle
-([L-44.9](Befunde/LEKTOR-44.md#l-44.9)); die Notizen zu `v1.0.113` warnen nicht
-vor [E-132](BEFUNDE.md#e-132) ([L-44.10](Befunde/LEKTOR-44.md#l-44.10)).
+([L-44.9](../Befunde/LEKTOR-44.md#l-44.9)); die Notizen zu `v1.0.113` warnen nicht
+vor [E-132](BEFUNDE.md#e-132) ([L-44.10](../Befunde/LEKTOR-44.md#l-44.10)).
 
 **Satz für Satz geprüft:** `Releases/ISSUE-102-ANTWORT.md` — jede Behauptung
 belegt, drei Dinge ungesagt; der freigegebene Wortlaut **unverändert**, die
-drei Punkte stehen darüber ([L-44.8](Befunde/LEKTOR-44.md#l-44.8)).
+drei Punkte stehen darüber ([L-44.8](../Befunde/LEKTOR-44.md#l-44.8)).
 
 **Nachtrag am selben Abend — gegen mich selbst.** Mein eigener Verweis-Prüfer
 meldete 20 tote Markdown-Links; ich habe 16 davon in acht Berichten unter
@@ -1533,7 +1533,7 @@ Rückstrichen oder in einem Blockzitat — sie sind der **Beleg**, mit dem der
 jeweilige Bericht seinen eigenen Fund zeigt. Die acht Dateien stehen wieder
 unverändert da. Echte tote Verweise im Bestand: **null**; die einzigen zwei
 waren meine eigenen, eine halbe Stunde alt
-([L-44.14](Befunde/LEKTOR-44.md#l-44.14)).
+([L-44.14](../Befunde/LEKTOR-44.md#l-44.14)).
 
 ## Fünfzigster Durchgang — Nachlauf vor 1.0.114, 21.10.2026 (Bericht: `Befunde/LEKTOR-45.md`)
 
@@ -1546,17 +1546,17 @@ Testverzeichnis bei Gregor und keine Veröffentlichung.
 **Drei Sätze behaupteten den Stand falsch, alle drei berichtigt:**
 `Releases/PAKETE.md` bewies mit Datum, es gebe kein Verzeichnis
 `Releases/1.0.114/` — es entstand **sechs Minuten** nach diesem Beweis
-([L-45.2](Befunde/LEKTOR-45.md#l-45.2)); die Release-Notizen zu 1.0.114
+([L-45.2](../Befunde/LEKTOR-45.md#l-45.2)); die Release-Notizen zu 1.0.114
 zählten Defender **zweimal an einem Tag**, während
 [E-124](BEFUNDE.md#e-124), `Releases/PAKETE.md` und `WEITERMACHEN.md`
 **dreimal** zählen und `Releases/DEFENDER-FEHLALARM.md` mit *„three separate
 builds"* bei Microsoft **eingereicht** ist
-([L-45.3](Befunde/LEKTOR-45.md#l-45.3)); und der Block *HIER WEITERMACHEN*
+([L-45.3](../Befunde/LEKTOR-45.md#l-45.3)); und der Block *HIER WEITERMACHEN*
 meldete `PR #119` als offen, obwohl er elf Stunden vor dem Schreiben gemergt
-worden war ([L-45.4](Befunde/LEKTOR-45.md#l-45.4)).
+worden war ([L-45.4](../Befunde/LEKTOR-45.md#l-45.4)).
 
 **Die neue Zeile in `tools/ZWEIGE.md` hält jeder Gegenprobe stand**
-([L-45.1](Befunde/LEKTOR-45.md#l-45.1)) — Zweig vorhanden und in `main`, Datum
+([L-45.1](../Befunde/LEKTOR-45.md#l-45.1)) — Zweig vorhanden und in `main`, Datum
 richtig, Verweise treffen, PR #120 trägt genau das, was die Zeile behauptet.
 Dass sie zwischen 19.10. und 20.10. steht, ist kein Fehler der Zeile: die
 Tabelle hat zwei Sortierrichtungen, und jede neue Zeile wird seit dem
@@ -1565,22 +1565,22 @@ Tabelle hat zwei Sortierrichtungen, und jede neue Zeile wird seit dem
 **Das Urteil zum Paket: ja, 1.0.114 darf so geschnürt werden.** Nach diesen
 drei Berichtigungen behauptet kein geprüftes Dokument mehr etwas Unwahres über
 1.0.114; die SHA-256 ist als Platzhalter kenntlich, und die Notizen tragen
-**nicht** den Textschaden aus [L-43.1](Befunde/LEKTOR-43.md#l-43.1) —
+**nicht** den Textschaden aus [L-43.1](../Befunde/LEKTOR-43.md#l-43.1) —
 gemessen, 0 Absätze mit ungerader Zahl von `**`. **Zwei Dinge treten beim
 Veröffentlichen von selbst wieder ein**, wenn niemand sie tut:
 `tools/release-veroeffentlichen.ps1` ruft **keine einzige** `pruefe-*`-Schranke
-auf ([L-43.11](Befunde/LEKTOR-43.md#l-43.11)), und es hängt die neue Zeile mit
+auf ([L-43.11](../Befunde/LEKTOR-43.md#l-43.11)), und es hängt die neue Zeile mit
 `AppendAllText` ans Dateiende von `tools/RELEASES.md` statt in die Tabelle —
 nach `v1.0.112` und `v1.0.113` wäre das das **dritte Mal**
-([L-43.12](Befunde/LEKTOR-43.md#l-43.12)).
+([L-43.12](../Befunde/LEKTOR-43.md#l-43.12)).
 
-Alles, was seit [LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43) und
-[LEKTOR-44](Befunde/LEKTOR-44.md#lektor-44) offen ist, steht jetzt als **eine**
-Liste in [L-45.5](Befunde/LEKTOR-45.md#l-45.5): vier Punkte erledigt
-(darunter [L-44.9](Befunde/LEKTOR-44.md#l-44.9)), elf offen, vier davon
+Alles, was seit [LEKTOR-43](../Befunde/LEKTOR-43.md#lektor-43) und
+[LEKTOR-44](../Befunde/LEKTOR-44.md#lektor-44) offen ist, steht jetzt als **eine**
+Liste in [L-45.5](../Befunde/LEKTOR-45.md#l-45.5): vier Punkte erledigt
+(darunter [L-44.9](../Befunde/LEKTOR-44.md#l-44.9)), elf offen, vier davon
 Gregors Entscheidung. **Die Frage, ob die veröffentlichte Beschreibung von
 `v1.0.113` berichtigt wird, ist damit zum dritten Mal offen** — sie stand
-schon für `v1.0.112` in [LEKTOR-43](Befunde/LEKTOR-43.md#lektor-43).
+schon für `v1.0.112` in [LEKTOR-43](../Befunde/LEKTOR-43.md#lektor-43).
 
 ## Einundfünfzigster Durchgang — Nachlauf vor der Veröffentlichung von `v1.0.117`, 21.10.2026 (Bericht: `Befunde/LEKTOR-46.md`)
 
@@ -1599,24 +1599,24 @@ Release-Notizen eines anderen Pakets** — `335751a9…eb1a1` in
 überhaupt keine; ein Release hätte entweder die 1.0.114-Notizen bekommen (241
 statt 243 Tests, kein Wort zu den Behebungen aus 115, 116 und 117) oder gar
 keine. Beides berichtigt, `Releases/1.0.117/RELEASE-NOTIZEN.md` neu angelegt
-([L-46.3](Befunde/LEKTOR-46.md#l-46.3)).
+([L-46.3](../Befunde/LEKTOR-46.md#l-46.3)).
 
 **Die Reste der Versionsschleife, alle berichtigt:** `WEITERMACHEN.md` nannte in
 **derselben Tabelle** 7.2.0.114 und 1.0.117 und forderte unten, 1.0.114 zu
 schnüren und als `v1.0.114` zu veröffentlichen
-([L-46.1](Befunde/LEKTOR-46.md#l-46.1)); der `CHANGELOG` schloss **unter der
+([L-46.1](../Befunde/LEKTOR-46.md#l-46.1)); der `CHANGELOG` schloss **unter der
 Überschrift 7.2.0.117** mit *„Also 1.0.116"* und einer Tabelle zweier Bauten
-unter einem Namen ([L-46.2](Befunde/LEKTOR-46.md#l-46.2));
+unter einem Namen ([L-46.2](../Befunde/LEKTOR-46.md#l-46.2));
 `Releases/PAKETE.md` bewies zum dritten Mal in Folge die Abwesenheit des
 1.0.114-Pakets, das seit 07:07 als ZIP vorliegt
-([L-46.4](Befunde/LEKTOR-46.md#l-46.4)); der Testplan trug 1.0.117 im Titel und
+([L-46.4](../Befunde/LEKTOR-46.md#l-46.4)); der Testplan trug 1.0.117 im Titel und
 schickte Gregor an 1.0.115, das er zugleich für ungeschnürt erklärte
-([L-46.5](Befunde/LEKTOR-46.md#l-46.5)); der freigegebene Beitrag an den Melder
-nannte viermal `v1.0.114` ([L-46.6](Befunde/LEKTOR-46.md#l-46.6)); die README
+([L-46.5](../Befunde/LEKTOR-46.md#l-46.5)); der freigegebene Beitrag an den Melder
+nannte viermal `v1.0.114` ([L-46.6](../Befunde/LEKTOR-46.md#l-46.6)); die README
 erklärte die Behebung für ungeschnürt
-([L-46.7](Befunde/LEKTOR-46.md#l-46.7)).
+([L-46.7](../Befunde/LEKTOR-46.md#l-46.7)).
 
-**Die Zahlen stimmen überein** ([L-46.8](Befunde/LEKTOR-46.md#l-46.8)): 243
+**Die Zahlen stimmen überein** ([L-46.8](../Befunde/LEKTOR-46.md#l-46.8)): 243
 Tests in sechs Dokumenten, die rot/grün-Messung (keine Rückfrage und 29
 Einträge in die fremde Sicherung an 1.0.116, Rückfrage an 1.0.117) in vier,
 Defender dreimal am 20.10.2026 in fünf, `v1.0.113` als veröffentlichter Stand
@@ -1645,30 +1645,30 @@ Code, die Auswahl im Baum von (0) auf (1) — stehen in `BEFUNDE.md`,
 *Einfügen*) stehen ausdrücklich als nicht gemessen da, und die erste
 Fehleinstufung *„Originalverhalten"* ist in [E-134](BEFUNDE.md#e-134) ausdrücklich zurückgenommen —
 Quelltext original, Verhalten verändert
-([L-47.13](Befunde/LEKTOR-47.md#l-47.13)).
+([L-47.13](../Befunde/LEKTOR-47.md#l-47.13)).
 
 **Alle zwölf Funde liegen in der Buchführung ringsum.** Der schwerste:
 `Releases/PAKETE.md` führte **1.0.119 als geschnürt und bei Gregor
 bereitgestellt** — es gibt weder das ZIP noch das Verzeichnis
-([L-47.1](Befunde/LEKTOR-47.md#l-47.1)). Dazu stand `WEITERMACHEN.md` zum
+([L-47.1](../Befunde/LEKTOR-47.md#l-47.1)). Dazu stand `WEITERMACHEN.md` zum
 zweiten Mal an einem Tag mit zwei Fassungen in derselben Tabelle
-([L-47.2](Befunde/LEKTOR-47.md#l-47.2)), und sein Block *HIER WEITERMACHEN*
+([L-47.2](../Befunde/LEKTOR-47.md#l-47.2)), und sein Block *HIER WEITERMACHEN*
 verlangte zum dritten Mal in Folge ein Release, das es schon gibt — `v1.0.117`,
 veröffentlicht um 07:56:56 UTC, Beitrag an den Melder um 08:13:26 UTC
-abgeschickt ([L-47.3](Befunde/LEKTOR-47.md#l-47.3)). Vier weitere Stellen gaben
+abgeschickt ([L-47.3](../Befunde/LEKTOR-47.md#l-47.3)). Vier weitere Stellen gaben
 weiter `v1.0.113` als veröffentlichten Stand aus
-([L-47.4](Befunde/LEKTOR-47.md#l-47.4) bis
-[L-47.6](Befunde/LEKTOR-47.md#l-47.6)), der Testplan trug *„241 Tests"* unter
-dem Plan zu 1.0.119 ([L-47.7](Befunde/LEKTOR-47.md#l-47.7)), `ZIEL.md` stand
-fünf Fassungen zurück ([L-47.8](Befunde/LEKTOR-47.md#l-47.8)) — und die vier
+([L-47.4](../Befunde/LEKTOR-47.md#l-47.4) bis
+[L-47.6](../Befunde/LEKTOR-47.md#l-47.6)), der Testplan trug *„241 Tests"* unter
+dem Plan zu 1.0.119 ([L-47.7](../Befunde/LEKTOR-47.md#l-47.7)), `ZIEL.md` stand
+fünf Fassungen zurück ([L-47.8](../Befunde/LEKTOR-47.md#l-47.8)) — und die vier
 Stellen mit *„09:56:57 UTC"* nennen in Wahrheit **Ortszeit**, abgeschrieben aus
 der Ortszeitspalte von `tools/RELEASES.md`
-([L-47.9](Befunde/LEKTOR-47.md#l-47.9)).
+([L-47.9](../Befunde/LEKTOR-47.md#l-47.9)).
 
 **Das Urteil: ja, die Papiere tragen** — nach diesen zwölf Berichtigungen, und
 unter der Bedingung, dass beim Schnüren vier Stellen nachgezogen werden, die
 jetzt ausdrücklich *„noch nicht geschnürt"* sagen. **Dieselbe Schranke fehlt
-zum vierten Mal:** die Prüfung aus [L-44.11](Befunde/LEKTOR-44.md#l-44.11),
+zum vierten Mal:** die Prüfung aus [L-44.11](../Befunde/LEKTOR-44.md#l-44.11),
 die *„veröffentlicht ist …"* und *„geschnürt ist …"* gegen `gh release view`,
 `ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen andere
 Dokumente. Sie hätte sechs der zwölf Funde gefangen, darunter alle vier
@@ -1677,7 +1677,7 @@ schweren.
 ## Dreiundfünfzigster Durchgang — die Papiere zu 1.0.120, 21.10.2026 nachmittags (Bericht: `Befunde/LEKTOR-48.md`)
 
 **Kein voller Durchgang.** Nur die Papiere zu [E-135](BEFUNDE.md#e-135) und
-dem Stand 7.2.0.120, drei Stunden nach [LEKTOR-47](Befunde/LEKTOR-47.md).
+dem Stand 7.2.0.120, drei Stunden nach [LEKTOR-47](../Befunde/LEKTOR-47.md).
 Dazwischen ist **1.0.119 geschnürt und bei Gregor bereitgestellt worden**
 (13:07), und der Quellstand ist auf 1.0.120 gegangen.
 
@@ -1687,37 +1687,37 @@ Dazwischen ist **1.0.119 geschnürt und bei Gregor bereitgestellt worden**
 `1158d27c` — stehen in `BEFUNDE.md`, `CHANGELOG.md`, `Releases/PAKETE.md`,
 `PORTIERUNG.md` und `ZIEL.md` in **derselben** Form; keine einzige war falsch.
 **Drei Lücken stehen ausdrücklich da**, darunter eine widerlegte eigene
-Vorhersage: [PRÜFER-43](Befunde/PRUEFER-43.md#k9) K9 ließ sich an fünf
+Vorhersage: [PRÜFER-43](../Befunde/PRUEFER-43.md#k9) K9 ließ sich an fünf
 Klickhöhen in **beiden** Fassungen nicht nachstellen und ist als **Sicherung**
 eingebaut, nicht als Behebung — fünfmal so aufgeschrieben, jedesmal mit Grund
-([L-48.12](Befunde/LEKTOR-48.md#l-48.12)).
+([L-48.12](../Befunde/LEKTOR-48.md#l-48.12)).
 
 **Elf Funde, wieder alle in der Buchführung ringsum.** `WEITERMACHEN.md:9`
 nannte zum **dritten Mal an einem Tag** zwei Fassungen in derselben Tabelle
-([L-48.1](Befunde/LEKTOR-48.md#l-48.1)), und sein Block *HIER WEITERMACHEN*
+([L-48.1](../Befunde/LEKTOR-48.md#l-48.1)), und sein Block *HIER WEITERMACHEN*
 verlangte zum **vierten Mal in Folge** etwas, das es schon gibt — diesmal das
-Paket 1.0.119 von 13:07 ([L-48.2](Befunde/LEKTOR-48.md#l-48.2)). `ZIEL.md:51`
-stand auf 7.2.0.119 ([L-48.3](Befunde/LEKTOR-48.md#l-48.3)), `AUFGABEN.md:3`
+Paket 1.0.119 von 13:07 ([L-48.2](../Befunde/LEKTOR-48.md#l-48.2)). `ZIEL.md:51`
+stand auf 7.2.0.119 ([L-48.3](../Befunde/LEKTOR-48.md#l-48.3)), `AUFGABEN.md:3`
 nannte in **einem** Absatz `v1.0.117` und `v1.0.113`
-([L-48.4](Befunde/LEKTOR-48.md#l-48.4)). Der schwerste für Gregor war eine
+([L-48.4](../Befunde/LEKTOR-48.md#l-48.4)). Der schwerste für Gregor war eine
 **Lücke**: `TESTPLAN.md` trug *„Paket 1.0.120"* im Titel und **keinen
 Handgriff zu [E-135](BEFUNDE.md#e-135)** im Text — [C10](TESTPLAN.md#c10) ist
-angelegt ([L-48.5](Befunde/LEKTOR-48.md#l-48.5)).
+angelegt ([L-48.5](../Befunde/LEKTOR-48.md#l-48.5)).
 
 **Zwei Schranken lesen Verneinungen nicht.** `pruefe-original-belegt.pl` hielt
 den Satz *„Ob ein Hermes 7.1 sich ebenso verhielt, ist **nicht** gemessen"*
 für den Beleg *„am Original gemessen"* — gemessen an einer eigenen Probe,
 behoben, Selbsttest jetzt **16 von 16**
-([L-48.7](Befunde/LEKTOR-48.md#l-48.7)); offen bleibt, dass sie ein **Zitat**
+([L-48.7](../Befunde/LEKTOR-48.md#l-48.7)); offen bleibt, dass sie ein **Zitat**
 eines zurückgenommenen Urteils für ein eigenes hält. `doku-pruefen.pl` las
 denselben Fehler in die andere Richtung
-([L-48.10](Befunde/LEKTOR-48.md#l-48.10)).
+([L-48.10](../Befunde/LEKTOR-48.md#l-48.10)).
 
 **Das Urteil: ja, die Papiere tragen** — nach diesen elf Berichtigungen.
 **Dieselbe Schranke fehlt zum fünften Mal:** die Prüfung aus
-[L-44.11](Befunde/LEKTOR-44.md#l-44.11). Sie hätte in diesem Durchgang
-[L-48.1](Befunde/LEKTOR-48.md#l-48.1) bis
-[L-48.4](Befunde/LEKTOR-48.md#l-48.4) gefangen — **alle vier schweren Funde
+[L-44.11](../Befunde/LEKTOR-44.md#l-44.11). Sie hätte in diesem Durchgang
+[L-48.1](../Befunde/LEKTOR-48.md#l-48.1) bis
+[L-48.4](../Befunde/LEKTOR-48.md#l-48.4) gefangen — **alle vier schweren Funde
 der Buchführung.**
 
 ## Vierundfünfzigster Durchgang — nach der Veröffentlichung von `v1.0.120`, 21.10.2026 abends (Bericht: `Befunde/LEKTOR-49.md`)
@@ -1727,12 +1727,12 @@ der Buchführung.**
 Seite nach außen, die Verweise und die Papiere zum Release.
 
 **Der schwerste Fund ist eine Wiederholung.** Zwischen
-[LEKTOR-48](Befunde/LEKTOR-48.md) am Nachmittag und diesem Durchgang ist
+[LEKTOR-48](../Befunde/LEKTOR-48.md) am Nachmittag und diesem Durchgang ist
 1.0.120 geschnürt **und als `v1.0.120` veröffentlicht** worden — und **fünf**
 führende Dokumente sagten weiterhin *„nicht veröffentlicht"* oder
 *„`v1.0.117` ist der veröffentlichte Stand"*: `ZIEL.md`, `PORTIERUNG.md`,
 `WEITERMACHEN.md` an zwei Stellen und `Releases/PAKETE.md`
-([L-49.1](Befunde/LEKTOR-49.md#l-49.1)). `WEITERMACHEN.md` widersprach sich
+([L-49.1](../Befunde/LEKTOR-49.md#l-49.1)). `WEITERMACHEN.md` widersprach sich
 dabei **in sich** — Zeile 46 richtig, Zeile 9 und 140 falsch —, und Punkt 1
 ihrer Arbeitsliste verlangte ein Paket, das es seit fünf Stunden gibt. Das
 ist der **vierte** Fall dieser Art an einem einzigen Tag. **Beide dafür
@@ -1748,7 +1748,7 @@ S/MIME fallen aus"* — während das lokale Adressbuch in `Eudora.exe`
 ([E-134](BEFUNDE.md#e-134), [E-135](BEFUNDE.md#e-135)). Die Verwechslung
 kommt von `EudoraBk.dll`, die nach Adressbuch klingt, aber der
 Protokollanbieter des Verzeichnisdienstes ist
-([L-49.4](Befunde/LEKTOR-49.md#l-49.4)). Gefunden hat das Gregor.
+([L-49.4](../Befunde/LEKTOR-49.md#l-49.4)). Gefunden hat das Gregor.
 Berichtigt sind **zehn** Stellen — `README.md`, `CHANGELOG.md`,
 `AUFGABEN.md`, `WEITERMACHEN.md`, `PORTIERUNG.md`,
 `Pruefung/PRUEFUNG-PAKET.md` und `PRUEFUNG-BRANCH.md`. **Nicht berichtigt
@@ -1757,27 +1757,27 @@ sind das Protokoll dessen, was hinausgegangen ist, und ihre Änderung ist
 Gregors Entscheidung.
 
 **Die Seite nach außen trug drei Mängel.**
-[MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) sagte von sich selbst, sie
-sei auf Deutsch ([L-49.8](Befunde/LEKTOR-49.md#l-49.8)); die Begründung
+[MELDUNGEN-VON-AUSSEN.md](../MELDUNGEN-VON-AUSSEN.md) sagte von sich selbst, sie
+sei auf Deutsch ([L-49.8](../Befunde/LEKTOR-49.md#l-49.8)); die Begründung
 *„both load paths read only up to `Bars`"* stimmt für den zweiten Ladeweg
 nicht — er liest `Bars` überhaupt nicht
-([L-49.9](Befunde/LEKTOR-49.md#l-49.9)); und **die einzige offene Zusage an
+([L-49.9](../Befunde/LEKTOR-49.md#l-49.9)); und **die einzige offene Zusage an
 einen Melder von außen** (`#102-4`, `MRUFloatYPos=-682908189`) stand in
 keinem Befund und in keiner Arbeitsliste
-([L-49.10](Befunde/LEKTOR-49.md#l-49.10)). Alle drei berichtigt, der dritte
+([L-49.10](../Befunde/LEKTOR-49.md#l-49.10)). Alle drei berichtigt, der dritte
 in [E-131](BEFUNDE.md#e-131) fortgeschrieben und am Quelltext beantwortet.
 Dazu stand [E-132](BEFUNDE.md#e-132) auf *„noch nicht ausgeliefert"*, während
 genau die Zeile, die darauf verlinkt, dem Melder *„released in `v1.0.120`"*
-sagt ([L-49.2](Befunde/LEKTOR-49.md#l-49.2)).
+sagt ([L-49.2](../Befunde/LEKTOR-49.md#l-49.2)).
 
 **Zwei offene Fragen sind am Quelltext beantwortet worden**, beide ohne Bau:
 `LoadBarState` liest die `Eudora.ini`, nicht die Registry
-([L-49.3](Befunde/LEKTOR-49.md#l-49.3)), und `E131PositionIstBrauchbar`
+([L-49.3](../Befunde/LEKTOR-49.md#l-49.3)), und `E131PositionIstBrauchbar`
 fängt auch einen beliebigen Müllwert — aber erst beim **Schreiben**
-([L-49.10](Befunde/LEKTOR-49.md#l-49.10)).
+([L-49.10](../Befunde/LEKTOR-49.md#l-49.10)).
 
 **Das Urteil: ja, die Papiere tragen** — nach fünfzehn Funden, davon dreizehn
 berichtigt. **Die Schranke aus
-[L-44.11](Befunde/LEKTOR-44.md#l-44.11) fehlt zum sechsten Mal**; sie hätte
-[L-49.1](Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses
+[L-44.11](../Befunde/LEKTOR-44.md#l-44.11) fehlt zum sechsten Mal**; sie hätte
+[L-49.1](../Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses
 Durchgangs.

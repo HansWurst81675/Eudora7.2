@@ -49,7 +49,7 @@ gegen den Quelltext, gegen GitHub und gegen das Dateisystem nachgemessen.
 Dort stand nicht nur die falsche Fassungsnummer, sondern darunter eine
 **Warnung an die Anwender**:
 
-> *„Im Release `v1.0.50` beendet *File → Save As* Eudora sofort ([E-97](../BEFUNDE.md#e-97)) … wer
+> *„Im Release `v1.0.50` beendet *File → Save As* Eudora sofort ([E-97](../Intern/BEFUNDE.md#e-97)) … wer
 > das veröffentlichte Paket benutzt, speichert Nachrichten bis dahin besser
 > nicht."*
 
@@ -73,8 +73,8 @@ Verzeichnis, das das Release nicht kennt, nicht nachhalten.
 | **Berichtigt** | **ja**, dazu sechs abgewanderte Zeilenangaben in derselben Zelle |
 
 **Warum das schwer wiegt.** `BEFUNDE.md` ist die Datei, die `CLAUDE.md` an die
-**erste Stelle jeder Sitzung** setzt — mit der Begründung [E-85](../BEFUNDE.md#e-85). Wer sie heute
-liest, findet [E-85](../BEFUNDE.md#e-85) als Befund mit offener Regression, an der falschen Fassung,
+**erste Stelle jeder Sitzung** setzt — mit der Begründung [E-85](../Intern/BEFUNDE.md#e-85). Wer sie heute
+liest, findet [E-85](../Intern/BEFUNDE.md#e-85) als Befund mit offener Regression, an der falschen Fassung,
 ohne den Mangel, der den Fall überhaupt gelöst hat. Das ist dieselbe Falle wie
 damals, nur andersherum: nicht ein übersehener Befund, sondern ein Befund, der
 **falsch über sich selbst berichtet**. [[bestand-vor-neuer-suche]] hilft nur,
@@ -121,7 +121,7 @@ Die sechs berichtigten Zeilenangaben derselben Zelle:
 |---|---|
 | **Behauptung** | Über alle 151 MDs stehen **2543** Angaben der Form `Datei.cpp:Zeile` |
 | **Gemessen** | **Keine einzige** zeigt hinter das Dateiende — das wäre aufgefallen. Aber bei **148** steht das im selben Atemzug genannte Symbol nicht innerhalb von ±15 Zeilen um die behauptete Stelle. Verteilung: **80 in lebenden Dokumenten** (`BEFUNDE.md` 38, `CHANGELOG.md` 8, `ZIEL.md` 7, `FILTER.md` 7, `Eudora71/OTShim/BEFUND-ANSICHT.md` 7, `PORTIERUNG.md` 3, `ABRUF-PRUEFEN.md` 2, `Eudora71/OTShim/PLAN.md` 2, dazu je eine in `AUFGABEN.md`, `EINSTELLUNGEN.md`, `WEITERMACHEN.md`, `Pruefung/PRUEFUNG-KETTE.md` und zwei Lehren), **68 in datierten Berichten** (`Befunde/PRUEFER-*`, `Befunde/BEENDEN.md` u. a.) |
-| **Berichtigt** | **teilweise: 13** — die sechs aus [E-85](../BEFUNDE.md#e-85) und die sieben aus `ZIEL.md`, also die, bei denen die Angabe eine **Handlungsanweisung** trägt. Die übrigen 135 stehen aufgeschrieben und unangetastet |
+| **Berichtigt** | **teilweise: 13** — die sechs aus [E-85](../Intern/BEFUNDE.md#e-85) und die sieben aus `ZIEL.md`, also die, bei denen die Angabe eine **Handlungsanweisung** trägt. Die übrigen 135 stehen aufgeschrieben und unangetastet |
 
 **Warum nicht alle.** Eine Zeilennummer in einem datierten Bericht ist ein
 Zeitdokument und war am Tag der Messung richtig ([[review-sieht-nur-den-diff]]
@@ -134,7 +134,7 @@ Vorschlag unter *Schranken* weiter unten.
 | | |
 |---|---|
 | **Behauptung** | `tools/rekursion-suchen.pl`, `tools/werkzeuge-angeschlossen.pl`, `tools/gibt-es-nicht.pl` |
-| **Gemessen** | Keines liegt im Baum. **Alle drei sind harmlos**: `rekursion-suchen.pl` ist unter **[PR-8](../BEFUNDE.md#pr-8)** ausdrücklich als *gelöscht* geführt, `werkzeuge-angeschlossen.pl` ist in `werkzeug-vor-eigenbau.md` als **Vorschlag** bezeichnet, `gibt-es-nicht.pl` ist ein Beispiel |
+| **Gemessen** | Keines liegt im Baum. **Alle drei sind harmlos**: `rekursion-suchen.pl` ist unter **[PR-8](../Intern/BEFUNDE.md#pr-8)** ausdrücklich als *gelöscht* geführt, `werkzeuge-angeschlossen.pl` ist in `werkzeug-vor-eigenbau.md` als **Vorschlag** bezeichnet, `gibt-es-nicht.pl` ist ein Beispiel |
 | **Berichtigt** | **nein** — keine Unwahrheit |
 
 ### <a id="l-13.8"></a>L-13.8 — Was **nicht** falsch war (gegengeprüft)
@@ -243,7 +243,7 @@ schlägt die Schranke bei 68 Zeitdokumenten an, die richtig sind.
 Nach jedem Schreibzugriff gemessen ([[zeilenenden-nach-jedem-schreibzugriff-messen]]):
 **CR=0 in allen berührten Dateien**, Zeilenzahlen geprüft. In `BEFUNDE.md` hatte
 ein Ersetzungslauf eine Leerzeile eingefügt (7838 → 7839); sie wurde entfernt,
-die Tabelle steht wieder lückenlos von [E-84](../BEFUNDE.md#e-84) über [E-85](../BEFUNDE.md#e-85) zu [E-86](../BEFUNDE.md#e-86).
+die Tabelle steht wieder lückenlos von [E-84](../Intern/BEFUNDE.md#e-84) über [E-85](../Intern/BEFUNDE.md#e-85) zu [E-86](../Intern/BEFUNDE.md#e-86).
 
 ## Was daraus zu lernen war
 

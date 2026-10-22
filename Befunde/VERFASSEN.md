@@ -56,12 +56,12 @@ Ebenso fallen weg:
 
 **Übrig bleiben genau zwei `CPtrArray`-Felder:**
 
-1. `CDockBar::m_arrBars` — die Andockleisten. Das war **[E-4](../BEFUNDE.md#e-4)**.
+1. `CDockBar::m_arrBars` — die Andockleisten. Das war **[E-4](../Intern/BEFUNDE.md#e-4)**.
 2. `SECCustomToolBar::m_btns` (`class SECBtnArray : public CPtrArray`,
    `OTShim_Werkzeugleiste.h:878-906`) — die Knöpfe jeder Werkzeugleiste.
 
 Zu 1: Alle Zugriffe von MFC auf `m_arrBars` sind durch `GetSize()` begrenzt;
-die einzigen ungesicherten Stellen sind die aus [E-4](../BEFUNDE.md#e-4) bekannten
+die einzigen ungesicherten Stellen sind die aus [E-4](../Intern/BEFUNDE.md#e-4) bekannten
 (`bardock.cpp:297, 321-322, 328-329`: `m_arrBars[nPos]` unmittelbar nach
 `RemoveAt(nPos)`), und die sind seit `SECDockBar::NormalizeBarArray()`
 abgesichert. Eudoras eigene Zugriffe in `DockBar.cpp` (`:127, :166, :242, :281`)

@@ -1,15 +1,15 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 21.10.2026**, Quellstand **7.2.0.120** / `VERSION` **1.0.120** — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)): `ReCalcACListBoxPos` las das Innenmaß und setzte daraus das Außenmaß. Rot und grün am laufenden Programm gemessen, 62 auf 14 Pixel gegen konstant 70. Davor **7.2.0.119** / **1.0.119** — der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](BEFUNDE.md#e-134)): `SelectItem()` tut nichts, wenn das Element schon die Karette trägt — auch dann nicht, wenn das `DoDeselectAll()` davor `TVIS_SELECTED` gelöscht hat, und `NicknameWasChanged` läuft bei jedem Tastendruck genau so (nachgemessen in [PRÜFER-43](Befunde/PRUEFER-43.md#k1); comctl32 5.82 und 6.16 verhalten sich gleich, die Fassung der Common Controls scheidet als Erklärung aus). Quelltext original, Verhalten verändert. Gegengemessen: dreimal `alias hans` gegen dreimal `alias Untitled` an 1.0.118. Davor **7.2.0.118** / **1.0.118** — eine fehlgeschlagene Rückfrage übernahm das fremde Verzeichnis, und ein gemerktes *Ja* sperrte unsichtbar ein ([PRÜFER-42](Befunde/PRUEFER-42.md)). **Veröffentlicht ist `v1.0.120`** — es trägt 7.2.0.118, 7.2.0.119 und 7.2.0.120. Davor **7.2.0.117** / **1.0.117** — eine kopierte Sicherung ohne `Eudora.ini` wird nicht mehr stillschweigend übernommen, und die Zeile *„Mail folder from"* im Über-Dialog lügt nicht mehr ([PRÜFER-41](Befunde/PRUEFER-41.md)). Davor **7.2.0.116** / **1.0.116** — [E-132](BEFUNDE.md#e-132), dritter Teil: die Rückfrage greift jetzt auf **allen** Startwegen (`mailto:`, `.mbx`, `.sta`, Anhang — dort kam sie nie), mit einem Leerzeichen im Programmpfad startet Eudora nach *Nein* wieder, und die Antwort wird gemerkt. Davor **7.2.0.115** / **1.0.115** — zweite Behebung zu [E-132](BEFUNDE.md#e-132): Eudora hielt sein eigenes Mailverzeichnis für fremd (8.3-Kurzform gegen Langform), 243 Tests. Am 21.10.2026 von Gregor gemeldet und von ihm selbst widerlegt: das Adressbuch löst Kurznamen beim Versenden **doch** auf (die verschickte Mail trägt `To: markus bakus <markus.bakus@gmx.de>`); im Verfassen-Fenster bleibt der Kurzname stehen, das ist Eudoras normales Verhalten. Kein Befund. Davor **7.2.0.114** / **1.0.114**, geschnürt und bei Gregor an seinem eigenen Fund gescheitert, nicht veröffentlicht (Zweig `e-132-fremdes-mailverzeichnis`, davor `e-131-leistenposition` und `e-123-transfersame` (davor `e-69-meldungsflut`), [E-69](BEFUNDE.md#e-69) – P3 aus [PRÜFER-36](Befunde/PRUEFER-36.md) mit R1–R3 aus [PRÜFER-38](Befunde/PRUEFER-38.md); dazu P1, P2 und R4 am Beenden-Weg zu [E-123](BEFUNDE.md#e-123), **der Befund selbst bleibt offen**; 229 Tests, 229 bestanden. **1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT** – ihr Inhalt steckt in 1.0.110. **Gregor hat am 19.10.2026 alle seine Testverzeichnisse gelöscht** (*„alles weg!“*), bei ihm liegen 1.0.110 bis 1.0.113 und 1.0.115 bis 1.0.119 (gemessen am 21.10.2026 nachmittags; 1.0.119 seit 13:07); an 1.0.110 ist Schritt 1 (Speichern) bestätigt, an 1.0.111 der Beenden-Weg auf beiden Wegen (6015 ms und 4015 ms), an 1.0.112 selbst ist nichts am laufenden Programm gemessen. **Die bekannte Regression ist weg:** F1, F3 und F4 aus [PRÜFER-37](Befunde/PRUEFER-37.md) zu [E-101](BEFUNDE.md#e-101) sind in 7.2.0.110 behoben – `windows-1251`, `koi8-r` und `iso-8859-2` behalten ihre Angabe, eine echte mehrteilige Nachricht wird nicht mehr zu `text/plain`; offen bleibt F2. Davor 7.2.0.101 = `v1.0.101`, Zweig `e-121-mehrere-gesendete`, [PRÜFER-32](Befunde/PRUEFER-32.md); [E-67](BEFUNDE.md#e-67) am laufenden Programm gemessen; [PRÜFER-31](Befunde/PRUEFER-31.md) F1/F3/F4; davor Zweig `e-118_HTML_header`, gemergt mit PR #98, Neubau wegen [E-124](BEFUNDE.md#e-124) – Defender stufte 1.0.98 als Trojaner ein; offen: Fehlalarm melden; davor 7.2.0.98: [E-83](BEFUNDE.md#e-83) zweite Ursache; davor 7.2.0.97: [E-121](BEFUNDE.md#e-121) gesendete Post und N1, N2/N3 abgetrennt als [E-123](BEFUNDE.md#e-123); beides an 1.0.99 von Gregor bestätigt; Doppelanzeige aus [E-121](BEFUNDE.md#e-121) bis 7.2.0.96 behoben; davor 7.2.0.90: [E-118](BEFUNDE.md#e-118) mit Teil 2 und [E-121](BEFUNDE.md#e-121) eingebaut; davor 7.2.0.89 mit [E-118](BEFUNDE.md#e-118); davor 7.2.0.88 mit [E-105](BEFUNDE.md#e-105), gemergt mit PR #97; beide nicht veröffentlicht); **veröffentlicht ist seit dem 21.10.2026 `v1.0.120`** (19:07:37 UTC, Marke `30feeae2`; davor am selben Tag `v1.0.117` um 07:56:56 UTC, Marke `f546b004`); davor `v1.0.113` am 20.10.2026 um 13:01:36 UTC, Marke `ac094f15` (davor am selben Tag `v1.0.112` um 11:55:10 UTC; davor `v1.0.101` am 17.10.2026) (berichtigt nach [LEKTOR-41](Befunde/LEKTOR-41.md) [L-41.2](Befunde/LEKTOR-41.md#l-41.2); davor `v1.0.87` am 14.10.2026) ([E-117](BEFUNDE.md#e-117) behoben und am laufenden Programm gemessen, Testsuite 196/196, **von Gregor am 14.10.2026 an 1.0.87 bestätigt**; damit sind alle Behebungen des Zweigs `e-112-skalierung` bestätigt, PR #96 gemergt, Release auf `41c6752`, ZIP-SHA-256 `a4f1c28d…904c`); 1.0.85 und 1.0.86 als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in `v1.0.87` (1.0.85: [E-112](BEFUNDE.md#e-112) und mit ihm [E-103](BEFUNDE.md#e-103) behoben und an `a36c47f` am laufenden Programm gemessen, PRÜFER-22 F1 und F2 danach eingebaut und am Bau `11b6a3a` gemessen, PRÜFER-23 N1 und seine Gegenrichtung behoben und am Bau `bf96856` am laufenden Programm gemessen, [E-116](BEFUNDE.md#e-116) neu; 1.0.86: dazu [E-115](BEFUNDE.md#e-115) behoben und gemessen). **Von Gregor am 13.10.2026 an 1.0.86 bestätigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115)**; neu aus diesem Test und offen: [E-118](BEFUNDE.md#e-118), [E-119](BEFUNDE.md#e-119), [E-105](BEFUNDE.md#e-105) zweiter Fall ([E-120](BEFUNDE.md#e-120) kein eigener Fehler); davor veröffentlicht `v1.0.84` (12.10.2026). Gregors Testlauf an 1.0.84 am 13.10.2026: Testplan Teil A bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen, [E-101](BEFUNDE.md#e-101) wieder offen, [E-114](BEFUNDE.md#e-114) neu, die Werbe-Annahme in [AN-2](BEFUNDE.md#an-2) widerlegt und [AN-2](BEFUNDE.md#an-2) selbst bestätigt, [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) bestätigt, [E-115](BEFUNDE.md#e-115) neu **[E-131](BEFUNDE.md#e-131) behoben in 7.2.0.113** – der erste Fehlerbericht von außen ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)): unsere Fassung schrieb `MRUFloatXPos=-2147483648` in die `Eudora.ini`, danach startete eine daneben installierte Hermes 7.1 nicht mehr. Nachgestellt und behoben; der Leseweg bleibt offen. **[E-132](BEFUNDE.md#e-132) behoben in 7.2.0.114** – der Weg dorthin: ein Doppelklick auf `Eudora.exe` uebernahm stillschweigend das Mailverzeichnis einer fremden Installation, gefunden ueber die Registry. Eudora fragt jetzt vorher, Vorgabe ist das eigene Verzeichnis. Am 20.10.2026 auf allen drei Wegen am laufenden Programm gemessen; der Fall *Ja* veraendert die fremde `Eudora.ini` nach fuenfzehn Sekunden – genau der Schaden aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102).
+**Stand 22.10.2026**, Quellstand **7.2.0.121** / `VERSION` **1.0.121** — nicht geschnürt: [E-111](BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus; die Längenschranke verglich mit `==` statt `>=` **und prüft erst nach dem Schreiben**, bei `nMaxLength` 0 oder 1 lief die Schleife bis zum Quellende durch. 246 Tests, 246 bestanden; Gegenprobe am alten Stand 245 von 246. Davor **7.2.0.120** / **1.0.120**, veröffentlicht als `v1.0.120` — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). **Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](../CHANGELOG.md)**, was zur Fassung 7.2.1.0 noch fehlt oben in [ZIEL.md](../ZIEL.md).
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
-Messungen [CHANGELOG.md](CHANGELOG.md), der Maßstab [ZIEL.md](ZIEL.md). `main`
+Messungen [CHANGELOG.md](../CHANGELOG.md), der Maßstab [ZIEL.md](../ZIEL.md). `main`
 ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 ([AGENTEN.md](AGENTEN.md)).
 
 ## Die Hauptarbeit bis 13.10.2026: vierzehn gebaute Behebungen — jetzt von Gregor bestätigt
 
-> **Stand 13.10.2026 ([L-27.3](Befunde/LEKTOR-27.md#l-27.3)).** Gregor hat an Paket 1.0.84 den
+> **Stand 13.10.2026 ([L-27.3](../Befunde/LEKTOR-27.md#l-27.3)).** Gregor hat an Paket 1.0.84 den
 > [Testplan](TESTPLAN.md) Teil A durchgeprüft: alle vierzehn ([E-49](BEFUNDE.md#e-49), [E-50](BEFUNDE.md#e-50),
 > [E-52](BEFUNDE.md#e-52) bis [E-63](BEFUNDE.md#e-63)) sind **bestätigt**, damit auch **A-4**. Ebenso bestätigt:
 > [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) und [AN-2](BEFUNDE.md#an-2); [E-83](BEFUNDE.md#e-83) auf seinen Auftrag an 1.0.84 nachgemessen.
@@ -18,7 +18,7 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 > **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
 > Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
-**Alle neun Kriterien aus [ZIEL.md](ZIEL.md) sind entweder erfüllt oder haben
+**Alle neun Kriterien aus [ZIEL.md](../ZIEL.md) sind entweder erfüllt oder haben
 eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
 fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
 improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2 fehlt
@@ -72,7 +72,7 @@ fehlen im Speicherdialog, weil Windows 10 die Dialogvorlage von 1996 nicht
 mehr anzeigt.
 
 **Am 18.09.2026 behoben: [E-110](BEFUNDE.md#e-110)** — [E-112](BEFUNDE.md#e-112) galt damals mit, der Versuch wirkte aber nicht
-(siehe unten; bis zum 13.10.2026 stand er hier in der Überschrift, [LEKTOR-28](Befunde/LEKTOR-28.md#lektor-28)). Beim **Antworten und Weiterleiten**
+(siehe unten; bis zum 13.10.2026 stand er hier in der Überschrift, [LEKTOR-28](../Befunde/LEKTOR-28.md#lektor-28)). Beim **Antworten und Weiterleiten**
 kamen nicht alle Bilder ins Verfassenfenster, ein Teil stand als grauer Kasten
 da. **Ursache:** `resolve_URL` (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg,
 statt sie zu entschlüsseln — aus `en%20aktuellen%20Verlust.png` wurde
@@ -88,19 +88,19 @@ Zeile vergrößerte statt das Bild zu verkleinern. **Der Versuch in 7.2.0.76
 wirkt nicht** — von Gregor am 18.09.2026 widerlegt und am 13.10.2026 an 1.0.84
 unverändert gesehen; [E-112](BEFUNDE.md#e-112) war damit **wieder offen**. *(Bis zum 13.10.2026 stand
 hier „Behoben in 7.2.0.76, noch nicht von Gregor bestätigt“ —
-[L-27.3](Befunde/LEKTOR-27.md#l-27.3).)* **Seit 7.2.0.85 behoben, ausgeliefert mit `v1.0.87`:** die Metadatei
+[L-27.3](../Befunde/LEKTOR-27.md#l-27.3).)* **Seit 7.2.0.85 behoben, ausgeliefert mit `v1.0.87`:** die Metadatei
 wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`), am laufenden Programm
 an `a36c47f` gemessen (alle drei Bilder der Prüfnachricht richtig, [E-103](BEFUNDE.md#e-103) mit);
 PRÜFER-22 F1 und F2 sind danach eingebaut und am Bau `11b6a3a` gemessen (70x70 und
 150x58); PRÜFER-23 N1 (beim Antworten `height="1"`) ist behoben (`9f5142b`), am laufenden
 Programm gemessen, die Gegenrichtung behoben und gemessen; N2 bis N5 sind offen; **von Gregor
 am 13.10.2026 an 1.0.86 bestätigt** (*„paßt dagegen“*). Neu daraus: [E-116](BEFUNDE.md#e-116) (`width="35px"` wird als 3508 gelesen).
-Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.85.
+Einzelheiten in [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.85.
 
 **Weiter offen: [E-113](BEFUNDE.md#e-113)** — ein Bild, dessen **angegebene** Breite größer ist als
 das Fenster, läuft rechts hinaus (`max-width:100%` kennt Paige nicht). Auf
 Gregors Anordnung *„erst A, dann B"* getrennt gehalten. Einzelheiten in
-[BEFUNDE.md](BEFUNDE.md), Prüfanleitungen in [CHANGELOG.md](CHANGELOG.md),
+[BEFUNDE.md](BEFUNDE.md), Prüfanleitungen in [CHANGELOG.md](../CHANGELOG.md),
 Abschnitte 7.2.0.75 und 7.2.0.76.
 
 **Stand 17.09.2026, seit dem 12.10.2026 überholt** — veröffentlicht ist jetzt
@@ -113,7 +113,7 @@ draußen war**: [E-93](BEFUNDE.md#e-93), [E-96](BEFUNDE.md#e-96), [E-97](BEFUNDE
 Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
 
-> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.3](Befunde/LEKTOR-15.md#l-15.3)).** Hier stand *„Gebaut und
+> **Berichtigt am 18.09.2026 (LEKTOR, [L-15.3](../Befunde/LEKTOR-15.md#l-15.3)).** Hier stand *„Gebaut und
 > geschnürt ist **7.2.0.70 / 1.0.70** … **Es ist das erste Paket, das alles
 > enthält** … Bei Gregor liegen 1.0.65 sowie **1.0.67 bis 1.0.72**"*. Drei
 > Fehler in fünf Zeilen: der Stand ist 7.2.0.72 (`Version.h`, `VERSION`,
@@ -135,13 +135,13 @@ Merge-Commit `8da72c8`; Gregor hat sie vorher am laufenden Programm geprüft
 **1.0.65 bis 1.0.71 sind nicht freigegeben** — 1.0.71 stürzt ab und ist
 ausdrücklich nicht zu benutzen.
 
-> **Berichtigt am 17.09.2026 (LEKTOR, [L-13.1](Befunde/LEKTOR-13.md#l-13.1)).** Hier stand *„veröffentlicht
+> **Berichtigt am 17.09.2026 (LEKTOR, [L-13.1](../Befunde/LEKTOR-13.md#l-13.1)).** Hier stand *„veröffentlicht
 > ist weiterhin nur `v1.0.50`"*. Gemessen mit `gh release list` und
 > `git ls-remote --tags origin`: `v1.0.64` existiert. Dieselbe Unwahrheit
 > stand in `WEITERMACHEN.md`, `Releases/PAKETE.md`, `README.md` und
 > `tools/RELEASES.md` — fünf Dokumente, ein Irrtum.
 >
-> **Nachgemessen am 17.09.2026 (LEKTOR, [L-14.2](Befunde/LEKTOR-14.md#l-14.2)):** In `WEITERMACHEN.md` stand
+> **Nachgemessen am 17.09.2026 (LEKTOR, [L-14.2](../Befunde/LEKTOR-14.md#l-14.2)):** In `WEITERMACHEN.md` stand
 > die Unwahrheit danach **weiter** (Zeile 24, *„Auf GitHub veröffentlicht ist
 > weiterhin `v1.0.50`; 1.0.51 bis 1.0.68 sind nicht freigegeben"*), und
 > **`PORTIERUNG.md` trug sie auch** — dort war sie in keinem der beiden
@@ -335,8 +335,8 @@ gefunden von PRUEFER, indem er meine Beweisführung verwarf), [**E-42**](BEFUNDE
 Aufräumschritte konnten den Ablauf abbrechen; neues Makro `AUFRAEUMEN` in
 `mainfrm.cpp`) und [**E-45**](BEFUNDE.md#e-45) (einer dieser zwölf, `QCWorkbook::OnClose`, darf
 **nicht** übersprungen werden — sonst bleibt ein Prozess ohne Fenster übrig).
-Der vermessene Weg steht in [Befunde/BEENDEN.md](Befunde/BEENDEN.md), das
-Review in [Befunde/PRUEFER-5.md](Befunde/PRUEFER-5.md).
+Der vermessene Weg steht in [Befunde/BEENDEN.md](../Befunde/BEENDEN.md), das
+Review in [Befunde/PRUEFER-5.md](../Befunde/PRUEFER-5.md).
 `tools/pruefe-beenden.pl` hält den Zustand und meldet ihn in Zahlen — **elf
 eingefasste Aufräumschritte**. Der zwölfte, `QCWorkbook::OnClose`, darf
 ausdrücklich **nicht** durch `AUFRAEUMEN` laufen, und genau das prüft das
@@ -371,13 +371,13 @@ den Aufrufstellen, die [E-34](BEFUNDE.md#e-34) erst sichtbar machte).
   der Stelle. Die Marke bleibt drin, weil sie die Reihenfolge belegt.
 - [**E-32**](BEFUNDE.md#e-32) — meine Ursachenbehauptung zur modalen Meldung.
   `CHeaderView::OnKillFocusRecipient` war es nicht; PRUEFER hat es dreifach
-  gemessen. Steht im [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.20.
+  gemessen. Steht im [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.20.
 - **Ein ODR-Bruch durch zwei `SECCustomToolBar`-Definitionen** — `stdafx.h`
   zieht `OTShimAll.h` zuerst und setzt `__TBARCUST_H__`; stünde `tbarcust.h`
   je zuerst, bräche der Bau mit dem `#error` in `OTShim_Werkzeugleiste.h` ab.
   Der echte ODR-Bruch lag bei `SECControlBar` ([E-43](BEFUNDE.md#e-43)), nicht hier.
 - **Sieben weitere Vermutungen**, jede gebaut und gemessen — die Liste mit
-  Messwerten steht im [CHANGELOG.md](CHANGELOG.md) unter 7.2.0.21.
+  Messwerten steht im [CHANGELOG.md](../CHANGELOG.md) unter 7.2.0.21.
 - **Beim Beenden:** `CFileBrowseView::OnAppExit` (ausgeschlossen — alle drei
   Wege gehen durch `CMainFrame::OnClose`) und die Vermutung, eine modale
   Meldung der Ersatzschicht verdecke das Beenden (die modalen `AfxMessageBox`
@@ -404,7 +404,7 @@ Dazu [**E-26**](BEFUNDE.md#e-26) (Ladeadressen im Absturzbericht), [**E-29**](BE
 **[E-31](BEFUNDE.md#e-31) ist von Gregor mittelbar bestätigt** — ohne Paige-Fenster gibt es
 kein Verfassen-Fenster, und er hat am 07.09.2026 mit 7.2.0.21 eine Mail
 geschrieben und abgeschickt. Zu [**E-32**](BEFUNDE.md#e-32) und [**E-46**](BEFUNDE.md#e-46) siehe oben: beide
-widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
+widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 
 ## Was sonst noch offen ist
 
@@ -413,8 +413,8 @@ widerlegt. Einzelheiten in [CHANGELOG.md](CHANGELOG.md).
 | [**E-101**](BEFUNDE.md#e-101) — gespeicherte HTML-Datei sagt UTF-8, enthält Windows-1252 (**wieder offen** seit 13.10.2026) | `BEFUNDE.md` | Bau, dann Gregors Gegenprobe |
 | [**E-114**](BEFUNDE.md#e-114) — ein gelöstes angedocktes Fenster hinterlässt einen leeren Bereich (neu, 13.10.2026) | `BEFUNDE.md` | Messen, dann Bau |
 | [**E-116**](BEFUNDE.md#e-116) — `width="35px"` wird als 3508 gelesen (neu, 13.10.2026, PRÜFER-22 F3; am Quelltext belegt, sichtbar erst ab 7.2.0.85) | `BEFUNDE.md` | Test zuerst, dann Bau (Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694`) |
-| [**E-118**](BEFUNDE.md#e-118) — HTML-Mail, in ein IMAP-Postfach verschoben, erscheint als Quelltext (neu, 13.10.2026, an 1.0.86; am Quelltext belegt) | `BEFUNDE.md` | Test zuerst, dann Bau (`ImapAppend.cpp:692`/`:1980` einteilig ohne `Content-Type`, `:1166` mehrteilig fest `text/plain`; Vorlage `SendContentType`, [PRÜFER-25](Befunde/PRUEFER-25.md) H1) — **Stand 14.10.2026:** eingebaut in 7.2.0.89, von Gregor an 1.0.89 bestätigt; Teil 2 (eingebettete Bilder) eingebaut in 7.2.0.90, von Gregor am 14.10.2026 an 1.0.90 bestätigt (Nachtrag 15.10.2026, [L-36.3](Befunde/LEKTOR-36.md#l-36.3)) |
-| [**E-119**](BEFUNDE.md#e-119) — `data:`-Bilder beim Antworten und Weiterleiten als grauer Kasten (neu, 13.10.2026, an 1.0.86; am Protokoll belegt) | `BEFUNDE.md` | Messen, ob 1.0.84 dasselbe zeigt; dann Bau im HTML-Import vor `PGHTMIMP.CPP:3317` (der Ladeweg ist zu spät, Attribute werden auf 1023 Zeichen gekürzt — [PRÜFER-25](Befunde/PRUEFER-25.md) H2) |
+| [**E-118**](BEFUNDE.md#e-118) — HTML-Mail, in ein IMAP-Postfach verschoben, erscheint als Quelltext (neu, 13.10.2026, an 1.0.86; am Quelltext belegt) | `BEFUNDE.md` | Test zuerst, dann Bau (`ImapAppend.cpp:692`/`:1980` einteilig ohne `Content-Type`, `:1166` mehrteilig fest `text/plain`; Vorlage `SendContentType`, [PRÜFER-25](../Befunde/PRUEFER-25.md) H1) — **Stand 14.10.2026:** eingebaut in 7.2.0.89, von Gregor an 1.0.89 bestätigt; Teil 2 (eingebettete Bilder) eingebaut in 7.2.0.90, von Gregor am 14.10.2026 an 1.0.90 bestätigt (Nachtrag 15.10.2026, [L-36.3](../Befunde/LEKTOR-36.md#l-36.3)) |
+| [**E-119**](BEFUNDE.md#e-119) — `data:`-Bilder beim Antworten und Weiterleiten als grauer Kasten (neu, 13.10.2026, an 1.0.86; am Protokoll belegt) | `BEFUNDE.md` | Messen, ob 1.0.84 dasselbe zeigt; dann Bau im HTML-Import vor `PGHTMIMP.CPP:3317` (der Ladeweg ist zu spät, Attribute werden auf 1023 Zeichen gekürzt — [PRÜFER-25](../Befunde/PRUEFER-25.md) H2) |
 | [**E-105**](BEFUNDE.md#e-105) — `display:none` wird nicht ausgewertet: Vorschautext und, zweiter Fall an 1.0.86, doppelte Bilder | `BEFUNDE.md` | ~~Entscheidung, ob Paige `display:none` lernen soll~~ — eingebaut in 7.2.0.88 (Zweig `e-105_doppelte_bilder`, gemergt mit PR #97; nur inline `style`, nicht über Klassen aus `<style>`), an der Prüfnachricht und an Gregors freenet-Newsletter gemessen; offen bis zu seinem Test an 1.0.89 (1.0.88 wurde nicht ausgeliefert, siehe [TESTPLAN.md](TESTPLAN.md#c5)) |
 | Meldung **„Encountered an improper argument"** beim **Anzeigen** mancher Nachrichten | oben, 2. | Start, dann Bau |
 | **Die Fenster stehen nach dem Neustart nicht im Vollbild** — Nebenbefund ohne Kennung | oben, 3. | Start, `Eudora.ini` lesen |
@@ -539,7 +539,7 @@ Es darf keine vollständige UTF-8-Folge mehr melden ([Z-2b](BEFUNDE.md#z-2b)).
 > dazu (Pufferschutz in `SetExtension`, keine Endung wird mehr ersetzt).
 > **Über IMAP** hat Gregor Paket 1.0.83 an seinem Postfach getestet: drei
 > Anhänge, alle mit Endung; sein Urteil *„gekürzt mit endung reicht"*.
-> Einzelheiten in [CHANGELOG.md](CHANGELOG.md), Abschnitte Messfassung
+> Einzelheiten in [CHANGELOG.md](../CHANGELOG.md), Abschnitte Messfassung
 > 7.2.0.80-an1, 7.2.0.81 und 7.2.0.83.
 
 Gregors Meldung vom 30.09.2026. Untersucht, gemessen, aufgeschrieben — und am
@@ -760,7 +760,7 @@ Vollständige Herleitung in **BEFUNDE.md, [AN-2](BEFUNDE.md#an-2)**. Kurz:
 
 #### Was offen bleibt — und zwar als Frage an Gregor
 
-> **Beantwortet am 13.10.2026 ([L-27.4](Befunde/LEKTOR-27.md#l-27.4)).** Gregor auf die Frage
+> **Beantwortet am 13.10.2026 ([L-27.4](../Befunde/LEKTOR-27.md#l-27.4)).** Gregor auf die Frage
 > *„brauchen wir mode=0 überhaupt?“*: *„ja, einverstanden“* — die
 > Werbe-Betriebsart wird **nicht weiter verfolgt**. Dazu ist die Annahme unten
 > überholt: dieser Bau startet nicht in der Werbe-Betriebsart, `DEFAULT_SWM_MODE`
@@ -814,7 +814,7 @@ Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
 | Bau, Prüfnachrichten 00–06 am laufenden Programm, PRÜFER | **erledigt**: 06 heil, 00–05 unverändert, PRUEFER-21 „kann ausgeliefert werden" |
 | Gregors Test an 1.0.84 über IMAP | **bestätigt** am 12.10.2026, Bildschirmfoto: Toner-Betreff und „Rabatt aktivieren“ in einem Stück |
 
-Einzelheiten: [CHANGELOG.md](CHANGELOG.md), Abschnitt 7.2.0.84; BEFUNDE.md, [E-94](BEFUNDE.md#e-94).
+Einzelheiten: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.84; BEFUNDE.md, [E-94](BEFUNDE.md#e-94).
 
 ## C — Das Auslieferungspaket
 
@@ -908,10 +908,10 @@ Stelle bleibt trotzdem zu härten.
 
 ### <a id="e1"></a>E1 · `FloatControlBarInMDIChild` ist ein leerer Rumpf (Erscheinungsbild-Befund **A-1**)
 
-> **Achtung, die Kennung [`A-1`](BEFUNDE.md#a-1) ist zweimal vergeben** (Befund [L-9.8](Befunde/LEKTOR-5.md#l-9.8), offen —
+> **Achtung, die Kennung [`A-1`](BEFUNDE.md#a-1) ist zweimal vergeben** (Befund [L-9.8](../Befunde/LEKTOR-5.md#l-9.8), offen —
 > Kennungen vergibt Gregor, nicht ein Agent). Gemeint ist hier der
 > **Agentenbefund vom 30.08.2026 zum Erscheinungsbild** (fünf Punkte aus [S-6](BEFUNDE.md#s-6)),
-> **nicht** die Anforderung [**A-1**](BEFUNDE.md#a-1) in [ZIEL.md](ZIEL.md) (Vorgaben für ein neu
+> **nicht** die Anforderung [**A-1**](BEFUNDE.md#a-1) in [ZIEL.md](../ZIEL.md) (Vorgaben für ein neu
 > angelegtes Konto). Wer „[A-1](BEFUNDE.md#a-1)" liest, prüft zuerst, welche der beiden gemeint
 > ist.
 
@@ -959,17 +959,17 @@ Zeile 3360) reicht noch an `CDockBar::OnSizeParent` durch.
   kein Projekt mehr. Beides kann weg.
 - **`Releases/PAKETE.md` hinkt hinterher** — einen eigenen Abschnitt haben
   1.0.23, 1.0.22, 1.0.21, 1.0.18, 1.0.3, 1.0.2 und 1.0.1; **1.0.4 bis 1.0.17
-  sowie 1.0.19 und 1.0.20 fehlen** (Mangel **[M-4](Befunde/PRUEFER-15.md#m-4)**, weiter offen). In der
+  sowie 1.0.19 und 1.0.20 fehlen** (Mangel **[M-4](../Befunde/PRUEFER-15.md#m-4)**, weiter offen). In der
   Tabelle *Wo die Pakete liegen* stehen 1.0.4, 1.0.10, 1.0.14, 1.0.15 und
   1.0.19 mit Prüfsumme; 1.0.20 fehlt auch dort. Wer das nächste Paket schnürt,
   trägt seinen Abschnitt gleich mit ein — für 1.0.22 und 1.0.23 ist das am
   08.09.2026 nachgeholt worden.
   Weitere überholte Stellen in anderen `.md` stehen in
-  [Befunde/LEKTOR.md](Befunde/LEKTOR.md),
-  [Befunde/LEKTOR-3.md](Befunde/LEKTOR-3.md),
-  [Befunde/LEKTOR-4.md](Befunde/LEKTOR-4.md),
-  [Befunde/LEKTOR-5.md](Befunde/LEKTOR-5.md) und
-  [Befunde/LEKTOR-6.md](Befunde/LEKTOR-6.md).
+  [Befunde/LEKTOR.md](../Befunde/LEKTOR.md),
+  [Befunde/LEKTOR-3.md](../Befunde/LEKTOR-3.md),
+  [Befunde/LEKTOR-4.md](../Befunde/LEKTOR-4.md),
+  [Befunde/LEKTOR-5.md](../Befunde/LEKTOR-5.md) und
+  [Befunde/LEKTOR-6.md](../Befunde/LEKTOR-6.md).
 
 ---
 
@@ -1038,5 +1038,5 @@ entschieden, das später anzugehen. **Nicht ohne sein Wort anwenden.**
     `.md`, `VERSION` oder `Eudora71/Version.h` mit im Commit ist (Befund L-7).
 12. **Zahlen und Fundstellen werden gemessen, nicht abgeschrieben.** Jede Zahl
     in der Doku braucht den Befehl, mit dem man sie nachzählt, daneben. Eine
-    Zahl, die niemand pflegt, ist schlimmer als keine (Lehre [L-6.10](Befunde/LEKTOR-2.md#l-6.10)). Wo eine
+    Zahl, die niemand pflegt, ist schlimmer als keine (Lehre [L-6.10](../Befunde/LEKTOR-2.md#l-6.10)). Wo eine
     Zeilennummer unvermeidlich ist, gehört der **Funktionsname** dazu.

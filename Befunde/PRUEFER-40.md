@@ -1,6 +1,6 @@
 # PRÜFER-40 — 7.2.0.113: die Behebung hält, die veröffentlichten Papiere nicht
 
-Gegenstand: Befund [**E-131**](../BEFUNDE.md#e-131), Zweig `e-131-leistenposition`
+Gegenstand: Befund [**E-131**](../Intern/BEFUNDE.md#e-131), Zweig `e-131-leistenposition`
 (Merge `1f31aadb`, PR #116), dazu der Veröffentlichungsweg bis `b6a40262`
 (PR #118). Quellstand **7.2.0.113 / 1.0.113**.
 
@@ -72,8 +72,8 @@ Was jetzt hinein muss, steht in dem, was der Anwender gerade liest:
 |---|---|---|
 | <a id="k1"></a>**K1** Die Ursachenkette *INT_MIN → Absturz in `MFC71.DLL`* ist **nicht belegt**. `-2147483648` ist `CW_USEDEFAULT`, das MFC selbst in `CDockContext::CDockContext` setzt, und MFC fängt es an seinem einzigen Leseort wieder ab. `ECX=0` passt dagegen genau auf einen anderen Weg | **hoch für die Behauptung, nicht für den Code.** Die Behebung ist harmlos, der Befund ist nicht abgeschlossen | **belegt am Quelltext** (MFC 14: `dockcont.cpp:49`, `:392-397`); dass MFC 7.1 an der Nachbarstelle ungeprüft zugreift, ist **Vermutung** |
 | <a id="k2"></a>**K2** Drei kopflose Stellen im **veröffentlichten** Text; zwei davon sind [L-43.1](LEKTOR-43.md#l-43.1) Nr. 1 und 2, wieder eingeschleppt, die dritte neu aus `fe49a6ab` | **hoch.** Der Anwender liest es jetzt | **gemessen** am Release-Text, per `diff` und `git log` |
-| <a id="k3"></a>**K3** *(zurückgezogen)* Beim Stand `1f31aadb` nannten die Notizen die Behebung nicht und führten [E-131](../BEFUNDE.md#e-131) als offenen Fehler mit *„noch nicht nachgestellt"*. **In `d64247cb` behoben** | — | **gemessen**, erledigt vor meinem Bericht |
-| <a id="k4"></a>**K4** `CHANGELOG.md:16` führt [E-131](../BEFUNDE.md#e-131) in *Noch offen (Stand 20.10.2026)* mit *„Offen … von uns noch nicht nachgestellt"*, während `CHANGELOG.md:85` und `BEFUNDE.md:300` *„Behoben in 7.2.0.113"* sagen. `doku-pruefen.pl` meldet dazu *„Kein Widerspruch gefunden"* | **mittel**, dazu eine blinde Schranke | **gemessen** an `origin/main` |
+| <a id="k3"></a>**K3** *(zurückgezogen)* Beim Stand `1f31aadb` nannten die Notizen die Behebung nicht und führten [E-131](../Intern/BEFUNDE.md#e-131) als offenen Fehler mit *„noch nicht nachgestellt"*. **In `d64247cb` behoben** | — | **gemessen**, erledigt vor meinem Bericht |
+| <a id="k4"></a>**K4** `CHANGELOG.md:16` führt [E-131](../Intern/BEFUNDE.md#e-131) in *Noch offen (Stand 20.10.2026)* mit *„Offen … von uns noch nicht nachgestellt"*, während `CHANGELOG.md:85` und `BEFUNDE.md:300` *„Behoben in 7.2.0.113"* sagen. `doku-pruefen.pl` meldet dazu *„Kein Widerspruch gefunden"* | **mittel**, dazu eine blinde Schranke | **gemessen** an `origin/main` |
 | <a id="k5"></a>**K5** Kein Bau, der sich als **7.2.0.113** meldet, ist je gelaufen. Die E-131-Messung stammt aus einem Bau, der im Protokoll *Version 7.2.0.112* sagt; Gregors Verzeichnis zu 1.0.113 enthält **keine** `eudora.log`. Die frühere Behauptung *„an Paket 1.0.113 bestätigt"* ist in `fe49a6ab` entfernt worden — und hat dabei [K2](#k2) Nr. 3 erzeugt | mittel, Prüflücke | **gemessen** (`eudora.log` Z. 3/64, `tools/TESTLAEUFE.md`, fehlende Logdatei) |
 | <a id="k6"></a>**K6** `GetPrivateProfileInt` liefert `-2147483648` **richtig** als negativen Wert — die Behebung prüft, was sie zu prüfen meint. Aber `INT_MAX` als Merkzeichen ist angreifbar, und bei nur **einem** fehlenden Schlüssel legt die Funktion den anderen an, entgegen ihrem eigenen Kommentar | gering, heute nicht auslösbar | **gemessen** (P/Invoke, 14 Abfragen) |
 | <a id="k7"></a>**K7** Bei mehr als rund 32 KB Abschnittsnamen kehrt die Funktion **wortlos** zurück und tut **nie** etwas; der Kommentar verspricht das Gegenteil. Dazu ein Fehlalarm bei genau passendem Puffer | mittel, unwahrscheinlich, aber stumm | **gemessen**, Pufferkante exakt bestimmt |
@@ -82,7 +82,7 @@ Was jetzt hinein muss, steht in dem, was der Anwender gerade liest:
 | <a id="k10"></a>**K10** Aufrufort richtig — drei Aufrufstellen, alle mit `"ToolBar"`, Nachbehandlung nach dem Notweg. Kosten gemessen: **18 ms** bei 7 KB, 95–112 ms bei 72–758 KB INI | kein Fund | **gemessen** |
 | <a id="k11"></a>**K11** Unser Ersatzwert wird von MFC **nicht übernommen**: `berichtigt=5` bei **beiden** Läufen. Deshalb bleibt `m_ptMRUFloatPos` im Speicher auf `CW_USEDEFAULT`, und der Anwender sieht beim Lösen einer Leiste **keinen** Unterschied | kein Fund — und die Entwarnung für die einzige denkbare Regression | **gemessen** (`eudora.log`, zwei Läufe) |
 | <a id="k12"></a>**K12** Die Abschnittsauswahl trifft heute alles (echte INI nachgezählt: 18 Abschnitte, 5 mit `MRUFloat*`, alle unter `ToolBar-`; `WazooBars` und `ToolBar-ToolBarManager` tragen keine Schwebeposition). Aber `strncmp` ist groß/klein-empfindlich, INI-Abschnitte sind es nicht, und der Präfix ist fest verdrahtet statt aus `lpszProfileName` | gering | **gemessen** an der echten `Eudora.ini` im Prüfverzeichnis |
-| <a id="k13"></a>**K13** `Extract.ps1`: *Region Q* zweimal vergeben ([E-118](../BEFUNDE.md#e-118) und [E-131](../BEFUNDE.md#e-131)); `O` und `P` ebenfalls | sehr gering, Altbestand | **gemessen** |
+| <a id="k13"></a>**K13** `Extract.ps1`: *Region Q* zweimal vergeben ([E-118](../Intern/BEFUNDE.md#e-118) und [E-131](../Intern/BEFUNDE.md#e-131)); `O` und `P` ebenfalls | sehr gering, Altbestand | **gemessen** |
 | <a id="k14"></a>**K14** Der Leseweg ist **nicht** durch `INT_MIN` bedroht — wohl aber durch `Docking=1` zu einer Leiste ohne Andockkontext: `CControlBar::SetBarInfo` greift nach einem `ASSERT` **ungeprüft** über `m_pDockContext`. Dieselbe Klasse wie der gemeldete Absturz, nirgends aufgeschrieben | mittel, nicht ausgelöst gesehen | **belegt am Quelltext** (`dockstat.cpp:600-608`) |
 | <a id="k15"></a>**K15** Die Veröffentlichungs-Buchführung wurde durch eine blinde Ersetzung `1.0.112` → `1.0.113` an die Schranke angepasst; `v1.0.112` ist als Veröffentlichung überschrieben, `v1.0.113` steht mit Zeit, Marke, PR, ZIP-Namen und Prüfsumme von `v1.0.112` da | **hoch** | **gemessen** gegen `gh release view` und `git ls-remote --tags` |
 
@@ -185,7 +185,7 @@ auslöst, ist die Vermutung des Melders, unverändert übernommen.
    nicht nur um den Starttest bitten, sondern um **seine `[ToolBar-Summary]` und
    die `BarID=`-Zeilen** vor und nach unserem Lauf. Das trennt die beiden
    Erklärungen in einer Minute.
-3. [E-131](../BEFUNDE.md#e-131) bleibt offen, bis einer von beiden Wegen gemessen ist.
+3. [E-131](../Intern/BEFUNDE.md#e-131) bleibt offen, bis einer von beiden Wegen gemessen ist.
 
 ## K2 — drei kopflose Stellen, öffentlich
 
@@ -213,7 +213,7 @@ hineinkopieren."* — **Das ist wörtlich [L-43.1](LEKTOR-43.md#l-43.1) Nr. 2.**
 angelegt — in demselben Commit, dessen Nachricht *„[LEKTOR-43](LEKTOR-43.md#lektor-43) hereingefuehrt (17
 Punkte)"* sagt.
 
-**2. Der Punkt zu [E-69](../BEFUNDE.md#e-69) hat wieder keinen Kopf**
+**2. Der Punkt zu [E-69](../Intern/BEFUNDE.md#e-69) hat wieder keinen Kopf**
 (`pub-113.md:41-42`):
 
 > … und der andere Weg lief an ihr vorbei.
@@ -310,7 +310,7 @@ die hier gewählt wurde — und sie hat den einzigen schriftlichen Beleg über
 > Quelltext belegt, von uns noch nicht nachgestellt.** … In `v1.0.112`
 > ausdrücklich **nicht** angefasst |
 
-`CHANGELOG.md:85` neunundsechzig Zeilen weiter: *„## 7.2.0.113 — [E-131](../BEFUNDE.md#e-131): keine
+`CHANGELOG.md:85` neunundsechzig Zeilen weiter: *„## 7.2.0.113 — [E-131](../Intern/BEFUNDE.md#e-131): keine
 ungültige Fensterposition mehr in der `Eudora.ini`"*, und `BEFUNDE.md:300`:
 *„Behoben in 7.2.0.113 (20.10.2026), am Prüfstand rot und grün gesehen"*.
 
@@ -428,7 +428,7 @@ viel — aber es ist nicht *„kann nicht vorkommen"*, und es ist **unsichtbar**
 den Abbruchgrund mitnennen (`abgeschnitten=1` bzw. `keine-abschnitte=1`). Wer
 mag, verdoppelt den Puffer in einer Schleife bis 1 MB — aber gemeldet werden
 muss es in jedem Fall. Eine Prüfung, die stumm grün meldet, ist
-[E-109](../BEFUNDE.md#e-109) in klein.
+[E-109](../Intern/BEFUNDE.md#e-109) in klein.
 
 ## K8 — `new` liefert hier nie NULL
 

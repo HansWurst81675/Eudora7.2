@@ -15,8 +15,8 @@
 > veröffentlicht ist** — gemessen am 21.10.2026 gibt es das Tag noch nicht,
 > veröffentlicht ist `v1.0.113`. Vorher zeigen alle vier Verweise ins Leere.
 
-Gehört zu [E-132](../BEFUNDE.md#e-132) und
-[E-131](../BEFUNDE.md#e-131). Ziel:
+Gehört zu [E-132](../Intern/BEFUNDE.md#e-132) und
+[E-131](../Intern/BEFUNDE.md#e-131). Ziel:
 [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
 Adressat `@rjsdotorg`.
 
@@ -30,8 +30,8 @@ wenn es diese Fassung als Release gibt — sonst zeigt der Hinweis ins Leere.
 Abschalten, und ein freigegebener Wortlaut, der danach aus dem Gedächtnis
 nachgebaut wird, ist nicht mehr derselbe.
 
-**Was ich am 20.10.2026 Satz für Satz gegen [E-132](../BEFUNDE.md#e-132),
-[E-131](../BEFUNDE.md#e-131), [E-124](../BEFUNDE.md#e-124) und
+**Was ich am 20.10.2026 Satz für Satz gegen [E-132](../Intern/BEFUNDE.md#e-132),
+[E-131](../Intern/BEFUNDE.md#e-131), [E-124](../Intern/BEFUNDE.md#e-124) und
 [CHANGELOG 7.2.0.114](../CHANGELOG.md) gehalten habe
 ([LEKTOR-44](../Befunde/LEKTOR-44.md#l-44.8)).** **Belegt ist jeder Satz**: der
 Registry-Weg und die drei Antworten samt Vorgabe stehen so in E-132, die drei
@@ -45,7 +45,7 @@ mit E-124 und [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md).
 den freigegebenen Wortlaut unten habe ich nicht angefasst.**
 
 1. **Seine vorhandene `Eudora.ini` wird dadurch nicht heil.** Unsere Behebung
-   zu [E-131](../BEFUNDE.md#e-131) berichtigt die Leistenwerte erst beim
+   zu [E-131](../Intern/BEFUNDE.md#e-131) berichtigt die Leistenwerte erst beim
    **Sichern**; eine INI, die sie schon trägt, bleibt, wie sie ist. Er hat
    seine aus der Sicherung zurückgespielt, also trifft es ihn nicht mehr — ein
    anderer Leser desselben Beitrags aber schon.

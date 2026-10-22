@@ -44,12 +44,12 @@ Und die Behebungen mit ihrer Uhrzeit:
 
 | Behebung | Commit | Zeit | Quellstand |
 |---|---|---|---|
-| [E-101](../BEFUNDE.md#e-101), erster Teil | `38bb52c` | 14:10 | **7.2.0.66** |
-| [E-103](../BEFUNDE.md#e-103) | `ca3d6b1` | 16:02 | **7.2.0.67** |
-| [E-104](../BEFUNDE.md#e-104), erste Hälfte | `eed2e4e` | **16:08:52** | 7.2.0.67 |
-| [E-104](../BEFUNDE.md#e-104), zweite Hälfte | `6b36c83` | **18:59:55** | 7.2.0.68 |
-| [E-106](../BEFUNDE.md#e-106) | `0334a6c` | **20:16:00** | **7.2.0.68** |
-| [E-101](../BEFUNDE.md#e-101), zweiter Teil | `e27ccf1` | **20:58:43** | **7.2.0.69** |
+| [E-101](../Intern/BEFUNDE.md#e-101), erster Teil | `38bb52c` | 14:10 | **7.2.0.66** |
+| [E-103](../Intern/BEFUNDE.md#e-103) | `ca3d6b1` | 16:02 | **7.2.0.67** |
+| [E-104](../Intern/BEFUNDE.md#e-104), erste Hälfte | `eed2e4e` | **16:08:52** | 7.2.0.67 |
+| [E-104](../Intern/BEFUNDE.md#e-104), zweite Hälfte | `6b36c83` | **18:59:55** | 7.2.0.68 |
+| [E-106](../Intern/BEFUNDE.md#e-106) | `0334a6c` | **20:16:00** | **7.2.0.68** |
+| [E-101](../Intern/BEFUNDE.md#e-101), zweiter Teil | `e27ccf1` | **20:58:43** | **7.2.0.69** |
 
 **Daraus folgt dreierlei, und alle drei stehen heute falsch in den MDs.**
 
@@ -63,10 +63,10 @@ Platte hat und **1.0.70 nicht** (gemessen: `C:\Users\Gregor\` trägt
 
 | | |
 |---|---|
-| **Behauptung** | `CHANGELOG.md`, Abschnitt 7.2.0.70: *„1.0.69 \| 7.2.0.69 \| **enthält** [E-101](../BEFUNDE.md#e-101) **zweiter Teil**, [P-38](PRUEFER-14.md#p-38) \| **es fehlt** [E-106](../BEFUNDE.md#e-106)"* |
-| **Gemessen** | **Beide Hälften sind vertauscht.** Die `Eudora.exe` von 1.0.69 ist um **20:24:54** entstanden, aus dem Stand `acc8ad7` (20:21:59). Der E-106-Merge `0334a6c` (20:16:00) **ist Vorfahr davon** — [E-106](../BEFUNDE.md#e-106) **ist** in 1.0.69. Der zweite Teil von [E-101](../BEFUNDE.md#e-101) (`e27ccf1`) entstand um **20:58:43**, also **34 Minuten nach dem Bau** — er ist **nicht** darin |
+| **Behauptung** | `CHANGELOG.md`, Abschnitt 7.2.0.70: *„1.0.69 \| 7.2.0.69 \| **enthält** [E-101](../Intern/BEFUNDE.md#e-101) **zweiter Teil**, [P-38](PRUEFER-14.md#p-38) \| **es fehlt** [E-106](../Intern/BEFUNDE.md#e-106)"* |
+| **Gemessen** | **Beide Hälften sind vertauscht.** Die `Eudora.exe` von 1.0.69 ist um **20:24:54** entstanden, aus dem Stand `acc8ad7` (20:21:59). Der E-106-Merge `0334a6c` (20:16:00) **ist Vorfahr davon** — [E-106](../Intern/BEFUNDE.md#e-106) **ist** in 1.0.69. Der zweite Teil von [E-101](../Intern/BEFUNDE.md#e-101) (`e27ccf1`) entstand um **20:58:43**, also **34 Minuten nach dem Bau** — er ist **nicht** darin |
 | **Gegenprobe im eigenen Haus** | Der Abschnitt **7.2.0.69** derselben Datei sagt es bereits richtig: *„sein `1.0.69` trug sie noch nicht"*. Die neue Tabelle widerspricht dem Abschnitt zwanzig Zeilen weiter unten |
-| **Was es kostet** | Gregor liest die Tabelle, sucht in seinem 1.0.69 nach der `E-101 speichern:`-Zeile mit `Content-Type` — und findet sie nicht, weil sie dort nicht sein kann. Umgekehrt hält er [E-106](../BEFUNDE.md#e-106) für ungetestet, obwohl genau sein 1.0.69 der Lauf wäre, der es belegen könnte |
+| **Was es kostet** | Gregor liest die Tabelle, sucht in seinem 1.0.69 nach der `E-101 speichern:`-Zeile mit `Content-Type` — und findet sie nicht, weil sie dort nicht sein kann. Umgekehrt hält er [E-106](../Intern/BEFUNDE.md#e-106) für ungetestet, obwohl genau sein 1.0.69 der Lauf wäre, der es belegen könnte |
 | **Berichtigt** | **nein** — die Zeile liegt im uncommitteten Abschnitt des parallelen Laufs. **Zur Übergabe**, siehe unten |
 
 ## <a id="l-14.2"></a>L-14.2 — dieselbe Unwahrheit über die Veröffentlichung stand in zwei weiteren Dateien
@@ -96,19 +96,19 @@ geschrieben wurde.
 
 | Befund | stand als | ist | stand in |
 |---|---|---|---|
-| **[E-101](../BEFUNDE.md#e-101)** | 7.2.0.68 bzw. 7.2.0.67 | **7.2.0.66** (erster Teil), **7.2.0.69** (zweiter Teil) | `AUFGABEN.md`, `README.md`, `ZIEL.md`, `BEFUNDE.md`, `WEITERMACHEN.md` |
-| **[E-103](../BEFUNDE.md#e-103)** | 7.2.0.68 | **7.2.0.67** | `AUFGABEN.md`, `README.md`, `WEITERMACHEN.md` |
-| **[E-104](../BEFUNDE.md#e-104)** | 7.2.0.68 bzw. nur 7.2.0.67 | **7.2.0.67** (verfasste) **und 7.2.0.68** (empfangene Nachricht) | `AUFGABEN.md`, `README.md`, `BEFUNDE.md` |
-| **[E-106](../BEFUNDE.md#e-106)** | 7.2.0.68 | **7.2.0.68** — richtig | — |
+| **[E-101](../Intern/BEFUNDE.md#e-101)** | 7.2.0.68 bzw. 7.2.0.67 | **7.2.0.66** (erster Teil), **7.2.0.69** (zweiter Teil) | `AUFGABEN.md`, `README.md`, `ZIEL.md`, `BEFUNDE.md`, `WEITERMACHEN.md` |
+| **[E-103](../Intern/BEFUNDE.md#e-103)** | 7.2.0.68 | **7.2.0.67** | `AUFGABEN.md`, `README.md`, `WEITERMACHEN.md` |
+| **[E-104](../Intern/BEFUNDE.md#e-104)** | 7.2.0.68 bzw. nur 7.2.0.67 | **7.2.0.67** (verfasste) **und 7.2.0.68** (empfangene Nachricht) | `AUFGABEN.md`, `README.md`, `BEFUNDE.md` |
+| **[E-106](../Intern/BEFUNDE.md#e-106)** | 7.2.0.68 | **7.2.0.68** — richtig | — |
 
 **Warum das nicht Kosmetik ist:** `WEITERMACHEN.md` schickt Gregor zur
 Prüfanleitung *„in `CHANGELOG.md`, Abschnitt 7.2.0.68"*. Der Abschnitt 7.2.0.68
-handelt von **[E-106](../BEFUNDE.md#e-106)**. Wer dort die Anleitung zu [E-101](../BEFUNDE.md#e-101) oder [E-103](../BEFUNDE.md#e-103) sucht, findet
+handelt von **[E-106](../Intern/BEFUNDE.md#e-106)**. Wer dort die Anleitung zu [E-101](../Intern/BEFUNDE.md#e-101) oder [E-103](../Intern/BEFUNDE.md#e-103) sucht, findet
 die eines fremden Befunds — genau der Schaden, den L-16 und [L-17](LEKTOR-12.md#l-17) schon
 beschrieben haben.
 
 **Berichtigt:** `AUFGABEN.md`, `README.md`, `ZIEL.md`, `BEFUNDE.md`
-([E-101](../BEFUNDE.md#e-101) und [E-104](../BEFUNDE.md#e-104)), `PORTIERUNG.md`. **Nicht berichtigt:** die
+([E-101](../Intern/BEFUNDE.md#e-101) und [E-104](../Intern/BEFUNDE.md#e-104)), `PORTIERUNG.md`. **Nicht berichtigt:** die
 Verweise auf *„Abschnitt 7.2.0.68"* in `WEITERMACHEN.md:12/18` — sie liegen
 neben den Zeilen des parallelen Laufs; siehe Übergabe.
 
@@ -124,7 +124,7 @@ anderes.** Gemessen über alle 153 MDs:
 | `AUFGABEN.md:48` | *„ist gebaut, aber **bei Gregor noch nicht nachgewiesen**"* |
 | `README.md:90` | *„bei Gregor noch nicht nachgewiesen"* |
 | `CHANGELOG.md:67-73` | *„**Bleibt die Zeile aus, ist auch diese Ursache widerlegt.**"* |
-| `ZIEL.md:17` | nannte [E-106](../BEFUNDE.md#e-106) in der Liste des Gebauten, **ohne** den Vorbehalt — **ergänzt** |
+| `ZIEL.md:17` | nannte [E-106](../Intern/BEFUNDE.md#e-106) in der Liste des Gebauten, **ohne** den Vorbehalt — **ergänzt** |
 
 Ein einziger Nachtrag also, und der ist kein Widerspruch, sondern eine
 Auslassung. Das ist das beste Ergebnis, das dieser Punkt haben konnte.
@@ -176,7 +176,7 @@ Der Commit wurde abgebrochen.
 solange sie nicht an der **Quelle** geschieht. Das gehört in
 `Arbeitsweise/README.md` gesagt — und wer den Verweis richtigstellen will,
 ändert `agenten-koordinieren.md` im Gedächtnisverzeichnis auf
-`[AGENTEN.md](../AGENTEN.md)`. Das habe ich **nicht** getan: das
+`[AGENTEN.md](../Intern/AGENTEN.md)`. Das habe ich **nicht** getan: das
 Gedächtnisverzeichnis gehört Gregor, nicht diesem Zweig.
 
 ---
@@ -215,8 +215,8 @@ Fließtext und zählte Querverweise mit, drei Fehlalarme. Der Abschnitt
 ### Was in welchem Paket steckt
 ```
 
-Die vier Befunde, um die es in der Fassung geht — **[E-101](../BEFUNDE.md#e-101), [E-103](../BEFUNDE.md#e-103), [E-104](../BEFUNDE.md#e-104),
-[E-106](../BEFUNDE.md#e-106)** — stehen im Fließtext und in einer Tabelle. Die Schranke meldete
+Die vier Befunde, um die es in der Fassung geht — **[E-101](../Intern/BEFUNDE.md#e-101), [E-103](../Intern/BEFUNDE.md#e-103), [E-104](../Intern/BEFUNDE.md#e-104),
+[E-106](../Intern/BEFUNDE.md#e-106)** — stehen im Fließtext und in einer Tabelle. Die Schranke meldete
 *„nichts zu pruefen"* und war damit **beim ersten echten Lauf nach ihrem Bau
 wirkungslos**.
 
@@ -244,7 +244,7 @@ müsste der **genannte Berichtsname**.
 prüfen, ob die Schranke grün meldet, sondern ob sie den **eigenen Zuwachs
 überhaupt sieht**.
 
-Nach meiner ersten Fassung von [L-14.4](#l-14.4) lautete das Urteil zu **[E-101](../BEFUNDE.md#e-101)**:
+Nach meiner ersten Fassung von [L-14.4](#l-14.4) lautete das Urteil zu **[E-101](../Intern/BEFUNDE.md#e-101)**:
 
 ```
 | E-101 | … | **behoben in 7.2.0.66 (erster Teil) und 7.2.0.69 (zweiter Teil),
@@ -298,11 +298,11 @@ arbeitet. Ich habe sie **nicht** angefasst
 
 | Stelle | Was zu ändern ist |
 |---|---|
-| `CHANGELOG.md`, Tabelle im Abschnitt 7.2.0.70, Zeile **1.0.69** | **enthält: [E-106](../BEFUNDE.md#e-106), [P-38](PRUEFER-14.md#p-38)** — **es fehlt: [E-101](../BEFUNDE.md#e-101) zweiter Teil.** Genau umgekehrt zum jetzigen Stand, Messung in [L-14.1](#l-14.1) |
-| `CHANGELOG.md`, dieselbe Tabelle, Zeile **1.0.67** | *„es fehlt: [E-104](../BEFUNDE.md#e-104)"* stimmt nur für die **zweite Hälfte** (`6b36c83`, 18:59:55). Die erste (`eed2e4e`, 16:08:52) ist in 1.0.67 drin — die Exe entstand um 18:58:58 |
+| `CHANGELOG.md`, Tabelle im Abschnitt 7.2.0.70, Zeile **1.0.69** | **enthält: [E-106](../Intern/BEFUNDE.md#e-106), [P-38](PRUEFER-14.md#p-38)** — **es fehlt: [E-101](../Intern/BEFUNDE.md#e-101) zweiter Teil.** Genau umgekehrt zum jetzigen Stand, Messung in [L-14.1](#l-14.1) |
+| `CHANGELOG.md`, dieselbe Tabelle, Zeile **1.0.67** | *„es fehlt: [E-104](../Intern/BEFUNDE.md#e-104)"* stimmt nur für die **zweite Hälfte** (`6b36c83`, 18:59:55). Die erste (`eed2e4e`, 16:08:52) ist in 1.0.67 drin — die Exe entstand um 18:58:58 |
 | `CHANGELOG.md`, Abschnitt 7.2.0.70, Absatz zum Protokollkanal | *„der Protokollkanal war **nicht** abgeschaltet — `LogLevel=58527` ist `0xE49F` und enthält `0x8000` sehr wohl"* widerlegt den Abschnitt 7.2.0.69 nicht: **der hat `LogLevel 25759 (0x649F)` aus Gregors Protokoll gemessen**, und `0x649F & 0x8000 = 0`. Beide Aussagen können stimmen, sie reden über verschiedene Läufe. Der Schlusssatz *„Die Behebung war dort schlicht noch nicht drin"* ist **richtig und gemessen** ([L-14.1](#l-14.1)) — er trägt die Erklärung allein |
 | `tools/ZWEIGE.md:70` | Der Zweig `p38-spurmarke-rumpf` steht jetzt als *„Quellstand **7.2.0.70**, Paketnummer **1.0.70**"*. Er hat **7.2.0.69 / 1.0.69** gebracht — der CHANGELOG-Abschnitt 7.2.0.69 trägt seinen Namen, und `ceab98f` ist sein Merge. **Das ist die Ersetzungsklasse aus L-11 und L-13:** eine Ersetzung `69 → 70` hat eine Angabe über die **Vergangenheit** mitgenommen |
-| `WEITERMACHEN.md:12` und `:18` | verweisen auf *„`CHANGELOG.md`, Abschnitt 7.2.0.68"* für **[E-103](../BEFUNDE.md#e-103)** bzw. **[E-101](../BEFUNDE.md#e-101)**. Richtig sind **7.2.0.67** ([E-103](../BEFUNDE.md#e-103)) und **7.2.0.66 / 7.2.0.69** ([E-101](../BEFUNDE.md#e-101)) |
+| `WEITERMACHEN.md:12` und `:18` | verweisen auf *„`CHANGELOG.md`, Abschnitt 7.2.0.68"* für **[E-103](../Intern/BEFUNDE.md#e-103)** bzw. **[E-101](../Intern/BEFUNDE.md#e-101)**. Richtig sind **7.2.0.67** ([E-103](../Intern/BEFUNDE.md#e-103)) und **7.2.0.66 / 7.2.0.69** ([E-101](../Intern/BEFUNDE.md#e-101)) |
 
 **Und eine Sache, die kein Dokumentfehler ist, aber Gregor betrifft:**
 `1.0.70` ist das erste vollständige Paket — bei ihm liegt es **nicht**. Auf
@@ -317,7 +317,7 @@ läuft jede Prüfanleitung, die 1.0.70 voraussetzt, ins Leere.
 |---|---|
 | **Verweise** `[…](….md)` über alle 153 MDs | **500** geprüft, **2** echte Fehler ([L-14.9](#l-14.9)): einer behoben, einer nur an der Quelle des Spiegels zu beheben |
 | **Werkzeuge gegen `tools/WERKZEUGE.md`** | 76 Dateien, **1** fehlte ([L-14.7](#l-14.7)) |
-| **[E-106](../BEFUNDE.md#e-106) als „nachgewiesen" oder „behoben"** | **keine einzige Stelle** — siehe [L-14.5](#l-14.5) |
+| **[E-106](../Intern/BEFUNDE.md#e-106) als „nachgewiesen" oder „behoben"** | **keine einzige Stelle** — siehe [L-14.5](#l-14.5) |
 | **Offene Befunde** | 12 offen / 70 behoben laut `BEFUNDE.md`; `WEITERMACHEN.md` deckt alle 12; kein Dokument erklärt einen offenen für erledigt |
 | **Kriterien in `ZIEL.md`** | neun, sieben belegt (0, 1, 3, 5, 6, 7, 8), zwei fast (2, 4) — `WEITERMACHEN.md` und `PORTIERUNG.md` sagen dasselbe |
 | **Testzahl** | **171/171**, belegt im CHANGELOG-Abschnitt 7.2.0.69 und in `BEFUNDE.md:262`. Die führenden Dokumente nannten **169**, `PORTIERUNG.md` sogar **160** — berichtigt |
@@ -332,8 +332,8 @@ läuft jede Prüfanleitung, die 1.0.70 voraussetzt, ins Leere.
 * **Die Durchgangsabschnitte in `LEKTORAT.md`** unterhalb des Kopfes. Die
   Datei ist ausdrücklich ein Fahrtenbuch; jeder Abschnitt gilt für seinen Tag.
   Berichtigt wurde nur, was sich als **heutige** Aussage ausgibt.
-* **Die vier alten Zitate ohne Herkunft** in `BEFUNDE.md` ([E-16](../BEFUNDE.md#e-16), [E-33](../BEFUNDE.md#e-33), [E-34](../BEFUNDE.md#e-34),
-  [E-47](../BEFUNDE.md#e-47)), die `pruefe-anzeigetext.pl` im Bestand kennt und deshalb nur im
+* **Die vier alten Zitate ohne Herkunft** in `BEFUNDE.md` ([E-16](../Intern/BEFUNDE.md#e-16), [E-33](../Intern/BEFUNDE.md#e-33), [E-34](../Intern/BEFUNDE.md#e-34),
+  [E-47](../Intern/BEFUNDE.md#e-47)), die `pruefe-anzeigetext.pl` im Bestand kennt und deshalb nur im
   Zuwachs prüft.
 
 ---
@@ -341,20 +341,20 @@ läuft jede Prüfanleitung, die 1.0.70 voraussetzt, ins Leere.
 ## Nachtrag, 17.09.2026 nach dem Commit — 1.0.71 ist dazwischengekommen
 
 Während dieser Bericht entstand, hat der parallele Lauf weitergearbeitet:
-`7d555df` bringt **7.2.0.71 / 1.0.71** und **[E-107](../BEFUNDE.md#e-107)** — *„Absturz beim
+`7d555df` bringt **7.2.0.71 / 1.0.71** und **[E-107](../Intern/BEFUNDE.md#e-107)** — *„Absturz beim
 Antworten auf eine geöffnete Nachricht"*. Drei Dinge folgen daraus, und das
 erste ist der wichtigste Satz dieses Berichts.
 
 ### 1. Gregors Absturz belegt L-14.1 unabhängig
 
-`BEFUNDE.md` zu **[E-107](../BEFUNDE.md#e-107)**: *„**Der Fehler war meiner**, eingebaut mit
-**[E-106](../BEFUNDE.md#e-106)** wenige Stunden zuvor. **Von Gregor am 17.09.2026 um 21:23 an
+`BEFUNDE.md` zu **[E-107](../Intern/BEFUNDE.md#e-107)**: *„**Der Fehler war meiner**, eingebaut mit
+**[E-106](../Intern/BEFUNDE.md#e-106)** wenige Stunden zuvor. **Von Gregor am 17.09.2026 um 21:23 an
 1.0.69 gemeldet**."*
 
-**Wenn Gregor den E-106-Absturz an 1.0.69 erlebt hat, dann ist [E-106](../BEFUNDE.md#e-106) in
+**Wenn Gregor den E-106-Absturz an 1.0.69 erlebt hat, dann ist [E-106](../Intern/BEFUNDE.md#e-106) in
 1.0.69.** Genau das habe ich aus Zeitstempel und Vorfahrenschaft gemessen —
 und genau das bestreitet die Tabelle im CHANGELOG-Abschnitt 7.2.0.70 bis
-heute (`CHANGELOG.md:143`): *„1.0.69 … **es fehlt [E-106](../BEFUNDE.md#e-106)**"*. Die Zeile ist
+heute (`CHANGELOG.md:143`): *„1.0.69 … **es fehlt [E-106](../Intern/BEFUNDE.md#e-106)**"*. Die Zeile ist
 damit **zweifach widerlegt**: durch die Messung und durch Gregors eigenen
 Lauf. **Sie steht noch da.**
 
@@ -362,11 +362,11 @@ Lauf. **Sie steht noch da.**
 
 `CHANGELOG.md:144` sagt weiterhin *„**1.0.70** | 7.2.0.70 | **alles** | —"*
 und der Abschnittskopf nennt es *„ein vollständiger Stand zum Testen"*.
-**1.0.70 enthält [E-106](../BEFUNDE.md#e-106) und damit den Absturz aus [E-107](../BEFUNDE.md#e-107).** Wer der Anleitung
+**1.0.70 enthält [E-106](../Intern/BEFUNDE.md#e-106) und damit den Absturz aus [E-107](../Intern/BEFUNDE.md#e-107).** Wer der Anleitung
 folgt — Kleinanzeigen-Nachricht öffnen, weiterleiten — ist einen Klick vom
 *Antworten* entfernt. Behoben ist es erst in **7.2.0.71**.
 
-**Zu tun:** in derselben Tabelle hinter 1.0.70 *„enthält den Absturz [E-107](../BEFUNDE.md#e-107)"*,
+**Zu tun:** in derselben Tabelle hinter 1.0.70 *„enthält den Absturz [E-107](../Intern/BEFUNDE.md#e-107)"*,
 und die Prüfanleitung auf **1.0.71** ziehen. Bei Gregor liegt 1.0.71 bereits
 (`C:\Users\Gregor\Eudora72-1.0.71-release`, gemessen) — **1.0.70 dagegen nie**.
 
@@ -394,6 +394,6 @@ Meine Berichtigungen sind an **7.2.0.70** gemessen und auf `origin/main`
 `AUFGABEN.md`, `WEITERMACHEN.md`, `ZIEL.md`, `PORTIERUNG.md` und
 `tools/WERKZEUGE.md` müssen beim Zusammenführen auf **7.2.0.71 / 1.0.71**
 gehoben werden. **Die Fassungszuordnungen der Befunde ändern sich dadurch
-nicht** — [E-101](../BEFUNDE.md#e-101) bleibt 7.2.0.66 und 7.2.0.69, [E-103](../BEFUNDE.md#e-103) bleibt 7.2.0.67, [E-104](../BEFUNDE.md#e-104)
-bleibt 7.2.0.67 und 7.2.0.68, [E-106](../BEFUNDE.md#e-106) bleibt 7.2.0.68. Genau das ist der
+nicht** — [E-101](../Intern/BEFUNDE.md#e-101) bleibt 7.2.0.66 und 7.2.0.69, [E-103](../Intern/BEFUNDE.md#e-103) bleibt 7.2.0.67, [E-104](../Intern/BEFUNDE.md#e-104)
+bleibt 7.2.0.67 und 7.2.0.68, [E-106](../Intern/BEFUNDE.md#e-106) bleibt 7.2.0.68. Genau das ist der
 Unterschied zwischen einer Zahl, die mitwandert, und einer, die nicht darf.

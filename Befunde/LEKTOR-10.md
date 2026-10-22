@@ -33,8 +33,8 @@ nicht gezählt:
 
 | Befund | Urteil | Länge |
 |---|---|---:|
-| **[E-90](../BEFUNDE.md#e-90)** | *gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.* | 62 |
-| **[E-92](../BEFUNDE.md#e-92)** | *beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.* | 67 |
+| **[E-90](../Intern/BEFUNDE.md#e-90)** | *gemessene Grenze, kein Fehler dieser Fassung — zurückgestellt.* | 62 |
+| **[E-92](../Intern/BEFUNDE.md#e-92)** | *beobachtet, unsere Seite NICHT gemessen — Kosmetik, zurückgestellt.* | 67 |
 
 Beide sind **zurückgestellt**, also nach der eigenen Wortliste der Werkzeuge
 offen. Beide fehlten in der Liste — und das Werkzeug schrieb dazu *„Die Liste
@@ -43,12 +43,12 @@ sondern Schweigen; die teurere der beiden Sorten
 ([prüfstand-kann-blind-sein](../Arbeitsweise/pruefstand-kann-blind-sein.md)).
 
 **Gegengetestet in beide Richtungen** ([schranke-gegentesten](../Arbeitsweise/schranke-gegentesten.md)):
-ohne Grenze kommen **genau** [E-90](../BEFUNDE.md#e-90) und [E-92](../BEFUNDE.md#e-92) dazu und kein behobener Befund
+ohne Grenze kommen **genau** [E-90](../Intern/BEFUNDE.md#e-90) und [E-92](../Intern/BEFUNDE.md#e-92) dazu und kein behobener Befund
 rutscht durch — „behoben" schlägt weiterhin „offen", weil diese Prüfung vorher
 steht. `perl -c` auf beide Werkzeuge: OK.
 
 **Die verschärfte Prüfung hat sofort geliefert:** sie schlug an `WEITERMACHEN.md:13`
-an, das [E-92](../BEFUNDE.md#e-92) als behoben führte. Genau das war der Zweck.
+an, das [E-92](../Intern/BEFUNDE.md#e-92) als behoben führte. Genau das war der Zweck.
 
 ## 2. Der Bestand stand an neun Stellen auf einer älteren Fassung
 
@@ -57,11 +57,11 @@ Keine dieser Zeilen war in einem Diff — sie waren einmal richtig.
 | Datei | stand da | ist |
 |---|---|---|
 | `WEITERMACHEN.md` Kopf | Stand 14.09.2026 | 15.09.2026 |
-| `WEITERMACHEN.md`:11 | [E-89](../BEFUNDE.md#e-89) wartet auf Gregor, gebaut in 7.2.0.63, 148/148 Tests | [E-89](../BEFUNDE.md#e-89) ist seit dem 14.09. an 1.0.58 **bestätigt**; 7.2.0.63 ist [E-95](../BEFUNDE.md#e-95)/[E-96](../BEFUNDE.md#e-96) mit 153/153 |
-| `WEITERMACHEN.md`:13 | 1.0.51 bis **1.0.56** nicht freigegeben; 1.0.63 sei Gregors Lauf vom 14.09., aus dem [E-89](../BEFUNDE.md#e-89) bis [E-92](../BEFUNDE.md#e-92) stammen | 1.0.51 bis **1.0.63**; Gregors Lauf war **1.0.58** |
-| `WEITERMACHEN.md`:15 | *„DER NÄCHSTE SCHRITT: [E-85](../BEFUNDE.md#e-85) ist NICHT behoben"* samt Anleitung | zwei Zeilen tiefer in derselben Tabelle: behoben in 7.2.0.52, belegt |
-| `WEITERMACHEN.md`:17 | *„Was als Nächstes zu messen ist: der hängende Resync"* | das ist **[E-83](../BEFUNDE.md#e-83)**, seit 7.2.0.53 behoben und gemessen |
-| `AUFGABEN.md` | *„Gepackt ist 1.0.52"*, zwei Behebungen warten | gepackt ist **1.0.63**, es warten **fünf** ([E-85](../BEFUNDE.md#e-85), [E-83](../BEFUNDE.md#e-83), [E-93](../BEFUNDE.md#e-93), [E-95](../BEFUNDE.md#e-95), [E-96](../BEFUNDE.md#e-96)) |
+| `WEITERMACHEN.md`:11 | [E-89](../Intern/BEFUNDE.md#e-89) wartet auf Gregor, gebaut in 7.2.0.63, 148/148 Tests | [E-89](../Intern/BEFUNDE.md#e-89) ist seit dem 14.09. an 1.0.58 **bestätigt**; 7.2.0.63 ist [E-95](../Intern/BEFUNDE.md#e-95)/[E-96](../Intern/BEFUNDE.md#e-96) mit 153/153 |
+| `WEITERMACHEN.md`:13 | 1.0.51 bis **1.0.56** nicht freigegeben; 1.0.63 sei Gregors Lauf vom 14.09., aus dem [E-89](../Intern/BEFUNDE.md#e-89) bis [E-92](../Intern/BEFUNDE.md#e-92) stammen | 1.0.51 bis **1.0.63**; Gregors Lauf war **1.0.58** |
+| `WEITERMACHEN.md`:15 | *„DER NÄCHSTE SCHRITT: [E-85](../Intern/BEFUNDE.md#e-85) ist NICHT behoben"* samt Anleitung | zwei Zeilen tiefer in derselben Tabelle: behoben in 7.2.0.52, belegt |
+| `WEITERMACHEN.md`:17 | *„Was als Nächstes zu messen ist: der hängende Resync"* | das ist **[E-83](../Intern/BEFUNDE.md#e-83)**, seit 7.2.0.53 behoben und gemessen |
+| `AUFGABEN.md` | *„Gepackt ist 1.0.52"*, zwei Behebungen warten | gepackt ist **1.0.63**, es warten **fünf** ([E-85](../Intern/BEFUNDE.md#e-85), [E-83](../Intern/BEFUNDE.md#e-83), [E-93](../Intern/BEFUNDE.md#e-93), [E-95](../Intern/BEFUNDE.md#e-95), [E-96](../Intern/BEFUNDE.md#e-96)) |
 | `ZIEL.md`:17 | gebaut ist inzwischen 7.2.0.57 | 7.2.0.63 |
 | `Releases/PAKETE.md`:6 | seit 09.09. sind 1.0.30 bis **1.0.57** dazugekommen | bis **1.0.63** |
 | `README.md`:158 | Titelzeilenbeispiel *„Eudora 7.2.0.29 / Paket 1.0.29"* | 34 Bauten alt, jetzt 7.2.0.63 / 1.0.63 |
@@ -75,7 +75,7 @@ ist. Ihr Text bleibt vollständig stehen, nur die Überschrift sagt jetzt
 
 ## 3. Eine Zahl im README war schlicht falsch
 
-Zu **[E-93](../BEFUNDE.md#e-93)** stand dort *„es gingen 17.889 statt **252.921** Byte hinaus"*.
+Zu **[E-93](../Intern/BEFUNDE.md#e-93)** stand dort *„es gingen 17.889 statt **252.921** Byte hinaus"*.
 `CHANGELOG.md` und `BEFUNDE.md` zitieren beide die Spurmarke selbst:
 `OrigBytes=105125 EditorBytes=17889`. Und nur 105.125 ergibt die **83 Prozent**,
 die im Befundtitel stehen:
@@ -97,11 +97,11 @@ Fassung genannt, die gerade **nicht** mehr im Bau ist. Dazu stand die Testzahl
 von 7.2.0.63 an 7.2.0.61.
 
 Das Urteil nennt jetzt in der ersten Zeile beides: behoben, **aber nicht so, wie
-7.2.0.61 es versuchte**; was trägt, ist [E-96](../BEFUNDE.md#e-96) aus 7.2.0.62. Der ausführliche
+7.2.0.61 es versuchte**; was trägt, ist [E-96](../Intern/BEFUNDE.md#e-96) aus 7.2.0.62. Der ausführliche
 Nachtrag darunter erklärt den Weg und bleibt unangetastet.
 
-**[E-94](../BEFUNDE.md#e-94) fehlte in `CHANGELOG.md`, Abschnitt *Noch offen*.** Der Abschnitt nannte
-[E-90](../BEFUNDE.md#e-90), [E-91](../BEFUNDE.md#e-91), [E-92](../BEFUNDE.md#e-92) und sieben ältere — aber nicht den einzigen Befund, den
+**[E-94](../Intern/BEFUNDE.md#e-94) fehlte in `CHANGELOG.md`, Abschnitt *Noch offen*.** Der Abschnitt nannte
+[E-90](../Intern/BEFUNDE.md#e-90), [E-91](../Intern/BEFUNDE.md#e-91), [E-92](../Intern/BEFUNDE.md#e-92) und sieben ältere — aber nicht den einzigen Befund, den
 `BEFUNDE.md` ausdrücklich mit dem Wort *offen* führt. Die **erzeugte** Liste in
 `WEITERMACHEN.md` hatte ihn, die von Hand gepflegte nicht. `offene-befunde.pl`
 deckt `CHANGELOG.md` nicht ab.
@@ -120,17 +120,17 @@ nicht nachgezogen worden war. Sie war es wieder.
 Der Messbefehl steht jetzt **dort**, dreizeilig und selbst gefahren — die Zahlen
 im Text sind seine Ausgabe ([prüfumfang-nicht-von-hand](../Arbeitsweise/pruefumfang-nicht-von-hand.md)).
 
-**Vier Marken fehlten** in *Alle Marken im Quelltext*: **[E-83](../BEFUNDE.md#e-83)**
-(`QCTaskManager.cpp:430`, acht Aufrufstellen), **[E-86](../BEFUNDE.md#e-86)** (`TridentView.cpp:1619`,
-`:2274`), **[E-87](../BEFUNDE.md#e-87)** (`summary.cpp:1149`) und **[E-95](../BEFUNDE.md#e-95)** (`PGHTMIMP.CPP:2186`, der
+**Vier Marken fehlten** in *Alle Marken im Quelltext*: **[E-83](../Intern/BEFUNDE.md#e-83)**
+(`QCTaskManager.cpp:430`, acht Aufrufstellen), **[E-86](../Intern/BEFUNDE.md#e-86)** (`TridentView.cpp:1619`,
+`:2274`), **[E-87](../Intern/BEFUNDE.md#e-87)** (`summary.cpp:1149`) und **[E-95](../Intern/BEFUNDE.md#e-95)** (`PGHTMIMP.CPP:2186`, der
 Auftragspunkt). Die Tabelle hat jetzt 29 Zeilen und deckt die 29 gemessenen
-Befunde. **[E-89](../BEFUNDE.md#e-89)** stand mit *„1 Stelle in `summary.cpp`"* falsch da — nach der
+Befunde. **[E-89](../Intern/BEFUNDE.md#e-89)** stand mit *„1 Stelle in `summary.cpp`"* falsch da — nach der
 eigenen Zählregel der Datei sind es **2 Stellen in `msgutils.cpp`**;
-`summary.cpp` nennt [E-89](../BEFUNDE.md#e-89) nur im Kommentar.
+`summary.cpp` nennt [E-89](../Intern/BEFUNDE.md#e-89) nur im Kommentar.
 
-**[E-95](../BEFUNDE.md#e-95) steht jetzt auch in der oberen Tabelle** mit seiner Auswertung: eingebaut
+**[E-95](../Intern/BEFUNDE.md#e-95) steht jetzt auch in der oberen Tabelle** mit seiner Auswertung: eingebaut
 1.0.61, ausgewertet 1.0.62, an einem selbst gestarteten Eudora mit drei Bildern
-bekannter Größe. Sie hat [E-96](../BEFUNDE.md#e-96) entschieden und die `cid:`/`http:`-Unterscheidung
+bekannter Größe. Sie hat [E-96](../Intern/BEFUNDE.md#e-96) entschieden und die `cid:`/`http:`-Unterscheidung
 aus 7.2.0.61 widerlegt.
 
 ## 6. Die README-Zahlen (Auftrag Punkt 3): zwei stimmen, zwei sind nicht nachprüfbar
@@ -167,7 +167,7 @@ genannt. **Kein Mangel.**
 
 ## Gefunden, nicht berichtigt
 
-**1. `spuren-auswerten.pl` meldet einen Fehlalarm zu [E-95](../BEFUNDE.md#e-95).** Das Werkzeug
+**1. `spuren-auswerten.pl` meldet einen Fehlalarm zu [E-95](../Intern/BEFUNDE.md#e-95).** Das Werkzeug
 erkennt eine Marke am Wort `SPURMARKE` in einer Kommentarzeile
 (`tools/spuren-auswerten.pl:122`). Der Kommentar über der E-95-Marke heißt
 `E-95-MESSUNG, 15.09.2026`. Die Marke steht sehr wohl im Bau. **Der Fix ist ein

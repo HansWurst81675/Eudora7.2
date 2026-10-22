@@ -5,7 +5,7 @@
 # WARUM ES DIESES WERKZEUG GIBT
 # ---------------------------------------------------------------------------
 #
-# Am 12.10.2026 habe ich in BEFUNDE.md vor jede Kennung der Urteilstabelle
+# Am 12.10.2026 habe ich in Intern/BEFUNDE.md vor jede Kennung der Urteilstabelle
 # einen Anker gesetzt - eine Ergaenzung, keine Zeile mehr oder weniger.
 # ZWOELF Werkzeuge lesen genau diese erste Zelle, und alle zwoelf haben sie
 # danach nicht mehr gefunden:
@@ -105,7 +105,7 @@ if ($tests) {
   $pruefe->('ein Punkt als Wurzel ersetzt NICHTS',
             saeubern("Quellstand 7.2.0.84\n", '.'), "Quellstand 7.2.0.84\n");
   $pruefe->('ein leerer Wert ersetzt NICHTS',
-            saeubern("BEFUNDE.md: 168\n", ''), "BEFUNDE.md: 168\n");
+            saeubern("Intern/BEFUNDE.md: 168\n", ''), "Intern/BEFUNDE.md: 168\n");
   $pruefe->('ein Wert ohne Schraegstrich ersetzt NICHTS',
             saeubern("ANWEISUNG-changelog.md\n", 'xyzw'), "ANWEISUNG-changelog.md\n");
   $pruefe->('Pfad mehrfach',

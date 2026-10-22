@@ -312,7 +312,7 @@ Prüfung wäre stillschweigend ausgefallen.
 
 ### Mängel
 
-**[M-2](Befunde/PRUEFER-15.md#m-2) (mittel).** *Das ausgelieferte 1.0.4-Paket nennt sich selbst 1.0.3.*
+**[M-2](../Befunde/PRUEFER-15.md#m-2) (mittel).** *Das ausgelieferte 1.0.4-Paket nennt sich selbst 1.0.3.*
 
 **gemessen** in `LIESMICH.txt` im ZIP `Eudora72-1.0.4-release.zip`:
 
@@ -326,7 +326,7 @@ die Datei nicht an. Jedes künftige Paket erbt damit das 1.0.3-LIESMICH.
 `PAKETE.md` warnt selbst genau davor („bei der QCSSL.dll sind genau so zwei
 verschiedene Binärdateien unter derselben Kennung ausgeliefert worden").
 
-**[M-3](Befunde/PRUEFER-15.md#m-3) (mittel).** *`tools/Eudora starten.cmd` fällt beim nächsten Paketbau
+**[M-3](../Befunde/PRUEFER-15.md#m-3) (mittel).** *`tools/Eudora starten.cmd` fällt beim nächsten Paketbau
 heraus.*
 
 **gemessen:** die Datei liegt im ausgelieferten ZIP im Wurzelverzeichnis
@@ -335,7 +335,7 @@ heraus.*
 hineingelegt. Der nächste Lauf von `paket-bauen.ps1` liefert ein Paket **ohne**
 Starter, und `paket-pruefen.ps1` merkt es nicht.
 
-**[M-4](Befunde/PRUEFER-15.md#m-4) (klein).** *Kein `Releases/1.0.4/`, kein Abschnitt in `PAKETE.md`.*
+**[M-4](../Befunde/PRUEFER-15.md#m-4) (klein).** *Kein `Releases/1.0.4/`, kein Abschnitt in `PAKETE.md`.*
 
 **gemessen:** `Releases/` enthält `1.0.2/`, `1.0.3/` — aber kein `1.0.4/`.
 `Releases/PAKETE.md` hat Abschnitte bis „## 1.0.3", keinen für 1.0.4. Das ZIP ist
@@ -632,8 +632,8 @@ Was in diesen Commits hätte mitgezogen werden müssen und nicht wurde:
 | 4 | **`AUFGABEN.md` unverändert** | Kopf sagt weiter „Stand 31.08.2026, 09:00. Branch `darstellung-und-menue`". Weder das Herausnehmen von OT501 noch 1.0.4 noch [E-7](BEFUNDE.md#e-7) sind eingetragen; die Punkte, die durch den Eingriff erledigt oder hinfällig sind, stehen unverändert drin |
 | 5 | **`PORTIERUNG.md` unverändert** | Zeilen 32, 47–49, 55 beschreiben einen Bauzustand, den es nicht mehr gibt (siehe M-8) |
 | 6 | **`Releases/PAKETE.md`: kein Abschnitt „## 1.0.4"** | Abschnitte enden bei „## 1.0.3" (Zeile 93). Das ZIP liegt im Repo, ohne Zeile in der Buchführung — genau die Lücke, vor der die Datei selbst in Zeile 70–76 warnt |
-| 7 | **`Releases/1.0.4/` fehlt** samt eigenem `LIESMICH.txt` | `Releases/` hat `1.0.2/` und `1.0.3/`. Deshalb greift `paket-bauen.ps1:156` weiter auf `Releases\1.0.3\LIESMICH.txt` — Ursache von [M-2](Befunde/PRUEFER-15.md#m-2) |
-| 8 | **`tools/paket-bauen.ps1` nicht nachgezogen** | Zeile 156 verdrahtet 1.0.3 fest; `Eudora starten.cmd` kommt gar nicht vor ([M-2](Befunde/PRUEFER-15.md#m-2), [M-3](Befunde/PRUEFER-15.md#m-3)) |
+| 7 | **`Releases/1.0.4/` fehlt** samt eigenem `LIESMICH.txt` | `Releases/` hat `1.0.2/` und `1.0.3/`. Deshalb greift `paket-bauen.ps1:156` weiter auf `Releases\1.0.3\LIESMICH.txt` — Ursache von [M-2](../Befunde/PRUEFER-15.md#m-2) |
+| 8 | **`tools/paket-bauen.ps1` nicht nachgezogen** | Zeile 156 verdrahtet 1.0.3 fest; `Eudora starten.cmd` kommt gar nicht vor ([M-2](../Befunde/PRUEFER-15.md#m-2), [M-3](../Befunde/PRUEFER-15.md#m-3)) |
 | 9 | **`tools/paket-pruefen.ps1` prüft den Starter nicht** | Ein von Hand hineingelegter Bestandteil, den kein Prüfwerkzeug kennt, verschwindet unbemerkt |
 | 10 | **keine Testsammlung für `tools/gesichert.pl`** | `pruefe-branch.pl` hat 15 Fälle, `gesichert.pl` null — bei 287 geänderten Zeilen |
 | 11 | **`README.md` und `mainfrm.cpp:9686` zeigen die alte Kennungsform** | M-9 |
@@ -645,9 +645,9 @@ Was in diesen Commits hätte mitgezogen werden müssen und nicht wurde:
 | # | Mangel | Schwere | Fundstelle |
 |---|---|---|---|
 | [M-1](BEFUNDE.md#m-1) | Die E-7-Behebung ist in keinem Paket; das ausgelieferte 1.0.4 stammt aus `d59cf63*` und ist nicht reproduzierbar | **schwer** | `2734414` vs. `bcc59bb`; Kennung in der EXE |
-| [M-2](Befunde/PRUEFER-15.md#m-2) | Das 1.0.4-Paket nennt sich in `LIESMICH.txt` selbst 1.0.3 | mittel | `tools/paket-bauen.ps1:156` |
-| [M-3](Befunde/PRUEFER-15.md#m-3) | `Eudora starten.cmd` fällt beim nächsten Paketbau heraus | mittel | `tools/paket-bauen.ps1` (kein Treffer) |
-| [M-4](Befunde/PRUEFER-15.md#m-4) | Kein `Releases/1.0.4/`, kein `PAKETE.md`-Abschnitt | klein | `Releases/` |
+| [M-2](../Befunde/PRUEFER-15.md#m-2) | Das 1.0.4-Paket nennt sich in `LIESMICH.txt` selbst 1.0.3 | mittel | `tools/paket-bauen.ps1:156` |
+| [M-3](../Befunde/PRUEFER-15.md#m-3) | `Eudora starten.cmd` fällt beim nächsten Paketbau heraus | mittel | `tools/paket-bauen.ps1` (kein Treffer) |
+| [M-4](../Befunde/PRUEFER-15.md#m-4) | Kein `Releases/1.0.4/`, kein `PAKETE.md`-Abschnitt | klein | `Releases/` |
 | M-5 | Die Schranke lässt ohne vorheriges `fetch` genau den Anlassfall durch; kein Testfall hält die Grenze fest | **schwer** | `tools/pruefe-branch.pl`, nachgestellt |
 | M-6 | `README.md:354` widerspricht `README.md:359` | klein | `README.md` |
 | M-7 | `bau-und-pruefung` bringt die alte, falsche Fassung der beiden Werkzeuge mit; Konflikt mit `wt/schranke` | mittel | `git merge-tree`: changed in both |
@@ -675,7 +675,7 @@ Zusammenführen sollten erledigt werden:
 3. `README.md:82-84`, `:101-103`, `:354`, `:464-465` und die Versionsangaben
    berichtigen (M-6, M-8).
 4. `tools/paket-bauen.ps1` von `Releases\1.0.3\LIESMICH.txt` lösen und den
-   Starter aufnehmen ([M-2](Befunde/PRUEFER-15.md#m-2), [M-3](Befunde/PRUEFER-15.md#m-3)).
+   Starter aufnehmen ([M-2](../Befunde/PRUEFER-15.md#m-2), [M-3](../Befunde/PRUEFER-15.md#m-3)).
 5. Das Paket 1.0.4 **neu bauen** — aus einem sauberen Commit, mit der
    E-7-Behebung, mit einem eigenen `LIESMICH.txt` ([M-1](BEFUNDE.md#m-1)). Die `Eudora.exe` dafür
    liegt bereits gebaut in diesem Arbeitsbaum, Kennung `1.0.4+bcc59bb` ohne

@@ -44,7 +44,7 @@ use warnings;
 #   perl tools/commit-bereit.pl -knapp   nur die Mangelliste
 #
 # Vor dem ERSTEN Commit-Versuch aufrufen, wenn sich VERSION, Version.h,
-# BEFUNDE.md-Urteile oder ein Zweig geaendert haben.
+# Intern/BEFUNDE.md-Urteile oder ein Zweig geaendert haben.
 #
 # Rueckgabe: 0 = alle frei, 1 = mindestens eine weist ab, 2 = Aufrufproblem.
 

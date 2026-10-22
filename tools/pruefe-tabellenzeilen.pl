@@ -15,7 +15,7 @@ use warnings;
 # WARUM ES DIESES WERKZEUG GIBT
 # ---------------------------------------------------------------------------
 #
-# Am 22.10.2026 meldete Gregor zu WEITERMACHEN.md auf GitHub: "hat ein
+# Am 22.10.2026 meldete Gregor zu Intern/WEITERMACHEN.md auf GitHub: "hat ein
 # darstellungsproblem: der text ist links, nicht rechts." Gemessen: zwei
 # Tabellenzeilen waren ueber zwei physische Zeilen gebrochen - Zeile 9/10
 # ("...Uebertragungsart. Davor" + "7.2.0.110 auf Zweig") und Zeile 46/47
@@ -38,7 +38,7 @@ use warnings;
 # erlaubten Fall, den diese Regel trifft (Arbeitsweise/schranke-gegentesten.md).
 #
 # Ein fehlender ABSCHLUSS-Pipe ("| a | b | c" ohne das letzte "|") ist KEIN
-# Mangel - GFM erlaubt ihn, und BEFUNDE.md:255 nutzt ihn. Die Schranke, die
+# Mangel - GFM erlaubt ihn, und Intern/BEFUNDE.md:255 nutzt ihn. Die Schranke, die
 # den Fehler zuerst fand, hat genau hier Fehlalarm gegeben.
 
 my $hinweis = 0;

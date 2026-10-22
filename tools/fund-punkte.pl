@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 # fund-punkte.pl - zerlegt einen Fund aus einem Bericht (PRUEFER-, LEKTOR-,
-# BEFUNDE.md) in die Punkte, die eine Behebung abdecken muss.
+# Intern/BEFUNDE.md) in die Punkte, die eine Behebung abdecken muss.
 #
 # WARUM ES DAS GIBT
 #

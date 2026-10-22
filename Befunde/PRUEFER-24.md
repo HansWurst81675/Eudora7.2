@@ -4,7 +4,7 @@ Lauf am 13.10.2026, nur lesend. Nichts gebaut, nichts geändert, kein Programm g
 Stand: Zweig `wt/pruefer`, gemergt mit `origin/e-112-skalierung` (`f305f49`).
 Gelesen: `Eudora71/Eudora/msgutils.cpp:3486-3740` (`E89BilderMessbarMachen`),
 `Eudora71/Eudora/PgEmbeddedImage.cpp:371-411` (`E112Zielrechteck`),
-`Eudora71/Tests/TestE89.cpp` (4), (4b), (4c), BEFUNDE.md [E-112](../BEFUNDE.md#e-112)/[E-113](../BEFUNDE.md#e-113).
+`Eudora71/Tests/TestE89.cpp` (4), (4b), (4c), BEFUNDE.md [E-112](../Intern/BEFUNDE.md#e-112)/[E-113](../Intern/BEFUNDE.md#e-113).
 
 **Nicht selbst gemessen:** Testsuite 195/195 und die beiden Spurmarken
 (`angegeben=600x0 gemalt=600x230`, `angegeben=0x600 gemalt=606x600`) sind aus
@@ -14,7 +14,7 @@ Nachgerechnet ist nur, dass sie zur Quelle passen.
 **Urteil: auslieferbar.** Beide Änderungen sind minimal (je eine Bedingung,
 Diff geprüft) und schließen die Lücke in beiden Richtungen. Der Rest der
 Funktion ist damit konsistent. Ein Bild kann breiter als 600 gemalt werden —
-das ist **nicht neu** und gehört zu [E-113](../BEFUNDE.md#e-113). Daneben eine
+das ist **nicht neu** und gehört zu [E-113](../Intern/BEFUNDE.md#e-113). Daneben eine
 veraltete Stelle in BEFUNDE.md (D1) und zwei Hygienepunkte an der Zählung (Z1, Z2),
 alle drei nicht durch diese Änderungen entstanden.
 
@@ -30,7 +30,7 @@ alle drei nicht durch diese Änderungen entstanden.
 | beide bekannt, `1200x1500` | Breite → 600, Höhe → 750; dann `:3668`: Breite → 480, Höhe 600 | `480x600` | seitenverhältnistreu, beide Deckel greifen nacheinander |
 
 Vorher wurde 0·600/n = 0 auf 1 angehoben (`height="1"` bzw. `width="1"`), seit
-[E-112](../BEFUNDE.md#e-112) als Strich gemalt. Die Tests (4b)/(4c) prüfen genau das Fehlen des
+[E-112](../Intern/BEFUNDE.md#e-112) als Strich gemalt. Die Tests (4b)/(4c) prüfen genau das Fehlen des
 erfundenen Maßes (`TestE89.cpp:150-195`), nicht nur die Abwesenheit der 1 — gut.
 
 ## 2. Der Rest der Funktion
@@ -58,7 +58,7 @@ erfundenen Maßes (`TestE89.cpp:150-195`), nicht nur die Abwesenheit der 1 — g
 
 ## 3. Kann ein Bild breiter als 600 durchkommen? — Ja, und nicht erst jetzt
 
-Beispiel aus dem Auftrag: nur `height="900"`, Datei 2344 × 900. [E-89](../BEFUNDE.md#e-89) schreibt
+Beispiel aus dem Auftrag: nur `height="900"`, Datei 2344 × 900. [E-89](../Intern/BEFUNDE.md#e-89) schreibt
 `height="600"`, `E112Zielrechteck` ergänzt die Breite aus dem Verhältnis
 (`PgEmbeddedImage.cpp:398-405`): **1563 × 600**. Ungemessen, aus der Quelle
 gerechnet. Schon der gemessene Fall `606x600` liegt über 600.
@@ -68,22 +68,22 @@ gerechnet. Schon der gemessene Fall `606x600` liegt über 600.
 1. Vorher kam an dieser Stelle `width="1" height="600"` heraus — ein senkrechter
    Strich. Ein zu breites, aber erkennbares Bild ist besser als keins.
 2. Derselbe Weg bestand schon vor dieser Änderung für **jede** Höhe ≤ 600 ohne
-   Breite: [E-89](../BEFUNDE.md#e-89) fasst sie gar nicht an, `E112Zielrechteck` ergänzt die Breite
+   Breite: [E-89](../Intern/BEFUNDE.md#e-89) fasst sie gar nicht an, `E112Zielrechteck` ergänzt die Breite
    seit F2 (`11b6a3a`) ohne Obergrenze. `height="500"` bei Datei 2000 × 500 →
    2000 × 500 (gerechnet, ungemessen).
-3. Bilder ganz ohne Maß malt Paige in Dateigröße ([E-103](../BEFUNDE.md#e-103),
+3. Bilder ganz ohne Maß malt Paige in Dateigröße ([E-103](../Intern/BEFUNDE.md#e-103),
    `PgEmbeddedImage.cpp:406-411`), beliebig breit.
 
-[E-89](../BEFUNDE.md#e-89) deckelt **angegebene** Maße; die gemalte Breite hat es nie begrenzen
+[E-89](../Intern/BEFUNDE.md#e-89) deckelt **angegebene** Maße; die gemalte Breite hat es nie begrenzen
 können, weil es die Datei nicht kennt (die Bilder sind beim Umschreiben noch
 nicht geladen). Die gemalte Breite gegen den verfügbaren Platz ist genau
-**[E-113](../BEFUNDE.md#e-113)**. Empfehlung dafür: die Obergrenze nach `E112Zielrechteck` auf das
+**[E-113](../Intern/BEFUNDE.md#e-113)**. Empfehlung dafür: die Obergrenze nach `E112Zielrechteck` auf das
 Ergebnisrechteck anwenden (gegen `page_width`, `PGHTMIMP.CPP:235-240`), nicht
-in [E-89](../BEFUNDE.md#e-89) — dort fehlt die Dateigröße.
+in [E-89](../Intern/BEFUNDE.md#e-89) — dort fehlt die Dateigröße.
 
 ## 4. Funde daneben
 
-* **D1 (Doku, veraltet):** BEFUNDE.md, Zeile [E-112](../BEFUNDE.md#e-112), Nachtrag zu PRÜFER-23,
+* **D1 (Doku, veraltet):** BEFUNDE.md, Zeile [E-112](../Intern/BEFUNDE.md#e-112), Nachtrag zu PRÜFER-23,
   sagt erst „die Gegenrichtung (`width="1"`) ist ebenfalls behoben … gemessen:
   `angegeben=0x600 gemalt=606x600`“ und unmittelbar danach „**Die Gegenrichtung
   war offen ([LEKTOR-29](LEKTOR-29.md#lektor-29)):** bei nur `height` über `E89_MAX_HOEHE` wird die

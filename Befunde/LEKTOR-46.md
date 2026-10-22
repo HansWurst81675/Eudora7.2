@@ -139,7 +139,7 @@ Paket ausmachen) oder gar keine.
   (keine Rückfrage und 29 Einträge in die fremde Sicherung an der Fassung
   davor; Rückfrage an 7.2.0.117), die drei Antworten *No*/*Yes*/*Cancel* samt
   Gegenprobe, die Defender-Zählung **dreimal am 20.10.2026** (dieselbe Zahl wie
-  [E-124](../BEFUNDE.md#e-124), `Releases/DEFENDER-FEHLALARM.md` *„three
+  [E-124](../Intern/BEFUNDE.md#e-124), `Releases/DEFENDER-FEHLALARM.md` *„three
   separate builds"* und [L-45.3](LEKTOR-45.md#l-45.3)), Vorgang
   `a567fe2a-9f58-47e1-a675-a62733ec538f`, die Prüfsumme **an der Datei selbst
   gemessen**. Gegen die Halbsatz-Regel aus
@@ -244,7 +244,7 @@ Nachgezählt, nicht abgeschrieben.
 | **rot:** keine Rückfrage, **29 Einträge** in die fremde Sicherung in 90 s | Commit `514c1be5`, am laufenden Programm gemessen | `Releases/PAKETE.md:167`, `CHANGELOG.md`, `WEITERMACHEN.md` (dort als *„neunundzwanzig Einträge"*), **neu** in den Notizen | **stimmig.** Die Fassung, an der *rot* gemessen wurde, heißt überall **1.0.116** |
 | **grün:** `fremd=1`, Rückfrage, nach *Nein* eigenes Verzeichnis | ebd. | dieselben Stellen | **stimmig** |
 | **ZIP-SHA-256 `335751a9…eb1a1`** | `sha256sum` an der Datei | stand **nur** in den 1.0.114-Notizen; jetzt in `Releases/1.0.117/RELEASE-NOTIZEN.md`, `Releases/PAKETE.md` und `WEITERMACHEN.md` | **war falsch zugeordnet**, siehe [L-46.3](#l-46.3) |
-| **Defender dreimal am 20.10.2026** | [E-124](../BEFUNDE.md#e-124), `DEFENDER-FEHLALARM.md:64` *„three separate builds"* | `README.md`, `Releases/PAKETE.md`, `WEITERMACHEN.md`, beide Notizen | **stimmig** seit [L-45.3](LEKTOR-45.md#l-45.3) |
+| **Defender dreimal am 20.10.2026** | [E-124](../Intern/BEFUNDE.md#e-124), `DEFENDER-FEHLALARM.md:64` *„three separate builds"* | `README.md`, `Releases/PAKETE.md`, `WEITERMACHEN.md`, beide Notizen | **stimmig** seit [L-45.3](LEKTOR-45.md#l-45.3) |
 | **veröffentlicht ist `v1.0.113`** | `git tag`, `gh release list` | `README.md:38/:146`, `TESTPLAN.md:172`, `Releases/PAKETE.md:6`, `AUFGABEN.md:3`, `WEITERMACHEN.md` | **stimmig — und es bleibt stimmig, bis das Tag steht** |
 
 `Releases/DEFENDER-FEHLALARM.md` ist **nicht angefasst**: der Text ist bei
@@ -295,7 +295,7 @@ vom Repo-Text ab (zum **vierten** Mal offen); die Schranke aus
 [L-43.13](LEKTOR-43.md#l-43.13), [L-43.15](LEKTOR-43.md#l-43.15),
 [L-42.14](LEKTOR-42.md#l-42.14), [L-41.8](LEKTOR-41.md#l-41.8),
 [L-38.5](LEKTOR-38.md#l-38.5), [L-37.10](LEKTOR-37.md#l-37.10) und
-[E-130](../BEFUNDE.md#e-130) stehen unverändert.
+[E-130](../Intern/BEFUNDE.md#e-130) stehen unverändert.
 
 **Ein Muster aus diesem Lauf, das eine eigene Schranke verdient.** Fünf der
 sieben Funde sind **Aussagen über den eigenen Auslieferungsstand**: welches

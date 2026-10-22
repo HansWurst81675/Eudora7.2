@@ -8,7 +8,7 @@ use warnings;
 # WARUM ES DIESES WERKZEUG GIBT
 # ---------------------------------------------------------------------------
 #
-# Gregor am 11.09.2026, auf LEKTORAT.md zeigend:
+# Gregor am 11.09.2026, auf Intern/LEKTORAT.md zeigend:
 #
 #   "ist eins von MDs, ich fragte, ob alles aktualisiert ist, du sagst, ja.
 #    war es der letzte 'Siebter Durchgang - 07.09.2026'? danach nichts mehr?"
@@ -37,10 +37,10 @@ use warnings;
 #    ihrem Auslassdatum) und Eudora71/ (Befunde am Quelltext). Die duerfen
 #    alt sein - sie beschreiben, was war, nicht was ist.
 #
-# 2. ROLLENHISTORIEN. LEKTORAT.md sammelt die Durchgaenge des Lektors,
-#    PRUEFBERICHT.md die des Pruefers. Hat die Rolle seither in Befunde/
+# 2. ROLLENHISTORIEN. Intern/LEKTORAT.md sammelt die Durchgaenge des Lektors,
+#    Intern/PRUEFBERICHT.md die des Pruefers. Hat die Rolle seither in Befunde/
 #    berichtet, ohne ihre Historie fortzuschreiben, faellt das hier auf.
-#    Genau das war der Fall: LEKTORAT.md stand beim "Siebten Durchgang -
+#    Genau das war der Fall: Intern/LEKTORAT.md stand beim "Siebten Durchgang -
 #    07.09.2026", waehrend LEKTOR am 09.09. zuletzt in Befunde/ berichtet
 #    und danach noch dreimal gearbeitet hatte.
 #
@@ -134,7 +134,7 @@ for my $f (@dateien) {
     }
 
     # Nennt der Kopf ausserdem einen QUELLSTAND oder eine PAKETNUMMER, muss
-    # sie stimmen. Am 13.09.2026 gefunden: AUFGABEN.md trug "Stand 11.09.2026"
+    # sie stimmen. Am 13.09.2026 gefunden: Intern/AUFGABEN.md trug "Stand 11.09.2026"
     # - das Datum war frisch - und dahinter "gemessen an Quellstand 7.2.0.48 /
     # Paket 1.0.48", waehrend der Baum auf 7.2.0.50 stand. Die Datumspruefung
     # allein liess das durch, und genau so entsteht die gefaehrlichste Sorte
@@ -171,8 +171,8 @@ push @gut, sprintf('%d Datei(en) mit Stand-Kopf geprueft, Massstab %s',
 # Die Historie einer Rolle darf nicht aelter sein als ihr juengster Bericht
 # in Befunde/.
 my %rolle = (
-    'LEKTORAT.md'     => { muster => 'Befunde/LEKTOR-*.md',  name => 'LEKTOR'  },
-    'PRUEFBERICHT.md' => { muster => 'Befunde/PRUEFER-*.md', name => 'PRUEFER' },
+    'Intern/LEKTORAT.md'     => { muster => 'Befunde/LEKTOR-*.md',  name => 'LEKTOR'  },
+    'Intern/PRUEFBERICHT.md' => { muster => 'Befunde/PRUEFER-*.md', name => 'PRUEFER' },
 );
 
 for my $datei (sort keys %rolle) {
@@ -181,14 +181,14 @@ for my $datei (sort keys %rolle) {
 
     # Das juengste Datum in einer UEBERSCHRIFT - nicht irgendwo im Text.
     #
-    # Der Unterschied ist genau der Fall, den Gregor gefunden hat: LEKTORAT.md
+    # Der Unterschied ist genau der Fall, den Gregor gefunden hat: Intern/LEKTORAT.md
     # nennt im Fliesstext den 09.09.2026, die letzte Durchgangsueberschrift
     # heisst aber "Siebter Durchgang - 07.09.2026". Wer nur das juengste
     # Datum irgendwo sucht, haelt die Datei faelschlich fuer fortgeschrieben.
     # Was zaehlt, ist der letzte EINTRAG, und der steht in einer Ueberschrift.
     # Eine Datei, die sich selbst ausdruecklich als abgeschlossen erklaert,
     # ist keine laufende Historie mehr - dann ist das Fehlen neuer Eintraege
-    # kein Mangel, sondern die Aussage. PRUEFBERICHT.md ist so ein Fall: ein
+    # kein Mangel, sondern die Aussage. Intern/PRUEFBERICHT.md ist so ein Fall: ein
     # Bericht zum Stand 371c1e3 vom 30.08.2026, waehrend PRUEFER seither in
     # Befunde/PRUEFER-*.md berichtet.
     if ($t =~ /wird nicht fortgeschrieben/) {
@@ -229,7 +229,7 @@ for my $datei (sort keys %rolle) {
     # Berichtigt am 18.09.2026 (PRUEFER-17, Befund E-109).
     #
     # Bis hierher hat diese Pruefung NUR Datum gegen Datum gehalten. Am
-    # 17.09.2026 hat sie LEKTORAT.md deshalb gruen gemeldet, waehrend die
+    # 17.09.2026 hat sie Intern/LEKTORAT.md deshalb gruen gemeldet, waehrend die
     # Datei Befunde/LEKTOR-13.md KEIN EINZIGES MAL nannte: die juengste
     # Durchgangsueberschrift trug dasselbe Datum wie der Commit auf den
     # Bericht, und damit war die Datumsfrage beantwortet. Die Frage, um die
@@ -275,7 +275,7 @@ if (@mangel) {
   Eine Datei, die einen Stand behauptet, den sie nicht hat, ist
   schlimmer als eine ohne Datum: man glaubt ihr. Gregor am
   11.09.2026, nachdem ich "ja, alles aktualisiert" gesagt hatte
-  und er LEKTORAT.md beim 07.09. fand: "hinterher nachzuarbeiten
+  und er Intern/LEKTORAT.md beim 07.09. fand: "hinterher nachzuarbeiten
   ist bloed, musst du selbst machen."
 
   Also: nachziehen - VOR dem Merge, nicht auf Nachfrage danach.

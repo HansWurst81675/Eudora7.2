@@ -17,7 +17,7 @@ vier hat ihn gefangen.
 Beim Nachmessen sind **vier Angaben widerlegt** worden, die in `BEFUNDE.md`
 und in `tools/taboo-rechnen.pl` stehen. Die wichtigste: `taboo-rechnen.pl`
 rechnete mit der Kopfzeilenliste von **2006**, nicht mit der aus der
-Ressource — also mit genau der Liste, deren Unzulänglichkeit der Befund [E-80](../BEFUNDE.md#e-80)
+Ressource — also mit genau der Liste, deren Unzulänglichkeit der Befund [E-80](../Intern/BEFUNDE.md#e-80)
 festgestellt hat.
 
 ---
@@ -26,9 +26,9 @@ festgestellt hat.
 
 | Schranke | bewacht | Gegenproben | fängt den echten Fehler |
 |---|---|---|---|
-| `tools/pruefe-taboo-liste.pl` | [E-80](../BEFUNDE.md#e-80), Teil 1 — die Liste `TabooHeaders` | **17** (12 melden, 5 still) | ja: „Originalliste allein — der Stand vor der Behebung" |
-| `tools/pruefe-blahblah-knopf.pl` | [E-80](../BEFUNDE.md#e-80), Teil 2 — der Knopfzustand | **13** (8 melden, 5 still) | ja: die echten Dateien aus `567a5d8` |
-| `tools/pruefe-kopfzeilen-stil.pl` | [E-81](../BEFUNDE.md#e-81) — Kopfzeilen auf dunklem Grund | **13** (8 melden, 5 still) | ja: die echte `EudoraRes.rc` aus `83c80fa` |
+| `tools/pruefe-taboo-liste.pl` | [E-80](../Intern/BEFUNDE.md#e-80), Teil 1 — die Liste `TabooHeaders` | **17** (12 melden, 5 still) | ja: „Originalliste allein — der Stand vor der Behebung" |
+| `tools/pruefe-blahblah-knopf.pl` | [E-80](../Intern/BEFUNDE.md#e-80), Teil 2 — der Knopfzustand | **13** (8 melden, 5 still) | ja: die echten Dateien aus `567a5d8` |
+| `tools/pruefe-kopfzeilen-stil.pl` | [E-81](../Intern/BEFUNDE.md#e-81) — Kopfzeilen auf dunklem Grund | **13** (8 melden, 5 still) | ja: die echte `EudoraRes.rc` aus `83c80fa` |
 | `tools/pruefe-zertifikatspruefung.pl` | `iOK = 1` im Fehler-`switch` | **12** (7 melden, 5 still) | ja: der Stand in `main` |
 
 Jede meldet bei Fehlschlag **was fehlt, warum es zählt und was zu tun ist**.
@@ -44,7 +44,7 @@ Testfall „eine DRITTE Ansicht kommt dazu und vergisst das Umschalten" belegt
 es.
 
 *Beide Code lesenden Schranken werfen Kommentare weg.* Die Begründung der
-Behebung zu [E-80](../BEFUNDE.md#e-80) nennt selbst `GetCheck(ID_BLAHBLAHBLAH)`, und zwar **vor**
+Behebung zu [E-80](../Intern/BEFUNDE.md#e-80) nennt selbst `GetCheck(ID_BLAHBLAHBLAH)`, und zwar **vor**
 dem Umschalten; die Begründung zur Zertifikatsprüfung zitiert `iOK = 1;`
 wörtlich. Eine Schranke, die Kommentare mitliest, schwärzt ihre eigene
 Begründung an. Je ein Testfall hält das fest.
@@ -88,7 +88,7 @@ Gemessen an `In.mbx` (72 Nachrichten):
 | `EudoraRes.rc:9996` (44 Einträge) | **7** Namen |
 
 55 Kopfzeilennamen wurden falsch einsortiert, darunter genau die, um die es
-bei [E-80](../BEFUNDE.md#e-80) geht: `DKIM-Signature`, `Authentication-Results`, `Envelope-To`,
+bei [E-80](../Intern/BEFUNDE.md#e-80) geht: `DKIM-Signature`, `Authentication-Results`, `Envelope-To`,
 `Delivered-To`, sämtliche `X-*`, `User-Agent`, `UI-OutboundReport`.
 
 **Abgestellt:** die Liste kommt jetzt aus `EudoraRes.rc`. Fehlt sie dort,
@@ -169,13 +169,13 @@ nicht auf `ReadMessageDoc.cpp:499`, sondern auf **2465** und **504**.
 
 Über die Historie verfolgt:
 
-* `TridentReadMessageView.cpp`: vor der Behebung zu [E-80](../BEFUNDE.md#e-80) Teil 2 (`567a5d8`)
+* `TridentReadMessageView.cpp`: vor der Behebung zu [E-80](../Intern/BEFUNDE.md#e-80) Teil 2 (`567a5d8`)
   stand die Stelle auf **2445**, nicht 2444 — die Angabe war schon damals um
   eins daneben. Der Patch hat 21 Zeilen davor eingefügt, seither ist es 2465.
 * `ReadMessageDoc.cpp`: die Stelle steht in **jedem** Commit des Repos auf
   504. Die 499 war **nie** richtig.
 
-Alle übrigen Zeilenangaben zu [E-80](../BEFUNDE.md#e-80) und [E-81](../BEFUNDE.md#e-81) habe ich einzeln nachgemessen und
+Alle übrigen Zeilenangaben zu [E-80](../Intern/BEFUNDE.md#e-80) und [E-81](../Intern/BEFUNDE.md#e-81) habe ich einzeln nachgemessen und
 **bestätigt**: `ReadMessageFrame.cpp:179`, `:498`, `:688`, `:981`,
 `TridentReadMessageView.cpp:161`, `PgReadMsgView.cpp:72`,
 `summary.cpp:2518-2520`, `TridentView.cpp:1329-1332` und `:1425`.
@@ -189,7 +189,7 @@ für mich gesperrt.
 
 ## 3. Was noch offen ist
 
-1. **`BEFUNDE.md` [E-80](../BEFUNDE.md#e-80)** trägt drei widerlegte Angaben: 175 Nachrichten
+1. **`BEFUNDE.md` [E-80](../Intern/BEFUNDE.md#e-80)** trägt drei widerlegte Angaben: 175 Nachrichten
    (gemessen 134), „genau acht" Kopfzeilen (gemessen zehn) und die
    Zeilennummern 2444/499 (gemessen 2465/504).
 2. **`CHANGELOG.md`** nennt dieselben 175 Nachrichten. Nicht angefasst.

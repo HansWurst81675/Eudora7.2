@@ -205,4 +205,45 @@ void RunResolveURLTests(void)
 		TT_Note("%s", szAus);
 	}
 	TT_EndTest();
+
+	// ------------------------------------------------------------- (9)
+	// BEFUND E-111 (PRUEFER-18, 18.09.2026, behoben 22.10.2026): die
+	// Laengenschranke prueft ERST NACH dem Schreiben und verglich mit "=="
+	// statt ">=". output_size startet bei 1 und zaehlt je Durchlauf um 1 -
+	// bei nMaxLength 0 oder 1 wurde "==" deshalb NIE wahr und die Schleife
+	// schrieb bis zum Ende der QUELLE ueber das Zielfeld hinaus.
+	//
+	// Ausgeloest gesehen wurde es nie: alle heutigen Aufrufer uebergeben
+	// sizeof() eines grossen Feldes. Dieser Test haelt den Fall fest,
+	// damit der naechste Aufrufer mit kleinem Feld nicht hineinlaeuft.
+	TT_BeginTest("E-111: entartete Feldgroessen schreiben nicht hinaus");
+	{
+		char szEng[32];
+
+		// nMaxLength = 1: nur Platz fuer die abschliessende Null.
+		memset(szEng, 'X', sizeof(szEng));
+		UTRU_ResolveURL("abcdefghij", szEng, 1);
+		TT_CHECK_MSG(szEng[0] == 0,
+			"Bei nMaxLength=1 bleibt nur Platz fuer die Null");
+		TT_CHECK_MSG(szEng[1] == 'X',
+			"Byte 1 gehoert nicht mehr zum Feld - bis 7.2.0.120 wurde es beschrieben");
+		TT_CHECK_MSG(szEng[9] == 'X',
+			"Bis 7.2.0.120 lief die Schleife bis zum Quellende durch");
+
+		// nMaxLength = 0: gar kein Platz, auch nicht fuer die Null.
+		memset(szEng, 'X', sizeof(szEng));
+		UTRU_ResolveURL("abcdefghij", szEng, 0);
+		TT_CHECK_MSG(szEng[0] == 'X',
+			"Bei nMaxLength=0 darf kein einziges Byte angefasst werden");
+
+		// Gegenprobe: die normale Groesse verhaelt sich unveraendert.
+		memset(szEng, 'X', sizeof(szEng));
+		UTRU_ResolveURL("abcdefghij", szEng, 8);
+		TT_CHECK_MSG(strcmp(szEng, "abcdefg") == 0,
+			"nMaxLength=8 ergibt weiter 7 Zeichen plus Null");
+		TT_CHECK_MSG(szEng[8] == 'X',
+			"und fasst das Byte dahinter nicht an");
+		TT_Note("nMaxLength=1 -> '%s', nMaxLength=8 -> '%s'", "", szEng);
+	}
+	TT_EndTest();
 }

@@ -1,15 +1,15 @@
 #!/usr/bin/perl
 #
-# Sammelt die Befunddateien der Agenten ein und haengt sie an BEFUNDE.md an.
+# Sammelt die Befunddateien der Agenten ein und haengt sie an Intern/BEFUNDE.md an.
 #
 #   perl tools/befunde-einsammeln.pl              zeigt, was anliegt
-#   perl tools/befunde-einsammeln.pl --anhaengen  haengt an BEFUNDE.md an
+#   perl tools/befunde-einsammeln.pl --anhaengen  haengt an Intern/BEFUNDE.md an
 #   perl tools/befunde-einsammeln.pl --naechste E nennt die naechste freie Kennung
 #
 # WARUM ES DIESES WERKZEUG GIBT
 #
 # Am 05.09.2026 liefen bis zu acht Agenten gleichzeitig. Jeder hat seinen Befund
-# ans ENDE von BEFUNDE.md angehaengt - und genau deshalb endete JEDE einzelne
+# ans ENDE von Intern/BEFUNDE.md angehaengt - und genau deshalb endete JEDE einzelne
 # Zusammenfuehrung im Konflikt, viermal derselbe Handgriff an derselben Stelle.
 # Zweimal wurde ausserdem dieselbe Kennung (E-12) vergeben, weil zwei Agenten
 # unabhaengig "die naechste freie Nummer" suchten, waehrend der jeweils andere
@@ -26,12 +26,12 @@
 # unmoeglich, nicht nur unwahrscheinlich. Dieses Werkzeug fuehrt am Ende
 # zusammen, und zwar nachdem alle fertig sind.
 #
-# Das Verfahren steht vollstaendig in AGENTEN.md.
+# Das Verfahren steht vollstaendig in Intern/AGENTEN.md.
 #
 use strict;
 use warnings;
 
-# Die Urteilstabelle in BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
+# Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
 # liest, muss ihn ueberspringen - sonst sieht er die Tabelle leer.
 my $ANKER = qr/(?:<a\s+id="[^"]*"><\/a>)?/;
@@ -40,7 +40,7 @@ my $anhaengen = grep { $_ eq '--anhaengen' } @ARGV;
 my $naechste;
 for my $i (0 .. $#ARGV) { $naechste = $ARGV[$i+1] if $ARGV[$i] eq '--naechste' }
 
-my $ZIEL  = 'BEFUNDE.md';
+my $ZIEL  = 'Intern/BEFUNDE.md';
 my $ORDNER = 'Befunde';
 
 sub roh {
@@ -54,7 +54,7 @@ sub roh {
 
 # --- Kennungen, die es schon gibt ---------------------------------------------
 #
-# Gesucht wird in BEFUNDE.md UND in den noch nicht eingesammelten Dateien -
+# Gesucht wird in Intern/BEFUNDE.md UND in den noch nicht eingesammelten Dateien -
 # sonst waere die Antwort schon veraltet, sobald zwei Agenten laufen.
 
 sub belegte_kennungen {
@@ -116,7 +116,7 @@ if (defined $naechste and length $naechste) {
 unless (-d $ORDNER) {
     print "\n  Kein Ordner $ORDNER/ - nichts einzusammeln.\n\n";
     print "  Agenten schreiben ihren Befund nach $ORDNER/<AGENTENNAME>.md,\n";
-    print "  nicht nach $ZIEL. Siehe AGENTEN.md.\n\n";
+    print "  nicht nach $ZIEL. Siehe Intern/AGENTEN.md.\n\n";
     exit 0;
 }
 
@@ -179,7 +179,7 @@ unless ($anhaengen) {
 
 # --- Anhaengen ----------------------------------------------------------------
 #
-# Byte-erhaltend: BEFUNDE.md ist UTF-8 mit LF. Die Befunddateien werden woertlich
+# Byte-erhaltend: Intern/BEFUNDE.md ist UTF-8 mit LF. Die Befunddateien werden woertlich
 # uebernommen; nur ein Trenner kommt dazwischen.
 
 my $ziel = roh($ZIEL);

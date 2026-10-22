@@ -40,18 +40,18 @@ Eudora7.2/
 |---|---|
 | Woran wird „fertig" gemessen? | [ZIEL.md](../ZIEL.md) — die Quelle für Kriterien und Anforderungen |
 | Was hat sich je Fassung geändert? | [CHANGELOG.md](../CHANGELOG.md) |
-| Wie funktionieren Filter und Junk, und welche INI-Schlüssel gehören dazu? | [FILTER.md](../FILTER.md) |
-| Welche Schalter gibt es ohne Menüpunkt, und was überrascht beim Betrieb? | [EINSTELLUNGEN.md](../EINSTELLUNGEN.md) |
-| Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](../BEFUNDE.md), Einzelbefunde in `Befunde/` |
-| Was ist als Nächstes zu tun? | [AUFGABEN.md](../AUFGABEN.md), Einstieg in [WEITERMACHEN.md](../WEITERMACHEN.md) |
-| Wie teste ich, was auf mein Urteil wartet? | [TESTPLAN.md](../TESTPLAN.md) — die vierzehn, die frischen Behebungen, und was im Protokoll zu sehen sein muss |
-| Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](../PORTIERUNG.md) |
+| Wie funktionieren Filter und Junk, und welche INI-Schlüssel gehören dazu? | [FILTER.md](../Intern/FILTER.md) |
+| Welche Schalter gibt es ohne Menüpunkt, und was überrascht beim Betrieb? | [EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md) |
+| Was wurde gefunden, mit Messung und Fundstelle? | [BEFUNDE.md](../Intern/BEFUNDE.md), Einzelbefunde in `Befunde/` |
+| Was ist als Nächstes zu tun? | [AUFGABEN.md](../Intern/AUFGABEN.md), Einstieg in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md) |
+| Wie teste ich, was auf mein Urteil wartet? | [TESTPLAN.md](../Intern/TESTPLAN.md) — die vierzehn, die frischen Behebungen, und was im Protokoll zu sehen sein muss |
+| Wie wurde von VC6 auf VS2022 portiert, und warum so? | [PORTIERUNG.md](../Intern/PORTIERUNG.md) |
 | Welche Werkzeuge gibt es in `tools/`? | [tools/WERKZEUGE.md](../tools/WERKZEUGE.md) |
-| Was muss neben `Eudora.exe` liegen, damit sie startet? | [STARTUMGEBUNG.md](../STARTUMGEBUNG.md) |
+| Was muss neben `Eudora.exe` liegen, damit sie startet? | [STARTUMGEBUNG.md](../Intern/STARTUMGEBUNG.md) |
 | Welches ZIP gehört zu welchem Commit? | [Releases/PAKETE.md](../Releases/PAKETE.md) |
-| Wie arbeiten mehrere Agenten nebeneinander? | [AGENTEN.md](../AGENTEN.md) |
-| Wonach wird gebaut, geprüft, abgenommen? | [PRUEFUNG-BAU.md](../PRUEFUNG-BAU.md), [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md), [PRUEFUNG-BRANCH.md](../PRUEFUNG-BRANCH.md) |
-| Warum steht die Doku so, wie sie steht? | [LEKTORAT.md](../LEKTORAT.md) |
+| Wie arbeiten mehrere Agenten nebeneinander? | [AGENTEN.md](../Intern/AGENTEN.md) |
+| Wonach wird gebaut, geprüft, abgenommen? | [PRUEFUNG-BAU.md](../Intern/PRUEFUNG-BAU.md), [PRUEFUNG-CODE.md](../Intern/PRUEFUNG-CODE.md), [PRUEFUNG-BRANCH.md](../Intern/PRUEFUNG-BRANCH.md) |
+| Warum steht die Doku so, wie sie steht? | [LEKTORAT.md](../Intern/LEKTORAT.md) |
 
 ### Fassungen und Pakete
 
@@ -60,12 +60,12 @@ Zwei Nummern, und sie bedeuten Verschiedenes:
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.120` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Paketnummer**, z. B. `1.0.121` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 `cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
 gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
 verschiedene Bauten dieselbe Kennung, und ein Fehlerbericht ist keinem Stand
-mehr zuzuordnen (Befund [**V-1**](../BEFUNDE.md#v-1)).
+mehr zuzuordnen (Befund [**V-1**](../Intern/BEFUNDE.md#v-1)).
 
 Die Titelzeile nennt beide Nummern plus den Commit; ein Bildschirmfoto ist
 damit eindeutig. Welches ZIP zu welcher Marke und welchem Commit gehört, führt
@@ -98,7 +98,7 @@ Was man als Erstes wissen muss:
 Jede Änderung läuft über einen eigenen Zweig; `main` wird nicht direkt
 beschrieben. Mehrere Agenten arbeiten in getrennten Arbeitsbäumen, jeder
 schreibt seine Befunde in eine **eigene** Datei unter `Befunde/`, und
-`tools/befunde-einsammeln.pl` führt sie am Ende in [BEFUNDE.md](../BEFUNDE.md)
+`tools/befunde-einsammeln.pl` führt sie am Ende in [BEFUNDE.md](../Intern/BEFUNDE.md)
 zusammen — zwei Agenten fassen so nie dieselbe Datei an. Das Verfahren steht
-in [AGENTEN.md](../AGENTEN.md).
+in [AGENTEN.md](../Intern/AGENTEN.md).
 

@@ -2,7 +2,7 @@
 
 Vorarbeit vom 30.08.2026, Branch `eudora-exe-linkt`, gemessen an `a139f9b`.
 Gegengelesen und in sechs Punkten berichtigt am **06.09.2026** (Agent LEKTOR,
-`Befunde/LEKTOR-2.md`, [L-6](Befunde/LEKTOR.md#l-6)).
+`Befunde/LEKTOR-2.md`, [L-6](../Befunde/LEKTOR.md#l-6)).
 
 > **Überholt in den Voraussagen, weiter gültig in der Sache.** Diese Datei entstand,
 > als `Eudora.exe` noch nicht linkte. Inzwischen linkt sie (`a807b93`), **Eudora
@@ -168,7 +168,7 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
 Wenn ein Paket geprüft werden soll, bevor es jemand auspackt, gibt es dafür
 `tools/paket-pruefen.ps1`. Es rechnet die Startkette aus den PE-Importtabellen
 aus und zählt einen Treffer in `SysWOW64`/`System32` ausdrücklich **nicht** als
-vorhanden ([PR-2.0](Befunde/PAKET.md#pr-2.0) behoben am 06.09.2026, `Befunde/PAKET.md`). **Es ersetzt
+vorhanden ([PR-2.0](../Befunde/PAKET.md#pr-2.0) behoben am 06.09.2026, `Befunde/PAKET.md`). **Es ersetzt
 keinen Startversuch auf einem fremden Rechner** — es sagt, ob der Lader alles
 findet, nicht ob Eudora läuft.
 
@@ -179,7 +179,7 @@ nicht schon am Import scheitert. Sie sagt **nicht**, ob Eudora fehlerfrei läuft
 
 Dass Eudora **startet**, bedienbar ist und Mail über TLS abruft, ist seit dem
 31.08.2026 belegt und am 06.09.2026 mit 7.2.0.12 wieder gemessen; der Stand
-steht in [README.md](README.md) und [BEFUNDE.md](BEFUNDE.md). Offen sind
+steht in [README.md](../README.md) und [BEFUNDE.md](BEFUNDE.md). Offen sind
 weiterhin Strg-N, Doppelklick auf eine Nachricht, die Suchtreffer und das
 Beenden.
 

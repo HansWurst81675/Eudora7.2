@@ -18,10 +18,10 @@ jede offene, noch nicht gesicherte Nachricht mit — das ist der Weg, auf dem
 Text verlorengeht.
 
 **Im Hauptbaum liegt die Behebung schon, aber unversioniert** (der Wächter
-`bAllowThreadedFetch &&`, dort als [E-107](../BEFUNDE.md#e-107) bezeichnet). Solange dieser Stand
+`bAllowThreadedFetch &&`, dort als [E-107](../Intern/BEFUNDE.md#e-107) bezeichnet). Solange dieser Stand
 nicht committet und im Paket ist, darf **1.0.70 nicht hinaus**.
 
-Durch **[E-104](../BEFUNDE.md#e-104) geht kein Text verloren und wird nichts Falsches geschrieben** —
+Durch **[E-104](../Intern/BEFUNDE.md#e-104) geht kein Text verloren und wird nichts Falsches geschrieben** —
 nachgerechnet, siehe Abschnitt 3. `SA.PutText(CopyText)` schreibt Byte für Byte
 dasselbe wie vorher `SA.PutText(UnwrapText(CopyText))`.
 
@@ -29,7 +29,7 @@ dasselbe wie vorher `SA.PutText(UnwrapText(CopyText))`.
 
 ## 0. Was ich gefahren habe
 
-* `perl tools/befund-suchen.pl PgEmbeddedImage.cpp` → [E-2](../BEFUNDE.md#e-2) (anderer Ort,
+* `perl tools/befund-suchen.pl PgEmbeddedImage.cpp` → [E-2](../Intern/BEFUNDE.md#e-2) (anderer Ort,
   fortgeschrieben wird nichts), `ReadMessageDoc.cpp` → kein Eintrag.
 * Testsammlung **selbst gebaut und gefahren** im eigenen Arbeitsbaum
   (MSBuild → `Tests\Build\Debug\EudoraTests.exe`):
@@ -53,7 +53,7 @@ Ursprung (`SetWindowOrgEx`) und spielt die Metadatei dann unverändert ab.
 **Kein `SetViewportExtEx`, keine Skalierung.** Erst im `else`-Zweig (fremder
 Abbildungsmodus) wird auf `target_rect` skaliert. Eine Datei, die größer ist als
 die Angabe im HTML, wird also tatsächlich über ihren Kasten hinaus gezeichnet.
-Die Ursachenbeschreibung von [E-106](../BEFUNDE.md#e-106) ist damit bestätigt.
+Die Ursachenbeschreibung von [E-106](../Intern/BEFUNDE.md#e-106) ist damit bestätigt.
 
 ### P-39 (DATENVERLUST über einen Absturz) — der Block läuft auf einem flüchtigen Embed
 
@@ -73,7 +73,7 @@ flüchtigen Objekts und durchsucht damit das **ganze Dokument**
 (`pgGetIndEmbed`, `UseMemory`/`UnuseMemory` je Treffer), um anschließend mit
 `pgSetStyleInfo` **ins Dokument zu schreiben**.
 
-Warum [E-106](../BEFUNDE.md#e-106) dort ankommt und [E-103](../BEFUNDE.md#e-103) nicht: `EMBED_PREPARE_IMAGE` ruft nur, wenn
+Warum [E-106](../Intern/BEFUNDE.md#e-106) dort ankommt und [E-103](../Intern/BEFUNDE.md#e-103) nicht: `EMBED_PREPARE_IMAGE` ruft nur, wenn
 `!(image->source_width && image->source_height)` — die *Quell*größe ist
 unbekannt. Das schließt ein Bild mit `width`/`height` im HTML **nicht** aus:
 `embed->height` ist dann 52, `source_height` aber noch 0. Genau diese Lage ist
@@ -89,7 +89,7 @@ ESI=FFFFFFFF`.
     if ( bAllowThreadedFetch &&
          nEchtHoehe > 0 && embed->height > 0 && nEchtHoehe > embed->height )
 
-Ich habe den Wächter nachgerechnet, und er kostet [E-106](../BEFUNDE.md#e-106) nichts: für ein Bild
+Ich habe den Wächter nachgerechnet, und er kostet [E-106](../Intern/BEFUNDE.md#e-106) nichts: für ein Bild
 **mit** Maßangaben und gesetzten `source_*` ruft `EMBED_PREPARE_IMAGE` die
 Funktion gar nicht erst; der Fall kommt über `EMBED_LOAD_IMAGE` mit
 `bAllowThreadedFetch == true`. Der Wächter ist richtig.
@@ -99,7 +99,7 @@ paketfähig**. Der Stand aus dem Hauptbaum muss vorher committet sein.
 
 ### P-40 (Regressionsgefahr, gerechnet, nicht gemessen) — derselbe Wächter kann E-103 stilllegen
 
-Der Hauptbaum setzt denselben Wächter zusätzlich vor den **[E-103](../BEFUNDE.md#e-103)**-Nachtrag
+Der Hauptbaum setzt denselben Wächter zusätzlich vor den **[E-103](../Intern/BEFUNDE.md#e-103)**-Nachtrag
 (`:592-600`, `if ( bAllowThreadedFetch && pUrlImage->source_height > 0 )`). Das
 ist folgerichtig — dieser Block schreibt ebenfalls ins Dokument —, hat aber eine
 Nebenwirkung, die niemand gemessen hat:
@@ -111,7 +111,7 @@ Nebenwirkung, die niemand gemessen hat:
   (`PgEmbeddedImage.cpp:279`) — und ruft **nicht mehr**.
 * Mit dem Wächter läuft der Ascent-Nachtrag im Vorbereiten nicht, und ein
   zweiter Durchgang kommt nie. **Für eingebettete Bilder ohne Maßangabe wäre
-  [E-103](../BEFUNDE.md#e-103) damit wieder offen.**
+  [E-103](../Intern/BEFUNDE.md#e-103) damit wieder offen.**
 
 Für Bilder über `http://` bleibt alles richtig: dort findet das Vorbereiten
 keinen Dateipfad, der Nachtrag geschieht beim Laden. Gregors neun
@@ -122,9 +122,9 @@ fällt es an seinem Protokoll nicht auf.
 **eingebetteten** Bild ohne `height`-Attribut öffnen und im Protokoll nachsehen,
 ob
 
-    [E-103](../BEFUNDE.md#e-103) Zeilenhoehe: pos=... ascent-vorher=... nachgezogen=1
+    [E-103](../Intern/BEFUNDE.md#e-103) Zeilenhoehe: pos=... ascent-vorher=... nachgezogen=1
 
-noch erscheint. Erscheint sie nicht mehr, ist [E-103](../BEFUNDE.md#e-103) für diese Klasse
+noch erscheint. Erscheint sie nicht mehr, ist [E-103](../Intern/BEFUNDE.md#e-103) für diese Klasse
 zurückgefallen. Der saubere Weg wäre dann, den Nachtrag aus `PgLoadUrlImage`
 herauszulösen und ihn in `eCallback` bei `EMBED_LOAD_IMAGE` **auch dann** zu
 fahren, wenn `image->image_data` schon steht:
@@ -155,7 +155,7 @@ fahren, wenn `image->image_data` schon steht:
 (`Eudora71/PaigeDLL/PGHEADER/PGEMBED.H:231`) — ein **Zeiger auf den
 Stileintrag**, kein Schlüssel für dieses Bild. Zwei Bilder mit demselben
 Stileintrag sind nicht unterscheidbar, und dass zwei Bilder denselben Stil
-bekommen, ist bei [E-106](../BEFUNDE.md#e-106) der **Normalfall**: der HTML-Import setzt
+bekommen, ist bei [E-106](../Intern/BEFUNDE.md#e-106) der **Normalfall**: der HTML-Import setzt
 `current_style.ascent = (short)image_record.source_height`
 (`PGHTMIMP.CPP:2166`) — zwei Bilder mit derselben Maßangabe bekommen damit
 denselben Stil.
@@ -164,7 +164,7 @@ Folge: die Schleife bleibt beim **ersten** Bild dieses Stils stehen. Dessen
 Zeile wächst, die des zweiten nicht — der Text unter dem zweiten Bild bleibt
 zugedeckt, und über dem ersten entsteht eine Lücke. Kein Datenverlust, aber der
 Befund wird für einen Teil der Bilder nur scheinbar behoben. (Die Schleife
-stammt im Kern von QUALCOMM; [E-106](../BEFUNDE.md#e-106) weitet ihren Anwendungsbereich von „Bilder
+stammt im Kern von QUALCOMM; [E-106](../Intern/BEFUNDE.md#e-106) weitet ihren Anwendungsbereich von „Bilder
 ohne Maßangabe" auf „fast jedes Bild jeder Werbemail" aus, und damit auch diese
 Schwäche.)
 
@@ -208,7 +208,7 @@ Steht dort je `treffer=2` oder mehr, ist [P-41](PRUEFER-14.md#p-41) belegt.
 Bild über 32767 Punkt Höhe — lange Verlaufsgrafiken und Bildschirmmitschnitte
 gibt es — ergibt einen **negativen** Ascent. Der Vergleich darüber
 (`info106.ascent < nEchtHoehe`) rechnet in `long` und feuert dabei zuverlässig.
-[E-103](../BEFUNDE.md#e-103) hat das Problem nicht, dort ist die Quelle schon ein `short`.
+[E-103](../Intern/BEFUNDE.md#e-103) hat das Problem nicht, dort ist die Quelle schon ein `short`.
 
 Vorschlag, eine Zeile:
 
@@ -226,16 +226,16 @@ Stunden vorher `e227940` geschrieben („E-101-Spurmarke auf einen Kanal, der in
 der Vorgabe AN ist"), und die Begründung steht ausführlich in
 `tocview.cpp:3196-3215`.
 
-[E-106](../BEFUNDE.md#e-106) ist der **am wenigsten belegte** Eingriff im Paket — der Commit sagt es
+[E-106](../Intern/BEFUNDE.md#e-106) ist der **am wenigsten belegte** Eingriff im Paket — der Commit sagt es
 selbst: „NICHT NACHGEWIESEN … nur sein Lauf kann die Behebung belegen". Sein
 einziger Beleg ist eine Zeile, die in der Vorgabe nicht geschrieben wird. Bei
-Gregor steht MISC offenbar an (seine Protokolle tragen die [E-95](../BEFUNDE.md#e-95)/E-103-Marken),
+Gregor steht MISC offenbar an (seine Protokolle tragen die [E-95](../Intern/BEFUNDE.md#e-95)/E-103-Marken),
 für jeden anderen Stand und nach jeder frischen INI ist die Behebung stumm.
 
 In 25759 gesetzt sind nach `QCUtils/public/inc/debug.h:15-36` die Bits `0x01`,
 `RCVD`, `NAV`, `DIALOG`, `PROG`, `TOC_CORRUPT`, `FILTERS`, `LMOS` und `SEARCH`;
 einen eigenen Kanal für die Oberfläche gibt es nicht. Es bleibt dieselbe Wahl
-wie bei [E-101](../BEFUNDE.md#e-101): `DEBUG_MASK_DIALOG` (0x08), mit einem Satz zur Begründung im
+wie bei [E-101](../Intern/BEFUNDE.md#e-101): `DEBUG_MASK_DIALOG` (0x08), mit einem Satz zur Begründung im
 Quelltext — der Bildweg gehört zur Anzeige einer geöffneten Nachricht, und eine
 Marke, die einen zugedeckten Text belegen soll, darf nicht abschaltbar sein.
 
@@ -285,7 +285,7 @@ Konstruktor `export_bits |= INCLUDE_LF_WITH_CR;` — die Fassung in
 `Eudora71/PaigeDLL/PGTXR/PGEXPORT.CPP` tut das nicht, und `Eudora.vcxproj:406`
 übersetzt die eigene. **Ohne diese Zeile fände `FindBody` auf dem Lesefenster-Weg
 nie eine Grenze, und „Absätze raten" liefe ersatzlos ins Leere.** Wer die
-doppelte Datei einmal aufräumt, nimmt [E-104](../BEFUNDE.md#e-104) mit. Das gehört aufgeschrieben, und
+doppelte Datei einmal aufräumt, nimmt [E-104](../Intern/BEFUNDE.md#e-104) mit. Das gehört aufgeschrieben, und
 deshalb steht es hier.
 
 ### <a id="p-45"></a>P-45 (Mangel, mittel; kein Datenverlust) — `FindBody` läuft bei Teilnachrichten zweimal
@@ -376,7 +376,7 @@ Die neue Bedingung lautet `!bHatContentType && ( bWarHtml || bHochbyte )`.
 `bHochbyte` ist wahr, sobald **ein einziges Byte ≥ 0x80** im Rumpf steht — also
 bei jedem Umlaut. Aus dem eigenen Testlauf, wörtlich:
 
-    [E-101](../BEFUNDE.md#e-101) speichern: kopfzeilen=0 ... typ=text/plain charset=ISO-8859-1
+    [E-101](../Intern/BEFUNDE.md#e-101) speichern: kopfzeilen=0 ... typ=text/plain charset=ISO-8859-1
     bytes-vorher=17 nachher=119 rumpf-vorher=17 rumpf-nachher=17 mime-ergaenzt=1
 
 Aus 17 Byte Text werden 119. Wer „Kopfzeilen einschließen" **aus** hat — nach
@@ -444,7 +444,7 @@ gar keinen Puffer. Wer den Puffer behalten will, meldet ihn über `atexit` ab.
 
 * **[P-8](PRUEFER-11.md#p-8), [P-9](PRUEFER-11.md#p-9), [P-10](PRUEFER-11.md#p-10), [P-12](PRUEFER-11.md#p-12)** (`PGHTMIMP.CPP`) — unverändert offen, seit PRÜFER-11
   bzw. -14 nichts daran geändert. [P-10](PRUEFER-11.md#p-10) (die feste Klemmung von
-  `current_style.ascent/descent` in `ProcessEmbed`) hat durch [E-103](../BEFUNDE.md#e-103) und [E-106](../BEFUNDE.md#e-106)
+  `current_style.ascent/descent` in `ProcessEmbed`) hat durch [E-103](../Intern/BEFUNDE.md#e-103) und [E-106](../Intern/BEFUNDE.md#e-106)
   an Gewicht gewonnen: drei Stellen stellen jetzt dieselbe Zeilenhöhe ein, eine
   beim Import und zwei beim Laden. **[P-11](PRUEFER-11.md#p-11) ist behoben** (`e28875c`).
 * **[M-3](PRUEFER-15.md#m-3)** (`filtersd.cpp:2048` und `:2083`) — **offen und jetzt schädlicher als
@@ -467,13 +467,13 @@ gar keinen Puffer. Wer den Puffer behalten will, meldet ihn über `atexit` ab.
   (`Eudora71/Eudora/PGHTMEXP.CPP:190-194`, QUALCOMM: „provide no value and just
   clutter things up"). Die Datei trägt damit Latin-1-Bytes ohne jede Angabe;
   jeder heutige Browser nimmt UTF-8 an und zeigt aus „gültig" etwas anderes.
-  Das ist derselbe Befund wie [E-101](../BEFUNDE.md#e-101), nur für die andere Dateiendung, und [E-101](../BEFUNDE.md#e-101)
+  Das ist derselbe Befund wie [E-101](../Intern/BEFUNDE.md#e-101), nur für die andere Dateiendung, und [E-101](../Intern/BEFUNDE.md#e-101)
   löst ihn für `.htm` nicht mit. Kleinster Eingriff, an der Schreibstelle statt
   im Filter:
 
       view->GetMessageAsHTML(msg, E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ));
 
-      // BEFUND [E-101](../BEFUNDE.md#e-101) fuer .htm: der Ausgabefilter schreibt kein <head>
+      // BEFUND [E-101](../Intern/BEFUNDE.md#e-101) fuer .htm: der Ausgabefilter schreibt kein <head>
       // (PGHTMEXP.CPP:190). Ohne Angabe nimmt jeder Browser UTF-8 an,
       // die Bytes sind aber Latin-1.
       {
@@ -494,7 +494,7 @@ gar keinen Puffer. Wer den Puffer behalten will, meldet ihn über `atexit` ab.
    ab — gemessen an 1.0.69. Das ist die einzige Schranke, die zwingend ist.
 2. **[P-40](PRUEFER-14.md#p-40) nachmessen**, sobald 1.0.70 läuft: eingebettetes Bild ohne
    `height`-Attribut öffnen, `E-103 Zeilenhoehe … nachgezogen=1` im Protokoll
-   suchen. Fehlt die Zeile, ist [E-103](../BEFUNDE.md#e-103) für eingebettete Bilder zurückgefallen.
+   suchen. Fehlt die Zeile, ist [E-103](../Intern/BEFUNDE.md#e-103) für eingebettete Bilder zurückgefallen.
 3. **[P-43](#p-43)**: solange die E-106-Marke auf `DEBUG_MASK_MISC` liegt, muss Gregor
    `LogLevel` mit gesetztem MISC-Bit fahren, sonst belegt sein Lauf nichts.
 4. [P-41](PRUEFER-14.md#p-41), [P-42](#p-42), [P-45](#p-45), [P-46](#p-46) und [M-3](PRUEFER-15.md#m-3) sind klein und können in einem Zug nach dem
@@ -507,12 +507,12 @@ Nichts davon außer Punkt 1 steht einem Paket im Weg.
 ## Nachtrag, 21:42 — Punkt 1 ist committet
 
 Während dieser Bericht geschrieben wurde, hat die andere Sitzung den Wächter
-als **`7d555df` („[E-107](../BEFUNDE.md#e-107): Absturz beim Antworten — von mir mit [E-106](../BEFUNDE.md#e-106)
+als **`7d555df` („[E-107](../Intern/BEFUNDE.md#e-107): Absturz beim Antworten — von mir mit [E-106](../Intern/BEFUNDE.md#e-106)
 eingeschleppt", 1.0.71)** committet, auf `paketliste-glattziehen`. Sie hat den
 Absturz unabhängig und schärfer belegt, als ich es konnte: die **letzte Zeile
 vor dem Abbruch** in Gregors Protokoll ist die E-106-Spurmarke selbst —
 
-    [E-106](../BEFUNDE.md#e-106) groesser als angegeben: attr=135x40 quelle=405x120 gefunden=1 pos=765
+    [E-106](../Intern/BEFUNDE.md#e-106) groesser als angegeben: attr=135x40 quelle=405x120 gefunden=1 pos=765
 
 — danach nichts mehr. Damit ist [P-39](PRUEFER-14.md#p-39) nicht nur hergeleitet, sondern gemessen,
 und `attr=135x40 quelle=405x120` ist zugleich der Beleg dafür, dass es die

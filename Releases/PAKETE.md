@@ -3,13 +3,13 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 21.10.2026 (Pakete bis 1.0.120 verzeichnet und geschnürt; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 22.10.2026 (Nummern bis 1.0.121 verzeichnet, geschnürt ist bis 1.0.120; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
 > haben hier keinen eigenen Eintrag, obwohl sie gebaut und teilweise
 > veröffentlicht wurden. Der Mangel ist als **M-4** in
-> [PRUEFUNG-CODE.md](../PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
+> [PRUEFUNG-CODE.md](../Intern/PRUEFUNG-CODE.md) festgehalten und weiterhin offen.
 >
 > **Versioniert im Repo sind nur noch zwei ZIPs** — **am 14.09.2026 neu
 > gemessen mit `git ls-files Releases/`, und die frühere Angabe stimmte
@@ -156,12 +156,21 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.121
+
+**Nicht geschnürt.** Die Nummer ist am 22.10.2026 vergeben, weil der
+Quellstand auf **7.2.0.121** gehoben wurde ([E-111](../Intern/BEFUNDE.md#e-111):
+`resolve_URL` schreibt nicht mehr über das Zielfeld hinaus, 246 Tests, 246
+bestanden, mit Gegenprobe). Es gibt kein ZIP und kein Testverzeichnis bei
+Gregor; der Eintrag steht hier, damit die Nummer nicht ein zweites Mal
+vergeben wird.
+
 ## 1.0.120 — geschnürt am 21.10.2026 um 14:14 nach `C:\Users\Gregor\Eudora72-1.0.120-release`, Quellstand 7.2.0.120, Zweig `e-135-vervollstaendigungsbox`
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 21.10.2026 um 14:14, `C:\Users\Gregor\Eudora72-1.0.120-release`. ZIP `Releases/Eudora72-1.0.120-release.zip`, **9 381 870 Byte**, SHA-256 `26fde41437ae159659675f73cef9037a87aff755e3f71ca5a4bc084a3af6a6a1` — mit `Get-FileHash` an der Datei selbst gemessen, nicht aus dem Bauprotokoll übernommen. Die `Eudora.exe` im Paket ist byte-gleich mit der im Bauverzeichnis (MD5 `C93AEE9B`, Fassung 7.2.0.120, 21.10.2026 14:14:01). `paket-pruefen.ps1`: **keine Fehler**, Kriterium 0 *JA*, 0 Defender-Funde, 4 bekannte Warnungen wie in 1.0.119 |
-| Inhalt | wie 1.0.119, dazu [E-135](../BEFUNDE.md#e-135): **die Vervollständigungsbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt.** `ReCalcACListBoxPos` (`AutoCompleteSearcher.cpp:530`) las mit `GetClientRect` das Innenmaß und setzte daraus über `MoveWindow` das Außenmaß, plus sechs Pixel; gemessen ist der nichtklientische Rand **14** Pixel, und gerufen wird **zweimal** je Cursor-Schritt. Jetzt Außenmaß gegen Außenmaß, wie es `InitList` von Anfang an machte. Dazu [PRÜFER-43 K9](../Befunde/PRUEFER-43.md#k9) als **Sicherung** in `nicktree.cpp:2941` |
+| Inhalt | wie 1.0.119, dazu [E-135](../Intern/BEFUNDE.md#e-135): **die Vervollständigungsbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt.** `ReCalcACListBoxPos` (`AutoCompleteSearcher.cpp:530`) las mit `GetClientRect` das Innenmaß und setzte daraus über `MoveWindow` das Außenmaß, plus sechs Pixel; gemessen ist der nichtklientische Rand **14** Pixel, und gerufen wird **zweimal** je Cursor-Schritt. Jetzt Außenmaß gegen Außenmaß, wie es `InitList` von Anfang an machte. Dazu [PRÜFER-43 K9](../Befunde/PRUEFER-43.md#k9) als **Sicherung** in `nicktree.cpp:2941` |
 | Gemessen | **Am eigenen Prüfstand nachgestellt, vorher rot.** `tools/messen-e135.ps1` unter `tools/testlauf.ps1`, Prüfstand `C:\Temp\E135-box` mit fünf Kurznamen gleichen Anfangs, je sechs Cursor-Schritte, zwei nachweislich verschiedene EXE (MD5 `b50d9136` gegen `1158d27c`). Vorher: 100×62, 84×46, 68×30, 52×14, 36×14, 20×14. Nachher: **sechsmal 108×70**. Bau Release 0 Fehler, **243 Tests, 243 bestanden** |
 | Offen | Die Testsuite deckt diesen Weg **nicht** ab. **K9 ist nicht gemessen:** die von [PRÜFER-43](../Befunde/PRUEFER-43.md#k9) vorhergesagte Wirkung — Rechtsklick wählt nicht aus, Kontextmenü ausgegraut — war an fünf Klickhöhen in **beiden** Fassungen nicht nachstellbar (`tools/messen-k9.ps1`); die Zeile bleibt als Sicherung drin. Ebenfalls offen: `InitList` rechnet ohne `ScreenToClient`, `ReCalcACListBoxPos` mit — ob das ein zweiter Fehler ist, ist nicht gemessen |
 | Veröffentlicht | als **`v1.0.120`** am 21.10.2026 um **19:07:37 UTC** (= 21:07:37 Ortszeit), Marke auf **`30feeae2`**, auf GitHub *Latest*: https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120 — Anhang `Eudora72-1.0.120-release.zip`, **9 381 870 Byte**, SHA-256 `26fde41437ae159659675f73cef9037a87aff755e3f71ca5a4bc084a3af6a6a1`, am Anhang gemessen mit `gh release view v1.0.120 --json assets` und byte-gleich mit dem ZIP im Arbeitsbaum. **Es trägt drei Fassungen:** 7.2.0.118, 7.2.0.119 und 7.2.0.120 — 1.0.118 und 1.0.119 haben kein eigenes Release bekommen. Freigabe von Gregor: *„ich habe ja schon alles getestet."* **Nachgetragen am 21.10.2026 abends vom LEKTOR** ([L-49.5](../Befunde/LEKTOR-49.md#l-49.5)): die Zeile fehlte hier, obwohl die Abschnitte 1.0.112 und 1.0.113 sie führen |
@@ -171,7 +180,7 @@ haben.
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 21.10.2026 um 13:07, `C:\Users\Gregor\Eudora72-1.0.119-release`. ZIP `Releases/Eudora72-1.0.119-release.zip`, **9 382 180 Byte**, SHA-256 `c39e475d16fc11cb8b503aff2fe410472eadb22cdabda3d50e5375f0404bfd2b` — an der Datei selbst gemessen, nicht aus dem Bauprotokoll übernommen. Die `Eudora.exe` im Paket ist byte-gleich mit der im Bauverzeichnis (MD5 `B50D9136`, 3 020 800 Byte, 21.10.2026 13:07:21, Fassung 7.2.0.119). `paket-pruefen.ps1`: **keine Fehler**, Kriterium 0 *JA*, 34 Dateien, 0 Defender-Funde, 4 bekannte Warnungen wie in 1.0.118 |
-| Inhalt | wie 1.0.118, dazu [E-134](../BEFUNDE.md#e-134): **ein neuer Adressbucheintrag nimmt den eingetippten Kurznamen an.** `CTreeCtrl::SelectItem()` tut **nichts**, wenn das Element schon die Karette trägt — auch dann nicht, wenn ein `DoDeselectAll()` davor `TVIS_SELECTED` gelöscht hat. `AddNewNickname` und `NicknameWasChanged` verlassen sich darauf, dass `SelectItem()` auswählt; letztere läuft bei **jedem** Tastendruck im Namensfeld und hat die Karette also immer schon dort. Beide ziehen den Zustand jetzt mit `DoSelectItem(…, TRUE)` nach. Dazu ein zweites, unabhängiges Stück: das `return` in `NicknameEditChanged` griff **immer**, wenn sich der Name geändert hatte, und `ASSERT(0)` daneben ist im Freigabebau nichts |
+| Inhalt | wie 1.0.118, dazu [E-134](../Intern/BEFUNDE.md#e-134): **ein neuer Adressbucheintrag nimmt den eingetippten Kurznamen an.** `CTreeCtrl::SelectItem()` tut **nichts**, wenn das Element schon die Karette trägt — auch dann nicht, wenn ein `DoDeselectAll()` davor `TVIS_SELECTED` gelöscht hat. `AddNewNickname` und `NicknameWasChanged` verlassen sich darauf, dass `SelectItem()` auswählt; letztere läuft bei **jedem** Tastendruck im Namensfeld und hat die Karette also immer schon dort. Beide ziehen den Zustand jetzt mit `DoSelectItem(…, TRUE)` nach. Dazu ein zweites, unabhängiges Stück: das `return` in `NicknameEditChanged` griff **immer**, wenn sich der Name geändert hatte, und `ASSERT(0)` daneben ist im Freigabebau nichts |
 | Gemessen | **Am eigenen Prüfstand nachgestellt, vorher rot.** Je drei Läufe mit frischem Prüfstand, Prüfgröße `Mailverzeichnis\NNdbase.txt` nach *New* → `hans` eintippen → Fokus weg → beenden. Das ausgelieferte **1.0.118** schreibt dreimal `alias Untitled` — der Fehler, wie Gregor ihn gemeldet hat. **Diese Fassung** schreibt dreimal `alias hans`. Im Code abgelesen: *„nach SelectItem allein: NICHT ausgewaehlt"*, *„nach DoSelectItem: ausgewaehlt"*, `Auswahl im Baum` von `(0)` auf `(1)`. Bau Release 0 Fehler, **243 Tests, 243 bestanden** |
 | Offen | Die Testsuite deckt diesen Weg **nicht** ab; der Beleg ist die Messung am laufenden Programm. **Neu offen seit [PRÜFER-43](../Befunde/PRUEFER-43.md):** *warum* die Karette in diesem Bau schon auf dem neuen Eintrag steht, wo sie es in Hermes nicht tat. Die zuerst hier genannte Vermutung *„Fassung der Common Controls oder der MFC"* ist **widerlegt** — PRÜFER hat `TVM_SELECTITEM`/`TVGN_CARET` an einem eigenen Baumsteuerelement mit denselben Stilbits gemessen, dasselbe Programm zweimal gebunden (comctl32 **5.82** ohne Manifest und **6.16** mit), **beide Fassungen verhalten sich gleich**. Weiter offen: [K9](../Befunde/PRUEFER-43.md#k9) — `OnRightButtonDown` (`nicktree.cpp:2941`) trägt denselben Fehlerfall wortwörtlich, Rechtsklick wählt nicht aus und das Kontextmenü bleibt ausgegraut; **nicht gemessen**, deshalb nicht vor diesem Paket eingebaut. Der Quelltext von `nickview.cpp/.h`, `nicktree.cpp/.h` und `Eudora.manifest` ist seit dem initial commit **von uns nie angefasst** worden — eine Portierungsfolge ohne eigene Zeile, passend zu Gregors Hinweis, dass es in Hermes ging |
 
@@ -200,7 +209,7 @@ haben.
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 21.10.2026, `C:\Users\Gregor\Eudora72-1.0.116-release`, mit `TESTEN.txt` |
-| Inhalt | wie 1.0.115, dazu [E-132](../BEFUNDE.md#e-132) dritter Teil aus [PRÜFER-41](../Befunde/PRUEFER-41.md): **K1** — die Rückfrage kam nur auf **einem von drei** Startwegen, weil `ExecutableDir` sonst leer ist (betroffen `mailto:`, Postfachdateien, Briefpapier, gezogene Anhänge; im Protokoll stand dann `eigenes="" fremd=0`, was wie eine Entwarnung aussieht); **K2** — mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* gar nicht mehr, und *Nein* ist die Vorgabe; **K7** — *Copy info* meldete „Copied" auch dann, wenn nichts in der Zwischenablage stand. Dazu auf Gregors Ansage *„ja, merken"*: die Antwort wird je fremdem Verzeichnis in der `DEudora.ini` gemerkt (`E132Abgelehnt` / `E132Angenommen`), *Abbrechen* nicht |
+| Inhalt | wie 1.0.115, dazu [E-132](../Intern/BEFUNDE.md#e-132) dritter Teil aus [PRÜFER-41](../Befunde/PRUEFER-41.md): **K1** — die Rückfrage kam nur auf **einem von drei** Startwegen, weil `ExecutableDir` sonst leer ist (betroffen `mailto:`, Postfachdateien, Briefpapier, gezogene Anhänge; im Protokoll stand dann `eigenes="" fremd=0`, was wie eine Entwarnung aussieht); **K2** — mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* gar nicht mehr, und *Nein* ist die Vorgabe; **K7** — *Copy info* meldete „Copied" auch dann, wenn nichts in der Zwischenablage stand. Dazu auf Gregors Ansage *„ja, merken"*: die Antwort wird je fremdem Verzeichnis in der `DEudora.ini` gemerkt (`E132Abgelehnt` / `E132Angenommen`), *Abbrechen* nicht |
 | Gemessen, **rot und grün** | Derselbe Prüfstand `C:\Temp\Eudora Pruefstand 116` — Kurzform `C:\Temp\EUDORA~1`, **mit Leerzeichen im Pfad**, Aufbau wie in unseren Paketen —, derselbe Handgriff: starten, *Nein* drücken, dreißig Sekunden **zusehen ohne einzugreifen**. **an 1.0.115 rot:** es erscheint ein Fenster *Eudora* mit der Fehlermeldung, und im `Mailverzeichnis` entsteht **kein Protokoll** — Eudora kommt gar nicht hoch. **an 1.0.116 grün:** die Rückfrage, dann das Programmfenster, und das **Protokoll ist da**. Dazu: der Pfad steht ausgeschrieben im Protokoll, der zweite Start fragt nicht mehr (`gemerkte Antwort Nein fuer …`), die fremde `Eudora.ini` bleibt SHA-256-gleich. **243 Tests, 243 bestanden**, Bau Release 0 Fehler. **Der erste Versuch war kein Beweis:** das Messskript beendete den Prozess am Ende selbst, und dann ist nicht mehr zu unterscheiden, ob Eudora von allein gestorben ist oder ob ich es umgebracht habe — deshalb greift der zweite Lauf nicht ein |
 | Nach dem Paket eingebaut | [PRÜFER-41](../Befunde/PRUEFER-41.md) **K5** — gefragt wurde nur, wenn im fremden Verzeichnis eine `Eudora.ini` liegt. Nach *Ja* legt Eudora dort aber `Attach\`, `Embedded\`, Postfächer und beim Beenden eine frische `Eudora.ini` an; eine kopierte **Sicherung ohne INI** wurde also ungefragt in Besitz genommen. Jetzt genügt irgendeine Spur einer Einrichtung (`Eudora.ini`, `In.mbx`, `Attach\`, `Embedded\`), und nachgesehen wird in dem Verzeichnis, über das auch entschieden wird — vorher wurde `szIni` geprüft und `szVerzeichnis` benutzt. **K6** — die Zeile *„Mail folder from"* im Über-Dialog log auf vier Wegen, darunter der häufigste überhaupt: liegt eine `Eudora.ini` neben der EXE, sagte sie *„(unbekannt)"*, obwohl die Antwort *Programmverzeichnis* feststeht. **Beides ist im Quelltext, aber NICHT im Paket 1.0.116** |
 | Warum es diesen Prüfstand braucht | `C:\Temp\E132` hat **keine** 8.3-Kurzform und **kein** Leerzeichen und fährt nur den Startweg mit leerer Befehlszeile. Drei grüne Messungen dort, und der Fehler war trotzdem da — gefunden hat ihn Gregor am laufenden 1.0.114. Seit dem 21.10.2026 prüft `tools/pruefe-pruefstand-pfad.pl` einen Prüfpfad auf genau diese drei Lagen |
@@ -210,7 +219,7 @@ haben.
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 21.10.2026, `C:\Users\Gregor\Eudora72-1.0.115-release`, mit `TESTEN.txt` |
-| Inhalt | wie 1.0.114, dazu die **zweite** Behebung zu [E-132](../BEFUNDE.md#e-132): Eudora hielt sein **eigenes** Mailverzeichnis für fremd und fragte bei jedem Start. Die Registry trägt die 8.3-Kurzform (`EUDORA~1.114`), `ExecutableDir` die Langform; `E132LangerPfad` löst jetzt beide Seiten auf, und der Dialog zeigt den ganzen Pfad. Dazu der Präfix ohne Grenze (`C:\Eudora` schluckte `C:\Eudora2`) |
+| Inhalt | wie 1.0.114, dazu die **zweite** Behebung zu [E-132](../Intern/BEFUNDE.md#e-132): Eudora hielt sein **eigenes** Mailverzeichnis für fremd und fragte bei jedem Start. Die Registry trägt die 8.3-Kurzform (`EUDORA~1.114`), `ExecutableDir` die Langform; `E132LangerPfad` löst jetzt beide Seiten auf, und der Dialog zeigt den ganzen Pfad. Dazu der Präfix ohne Grenze (`C:\Eudora` schluckte `C:\Eudora2`) |
 | Gemessen | **Von Gregor am 21.10.2026 an 1.0.115 bestätigt:** *„2x nacheinander starten verhält sich jetzt korrekt"*, und im Dialog steht der ausgeschriebene Pfad statt `EUDORA~1.113`. Er hat ausserdem nachgewiesen, dass die Rückfrage **wiederkommt**, wenn dazwischen 1.0.114 läuft — das ist richtig so, 1.0.114 ist aus Sicht von 1.0.115 eine fremde Installation. **243 Tests, 243 bestanden**, Bau Release 0 Fehler, `Eudora.exe` im Paket byteidentisch mit `Bin\Release`, keine Debug-Laufzeit, Defender 0 Funde |
 | Gefunden hat beides Gregor | 1.0.114 lag zwei Minuten bei ihm. Mein Prüfstand lag in `C:\Temp\E132` — **zu kurz für einen 8.3-Alias**, und hat den Fehler dadurch weggemessen. Alle drei Messungen am laufenden Programm waren grün, und der Fehler war trotzdem da |
 | Nach dem Paket eingebaut | [PRÜFER-41](../Befunde/PRUEFER-41.md) K1 (die Rückfrage gab es nur auf **einem von drei** Startwegen, weil `ExecutableDir` sonst leer ist) und K2 (mit einem Leerzeichen im Programmpfad startete Eudora nach *Nein* **gar nicht mehr** — und *Nein* ist die Vorgabe). **Beide sind im Quelltext, aber NICHT im Paket 1.0.115** |
@@ -242,19 +251,19 @@ haben.
 | | |
 |---|---|
 | Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.114-release`, am 21.10.2026 bereitgestellt. **Steht heute nicht mehr bei ihm** (gemessen am 21.10.2026: dort liegen 1.0.110 bis 1.0.113 und 1.0.115 bis 1.0.117); wer es entfernt hat, ist nicht gemessen |
-| Inhalt | wie 1.0.113, dazu: [E-132](../BEFUNDE.md#e-132) behoben — Eudora fragt, bevor es das Mailverzeichnis einer **fremden** Installation übernimmt, die es über die Registry gefunden hat. Vorgabe ist *Nein* (eigenes Verzeichnis anlegen), damit ein unbedachtes Enter nichts beschädigt. Dazu zwei Dinge, die erst die Messung gezeigt hat: `E132AufrufZerlegen` trennt die **zwei** Pfade, die in der Registry in **einer** Zeichenkette stehen, und die Spurmarken werden gemerkt, bis das Protokoll offen ist — vorher konnten sie gar nicht geschrieben werden |
+| Inhalt | wie 1.0.113, dazu: [E-132](../Intern/BEFUNDE.md#e-132) behoben — Eudora fragt, bevor es das Mailverzeichnis einer **fremden** Installation übernimmt, die es über die Registry gefunden hat. Vorgabe ist *Nein* (eigenes Verzeichnis anlegen), damit ein unbedachtes Enter nichts beschädigt. Dazu zwei Dinge, die erst die Messung gezeigt hat: `E132AufrufZerlegen` trennt die **zwei** Pfade, die in der Registry in **einer** Zeichenkette stehen, und die Spurmarken werden gemerkt, bis das Protokoll offen ist — vorher konnten sie gar nicht geschrieben werden |
 | Gemessen | **am laufenden Programm, auf allen drei Wegen** (20.10.2026, `C:\Temp\E132` gegen die fremde Installation `C:\Temp\E131`; die Antwort kam als `WM_COMMAND` an ein gemessenes Fensterhandle). *Nein:* `fremd=1`, danach `eigenes gewaehlt="C:\Temp\E132\Mailverzeichnis"`, fremde `Eudora.ini` SHA-256 unverändert. *Ja:* `fremdes bewusst uebernommen`, das Protokoll landet im **fremden** Verzeichnis und dessen `Eudora.ini` ändert sich nach fünfzehn Sekunden (`LastKnownCrashInfo=0` → `=1`) — genau der Schaden aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102). *Abbrechen:* das Programm endet, nichts wird angefasst. **Gegenprobe:** zeigt die Registry auf das eigene Paket, steht `fremd=0` und es wird nicht gefragt. **241 Tests, 241 bestanden**, Bau Release 0 Fehler |
-| Defender | **1.0.113 wurde am 20.10.2026 um 20:33:12 beim Starten eingezogen** (`Trojan:Win32/Bearfoos.A!ml`, Signaturstand 1.461.115.0) — dritter betroffener Bau nach 1.0.98 (16.10.) und 1.0.111 (20.10., 13:17:28, acht Minuten nach einer Prüfung mit 0 Funden; gemessen und in der Commit-Nachricht von `0f4b2b1a` festgehalten). Nach **Erkennungen** gezählt ist es der vierte Fall, und um 20:45:19 kam ein fuenfter dazu. Ein gezielter Scan derselben Datei meldet **nichts**; der Fund kommt beim **Ausführen**. Die Meldung an Microsoft liegt fertig ausgefüllt in [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md); absenden muss sie ein Mensch, das Formular verlangt ein CAPTCHA ([E-124](../BEFUNDE.md#e-124)) |
+| Defender | **1.0.113 wurde am 20.10.2026 um 20:33:12 beim Starten eingezogen** (`Trojan:Win32/Bearfoos.A!ml`, Signaturstand 1.461.115.0) — dritter betroffener Bau nach 1.0.98 (16.10.) und 1.0.111 (20.10., 13:17:28, acht Minuten nach einer Prüfung mit 0 Funden; gemessen und in der Commit-Nachricht von `0f4b2b1a` festgehalten). Nach **Erkennungen** gezählt ist es der vierte Fall, und um 20:45:19 kam ein fuenfter dazu. Ein gezielter Scan derselben Datei meldet **nichts**; der Fund kommt beim **Ausführen**. Die Meldung an Microsoft liegt fertig ausgefüllt in [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md); absenden muss sie ein Mensch, das Formular verlangt ein CAPTCHA ([E-124](../Intern/BEFUNDE.md#e-124)) |
 
 ## 1.0.113 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.113-release`, Quellstand 7.2.0.113, Zweig `e-131-leistenposition`
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.113-release`, mit `TESTEN.txt` |
-| Inhalt | wie 1.0.112, dazu: [E-131](../BEFUNDE.md#e-131) behoben — keine ungültige Fensterposition mehr in der `Eudora.ini`, die eine daneben installierte Eudora/Hermes 7.1 beim Start abstürzen ließ |
+| Inhalt | wie 1.0.112, dazu: [E-131](../Intern/BEFUNDE.md#e-131) behoben — keine ungültige Fensterposition mehr in der `Eudora.ini`, die eine daneben installierte Eudora/Hermes 7.1 beim Start abstürzen ließ |
 | Gemessen | **rot:** ein einziges Starten und Beenden von 7.2.0.112 im Prüfverzeichnis schrieb `MRUFloatXPos=-2147483648` **dreimal** in die INI, die von 3249 auf 6480 Byte wuchs. **grün:** nach der Behebung `E-131 Leistenposition: abschnitte-mit-eintrag=5 berichtigt=5`, danach `MRUFloatXPos=40` und **null** Treffer für `INT_MIN`; beim zweiten Lauf dasselbe. **234 Tests, 234 bestanden** (fünf neue, darunter die Gegenprobe, dass gewöhnliche Positionen unangetastet bleiben). Bau Release 0 Fehler. **Offen bleibt der Leseweg** — eine bereits kaputte INI wird erst beim nächsten Sichern berichtigt |
 | Veröffentlicht | als **`v1.0.113`** am 20.10.2026 um **13:01:36 UTC**, Marke auf **`ac094f15`** (Merge von PR **#117**), Anhang **`Eudora72-1.0.113-release.zip`**, SHA-256 `0d1d4bf43eab8323f2ce3ad2ff1c78f44af5c7adf7a84e979334aab5687f4772`. **Am 20.10.2026 vom CHRONIST nachgetragen und gegen `gh release view v1.0.113` sowie `git rev-parse v1.0.113^{commit}` gemessen** — die Zeile fehlte, und `WEITERMACHEN.md:45` schrieb dieser Fassung stattdessen die Angaben von 1.0.112 zu (11:55:10 UTC, `f87a4a74`, PR #113, SHA `0406c108…`). Dadurch wies `doku-pruefen.pl` auf `origin/main` jeden Commit und jeden Push ab. **Noch offen:** der Abschnitt zu 1.0.112 unten beansprucht dieselbe Marke; gemessen ist, dass der veröffentlichte Anhang und seine Prüfsumme zu **1.0.113** gehören ([CHRONIST-2026-10-20b](../Befunde/CHRONIST-2026-10-20b.md), Punkt 6b) |
-| Defender | vor dem Hochladen geprüft: **34 Dateien, 0 Funde**. **Das war kein Freispruch:** am 20.10.2026 um **20:33:12** zog Defender `C:\Users\Gregor\Eudora72-1.0.113-release\Eudora.exe` **beim Starten** ein (`Trojan:Win32/Bearfoos.A!ml`, Signaturstand 1.461.115.0), Gregor hat sie aus der Quarantäne geholt; um **20:45:19** traf es dieselbe EXE noch einmal, ausgepackt von unserer eigenen Schranke. Eingereicht bei Microsoft am 20.10.2026 um 20:57:52, Vorgang `a567fe2a-9f58-47e1-a675-a62733ec538f` ([E-124](../BEFUNDE.md#e-124), [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md)) |
+| Defender | vor dem Hochladen geprüft: **34 Dateien, 0 Funde**. **Das war kein Freispruch:** am 20.10.2026 um **20:33:12** zog Defender `C:\Users\Gregor\Eudora72-1.0.113-release\Eudora.exe` **beim Starten** ein (`Trojan:Win32/Bearfoos.A!ml`, Signaturstand 1.461.115.0), Gregor hat sie aus der Quarantäne geholt; um **20:45:19** traf es dieselbe EXE noch einmal, ausgepackt von unserer eigenen Schranke. Eingereicht bei Microsoft am 20.10.2026 um 20:57:52, Vorgang `a567fe2a-9f58-47e1-a675-a62733ec538f` ([E-124](../Intern/BEFUNDE.md#e-124), [DEFENDER-FEHLALARM.md](DEFENDER-FEHLALARM.md)) |
 
 ## 1.0.112 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.112-release`, Quellstand 7.2.0.112, Zweig `e-123-transfersame`, **als `v1.0.112` veröffentlicht**
 
@@ -263,14 +272,14 @@ haben.
 | Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.112-release`, mit `TESTEN.txt` |
 | Veröffentlicht | **`v1.0.112`** am 20.10.2026 um 11:55:10 UTC auf GitHub, Marke auf `f87a4a74` = Merge von PR #113; ZIP `Eudora72-1.0.112-release.zip`, SHA-256 `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`. Die Release-Notizen standen beim Veröffentlichen verstümmelt da – siehe [LEKTOR-43](../Befunde/LEKTOR-43.md#l-43.1) |
 | Inhalt | wie 1.0.111, **ohne** den Hochladezähler in `CImapSameServerTransferMsgAction::DoWork` ([PRÜFER-39](../Befunde/PRUEFER-39.md) N1); dazu beide neuen Schranken im **versionierten** Haken |
-| Gemessen | **ohne Nachstellung** — Gregor am 20.10.2026: *„wie auch immer: release eine neue version, alles in release notes und changelog, auch der neue befund“* und *„ja, mach das!“*. Diese Fassung behebt **keinen** Fehler Gregors, sie **nimmt eine Gefahr zurück**, die [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 gefunden hat; ein rot-grüner Lauf am Prüfstand ist dafür nicht zu führen, weil der entfernte Zweig nur bei einer im Netz hängenden Verbindung sichtbar würde. **Belegt am Quelltext:** `DoWork` läuft im Nebenfaden (`QCTaskManager.cpp:1095`, `AfxBeginThread` in `:549`), `RequestThreadStop()` ist ein leerer Rumpf (`ImapActionQueue.cpp:709`) — der Zähler hätte `bLaeuft` dauerhaft wahr halten und Eudora unbeendbar machen können. **Gemessen an Gregors eigenen Protokollen, dass das Entfernen nichts ändert:** bei Weg 2b blieb `laeuft=0`, bei Weg 2a kam `laeuft=1` aus `m_bE123UebertragungLaeuft` (`:3768`). Bau Release 0 Fehler, **229 Tests, 229 bestanden**. **Warnung in den Release-Notizen:** [E-131](../BEFUNDE.md#e-131), von außen gemeldet, von uns nicht nachgestellt |
+| Gemessen | **ohne Nachstellung** — Gregor am 20.10.2026: *„wie auch immer: release eine neue version, alles in release notes und changelog, auch der neue befund“* und *„ja, mach das!“*. Diese Fassung behebt **keinen** Fehler Gregors, sie **nimmt eine Gefahr zurück**, die [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 gefunden hat; ein rot-grüner Lauf am Prüfstand ist dafür nicht zu führen, weil der entfernte Zweig nur bei einer im Netz hängenden Verbindung sichtbar würde. **Belegt am Quelltext:** `DoWork` läuft im Nebenfaden (`QCTaskManager.cpp:1095`, `AfxBeginThread` in `:549`), `RequestThreadStop()` ist ein leerer Rumpf (`ImapActionQueue.cpp:709`) — der Zähler hätte `bLaeuft` dauerhaft wahr halten und Eudora unbeendbar machen können. **Gemessen an Gregors eigenen Protokollen, dass das Entfernen nichts ändert:** bei Weg 2b blieb `laeuft=0`, bei Weg 2a kam `laeuft=1` aus `m_bE123UebertragungLaeuft` (`:3768`). Bau Release 0 Fehler, **229 Tests, 229 bestanden**. **Warnung in den Release-Notizen:** [E-131](../Intern/BEFUNDE.md#e-131), von außen gemeldet, von uns nicht nachgestellt |
 
 ## 1.0.111 — geschnürt am 20.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.111-release`, Quellstand 7.2.0.111, Zweig `e-123-transfersame`
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 20.10.2026, `C:\Users\Gregor\Eudora72-1.0.111-release`, mit `TESTEN.txt` |
-| Inhalt | wie 1.0.110, dazu: die Wache beim Beenden zählt **jede** Übertragungsart, nicht nur die aus einem lokalen Postfach ([E-123](../BEFUNDE.md#e-123)) |
+| Inhalt | wie 1.0.110, dazu: die Wache beim Beenden zählt **jede** Übertragungsart, nicht nur die aus einem lokalen Postfach ([E-123](../Intern/BEFUNDE.md#e-123)) |
 | Gemessen | Gregors Lauf an 1.0.110 vom 20.10.2026 ist der Fehlerstand: `E-123 Warteschlange: konto=1 eintraege=1 … laeuft=0 uebertragungen=0` bei einem `transfersame`-Eintrag in `actionqueue.dat`, Fenster sofort weg. Nach der Behebung zählt `E123OffeneUebertragungen` die Basisklasse `CImapTransferMsgAction`. Schranke `tools/pruefe-e123-zaehlung.pl` gegengetestet: am Fehlerstand **2 von 2 rot**, nach der Behebung grün; `--selbsttest` 2 Fälle, 0 Fehler. Bau Release 0 Fehler. **Von Gregor am 20.10.2026 an 1.0.111 am laufenden Programm bestätigt (Wege 2a und 2b):** `uebertragungen=1` statt vorher `0`, `E-123 Beenden wartet auf 1 Uebertragung(en)`, `Warten zu Ende nach 4015 ms`; Weg 2a ebenso mit `laeuft=1` und 6015 ms |
 
 ## 1.0.110 — geschnürt am 19.10.2026 nach `C:\Users\Gregor\Eudora72-1.0.110-release`, Quellstand 7.2.0.110, Zweig `e-69-meldungsflut`
@@ -438,7 +447,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.106-release` |
-| Inhalt | wie 1.0.104, dazu: übersprungene Nachricht beim Filtern erscheint in *Task Errors* ([E-69](../BEFUNDE.md#e-69)) |
+| Inhalt | wie 1.0.104, dazu: übersprungene Nachricht beim Filtern erscheint in *Task Errors* ([E-69](../Intern/BEFUNDE.md#e-69)) |
 | Gemessen | nachgestellt am Prüfstand: an 7.2.0.104 nur Protokollzeile ohne Meldung (Fehler: lautlos), an 7.2.0.106 Eintrag in Task Errors, Nachricht bleibt in `In`; E-123 wie 1.0.104; Testsuite 209/209 |
 
 ## 1.0.105 — **nie gebaut als Paket**, Zwischenbau 7.2.0.105 (Meldungstext *„message text is empty“*), nur am Prüfstand
@@ -464,7 +473,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.102-release` |
-| Inhalt | wie 1.0.101, dazu: Beenden wartet auf IMAP-Übertragungen, belegte Verbindung blockiert die Warteschlange nicht mehr ([E-123](../BEFUNDE.md#e-123)) |
+| Inhalt | wie 1.0.101, dazu: Beenden wartet auf IMAP-Übertragungen, belegte Verbindung blockiert die Warteschlange nicht mehr ([E-123](../Intern/BEFUNDE.md#e-123)) |
 | Gemessen | nachgestellt am Prüfstand: an 7.2.0.101 kein Warten, Hochladen nie bestätigt (Fehler), an 7.2.0.102 Warten 10 s bis zum bestätigten Hochladen, sauber beendet; Testsuite 209/209 |
 
 ## 1.0.101 — **veröffentlicht als `v1.0.101`** (17.10.2026), Quellstand 7.2.0.101, Zweig `e-121-mehrere-gesendete` (eigene Kennung für gesendete Post, E-67 gemessen)
@@ -472,29 +481,29 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 17.10.2026, `C:\Users\Gregor\Eudora72-1.0.101-release` |
-| Inhalt | wie 1.0.100, dazu: gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung, eine gescheiterte Vorab-Kopie wird sofort entfernt ([E-121](../BEFUNDE.md#e-121)); Spurmarken zu [E-67](../BEFUNDE.md#e-67) |
+| Inhalt | wie 1.0.100, dazu: gesendete Post bekommt beim Verschieben nach IMAP eine eigene Kennung, eine gescheiterte Vorab-Kopie wird sofort entfernt ([E-121](../Intern/BEFUNDE.md#e-121)); Spurmarken zu [E-67](../Intern/BEFUNDE.md#e-67) |
 | Gemessen | Prüfstand an 7.2.0.101: Normalfall, abgelehntes Hochladen (Kopie entfernt, Mail bleibt in `In`), Kollisionsfall; Filterfenster nachgestellt – an 7.2.0.101 grün, Gegenprobe mit dem alten Vergleich zeigt den Fehler (`verb-auswahl=14 eintraege=2`); Testsuite 209/209. Die Kennung für gesendete Post ist am Prüfstand nicht nachstellbar – Prüfung bei Gregor, auf seine Anweisung (*„nur was nicht geht, werde ich testen.“*). |
 | Defender | sauber (Paketprüfung, 34 Dateien, 0 Funde) |
 | Release-ZIP | gebaut am 17.10.2026, `Releases/Eudora72-1.0.101-release.zip`, 9 066 464 Byte, SHA-256 `79a40bc00e2ca4d929e23f4ad5d043a8cbdab27ce9a7ab66eb58a77764e8694a`; die 34 EXE/DLL/OCX byteidentisch mit Gregors getestetem `Eudora72-1.0.101-release`; Paketprüfung mit Defender am entpackten ZIP: 0 Funde. **Veröffentlicht als `v1.0.101`** – am 17.10.2026 um 19:12:08 UTC auf GitHub veröffentlicht (*Latest*, Marke auf `eec4e4e5` = Merge von PR #99, ZIP 9 066 464 Byte, SHA-256 `79a40bc00e2ca4d929e23f4ad5d043a8cbdab27ce9a7ab66eb58a77764e8694a`, nachgerechnet an der von GitHub zurückgeladenen Datei; die 34 EXE/DLL/OCX byteidentisch mit Gregors getestetem `Eudora72-1.0.101-release`; Defender: 0 Funde). |
 | URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.101 |
 | Freigabe | Gregor am 17.10.2026: *„ja, veröffentlichen“* (nach seinem Test von 1.0.101 in vier Runden und dem Merge von PR #99) |
-| Bei Gregor | bestätigt am 17.10.2026: zwei gesendete Mails mit zwei verschiedenen eigenen Kennungen hochgeladen; in der Liste erst nach Neuöffnen des Ordners sichtbar ([E-121](../BEFUNDE.md#e-121)) |
+| Bei Gregor | bestätigt am 17.10.2026: zwei gesendete Mails mit zwei verschiedenen eigenen Kennungen hochgeladen; in der Liste erst nach Neuöffnen des Ordners sichtbar ([E-121](../Intern/BEFUNDE.md#e-121)) |
 
 ## 1.0.100 — **nicht ausgeliefert**, Quellstand 7.2.0.100, Zweig `e-121-mehrere-gesendete` ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1, F3, F4)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.100-release` |
-| Inhalt | wie 1.0.99, dazu: mehrere gesendete Mails in einer Übertragung nach IMAP ([E-121](../BEFUNDE.md#e-121)), leere Kennungsliste, Sperre in `SetDisplayWindow` ([E-83](../BEFUNDE.md#e-83)) |
+| Inhalt | wie 1.0.99, dazu: mehrere gesendete Mails in einer Übertragung nach IMAP ([E-121](../Intern/BEFUNDE.md#e-121)), leere Kennungsliste, Sperre in `SetDisplayWindow` ([E-83](../Intern/BEFUNDE.md#e-83)) |
 | Stand | Testsuite 209/209; sechs Prüfstandläufe an 7.2.0.100 grün (Normalfall, Server ohne neue UID, Kollisionsfall); F1 selbst **ohne Nachstellung** – am Prüfstand nicht nachstellbar (Kennung 0 nur aus `Out`), bei Gregor (GMX mit UIDPLUS) tritt es nicht auf. Gregor hat entschieden, ohne Nachstellung zu testen: *„ja, leg 1.0.100 hin, ich teste es“* (Chat, 16.10.2026). Sein Test: zwei gesendete Mails auf einmal verschieben. |
-| Bei Gregor | 16.10.2026 (nachgetragen von [LEKTOR-39](../Befunde/LEKTOR-39.md), Quelle `WEITERMACHEN.md`): eine gesendete Mail `test 20261016c` hochgeladen (`id=0 … hochgeladen=1`, einmal in der `OUTBOX`), zwei Mails aus `In` mit `markiert=1`, sauber beendet. Der Fall *mehrere gesendete Mails auf einmal* ist damit nicht gemessen ([PRÜFER-32](../Befunde/PRUEFER-32.md)). Dabei gefunden: [E-125](../BEFUNDE.md#e-125). Kein Release wegen [PRÜFER-32](../Befunde/PRUEFER-32.md) (zwei Wege zum Datenverlust, behoben in 7.2.0.101) |
+| Bei Gregor | 16.10.2026 (nachgetragen von [LEKTOR-39](../Befunde/LEKTOR-39.md), Quelle `WEITERMACHEN.md`): eine gesendete Mail `test 20261016c` hochgeladen (`id=0 … hochgeladen=1`, einmal in der `OUTBOX`), zwei Mails aus `In` mit `markiert=1`, sauber beendet. Der Fall *mehrere gesendete Mails auf einmal* ist damit nicht gemessen ([PRÜFER-32](../Befunde/PRUEFER-32.md)). Dabei gefunden: [E-125](../Intern/BEFUNDE.md#e-125). Kein Release wegen [PRÜFER-32](../Befunde/PRUEFER-32.md) (zwei Wege zum Datenverlust, behoben in 7.2.0.101) |
 
 ## 1.0.99 — **nicht ausgeliefert**, Quellstand 7.2.0.99, Zweig `e-118_HTML_header` (Neubau von 1.0.98, E-124)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.99-release` |
-| Inhalt | derselbe Quelltext wie 1.0.98, neu gebaut ([E-124](../BEFUNDE.md#e-124): Defender stufte 1.0.98 als Trojaner ein) |
+| Inhalt | derselbe Quelltext wie 1.0.98, neu gebaut ([E-124](../Intern/BEFUNDE.md#e-124): Defender stufte 1.0.98 als Trojaner ein) |
 | Gemessen | wie 1.0.98 nachgestellt (Start-Abgleich: an 7.2.0.96/97 12 von 12 hängend, Fehler `liegengeblieben`; Kollisionsfall an 1.0.95 mit Fehler); an 7.2.0.99 drei Läufe hochgeladen; Defender sauber vor und nach den Läufen; Testsuite 209/209 |
 | Defender | 1.0.98: `Trojan:Win32/Bearfoos.A!ml` (nicht ausliefern); 1.0.99: sauber |
 | Bei Gregor | bestätigt am 16.10.2026: gesendete Mail und zwei Mails aus `In` hochgeladen, sauber beendet |
@@ -504,24 +513,24 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 16.10.2026, `C:\Users\Gregor\Eudora72-1.0.98-release` |
-| Inhalt | wie 1.0.97, dazu: eine beim Start schon erledigte Aufgabe bleibt nicht mehr stehen ([E-83](../BEFUNDE.md#e-83)) |
+| Inhalt | wie 1.0.97, dazu: eine beim Start schon erledigte Aufgabe bleibt nicht mehr stehen ([E-83](../Intern/BEFUNDE.md#e-83)) |
 | Gemessen | Nachgestellt: an 7.2.0.96 und 7.2.0.97 hingen 12 von 12 Läufen am Start-Abgleich (Fehler `liegengeblieben`), an 7.2.0.98 10 von 10 hochgeladen; Kollisionsfall an 1.0.95 mit Fehler nachgestellt, an 7.2.0.98 grün; Testsuite 209/209. Gesendete Post (Kennung 0) am Prüfstand nicht nachstellbar – Prüfung bei Gregor. |
-| Bei Gregor | 16.10.2026: Microsoft Defender beendete das laufende Programm (`Trojan:Win32/Bearfoos.A!ml`, [E-124](../BEFUNDE.md#e-124)) – kein Absturz; die gesendete Mail war schon hochgeladen (`id=0 … hochgeladen=1`). **Nicht testen, nicht ausliefern**, ersetzt durch 1.0.99 |
+| Bei Gregor | 16.10.2026: Microsoft Defender beendete das laufende Programm (`Trojan:Win32/Bearfoos.A!ml`, [E-124](../Intern/BEFUNDE.md#e-124)) – kein Absturz; die gesendete Mail war schon hochgeladen (`id=0 … hochgeladen=1`). **Nicht testen, nicht ausliefern**, ersetzt durch 1.0.99 |
 
 ## 1.0.97 — **nicht ausgeliefert, nicht freigegeben**, Quellstand 7.2.0.97, Zweig `e-118_HTML_header` (E-121: gesendete Post wieder hochgeladen, N1)
 
 | | |
 |---|---|
 | Testverzeichnis | am 15.10.2026 bei Gregor abgelegt, `C:\Users\Gregor\Eudora72-1.0.97-release`; **nicht testen** (`f6d98141`: *„Gregor testet 1.0.97 nicht“*), ersetzt durch 1.0.99 |
-| Inhalt | wie 1.0.96, dazu: gesendete Post (Kennung 0) wird wieder hochgeladen ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1, Rückfall in 1.0.96), nur die markierte Quelle wird entfernt (N1, [E-121](../BEFUNDE.md#e-121)) |
-| Stand | Testsuite 209/209, Paketprüfung grün. **Keine Nachstellung am Prüfstand** – F1 ist dort nicht nachstellbar, für N1/Kollision fehlte die Zustimmung zu Fenstern. Ob ohne Nachstellung getestet wird, entscheidet Gregor (siehe WEITERMACHEN.md). **Nachtrag 16.10.2026 ([LEKTOR-37](../Befunde/LEKTOR-37.md#l-37.5)):** am Prüfstand hingen an 7.2.0.96 und 7.2.0.97 zusammen 12 von 12 Läufen am Start-Abgleich – Ursache [E-83](../BEFUNDE.md#e-83), behoben in 7.2.0.98; der Verdacht eines Rückfalls in 7.2.0.97 ist widerlegt. |
+| Inhalt | wie 1.0.96, dazu: gesendete Post (Kennung 0) wird wieder hochgeladen ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1, Rückfall in 1.0.96), nur die markierte Quelle wird entfernt (N1, [E-121](../Intern/BEFUNDE.md#e-121)) |
+| Stand | Testsuite 209/209, Paketprüfung grün. **Keine Nachstellung am Prüfstand** – F1 ist dort nicht nachstellbar, für N1/Kollision fehlte die Zustimmung zu Fenstern. Ob ohne Nachstellung getestet wird, entscheidet Gregor (siehe WEITERMACHEN.md). **Nachtrag 16.10.2026 ([LEKTOR-37](../Befunde/LEKTOR-37.md#l-37.5)):** am Prüfstand hingen an 7.2.0.96 und 7.2.0.97 zusammen 12 von 12 Läufen am Start-Abgleich – Ursache [E-83](../Intern/BEFUNDE.md#e-83), behoben in 7.2.0.98; der Verdacht eines Rückfalls in 7.2.0.97 ist widerlegt. |
 
 ## 1.0.96 — **nicht ausgeliefert**, Quellstand 7.2.0.96, Zweig `e-118_HTML_header` (E-121 Kollision Kennung/Server-UID)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.96-release` |
-| Inhalt | wie 1.0.95, dazu: die Vorab-Kopie trägt ein Merkzeichen, eine fremde Mail mit gleicher UID wird nicht mehr angefasst ([E-121](../BEFUNDE.md#e-121)) |
+| Inhalt | wie 1.0.95, dazu: die Vorab-Kopie trägt ein Merkzeichen, eine fremde Mail mit gleicher UID wird nicht mehr angefasst ([E-121](../Intern/BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; Prüfstand mit `--fremde-uid`: an 1.0.95 Gregors Fehler nachgestellt, an 1.0.96 grün |
 | Bei Gregor | bestätigt am 15.10.2026: kein Fehlerdialog, vier Übertragungen alle hochgeladen |
 | Freigabe | **nicht veröffentlichen** ([PRÜFER-30](../Befunde/PRUEFER-30.md) F1: gesendete Post mit Kennung 0 wird nicht hochgeladen, behoben in 1.0.97) |
@@ -531,70 +540,70 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.95-release` |
-| Inhalt | wie 1.0.94, dazu: die Vorab-Kopie wird an Ort und Stelle aktualisiert ([E-121](../BEFUNDE.md#e-121)) |
+| Inhalt | wie 1.0.94, dazu: die Vorab-Kopie wird an Ort und Stelle aktualisiert ([E-121](../Intern/BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; am Prüfstand nicht gemessen |
-| Gregors Test, 15.10.2026 | Doppelanzeige weg; neuer Fehler *„Attempt to add the message to mailbox Inbox failed“* – lokale Kennung 13 gleich Server-UID 13, die fremde Mail wurde für die Vorab-Kopie gehalten. Kein Verlust, die Mail blieb in In ([E-121](../BEFUNDE.md#e-121), behoben in 1.0.96) |
+| Gregors Test, 15.10.2026 | Doppelanzeige weg; neuer Fehler *„Attempt to add the message to mailbox Inbox failed“* – lokale Kennung 13 gleich Server-UID 13, die fremde Mail wurde für die Vorab-Kopie gehalten. Kein Verlust, die Mail blieb in In ([E-121](../Intern/BEFUNDE.md#e-121), behoben in 1.0.96) |
 
 ## 1.0.94 — **nicht ausgeliefert**, Quellstand 7.2.0.94, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, vierter Teil)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.94-release` |
-| Inhalt | wie 1.0.93, dazu: der Abgleich ersetzt einen Eintrag mit derselben UID, statt ihn zu verdoppeln ([E-121](../BEFUNDE.md#e-121)) |
+| Inhalt | wie 1.0.93, dazu: der Abgleich ersetzt einen Eintrag mit derselben UID, statt ihn zu verdoppeln ([E-121](../Intern/BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; am Prüfstand nicht gemessen |
-| Gregors Test, 15.10.2026 | **nicht bestanden:** weiter doppelt in der Fensterliste, nach dem Neuöffnen einmal; `summen` unverändert, der Abgleich-Weg aus 7.2.0.94 lief gar nicht ([E-121](../BEFUNDE.md#e-121)) |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** weiter doppelt in der Fensterliste, nach dem Neuöffnen einmal; `summen` unverändert, der Abgleich-Weg aus 7.2.0.94 lief gar nicht ([E-121](../Intern/BEFUNDE.md#e-121)) |
 
 ## 1.0.93 — **nicht ausgeliefert**, Quellstand 7.2.0.93, Zweig `e-118_HTML_header` (E-121 Doppelanzeige ohne UIDPLUS)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.93-release` |
-| Inhalt | wie 1.0.92, dazu: meldet der Server keine UID, wird die Vorab-Kopie nach dem Hochladen entfernt ([E-121](../BEFUNDE.md#e-121)) |
+| Inhalt | wie 1.0.92, dazu: meldet der Server keine UID, wird die Vorab-Kopie nach dem Hochladen entfernt ([E-121](../Intern/BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; Am Prüfstand NICHT gemessen (vier Läufe mit `--ohne-appenduid` hingen alle am Start-Abgleich des Prüfservers); Prüfung bei Gregor mit offenem IMAP-Ordner. |
-| Gregors Test, 15.10.2026 | **nicht bestanden** (*„FAILED“*): weiter doppelt in Inbox und OUTBOX bis zum Neuöffnen; GMX meldet die UID, die UIDPLUS-Vermutung ist widerlegt ([E-121](../BEFUNDE.md#e-121)) |
+| Gregors Test, 15.10.2026 | **nicht bestanden** (*„FAILED“*): weiter doppelt in Inbox und OUTBOX bis zum Neuöffnen; GMX meldet die UID, die UIDPLUS-Vermutung ist widerlegt ([E-121](../Intern/BEFUNDE.md#e-121)) |
 
 ## 1.0.92 — **nicht ausgeliefert**, Quellstand 7.2.0.92, Zweig `e-118_HTML_header` (E-121 Doppelanzeige, zweiter Teil)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.92-release` |
-| Inhalt | wie 1.0.91, dazu: die ersetzte Vorab-Kopie trägt die Server-UID, damit der Abgleich keine zweite Zeile einfügt ([E-121](../BEFUNDE.md#e-121)) |
+| Inhalt | wie 1.0.91, dazu: die ersetzte Vorab-Kopie trägt die Server-UID, damit der Abgleich keine zweite Zeile einfügt ([E-121](../Intern/BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; am Prüfstand nicht im Doppelfall gemessen |
-| Gregors Test, 15.10.2026 | **nicht bestanden:** drei Mails, jede doppelt bei offenem Ordner ([E-121](../BEFUNDE.md#e-121)) |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** drei Mails, jede doppelt bei offenem Ordner ([E-121](../Intern/BEFUNDE.md#e-121)) |
 
 ## 1.0.91 — **nicht ausgeliefert**, Quellstand 7.2.0.91, Zweig `e-118_HTML_header` (E-121 Doppelanzeige)
 
 | | |
 |---|---|
 | Testverzeichnis | bereitgestellt am 15.10.2026, `C:\Users\Gregor\Eudora72-1.0.91-release` |
-| Inhalt | wie 1.0.90, dazu: nach dem Verschieben in einen IMAP-Ordner steht die Mail nicht mehr doppelt da ([E-121](../BEFUNDE.md#e-121)) |
+| Inhalt | wie 1.0.90, dazu: nach dem Verschieben in einen IMAP-Ordner steht die Mail nicht mehr doppelt da ([E-121](../Intern/BEFUNDE.md#e-121)) |
 | Gemessen | Testsuite 209/209; Prüfstand: `summen=1` im Fall mit Vorab-Kopie |
-| Gregors Test, 15.10.2026 | **nicht bestanden:** die Mail steht nach dem Verschieben weiter doppelt da, bis der Ordner neu geöffnet wird ([E-121](../BEFUNDE.md#e-121)) |
+| Gregors Test, 15.10.2026 | **nicht bestanden:** die Mail steht nach dem Verschieben weiter doppelt da, bis der Ordner neu geöffnet wird ([E-121](../Intern/BEFUNDE.md#e-121)) |
 
 ## 1.0.90 — **nicht ausgeliefert**, Quellstand 7.2.0.90, Zweig `e-118_HTML_header` (E-118 Teil 2, E-121)
 
 | | |
 |---|---|
 | Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.90-release`, Grundlage 1.0.84-ZIP, 33 EXE/DLL/OCX aus dem Bau (`SPELL32.DLL` aus dem ZIP), `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`, `paket-pruefen.ps1`: keine Fehler, `TESTEN.txt` (Kopie `Releases/1.0.90/TESTEN.txt`); PRÜFER-29: auslieferbar |
-| Inhalt | wie 1.0.89, dazu [E-118](../BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder werden mit hochgeladen) und [E-121](../BEFUNDE.md#e-121) (kein Verlust beim Verschieben in einen IMAP-Ordner) |
+| Inhalt | wie 1.0.89, dazu [E-118](../Intern/BEFUNDE.md#e-118) Teil 2 (eingebettete Bilder werden mit hochgeladen) und [E-121](../Intern/BEFUNDE.md#e-121) (kein Verlust beim Verschieben in einen IMAP-Ordner) |
 | Gemessen | Testsuite 209/209; IMAP-Prüfserver: Bild als `multipart/related` mit `Content-ID`, Fußzeile erhalten; fehlende Kopie und abgelehntes `APPEND` ohne Verlust |
-| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../BEFUNDE.md#e-118) Teil 2 an der SoftMaker-Mail (*„ja, bilder sind drin.“*). **Gemeldet:** nach dem Verschieben erscheint die Mail doppelt, auf dem Server einmal ([E-121](../BEFUNDE.md#e-121), behoben in 1.0.91 bis 1.0.96) |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../Intern/BEFUNDE.md#e-118) Teil 2 an der SoftMaker-Mail (*„ja, bilder sind drin.“*). **Gemeldet:** nach dem Verschieben erscheint die Mail doppelt, auf dem Server einmal ([E-121](../Intern/BEFUNDE.md#e-121), behoben in 1.0.91 bis 1.0.96) |
 
 ## 1.0.89 — **nicht ausgeliefert**, Quellstand 7.2.0.89, Zweig `e-118_HTML_header` (E-118)
 
 | | |
 |---|---|
-| Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.89-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip`, darüber 33 EXE/DLL/OCX aus `Eudora71/Bin/Release` (`SPELL32.DLL` bleibt die aus dem ZIP); `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`; `paket-pruefen.ps1`: keine Fehler; beide melden 7.2.0.89. Im Paket `TESTEN.txt` (Kopie `Releases/1.0.89/TESTEN.txt`); Prüfschritte in [TESTPLAN.md](../TESTPLAN.md#c5) |
-| Inhalt | wie 1.0.88, dazu [E-118](../BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
+| Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.89-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip`, darüber 33 EXE/DLL/OCX aus `Eudora71/Bin/Release` (`SPELL32.DLL` bleibt die aus dem ZIP); `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`; `paket-pruefen.ps1`: keine Fehler; beide melden 7.2.0.89. Im Paket `TESTEN.txt` (Kopie `Releases/1.0.89/TESTEN.txt`); Prüfschritte in [TESTPLAN.md](../Intern/TESTPLAN.md#c5) |
+| Inhalt | wie 1.0.88, dazu [E-118](../Intern/BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
 | Gemessen | Testsuite 207/207 (`TestE118.cpp`); IMAP-Prüfserver: `text/html` mit Zeichensatz, ohne Hülle; Gegenprobe 1.0.88 ohne `Content-Type` |
-| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../BEFUNDE.md#e-118) an der waipu.tv-Mail (in den IMAP-Ordner verschoben, erscheint als HTML). **Nicht bestanden:** bei der SoftMaker-Mail fehlten danach die eingebetteten Bilder (*„hier fehlt der inhalt“*) – [E-118](../BEFUNDE.md#e-118) Teil 2, eingebaut in 1.0.90. [E-105](../BEFUNDE.md#e-105) an 1.0.89 noch nicht geprüft |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../Intern/BEFUNDE.md#e-118) an der waipu.tv-Mail (in den IMAP-Ordner verschoben, erscheint als HTML). **Nicht bestanden:** bei der SoftMaker-Mail fehlten danach die eingebetteten Bilder (*„hier fehlt der inhalt“*) – [E-118](../Intern/BEFUNDE.md#e-118) Teil 2, eingebaut in 1.0.90. [E-105](../Intern/BEFUNDE.md#e-105) an 1.0.89 noch nicht geprüft |
 
 ## 1.0.88 — **nicht ausgeliefert**, Quellstand 7.2.0.88, gemergt mit PR #97 (E-105); Gregor verzichtete auf einen eigenen Test
 
 | | |
 |---|---|
 | Testverzeichnis | noch keines bei Gregor; gemessen in `C:\Temp\E105` (Programmdateien aus `Eudora71/Bin/Release`, 14.10.2026) |
-| Inhalt | wie 1.0.87, dazu [E-105](../BEFUNDE.md#e-105): Abschnitte mit `style="display:none"` werden samt Inhalt nicht angezeigt |
+| Inhalt | wie 1.0.87, dazu [E-105](../Intern/BEFUNDE.md#e-105): Abschnitte mit `style="display:none"` werden samt Inhalt nicht angezeigt |
 | Gemessen | Testsuite 202/202 (`TestE105.cpp`); Prüfnachricht `Testdaten/e105-handyfassung-versteckt.eml`: Öffnen und Weiterleiten ohne versteckte Teile, Gegenprobe 1.0.87 zeigt sie |
 
 ## 1.0.87 — **veröffentlicht als `v1.0.87`** am 14.10.2026, Quellstand 7.2.0.87 (E-117, mit E-112, E-103, E-115)
@@ -602,32 +611,32 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | | |
 |---|---|
 | Testverzeichnis | **bereitgestellt am 13.10.2026** nach LEKTOR-31, PRÜFER-25 (auslieferbar) und CHRONIST, `C:\Users\Gregor\Eudora72-1.0.87-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem gemessenen Prüfstand `C:\Temp\E112-1085`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide melden 7.2.0.87. Im Paket `TESTEN.txt` mit den Testschritten (Kopie `Releases/1.0.87/TESTEN.txt`). Von Gregor getestet, siehe unten |
-| Inhalt | wie 1.0.86, dazu [E-117](../BEFUNDE.md#e-117): `&amp;` in Bildadressen |
-| Gemessen | Testsuite 196/196 (`TestResolveURL.cpp` (8), vorher rot); am laufenden Programm (`C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml`, Bildserver `tools/bildserver-e117.pl`): 7.2.0.85 holt `&amp;` und malt ein Pixel, 7.2.0.87 holt `&` und das Bild (`Datei=330x327 gemalt=165x164`), siehe [E-117](../BEFUNDE.md#e-117); das ZIP entstand erst zum Release (siehe unten) |
-| Gregors Test, 14.10.2026 | **bestätigt:** [E-117](../BEFUNDE.md#e-117) (Bildschirmfoto: eBay-Synology-Weiterleitung, das Produktfoto steht unter „Der Countdown läuft!“; *„so?“*) |
+| Inhalt | wie 1.0.86, dazu [E-117](../Intern/BEFUNDE.md#e-117): `&amp;` in Bildadressen |
+| Gemessen | Testsuite 196/196 (`TestResolveURL.cpp` (8), vorher rot); am laufenden Programm (`C:\Temp\E112-1085`, Prüfnachricht `Testdaten/e117-amp-in-bildadresse.eml`, Bildserver `tools/bildserver-e117.pl`): 7.2.0.85 holt `&amp;` und malt ein Pixel, 7.2.0.87 holt `&` und das Bild (`Datei=330x327 gemalt=165x164`), siehe [E-117](../Intern/BEFUNDE.md#e-117); das ZIP entstand erst zum Release (siehe unten) |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-117](../Intern/BEFUNDE.md#e-117) (Bildschirmfoto: eBay-Synology-Weiterleitung, das Produktfoto steht unter „Der Countdown läuft!“; *„so?“*) |
 | ZIP (Release) | `Releases/Eudora72-1.0.87-release.zip`, 9 060 108 Byte (nicht versioniert), 158 Dateien, flach ohne Wurzelordner. Gebaut am 14.10.2026 **nicht** aus Gregors Testverzeichnis (darin liegt inzwischen sein Mailverzeichnis), sondern frisch: 1.0.84-ZIP (157 Dateien) entpackt, darüber die EXE/DLL/OCX aus `Eudora71/Bin/Release` außer `SPELL32.DLL` (siehe Nebenbefund), dazu `TESTEN.txt`. Die 34 EXE/DLL/OCX byteidentisch (`cmp`) mit Gregors getestetem `Eudora72-1.0.87-release`; `Eudora.exe` und `EudoraRes.dll` melden 7.2.0.87; `paket-pruefen.ps1`: startet ohne Nachinstallation. `Mailverzeichnis` enthält nur die Vorgabe-`Eudora.ini` (3249 Byte) |
 | SHA256 | `a4f1c28ddfa22dbd1c16bd71705157134fca431dbc161d1554f78da42864904c` — gemessen am lokalen und am von GitHub heruntergeladenen ZIP, gleich |
 | URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.87 — 14.10.2026, 05:46:20 UTC, *Latest*, Marke auf `41c6752` (Merge von PR #96) |
 | Freigabe | Gregor am 14.10.2026: *„ja, wir releasen ein 0.87 in github“*, nach seinem Test von 1.0.87 |
-| Nebenbefund | `Eudora71/Bin/Release/SPELL32.DLL` (05.09.2026 19:18, SHA-256 `c085571c…48ac9`) ist **nicht** die getestete und ausgelieferte Datei: ausgeliefert ist die aus dem 1.0.84-ZIP (30.08.2026 17:57, `2d5d3d78…7f45`), gleich groß (112 128 Byte). Der erste Packlauf hatte die aus `Bin/Release` genommen; erst der Byte-Vergleich gegen Gregors Verzeichnis hat es gezeigt, `paket-pruefen.ps1` sieht es nicht. Nicht behoben, siehe [PR-2](../BEFUNDE.md#pr-2), Abschnitt PR-2.2 |
+| Nebenbefund | `Eudora71/Bin/Release/SPELL32.DLL` (05.09.2026 19:18, SHA-256 `c085571c…48ac9`) ist **nicht** die getestete und ausgelieferte Datei: ausgeliefert ist die aus dem 1.0.84-ZIP (30.08.2026 17:57, `2d5d3d78…7f45`), gleich groß (112 128 Byte). Der erste Packlauf hatte die aus `Bin/Release` genommen; erst der Byte-Vergleich gegen Gregors Verzeichnis hat es gezeigt, `paket-pruefen.ps1` sieht es nicht. Nicht behoben, siehe [PR-2](../Intern/BEFUNDE.md#pr-2), Abschnitt PR-2.2 |
 
 ## 1.0.86 — **als Testverzeichnis an Gregor, nicht einzeln veröffentlicht** (enthalten in `v1.0.87`), Quellstand 7.2.0.86 (E-115)
 
 | | |
 |---|---|
 | Testverzeichnis | **bereitgestellt am 13.10.2026** auf Gregors Anweisung (*„bau mir dann auch ein 0.86 zum testen.“*), `C:\Users\Gregor\Eudora72-1.0.86-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem gemessenen Prüfstand `C:\Temp\E115-gregor`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide melden 7.2.0.86. Rollen nach der E-115-Behebung nicht gelaufen |
-| Inhalt | wie 1.0.85, dazu [E-115](../BEFUNDE.md#e-115): `FindCheck` überspringt Recent nicht mehr ins Leere |
-| Gemessen | am laufenden Programm: mit 7.2.0.84 Meldung, mit 7.2.0.86 keine (siehe [E-115](../BEFUNDE.md#e-115)) |
-| Gregors Test, 13.10.2026 | **bestätigt:** [E-112](../BEFUNDE.md#e-112) (*„paßt dagegen“*, Bildschirmfoto), mit ihm [E-103](../BEFUNDE.md#e-103), und [E-115](../BEFUNDE.md#e-115) (*„tritt bisher nicht mehr auf“*, vorläufig). **Neu gemeldet:** [E-117](../BEFUNDE.md#e-117) (seither in 1.0.87 behoben), [E-118](../BEFUNDE.md#e-118), [E-119](../BEFUNDE.md#e-119), [E-105](../BEFUNDE.md#e-105) zweiter Fall, [E-120](../BEFUNDE.md#e-120) (kein eigener Fehler). Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
+| Inhalt | wie 1.0.85, dazu [E-115](../Intern/BEFUNDE.md#e-115): `FindCheck` überspringt Recent nicht mehr ins Leere |
+| Gemessen | am laufenden Programm: mit 7.2.0.84 Meldung, mit 7.2.0.86 keine (siehe [E-115](../Intern/BEFUNDE.md#e-115)) |
+| Gregors Test, 13.10.2026 | **bestätigt:** [E-112](../Intern/BEFUNDE.md#e-112) (*„paßt dagegen“*, Bildschirmfoto), mit ihm [E-103](../Intern/BEFUNDE.md#e-103), und [E-115](../Intern/BEFUNDE.md#e-115) (*„tritt bisher nicht mehr auf“*, vorläufig). **Neu gemeldet:** [E-117](../Intern/BEFUNDE.md#e-117) (seither in 1.0.87 behoben), [E-118](../Intern/BEFUNDE.md#e-118), [E-119](../Intern/BEFUNDE.md#e-119), [E-105](../Intern/BEFUNDE.md#e-105) zweiter Fall, [E-120](../Intern/BEFUNDE.md#e-120) (kein eigener Fehler). Urteile mit Zitat in [BEFUNDE.md](../Intern/BEFUNDE.md) |
 
 ## 1.0.85 — **als Testverzeichnis an Gregor, nicht einzeln veröffentlicht** (enthalten in `v1.0.87`), Quellstand 7.2.0.85 (E-112)
 
 | | |
 |---|---|
-| Testverzeichnis | **als Verzeichnis bereitgestellt am 13.10.2026**, `C:\Users\Gregor\Eudora72-1.0.85-release`, auf Gregors Anweisung (*„stell mir ein 0.85 zu den anderen dazu. nicht bei dir“*). Grundlage: `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem Prüfstand `C:\Temp\E112-1085`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide Dateien melden 7.2.0.85. Ein erster Versuch mit `paket-bauen.ps1 -AusBauverzeichnis` nahm `Bin\Debug` (7.2.0.12) – umbenannt in `Eudora72-1.0.85-FALSCH-debug-7.2.0.12-nicht-benutzen`, Löschen lag nicht in meiner Freigabe. Gregors Urteil zu [E-112](../BEFUNDE.md#e-112) und [E-103](../BEFUNDE.md#e-103) kam an 1.0.86, das diesen Stand enthält (siehe dort) |
-| Inhalt | [E-112](../BEFUNDE.md#e-112): die Metadatei eines Bildes wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`, `QCGraphics.cpp`), mit ihm [E-103](../BEFUNDE.md#e-103); danach PRÜFER-22 **F1** (gleiche URL nicht mehr teilen: zuerst `dae6727` an `PGEMBED.C`, wirkungslos, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird; jetzt `ac8f030` in `PGHTMIMP.CPP`, `check_to` 0) und **F2** (halbe Angabe ergänzt die fehlende Seite aus dem Seitenverhältnis: zuerst `c294594`, am Ladeweg wirkungslos; jetzt `11b6a3a`); danach PRÜFER-23 **N1** (`9f5142b`, `msgutils.cpp`: der [E-89](../BEFUNDE.md#e-89)-Deckel erfindet beim Antworten kein `height="1"` mehr) und ihre Gegenrichtung (`bf96856`, kein `width="1"`, [LEKTOR-29](../Befunde/LEKTOR-29.md#l-29.3)) |
+| Testverzeichnis | **als Verzeichnis bereitgestellt am 13.10.2026**, `C:\Users\Gregor\Eudora72-1.0.85-release`, auf Gregors Anweisung (*„stell mir ein 0.85 zu den anderen dazu. nicht bei dir“*). Grundlage: `Releases/Eudora72-1.0.84-release.zip` (157 Dateien), darüber 29 EXE/DLL/OCX aus `Eudora71/Bin/Release`; `Eudora.exe`, `EudoraRes.dll`, `Paige32.dll` byte-gleich mit dem Prüfstand `C:\Temp\E112-1085`; `paket-pruefen.ps1`: startet ohne Nachinstallation; beide Dateien melden 7.2.0.85. Ein erster Versuch mit `paket-bauen.ps1 -AusBauverzeichnis` nahm `Bin\Debug` (7.2.0.12) – umbenannt in `Eudora72-1.0.85-FALSCH-debug-7.2.0.12-nicht-benutzen`, Löschen lag nicht in meiner Freigabe. Gregors Urteil zu [E-112](../Intern/BEFUNDE.md#e-112) und [E-103](../Intern/BEFUNDE.md#e-103) kam an 1.0.86, das diesen Stand enthält (siehe dort) |
+| Inhalt | [E-112](../Intern/BEFUNDE.md#e-112): die Metadatei eines Bildes wird in der angegebenen Größe geschrieben (`E112MetadateiAusDIB`, `QCGraphics.cpp`), mit ihm [E-103](../Intern/BEFUNDE.md#e-103); danach PRÜFER-22 **F1** (gleiche URL nicht mehr teilen: zuerst `dae6727` an `PGEMBED.C`, wirkungslos, weil `Paige32.dll` nicht aus dem Quelltext gebaut wird; jetzt `ac8f030` in `PGHTMIMP.CPP`, `check_to` 0) und **F2** (halbe Angabe ergänzt die fehlende Seite aus dem Seitenverhältnis: zuerst `c294594`, am Ladeweg wirkungslos; jetzt `11b6a3a`); danach PRÜFER-23 **N1** (`9f5142b`, `msgutils.cpp`: der [E-89](../Intern/BEFUNDE.md#e-89)-Deckel erfindet beim Antworten kein `height="1"` mehr) und ihre Gegenrichtung (`bf96856`, kein `width="1"`, [LEKTOR-29](../Befunde/LEKTOR-29.md#l-29.3)) |
 | Gemessen | Testsuite 195/195 (seit der Gegenrichtung; nach N1 194/194, davor 193/193), darunter `TestE112Metadatei.cpp` (vor der Behebung rot: 330×327 statt 35×35 gemalt), `TestE112.cpp` (3), (6) zu F2, `TestE89.cpp` (4b) zu N1 und (4c) zur Gegenrichtung. **Am laufenden Programm an `a36c47f`** (Prüfstand `C:\Temp\E112-1085`, Titelzeile `1.0.85+a36c47f*`): `gemalt=35x35`, `250x96`, `79x64`, kein Bild auf dem Text. **Am Bau `11b6a3a`**, derselbe Prüfstand: dazu `70x70` (F1) und `150x58` (F2), Fensterfoto ohne überdeckten Text. **Am Bau `bf96856`** (13.10.2026): N1 `angegeben=600x0 gemalt=600x230`, Gegenrichtung `angegeben=0x600 gemalt=606x600` |
-| Nicht gemessen | kein Paket. Bekannt offen: PRÜFER-23 N2 bis N5 und, erst ab dieser Fassung sichtbar, [E-116](../BEFUNDE.md#e-116) |
+| Nicht gemessen | kein Paket. Bekannt offen: PRÜFER-23 N2 bis N5 und, erst ab dieser Fassung sichtbar, [E-116](../Intern/BEFUNDE.md#e-116) |
 
 ## 1.0.84 — **veröffentlicht als `v1.0.84`** am 12.10.2026, Quellstand 7.2.0.84 (E-94)
 
@@ -638,7 +647,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
 | URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v1.0.120` *Latest*); Marke auf `eb54752` |
 | Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
-| Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../BEFUNDE.md) |
+| Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../Intern/BEFUNDE.md) |
 
 Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlichten
 7.2.0.83 ändert (**V-1**). Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.84.
@@ -718,7 +727,7 @@ Gemessen mit `tools/html-tags-pruefen.pl` (30 Fälle, 0 Abweichungen, Gegenprobe
 gefahren); **übersetzt ist nichts**. *Stand 12.10.2026: übersetzt erst als Teil
 von 7.2.0.82 (siehe 1.0.82), am laufenden Programm nicht gemessen.*
 
-Durchlauf: [AUFGABEN.md](../AUFGABEN.md), **B6**.
+Durchlauf: [AUFGABEN.md](../Intern/AUFGABEN.md), **B6**.
 
 ## 1.0.79 — **nicht gebaut, nicht geschnürt**, Quellstand 7.2.0.79 (AN-1)
 
@@ -746,7 +755,7 @@ dem Weg des Namens. **Übersetzt ist nichts**, und von Gregor ist nichts geprüf
 Gemessen ohne MSVC: `tools/kopfzeile-pruefen.pl` (10 Fälle, 0 Abweichungen) und
 `tools/rfc2231-pruefen.pl` (20 Fälle, 0 Abweichungen). Offen bleibt **B5.7**.
 
-Durchlauf zum Bauen und Prüfen: [AUFGABEN.md](../AUFGABEN.md), **B5**.
+Durchlauf zum Bauen und Prüfen: [AUFGABEN.md](../Intern/AUFGABEN.md), **B5**.
 
 ## 1.0.76 — gebaut am 18.09.2026, **E-112 behoben**
 

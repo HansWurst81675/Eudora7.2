@@ -111,9 +111,9 @@ Der Commit `765c39b` („[PR-5](BEFUNDE.md#pr-5) und die LIESMICH des ausgeliefe
 stehen. Wer das Verzeichnis liest — und dafür ist es da — bekommt den falschen
 Stand.
 
-**b) [`P-3`](Befunde/PRUEFER-11.md#p-3) hat einen Abschnitt (`BEFUNDE.md:2437`), steht aber in keinem
+**b) [`P-3`](../Befunde/PRUEFER-11.md#p-3) hat einen Abschnitt (`BEFUNDE.md:2437`), steht aber in keinem
 Verzeichniseintrag.** Gemessen: 55 Abschnitte im Text, 64 Kennungen im
-Verzeichnis, [`P-3`](Befunde/PRUEFER-11.md#p-3) fehlt.
+Verzeichnis, [`P-3`](../Befunde/PRUEFER-11.md#p-3) fehlt.
 
 **c) [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8) sind nur gesammelt über die Zeile [`W-1`](BEFUNDE.md#w-1) erfasst.** Wer
 nach [`PR-6`](BEFUNDE.md#pr-6) sucht, findet im Verzeichnis nichts. Kleiner Mangel, aber er
@@ -133,11 +133,11 @@ Repo ist der Satz, der das feststellt. **BESTÄTIGT.**
 
 ## 2. Was die Agenten gemessen haben
 
-Die vollständigen Einzelberichte liegen unter [Pruefung/](Pruefung/).
+Die vollständigen Einzelberichte liegen unter [Pruefung/](../Pruefung).
 
 ### 2.1 KETTE — Befund R-1, die 142 `ReleaseBuffer`-Stellen
 
-Bericht: [Pruefung/PRUEFUNG-KETTE.md](Pruefung/PRUEFUNG-KETTE.md)
+Bericht: [Pruefung/PRUEFUNG-KETTE.md](../Pruefung/PRUEFUNG-KETTE.md)
 
 **Die Einstufung selbst trägt.** Der Werkzeuglauf reproduziert [R-1](BEFUNDE.md#r-1) auf die
 Zahl: 142 Vorkommen, 20 falsch / 4 lockbuffer / 1 danach / 117 ok. Für alle 20
@@ -199,7 +199,7 @@ ist falsch (7/2 statt 6/1 — `grep` traf `UnlockBuffer` als Teilstring), und
 
 ### 2.2 ZEIGER — Befund D3a, die neun Zeigerstellen
 
-Bericht: [Pruefung/PRUEFUNG-ZEIGER.md](Pruefung/PRUEFUNG-ZEIGER.md)
+Bericht: [Pruefung/PRUEFUNG-ZEIGER.md](../Pruefung/PRUEFUNG-ZEIGER.md)
 
 **Trägt nicht. Von neun halten vier.**
 
@@ -229,7 +229,7 @@ stummgeschaltet: ohne den Filter 40 statt 18 Treffer.
 
 ### 2.3 PAKET — Kriterium 0, das ausgelieferte Paket
 
-Bericht: [Pruefung/PRUEFUNG-PAKET.md](Pruefung/PRUEFUNG-PAKET.md)
+Bericht: [Pruefung/PRUEFUNG-PAKET.md](../Pruefung/PRUEFUNG-PAKET.md)
 
 **Gregors Fehlschlag ist erklärt, und die Erklärung ist nicht die erwartete.**
 
@@ -297,7 +297,7 @@ Code — sie richten keinen Schaden an, solange sie berichtigt werden.
    Argument) — das ist [E-6](BEFUNDE.md#e-6).
 5. **Paket 1.0.2 zurückziehen**; 1.0.3 auf dem VS-freien Laptop erproben,
    Prüfsumme `d4719047…` mitgeben.
-6. **Statusspalten berichtigen**: [PR-5](BEFUNDE.md#pr-5), [`P-3`](Befunde/PRUEFER-11.md#p-3), [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8).
+6. **Statusspalten berichtigen**: [PR-5](BEFUNDE.md#pr-5), [`P-3`](../Befunde/PRUEFER-11.md#p-3), [`PR-3`](BEFUNDE.md#pr-3) bis [`PR-8`](BEFUNDE.md#pr-8).
 7. Erst dann die 26 `ReleaseBuffer`-Stellen — beginnend mit
    `SMTPSession.cpp:683` und `PaigeEdtView.cpp:657`, **nicht** mit `sendmail`.
 

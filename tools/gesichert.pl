@@ -19,7 +19,7 @@
 #    feststellen und verhindern sollen. die arbeiten also nicht sauber!"
 #
 # Er hat recht, und der Entwurf war falsch. Die Regel stand als Prosa in
-# AUFGABEN.md und hing daran, dass ein Agent daran denkt. Eine Regel, die nur
+# Intern/AUFGABEN.md und hing daran, dass ein Agent daran denkt. Eine Regel, die nur
 # im Text lebt, wird uebersehen - beim zweiten Mal baut man ein Werkzeug
 # (Lehre "Fehlerklassen abstellen"). Dieses hier beantwortet die Frage in einem
 # Aufruf, statt sie auf fuenf git-Befehle und ein gutes Gedaechtnis zu verteilen.
