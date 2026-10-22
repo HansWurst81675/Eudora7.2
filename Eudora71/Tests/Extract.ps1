@@ -332,3 +332,23 @@ $r2End = Find-Line $eu '^\}\s*$' $r2Start
 Write-Region $eu $r2Start $r2End (Join-Path $OutDir "eudora_e132_zerlegen.inc") $euPath
 
 Write-Host "Extract.ps1: fertig."
+
+# ---------------------------------------------------------------- ReadMessageDoc.cpp
+# Region S: BuildTabooHeaderArray + StripTabooHeaders (Befund E-101, F2).
+#
+# WARUM DAS HIER DAZUKOMMT. Zu E-101 gab es am 22.10.2026 siebenundzwanzig
+# Testfaelle - und keinen einzigen, der StripTabooHeaders aufruft. Geprueft
+# war damit immer nur E101SpeicherfassungAufbereiten ALLEIN, nie die
+# Reihenfolge, die der Speicherweg wirklich faehrt:
+#
+#     tocview.cpp:3138   StripTabooHeaders(...)        <- wirft "Content-" weg
+#     tocview.cpp:3186   E101SpeicherfassungAufbereiten(...)
+#
+# Gregor am 22.10.2026: "sollte ja bereits existieren, wenn es dazu einen fix
+# gibt. das machen wir ja immer so!" - er hat recht, und dass der Test fehlte,
+# ist der Grund, warum F2 so lange unklar blieb.
+$rmdPath = Join-Path $SrcDir "ReadMessageDoc.cpp"
+$rmd = Read-Lines $rmdPath
+$sStart = Find-Line $rmd '^void CReadMessageDoc::BuildTabooHeaderArray' 0
+$sEnd = Find-Line $rmd '^\}\s*$' (Find-Line $rmd '^void CReadMessageDoc::StripTabooHeaders' $sStart)
+Write-Region $rmd $sStart $sEnd (Join-Path $OutDir "readmessagedoc_taboo.inc") $rmdPath

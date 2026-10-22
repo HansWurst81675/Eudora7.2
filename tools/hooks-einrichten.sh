@@ -168,6 +168,24 @@ schranke pruefe-nicht-kann.pl || exit $?
 #     ZIEL.md, erzeugt aus Intern/BEFUNDE.md. Diese Schranke haelt es aktuell.
 schranke ziel-stand.pl || exit $?
 
+# 1e. Hat jeder NEU als behoben erklaerte Befund einen Regressionstest?
+#
+#     Gregor am 22.10.2026, als Anordnung: "wir fuehren vor jedem release
+#     alle regression tests aus, soll alles PASSED sein. und zu jedem befund
+#     brauchen wir ein regression test, damit wir sehen, dass eine neue
+#     aenderung nichts altes kaputt macht."
+#
+#     Gemessen an dem Tag: 186 Befunde, 29 mit Testfall, 97 als "behoben"
+#     ohne Test - darunter E-121 (Nachricht verschwindet beim Verschieben),
+#     E-83, E-97, E-104, E-115, E-134 und E-135.
+#
+#     Die Schranke verlangt NICHT alle 97 auf einmal - das waere am zweiten
+#     Tag ausgebaut. Sie weist ab, wenn in DIESEM Commit ein Befund neu auf
+#     "behoben" geht, ohne dass ein Test ihn nennt oder er als "Pruefung:
+#     manuell" im Testplan steht. Der Rueckstand wird gezaehlt und kann
+#     dadurch nur sinken.
+schranke pruefe-regressionstest.pl || exit $?
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #
@@ -735,6 +753,7 @@ echo " 14g. tools/pruefe-startwege.pl"
 echo " 14h. tools/pruefe-tabellenzeilen.pl"
 echo " 14i. tools/pruefe-nicht-kann.pl"
 echo " 14j. tools/ziel-stand.pl"
+echo " 14k. tools/pruefe-regressionstest.pl"
 echo "                               steht jeder eigene Eudora-Start von heute"
 echo "                               in tools/TESTLAEUFE.md? (21.10.2026: 15/0)"
 echo " 14h. tools/pruefe-original-belegt.pl"

@@ -61,6 +61,50 @@ zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/
 stammen von 7.2.0.55), dann Gregors Test aller neun Kriterien an einem frischen
 Paket, erst danach Marke `v7.2.1.0`.
 
+
+## Regressionstests — Anordnung vom 22.10.2026
+
+> *„das zauberwort heißt regression tests … jetzt ordne ich es an: wir führen
+> vor jedem release alle regression tests aus, soll alles PASSED sein. und zu
+> jedem befund brauchen wir ein regression test, damit wir sehen, daß eine
+> neue änderung nichts altes kaputt macht."*
+>
+> *„vermutlich kann man nicht alle findings per automatisierten tests prüfen.
+> manche muß man wohl manuell testen, diese werden dann als solche markiert
+> und vor 7.2.1.0 release ausgeführt. dazu wie immer eine liste / tabelle mit
+> schritten und zu erwarteten ergebnissen (= testplan)."*
+
+**Zwei Regeln, beide ab sofort:**
+
+1. **Vor jedem Release laufen alle Regressionstests, und alle müssen bestehen.**
+   Kein Paket, solange einer rot ist.
+2. **Jeder Befund braucht eine Prüfung** — entweder einen **automatischen**
+   Testfall, der seine Kennung nennt, oder die Marke **`Prüfung: manuell`** im
+   Urteil **und** einen Eintrag mit Schritten und erwartetem Ergebnis in
+   [Intern/TESTPLAN.md](Intern/TESTPLAN.md). Die Marke allein reicht nicht:
+   ohne Schritte ist *manuell* nur ein Wort, das die Schranke abschaltet.
+
+**Stand am 22.10.2026, gemessen mit `tools/pruefe-regressionstest.pl`:**
+
+| | |
+|---|---|
+| Befunde insgesamt | **186** |
+| davon mit automatischem Testfall | **29** |
+| davon manuell im Testplan | **0** |
+| als *behoben* geführt und **ohne jede Prüfung** | **97** |
+
+Darunter [E-121](Intern/BEFUNDE.md#e-121) (eine Nachricht verschwand beim
+Verschieben in einen IMAP-Ordner), [E-83](Intern/BEFUNDE.md#e-83),
+[E-97](Intern/BEFUNDE.md#e-97), [E-104](Intern/BEFUNDE.md#e-104),
+[E-115](Intern/BEFUNDE.md#e-115), [E-134](Intern/BEFUNDE.md#e-134) und
+[E-135](Intern/BEFUNDE.md#e-135). Nichts hindert eine neue Änderung daran,
+sie wieder kaputtzumachen.
+
+**Die Schranke verlangt den Rückstand nicht auf einmal** — eine Prüfung, die
+vom ersten Tag an jeden Commit abweist, wird am zweiten Tag ausgebaut. Sie
+weist ab, sobald ein Befund **neu** auf *behoben* geht, ohne geprüft zu sein;
+die 97 werden gezählt und können dadurch nur sinken.
+
 ## Die Kriterien
 
 > **Diese Tabelle ist die Quelle.** `README.md`, `AUFGABEN.md`,
