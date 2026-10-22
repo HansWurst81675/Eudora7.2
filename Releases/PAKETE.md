@@ -158,7 +158,7 @@ haben.
 
 ## 1.0.121
 
-**Nicht geschnürt.** Die Nummer ist am 22.10.2026 vergeben, weil der
+**Nur übersetzt am 22.10.2026, nicht geschnürt.** Die Nummer ist vergeben, weil der
 Quellstand auf **7.2.0.121** gehoben wurde ([E-111](../Intern/BEFUNDE.md#e-111):
 `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus, 246 Tests, 246
 bestanden, mit Gegenprobe). Es gibt kein ZIP und kein Testverzeichnis bei

@@ -1,4 +1,9 @@
-# Testplan für Gregor — Quellstand 1.0.121 — geschnürt und bei dir liegt 1.0.120, Stand 22.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.121 / `VERSION` 1.0.121, Stand 22.10.2026
+
+> **Es gibt kein Paket 1.0.121.** Der Quellstand ist auf 7.2.0.121 gehoben
+> ([E-111](BEFUNDE.md#e-111), nur übersetzt), geschnürt und bei dir liegt
+> **1.0.120**. Alles unten ist an 1.0.120 zu prüfen, solange nichts anderes
+> dasteht.
 
 ## Was jetzt zu testen ist
 
@@ -228,8 +233,9 @@ einen ersten Filterlauf gar nichts aussagt.
   ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
-Mit der **Paketnummer**: *„Starttest an 1.0.121 in Ordnung"* oder
-*„Starttest an 1.0.121 gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
+Mit der **Paketnummer** — der des Pakets, das du wirklich gestartet hast:
+*„Starttest an `<Paketnummer>` in Ordnung"* oder *„Starttest an
+`<Paketnummer>` gescheitert, es kam keine Rückfrage"*. Ohne die Nummer
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
