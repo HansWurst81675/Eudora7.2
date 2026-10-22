@@ -328,48 +328,48 @@ nicht selbst messen kann*.
 
 <!-- offene-befunde: Anfang -->
 
-| Kennung | worum es geht |
-|---|---|
-| **[E-133](BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… |
-| **[E-131](BEFUNDE.md#e-131)** | Unsere Fassung schreibt eine ungültige Fensterposition in die Eudora.ini — danach stür… |
-| **[E-130](BEFUNDE.md#e-130)** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… |
-| **[E-129](BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… |
-| **[E-128](BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… |
-| **[E-127](BEFUNDE.md#e-127)** | Ein IMAP-Ordner, der seit dem Start noch nie geöffnet war, zeigt die eben dorthin verscho… |
-| **[E-126](BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… |
-| **[E-125](BEFUNDE.md#e-125)** | Eine Nachricht aus einem IMAP-Ordner nach Out verschieben legt eine neue Nachricht mit <br… |
-| **[E-124](BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… |
-| **[E-123](BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… |
-| **[E-122](BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… |
-| **[E-119](BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … |
-| **[E-116](BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… |
-| **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… |
-| **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… |
-| **[E-111](BEFUNDE.md#e-111)** | resolve_URL kann ein Byte hinter das Zielfeld schreiben |
-| **[E-109](BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… |
-| **[E-105](BEFUNDE.md#e-105)** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… |
-| **[E-101](BEFUNDE.md#e-101)** | Die gespeicherte Datei ist für jedes andere Programm unbrauchbar — *„datei gespeicher… |
-| **[E-98](BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… |
-| **[E-92](BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… |
-| **[E-91](BEFUNDE.md#e-91)** | zitierte Bereiche stehen bündig im Text, ohne Randbalken und Einrückung — auf Gregors … |
-| **[E-90](BEFUNDE.md#e-90)** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… |
-| **[E-78](BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… |
-| **[E-77](BEFUNDE.md#e-77)** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… |
-| **[E-71](BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer |
-| **[E-47](BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … |
-| **[E-39](BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… |
-| **[E-14](BEFUNDE.md#e-14)** | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) |
-| **[S-6](BEFUNDE.md#s-6)** | Bereiche überlagern sich |
-| **[NP2-3](BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben |
-| **[NP3-3](BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch |
-| **[S-3](BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen |
-| **[NP2-2](BEFUNDE.md#np2-2)** | SysColorChange() tut nicht, was daneben steht |
-| **[NP3-2](BEFUNDE.md#np3-2)** | OnToolHitTest als int statt INT_PTR — x64-Sperre |
-| **[A-1](BEFUNDE.md#a-1)** | Erscheinungsbild: fünf Punkte umgesetzt |
-| **[AN-1](BEFUNDE.md#an-1)** | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — elf Ursachen (Teile B5.1 bis B5… |
-| **[NP3-1](BEFUNDE.md#np3-1)** | ZeigeInhaltsfenster läuft, bevor Eudora das Fenster umhängt |
-| **[P-1](BEFUNDE.md#p-1)** | der POP-Abrufpfad gegengelesen, elf Altlasten benannt |
-| **[R-1](BEFUNDE.md#r-1)** | die Fehlerklasse hinter [E-11](BEFUNDE.md#e-11) ausgezählt |
+| Kennung | worum es geht | was noch fehlt |
+|---|---|---|
+| **[E-133](BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
+| **[E-131](BEFUNDE.md#e-131)** | Unsere Fassung schreibt eine ungültige Fensterposition in die Eudora.ini — danach stür… | der **Leseweg**: eine `Eudora.ini`, die den kaputten Wert schon trägt, wird erst beim nächsten Speichern berichtigt — bis dahin startet eine daneb… |
+| **[E-130](BEFUNDE.md#e-130)** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… | zweierlei — **wer** die fünf DLLs beim Bau stempelt, ist nicht gefunden (`paket-bauen.ps1` liest sie nur, kein `.vcxproj` nennt sie), und es ist ni… |
+| **[E-129](BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
+| **[E-128](BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |
+| **[E-127](BEFUNDE.md#e-127)** | Ein IMAP-Ordner, der seit dem Start noch nie geöffnet war, zeigt die eben dorthin verscho… | die Ursache ist nicht untersucht — gemessen ist nur Gregors Protokoll (hochgeladen bei `summen=2`, erst **danach** `NewChildFrame … OUTBOX`, Abgle… |
+| **[E-126](BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… | jede Messung — die Vermutung aus [PRÜFER-33](Befunde/PRUEFER-33.md) Q1 ist nie beobachtet worden, weder bei Gregor noch am Prüfstand, und dort auc… |
+| **[E-125](BEFUNDE.md#e-125)** | Eine Nachricht aus einem IMAP-Ordner nach Out verschieben legt eine neue Nachricht mit <br… | Gregors Entscheidung **B** ist noch nicht gebaut — Ziehen nach `Out` soll abgelehnt werden mit Hinweis auf *Message → Send Again*; die Stelle ist … |
+| **[E-124](BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | zwei Dinge von außen — die Antwort von Microsoft auf Vorgang `a567fe2a-9f58-47e1-a675-a62733ec538f` (Stand *Submitted*) gehört hierher, und über … |
+| **[E-123](BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
+| **[E-122](BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
+| **[E-119](BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… |
+| **[E-116](BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… | Einbau und Messung — der Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694` (auf eine folgende Ziffer prüfen und sonst abbrechen) ist nicht eingebaut, … |
+| **[E-114](BEFUNDE.md#e-114)** | ein angedocktes Fenster hinterlässt nach dem Lösen einen leeren Bereich — das Filterfe… | die Bedingungen — Gregor konnte es am selben Tag nicht nachstellen. Zu messen: wo genau angedockt war, ob der leere Bereich nach Größenänderung d… |
+| **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… | alles — von Gregor angeordnet, aber ausdrücklich erst nach [E-112](BEFUNDE.md#e-112). Billig wäre ein Deckel beim Umbruch (`page_width` liegt in `PGHTMIMP.CPP:235-240… |
+| **[E-111](BEFUNDE.md#e-111)** | resolve_URL kann ein Byte hinter das Zielfeld schreiben | die Berichtigung — die Schranke in `PGHTMIMP.CPP:2025-2033` prüft auf `>` statt auf `>=`, es ist ein Zeichen. Ausgelöst gesehen wurde der Überlau… |
+| **[E-109](BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… | die drei Forderungen sind nicht umgesetzt — je Schranke ein Testfall für ihre **bekannte Grenze**, eine Unterscheidung zwischen *geprüft und frei*… |
+| **[E-105](BEFUNDE.md#e-105)** | Ein versteckter Vorschautext wird mitgelesen — beim Lesen einer eBay-Nachricht steht üb… | Gregors Bestätigung an einem Paket, und ein nicht abgedeckter Fall: `display:none` über eine **Klasse** aus einem `<style>`-Block — den liest `Sca… |
+| **[E-101](BEFUNDE.md#e-101)** | Die gespeicherte Datei ist für jedes andere Programm unbrauchbar — *„datei gespeicher… | allein **F2** — `StripTabooHeaders` entfernt die `Content-Type`-Zeile, bevor der Kern sie setzen kann; auf dem einzigen Aufrufweg ist er damit tot (… |
+| **[E-98](BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… | zweierlei ist nicht gemessen — welche Vorgabe für *Kopfzeilen einschließen* und *Absätze raten* tatsächlich greift, solange die Kästchen fehlen… |
+| **[E-92](BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… | unsere eigene Seite — ein Vergleichsbild aus Eudora zur selben Nachricht liegt nicht vor, es ist also offen, ob unser Weiterleitungskopf überhaupt … |
+| **[E-91](BEFUNDE.md#e-91)** | zitierte Bereiche stehen bündig im Text, ohne Randbalken und Einrückung — auf Gregors … | die **Messung selbst** — ungeklärt ist, ob Gregors Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` tru… |
+| **[E-90](BEFUNDE.md#e-90)** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… | nichts, was für sich zu beheben wäre — `?` ist die bessere von zwei Möglichkeiten, solange Eudora durchgehend ANSI/MBCS gebaut ist (Begründung i… |
+| **[E-78](BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… | die Auswertung der vorhandenen Spurmarken und danach die Behebung — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig` (`mainfrm.cpp`, … |
+| **[E-77](BEFUNDE.md#e-77)** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… |
+| **[E-71](BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer | nicht die Behebung, sondern Gregors Freigabe — er hat ihn ausdrücklich auf die nächste Fassung geschoben. Die Messung steht fertig da: in `CFilter… |
+| **[E-47](BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie als Redistributable veröffentlicht, `RegisterCOMObjects()` sche… |
+| **[E-39](BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | die Bestätigung am laufenden Programm — belegt ist nur der Quelltext (`persona.cpp:565-566` und `:179-198`, `rs.cpp:1237-1250`). Zu fahren wäre: d… |
+| **[E-14](BEFUNDE.md#e-14)** | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) | die eine Messung, die entscheidet — Eudora zweimal hintereinander auf **demselben gewachsenen** Mailverzeichnis starten und beim zweiten Mal auf `Se… |
+| **[S-6](BEFUNDE.md#s-6)** | Bereiche überlagern sich | der Splitter-Teil — die Ersatzschicht setzt die prozentualen Zeilenbreiten (`m_fPctWidth`) und die Splitter nicht um (`OTShim.h:695-699`), die Leist… |
+| **[NP2-3](BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben | die Behebung selbst — `CPaletteDC::BitBltTransparent` (`OTShim_Werkzeugleiste.cpp:239`) meldet unverändert Erfolg, ohne gezeichnet zu haben. Seit d… |
+| **[NP3-3](BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch | eine Zeile Text — der Kommentar in `OTShim_Bild.h:326-330` sagt weiterhin *„an drei von fünf Stellen"* und zählt die Aufrufstellen damit falsch.… |
+| **[S-3](BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen | allein S-3c (die beiden Laufzeitbibliotheken) — `MFC71.DLL` und `MSVCP71.dll` fehlen dauerhaft, damit fallen Adressbuch (`EudoraBk.dll`), LDAP (`Lda… |
+| **[NP2-2](BEFUNDE.md#np2-2)** | SysColorChange() tut nicht, was daneben steht | nur die Berichtigung des irreführenden Kommentars an `OTShim.cpp:497`, `:5139` und `OTShim_Knopf.cpp:257` — folgenlos, deshalb bewusst nicht angefa… |
+| **[NP3-2](BEFUNDE.md#np3-2)** | OnToolHitTest als int statt INT_PTR — x64-Sperre | die Umstellung auf `INT_PTR` — `OnToolHitTest` ist an allen Stellen noch `int`: `PaigeEdtView.cpp:1440`/`.h:405`, `SearchBar.cpp:1265`/`.h:177`, `TB… |
+| **[A-1](BEFUNDE.md#a-1)** | Erscheinungsbild: fünf Punkte umgesetzt | nur `SECDockBar::SetControlBarWidthsInRow` (`OTShim.cpp:2830`) ist ein leerer Rumpf — die prozentualen Zeilenbreiten. **Niemand ruft sie auf**, die … |
+| **[AN-1](BEFUNDE.md#an-1)** | Anhänge: lange Dateinamen abgeschnitten, Endung fehlt — elf Ursachen (Teile B5.1 bis B5… | allein **[B5.7](AUFGABEN.md#b5.7)** — der IMAP-Weg ruft `SetExtension` nicht auf. Zehn der elf Teile sind behoben; im Test fiel es nicht auf, weil alle drei Namen schon… |
+| **[NP3-1](BEFUNDE.md#np3-1)** | ZeigeInhaltsfenster läuft, bevor Eudora das Fenster umhängt | die Umstellung der Reihenfolge — `ZeigeInhaltsfenster` (`OTShim_Reiter.cpp:1500-1503`) läuft weiterhin, bevor Eudora das Fenster umhängt (`Create`… |
+| **[P-1](BEFUNDE.md#p-1)** | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | die neun Altlasten **P-1.5b bis P-1.5j** — wortgleich wie in `567a5d8`, keine davon angefasst. Nach Aufwand-Nutzen zuerst die beiden Einzeiler: **P-… |
+| **[R-1](BEFUNDE.md#r-1)** | die Fehlerklasse hinter [E-11](BEFUNDE.md#e-11) ausgezählt | die 21 Änderungen selbst — 137 Vorkommen, 116 richtig gepaart, **21** zu ändern (16 `falsch`, 4 `lockbuffer`, 1 `danach`), seit dem 07.09.2026 kei… |
 
 <!-- offene-befunde: Ende -->
 
