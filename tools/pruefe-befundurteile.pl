@@ -116,6 +116,19 @@ my @ausnahme = (
     "fr\xc3\xbchere Einstufung",
 );
 
+# TEILBEFUNDE (22.10.2026). "F1, F3 und F4 ... sind behoben; offen bleibt F2"
+# ist KEIN Widerspruch zu einem offenen E-101 - behoben sind die TEILE, nicht
+# der Befund. Als E-101 am 22.10.2026 in BEFUNDE.md von "behoben" auf "offen"
+# berichtigt wurde, meldete diese Schranke genau deshalb fuenf Fehlalarme
+# (README.md:106, PORTIERUNG.md:54, ZIEL.md:28, CHANGELOG.md:31,
+# WEITERMACHEN.md:9) - alle fuenf Saetze waren richtig.
+#
+# Eng gehalten: es muss eine TEILKENNUNG (F3, N2, P1, B5.7, K1 ...) kurz vor
+# dem "behoben" stehen. Ein blosses "offen bleibt" irgendwo im Absatz reicht
+# NICHT, sonst entwaffnet ein beliebiger Nebensatz die Schranke
+# (Arbeitsweise/schranke-gegentesten.md).
+my $teilbefund = qr/\b(?:F|N|P|R|K|M|B5\.)\d+(?:[\s,;]+(?:und\s+)?(?:F|N|P|R|K|M|B5\.)?\d+)*(?:(?!\.\s+[A-ZÄÖÜ])[^|]){0,110}behoben/i;
+
 sub lesen {
     my ($datei) = @_;
     open my $h, '<:raw', $datei or return undef;
@@ -259,6 +272,8 @@ for my $datei (@dateien) {
         my ($text, $zeile) = @_;
         return unless length $text;
         return if grep { index(lc $text, lc $_) >= 0 } @ausnahme;
+        # Teilbefunde (F3, N2, B5.7 ...) behoben heisst nicht: Befund behoben.
+        return if $text =~ $teilbefund;
         # --- Gegenrichtung: behoben, aber als unerledigt gefuehrt ------
         for my $k (@behobene) {
             next unless $text =~ /\Q$k\E(?!\d)/;   # E-7 darf nicht in E-71 treffen

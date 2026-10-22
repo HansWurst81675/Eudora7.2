@@ -73,7 +73,12 @@ sub lies {
 # --- Die Urteile aus BEFUNDE.md -------------------------------------------
 # Dieselbe Regel wie pruefe-befundurteile.pl: dritte Spalte, erstes
 # Fettgedrucktes. Wer sie hier anders liest, bekommt zwei Wahrheiten.
-my @offen_wort = ('offen', 'in arbeit', 'zurueckgestellt', "zur\xc3\xbcckgestellt", 'teilweise');
+# "beobachtet" und "nicht gemessen" gehoeren dazu (22.10.2026). E-91 stand
+# als "beobachtet, Ursache NICHT gemessen." da - weder behoben noch eines
+# der Offen-Woerter, und fiel damit aus BEIDEN Zaehlungen heraus. Ein
+# Befund, den niemand gemessen hat, ist nicht erledigt.
+my @offen_wort = ('offen', 'in arbeit', 'zurueckgestellt', "zur\xc3\xbcckgestellt", 'teilweise',
+                  'beobachtet', 'nicht gemessen');
 my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr auf', 'widerlegt',
                      'ueberholt', "\xc3\xbcberholt");
 
@@ -114,9 +119,10 @@ for my $zeile (split /\n/, $befunde) {
     # Zaehlung, ohne dass irgendetwas meldete. Das Werkzeug sagte "Die Liste
     # deckt die offenen Befunde" und meinte 9, wo 11 stehen. Gegengetestet:
     # ohne Grenze kommen genau E-90 und E-92 dazu, kein behobener Befund.
-    my ($fett) = $urteil =~ /\*\*([^*]+?)\*\*/;
-    next unless defined $fett;
-    my $w = lc $fett;
+    my @fett_alle = $urteil =~ /\*\*([^*]+?)\*\*/g;
+    next unless @fett_alle;
+    my $w     = lc $fett_alle[0];
+    my $alle  = lc join ' || ', @fett_alle;
 
     # "behoben" schlaegt "offen" - eine Zeile "behoben ... war offen"
     # beschreibt einen erledigten Befund. AUSSER "wieder offen": E-112 steht
@@ -125,9 +131,16 @@ for my $zeile (split /\n/, $befunde) {
     # Ebenso "teilweise": AN-1 steht als "teilweise behoben - ... B5.7 offen"
     # da, und "behoben" haette ihn hinausgeworfen. Teilweise erledigt ist
     # nicht erledigt.
-    my $wieder = index($w, 'wieder offen') >= 0 || index($w, 'teilweise') >= 0;
+    # "bleibt offen" IRGENDWO im Fettgedruckten schlaegt jedes "behoben"
+    # davor (22.10.2026). Bis dahin zaehlte nur das ERSTE Fettgedruckte, und
+    # E-123 begann mit "Der Beenden-Weg ist ... bestaetigt - auf beiden
+    # Wegen." Vier Saetze weiter stand, ebenfalls fett: "Der Befund selbst
+    # bleibt offen:". Das Werkzeug las den ersten Satz und schloss ihn.
+    # Ein Urteil, das seinen eigenen Befund offen nennt, ist offen.
+    my $bleibt_offen = index($alle, 'bleibt offen') >= 0;
+    my $wieder = index($w, 'wieder offen') >= 0 || index($w, 'teilweise') >= 0 || $bleibt_offen;
     next if !$wieder and grep { index($w, $_) >= 0 } @erledigt_wort;
-    next unless grep { index($w, $_) >= 0 } @offen_wort;
+    next unless $bleibt_offen or grep { index($w, $_) >= 0 } @offen_wort;
 
     # Die Kurzbeschreibung ist die zweite Spalte, ohne Auszeichnung.
     my $b = $s[2];
