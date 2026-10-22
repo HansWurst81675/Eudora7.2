@@ -141,6 +141,23 @@ fi
 #     - eine .md sieht im Editor heil aus (Arbeitsweise/anzeige-ist-kein-zustand.md).
 schranke pruefe-tabellenzeilen.pl || exit $?
 
+# 1c. Steht unter "Was es nicht kann" nur, was HEUTE fehlt?
+#
+#     Gregor am 22.10.2026: "das ist doch bullshit! hier steht unter der
+#     ueberschrift 'was es nicht kann', entsteht also der eindruck, all das
+#     kann unser eudora nicht!" - gemeint waren "Das neueste Release ist
+#     v1.0.120" und "Beim Antworten und Weiterleiten fehlten Bilder ...
+#     (E-110, behoben)".
+#
+#     Gemessen: 224 Zeilen, davon 37 ueber Behebungen, Bestaetigungen und
+#     Veroeffentlichungen - samt vollstaendiger Fassungsgeschichte. Nach dem
+#     Aufraeumen 86 Zeilen, 11 Punkte, alle heute zutreffend.
+#
+#     Gegenprobe: --selbsttest, 10 Faelle (6 muessen durchgehen); dazu die
+#     alte Fassung des Abschnitts, die an genau den beiden von Gregor
+#     genannten Zeilen abweist.
+schranke pruefe-nicht-kann.pl || exit $?
+
 # 2. Lehren aus dem Gedaechtnis des Assistenten ins Repo spiegeln,
 #    sonst gehen sie beim naechsten Abschalten verloren.
 #

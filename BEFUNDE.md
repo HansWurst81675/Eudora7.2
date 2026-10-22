@@ -6,7 +6,7 @@
      Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](#np3-7)). -->
 
 Diese Datei ist die Befundsammlung des Projekts, gewachsen durch Anhängen.
-Gemessen am 13.10.2026: **8630 Zeilen**, **128** Abschnitte auf zweiter und
+Gemessen am 22.10.2026: **8668 Zeilen**, **128** Abschnitte auf zweiter und
 **233** auf dritter Ebene. Nachzählen:
 
 ```sh
@@ -15,6 +15,39 @@ grep -c '^## '   BEFUNDE.md         # Abschnitte 2. Ebene (dieses Verzeichnis z�
 grep -cE '^### +[A-Z]' BEFUNDE.md   # Unterabschnitte
 ```
 
+
+## Die Kürzel — was die Buchstaben vor der Nummer bedeuten
+
+Diese Datei führt **16 Nummernkreise**. Bis zum 22.10.2026 stand nirgends, was
+sie bedeuten; `CLAUDE.md` nannte acht davon ohne Erklärung. Gregor an dem Tag,
+über `S-3b`: *„ist es die S-Bahn?"* — eine berechtigte Frage, denn aus dem
+Kürzel allein war es nicht zu erschließen.
+
+Die Spalte **Woher** nennt den Beleg: entweder die Stelle, an der es
+ausgeschrieben steht, oder den Commit, der den Kreis eingeführt hat.
+
+| Kürzel | Was es ist | Woher |
+|---|---|---|
+| `E-` | **Eudora-Befund** — die Hauptreihe: ein Fehler oder Mangel am Programm. 133 Einträge | die Reihe selbst |
+| `A-` | **Anforderung** — etwas, das Gregor verlangt hat und das noch nicht da war | [ZIEL.md](ZIEL.md): *„dazu einzelne Anforderungen `A-n`"* |
+| `AN-` | **Anhänge** — alles rund um Dateianhänge | [AN-1](#an-1): *„Anhänge: lange Dateinamen werden abgeschnitten"* |
+| `S-` | **Startlauf** — was Gregor beim Ausprobieren eines Pakets auffiel | [S-1](#s-1): *„Das Auslieferungspaket 1.0.1 startet nicht"*; [S-3](#s-3): *„erster Lauf durch Gregor"* |
+| `B-` | **Brücke** — die Ersatzbausteine für fehlende Fremdbibliotheken | Commit `23ca822e` (30.08.2026): *„VC71Bruecke: eigene msvcr71.dll als Weiterleitung"* |
+| `M-` | **Menü** — der einzige Eintrag dieses Kreises betrifft die Menüleiste | Commit `3ad6768b` (30.08.2026): *„Befund [M-1](#m-1): tote Menueleiste"* |
+| `R-` | **ReleaseBuffer** — die Fehlerklasse hinter [E-11](#e-11), gezählt von `tools/releasebuffer-pruefen.pl` | Commit `8f1c51e1` (31.08.2026) |
+| `V-` | **Version** — Mängel an der Fassungsvergabe | [V-1](#v-1): *„Zwei verschiedene ZIPs unter derselben Versionsnummer"* |
+| `P-` | **Prüfung am Code** — Funde aus einem Testlauf gegen die Ersatzschicht | Commit `4e72c9f4` (30.08.2026): *„Tests: Registerkarten … geprueft — 30 Testfaelle, ein Befund"* |
+| `PR-` | **Prüfbericht über die eigenen Werkzeuge** — Löcher in den Schranken, nicht im Programm | [PR-1](#pr-1): *„drei Löcher in der Commit-Schranke"*, abgearbeitet durch [W-1](#w-1) |
+| `W-` | **Werkzeug** — Arbeit an `tools/`, meist als Antwort auf `PR-` | [W-1](#w-1): *„Die Werkzeuge in Ordnung gebracht (**WERKZEUG**, 31.08.2026)"* |
+| `F-` | **Freigabe** — Fragen rund um den Release-Bau und das Ausliefern | [F-1](#f-1): *„Der Release-Bau … (**FREIGABE**, 31.08.2026)"* |
+| `X-` | **Angriff auf die eigenen Schranken** — bewusst versucht, sie auszutricksen | [X-1](#x-1): *„Die Werkzeuge **angegriffen**: neun Löcher in der Schranke"* |
+| `Z-` | **Zahlen nachgerechnet** — eine Prüfung der eigenen Messwerte und Fundstellen | [Z-1](#z-1): *„Alle **Zahlen** und Fundstellen des 31.08. nachgerechnet"* |
+| `NP2-` | **Nachprüfung, zweite Runde** — die Ersatzschicht Stufe für Stufe gegengelesen | [NP2-1](#np2-1): *„Stufe 3 hängt nirgends: 6.083 Zeilen ohne Übersetzung"* |
+| `NP3-` | **Nachprüfung, dritte Runde** — dasselbe, eine Runde später | die Reihe selbst |
+
+**Ein Buchstabe mit Nachsatz** (`S-3b`, [`Z-2b`](#z-2b), [`NP3-8`](#np3-8)) ist ein **Teilbefund**:
+dieselbe Beobachtung, in mehrere Ursachen zerlegt. [`S-3`](#s-3) war Gregors erster
+Lauf mit drei Beobachtungen — `S-3a`, `S-3b` und `S-3c` sind diese drei.
 Jeder Agent schreibt seinen Abschnitt ans **Ende**, die Reihenfolge ist also
 zeitlich, nicht sachlich. Ohne dieses Verzeichnis findet niemand, was er sucht —
 und schlimmer: er findet einen Befund und weiß nicht, ob er noch gilt.

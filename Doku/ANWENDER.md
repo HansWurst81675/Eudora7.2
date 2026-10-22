@@ -4,6 +4,16 @@ Zurück zum [Einstieg](../README.md).
 
 ## Was es nicht kann
 
+**Hier steht nur, was heute fehlt.** Keine Fassungsgeschichte, keine behobenen
+Fehler — die stehen in [CHANGELOG.md](../CHANGELOG.md), und eine Liste, die
+beides mischt, liest sich wie eine Liste von Mängeln, die längst keine mehr
+sind.
+
+Die **tagesaktuellen Fehler mit Abhilfe** führt die Tabelle *Bekannte Fehler*
+in der [README](../README.md#bekannte-fehler). Was hier folgt, sind die
+Grenzen, die **bleiben** — und die zwei, drei Mängel, die ein Anwender im
+Alltag am ehesten merkt.
+
 * **Kein fertiges Installationsprogramm.** Es gibt ein ZIP, sonst nichts.
 * **LDAP, Ph, S/MIME und die Suche über den Verzeichnisdienst fallen aus —
   das eigene Adressbuch nicht.** Diese Teile brauchen
@@ -19,127 +29,15 @@ Zurück zum [Einstieg](../README.md).
   klingt nach Adressbuch, ist aber der Protokollanbieter *„EudoraBk
   Protocol"* des Verzeichnisdienstes
   (`DirectoryServices/DirectoryServicesUI/inc/RegisterComponentImpl.h:67`).
-* **Eine Filterregel verträgt bloßes Ansehen wieder.** Eine Regel der Form
-  *„Junk Score is less than N"* wurde unbrauchbar, sobald man sie im
-  Filterfenster anklickte ([**E-67**](../BEFUNDE.md#e-67)); die Korrektur steht seit
-  7.2.0.43 im Code und ist seit 17.10.2026 am laufenden Programm gemessen. Das Filtern selbst arbeitet korrekt — dass
-  ein Lauf über ein ganzes Postfach *alle* Nachrichten verschob ([**E-64**](../BEFUNDE.md#e-64)),
-  ist behoben und am 10.09.2026 bestätigt. Was Filter können und wo ihre
-  Grenzen liegen, steht in [FILTER.md](../FILTER.md).
-* **HTML-Nachrichten werden beim Lesen inzwischen richtig dargestellt**
-  ([**E-86**](../BEFUNDE.md#e-86), behoben in 7.2.0.55): MSHTML lief ohne `X-UA-Compatible` im
-  IE-7-Modus von 2006. Im **Verfassenfenster** bleibt die Darstellung schlicht
-  — siehe *Wo die Grenzen liegen* weiter unten.
 * **IMAP-Postfachnamen mit Umlauten stehen roh da** ([**E-77**](../BEFUNDE.md#e-77), offen):
   `Entw&APw-rfe` statt *Entwürfe*. IMAP selbst läuft — von Gregor am
   10.09.2026 bestätigt: *„imap: funktioniert"*, `imap.gmx.net:993`.
-* **Das neueste Release ist `v1.0.120`** (veröffentlicht am 21.10.2026 um 19:07:37 UTC, Marke auf `30feeae2`, ZIP `Eudora72-1.0.120-release.zip`, 9.381.870 Byte, SHA-256 `26fde414…3af6a6a1`): es trägt drei Fassungen — die Vervollständigungsbox im `To:`-Feld schrumpft nicht mehr ([E-135](../BEFUNDE.md#e-135)), der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](../BEFUNDE.md#e-134)), und eine fehlgeschlagene Rückfrage übernimmt nicht mehr das fremde Verzeichnis ([E-132](../BEFUNDE.md#e-132)). Davor `v1.0.117` (07:56:56 UTC, Marke `f546b004`): Eudora fragt, bevor es das Mailverzeichnis einer fremden Installation übernimmt — auf allen Startwegen und auch bei einer kopierten Sicherung ohne `Eudora.ini`. Davor `v1.0.113` (20.10.2026 um 13:01
-  ohne `Eudora.ini`. Davor erschienen `v1.0.113` und `v1.0.112` am 20.10.2026
-  sowie `v1.0.101` am 17.10.2026 — alle drei überholt.
-  IMAP-Ordner verliert keine Mail mehr**, auch gesendete und mehrere auf einmal –
-  bis auf einen seltenen, vermuteten Fall bei gesendeter Post (siehe *Auf einen Blick*)
-  ([E-121](../BEFUNDE.md#e-121)); HTML-Mails und eingebettete Bilder kommen dort vollständig an
-  ([E-118](../BEFUNDE.md#e-118)); sauberes Beenden ([E-83](../BEFUNDE.md#e-83)); der Filterfehler
-  [E-67](../BEFUNDE.md#e-67) gemessen; von Gregor an 1.0.101 bestätigt. Bekannte Fehler: siehe
-  *Auf einen Blick* oben. Sonst wie `v1.0.87`:
-* **`v1.0.87`** (veröffentlicht am 14.10.2026 um 05:46
-  Uhr UTC, bis 17.10.2026 das Release auf GitHub,
-  https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.87) — Bilder in
-  der angegebenen Größe ([E-112](../BEFUNDE.md#e-112) mit [E-103](../BEFUNDE.md#e-103)),
-  Ctrl+F bei aktivem IMAP-Postfach ([E-115](../BEFUNDE.md#e-115)) und `&amp;` in
-  Bildadressen ([E-117](../BEFUNDE.md#e-117)); alle von Gregor vorher an 1.0.86 und
-  1.0.87 bestätigt. Das Mailverzeichnis im ZIP ist leer (nur die Vorgabe-`Eudora.ini`):
-  ein vorhandenes Mailverzeichnis hineinkopieren. Sonst wie `v1.0.84`:
-* **`v1.0.84`** (veröffentlicht am 12.10.2026 um 12:59
-  Uhr UTC) — **[E-94](../BEFUNDE.md#e-94) behoben**: Betreffs werden nicht
-  mehr mitten im Wort umbrochen; von Gregor vorher an seinem Postfach geprüft
-  (Bildschirmfoto). Sonst wie `v1.0.83`:
-* **`v1.0.83`** (veröffentlicht am 12.10.2026 um 11:18 Uhr UTC) — **von Gregor
-  vorher am laufenden Programm geprüft**, über IMAP an seinem Postfach: *„gekürzt mit endung reicht"*. Neu
-  darin: **Anhänge behalten Endung und Namen** ([AN-1](../BEFUNDE.md#an-1), über POP und IMAP gemessen)
-  und, übersetzt, aber damals am Programm nicht gemessen (seit 13.10.2026 von Gregor an 1.0.84 bestätigt), [**AN-2**](../BEFUNDE.md#an-2) (kein Quelltext einer
-  Webseite mehr im Werbefenster). Das Release davor war **`v1.0.72`** (17.09.2026,
-  von Gregor geprüft: *„kein crash"*). **Seit `v1.0.72` im Download enthalten**
-  sind damit: Zeichensalat
-  beim IMAP-Abruf (7.2.0.52), das Beenden mit hängender Aufgabe (7.2.0.53), die
-  HTML-Darstellung beim Lesen (7.2.0.55), der Formatverlust beim Weiterleiten
-  (7.2.0.56), sich überlagernde Bilder im Verfassenfenster (7.2.0.58),
-  Fragezeichen statt Emoji (7.2.0.59), **Inhaltsverlust beim Weiterleiten**
-  einer bereits weitergeleiteten Nachricht (7.2.0.59, [**E-93**](../BEFUNDE.md#e-93) — es gingen
-  17.889 statt 105.125 Byte hinaus), die **Bildgrößen im Verfassenfenster**
-  (7.2.0.62, [**E-96**](../BEFUNDE.md#e-96); der Notbehelf davor ist mit 7.2.0.63 wieder weg), der
-  **Absturz beim Speichern einer Nachricht** (7.2.0.64, [**E-97**](../BEFUNDE.md#e-97), von Gregor an
-  1.0.64 bestätigt), der **Datenverlust beim Senden eines gesicherten
-  Entwurfs** (7.2.0.64, [**E-99**](../BEFUNDE.md#e-99)), dieselbe Absturzstelle an drei weiteren
-  Stellen (7.2.0.65, [**E-100**](../BEFUNDE.md#e-100)), die **unbrauchbare gespeicherte Datei**
-  (7.2.0.66 und 7.2.0.69, [**E-101**](../BEFUNDE.md#e-101) — ohne `Content-Type`-Zeile und mit Eudoras
-  internem Marker `<x-html>`; ohne *Kopfzeilen einschließen* fehlte der
-  `Content-Type` zunächst ganz; **seit 13.10.2026 wieder offen**, siehe unten),
-  **Bilder, die über dem Text lagen** (7.2.0.67,
-  [**E-103**](../BEFUNDE.md#e-103) — **an 1.0.84 von Gregor widerlegt**, der Rückfall kommt aus
-  [E-112](../BEFUNDE.md#e-112), siehe unten), **zusammengeklebte Kopfzeilen in der gespeicherten Datei**
-  (7.2.0.67 für die verfasste, 7.2.0.68 für die empfangene Nachricht,
-  [**E-104**](../BEFUNDE.md#e-104)), **Bilder, die größer sind als im HTML angegeben und deshalb über
-  dem Text liegen** (7.2.0.68, [**E-106**](../BEFUNDE.md#e-106) — **von Gregor am 17.09.2026 an 1.0.69
-  bestätigt**) und der **Absturz beim Antworten auf eine geöffnete Nachricht**
-  ([**E-107**](../BEFUNDE.md#e-107) war die falsche Erklärung und ist widerlegt; [**E-108**](../BEFUNDE.md#e-108) in 7.2.0.72
-  entfernt den Stilweg, der ihn ausgelöst hat — **von Gregor am 17.09.2026 an
-  1.0.72 bestätigt**: *„kein crash"*, und sein Protokoll läuft über die bisher
-  tödliche Stelle hinaus bis `Logging shutdown`, ohne `Exception.log`).
-  **`1.0.71` darf nicht benutzt werden**: diese Fassung stürzt beim Antworten
-  ab, ist nie veröffentlicht worden und liegt nur noch als Paket in Gregors
-  Testverzeichnis.
-  > **Berichtigt am 17.09.2026 (LEKTOR, [L-13.1](../Befunde/LEKTOR-13.md#l-13.1)).** Bis hierher stand hier
-  > *„das neueste Release ist `v1.0.50`"* und darunter eine Warnung, das
-  > veröffentlichte Paket stürze beim Speichern ab. Beides war überholt:
-  > `gh release list` nennt `v1.0.64` als *Latest*, und genau dort ist [E-97](../BEFUNDE.md#e-97)
-  > behoben. Die Warnung hätte Anwender von einem Download abgehalten, der
-  > den gewarnten Fehler nicht mehr hat.
-* **Wer noch `v1.0.50` oder älter benutzt: *File → Save As* beendet Eudora
-  sofort** ([**E-97**](../BEFUNDE.md#e-97)): der Windows-Dateidialog ruft
-  `CSaveAsDialog::OnTypeChange` auf, bevor der Dialog fertig aufgebaut ist,
-  und ein ungeprüfter `GetParent()` liefert dort `NULL`. Der Fehler steckt in
-  **jeder** Fassung von 1.0.49 bis 1.0.63.
-  Behoben in **7.2.0.64** und im Release **`v1.0.64`**; wer ein älteres Paket benutzt,
-  speichert Nachrichten bis dahin besser nicht.
 * **Im Dialog *Speichern unter* fehlen zwei Optionen** ([**E-98**](../BEFUNDE.md#e-98), offen):
   *Kopfzeilen einschließen* und *Absätze raten* sind nicht wählbar. Windows 10
   öffnet den modernen Dateidialog, und der zeigt Eudoras Dialogvorlage von 1996
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
   Rückschritt durch die Behebung von [E-97](../BEFUNDE.md#e-97)** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
-* **Beim Antworten und Weiterleiten fehlten Bilder im Verfassenfenster**
-  ([**E-110**](../BEFUNDE.md#e-110), behoben in 7.2.0.75, von Gregor bestätigt): `resolve_URL` warf
-  jede Prozent-Sequenz weg, statt sie zu entschlüsseln — aus
-  `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
-  antwortete 404, und Eudora zeichnete einen grauen Kasten. Zehn von zwanzig
-  Bildern. **Dabei wurde [E-112](../BEFUNDE.md#e-112) sichtbar** (**wieder offen**): die Bilder erscheinen
-  in Originalgröße statt in der angegebenen — eine Regression der
-  E-106-Behebung. **Der Versuch in 7.2.0.76 wirkt nicht** — von Gregor am
-  18.09.2026 am laufenden Programm widerlegt, mit Bildschirmfoto; seither
-  liegt der Text sogar wieder auf den Bildern. **Behoben in 7.2.0.85, veröffentlicht mit
-  `v1.0.87`, von Gregor am 13.10.2026 am Testverzeichnis 1.0.86 bestätigt:** die Bilder werden in der
-  angegebenen Größe gezeichnet, ohne Angabe in Dateigröße ([E-103](../BEFUNDE.md#e-103), ebenfalls
-  bestätigt) — am
-  laufenden Programm gemessen, auch für dieselbe Bildadresse in zwei Größen und
-  für ein Bild mit nur der Breite; dass ein breites Bild ohne Höhe beim Antworten
-  nicht mehr zum Strich wird (und ein hohes ohne Breite nicht zum senkrechten), ist behoben
-  und gemessen. Erst mit
-  dieser Behebung wird [**E-116**](../BEFUNDE.md#e-116) sichtbar (offen): eine Angabe wie
-  `width="35px"` wird als 3508 gelesen. **Behoben in 7.2.0.87, veröffentlicht als `v1.0.87`, am laufenden
-  Programm gemessen, von Gregor an 1.0.87 bestätigt (14.10.2026):** [**E-117**](../BEFUNDE.md#e-117) — Bilder
-  mit `&amp;` in der Adresse kamen beim Antworten und Weiterleiten als 1×1-Pixel
-  an und blieben eine leere Fläche. **Weiter offen ist
-  [E-113](../BEFUNDE.md#e-113):** ein Bild, dessen angegebene Breite größer ist als das Fenster,
-  läuft rechts hinaus.
-* **Die Betreffzeile wird mitten im Wort umbrochen** ([**E-94**](../BEFUNDE.md#e-94), in `v1.0.83`
-  noch enthalten, **behoben in 7.2.0.84**): beim **Empfang** werden Betreffs
-  wie `Toner bestel len` oder `Wochenend e!` angezeigt, wenn der Absender
-  (etwa der web.de-Webmailer) einen langen Betreff in mehrere kodierte Wörter
-  zerlegt und dazwischen faltet. Eudora ließ die Faltung stehen, statt sie
-  nach RFC 2047 wegzulassen; über POP zeigte die Postfachliste sogar nur die
-  erste Zeile. Der frühere Verdacht auf `Encode2047` beim Senden ist widerlegt
-  — Eudora hatte diese Nachrichten gar nicht gesendet. **Kein Datenverlust.**
 * **Versteckter Vorschautext wird mitgelesen** ([**E-105**](../BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, ausgeliefert mit `v1.0.101`, von Gregor noch nicht bestätigt): In manchen
   Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
   füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
@@ -148,31 +46,6 @@ Zurück zum [Einstieg](../README.md).
   stehen in manchen Newslettern Bilder doppelt da (Desktop- und
   Handyfassung, eine davon per `display:none` verborgen; zweiter Fall,
   von Gregor am 13.10.2026 an 1.0.86 gemeldet).
-* **Eine HTML-Mail, in ein IMAP-Postfach verschoben, erscheint dort als
-  HTML-Quelltext** ([**E-118**](../BEFUNDE.md#e-118), im Download `v1.0.87` offen; Behebung in 7.2.0.89 eingebaut, am IMAP-Prüfserver gemessen, ausgeliefert mit `v1.0.101`, Teil 1 von Gregor am 14.10.2026 an 1.0.89 bestätigt, Teil 2 am 14.10.2026 an 1.0.90): beim Hochladen
-  verwirft Eudora die `Content-*`-Köpfe und schreibt keinen oder nur
-  `text/plain` als Inhaltstyp, nie `text/html`. Originalfehler von QUALCOMM.
-  Eingebettete Bilder gingen dabei ganz verloren; das holt 7.2.0.90 nach (am IMAP-Prüfserver gemessen, von Gregor am 14.10.2026 an 1.0.90 bestätigt).
-* **Eine Nachricht, die in einen IMAP-Ordner verschoben wird, kann spurlos
-  verschwinden** ([**E-121**](../BEFUNDE.md#e-121), Datenverlust, in `v1.0.87` offen, **in `v1.0.101` behoben, von Gregor am 17.10.2026 bestätigt**; zwei Reste abgetrennt als [E-126](../BEFUNDE.md#e-126) (offen) und [E-127](../BEFUNDE.md#e-127) (offen);
-  Behebung in 7.2.0.90 eingebaut, am IMAP-Prüfserver gemessen, ausgeliefert mit `v1.0.101`;
-  gegen die Doppelanzeige danach sechs Anläufe bis 7.2.0.96, der letzte an 1.0.96
-  von Gregor bestätigt; in 7.2.0.97 gesendete Post wieder hochgeladen, und entfernt
-  wird nur noch die Nachricht, die tatsächlich verschoben wurde, an 1.0.99 von Gregor
-  bestätigt (16.10.2026); der Verlust eingebetteter Bilder nach einem Neustart ist
-  abgetrennt als [E-123](../BEFUNDE.md#e-123) (offen);
-  in 7.2.0.100 mehrere gesendete Mails in einer Übertragung ([PRÜFER-31](../Befunde/PRUEFER-31.md)),
-  am Prüfstand gemessen, an 1.0.100 von Gregor getestet (16.10.2026);
-  in 7.2.0.101 bekommt gesendete Post beim Verschieben eine eigene Kennung, und eine
-  Kopie, deren Hochladen scheiterte, wird sofort entfernt ([PRÜFER-32](../Befunde/PRUEFER-32.md)),
-  am Prüfstand gemessen, an 1.0.101 von Gregor bestätigt (17.10.2026)):
-  ein Abgleich des Zielordners verwarf die lokale Kopie, bevor sie hochgeladen war.
-  Selten, aber still. Originalfehler von QUALCOMM.
-* **Eine beim Start schon fertige IMAP-Aufgabe blieb manchmal stehen** ([E-83](../BEFUNDE.md#e-83), zweite Ursache):
-  sie belegte ihren Ordner, das Verschieben dorthin wartete ewig, und beim Beenden kam
-  *„You currently have 1 task(s) running“*. Behoben in 7.2.0.98, am IMAP-Prüfstand gemessen
-  (vorher 12 von 12 Läufen hängend, danach 10 von 10 durch), an 1.0.99 von Gregor sauber
-  beendet (16.10.2026; der Wettlauf selbst trat in seinem Lauf nicht auf), ausgeliefert mit `v1.0.101`.
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](../BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
@@ -194,17 +67,6 @@ Zurück zum [Einstieg](../README.md).
   seinem Postfach getestet und bestätigt. **Offen bleibt [B5.7](../AUFGABEN.md#b5.7):** über IMAP
   wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
   Durchlauf in [AUFGABEN.md](../AUFGABEN.md), **B5**.
-* **Beim Start erschien der Quelltext einer Webseite in einem Fenster**
-  ([**AN-2**](../BEFUNDE.md#an-2), **behoben, von Gregor an 1.0.84 am 13.10.2026 bestätigt**):
-  JavaScript, CSS und JSON als Text. Angezeigt wird HTML von **Paige**, nicht
-  von einem Browser, und Paige kannte kein Element, dessen Inhalt kein Text
-  ist: `<script>` war unbekannt, `<style>` bekannt aber unbehandelt — das traf
-  auch jeden Newsletter mit eingebettetem CSS. Seit 7.2.0.80 wird beides
-  unterdrückt. Die frühere Erklärung, Eudora starte ohne `[Settings] Mode` in
-  der **Werbe-Betriebsart**, ist **widerlegt**: dieser Bau startet mit
-  `Mode=2` (ohne Werbung), und auch mit `Mode=0` holte 1.0.84 nichts. Die
-  Werbe-Betriebsart wird nach Gregors Entscheidung nicht weiter verfolgt
-  ([AUFGABEN.md](../AUFGABEN.md), **B6**).
 * **Eine gespeicherte HTML-Nachricht zeigt in anderen Programmen falsche
   Umlaute** ([**E-101**](../BEFUNDE.md#e-101), **wieder offen** seit 13.10.2026, an 1.0.84 gemeldet):
   die Datei aus *File → Save As* sagt im `<meta>` UTF-8, enthält aber
