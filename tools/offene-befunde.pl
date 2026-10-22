@@ -93,7 +93,8 @@ my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr a
 my $kennung = qr/[A-Z]{1,3}\d?-\d+[a-z]?/;
 
 my $befunde = lies($quelle);
-my (@offene, %beschreibung, %fehlt, %gemessen, %messnummer, %gesehen);
+my (@offene, %beschreibung, %fehlt, %gemessen, %messnummer, %quelltext, %gesehen);
+my $zahl_quelltext = 0;
 
 for my $zeile (split /\n/, $befunde) {
     next unless $zeile =~ /^\|\s*$ANKER\s*\**\s*($kennung)\s*\**\s*\|/;
@@ -184,6 +185,25 @@ for my $zeile (split /\n/, $befunde) {
     # Daten haben die Liste jahrelang glaubwuerdig aussehen lassen.
     if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.0\.\d+)\*\*/) {
         $gemessen{$k} = "$1 an $2";
+        my ($nr) = $2 =~ /\.(\d+)$/;
+        $messnummer{$k} = $nr;
+    }
+    # ZWEITE MARKE: AM QUELLTEXT BELEGT (22.10.2026, LEKTOR L-50.10).
+    #
+    # Was am 22.10.2026 an E-90, E-91, E-92, E-71, E-47, E-39, S-3, S-6,
+    # NP2-2, NP3-1/2/3, P-1 und R-1 geschah, war ein GEGENLESEN DES
+    # QUELLTEXTS - gute Arbeit, aber kein Lauf. In der Spalte stand
+    # trotzdem "22.10.2026 an 7.2.0.121", und wer sie ueberfliegt, liest
+    # "am laufenden Programm geprueft". Bei E-92 sagt der Befund sogar
+    # ausdruecklich "nicht entscheidbar am Quelltext".
+    #
+    # Arbeitsweise/ursache-nur-gemessen-behaupten.md kennt drei Dinge:
+    # gemessen / belegt am Quelltext / Vermutung. Die Uebersicht kannte
+    # nur eines. Jetzt zwei - die Vermutung bleibt draussen, sie gehoert
+    # nicht in eine Spalte, die Glaubwuerdigkeit behauptet.
+    elsif ($urteil =~ /\*\*Zuletzt belegt am Quelltext:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.0\.\d+)\*\*/) {
+        $gemessen{$k}   = "$1 an $2 (Quelltext)";
+        $quelltext{$k}  = 1;
         my ($nr) = $2 =~ /\.(\d+)$/;
         $messnummer{$k} = $nr;
     }
@@ -286,6 +306,7 @@ for my $k (@offene) {
     }
     elsif ($messnummer{$k} >= $aktuell - 5) {
         $g = $gemessen{$k};
+        $quelltext{$k} ? $zahl_quelltext++ : 0;
         $zahl_aktuell++;
     }
     else {
@@ -354,6 +375,7 @@ print "  offene-befunde\n";
 print "  ------------------------------------------------------------\n";
 printf "    offen laut Intern/BEFUNDE.md  %2d\n", scalar @offene;
 printf "      davon aktuell gemessen      %2d  (ab 7.2.0.%d)\n", $zahl_aktuell, ($aktuell > 5 ? $aktuell - 5 : 0);
+printf "        davon nur am Quelltext    %2d  (gegengelesen, kein Lauf)\n", $zahl_quelltext;
 printf "      davon veraltet gemessen     %2d\n", $zahl_alt;
 printf "      davon NIE gemessen          %2d\n", $zahl_nie;
 printf "    in Intern/WEITERMACHEN.md     %2d\n", scalar keys %im_ist;
