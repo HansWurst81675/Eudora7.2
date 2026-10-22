@@ -156,6 +156,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `rollen-faellig-ohne-binaerdateien` | 21.10.2026 | Von Gregor angenommen (*„rollen-faellig-ohne-binaerdateien ist ok, mach das"*). Zweck: der CHRONIST-Bereich in `tools/rollen-faellig.pl` war als `^(?:Eudora71/|tools/)` ohne Einschränkung auf den Dateityp festgelegt und zählte deshalb Binärdateien mit. Am 21.10.2026 meldete die Schranke *„CHRONIST ist fällig: 11 Dateien — `DirServ.dll`, `EudoraBk.dll`, `ISock.dll` und 8 weitere"*; die fünf DLLs unterschieden sich nur im PE-Zeitstempel. Von CHRONIST gemeldet statt behoben, weil dieselbe Datei den Umfang aller drei Rollen festlegt. **Gegenprobe in beide Richtungen:** der Fehlalarm fällt von 11 auf 2 echte Dateien, und für alle fünf letzten CHRONIST-Berichte bleiben Textdateien übrig — kein berechtigter Fall geht verloren |
 
+| `lizenz-und-plugin-antwort` | 22.10.2026 | Von Gregor angenommen (*„lizenz-und-plugin-antwort ist ok, nimm den github namen"*). Zweck: zwei Dinge, die er am selben Tag gefunden hat. Erstens hatte das Repo **keine Lizenzdatei** (`license: null`) — neu ist [LICENSE](../LICENSE): BSD-3-Clause mit Patentausschluss wie die Freigabe von 2018, erweitert um die Urheberzeile des Projekts, dazu ein Abschnitt über die Teile, die **weder uns noch dem CHM** gehören (Stingray, Paige, SMIME, die Verzeichnisdienst-DLLs). Zweitens die Antwort auf die Plug-in-Freigabe von `rjsdotorg`, der uns alle drei Stufen bewilligt hat — sein Quell-Repo liefert allerdings 404 und hat selbst keine Lizenz |
+
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl

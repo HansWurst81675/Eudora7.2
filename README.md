@@ -1243,5 +1243,24 @@ vollständige Liste der Fremdbestandteile steht dort ebenfalls.
 
 ## Lizenz
 
-Der Eudora-Quellcode steht unter der BSD-artigen Lizenz der Freigabe von 2018
-(siehe Kopf der Quelldateien). Fremdbestandteile behalten ihre eigenen Lizenzen.
+**[LICENSE](LICENSE)** — der vollständige Text. Kurz:
+
+Der Eudora-Quelltext steht unter der BSD-3-Clause-Lizenz mit Patentausschluss,
+unter der ihn das Computer History Museum 2018 freigegeben hat (Urheberzeile
+von 2016, siehe Kopf der Quelldateien). **Alles, was in diesem Projekt neu
+entstanden ist** — die Ersatzschicht unter `Eudora71/OTShim`, die Werkzeuge
+unter `tools/` und die Dokumentation — steht unter **derselben** Lizenz. Die
+Änderungen liegen fast alle innerhalb von Dateien mit diesem Lizenzkopf; eine
+zweite Lizenz ergäbe eine Grenze, die niemand nachziehen kann.
+
+Benutzen, verändern und weitergeben ist damit erlaubt, auch gewerblich,
+solange Urhebervermerk und Lizenztext mitgehen. Keine Gewährleistung, keine
+Patentrechte, und unsere Namen nicht zur Werbung.
+
+**Zwei Einschränkungen**, die [LICENSE](LICENSE) im Einzelnen aufführt:
+Fremdbestandteile wie OpenSSL, expat und libpng behalten ihre eigenen
+Lizenzen — und einiges im Baum gehört **weder uns noch dem Computer History
+Museum**: die Stingray-Header unter `Eudora71/OT501`, `Paige32.dll`,
+`SMIME.dll` und die Verzeichnisdienst-Bibliotheken von 2003. Daran können wir
+niemandem Rechte einräumen.
+
