@@ -1,6 +1,8 @@
 # Issue #102 — Antwort auf die Plug-in-Freigabe
 
-**ENTWURF, noch nicht abgeschickt.** Warten auf Gregors Freigabe.
+**ABGESCHICKT am 22.10.2026** auf Gregors Freigabe *"ja, entwuerfe sehen gut aus"*: [Kommentar in #102](https://github.com/HansWurst81675/Eudora7.2/issues/102#issuecomment-6333237823). Der Wortlaut ging unveraendert hinaus.
+
+**Nachtrag, ebenfalls abgeschickt** (*"ja, schick den nachtrag"*): [Kommentar](https://github.com/HansWurst81675/Eudora7.2/issues/102#issuecomment-6333264895). Nachgemessen: `EudoraUnicodeFix-releases` enthaelt nur eine README - **0 Releases, 0 Tags, keine DLL**. Wir haben also auch kein Binaerpaket. Der Nachtrag schlaegt deshalb den kuerzeren Weg vor: die gebaute DLL an ein Release dort anhaengen, dann braucht es den Quellzugang fuer den Test gar nicht.
 
 Gehört zu [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
 Adressat `@rjsdotorg`. Das Issue ist geschlossen; ein Beitrag ist trotzdem
@@ -73,3 +75,26 @@ es übernehmen und testen."*
 > real; the deep debugging in a large codebase is where it still takes a careful
 > human reading every measurement. This port has had its share of confidently
 > wrong first attempts — several of them in this very issue.
+
+---
+
+## Nachtrag, Wortlaut
+
+> One addendum, so you are not waiting on us while we wait on you.
+> 
+> Looking again at `EudoraUnicodeFix-releases`: it currently holds **only the
+> README** — no releases, no tags, no DLL. So we do not have a binary either,
+> and the install instructions point at `build\Release\EudoraUnicodeFix.dll`,
+> which only exists for someone who has already built it.
+> 
+> That makes the easiest path probably this one: **attach the built
+> `EudoraUnicodeFix.dll` to a release in that repository.** Then our maintainer
+> can install and test it straight away, without the source repository being
+> opened at all. Opening the source would still be welcome — for the
+> "baked in" part — but it is the slower of the two.
+> 
+> Either way a one-line `LICENSE` file would settle the redistribution
+> question. Your other projects carry them (MIT, GPL-3.0, CC0), so this one
+> looks like it simply slipped through.
+> 
+> No rush on any of it.
