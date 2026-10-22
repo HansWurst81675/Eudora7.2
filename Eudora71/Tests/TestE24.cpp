@@ -35,6 +35,7 @@
 
 #include "TinyTest.h"
 #include "UnderTestE24.h"
+#include "Quelltext.h"
 
 // Die Namen, die Eudora wirklich benutzt: IDS_IN_MBOX_FILENAME +
 // IDS_MAILBOX_EXTENSION ergibt "In.mbx".
@@ -71,7 +72,52 @@ static void PruefeListe(const char* szWas, const std::list<LPCTSTR>& theList,
 	}
 }
 
-void RunE24Tests(void)
+//
+// Test_E24_DieStellen - benutzt QCMailboxDirector.cpp die Funktionen auch?
+//
+// NACHGEZOGEN AM 22.10.2026 (PRUEFER, Fund 1). Bis dahin prueften alle
+// sieben E-24-Faelle nur die drei geschnittenen Funktionen. Niemand prueft,
+// ob QCMailboxDirector.cpp sie BENUTZT - als einziger der acht neuen
+// Befunde hatte E-24 keinen Aufrufstellen-Test.
+//
+// PRUEFER hat gemessen, was das heisst: beide Aufrufstellen auf den alten
+// Stand zurueckgedreht (RecentListRemove -> s_RecentMailboxList.remove,
+// RecentListContains -> std::find), die Funktionen stehen gelassen. Der
+// Extrakt blieb byte-identisch, und die Sammlung meldete 274 Tests, 274
+// bestanden. Der Befund waere vollstaendig zurueck gewesen - zwei "In" im
+// Postfachbaum - und der Pruefstand haette gruen gemeldet.
+// (Arbeitsweise/extrakt-ist-nicht-das-programm.md)
+//
+static void Test_E24_DieStellen(const char* szEudoraDir)
+{
+	char*	pCode = QT_LiesNurCode(szEudoraDir, "QCMailboxDirector.cpp");
+
+	TT_BeginTest("E-24: QCMailboxDirector.cpp benutzt die Vergleichsfunktionen");
+
+	if (!pCode)
+	{
+		TT_Fail("QCMailboxDirector.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
+		return;
+	}
+
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "RecentListContains(s_RecentMailboxList"),
+				 "die Abfrage \"steht schon drin\" muss ueber RecentListContains gehen");
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "RecentListRemove(s_RecentMailboxList"),
+				 "das Entfernen muss ueber RecentListRemove gehen");
+
+	// Die Gegenrichtung: der alte Stand darf nicht zurueckkommen. Beides
+	// vergleicht ueber den ZEIGER und ist die Ursache des Befunds.
+	TT_CHECK_MSG(!QT_Enthaelt(pCode, "s_RecentMailboxList.remove("),
+				 "std::list::remove vergleicht ueber den Zeiger - darf nicht zurueckkommen");
+	TT_CHECK_MSG(!QT_Enthaelt(pCode, "std::find(s_RecentMailboxList"),
+				 "std::find vergleicht ueber den Zeiger - darf nicht zurueckkommen");
+
+	free(pCode);
+	TT_EndTest();
+}
+
+void RunE24Tests(const char* szEudoraDir)
 {
 	TT_Suite("E-24: unter \"Recent\" stand \"In\" zweimal");
 
@@ -217,4 +263,7 @@ void RunE24Tests(void)
 		PruefeListe("nach dem Entfernen aus der Mitte", theList, aszSoll, 2);
 	}
 	TT_EndTest();
+
+	// Die Aufrufstellen - siehe oben, PRUEFER Fund 1.
+	Test_E24_DieStellen(szEudoraDir);
 }

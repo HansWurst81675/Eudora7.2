@@ -271,11 +271,38 @@ int QT_RueckgabeGenutzt(const char* pText, const char* szAufruf, int* piGefunden
 		{
 			const char	chDavor = pZurueck[-1];
 
-			// '=' nimmt den Wert entgegen, '(' und ',' reichen ihn weiter,
-			// 'n' aus "return" ebenfalls. Steht dort ';', '{' oder '}', ist
-			// der Aufruf eine blosse Anweisung und der Wert faellt weg -
-			// genau der Mangel aus NP3-9.
-			if (chDavor == ';' || chDavor == '{' || chDavor == '}')
+			// UMGEDREHT AM 22.10.2026 (PRUEFER, Fund 2).
+			//
+			// Hier stand eine Liste der Anweisungsanfaenge: ';', '{', '}'.
+			// Alles andere galt als "Wert genutzt". Damit kam ein
+			// weggeworfener Rueckgabewert durch, sobald davor etwas anderes
+			// stand - gemessen an
+			//
+			//     if (inLen > 0) ISOTranslateChunk(...);
+			//
+			// Dort steht ')' davor, der Wert faellt weg, und der Test
+			// "NP3-9: beide Aufrufstellen nehmen den Rueckgabewert
+			// entgegen" blieb bei 274/274 gruen. Dasselbe gilt fuer das 'e'
+			// aus "else".
+			//
+			// Jetzt wird die KURZE Liste gefuehrt: was den Wert wirklich
+			// entgegennimmt oder weiterreicht. Alles andere zaehlt als
+			// weggeworfen. Eine unbekannte Umgebung macht den Test damit
+			// ROT statt gruen - das ist die richtige Richtung fuer eine
+			// Schranke.
+			//
+			//   =        Zuweisung, auch ==, <=, >=, != (alle nutzen ihn)
+			//   ( ,      Argument eines anderen Aufrufs
+			//   n        das 'n' aus "return"
+			//   & | ! ?  : < > + - * / %   Teil eines Ausdrucks
+			//
+			// BEKANNTE GRENZE: eine Typumwandlung - (LONG)Aufruf(...) -
+			// hat ebenfalls ')' davor und wuerde faelschlich als
+			// weggeworfen gelten. Dann wird der Test rot und jemand sieht
+			// hin; im Baum kommt es an den geprueften Stellen nicht vor.
+			const char* const	szNutzt = "=(,n&|!?:<>+-*/%";
+
+			if (strchr(szNutzt, chDavor) == NULL)
 				iAllesGenutzt = 0;
 		}
 
