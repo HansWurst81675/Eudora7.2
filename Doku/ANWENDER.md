@@ -231,6 +231,53 @@ Damit ein Bericht verwertbar ist, gehören drei Dinge hinein:
 Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 [CHANGELOG.md](../CHANGELOG.md) unter *Noch offen*.
 
+## Der Zusatz *EudoraUnicodeFix* — kaputte Umlaute nachträglich reparieren
+
+Seit dem 22.10.2026 liegt im Paket unter `Plugins\` ein Zusatz, der **nicht
+von uns** stammt: `EudoraUnicodeFix.dll` von
+[`rjsdotorg`](https://github.com/rjsdotorg/EudoraUnicodeFix-releases)
+(BSD-3-Clause). Er ist derselbe, der [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)
+gemeldet hat.
+
+**Wozu er da ist.** Eudora 7.2 behandelt den Zeichensatz beim Abrufen
+richtig — das verhindert **neuen** Schaden. Nachrichten, die schon
+beschädigt im Postfach liegen, heilt das nicht: dort steht weiterhin
+`GrÃ¼ÃŸe` statt *Grüße*, `cafÃ©` statt *café*, `donâ€™t` statt *don't*.
+Genau diese Lücke schließt der Zusatz.
+
+**So benutzt man ihn:**
+
+1. Nachricht **doppelklicken**, damit sie im eigenen Fenster steht — im
+   Vorschaufenster gibt es den Befehl nicht.
+2. *Edit → Message Plug-ins → Repair Gmail Unicode for Eudora*
+3. **Strg-S** sichert die reparierte Fassung — **aber bitte erst die
+   Warnung unten lesen.**
+
+Einstellungen über *Special → Message Plug-ins Settings →
+EudoraUnicodeFix Rev A → Settings*. *Conservative mode* ist an und sollte
+an bleiben: damit wird nur repariert, was vier unabhängige Prüfungen
+besteht. Gesunder Text wird nicht angefasst.
+
+> ### ⚠ Beim Speichern können Zeichen verlorengehen
+>
+> Nach der Reparatur zeigt Eudora Zeichen an, die es sonst **streicht** —
+> Emoji, Kyrillisch, Griechisch, Chinesisch. Sie stehen dann richtig auf
+> dem Bildschirm. Wer die Nachricht mit **Strg-S** sichert, verliert sie:
+> aus einem Emoji werden zwei Fragezeichen, dauerhaft und ohne Rückfrage.
+>
+> **Die Ursache liegt bei uns, nicht beim Zusatz** — er liefert die Zeichen
+> korrekt ab, Eudora verliert sie erst beim Schreiben ins Postfach.
+> Gemessen am 22.10.2026 an 7.2.0.120, geführt als
+> [E-136](../Intern/BEFUNDE.md#e-136).
+>
+> **Zum Lesen** einer beschädigten Nachricht ist der Zusatz unbedenklich.
+> **Zum Speichern** nur, wenn außer Umlauten, Akzenten und dem Eurozeichen
+> nichts Besonderes darin steht — die gibt es in windows-1252 und sie
+> gehen nicht verloren.
+
+**Wieder entfernen:** Eudora schließen, `EudoraUnicodeFix.dll` aus
+`Plugins\` löschen, Eudora starten. Eudora lädt Zusätze nur beim Start.
+
 ## Einstellungen, die es nur hier gibt
 
 Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab — und

@@ -29,6 +29,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-130](Intern/BEFUNDE.md#e-130)** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… | **nie gemessen** | zweierlei — **wer** die fünf DLLs beim Bau stempelt, ist nicht gefunden (`paket-bauen.ps1` liest sie nur, kein `.vcxproj` nennt sie), und es ist ni… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | **nie gemessen** | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
