@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 10 von 17 erfüllt, 7 offen.** Diese Übersicht wird aus den
+**Stand: 11 von 17 erfüllt, 6 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -25,7 +25,6 @@ beschädigt, steht oben.
 
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
-| **[E-131](Intern/BEFUNDE.md#e-131)** | ? | **am 22.10.2026 gemessen — die Lücke ist eine andere, als hier stand.** Bis dahin hieß es, eine `Eudora.ini` mit kaputtem Wert werde *erst beim n… | — **nicht aufgeschrieben** |
 | **[E-101](Intern/BEFUNDE.md#e-101)** | ich | allein **F2** — `StripTabooHeaders` entfernt die `Content-Type`-Zeile, bevor der Kern sie setzen kann; auf dem einzigen Aufrufweg ist er damit tot (… | Testsuite plus eine echte Nachricht: HTML-Mail über *File → Save As* sichern und die Datei in einem Browser öffnen. Rot: Umlaute als Ersatzzeichen, weil die `Content-Type`-Zeile fehlt. G… |
 | **[E-77](Intern/BEFUNDE.md#e-77)** | ich | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… | am eigenen IMAP-Prüfserver (`tools/imap-pruefserver.pl`). Einen Ordner `Entwürfe` anlegen, abrufen, in der Postfachliste nachsehen. Rot: `Entw&APw-rfe`. Grün: `Entwürfe`. |
 | **[E-113](Intern/BEFUNDE.md#e-113)** | ich | alles — von Gregor angeordnet, aber ausdrücklich erst nach [E-112](Intern/BEFUNDE.md#e-112). Billig wäre ein Deckel beim Umbruch (`page_width` liegt in `PGHTMIMP.CPP:235-240… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
