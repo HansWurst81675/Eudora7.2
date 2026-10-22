@@ -92,13 +92,21 @@ my @erledigt_wort = ('behoben', 'kein eigener fehler', 'erledigt', 'nicht mehr a
 my $kennung = qr/[A-Z]{1,3}\d?-\d+[a-z]?/;
 
 my $befunde = lies($quelle);
-my (@offene, %beschreibung, %gesehen);
+my (@offene, %beschreibung, %fehlt, %gesehen);
 
 for my $zeile (split /\n/, $befunde) {
     next unless $zeile =~ /^\|\s*$ANKER\s*\**\s*($kennung)\s*\**\s*\|/;
     my $k = $1;
 
-    my @s = split /\|/, $zeile, -1;
+    # MASKIERTE PIPES (22.10.2026, von LEKTOR gemessen). "split /\|/" zerlegt
+    # auch an einem \| mitten im Urteilstext. Vier Urteile enthalten eines -
+    # E-128 ("Text Files (*.txt)\|*.txt"), E-116 ("digit < '0' \|\| digit >
+    # '9'"), E-105 (ein zitierter Betreff mit \|) und NP3-1 ("WS_CHILD \|
+    # WS_VISIBLE"). Ihre Zeilen zerfielen in 6 bis 9 statt 5 Spalten, $s[3]
+    # endete vor dem Ende des Urteils, und die Marke "Was noch fehlt" dahinter
+    # war fuer das Werkzeug nicht vorhanden - die Tabelle schrieb bei allen
+    # vieren "nicht aufgeschrieben", obwohl der Text dastand.
+    my @s = split /(?<!\\)\|/, $zeile, -1;
     next unless @s >= 4;
 
     # Erste Zeile gewinnt - und zwar die erste Zeile UEBERHAUPT. Bis zum
@@ -120,6 +128,14 @@ for my $zeile (split /\n/, $befunde) {
     # deckt die offenen Befunde" und meinte 9, wo 11 stehen. Gegengetestet:
     # ohne Grenze kommen genau E-90 und E-92 dazu, kein behobener Befund.
     my @fett_alle = $urteil =~ /\*\*([^*]+?)\*\*/g;
+    # LEERE FETTSTELLEN WEGWERFEN (22.10.2026, von LEKTOR gemessen). E-89
+    # endet mit >>...*„keine ueberlappung."*** **Die Ursache...<<. In der
+    # Folge "*** **" greift das Muster und liefert als erstes Fettwort ein
+    # LEERZEICHEN - E-89 galt damit weder als offen noch als behoben und
+    # wurde stillschweigend uebergangen. Dass das folgenlos blieb, lag nur
+    # daran, dass er wirklich behoben ist. Es ist die einzige Zeile der
+    # Datei mit diesem Muster - gemessen, nicht vermutet.
+    @fett_alle = grep { /\S/ } @fett_alle;
     next unless @fett_alle;
     my $w     = lc $fett_alle[0];
     my $alle  = lc join ' || ', @fett_alle;
@@ -150,6 +166,32 @@ for my $zeile (split /\n/, $befunde) {
     $b =~ s/\s+/ /g;
     $b = substr($b, 0, 90) . '…' if length($b) > 90;
 
+
+    # --- DRITTE SPALTE: was noch fehlt (22.10.2026) -----------------------
+    # Gregor, nachdem er sich A-1 angesehen hatte: "Erscheinungsbild: fuenf
+    # Punkte umgesetzt | teilweise, Wirkung belegt (E-1/E-2), was heisst es?
+    # was fehlt hier?" - und gleich danach: "mir geht es nicht nur um A-1,
+    # sondern um alle punkte!"
+    #
+    # Gemessen am 22.10.2026: 23 von 40 offenen Befunden sagten nur, WIE sie
+    # eingestuft sind ("offen", "teilweise"), nicht WAS noch aussteht. Acht
+    # davon mit einem einzigen Wort. Eine Liste offener Punkte, die den
+    # erledigten Teil nennt und den offenen verschweigt, ist verkehrt herum.
+    #
+    # Die Marke steht am ENDE der Urteilsspalte und laeuft bis zum Zellenende:
+    #
+    #     **Was noch fehlt:** der IMAP-Weg ruft SetExtension nicht auf (B5.7).
+    #
+    # Fehlt sie, schreibt die Tabelle "— nicht aufgeschrieben". Das ist
+    # Absicht: die Luecke soll sichtbar und zaehlbar sein, nicht hinter
+    # einem "teilweise" verschwinden (Arbeitsweise/ausbleiben-ist-kein-befund.md).
+    if ($urteil =~ /\*\*Was noch fehlt:\*\*\s*(.+)\z/s) {
+        my $f = $1;
+        $f =~ s/\s+/ /g;
+        $f =~ s/\s+\z//;
+        $f = substr($f, 0, 150) . '…' if length($f) > 150;
+        $fehlt{$k} = $f;
+    }
     push @offene, $k;
     $beschreibung{$k} = $b;
 }
@@ -166,7 +208,8 @@ unless (@offene) {
 
 my $soll = '';
 for my $k (@offene) {
-    $soll .= "| **$k** | $beschreibung{$k} |\n";
+    my $f = $fehlt{$k} // '— **nicht aufgeschrieben**';
+    $soll .= "| **$k** | $beschreibung{$k} | $f |\n";
 }
 
 # --- Gegen WEITERMACHEN.md halten -----------------------------------------
@@ -193,7 +236,20 @@ my %im_ist;
 # **[E-115](BEFUNDE.md#e-115)** da. Bis dahin las diese Zeile nur **E-115**
 # und meldete "in WEITERMACHEN.md 0, FEHLEN 30" - bei inhaltlich deckender
 # Liste. Der Haken zeigt die Ausgabe nur an, also fiel es niemandem auf.
-while ($ist =~ /\*\*\[?($kennung)\]?(?:\([^)]*\))?\*\*/g) { $im_ist{$1} = 1; }
+# NUR DIE ERSTE SPALTE (22.10.2026, von LEKTOR gemessen). Bis die Tabelle
+# eine dritte Spalte bekam, war der ganze Block eine sichere Quelle fuer
+# Kennungen. Jetzt nicht mehr: LEKTORs erste Fassung der S-3-Marke schrieb
+# "**S-3c**" in "was noch fehlt", und der naechste Lauf meldete
+# "ZU VIEL (1, laut BEFUNDE.md erledigt): S-3c" - eine Kennung, die gar
+# keine Tabellenzeile war. Gezaehlt wird deshalb nur noch, was in der
+# KENNUNGSSPALTE steht. Damit darf eine Marke eine Kennung auch fett
+# nennen, ohne das Werkzeug zu verwirren.
+for my $zeile (split /\n/, $ist) {
+    next unless $zeile =~ /^\s*\|/;
+    my @c = split /(?<!\\)\|/, $zeile, -1;
+    next unless @c >= 2;
+    $im_ist{$1} = 1 if $c[1] =~ /\*\*\[?($kennung)\]?(?:\([^)]*\))?\*\*/;
+}
 
 my @fehlen = grep { not $im_ist{$_} } @offene;
 my @zuviel = grep { my $n = $_; not grep { $_ eq $n } @offene } sort keys %im_ist;
@@ -204,7 +260,38 @@ print "  ------------------------------------------------------------\n";
 printf "    offen laut BEFUNDE.md      %2d\n", scalar @offene;
 printf "    in WEITERMACHEN.md         %2d\n", scalar keys %im_ist;
 
-if (not @fehlen and not @zuviel) {
+# ABWEISEN, WENN EIN OFFENER BEFUND NICHT SAGT, WAS NOCH FEHLT (22.10.2026).
+# Gregor, nachdem er sich A-1 angesehen hatte: "was heisst es? was fehlt
+# hier?" - und gleich darauf: "mir geht es nicht nur um A-1, sondern um alle
+# punkte!" Am selben Tag gemessen: 23 von 40 Urteilen sagten nur, WIE ein
+# Befund eingestuft ist, nicht WAS aussteht.
+#
+# Die Schranke weist erst ab, seit alle 40 gefuellt sind. Haette sie vorher
+# abgewiesen, waere jeder Commit blockiert gewesen und sie waere wieder
+# ausgebaut worden (Arbeitsweise/schranke-gehoert-in-den-haken.md). Jetzt
+# haelt sie den Stand: ein NEUER Befund kommt ohne die Marke nicht durch.
+my @ohne = grep { not defined $fehlt{$_} } @offene;
+if (@ohne) {
+    printf "    ohne \"Was noch fehlt\"      %2d\n", scalar @ohne;
+    print "\n  MANGEL - diese offenen Befunde sagen nicht, was noch aussteht:\n";
+    print "    $_\n" for @ohne;
+    print <<'ENDE';
+
+  Ein offener Punkt, der nur seine Einstufung nennt ("offen", "teilweise"),
+  ist fuer den naechsten Leser wertlos - er muss das ganze Urteil lesen, um
+  zu erfahren, wo er anfangen soll. Ans ENDE der Urteilsspalte gehoert:
+
+      **Was noch fehlt:** <ein bis drei Saetze, mit Datei und Zeile>
+
+ENDE
+    exit 1;
+}
+
+# Bei deckungsgleicher Kennungsliste war hier frueher Schluss. Seit die
+# Tabelle eine dritte Spalte traegt ("was noch fehlt", 22.10.2026), kann
+# sich ihr INHALT aendern, ohne dass eine Kennung dazukommt - "-schreiben"
+# muss deshalb immer durchlaufen.
+if (not @fehlen and not @zuviel and not $schreiben) {
     print "\n  Die Liste deckt die offenen Befunde.\n\n";
     exit 0;
 }
@@ -226,7 +313,7 @@ ENDE
     exit 1;
 }
 
-my $neu = "$anfang\n\n| Kennung | worum es geht |\n|---|---|\n$soll\n$ende";
+my $neu = "$anfang\n\n| Kennung | worum es geht | was noch fehlt |\n|---|---|---|\n$soll\n$ende";
 $t =~ s/\Q$anfang\E.*?\Q$ende\E/$neu/s;
 
 my $c0 = () = lies($ziel) =~ /\r\n/g;

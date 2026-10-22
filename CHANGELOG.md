@@ -635,7 +635,7 @@ Der Knopf **Copy info** legt den ganzen Block als Text auf die Zwischenablage,
 fertig zum Einfügen in ein Issue. Genommen wird, was im Dialog **steht** — der
 Block kann also nichts behaupten, was der Anwender nicht selbst sieht. Im
 Startbild ist der Knopf ausgeblendet. Beschrieben in
-[README.md](README.md#was-in-einen-fehlerbericht-gehört--help--about-eudora).
+[README.md](Doku/ANWENDER.md#was-in-einen-fehlerbericht-gehört--help--about-eudora).
 
 **Offen bleibt** der Leseweg von [E-131](BEFUNDE.md#e-131), und neu
 aufgeschrieben: `SaveBarState` legt die Leistenzustände **zuerst** in der
