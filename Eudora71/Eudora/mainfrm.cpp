@@ -836,6 +836,10 @@ CMainFrame::~CMainFrame()
 }
 
 
+// BEFUND E-131, Leseweg (22.10.2026). Vorwaerts erklaert, weil die Funktion
+// erst weiter unten steht - sie muss aber VOR dem ersten LoadState laufen.
+static void E131LeistenpositionenBereinigen(void);
+
 bool CMainFrame::FinishInitAndShowWindow(
 	int			nWindowState,
 	CWnd *		pAboutDlg)
@@ -885,6 +889,23 @@ bool CMainFrame::FinishInitAndShowWindow(
 	SECDockState state(m_pControlBarManager);
 	if (AfxGetThread()->m_pMainWnd == NULL)
 		AfxGetThread()->m_pMainWnd = this;
+	//
+	// BEFUND E-131, LESEWEG (22.10.2026). Bis hierher lief die Bereinigung
+	// nur NACH dem Speichern (siehe das Ende von SaveBarState weiter unten).
+	// Eine Eudora.ini, die den kaputten Wert schon trug - etwa weil eine
+	// aeltere Fassung von uns ihn geschrieben hatte -, blieb damit kaputt,
+	// bis wir das naechste Mal sichern. Eine daneben installierte Eudora
+	// oder Hermes 7.1 startete solange weiterhin nicht.
+	//
+	// Gregors Massstab fuer 7.2.1.0 fuehrt genau das als offenen Rest von
+	// E-131: "der Leseweg: eine Eudora.ini, die den kaputten Wert schon
+	// traegt, wird erst beim naechsten Speichern berichtigt".
+	//
+	// Hier, vor dem ersten LoadState, ist die frueheste Stelle, an der die
+	// Datei feststeht und noch niemand sie gelesen hat.
+	//
+	E131LeistenpositionenBereinigen();
+
 	state.LoadState( _T("ToolBar") );
 
 	//	Look for the previous existence of the Search Bar or failing that look
