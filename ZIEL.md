@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 9 von 17 erfüllt, 8 offen.** Diese Übersicht wird aus den
+**Stand: 10 von 17 erfüllt, 7 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -27,7 +27,6 @@ beschädigt, steht oben.
 |---|---|---|---|
 | **[E-131](Intern/BEFUNDE.md#e-131)** | ich | der **Leseweg**: eine `Eudora.ini`, die den kaputten Wert schon trägt, wird erst beim nächsten Speichern berichtigt — bis dahin sta… | am eigenen Prüfstand. Schritte: eine `Eudora.ini` mit `MRUFloatYPos=-682908189` vorbereiten, Eudora darauf starten, prüfen ob der Wert beim Lesen berichtigt wird. Rot ist der heutige Stand… |
 | **[E-101](Intern/BEFUNDE.md#e-101)** | ich | allein **F2** — `StripTabooHeaders` entfernt die `Content-Type`-Zeile, bevor der Kern sie setzen kann; auf dem einzigen Aufrufweg ist… | Testsuite plus eine echte Nachricht: HTML-Mail über *File → Save As* sichern und die Datei in einem Browser öffnen. Rot: Umlaute als Ersatzzeichen, weil die `Content-Type`-Zeile fehlt. G… |
-| **[E-105](Intern/BEFUNDE.md#e-105)** | Gregor | Gregors Bestätigung an einem Paket, und ein nicht abgedeckter Fall: `display:none` über eine **Klasse** aus einem `<style>`-Block —… | **GREGOR** — ich kann das nicht abschließen, es braucht einen Blick in ein echtes Postfach. Eingebaut in 7.2.0.88, an `Testdaten/e105-handyfassung-versteckt.eml` gemessen. **Schritte:** (… |
 | **[E-77](Intern/BEFUNDE.md#e-77)** | ich | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in… | am eigenen IMAP-Prüfserver (`tools/imap-pruefserver.pl`). Einen Ordner `Entwürfe` anlegen, abrufen, in der Postfachliste nachsehen. Rot: `Entw&APw-rfe`. Grün: `Entwürfe`. |
 | **[E-113](Intern/BEFUNDE.md#e-113)** | ich | alles — von Gregor angeordnet, aber ausdrücklich erst nach [E-112](Intern/BEFUNDE.md#e-112). Billig wäre ein Deckel beim Umbruch (`page_width` liegt in `PGHTM… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
 | **[E-119](Intern/BEFUNDE.md#e-119)** | ich | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dek… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. |

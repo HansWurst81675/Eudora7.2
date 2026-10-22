@@ -103,6 +103,32 @@ sub pruefe_text {
         if ($z =~ /^\s*$/) { $in_tabelle = 0; next }
 
         if ($z =~ /^\s*\|/) {
+            # EINE ZEILE, DIE NUR AUS STRICHEN BESTEHT (22.10.2026).
+            #
+            # Gregor am 22.10.2026 zu Intern/BEFUNDE.md auf GitHub: "ist
+            # wieder zerschossen - alles fliesstext nach E-105". Gemessen:
+            # Zeile 308 bestand aus genau zwei Zeichen - einem Leerzeichen
+            # und einem "|". Entstanden beim Setzen der E-105-Pruefanleitung,
+            # weil das Ersetzungsmuster mit /s ueber die Zeilengrenze griff
+            # und das Zeilenende abriss.
+            #
+            # Die Schranke schwieg, weil " |" auf "^\s*\|" passt und damit
+            # wie eine Tabellenzeile aussah. Eine Zeile ohne eine einzige
+            # gefuellte Zelle ist aber keine - sie beendet die Tabelle, und
+            # alles dahinter wird Fliesstext.
+            if ($in_tabelle) {
+                my $inhalt = $z;
+                $inhalt =~ s/\|//g;
+                if ($inhalt !~ /\S/) {
+                    push @funde, {
+                        datei => $datei, zeile => $nr, text => $z,
+                        davor => (defined $letzte_zeile ? $letzte_zeile : ''),
+                        grund => 'Zeile ohne eine einzige gefuellte Zelle - beendet die Tabelle',
+                    };
+                    $in_tabelle = 0;
+                    next;
+                }
+            }
             # Kopfzeile wird erst durch die Trennzeile darunter zur Tabelle.
             if (!$in_tabelle) {
                 my $next = $i + 1 <= $#$zeilen ? $zeilen->[$i + 1] : '';
@@ -162,6 +188,8 @@ sub selbsttest {
         [ 'Trennstrich beendet Tabelle',   "| a | b |\n|---|---|\n| 1 | 2 |\n---\n", 0 ],
         [ 'HTML beendet Tabelle',          "| a | b |\n|---|---|\n| 1 | 2 |\n<a id=\"x\"></a>\n", 0 ],
         [ 'Zahlenliste beendet Tabelle',   "| a | b |\n|---|---|\n| 1 | 2 |\n1. Punkt\n", 0 ],
+        [ 'DER ECHTE FEHLER 2 (BEFUNDE:308)', "| a | b |\n|---|---|\n| 1 | abgerissen\n |\n| 2 | y |\n", 1 ],
+        [ 'Trennzeile darf nicht anschlagen',  "| a | b |\n|---|---|\n| 1 | 2 |\n", 0 ],
         [ 'Bruch nach dem Code-Block',    "```\nirgendwas\n```\n\n| a | b |\n|---|---|\n| 1 | x\nrest\n", 1 ],
     );
 
@@ -180,6 +208,6 @@ sub selbsttest {
     }
     print "  ------------------------------------------------------------\n";
     printf "    %d Faelle, %d richtig, %d falsch\n", $gut + $schlecht, $gut, $schlecht;
-    print "    (13 muessen durchgehen, 5 muessen abweisen)\n";
+    print "    (14 muessen durchgehen, 6 muessen abweisen)\n";
     return $schlecht ? 1 : 0;
 }
