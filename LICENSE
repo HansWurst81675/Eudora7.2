@@ -90,6 +90,16 @@ dieses Projekt weitergibt, muss ihre Lage selbst pruefen.
   libpng                   libpng-Lizenz     Eudora71/PNG/libpng/LICENSE
   expat                    MIT               Eudora71/expat/COPYING.txt
   zlib, libjpeg            zlib bzw. IJG     in den jeweiligen Quellen
+  EudoraUnicodeFix V1.0.0  BSD-3-Clause      Eudora71/Bin/Release/Plugins/
+                                             EudoraUnicodeFix-LIZENZ.txt
+
+Zu EudoraUnicodeFix: ein Zusatz von "rjsdotorg", seit dem
+22.10.2026 unveraendert mitgeliefert. Er repariert Nachrichten, die mit
+kaputten Umlauten im Postfach liegen. Er ist NICHT unser Code; Quelle und
+Freigabe liegen unter
+https://github.com/rjsdotorg/EudoraUnicodeFix-releases
+Die Weitergabe ist durch die BSD-3-Clause gedeckt, deren Text neben der DLL
+liegt. Eine Warnung zum Speichern steht in EudoraUnicodeFix-LIESMICH.txt.
 
 
 --------------------------------------------------------------------------------

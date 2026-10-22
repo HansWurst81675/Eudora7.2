@@ -508,7 +508,22 @@ Weg 'msvcp71d.dll'
 
 Write-Host ''
 Write-Host '4. Plugins: Release-Fassungen, ohne Symboldateien'
-foreach ($p in @('SMIME.dll','SpamHeaders.dll','SpamWatch.dll')) {
+# EudoraUnicodeFix ist ein Zusatz von rjsdotorg, BSD-3-Clause, NICHT unser
+# Code. Er repariert Nachrichten, die mit kaputten Umlauten im Postfach
+# liegen - die Luecke, die unsere eigenen Behebungen offen lassen: sie
+# verhindern neuen Schaden beim Abrufen, heilen aber nichts Gespeichertes.
+#
+# Er geht MIT WARNUNG hinaus. Gregor am 22.10.2026: "wir koennen das plug-in
+# bei uns als add-on aufnehmen mit der warnung, dass es beim speichern evtl.
+# inhalte verfaelscht." Der Grund dafuer liegt bei UNS (Befund E-136): nach
+# der Reparatur zeigt Eudora Zeichen an, die es sonst streicht, und verliert
+# sie beim Schreiben ins Postfach. Die Warnung steht in
+# EudoraUnicodeFix-LIESMICH.txt und MUSS mitgehen - deshalb steht sie hier
+# in derselben Liste wie die DLL und nicht irgendwo daneben.
+foreach ($p in @('SMIME.dll','SpamHeaders.dll','SpamWatch.dll',
+                 'EudoraUnicodeFix.dll',
+                 'EudoraUnicodeFix-LIESMICH.txt',
+                 'EudoraUnicodeFix-LIZENZ.txt')) {
   Nimm (Join-Path $binRel "Plugins\$p") "Plugins\$p"
 }
 Get-ChildItem -LiteralPath (Join-Path $Ziel 'Plugins') -Filter *.pdb -ErrorAction Ignore |

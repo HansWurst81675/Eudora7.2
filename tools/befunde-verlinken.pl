@@ -231,6 +231,7 @@ for my $d (@dateien) {
   my $text = lies($pfad);
   my @z = split /\n/, $text, -1;
   my $in_block = 0;
+  my $erzeugt   = 0;
   my $geaendert = 0;
   my $hier = 0;
 
@@ -240,6 +241,25 @@ for my $d (@dateien) {
 
     if ($z =~ /^\s*```/) { $in_block = !$in_block; next }
     next if $in_block;
+
+    # ERZEUGTE BLOECKE GEHOEREN IHREM GENERATOR (22.10.2026).
+    #
+    # Zwischen <!-- offene-befunde: Anfang --> und ...Ende steht, was
+    # tools/offene-befunde.pl schreibt; zwischen den ziel-stand-Marken,
+    # was tools/ziel-stand.pl schreibt. Wer da hineinschreibt, kaempft
+    # gegen den Generator: wir trugen Links nach, der Generator erkannte
+    # seinen eigenen Block nicht wieder und schrieb ihn zurueck - und
+    # beide Schranken wiesen ab, bis keine mehr durchkam (LEKTOR fand es
+    # an einem anderen Fall, hier war es die Folge).
+    #
+    # Die Kennung IM Block ist ohnehin verlinkt: offene-befunde.pl setzt
+    # sie selbst als Link. Was im Fliesstext der Spalten steht, ist
+    # gekuerzter Text aus Intern/BEFUNDE.md - dort gehoert der Link hin,
+    # nicht in die Kopie.
+    if ($z =~ /<!--\s*(?:offene-befunde|ziel-stand):\s*Anfang\s*-->/) { $erzeugt = 1; next }
+    if ($z =~ /<!--\s*(?:offene-befunde|ziel-stand):\s*Ende\s*-->/)   { $erzeugt = 0; next }
+    next if $erzeugt;
+
     next if $z =~ /^\s*#/;                       # Ueberschrift
     # Die Ankerzelle der Urteilstabelle in Intern/BEFUNDE.md bleibt, wie sie ist.
     # In Intern/BEFUNDE.md bleibt die Urteilstabelle unverlinkt: dort steht die

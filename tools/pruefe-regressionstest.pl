@@ -62,6 +62,30 @@ for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
     $tests .= $t if defined $t;
 }
 
+# DIE OBERFLAECHENFAELLE ZAEHLEN AUCH (22.10.2026, PRUEFER Fund 5).
+#
+# Bis hierher wurde die Deckung AUSSCHLIESSLICH aus Eudora71/Tests/*.cpp
+# gelesen. tools/pruefstand-faelle.txt - die Datei, die Gregors
+# Regressionstests ueber die Oberflaeche traegt - wurde nicht gelesen.
+# Folge: E-121 stand in der Liste "OHNE jede Pruefung", obwohl dafuer ein
+# gruener Fall existiert, und diese Zahl ging unveraendert in den
+# Pruefbericht. Gezaehlt werden nur die FALLZEILEN, nicht die Kommentare:
+# E-14 und E-132 stehen dort als Begruendung, warum sie NICHT automatisiert
+# sind - wer sie mitzaehlte, machte aus einer Absage eine Deckung.
+{
+    my $f = lies("$wurzel/tools/pruefstand-faelle.txt");
+    if (defined $f) {
+        for my $z (split /\n/, $f) {
+            next if $z =~ /^\s*(#|$)/;
+            my @sp = split /\|/, $z, -1;
+            next unless @sp >= 8;
+            my $k = $sp[0];
+            $k =~ s/^\s+|\s+$//g;
+            $tests .= " $k ";
+        }
+    }
+}
+
 sub hat_test {
     my ($id) = @_;
     my $gross = uc $id;
@@ -91,9 +115,9 @@ sub ist_manuell {
 
 # --- Bestand zaehlen ------------------------------------------------------
 my (@ohne_behoben, $gesamt, $mit, $manuell);
-my (@ohne_stufe, @krit_ohne, %stufen, $krit, $krit_test, $krit_man);
+my (@ohne_stufe, @krit_ohne, @datenverlust_nicht_kritisch, %stufen, $krit, $krit_test, $krit_man, $man_gesamt);
 my %gesehen;
-$_ = 0 for ($gesamt, $mit, $manuell, $krit, $krit_test, $krit_man);
+$_ = 0 for ($gesamt, $mit, $manuell, $krit, $krit_test, $krit_man, $man_gesamt);
 for my $zeile (split /\n/, $befunde) {
     next unless $zeile =~ /^\|\s*<a id="([a-z]+[0-9]*-[0-9.]+[a-z]?)"><\/a>/;
     my $id = $1;
@@ -106,15 +130,44 @@ for my $zeile (split /\n/, $befunde) {
     if (defined $stufe) { $stufen{$stufe}++ }
     else                { push @ohne_stufe, uc $id; }
 
+    # WER DATENVERLUST SAGT, IST KRITISCH (22.10.2026, PRUEFER).
+    #
+    # E-64 ("ein Filterlauf verschob ALLE Nachrichten - DATENVERLUST") und
+    # E-72 ("schreibt den leeren Zustand in den Filter - DATENVERLUST ueber
+    # E-64 und E-73") standen als UNKRITISCH da. Der Grund war eine
+    # Verwechslung beim Einstufen: beide Urteile beginnen mit einem
+    # Bestaetigungsvermerk ("BESTAETIGT von Gregor am 10.09.2026"), und ich
+    # habe die Klammer danach beschrieben statt den Schaden. E-72 ist sogar
+    # die URSACHE von E-73, das kritisch steht - eine Ursache kann nicht
+    # harmloser sein als ihre Wirkung.
+    #
+    # Folge waere gewesen: die Filter-Datenverlustkette muss vor keinem
+    # Release geprueft werden. Deshalb hier eine Regel, die kein Urteil
+    # braucht: steht DATENVERLUST in Grossbuchstaben in der Zeile, ist die
+    # Stufe kritisch - oder die Zeile erklaert, warum nicht.
+    if ($zeile =~ /DATENVERLUST/ and defined $stufe and $stufe ne 'kritisch') {
+        push @datenverlust_nicht_kritisch, uc $id;
+    }
+
     my @s = split /(?<!\\)\|/, $zeile, -1;
     my $urteil = $s[3] // '';
     my $hat    = hat_test($id);
     my $man    = ist_manuell($id, $urteil);
 
+    # Ein Befund kann BEIDES haben: einen automatischen Testfall UND einen
+    # manuellen Fall im Testplan. E-132 ist so einer - TestE132.cpp deckt
+    # den Quelltextteil, der Dialogweg steht als Teil M1 im Testplan.
+    # Bis zum 22.10.2026 verschwand der manuelle Fall hinter dem
+    # automatischen, und der Pruefbericht sagte "0 manuelle Faelle",
+    # waehrend der Testplan einen fuehrte, der vor dem Release zu fahren
+    # ist (LEKTOR, L-50.9). Gezaehlt wird deshalb unabhaengig.
+    $man_gesamt++ if $man;
+
     if (defined $stufe and $stufe eq 'kritisch') {
         $krit++;
+        $krit_man++ if $man;
         if    ($hat) { $krit_test++ }
-        elsif ($man) { $krit_man++ }
+        elsif ($man) { }
         else         { push @krit_ohne, uc $id }
     }
 
@@ -164,7 +217,7 @@ printf "  Regressionstests je Befund\n";
 printf "  ------------------------------------------------------------\n";
 printf "    Befunde insgesamt            %3d\n", $gesamt // 0;
 printf "    davon mit Testfall           %3d\n", $mit // 0;
-printf "    davon manuell im Testplan    %3d\n", $manuell // 0;
+printf "    davon manuell im Testplan    %3d   (Marke im Urteil UND Eintrag im Plan)\n", $man_gesamt;
 printf "    behoben und OHNE Testfall    %3d   <- Rueckstand\n", scalar @ohne_behoben;
 printf "  ------------------------------------------------------------\n";
 printf "  Einstufung (Gregor am 22.10.2026: \"markiere diejenigen, die du\n";
@@ -180,13 +233,32 @@ printf "  ------------------------------------------------------------\n";
 printf "  Die kritischen - sie muessen VOR JEDEM Release laufen\n";
 printf "  ------------------------------------------------------------\n";
 printf "    mit Testfall im Pruefstand   %3d von %d\n", $krit_test, $krit;
-printf "    manuell, im Testplan         %3d\n", $krit_man;
+printf "    zusaetzlich manuell im Plan  %3d   (kann sich mit der Zeile\n", $krit_man;
+printf "                                       darueber ueberschneiden)\n";
 printf "    OHNE jede Pruefung           %3d   <- Rueckstand\n", scalar @krit_ohne;
 if (@krit_ohne) {
     my @a = @krit_ohne;
     while (@a) { printf "      %s\n", join(' ', splice(@a, 0, 10)) }
 }
 printf "  ------------------------------------------------------------\n";
+
+if (@datenverlust_nicht_kritisch) {
+    printf "\n  MANGEL - DATENVERLUST, aber nicht als kritisch eingestuft:\n";
+    printf "    %s\n", $_ for @datenverlust_nicht_kritisch;
+    print <<'ENDE';
+
+  Steht DATENVERLUST in Grossbuchstaben in einer Befundzeile, ist der
+  Befund kritisch. E-64 und E-72 standen am 22.10.2026 als unkritisch da,
+  obwohl beide das Wort im eigenen Titel tragen und E-72 die URSACHE von
+  E-73 ist, das kritisch steht. Eine Ursache kann nicht harmloser sein
+  als ihre Wirkung.
+
+  Folge waere gewesen: die Filter-Datenverlustkette muss vor keinem
+  Release geprueft werden.
+
+ENDE
+    exit($hinweis ? 0 : 1);
+}
 
 if (@ohne_stufe) {
     printf "\n  MANGEL - Befunde ohne Einstufung:\n";

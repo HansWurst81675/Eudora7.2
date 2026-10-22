@@ -193,7 +193,21 @@ for my $zeile (split /\n/, $befunde) {
     $b =~ s/`//g;
     $b =~ s/^\s+|\s+$//g;
     $b =~ s/\s+/ /g;
-    $b = substr($b, 0, 90) . '…' if length($b) > 90;
+    # Byte-sicher kuerzen - dieselbe Regel wie unten bei "was noch fehlt".
+    #
+    # WARUM (22.10.2026): hier stand nur substr($b, 0, 90). Die Beschreibung
+    # von E-136 enthaelt ein Emoji, also ein VIERBYTE-Zeichen, und der Schnitt
+    # fiel mitten hinein. befunde-verlinken.pl und offene-befunde.pl
+    # behandelten die halbe Folge danach verschieden - der eine schrieb sie
+    # so, der andere so, und die beiden Schranken wiesen sich gegenseitig ab,
+    # bis keine mehr durchkam. Ausgerechnet an einem Befund UEBER verlorene
+    # Vierbyte-Zeichen.
+    if (length($b) > 90) {
+        $b = substr($b, 0, 90);
+        1 while length($b) && $b =~ /[\x80-\xBF]\z/ && do { chop $b; 1 };
+        chop $b if $b =~ /[\xC0-\xFF]\z/;
+        $b .= '…';
+    }
 
 
     # --- DRITTE SPALTE: was noch fehlt (22.10.2026) -----------------------
@@ -278,7 +292,19 @@ for my $k (@offene) {
         $g = $gemessen{$k} . ' — **veraltet**';
         $zahl_alt++;
     }
-    $soll .= "| **$k** | $beschreibung{$k} | $g | $f |\n";
+    # Die Kennung als LINK erzeugen, nicht als blossen Fettdruck.
+    #
+    # WARUM (22.10.2026): vorher stand hier "**$k**". Fuer
+    # Intern/WEITERMACHEN.md war das in Ordnung - befunde-verlinken.pl
+    # prueft Intern/ nicht. In CHANGELOG.md aber schon: es trug 40 Kennungen
+    # nach, offene-befunde.pl erkannte seinen eigenen Block danach nicht
+    # wieder und verlangte ihn zurueck - und so weiter. Zwei Schranken, die
+    # sich gegenseitig abwiesen, bis keine mehr durchkam.
+    #
+    # block_fuer() unten zieht den Pfad je Zielverzeichnis gerade:
+    # in Intern/ bleibt BEFUNDE.md, in der Wurzel wird Intern/BEFUNDE.md.
+    my $anker = lc $k;
+    $soll .= "| **[$k](BEFUNDE.md#$anker)** | $beschreibung{$k} | $g | $f |\n";
 }
 
 # --- Gegen Intern/WEITERMACHEN.md halten -----------------------------------------
