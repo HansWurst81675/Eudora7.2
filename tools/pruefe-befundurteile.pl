@@ -346,6 +346,25 @@ for my $datei (@dateien) {
 
             for my $w (@erledigt) {
                 next unless lc($text) =~ /\b\Q$w\E/i;   # dito
+                # WEM GEHOERT DAS WORT? (22.10.2026). Bis hierher zaehlte
+                # jedes "behoben" irgendwo im Text gegen $k. In der Zeile zu
+                # E-113 steht aber "die Vorbedingung E-112 ist seit 7.2.0.85
+                # behoben" - das Wort gehoert E-112. Dieselbe Klasse wie die
+                # Teilbefunde eine Ebene hoeher, nur zwischen zwei VOLLEN
+                # Kennungen. Ein Statuswort spricht ueber die Kennung, die
+                # ihm am naechsten VORAUSGEHT; steht dort eine andere, sagt
+                # es ueber $k nichts.
+                my $gehoert_k = 0;
+                my $wp = 0;
+                while ((my $j = index(lc $text, lc $w, $wp)) >= 0) {
+                    my $davor = substr($text, 0, $j);
+                    my $letzte;
+                    while ($davor =~ /\b([A-Za-z]+\d*-\d+[a-z]?)\b/g) { $letzte = $1 }
+                    $gehoert_k = 1 if !defined $letzte or uc($letzte) eq uc($k);
+                    last if $gehoert_k;
+                    $wp = $j + 1;
+                }
+                next unless $gehoert_k;
                 my $kurz = $text;
                 $kurz =~ s/\s+/ /g;
                 $kurz = substr($kurz, 0, 100) . '…' if length($kurz) > 100;

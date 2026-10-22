@@ -26,10 +26,10 @@ beschädigt, steht oben.
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
 | **[E-101](Intern/BEFUNDE.md#e-101)** | ich | allein **F2** — `StripTabooHeaders` entfernt die `Content-Type`-Zeile, bevor der Kern sie setzen kann; auf dem einzigen Aufrufweg ist er damit tot (… | Testsuite plus eine echte Nachricht: HTML-Mail über *File → Save As* sichern und die Datei in einem Browser öffnen. Rot: Umlaute als Ersatzzeichen, weil die `Content-Type`-Zeile fehlt. G… |
-| **[E-77](Intern/BEFUNDE.md#e-77)** | ich | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… | am eigenen IMAP-Prüfserver (`tools/imap-pruefserver.pl`). Einen Ordner `Entwürfe` anlegen, abrufen, in der Postfachliste nachsehen. Rot: `Entw&APw-rfe`. Grün: `Entwürfe`. |
-| **[E-113](Intern/BEFUNDE.md#e-113)** | ich | alles — von Gregor angeordnet, aber ausdrücklich erst nach [E-112](Intern/BEFUNDE.md#e-112). Billig wäre ein Deckel beim Umbruch (`page_width` liegt in `PGHTMIMP.CPP:235-240… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
-| **[E-119](Intern/BEFUNDE.md#e-119)** | ich | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. |
-| **[E-116](Intern/BEFUNDE.md#e-116)** | ich | Einbau und Messung — der Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694` (auf eine folgende Ziffer prüfen und sonst abbrechen) ist nicht eingebaut, … | Testsuite: `width="35px"` muss 35 ergeben, nicht 3508; `width="35.5"` 35, nicht 3645. Dazu eine Prüfnachricht, auf der das Bild vorher zu breit war. |
+| **[E-77](Intern/BEFUNDE.md#e-77)** | ich | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… | am eigenen IMAP-Prüfserver (`tools/imap-pruefserver.pl`). Einen Ordner `Entwürfe` anlegen, abrufen, in der Postfachliste nachsehen. Rot: `Entw&APw-rfe`. Grün: `Entwürfe`. **Stufe: wichti… |
+| **[E-113](Intern/BEFUNDE.md#e-113)** | ich | alles — von Gregor angeordnet; die Vorbedingung [E-112](Intern/BEFUNDE.md#e-112) ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
+| **[E-119](Intern/BEFUNDE.md#e-119)** | ich | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. **Stufe: wichtig** (Darstellung: eingebettete Bilder als… |
+| **[E-116](Intern/BEFUNDE.md#e-116)** | ich | Einbau und Messung — der Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694` (auf eine folgende Ziffer prüfen und sonst abbrechen) ist nicht eingebaut, … | Testsuite: `width="35px"` muss 35 ergeben, nicht 3508; `width="35.5"` 35, nicht 3645. Dazu eine Prüfnachricht, auf der das Bild vorher zu breit war. **Stufe: wichtig** (Darstellung: Groesse… |
 | **[E-14](Intern/BEFUNDE.md#e-14)** | ich | die eine Messung, die entscheidet — Eudora zweimal hintereinander auf **demselben gewachsenen** Mailverzeichnis starten und beim zweiten Mal auf `Se… | eine Messung, kein Einbau. Schritte: ein Testverzeichnis mit gewachsenem Postfach nehmen, Eudora starten, beenden, **sofort wieder starten**. Beim zweiten Start auf die Zusicherung `SearchMa… |
 
 <!-- ziel-stand: Ende -->
@@ -104,6 +104,27 @@ sie wieder kaputtzumachen.
 vom ersten Tag an jeden Commit abweist, wird am zweiten Tag ausgebaut. Sie
 weist ab, sobald ein Befund **neu** auf *behoben* geht, ohne geprüft zu sein;
 die 97 werden gezählt und können dadurch nur sinken.
+
+**Dritte Regel, angeordnet am selben Tag:**
+
+> *„unit tests beim bauen sind auch sehr hilfreich. das bedeutet, die baust du
+> jetzt auch — erst für die aktuellen fixes, später für die alten befunde."*
+
+3. **Jeder Bau fährt die Tests gleich mit.** `tools/bauen.ps1` ruft am Ende
+   `pruefe-tests-gruen.pl` — wer baut, sieht sofort, ob er etwas Altes
+   kaputtgemacht hat, und nicht erst beim Push. Der Bau gilt dabei weiter als
+   **Erfolg**, wenn ein Test rot ist: die Übersetzung *ist* gelungen, und zwei
+   verschiedene Aussagen gehören nicht in einen Rückgabewert. Abgewiesen wird
+   im `pre-push`. `-OhneTests` überspringt den Schritt für einen Wegwerfbau.
+
+**Die Reihenfolge, in der der Rückstand abgearbeitet wird** — ebenfalls seine
+Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
+
+| | |
+|---|---|
+| **zuerst** | die Befunde, die **gerade** behoben werden — jede neue Behebung bringt ihren Test im selben Commit mit, das erzwingt `pruefe-regressionstest.pl` |
+| **danach** | die Altlasten: 97 Befunde stehen als *behoben* ohne jede Prüfung. Davon sind viele **Werkzeug**-Befunde ([NP3-4](Intern/BEFUNDE.md#np3-4)…7, [W-1](Intern/BEFUNDE.md#w-1), [X-1](Intern/BEFUNDE.md#x-1)…8), die nicht in die C++-Sammlung gehören, sondern eigene `--selbsttest` haben — die werden getrennt gezählt, damit die Rückstandszahl ehrlich bleibt |
+| **nicht automatisierbar** | bekommt die Marke `Prüfung: manuell` **und** einen Eintrag mit Schritten und erwartetem Ergebnis in [Intern/TESTPLAN.md](Intern/TESTPLAN.md) |
 
 ## Die Kriterien
 

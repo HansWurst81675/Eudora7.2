@@ -195,6 +195,7 @@ param(
   # Baut auch mit ungesicherten Quelldateien. Siehe die Pruefung dazu weiter
   # unten - sie ist da, weil ein Bau die Zeit ist, in der Arbeit liegenbleibt.
   [switch]$Ungesichert,
+  [switch]$OhneTests,
   # Zeitschranke je MSBuild-Lauf. Der vollstaendige Bau dauert gemessen rund
   # acht Minuten; 45 ist reichlich und faengt trotzdem den Fall auf, dass ein
   # Lauf nicht fertig wird (Befund X-7). Siehe Starte-MSBuild.
@@ -1237,4 +1238,34 @@ Write-Host (' ERGEBNIS: ERFOLG - 0 Fehler, ' + $warnung.Count + ' Warnungen') -F
 foreach ($w in $warnung) { Write-Host ('   - ' + $w) -ForegroundColor Yellow }
 Write-Host '====================================================================='
 Write-Host ''
+
+# --- Regressionstests gleich mitfahren -------------------------------------
+#
+# Gregor am 22.10.2026: "unit tests beim bauen sind auch sehr hilfreich. das
+# bedeutet, die baust du jetzt auch - erst fuer die aktuellen fixes, spaeter
+# fuer die alten befunde."
+#
+# Bis heute lief die Testsammlung NUR von Hand. Seit dem 22.10.2026 fuehrt
+# pruefe-tests-gruen.pl sie im pre-push aus - aber das ist zu spaet: wer baut,
+# soll sofort sehen, ob er etwas Altes kaputtgemacht hat, nicht erst beim
+# Push. Deshalb hier, direkt nach dem erfolgreichen Bau.
+#
+# Der Bau gilt trotzdem als ERFOLG, wenn ein Test rot ist - die Uebersetzung
+# IST ja gelungen, und zwei verschiedene Aussagen gehoeren nicht in einen
+# Rueckgabewert. Die Abweisung besorgt die Schranke im pre-push.
+# -OhneTests ueberspringt diesen Schritt (z. B. fuer einen Wegwerfbau).
+if (-not $OhneTests) {
+    Write-Host ' Regressionstests'
+    Write-Host '====================================================================='
+    $pt = Join-Path $PSScriptRoot 'pruefe-tests-gruen.pl'
+    if (Test-Path -LiteralPath $pt) {
+        & perl $pt --ohne-bau --hinweis 2>&1 | ForEach-Object { Write-Host $_ }
+    }
+    else {
+        Write-Host '   pruefe-tests-gruen.pl fehlt - nicht gefahren.' -ForegroundColor Yellow
+    }
+    Write-Host '====================================================================='
+    Write-Host ''
+}
+
 exit 0

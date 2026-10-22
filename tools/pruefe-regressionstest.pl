@@ -91,16 +91,35 @@ sub ist_manuell {
 
 # --- Bestand zaehlen ------------------------------------------------------
 my (@ohne_behoben, $gesamt, $mit, $manuell);
+my (@ohne_stufe, @krit_ohne, %stufen, $krit, $krit_test, $krit_man);
 my %gesehen;
+$_ = 0 for ($gesamt, $mit, $manuell, $krit, $krit_test, $krit_man);
 for my $zeile (split /\n/, $befunde) {
-    next unless $zeile =~ /^\|\s*<a id="([a-z]+[0-9]*-\d+[a-z]?)"><\/a>/;
+    next unless $zeile =~ /^\|\s*<a id="([a-z]+[0-9]*-[0-9.]+[a-z]?)"><\/a>/;
     my $id = $1;
     next if $gesehen{$id}++;
     $gesamt++;
-    if (hat_test($id)) { $mit++; next }
+
+    # Einstufung lesen - sie steht im Befund selbst, nicht in einer
+    # zweiten Liste (Gregor: "single point of truth").
+    my ($stufe) = $zeile =~ /\*\*Stufe: ([a-z]+)\*\*/;
+    if (defined $stufe) { $stufen{$stufe}++ }
+    else                { push @ohne_stufe, uc $id; }
+
     my @s = split /(?<!\\)\|/, $zeile, -1;
     my $urteil = $s[3] // '';
-    if (ist_manuell($id, $urteil)) { $manuell++; next }
+    my $hat    = hat_test($id);
+    my $man    = ist_manuell($id, $urteil);
+
+    if (defined $stufe and $stufe eq 'kritisch') {
+        $krit++;
+        if    ($hat) { $krit_test++ }
+        elsif ($man) { $krit_man++ }
+        else         { push @krit_ohne, uc $id }
+    }
+
+    if ($hat) { $mit++; next }
+    if ($man) { $manuell++; next }
     my ($fett) = $urteil =~ /\*\*([^*]{1,90})\*\*/;
     next unless defined $fett;
     push @ohne_behoben, uc $id if $fett =~ /^\s*behoben/i;
@@ -108,14 +127,34 @@ for my $zeile (split /\n/, $befunde) {
 
 # --- Was ist in DIESEM Commit neu auf "behoben" gegangen? -----------------
 my $diff = `git -C "$wurzel" diff --cached -M --unified=0 -- "$DATEI" "$ALT" 2>&1`;
-my @neu;
-for my $z (split /\n/, $diff) {
-    next unless $z =~ /^\+\|\s*<a id="([a-z]+[0-9]*-\d+[a-z]?)"><\/a>/;
-    my $id = $1;
+# WAS "NEU" HEISST (22.10.2026 berichtigt). Bis hierher galt jede
+# HINZUGEFUEGTE Zeile mit "behoben" als neu behoben. Das stimmt nur, solange
+# niemand alle Zeilen auf einmal anfasst. Als die Marke **Stufe:** in alle
+# 190 Urteile kam, stand jede Zeile als + und als - im Diff - die Schranke
+# meldete 88 angeblich neu behobene Befunde und haette den Commit zu Recht
+# aussehenden Gruenden verweigert, die es nicht gab.
+# Verglichen wird deshalb der Status VORHER gegen den Status NACHHER
+# derselben Zeile. Nur ein echter Wechsel zaehlt.
+sub status_von {
+    my ($z) = @_;
     my @s = split /(?<!\\)\|/, $z, -1;
     my $urteil = $s[3] // '';
     my ($fett) = $urteil =~ /\*\*([^*]{1,90})\*\*/;
-    next unless defined $fett and $fett =~ /^\s*behoben/i;
+    return '' unless defined $fett;
+    return $fett =~ /^\s*behoben/i ? 'behoben' : 'sonst';
+}
+
+my (%vorher, %nachher);
+for my $z (split /\n/, $diff) {
+    if ($z =~ /^-\|\s*<a id="([a-z]+[0-9]*-[0-9.]+[a-z]?)"><\/a>/) { $vorher{$1}  = status_von($z); next }
+    if ($z =~ /^\+\|\s*<a id="([a-z]+[0-9]*-[0-9.]+[a-z]?)"><\/a>/) { $nachher{$1} = status_von($z); next }
+}
+
+my @neu;
+for my $id (sort keys %nachher) {
+    next unless $nachher{$id} eq 'behoben';
+    # War die Zeile vorher schon "behoben", ist nichts neu geworden.
+    next if exists $vorher{$id} and $vorher{$id} eq 'behoben';
     next if hat_test($id);
     push @neu, uc $id;
 }
@@ -128,6 +167,56 @@ printf "    davon mit Testfall           %3d\n", $mit // 0;
 printf "    davon manuell im Testplan    %3d\n", $manuell // 0;
 printf "    behoben und OHNE Testfall    %3d   <- Rueckstand\n", scalar @ohne_behoben;
 printf "  ------------------------------------------------------------\n";
+printf "  Einstufung (Gregor am 22.10.2026: \"markiere diejenigen, die du\n";
+printf "  als kritisch betrachtest, so dass sie auf jeden fall vor einem\n";
+printf "  release ausgefuehrt werden\")\n";
+printf "  ------------------------------------------------------------\n";
+printf "    kritisch   %3d   Verlust, Schaden, Absturz, Fremdschaden\n", $stufen{kritisch}   // 0;
+printf "    wichtig    %3d   Funktion unbrauchbar, nichts geht verloren\n", $stufen{wichtig} // 0;
+printf "    unkritisch %3d   Aussehen, Reste, Bequemlichkeit\n",           $stufen{unkritisch} // 0;
+printf "    werkzeug   %3d   betrifft Bau und Werkzeuge, nicht das Programm\n", $stufen{werkzeug} // 0;
+printf "    OHNE Stufe %3d\n", scalar @ohne_stufe;
+printf "  ------------------------------------------------------------\n";
+printf "  Die kritischen - sie muessen VOR JEDEM Release laufen\n";
+printf "  ------------------------------------------------------------\n";
+printf "    mit Testfall im Pruefstand   %3d von %d\n", $krit_test, $krit;
+printf "    manuell, im Testplan         %3d\n", $krit_man;
+printf "    OHNE jede Pruefung           %3d   <- Rueckstand\n", scalar @krit_ohne;
+if (@krit_ohne) {
+    my @a = @krit_ohne;
+    while (@a) { printf "      %s\n", join(' ', splice(@a, 0, 10)) }
+}
+printf "  ------------------------------------------------------------\n";
+
+if (@ohne_stufe) {
+    printf "\n  MANGEL - Befunde ohne Einstufung:\n";
+    my @a = @ohne_stufe;
+    while (@a) { printf "    %s\n", join(' ', splice(@a, 0, 10)) }
+    print <<'ENDE';
+
+  Jeder Befund traegt am Ende seines Urteils eine Marke:
+
+      **Stufe: kritisch**   (Grund)
+
+  Erlaubt sind kritisch, wichtig, unkritisch, werkzeug. Die Stufe
+  entscheidet, ob der Befund vor einem Release geprueft werden MUSS -
+  sie steht deshalb im Befund selbst und nicht in einer zweiten Liste.
+
+  kritisch   Post oder Einstellungen gehen verloren oder werden still
+             beschaedigt; eine fremde Installation nimmt Schaden; das
+             Programm stuerzt ab, startet nicht oder haengt; eine
+             Nachricht geht falsch hinaus oder kommt falsch an;
+             Sicherheit.
+  wichtig    eine Funktion ist unbrauchbar, aber nichts geht verloren
+             und der Anwender merkt es sofort.
+  unkritisch Aussehen, Reste, Bequemlichkeit. Gregor am 22.10.2026:
+             "ob da bei der kachel darstellung ein rest vom schliessen
+             zu sehen ist, ist z.b. unkritisch."
+  werkzeug   betrifft Bau, Schranken oder Werkzeuge, nicht das Programm.
+
+ENDE
+    exit($hinweis ? 0 : 1);
+}
 
 if (@neu) {
     printf "\n  MANGEL - in diesem Commit neu auf \"behoben\" gesetzt, ohne Test:\n";

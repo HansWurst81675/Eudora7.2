@@ -130,7 +130,9 @@ if ($selbsttest) {
         [ "Der Buildvorgang wurde erfolgreich ausgefuehrt.\n  0 Warnung(en)\n  0 Fehler", 0, 0,
           "sauberer Bau" ],
         [ "Der Buildvorgang wurde erfolgreich ausgefuehrt.\nErgebnis: 120 Tests, 118 bestanden, 2 fehlgeschlagen", 0, 0,
-          "sauberer Bau MIT roten Tests - darf NICHT abweisen" ],
+          "sauberer Bau MIT roten Tests - DIESE Schranke laesst durch; " .
+          "abgewiesen wird dort von pruefe-tests-gruen.pl. Arbeitsteilung " .
+          "seit 22.10.2026: hier die Frage 'baut es?', dort 'sind sie gruen?'" ],
         [ "warning LNK4099: PDB nicht gefunden", 0, 0,
           "Linker-WARNUNG - darf nicht abweisen" ],
         [ "", 1, 1,

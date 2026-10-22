@@ -25,7 +25,7 @@
 > Diese Fassung bringt drei Behebungen: 7.2.0.118, 7.2.0.119 und 7.2.0.120.
 > Die beiden mittleren wurden gebaut, aber nie veröffentlicht.
 >
-> ## 7.2.0.120 — die Vervollständigungsbox schrumpft nicht mehr ([E-135](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-135))
+> ## 7.2.0.120 — die Vervollständigungsbox schrumpft nicht mehr ([E-135](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-135))
 >
 > Beim Tippen einer Adresse und Blättern mit den Cursortasten wurde die
 > Vorschlagsliste bei **jedem Schritt um acht Pixel kleiner** — nach fünf
@@ -39,11 +39,11 @@
 > Gemessen am laufenden Programm: vorher 100×62 → 20×14 über fünf Schritte,
 > jetzt stabil 108×70.
 >
-> ## 7.2.0.119 — der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-134))
+> ## 7.2.0.119 — der Kurzname eines neuen Adressbucheintrags kommt an ([E-134](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-134))
 >
 > Ein neu angelegter Adressbucheintrag verlor seinen Kurznamen.
 >
-> ## 7.2.0.118 — eine fehlgeschlagene Rückfrage übernahm das fremde Verzeichnis ([E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-132))
+> ## 7.2.0.118 — eine fehlgeschlagene Rückfrage übernahm das fremde Verzeichnis ([E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-132))
 >
 > Seit 7.2.0.117 fragt Eudora, bevor es das Mailverzeichnis einer anderen
 > Installation übernimmt. **Schlug diese Rückfrage selbst fehl**, wurde das

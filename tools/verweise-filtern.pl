@@ -82,3 +82,32 @@ unless (caller) {
 }
 
 1;
+
+# DIE STUFENMARKE IST KEINE NEUE AUSSAGE (22.10.2026). Als die Marke
+# **Stufe: ...** in alle 190 Urteile kam, stand jede Befundzeile im Diff.
+# Drei Schranken, die nur den ZUWACHS pruefen, warfen daraufhin den ganzen
+# Altbestand hoch: pruefe-regressionstest (88 angeblich neu behobene),
+# pruefe-behoben-belegt (62 ohne Beleg) und pruefe-anzeigetext (3 Zitate
+# ohne Herkunft). Der Rueckstand ist echt - aber er ist kein Zuwachs, und
+# eine Schranke, die bei einer Massenaenderung so etwas tut, wird beim
+# naechsten Mal mit --no-verify umgangen.
+#
+# Deshalb steht der Filter HIER und nicht dreimal einzeln
+# (Arbeitsweise/fehlerklassen-abstellen.md: beim zweiten Auftreten ein
+# Werkzeug bauen, nicht einzeln nachbessern).
+sub stufenmarke_nur_gefiltert {
+    my ($alt, $neu) = @_;
+    my $ohne = sub {
+        my ($z) = @_;
+        $z =~ s/\s*\*\*Stufe: [a-z]+\*\* \([^)]*\)//g;
+        # Leerraum angleichen: die Marke wurde VOR dem letzten | eingesetzt,
+        # aus "**behoben** |" wurde "**behoben**  **Stufe: ...)|".
+        $z =~ s/\s+/ /g;
+        $z =~ s/\s*\|/|/g;
+        return $z;
+    };
+    my %altohne = map { $ohne->($_) => 1 } @$alt;
+    return grep { !$altohne{ $ohne->($_) } } @$neu;
+}
+
+1;

@@ -100,6 +100,21 @@ my @belege = (
      qr/(?:im\s+Protokoll|Protokollzeile|Spurmarke|Gregors\s+Lauf)\b[^|]{0,120}?(?:belegt|gemessen|zeigt|nennt|meldet|`[^`|]*[A-Za-z_][A-Za-z_0-9-]*=[^`|\s()]+[^`|]*`)/i],
     ['Testlauf mit Zahlen',
      qr/\b\d+\s+Tests?\b[^.|]{0,40}?\b\d+\s+bestanden/i],
+    # AM QUELLTEXT AUSGEZAEHLT (22.10.2026). Ein Urteil "gegenstandslos -
+    # keine Aufrufstelle im Baum" laesst sich am laufenden Programm gar
+    # nicht belegen: es sagt ja gerade, dass nie etwas laeuft. Der Beleg
+    # dafuer ist eine Zaehlung in den Quellen. NP2-3 ist daran haengen
+    # geblieben, obwohl das Urteil stimmt (BitBltTransparent kommt dreimal
+    # vor: Deklaration, Kommentar, Definition - kein Aufruf).
+    # Verlangt wird eine ZAHL in Ruecklaufform, nicht das blosse Wort -
+    # sonst genuegte wieder eine Behauptung.
+    ['am Quelltext ausgezaehlt',
+     # Der Umlaut muss in BEIDEN Formen passen: die Datei wird je nach
+     # Aufrufweg als rohe Bytes (\xc3\xa4) oder dekodiert (\x{e4}) gelesen.
+     # Genau daran ist der erste Entwurf am 22.10.2026 haengen geblieben -
+     # von Hand mit `grep` getestet (rohe Bytes) passte er, in der Schranke
+     # selbst nicht.
+     qr/am\s+Quelltext\s+(?:nachgez(?:\xc3\xa4|\x{e4}|ae)hlt|ausgez(?:\xc3\xa4|\x{e4}|ae)hlt|gemessen)[^|]{0,40}?[A-Za-z_][A-Za-z_0-9-]*=\d+/i],
 );
 
 # --- Verneinungen, die einen Beleg entwerten -------------------------------
@@ -334,7 +349,8 @@ sub zeilen_aus_diff {
     # und gegen die hinzugefuegten gehalten.
     my @zuwachs = entmojibake_nur_kodierung_gefiltert(\@alt, \@neu);
     @zuwachs    = trenner_nur_schreibweise_gefiltert(\@alt, \@zuwachs);
-    return verweise_nur_links_gefiltert(\@alt, \@zuwachs);
+    @zuwachs    = verweise_nur_links_gefiltert(\@alt, \@zuwachs);
+    return stufenmarke_nur_gefiltert(\@alt, \@zuwachs);
 }
 
 #

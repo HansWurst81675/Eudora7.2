@@ -110,6 +110,12 @@
     <ClCompile Include="TestE105.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />
+    <ClCompile Include="Quelltext.cpp" />
+    <ClCompile Include="UnderTestE24.cpp" />
+    <ClCompile Include="TestE24.cpp" />
+    <ClCompile Include="UnderTestZ2.cpp" />
+    <ClCompile Include="TestZeichenWege.cpp" />
+    <ClCompile Include="TestStartWege.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -124,6 +130,9 @@
     <ClInclude Include="UnderTestE112Meta.h" />
     <ClInclude Include="UnderTestE105.h" />
     <ClInclude Include="UnderTestE118.h" />
+    <ClInclude Include="Quelltext.h" />
+    <ClInclude Include="UnderTestE24.h" />
+    <ClInclude Include="UnderTestZ2.h" />
     <ClInclude Include="TestRes.h" />
   </ItemGroup>
   <ItemGroup>

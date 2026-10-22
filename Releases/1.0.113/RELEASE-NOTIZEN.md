@@ -15,7 +15,7 @@
 > **Nachgestellt und behoben.** Ein einziges Starten und Beenden der Fassung
 > 7.2.0.112 genügte, um den Wert dreimal in die Datei zu schreiben; mit
 > 7.2.0.113 steht dort eine gültige Position und **kein** `INT_MIN` mehr. Der
-> Befund läuft bei uns als **[E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-131)**.
+> Befund läuft bei uns als **[E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-131)**.
 >
 > **Was wir nicht prüfen konnten:** ob eine daneben installierte Hermes 7.1
 > danach wieder startet — wir haben kein Hermes. Wer das testen kann, wird in
@@ -68,13 +68,13 @@ Mailverzeichnis im ZIP ist leer – ein vorhandenes `Mailverzeichnis` hineinkopi
   Ordner — und schreibt dann in deren `Eudora.ini`. Immer `Eudora starten.cmd`
   benutzen; eine Verknüpfung bekommt den Pfad mit:
   `Eudora.exe "C:\…\Mailverzeichnis"`. Das ist der Weg hinter #102
-  ([E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-132));
+  ([E-132](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-132));
   in dieser Fassung ist er **noch offen**, behoben erst in 7.2.0.114.
 
 - **Eine bereits beschädigte `Eudora.ini`** — etwa von einer älteren Fassung
   dieses Projekts — wird erst beim **nächsten Sichern** berichtigt; der Leseweg
   ist noch offen ([#102](https://github.com/HansWurst81675/Eudora7.2/issues/102),
-  bei uns [E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/BEFUNDE.md#e-131)). Vorher eine Kopie anlegen.
+  bei uns [E-131](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-131)). Vorher eine Kopie anlegen.
 Die vollständige Liste mit Abhilfe steht in der
 [README, Abschnitt „Auf einen Blick“](https://github.com/HansWurst81675/Eudora7.2#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind).
 Die wichtigsten:
