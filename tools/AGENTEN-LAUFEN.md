@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| BILDBREITE | 2026-10-23 15:36 | [E-116](../Intern/BEFUNDE.md#e-116) decimal_value_percent, Zweig e-116-bildbreite-px |
