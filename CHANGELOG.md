@@ -101,6 +101,29 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## Seit 7.2.0.122, noch ohne Paket — Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+
+**Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
+die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
+dieser Abschnitt zu 7.2.0.123.
+
+* **[E-116](Intern/BEFUNDE.md#e-116) — ein Bild mit `width="35px"` wird nicht
+  mehr riesig breit.** Die Breite wurde Zeichen für Zeichen gelesen, auch über
+  die Einheit hinweg: aus `35px` wurde 3508, aus `35.5` 3645. Jetzt endet das
+  Lesen an der ersten Nicht-Ziffer, führende Leerzeichen werden übersprungen
+  (`PGHTMIMP.CPP`, `decimal_value_percent`). Testsuite **280 Tests, 280
+  bestanden**; gegen den alten Stand fallen die neuen Fälle um. **Am laufenden
+  Programm noch nicht gesehen** — deshalb im Befund „eingebaut", nicht
+  „behoben".
+* **[E-130](Intern/BEFUNDE.md#e-130) — nach dem Bauen sind die fünf
+  mitgelieferten DLLs von QUALCOMM nicht mehr verändert.** Der Bindeschritt nach
+  dem Bau (`BinTools\BindExe.bat`) lief über alle DLLs in `Bin\Release`, auch
+  über `DirServ`, `EudoraBk`, `ISock`, `Ldap` und `Ph`, und schrieb Prüfsumme und
+  Zeitstempel hinein. Er bindet jetzt nur die acht eigenen Bauergebnisse; die
+  fünf DLLs im Repo sind wieder die Originale und gleichen denen im Paket.
+  Gemessen: Release-Bau 134 s, 0 Fehler, danach keine der fünf als geändert.
+  Für den Anwender ändert sich nichts.
+
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 
 **Übersetzt am 23.10.2026, als Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.122-release` bereitgestellt und als ZIP geschnürt; nicht veröffentlicht.** 277 Tests, 277 bestanden.
