@@ -516,7 +516,9 @@ Handgriff dazu steht oben in der Tabelle.
 
 ---
 
-## Teil M — Manuelle Fälle, die **vor jedem Release** zu fahren sind
+## Teil M — Manuelle Fälle, die **vor dem Release 7.2.1** zu fahren sind
+
+**Einmal vor 7.2.1, nicht vor jedem Release.** Gregor am 23.10.2026: *„handtest für 7.2.1, ist nicht so kritisch, um sie jedes mal auszuführen."* Bis dahin stand hier *„vor jedem Release"* ([L-53.21](../Befunde/LEKTOR-53.md#l-53.21)).
 
 Diese Fälle gehören zu **kritischen** Befunden (Stufe `kritisch` in
 [BEFUNDE.md](BEFUNDE.md)), lassen sich aber nicht automatisch fahren. Der
@@ -558,6 +560,8 @@ damit sie in der Registry unter
 unbrauchbar gemacht.
 
 ### <a id="m2-e14"></a>M2 — E-14: der Suchindex darf nicht bei jedem Start neu angelegt werden
+
+> **Deaktiviert am 23.10.2026, nicht gelöscht.** Gregor: *„suchindex test: wenn es nicht mehr aufgetreten ist, dann kann man es deaktivieren, den test aber nicht löschen."* Der Fehler ([E-14](BEFUNDE.md#e-14)) ist gemessen und erledigt und seither nicht mehr aufgetreten. Dieser Fall wird vor 7.2.1 **nicht** gefahren; die Schritte bleiben stehen, damit er wieder eingeschaltet werden kann, falls der Suchindex erneut bei jedem Start neu angelegt wird.
 
 **Warum manuell.** Am 22.10.2026 stand dieser Fall kurz im automatischen
 Satz und war **Vakuum-Grün**: PRÜFER hat nachgemessen, dass im Protokoll des
